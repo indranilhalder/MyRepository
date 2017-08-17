@@ -362,7 +362,7 @@ public class MplPancardUploadserviceImpl implements MplPancardUploadService
 		final Client client = Client.create();
 		ClientResponse response = null;
 		WebResource webResource = null;
-		String output = null;
+		String output = "";
 		LOG.debug("********************Pancard upload PI-->SP called********************************** ");
 		if (null != configurationService && null != configurationService.getConfiguration()
 				&& null != configurationService.getConfiguration().getString(MarketplacecclientservicesConstants.PANCARD_UPLOAD_URL))
@@ -407,15 +407,21 @@ public class MplPancardUploadserviceImpl implements MplPancardUploadService
 			if (LOG.isDebugEnabled())
 			{
 				LOG.debug(":::::::::::::::::::::response:::" + response);
+				LOG.debug("*********************response:::" + response.getStatus());
 			}
 		}
-		if (response.getStatus() != 200 || response.getStatus() != 202)
+		if (response.getStatus() == 200)
 		{
-			output = "faliure";
+			//output = response.getEntity(String.class);
+			output = "success";
+			if (LOG.isDebugEnabled())
+			{
+				LOG.debug("output " + output);
+			}
 		}
 		else
 		{
-			output = response.getEntity(String.class);
+			output = "faliure";
 			if (LOG.isDebugEnabled())
 			{
 				LOG.debug("output " + output);

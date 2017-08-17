@@ -269,15 +269,45 @@ function loadVariant(x){
 </ul> -->
 <!-- share mobile -->
 <c:if test="${noVariant!=true&&notApparel!=true}">
+<c:if test="${showSizeGuideForFA eq true}">
 <div class="size" style="font-size: 12px;">
 	<form:form action="/" id="sizevariantForm" method="post">
 		<input type="hidden" maxlength="10" size="1" id="sellersSkuListId"
 			name="sellersSkuListId" value="" />
 		<product:sellerForm></product:sellerForm>
 		<div class="selectSize">
-			<span>
+			<%-- <span>
 				<spring:theme code="product.variant.size"></spring:theme><c:if test="${not empty productSizeType}">(${productSizeType})</c:if>
-			</span>
+			</span> --%>
+			    <c:choose> 
+					<c:when test="${ product.rootCategory =='FineJewellery' || product.rootCategory =='FashionJewellery'}">
+					    <spring:eval expression="T(de.hybris.platform.util.Config).getParameter('mpl.jewellery.category')" var="lengthVariant"/>
+				     	<c:set var = "categoryListArray" value = "${fn:split(lengthVariant, ',')}" />
+						<c:forEach items="${product.categories}" var="categories">
+				   			<c:forEach items = "${categoryListArray}" var="lengthVariantArray">
+				   				<c:if test="${categories.code eq lengthVariantArray}">
+				   				 	<c:set var="lengthSize" value="true"/>
+				   				</c:if> 
+				   			</c:forEach>
+				   		</c:forEach>	  
+				   		<c:choose>
+				   			<c:when test="${true eq lengthSize}">
+				   				<span><spring:theme code="product.variant.length"></spring:theme><c:if test="${not empty productSizeType}">(${productSizeType})</c:if>
+							  </span>
+				   			</c:when>
+				   			<c:otherwise>
+				   				<span>
+									<spring:theme code="product.variant.size"></spring:theme><c:if test="${not empty productSizeType}">(${productSizeType})</c:if>
+							  </span> 
+				   			</c:otherwise>
+				   		</c:choose>
+					</c:when>
+					<c:otherwise>
+				        <span>
+							<spring:theme code="product.variant.size"></spring:theme><c:if test="${not empty productSizeType}">(${productSizeType})</c:if>
+						</span>
+				    </c:otherwise>
+				</c:choose>	
 			<a class="size-guide" href="${sizeGuideUrl}" role="button"
 			data-toggle="modal" data-target="#popUpModal" data-productcode="${product.code}" data-sizeSelected="${selectedSize}"> <spring:theme
 				code="product.variants.size.guide" />
@@ -408,6 +438,7 @@ function loadVariant(x){
 				code="product.variants.size.guide" />
 		</a> --%>
 	</div>
+	</c:if>
 </c:if>
 
 <div id="allVariantOutOfStock" style="display: none;">

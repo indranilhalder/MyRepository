@@ -157,8 +157,25 @@ tr.d0 td {
 											<c:when test="${entry.product.size ne noSize }">
 												<p class="size disclaimer-txt more-cart">
 													<ycommerce:testId code="cart_product_size">
-														<spring:theme code="product.variant.size" />:&nbsp;${entry.product.size}&nbsp;
-														${disclaimer}
+														<spring:eval expression="T(de.hybris.platform.util.Config).getParameter('mpl.jewellery.category')" var="lengthVariant"/>
+														<c:set var = "categoryListArray" value = "${fn:split(lengthVariant, ',')}" />
+														<c:forEach items="${entry.product.categories}" var="categories">
+															<c:forEach items = "${categoryListArray}" var="lengthVariantArray">
+																<c:if test="${categories.code eq lengthVariantArray}">
+																	<c:set var="lengthSize" value="true"/>
+																</c:if> 
+															</c:forEach>
+														</c:forEach> 	  
+														<c:choose>
+															<c:when test="${true eq lengthSize}">
+															  <spring:theme code="product.variant.length"/>:&nbsp;${entry.product.size}&nbsp;
+															  ${disclaimer}
+															</c:when>
+															<c:otherwise>
+															  <spring:theme code="product.variant.size" />:&nbsp;${entry.product.size}&nbsp;
+															  ${disclaimer}
+															</c:otherwise>
+														</c:choose>
 													</ycommerce:testId>
 												</p>
 											</c:when>
@@ -176,7 +193,23 @@ tr.d0 td {
 										<c:if test="${entry.product.size ne noSize }">
 											<p class="size disclaimer-txt more">
 												<ycommerce:testId code="cart_product_size">
-													<spring:theme code="product.variant.size" />:&nbsp;${entry.product.size}&nbsp;
+													<spring:eval expression="T(de.hybris.platform.util.Config).getParameter('mpl.jewellery.category')" var="lengthVariant"/>
+														<c:set var = "categoryListArray" value = "${fn:split(lengthVariant, ',')}" />
+														<c:forEach items="${entry.product.categories}" var="categories">
+															<c:forEach items = "${categoryListArray}" var="lengthVariantArray">
+																<c:if test="${categories.code eq lengthVariantArray}">
+																	<c:set var="lengthSize" value="true"/>
+																</c:if> 
+															</c:forEach>
+														</c:forEach> 	  
+														<c:choose>
+															<c:when test="${true eq lengthSize}">
+															  <spring:theme code="product.variant.length"/>:&nbsp;${entry.product.size}&nbsp;
+															</c:when>
+															<c:otherwise>
+															  <spring:theme code="product.variant.size" />:&nbsp;${entry.product.size}&nbsp;
+															</c:otherwise>
+														</c:choose>
 												</ycommerce:testId>
 											</p>		
 										</c:if>
@@ -191,11 +224,10 @@ tr.d0 td {
 								</c:choose>
 							</c:if>
 							<!-- TPR-3780 ENDS HERE -->
-						</div>
-
-
-						<ul class="item-edit-details">
-						<c:if test="${not empty entry.exchangeApplied}">
+							
+							<!-- TISJEW-3478 start -->
+							<ul class="exchange-applied-ul">
+							<c:if test="${not empty entry.exchangeApplied}">
 		              			<li class="cart_exchange" style="display:none">
 <%-- 			              		<c:set var="exchangeId" value="${entry.exchangeApplied}"/> --%>
 			              		<input type="hidden" id="exc_cart" value="${entry.exchangeApplied}">
@@ -203,6 +235,20 @@ tr.d0 td {
    										${isExchangeavailable} 
 			              		</li>
 			              		</c:if>
+			              		</ul>
+			              <!-- TISJEW-3478 ENDS HERE -->
+						</div>
+
+
+						<ul class="item-edit-details">
+						<%-- <c:if test="${not empty entry.exchangeApplied}">
+		              			<li class="cart_exchange" style="display:none">
+			              		<c:set var="exchangeId" value="${entry.exchangeApplied}"/>
+			              		<input type="hidden" id="exc_cart" value="${entry.exchangeApplied}">
+			              		<c:set var="isExchangeavailable" value="Exchange Applied"/>
+   										${isExchangeavailable} 
+			              		</li>
+			              		</c:if> --%>
 							<c:if test="${entry.updateable}">
 								<c:forEach items="${entry.product.seller}" var="seller">
 									<c:if test="${seller.ussid eq entry.selectedUssid }">
@@ -1470,3 +1516,4 @@ tr.d0 td {
            <!-- commented as part of TISPRD-9245, TPR-3691 -->
          
 <storepickup:pickupStorePopup />
+	

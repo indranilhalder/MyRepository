@@ -358,7 +358,7 @@ Free
                                                             </tr>
                                                             <tr>
                                                                <td>
-                                                               <span style="display:block; width:20px; height: 25px; line-height:0;font-size:0;">${ctx.cmsSlotContents.ForwardSeal}</span>
+                                                               <span style="display:block; line-height:0;font-size:0;">${ctx.cmsSlotContents.ForwardSeal}</span>
                                                                </td>
                                                                
                                                             </tr>
@@ -377,7 +377,7 @@ Free
                                                             </tr>
                                                             <tr>
                                                                <td>
-                                                               <span style="display:block; width:20px; height: 25px; line-height:0;font-size:0;">${ctx.cmsSlotContents.ReverseSeal}</span>
+                                                               <span style="display:block; line-height:0;font-size:0;">${ctx.cmsSlotContents.ReverseSeal}</span>
                                                                </td>
                                                                
                                                             </tr>

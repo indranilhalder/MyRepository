@@ -813,8 +813,17 @@ public class BuyBoxFacadeImpl implements BuyBoxFacade
 				sellerData.setUssid(buyBox.getSellerArticleSKU());
 				sellerData.setSellername(buyBox.getSellerName());
 
-				sellerData.setDeliveryModes(productDetailsHelper.getDeliveryModeLlist(rich, buyBox.getSellerArticleSKU()));
-
+				if (MarketplaceFacadesConstants.PRODUCT_TYPE.equalsIgnoreCase(prodCatType))
+				{
+					if (StringUtils.isNotEmpty(buyBox.getPUSSID()))
+					{
+						sellerData.setDeliveryModes(productDetailsHelper.getDeliveryModeLlist(rich, buyBox.getPUSSID()));
+					}
+				}
+				else
+				{
+					sellerData.setDeliveryModes(productDetailsHelper.getDeliveryModeLlist(rich, buyBox.getSellerArticleSKU()));
+				}
 
 				if (null != rich.getShippingModes())
 				{

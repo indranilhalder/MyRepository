@@ -246,6 +246,19 @@ public class CustomOmsOrderLinePopulator implements Populator<OrderEntryModel, O
 					&& source.getProduct().getProductCategoryType()
 							.equalsIgnoreCase(MarketplacecommerceservicesConstants.FINEJEWELLERY))
 			{
+
+				if (null != source.getOrder() && null != source.getOrder().getParentReference())
+				{
+					//Checking the pancard request is true or not
+					if (source.getOrder().getParentReference().getPanVerificationReq().booleanValue())
+					{
+						target.setIsPANCARDVerificationReq("Y");
+					}
+					else
+					{
+						target.setIsPANCARDVerificationReq("N");
+					}
+				}
 				populateJewelleryInfo(source, target);
 
 				final List<BrandModel> brands = (List<BrandModel>) productModel.getBrands();
@@ -869,6 +882,17 @@ public class CustomOmsOrderLinePopulator implements Populator<OrderEntryModel, O
 			if (null != jewelleryEntry.getStoneSizeType10())
 			{
 				target.setStoneSizeType10(jewelleryEntry.getStoneSizeType10());
+			}
+
+			//TISJEW-3469
+			if (null != jewelleryEntry.getPriceBreakuponInvoice())
+			{
+				target.setPriceBreakuponInvoice(jewelleryEntry.getPriceBreakuponInvoice());
+			}
+
+			if (null != jewelleryEntry.getMetalName())
+			{
+				target.setMetalName(jewelleryEntry.getMetalName());
 			}
 
 
