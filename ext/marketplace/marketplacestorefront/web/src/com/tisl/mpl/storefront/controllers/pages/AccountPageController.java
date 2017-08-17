@@ -5205,8 +5205,10 @@ public class AccountPageController extends AbstractMplSearchPageController
 
 				for (final Wishlist2EntryModel entry : entryModels)
 				{
+				        LOG.debug("Step0-************************Wishlist");
 					if (!entry.getIsDeleted().booleanValue() || entry.getIsDeleted() == null)//TPR-5787
 					{
+					        LOG.debug("Step1-************************Wishlist");
 						//TISEE-6376
 						if (entry.getProduct() != null
 								&& entry.getProduct().getCode() != null
@@ -5214,6 +5216,7 @@ public class AccountPageController extends AbstractMplSearchPageController
 										.equalsIgnoreCase(catalogVersion)))
 
 						{
+						        LOG.debug("Step2-************************Wishlist");
 							final ProductModel productModel = getMplOrderFacade().getProductForCode(entry.getProduct().getCode());
 							if (null != productModel.getSellerInformationRelator())
 
@@ -5265,7 +5268,8 @@ public class AccountPageController extends AbstractMplSearchPageController
 							// LW-225,230 end
 						}
 
-
+                                                LOG.debug("Step3-************************Wishlist");
+						
 						final boolean isWishlistEntryValid = mplCartFacade.isWishlistEntryValid(entry);
 						if (!isDelisted && !isWishlistEntryValid)
 						{
@@ -5290,6 +5294,7 @@ public class AccountPageController extends AbstractMplSearchPageController
 					for (final Wishlist2EntryModel entryModel : allProductsModifiable)
 					{
 						final WishlistProductData wishlistProductData = new WishlistProductData();
+						LOG.debug("Step4-************************Wishlist");
 						//TISEE-6376
 						if (entryModel.getProduct() != null
 								&& ((entryModel.getProduct().getCatalogVersion().getCatalog().getId().toString())
@@ -5305,6 +5310,7 @@ public class AccountPageController extends AbstractMplSearchPageController
 							 * ProductOption.SELLER));
 							 */
 
+                                                        LOG.debug("Step5-************************Wishlist");
 							final ProductData productData1 = productFacade.getProductForOptions(entryModel.getProduct(), Arrays.asList(
 									ProductOption.BASIC, ProductOption.SUMMARY, ProductOption.DESCRIPTION, ProductOption.CATEGORIES,
 									ProductOption.STOCK, ProductOption.SELLER));
@@ -5365,7 +5371,7 @@ public class AccountPageController extends AbstractMplSearchPageController
 							showSizeGuideForFA(entryModel.getProduct(), map, model);
 							wpDataList.add(wishlistProductData);
 						}
-
+                                                LOG.debug("Step6-************************Wishlist");  
 					}
 				}
 
