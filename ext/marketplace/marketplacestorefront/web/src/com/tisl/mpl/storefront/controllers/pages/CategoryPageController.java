@@ -16,6 +16,7 @@ package com.tisl.mpl.storefront.controllers.pages;
 
 import de.hybris.platform.acceleratorservices.controllers.page.PageType;
 import de.hybris.platform.acceleratorservices.data.RequestContextData;
+import de.hybris.platform.acceleratorservices.storefront.data.MetaElementData;
 import de.hybris.platform.acceleratorstorefrontcommons.breadcrumb.Breadcrumb;
 import de.hybris.platform.acceleratorstorefrontcommons.constants.WebConstants;
 import de.hybris.platform.acceleratorstorefrontcommons.controllers.pages.AbstractCategoryPageController;
@@ -46,6 +47,7 @@ import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Enumeration;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -1963,12 +1965,12 @@ public class CategoryPageController extends AbstractCategoryPageController
 	private void setUpMetaDataForSeo(final Model model, final String metaKeywords, final String metaDescription,
 			final String metaTitle)
 	{
-		/* commented for PRDI-422 */
-		//		final List<MetaElementData> metadata = new LinkedList<>();
-		//		metadata.add(createMetaElement("keywords", metaKeywords));
-		//		metadata.add(createMetaElement("description", metaDescription));
-		//		//metadata.add(createMetaElement("title", metaTitle));
-		//		model.addAttribute("metatags", metadata);
+		final List<MetaElementData> metadata = new LinkedList<>();
+		//Add the String constant in the ModelAttributeConstants file
+		metadata.add(createMetaElement(ModelAttributetConstants.KEYWORDS, metaKeywords));
+		metadata.add(createMetaElement(ModelAttributetConstants.DESCRIPTION, metaDescription));
+		//metadata.add(createMetaElement("title", metaTitle));
+		model.addAttribute(ModelAttributetConstants.METATAGS, metadata);
 		//PRDI-422
 		model.addAttribute(ModelAttributetConstants.KEYWORDS, metaKeywords);
 		model.addAttribute(ModelAttributetConstants.DESCRIPTION, metaDescription);
