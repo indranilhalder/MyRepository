@@ -164,13 +164,18 @@
 					});
 					/* end change of INC144313760 */
 					/* start change of TPR-6147 */
-				   /* function copyToClipboard(element) {
+				  	  function copyToClipboard(element) {
 					  var $temp = $("<input>");
 					  $("body").append($temp);
 					  $temp.val($(element).val()).select();
 					  document.execCommand("copy");
 					  $temp.remove();
-					} */
+					  $('.copycode_message').fadeIn(function() {
+						  window.setTimeout(function() {
+						    $('.copycode_message').fadeOut('slow');
+						  }, 1500);
+						});
+					} 
 				   /* start change of TPR-6147 */
 					</script>
 					<div class="personal-invites">
@@ -183,7 +188,7 @@
 					<c:set value="${baseUrl}${regUrl}" var="finalUrl"></c:set> --%>
 					
 					<input type="text" disabled="disabled" value="${baseUrl}" id="copyLink" />
-					<a  class="copy-link" onclick="copyCode(this)">COPY LINK</a>
+					<a  class="copy-link" onclick="copyToClipboard(copyLink)">COPY LINK</a>
 					</div>
 				<p class="copycode_message">link copied</p>
 			</div>
