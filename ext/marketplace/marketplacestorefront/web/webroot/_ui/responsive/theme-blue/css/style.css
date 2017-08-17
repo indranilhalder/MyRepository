@@ -48603,10 +48603,6 @@ float: right;
 /*Mobile
 ---------------------------------------------*/
 @media(max-width:767px){
-	.tabs-block .nav-wrapper{
-		margin-left: 15px;
-	}
-	
 	/*Products left*/
 	.product-image-container.device .owl-carousel .owl-item img {
 		padding: 0 8%;
@@ -74339,7 +74335,7 @@ header .content nav > ul > li.ShopByBrand > ul > li > ul > li {
 	width: 100%;
 }
 header .content .search .select-list{
-	z-index: 10;
+	z-index: 10000;  /* JWLSPCUAT-680 */ 
 }
 header.brand-header .content .bottom nav>ul>li>ul:before {
     background-image: linear-gradient(to bottom,#000,#000);
@@ -76608,6 +76604,11 @@ body.page-returnSubmit .accordtionTataCliq .accContents.reasonType .slectionRefu
 	.accordtionTataCliq .slectionRefund .paymentCC {
     margin-top: 220px;
 }
+/* TISJEW-3494 start */
+ul.jqtree-tree .jqtree-element{
+	margin-bottom: 20px;
+}
+/* TISJEW-3494 end */
 }
 @media(max-width: 790px){
 	.accordtionTataCliq .accContents .reverseSealJwlry a.revSeal{
@@ -77180,6 +77181,11 @@ body .account .right-account .order-history.order-details li.item .status>ul.nav
     	clear: both;
     	padding: 30px 15px 0;
 	 }
+	 /* TISJEW-3498 start */
+	 .tabs-block.FineJewellery .nav-wrapper {
+   		 margin-left: 15px;
+		}
+	/* TISJEW-3498 end */
 }
 /* JWLSPCUAT-54 end */
 
