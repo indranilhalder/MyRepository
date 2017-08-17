@@ -71,7 +71,7 @@ public class CustomOmsOrderLinePopulator implements Populator<OrderEntryModel, O
 		if (source.getSelectedUSSID() != null)
 		{
 			final SellerInformationModel sellerInfoModel = getMplSellerInformationService().getSellerDetail(
-					source.getSelectedUSSID());
+					source.getSelectedUSSID(), source.getOrder().getStore().getCatalogs().get(0).getActiveCatalogVersion());
 			List<RichAttributeModel> richAttributeModel = null;
 			if (sellerInfoModel != null)
 			{
