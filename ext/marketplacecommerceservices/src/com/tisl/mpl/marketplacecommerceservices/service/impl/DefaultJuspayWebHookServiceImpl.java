@@ -140,28 +140,21 @@ public class DefaultJuspayWebHookServiceImpl implements JuspayWebHookService
 	private void validateWebHookData(final List<JuspayWebhookModel> webHookDetailList, final boolean flag)
 			throws EtailNonBusinessExceptions
 	{
+	
 		if (CollectionUtils.isNotEmpty(webHookDetailList))
 		{
 			final List<JuspayWebhookModel> uniqueList = new ArrayList<JuspayWebhookModel>();
 
-			if (flag)
-			{//check only if call is coming from method fetchWebHookData
-				for (final JuspayWebhookModel oModel : webHookDetailList)
-				{
-					if (null != oModel.getOrderStatus() && oModel.getIsExpired().booleanValue())
-					{
-						/*
-						 * final OrderModel ordrMdl =
-						 * getMplPaymentService().fetchOrderOnGUID(oModel.getOrderStatus().getOrderId()); if ((null !=
-						 * ordrMdl.getIsWallet() && WalletEnum.NONWALLET.toString().equals(ordrMdl.getIsWallet().getCode()))
-						 * || ordrMdl.getIsWallet() == null) {
-						 */
-						//getting all the webhook data where isExpired is Y and adding into a list
-						uniqueList.add(oModel);
-						//}
-					}
-				}
-			}
+			/*
+			 * if (flag) {//check only if call is coming from method fetchWebHookData for (final JuspayWebhookModel oModel
+			 * : webHookDetailList) { if (null != oModel.getOrderStatus() && oModel.getIsExpired().booleanValue()) {
+			 *
+			 * final OrderModel ordrMdl = getMplPaymentService().fetchOrderOnGUID(oModel.getOrderStatus().getOrderId()); if
+			 * ((null != ordrMdl.getIsWallet() && WalletEnum.NONWALLET.toString().equals(ordrMdl.getIsWallet().getCode()))
+			 * || ordrMdl.getIsWallet() == null) {
+			 *
+			 * //getting all the webhook data where isExpired is Y and adding into a list uniqueList.add(oModel); //} } } }
+			 */
 
 			//			for (final JuspayWebhookModel oModel : webHookDetailList)
 			//			{
@@ -173,33 +166,27 @@ public class DefaultJuspayWebHookServiceImpl implements JuspayWebHookService
 			//			}
 			for (final JuspayWebhookModel hook : webHookDetailList)
 			{
-				if (CollectionUtils.isNotEmpty(uniqueList))
+				/*
+				 * if (CollectionUtils.isNotEmpty(uniqueList)) {
+				 */
+				//iterating through the new list against the whole webhook data list
+				boolean duplicateFound = false;
+				for (final JuspayWebhookModel unique : uniqueList)
 				{
-					//iterating through the new list against the whole webhook data list
-					boolean duplicateFound = false;
-					for (final JuspayWebhookModel unique : uniqueList)
-					{
-						//if there is duplicate order id which is not expired(N) then setting it to Y
-						if (unique != null && unique.getOrderStatus() != null && hook.getOrderStatus() != null
-								&& StringUtils.equalsIgnoreCase(unique.getOrderStatus().getOrderId(), hook.getOrderStatus().getOrderId())
-								&& StringUtils.equalsIgnoreCase(hook.getEventName(), "ORDER_SUCCEEDED"))
+					//if there is duplicate order id which is not expired(N) then setting it to Y
+					if (unique != null && unique.getOrderStatus() != null && hook.getOrderStatus() != null
+							&& StringUtils.equalsIgnoreCase(unique.getOrderStatus().getOrderId(), hook.getOrderStatus().getOrderId())
+							&& StringUtils.equalsIgnoreCase(hook.getEventName(), unique.getEventName()))
 
-						{
-							duplicateFound = true;
-							break;
-						}
-					}
-					if (duplicateFound)
 					{
-						hook.setIsExpired(Boolean.TRUE);
-						getModelService().save(hook);
+						duplicateFound = true;
+						break;
 					}
-					else
-					{
-						processWebhook(hook, webHookDetailList);
-						//TISSIT-1811:the processed hook in the uniqueList
-						uniqueList.add(hook);
-					}
+				}
+				if (duplicateFound)
+				{
+					hook.setIsExpired(Boolean.TRUE);
+					getModelService().save(hook);
 				}
 				else
 				{
@@ -207,6 +194,10 @@ public class DefaultJuspayWebHookServiceImpl implements JuspayWebHookService
 					//TISSIT-1811:the processed hook in the uniqueList
 					uniqueList.add(hook);
 				}
+				/*
+				 * } else { processWebhook(hook, webHookDetailList); //TISSIT-1811:the processed hook in the uniqueList
+				 * uniqueList.add(hook); }
+				 */
 			}
 		}
 	}
