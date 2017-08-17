@@ -1261,7 +1261,7 @@ function tealiumCallOnPageLoad()
 				//TPR-429 END
 				//TPR-5193|Req-1 starts
 				if($("#tealiumExchangeVar").val() != 'undefined' && $("#tealiumExchangeVar").val() !='' &&  $("#tealiumExchangeVar").val()!= "notAvailable"){ 
-					tealiumData += '"exchange:value":"'
+					tealiumData += '"exchange_value":"'
 					+ $("#tealiumExchangeVar").val() + '",';
 				}
 				//TPR-5193|Req-1 ends
