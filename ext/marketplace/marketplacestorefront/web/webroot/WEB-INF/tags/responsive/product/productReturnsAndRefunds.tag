@@ -23,9 +23,11 @@
 		<li id="defaultRetRefLi4" style="display:none"><spring:theme code="know.more.sixth"/>&nbsp;</li>
 
 		<c:if test="${productCategoryType eq 'FineJewellery'}">
-			<c:forEach items="${RetRefTab}" var="retRefTab">
-				<li>${retRefTab}</li>
-			</c:forEach>
+			<c:if test="${not empty RetRefTab}">
+				<c:forEach items="${RetRefTab}" var="retRefTab">
+					<li>${retRefTab}</li>
+				</c:forEach>
+			</c:if>
 		</c:if>
 	</ul>
 	</ycommerce:testId>
