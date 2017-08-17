@@ -194,6 +194,13 @@ public class NPSFeedbackQuestionFacadeImpl implements NPSFeedbackQuestionFacade
 			npsFeedbackModel.setTransactionId(transactionId);
 			npsFeedbackModel.setResponseTime(new Date());
 			//npsFeedbackModel.setOriginalSurveyDate();
+			//TISPRDT-2140 starts
+			final SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy hh:mm:ss a");
+			final SimpleDateFormat dateFormatParse = new SimpleDateFormat("dd/MM/yyyy hh:mm:ss a");
+			final Date date = new Date();
+			final String SurveyDate = dateFormat.format(date);
+			npsFeedbackModel.setOriginalSurveyDate(dateFormatParse.parse(SurveyDate));
+			//TISPRDT-2140 ends
 			modelService.save(npsFeedbackModel);
 		}
 		catch (final ModelSavingException e)
