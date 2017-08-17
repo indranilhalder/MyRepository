@@ -52,10 +52,13 @@ public class DefaultJuspayWebHookDaoImpl implements JuspayWebHookDao
 		{
 			LOG.debug("Fetching WebHook Details");
 			final String queryString = //
-			"SELECT {jwm:" + JuspayWebhookModel.PK + "} "//
-					+ MarketplacecommerceservicesConstants.QUERYFROM + JuspayWebhookModel._TYPECODE + " AS jwm} ";
+			"SELECT {jwm:" + JuspayWebhookModel.PK
+					+ "} "//
+					+ MarketplacecommerceservicesConstants.QUERYFROM + JuspayWebhookModel._TYPECODE + " AS jwm} where " + "{jwm."
+					+ JuspayWebhookModel.ISEXPIRED + "} = ?expiredData";
 
 			final FlexibleSearchQuery query = new FlexibleSearchQuery(queryString);
+			query.addQueryParameter("expiredData", MarketplacecommerceservicesConstants.WEBHOOK_ENTRY_EXPIRED);
 			return getFlexibleSearchService().<JuspayWebhookModel> search(query).getResult();
 		}
 		catch (final FlexibleSearchException e)
