@@ -228,7 +228,7 @@ function getProductSetDataCustomSku() {
 
 $(document).ready(function() {
     //lazy image load initialization
-	if($('#pageType').val() == "productsearch" || $('#pageType').val() == "product"){
+	if($('#pageType').val() == "productsearch" || $('#pageType').val() == "product" || $('#pageType').val() == "category" || $('input[name=customSku]').length){
 	    $("img.lazy").lazyload();	
 	}
     //set the total no of pages 
@@ -404,7 +404,7 @@ $(document).ready(function() {
 });
 //UF-409 -> added for ajax complete events to auto lazy load
 $( document ).ajaxComplete(function( event, xhr, settings ) {
-	if($('#pageType').val() == "productsearch" || $('#pageType').val() == "product"){
+	if($('#pageType').val() == "productsearch" || $('#pageType').val() == "product" || $('#pageType').val() == "category" || $('input[name=customSku]').length){
 		$("img.lazy").lazyload();
 	}
 });
