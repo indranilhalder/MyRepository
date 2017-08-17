@@ -18797,6 +18797,9 @@ header.brand-header .content .search form button, header.brand-header .content .
 	border-color: #fff;
 	color: #fff
 }
+header .content .search button#micrositesearchButton:before{
+	background: url(../images/Sprite-combined.png) no-repeat scroll -366px -5px;
+}
 	header.brand-header .content .bottom.active {
 	/* position: fixed;
 	top: 0;
@@ -19121,6 +19124,10 @@ header.brand-header .content .bottom nav > ul > li  .toggle {
 
 header.brand-header .content .bottom .bag{
 	display:none;
+}
+    header.brand-header .content .bottom .search select {
+    background-color: #fff;
+    color: #000;
 }
 }
 
@@ -65159,6 +65166,9 @@ footer .footer-text{
     background-color: rgba(0,0,0,0.2);
 	z-index: 1;
 }
+body:not(.page-homepage) .homepage-banner .owl-theme .owl-controls .owl-nav div{
+	background-color: transparent;
+}
 .homepage-banner .owl-theme .owl-controls  .owl-nav div:hover{
 	background-color: rgba(0,0,0,0.2);
 	color: transparent;
@@ -71585,6 +71595,7 @@ body .account.preferences .right-account div.email-pref form .button-set a{
 	background: none;
 	border: 0;
     border-top: solid 1px #9b9b9b;
+    z-index: 0;
 }
 .product-specification-accordion.smk_accordion .accordion_in:last-of-type{
     border-bottom: solid 1px #9b9b9b;
@@ -71773,6 +71784,7 @@ body.page-cartPage .cart.wrapper .product-block li.item>ul.desktop>li.price{
 }
 body.page-cartPage span.delSeat.delAction{
 color: #ff2c43;
+margin-right: 5px; /*TISPRDT-2122*/
 }
 body.page-cartPage .cart.wrapper .product-block li.item li.price > ul > span.delSeat.mop{
 	display: inline-block;
