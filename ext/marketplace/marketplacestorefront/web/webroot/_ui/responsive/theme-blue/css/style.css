@@ -77307,3 +77307,11 @@ body .account .right-account .order-history.order-details li.item .status>ul.nav
     color: #92002e;
 } 
 /*  TISJEW-3478 End  */
+
+
+/* TISJEW-3497 start */
+.exchange-return-terms-block + a + a {
+    display: block;
+    margin-top: 10px;
+}
+/* TISJEW-3497 end */
