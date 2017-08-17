@@ -3599,7 +3599,8 @@ public class UsersController extends BaseCommerceController
 		List<OAuthAccessTokenModel> accessTokenModelList = null;
 		try
 		{
-			currentUser = mplPaymentWebFacade.getCustomer(userId);
+		        final String userIdLwCase = userId.toLowerCase(); //INC144318796
+			currentUser = mplPaymentWebFacade.getCustomer(userIdLwCase);
 			final String authorization = httpRequest.getHeader("Authorization");
 			String username = null;
 			if (authorization != null && authorization.startsWith("Basic"))
@@ -3613,7 +3614,7 @@ public class UsersController extends BaseCommerceController
 			}
 			if (StringUtils.isNotEmpty(username))
 			{
-				accessTokenModelList = oauthTokenService.getAccessTokensForClientAndUser(username, userId);
+				accessTokenModelList = oauthTokenService.getAccessTokensForClientAndUser(username, userIdLwCase);
 			}
 
 			if (CollectionUtils.isNotEmpty(accessTokenModelList))
@@ -3768,7 +3769,8 @@ public class UsersController extends BaseCommerceController
 		}
 		else
 		{
-			final MplCustomerProfileData customerToSave = mplCustomerProfileService.getCustomerProfileDetail(userId);
+		        final String userIdLwCase = userId.toLowerCase(); //INC144318796
+			final MplCustomerProfileData customerToSave = mplCustomerProfileService.getCustomerProfileDetail(userIdLwCase);
 			// Get the data before editing
 			final String channel = MarketplacecommerceservicesConstants.UPDATE_CHANNEL_MOBILE;
 			final Map<String, String> preSavedDetailMap = mplCustomerProfileFacade.setPreviousDataToMap(
@@ -3784,7 +3786,7 @@ public class UsersController extends BaseCommerceController
 			else
 			{
 				customerToSave.setUid(customerData.getUid());
-				customerToSave.setDisplayUid(userId);
+				customerToSave.setDisplayUid(userIdLwCase);
 				try
 				{
 					if (!StringUtils.isEmpty(firstName) && DefaultCommonAsciiValidator.validateAlphaWithSpaceNoSpCh(firstName)
@@ -4213,13 +4215,14 @@ public class UsersController extends BaseCommerceController
 		else
 		{
 			try
-			{
-				customerData = mplCustomerProfileService.getCustomerProfileDetail(emailid);
+			{       
+			        final String emailIdLwCase = emailid.toLowerCase(); //INC144318796
+				customerData = mplCustomerProfileService.getCustomerProfileDetail(emailIdLwCase);
 				if (null != customerData)
 				{
-					if (null != emailid && StringUtils.isNotEmpty(emailid))
+					if (null != emailIdLwCase && StringUtils.isNotEmpty(emailIdLwCase))
 					{
-						customer.setEmailID(emailid);
+						customer.setEmailID(emailIdLwCase);
 					}
 					if (StringUtils.isNotEmpty(customerData.getFirstName())
 							&& !customerData.getFirstName().equals(MarketplacecommerceservicesConstants.SPACE))
@@ -4313,7 +4316,8 @@ public class UsersController extends BaseCommerceController
 		MplUserResultWsDto validated = new MplUserResultWsDto();
 		try
 		{
-			validated = mplUserHelper.validateRegistrationData(userId, newPassword);
+		        final String userIdLwCase = userId.toLowerCase(); //INC144318796
+			validated = mplUserHelper.validateRegistrationData(userIdLwCase, newPassword);
 			if (null != validated.getStatus()
 					&& validated.getStatus().equalsIgnoreCase(MarketplacecommerceservicesConstants.ERROR_FLAG))
 			{
@@ -4323,7 +4327,7 @@ public class UsersController extends BaseCommerceController
 			{
 				if (containsRole(auth, TRUSTED_CLIENT) || containsRole(auth, CUSTOMERMANAGER))
 				{
-					extUserService.setPassword(userId, newPassword);
+					extUserService.setPassword(userIdLwCase, newPassword);
 				}
 				else
 				{
