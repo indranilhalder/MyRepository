@@ -4932,8 +4932,8 @@ function onSubmitExc()
 	var couponValue = $('#priceselect').text();
 	var l3 =$('#l3').val();
     var selector	 = $('#activeselect option:selected').val();
-    var exchangeDropdown = selector.split('|');
-    var exchangeCondition = exchangeDropdown[1] ;
+  //  var exchangeDropdown = selector.split('|');
+  //  var exchangeCondition = exchangeDropdown[1] ;
     var productCode =  $('#product_id').val();
 	var productArray =[];
 	productArray.push(productCode);
@@ -4970,7 +4970,7 @@ function onSubmitExc()
 		  utag.link({
 			event_type          : "exchange_success",
 			exchange_brand      : brandExchange ,
-			exchange_condition  : exchangeCondition ,
+			exchange_condition  : selector ,
 			exchange_l3         : l3 ,
 			couponcode_exchange : couponValue ,
 			product_id          : productCode
