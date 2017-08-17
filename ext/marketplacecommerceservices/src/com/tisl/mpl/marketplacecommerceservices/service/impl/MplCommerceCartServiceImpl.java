@@ -1228,9 +1228,24 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 			{
 				for (final Wishlist2EntryModel entryWishlist : wishlistEntry.getEntries())//getting the latest two
 				{
+					// if (!entryWishlist.getIsDeleted().booleanValue() || entryWishlist.getIsDeleted() == null)
+					//   {
+					//	productDataList.add(entryWishlist);
+					//   }
+
 					//TPR-5787 starts here
-					if (!entryWishlist.getIsDeleted().booleanValue() || entryWishlist.getIsDeleted() == null)
+					if (entryWishlist.getIsDeleted() != null)
 					{
+						LOG.info("WishListEntry isDeleted exists");
+						if (!entryWishlist.getIsDeleted().booleanValue())
+						{
+							LOG.info("WishListEntry isDeleted false");
+							productDataList.add(entryWishlist);
+						}
+					}
+					else
+					{
+						LOG.info("WishListEntry isDeleted not exists");
 						productDataList.add(entryWishlist);
 					}
 					//TPR-5787 ends here
