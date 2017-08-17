@@ -76737,6 +76737,9 @@ body.page-cartPage .cart.wrapper .product-block li.item li.price > ul > span.del
 	max-width: 273px;
 	margin: 0px auto;
 	padding-top: 48px;
+	color: #666666;
+    font-size: 12px;
+    text-align: center; 
 }
 .pan-card-block > section .pan-detail-sec div.form-section .orderId-left .pan-label, 
 .pan-card-block > section .pan-detail-sec div.form-section .orderName-right .pan-label{
