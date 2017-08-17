@@ -2221,6 +2221,8 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String HOME = "Home";
 	//For sending pancard details to SP through PI and save data into database for new pancard entry
 	public static final String PENDING_FOR_VERIFICATION = "PENDING_FOR_VERIFICATION";
+	public static final String PANCARDREDIRECTURL = "/pancard/pancarddetailsupload/";
+	public static final String PANCARDREDIRECTURLSUFFIX = "?status=";
 	//TPR-3782
 	public static final String GOLD = "GOLD";
 	public static final String SILVER = "SILVER";
