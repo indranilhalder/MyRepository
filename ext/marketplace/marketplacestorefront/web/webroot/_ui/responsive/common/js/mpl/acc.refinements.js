@@ -773,15 +773,17 @@ ACC.refinements = {
 					//var spanCount=$(this).find(".facet-list li").find("input[type=checkbox]:checked").length;
 					if(spanCountMore>0)
 					{
-						$('li.facet.js-facet.Brand').find('span.category-icons').removeClass("blank");
-						$('li.facet.js-facet.Brand').find('span.category-icons span').text(spanCountMore);
-						//$(this).find(".category-icons").removeClass("blank");
-						//$(this).find(".category-icons span").text(spanCount);
+						//TISJEW-3501
+						//$('li.facet.js-facet.Brand').find('span.category-icons').removeClass("blank");
+						//$('li.facet.js-facet.Brand').find('span.category-icons span').text(spanCountMore);
+						$(this).find("span.category-icons").removeClass("blank");
+						$(this).find("span.category-icons span").text(spanCountMore);
 					}
 					else
 					{
-						//$(this).find(".category-icons").addClass("blank");
-						$('li.facet.js-facet.Brand').find('span.category-icons').addClass("blank");
+						//TISJEW-3501
+						$(this).find("span.category-icons").addClass("blank");
+						//$('li.facet.js-facet.Brand').find('span.category-icons').addClass("blank");
 					}
 				}else{
 					var spanCount=$(this).find(".facet-list li").find("input[type=checkbox]:checked").length;
