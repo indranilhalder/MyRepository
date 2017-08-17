@@ -671,9 +671,16 @@ function getNewAndExclusiveAjaxCall() {
                         value.productImageUrl +
                         "'></img><p class='New_Exclusive_title'>" +
                         value.productTitle +
-                        "</p><p class='New_Exclusive_price'><span class='priceFormat'>" +
-                        value.productPrice +
-                        "</span></p></a></div></div>";
+                        "</p><p class='New_Exclusive_price'>";
+			//UF-319
+	                if (value.productPrice.strikePrice != "" && value.productPrice.dispPrice != value.productPrice.strikePrice) {
+	                	renderHtml += "<span class='priceFormat' style='color: gray;text-decoration: line-through;padding-right: 5px;'>" +
+	                    value.productPrice.strikePrice +
+	                    "</span>";
+	                }
+	                renderHtml += "<span class='priceFormat'>" +
+                    value.productPrice.dispPrice +
+                    "</span></p></a></div></div>";
                 });
                 renderHtml += "</div><a href='" + ACC.config.encodedContextPath +
                     "/search/viewOnlineProducts' class='new_exclusive_viewAll'>View All</a>";
