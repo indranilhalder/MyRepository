@@ -595,7 +595,7 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 
 	public static final String SMS_MESSAGE_ORDER_RISK = "We're sorry! Your Tata CLiQ order no.{0} has been put on hold for some checks. You might get a call from Tata CLiQ Care.";
 	/* 8. Anniversary Changes */
-	public static final String SMS_MESSAGE_ORDER_RISK_CONFIRMED = "Hi, your order no. {0} is now confirmed. While we�ll keep you posted, track your order at {1}. Hope you enjoyed shopping with us.";
+	public static final String SMS_MESSAGE_ORDER_RISK_CONFIRMED = "Hi, your order no. {0} is now confirmed. While we'll keep you posted, track your order at {1}. Hope you enjoyed shopping with us.";
 	/* 9.Anniversary Changes */
 	public static final String SMS_MESSAGE_ORDER_RISK_REJECTED = "Hi, there's been a problem and your order no.{0} has been rejected. Log on to your account {1} or call us on {3} for more details.";
 	//R2.3 Added ShipmentSecondaryStatus NEW SMS
