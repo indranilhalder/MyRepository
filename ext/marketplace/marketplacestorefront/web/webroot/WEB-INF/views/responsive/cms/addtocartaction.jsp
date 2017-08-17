@@ -176,7 +176,33 @@ $(document).ready(function(){
 		<%-- <input type="button" id="add_to_wishlist" onClick="openPop();" id="wishlist" class="wishlist" data-toggle="popover" data-placement="bottom" value="<spring:theme code="text.add.to.wishlist"/>"/> --%>
 		<input type="button" id="add_to_wishlist" onClick="addToWishlist();" id="wishlist" class="wishlist" data-toggle="popover" value="<spring:theme code="text.add.to.wishlist"/>"/>
 	</span>
-	<span id="selectSizeId" style="display: none;color:#ff1c47"><spring:theme code="variant.pleaseselectsize"/></span>
+	<%-- <span id="selectSizeId" style="display: none;color:#ff1c47"><spring:theme code="variant.pleaseselectsize"/></span> --%>
+	
+	<c:choose> 
+	<c:when test="${ product.rootCategory =='FineJewellery' || product.rootCategory =='FashionJewellery'}">
+	    <spring:eval expression="T(de.hybris.platform.util.Config).getParameter('mpl.jewellery.category')" var="lengthVariant"/>
+     	<c:set var = "categoryListArray" value = "${fn:split(lengthVariant, ',')}" />
+		<c:forEach items="${product.categories}" var="categories">
+   			<c:forEach items = "${categoryListArray}" var="lengthVariantArray">
+   				<c:if test="${categories.code eq lengthVariantArray}">
+   				 	<c:set var="lengthSize" value="true"/>
+   				</c:if> 
+   			</c:forEach>
+   		</c:forEach>	  
+   		<c:choose>
+   			<c:when test="${true eq lengthSize}">
+   				<span id="selectSizeId" style="display: none;color:#ff1c47"><spring:theme code="variant.pleaseselectlength"/></span>
+   			</c:when>
+   			<c:otherwise>
+				<span id="selectSizeId" style="display: none;color:#ff1c47"><spring:theme code="variant.pleaseselectsize"/></span> 
+   			</c:otherwise>
+   		</c:choose>
+	</c:when>
+	<c:otherwise>
+    	<span id="selectSizeId" style="display: none;color:#ff1c47"><spring:theme code="variant.pleaseselectsize"/></span>
+	</c:otherwise>
+	</c:choose>	
+	
 	<!-- UF-160 -->
 	<span id="addToCartLargeAppliance" style="display: none;color:#ff1c47"><spring:theme code="product.addToCart.largeAppliance.error"/></span>
 

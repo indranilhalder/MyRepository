@@ -74063,7 +74063,7 @@ body.page-homepage .feature-collections #stayQued > h2{
 }
 #showcaseMobile a.button.trending-button {
 	width: 180px;
-	bottom: 0px;
+	bottom: 3px;
     background: #fff;
     border: solid 1px #444444;
     min-height: 42px;
