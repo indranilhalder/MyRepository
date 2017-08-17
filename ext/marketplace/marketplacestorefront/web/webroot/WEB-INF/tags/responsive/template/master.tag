@@ -73,7 +73,6 @@
 	
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	
-	
 	<%-- Additional meta tags --%>
 	<!-- commented for PRDI-422 -->
 	<%-- <htmlmeta:meta items="${metatags}"/> --%>

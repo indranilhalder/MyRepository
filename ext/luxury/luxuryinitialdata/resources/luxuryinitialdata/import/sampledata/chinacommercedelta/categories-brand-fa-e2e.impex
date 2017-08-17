@@ -1,0 +1,288 @@
+$uidGroup=admingroup,marketplaceGroup,ETAILREAD
+$supercategories=supercategories( code, catalogVersion(catalog(id[default='luxProductCatalog']),version[default='Staged']));;;;;;;;;
+$catalogVersion=catalogVersion(catalog(id[default='luxProductCatalog']),version[default='Staged'])[unique=true,default='luxProductCatalog:Staged'];;;;;;;;;
+
+INSERT_UPDATE Category;code[unique=true];name[lang=en];$supercategories;$catalogVersion;allowedPrincipals(uid)
+;MBH1;Brand;;luxProductCatalog:Staged;admingroup
+;MBH16;Accessories;MBH1;luxProductCatalog:Staged;admingroup
+;MBH16F00009;Adidas;MBH16;luxProductCatalog:Staged;admingroup
+;MBH16A00023;Allen Solly;MBH16;luxProductCatalog:Staged;admingroup
+;MBH16F00015;Bata;MBH16;luxProductCatalog:Staged;admingroup
+;MBH16A00086;Being Human;MBH16;luxProductCatalog:Staged;admingroup
+;MBH16E00246;BILT;MBH16;luxProductCatalog:Staged;admingroup
+;MBH16F00020;Buckaroo;MBH16;luxProductCatalog:Staged;admingroup
+;MBH16E00576;Casio;MBH16;luxProductCatalog:Staged;admingroup
+;MBH16F00027;Charles & Keith;MBH16;luxProductCatalog:Staged;admingroup
+;MBH16A00119;Diesel;MBH16;luxProductCatalog:Staged;admingroup
+;MBH16A00145;Disney;MBH16;luxProductCatalog:Staged;admingroup
+;MBH16F00033;DKNY;MBH16;luxProductCatalog:Staged;admingroup
+;MBH16A00047;FCUK;MBH16;luxProductCatalog:Staged;admingroup
+;MBH16E00199;Ferrari;MBH16;luxProductCatalog:Staged;admingroup
+;MBH16E00009;Fitbit;MBH16;luxProductCatalog:Staged;admingroup
+;MBH16F00002;Franco Leone;MBH16;luxProductCatalog:Staged;admingroup
+;MBH16E00461;Guess;MBH16;luxProductCatalog:Staged;admingroup
+;MBH16A00082;Jack & Jones;MBH16;luxProductCatalog:Staged;admingroup
+;MBH16F00052;Kenneth Cole;MBH16;luxProductCatalog:Staged;admingroup
+;MBH16A00101;Killer;MBH16;luxProductCatalog:Staged;admingroup
+;MBH16A00102;Lawman;MBH16;luxProductCatalog:Staged;admingroup
+;MBH16E00579;LB1;MBH16;luxProductCatalog:Staged;admingroup
+;MBH16A00004;Westside;MBH16;luxProductCatalog:Staged;admingroup
+;MBH16A00006;W;MBH16;luxProductCatalog:Staged;admingroup
+;MBH16A00018;Vero Moda;MBH16;luxProductCatalog:Staged;admingroup
+;MBH16A00024;Van Heusen;MBH16;luxProductCatalog:Staged;admingroup
+;MBH16A00025;Levis;MBH16;luxProductCatalog:Staged;admingroup
+;MBH16A00027;New Look;MBH16;luxProductCatalog:Staged;admingroup
+;MBH16A00044;Satya Paul;MBH16;luxProductCatalog:Staged;admingroup
+;MBH16A00049;Mango;MBH16;luxProductCatalog:Staged;admingroup
+;MBH16A00052;Tommy Hilfiger;MBH16;luxProductCatalog:Staged;admingroup
+;MBH16A00078;Louis Philippe;MBH16;luxProductCatalog:Staged;admingroup
+;MBH16A00092;Nike;MBH16;luxProductCatalog:Staged;admingroup
+;MBH16A00100;Spykar;MBH16;luxProductCatalog:Staged;admingroup
+;MBH16A00168;Puma;MBH16;luxProductCatalog:Staged;admingroup
+;MBH16A00208;Peter England;MBH16;luxProductCatalog:Staged;admingroup
+;MBH16A00209;Raymonds;MBH16;luxProductCatalog:Staged;admingroup
+;MBH16A00263;Warehouse;MBH16;luxProductCatalog:Staged;admingroup
+;MBH16A00264;Oasis;MBH16;luxProductCatalog:Staged;admingroup
+;MBH16E00239;Solo;MBH16;luxProductCatalog:Staged;admingroup
+;MBH16E00255;Swarovski;MBH16;luxProductCatalog:Staged;admingroup
+;MBH16E00377;Misfit;MBH16;luxProductCatalog:Staged;admingroup
+;MBH16E00463;Suunto;MBH16;luxProductCatalog:Staged;admingroup
+;MBH16E00469;Maxell;MBH16;luxProductCatalog:Staged;admingroup
+;MBH16F00060;Marvel;MBH16;luxProductCatalog:Staged;admingroup
+;MBH16F00064;Nine West;MBH16;luxProductCatalog:Staged;admingroup
+;MBH16F00066;Paprika;MBH16;luxProductCatalog:Staged;admingroup
+;MBH16A00074;Park Avenue;MBH16;luxProductCatalog:Staged;admingroup
+;MBH16F00083;Vans;MBH16;luxProductCatalog:Staged;admingroup
+;MBH16W00000;7Trees;MBH16;luxProductCatalog:Staged;admingroup
+;MBH16W00001;Accessorize;MBH16;luxProductCatalog:Staged;admingroup
+;MBH16W00002;Add Ons;MBH16;luxProductCatalog:Staged;admingroup
+;MBH16W00003;Addons;MBH16;luxProductCatalog:Staged;admingroup
+;MBH16W00004;Adamis;MBH16;luxProductCatalog:Staged;admingroup
+;MBH16W00005;Aditi Wasan;MBH16;luxProductCatalog:Staged;admingroup
+;MBH16W00006;Afinito;MBH16;luxProductCatalog:Staged;admingroup
+;MBH16F00012;Aldo;MBH16;luxProductCatalog:Staged;admingroup
+;MBH16W00008;Alessia;MBH16;luxProductCatalog:Staged;admingroup
+;MBH16W00009;Alfa;MBH16;luxProductCatalog:Staged;admingroup
+;MBH16W00010;Aliceband;MBH16;luxProductCatalog:Staged;admingroup
+;MBH16W00011;Alvaro Castagnino;MBH16;luxProductCatalog:Staged;admingroup
+;MBH16W00012;American Tourister;MBH16;luxProductCatalog:Staged;admingroup
+;MBH16W00013;Anekaant;MBH16;luxProductCatalog:Staged;admingroup
+;MBH16W00014;Antonio Bernini;MBH16;luxProductCatalog:Staged;admingroup
+;MBH16W00015;Anuradha;MBH16;luxProductCatalog:Staged;admingroup
+;MBH16W00016;Arancia;MBH16;luxProductCatalog:Staged;admingroup
+;MBH16W00017;Aristrocrat;MBH16;luxProductCatalog:Staged;admingroup
+;MBH16W00018;Armani Exchange;MBH16;luxProductCatalog:Staged;admingroup
+;MBH16W00019;ATC;MBH16;luxProductCatalog:Staged;admingroup
+;MBH16W00020;Avecamour;MBH16;luxProductCatalog:Staged;admingroup
+;MBH16W00021;Avirate;MBH16;luxProductCatalog:Staged;admingroup
+;MBH16W00022;Ayesha;MBH16;luxProductCatalog:Staged;admingroup
+;MBH16W00023;Baggit;MBH16;luxProductCatalog:Staged;admingroup
+;MBH16W00024;Bands&Clips;MBH16;luxProductCatalog:Staged;admingroup
+;MBH16W00025;Beautiful;MBH16;luxProductCatalog:Staged;admingroup
+;MBH16W00026;Bendly;MBH16;luxProductCatalog:Staged;admingroup
+;MBH16W00027;Bern;MBH16;luxProductCatalog:Staged;admingroup
+;MBH16W00028;BJA;MBH16;luxProductCatalog:Staged;admingroup
+;MBH16W00029;Black Fleece;MBH16;luxProductCatalog:Staged;admingroup
+;MBH16W00030;Blacksmith;MBH16;luxProductCatalog:Staged;admingroup
+;MBH16W00031;Blueberry;MBH16;luxProductCatalog:Staged;admingroup
+;MBH16W00032;BO;MBH16;luxProductCatalog:Staged;admingroup
+;MBH16W00033;Bulfyss;MBH16;luxProductCatalog:Staged;admingroup
+;MBH16W00034;Butterflies;MBH16;luxProductCatalog:Staged;admingroup
+;MBH16W00035;Caprese;MBH16;luxProductCatalog:Staged;admingroup
+;MBH16W00036;Carlton;MBH16;luxProductCatalog:Staged;admingroup
+;MBH16W00037;Celio;MBH16;luxProductCatalog:Staged;admingroup
+;MBH16W00038;Cerruti;MBH16;luxProductCatalog:Staged;admingroup
+;MBH16W00039;Charming Charlie;MBH16;luxProductCatalog:Staged;admingroup
+;MBH16W00040;Cherokee;MBH16;luxProductCatalog:Staged;admingroup
+;MBH16W00041;Chumbak;MBH16;luxProductCatalog:Staged;admingroup
+;MBH16W00042;Civil Outfitters;MBH16;luxProductCatalog:Staged;admingroup
+;MBH16W00043;Classmate;MBH16;luxProductCatalog:Staged;admingroup
+;MBH16W00044;Clean Planet;MBH16;luxProductCatalog:Staged;admingroup
+;MBH16W00045;Coi;MBH16;luxProductCatalog:Staged;admingroup
+;MBH16W00046;Corsica;MBH16;luxProductCatalog:Staged;admingroup
+;MBH16W00047;Covo;MBH16;luxProductCatalog:Staged;admingroup
+;MBH16W00048;Cross;MBH16;luxProductCatalog:Staged;admingroup
+;MBH16W00049;Crude;MBH16;luxProductCatalog:Staged;admingroup
+;MBH16W00050;Cupidity;MBH16;luxProductCatalog:Staged;admingroup
+;MBH16W00051;Da Milano;MBH16;luxProductCatalog:Staged;admingroup
+;MBH16W00052;Daily Objects;MBH16;luxProductCatalog:Staged;admingroup
+;MBH16W00053;Daniel Klein;MBH16;luxProductCatalog:Staged;admingroup
+;MBH16W00054;Daphne;MBH16;luxProductCatalog:Staged;admingroup
+;MBH16W00055;Deluxe;MBH16;luxProductCatalog:Staged;admingroup
+;MBH16W00056;Desi Drama Queen;MBH16;luxProductCatalog:Staged;admingroup
+;MBH16W00057;Diana Korr;MBH16;luxProductCatalog:Staged;admingroup
+;MBH16W00058;Dolse & Stela;MBH16;luxProductCatalog:Staged;admingroup
+;MBH16W00059;Dressberry;MBH16;luxProductCatalog:Staged;admingroup
+;MBH16W00060;EBI;MBH16;luxProductCatalog:Staged;admingroup
+;MBH16W00061;Eccellente;MBH16;luxProductCatalog:Staged;admingroup
+;MBH16W00062;eCosmos;MBH16;luxProductCatalog:Staged;admingroup
+;MBH16W00063;Ellehammer;MBH16;luxProductCatalog:Staged;admingroup
+;MBH16W00064;Emporio Armani;MBH16;luxProductCatalog:Staged;admingroup
+;MBH16W00065;Eozy;MBH16;luxProductCatalog:Staged;admingroup
+;MBH16W00066;Esbeda;MBH16;luxProductCatalog:Staged;admingroup
+;MBH16W00067;Eske;MBH16;luxProductCatalog:Staged;admingroup
+;MBH16W00068;Esprit;MBH16;luxProductCatalog:Staged;admingroup
+;MBH16W00069;Esprit Collection;MBH16;luxProductCatalog:Staged;admingroup
+;MBH16W00070;Evelyn;MBH16;luxProductCatalog:Staged;admingroup
+;MBH16W00071;Fancy Pants;MBH16;luxProductCatalog:Staged;admingroup
+;MBH16W00072;Fastrack;MBH16;luxProductCatalog:Staged;admingroup
+;MBH16W00073;Fayon;MBH16;luxProductCatalog:Staged;admingroup
+;MBH16W00074;Fengfanglin;MBH16;luxProductCatalog:Staged;admingroup
+;MBH16W00075;Fico;MBH16;luxProductCatalog:Staged;admingroup
+;MBH16W00076;Fida;MBH16;luxProductCatalog:Staged;admingroup
+;MBH16W00077;Fossil;MBH16;luxProductCatalog:Staged;admingroup
+;MBH16W00078;Fostelo;MBH16;luxProductCatalog:Staged;admingroup
+;MBH16W00079;Frederique Constant;MBH16;luxProductCatalog:Staged;admingroup
+;MBH16W00080;Frida;MBH16;luxProductCatalog:Staged;admingroup
+;MBH16W00081;Funky Fish;MBH16;luxProductCatalog:Staged;admingroup
+;MBH16W00082;Gauge Machine;MBH16;luxProductCatalog:Staged;admingroup
+;MBH16W00083;Gear;MBH16;luxProductCatalog:Staged;admingroup
+;MBH16W00084;Gilderman;MBH16;luxProductCatalog:Staged;admingroup
+;MBH16W00085;Gio Collection;MBH16;luxProductCatalog:Staged;admingroup
+;MBH16W00086;Giordano;MBH16;luxProductCatalog:Staged;admingroup
+;MBH16W00087;Globus;MBH16;luxProductCatalog:Staged;admingroup
+;MBH16W00088;Glory;MBH16;luxProductCatalog:Staged;admingroup
+;MBH16W00089;Go Noise;MBH16;luxProductCatalog:Staged;admingroup
+;MBH16W00090;Greece;MBH16;luxProductCatalog:Staged;admingroup
+;MBH16W00091;Gues collection;MBH16;luxProductCatalog:Staged;admingroup
+;MBH16W00092;Guess Collection;MBH16;luxProductCatalog:Staged;admingroup
+;MBH16W00093;Hakashi;MBH16;luxProductCatalog:Staged;admingroup
+;MBH16W00094;Hala;MBH16;luxProductCatalog:Staged;admingroup
+;MBH16W00095;Happily Unmarried;MBH16;luxProductCatalog:Staged;admingroup
+;MBH16W00096;Harley-Davidson;MBH16;luxProductCatalog:Staged;admingroup
+;MBH16W00097;Harp;MBH16;luxProductCatalog:Staged;admingroup
+;MBH16W00098;Hartmann;MBH16;luxProductCatalog:Staged;admingroup
+;MBH16W00099;Helix;MBH16;luxProductCatalog:Staged;admingroup
+;MBH16W00100;Hidekraft;MBH16;luxProductCatalog:Staged;admingroup
+;MBH16W00101;Hidesign;MBH16;luxProductCatalog:Staged;admingroup
+;MBH16W00102;High Quality;MBH16;luxProductCatalog:Staged;admingroup
+;MBH16W00103;High Sierra;MBH16;luxProductCatalog:Staged;admingroup
+;MBH16W00104;House of Chic;MBH16;luxProductCatalog:Staged;admingroup
+;MBH16W00105;House of Tara;MBH16;luxProductCatalog:Staged;admingroup
+;MBH16W00106;India Circus;MBH16;luxProductCatalog:Staged;admingroup
+;MBH16W00107;Integriti;MBH16;luxProductCatalog:Staged;admingroup
+;MBH16W00108;Invictus;MBH16;luxProductCatalog:Staged;admingroup
+;MBH16W00109;JC Collection;MBH16;luxProductCatalog:Staged;admingroup
+;MBH16W00110;Joker & WItch;MBH16;luxProductCatalog:Staged;admingroup
+;MBH16W00111;Jstarmart;MBH16;luxProductCatalog:Staged;admingroup
+;MBH16W00112;Kanvas Katha;MBH16;luxProductCatalog:Staged;admingroup
+;MBH16W00113;Kara;MBH16;luxProductCatalog:Staged;admingroup
+;MBH16W00114;Kate Spade;MBH16;luxProductCatalog:Staged;admingroup
+;MBH16W00115;Kevin Danny;MBH16;luxProductCatalog:Staged;admingroup
+;MBH16W00116;Kiosha;MBH16;luxProductCatalog:Staged;admingroup
+;MBH16W00117;Kool Kidz;MBH16;luxProductCatalog:Staged;admingroup
+;MBH16W00118;Koovs;MBH16;luxProductCatalog:Staged;admingroup
+;MBH16W00119;Kraftly;MBH16;luxProductCatalog:Staged;admingroup
+;MBH16W00120;Krystle;MBH16;luxProductCatalog:Staged;admingroup
+;MBH16W00121;Laurels;MBH16;luxProductCatalog:Staged;admingroup
+;MBH16W00122;Lavie;MBH16;luxProductCatalog:Staged;admingroup
+;MBH16W00124;Leather Zentrum;MBH16;luxProductCatalog:Staged;admingroup
+;MBH16W00125;LegendDeal;MBH16;luxProductCatalog:Staged;admingroup
+;MBH16W00126;Lemon Trunk;MBH16;luxProductCatalog:Staged;admingroup
+;MBH16W00127;Leonardi;MBH16;luxProductCatalog:Staged;admingroup
+;MBH16W00128;Leonardi Men;MBH16;luxProductCatalog:Staged;admingroup
+;MBH16W00129;Like;MBH16;luxProductCatalog:Staged;admingroup
+;MBH16W00130;Lino Perros;MBH16;luxProductCatalog:Staged;admingroup
+;MBH16W00131;LKE;MBH16;luxProductCatalog:Staged;admingroup
+;MBH16W00132;LMP3Creation;MBH16;luxProductCatalog:Staged;admingroup
+;MBH16W00133;Lobong;MBH16;luxProductCatalog:Staged;admingroup
+;MBH16W00134;Louise Philippe;MBH16;luxProductCatalog:Staged;admingroup
+;MBH16W00135;Magicdeal;MBH16;luxProductCatalog:Staged;admingroup
+;MBH16W00136;Mast & Harbour;MBH16;luxProductCatalog:Staged;admingroup
+;MBH16W00137;Maxima;MBH16;luxProductCatalog:Staged;admingroup
+;MBH16W00138;Michael Kors;MBH16;luxProductCatalog:Staged;admingroup
+;MBH16W00139;Movado;MBH16;luxProductCatalog:Staged;admingroup
+;MBH16W00140;Napa Dori;MBH16;luxProductCatalog:Staged;admingroup
+;MBH16W00141;New Fleece;MBH16;luxProductCatalog:Staged;admingroup
+;MBH16W00142;Noise;MBH16;luxProductCatalog:Staged;admingroup
+;MBH16W00143;Ocean;MBH16;luxProductCatalog:Staged;admingroup
+;MBH16W00144;Pacific Gold;MBH16;luxProductCatalog:Staged;admingroup
+;MBH16W00145;Pappi Boss;MBH16;luxProductCatalog:Staged;admingroup
+;MBH16W00146;Parfois;MBH16;luxProductCatalog:Staged;admingroup
+;MBH16W00147;Parker;MBH16;luxProductCatalog:Staged;admingroup
+;MBH16W00148;Pataka;MBH16;luxProductCatalog:Staged;admingroup
+;MBH16W00149;Peperone;MBH16;luxProductCatalog:Staged;admingroup
+;MBH16W00150;Police;MBH16;luxProductCatalog:Staged;admingroup
+;MBH16W00151;Postbox;MBH16;luxProductCatalog:Staged;admingroup
+;MBH16W00152;Princesse K;MBH16;luxProductCatalog:Staged;admingroup
+;MBH16W00153;Princessk;MBH16;luxProductCatalog:Staged;admingroup
+;MBH16W00154;Printelligent;MBH16;luxProductCatalog:Staged;admingroup
+;MBH16W00155;Pulse;MBH16;luxProductCatalog:Staged;admingroup
+;MBH16W00156;Purseus;MBH16;luxProductCatalog:Staged;admingroup
+;MBH16W00157;Q&Q;MBH16;luxProductCatalog:Staged;admingroup
+;MBH16W00158;Quiksilver;MBH16;luxProductCatalog:Staged;admingroup
+;MBH16W00159;Quinston;MBH16;luxProductCatalog:Staged;admingroup
+;MBH16W00160;Quirkbox;MBH16;luxProductCatalog:Staged;admingroup
+;MBH16W00161;Quiz;MBH16;luxProductCatalog:Staged;admingroup
+;MBH16W00162;Rafael;MBH16;luxProductCatalog:Staged;admingroup
+;MBH16W00163;Raymond;MBH16;luxProductCatalog:Staged;admingroup
+;MBH16W00164;Raymond Weil;MBH16;luxProductCatalog:Staged;admingroup
+;MBH16W00165;Risa;MBH16;luxProductCatalog:Staged;admingroup
+;MBH16W00166;Risa Bags;MBH16;luxProductCatalog:Staged;admingroup
+;MBH16W00167;Rossoyuki;MBH16;luxProductCatalog:Staged;admingroup
+;MBH16W00168;Samsonite;MBH16;luxProductCatalog:Staged;admingroup
+;MBH16W00169;Scarfking;MBH16;luxProductCatalog:Staged;admingroup
+;MBH16W00170;Scoop Street;MBH16;luxProductCatalog:Staged;admingroup
+;MBH16W00171;Scotch&Soda;MBH16;luxProductCatalog:Staged;admingroup
+;MBH16W00172;Seiko;MBH16;luxProductCatalog:Staged;admingroup
+;MBH16W00173;Seizaiken;MBH16;luxProductCatalog:Staged;admingroup
+;MBH16W00174;Sheaffer;MBH16;luxProductCatalog:Staged;admingroup
+;MBH16W00175;Shoetopia;MBH16;luxProductCatalog:Staged;admingroup
+;MBH16W00176;Skagen;MBH16;luxProductCatalog:Staged;admingroup
+;MBH16W00177;Skinn;MBH16;luxProductCatalog:Staged;admingroup
+;MBH16W00178;Skmei;MBH16;luxProductCatalog:Staged;admingroup
+;MBH16W00179;Sky Bags;MBH16;luxProductCatalog:Staged;admingroup
+;MBH16W00180;Skybags;MBH16;luxProductCatalog:Staged;admingroup
+;MBH16W00181;Sonata;MBH16;luxProductCatalog:Staged;admingroup
+;MBH16W00182;Sorella;MBH16;luxProductCatalog:Staged;admingroup
+;MBH16W00183;Sortito;MBH16;luxProductCatalog:Staged;admingroup
+;MBH16W00184;Sparkle street;MBH16;luxProductCatalog:Staged;admingroup
+;MBH16W00185;Spice Art;MBH16;luxProductCatalog:Staged;admingroup
+;MBH16W00186;Spread;MBH16;luxProductCatalog:Staged;admingroup
+;MBH16W00187;S-Shock;MBH16;luxProductCatalog:Staged;admingroup
+;MBH16W00188;Staples;MBH16;luxProductCatalog:Staged;admingroup
+;MBH16W00189;SToK;MBH16;luxProductCatalog:Staged;admingroup
+;MBH16W00190;Style 98;MBH16;luxProductCatalog:Staged;admingroup
+;MBH16W00191;Style Fiesta;MBH16;luxProductCatalog:Staged;admingroup
+;MBH16W00192;Sunglass;MBH16;luxProductCatalog:Staged;admingroup
+;MBH16W00193;Super Drool;MBH16;luxProductCatalog:Staged;admingroup
+;MBH16W00194;Swiss Watch Chalet;MBH16;luxProductCatalog:Staged;admingroup
+;MBH16W00195;Tag Heuer;MBH16;luxProductCatalog:Staged;admingroup
+;MBH16W00196;Tarini Narula;MBH16;luxProductCatalog:Staged;admingroup
+;MBH16W00197;Tarusa;MBH16;luxProductCatalog:Staged;admingroup
+;MBH16W00198;Tcs;MBH16;luxProductCatalog:Staged;admingroup
+;MBH16W00199;The Bro Code;MBH16;luxProductCatalog:Staged;admingroup
+;MBH16W00200;The Brown Book;MBH16;luxProductCatalog:Staged;admingroup
+;MBH16W00201;The House of Tara;MBH16;luxProductCatalog:Staged;admingroup
+;MBH16W00202;The Rad Project;MBH16;luxProductCatalog:Staged;admingroup
+;MBH16W00203;The Runner;MBH16;luxProductCatalog:Staged;admingroup
+;MBH16W00204;The Tie Hub;MBH16;luxProductCatalog:Staged;admingroup
+;MBH16W00205;Timberland;MBH16;luxProductCatalog:Staged;admingroup
+;MBH16W00206;Timex;MBH16;luxProductCatalog:Staged;admingroup
+;MBH16W00207;Titan;MBH16;luxProductCatalog:Staged;admingroup
+;MBH16W00208;Toniq;MBH16;luxProductCatalog:Staged;admingroup
+;MBH16W00209;Tossido;MBH16;luxProductCatalog:Staged;admingroup
+;MBH16W00210;Totetaca;MBH16;luxProductCatalog:Staged;admingroup
+;MBH16W00211;Trendy Lions;MBH16;luxProductCatalog:Staged;admingroup
+;MBH16W00212;Turtle;MBH16;luxProductCatalog:Staged;admingroup
+;MBH16W00213;U.S. Polo Assn.;MBH16;luxProductCatalog:Staged;admingroup
+;MBH16A00238;United Colors of Benetton;MBH16;luxProductCatalog:Staged;admingroup
+;MBH16W00215;Venlo;MBH16;luxProductCatalog:Staged;admingroup
+;MBH16W00216;Versus;MBH16;luxProductCatalog:Staged;admingroup
+;MBH16W00217;Viari;MBH16;luxProductCatalog:Staged;admingroup
+;MBH16W00218;Viari Exclusive;MBH16;luxProductCatalog:Staged;admingroup
+;MBH16W00219;Victorinox;MBH16;luxProductCatalog:Staged;admingroup
+;MBH16W00220;Vie;MBH16;luxProductCatalog:Staged;admingroup
+;MBH16W00221;Vintage;MBH16;luxProductCatalog:Staged;admingroup
+;MBH16W00222;VIP;MBH16;luxProductCatalog:Staged;admingroup
+;MBH16W00223;Watchbuddy;MBH16;luxProductCatalog:Staged;admingroup
+;MBH16W00224;Watches & More;MBH16;luxProductCatalog:Staged;admingroup
+;MBH16W00225;Weiyiss;MBH16;luxProductCatalog:Staged;admingroup
+;MBH16W00226;Wildcraft;MBH16;luxProductCatalog:Staged;admingroup
+;MBH16W00227;Wink;MBH16;luxProductCatalog:Staged;admingroup
+;MBH16W00228;Wolf;MBH16;luxProductCatalog:Staged;admingroup
+;MBH16W00229;Xelectron;MBH16;luxProductCatalog:Staged;admingroup
+;MBH16W00230;Xylys;MBH16;luxProductCatalog:Staged;admingroup
+;MBH16W00231;Yellow Submarine;MBH16;luxProductCatalog:Staged;admingroup
+;MBH16W00232;Yepme;MBH16;luxProductCatalog:Staged;admingroup
+;MBH16W00233;Zoop;MBH16;luxProductCatalog:Staged;admingroup

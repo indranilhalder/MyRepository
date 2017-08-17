@@ -25,6 +25,7 @@ import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.marketplacecommerceservices.daos.MplPriceRowDao;
 import com.tisl.mpl.marketplacecommerceservices.service.impl.MplPriceRowServiceImpl;
 import com.tisl.mpl.model.SellerInformationModel;
+import com.tisl.mpl.util.CatalogUtils;
 
 
 /**
@@ -41,6 +42,9 @@ public class MplPriceRowServiceImplTest
 	@Autowired
 	private CatalogVersionService catalogVersionService;
 
+	@Autowired
+	private CatalogUtils catalogUtils;
+
 	public void setUp()
 	{
 		final MplPriceRowServiceImpl mplPriceRowServiceimpl = new MplPriceRowServiceImpl();
@@ -51,7 +55,7 @@ public class MplPriceRowServiceImplTest
 	public void testmplPriceRowServiceimpl()
 	{
 		//TISSEC-50
-		final CatalogVersionModel catalogVersionModel = getCatalogVersion();
+		final CatalogVersionModel catalogVersionModel = catalogUtils.getSessionCatalogVersionForProduct();
 
 		final List<PriceRowModel> priceRowDetails = new ArrayList<PriceRowModel>();
 		final String skuID = MarketplacecommerceservicesConstants.EMPTY;//TODO : Please enter skuID

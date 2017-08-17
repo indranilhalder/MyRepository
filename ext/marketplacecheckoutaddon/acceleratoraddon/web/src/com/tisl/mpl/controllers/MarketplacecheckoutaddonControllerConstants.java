@@ -20,6 +20,8 @@ public interface MarketplacecheckoutaddonControllerConstants
 	// implement here controller constants used by this extension
 	String ADDON_PREFIX = "addon:/marketplacecheckoutaddon/";
 
+	String LUXURY_ADDON_PREFIX = "addon:/luxurycheckoutaddon/";
+
 
 	interface Views
 	{
@@ -42,7 +44,7 @@ public interface MarketplacecheckoutaddonControllerConstants
 				String PAYMENTDETAILSPAGE = ADDON_PREFIX + "pages/checkout/multi/enterPaymentDetailsPage";
 				String ChooseAddNewAddressPage = ADDON_PREFIX + "pages/checkout/multi/addNewAddressPage";
 				String ChooseDeliveryMethodEditPage = ADDON_PREFIX + "pages/checkout/multi/editAddressDetailsPage";
-                String ChooseDeliverySlotPage = ADDON_PREFIX + "pages/checkout/multi/chooseDeliverySlotPage";
+				String ChooseDeliverySlotPage = ADDON_PREFIX + "pages/checkout/multi/chooseDeliverySlotPage";
 			}
 		}
 
@@ -56,6 +58,7 @@ public interface MarketplacecheckoutaddonControllerConstants
 				String NetbankingPanel = ADDON_PREFIX + "fragments/checkout/netbankingPanel"; //TISPT-235
 				String CODPanel = ADDON_PREFIX + "fragments/checkout/codPanel"; //TISPT-235
 			}
+
 
 		}
 	}

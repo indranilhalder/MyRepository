@@ -614,9 +614,11 @@ $(window).load(function() {
 	});
 	if(brokenImageCount > 0){
 		var msg = brokenImageCount+" broken_image_found";
-		utag.link({ 
-			error_type : msg
-		});
+		if(typeof utag !="undefined"){
+			utag.link({ 
+				error_type : msg
+			});
+		}
 	}
 });
 
@@ -2115,9 +2117,11 @@ function tealiumBrokenImage(){
 	});
 	if(brokenImageCount > 0){
 		var msg = brokenImageCount+" broken_image_found";
-		utag.link({ 
-			error_type : msg
-		});
+		if(typeof utag !="undefined"){
+			utag.link({ 
+				error_type : msg
+			});
+		}
 	}
 }
 /*TPR-4728 | add to compare page  3rd part */

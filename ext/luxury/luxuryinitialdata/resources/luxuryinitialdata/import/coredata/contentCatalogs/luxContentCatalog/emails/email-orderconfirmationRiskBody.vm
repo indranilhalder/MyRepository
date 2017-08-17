@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<head>
+<title>TATA - CLiQ</title>
+<style>
+td span img{
+width:100%;
+}
+</style>
+</head>
+
+<body>
+<table width="598" border="0" align="center" cellpadding="0" cellspacing="0" style="font-family:Arial, Helvetica, sans-serif; border:1px solid #cccccc;">
+  <tr>
+    <td><table width="598" border="0" cellspacing="0" cellpadding="0">
+      <tr>
+        <td align="left" valign="top" bgcolor="#ffffff"><span>${ctx.cmsSlotContents.OrderConfirmSiteLogo}</span></td>
+      </tr>
+ 
+      <tr>
+        <td><table border="0" cellspacing="0" cellpadding="0">
+          <tr>
+            <td>&nbsp;</td>
+            <td>
+			<h2 style="padding-left: 17px;color: #AA133D;margin-bottom: 2px;margin-top:0px">Great News !</h2>
+			<h2 style="padding-left: 17px;color: #AA133D;margin-top: 4px;margin-bottom:0px">Order Confirmed.</h2>
+			<br>
+			<font style="font-family:Arial, Helvetica, sans-serif; font-size:18px; color:#4a4a4b; font-weight:bold;">Hey ${ctx.customerName},</font>
+                  <br>
+                  <br>
+                  <font style="font-family:Arial, Helvetica, sans-serif; font-size:14px; color:#606060;">We checked out your order and found that it's good to go, so we're sending it straight to you!
+ 
+ <br>
+                  <br>
+                  </font>
+				   <font style="font-family:Arial, Helvetica, sans-serif; font-size:14px; color:#AA133D;">Here's what's on its way:
+ 
+ <br>
+                  <br>
+                  </font>
+				  </td>
+            <td>&nbsp;</td>
+          </tr>
+        </table></td>
+      </tr>
+	 
+      
+	  
+	 
+	 
+      <tr>
+        <td><table border="0" cellspacing="0" cellpadding="0">
+          <tr>
+            <td>&nbsp;</td>
+            <td><table border="0" cellspacing="0" cellpadding="0">
+			<tr>
+        <td><table border="0" cellspacing="0" cellpadding="0">
+          <tr>
+            <td height="35">&nbsp;</td>
+            <td align="left" bgcolor="#f5f5f5" style="font-family:Avenir, Arial, Helvetica, sans-serif; font-size:17px; color:#aa133d; font-weight:bold;">Order reference number:</td>
+            <td align="left" bgcolor="#f5f5f5" style="font-family:Avenir, Arial, Helvetica, sans-serif; font-size:17px; color:#4a4a4a; font-weight:bold;padding-right:12px;">$ctx.orderReferenceNumber</td>
+            <td>&nbsp;</td>
+          </tr>
+        </table><br></td>
+      </tr>
+	  
+	   #set ($shippingCharge=0)
+	    #foreach( $childorder in ${ctx.childOrders} )
+	  <tr>
+        <td><table border="0" cellspacing="0" cellpadding="0">
+          <tr>
+            <td height="35">&nbsp;</td>
+            <td align="left" bgcolor="#f5f5f5" style="font-family:Avenir, Arial, Helvetica, sans-serif; font-size:15px; color:#aa133d; font-weight:bold;">Order number:</td>
+            <td align="left" bgcolor="#f5f5f5" style="font-family:Avenir, Arial, Helvetica, sans-serif; font-size:15px; color:#4a4a4a; font-weight:bold; padding-right: 12px;">$childorder.code</td>
+            <td>&nbsp;</td>
+          </tr>
+        </table><br></td>
+      </tr>
+              <tr>
+                <td><table border="0" cellspacing="0" cellpadding="0">
+                  <tr>
+                    <td height="10"></td>
+                  </tr>
+                  <tr>
+                    <td style="border-bottom:solid 1px #f4f4f4;"><table border="0" cellspacing="0" cellpadding="0" style="font-family:Arial, Helvetica, sans-serif; font-size:12px; color:#aa133d; font-weight:bold;">
+                      <tr>
+                        <td height="55" align="center">Transaction <br>
+                          ID</td>
+                        <td align="center">Product</td>
+                        <td align="center">Qty</td>
+                        <td align="center">Price</td>
+                        <td align="center">Shipping charges<br>
+                          (if any) </td>
+						   <td align="center">COD Charges<br>
+                          (if any) </td>
+                        
+                      </tr>
+                    </table></td>
+                  </tr>
+				  #set ($srNo=1)
+					  #foreach($entry in ${childorder.entries})
+                  <tr>
+                    <td style="border-bottom:solid 1px #f4f4f4;"><table border="0" cellspacing="0" cellpadding="0" style="font-family:Arial, Helvetica, sans-serif; font-size:12px; color:#424242;">
+                      <tr>
+                        <td height="55" align="center">$entry.orderLineId</td>
+                        <td align="center">$entry.product.name</td>
+                        <td align="center" >$entry.quantity</td>
+                        <td align="center">$ctx.numberTool.format("#0.00",$entry.netAmountAfterAllDisc)</td>
+                        <td align="center" >$ctx.numberTool.format("#0.00", $entry.currDelCharge)</td>
+                        <td align="center" >$ctx.numberTool.format("#0.00", $entry.convenienceChargeApportion)</td>
+                      </tr>
+                    </table></td>
+                  </tr>
+				  #set ($srNo=$srNo+1)
+					#set($shippingCharge=$shippingCharge+$entry.currDelCharge)
+					#end
+                 
+                  
+                </table></td>
+              </tr>
+				#end
+              <tr>
+                <td><table border="0" cellspacing="0" cellpadding="0">
+                  <tr>
+                    <td height="70" align="left" style="font-family:Arial, Helvetica, sans-serif; font-size:18px; color:#aa133d;">Total: <span style="color:#606060;">INR&nbsp; $ctx.numberTool.format("#0.00",$ctx.totalPrice)</span>  </td>
+                    <td>&nbsp;</td>
+					<td height="70" align="left" style="font-family:Arial, Helvetica, sans-serif; font-size:18px; color:#aa133d;">Shipping: <span style="color:#606060;">INR&nbsp; $ctx.numberTool.format("#0.00", $shippingCharge)</span>  </td>
+                    
+                  </tr>
+				  
+                    
+                   
+                    
+                  
+                </table>
+				<div style="text-align:center;font-weight:bold;margin-top:18px;"><a href="${ctx.trackOrderUrl}" style="text-decoration:none; color:#000;padding: 10px 15px;">${ctx.cmsSlotContents.trackbtn}</a></div>
+				<br><br>
+				
+				</td>
+              </tr>
+			   <tr>
+                <td style="font-family:Arial, Helvetica, sans-serif; font-size:14px; color:#4a4a4a; padding:5px 0;"><span style="font-family:Avenir, Arial, Helvetica, sans-serif; font-size:18px; color:#4a4a4a; padding:5px 0;">Delivery details are as follows:</span></td>
+              </tr>
+			  <tr>
+                <td><table bgcolor="#f3f3f3" border="0" cellspacing="0" cellpadding="0" >
+                  <tr>
+                    <td >&nbsp;</td>
+                    <td align="left" valign="top" style="padding-right:10px;vertical-align:middle;">${ctx.cmsSlotContents.OrderDelivery}</td>
+                    <td>&nbsp;</td>
+                    <td align="left" valign="top"><table border="0" cellspacing="0" cellpadding="0">
+                      <tr>
+                        <td height="35" align="left" style="font-family:Avenir, Arial, Helvetica, sans-serif; font-size:15px; color:#202020;"><strong style="color:#AA133D">${ctx.nameofperson}</strong></td>
+                      </tr>
+                      <tr>
+                        <td height="1"></td>
+                      </tr>
+                      <tr>
+                        <td height="35" align="left" style="font-family:Avenir, Arial, Helvetica, sans-serif; font-size:15px; color:#202020;"><strong style="color:#AA133D">${ctx.deliveryAddress}</strong></td>
+                      </tr>
+                      <tr>
+                        <td height="1"></td>
+                      </tr>
+					  <tr>
+                        <td height="35" align="left" style="font-family:Avenir, Arial, Helvetica, sans-serif; font-size:15px; color:#202020;"><strong style="color:#AA133D">${ctx.mobilenumber}</strong></td>
+                      </tr>
+                    </table></td>
+                    <td>&nbsp;</td>
+                  </tr>
+                </table></td>
+              </tr>
+             
+              <tr>
+                <td>&nbsp;</td>
+              </tr>
+			  <tr>
+                <td style="font-family:Arial, Helvetica, sans-serif; font-size:14px; color:#4a4a4a; padding:5px 0;"><span style="font-family:Avenir, Arial, Helvetica, sans-serif; font-size:14px; color:#4a4a4a; padding:5px 0;">As you've requested, we'll be sending SMS alerts about your order status on your registered mobile number as well. </span></td>
+              </tr>
+			   <tr>
+                <td>&nbsp;</td>
+              </tr>
+              <tr>
+                <td height="60" align="left" valign="top">${ctx.cmsSlotContents.Tip}</td>
+              </tr>
+              <tr>
+                <td style="font-family:Arial, Helvetica, sans-serif; font-size:14px; color:#4a4a4a; padding:5px 0;"><span style="font-family:Avenir, Arial, Helvetica, sans-serif; font-size:14px; color:#4a4a4a; padding:5px 0;">Quote your <strong>order reference number</strong> to get information 
+								about
+							  
+							
+							  
+							  all the items you've ordered this time.
+							
+							
+							  
+							  If you want to know more about the items you've bought
+							
+							
+							 
+							 from a seller, quote the <strong>order number</strong>. And if you're looking for
+							 
+							
+							 
+							  information about an individual product, quote its <strong>transaction ID.</strong></span></td>
+              </tr>
+              <tr>
+                <td height="70" align="center"><a href="${ctx.secureBaseUrl}/apps" target="_blank">${ctx.cmsSlotContents.AppDownloadUrl}</a></td>
+              </tr>
+              <tr>
+                <td><span>${ctx.cmsSlotContents.smileyimg}</span></td>
+              </tr>
+              <tr>
+                <td align="left" style="font-family:Arial, Helvetica, sans-serif; font-size:11px; color:#4a4a4a;"><p>This email cant receive replies. Get in touch by calling  us at 1800 208 8282 or email us at <a href="mailto:hello@tatacliq.com">hello@tatacliq.com</a></p></td>
+              </tr>
+              <tr>
+                <td>&nbsp;</td>
+              </tr>
+              <tr>
+                <td><table style="width:95%;" border="0" cellspacing="0" cellpadding="0">
+                  <tr>
+                    <td align="left" style="font-family:Avenir, Arial, Helvetica, sans-serif; font-size:11px; color:#4a4a4a;">&#169; 2016 Tata CLiQ  Luxury| All Rights Reserved</td>
+                    <td>&nbsp;</td>
+                    <td align="right"><a href="https://www.facebook.com" style="border:none;">${ctx.cmsSlotContents.fb}</a></td>
+                    <td align="right"><a href="https://twitter.com" style="border:none;">${ctx.cmsSlotContents.tweet}</a></td>
+                    <td align="right"><a href="https://www.youtube.com" style="border:none;">${ctx.cmsSlotContents.youtube}</a></td>
+                    <td align="right"><a href="https://www.instagram.com" style="border:none;">${ctx.cmsSlotContents.insta}</a></td>
+                  </tr>
+                </table></td>
+              </tr>
+              </table></td>
+            <td>&nbsp;</td>
+          </tr>
+        </table></td>
+      </tr>
+      <tr>
+        <td>&nbsp;</td>
+      </tr>
+    </table></td>
+  </tr>
+</table>
+</body>
+</html>
