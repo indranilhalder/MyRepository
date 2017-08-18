@@ -111,7 +111,7 @@ $(document).ready(function() {
 						
 						<div class="panfield-wrapper clearfix pan-num">
 							<div class="pan-label">PAN Card Number * <br>
-								<span class="pancard-img-msg">Please provide the PAN Card Number of the person whose name appears on the invoice</span>
+								<span class="pancard-img-msg" style = "display:none">Please provide the PAN Card Number of the person whose name appears on the invoice</span>
 							</div>
 							<div class="pan-label-value">
 								<input type="text" name="Pancard_number" id="pancard_No" maxlength = "10">
@@ -120,7 +120,7 @@ $(document).ready(function() {
 						</div>
 						<div class="panfield-wrapper clearfix pan-img">
 							<div class="pan-label">Upload a copy of the PAN Card * <br>
-								<span class="pancard-img-msg">Please upload a copy of the PAN Card</span>
+								<span class="pancard-img-msg" style = "display:none">Please upload a copy of the PAN Card</span>
 							</div>
 							<div class="pan-label-value fileupload">
 								<input  type="file" name="file" id="pancard_Img"> 
