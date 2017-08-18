@@ -75438,6 +75438,7 @@ body .account .right-account .password.responsiveProfile #frmUpdatePassword butt
 	}
 	body .account .right-account .info.responsiveProfile h2{
 	margin-bottom:0px;
+	margin-top: 16px; /* TISJEW-4348 */
 	}
 	body .container .account .wrapper .right-account p.commonAccountPara{
 	margin-bottom: 20px;
