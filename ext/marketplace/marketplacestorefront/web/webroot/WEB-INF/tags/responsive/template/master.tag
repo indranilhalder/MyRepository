@@ -368,7 +368,9 @@
  		var buildNumber='${buildNumber}'; 
  		
  		$(window).on('load',function(){
- 			//callGigya();
+ 			if($("#pageType").val() != "homepage"){
+ 			callGigya();
+ 			}
  		});
  		</script>
  	</c:when>
@@ -376,7 +378,9 @@
  		<script type="text/javascript">
  		
  		$(window).on('load',function(){
- 			//callGigyaWhenNotMinified();
+ 			if($("#pageType").val() != "homepage"){
+ 			callGigyaWhenNotMinified();
+ 			}
  		});
  		</script>
  		</c:otherwise>
