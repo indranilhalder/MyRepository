@@ -84,7 +84,7 @@ public class NPSFeedbackController
 		{
 			if (npsFeedBackModelCount > 0)
 			{
-				returnStatement = ControllerConstants.Views.Fragments.NPS_Emailer.NpsFeedbackExists;
+				return ControllerConstants.Views.Fragments.NPS_Emailer.NpsFeedbackExists;
 			}
 			else
 			{
