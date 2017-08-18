@@ -70838,7 +70838,40 @@ background:#f8f8f8;
     display: inline-block;
     right: 0px;
 }
+p#cncpickuppincode_tooltip {
+    width: 206px;
+    position: absolute;
+    left: 28%;
+    background: #000;
+    color: #fff;
+    top: -50px;
+    padding: 7px 18px 6px 19px;
+    border-radius: 4px;
+    line-height: 15px;
+    display: none;
+    z-index: 10023;
+}
+
+p#cncpickuppincode_tooltip:after{
+	content: "";
+    display: block;
+    width: 10px;
+    height: 10px;
+    background-color: #000;
+    -ms-transform: rotate(45deg);
+    -webkit-transform: rotate(45deg);
+    -moz-transform: rotate(45deg);
+    transform: rotate(45deg);
+    position: absolute;
+    left: 0;
+    right: 0;
+    margin: auto;
+}
 @media(max-width: 768px){
+p#cncpickuppincode_tooltip:after{
+	content: "";
+    display: none;
+}
 .marketplace-checkout span.need-help-call {
     display: none;
 }
@@ -70897,6 +70930,7 @@ select.update-entry-quantity-input.review-page-select{
 #singlePageMobile .mobileNotDefaultDelAddress{
 	display:none;
 }
+
 /*UF-281 UF-282 single page checkout css ends*/
 
 /* R2.3:START: Date: 2016-12-19- Code Merge */
@@ -77315,3 +77349,5 @@ body .account .right-account .order-history.order-details li.item .status>ul.nav
     margin-top: 10px;
 }
 /* TISJEW-3497 end */
+
+
