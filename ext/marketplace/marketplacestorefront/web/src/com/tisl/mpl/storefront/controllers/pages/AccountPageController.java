@@ -26,7 +26,6 @@ import de.hybris.platform.acceleratorstorefrontcommons.forms.validation.EmailVal
 import de.hybris.platform.acceleratorstorefrontcommons.forms.validation.PasswordValidator;
 import de.hybris.platform.acceleratorstorefrontcommons.forms.validation.ProfileValidator;
 import de.hybris.platform.acceleratorstorefrontcommons.forms.verification.AddressVerificationResultHandler;
-import de.hybris.platform.catalog.impl.CatalogUtils;
 import de.hybris.platform.category.model.CategoryModel;
 import de.hybris.platform.cms2.exceptions.CMSItemNotFoundException;
 import de.hybris.platform.cms2.servicelayer.services.CMSComponentService;
@@ -233,6 +232,7 @@ import com.tisl.mpl.storefront.web.forms.validator.MplPasswordValidator;
 import com.tisl.mpl.storefront.web.forms.validator.MplUpdateEmailFormValidator;
 import com.tisl.mpl.storefront.web.forms.validator.ReturnItemFormValidator;
 import com.tisl.mpl.ticket.facades.MplSendTicketFacade;
+import com.tisl.mpl.util.CatalogUtils;
 import com.tisl.mpl.util.ExceptionUtil;
 import com.tisl.mpl.util.GenericUtilityMethods;
 import com.tisl.mpl.wsdto.GigyaProductReviewWsDTO;
@@ -5207,7 +5207,7 @@ public class AccountPageController extends AbstractMplSearchPageController
 				for (final Wishlist2EntryModel entry : entryModels)
 				{
 					LOG.debug("Step0-************************Wishlist");
-					if (!entry.getIsDeleted().booleanValue() || entry.getIsDeleted() == null)//TPR-5787
+					if (entry.getIsDeleted() == null || (entry.getIsDeleted() != null && !entry.getIsDeleted().booleanValue()))//TPR-5787
 					{
 						LOG.debug("Step1-************************Wishlist");
 						//TISEE-6376
@@ -5300,7 +5300,8 @@ public class AccountPageController extends AbstractMplSearchPageController
 						if (entryModel.getProduct() != null
 								&& ((entryModel.getProduct().getCatalogVersion().getCatalog().getId().toString())
 										.equalsIgnoreCase(catalogVersion))
-								&& (!entryModel.getIsDeleted().booleanValue() || entryModel.getIsDeleted() == null))//TPR-5787)
+								&& (entryModel.getIsDeleted() == null || (entryModel.getIsDeleted() != null && !entryModel.getIsDeleted()
+										.booleanValue())))//TPR-5787 check added
 
 						{
 							/*

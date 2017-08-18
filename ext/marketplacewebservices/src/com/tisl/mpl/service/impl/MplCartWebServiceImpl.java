@@ -705,7 +705,8 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 				for (final Wishlist2EntryModel wishentryModel : allWishlistEntry)
 				{
 					//TISSPTEN-64
-					if (Boolean.FALSE.equals(wishentryModel.getIsDeleted()) || null == wishentryModel.getIsDeleted())
+					if (wishentryModel.getIsDeleted() == null
+							|| (wishentryModel.getIsDeleted() != null && !wishentryModel.getIsDeleted().booleanValue()))//TPR-5787 check added here
 					{
 						wishentryModel.setAddToCartFromWl(Boolean.valueOf(addedToCartWl));
 						if (LOG.isDebugEnabled())

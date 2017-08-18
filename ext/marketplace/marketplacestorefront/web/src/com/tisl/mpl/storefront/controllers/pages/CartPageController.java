@@ -410,7 +410,9 @@ public class CartPageController extends AbstractPageController
 				{
 					isLuxFlag = true;
 
-				}else{
+				}
+				else
+				{
 					isLuxFlag = false;
 				}
 
@@ -508,7 +510,7 @@ public class CartPageController extends AbstractPageController
 	 * private void setExpressCheckout(final CartModel serviceCart) {
 	 * serviceCart.setIsExpressCheckoutSelected(Boolean.FALSE); if (serviceCart.getDeliveryAddress() != null) {
 	 * serviceCart.setDeliveryAddress(null); modelService.save(serviceCart); }
-	 *
+	 * 
 	 * }
 	 */
 
@@ -790,7 +792,7 @@ public class CartPageController extends AbstractPageController
 	/*
 	 * @description This controller method is used to allow the site to force the visitor through a specified checkout
 	 * flow. If you only have a static configured checkout flow then you can remove this method.
-	 *
+	 * 
 	 * @param model ,redirectModel
 	 */
 
@@ -1091,7 +1093,8 @@ public class CartPageController extends AbstractPageController
 						boolean flag = true;
 						//TISEE-6376
 						if (entryModel.getProduct() != null
-								&& (!entryModel.getIsDeleted().booleanValue() || entryModel.getIsDeleted() == null))//TPR-5787 check added
+								&& (entryModel.getIsDeleted() == null || (entryModel.getIsDeleted() != null && !entryModel.getIsDeleted()
+										.booleanValue())))//TPR-5787 check added
 						{
 							/*
 							 * ProductData productData = productFacade.getProductForOptions(entryModel.getProduct(),
@@ -1670,7 +1673,7 @@ public class CartPageController extends AbstractPageController
 
 	/*
 	 * @Description adding wishlist popup in cart page
-	 *
+	 * 
 	 * @param String productCode,String wishName, model
 	 */
 
@@ -1727,7 +1730,7 @@ public class CartPageController extends AbstractPageController
 
 	/*
 	 * @Description showing wishlist popup in cart page
-	 *
+	 * 
 	 * @param String productCode, model
 	 */
 	@ResponseBody

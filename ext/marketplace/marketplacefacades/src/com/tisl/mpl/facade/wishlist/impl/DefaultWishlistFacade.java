@@ -98,9 +98,10 @@ public class DefaultWishlistFacade implements WishlistFacade
 	@Override
 	public Wishlist2Model removeProductFromWl(final String productCode, final String wishlistName, final String ussid)
 	{
+		Wishlist2Model wishlist2Model = null;
 		try
 		{
-			final Wishlist2Model wishlist2Model = getWishlistForName(wishlistName);
+			wishlist2Model = getWishlistForName(wishlistName);
 			for (final Wishlist2EntryModel entryModel : wishlist2Model.getEntries())
 			{
 				if (null != entryModel.getProduct() && entryModel.getProduct().getCode().equals(productCode)
@@ -118,12 +119,17 @@ public class DefaultWishlistFacade implements WishlistFacade
 				}
 			}
 			//wishlistService.removeWishlistEntry(wishlist2Model, wishlist2EntryModel);//commented for TPR-5787
-			return wishlist2Model;
 		}
-		catch (final Exception ex)
+		/*
+		 * catch (final Exception ex) { throw new EtailNonBusinessExceptions(ex,
+		 * MarketplacecommerceservicesConstants.E0000); }
+		 */
+		catch (final ModelSavingException e)
 		{
-			throw new EtailNonBusinessExceptions(ex, MarketplacecommerceservicesConstants.E0000);
+			LOG.error("removeProductFromWl:" + e.getMessage());
 		}
+		return wishlist2Model;
+
 	}
 
 	/* Changes for INC144313867 */
@@ -135,9 +141,10 @@ public class DefaultWishlistFacade implements WishlistFacade
 	@Override
 	public Wishlist2Model removeProductFromWl(final String productCode, final String wishlistName)
 	{
+		Wishlist2Model wishlist2Model = null;
 		try
 		{
-			final Wishlist2Model wishlist2Model = getWishlistForName(wishlistName);
+			wishlist2Model = getWishlistForName(wishlistName);
 			for (final Wishlist2EntryModel entryModel : wishlist2Model.getEntries())
 			{
 				if (null != entryModel.getProduct() && entryModel.getProduct().getCode().equals(productCode))
@@ -154,12 +161,17 @@ public class DefaultWishlistFacade implements WishlistFacade
 				}
 			}
 			//wishlistService.removeWishlistEntry(wishlist2Model, wishlist2EntryModel);//commented for TPR-5787
-			return wishlist2Model;
+
 		}
-		catch (final Exception ex)
+		/*
+		 * catch (final Exception ex) { throw new EtailNonBusinessExceptions(ex,
+		 * MarketplacecommerceservicesConstants.E0000); }
+		 */
+		catch (final ModelSavingException e)
 		{
-			throw new EtailNonBusinessExceptions(ex, MarketplacecommerceservicesConstants.E0000);
+			LOG.error("removeProductFromWl:" + e.getMessage());
 		}
+		return wishlist2Model;
 	}
 
 	/**
@@ -173,7 +185,8 @@ public class DefaultWishlistFacade implements WishlistFacade
 		try
 		{
 			if (null != wishentryModel.getProduct()
-					&& (Boolean.FALSE.equals(wishentryModel.getIsDeleted()) || null == wishentryModel.getIsDeleted()))
+					&& (wishentryModel.getIsDeleted() == null || (wishentryModel.getIsDeleted() != null && !wishentryModel
+							.getIsDeleted().booleanValue())))//TPR-5787 check added here
 			{
 				//TPR-5787 starts here
 				LOG.debug("To remove the prod from wishlist entry-----");
@@ -185,12 +198,17 @@ public class DefaultWishlistFacade implements WishlistFacade
 				saved = true;
 				//TPR-5787 ends here
 			}
-			return saved;
+
 		}
-		catch (final Exception ex)
+		/*
+		 * catch (final Exception ex) { throw new EtailNonBusinessExceptions(ex,
+		 * MarketplacecommerceservicesConstants.E0000); }
+		 */
+		catch (final ModelSavingException e)
 		{
-			throw new EtailNonBusinessExceptions(ex, MarketplacecommerceservicesConstants.E0000);
+			LOG.error("removeProductFromWl:" + e.getMessage());
 		}
+		return saved;
 	}
 
 	/**
@@ -310,9 +328,13 @@ public class DefaultWishlistFacade implements WishlistFacade
 				}
 			}
 		}
-		catch (final Exception ex)
+		/*
+		 * catch (final Exception ex) { throw new EtailNonBusinessExceptions(ex,
+		 * MarketplacecommerceservicesConstants.E0000); }
+		 */
+		catch (final ModelSavingException e)
 		{
-			throw new EtailNonBusinessExceptions(ex, MarketplacecommerceservicesConstants.E0000);
+			e.getMessage();
 		}
 		return add;
 		//TPR-5787 ends here
@@ -374,9 +396,13 @@ public class DefaultWishlistFacade implements WishlistFacade
 				//TPR-5787 ends here
 			}
 		}
-		catch (final Exception ex)
+		/*
+		 * catch (final Exception ex) { throw new EtailNonBusinessExceptions(ex,
+		 * MarketplacecommerceservicesConstants.E0000); }
+		 */
+		catch (final ModelSavingException e)
 		{
-			throw new EtailNonBusinessExceptions(ex, MarketplacecommerceservicesConstants.E0000);
+			e.getMessage();
 		}
 		return add;
 	}
@@ -559,8 +585,8 @@ public class DefaultWishlistFacade implements WishlistFacade
 						{
 							if (null != wishlist2EntryModel.getAddToCartFromWl()
 									&& wishlist2EntryModel.getAddToCartFromWl().equals(Boolean.TRUE)
-									&& (Boolean.FALSE.equals(wishlist2EntryModel.getIsDeleted()) || null == wishlist2EntryModel
-											.getIsDeleted()))
+									&& (wishlist2EntryModel.getIsDeleted() == null || (wishlist2EntryModel.getIsDeleted() != null && !wishlist2EntryModel
+											.getIsDeleted().booleanValue())))//TPR-5787 check added here
 							{
 								final Date date = new Date();
 								wishlist2EntryModel.setIsDeleted(Boolean.TRUE);
@@ -576,9 +602,13 @@ public class DefaultWishlistFacade implements WishlistFacade
 			}
 
 		}
-		catch (final Exception ex)
+		/*
+		 * catch (final Exception ex) { throw new EtailNonBusinessExceptions(ex,
+		 * MarketplacecommerceservicesConstants.E0000); }
+		 */
+		catch (final ModelSavingException e)
 		{
-			throw new EtailNonBusinessExceptions(ex, MarketplacecommerceservicesConstants.E0000);
+			e.getMessage();
 		}
 	}
 

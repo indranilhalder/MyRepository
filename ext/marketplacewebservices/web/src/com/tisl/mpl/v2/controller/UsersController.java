@@ -3196,7 +3196,7 @@ public class UsersController extends BaseCommerceController
 						for (final Wishlist2EntryModel entryModel : entryModels)
 						{
 							LOG.debug("Step4-************************Wishlist");
-							if (!entryModel.getIsDeleted().booleanValue() || entryModel.getIsDeleted() == null)//TPR-5787 check added
+							if (entryModel.getIsDeleted() == null || (entryModel.getIsDeleted() != null && !entryModel.getIsDeleted().booleanValue()))//TPR-5787 check added
 							{
 								LOG.debug("Step5-************************Wishlist");
 								wldpDTO = new GetWishListProductWsDTO();

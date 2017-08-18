@@ -1150,7 +1150,8 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 					 * }
 					 */
 
-					if (!entryWishlist.getIsDeleted().booleanValue())
+					if (entryWishlist.getIsDeleted() == null
+							|| (entryWishlist.getIsDeleted() != null && !entryWishlist.getIsDeleted().booleanValue()))//TPR-5787 check added
 					{
 						if (null != cartData.getEntries() && !cartData.getEntries().isEmpty())
 						{
@@ -5634,8 +5635,10 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 		final Map<String, String> productUSSIDDetails = new HashMap<>();
 		for (final Wishlist2EntryModel wishModel : entryModels)
 		{
-			if (wishModel.getProduct() != null && wishModel.getProduct().getCode() != null
-					&& (!wishModel.getIsDeleted().booleanValue() || wishModel.getIsDeleted() == null))//TPR-5787 check added
+			if (wishModel.getProduct() != null
+					&& wishModel.getProduct().getCode() != null
+					&& (wishModel.getIsDeleted() == null || (wishModel.getIsDeleted() != null && !wishModel.getIsDeleted()
+							.booleanValue())))//TPR-5787 check added
 			{
 				productUSSIDDetails.put(wishModel.getUssid(), wishModel.getProduct().getCode());
 			}
