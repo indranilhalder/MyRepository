@@ -20,7 +20,9 @@ import javax.annotation.Resource;
 import org.joda.time.DateTime;
 import org.joda.time.Days;
 
+import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.core.model.RichAttributeModel;
+import com.tisl.mpl.marketplacecommerceservices.service.BuyBoxService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplSellerInformationService;
 import com.tisl.mpl.model.SellerInformationModel;
 
@@ -32,6 +34,8 @@ public class MPLDefaultConsignmentBasedReturnableCheck extends DefaultConsignmen
 	ModelService modelService;
 	@Resource
 	MplSellerInformationService mplSellerInformationService;
+	@Resource
+	BuyBoxService buyBoxService;
 
 	/* private static final Logger LOG = Logger.getLogger(MPLDefaultConsignmentBasedReturnableCheck.class.getName()); */
 
@@ -48,18 +52,31 @@ public class MPLDefaultConsignmentBasedReturnableCheck extends DefaultConsignmen
 			return false;
 		}
 		//TISUAT-4519 Take from seller rich attribute instead product
-		final SellerInformationModel sellerInfo = mplSellerInformationService.getSellerDetail(orderentry.getSelectedUSSID());
-
-		for (final RichAttributeModel richAttribute : sellerInfo.getRichAttribute())
+		SellerInformationModel sellerInfo = null;
+		if (null != orderentry.getProduct().getProductCategoryType()
+				&& orderentry.getProduct().getProductCategoryType()
+						.equalsIgnoreCase(MarketplacecommerceservicesConstants.FINEJEWELLERY))
 		{
-			//			if (StringUtils.isNotEmpty(richAttribute.getReplacementWindow()))
-			//			{
-			//				replacementWindow = Integer.parseInt(richAttribute.getReplacementWindow());
-			//			}
-			if (richAttribute.getReturnWindow() != null && Integer.parseInt(richAttribute.getReturnWindow()) > 0)
+			final String pussid = buyBoxService.findPussid(orderentry.getSelectedUSSID());
+			sellerInfo = mplSellerInformationService.getSellerDetail(pussid);
+		}
+		else
+		{
+			sellerInfo = mplSellerInformationService.getSellerDetail(orderentry.getSelectedUSSID());
+		}
+		if (null != sellerInfo)
+		{
+			for (final RichAttributeModel richAttribute : sellerInfo.getRichAttribute())
 			{
-				refundWindow = Integer.parseInt(richAttribute.getReturnWindow());
-				break;
+				//			if (StringUtils.isNotEmpty(richAttribute.getReplacementWindow()))
+				//			{
+				//				replacementWindow = Integer.parseInt(richAttribute.getReplacementWindow());
+				//			}
+				if (richAttribute.getReturnWindow() != null && Integer.parseInt(richAttribute.getReturnWindow()) > 0)
+				{
+					refundWindow = Integer.parseInt(richAttribute.getReturnWindow());
+					break;
+				}
 			}
 		}
 		//		if (replacementWindow < refundWindow)
