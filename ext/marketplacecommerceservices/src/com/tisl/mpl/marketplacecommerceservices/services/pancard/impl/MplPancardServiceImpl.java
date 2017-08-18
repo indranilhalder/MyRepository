@@ -80,7 +80,7 @@ public class MplPancardServiceImpl implements MplPancardService
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * com.tisl.mpl.marketplacecommerceservices.services.pancard.MplPancardService#getPanCardOrderId(java.lang.String)
 	 */
@@ -174,7 +174,7 @@ public class MplPancardServiceImpl implements MplPancardService
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * com.tisl.mpl.marketplacecommerceservices.services.pancard.MplPancardService#refreshPancardDetailsService(de.hybris
 	 * .platform.core.model.PancardInformationModel, org.springframework.web.multipart.MultipartFile)
@@ -242,7 +242,7 @@ public class MplPancardServiceImpl implements MplPancardService
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * com.tisl.mpl.marketplacecommerceservices.services.pancard.MplPancardService#getCrmStatusForPancardDetailsFacade
 	 * (de.hybris.platform.core.model.PancardInformationModel)
@@ -268,7 +268,7 @@ public class MplPancardServiceImpl implements MplPancardService
 	//For sending pancard details to SP through PI and save data into database for new pancard entry
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * com.tisl.mpl.marketplacecommerceservices.services.pancard.MplPancardService#setPanCardDetailsAndPIcall(java.lang
 	 * .String, java.lang.String, java.lang.String, java.lang.String, org.springframework.web.multipart.MultipartFile)
@@ -308,11 +308,13 @@ public class MplPancardServiceImpl implements MplPancardService
 		//generate xml in PI---->SP ends
 
 		//save data in model starts
-		final PancardInformationModel panCardModel = modelService.create(PancardInformationModel.class);
+		//final PancardInformationModel panCardModel = modelService.create(PancardInformationModel.class);
+		PancardInformationModel panCardModel = null;
 		final List<PancardInformationModel> panCardModelList = new ArrayList<PancardInformationModel>();
 
 		for (final String transId : transactionidList)
 		{
+			panCardModel = modelService.create(PancardInformationModel.class);
 			if (StringUtils.isNotEmpty(orderreferancenumber))
 			{
 				panCardModel.setOrderId(orderreferancenumber);
@@ -352,7 +354,7 @@ public class MplPancardServiceImpl implements MplPancardService
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * com.tisl.mpl.marketplacecommerceservices.services.pancard.MplPancardService#refreshPanCardDetailsAndPIcall(de.
 	 * hybris.platform.core.model.PancardInformationModel, java.lang.String,
@@ -417,7 +419,7 @@ public class MplPancardServiceImpl implements MplPancardService
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.tisl.mpl.marketplacecommerceservices.services.pancard.MplPancardService#getOrderForCode(java.lang.String)
 	 */
 	@Override
@@ -429,7 +431,7 @@ public class MplPancardServiceImpl implements MplPancardService
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.tisl.mpl.marketplacecommerceservices.services.pancard.MplPancardService#setPancardRes(com.tisl.mpl.pojo.
 	 * PanCardResDTO)
 	 */
