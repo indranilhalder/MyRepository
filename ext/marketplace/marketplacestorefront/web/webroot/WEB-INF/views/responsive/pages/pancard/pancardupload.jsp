@@ -111,7 +111,7 @@ $(document).ready(function() {
 						
 						<div class="panfield-wrapper clearfix pan-num">
 							<div class="pan-label">PAN Card Number * <br>
-								<span class="pancard-img-msg" style = "display:none">Please provide the PAN Card Number of the person whose name appears on the invoice</span>
+								<span class="pancard-img-msg">Please provide the PAN Card Number of the person whose name appears on the invoice</span>
 							</div>
 							<div class="pan-label-value">
 								<input type="text" name="Pancard_number" id="pancard_No" maxlength = "10">
