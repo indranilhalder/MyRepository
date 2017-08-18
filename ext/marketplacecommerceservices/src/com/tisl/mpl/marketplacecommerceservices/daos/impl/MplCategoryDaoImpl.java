@@ -259,7 +259,7 @@ public class MplCategoryDaoImpl extends DefaultCategoryDao implements MplCategor
 			final String queryString = "SELECT {p:" + MplbrandfilterModel.PK
 					+ "} "//
 					+ MarketplacecommerceservicesConstants.QUERYFROM + MplbrandfilterModel._TYPECODE + " AS p} where " + "{p."
-					+ MplbrandfilterModel.L1 + "} = ?l1 and " + MplbrandfilterModel.L2 + "=?l2";
+					+ MplbrandfilterModel.L1 + "} = ?l1code and " + MplbrandfilterModel.L2 + "=?l2code";
 
 			final FlexibleSearchQuery query = new FlexibleSearchQuery(queryString);
 			query.addQueryParameter("l1code", l1CategoryCode);
