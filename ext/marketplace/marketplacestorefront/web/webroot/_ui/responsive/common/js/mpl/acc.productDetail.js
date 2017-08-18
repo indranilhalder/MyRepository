@@ -4973,7 +4973,7 @@ function onSubmitExc()
 			exchange_condition  : selector ,
 			exchange_l3         : l3 ,
 			couponcode_exchange : couponValue ,
-			product_id          : productCode
+			product_id          : productArray
 		});
 	   }
 			}
