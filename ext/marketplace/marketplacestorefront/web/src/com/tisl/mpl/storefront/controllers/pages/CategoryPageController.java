@@ -78,6 +78,7 @@ import com.google.common.base.Splitter;
 import com.google.common.collect.Iterables;
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.constants.MplConstants;
+import com.tisl.mpl.core.model.PriorityBrandsModel;
 import com.tisl.mpl.core.model.SeoContentModel;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.facade.category.MplCategoryFacade;
