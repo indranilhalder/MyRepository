@@ -120,7 +120,7 @@ $(document).ready(function() {
 						</div>
 						<div class="panfield-wrapper clearfix pan-img">
 							<div class="pan-label">Upload a copy of the PAN Card * <br>
-								<span class="pancard-img-msg">Please upload a copy of the PAN Card</span>
+								<span class="pancard-img-msg" style = "display:none">Please upload a copy of the PAN Card</span>
 							</div>
 							<div class="pan-label-value fileupload">
 								<input  type="file" name="file" id="pancard_Img"> 
