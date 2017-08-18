@@ -193,8 +193,8 @@
 							<div class="freq">
 								<c:forEach items="${frequencyList}" var="frequency" varStatus="status">
 									<input type="radio" name="frequency"
-										id="radioFrequency${status.index}" value="${frequency}"
-										<c:if test="${not empty selectedFreq && frequency eq selectedFreq}">
+										id="radioFrequency${status.index}" value="(fn:replace(frequency,'-','_')}"
+										<c:if test="${not empty selectedFreq && fn:replace(frequency,'-','_') eq selectedFreq}">
 									checked="checked"
 									</c:if>>
 									<label for="radioFrequency${status.index}">
