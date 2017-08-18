@@ -63034,6 +63034,7 @@ span.default input[type="radio"]+label:before {
     text-decoration: none;
     font-size: 12px;
     letter-spacing: 0.6px;
+    line-height: 18px;	/* TISPRDT-2156 */
 }
 .checkout.wrapper .product-block.addresses.new-form li.item input[type="checkbox"] + label:before, .checkout.wrapper .product-block.addresses.new-form li.item input[type="radio"] + label:before{
 	left:1px;
@@ -66978,7 +66979,9 @@ body .account:not(.preferences) .track{
  		background-color: #000;
  		border: 2px solid #ccc !important;
  	}
- 	
+ 	.accordtionTataCliq .accContents .selectReason{
+ 	overflow: hidden; /*TISPRDT-2154*/
+ 	}
  	.accordtionTataCliq .accContents .selectReason, .accordtionTataCliq .accContents .selectReturnMethod, .accordtionTataCliq .accContents .selectquickDrop {
  		margin-top: 15px;
  	}
@@ -67000,8 +67003,11 @@ body .account:not(.preferences) .track{
  		padding: 0px !important;
  	}
  	
- 	 .accordtionTataCliq .accContents .slectionRefund, .accordtionTataCliq .accContents .slectionRefund .col-md-12 .col-md-4  {
- 	 	padding: 0px 15px 0px 10px !important;
+ 	 .accordtionTataCliq .accContents .slectionRefund, .accordtionTataCliq .accContents .slectionRefund .col-md-12 .col-md-4, .accordtionTataCliq .accContents .slectionRefund .col-md-12 .col-md-3, .accordtionTataCliq .accContents .slectionRefund .col-md-12 .col-md-2  {
+ 	 	padding: 0px 15px 0px 10px !important; /*TISPRDT-2154*/
+ 	 }
+ 	 .accordtionTataCliq .accContents .slectionRefund .col-md-12 .col-md-2  {
+ 	 	width: auto; /*TISPRDT-2154*/
  	 }
  	
  	.accordtionTataCliq .accContents .slectionRefund .col-md-12 b {

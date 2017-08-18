@@ -975,130 +975,7 @@ body {
 	        padding-left: 5px
 	    }
 	}
-	
-	.modal {
-	    display: none;
-	    position: fixed;
-	    top: 0;
-	    left: 0;
-	    width: 100%;
-	    height: 100%;
-	    z-index: 201;
-	    text-align: center;
-	    opacity: 0;
-	    -webkit-transform: translateZ(0);
-	    -moz-transform: translateZ(0);
-	    -ms-transform: translateZ(0);
-	    -o-transform: translateZ(0);
-	    transform: translateZ(0);
-	    -webkit-transition: opacity .3s .3s;
-	    -moz-transition: opacity .3s .3s;
-	    transition: opacity .3s .3s
-	}
-	
-	.modal .content {
-	    left: 0;
-	    z-index: 2;
-	    border: 1px solid #000;
-	    background: #fff;
-	    min-height: 0;
-	    vertical-align: middle;
-	    position: relative;
-	    padding: 0;
-	    opacity: 0;
-	    top: -15px;
-	    max-height: 100%;
-	    max-width: 80%;
-	    overflow: auto;
-	    -webkit-transition: opacity .3s, top .3s;
-	    -moz-transition: opacity .3s, top .3s;
-	    transition: opacity .3s, top .3s;
-	    width: 100%;
-	    height: auto;
-	    display: inline-block
-	}
-	
-	@media (min-width:791px) {
-	    .modal .content {
-	        width: 70%
-	    }
-	}
-	
-	.modal .content>div {
-	    background: 0
-	}
-	
-	.modal .content:after {
-	    position: absolute;
-	    bottom: 5px;
-	    right: 5%;
-	    margin-left: -10px;
-	    width: 20px;
-	    height: 20px;
-	    line-height: 1;
-	    content: "\e60c";
-	    font-family: 'icomoon';
-	    font-size: 1.8em;
-	    color: #fafafa;
-	    opacity: 0;
-	    -webkit-transition: opacity 1s;
-	    -moz-transition: opacity 1s;
-	    transition: opacity 1s
-	}
-	
-	.modal .content>.close {
-	    display: block;
-	    position: absolute;
-	    width: 25px;
-	    height: 25px;
-	    top: 10px;
-	    right: 10px;
-	    left: auto;
-	    margin: 0;
-	    line-height: 1;
-	    min-width: 0;
-	    padding: 0;
-	    border: 0;
-	    background: 0;
-	    box-shadow: none;
-	    z-index: 5
-	}
-	
-	.modal .content>.close:before {
-	    content: "\00d7";
-	    color: #a9143c;
-	    font-family: "Montserrat";
-	    font-size: 24px;
-	    font-weight: 500;
-	    -webkit-transition: font-weight .15s;
-	    -moz-transition: font-weight .15s;
-	    transition: font-weight .15s
-	}
-	
-	.modal .overlay {
-	    position: fixed;
-	    width: 100%;
-	    height: 100%;
-	    top: 0;
-	    left: 0;
-	    z-index: 0;
-	    opacity: .65;
-	    background: #000;
-	    -webkit-transform: none;
-	    -moz-transform: none;
-	    -ms-transform: none;
-	    -o-transform: none;
-	    transform: none
-	}
-	
-	.modal:before {
-	    content: '';
-	    display: inline-block;
-	    height: 100%;
-	    vertical-align: middle;
-	    margin-right: -.5em
-	}
-	
+			
 	.content b {
 	    font-weight: 600
 	}
@@ -1418,17 +1295,6 @@ body {
 	    padding-bottom: 10px
 	}
 	
-	.modal .content {
-	    min-width: 300px
-	}
-	
-	.modal.fade .content {
-	    top: 0;
-	    opacity: 1;
-	    -webkit-transition: opacity .3s .3s, top .3s .3s;
-	    -moz-transition: opacity .3s .3s, top .3s .3s;
-	    transition: opacity .3s .3s, top .3s .3s
-	}
 	
 	li.wishlist #myWishlistHeader {
 	    display: block
@@ -1778,44 +1644,7 @@ body {
 	    background: transparent;
 	    border: 0;
 	    -webkit-appearance: none
-	}
-	
-	.modal {
-	    display: none;
-	    overflow: hidden;
-	    position: fixed;
-	    top: 0;
-	    right: 0;
-	    bottom: 0;
-	    left: 0;
-	    z-index: 100002;
-	    -webkit-overflow-scrolling: touch;
-	    outline: 0
-	}
-	
-	.modal-dialog {
-	    position: relative;
-	    width: auto;
-	    margin: 10px;
-	    z-index: 2
-	}
-	
-	.modal-title {
-	    margin: 0;
-	    line-height: 1.42857143
-	}
-	
-	.modal-body {
-	    position: relative;
-	    padding: 15px
-	}
-	
-	@media (min-width:640px) {
-	    .modal-dialog {
-	        width: 600px;
-	        margin: 30px auto
-	    }
-	}
+	}	
 	
 	.container:after,
 	.row:after {
@@ -2173,36 +2002,7 @@ body {
 	
 	.error_text {
 	    color: red
-	}
-	
-	.modal-title {
-	    font-size: 18px;
-	    font-weight: 700
-	}
-	
-	.modal-dialog {
-	    border: 1px solid #ccc;
-	    border-radius: 8px;
-	    background: #fff none repeat scroll 0 0;
-	    padding-top: 20px
-	}
-	
-	.modal-body h4 {
-	    font-size: 13px;
-	    font-weight: 700
-	}
-	
-	.close {
-	    border-radius: 50%;
-	    border: 1px solid #ccc!important;
-	    width: 30px;
-	    height: 30px;
-	    margin-top: -10px!important;
-	    margin-right: -14px!important;
-	    position: absolute;
-	    right: 17px;
-	    top: -6px
-	}
+	}	
 	
 	#showTrackOrder {
 	    display: none;
@@ -2279,30 +2079,6 @@ body {
 	    }
 	}
 	
-	.modal-title {
-	    font-size: 18px;
-	    font-weight: 700
-	}
-	
-	.modal-dialog {
-	    border: 1px solid #ccc;
-	    border-radius: 8px;
-	    background: #fff none repeat scroll 0 0;
-	    padding-top: 20px
-	}
-	
-	.close {
-	    border-radius: 50%;
-	    border: 1px solid #ccc!important;
-	    width: 30px;
-	    height: 30px;
-	    margin-top: -10px!important;
-	    margin-right: -14px!important;
-	    position: absolute;
-	    right: 17px;
-	    top: -6px
-	}
-	
 	h4 {
 	    font-size: 18px!important;
 	    font-weight: bolder!important;
@@ -2319,12 +2095,6 @@ body {
 	    position: relative;
 	    right: 0;
 	    top: 0
-	}
-	
-	.modal .content>.close {
-	    border-radius: 0;
-	    border: none!important;
-	    margin: 0!important
 	}
 	
 	header>.content .bottom .marketplace .simple-banner-component img {
