@@ -3163,13 +3163,16 @@ public class UsersController extends BaseCommerceController
 		try
 		{
 			allWishlists = wishlistFacade.getAllWishlists();
+			LOG.debug("Step1-************************Wishlist");
 			//allWishlists = wishlistService.getWishlists();
 			if (CollectionUtils.isNotEmpty(allWishlists))
 			{
 				for (final Wishlist2Model requiredWl : allWishlists)
 				{
+					LOG.debug("Step2-************************Wishlist");
 					if (null != requiredWl)
 					{
+						LOG.debug("Step3-************************Wishlist");
 						wldDTO = new GetWishListDataWsDTO();
 						List<Wishlist2EntryModel> entryModels = null;
 						if (null != requiredWl.getEntries())
@@ -3187,8 +3190,10 @@ public class UsersController extends BaseCommerceController
 						wldpDTOList = new ArrayList<GetWishListProductWsDTO>();
 						for (final Wishlist2EntryModel entryModel : entryModels)
 						{
+							LOG.debug("Step4-************************Wishlist");
 							if (!entryModel.getIsDeleted().booleanValue() || entryModel.getIsDeleted() == null)//TPR-5787 check added
 							{
+								LOG.debug("Step5-************************Wishlist");
 								wldpDTO = new GetWishListProductWsDTO();
 								ProductData productData1 = null;
 								if (null != entryModel.getProduct())
@@ -3203,6 +3208,7 @@ public class UsersController extends BaseCommerceController
 
 
 								}
+								LOG.debug("Step6-************************Wishlist");
 								if (StringUtils.isNotEmpty(entryModel.getProduct().getCode()))
 
 								{
@@ -3231,7 +3237,7 @@ public class UsersController extends BaseCommerceController
 								//							}
 
 								final String prodCategory = mplProductWebService.getCategoryCodeOfProduct(productData1);
-
+								LOG.debug("Step7-************************Wishlist");
 								if (null != productData1 && StringUtils.isNotEmpty(prodCategory))
 
 								{
@@ -3334,6 +3340,7 @@ public class UsersController extends BaseCommerceController
 
 											final BuyBoxModel buyboxmodel = buyBoxFacade.getpriceForUssid(entryModel.getUssid());
 											//final double price = 0.0;
+											LOG.debug("Step8-************************Wishlist");
 											if (null != buyboxmodel)
 											{
 
@@ -3388,9 +3395,9 @@ public class UsersController extends BaseCommerceController
 								}
 
 								//	final ProductModel productModel = getMplOrderFacade().getProductForCode(entryModel.getProduct().getCode());
-
+								LOG.debug("Step9-************************Wishlist");
 								final ProductModel productModel = productService.getProductForCode(entryModel.getProduct().getCode());
-
+								LOG.debug("Step10-************************Wishlist");
 								if (null != productModel.getSellerInformationRelator())
 								{
 									final List<SellerInformationModel> sellerInfo = (List<SellerInformationModel>) productModel
@@ -3421,7 +3428,7 @@ public class UsersController extends BaseCommerceController
 								}
 							}
 						}
-						LOG.debug("The size of entries in wishlist is" + entryModelSize);//for TPR-5787
+						LOG.debug("Step11: The size of entries in wishlist is" + entryModelSize);//for TPR-5787
 						wldDTO.setCount(Integer.valueOf(entryModelSize));//TPR-5787 modified
 						wldDTO.setProducts(wldpDTOList);
 						wldDTOList.add(wldDTO);
@@ -3429,6 +3436,7 @@ public class UsersController extends BaseCommerceController
 				}
 				wlDTO.setWishList(wldDTOList);
 			}
+			wlDTO.setStatus(MarketplacecommerceservicesConstants.SUCCESSS_RESP);
 		}
 		catch (final EtailNonBusinessExceptions e)
 		{
@@ -3456,7 +3464,7 @@ public class UsersController extends BaseCommerceController
 			}
 			wlDTO.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
 		}
-		wlDTO.setStatus(MarketplacecommerceservicesConstants.SUCCESSS_RESP);
+
 		return wlDTO;
 
 	}//End of Get all Wish List data.
