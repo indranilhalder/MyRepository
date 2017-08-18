@@ -284,13 +284,15 @@ public class MplPancardUploadserviceImpl implements MplPancardUploadService
 	{
 		// YTODO Auto-generated method stub
 		final LPAWBUpdate lpAwbUpdate = new LPAWBUpdate();
-		final OrderLine orderLine = new OrderLine();
+		//final OrderLine orderLine = new OrderLine();
+		OrderLine orderLine = null;
 		final List<OrderLine> orderLineList = new ArrayList<OrderLine>();
 
 		if (null != pModelList)
 		{
 			for (final PancardInformationModel pModel : pModelList)
 			{
+				orderLine = new OrderLine();
 				orderLine.setInterfaceType(MarketplacecclientservicesConstants.PANCARD);
 				if (StringUtils.isNotEmpty(panCardImagePath))
 				{
@@ -312,8 +314,9 @@ public class MplPancardUploadserviceImpl implements MplPancardUploadService
 						orderLine.setPancardStatus(MarketplacecclientservicesConstants.APPROVED);
 					}
 				}
+				orderLineList.add(orderLine);
 			}
-			orderLineList.add(orderLine);
+			//orderLineList.add(orderLine);
 		}
 		else
 		{
@@ -321,6 +324,7 @@ public class MplPancardUploadserviceImpl implements MplPancardUploadService
 			{
 				for (final String transId : transactionidList)
 				{
+					orderLine = new OrderLine();
 					orderLine.setInterfaceType(MarketplacecclientservicesConstants.PANCARD);
 					if (StringUtils.isNotEmpty(transId))
 					{
