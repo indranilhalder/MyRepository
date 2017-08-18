@@ -69499,7 +69499,7 @@ body.page-multiStepCheckoutSummaryPage header, body.page-checkout-login header {
 	margin:24px 0px 0px;
   	padding-left: 58px;
   	padding-right: 59px;
-  	overflow: hidden;
+  	/* overflow: hidden; */
 }
 .cart.wrapper .cnc_store_wrapper .checkout-shipping-items.left-block.left-block-width .change_pincode_block{
   	padding-left: 58px;
@@ -70841,17 +70841,24 @@ background:#f8f8f8;
 p#cncpickuppincode_tooltip {
     width: 206px;
     position: absolute;
-    left: 28%;
+    left: -636%;
     background: #000;
     color: #fff;
-    top: -50px;
+    top: -94px;
     padding: 7px 18px 6px 19px;
     border-radius: 4px;
     line-height: 15px;
-    display: none;
+    opacity: 0;
     z-index: 10023;
+    text-align: left;
 }
-
+#cncpickuppincode_info:hover p#cncpickuppincode_tooltip {
+    opacity: 1;
+    cursor: text !important;
+}
+span#cncpickuppincode_info{
+	 position: relative;
+}
 p#cncpickuppincode_tooltip:after{
 	content: "";
     display: block;
@@ -70868,6 +70875,10 @@ p#cncpickuppincode_tooltip:after{
     margin: auto;
 }
 @media(max-width: 768px){
+	p#cncpickuppincode_tooltip {
+    left: 10%;
+    top: -75px;
+}
 p#cncpickuppincode_tooltip:after{
 	content: "";
     display: none;
