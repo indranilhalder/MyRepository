@@ -11513,5 +11513,62 @@
 			</itemtype>
 		</typegroup>
 		<!-- End CAR-274 -->
+		
+		<!-- PRDI-423 -->
+		<typegroup name="Mplbrandfilter">
+			<itemtype code="Mplbrandfilter" autocreate="true"
+				generate="false">
+				<deployment table="Mplbrandfilter" typecode="13099" />
+				<attributes>
+			 		<attribute autocreate="true" qualifier="L1"
+						type="java.lang.String" generate="false">
+						<persistence type="property" />
+						<modifiers read="true" write="true" search="true"
+							optional="true" />
+					</attribute>
+
+					<attribute autocreate="true" qualifier="L2"
+						type="java.lang.String" generate="true">
+						<persistence type="property" />
+						<modifiers read="true" write="true" search="true"
+							optional="true" />
+					</attribute>
+
+					<attribute autocreate="true" qualifier="L3" type="java.lang.String"
+						generate="true">
+						<persistence type="property" />
+						<modifiers read="true" write="true" search="true"
+							optional="true" />
+					</attribute>
+
+					<attribute autocreate="true" qualifier="brandCode"
+						type="java.lang.String" generate="true">
+						<persistence type="property" />
+						<modifiers read="true" write="true" search="true"
+							optional="true" />
+					</attribute>
+					<attribute autocreate="true" qualifier="url1"
+						type="java.lang.String" generate="true">
+						<persistence type="property" />
+						<modifiers read="true" write="true" search="true"
+							optional="true" />
+					</attribute>
+					<attribute autocreate="true" qualifier="url2"
+						type="java.lang.String" generate="true">
+						<persistence type="property" />
+						<modifiers read="true" write="true" search="true"
+							optional="true" />
+					</attribute>
+					<attribute autocreate="true" qualifier="url3"
+						type="java.lang.String" generate="true">
+						<persistence type="property" />
+						<modifiers read="true" write="true" search="true"
+							optional="true" />
+					</attribute>
+
+					</attributes>
+			</itemtype>
+
+		</typegroup>
 	</itemtypes>
 </items>
