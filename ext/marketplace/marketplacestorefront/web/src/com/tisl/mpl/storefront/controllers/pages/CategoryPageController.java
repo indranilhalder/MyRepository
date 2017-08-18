@@ -78,7 +78,6 @@ import com.google.common.base.Splitter;
 import com.google.common.collect.Iterables;
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.constants.MplConstants;
-import com.tisl.mpl.core.model.PriorityBrandsModel;
 import com.tisl.mpl.core.model.SeoContentModel;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.facade.category.MplCategoryFacade;
@@ -193,6 +192,14 @@ public class CategoryPageController extends AbstractCategoryPageController
 
 	private static final Integer PAGE_SIZE = Integer.valueOf(24);
 
+	private static final String SEARCH_CATEGORY_KEY = "searchCategory";
+	private static final String RESET_ALL_KEY = "resetAll";
+	private static final String CAT_NAME_KEY = "catName";
+	private static final String CAT_CODE_KEY = "catCode";
+	private static final String BUY_KEY = " Buy ";
+	private static final String ONLINE_KEY = " Online";
+	private static final String LAZY_INTERFACE_KEY = "lazyInterface";
+
 	/**
 	 * @return the pageSiseCount
 	 */
@@ -233,8 +240,8 @@ public class CategoryPageController extends AbstractCategoryPageController
 			@RequestParam(value = SHOW, defaultValue = PAGEVAl) final ShowMode showMode,
 			@RequestParam(value = SORT, required = false) final String sortCode,
 			@RequestParam(value = PAGE_SIZE_KEY, required = false) final Integer pageSize,
-			@RequestParam(value = "searchCategory", required = false) String dropDownText,
-			@RequestParam(value = "resetAll", required = false) final boolean resetAll, final Model model,
+			@RequestParam(value = SEARCH_CATEGORY_KEY, required = false) String dropDownText,
+			@RequestParam(value = RESET_ALL_KEY, required = false) final boolean resetAll, final Model model,
 			final HttpServletRequest request, final HttpServletResponse response)
 	{
 		//EQA review comments added
@@ -359,8 +366,8 @@ public class CategoryPageController extends AbstractCategoryPageController
 				catName = getCategoryModelUrlResolver().resolve(category);
 
 				final String newcatName = catName.substring(1, catName.lastIndexOf('/'));
-				model.addAttribute("catName", newcatName);
-				model.addAttribute("catCode", categoryCode.toLowerCase());
+				model.addAttribute(CAT_NAME_KEY, newcatName);
+				model.addAttribute(CAT_CODE_KEY, categoryCode.toLowerCase());
 				//model.addAttribute("brand", Boolean.valueOf(true));//SonarFix
 				model.addAttribute(BRANDNAME, Boolean.TRUE);
 				/* Added for TPR-1283 --Ends */
@@ -379,8 +386,8 @@ public class CategoryPageController extends AbstractCategoryPageController
 
 					final String cateName = category.getName();
 
-					metaKeywords = brandName + " " + cateName + ", " + brandName + " " + cateName + " Online" + "," + " Buy "
-							+ brandName + " " + cateName + "," + " Buy " + brandName + " " + cateName + " Online";
+					metaKeywords = brandName + " " + cateName + ", " + brandName + " " + cateName + ONLINE_KEY + "," + BUY_KEY
+							+ brandName + " " + cateName + "," + BUY_KEY + brandName + " " + cateName + ONLINE_KEY;
 					//EQA Review Comments added
 					metaDescription = brandName + " " + cateName + ModelAttributetConstants.DESCRIPTION_TEXT1 + brandName + " "
 							+ cateName + ModelAttributetConstants.DESCRIPTION_TEXT2 + cateName + " by " + brandName
@@ -462,8 +469,8 @@ public class CategoryPageController extends AbstractCategoryPageController
 			@RequestParam(value = SHOW, defaultValue = PAGEVAl) final ShowMode showMode,
 			@RequestParam(value = SORT, required = false) final String sortCode,
 			@RequestParam(value = PAGE_SIZE_KEY, required = false) final Integer pageSize,
-			@RequestParam(value = "searchCategory", required = false) String dropDownText,
-			@RequestParam(value = "resetAll", required = false) final boolean resetAll, final Model model,
+			@RequestParam(value = SEARCH_CATEGORY_KEY, required = false) String dropDownText,
+			@RequestParam(value = RESET_ALL_KEY, required = false) final boolean resetAll, final Model model,
 			final HttpServletRequest request, final HttpServletResponse response)
 	{
 		//EQA review comments added
@@ -587,8 +594,8 @@ public class CategoryPageController extends AbstractCategoryPageController
 				catName = getCategoryModelUrlResolver().resolve(category);
 
 				final String newcatName = catName.substring(1, catName.lastIndexOf('/'));
-				model.addAttribute("catName", newcatName);
-				model.addAttribute("catCode", categoryCode.toLowerCase());
+				model.addAttribute(CAT_NAME_KEY, newcatName);
+				model.addAttribute(CAT_CODE_KEY, categoryCode.toLowerCase());
 				//model.addAttribute("brand", Boolean.valueOf(true));//SonarFix
 				model.addAttribute(BRANDNAME, Boolean.TRUE);
 				/* Added for TPR-1283 --Ends */
@@ -607,8 +614,8 @@ public class CategoryPageController extends AbstractCategoryPageController
 
 					final String cateName = category.getName();
 
-					metaKeywords = brandName + " " + cateName + ", " + brandName + " " + cateName + " Online" + "," + " Buy "
-							+ brandName + " " + cateName + "," + " Buy " + brandName + " " + cateName + " Online";
+					metaKeywords = brandName + " " + cateName + ", " + brandName + " " + cateName + ONLINE_KEY + "," + BUY_KEY
+							+ brandName + " " + cateName + "," + BUY_KEY + brandName + " " + cateName + ONLINE_KEY;
 					//EQA Review Comments added
 					metaDescription = brandName + " " + cateName + ModelAttributetConstants.DESCRIPTION_TEXT1 + brandName + " "
 							+ cateName + ModelAttributetConstants.DESCRIPTION_TEXT2 + cateName + " by " + brandName
@@ -689,8 +696,8 @@ public class CategoryPageController extends AbstractCategoryPageController
 			@RequestParam(value = "show", defaultValue = "Page") final ShowMode showMode,
 			@RequestParam(value = "sort", required = false) final String sortCode,
 			@RequestParam(value = PAGE_SIZE_KEY, required = false) final Integer pageSize,
-			@RequestParam(value = "searchCategory", required = false) String dropDownText,
-			@RequestParam(value = "resetAll", required = false) final boolean resetAll, final Model model,
+			@RequestParam(value = SEARCH_CATEGORY_KEY, required = false) String dropDownText,
+			@RequestParam(value = RESET_ALL_KEY, required = false) final boolean resetAll, final Model model,
 			final HttpServletRequest request, final HttpServletResponse response)
 	{
 		//EQA review comments added
@@ -757,8 +764,8 @@ public class CategoryPageController extends AbstractCategoryPageController
 			catName = getCategoryModelUrlResolver().resolve(category);
 
 			final String newcatName = catName.substring(1, catName.lastIndexOf('/'));
-			model.addAttribute("catName", newcatName);
-			model.addAttribute("catCode", categoryCode.toLowerCase());
+			model.addAttribute(CAT_NAME_KEY, newcatName);
+			model.addAttribute(CAT_CODE_KEY, categoryCode.toLowerCase());
 			/* Added for TPR-1283 --Ends */
 			//Set the drop down text if the attribute is not empty or null
 			if (dropDownText != null && !dropDownText.isEmpty())
@@ -886,9 +893,9 @@ public class CategoryPageController extends AbstractCategoryPageController
 			@RequestParam(value = SHOW, defaultValue = PAGEVAl) final ShowMode showMode,
 			@RequestParam(value = SORT, required = false) final String sortCode,
 			@RequestParam(value = PAGE_SIZE_KEY, required = false) Integer pageSize,
-			@RequestParam(value = "searchCategory", required = false) String dropDownText,
-			@RequestParam(value = "resetAll", required = false) final boolean resetAll,
-			@RequestParam(value = "lazyInterface", required = false) final String lazyInterface, final Model model,
+			@RequestParam(value = SEARCH_CATEGORY_KEY, required = false) String dropDownText,
+			@RequestParam(value = RESET_ALL_KEY, required = false) final boolean resetAll,
+			@RequestParam(value = LAZY_INTERFACE_KEY, required = false) final String lazyInterface, final Model model,
 			final HttpServletRequest request, final HttpServletResponse response)
 	{
 		String returnStatement = null;
@@ -987,8 +994,8 @@ public class CategoryPageController extends AbstractCategoryPageController
 						return null;
 					}
 				}
-				model.addAttribute("catName", resolvedcatName);
-				model.addAttribute("catCode", categoryCode.toLowerCase());
+				model.addAttribute(CAT_NAME_KEY, resolvedcatName);
+				model.addAttribute(CAT_CODE_KEY, categoryCode.toLowerCase());
 				/* TPR-1283 changes --Ends */
 
 				//TISPRD-2315(checking whether the link has been clicked for pagination)
@@ -1156,11 +1163,11 @@ public class CategoryPageController extends AbstractCategoryPageController
 						//UF-15
 						if (null != lazyInterface && lazyInterface.equals("Y"))
 						{
-							model.addAttribute("lazyInterface", Boolean.TRUE);
+							model.addAttribute(LAZY_INTERFACE_KEY, Boolean.TRUE);
 						}
 						else
 						{
-							model.addAttribute("lazyInterface", Boolean.FALSE);
+							model.addAttribute(LAZY_INTERFACE_KEY, Boolean.FALSE);
 						}
 						return performSearch;
 					}
@@ -1238,9 +1245,9 @@ public class CategoryPageController extends AbstractCategoryPageController
 			@RequestParam(value = SHOW, defaultValue = PAGEVAl) final ShowMode showMode,
 			@RequestParam(value = SORT, required = false) final String sortCode,
 			@RequestParam(value = PAGE_SIZE_KEY, required = false) Integer pageSize,
-			@RequestParam(value = "searchCategory", required = false) String dropDownText,
-			@RequestParam(value = "resetAll", required = false) final boolean resetAll,
-			@RequestParam(value = "lazyInterface", required = false) final String lazyInterface, final Model model,
+			@RequestParam(value = SEARCH_CATEGORY_KEY, required = false) String dropDownText,
+			@RequestParam(value = RESET_ALL_KEY, required = false) final boolean resetAll,
+			@RequestParam(value = LAZY_INTERFACE_KEY, required = false) final String lazyInterface, final Model model,
 			final HttpServletRequest request, final HttpServletResponse response)
 	{
 		String returnStatement = null;
@@ -1274,8 +1281,8 @@ public class CategoryPageController extends AbstractCategoryPageController
 					model.addAttribute(ModelAttributetConstants.SEARCH_QUERY_VALUE, searchQuery);
 				}
 
-				model.addAttribute("catName", resolvedcatName);
-				model.addAttribute("catCode", categoryCode.toLowerCase());
+				model.addAttribute(CAT_NAME_KEY, resolvedcatName);
+				model.addAttribute(CAT_CODE_KEY, categoryCode.toLowerCase());
 				/* TPR-1283 changes --Ends */
 
 				//TISPRD-2315(checking whether the link has been clicked for pagination)
@@ -1406,11 +1413,11 @@ public class CategoryPageController extends AbstractCategoryPageController
 						//UF-15
 						if (null != lazyInterface && lazyInterface.equals("Y"))
 						{
-							model.addAttribute("lazyInterface", Boolean.TRUE);
+							model.addAttribute(LAZY_INTERFACE_KEY, Boolean.TRUE);
 						}
 						else
 						{
-							model.addAttribute("lazyInterface", Boolean.FALSE);
+							model.addAttribute(LAZY_INTERFACE_KEY, Boolean.FALSE);
 						}
 						return performSearch;
 					}

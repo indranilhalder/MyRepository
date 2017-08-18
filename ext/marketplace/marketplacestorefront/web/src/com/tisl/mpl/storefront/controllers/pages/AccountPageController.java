@@ -26,6 +26,7 @@ import de.hybris.platform.acceleratorstorefrontcommons.forms.validation.EmailVal
 import de.hybris.platform.acceleratorstorefrontcommons.forms.validation.PasswordValidator;
 import de.hybris.platform.acceleratorstorefrontcommons.forms.validation.ProfileValidator;
 import de.hybris.platform.acceleratorstorefrontcommons.forms.verification.AddressVerificationResultHandler;
+import de.hybris.platform.catalog.impl.CatalogUtils;
 import de.hybris.platform.category.model.CategoryModel;
 import de.hybris.platform.cms2.exceptions.CMSItemNotFoundException;
 import de.hybris.platform.cms2.servicelayer.services.CMSComponentService;
@@ -232,7 +233,6 @@ import com.tisl.mpl.storefront.web.forms.validator.MplPasswordValidator;
 import com.tisl.mpl.storefront.web.forms.validator.MplUpdateEmailFormValidator;
 import com.tisl.mpl.storefront.web.forms.validator.ReturnItemFormValidator;
 import com.tisl.mpl.ticket.facades.MplSendTicketFacade;
-import com.tisl.mpl.util.CatalogUtils;
 import com.tisl.mpl.util.ExceptionUtil;
 import com.tisl.mpl.util.GenericUtilityMethods;
 import com.tisl.mpl.wsdto.GigyaProductReviewWsDTO;
@@ -759,7 +759,7 @@ public class AccountPageController extends AbstractMplSearchPageController
 							final String orderEntryStatus = orderEntryData.getConsignment().getStatus().getCode();
 							final String stage = cancelReturnFacade.getOrderStatusStage(orderEntryStatus);
 
-							if (StringUtils.isNotEmpty(stage) && stage.equalsIgnoreCase("SHIPPING"))
+							if (StringUtils.isNotEmpty(stage) && stage.equalsIgnoreCase(MarketplacecommerceservicesConstants.SHIPPING))
 							{
 								cancellationMsgFlag = true;
 							}
@@ -791,7 +791,7 @@ public class AccountPageController extends AbstractMplSearchPageController
 							approved = response.get(0);
 						}
 
-						response = statusTrackMap.get("SHIPPING");
+						response = statusTrackMap.get(MarketplacecommerceservicesConstants.SHIPPING);
 
 						if (CollectionUtils.isNotEmpty(response))
 						{
@@ -841,7 +841,7 @@ public class AccountPageController extends AbstractMplSearchPageController
 							returns = response.get(0);
 						}
 						orderStatus.put("APPROVED", approved);
-						orderStatus.put("SHIPPING", shipped);
+						orderStatus.put(MarketplacecommerceservicesConstants.SHIPPING, shipped);
 						orderStatus.put("DELIVERY", delivery);
 						orderStatus.put("CANCEL", cancel);
 						orderStatus.put("RETURN", returns);
@@ -1309,7 +1309,8 @@ public class AccountPageController extends AbstractMplSearchPageController
 										final String orderEntryStatus = consignmentModel.getStatus().getCode();
 										final String stage = cancelReturnFacade.getOrderStatusStage(orderEntryStatus);
 										boolean cancellationMsgFlag = false;
-										if (StringUtils.isNotEmpty(stage) && stage.equalsIgnoreCase("SHIPPING"))
+										if (StringUtils.isNotEmpty(stage)
+												&& stage.equalsIgnoreCase(MarketplacecommerceservicesConstants.SHIPPING))
 										{
 											cancellationMsgFlag = true;
 										}
@@ -5205,10 +5206,10 @@ public class AccountPageController extends AbstractMplSearchPageController
 
 				for (final Wishlist2EntryModel entry : entryModels)
 				{
-				        LOG.debug("Step0-************************Wishlist");
+					LOG.debug("Step0-************************Wishlist");
 					if (!entry.getIsDeleted().booleanValue() || entry.getIsDeleted() == null)//TPR-5787
 					{
-					        LOG.debug("Step1-************************Wishlist");
+						LOG.debug("Step1-************************Wishlist");
 						//TISEE-6376
 						if (entry.getProduct() != null
 								&& entry.getProduct().getCode() != null
@@ -5216,7 +5217,7 @@ public class AccountPageController extends AbstractMplSearchPageController
 										.equalsIgnoreCase(catalogVersion)))
 
 						{
-						        LOG.debug("Step2-************************Wishlist");
+							LOG.debug("Step2-************************Wishlist");
 							final ProductModel productModel = getMplOrderFacade().getProductForCode(entry.getProduct().getCode());
 							if (null != productModel.getSellerInformationRelator())
 
@@ -5268,8 +5269,8 @@ public class AccountPageController extends AbstractMplSearchPageController
 							// LW-225,230 end
 						}
 
-                                                LOG.debug("Step3-************************Wishlist");
-						
+						LOG.debug("Step3-************************Wishlist");
+
 						final boolean isWishlistEntryValid = mplCartFacade.isWishlistEntryValid(entry);
 						if (!isDelisted && !isWishlistEntryValid)
 						{
@@ -5310,7 +5311,7 @@ public class AccountPageController extends AbstractMplSearchPageController
 							 * ProductOption.SELLER));
 							 */
 
-                                                        LOG.debug("Step5-************************Wishlist");
+							LOG.debug("Step5-************************Wishlist");
 							final ProductData productData1 = productFacade.getProductForOptions(entryModel.getProduct(), Arrays.asList(
 									ProductOption.BASIC, ProductOption.SUMMARY, ProductOption.DESCRIPTION, ProductOption.CATEGORIES,
 									ProductOption.STOCK, ProductOption.SELLER));
@@ -5371,7 +5372,7 @@ public class AccountPageController extends AbstractMplSearchPageController
 							showSizeGuideForFA(entryModel.getProduct(), map, model);
 							wpDataList.add(wishlistProductData);
 						}
-                                                LOG.debug("Step6-************************Wishlist");  
+						LOG.debug("Step6-************************Wishlist");
 					}
 				}
 

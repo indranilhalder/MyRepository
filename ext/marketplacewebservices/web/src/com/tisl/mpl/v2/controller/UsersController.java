@@ -437,6 +437,11 @@ public class UsersController extends BaseCommerceController
 
 	@Resource(name = "voucherService")
 	private VoucherService voucherService;
+	
+	//Sonar Fix
+	private static final String NO_JUSPAY_URL= "No juspayReturnUrl is defined in local properties";
+	  
+	private static final String NO_JUSPAY_MERCHANTKEY= "No juspayMerchantKey is defined in local properties";
 
 	//@Autowired
 	//private MplPaymentFacadeImpl mplPaymentFacadeImpl;
@@ -6768,7 +6773,7 @@ public class UsersController extends BaseCommerceController
 			juspayMerchantId = !getConfigurationService().getConfiguration()
 					.getString(MarketplacecommerceservicesConstants.MARCHANTID).isEmpty() ? getConfigurationService()
 					.getConfiguration().getString(MarketplacecommerceservicesConstants.MARCHANTID)
-					: "No juspayMerchantKey is defined in local properties";
+					: NO_JUSPAY_MERCHANTKEY;
 
 			if (commonUtils.isLuxurySite())
 			{
@@ -6777,7 +6782,7 @@ public class UsersController extends BaseCommerceController
 
 
 				.getConfiguration().getString(MarketplacecommerceservicesConstants.RETURNURLLUX)
-						: "No juspayReturnUrl is defined in local properties";
+						: NO_JUSPAY_URL;
 
 			}
 			else
@@ -6785,7 +6790,7 @@ public class UsersController extends BaseCommerceController
 				juspayReturnUrl = !getConfigurationService().getConfiguration()
 						.getString(MarketplacecommerceservicesConstants.RETURNURL).isEmpty() ? getConfigurationService()
 						.getConfiguration().getString(MarketplacecommerceservicesConstants.RETURNURL)
-						: "No juspayReturnUrl is defined in local properties";
+						: NO_JUSPAY_URL;
 			}
 
 			returnUrlBuilder.append(juspayReturnUrl);
@@ -6931,14 +6936,14 @@ public class UsersController extends BaseCommerceController
 						juspayMerchantId = !getConfigurationService().getConfiguration()
 								.getString(MarketplacecommerceservicesConstants.MARCHANTID).isEmpty() ? getConfigurationService()
 								.getConfiguration().getString(MarketplacecommerceservicesConstants.MARCHANTID)
-								: "No juspayMerchantKey is defined in local properties";
+								: NO_JUSPAY_MERCHANTKEY;
 
 						if (commonUtils.isLuxurySite())
 						{
 							juspayReturnUrl = !getConfigurationService().getConfiguration()
 									.getString(MarketplacecommerceservicesConstants.RETURNURLLUX).isEmpty() ? getConfigurationService()
 									.getConfiguration().getString(MarketplacecommerceservicesConstants.RETURNURLLUX)
-									: "No juspayReturnUrl is defined in local properties";
+									: NO_JUSPAY_URL;
 
 						}
 						else
@@ -6946,7 +6951,7 @@ public class UsersController extends BaseCommerceController
 							juspayReturnUrl = !getConfigurationService().getConfiguration()
 									.getString(MarketplacecommerceservicesConstants.RETURNURL).isEmpty() ? getConfigurationService()
 									.getConfiguration().getString(MarketplacecommerceservicesConstants.RETURNURL)
-									: "No juspayReturnUrl is defined in local properties";
+									: NO_JUSPAY_URL;
 						}
 
 						juspayOrderId = mplPaymentFacade.createJuspayOrder(cart, null, firstName, lastName, addressLine1, addressLine2,
