@@ -252,21 +252,20 @@ public class MplCategoryDaoImpl extends DefaultCategoryDao implements MplCategor
 		try
 		{
 
-			//final String queryString = getBrandFilterQuery();
-			//final FlexibleSearchQuery query = new FlexibleSearchQuery(queryString);
-			//query.addQueryParameter("l1code", l1CategoryCode);
-			//query.addQueryParameter("l2code", l2CategoryCode);
-			final String queryString = "SELECT {p:" + MplbrandfilterModel.PK
-					+ "} "//
-					+ MarketplacecommerceservicesConstants.QUERYFROM + MplbrandfilterModel._TYPECODE + " AS p} where " + "{p."
-					+ MplbrandfilterModel.L1 + "} = ?l1code and " + "{p." + MplbrandfilterModel.L2 + "} = ?l2code";
-
+			final String queryString = getBrandFilterQuery();
 			final FlexibleSearchQuery query = new FlexibleSearchQuery(queryString);
 			query.addQueryParameter("l1code", l1CategoryCode);
 			query.addQueryParameter("l2code", l2CategoryCode);
+			//			final String queryString = "SELECT {p:" + MplbrandfilterModel.PK
+			//					+ "} "//
+			//					+ MarketplacecommerceservicesConstants.QUERYFROM + MplbrandfilterModel._TYPECODE + " AS p} where " + "{p."
+			//					+ MplbrandfilterModel.L1 + "} = ?l1code and " + MplbrandfilterModel.L2 + "=?l2code";
+			//
+			//			final FlexibleSearchQuery query = new FlexibleSearchQuery(queryString);
+			//			query.addQueryParameter("l1code", l1CategoryCode);
+			//			query.addQueryParameter("l2code", l2CategoryCode);
 
 			brandFilterList = flexibleSearchService.<MplbrandfilterModel> search(query).getResult();
-
 		}
 
 		catch (final FlexibleSearchException e)
