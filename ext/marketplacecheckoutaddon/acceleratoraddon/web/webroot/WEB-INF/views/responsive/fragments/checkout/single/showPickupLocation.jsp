@@ -18,8 +18,11 @@
 	<span class="cnc_arrow"></span>
 		<div class="cnc_title_search">
 		<h1>
-			<spring:theme code="checkout.single.cnc.nearBy"/> (pincode <span id="cncChangedPincode${entryNumber}">${defaultPincode}</span>) <span>[?]</span>
+			<spring:theme code="checkout.single.cnc.nearBy"/> (pincode <span id="cncChangedPincode${entryNumber}">${defaultPincode}</span>) <span id="cncpickuppincode_info">[?]
+			
+			</span>
 		</h1>
+		<p id="cncpickuppincode_tooltip">Place the order and collect your items from a nearby store. We will keep it ready for you.</p>
 		<div class="cnc_search_wrapper">
 		<input class="cncStoreSearch" type="text" id="cncStoreSearch${entryNumber}" name="cncStoreSearch" placeholder="Search nearby store" onkeypress="ACC.singlePageCheckout.searchOnEnterPress(event,'cncStoreSearch${entryNumber}','${entryNumber}')">
 		<button onclick="ACC.singlePageCheckout.searchCNCStores('cncStoreSearch${entryNumber}','${entryNumber}');" type="button"></button>
@@ -71,6 +74,13 @@
 <c:if test="${storesAvailable eq true}">
 <script>
 $(document).ready(function() {
+	/*CNC pickup location tooltip*/
+	$("#cncpickuppincode_info").hover(function(){
+	    $('#cncpickuppincode_tooltip').fadeIn();
+	},function(){
+	    $('#cncpickuppincode_tooltip').fadeOut();
+	});
+	
 	$(".enter-pincode-block").hide();
 	$(".txt${entryNumber}").click(function(e){
 		e.stopPropagation();
