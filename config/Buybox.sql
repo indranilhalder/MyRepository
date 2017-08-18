@@ -636,6 +636,7 @@ AS
 			and p1.p_catalogversion=v_catalogversion_buybox 
 			and p2.p_catalogversion=v_catalogversion_buybox);
 			
+			COMMIT;
 			-- CAR-302/CAR-303 size variant  update snippet ends
 		
       --to Update the last run time
