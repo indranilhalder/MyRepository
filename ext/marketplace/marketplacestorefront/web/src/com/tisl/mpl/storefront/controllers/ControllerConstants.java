@@ -60,6 +60,8 @@ public interface ControllerConstants
 	/**
 	 * Class with action name constants
 	 */
+	String LUXURY_STORE_ADDON_PREFIX = "addon:/luxurystoreaddon";
+
 	interface Actions
 	{
 		interface Cms
@@ -151,6 +153,7 @@ public interface ControllerConstants
 				String AccountRegisterPage = "pages/account/accountRegisterPage";
 				String ChangePassword = "/my-account/update-password";
 
+
 			}
 
 			interface Oauth2callback
@@ -191,8 +194,8 @@ public interface ControllerConstants
 				String AccountInviteFriendPage = "pages/account/inviteFriends";
 				String AccountCouponsPage = "pages/account/accountCouponDetailsPage";
 				String AccountOrderReturnPincodeServiceCheck = "pages/account/returnPincodeAvailabilityCheck";
-				String ScheduledDeliveryDate= "pages/account/scheduledDeliveryDate";
-				String OTPPopup= "pages/account/otpPopup";
+				String ScheduledDeliveryDate = "pages/account/scheduledDeliveryDate";
+				String OTPPopup = "pages/account/otpPopup";
 			}
 
 
@@ -260,10 +263,12 @@ public interface ControllerConstants
 				String chatPage = "pages/clickToChatCall/clickToChat";
 				String callPage = "pages/clickToChatCall/clickToCall";
 			}
+
 			interface Order
 			{
 				String TrackOrderDetailsPage = "pages/order/trackOrderDetailsPage";
 			}
+
 			interface Search
 			{
 				// TPR-198
@@ -287,6 +292,14 @@ public interface ControllerConstants
 				String LatestOffers = "fragments/home/latestOffersPanel";
 				String ShopByBrandImagesPanel = "fragments/home/shopByBrandImagesPanel";
 				String FooterPanel = "fragments/home/footerPanel";
+			}
+
+			interface LuxuryHome
+			{
+				String RegisterFragment = LUXURY_STORE_ADDON_PREFIX + "/fragments/home/luxRegister";
+				String LoginFragment = LUXURY_STORE_ADDON_PREFIX + "/fragments/home/luxLoginPanel";
+				String ForgotPasswordPanel = LUXURY_STORE_ADDON_PREFIX + "/fragments/home/forgottenPwd";
+
 			}
 
 			interface Cart
@@ -377,12 +390,9 @@ public interface ControllerConstants
 				//UF-60
 				public static final String AJAXPRODUCTDATA = "fragments/product/productPromotionSection";
 
-
-
 				public static final String USSID_CODE_PATH_NEW_PATTERN = "/**/p-{ussId:.*}";
 				public static final String USSID = "ussId";
-				public static final String ID_ED_SELLER_HANDLING_TIME= "isEDSeller";
-			}
+				public static final String ID_ED_SELLER_HANDLING_TIME= "isEDSeller";			}
 
 			interface NPS_Emailer
 			{

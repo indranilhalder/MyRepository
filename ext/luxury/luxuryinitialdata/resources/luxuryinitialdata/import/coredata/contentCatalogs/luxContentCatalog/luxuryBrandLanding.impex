@@ -1,0 +1,301 @@
+$storePrefix=lux
+$contentCatalog=$storePrefixContentCatalog
+$productCatalog=luxProductCatalog
+$contentCV=catalogVersion(CatalogVersion.catalog(Catalog.id[default=$contentCatalog]),CatalogVersion.version[default=Staged])[default=$contentCatalog:Staged]
+$picture=media(code, $contentCV)
+$productCV=catalogVersion(catalog(id[default=$productCatalog]),version[default='Staged'])[unique=true,default=$productCatalog:Staged]
+# Import modulegen config properties into impex macros
+$luxuryStoreAddonPrefix=addon:/luxurystoreaddon
+$lang=en
+
+UPDATE GenericItem[processor=de.hybris.platform.commerceservices.impex.impl.ConfigPropertyImportProcessor];pk[unique=true]
+$jarResourceCms=$config-jarResourceCmsValue
+
+INSERT_UPDATE PageTemplate;$contentCV[unique=true];uid[unique=true];name;frontendTemplateName;restrictedPageTypes(code);active[default=true]
+;;luxuryBrandLandingPageTemplate;Luxury Band Landing Page Template;$luxuryStoreAddonPrefix/pages/layout/luxuryBrandLandingPage;ContentPage;true
+;;luxuryGenderLandingPageTemplate;Luxury Gender Landing page Template;$luxuryStoreAddonPrefix/pages/layout/luxuryGenderLandingPage;ContentPage;true
+
+
+
+UPDATE PageTemplate;$contentCV[unique=true];uid[unique=true];velocityTemplate[translator=de.hybris.platform.commerceservices.impex.impl.FileLoaderValueTranslator]
+;;luxuryBrandLandingPageTemplate;$jarResourceCms/structure-view/structure_luxuryBrand.vm
+;;luxuryGenderLandingPageTemplate;$jarResourceCms/structure-view/structure_luxuryGender.vm
+
+INSERT_UPDATE ContentPage;$contentCV[unique=true];uid[unique=true];name;masterTemplate(uid,$contentCV);label;defaultPage[default='true'];approvalStatus(code)[default='approved'];homepage[default='false']
+;;luxuryBrandLandingPage;Luxury Brand Landing Page;luxuryBrandLandingPageTemplate;/lifestyle
+;;luxuryMenlandingPage;Luxury Men Landing Page;luxuryGenderLandingPageTemplate;/menlanding
+;;luxuryWomenlandingPage;Luxury Women Landing Page;luxuryGenderLandingPageTemplate;/womenlanding
+
+
+#### Product carousel
+INSERT_UPDATE ProductCarouselComponent;$contentCV[unique=true];uid[unique=true];name;scroll(code);popup;&componentRef
+;;CoachBrand-ProductCarouselComponent; Coach Product Carousel Component;allVisible;false;Coach-ProductCarouselComponent
+
+INSERT_UPDATE ProductCarouselComponent;$contentCV[unique=true];uid[unique=true];products(code,$productCV)
+;;CoachBrand-ProductCarouselComponent;LUX000000000384001,LUX000000000384021,LUX000000000384031,LUX000000000384041,LUX000000000384021;
+
+INSERT_UPDATE VideoComponent;$contentCV[unique=true];uid[unique=true];name;&componentRef;videoUrl;videoTitle;videoDescription;
+;;Men-StyleEditVideoComponent;Style Edit Video Component;StyleEditVideoComponent;https://www.youtube.com/embed/7Djj21GYLDU;REVENGE DRESSING:Best outfits in history;;
+
+
+
+INSERT_UPDATE Media;$contentCV[unique=true];code[unique=true]	;mime;realfilename;@media[translator=de.hybris.platform.impex.jalo.media.MediaDataTranslator][forceWrite=true];folder(qualifier)[default='images'];mediaType(code)[default='Image']
+;;MenHeroBanner;text/png;MenHeroBanner.png;$jarResourceCms/preview-images/MenHeroBanner.png;;;
+;;CoachHeroBanner;text/png;HeroBanner1.png;$jarResourceCms/preview-images/HeroBanner1.png;;;
+;;CoachHeroBanner1;text/png;HeroBanner1.png;$jarResourceCms/preview-images/HeroBanner1.png;;;
+;;CoachHeroBanner2;text/png;HeroBanner1.png;$jarResourceCms/preview-images/HeroBanner1.png;;;
+;;CoachHeroBanner3;text/png;HeroBanner1.png;$jarResourceCms/preview-images/HeroBanner1.png;;;
+;;BagsImageCoursel;text/png;acc-thumb.png;$jarResourceCms/preview-images/acc-thumb.png;;;
+;;PantsImageCoursel;text/png;bottoms-thumb.png;$jarResourceCms/preview-images/bottoms-thumb.png;;;
+;;ClothingImageCoursel;text/png;clothing-thumb.png;$jarResourceCms/preview-images/clothing-thumb.png;;;
+;;FootwearImageCoursel;text/png;footwear-thumb.png;$jarResourceCms/preview-images/footwear-thumb.png;;;
+;;GroomingImageCoursel;text/png;grooming-thumb.png;$jarResourceCms/preview-images/grooming-thumb.png;;;
+;;look1Col1;text/png;look1.png;$jarResourceCms/preview-images/look1.png;;;
+;;look2Col1;text/png;look3.png;$jarResourceCms/preview-images/look3.png;;;
+;;look1Col2;text/png;look2.png;$jarResourceCms/preview-images/look2.png;;;
+;;look2Col2;text/png;look4.png;$jarResourceCms/preview-images/look4.png;;;
+;;bag-look1col1;text/png;look11.png;$jarResourceCms/preview-images/look11.png;;;
+;;bag-look1col21;text/png;img-look3.png;$jarResourceCms/preview-images/img-look3.png;;;
+;;bag-look1col22;text/png;img-look4.png;$jarResourceCms/preview-images/img-look4.png;;;
+;;bag-look2col1;text/png;look12.png;$jarResourceCms/preview-images/look12.png;;;
+;;Men-MiniLookBook;text/png;MenPlaceholder.png;$jarResourceCms/preview-images/MenPlaceholder.png;;;
+;;Brand_landingVideo;video/mp4;;$jarResourceCms/preview-images/brooks-brothers_brand-video.mp4;;Video;
+;;Brand-team;text/png;niketeam.png;$jarResourceCms/preview-images/niketeam.png;;;
+;;mobile-RedPoster;text/png;gadget-banner.png;$jarResourceCms/preview-images/gadget-banner.png;;;
+;;pickitup-poster;text/png;banner-right.png;$jarResourceCms/preview-images/banner-right.png;;;
+
+
+INSERT_UPDATE CMSImageComponent;$contentCV[unique=true];uid[unique=true];$picture[lang=$lang];&componentRef
+;;CoachHeroBannerSlot;CoachHeroBanner;
+;;CoachHeroBannerSlot1;CoachHeroBanner1;
+;;CoachHeroBannerSlot2;CoachHeroBanner2;
+;;CoachHeroBannerSlot3;CoachHeroBanner3;
+;;BagsImageCoursel;BagsImageCoursel;BagsImageCoursel
+;;PantsImageCoursel;PantsImageCoursel;PantsImageCoursel
+;;ClothingImageCoursel;ClothingImageCoursel;ClothingImageCoursel
+;;FootwearImageCoursel;FootwearImageCoursel;FootwearImageCoursel
+;;GroomingImageCoursel;GroomingImageCoursel;GroomingImageCoursel
+;;look1ShowCol1;look1Col1;
+;;look1ShowCol2;look1Col2;
+;;look2ShowCol1;look2Col1;
+;;look2ShowCol2;look2Col2;
+;;bagShow-look1col1;bag-look1col1;
+;;bagShow-look1col21;bag-look1col21;
+;;bagShow-look1col22;bag-look1col22;
+;;bagShow-look2col1;bag-look2col1;
+;;MenBanner;MenHeroBanner;
+;;Men-MiniLookBook;Men-MiniLookBook;
+;;Brand-team;Brand-team;
+;;pickitup-poster;pickitup-poster;
+;;mobile-RedPoster;mobile-RedPoster;
+
+INSERT_UPDATE CMSParagraphComponent ;$contentCV[unique=true];uid[unique=true];name;content;
+;;Brand-shopByFav;Brand-shopByFav;"<section class='look-book clearfix'><h3 class='section-title'>Shop by Category</h3><p class='mb-40 section-content'>Shop your favourites</p><div class='look-book-link'><ul class='list-unstyled clearfix'><li><a href='#'>Polos &amp; T-shirts</a></li><li><a href='#'>Casual Shirts</a></li><li><a href='#'>Jeans</a></li><li><a href='#'>Casual Trousers</a></li><li><a href='#'>Formal Shirts</a></li><li><a href='#'>Formal Trousers</a></li><li><a href='#'>Sweatshirts &amp; Sweaters</a></li><li><a href='#'>Casual Jackets &amp; Blazers Underwear</a></li><li><a href='#'>Underwear</a></li></ul></div></section>";
+
+
+INSERT_UPDATE LuxurySimpleBannerComponent;$contentCV[unique=true];uid[unique=true];name;&componentRef;urlLink;$picture[lang=$lang];
+;;Men-BannerVideo1;Men Video Banner;;/;Brand_landingVideo;
+
+INSERT_UPDATE BannerComponent;$contentCV[unique=true];uid[unique=true];name;&componentRef;urlLink;$picture[lang=$lang]
+;;CoachType1Banner;Category Type Banner 1;CoachType1Banner;/;CoachHeroBanner
+;;MenHeroBanner;Men Banner;MenHeroBanner;/;MenHeroBanner
+;;MenHeroBanner1;Men Banner1;MenHeroBanner1;/;MenHeroBanner
+;;MenHeroBanner2;Men Banner2;MenHeroBanner2;/;MenHeroBanner
+;;MenHeroBanner3;Men Banner3;MenHeroBanner3;/;MenHeroBanner
+;;CoachType2Banner;Category Type Banner 2;CoachType2Banner;/;CoachHeroBanner1
+;;CoachType3Banner;Category Type Banner 3;CoachType3Banner;/;CoachHeroBanner2
+;;CoachType4Banner;Category Type Banner 4;CoachType4Banner;/;CoachHeroBanner3
+;;BagsImageCoursel1;Bags;BagsImageCourselBanner;/;BagsImageCoursel
+;;PantsImageCoursel1;Pants;PantsImageCourselBanner1;/;PantsImageCoursel
+;;ClothingImageCoursel1;Clothing;ClothingImageCourselBanner2;/;ClothingImageCoursel
+;;FootwearImageCoursel1;Foot Wear;FootwearImageCourselBanner3;/;FootwearImageCoursel
+;;GroomingImageCoursel1;Brooming;GroomImageCourselBanner4;/;GroomingImageCoursel
+;;look1bookCol1;look1 book1;look1bookCol1;/;look1Col1
+;;look1bookCol2;look1 book2;look1bookCol2;/;look1Col2
+;;look2bookCol1;look2 book1;look2bookCol1;/;look2Col1
+;;look2bookCol2;look2 book2;look2bookCol2;/;look2Col2
+;;mobile1-RedPoster;mobile RedPoster;mobile-RedPoster;/;mobile-RedPoster
+;;pickitup1-poster;pickitup-poster;pickitup-poster;/;pickitup-poster
+
+
+INSERT_UPDATE LuxCMSMediaParagraphComponent ;$contentCV[unique=true];uid[unique=true];name;$picture[lang=en];content;url;medias(uid,$contentCV);
+;;Men-lookBook;Men look;Men-MiniLookBook;"<div class='seastion-content'><h2>Travellers <br>Edition</h2></div>";"/menlanding";"";
+;;mobile-lookBook;Mobile  MiniLookBook;;;"/";mobile1-RedPoster,pickitup1-poster;
+
+
+INSERT_UPDATE ShopByCategory;$contentCV[unique=true];uid[unique=true];name;title;relatedImage(uid,$contentCV)
+;;Brand-shopbycategory	;Brand-shopbycategory;Shop by Category;BagsImageCoursel1,PantsImageCoursel1,ClothingImageCoursel1,FootwearImageCoursel1,GroomingImageCoursel1
+
+
+
+
+INSERT_UPDATE RotatingImagesComponent;$contentCV[unique=true];uid[unique=true];name;banners(&componentRef)                                              					;&componentRef
+;;BrandBannerRotating;Brand Banner Rotating;CoachType2Banner,CoachType3Banner,CoachType4Banner;CategoryBannerRotating
+;;MenBannerRotating;Men Brand Banner Rotating;MenHeroBanner,MenHeroBanner1,MenHeroBanner2,MenHeroBanner3;MensBannerRotating
+
+INSERT_UPDATE ContentSlotName;name[unique=true];template(uid,$contentCV)[unique=true][default='luxuryBrandLandingPageTemplate'];validComponentTypes(code);compTypeGroup(code)
+;Brand-TopHeaderSlot;;;wide
+;Brand-HeaderLinkSlot;;;wide
+;Brand-SiteLogoSlot;;;wide
+;Brand-SearchBoxSlot;;;wide
+;Brand-MiniCartSlot;;;wide
+;Brand-NavigationBarSlot;;;wide
+;Brand-WhyShopOnLuxurySlot;;;wide
+;Brand-FooterSlot;;;wide
+
+INSERT_UPDATE ContentSlot;$contentCV[unique=true];uid[unique=true];name;active;cmsComponents(uid,$contentCV)
+;;Brand-TopHeaderSlot;Brand TopHeader;true;Home-TopBannerContent
+;;Brand-HeaderLinkSlot;Brand HeaderLinkSlot;true;
+;;Brand-siteLogoSlot;Brand siteLogo;true;Brand-team;
+;;Brand-MiniCartSlot;Brand MiniCart;true;
+;;Brand-HeroBannerSlot;Brand HeroBanner;true;Men-BannerVideo1
+;;Brand-BannerDescriptionSlot;Brand BannerDescription;true;
+;;Brand-CategoryCuroselSlot;Brand CategoryCurosel;true;Brand-shopbycategory
+;;Brand-ShowCase1Slot;Brand ShowCase1;true;Bag-ShowCase
+;;Brand-ShowCase2Slot;Brand ShowCase2;true;
+;;Brand-ProductCurosel1Slot;Brand ProductCurosel1;true;CoachBrand-ProductCarouselComponent
+;;Brand-ProductCurosel2Slot;Brand ProductCurosel2;true;
+;;Brand-MoreStoriesbanner1DescriptionSlot;Brand MoreStoriesbanner1Description;true;
+;;Brand-MoreStoriesbanner1Col1Slot;Brand MoreStoriesbanner1Col1;true;look1ShowCol1,look1ShowCol2
+;;Brand-MoreStoriesbanner1Col2Slot;Brand MoreStoriesbanner1Col2;true;look2ShowCol1,look2ShowCol2
+;;Brand-MoreStoriesbanner2Col1Slot;Brand MoreStoriesbanner2Col1;true;bagShow-look1col1
+;;Brand-MoreStoriesbanner2Col2Slot;Brand MoreStoriesbanner2Col2;true;bagShow-look1col21,bagShow-look1col22,bagShow-look2col1
+;;Brand-MoreStoriesbanner2DescriptionSlot;Brand MoreStoriesbanner2Description;true;
+;;Brand-PopularCategorySlot;Brand PopularCategory;true;Brand-shopByFav
+;;Brand-WhyShopOnLuxurySlot;Brand WhyShopOnLuxury;true;
+;;Brand-FooterSlot;Brand Footer;true;LuxuryFooterComponent
+;;Gender-TopHeaderSlot;Gender TopHeader;true;Home-TopBannerContent
+;;Gender-HeaderLinkSlot;Gender HeaderLinkSlot;true;
+;;Gender-siteLogoSlot;Gender siteLogo;true;
+;;Gender-MiniCartSlot;Gender MiniCart;true;
+;;Gender-WhyShopOnLuxurySlot;Gender WhyShopOnLuxury;true;
+;;Gender-FooterSlot;Gender Footer;true;LuxuryFooterComponent
+;;Men-TopHeaderSlot;Gender TopHeader;true;
+;;Men-HeaderLinkSlot;Gender HeaderLinkSlot;true;
+;;Men-siteLogoSlot;Gender siteLogo;true;
+;;Men-MiniCartSlot;Gender MiniCart;true;
+;;Men-WhyShopOnLuxurySlot;Gender WhyShopOnLuxury;true;
+;;Men-FooterSlot;Gender Footer;true;
+;;Men-HeroBannerSlot;Brand HeroBanner;true;MenBanner
+;;Men-BannerDescriptionSlot;Brand BannerDescription;true;
+;;Men-CategoryCuroselSlot;Brand CategoryCurosel;true;Brand-shopbycategory
+;;Men-ShowCase1Slot;Brand ShowCase1;true;Men-ShowCase
+;;Men-ShowCase2Slot;Brand ShowCase2;true;Men-ShowCase
+;;Men-ProductCurosel1Slot;Brand ProductCurosel1;true;CoachBrand-ProductCarouselComponent
+;;Men-ProductCurosel2Slot;Brand ProductCurosel2;true;CoachBrand-ProductCarouselComponent
+;;Men-MoreStoriesbanner1DescriptionSlot;Brand MoreStoriesbanner1Description;true;
+;;Men-MoreStoriesbanner1Col1Slot;Brand MoreStoriesbanner1Col1;true;look1ShowCol1,look1ShowCol2
+;;Men-MoreStoriesbanner1Col2Slot;Brand MoreStoriesbanner1Col2;true;look2ShowCol1,look2ShowCol2
+;;Men-MoreStoriesbanner2Col1Slot;Brand MoreStoriesbanner2Col1;true;bagShow-look1col1
+;;Men-MoreStoriesbanner2Col2Slot;Brand MoreStoriesbanner2Col2;true;bagShow-look1col21,bagShow-look1col22,bagShow-look2col1
+;;Men-MoreStoriesbanner2DescriptionSlot;Brand MoreStoriesbanner2Description;true;
+;;Men-PopularCategorySlot;Brand PopularCategory;true;Brand-shopByFav
+;;Men-ShortlookBookSlot;Gender ShortlookBook;true;mobile-lookBook
+;;Men-WeeklyBanner2Slot;Gender WeeklyBanner2;true;HomePageWeaklySpecialBanner
+;;Men-WeeklyBanner1Slot;Gender WeeklyBanner1;true;HomePageWeaklySpecialBanner
+;;Women-TopHeaderSlot;Gender TopHeader;true;Home-TopBannerContent
+;;Women-HeaderLinkSlot;Gender HeaderLinkSlot;true;
+;;Women-siteLogoSlot;Gender siteLogo;true;
+;;Women-MiniCartSlot;Gender MiniCart;true;
+;;Women-WhyShopOnLuxurySlot;Gender WhyShopOnLuxury;true;
+;;Women-FooterSlot;Gender Footer;true;
+;;Women-HeroBannerSlot;Brand HeroBanner;true;MenBannerRotating
+;;Women-BannerDescriptionSlot;Brand BannerDescription;true;
+;;Women-CategoryCuroselSlot;Brand CategoryCurosel;true;Brand-shopbycategory
+;;Women-ShowCase1Slot;Brand ShowCase1;true;Men-ShowCase
+;;Women-ShowCase2Slot;Brand ShowCase2;true;Men-ShowCase
+;;Women-ProductCurosel1Slot;Brand ProductCurosel1;true;CoachBrand-ProductCarouselComponent
+;;Women-ProductCurosel2Slot;Brand ProductCurosel2;true;CoachBrand-ProductCarouselComponent
+;;Women-MoreStoriesbanner1DescriptionSlot;Brand MoreStoriesbanner1Description;true;
+;;Women-MoreStoriesbanner1Col1Slot;Brand MoreStoriesbanner1Col1;true;look1ShowCol1,look1ShowCol2
+;;Women-MoreStoriesbanner1Col2Slot;Brand MoreStoriesbanner1Col2;true;look2ShowCol1,look2ShowCol2
+;;Women-MoreStoriesbanner2Col1Slot;Brand MoreStoriesbanner2Col1;true;bagShow-look1col1
+;;Women-MoreStoriesbanner2Col2Slot;Brand MoreStoriesbanner2Col2;true;bagShow-look1col21,bagShow-look1col22,bagShow-look2col1
+;;Women-MoreStoriesbanner2DescriptionSlot;Brand MoreStoriesbanner2Description;true;
+;;Women-PopularCategorySlot;Brand PopularCategory;true;Brand-shopByFav
+;;Women-ShortlookBookSlot;Gender ShortlookBook;true;Men-MiniLookBook
+;;Women-WeeklyBanner2Slot;Gender WeeklyBanner2;true;HomePageWeaklySpecialBanner
+;;Women-WeeklyBanner1Slot;Gender WeeklyBanner1;true;HomePageWeaklySpecialBanner
+
+INSERT_UPDATE ContentSlotForTemplate;$contentCV[unique=true];uid[unique=true];position[unique=true];pageTemplate(uid,$contentCV)[unique=true][default='luxuryBrandLandingPageTemplate'];contentSlot(uid,$contentCV)[unique=true];allowOverwrite
+;;BrandPageTopHeaderSlot;TopHeaderSlot;;Brand-TopHeaderSlot;true
+;;BrandpageHeaderLink;HeaderLink;;Brand-HeaderLinkSlot;true
+;;BrandPageSearchBox;SearchBox;;SearchBoxSlot;true
+;;BrandPageMiddleHeaderLink;MiddleHeader;;MiddleHeader;true
+;;BrandPageWishList;WishList;;WishListSlot;true;MyWishList
+;;BrandPageMiniCart;MiniCart;;MiniCartSlot;true
+;;BrandPageNavigationBar;NavigationBar;;NavigationBarSlot;true
+;;BrandPageWhyShopOnLuxury;WhyShopOnLuxury;;Brand-WhyShopOnLuxurySlot;true
+;;BrandPageFooter;Footer;;FooterSlot;true
+
+
+INSERT_UPDATE ContentSlotForPage;$contentCV[unique=true];uid[unique=true];position[unique=true];page(uid,$contentCV)[unique=true][default='luxuryBrandLandingPage'];contentSlot(uid,$contentCV)[unique=true];
+;;BrandPageSiteLogo;Brand-siteLogo;;Brand-siteLogoSlot
+;;Brand-HeroBanner;Brand-HeroBanner;;Brand-HeroBannerSlot
+;;Brand-BannerDescription;Brand-BannerDescription;;Brand-BannerDescriptionSlot
+;;Brand-CategoryCurosel;Brand-CategoryCurosel;;Brand-CategoryCuroselSlot
+;;Brand-ShowCase1;Brand-ShowCase1;;Brand-ShowCase1Slot
+;;Brand-ShowCase2;Brand-ShowCase2;;Brand-ShowCase2Slot
+;;Brand-ProductCurosel1;Brand-ProductCurosel1;;Brand-ProductCurosel1Slot
+;;Brand-ProductCurosel2;Brand-ProductCurosel2;;Brand-ProductCurosel2Slot
+;;Brand-MoreStoriesbanner1Col1;Brand-MoreStoriesbanner1Col1;;Brand-MoreStoriesbanner1Col1Slot
+;;Brand-MoreStoriesbanner1Col2;Brand-MoreStoriesbanner1Col2;;Brand-MoreStoriesbanner1Col2Slot
+;;Brand-MoreStoriesbanner2Col1;Brand-MoreStoriesbanner2Col1;;Brand-MoreStoriesbanner2Col1Slot
+;;Brand-MoreStoriesbanner2Col2;Brand-MoreStoriesbanner2Col2;;Brand-MoreStoriesbanner2Col2Slot
+;;Brand-MoreStoriesbanner1Description;Brand-MoreStoriesbanner1Description;;Brand-MoreStoriesbanner1DescriptionSlot
+;;Brand-MoreStoriesbanner2Description;Brand-MoreStoriesbanner2Description;;Brand-MoreStoriesbanner2DescriptionSlot
+;;Brand-PopularCategory;Brand-PopularCategory;;Brand-PopularCategorySlot
+
+INSERT_UPDATE ContentSlotForPage;$contentCV[unique=true];uid[unique=true];position[unique=true];page(uid,$contentCV)[unique=true][default='luxuryMenlandingPage'];contentSlot(uid,$contentCV)[unique=true];
+;;Men-HeroBanner;Gender-HeroBanner;;Men-HeroBannerSlot
+;;Men-BannerDescription;Gender-BannerDescription;;Men-BannerDescriptionSlot
+;;Men-CategoryCurosel;Gender-CategoryCurosel;;Men-CategoryCuroselSlot
+;;Men-ShowCase1;Gender-ShowCase1;;Men-ShowCase1Slot
+;;Men-ShowCase2;Gender-ShowCase2;;Men-ShowCase2Slot
+;;Men-WeeklyBanner2;Gender-WeeklyBanner2;;Men-WeeklyBanner2Slot
+;;Men-WeeklyBanner1;Gender-WeeklyBanner1;;Men-WeeklyBanner1Slot
+;;Men-ShortlookBook;Gender-ShortlookBook;;Men-ShortlookBookSlot
+;;Men-ProductCurosel1;Gender-ProductCurosel1;;Men-ProductCurosel1Slot
+;;Men-ProductCurosel2;Gender-ProductCurosel2;;Men-ProductCurosel2Slot
+;;Men-MoreStoriesbanner1Col1;Gender-MoreStoriesbanner1Col1;;Men-MoreStoriesbanner1Col1Slot
+;;Men-MoreStoriesbanner1Col2;Gender-MoreStoriesbanner1Col2;;Men-MoreStoriesbanner1Col2Slot
+;;Men-MoreStoriesbanner2Col1;Gender-MoreStoriesbanner2Col1;;Men-MoreStoriesbanner2Col1Slot
+;;Men-MoreStoriesbanner2Col2;Gender-MoreStoriesbanner2Col2;;Men-MoreStoriesbanner2Col2Slot
+;;Men-MoreStoriesbanner1Description;Gender-MoreStoriesbanner1Description;;Men-MoreStoriesbanner1DescriptionSlot
+;;Men-MoreStoriesbanner2Description;Gender-MoreStoriesbanner2Description;;Men-MoreStoriesbanner2DescriptionSlot
+;;Men-PopularCategory;Gender-PopularCategory;;Men-PopularCategorySlot
+
+
+INSERT_UPDATE ContentSlotForPage;$contentCV[unique=true];uid[unique=true];position[unique=true];page(uid,$contentCV)[unique=true][default='luxuryWomenlandingPage'];contentSlot(uid,$contentCV)[unique=true];
+;;Women-HeroBanner;Gender-HeroBanner;;Women-HeroBannerSlot
+;;Women-BannerDescription;Gender-BannerDescription;;Women-BannerDescriptionSlot
+;;Women-CategoryCurosel;Gender-CategoryCurosel;;Women-CategoryCuroselSlot
+;;Women-ShowCase1;Gender-ShowCase1;;Women-ShowCase1Slot
+;;Women-ShowCase2;Gender-ShowCase2;;Women-ShowCase2Slot
+;;Women-WeeklyBanner2;Gender-WeeklyBanner2;;Women-WeeklyBanner2Slot
+;;Women-WeeklyBanner1;Gender-WeeklyBanner1;;Women-WeeklyBanner1Slot
+;;Women-ShortlookBook;Gender-ShortlookBook;;Women-ShortlookBookSlot
+;;Women-ProductCurosel1;Gender-ProductCurosel1;;Women-ProductCurosel1Slot
+;;Women-ProductCurosel2;Gender-ProductCurosel2;;Women-ProductCurosel2Slot
+;;Women-MoreStoriesbanner1Col1;Gender-MoreStoriesbanner1Col1;;Women-MoreStoriesbanner1Col1Slot
+;;Women-MoreStoriesbanner1Col2;Gender-MoreStoriesbanner1Col2;;Women-MoreStoriesbanner1Col2Slot
+;;Women-MoreStoriesbanner2Col1;Gender-MoreStoriesbanner2Col1;;Women-MoreStoriesbanner2Col1Slot
+;;Women-MoreStoriesbanner2Col2;Gender-MoreStoriesbanner2Col2;;Women-MoreStoriesbanner2Col2Slot
+;;Women-MoreStoriesbanner1Description;Gender-MoreStoriesbanner1Description;;Women-MoreStoriesbanner1DescriptionSlot
+;;Women-MoreStoriesbanner2Description;Gender-MoreStoriesbanner2Description;;Women-MoreStoriesbanner2DescriptionSlot
+;;Women-PopularCategory;Gender-PopularCategory;;Women-PopularCategorySlot
+
+
+
+
+INSERT_UPDATE ContentSlotForTemplate;$contentCV[unique=true];uid[unique=true];position[unique=true];pageTemplate(uid,$contentCV)[unique=true][default='luxuryGenderLandingPageTemplate'];contentSlot(uid,$contentCV)[unique=true];allowOverwrite
+;;GenderPageTopHeaderSlot;TopHeaderSlot;;Gender-TopHeaderSlot;true
+;;GenderPageHeaderLink;HeaderLink;;Gender-HeaderLinkSlot;true
+;;GenderPageSiteLogo;SiteLogo;;SiteLogoSlot;true
+;;GenderPageSearchBox;SearchBox;;SearchBoxSlot;true
+;;GenderPageMiddleHeaderLink;MiddleHeader;;MiddleHeader;true
+;;GenderPageWishList;WishList;;WishListSlot;true;MyWishList
+;;GenderPageMiniCart;MiniCart;;MiniCartSlot;true
+;;GenderPageNavigationBar;NavigationBar;;NavigationBarSlot;true
+;;GenderPageWhyShopOnLuxury;WhyShopOnLuxury;;Gender-WhyShopOnLuxurySlot;true
+;;GenderPageFooter;Footer;;FooterSlot;true

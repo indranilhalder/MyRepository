@@ -60,6 +60,8 @@ ACC.minicart = {
 						function(e) {
 							var entryNo = $(this).attr("data-entry-no");
 							var entryUssid = $(this).attr("data-ussid");
+							var status = $(this).attr("data-status");
+
 							$
 									.ajax({
 										url : ACC.config.encodedContextPath
@@ -82,9 +84,16 @@ ACC.minicart = {
 															if (quantity == 0) {
 																$("ul.my-bag-ul").remove();
 															} else {
-																// console.log($(e.target).parents().find("li.item"));
-																
-																$(e.target).parents().find("li.item").remove();
+                                                                var isLuxury = $("#isLuxury").val();
+                                                                console.log("isLuxury"+ isLuxury);
+                                                                if(isLuxury) {
+                                                                    $(e.target).parents().find("li.item_"+status).remove();
+                                                                } else {
+                                                                    $(e.target).parents().find("li.item").remove();
+                                                                }
+
+
+
 															}
 																var url = window.location.href;
 																if (url.indexOf("cart") != -1) {

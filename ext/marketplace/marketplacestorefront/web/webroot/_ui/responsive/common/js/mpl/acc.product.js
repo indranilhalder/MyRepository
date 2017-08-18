@@ -498,8 +498,26 @@ sendAddToBag : function(formId, isBuyNow) {
 							//$("#" + formId + "Title.sellerAddToBagTitle").show().fadeOut(5000);
 							//$("#" + formId + " " + ".addToCartSerpTitle").show().fadeOut(5000);
 							if(!isBuyNow){
-								ACC.product.showTransientCart(ussid);
-								ACC.product.scrollForTransientCart();
+								
+								var isLuxury = $("#isLuxury").val();
+								console.log("isLuxury"+ isLuxury);
+								
+								if(isLuxury) {
+									var url = $(".mini-cart-link").data("miniCartUrl") + "?stamp="
+									+ (new Date()).getTime();
+									$.get(url, function(html) {
+										var cartqtytext = $(html).find('.item-edit-details li:first-child').html();
+										//var cartcount = cartqtytext;
+										$('#addtocart-popup .lux-cart-btn span').html('('+cartqtytext+')');
+									}); 
+									$('#addtocart-popup,.luxury-over-lay').show(); 
+									$("#no-click,.loaderDiv").remove();
+								} else {
+									ACC.product.showTransientCart(ussid);
+									ACC.product.scrollForTransientCart();
+								}
+								
+								
 							}
 							
 							// ACC.product.displayAddToCart(data,formId,false);
@@ -550,6 +568,11 @@ sendAddToBag : function(formId, isBuyNow) {
 						} 
 						else if(data == "freebieErrorMsg") { //freebie unable to add
 							$("#" + formId + "Title").html("Freebie: This product is not on sale");						
+							$("#" + formId + "Title").show().fadeOut(5000);
+							return false;
+						}
+						else if(data == "mismatchUssid") { //mismatchUssid unable to add
+							$("#" + formId + "Title").html("Something went wrong. Please try again");						
 							$("#" + formId + "Title").show().fadeOut(5000);
 							return false;
 						}
@@ -660,7 +683,11 @@ sendAddToBagQuick:function(formId){
 		type : "POST",
 		cache : false,
 		beforeSend: function(){
-	        $('#ajax-loader').show();
+	       // $('#ajax-loader').show();
+			//$('#ajax-loader').show();//mismatch issue
+			var staticHost=$('#staticHost').val();
+			$(".quickview").append("<div id='bag-clickSpin' style='opacity:0.15; background:#000; z-index: 100000; width:100%; height:100%; position: fixed; top: 0; left:0;'></div>");
+			$(".quickview").append('<img src="'+staticHost+'/_ui/responsive/common/images/spinner.gif" class="bagspinner" style="position: fixed; left: 45%;top:45%; height: 30px;">'); 
 	    },
 		success : function(data) {
 			
@@ -702,6 +729,12 @@ sendAddToBagQuick:function(formId){
 			else if(data=="willexceedeinventory"){
 				 $("#"+formId+"excedeInventory").html("<font color='#ff1c47'>" + $('#addToCartFormexcedeInventory').text() + "</font>");
 				 $("#"+formId+"excedeInventory").show().fadeOut(6000);
+		   		 return false;
+			}
+			else if(data=="mismatchUssid"){ //mismatch issue
+				$("#"+formId+"Title").html("");
+				$("#"+formId+"Title").html("<font color='#ff1c47'>" + $('#addtobagerror').text() + "</font>");
+				$("#"+formId+"Title").show().fadeOut(6000);
 		   		 return false;
 			}
 			else{
@@ -759,7 +792,8 @@ sendAddToBagQuick:function(formId){
 			
 		},
 		complete: function(){
-	        $('#ajax-loader').hide();
+	        //$('#ajax-loader').hide();//mismatch issue
+			$("#bag-clickSpin,.bagspinner").remove();
 	    },
 		error : function(resp) {
 			
@@ -791,7 +825,10 @@ sendAddToBagQuick:function(formId){
 			type : "POST",
 			cache : false,
 			beforeSend: function(){
-		        $('#ajax-loader').show();
+		        //$('#ajax-loader').show();//mismatch issue
+				var staticHost=$('#staticHost').val();
+				$(".quickview").append("<div id='bag-clickSpin' style='opacity:0.15; background:#000; z-index: 100000; width:100%; height:100%; position: fixed; top: 0; left:0;'></div>");
+				$(".quickview").append('<img src="'+staticHost+'/_ui/responsive/common/images/spinner.gif" class="bagspinner" style="position: fixed; left: 45%;top:45%; height: 30px;">'); 
 		    },
 			success : function(data) {
 				//TISQAEE-64
@@ -836,6 +873,12 @@ sendAddToBagQuick:function(formId){
 				else if(data=="willexceedeinventory"){
 					 $("#"+formId+"excedeInventory").html("<font color='#ff1c47'>" + $('#addToCartFormexcedeInventory').text() + "</font>");
 					 $("#"+formId+"excedeInventory").show().fadeOut(6000);
+			   		 return false;
+				}
+				else if(data=="mismatchUssid"){ //mismatch issue
+					$("#"+formId+"Title").html("");
+					$("#"+formId+"Title").html("<font color='#ff1c47'>" + $('#addtobagerror').text() + "</font>");
+					$("#"+formId+"Title").show().fadeOut(6000);
 			   		 return false;
 				}
 				else{
@@ -893,7 +936,8 @@ sendAddToBagQuick:function(formId){
 				
 			},
 			complete: function(){
-		        $('#ajax-loader').hide();
+				 // $('#ajax-loader').hide(); //mismatch issue
+				$("#bag-clickSpin,.bagspinner").remove();
 		    },
 			error : function(resp) {
 			//	alert("Add to Bag unsuccessful");

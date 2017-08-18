@@ -3,6 +3,7 @@
  */
 package com.tisl.mpl.jalo;
 
+import de.hybris.platform.basecommerce.model.site.BaseSiteModel;
 import de.hybris.platform.catalog.CatalogVersionService;
 import de.hybris.platform.catalog.constants.GeneratedCatalogConstants;
 import de.hybris.platform.catalog.model.CatalogVersionModel;
@@ -52,6 +53,7 @@ import de.hybris.platform.servicelayer.exceptions.ModelNotFoundException;
 import de.hybris.platform.servicelayer.model.ModelService;
 import de.hybris.platform.servicelayer.search.FlexibleSearchService;
 import de.hybris.platform.servicelayer.util.ServicesUtil;
+import de.hybris.platform.site.BaseSiteService;
 import de.hybris.platform.util.Config;
 import de.hybris.platform.util.localization.Localization;
 
@@ -111,6 +113,10 @@ import com.tisl.mpl.util.ValueComparator;
 public class DefaultPromotionManager extends PromotionsManager
 {
 	private final static Logger LOG = Logger.getLogger(DefaultPromotionManager.class.getName());
+
+	@Autowired
+	private BaseSiteService baseSiteService;
+
 	@Autowired
 	private CategoryService categoryService;
 	@Autowired
@@ -976,8 +982,14 @@ public class DefaultPromotionManager extends PromotionsManager
 	 */
 	public CatalogVersionModel catalogData()
 	{
-		final String catalogId = configurationService.getConfiguration().getString(
-				MarketplacecommerceservicesConstants.DEFAULTCATALOGID, "");
+		final BaseSiteModel currentBaseSite = baseSiteService.getCurrentBaseSite();
+		String catalogId = "";
+		if (null != currentBaseSite && StringUtils.isNotBlank(currentBaseSite.getUid())
+				&& currentBaseSite.getUid().equals(configurationService.getConfiguration().getString(MarketplacecommerceservicesConstants.DEFAULTLUXURYSITEID))){
+			catalogId = configurationService.getConfiguration().getString(MarketplacecommerceservicesConstants.DEFAULTLUXURYCATALOGID, "");
+		}else{
+			catalogId = configurationService.getConfiguration().getString(MarketplacecommerceservicesConstants.DEFAULTCATALOGID, "");
+		}
 		final String catalogVersionName = configurationService.getConfiguration().getString(
 				MarketplacecommerceservicesConstants.DEFAULTCATALOGVERISONID, "");
 		final CatalogVersionModel catalogVersionModel = catalogVersionService.getCatalogVersion(catalogId, catalogVersionName);
@@ -2396,10 +2408,12 @@ public class DefaultPromotionManager extends PromotionsManager
 					isPaymentResticted = true;
 					String paymentMode = null;
 					String selectedBank = MarketplacecommerceservicesConstants.EMPTY;
+					//String selectedNBBank = MarketplacecommerceservicesConstants.EMPTY;//INC144317480: Order Threshold Discount Promotion: Netbanking Payment Mode Restriction doesn't work
 					if (null != ctx)
 					{
 						paymentMode = ctx.getAttribute(MarketplacecommerceservicesConstants.PAYMENTMODEFORPROMOTION);
 						selectedBank = ctx.getAttribute(MarketplacecommerceservicesConstants.BANKFROMBIN);
+						//selectedNBBank = ctx.getAttribute(MarketplacecommerceservicesConstants.BANKNAMEFORNETBANKING);//INC144317480: Order Threshold Discount Promotion: Netbanking Payment Mode Restriction doesn't work
 					}
 					if (paymentMode != null)
 					{
@@ -2417,6 +2431,12 @@ public class DefaultPromotionManager extends PromotionsManager
 										flag = true;
 										break;
 									}
+									//									else if ((paymentMode.equalsIgnoreCase(MarketplacecommerceservicesConstants.NETBANKING) && (StringUtils
+									//											.isNotEmpty(selectedNBBank) && checkBankData(selectedNBBank, restrBanks)))
+									//											|| ((paymentMode.equalsIgnoreCase(MarketplacecommerceservicesConstants.DEBIT)
+									//													|| paymentMode.equalsIgnoreCase(MarketplacecommerceservicesConstants.CREDIT) || paymentMode
+									//														.equalsIgnoreCase(MarketplacecommerceservicesConstants.EMI)) && (StringUtils
+									//													.isNotEmpty(selectedBank) && checkBankData(selectedBank, restrBanks))))
 									else if ((paymentMode.equalsIgnoreCase(MarketplacecommerceservicesConstants.NETBANKING)
 											|| paymentMode.equalsIgnoreCase(MarketplacecommerceservicesConstants.DEBIT)
 											|| paymentMode.equalsIgnoreCase(MarketplacecommerceservicesConstants.CREDIT) || paymentMode

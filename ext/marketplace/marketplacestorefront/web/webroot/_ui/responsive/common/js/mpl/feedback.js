@@ -3784,6 +3784,7 @@ $(document).ready(function() {
 	if($('.facet_desktop .facet.js-facet.Dial').hasClass("Colour")){
 		$('.facet_desktop .facet.js-facet.Dial.Colour .more-lessFacetLinks').remove();
 	}
+	
 });
 
 
@@ -3798,3 +3799,30 @@ $(window).on("load resize click",function(){
 	},500);
 });
 /* end change of PRDI-92 */
+
+/*start change of INC144316778*/
+$(window).on("scroll resize",function(){
+	fixTopAdjust();
+	if($(window).scrollTop() == 0){
+		$(".listing.wrapper .left-block").removeClass("topTheFix");
+		/*start change for TISPRDT-1898*/
+		if($("header .content .top").hasClass("header_fix"))
+			$(".listing.wrapper .left-block").removeClass("fix"); 
+		/*end change for TISPRDT-1898*/
+	}
+});
+$(document).on("click",".product-facet .facet .facet-name",function(){
+	fixTopAdjustTimeOut();
+});
+function fixTopAdjust(){
+	if($(".left-block ul.product-facet.js-product-facet.listing-leftmenu").outerHeight() <= $(window).height() && ($(".listing.wrapper .left-block").hasClass("fix") && $("header .content .bottom").hasClass("active")))
+		$(".listing.wrapper .left-block").addClass("topTheFix");
+	else
+		$(".listing.wrapper .left-block").removeClass("topTheFix");
+}
+function fixTopAdjustTimeOut(){
+	setTimeout( function(){ 
+		fixTopAdjust(); 
+	}  , 100 );
+}
+/*end change of INC144316778*/

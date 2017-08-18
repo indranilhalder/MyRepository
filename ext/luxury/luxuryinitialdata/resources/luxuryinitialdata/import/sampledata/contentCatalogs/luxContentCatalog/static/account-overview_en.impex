@@ -1,0 +1,42 @@
+# 
+# ImpEx for Responsive Tata Marketplace Site CMS Content 
+# 
+$contentCatalog=luxContentCatalog 
+$contentCV=catalogVersion(CatalogVersion.catalog(Catalog.id[default=$contentCatalog]),CatalogVersion.version[default=Staged])[default=$contentCatalog:Staged] 
+$productCatalog=luxProductCatalog 
+$productCatalogName=MarketPlace Product Catalog
+$productCV=catalogVersion(catalog(id[default=$productCatalog]),version[default='Staged'])[unique=true,default=$productCatalog:Staged] 
+$picture=media(code, $contentCV);
+$siteResource=jar:com.tisl.lux.setup.InitialDataSystemSetup&/luxuryinitialdata/import/sampledata/contentCatalogs/$contentCatalog
+$medias=medias(code, $contentCV);
+$lang=en
+$mediaContainer=media(qualifier, $contentCV)[lang=$lang];
+$jarResourceCms=jar:com.tisl.lux.setup.InitialDataSystemSetup&/luxuryinitialdata/import/sampledata/cockpits/cmscockpit
+
+
+UPDATE CMSMediaParagraphComponent;$contentCV[unique=true];uid[unique=true];content
+
+;;PersonalInformationMediaParagraphComponent;"<h3>ALL ABOUT YOU</h3>
+<p>Pick a name, change your password and all that jazz.</p>
+<a href='/my-account/update-profile'>VIEW PERSONAL INFO</a>"
+
+;;SavedCardsMediaParagraphComponent;"<h3>SAVED CARDS</h3>
+<p>Manage and delete your credit/debit card details here.</p>
+<a href='/my-account/payment-details'>VIEW PAYMENT INFO</a>"
+
+;;MyRecommendationsMediaParagraphComponent;"<h3>MY RECOMMENDATIONS</h3>
+<p>Let's get personal</p>
+<a href='/my-account/myInterest'>VIEW RECOMMENDATIONS</a>"
+
+;;InviteFriendsMediaParagraphComponent;"<h3>INVITE YOUR FRIENDS</h3>
+<p>Why shop solo when you can do it with your friends?  Get your crew here.</p>
+<a href='/my-account/friendsInvite'>INVITE FRIENDS TO THE MARKETPLACE</a>"
+
+;;OrderHistoryMediaParagraphComponent;"<h3>ORDER HISTORY</h3>
+<p>When will that package arrive? And other such pressing questions.</p>
+<a href='/my-account/orders'>VIEW ORDER HISTORY</a>"
+
+;;SavedAddressesMediaParagraphComponent;"<h3>MY ADDRESS</h3>
+<p>Where do we send that package? And other such address details. </p>
+<a href='/my-account/address-book'>VIEW SAVED ADDRESSES</a>"
+

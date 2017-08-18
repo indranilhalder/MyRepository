@@ -138,7 +138,10 @@
 		class="com.tisl.mpl.marketplacecommerceservices.service.impl.MplPriceRowServiceImpl" />
 
 	<bean id="mplNotificationSaveService"
-		class="com.tisl.mpl.marketplacecommerceservices.service.impl.MplNotificationServiceImpl" />
+		class="com.tisl.mpl.marketplacecommerceservices.service.impl.MplNotificationServiceImpl" >
+		<property name="businessProcessService" ref="businessProcessService"/>  <!-- Added for TPR-1348 AutorefundInitiated -->
+		<property name="sendSMSService" ref="sendSMSService" />     <!-- Added for TPR-1348 AutorefundInitiated -->
+	</bean>
 
 
 
@@ -425,6 +428,8 @@
 		class="com.tisl.mpl.marketplacecommerceservices.service.impl.MplPaymentServiceImpl">
 		<property name="mplPaymentDao" ref="mplPaymentDao" />
 		<property name="discountUtility" ref="discountUtility" />
+		<property name="mplJusPayRefundService" ref="mplJusPayRefundService" /> <!-- Added for TPR-1348 AutoReefundInitiate -->
+		<property name="mplMWalletRefundService" ref="mplMWalletRefundService" />  <!-- Added for TPR-1348 AutoReefundInitiate -->
 	</bean>
 
 
@@ -2183,6 +2188,8 @@
 			</bean>
     
     <!-- CAR-285 End -->
+    
+    <bean id="catalogUtils" class="com.tisl.mpl.util.CatalogUtils" />
 </beans>
 
 

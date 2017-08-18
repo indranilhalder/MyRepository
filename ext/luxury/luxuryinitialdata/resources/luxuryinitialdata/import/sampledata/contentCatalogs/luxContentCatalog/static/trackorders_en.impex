@@ -1,0 +1,54 @@
+
+# ImpEx for Importing CMS Content
+# English Localisation
+
+# Macros / Replacement Parameter definitions
+$storePrefix=lux
+$contentCatalog=$storePrefixContentCatalog
+
+$contentCV=catalogVersion(CatalogVersion.catalog(Catalog.id[default=$contentCatalog]),CatalogVersion.version[default=Staged])[default=$contentCatalog:Staged]
+$picture=media(code, $contentCV);
+$siteResource=jar:com.tisl.lux.setup.InitialDataSystemSetup&/luxuryinitialdata/import/contentCatalogs/$contentCatalog
+
+# Language
+$lang=en
+
+
+# CMS Paragraph Components
+UPDATE CMSParagraphComponent;$contentCV[unique=true];uid[unique=true];content[lang=$lang]
+
+;;TitleForTrackOrderPageComponent;"Track Orders"
+
+
+
+;;TrackOrderPageComponent;" 
+<h3>Frequently Asked TRACK ORDERS Questions:</h3>
+
+<div id='collapsible-panels'>
+<h5 class='questions'><a href='#'> 1. I want to know where my package is. How can I track my order?</a></h5>  
+<div><p>We&rsquo;ve got your package on our radar and we&rsquo;ll always keep you in the loop. You can do a bit of snooping around and track your order under the &lsquo;Order History&rsquo; tab (under &lsquo;My Tata CLiQ&rsquo; on the home screen) whenever you like. Select the order you want to check, and track your status. So excited you can&rsquo;t even log in? Click on the &lsquo;Track Orders&rsquo; tab on the top of our home page, enter your tracking number (the one in your order confirmation email and SMS) followed by your email ID to see the order status yourself. Happy stalking!</p></div></div>
+ 
+ 
+ <div id='collapsible-panels'><h5 class='questions'><a href='#'> 2. Whoops, how can I modify an order that I&rsquo;ve already placed? </a></h5>
+  <div><p>Sadly, we can&rsquo;t modify an order once it has been placed. But we get that you can change your mind. Feel free to cancel an order after you&rsquo;ve placed it. Make sure you do this immediately before it gets shipped, and place a new order with the correct address.  To cancel a part or the full order you&rsquo;ve placed, swing by the &lsquo;Order History&rsquo; tab, select the appropriate order and cancel the item(s) you don&rsquo;t want anymore. The &lsquo;Cancellation&rsquo; section has all the details you&rsquo;ll need.</p></div></div>
+ 
+ 
+ <div id='collapsible-panels'><h5 class='questions'><a href='#'> 3. I&rsquo;m between places. Can I change the delivery address after I&rsquo;ve placed my order? </a></h5> 
+ <div><p>Hate to say this, but you can&rsquo;t. Once an order has been placed, the delivery address can&rsquo;t be modified. Check and double-check that you&rsquo;ve entered the right shipping address details while ordering. This is probably why most people like you just get stuff delivered at their workplaces.</p></div></div> 
+
+ 
+  <div id='collapsible-panels'><h5 class='questions'><a href='#'> 4. Is my order confirmed? How can I find out about it? </a></h5> 
+  <div><p>Ah, you have a case of shopper&rsquo;s anxiety, don&rsquo;t you? Worry not. You&rsquo;ll get an email and SMS once the seller confirms your order. The email will give you details about your order, including the Order ID, and the information on the item(s) ordered.</p></div></div>
+ 
+ 
+ 
+ <div id='collapsible-panels'><h5 class='questions'><a href='#'> 5. It says &lsquo;Out-of-stock&rsquo; but I still want that product. We are meant to be, the product and me!  </a></h5> 
+ <div><p>Hate to break this to you, but a product that is &lsquo;Out-of-stock&rsquo; is not up for grabs at the moment. But, here&rsquo;s the good news &mdash; you can add the product to your wish list and we&rsquo;ll let you know as soon as the product is available again.</p></div></div>
+ 
+ <div id='collapsible-panels'><h5 class='questions'><a href='#'> 6. All these order statuses are confusing. What do they mean?  </a></h5>
+  <div><p>Okay. Keep this handy and take notes if you must.</p> <p><strong>Order Confirmed</strong>: Congratulations! This means your order has been confirmed and approved by the seller</p> <p><strong>Order Placed/Processing</strong>: Hold your horses just a little while longer. Your order is being processed by the seller and will be shipped right after</p> <p><strong>Shipping Commenced</strong>: It&rsquo;s go time! Your order is ready to be shipped to its destination</p> <p><strong>In Transit</strong>:  Your order is on its way and can&rsquo;t wait to meet you.</p> <p><strong>Shipment delivered</strong>: Home run! Your order was delivered to you.</p> <p><strong>Ready for Pickup</strong>: Hope you have a good pick up line. Your order is ready to be picked up from the store location you wanted. (This is only for orders to be collected in store).</p> <p><strong>Picked Up</strong>: So you did come up with a good line! This means that you&rsquo;ve picked up your order from the store.</p> <p><strong>Not Picked Up</strong>: That&rsquo;s odd. Seems like you haven&rsquo;t picked your order up from the store yet.</p></div></div> 
+  <div id='collapsible-panels'><h5 class='questions'><a href='#'> 7. My shipping address and billing address may be different. You guys cool with that?  </a></h5> 
+  <div><p>Sure. No questions asked. You can choose to have separate shipping and billing addresses. Our folks will ship the order to you accordingly.</p></div></div></div></div>
+ 
+ "
+ 

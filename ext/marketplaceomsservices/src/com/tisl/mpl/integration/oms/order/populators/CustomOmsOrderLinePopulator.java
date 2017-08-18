@@ -25,6 +25,7 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Required;
+
 import com.hybris.oms.domain.locationrole.LocationRole;
 import com.hybris.oms.domain.order.CouponDto;
 import com.hybris.oms.domain.order.OrderLine;
@@ -70,7 +71,7 @@ public class CustomOmsOrderLinePopulator implements Populator<OrderEntryModel, O
 		if (source.getSelectedUSSID() != null)
 		{
 			final SellerInformationModel sellerInfoModel = getMplSellerInformationService().getSellerDetail(
-					source.getSelectedUSSID());
+					source.getSelectedUSSID(), source.getOrder().getStore().getCatalogs().get(0).getActiveCatalogVersion());
 			List<RichAttributeModel> richAttributeModel = null;
 			if (sellerInfoModel != null)
 			{
@@ -142,7 +143,19 @@ public class CustomOmsOrderLinePopulator implements Populator<OrderEntryModel, O
 			if (source.getOrder() != null && source.getOrder().getStatus() != null
 					&& source.getOrder().getStatus().getCode() != null)
 			{
-				target.setOrderLineStatus(MplCodeMasterUtility.getglobalCode(source.getOrder().getStatus().getCode().toUpperCase()));
+				//PT issue for One touch cancellation--fix
+				String orderStatus = null;
+				if (source.getOrder().getParentReference() != null)
+				{
+					orderStatus = source.getOrder().getParentReference().getStatus().getCode().toUpperCase();
+				}
+				else
+				{
+					orderStatus = source.getOrder().getStatus().getCode().toUpperCase();
+				}
+				target.setOrderLineStatus(MplCodeMasterUtility.getglobalCode(orderStatus));
+				//PT issue for One touch cancellation--fix
+				//target.setOrderLineStatus(MplCodeMasterUtility.getglobalCode(source.getOrder().getStatus().getCode().toUpperCase()));
 			}
 			else
 			{
@@ -236,10 +249,19 @@ public class CustomOmsOrderLinePopulator implements Populator<OrderEntryModel, O
 					&& CollectionUtils.isNotEmpty(source.getAssociatedItems()))
 			{
 				target.setParentTransactionID(source.getParentTransactionID());
+				//TPR-1347---START
+				target.setCrmParentRef(source.getParentTransactionID());
+				//TPR-1347---END
 
 			}
-
-
+			//TPR-1347---START
+			if (source.getIsBOGOapplied() != null && source.getIsBOGOapplied().booleanValue()
+					&& CollectionUtils.isNotEmpty(source.getAssociatedItems()))
+			{
+				//target.setParentTransactionID(source.getParentTransactionID());
+				target.setCrmParentRef(source.getParentTransactionID());
+			}
+			//TPR-1347---END
 			if (richAttributeModel.get(0).getDeliveryFulfillModeByP1() != null
 					&& richAttributeModel.get(0).getDeliveryFulfillModeByP1().getCode() != null)
 
@@ -255,14 +277,14 @@ public class CustomOmsOrderLinePopulator implements Populator<OrderEntryModel, O
 			/*
 			 * if (richAttributeModel.get(0).getDeliveryFulfillModeByP1() != null &&
 			 * richAttributeModel.get(0).getDeliveryFulfillModeByP1().getCode() != null)
-			 *
+			 * 
 			 * { final String fulfilmentType =
 			 * richAttributeModel.get(0).getDeliveryFulfillModeByP1().getCode().toUpperCase();
 			 * target.setFulfillmentTypeP1(fulfilmentType); }
-			 *
+			 * 
 			 * if (richAttributeModel.get(0).getDeliveryFulfillModes() != null &&
 			 * richAttributeModel.get(0).getDeliveryFulfillModes().getCode() != null)
-			 *
+			 * 
 			 * { final String fulfilmentType = richAttributeModel.get(0).getDeliveryFulfillModes().getCode().toUpperCase();
 			 * if(fulfilmentType.equalsIgnoreCase(MarketplaceomsservicesConstants.BOTH)){
 			 * if(richAttributeModel.get(0).getDeliveryFulfillModeByP1
@@ -481,7 +503,18 @@ public class CustomOmsOrderLinePopulator implements Populator<OrderEntryModel, O
 			target.setIsaGift(MarketplaceomsservicesConstants.FALSE);
 			target.setIsAFreebie(MarketplaceomsservicesConstants.FALSE);
 		}
-
+		//TPR-1345--START
+		if (source.getIsBOGOapplied() != null && source.getIsBOGOapplied().booleanValue())
+		{
+			target.setIsBOGO(Boolean.TRUE);
+			//target.setIsBOGO(MarketplaceomsservicesConstants.TRUE);
+		}
+		else
+		{
+			target.setIsBOGO(Boolean.FALSE);
+			//target.setIsBOGO(MarketplaceomsservicesConstants.FALSE);
+		}
+		//TPR-1345--END
 		target.setOrderLineId((source.getOrderLineId() != null) ? source.getOrderLineId() : source.getTransactionID());
 
 

@@ -1912,9 +1912,13 @@
 			<attributes>
 				<attribute qualifier="mode" type="java.lang.String">
 					<persistence type="property" />
-					<modifiers optional="false" unique="true" />
+					<modifiers optional="false" unique="false" />
 				</attribute>
 				<attribute qualifier="isAvailable" type="java.lang.Boolean">
+					<persistence type="property" />
+					<modifiers optional="false" unique="true" />
+				</attribute>
+				<attribute qualifier="modeId" type="java.lang.String">
 					<persistence type="property" />
 					<modifiers optional="false" unique="true" />
 				</attribute>

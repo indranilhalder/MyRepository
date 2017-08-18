@@ -26,6 +26,7 @@ import de.hybris.platform.acceleratorstorefrontcommons.forms.validation.ReviewVa
 import de.hybris.platform.acceleratorstorefrontcommons.util.MetaSanitizerUtil;
 import de.hybris.platform.acceleratorstorefrontcommons.util.XSSFilterUtil;
 import de.hybris.platform.acceleratorstorefrontcommons.variants.VariantSortStrategy;
+import de.hybris.platform.basecommerce.model.site.BaseSiteModel;
 import de.hybris.platform.catalog.model.ProductFeatureModel;
 import de.hybris.platform.category.model.CategoryModel;
 import de.hybris.platform.cms2.exceptions.CMSItemNotFoundException;
@@ -62,6 +63,7 @@ import de.hybris.platform.servicelayer.exceptions.UnknownIdentifierException;
 import de.hybris.platform.servicelayer.search.exceptions.FlexibleSearchException;
 import de.hybris.platform.servicelayer.session.SessionService;
 import de.hybris.platform.servicelayer.user.UserService;
+import de.hybris.platform.site.BaseSiteService;
 import de.hybris.platform.storelocator.location.Location;
 import de.hybris.platform.storelocator.location.impl.LocationDTO;
 import de.hybris.platform.storelocator.location.impl.LocationDtoWrapper;
@@ -134,6 +136,7 @@ import com.tisl.mpl.facade.comparator.SizeGuideHeaderComparator;
 import com.tisl.mpl.facade.product.MplProductFacade;
 import com.tisl.mpl.facade.product.SizeGuideFacade;
 import com.tisl.mpl.facade.product.impl.CustomProductFacadeImpl;
+import com.tisl.mpl.facades.constants.MarketplaceFacadesConstants;
 import com.tisl.mpl.facades.data.MplAjaxProductData;
 import com.tisl.mpl.facades.payment.MplPaymentFacade;
 import com.tisl.mpl.facades.product.RichAttributeData;
@@ -282,7 +285,8 @@ public class ProductPageController extends MidPageController
 	@Resource(name = "pinCodeFacade")
 	private PinCodeServiceAvilabilityFacade pinCodeFacade;
 
-
+	@Resource(name = "baseSiteService")
+	private BaseSiteService baseSiteService;
 
 	@Resource(name = "sizeGuideFacade")
 	private SizeGuideFacade sizeGuideFacade;
@@ -323,6 +327,7 @@ public class ProductPageController extends MidPageController
 	//private ConfigurationService configService;
 	@Resource(name = "customProductFacade")
 	private CustomProductFacadeImpl customProductFacade;
+
 
 	/**
 	 * @param buyBoxFacade
@@ -448,7 +453,8 @@ public class ProductPageController extends MidPageController
 			}
 
 			if (productModel.getLuxIndicator() != null
-					&& productModel.getLuxIndicator().getCode().equalsIgnoreCase(ControllerConstants.Views.Pages.Cart.LUX_INDICATOR))
+					&& productModel.getLuxIndicator().getCode().equalsIgnoreCase(ControllerConstants.Views.Pages.Cart.LUX_INDICATOR)
+					&& !isLuxurySite())
 			{
 				LOG.debug("**********The product is a luxury product.Hence redirecting to luxury website***********" + productCode);
 				final String luxuryHost = configurationService.getConfiguration().getString("luxury.resource.host");
@@ -528,7 +534,7 @@ public class ProductPageController extends MidPageController
 				 * final String metaTitle = productData.getSeoMetaTitle(); final String pdCode = productData.getCode();
 				 * final String metaDescription = productData.getSeoMetaDescription(); //TISPRD-4977 final String
 				 * metaKeyword = productData.getSeoMetaKeyword(); //final String metaKeywords = productData.gets
-				 *
+				 * 
 				 * setUpMetaData(model, metaDescription, metaTitle, pdCode, metaKeyword);
 				 */
 				//AKAMAI fix
@@ -540,7 +546,6 @@ public class ProductPageController extends MidPageController
 
 				returnStatement = getViewForPage(model);
 			}
-
 		}
 		catch (final EtailBusinessExceptions e)
 		{
@@ -1893,8 +1898,20 @@ public class ProductPageController extends MidPageController
 			final String sharePath = configurationService.getConfiguration().getString("social.share.path");
 			//For Gigya
 			final String isGigyaEnabled = configurationService.getConfiguration().getString(MessageConstants.USE_GIGYA);
-			final String gigyaAPIKey = configurationService.getConfiguration().getString("gigya.apikey");
-			final String gigyaRatingURL = configurationService.getConfiguration().getString("gigya.rating.url");
+			final String siteId = getSiteConfigService().getProperty("luxury.site.id");
+			final String gigyaAPIKey;
+			final String gigyaRatingURL;
+			if ((getCmsSiteService().getCurrentSite().getUid()).equalsIgnoreCase(siteId))
+			{
+
+				gigyaAPIKey = configurationService.getConfiguration().getString("luxury.gigya.apikey");
+				gigyaRatingURL = configurationService.getConfiguration().getString("luxury.gigya.rating.url");
+			}
+			else
+			{
+				gigyaAPIKey = configurationService.getConfiguration().getString("gigya.apikey");
+				gigyaRatingURL = configurationService.getConfiguration().getString("gigya.rating.url");
+			}
 			//end gigya
 			final String emiCuttOffAmount = configurationService.getConfiguration().getString("marketplace.emiCuttOffAmount");
 			final String cliqCareNumber = configurationService.getConfiguration().getString("cliq.care.number");
@@ -2010,6 +2027,8 @@ public class ProductPageController extends MidPageController
 
 	}
 
+
+
 	/**
 	 * @param productData
 	 * @param model
@@ -2029,12 +2048,12 @@ public class ProductPageController extends MidPageController
 			final String productCode, final String metaKeywords)
 	{
 		final List<MetaElementData> metadata = new LinkedList<>();
-		//metadata.add(createMetaElement(ModelAttributetConstants.DESCRIPTION, metaDescription));
+		metadata.add(createMetaElement(ModelAttributetConstants.DESCRIPTION, metaDescription));
 		model.addAttribute(ModelAttributetConstants.DESCRIPTION, metaDescription); //PRDI-422
 		//TISPRD-4977
 		if (null != metaKeywords)
 		{
-			//metadata.add(createMetaElement(ModelAttributetConstants.KEYWORDS, metaKeywords));
+			metadata.add(createMetaElement(ModelAttributetConstants.KEYWORDS, metaKeywords));
 			model.addAttribute(ModelAttributetConstants.KEYWORDS, metaKeywords); //PRDI-422
 		}
 		//metadata.add(createMetaElement(ModelAttributetConstants.TITLE, metaTitle));
@@ -2160,10 +2179,13 @@ public class ProductPageController extends MidPageController
 							}
 							else
 							{
+								if (StringUtils.isBlank(properitsValue.toLowerCase()))
+								{
+									mapConfigurableAttribute.put(featureData.getName(), featureValueData.getValue());
+								}
 								if (properitsValue.toLowerCase().contains(configurableAttributData.getCode().toLowerCase()))
 
 								{
-
 									mapConfigurableAttribute.put(featureData.getName(), featureValueData.getValue());
 								}
 
@@ -3385,6 +3407,18 @@ public class ProductPageController extends MidPageController
 			returnStatement = gson.toJson(mplAjaxProductData);
 		}
 		return returnStatement;
+	}
+
+	private boolean isLuxurySite()
+	{
+
+		final BaseSiteModel currentBaseSite = baseSiteService.getCurrentBaseSite();
+		if (null != currentBaseSite && StringUtils.isNotBlank(currentBaseSite.getUid())
+				&& MarketplaceFacadesConstants.LuxuryPrefix.equals(currentBaseSite.getUid()))
+		{
+			return true;
+		}
+		return false;
 	}
 
 

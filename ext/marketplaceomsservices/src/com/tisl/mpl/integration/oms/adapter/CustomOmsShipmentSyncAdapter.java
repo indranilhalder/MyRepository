@@ -34,6 +34,7 @@ import de.hybris.platform.servicelayer.event.EventService;
 import de.hybris.platform.servicelayer.model.ModelService;
 import de.hybris.platform.servicelayer.search.FlexibleSearchService;
 import de.hybris.platform.servicelayer.time.TimeService;
+import de.hybris.platform.processengine.BusinessProcessService;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -124,6 +125,10 @@ public class CustomOmsShipmentSyncAdapter extends DefaultOmsShipmentSyncAdapter 
 	@Autowired
 	private MplDeliveryCostService mplDeliveryCostService;
 @Autowired private MplJusPayRefundService mplJusPayRefundService;
+
+	@Autowired
+	private BusinessProcessService businessProcessService;  // Added for TPR-1348
+
 	@Override
 	public ConsignmentModel update(final OrderWrapper wrapper, final ItemModel parent)
 	{
@@ -564,6 +569,15 @@ public class CustomOmsShipmentSyncAdapter extends DefaultOmsShipmentSyncAdapter 
 					sendOrderNotification(shipment, consignmentModel, orderModel, shipmentNewStatus);
 					//}
 					}
+					
+					//Added TPR-1348
+					if ("Y".equalsIgnoreCase(configurationService.getConfiguration().getString(
+							MarketplaceomsservicesConstants.AUTO_REFUND_ENABLED))
+							&& ConsignmentStatus.RETURN_CLOSED.equals(shipmentNewStatus))
+					{
+						startAutomaticRefundProcess(orderModel); //Start the new Automatic Process
+					}
+
 					return true;
 				}
 				//R2.3  Start Bug Id TISRLUAT-986 20-02-2017 Start
@@ -1487,4 +1501,41 @@ public class CustomOmsShipmentSyncAdapter extends DefaultOmsShipmentSyncAdapter 
 	{
 		this.customOmsCollectedAdapter = customOmsCollectedAdapter;
 	}
+	
+	//Added for TPR-1348
+	/**
+	 * @return the businessProcessService
+	 */
+	public BusinessProcessService getBusinessProcessService()
+	{
+		return businessProcessService;
+	}
+
+	/**
+	 * @param businessProcessService
+	 *           the businessProcessService to set
+	 */
+	public void setBusinessProcessService(final BusinessProcessService businessProcessService)
+	{
+		this.businessProcessService = businessProcessService;
+	}
+
+
+	private void startAutomaticRefundProcess(final OrderModel orderModel)
+	{
+		try
+		{
+			final OrderProcessModel orderProcessModel = (OrderProcessModel) businessProcessService.createProcess(
+					"autorefundinitiate-process-" + System.currentTimeMillis(), "autorefundinitiate-process");
+			orderProcessModel.setOrder(orderModel);
+			businessProcessService.startProcess(orderProcessModel);
+			LOG.error("CustomOmsShipmentSyncAdapter: in the CustomOmsShipmentSyncAdapter.startAutomaticRefundProcess() for Order #"
+					+ orderModel.getCode());
+		}
+		catch (final Exception e)
+		{
+			LOG.error("CustomOmsShipmentSyncAdapter: error creating AutoRefundProcess for Order #" + orderModel.getCode());
+		}
+	}
+	//End for TPR-1348
 }

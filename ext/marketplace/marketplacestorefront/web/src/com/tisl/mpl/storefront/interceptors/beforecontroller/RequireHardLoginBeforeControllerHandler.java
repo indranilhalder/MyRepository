@@ -28,12 +28,14 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Required;
 import org.springframework.core.annotation.AnnotationUtils;
 import org.springframework.security.web.RedirectStrategy;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.util.CookieGenerator;
 
+import com.tisl.lux.facade.CommonUtils;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.storefront.interceptors.BeforeControllerHandler;
 
@@ -47,12 +49,16 @@ public class RequireHardLoginBeforeControllerHandler implements BeforeController
 	public static final String SECURE_GUID_SESSION_KEY = "acceleratorSecureGUID";
 
 	private String loginUrl;
+	private String luxuryLoginUrl;
 	private String loginAndCheckoutUrl;
+	private String luxuryLoginAndCheckoutUrl;
 	private RedirectStrategy redirectStrategy;
 	private CookieGenerator cookieGenerator;
 	private UserService userService;
 	private SessionService sessionService;
 	private CartService cartService;
+	@Autowired
+	private CommonUtils commonUtils;
 
 	protected String getLoginUrl()
 	{
@@ -63,6 +69,28 @@ public class RequireHardLoginBeforeControllerHandler implements BeforeController
 	public void setLoginUrl(final String loginUrl)
 	{
 		this.loginUrl = loginUrl;
+	}
+
+	public String getLuxuryLoginAndCheckoutUrl()
+	{
+		return luxuryLoginAndCheckoutUrl;
+	}
+
+	@Required
+	public void setLuxuryLoginAndCheckoutUrl(final String luxuryLoginAndCheckoutUrl)
+	{
+		this.luxuryLoginAndCheckoutUrl = luxuryLoginAndCheckoutUrl;
+	}
+
+	protected String getLuxuryLoginUrl()
+	{
+		return luxuryLoginUrl;
+	}
+
+	@Required
+	public void setLuxuryLoginUrl(final String luxuryLoginUrl)
+	{
+		this.luxuryLoginUrl = luxuryLoginUrl;
 	}
 
 	protected RedirectStrategy getRedirectStrategy()
@@ -165,8 +193,8 @@ public class RequireHardLoginBeforeControllerHandler implements BeforeController
 			if (null != findAnnotation(handler, RequireHardLogIn.class))
 			{
 				final String guid = (String) request.getSession().getAttribute(SECURE_GUID_SESSION_KEY);
-				if (!(((!getUserService().isAnonymousUser(getUserService().getCurrentUser()) || checkForAnonymousCheckout()) && checkForGUIDCookie(
-						request, response, guid))))
+				if (!(((!getUserService().isAnonymousUser(getUserService().getCurrentUser()) || checkForAnonymousCheckout())
+						&& checkForGUIDCookie(request, response, guid))))
 				{
 					boolean redirect = true;
 					if (keepLoginAlive(request))
@@ -195,7 +223,7 @@ public class RequireHardLoginBeforeControllerHandler implements BeforeController
 
 	protected boolean checkForGUIDCookie(final HttpServletRequest request, final HttpServletResponse response, final String guid)
 	{////Deeply nested if..then statements are hard to read
-	 //		if (guid != null && request.getCookies() != null)
+		 //		if (guid != null && request.getCookies() != null)
 	 //		{
 	 //			final String guidCookieName = getCookieGenerator().getCookieName();
 	 //			if (guidCookieName != null)
@@ -259,6 +287,15 @@ public class RequireHardLoginBeforeControllerHandler implements BeforeController
 
 	protected String getRedirectUrl(final HttpServletRequest request)
 	{
+		if (commonUtils.isLuxurySite() && request != null && !request.getServletPath().contains("checkout"))
+		{
+			return getLuxuryLoginUrl();
+		}
+		else if (commonUtils.isLuxurySite() && request != null && request.getServletPath().contains("checkout"))
+		{
+			return getLuxuryLoginAndCheckoutUrl();
+		}
+
 		if (request != null && request.getServletPath().contains("checkout"))
 		{
 			return getLoginAndCheckoutUrl();

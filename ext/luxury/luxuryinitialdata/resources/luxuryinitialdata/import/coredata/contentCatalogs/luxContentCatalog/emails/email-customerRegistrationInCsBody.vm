@@ -1,0 +1,275 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+	<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport" content="width=device-width; initial-scale=1.0; maximum-scale=1.0; user-scalable=0;" />
+<title>Registration Through Call Center</title>
+<style>
+ img.spacer-img {
+ 	opacity: 0;
+ }
+ .emailPass td{
+ padding: 25px 0px 0px 3px;
+ padding-top:0px;
+ }
+ tr > td > span > span > a{
+ pointer-events: none !important;
+color: #4a4a4a !important;
+text-decoration: none !important;
+ }
+ tr > td > span > font > span > a{
+ pointer-events: none !important;
+color: #4a4a4a !important;
+text-decoration: none !important;
+ }
+ td span img{
+ width:100%;
+ }
+</style>
+	</head>
+	<body style="margin:0;">
+<table width="600" border="0" cellspacing="0" cellpadding="0" align="center" style="font-family:Arial, Helvetica, sans-serif;border:solid 1px #cccccc;display:inherit">
+<tr>
+<td align="left" valign="top"><span>${ctx.cmsSlotContents.SiteLogo}</span></td>
+</tr>
+<tr>
+<td align="left" valign="top" style="display:inherit;">
+<h2 style="padding-left: 17px;color: #AA133D;margin-bottom: 2px;">Looks Like We're Going To Be</h2>
+<h2 style="padding-left: 17px;color: #AA133D;margin-bottom: 2px;margin-top:4px">Friends For A Long, Long Time</h2>
+
+<table border="0" cellspacing="0" cellpadding="0" style="padding-left:13px;margin-top:12px">
+
+<tr>
+
+<td align="left" valign="top"><table border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td align="left" valign="top" style="font-family:Avenir, Arial, Helvetica, sans-serif; font-size:20px; color:#606060;"><table border="0" cellspacing="0" cellpadding="0">
+      <tr>
+        
+        <td align="left" valign="top" style="color:#000;font-weight:bold"><span><font style="font-family:Arial, Helvetica, sans-serif; font-size:18px; color:#4a4a4b; font-weight:bold;">Hey <span>${ctx.title} ${ctx.displayName}</span>,</font></span></td>
+      </tr>
+    </table></td>
+  </tr>
+ <tr>
+							<td height="15" align="left" valign="top" style="font-size:0;line-height:0">&nbsp;</td>
+							
+						</tr>
+
+  <tr>
+    <td colspan="3" align="left" valign="top" style="font-family:Avenir, Arial, Helvetica, sans-serif; font-size:14px; color:#606060;">So glad we get to do that, now that you've signed up for TataCLiQ Luxury . Our XXXHelpers told us you wanted an account with us. So here it is.  </td>
+  </tr>
+  <tr>
+    <td align="left" valign="top" style="font-family:Avenir, Arial, Helvetica, sans-serif; font-size:14px; color:#606060;">&nbsp;</td>
+  </tr>
+  <tr>
+    <td align="left" valign="top" style="font-family:Avenir, Arial, Helvetica, sans-serif; font-size:14px; color:#606060;">But first, introductions are in order. Here are your details:</td>
+  </tr>
+</table></td>
+<td align="left" valign="top">&nbsp;</td>
+</tr>
+<tr>
+							<td height="15" align="left" valign="top" style="font-size:0;line-height:0">&nbsp;</td>
+							
+						</tr>
+
+<tr>
+  
+  <td align="left" valign="top"><table class="emailPass" border="0" cellspacing="0" cellpadding="0">
+    <tr>
+      <td align="left" valign="middle" style="font-family:Avenir, Arial, Helvetica, sans-serif; font-size:14px; color:#AA133D;font-weight:bold;padding-left: 0px">Email ID for login:  </td>
+      <td  align="left" valign="middle" style="font-family:Avenir, Arial, Helvetica, sans-serif; font-size:14px; color:#4a4a4a; font-weight:bold;padding-right: 10px; "> <span><span>${ctx.customerId}</span></span></td>
+	  #if ($ctx.customerCreatedInCscockpit) 
+      <td align="left" valign="middle" style="font-family:Avenir, Arial, Helvetica, sans-serif; font-size:14px; color:#AA133D;font-weight:bold">Temporary password:</td>
+      <td align="left" valign="middle" style="font-family:Avenir, Arial, Helvetica, sans-serif; font-size:14px; color:#4a4a4a; font-weight:bold;" >${ctx.customerPassword}</td>
+	#end
+      </tr>
+    <tr>
+							<td height="15" align="left" valign="top" style="font-size:0;line-height:0">&nbsp;</td>
+							<td height="15" align="left" valign="top" style="font-size:0;line-height:0">&nbsp;</td>
+							<td height="15" align="left" valign="top" style="font-size:0;line-height:0">&nbsp;</td>
+						</tr>
+
+    
+  </table></td>
+ 
+</tr>
+<tr>
+ 
+  <td align="left" valign="top" style="font-family:Avenir, Arial, Helvetica, sans-serif; font-size:14px; color:#606060;">You will be prompted to change your password when you log in for the first time.</td>
+
+</tr>
+<tr>
+							
+							<td height="15" align="left" valign="top" style="font-size:0;line-height:0">&nbsp;</td>
+							
+						</tr>
+
+<tr>
+ 
+  <td align="left" valign="top"><table border="0" cellspacing="0" cellpadding="0">
+    <tr bgcolor="#f5f5f5">
+      <td height="35" align="left" valign="top" >&nbsp;</td>
+      <td align="left" valign="middle"  style="font-family:Avenir, Arial, Helvetica, sans-serif; font-size:18px; color:#AA133D;">Here's what will make shopping&nbsp;&nbsp;<span style="color:#202020;">together fun:</span></td>
+     
+      <td align="left" valign="top" > </td>
+      <td align="left" valign="top">&nbsp;</td>
+    </tr>
+  </table></td>
+  
+</tr>
+<tr>
+							
+							<td height="15" align="left" valign="top" style="font-size:0;line-height:0">&nbsp;</td>
+						</tr>
+
+<tr>
+ 
+  <td align="left" valign="top"><table border="0" cellspacing="0" cellpadding="0" style="font-family:Avenir, Arial, Helvetica, sans-serif; font-size:12px; color:#000000;width:100%;">
+    <tr>
+      <td align="center" valign="top">${ctx.cmsSlotContents.handpick}</td>
+	  <td rowspan="2" align="center" valign="bottom">${ctx.cmsSlotContents.slashImgOne}</td>
+      <td align="center" valign="top">${ctx.cmsSlotContents.brand}</td>
+	  <td rowspan="2" align="center" valign="bottom">${ctx.cmsSlotContents.slashImgTwo} </td>
+      <td align="center" valign="top">${ctx.cmsSlotContents.exp}</td>
+	  <td rowspan="2" align="center" valign="bottom">${ctx.cmsSlotContents.slashImgThree} </td>
+      <td align="center" valign="bottom">${ctx.cmsSlotContents.fast}</td>
+      
+    </tr>
+    <tr>
+      <td align="center" valign="top" >Handpicked<br />
+        collections</td>
+      <td align="center" valign="top">Exclusive<br />
+        brands</td>
+      <td align="center" valign="top">Personalised<br />
+        experiences</td>
+      <td align="center" valign="top">Faster<br />
+        delivery</td>
+    </tr>
+  </table></td>
+  
+</tr>
+<tr>
+							<td height="15" align="left" valign="top" style="font-size:0;line-height:0">&nbsp;</td>
+							<td height="15" align="left" valign="top" style="font-size:0;line-height:0">&nbsp;</td>
+							<td height="15" align="left" valign="top" style="font-size:0;line-height:0">&nbsp;</td>
+						</tr>
+
+<tr>
+  
+  <td align="left" valign="top"><table border="0" cellspacing="0" cellpadding="0">
+    <tr>
+  <td align="left" valign="top">&nbsp;</td>
+  <td align="left" valign="top"><table border="0" cellspacing="0" cellpadding="0">
+   <tbody><tr>
+                <td height="60" align="left" valign="top">${ctx.cmsSlotContents.Tip}</td>
+              </tr>
+   
+  </tbody></table></td>
+  <td align="left" valign="top">&nbsp;</td>
+</tr>
+    <tr>
+							<td height="15" align="left" valign="top" style="font-size:0;line-height:0">&nbsp;</td>
+							<td height="15" align="left" valign="top" style="font-size:0;line-height:0">&nbsp;</td>
+							<td height="15" align="left" valign="top" style="font-size:0;line-height:0">&nbsp;</td>
+						</tr>
+
+  </table></td>
+ 
+</tr>
+<tr>
+  
+  <td align="left" valign="top"><table border="0" cellspacing="0" cellpadding="0">
+    <tr>
+     
+      <td rowspan="2" align="left" valign="top" ><table border="0" cellspacing="0" cellpadding="0" style="font-family:Avenir, Arial, Helvetica, sans-serif; font-size:16px; color:#ffffff;">
+        
+        <tr>
+        
+          <td align="left" valign="top" style="font-family:Avenir, Arial, Helvetica, sans-serif; font-size:14px; color:#000;line-height:22px;">If you're worried about what your friends will think of what you want to buy, don't be. Add it to your wish list, share it with them and get their feedback right away.</td>
+        </tr>
+       
+        
+      </table></td>
+      <td rowspan="2" align="right" valign="top">&nbsp;</td>
+    </tr>
+    
+  </table></td>
+ 
+</tr>
+
+
+	<tr>
+					 
+					  <td align="left" valign="top" style="font-family:Avenir, Arial, Helvetica, sans-serif; font-size:18px; color:#ed0c6e;"><table border="0" cellspacing="0" cellpadding="0">
+					  <tr>
+                <td height="70" align="center"><a href="${ctx.secureBaseUrl}/apps" target="_blank">${ctx.cmsSlotContents.AppDownloadUrl}</a></td>
+              </tr>
+						<tr>
+						  <td>${ctx.cmsSlotContents.smileyimg}</td></td>
+						  </tr>
+						</table></td>
+					
+					</tr>
+
+<tr>
+ 
+  <td align="left" valign="top"><table border="0" cellspacing="0" cellpadding="0">
+    
+  </table></td>
+  
+</tr>
+
+
+<tr>
+  
+  <td align="left" valign="top"><table border="0" cellspacing="0" cellpadding="0">
+<tr>
+				
+					  <td align="left" valign="top" style="font-family:Avenir, Arial, Helvetica, sans-serif; font-size:18px; color:#ed0c6e;padding-left:13px"><table border="0" cellspacing="0" cellpadding="0">
+						<tr>
+						 <td align="left" style="font-family:Arial, Helvetica, sans-serif; font-size:11px; color:#4a4a4a;"><p>This email cant receive replies. Get in touch by calling  us at 1800 208 8282 or email us at <a href="mailto:hello@tatacliq.com">hello@tatacliq.com</a></p></td>
+						  </tr>
+						  <tr>
+               
+              </tr>
+						</table></td>
+					
+					</tr>
+</table></td>
+ 
+</tr>
+<tr>
+							<td height="15" align="left" valign="top" style="font-size:0;line-height:0">&nbsp;</td>
+							
+						</tr>
+
+<tr>
+					
+					  <td align="left" valign="top" style="font-family:Avenir, Arial, Helvetica, sans-serif; font-size:18px; color:#ed0c6e;padding-left:13px"><table style="width:95%;" border="0" cellspacing="0" cellpadding="0">
+						<tr>
+						 <td align="left" style="font-family:Avenir, Arial, Helvetica, sans-serif; font-size:11px; color:#4a4a4a;">&copy; 2016 Tata CLiQ Luxury| All Rights Reserved</td>
+						  <td align="left" valign="top">&nbsp;</td>
+						  <td align="right" valign="top"><table border="0" cellspacing="0" cellpadding="0" align="right">
+							<tr>
+							  <td align="left" valign="middle"><a href="https://www.facebook.com"  style="border:none;">${ctx.cmsSlotContents.fb}</td>
+							  <td align="left" valign="middle"><a href="https://plus.google.com" style="border:none;">${ctx.cmsSlotContents.tweet}</td>
+							   <td align="left" valign="middle"><a href="https://plus.google.com" style="border:none;">${ctx.cmsSlotContents.youtube}</td>
+							   <td align="left" valign="middle"><a href="https://plus.google.com" style="border:none;">${ctx.cmsSlotContents.insta}</td>
+							  
+							  </tr>
+							</table></td>
+						  </tr>
+						<tr>
+						  <td align="left" valign="middle" style="font-family:Avenir, Arial, Helvetica, sans-serif; font-size:11px; color:#606060;">&nbsp;</td>
+						  <td align="left" valign="top">&nbsp;</td>
+						  <td align="left" valign="top">&nbsp;</td>
+						  </tr>
+						</table></td>
+					
+					</tr>
+</table></td>
+</tr>
+</table>
+</body>
+
+</html>
