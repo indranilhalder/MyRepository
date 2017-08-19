@@ -101,8 +101,7 @@ public class CustomProductCategoriesPopulator<SOURCE extends ProductModel, TARGE
 		productData.setCategories(Converters.convertAll(resultList, getCategoryConverter()));
 		//TPR-1083 Changes Exchange Start
 		//Check if Exchange is Allowed from properties file
-		final List<String> defaultlist = new ArrayList();
-		defaultlist.add("Electronics");
+
 
 		final Boolean exchangeAllowed = configurationService.getConfiguration().getBoolean("mpl.exchange.enabled", Boolean.FALSE);
 		final List<String> exchangeAllowedRootCategory = Arrays.asList(configurationService.getConfiguration()
