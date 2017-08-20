@@ -227,6 +227,24 @@ function getProductSetDataCustomSku() {
 }
 
 $(document).ready(function() {
+	//INC144318859 remove previous cache data | old cache issue
+    if ($('#pageType').val() != 'productsearch' && $('#pageType').val() != 'product' && $('#pageType').val() != 'category') 
+	{ 
+	    //console.log("trying to remove previous cache data not for plp(category&productsearch) & pdp ");
+	        var lastUrlpathNameprvdata = window.localStorage.getItem('lastUrlpathName');
+                var lastUrlqueryprvdata    = window.localStorage.getItem('lastUrlquery');
+		var htmlprvdata            = window.localStorage.getItem('productlazyarray');
+		var lazyfrompdpprvdata     = window.localStorage.getItem("lazyfrompdp");
+		if(lastUrlpathNameprvdata != null || lastUrlqueryprvdata != null || htmlprvdata != null || lazyfrompdpprvdata != null) 
+		    {
+			   // console.log("removed cache data");
+        		window.localStorage.removeItem('lazyfrompdp');
+          		window.localStorage.removeItem('productlazyarray');
+          		window.localStorage.removeItem('lastUrlpathName');
+          		window.localStorage.removeItem('lastUrlquery');
+		    }	
+				
+	}	
     //lazy image load initialization
 	if($('#pageType').val() == "productsearch" || $('#pageType').val() == "product" || $('#pageType').val() == "category" || $('input[name=customSku]').length){
 	    $("img.lazy").lazyload();	
