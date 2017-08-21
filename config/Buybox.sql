@@ -744,6 +744,33 @@ AS
             B.modifiedts = v_prc_start_time_dateupdate;
 ------------------------------------------------------------------------------------------
 
+-- CAR-302/CAR-303 size variant  update snippet
+
+	update MplBuyBoxProcTable bbox2 set bbox2.modifiedts=v_prc_start_time_dateupdate, bbox2.p_oosmodifiedval=v_prc_start_time_dateupdate 
+	where exists 
+	(SELECT   
+	null 
+	from 
+	MplBuyBoxProcTable bbox1, 
+	MplBuyBox bbox, 
+	products p1, 
+	products p2 
+	WHERE   
+	bbox1.p_sellerarticlesku = bbox.p_sellerarticlesku 
+	and ((bbox.p_delisted = 1 and bbox1.p_delisted = 0) 
+	or (bbox.p_delisted = 0 and bbox1.p_delisted = 1) 
+	) 
+	and bbox1.p_product = p1.p_code 
+	and p1.p_colour=p2.p_colour 
+	and p1.p_baseproduct=p2.p_baseproduct 
+	and bbox2.p_product = p2.p_code 
+	and bbox1.modifiedts > v_last_run_dateupdate 
+	and p1.p_catalogversion=v_catalogversion_buybox 
+	and p2.p_catalogversion=v_catalogversion_buybox); 
+
+	COMMIT;
+-- CAR-302/CAR-303 size variant  update snippet ends
+
       --to Update the last run time
       UPDATE MPLBUYBOXUPDTLOG
          SET MPLBUYBOXUPDTLOG.P_LAST_RUN_TIME = v_prc_start_time_dateupdate
