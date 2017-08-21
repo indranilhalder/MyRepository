@@ -4316,7 +4316,8 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 							 * entryModel.getSelectedUSSID());
 							 */
 							final SellerInformationModel sellerInfoModel = getMplSellerInformationService().getSellerDetail(
-									entryModel.getSelectedUssid());
+									entryModel.getSelectedUssid(),
+									abstractOrderModel.getStore().getCatalogs().get(0).getActiveCatalogVersion());
 							List<RichAttributeModel> richAttributeModel = null;
 							if (sellerInfoModel != null && sellerInfoModel.getRichAttribute() != null)
 							{
