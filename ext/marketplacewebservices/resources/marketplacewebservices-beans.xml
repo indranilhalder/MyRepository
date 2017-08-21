@@ -3020,5 +3020,37 @@
 		<property name="maxQuantityAllowed" type="String" />
 		<property name="userSelectedQty" type="String" />
 	</bean>
+
+	<!-- =======================================luxury Components========================================================= -->
+
+	<!--============= luxuryHomePage =============-->
+	<bean class="com.tisl.mpl.wsdto.LuxuryHomePageCompWsDTO">
+		<property name="sectionId" type="String" />
+		<property name="Components" type="java.util.List&lt;com.tisl.mpl.wsdto.LuxuryComponentsListWsDTO>"/>
+		<property name="pageTitle" type="String" />
+		<property name="metaKeywords" type="String" />
+		<property name="metaDescription" type="String" />
+	</bean>
+
+
+
+
+	<bean class="com.tisl.mpl.wsdto.LuxuryComponentsListWsDTO">
+		<property name="title" type="String" />
+		<property name="sectionid" type="String" />
+		<property name="WeeklySpecialBanner" type="String" />
+		<property name="ShopOnLuxuryElement" type="String" />
+		<property name="ShopOnLuxury" type="String" />
+		<property name="CMSParagraphComponent" type="String" />
+		<property name="LuxShowCaseCollectionComponent" type="String" />
+		<property name="LuxCMSMediaParagraphComponent" type="String" />
+		<property name="LuxShopByCategory" type="String" />
+		<property name="LuxurySimpleBannerComponent" type="String" />
+		<property name="LuxuryPincodeServiceComponent" type="String" />
+		<property name="LuxuryLookBookComponent" type="String" />
+		<property name="LuxuryMedia" type="String" />
+
+	</bean>
+
 </beans>
 
