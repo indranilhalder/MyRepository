@@ -129,6 +129,7 @@ public class TshipLogisticDataUploadController extends DefaultWidgetController
 		{
 			homeExcelFileName.setText(fileName);
 			homeEmptyFileError.setValue("");
+			expressEmptyFileError.setValue("");
 			final String fileNameTimeStamp = fileName.concat("/".concat(new Date().toString()));
 			try
 			{

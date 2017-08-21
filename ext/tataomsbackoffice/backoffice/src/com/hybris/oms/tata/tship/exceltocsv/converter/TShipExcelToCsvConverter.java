@@ -6,6 +6,7 @@ import de.hybris.platform.servicelayer.i18n.CommonI18NService;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -107,6 +108,7 @@ public class TShipExcelToCsvConverter
 	{
 
 		LOG.info("inside Convert Excel TO CSV");
+		 FileWriter writer=null;
 		XSSFWorkbook wBook = null;
 		XSSFSheet sheet = null;
 		ArrayList<Integer> logisticPartnerIndexes = null;
@@ -132,7 +134,7 @@ public class TShipExcelToCsvConverter
 			{
 				validationPath.createNewFile();
 			}
-			final FileWriter writer = new FileWriter(validationFile);
+			writer = new FileWriter(validationFile);
 			wBook = new XSSFWorkbook(new FileInputStream(inputFile));
 			logisticPartnerIndexes = new ArrayList<Integer>();
 			final TshipRowCount rowCount = new TshipRowCount();
@@ -156,7 +158,7 @@ public class TShipExcelToCsvConverter
 								.findLogisticPartnerName(getCellData(row.getCell(i)));
 						logisticPartners.put(i, logisticPartnerName);
 						logisticPartnerIndexes.add(i);//keep track of starting index of logistic partner data
-						LOG.info("Logistc Partner Name Index values In xlxs" + logisticPartnerIndexes);
+
 					}
 				}
 
@@ -382,22 +384,41 @@ public class TShipExcelToCsvConverter
 						  //
 						  //	System.out.println("lp " + logisticPartners1);
 						  //Now validate all Logistic Partner Data
-						logisticPartnerValidator.validateLogisticPartners(deliveryMode, priorityMaster, logisticPartners1, writer,
-								rowNumber);
+						try
+						{
+							logisticPartnerValidator.validateLogisticPartners(deliveryMode, priorityMaster, logisticPartners1, writer,
+									rowNumber);
+						}
+						catch (final Exception e)
+						{
+							writer.flush();
+						} //TISPRDT-969 :it will continue to the loop end of the  logistics
 					} //if PM validated
 				} //reading rows while loop
 			} //sheet reading for loop
 			writer.flush();
-			writer.close();
 			tshipExcelToCsvService.appendFooterData(deliveryMode, fileNameTimeStamp);
 			tshipExcelToCsvService.writeData(tshipExcelToCsvService.getData(), outputFile, validationFile);
 
 		} //try
 		catch (final Exception e)
 		{
-			e.printStackTrace();
 
+		LOG.info("Error while Lodaing Tship Bulk Upload File "+e.getMessage());
 		} //catch
+		finally //TISPRDT-969:to write the error logistics data in case any exception with validation
+		{
+			try
+			{
+				writer.flush();
+				writer.close();
+			}
+			catch (final IOException e)
+			{
+				LOG.info("Error while closing the writer obejct"+e.getMessage());
+			}
+
+		}
 
 	}
 

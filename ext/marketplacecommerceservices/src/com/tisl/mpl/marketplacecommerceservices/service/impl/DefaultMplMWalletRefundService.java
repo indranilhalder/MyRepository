@@ -315,6 +315,13 @@ public class DefaultMplMWalletRefundService implements MplMWalletRefundService
 
 				orderEntry.setRefundedDeliveryChargeAmt(Double.valueOf(deliveryCost));
 				orderEntry.setCurrDelCharge(NumberUtils.DOUBLE_ZERO);
+				if(null != orderEntry.getIsEDtoHD() && orderEntry.getIsEDtoHD().booleanValue() && null != orderEntry.getRefundedEdChargeAmt() && orderEntry.getRefundedEdChargeAmt().doubleValue() == 0D){
+					double hdDeliveryCharges=0.0D;
+					if(null !=orderEntry.getHdDeliveryCharge()) {
+						hdDeliveryCharges = orderEntry.getHdDeliveryCharge().doubleValue();
+					}
+					orderEntry.setRefundedEdChargeAmt(Double.valueOf(deliveryCost-hdDeliveryCharges));
+				}
 				// Added in R2.3 START
 				orderEntry.setRefundedScheduleDeliveryChargeAmt(Double.valueOf(scheduleDeliveryCost));
 				orderEntry.setScheduledDeliveryCharge(NumberUtils.DOUBLE_ZERO);
@@ -371,6 +378,13 @@ public class DefaultMplMWalletRefundService implements MplMWalletRefundService
 
 				orderEntry.setRefundedDeliveryChargeAmt(Double.valueOf(deliveryCost));
 				orderEntry.setCurrDelCharge(NumberUtils.DOUBLE_ZERO);
+				if(null != orderEntry.getIsEDtoHD() && orderEntry.getIsEDtoHD().booleanValue() && null != orderEntry.getRefundedEdChargeAmt() && orderEntry.getRefundedEdChargeAmt().doubleValue() == 0D){
+					double hdDeliveryCharges=0.0D;
+					if(null !=orderEntry.getHdDeliveryCharge()) {
+						hdDeliveryCharges = orderEntry.getHdDeliveryCharge().doubleValue();
+					}
+					orderEntry.setRefundedEdChargeAmt(Double.valueOf(deliveryCost-hdDeliveryCharges));
+				}
 				orderEntry.setRefundedScheduleDeliveryChargeAmt(Double.valueOf(scheduleDeliveryCost));
 				orderEntry.setScheduledDeliveryCharge(NumberUtils.DOUBLE_ZERO);
 				modelService.save(orderEntry);
