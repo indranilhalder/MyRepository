@@ -227,7 +227,10 @@ public class CustomOmsOrderLinePopulator implements Populator<OrderEntryModel, O
 			{
 				target.setShippingCharge(source.getPrevDelCharge().doubleValue());
 			}
-
+			if (source.getHdDeliveryCharge() != null)
+			{
+				target.setHDShippingCharge(source.getHdDeliveryCharge().doubleValue());
+			}
 			/*
 			 * if (source.getPrevDelCharge() != null && source.getPrevDelCharge().doubleValue() > 0) {
 			 * target.setShippingCharge(source.getPrevDelCharge().doubleValue()); } else if (source.getCurrDelCharge() !=
@@ -277,14 +280,14 @@ public class CustomOmsOrderLinePopulator implements Populator<OrderEntryModel, O
 			/*
 			 * if (richAttributeModel.get(0).getDeliveryFulfillModeByP1() != null &&
 			 * richAttributeModel.get(0).getDeliveryFulfillModeByP1().getCode() != null)
-			 * 
+			 *
 			 * { final String fulfilmentType =
 			 * richAttributeModel.get(0).getDeliveryFulfillModeByP1().getCode().toUpperCase();
 			 * target.setFulfillmentTypeP1(fulfilmentType); }
-			 * 
+			 *
 			 * if (richAttributeModel.get(0).getDeliveryFulfillModes() != null &&
 			 * richAttributeModel.get(0).getDeliveryFulfillModes().getCode() != null)
-			 * 
+			 *
 			 * { final String fulfilmentType = richAttributeModel.get(0).getDeliveryFulfillModes().getCode().toUpperCase();
 			 * if(fulfilmentType.equalsIgnoreCase(MarketplaceomsservicesConstants.BOTH)){
 			 * if(richAttributeModel.get(0).getDeliveryFulfillModeByP1

@@ -346,6 +346,19 @@ public class DefaultJuspayWebHookServiceImpl implements JuspayWebHookService
 												LOG.error("Exception occurred while creating paymentTransactionModel for ScheduleDelCharges for order id "
 														+ subOrder.getCode());
 											}
+										}else if (null != subOrder && null != rtmModel.getRefundType()
+												&& rtmModel.getRefundType().equals(JuspayRefundType.REFUND_EXPRESS_DELIVERY_CHARGE))
+										{
+											try
+											{
+												createPaymentTransactionModelForEdCharges(rtmModel, refund, subOrder, hook
+														.getOrderStatus().getOrderId());
+											}
+											catch (final Exception e)
+											{
+												LOG.error("Exception occurred while creating paymentTransactionModel for DeliveryCharges for order id "
+														+ subOrder.getCode());
+											}
 										}
 										// added in R2.3 for refund Delivery / schedule Delivery Charges End
 									}
@@ -845,6 +858,87 @@ public class DefaultJuspayWebHookServiceImpl implements JuspayWebHookService
 		}
 	}
 
+	
+	/**
+	 * @param rtmModel
+	 * @param refund
+	 * @param order
+	 * @param juspayOrderId
+	 */
+	private void createPaymentTransactionModelForEdCharges(final RefundTransactionMappingModel rtmModel,
+			final JuspayRefundResponseModel refund, final OrderModel order, final String juspayOrderId)
+	{
+
+		LOG.info("Creating  PaymentTransactionModel for DeliveryCharges refund");
+		try
+		{
+			if (null != rtmModel.getJuspayRefundId() && null != rtmModel.getRefundedOrderEntry()
+					&& null != rtmModel.getRefundedOrderEntry().getTransactionID())
+			{
+				final Double refundAmount = rtmModel.getRefundAmount() != null ? rtmModel.getRefundAmount() : NumberUtils.DOUBLE_ZERO;
+				PaymentTransactionModel paymentTransactionModel = getModelService().create(PaymentTransactionModel.class);
+				ConsignmentStatus newStatus = null;
+
+				final String uniqueRequestId = getWebhookUniqueRequestId(rtmModel);
+
+				if (refund.getStatus().equalsIgnoreCase(MarketplacecommerceservicesConstants.SUCCESS))
+				{
+					paymentTransactionModel = getMplJusPayRefundService().createPaymentTransactionModel(order,
+							MarketplacecommerceservicesConstants.SUCCESS, refundAmount, PaymentTransactionType.REFUND_EXPRESS_DELIVERY_CHARGES,
+							REFUND, uniqueRequestId);
+					if (null != rtmModel.getRefundedOrderEntry() && null != rtmModel.getRefundedOrderEntry().getConsignmentEntries())
+					{
+						newStatus = rtmModel.getRefundedOrderEntry().getConsignmentEntries().iterator().next().getConsignment()
+								.getStatus();
+					}
+				}
+				else if (refund.getStatus().equalsIgnoreCase(MarketplacecommerceservicesConstants.FAILURE))
+				{
+					paymentTransactionModel = getMplJusPayRefundService().createPaymentTransactionModel(order,
+							MarketplacecommerceservicesConstants.FAILURE, refundAmount, PaymentTransactionType.REFUND_EXPRESS_DELIVERY_CHARGES,
+							REFUND_FAIL, uniqueRequestId);
+
+					if (null != rtmModel.getRefundedOrderEntry() && null != rtmModel.getRefundedOrderEntry().getConsignmentEntries())
+					{
+						newStatus = rtmModel.getRefundedOrderEntry().getConsignmentEntries().iterator().next().getConsignment()
+								.getStatus();
+					}
+				}
+
+				if (newStatus != null)
+				{
+					getMplJusPayRefundService().attachPaymentTransactionModel(order, paymentTransactionModel);
+
+					//RTM processed set
+					rtmModel.setIsProcessed(Boolean.TRUE);
+					getModelService().save(rtmModel);
+
+					final AbstractOrderEntryModel orderEntryModel = rtmModel.getRefundedOrderEntry();
+
+					orderEntryModel.setEdChargesJuspayRequestId(uniqueRequestId);
+					getModelService().save(orderEntryModel);
+
+					//TO update the status to OMS
+					LOG.debug(LOG_MSG_CALLING_OMS_WITH_STATUS + newStatus + LOG_MSG_FOR_REFUND_AMOUNT + refund.getAmount()
+							+ LOG_MSG_FOR_ORDER_LINE_ID + orderEntryModel.getOrderLineId());
+
+					mplJusPayRefundService.makeRefundOMSCall(orderEntryModel, paymentTransactionModel, refund.getAmount(), newStatus,
+							null);
+
+					//Update in Audit table with new status
+					updateInAudit(juspayOrderId, refund.getStatus(), getWebhookUniqueRequestId(rtmModel), paymentTransactionModel);
+				}
+			}
+		}
+		catch (final ModelSavingException e)
+		{
+			LOG.error(e.getMessage(), e);
+		}
+		catch (final EtailNonBusinessExceptions e)
+		{
+			LOG.error(e.getMessage(), e);
+		}
+	}
 
 	/**
 	 * @param rtmModel

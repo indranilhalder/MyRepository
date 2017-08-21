@@ -6,6 +6,8 @@ import java.util.ArrayList;
 
 import javax.annotation.Resource;
 
+import org.apache.commons.lang.StringUtils;
+
 import com.hybris.oms.tata.tship.exceltocsv.pojo.LogisticPartner;
 import com.hybris.oms.tata.tship.exceltocsv.pojo.PriorityMaster;
 import com.hybris.oms.tata.tship.exceltocsv.service.DefaultTshipExcelToCsvService;
@@ -22,7 +24,6 @@ public class TshipLogisticPartnerValidator
 {
 	@Resource(name = "tshipExcelToCsvService")
 	private DefaultTshipExcelToCsvService tshipExcelToCsvService;
-
 
 	//
 
@@ -202,7 +203,14 @@ public class TshipLogisticPartnerValidator
 					&& !logisticPartner.getName().equalsIgnoreCase(priorityMaster.getSurfacePriorityMaster().getSurfaceCodPriority3())
 					&& !logisticPartner.getName().equalsIgnoreCase(priorityMaster.getSurfacePriorityMaster().getSurfaceCodPriority4()))
 			{
-				logisticPartner.setCodLimit(logisticPartner.getCodLimit());
+				if (StringUtils.isEmpty(logisticPartner.getCodLimit()) || !isNumeric(logisticPartner.getCodLimit().substring(0, logisticPartner.getCodLimit().length()-1))) // TISPRD-649: Non Numeric Check and Not Present in any  Priority
+				{
+					logisticPartner.setCodLimit("0.0" + TshipExcelConstants.ADD_COMMA);
+				}
+				else
+				{
+					logisticPartner.setCodLimit(logisticPartner.getCodLimit());
+				}	
 			}
 		}
 		else
@@ -243,7 +251,14 @@ public class TshipLogisticPartnerValidator
 					&& !logisticPartner.getName().equalsIgnoreCase(priorityMaster.getAirPriorityMaster().getAirCodPriority4())
 					&& !logisticPartner.getName().equalsIgnoreCase(priorityMaster.getAirPriorityMaster().getAirCodPriority5()))
 			{
-				logisticPartner.setCodLimit(logisticPartner.getCodLimit());
+				if (StringUtils.isEmpty(logisticPartner.getCodLimit()) || !isNumeric(logisticPartner.getCodLimit().substring(0, logisticPartner.getCodLimit().length()-1))) // TISPRD-649: Non Numeric Check and Not Present in any  Priority
+				{
+					logisticPartner.setCodLimit("0.0" + TshipExcelConstants.ADD_COMMA);
+				}
+				else
+				{
+					logisticPartner.setCodLimit(logisticPartner.getCodLimit());
+				}
 			}
 		}
 
@@ -266,25 +281,25 @@ public class TshipLogisticPartnerValidator
 		if (logisticPartner.getIndex() >= surfaceModeStartingIndex)
 		{
 			if (priorityMaster.getSurfacePriorityMaster().getSurfacePrepaidPriority1().length() > 1
-					&& priorityMaster.getSurfacePriorityMaster().getSurfaceCodPriority1().equalsIgnoreCase(logisticPartner.getName()))
+					&& priorityMaster.getSurfacePriorityMaster().getSurfacePrepaidPriority1().equalsIgnoreCase(logisticPartner.getName()))
 			{
 				validatePrepaidLimitOfPriorities(priorityMaster.getSurfacePriorityMaster().getSurfacePrepaidPriority1(),
 						logisticPartner, writer, rowNumber);
 			}
 			else if (priorityMaster.getSurfacePriorityMaster().getSurfacePrepaidPriority2().length() > 1
-					&& priorityMaster.getSurfacePriorityMaster().getSurfaceCodPriority2().equalsIgnoreCase(logisticPartner.getName()))
+					&& priorityMaster.getSurfacePriorityMaster().getSurfacePrepaidPriority2().equalsIgnoreCase(logisticPartner.getName()))
 			{
 				validatePrepaidLimitOfPriorities(priorityMaster.getSurfacePriorityMaster().getSurfacePrepaidPriority2(),
 						logisticPartner, writer, rowNumber);
 			}
 			else if (priorityMaster.getSurfacePriorityMaster().getSurfacePrepaidPriority3().length() > 1
-					&& priorityMaster.getSurfacePriorityMaster().getSurfaceCodPriority3().equalsIgnoreCase(logisticPartner.getName()))
+					&& priorityMaster.getSurfacePriorityMaster().getSurfacePrepaidPriority2().equalsIgnoreCase(logisticPartner.getName()))
 			{
 				validatePrepaidLimitOfPriorities(priorityMaster.getSurfacePriorityMaster().getSurfacePrepaidPriority3(),
 						logisticPartner, writer, rowNumber);
 			}
 			else if (priorityMaster.getSurfacePriorityMaster().getSurfacePrepaidPriority4().length() > 1
-					&& priorityMaster.getSurfacePriorityMaster().getSurfaceCodPriority4().equalsIgnoreCase(logisticPartner.getName()))
+					&& priorityMaster.getSurfacePriorityMaster().getSurfacePrepaidPriority4().equalsIgnoreCase(logisticPartner.getName()))
 			{
 				validatePrepaidLimitOfPriorities(priorityMaster.getSurfacePriorityMaster().getSurfacePrepaidPriority4(),
 						logisticPartner, writer, rowNumber);
@@ -298,37 +313,44 @@ public class TshipLogisticPartnerValidator
 					&& !logisticPartner.getName()
 							.equalsIgnoreCase(priorityMaster.getSurfacePriorityMaster().getSurfacePrepaidPriority4()))
 			{
-				logisticPartner.setPrepaidLimit(logisticPartner.getPrepaidLimit());
+				if (StringUtils.isEmpty(logisticPartner.getPrepaidLimit()) || !isNumeric(logisticPartner.getPrepaidLimit().substring(0, logisticPartner.getPrepaidLimit().length()-1))) // TISPRD-649: Non Numeric Check , Not given in any  Priority
+				{
+					logisticPartner.setPrepaidLimit("0.0" + TshipExcelConstants.ADD_COMMA);
+				}
+				else
+				{
+					logisticPartner.setPrepaidLimit(logisticPartner.getPrepaidLimit());
+				}
 			}
 		}
 		else
 		{
 			if (priorityMaster.getAirPriorityMaster().getAirPrepaidPriority1().length() > 1
-					&& priorityMaster.getAirPriorityMaster().getAirCodPriority1().equalsIgnoreCase(logisticPartner.getName()))
+					&& priorityMaster.getAirPriorityMaster().getAirPrepaidPriority1().equalsIgnoreCase(logisticPartner.getName()))
 			{
 				validatePrepaidLimitOfPriorities(priorityMaster.getAirPriorityMaster().getAirPrepaidPriority1(), logisticPartner,
 						writer, rowNumber);
 			}
 			else if (priorityMaster.getAirPriorityMaster().getAirPrepaidPriority2().length() > 1
-					&& priorityMaster.getAirPriorityMaster().getAirCodPriority2().equalsIgnoreCase(logisticPartner.getName()))
+					&& priorityMaster.getAirPriorityMaster().getAirPrepaidPriority2().equalsIgnoreCase(logisticPartner.getName()))
 			{
 				validatePrepaidLimitOfPriorities(priorityMaster.getAirPriorityMaster().getAirPrepaidPriority2(), logisticPartner,
 						writer, rowNumber);
 			}
 			else if (priorityMaster.getAirPriorityMaster().getAirPrepaidPriority3().length() > 1
-					&& priorityMaster.getAirPriorityMaster().getAirCodPriority3().equalsIgnoreCase(logisticPartner.getName()))
+					&& priorityMaster.getAirPriorityMaster().getAirPrepaidPriority3().equalsIgnoreCase(logisticPartner.getName()))
 			{
 				validatePrepaidLimitOfPriorities(priorityMaster.getAirPriorityMaster().getAirPrepaidPriority3(), logisticPartner,
 						writer, rowNumber);
 			}
 			else if (priorityMaster.getAirPriorityMaster().getAirPrepaidPriority4().length() > 1
-					&& priorityMaster.getAirPriorityMaster().getAirCodPriority4().equalsIgnoreCase(logisticPartner.getName()))
+					&& priorityMaster.getAirPriorityMaster().getAirPrepaidPriority4().equalsIgnoreCase(logisticPartner.getName()))
 			{
 				validatePrepaidLimitOfPriorities(priorityMaster.getAirPriorityMaster().getAirPrepaidPriority4(), logisticPartner,
 						writer, rowNumber);
 			}
 			else if (priorityMaster.getAirPriorityMaster().getAirPrepaidPriority5().length() > 1
-					&& priorityMaster.getAirPriorityMaster().getAirCodPriority5().equalsIgnoreCase(logisticPartner.getName()))
+					&& priorityMaster.getAirPriorityMaster().getAirPrepaidPriority5().equalsIgnoreCase(logisticPartner.getName()))
 			{
 				validatePrepaidLimitOfPriorities(priorityMaster.getAirPriorityMaster().getAirPrepaidPriority5(), logisticPartner,
 						writer, rowNumber);
@@ -340,7 +362,14 @@ public class TshipLogisticPartnerValidator
 					&& !logisticPartner.getName().equalsIgnoreCase(priorityMaster.getAirPriorityMaster().getAirPrepaidPriority4())
 					&& !logisticPartner.getName().equalsIgnoreCase(priorityMaster.getAirPriorityMaster().getAirPrepaidPriority5()))
 			{
-				logisticPartner.setPrepaidLimit(logisticPartner.getPrepaidLimit());
+				if (StringUtils.isEmpty(logisticPartner.getPrepaidLimit()) || !isNumeric(logisticPartner.getPrepaidLimit().substring(0, logisticPartner.getPrepaidLimit().length()-1))) // TISPRD-649: Non Numeric Check , Not given in any  Priority
+				{
+					logisticPartner.setPrepaidLimit("0.0" + TshipExcelConstants.ADD_COMMA);
+				}
+				else
+				{
+					logisticPartner.setPrepaidLimit(logisticPartner.getPrepaidLimit());
+				}
 			}
 		}
 	}

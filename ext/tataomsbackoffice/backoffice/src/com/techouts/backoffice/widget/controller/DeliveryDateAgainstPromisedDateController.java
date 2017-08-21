@@ -2,6 +2,7 @@
  *
  */
 package com.techouts.backoffice.widget.controller;
+import de.hybris.platform.util.Config;
 
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -33,6 +34,7 @@ import com.hybris.oms.deliverdvspromised.report.DeliveredVsPromisedRestClient;
 import com.hybris.oms.domain.deliveredvspromised.dto.DeliveredVsPromised;
 import com.hybris.oms.domain.deliveredvspromised.dto.DeliveredVsPromisedReport;
 import com.hybris.oms.domain.sshiptxninfo.dto.SShipTxnInfo;
+import com.hybris.oms.tata.constants.TataomsbackofficeConstants;
 import com.hybris.oms.tata.renderer.DeliveredVsPromisedRenderer;
 
 
@@ -71,14 +73,41 @@ public class DeliveryDateAgainstPromisedDateController extends DefaultWidgetCont
 	{
 		super.initialize(comp);
 		final Calendar cal = Calendar.getInstance();
-		cal.add(Calendar.DATE, -6);
-		LOG.info("inside initialize method" + "Start Date " + cal.getTime() + "******* End Date " + new Date());
+		int defaultdays = 1;
+		String defaultdaysConfig = Config.getParameter(TataomsbackofficeConstants.DELIVERY_PROMISED_REPORT_DEFAULT_DAYS);
+		if (defaultdaysConfig != null)
+		{
+			try
+			{
+				defaultdays = Integer.parseInt(defaultdaysConfig);
+			}
+			catch (Exception exception)
+			{
+				LOG.error("Exception while reading configuration: "
+						+ TataomsbackofficeConstants.DELIVERY_PROMISED_REPORT_DEFAULT_DAYS + ". Configured Value = "
+						+ defaultdaysConfig + " . Used Default as 1. Exception = " + exception);
+			}
+		}
+		else
+		{
+			LOG.info("Value for " + TataomsbackofficeConstants.DELIVERY_PROMISED_REPORT_DEFAULT_DAYS
+					+ " is not configured, used Default as 1");
+		}
+		cal.add(Calendar.DATE, -defaultdays);
 		final SShipTxnInfo requestDto = new SShipTxnInfo();
 		requestDto.setFromDate(cal.getTime());
 		requestDto.setToDate(new Date());
 		startDate = dateFormat.format(cal.getTime());
 		endDate = dateFormat.format(new Date());
-		displayDeliveredVsPromisedData(requestDto);
+		try
+		{
+			displayDeliveredVsPromisedData(requestDto);
+		}
+		catch (Exception exception)
+		{
+			LOG.error("Unable to fetch the data, please use search parameters on the screen to filter the results and search again. Exception = "
+					+ exception);
+		}
 	}
 
 	/**
@@ -92,23 +121,26 @@ public class DeliveryDateAgainstPromisedDateController extends DefaultWidgetCont
 
 
 		final String[] startEndArray = startendDates.trim().split(",");
-		startDate = startEndArray[0];
-		endDate = startEndArray[1];
+		this.startDate = startEndArray[0];
+		this.endDate = startEndArray[1];
 		final DateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
 		LOG.info(" inside sockent Start Date " + startDate + "******* End Date " + endDate);
 		final SShipTxnInfo reportRequest = new SShipTxnInfo();
 		try
 		{
 
-			fromDate = dateFormat.parse(startDate);
-			toDate = dateFormat.parse(endDate);
+			fromDate = dateFormat.parse(this.startDate);
+			toDate = dateFormat.parse(this.endDate);
 			reportRequest.setFromDate(fromDate);
 			reportRequest.setToDate(toDate);
 		}
 		catch (final ParseException e)
 		{
 
-			e.printStackTrace();
+			if(LOG.isErrorEnabled())
+			{
+				LOG.error("Error occured while parsing dates"+e.getMessage());
+			}
 		}
 		displayDeliveredVsPromisedData(reportRequest);
 	}
@@ -127,16 +159,44 @@ public class DeliveryDateAgainstPromisedDateController extends DefaultWidgetCont
 			}
 			++count;
 			shipTxnInfo.setSellerId(txtSellerId.getValue().trim());
-			shipTxnInfo.setFromDate(fromDate);
-			shipTxnInfo.setToDate(toDate);
+			try
+			{
+
+				fromDate = dateFormat.parse(this.startDate);
+				toDate = dateFormat.parse(this.endDate);
+				shipTxnInfo.setFromDate(fromDate);
+				shipTxnInfo.setToDate(toDate);
+			}
+			catch (final ParseException e)
+			{
+
+				if(LOG.isErrorEnabled())
+				{
+					LOG.error("Error occured while parsing dates"+e.getMessage());
+				}
+			}
 		}
 		if (txtSlaveId != null && StringUtils.isNotEmpty(txtSlaveId.getValue()))
 		{
 			LOG.info("txt slave id" + txtSlaveId.getValue());
 			++count;
 			shipTxnInfo.setSlaveId(txtSlaveId.getValue().trim());
-			shipTxnInfo.setFromDate(fromDate);
-			shipTxnInfo.setToDate(toDate);
+			try
+			{
+
+				fromDate = dateFormat.parse(this.startDate);
+				toDate = dateFormat.parse(this.endDate);
+				shipTxnInfo.setFromDate(fromDate);
+				shipTxnInfo.setToDate(toDate);
+			}
+			catch (final ParseException e)
+			{
+
+				if(LOG.isErrorEnabled())
+				{
+					LOG.error("Error occured while parsing dates"+e.getMessage());
+				}
+			}
 		}
 		if (txtTransactionId != null && StringUtils.isNotEmpty(txtTransactionId.getValue()))
 		{
@@ -168,10 +228,21 @@ public class DeliveryDateAgainstPromisedDateController extends DefaultWidgetCont
 
 	private void displayDeliveredVsPromisedData(final SShipTxnInfo shipTxnInfo)
 	{
-		final DeliveredVsPromisedReport deliveredVsPromisedReport = reportsGenarateFacade.getDeliveredVsPromisedTxns(shipTxnInfo);
-		listOfSshipResponse = deliveredVsPromisedReport.getDeliveredVsPromised();
-		listBoxData.setModel(new ListModelList<DeliveredVsPromised>(listOfSshipResponse));
-		listBoxData.setItemRenderer(new DeliveredVsPromisedRenderer());
+		try
+		{
+			final DeliveredVsPromisedReport deliveredVsPromisedReport = reportsGenarateFacade
+					.getDeliveredVsPromisedTxns(shipTxnInfo);
+			listOfSshipResponse = deliveredVsPromisedReport.getDeliveredVsPromised();
+			listBoxData.setModel(new ListModelList<DeliveredVsPromised>(listOfSshipResponse));
+			listBoxData.setItemRenderer(new DeliveredVsPromisedRenderer());
+		}
+		catch (Exception e)
+		{
+			String errMsg = "Not able to Fetch the search results. Please narrow down the search criteria and try again. Exception = "
+					+ e.getMessage();
+			LOG.info(errMsg);
+			Messagebox.show(errMsg, "", Messagebox.OK, Messagebox.ERROR);
+		}
 	}
 
 	/**
@@ -183,8 +254,8 @@ public class DeliveryDateAgainstPromisedDateController extends DefaultWidgetCont
 	public void getCsv() throws InterruptedException
 	{
 
-		exportToCsv(listBoxData, listOfSshipResponse,
-				"DeliveryDateAgainstPromisedReport_" + startDate.replace("-", "") + "_" + endDate.replace("-", ""));
+		exportToCsv(listBoxData, listOfSshipResponse, "DeliveryDateAgainstPromisedReport_" + startDate.replace("-", "") + "_"
+				+ endDate.replace("-", ""));
 
 	}
 
@@ -196,8 +267,7 @@ public class DeliveryDateAgainstPromisedDateController extends DefaultWidgetCont
 
 		if (listOfTrackingReport == null || listbox.getItems() == null || listOfTrackingReport.isEmpty())
 		{
-			LOG.info(
-					"****************************Delivery Date against promised date Report List Is Empty***************************");
+			LOG.info("****************************Delivery Date against promised date Report List Is Empty***************************");
 			Messagebox.show("List is empty", "Empty Data", Messagebox.OK, Messagebox.ERROR);
 			return;
 		}
@@ -217,12 +287,12 @@ public class DeliveryDateAgainstPromisedDateController extends DefaultWidgetCont
 
 				stringBuff.append(deliveredVsPromised.getOrderId().concat(saperator));
 				stringBuff.append(deliveredVsPromised.getOrderLineId().concat(saperator));
-				stringBuff.append((deliveredVsPromised.getPromisedDate() == null) ? "".concat(saperator)
-						: deliveredVsPromised.getPromisedDate().toString().concat(saperator));
-				stringBuff.append((deliveredVsPromised.getDeliveryAttempt() == null) ? "".concat(saperator)
-						: deliveredVsPromised.getDeliveryAttempt().toString().concat(saperator));
-				stringBuff.append((deliveredVsPromised.getDeliveredDate() == null) ? "".concat(saperator)
-						: deliveredVsPromised.getDeliveredDate().toString().concat(saperator));
+				stringBuff.append((deliveredVsPromised.getPromisedDate() == null) ? "".concat(saperator) : deliveredVsPromised
+						.getPromisedDate().toString().concat(saperator));
+				stringBuff.append((deliveredVsPromised.getDeliveryAttempt() == null) ? "".concat(saperator) : deliveredVsPromised
+						.getDeliveryAttempt().toString().concat(saperator));
+				stringBuff.append((deliveredVsPromised.getDeliveredDate() == null) ? "".concat(saperator) : deliveredVsPromised
+						.getDeliveredDate().toString().concat(saperator));
 				stringBuff.append(deliveredVsPromised.getSlaveId().concat(saperator));
 				stringBuff.append(deliveredVsPromised.getSellerId().concat(saperator));
 				stringBuff.append("\n");
@@ -231,4 +301,3 @@ public class DeliveryDateAgainstPromisedDateController extends DefaultWidgetCont
 		Filedownload.save(stringBuff.toString().getBytes(), "text/plain", fileName.concat(".csv"));
 	}
 }
-

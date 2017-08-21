@@ -76,6 +76,16 @@ public class ShortUrlServiceGoogleImpl implements ShortUrlService
 		String shortUrl = null;
 		try
 		{
+			//PROD fix - 2017-06-22. If Short URL has already been generated for an order and is available in DB.
+			//then fetch that URL and return the same. Do not generate again, if short URL already exist.
+			OrderShortUrlInfoModel shortUrlInfoModel = getShortUrlReportModelByOrderId(orderCode);
+            if(null != shortUrlInfoModel && null != shortUrlInfoModel.getShortURL() && !shortUrlInfoModel.getShortURL().isEmpty()) {
+				shortUrl = shortUrlInfoModel.getShortURL();
+				if(LOG.isDebugEnabled()) {
+					LOG.debug("Short URL  for Order id "+orderCode+ " is "+shortUrl);
+				}
+				return shortUrl;
+			}
 			LOG.info("Generating short url for order id :" + orderCode);
 			final String googleAPIUrl = getConfigurationService().getConfiguration()
 					.getString(MarketplaceclientservicesConstants.GOOGLE_API_SHORT_URL);
@@ -114,11 +124,15 @@ public class ShortUrlServiceGoogleImpl implements ShortUrlService
 				//create TULShortUrlReport model to generate report ,later use and update this model when user clicks on short url
 				try
 				{
-					final OrderShortUrlInfoModel shortUrlModel = getModelService().create(OrderShortUrlInfoModel.class);
-					shortUrlModel.setOrderId(orderCode);
-					shortUrlModel.setShortURL(shortUrl);
-					shortUrlModel.setLongURL(longUrl);
-					getModelService().save(shortUrlModel);
+					 OrderShortUrlInfoModel shortUrlModel = getShortUrlReportModelByOrderId(orderCode);
+					if (shortUrlModel == null)
+					{
+						shortUrlModel = getModelService().create(OrderShortUrlInfoModel.class);
+						shortUrlModel.setOrderId(orderCode);
+						shortUrlModel.setShortURL(shortUrl);
+						shortUrlModel.setLongURL(longUrl);
+						getModelService().save(shortUrlModel);
+					}
 				}
 				catch (final ModelSavingException e)
 				{
