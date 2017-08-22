@@ -77,20 +77,20 @@ function viewOrderStatus(event) {
 			contentType : "application/json",
 			dataType : 'json',
 			success : function(result) {
-				if (result == "true") {
+				if (result.validationResult == true) {
 					$("#showTrackOrder").hide();
 					window.location.href = ACC.config.encodedContextPath
-							+ "/trackOrder/shortDetails/?orderCode="
-							+ orderId;
+					+ "/trackOrder/shortDetails/?trackKey="
+					+ result.trackKey;
 				} else {
 					
 					$(".main_error").show();
-					$("#showTrackOrder .main_error").text(result);
+					$("#showTrackOrder .main_error").text(result.errorMessage);
 				}
 
 			},
 			error : function(result) {
-				alert("Error while tracking the order. Kindly try after some time"+result)
+				alert("Error while tracking the order. Kindly try after some time"+result.errorMessage)
 			}
 
 		});
