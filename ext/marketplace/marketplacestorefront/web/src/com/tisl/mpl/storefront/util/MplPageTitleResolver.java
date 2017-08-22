@@ -19,7 +19,6 @@ import de.hybris.platform.cms2.model.site.CMSSiteModel;
 
 import java.util.List;
 
-import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
@@ -67,7 +66,8 @@ public class MplPageTitleResolver extends PageTitleResolver
 			}
 		}
 
-		pageTitle = StringEscapeUtils.escapeHtml(stringBuilder.toString());
+		//pageTitle = StringEscapeUtils.escapeHtml(stringBuilder.toString());
+		pageTitle = stringBuilder.toString();//PRDI-422
 		LOG.debug("Inside category page title" + pageTitle);
 		return pageTitle;
 	}
@@ -89,7 +89,8 @@ public class MplPageTitleResolver extends PageTitleResolver
 		{
 			builder.append(title);
 		}
-		return StringEscapeUtils.escapeHtml(builder.toString());
+		//return StringEscapeUtils.escapeHtml(builder.toString());
+		return builder.toString();//PRDI-422
 	}
 
 	@Override
@@ -109,6 +110,7 @@ public class MplPageTitleResolver extends PageTitleResolver
 				builder.append(TITLE_WORD_SEPARATOR).append(currentSite.getName());
 			}
 		}
-		return StringEscapeUtils.escapeHtml(builder.toString());
+		//return StringEscapeUtils.escapeHtml(builder.toString());
+		return builder.toString();//PRDI-422
 	}
 }
