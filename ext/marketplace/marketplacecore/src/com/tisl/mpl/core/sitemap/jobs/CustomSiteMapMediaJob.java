@@ -572,10 +572,14 @@ public class CustomSiteMapMediaJob extends SiteMapMediaJob
 					LOG.debug("*************" + myset);
 				}
 			}
+			else
+			{
+				LOG.debug("******Empty Brandlist*******");
+			}
 		}
 		else
 		{
-			LOG.debug("*****Empty BrandList ********");
+			LOG.debug("*****Empty l1categorycode or l2categorycode ********");
 		}
 
 		return brandfilterurl;
