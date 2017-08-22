@@ -541,33 +541,41 @@ public class CustomSiteMapMediaJob extends SiteMapMediaJob
 		if (StringUtils.isNotEmpty(categoryl1) && StringUtils.isNotEmpty(categoryl2))
 		{
 			brandFilterList = getMplCategoryDao().fetchBrandFilterforL1L2(categoryl1, categoryl2);
-			for (final MplbrandfilterModel brandFilter : brandFilterList)
+
+			if (CollectionUtils.isNotEmpty(brandFilterList))
 			{
-				brandfilterurl.add(brandFilter.getUrl1());
-				brandfilterurl.add(brandFilter.getUrl2());
-				brandfilterurl.add(brandFilter.getUrl3());
-				LOG.debug("111" + brandFilter.getUrl1());
-				LOG.debug("22222" + brandFilter.getUrl2());
-				LOG.debug("333333333" + brandFilter.getUrl3());
+				for (final MplbrandfilterModel brandFilter : brandFilterList)
+				{
+					brandfilterurl.add(brandFilter.getUrl1());
+					brandfilterurl.add(brandFilter.getUrl2());
+					brandfilterurl.add(brandFilter.getUrl3());
+					LOG.debug("111" + brandFilter.getUrl1());
+					LOG.debug("22222" + brandFilter.getUrl2());
+					LOG.debug("333333333" + brandFilter.getUrl3());
 
-				//					fw.write(brandFilter.getUrl1() + "\n");
-				//					fw.write(brandFilter.getUrl2() + "\n");
-				//					fw.write(brandFilter.getUrl3() + "\n");
+					//					fw.write(brandFilter.getUrl1() + "\n");
+					//					fw.write(brandFilter.getUrl2() + "\n");
+					//					fw.write(brandFilter.getUrl3() + "\n");
+				}
+
+				//				fw.close();
+				//				for (int i = 0; i < 2; i++)
+				//				{
+				//					brandfilterurl.add("URL1-" + i + 1);
+				//					brandfilterurl.add("URL2-" + i + 1);
+				//					brandfilterurl.add("URL3-" + i + 1);
+				//				}
+				final Set<String> set = new HashSet<String>(brandfilterurl);
+
+				for (final String myset : set)
+				{
+					LOG.debug("*************" + myset);
+				}
 			}
-
-			//				fw.close();
-			//				for (int i = 0; i < 2; i++)
-			//				{
-			//					brandfilterurl.add("URL1-" + i + 1);
-			//					brandfilterurl.add("URL2-" + i + 1);
-			//					brandfilterurl.add("URL3-" + i + 1);
-			//				}
 		}
-		final Set<String> set = new HashSet<String>(brandfilterurl);
-
-		for (final String myset : set)
+		else
 		{
-			LOG.debug("*************" + myset);
+			LOG.debug("*****Empty BrandList ********");
 		}
 
 		return brandfilterurl;
