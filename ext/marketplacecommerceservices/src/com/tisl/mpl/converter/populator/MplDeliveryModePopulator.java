@@ -44,7 +44,7 @@ public class MplDeliveryModePopulator<SOURCE extends MplZoneDeliveryModeValueMod
 				: MarketplacecommerceservicesConstants.DEFAULT_END_TIME;
 
 		target.setDescription(getMplCommerceCartService().getDeliveryModeDescription(source.getSellerArticleSKU(),
-				source.getDeliveryMode().getCode(), startValue, endValue));
+				source.getDeliveryMode().getCode(), startValue, endValue, source.getOrderEntry().getOrder()));
 
 		target.setSellerArticleSKU(source.getSellerArticleSKU());
 		final PriceData priceData = formPriceData(source.getValue());
