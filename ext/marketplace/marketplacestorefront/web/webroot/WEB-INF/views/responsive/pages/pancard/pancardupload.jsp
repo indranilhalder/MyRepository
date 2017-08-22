@@ -14,7 +14,7 @@ $(document).ready(function() {
 		
 		if(regpan.test($(this).val()) == false)
 		{
-			panv = fase;
+			panv = false;
 			$(".pancard-img-msg").show();
 		}else{
 			panv = true;
@@ -79,9 +79,6 @@ $(document).ready(function() {
 	$("input[type='file']").change(function () {
 		$('#val').text(this.value.replace(/C:\\fakepath\\/i, ''))
 	});
-	
-	
-	
 });
 </script>
 </head>
@@ -117,13 +114,13 @@ $(document).ready(function() {
 								<span class="pancard-img-msg">Please provide the PAN Card Number of the person whose name appears on the invoice</span>
 							</div>
 							<div class="pan-label-value">
-								<input type="text" name="Pancard_number" id="pancard_No">
+								<input type="text" name="Pancard_number" id="pancard_No" maxlength = "10">
 								<!-- <span class="pancard-msg">Please enter correct pancard number.</span>  -->
 							</div>
 						</div>
 						<div class="panfield-wrapper clearfix pan-img">
 							<div class="pan-label">Upload a copy of the PAN Card * <br>
-								<span class="pancard-img-msg">Please upload a copy of the PAN Card</span>
+								<span class="pancard-img-msg" style = "display:none">Please upload a copy of the PAN Card</span>
 							</div>
 							<div class="pan-label-value fileupload">
 								<input  type="file" name="file" id="pancard_Img"> 
@@ -134,7 +131,7 @@ $(document).ready(function() {
 						<div class="panfield-wrapper btn-wrapper clearfix">
 							<div class="pan-label-value">
 								<a href="javascript:;" class="pan-submit-btn" title="SUBMIT" id="btn_PanDetails">SUBMIT</a>
-								<a href="javascript:;" class="pan-cancel-btn" title="CANCEL">CANCEL</a>
+								<!-- <a href="javascript:;" class="pan-cancel-btn" title="CANCEL" id="btncncl_PanDetails">CANCEL</a> -->
 							</div>
 						</div>
 						</div>

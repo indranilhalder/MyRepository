@@ -18,7 +18,7 @@
     <!-- TPR3780 STARTS HERE -->
 												<c:if test="${priceNotificationUpdateStatus!= null}">
 												<p class="disclaimer-txt">
-												<spring:theme code="cart.price.change.notification"></spring:theme>&nbsp;₹ ${totalCartPriceAsStringStatus}
+												<spring:theme code="cart.price.change.notification"></spring:theme>&nbsp;${cartData.totalPrice.formattedValue}
 												</p>
 												</c:if>
     <!-- TPR3780 ENDS HERE -->

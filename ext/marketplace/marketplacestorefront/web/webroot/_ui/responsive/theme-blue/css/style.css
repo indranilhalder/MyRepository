@@ -69499,7 +69499,7 @@ body.page-multiStepCheckoutSummaryPage header, body.page-checkout-login header {
 	margin:24px 0px 0px;
   	padding-left: 58px;
   	padding-right: 59px;
-  	overflow: hidden;
+  	/* overflow: hidden; */
 }
 .cart.wrapper .cnc_store_wrapper .checkout-shipping-items.left-block.left-block-width .change_pincode_block{
   	padding-left: 58px;
@@ -70838,7 +70838,51 @@ background:#f8f8f8;
     display: inline-block;
     right: 0px;
 }
+p#cncpickuppincode_tooltip {
+    width: 206px;
+    position: absolute;
+    left: -636%;
+    background: #000;
+    color: #fff;
+    top: -94px;
+    padding: 7px 18px 6px 19px;
+    border-radius: 4px;
+    line-height: 15px;
+    opacity: 0;
+    z-index: 10023;
+    text-align: left;
+}
+#cncpickuppincode_info:hover p#cncpickuppincode_tooltip {
+    opacity: 1;
+    cursor: text !important;
+}
+span#cncpickuppincode_info{
+	 position: relative;
+}
+p#cncpickuppincode_tooltip:after{
+	content: "";
+    display: block;
+    width: 10px;
+    height: 10px;
+    background-color: #000;
+    -ms-transform: rotate(45deg);
+    -webkit-transform: rotate(45deg);
+    -moz-transform: rotate(45deg);
+    transform: rotate(45deg);
+    position: absolute;
+    left: 0;
+    right: 0;
+    margin: auto;
+}
 @media(max-width: 768px){
+	p#cncpickuppincode_tooltip {
+    left: 10%;
+    top: -75px;
+}
+p#cncpickuppincode_tooltip:after{
+	content: "";
+    display: none;
+}
 .marketplace-checkout span.need-help-call {
     display: none;
 }
@@ -70897,6 +70941,7 @@ select.update-entry-quantity-input.review-page-select{
 #singlePageMobile .mobileNotDefaultDelAddress{
 	display:none;
 }
+
 /*UF-281 UF-282 single page checkout css ends*/
 
 /* R2.3:START: Date: 2016-12-19- Code Merge */
@@ -75404,6 +75449,7 @@ body .account .right-account .password.responsiveProfile #frmUpdatePassword butt
 	}
 	body .account .right-account .info.responsiveProfile h2{
 	margin-bottom:0px;
+	margin-top: 16px; /* TISJEW-4348 */
 	}
 	body .container .account .wrapper .right-account p.commonAccountPara{
 	margin-bottom: 20px;
@@ -77315,3 +77361,5 @@ body .account .right-account .order-history.order-details li.item .status>ul.nav
     margin-top: 10px;
 }
 /* TISJEW-3497 end */
+
+

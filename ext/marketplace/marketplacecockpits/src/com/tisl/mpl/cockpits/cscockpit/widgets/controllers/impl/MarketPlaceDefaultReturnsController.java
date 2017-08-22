@@ -138,6 +138,8 @@ public class MarketPlaceDefaultReturnsController extends
 	CustomerFacade customerFacade;
 
 	private static final String OMS_BYPASS_KEY = "cscockpit.oms.serviceability.check.bypass";
+	
+	private static final String FINEJEWELLERY = "FineJewellery";
 
 	private static final Logger LOG = Logger
 			.getLogger(DefaultReturnsController.class);
@@ -1076,5 +1078,23 @@ public class MarketPlaceDefaultReturnsController extends
 		return eligibleForRTS;
 
 	}
-		
+	
+	@Override
+	public boolean checkIfFineJewellery(
+			List<AbstractOrderEntryModel> entries) {
+		boolean isFineJewellery = false ;
+		try {
+			for (final AbstractOrderEntryModel entry : entries)
+			{
+				if(entry.getProduct().getProductCategoryType().equalsIgnoreCase(FINEJEWELLERY)){
+					isFineJewellery = true;
+					break;
+				}
+			}
+		}catch(Exception e) {
+			LOG.error("Exception while checking order entries for Fine Jewellery category ");
+		}
+		return isFineJewellery;
+
+	}
 }

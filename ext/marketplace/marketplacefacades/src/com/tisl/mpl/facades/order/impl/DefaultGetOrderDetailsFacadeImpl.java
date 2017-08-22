@@ -214,16 +214,16 @@ public class DefaultGetOrderDetailsFacadeImpl implements GetOrderDetailsFacade
 				}
 
 				//TPR-6117 exchange field added
-				if (CollectionUtils.isNotEmpty(orderDetails.getEntries()))
-				{
-					for (final OrderEntryData entry : orderDetails.getEntries())
-					{
-						if (StringUtils.isNotEmpty(entry.getExchangeApplied()))
-						{
-							orderTrackingWsDTO.setExchangeId(entry.getExchangeApplied());
-						}
-					}
-				}
+				//				if (CollectionUtils.isNotEmpty(orderDetails.getEntries()))
+				//				{
+				//					for (final OrderEntryData entry : orderDetails.getEntries())
+				//					{
+				//						if (StringUtils.isNotEmpty(entry.getExchangeApplied()))
+				//						{
+				//							orderTrackingWsDTO.setExchangeId(entry.getExchangeApplied());
+				//						}
+				//					}
+				//				}
 
 				if (CollectionUtils.isNotEmpty(orderDetails.getSellerOrderList()))
 				{
@@ -315,6 +315,13 @@ public class DefaultGetOrderDetailsFacadeImpl implements GetOrderDetailsFacade
 								{
 									orderproductdto.setAssociatedProducts(entry.getAssociatedItems());
 								}
+
+								//TISJEW-3519 && TPR-1083 && TPR-6117
+								if (StringUtils.isNotEmpty(entry.getExchangeApplied()))
+								{
+									orderproductdto.setExchangeId(entry.getExchangeApplied());
+								}
+
 
 								//final ProductModel productModel = productService.getProductForCode(entry.getProduct().getCode());
 								final ProductModel productModel = mplOrderService.findProductsByCode(product.getCode());
@@ -1696,18 +1703,18 @@ public class DefaultGetOrderDetailsFacadeImpl implements GetOrderDetailsFacade
 					orderTrackingWsDTO.setOrderId(orderDetail.getCode());
 				}
 
-
+				//Removed due to TISJEW-3519
 				//TPR-6117 exchange field added
-				if (CollectionUtils.isNotEmpty(orderDetail.getEntries()))
-				{
-					for (final OrderEntryData entry : orderDetail.getEntries())
-					{
-						if (StringUtils.isNotEmpty(entry.getExchangeApplied()))
-						{
-							orderTrackingWsDTO.setExchangeId(entry.getExchangeApplied());
-						}
-					}
-				}
+				//				if (CollectionUtils.isNotEmpty(orderDetail.getEntries()))
+				//				{
+				//					for (final OrderEntryData entry : orderDetail.getEntries())
+				//					{
+				//						if (StringUtils.isNotEmpty(entry.getExchangeApplied()))
+				//						{
+				//							orderTrackingWsDTO.setExchangeId(entry.getExchangeApplied());
+				//						}
+				//					}
+				//				}
 
 				//not required
 				//orderTrackingWsDTO.setCancelflag(MarketplacecommerceservicesConstants.YES);
@@ -1905,6 +1912,11 @@ public class DefaultGetOrderDetailsFacadeImpl implements GetOrderDetailsFacade
 								 */
 
 								//}
+								//TISJEW-3519 && TPR-1083 && TPR-6117
+								if (StringUtils.isNotEmpty(entry.getExchangeApplied()))
+								{
+									orderproductdto.setExchangeId(entry.getExchangeApplied());
+								}
 								if (StringUtils.isNotEmpty(entry.getSelectedUssid()))
 								{
 									//sellerInfoModel = getMplSellerInformationService().getSellerDetail(entry.getSelectedUssid());
