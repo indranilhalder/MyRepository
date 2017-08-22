@@ -878,7 +878,7 @@ public final class ModelAttributetConstants
 	public static final String TITLE_TEXT2 = " Online at Tata CLiQ ";
 	public static final String ICID = "icid";
 	public static final String SHARE = "share";
-	
+
 	public static final String MESSAGE = "message";
 
 	public static final String EMAILORPASSINVALID = "Email or Password invalid";
@@ -887,4 +887,6 @@ public final class ModelAttributetConstants
 
 	/* TPR-5733 */
 	public static final String FOOTER_LINK_LIST = "footerLinkList";
+	/* UF-432 */
+	public static final String MULTI_COLOUR_FLAG = "multiColorFlag";
 }
