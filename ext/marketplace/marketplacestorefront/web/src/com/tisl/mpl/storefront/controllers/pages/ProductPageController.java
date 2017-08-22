@@ -604,7 +604,7 @@ public class ProductPageController extends MidPageController
 		}
 		catch (final IOException e)
 		{
-			System.err.println("An IOException was caught :" + e.getMessage());
+			LOG.error("An IOException was caught :" + e.getMessage()); //PMD fix
 		}
 		finally
 		{
@@ -621,7 +621,7 @@ public class ProductPageController extends MidPageController
 			}
 			catch (final Exception ex)
 			{
-				ex.printStackTrace();
+				LOG.error("Exception occurred :" + ex.getMessage()); //PMD fix
 			}
 
 
@@ -1993,21 +1993,17 @@ public class ProductPageController extends MidPageController
 			 * Add Filter for FA END :::::
 			 */
 			//TISPRM-56
-			if (CollectionUtils.isNotEmpty(productData.getAllVariantsId()))
+			if (CollectionUtils.isNotEmpty(productData.getAllVariantsId()) && productData.getAllVariantsId().size() > 1) //PMD fix
 			{
-				//get left over variants
-				if (productData.getAllVariantsId().size() > 1)
+				productData.getAllVariantsId().remove(productData.getCode());
+				for (final String variants : productData.getAllVariantsId())
 				{
-					productData.getAllVariantsId().remove(productData.getCode());
-					for (final String variants : productData.getAllVariantsId())
-					{
-						allVariants.append(variants).append(',');
-					}
-
-					final int length = allVariants.length();
-					final String allVariantsString = allVariants.substring(0, length - 1);
-					model.addAttribute(MarketplacecommerceservicesConstants.ALLVARIANTSSTRING, allVariantsString);
+					allVariants.append(variants).append(',');
 				}
+
+				final int length = allVariants.length();
+				final String allVariantsString = allVariants.substring(0, length - 1);
+				model.addAttribute(MarketplacecommerceservicesConstants.ALLVARIANTSSTRING, allVariantsString);
 			}
 
 			// TPR-743
@@ -2020,11 +2016,11 @@ public class ProductPageController extends MidPageController
 		//populateVariantSizes(productData);
 		catch (final EtailBusinessExceptions e)
 		{
-			throw e;
+			LOG.error("EtailBusinessExceptions occurred at populateProductDetailForDisplay method ::: " + e.getMessage()); //PMD fix
 		}
 		catch (final Exception e)
 		{
-			throw new EtailNonBusinessExceptions(e, ModelAttributetConstants.E0000);
+			LOG.error("Exception occurred at populateProductDetailForDisplay method ::: " + e.getMessage()); //PMD fix
 		}
 
 	}
@@ -2788,14 +2784,14 @@ public class ProductPageController extends MidPageController
 
 	@Override
 	protected String checkRequestUrl(final HttpServletRequest request, final HttpServletResponse response,
-			final String resolvedUrlPath) throws UnsupportedEncodingException
+			final String resolvedUrlPath)
 	{
+		String newUrl = null;
 		try
 		{
 			final String resolvedUrl = response.encodeURL(request.getContextPath() + resolvedUrlPath);
 			final String requestURI = URIUtil.decode(request.getRequestURI(), "utf-8");
 			final String decoded = URIUtil.decode(resolvedUrl, "utf-8");
-			String newUrl = null;
 			if (StringUtils.isNotEmpty(requestURI) && requestURI.endsWith(decoded))
 			{
 				return null;
@@ -2814,15 +2810,13 @@ public class ProductPageController extends MidPageController
 				{
 					newUrl = resolvedUrlPath;
 				}
-				return newUrl;
-
-
 			}
 		}
 		catch (final URIException e)
 		{
-			throw new UnsupportedEncodingException();
+			LOG.error("Exception occurred at checkRequestUrl method ::: " + e.getMessage()); //PMD fix
 		}
+		return newUrl;
 	}
 
 	/**
