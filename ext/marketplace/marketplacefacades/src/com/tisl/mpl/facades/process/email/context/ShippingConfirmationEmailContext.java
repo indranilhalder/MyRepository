@@ -84,8 +84,8 @@ public class ShippingConfirmationEmailContext extends AbstractEmailContext<Order
 
 	@Autowired
 	private ConfigurationService configurationService;
-	@Autowired
-	private ShortUrlService shortUrlService;
+//	@Autowired
+//	private ShortUrlService shortUrlService;//Sonar Fix
 
 	@Override
 	public void init(final OrderUpdateProcessModel orderUpdateProcessModel, final EmailPageModel emailPageModel)

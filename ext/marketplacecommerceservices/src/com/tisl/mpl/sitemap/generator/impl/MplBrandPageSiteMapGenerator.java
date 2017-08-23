@@ -45,7 +45,7 @@ import org.springframework.context.ApplicationContext;
 
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.data.CustomPageData;
-import com.tisl.mpl.marketplacecommerceservices.daos.MplCategoryDao;
+//import com.tisl.mpl.marketplacecommerceservices.daos.MplCategoryDao;//Sonar Fix
 import com.tisl.mpl.util.GenericUtilityMethods;
 
 
@@ -72,8 +72,8 @@ public class MplBrandPageSiteMapGenerator extends AbstractSiteMapGenerator<Custo
 	@Autowired
 	private SiteBaseUrlResolutionService siteBaseUrlResolutionService;
 
-	@Autowired
-	private MplCategoryDao mplCategoryDao;
+//	@Autowired
+//	private MplCategoryDao mplCategoryDao;//SonarFix
 
 
 

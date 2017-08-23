@@ -75,8 +75,8 @@ public class OrderDeliveryEmailContext extends AbstractEmailContext<OrderUpdateP
 
 	@Autowired
 	private ConfigurationService configurationService;
-	@Autowired
-	private ShortUrlService shortUrlService;
+//	@Autowired
+//	private ShortUrlService shortUrlService;//Sonar Fix
 
 
 	@Override
