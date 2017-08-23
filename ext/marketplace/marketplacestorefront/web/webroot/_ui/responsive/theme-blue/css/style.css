@@ -52483,6 +52483,13 @@ word-wrap: break-word;
 		.template-pages-layout-apparelCategoryLandingPageV1 #rotatingImage {
 		padding: 0;
 	}
+	
+	 .template-pages-layout-apparelCategoryLandingPageV1 #rotatingImageTimeoutMobile,
+ 		.template-pages-layout-apparelCategoryLandingPageV1 #rotatingImageMobile ,
+ 	.template-pages-layout-newBrandLandingPageTemplate #rotatingImageTimeoutMobile,
+ 		.template-pages-layout-newBrandLandingPageTemplate #rotatingImageMobile {
+ 		display: none;
+ 	}
 	.style_edit .style_edit_left>div>div:first-child >span:first-child {
 		font-size: 24px;
 		margin: 40px 0;
