@@ -24,7 +24,7 @@
 							<div class="image">
 							<a href="${productUrl}" class="product-tile">
 								<product:productPrimaryImage product="${product}"
-									format="product" />
+									format="product" lazyLoad="false"/>
 							</a>
 							</div>
 							

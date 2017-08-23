@@ -24,6 +24,7 @@ import de.hybris.platform.servicelayer.config.ConfigurationService;
 import de.hybris.platform.servicelayer.session.SessionService;
 
 import java.io.PrintWriter;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -53,6 +54,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.lux.facade.CommonUtils;
 import com.tisl.mpl.data.FriendsInviteData;
 import com.tisl.mpl.exception.EtailBusinessExceptions;
@@ -336,6 +338,7 @@ public class LoginPageController extends AbstractLoginPageController
 				model.addAttribute(ModelAttributetConstants.IS_SIGN_IN_ACTIVE, ModelAttributetConstants.Y_CAPS_VAL);
 			}
 
+
 			/** Added for UF-93 to show the last logged in user in log in field for the remembered Users **/
 			final String rememberMeEnabled = configurationService.getConfiguration().getString("rememberMe.enabled"); //unblocked for testing
 			model.addAttribute("rememberMeEnabled", rememberMeEnabled); //unblocked for testing
@@ -353,6 +356,7 @@ public class LoginPageController extends AbstractLoginPageController
 			//				}
 			//			}
 			/** End UF-93 **/
+
 
 			/** Added for UF-93 to show the last logged in user in log in field for the remembered Users **/
 			final Cookie cookie = GenericUtilityMethods.getCookieByName(request, "LastUserLogedIn");
@@ -512,6 +516,7 @@ public class LoginPageController extends AbstractLoginPageController
 			throws CMSItemNotFoundException
 	{
 		String returnPage = null;
+		boolean isExist = false; //TPR-6272
 		if (bindingResult.hasErrors())
 		{
 			model.addAttribute(form);
@@ -551,7 +556,75 @@ public class LoginPageController extends AbstractLoginPageController
 			{
 				if (getRegisterCustomerFacade().checkUniquenessOfEmail(data))
 				{
-					getRegisterCustomerFacade().register(data);
+
+					//TPR-6272 starts here
+					//final String luxDetector = form.getIsFromLuxury();//for luxury registration capture
+					/*
+					 * int platformNumber; if (luxDetector != null && StringUtils.isNotEmpty(luxDetector) &&
+					 * StringUtils.equalsIgnoreCase(luxDetector, "true")) { platformNumber = 5;//for luxury desktop web }
+					 * else { platformNumber = 1;//for mkt desktop web } //TPR-6272 ends here
+					 */
+					//TPR-6272 starts here
+					int platformNumber = MarketplacecommerceservicesConstants.PLATFORM_ZERO;
+					//added for IQA starts here
+					final String userAgentHeader = configurationService.getConfiguration().getString("useragent.responsive.header");
+					String userAgent = null;
+
+					if (StringUtils.isNotEmpty(userAgentHeader))
+					{
+						userAgent = request.getHeader(userAgentHeader);
+
+						if (StringUtils.isNotEmpty(userAgent))
+						{
+							userAgent = userAgent.toLowerCase();
+						}
+					}
+					//added for IQA ends here
+					if (StringUtils.isNotEmpty(userAgent))
+					{
+						String mobileDevices = configurationService.getConfiguration().getString("useragent.responsive.mobile");
+
+						//added for IQA starts here
+						if (StringUtils.isNotEmpty(mobileDevices))
+						{
+							mobileDevices = mobileDevices.toLowerCase();
+						}
+						//added for IQA ends here
+
+						if (StringUtils.isNotEmpty(mobileDevices))
+						{
+							final List<String> mobileDeviceArray = Arrays.asList(mobileDevices
+									.split(MarketplacecommerceservicesConstants.COMMACONSTANT));
+							if (null != mobileDeviceArray && mobileDeviceArray.size() > 0)//IQA added here
+							{
+								for (final String mobDevice : mobileDeviceArray)
+								{
+									if (userAgent.contains(mobDevice))
+									{
+										isExist = true;
+										break;
+									}
+								}
+							}
+						}
+						if (isExist)
+						{
+							platformNumber = MarketplacecommerceservicesConstants.PLATFORM_FIVE;//for mobile responsive
+						}
+						else
+						{
+							platformNumber = MarketplacecommerceservicesConstants.PLATFORM_ONE;//for mkt desktop web
+						}
+					}
+					else
+					{
+						platformNumber = MarketplacecommerceservicesConstants.PLATFORM_ONE;//for mkt desktop web
+					}
+					LOG.debug("The platform number is " + platformNumber);
+					//TPR-6272 ends here
+
+
+					getRegisterCustomerFacade().register(data, platformNumber);//TPR-6272 parameter platformNumber passed
 					// To avoid multiple time decoding of password containing '%' specially
 					final String password = java.net.URLEncoder.encode(form.getPwd(), "UTF-8");
 					form.setPwd(password);

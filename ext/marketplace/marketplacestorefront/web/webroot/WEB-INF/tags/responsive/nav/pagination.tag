@@ -296,15 +296,15 @@
 					<ul>
 						<span>Sort:</span>
 
-						<li><span class="sort" data-name="relevance" style="color: #a5173c;">Relevance</span></li>
-						<li><span class="sort" data-name="new">New</span></li>
-						<li><span class="sort" data-name="discount">Discount</span></li>
+						<li><span class="sort" data-name="relevance"<c:if test="${param.sort == null || param.sort eq 'relevance'}"> style="color: #a5173c;"</c:if>>Relevance</span></li>
+						<li><span class="sort" data-name="new"<c:if test="${param.sort eq 'isProductNew' || param.sort eq 'new'}"> style="color: #a5173c;"</c:if>>New</span></li>
+						<li><span class="sort" data-name="discount"<c:if test="${param.sort eq 'isDiscountedPrice'}"> style="color: #a5173c;"</c:if>>Discount</span></li>
 					</ul>
 					<ul>
 						<span>Price:</span>
 
-						<li><span class="sort" data-name="low">Low</span></li>
-						<li><span class="sort" data-name="high">High</span></li>
+						<li><span class="sort" data-name="low"<c:if test="${param.sort eq 'price-asc'}"> style="color: #a5173c;"</c:if>>Low</span></li>
+						<li><span class="sort" data-name="high"<c:if test="${param.sort eq 'price-desc'}"> style="color: #a5173c;"</c:if>>High</span></li>
 					</ul>
 				</div>
 			</div>
@@ -312,11 +312,11 @@
 			<div class="list_title_sort">
 			<label class="sortByMobile">Sort by</label>
 			<select class="responsiveSort">
-			<option  data-name="relevance">Relevance</option>
-			<option  data-name="new">New</option>
-			<option  data-name="discount">Discount</option>
-			<option  data-name="low">Low to High</option>
-			<option  data-name="high">High to Low</option>
+			<option  data-name="relevance"<c:if test="${param.sort == null || param.sort eq 'relevance'}"> selected="selected"</c:if>>Relevance</option>
+			<option  data-name="new"<c:if test="${param.sort eq 'isProductNew' || param.sort eq 'new'}"> selected="selected"</c:if>>New</option>
+			<option  data-name="discount"<c:if test="${param.sort eq 'isDiscountedPrice'}"> selected="selected"</c:if>>Discount</option>
+			<option  data-name="low"<c:if test="${param.sort eq 'price-asc'}"> selected="selected"</c:if>>Low to High</option>
+			<option  data-name="high"<c:if test="${param.sort eq 'price-desc'}"> selected="selected"</c:if>>High to Low</option>
 			
 			</select>
 			</div>

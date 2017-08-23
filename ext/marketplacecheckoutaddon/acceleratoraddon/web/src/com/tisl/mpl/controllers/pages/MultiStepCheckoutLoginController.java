@@ -30,7 +30,10 @@ import de.hybris.platform.commercefacades.order.data.CartData;
 import de.hybris.platform.commerceservices.order.CommerceCartModificationException;
 import de.hybris.platform.servicelayer.config.ConfigurationService;
 
+import java.util.Arrays;
 import java.util.Collections;
+import java.util.Iterator;
+import java.util.List;
 
 import javax.annotation.Resource;
 import javax.servlet.http.Cookie;
@@ -49,6 +52,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.controllers.MarketplacecheckoutaddonControllerConstants;
 import com.tisl.mpl.data.FriendsInviteData;
 import com.tisl.mpl.exception.EtailBusinessExceptions;
@@ -101,7 +105,7 @@ public class MultiStepCheckoutLoginController extends MplAbstractCheckoutStepCon
 
 	@Autowired
 	private ConfigurationService configurationService; //Added for UF-93
-	
+
 	/**
 	 * @return the resourceBreadcrumbBuilder
 	 */
@@ -404,6 +408,7 @@ public class MultiStepCheckoutLoginController extends MplAbstractCheckoutStepCon
 			final BindingResult bindingResult, final Model model, final HttpServletRequest request,
 			final HttpServletResponse response, final RedirectAttributes redirectModel) throws CMSItemNotFoundException
 	{
+		boolean isExist = false; //TPR-6272
 		if (bindingResult.hasErrors())
 		{
 			model.addAttribute(form);
@@ -446,7 +451,65 @@ public class MultiStepCheckoutLoginController extends MplAbstractCheckoutStepCon
 		{
 			if (getRegisterCustomerFacade().checkUniquenessOfEmail(data))
 			{
-				getRegisterCustomerFacade().register(data);
+				//TPR-6272 starts here
+				int platformNumber = MarketplacecommerceservicesConstants.PLATFORM_ZERO;
+				//added for IQA starts here
+				final String userAgentHeader = configurationService.getConfiguration().getString("useragent.responsive.header");
+				String userAgent = null;
+
+				if (StringUtils.isNotEmpty(userAgentHeader))
+				{
+					userAgent = request.getHeader(userAgentHeader);
+
+					if (StringUtils.isNotEmpty(userAgent))
+					{
+						userAgent = userAgent.toLowerCase();
+					}
+				}
+				//added for IQA ends here
+				if (StringUtils.isNotEmpty(userAgent))
+				{
+					String mobileDevices = configurationService.getConfiguration().getString("useragent.responsive.mobile");
+
+					//added for IQA starts here
+					if (StringUtils.isNotEmpty(mobileDevices))
+					{
+						mobileDevices = mobileDevices.toLowerCase();
+					}
+					//added for IQA ends here
+
+					if (StringUtils.isNotEmpty(mobileDevices))
+					{
+						final List<String> mobileDeviceArray = Arrays.asList(mobileDevices
+								.split(MarketplacecommerceservicesConstants.COMMACONSTANT));
+						if (null != mobileDeviceArray && mobileDeviceArray.size() > 0)//IQA added here
+						{
+							for (final String mobDevice : mobileDeviceArray)
+							{
+								if (userAgent.contains(mobDevice))
+								{
+									isExist = true;
+									break;
+								}
+							}
+						}
+					}
+					if (isExist)
+					{
+						platformNumber = MarketplacecommerceservicesConstants.PLATFORM_FIVE;//for mobile responsive
+					}
+					else
+					{
+						platformNumber = MarketplacecommerceservicesConstants.PLATFORM_ONE;//for mkt desktop web
+					}
+				}
+				else
+				{
+					platformNumber = MarketplacecommerceservicesConstants.PLATFORM_ONE;//for mkt desktop web
+				}
+				LOG.debug("The platform number is " + platformNumber);
+				//TPR-6272 ends here
+				getRegisterCustomerFacade().register(data, platformNumber);//TPR-6272 parameter platformNumber added
 				getAutoLoginStrategy().login(form.getEmail().toLowerCase(), form.getPwd(), request, response);
 				final HttpSession session = request.getSession();
 				session.setAttribute(LOGIN_SUCCESS, Boolean.TRUE);

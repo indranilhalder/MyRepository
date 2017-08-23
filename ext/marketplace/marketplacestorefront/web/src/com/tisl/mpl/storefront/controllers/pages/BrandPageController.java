@@ -84,14 +84,20 @@ public class BrandPageController extends AbstractSearchPageController
 
 	private static final String LAST_LINK_CLASS = "active";
 	private Map<String, List<CategoryModel>> sortedMap;
-	private Map<String, List<CategoryModel>> sortedMapForAToZ;
-	private Map<String, List<CategoryModel>> CmsSortedMap;
+
+	//Changes for SR144311279 start 
+
+	//private Map<String, List<CategoryModel>> sortedMapForAToZ;
+	//private Map<String, List<CategoryModel>> CmsSortedMap;
+
+	//Changes for SR144311279 end
 
 	private static final String CODE = "MBH1";
 
-	private final Collection<CategoryModel> allBrandList = new ArrayList<CategoryModel>();
-	private List<CategoryModel> allBrandListForCategory = new ArrayList<CategoryModel>();
-
+	/*
+	 * private final Collection<CategoryModel> allBrandList = new ArrayList<CategoryModel>(); private List<CategoryModel>
+	 * allBrandListForCategory = new ArrayList<CategoryModel>(); Changes as per SR144311279
+	 */
 
 
 	//private static final String ERROR_CMS_PAGE = "notFound";
@@ -112,58 +118,58 @@ public class BrandPageController extends AbstractSearchPageController
 	 * @RequestMapping(method = RequestMethod.GET) public String getPageForBrand(@RequestParam("brandName") final String
 	 * brandName, final Model model, final HttpServletRequest request) throws UnsupportedEncodingException,
 	 * CMSItemNotFoundException {
-	 *
-	 *
-	 *
+	 * 
+	 * 
+	 * 
 	 * //Setting the brand name in search dropdown final List<SearchDropDownBrand> brandList =
 	 * enumerationService.getEnumerationValues(SearchDropDownBrand.class); final List<SearchDropDownSeller> sellerList =
 	 * enumerationService.getEnumerationValues(SearchDropDownSeller.class);
-	 *
-	 *
-	 *
+	 * 
+	 * 
+	 * 
 	 * //Populating Seller in search dropdown for (int index = 0; index < sellerList.size(); index++) { if
 	 * (sellerList.get(index).getCode().equalsIgnoreCase(brandName)) { for (final SearchDropDownSeller dropdownSeller :
 	 * sellerList) {
-	 *
+	 * 
 	 * if (dropdownSeller.getCode().equalsIgnoreCase(brandName)) {
 	 * model.addAttribute(ModelAttributetConstants.DROP_DOWN_TEXT, dropdownSeller.getCode()); } }
-	 *
+	 * 
 	 * } }
-	 *
+	 * 
 	 * //Populating brand in search dropdown for (final SearchDropDownBrand dropdownBrand : brandList) {
-	 *
+	 * 
 	 * if (dropdownBrand.getCode().equalsIgnoreCase(brandName)) {
 	 * model.addAttribute(ModelAttributetConstants.DROP_DOWN_TEXT, dropdownBrand.getCode()); } } //Perform the brand
 	 * search for products boolean showFacets = true; showFacets = true;
-	 *
+	 * 
 	 * final ProductCategorySearchPageData<SearchStateData, ProductData, CategoryData> searchPageData =
 	 * performBrandSearch(brandName); if (searchPageData != null && searchPageData.getResults() != null) { showFacets =
 	 * true; }
-	 *
+	 * 
 	 * //populateModel(model, searchPageData, ShowMode.Page);
 	 * model.addAttribute(ModelAttributetConstants.SHOW_CATEGORIES_ONLY, Boolean.FALSE);
-	 *
+	 * 
 	 * //Check if there is a landing page for the brand with the brandName try { final ContentPageModel
 	 * brandPageLandingPage = getContentPageForLabelOrId(brandName); storeCmsPageInModel(model, brandPageLandingPage);
 	 * model.addAttribute(ModelAttributetConstants.SHOW_FACETS, showFacets);
 	 * model.addAttribute(WebConstants.BREADCRUMBS_KEY, Collections.singletonList(new Breadcrumb(HASH, brandName,
 	 * LAST_LINK_CLASS))); setUpMetaDataForContentPage(model, brandPageLandingPage); } catch (final
 	 * CMSItemNotFoundException e) {
-	 *
+	 * 
 	 * //storeCmsPageInModel(model, getCmsPageService().getDefaultCategoryPage());
-	 *
-	 *
+	 * 
+	 * 
 	 * storeCmsPageInModel(model, getContentPageForLabelOrId(ERROR_CMS_PAGE)); setUpMetaDataForContentPage(model,
 	 * getContentPageForLabelOrId(ERROR_CMS_PAGE)); GlobalMessages.addErrorMessage(model, "system.error.page.not.found");
 	 * return ControllerConstants.Views.Pages.Error.ErrorNotFoundPage;
-	 *
+	 * 
 	 * }
-	 *
-	 *
-	 *
+	 * 
+	 * 
+	 * 
 	 * return getViewForPage(model);
-	 *
-	 *
+	 * 
+	 * 
 	 * }
 	 */
 
@@ -197,6 +203,10 @@ public class BrandPageController extends AbstractSearchPageController
 	@RequestMapping(value = "/**", method = RequestMethod.GET)
 	public String getListOfBrandsCategory(final Model model) throws CMSItemNotFoundException
 	{
+		Map<String, List<CategoryModel>> sortedMapForAToZ = null;
+		Map<String, List<CategoryModel>> CmsSortedMap;
+		final Collection<CategoryModel> allBrandList = new ArrayList<CategoryModel>();
+		List<CategoryModel> allBrandListForCategory = new ArrayList<CategoryModel>();
 		try
 		{
 
@@ -209,13 +219,13 @@ public class BrandPageController extends AbstractSearchPageController
 			final Map<String, Map<String, List<CategoryModel>>> allBrandListMapForCode = new HashMap();
 
 			String categoryCode = null;
-			boolean present = false;
+			boolean present = false; //Changes for SR144311279
 
 			if (subcategoryList != null)
 			{
 				for (final CategoryModel category : subcategoryList)
 				{
-
+					present = false;  //Changes for SR144311279
 					allBrandListForCategory = category.getCategories();
 
 					for (final CategoryModel subBrand : category.getAllSubcategories())

@@ -1,67 +1,3 @@
-/*$(document).ready(function(){
-
-			$(document).on("click", "#chatMe", function(e) {
-			e.preventDefault();
-			var url = $(this).attr('href');
-			$.get(url, function(data) {
-				$(data).modal();
-			}).success(function(){
-				//ACC.click2chat.validateClick2ChatForm();
-				//ACC.click2chat.clickToCallModalEvents();
-			});
-			});
-
-			$(document).on("click","#submitC2C",function(){
-			$(".error").each(function(){
-				$(this).empty();
-			});
-			$.ajax({
-				url: ACC.config.encodedContextPath+"/clickto/invoke-chat",
-				type:"GET",
-				dataType:"JSON",
-				data:$("#chatForm").serialize(),
-				success:function(data){
-					var error = false;
-
-					if(data.error_name != null){
-						$("label[for=errorCustomerName]").text(data.error_name);
-						error = true;
-					}
-					if(data.error_email != null){
-						$("label[for=errorCustomerEmail]").text(data.error_email);
-						error = true;
-					}
-					if(data.error_contact != null){
-						$("label[for=errorCustomerMobileNo]").text(data.error_contact);
-						error = true;
-					}
-
-					if(!error) {
-						var url = chatUrl+"?name="+encodeURI($("input[name=customerName]").val())+"&email="+$("input[name=emailId]").val()+"&phone="+$("input[name=contactNo]").val()+"&reason="+encodeURI($("select[name=reason]").val());
-						var title = "Chat";
-						var w = "750";
-						var h = "650";
-						var left = (screen.width/2)-(w/2);
-						var top = (screen.height/2)-(h/2);
-						window.open(url, title, 'toolbar=no, location=no, directories=no, status=no, menubar=no, scrollbars=no, resizable=no, copyhistory=no, width='+w+', height='+h+', top='+top+', left='+left);
-						$("#clicktoChatModal").remove();
-					}
-				},
-				fail:function(fail){
-					alert("Sorry we are unable to connect to chat services. Please try again later.");
-				}
-			});
-		});
-
-			$(document).on('hide.bs.modal', function () {
-	            $("#clicktoChatModal").remove();
-	            $(".modal-backdrop.in").remove();
-			});
-
-});	
-*/
-
-
 $(window).on("load", function(e) {
 		var chatEstFlag = setInterval(function(){
 			if($('#dCustEmail').text() != "") {
@@ -89,8 +25,8 @@ var liveChatText = '<div class="chat">'
 	+'<a>Live Chat</a>'
 	+'</h5></div>';
 var chatFlag;
+
 function handleChatInit(){
-	//alert('handlechatinit');
 	$('#h').hide();
 	$(".gwc-chat-registration-submit button").text("CONNECT");
 	$("#gcbChatSkipRegistration").text("CANCEL");
@@ -107,21 +43,6 @@ function handleChatInit(){
 	}
 	  },50);
 	
-//	if($('.gwc-chat-body').css('display') == 'block')
-//	{
-//		$('.no-click').remove();
-//		$("body").append("<div class='no-click' style='opacity:0.65; background:#000; z-index: 100000; width:100%; height:100%; position: fixed; top: 0; left:0;'></div>");
-//		//$("#chatReason").prepend('<option class="default" value="" selected></option>');
-//		$("#chatReason").prepend("<option class='default' value='' selected></option>").val('');
-//		if($("#chatReason").val() == '') {
-//			$('.gwc-chat-label[for="gcbChatReason"]').removeClass('focused');
-//		}
-//	}else {
-//		//alert('chat me')
-//		$('.gwc-chat-embedded-window').addClass('minimized');
-//		$('.gwc-chat-control-minimize').append(liveChatText);
-////		$('.gwc-chat-control-minimize').append($('.gwc-chat-control.gwc-chat-control-close').clone());
-//	}
 }
 $(window).on('beforeunload',function(){
 	if(sessionStorage.getItem('chatActive') == 'false'){
@@ -164,11 +85,6 @@ $(document).ready(function(){
 			}
 	});
 	
-	
-	/*if($('.gwc-chat-body').css('display') == 'block')
-	{
-		$("body").append("<div class='no-click' style='opacity:0.50; background:#000; z-index: 100000; width:100%; height:100%; position: fixed; top: 0; left:0;'></div>");
-	}*/
 	$(document).on("click", ".gwc-chat-control-minimize", function(e) {
 		//alert(($('.gwc-chat-body').css('display') == 'none'));
 		
@@ -204,13 +120,7 @@ $(document).ready(function(){
 		e.stopPropagation();
 		$('.no-click').remove();
 		chatObj.close();
-		//$('.gwc-chat-embedded-window').addClass('minimized');
-		//$('.gwc-chat-control-minimize').append(liveChatText);
 	});
-	/*$(document).on("click", '.gwc-chat-embedded-window > span.cclose-ico', function(e) {
-		e.stopPropagation();
-		$('.gwc-chat-control-close').click();
-	});*/
 	$(document).on("click", "#gcbChatSkipRegistration", function() {
 		chatObj.close();
 		unreadMsgCount = 0;
@@ -235,31 +145,46 @@ $(document).ready(function(){
 		}
 	})
 });
-/*$( window ).unload(function() {
-	
-});
 
-function warning()
-{
-	alert("refresh");
-	chatObj.close();
+//TISSPTEN-132 gcb.min.js loading on page load for contact us page only
+if(window.location.pathname == '/contact'){
+	//UF-412
+	(function(co, b, r, o, w, s, e) {
+	    e = co.getElementsByTagName(b)[0];
+	    if (co.getElementById(r)){
+	          return;
+	    }
+	    s = co.createElement(b); s.id = r; s.src = o;
+	    s.setAttribute('data-gcb-url', w);
+	    e.parentNode.insertBefore(s, e);
+	})(document, 'script', 'gcb-js',
+	//'http://10.9.17.46:8700/cobrowse/js/gcb.min.js',
+	//'http://10.9.17.46:8700/cobrowse');
+	//'https://219.65.91.73:443/cobrowse/js/gcb.min.js',
+	//'https://219.65.91.73:443/cobrowse');
+	   'https://prod-tulweb.tata-bss.com:443/cobrowse/js/gcb.min.js',
+	   'https://prod-tulweb.tata-bss.com:443/cobrowse');
 }
-window.onbeforeunload = warning;*/
-(function(co, b, r, o, w, s, e) {
-    e = co.getElementsByTagName(b)[0];
-    if (co.getElementById(r)){
-          return;
-    }
-    s = co.createElement(b); s.id = r; s.src = o;
-    s.setAttribute('data-gcb-url', w);
-    e.parentNode.insertBefore(s, e);
-})(document, 'script', 'gcb-js',
-//'http://10.9.17.46:8700/cobrowse/js/gcb.min.js',
-//'http://10.9.17.46:8700/cobrowse');
-//'https://219.65.91.73:443/cobrowse/js/gcb.min.js',
-//'https://219.65.91.73:443/cobrowse');
-   'https://prod-tulweb.tata-bss.com:443/cobrowse/js/gcb.min.js',
-   'https://prod-tulweb.tata-bss.com:443/cobrowse');
+else {
+	$(document).on("click",".lazy-need-help",function(){
+	//UF-412
+		(function(co, b, r, o, w, s, e) {
+		    e = co.getElementsByTagName(b)[0];
+		    if (co.getElementById(r)){
+		          return;
+		    }
+		    s = co.createElement(b); s.id = r; s.src = o;
+		    s.setAttribute('data-gcb-url', w);
+		    e.parentNode.insertBefore(s, e);
+		})(document, 'script', 'gcb-js',
+		//'http://10.9.17.46:8700/cobrowse/js/gcb.min.js',
+		//'http://10.9.17.46:8700/cobrowse');
+		//'https://219.65.91.73:443/cobrowse/js/gcb.min.js',
+		//'https://219.65.91.73:443/cobrowse');
+		   'https://prod-tulweb.tata-bss.com:443/cobrowse/js/gcb.min.js',
+		   'https://prod-tulweb.tata-bss.com:443/cobrowse');
+	});
+}
 	   
 var chatSession = null;
 var chatObj = null;
@@ -292,33 +217,7 @@ var _genesys = {
 			onReady: function(cobrowseAPI, isTopContext){
 				
 				chatObj = cobrowseAPI;
-				console.log('onReady : ' + chatObj.isMinimized());
-				
-				//alert('chat ready');
-//				chatObj.onMinimized(function(isMinimized){
-//					alert('isminimized');
-//				});
-//				chatObj.restoreChat({}).fail(function(e){
-//					if(e.error){
-//						alert('restore fail : ' + chatObj.isMinimized());
-//						return;
-//					}
-//					alert('no chat session : ' + chatObj.isMinimized());
-//					//chat session does not exist
-//					//apply minimize css here.Arnab
-//				}).done(function(session){
-//					alert('chat session : ' + chatObj.isMinimized());
-//					console.log('chat session : ');
-//					console.log(session);
-//					//get data from local storage
-//					
-//					//$('#dCustName').text(sessionStorage.getItem('regUser'));//regUser);
-//					//$('#dCustEmail').text(sessionStorage.getItem('regEmail'));//regEmail);
-//					
-//					//alert(dCustName);
-////					$('#dCustName').text('dhanesh');
-////					$('#dCustEmail').text('dhnaesh@gmail.com');
-//				});
+				//console.log('onReady : ' + chatObj.isMinimized());
 				cobrowseAPI.onSession(function(session) {
 					//alert('on session');
 					
@@ -350,12 +249,6 @@ var _genesys = {
 					$('#dCustName').text(sessionStorage.getItem('regUser'));
 					$('#dCustEmail').text(sessionStorage.getItem('regEmail'));
 					sessionStorage.setItem('chatActive','true');
-					//alert('setting storage : ');
-					
-					//alert(sessionStorage.getItem('regUser'));
-					//alert(sessionStorage.getItem('regEmail'));
-					//store here
-					//chatSession.sendMessage('Automatically sent chat message');
 				});
 				
 			},
@@ -406,132 +299,3 @@ var _genesys = {
 			}
 		}
 };
-
-/*(function(co, b, r, o, w, s, e) {
-      e = co.getElementsByTagName(b)[0];
-      if (co.getElementById(r)){
-            return;
-      }
-      s = co.createElement(b); s.id = r; s.src = o;
-      s.setAttribute('data-gcb-url', w);
-      e.parentNode.insertBefore(s, e);
-})(document, 'script', 'gcb-js',
-//'http://10.9.17.46:8700/cobrowse/js/gcb.min.js',
-//'http://10.9.17.46:8700/cobrowse');
-'https://219.65.91.73:443/cobrowse/js/gcb.min.js',
-'https://219.65.91.73:443/cobrowse');
-var chatSession = null;
-var chatObj = null;
-var regUser = null;
-var regEmail = null;
-var _genesys = {
-	debug: true,
-		buttons:{
-			chat:true,
-			cobrowse:false
-		},
-		integration:
-		{
-			buttons: {
-				position: "left", // Set to "right" to stick buttons to right side of the page.
-				cobrowse: false, // Set to false to disable button completely (you can start Co-browse manually via API call).
-				chat: true // Set to false if you don't want to use built-in chat button.
-			},
-			onReady: function() {
-				//alert('button ready');
-				$(".gwc-chat-registration-submit button").text("CONNECT");
-				$("#gcbChatSkipRegistration").text("CANCEL");
-			}//,
-		},
-		chat:{
-			localization: {
-				'regExit': 'CANCEL',
-				'regSubmit': 'CONNECT'
-			},
-			templates:'https://219.65.91.73:443/static/chatTemplates2.html',
-			onReady: function(cobrowseAPI, isTopContext){
-				cobrowseAPI.onBeforeChatOptionsApplied(function(options) { // you can modify options object here, for example:
-					//alert('before chat');
-					$( "#gcbChatCustName" ).blur(function() {
-						alert( "Handler for .blur() called." );
-					}
-				});
-			});
-				//cobrowseAPI.startChat({ui:true});
-			.done(function(session, options) {
-				  // Implement your own UI using session API
-				  session.startSession();
-				  
-			});
-			
-				//alert('chat ready');
-				chatObj = cobrowseAPI;
-				cobrowseAPI.onSession(function(session) {
-					//alert('on session');
-					chatSession = session;
-					chatObj = cobrowseAPI;
-					chatSession.onMessageReceived(function(event) {
-						if (event.content.type.url) {
-							// this is "url" message
-						} else if (event.content.type.text) {
-							//alert('message recvd : ' + event.content.text);
-						}
-						if(chatObj.isMinimized()){
-							alert('message recvd : ' + event.content.text);
-						}
-					});
-					$('.gwc-chat-body').css('height','418px');
-					$('#dCustName').text(regUser);
-					$('#dCustEmail').text(regEmail);
-					//chatSession.sendMessage('Automatically sent chat message');
-				});
-				
-			},
-			ui: {
-				onBeforeRegistration: function(regForm) {
-					$('.selectpicker').selectpicker();
-					jQuery(regForm).find("#gcbChatCustName" ).off();
-					jQuery(regForm).find("#gcbChatCustName" ).blur(function() {
-						regUser = $(this).val();
-						//alert(regUser);
-					});
-					
-					jQuery(regForm).find("#gcbChatEmail" ).off();
-					jQuery(regForm).find("#gcbChatEmail").blur(function() {
-						regEmail = $(this).val();
-						//alert(regEmail);
-					});
-					
-					var $skipBtn = jQuery(regForm).find('#gcbChatSkipRegistration');
-					$skipBtn.on('click', function() {
-						chatObj.close();
-						return false; // prevent default behavior
-					});
-				}
-			}
-		}
-};
-					$('.csi-chat-icon-close').on('click',function(){
-						alert('closing');
-						chatObj.close();
-					});
-					$('.csi-chat-icon-min').on('click',function(){
-						alert('toggle');
-						chatObj.toggle();
-					});
-					//chatSession.sendMessage('Automatically sent chat message');
-				});
-				$(".gwc-chat-registration-submit button").text("CONNECT");
-				$("#gcbChatSkipRegistration").text("CANCEL");
-			},
-		}
-};
-
-
-_genesys.chat.onReady.push(function(chat) {
-  chat.onSession(function(session) {
-	session.sendMessage('Automatically sent chat message');
-  });
- 
-});
-*/

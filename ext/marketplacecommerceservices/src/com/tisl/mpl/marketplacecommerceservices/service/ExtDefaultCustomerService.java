@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package com.tisl.mpl.marketplacecommerceservices.service;
 
@@ -12,14 +12,14 @@ import com.tisl.mpl.facades.product.data.ExtRegisterData;
 
 /**
  * @author 314180
- * 
+ *
  */
 public interface ExtDefaultCustomerService extends CustomerAccountService
 {
 	void changeUid(String newUid) throws DuplicateUidException;
 
-	public void registerUser(final CustomerModel customerModel, final String password, final String affiliateId)
-			throws DuplicateUidException;
+	public void registerUser(final CustomerModel customerModel, final String password, final String affiliateId,
+			final int platformNumber) throws DuplicateUidException;//TPR-6272 parameter platformNumber added
 
 	public void registerCockpit(final CustomerModel customerModel, final String password) throws DuplicateUidException;
 

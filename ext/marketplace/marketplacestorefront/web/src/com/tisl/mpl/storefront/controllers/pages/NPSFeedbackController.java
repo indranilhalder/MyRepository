@@ -59,22 +59,43 @@ public class NPSFeedbackController
 	 *
 	 * @param model
 	 * @param transactionId
+	 * @param deliveryMode
+	 * @param rating
+	 * @param originalUid
 	 * @return String
 	 * @throws CMSItemNotFoundException
 	 * @throws UnsupportedEncodingException
 	 */
 	@RequestMapping(value = "/NPSFeedbackForm", method = RequestMethod.GET)
-	public String getFeedbackQuestionDetails(final Model model, @RequestParam(required = false) final String transactionId,
-			@RequestParam(required = false) final String deliveryMode) throws CMSItemNotFoundException, UnsupportedEncodingException
+	public String getFeedbackQuestionDetails(final Model model, @RequestParam(required = true) final String transactionId,
+			@RequestParam(required = false) final String deliveryMode, @RequestParam(required = true) final String rating,
+			@RequestParam(required = true) final String originalUid) throws CMSItemNotFoundException, UnsupportedEncodingException
 
 	{
 		String returnStatement = null;
 		NPSFeedbackQRData npsFeedbackQRData = null;
 		final List<NPSFeedbackQuestionForm> npsFeedbackQRDetail = new ArrayList<NPSFeedbackQuestionForm>();
 		final NPSFeedbackQRForm npsFeedbackQRForm = new NPSFeedbackQRForm();
+		final NPSFeedbackQRData feedbackData = new NPSFeedbackQRData();
+		//Added for TPR-6081
+		int npsFeedBackModelCount = 0;
+		npsFeedBackModelCount = npsFeedbackQuestionFacade.getFeedback(transactionId);
 		try
 		{
-			//1. Stop the form submission if any of these values are missing
+			if (npsFeedBackModelCount > 0)
+			{
+				return ControllerConstants.Views.Fragments.NPS_Emailer.NpsFeedbackExists;
+			}
+			else
+			{
+				feedbackData.setOverAllRating(rating);
+				feedbackData.setTransactionId(transactionId);
+				feedbackData.setOriginalUid(originalUid);
+				//Save NPS rating for transactionId
+				npsFeedbackQuestionFacade.saveFeedbackRating(originalUid, transactionId, rating);
+			}
+
+
 			if (StringUtils.isEmpty(transactionId))
 			{
 				GlobalMessages.addErrorMessage(model, "Invalid Transaction , User or Rating. ");
@@ -140,7 +161,7 @@ public class NPSFeedbackController
 	}
 
 	/**
-	 * This method accepts both GET and POST in case of POST the method accets data and on GET it redirects to the base
+	 * This method accepts both GET and POST in case of POST the method accepts data and on GET it redirects to the base
 	 * website
 	 *
 	 * @param feedbackForm
@@ -154,7 +175,7 @@ public class NPSFeedbackController
 			final BindingResult result, final Model model) throws CMSItemNotFoundException
 	{
 		String returnStatement = null;
-		int npsFeedBackModelCount = 0;
+
 		final NPSFeedbackQRData feedbackData = new NPSFeedbackQRData();
 		final List<NPSFeedbackQRDetailData> feedbackDataDetail = new ArrayList<>();
 		try
@@ -166,10 +187,7 @@ public class NPSFeedbackController
 				GlobalMessages.addErrorMessage(model, "Invalid transactions , user or rating. ");
 				return ControllerConstants.Views.Fragments.NPS_Emailer.NPSFeedback;
 			}//2. Check if a feedback already exist for this transaction ID
-			else
-			{
-				npsFeedBackModelCount = npsFeedbackQuestionFacade.getFeedback(feedbackForm.getTransactionId());
-			}
+
 
 			if (result.hasErrors())
 			{
@@ -177,10 +195,7 @@ public class NPSFeedbackController
 				return ControllerConstants.Views.Fragments.NPS_Emailer.NPSFeedback;
 
 			}
-			else if (npsFeedBackModelCount > 0)
-			{
-				return ControllerConstants.Views.Fragments.NPS_Emailer.NpsFeedbackExists;
-			}
+
 			else if (!npsFeedbackQuestionFacade.validateCustomerForTransaction(feedbackForm.getTransactionId()).getOriginalUid()
 					.equals(feedbackForm.getOriginalUid()))
 			{
