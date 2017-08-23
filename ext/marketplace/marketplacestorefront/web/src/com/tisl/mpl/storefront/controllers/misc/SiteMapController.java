@@ -97,6 +97,10 @@ public class SiteMapController extends AbstractPageController
 
 	private static final String REGEX = "[^\\w\\s]";
 
+	private static final String hyphen_key = "-";
+	private static final String double_hyphen_key = "--";
+	private static final String pipe_key = "||";
+
 	//TPR-1285 Dynamic sitemap Changes Ends
 
 	@RequestMapping(value = "/sitemap.xml", method = RequestMethod.GET, produces = "application/xml")
@@ -193,7 +197,7 @@ public class SiteMapController extends AbstractPageController
 											l1CatName = department.getName().replaceAll(REGEX, "").replaceAll(" ", "-").replace("--", "-")
 													.toLowerCase();
 											final StringBuilder catName1 = new StringBuilder();
-											catName1.append(department.getName()).append("||")
+											catName1.append(department.getName()).append(pipe_key)//Sonar Fix
 													.append(department.getLinkComponents().get(0).getUrl());
 											if (StringUtils.isNotEmpty(catName1.toString()))
 											{
@@ -240,11 +244,12 @@ public class SiteMapController extends AbstractPageController
 															//Check if any special characters are present and remove them
 															l3CatName = thirdLevelCategories.getName().replaceAll(REGEX, "")
 																	.replaceAll(" ", "-").replace("--", "-").toLowerCase();
-															l3Url.append(l1CatName).append("-").append(l2CatName).append("-").append(l3CatName);
+															l3Url.append(l1CatName).append(hyphen_key).append(l2CatName).append(hyphen_key)//Sonar Fix
+																	.append(l3CatName);
 															l3Url.toString().replaceAll(" ", "-").replace("--", "-");
 															//PRDI-462 adding the L3 url to the catName3
-															catName3.append(thirdLevelCategories.getName()).append("||")
-																	.append(categoryPathChildlevel3).append("||").append(l3Url);
+															catName3.append(thirdLevelCategories.getName()).append(pipe_key)//Sonar Fix
+																	.append(categoryPathChildlevel3).append(pipe_key).append(l3Url);
 
 															thirdLevelCategories.setName(catName3.toString());
 														}
@@ -266,12 +271,12 @@ public class SiteMapController extends AbstractPageController
 												{
 													//PRDI-462
 													final StringBuilder l2Url = new StringBuilder();
-													l2Url.append(l1CatName).append("-").append(l2CatName);
+													l2Url.append(l1CatName).append(hyphen_key).append(l2CatName);//Sonar Fix
 													l2Url.toString().replaceAll(" ", "-").replace("--", "-");
 													final StringBuilder catName2 = new StringBuilder();
 													//PRDI-462 adding the L2 url to the catName2
-													catName2.append(secondLevelCategory.getName()).append("||")
-															.append(categoryPathChildlevel2).append("||").append(l2Url);
+													catName2.append(secondLevelCategory.getName()).append(pipe_key)//Sonar fix
+															.append(categoryPathChildlevel2).append(pipe_key).append(l2Url);
 													secondLevelCategory.setName(catName2.toString());
 												}
 												else
