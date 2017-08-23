@@ -98,7 +98,6 @@ public class SiteMapController extends AbstractPageController
 	private static final String REGEX = "[^\\w\\s]";
 
 	private static final String hyphen_key = "-";
-	private static final String double_hyphen_key = "--";
 	private static final String pipe_key = "||";
 
 	//TPR-1285 Dynamic sitemap Changes Ends
