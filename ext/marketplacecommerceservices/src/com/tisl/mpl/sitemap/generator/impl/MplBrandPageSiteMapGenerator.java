@@ -108,15 +108,13 @@ public class MplBrandPageSiteMapGenerator extends AbstractSiteMapGenerator<Custo
 				mainSiteMapUrlList = brandPageSiteMap(siteModel, mainSiteMapUrlList, siteMapPage, brandLists);
 
 			}
-			//			else if (siteMapPage.getCode().equals(SiteMapPageEnum.CONTENT))
-			//			{
-			//
-			//				LOG.debug("**Inside ContentPage***");
-			//				//ContentPage
-			//				mainSiteMapUrlList = contentPageSiteMap(mainSiteMapUrlList, siteMapPage);
-			//			}
+			else if (siteMapPage.getCode().equals(SiteMapPageEnum.CONTENT))
+			{
 
-
+				LOG.debug("**Inside ContentPage***");
+				//ContentPage
+				mainSiteMapUrlList = contentPageSiteMap(mainSiteMapUrlList, siteMapPage);
+			}
 			//			else if (siteMapPage.getCode().equals(SiteMapPageEnum.CUSTOM))
 			//			{
 			//				//Custom
