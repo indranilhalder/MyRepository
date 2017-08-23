@@ -417,6 +417,7 @@ public class CartPageController extends AbstractPageController
 				final int luxuryProducts = countLuxuryProductsInCart(cartData);
 				int marketplaceProducts = 0;
 				boolean luxFlag = false;
+				boolean isLuxFlag = false;
 				boolean marketplaceFlag = false;
 				if (CollectionUtils.isNotEmpty(cartData.getEntries()))
 				{
@@ -430,7 +431,17 @@ public class CartPageController extends AbstractPageController
 					model.addAttribute(ModelAttributetConstants.IS_LUXURY, ControllerConstants.Views.Pages.Cart.EMPTY_CART);
 				}
 
-				showMessageToUser(luxFlag, marketplaceFlag, isLux, model);
+
+				final String siteId = getSiteConfigService().getProperty("luxury.site.id");
+				if ((getCmsSiteService().getCurrentSite().getUid()).equalsIgnoreCase(siteId))
+				{
+					isLuxFlag = true;
+
+				}else{
+					isLuxFlag = false;
+				}
+
+				showMessageToUser(luxFlag, marketplaceFlag, isLuxFlag, model);
 				// LW-230 End
 
 				cartDataOnLoad = cartData;

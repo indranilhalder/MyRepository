@@ -28,7 +28,6 @@
 				<input type="hidden" name="sms" id="sms" value="" />
 
 				<span id="errorHolder" style="color: red;"></span>
-				<br />
 
 				<div class="actions">
 					<ycommerce:testId code="forgot_password_email">

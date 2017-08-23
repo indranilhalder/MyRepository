@@ -518,8 +518,26 @@ sendAddToBag : function(formId, isBuyNow) {
 							//$("#" + formId + "Title.sellerAddToBagTitle").show().fadeOut(5000);
 							//$("#" + formId + " " + ".addToCartSerpTitle").show().fadeOut(5000);
 							if(!isBuyNow){
-								ACC.product.showTransientCart(ussid);
-								ACC.product.scrollForTransientCart();
+								
+								var isLuxury = $("#isLuxury").val();
+								console.log("isLuxury"+ isLuxury);
+								
+								if(isLuxury) {
+									var url = $(".mini-cart-link").data("miniCartUrl") + "?stamp="
+									+ (new Date()).getTime();
+									$.get(url, function(html) {
+										var cartqtytext = $(html).find('.item-edit-details li:first-child').html();
+										//var cartcount = cartqtytext;
+										$('#addtocart-popup .lux-cart-btn span').html('('+cartqtytext+')');
+									}); 
+									$('#addtocart-popup,.luxury-over-lay').show(); 
+									$("#no-click,.loaderDiv").remove();
+								} else {
+									ACC.product.showTransientCart(ussid);
+									ACC.product.scrollForTransientCart();
+								}
+								
+								
 							}
 							
 							// ACC.product.displayAddToCart(data,formId,false);

@@ -90,6 +90,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.granule.json.JSONObject;
 import com.hybris.oms.tata.model.MplBUCConfigurationsModel;
+import com.tisl.lux.facade.CommonUtils;
 import com.tisl.mpl.checkout.form.DeliveryMethodEntry;
 import com.tisl.mpl.checkout.form.DeliveryMethodForm;
 import com.tisl.mpl.constants.MarketplacecheckoutaddonConstants;
@@ -177,6 +178,9 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 
 	@Autowired
 	private CommerceCartService commerceCartService;
+	
+	@Autowired
+	private CommonUtils utils;
 
 	@Resource(name = "accProductFacade")
 	private ProductFacade productFacade;
@@ -322,10 +326,12 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 
 			//TISBOX-1618
 			//final CartModel cartModel = getCartService().getSessionCart();
-			getMplCouponFacade().releaseVoucherInCheckout(serviceCart);
-			getMplCartFacade().removeDeliveryMode(serviceCart); //TISPT-104 // Cart recalculation method invoked inside this method
-			//applyPromotions();
-
+			if(!utils.isLuxurySite()){
+				getMplCouponFacade().releaseVoucherInCheckout(serviceCart);
+				//TISPT-104 // Cart recalculation method invoked inside this method
+				//applyPromotions();
+			}
+			getMplCartFacade().removeDeliveryMode(serviceCart); 
 
 			final CartData cartData = getMplCartFacade().getSessionCartWithEntryOrdering(true);
 			final String defaultPinCodeId = getSessionService().getAttribute(MarketplacecommerceservicesConstants.SESSION_PINCODE);
@@ -411,8 +417,9 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 			{
 				return MarketplacecommerceservicesConstants.REDIRECT + "/cart";
 			}
-
-			returnPage = MarketplacecheckoutaddonControllerConstants.Views.Pages.MultiStepCheckout.ChooseDeliveryMethodPage;
+			
+				returnPage = MarketplacecheckoutaddonControllerConstants.Views.Pages.MultiStepCheckout.ChooseDeliveryMethodPage;
+			
 		}
 
 		catch (final CMSItemNotFoundException e)

@@ -125,7 +125,7 @@ public class CustomOmsOrderLinePopulator implements Populator<OrderEntryModel, O
 			//final SellerInformationModel sellerInfoModel = getMplSellerInformationService().getSellerDetail(
 			//	source.getSelectedUSSID());
 
-			final SellerInformationModel sellerInfoModel = getMplSellerInformationService().getSellerDetail(ussid);
+			final SellerInformationModel sellerInfoModel = getMplSellerInformationService().getSellerDetail(ussid,source.getOrder().getStore().getCatalogs().get(0).getActiveCatalogVersion());
 
 			//jewellery ends
 

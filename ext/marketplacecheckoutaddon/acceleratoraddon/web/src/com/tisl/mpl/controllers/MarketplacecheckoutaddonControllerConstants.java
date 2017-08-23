@@ -20,6 +20,8 @@ public interface MarketplacecheckoutaddonControllerConstants
 	// implement here controller constants used by this extension
 	String ADDON_PREFIX = "addon:/marketplacecheckoutaddon/";
 
+	String LUXURY_ADDON_PREFIX = "addon:/luxurycheckoutaddon/";
+
 
 	interface Views
 	{
@@ -75,6 +77,7 @@ public interface MarketplacecheckoutaddonControllerConstants
 					String OrderTotals = ADDON_PREFIX + "fragments/checkout/single/showOrderTotalDetailsPage";
 				}
 			}
+
 
 		}
 	}

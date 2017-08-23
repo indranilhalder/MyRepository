@@ -99,7 +99,7 @@ public class MarketplacewebservicesConstants
 	public static final String GUID = "guid".intern();
 
 	//PaymentMode Query
-	public static final String PAYMENTMODETYPE = "select {b:pk} from {PaymentType As b} where {b.mode}=?mode";
+	public static final String PAYMENTMODETYPE = "select {b:pk} from {PaymentType As b} where {b.mode}=?mode and {b.basestore} = ?baseStore";
 
 	//Country ISO Query
 	public static final String COUNTRYISOQUERY = "select {c:pk} from {Country As c} where {c.name}=?countryName".intern();

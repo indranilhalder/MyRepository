@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<head>
+<title>TATA - CLiQ</title>
+<style>
+td span img{
+width:100%;
+}
+</style>
+</head>
+
+<body>
+<table width="598" border="0" align="center" cellpadding="0" cellspacing="0" style=" border:1px solid #000; font-family:Arial, Helvetica, sans-serif;">
+  <tr>
+    <td>
+	<table width="598" border="0" cellspacing="0" cellpadding="0">
+      <tr>
+        <td align="left" valign="top" bgcolor="#ffffff">
+<span>${ctx.cmsSlotContents.SiteLogo}</span></td>
+      </tr>
+ 
+      <tr>
+        <td bgcolor="#FBFBFB"><table width="598" border="0" cellspacing="0" cellpadding="0" style="padding-left:15px;">
+          <tr>
+           <td>
+			<br>
+			<font style="font-family:Arial, Helvetica, sans-serif; font-size:18px; color:#4a4a4b; font-weight:bold;">Hey ${ctx.customerName},</font>
+                  <br>
+                  <br>
+				  <font style="font-family:Arial, Helvetica, sans-serif; font-size:14px; color:#606060;">We get why you'd want to return something that isn't perfect.This is what you want to return, right? </font>
+				  <br><br>
+                 </td>
+            <td width="13">&nbsp;</td>
+          </tr>
+        </table></td>
+      </tr>
+	  	 <tr>
+        <td bgcolor="#FBFBFB"><table border="0" cellspacing="0" cellpadding="0">
+          <tr>
+            <td height="35" width="13">&nbsp;</td>
+            <td width="13">&nbsp;</td>
+          </tr>
+        </table>
+		<br>
+		</td>
+      </tr>
+	  
+	   <tr>
+        <td bgcolor="#FBFBFB"><table border="0" cellspacing="0" cellpadding="0">
+          <tr>
+            <td height="35" width="13">&nbsp;</td>
+            <td align="left" bgcolor="#f5f5f5" style="font-family:Avenir, Arial, Helvetica, sans-serif; font-size:17px; color:#aa133d; font-weight:bold;">Order reference number:</td>
+            <td align="left" bgcolor="#f5f5f5" style="font-family:Avenir, Arial, Helvetica, sans-serif; font-size:17px; color:#4a4a4a; font-weight:bold; padding-right: 50px; padding-left: 10px;">${ctx.orderReferenceNumber}</td>
+            <td width="13">&nbsp;</td>
+          </tr>
+        </table>
+		<br>
+		</td>
+      </tr>
+        <tr>
+        <td bgcolor="#FBFBFB"><table border="0" cellspacing="0" cellpadding="0">
+          <tr>
+            <td height="35" width="13">&nbsp;</td>
+            <td align="left" bgcolor="#f5f5f5" style="font-family:Avenir, Arial, Helvetica, sans-serif; font-size:17px; color:#aa133d; font-weight:bold;">Order number:</td>
+            <td align="left" bgcolor="#f5f5f5" style="font-family:Avenir, Arial, Helvetica, sans-serif; font-size:17px; color:#4a4a4a; font-weight:bold; padding-right: 50px; padding-left: 10px;">${ctx.sellerOrderNumber}</td>
+            <td width="13">&nbsp;</td>
+          </tr>
+        </table>
+		<br>
+		</td>
+      </tr>
+      <tr>
+        <td bgcolor="#fbfbfb">
+		<table width="598" border="0" cellspacing="0" cellpadding="0" style="padding-left:15px;">
+          <tr>
+            
+            <td><table width="572" border="0" cellspacing="0" cellpadding="0">
+			
+              <tr>
+                <td><table width="572" border="0" cellspacing="0" cellpadding="0">
+                  <tr>
+                    <td height="10"></td>
+                  </tr>
+                  <tr>
+                    <td style=""><table width="572" border="0" cellspacing="0" cellpadding="0" style="font-family:Arial, Helvetica, sans-serif; font-size:12px; color:#aa133d; font-weight:bold;">
+                      
+                    </table></td>
+                  </tr>
+				 
+	
+                  <tr>
+                    <td style="border-bottom:solid 1px #f4f4f4;"><table width="572" border="0" cellspacing="0" cellpadding="0" style="font-family:Arial, Helvetica, sans-serif; font-size:12px; color:#424242;">
+<tr style=" color:#aa133d;border-bottom:solid 1px #f4f4f4; ">
+                        <td width="70" height="55" align="center">Transaction ID<br>
+                        </td>
+                        <td width="50" align="center">Product</td>
+                        <td width="50" align="center">Qty</td>
+                        <td width="10" align="center">Price</td>
+                        <td width="50" align="center">Shipping charges </br>(if any)</td>
+                        <td width="50" align="center">COD charges </br>(if any)</td>
+                      </tr>                     
+ <tr>
+                        <td width="50" align="center">${ctx.transactionId}</td>
+                        <td width="40" align="center" >${ctx.nameOfProduct}</td>
+						<td width="50" align="center">1</td>
+						<td width="10" align="center">${ctx.productPrice}</td>
+						<td width="50" align="center">${ctx.deliveryCharge}</td>
+						<td width="50" align="center">${ctx.codCharges}</td>
+                      </tr>
+                    </table></td>
+                  </tr>
+                </table>
+                  <hr>
+
+				<table width="572" border="0" cellspacing="0" cellpadding="0">
+				 </tr>
+                     <tr style=" color:#aa133d; border-bottom:solid 1px #f4f4f4;">
+                     <td>Total: INR  ${ctx.total}</td>
+                  </tr>
+                  <tr>
+                    <td height="15"></td>
+                  </tr>
+                  </tr>
+                     <tr style=" color:#aa133d; border-bottom:solid 1px #f4f4f4;">
+                     <td>You can return it to the below store</td>
+                  </tr>
+                <tr>
+                    <td style="border-bottom:solid 1px #f4f4f4;"><table width="572" border="0" cellspacing="0" cellpadding="0" style="font-family:Arial, Helvetica, sans-serif; font-size:12px; color:#424242;">
+               <tr style=" color:#aa133d; border-bottom:solid 1px #f4f4f4;">
+                        <th width="120" height="55" align="center">Store Name <br>
+                         </th>
+                        <th width="155" align="center">Date</th>
+                        <th width="80" align="center">Store location</th>
+                      </tr>
+   <tr>
+                    <td height="10"></td>
+                  </tr>
+                      #foreach( $storeDetails in ${ctx.storeInfoList} )
+						 <tr style="border-bottom:solid 1px #f4f4f4;">
+						 <td width="120" align="center">$storeDetails.storeName</td>
+						 <td width="155" align="center">$storeDetails.date</td>
+						 <td width="80" align="center">$storeDetails.storeAddress</td>
+						 </tr>
+   <tr>
+                    <td height="8"></td>
+                  </tr>
+					#end 
+                    </table></td>
+                  </tr>
+                </table>
+				</td>
+              </tr>
+              <tr>
+
+</tr>    
+              </tr>
+				<td>&nbsp;</td>
+              </tr>
+			   <tr>
+                <td style="font-family:Arial, Helvetica, sans-serif; font-size:14px; color:#4a4a4a; padding:5px 0;"><span style="font-family:Avenir, Arial, Helvetica, sans-serif; font-size:18px; color:#4a4a4a; padding:5px 0;"></span></td>
+              </tr>
+			   <tr>
+                <td>&nbsp;</td>
+              </tr>
+			   <tr style="word-break:break-word;">
+                <td colspan="1" style="font-family:Arial, Helvetica, sans-serif; font-size:14px; color:#4a4a4a; padding:5px 0;color:#aa133d;">
+				<table style="background-color:#f3f3f3;">
+				<tr style="color:#aa133d;">
+				<td style="padding-right:25px;">
+				<span></span>
+				</td></tr><table>
+				
+              </tr>
+			  
+			  
+             
+			  <tr>
+                <td>&nbsp;</td>
+              </tr>
+              
+              
+             
+      <!--    <tr class="heading_shopping">
+            <td colspan="5" style="padding-left:16px;" align="left" bgcolor="#fbfbfb">
+               <p style="margin-bottom: 10px; margin-top: 10px;"><font size="4" color="#000000" ><strong>Happy Shopping! </strong></font>
+               </p>
+            </td>
+         </tr> -->
+         
+         
+              
+              
+			  <tr>
+               <td height="60" align="left" valign="top">
+			   <table width="173">
+			   <tr>
+			   <td valign="middle" align="right">${ctx.cmsSlotContents.Tip} </td>
+			   <td valign="middle" align="left"  style="font-weight:bold;color:#000;">HERE'S A TIP</td>
+			   </tr>
+			   </table>
+			   </td>
+              </tr>
+			  <tr>
+            <td colspan="5" style="padding-left:16px;" align="left" bgcolor="#fbfbfb">
+               <p style="margin-bottom: 10px;"><font size="2" color="#000000">
+                  Please quote your <strong>order reference number</strong> to get information about
+                  your whole order. If you want to know more about an individual product,
+                  quote its <strong>transaction ID</strong>. </font>
+               </p>
+            </td>
+         </tr>
+              <!-- <tr>
+                <td height="70" align="center"><a href="https://www.e2eluxury.tataunistore.com/apps" target="_blank"></a></td>
+              </tr> -->
+			   #if($ctx.cmsSlotContents.app)
+         <tr bgcolor="#fbfbfb">
+            <td colspan="5" align="center">
+               <a href="${ctx.secureBaseUrl}/apps" target="_blank" style="display: block; margin-bottom: 25px;" class="downloadapp-icon">
+     ${ctx.cmsSlotContents.app}
+    </a> 
+            </td>
+         </tr>
+   #end
+              <tr>
+                <td><span>${ctx.cmsSlotContents.smileyimg}</span></td>
+              </tr>
+			  
+              <tr>
+                <td align="left" style="font-family:Arial, Helvetica, sans-serif; font-size:11px; color:#4a4a4a;"><p style="margin:0;margin-top:12px;">This email can't receive replies. Get in touch with us by contacting Tata CLiQ Luxury Care <a href="tel:18002088282">1800 208 8282</a>. You can also write to us at <a href="mailto:hello@tatacliq.com">hello@tatacliq.com</a>. For help with our luxury products,
+               write to <a href="mailto:luxury@tatacliq.com">luxury@tatacliq.com</a>.</p></td>
+              </tr>
+              <tr>
+                <td>&nbsp;</td>
+              </tr>
+              <tr>
+                <td><table width="572" border="0" cellspacing="0" cellpadding="0" style="width:95%;">
+                  <tr>
+                    <td align="left" style="font-family:Avenir, Arial, Helvetica, sans-serif; font-size:11px; color:#4a4a4a;">&#169; 2016 Tata CLiQ Luxury| All Rights Reserved</td>
+                    <td>&nbsp;</td>
+                    <td align="right"><a href="https://www.facebook.com" style="border:none;">${ctx.cmsSlotContents.fb}</a></td>
+                    <td align="right"><a href="https://www.youtube.com" style="border:none;">${ctx.cmsSlotContents.youtube}</a></td>
+                  </tr>
+                </table></td>
+              </tr>
+              </table></td>
+            <td>&nbsp;</td>
+          </tr>
+        </table></td>
+      </tr>
+
+	<tr>
+        <td bgcolor="#fbfbfb">&nbsp;</td>
+      </tr>
+    </table></td>
+  </tr>
+</table>
+</table>
+</td>
+</tr>
+</table>
+</body>
+</html>

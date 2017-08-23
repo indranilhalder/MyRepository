@@ -155,6 +155,7 @@ import com.tisl.mpl.mplcommerceservices.service.data.InvReserForDeliverySlotsRes
 import com.tisl.mpl.service.InventoryReservationService;
 import com.tisl.mpl.service.PinCodeDeliveryModeService;
 import com.tisl.mpl.strategy.service.impl.MplDefaultCommerceAddToCartStrategyImpl;
+import com.tisl.mpl.util.CatalogUtils;
 import com.tisl.mpl.util.ExceptionUtil;
 import com.tisl.mpl.util.GenericUtilityMethods;
 import com.tisl.mpl.wsdto.CNCServiceableSlavesWsDTO;
@@ -255,6 +256,9 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 	private PriceDataFactory priceDataFactory;
 
 	@Autowired
+	private CatalogUtils catalogUtils;
+	
+	@Autowired
 	private SessionService sessionService;
 
 	@Autowired
@@ -302,6 +306,7 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 
 	private Converter<OrderModel, OrderData> orderConverter;
 
+
 	@Autowired
 	private ExchangeGuideService exchangeService;
 
@@ -311,6 +316,9 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 
 	@Autowired
 	private MplCommerceAddToCartStrategy mplCommerceAddToCartStrategy;
+
+
+
 
 	/**
 	 * @description: It is responsible for adding product to cart at ussid level
@@ -639,6 +647,7 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 											&& isFulFillmentTypeMatch(deliveryData.getFulfilmentType(), deliveryModel
 													.getDeliveryFulfillModes().getCode(), sellerInformationData))
 									{
+
 										/*
 										 * priceData = formPriceData(Double.valueOf(deliveryModel.getValue().doubleValue()
 										 * entry.getQualifyingCount().intValue()), cartData);
@@ -996,7 +1005,13 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 	 * 
 	 * 
 	 * 
+	 * 
+	 * 
+	 * 
 	 * @param ussId
+	 * 
+	 * 
+	 * 
 	 * 
 	 * 
 	 * 
@@ -1004,11 +1019,20 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 	 * 
 	 * 
 	 * 
+	 * 
+	 * 
+	 * 
 	 * @param startTime
 	 * 
 	 * 
 	 * 
+	 * 
+	 * 
+	 * 
 	 * @param endTime
+	 * 
+	 * 
+	 * 
 	 * 
 	 * 
 	 * 
@@ -1207,15 +1231,19 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 					/*
 					 * if (null != cartModel.getEntries() && !cartModel.getEntries().isEmpty()) { for (final
 					 * AbstractOrderEntryModel entry : cartModel.getEntries()) {
-					 *
+					 * 
+					 * 
 					 * if (null != entry.getSelectedUSSID() && !entry.getSelectedUSSID().isEmpty() && null !=
 					 * entryWishlist.getUssid() && !entryWishlist.getUssid().isEmpty() &&
 					 * entry.getSelectedUSSID().equalsIgnoreCase(entryWishlist.getUssid())) {
 					 * productExistInCartList.add(entryWishlist); } }
-					 *
+					 * 
+					 * 
 					 * }
 					 */
-					if (null != cartData.getEntries() && !cartData.getEntries().isEmpty())
+
+					if (entryWishlist.getIsDeleted() == null
+							|| (entryWishlist.getIsDeleted() != null && !entryWishlist.getIsDeleted().booleanValue()))//TPR-5787 check added
 					{
 						for (final OrderEntryData entry : cartData.getEntries())
 						{
@@ -1436,11 +1464,14 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 
 	/*
 	 * @Desc checking wishlist entry is valid or not , delisted , end date , online from TISEE-5185
-	 *
+	 * 
+	 * 
 	 * @param wishlistEntryModel
-	 *
+	 * 
+	 * 
 	 * @return boolean
-	 *
+	 * 
+	 * 
 	 * @throws EtailNonBusinessExceptions
 	 */
 	@Override
@@ -1450,10 +1481,12 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 		final Date sysDate = new Date();
 		final String ussid = wishlistEntryModel.getUssid();
 
-		final CatalogVersionModel onlineCatalog = catalogService.getCatalogVersion(
-				MarketplacecommerceservicesConstants.DEFAULT_IMPORT_CATALOG_ID,
-				MarketplacecommerceservicesConstants.DEFAULT_IMPORT_CATALOG_VERSION);
-
+		/*
+		 * final CatalogVersionModel onlineCatalog = catalogService.getCatalogVersion(
+		 * MarketplacecommerceservicesConstants.DEFAULT_IMPORT_CATALOG_ID,
+		 * MarketplacecommerceservicesConstants.DEFAULT_IMPORT_CATALOG_VERSION);
+		 */
+		final CatalogVersionModel onlineCatalog = catalogUtils.getSessionCatalogVersionForProduct();
 		final List<SellerInformationModel> sellerInformationModelList = mplDelistingService.getModelforUSSID(ussid, onlineCatalog);
 
 		if (CollectionUtils.isNotEmpty(sellerInformationModelList)
@@ -1487,11 +1520,14 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 
 	/*
 	 * @Desc creating pin code service data for pincode serviceability for wishlist
-	 *
+	 * 
+	 * 
 	 * @param sortedWishListMap
-	 *
+	 * 
+	 * 
 	 * @return List<PincodeServiceData>
-	 *
+	 * 
+	 * 
 	 * @throws EtailNonBusinessExceptions
 	 */
 	private List<PincodeServiceData> fetchWishlistPincodeRequestData(
@@ -1625,11 +1661,14 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 
 	/*
 	 * @Desc creating pin code service data for pincode serviceability for wishlist
-	 *
+	 * 
+	 * 
 	 * @param sortedWishListMap
-	 *
+	 * 
+	 * 
 	 * @return List<PincodeServiceData>
-	 *
+	 * 
+	 * 
 	 * @throws EtailNonBusinessExceptions
 	 */
 	private List<PincodeServiceData> fetchWishlistPincodeRequestDataMobile(final Wishlist2EntryModel wishlist2EntryModel,
@@ -2057,7 +2096,8 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 	 * CurrencyModel(); currency.setIsocode(MarketplacecommerceservicesConstants.INR);
 	 * currency.setSymbol(cartModel.getCurrency().getSymbol()); formattedPriceData =
 	 * getPriceDataFactory().create(PriceDataType.BUY, new BigDecimal(price.doubleValue()), currency);
-	 *
+	 * 
+	 * 
 	 * } return formattedPriceData; }
 	 */
 
@@ -2613,7 +2653,12 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 
 	/**
 	 *
+	 *
 	 * @Desc fetching reservation details
+	 *
+	 *
+	 *
+	 *
 	 *
 	 *
 	 *
@@ -2915,10 +2960,16 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 	 * @Desc converting response to dto
 	 * 
 	 * 
+	 * 
+	 * 
 	 * @param inventoryReservListResponse
 	 * 
 	 * 
+	 * 
+	 * 
 	 * @return List<ReservationItemWsDTO>
+	 * 
+	 * 
 	 * 
 	 * 
 	 * @throws EtailNonBusinessExceptions
@@ -2959,10 +3010,16 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 	 * @Desc populating data for soft reservation
 	 * 
 	 * 
+	 * 
+	 * 
 	 * @param cartData
 	 * 
 	 * 
+	 * 
+	 * 
 	 * @return List<CartSoftReservationData>
+	 * 
+	 * 
 	 * 
 	 * 
 	 * @throws EtailNonBusinessExceptions
@@ -3039,13 +3096,21 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 	 * @DESC MobileWS105 : get top two wish list for mobile web service
 	 * 
 	 * 
+	 * 
+	 * 
 	 * @param userModel
+	 * 
+	 * 
 	 * 
 	 * 
 	 * @param pincode
 	 * 
 	 * 
+	 * 
+	 * 
 	 * @return GetWishListWsDTO
+	 * 
+	 * 
 	 * 
 	 * 
 	 * @throws EtailNonBusinessExceptions
@@ -3120,9 +3185,11 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 
 	/*
 	 * @param sortedWishListMap
-	 *
+	 * 
+	 * 
 	 * @return GetWishListWsDTO
-	 *
+	 * 
+	 * 
 	 * @throws EtailNonBusinessExceptions
 	 */
 	private GetWishListWsDTO getWishListWebserviceDetails(final Map<String, List<Wishlist2EntryModel>> sortedWishListMap,
@@ -3363,13 +3430,21 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 	 * @Desc For webservice
 	 * 
 	 * 
+	 * 
+	 * 
 	 * @param buyBoxModelList
+	 * 
+	 * 
 	 * 
 	 * 
 	 * @param getWishListProductWsObj
 	 * 
 	 * 
+	 * 
+	 * 
 	 * @return GetWishListProductWsDTO
+	 * 
+	 * 
 	 * 
 	 * 
 	 * @throws EtailNonBusinessExceptions
@@ -3402,10 +3477,16 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 	 * @Desc For webservice
 	 * 
 	 * 
+	 * 
+	 * 
 	 * @param wishlist2EntryModel
 	 * 
 	 * 
+	 * 
+	 * 
 	 * @param getWishListProductWsObj
+	 * 
+	 * 
 	 * 
 	 * 
 	 * @throws EtailNonBusinessExceptions
@@ -3540,13 +3621,20 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 	/*
 	 * @DESC TISST-6994,TISST-6990 adding to cart COD eligible or not with Pincode serviceabilty and sship product
 	 * 
+	 * 
 	 * @param deliveryModeMap
+	 * 
+	 * 
 	 * 
 	 * 
 	 * @param pincodeResponseData
 	 * 
 	 * 
+	 * 
+	 * 
 	 * @return boolean
+	 * 
+	 * 
 	 * 
 	 * 
 	 * @throws EtailNonBusinessExceptions
@@ -3872,10 +3960,16 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 	 * @Desc fetching state details for a state name
 	 * 
 	 * 
+	 * 
+	 * 
 	 * @param stateName
 	 * 
 	 * 
+	 * 
+	 * 
 	 * @return StateModel
+	 * 
+	 * 
 	 * 
 	 * 
 	 * @throws EtailNonBusinessExceptions
@@ -3904,7 +3998,11 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 	 * @Desc to generate Sub order id
 	 * 
 	 * 
+	 * 
+	 * 
 	 * @return String
+	 * 
+	 * 
 	 * 
 	 * 
 	 * @throws EtailNonBusinessExceptions
@@ -3919,7 +4017,11 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 	 * @Desc to generate Order Line id and transaction id
 	 * 
 	 * 
+	 * 
+	 * 
 	 * @return String
+	 * 
+	 * 
 	 * 
 	 * 
 	 * @throws EtailNonBusinessExceptions
@@ -3935,7 +4037,11 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 	 * @Desc to generate Order Id
 	 * 
 	 * 
+	 * 
+	 * 
 	 * @return String
+	 * 
+	 * 
 	 * 
 	 * 
 	 * @throws EtailNonBusinessExceptions
@@ -3951,13 +4057,21 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 	 * @Desc used for inventory soft reservation from Commerce Checkout and Payment
 	 * 
 	 * 
+	 * 
+	 * 
 	 * @param requestType
+	 * 
+	 * 
 	 * 
 	 * 
 	 * @param abstractOrderModel
 	 * 
 	 * 
+	 * 
+	 * 
 	 * @return boolean
+	 * 
+	 * 
 	 * 
 	 * 
 	 * @throws EtailNonBusinessExceptions
@@ -4186,7 +4300,11 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 	 * @description:Populate data to CartSoftReservationData
 	 * 
 	 * 
+	 * 
+	 * 
 	 * @return:List<CartSoftReservationData>
+	 * 
+	 * 
 	 * 
 	 * 
 	 * @throws EtailNonBusinessExceptions
@@ -4227,7 +4345,6 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 					if (tupleData != null && tupleData.getFirst() != null && tupleData.getFirst().equals(Boolean.TRUE))
 					{
 						final List<CartSoftReservationData> dataList = (List<CartSoftReservationData>) tupleData.getSecond();
-
 						if (CollectionUtils.isNotEmpty(dataList))
 						{
 							cartSoftReservationDataList.addAll(dataList);
@@ -4432,8 +4549,9 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 							 * final SellerInformationModel sellerInfoModel = getMplSellerInformationService().getSellerDetail(
 							 * entryModel.getSelectedUSSID());
 							 */
-							SellerInformationModel sellerInfoModel = getMplSellerInformationService().getSellerDetail(
-									entryModel.getSelectedUssid());
+						final SellerInformationModel sellerInfoModel = getMplSellerInformationService().getSellerDetail(
+									entryModel.getSelectedUssid(),
+									abstractOrderModel.getStore().getCatalogs().get(0).getActiveCatalogVersion());
 
 							if (null == sellerInfoModel)
 							{
@@ -5673,7 +5791,10 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 		final Map<String, String> productUSSIDDetails = new HashMap<>();
 		for (final Wishlist2EntryModel wishModel : entryModels)
 		{
-			if (wishModel.getProduct() != null && wishModel.getProduct().getCode() != null)
+			if (wishModel.getProduct() != null
+					&& wishModel.getProduct().getCode() != null
+					&& (wishModel.getIsDeleted() == null || (wishModel.getIsDeleted() != null && !wishModel.getIsDeleted()
+							.booleanValue())))//TPR-5787 check added
 			{
 				productUSSIDDetails.put(wishModel.getUssid(), wishModel.getProduct().getCode());
 			}
@@ -5701,16 +5822,26 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 	 * @desc use to save freebie delivery mode
 	 * 
 	 * 
+	 * 
+	 * 
 	 * @param cartModel
+	 * 
+	 * 
 	 * 
 	 * 
 	 * @param freebieModelMap
 	 * 
 	 * 
+	 * 
+	 * 
 	 * @param freebieParentQtyMap
 	 * 
 	 * 
+	 * 
+	 * 
 	 * @return void
+	 * 
+	 * 
 	 * 
 	 * 
 	 * @throws EtailNonBusinessExceptions

@@ -118,8 +118,8 @@ public abstract class AbstractCheckoutStepController extends AbstractCheckoutCon
 		for (final Map.Entry<String, CheckoutStep> entry : progressBarMap.entrySet())
 		{
 			final CheckoutStep checkoutStep = entry.getValue();
-			checkoutSteps.add(new CheckoutSteps(checkoutStep.getProgressBarId(), StringUtils.remove(checkoutStep.currentStep(),
-					"redirect:"), Integer.valueOf(entry.getKey())));
+			checkoutSteps.add(new CheckoutSteps(checkoutStep.getProgressBarId(),
+					StringUtils.remove(checkoutStep.currentStep(), "redirect:"), Integer.valueOf(entry.getKey())));
 		}
 		return checkoutSteps;
 	}

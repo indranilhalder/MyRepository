@@ -60,6 +60,8 @@ public interface ControllerConstants
 	/**
 	 * Class with action name constants
 	 */
+	String LUXURY_STORE_ADDON_PREFIX = "addon:/luxurystoreaddon";
+
 	interface Actions
 	{
 		interface Cms
@@ -150,6 +152,7 @@ public interface ControllerConstants
 				String AccountPaymentInfoPage = "pages/account/accountPaymentInfoPage";
 				String AccountRegisterPage = "pages/account/accountRegisterPage";
 				String ChangePassword = "/my-account/update-password";
+
 
 			}
 
@@ -304,6 +307,14 @@ public interface ControllerConstants
 				String FooterPanel = "fragments/home/footerPanel";
 			}
 
+			interface LuxuryHome
+			{
+				String RegisterFragment = LUXURY_STORE_ADDON_PREFIX + "/fragments/home/luxRegister";
+				String LoginFragment = LUXURY_STORE_ADDON_PREFIX + "/fragments/home/luxLoginPanel";
+				String ForgotPasswordPanel = LUXURY_STORE_ADDON_PREFIX + "/fragments/home/forgottenPwd";
+
+			}
+
 			interface Cart
 			{
 				String AddToCartPopup = "fragments/cart/addToCartPopup";
@@ -424,7 +435,6 @@ public interface ControllerConstants
 				public static final String USSID_CODE_PATH_NEW_PATTERN = "/**/p-{ussId:.*}";
 				public static final String USSID = "ussId";
 			}
-
 			interface NPS_Emailer
 			{
 				String NPSFeedback = "fragments/NPS_Emailer/npsFeedbackPage";

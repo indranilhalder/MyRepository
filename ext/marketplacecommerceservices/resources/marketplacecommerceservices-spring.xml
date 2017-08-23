@@ -2316,6 +2316,7 @@
  		</property>
  	</bean>
  	<!-- //Added for 3782 -->
+    <bean id="catalogUtils" class="com.tisl.mpl.util.CatalogUtils" />
 </beans>
 
 

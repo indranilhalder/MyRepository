@@ -1,0 +1,188 @@
+#
+# Import the Solr configuration for the store
+#
+$prefix=lux
+$productCatalog=$prefixProductCatalog
+$catalogVersions=catalogVersions(catalog(id),version);
+$serverConfigName=$prefixSolrServerConfig
+$indexConfigName=$prefixSolrIndexConfig
+$searchConfigName=$prefixPageSize
+$facetSearchConfigName=$prefixIndex
+$facetSearchConfigDescription=Marketplace Solr Index
+$searchIndexNamePrefix=$prefix
+$solrIndexedType=$prefixProductType
+$indexBaseSite=$prefix
+$indexLanguages=en,de
+$indexCurrencies=INR
+
+# Language
+$lang=en
+
+# Solr Indexed Property
+UPDATE SolrIndexedProperty;solrIndexedType(identifier)[unique=true];name[unique=true];displayName[lang=$lang]
+ ;$solrIndexedType		   ;inStockFlag						   ;"Availability"
+ ;$solrIndexedType		   ;allPromotions					   ;"On Sale"
+ ;$solrIndexedType		   ;allMobilePromotions				   ;"On Mobile Sale"
+ ;$solrIndexedType		   ;price							   ;"Price"
+ ;$solrIndexedType		   ;deliveryMode					   ;"Delivery"
+ ;$solrIndexedType		   ;discountFlag					   ;"Discount"
+ ;$solrIndexedType		   ;discountAll							;"All Discount"
+ ;$solrIndexedType		   ;colour							   ;"Colour"
+ ;$solrIndexedType		   ;size							   ;"Size"
+ ;$solrIndexedType		   ;rating							   ;"Rating"
+ ;$solrIndexedType		   ;Occasion						   ;"Occasion"
+ ;$solrIndexedType         ;brand          		               ;"Brand"	  
+ ;$solrIndexedType         ;setContents-classification	                       ;"Set Contents"           
+ ;$solrIndexedType         ;length-classification	          		           ;"Length"
+ ;$solrIndexedType         ;fit-classification	          		               ;"Fit"
+ ;$solrIndexedType         ;withBlouse-classification	          	           ;"With Blouse"
+ ;$solrIndexedType         ;Wiring-classification	          		           ;"Wiring"
+ ;$solrIndexedType         ;waistRise-classification	          	           ;"Waist Rise" 
+ ;$solrIndexedType         ;briefType-classification	          	           ;"Brief Type" 
+ ;$solrIndexedType         ;sockUsage-classification 	          	           ;"Sock Usage " 
+ ;$solrIndexedType         ;sleepwearCoverage-classification	               ;"Sleepwear Coverage " 
+ ;$solrIndexedType         ;setItems-classification		                       ;"Set Items" 
+ ;$solrIndexedType         ;padding-classification			                   ;"Padding" 
+ ;$solrIndexedType         ;material-classification			                   ;"Material" 
+ ;$solrIndexedType         ;dressShape-classification			               ;"Dress Shape"  
+ ;$solrIndexedType         ;denimTreatments-classification		               ;"Denim Treatments"   
+ ;$solrIndexedType         ;cut-classification			                       ;"Cut"   
+ ;$solrIndexedType         ;braCoverage-classification			               ;"Bra Coverage"
+ ;$solrIndexedType         ;age          			                           ;"Age"
+ ;$solrIndexedType         ;capacityCC-classification        		           ;"Capacity"
+ ;$solrIndexedType         ;displayFeatures-classification                     ;"Display Features"
+ ;$solrIndexedType         ;memorySmartphone-classification                    ;"Smartphone Memory"
+ ;$solrIndexedType         ;cameraFeatures-classification                      ;"Camera Features" 
+ ;$solrIndexedType         ;maximumISO-classification          	               ;"Maximum ISO"  
+ ;$solrIndexedType         ;megapixel-classification          	               ;"Megapixel"   
+ ;$solrIndexedType         ;connectivityCameraAccessories-classification       ;"Connectivity"
+ ;$solrIndexedType         ;primaryCamera-classification                       ;"Primary Camera"  
+ ;$solrIndexedType         ;audioFeatures-classification	                   ;"Audio Features"
+ ;$solrIndexedType         ;bag-classification	          		               ;"Bag"
+ ;$solrIndexedType         ;blades-classification	          		           ;"Blades"
+ ;$solrIndexedType         ;caseOrCover-classification          	           ;"Case or Cover"
+ ;$solrIndexedType         ;channels-classification		                       ;"Channels"
+ ;$solrIndexedType         ;components-classification		                   ;"Components"
+ ;$solrIndexedType         ;coolingTechnology-classification                   ;"Cooling Technology"
+ ;$solrIndexedType         ;cpuSpeed-classification		                       ;"CPU Speed"
+ ;$solrIndexedType         ;dialShape-classification		                   ;"Dial Shape"
+ ;$solrIndexedType         ;displayScreen-classification		               ;"Display Screen"
+ ;$solrIndexedType         ;displaySizeCC-classification		               ;"Display Size"
+ ;$solrIndexedType         ;hDMIPorts-classification		                   ;"HDMI Ports"
+ ;$solrIndexedType         ;maximumShutterSpeed-classification	               ;"Maximum Shutter Speed"
+ ;$solrIndexedType         ;numberOfBurners-classification		               ;"Number of Burners"
+ ;$solrIndexedType         ;numberofSpeakers-classification		               ;"Number of Speakers"
+ ;$solrIndexedType         ;rAM-classification		          	               ;"RAM"
+ ;$solrIndexedType         ;security-classification		                       ;"Security"
+ ;$solrIndexedType         ;sensorSize-classification	          	           ;"Sensor Size"
+ ;$solrIndexedType         ;sensorType-classification	          	           ;"Sensor Type"
+ ;$solrIndexedType         ;shopbyFamilySize-classification		               ;"Shop by family size"
+ ;$solrIndexedType         ;simCard-classification	          	               ;"Sim Card"
+ ;$solrIndexedType         ;sIMType-classification	          	               ;"Sim Type"
+ ;$solrIndexedType         ;stabilizerRequired-classification	               ;"Stabilizer Required"
+ ;$solrIndexedType         ;strapColor-classification	          	           ;"Strap Color"
+ ;$solrIndexedType         ;surroundSound-classification	                   ;"Surround Sound"
+ ;$solrIndexedType         ;uSBInputs-classification	          	           ;"USB Inputs"
+ ;$solrIndexedType         ;uvTypes-classification         		               ;"UV Types"
+ ;$solrIndexedType         ;videoRecording-classification                      ;"Video Recording"
+ ;$solrIndexedType         ;wirelessSubwooferconnect-classification            ;"Wireless Subwoofer Connect"
+ ;$solrIndexedType         ;pattern-classification	         	               ;"Pattern"
+ ;$solrIndexedType         ;sleeve-classification         		               ;"Sleeve" 
+ ;$solrIndexedType		   ;aspectRatio-classification						   ;"Aspect Ratio"
+ ;$solrIndexedType		   ;battery-classification							   ;"Battery"
+ ;$solrIndexedType		   ;batteryCapacity-classification					   ;"Battery Capacity"
+ ;$solrIndexedType		   ;bluetooth-classification						   ;"Bluetooth"
+ ;$solrIndexedType		   ;bodyMaterial-classification					       ;"Body Material"
+ ;$solrIndexedType		   ;cableLength-classification						   ;"Cable Length"
+ ;$solrIndexedType		   ;cameraSpecifications-classification			       ;"Camera Specifications"
+ ;$solrIndexedType		   ;cameraType-classification						   ;"Camera Type"
+ ;$solrIndexedType		   ;collar-classification							   ;"Collar"
+ ;$solrIndexedType		   ;connectivity-classification					       ;"Connectivity"
+ ;$solrIndexedType		   ;connectivityAudioHts-classification			       ;"Conncetivity Audio HTS"
+ ;$solrIndexedType		   ;control-classification							   ;"Control"
+ ;$solrIndexedType		   ;cookingType-classification						   ;"Cooking Type"
+ ;$solrIndexedType		   ;cordless-classification						       ;"Cordless"
+ ;$solrIndexedType		   ;dialColour-classification						   ;"Dial Colour"
+ ;$solrIndexedType		   ;display-classification							   ;"Display"
+ ;$solrIndexedType		   ;energyRating-classification					       ;"Energy Rating"
+ ;$solrIndexedType		   ;features-classification						       ;"Features"
+ ;$solrIndexedType		   ;filters-classification							   ;"Filters"
+ ;$solrIndexedType		   ;focalLength-classification						   ;"Focal Length"
+ ;$solrIndexedType		   ;function-classification						       ;"Functions"
+ ;$solrIndexedType		   ;internalStorage-classification					   ;"Internal Storage"
+ ;$solrIndexedType		   ;jars-classification							       ;"Jars"
+ ;$solrIndexedType		   ;memory-classification							   ;"Memory"
+ ;$solrIndexedType		   ;operatingSystem-classification					   ;"Operating System"
+ ;$solrIndexedType		   ;opticaldrive-classification					       ;"Optical Drive"
+ ;$solrIndexedType		   ;powerConsumption-classification				       ;"Power Consumption"
+ ;$solrIndexedType		   ;processor-classification						   ;"Processor"
+ ;$solrIndexedType		   ;projectionType-classification					   ;"Projection Type"
+ ;$solrIndexedType		   ;protocols-classification						   ;"Protocols"
+ ;$solrIndexedType		   ;ramType-classification							   ;"RAM Type"
+ ;$solrIndexedType		   ;ratingsStar-classification						   ;"Ratings Star"
+ ;$solrIndexedType		   ;resolution-classification						   ;"Resolution"
+ ;$solrIndexedType		   ;screen-classification							   ;"Screen"
+ ;$solrIndexedType		   ;screenSize-classification						   ;"Screen Size"
+ ;$solrIndexedType		   ;simSize-classification						       ;"Sim Size"
+ ;$solrIndexedType		   ;speakers-classification						       ;"Speakers"
+ ;$solrIndexedType		   ;speed-classification							   ;"Speed"
+ ;$solrIndexedType		   ;suitableFor-classification					       ;"Suitable For"
+ ;$solrIndexedType		   ;touchScreen-classification						   ;"Touch Screen"
+ ;$solrIndexedType		   ;type-classification							       ;"Type"
+ ;$solrIndexedType		   ;usbPorts-classification						       ;"USB Ports"
+ ;$solrIndexedType		   ;videoFormat-classification						   ;"Video Format"
+ ;$solrIndexedType		   ;warranty-classification						       ;"Warranty"
+ ;$solrIndexedType		   ;weight-classification						       ;"Weight"
+ ;$solrIndexedType		   ;wireless-classification						       ;"Wireless"
+
+ 
+ 
+ 
+# Define the available sorts
+#Release 2 changes for SERP 'Sort by' headers
+UPDATE SolrSort;indexedType(identifier)[unique=true];code[unique=true];name[lang=$lang]
+;$solrIndexedType;relevance;Relevance
+;$solrIndexedType;name-asc;Brands A-Z
+;$solrIndexedType;name-desc;Brands Z-A
+;$solrIndexedType;price-asc;Price Low to High
+;$solrIndexedType;price-desc;Price High to Low
+;$solrIndexedType;isDiscountedPrice;Discounts
+;$solrIndexedType;isProductNew;Brand New
+
+
+# for footwear
+UPDATE SolrIndexedProperty;solrIndexedType(identifier)[unique=true];name[unique=true];displayName[lang=$lang]
+ ;$solrIndexedType		   ;stylecodefootwear						   ;"Style Code"
+ ;$solrIndexedType		   ;brandcolorfootwear					       ;"Brand Colour"
+ ;$solrIndexedType		   ;collectionname						       ;"Collection Name"
+ ;$solrIndexedType		   ;seasonfootwear					           ;"Season"
+ ;$solrIndexedType		   ;colorfamilyfootwear						   ;"Color Family"
+ ;$solrIndexedType		   ;unisex						   			   ;"Unisex"
+ ;$solrIndexedType		   ;occasion					       		   ;"Occasion"
+ ;$solrIndexedType		   ;stylenotefootwear						   ;"Style Note"
+ ;$solrIndexedType		   ;sizetype-classification					   ;"Size Type"
+ ;$solrIndexedType		   ;footsize						   		   ;"Foot Size"
+ ;$solrIndexedType		   ;sizechart					               ;"Size Chart"
+ ;$solrIndexedType		   ;accessoriessize						       ;"Accessories Size"
+ ;$solrIndexedType		   ;uppermaterial					           ;"Upper Material"
+ ;$solrIndexedType		   ;liningmaterial						       ;"Lining Material"
+ ;$solrIndexedType		   ;solematerial-classification				   ;"Sole Material"
+ ;$solrIndexedType		   ;shoeheight						           ;"Shoe Height"
+ ;$solrIndexedType		   ;heelheightcategory					       ;"Heel Height Category"
+ ;$solrIndexedType		   ;heeltype-classification					   ;"Heel Type"
+ ;$solrIndexedType		   ;heelheight-classification				   ;"Heel Height"
+ ;$solrIndexedType		   ;fastening-classification				   ;"Fastening"
+ ;$solrIndexedType		   ;character					               ;"Character"
+ ;$solrIndexedType		   ;careinstructionfootwear					   ;"Care Instructions"
+ ;$solrIndexedType		   ;technologyusedfootwear					   ;"Technology Used" 
+ ;$solrIndexedType		   ;agekids					                   ;"Age Kids"
+ ;$solrIndexedType		   ;recommendedfor						       ;"Recommended For"
+ ;$solrIndexedType		   ;weightfootwear					           ;"Weight of Product"
+ ;$solrIndexedType		   ;sandaltype-classification				   ;"Sandal Type"
+ ;$solrIndexedType		   ;shoeboottype-classification				   ;"Shoe/Boot Type"
+ ;$solrIndexedType		   ;clogflipfloptype-classification			   ;"Clog/Flip Flop Type"
+ ;$solrIndexedType		   ;tipshape-classification					   ;"Tip Shape"
+ ;$solrIndexedType		   ;shoeaccessoriestype						   ;"Shoe Accessories Type"
+ ;$solrIndexedType		   ;shoecaretype					           ;"Shoe Care Type"
+ ;$solrIndexedType		   ;suitablefor						           ;"Suitable for"
+ ;$solrIndexedType		   ;weightsportsfootwear					   ;"Weight of Product"

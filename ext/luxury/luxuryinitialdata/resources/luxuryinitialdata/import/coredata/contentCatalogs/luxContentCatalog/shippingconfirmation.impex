@@ -1,0 +1,83 @@
+##
+# Import the CMS content for the site emails
+#
+$storePrefix=lux
+$contentCatalog=$storePrefixContentCatalog
+$contentCV=catalogVersion(CatalogVersion.catalog(Catalog.id[default=$contentCatalog]),CatalogVersion.version[default=Staged])[default=$contentCatalog:Staged]
+$wideContent=CMSImageComponent,BannerComponent
+
+# Import config properties into impex macros
+
+$jarResourceCms=jar:com.tisl.mpl.core.setup.CoreSystemSetup&/marketplacecore/import/cockpits/cmscockpit
+
+$emailPackageName=com.tisl.mpl.facades.process.email.context
+
+
+
+# Templates for CMS Cockpit Page Edit
+INSERT_UPDATE EmailPageTemplate;$contentCV[unique=true];uid[unique=true];velocityTemplate[translator=de.hybris.platform.commerceservices.impex.impl.FileLoaderValueTranslator]
+#Shipping Confirmation Event
+;;ShippingConfirmationEmailTemplate;$jarResourceCms/structure-view/structure_shippingConfirmationEmailTemplate.vm
+
+
+# Email page Template
+INSERT_UPDATE EmailPageTemplate;$contentCV[unique=true];uid[unique=true];name;active;frontendTemplateName;subject(code);htmlTemplate(code);restrictedPageTypes(code)
+#Shipping Confirmation Event 
+;;ShippingConfirmationEmailTemplate;Shipping Confirmation Email Template;true;shippingConfirmationEmail;lux_Email_ShippingConfirmation_Subject;lux_Email_ShippingConfirmation_Body;EmailPage
+
+
+#Shipping Confirmation Event
+INSERT_UPDATE ContentSlotName;name[unique=true];template(uid,$contentCV)[unique=true][default='ShippingConfirmationEmailTemplate'];validComponentTypes(code)
+;HOTCSiteLogo;;;logo
+;TopContent;;$wideContent;
+;BottomContent;;$wideContent;
+;Tip;;$wideContent;
+#;HOTCTrackOrder1;;$wideContent;
+#;HOTCDeliveryPerson1;;$wideContent;
+;AppDownloadUrl;;$wideContent;
+;smileyimg;;$wideContent;
+;fbNew;;$wideContent;
+;tweet;;$wideContent;
+;youtube;;$wideContent;
+;insta;;$wideContent;
+;gplus;;$wideContent;
+;linegrey;;$wideContent;
+;tatatrust;;$wideContent;
+;cliqnpic;;$wideContent;
+;easyreturn;;$wideContent;
+;authenticbrands;;$wideContent;
+;freeshipping;;$wideContent;
+;appstore;;$wideContent;
+;googleplay;;$wideContent;
+
+
+
+
+#Shipping Confirmation Event
+INSERT_UPDATE ContentSlotForTemplate;$contentCV[unique=true];uid[unique=true];position[unique=true];pageTemplate(uid,$contentCV)[unique=true][default='ShippingConfirmationEmailTemplate'];contentSlot(uid,$contentCV)[unique=true];allowOverwrite
+;;HOTCSiteLogo-ShippingConfirmationEmail;HOTCSiteLogo;;EmailSiteLogoHOTCSlot;true
+#;;HOTCTrackOrder1-ShippingConfirmationEmail;HOTCTrackOrder1;;EmailTrackOrder1HOTCSlot;true
+#;;HOTCDeliveryPerson1-ShippingConfirmationEmail;HOTCDeliveryPerson1;;EmailDeliveryPerson1HOTCSlot;true
+;;smileyimg-ShippingConfirmationEmail;smileyimg;;EmailsmileyimgRegSlot;true
+;;fb-ShippingConfirmationEmail;fbNew;;EmailfbRegSlot;true
+;;AppDownloadUrl-ShippingConfirmationEmail;AppDownloadUrl;;AppDownloadUrlSlot;true
+;;tweet-ShippingConfirmationEmail;tweet;;EmailtweetSlot;true
+;;youtube-ShippingConfirmationEmail;youtube;;EmailYouTubeSlot;true
+;;insta-ShippingConfirmationEmail;insta;;EmailInstaSlot;true
+;;gplus-ShippingConfirmationEmail;gplus;;EmailgplusRegSlot;true
+;;Tip-ShippingConfirmationEmail;Tip;;EmailTipCUSlot;true
+;;linegrey-ShippingConfirmationEmail;linegrey;;EmailLinegreySlot;true
+;;tatatrust-ShippingConfirmationEmail;tatatrust;;EmailTatatrustSlot;true
+;;cliqnpic-ShippingConfirmationEmail;cliqnpic;;EmailcliqnpicSlot;true
+;;easyreturn-ShippingConfirmationEmail;easyreturn;;EmailEasyreturnSlot;true
+;;authenticbrands-ShippingConfirmationEmail;authenticbrands;;EmailAuthenticbrandsSlot;true
+;;freeshipping-ShippingConfirmationEmail;freeshipping;;EmailFreeshippingSlot;true
+;;appstore-ShippingConfirmationEmail;appstore;;EmailAppleStoreSlot;true
+;;googleplay-ShippingConfirmationEmail;googleplay;;EmailAndroidStoreSlot;true
+
+
+
+# Email Pages
+INSERT_UPDATE EmailPage;$contentCV[unique=true];uid[unique=true];name;masterTemplate(uid,$contentCV);defaultPage;approvalStatus(code)[default='approved']
+#Shipping Confirmation Event
+;;ShippingConfirmationEmail;Shipping Confirmation Email;ShippingConfirmationEmailTemplate;true;

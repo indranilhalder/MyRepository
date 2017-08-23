@@ -142,6 +142,7 @@
 		extends="de.hybris.platform.commercefacades.user.data.PrincipalData">
 		<property name="title" type="String" />
 		<property name="registrationDate" type="java.util.Date" />
+		<property name="gender" type="String" />
 		<!-- <property name="ipAddress" type="String" /> -->
 	</bean>
 

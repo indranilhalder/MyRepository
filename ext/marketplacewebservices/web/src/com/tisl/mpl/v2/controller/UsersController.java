@@ -97,6 +97,7 @@ import de.hybris.platform.voucher.model.VoucherModel;
 import de.hybris.platform.wishlist2.Wishlist2Service;
 import de.hybris.platform.wishlist2.model.Wishlist2EntryModel;
 import de.hybris.platform.wishlist2.model.Wishlist2Model;
+import com.tisl.mpl.model.PaymentModeRestrictionModel;
 
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -153,6 +154,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
+import com.tisl.lux.facade.CommonUtils;
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.constants.MarketplacewebservicesConstants;
 import com.tisl.mpl.constants.YcommercewebservicesConstants;
@@ -456,6 +458,9 @@ public class UsersController extends BaseCommerceController
 	@Resource(name = "mplJewelleryService")
 	private MplJewelleryService jewelleryService;
 
+	@Autowired
+ 	private CommonUtils commonUtils;
+	
 	@Resource(name = "voucherService")
 	private VoucherService voucherService;
 
@@ -6743,13 +6748,22 @@ public class UsersController extends BaseCommerceController
 					.getString(MarketplacecommerceservicesConstants.MARCHANTID).isEmpty() ? getConfigurationService()
 					.getConfiguration().getString(MarketplacecommerceservicesConstants.MARCHANTID)
 					: "No juspayMerchantKey is defined in local properties";
-			juspayReturnUrl = !getConfigurationService().getConfiguration()
-					.getString(MarketplacecommerceservicesConstants.RETURNURL)
+			
+			if (commonUtils.isLuxurySite())
+			{
+				juspayReturnUrl = !getConfigurationService().getConfiguration()
+						.getString(MarketplacecommerceservicesConstants.RETURNURLLUX).isEmpty() ? getConfigurationService()
+						.getConfiguration().getString(MarketplacecommerceservicesConstants.RETURNURLLUX)
+						: "No juspayReturnUrl is defined in local properties";
 
-
-
-					.isEmpty() ? getConfigurationService().getConfiguration()
-					.getString(MarketplacecommerceservicesConstants.RETURNURL) : "No juspayReturnUrl is defined in local properties";
+			}
+			else
+			{
+				juspayReturnUrl = !getConfigurationService().getConfiguration()
+						.getString(MarketplacecommerceservicesConstants.RETURNURL).isEmpty() ? getConfigurationService()
+						.getConfiguration().getString(MarketplacecommerceservicesConstants.RETURNURL)
+						: "No juspayReturnUrl is defined in local properties";
+			}	
 
 			returnUrlBuilder.append(juspayReturnUrl);
 			//To avoid backward- incompatibility,
@@ -6895,10 +6909,22 @@ public class UsersController extends BaseCommerceController
 								.getString(MarketplacecommerceservicesConstants.MARCHANTID).isEmpty() ? getConfigurationService()
 								.getConfiguration().getString(MarketplacecommerceservicesConstants.MARCHANTID)
 								: "No juspayMerchantKey is defined in local properties";
-						juspayReturnUrl = !getConfigurationService().getConfiguration()
-								.getString(MarketplacecommerceservicesConstants.RETURNURL).isEmpty() ? getConfigurationService()
-								.getConfiguration().getString(MarketplacecommerceservicesConstants.RETURNURL)
-								: "No juspayReturnUrl is defined in local properties";
+								
+						if (commonUtils.isLuxurySite())
+						{
+							juspayReturnUrl = !getConfigurationService().getConfiguration()
+									.getString(MarketplacecommerceservicesConstants.RETURNURLLUX).isEmpty() ? getConfigurationService()
+									.getConfiguration().getString(MarketplacecommerceservicesConstants.RETURNURLLUX)
+									: "No juspayReturnUrl is defined in local properties";
+
+						}
+						else
+						{
+							juspayReturnUrl = !getConfigurationService().getConfiguration()
+									.getString(MarketplacecommerceservicesConstants.RETURNURL).isEmpty() ? getConfigurationService()
+									.getConfiguration().getString(MarketplacecommerceservicesConstants.RETURNURL)
+									: "No juspayReturnUrl is defined in local properties";
+						}
 
 						juspayOrderId = mplPaymentFacade.createJuspayOrder(cart, null, firstName, lastName, addressLine1, addressLine2,
 								addressLine3, country, state, city, pincode, cardSaved + MarketplacewebservicesConstants.STRINGSEPARATOR

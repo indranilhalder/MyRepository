@@ -1,0 +1,37 @@
+#
+# Import the Solr configuration for the store
+#
+$prefix=lux
+$productCatalog=$prefixProductCatalog
+$catalogVersions=catalogVersions(catalog(id),version);
+$serverConfigName=$prefixSolrServerConfig
+$indexConfigName=$prefixSolrIndexConfig
+$searchConfigName=$prefixPageSize
+$facetSearchConfigName=$prefixIndex
+$facetSearchConfigDescription=Luxury Solr Index
+$searchIndexNamePrefix=$prefix
+$solrIndexedType=$prefixProductType
+$indexBaseSite=$prefix
+$indexLanguages=en,de
+$indexCurrencies=INR
+
+# Language
+$lang=en
+
+UPDATE SolrIndexedProperty;solrIndexedType(identifier)[unique=true];name[unique=true];displayName[lang=$lang]
+ ;$solrIndexedType		   ;colour							   ;"Colour"
+ ;$solrIndexedType		   ;Occasion						   ;"Occasion"
+ ;$solrIndexedType		   ;gender							   ;"Ideal For"
+ ;$solrIndexedType		   ;multipack						   ;"Show Multi-Packs Only"
+ ;$solrIndexedType		   ;materialType					   ;"Material"
+ ;$solrIndexedType		   ;hatcaptype						   ;"Hat/Cap Type"
+ ;$solrIndexedType		   ;strapmaterial					   ;"Strap Material"
+ ;$solrIndexedType		   ;straptype						   ;"Strap Type"
+ ;$solrIndexedType		   ;features						   ;"Features"
+ ;$solrIndexedType		   ;dailshape						   ;"Dial Shape"
+ ;$solrIndexedType		   ;strapcolor						   ;"Strap Color"
+ ;$solrIndexedType		   ;beltSize						   ;"Belt Size"
+ ;$solrIndexedType         ;patternWatches	         	       ;"Pattern"
+ ;$solrIndexedType         ;dialColourWatches	         	   ;"Dial Colour"
+ ;$solrIndexedType         ;typeWatches	         	   		   ;"Type"
+ ;$solrIndexedType         ;hairAccessoryType	         	   ;"Type"
