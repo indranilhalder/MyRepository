@@ -5212,6 +5212,9 @@ public class AccountPageController extends AbstractMplSearchPageController
 			final List<WishlistProductData> wpDataList = new ArrayList<WishlistProductData>();
 			Boolean isDelisted = Boolean.FALSE;
 			boolean luxProduct = false;
+
+			Integer available = 0;
+
 			if (null != particularWishlist && null != particularWishlist.getEntries() && !particularWishlist.getEntries().isEmpty())
 			{
 				final List<Wishlist2EntryModel> entryModels = particularWishlist.getEntries();
@@ -5288,6 +5291,7 @@ public class AccountPageController extends AbstractMplSearchPageController
 									ProductOption.STOCK, ProductOption.SELLER));
 
 							final BuyBoxModel buyboxmodel = buyBoxFacade.getpriceForUssid(entryModel.getUssid());
+
 							double price = 0.0;
 							if (null != buyboxmodel)
 							{
@@ -5317,20 +5321,42 @@ public class AccountPageController extends AbstractMplSearchPageController
 								final List<SellerInformationData> sellerDatas = productData1.getSeller();
 								for (final SellerInformationData sellerData : sellerDatas)
 								{
-									if (sellerData.getUssid().equals(entryModel.getUssid()))
+									if (MarketplacecommerceservicesConstants.FINEJEWELLERY
+											.equalsIgnoreCase(productData1.getRootCategory()))
 									{
-										wishlistProductData.setSellerInfoData(sellerData);
-
-										if (sellerData.getAvailableStock() <= 0)
+										if (buyboxmodel.getPUSSID().equals(sellerData.getUssid()))
 										{
-											wishlistProductData.setIsOutOfStock(ModelAttributetConstants.Y_CAPS_VAL);
-										}
-										else
-										{
-											wishlistProductData.setIsOutOfStock(ModelAttributetConstants.N_CAPS_VAL);
-										}
+											wishlistProductData.setSellerInfoData(sellerData);
 
-										break;
+											if (buyboxmodel.getAvailable() <= 0)
+											{
+												wishlistProductData.setIsOutOfStock(ModelAttributetConstants.Y_CAPS_VAL);
+											}
+											else
+											{
+												wishlistProductData.setIsOutOfStock(ModelAttributetConstants.N_CAPS_VAL);
+											}
+											available = buyboxmodel.getAvailable();
+											break;
+										}
+									}
+									else
+									{
+										if (sellerData.getUssid().equals(entryModel.getUssid()))
+										{
+											wishlistProductData.setSellerInfoData(sellerData);
+
+											if (sellerData.getAvailableStock() <= 0)
+											{
+												wishlistProductData.setIsOutOfStock(ModelAttributetConstants.Y_CAPS_VAL);
+											}
+											else
+											{
+												wishlistProductData.setIsOutOfStock(ModelAttributetConstants.N_CAPS_VAL);
+											}
+
+											break;
+										}
 									}
 								}
 								wishlistProductData.setWishlistAddedDate(simpleDateFormat.format(entryModel.getAddedDate()));
@@ -5357,6 +5383,8 @@ public class AccountPageController extends AbstractMplSearchPageController
 
 			}
 			sessionService.setAttribute(ModelAttributetConstants.MY_WISHLIST_FLAG, ModelAttributetConstants.Y_CAPS_VAL);
+
+			model.addAttribute(ModelAttributetConstants.BUYBOX_AVAILABLE, available);
 
 			model.addAttribute(ModelAttributetConstants.IS_DELISTED, isDelisted);
 			model.addAttribute(ModelAttributetConstants.WISHLIST_SIZE, pageSizeInWl);
