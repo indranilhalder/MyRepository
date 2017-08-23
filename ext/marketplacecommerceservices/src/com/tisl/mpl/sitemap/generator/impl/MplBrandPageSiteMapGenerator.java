@@ -337,6 +337,7 @@ public class MplBrandPageSiteMapGenerator extends AbstractSiteMapGenerator<Custo
 					+ File.separator + "brandOriginal.txt");
 			for (final String relUrl : brandLists)
 			{
+				final List<CustomPageData> mainSiteMapUrlListInitial = new ArrayList<CustomPageData>();
 				LOG.debug("brandurl" + relUrl);
 				//final String relUrl = StringEscapeUtils.escapeXml(getCategoryModelUrlResolver().resolve(categoryModel));
 				final CustomPageData data = new CustomPageData();
@@ -352,9 +353,15 @@ public class MplBrandPageSiteMapGenerator extends AbstractSiteMapGenerator<Custo
 					data.setPriority(siteMapPage.getPriority().toString());
 				}
 				mainSiteMapUrlList.add(data);
+				mainSiteMapUrlListInitial.addAll(mainSiteMapUrlList);
+				mainSiteMapUrlListFinal.addAll(mainSiteMapUrlListInitial);
+				for (final CustomPageData cpd : mainSiteMapUrlListFinal)
+				{
+					LOG.debug("+++IN LOOP+++" + cpd.getUrl());
+				}
 				//}
 			}
-			mainSiteMapUrlListFinal.addAll(mainSiteMapUrlList);
+
 			fw.flush();
 			fw.close();
 		}
