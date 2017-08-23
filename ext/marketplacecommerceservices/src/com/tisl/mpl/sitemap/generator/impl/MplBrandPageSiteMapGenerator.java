@@ -319,6 +319,7 @@ public class MplBrandPageSiteMapGenerator extends AbstractSiteMapGenerator<Custo
 	private List<CustomPageData> brandPageSiteMap(final CMSSiteModel siteModel, final List<CustomPageData> mainSiteMapUrlList,
 			final SiteMapPageModel siteMapPage, final List<String> brandLists)
 	{
+		final List<CustomPageData> mainSiteMapUrlListFinal = new ArrayList<CustomPageData>();
 		//final String query = getCategoryForSitemapQuery();
 
 		//final Map<String, Object> params = new HashMap<String, Object>();
@@ -329,6 +330,7 @@ public class MplBrandPageSiteMapGenerator extends AbstractSiteMapGenerator<Custo
 		try
 		{
 
+			//List<CustomPageData> mainSiteMapUrlListFinal = new ArrayList<CustomPageData>();
 			final FileWriter fw = new FileWriter(configurationService.getConfiguration().getString(
 					MarketplacecommerceservicesConstants.SITEMAP_FILE_LOCATION_BRAND)
 					+ File.separator + "brandOriginal.txt");
@@ -351,6 +353,7 @@ public class MplBrandPageSiteMapGenerator extends AbstractSiteMapGenerator<Custo
 				mainSiteMapUrlList.add(data);
 				//}
 			}
+			mainSiteMapUrlListFinal.addAll(mainSiteMapUrlList);
 			fw.flush();
 			fw.close();
 		}
@@ -358,7 +361,7 @@ public class MplBrandPageSiteMapGenerator extends AbstractSiteMapGenerator<Custo
 		{
 			LOG.error("Error while writing" + ex);
 		}
-		return mainSiteMapUrlList;
+		return mainSiteMapUrlListFinal;
 	}
 
 	/**
