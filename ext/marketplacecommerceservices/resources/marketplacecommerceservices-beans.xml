@@ -848,10 +848,53 @@
  		<property name="layout" type="com.tisl.mpl.core.enums.LayoutStructure" />
  	</bean>
 	<!-- TPR-1072 END -->
+	
 	<!-- //PRICE BREAKUP STARTS:TPR-3752- -->
 	<bean class="com.tisl.mpl.data.PriceBreakupData">
 	<property name="name" type="String" />
 	<property name="weightRateList" type="java.util.List&lt;String>" />
 	<property name="price" type="de.hybris.platform.commercefacades.product.data.PriceData" />
 	</bean>
+	
+	<!-- TPR-5667 : Samsung order response | start -->
+	<bean class="com.tisl.mpl.samsung.wsdto.ChargeWsDTO">
+    	<property name="charges" type="String"/>
+    	<property name="cost" type="Double"/>
+    </bean>
+    <bean class="com.tisl.mpl.samsung.wsdto.DeliveryModeWsDTO">
+    	<property name="code" type="String"/>
+    	<property name="deliveryCost" type="Double"/>
+    	<property name="desc" type="String"/>
+    	<property name="name" type="String"/>
+    </bean>
+	<bean class="com.tisl.mpl.samsung.wsdto.ProductWsDTO">
+    	<property name="USSID" type="String"/>
+    	<property name="price" type="Double"/>
+    	<property name="promoDiscount" type="Double"/>
+    	<property name="couponDiscoun" type="Double"/>
+    	<property name="apportionedPrice" type="Double"/>
+    	<property name="productBrand" type="String"/>
+    	<property name="productCategory" type="String"/>
+    	<property name="productDescription" type="String"/>
+    	<property name="productName" type="String"/>
+    	<property name="listingId" type="String"/>
+    	<property name="quantity" type="Integer"/>
+    	<property name="Charges" type="com.tisl.mpl.samsung.wsdto.ChargeWsDTO"/>
+    	<property name="rootCategory" type="String"/>
+    	<property name="selectedDeliveryMode" type="com.tisl.mpl.samsung.wsdto.DeliveryModeWsDTO"/>
+    	<property name="sellerID" type="String"/>
+    	<property name="sellerName" type="String"/>
+    </bean>
+	<bean class="com.tisl.mpl.samsung.wsdto.OrderListWsDTO">
+    	<property name="orderId" type="String"/>
+    	<property name="products" type="java.util.List&lt;com.tisl.mpl.samsung.wsdto.ProductWsDTO>"/>
+    	<property name="status" type="String"/>
+    	<property name="subTotal" type="Double"/>
+    </bean>
+    <bean class="com.tisl.mpl.samsung.wsdto.OrderResponseWsDTO">
+    	<property name="ORN" type="String"/>
+    	<property name="placedDate" type="String"/>
+    	<property name="Order" type="java.util.List&lt;com.tisl.mpl.samsung.wsdto.OrderListWsDTO>"/>
+    </bean>
+    <!-- TPR-5667 : Samsung order response | end -->
 </beans>

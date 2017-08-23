@@ -5,6 +5,7 @@
 <%@ taglib prefix="ycommerce" uri="http://hybris.com/tld/ycommercetags"%>
 <%@ taglib prefix="format" tagdir="/WEB-INF/tags/shared/format"%>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
 
 <!-- Accordtion Panel 1 For Select Reason For Return -->
 				<p class="return-title">Return</p>
@@ -29,7 +30,35 @@
 										<span class="productName">${entryReturn.product.name}</span>
 										<%-- <span><spring:theme code="text.order.returns.quantitylable"/> ${entryReturn.quantity}</span><br/> --%>
 												<c:if test="${not empty entryReturn.product.size}">
-				 									<span class="size"><spring:theme code="text.order.returns.sizelable"/>${entryReturn.product.size}</span>
+				 									<%-- <span class="size"><spring:theme code="text.order.returns.sizelable"/>${entryReturn.product.size}</span> --%>
+				 									<c:choose>
+														<c:when test="${(not empty entryReturn.product.rootCategory) && (entryReturn.product.rootCategory == 'FineJewellery' || entryReturn.product.rootCategory == 'FashionJewellery') }">
+															<spring:theme code="product.variant.size.noSize" var="noSize"/>
+															<input type="hidden" id="productCategoryTypeReturn" value="${entryReturn.product.rootCategory}"/>
+															<c:if test="${entryReturn.product.size ne noSize}">
+																<spring:eval expression="T(de.hybris.platform.util.Config).getParameter('mpl.jewellery.category')" var="lengthVariant"/>
+																<c:set var = "categoryListArray" value = "${fn:split(lengthVariant, ',')}" />
+																<c:forEach items="${entryReturn.product.categories}" var="categories">
+																	<c:forEach items = "${categoryListArray}" var="lengthVariantArray">
+																		<c:if test="${categories.code eq lengthVariantArray}">
+																			<c:set var="lengthSize" value="true"/>
+																		</c:if> 
+																	</c:forEach>
+																</c:forEach>	  
+																<c:choose>
+																	<c:when test="${true eq lengthSize}">
+																	  <span class="size"><spring:theme code="product.variant.length"/>${entryReturn.product.size}</span>
+																	</c:when>
+																	<c:otherwise>
+																	  <span class="size"><spring:theme code="text.order.returns.sizelable"/>${entryReturn.product.size}</span>
+																	</c:otherwise>
+																</c:choose>
+															</c:if>
+														</c:when>
+														<c:otherwise>
+															<span class="size"><spring:theme code="text.order.returns.sizelable"/>${entryReturn.product.size}</span>
+														</c:otherwise>
+													</c:choose>
 												</c:if>
 												<c:if test="${not empty entryReturn.product.colour}">
 													<span class="productName"><spring:theme code="text.order.returns.colourlable"/> ${entryReturn.product.colour}</span>

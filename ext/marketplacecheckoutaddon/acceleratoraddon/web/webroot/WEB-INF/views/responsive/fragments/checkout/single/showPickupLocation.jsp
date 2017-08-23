@@ -4,15 +4,7 @@
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
 <%@ taglib prefix="theme" tagdir="/WEB-INF/tags/shared/theme"%>
 
-<%--  <c:set var = "addressFlag" scope="session" value = "${addressFlag}" />  --%>
 
-
-<!-- <script
-	src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
-<script
-	src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
-<link rel="stylesheet"
-	href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css"> -->
 <div class="checkout-content cart checkout wrapper">
 <c:if test="${storesAvailable eq true}">
 	<script>
@@ -21,37 +13,7 @@
 						showPromotionTag();
 					});
 					</script>
-	<script type="text/javascript">
 
-/* 	function openPopForAdddPosToCartEntry(ussId,posName){
-		//var productCode = $("#product").val();
-		//alert(ussId+"@@@"+posName);
-		$(".continue_btn, .continue_btn_a").css("pointer-events", "none");
-		$(".continue_btn, .continue_btn_a").css("cursor", "default"); 
-		$(".continue_btn, .continue_btn_a").attr("data-id", $(".continue_btn, .continue_btn_a").attr("href"));
-		$(".continue_btn, .continue_btn_a").removeAttr("href");
-		var requiredUrl = ACC.config.encodedContextPath +"/checkout/multi/delivery-method/addPosToOrderEntry";
-		var dataString = 'ussId=' + ussId+ '&posName=' + posName;
-			$.ajax({
-			url : requiredUrl,
-			data : dataString,
-			success : function(data) {
-				if(ACC.singlePageCheckout.getIsResponsive())
-				{
-					ACC.singlePageCheckout.getPickUpPersonPopUpMobile();
-					//$("#singlePagePickupPersonPopup").modal('show');
-				}
-				$(".continue_btn, .continue_btn_a").css("pointer-events", "all");
-				$(".continue_btn, .continue_btn_a").css("cursor", "pointer"); 
-				$(".continue_btn, .continue_btn_a").attr("href", $(".continue_btn, .continue_btn_a").attr("data-id"));
-			},
-			error : function(xhr, status, error) {
-				alert("Oops something went wrong!!!");	
-			}
-		});
-	}
- */	
-</script>
 	<div class="checkout-shipping-items  left-block left-block-width">
 	<span class="cnc_arrow"></span>
 		<div class="cnc_title_search">
@@ -80,10 +42,12 @@
 		<%-- <div class="productCount">(for ${cnccount} out of ${delModeCount + cnccount}
 			items in your bag)</div> --%>
 
+		<!-- UF-281/281:starts -->
 		<div id="cncUlDiv${entryNumber}">
 		<%@include
 				file="/WEB-INF/views/addons/marketplacecheckoutaddon/responsive/fragments/checkout/single/showPickupLocationFragments.jsp"%>
 		</div>
+		<!-- UF-281/281:ends -->
 		<!-- End of main UL where every thing happens -->
 		<!-- Start:Below span is used to display error if no stores are selected -->
 		<span class="${entryNumber}_select_store select_store error_txt"
@@ -100,16 +64,13 @@
 	</div>
 </c:if>
 <c:if test="${storesAvailable eq false}">
+	<!-- UF-281/281 -->
 	<span><spring:theme code="checkout.single.nostores.select.another"/></span>
 </c:if>
 </div>
 <c:if test="${storesAvailable eq true}">
 <script>
 $(document).ready(function() {
-/* $(".txt${entryNumber}").click(function(){
-		//$(".txt${entryNumber}").hide();
-		$(".input${entryNumber}").show();
-	});  */
 	$(".enter-pincode-block").hide();
 	$(".txt${entryNumber}").click(function(e){
 		e.stopPropagation();
@@ -176,6 +137,7 @@ $(document).ready(function() {
 			    	  cache: false,
 			          data : dataString${entryNumber},   
 			          success : function(data) {
+			        	  //UF-281/281:starts
 			        	 $("#cncUlDiv${entryNumber}").html(data);
 			        	 $("#cncChangedPincode${entryNumber}").html($(".changepin${entryNumber}").val());
 			        	 var cnc_arrow_left, cnc_top;
@@ -215,17 +177,20 @@ $(document).ready(function() {
 			            				stagePadding: 36,
 			            				slideBy: 1,
 			            				margin: 0,
+			            				mouseDrag:($(".cnc_item .removeColor${entryNumber}").length <= 1)?false:true,
 			            				nav: ($(".cnc_item .removeColor${entryNumber}").length <= 1)?false:true,
 			            			},
 			            			// breakpoint from 768 up
 			            			768 : {
 			            				items:2,
 			            				slideBy: 2,
+			            				mouseDrag:($(".cnc_item .removeColor${entryNumber}").length <= 2)?false:true,
 			            				nav: ($(".cnc_item .removeColor${entryNumber}").length <= 2)?false:true,
 			            			},
 			            			// breakpoint from 1280 up
 			            			1280 : {
 			            				items:3,
+			            				mouseDrag:($(".cnc_item .removeColor${entryNumber}").length <= 3)?false:true,
 			            				nav: ($(".cnc_item .removeColor${entryNumber}").length <= 3)?false:true,
 			            			}			
 			            		},
@@ -240,6 +205,7 @@ $(document).ready(function() {
 			        		$( '.cnc_carousel input.radio_btn' ).on( 'click change', function(event) {
 			        			event.stopPropagation();
 			        		});
+			        		//UF-281/281:ends
 			          },
 			          error : function(xhr, data, error) {
 			        	  console.log("Error in processing Ajax. Error Message : " +error+" Data : " +data)

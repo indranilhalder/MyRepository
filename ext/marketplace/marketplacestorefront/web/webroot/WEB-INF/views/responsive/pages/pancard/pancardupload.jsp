@@ -1,5 +1,6 @@
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <html>
 <head>
 <link rel="stylesheet" type="text/css" media="all" href="${themeResourcePath}/css/style.css"/>
@@ -7,74 +8,68 @@
 <script type="text/javascript">
 $(document).ready(function() {
 	var regpan = /^([a-zA-Z]){5}([0-9]){4}([a-zA-Z]){1}?$/;
+	var panv = true;
 	
 	 $("#pancard_No").keyup(function(){
 		
-		/* if($(this).val().length < 10) */
 		if(regpan.test($(this).val()) == false)
 		{
+			panv = fase;
 			$(".pancard-img-msg").show();
 		}else{
+			panv = true;
 			$(".pancard-img-msg").hide();
 		}
 	}); 	
 	
 	$("#btn_PanDetails").on("click", function(e){
 		
-		<%--$("#uploadPanDetails").submit();--%>
 		if(regpan.test($("#pancard_No").val())==false)
 		{
+			panv = false;
 			$(".pancard-img-msg").show();
 		}else{
+			panv = true;
 			$(".pancard-img-msg").hide();
 		}
-		
-		
-		
-		
+	
 		var has_selected_file = $('input[type=file]').filter(function(){
 	        return $.trim(this.value) != ''
 	    }).length  > 0 ;
 
-		
-	    if (has_selected_file) {
+	    if ((has_selected_file) && (panv)) {
 	    	$(".pancard-img-msg").hide();
 	    } else {
 	    	$(".pancard-img-msg").show();
 	    }
 
+	    var status = '<c:out value="${status}"/>';
+	    var orderId = '<c:out value="${orderreferancenumber}"/>';
+	    $('#pancardMsg').hide();
 		
-		
-		
-		
-		
-		
-		
-		
-		
-		/* if(!$('#pancard_Img').val()){
-			$(".pancard-img-msg").show();
-		}else{
-			$(".pancard-img-msg").hide();
-		} 
-		 */
-		
-		
-		 /* if((regpan.test($("#pancard_No").val())==false) && ($('#pancard_Img').val() != true)) */
 		 if((regpan.test($("#pancard_No").val())==false))
 			{
 				e.preventDefault();
 				return false;
-			}else{
-				if (has_selected_file) {
+			}
+		 else if(status=="PENDING_FOR_VERIFICATION"){
+			 e.preventDefault();
+			 $('.pan-card-fields').html("<div class = 'pan-details-pending' id = 'pancardMsg'>PanDetails is already uploaded and in "+status+" state</div>");
+			 return false;
+		 }
+		 else if(status=="APPROVED"){
+			 e.preventDefault();
+			 $('.pan-card-fields').html("<div class = 'pan-details-approved' id = 'pancardMsg'>PanDetails is already "+status+"</div>");
+			 return false;
+		 }
+		 else{
+			if (has_selected_file) {
 					$("#uploadPanDetails").submit();
 			    }else{
-				e.preventDefault();
-				return false;
+					e.preventDefault();
+					return false;
 			    }
 			}
-		
-		
 	})
 	
 	$('#labelBrowseBtn').click(function () {
@@ -86,74 +81,20 @@ $(document).ready(function() {
 	});
 	
 	
+	
 });
 </script>
 </head>
 
 <body>
-	<%-- <h2>PAN CARD DETAILS FOR ORDER ID:${orderreferancenumber} </h2> --%>
-	
-	<%-- <form:form method="POST" action="/pancard/pancardupload" enctype="multipart/form-data" id="uploadPanDetails" > --%>
-       <!--<table width="50%" border="0" cellspacing="2" cellpadding="2">
-       
-		  <input type="hidden" name="orderreferancenumber" value="${orderreferancenumber}" />
-        <input type="hidden" name="Customer_name" value="${customername}">
-        
-        
-         <tr>
-          <td>OrderId : </td>
-          <td><Strong>${orderreferancenumber}</Strong></td>
-        </tr>
-
-         <tr>
-          <td>Name : </td>
-          <td><Strong>${customername}</Strong></td>
-        </tr>
- 
-         <tr>
-          <td>Pancard Number: </td>
-          <td>
-          		<input type="text" name="Pancard_number" id="pancard_No"><br>
-          		<span class="pancard-msg">Please enter correct pancard number.</span>          
-          </td>
-        </tr> 
-              
-         <tr>
-          	<td>Please select a file to upload : </td>
-            <td>
-          		<input  type="file" name="file" id="pancard_Img"><br>
-          		<span class="pancard-img-msg">Please upload Pan Card image.</span>
-			</td>
-        </tr>
-       
-		<tr>
-	      <td>&nbsp;</td>
-	      <td><input type="submit" value="Upload" id="btn_PanDetails"  /></td>
-		</tr>
-	</table>-->
-
-	<%-- </form:form> --%>
-	
-	
-	
 	<div class="wrapper-block pan-card-block">
-		<%-- <div class="sureheader">
-			<div class="sure-head clearfix">
-				<div class="logo-left">
-					<img class="logo1" src="${commonResourcePath}/images/logo_camel.png" alt="SureThing">
-					<img class="logo2" src="${commonResourcePath}/images/surething.png" alt="SureThing">
-				</div>
-				<div class="logo-right">
-					<img src="${commonResourcePath}/images/tataclicq-logo.png" alt="TATA CLiQ">
-				</div>				
-			</div>
-		</div> --%>
 		<section>
 			<div class="pan-detail-sec">
 				<h2 class="pan-heading">PAN Card Details</h2>
 				<p class="lead-text">Your order is just one step away!</p>
+				
 				<div class="form-section">
-					<form:form method="POST" action="/pancard/pancardupload" enctype="multipart/form-data" id="uploadPanDetails" >
+					<form:form method="POST" action="/pancard/pancardupload" enctype="multipart/form-data" id="uploadPanDetails">
 						<input type="hidden" name="orderreferancenumber" value="${orderreferancenumber}" />
         				<input type="hidden" name="Customer_name" value="${customername}">
         				 <input type="hidden" name="transactionid" value="${transactionid}">
@@ -166,6 +107,11 @@ $(document).ready(function() {
 							<div class="pan-label-value disable-color">${customername}</div>
 						</div>
 						<div class="pan-card-fields">
+						
+						<c:if test="${not empty failure}">
+							<div class = "pan-failure-msg"><span class = "pan-failure-span">${failure}</span></div>
+						</c:if>
+						
 						<div class="panfield-wrapper clearfix pan-num">
 							<div class="pan-label">PAN Card Number * <br>
 								<span class="pancard-img-msg">Please provide the PAN Card Number of the person whose name appears on the invoice</span>
@@ -187,7 +133,7 @@ $(document).ready(function() {
 						</div>
 						<div class="panfield-wrapper btn-wrapper clearfix">
 							<div class="pan-label-value">
-								<a href="javascript:;" class="pan-submit-btn" title="SUBMIT" id="btn_PanDetails" >SUBMIT</a>
+								<a href="javascript:;" class="pan-submit-btn" title="SUBMIT" id="btn_PanDetails">SUBMIT</a>
 								<a href="javascript:;" class="pan-cancel-btn" title="CANCEL">CANCEL</a>
 							</div>
 						</div>

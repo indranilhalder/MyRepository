@@ -183,11 +183,11 @@
 							<div class="thumb product-img">
 								<c:choose>
 									<c:when test="${fn:toLowerCase(entry.product.luxIndicator)=='luxury'}">
-										<a href="${productUrl}"><product:productPrimaryImage
+										<a href="${productUrl}"><product:productPrimaryImage lazyLoad="false"
 												product="${entry.product}" format="luxuryCartIcon" /></a>
 									</c:when>
 									<c:otherwise>
-										<a href="${productUrl}"><product:productPrimaryImage
+										<a href="${productUrl}"><product:productPrimaryImage lazyLoad="false"
 												product="${entry.product}" format="thumbnail" /></a>
 									</c:otherwise>
 								</c:choose>
@@ -207,17 +207,18 @@
 												<c:set var="lineItemIndex" value="${lineItemIndex + 1}" scope="page"></c:set>
 													<span class="delslot_timeslot">	
 														<input type="radio" class="" name="date${scheduleIndex}" id="date${scheduleIndex}${lineItemIndex}" style="display:block;" data-ussid="${entry.selectedUssid}" data-deliveryCost="${mplconfigModel}" data-deliverySlotDate="${dateSlots.key}"  data-deliverySlotTime="${timeSlots}" data-submitted="false" value="" onchange="updateFormInputElements(this,'${entry.entryNumber}');">
-														<label class="delslot_radio" for="date${scheduleIndex}${lineItemIndex}"></label>
-														<fmt:formatDate value="${parseddeliveryDate}" pattern="d  MMMM"/>
-														<span class="dateTime1">&nbsp;(${fn:replace(timeSlots, 'TO', '-')})</span>
-														<c:choose>
-															<c:when test="${empty mplconfigModel}">
-																<span class="greyText">(Free)</span>
-															</c:when>
-															<c:otherwise>
-																<span class="del_charge greyText">(${currencySymbol} ${mplconfigModel})</span>
-															</c:otherwise>
-														</c:choose>
+														<label class="delslot_radio" for="date${scheduleIndex}${lineItemIndex}">
+															<fmt:formatDate value="${parseddeliveryDate}" pattern="d  MMMM"/>
+															<span class="dateTime1">&nbsp;(${fn:replace(timeSlots, 'TO', '-')})</span>
+															<c:choose>
+																<c:when test="${empty mplconfigModel}">
+																	<span class="greyText">(Free)</span>
+																</c:when>
+																<c:otherwise>
+																	<span class="del_charge greyText">(${currencySymbol} ${mplconfigModel})</span>
+																</c:otherwise>
+															</c:choose>
+														</label>
 													</span>
 												</c:forEach>
 											</div>

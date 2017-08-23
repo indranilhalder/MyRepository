@@ -253,7 +253,7 @@ tr.d0 td {
 				<!-- </a> -->
 				<!-- //TPR-3752 Jewel Feature Attribute Added -->
 				<c:choose>
-					<c:when test="${product.rootCategory=='FineJewellery'}">
+					<c:when test="${product.rootCategory=='FineJewellery' || product.rootCategory=='FashionJewellery' }">
 						<div class="product-desc">
 							<span class="key-label">
 							 <c:forEach var="classification" items="${mapConfigurableAttributes}">
@@ -404,7 +404,7 @@ tr.d0 td {
 			</div> --%>
 
             <!-- BLOCK ADDED FOR JEWELLERY CERTIFICATION STARTS HERE-->
-            <c:if test="${product.rootCategory =='FineJewellery'}">
+            <c:if test="${product.rootCategory =='FineJewellery' && not empty certificationfeatureValueDataList}">
              <div class="certified-by"> 
               <h2>Certified by:</h2>
               <ul>
@@ -415,10 +415,6 @@ tr.d0 td {
               <c:if test="${certification.value=='AGL'}">
                  <%-- <li class="jwlryCerti"><img src="${commonResourcePath}/images/Visa.png" alt="certified by"></li> --%>
                  <li class="jwlryCertiAGL"></li>
-             </c:if>
-             <c:if test="${certification.value=='Tanishq'}">  
-                <%--  <img src="${commonResourcePath}/images/Master_Card.png" alt="certified by">   --%>
-                <li class="jwlryCertiTanishq"></li>
              </c:if>
              <c:if test="${certification.value=='AGS'}">
                 <%--  <img src="${commonResourcePath}/images/American_Express.png" alt="certified by"> --%>
@@ -432,7 +428,62 @@ tr.d0 td {
                 <%--  <img src="${commonResourcePath}/images/Discover.png" alt="certified by">  --%>
                 <li class="jwlryCertiHRD"></li>  
             </c:if>
-            </li>     
+            <c:if test="${certification.value=='EGL'}">  
+                <%--  <img src="${commonResourcePath}/images/Discover.png" alt="certified by">  --%>
+                <li class="jwlryCertiEGL"></li>  
+            </c:if>
+            <c:if test="${certification.value=='GII'}">  
+                <%--  <img src="${commonResourcePath}/images/Discover.png" alt="certified by">  --%>
+                <li class="jwlryCertiGII"></li>  
+            </c:if>
+            <c:if test="${certification.value=='Gubelin'}">  
+                <%--  <img src="${commonResourcePath}/images/Discover.png" alt="certified by">  --%>
+                <li class="jwlryCertiGubelin"></li>  
+            </c:if>
+            <c:if test="${certification.value=='IDL'}">  
+                <%--  <img src="${commonResourcePath}/images/Discover.png" alt="certified by">  --%>
+                <li class="jwlryCertiIDL"></li>  
+            </c:if>
+            <c:if test="${certification.value=='Tanishq'}">  
+                <%--  <img src="${commonResourcePath}/images/Master_Card.png" alt="certified by">   --%>
+                <li class="jwlryCertiTanishq"></li>
+             </c:if>
+             <c:if test="${certification.value=='IGI'}">  
+                <%--  <img src="${commonResourcePath}/images/Discover.png" alt="certified by">  --%>
+                <li class="jwlryCertiIGI"></li>  
+            </c:if>
+             <c:if test="${certification.value=='BIS'}">  
+                <%--  <img src="${commonResourcePath}/images/Discover.png" alt="certified by">  --%>
+                <li class="jwlryCertiBIS"></li>  
+            </c:if>
+            <c:if test="${certification.value=='SGL'}">  
+                <%--  <img src="${commonResourcePath}/images/Discover.png" alt="certified by">  --%>
+                <li class="jwlryCertiSGL"></li>  
+            </c:if>
+             <c:if test="${certification.value=='GIA'}">  
+                <%--  <img src="${commonResourcePath}/images/Discover.png" alt="certified by">  --%>
+                <li class="jwlryCertiGIA"></li>  
+            </c:if>
+            <c:if test="${certification.value=='PGI'}">  
+                <%--  <img src="${commonResourcePath}/images/Discover.png" alt="certified by">  --%>
+                <li class="jwlryCertiPGI"></li>  
+            </c:if>
+            <c:if test="${certification.value=='GSL'}">  
+                <%--  <img src="${commonResourcePath}/images/Discover.png" alt="certified by">  --%>
+                <li class="jwlryCertiGSL"></li>  
+            </c:if>
+            <c:if test="${certification.value=='GSI'}">  
+                <%--  <img src="${commonResourcePath}/images/Discover.png" alt="certified by">  --%>
+                <li class="jwlryCertiGSI"></li>  
+            </c:if>
+            <c:if test="${certification.value=='IGL'}">  
+                <%--  <img src="${commonResourcePath}/images/Discover.png" alt="certified by">  --%>
+                <li class="jwlryCertiIGL"></li>  
+            </c:if>
+            <c:if test="${certification.value=='DGLA'}">  
+                <%--  <img src="${commonResourcePath}/images/Discover.png" alt="certified by">  --%>
+                <li class="jwlryCertiDGLA"></li>  
+            </c:if>
            </c:forEach>
          </ul>
       </div>
@@ -547,6 +598,9 @@ tr.d0 td {
             <!-- BLOCK ADDED FOR JEWELLERY CERTIFICATION ENDS HERE--> --%>
           
 		</div>
+		<c:if test="${product.rootCategory=='FineJewellery'or product.rootCategory=='FashionJewellery' }">
+		 <div class="jewellery-wrapper">
+		 </c:if>
 		 <div class="tabs-block ${product.rootCategory}">
 				<product:productPageTabs />
 			</div>
@@ -566,6 +620,9 @@ tr.d0 td {
 		<c:if test="${product.rootCategory=='FineJewellery'or product.rootCategory=='FashionJewellery' }">
 			<product:productDetailsClassifications product="${product}" />
 			</c:if>
+			<c:if test="${product.rootCategory=='FineJewellery'or product.rootCategory=='FashionJewellery' }">
+		 </div>
+		 </c:if>	
 	</div>
 	
 	

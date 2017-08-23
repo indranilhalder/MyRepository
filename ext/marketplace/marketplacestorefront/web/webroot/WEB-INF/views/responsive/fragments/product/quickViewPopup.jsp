@@ -411,19 +411,9 @@ display:none;
     <div class="main-image">
 	<a onClick="openPop_quick();" class="wishlist-icon-qv normal"></a>
 	<a onClick="openPop_quick();" class="wishlist-icon-qv zoom-qv" style="display: none;"></a>
-	<c:choose>
-	<c:when test="${product.rootCategory=='FineJewellery'}">
-		<a href="${productUrl}"> <product:productPrimaryImage
-				product="${product}" format="fineJewelproductquickview" />
-		</a>
-	</c:when>
-	<c:otherwise>
- 		<a href="${productUrl}"> <product:productPrimaryImage lazyLoad="false"
+	<a href="${productUrl}"> <product:productPrimaryImage lazyLoad="false"
 				product="${product}" format="product" />
-				</a>
-	</c:otherwise>
-	</c:choose>
-<!-- 		<div class="zoom" style="z-index:10000;">
+		</a><!-- 		<div class="zoom" style="z-index:10000;">
 		<a onClick="openPop_quick();" id="wishlist_quick" class="wishlist" data-toggle="popover" data-placement='bottom'></a>
 		</div> -->
 		 <%-- <c:if test="${isCodEligible=='Y'}">
@@ -521,7 +511,7 @@ display:none;
     <h3 class="product-name"><a href="${productUrl}">${product.productTitle}</a></h3>
     
     <!-- //TPR-3752 Jewel Heading Added -->
-			<c:choose>
+			<%-- <c:choose>
 					<c:when test="${product.rootCategory=='FineJewellery'}">
 						<div class="product-desc">
 							<span class="key-label">
@@ -530,14 +520,14 @@ display:none;
    						 		<c:forEach var="classValue" items="${classification.value }">
    						 			${classValue.key} &nbsp;&nbsp;${classValue.value}
    						 			 </c:forEach>
-   						 			 <a href="" class="more-link">More</a>
+   						 			<!--  <a href="" class="more-link">More</a> -->
 							  </c:if> 
 								</c:forEach>
 							</span> 
 						</div>
 					</c:when>
 				</c:choose>
-    
+     --%>
     
     <div class="price">
     
@@ -1156,8 +1146,4 @@ $(window).resize(function(){
 });
 
 /*add to wishlist st*/
-   
-    <!-- //TPR-3752 Jewel Heading Added -->
-var propQuick = '${mapConfigurableAttributes}';
-	propQuick =propQuick.replace(/[{}]/g, '');
 </script>

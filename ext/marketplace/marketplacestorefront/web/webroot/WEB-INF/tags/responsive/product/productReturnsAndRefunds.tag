@@ -8,19 +8,30 @@
 <%@ taglib prefix="product" tagdir="/WEB-INF/tags/responsive/product"%>
 <%@ taglib prefix="ycommerce" uri="http://hybris.com/tld/ycommercetags"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
+
+
+
 <!-- Details of style notes tab -->
-<div class="tab-details return-refnd-dtls"> <!-- /* CLASS return-refnd-dtls ADDED TO REDUCE WIDTH OF CONTAINER */ -->
+<div class="tab-details return-refnd-dtls">
+<!-- /* CLASS return-refnd-dtls ADDED TO REDUCE WIDTH OF CONTAINER */ -->
 	<%-- <ycommerce:testId code="productDetails_content_label"> --%>
-	<ycommerce:testId code="productTataPromise_content_label">
-		<ul>
-		<li><spring:theme code="know.more.first"/></li>
-		<!-- 	TISCR-414 - Chairmans demo feedback 10thMay CR -->
-		<li id="defaultKnowMoreLi"><spring:theme code="know.more.second"/>&nbsp;<span id="returnWindow">0</span>&nbsp;<spring:theme code="know.more.third"/></li>
-		<li id="lingerieKnowMoreLi1" style="display:none"><spring:theme code="know.more.second.lingerie1"/></li>
-		<li id="lingerieKnowMoreLi2" style="display:none"><spring:theme code="know.more.second.lingerie2"/></li>
-		<li><spring:theme code="know.more.fourth"/>&nbsp;${cliqCareNumber}&nbsp;<spring:theme code="know.more.fifth"/>&nbsp;${cliqCareMail}&nbsp;</li>
+	<ycommerce:testId code="productRetRef_content_label">
+	<ul>
+		<li id="defaultRetRefLi"><spring:theme code="know.more.second"/>&nbsp;<span id="returnWindowRefRet"></span>&nbsp;<spring:theme code="know.more.third"/></li>
+		<!-- Added for UF-98 -->
+		<li id="defaultRetRefLi4" style="display:none"><spring:theme code="know.more.sixth"/>&nbsp;</li>
+
+		<c:if test="${productCategoryType eq 'FineJewellery'}">
+			<c:if test="${not empty RetRefTab}">
+				<c:forEach items="${RetRefTab}" var="retRefTab">
+					<li>${retRefTab}</li>
+				</c:forEach>
+			</c:if>
+		</c:if>
 	</ul>
 	</ycommerce:testId>
+	
 </div> 
 
 <!-- PDP changes end -->

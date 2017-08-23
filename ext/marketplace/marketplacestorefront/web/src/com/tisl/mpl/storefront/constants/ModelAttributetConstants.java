@@ -225,6 +225,7 @@ public final class ModelAttributetConstants
 
 	//Added  for Fine Jewellery  :::  START
 	public static final String FINEJEWELLERY = "FineJewellery";
+	public static final String NOSIZE = "NO SIZE";
 	//Added  for Fine Jewellery  :::  END
 
 	//Added  for Fashion Jewellery  :::  START
@@ -294,6 +295,9 @@ public final class ModelAttributetConstants
 	public static final String SHARED_PATH = "SHARED_PATH";
 
 	public static final String VALID_TABS = "VALID_TABS";
+
+	//for return refund tab fine jewellery
+	public static final String RET_REF_TAB = "RetRefTab";
 
 	public static final String FRIENDS_INVITE_FORM = "friendsInviteForm";
 	public static final String J_FRIENDSEMAIL = "j_friendsEmail";

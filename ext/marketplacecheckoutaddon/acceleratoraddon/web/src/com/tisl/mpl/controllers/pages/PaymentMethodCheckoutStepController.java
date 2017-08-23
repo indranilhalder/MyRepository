@@ -54,6 +54,7 @@ import de.hybris.platform.voucher.model.RestrictionModel;
 import de.hybris.platform.voucher.model.VoucherModel;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.nio.charset.Charset;
 import java.security.InvalidKeyException;
 import java.security.MessageDigest;
@@ -92,6 +93,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import reactor.function.support.UriUtils;
+
 import com.hybris.oms.tata.model.MplBUCConfigurationsModel;
 import com.tisl.mpl.bin.facade.BinFacade;
 import com.tisl.mpl.checkout.steps.validation.impl.ResponsivePaymentCheckoutStepValidator;
@@ -122,6 +125,7 @@ import com.tisl.mpl.facade.checkout.MplCustomAddressFacade;
 import com.tisl.mpl.facade.config.MplConfigFacade;
 import com.tisl.mpl.facade.product.PriceBreakupFacade;
 import com.tisl.mpl.facades.account.register.NotificationFacade;
+import com.tisl.mpl.facades.constants.MarketplaceFacadesConstants;
 import com.tisl.mpl.facades.payment.MplPaymentFacade;
 import com.tisl.mpl.facades.product.data.MarketplaceDeliveryModeData;
 import com.tisl.mpl.juspay.response.ListCardsResponse;
@@ -411,7 +415,8 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 							{
 								selectPickupDetails = true;
 								model.addAttribute("selectPickupDetails", Boolean.valueOf(selectPickupDetails));
-								return MarketplacecommerceservicesConstants.REDIRECT + "/checkout/multi/delivery-method/check";
+								//return MarketplacecommerceservicesConstants.REDIRECT + "/checkout/multi/delivery-method/check";
+								return getCheckoutStep().previousStep();
 							}
 						}
 						if (!orderEntry.isGiveAway() && orderEntry.getSelectedUssid() != null)
@@ -2152,7 +2157,14 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 				//Existing code for cart
 				//getting the session cart
 				final CartModel cart = getCartService().getSessionCart();
-
+				//UF-281/282 Starts
+				if (!checkCODforCNC(cart))
+				{
+					LOG.debug("COD payment is not allwoed if an user selects CNC as payment mode");
+					final String requestQueryParam = UriUtils.encodeQuery("?msg=" + "codNotallowed" + "&type=error", UTF);
+					return FORWARD_PREFIX + "/checkout/single/message" + requestQueryParam;
+				}
+				//UF-281/282 End
 				//to check customer is blacklisted or not against customer id, email, phone no. & ip address
 				//TISEE-5555
 				model.addAttribute(MarketplacecheckoutaddonConstants.CELLNO, getMplPaymentFacade().fetchPhoneNumber(cart));
@@ -3145,6 +3157,13 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 				else
 				{
 					getSessionService().setAttribute(MarketplacecheckoutaddonConstants.PAYMENTMODEFORPROMOTION, paymentMode);
+					//INC144317480: Order Threshold Discount Promotion: Netbanking Payment Mode Restriction doesn't work
+					if (StringUtils.isNotEmpty(paymentMode)
+							&& paymentMode.equalsIgnoreCase(MarketplacecheckoutaddonConstants.NETBANKINGMODE))
+					{
+						getSessionService().setAttribute(MarketplacecheckoutaddonConstants.BANKFROMBIN, bankName);
+						//getSessionService().setAttribute(MarketplacecheckoutaddonConstants.BANKNAMEFORNETBANKING, bankName);
+					}
 
 					final Map<String, MplZoneDeliveryModeValueModel> freebieModelMap = new HashMap<String, MplZoneDeliveryModeValueModel>();
 					final Map<String, Long> freebieParentQtyMap = new HashMap<String, Long>();
@@ -3296,116 +3315,127 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 			}
 			else
 			{
-				//Code for orderModel TPR-629
-				if (null != bankName && !bankName.equalsIgnoreCase("null"))
+				//Added for INC144317089: Promotion is getting reapplied on order if user clicks on "back" button from order confirmation page.
+				if (!OrderStatus.PAYMENT_SUCCESSFUL.equals(orderModel.getStatus())
+						&& CollectionUtils.isEmpty(orderModel.getChildOrders()))
 				{
-					getMplPaymentFacade().setBankForSavedCard(bankName);
-				}
-
-				//TISPT-29
-				if (StringUtils.isNotEmpty(paymentMode)
-						&& (paymentMode.equalsIgnoreCase(MarketplacecheckoutaddonConstants.CREDITCARDMODE)
-								|| paymentMode.equalsIgnoreCase(MarketplacecheckoutaddonConstants.DEBITCARDMODE)
-								|| paymentMode.equalsIgnoreCase(MarketplacecheckoutaddonConstants.NETBANKINGMODE)
-								|| paymentMode.equalsIgnoreCase(MarketplacecheckoutaddonConstants.EMIMODE) || paymentMode
-									.equalsIgnoreCase(MarketplacecommerceservicesConstants.MRUPEE)))
-				{
-					//setting in orderModel
-					orderModel.setConvenienceCharges(Double.valueOf(0));
-					getModelService().save(orderModel);
-				}
-
-				if (!getMplCheckoutFacade().isPromotionValid(orderModel))
-				{
-					responseData.setPromoExpiryMsg(MarketplacecheckoutaddonConstants.REDIRECTTOPAYMENT);
-				}
-
-				getSessionService().setAttribute(MarketplacecheckoutaddonConstants.PAYMENTMODEFORPROMOTION, paymentMode);
-
-				final Map<String, MplZoneDeliveryModeValueModel> freebieModelMap = new HashMap<String, MplZoneDeliveryModeValueModel>();
-				final Map<String, Long> freebieParentQtyMap = new HashMap<String, Long>();
-				if (orderModel.getEntries() != null)
-				{
-					for (final AbstractOrderEntryModel cartEntryModel : orderModel.getEntries())
+					//Code for orderModel TPR-629
+					if (null != bankName && !bankName.equalsIgnoreCase("null"))
 					{
-						if (cartEntryModel != null && cartEntryModel.getGiveAway() != null
-								& !cartEntryModel.getGiveAway().booleanValue() && cartEntryModel.getSelectedUSSID() != null)
+						getMplPaymentFacade().setBankForSavedCard(bankName);
+					}
+
+					//TISPT-29
+					if (StringUtils.isNotEmpty(paymentMode)
+							&& (paymentMode.equalsIgnoreCase(MarketplacecheckoutaddonConstants.CREDITCARDMODE)
+									|| paymentMode.equalsIgnoreCase(MarketplacecheckoutaddonConstants.DEBITCARDMODE)
+									|| paymentMode.equalsIgnoreCase(MarketplacecheckoutaddonConstants.NETBANKINGMODE)
+									|| paymentMode.equalsIgnoreCase(MarketplacecheckoutaddonConstants.EMIMODE) || paymentMode
+										.equalsIgnoreCase(MarketplacecommerceservicesConstants.MRUPEE)))
+					{
+						//setting in orderModel
+						orderModel.setConvenienceCharges(Double.valueOf(0));
+						getModelService().save(orderModel);
+					}
+
+					if (!getMplCheckoutFacade().isPromotionValid(orderModel))
+					{
+						responseData.setPromoExpiryMsg(MarketplacecheckoutaddonConstants.REDIRECTTOPAYMENT);
+					}
+
+					getSessionService().setAttribute(MarketplacecheckoutaddonConstants.PAYMENTMODEFORPROMOTION, paymentMode);
+					//INC144317480: Order Threshold Discount Promotion: Netbanking Payment Mode Restriction doesn't work
+					if (StringUtils.isNotEmpty(paymentMode)
+							&& paymentMode.equalsIgnoreCase(MarketplacecheckoutaddonConstants.NETBANKINGMODE))
+					{
+						getSessionService().setAttribute(MarketplacecheckoutaddonConstants.BANKFROMBIN, bankName);
+						//getSessionService().setAttribute(MarketplacecheckoutaddonConstants.BANKNAMEFORNETBANKING, bankName);
+					}
+
+					final Map<String, MplZoneDeliveryModeValueModel> freebieModelMap = new HashMap<String, MplZoneDeliveryModeValueModel>();
+					final Map<String, Long> freebieParentQtyMap = new HashMap<String, Long>();
+					if (orderModel.getEntries() != null)
+					{
+						for (final AbstractOrderEntryModel cartEntryModel : orderModel.getEntries())
 						{
-							freebieModelMap.put(cartEntryModel.getSelectedUSSID(), cartEntryModel.getMplDeliveryMode());
-							freebieParentQtyMap.put(cartEntryModel.getSelectedUSSID(), cartEntryModel.getQuantity());
+							if (cartEntryModel != null && cartEntryModel.getGiveAway() != null
+									& !cartEntryModel.getGiveAway().booleanValue() && cartEntryModel.getSelectedUSSID() != null)
+							{
+								freebieModelMap.put(cartEntryModel.getSelectedUSSID(), cartEntryModel.getMplDeliveryMode());
+								freebieParentQtyMap.put(cartEntryModel.getSelectedUSSID(), cartEntryModel.getQuantity());
+							}
 						}
 					}
-				}
 
-				orderData = getMplCheckoutFacade().getOrderDetailsForCode(orderModel);
-				responseData = getMplPaymentFacade().applyPromotions(null, orderData, null, orderModel, responseData);
+					orderData = getMplCheckoutFacade().getOrderDetailsForCode(orderModel);
+					responseData = getMplPaymentFacade().applyPromotions(null, orderData, null, orderModel, responseData);
 
-				getMplPaymentFacade().populateDelvPOSForFreebie(orderModel, freebieModelMap, freebieParentQtyMap);
+					getMplPaymentFacade().populateDelvPOSForFreebie(orderModel, freebieModelMap, freebieParentQtyMap);
 
-				//Wallet amount assigned. Will be changed after release1
-				final double walletAmount = MarketplacecheckoutaddonConstants.WALLETAMOUNT;
+					//Wallet amount assigned. Will be changed after release1
+					final double walletAmount = MarketplacecheckoutaddonConstants.WALLETAMOUNT;
 
-				//setting the payment modes and the amount against it in session to be used later
-				final Map<String, Double> paymentInfo = new HashMap<String, Double>();
-				paymentInfo.put(paymentMode, Double.valueOf(orderModel.getTotalPriceWithConv().doubleValue() - walletAmount));
-				getSessionService().setAttribute(MarketplacecheckoutaddonConstants.PAYMENTMODE, paymentInfo);
+					//setting the payment modes and the amount against it in session to be used later
+					final Map<String, Double> paymentInfo = new HashMap<String, Double>();
+					paymentInfo.put(paymentMode, Double.valueOf(orderModel.getTotalPriceWithConv().doubleValue() - walletAmount));
+					getSessionService().setAttribute(MarketplacecheckoutaddonConstants.PAYMENTMODE, paymentInfo);
 
-				//TISPRO-540 - Setting Payment mode in orderModel
-				if (StringUtils.isNotEmpty(paymentMode)
-						&& paymentMode.equalsIgnoreCase(MarketplacecheckoutaddonConstants.CREDITCARDMODE))
-				{
-					orderModel.setModeOfOrderPayment(MarketplacecheckoutaddonConstants.CREDITCARDMODE);
-					getModelService().save(orderModel);
-				}
-				else if (StringUtils.isNotEmpty(paymentMode)
-						&& paymentMode.equalsIgnoreCase(MarketplacecheckoutaddonConstants.DEBITCARDMODE))
-				{
-					orderModel.setModeOfOrderPayment(MarketplacecheckoutaddonConstants.DEBITCARDMODE);
-					getModelService().save(orderModel);
-				}
-				else if (StringUtils.isNotEmpty(paymentMode)
-						&& paymentMode.equalsIgnoreCase(MarketplacecheckoutaddonConstants.NETBANKINGMODE))
-				{
-					orderModel.setModeOfOrderPayment(MarketplacecheckoutaddonConstants.NETBANKINGMODE);
-					getModelService().save(orderModel);
-				}
-				else if (StringUtils.isNotEmpty(paymentMode)
-						&& paymentMode.equalsIgnoreCase(MarketplacecheckoutaddonConstants.EMIMODE))
-				{
-					orderModel.setModeOfOrderPayment(MarketplacecheckoutaddonConstants.EMIMODE);
-					getModelService().save(orderModel);
-				}
-				else if (StringUtils.isNotEmpty(paymentMode) && paymentMode.equalsIgnoreCase("COD"))
-				{
-					orderModel.setModeOfOrderPayment("COD");
-					getModelService().save(orderModel);
-				}
-
-				//Added for third party wallet
-				else if (StringUtils.isNotEmpty(paymentMode)
-						&& paymentMode.equalsIgnoreCase(MarketplacecommerceservicesConstants.MRUPEE))
-				{
-					orderModel.setModeOfOrderPayment(MarketplacecommerceservicesConstants.MRUPEE);
-					getModelService().save(orderModel);
-				}
-
-				//TISST-7955
-				final Map<String, String> ussidPricemap = new HashMap<String, String>();
-				if (orderData != null)
-				{
-					for (final OrderEntryData entryData : orderData.getEntries())
+					//TISPRO-540 - Setting Payment mode in orderModel
+					if (StringUtils.isNotEmpty(paymentMode)
+							&& paymentMode.equalsIgnoreCase(MarketplacecheckoutaddonConstants.CREDITCARDMODE))
 					{
-						ussidPricemap.put(entryData.getSelectedUssid() + "_" + entryData.isGiveAway(), entryData.getTotalPrice()
-								.getFormattedValue());
+						orderModel.setModeOfOrderPayment(MarketplacecheckoutaddonConstants.CREDITCARDMODE);
+						getModelService().save(orderModel);
 					}
-				}
-				final ObjectMapper objectMapper = new ObjectMapper();
-				jsonResponse = objectMapper.writeValueAsString(ussidPricemap);
+					else if (StringUtils.isNotEmpty(paymentMode)
+							&& paymentMode.equalsIgnoreCase(MarketplacecheckoutaddonConstants.DEBITCARDMODE))
+					{
+						orderModel.setModeOfOrderPayment(MarketplacecheckoutaddonConstants.DEBITCARDMODE);
+						getModelService().save(orderModel);
+					}
+					else if (StringUtils.isNotEmpty(paymentMode)
+							&& paymentMode.equalsIgnoreCase(MarketplacecheckoutaddonConstants.NETBANKINGMODE))
+					{
+						orderModel.setModeOfOrderPayment(MarketplacecheckoutaddonConstants.NETBANKINGMODE);
+						getModelService().save(orderModel);
+					}
+					else if (StringUtils.isNotEmpty(paymentMode)
+							&& paymentMode.equalsIgnoreCase(MarketplacecheckoutaddonConstants.EMIMODE))
+					{
+						orderModel.setModeOfOrderPayment(MarketplacecheckoutaddonConstants.EMIMODE);
+						getModelService().save(orderModel);
+					}
+					else if (StringUtils.isNotEmpty(paymentMode) && paymentMode.equalsIgnoreCase("COD"))
+					{
+						orderModel.setModeOfOrderPayment("COD");
+						getModelService().save(orderModel);
+					}
 
-				//UF-260
-				GenericUtilityMethods.getCartPriceDetails(null, orderModel, responseData);
+					//Added for third party wallet
+					else if (StringUtils.isNotEmpty(paymentMode)
+							&& paymentMode.equalsIgnoreCase(MarketplacecommerceservicesConstants.MRUPEE))
+					{
+						orderModel.setModeOfOrderPayment(MarketplacecommerceservicesConstants.MRUPEE);
+						getModelService().save(orderModel);
+					}
+
+					//TISST-7955
+					final Map<String, String> ussidPricemap = new HashMap<String, String>();
+					if (orderData != null)
+					{
+						for (final OrderEntryData entryData : orderData.getEntries())
+						{
+							ussidPricemap.put(entryData.getSelectedUssid() + "_" + entryData.isGiveAway(), entryData.getTotalPrice()
+									.getFormattedValue());
+						}
+					}
+					final ObjectMapper objectMapper = new ObjectMapper();
+					jsonResponse = objectMapper.writeValueAsString(ussidPricemap);
+
+					//UF-260
+					GenericUtilityMethods.getCartPriceDetails(null, orderModel, responseData);
+				}
 			}
-			//}
 		}
 		catch (final JsonGenerationException e)
 		{
@@ -4060,6 +4090,7 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 		catch (final EtailNonBusinessExceptions e)
 		{
 			ExceptionUtil.etailNonBusinessExceptionHandler(e);
+			orderId = "NONBusinessException" + e.getErrorMessage();
 			LOG.error(MarketplacecheckoutaddonConstants.LOGERROR, e);
 		}
 		catch (final Exception e)
@@ -4914,6 +4945,7 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 			//getting current user
 			emailId = getUserService().getCurrentUser().getUid();
 			//OTP handled for both cart and order
+
 			if (StringUtils.isNotEmpty(guid))
 			{
 				orderModel = getMplPaymentFacade().getOrderByGuid(guid);
@@ -4922,7 +4954,13 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 			{
 				//Existing code for cartModel
 				final CartModel cart = getCartService().getSessionCart();
-
+				//UF-281/282 Starts
+				if (!checkCODforCNC(cart))
+				{
+					LOG.debug("COD payment is not allwoed if an user selects CNC as payment mode");
+					return MarketplacecommerceservicesConstants.REDIRECT + MarketplacecommerceservicesConstants.CART;
+				}
+				//UF-281/282 Ends
 				//TPR-4461 Starts here for payment mode and bank restriction validation for Voucher
 				final ArrayList<DiscountModel> voucherList = new ArrayList<DiscountModel>(getVoucherService()
 						.getAppliedVouchers(cart));
@@ -5722,7 +5760,38 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 	{
 		this.voucherService = voucherService;
 	}
-	//TPR-4461 ends here
 
+	//TPR-4461 ends here
+	/**
+	 * @Description Check if cart contsins CNC product
+	 * @param cart
+	 * @return
+	 * @throws UnsupportedEncodingException
+	 */
+	//UF-281/282 Start
+	public boolean checkCODforCNC(final CartModel cart) throws UnsupportedEncodingException
+	{
+
+		boolean codEligible = true;
+
+		if (cart != null)
+		{
+			for (final AbstractOrderEntryModel entry : cart.getEntries())
+			{
+
+				if (entry.getMplDeliveryMode() != null && entry.getMplDeliveryMode().getDeliveryMode() != null)
+				{
+					if (entry.getMplDeliveryMode().getDeliveryMode().getCode().equalsIgnoreCase(MarketplaceFacadesConstants.C_C))
+					{
+						codEligible = false;
+						LOG.debug("CNC not allowed for CNC");
+					}
+				}
+
+			}
+		}
+		return codEligible;
+	}
+	//UF-281/282 End
 
 }

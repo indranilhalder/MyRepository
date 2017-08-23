@@ -24,6 +24,7 @@ import de.hybris.platform.ordersplitting.model.ConsignmentModel;
 import de.hybris.platform.payment.enums.PaymentTransactionType;
 import de.hybris.platform.payment.model.PaymentTransactionEntryModel;
 import de.hybris.platform.payment.model.PaymentTransactionModel;
+import de.hybris.platform.processengine.BusinessProcessService;
 import de.hybris.platform.returns.ReturnService;
 import de.hybris.platform.returns.model.RefundEntryModel;
 import de.hybris.platform.returns.model.ReturnEntryModel;
@@ -126,6 +127,9 @@ public class CustomOmsShipmentSyncAdapter extends DefaultOmsShipmentSyncAdapter 
 	@Autowired
 	private MplJusPayRefundService mplJusPayRefundService;
 
+	@Autowired
+	private BusinessProcessService businessProcessService; // Added for TPR-1348
+
 	@Override
 	public ConsignmentModel update(final OrderWrapper wrapper, final ItemModel parent)
 	{
@@ -225,8 +229,8 @@ public class CustomOmsShipmentSyncAdapter extends DefaultOmsShipmentSyncAdapter 
 					existingConsignmentModel.setReceivedBy(line.getReceivedBy());
 					existingConsignmentModel.setCarrier(line.getLogisticProviderName());
 					//TPR-3809 changes start
-					existingConsignmentModel.setForwardSealNum("toBePopulated"); //changes
-					existingConsignmentModel.setReverseSealNum("toBePopulated"); //changes
+					existingConsignmentModel.setForwardSealNum(line.getForwardSealNo());
+					existingConsignmentModel.setReverseSealNum(line.getReverseSealNo());
 					//TPR-3809 changes end
 
 
@@ -505,7 +509,6 @@ public class CustomOmsShipmentSyncAdapter extends DefaultOmsShipmentSyncAdapter 
 					&& shipmentNewStatus.equals(ConsignmentStatus.CANCELLATION_INITIATED))
 			{
 
-
 				LOG.debug("Calling cancel Initiation process started");
 				final SendUnCollectedOrderToCRMEvent sendUnCollectedOrderToCRMEvent = new SendUnCollectedOrderToCRMEvent(shipment,
 						consignmentModel, orderModel, shipmentNewStatus, MarketplaceomsordersConstants.TICKET_TYPE_CODE);
@@ -535,7 +538,6 @@ public class CustomOmsShipmentSyncAdapter extends DefaultOmsShipmentSyncAdapter 
 
 			}
 
-
 			if (ObjectUtils.notEqual(shipmentCurrentStatus, shipmentNewStatus)
 					&& shipmentNewStatus.equals(ConsignmentStatus.ORDER_COLLECTED))
 			{
@@ -554,11 +556,9 @@ public class CustomOmsShipmentSyncAdapter extends DefaultOmsShipmentSyncAdapter 
 				}
 
 			}
-
 			createRefundEntry(shipment, shipmentNewStatus, consignmentModel, orderModel);
 			if (ObjectUtils.notEqual(shipmentCurrentStatus, shipmentNewStatus))
 			{
-
 				if (!checkConsignmentStatus)
 				{
 					//if(shipmentCurrentStatus.equals(ConsignmentStatus.RETURN_INITIATED) && shipmentNewStatus.equals(ConsignmentStatus.DELIVERED) ){
@@ -583,10 +583,17 @@ public class CustomOmsShipmentSyncAdapter extends DefaultOmsShipmentSyncAdapter 
 					sendOrderNotification(shipment, consignmentModel, orderModel, shipmentNewStatus);
 					//}
 				}
+
+				//Added TPR-1348
+				if ("Y".equalsIgnoreCase(configurationService.getConfiguration().getString(
+						MarketplaceomsservicesConstants.AUTO_REFUND_ENABLED))
+						&& ConsignmentStatus.RETURN_CLOSED.equals(shipmentNewStatus))
+				{
+					startAutomaticRefundProcess(orderModel); //Start the new Automatic Process
+				}
+
 				return true;
-
 			}
-
 			//R2.3  Start Bug Id TISRLUAT-986 20-02-2017 Start
 			try
 			{
@@ -612,7 +619,6 @@ public class CustomOmsShipmentSyncAdapter extends DefaultOmsShipmentSyncAdapter 
 				LOG.info("Exception ouccer trigger email " + exception.getMessage());
 			}
 			//R2.3  Start Bug Id TISRLUAT-986 20-02-2017 END
-
 		}
 		catch (final Exception e)
 		{
@@ -1406,15 +1412,15 @@ public class CustomOmsShipmentSyncAdapter extends DefaultOmsShipmentSyncAdapter 
 	 * ConsignmentModel consignment : orderModel.getConsignments()) { for (final ConsignmentEntryModel s :
 	 * consignment.getConsignmentEntries()) { if (s.getOrderEntry().getEntryNumber().equals(line.getOrderLineId())) {
 	 * return consignment; } }
-	 *
-	 *
-	 *
-	 *
+	 * 
+	 * 
+	 * 
+	 * 
 	 * }
-	 *
-	 *
-	 *
-	 *
+	 * 
+	 * 
+	 * 
+	 * 
 	 * return null; }
 	 */
 
@@ -1575,4 +1581,41 @@ public class CustomOmsShipmentSyncAdapter extends DefaultOmsShipmentSyncAdapter 
 	{
 		this.customOmsCollectedAdapter = customOmsCollectedAdapter;
 	}
+
+	//Added for TPR-1348
+	/**
+	 * @return the businessProcessService
+	 */
+	public BusinessProcessService getBusinessProcessService()
+	{
+		return businessProcessService;
+	}
+
+	/**
+	 * @param businessProcessService
+	 *           the businessProcessService to set
+	 */
+	public void setBusinessProcessService(final BusinessProcessService businessProcessService)
+	{
+		this.businessProcessService = businessProcessService;
+	}
+
+
+	private void startAutomaticRefundProcess(final OrderModel orderModel)
+	{
+		try
+		{
+			final OrderProcessModel orderProcessModel = (OrderProcessModel) businessProcessService.createProcess(
+					"autorefundinitiate-process-" + System.currentTimeMillis(), "autorefundinitiate-process");
+			orderProcessModel.setOrder(orderModel);
+			businessProcessService.startProcess(orderProcessModel);
+			LOG.error("CustomOmsShipmentSyncAdapter: in the CustomOmsShipmentSyncAdapter.startAutomaticRefundProcess() for Order #"
+					+ orderModel.getCode());
+		}
+		catch (final Exception e)
+		{
+			LOG.error("CustomOmsShipmentSyncAdapter: error creating AutoRefundProcess for Order #" + orderModel.getCode());
+		}
+	}
+	//End for TPR-1348
 }

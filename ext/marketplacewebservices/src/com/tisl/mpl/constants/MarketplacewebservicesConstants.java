@@ -561,6 +561,29 @@ public class MarketplacewebservicesConstants
 	//TPR-6117
 	public static final String REACHED_MAX_LIMIT_FOR_PRODUCT = "MAX QUANTITY ADDED";
 	public static final String FINEJEWELLERY = "finejewellery";
+	public static final String FASHIONJEWELLERY = "fashionjewellery";
+	//One touch Cancel return constants
+	public static final String VALID_FLAG_S = "S".intern();
+	public static final String CANCEL_TICKET = "C".intern();
+	public static final String RETURN_TICKET = "R".intern();
+	public static final String TICKET_TYPE_RSP = "RSP".intern();
+	public static final String VALID_FLAG_F = "F".intern();
+	public static final String PINCODE_NOT_SERVICEABLE = "Pincode is not serviceable".intern();
+	public static final String INVALID_TICKET_TYPE = "Invalid Ticket Type".intern();
+	public static final String ERROR_IN_OMS = "The order is not cancellable or returnable in OMS system".intern();
+	public static final String FORMAT_MISMATCH = "Format mismatch".intern();
+	public static final String MISSING_MANDATORY_FIELDS = "Some mandatory fields are missing in CRM request".intern();
+	public static final String CANCEL_ORDER_STATUS = "valid.order.statuses.CANCEL";
+	public static final String RETURN_ORDER_STATUS = "valid.order.statuses.RETURN";
+	public static final String BLANK_TRANSACTION_ID = "Transaction id is not found in commerce system";
+	public static final String NO_CONSIGNMENT_FOUND = "No consignment found";
+	public static final String ORDER_ALREAY_CANCELLED = "Order is not eligible for cancellation in commerce system".intern();
+	public static final String RETURN_ALREADY_INITIATED = "Order is not eligible for return in commerce system".intern();
+	public static final String RETURN_ALREADY_INITIATED_CSCP = "Return already initiated in commerce system".intern();
+	public static final String ORDERTAG_TYPE_POSTPAID = "POSTPAIDRRF".intern();
+	public static final String CANCEL_ELIGIBLE_STATUS = "valid.order.statuses.CANCELLATION".intern();
+	public static final String DELIVERED_STATUS = "DELIVERED".intern();
+	public static final String ORDER_COLLECTED_STATUS = "ORDER_COLLECTED".intern();
 
 	//TPR-1083
 	public static final String MAXIMUM_CONFIGURED_QUANTIY_FOR_EXCHANGE = "1";
@@ -568,4 +591,7 @@ public class MarketplacewebservicesConstants
 	public static final String EXCHANGENOTAPPLIED = "Exchange Is Not Applicable For Pincode";
 	public static final String SPECIAL_MOBILE_FLAG = "special.mobile.flag".intern();
 	public static final String PRICE_DISCLAIMER_JEWELLERY = "Price and Weight are subjected to change on the basis of availability. Please check final Price and Weight before making a payment.";
+
+	//INC144317480: Order Threshold Discount Promotion: Netbanking Payment Mode Restriction doesn't work
+	//public static final String BANKNAMEFORNETBANKING = "bankNameforNetbanking";
 }

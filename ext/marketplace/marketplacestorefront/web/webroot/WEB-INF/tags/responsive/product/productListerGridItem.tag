@@ -139,14 +139,13 @@
 					title="${product.name}"> <%-- <product:productPrimaryImage
 						product="${product}" format="searchPage" /> --%> <product:productSearchPrimaryImage product="${product}" format="searchPage"/>
 						<!-- TPR-250 -->
-						        <span class="plp-wishlist" data-product="${productUrl}" data-ussid="${ussidVal}"></span>
+								<span class="plp-wishlist" data-product="${productUrl}" data-ussid="${ussidVal}"></span>	
 						<!-- TPR-250 -->
 						<%-- <span class="plp-wishlist" data-product="${productUrl}"></span> --%>
 						<span class="plpWlcode" style="display: none;">${productUrl}</span>
 			
 
 				</a>
-				
 				<c:if test="${product.isOfferExisting}">
 					<%-- <div style="z-index: 2;display: none;" class="on-sale" id="on-sale_${product.code}"> --%>
 						<div style="z-index: 2;" class="on-sale" id="on-sale_${product.code}">
@@ -274,12 +273,16 @@
 						<!-- TISSTRT - 985  TISPRO-277::Size of footwear products are not displayed in SERP page-->
 						<c:if
 							test="${not empty product.productCategoryType && product.isVariant &&  (product.productCategoryType eq 'Apparel' 
-							                          || product.productCategoryType eq 'Footwear'|| product.productCategoryType eq 'FineJewellery'|| product.productCategoryType eq 'FashonJewellery') }">
-
-
+							                          || product.productCategoryType eq 'Footwear') }">
 							<%-- <li class="product-size-list"><span class="product-size">Size : ${fn:toUpperCase(product.displaySize)} </span></li> --%>
 							<li class="product-size-list"><span class="product-size">Size: <span class="size-col">${product.displaySize}</span><%-- Price : ${product.displayPrice}### ${product.displayUrl} --%>
 							</span></li>
+						</c:if>
+						<c:if test="${not empty product.productCategoryType && product.isVariant && (product.productCategoryType eq 'FineJewellery'|| product.productCategoryType eq 'FashonJewellery')}">
+							<c:if test="${not empty product.displaySize && product.displaySize ne '[NO SIZE]'}">
+									<li class="product-size-list"><span class="product-size">Size: <span class="size-col">${product.displaySize}</span><%-- Price : ${product.displayPrice}### ${product.displayUrl} --%>
+								</span></li>
+							</c:if>
 						</c:if>
 						<%-- <li>Color: ${product.swatchColor}</li> --%>
 						<c:if

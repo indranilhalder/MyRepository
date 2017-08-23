@@ -41,6 +41,7 @@ import com.tisl.mpl.facades.product.data.BuyBoxData;
 import com.tisl.mpl.helper.ProductDetailsHelper;
 import com.tisl.mpl.marketplacecommerceservices.service.BuyBoxService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplDeliveryCostService;
+import com.tisl.mpl.marketplacecommerceservices.service.MplJewelleryService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplSellerInformationService;
 import com.tisl.mpl.model.SellerInformationModel;
 import com.tisl.mpl.seller.product.facades.BuyBoxFacade;
@@ -82,6 +83,9 @@ public class BuyBoxFacadeImpl implements BuyBoxFacade
 	private ProductDetailsHelper productDetailsHelper;
 	@Autowired
 	private MplSellerInformationService mplSellerInformationService;
+
+	@Resource(name = "mplJewelleryService")
+	private MplJewelleryService mplJewelleryService;
 	/* SONAR FIX JEWELLERY */
 	//	@Resource(name = "mplJewelleryService")
 	//	private MplJewelleryService jewelleryService;
@@ -809,8 +813,17 @@ public class BuyBoxFacadeImpl implements BuyBoxFacade
 				sellerData.setUssid(buyBox.getSellerArticleSKU());
 				sellerData.setSellername(buyBox.getSellerName());
 
-				sellerData.setDeliveryModes(productDetailsHelper.getDeliveryModeLlist(rich, buyBox.getSellerArticleSKU()));
-
+				if (MarketplaceFacadesConstants.PRODUCT_TYPE.equalsIgnoreCase(prodCatType))
+				{
+					if (StringUtils.isNotEmpty(buyBox.getPUSSID()))
+					{
+						sellerData.setDeliveryModes(productDetailsHelper.getDeliveryModeLlist(rich, buyBox.getPUSSID()));
+					}
+				}
+				else
+				{
+					sellerData.setDeliveryModes(productDetailsHelper.getDeliveryModeLlist(rich, buyBox.getSellerArticleSKU()));
+				}
 
 				if (null != rich.getShippingModes())
 				{
@@ -880,6 +893,16 @@ public class BuyBoxFacadeImpl implements BuyBoxFacade
 	public RichAttributeData getRichAttributeDetails(final ProductModel productModel, final String buyboxid)
 			throws EtailNonBusinessExceptions, EtailBusinessExceptions
 	{
+		String sellerArticleSku = buyboxid;
+
+		LOG.debug("sellerArticleSku : " + sellerArticleSku);
+
+		//PRODUCT_TYPE is set to FineJewellery in MarketplaceFacadesConstants. This if block is for FineJewellery to fetch the PCMUSSID.
+		if (MarketplaceFacadesConstants.PRODUCT_TYPE.equalsIgnoreCase(productModel.getProductCategoryType()))
+		{
+			sellerArticleSku = mplJewelleryService.getJewelleryInfoByUssid(buyboxid).get(0).getPCMUSSID();
+		}
+
 		final RichAttributeData richData = new RichAttributeData();
 		final StringBuilder deliveryModes = new StringBuilder();
 		boolean onlineExclusive = false;
@@ -899,7 +922,8 @@ public class BuyBoxFacadeImpl implements BuyBoxFacade
 					onlineExclusive = true;
 				}
 
-				if (buyboxid.equals(seller.getSellerArticleSKU()) && null != seller.getRichAttribute())
+				//if (buyboxid.equals(seller.getSellerArticleSKU()) && null != seller.getRichAttribute())
+				if (sellerArticleSku.equals(seller.getSellerArticleSKU()) && null != seller.getRichAttribute())
 				{
 
 					for (final RichAttributeModel rich : seller.getRichAttribute())
@@ -1064,10 +1088,10 @@ public class BuyBoxFacadeImpl implements BuyBoxFacade
 
 	/*
 	 * This method is used to get the price of a product by giving the ussid
-	 *
-	 *
-	 *
-	 *
+	 * 
+	 * 
+	 * 
+	 * 
 	 * @see com.tisl.mpl.seller.product.facades.BuyBoxFacade#getpriceForUssid(java.lang.String)
 	 */
 
@@ -1290,7 +1314,7 @@ public class BuyBoxFacadeImpl implements BuyBoxFacade
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.seller.product.facades.BuyBoxFacade#getBuyBoxDataForUssids(java.util.List, java.lang.String)
 	 */
 	//TPR-3736

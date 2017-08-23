@@ -1055,5 +1055,13 @@ $(document).ready(function(){
 	    trigger: 'hover',
 	    content: $("#ifscPopOverHelp").html()
 	});
+	
+	//TISJEW-3484
+	var catType = $("#productCategoryTypeReturn").val();
+	if("FineJewellery" == catType){
+		$(".accContents.returnMethod .selectReturnMethod.self").css("display","none");
+		$(".accContents.returnMethod .selfCourier").css("display","none");
+	}
+	
 });	
 		

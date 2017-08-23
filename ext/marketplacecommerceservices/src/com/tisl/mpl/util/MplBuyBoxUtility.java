@@ -622,12 +622,12 @@ public class MplBuyBoxUtility
 			if (min.doubleValue() == max.doubleValue())
 			{
 				//priceRange = currency + String.valueOf(min);//SONAR FIX JEWELLERY
-				priceRange = currency + min;
+				priceRange = currency + Math.round(min.doubleValue());
 			}
 			else
 			{
 				//	priceRange = currency + String.valueOf(min) + HYPHEN + currency + String.valueOf(max);//SONAR FIX JEWELLERY
-				priceRange = currency + min + HYPHEN + currency + max;
+				priceRange = currency + Math.round(min.doubleValue()) + HYPHEN + currency + Math.round(max.doubleValue());
 			}
 		}
 		return priceRange;

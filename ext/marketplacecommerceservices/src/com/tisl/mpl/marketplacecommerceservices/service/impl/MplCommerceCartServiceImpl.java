@@ -465,6 +465,7 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 							&& (entry.getProduct().getRootCategory()
 									.equalsIgnoreCase(MarketplacecommerceservicesConstants.FINEJEWELLERY)))
 					{
+						//Below will execute for fine jewellery
 						final List<JewelleryInformationModel> jewelleryInfo = jewelleryService.getJewelleryInfoByUssid(entry
 								.getSelectedUssid());
 						if (CollectionUtils.isNotEmpty(jewelleryInfo))
@@ -2611,13 +2612,13 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 	}
 
 	/**
-	 * 
+	 *
 	 * @Desc fetching reservation details
 	 *
-	 * 
-	 * 
-	 * 
-	 * 
+	 *
+	 *
+	 *
+	 *
 	 * @param pincode
 	 *
 	 * @throws EtailNonBusinessExceptions
@@ -2660,7 +2661,7 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 								entry.setFulfillmentType(item.getFulfillmentType());
 								try
 								{
-									//  INC144316545 START 
+									//  INC144316545 START
 									if (null != salesApplication && salesApplication.equals(SalesApplication.MOBILE))
 									{
 										if (null != item.getFulfillmentType())
@@ -4571,13 +4572,15 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 		return cartSoftReservationDataList;
 	}
 
+
 	/**
-	 * @param jeweleryInfo
 	 * @param deliveryModeGlobalCode
 	 * @param cartSoftReservationDataList
 	 * @param fulfillmentType
+	 * @param ussid
 	 * @param ListingId
-	 * @param string
+	 *           This method will set all variants with same serviceable slaves since on failure of IR will redirect to
+	 *           cart user will have to choose a new product to continue a checkout journey
 	 */
 	private void populataJewelleryWeight(final String deliveryModeGlobalCode,
 			final List<CartSoftReservationData> cartSoftReservationDataList, final String fulfillmentType, final String ussid,
@@ -4600,6 +4603,17 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 					jewellery.setListingId(ListingId);
 					jewellery.setUSSID(jewelInfoUssid.getSellerArticleSKU());
 					jewellery.setQuantity(Integer.valueOf(1));
+					// Added to populate servicable slaves for other variants
+					for (final CartSoftReservationData jwlDataObj : cartSoftReservationDataList)
+					{
+						if (jwlDataObj.getUSSID().equalsIgnoreCase(ussid))
+						{
+							jewellery.setTransportMode(jwlDataObj.getTransportMode());
+							jewellery.setServiceableSlaves(jwlDataObj.getServiceableSlaves());
+							break;
+						}
+					}
+
 					cartSoftReservationDataList.add(jewellery);
 				}
 			}
@@ -4613,7 +4627,7 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 	 * @author TECHOUTS
 	 * @param cartSoftReservationData
 	 * @param abstractOrderData
-	 * 
+	 *
 	 * @return void
 	 */
 	//commented for CAR:127

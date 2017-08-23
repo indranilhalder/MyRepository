@@ -749,6 +749,8 @@
 			</description>
 			<value code="Kiosk" />
 			<value code="Mobile" />
+			<!-- TPR-5666, TPR-5667 | Enum value added for samsung -->
+			<value code="Samsung" />
 		</enumtype>
 
 
@@ -1741,14 +1743,6 @@
 						<description>This is the value reference of the banner's deeplink reference</description>
 					</attribute>
 					<!-- Added for Deep Linking in Mobile apps - End -->
-					 <!--  Jewellery Changes added below  -->
-                    
-                      <attribute qualifier="JewelleryType" type="java.lang.String"
-						generate="true" autocreate="true">
-						<persistence type="property" />
-						<description>This value refer the jewellery type </description>
-					</attribute>					
-
 					<!-- Added for KidsWear -->
 					<attribute qualifier="productCategoryTypeL2" type="java.lang.String">
 						<description>Represent the product's master Category</description>
@@ -2842,6 +2836,7 @@
 						<persistence type="property" />
 					</attribute>
 					<!-- TPR-970 ends -->
+					
 				</attributes>
 			</itemtype>
 
@@ -6053,6 +6048,52 @@
 						<defaultvalue>Integer.valueOf(0)</defaultvalue>
 						<persistence type="property" />
 					</attribute>
+					
+					<!-- TPR-3782 pancard changes -->
+					<attribute qualifier="panVerificationReq" type="java.lang.Boolean">
+						<modifiers optional="true" read="true" write="true" />
+						<persistence type="property" />
+					</attribute>
+					<!-- TPR-3782 pancard changes -->
+					<!-- For TPR-5667 | samsung order -->
+					<attribute qualifier="samsungSubmitStatus" type="java.lang.String">
+						<modifiers optional="true" />
+						<persistence type="property" />
+					</attribute>
+					
+					<!-- TPR-5667 | Start : Attribute added to store samsung reuqest and response json for audit purpose -->
+					<attribute autocreate="true" qualifier="samsungOrderRequestJSON" type="java.lang.String">
+						<persistence type='property'>
+							<columntype database="oracle">
+								<value>CLOB</value>
+							</columntype>
+							<columntype database="sap">
+								<value>CLOB</value>
+							</columntype>
+							<columntype>
+								<value>HYBRIS.LONG_STRING</value>
+							</columntype>
+						</persistence>
+						<modifiers read="true" write="true" search="true"
+							optional="true" />
+					</attribute>
+					<attribute autocreate="true" qualifier="samsungOrderResponseJSON"
+						type="java.lang.String">
+						<persistence type='property'>
+							<columntype database="oracle">
+								<value>CLOB</value>
+							</columntype>
+							<columntype database="sap">
+								<value>CLOB</value>
+							</columntype>
+							<columntype>
+								<value>HYBRIS.LONG_STRING</value>
+							</columntype>
+						</persistence>
+						<modifiers read="true" write="true" search="true"
+							optional="true" />
+					</attribute>
+					<!-- TPR-5667 | End : Attribute added to store samsung reuqest and response json for audit purpose -->
 				</attributes>
 				<!-- CAR-274 -->
 				<indexes>
@@ -12502,7 +12543,46 @@
 		  </attributes>
  	  </itemtype>		
 		  
-<!-- End of changes for tpr-3782 -->		  
+<!-- End of changes for tpr-3782 -->	
+
+	<itemtype code="JewellerySellerDetails"  extends="GenericItem" autocreate="true" generate="true" jaloclass="de.hybris.platform.jalo.JewellerySellerInfo">
+		<deployment table="JewellerySellerInfo" typecode="16989" />
+		<attributes>
+			 <attribute qualifier="index" type="java.lang.Integer" autocreate="true" generate="true">
+					<persistence type="property" />
+					<modifiers optional="false" read="true" write="true" search="true" unique="true"/>
+					<defaultvalue>Integer.valueOf(0)</defaultvalue>
+			 </attribute>
+			 <attribute qualifier="sellerId" autocreate="true" type="java.lang.String" generate="true">
+			        <description>seller Id</description>
+			        <modifiers optional="false" read="true" write="true"/>
+			        <persistence type="property"/>
+			 </attribute>
+			 <attribute qualifier="description" autocreate="true" type="java.lang.String" generate="true">
+			        <description>description message for return refund tab of the item</description>
+			        <modifiers optional="true" read="true" write="true"/>
+			        <persistence type="property"/>
+			 </attribute>
+			 <attribute qualifier="metalRateUnitGold" autocreate="true" type="java.lang.String" generate="true">
+			        <description>rate unit of gold</description>
+			        <modifiers optional="true" read="true" write="true"/>
+			        <persistence type="property"/>
+			 </attribute>
+			 <attribute qualifier="metalRateUnitSil" autocreate="true" type="java.lang.String" generate="true">
+			        <description>rate unit of silver</description>
+			        <modifiers optional="true" read="true" write="true"/>
+			        <persistence type="property"/>
+			 </attribute>
+			 <attribute qualifier="metalRateUnitPlat" autocreate="true" type="java.lang.String" generate="true">
+			        <description>rate unit of platinum</description>
+			        <modifiers optional="true" read="true" write="true"/>
+			        <persistence type="property"/>
+			 </attribute>
+		</attributes>
+	</itemtype>
+
+
+	  
 		</typegroup>
 		
 															<!-- Jewellery Changes End -->

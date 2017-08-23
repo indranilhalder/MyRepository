@@ -27,6 +27,7 @@ import de.hybris.platform.commercefacades.product.data.SellerInformationData;
 import de.hybris.platform.commercefacades.product.data.VariantOptionData;
 import de.hybris.platform.commerceservices.enums.SalesApplication;
 import de.hybris.platform.core.model.JewelleryInformationModel;
+import de.hybris.platform.core.model.JewellerySellerDetailsModel;
 import de.hybris.platform.core.model.product.ProductModel;
 import de.hybris.platform.product.ProductService;
 import de.hybris.platform.servicelayer.config.ConfigurationService;
@@ -102,6 +103,7 @@ import com.tisl.mpl.wsdto.ProductContentWsData;
 import com.tisl.mpl.wsdto.ProductDetailMobileWsData;
 import com.tisl.mpl.wsdto.ProductOfferMsgDTO;
 import com.tisl.mpl.wsdto.PromotionMobileData;
+import com.tisl.mpl.wsdto.RefundReturnDTO;
 import com.tisl.mpl.wsdto.SellerInformationMobileData;
 import com.tisl.mpl.wsdto.SizeLinkData;
 import com.tisl.mpl.wsdto.VariantOptionMobileData;
@@ -336,6 +338,9 @@ public class MplProductWebServiceImpl implements MplProductWebService
 		final List<PriceBreakUpDto> priceBreakUpList = new ArrayList<PriceBreakUpDto>();
 		final Map<String, FineJwlryClassificationListDTO> fineJewelleryClassificationList = new LinkedHashMap<String, FineJwlryClassificationListDTO>();
 		String ussidJwlry = "";
+
+		//for new tab return refund for fine and fashion jewellery
+		List<RefundReturnDTO> refundReturnList = null;
 		try
 		{
 
@@ -411,7 +416,6 @@ public class MplProductWebServiceImpl implements MplProductWebService
 					// TPR-522
 					if (null != buyBoxData.getMrp())
 					{
-
 						// Below codes are Channel specific promotion TISPRD-8944
 						if (specialMobileFlag && buyBoxData.getSpecialPriceMobile() != null
 								&& buyBoxData.getSpecialPriceMobile().getValue().doubleValue() > 0)
@@ -485,7 +489,10 @@ public class MplProductWebServiceImpl implements MplProductWebService
 				{
 					final List<JewelleryInformationModel> jewelleryInfo = jewelleryService.getJewelleryInfoByUssid(buyBoxData
 							.getSellerArticleSKU());
-					ussidJwlry = jewelleryInfo.get(0).getPCMUSSID();
+					if (CollectionUtils.isNotEmpty(jewelleryInfo) && StringUtils.isNotEmpty(jewelleryInfo.get(0).getPCMUSSID()))
+					{
+						ussidJwlry = jewelleryInfo.get(0).getPCMUSSID();
+					}
 				}
 			}
 			//			Added for OfferDetail of  a product TPR-1299
@@ -680,7 +687,7 @@ public class MplProductWebServiceImpl implements MplProductWebService
 					/* Specifications of a product */
 					if (MarketplacecommerceservicesConstants.FINEJEWELLERY.equalsIgnoreCase(productModel.getProductCategoryType()))
 					{
-						productDetailsHelper.groupGlassificationDataForFineDeatils(productData);
+						productDetailsHelper.groupGlassificationDataForJewelDetails(productData);
 						if (MapUtils.isNotEmpty(productData.getFineJewelleryDeatils()))
 						{
 							LinkedHashMap<String, Map<String, List<String>>> featureDetails = new LinkedHashMap<String, Map<String, List<String>>>();
@@ -743,10 +750,32 @@ public class MplProductWebServiceImpl implements MplProductWebService
 					productDetailMobile.setKnowMore(knowMoreList);
 				}
 
+				if (MarketplacecommerceservicesConstants.FINEJEWELLERY.equalsIgnoreCase(productModel.getProductCategoryType())
+						|| MarketplacecommerceservicesConstants.FASHIONJEWELLERY
+								.equalsIgnoreCase(productModel.getProductCategoryType()))
+				{
+					if (null != buyBoxData)
+					{
+						refundReturnList = getRefundReturnDetails(productModel, buyBoxData, ussidJwlry);
+					}
+				}
+				if (CollectionUtils.isNotEmpty(refundReturnList))
+				{
+					if (MarketplacecommerceservicesConstants.FINEJEWELLERY.equalsIgnoreCase(productModel.getProductCategoryType()))
+					{
+						productDetailMobile.setReturnAndRefund(refundReturnList);
+					}
+					if (MarketplacecommerceservicesConstants.FASHIONJEWELLERY.equalsIgnoreCase(productModel.getProductCategoryType()))
+					{
+						productDetailMobile.setReturns(refundReturnList);
+					}
+				}
+
 				if (null != productData.getBrand() && null != productData.getBrand().getBrandname())
 				{
 					productDetailMobile.setBrandName(productData.getBrand().getBrandname());
 				}
+
 
 				// changed for TPR-796
 				//first set false to make all available
@@ -840,7 +869,7 @@ public class MplProductWebServiceImpl implements MplProductWebService
 					{
 						final String priceBrkUpPDP = displayConfigurableAttributeForPriceBreakup(buyBoxData.getSellerArticleSKU());
 						productDetailMobile.setShowPriceBrkUpPDP(priceBrkUpPDP);
-						priceMap = priceBreakupFacade.getPricebreakup(buyBoxData.getSellerArticleSKU());
+						priceMap = priceBreakupFacade.getPricebreakup(buyBoxData.getSellerArticleSKU(), buyBoxData.getSellerId());
 					}
 
 					if (CollectionUtils.isNotEmpty(priceMap))
@@ -857,7 +886,34 @@ public class MplProductWebServiceImpl implements MplProductWebService
 						productDetailMobile.setPriceBreakUpDetailsMap(priceBreakUpList);
 					}
 				}
+				if (((MarketplacewebservicesConstants.FINEJEWELLERY).equalsIgnoreCase(productData.getRootCategory()))
+						|| ((MarketplacewebservicesConstants.FASHIONJEWELLERY).equalsIgnoreCase(productData.getRootCategory())))
+				{
+					final String jwlryCat = configurationService.getConfiguration().getString("mpl.jewellery.category");
+					boolean showSizeOrLength = false;
+					if (StringUtils.isNotEmpty(jwlryCat))
+					{
+						final List<String> catCodeList = Arrays.asList(jwlryCat.split(","));
 
+						for (final CategoryData cat : productData.getCategories())
+						{
+							final String catCode = cat.getCode();
+							if (catCodeList.contains(catCode))
+							{
+								showSizeOrLength = true;
+								break;
+							}
+						}
+					}
+					if (showSizeOrLength)
+					{
+						productDetailMobile.setIsSizeOrLength("Length");
+					}
+					else
+					{
+						productDetailMobile.setIsSizeOrLength("Size");
+					}
+				}
 			}
 			sharedText += MarketplacecommerceservicesConstants.SPACE
 					+ Localization.getLocalizedString(MarketplacewebservicesConstants.PDP_SHARED_POST);
@@ -917,6 +973,68 @@ public class MplProductWebServiceImpl implements MplProductWebService
 	//		}
 	//		return warrantyList;
 	//	}
+
+	/**
+	 * @param buyBoxData
+	 * @param ussidJwlry
+	 * @return
+	 */
+	private List<RefundReturnDTO> getRefundReturnDetails(final ProductModel productModel, final BuyBoxData buyBoxData,
+			final String ussidJwlry)
+	{
+		// YTODO Auto-generated method stub
+		final List<RefundReturnDTO> refundReturnList = new ArrayList<RefundReturnDTO>();
+		List<JewellerySellerDetailsModel> jSellerMsgList = new ArrayList<JewellerySellerDetailsModel>();
+		RefundReturnDTO refundReturn = null;
+
+		String retRefFirst = null;
+		String retRefSec = null;
+
+		String returnWindow = "0";
+
+		if (StringUtils.isNotEmpty(Localization.getLocalizedString(MarketplacewebservicesConstants.KNOW_MORE_SECOND)))
+		{
+			retRefFirst = Localization.getLocalizedString(MarketplacewebservicesConstants.KNOW_MORE_SECOND);
+
+			if (StringUtils.isNotEmpty(Localization.getLocalizedString(MarketplacewebservicesConstants.KNOW_MORE_THIRD)))
+			{
+				retRefSec = Localization.getLocalizedString(MarketplacewebservicesConstants.KNOW_MORE_THIRD);
+			}
+		}
+
+		returnWindow = getReturnWindow(productModel, buyBoxData.getSellerArticleSKU(), ussidJwlry);
+
+		if (StringUtils.isNotEmpty(retRefFirst) && StringUtils.isNotEmpty(returnWindow) && StringUtils.isNotEmpty(retRefSec))
+		{
+			refundReturn = new RefundReturnDTO();
+			refundReturn.setRefundReturnItem(retRefFirst + MarketplacecommerceservicesConstants.SPACE + returnWindow
+					+ MarketplacecommerceservicesConstants.SPACE + retRefSec);
+			refundReturnList.add(refundReturn);
+		}
+
+		if (MarketplacecommerceservicesConstants.FINEJEWELLERY.equalsIgnoreCase(productModel.getProductCategoryType()))
+		{
+			if (StringUtils.isNotEmpty(buyBoxData.getSellerId()))
+			{
+				jSellerMsgList = jewelleryService.getSellerMsgForRetRefTab(buyBoxData.getSellerId());
+			}
+
+			if (CollectionUtils.isNotEmpty(jSellerMsgList))
+			{
+				for (final JewellerySellerDetailsModel jSellerMsg : jSellerMsgList)
+				{
+					refundReturn = new RefundReturnDTO();
+					if (StringUtils.isNotEmpty(jSellerMsg.getDescription()))
+					{
+						refundReturn.setRefundReturnItem(jSellerMsg.getDescription());
+						refundReturnList.add(refundReturn);
+					}
+				}
+			}
+		}
+
+		return refundReturnList;
+	}
 
 	/**
 	 * get eligible delivery modes
@@ -1002,19 +1120,25 @@ public class MplProductWebServiceImpl implements MplProductWebService
 			{
 				isProductLingerie = true;
 			}
-			if (!isProductLingerie)
+			if (!isProductLingerie
+					&& !MarketplacewebservicesConstants.FINEJEWELLERY.equalsIgnoreCase(productModel.getProductCategoryType())
+					&& !MarketplacewebservicesConstants.FASHIONJEWELLERY.equalsIgnoreCase(productModel.getProductCategoryType()))
 			{
 				returnWindow = getReturnWindow(productModel, buyBoxData.getSellerArticleSKU(), ussidJwlry);
 			}
 		}
 
-		if (StringUtils.isNotEmpty(Localization.getLocalizedString(MarketplacewebservicesConstants.KNOW_MORE_SECOND)))
+		if (!MarketplacewebservicesConstants.FINEJEWELLERY.equalsIgnoreCase(productModel.getProductCategoryType())
+				&& !MarketplacewebservicesConstants.FASHIONJEWELLERY.equalsIgnoreCase(productModel.getProductCategoryType()))
 		{
-			knowMoreSec = Localization.getLocalizedString(MarketplacewebservicesConstants.KNOW_MORE_SECOND);
-
-			if (StringUtils.isNotEmpty(Localization.getLocalizedString(MarketplacewebservicesConstants.KNOW_MORE_THIRD)))
+			if (StringUtils.isNotEmpty(Localization.getLocalizedString(MarketplacewebservicesConstants.KNOW_MORE_SECOND)))
 			{
-				knowMoreTh = Localization.getLocalizedString(MarketplacewebservicesConstants.KNOW_MORE_THIRD);
+				knowMoreSec = Localization.getLocalizedString(MarketplacewebservicesConstants.KNOW_MORE_SECOND);
+
+				if (StringUtils.isNotEmpty(Localization.getLocalizedString(MarketplacewebservicesConstants.KNOW_MORE_THIRD)))
+				{
+					knowMoreTh = Localization.getLocalizedString(MarketplacewebservicesConstants.KNOW_MORE_THIRD);
+				}
 			}
 		}
 
@@ -1634,7 +1758,7 @@ public class MplProductWebServiceImpl implements MplProductWebService
 	 * @param productData
 	 * @return PromotionData
 	 */
-	private PromotionData getHighestPromotion(final ProductData productData, final String channel)
+	private PromotionData getHighestPromotion(final ProductData productData, final String channel, final BuyBoxData buyBoxData)
 	{
 		PromotionData highestPromotion = null;
 		try
@@ -1644,49 +1768,54 @@ public class MplProductWebServiceImpl implements MplProductWebService
 			{
 				promotioncollection = productData.getPotentialPromotions();
 			}
-			final List<PromotionData> enabledPromotionList = new ArrayList<PromotionData>();
-			final Date todays_Date = new Date();
+			//INC144317611
+			//final List<PromotionData> enabledPromotionList = new ArrayList<PromotionData>();
+			//final Date todays_Date = new Date();
 			if (CollectionUtils.isNotEmpty(promotioncollection))
 			{
 				for (final PromotionData promodata : promotioncollection)
 				{
-					if (null != promodata.getEnabled() && promodata.getEnabled().booleanValue() && null != promodata.getStartDate()
-							&& null != promodata.getEndDate() && todays_Date.after(promodata.getStartDate())
-							&& todays_Date.before(promodata.getEndDate()))
+
+					final List<String> restrictedSellerList = promodata.getAllowedSellers();
+					final List<String> restrictedChannel = promodata.getChannels();
+
+					if (CollectionUtils.isEmpty(restrictedSellerList)
+							|| (CollectionUtils.isNotEmpty(restrictedSellerList) && restrictedSellerList.contains(buyBoxData
+									.getSellerId())))
 					{
-						if (CollectionUtils.isNotEmpty(promodata.getChannels()))
+						if (channel == null
+								|| CollectionUtils.isEmpty(restrictedChannel)
+								|| (channel.equalsIgnoreCase(SalesApplication.WEB.getCode()) && restrictedChannel
+										.contains(SalesApplication.WEB.getCode()))
+								|| (channel.equalsIgnoreCase(SalesApplication.MOBILE.getCode()) && restrictedChannel
+										.contains(SalesApplication.MOBILE.getCode())))
 						{
-							for (final String promoChannel : promodata.getChannels())
-							{
-								//TISLUX-1823 -For LuxuryWeb
-								if (channel != null && channel.equalsIgnoreCase(SalesApplication.WEB.getCode()))
-								{
-									if (promoChannel.equalsIgnoreCase(SalesApplication.WEB.getCode()))
-									{
-										enabledPromotionList.add(promodata);
-									}
-								}
-								else
-								//For Mobile APP
-								{
-									if (promoChannel.equalsIgnoreCase(SalesApplication.MOBILE.getCode()))
-									{
-										enabledPromotionList.add(promodata);
-									}
-								}
-							}
+							highestPromotion = promodata;
+							break;
 						}
-						else
-						{
-							enabledPromotionList.add(promodata);
-						}
+
 					}
 
+					//INC144317611
+
+					/*
+					 * if (null != promodata.getEnabled() && promodata.getEnabled().booleanValue() && null !=
+					 * promodata.getStartDate() && null != promodata.getEndDate() &&
+					 * todays_Date.after(promodata.getStartDate()) && todays_Date.before(promodata.getEndDate())) { if
+					 * (CollectionUtils.isNotEmpty(promodata.getChannels())) { for (final String promoChannel :
+					 * promodata.getChannels()) { //TISLUX-1823 -For LuxuryWeb if (channel != null &&
+					 * channel.equalsIgnoreCase(SalesApplication.WEB.getCode())) { if
+					 * (promoChannel.equalsIgnoreCase(SalesApplication.WEB.getCode())) { enabledPromotionList.add(promodata);
+					 * } } else //For Mobile APP { if (promoChannel.equalsIgnoreCase(SalesApplication.MOBILE.getCode())) {
+					 * enabledPromotionList.add(promodata); } } } } else { enabledPromotionList.add(promodata); } }
+					 */
+
 				}
-				if (CollectionUtils.isNotEmpty(enabledPromotionList))
-				{
-					highestPromotion = checkHighestPriority(enabledPromotionList);
-				}
+				//INC144317611
+				/*
+				 * if (CollectionUtils.isNotEmpty(enabledPromotionList)) { highestPromotion =
+				 * checkHighestPriority(enabledPromotionList); }
+				 */
 			}
 		}
 		catch (final Exception e)
@@ -1734,7 +1863,7 @@ public class MplProductWebServiceImpl implements MplProductWebService
 	private PromotionMobileData getPromotionsForProduct(final ProductData productData, final BuyBoxData buyBoxData,
 			final List<SellerInformationMobileData> otherSellers, final String channel)
 	{
-		final PromotionData highestPrmotion = getHighestPromotion(productData, channel);
+		final PromotionData highestPrmotion = getHighestPromotion(productData, channel, buyBoxData);
 		PromotionMobileData promoMobiledata = null;
 		try
 		{

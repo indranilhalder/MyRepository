@@ -1,7 +1,5 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
-<%@ taglib prefix="template" tagdir="/WEB-INF/tags/desktop/template"%>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
-<%@ taglib prefix="cms" uri="http://hybris.com/tld/cmstags"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
 <%@ taglib prefix="theme" tagdir="/WEB-INF/tags/shared/theme"%>
@@ -16,12 +14,12 @@
 
 <div id="reviewOrderMessage" style=""></div>
 <ul class="product-block">
-	<li>
+	<%-- <li>
 		<span id="removeFromCart_Cart" style="display: none; color: #60A119;">
 			<!-- And it's out!</span> -->
 			<spring:theme code="remove.product.cartmsg" />
 		</span>
-	</li>
+	</li> --%>
 	<li class="moveToWishlistMsg" style="display: none;"></li>
 	<li class="header">
 		<ul>
@@ -54,12 +52,12 @@
 
 					<div class="product-img">
 
-   						<c:if test="${fn:toLowerCase(entry.product.luxIndicator)=='marketplace' or empty entry.product.luxIndicator and entry.product.rootCategory != 'FineJewellery'}">
+   						<c:if test="${fn:toLowerCase(entry.product.luxIndicator)=='marketplace' or empty entry.product.luxIndicator}">
    							<a href="${productUrl}"><product:productPrimaryImage product="${entry.product}" format="cartPage" /></a>
 						</c:if>
-						<c:if test="${fn:toLowerCase(entry.product.luxIndicator)=='marketplace' or empty entry.product.luxIndicator and entry.product.rootCategory == 'FineJewellery'}">
+						<%-- <c:if test="${fn:toLowerCase(entry.product.luxIndicator)=='marketplace' or empty entry.product.luxIndicator and entry.product.rootCategory == 'FineJewellery'}">
 							<a href="${productUrl}"><product:productPrimaryImage product="${entry.product}" format="fineJewelcartPage" /></a>
-						</c:if>
+						</c:if> --%>
 																	
 					   <c:if test="${fn:toLowerCase(entry.product.luxIndicator)=='luxury' and not empty entry.product.luxIndicator}">
 					   	<a href="${productUrl}"><product:productPrimaryImage product="${entry.product}" format="luxuryCartPage" /></a>
@@ -110,11 +108,46 @@
 							</p>
 
 							<c:if test="${not empty entry.product.size}">
-								<p class="size">
+								<%-- <p class="size">
 									<ycommerce:testId code="cart_product_size">
 										<spring:theme code="product.variant.size" />:&nbsp;${entry.product.size}
 										</ycommerce:testId>
-								</p>
+								</p> --%>
+								<c:choose>
+									<c:when test="${(not empty entry.product.rootCategory) && (entry.product.rootCategory == 'FineJewellery' || entry.product.rootCategory == 'FashionJewellery') }">
+										<spring:theme code="product.variant.size.noSize" var="noSize"/>
+										<c:if test="${entry.product.size ne noSize }">
+											<p class="size">
+												<ycommerce:testId code="cart_product_size">
+													<spring:eval expression="T(de.hybris.platform.util.Config).getParameter('mpl.jewellery.category')" var="lengthVariant"/>
+											     	<c:set var = "categoryListArray" value = "${fn:split(lengthVariant, ',')}" />
+													<c:forEach items="${entry.product.categories}" var="categories">
+											   			<c:forEach items = "${categoryListArray}" var="lengthVariantArray">
+											   				<c:if test="${categories.code eq lengthVariantArray}">
+											   				 	<c:set var="lengthSize" value="true"/>
+											   				</c:if> 
+											   			</c:forEach>
+											   		</c:forEach>	  
+											   		<c:choose>
+											   			<c:when test="${true eq lengthSize}">
+														  <spring:theme code="product.variant.length"/>:&nbsp;${entry.product.size}
+											   			</c:when>
+											   			<c:otherwise>
+														  <spring:theme code="product.variant.size" />:&nbsp;${entry.product.size}
+											   			</c:otherwise>
+											   		</c:choose>
+												</ycommerce:testId>
+											</p>
+										</c:if>
+									</c:when>
+									<c:otherwise>
+										<p class="size">
+											<ycommerce:testId code="cart_product_size">
+												<spring:theme code="product.variant.size" />:&nbsp;${entry.product.size}
+											</ycommerce:testId>
+										</p>
+									</c:otherwise>
+								</c:choose>
 							</c:if>
 						</div>
 
@@ -486,7 +519,7 @@
 					<input type="hidden" name="initialQuantity"
 						value="${entry.quantity}" />
 					
-					<select class="update-entry-quantity-input" disabled="disabled">
+					<select class="update-entry-quantity-input review-page-select" disabled="disabled">
 						<option value="${entry.quantity}" selected="selected" >${entry.quantity}</option>
 					</select>
 				</form>

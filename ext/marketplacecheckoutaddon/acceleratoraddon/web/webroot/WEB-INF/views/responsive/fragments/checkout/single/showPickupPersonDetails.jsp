@@ -8,10 +8,9 @@
 		<div class="pickUpPersonAjax"></div>
 	</div>
 	<div class="panel panel-default pickuppersonWidth">
-		<h2 class="panel-defaultHeading">Collect in store: Personal Info</h2>
+		<h2 class="panel-defaultHeading"><spring:theme	code="checkout.single.pickup.person.personalinfo" /></h2>
 		<p class="retail-bag"></p>
-		<div class="retail-detail">Please provide us with your name and
-			phone number so we can assist you quickly and easily</div>
+		<div class="retail-detail"><spring:theme code="checkout.single.pickup.person.providedetail.msg" /></div>
 		<div class="panel panel-body">
 			<div class="pickupDetails error_txt" style="display:none;">
 				<spring:theme
@@ -25,24 +24,19 @@
 				</div>
 				<div class="nameFullSubPanel">
 				<div class="form-group">
-					<label class="control-label" for="pickupPersonName">Name</label>
+					<label class="control-label" for="pickupPersonName"><spring:theme code="checkout.single.pickup.person.name" /></label>
 					<input type="text" id="pickupPersonName" name="pickupPersonName"
 						maxlength="30" class="inputname form-control" placeholder="Enter Full Name*"
 						value="" onkeyup="ACC.singlePageCheckout.validatePickupPersonNameOnKeyUp()"/>
 					<div class="error_txt pickupPersonNameError"></div>
 						</div>
 				</div>
-				<!-- <div class="nameBlankSubPanel">
-					<input type="text" name="pickupPersonName" maxlength="30"
-						class="inputname" />
-					<div class="error_txt pickupPersonNameError"></div>
-				</div> -->
 				<div class="mobileSubPanel">
 				<div class="form-group">
-					<label class="control-label" for="pickupPersonMobile">Mobile Number</label>
+					<label class="control-label" for="pickupPersonMobile"><spring:theme	code="checkout.single.pickup.person.mobileNumber" /></label>
 					<input type="text" id="pickupPersonMobile" class="inputmobile"
 						maxlength="10" placeholder="Enter Mobile Number*"
-						value="" onkeyup="ACC.singlePageCheckout.validatePickupPersonMobileOnKeyUp()"/><br />
+						value="" onkeyup="ACC.singlePageCheckout.validatePickupPersonMobileOnKeyUp()" oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"/><br />
 					<div class="error_txt pickupPersonMobileError"></div>
 					</div>
 				</div>
@@ -53,7 +47,7 @@
 						<spring:theme code="checkout.single.cnc.pickup.details.submit" />
 					</button>
 					<div>
-						<a href="javascript:void(0);" class="cancel_delslot" onclick="$('#singlePagePickupPersonPopup').modal('hide');">Cancel</a>
+						<a href="javascript:void(0);" class="cancel_delslot" onclick="$('#singlePagePickupPersonPopup').modal('hide');"><spring:theme code="checkout.single.pickup.person.cancel" /></a>
 					</div>
 				</div>
 				<div id="pickUpDetailsMsg" style="padding-top: 10px; display: none;">

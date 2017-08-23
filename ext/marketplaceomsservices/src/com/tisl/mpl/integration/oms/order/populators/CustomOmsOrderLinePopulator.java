@@ -230,7 +230,14 @@ public class CustomOmsOrderLinePopulator implements Populator<OrderEntryModel, O
 				final List<CategoryModel> productCategoryList = getDefaultPromotionsManager().getPrimarycategoryData(productModel);
 				if (CollectionUtils.isNotEmpty(productCategoryList))
 				{
-					target.setCategoryName(productCategoryList.get(0).getCode());
+					for (final CategoryModel cat : productCategoryList)
+					{
+						if (StringUtils.isNotEmpty(cat.getCode()) && (cat.getCode().length() >= 5))
+						{
+							target.setCategoryName(cat.getCode().substring(0, 5));
+							break;
+						}
+					}
 				}
 			}
 
@@ -239,6 +246,19 @@ public class CustomOmsOrderLinePopulator implements Populator<OrderEntryModel, O
 					&& source.getProduct().getProductCategoryType()
 							.equalsIgnoreCase(MarketplacecommerceservicesConstants.FINEJEWELLERY))
 			{
+
+				if (null != source.getOrder() && null != source.getOrder().getParentReference())
+				{
+					//Checking the pancard request is true or not
+					if (source.getOrder().getParentReference().getPanVerificationReq().booleanValue())
+					{
+						target.setIsPANCARDVerificationReq("Y");
+					}
+					else
+					{
+						target.setIsPANCARDVerificationReq("N");
+					}
+				}
 				populateJewelleryInfo(source, target);
 
 				final List<BrandModel> brands = (List<BrandModel>) productModel.getBrands();
@@ -251,7 +271,19 @@ public class CustomOmsOrderLinePopulator implements Populator<OrderEntryModel, O
 			if (source.getOrder() != null && source.getOrder().getStatus() != null
 					&& source.getOrder().getStatus().getCode() != null)
 			{
-				target.setOrderLineStatus(MplCodeMasterUtility.getglobalCode(source.getOrder().getStatus().getCode().toUpperCase()));
+				//PT issue for One touch cancellation--fix
+				String orderStatus = null;
+				if (source.getOrder().getParentReference() != null)
+				{
+					orderStatus = source.getOrder().getParentReference().getStatus().getCode().toUpperCase();
+				}
+				else
+				{
+					orderStatus = source.getOrder().getStatus().getCode().toUpperCase();
+				}
+				target.setOrderLineStatus(MplCodeMasterUtility.getglobalCode(orderStatus));
+				//PT issue for One touch cancellation--fix
+				//target.setOrderLineStatus(MplCodeMasterUtility.getglobalCode(source.getOrder().getStatus().getCode().toUpperCase()));
 			}
 			else
 			{
@@ -314,14 +346,21 @@ public class CustomOmsOrderLinePopulator implements Populator<OrderEntryModel, O
 				LOG.debug("CustomOmsOrderLinePopulator : there is no coupon for the order ");
 			}
 
-			if (source.getPrevDelCharge() != null && source.getPrevDelCharge().doubleValue() > 0)
-			{
-				target.setShippingCharge(source.getPrevDelCharge().doubleValue());
-			}
-			else if (source.getCurrDelCharge() != null)
+			//TISPRDT-1226
+			if (source.getCurrDelCharge() != null)
 			{
 				target.setShippingCharge(source.getCurrDelCharge().doubleValue());
 			}
+			else if (source.getPrevDelCharge() != null && source.getPrevDelCharge().doubleValue() > 0)
+			{
+				target.setShippingCharge(source.getPrevDelCharge().doubleValue());
+			}
+
+			/*
+			 * if (source.getPrevDelCharge() != null && source.getPrevDelCharge().doubleValue() > 0) {
+			 * target.setShippingCharge(source.getPrevDelCharge().doubleValue()); } else if (source.getCurrDelCharge() !=
+			 * null) { target.setShippingCharge(source.getCurrDelCharge().doubleValue()); }
+			 */
 			if (source.getOrder().getPaymentInfo() instanceof CODPaymentInfoModel)
 			{
 				target.setIsCOD(true);
@@ -338,11 +377,19 @@ public class CustomOmsOrderLinePopulator implements Populator<OrderEntryModel, O
 					&& CollectionUtils.isNotEmpty(source.getAssociatedItems()))
 			{
 				target.setParentTransactionID(source.getParentTransactionID());
+				//TPR-1347---START
+				target.setCrmParentRef(source.getParentTransactionID());
+				//TPR-1347---END
 
 			}
-
-
-
+			//TPR-1347---START
+			if (source.getIsBOGOapplied() != null && source.getIsBOGOapplied().booleanValue()
+					&& CollectionUtils.isNotEmpty(source.getAssociatedItems()))
+			{
+				//target.setParentTransactionID(source.getParentTransactionID());
+				target.setCrmParentRef(source.getParentTransactionID());
+			}
+			//TPR-1347---END
 			if (richAttributeModel.get(0).getDeliveryFulfillModeByP1() != null
 					&& richAttributeModel.get(0).getDeliveryFulfillModeByP1().getCode() != null)
 
@@ -837,6 +884,17 @@ public class CustomOmsOrderLinePopulator implements Populator<OrderEntryModel, O
 				target.setStoneSizeType10(jewelleryEntry.getStoneSizeType10());
 			}
 
+			//TISJEW-3469
+			if (null != jewelleryEntry.getPriceBreakuponInvoice())
+			{
+				target.setPriceBreakuponInvoice(jewelleryEntry.getPriceBreakuponInvoice());
+			}
+
+			if (null != jewelleryEntry.getMetalName())
+			{
+				target.setMetalName(jewelleryEntry.getMetalName());
+			}
+
 
 		}
 	}
@@ -866,7 +924,18 @@ public class CustomOmsOrderLinePopulator implements Populator<OrderEntryModel, O
 			target.setIsaGift(MarketplaceomsservicesConstants.FALSE);
 			target.setIsAFreebie(MarketplaceomsservicesConstants.FALSE);
 		}
-
+		//TPR-1345--START
+		if (source.getIsBOGOapplied() != null && source.getIsBOGOapplied().booleanValue())
+		{
+			target.setIsBOGO(Boolean.TRUE);
+			//target.setIsBOGO(MarketplaceomsservicesConstants.TRUE);
+		}
+		else
+		{
+			target.setIsBOGO(Boolean.FALSE);
+			//target.setIsBOGO(MarketplaceomsservicesConstants.FALSE);
+		}
+		//TPR-1345--END
 		target.setOrderLineId((source.getOrderLineId() != null) ? source.getOrderLineId() : source.getTransactionID());
 
 

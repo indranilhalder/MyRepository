@@ -397,23 +397,23 @@ function navigateToPage(queryString,textString)
 								<input type="hidden" name="text" value="${searchPageData.freeTextSearch}"/>
 								<input type="hidden" name="pageFacetData" value="${pageFacetData}"/>
 								<input type="hidden" name="isFacet" value="true"/>
-								<input type="hidden" name="facetValue" value="${facetValue.code}"/>
-								<label>
-								<input type="checkbox" ${facetValue.selected ? 'checked="checked"' : ''}  class="facet-checkbox js-facet-checkbox sr-only" value="${facetValue.code}"/>
-								<span class="facet-label">
-										<span class="facet-mark"></span>
-										<div class="facet-text">
-										<span class="facet-text">
-											${facetValue.name}&nbsp;											
-
-										</span>
-
-										 <ycommerce:testId code="facetNav_count">
-												<span class="facet-count"><spring:theme code="search.nav.facetValueCount" arguments="${facetValue.count}"/></span>
-										</ycommerce:testId>
-										</div>
-									</span>
-								</label>
+								<input type="hidden" name="facetValue" value="${facetValue.code}"/>									
+								<c:if test="${not empty facetValue.name && facetValue.name ne 'NO SIZE'}">
+									<label>
+										<input type="checkbox" ${facetValue.selected ? 'checked="checked"' : ''}  class="facet-checkbox js-facet-checkbox sr-only" value="${facetValue.code}"/>
+										<span class="facet-label">
+												<span class="facet-mark"></span>
+												<div class="facet-text">
+												<span class="facet-text">
+													${facetValue.name}&nbsp;											
+												</span>
+												 <ycommerce:testId code="facetNav_count">
+														<span class="facet-count"><spring:theme code="search.nav.facetValueCount" arguments="${facetValue.count}"/></span>
+												</ycommerce:testId>
+												</div>
+											</span>
+									</label>
+								</c:if>
 								</form>
 						<%-- <a href="#">${facetValue.name}</a> --%>
 							<%-- <a href="${facetValueQueryUrl}&amp;text=${searchPageData.freeTextSearch}">${facetValue.name}</a> --%>

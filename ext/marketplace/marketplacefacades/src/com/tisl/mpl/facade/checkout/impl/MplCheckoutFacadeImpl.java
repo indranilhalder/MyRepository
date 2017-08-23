@@ -90,6 +90,7 @@ import com.tisl.mpl.facade.checkout.MplCartFacade;
 import com.tisl.mpl.facade.checkout.MplCheckoutFacade;
 import com.tisl.mpl.facade.checkout.MplCustomAddressFacade;
 import com.tisl.mpl.facade.config.MplConfigFacade;
+import com.tisl.mpl.facade.product.ExchangeGuideFacade;
 import com.tisl.mpl.facades.account.address.MplAccountAddressFacade;
 import com.tisl.mpl.facades.constants.MarketplaceFacadesConstants;
 import com.tisl.mpl.facades.product.data.MarketplaceDeliveryModeData;
@@ -194,6 +195,10 @@ public class MplCheckoutFacadeImpl extends DefaultCheckoutFacade implements MplC
 	@Resource(name = "sellerBasedPromotionService")
 	private SellerBasedPromotionService sellerBasedPromotionService;
 
+	//Exchange Changes
+	@Resource(name = "exchangeGuideFacade")
+	private ExchangeGuideFacade exchangeGuideFacade;
+
 	@Autowired
 	private ShortUrlService googleShortUrlService;
 
@@ -253,7 +258,8 @@ public class MplCheckoutFacadeImpl extends DefaultCheckoutFacade implements MplC
 		ServicesUtil.validateParameterNotNull(addressDataList, "Address data list cannot be empty");
 		final List<AddressData> addressDataNewList = new ArrayList<AddressData>();
 		String defaultAddressId = "";
-		String firstPriority = "Home";
+		String firstPriority = MarketplacecommerceservicesConstants.HOME;
+
 		int count = 0;
 
 		final Map<String, AddressData> sortedMap = new TreeMap<String, AddressData>(new Comparator<String>()
@@ -1536,6 +1542,15 @@ public class MplCheckoutFacadeImpl extends DefaultCheckoutFacade implements MplC
 		result.setOrder(orderModel);
 
 		mplCommerceCheckoutService.beforeSubmitOrder(parameter, result);
+		try
+		{
+
+			exchangeGuideFacade.getExchangeRequestID(orderModel);
+		}
+		catch (final Exception e)
+		{
+			LOG.error("Exchange Could Not be Applied" + e);
+		}
 	}
 
 	/**
@@ -1552,6 +1567,14 @@ public class MplCheckoutFacadeImpl extends DefaultCheckoutFacade implements MplC
 		result.setOrder(orderModel);
 
 		mplCommerceCheckoutService.beforeSubmitOrder(parameter, result);
+		try
+		{
+			exchangeGuideFacade.getExchangeRequestID(orderModel);
+		}
+		catch (final Exception e)
+		{
+			LOG.error("Exchange Could Not be Applied" + e);
+		}
 	}
 
 
@@ -1566,16 +1589,31 @@ public class MplCheckoutFacadeImpl extends DefaultCheckoutFacade implements MplC
 		getOrderService().submitOrder(orderModel);
 	}
 
+	/**
+	 * This method overrides the OOTB placeorder method where it allows to pass the available sales application of the
+	 * cartModel
+	 *
+	 * @param cartModel
+	 */
+	@Override
+	public OrderModel placeOrder(final CartModel cartModel) throws InvalidCartException
+	{
+		final CommerceCheckoutParameter parameter = new CommerceCheckoutParameter();
+		parameter.setEnableHooks(true);
+		parameter.setCart(cartModel);
+		// For TPR-5667 : setting salesapplication
+		if (cartModel.getChannel() != null)
+		{
+			parameter.setSalesApplication(cartModel.getChannel());
+		}
+		else
+		{
+			parameter.setSalesApplication(SalesApplication.WEB);
+		}
 
-
-
-
-
-
-
-
-
-
+		final CommerceOrderResult commerceOrderResult = getCommerceCheckoutService().placeOrder(parameter);
+		return commerceOrderResult.getOrder();
+	}
 
 
 	public VoucherModelService getVoucherModelService()

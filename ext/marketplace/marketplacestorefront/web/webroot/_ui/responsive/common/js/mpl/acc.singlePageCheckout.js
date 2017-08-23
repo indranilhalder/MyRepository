@@ -76,6 +76,7 @@ ACC.singlePageCheckout = {
 		              $("#address_carousel").owlCarousel({
 		                items:3,
 						loop: false,
+						mouseDrag:($(".checkTab .addressList_wrapper .address-list").length <= 3)?false:true,
 						nav: ($(".checkTab .addressList_wrapper .address-list").length <= 3)?false:true,
 						dots:false,
 						navText:[],
@@ -109,6 +110,8 @@ ACC.singlePageCheckout = {
         	else
         	{
         		$("#chooseDeliveryAddressMobileDiv").html(data);
+        		//Hide edit radio for responsive
+        		ACC.singlePageCheckout.hideMobileEditRadio();
         	}
 		});
         
@@ -311,6 +314,17 @@ ACC.singlePageCheckout = {
 						}
     				}
 	        	}
+				//Hiding/Showing COD if cnc is selcted
+				if(cncSelected=="true")
+				{
+					$("#viewPaymentCOD, #viewPaymentCODMobile").css("display","none");
+					$("#viewPaymentCOD, #viewPaymentCODMobile").parent("li").css("display","none");
+				}
+				else
+				{
+					$("#viewPaymentCOD, #viewPaymentCODMobile").css("display","block");
+					$("#viewPaymentCOD, #viewPaymentCODMobile").parent("li").css("display","block");
+				}
 			}
 		}
 		ACC.singlePageCheckout.showAjaxLoader();
@@ -621,7 +635,6 @@ ACC.singlePageCheckout = {
         			ACC.singlePageCheckout.processError("#selectedAddressMessage",data);
                 }
             } else {
-	        	//alert(data);
             	ACC.singlePageCheckout.getSelectedAddress();
 	        	$("#choosedeliveryMode").html(data);
 	        	ACC.singlePageCheckout.showAccordion("#choosedeliveryMode");
@@ -718,13 +731,13 @@ ACC.singlePageCheckout = {
 		}
 	},
 	//Function to get pick up persson form from server, Once fetched it will not be fetched again[For web].
-	getPickUpPersonForm:function(pickupPersonName,pickupPersonMobileNo){		
+	getPickUpPersonForm:function(pickupPersonName,pickupPersonMobileNo){
     	var isCncPresent=$("#selectDeliveryMethodForm #isCncPresentInSinglePageCart").val();
     	if(isCncPresent=="true")
     	{
     		var htmlPopulated=$("#singlePagePickupPersonPopup span#modalBody").attr("data-htmlPopulated");
     		if(htmlPopulated=="NO")
-        	{
+        	{	//If form has not been fetched yet
     			var url=ACC.config.encodedContextPath + "/checkout/single/pickupPerson/popup";
         		var data="";
         		var xhrPickupPersonResponse=ACC.singlePageCheckout.ajaxRequest(url,"GET",data,false);;
@@ -740,6 +753,11 @@ ACC.singlePageCheckout = {
             		$('form[name="pickupPersonDetails"] #pickupPersonMobile').val(pickupPersonMobileNo);
     			});
         	}
+    		else if(htmlPopulated=="YES")
+    		{	//If form has already been fetched, We just need to update the form entries.
+    			$('form[name="pickupPersonDetails"] #pickupPersonName').val(pickupPersonName);
+        		$('form[name="pickupPersonDetails"] #pickupPersonMobile').val(pickupPersonMobileNo);
+    		}
     	}
 	},
 	
@@ -919,17 +937,20 @@ ACC.singlePageCheckout = {
 	            				stagePadding: 36,
 	            				slideBy: 1,
 	            				margin: 0,
+	            				mouseDrag:($(".cnc_item .removeColor"+entryNumber).length <= 1)?false:true,
 	            				nav: ($(".cnc_item .removeColor"+entryNumber).length <= 1)?false:true,
 	            			},
 	            			// breakpoint from 768 up
 	            			768 : {
 	            				items:2,
 	            				slideBy: 2,
+	            				mouseDrag:($(".cnc_item .removeColor"+entryNumber).length <= 2)?false:true,
 	            				nav: ($(".cnc_item .removeColor"+entryNumber).length <= 2)?false:true,
 	            			},
 	            			// breakpoint from 1280 up
 	            			1280 : {
 	            				items:3,
+	            				mouseDrag:($(".cnc_item .removeColor"+entryNumber).length <= 3)?false:true,
 	            				nav: ($(".cnc_item .removeColor"+entryNumber).length <= 3)?false:true,
 	            			}			
 	            		},
@@ -1141,16 +1162,16 @@ ACC.singlePageCheckout = {
 			$(".pickupPersonNameError").text("Enter Atleast 4 Letters");
 			return false;
 		}
-		else if(nameCheck == false){
-			$(".pickupPersonNameError").show();
-			$(".pickupPersonNameError").text("Spaces cannot be allowed");
-			return false;
-		 }
 		else if(statusName == false) {
 			$(".pickupPersonNameError").show();
 			$(".pickupPersonNameError").text("Please Enter Only Alphabets");
 			return false;
 		}
+		else if(nameCheck == false){
+			$(".pickupPersonNameError").show();
+			$(".pickupPersonNameError").text("Spaces cannot be allowed");
+			return false;
+		 }
 		else{
 			return true;
 		}
@@ -1198,7 +1219,7 @@ ACC.singlePageCheckout = {
 		var selector="#"+elementId+" #modalBody"
 		$(selector).html(data);
 		$("#"+elementId).modal('show');
-		$(".new-address-form-mobile").html('');
+		$("#newAddressFormMobile.new-address-form-mobile").html('');
 	},
 	//Generic function to showAccordion
 	showAccordion: function(showElementId){
@@ -1279,6 +1300,20 @@ ACC.singlePageCheckout = {
 	            return false;
 	        }
     },
+    addReviewOrderPriceStrikeThrough:function(){
+    	$("#off-bag").show();
+
+		$("li.price").each(function(){
+			if(($(this).find(".off-bag").css("display") === "inline-block") || ($(this).find(".off-bag").css("display") === "block")){
+				if($(this).find("span.delSeat.mop").length > 0){
+				$(this).find("span.delSeat:not(.mop)").addClass("delAction");
+				}
+			}
+			else{
+				$(this).find("span.delSeat:not(.mop)").removeClass("delAction");
+			}
+		});
+    },
     //Function to fetch review order page from server
     getReviewOrder:function(){
     	ACC.singlePageCheckout.showAjaxLoader();
@@ -1317,26 +1352,7 @@ ACC.singlePageCheckout = {
             }
   	      // tealiumCallOnPageLoad();
         	//START:Code to show strike off price
-    		$("#off-bag").show();
-
-//    		$("li.price").each(function(){
-//    				if($(this).find(".off-bag").css("display") === "block"){
-//    					$(this).find("span.delSeat").addClass("delAction");
-//    				}
-//    				else{
-//    					$(this).find("span.delSeat").removeClass("delAction");
-//    				}
-//    			});
-    		$("li.price").each(function(){
-    			if(($(this).find(".off-bag").css("display") === "inline-block") || ($(this).find(".off-bag").css("display") === "block")){
-    				if($(this).find("span.delSeat.mop").length > 0){
-    				$(this).find("span.delSeat:not(.mop)").addClass("delAction");
-    				}
-    			}
-    			else{
-    				$(this).find("span.delSeat:not(.mop)").removeClass("delAction");
-    			}
-    		});
+        	ACC.singlePageCheckout.addReviewOrderPriceStrikeThrough();
     		//END:Code to show strike off price
         	if($('body').find('a.cart_move_wishlist').length > 0){
         	$('a.cart_move_wishlist').popover({ 
@@ -1415,6 +1431,7 @@ ACC.singlePageCheckout = {
 						$(showElementId).show();
 						ACC.singlePageCheckout.mobileValidationSteps.selectedAddressId="";
 	            		ACC.singlePageCheckout.mobileValidationSteps.saveNewAddress=false;
+	            		ACC.singlePageCheckout.mobileValidationSteps.saveEditAddress=false;
 					 document.getElementById('confirmOverlay').style.display = "none";
 					 document.getElementById('confirmBox').style.display = "none";
 					 document.getElementById('singlePageAddressPopup').style.display = "block";
@@ -1449,6 +1466,7 @@ ACC.singlePageCheckout = {
 					$(showElementId).show();
 					ACC.singlePageCheckout.mobileValidationSteps.selectedAddressId="";
             		ACC.singlePageCheckout.mobileValidationSteps.saveNewAddress=false;
+            		ACC.singlePageCheckout.mobileValidationSteps.saveEditAddress=false;
 				 document.getElementById('confirmOverlay').style.display = "none";
 				 document.getElementById('confirmBox').style.display = "none";
 				 
@@ -1537,16 +1555,7 @@ ACC.singlePageCheckout = {
 	        		}
 	        		ACC.singlePageCheckout.getTealiumData();
 	        		//START:Code to show strike off price
-	        		$("#off-bag").show();
-
-	        		$("li.price").each(function(){
-	        				if($(this).find(".off-bag").css("display") === "block"){
-	        					$(this).find("span.delSeat").addClass("delAction");
-	        				}
-	        				else{
-	        					$(this).find("span.delSeat").removeClass("delAction");
-	        				}
-	        			});
+	        		ACC.singlePageCheckout.addReviewOrderPriceStrikeThrough();
 	        		//END:Code to show strike off price
 //	        		var entryNumbers=$("#entryNumbersId").val();
 //	        		var removeEntryNo=entryNumber+"#";
@@ -1700,7 +1709,7 @@ ACC.singlePageCheckout = {
 	},
 	//Function called from onPaymentModeSelection() function for responsive
 	proceedWithPaymentForResponsive:function(paymentMode,savedOrNew,radioId,callFromCvv){
-		alert("proceedWithPaymentForResponsive called with paymentMode:"+paymentMode+" savedOrNew:"+savedOrNew+" radioId:"+radioId+" callFromCvv:"+callFromCvv);
+		//alert("proceedWithPaymentForResponsive called with paymentMode:"+paymentMode+" savedOrNew:"+savedOrNew+" radioId:"+radioId+" callFromCvv:"+callFromCvv);
 		ACC.singlePageCheckout.showAjaxLoader();
 		//function call to validate payment before proceeding
 		var xhrValidateResponse=ACC.singlePageCheckout.validateCartForPayment();
@@ -1753,7 +1762,7 @@ ACC.singlePageCheckout = {
         			
         			//Populating sub-total which is subject to change on order item removal
         			$("#orderTotalSpanId ul.totals li.subtotal span.amt span.priceFormat").html(data.subTotalPrice.formattedValue);
-        			alert("Saved or New"+savedOrNew);
+        			//alert("Saved or New"+savedOrNew);
         			if(savedOrNew=="savedCard")
         			{
         				////Code to be executed if a saved card is selected
@@ -1999,7 +2008,42 @@ ACC.singlePageCheckout = {
     xhrResponse.always(function(){        	
 	});
   },	
-	
+  showHideCodTab:function(){
+	  if(ACC.singlePageCheckout.getIsResponsive()){
+		  //Mobile
+		  var entryNumbersId=$("#selectDeliveryMethodFormMobile #entryNumbersId").val();
+		  var isCncPresent=$("#selectDeliveryMethodFormMobile #isCncPresentInSinglePageCart").val();//This will be true if any cart item has CNC as delivery mode
+	  }
+	  else{
+		  //Desktop
+		  var entryNumbersId=$("#selectDeliveryMethodForm #entryNumbersId").val();
+		  var isCncPresent=$("#selectDeliveryMethodForm #isCncPresentInSinglePageCart").val();//This will be true if any cart item has CNC as delivery mode
+	  }
+	  var cncSelected="false";
+	  var entryNumbers=entryNumbersId.split("#");
+	  for(var i=0;i<entryNumbers.length-1;i++)
+	  {
+		if(isCncPresent=="true")
+	  	{
+	  		if($("input[name='"+entryNumbers[i]+"']").length>0 && $('input:radio[name='+entryNumbers[i]+']:checked').attr("id").includes("click-and-collect"))
+	  		{
+	  			cncSelected="true";	
+	  		}
+	  	}
+	  }
+	  if(cncSelected=="true")
+	  {
+	  	$("#viewPaymentCOD, #viewPaymentCODMobile").css("display","none");
+	  	$("#viewPaymentCOD, #viewPaymentCODMobile").parent("li").css("display","none");
+	  	$("#viewPaymentCODMobile").parent("li").removeClass("paymentModeMobile");
+	  }
+	  else
+	  {
+	  	$("#viewPaymentCOD, #viewPaymentCODMobile").css("display","block");
+	  	$("#viewPaymentCOD, #viewPaymentCODMobile").parent("li").css("display","block");
+	  	$("#viewPaymentCODMobile").parent("li").addClass("paymentModeMobile");
+	  }
+  },
 //	mobileAccordion:function(){
 //		$("#address-change-link").on("click", function(){
 //			$(this).parents(".checkout_mobile_section").find(".mobileNotDefaultDelAddress").show();
@@ -2029,20 +2073,23 @@ ACC.singlePageCheckout = {
 	isSlotDeliveryAndCncPresent:false,
 	countItemsForReviewOrder:"",
 	needHelpContactNumber:"",
+	currentPincode:"",
+	previousPincode:"",
 /****************MOBILE STARTS HERE************************/
 //-----------------------------COMMENTS ON mobileValidationSteps object-----------------------------//
 //	1.isAddressSaved		:	Used to track if new address has been saved in cartModel for responsive
-//	2.isAddressSet		:	Used to track if existing address has been set as delivery address in cartModel for responsive
-//	3.isDeliveryModeSet	:	Used to track if delivery mode has been set in cartModel for responsive
+//	2.isAddressSet			:	Used to track if existing address has been set as delivery address in cartModel for responsive
+//	3.isDeliveryModeSet		:	Used to track if delivery mode has been set in cartModel for responsive
 //	4.saveNewAddress		:	Used to track if new address has to be saved in cartModel for responsive
-//	5.selectedAddressId	:	Used to track the selected address id for responsive
+//	5.selectedAddressId		:	Used to track the selected address id for responsive
 //	6.isInventoryReserved	:	Used to track if inventory has been reserved for responsive
-//	7.isScheduleServiceble:	Used to track scheduled delivery is available for responsive
-//	8.paymentModeSelected:	Used to track the selected payment mode for responsive
+//	7.isScheduleServiceble	:	Used to track scheduled delivery is available for responsive
+//	8.paymentModeSelected	:	Used to track the selected payment mode for responsive
 //	9.prePaymentValidationDone:	Used to track cart validation before payment is made
-//	10.isCncSelected:	Used to track if CNC delivery mode has been selected
+//	10.isCncSelected		:	Used to track if CNC delivery mode has been selected
 //	11.isPickUpPersonDetailsSaved:	Used to track if CNC pickup person details have been saved
-//	12.isPincodeServiceable:	Used to track if pincode is serviceable or not
+//	12.isPincodeServiceable	:	Used to track if pincode is serviceable or not
+//	13.saveEditAddress		:	Used to track if edit address has to be saved in cartModel for responsive
 //////////////////////////////////////////////////////////////////////////////////////////////////////
 	
 	mobileValidationSteps:{
@@ -2057,7 +2104,8 @@ ACC.singlePageCheckout = {
 		prePaymentValidationDone:false,
 		isCncSelected:false,
 		isPickUpPersonDetailsSaved:false,
-		isPincodeServiceable:false
+		isPincodeServiceable:false,
+		saveEditAddress:false,
 	},
 
 	resetValidationSteps:function(){
@@ -2072,7 +2120,7 @@ ACC.singlePageCheckout = {
 		ACC.singlePageCheckout.mobileValidationSteps.prePaymentValidationDone=false;
 		ACC.singlePageCheckout.mobileValidationSteps.isCncSelected=false;
 		ACC.singlePageCheckout.mobileValidationSteps.isPickUpPersonDetailsSaved=false;
-		//ACC.singlePageCheckout.mobileValidationSteps.isPincodeServiceable=false;
+		ACC.singlePageCheckout.mobileValidationSteps.saveEditAddress=false;
 	},
 	
 	resetPaymentModes:function()
@@ -2128,7 +2176,7 @@ ACC.singlePageCheckout = {
 		$("#paymentButtonId_up").css("display","none");
 		$("#make_mrupee_payment_up").css("display","none");
 		//Hiding SnackBar
-		ACC.singlePageCheckout.hideSnackBar();
+		//ACC.singlePageCheckout.hideSnackBar();
 	},
 	
 	//Used to get blank popup for pickup person form on clicking on cnc store for mobile
@@ -2169,7 +2217,7 @@ ACC.singlePageCheckout = {
 	
 	//Function used to fetch add address form for responsive
 	getMobileAddAddress:function(){
-		var formAlreadyLoaded=$(".new-address-form-mobile").attr("data-loaded");
+		var formAlreadyLoaded=$("#newAddressFormMobile.new-address-form-mobile").attr("data-loaded");
 		if(ACC.singlePageCheckout.mobileValidationSteps.paymentModeSelected!="")
 		{//Will enter if an user selects new address after selecting a payment mode
 			ACC.singlePageCheckout.resetValidationSteps();
@@ -2177,6 +2225,7 @@ ACC.singlePageCheckout = {
 		}
 		//When ever a user selects a new address this flag should be set to true
 		ACC.singlePageCheckout.mobileValidationSteps.saveNewAddress=true;
+		ACC.singlePageCheckout.mobileValidationSteps.saveEditAddress=false;
 		if(formAlreadyLoaded=="false")
 		{
 			ACC.singlePageCheckout.showAjaxLoader();
@@ -2188,15 +2237,19 @@ ACC.singlePageCheckout = {
 			});
 	        
 	        xhrResponse.done(function(data) {
+	        	$("#editAddressFormMobile.new-address-form-mobile").html("");//Removing edit address form when new address is selected
+	        	//Remove edit address radio button check
+        		$("#editAddressForResponsive div.mobile_add_address.form_open").removeClass("form_open");//Remove radio of edit address
+        		$("#editAddressForResponsive").css("display","none");//Hide edit address block
 	        	//Unchecking the radio button of saved addresses
 	        	$('#selectAddressFormMobile input[name=selectedAddressCode]').prop('checked', false);
-	        	$(".mobile_add_address").addClass("form_open");
-				$(".new-address-form-mobile").html(data);
-				$(".new-address-form-mobile").attr("data-loaded","true");
-				$(".new-address-form-mobile").slideDown();
+	        	$("#addNewAddressForResponsive div.mobile_add_address").addClass("form_open");
+				$("#newAddressFormMobile.new-address-form-mobile").html(data);
+				$("#newAddressFormMobile.new-address-form-mobile").attr("data-loaded","true");
+				$("#newAddressFormMobile.new-address-form-mobile").slideDown();
 				$("#singlePageAddressPopup #modalBody").html('');
 				$("#newAddressButton").hide();
-				ACC.singlePageCheckout.attachOnPincodeKeyUpEvent();
+				ACC.singlePageCheckout.attachOnPincodeKeyUpEvent("newAddressFormMobile",true,false);//OnKeyUp even will be attached so that after 6 digits are enter pincode serviceability call is made
 			});
 	        
 	        xhrResponse.always(function(){
@@ -2205,10 +2258,11 @@ ACC.singlePageCheckout = {
 		}
 		else
 		{
+			$("#newAddressFormMobile form#addressForm")[0].reset();
 			ACC.singlePageCheckout.showAjaxLoader();
 			$('#selectAddressFormMobile input[name=selectedAddressCode]').prop('checked', false);
-        	$(".mobile_add_address").addClass("form_open");
-			$(".new-address-form-mobile").slideDown();
+        	$("#addNewAddressForResponsive .mobile_add_address").addClass("form_open");
+			$(".newAddressFormMobile").slideDown();
 			ACC.singlePageCheckout.hideAjaxLoader();
 		} 
 		
@@ -2222,19 +2276,74 @@ ACC.singlePageCheckout = {
 		}
 		return false;	
 	},
-	//Function used to check pincode serviceability for responsive
-	checkPincodeServiceabilityForRespoinsive:function(selectedPincode,addressId,isNew)
-	{
-		alert("Calling pincode serviceability for responsive with Pincode:"+selectedPincode+"/AddressId:"+addressId+"/isNew:"+isNew);
-		if(!ACC.singlePageCheckout.mobileValidationSteps.isPincodeServiceable || ACC.singlePageCheckout.mobileValidationSteps.isAddressSet || ACC.singlePageCheckout.mobileValidationSteps.isInventoryReserved)
-		{alert("resetting validation steps now");
+	//Function used to fetch edit address form for responsive
+	getMobileEditAddress:function(pincode,addressId){
+		if(ACC.singlePageCheckout.mobileValidationSteps.paymentModeSelected!="")
+		{//Will enter if an user selects new address after selecting a payment mode
 			ACC.singlePageCheckout.resetValidationSteps();
-			alert("resetting payment modes now");
-    		ACC.singlePageCheckout.resetPaymentModes();
-    		alert("Done resetting...");
+			ACC.singlePageCheckout.resetPaymentModes();
 		}
-		if(addressId!="")
-		{alert("checking addressId:"+addressId+" checkbox");
+		//When ever a user selects a edit address this flag should be set to true
+		ACC.singlePageCheckout.mobileValidationSteps.saveEditAddress=true;
+		ACC.singlePageCheckout.mobileValidationSteps.saveNewAddress=false;
+		
+		ACC.singlePageCheckout.showAjaxLoader();
+		var url=ACC.config.encodedContextPath + "/checkout/single/edit-address/"+addressId;
+		var xhrResponse=ACC.singlePageCheckout.ajaxRequest(url,"GET","",false);
+		
+		xhrResponse.fail(function(xhr, textStatus, errorThrown) {
+			console.log("ERROR:"+textStatus + ': ' + errorThrown);
+		});
+		
+		xhrResponse.done(function(data) {
+			$("#editAddressForResponsive").show();//Show edit address block
+			$("#newAddressFormMobile.new-address-form-mobile").html("");//Removing new address form when new address is selected
+			$("#newAddressFormMobile.new-address-form-mobile").attr("data-loaded","false");//As the form has been removed above we need to reset data-loaded attribute to false 
+			ACC.singlePageCheckout.changeAddress();//Hiding change link and displaying other addressess
+			//Unchecking the radio button of saved addresses
+			$('#selectAddressFormMobile input[name=selectedAddressCode]').prop('checked', false);
+			$("#addNewAddressForResponsive .mobile_add_address").removeClass("form_open");//Closing new address form
+			$("#editAddressForResponsive .mobile_add_address").addClass("form_open");	  //Opeining edit address form
+			$("#editAddressFormMobile.new-address-form-mobile").html(data);
+			$("#editAddressFormMobile.new-address-form-mobile").attr("data-loaded","true");
+			$("#editAddressFormMobile.new-address-form-mobile").slideDown();
+			$("#editAddressFormMobile #modalBody").html('');
+			$("#newAddressButton").hide();
+			loadPincodeData("edit").done(function() {
+        	var value = $(".address_landmarkOtherDiv").attr("data-value");
+   			 otherLandMarkTri(value,"defult");
+            });
+			//Call pincode serviceability on edit.
+			ACC.singlePageCheckout.checkPincodeServiceabilityForRespoinsive(pincode,addressId,false,true);
+			ACC.singlePageCheckout.attachOnPincodeKeyUpEvent("editAddressFormMobile",false,true);//OnKeyUp even will be attached so that after 6 digits are enter pincode serviceability call is made
+			ACC.singlePageCheckout.scrollToDiv("editAddressFormMobile",100);
+		});
+		
+		xhrResponse.always(function(){
+			ACC.singlePageCheckout.hideAjaxLoader();
+		});
+		
+		//UF-429
+		if(typeof(utag)!='undefined')
+		{
+			utag.link({
+				link_text  : 'new_address_clicked', 
+				event_type : 'new_address_clicked'
+			});
+		}
+		return false;	
+	},
+	//Function used to check pincode serviceability for responsive
+	checkPincodeServiceabilityForRespoinsive:function(selectedPincode,addressId,isNew,isEdit)
+	{
+		//alert("Calling pincode serviceability for responsive with Pincode:"+selectedPincode+"/AddressId:"+addressId+"/isNew:"+isNew);
+		if(!ACC.singlePageCheckout.mobileValidationSteps.isPincodeServiceable || ACC.singlePageCheckout.mobileValidationSteps.isAddressSet || ACC.singlePageCheckout.mobileValidationSteps.isInventoryReserved)
+		{
+			ACC.singlePageCheckout.resetValidationSteps();
+    		ACC.singlePageCheckout.resetPaymentModes();
+		}
+		if(addressId!="" && !isEdit)
+		{
 			$("#radio_mobile_"+addressId).prop("checked", true);
 		}
 		else
@@ -2249,29 +2358,56 @@ ACC.singlePageCheckout = {
 					console.log("ERROR:"+textStatus + ': ' + errorThrown);
 				});
 				xhrResponse.done(function(response, textStatus, jqXHR) {
-					alert("Pincode serviceability ajax called successfully");
+					//alert("Pincode serviceability ajax called successfully");
 					//Hiding address pincode serviceability failure error messages
 	            	$("#selectedAddressMessageMobile").hide();
 	            	$("#addressMessage").hide();
 	            	if(!isNew)
-                	{alert("isNew");
-	            		//Remove new address radio nutton check
-	            		$("div.mobile_add_address.form_open").removeClass("form_open");
-	            		$(".new-address-form-mobile").slideUp();
+                	{
+	            		//Remove new address radio button check
+	            		$("#addNewAddressForResponsive div.mobile_add_address.form_open").removeClass("form_open");
+	            		$("#newAddressFormMobile").slideUp();
                 	}
-					if (jqXHR.responseJSON) {alert("jqXHR.responseJSON is true");
+	            	if(!isEdit)
+	            	{
+	            		//Hide edit radio for responsive
+	            		 ACC.singlePageCheckout.hideMobileEditRadio();
+	            	}
+	            	if(isNew)
+                	{
+	            		//Flags set for new address
+	            		ACC.singlePageCheckout.mobileValidationSteps.selectedAddressId="";
+	            		ACC.singlePageCheckout.mobileValidationSteps.saveNewAddress=true;
+	            		ACC.singlePageCheckout.mobileValidationSteps.saveEditAddress=false;
+                	}
+	            	else if(isEdit)
+                	{
+	            		//Flags set for edit address
+	            		ACC.singlePageCheckout.mobileValidationSteps.selectedAddressId=addressId;
+	            		ACC.singlePageCheckout.mobileValidationSteps.saveNewAddress=false;
+	            		ACC.singlePageCheckout.mobileValidationSteps.saveEditAddress=true;
+                	}
+	            	else
+	            	{
+	            		//Flags set for select address
+	            		ACC.singlePageCheckout.mobileValidationSteps.selectedAddressId=addressId;
+	            		ACC.singlePageCheckout.mobileValidationSteps.saveNewAddress=false;
+	            		ACC.singlePageCheckout.mobileValidationSteps.saveEditAddress=false;
+	            	}
+	            	//Processing ajax response below
+					if (jqXHR.responseJSON) {
 						//In case of some error at server end below block will execute.
 		                if(response.type!="response" && response.type!="confirm")
-		                {alert('response.type!="response" && response.type!="confirm"');
-		                	if(isNew)
+		                {
+		                	if(isNew || isEdit)
 		                	{
 		                		ACC.singlePageCheckout.processError("#addressMessage",response);
 		                		ACC.singlePageCheckout.scrollToDiv("addressMessage",100);
 		                	}
 		                	else
-	                		{alert("is not new");
+	                		{
 		                		//Remove new address radio nutton check
-		                		$("div.mobile_add_address.form_open").removeClass("form_open");
+		                		//$("#addNewAddressForResponsive div.mobile_add_address.form_open").removeClass("form_open");
 		                		ACC.singlePageCheckout.processError("#selectedAddressMessageMobile",response);
 		                		ACC.singlePageCheckout.scrollToDiv("selectedAddressMessageMobile",100);
 	                		}
@@ -2280,26 +2416,14 @@ ACC.singlePageCheckout = {
 		                //For Confirm Box TPR-1083
 		                else if(response.type=="confirm")
 		                {
-		                	alert('response.type=="confirm"');
 		                		ACC.singlePageCheckout.processConfirm("#selectedAddressMessageMobile",response,addressId,selectedPincode,isNew,"");
-	           
 		                }
-		            } else {alert("In case of no error at server end below block will execute.");
+		            } else {
 		            	//In case of no error at server end below block will execute.
-		            	if(isNew)
-	                	{
-		            		ACC.singlePageCheckout.mobileValidationSteps.selectedAddressId="";
-		            		ACC.singlePageCheckout.mobileValidationSteps.saveNewAddress=true;
-	                	}
-		            	else
-		            	{
-		            		ACC.singlePageCheckout.mobileValidationSteps.selectedAddressId=addressId;
-		            		ACC.singlePageCheckout.mobileValidationSteps.saveNewAddress=false;
-		            	}
-		            	alert("Before setting #choosedeliveryModeMobile");
+		            	//alert("Before setting #choosedeliveryModeMobile");
 		            	$("#choosedeliveryModeMobile").html(response);
 		            	ACC.singlePageCheckout.mobileValidationSteps.isPincodeServiceable=true;
-		            	alert("ACC.singlePageCheckout.mobileValidationSteps.isPincodeServiceable="+ACC.singlePageCheckout.mobileValidationSteps.isPincodeServiceable);
+		            	//alert("ACC.singlePageCheckout.mobileValidationSteps.isPincodeServiceable="+ACC.singlePageCheckout.mobileValidationSteps.isPincodeServiceable);
 //		            	var entryNumbersId=$("#entryNumbersId").val();		            	
 //		            	var entryNumbers=entryNumbersId.split("#");
 //		            	for(var i=0;i<entryNumbers.length-1;i++)
@@ -2319,12 +2443,20 @@ ACC.singlePageCheckout = {
 		}
 		
 	},
+	//Function to hide edit radio for responsive
+	hideMobileEditRadio:function(){
+		//Remove edit address radio button check
+		$("#editAddressForResponsive div.mobile_add_address.form_open").removeClass("form_open");
+		$("#editAddressFormMobile").slideUp();
+		$("#editAddressFormMobile").html("");
+		$("#editAddressForResponsive").css("display","none");
+	},
 	//Function called when change link of address is clicked for responsive
-	changeAddress:function(element){
+	changeAddress:function(){
 		//$("#address-change-link").on("click", function(){
-			$(element).parents(".checkout_mobile_section").find(".mobileNotDefaultDelAddress").show();
+			$("#address-change-link").parents(".checkout_mobile_section").find(".mobileNotDefaultDelAddress").show();
 			//$(this).parents(".checkout_mobile_section").find(".cancel-mobile").show();
-			$(element).hide();
+			$("#address-change-link").hide();
 			if(typeof utag !="undefined")  {
 				utag.link({
 			        link_text: "change_link_clicked",
@@ -2375,38 +2507,55 @@ ACC.singlePageCheckout = {
 	        'slow');
 	},
 	//Function called when ever a user enters pincode for responsive, When the character length becomes 6 a pincode serviceability call is fired.
-	attachOnPincodeKeyUpEvent:function()
+	attachOnPincodeKeyUpEvent:function(id,isNew,isEdit)
 	{	
-		$('.address_postcode').on('keyup',function(){
-			$("#addressMessage").html("");
+		var selector1='keyup'+"."+id;
+		var selector2='change'+"."+id;//Adding change event to handle form autocomplete/autofill scenario
+		$('#'+id+' .address_postcode').off(selector1+" "+selector2);
+		$('#'+id+' .address_postcode').on(selector1+" "+selector2,function(){
+			$("#"+id+" #addressMessage").html("");
 			var pincode=$('.address_postcode').val();
-			$(".otherLandMarkError").html("");
+			$("#"+id+" .otherLandMarkError").html("");
 			var regPostcode = /^([1-9])([0-9]){5}$/;
 			if(pincode.length>=6)
 			{
 				if(regPostcode.test(pincode) == false)
 				{
-					 $("#addresspostcodeError").show();
-				     $("#addresspostcodeError").html("<p>Please enter a valid pincode</p>");
+					 $("#"+id+" #addresspostcodeError").show();
+				     $("#"+id+" #addresspostcodeError").html("<p>Please enter a valid pincode</p>");
 				}
 				else
 				{
-					$("#addresspostcodeError").hide();
-					ACC.singlePageCheckout.checkPincodeServiceabilityForRespoinsive(pincode,"",true);
+					ACC.singlePageCheckout.currentPincode=pincode;
+					if(ACC.singlePageCheckout.currentPincode!=ACC.singlePageCheckout.previousPincode)
+					{
+						console.log("CONSOLE========>"+pincode);
+						ACC.singlePageCheckout.previousPincode=pincode;
+						$("#"+id+" #addresspostcodeError").hide();
+						ACC.singlePageCheckout.checkPincodeServiceabilityForRespoinsive(pincode,"",isNew,isEdit);
+					}
 				}
 			}
 				
 		});
 	},
-	//Function used to save a new address and set it as delievry address[for responsive]. Called from onPaymentModeSelection() method
-	saveAndSetNewDeliveryAddress:function()
+	//Function used to save a new/edited address and set it as delievry address[for responsive]. Called from onPaymentModeSelection() method
+	saveAndSetDeliveryAddress:function(isNew,isEdit)
 	{
 		var validationResult=ACC.singlePageCheckout.validateAddressForm();
 		if(validationResult!=false)
 		{
 			ACC.singlePageCheckout.showAjaxLoader();
 			try{
-				var url=ACC.config.encodedContextPath + "/checkout/single/new-address-responsive";
+				var url="";
+				if(isNew)
+				{
+					url=ACC.config.encodedContextPath + "/checkout/single/new-address-responsive";
+				}
+				else if(isEdit)
+				{
+					url=ACC.config.encodedContextPath + "/checkout/single/new-address-responsive?isEdit=true";
+				}
 				var data=$("#selectAddressFormMobile form#addressForm").serialize().replace(/\+/g,'%20');
 				
 				ACC.singlePageCheckout.showAjaxLoader();
@@ -2548,11 +2697,17 @@ ACC.singlePageCheckout = {
 	{
 		var formValidationSuccess=true;
 		ACC.singlePageCheckout.mobileValidationSteps.paymentModeSelected=paymentMode;
-		alert("onPaymentModeSelection:ACC.singlePageCheckout.mobileValidationSteps.isPincodeServiceable="+ACC.singlePageCheckout.mobileValidationSteps.isPincodeServiceable);
 		//Below we are checking if pincode is serviceabile
 		if(!ACC.singlePageCheckout.mobileValidationSteps.isPincodeServiceable)
 		{
-			ACC.singlePageCheckout.scrollToDiv("selectedAddressMessageMobile",100);
+			if(!ACC.singlePageCheckout.mobileValidationSteps.saveNewAddress  && !ACC.singlePageCheckout.mobileValidationSteps.saveEditAddress)
+			{
+				ACC.singlePageCheckout.scrollToDiv("selectedAddressMessageMobile",100);
+			}
+			else if((ACC.singlePageCheckout.mobileValidationSteps.saveNewAddress||ACC.singlePageCheckout.mobileValidationSteps.saveEditAddress))
+			{
+				ACC.singlePageCheckout.scrollToDiv("addressMessage",100);
+			}
 			return false;
 		}
 		
@@ -2565,9 +2720,16 @@ ACC.singlePageCheckout = {
 			});
 			return false;
 		}
-		if(ACC.singlePageCheckout.mobileValidationSteps.saveNewAddress && !ACC.singlePageCheckout.mobileValidationSteps.isAddressSet)
+		if((ACC.singlePageCheckout.mobileValidationSteps.saveNewAddress||ACC.singlePageCheckout.mobileValidationSteps.saveEditAddress) && !ACC.singlePageCheckout.mobileValidationSteps.isAddressSet)
 		{
-			formValidationSuccess=ACC.singlePageCheckout.saveAndSetNewDeliveryAddress();
+			if(ACC.singlePageCheckout.mobileValidationSteps.saveNewAddress)
+			{
+				formValidationSuccess=ACC.singlePageCheckout.saveAndSetDeliveryAddress(true,false);
+			}
+			else if(ACC.singlePageCheckout.mobileValidationSteps.saveEditAddress)
+			{
+				formValidationSuccess=ACC.singlePageCheckout.saveAndSetDeliveryAddress(false,true);
+			}
 			if(!formValidationSuccess)
 			{
 				//Removing payment mode selection incase of address form validation failure
@@ -2581,15 +2743,13 @@ ACC.singlePageCheckout = {
 	        	return false;
 			}
 		}
-		else if(ACC.singlePageCheckout.mobileValidationSteps.selectedAddressId!="" && !ACC.singlePageCheckout.mobileValidationSteps.saveNewAddress && !ACC.singlePageCheckout.mobileValidationSteps.isAddressSet)
+		else if(ACC.singlePageCheckout.mobileValidationSteps.selectedAddressId!="" && !ACC.singlePageCheckout.mobileValidationSteps.saveNewAddress  && !ACC.singlePageCheckout.mobileValidationSteps.saveEditAddress && !ACC.singlePageCheckout.mobileValidationSteps.isAddressSet)
 		{
 			ACC.singlePageCheckout.showAjaxLoader();
-			alert("Set delivery address now");
 			ACC.singlePageCheckout.setDeliveryAddress();
-			alert("Set delivery address done");
 		}
 		if(formValidationSuccess && !ACC.singlePageCheckout.mobileValidationSteps.isDeliveryModeSet && !ACC.singlePageCheckout.mobileValidationSteps.isInventoryReserved)
-		{	alert("onPaymentModeSelection:If part called with formValidationSuccess:"+formValidationSuccess+"&ACC.singlePageCheckout.mobileValidationSteps.isDeliveryModeSet:"+ACC.singlePageCheckout.mobileValidationSteps.isDeliveryModeSet+"&ACC.singlePageCheckout.mobileValidationSteps.isInventoryReserved:"+ACC.singlePageCheckout.mobileValidationSteps.isInventoryReserved);
+		{	
 			ACC.singlePageCheckout.showAjaxLoader();
 			var isPincodeRestrictedPromoPresent="";
 			if(typeof($("#isPincodeRestrictedPromoPresent").text())!='undefined')
@@ -2646,7 +2806,6 @@ ACC.singlePageCheckout = {
 		}
 		else if(formValidationSuccess && ACC.singlePageCheckout.mobileValidationSteps.isDeliveryModeSet && ACC.singlePageCheckout.mobileValidationSteps.isInventoryReserved && ACC.singlePageCheckout.mobileValidationSteps.prePaymentValidationDone)
     	{
-			alert("onPaymentModeSelection:Else part called with formValidationSuccess:"+formValidationSuccess+"&ACC.singlePageCheckout.mobileValidationSteps.isDeliveryModeSet:"+ACC.singlePageCheckout.mobileValidationSteps.isDeliveryModeSet+"&ACC.singlePageCheckout.mobileValidationSteps.isInventoryReserved:"+ACC.singlePageCheckout.mobileValidationSteps.isInventoryReserved+"&ACC.singlePageCheckout.mobileValidationSteps.prePaymentValidationDone:"+ACC.singlePageCheckout.mobileValidationSteps.prePaymentValidationDone);
 			if(savedOrNew=="savedCard")
 			{
 				////Code to be executed if a saved card is selected
@@ -2822,7 +2981,7 @@ $(document).ready(function(){
 				window.location.href=ACC.config.encodedContextPath +"/checkout/single"+"?isResponsive=true";
 			}
 		});
-		var deviceType=$("#deviceType").html();
+		var deviceType=$("#deviceType").text();
 		if(deviceType=="normal" && ACC.singlePageCheckout.getIsResponsive())
 		{
 			//These is to handle abnormal scenarios, Which are likely to occur in test environment.
@@ -2838,14 +2997,13 @@ $(document).ready(function(){
 		
 		if(ACC.singlePageCheckout.getIsResponsive())
 		{
-			var defaultAddressPincode=$("#defaultAddressPincode").html();
-			var defaultAddressId=$("#defaultAddressId").html();
-			var defaultAddressPresent=$("#defaultAddressPresent").html();
+			var defaultAddressPincode=$("#defaultAddressPincode").text();
+			var defaultAddressId=$("#defaultAddressId").text();
+			var defaultAddressPresent=$("#defaultAddressPresent").text();
 			if(defaultAddressPresent=="true" && typeof(defaultAddressPincode)!='undefined' && typeof(defaultAddressId)!='undefined')
 			{
-				alert("Before calling pincode serviceability onload");
 				//Calling pincode serviceability on page load for responsive cases.
-				ACC.singlePageCheckout.checkPincodeServiceabilityForRespoinsive(defaultAddressPincode.trim(),defaultAddressId.trim(),false);
+				ACC.singlePageCheckout.checkPincodeServiceabilityForRespoinsive(defaultAddressPincode.trim(),defaultAddressId.trim(),false,false);
 			}
 			//Hiding change link if no dafault address is present
 			if(defaultAddressPresent=="false")
@@ -2862,5 +3020,10 @@ $(document).ready(function(){
 			//For web site we are removing payment page laoded for responsive view inorder to keep unique id's in the view
 			$("#makePaymentDivMobile").html("");
 		}
+		//Preventing auto complete of forms in single page
+//		$( document ).on( 'focus', ':input', function(){
+//	        //$( this ).attr( 'autocomplete', 'off' );
+//	        $( this ).attr( 'autocomplete', 'false' );
+//	    });
 	}
 });

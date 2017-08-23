@@ -37,4 +37,10 @@ public interface MplSellerInformationService
 	public SellerInformationModel getSellerInformationBySellerID(CatalogVersionModel currentCatalogVersion, String sellerId);
 
 	public ContentPageModel getContentPageBySellerID(String sellerId);
+
+	/**
+	 * @param selectedUSSID
+	 * @return
+	 */
+	String getSellerIdByUssid(String selectedUSSID);
 }

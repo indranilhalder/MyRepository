@@ -20,13 +20,14 @@ import javax.xml.bind.annotation.XmlType;
 { "ListingID", "Item" })
 public class InventoryReservJewelleryRequest
 {
-	@XmlElement(name = "ListingID")
+	@XmlElement(name = "listingID")
 	private String ListingID;
 
 	@XmlElement(name = "Item")
 	private List<InventoryReservRequest> Item;
 
 	/**
+	 *
 	 * @return the cartId
 	 */
 

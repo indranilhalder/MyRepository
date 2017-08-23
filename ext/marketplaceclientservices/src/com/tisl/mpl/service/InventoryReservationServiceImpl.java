@@ -115,7 +115,7 @@ public class InventoryReservationServiceImpl implements InventoryReservationServ
 					{
 						reqObj.setUSSID(cartObj.getUSSID());
 					}
-					reqObj.setJewellery(cartObj.isJewellery());
+					//reqObj.setJewellery((Boolean) null);
 					if (StringUtils.isNotEmpty(cartObj.getParentUSSID()))
 					{
 						reqObj.setParentUSSID(cartObj.getParentUSSID());
@@ -193,7 +193,7 @@ public class InventoryReservationServiceImpl implements InventoryReservationServ
 							{
 								reqObj.setUSSID(cartObj.getUSSID());
 							}
-							reqObj.setJewellery(cartObj.isJewellery());
+							//	reqObj.setJewellery((Boolean) null);
 							if (StringUtils.isNotEmpty(cartObj.getParentUSSID()))
 							{
 								reqObj.setParentUSSID(cartObj.getParentUSSID());
@@ -219,6 +219,34 @@ public class InventoryReservationServiceImpl implements InventoryReservationServ
 								reqObj.setQuantity(cartObj.getQuantity().toString());
 							}
 
+
+							if (cartObj.getTransportMode() != null)
+							{
+								reqObj.setTransportMode(cartObj.getTransportMode().toString());
+							}
+
+
+							// Added code for Inventory Reservation Request change
+							if ((null != cartObj.getServiceableSlaves() && cartObj.getServiceableSlaves().size() > 0))
+							{
+								reqObj.setServiceableSlaves(populateServiceableSlaves(cartObj.getServiceableSlaves()));
+							}
+							// Added code for Inventory Reservation Request change
+							if (cartObj.getDeliveryMode().equalsIgnoreCase(MarketplacecclientservicesConstants.CNC))
+							{
+								if ((null != cartObj.getCncServiceableSlaves() && cartObj.getCncServiceableSlaves().size() > 0))
+								{
+									List<ServiceableSlavesDTO> serviceableSlavesDTOList = new ArrayList<ServiceableSlavesDTO>();
+									for (final CNCServiceableSlavesData data : cartObj.getCncServiceableSlaves())
+									{
+										if (cartObj.getStoreId().equalsIgnoreCase(data.getStoreId()))
+										{
+											serviceableSlavesDTOList = populateServiceableSlaves(data.getServiceableSlaves());
+										}
+									}
+									reqObj.setServiceableSlaves(serviceableSlavesDTOList);
+								}
+							}
 							if (reqObj.getIsAFreebie() != null && reqObj.getIsAFreebie().equals("Y"))
 							{
 								freebieItemslist.add(reqObj);
@@ -248,7 +276,7 @@ public class InventoryReservationServiceImpl implements InventoryReservationServ
 					{
 						reqJewelleryObj.setUSSID(cartObj.getUSSID());
 					}
-					reqJewelleryObj.setJewellery(cartObj.isJewellery());
+					//	reqJewelleryObj.setJewellery((Boolean) null);
 					if (StringUtils.isNotEmpty(cartObj.getParentUSSID()))
 					{
 						reqJewelleryObj.setParentUSSID(cartObj.getParentUSSID());
@@ -274,6 +302,33 @@ public class InventoryReservationServiceImpl implements InventoryReservationServ
 						reqJewelleryObj.setQuantity(cartObj.getQuantity().toString());
 					}
 
+					if (cartObj.getTransportMode() != null)
+					{
+						reqJewelleryObj.setTransportMode(cartObj.getTransportMode().toString());
+					}
+
+
+					// Added code for Inventory Reservation Request change
+					if ((null != cartObj.getServiceableSlaves() && cartObj.getServiceableSlaves().size() > 0))
+					{
+						reqJewelleryObj.setServiceableSlaves(populateServiceableSlaves(cartObj.getServiceableSlaves()));
+					}
+					// Added code for Inventory Reservation Request change
+					if (cartObj.getDeliveryMode().equalsIgnoreCase(MarketplacecclientservicesConstants.CNC))
+					{
+						if ((null != cartObj.getCncServiceableSlaves() && cartObj.getCncServiceableSlaves().size() > 0))
+						{
+							List<ServiceableSlavesDTO> serviceableSlavesDTOList = new ArrayList<ServiceableSlavesDTO>();
+							for (final CNCServiceableSlavesData data : cartObj.getCncServiceableSlaves())
+							{
+								if (cartObj.getStoreId().equalsIgnoreCase(data.getStoreId()))
+								{
+									serviceableSlavesDTOList = populateServiceableSlaves(data.getServiceableSlaves());
+								}
+							}
+							reqJewelleryObj.setServiceableSlaves(serviceableSlavesDTOList);
+						}
+					}
 
 					if (reqJewelleryObj.getIsAFreebie() != null && reqJewelleryObj.getIsAFreebie().equals("Y"))
 					{
@@ -556,7 +611,7 @@ public class InventoryReservationServiceImpl implements InventoryReservationServ
 				for (final InventoryReservRequest entry : request.getItem())
 				{
 					//	if (null != entry.getUSSID() && !entry.getUSSID().isEmpty() && entry.isJewellery() == false)//SONAR FIX JEWELLERY
-					if ((null != entry.getUSSID() && !entry.getUSSID().isEmpty()) && !entry.isJewellery())
+					if ((null != entry.getUSSID() && !entry.getUSSID().isEmpty()))
 					{
 						mockXmlSecondPhase = mockXmlSecondPhase.replaceAll("<replaceussid>", entry.getUSSID());
 						outputXml += mockXmlSecondPhase;

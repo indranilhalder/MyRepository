@@ -723,12 +723,13 @@ function addToWishlist(alreadyAddedWlName_pdp) {
 					
 					/*TPR-656*/
 					utag.link({
+						link_obj: this, 
 						link_text: 'add_to_wishlist_pdp' , 
 						event_type : 'add_to_wishlist_pdp', 
 						product_sku_wishlist : productcodearray
 					});
 				/*TPR-656 Ends*/
-					dtmAddToWishlist(pdp);  	/*TPR-6364*/
+					dtmAddToWishlist(pdp);
 					
 					//openPop(ussidValue);
 				//	$('#myModal').modal('hide');
@@ -1458,7 +1459,7 @@ $(function() {
 											if(typeof utag !="undefined"){
 											utag.link({error_type: error  });
                                             }
-                                            //TPR-6369 |Error tracking dtm
+											//TPR-6369 |Error tracking dtm
 							 				dtmErrorTracking("Pin Code Servicability Error",error);
 										}
 									});
@@ -1600,6 +1601,7 @@ function displayDeliveryDetails(sellerName) {
 
 	var buyboxSeller = $("#ussid").val();
 	var productCode = $("#product").val();
+	var productCategoryType=$('#productCategoryType').val();
 	var requiredUrl = ACC.config.encodedContextPath + "/p-" + productCode
 			+ "/getRichAttributes";
 	var dataString = 'buyboxid=' + buyboxSeller;
@@ -1610,6 +1612,7 @@ function displayDeliveryDetails(sellerName) {
 		dataType : "json",
 		success : function(data) {
 			if (data != null) {
+				console.log("success");
 				var pretext=$("#deliveryPretext").text();
 				var posttext=$("#deliveryPosttext").text();
 				var fulFillment = data['fulfillment'];
@@ -1785,38 +1788,51 @@ function displayDeliveryDetails(sellerName) {
 				}
 				if(null != data['returnWindow'])
 				{
-				//TISCR-414 - Chairmans demo feedback 10thMay CR starts
-				var rWindowValue = data['returnWindow'];
-				
-				if(rWindowValue=="LINGERIE1")
-					{
-					$("#lingerieKnowMoreLi1").show();
-					$("#defaultKnowMoreLi").hide();
-					}
-				else if(rWindowValue=="LINGERIE2")
-					{
-					$("#lingerieKnowMoreLi2").show();
-					$("#defaultKnowMoreLi").hide();
-					}
-				//Added for UF-98_start
-				else if(rWindowValue=="0")
-				{        
-					$("#defaultKnowMoreLi4").show();
-					$("#defaultKnowMoreLi").hide();
-				}
-				else
-					{
-					$("#returnWindow").text(data['returnWindow']);
-					}
-				//TISCR-414 - Chairmans demo feedback 10thMay CR ends
-				}
-				else
-					{
-					$("#defaultKnowMoreLi4").show();
-					$("#defaultKnowMoreLi").hide();
-					$("#returnWindow").text("0");
+					//TISCR-414 - Chairmans demo feedback 10thMay CR starts
+					var rWindowValue = data['returnWindow'];
 					
+					if(rWindowValue=="LINGERIE1")
+					{
+						$("#lingerieKnowMoreLi1").show();
+						$("#defaultKnowMoreLi").hide();
+						
 					}
+					else if(rWindowValue=="LINGERIE2")
+					{
+						$("#lingerieKnowMoreLi2").show();
+						$("#defaultKnowMoreLi").hide();
+					}
+					//Added for UF-98_start
+					else if(rWindowValue=="0")
+					{ 
+						var catType = $("#categoryType").val();
+						if(catType != 'FineJewellery' && catType != 'FashionJewellery'){
+							$("#defaultKnowMoreLi4").show();
+						}
+						//$("#defaultKnowMoreLi4").show();
+						$("#defaultKnowMoreLi").hide();
+						$("#defaultRetRefLi4").show();
+						$("#defaultRetRefLi").hide();
+						$("#defaultRetLi4").show();
+						$("#defaultRetLi").hide();
+					}
+					else 
+					{
+						$("#returnWindow").text(data['returnWindow']);
+						$("#returnWindowRefRet").text(data['returnWindow']);
+						$("#returnWindowRet").text(data['returnWindow']);
+					}
+					//TISCR-414 - Chairmans demo feedback 10thMay CR ends
+				}
+				else
+				{
+					$("#defaultKnowMoreLi4").show();
+					$("#defaultKnowMoreLi").hide();
+					$("#defaultRetRefLi4").show();
+					$("#defaultRetRefLi").hide();
+					$("#returnWindow").text("0");
+					$("#returnWindowRefRet").text("0");
+				}
 			}
 		}
 	});
@@ -3216,10 +3232,12 @@ function loadDefaultWishListName_SizeGuide() {
 				
 				/*TPR-646 Changes*/
 				utag.link({
+					"link_obj" : this,
 			        "link_text": 'remove_from_wishlist',
 			        "event_type": 'remove_from_wishlist',
 			        "product_sku_wishlist": "" + productCode
 			    });
+				
 				dtmRemoveFromWishlist(pdp);
 				//END MSD
 //				window.location.href = ACC.config.encodedContextPath + "/my-account/wishList";
@@ -3413,7 +3431,9 @@ function getProductContents() {
 					"a_plus_product_id":productId
 				});
 				//TPR-6029 | dtm for A+ products
-				_satellite.track('cpj_pdp_a_plus');
+				if(typeof(_satellite) != "undefined") {
+					_satellite.track('cpj_pdp_a_plus');
+			    }
 			}
 				 
 		},
@@ -4022,8 +4042,9 @@ function getBuyBoxDataAjax(productCode,variantCodesJson)
 				/* PRICE BREAKUP STARTS HERE */
 			    jwllryShowPrcBrkUp = data['displayconfigattr'];
 			    jwlryPrcBrkUp = data['priceBreakup'];
-			    //alert("**"+jwlryPrcBrkUp);
+
 				if(jwllryShowPrcBrkUp == "Yes"){
+					$("#pricebreakupIdSpan").show();
 					$("#showPrice").show();
 					var priceBreakUp= '<p>Price Breakup</p>'
 					$('#show').empty();
@@ -4531,7 +4552,7 @@ function populateProductPageTabs(jsonData)
 	}
 	
 	var catType = $("#categoryType").val();
-	if((catType != undefined) && ("FINEJEWELLERY" == catType.toUpperCase())){
+	if((catType != undefined) && ("FINEJEWELLERY" == catType.toUpperCase()) && ("FASHIONJEWELLERY" == catType.toUpperCase())){
 		populateClassificationForJewellery(jsonData);
 	}
 	
@@ -4915,6 +4936,17 @@ function onSubmitExc()
 	var l4select=$('#l4select').val();
 	var isError=false;
 	var isWorking=$('#activeselect').val();
+	//TPR-5193 Analytics starts
+	var brandExchange = $('#brandExchange').val();
+	var couponValue = $('#priceselect').text();
+	var l3 =$('#l3').val();
+    var selector	 = $('#activeselect option:selected').val();
+  //  var exchangeDropdown = selector.split('|');
+  //  var exchangeCondition = exchangeDropdown[1] ;
+    var productCode =  $('#product_id').val();
+	var productArray =[];
+	productArray.push(productCode);
+	//TPR-5193 Analytics ends
 		if(!brand)
 			{
 			$("#lbrand").text("Please Enter Brand");
@@ -4940,8 +4972,19 @@ function onSubmitExc()
 			}
 		if(!isError)
 			{
-	document.getElementById('couponValue').style.display = "block";
-	document.getElementById('submit&Condition').style.display = "none";
+	          document.getElementById('couponValue').style.display = "block";
+	          document.getElementById('submit&Condition').style.display = "none";
+     	//TPR-5193
+	   if(typeof utag !="undefined"){
+		  utag.link({
+			event_type          : "exchange_success",
+			exchange_brand      : brandExchange ,
+			exchange_condition  : selector ,
+			exchange_l3         : l3 ,
+			couponcode_exchange : couponValue ,
+			product_id          : productArray
+		});
+	   }
 			}
 	
 }

@@ -66,7 +66,33 @@
 							<ul class="item-edit-details">
 								<li><spring:theme code="cart.popup.quantity" /> ${entry.quantity}</li>
 								<c:if test="${not empty entry.product.size}">
-								<li><spring:theme code="cart.popup.size" />&nbsp;${entry.product.size}</li>
+								<c:choose>
+									<c:when test="${(not empty entry.product.rootCategory) && (entry.product.rootCategory == 'FineJewellery' || entry.product.rootCategory == 'FashionJewellery') }">
+										<spring:theme code="product.variant.size.noSize" var="noSize"/>
+										<c:if test="${entry.product.size ne noSize}">
+											<spring:eval expression="T(de.hybris.platform.util.Config).getParameter('mpl.jewellery.category')" var="lengthVariant"/>
+									     	<c:set var = "categoryListArray" value = "${fn:split(lengthVariant, ',')}" />
+											<c:forEach items="${entry.product.categories}" var="categories">
+									   			<c:forEach items = "${categoryListArray}" var="lengthVariantArray">
+									   				<c:if test="${categories.code eq lengthVariantArray}">
+									   				 	<c:set var="lengthSize" value="true"/>
+									   				</c:if> 
+									   			</c:forEach>
+									   		</c:forEach>	  
+									   		<c:choose>
+									   			<c:when test="${true eq lengthSize}">
+												  <li><spring:theme code="product.variant.length"/>&nbsp;${entry.product.size}</li>
+									   			</c:when>
+									   			<c:otherwise>
+												  <li><spring:theme code="cart.popup.size" />&nbsp;${entry.product.size}</li>
+									   			</c:otherwise>
+									   		</c:choose>
+										</c:if>
+									</c:when>
+									<c:otherwise>
+										<li><spring:theme code="cart.popup.size" />&nbsp;${entry.product.size}</li>
+									</c:otherwise>
+								</c:choose>
 								</c:if>
 								<c:if test="${entry.giveAway ne true}">
 								<li><a href="#nogo" class="removeFromCart" data-entry-no="${entry.entryNumber}" data-ussid="${entry.selectedUssid}"><spring:theme code="text.iconCartRemove" /></a></li>

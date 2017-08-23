@@ -338,6 +338,8 @@ $(document).ready(function(){
 				if(typeof(Storage) !== "undefined") {
 						if($(this).parents().hasClass("facet_mobile")){
 							$(".facet-name.js-facet-name h3").removeClass("active-mob");
+							$(".js-facet-top-values.active").removeClass("selectedMobile");
+							$(".facet-list.js-facet-list.facet-list-hidden.js-facet-list-hidden").removeClass("selectedMobile");
 							$(this).parents(".facet_mobile").siblings().find(".facet-values.js-facet-values.js-facet-form").hide();
 							if($(this).parent().siblings('#searchPageDeptHierTreeForm').length == 0){
 								$('#searchPageDeptHierTreeForm').find("#searchPageDeptHierTree").hide();
@@ -356,6 +358,8 @@ $(document).ready(function(){
 							$(this).siblings('.brandSelectAllMain').show();
 							$(this).parent().siblings('#searchPageDeptHierTreeForm').find("#searchPageDeptHierTree").show();
 							$(this).parent().siblings('#categoryPageDeptHierTreeForm').find("#categoryPageDeptHierTree").show();
+							$(this).parent().closest("li").find(".js-facet-top-values.active").addClass("selectedMobile");
+							$(this).parent().closest("li").find(".facet-list.js-facet-list.facet-list-hidden.js-facet-list-hidden").addClass("selectedMobile");
 						}
 						else{
 					    if($(this).hasClass('active')) {
@@ -3854,6 +3858,7 @@ $(document).ready(function() {
 	if($('.facet_desktop .facet.js-facet.Dial').hasClass("Colour")){
 		$('.facet_desktop .facet.js-facet.Dial.Colour .more-lessFacetLinks').remove();
 	}
+	
 });
 
 
@@ -3891,6 +3896,37 @@ $("span.price-breakup").click(function() {
 $("span.more-link").click(function() {
 	  $("body,html").animate({ scrollTop: $("#tabs_styleNotes").offset().top - 150 }, "slow");
 	  $("#tabs_styleNotes").addClass("active");
+	  $("#tabs_styleNotes_Refunds").removeClass("active");
+	  $("#tabs_knowmore").removeClass("active");
+	  $("#tabs_brandInfo").removeClass("active");
+	  $("ul.tabs.pdp.productTabs li").removeClass('active'); 
+	  $("ul.tabs.pdp.productTabs li").eq(0).addClass('active');
 });
 /*Feature for FineJewellery scroll end*/
-/* end change of PRDI-92 */
+
+/*start change of INC144316778*/
+$(window).on("scroll resize",function(){
+	fixTopAdjust();
+	if($(window).scrollTop() == 0){
+		$(".listing.wrapper .left-block").removeClass("topTheFix");
+		/*start change for TISPRDT-1898*/
+		if($("header .content .top").hasClass("header_fix"))
+			$(".listing.wrapper .left-block").removeClass("fix"); 
+		/*end change for TISPRDT-1898*/
+	}
+});
+$(document).on("click",".product-facet .facet .facet-name",function(){
+	fixTopAdjustTimeOut();
+});
+function fixTopAdjust(){
+	if($(".left-block ul.product-facet.js-product-facet.listing-leftmenu").outerHeight() <= $(window).height() && ($(".listing.wrapper .left-block").hasClass("fix") && $("header .content .bottom").hasClass("active")))
+		$(".listing.wrapper .left-block").addClass("topTheFix");
+	else
+		$(".listing.wrapper .left-block").removeClass("topTheFix");
+}
+function fixTopAdjustTimeOut(){
+	setTimeout( function(){ 
+		fixTopAdjust(); 
+	}  , 100 );
+}
+/*end change of INC144316778*/
