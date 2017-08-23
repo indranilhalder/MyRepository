@@ -671,7 +671,7 @@
 												  	</c:when>
 												  	<c:otherwise>
 												  			 <c:if test="${cancellationMsg eq 'true'}">
-																<spring:theme code="orderHistory.cancellationDeadlineMissed.msg" />
+																<div class="mt-10 mb-10"><spring:theme code="orderHistory.cancellationDeadlineMissed.msg" /></div>
 															</c:if> 
 												  	</c:otherwise>
 												</c:choose>
@@ -1835,7 +1835,7 @@
 											</c:if>
 											<!-- TISCR-410 -->
 											<c:if test="${cancellationMsg eq 'true'}">
-												<spring:theme code="orderHistory.cancellationDeadlineMissed.msg" />
+												<div class="mt-10 mb-10"><spring:theme code="orderHistory.cancellationDeadlineMissed.msg" /></div>
 											</c:if>
 											</div>
 											<div class="col-md-6 col-sm-6 pull-right">
