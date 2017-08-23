@@ -105,6 +105,7 @@ public class CustomOmsOrderLinePopulator implements Populator<OrderEntryModel, O
 		{
 			//Added for jewellery
 			String ussid = null;
+			String jwlSkuid = null;
 
 			if (null != source.getProduct()
 					&& source.getProduct().getProductCategoryType()
@@ -113,6 +114,7 @@ public class CustomOmsOrderLinePopulator implements Populator<OrderEntryModel, O
 				final List<JewelleryInformationModel> jewelleryInfo = jewelleryService.getJewelleryInfoByUssid(source
 						.getSelectedUSSID());
 				ussid = jewelleryInfo.get(0).getPCMUSSID();
+				jwlSkuid = ussid.substring(6, ussid.length());
 			}
 			else
 			{
@@ -129,7 +131,15 @@ public class CustomOmsOrderLinePopulator implements Populator<OrderEntryModel, O
 			List<RichAttributeModel> richAttributeModel = null;
 			if (sellerInfoModel != null)
 			{
-				target.setSkuId(sellerInfoModel.getSellerSKU());
+
+				if (StringUtils.isNotEmpty(jwlSkuid))
+				{
+					target.setSkuId(jwlSkuid); //Added for jewellery
+				}
+				else
+				{
+					target.setSkuId(sellerInfoModel.getSellerSKU());
+				}
 				target.setSellerId(sellerInfoModel.getSellerID());
 				richAttributeModel = (List<RichAttributeModel>) sellerInfoModel.getRichAttribute();
 			}
