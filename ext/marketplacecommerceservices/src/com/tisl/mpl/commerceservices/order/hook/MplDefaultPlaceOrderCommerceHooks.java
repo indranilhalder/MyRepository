@@ -2580,6 +2580,12 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 				orderEntryModel.setSddDateBetween(abstractOrderEntryModel.getSddDateBetween());
 			}
 			/* Added in R2.3 for TISRLEE-2073 end */
+
+			if (null != abstractOrderEntryModel.getProductRootCatCode())
+			{
+				orderEntryModel.setProductRootCatCode(abstractOrderEntryModel.getProductRootCatCode());
+			}
+
 			// End Order line  Code for OrderLine
 			orderEntryModel = setAdditionalDetails(orderEntryModel);
 
