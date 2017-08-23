@@ -1230,3 +1230,23 @@ border-right: 1px solid #ccc;
     word-wrap: break-word;
     font-size: 12px;
 }
+#otpPopup{
+    position: fixed!important;
+    top: 0px;
+    left: 0;
+    right: 0;
+    .modal-content{
+        padding: 15px;
+        .modal-body{
+            .col-md-12.clearfix{
+                padding: 0px;
+            }
+        }
+        .otpForm .submitOrange{
+            background: #2d2d2d;
+        }
+        .otpForm .otpMessage{
+            padding: 5px 20px;
+        }
+    }
+}
