@@ -549,9 +549,9 @@ public class CustomSiteMapMediaJob extends SiteMapMediaJob
 					brandfilterurl.add(brandFilter.getUrl1());
 					brandfilterurl.add(brandFilter.getUrl2());
 					brandfilterurl.add(brandFilter.getUrl3());
-					LOG.debug("111" + brandFilter.getUrl1());
-					LOG.debug("22222" + brandFilter.getUrl2());
-					LOG.debug("333333333" + brandFilter.getUrl3());
+					//					LOG.debug("111" + brandFilter.getUrl1());
+					//					LOG.debug("22222" + brandFilter.getUrl2());
+					//					LOG.debug("333333333" + brandFilter.getUrl3());
 
 					//					fw.write(brandFilter.getUrl1() + "\n");
 					//					fw.write(brandFilter.getUrl2() + "\n");
@@ -569,7 +569,7 @@ public class CustomSiteMapMediaJob extends SiteMapMediaJob
 
 				for (final String myset : set)
 				{
-					LOG.debug("*************" + myset);
+					LOG.debug("******brandfilterurl in cronjob*******" + myset);
 				}
 			}
 			else
