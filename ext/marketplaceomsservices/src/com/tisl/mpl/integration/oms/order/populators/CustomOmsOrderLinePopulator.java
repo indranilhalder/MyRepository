@@ -114,7 +114,7 @@ public class CustomOmsOrderLinePopulator implements Populator<OrderEntryModel, O
 				final List<JewelleryInformationModel> jewelleryInfo = jewelleryService.getJewelleryInfoByUssid(source
 						.getSelectedUSSID());
 				ussid = jewelleryInfo.get(0).getPCMUSSID();
-				jwlSkuid = ussid.substring(6, ussid.length());
+				jwlSkuid = source.getSelectedUSSID().substring(6, source.getSelectedUSSID().length());
 			}
 			else
 			{
@@ -392,14 +392,14 @@ public class CustomOmsOrderLinePopulator implements Populator<OrderEntryModel, O
 			/*
 			 * if (richAttributeModel.get(0).getDeliveryFulfillModeByP1() != null &&
 			 * richAttributeModel.get(0).getDeliveryFulfillModeByP1().getCode() != null)
-			 *
+			 * 
 			 * { final String fulfilmentType =
 			 * richAttributeModel.get(0).getDeliveryFulfillModeByP1().getCode().toUpperCase();
 			 * target.setFulfillmentTypeP1(fulfilmentType); }
-			 *
+			 * 
 			 * if (richAttributeModel.get(0).getDeliveryFulfillModes() != null &&
 			 * richAttributeModel.get(0).getDeliveryFulfillModes().getCode() != null)
-			 *
+			 * 
 			 * { final String fulfilmentType = richAttributeModel.get(0).getDeliveryFulfillModes().getCode().toUpperCase();
 			 * if(fulfilmentType.equalsIgnoreCase(MarketplaceomsservicesConstants.BOTH)){
 			 * if(richAttributeModel.get(0).getDeliveryFulfillModeByP1
@@ -603,7 +603,7 @@ public class CustomOmsOrderLinePopulator implements Populator<OrderEntryModel, O
 	 * (!category.getSupercategories().isEmpty()) { for (final CategoryModel superCategory :
 	 * category.getSupercategories()) { getCategoryName(superCategory); } } } catch (final Exception e) { throw new
 	 * EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000); }
-	 * 
+	 *
 	 * }
 	 */
 
