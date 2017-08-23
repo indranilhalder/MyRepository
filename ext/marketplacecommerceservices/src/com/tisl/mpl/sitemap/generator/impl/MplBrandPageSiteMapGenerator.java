@@ -108,13 +108,14 @@ public class MplBrandPageSiteMapGenerator extends AbstractSiteMapGenerator<Custo
 				mainSiteMapUrlList = brandPageSiteMap(siteModel, mainSiteMapUrlList, siteMapPage, brandLists);
 
 			}
-			else if (siteMapPage.getCode().equals(SiteMapPageEnum.CONTENT))
-			{
+			//			else if (siteMapPage.getCode().equals(SiteMapPageEnum.CONTENT))
+			//			{
+			//
+			//				LOG.debug("**Inside ContentPage***");
+			//				//ContentPage
+			//				mainSiteMapUrlList = contentPageSiteMap(mainSiteMapUrlList, siteMapPage);
+			//			}
 
-				LOG.debug("**Inside ContentPage***");
-				//ContentPage
-				mainSiteMapUrlList = contentPageSiteMap(mainSiteMapUrlList, siteMapPage);
-			}
 			//			else if (siteMapPage.getCode().equals(SiteMapPageEnum.CUSTOM))
 			//			{
 			//				//Custom
@@ -371,78 +372,78 @@ public class MplBrandPageSiteMapGenerator extends AbstractSiteMapGenerator<Custo
 	 * @param siteMapPage
 	 * @return List<CustomPageData>
 	 */
-	private List<CustomPageData> contentPageSiteMap(final List<CustomPageData> mainSiteMapUrlList,
-			final SiteMapPageModel siteMapPage)
-	{
-		LOG.debug("Inside mplbrandpagesitemapgenerator contentPageSiteMap");
-		final List<ContentPageModel> contentPageList = doSearch(getContentForSitemapQuery(), null, ContentPageModel.class);
-		for (final ContentPageModel contentPageModel : contentPageList)
-		{
-			final CustomPageData data = new CustomPageData();
-			final String contentPageTemplateUid = contentPageModel.getMasterTemplate().getUid();
-			final String templateTypeForLabel = configurationService.getConfiguration().getString("mpl.contentPage.template.label");
-			final String categoryTemplateType = configurationService.getConfiguration().getString(
-					"mpl.contentPage.template.category");
-			final String sellerTemplateType = configurationService.getConfiguration().getString("mpl.contentPage.template.seller");
-
-			//Logic for templates with url picked up from label
-			if (templateTypeForLabel.indexOf(contentPageTemplateUid) != -1)
-			{
-				if (StringUtils.isNotEmpty(contentPageModel.getLabel()))
-				{
-					LOG.debug("Inside mplbrandpagesitemapgenerator contentPageModel" + contentPageModel.getLabel());
-					data.setUrl(contentPageModel.getLabel());
-					if (null != siteMapPage.getFrequency())
-					{
-						data.setChangeFrequency(siteMapPage.getFrequency().getCode());
-					}
-					if (null != siteMapPage.getPriority())
-					{
-						data.setPriority(siteMapPage.getPriority().toString());
-					}
-				}
-				mainSiteMapUrlList.add(data);
-			}
-			//Logic for category templates
-			else if (categoryTemplateType.indexOf(contentPageTemplateUid) != -1 && null != contentPageModel.getCategoryAssociated())
-			{
-				final String relUrl = StringEscapeUtils.escapeXml(getCategoryModelUrlResolver().resolve(
-						contentPageModel.getCategoryAssociated()));
-				LOG.debug("Inside mplbrandpagesitemapgenerator category templates" + relUrl);
-				data.setUrl(relUrl);
-				if (null != siteMapPage.getFrequency())
-				{
-					data.setChangeFrequency(siteMapPage.getFrequency().getCode());
-				}
-				if (null != siteMapPage.getPriority())
-				{
-					data.setPriority(siteMapPage.getPriority().toString());
-				}
-
-				mainSiteMapUrlList.add(data);
-			}
-			//Logic for seller templates
-			else if (sellerTemplateType.indexOf(contentPageTemplateUid) != -1 && null != contentPageModel.getAssociatedSeller())
-			{
-				final StringBuilder urlBuilder = new StringBuilder();
-				urlBuilder.append("s/").append(contentPageModel.getAssociatedSeller().getId());
-				LOG.debug("Inside mplbrandpagesitemapgenerator seller templates" + urlBuilder.toString());
-				data.setUrl(urlBuilder.toString());
-				if (null != siteMapPage.getFrequency())
-				{
-					data.setChangeFrequency(siteMapPage.getFrequency().getCode());
-				}
-				if (null != siteMapPage.getPriority())
-				{
-					data.setPriority(siteMapPage.getPriority().toString());
-				}
-
-				mainSiteMapUrlList.add(data);
-			}
-
-		}
-		return mainSiteMapUrlList;
-	}
+	//	private List<CustomPageData> contentPageSiteMap(final List<CustomPageData> mainSiteMapUrlList,
+	//			final SiteMapPageModel siteMapPage)
+	//	{
+	//		LOG.debug("Inside mplbrandpagesitemapgenerator contentPageSiteMap");
+	//		final List<ContentPageModel> contentPageList = doSearch(getContentForSitemapQuery(), null, ContentPageModel.class);
+	//		for (final ContentPageModel contentPageModel : contentPageList)
+	//		{
+	//			final CustomPageData data = new CustomPageData();
+	//			final String contentPageTemplateUid = contentPageModel.getMasterTemplate().getUid();
+	//			final String templateTypeForLabel = configurationService.getConfiguration().getString("mpl.contentPage.template.label");
+	//			final String categoryTemplateType = configurationService.getConfiguration().getString(
+	//					"mpl.contentPage.template.category");
+	//			final String sellerTemplateType = configurationService.getConfiguration().getString("mpl.contentPage.template.seller");
+	//
+	//			//Logic for templates with url picked up from label
+	//			if (templateTypeForLabel.indexOf(contentPageTemplateUid) != -1)
+	//			{
+	//				if (StringUtils.isNotEmpty(contentPageModel.getLabel()))
+	//				{
+	//					LOG.debug("Inside mplbrandpagesitemapgenerator contentPageModel" + contentPageModel.getLabel());
+	//					data.setUrl(contentPageModel.getLabel());
+	//					if (null != siteMapPage.getFrequency())
+	//					{
+	//						data.setChangeFrequency(siteMapPage.getFrequency().getCode());
+	//					}
+	//					if (null != siteMapPage.getPriority())
+	//					{
+	//						data.setPriority(siteMapPage.getPriority().toString());
+	//					}
+	//				}
+	//				mainSiteMapUrlList.add(data);
+	//			}
+	//			//Logic for category templates
+	//			else if (categoryTemplateType.indexOf(contentPageTemplateUid) != -1 && null != contentPageModel.getCategoryAssociated())
+	//			{
+	//				final String relUrl = StringEscapeUtils.escapeXml(getCategoryModelUrlResolver().resolve(
+	//						contentPageModel.getCategoryAssociated()));
+	//				LOG.debug("Inside mplbrandpagesitemapgenerator category templates" + relUrl);
+	//				data.setUrl(relUrl);
+	//				if (null != siteMapPage.getFrequency())
+	//				{
+	//					data.setChangeFrequency(siteMapPage.getFrequency().getCode());
+	//				}
+	//				if (null != siteMapPage.getPriority())
+	//				{
+	//					data.setPriority(siteMapPage.getPriority().toString());
+	//				}
+	//
+	//				mainSiteMapUrlList.add(data);
+	//			}
+	//			//Logic for seller templates
+	//			else if (sellerTemplateType.indexOf(contentPageTemplateUid) != -1 && null != contentPageModel.getAssociatedSeller())
+	//			{
+	//				final StringBuilder urlBuilder = new StringBuilder();
+	//				urlBuilder.append("s/").append(contentPageModel.getAssociatedSeller().getId());
+	//				LOG.debug("Inside mplbrandpagesitemapgenerator seller templates" + urlBuilder.toString());
+	//				data.setUrl(urlBuilder.toString());
+	//				if (null != siteMapPage.getFrequency())
+	//				{
+	//					data.setChangeFrequency(siteMapPage.getFrequency().getCode());
+	//				}
+	//				if (null != siteMapPage.getPriority())
+	//				{
+	//					data.setPriority(siteMapPage.getPriority().toString());
+	//				}
+	//
+	//				mainSiteMapUrlList.add(data);
+	//			}
+	//
+	//		}
+	//		return mainSiteMapUrlList;
+	//	}
 
 
 
