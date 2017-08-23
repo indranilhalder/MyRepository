@@ -52,6 +52,8 @@
 
 					<input type="hidden" name="customSkuUrl" value="/CustomSkuCollection/${component.labelOrId}/page-1?q="/>
 					<input type="hidden" name="customSku" value="true"/>
-					<input type="hidden" name="customSkuCollectionId" value="${component.labelOrId}"/>					
+					<input type="hidden" name="customSkuCollectionId" value="${component.labelOrId}"/>	
+					<!-- Added for UF-359 -->
+ 					<input type="hidden" name="noOfPages" value="${searchPageData.pagination.numberOfPages}"/>				
 				</div>
 				

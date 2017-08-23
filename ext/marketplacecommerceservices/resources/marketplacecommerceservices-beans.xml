@@ -829,6 +829,15 @@
  		<property name="layout" type="com.tisl.mpl.core.enums.LayoutStructure" />
  	</bean>
 	<!-- TPR-1072 END -->
+
+	<!-- For TPR-5733 -->
+	<bean class="com.tisl.mpl.facades.cms.data.FooterLinkData">
+		<property name="footerLinkRow" type="Integer"/>
+		<property name="footerLinkColumn" type="Integer"/>
+		<property name="footerLinkName" type="String"/>
+		<property name="footerLinkURL" type="String"/>
+	</bean>
+	
 	<!-- TPR-5667 : Samsung order response | start -->
 	<bean class="com.tisl.mpl.samsung.wsdto.ChargeWsDTO">
     	<property name="charges" type="String"/>

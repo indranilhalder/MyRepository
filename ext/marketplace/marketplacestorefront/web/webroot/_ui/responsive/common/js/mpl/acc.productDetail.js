@@ -3065,7 +3065,12 @@ function loadDefaultWishListName_SizeGuide() {
 				$("#add_to_wishlist").attr("disabled",true);
 				$('.add_to_cart_form .out_of_stock #add_to_wishlist').addClass("wishDisabled");
 			}
-			
+			else if(data == false)//TPR-5787
+			{
+				$('.product-info .picZoomer-pic-wp .zoom a,.product-image-container.device a.wishlist-icon').removeClass("added");
+				$("#add_to_wishlist").attr("disabled",false);
+				$('.add_to_cart_form .out_of_stock #add_to_wishlist').removeClass("wishDisabled");
+			}
 			},
 			error : function(xhr, status, error) {
 				$("#wishlistErrorId_pdp").html("Could not add the product in your wishlist");
@@ -3264,6 +3269,19 @@ function getProductContents() {
 		success : function(data) {
 			if(data){ 
 				$('#productContentDivId').html(data);
+				//UF-403 starts
+				if ($(".youtube-player").length) {
+					var div, n,
+	                v = document.getElementsByClassName("youtube-player");
+		            for (n = 0; n < v.length; n++) {
+		                div = document.createElement("div");
+		                div.setAttribute("data-id", v[n].dataset.id);
+		                div.innerHTML = labnolThumb(v[n].dataset.id); //labnolThumb function implementation in videocomponent.jsp
+		                div.onclick = labnolIframe; //labnolIframe function implementation in videocomponent.jsp
+		                v[n].appendChild(div);
+		            }
+				}
+				//UF-403 ends
 				 if (data.indexOf('class="Manufacturer Temp07"') > -1 ) {
 					 $(".every-scene-carousel").owlCarousel({
 							items:3,
@@ -3668,7 +3686,7 @@ function onSizeSelectPopulateDOM()//First Method to be called in size select aja
 						
 						
 						//Calling to check if the product already exists in the wishlist,If so fill/unfill heart icon
-						getLastModifiedWishlistForPLP(responseProductCode);
+						//getLastModifiedWishlistForPLP(responseProductCode);//CALL FROM BUYBOX..TPR-5787
 						
 						//Prepare data for buybox call
 						var variantCodes = $("#product_allVariantsListingId").val();
@@ -4298,6 +4316,8 @@ function populateProductPageTabs(jsonData)
 		{
 			var selector='ul.tabs.pdp>li:eq('+index+')';
 			$(selector).html(populateProductDetailsTab(jsonData));
+			//UF-377
+			$("#detailsAccordion").html(populateProductDetailsTab(jsonData));
 		}
 	}
 	if(jsonData['validTabs'].includes('description'))
@@ -4307,6 +4327,8 @@ function populateProductPageTabs(jsonData)
 		{
 			var selector='ul.tabs.pdp>li:eq('+index+')';
 			$(selector).html(populateProductDescriptionTab(jsonData));
+			//UF-377
+			$("#descriptionAccordion").html(populateProductDetailsTab(jsonData));
 		}
 	}
 	if(jsonData['validTabs'].includes('warranty'))
@@ -4316,6 +4338,8 @@ function populateProductPageTabs(jsonData)
 		{
 			var selector='ul.tabs.pdp>li:eq('+index+')';
 			$(selector).html(populateProductWarrantyTab(jsonData));
+			//UF-377
+			$("#warrantyAccordion").html(populateProductDetailsTab(jsonData));
 		}
 	}
 }

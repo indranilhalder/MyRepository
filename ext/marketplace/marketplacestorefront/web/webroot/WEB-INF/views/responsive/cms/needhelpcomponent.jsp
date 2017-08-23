@@ -15,7 +15,7 @@
 
 </head>
 <body>
-	<div id="up" onclick="openNeedHelpSec()">
+	<div id="up" class="lazy-need-help" onclick="openNeedHelpSec()">
 		<spring:theme code="needhelp.needhelptext" />
 
 		<div id="h">

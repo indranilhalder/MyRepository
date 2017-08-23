@@ -129,7 +129,6 @@
   		 <collectiontype elementtype="java.lang.String" code="quickDropStoreNames"
    				autocreate="true" generate="true" type="list" />
 		<!-- Added in R2.3 END  -->
-
 		<!-- Added for TPR-6286  -->
 		<collectiontype code="AbstractOrderEntryListInvoice" elementtype="AbstractOrderEntry"
 			autocreate="true" generate="true" type="list" />
@@ -149,6 +148,23 @@
 
 
 	<enumtypes>
+	                <!-- TPR-6272 starts here -->
+	                <!-- <enumtype generate="true" code="registrationPlatform" autocreate="true" dynamic="true">
+			              <description>
+				               This enumeration creates the registration platform.
+			              </description>
+						  <value code="Mkt_Desktop_Web" />
+			              <value code="Mkt_Mobile_Web" />
+			              <value code="Mkt_Mobile_App" />
+			              <value code="Mkt_iOS_App" />
+			              <value code="Mkt_Android_App" />
+			              <value code="Lux_Desktop_Web" />
+			              <value code="Lux_Mobile_Web" />
+			              <value code="Lux_Mobile_App" />
+			              <value code="Lux_iOS_App" />
+			              <value code="Lux_Android_App" />			              
+		            </enumtype> -->
+	                <!-- TPR-6272 ends here -->
 
 		<!-- TPR-628-Make changes to Banners rendering in MObile Viewports -->
 
@@ -1720,6 +1736,12 @@
 						<persistence type="property" />
 					</attribute>
 					<attribute qualifier="qualifier" type="java.lang.String">
+						<description>Used to define Media Status.</description>
+						<modifiers read="true" write="true" optional="true"
+							unique="false" />
+						<persistence type="property" />
+					</attribute>
+					<attribute qualifier="alternativeURL" type="java.lang.String">
 						<description>Used to define Media Status.</description>
 						<modifiers read="true" write="true" optional="true"
 							unique="false" />
@@ -3515,6 +3537,14 @@
 			</itemtype>
 			<itemtype code="Customer" generate="false" autocreate="false">
 				<attributes>
+				    <!-- TPR-6272 starts here -->				   				    
+				    <attribute qualifier="customerRegistrationPlatform" autocreate="true"
+						type="java.lang.String" generate="true">
+						<modifiers read="true" write="true" search="true"
+							optional="true" />
+						<persistence type="property" />
+					</attribute>
+					<!-- TPR-6272 ends here -->
 					<attribute qualifier="isCustomerCreatedInCScockpit"
 						autocreate="true" type="java.lang.boolean" generate="true">
 						<modifiers read="true" write="true" search="true"
@@ -4513,16 +4543,18 @@
 					</attribute>
 				</attributes>
 			</itemtype>
+			<!-- TPR-6410 starts -->
 			<itemtype code="CMSNavigationNode" generate="false"
 				autocreate="false">
 				<attributes>
 					<attribute qualifier="media" generate="true" autocreate="true"
-						type="localized:Media">
+						type="Media">
 						<persistence type="property" />
 						<description>Attribute that stores the localized media in CMS Navigation Node.</description>
 					</attribute>
 				</attributes>
 			</itemtype>
+			<!-- TPR-6410 ends -->
 			<itemtype code="MplNavigationNodeComponent" autocreate="true"
 				generate="true" extends="CMSNavigationNode"
 				jaloclass="com.tisl.mpl.core.jalo.MplNavigationNodeComponent">
@@ -6351,6 +6383,22 @@
 						<defaultvalue>Boolean.FALSE</defaultvalue>
 						<persistence type="property" />
 					</attribute>
+					<!-- TPR-5787 starts here -->
+					<attribute qualifier="isDeleted" autocreate="true"
+						type="java.lang.Boolean">
+						<description>Flag to indicate that the wishlist has been deleted</description>
+						<modifiers read="true" write="true" optional="false" />
+						<defaultvalue>Boolean.FALSE</defaultvalue>
+						<persistence type="property" />
+					</attribute>
+					<attribute autocreate="true" qualifier="deletedDate"
+						type="java.util.Date">
+						<description>To store the date when wishlist item has been deleted</description>
+						<persistence type="property" />
+						<modifiers read="true" write="true" search="true"
+							optional="true" />
+					</attribute>
+					<!-- TPR-5787 ends here -->
 				</attributes>
 			</itemtype>
 
@@ -11513,5 +11561,41 @@
 			</itemtype>
 		</typegroup>
 		<!-- End CAR-274 -->
-	</itemtypes>
+		<!-- START TPR-5733 -->
+			<typegroup name="MPL_FOOTER"> 
+			   <itemtype code="MplFooterLink" autocreate="true" generate="true">
+				<description>Added New Links For Tag Cloud</description>
+				<deployment table="MplFooterLink" typecode="21101" />
+				<attributes>
+				<attribute qualifier="footerLinkRow" type="java.lang.Integer">
+				    <modifiers optional="false" unique="false" write="true" read="true"/>
+				   <persistence type="property" />
+				<description>Attribute contains the row id</description>
+			  </attribute>
+			  <attribute qualifier="footerLinkColumn" type="java.lang.Integer">
+				    <modifiers optional="false" unique="false" write="true" read="true"/>
+				    <persistence type="property" />
+				    <description>Attribute contains the column id</description>
+			 </attribute>
+			<attribute qualifier="footerLinkName" type="java.lang.String">
+			      <modifiers optional="false" unique="false" write="true" read="true"/>
+			      <persistence type="property" />
+			      <description>Attribute contains name of the links</description>
+		  </attribute>
+		  <attribute qualifier="footerLinkURL" type="java.lang.String">
+			     <modifiers optional="false" unique="false" write="true" read="true"/>
+			     <persistence type="property" />
+			     <description>Attribute contains the required URL</description>
+		  </attribute>
+		</attributes>
+		<indexes>
+			<index name="INDX_ROW_COLUMN" unique="true">
+				<key attribute="footerLinkRow" />
+				<key attribute="footerLinkColumn" />
+			</index>
+		</indexes>
+	 </itemtype>
+    </typegroup>
+		<!-- END TPR-5733 -->
+  </itemtypes>
 </items>

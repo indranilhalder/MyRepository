@@ -12,6 +12,7 @@ import de.hybris.platform.commerceservices.enums.CustomerType;
 import de.hybris.platform.commerceservices.event.RegisterEvent;
 import de.hybris.platform.core.model.user.CustomerModel;
 import de.hybris.platform.core.model.user.UserModel;
+import de.hybris.platform.servicelayer.config.ConfigurationService;
 import de.hybris.platform.servicelayer.exceptions.AmbiguousIdentifierException;
 import de.hybris.platform.servicelayer.exceptions.ModelSavingException;
 import de.hybris.platform.servicelayer.interceptor.InterceptorException;
@@ -21,6 +22,7 @@ import de.hybris.platform.servicelayer.user.exceptions.PasswordEncoderNotFoundEx
 
 import java.util.Random;
 
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Required;
 import org.springframework.util.Assert;
@@ -43,6 +45,11 @@ import com.tisl.mpl.service.MplCustomerWebService;
  */
 public class ExtDefaultCustomerServiceImpl extends DefaultCustomerAccountService implements ExtDefaultCustomerService
 {
+	//TPR-6272 starts here
+	private static final Logger LOG = Logger.getLogger(ExtDefaultCustomerServiceImpl.class);
+	@Autowired
+	private ConfigurationService configurationService;
+	//TPR-6272 ends here
 	private UserService userService;
 	@Autowired
 	private ExtendedUserService extUserService;
@@ -285,8 +292,8 @@ public class ExtDefaultCustomerServiceImpl extends DefaultCustomerAccountService
 	 * @description to register user
 	 */
 	@Override
-	public void registerUser(final CustomerModel customerModel, final String password, final String affiliateId)
-			throws DuplicateUidException
+	public void registerUser(final CustomerModel customerModel, final String password, final String affiliateId,
+			final int platformNumber) throws DuplicateUidException//TPR-6272 parameter platformNumber added
 	{
 		try
 		{
@@ -297,6 +304,43 @@ public class ExtDefaultCustomerServiceImpl extends DefaultCustomerAccountService
 			{
 				getUserService().setPassword(customerModel, password, getPasswordEncoding());
 			}
+
+
+			//TPR-6272 starts here
+			LOG.debug("The platform number is " + platformNumber);
+			if (platformNumber == MarketplacecommerceservicesConstants.PLATFORM_ONE)//IQA
+			{
+				customerModel.setCustomerRegistrationPlatform(configurationService.getConfiguration().getString(
+						"registration.platform.mktdesktopweb"));
+			}
+			else if (platformNumber == MarketplacecommerceservicesConstants.PLATFORM_TWO)//IQA
+			{
+				customerModel.setCustomerRegistrationPlatform(configurationService.getConfiguration().getString(
+						"registration.platform.mktiosapp"));
+			}
+			else if (platformNumber == MarketplacecommerceservicesConstants.PLATFORM_THREE)//IQA
+			{
+				customerModel.setCustomerRegistrationPlatform(configurationService.getConfiguration().getString(
+						"registration.platform.mktandroidapp"));
+			}
+			else if (platformNumber == MarketplacecommerceservicesConstants.PLATFORM_FOUR)//IQA
+			{
+				customerModel.setCustomerRegistrationPlatform(configurationService.getConfiguration().getString(
+						"registration.platform.mktmobileapp"));//for backward compatibility
+			}
+			else if (platformNumber == MarketplacecommerceservicesConstants.PLATFORM_FIVE)//IQA
+			{
+				customerModel.setCustomerRegistrationPlatform(configurationService.getConfiguration().getString(
+						"registration.platform.mktmobileweb"));
+			}
+			else
+			{
+				LOG.error(" --------- The registration platform is not in scope/not required to be stored ---------- "
+						+ platformNumber);//IQA
+			}
+			//TPR-6272 ends here
+
+
 			internalSaveCustomer(customerModel);
 
 			//Commented this code as this is not required while sign in/sign up

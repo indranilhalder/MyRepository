@@ -3,7 +3,6 @@ package com.tisl.mpl.integration.oms.order.service.impl;
 //import de.hybris.platform.commercefacades.order.OrderFacade;
 import de.hybris.platform.catalog.CatalogVersionService;
 import de.hybris.platform.category.model.CategoryModel;
-import de.hybris.platform.commercefacades.product.ProductFacade;
 import de.hybris.platform.core.model.order.AbstractOrderEntryModel;
 import de.hybris.platform.core.model.order.OrderModel;
 import de.hybris.platform.core.model.product.ProductModel;
@@ -59,7 +58,6 @@ import com.tisl.mpl.constants.clientservice.MarketplacecclientservicesConstants;
 import com.tisl.mpl.core.model.BrandModel;
 import com.tisl.mpl.exception.ClientEtailNonBusinessExceptions;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
-import com.tisl.mpl.marketplacecommerceservices.service.MplCategoryService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplCommerceCartService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplSellerInformationService;
 import com.tisl.mpl.samsung.wsdto.ChargeWsDTO;
@@ -95,14 +93,16 @@ public class CustomOmsOrderService extends DefaultOmsOrderService implements Mpl
 	@Autowired
 	private ChangeDeliveryAddressFacade changeDeliveryAddressFacade;
 
-	@Resource(name = "accProductFacade")
-	private ProductFacade productFacade;
+	//SONAR FIX
+	//@Resource(name = "accProductFacade")
+	//private ProductFacade productFacade;
 
 	@Resource(name = "mplCommerceCartService")
 	private MplCommerceCartService mplCommerceCartService;
 
-	@Resource(name = "mplCategoryServiceImpl")
-	private MplCategoryService mplCategoryService;
+	//SONAR FIX
+	//@Resource(name = "mplCategoryServiceImpl")
+	//private MplCategoryService mplCategoryService;
 
 	@Resource(name = "mplSellerInformationService")
 	private MplSellerInformationService mplSellerInformationService;
@@ -113,11 +113,11 @@ public class CustomOmsOrderService extends DefaultOmsOrderService implements Mpl
 	@Resource(name = "mplSendOrderFromCommerceToSamsung")
 	private MplSendOrderFromCommerceToSamsung mplSendOrderFromCommerceToSamsung;
 
-
-	private static final String COLON = ":";
-	private final int connectionTimeout = 5 * 10000;
-	private final int readTimeout = 5 * 1000;
-
+	//SONAR FIX
+	/*
+	 * private static final String COLON = ":"; private final int connectionTimeout = 5 * 10000; private final int
+	 * readTimeout = 5 * 1000;
+	 */
 
 	@Override
 	public OrderPlacementResult createCrmOrder(final OrderModel orderModel)
@@ -622,9 +622,9 @@ public class CustomOmsOrderService extends DefaultOmsOrderService implements Mpl
 
 	/*
 	 * @Desc Used for generating xml
-	 *
+	 * 
 	 * @param order
-	 *
+	 * 
 	 * @return String
 	 */
 	protected String getOrderAuditXml(final Order order)

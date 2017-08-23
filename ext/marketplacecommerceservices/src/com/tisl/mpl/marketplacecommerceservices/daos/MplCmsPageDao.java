@@ -18,6 +18,7 @@ import java.util.List;
 
 import com.tisl.mpl.core.enums.CMSChannel;
 import com.tisl.mpl.core.model.BrandComponentModel;
+import com.tisl.mpl.core.model.MplFooterLinkModel;
 import com.tisl.mpl.core.model.MplShopByLookModel;
 import com.tisl.mpl.model.SellerMasterModel;
 
@@ -72,4 +73,11 @@ public interface MplCmsPageDao extends CMSPageDao
 	 * @CAR-285
 	 */
 	public CMSSiteModel getSiteforId(final String siteUid) throws CMSItemNotFoundException;
+
+	/**
+	 * TPR-5733
+	 * 
+	 * @return List<MplFooterLinkModel>
+	 */
+	List<MplFooterLinkModel> getAllFooterLinks();
 }

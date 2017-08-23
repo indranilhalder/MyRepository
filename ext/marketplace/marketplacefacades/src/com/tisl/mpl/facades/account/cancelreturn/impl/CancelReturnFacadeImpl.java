@@ -121,7 +121,6 @@ import com.tisl.mpl.marketplacecommerceservices.service.MplOrderService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplProcessOrderService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplSellerInformationService;
 import com.tisl.mpl.marketplacecommerceservices.service.OrderModelService;
-import com.tisl.mpl.marketplacecommerceservices.service.impl.DefaultMplMWalletRefundService;
 import com.tisl.mpl.model.CRMTicketDetailModel;
 import com.tisl.mpl.model.SellerInformationModel;
 import com.tisl.mpl.ordercancel.MplOrderCancelEntry;
@@ -239,8 +238,11 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 	private MPLReturnService mplReturnService;
 
 	private OrderCancelRecordsHandler orderCancelRecordsHandler;
-	@Autowired
-	private DefaultMplMWalletRefundService walletRefundService;
+
+
+	//	@Autowired
+	//	private DefaultMplMWalletRefundService walletRefundService;
+
 	@Resource(name = "mplProcessOrderService")
 	MplProcessOrderService mplProcessOrderService;
 	@Autowired
@@ -332,8 +334,7 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 				bogoOrFreeBie = true;
 			}
 
-			LOG.debug("************BOGO or Free Bie available for order" + subOrderModel.getCode() + " is " + bogoOrFreeBie);
-			LOG.debug("Step 2: ***********************************Ticket Type code : " + ticketTypeCode);
+			LOG.debug("Step 1: BOGO or Free Bie available for order" + subOrderModel.getCode() + bogoOrFreeBie);
 			if ((ticketTypeCode.equalsIgnoreCase("C") || (ticketTypeCode.equalsIgnoreCase("R") && !bogoOrFreeBie))) //TISEE-933
 			{
 				orderLineRequest = populateOrderLineData(subOrderEntry, ticketTypeCode, subOrderModel, reasonCode);
@@ -347,7 +348,7 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 			{
 				cancelOrRetrnanable = true;
 			}
-			LOG.debug("Step 2: ***********************************cancelOrRetrnanable : " + cancelOrRetrnanable);
+			LOG.debug("Step 2:cancelOrRetrnanable : " + cancelOrRetrnanable);
 			if (cancelOrRetrnanable)
 			{
 				final List<AbstractOrderEntryModel> orderEntriesModel = associatedEntries(subOrderModel,
@@ -356,12 +357,12 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 				{
 					if (ticketTypeCode.equalsIgnoreCase("C"))
 					{
-						LOG.debug("Step 3:***********************************History creation start for cancellation");
+						LOG.debug("Step 3:History creation start for cancellation");
 						createHistoryEntry(abstractOrderEntryModel, subOrderModel, ConsignmentStatus.CANCELLATION_INITIATED);
 					}
 					else if (ticketTypeCode.equalsIgnoreCase("R") && !bogoOrFreeBie) ////TISEE-933
 					{
-						LOG.debug("Step 3:***********************************History creation start for retrun");
+						LOG.debug("Step 3:History creation start for retrun");
 						createHistoryEntry(abstractOrderEntryModel, subOrderModel, ConsignmentStatus.RETURN_INITIATED);
 					}
 				}
@@ -384,8 +385,7 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 
 			if (omsCancellationStatus)
 			{
-				LOG.debug("Step 4:***********************************Ticket is to be created for sub order:"
-						+ subOrderDetails.getCode());
+				LOG.debug("Step 4:Ticket is to be created for sub order:" + subOrderDetails.getCode());
 
 				//TISPRD-1641
 				final List<PaymentTransactionModel> tranactions = subOrderModel.getPaymentTransactions();
@@ -444,10 +444,10 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 				}
 				//TISRLEE-1703 end
 
-				LOG.debug("Step 4.1:***********************************Ticket creation status for sub order:" + ticketCreationStatus);
-				LOG.debug("Step 5 :*********************************** Refund and OMS call started");
+				LOG.debug("Step 4.1:Ticket creation status for sub order:" + ticketCreationStatus);
+				LOG.debug("Step 5 :Refund and OMS call started");
 				cancelOrRetrnanable = initiateCancellation(ticketTypeCode, subOrderDetails, subOrderEntry, subOrderModel, reasonCode);
-				LOG.debug("Step 5.1 :*********************************** Refund and OMS call status:" + cancelOrRetrnanable);
+				LOG.debug("Step 5.1 : Refund and OMS call status:" + cancelOrRetrnanable);
 
 				if (cancelOrRetrnanable && ticketTypeCode.equalsIgnoreCase("R") && !bogoOrFreeBie) //TISEE-5524
 				{
@@ -457,8 +457,7 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 					//				if (cancelOrRetrnanable && ticketTypeCode.equalsIgnoreCase("R") && !bogoOrFreeBie
 					//						&& !subOrderModel.getIsWallet().equals(WalletEnum.MRUPEE))
 					//				{
-					LOG.debug("Step 6:***********************************Create return request for Return:"
-							+ subOrderDetails.getCode());
+					LOG.debug("Step 6:Create return request for Return:" + subOrderDetails.getCode());
 
 
 					final List<AbstractOrderEntryModel> orderEntriesModel = associatedEntries(subOrderModel,
@@ -469,14 +468,14 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 						final boolean returnReqSuccess = createRefund(subOrderModel, abstractOrderEntryModel, reasonCode,
 								salesApplication, returnLogisticsCheck);
 
-						LOG.debug("**********************************Return request successful :" + returnReqSuccess);
+						LOG.debug("Return request successful :" + returnReqSuccess);
 					}
 				}
 				if (cancelOrRetrnanable && ticketTypeCode.equalsIgnoreCase("C"))
 				{
-					LOG.debug("Step 7:***********************************Create Cancel request" + subOrderDetails.getCode());
+					LOG.debug("Step 7:Create Cancel request" + subOrderDetails.getCode());
 					frameCancelPushNotification(subOrderModel, subOrderModelVersioned, subOrderEntry, reasonCode, customerData);
-					LOG.debug("*Step 7:*********************************Cancel request successful and push notification sent:");
+					LOG.debug("*Step 7:Cancel request successful and push notification sent:");
 				}
 			}
 		}
@@ -493,7 +492,7 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 
 		try
 		{
-			LOG.debug("Step 8: *********************************** Updating commerce consignment status" + omsCancellationStatus);
+			LOG.debug("Step 8: Updating commerce consignment status" + omsCancellationStatus);
 
 			if (omsCancellationStatus)
 			{
@@ -517,7 +516,7 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 		}
 		catch (final EtailNonBusinessExceptions e)
 		{
-			LOG.error("*******************Updating commerce consignment status ", e);
+			LOG.error("Updating commerce consignment status ", e);
 			ExceptionUtil.etailNonBusinessExceptionHandler(e);
 		}
 		catch (final Exception ex)
@@ -541,9 +540,6 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 		final boolean isReturn = true;
 		final String ticketTypeCode = returninfoData.getTicketTypeCode();
 		final String reasonCode = returninfoData.getReasonCode();
-
-		LOG.debug("Step 1 :*********************************** isReturn:" + isReturn);
-
 		boolean cancelOrRetrnanable = true;
 		boolean omsCancellationStatus = false;
 		String pincode = null;
@@ -568,8 +564,8 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 				bogoOrFreeBie = true;
 			}
 
-			LOG.debug("************BOGO or Free Bie available for order" + subOrderModel.getCode() + " is " + bogoOrFreeBie);
-			LOG.debug("Step 2: ***********************************Ticket Type code : " + ticketTypeCode);
+			LOG.debug("==BOGO or Free Bie available for order" + subOrderModel.getCode() + bogoOrFreeBie);
+			LOG.debug("==Step 2: Ticket Type code : " + ticketTypeCode);
 			if ((ticketTypeCode.equalsIgnoreCase("C") || (ticketTypeCode.equalsIgnoreCase("R") && !bogoOrFreeBie))) //TISEE-933
 			{
 
@@ -588,7 +584,7 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 			{
 				cancelOrRetrnanable = true;
 			}
-			LOG.debug("Step 2: ***********************************cancelOrRetrnanable : " + cancelOrRetrnanable);
+			LOG.debug("==Step 2:cancelOrRetrnanable : " + cancelOrRetrnanable);
 			if (cancelOrRetrnanable)
 			{
 				final List<AbstractOrderEntryModel> orderEntriesModel = associatedEntries(subOrderModel,
@@ -598,7 +594,7 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 
 					if (ticketTypeCode.equalsIgnoreCase("R") && !bogoOrFreeBie) ////TISEE-933
 					{
-						LOG.debug("Step 3:***********************************History creation start for retrun");
+						LOG.debug("==Step 3:History creation start for retrun");
 						createHistoryEntry(abstractOrderEntryModel, subOrderModel, ConsignmentStatus.RETURN_INITIATED);
 					}
 				}
@@ -621,18 +617,17 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 
 			if (omsCancellationStatus)
 			{
-				LOG.debug("Step 4:***********************************Ticket is to be created for sub order:"
-						+ subOrderDetails.getCode());
+				LOG.debug("==Step 4:Ticket is to be created for sub order:" + subOrderDetails.getCode());
 
 
 				final boolean ticketCreationStatus = createTicketInCRM(subOrderDetails, subOrderEntry, ticketTypeCode, reasonCode,
 						returninfoData.getRefundType(), returninfoData.getUssid(), customerData, subOrderModel, returnAddress,
 						returninfoData);
 
-				LOG.debug("Step 4.1:***********************************Ticket creation status for sub order:" + ticketCreationStatus);
-				LOG.debug("Step 5 :*********************************** Refund and OMS call started");
+				LOG.debug("==Step 4.1:Ticket creation status for sub order:" + ticketCreationStatus);
+				LOG.debug("==Step 5 : Refund and OMS call started");
 				cancelOrRetrnanable = initiateCancellation(ticketTypeCode, subOrderDetails, subOrderEntry, subOrderModel, reasonCode);
-				LOG.debug("Step 5.1 :*********************************** Refund and OMS call status:" + cancelOrRetrnanable);
+				LOG.debug("==Step 5.1 :*********************************** Refund and OMS call status:" + cancelOrRetrnanable);
 
 				if (cancelOrRetrnanable && ticketTypeCode.equalsIgnoreCase("R") && !bogoOrFreeBie) //TISEE-5524
 				{
@@ -641,7 +636,7 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 					//				if (cancelOrRetrnanable && ticketTypeCode.equalsIgnoreCase("R") && !bogoOrFreeBie
 					//						&& !subOrderModel.getIsWallet().equals(WalletEnum.MRUPEE))
 					//				{
-					LOG.debug("Step 6:***********************************Create return request for Return:"
+					LOG.debug("==Step 6:***********************************Create return request for Return:"
 							+ subOrderDetails.getCode());
 
 
@@ -653,26 +648,26 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 						final boolean returnReqSuccess = createRefund(subOrderModel, abstractOrderEntryModel, reasonCode,
 								salesApplication, returnAddress.getPincode(), subOrderDetails);
 
-						LOG.debug("**********************************Return request successful :" + returnReqSuccess);
+						LOG.debug("==**********************************Return request successful :" + returnReqSuccess);
 					}
 				}
 			}
 		}
 		catch (final EtailNonBusinessExceptions e)
 		{
-			LOG.error(">>> Cancel Refund exception occured in implementReturnItem etail non business exception : ", e);
+			LOG.error(">>>== Cancel Refund exception occured in implementReturnItem etail non business exception : ", e);
 
 			ExceptionUtil.etailNonBusinessExceptionHandler(e);
 		}
 		catch (final Exception e)
 		{
-			LOG.error(">>> Cancel Refund exception occured in implementReturnItem : ", e);
+			LOG.error(">>>== Cancel Refund exception occured in implementReturnItem : ", e);
 		}
 
 
 		try
 		{
-			LOG.debug("Step 8: *********************************** Updating commerce consignment status" + omsCancellationStatus);
+			LOG.debug("Step 8:== *********************************** Updating commerce consignment status" + omsCancellationStatus);
 
 			if (omsCancellationStatus)
 			{
@@ -696,12 +691,12 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 		}
 		catch (final EtailNonBusinessExceptions e)
 		{
-			LOG.error("*******************Updating commerce consignment status ", e);
+			LOG.error("==*******************Updating commerce consignment status ", e);
 			ExceptionUtil.etailNonBusinessExceptionHandler(e);
 		}
 		catch (final Exception ex)
 		{
-			LOG.error(">>> Exception occured while updating consignment : ", ex);
+			LOG.error(">>>== Exception occured while updating consignment : ", ex);
 		}
 
 		return omsCancellationStatus;
@@ -731,16 +726,16 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 			}
 			else
 			{
-				LOG.debug("Step8:**** Updating consignment status and order histoery insertion Consinment is not present ************** ");
+				LOG.debug("Step8:****== Updating consignment status and order histoery insertion Consinment is not present ************** ");
 			}
 
 			//createHistoryEntry(orderEntryModel, orderModel, consignmentStatus);
 		}
 		catch (final Exception ex)
 		{
-			LOG.error("**** Error occurs while updateConsignmentStatus ", ex);
+			LOG.error("**** ==Error occurs while updateConsignmentStatus ", ex);
 		}
-		LOG.debug("Step8:**** Updating consignment status and order history completed" + updateStatus);
+		LOG.debug("Step8:****== Updating consignment status and order history completed" + updateStatus);
 	}
 
 
@@ -1074,7 +1069,7 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 		}
 		//End
 
-		LOG.info("****Actual return reason desc from Global code master : " + reasonDescription);
+		LOG.info("****==Actual return reason desc from Global code master : " + reasonDescription);
 		return reasonDescription;
 	}
 
@@ -1358,7 +1353,7 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 						 * RETURN_SCHEDULE)) { if (returnLogisticsCheck) { //LOG.info("Setting Type of Return::::::" +
 						 * returnLogisticsCheck);
 						 * sendTicketRequestData.setTicketSubType(MarketplacecommerceservicesConstants.RETURN_TYPE_RSP); }
-						 * 
+						 *
 						 * }
 						 */
 					}
@@ -2025,9 +2020,9 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 	/*
 	 * private MplOrderCancelRequest buildCancelRequest(final AbstractOrderEntryModel orderEntryData, final String
 	 * reasonCode, final OrderData subOrderDetails, final OrderModel subOrderModel) throws OrderCancelException {
-	 * 
+	 *
 	 * final List orderCancelEntries = new ArrayList();
-	 * 
+	 *
 	 * //Get the reason from Global Code master String reasonDescription = null; final List<CancellationReasonModel>
 	 * cancellationReasonList = mplOrderService.getCancellationReason(); for (final CancellationReasonModel
 	 * cancellationReason : cancellationReasonList) { if
@@ -2043,16 +2038,16 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 	 * orderCancelEntry : orderCancelRequest.getEntriesToCancel()) { final AbstractOrderEntryModel orderEntry =
 	 * orderCancelEntry.getOrderEntry(); final List<PaymentTransactionModel> tranactions = new
 	 * ArrayList<PaymentTransactionModel>( subOrderModel.getPaymentTransactions());
-	 * 
+	 *
 	 * if (CollectionUtils.isNotEmpty(tranactions)) { for (final PaymentTransactionModel transaction : tranactions) { if
 	 * (CollectionUtils.isNotEmpty(transaction.getEntries())) { for (final PaymentTransactionEntryModel entry :
 	 * transaction.getEntries()) { if (entry.getPaymentMode() != null && entry.getPaymentMode().getMode() != null &&
 	 * entry.getPaymentMode().getMode().equalsIgnoreCase(MarketplaceFacadesConstants.PAYMENT_METHOS_COD)) {
 	 * orderCancelRequest.setAmountToRefund(NumberUtils.DOUBLE_ZERO); return orderCancelRequest; } } } } }
-	 * 
+	 *
 	 * double deliveryCost = 0D; if (orderEntry.getCurrDelCharge() != null) { deliveryCost =
 	 * orderEntry.getCurrDelCharge().doubleValue(); }
-	 * 
+	 *
 	 * refundAmount = orderEntryData.getNetAmountAfterAllDisc().doubleValue() + deliveryCost; } //Setting Refund Amount
 	 * orderCancelRequest.setAmountToRefund(new Double(refundAmount)); return orderCancelRequest; }
 	 */
@@ -2075,7 +2070,7 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 	 * OrderCancelRecordsHandlerException { final OrderCancelRecordEntryModel result =
 	 * this.getOrderCancelRecordsHandler().createRecordEntry(orderCancelRequest, userService.getCurrentUser());
 	 * //Initiate Refund initiateRefund(subOrderDetails, subOrderModel, result);
-	 * 
+	 *
 	 * }
 	 */
 
@@ -2561,9 +2556,9 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 
 	/*
 	 * @desc Saving order history for cancellation as OMS is not sending
-	 * 
+	 *
 	 * @param subOrderData
-	 * 
+	 *
 	 * @param subOrderModel
 	 */
 	private void createHistoryEntry(final AbstractOrderEntryModel orderEntryModel, final OrderModel orderModel,
@@ -2898,152 +2893,152 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 	 * @param subOrderModel
 	 * @param orderRequestRecord
 	 */
-	private void initiateRefundMrupee(final OrderModel subOrderModel, final OrderCancelRecordEntryModel orderRequestRecord,
-			final String ticketTypeCode)
-	{
-		PaymentTransactionModel paymentTransactionModel = null;
-		if (orderRequestRecord.getRefundableAmount() != null
-				&& orderRequestRecord.getRefundableAmount().doubleValue() > NumberUtils.DOUBLE_ZERO.doubleValue())
-		{
-			//TISSIT-1801
-			final String uniqueRequestId = walletRefundService.getRefundUniqueRequestId();
-			try
-			{
-				LOG.debug("****** initiateRefund Step 1 >> Begin >> Calling for prepaid for " + orderRequestRecord.getCode());
 
-				if ("C".equalsIgnoreCase(ticketTypeCode))
-				{
-					LOG.debug(" ############### MRupee doRefund  Method for Cancel order *********************************** "
-							+ ticketTypeCode);
-					paymentTransactionModel = walletRefundService.doRefund(subOrderModel, orderRequestRecord.getRefundableAmount()
-							.doubleValue(), PaymentTransactionType.CANCEL, uniqueRequestId);
-				}
-				if (null != paymentTransactionModel)
-				{
-					LOG.debug(" ############### MRupee doRefund  paymentTransactionModel not null  *************");
-					mplJusPayRefundService.attachPaymentTransactionModel(subOrderModel, paymentTransactionModel);
-
-					if (CollectionUtils.isNotEmpty(orderRequestRecord.getOrderEntriesModificationEntries()))
-					{
-						for (final OrderEntryModificationRecordEntryModel modificationEntry : orderRequestRecord
-								.getOrderEntriesModificationEntries())
-						{
-							final OrderEntryModel orderEntry = modificationEntry.getOrderEntry();
-							ConsignmentStatus newStatus = null;
-							if (orderEntry != null)
-							{
-								double refundAmount = 0D;
-								final Double deliveryCost = orderEntry.getCurrDelCharge() != null ? orderEntry.getCurrDelCharge()
-										: NumberUtils.DOUBLE_ZERO;
-								// Added in r2.3 START
-								final Double scheduleDeliveryCost = orderEntry.getScheduledDeliveryCharge() != null ? orderEntry
-										.getScheduledDeliveryCharge() : NumberUtils.DOUBLE_ZERO;
-								// Added in r2.3 END
-
-								//refundAmount = orderEntry.getNetAmountAfterAllDisc().doubleValue() + deliveryCost.doubleValue();
-								refundAmount = orderEntry.getNetAmountAfterAllDisc().doubleValue() + deliveryCost.doubleValue()
-										+ scheduleDeliveryCost.doubleValue();
-
-								refundAmount = mplJusPayRefundService.validateRefundAmount(refundAmount, subOrderModel);
-								List<PaymentTransactionEntryModel> entryList = new ArrayList<PaymentTransactionEntryModel>();
-								PaymentTransactionEntryModel entryValue = null;
-								entryList = paymentTransactionModel.getEntries();
-								if (CollectionUtils.isNotEmpty(entryList))
-								{
-									entryValue = entryList.get(entryList.size() - 1);
-
-									if (null != entryValue)
-									{
-										if (StringUtils.equalsIgnoreCase(paymentTransactionModel.getStatus(),
-												MarketplacecommerceservicesConstants.SUCCESS))
-										{
-											LOG.debug(" ########## ConsignmentStatus for MRupee cancel order ********************************"
-													+ paymentTransactionModel.getStatus());
-
-											newStatus = ConsignmentStatus.ORDER_CANCELLED;
-										}
-									}
-								}
-								else if (StringUtils.equalsIgnoreCase(paymentTransactionModel.getStatus(),
-										MarketplacecommerceservicesConstants.FAILURE))
-								{
-									LOG.debug(" ########## ConsignmentStatus for MRupee refund Inprogress ******************************"
-											+ paymentTransactionModel.getStatus());
-
-									newStatus = ConsignmentStatus.REFUND_IN_PROGRESS;
-								}
-								else
-								{
-									LOG.debug(" ########## ConsignmentStatus for MRupee refund initiated ******************************"
-											+ paymentTransactionModel.getStatus());
-
-									newStatus = ConsignmentStatus.REFUND_INITIATED;
-								}
-								orderEntry.setRefundedDeliveryChargeAmt(deliveryCost);
-								orderEntry.setCurrDelCharge(new Double(0D));
-
-								// Added in R2.3 START
-								orderEntry.setRefundedScheduleDeliveryChargeAmt(scheduleDeliveryCost);
-								orderEntry.setScheduledDeliveryCharge(new Double(0D));
-								// Added in R2.3 END
-
-								modelService.save(orderEntry);
-								LOG.debug("****** initiateRefund : Step 3  >>Payment transaction mode is not null >> Calling OMS with status as received from Mrupee "
-										+ newStatus.getCode());
-
-								LOG.debug(" ########## Calling Oms refund method at the time of Mrupee order*************" + newStatus);
-								//								mplJusPayRefundService.makeRefundOMSCall(orderEntry, paymentTransactionModel,
-								//										Double.valueOf(refundAmount), newStatus);
-
-								//R2.3 changes
-
-								mplJusPayRefundService.makeRefundOMSCall(orderEntry, paymentTransactionModel,
-										Double.valueOf(refundAmount), newStatus, null);
-							}
-						}
-					}
-				}
-				else
-				{
-					LOG.debug("****** initiateRefund >>Payment transaction mode is null");
-					if (PaymentTransactionType.CANCEL.toString().equalsIgnoreCase("CANCEL"))
-					{
-						walletRefundService.createCancelRefundPgErrorEntry(orderRequestRecord, PaymentTransactionType.CANCEL,
-								uniqueRequestId);
-
-					}
-				}
-			}
-			catch (final EtailNonBusinessExceptions e)
-			{
-				LOG.error(">>>> *****************initiateRefund*********** Exception occured " + e.getMessage(), e);
-				walletRefundService.createCancelRefundExceptionEntry(orderRequestRecord, PaymentTransactionType.CANCEL,
-						uniqueRequestId);
-			}
-			catch (final Exception e)
-			{
-				LOG.error(">>>> *****************initiateRefund*********** Exception occured " + e.getMessage(), e);
-				walletRefundService.createCancelRefundExceptionEntry(orderRequestRecord, PaymentTransactionType.CANCEL,
-						uniqueRequestId);
-			}
-		}
-		else
-
-		{// Case of COD.
-
-			LOG.debug("****** initiateRefund >> Begin >> OMS will not be called for COD  ");
-			final double refundedAmount = 0D;
-			paymentTransactionModel = mplJusPayRefundService.createPaymentTransactionModel(orderRequestRecord.getOriginalVersion()
-					.getOrder(), MarketplacecommerceservicesConstants.FAILURE_FLAG, new Double(refundedAmount),
-					PaymentTransactionType.CANCEL, MarketplacecommerceservicesConstants.FAILURE_FLAG, UUID.randomUUID().toString());
-			mplJusPayRefundService.attachPaymentTransactionModel(orderRequestRecord.getOriginalVersion().getOrder(),
-					paymentTransactionModel);
-		}
-		orderRequestRecord.setStatus(OrderModificationEntryStatus.SUCCESSFULL);
-		orderRequestRecord.setTransactionCode(paymentTransactionModel != null ? paymentTransactionModel.getCode()
-				: MarketplacecommerceservicesConstants.EMPTY);
-		modelService.save(orderRequestRecord);
-	}
+	//	private void initiateRefundMrupee(final OrderModel subOrderModel, final OrderCancelRecordEntryModel orderRequestRecord,
+	//			final String ticketTypeCode)
+	//	{
+	//		PaymentTransactionModel paymentTransactionModel = null;
+	//		if (orderRequestRecord.getRefundableAmount() != null
+	//				&& orderRequestRecord.getRefundableAmount().doubleValue() > NumberUtils.DOUBLE_ZERO.doubleValue())
+	//		{
+	//			//TISSIT-1801
+	//			final String uniqueRequestId = walletRefundService.getRefundUniqueRequestId();
+	//			try
+	//			{
+	//				LOG.debug("****** initiateRefund Step 1 >> Begin >> Calling for prepaid for " + orderRequestRecord.getCode());
+	//
+	//				if ("C".equalsIgnoreCase(ticketTypeCode))
+	//				{
+	//					LOG.debug(" ############### MRupee doRefund  Method for Cancel order *********************************** "
+	//							+ ticketTypeCode);
+	//					paymentTransactionModel = walletRefundService.doRefund(subOrderModel, orderRequestRecord.getRefundableAmount()
+	//							.doubleValue(), PaymentTransactionType.CANCEL, uniqueRequestId);
+	//				}
+	//				if (null != paymentTransactionModel)
+	//				{
+	//					LOG.debug(" ############### MRupee doRefund  paymentTransactionModel not null  *************");
+	//					mplJusPayRefundService.attachPaymentTransactionModel(subOrderModel, paymentTransactionModel);
+	//
+	//					if (CollectionUtils.isNotEmpty(orderRequestRecord.getOrderEntriesModificationEntries()))
+	//					{
+	//						for (final OrderEntryModificationRecordEntryModel modificationEntry : orderRequestRecord
+	//								.getOrderEntriesModificationEntries())
+	//						{
+	//							final OrderEntryModel orderEntry = modificationEntry.getOrderEntry();
+	//							ConsignmentStatus newStatus = null;
+	//							if (orderEntry != null)
+	//							{
+	//								double refundAmount = 0D;
+	//								final Double deliveryCost = orderEntry.getCurrDelCharge() != null ? orderEntry.getCurrDelCharge()
+	//										: NumberUtils.DOUBLE_ZERO;
+	//								// Added in r2.3 START
+	//								final Double scheduleDeliveryCost = orderEntry.getScheduledDeliveryCharge() != null ? orderEntry
+	//										.getScheduledDeliveryCharge() : NumberUtils.DOUBLE_ZERO;
+	//								// Added in r2.3 END
+	//
+	//								//refundAmount = orderEntry.getNetAmountAfterAllDisc().doubleValue() + deliveryCost.doubleValue();
+	//								refundAmount = orderEntry.getNetAmountAfterAllDisc().doubleValue() + deliveryCost.doubleValue()
+	//										+ scheduleDeliveryCost.doubleValue();
+	//
+	//								refundAmount = mplJusPayRefundService.validateRefundAmount(refundAmount, subOrderModel);
+	//								List<PaymentTransactionEntryModel> entryList = new ArrayList<PaymentTransactionEntryModel>();
+	//								PaymentTransactionEntryModel entryValue = null;
+	//								entryList = paymentTransactionModel.getEntries();
+	//								if (CollectionUtils.isNotEmpty(entryList))
+	//								{
+	//									entryValue = entryList.get(entryList.size() - 1);
+	//
+	//									if (null != entryValue)
+	//									{
+	//										if (StringUtils.equalsIgnoreCase(paymentTransactionModel.getStatus(),
+	//												MarketplacecommerceservicesConstants.SUCCESS))
+	//										{
+	//											LOG.debug(" ########## ConsignmentStatus for MRupee cancel order ********************************"
+	//													+ paymentTransactionModel.getStatus());
+	//
+	//											newStatus = ConsignmentStatus.ORDER_CANCELLED;
+	//										}
+	//									}
+	//								}
+	//								else if (StringUtils.equalsIgnoreCase(paymentTransactionModel.getStatus(),
+	//										MarketplacecommerceservicesConstants.FAILURE))
+	//								{
+	//									LOG.debug(" ########## ConsignmentStatus for MRupee refund Inprogress ******************************"
+	//											+ paymentTransactionModel.getStatus());
+	//
+	//									newStatus = ConsignmentStatus.REFUND_IN_PROGRESS;
+	//								}
+	//								else
+	//								{
+	//									LOG.debug(" ########## ConsignmentStatus for MRupee refund initiated ******************************"
+	//											+ paymentTransactionModel.getStatus());
+	//
+	//									newStatus = ConsignmentStatus.REFUND_INITIATED;
+	//								}
+	//								orderEntry.setRefundedDeliveryChargeAmt(deliveryCost);
+	//								orderEntry.setCurrDelCharge(new Double(0D));
+	//
+	//								// Added in R2.3 START
+	//								orderEntry.setRefundedScheduleDeliveryChargeAmt(scheduleDeliveryCost);
+	//								orderEntry.setScheduledDeliveryCharge(new Double(0D));
+	//								// Added in R2.3 END
+	//
+	//								modelService.save(orderEntry);
+	//								LOG.debug("****** initiateRefund : Step 3  >>Payment transaction mode is not null >> Calling OMS with status as received from Mrupee "
+	//										+ newStatus.getCode());
+	//
+	//								LOG.debug(" ########## Calling Oms refund method at the time of Mrupee order*************" + newStatus);
+	//								//								mplJusPayRefundService.makeRefundOMSCall(orderEntry, paymentTransactionModel,
+	//								//										Double.valueOf(refundAmount), newStatus);
+	//
+	//								//R2.3 changes
+	//
+	//								mplJusPayRefundService.makeRefundOMSCall(orderEntry, paymentTransactionModel,
+	//										Double.valueOf(refundAmount), newStatus, null);
+	//							}
+	//						}
+	//					}
+	//				}
+	//				else
+	//				{
+	//					LOG.debug("****** initiateRefund >>Payment transaction mode is null");
+	//					if (PaymentTransactionType.CANCEL.toString().equalsIgnoreCase("CANCEL"))
+	//					{
+	//						walletRefundService.createCancelRefundPgErrorEntry(orderRequestRecord, PaymentTransactionType.CANCEL,
+	//								uniqueRequestId);
+	//					}
+	//				}
+	//			}
+	//			catch (final EtailNonBusinessExceptions e)
+	//			{
+	//				LOG.error(">>>> *****************initiateRefund*********** Exception occured " + e.getMessage(), e);
+	//				walletRefundService.createCancelRefundExceptionEntry(orderRequestRecord, PaymentTransactionType.CANCEL,
+	//						uniqueRequestId);
+	//			}
+	//			catch (final Exception e)
+	//			{
+	//				LOG.error(">>>> *****************initiateRefund*********** Exception occured " + e.getMessage(), e);
+	//				walletRefundService.createCancelRefundExceptionEntry(orderRequestRecord, PaymentTransactionType.CANCEL,
+	//						uniqueRequestId);
+	//			}
+	//		}
+	//		else
+	//
+	//		{// Case of COD.
+	//
+	//			LOG.debug("****** initiateRefund >> Begin >> OMS will not be called for COD  ");
+	//			final double refundedAmount = 0D;
+	//			paymentTransactionModel = mplJusPayRefundService.createPaymentTransactionModel(orderRequestRecord.getOriginalVersion()
+	//					.getOrder(), MarketplacecommerceservicesConstants.FAILURE_FLAG, new Double(refundedAmount),
+	//					PaymentTransactionType.CANCEL, MarketplacecommerceservicesConstants.FAILURE_FLAG, UUID.randomUUID().toString());
+	//			mplJusPayRefundService.attachPaymentTransactionModel(orderRequestRecord.getOriginalVersion().getOrder(),
+	//					paymentTransactionModel);
+	//		}
+	//		orderRequestRecord.setStatus(OrderModificationEntryStatus.SUCCESSFULL);
+	//		orderRequestRecord.setTransactionCode(paymentTransactionModel != null ? paymentTransactionModel.getCode()
+	//				: MarketplacecommerceservicesConstants.EMPTY);
+	//		modelService.save(orderRequestRecord);
+	//	}
 
 	/**
 	 * @author TECHOUTS
@@ -3515,7 +3510,6 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 			final ReturnItemAddressData returnAddress)
 	{
 
-		LOG.debug("Step 1 :*********************************** isReturn:" + isReturn);
 
 		boolean cancelOrRetrnanable = true;
 		boolean omsCancellationStatus = false;
@@ -3537,8 +3531,8 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 				bogoOrFreeBie = true;
 			}
 
-			LOG.debug("************BOGO or Free Bie available for order" + subOrderModel.getCode() + " is " + bogoOrFreeBie);
-			LOG.debug("Step 2: ***********************************Ticket Type code : " + ticketTypeCode);
+			LOG.debug("======***********BOGO or Free Bie available for order" + subOrderModel.getCode() + bogoOrFreeBie);
+			LOG.debug("Step 2: =====***********************************Ticket Type code : " + ticketTypeCode);
 			if ((ticketTypeCode.equalsIgnoreCase("C") || (ticketTypeCode.equalsIgnoreCase("R") && !bogoOrFreeBie))) //TISEE-933
 			{
 
@@ -3558,7 +3552,7 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 			{
 				cancelOrRetrnanable = true;
 			}
-			LOG.debug("Step 2: ***********************************cancelOrRetrnanable : " + cancelOrRetrnanable);
+			LOG.debug("Step 2: =====**************************cancelOrRetrnanable : " + cancelOrRetrnanable);
 			if (cancelOrRetrnanable)
 			{
 				final List<AbstractOrderEntryModel> orderEntriesModel = associatedEntries(subOrderModel,
@@ -3568,7 +3562,7 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 
 					if (ticketTypeCode.equalsIgnoreCase("R") && !bogoOrFreeBie) ////TISEE-933
 					{
-						LOG.debug("Step 3:***********************************History creation start for retrun");
+						LOG.debug("Step 3:======************************History creation start for retrun");
 						createHistoryEntry(abstractOrderEntryModel, subOrderModel, ConsignmentStatus.RETURN_INITIATED);
 					}
 				}
@@ -3591,16 +3585,16 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 
 			if (omsCancellationStatus)
 			{
-				LOG.debug("Step 4:***********************************Ticket is to be created for sub order:"
+				LOG.debug("Step 4:==========*************************Ticket is to be created for sub order:"
 						+ subOrderDetails.getCode());
 
 				final boolean ticketCreationStatus = createTicketInCRM(subOrderDetails, subOrderEntry, ticketTypeCode, reasonCode,
 						refundType, ussid, customerData, subOrderModel, returnAddress);
 
-				LOG.debug("Step 4.1:***********************************Ticket creation status for sub order:" + ticketCreationStatus);
-				LOG.debug("Step 5 :*********************************** Refund and OMS call started");
+				LOG.debug("Step 4.1:=========***********************Ticket creation status for sub order:" + ticketCreationStatus);
+				LOG.debug("Step 5 :============********************** Refund and OMS call started");
 				cancelOrRetrnanable = initiateCancellation(ticketTypeCode, subOrderDetails, subOrderEntry, subOrderModel, reasonCode);
-				LOG.debug("Step 5.1 :*********************************** Refund and OMS call status:" + cancelOrRetrnanable);
+				LOG.debug("Step 5.1 :================************************* Refund and OMS call status:" + cancelOrRetrnanable);
 
 				if (cancelOrRetrnanable && ticketTypeCode.equalsIgnoreCase("R") && !bogoOrFreeBie) //TISEE-5524
 				{
@@ -3609,7 +3603,7 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 					//				if (cancelOrRetrnanable && ticketTypeCode.equalsIgnoreCase("R") && !bogoOrFreeBie
 					//						&& !subOrderModel.getIsWallet().equals(WalletEnum.MRUPEE))
 					//				{
-					LOG.debug("Step 6:***********************************Create return request for Return:"
+					LOG.debug("Step 6:=================***************************Create return request for Return:"
 							+ subOrderDetails.getCode());
 
 					final List<AbstractOrderEntryModel> orderEntriesModel = associatedEntries(subOrderModel,
@@ -3620,26 +3614,27 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 						final boolean returnReqSuccess = createRefund(subOrderModel, abstractOrderEntryModel, reasonCode,
 								salesApplication, returnAddress.getPincode(), subOrderDetails);
 
-						LOG.debug("**********************************Return request successful :" + returnReqSuccess);
+						LOG.debug("=======================*****************************Return request successful :" + returnReqSuccess);
 					}
 				}
 			}
 		}
 		catch (final EtailNonBusinessExceptions e)
 		{
-			LOG.error(">>> Cancel Refund exception occured in implementReturnItem etail non business exception : ", e);
+			LOG.error(">>>===== Cancel Refund exception occured in implementReturnItem etail non business exception : ", e);
 
 			ExceptionUtil.etailNonBusinessExceptionHandler(e);
 		}
 		catch (final Exception e)
 		{
-			LOG.error(">>> Cancel Refund exception occured in implementReturnItem : ", e);
+			LOG.error(">>>=========== Cancel Refund exception occured in implementReturnItem : ", e);
 		}
 
 
 		try
 		{
-			LOG.debug("Step 8: *********************************** Updating commerce consignment status" + omsCancellationStatus);
+			LOG.debug("Step 8: ==================************************* Updating commerce consignment status"
+					+ omsCancellationStatus);
 
 			if (omsCancellationStatus)
 			{
@@ -3660,12 +3655,12 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 		}
 		catch (final EtailNonBusinessExceptions e)
 		{
-			LOG.error("*******************Updating commerce consignment status ", e);
+			LOG.error("=========================***************Updating commerce consignment status ", e);
 			ExceptionUtil.etailNonBusinessExceptionHandler(e);
 		}
 		catch (final Exception ex)
 		{
-			LOG.error(">>> Exception occured while updating consignment : ", ex);
+			LOG.error(">>> ====================Exception occured while updating consignment : ", ex);
 		}
 
 		return omsCancellationStatus;
@@ -4524,11 +4519,7 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 	}
 
 	/*
-	 * (non-Javadoc) <<<<<<< HEAD
-	 * 
-	 * =======
-	 * 
-	 * >>>>>>> refs/remotes/origin/TCS_DEV_MASTER
+	 * (non-Javadoc)
 	 * 
 	 * @see com.tisl.mpl.facades.account.cancelreturn.CancelReturnFacade#checkReturnLogisticsForApp(de.hybris.platform.
 	 * commercefacades.order.data.OrderData, java.lang.String, java.lang.String)
@@ -4764,7 +4755,7 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 
 
 			MplCancelOrderRequest orderLineRequest = new MplCancelOrderRequest();
-			LOG.debug("Step 2: ***********************************Ticket Type code : " + ticketTypeCode);
+			LOG.debug("Step 2: ------------------****************Ticket Type code : " + ticketTypeCode);
 			//orderLineRequest = populateOrderLineData(subOrderEntry, ticketTypeCode, subOrderModel, reasonCode, returnPincode);
 			orderLineRequest = populateOrderLineData(subOrderEntry, ticketTypeCode, subOrderModel, reasonCode, ussid, returnPincode,
 					returnFulfillmentType);
@@ -4772,12 +4763,12 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 			{
 				cancelOrRetrnanable = cancelOrderInOMS(orderLineRequest, cancelOrRetrnanable, isReturn);
 			}
-			LOG.debug("Step 2: ***********************************cancelOrRetrnanable : " + cancelOrRetrnanable);
+			LOG.debug("Step 2: ------------------****************cancelOrRetrnanable : " + cancelOrRetrnanable);
 			if (cancelOrRetrnanable)
 			{
 				for (final AbstractOrderEntryModel abstractOrderEntryModel : orderEntries)
 				{
-					LOG.debug("Step 3:***********************************History creation start for retrun");
+					LOG.debug("Step 3:------------------****************History creation start for retrun");
 					createHistoryEntry(abstractOrderEntryModel, subOrderModel, ConsignmentStatus.RETURN_INITIATED);
 				}
 			}
@@ -4801,7 +4792,7 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 				{
 					final boolean returnReqSuccess = createRefund(subOrderModel, abstractOrderEntryModel, reasonCode,
 							salesApplication, returnPincode, subOrderDetails);
-					LOG.debug("**********************************Return request successful :" + returnReqSuccess);
+					LOG.debug("------------------***************Return request successful :" + returnReqSuccess);
 				}
 			}
 
@@ -4821,7 +4812,7 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 
 		try
 		{
-			LOG.debug("Step 8: *********************************** Updating commerce consignment status" + omsCancellationStatus);
+			LOG.debug("Step 8: ------------------**************** Updating commerce consignment status" + omsCancellationStatus);
 
 			if (omsCancellationStatus)
 			{
@@ -4838,7 +4829,7 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 		}
 		catch (final EtailNonBusinessExceptions e)
 		{
-			LOG.error("*******************Updating commerce consignment status ", e);
+			LOG.error("------------------Updating commerce consignment status ", e);
 			ExceptionUtil.etailNonBusinessExceptionHandler(e);
 		}
 		catch (final Exception ex)
@@ -4888,8 +4879,8 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 			{
 				bogoOrFreeBie = true;
 			}
-			LOG.debug("************BOGO or Free Bie available for order" + subOrderModel.getCode() + " is " + bogoOrFreeBie);
-			LOG.debug("Step 2: ***********************************Ticket Type code : " + ticketTypeCode);
+			LOG.debug("----------------****BOGO or Free Bie available for order" + subOrderModel.getCode() + bogoOrFreeBie);
+			LOG.debug("Step 2: ------------------****************Ticket Type code : " + ticketTypeCode);
 			if ((ticketTypeCode.equalsIgnoreCase("C")))
 			{
 				orderLineRequest = populateOrderLineData(subOrderEntry, ticketTypeCode, subOrderModel, reasonCode);
@@ -4899,7 +4890,7 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 					cancelOrRetrnanable = cancelOrderInOMS(orderLineRequest, cancelOrRetrnanable, isReturn);
 				}
 			}
-			LOG.debug("Step 2: ***********************************cancelOrRetrnanable : " + cancelOrRetrnanable);
+			LOG.debug("Step 2: ------------------****************cancelOrRetrnanable : " + cancelOrRetrnanable);
 			if (cancelOrRetrnanable)
 			{
 				//				final List<AbstractOrderEntryModel> orderEntriesModel = associatedEntries(subOrderModel,
@@ -4908,7 +4899,7 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 				{
 					if (ticketTypeCode.equalsIgnoreCase("C"))
 					{
-						LOG.debug("Step 3:***********************************History creation start for cancellation");
+						LOG.debug("Step 3:------------------****************History creation start for cancellation");
 						createHistoryEntry(abstractOrderEntryModel, subOrderModel, ConsignmentStatus.CANCELLATION_INITIATED);
 					}
 				}
@@ -4928,7 +4919,7 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 		{
 			if (omsCancellationStatus)
 			{
-				LOG.debug("Step 4:***********************************Ticket is to be created for sub order:"
+				LOG.debug("Step 4:------------------****************Ticket is to be created for sub order:"
 						+ subOrderDetails.getCode());
 				//TISPRD-1641
 				final List<PaymentTransactionModel> tranactions = subOrderModel.getPaymentTransactions();
@@ -4944,25 +4935,25 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 						refundType = "N";
 					}
 				}
-				LOG.debug("Step 5 :*********************************** Refund and OMS call started");
+				LOG.debug("Step 5 :------------------**************** Refund and OMS call started");
 				cancelOrRetrnanable = initiateCancellation(ticketTypeCode, subOrderDetails, subOrderEntry, subOrderModel, reasonCode);
-				LOG.debug("Step 5.1 :*********************************** Refund and OMS call status:" + cancelOrRetrnanable);
+				LOG.debug("Step 5.1 :------------------**************** Refund and OMS call status:" + cancelOrRetrnanable);
 			}
 		}
 		catch (final EtailNonBusinessExceptions e)
 		{
-			LOG.error(">>> Cancel Refund exception occured in implementCancelOrReturn Etail Non BusinessException: ", e);
+			LOG.error(">>>------------ Cancel Refund exception occured in implementCancelOrReturn Etail Non BusinessException: ", e);
 			ExceptionUtil.etailNonBusinessExceptionHandler(e);
 		}
 		catch (final Exception e)
 		{
-			LOG.error(">>> Cancel Refund exception occured in implementCancelOrReturn in implementCancelOrReturn ", e);
+			LOG.error(">>>-------------- Cancel Refund exception occured in implementCancelOrReturn in implementCancelOrReturn ", e);
 		}
 
 
 		try
 		{
-			LOG.debug("Step 8: *********************************** Updating commerce consignment status" + omsCancellationStatus);
+			LOG.debug("Step 8: ------------------**************** Updating commerce consignment status" + omsCancellationStatus);
 
 			if (omsCancellationStatus)
 			{
@@ -4980,12 +4971,12 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 		}
 		/*
 		 * catch (final EtailNonBusinessExceptions e) {
-		 * LOG.error("*******************Updating commerce consignment status ", e);
+		 * LOG.error("------------------Updating commerce consignment status ", e);
 		 * ExceptionUtil.etailNonBusinessExceptionHandler(e); }
 		 */
 		catch (final Exception ex)
 		{
-			LOG.error(">>> Exception occured while updating consignment : ", ex);
+			LOG.error(">>>------------------ Exception occured while updating consignment : ", ex);
 		}
 
 		return omsCancellationStatus;
