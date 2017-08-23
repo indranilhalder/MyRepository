@@ -1045,6 +1045,8 @@ ACC.singlePageCheckout = {
 				event_type : storeName+'_store_seleted'
 			});
 		}
+		//TPR-6029 | DTM For checkout
+		dtmStoreSelection(storeName);
 		
 	},
 	//Function to validate and submit pick up person form

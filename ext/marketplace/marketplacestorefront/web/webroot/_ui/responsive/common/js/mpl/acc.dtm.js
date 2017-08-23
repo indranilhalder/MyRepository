@@ -231,6 +231,29 @@ $(document).ready(function(){
 				}
 		}
 	}
+	
+	//TPR-6029|Checkout changes
+	if(pageType =="orderconfirmation" && $('#orderIDString').val()!= ''){
+		if(typeof _satellite !="undefined"){
+			_satellite.track('cpj_order_successful');
+		}	
+		
+		digitalData.cpj = {
+				   product : {
+					   id       :  $('#product_sku').val() ,
+			           category :  $('#product_category').val(),
+			           price    :  $('#product_unit_price').val()
+			 }
+		  }
+		
+		if(typeof digitalData.cpj.payment !='undefined'){
+			digitalData.cpj.payment = {
+					quantity : $('#product_quantity').val()
+			}
+			
+		}
+	}
+	
 	/*  Direct call rule starts here*/
 	
     // For icid
@@ -906,7 +929,7 @@ function dtmSearchTags(){
 	
 	//TPR-6369 | Error Tracking
 	function dtmErrorTracking(errorType,errorName){
-		if (typeof _satellite != "undefined") {
+		if (typeof (_satellite)!= "undefined") {
 			_satellite.track('error_tracking');
 	    }
 		digitalData.page = {
@@ -915,11 +938,28 @@ function dtmSearchTags(){
 				name  : errorName
 			}
 		}
-		
+		//order failure track
+		if (typeof(_satellite)!= "undefined") {
+			_satellite.track('cpj_order_fail');
+	    }
+		digitalData.cpj = {
+	    		    product : {
+	    			 	    id  :  productId,
+	    		     category   :  category,	
+	    		     price      : $('#product_unit_price').val()
+	    	 } 
+	    }
+		if(typeof (digitalData.cpj.payment)!= "undefined"){
+			digitalData.cpj.payment.quantity =$('#product_quantity').val();
+		}
+		if(typeof (digitalData.cpj.order)!= "undefined"){
+			digitalData.cpj.order.failureReason = errorName;
+		}
+	
 	}
    //TPR-6288 | My account Order cancel
 	function dtmOrderCancelSuccess(productId,category,reasonCancel){
-		if (typeof _satellite != "undefined") {
+		if (typeof (_satellite) != "undefined") {
 			_satellite.track('order_cancellation');
 			
 	    }
@@ -938,7 +978,7 @@ function dtmSearchTags(){
 	}
 	  //TPR-6288 | My account Order Return
 	function dtmOrderReturn(dtmReturnReason,dtmReturnProduct,dtmReturnProductCat){
-		if (typeof _satellite != "undefined") {
+		if (typeof (_satellite) != "undefined") {
 			_satellite.track('order_returns');
 			
 	    }
@@ -951,6 +991,50 @@ function dtmSearchTags(){
 		digitalData.order = {
 				return : {
 				reason : dtmReturnReason
+				}
+		}
+	}
+	
+	//TPR-6029|DTM CHECKOUT Changes
+	function dtmPaymentModeSelection(mode){
+		if(typeof (_satellite)!= undefined){
+			_satellite.track('cpj_checkout_payment_selection');
+		}
+		
+		if(typeof (digitalData.cpj.payment)!= undefined){
+			digitalData.cpj.payment.mode = mode;
+		}
+	}
+	
+	function dtmCouponCheck(msg,couponCode){
+		if(msg == 'success'){
+			 if(typeof (_satellite)!= 'undefined'){
+				_satellite.track('cpj_checkout_payment_coupon_success');
+		    }
+			
+			 if(typeof (digitalData.cpj.coupon)!= 'undefined'){
+				digitalData.cpj.coupon.code = couponCode;
+			 }
+		 }
+		else{
+			 if(typeof (_satellite)!= 'undefined'){
+				_satellite.track('cpj_checkout_payment_coupon_fail');
+			 }
+			
+			 if(typeof (digitalData.cpj.coupon)!= 'undefined'){
+				digitalData.cpj.coupon.code = couponCode;
+			 }
+		}	
+	}
+	
+	function dtmStoreSelection(storeName){
+		if(typeof (_satellite)!= 'undefined'){
+			_satellite.track('cpj_checkout_store_selection');
+		 }
+		
+		digitalData.cpj = {
+				  checkout: {
+					 storeName : storeName
 				}
 		}
 	}
@@ -977,7 +1061,7 @@ function dtmSearchTags(){
 	
 	//TPR-6308 | Product Recommendation
   $(document).on('click','.iaAddToCartButton.ia_both',function(){
-	   if(typeof _satellite != "undefined") {  
+	   if(typeof(_satellite) != "undefined") {  
 	          if($('#pageType').val() == "product" ){
 		           _satellite.track('cpj_pdp_product_reco_cart_add');
 	            }
@@ -989,21 +1073,21 @@ function dtmSearchTags(){
   });
 	
 $(document).on('click','.add_address_button',function(){
-	if(typeof _satellite != "undefined") {  
+	if(typeof (_satellite)!= "undefined") {  
 		_satellite.track('cpj_checkout_add_address');
 	}
 })	
 	
 
 $(document).on('click','#newAddressButton .button',function(){
-	if(typeof _satellite != "undefined") {  
+	if(typeof (_satellite)!= "undefined") {  
 		_satellite.track('cpj_checkout_save_address');
 	}
 })
 
 if($("#checkoutPageName").val()=="Review Order"){
-	if(typeof _satellite != "undefined") {  
-		_satellite.track('cpj_checkout_save_address');
+	if(typeof (_satellite)!= "undefined") {  
+		_satellite.track('cpj_checkout_proceed_to_review');
 	}	
 }
 

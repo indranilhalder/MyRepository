@@ -45,6 +45,10 @@ function viewPaymentCredit(){
 			
 	});
 	}
+	//TPR-6029|DTM CHECKOUT Changes
+	dtmPaymentModeSelection('credit card');
+		
+	
 //});
 }
 
@@ -82,6 +86,9 @@ function viewPaymentDebit(){
 			"link_text": "pay_debit_card_selected" , "event_type" : "payment_mode_selection"
 		});
 	}
+	
+	//TPR-6029|DTM CHECKOUT Changes
+	dtmPaymentModeSelection('debit card');
 //});
 }
 
@@ -107,6 +114,10 @@ function viewPaymentNetbanking(){
 			"link_text": "pay_net_banking_selected" , "event_type" : "payment_mode_selection"
 		});
 	}
+	
+	//TPR-6029|DTM CHECKOUT Changes
+	dtmPaymentModeSelection('net banking');
+	
 //});
 }
 
@@ -138,6 +149,9 @@ function viewPaymentCOD(){
 			"link_text": "pay_cod_selected" , "event_type" : "payment_mode_selection"
 		});
 	}
+	
+	//TPR-6029|DTM CHECKOUT Changes
+	dtmPaymentModeSelection('cod');
 //});
 }
 
@@ -163,6 +177,9 @@ function viewPaymentEMI(){
 			"link_text": "pay_emi_selected" , "event_type" : "payment_mode_selection"
 		});
 	}
+	
+	//TPR-6029|DTM CHECKOUT Changes
+	dtmPaymentModeSelection('emi');
 //});
 }
 // Mode button click function ends
@@ -7852,6 +7869,10 @@ function onSubmitAnalytics(msg){
 		event_type : 'apply_coupon',
 		coupon_code : couponCode
 	});
+	
+	// TPR-6029 | for checkout button click from cart | start
+	
+	dtmCouponCheck(msg,couponCode);
 }
 // TPR-658 END
 
@@ -8037,7 +8058,19 @@ function sendTealiumData(){
 				        });
 		        	}
 		        }
-	        
+		        
+		     // TPR-6029 | for checkout button click from cart | start
+		    	if(typeof _satellite != "undefined"){
+		    		_satellite.track('cpj_place_order');
+		    	}
+		    	if(typeof (digitalData.cpj.product) != undefined){
+		    		digitalData.cpj.product.id = $('#product_id').val();
+		    		digitalData.cpj.product.category =$('#product_category').val();
+		    	}
+		    	
+		    	if(typeof (digitalData.cpj.payment) != undefined){
+		    	    digitalData.cpj.payment.finalMode = payment_mode ;
+		    	}
 	   } catch (e) {
 		// TODO: handle exception
 
