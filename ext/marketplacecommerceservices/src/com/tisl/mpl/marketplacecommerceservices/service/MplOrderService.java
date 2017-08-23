@@ -91,15 +91,27 @@ public interface MplOrderService
 
 	/*
 	 * @Desc : used to check if BuyAandBGetC is applied on order entry or not TISPRO-249
-	 *
+	 * 
 	 * @param orderEntryModel
-	 *
+	 * 
 	 * @return boolean
-	 *
+	 * 
 	 * @throws Exception
 	 */
 	boolean checkIfBuyABGetCApplied(final AbstractOrderEntryModel orderEntryModel) throws Exception;
-	
+
 	public AbstractOrderEntryModel getEntryModel(String transactionId);
+
+	//TPR-4840
+	public OrderModel getOrderByParentOrderId(final String orderRefNo);
+
+	//TPR-5225
+	public List<OrderModel> fetchOrderByMobile(final String mobileNo, int queryCount);
+
+	//TPR-5225
+	public String getL4CategoryNameOfProduct(final String productCode);
+
+	//TPR-4841
+	public OrderModel fetchOrderByTransactionId(final String transactionId);
 
 }

@@ -39,7 +39,7 @@
 										</c:if>
 										<a class="thumb" href="${productUrl}" title="${product.name}">
 											 <product:productPrimaryImage
-												product="${product}" format="searchPage" />
+												product="${product}" format="searchPage" lazyLoad="false"/>
 
 										</a>									
 

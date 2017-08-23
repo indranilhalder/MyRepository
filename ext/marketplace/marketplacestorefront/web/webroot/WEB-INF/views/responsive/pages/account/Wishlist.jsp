@@ -245,14 +245,14 @@
                                           
 										<c:if test="${fn:toLowerCase(product.luxIndicator)=='marketplace' or empty product.luxIndicator}">
 										<a href="${productUrl}"> <product:productPrimaryImage
-														product="${product}" format="thumbnail" /></a>
+														product="${product}" format="thumbnail" lazyLoad="false" /></a>
 										<!--  TISPRD-9318  -->
 										<c:set value="${ycommerce:productImage(product, 'cartIcon')}" var="cartImage"/>
 														
 										</c:if>
 										<c:if test="${fn:toLowerCase(product.luxIndicator)=='luxury' and not empty product.luxIndicator}">
 										<a href="${productUrl}"> <product:productPrimaryImage
-														product="${product}" format="luxuryCartPage" /></a>
+														product="${product}" format="luxuryCartPage" lazyLoad="false" /></a>
 										<!--  TISPRD-9318  -->				
 										<c:set value="${ycommerce:productImage(product, 'luxuryCartIcon')}" var="cartImage"/>
 														

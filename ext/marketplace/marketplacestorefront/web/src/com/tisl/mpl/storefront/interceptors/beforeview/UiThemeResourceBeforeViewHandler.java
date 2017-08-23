@@ -156,6 +156,9 @@ public class UiThemeResourceBeforeViewHandler implements BeforeViewHandler
 		final String isLuxuryGigyaEnabled = configurationService.getConfiguration().getString(MessageConstants.USE_LUXURY_GIGYA);
 		//FOR Feedback survey
 		final String feedbackSurveyUrl = configurationService.getConfiguration().getString(MessageConstants.FEEDBACK_SURVEY_URL);
+		//for izooto |TPR-5812
+		final String isIzootoEnabled = configurationService.getConfiguration().getString("izooto.use");
+		modelAndView.addObject(ModelAttributetConstants.IS_IZOOTO_ENABLED, isIzootoEnabled);
 		modelAndView.addObject("contextPath", contextPath);
 		modelAndView.addObject("sharedResourcePath", sharedResourcePath);
 		modelAndView.addObject("siteResourcePath", siteResourcePath);
