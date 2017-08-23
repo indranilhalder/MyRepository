@@ -129,7 +129,7 @@
 	
 	
 	
-<div id="stw_widget_blp"></div>
+<div id="stw_widget_blp" class="lazy-reached-stw"></div>
 	
 	<div class="shop_for_blp">
 		<cms:pageSlot position="ShopForHeading" var="feature">

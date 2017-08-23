@@ -555,23 +555,4 @@ public interface MplCommerceCartService
 	public CartModel fetchCartUsingGuid(String cartGuid) throws InvalidCartException;
 
 
-	/*
-	 * @Desc : used to fetch delivery mode description details TISEE-950
-	 *
-	 * @param ussId
-	 *
-	 * @param deliveryMode
-	 *
-	 * @param startTime
-	 *
-	 * @param endTime
-	 *
-	 * @param order
-	 *
-	 * @return String
-	 */
-	String getDeliveryModeDescription(final String ussId, final String deliveryMode, final String startTime, final String endTime,
-			final AbstractOrderModel order);
-
-
 }

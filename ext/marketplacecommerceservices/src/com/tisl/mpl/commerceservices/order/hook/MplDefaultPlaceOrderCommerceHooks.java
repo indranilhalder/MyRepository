@@ -200,7 +200,6 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 			//			}
 
 
-
 			//TPR -965 + TPR-4579 starts
 			if (null != orderModel && CollectionUtils.isNotEmpty(orderModel.getAllPromotionResults())
 					&& isLimitedStockPromoExists(orderModel.getAllPromotionResults()))
@@ -291,14 +290,16 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 				 */
 
 				orderModel.setType("Parent");
-				if (orderModel.getPaymentInfo() instanceof CODPaymentInfoModel
-						|| orderModel.getPaymentInfo() instanceof JusPayPaymentInfoModel)
+				if (orderModel.getPaymentInfo() instanceof CODPaymentInfoModel)
 				{
 					LOG.debug("Payment Info and Status saving COD");
 					orderModel.setModeOfOrderPayment(MarketplacecommerceservicesConstants.COD);
 					getModelService().save(orderModel);
-					//Multiple times status change not required TISSTRT-1562
-					//getOrderStatusSpecifier().setOrderStatus(orderModel, OrderStatus.PAYMENT_SUCCESSFUL);
+				}
+				else if (orderModel.getPaymentInfo() instanceof JusPayPaymentInfoModel)
+				{
+					LOG.debug("Payment Info for juspay");
+					getOrderStatusSpecifier().setOrderStatus(orderModel, OrderStatus.PAYMENT_SUCCESSFUL);
 				}
 				else
 				{

@@ -291,7 +291,7 @@ public class RegisterCustomerFacadeImpl extends DefaultCustomerFacade implements
 	 * @throws DuplicateUidException
 	 */
 	@Override
-	public void register(final ExtRegisterData registerData) throws DuplicateUidException
+	public void register(final ExtRegisterData registerData, final int platformNumber) throws DuplicateUidException //TPR-6272 parameter platformNumber added
 	{
 		try
 		{
@@ -331,7 +331,7 @@ public class RegisterCustomerFacadeImpl extends DefaultCustomerFacade implements
 					newCustomer.setMobileNumber(registerData.getMobilenumber());
 				}
 
-				extDefaultCustomerService.registerUser(newCustomer, registerData.getPassword(), registerData.getAffiliateId());
+				extDefaultCustomerService.registerUser(newCustomer, registerData.getPassword(), registerData.getAffiliateId(),platformNumber);
 				/*
 				 * mplCustomerWebService.customerModeltoWsData(newCustomer,
 				 * MarketplacecommerceservicesConstants.NEW_CUSTOMER_CREATE_FLAG, false);

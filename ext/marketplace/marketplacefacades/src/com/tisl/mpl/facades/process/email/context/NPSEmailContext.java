@@ -83,26 +83,17 @@ public class NPSEmailContext extends AbstractEmailContext<NpsEmailProcessModel>
 				final String productSize = variantProductModel.getSize();
 				put(PRODUCT_SIZE, productSize);
 			}
-
+			//Changed for-6033
 			if (orderEntry.getCouponCode() != null)
 			{
 				final Double couponDiscount = orderEntry.getCouponValue();
 				put(COUPON_DISCOUNT, couponDiscount);
-
-				final Double totalNetAmount = new Double(orderEntry.getNetAmountAfterAllDisc().doubleValue()
-						- orderEntry.getCouponValue().doubleValue());
-				put(TOTAL_NET_AMOUNT, totalNetAmount);
 			}
-			else
-			{
-				final Double couponDiscount = orderEntry.getCouponValue();
-				put(COUPON_DISCOUNT, couponDiscount);
+			final Double totalNetAmount = new Double(orderEntry.getNetAmountAfterAllDisc().doubleValue());
 
-				final Double totalNetAmount = new Double(orderEntry.getNetAmountAfterAllDisc().doubleValue()
-						- orderEntry.getCouponValue().doubleValue());
-				put(TOTAL_NET_AMOUNT, totalNetAmount);
+			put(TOTAL_NET_AMOUNT, totalNetAmount);
 
-			}
+
 
 			if (productInfo.getPicture() != null)
 			{

@@ -15,8 +15,8 @@
 <%@ taglib prefix="tealium" tagdir="/WEB-INF/tags/addons/tealiumIQ/shared/analytics" %>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <%-- <%@ taglib prefix="regex" uri="/WEB-INF/common/tld/regex.tld" %> --%>
-<%-- <%@ taglib uri="http://htmlcompressor.googlecode.com/taglib/compressor" prefix="compress" %>
-<compress:html removeIntertagSpaces="true"> --%>
+<%@ taglib uri="http://htmlcompressor.googlecode.com/taglib/compressor" prefix="compress" %>
+<compress:html removeIntertagSpaces="true">
 <!DOCTYPE html>
 <html lang="${currentLanguage.isocode}">
 <head>
@@ -51,14 +51,14 @@
 <spring:eval expression="T(de.hybris.platform.util.Config).getParameter('product.dns.host')" var="productMediadnsHost"/>
 <spring:eval expression="T(de.hybris.platform.util.Config).getParameter('product.dns.host1')" var="productMediadnsHost1"/>
 
-<link rel="stylesheet" type="text/css" media="all" href="//${mediaHost}/preload.css?${rand}"/>
+<%-- <link rel="stylesheet" type="text/css" media="all" href="//${mediaHost}/preload.css?${rand}"/>
 <link rel="stylesheet" type="text/css" media="all" href="//${staticResourceHost}/preload.css?${rand}"/>
 <c:if test="${not empty productMediadnsHost}">
 <link rel="stylesheet" type="text/css" media="all" href="//${productMediadnsHost}/preload.css?${rand}"/>
 </c:if>
 <c:if test="${not empty productMediadnsHost1}">
 <link rel="stylesheet" type="text/css" media="all" href="//${productMediadnsHost1}/preload.css?${rand}"/>
-</c:if>
+</c:if> --%>
 
 
 
@@ -259,7 +259,9 @@
 	 
 	
 	<%-- CSS Files Are Loaded First as they can be downloaded in parallel --%>
+	<link id="mincss">
 	<template:styleSheets/>
+	<template:headercss/>
 	<script type="text/javascript"
 	src="${commonResourcePath}/js/jquery-2.1.1.min.js"></script>
 	<%-- Inject any additional CSS required by the page --%>
@@ -275,17 +277,18 @@
 <c:if test="${fn:contains(requestScope['javax.servlet.forward.request_uri'],'/my-account')}">
 	<link rel="stylesheet" type="text/css" media="all" href="${themeResourcePath}/css/pikaday.css"/>
 </c:if>
+<!--Added for TPR-5812  -->
+<c:if test="${isIzootoEnabled=='Y'}">
+ <script> window._izq = window._izq || []; window._izq.push(["init"]); </script>
+<spring:eval expression="T(de.hybris.platform.util.Config).getParameter('izooto.script.url')" var="izootoScript"/>
+<script src="${izootoScript}"></script>
+</c:if>
+ <!-- Changes End  TPR-5812 -->
 </head>
 <c:if test="${empty buildNumber}">
 <c:set var="buildNumber" value= "100000"/>
 </c:if>
 <body class="${pageBodyCssClasses} ${cmsPageRequestContextData.liveEdit ? ' yCmsLiveEdit' : ''} language-${currentLanguage.isocode}">
-
-
-
-
-
-
 
 	<c:if test="${isGigyaEnabled=='Y'}">
 		<c:choose>
@@ -365,7 +368,9 @@
  		var buildNumber='${buildNumber}'; 
  		
  		$(window).on('load',function(){
+ 			if($("#pageType").val() != "homepage"){
  			callGigya();
+ 			}
  		});
  		</script>
  	</c:when>
@@ -373,7 +378,9 @@
  		<script type="text/javascript">
  		
  		$(window).on('load',function(){
+ 			if($("#pageType").val() != "homepage"){
  			callGigyaWhenNotMinified();
+ 			}
  		});
  		</script>
  		</c:otherwise>
@@ -411,4 +418,4 @@
 
 <debug:debugFooter/>
 </html>
-<%-- </compress:html> --%>
+</compress:html> 

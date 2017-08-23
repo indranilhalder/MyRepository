@@ -41,6 +41,12 @@ public interface WishlistFacade
 	void removeProductFromWL(final String orderCode);
 
 	/**
+	 * @param entryModel
+	 * @return
+	 */
+	boolean removeWishlistEntry(final Wishlist2EntryModel entryModel);
+
+	/**
 	 * @param ussid
 	 * @param productData1
 	 * @return

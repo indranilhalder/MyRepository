@@ -307,6 +307,7 @@
 						<arg line="--language_in ECMASCRIPT5" />
 						<arg line="--warning_level QUIET" />
 						<arg line="--js ${mpstorefront.js.dir}/mpl-primary/tisl.home.js" />
+						<arg line="--js ${mpstorefront.js.dir}/mpl-primary/tisl.home.lazy.js" />
 						<arg line="--js ${mpstorefront.js.dir}/mpl/**.js" />
 						<arg line="--js_output_file ${mpstorefront.minjs.dir}/tmpmain.min.js" />
 					</java>

@@ -12,6 +12,7 @@
 		<property qualifier="Media.description"/>
 		<property qualifier="Media.realFileName"/>
 		<property qualifier="Media.altText"/>
+	    <property qualifier="Media.alternativeURL"/>
 	</group>
 
 	<custom-group 

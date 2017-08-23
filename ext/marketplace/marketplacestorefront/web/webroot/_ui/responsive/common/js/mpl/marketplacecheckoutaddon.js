@@ -3623,8 +3623,25 @@ function validateCardNo(formSubmit) {
 			}
 			else
 			{
-				if(response.cardType==null)
-				{
+//				if(response.cardType==null)
+//				{
+//					binStatus=true;
+//					if($("#paymentMode").val()!='EMI'){
+//						applyPromotion(null,binStatus,formSubmit);
+//					}
+//					else
+//					{
+//						//TPR-629
+//						if(formSubmit=="formSubmit")
+//						{
+//							dopayment(binStatus);
+//						}
+//					}
+//					errorHandle.innerHTML = "";
+//					return true;
+//				}
+//				else
+//				{
 					binStatus=true;
 					if($("#paymentMode").val()!='EMI'){
 						applyPromotion(null,binStatus,formSubmit);
@@ -3639,69 +3656,68 @@ function validateCardNo(formSubmit) {
 					}
 					errorHandle.innerHTML = "";
 					return true;
-				}
-				else
-				{
-					var selectedBank=$("select[id='bankNameForEMI']").find('option:selected').text();
-					// TISPRO-572 bank selection drop down
-					//var selectedBankVal=selectedBank.split(" ", 1);	//comment for INC_11876
-					var selectedBankVal = selectedBank.toLowerCase(); //$("#bankNameForEMI").val();  //add for INC_11876
-					var responseBankVal = response.bankName.toLowerCase();  //response.bankName;
-					if($("#paymentMode").val()=='EMI')
-					{
-						if(response.cardType=="" || response.cardType==null || response.cardType=="CREDIT" || response.cardType=="CC" || response.cardType=="Credit")
-						{
-
-							//if(selectedBank!="select" && responseBankVal.indexOf(selectedBankVal)){	//comment for INC_11876
-							if(selectedBank!="select" && responseBankVal.indexOf(selectedBankVal)!=-1){    //add for INC_11876
-
-								binStatus=true;
-								//applyPromotion(selectedBankVal,binStatus,formSubmit);
-								errorHandle.innerHTML = "";
-								return true;			
-							}
-
-							//else if(selectedBank!="select" && !responseBankVal.indexOf(selectedBankVal)){		//comment for INC_11876
-							else if(selectedBank!="select" && responseBankVal.indexOf(selectedBankVal)==-1){	//add for INC_11876
-
-								binStatus=false;
-								errorHandle.innerHTML = "Please enter a card same as the selected bank";
-								return false;	
-							}
-						}
-						else
-						{
-							binStatus=false;
-							errorHandle.innerHTML = "Please enter a valid Credit Card number";
-						}
-					}
-					/*else if(document.getElementById("paymentMode").value=='Credit Card'){
-						if(response.cardType=="" || response.cardType==null || response.cardType=="CREDIT" || response.cardType=="CC" || response.cardType=="Credit")
-						{
-							binStatus=true;
-							applyPromotion(null,binStatus,formSubmit);
-							errorHandle.innerHTML = "";
-							return true;
-						}
-						else
-						{
-							binStatus=false;
-							//TPR-629
-							if(formSubmit=="formSubmit")
-							{
-								dopayment(binStatus);
-							}
-							errorHandle.innerHTML = "Please enter a valid Credit Card number";
-						}
-					}*/
-					else{
-						binStatus=true;
-						applyPromotion(null,binStatus,formSubmit);
-						errorHandle.innerHTML = "";
-						return true;
-					}
 					
-				}
+					
+					
+//					// TISPRO-572 bank selection drop down
+//					//var selectedBankVal=selectedBank.split(" ", 1);	//comment for INC_11876
+//					var selectedBankVal = selectedBank.toLowerCase(); //$("#bankNameForEMI").val();  //add for INC_11876
+//					var responseBankVal = response.bankName.toLowerCase();  //response.bankName;
+//					if($("#paymentMode").val()=='EMI')
+//					{
+//						if(response.cardType=="" || response.cardType==null || response.cardType=="CREDIT" || response.cardType=="CC" || response.cardType=="Credit")
+//						{
+//
+//							//if(selectedBank!="select" && responseBankVal.indexOf(selectedBankVal)){	//comment for INC_11876
+//							if(selectedBank!="select" && responseBankVal.indexOf(selectedBankVal)!=-1){    //add for INC_11876
+//
+//								binStatus=true;
+//								//applyPromotion(selectedBankVal,binStatus,formSubmit);
+//								errorHandle.innerHTML = "";
+//								return true;			
+//							}
+//
+//							//else if(selectedBank!="select" && !responseBankVal.indexOf(selectedBankVal)){		//comment for INC_11876
+//							else if(selectedBank!="select" && responseBankVal.indexOf(selectedBankVal)==-1){	//add for INC_11876
+//
+//								binStatus=false;
+//								errorHandle.innerHTML = "Please enter a card same as the selected bank";
+//								return false;	
+//							}
+//						}
+//						else
+//						{
+//							binStatus=false;
+//							errorHandle.innerHTML = "Please enter a valid Credit Card number";
+//						}
+//					}
+//					/*else if(document.getElementById("paymentMode").value=='Credit Card'){
+//						if(response.cardType=="" || response.cardType==null || response.cardType=="CREDIT" || response.cardType=="CC" || response.cardType=="Credit")
+//						{
+//							binStatus=true;
+//							applyPromotion(null,binStatus,formSubmit);
+//							errorHandle.innerHTML = "";
+//							return true;
+//						}
+//						else
+//						{
+//							binStatus=false;
+//							//TPR-629
+//							if(formSubmit=="formSubmit")
+//							{
+//								dopayment(binStatus);
+//							}
+//							errorHandle.innerHTML = "Please enter a valid Credit Card number";
+//						}
+//					}*/
+//					else{
+//						binStatus=true;
+//						applyPromotion(null,binStatus,formSubmit);
+//						errorHandle.innerHTML = "";
+//						return true;
+//					}
+					
+				//}
 			}
 		},
 		error : function(resp) {
@@ -3887,44 +3903,60 @@ function validateDebitCardNo(formSubmit) {
 				}
 				else
 				{
-					if(response.cardType==null)
-					{
-						binStatus=true;
-//						if($("#paymentMode").val()!='EMI'){
+//					if(response.cardType==null)
+//					{
+//						binStatus=true;
+//						if(cardType!='EMI'){
 //							applyPromotion(null,binStatus,formSubmit);
 //						}
 //						//TPR-629
 //						else
 //						{
+//							if(formSubmit=="formSubmit")
+//							{
+//								dopayment(binStatus);
+//							}
+//						}
+//						errorHandle.innerHTML = "";
+//						return true;
+//					}
+//					else
+//					{
+						binStatus=true;
+						if(cardType!='EMI'){
+							applyPromotion(null,binStatus,formSubmit);
+						}
+						//TPR-629
+						else
+						{
 							if(formSubmit=="formSubmit")
 							{
 								dopayment(binStatus);
 							}
-//						}
+						}
 						errorHandle.innerHTML = "";
-						return true;
-					}
-					else
-					{
+						return true;s
+						
+						
 //						var selectedBank=$("select[id='bankNameForEMI']").find('option:selected').text();
 //						//TISPRO-572 bank selection drop down
 //						var selectedBankVal=selectedBank.split(" ", 1);
 //						var responseBankVal=response.bankName;
-						if(document.getElementById("paymentMode").value=='Debit Card'){
-							if(response.cardType=="" || response.cardType==null || response.cardType=="DEBIT" || response.cardType=="DC" || response.cardType=="Debit")
-							{
-								binStatus=true;
-								applyPromotion(null,binStatus,formSubmit);
-								errorHandle.innerHTML = "";
-								return true;
-							}
-							else
-							{
-								binStatus=false;
-								errorHandle.innerHTML = "Please enter a valid Debit Card number";
-							}
-						}
-					}
+//						if(document.getElementById("paymentMode").value=='Debit Card'){
+//							if(response.cardType=="" || response.cardType==null || response.cardType=="DEBIT" || response.cardType=="DC" || response.cardType=="Debit")
+//							{
+//								binStatus=true;
+//								applyPromotion(null,binStatus,formSubmit);
+//								errorHandle.innerHTML = "";
+//								return true;
+//							}
+//							else
+//							{
+//								binStatus=false;
+//								errorHandle.innerHTML = "Please enter a valid Debit Card number";
+//							}
+//						}
+//					}
 				}
 			},
 			error : function(resp) {
@@ -4105,68 +4137,79 @@ function validateEmiCardNo(formSubmit) {
 				}
 				else
 				{
-					if(response.cardType==null)
-					{
+//					if(response.cardType==null)
+//					{
+//						binStatus=true;
+//						//INC144313385
+//						if(formSubmit=="formSubmit")
+//						{
+//							dopayment(binStatus);
+//						}
+//						errorHandle.innerHTML = "";
+//						return true;
+//					}
+//					else
+//					{
 						binStatus=true;
-						//INC144313385
+						//TPR-629
 						if(formSubmit=="formSubmit")
 						{
 							dopayment(binStatus);
 						}
+						//applyPromotion();
 						errorHandle.innerHTML = "";
 						return true;
-					}
-					else
-					{
-						var selectedBank=$("select[id='bankNameForEMI']").find('option:selected').text();
-						//TISPRO-572 bank selection drop down
-						//var selectedBankVal=selectedBank.split(" ", 1);	//comment for INC_11876
-						var selectedBankVal = selectedBank.toLowerCase(); //$("#bankNameForEMI").val();  //add for INC_11876
-						var responseBankVal = response.bankName.toLowerCase();  //response.bankName;
-						if($("#paymentMode").val()=='EMI')
-						{
-							if(response.cardType=="" || response.cardType==null || response.cardType=="CREDIT" || response.cardType=="CC" || response.cardType=="Credit")
-							{
-
-								//if(selectedBank!="select" && responseBankVal.indexOf(selectedBankVal)){		//comment for INC_11876
-								if(selectedBank!="select" && responseBankVal.indexOf(selectedBankVal)!=-1){    //add for INC_11876
-
-									binStatus=true;
-									//TPR-629
-									if(formSubmit=="formSubmit")
-									{
-										dopayment(binStatus);
-									}
-									//applyPromotion();
-									errorHandle.innerHTML = "";
-									return true;			
-								}
-
-								//else if(selectedBank!="select" && !responseBankVal.indexOf(selectedBankVal)){		//comment for INC_11876
-								else if(selectedBank!="select" && responseBankVal.indexOf(selectedBankVal)==-1){	//add for INC_11876
-
-									binStatus=false;
-									//TPR-629
-									if(formSubmit=="formSubmit")
-									{
-										dopayment(binStatus);
-									}
-									errorHandle.innerHTML = "Please enter a card same as the selected bank";
-									return false;	
-								}
-							}
-							else
-							{
-								binStatus=false;
-								//TPR-629
-								if(formSubmit=="formSubmit")
-								{
-									dopayment(binStatus);
-								}
-								errorHandle.innerHTML = "Please enter a valid Credit Card number";
-							}
-						}
-					}
+						
+						
+//						var selectedBank=$("select[id='bankNameForEMI']").find('option:selected').text();
+//						//TISPRO-572 bank selection drop down
+//						//var selectedBankVal=selectedBank.split(" ", 1);	//comment for INC_11876
+//						var selectedBankVal = selectedBank.toLowerCase(); //$("#bankNameForEMI").val();  //add for INC_11876
+//						var responseBankVal = response.bankName.toLowerCase();  //response.bankName;
+//						if($("#paymentMode").val()=='EMI')
+//						{
+//							if(response.cardType=="" || response.cardType==null || response.cardType=="CREDIT" || response.cardType=="CC" || response.cardType=="Credit")
+//							{
+//
+//								//if(selectedBank!="select" && responseBankVal.indexOf(selectedBankVal)){		//comment for INC_11876
+//								if(selectedBank!="select" && responseBankVal.indexOf(selectedBankVal)!=-1){    //add for INC_11876
+//
+//									binStatus=true;
+//									//TPR-629
+//									if(formSubmit=="formSubmit")
+//									{
+//										dopayment(binStatus);
+//									}
+//									//applyPromotion();
+//									errorHandle.innerHTML = "";
+//									return true;			
+//								}
+//
+//								//else if(selectedBank!="select" && !responseBankVal.indexOf(selectedBankVal)){		//comment for INC_11876
+//								else if(selectedBank!="select" && responseBankVal.indexOf(selectedBankVal)==-1){	//add for INC_11876
+//
+//									binStatus=false;
+//									//TPR-629
+//									if(formSubmit=="formSubmit")
+//									{
+//										dopayment(binStatus);
+//									}
+//									errorHandle.innerHTML = "Please enter a card same as the selected bank";
+//									return false;	
+//								}
+//							}
+//							else
+//							{
+//								binStatus=false;
+//								//TPR-629
+//								if(formSubmit=="formSubmit")
+//								{
+//									dopayment(binStatus);
+//								}
+//								errorHandle.innerHTML = "Please enter a valid Credit Card number";
+//							}
+//						}
+//					}
 				}
 			},
 			error : function(resp) {

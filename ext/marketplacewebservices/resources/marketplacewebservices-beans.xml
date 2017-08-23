@@ -3020,5 +3020,62 @@
 		<property name="maxQuantityAllowed" type="String" />
 		<property name="userSelectedQty" type="String" />
 	</bean>
+       <!-- TPR-4512 -->
+	<bean class="com.tisl.mpl.wsdto.CustomerOrderInfoWsDTO">
+		
+		<property name="transactionId" type="String" />
+		<property name="productName" type="String" />
+		<property name="sellerName" type="String" />
+		<property name="shippingType" type="String" />
+		<property name="shippingMode" type="String" />
+		<property name="edd" type="String" />
+		<property name="apportionedPrice" type="String" />
+		<property name="orderStatus" type="String" />
+		<property name="paymentType" type="String" />
+		<property name="paymentMode" type="String" />
+		<property name="l4CategoryName" type="String" />
+		<property name="transactionTimestamp" type="String" />
+		<property name="transactionCreationDate" type="String" />
+		<property name="orderTimestamp" type="String" />
+		<property name="transactionStatus" type="String" />
+		<property name="transactionStatusDetails" type="String" />
+		<property name="carrierName" type="String" />
+		<property name="awbNumber" type="String" />
+		<property name="qcRejectionReason" type="String" />
+		<property name="returnCarrier" type="String" />
+		<property name="returnAwbNumber" type="String" />
+		<property name="returnType" type="String" />
+		<property name="returnRequestStatus" type="String" />
+		<property name="returnRequestTimestamp" type="String" />
+		<property name="refundDate" type="String" />
+		<property name="shippingStatus" type="String" />
+		<property name="shippingTimestamp" type="String" />
+		<property name="deliverytrackingDetails" type="java.util.List&lt;com.tisl.mpl.wsdto.DeliveryTrackingInfoWsDTO>" />
+		
+		
+		
+		
+	</bean>
+	
+	<bean class="com.tisl.mpl.wsdto.OrderInfoWsDTO" extends="com.tisl.mpl.wsdto.ErrorDTO">
+	
+	<property name="orderDate" type="String" />
+	<property name="custName" type="String" />
+	<property name="custMobileNo" type="String" />
+	<property name="orderTotal" type="String" />
+	<property name="customerOrderInfoWsDTO" type="java.util.List&lt;com.tisl.mpl.wsdto.CustomerOrderInfoWsDTO>" />
+	
+	</bean>
+	
+	<bean class="com.tisl.mpl.wsdto.DeliveryTrackingInfoWsDTO">
+	
+	<property name="deliveryTrackingDate" type="String" />
+	<property name="deliveryTrackingLocation" type="String" />
+	<property name="deliveryTrackingDescription" type="String" />
+		
+	</bean>
+	
+
+
 </beans>
 

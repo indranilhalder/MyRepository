@@ -102,7 +102,7 @@ public class MplMobileUserServiceImpl implements MplMobileUserService
 	@Override
 	public MplUserResultWsDto registerNewLuxUser(final String login, final String password, final String mobileNumber,
 			final String firstName, final String lastName, final String gender, final boolean tataTreatsEnable)
-					throws EtailBusinessExceptions, EtailNonBusinessExceptions
+			throws EtailBusinessExceptions, EtailNonBusinessExceptions
 	{
 		MplUserResultWsDto result = new MplUserResultWsDto();
 		boolean successFlag = false;
@@ -127,7 +127,7 @@ public class MplMobileUserServiceImpl implements MplMobileUserService
 			//Register the user, call facade
 			if (registerCustomerFacade.checkUniquenessOfEmail(registration))
 			{
-				registerCustomerFacade.register(registration);
+				registerCustomerFacade.register(registration, 0);
 				//Set success flag
 				successFlag = true;
 				LOG.debug("************** User registered via mobile web service *************" + login);
@@ -185,8 +185,8 @@ public class MplMobileUserServiceImpl implements MplMobileUserService
 	 */
 	@SuppressWarnings("javadoc")
 	@Override
-	public MplUserResultWsDto registerNewMplUser(final String login, final String password, final boolean tataTreatsEnable)
-			throws EtailBusinessExceptions, EtailNonBusinessExceptions
+	public MplUserResultWsDto registerNewMplUser(final String login, final String password, final boolean tataTreatsEnable,
+			final int platformNumber) throws EtailBusinessExceptions, EtailNonBusinessExceptions//TPR-6272 parameter platformNumber added
 	{
 		MplUserResultWsDto result = new MplUserResultWsDto();
 		boolean successFlag = false;
@@ -206,7 +206,7 @@ public class MplMobileUserServiceImpl implements MplMobileUserService
 			//Register the user, call facade
 			if (registerCustomerFacade.checkUniquenessOfEmail(registration))
 			{
-				registerCustomerFacade.register(registration);
+				registerCustomerFacade.register(registration, platformNumber);//TPR-6272 parameter platformNumber passed
 				//Set success flag
 				successFlag = true;
 				LOG.debug("************** User registered via mobile web service *************" + login);
@@ -263,8 +263,8 @@ public class MplMobileUserServiceImpl implements MplMobileUserService
 	 * @return MplUserResultWsDto
 	 */
 	@Override
-	public MplUserResultWsDto loginUser(final String login, final String password)
-			throws EtailNonBusinessExceptions, EtailBusinessExceptions
+	public MplUserResultWsDto loginUser(final String login, final String password) throws EtailNonBusinessExceptions,
+			EtailBusinessExceptions
 	{
 		final MplUserResultWsDto output = new MplUserResultWsDto();
 		String result = null;
@@ -327,8 +327,8 @@ public class MplMobileUserServiceImpl implements MplMobileUserService
 				if (!StringUtils.isEmpty(login) && !StringUtils.isEmpty(isTemporaryPassword(login)))
 				{
 					output.setIsTemporaryPassword(isTemporaryPassword(login));
-					LOG.debug(
-							"*********** Mobile web service isTemporaryPassword for" + login + " is >>> " + isTemporaryPassword(login));
+					LOG.debug("*********** Mobile web service isTemporaryPassword for" + login + " is >>> "
+							+ isTemporaryPassword(login));
 				}
 			}
 		}
@@ -364,8 +364,8 @@ public class MplMobileUserServiceImpl implements MplMobileUserService
 	 * @throws AuthenticationServiceException
 	 * @throws AuthenticationException
 	 */
-	public UserDetails retrieveUserforMarketplace(final String username)
-			throws DataAccessException, EtailBusinessExceptions, AuthenticationException
+	public UserDetails retrieveUserforMarketplace(final String username) throws DataAccessException, EtailBusinessExceptions,
+			AuthenticationException
 	{
 		//Try to load user with username
 		UserDetails loadedUser;
@@ -850,7 +850,7 @@ public class MplMobileUserServiceImpl implements MplMobileUserService
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.service.MplMobileUserService#loginSocialUser(java.lang.String, java.lang.String)
 	 */
 	@Override
@@ -901,22 +901,22 @@ public class MplMobileUserServiceImpl implements MplMobileUserService
 
 		{
 			if (null != Localization.getLocalizedString(MarketplacewebservicesConstants.SOCIAL_RESPONSE_CODE_400_ERROR)
-					&& e.toString()
-							.contains(Localization.getLocalizedString(MarketplacewebservicesConstants.SOCIAL_RESPONSE_CODE_400_ERROR))
+					&& e.toString().contains(
+							Localization.getLocalizedString(MarketplacewebservicesConstants.SOCIAL_RESPONSE_CODE_400_ERROR))
 					&& null != Localization.getLocalizedString(MarketplacewebservicesConstants.SOCIAL_RESPONSE_CODE_ERROR_MSG))
 			{
 				throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9021);
 			}
 			else if (null != Localization.getLocalizedString(MarketplacewebservicesConstants.SOCIAL_RESPONSE_CODE_401_ERROR)
-					&& e.toString()
-							.contains(Localization.getLocalizedString(MarketplacewebservicesConstants.SOCIAL_RESPONSE_CODE_401_ERROR))
+					&& e.toString().contains(
+							Localization.getLocalizedString(MarketplacewebservicesConstants.SOCIAL_RESPONSE_CODE_401_ERROR))
 					&& null != Localization.getLocalizedString(MarketplacewebservicesConstants.SOCIAL_RESPONSE_CODE_ERROR_MSG))
 			{
 				throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9021);
 			}
 			else if (null != Localization.getLocalizedString(MarketplacewebservicesConstants.SOCIAL_RESPONSE_CODE_403_ERROR)
-					&& e.toString()
-							.contains(Localization.getLocalizedString(MarketplacewebservicesConstants.SOCIAL_RESPONSE_CODE_403_ERROR))
+					&& e.toString().contains(
+							Localization.getLocalizedString(MarketplacewebservicesConstants.SOCIAL_RESPONSE_CODE_403_ERROR))
 					&& null != Localization.getLocalizedString(MarketplacewebservicesConstants.SOCIAL_RESPONSE_CODE_ERROR_MSG))
 			{
 				throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9021);
@@ -951,7 +951,7 @@ public class MplMobileUserServiceImpl implements MplMobileUserService
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.service.MplMobileUserService#socialMediaRegistration(java.lang.String, java.lang.String)
 	 */
 	@Override
@@ -985,22 +985,22 @@ public class MplMobileUserServiceImpl implements MplMobileUserService
 			//Set success flag as false
 			successflag = false;
 			if (null != Localization.getLocalizedString(MarketplacewebservicesConstants.SOCIAL_RESPONSE_CODE_400_ERROR)
-					&& e.toString()
-							.contains(Localization.getLocalizedString(MarketplacewebservicesConstants.SOCIAL_RESPONSE_CODE_400_ERROR))
+					&& e.toString().contains(
+							Localization.getLocalizedString(MarketplacewebservicesConstants.SOCIAL_RESPONSE_CODE_400_ERROR))
 					&& null != Localization.getLocalizedString(MarketplacewebservicesConstants.SOCIAL_RESPONSE_CODE_ERROR_MSG))
 			{
 				throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9021);
 			}
 			else if (null != Localization.getLocalizedString(MarketplacewebservicesConstants.SOCIAL_RESPONSE_CODE_401_ERROR)
-					&& e.toString()
-							.contains(Localization.getLocalizedString(MarketplacewebservicesConstants.SOCIAL_RESPONSE_CODE_401_ERROR))
+					&& e.toString().contains(
+							Localization.getLocalizedString(MarketplacewebservicesConstants.SOCIAL_RESPONSE_CODE_401_ERROR))
 					&& null != Localization.getLocalizedString(MarketplacewebservicesConstants.SOCIAL_RESPONSE_CODE_ERROR_MSG))
 			{
 				throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9021);
 			}
 			else if (null != Localization.getLocalizedString(MarketplacewebservicesConstants.SOCIAL_RESPONSE_CODE_403_ERROR)
-					&& e.toString()
-							.contains(Localization.getLocalizedString(MarketplacewebservicesConstants.SOCIAL_RESPONSE_CODE_403_ERROR))
+					&& e.toString().contains(
+							Localization.getLocalizedString(MarketplacewebservicesConstants.SOCIAL_RESPONSE_CODE_403_ERROR))
 					&& null != Localization.getLocalizedString(MarketplacewebservicesConstants.SOCIAL_RESPONSE_CODE_ERROR_MSG))
 			{
 				throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9021);

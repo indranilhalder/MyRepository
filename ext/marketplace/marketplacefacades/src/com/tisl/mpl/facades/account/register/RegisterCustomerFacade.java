@@ -18,7 +18,8 @@ import com.tisl.mpl.facades.product.data.SendInvoiceData;
  */
 public interface RegisterCustomerFacade
 {
-	void register(ExtRegisterData registerData) throws DuplicateUidException, UnknownIdentifierException, IllegalArgumentException;
+	void register(ExtRegisterData registerData, final int platformNumber) throws DuplicateUidException,
+			UnknownIdentifierException, IllegalArgumentException;//TPR-6272 parameter platformNumber added
 
 	/**
 	 * @param data

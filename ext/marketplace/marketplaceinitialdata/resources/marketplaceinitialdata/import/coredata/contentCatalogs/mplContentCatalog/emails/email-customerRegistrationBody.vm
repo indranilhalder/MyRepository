@@ -205,10 +205,10 @@
 		  	        		    				    <td class="smFull trackdiv" width="190" style="font-size:10px;font-family:Arial, Helvetica, sans-serif;color: #000000;">Track Your Order on the go. Download our app.Stay updated on what's NEW &amp; NOW.</td>
 		  	        		    					<td class="smFull">
 														#if($ctx.cmsSlotContents.appstore)
-															<a href="https://itunes.apple.com/us/app/tata-cliq-online-shopping/id1101619385?ls=1&mt=8&tcid=em:general:registration:ios:22052017" target="_blank"> ${ctx.cmsSlotContents.appstore}</a> 
+															<a href="https://itunes.apple.com/us/app/tata-cliq-online-shopping/id1101619385?ls=1&mt=8&tcid=em:general:registration:ios:22052017" target="_blank" style="text-decoration: none;"><span style="text-decoration: none; text-underline:none"> ${ctx.cmsSlotContents.appstore}</span></a> 
 														#end
 														#if($ctx.cmsSlotContents.googleplay)
-															<a href="https://play.google.com/store/apps/details?id=com.tul.tatacliq&tcid=em:general:registration:android:22052017" target="_blank"> ${ctx.cmsSlotContents.googleplay}</a> 
+															<a href="https://play.google.com/store/apps/details?id=com.tul.tatacliq&tcid=em:general:registration:android:22052017" target="_blank" style="text-decoration: none;"><span style="text-decoration: none; text-underline:none"> ${ctx.cmsSlotContents.googleplay}</span></a> 
 														#end
 													</td>
 		  	        		    					<td class="smFull dsnone">
@@ -216,13 +216,13 @@
 													</td>
 		  	        		    					<td class="smFull followhead" style="font-size:10px;font-family:Arial, Helvetica, sans-serif;color: #000000;"> Follow Us: </td>
 		  	        		    					<td class="smFull socialLinks">
-		  	        		    						#if($ctx.cmsSlotContents.fb)<a href="https://www.facebook.com/TataCLiQ/" target="_blank"> ${ctx.cmsSlotContents.fb}</a> #end
-						  	        		    		#if($ctx.cmsSlotContents.tweet)<a href="https://twitter.com/tatacliq" target="_blank">${ctx.cmsSlotContents.tweet}</a>#end
-						  	        		    		#if($ctx.cmsSlotContents.insta)<a href="https://www.instagram.com/tatacliq/" target="_blank">${ctx.cmsSlotContents.insta}</a>#end
+		  	        		    						#if($ctx.cmsSlotContents.fb)<a href="https://www.facebook.com/TataCLiQ/" target="_blank" style="text-decoration: none;"><span style="text-decoration: none; text-underline:none"> ${ctx.cmsSlotContents.fb}</span></a> #end
+						  	        		    		#if($ctx.cmsSlotContents.tweet)<a href="https://twitter.com/tatacliq" target="_blank" style="text-decoration: none;"><span style="text-decoration: none; text-underline:none">${ctx.cmsSlotContents.tweet}</span></a>#end
+						  	        		    		#if($ctx.cmsSlotContents.insta)<a href="https://www.instagram.com/tatacliq/" target="_blank" style="text-decoration: none;"><span style="text-decoration: none; text-underline:none">${ctx.cmsSlotContents.insta}</span></a>#end
 														
-						  	        		    		#if($ctx.cmsSlotContents.gplus)<a href="https://plus.google.com/+TataCLiQ/" target="_blank">${ctx.cmsSlotContents.gplus}</a>#end
+						  	        		    		#if($ctx.cmsSlotContents.gplus)<a href="https://plus.google.com/+TataCLiQ/" target="_blank" style="text-decoration: none;"><span style="text-decoration: none; text-underline:none">${ctx.cmsSlotContents.gplus}</span></a>#end
 						  	        		    		
-														#if($ctx.cmsSlotContents.youtube)<a href="https://www.youtube.com/channel/UCUwkaWqIcl9dYQccKkM0VRA" target="_blank">${ctx.cmsSlotContents.youtube}</a>#end
+														#if($ctx.cmsSlotContents.youtube)<a href="https://www.youtube.com/channel/UCUwkaWqIcl9dYQccKkM0VRA" target="_blank" style="text-decoration: none;"><span style="text-decoration: none; text-underline:none">${ctx.cmsSlotContents.youtube}</span></a>#end
 					  	        		    		</td>
 		  	        		    				</tr>
 		  	        		    			</tbody>
