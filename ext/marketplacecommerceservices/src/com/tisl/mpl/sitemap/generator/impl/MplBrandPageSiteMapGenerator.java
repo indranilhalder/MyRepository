@@ -45,7 +45,6 @@ import org.springframework.context.ApplicationContext;
 
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.data.CustomPageData;
-//import com.tisl.mpl.marketplacecommerceservices.daos.MplCategoryDao;//Sonar Fix
 import com.tisl.mpl.util.GenericUtilityMethods;
 
 
@@ -72,10 +71,8 @@ public class MplBrandPageSiteMapGenerator extends AbstractSiteMapGenerator<Custo
 	@Autowired
 	private SiteBaseUrlResolutionService siteBaseUrlResolutionService;
 
-//	@Autowired
-//	private MplCategoryDao mplCategoryDao;//SonarFix
-
-
+	//	@Autowired
+	//	private MplCategoryDao mplCategoryDao;//Sonar Fix
 
 
 
@@ -329,24 +326,37 @@ public class MplBrandPageSiteMapGenerator extends AbstractSiteMapGenerator<Custo
 		//final List<CategoryModel> categoryList = doSearch(query, params, CategoryModel.class);
 		//		for (final CategoryModel categoryModel : categoryList)
 		//		{
-
-		for (final String relUrl : brandLists)
+		try
 		{
-			LOG.debug("brandurl" + relUrl);
-			//final String relUrl = StringEscapeUtils.escapeXml(getCategoryModelUrlResolver().resolve(categoryModel));
-			final CustomPageData data = new CustomPageData();
-			data.setUrl(relUrl);
-			LOG.debug("brandurl in custompagedata" + data.getUrl());
-			if (null != siteMapPage.getFrequency())
+
+			final FileWriter fw = new FileWriter(configurationService.getConfiguration().getString(
+					MarketplacecommerceservicesConstants.SITEMAP_FILE_LOCATION_BRAND)
+					+ File.separator + "brandOriginal.txt");
+			for (final String relUrl : brandLists)
 			{
-				data.setChangeFrequency(siteMapPage.getFrequency().getCode());
+				LOG.debug("brandurl" + relUrl);
+				//final String relUrl = StringEscapeUtils.escapeXml(getCategoryModelUrlResolver().resolve(categoryModel));
+				final CustomPageData data = new CustomPageData();
+				data.setUrl(relUrl);
+				LOG.debug("brandurl in custompagedata" + data.getUrl());
+				fw.write(data.getUrl());
+				if (null != siteMapPage.getFrequency())
+				{
+					data.setChangeFrequency(siteMapPage.getFrequency().getCode());
+				}
+				if (null != siteMapPage.getPriority())
+				{
+					data.setPriority(siteMapPage.getPriority().toString());
+				}
+				mainSiteMapUrlList.add(data);
+				//}
 			}
-			if (null != siteMapPage.getPriority())
-			{
-				data.setPriority(siteMapPage.getPriority().toString());
-			}
-			mainSiteMapUrlList.add(data);
-			//}
+			fw.flush();
+			fw.close();
+		}
+		catch (final Exception ex)
+		{
+			LOG.error("Error while writing" + ex);
 		}
 		return mainSiteMapUrlList;
 	}
