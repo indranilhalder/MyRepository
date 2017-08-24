@@ -33,6 +33,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
@@ -47,7 +48,6 @@ import org.springframework.beans.factory.annotation.Required;
 
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.core.enums.SiteMapUpdateModeEnum;
-import com.tisl.mpl.data.CustomPageData;
 import com.tisl.mpl.marketplacecommerceservices.daos.MplCategoryDao;
 import com.tisl.mpl.marketplacecommerceservices.service.CustomMediaService;
 import com.tisl.mpl.sitemap.generator.impl.MplBrandPageSiteMapGenerator;
@@ -179,7 +179,7 @@ public class CustomSiteMapMediaJob extends SiteMapMediaJob
 
 					LOG.debug("**START**BRAND***");
 
-					final List<CustomPageData> modelsFinal = new ArrayList<CustomPageData>();
+					final List modelsFinal = new ArrayList();
 					if (CollectionUtils.isNotEmpty(L1Category))
 					{
 						LOG.debug("100...");
@@ -199,7 +199,7 @@ public class CustomSiteMapMediaJob extends SiteMapMediaJob
 										LOG.debug("1*******");
 										final List models = getMplbrandPageSiteMapGenerator().getBrandData(contentSite, category,
 												categoryl2, brandLists);
-										modelsFinal.addAll(models);
+										modelsFinal.add(models);
 
 										LOG.debug("2*******");
 										//final String categoryName = getSiteMapNamefromCategories(category, categoryl2);
@@ -243,25 +243,33 @@ public class CustomSiteMapMediaJob extends SiteMapMediaJob
 						}
 						if (CollectionUtils.isNotEmpty(modelsFinal))
 						{
-							//Logic for splitting files based on model size
-							final Integer MAX_SITEMAP_LIMIT = cronJob.getSiteMapUrlLimitPerFile();
-							if (modelsFinal.size() > MAX_SITEMAP_LIMIT.intValue())
+							LOG.debug("UU*******");
+							final Iterator it = modelsFinal.iterator();
+							while (it.hasNext())
 							{
-								final List<List> modelsList = splitUpTheListIfExceededLimit(modelsFinal, MAX_SITEMAP_LIMIT);
-								for (int modelIndex = 0; modelIndex < modelsList.size(); modelIndex++)
+								LOG.debug("VV*******");
+								final List models = (List) it.next();
+								//Logic for splitting files based on model size
+								final Integer MAX_SITEMAP_LIMIT = cronJob.getSiteMapUrlLimitPerFile();
+								LOG.debug("TT*******");
+
+								if (models.size() > MAX_SITEMAP_LIMIT.intValue())
 								{
-									LOG.debug("3*******");
+									final List<List> modelsList = splitUpTheListIfExceededLimit(models, MAX_SITEMAP_LIMIT);
+									for (int modelIndex = 0; modelIndex < modelsList.size(); modelIndex++)
+									{
+										LOG.debug("3*******");
+										generateSiteMapFiles(siteMapFiles, contentSite, getMplbrandPageSiteMapGenerator(), siteMapConfig,
+												modelsList.get(modelIndex), SiteMapPageEnum.CATEGORY, Integer.valueOf(modelIndex), null);
+									}
+								}
+								else
+								{
+									LOG.debug("4*******");
 									generateSiteMapFiles(siteMapFiles, contentSite, getMplbrandPageSiteMapGenerator(), siteMapConfig,
-											modelsList.get(modelIndex), SiteMapPageEnum.CATEGORY, Integer.valueOf(modelIndex), null);
+											models, SiteMapPageEnum.CATEGORY, null, null);
 								}
 							}
-							else
-							{
-								LOG.debug("4*******");
-								generateSiteMapFiles(siteMapFiles, contentSite, getMplbrandPageSiteMapGenerator(), siteMapConfig,
-										modelsFinal, SiteMapPageEnum.CATEGORY, null, null);
-							}
-
 
 						}
 						else
