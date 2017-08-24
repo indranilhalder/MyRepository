@@ -461,6 +461,7 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 					 * .getSelectedUssid());
 					 */
 					SellerInformationModel sellerInfoModel = null;
+					Collection<RichAttributeModel> richAttributeModel = null;
 					if ((null != entry.getProduct())
 							&& (entry.getProduct().getRootCategory()
 									.equalsIgnoreCase(MarketplacecommerceservicesConstants.FINEJEWELLERY)))
@@ -482,20 +483,22 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 						sellerInfoModel = getMplSellerInformationService().getSellerDetail(entry.getSelectedUssid());
 					}
 
-					if (sellerInfoModel != null
-							&& CollectionUtils.isNotEmpty(sellerInfoModel.getRichAttribute())
-							&& null != ((List<RichAttributeModel>) sellerInfoModel.getRichAttribute()).get(0)
-							&& null != ((List<RichAttributeModel>) sellerInfoModel.getRichAttribute()).get(0).getDeliveryFulfillModes()
-							&& null != ((List<RichAttributeModel>) sellerInfoModel.getRichAttribute()).get(0).getDeliveryFulfillModes()
-									.getCode())
+					if (sellerInfoModel != null)
 					{
-						String fulfillmentType = ((List<RichAttributeModel>) sellerInfoModel.getRichAttribute()).get(0)
-								.getDeliveryFulfillModes().getCode();
+						richAttributeModel = sellerInfoModel.getRichAttribute();
+					}
+					if (CollectionUtils.isNotEmpty(richAttributeModel)
+							&& null != ((List<RichAttributeModel>) richAttributeModel).get(0)
+							&& null != ((List<RichAttributeModel>) richAttributeModel).get(0).getDeliveryFulfillModes()
+							&& null != ((List<RichAttributeModel>) richAttributeModel).get(0).getDeliveryFulfillModes().getCode())
+					{
+						String fulfillmentType = ((List<RichAttributeModel>) richAttributeModel).get(0).getDeliveryFulfillModes()
+								.getCode();
 						//BUG-ID TISRLEE-1561 03-01-2017
 						if (fulfillmentType.equalsIgnoreCase(MarketplacecommerceservicesConstants.FULFILMENT_TYPE_BOTH))
 						{
-							fulfillmentType = ((List<RichAttributeModel>) sellerInfoModel.getRichAttribute()).get(0)
-									.getDeliveryFulfillModeByP1().getCode();
+							fulfillmentType = ((List<RichAttributeModel>) richAttributeModel).get(0).getDeliveryFulfillModeByP1()
+									.getCode();
 							fullfillmentDataMap.put(entry.getEntryNumber().toString(), fulfillmentType.toLowerCase());
 						}
 						else
@@ -6148,7 +6151,8 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 		{
 			for (final AbstractOrderEntryModel cartEntry : cart.getEntries())
 			{
-				if (null != cartEntry.getProduct() && cartEntry.getProduct().getCode().equalsIgnoreCase(item.getListingID()))
+				final ProductModel productModel = cartEntry.getProduct();
+				if (null != productModel && productModel.getCode().equalsIgnoreCase(item.getListingID()))
 				{
 					for (final InventoryReservResponse responseItem : response.getItem())
 					{
