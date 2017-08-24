@@ -451,7 +451,7 @@ public class ProductPageController extends MidPageController
 				}
 				//   TPR-4389 ENDS HERE
 			}
-
+			model.addAttribute("isGigyaforPdpEnabled", isGigyaforPdpEnabled);
 			if (productModel.getLuxIndicator() != null
 					&& productModel.getLuxIndicator().getCode().equalsIgnoreCase(ControllerConstants.Views.Pages.Cart.LUX_INDICATOR)
 					&& !isLuxurySite())
