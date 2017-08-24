@@ -6163,7 +6163,7 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 								if (requestItem.getUSSID().equalsIgnoreCase(responseItem.getUSSID()))
 								{
 
-									replaceItemForJewellery(cart, responseItem.getUSSID(), cartEntry);
+									replaceItemForJewellery(cart, responseItem.getUSSID(), cartEntry, productModel);
 									sessionService.setAttribute("replacedUssid", Boolean.TRUE);
 								}
 
@@ -6193,7 +6193,8 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 	 * @param ussid
 	 * @param cartEntry
 	 */
-	private void replaceItemForJewellery(final AbstractOrderModel cart, final String ussid, final AbstractOrderEntryModel cartEntry)
+	private void replaceItemForJewellery(final AbstractOrderModel cart, final String ussid,
+			final AbstractOrderEntryModel cartEntry, final ProductModel productModel)
 	{
 		// YTODO Auto-generated method stub
 
@@ -6212,9 +6213,9 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 				addParameter.setCreateNewEntry(true);
 				addParameter.setEnableHooks(true);
 				addParameter.setCart((CartModel) cart);
-				addParameter.setProduct(cartEntry.getProduct());
+				addParameter.setProduct(productModel);
 				addParameter.setQuantity(1);
-				addParameter.setUnit(cartEntry.getProduct().getUnit());
+				addParameter.setUnit(productModel.getUnit());
 				addParameter.setUssid(ussid);
 
 				//mplCommerceCartService.addToCartWithUSSID(addParameter);
