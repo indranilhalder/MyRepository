@@ -163,8 +163,9 @@ $catalog-id=mplProductCatalog
 $syncJobCode=sync $catalog-id:Staged->Online
 $sourceversion=sourceversion(catalog(id[default=$catalog-id]),version[default=Staged])[unique=true,default=$catalog-id:Staged]
 $targetversion=targetversion(catalog(id[default=$catalog-id]),version[default=Online])[unique=true,default=$catalog-id:Online]
-INSERT_UPDATE CatalogVersionSyncJob;code[unique=true];active;roottypes(code)[mode=append];sessionUser(uid);$sourceversion;$targetversion
-;sync mplProductCatalog:Staged->Online;true;SellerInformation,GlobalIdentifier,Brand,SeoContent,RichAttribute,ratingReview;syncmanager
+#Commented against CAR-304
+#INSERT_UPDATE CatalogVersionSyncJob;code[unique=true];active;roottypes(code)[mode=append];sessionUser(uid);$sourceversion;$targetversion
+#;sync mplProductCatalog:Staged->Online;true;SellerInformation,GlobalIdentifier,Brand,SeoContent,RichAttribute,ratingReview;syncmanager
 INSERT_UPDATE SearchRestriction;code[unique=true];name[lang=de];name[lang=en];query;restrictedType(code);principal(UID);active;generate
 ;SyncManagerRestriction;SyncManagerRestriction;SyncManagerRestriction;({approvalStatus}=  ({{select {appstatus:pk} from {ArticleApprovalStatus as appstatus} where {appstatus:code}='approved'}}));Product;syncmanager;true;true
 
@@ -185,7 +186,8 @@ INSERT_UPDATE SearchRestriction;code[unique=true];name[lang=de];name[lang=en];qu
 INSERT_UPDATE Trigger;job(code)[unique=true];cronExpression;maxAcceptableDelay;
 #;sync mplProductCatalog\:Staged->Online;0 0/10 * * * ?;30;
 #Change for TISPT-215
-;sync mplProductCatalog\:Staged->Online;0 0 0/5 * * ?;;
+#Commented against CAR-304
+#;sync mplProductCatalog\:Staged->Online;0 0 0/5 * * ?;;
 #Commented as per Changes for TISPT-345      
 
 

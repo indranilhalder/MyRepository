@@ -43,7 +43,7 @@
 							<div class="item">
 								<a href="${productUrl}">
 									<div class="thumb">
-										<product:productPrimaryImage product="${product}" format="product"/>
+										<product:productPrimaryImage product="${product}" format="product" lazyLoad="false"/>
 									</div>
 									<div class="item-name">${product.name}</div>
 									<div class="item-price"><format:fromPrice priceData="${product.price}"/></div>

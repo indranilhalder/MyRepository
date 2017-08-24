@@ -31,12 +31,12 @@
 								<c:choose>
 											<c:when test="${fn:toLowerCase(entry.product.luxIndicator)=='luxury'}">
 													<a href="${entryProductUrl}">
-												<product:productPrimaryImage product="${entry.product}" format="luxuryCartIcon"/>
+												<product:productPrimaryImage product="${entry.product}" format="luxuryCartIcon" lazyLoad="false"/>
 											</a>
 											</c:when>
 											<c:otherwise>
 													<a href="${entryProductUrl}">
-												<product:productPrimaryImage product="${entry.product}" format="cartIcon"/>
+												<product:productPrimaryImage product="${entry.product}" format="cartIcon" lazyLoad="false"/>
 											</a>
 													
 											</c:otherwise>

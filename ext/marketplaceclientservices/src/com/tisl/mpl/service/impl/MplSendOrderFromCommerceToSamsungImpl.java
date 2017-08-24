@@ -115,8 +115,13 @@ public class MplSendOrderFromCommerceToSamsungImpl implements MplSendOrderFromCo
 			responseString = response.getEntity(String.class);
 			LOG.debug(MarketplacecclientservicesConstants.SAMSUNG_LOGGER_HEAD + "Response from samsung end :" + responseString);
 			// Read the response
-			jsonObject = (JSONObject) parser.parse(responseString.toString());
-			orderModel.setSamsungOrderResponseJSON(responseString.toString());
+			/*
+			 * jsonObject = (JSONObject) parser.parse(responseString.toString());
+			 * orderModel.setSamsungOrderResponseJSON(responseString.toString());
+			 */
+			//SONAR FIX
+			jsonObject = (JSONObject) parser.parse(responseString);
+			orderModel.setSamsungOrderResponseJSON(responseString);
 			modelService.save(orderModel);
 
 		}

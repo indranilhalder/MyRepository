@@ -1179,6 +1179,8 @@ class="de.hybris.platform.commercefacades.product.impl.DefaultImageFormatMapping
 			<entry key="Section9" value="Section9-ourJourney" />
 			</map>
 			</property>
+			<!-- TPR-5733 -->
+			<property name="footerLinkConverter" ref="mplFooterLinkConverter" />
 			
 			</bean>
 			
@@ -2007,6 +2009,20 @@ class="de.hybris.platform.commercefacades.product.impl.DefaultImageFormatMapping
 	
 	
 	<!-- close R2.3 Changes -->
+
+	<!-- TPR-5733 : creating n new converter -->
+	<bean id="mplFooterLinkConverter" parent="abstractPopulatingConverter">
+		<property name="targetClass" value="com.tisl.mpl.facades.cms.data.FooterLinkData"/>
+		<property name="populators">
+			<list>
+				<ref bean="mplFooterLinkPopulator"/>
+			</list>
+		</property>
+	</bean>
+	
+	<bean id="mplFooterLinkPopulator"
+			class="com.tisl.mpl.facades.populators.MplFooterLinkPopulator">
+	</bean>
 	
 	<!-- TPR-1083 Exchange Changes Start -->
 	<bean id="exchangeGuideFacade"

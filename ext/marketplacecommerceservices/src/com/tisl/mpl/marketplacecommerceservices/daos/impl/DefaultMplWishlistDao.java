@@ -14,7 +14,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import javax.annotation.Resource;
 
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.marketplacecommerceservices.daos.MplWishlistDao;
@@ -26,7 +26,8 @@ import com.tisl.mpl.marketplacecommerceservices.daos.MplWishlistDao;
  */
 public class DefaultMplWishlistDao implements MplWishlistDao
 {
-	@Autowired
+	//TPR-5787 autowired changed to resource
+	@Resource(name = "flexibleSearchService")
 	private FlexibleSearchService flexibleSearchService;
 
 	@Override
@@ -58,7 +59,6 @@ public class DefaultMplWishlistDao implements MplWishlistDao
 	@Override
 	public List<Wishlist2Model> getWishListAgainstUser(final UserModel user)
 	{
-
 		final String queryString = //
 		"SELECT {pk} FROM {Wishlist2} WHERE {user} = ?user ORDER BY {modifiedtime} desc";
 		final FlexibleSearchQuery query = new FlexibleSearchQuery(queryString);

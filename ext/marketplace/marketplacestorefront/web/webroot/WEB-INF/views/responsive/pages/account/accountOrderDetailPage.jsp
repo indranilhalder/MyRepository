@@ -695,13 +695,13 @@
 											<c:choose>
 												<c:when test="${fn:toLowerCase(entry.product.luxIndicator)=='luxury'}">
 														<a href="${productUrl}"> <product:productPrimaryImage
-															product="${entry.product}" format="luxuryCartIcon" />
+															product="${entry.product}" format="luxuryCartIcon" lazyLoad="false" />
 													</a>
 							
 												</c:when>
 												<c:otherwise>
 														<a href="${productUrl}"> <product:productPrimaryImage
-															product="${entry.product}" format="thumbnail" />
+															product="${entry.product}" format="thumbnail" lazyLoad="false" />
 													</a>
 														
 												</c:otherwise>
@@ -891,14 +891,14 @@
 																						<c:when test="${fn:toLowerCase(entryCancel.product.luxIndicator)=='luxury'}">
 																								<a href="${productUrl}"> <product:productPrimaryImage
 																																			product="${entryCancel.product}"
-																																			format="luxuryCartIcon" />
+																																			format="luxuryCartIcon" lazyLoad="false" />
 																																	</a>
 																	
 																						</c:when>
 																						<c:otherwise>
 																								<a href="${productUrl}"> <product:productPrimaryImage
 																																			product="${entryCancel.product}"
-																																			format="thumbnail" />
+																																			format="thumbnail" lazyLoad="false" />
 																																	</a>
 																								
 																						</c:otherwise>
@@ -1060,14 +1060,14 @@
 																						<c:when test="${fn:toLowerCase(entryCancel.product.luxIndicator)=='luxury'}">
 																								<a href="${productUrl}"> <product:productPrimaryImage
 																																			product="${entryCancel.product}"
-																																			format="luxuryCartIcon" />
+																																			format="luxuryCartIcon" lazyLoad="false" />
 																																	</a>
 																	
 																						</c:when>
 																						<c:otherwise>
 																								<a href="${productUrl}"> <product:productPrimaryImage
 																																			product="${entryCancel.product}"
-																																			format="thumbnail" />
+																																			format="thumbnail" lazyLoad="false" />
 																																	</a>
 																								
 																						</c:otherwise>
@@ -2048,13 +2048,13 @@
 											<c:choose>
 												<c:when test="${fn:toLowerCase(entry.product.luxIndicator)=='luxury'}">
 														<a href="${productUrl}"> <product:productPrimaryImage
-															product="${entry.product}" format="luxuryCartIcon" />
+															product="${entry.product}" format="luxuryCartIcon" lazyLoad="false" />
 													</a>
 							
 												</c:when>
 												<c:otherwise>
 														<a href="${productUrl}"> <product:productPrimaryImage
-															product="${entry.product}" format="thumbnail" />
+															product="${entry.product}" format="thumbnail" lazyLoad="false" />
 													</a>
 														
 												</c:otherwise>
@@ -2209,13 +2209,13 @@
 																					<c:choose>
 																						<c:when test="${fn:toLowerCase(entry.product.luxIndicator)=='luxury'}">
 																								<a href="${productUrl}"> <product:productPrimaryImage
-																									product="${entry.product}" format="luxuryCartIcon" />
+																									product="${entry.product}" format="luxuryCartIcon" lazyLoad="false" />
 																							</a>
 																	
 																						</c:when>
 																						<c:otherwise>
 																								<a href="${productUrl}"> <product:productPrimaryImage
-																									product="${entry.product}" format="thumbnail" />
+																									product="${entry.product}" format="thumbnail" lazyLoad="false" />
 																							</a>
 																								
 																						</c:otherwise>
@@ -2385,13 +2385,13 @@
 																					<c:choose>
 																						<c:when test="${fn:toLowerCase(entry.product.luxIndicator)=='luxury'}">
 																								<a href="${productUrl}"> <product:productPrimaryImage
-																									product="${entry.product}" format="luxuryCartIcon" />
+																									product="${entry.product}" format="luxuryCartIcon" lazyLoad="false" />
 																							</a>
 																	
 																						</c:when>
 																						<c:otherwise>
 																								<a href="${productUrl}"> <product:productPrimaryImage
-																									product="${entry.product}" format="thumbnail" />
+																									product="${entry.product}" format="thumbnail" lazyLoad="false" />
 																							</a>
 																								
 																						</c:otherwise>

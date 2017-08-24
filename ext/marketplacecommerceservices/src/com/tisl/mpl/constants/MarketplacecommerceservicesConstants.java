@@ -36,15 +36,15 @@ import com.tisl.mpl.core.model.ProductFreebieDetailModel;
 public final class MarketplacecommerceservicesConstants extends GeneratedMarketplacecommerceservicesConstants
 {
 
-	//TPR-4461 starts here
-	//public static final String RESTRICTIONBANK = "restrictionbank".intern();
-	//public static final String RESTRICTIONPAYMENTMODE =
-	//"restrictionpaymentmode".intern();
-	//public final static String BANKFROMBINFORPROMOTION =
-	//"bankForPromotion".intern();
-	//public static final String PAYMENTMODECOUPON =
-	//"paymentmodecoupon".intern();
-	//TPR-4464 ends here
+	//TPR-6272 starts here IQA
+	public static final String COMMACONSTANT = ",";
+	public static final int PLATFORM_ZERO = 0;
+	public static final int PLATFORM_ONE = 1;
+	public static final int PLATFORM_TWO = 2;
+	public static final int PLATFORM_THREE = 3;
+	public static final int PLATFORM_FOUR = 4;
+	public static final int PLATFORM_FIVE = 5;
+	//TPR-6272 ends here
 	//TPR-4461 STARTS HERE
 	public static final String COUPONFAILUREMESSAGE = "Sorry,Voucher is not applicable for the PAYMENT MODE/BANK you have selected.In order to proceed with this payment mode, please release the coupon or select an alternative payment mode";
 
@@ -80,6 +80,7 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String FASHIONJEWELLERY = "FashionJewellery";
 
 	//SONAR FIX
+	public static final String SHIPPING = "SHIPPING";
 	public static final String CONSIGNMENT_STATUS = " Consignment status :";
 	public static final String BOXING = "boxing";
 	public static final String APPLICATION_JSON_VALUE = "application/json";
@@ -572,6 +573,7 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String SMS_SHORT_ORDER_TRACK_URL = "marketplace.sms.shortOrder.track.url";
 
 	public static final String SMS_SERVICE_APP_DWLD_URL = "marketplace.sms.app.download.url";
+	public static final String SMS_SERVICE_WEBSITE_URL = "marketplace.sms.order.website.url";
 
 	//public static final String SMS_MESSAGE_HOTC =
 	//"Hey! we have shipped {0} item(s) of your order #{1} via {2}.Give it 2-3 working days to reach you. Can't control the excitement? Track your order here {3} .Thanks!";
@@ -667,7 +669,7 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String SALES_REPORT = "salesReport";
 	public static final String OTPGENERATEERROR = "Otp has not generated";
 	public static final String PREPAID_SPACE = "Prepaid";
-
+	//TISSPTEN-116 remove full stop
 	public static final String INTERESTED_IN_EMAIL = "I am interested in receiving e-mails";
 	public static final String NOT_INTERESTED_IN_EMAIL = "I am not interested in receiving e-mails";
 	public static final String BRAND_NAME_PREFIX = "MBH";
@@ -1809,7 +1811,7 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	//"SELECT {o.pk} FROM {order as o},{OrderStatus as os} WHERE {creationtime} > (to_date(sysdate,'YYYY/MM/DD HH24:MI:SS') - INTERVAL '10' MINUTE) and {o.status}={os.pk} and {os.code}=?status"
 	//.intern();
 
-	//SprintPaymentFixes:- New query added //PaymentFix2017:- queryTAT added
+	//SprintPaymentFixes:- New query added 			//PaymentFix2017:- queryTAT added
 	public static final String PAYMENTPENDINGQUERY = "select {o.pk} from {Order as o},{OrderStatus as os} where  {o.creationtime} <= ?queryTAT and {o.status}={os.pk} and {os.code}=?status"
 			.intern();
 
@@ -1820,7 +1822,7 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String PAYMENTPENDINGSTATUS = "status".intern();
 	//PaymentFix2017:- queryTAT added
 	public static final String PAYMENTPENDINGSKIPTIME = "queryTAT".intern();
-	//PaymentFix2017:- order by {jw.creationtime} desc added
+	//PaymentFix2017:-  order by {jw.creationtime} desc added
 	public static final String PAYMENTPENDINGWEBHOOKUERY = "select {jw.pk} from {JuspayWebhook as jw}, {JuspayOrderStatus as js} where {jw.orderstatus}={js.pk} and {js.orderId}=?reqId order by {jw.creationtime} desc"
 			.intern();
 	public static final String WEBHOOKREQSTATUS = "reqId".intern();
@@ -2150,6 +2152,30 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	//Payment Type changes
 	public static final String BASESTORE = "baseStore".intern();
 
+	//TPR-5733
+	public static final String FOOTER_LINK_QUERY = "select pk from {MplFooterLink} order by {footerLinkRow},{footerLinkColumn} asc";
+
+	//TPR-4512
+	public static final String TRANSACTION_NO_KEY = "transaction.count";
+	public static final String NULL_VALUE = "NULL".intern();
+	public static final String COD_PAYMENT = "COD".intern();
+	public static final String POSTPAID = "POSTPAID".intern();
+	public static final String PREPAID = "PREPAID".intern();
+	public static final String EMPTY_SPACE = " ".intern();
+	public static final String REFUND_SUCCESSFUL_ = "REFUND_SUCCESSFUL".intern();
+	public static final String MOBILE_NO_NOT_PRESENT = "Mobile number is not present in Commerce System".intern();
+	public static final String TRANSACTION_ID_NOT_PRESENT = "TransactionId is not present in Commerce System".intern();
+	public static final String ORDER_ID_NOT_PRESENT = "Order Reference Number is not present in Commerce System".intern();
+	public static final String MOBILE_QUERY = "SELECT UNIQUE {a:pk} FROM {order as a},{address as b} WHERE {a:user}={b:owner} AND {b.cellphone}=?mobileNo AND {a.type}=?type AND ({a.creationtime} > sysdate -180) order by {a.creationtime} desc fetch first ?queryCount rows only"
+			.intern();
+	public static final String MOBILE_QUERY_FOR_L4CATEGORY = "select distinct {c.pk} from {product as p},{CategoryProductRelation as cp},{Category as c},{catalogversion as cv} where {cp.TARGET} = {p.pk} and {cp.SOURCE} = {c.pk} and {c.code} like 'MPH%' and {p.varianttype} is null and {p.catalogversion}={cv.pk} and {cv.version}='Online' and {p.code} = ?productCode"
+			.intern();
+	public static final String TRANSACTION_QUERY = "select {b:pk} from {orderentry as a},{order as b} where p_orderlineid=?transactionId and {a:order}={b:pk} and {b:type}=?type"
+			.intern();
+	public static final String PARENT_ORDER_QUERY = "select {o:pk} from {order as o} where {o:type}=?type and {o:code}=?orderRefNo"
+			.intern();
+
+
 	public static final String ERROR_MSG_TYPE_MISMATCHUSSID = "mismatchUssid";
 	public static final String TRANSACTIONID = "transactionid";
 
@@ -2198,6 +2224,5 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String REV_SEAL_RADIO_NO = "No,I do not have reverse seal";
 
 	//jewellery TPR-3765
-	public static final String SMS_SERVICE_WEBSITE_URL = "marketplace.sms.order.website.url";
 	public static final String RETURN_FINEJEWELLERY = "Forward Seal Mismatch";
 }

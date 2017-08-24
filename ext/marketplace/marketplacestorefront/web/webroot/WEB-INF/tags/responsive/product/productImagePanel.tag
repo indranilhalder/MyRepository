@@ -99,13 +99,14 @@
 		<span>online exclusive</span>
 	</div>
 	<div class="productImagePrimary" id="primary_image">
-		<%-- <span id="codId" style="display:none;"> <img  alt="cod" src="${commonResourcePath}/images/cod.png" style="width:60px;">  </span> --%>
-		<div id="newProduct" style="z-index: 1; display: none;" class="new">
-			<img class="brush-strokes-sprite sprite-New"
-				src="//${mplStaticResourceHost}/_ui/responsive/common/images/transparent.png"><span>New</span>
-		</div>
-
-
+		
+		 <%-- <span id="codId" style="display:none;"> <img  alt="cod" src="${commonResourcePath}/images/cod.png" style="width:60px;">  </span> --%> 
+		 <div id ="newProduct" style="z-index: 1;display:none;" class="new">
+					<%-- <img class="brush-strokes-sprite sprite-New"
+					src="//${mplStaticResourceHost}/_ui/responsive/common/images/transparent.png"> --%><span>New</span>
+					</div>
+		 
+		 
 		<%-- <img  id ="newProduct" class="new brush-strokes-sprite sprite-New" style="z-index:1; display:none;" src="${commonResourcePath}/images/transparent.png"> --%>
 		<div class="productImagePrimaryLink" id="imageLink"
 			data-href="${productZoomImagesUrl}" target="_blank"

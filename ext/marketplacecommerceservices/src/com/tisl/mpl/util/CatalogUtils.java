@@ -8,7 +8,6 @@ import de.hybris.platform.catalog.model.CatalogModel;
 import de.hybris.platform.catalog.model.CatalogVersionModel;
 import de.hybris.platform.cms2.model.contents.ContentCatalogModel;
 import de.hybris.platform.cms2.servicelayer.services.CMSSiteService;
-import de.hybris.platform.site.BaseSiteService;
 
 import java.util.List;
 
@@ -24,9 +23,9 @@ import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
  */
 public class CatalogUtils
 {
-
-	@Autowired
-	private BaseSiteService baseSiteService;
+	//SONAR FIX
+	//@Autowired
+	//private BaseSiteService baseSiteService;
 
 	@Autowired
 	private CMSSiteService cmsSiteService;

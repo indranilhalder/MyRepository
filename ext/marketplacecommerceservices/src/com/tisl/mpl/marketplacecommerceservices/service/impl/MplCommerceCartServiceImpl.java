@@ -256,10 +256,11 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 	private PriceDataFactory priceDataFactory;
 
 	@Autowired
-	private CatalogUtils catalogUtils;
-	
-	@Autowired
 	private SessionService sessionService;
+@Autowired
+	private CatalogUtils catalogUtils;
+
+
 
 	@Autowired
 	private MplDefaultCommerceAddToCartStrategyImpl mplDefaultCommerceAddToCartStrategyImpl;
@@ -306,7 +307,6 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 
 	private Converter<OrderModel, OrderData> orderConverter;
 
-
 	@Autowired
 	private ExchangeGuideService exchangeService;
 
@@ -316,9 +316,6 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 
 	@Autowired
 	private MplCommerceAddToCartStrategy mplCommerceAddToCartStrategy;
-
-
-
 
 	/**
 	 * @description: It is responsible for adding product to cart at ussid level
@@ -647,7 +644,6 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 											&& isFulFillmentTypeMatch(deliveryData.getFulfilmentType(), deliveryModel
 													.getDeliveryFulfillModes().getCode(), sellerInformationData))
 									{
-
 										/*
 										 * priceData = formPriceData(Double.valueOf(deliveryModel.getValue().doubleValue()
 										 * entry.getQualifyingCount().intValue()), cartData);
@@ -1245,19 +1241,28 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 					if (entryWishlist.getIsDeleted() == null
 							|| (entryWishlist.getIsDeleted() != null && !entryWishlist.getIsDeleted().booleanValue()))//TPR-5787 check added
 					{
-						for (final OrderEntryData entry : cartData.getEntries())
+						if (null != cartData.getEntries() && !cartData.getEntries().isEmpty())
 						{
 
-							if (null != entry.getSelectedUssid() && !entry.getSelectedUssid().isEmpty()
-									&& null != entryWishlist.getUssid() && !entryWishlist.getUssid().isEmpty()
-									&& entry.getSelectedUssid().equalsIgnoreCase(entryWishlist.getUssid()))
-							{
-								productExistInCartList.add(entryWishlist);
-							}
-						}
 
+
+
+							for (final OrderEntryData entry : cartData.getEntries())
+							{
+
+								if (null != entry.getSelectedUssid() && !entry.getSelectedUssid().isEmpty()
+										&& null != entryWishlist.getUssid() && !entryWishlist.getUssid().isEmpty()
+										&& entry.getSelectedUssid().equalsIgnoreCase(entryWishlist.getUssid()))
+								{
+									productExistInCartList.add(entryWishlist);
+								}
+							}
+
+
+						}
+						productDataList.add(entryWishlist);
 					}
-					productDataList.add(entryWishlist);
+
 				}
 
 			}
@@ -1312,7 +1317,27 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 			{
 				for (final Wishlist2EntryModel entryWishlist : wishlistEntry.getEntries())//getting the latest two
 				{
-					productDataList.add(entryWishlist);
+					// if (!entryWishlist.getIsDeleted().booleanValue() || entryWishlist.getIsDeleted() == null)
+					//   {
+					//	productDataList.add(entryWishlist);
+					//   }
+
+					//TPR-5787 starts here
+					if (entryWishlist.getIsDeleted() != null)
+					{
+						LOG.info("WishListEntry isDeleted exists");
+						if (!entryWishlist.getIsDeleted().booleanValue())
+						{
+							LOG.info("WishListEntry isDeleted false");
+							productDataList.add(entryWishlist);
+						}
+					}
+					else
+					{
+						LOG.info("WishListEntry isDeleted not exists");
+						productDataList.add(entryWishlist);
+					}
+					//TPR-5787 ends here
 				}
 			}
 		}
@@ -4300,8 +4325,6 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 	 * @description:Populate data to CartSoftReservationData
 	 * 
 	 * 
-	 * 
-	 * 
 	 * @return:List<CartSoftReservationData>
 	 * 
 	 * 
@@ -4549,9 +4572,8 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 							 * final SellerInformationModel sellerInfoModel = getMplSellerInformationService().getSellerDetail(
 							 * entryModel.getSelectedUSSID());
 							 */
-						final SellerInformationModel sellerInfoModel = getMplSellerInformationService().getSellerDetail(
-									entryModel.getSelectedUssid(),
-									abstractOrderModel.getStore().getCatalogs().get(0).getActiveCatalogVersion());
+							SellerInformationModel sellerInfoModel = getMplSellerInformationService().getSellerDetail(
+									entryModel.getSelectedUssid(),abstractOrderModel.getStore().getCatalogs().get(0).getActiveCatalogVersion());
 
 							if (null == sellerInfoModel)
 							{
@@ -4687,6 +4709,7 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 
 		getSessionService().setAttribute(MarketplacecommerceservicesConstants.RESERVATION_DATA_TO_SESSION,
 				cartSoftReservationDataList);
+
 		return cartSoftReservationDataList;
 	}
 
@@ -4745,6 +4768,7 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 	 * @author TECHOUTS
 	 * @param cartSoftReservationData
 	 * @param abstractOrderData
+	 *
 	 *
 	 * @return void
 	 */
@@ -4978,10 +5002,16 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 	 * @DESC : Inventory list to be generated for TISPRD-2758
 	 * 
 	 * 
+	 * 
+	 * 
 	 * @param abstractOrderModel
 	 * 
 	 * 
+	 * 
+	 * 
 	 * @param entryModel
+	 * 
+	 * 
 	 * 
 	 * 
 	 * @return Tuple2<?, ?>
@@ -5044,13 +5074,21 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 	 * @DESC : Inventory list to be generated for TISPRD-2758
 	 * 
 	 * 
+	 * 
+	 * 
 	 * @param abstractOrderModel
+	 * 
+	 * 
 	 * 
 	 * 
 	 * @param entryModel
 	 * 
 	 * 
+	 * 
+	 * 
 	 * @param productPromoCode
+	 * 
+	 * 
 	 * 
 	 * 
 	 * @return List<CartSoftReservationData>
@@ -6765,6 +6803,7 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 	//TPR-5666 samsung cart changes
 	/*
 	 * (non-Javadoc)
+	 * 
 	 * 
 	 * @see com.tisl.mpl.marketplacecommerceservices.service.MplCommerceCartService#fetchCartUsingGuid(java.lang.String)
 	 */

@@ -580,7 +580,7 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 		boolean addedToCart = false;
 		int count = 0;
 		String delistMessage = MarketplacewebservicesConstants.EMPTY;
-		final List<Wishlist2EntryModel> entryModelList = new ArrayList<Wishlist2EntryModel>();
+		final List<Wishlist2EntryModel> wishentryModelList = new ArrayList<Wishlist2EntryModel>();
 		CartModel cartModel = null;
 		boolean delisted = false;
 		ProductModel productModel = null;
@@ -717,20 +717,27 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 							+ addedToCart);
 				}
 				final List<Wishlist2EntryModel> allWishlistEntry = wishlistFacade.getAllWishlistByUssid(USSID);
-				for (final Wishlist2EntryModel entryModel : allWishlistEntry)
+				for (final Wishlist2EntryModel wishentryModel : allWishlistEntry)
 				{
-					entryModel.setAddToCartFromWl(Boolean.valueOf(addedToCartWl));
-					if (LOG.isDebugEnabled())
+					//TISSPTEN-64
+					if (wishentryModel.getIsDeleted() == null
+							|| (wishentryModel.getIsDeleted() != null && !wishentryModel.getIsDeleted().booleanValue()))//TPR-5787 check added here
 					{
 
-
-						LOG.debug("*********** Add to cart from WL mobile web service *************" + addedToCart + "::USSID::"
-								+ USSID);
+						wishentryModel.setAddToCartFromWl(Boolean.valueOf(addedToCartWl));
+						if (LOG.isDebugEnabled())
+						{
+							LOG.debug("*********** Add to cart from WL mobile web service *************" + addedToCart + "::USSID::"
+									+ USSID);
+						}
+						wishentryModelList.add(wishentryModel);
 					}
-					entryModelList.add(entryModel);
 				}
 				//For saving all the data at once rather in loop;
-				modelService.saveAll(entryModelList);
+				if (CollectionUtils.isNotEmpty(wishentryModelList))
+				{
+					modelService.saveAll(wishentryModelList);
+				}
 				//TISLUX-1823 -For LuxuryWeb
 				if (channel != null && channel.equalsIgnoreCase(SalesApplication.WEB.getCode()))
 				{
@@ -946,6 +953,7 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 			final Map<String, List<MarketplaceDeliveryModeData>> deliveryModeDataMap, final boolean isPinCodeCheckRequired,
 			final boolean resetRequired, final List<PinCodeResponseData> pincodeList, final String pincode)
 			throws EtailBusinessExceptions, EtailNonBusinessExceptions
+
 	{
 
 		String mediaFormat = null;

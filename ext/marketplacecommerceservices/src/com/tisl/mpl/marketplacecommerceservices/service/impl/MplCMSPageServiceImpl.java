@@ -26,6 +26,7 @@ import org.springframework.beans.factory.annotation.Required;
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.core.enums.CMSChannel;
 import com.tisl.mpl.core.model.BrandComponentModel;
+import com.tisl.mpl.core.model.MplFooterLinkModel;
 import com.tisl.mpl.core.model.MplShopByLookModel;
 import com.tisl.mpl.marketplacecommerceservices.daos.MplCmsPageDao;
 import com.tisl.mpl.marketplacecommerceservices.service.MplCmsPageService;
@@ -260,7 +261,7 @@ public class MplCMSPageServiceImpl extends DefaultCMSPageService implements MplC
 		return mplCmsPageDao.getBrandsForShopByBrand();
 
 	}
-	
+
 	/**
 	 * @param siteUid
 	 * @return CMSSite
@@ -270,6 +271,16 @@ public class MplCMSPageServiceImpl extends DefaultCMSPageService implements MplC
 	public CMSSiteModel getSiteforId(final String siteUid) throws CMSItemNotFoundException
 	{
 		return mplCmsPageDao.getSiteforId(siteUid);
+	}
+
+	/**
+	 * TPR-5733 | Fetches list of MplFooterLinkModel
+	 *
+	 * @return List<FooterLinkData>
+	 */
+	public List<MplFooterLinkModel> getAllMplFooterLinks()
+	{
+		return mplCmsPageDao.getAllFooterLinks();
 	}
 
 }

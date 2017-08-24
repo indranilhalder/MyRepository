@@ -1066,6 +1066,8 @@ if (searchCategory_id){
 			        
 			        
 			        if(category_id === "allCat") {
+			        	params.htmlElement = 'ia_products_hot';
+			        	params.category_id = '';
 			        	hotDropdownselected = category_name;
 			        } 
 			        else {

@@ -51,7 +51,7 @@
 	
 	
 <!-- For Infinite Analytics Start -->
-	<div class="trending"  id="ia_products_hot"></div>
+	<div class="trending"  id="ia_products_hot lazy-reached-ia"></div>
 <!-- For Infinite Analytics End -->
 	</div>
 </template:page>

@@ -90,6 +90,10 @@ public class CheckTransactionReviewStatusAction extends AbstractAction<OrderProc
 	@Autowired
 	private OrderStatusSpecifier orderStatusSpecifier;
 
+	//Sonar fix
+	private static final String ONLINE_KEY = "Online";
+	private static final String MPLPRODUCT_CATALOG = "mplProductCatalog";
+
 	//added for CAR:127
 
 	//private Converter<OrderModel, OrderData> orderConverter;
@@ -250,7 +254,7 @@ public class CheckTransactionReviewStatusAction extends AbstractAction<OrderProc
 				 */
 				try
 				{
-					getCatalogVersionService().setSessionCatalogVersion("mplProductCatalog", "Online");
+					getCatalogVersionService().setSessionCatalogVersion(MPLPRODUCT_CATALOG, ONLINE_KEY);
 					mplCommerceCartService.isInventoryReserved(null,
 							MarketplaceFulfilmentProcessConstants.OMS_INVENTORY_RESV_TYPE_ORDERDEALLOCATE, defaultPinCode, orderModel,
 							null, orderModel.getSalesApplication());
@@ -321,7 +325,7 @@ public class CheckTransactionReviewStatusAction extends AbstractAction<OrderProc
 
 				try
 				{
-					getCatalogVersionService().setSessionCatalogVersion("mplProductCatalog", "Online");
+					getCatalogVersionService().setSessionCatalogVersion(MPLPRODUCT_CATALOG, ONLINE_KEY);
 					mplCommerceCartService.isInventoryReserved(null,
 							MarketplaceFulfilmentProcessConstants.OMS_INVENTORY_RESV_TYPE_ORDERDEALLOCATE, defaultPinCode, orderModel,
 							null, orderModel.getSalesApplication());
@@ -348,7 +352,7 @@ public class CheckTransactionReviewStatusAction extends AbstractAction<OrderProc
 				 */
 				try
 				{
-					getCatalogVersionService().setSessionCatalogVersion("mplProductCatalog", "Online");
+					getCatalogVersionService().setSessionCatalogVersion(MPLPRODUCT_CATALOG, ONLINE_KEY);
 					mplCommerceCartService.isInventoryReserved(null,
 							MarketplaceFulfilmentProcessConstants.OMS_INVENTORY_RESV_TYPE_ORDERHELD, defaultPinCode, orderModel, null,
 							orderModel.getSalesApplication());
@@ -382,7 +386,7 @@ public class CheckTransactionReviewStatusAction extends AbstractAction<OrderProc
 				try
 				{
 					//Setting the version of sessioncatalog
-					getCatalogVersionService().setSessionCatalogVersion("mplProductCatalog", "Online");
+					getCatalogVersionService().setSessionCatalogVersion(MPLPRODUCT_CATALOG, ONLINE_KEY);
 					mplCommerceCartService.isInventoryReserved(null,
 							MarketplaceFulfilmentProcessConstants.OMS_INVENTORY_RESV_TYPE_PAYMENT, defaultPinCode, orderModel, null,
 							orderModel.getSalesApplication());

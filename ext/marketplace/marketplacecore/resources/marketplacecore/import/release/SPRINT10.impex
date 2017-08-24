@@ -1,0 +1,59 @@
+# Import the CMS content for the site emails
+$storePrefix=mpl
+$contentCatalog=$storePrefixContentCatalog
+$contentCV=catalogVersion(CatalogVersion.catalog(Catalog.id[default=$contentCatalog]),CatalogVersion.version[default=Online])[default=$contentCatalog:Online]
+$wideContent=CMSImageComponent,BannerComponent
+$emailResource=jar:com.tisl.mpl.initialdata.setup.InitialDataSystemSetup&/marketplaceinitialdata/import/coredata/contentCatalogs/$contentCatalog/emails
+$productCatalog=mplProductCatalog 
+$productCatalogName=MarketPlace Product Catalog
+$productCV=catalogVersion(catalog(id[default=$productCatalog]),version[default='Online'])[unique=true,default=$productCatalog:Online] 
+$picture=media(code, $contentCV);
+$siteResource=jar:com.tisl.mpl.initialdata.setup.InitialDataSystemSetup&/marketplaceinitialdata/import/sampledata/contentCatalogs/$contentCatalog
+$jarResourceCms=jar:com.tisl.mpl.initialdata.setup.InitialDataSystemSetup&/marketplaceinitialdata/import/sampledata/cockpits/cmscockpit
+$medias=medias(code, $contentCV);
+$lang=en
+$mediaContainer=media(qualifier, $contentCV)[lang=$lang];
+
+#Language
+$lang=en   
+
+$jarResourceCms=jar:com.tisl.mpl.core.setup.CoreSystemSetup&/marketplacecore/import/cockpits/cmscockpit
+$emailPackageName=com.tisl.mpl.facades.process.email.context
+
+
+# CMS components and Email velocity templates
+UPDATE RendererTemplate;code[unique=true];description[lang=$lang];templateScript[lang=$lang,translator=de.hybris.platform.commerceservices.impex.impl.FileLoaderValueTranslator]
+;mpl_Email_PDP_Body;"Send Invoice Email Body";$emailResource/email-PDPBody.vm
+;mpl_Email_Customer_Registration_Body;"Customer Registration Email Body";$emailResource/email-customerRegistrationBody.vm
+ ;mpl_Email_FriendsInvite_Body;"Friends Invite Email Body";$emailResource/email-friendsInviteBody.vm
+ ;mpl_Email_Nps_Emailer_Body;"Nps Email Body";$emailResource/email-npsEmailerBody.vm
+ ;mpl_Email_Payment_Failed_Body;"Payment Failed Email Body";$emailResource/email-paymentFailedBody.vm
+ ;mpl_Email_Payment_Timeout_Body;"Payment Timeout Email Body";$emailResource/email-paymentTimeoutBody.vm
+
+
+
+INSERT_UPDATE EmailPageTemplate;$contentCV[unique=true];uid[unique=true];name;active;frontendTemplateName;subject(code);htmlTemplate(code);restrictedPageTypes(code)
+;;PDPEmailTemplate;PDP Email Template;true;PDPEmail;mpl_Email_PDP_Subject;mpl_Email_PDP_Body;EmailPage
+;;CustomerRegistrationEmailTemplate;Customer Registration Email Template;true;customerRegistrationEmail;mpl_Email_Customer_Registration_Subject;mpl_Email_Customer_Registration_Body;EmailPage
+;;FriendsInviteEmailTemplate;Friends Invitation Email Template;true;friendsInviteEmail;mpl_Email_FriendsInvite_Subject;mpl_Email_FriendsInvite_Body;EmailPage
+;;NpsEmailTemplate;Nps Email Template;true;npsEmail;mpl_Email_Nps_Emailer_Subject;mpl_Email_Nps_Emailer_Body;EmailPage
+;;PaymentFailedEmailTemplate;Payment Failed Email Template;true;paymentFailedEmail;mpl_Email_Payment_Failed_Subject;mpl_Email_Payment_Failed_Body;EmailPage
+;;PaymentTimeoutEmailTemplate;Payment Timeout Email Template;true;paymentTimeoutEmail;mpl_Email_Payment_Timeout_Subject;mpl_Email_Payment_Timeout_Body;EmailPage
+
+
+# Email Pages
+INSERT_UPDATE EmailPage;$contentCV[unique=true];uid[unique=true];name;masterTemplate(uid,$contentCV);defaultPage;approvalStatus(code)[default='approved']
+;;PDPEmail;PDP Email;PDPEmailTemplate;true;
+;;CustomerRegistrationEmail;Customer Registration Email;CustomerRegistrationEmailTemplate;true;
+;;FriendsInviteEmail;Friends Invite Email;FriendsInviteEmailTemplate;true;
+;;NpsEmail;Nps Email;NpsEmailTemplate;true;
+;;PaymentFailedEmail;Payment Failed Email;PaymentFailedEmailTemplate;true;
+;;PaymentTimeoutEmail;Payment Timeout Email;PaymentTimeoutEmailTemplate;true;
+
+
+
+UPDATE CMSParagraphComponent;$contentCV[unique=true];uid[unique=true];name;&componentRef;content[lang=$lang]
+;;FeedbackTextComponent;FeedbackTextComponent;;"Send us some love or direct your anger this way. We want to know how we can serve you better."
+
+
+

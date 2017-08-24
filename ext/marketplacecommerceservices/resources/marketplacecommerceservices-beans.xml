@@ -839,6 +839,7 @@
 		<property name="priceList" type="java.util.Set&lt;String>" />
 	</bean>
 	<!-- TPR-1083 Exchange Ends -->
+	
 	<!-- TPR-1072 START -->
 	<bean class="com.tisl.mpl.data.ShopByBrandData">
  		<property name="masterBrandUrl" type="String" />
@@ -854,6 +855,15 @@
 	<property name="name" type="String" />
 	<property name="weightRateList" type="java.util.List&lt;String>" />
 	<property name="price" type="de.hybris.platform.commercefacades.product.data.PriceData" />
+	</bean>
+	
+
+	<!-- For TPR-5733 -->
+	<bean class="com.tisl.mpl.facades.cms.data.FooterLinkData">
+		<property name="footerLinkRow" type="Integer"/>
+		<property name="footerLinkColumn" type="Integer"/>
+		<property name="footerLinkName" type="String"/>
+		<property name="footerLinkURL" type="String"/>
 	</bean>
 	
 	<!-- TPR-5667 : Samsung order response | start -->

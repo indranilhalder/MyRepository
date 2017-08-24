@@ -46,8 +46,6 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -306,7 +304,7 @@ public class MplProductWebServiceImpl implements MplProductWebService
 
 	/*
 	 * To get product details for a product code
-	 * 
+	 *
 	 * @see com.tisl.mpl.service.MplProductWebService#getProductdetailsForProductCode(java.lang.String)
 	 */
 	@Override
@@ -1831,26 +1829,18 @@ public class MplProductWebServiceImpl implements MplProductWebService
 	 * @param enabledPromotionList
 	 * @return PromotionData
 	 */
-	private PromotionData checkHighestPriority(final List<PromotionData> enabledPromotionList)
-	{
-		Collections.sort(enabledPromotionList, new Comparator<PromotionData>()
-		{
-			@Override
-			public int compare(final PromotionData promo1, final PromotionData promo2)
-			{
-				int priority = 0;
-				if (null != promo1.getPriority() && null != promo2.getPriority())
-				{
-					priority = promo1.getPriority().compareTo(promo2.getPriority());
-				}
-				return priority;
-			}
-
-
-		});
-		Collections.reverse(enabledPromotionList);
-		return enabledPromotionList.get(0);
-	}
+	/* sonar fix */
+	/*
+	 * private PromotionData checkHighestPriority(final List<PromotionData> enabledPromotionList) {
+	 * Collections.sort(enabledPromotionList, new Comparator<PromotionData>() {
+	 * 
+	 * @Override public int compare(final PromotionData promo1, final PromotionData promo2) { int priority = 0; if (null
+	 * != promo1.getPriority() && null != promo2.getPriority()) { priority =
+	 * promo1.getPriority().compareTo(promo2.getPriority()); } return priority; }
+	 * 
+	 * 
+	 * }); Collections.reverse(enabledPromotionList); return enabledPromotionList.get(0); }
+	 */
 
 	/**
 	 * All Potential promotions for a product

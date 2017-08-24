@@ -232,8 +232,8 @@ public class ProductDetailsHelper
 
 	/*
 	 * @Resource(name = "GigyaService") private GigyaService gigyaservice;
-	 * 
-	 * 
+	 *
+	 *
 	 * @Autowired private ExtendedUserServiceImpl userexService;
 	 *//**
 	 * @return the gigyaservice
@@ -774,7 +774,8 @@ public class ProductDetailsHelper
 					{
 						//TISEE-6376
 						if (wlEntry.getProduct() != null && wlEntry.getProduct().getCode() != null
-								&& wlEntry.getProduct().getCode().equals(productCode))
+								&& wlEntry.getProduct().getCode().equals(productCode)
+								&& (!wlEntry.getIsDeleted().booleanValue() || wlEntry.getIsDeleted() == null))//TPR-5787 TISSPTEN-9 check added
 						{
 							ussidEntries.add(wlEntry.getUssid());
 						}
@@ -1253,15 +1254,15 @@ public class ProductDetailsHelper
 
 	/*
 	 * @description: It is used for populating delivery code and cost for sellerartickeSKU
-	 * 
+	 *
 	 * @param deliveryCode
-	 * 
+	 *
 	 * @param currencyIsoCode
-	 * 
+	 *
 	 * @param sellerArticleSKU
-	 * 
+	 *
 	 * @return MplZoneDeliveryModeValueModel
-	 * 
+	 *
 	 * @throws EtailNonBusinessExceptions
 	 */
 	private MplZoneDeliveryModeValueModel populateDeliveryCostForUSSIDAndDeliveryMode(final String deliveryCode,
@@ -1458,7 +1459,8 @@ public class ProductDetailsHelper
 			{
 				for (final Wishlist2EntryModel entry : lastCreatedWishlist.getEntries())
 				{
-					if (null != (entry) && null != entry.getUssid() && (entry.getUssid()).equalsIgnoreCase(ussid))
+					if (null != (entry) && null != entry.getUssid() && (entry.getUssid()).equalsIgnoreCase(ussid)
+							&& (!entry.getIsDeleted().booleanValue() || entry.getIsDeleted() == null))//TPR-5787 condition added
 					{
 						existUssid = true;
 						break;

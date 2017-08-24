@@ -52,6 +52,9 @@ public class MplProductDaoImpl extends DefaultProductDao implements MplProductDa
 	private static final String CODE = "code";
 	private static final String PRODUCT_PARAM = "{c.code}=?productParam";
 
+	//Sonar Fix
+	private static final String CATALOG_VERSION_KEY = "catalogVersion";
+
 
 	public MplProductDaoImpl(final String typecode)
 	{
@@ -82,7 +85,7 @@ public class MplProductDaoImpl extends DefaultProductDao implements MplProductDa
 
 		query.addQueryParameter(CODE, code);
 
-		query.addQueryParameter("catalogVersion", catalogVersion);
+		query.addQueryParameter(CATALOG_VERSION_KEY, catalogVersion);
 		query.setResultClassList(Collections.singletonList(ProductModel.class));
 		final SearchResult<ProductModel> searchResult = getFlexibleSearchService().search(query);
 		LOG.debug("findProductsByCode: searchResult********** " + searchResult);
@@ -107,7 +110,7 @@ public class MplProductDaoImpl extends DefaultProductDao implements MplProductDa
 		LOG.debug(stringBuilder);
 		final FlexibleSearchQuery query = new FlexibleSearchQuery(stringBuilder.toString());
 		query.addQueryParameter(CODE, code);
-		query.addQueryParameter("catalogVersion", catalogVersion);
+		query.addQueryParameter(CATALOG_VERSION_KEY, catalogVersion);
 		query.setResultClassList(Collections.singletonList(ProductModel.class));
 
 		//disabling search restriction and then enabling once again
@@ -161,7 +164,7 @@ public class MplProductDaoImpl extends DefaultProductDao implements MplProductDa
 		final FlexibleSearchQuery query = new FlexibleSearchQuery(stringBuilder.toString());
 		query.addQueryParameter(CODE, code);
 		//		Changed to support the luxProductCatalog
-		query.addQueryParameter("catalogVersion", catalogVersion);
+		query.addQueryParameter(CATALOG_VERSION_KEY, catalogVersion);
 		query.setResultClassList(Collections.singletonList(ProductModel.class));
 		final SearchResult<ProductModel> searchResult = getFlexibleSearchService().search(query);
 		LOG.debug("findProductsByCode: searchResult********** " + searchResult);
@@ -173,7 +176,7 @@ public class MplProductDaoImpl extends DefaultProductDao implements MplProductDa
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * com.tisl.mpl.marketplacecommerceservices.daos.product.MplProductDao#findProductFeaturesByCodeAndQualifier(java
 	 * .lang.String, java.lang.String)
@@ -204,7 +207,7 @@ public class MplProductDaoImpl extends DefaultProductDao implements MplProductDa
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * com.tisl.mpl.marketplacecommerceservices.daos.product.MplProductDao#findProductListByCodeList(de.hybris.platform
 	 * .catalog.model.CatalogVersionModel, java.util.List)
@@ -248,7 +251,7 @@ public class MplProductDaoImpl extends DefaultProductDao implements MplProductDa
 			//LOG.debug("QueryStringFetchingPrice" + queryStringForPrice);
 			final FlexibleSearchQuery query = new FlexibleSearchQuery(queryString);
 
-			query.addQueryParameter("catalogVersion", catalogVersion);
+			query.addQueryParameter(CATALOG_VERSION_KEY, catalogVersion);
 
 			for (final Map.Entry<String, String> entry : queryParamMap.entrySet())
 			{
@@ -275,7 +278,7 @@ public class MplProductDaoImpl extends DefaultProductDao implements MplProductDa
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.tisl.mpl.marketplacecommerceservices.daos.product.MplProductDao#findProductData(java.lang.String)
 	 */
 	@Override
@@ -285,7 +288,7 @@ public class MplProductDaoImpl extends DefaultProductDao implements MplProductDa
 		ProductModel prod = new ProductModel();
 
 		LOG.debug("findProductsByCode: code********** " + code);
-		final CatalogVersionModel catalogVersion = getCatalogVersion();
+		final CatalogVersionModel catalogVersion = catalogUtils.getSessionCatalogVersionForProduct();
 		final StringBuilder stringBuilder = new StringBuilder(70);
 		stringBuilder.append(SELECT_STRING).append(ProductModel.PK).append("} ");
 		stringBuilder.append(FROM_STRING).append(ProductModel._TYPECODE).append(" AS p ");
