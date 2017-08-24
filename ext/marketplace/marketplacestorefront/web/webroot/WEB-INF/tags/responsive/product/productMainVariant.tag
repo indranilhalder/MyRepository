@@ -87,7 +87,13 @@ $("#variant").change(function() {
 
 //AKAMAI Fix 
 
+function redirectURL(val){
+	//console.log(val);
+	window.open(val,'_blank');
+}
+
 var productSizeVar = '${productSize}';
+var buyingGuideData ='${buyingGuide}';
 </script>
 <!-- logic for displaying color and size variant -->
 <!-- displaying colour swatches -->
@@ -313,8 +319,17 @@ share mobile -->
 			data-toggle="modal" data-target="#popUpModal" data-productcode="${product.code}" data-sizeSelected="${selectedSize}"> <spring:theme
 				code="product.variants.size.guide" />
 			</a>
-		<!-- Size guide Pop-up -->
-		
+			<!-- Size guide Pop-up -->	
+			
+			
+			<!-- Added for PDP Changes for Home Furnishing : TPR-6738-->
+			<c:if test="${not empty buyingGuide}">
+					<a class="buying-guide" role="button" onclick = "redirectURL(buyingGuideData);"> 
+					<spring:theme code="product.variants.buying.guide" />
+					</a>
+			</c:if>
+			<!--  PDP Changes for Home Furnishing Ends-->
+			
 		<!-- Added for PDP Size ChartChange -->
 		<ul id="variant" class="variant-select">
 			<%-- <c:choose>

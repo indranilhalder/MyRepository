@@ -889,4 +889,7 @@ public final class ModelAttributetConstants
 	public static final String ICID = "icid";
 	public static final String SHARE = "share";
 
+	//TPR-6738
+	public static final String BUYING_GUIDE = "buyingGuide".intern();
+
 }

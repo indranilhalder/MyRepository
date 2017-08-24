@@ -46,6 +46,13 @@ function loadVariant(x){
 	 $('#variantForm').attr('action',requiredUrl);
 	 $("#variantForm").submit();
 }
+
+function redirectURL(val){
+	//console.log(val);
+	window.open(val,'_blank');
+}
+
+var buyingGuideData ='${buyingGuide}';
 </script>
 <c:url var="sizeGuideUrl"
 	value="/p-sizeGuide?productCode=${product.code}&sizeSelected=${selectedSize}" scope="request"></c:url>
@@ -312,6 +319,17 @@ function loadVariant(x){
 			data-toggle="modal" data-target="#popUpModal" data-productcode="${product.code}" data-sizeSelected="${selectedSize}"> <spring:theme
 				code="product.variants.size.guide" />
 			</a>
+			
+			<!-- Added for PDP Changes for Home Furnishing : TPR-6738-->
+			<c:if test="${not empty buyingGuide}">
+					<a class="buying-guide" role="button" onclick = "redirectURL(buyingGuideData);"> 
+					<spring:theme code="product.variants.buying.guide" />
+					</a>
+			</c:if>
+			<!--  PDP Changes for Home Furnishing Ends-->
+			
+			
+			
 			<ul id="variant" class="form-control variant-select"
 				onchange="selectProductSize()">
 				<%-- <c:choose>
