@@ -320,7 +320,6 @@ public class MplBrandPageSiteMapGenerator extends AbstractSiteMapGenerator<Custo
 	private List<CustomPageData> brandPageSiteMap(final CMSSiteModel siteModel, final List<CustomPageData> mainSiteMapUrlList,
 			final SiteMapPageModel siteMapPage, final List<String> brandLists)
 	{
-		final List<CustomPageData> mainSiteMapUrlListFinal = new ArrayList<CustomPageData>();
 		//final String query = getCategoryForSitemapQuery();
 
 		//final Map<String, Object> params = new HashMap<String, Object>();
@@ -331,14 +330,11 @@ public class MplBrandPageSiteMapGenerator extends AbstractSiteMapGenerator<Custo
 		try
 		{
 
-			//List<CustomPageData> mainSiteMapUrlListFinal = new ArrayList<CustomPageData>();
 			final FileWriter fw = new FileWriter(configurationService.getConfiguration().getString(
 					MarketplacecommerceservicesConstants.SITEMAP_FILE_LOCATION_BRAND)
 					+ File.separator + "brandOriginal.txt");
 			for (final String relUrl : brandLists)
 			{
-				final List<CustomPageData> mainSiteMapUrlListInitial = new ArrayList<CustomPageData>();
-				LOG.debug("brandurl" + relUrl);
 				//final String relUrl = StringEscapeUtils.escapeXml(getCategoryModelUrlResolver().resolve(categoryModel));
 				final CustomPageData data = new CustomPageData();
 				data.setUrl(relUrl);
@@ -353,12 +349,6 @@ public class MplBrandPageSiteMapGenerator extends AbstractSiteMapGenerator<Custo
 					data.setPriority(siteMapPage.getPriority().toString());
 				}
 				mainSiteMapUrlList.add(data);
-				mainSiteMapUrlListInitial.addAll(mainSiteMapUrlList);
-				mainSiteMapUrlListFinal.addAll(mainSiteMapUrlListInitial);
-				for (final CustomPageData cpd : mainSiteMapUrlListFinal)
-				{
-					LOG.debug("+++IN LOOP+++" + cpd.getUrl());
-				}
 				//}
 			}
 
@@ -369,7 +359,7 @@ public class MplBrandPageSiteMapGenerator extends AbstractSiteMapGenerator<Custo
 		{
 			LOG.error("Error while writing" + ex);
 		}
-		return mainSiteMapUrlListFinal;
+		return mainSiteMapUrlList;
 	}
 
 	/**

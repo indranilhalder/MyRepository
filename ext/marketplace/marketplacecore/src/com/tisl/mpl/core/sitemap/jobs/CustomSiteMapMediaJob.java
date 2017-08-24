@@ -177,6 +177,8 @@ public class CustomSiteMapMediaJob extends SiteMapMediaJob
 					}
 
 					LOG.debug("**START**BRAND***");
+
+					final List modelsFinal = new ArrayList();
 					if (CollectionUtils.isNotEmpty(L1Category))
 					{
 						LOG.debug("100...");
@@ -196,38 +198,39 @@ public class CustomSiteMapMediaJob extends SiteMapMediaJob
 										LOG.debug("1*******");
 										final List models = getMplbrandPageSiteMapGenerator().getBrandData(contentSite, category,
 												categoryl2, brandLists);
+										modelsFinal.add(models);
 
 										LOG.debug("2*******");
-										final String categoryName = getSiteMapNamefromCategories(category, categoryl2);
+										//final String categoryName = getSiteMapNamefromCategories(category, categoryl2);
 
-										if (CollectionUtils.isNotEmpty(models))
-										{
-											//Logic for splitting files based on model size
-											final Integer MAX_SITEMAP_LIMIT = cronJob.getSiteMapUrlLimitPerFile();
-											if (models.size() > MAX_SITEMAP_LIMIT.intValue())
-											{
-												final List<List> modelsList = splitUpTheListIfExceededLimit(models, MAX_SITEMAP_LIMIT);
-												for (int modelIndex = 0; modelIndex < modelsList.size(); modelIndex++)
-												{
-													LOG.debug("3*******");
-													generateSiteMapFiles(siteMapFiles, contentSite, getMplbrandPageSiteMapGenerator(),
-															siteMapConfig, modelsList.get(modelIndex), SiteMapPageEnum.CATEGORY,
-															Integer.valueOf(modelIndex), categoryName);
-												}
-											}
-											else
-											{
-												LOG.debug("4*******");
-												generateSiteMapFiles(siteMapFiles, contentSite, getMplbrandPageSiteMapGenerator(),
-														siteMapConfig, models, SiteMapPageEnum.CATEGORY, null, categoryName);
-											}
-
-
-										}
-										else
-										{
-											LOG.debug("models are empty");
-										}
+										//										if (CollectionUtils.isNotEmpty(models))
+										//										{
+										//											//Logic for splitting files based on model size
+										//											final Integer MAX_SITEMAP_LIMIT = cronJob.getSiteMapUrlLimitPerFile();
+										//											if (models.size() > MAX_SITEMAP_LIMIT.intValue())
+										//											{
+										//												final List<List> modelsList = splitUpTheListIfExceededLimit(models, MAX_SITEMAP_LIMIT);
+										//												for (int modelIndex = 0; modelIndex < modelsList.size(); modelIndex++)
+										//												{
+										//													LOG.debug("3*******");
+										//													generateSiteMapFiles(siteMapFiles, contentSite, getMplbrandPageSiteMapGenerator(),
+										//															siteMapConfig, modelsList.get(modelIndex), SiteMapPageEnum.CATEGORY,
+										//															Integer.valueOf(modelIndex), categoryName);
+										//												}
+										//											}
+										//											else
+										//											{
+										//												LOG.debug("4*******");
+										//												generateSiteMapFiles(siteMapFiles, contentSite, getMplbrandPageSiteMapGenerator(),
+										//														siteMapConfig, models, SiteMapPageEnum.CATEGORY, null, categoryName);
+										//											}
+										//
+										//
+										//										}
+										//										else
+										//										{
+										//											LOG.debug("models are empty");
+										//										}
 									}
 									else
 									{
@@ -236,6 +239,33 @@ public class CustomSiteMapMediaJob extends SiteMapMediaJob
 
 								}
 							}
+						}
+						if (CollectionUtils.isNotEmpty(modelsFinal))
+						{
+							//Logic for splitting files based on model size
+							final Integer MAX_SITEMAP_LIMIT = cronJob.getSiteMapUrlLimitPerFile();
+							if (modelsFinal.size() > MAX_SITEMAP_LIMIT.intValue())
+							{
+								final List<List> modelsList = splitUpTheListIfExceededLimit(modelsFinal, MAX_SITEMAP_LIMIT);
+								for (int modelIndex = 0; modelIndex < modelsList.size(); modelIndex++)
+								{
+									LOG.debug("3*******");
+									generateSiteMapFiles(siteMapFiles, contentSite, getMplbrandPageSiteMapGenerator(), siteMapConfig,
+											modelsList.get(modelIndex), SiteMapPageEnum.CATEGORY, Integer.valueOf(modelIndex), null);
+								}
+							}
+							else
+							{
+								LOG.debug("4*******");
+								generateSiteMapFiles(siteMapFiles, contentSite, getMplbrandPageSiteMapGenerator(), siteMapConfig,
+										modelsFinal, SiteMapPageEnum.CATEGORY, null, null);
+							}
+
+
+						}
+						else
+						{
+							LOG.debug("models are empty");
 						}
 					}
 
