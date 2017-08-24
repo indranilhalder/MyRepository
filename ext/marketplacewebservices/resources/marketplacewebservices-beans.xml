@@ -3031,17 +3031,30 @@
 		<property name="metaKeywords" type="String" />
 		<property name="metaDescription" type="String" />
 	</bean>
-
+	
+	
+	 <bean class="com.tisl.mpl.wsdto.ShopOnLuxuryElementWsDTO">
+    	<property name="title" type="String" />
+    	<property name="imagePath" type="String" />
+    	<property name="description" type="String" /> 
+    </bean>
+    
+    <bean class="com.tisl.mpl.wsdto.ShopOnLuxuryElementListWsDTO">
+    	<property name="shopOnLuxuryTitle" type="String" />
+    	<property name="shopOnLuxuryElements" type="java.util.List&lt;com.tisl.mpl.wsdto.ShopOnLuxuryElementWsDTO>"/>
+    </bean>
 
 
 
 	<bean class="com.tisl.mpl.wsdto.LuxuryComponentsListWsDTO">
 		<property name="title" type="String" />
+		<property name="pageTitle" type="String" />
 		<property name="sectionid" type="String" />
-		<property name="WeeklySpecialBanner" type="String" />
-		<property name="ShopOnLuxuryElement" type="String" />
-		<property name="ShopOnLuxury" type="String" />
-		<property name="CMSParagraphComponent" type="String" />
+		<property name="metaKeywords" type="String" />
+		<property name="metaDescription" type="String" />
+		<property name="LuxuryWeeklySpecialBanner" type="String" />
+		<property name="LuxuryShopOnLuxury" type="com.tisl.mpl.wsdto.ShopOnLuxuryElementListWsDTO"/>
+		<property name="LuxuryCMSParagraphComponent" type="String" />
 		<property name="LuxShowCaseCollectionComponent" type="String" />
 		<property name="LuxCMSMediaParagraphComponent" type="String" />
 		<property name="LuxShopByCategory" type="String" />

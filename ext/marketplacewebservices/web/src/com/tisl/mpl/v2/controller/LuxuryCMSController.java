@@ -3,6 +3,7 @@
  */
 package com.tisl.mpl.v2.controller;
 
+import de.hybris.platform.cms2.exceptions.CMSItemNotFoundException;
 import de.hybris.platform.commercewebservicescommons.cache.CacheControl;
 import de.hybris.platform.commercewebservicescommons.cache.CacheControlDirective;
 import de.hybris.platform.commercewebservicescommons.mapping.FieldSetBuilder;
@@ -16,8 +17,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.tisl.mpl.facade.cms.MplCmsFacade;
-import com.tisl.mpl.wsdto.MplPageWsDTO;
+import com.tisl.mpl.facade.cms.LuxCmsFacade;
+import com.tisl.mpl.wsdto.LuxuryComponentsListWsDTO;
 
 
 /**
@@ -25,12 +26,12 @@ import com.tisl.mpl.wsdto.MplPageWsDTO;
  *
  */
 @Controller
-@RequestMapping(value = "/{baseSiteId}/cms")
+@RequestMapping(value = "/lux/cms")
 public class LuxuryCMSController extends BaseController
 {
 
-	@Resource(name = "mplCmsFacade")
-	private MplCmsFacade mplCmsFacade;
+	@Resource(name = "luxCmsFacade")
+	private LuxCmsFacade luxCmsFacade;
 
 	@Resource(name = "fieldSetBuilder")
 	private FieldSetBuilder fieldSetBuilder;
@@ -46,8 +47,18 @@ public class LuxuryCMSController extends BaseController
 	@RequestMapping(value = "/homepage1", method = RequestMethod.GET)
 	@CacheControl(directive = CacheControlDirective.PUBLIC, maxAge = 300)
 	@ResponseBody
-	public MplPageWsDTO getHomepage(@RequestParam(defaultValue = DEFAULT) final String fields)
+	public LuxuryComponentsListWsDTO getHomepage(@RequestParam(defaultValue = DEFAULT) final String fields)
 	{
+		try
+		{
+			final LuxuryComponentsListWsDTO luxuryComponentsListWsDTO = luxCmsFacade.getLuxuryHomePage();
+			return luxuryComponentsListWsDTO;
+		}
+		catch (final CMSItemNotFoundException e)
+		{
+			// YTODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		return null;
 	}
 
