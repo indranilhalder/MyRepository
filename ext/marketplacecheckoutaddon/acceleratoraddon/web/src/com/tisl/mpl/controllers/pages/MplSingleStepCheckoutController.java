@@ -471,7 +471,7 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 					modelService.save(cartModel);
 					modelService.refresh(cartModel);
 					final List<AbstractOrderEntryModel> cartEntryList = cartModel.getEntries();
-					resetSlotEntries(cartEntryList);
+					mplCheckoutFacade.resetSlotEntries(cartEntryList);
 					prepareModelForDeliveryMode(model, cartModel);
 				}
 				GenericUtilityMethods.getCartPriceDetails(model, cartModel, null);
@@ -2023,7 +2023,7 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 
 
 				final List<AbstractOrderEntryModel> cartEntryList = cartModel.getEntries();
-				resetSlotEntries(cartEntryList);
+				mplCheckoutFacade.resetSlotEntries(cartEntryList);
 
 				for (final AbstractOrderEntryModel cartEntryModel : cartEntryList)
 				{
@@ -3046,7 +3046,7 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 
 
 				final List<AbstractOrderEntryModel> cartEntryList = cartModel.getEntries();
-				resetSlotEntries(cartEntryList);
+				mplCheckoutFacade.resetSlotEntries(cartEntryList);
 
 
 				for (final AbstractOrderEntryModel cartEntryModel : cartEntryList)
@@ -3212,38 +3212,6 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 		return isScheduleServiceble;
 	}
 
-
-	/**
-	 * used for reseting values inserted for SD
-	 *
-	 * @param cartEntryList
-	 */
-	private void resetSlotEntries(final List<AbstractOrderEntryModel> cartEntryList)
-	{
-		boolean isSaveRequired = false;
-		for (final AbstractOrderEntryModel cartEntryModel : cartEntryList)
-		{
-			if (null != cartEntryModel)
-			{
-				if (null != cartEntryModel.getEdScheduledDate() && StringUtils.isNotEmpty(cartEntryModel.getEdScheduledDate()))
-				{
-					isSaveRequired = true;
-					cartEntryModel.setEdScheduledDate("".trim());
-					cartEntryModel.setTimeSlotFrom("".trim());
-					cartEntryModel.setTimeSlotTo("".trim());
-					if (cartEntryModel.getScheduledDeliveryCharge() != null
-							&& cartEntryModel.getScheduledDeliveryCharge().doubleValue() != 0.0)
-					{
-						cartEntryModel.setScheduledDeliveryCharge(Double.valueOf(0));
-					}
-				}
-			}
-		}
-		if (isSaveRequired)
-		{
-			modelService.saveAll(cartEntryList);
-		}
-	}
 
 	/**
 	 * @Description slot delivery page for responsive
@@ -3586,31 +3554,32 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 			final CartData cartData = getMplCustomAddressFacade().getCheckoutCart();
 			ValidationResults validationResult = null;
 
+			//Below code is not required as this section is suuposed to execute only for payment failure scenario,Where as on payment failure this method is never called.
+			//			final String refNumber = getSessionService().getAttribute(MarketplacecheckoutaddonConstants.REFNUMBER);
+			//
+			//			LOG.debug("refNumber number is ...................." + refNumber);
+			//			//Implementing mRupee Logic with cartGuid TISSQAEE-229
+			//			OrderModel mRupeeorderModel = null;
+			//			String cartGuid = null;
+			//			/* Getting guid from audit table based on the reference no. received from mRupee */
+			//			if (StringUtils.isNotEmpty(refNumber))
+			//			{
+			//				cartGuid = getMplPaymentFacade().getWalletAuditEntries(refNumber);
+			//			}
+			//			LOG.debug("cartGuid number is ...................." + cartGuid);
+			//			if (StringUtils.isNotEmpty(cartGuid))
+			//			{
+			//				mRupeeorderModel = getMplPaymentFacade().getOrderByGuid(cartGuid);
+			//			}
+			//			LOG.debug("mRupeeorderModel is ++++++++" + mRupeeorderModel);
+			//			if (null != mRupeeorderModel && null != mRupeeorderModel.getIsWallet()
+			//					&& !WalletEnum.MRUPEE.equals(mRupeeorderModel.getIsWallet()))
+			//			{
+			//				LOG.debug("mRupeeorderModel.getIsWallet() is ++++++++" + mRupeeorderModel.getIsWallet());
+			//				validationResult = paymentValidator.validateOnEnterOptimized(cartData, redirectAttributes);
+			//			}
 
-			final String refNumber = getSessionService().getAttribute(MarketplacecheckoutaddonConstants.REFNUMBER);
-
-			LOG.debug("refNumber number is ...................." + refNumber);
-			//Implementing mRupee Logic with cartGuid TISSQAEE-229
-			OrderModel mRupeeorderModel = null;
-			String cartGuid = null;
-			/* Getting guid from audit table based on the reference no. received from mRupee */
-			if (StringUtils.isNotEmpty(refNumber))
-			{
-				cartGuid = getMplPaymentFacade().getWalletAuditEntries(refNumber);
-			}
-			LOG.debug("cartGuid number is ...................." + cartGuid);
-			if (StringUtils.isNotEmpty(cartGuid))
-			{
-				mRupeeorderModel = getMplPaymentFacade().getOrderByGuid(cartGuid);
-			}
-			LOG.debug("mRupeeorderModel is ++++++++" + mRupeeorderModel);
-			if (null != mRupeeorderModel && null != mRupeeorderModel.getIsWallet()
-					&& !WalletEnum.MRUPEE.equals(mRupeeorderModel.getIsWallet()))
-			{
-				LOG.debug("mRupeeorderModel.getIsWallet() is ++++++++" + mRupeeorderModel.getIsWallet());
-				validationResult = paymentValidator.validateOnEnterOptimized(cartData, redirectAttributes);
-			}
-
+			validationResult = paymentValidator.validateOnEnterOptimized(cartData, redirectAttributes);
 			if (null != validationResult && ValidationResults.REDIRECT_TO_CART.equals(validationResult))
 			{
 				jsonObj.put("url", MarketplacecheckoutaddonConstants.CART);
@@ -4682,7 +4651,7 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 
 	/*
 	 * @Description adding wishlist popup in cart page
-	 *
+	 * 
 	 * @param String productCode,String wishName, model
 	 */
 
@@ -4740,7 +4709,7 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 
 	/*
 	 * @Description showing wishlist popup in cart page
-	 * 
+	 *
 	 * @param String productCode, model
 	 */
 	@ResponseBody

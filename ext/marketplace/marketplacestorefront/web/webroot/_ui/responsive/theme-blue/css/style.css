@@ -49054,7 +49054,7 @@ body.page-productDetails .breadcrumbs.wrapper {
 	position: relative;
 	margin: -15px 0 0;
 	display: inline-block;
-	width:100%
+	/* width:100% */
 }
 
 .product-detail .Emi p, .pricebreakup-link {
@@ -70848,12 +70848,12 @@ p#cncpickuppincode_tooltip {
     padding: 7px 18px 6px 19px;
     border-radius: 4px;
     line-height: 15px;
-    opacity: 0;
+    display:none;
     z-index: 10023;
     text-align: left;
 }
 #cncpickuppincode_info:hover p#cncpickuppincode_tooltip {
-    opacity: 1;
+    display:block;
     cursor: text !important;
 }
 span#cncpickuppincode_info{
