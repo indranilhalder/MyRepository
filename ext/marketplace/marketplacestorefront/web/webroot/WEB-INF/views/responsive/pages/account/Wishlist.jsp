@@ -357,6 +357,19 @@
 									</form> <!-- END OF STATIC COMPONENT FOR ADD COMMENT-->
 
 									<div class="actions">
+									<!-- Added for JWLSPCUAT-1456 -->
+									<c:if test="${ product.rootCategory =='FineJewellery' || product.rootCategory =='FashionJewellery'}">
+										 <spring:eval expression="T(de.hybris.platform.util.Config).getParameter('mpl.jewellery.category')" var="lengthVariant"/>
+								     	<c:set var = "categoryListArray" value = "${fn:split(lengthVariant, ',')}" />
+										<c:forEach items="${product.categories}" var="categories">
+								   			<c:forEach items = "${categoryListArray}" var="lengthVariantArray">
+								   				<c:if test="${categories.code eq lengthVariantArray}">
+								   				 	<c:set var="lengthSize" value="true"/>
+								   				</c:if> 
+								   			</c:forEach>
+								   		</c:forEach>
+									</c:if>
+									<!-- Added for JWLSPCUAT-1456 -->
 										<c:url value="/cart/add" var="addToCartUrl" />
 										<ycommerce:testId
 											code="searchPage_addToCart_button_${product.code}">
@@ -413,7 +426,7 @@
 															</button>
 														</span>
 													</c:if>
-													<c:if test="${(empty wpproduct.wishlistProductSize && wpproduct.productCategory eq 'Electronics')||(empty wpproduct.wishlistProductSize && wpproduct.productCategory eq 'Watches')||(empty wpproduct.wishlistProductSize && wpproduct.productCategory eq 'TravelAndLuggage') }">
+													<c:if test="${(empty wpproduct.wishlistProductSize && wpproduct.productCategory eq 'Electronics')||(empty wpproduct.wishlistProductSize && wpproduct.productCategory eq 'Watches')||(empty wpproduct.wishlistProductSize && wpproduct.productCategory eq 'TravelAndLuggage') || (empty wpproduct.wishlistProductSize && wpproduct.productCategory eq 'FineJewellery' && product.size eq 'NO SIZE') || (empty wpproduct.wishlistProductSize && wpproduct.productCategory eq 'FashionJewellery' && product.size eq 'NO SIZE')}">
 														<span>
 															<button id="addToCartButtonwl" type="${buttonType}"
 																class="blue button js-add-to-cart_wl">
@@ -422,10 +435,10 @@
 														</span>
 														</c:if>
 														 <!-- Add to cart from wishlist added for Jewellery -->
-														<c:if test="${(empty wpproduct.wishlistProductSize && wpproduct.productCategory eq 'Clothing')||(empty wpproduct.wishlistProductSize && wpproduct.productCategory eq 'Footwear')||(showSizeGuideForFA eq 'true' && wpproduct.productCategory eq 'Accessories')|| (empty wpproduct.wishlistProductSize && wpproduct.productCategory eq 'FineJewellery') || (empty wpproduct.wishlistProductSize && wpproduct.productCategory eq 'FashionJewellery')}">
+														<c:if test="${(empty wpproduct.wishlistProductSize && wpproduct.productCategory eq 'Clothing')||(empty wpproduct.wishlistProductSize && wpproduct.productCategory eq 'Footwear')||(showSizeGuideForFA eq 'true' && wpproduct.productCategory eq 'Accessories')|| (empty wpproduct.wishlistProductSize && wpproduct.productCategory eq 'FineJewellery' && product.size ne 'NO SIZE') || (empty wpproduct.wishlistProductSize && wpproduct.productCategory eq 'FashionJewellery' && product.size ne 'NO SIZE')}">
 														<span id="addToCartButtonId" style="display: none">
 															<button type="button" id="addToCartButtonwl" 
-																class="blue button sizeNotSpecified_wl" data-toggle="modal"
+																class="blue button sizeNotSpecified_wl" data-toggle="modal" data-id="${lengthSize}"
 															data-target="#redirectsToPDP">
 																<spring:theme code="basket.add.to.basket" />
 															</button>
@@ -674,8 +687,10 @@
 					<b><spring:theme code="text.wishlist.pdp" /></b>
 				</h2>
 				<div class="wishlist-redirects-to-pdp-block">
-				<label class="wishlist-redirects-to-pdp"><spring:theme
+						<label class="wishlist-redirects-to-pdp" id="textForSize" style="display: none"><spring:theme
 							code="wishlist.redirectsToPdp.message" /></label>
+						<label class="wishlist-redirects-to-pdp" id="textForLength" style="display: none"><spring:theme
+							code="wishlist.redirectsToPdp.messagelength" /></label>
 				</div>
 				<button class="redirectsToPdpPage" type="submit"><spring:theme code="text.wishlist.ok" /></button>
 				</div>
@@ -973,6 +988,19 @@
 		$('#newWishlistName').blur(function() {
 			validateEnteredName("newWishlistName","errorCreate");
 		});
+	});
+	
+	$(document).on("click", "#addToCartButtonwl", function () {
+	    var lengthOrSize = $(this).data('id');
+	    if(lengthOrSize != null && lengthOrSize == true){
+	    	$("#textForSize").hide();
+	    	$("#textForLength").show();
+	    }
+	    else{
+	    	$("#textForSize").show();
+	    	$("#textForLength").hide();
+	    }
+	     
 	});
 	
 	</script>
