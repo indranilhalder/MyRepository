@@ -33799,6 +33799,8 @@ body.page-cartPage .product-block.wishlist .item .desktop .treat-urself-button{
 }
 body.page-cartPage .product-block.wishlist .item .desktop .treat-urself-button#addToCartButton{
     height: 32px !important;
+    z-index: 2; /*PRDI-753 fix*/
+    position: relative; /*PRDI-753 fix*/
 }
 body.page-cartPage .cart.wrapper .product-block.wishlist{
 	margin-top:0;
