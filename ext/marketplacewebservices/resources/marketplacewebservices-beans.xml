@@ -3049,6 +3049,15 @@
 		<property name="LuxuryPincodeServiceComponent" type="String" />
 		<property name="LuxuryLookBookComponent" type="String" />
 		<property name="LuxuryMedia" type="String" />
+		<property name="Luxurybannerlist" type="java.util.List&lt;com.tisl.mpl.wsdto.LuxHeroBannerWsDTO>"/>
+    	<property name="Luxurysubsections" type="java.util.List&lt;com.tisl.mpl.wsdto.LuxSignatureWsDTO>"/>
+    	<property name="Luxurycategorylist" type="java.util.List&lt;com.tisl.mpl.wsdto.LuxShopYourFavListWsDTO>"/>
+    	<property name="Luxuryvideocomponent" type="java.util.List&lt;com.tisl.mpl.wsdto.LuxVideocomponentWsDTO>"/>
+    	<property name="Luxuryengagementcomponent" type="java.util.List&lt;com.tisl.mpl.wsdto.LuxEngagementcomponentWsDTO>"/>
+    	<property name="Luxuryfeaturedproducts" type="java.util.List&lt;com.tisl.mpl.wsdto.LuxBrandProductsListWsDTO>"/>
+    	<property name="Luxuryshopbycomponents" type="java.util.List&lt;com.tisl.mpl.wsdto.LuxShopByListWsDTO>"/>
+    	<property name="LuxurysocialfeedHeadercomponent" type="com.tisl.mpl.wsdto.TextComponentWsDTO"/>
+    	<property name="Luxurysocialfeedcomponent" type="com.tisl.mpl.wsdto.LuxSocialFeedComponentWsDTO"/>
 
 	</bean>
 
