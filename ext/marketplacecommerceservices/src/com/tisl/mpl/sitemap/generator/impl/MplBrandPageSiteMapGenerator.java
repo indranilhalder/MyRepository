@@ -339,7 +339,7 @@ public class MplBrandPageSiteMapGenerator extends AbstractSiteMapGenerator<Custo
 				final CustomPageData data = new CustomPageData();
 				data.setUrl(relUrl);
 				LOG.debug("brandurl in custompagedata" + data.getUrl());
-				fw.write(data.getUrl());
+				fw.append(data.getUrl());
 				if (null != siteMapPage.getFrequency())
 				{
 					data.setChangeFrequency(siteMapPage.getFrequency().getCode());

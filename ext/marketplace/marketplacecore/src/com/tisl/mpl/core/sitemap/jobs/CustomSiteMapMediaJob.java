@@ -199,9 +199,11 @@ public class CustomSiteMapMediaJob extends SiteMapMediaJob
 										LOG.debug("1*******");
 										final List models = getMplbrandPageSiteMapGenerator().getBrandData(contentSite, category,
 												categoryl2, brandLists);
+										LOG.debug("Model Size--->" + models.size());
+										LOG.debug("Adding Models*******");
 										modelsFinal.add(models);
 
-										LOG.debug("2*******");
+										LOG.debug("modelsFinal Size***" + modelsFinal.size());
 										//final String categoryName = getSiteMapNamefromCategories(category, categoryl2);
 
 										//										if (CollectionUtils.isNotEmpty(models))
@@ -241,6 +243,8 @@ public class CustomSiteMapMediaJob extends SiteMapMediaJob
 								}
 							}
 						}
+
+						LOG.debug("Ultimate modelsFinal size::" + modelsFinal.size());
 						if (CollectionUtils.isNotEmpty(modelsFinal))
 						{
 							LOG.debug("UU*******");
@@ -249,26 +253,27 @@ public class CustomSiteMapMediaJob extends SiteMapMediaJob
 							{
 								LOG.debug("VV*******");
 								final List models = (List) it.next();
-								//Logic for splitting files based on model size
-								final Integer MAX_SITEMAP_LIMIT = cronJob.getSiteMapUrlLimitPerFile();
-								LOG.debug("TT*******");
 
-								if (models.size() > MAX_SITEMAP_LIMIT.intValue())
-								{
-									final List<List> modelsList = splitUpTheListIfExceededLimit(models, MAX_SITEMAP_LIMIT);
-									for (int modelIndex = 0; modelIndex < modelsList.size(); modelIndex++)
-									{
-										LOG.debug("3*******");
-										generateSiteMapFiles(siteMapFiles, contentSite, getMplbrandPageSiteMapGenerator(), siteMapConfig,
-												modelsList.get(modelIndex), SiteMapPageEnum.CATEGORY, Integer.valueOf(modelIndex), null);
-									}
-								}
-								else
-								{
-									LOG.debug("4*******");
-									generateSiteMapFiles(siteMapFiles, contentSite, getMplbrandPageSiteMapGenerator(), siteMapConfig,
-											models, SiteMapPageEnum.CATEGORY, null, null);
-								}
+								//Logic for splitting files based on model size
+								//	final Integer MAX_SITEMAP_LIMIT = cronJob.getSiteMapUrlLimitPerFile();
+								LOG.debug("TT*******" + models.size());
+
+								//								if (models.size() > MAX_SITEMAP_LIMIT.intValue())
+								//								{
+								//									final List<List> modelsList = splitUpTheListIfExceededLimit(models, MAX_SITEMAP_LIMIT);
+								//									for (int modelIndex = 0; modelIndex < modelsList.size(); modelIndex++)
+								//									{
+								//										LOG.debug("3*******");
+								//										generateSiteMapFiles(siteMapFiles, contentSite, getMplbrandPageSiteMapGenerator(), siteMapConfig,
+								//												modelsList.get(modelIndex), SiteMapPageEnum.CATEGORY, Integer.valueOf(modelIndex), null);
+								//									}
+								//								}
+								//								else
+								//								{
+								LOG.debug("4*******");
+								generateSiteMapFiles(siteMapFiles, contentSite, getMplbrandPageSiteMapGenerator(), siteMapConfig, models,
+										SiteMapPageEnum.CATEGORY, null, null);
+								//	}
 							}
 
 						}
