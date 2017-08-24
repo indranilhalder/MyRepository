@@ -254,6 +254,7 @@ public class CustomSiteMapMediaJob extends SiteMapMediaJob
 								LOG.debug("AA*******" + mod.size());
 								generateSiteMapFiles(siteMapFiles, contentSite, getMplbrandPageSiteMapGenerator(), siteMapConfig, mod,
 										SiteMapPageEnum.CATEGORY, Integer.valueOf(modelIndex), null);
+								LOG.debug("After Generate File");
 							}
 							//							final Iterator it = modelsFinal.iterator();
 							//							while (it.hasNext())
@@ -430,27 +431,31 @@ public class CustomSiteMapMediaJob extends SiteMapMediaJob
 			final SiteMapGenerator generator, final SiteMapConfigModel siteMapConfig, final List<List> models,
 			final SiteMapPageEnum pageType, final Integer index, final String fileIndex)
 	{
+
+		LOG.debug("**Inside generateSiteMapFiles**");
+		LOG.debug("**SiteMapGenerator**" + generator);
+		LOG.debug("**pageType**" + pageType);
 		for (final SiteMapLanguageCurrencyModel siteMapLanguageCurrency : siteMapConfig.getSiteMapLanguageCurrencies())
 		{
 			try
 			{
 				if (pageType.equals(SiteMapPageEnum.PRODUCT))
 				{
-					System.out.println("**Inside pageType Product**");
+					LOG.debug("**Inside pageType Product**");
 
 					siteMapFiles.add(generator.render(contentSite, siteMapLanguageCurrency.getCurrency(),
 							siteMapLanguageCurrency.getLanguage(), siteMapConfig.getSiteMapTemplate(), models, fileIndex, index));
 				}
 				else if (pageType.equals(SiteMapPageEnum.CATEGORY))
 				{
-					System.out.println("**Inside pageType Category**");
+					LOG.debug("**Inside pageType Category**");
 					siteMapFiles.add(generator.render(contentSite, siteMapLanguageCurrency.getCurrency(),
 							siteMapLanguageCurrency.getLanguage(), siteMapConfig.getSiteMapTemplate(), models, fileIndex, index));
 				}
 
 				else
 				{
-					System.out.println("**Inside pageType else**");
+					LOG.debug("**Inside pageType else**");
 					siteMapFiles.add(generator.render(contentSite, siteMapLanguageCurrency.getCurrency(),
 							siteMapLanguageCurrency.getLanguage(), siteMapConfig.getSiteMapTemplate(), models, pageType.toString(),
 							index));
@@ -463,7 +468,6 @@ public class CustomSiteMapMediaJob extends SiteMapMediaJob
 			}
 		}
 	}
-
 
 
 
