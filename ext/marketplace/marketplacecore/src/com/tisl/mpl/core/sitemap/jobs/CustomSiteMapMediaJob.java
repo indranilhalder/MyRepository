@@ -33,7 +33,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
@@ -248,33 +247,43 @@ public class CustomSiteMapMediaJob extends SiteMapMediaJob
 						if (CollectionUtils.isNotEmpty(modelsFinal))
 						{
 							LOG.debug("UU*******");
-							final Iterator it = modelsFinal.iterator();
-							while (it.hasNext())
+							for (int modelIndex = 0; modelIndex < modelsFinal.size(); modelIndex++)
 							{
 								LOG.debug("VV*******");
-								final List models = (List) it.next();
-
-								//Logic for splitting files based on model size
-								//	final Integer MAX_SITEMAP_LIMIT = cronJob.getSiteMapUrlLimitPerFile();
-								LOG.debug("TT*******" + models.size());
-
-								//								if (models.size() > MAX_SITEMAP_LIMIT.intValue())
-								//								{
-								//									final List<List> modelsList = splitUpTheListIfExceededLimit(models, MAX_SITEMAP_LIMIT);
-								//									for (int modelIndex = 0; modelIndex < modelsList.size(); modelIndex++)
-								//									{
-								//										LOG.debug("3*******");
-								//										generateSiteMapFiles(siteMapFiles, contentSite, getMplbrandPageSiteMapGenerator(), siteMapConfig,
-								//												modelsList.get(modelIndex), SiteMapPageEnum.CATEGORY, Integer.valueOf(modelIndex), null);
-								//									}
-								//								}
-								//								else
-								//								{
-								LOG.debug("4*******");
-								generateSiteMapFiles(siteMapFiles, contentSite, getMplbrandPageSiteMapGenerator(), siteMapConfig, models,
-										SiteMapPageEnum.CATEGORY, null, null);
-								//	}
+								final List<List> mod = (List<List>) modelsFinal.get(modelIndex);
+								LOG.debug("AA*******" + mod.size());
+								generateSiteMapFiles(siteMapFiles, contentSite, getMplbrandPageSiteMapGenerator(), siteMapConfig, mod,
+										SiteMapPageEnum.CATEGORY, Integer.valueOf(modelIndex), null);
 							}
+							//							final Iterator it = modelsFinal.iterator();
+							//							while (it.hasNext())
+							//							{
+
+							//	final List models = (List) it.next();
+
+							//Logic for splitting files based on model size
+							//	final Integer MAX_SITEMAP_LIMIT = cronJob.getSiteMapUrlLimitPerFile();
+							//	LOG.debug("TT*******" + models.size());
+
+							//								if (models.size() > MAX_SITEMAP_LIMIT.intValue())
+							//								{
+							//									final List<List> modelsList = splitUpTheListIfExceededLimit(models, MAX_SITEMAP_LIMIT);
+							//									for (int modelIndex = 0; modelIndex < modelsList.size(); modelIndex++)
+							//									{
+							//										LOG.debug("3*******");
+							//										generateSiteMapFiles(siteMapFiles, contentSite, getMplbrandPageSiteMapGenerator(), siteMapConfig,
+							//												modelsList.get(modelIndex), SiteMapPageEnum.CATEGORY, Integer.valueOf(modelIndex), null);
+							//									}
+							//								}
+							//								else
+							//								{
+
+							//
+							//								LOG.debug("4*******");
+							//								generateSiteMapFiles(siteMapFiles, contentSite, getMplbrandPageSiteMapGenerator(), siteMapConfig, models,
+							//										SiteMapPageEnum.CATEGORY, null, null);
+							//								//	}
+							//							}
 
 						}
 						else
