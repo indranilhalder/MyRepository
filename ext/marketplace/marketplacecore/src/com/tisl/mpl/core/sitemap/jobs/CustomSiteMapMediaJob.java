@@ -47,6 +47,7 @@ import org.springframework.beans.factory.annotation.Required;
 
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.core.enums.SiteMapUpdateModeEnum;
+import com.tisl.mpl.data.CustomPageData;
 import com.tisl.mpl.marketplacecommerceservices.daos.MplCategoryDao;
 import com.tisl.mpl.marketplacecommerceservices.service.CustomMediaService;
 import com.tisl.mpl.sitemap.generator.impl.MplBrandPageSiteMapGenerator;
@@ -178,7 +179,7 @@ public class CustomSiteMapMediaJob extends SiteMapMediaJob
 
 					LOG.debug("**START**BRAND***");
 
-					final List modelsFinal = new ArrayList();
+					final List<CustomPageData> modelsFinal = new ArrayList<CustomPageData>();
 					if (CollectionUtils.isNotEmpty(L1Category))
 					{
 						LOG.debug("100...");
@@ -198,7 +199,7 @@ public class CustomSiteMapMediaJob extends SiteMapMediaJob
 										LOG.debug("1*******");
 										final List models = getMplbrandPageSiteMapGenerator().getBrandData(contentSite, category,
 												categoryl2, brandLists);
-										modelsFinal.add(models);
+										modelsFinal.addAll(models);
 
 										LOG.debug("2*******");
 										//final String categoryName = getSiteMapNamefromCategories(category, categoryl2);
