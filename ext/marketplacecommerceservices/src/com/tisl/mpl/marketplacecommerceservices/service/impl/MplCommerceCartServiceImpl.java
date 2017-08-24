@@ -301,14 +301,16 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 	@Resource(name = "baseStoreService")
 	private BaseStoreService baseStoreService;
 
+	@Resource(name = "exchangeGuideService")
+	private ExchangeGuideService exchangeService;
+
 	@Autowired
 	private MplCommerceCartCalculationStrategy calculationStrategy;
 
 
 	private Converter<OrderModel, OrderData> orderConverter;
 
-	@Autowired
-	private ExchangeGuideService exchangeService;
+
 
 
 
@@ -466,6 +468,7 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 					 * .getSelectedUssid());
 					 */
 					SellerInformationModel sellerInfoModel = null;
+					Collection<RichAttributeModel> richAttributeModel = null;
 					if ((null != entry.getProduct())
 							&& (entry.getProduct().getRootCategory()
 									.equalsIgnoreCase(MarketplacecommerceservicesConstants.FINEJEWELLERY)))
@@ -487,20 +490,22 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 						sellerInfoModel = getMplSellerInformationService().getSellerDetail(entry.getSelectedUssid());
 					}
 
-					if (sellerInfoModel != null
-							&& CollectionUtils.isNotEmpty(sellerInfoModel.getRichAttribute())
-							&& null != ((List<RichAttributeModel>) sellerInfoModel.getRichAttribute()).get(0)
-							&& null != ((List<RichAttributeModel>) sellerInfoModel.getRichAttribute()).get(0).getDeliveryFulfillModes()
-							&& null != ((List<RichAttributeModel>) sellerInfoModel.getRichAttribute()).get(0).getDeliveryFulfillModes()
-									.getCode())
+					if (sellerInfoModel != null)
 					{
-						String fulfillmentType = ((List<RichAttributeModel>) sellerInfoModel.getRichAttribute()).get(0)
-								.getDeliveryFulfillModes().getCode();
+						richAttributeModel = sellerInfoModel.getRichAttribute();
+					}
+					if (CollectionUtils.isNotEmpty(richAttributeModel)
+							&& null != ((List<RichAttributeModel>) richAttributeModel).get(0)
+							&& null != ((List<RichAttributeModel>) richAttributeModel).get(0).getDeliveryFulfillModes()
+							&& null != ((List<RichAttributeModel>) richAttributeModel).get(0).getDeliveryFulfillModes().getCode())
+					{
+						String fulfillmentType = ((List<RichAttributeModel>) richAttributeModel).get(0).getDeliveryFulfillModes()
+								.getCode();
 						//BUG-ID TISRLEE-1561 03-01-2017
 						if (fulfillmentType.equalsIgnoreCase(MarketplacecommerceservicesConstants.FULFILMENT_TYPE_BOTH))
 						{
-							fulfillmentType = ((List<RichAttributeModel>) sellerInfoModel.getRichAttribute()).get(0)
-									.getDeliveryFulfillModeByP1().getCode();
+							fulfillmentType = ((List<RichAttributeModel>) richAttributeModel).get(0).getDeliveryFulfillModeByP1()
+									.getCode();
 							fullfillmentDataMap.put(entry.getEntryNumber().toString(), fulfillmentType.toLowerCase());
 						}
 						else
@@ -1004,6 +1009,7 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 	 * 
 	 * 
 	 * 
+
 	 * @param ussId
 	 * 
 	 * 
@@ -3047,6 +3053,7 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 	 * 
 	 * 
 	 * 
+
 	 * @throws EtailNonBusinessExceptions
 	 */
 	public List<CartSoftReservationData> populateDataForSoftReservation(final CartData cartData) throws EtailNonBusinessExceptions
@@ -3133,6 +3140,7 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 	 * 
 	 * 
 	 * 
+
 	 * @return GetWishListWsDTO
 	 * 
 	 * 
@@ -3462,16 +3470,9 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 	 * 
 	 * 
 	 * 
+	 *
+	 *
 	 * @param getWishListProductWsObj
-	 * 
-	 * 
-	 * 
-	 * 
-	 * @return GetWishListProductWsDTO
-	 * 
-	 * 
-	 * 
-	 * 
 	 * @throws EtailNonBusinessExceptions
 	 */
 
@@ -4323,8 +4324,8 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 
 	/*
 	 * @description:Populate data to CartSoftReservationData
-	 * 
-	 * 
+	 *
+	 *
 	 * @return:List<CartSoftReservationData>
 	 * 
 	 * 
@@ -6317,7 +6318,8 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 		{
 			for (final AbstractOrderEntryModel cartEntry : cart.getEntries())
 			{
-				if (null != cartEntry.getProduct() && cartEntry.getProduct().getCode().equalsIgnoreCase(item.getListingID()))
+				final ProductModel productModel = cartEntry.getProduct();
+				if (null != productModel && productModel.getCode().equalsIgnoreCase(item.getListingID()))
 				{
 					for (final InventoryReservResponse responseItem : response.getItem())
 					{
@@ -6328,7 +6330,7 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 								if (requestItem.getUSSID().equalsIgnoreCase(responseItem.getUSSID()))
 								{
 
-									replaceItemForJewellery(cart, responseItem.getUSSID(), cartEntry);
+									replaceItemForJewellery(cart, responseItem.getUSSID(), cartEntry, productModel);
 									sessionService.setAttribute("replacedUssid", Boolean.TRUE);
 								}
 
@@ -6358,7 +6360,8 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 	 * @param ussid
 	 * @param cartEntry
 	 */
-	private void replaceItemForJewellery(final AbstractOrderModel cart, final String ussid, final AbstractOrderEntryModel cartEntry)
+	private void replaceItemForJewellery(final AbstractOrderModel cart, final String ussid,
+			final AbstractOrderEntryModel cartEntry, final ProductModel productModel)
 	{
 		// YTODO Auto-generated method stub
 
@@ -6377,9 +6380,9 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 				addParameter.setCreateNewEntry(true);
 				addParameter.setEnableHooks(true);
 				addParameter.setCart((CartModel) cart);
-				addParameter.setProduct(cartEntry.getProduct());
+				addParameter.setProduct(productModel);
 				addParameter.setQuantity(1);
-				addParameter.setUnit(cartEntry.getProduct().getUnit());
+				addParameter.setUnit(productModel.getUnit());
 				addParameter.setUssid(ussid);
 
 				//mplCommerceCartService.addToCartWithUSSID(addParameter);
@@ -6815,7 +6818,7 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * com.tisl.mpl.marketplacecommerceservices.service.MplCommerceCartService#addItemToCartWithExchange(java.lang.String
 	 * , de.hybris.platform.core.model.order.CartModel, de.hybris.platform.core.model.product.ProductModel, long,

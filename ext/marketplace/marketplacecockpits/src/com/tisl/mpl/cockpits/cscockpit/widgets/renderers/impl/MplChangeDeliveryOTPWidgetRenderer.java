@@ -15,6 +15,7 @@ import java.util.function.Consumer;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Required;
 import org.zkoss.zhtml.Messagebox;
 import org.zkoss.zk.ui.api.HtmlBasedComponent;
@@ -111,8 +112,10 @@ public class MplChangeDeliveryOTPWidgetRenderer
 	@Autowired
 	private CustomAddressReversePopulator addressReversePopulator;
 	private WidgetDetailRenderer<TypedObject, Widget> detailRenderer;
+	
 	@Autowired
-	private MarketPlaceOrderController controller;
+	@Qualifier("marketPlaceCsAssociatedOrderController")
+	private MarketPlaceOrderController controller; 
 
 	protected WidgetDetailRenderer<TypedObject, Widget> getDetailRenderer() {
 		return detailRenderer;

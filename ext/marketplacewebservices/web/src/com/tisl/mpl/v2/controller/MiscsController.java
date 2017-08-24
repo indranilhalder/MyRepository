@@ -1819,8 +1819,8 @@ public class MiscsController extends BaseController
 					for (final MplNewsLetterSubscriptionModel mplNewsLetterSubscriptionModel : newsLetterSubscriptionList)
 					{
 						if ((mplNewsLetterSubscriptionModel.getEmailId().equalsIgnoreCase(emailId))
-								&& (!(mplNewsLetterSubscriptionModel.getIsLuxury().booleanValue())
-										|| mplNewsLetterSubscriptionModel.getIsLuxury() == null))
+								&& (!(mplNewsLetterSubscriptionModel.getIsLuxury().booleanValue()) || mplNewsLetterSubscriptionModel
+										.getIsLuxury() == null))
 						{
 							mplNewsLetterSubscriptionModel.setIsLuxury(Boolean.TRUE);
 							modelService.save(mplNewsLetterSubscriptionModel);
@@ -1895,15 +1895,15 @@ public class MiscsController extends BaseController
 		}
 		catch (final RequestParameterException e)
 		{
-			LOG.error("the exception is **** " + e.getMessage());
+			LOG.error("the exception is **** " + e);
 		}
 		catch (final JAXBException e)
 		{
-			LOG.error("the exception is **** " + e.getMessage());
+			LOG.error("the exception is **** " + e);
 		}
 		catch (final Exception e)
 		{
-			LOG.error("the exception is **** " + e.getMessage());
+			LOG.error("the exception is **** " + e);
 		}
 	}
 	//TPR-4840 starts
@@ -2023,6 +2023,7 @@ public class MiscsController extends BaseController
 	}
 
 	//TPR-5225 ends
+
 	/**
 	 * Method: One touch Cancel and return--TPR-1345
 	 *

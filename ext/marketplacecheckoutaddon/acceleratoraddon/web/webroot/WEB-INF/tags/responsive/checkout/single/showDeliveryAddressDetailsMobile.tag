@@ -197,7 +197,7 @@
 			}
 		})
 		</script>
-		<div class="new-address" style="display: block;">
+		<div class="new-address" id="addNewAddressForResponsive" style="display: block;">
 			<%-- <p id="" onclick="ACC.singlePageCheckout.getMobileAddAddress();">
 				<span class="addsign pincode-button"> </span> 
 				<a
