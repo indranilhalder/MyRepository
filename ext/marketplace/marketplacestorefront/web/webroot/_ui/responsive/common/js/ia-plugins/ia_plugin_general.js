@@ -382,6 +382,9 @@ function callRecApi(params, requestURL) {
           requestURL = "normal";
         }
       }
+      if("category_id" in params){
+    	  updatePage(response, requestURL);
+      }else{
       $(window).on("scroll",function(){
     	  if($('.lazy-reached-ia').length){
     		  var hT = $('.lazy-reached-ia').offset().top,
@@ -397,7 +400,7 @@ function callRecApi(params, requestURL) {
     	  }
   		
       });
-      
+      }	         
     }, error: function(jqXHR, textStatus, errorThrown) {
       eT = errorThrown;
 		  tS = textStatus; 
