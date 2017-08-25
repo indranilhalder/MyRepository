@@ -7,7 +7,7 @@ import de.hybris.platform.cms2.exceptions.CMSItemNotFoundException;
 import de.hybris.platform.cms2.model.contents.components.AbstractCMSComponentModel;
 import de.hybris.platform.cms2.model.contents.contentslot.ContentSlotModel;
 import de.hybris.platform.cms2.model.pages.ContentPageModel;
-import de.hybris.platform.cms2.model.relations.ContentSlotForPageModel;
+import de.hybris.platform.cms2.model.relations.ContentSlotForTemplateModel;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -57,28 +57,27 @@ public class LuxCmsFacadeImpl implements LuxCmsFacade
 	public LuxuryComponentsListWsDTO getLuxuryHomePage() throws CMSItemNotFoundException
 	{
 
+		LuxuryComponentsListWsDTO luxuryComponentsForASlot = new LuxuryComponentsListWsDTO();
 		final ContentPageModel contentPage = getMplCMSPageService().getPageByLabelOrId("homepage");
-		final LuxuryComponentsListWsDTO luxuryHomePageDto = new LuxuryComponentsListWsDTO();
 		if (contentPage != null)
 		{
 
-			final ArrayList<LuxuryComponentsListWsDTO> listOfComp = new ArrayList<LuxuryComponentsListWsDTO>();
-			for (final ContentSlotForPageModel contentSlotForPage : contentPage.getContentSlots())
+			for (final ContentSlotForTemplateModel contentSlotForPage : contentPage.getMasterTemplate().getContentSlots())
 			{
 				final ContentSlotModel contentSlot = contentSlotForPage.getContentSlot();
-				final List<LuxuryComponentsListWsDTO> luxuryComponentsForASlot = getLuxuryComponentDtoForSlot(contentSlot);
-				listOfComp.addAll(luxuryComponentsForASlot);
+				luxuryComponentsForASlot = getLuxuryComponentDtoForSlot(contentSlot);
+
 			}
 
+
 		}
-		return luxuryHomePageDto;
+		return luxuryComponentsForASlot;
 	}
 
-	public List<LuxuryComponentsListWsDTO> getLuxuryComponentDtoForSlot(final ContentSlotModel contentSlot)
+	public LuxuryComponentsListWsDTO getLuxuryComponentDtoForSlot(final ContentSlotModel contentSlot)
 			throws CMSItemNotFoundException
 	{
 
-		final List<LuxuryComponentsListWsDTO> componentListForASlot = new ArrayList<LuxuryComponentsListWsDTO>();
 		LuxuryComponentsListWsDTO luxuryComponent = new LuxuryComponentsListWsDTO();
 		if (null != contentSlot)
 		{
@@ -90,25 +89,24 @@ public class LuxCmsFacadeImpl implements LuxCmsFacade
 				{
 					final ShopOnLuxuryModel luxuryShopOnLuxuryComponent = (ShopOnLuxuryModel) abstractCMSComponentModel;
 					luxuryComponent = getShopOnLuxuryWsDTO(luxuryShopOnLuxuryComponent);
-					componentListForASlot.add(luxuryComponent);
 				}
 
 			}
 
 		}
 		//}
-		return componentListForASlot;
+		return luxuryComponent;
 	}
 
 	private LuxuryComponentsListWsDTO getShopOnLuxuryWsDTO(final ShopOnLuxuryModel luxuryShopOnLuxuryComponent)
 	{
 		final LuxuryComponentsListWsDTO luxuryComponent = new LuxuryComponentsListWsDTO();
-		String title = null;
 		final List<ShopOnLuxuryElementWsDTO> shopOnLuxuryElementList = new ArrayList<ShopOnLuxuryElementWsDTO>();
+		final ShopOnLuxuryElementListWsDTO shopOnLuxuryElementListObj = new ShopOnLuxuryElementListWsDTO();
 
 		if (StringUtils.isNotEmpty(luxuryShopOnLuxuryComponent.getShopOnLuxuryTitle()))
 		{
-			title = luxuryShopOnLuxuryComponent.getShopOnLuxuryTitle();
+			luxuryShopOnLuxuryComponent.setShopOnLuxuryTitle(luxuryShopOnLuxuryComponent.getShopOnLuxuryTitle());
 		}
 		for (final ShopOnLuxuryElementModel element : luxuryShopOnLuxuryComponent.getShopOnLuxuryElements())
 		{
@@ -139,7 +137,8 @@ public class LuxCmsFacadeImpl implements LuxCmsFacade
 			shopOnLuxuryElementList.add(shopOnLuxuryelement);
 
 		}
-		luxuryComponent.setLuxuryShopOnLuxury((ShopOnLuxuryElementListWsDTO) shopOnLuxuryElementList);
+		shopOnLuxuryElementListObj.setShopOnLuxuryElements(shopOnLuxuryElementList);
+		luxuryComponent.setLuxuryShopOnLuxury(shopOnLuxuryElementListObj);
 		return luxuryComponent;
 	}
 
