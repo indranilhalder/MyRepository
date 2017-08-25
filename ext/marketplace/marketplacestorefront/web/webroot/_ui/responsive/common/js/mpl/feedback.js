@@ -627,14 +627,6 @@ $(document).ready(function(){
 					 $("ul.tabs.pdp>li").removeClass("active");
 					 $("ul.tabs.pdp>li").eq(count).addClass("active");
 			    }); 
-			 } else {
-				 $(".tabs-block .nav.pdp li").on("click",function(e) {
-	 				$("ul.nav.pdp li").removeClass('active'); 
-	 				$(this).addClass('active');
-	 				var count = $(this).index();
-	 				$("ul.tabs.pdp>li").removeClass('active'); 
-	 				$("ul.tabs.pdp>li").eq(count).addClass("active");
-			    }); 
 			 }
 	/*----END of  PDP tabs for Jewellery -----*/
 	
