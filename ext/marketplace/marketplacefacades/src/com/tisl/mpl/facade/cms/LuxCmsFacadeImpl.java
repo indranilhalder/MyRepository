@@ -61,7 +61,7 @@ public class LuxCmsFacadeImpl implements LuxCmsFacade
 	public LuxuryComponentsListWsDTO getLuxuryHomePage() throws CMSItemNotFoundException
 	{
 
-		LuxuryComponentsListWsDTO luxuryComponentsForASlot = new LuxuryComponentsListWsDTO();
+		LuxuryComponentsListWsDTO luxuryAllComponents = new LuxuryComponentsListWsDTO();
 		final ContentPageModel contentPage = getMplCMSPageService().getPageByLabelOrId("homepage");
 		if (contentPage != null)
 		{
@@ -69,13 +69,13 @@ public class LuxCmsFacadeImpl implements LuxCmsFacade
 			for (final ContentSlotForTemplateModel contentSlotForPage : contentPage.getMasterTemplate().getContentSlots())
 			{
 				final ContentSlotModel contentSlot = contentSlotForPage.getContentSlot();
-				luxuryComponentsForASlot = getLuxuryComponentDtoForSlot(contentSlot, luxuryComponentsForASlot);
+				luxuryAllComponents = getLuxuryComponentDtoForSlot(contentSlot, luxuryAllComponents);
 
 			}
 
 
 		}
-		return luxuryComponentsForASlot;
+		return luxuryAllComponents;
 	}
 
 	public LuxuryComponentsListWsDTO getLuxuryComponentDtoForSlot(final ContentSlotModel contentSlot,
@@ -95,11 +95,11 @@ public class LuxCmsFacadeImpl implements LuxCmsFacade
 				{
 					case "ShopOnLuxury":
 						final ShopOnLuxuryModel luxuryShopOnLuxuryComponent = (ShopOnLuxuryModel) abstractCMSComponentModel;
-						luxuryComponentsList = getShopOnLuxuryWsDTO(luxuryShopOnLuxuryComponent);
+						luxuryComponentsList = getShopOnLuxuryWsDTO(luxuryShopOnLuxuryComponent, luxuryComponentsListWsDTO);
 						break;
 					case "WeeklySpecial":
 						final WeeklySpecialModel weeklySpecialComponent = (WeeklySpecialModel) abstractCMSComponentModel;
-						luxuryComponentsList = getWeeklySpecialWsDTO(weeklySpecialComponent);
+						luxuryComponentsList = getWeeklySpecialWsDTO(weeklySpecialComponent, luxuryComponentsListWsDTO);
 						break;
 
 					default:
@@ -112,9 +112,10 @@ public class LuxCmsFacadeImpl implements LuxCmsFacade
 		return luxuryComponentsList;
 	}
 
-	private LuxuryComponentsListWsDTO getWeeklySpecialWsDTO(final WeeklySpecialModel weeklySpecialComponent)
+	private LuxuryComponentsListWsDTO getWeeklySpecialWsDTO(final WeeklySpecialModel weeklySpecialComponent,
+			final LuxuryComponentsListWsDTO luxuryComponentsListWsDTO)
 	{
-		final LuxuryComponentsListWsDTO luxuryComponent = new LuxuryComponentsListWsDTO();
+		final LuxuryComponentsListWsDTO luxuryComponent = luxuryComponentsListWsDTO;
 		final List<WeeklySpecialBannerWsDTO> weeklySpecialBannerList = new ArrayList<WeeklySpecialBannerWsDTO>();
 		final WeeklySpecialBannerListWsDTO weeklySpecialBannerListObj = new WeeklySpecialBannerListWsDTO();
 
@@ -124,11 +125,11 @@ public class LuxCmsFacadeImpl implements LuxCmsFacade
 		}
 		for (final WeeklySpecialBannerModel banner : weeklySpecialComponent.getWeeklySpecialBanners())
 		{
-			WeeklySpecialBannerWsDTO weeklySpecialBanner = new WeeklySpecialBannerWsDTO();
-			String svglogoUrl=null;
-			String imageUrl=null;
-			String url=null;
-			
+			final WeeklySpecialBannerWsDTO weeklySpecialBanner = new WeeklySpecialBannerWsDTO();
+			String svglogoUrl = null;
+			String imageUrl = null;
+			String url = null;
+
 			if (null != banner.getImage() && StringUtils.isNotEmpty(banner.getImage().getURL()))
 			{
 				imageUrl = banner.getImage().getURL();
@@ -143,13 +144,13 @@ public class LuxCmsFacadeImpl implements LuxCmsFacade
 			{
 				url = banner.getUrl();
 			}
-			
+
 			weeklySpecialBanner.setImageUrl(imageUrl);
 			weeklySpecialBanner.setSvglogoUrl(svglogoUrl);
 			weeklySpecialBanner.setUrl(url);
-			
+
 			weeklySpecialBannerList.add(weeklySpecialBanner);
-			
+
 		}
 		weeklySpecialBannerListObj.setWeeklySpecialBannerList(weeklySpecialBannerList);
 		luxuryComponent.setLuxuryWeeklySpecialBanner(weeklySpecialBannerListObj);
@@ -159,9 +160,10 @@ public class LuxCmsFacadeImpl implements LuxCmsFacade
 
 
 
-	private LuxuryComponentsListWsDTO getShopOnLuxuryWsDTO(final ShopOnLuxuryModel luxuryShopOnLuxuryComponent)
+	private LuxuryComponentsListWsDTO getShopOnLuxuryWsDTO(final ShopOnLuxuryModel luxuryShopOnLuxuryComponent,
+			final LuxuryComponentsListWsDTO luxuryComponentsListWsDTO)
 	{
-		final LuxuryComponentsListWsDTO luxuryComponent = new LuxuryComponentsListWsDTO();
+		final LuxuryComponentsListWsDTO luxuryComponent = luxuryComponentsListWsDTO;
 		final List<ShopOnLuxuryElementWsDTO> shopOnLuxuryElementList = new ArrayList<ShopOnLuxuryElementWsDTO>();
 		final ShopOnLuxuryElementListWsDTO shopOnLuxuryElementListObj = new ShopOnLuxuryElementListWsDTO();
 
