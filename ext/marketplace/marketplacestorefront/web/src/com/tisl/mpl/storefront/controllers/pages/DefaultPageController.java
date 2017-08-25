@@ -90,17 +90,31 @@ public class DefaultPageController extends AbstractPageController
 		// Get the path for this request.
 		// Note that the path begins with a '/'
 		final String lookupPathForRequest = urlPathHelper.getLookupPathForRequest(request);
-
+		//INC144319366 fix start
 		try
 		{
 			// Lookup the CMS Content Page by label. Note that the label value must begin with a '/'.
-			return getCmsPageService().getPageForLabel(lookupPathForRequest);
+			final ContentPageModel contentPageModel = getCmsPageService().getPageForLabel(lookupPathForRequest);
+			return contentPageModel;
 		}
 		catch (final CMSItemNotFoundException ignore)
 		{
+			if (lookupPathForRequest.contains("page"))
+			{
+				final String excludedUrlPage = lookupPathForRequest.replaceAll("/page-[0-9]", "");
+				try
+				{
+					return getCmsPageService().getPageForLabel(excludedUrlPage);
+				}
+				catch (final CMSItemNotFoundException e)
+				{
+					LOG.error(e);
+				}
+			}
 			// Ignore exception
 			LOG.error(ignore);
 		}
+		//INC144319366 fix ends
 		return null;
 	}
 }
