@@ -17,10 +17,14 @@ import org.apache.log4j.Logger;
 
 import com.tisl.lux.model.cms.components.ShopOnLuxuryElementModel;
 import com.tisl.lux.model.cms.components.ShopOnLuxuryModel;
+import com.tisl.lux.model.cms.components.WeeklySpecialBannerModel;
+import com.tisl.lux.model.cms.components.WeeklySpecialModel;
 import com.tisl.mpl.marketplacecommerceservices.service.impl.MplCMSPageServiceImpl;
 import com.tisl.mpl.wsdto.LuxuryComponentsListWsDTO;
 import com.tisl.mpl.wsdto.ShopOnLuxuryElementListWsDTO;
 import com.tisl.mpl.wsdto.ShopOnLuxuryElementWsDTO;
+import com.tisl.mpl.wsdto.WeeklySpecialBannerListWsDTO;
+import com.tisl.mpl.wsdto.WeeklySpecialBannerWsDTO;
 
 
 
@@ -65,7 +69,7 @@ public class LuxCmsFacadeImpl implements LuxCmsFacade
 			for (final ContentSlotForTemplateModel contentSlotForPage : contentPage.getMasterTemplate().getContentSlots())
 			{
 				final ContentSlotModel contentSlot = contentSlotForPage.getContentSlot();
-				luxuryComponentsForASlot = getLuxuryComponentDtoForSlot(contentSlot,luxuryComponentsForASlot);
+				luxuryComponentsForASlot = getLuxuryComponentDtoForSlot(contentSlot, luxuryComponentsForASlot);
 
 			}
 
@@ -74,30 +78,86 @@ public class LuxCmsFacadeImpl implements LuxCmsFacade
 		return luxuryComponentsForASlot;
 	}
 
-	public LuxuryComponentsListWsDTO getLuxuryComponentDtoForSlot(final ContentSlotModel contentSlot , final LuxuryComponentsListWsDTO luxuryComponentsListWsDTO)
-			throws CMSItemNotFoundException
+	public LuxuryComponentsListWsDTO getLuxuryComponentDtoForSlot(final ContentSlotModel contentSlot,
+			final LuxuryComponentsListWsDTO luxuryComponentsListWsDTO) throws CMSItemNotFoundException
 	{
 
-		LuxuryComponentsListWsDTO luxuryComponentsList= luxuryComponentsListWsDTO;
-		
+		LuxuryComponentsListWsDTO luxuryComponentsList = luxuryComponentsListWsDTO;
+
 		if (null != contentSlot)
 		{
 			//			final int count = 0;
 			for (final AbstractCMSComponentModel abstractCMSComponentModel : contentSlot.getCmsComponents())
 			{
 				final String typecode = abstractCMSComponentModel.getTypeCode();
-				if (typecode.equalsIgnoreCase("ShopOnLuxury"))
-				{
-					ShopOnLuxuryModel luxuryShopOnLuxuryComponent = (ShopOnLuxuryModel) abstractCMSComponentModel;
-					luxuryComponentsList=getShopOnLuxuryWsDTO(luxuryShopOnLuxuryComponent);
-				}
 
+				switch (typecode)
+				{
+					case "ShopOnLuxury":
+						final ShopOnLuxuryModel luxuryShopOnLuxuryComponent = (ShopOnLuxuryModel) abstractCMSComponentModel;
+						luxuryComponentsList = getShopOnLuxuryWsDTO(luxuryShopOnLuxuryComponent);
+						break;
+					case "WeeklySpecial":
+						final WeeklySpecialModel weeklySpecialComponent = (WeeklySpecialModel) abstractCMSComponentModel;
+						luxuryComponentsList = getWeeklySpecialWsDTO(weeklySpecialComponent);
+						break;
+
+					default:
+						break;
+				}
 			}
 
 		}
 		//}
 		return luxuryComponentsList;
 	}
+
+	private LuxuryComponentsListWsDTO getWeeklySpecialWsDTO(final WeeklySpecialModel weeklySpecialComponent)
+	{
+		final LuxuryComponentsListWsDTO luxuryComponent = new LuxuryComponentsListWsDTO();
+		final List<WeeklySpecialBannerWsDTO> weeklySpecialBannerList = new ArrayList<WeeklySpecialBannerWsDTO>();
+		final WeeklySpecialBannerListWsDTO weeklySpecialBannerListObj = new WeeklySpecialBannerListWsDTO();
+
+		if (StringUtils.isNotEmpty(weeklySpecialComponent.getTitle()))
+		{
+			weeklySpecialBannerListObj.setSeeklySpecialTitle(weeklySpecialComponent.getTitle());
+		}
+		for (final WeeklySpecialBannerModel banner : weeklySpecialComponent.getWeeklySpecialBanners())
+		{
+			WeeklySpecialBannerWsDTO weeklySpecialBanner = new WeeklySpecialBannerWsDTO();
+			String svglogoUrl=null;
+			String imageUrl=null;
+			String url=null;
+			
+			if (null != banner.getImage() && StringUtils.isNotEmpty(banner.getImage().getURL()))
+			{
+				imageUrl = banner.getImage().getURL();
+
+			}
+			if (null != banner.getSvglogo() && StringUtils.isNotEmpty(banner.getSvglogo().getURL()))
+			{
+				svglogoUrl = banner.getSvglogo().getURL();
+
+			}
+			if (StringUtils.isNotEmpty(banner.getUrl()))
+			{
+				url = banner.getUrl();
+			}
+			
+			weeklySpecialBanner.setImageUrl(imageUrl);
+			weeklySpecialBanner.setSvglogoUrl(svglogoUrl);
+			weeklySpecialBanner.setUrl(url);
+			
+			weeklySpecialBannerList.add(weeklySpecialBanner);
+			
+		}
+		weeklySpecialBannerListObj.setWeeklySpecialBannerList(weeklySpecialBannerList);
+		luxuryComponent.setLuxuryWeeklySpecialBanner(weeklySpecialBannerListObj);
+		return luxuryComponent;
+	}
+
+
+
 
 	private LuxuryComponentsListWsDTO getShopOnLuxuryWsDTO(final ShopOnLuxuryModel luxuryShopOnLuxuryComponent)
 	{
@@ -107,7 +167,7 @@ public class LuxCmsFacadeImpl implements LuxCmsFacade
 
 		if (StringUtils.isNotEmpty(luxuryShopOnLuxuryComponent.getShopOnLuxuryTitle()))
 		{
-			luxuryShopOnLuxuryComponent.setShopOnLuxuryTitle(luxuryShopOnLuxuryComponent.getShopOnLuxuryTitle());
+			shopOnLuxuryElementListObj.setShopOnLuxuryTitle(luxuryShopOnLuxuryComponent.getShopOnLuxuryTitle());
 		}
 		for (final ShopOnLuxuryElementModel element : luxuryShopOnLuxuryComponent.getShopOnLuxuryElements())
 		{

@@ -3032,6 +3032,16 @@
 		<property name="metaDescription" type="String" />
 	</bean>
 	
+	<bean class="com.tisl.mpl.wsdto.WeeklySpecialBannerWsDTO">
+    	<property name="svglogoUrl" type="String" />
+    	<property name="imageUrl" type="String" />
+    	<property name="url" type="String" /> 
+    </bean>
+	
+	 <bean class="com.tisl.mpl.wsdto.WeeklySpecialBannerListWsDTO">
+    	<property name="seeklySpecialTitle" type="String" />
+    	<property name="weeklySpecialBannerList" type="java.util.List&lt;com.tisl.mpl.wsdto.WeeklySpecialBannerWsDTO>"/>
+    </bean>
 	
 	 <bean class="com.tisl.mpl.wsdto.ShopOnLuxuryElementWsDTO">
     	<property name="title" type="String" />
@@ -3052,7 +3062,7 @@
 		<property name="sectionid" type="String" />
 		<property name="metaKeywords" type="String" />
 		<property name="metaDescription" type="String" />
-		<property name="LuxuryWeeklySpecialBanner" type="String" />
+		<property name="LuxuryWeeklySpecialBanner" type="com.tisl.mpl.wsdto.WeeklySpecialBannerListWsDTO" />
 		<property name="LuxuryShopOnLuxury" type="com.tisl.mpl.wsdto.ShopOnLuxuryElementListWsDTO"/>
 		<property name="LuxuryCMSParagraphComponent" type="String" />
 		<property name="LuxShowCaseCollectionComponent" type="String" />
