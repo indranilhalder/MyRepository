@@ -2217,6 +2217,14 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String GM = "gm";
 	public static final String CT = "Ct";
 	public static final String KG = "kg";
+	public static final String METALWEIGHTFINEJEWELLERY = "metalweightfinejwlry";
+	public static final String DIAMONDWEIGHTFINEJEWELLERY1 = "diamondweightfinejwlry1";
+	public static final String DIAMONDWEIGHTFINEJEWELLERY2 = "diamondweightfinejwlry2";
+	public static final String DIAMONDWEIGHTFINEJEWELLERY3 = "diamondweightfinejwlry3";
+	public static final String DIAMONDWEIGHTFINEJEWELLERY4 = "diamondweightfinejwlry4";
+	public static final String DIAMONDWEIGHTFINEJEWELLERY5 = "diamondweightfinejwlry5";
+	public static final String DIAMONDWEIGHTFINEJEWELLERY6 = "diamondweightfinejwlry6";
+	public static final String DIAMONDWEIGHTFINEJEWELLERY7 = "diamondweightfinejwlry7";
 
 	//TPR-4134 web service
 	public static final String REV_SEAL_JWLRY = "Do you have Reverse Seal with you?";
