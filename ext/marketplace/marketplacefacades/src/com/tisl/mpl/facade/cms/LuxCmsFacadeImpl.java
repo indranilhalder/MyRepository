@@ -65,7 +65,7 @@ public class LuxCmsFacadeImpl implements LuxCmsFacade
 			for (final ContentSlotForTemplateModel contentSlotForPage : contentPage.getMasterTemplate().getContentSlots())
 			{
 				final ContentSlotModel contentSlot = contentSlotForPage.getContentSlot();
-				luxuryComponentsForASlot = getLuxuryComponentDtoForSlot(contentSlot);
+				luxuryComponentsForASlot = getLuxuryComponentDtoForSlot(contentSlot,luxuryComponentsForASlot);
 
 			}
 
@@ -74,11 +74,12 @@ public class LuxCmsFacadeImpl implements LuxCmsFacade
 		return luxuryComponentsForASlot;
 	}
 
-	public LuxuryComponentsListWsDTO getLuxuryComponentDtoForSlot(final ContentSlotModel contentSlot)
+	public LuxuryComponentsListWsDTO getLuxuryComponentDtoForSlot(final ContentSlotModel contentSlot , final LuxuryComponentsListWsDTO luxuryComponentsListWsDTO)
 			throws CMSItemNotFoundException
 	{
 
-		LuxuryComponentsListWsDTO luxuryComponent = new LuxuryComponentsListWsDTO();
+		LuxuryComponentsListWsDTO luxuryComponentsList= luxuryComponentsListWsDTO;
+		
 		if (null != contentSlot)
 		{
 			//			final int count = 0;
@@ -87,15 +88,15 @@ public class LuxCmsFacadeImpl implements LuxCmsFacade
 				final String typecode = abstractCMSComponentModel.getTypeCode();
 				if (typecode.equalsIgnoreCase("ShopOnLuxury"))
 				{
-					final ShopOnLuxuryModel luxuryShopOnLuxuryComponent = (ShopOnLuxuryModel) abstractCMSComponentModel;
-					luxuryComponent = getShopOnLuxuryWsDTO(luxuryShopOnLuxuryComponent);
+					ShopOnLuxuryModel luxuryShopOnLuxuryComponent = (ShopOnLuxuryModel) abstractCMSComponentModel;
+					luxuryComponentsList=getShopOnLuxuryWsDTO(luxuryShopOnLuxuryComponent);
 				}
 
 			}
 
 		}
 		//}
-		return luxuryComponent;
+		return luxuryComponentsList;
 	}
 
 	private LuxuryComponentsListWsDTO getShopOnLuxuryWsDTO(final ShopOnLuxuryModel luxuryShopOnLuxuryComponent)
