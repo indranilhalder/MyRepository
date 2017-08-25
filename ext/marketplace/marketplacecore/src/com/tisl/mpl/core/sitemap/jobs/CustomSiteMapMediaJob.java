@@ -264,7 +264,7 @@ public class CustomSiteMapMediaJob extends SiteMapMediaJob
 								final List<List> modelsList = splitUpTheListIfExceededLimit(modelUltimate, MAX_SITEMAP_LIMIT);
 								for (int modelIndex = 0; modelIndex < modelsList.size(); modelIndex++)
 								{
-									LOG.debug("3*******");
+									LOG.debug("FOR size greater than 1000*******");
 									generateSiteMapFiles(siteMapFiles, contentSite, getMplbrandPageSiteMapGenerator(), siteMapConfig,
 											modelsList.get(modelIndex), SiteMapPageEnum.CATEGORY, Integer.valueOf(modelIndex), null);
 									LOG.debug("After Generate File for greater than 1000");
@@ -272,7 +272,7 @@ public class CustomSiteMapMediaJob extends SiteMapMediaJob
 							}
 							else
 							{
-								LOG.debug("4*******");
+								LOG.debug("FOR size less than 1000*******");
 								generateSiteMapFiles(siteMapFiles, contentSite, getMplbrandPageSiteMapGenerator(), siteMapConfig,
 										modelUltimate, SiteMapPageEnum.CATEGORY, null, null);
 								LOG.debug("After Generate File for else");
