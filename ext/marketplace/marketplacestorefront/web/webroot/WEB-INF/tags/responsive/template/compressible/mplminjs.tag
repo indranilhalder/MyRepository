@@ -6,6 +6,7 @@
 </c:if>
 
 <!-- UF-439 -->
+	<c:if test="${cmsPage.uid eq 'mpl'}">
 <c:choose>
 	<c:when test="${fn:contains(pageBodyCssClasses, 'homepage')}">
 		<script type="text/javascript">
@@ -140,7 +141,7 @@
 		</c:if>
 	</c:otherwise>
 </c:choose>
-
+</c:if>
 <!--[if lt IE 9]>
 <script type="text/javascript" src="${commonResourcePath}/js/minified/ie9.min.js"></script>
 <![endif]-->
