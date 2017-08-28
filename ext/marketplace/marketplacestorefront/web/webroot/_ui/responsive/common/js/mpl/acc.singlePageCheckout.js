@@ -156,7 +156,9 @@ ACC.singlePageCheckout = {
 		var form=$(element).closest("form");
 		var validationResult=ACC.singlePageCheckout.validateAddressForm();
 		if(validationResult!=false)
-		{			
+		{
+			//disableHideAjaxLoader will make sure that loader is not removed until CNC stores are fetched.
+	        var disableHideAjaxLoader=false;
 			var addressId=$(form).find(" #addressId").val();
 			var url=ACC.config.encodedContextPath + "/checkout/single/edit-address/"+addressId;
 			var data=$(form).serialize().replace(/\+/g,'%20');
@@ -180,7 +182,9 @@ ACC.singlePageCheckout = {
 	            } else {
 	            	ACC.singlePageCheckout.getSelectedAddress();
 	                $("#choosedeliveryMode").html(data);
-	                ACC.singlePageCheckout.callFetchCNCStoresForWeb();
+	                //This method will check if CNC is checked as default delivery mode. If so an ajax call is fired to fetch CNC stores. 
+		        	//disableHideAjaxLoader will make sure that loader is not removed until stores are fetched.
+	                disableHideAjaxLoader=ACC.singlePageCheckout.callFetchCNCStoresForWeb();
 	                ACC.singlePageCheckout.showAccordion("#choosedeliveryMode");
 		        	//selectDefaultDeliveryMethod();
 		        	$(".click-and-collect").addClass("click-collect");
@@ -192,7 +196,10 @@ ACC.singlePageCheckout = {
 	        });
 	        
 	        xhrResponse.always(function(){
-	        	ACC.singlePageCheckout.hideAjaxLoader();
+	        	if(!disableHideAjaxLoader)
+	        	{
+	        		ACC.singlePageCheckout.hideAjaxLoader();
+	        	}
 			});
 		}
 		else
@@ -233,6 +240,8 @@ ACC.singlePageCheckout = {
 		var validationResult=ACC.singlePageCheckout.validateAddressForm();
 		if(validationResult!=false)
 		{
+			//disableHideAjaxLoader will make sure that loader is not removed until stores are fetched.
+			var disableHideAjaxLoader=false;
 			var url=ACC.config.encodedContextPath + "/checkout/single/new-address";
 			var data=$(form).serialize().replace(/\+/g,'%20');
 			
@@ -257,7 +266,9 @@ ACC.singlePageCheckout = {
 	            }  else {
 					ACC.singlePageCheckout.getSelectedAddress();
 					$("#choosedeliveryMode").html(data);
-					ACC.singlePageCheckout.callFetchCNCStoresForWeb();
+					//This method will check if CNC is checked as default delivery mode. If so an ajax call is fired to fetch CNC stores. 
+		        	//disableHideAjaxLoader will make sure that loader is not removed until stores are fetched.
+					disableHideAjaxLoader=ACC.singlePageCheckout.callFetchCNCStoresForWeb();
 		        	ACC.singlePageCheckout.showAccordion("#choosedeliveryMode");
 		        	//selectDefaultDeliveryMethod();
 		        	$(".click-and-collect").addClass("click-collect");
@@ -272,7 +283,10 @@ ACC.singlePageCheckout = {
 			});
 	        
 	        xhrResponse.always(function(){
-	        	ACC.singlePageCheckout.hideAjaxLoader();
+	        	if(!disableHideAjaxLoader)
+	        	{
+	        		ACC.singlePageCheckout.hideAjaxLoader();
+	        	}
 			});
 		}
 		else
@@ -285,6 +299,7 @@ ACC.singlePageCheckout = {
 	//Fetch CNC stores from here for web
 	callFetchCNCStoresForWeb:function()
 	{
+		var disableHideAjaxLoader=false;
 		//fetching cnc stores if only click n collect delivery mode is present
     	var entryNumbersId=$("#selectDeliveryMethodForm #entryNumbersId").val();
 		var isCncPresent=$("#selectDeliveryMethodForm #isCncPresentInSinglePageCart").val();//This will be true if any cart item has CNC as delivery mode
@@ -295,9 +310,11 @@ ACC.singlePageCheckout = {
 		    {
 			    var ussid=$('input[name="deliveryMethodEntry['+entryNumbers[i]+'].sellerArticleSKU"]').val();
 			    ACC.singlePageCheckout.fetchStores(entryNumbers[i],ussid,'click-and-collect','','');
+			    disableHideAjaxLoader=true;
 		    }
 		}
 	  //end of fetching cnc stores if only click n collect delivery mode is present
+		return disableHideAjaxLoader;
 	},
 	//Function called when proceed button on delivery options page is clicked. 
 	//This function will fetch slot delivery page or will proceed to review order page
@@ -641,7 +658,7 @@ ACC.singlePageCheckout = {
         	//$("#pageName").val(checkoutDeliveryPage);
         	 
         }
-        //tealiumCallOnPageLoad();
+        //disableHideAjaxLoader will make sure that loader is not removed until CNC stores are fetched.
         var disableHideAjaxLoader=false;
         xhrResponse.done(function(data, textStatus, jqXHR) {
         	if (jqXHR.responseJSON) {
@@ -661,7 +678,9 @@ ACC.singlePageCheckout = {
 	        	$(".click-and-collect").addClass("click-collect");
 	        	$("#selectedAddressMessage").hide();
 	        	
-	        	ACC.singlePageCheckout.callFetchCNCStoresForWeb();
+	        	//This method will check if CNC is checked as default delivery mode. If so an ajax call is fired to fetch CNC stores. 
+	        	//disableHideAjaxLoader will make sure that loader is not removed until stores are fetched.
+	        	disableHideAjaxLoader=ACC.singlePageCheckout.callFetchCNCStoresForWeb();
 	        	
 	        	ACC.singlePageCheckout.attachDeliveryModeChangeEvent();
 	        	
