@@ -34,7 +34,7 @@
 
 		<security:session-management session-authentication-strategy-ref="fixation" />
 		<!-- <security:intercept-url pattern="/**" requires-channel="http" /> -->
-		<security:intercept-url pattern="/login"/>
+		<security:intercept-url pattern="/login" requires-channel="http" />
 		<security:intercept-url pattern="/login/checkout" requires-channel="http" />
 
 		<security:form-login
@@ -84,13 +84,13 @@
 		<security:remember-me key="marketplacestorefront" services-ref="rememberMeServices"/>
 
 		<!-- SSL / AUTHENTICATED pages -->
-		<security:intercept-url pattern="/my-account/addressform" access="hasAnyRole('ROLE_ANONYMOUS','ROLE_CUSTOMERGROUP')"/>
-		<security:intercept-url pattern="/checkout/multi/billingaddressform" access="hasAnyRole('ROLE_ANONYMOUS','ROLE_CUSTOMERGROUP')"/>
-		<security:intercept-url pattern="/my-account*" access="hasRole('ROLE_CUSTOMERGROUP')"/>
-		<security:intercept-url pattern="/my-account/**" access="hasRole('ROLE_CUSTOMERGROUP')"/>
+		<security:intercept-url pattern="/my-account/addressform" access="hasAnyRole('ROLE_ANONYMOUS','ROLE_CUSTOMERGROUP')" requires-channel="http" />
+		<security:intercept-url pattern="/checkout/multi/billingaddressform" access="hasAnyRole('ROLE_ANONYMOUS','ROLE_CUSTOMERGROUP')" requires-channel="http" />
+		<security:intercept-url pattern="/my-account*" access="hasRole('ROLE_CUSTOMERGROUP')" requires-channel="http" />
+		<security:intercept-url pattern="/my-account/**" access="hasRole('ROLE_CUSTOMERGROUP')" requires-channel="http" />
 
 		<!-- <security:intercept-url pattern="/**" requires-channel="http" /> --> <!-- Everything should be secure -->
-		<security:intercept-url pattern="/login"/>
+		<security:intercept-url pattern="/login" requires-channel="http" />
 		<security:intercept-url pattern="/login/checkout" requires-channel="http" />
 		<security:intercept-url pattern="/login/pw/change" requires-channel="http" />
 		<security:form-login
@@ -119,12 +119,11 @@
 	<!-- POC -->
 	<bean id="keepAliveCookieGenerator" class="com.tisl.mpl.storefront.security.cookie.KeepAliveCookieGenerator" >
 		<property name="cookieName" value="keepAlive"/>
-		<property name="cookieSecure" value="false"/>
+		<property name="cookieSecure" value="true"/>
 		<property name="cookieMaxAge" value="#{configurationService.configuration.getProperty('default.session.timeout')}"/>
 		<property name="useDefaultPath" value="false"/>
 		<property name="useDefaultDomain" value="false"/>
 		<property name="cookieDomain" value="#{configurationService.configuration.getProperty('shared.cookies.domain')}"/>
-		<property name="httpOnly" value="true"/>
 	</bean>
 	<!-- POC End -->
 
@@ -171,7 +170,7 @@
 
 	<alias name="defaultGuidCookieGenerator" alias="guidCookieGenerator"/>
 	<bean id="defaultGuidCookieGenerator" class="com.tisl.mpl.storefront.security.cookie.EnhancedCookieGenerator" >
-		<property name="cookieSecure" value="false" />
+		<property name="cookieSecure" value="true" />
 		<property name="cookieName" value="acceleratorSecureGUID" />
 		<property name="httpOnly" value="true"/>
 	</bean>
@@ -319,7 +318,7 @@
 		<property name="cookieName" value="EX" />
 		<property name="alwaysRemember" value="true" />
 		<property name="userService" ref="extendedUserService"/>
-		<property name="useSecureCookie" value="false"/>
+		<property name="useSecureCookie" value="true"/>
 		<property name="customerFacade" ref="customerFacade"/>
 		<property name="checkoutCustomerStrategy" ref="checkoutCustomerStrategy"/>
 		<property name="urlEncoderService" ref="urlEncoderService"/>
@@ -333,3 +332,4 @@
 	</bean>
 
 </beans>
+
