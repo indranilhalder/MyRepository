@@ -802,6 +802,7 @@ function openPop_quick(ussidfromSeller){
 			dataType : "json",
 			success : function(data) {
 				if (data == true) {
+					console.log('Inside data true'); //TPR-5787
 					//$("#radio_" + $("#hidWishlist").val()).prop("disabled", true);
 					//var msg=$('#wishlistSuccess').text();
 					//$('#addedMessage').show();
@@ -870,10 +871,12 @@ function openPop_quick(ussidfromSeller){
 				//	
 				}
 				else{
-					$("div.wishAlreadyAddedQv").addClass("active");
-					setTimeout(function(){
-						$("div.wishAlreadyAddedQv").removeClass("active")
-					},3000);
+					console.log('Inside data false'); //TPR-5787
+					$("div.wishAlreadyAddedQv").removeClass("active");//TPR-5787
+					//$("div.wishAlreadyAddedQv").addClass("active");//TPR-5787
+					//setTimeout(function(){//TPR-5787
+					//	$("div.wishAlreadyAddedQv").removeClass("active")//TPR-5787
+					//},3000);//TPR-5787
 					if(typeof utag !="undefined"){
 						utag.link({error_type : 'wishlist_error'});
 						}

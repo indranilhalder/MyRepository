@@ -1144,9 +1144,10 @@ public class GenericUtilityMethods
 
 						if (null != entry.getBrandName())
 						{
-
-							brand = appendQuote(entry.getBrandName());
-
+							//	brand = appendQuote(entry.getBrandName());
+							//PRDI-560 fix
+							brand = appendQuote(entry.getBrandName().replaceAll("[^\\w\\s]", "").replaceAll(" ", "_").replace("__", "_")
+									.toLowerCase());
 						}
 
 

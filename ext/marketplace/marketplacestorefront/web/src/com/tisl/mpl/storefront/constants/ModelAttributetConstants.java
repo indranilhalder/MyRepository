@@ -27,6 +27,7 @@ public final class ModelAttributetConstants
 	public static final String QS = "?";
 	public static final String EQUALS = "=";
 	public static final String AMPARSAND = "&";
+	public static final String COLON = ":";
 	public static final String SUFFIX_TH = "th";
 	public static final String SUFFIX_ST = "st";
 	public static final String SUFFIX_ND = "nd";
@@ -686,6 +687,9 @@ public final class ModelAttributetConstants
 	public static final String IS_GIGYA_ENABLED = "isGigyaEnabled";
 	public static final String IS_LUXURY_GIGYA_ENABLED = "isLuxuryGigyaEnabled";
 
+	//for Izooto
+	public static final String IS_IZOOTO_ENABLED = "isIzootoEnabled";
+
 	//AccountPageController
 	public static final String UTF8 = "UTF-8";
 	public static final String HTTPS = "https";
@@ -881,4 +885,7 @@ public final class ModelAttributetConstants
 	public static final String EMAILORPASSINVALID = "Email or Password invalid";
 	public static final String LUXURY_USER_FIRST_NAME = "fname";
 
+
+	/* TPR-5733 */
+	public static final String FOOTER_LINK_LIST = "footerLinkList";
 }

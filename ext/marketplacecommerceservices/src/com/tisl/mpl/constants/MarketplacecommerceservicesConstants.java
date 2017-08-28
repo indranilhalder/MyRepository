@@ -36,16 +36,16 @@ import com.tisl.mpl.core.model.ProductFreebieDetailModel;
 public final class MarketplacecommerceservicesConstants extends GeneratedMarketplacecommerceservicesConstants
 {
 
-	// TPR-4461 starts here
-	// public static final String RESTRICTIONBANK = "restrictionbank".intern();
-	// public static final String RESTRICTIONPAYMENTMODE =
-	// "restrictionpaymentmode".intern();
-	// public final static String BANKFROMBINFORPROMOTION =
-	// "bankForPromotion".intern();
-	// public static final String PAYMENTMODECOUPON =
-	// "paymentmodecoupon".intern();
-	// TPR-4464 ends here
-	// TPR-4461 STARTS HERE
+	//TPR-6272 starts here IQA
+	public static final String COMMACONSTANT = ",";
+	public static final int PLATFORM_ZERO = 0;
+	public static final int PLATFORM_ONE = 1;
+	public static final int PLATFORM_TWO = 2;
+	public static final int PLATFORM_THREE = 3;
+	public static final int PLATFORM_FOUR = 4;
+	public static final int PLATFORM_FIVE = 5;
+	//TPR-6272 ends here
+
 	public static final String COUPONFAILUREMESSAGE = "Sorry,Voucher is not applicable for the PAYMENT MODE/BANK you have selected.In order to proceed with this payment mode, please release the coupon or select an alternative payment mode";
 
 	public static final String EXTENSIONNAME = "marketplacecommerceservices";
@@ -77,7 +77,8 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String IS_BOGO_APPLIED = "isBOGOapplied";
 	public static final String BOGO_ITEM_COUNT = "bogoFreeItmCount";
 
-	// SONAR FIX
+	//SONAR FIX
+	public static final String SHIPPING = "SHIPPING";
 	public static final String CONSIGNMENT_STATUS = " Consignment status :";
 	public static final String BOXING = "boxing";
 	public static final String APPLICATION_JSON_VALUE = "application/json";
@@ -551,7 +552,7 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String SMS_MESSAGE = "Test from TatauniStore";
 	public static final String SMS_MESSAGE_COD_OTP = "Peek-a-boo {0}! One-time password for your COD order is {1}. Please feel free to call us at {2} in case of any queries.";
 	public static final String SMS_MESSAGE_C2C_OTP = "Hi, one time password for your request is {0}. Please enter this to submit the request. Thanks!";
-	public static final String SMS_MESSAGE_PAYMENT_PENDING = "Hmmm There seems to be a spot of bother. Please hold on.";
+	public static final String SMS_MESSAGE_PAYMENT_PENDING = "HmmmÂ There seems to be a spot of bother. Please hold on.";
 	public static final String SMS_MESSAGE_PAYMENT_FAILED = "Uh oh. Looks like your order was declined for some reason. Please try again.";
 	public static final String SMS_MESSAGE_PAYMENT_TIMEOUT = "Oh no! Your order couldn't go through due to techincal issues. Please try again.";
 	public static final String SMS_MESSAGE_INVENTORY_RESERVATION_FAILED = "Uh oh! Looks like what you wanted isn't available right now, but it could come back soon. Please try again later";
@@ -584,7 +585,7 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 
 	public static final String SMS_MESSAGE_ORDER_RISK = "We're sorry! Your Tata CLiQ order no.{0} has been put on hold for some checks. You might get a call from Tata CLiQ Care.";
 	/* 8. Anniversary Changes */
-	public static final String SMS_MESSAGE_ORDER_RISK_CONFIRMED = "Hi, your order no. {0} is now confirmed. While we�ll keep you posted, track your order at {1}. Hope you enjoyed shopping with us.";
+	public static final String SMS_MESSAGE_ORDER_RISK_CONFIRMED = "Hi, your order no. {0} is now confirmed. While well keep you posted, track your order at {1}. Hope you enjoyed shopping with us.";
 	/* 9.Anniversary Changes */
 	public static final String SMS_MESSAGE_ORDER_RISK_REJECTED = "Hi, there's been a problem and your order no.{0} has been rejected. Log on to your account {1} or call us on {3} for more details.";
 	// R2.3 Added ShipmentSecondaryStatus NEW SMS
@@ -665,7 +666,7 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String SALES_REPORT = "salesReport";
 	public static final String OTPGENERATEERROR = "Otp has not generated";
 	public static final String PREPAID_SPACE = "Prepaid";
-
+	//TISSPTEN-116 remove full stop
 	public static final String INTERESTED_IN_EMAIL = "I am interested in receiving e-mails";
 	public static final String NOT_INTERESTED_IN_EMAIL = "I am not interested in receiving e-mails";
 	public static final String BRAND_NAME_PREFIX = "MBH";
@@ -2128,6 +2129,30 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	
 	//Payment Type changes
 	public static final String BASESTORE = "baseStore".intern();
+
+	//TPR-5733
+	public static final String FOOTER_LINK_QUERY = "select pk from {MplFooterLink} order by {footerLinkRow},{footerLinkColumn} asc";
+
+	//TPR-4512
+	public static final String TRANSACTION_NO_KEY = "transaction.count";
+	public static final String NULL_VALUE = "NULL".intern();
+	public static final String COD_PAYMENT = "COD".intern();
+	public static final String POSTPAID = "POSTPAID".intern();
+	public static final String PREPAID = "PREPAID".intern();
+	public static final String EMPTY_SPACE = " ".intern();
+	public static final String REFUND_SUCCESSFUL_ = "REFUND_SUCCESSFUL".intern();
+	public static final String MOBILE_NO_NOT_PRESENT = "Mobile number is not present in Commerce System".intern();
+	public static final String TRANSACTION_ID_NOT_PRESENT = "TransactionId is not present in Commerce System".intern();
+	public static final String ORDER_ID_NOT_PRESENT = "Order Reference Number is not present in Commerce System".intern();
+	public static final String MOBILE_QUERY = "SELECT UNIQUE {a:pk} FROM {order as a},{address as b} WHERE {a:user}={b:owner} AND {b.cellphone}=?mobileNo AND {a.type}=?type AND ({a.creationtime} > sysdate -180) order by {a.creationtime} desc fetch first ?queryCount rows only"
+			.intern();
+	public static final String MOBILE_QUERY_FOR_L4CATEGORY = "select distinct {c.pk} from {product as p},{CategoryProductRelation as cp},{Category as c},{catalogversion as cv} where {cp.TARGET} = {p.pk} and {cp.SOURCE} = {c.pk} and {c.code} like 'MPH%' and {p.varianttype} is null and {p.catalogversion}={cv.pk} and {cv.version}='Online' and {p.code} = ?productCode"
+			.intern();
+	public static final String TRANSACTION_QUERY = "select {b:pk} from {orderentry as a},{order as b} where p_orderlineid=?transactionId and {a:order}={b:pk} and {b:type}=?type"
+			.intern();
+	public static final String PARENT_ORDER_QUERY = "select {o:pk} from {order as o} where {o:type}=?type and {o:code}=?orderRefNo"
+			.intern();
+
 
 	public static final String ERROR_MSG_TYPE_MISMATCHUSSID = "mismatchUssid";
 	public static final String TRANSACTIONID = "transactionid";

@@ -364,7 +364,7 @@
 										<c:url value="${entry.product.url}" var="productUrl" />
 										<div class="image">
 											<a href="${productUrl}"> <product:productPrimaryImage
-													product="${entry.product}" format="thumbnail" />
+													product="${entry.product}" format="thumbnail" lazyLoad="false" />
 											</a>
 										</div>
 										<div class="details">

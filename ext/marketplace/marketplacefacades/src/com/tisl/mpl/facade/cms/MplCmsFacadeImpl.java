@@ -28,6 +28,7 @@ import de.hybris.platform.commercesearch.searchandizing.heroproduct.HeroProductD
 import de.hybris.platform.commerceservices.search.pagedata.PageableData;
 import de.hybris.platform.commerceservices.search.pagedata.SearchPageData;
 import de.hybris.platform.converters.Converters;
+import de.hybris.platform.core.GenericSearchConstants.LOG;
 import de.hybris.platform.core.model.media.MediaModel;
 import de.hybris.platform.core.model.product.ProductModel;
 import de.hybris.platform.product.ProductService;
@@ -42,6 +43,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -49,6 +51,7 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.collections.MapUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -59,6 +62,7 @@ import com.tisl.mpl.core.enums.CMSChannel;
 import com.tisl.mpl.core.model.BrandModel;
 import com.tisl.mpl.core.model.MplAdvancedCategoryCarouselComponentModel;
 import com.tisl.mpl.core.model.MplBigPromoBannerComponentModel;
+import com.tisl.mpl.core.model.MplFooterLinkModel;
 import com.tisl.mpl.core.model.MplImageCategoryComponentModel;
 import com.tisl.mpl.core.model.MplNavigationNodeComponentModel;
 import com.tisl.mpl.core.model.MplShopByLookModel;
@@ -76,6 +80,7 @@ import com.tisl.mpl.facades.cms.data.CollectionPageData;
 import com.tisl.mpl.facades.cms.data.CollectionProductData;
 import com.tisl.mpl.facades.cms.data.CollectionSectionData;
 import com.tisl.mpl.facades.cms.data.ComponentData;
+import com.tisl.mpl.facades.cms.data.FooterLinkData;
 import com.tisl.mpl.facades.cms.data.HeroComponentData;
 import com.tisl.mpl.facades.cms.data.HeroProductData;
 import com.tisl.mpl.facades.cms.data.HomePageComponentData;
@@ -187,6 +192,25 @@ public class MplCmsFacadeImpl implements MplCmsFacade
 
 	@Resource(name = "mplBannerConverter")
 	private Converter<SimpleBannerComponentModel, SimpleBannerComponentData> mplBannerConverter;
+
+	private Converter<MplFooterLinkModel, FooterLinkData> footerLinkConverter;
+
+	/**
+	 * @return the footerLinkConverter
+	 */
+	public Converter<MplFooterLinkModel, FooterLinkData> getFooterLinkConverter()
+	{
+		return footerLinkConverter;
+	}
+
+	/**
+	 * @param footerLinkConverter
+	 *           the footerLinkConverter to set
+	 */
+	public void setFooterLinkConverter(final Converter<MplFooterLinkModel, FooterLinkData> footerLinkConverter)
+	{
+		this.footerLinkConverter = footerLinkConverter;
+	}
 
 	private HeroProductDefinitionService heroProductDefinitionService;
 
@@ -400,7 +424,7 @@ public class MplCmsFacadeImpl implements MplCmsFacade
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.facade.cms.MplCmsFacade#getLandingPageForCategory(java.lang.String)
 	 */
 	@Override
@@ -425,7 +449,7 @@ public class MplCmsFacadeImpl implements MplCmsFacade
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.facade.cms.MplCmsFacade#getHomePageForMobile()
 	 */
 	@Override
@@ -1579,7 +1603,7 @@ public class MplCmsFacadeImpl implements MplCmsFacade
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.facade.cms.MplCmsFacade#populateCategoryLandingPageForMobile()
 	 */
 	@Override
@@ -1695,7 +1719,7 @@ public class MplCmsFacadeImpl implements MplCmsFacade
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see
 	 * com.tisl.mpl.facade.cms.MplCmsFacade#populateSubBrandLandingPageForMobile(de.hybris.platform.cms2.model.pages.
 	 * ContentPageModel, java.lang.String)
@@ -1746,7 +1770,7 @@ public class MplCmsFacadeImpl implements MplCmsFacade
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.facade.cms.MplCmsFacade#populatePageType(java.lang.String, boolean)
 	 */
 	@Override
@@ -1893,7 +1917,7 @@ public class MplCmsFacadeImpl implements MplCmsFacade
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.facade.cms.MplCmsFacade#getCategoryNameForCode(java.lang.String)
 	 */
 	@Override
@@ -1905,7 +1929,7 @@ public class MplCmsFacadeImpl implements MplCmsFacade
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.facade.cms.MplCmsFacade#getHeroProducts(java.lang.String)
 	 */
 	@Override
@@ -1979,7 +2003,7 @@ public class MplCmsFacadeImpl implements MplCmsFacade
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.facade.cms.MplCmsFacade#populateSellerLandingPageForMobile()
 	 */
 	@Override
@@ -2020,7 +2044,7 @@ public class MplCmsFacadeImpl implements MplCmsFacade
 				 * (SmallBrandMobileAppComponentModel) abstractCMSComponentModel; final ComponentData componentData =
 				 * getMobileCategoryComponentConverter().convert(smallBrandMobileComponentModel);
 				 * componentDatas.add(componentData);
-				 *
+				 * 
 				 * }
 				 */
 				else if (abstractCMSComponentModel instanceof PromotionalProductsComponentModel)
@@ -2078,7 +2102,7 @@ public class MplCmsFacadeImpl implements MplCmsFacade
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.facade.cms.MplCmsFacade#getSellerMasterName(java.lang.String)
 	 */
 	@Override
@@ -2090,7 +2114,7 @@ public class MplCmsFacadeImpl implements MplCmsFacade
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.facade.cms.MplCmsFacade#populateSellerPageType(java.lang.String, boolean)
 	 */
 	@Override
@@ -2106,7 +2130,7 @@ public class MplCmsFacadeImpl implements MplCmsFacade
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.facade.cms.MplCmsFacade#populateOfferPageType(java.lang.String, boolean)
 	 */
 	@Override
@@ -2123,7 +2147,7 @@ public class MplCmsFacadeImpl implements MplCmsFacade
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.facade.cms.MplCmsFacade#getlandingForBrand()
 	 */
 	@Override
@@ -2967,7 +2991,7 @@ public class MplCmsFacadeImpl implements MplCmsFacade
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.facade.cms.MplCmsFacade#getMegaNavigation()
 	 */
 	@Override
@@ -3223,7 +3247,7 @@ public class MplCmsFacadeImpl implements MplCmsFacade
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.facade.cms.MplCmsFacade#getContentSlotData(java.lang.String)
 	 */
 	@Override
@@ -3231,7 +3255,7 @@ public class MplCmsFacadeImpl implements MplCmsFacade
 	{
 		final FooterComponentData fData = new FooterComponentData();
 		FooterComponentModel footer = null;
-     	final ContentSlotModel footerSlot = contentSlotService.getContentSlotForId(slotId);
+		final ContentSlotModel footerSlot = contentSlotService.getContentSlotForId(slotId);
 		final NeedHelpComponentModel needHelpFooter = null;
 
 		if (null != footerSlot && CollectionUtils.isNotEmpty(footerSlot.getCmsComponents()))
@@ -3275,6 +3299,53 @@ public class MplCmsFacadeImpl implements MplCmsFacade
 		}
 
 		return fData;
+	}
+
+	/**
+	 *
+	 *
+	 *
+	 * @param void
+	 * @return Map<Integer, Map<Integer, FooterLinkData>>
+	 */
+	@Override
+	public Map<Integer, Map<Integer, FooterLinkData>> getFooterLinkData()
+	{
+		final List<MplFooterLinkModel> footerLinkModelList = getMplCMSPageService().getAllMplFooterLinks();
+		final List<FooterLinkData> mplFooterLinkDataList = new ArrayList<FooterLinkData>();
+		if (CollectionUtils.isNotEmpty(footerLinkModelList))
+		{
+			for (final MplFooterLinkModel footerLink : footerLinkModelList)
+			{
+				final FooterLinkData footerLinkData = getFooterLinkConverter().convert(footerLink);
+				mplFooterLinkDataList.add(footerLinkData);
+			}
+		}
+
+		Map<Integer, Map<Integer, FooterLinkData>> outerMap = null;
+
+		int rowCount = -1;
+		if (CollectionUtils.isNotEmpty(mplFooterLinkDataList))
+		{
+			outerMap = new LinkedHashMap<Integer, Map<Integer, FooterLinkData>>();
+			Map<Integer, FooterLinkData> innerMap = null;
+			for (final FooterLinkData footerLinkData : mplFooterLinkDataList)
+			{
+				if (footerLinkData.getFooterLinkRow().intValue() > rowCount)
+				{
+					if (MapUtils.isNotEmpty(innerMap))
+					{
+						outerMap.put(Integer.valueOf(rowCount), innerMap);
+					}
+					innerMap = new LinkedHashMap<Integer, FooterLinkData>();
+					rowCount = footerLinkData.getFooterLinkRow().intValue();
+				}
+				innerMap.put(footerLinkData.getFooterLinkColumn(), footerLinkData);
+			}
+			outerMap.put(Integer.valueOf(rowCount), innerMap);
+		}
+
+		return outerMap;
 	}
 
 }

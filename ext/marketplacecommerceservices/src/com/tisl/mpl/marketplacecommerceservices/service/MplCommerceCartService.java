@@ -283,7 +283,7 @@ public interface MplCommerceCartService
 
 	boolean addCartCodEligible(final Map<String, List<MarketplaceDeliveryModeData>> deliveryModeMap,
 			final List<PinCodeResponseData> pincodeResponseData, CartModel cartModel, CartData cartData)
-					throws EtailNonBusinessExceptions;
+			throws EtailNonBusinessExceptions;
 
 
 	public PriceData addConvCharge(final CartModel source, final CartData prototype);
@@ -446,7 +446,7 @@ public interface MplCommerceCartService
 	 */
 	void saveDeliveryMethForFreebie(AbstractOrderModel abstractOrderModel,
 			Map<String, MplZoneDeliveryModeValueModel> freebieModelMap, Map<String, Long> freebieParentQtyMap)
-					throws EtailNonBusinessExceptions;
+			throws EtailNonBusinessExceptions;
 
 	/**
 	 * @Desc Used as part of oms fallback
@@ -553,5 +553,6 @@ public interface MplCommerceCartService
 	 * @throws InvalidCartException
 	 */
 	public CartModel fetchCartUsingGuid(String cartGuid) throws InvalidCartException;
+
 
 }

@@ -18,11 +18,15 @@
 					href="<c:url value="/my-account/viewParticularWishlist?particularWishlist=${wishlist.name}" />">${wishlist.name}
 						<c:set var="size" value="0"></c:set>
 						<c:forEach items="${wishlist.getEntries()}" var="wishlistEntry">
-							<c:if test="${not empty wishlistEntry.product && wishlistEntry.product.catalogVersion.catalog.id eq cmsSite.productCatalogs[0].id}">
+						    <%-- TPR-5787 check starts here --%>
+						    <c:if test="${((wishlistEntry.isDeleted == null) || (wishlistEntry.isDeleted != null && wishlistEntry.isDeleted eq false)) && not empty wishlistEntry.product
+						    && wishlistEntry.product.catalogVersion.catalog.id eq cmsSite.productCatalogs[0].id}">
 								<c:set var="size" value="${size +1}"></c:set>
-								<span class="wlCode" style="display: none;">${wishlistEntry.product.code}</span>	
-							</c:if>
-						</c:forEach>
+							<span class="wlCode" style="display: none;">${wishlistEntry.product.code}</span>
+						    </c:if>
+						    <%-- TPR-5787 check ends here--%>
+					        </c:forEach>
+
 						<span> <c:if test="${size> 1}">${size}&nbsp;<spring:theme
 									code="text.items" />
 							</c:if></span> <span> <c:if test="${size <= 1}">${size}&nbsp;<spring:theme

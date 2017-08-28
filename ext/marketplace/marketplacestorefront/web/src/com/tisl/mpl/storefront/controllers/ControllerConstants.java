@@ -244,6 +244,9 @@ public interface ControllerConstants
 				String MiscRobotsPage = "pages/misc/miscRobotsPage";
 				String MiscSiteMapPage = "pages/misc/miscSiteMapPage";
 				String MiscIndividualSiteMapPage = "pages/misc/miscIndividualSiteMapPage";
+				//Changes for TPR-5812
+				String manifest = "pages/misc/manifest";
+				String serviceWorker = "pages/misc/service-worker";
 			}
 
 			interface Guest
@@ -392,7 +395,9 @@ public interface ControllerConstants
 
 				public static final String USSID_CODE_PATH_NEW_PATTERN = "/**/p-{ussId:.*}";
 				public static final String USSID = "ussId";
-				public static final String ID_ED_SELLER_HANDLING_TIME= "isEDSeller";			}
+				public static final String ID_ED_SELLER_HANDLING_TIME = "isEDSeller";
+			}
+
 
 			interface NPS_Emailer
 			{
@@ -401,7 +406,7 @@ public interface ControllerConstants
 				String NpsFeedbackExists = "fragments/NPS_Emailer/npsFeedbackExists";
 
 			}
-			
+
 		}
 	}
 

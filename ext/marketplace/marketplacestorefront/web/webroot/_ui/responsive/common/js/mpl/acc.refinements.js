@@ -434,7 +434,18 @@ ACC.refinements = {
 				filterChecked = true;
 				//onFilterRemoveAnalytics(filterName,filterValue);
 			}
-			
+			//TISSPTEN-130 starts
+			if ($("input[name=customSku]").val()) {
+				pageURL =  window.location.href;
+				if (pageURL.indexOf("?") > -1) {
+					pageURL = pageURL.split("?")[0];
+					pageURL = pageURL.replace(/page-[0-9]+/, 'page-1');
+				}
+				if (action[1] != "") {
+					pageURL = pageURL + '?' + action[1]; 
+				}
+			}
+			//TISSPTEN-130 ends
 			// AJAX call
 			filterDataAjax(requiredUrl,dataString,pageURL);
 			
@@ -1009,7 +1020,26 @@ function filterDataAjax(requiredUrl,dataString,pageURL){
 				       window.localStorage.setItem('lastUrlpathName',encodeURI(pathName));
 					   window.localStorage.setItem('lastUrlquery',encodeURI(query));
 				 }
-			}		
+			}
+			//TISSPTEN-130 starts
+			else {
+				$("body,html").animate({scrollTop:$('#productGrid').offset().top - 200},500);
+				pageURL = window.location.pathname;
+				pageURL = pageURL.replace(/page-[0-9]+/, 'page-1');
+				if (facetAjaxUrl.indexOf("?") > -1) {
+					var queryArr = facetAjaxUrl.split("?");
+					if (queryArr[1] != "") {
+						pageURL = pageURL + '?' + queryArr[1];
+					}
+					if($( "span.sort[style*='color']" ).length == 1){
+				 		var sortData = $( "span.sort[style*='color']" ).attr('data-name');
+				 		pageURL = pageURL + getSortCode(sortData); 
+				  	}
+				}
+
+				window.history.replaceState(response,"",pageURL);
+			}
+			//TISSPTEN-130 ends
 			// TPR-158 and TPR-413 starts here
 			
 			$("#displayAll").show();
@@ -1096,7 +1126,14 @@ function getSortCode(item){
 	  		code = '&sort=relevance';
 	  		break;
 	  	case 'new':
-	  		code = '&sort=isProductNew';
+	  		//TISSPTEN-125 starts
+			if ($("input[name=customSku]").length) {
+				code = '&sort=new';
+			}
+			else {
+				code = '&sort=isProductNew';
+			}
+			//TISSPTEN-125 ends
 	  		break;
 	  	case 'discount':
 	  		code = '&sort=isDiscountedPrice';
@@ -1238,7 +1275,8 @@ function isCustomSku(requiredUrl){
 //UF-15
 function lazyPaginationFacet(response){
 	res = response;
-	var ulProduct = $(response).find('ul.product-listing.product-grid,ul.product-list');
+	// Added for UF-359
+	var ulProduct = $(response).find('ul.product-listing.product-grid,ul.product-list,ul.product-listing.product-grid.custom-sku');
 	//Add to bag and quick view ui fixes starts here
 	$(".product-tile .image .item.quickview").each(function(){
     	if($(this).find(".addtocart-component").length == 1){
@@ -1251,7 +1289,8 @@ function lazyPaginationFacet(response){
         productItemArray.push($(this));
     });
     console.log(""+productItemArray);
-	$("#productGrid").html($.strRemove("ul.product-listing.product-grid.lazy-grid,ul.product-listing.product-grid.lazy-grid-facet,ul.product-list", response));
+    // Added for UF-359
+    $("#productGrid").html($.strRemove("ul.product-listing.product-grid.lazy-grid,ul.product-listing.product-grid.lazy-grid-facet,ul.product-list,ul.product-listing.product-grid.custom-sku", response));
 	initPageLoad = true;
     innerLazyLoad({isSerp:true});
     

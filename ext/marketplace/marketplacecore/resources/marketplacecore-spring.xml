@@ -1935,5 +1935,12 @@ http://www.springframework.org/schema/aop/spring-aop.xsd">
     
 	</bean>
     
+<!--      <bean id="performanceMonitor" -->
+<!--               class="com.tisl.mpl.core.interceptor.PerformanceMonitoring" /> -->
+
+<!--     <aop:config> -->
+<!--         <aop:pointcut id="allServiceMethods" expression="execution(* com.tisl.mpl.core.search.solrfacetsearch.provider.impl.*.*(..))"/> -->
+<!--         <aop:advisor pointcut-ref="allServiceMethods" advice-ref="performanceMonitor" order="2"/> -->
+<!--     </aop:config> -->
 			
 </beans>

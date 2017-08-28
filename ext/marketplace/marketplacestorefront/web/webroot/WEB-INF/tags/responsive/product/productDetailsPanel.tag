@@ -401,7 +401,7 @@ tr.d0 td {
 		</div>
 
 <div class="tabs-block">
-				<product:productPageTabs />
+				<product:productPageTabs product="${product}" />
 			</div>
 	</div>
 	

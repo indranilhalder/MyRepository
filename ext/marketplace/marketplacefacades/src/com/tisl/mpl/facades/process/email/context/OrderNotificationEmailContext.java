@@ -20,7 +20,6 @@ import de.hybris.platform.commercefacades.order.data.OrderData;
 import de.hybris.platform.core.model.c2l.LanguageModel;
 import de.hybris.platform.core.model.order.AbstractOrderEntryModel;
 import de.hybris.platform.core.model.order.OrderModel;
-import de.hybris.platform.core.model.product.ProductModel;
 import de.hybris.platform.core.model.user.AddressModel;
 import de.hybris.platform.core.model.user.CustomerModel;
 import de.hybris.platform.orderprocessing.model.OrderProcessModel;
@@ -28,6 +27,7 @@ import de.hybris.platform.ordersplitting.model.ConsignmentEntryModel;
 import de.hybris.platform.servicelayer.dto.converter.Converter;
 import de.hybris.platform.storelocator.model.PointOfServiceModel;
 
+//import de.hybris.platform.core.model.product.ProductModel;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -44,6 +44,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Required;
 
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
+import com.tisl.mpl.core.model.OrderShortUrlInfoModel;
 import com.tisl.mpl.facades.account.address.MplAccountAddressFacade;
 import com.tisl.mpl.facades.constants.MarketplaceFacadesConstants;
 import com.tisl.mpl.facades.product.data.StateData;
@@ -78,7 +79,7 @@ public class OrderNotificationEmailContext extends AbstractEmailContext<OrderPro
 	private static final String SPACE = " ";
 	private static final String NUMBERTOOL = "numberTool";
 	private static final String WEBSITE_URL = "websiteUrl";
-	private static final String PRODUCT_IMAGE_URL = "productImageUrl";
+	//private static final String PRODUCT_IMAGE_URL = "productImageUrl";//commented as part of TISSPTEN-7
 	private static final String ORDERPLACEDATE = "orderPlaceDate";
 	private static final String DELIVERYDATE = "deliveryDate";
 	@Autowired
@@ -161,7 +162,26 @@ public class OrderNotificationEmailContext extends AbstractEmailContext<OrderPro
 				MarketplacecommerceservicesConstants.MPL_TRACK_ORDER_LONG_URL_FORMAT)
 				+ orderCode;
 		/* Added in R2.3 for shortUrl START */
-		final String shortUrl = shortUrlService.genearateShortURL(orderCode);
+
+		final OrderShortUrlInfoModel orderShortUrlInfoModel = shortUrlService.getShortUrlReportModelByOrderId(orderCode);
+
+		LOG.debug("**OrderCode**" + orderCode + "--**orderShortUrlInfoModel--" + orderShortUrlInfoModel);
+
+		String shortUrl = null;
+
+		if (orderShortUrlInfoModel == null)
+		{
+
+			LOG.debug("Inside orderShortUrlInfoModel null for orderCode**" + orderCode);
+			shortUrl = shortUrlService.genearateShortURL(orderCode);
+		}
+		else
+		{
+			LOG.debug("Inside orderShortUrlInfoModel not null for orderCode**" + orderCode);
+			shortUrl = orderShortUrlInfoModel.getShortURL();
+		}
+		LOG.debug("Generated shortUrl**" + shortUrl);
+
 		put(TRACK_ORDER_URL, null != shortUrl ? shortUrl : trackOrderUrl);
 
 		put(ORDER_CODE, orderCode);
@@ -188,20 +208,16 @@ public class OrderNotificationEmailContext extends AbstractEmailContext<OrderPro
 			LOG.debug("total sale price" + entryModel.getTotalSalePrice());
 			childEntries.add(entryModel);
 
-			final String productImageUrl;
-
-			final ProductModel productModel = entryModel.getProduct();
-			if (null != productModel.getPicture())
-			{
-				productImageUrl = productModel.getPicture().getURL();
-			}
-			else
-			{
-				productImageUrl = "";
-			}
-
-
-			put(PRODUCT_IMAGE_URL, productImageUrl);
+			//Commented as part of TISSPTEN-7
+			/*
+			 * final String productImageUrl;
+			 * 
+			 * final ProductModel productModel = entryModel.getProduct(); if (null != productModel.getPicture()) {
+			 * productImageUrl = productModel.getPicture().getURL(); } else { productImageUrl = ""; }
+			 * 
+			 * 
+			 * put(PRODUCT_IMAGE_URL, productImageUrl);
+			 */
 
 
 			final String orderPlaceDate;

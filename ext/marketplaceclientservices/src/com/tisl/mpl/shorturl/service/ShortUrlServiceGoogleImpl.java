@@ -77,6 +77,7 @@ public class ShortUrlServiceGoogleImpl implements ShortUrlService
 		try
 		{
 			LOG.info("Generating short url for order id :" + orderCode);
+
 			final String googleAPIUrl = getConfigurationService().getConfiguration()
 					.getString(MarketplaceclientservicesConstants.GOOGLE_API_SHORT_URL);
 			final String googleShortUrlApiKey = getConfigurationService().getConfiguration()
@@ -118,7 +119,11 @@ public class ShortUrlServiceGoogleImpl implements ShortUrlService
 					shortUrlModel.setOrderId(orderCode);
 					shortUrlModel.setShortURL(shortUrl);
 					shortUrlModel.setLongURL(longUrl);
-					getModelService().save(shortUrlModel);
+					if (getShortUrlReportModelByOrderId(orderCode) == null)
+					{
+						LOG.debug("Creating TULShortUrlReportModel for Order " + orderCode);
+						getModelService().save(shortUrlModel);
+					}
 				}
 				catch (final ModelSavingException e)
 				{
@@ -141,6 +146,7 @@ public class ShortUrlServiceGoogleImpl implements ShortUrlService
 		return shortUrl;
 
 	}
+
 
 	private String getShortUrl(final String endPoint, final String encodedParams)
 	{
@@ -288,7 +294,11 @@ public class ShortUrlServiceGoogleImpl implements ShortUrlService
 	@Override
 	public OrderShortUrlInfoModel getShortUrlReportModelByOrderId(final String orderCode)
 	{
-		return getOrderShortUrlDaoImpl().getShortUrlReportModelByOrderId(orderCode);
+		final OrderShortUrlInfoModel orderShortUrlInfoModel = getOrderShortUrlDaoImpl().getShortUrlReportModelByOrderId(orderCode);
+		LOG.debug("Inside getShortUrlReportModelByOrderId**OrderCode**" + orderCode + "--**orderShortUrlInfoModel--"
+				+ orderShortUrlInfoModel);
+		//return getOrderShortUrlDaoImpl().getShortUrlReportModelByOrderId(orderCode);
+		return orderShortUrlInfoModel;
 	}
 
 	/**
@@ -311,8 +321,6 @@ public class ShortUrlServiceGoogleImpl implements ShortUrlService
 			longURLFormat = (String) getConfigurationService().getConfiguration()
 					.getProperty(MarketplaceclientservicesConstants.MPL_TRACK_ORDER_LONG_URL_FORMAT);
 		}
-
-
 		return longURLFormat + "/" + orderCode;
 	}
 
@@ -370,7 +378,6 @@ public class ShortUrlServiceGoogleImpl implements ShortUrlService
 
 	/*
 	 * (non-Javadoc)
-	 *
 	 * @see com.tisl.mpl.shorturl.service.ShortUrlService#getShortUrlReportModels(java.util.Date, java.util.Date)
 	 */
 	@Override

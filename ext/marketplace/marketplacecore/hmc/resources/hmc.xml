@@ -4324,5 +4324,29 @@
 		</editor>
 	</organizer>
 </type>	
-
+<!-- START TPR-5733 -->
+<type name="MplFooterLink" mode="append">
+		<organizer>
+			<search mode="replace">
+				<condition attribute="pk" />
+				<condition attribute="footerLinkRow" />
+				<condition attribute="footerLinkColumn" />
+			</search>
+			<result>
+				<listview mode="replace">
+					<itemlayout>
+						<attribute name="pk" />
+						<attribute name="footerLinkRow" />
+						<attribute name="footerLinkColumn" />
+					</itemlayout>
+				</listview>
+			</result>
+		</organizer>
+		<defaultreference searchattribute="pk" mode="replace">
+			<itemlayout>
+				 <attribute name="pk" />
+			</itemlayout>
+		</defaultreference>
+	</type>
+	<!-- END TPR-5733 -->
 </configuration>

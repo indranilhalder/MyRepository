@@ -122,7 +122,7 @@ public class MplPaymentTransactionServiceImpl implements MplPaymentTransactionSe
 			//			final PaymentTypeModel paymenttype = getMplPaymentDao().getPaymentMode(cart.getModeOfPayment());
 			//			paymentTransactionEntry.setPaymentMode(paymenttype);
 			//		}
-			final BaseStoreModel baseStore = baseStoreService.getCurrentBaseStore();
+			final BaseStoreModel baseStore = cart.getStore();
 			if (StringUtils.isNotEmpty(getOrderStatusResponse.getPaymentMethodType())
 					&& getOrderStatusResponse.getPaymentMethodType().equalsIgnoreCase("NB"))
 			{
@@ -517,9 +517,9 @@ public class MplPaymentTransactionServiceImpl implements MplPaymentTransactionSe
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see
-	 *
+	 * 
 	 * @desc SprintPaymentFixes:-:- To handle missing paymentTransaction for specific order
 	 */
 	@Override
@@ -578,8 +578,7 @@ public class MplPaymentTransactionServiceImpl implements MplPaymentTransactionSe
 			if (StringUtils.isNotEmpty(getOrderStatusResponse.getPaymentMethodType())
 					&& getOrderStatusResponse.getPaymentMethodType().equalsIgnoreCase("NB"))
 			{
-				final PaymentTypeModel paymenttype = getMplPaymentDao().getPaymentMode("Netbanking",
-						baseStoreService.getCurrentBaseStore());
+				final PaymentTypeModel paymenttype = getMplPaymentDao().getPaymentMode("Netbanking", order.getStore());
 				paymentTransactionEntry.setPaymentMode(paymenttype);
 			}
 			else if (StringUtils.isNotEmpty(getOrderStatusResponse.getPaymentMethodType())
@@ -589,28 +588,24 @@ public class MplPaymentTransactionServiceImpl implements MplPaymentTransactionSe
 				if (StringUtils.isEmpty(cardType))
 				{
 					//:- Check with Barun Da wt to set the payment Mode, Since paymntmode is mandatory
-					final PaymentTypeModel paymenttype = getMplPaymentDao().getPaymentMode("UNKNOWN",
-							baseStoreService.getCurrentBaseStore());
+					final PaymentTypeModel paymenttype = getMplPaymentDao().getPaymentMode("UNKNOWN", order.getStore());
 					paymentTransactionEntry.setPaymentMode(paymenttype);
 				}
 				else
 				{
 					if (cardType.equalsIgnoreCase("DEBIT"))
 					{
-						final PaymentTypeModel paymenttype = getMplPaymentDao().getPaymentMode("Debit Card",
-								baseStoreService.getCurrentBaseStore());
+						final PaymentTypeModel paymenttype = getMplPaymentDao().getPaymentMode("Debit Card", order.getStore());
 						paymentTransactionEntry.setPaymentMode(paymenttype);
 					}
 					else if (cardType.equalsIgnoreCase("CREDIT"))
 					{
-						final PaymentTypeModel paymenttype = getMplPaymentDao().getPaymentMode("Credit Card",
-								baseStoreService.getCurrentBaseStore());
+						final PaymentTypeModel paymenttype = getMplPaymentDao().getPaymentMode("Credit Card", order.getStore());
 						paymentTransactionEntry.setPaymentMode(paymenttype);
 					}
 					else
 					{
-						final PaymentTypeModel paymenttype = getMplPaymentDao().getPaymentMode("EMI",
-								baseStoreService.getCurrentBaseStore());
+						final PaymentTypeModel paymenttype = getMplPaymentDao().getPaymentMode("EMI", order.getStore());
 						paymentTransactionEntry.setPaymentMode(paymenttype);
 					}
 				}
