@@ -6,7 +6,7 @@
 </c:if>
 
 <!-- UF-439 -->
-	<c:if test="${cmsPage.uid eq 'mpl'}">
+	<c:if test="${!fn:contains(themeResourcePath,'theme-luxury')}">
 <c:choose>
 	<c:when test="${fn:contains(pageBodyCssClasses, 'homepage')}">
 		<script type="text/javascript">

@@ -43,8 +43,14 @@ if(loginStatus){
 <%-- <script type="text/javascript" src="${themeResourcePath}/js/plpSearch.js"></script> --%>
 
 <c:if test="${fn:contains(themeResourcePath,'theme-luxury')}">
+	<script type="text/javascript"
+			src="${commonResourcePath}/js/minified/plugins.min.js?v=${buildNumber}"></script>
 	<script type="text/javascript" src="${themeResourcePath}/combined/luxury-main.js"></script>
 	<script type="text/javascript" src="${themeResourcePath}/combined/luxury-tmpmain.min.js"></script>
+	<c:if test="${isIAEnabled}">
+		<script type="text/javascript"
+				src="${commonResourcePath}/js/minified/ia.min.js?v=${buildNumber}"></script>
+	</c:if>
 </c:if>
 <%-- <script type="text/javascript" src="${themeResourcePath}/js/plpSearch.js"></script> --%>
 
