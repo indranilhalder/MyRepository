@@ -36,8 +36,8 @@
 	</jsp:attribute>
 
 	<jsp:body>
-		<main data-currency-iso-code="${currentCurrency.isocode}">
-		
+	
+		<main data-currency-iso-code="${currentCurrency.isocode}">	
 		 <%-- <spring:theme code="text.skipToContent" var="skipToContent" />
 			<a href="#skip-to-content" class="skiptocontent" data-role="none">${skipToContent}</a>
 			<spring:theme code="text.skipToNavigation" var="skipToNavigation" />
@@ -75,7 +75,7 @@
 			<c:if test="${param.frame eq null}">
 			<c:choose>
             <c:when test="${empty showOnlySiteLogo }">
-				<footer:footer />
+				<footer:footer/>
 			</c:when>
 			<c:otherwise>
 			<c:if test="${empty hideAllFooter}">

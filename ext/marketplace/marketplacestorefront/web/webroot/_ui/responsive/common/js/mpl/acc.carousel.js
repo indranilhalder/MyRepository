@@ -1,13 +1,13 @@
 ACC.carousel = {
 
 	_autoload: [
-
+	    // "myFun",
 	     "shopTheStyleCarousel",
 	     "shopTheStyleHomeCarousel",
 
 	     "StyleEditCarousel",
 
-	     "myFun",
+	     
 
 	     "shopTheLookCarousel",
 
@@ -151,8 +151,10 @@ ACC.carousel = {
 	 
 		//Desktop view
 		/*TISSQAEE-403 Start*/
+		alert("~~~~~~~"+homePageBannerTimeout);
 		if(typeof homePageBannerTimeout!== "undefined"){
 			var timeout = parseInt(homePageBannerTimeout) * 1000 ;
+			alert("-------------"+timeout);
 			var loop = $(".homepage-banner #rotatingImageTimeout img").length > 1 ? true :false;
 			var dots = $(".homepage-banner #rotatingImageTimeout img").length > 1 ? true :false; 
 			//$(".home-rotatingImage").owlCarousel({

@@ -24,6 +24,7 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 
 import org.apache.commons.lang.StringUtils;
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 
 
@@ -32,6 +33,7 @@ import org.springframework.beans.factory.annotation.Autowired;
  */
 public class ForgottenPasswordEmailContext extends CustomerEmailContext
 {
+	private static final Logger LOG = Logger.getLogger(ForgottenPasswordEmailContext.class);//sonar fix
 	private int expiresInMinutes = 30;
 	private String token;
 	public static final String SECURE_RESET_PASSWORD_URL = "secureResetPasswordUrl";
@@ -78,6 +80,7 @@ public class ForgottenPasswordEmailContext extends CustomerEmailContext
 		super.init(storeFrontCustomerProcessModel, emailPageModel);
 		//TISTE-197 starts
 		customerData = getCustomerConverter().convert(getCustomer(storeFrontCustomerProcessModel));
+		LOG.debug("customer data ::: " + customerData);
 		final CustomerModel customer = getCustomer(storeFrontCustomerProcessModel);
 		final String displayName = customer.getFirstName();
 		if (displayName != null && StringUtils.isNotEmpty(displayName))

@@ -835,6 +835,7 @@ function openPop_quick(ussidfromSeller){
 			dataType : "json",
 			success : function(data) {
 				if (data == true) {
+					console.log('Inside data true'); //TPR-5787
 					//$("#radio_" + $("#hidWishlist").val()).prop("disabled", true);
 					//var msg=$('#wishlistSuccess').text();
 					//$('#addedMessage').show();
@@ -903,10 +904,12 @@ function openPop_quick(ussidfromSeller){
 				//	
 				}
 				else{
-					$("div.wishAlreadyAddedQv").addClass("active");
-					setTimeout(function(){
-						$("div.wishAlreadyAddedQv").removeClass("active")
-					},3000);
+					console.log('Inside data false'); //TPR-5787
+					$("div.wishAlreadyAddedQv").removeClass("active");//TPR-5787
+					//$("div.wishAlreadyAddedQv").addClass("active");//TPR-5787
+					//setTimeout(function(){//TPR-5787
+					//	$("div.wishAlreadyAddedQv").removeClass("active")//TPR-5787
+					//},3000);//TPR-5787
 					if(typeof utag !="undefined"){
 						utag.link({error_type : 'wishlist_error'});
 						}
@@ -1063,25 +1066,26 @@ $(document).on("click",".quickview .Emi > #EMImodal-content",function(e){
 });
 
 $(document).on('click','#buyNowQv .js-add-to-cart-qv',function(event){
-		 if(!$("#quickViewVariant li ").hasClass("selected")  && typeof($(".variantFormLabel").html())== 'undefined' && $("#categoryType").val()!='Electronics' && $("#categoryType").val()!='Watches' && $("#categoryType").val()!='TravelAndLuggage') {
-			// alert("Please select")
+	var isShowSize= $("#showSizeQuickView").val();
+		 /*if(!$("#quickViewVariant li ").hasClass("selected")  && typeof($(".variantFormLabel").html())== 'undefined' && $("#categoryType").val()!='Electronics' && $("#categoryType").val()!='Watches' && $("#categoryType").val()!='TravelAndLuggage' && isShowSize=='true') {
 			 $("#addToCartFormQuickTitle").html("<font color='#ff1c47'>" + $('#selectSizeId').text() + "</font>");
 			 				$("#addToCartFormQuickTitle").show();
 			  				$("#addToCartFormQuickTitle").fadeOut(5000);
 	 	    return false;
 	     }
+		 
+		ACC.product.sendToCartPageQuick("addToCartFormQuick",true);*/
+
 	
-		 ACC.product.sendToCartPageQuick("addToCartFormQuick",true);
-	
-	 if(!$("#quickViewVariant li ").hasClass("selected") && typeof($(".variantFormLabel").html())== 'undefined' && $("#categoryType").val()!='Electronics' && $("#categoryType").val()!='Watches' && $("#categoryType").val()!='Accessories' ){
-		 $("#addToCartFormQuickTitle").html("<font color='#ff1c47'>" + $('#selectSizeId').text() + "</font>");
+	 if(!$("#quickViewVariant li ").hasClass("selected") && typeof($(".variantFormLabel").html())== 'undefined' && $("#categoryType").val()!='Electronics' && $("#categoryType").val()!='Watches' && $("#categoryType").val()!='Accessories' && isShowSize=='true' ){
+		$("#addToCartFormQuickTitle").html("<font color='#ff1c47'>" + $('#selectSizeId').text() + "</font>");
 		 				$("#addToCartFormQuickTitle").show();
 		  				$("#addToCartFormQuickTitle").fadeOut(5000);
 		  				errorAddToBag("size_not_selected"); //Error for tealium analytics
  	    return false;
- }else{			 
+	 }	 
 	ACC.product.sendToCartPageQuick("addToCartFormQuick",true);
-}
+
 
 });
 /*End of quickview Emi*/
@@ -1165,3 +1169,4 @@ $(document).ready(function() {
 		$("#showPriceBreakupquick").slideToggle("fast");
 	});
 });
+

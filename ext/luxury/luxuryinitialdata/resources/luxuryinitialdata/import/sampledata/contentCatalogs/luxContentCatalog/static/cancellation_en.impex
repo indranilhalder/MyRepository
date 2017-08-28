@@ -1,0 +1,65 @@
+
+
+# ImpEx for Importing CMS Content
+# English Localisation
+
+# Macros / Replacement Parameter definitions
+$storePrefix=lux
+$contentCatalog=$storePrefixContentCatalog
+
+$contentCV=catalogVersion(CatalogVersion.catalog(Catalog.id[default=$contentCatalog]),CatalogVersion.version[default=Online])[default=$contentCatalog:Online]
+$picture=media(code, $contentCV);
+$siteResource=jar:com.tisl.lux.setup.InitialDataSystemSetup&/luxuryinitialdata/import/contentCatalogs/$contentCatalog
+
+# Language
+$lang=en
+
+
+
+
+# CMS Paragraph Components
+UPDATE CMSParagraphComponent;$contentCV[unique=true];uid[unique=true];content[lang=$lang]
+
+;;TitleForCancellationPageComponent;"Cancellation"
+
+
+
+
+;;CancellationPageComponent;" 
+                          <h3>Frequently Asked  Questions:</h3>
+
+
+<div id='collapsible-panels'> 
+<h5><b>Cancellation</b></h5>
+
+
+<h5 class='questions'><a href='#'>1.I didn’t mean to order that. How can I cancel my order?</a></h5>
+<div><p>You can cancel your order before the item(s) have been shipped. We'll refund the full amount you've paid for such a cancellation.
+Here's how to cancel your order:
+• Log in to your account and go to My TataCLiQ/My TataCLiQ Luxury
+• Select the appropriate order from ‘My Orders’
+• Click on ‘Cancel Order’ for the item(s) you want to cancel, individually
+• Select the reason and confirm the cancellation
+Once you're done, we'll send you an acknowledgement of the cancellation. Remember, you won’t be able to cancel an order after it has been shipped.</p></div>  
+<h5 class='questions'><a href='#'>2.When can I cancel my order?</a></h5>
+<div><p>Make sure you cancel your order before it has been shipped. That's the only way we can refund the full amount you've spent.</p></div>
+<h5 class='questions'><a href='#'>3.Can I cancel only part of my order?</a></h5>
+<div><p>Yes you can, you don't have to let go of everything in your cart. Before the item(s) of your order have reached the shipping stage, you can select them individually in the 'Order History' tab and cancel them.</p></div>
+<h5 class='questions'><a href='#'>4.Why do I see a disabled cancel link?</a></h5>
+<div><p>That means the item(s) from your order have already been shipped and you can't make any cancellations now.</p></div>
+<h5 class='questions'><a href='#'>5.How will I get my refund when I cancel an order?</a></h5>
+<div><p>Once your order has been cancelled, it will take around 7-8 business days for your refund to be processed and the amount to be transferred back to the source account. Check out the ‘Returns Section’ to know more</p></div>
+<h5 class='questions'><a href='#'>6.Will I get the complete refund for the order I’ve cancelled?</a></h5>
+<div><p>Yes, indeed. We'll refund the entire amount for a cancelled order.</p></div>
+<h5 class='questions'><a href='#'>7.What should I do if I don’t get my refund in the promised time?</a></h5>
+<div><p>We work on the double to make sure your refund gets to you on time. On the off-chance that it's been delayed, please get in touch with our team here. Don't forget to keep your order number handy.</p></div>
+<h5 class='questions'><a href='#'>8.This is not what I ordered. How do I replace it?</a></h5>
+<div><p>If your order or a part of it does not match the product description, we'll look into it right away. Please get in touch with us here. You can also initiate a product return by checking out the 'Returns' section.</p></div>
+<h5 class='questions'><a href='#'>9.Why was my order cancelled?</a></h5>
+<div><p>Sometimes our sellers cancel orders for various reasons – the product could be out-of-stock, of unacceptable quality, etc. Once an order has been cancelled, the refund will be processed immediately for online/credit card processes.</p></div>
+
+
+
+</div>
+
+"

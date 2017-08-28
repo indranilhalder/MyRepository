@@ -150,9 +150,8 @@ public class PancardController
 			model.addAttribute("filename", file.getOriginalFilename());
 			model.addAttribute("customername", customerName);
 
-			boolean ifRejected = false;
-			PancardInformationModel pancRejModel = null;
 			final List<String> transEntryList = new ArrayList<String>();
+			final List<PancardInformationModel> pModelR = new ArrayList();
 			final List<PancardInformationModel> pModelList = mplPancardFacade.getPanCardOredrId(orderReferanceNumber);
 
 			if (null != pModelList && CollectionUtils.isNotEmpty(pModelList))
@@ -161,14 +160,12 @@ public class PancardController
 				{
 					if (pModel.getStatus().equalsIgnoreCase(MarketplacecommerceservicesConstants.REJECTED))
 					{
-						ifRejected = true;
-						pancRejModel = pModel;
-						break;
+						pModelR.add(pModel);
 					}
 				}
-				if (ifRejected)
+				if (CollectionUtils.isNotEmpty(pModelR))
 				{
-					mplPancardFacade.refreshPanCardDetailsAndPIcall(pModelList, pancRejModel, pancardNumber, file);
+					mplPancardFacade.refreshPanCardDetailsAndPIcall(pModelList, pModelR, pancardNumber, file);
 					return ControllerConstants.Views.Pages.Pancard.panCardUploadSuccess;
 				}
 			}
@@ -195,35 +192,35 @@ public class PancardController
 		}
 		catch (final JAXBException e)
 		{
-			LOG.error("the JAXBException exception is**" + e.getMessage());
+			LOG.error("the JAXBException exception is**" + e);
 			return MarketplacecommerceservicesConstants.REDIRECT + MarketplacecommerceservicesConstants.PANCARDREDIRECTURL
 					+ orderReferanceNumber + "/" + customerName + MarketplacecommerceservicesConstants.PANCARDREDIRECTURLSUFFIX
 					+ MarketplacecommerceservicesConstants.FAILURE;
 		}
 		catch (final IOException e)
 		{
-			LOG.error("the IOException exception is**" + e.getMessage());
+			LOG.error("the IOException exception is**" + e);
 			return MarketplacecommerceservicesConstants.REDIRECT + MarketplacecommerceservicesConstants.PANCARDREDIRECTURL
 					+ orderReferanceNumber + "/" + customerName + MarketplacecommerceservicesConstants.PANCARDREDIRECTURLSUFFIX
 					+ MarketplacecommerceservicesConstants.FAILURE;
 		}
 		catch (final IllegalStateException e)
 		{
-			LOG.error("the IllegalStateException exception is**" + e.getMessage());
+			LOG.error("the IllegalStateException exception is**" + e);
 			return MarketplacecommerceservicesConstants.REDIRECT + MarketplacecommerceservicesConstants.PANCARDREDIRECTURL
 					+ orderReferanceNumber + "/" + customerName + MarketplacecommerceservicesConstants.PANCARDREDIRECTURLSUFFIX
 					+ MarketplacecommerceservicesConstants.FAILURE;
 		}
 		catch (final IllegalArgumentException e)
 		{
-			LOG.error("the IllegalArgumentException exception is**" + e.getMessage());
+			LOG.error("the IllegalArgumentException exception is**" + e);
 			return MarketplacecommerceservicesConstants.REDIRECT + MarketplacecommerceservicesConstants.PANCARDREDIRECTURL
 					+ orderReferanceNumber + "/" + customerName + MarketplacecommerceservicesConstants.PANCARDREDIRECTURLSUFFIX
 					+ MarketplacecommerceservicesConstants.FAILURE;
 		}
 		catch (final Exception e)
 		{
-			LOG.error("the exception is**" + e.getMessage());
+			LOG.error("the exception is**" + e);
 			return MarketplacecommerceservicesConstants.REDIRECT + MarketplacecommerceservicesConstants.PANCARDREDIRECTURL
 					+ orderReferanceNumber + "/" + customerName + MarketplacecommerceservicesConstants.PANCARDREDIRECTURLSUFFIX
 					+ MarketplacecommerceservicesConstants.FAILURE;

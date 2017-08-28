@@ -81,10 +81,11 @@
 	<property location="${ext.marketplacestorefront.path}/web/webroot/_ui" name="mpstorefront.webroot.ui" />
 	<property location="${ext.marketplacestorefront.path}/web/webroot/_ui/compiler.jar" name="google.closure.jar" />
 	<property location="${mpstorefront.webroot.ui}/responsive/common/js/minified" name="mpstorefront.minjs.dir" />
+	<property location="${mpstorefront.webroot.ui}/responsive/theme-luxury/combined" name="lxstorefront.minjs.dir" />
 	<property location="${mpstorefront.webroot.ui}/responsive/common/js" name="mpstorefront.js.dir" />
 	<property location="**.js" name="alljs.file.expression" />
 
-	<!-- Start properties for min-css -->
+	<!-- Start properties for min-css for mpl -->
 
 	<property location="${ext.marketplacestorefront.path}/web/webroot/_ui/yuicompressor.jar" name="yui.compresser.jar" />
 	<property location="${mpstorefront.webroot.ui}/responsive/theme-blue/css/minified" name="mpstorefront.mincss.dir" />
@@ -96,7 +97,20 @@
 	<property location="${mpstorefront.mincss.temp.ie8.dir}/yuicompressor.jar" name="minifier.ie8.yui.compresser.jar" />
 	<property location="${mpstorefront.mincss.temp.ie9.dir}/yuicompressor.jar" name="minifier.ie9.yui.compresser.jar" />
 
-	<!-- End properties for min-css -->
+	<!-- End properties for min-css for mpl -->
+
+	<!-- Start properties for min-css for lux -->
+
+	<property location="${mpstorefront.webroot.ui}/responsive/theme-luxury/css/minified" name="lsstorefront.mincss.dir" />
+	<property location="${mpstorefront.webroot.ui}/responsive/theme-luxury/css/minifier-temp" name="lxstorefront.mincss.temp.dir" />
+	<property location="${mpstorefront.webroot.ui}/responsive/theme-luxury/css/minifier-temp-ie8" name="lxstorefront.mincss.temp.ie8.dir" />
+	<property location="${mpstorefront.webroot.ui}/responsive/theme-luxury/css/minifier-temp-ie9" name="lxstorefront.mincss.temp.ie9.dir" />
+	<property location="${mpstorefront.webroot.ui}/responsive/theme-luxury/css" name="lxstorefront.css.dir" />
+	<property location="${lxstorefront.mincss.temp.dir}/yuicompressor.jar" name="lxstorefront.minifier.yui.compresser.jar" />
+	<property location="${lxstorefront.mincss.temp.ie8.dir}/yuicompressor.jar" name="lxstorefront.minifier.ie8.yui.compresser.jar" />
+	<property location="${lxstorefront.mincss.temp.ie9.dir}/yuicompressor.jar" name="lxstorefront.minifier.ie9.yui.compresser.jar" />
+
+	<!-- End properties for min-css for mpl -->
 
 	<if>
 		<os family="windows" />
@@ -226,7 +240,7 @@
 	</macrodef>
 
 
-	<!-- 
+	<!--
 		Called whenever 'ant ear' is used. this callback can be used to modify the content of the ear file
 
 		${ear.path}: 			path to ear
@@ -251,22 +265,41 @@
 				<then>
 					<delete dir="${mpstorefront.minjs.dir}" />
 
-					<!-- Start delete directories for min-css -->
+					<!-- Start delete directories for min-css for mpl -->
 					<delete dir="${mpstorefront.mincss.temp.dir}" />
 					<delete dir="${mpstorefront.mincss.temp.ie8.dir}" />
 					<delete dir="${mpstorefront.mincss.temp.ie9.dir}" />
 					<delete file="${mpstorefront.css.dir}/tmpmain.min.css" />
 					<delete file="${mpstorefront.css.dir}/main-ie8-min.css" />
 					<delete file="${mpstorefront.css.dir}/main-ie9-min.css" />
-					<!-- End delete directories for min-css -->
+					<!-- End delete directories for min-css for mpl -->
+
+					<!-- Start delete directories for min-css lux -->
+
+					<!--<delete dir="${lxstorefront.mincss.temp.dir}" />-->
+					<delete dir="${lxstorefront.mincss.temp.ie8.dir}" />
+					<delete dir="${lxstorefront.mincss.temp.ie9.dir}" />
+					<delete file="${lxstorefront.css.dir}/tmpmain.min.css" />
+					<delete file="${lxstorefront.css.dir}/main-ie8-min.css" />
+					<delete file="${lxstorefront.css.dir}/main-ie9-min.css" />
+
+					<!-- End delete directories for min-css  lux -->
+
 
 					<mkdir dir="${mpstorefront.minjs.dir}" />
+					<mkdir dir="${lxstorefront.minjs.dir}" />
 
-					<!-- Start make directories for min-css -->
+					<!-- Start make directories for min-css for mpl-->
 					<mkdir dir="${mpstorefront.mincss.temp.dir}" />
 					<mkdir dir="${mpstorefront.mincss.temp.ie8.dir}" />
 					<mkdir dir="${mpstorefront.mincss.temp.ie9.dir}" />
-					<!-- End make directories for min-css -->
+					<!-- End make directories for min-css for mpl-->
+
+					<!-- Start make directories for min-css for lux -->
+					<!--<mkdir dir="${lxstorefront.mincss.temp.dir}" />-->
+					<mkdir dir="${lxstorefront.mincss.temp.ie8.dir}" />
+					<mkdir dir="${lxstorefront.mincss.temp.ie9.dir}" />
+					<!-- End make directories for min-css for lux -->
 
 					<echo message="Minifying JS..." />
 					<java jar="${google.closure.jar}" dir="${mpstorefront.webroot.ui}" fork="true">
@@ -274,8 +307,21 @@
 						<arg line="--language_in ECMASCRIPT5" />
 						<arg line="--warning_level QUIET" />
 						<arg line="--js ${mpstorefront.js.dir}/mpl-primary/tisl.home.js" />
+						<arg line="--js ${mpstorefront.js.dir}/mpl-primary/tisl.home.lazy.js" />
 						<arg line="--js ${mpstorefront.js.dir}/mpl/**.js" />
 						<arg line="--js_output_file ${mpstorefront.minjs.dir}/tmpmain.min.js" />
+					</java>
+					<echo message="Minifying JS for Luxury..." />
+					<java jar="${google.closure.jar}" dir="${mpstorefront.webroot.ui}" fork="true">
+						<arg line="--compilation_level SIMPLE" />
+						<arg line="--language_in ECMASCRIPT5" />
+						<arg line="--warning_level QUIET" />
+						<arg line="--js ${mpstorefront.js.dir}/mpl-primary/tisl.home.js" />
+						<arg line="--js ${mpstorefront.js.dir}/mpl/**.js" />
+						<arg line="--js !${mpstorefront.js.dir}/mpl/**acc.accountaddress.js"/>
+						<arg line="--js !${mpstorefront.js.dir}/mpl/**feedback.js"/>
+						<arg line="--js !${mpstorefront.js.dir}/mpl/**acc.productDetail.js"/>
+						<arg line="--js_output_file ${lxstorefront.minjs.dir}/luxury-tmpmain.min.js" />
 					</java>
 					<java jar="${google.closure.jar}" dir="${mpstorefront.webroot.ui}" fork="true">
 						<arg line="--compilation_level SIMPLE" />
@@ -321,7 +367,7 @@
 						<arg line="--js_output_file ${mpstorefront.minjs.dir}/ie10.min.js" />
 					</java>
 
-					<!-- Start min-css steps -->
+					<!-- Start min-css steps for mpl -->
 					<copy file="${yui.compresser.jar}" tofile="${minifier.yui.compresser.jar}" />
 					<copy file="${yui.compresser.jar}" tofile="${minifier.ie8.yui.compresser.jar}" />
 					<copy file="${yui.compresser.jar}" tofile="${minifier.ie9.yui.compresser.jar}" />
@@ -371,12 +417,74 @@
 							<include name="*-min.css" />
 						</fileset>
 					</concat>
-					<copy file="${mpstorefront.mincss.temp.ie8.dir}/main-ie8-min.css" tofile="${mpstorefront.css.dir}/main-ie8-min.css" />
+<!--					<copy file="${mpstorefront.mincss.temp.ie8.dir}/main-ie8-min.css" tofile="${mpstorefront.css.dir}/main-ie8-min.css" />
 					<copy file="${mpstorefront.mincss.temp.ie9.dir}/main-ie9-min.css" tofile="${mpstorefront.css.dir}/main-ie9-min.css" />
+-->
 					<delete dir="${mpstorefront.mincss.temp.dir}" />
 					<delete dir="${mpstorefront.mincss.temp.ie8.dir}" />
 					<delete dir="${mpstorefront.mincss.temp.ie9.dir}" />
-					<!-- End min-css steps -->
+					<!-- End min-css steps mpl -->
+
+					<!-- Start min-css steps for lux -->
+					<copy file="${yui.compresser.jar}" tofile="${lxstorefront.minifier.yui.compresser.jar}" />
+					<copy file="${yui.compresser.jar}" tofile="${lxstorefront.minifier.ie8.yui.compresser.jar}" />
+					<copy file="${yui.compresser.jar}" tofile="${lxstorefront.minifier.ie9.yui.compresser.jar}" />
+
+					<!--<copy todir="${lxstorefront.mincss.temp.dir}">
+						<fileset dir="${lxstorefront.css.dir}" includes="*.css" excludes="hybris.cms.live.edit.css,main-ie8.css,main-ie9.css,fonts.min.css,preload.css" />
+					</copy>-->
+					<copy file="${lxstorefront.css.dir}/style.css" tofile="${lxstorefront.css.dir}/tmpmain.min.css" />
+					<copy todir="${lxstorefront.mincss.temp.ie8.dir}">
+						<fileset dir="${lxstorefront.css.dir}" includes="main-ie8.css" />
+					</copy>
+					<copy todir="${lxstorefront.mincss.temp.ie9.dir}">
+						<fileset dir="${lxstorefront.css.dir}" includes="main-ie9.css" />
+					</copy>
+					<echo message="Minifying CSS for lux..." />
+					<!--<pathconvert pathsep=" " property="luxurycustomcssfiles">-->
+						<!--<fileset dir="${lxstorefront.mincss.temp.dir}">-->
+							<!--<include name="*.css" />-->
+						<!--</fileset>-->
+					<!--</pathconvert>-->
+					<pathconvert pathsep=" " property="luxuryie8cssfiles">
+						<fileset dir="${lxstorefront.mincss.temp.ie8.dir}">
+							<include name="*.css" />
+						</fileset>
+					</pathconvert>
+					<pathconvert pathsep=" " property="luxuryie9cssfiles">
+						<fileset dir="${lxstorefront.mincss.temp.ie9.dir}">
+							<include name="*.css" />
+						</fileset>
+					</pathconvert>
+					<!--<java jar="${lxstorefront.minifier.yui.compresser.jar}" dir="${lxstorefront.mincss.temp.dir}" fork="true">
+						<arg line="&#45;&#45;type css" />
+						<arg line="-o '.css$:-min.css'" />
+						<arg line="${luxurycustomcssfiles}" />
+					</java>-->
+					<java jar="${lxstorefront.minifier.ie8.yui.compresser.jar}" dir="${lxstorefront.mincss.temp.ie8.dir}" fork="true">
+						<arg line="--type css" />
+						<arg line="-o '.css$:-min.css'" />
+						<arg line="${luxuryie8cssfiles}" />
+					</java>
+					<java jar="${lxstorefront.minifier.ie9.yui.compresser.jar}" dir="${lxstorefront.mincss.temp.ie9.dir}" fork="true">
+						<arg line="--type css" />
+						<arg line="-o '.css$:-min.css'" />
+						<arg line="${luxuryie9cssfiles}" />
+					</java>
+					<echo message="Merging minfied CSS for lux..." />
+					<!--<concat destfile="${lxstorefront.css.dir}/tmpmain.min.css" append="true">
+						<fileset dir="${lxstorefront.mincss.temp.dir}">
+							<include name="*-min.css" />
+						</fileset>
+					</concat>-->
+<!--					<copy file="${lxstorefront.mincss.temp.ie8.dir}/main-ie8-min.css" tofile="${lxstorefront.css.dir}/main-ie8-min.css" />
+					<copy file="${lxstorefront.mincss.temp.ie9.dir}/main-ie9-min.css" tofile="${lxstorefront.css.dir}/main-ie9-min.css" />
+-->
+					<!--<delete dir="${lxstorefront.mincss.temp.dir}" />-->
+					<delete dir="${lxstorefront.mincss.temp.ie8.dir}" />
+					<delete dir="${lxstorefront.mincss.temp.ie9.dir}" />
+					
+					<!-- End min-css steps for lux-->
 
 				</then>
 			</if>
@@ -395,6 +503,13 @@
 		<delete file="${mpstorefront.css.dir}/tmpmain.min.css" />
 		<delete file="${mpstorefront.css.dir}/main-ie8-min.css" />
 		<delete file="${mpstorefront.css.dir}/main-ie9-min.css" />
+		<delete dir="${lxstorefront.minjs.dir}" />
+		<delete dir="${lxstorefront.mincss.temp.dir}" />
+		<delete dir="${lxstorefront.mincss.temp.ie8.dir}" />
+		<delete dir="${lxstorefront.mincss.temp.ie9.dir}" />
+		<delete file="${lxstorefront.css.dir}/tmpmain.min.css" />
+		<delete file="${lxstorefront.css.dir}/main-ie8-min.css" />
+		<delete file="${lxstorefront.css.dir}/main-ie9-min.css" />
 		<echo message="Cleaned!" />
 	</target>
 

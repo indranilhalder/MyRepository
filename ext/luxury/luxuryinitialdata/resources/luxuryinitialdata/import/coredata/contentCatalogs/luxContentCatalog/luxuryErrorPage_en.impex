@@ -1,0 +1,47 @@
+
+
+$contentCatalog=luxContentCatalog 
+$contentCV=catalogVersion(CatalogVersion.catalog(Catalog.id[default=$contentCatalog]),CatalogVersion.version[default=Online])[default=$contentCatalog:Online] 
+$productCatalog=luxProductCatalog 
+$productCatalogName=MarketPlace Product Catalog
+$productCV=catalogVersion(catalog(id[default=$productCatalog]),version[default='Online'])[unique=true,default=$productCatalog:Online] 
+$picture=media(code, $contentCV);
+$siteResource=jar:com.tisl.lux.setup.InitialDataSystemSetup&/luxuryinitialdata/import/sampledata/contentCatalogs/$contentCatalog
+$medias=medias(code, $contentCV);
+$lang=en
+$mediaContainer=media(qualifier, $contentCV)[lang=$lang];
+
+UPDATE GenericItem[processor=de.hybris.platform.commerceservices.impex.impl.ConfigPropertyImportProcessor];pk[unique=true]
+$jarResourceCms=$config-jarResourceCmsValue
+
+INSERT_UPDATE Media;mediaFormat(qualifier);code[unique=true];@media[translator=de.hybris.platform.impex.jalo.media.MediaDataTranslator][forceWrite=true];realfilename;altText;mime[default='image/jpeg'];$contentCV[unique=true];folder(qualifier)[default=images];
+;;TMP_ErrorPageBanner.png;$jarResourceCms/preview-images/404.jpg;TMP_ErrorPageBanner.png;"Bussiness Error Banner";
+
+INSERT_UPDATE MplBigPromoBannerComponent;$contentCV[unique=true];uid[unique=true];name;&componentRef
+;;ErrorPageBannerComponent;Error Page Banner Component;ErrorPageBannerComponent
+
+
+
+
+UPDATE MplBigPromoBannerComponent;$contentCV[unique=true];uid[unique=true];bannerImage(code,$contentCV);majorPromoText;minorPromo1Text;minorPromo2Text
+;;ErrorPageBannerComponent;TMP_ErrorPageBanner.png;;
+						  
+
+INSERT_UPDATE ContentSlot;$contentCV[unique=true];uid[unique=true];name;active;cmsComponents(uid,$contentCV)
+;;ErrorPageBannerComponent-slot;Error PageBanner Slot;true;ErrorPageBannerComponent
+						  
+						  
+
+INSERT_UPDATE ContentSlotForTemplate;$contentCV[unique=true];uid[unique=true];position[unique=true];pageTemplate(uid,$contentCV)[unique=true][default='ErrorPageTemplate'];contentSlot(uid,$contentCV)[unique=true];allowOverwrite
+;;TopHeaderSlot-ErrorPage;TopHeaderSlot;;TopHeaderSlot;true          
+;;MiddleHeaderHelpLink-ErrorPage;MiddleHeader;;MiddleHeader;true          
+;;SiteLogo-ErrorPage;SiteLogo;;SiteLogoSlot;true          
+;;HeaderLinks-ErrorPage;HeaderLinks;;HeaderLinksSlot;true          
+;;SearchBox-ErrorPage;SearchBox;;SearchBoxSlot;true          
+;;MiniCart-ErrorPage;MiniCart;;MiniCartSlot;true       
+;;NavigationBar-ErrorPage;NavigationBar;;NavigationBarSlot;true                  
+;;Footer-ErrorPage;Footer;;FooterSlot;true
+;;SideContent-ErrorPage;SideContent;;SideContentSlot;true 
+#;;MiddleContent-ErrorPage;MiddleContent;;MiddleContentSlot;true
+;;ErrorPageBannerComponent-ErrorPage;MiddleContent;;ErrorPageBannerComponent-slot;true
+

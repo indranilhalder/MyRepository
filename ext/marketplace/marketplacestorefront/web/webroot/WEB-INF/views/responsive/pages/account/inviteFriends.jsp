@@ -94,13 +94,14 @@
 				<p><spring:theme code="text.InviteFriends.SendInvitationEmail" text="Recommed us to your friends and family. Send them an invite!"/></p>
                 <form>
 						<c:if test="${not empty textMessage}">
-							<c:set var="textMessage" value="Have you shopped on Tata CLiQ yet? <www.tatacliq.com>"></c:set>
+							<c:set var="textMessage" value="Hey! I loved the shopping experience on Tata CLiQ and I recommend that you try it as well."></c:set>
                        	</c:if>
-                        <label><spring:theme code="text.InviteFriends.friends.email" /></label>	
-						<input type="text" id="friendsEmail" onkeypress="kpressfemail()"/>
-						<span><spring:theme code="text.InviteFriends.SeparateWithCommas"/></span>
+                        <label class="invite-text-lbl label-float"><spring:theme code="text.InviteFriends.friends.email" /></label>	
+                        </br>
+						<input type="text" id="friendsEmail" onkeypress="kpressfemail()" placeholder='<spring:theme code="text.InviteFriends.SeparateWithCommas"/>'/>
+						<%-- <span><spring:theme code="text.InviteFriends.SeparateWithCommas"/></span> --%>
 						<div class="errorMessage"><div id="errfemail"></div></div>
-						<label><spring:theme code="text.InviteFriends.message" /></label>	
+						<label class="massage-text-lbl invite-text-lbl"><spring:theme code="text.InviteFriends.message" /></label>	
 						<textarea class="mytextarea" id="mytextarea" placeholder="${textMessage}">${textMessage}</textarea>
 						<button type="button"  id="inviteFriends"
 							class="blue"><spring:theme code="text.InviteFriends.InviteNow"/></button>
@@ -111,8 +112,8 @@
 					
 					<span class="or"><spring:theme code="text.or"/></span>
 					
-					<h2><spring:theme code="text.inviteFriends.invite.social" text="The social network"/></h2>
-					
+					<label class="invite-text-lbl"><spring:theme code="text.inviteFriends.invite.social" text="The social network"/></label>
+					<br />
 					<p><spring:theme code="text.inviteFriends.invite.more.friends" text="Invite your friends on Facebook, Google+ or Twitter"/></p>
 					
 						<div class="social">
@@ -140,9 +141,10 @@
 							<!-- <g:plus action="share" style="width:174px !important;"></g:plus> -->
 							
 							<a class="fb" onclick="return openPopup('https://www.facebook.com/dialog/feed?link=' + window.location + '&amp;app_id=' + $('#facebookAppid').text() + '&amp;description='+$('#sharepretext').text()+' '+' &amp;redirect_uri=http://www.facebook.com/')"></a>   
-							
-							
-							<span id="myBtn" class="demo g-interactivepost"
+						
+	                         <a class="tw" onclick="return openPopup('https://twitter.com/intent/tweet?text='+ $('#sharepretext').text() + ' ' + window.location + ' ')"></a>
+								
+								<span id="myBtn" class="demo g-interactivepost"
 	                            data-contenturl=""
 	                            data-clientid='${googleClientid}'
 	                            data-cookiepolicy="single_host_origin"
@@ -151,9 +153,6 @@
 	                            data-calltoactionurl="">
 	                           <a class="gp"></a>
 	                         </span> 
-	                         
-	                         <a class="tw" onclick="return openPopup('https://twitter.com/intent/tweet?text='+ $('#sharepretext').text() + ' ' + window.location + ' ')"></a>
-								
 						</div>
 						</div>
 					</div>
@@ -164,19 +163,34 @@
 						$(".g-interactivepost").attr("data-calltoactionurl",window.location);
 					});
 					/* end change of INC144313760 */
+					/* start change of TPR-6147 */
+				  	  function copyToClipboard(element) {
+					  var $temp = $("<input>");
+					  $("body").append($temp);
+					  $temp.val($(element).val()).select();
+					  document.execCommand("copy");
+					  $temp.remove();
+					  $('.copycode_message').fadeIn(function() {
+						  window.setTimeout(function() {
+						    $('.copycode_message').fadeOut('slow');
+						  }, 1500);
+						});
+					} 
+				   /* start change of TPR-6147 */
 					</script>
 					<div class="personal-invites">
 					
 					<span class="or"><spring:theme code="text.or"/></span>
-					<h2><spring:theme code="text.inviteFriends.invite.personal" text="One on one"/></h2>
-					<p><spring:theme code="text.inviteFriends.invite.copy.and.share" text="Invite your friends to shop on Tata CLiQ by emailing them the link below"/></p>
+					<label class="invite-text-lbl"><spring:theme code="text.inviteFriends.invite.personal" text="One on one"/></label>
+					<%-- <p><spring:theme code="text.inviteFriends.invite.copy.and.share" text="Invite your friends to shop on Tata CLiQ by emailing them the link below"/></p> --%>
 					
 					<%-- <c:url value='/login/?affiliateId=${affiliateId}' var="regUrl" />
 					<c:set value="${baseUrl}${regUrl}" var="finalUrl"></c:set> --%>
 					
-					<input type="text" disabled="disabled" value="${baseUrl}" />
+					<input type="text" disabled="disabled" value="${baseUrl}" id="copyLink" />
+					<a  class="copy-link" onclick="copyToClipboard(copyLink)">COPY LINK</a>
 					</div>
-				
+				<p class="copycode_message">link copied</p>
 			</div>
 		</div>
 	</div>	
@@ -188,4 +202,5 @@
 <template:javaScriptVariables />
 <script type="text/javascript"
 	src="${commonResourcePath}/js/acc.accountaddress.js"></script> --%>
+
 

@@ -173,7 +173,8 @@ public class CODPaymentServiceImpl implements CODPaymentService
 				"payment.transactionStatusDetails"));
 		paymentTransactionEntryModel.setTime(new Date());
 		paymentTransactionEntryModel.setType(PaymentTransactionType.AUTHORIZATION);
-		paymentTransactionEntryModel.setPaymentMode(mplPaymentDaoImpl.getPaymentMode(OTPTypeEnum.COD.toString()));
+		paymentTransactionEntryModel.setPaymentMode(mplPaymentDaoImpl.getPaymentMode(OTPTypeEnum.COD.toString(),
+				baseStoreService.getCurrentBaseStore()));
 		getModelService().save(paymentTransactionEntryModel);
 
 	}

@@ -114,7 +114,7 @@ public class CustomOmsOrderLinePopulator implements Populator<OrderEntryModel, O
 				final List<JewelleryInformationModel> jewelleryInfo = jewelleryService.getJewelleryInfoByUssid(source
 						.getSelectedUSSID());
 				ussid = jewelleryInfo.get(0).getPCMUSSID();
-				jwlSkuid = ussid.substring(6, ussid.length());
+				jwlSkuid = source.getSelectedUSSID().substring(6, source.getSelectedUSSID().length());
 			}
 			else
 			{
@@ -124,9 +124,10 @@ public class CustomOmsOrderLinePopulator implements Populator<OrderEntryModel, O
 			//final SellerInformationModel sellerInfoModel = getMplSellerInformationService().getSellerDetail(
 			//	source.getSelectedUSSID());
 
-			final SellerInformationModel sellerInfoModel = getMplSellerInformationService().getSellerDetail(ussid);
+			final SellerInformationModel sellerInfoModel = getMplSellerInformationService().getSellerDetail(ussid,source.getOrder().getStore().getCatalogs().get(0).getActiveCatalogVersion());
 
 			//jewellery ends
+
 
 			List<RichAttributeModel> richAttributeModel = null;
 			if (sellerInfoModel != null)
@@ -271,6 +272,8 @@ public class CustomOmsOrderLinePopulator implements Populator<OrderEntryModel, O
 				target.setOrderLineStatus(MplCodeMasterUtility.getglobalCode(orderStatus));
 				//PT issue for One touch cancellation--fix
 				//target.setOrderLineStatus(MplCodeMasterUtility.getglobalCode(source.getOrder().getStatus().getCode().toUpperCase()));
+
+
 			}
 			else
 			{
@@ -377,6 +380,7 @@ public class CustomOmsOrderLinePopulator implements Populator<OrderEntryModel, O
 				target.setCrmParentRef(source.getParentTransactionID());
 			}
 			//TPR-1347---END
+
 			if (richAttributeModel.get(0).getDeliveryFulfillModeByP1() != null
 					&& richAttributeModel.get(0).getDeliveryFulfillModeByP1().getCode() != null)
 
@@ -392,14 +396,14 @@ public class CustomOmsOrderLinePopulator implements Populator<OrderEntryModel, O
 			/*
 			 * if (richAttributeModel.get(0).getDeliveryFulfillModeByP1() != null &&
 			 * richAttributeModel.get(0).getDeliveryFulfillModeByP1().getCode() != null)
-			 *
+			 * 
 			 * { final String fulfilmentType =
 			 * richAttributeModel.get(0).getDeliveryFulfillModeByP1().getCode().toUpperCase();
 			 * target.setFulfillmentTypeP1(fulfilmentType); }
-			 *
+			 * 
 			 * if (richAttributeModel.get(0).getDeliveryFulfillModes() != null &&
 			 * richAttributeModel.get(0).getDeliveryFulfillModes().getCode() != null)
-			 *
+			 * 
 			 * { final String fulfilmentType = richAttributeModel.get(0).getDeliveryFulfillModes().getCode().toUpperCase();
 			 * if(fulfilmentType.equalsIgnoreCase(MarketplaceomsservicesConstants.BOTH)){
 			 * if(richAttributeModel.get(0).getDeliveryFulfillModeByP1
@@ -603,7 +607,7 @@ public class CustomOmsOrderLinePopulator implements Populator<OrderEntryModel, O
 	 * (!category.getSupercategories().isEmpty()) { for (final CategoryModel superCategory :
 	 * category.getSupercategories()) { getCategoryName(superCategory); } } } catch (final Exception e) { throw new
 	 * EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000); }
-	 * 
+	 *
 	 * }
 	 */
 
@@ -1059,3 +1063,4 @@ public class CustomOmsOrderLinePopulator implements Populator<OrderEntryModel, O
 		return Registry.getApplicationContext().getBean("defaultPromotionManager", DefaultPromotionManager.class);
 	}
 }
+

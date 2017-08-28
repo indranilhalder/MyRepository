@@ -1,0 +1,95 @@
+#
+# Import the CMS content for the site
+#
+$storePrefix=lux
+$contentCatalog=$storePrefixContentCatalog
+$productCatalog=$storePrefixProductCatalog
+$contentCV=catalogVersion(CatalogVersion.catalog(Catalog.id[default=$contentCatalog]),CatalogVersion.version[default=Staged])[default=$contentCatalog:Staged]
+$productCV=catalogVersion(CatalogVersion.catalog(Catalog.id[default=$productCatalog]),CatalogVersion.version[default=Staged])[default=$productCatalog:Staged]
+$lang=en
+$picture=media(code, $contentCV);
+$luxuryStoreAddonPrefix=addon:/luxurystoreaddon
+# Import modulegen config properties into impex macros
+UPDATE GenericItem[processor=de.hybris.platform.commerceservices.impex.impl.ConfigPropertyImportProcessor];pk[unique=true]
+$jarResourceCms=$config-jarResourceCmsValue
+
+INSERT_UPDATE PageTemplate;$contentCV[unique=true];uid[unique=true];name;frontendTemplateName;active[default=true]
+;;LuxSearchResultsPageTemplate;Luxury Search Results Page Template;$luxuryStoreAddonPrefix/pages/search/luxurySearchResultsPage
+;;LuxSearchResultsEmptyPageTemplate;Luxury Search Results Empty Page Template;$luxuryStoreAddonPrefix/pages/search/luxurySearchEmptyPage
+
+UPDATE PageTemplate;$contentCV[unique=true];uid[unique=true];velocityTemplate[translator=de.hybris.platform.commerceservices.impex.impl.FileLoaderValueTranslator]
+;;LuxSearchResultsPageTemplate;$jarResourceCms/structure-view/structure_searchResultsGridPageLuxTemplate.vm                         
+
+INSERT_UPDATE ContentSlot;$contentCV[unique=true];uid[unique=true];name;active;cmsComponents(uid,$contentCV)
+;;WishListSlot;Wish List;true;MyWishList
+
+INSERT_UPDATE ContentSlotForTemplate;$contentCV[unique=true];uid[unique=true];position[unique=true];pageTemplate(uid,$contentCV)[unique=true][default='LuxSearchResultsPageTemplate'];contentSlot(uid,$contentCV)[unique=true];allowOverwrite
+;;LuxProductLeftRefinements-SearchResultsGrid;LuxProductLeftRefinements;;ProductLeftRefinements;true          
+;;LuxSearchResultsGridSlot-SearchResultsGrid;LuxSearchResultsGridSlot;;SearchResultsGridSlot;true          
+;;LuxTopHeaderSlot-SearchResultsGrid;TopHeaderSlot;;TopHeaderSlot;true          
+;;LuxMiddleHeaderHelpLink-SearchResultsGrid;MiddleHeader;;MiddleHeader;true          
+;;LuxSiteLogo-SearchResultsGrid;SiteLogo;;SiteLogoSlot;true          
+;;LuxHeaderLinks-SearchResultsGrid;HeaderLinks;;HeaderLinksSlot;true          
+;;LuxSearchBox-SearchResultsGrid;SearchBox;;SearchBoxSlot;true          
+;;LuxMiniCart-SearchResultsGrid;MiniCart;;MiniCartSlot;true          
+;;LuxNavigationBar-SearchResultsGrid;NavigationBar;;NavigationBarSlot;true          
+;;LuxWhyShopOnLuxury-SearchResultsGrid;WhyShopOnLuxury;;WhyShopOnLuxury;true
+;;LuxFooter-SearchResultsGrid;Footer;;FooterSlot;true          
+;;LuxPlaceholderContentSlot-SearchResultsGrid;PlaceholderContentSlot;;PlaceholderContentSlot;true
+;;WishList-SearchResultsGrid;WishList;;WishListSlot;true
+;;LuxBottomHeaderSlot-SearchResultsGrid;BottomHeaderSlot;;BottomHeaderSlot;true
+
+INSERT_UPDATE ContentSlotForTemplate;$contentCV[unique=true];uid[unique=true];position[unique=true];pageTemplate(uid,$contentCV)[unique=true][default='LuxSearchResultsEmptyPageTemplate'];contentSlot(uid,$contentCV)[unique=true];allowOverwrite
+;;LuxTopHeaderSlot-SearchResultsEmpty;TopHeaderSlot;;TopHeaderSlot;true
+;;LuxMiddleHeaderHelpLink-SearchResultsEmpty;MiddleHeader;;MiddleHeader;true
+;;LuxSiteLogo-SearchResultsEmpty;SiteLogo;;SiteLogoSlot;true
+;;LuxHeaderLinks-SearchResultsEmpty;HeaderLinks;;HeaderLinksSlot;true
+;;LuxSearchBox-SearchResultsEmpty;SearchBox;;SearchBoxSlot;true
+;;LuxMiniCart-SearchResultsEmpty;MiniCart;;MiniCartSlot;true
+;;LuxNavigationBar-SearchResultsEmpty;NavigationBar;;NavigationBarSlot;true
+;;LuxWhyShopOnLuxury-SearchResultsEmpty;WhyShopOnLuxury;;WhyShopOnLuxury;true
+;;LuxFooter-SearchResultsEmpty;Footer;;FooterSlot;true
+;;LuxPlaceholderContentSlot-SearchResultsEmpty;PlaceholderContentSlot;;PlaceholderContentSlot;true
+;;WishList-SearchResultsEmpty;WishList;;WishListSlot;true
+;;LuxBottomHeaderSlot-SearchResultsGrid;BottomHeaderSlot;;BottomHeaderSlot;true
+
+
+INSERT_UPDATE ContentPage;$contentCV[unique=true];uid[unique=true];name;masterTemplate(uid,$contentCV);label;categoryAssociated(code,$productCV);defaultPage[default='true'];approvalStatus(code)[default='approved'];homepage[default='false']
+;;LuxSearchResultsPage;Luxury Search Results Page;LuxSearchResultsPageTemplate;search
+;;LuxSearchEmpty;Luxury Search Results Empty Page;LuxSearchResultsEmptyPageTemplate;searchEmpty
+
+INSERT_UPDATE NeedHelpComponent;$contentCV[unique=true];uid[unique=true];name;&componentRef;ContactNumber;;
+;;NeedHelp;Need Help;NeedHelp;1-800-123-4567;;
+
+
+#Impex for PLP with Visual filter & Banner
+
+INSERT_UPDATE ShopByCategory;$contentCV[unique=true];uid[unique=true];name;title;relatedImage(uid,$contentCV)
+;;visual-filter-100001SHW0001	;visual-filter-100001SHW0001;Visual Category for 100001SHW0001;ImageCourselBanner,ImageCourselBanner1,ImageCourselBanner2,ImageCourselBanner3,ImageCourselBanner4
+;;visual-filter-100009K0001K11	;visual-filter-100009K0001K11;Visual Category for 100009K0001K11;ImageCourselBanner,ImageCourselBanner1,ImageCourselBanner2,ImageCourselBanner3,ImageCourselBanner4
+
+INSERT_UPDATE RotatingImagesComponent;$contentCV[unique=true];uid[unique=true];name;banners(uid,$contentCV);
+;;PLP-Banner-100001SHW0001;PLP Banner Rotating for 100001SHW0001;CategoryType1Banner,CategoryType2Banner,CategoryType3Banner,CategoryType4Banner;
+;;PLP-Banner-100009K0001K11;PLP Banner Rotating for 100009K0001K11;CategoryType1Banner,CategoryType2Banner,CategoryType3Banner,CategoryType4Banner;
+
+INSERT_UPDATE ContentSlot;$contentCV[unique=true];uid[unique=true];name;active;cmsComponents(uid,$contentCV)
+;;LuxPLPBannerSlot-100001SHW0001;PLP Hero Banner for 100001SHW0001;true;PLP-Banner-100001SHW0001
+;;LuxPLPVisualFilterSlot-100001SHW0001;PLP Visual Filter for 100001SHW0001;true;visual-filter-100001SHW0001
+;;LuxPLPBannerSlot-100009K0001K11;PLP Hero Banner for 100009K0001K11;true;PLP-Banner-100009K0001K11
+;;LuxPLPVisualFilterSlot-100009K0001K11;PLP Visual Filter for 100009K0001K11;true;visual-filter-100009K0001K11
+;;LuxPLPBannerSlot;PLP Hero Banner;true;CategoryBannerRotating
+;;LuxPLPVisualFilterSlot;PLP Visual Filter;true;shop-bag
+
+#INSERT_UPDATE ContentSlotForTemplate;$contentCV[unique=true];uid[unique=true];position[unique=true];pageTemplate(uid,$contentCV)[unique=true][default='LuxSearchResultsPageTemplate'];contentSlot(uid,$contentCV)[unique=true];allowOverwrite
+#;;Banner-LuxPLP;LuxPLPBannerPosition;;LuxPLPBannerSlot;true
+#;;VisualFilter-LuxPLP;LuxPLPVisualFilterPosition;;LuxPLPVisualFilterSlot;true
+
+INSERT_UPDATE ContentPage;$contentCV[unique=true];uid[unique=true];name;masterTemplate(uid,$contentCV);label;categoryAssociated(code,$productCV);defaultPage[default='true'];approvalStatus(code)[default='approved'];homepage[default='false']
+;;LuxProductsListingPage-100001SHW0001;Luxury Products Listing Page For 100001SHW0001;LuxSearchResultsPageTemplate;luxuryProductsListingPage;MSH1116101
+;;LuxProductsListingPage-100009K0001K11;Luxury Products Listing Page For 100009K0001K11;LuxSearchResultsPageTemplate;luxuryProductsListingPage;MSH1116
+
+INSERT_UPDATE ContentSlotForPage;$contentCV[unique=true];uid[unique=true];position[unique=true];page(uid,$contentCV)[unique=true];contentSlot(uid,$contentCV)[unique=true];
+;;LuxPLPBannerSlotFor100001SHW0001;LuxPLPBannerPosition;LuxProductsListingPage-100001SHW0001;LuxPLPBannerSlot-100001SHW0001;
+;;LuxPLPVisualFilterSlotFor100001SHW0001;LuxPLPVisualFilterPosition;LuxProductsListingPage-100001SHW0001;LuxPLPVisualFilterSlot-100001SHW0001;
+;;LuxPLPBannerSlotFor100009K0001K11;LuxPLPBannerPosition;LuxProductsListingPage-100009K0001K11;LuxPLPBannerSlot-100009K0001K11;
+;;LuxPLPVisualFilterSlotFor100009K0001K11;LuxPLPVisualFilterPosition;LuxProductsListingPage-100009K0001K11;LuxPLPVisualFilterSlot-100009K0001K11;
