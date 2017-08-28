@@ -120,7 +120,7 @@
 			</c:choose> --%>
 			<%-- <link rel="canonical" href="${regex:regExMatchAndRemove(canonical,'[/]$') }" /> --%>
 			<c:choose>
-				<c:when test = "${fn:contains(canonical, '/page-1')}">
+				<c:when test = "${fn:endsWith(canonical, '/page-1')}"><!-- TISSPTXI-2 Fix -->
 	   				<link rel="canonical" href="${fn:replace(canonical,'/page-1','')}" />
 				</c:when>
 				<c:otherwise>
