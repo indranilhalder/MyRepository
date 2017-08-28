@@ -1,0 +1,242 @@
+
+# ImpEx for Importing CMS Content
+# English Localisation
+
+# Macros / Replacement Parameter definitions
+$storePrefix=lux
+$contentCatalog=$storePrefixContentCatalog
+
+$contentCV=catalogVersion(CatalogVersion.catalog(Catalog.id[default=$contentCatalog]),CatalogVersion.version[default=Online])[default=$contentCatalog:Online]
+$picture=media(code, $contentCV);
+$siteResource=jar:com.tisl.lux.setup.InitialDataSystemSetup&/luxuryinitialdata/import/contentCatalogs/$contentCatalog
+
+# Language
+$lang=en
+
+
+
+
+
+# CMS Paragraph Components
+UPDATE CMSParagraphComponent;$contentCV[unique=true];uid[unique=true];content[lang=$lang]
+
+;;TitleForTermsOfUsePageComponent;"Terms Of Use"
+
+
+
+
+;;TermsOfUsePageComponent;" Terms Of Use
+
+<table >
+
+<tr>
+	<th>Shipping Type</th>
+	<th>Price</th>
+</tr>	
+ 
+  
+  <tr>
+    <td>Home Delivery</td>
+    <td>Free</td>		
+    
+  </tr>
+  
+  <tr>
+  <td>Express Shipping</td>
+  <td>300</td>
+  </tr>
+  
+  <tr>
+  <td>Cash On Delivery</td>
+  <td>150</td>
+  </tr>
+  
+</table>
+
+
+<h3>Terms Of Use:</h3>
+
+
+ <div id='collapsible-panels'> 
+
+<h5 class='questions'><a href='#'>How do I check the status of my order?</a></h5>
+<div><p>Answer to Question One goes here.</p></div>  
+
+<h5 class='questions'><a href='#'>How do I check the status of my order?</a></h5>
+<div><p>Answer to Question two goes here.</p></div>  
+
+ </div>
+
+ Terms Of Use
+
+<table >
+
+<tr>
+	<th>Shipping Type</th>
+	<th>Price</th>
+</tr>	
+ 
+  
+  <tr>
+    <td>Home Delivery</td>
+    <td>Free</td>		
+    
+  </tr>
+  
+  <tr>
+  <td>Express Shipping</td>
+  <td>300</td>
+  </tr>
+  
+  <tr>
+  <td>Cash On Delivery</td>
+  <td>150</td>
+  </tr>
+  
+</table>
+
+
+
+
+ <div id='collapsible-panels'> 
+
+<h5 class='questions'><a href='#'>How do I check the status of my order?</a></h5>
+<div><p>Answer to Question One goes here.</p></div>  
+
+<h5 class='questions'><a href='#'>How do I check the status of my order?</a></h5>
+<div><p>Answer to Question two goes here.</p></div>  
+
+ </div>
+ 
+  
+ 
+  Terms Of Use
+
+<table >
+
+<tr>
+	<th>Shipping Type</th>
+	<th>Price</th>
+</tr>	
+ 
+  
+  <tr>
+    <td>Home Delivery</td>
+    <td>Free</td>		
+    
+  </tr>
+  
+  <tr>
+  <td>Express Shipping</td>
+  <td>300</td>
+  </tr>
+  
+  <tr>
+  <td>Cash On Delivery</td>
+  <td>150</td>
+  </tr>
+  
+</table>
+
+
+
+
+
+ <div id='collapsible-panels'> 
+
+<h5 class='questions'><a href='#'>How do I check the status of my order?</a></h5>
+<div><p>Answer to Question One goes here.</p></div>  
+
+<h5 class='questions'><a href='#'>How do I check the status of my order?</a></h5>
+<div><p>Answer to Question two goes here.</p></div>  
+
+ </div>
+ 
+ 
+ Terms Of Use
+
+<table >
+
+<tr>
+	<th>Shipping Type</th>
+	<th>Price</th>
+</tr>	
+ 
+  
+  <tr>
+    <td>Home Delivery</td>
+    <td>Free</td>		
+    
+  </tr>
+  
+  <tr>
+  <td>Express Shipping</td>
+  <td>300</td>
+  </tr>
+  
+  <tr>
+  <td>Cash On Delivery</td>
+  <td>150</td>
+  </tr>
+  
+</table>
+
+
+
+
+
+ <div id='collapsible-panels'> 
+
+<h5 class='questions'><a href='#'>How do I check the status of my order?</a></h5>
+<div><p>Answer to Question One goes here.</p></div>  
+
+<h5 class='questions'><a href='#'>How do I check the status of my order?</a></h5>
+<div><p>Answer to Question two goes here.</p></div>  
+
+ </div>
+ 
+ 
+  Terms Of Use
+
+<table >
+
+<tr>
+	<th>Shipping Type</th>
+	<th>Price</th>
+</tr>	
+ 
+  
+  <tr>
+    <td>Home Delivery</td>
+    <td>Free</td>		
+    
+  </tr>
+  
+  <tr>
+  <td>Express Shipping</td>
+  <td>300</td>
+  </tr>
+  
+  <tr>
+  <td>Cash On Delivery</td>
+  <td>150</td>
+  </tr>
+  
+</table>
+
+
+
+
+
+ <div id='collapsible-panels'> 
+
+<h5 class='questions'><a href='#'>How do I check the status of my order?</a></h5>
+<div><p>Answer to Question One goes here.</p></div>  
+
+<h5 class='questions'><a href='#'>How do I check the status of my order?</a></h5>
+<div><p>Answer to Question two goes here.</p></div>  
+
+ </div>
+
+
+"

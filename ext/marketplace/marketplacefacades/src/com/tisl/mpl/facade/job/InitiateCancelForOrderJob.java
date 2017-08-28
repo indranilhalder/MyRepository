@@ -24,7 +24,6 @@ import org.springframework.beans.factory.annotation.Required;
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.exception.EtailBusinessExceptions;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
-import com.tisl.mpl.facades.account.register.MplOrderFacade;
 import com.tisl.mpl.marketplacecommerceservices.service.OrderModelService;
 import com.tisl.mpl.pojo.OmsOrderCancelTaskContext;
 import com.tisl.mpl.util.ExceptionUtil;
@@ -44,8 +43,11 @@ public class InitiateCancelForOrderJob extends AbstractJobPerformable<CronJobMod
 	 */
 	@Resource(name = "orderModelService")
 	private OrderModelService orderModelService;
-	@Resource(name = "mplOrderFacade")
-	private MplOrderFacade mplOrderFacade;
+
+	/* sonar fix */
+	/*
+	 * @Resource(name = "mplOrderFacade") private MplOrderFacade mplOrderFacade;
+	 */
 	/*
 	 * @Resource(name = "sessionService") private SessionService sessionService;
 	 *

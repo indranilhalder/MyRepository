@@ -45,7 +45,19 @@ function _autoload(){
 		}
 	})
 }
-
-$(function(){
-	_autoload();
+//UF-439
+$(document).ready(function(){
+	if($("#pageType").val() == 'homepage'){
+		
+		$(window).on("load",function(){
+			$(function(){
+				_autoload();
+			});
+		});
+	}else{
+		$(function(){
+			_autoload();
+		});
+	}
 });
+

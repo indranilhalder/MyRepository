@@ -64,7 +64,11 @@
 <div class="facet_desktop">
 <li class="facet js-facet AvailabilitySize" style="display: none">
 		
+		<!-- PRDI-237 -->
+		<div class="facet-name js-facet-name">
 		<h3 class="true">Availability</h3>
+		</div>
+		<!-- PRDI-237 -->
         
 		<div class="facet-values js-facet-values js-facet-form ">
 		<p class="filter-name facet_mobile">Availability</p>
@@ -113,8 +117,12 @@
 	</div>
 <div class="facet_mobile">
 <li class="facet js-facet AvailabilitySize" style="display: none">
-		<h4 class="true"><span class="filter-nav">Availability</span><span class="category-icons"><span></span></span></h4>
-        
+		<!-- <h4 class="true"><span class="filter-nav">Availability</span><span class="category-icons"><span></span></span></h4> -->
+        <!-- PRDI-237 -->
+        <div class="facet-name js-facet-name">
+        <h3 class="true"><span class="filter-nav">Availability</span><span class="category-icons"><span></span></span></h3>
+        </div>
+        <!-- PRDI-237 -->
 		<div class="facet-values js-facet-values js-facet-form ">
 		<p class="filter-name facet_mobile">Availability</p>
 			<ul class="facet-list js-facet-list  ">

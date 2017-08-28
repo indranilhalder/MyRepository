@@ -7,6 +7,7 @@ import static de.hybris.platform.servicelayer.util.ServicesUtil.validateParamete
 
 import de.hybris.platform.acceleratorservices.email.EmailService;
 import de.hybris.platform.acceleratorservices.model.email.EmailAttachmentModel;
+import de.hybris.platform.basecommerce.model.site.BaseSiteModel;
 import de.hybris.platform.catalog.CatalogVersionService;
 import de.hybris.platform.catalog.model.CatalogVersionModel;
 import de.hybris.platform.commercefacades.customer.impl.DefaultCustomerFacade;
@@ -14,6 +15,7 @@ import de.hybris.platform.commercefacades.user.data.RegisterData;
 import de.hybris.platform.commercefacades.user.exceptions.PasswordMismatchException;
 import de.hybris.platform.commerceservices.customer.DuplicateUidException;
 import de.hybris.platform.commerceservices.enums.CustomerType;
+import de.hybris.platform.core.enums.Gender;
 import de.hybris.platform.core.model.order.OrderModel;
 import de.hybris.platform.core.model.user.CustomerModel;
 import de.hybris.platform.processengine.BusinessProcessService;
@@ -48,6 +50,7 @@ import com.tisl.mpl.core.model.SendInvoiceProcessModel;
 import com.tisl.mpl.exception.EtailBusinessExceptions;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.facades.account.register.RegisterCustomerFacade;
+import com.tisl.mpl.facades.constants.MarketplaceFacadesConstants;
 import com.tisl.mpl.facades.product.data.ExtRegisterData;
 import com.tisl.mpl.facades.product.data.SendInvoiceData;
 import com.tisl.mpl.marketplacecommerceservices.service.ExtDefaultCustomerService;
@@ -55,6 +58,7 @@ import com.tisl.mpl.marketplacecommerceservices.service.ExtendedUserService;
 import com.tisl.mpl.marketplacecommerceservices.service.OrderModelService;
 import com.tisl.mpl.service.GigyaService;
 import com.tisl.mpl.service.MplCustomerWebService;
+import com.tisl.mpl.util.CatalogUtils;
 import com.tisl.mpl.util.ExceptionUtil;
 
 
@@ -95,8 +99,13 @@ public class RegisterCustomerFacadeImpl extends DefaultCustomerFacade implements
 	ConfigurationService configurationService;
 
 
+
 	@Resource(name = "defaultEmailService")
 	private EmailService emailService;
+
+	@Autowired
+	private CatalogUtils catalogUtils;
+
 
 	/**
 	 * @return the userUniqueIdGenerator
@@ -282,7 +291,7 @@ public class RegisterCustomerFacadeImpl extends DefaultCustomerFacade implements
 	 * @throws DuplicateUidException
 	 */
 	@Override
-	public void register(final ExtRegisterData registerData) throws DuplicateUidException
+	public void register(final ExtRegisterData registerData, final int platformNumber) throws DuplicateUidException //TPR-6272 parameter platformNumber added
 	{
 		try
 		{
@@ -300,7 +309,29 @@ public class RegisterCustomerFacadeImpl extends DefaultCustomerFacade implements
 				setUidForRegister(registerData, newCustomer);
 				newCustomer.setSessionLanguage(getCommonI18NService().getCurrentLanguage());
 				newCustomer.setSessionCurrency(getCommonI18NService().getCurrentCurrency());
-				extDefaultCustomerService.registerUser(newCustomer, registerData.getPassword(), registerData.getAffiliateId());
+
+				final BaseSiteModel currentBaseSite = baseSiteService.getCurrentBaseSite();
+				final String site = currentBaseSite.getUid();
+
+				if (MarketplaceFacadesConstants.LuxuryPrefix.equals(site))
+				{
+					newCustomer.setFirstName(registerData.getFirstName());
+					newCustomer.setLastName(registerData.getLastName());
+					if (registerData.getGender() != null && !"".equals(registerData.getGender())
+							&& MplConstants.MALE.equals(registerData.getGender()))
+					{
+						newCustomer.setGender(Gender.MALE);
+					}
+					if (registerData.getGender() != null && !"".equals(registerData.getGender())
+							&& MplConstants.FEMALE.equals(registerData.getGender()))
+					{
+						newCustomer.setGender(Gender.FEMALE);
+					}
+					newCustomer.setIsLuxuryCustomer(Boolean.TRUE);
+					newCustomer.setMobileNumber(registerData.getMobilenumber());
+				}
+
+				extDefaultCustomerService.registerUser(newCustomer, registerData.getPassword(), registerData.getAffiliateId(),platformNumber);
 				/*
 				 * mplCustomerWebService.customerModeltoWsData(newCustomer,
 				 * MarketplacecommerceservicesConstants.NEW_CUSTOMER_CREATE_FLAG, false);
@@ -375,6 +406,48 @@ public class RegisterCustomerFacadeImpl extends DefaultCustomerFacade implements
 				newCustomer.setName(MarketplacecommerceservicesConstants.SINGLE_SPACE);
 				newCustomer.setFirstName(MarketplacecommerceservicesConstants.SINGLE_SPACE);
 				newCustomer.setLastName(MarketplacecommerceservicesConstants.SINGLE_SPACE);
+
+				//Logic for Luxury adding firstname, lastname and Gender starts
+				final BaseSiteModel currentBaseSite = baseSiteService.getCurrentBaseSite();
+				final String site = currentBaseSite.getUid();
+
+				if (MarketplaceFacadesConstants.LuxuryPrefix.equals(site))
+				{
+					newCustomer.setFirstName(registerData.getFirstName());
+					newCustomer.setLastName(registerData.getLastName());
+					newCustomer.setIsLuxuryCustomer(Boolean.TRUE);
+					if (registerData.getSocialMediaType().equalsIgnoreCase(MarketplacecommerceservicesConstants.FACEBOOK))
+					{
+						if (registerData.getGender() != null && !"".equals(registerData.getGender())
+								&& MplConstants.FBMALE.equalsIgnoreCase(registerData.getGender()))
+						{
+							newCustomer.setGender(Gender.MALE);
+						}
+						if (registerData.getGender() != null && !"".equals(registerData.getGender())
+								&& MplConstants.FBFEMALE.equalsIgnoreCase(registerData.getGender()))
+						{
+							newCustomer.setGender(Gender.FEMALE);
+						}
+					}
+
+					if (registerData.getSocialMediaType().equalsIgnoreCase(MarketplacecommerceservicesConstants.GOOGLE))
+					{
+						if (registerData.getGender() != null && !"".equals(registerData.getGender())
+								&& MplConstants.FBMALE.equalsIgnoreCase(registerData.getGender()))
+						{
+							newCustomer.setGender(Gender.MALE);
+						}
+						if (registerData.getGender() != null && !"".equals(registerData.getGender())
+								&& MplConstants.FBFEMALE.equalsIgnoreCase(registerData.getGender()))
+						{
+							newCustomer.setGender(Gender.FEMALE);
+						}
+
+					}
+
+				}
+				//Logic for Luxury adding firstname, lastname and Gender ends
+
 				if (StringUtils.isNotEmpty(registerData.getSocialMediaType()))
 				{
 					if (registerData.getSocialMediaType().equalsIgnoreCase(MarketplacecommerceservicesConstants.FACEBOOK))
@@ -464,6 +537,7 @@ public class RegisterCustomerFacadeImpl extends DefaultCustomerFacade implements
 				LOG.debug("Method  registerSocial return user ,SITE UID " + customerModel.getUid());
 				LOG.debug("Method  registerSocial else FIRST_NAME " + registerData.getFirstName());
 				LOG.debug("Method  registerSocial else LAST_NAME " + registerData.getLastName());
+				LOG.debug("Method  registerSocial else GENDER " + registerData.getGender());
 				LOG.debug("customer model email is   " + customerModel.getOriginalUid());
 
 				if (registerData.getFirstName() != null)
@@ -604,7 +678,8 @@ public class RegisterCustomerFacadeImpl extends DefaultCustomerFacade implements
 			if (null != customer)
 			{
 				sendInvoiceProcessModel.setCustomer(customer);
-				final CatalogVersionModel catalogVersion = catalogVersionService.getCatalogVersion("mplContentCatalog", "Online");
+				//final CatalogVersionModel catalogVersion = catalogVersionService.getCatalogVersion("mplContentCatalog", "Online");
+				final CatalogVersionModel catalogVersion = catalogUtils.getSessionCatalogVersionForContent();
 				catalogVersionService.setSessionCatalogVersions(Collections.singleton(catalogVersion));
 			}
 			else

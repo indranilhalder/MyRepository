@@ -20,6 +20,7 @@ import com.tisl.mpl.core.model.CancellationReasonModel;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.facades.product.data.ReturnReasonData;
 import com.tisl.mpl.facades.product.data.ReturnReasonDetails;
+import com.tisl.mpl.wsdto.OrderInfoWsDTO;
 
 
 /**
@@ -71,11 +72,11 @@ public interface MplOrderFacade
 
 	/*
 	 * @Desc : Used to fetch IMEI details for Account Page order history
-	 * 
+	 *
 	 * @param : orderModelList
-	 * 
+	 *
 	 * @return Map<String, Map<String, String>>
-	 * 
+	 *
 	 * @ throws EtailNonBusinessExceptions
 	 */
 	Map<String, Map<String, String>> fetchOrderSerialNoDetails(final List<OrderModel> orderModelList)
@@ -83,22 +84,22 @@ public interface MplOrderFacade
 
 	/*
 	 * @Desc : Used to fetch Invoice details for Account Page order history
-	 * 
+	 *
 	 * @param : orderModelList
-	 * 
+	 *
 	 * @return Map<String, Boolean>
-	 * 
+	 *
 	 * @ throws EtailNonBusinessExceptions
 	 */
 	Map<String, Boolean> fetchOrderInvoiceDetails(final List<OrderModel> orderModelList) throws EtailNonBusinessExceptions;
 
 	/*
 	 * @Desc : Used to fetch and populate details for Account Page order history
-	 * 
+	 *
 	 * @param : orderEntryData
-	 * 
+	 *
 	 * @return OrderEntryData
-	 * 
+	 *
 	 * @ throws EtailNonBusinessExceptions
 	 */
 	OrderEntryData fetchOrderEntryDetails(OrderEntryData orderEntryData, OrderData subOrder) throws EtailNonBusinessExceptions;
@@ -164,6 +165,34 @@ public interface MplOrderFacade
 	 * @return OrderModel
 	 */
 	OrderModel getOrder(String orderCode);
+
+	//TPR-5225 starts here
+	/**
+	 * This method returns the order model based on mobile number
+	 *
+	 * @param orderCode
+	 * @return OrderModel
+	 */
+	public List<OrderModel> getOrderWithMobileNo(final String mobileNo, int queryCount);
+
+	public String getL4CategoryNameForProduct(final String productCode);
+
+	public OrderInfoWsDTO storeOrderInfoByMobileNo(List<OrderModel> orderModels, int countLimit);
+
+	//TPR-5225 ends here
+
+	//TPR-4840
+	public OrderModel getOrderByParentOrderNo(final String orderRefNo);
+
+	//TPR-4840
+	public OrderInfoWsDTO storeOrderInfoByOrderNo(OrderModel orderModel);
+
+	//TPR-4841
+	public OrderInfoWsDTO storeOrderInfoByTransactionId(OrderModel orderModel, String transactionId);
+
+	//TPR-4841
+	public OrderModel fetchOrderInfoByTransactionId(final String transactionId);
+
 
 	/**
 	 * This method used to get Order Model by orderNumber for anonymous users

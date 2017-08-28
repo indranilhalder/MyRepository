@@ -12,6 +12,7 @@ import de.hybris.platform.promotions.model.AbstractPromotionModel;
 import de.hybris.platform.promotions.model.PromotionGroupModel;
 import de.hybris.platform.servicelayer.search.FlexibleSearchQuery;
 import de.hybris.platform.servicelayer.search.FlexibleSearchService;
+import de.hybris.platform.store.BaseStoreModel;
 
 import java.util.List;
 
@@ -44,6 +45,13 @@ public class DefaultBulkPromotionCreationDaoImpl implements BulkPromotionCreatio
 	private static final String CODE_CLASS = "} = ?code";
 	private static final String WHERE = " AS p } where";
 	private static final String CODE = "code";
+	private static final String BASESTORE = "baseStore";
+	private static final String BASESTORE_CLASS = "} = ?baseStore";
+	private static final String AND = " and ";
+
+	//SONAR FIX
+	//@Autowired
+	//private BaseStoreService baseStoreService;
 
 	/**
 	 * @return the flexibleSearchService
@@ -195,14 +203,17 @@ public class DefaultBulkPromotionCreationDaoImpl implements BulkPromotionCreatio
 	 * @Description: Fetch Payment Mode Details
 	 */
 	@Override
-	public PaymentTypeModel fetchPaymentModeDetails(final String paymentMode)
+	public PaymentTypeModel fetchPaymentModeDetails(final String paymentMode, final BaseStoreModel baseStore)
 	{
 		final String queryString = //
-		SELECT_CLASS + PaymentTypeModel.PK + "} "//
-				+ FROM_CLASS + PaymentTypeModel._TYPECODE + WHERE + P_CLASS + PaymentTypeModel.MODE + CODE_CLASS;
+		SELECT_CLASS + PaymentTypeModel.PK
+				+ "} "//
+				+ FROM_CLASS + PaymentTypeModel._TYPECODE + WHERE + P_CLASS + PaymentTypeModel.MODE + CODE_CLASS + AND + P_CLASS
+				+ PaymentTypeModel.BASESTORE + BASESTORE_CLASS;
 
 		final FlexibleSearchQuery query = new FlexibleSearchQuery(queryString);
 		query.addQueryParameter(CODE, paymentMode);
+		query.addQueryParameter(BASESTORE, baseStore);
 		return flexibleSearchService.<PaymentTypeModel> searchUnique(query);
 	}
 

@@ -24,6 +24,7 @@ import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.marketplacecommerceservices.daos.MplPriceRowDao;
 import com.tisl.mpl.marketplacecommerceservices.service.MplPriceRowService;
 import com.tisl.mpl.model.SellerInformationModel;
+import com.tisl.mpl.util.CatalogUtils;
 
 
 /**
@@ -38,6 +39,9 @@ public class MplPriceRowServiceImpl implements MplPriceRowService
 	@Autowired
 	private CatalogVersionService catalogVersionService;
 	private static final Logger LOG = Logger.getLogger(MplPriceRowServiceImpl.class);
+
+	@Autowired
+	private CatalogUtils catalogUtils;
 
 
 	/**
@@ -79,16 +83,16 @@ public class MplPriceRowServiceImpl implements MplPriceRowService
 	}
 
 	/*
-	 * 
-	 * 
+	 *
+	 *
 	 * @see
 	 * com.tisl.mpl.marketplacecommerceservices.service.MplPriceRowService#getPriceRowDetail(de.hybris.platform.europe1
 	 * .model.PriceRowModel)
-	 * 
+	 *
 	 * @Javadoc Method to Retrieve Pricerow based on articleSKUID
-	 * 
+	 *
 	 * @param articleSKUID
-	 * 
+	 *
 	 * @return listOfPrice
 	 */
 	@Override
@@ -101,9 +105,9 @@ public class MplPriceRowServiceImpl implements MplPriceRowService
 
 	/*
 	 * @Javadoc Method to Retrieve Pricerow based on articleSKUIDs
-	 * 
+	 *
 	 * @param aticleSKUIDs
-	 * 
+	 *
 	 * @return mopMap
 	 */
 
@@ -138,12 +142,12 @@ public class MplPriceRowServiceImpl implements MplPriceRowService
 
 
 	/*
-	 * 
+	 *
 	 * @Javadoc Method to Retrieve Pricerow with lowest price for a specific product based on articleSKUIDs with checking
 	 * greater than 0 Stock,if Stock is available for any price row then it will return minimum price
-	 * 
+	 *
 	 * @param ProductModel
-	 * 
+	 *
 	 * @return PriceRow
 	 */
 
@@ -154,7 +158,7 @@ public class MplPriceRowServiceImpl implements MplPriceRowService
 		final List<PriceRowModel> priceList = new ArrayList<>();
 		final List<String> uusids = new ArrayList<>();
 
-		final CatalogVersionModel catalogVersionModel = getCatalogVersion();
+		final CatalogVersionModel catalogVersionModel = catalogUtils.getSessionCatalogVersionForProduct();
 		try
 		{
 			if (product != null)

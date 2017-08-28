@@ -21,6 +21,10 @@ public class ExtRegisterForm extends RegisterForm
 
 	private String affiliateId;
 	private boolean checkMyRewards;
+	private String gender;
+
+
+	//private String isFromLuxury;//TPR-6272 attribute added
 
 	/**
 	 * @return the affiliateId
@@ -56,6 +60,39 @@ public class ExtRegisterForm extends RegisterForm
 		this.checkMyRewards = checkMyRewards;
 	}
 
+	/*
+	 * //TPR-6272 starts here
+	 *//**
+	 * @return the isFromLuxury
+	 */
+	/*
+	 * public String getIsFromLuxury() { return isFromLuxury; }
+	 *//**
+	 * @param isFromLuxury
+	 *           the isFromLuxury to set
+	 */
+	/*
+	 * public void setIsFromLuxury(final String isFromLuxury) { this.isFromLuxury = isFromLuxury; }
+	 * 
+	 * //TPR-6272 ends here
+	 */
+
+	/**
+	 * @return the gender
+	 */
+	public String getGender()
+	{
+		return gender;
+	}
+
+	/**
+	 * @param gender
+	 *           the gender to set
+	 */
+	public void setGender(final String gender)
+	{
+		this.gender = gender;
+	}
 
 
 

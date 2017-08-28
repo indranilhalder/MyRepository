@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<head>
+<title>TATA - CLiQ</title>
+<style>
+td span img{
+width:100%;
+}
+</style>
+</head>
+
+<body>
+<table width="598" border="0" align="center" cellpadding="0" cellspacing="0" style="font-family:Arial, Helvetica, sans-serif; border:1px solid #cccccc;" >
+  <tr>
+    <td><table border="0" cellspacing="0" cellpadding="0">
+      <tr>
+        <td align="left" valign="top" bgcolor="#ffffff"><span>${ctx.cmsSlotContents.OnHOldSiteLogo}</span></td>
+      </tr>
+ 
+      <tr>
+        <td><table border="0" cellspacing="0" cellpadding="0">
+          <tr>
+            <td>&nbsp;</td>
+            <td>
+			<h2 style="padding-left: 17px;color: #AA133D;margin-bottom: 2px;">You're Genuinely Awesome. So We'll Make Sure</h2>
+			<h2 style="padding-left: 17px;color: #AA133D;margin-bottom: 12px;margin-top:4px">Your Order Is Too.</h2><br>
+			<font style="font-family:Arial, Helvetica, sans-serif; font-size:18px; color:#4a4a4b; font-weight:bold;">Hey ${ctx.customerName} ,</font>
+                  <br>
+                  <br>
+                  <font style="font-family:Arial, Helvetica, sans-serif; font-size:14px; color:#606060;">Our folks here noticed that your order <strong>${ctx.orderReferenceNumber}</strong>,
+placed on <strong>${ctx.orderDate}</strong> has just a few details we're not completely sure about.<br>
+                  <br>
+                  </font>
+				   <font style="font-family:Arial, Helvetica, sans-serif; font-size:14px; color:#606060;">Now we absolutely cannot have that, so we've placed your order on hold while we check it out. You might get a call from one of our CLIQhelpers to sort this out soon.<br>
+                  <br>
+                  </font>
+				  <font style="font-family:Arial, Helvetica, sans-serif; font-size:14px; color:#AA133D;font-weight:bold;">For any clarifications, please feel free to	<a href="${ctx.contactUsLink}" style="color:#AA133D"><strong>contact us.</strong></a><br>
+                  <br>
+                  </font>
+				  </td>
+            <td>&nbsp;</td>
+          </tr>
+        </table></td>
+      </tr>
+      
+      <tr>
+        <td><table border="0" cellspacing="0" cellpadding="0">
+          <tr>
+            <td>&nbsp;</td>
+            <td><table border="0" cellspacing="0" cellpadding="0">
+              
+              <tr>
+                <td height="60" align="left" valign="top">${ctx.cmsSlotContents.Tip}</td>
+              </tr>
+              <tr>
+                <td style="font-family:Arial, Helvetica, sans-serif; font-size:14px; color:#4a4a4a; padding:5px 0;"><span style="font-family:Avenir, Arial, Helvetica, sans-serif; font-size:14px; color:#4a4a4a; padding:5px 0;">Quote your <strong>order reference number</strong> to get information about all the items you've ordered this time. If you want to know more about the items you've bought from a seller, quote the<strong> order number</strong>. And if you're looking for information about an individual product, quote its <strong>transaction ID</strong>. </span></td>
+              </tr>
+              <tr>
+                <td height="70" align="center"><a href="${ctx.secureBaseUrl}/apps" target="_blank">${ctx.cmsSlotContents.AppDownloadUrl}</a></td>
+              </tr>
+              <tr>
+                <td><span>${ctx.cmsSlotContents.smileyimg}</span></td>
+              </tr>
+              <tr>
+                <td align="left" style="font-family:Arial, Helvetica, sans-serif; font-size:11px; color:#4a4a4a;"><p>This email cant receive replies. Get in touch by calling  us at 1800 208 8282 or email us at <a href="mailto:hello@tatacliq.com">hello@tatacliq.com</a></p></td>
+              </tr>
+              <tr>
+                <td>&nbsp;</td>
+              </tr>
+              <tr>
+                <td><table border="0" cellspacing="0" cellpadding="0" style="width:95%;">
+                  <tr>
+                    <td align="left" style="font-family:Avenir, Arial, Helvetica, sans-serif; font-size:11px; color:#4a4a4a;">&#169; 2016 Tata CLiQ Luxury| All Rights Reserved</td>
+                    <td>&nbsp;</td>
+                    <td align="right"><a href="https://www.facebook.com" style="border:none;">${ctx.cmsSlotContents.fb}</a></td>
+                    <td align="right"><a href="https://twitter.com" style="border:none;">${ctx.cmsSlotContents.tweet}</a></td>
+                    <td align="right"><a href="https://www.youtube.com" style="border:none;">${ctx.cmsSlotContents.youtube}</a></td>
+                    <td align="right"><a href="https://www.instagram.com" style="border:none;">${ctx.cmsSlotContents.insta}</a></td>
+                  </tr>
+                </table></td>
+              </tr>
+              </table></td>
+            <td>&nbsp;</td>
+          </tr>
+        </table></td>
+      </tr>
+      <tr>
+        <td>&nbsp;</td>
+      </tr>
+    </table></td>
+  </tr>
+</table>
+</body>
+</html>

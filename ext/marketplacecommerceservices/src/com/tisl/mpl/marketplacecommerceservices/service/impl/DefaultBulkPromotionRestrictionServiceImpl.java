@@ -12,6 +12,7 @@ import de.hybris.platform.promotions.model.AbstractPromotionRestrictionModel;
 import de.hybris.platform.servicelayer.exceptions.ModelNotFoundException;
 import de.hybris.platform.servicelayer.exceptions.ModelSavingException;
 import de.hybris.platform.servicelayer.model.ModelService;
+import de.hybris.platform.store.services.BaseStoreService;
 import de.hybris.platform.util.CSVReader;
 import de.hybris.platform.util.CSVWriter;
 
@@ -24,6 +25,7 @@ import java.util.regex.Pattern;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.jalo.DefaultPromotionManager;
@@ -55,6 +57,10 @@ public class DefaultBulkPromotionRestrictionServiceImpl implements BulkPromotion
 	private ModelService modelService;
 
 	private BulkPromotionErrorHandling bulkPromotionErrorHandling;
+
+	@Autowired
+	private BaseStoreService baseStoreService;
+
 
 	//@Description: Variable Declaration for Promotion Restrictions
 	private static final int RESTRICTIONCODE = 0;
@@ -642,7 +648,8 @@ public class DefaultBulkPromotionRestrictionServiceImpl implements BulkPromotion
 
 				for (int i = 0; i < paymentModeArray.length; i++)
 				{
-					final PaymentTypeModel paymentTypeModel = bulkPromotionCreationDao.fetchPaymentModeDetails(paymentModeArray[i]);
+					final PaymentTypeModel paymentTypeModel = bulkPromotionCreationDao.fetchPaymentModeDetails(paymentModeArray[i],
+							baseStoreService.getCurrentBaseStore());
 					if (null != paymentTypeModel)
 					{
 						paymentModeList.add(paymentTypeModel);
@@ -651,8 +658,8 @@ public class DefaultBulkPromotionRestrictionServiceImpl implements BulkPromotion
 			}
 			else
 			{
-				final PaymentTypeModel paymentTypeModel = bulkPromotionCreationDao.fetchPaymentModeDetails(line.get(Integer
-						.valueOf(PAYMENTMODES)));
+				final PaymentTypeModel paymentTypeModel = bulkPromotionCreationDao.fetchPaymentModeDetails(
+						line.get(Integer.valueOf(PAYMENTMODES)), baseStoreService.getCurrentBaseStore());
 				if (null != paymentTypeModel)
 				{
 					paymentModeList.add(paymentTypeModel);

@@ -108,6 +108,7 @@
  <input type ="hidden"  id="priceRangeJewellery" value='${product.priceRangeJewellery}'/>
 
 
+
 <!-- <input type ="hidden"  id="productPromotion" value='${product.displayPromotion}'/> -->
 
 <sec:authorize ifAnyGranted="ROLE_ANONYMOUS">
@@ -130,9 +131,8 @@
 
 				<c:if test="${product.isProductNew eq true && !product.isOfferExisting}">
 					<div style="z-index: 1;" class="new">
-						<img class="brush-strokes-sprite sprite-New"
-
-							src="//${staticHost}/_ui/responsive/common/images/transparent.png"><span>New</span>
+						<%-- <img class="brush-strokes-sprite sprite-New" src="//${staticHost}/_ui/responsive/common/images/transparent.png"> --%>
+						<span>New</span>
 					</div>
 				</c:if>
 				<a class="thumb_${product.code}" href="${productUrl}"
@@ -150,15 +150,13 @@
 					<%-- <div style="z-index: 2;display: none;" class="on-sale" id="on-sale_${product.code}"> --%>
 						<div style="z-index: 2;" class="on-sale" id="on-sale_${product.code}">
 				<%-- 	<div style="z-index: 2;" class="on-sale" id="on-sale_${product.code}"> --%>
-						<img class="brush-strokes-sprite sprite-Vector_Smart_Object"
-							src="//${staticHost}/_ui/responsive/common/images/transparent.png">
+						<%-- <img class="brush-strokes-sprite sprite-Vector_Smart_Object" src="//${staticHost}/_ui/responsive/common/images/transparent.png"> --%>
 						<span>On<br>Offer</span>
 					</div>
 		         </c:if>
 				<c:if test="${!product.isOfferExisting && !product.isProductNew && product.isOnlineExclusive}">
 					<div style="z-index: 1;" class="online-exclusive">
-						<img class="brush-strokes-sprite sprite-Vector_Smart_Object"
-							src="//${staticHost}/_ui/responsive/common/images/transparent.png">
+						<%-- <img class="brush-strokes-sprite sprite-Vector_Smart_Object" src="//${staticHost}/_ui/responsive/common/images/transparent.png"> --%>
 						<span>online<br>exclusive</span>
 					</div>
 				</c:if>

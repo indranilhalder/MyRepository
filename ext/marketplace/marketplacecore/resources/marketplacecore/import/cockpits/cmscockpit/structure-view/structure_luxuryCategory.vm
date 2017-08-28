@@ -1,0 +1,66 @@
+<div>
+<table
+	style="margin: 0; padding: 0; table-layout: fixed; border: 1px solid #1E4EBF;"
+	border="1" width="100%" height="100%" cellspacing="0">
+	<tbody>
+		<tr style="height: 11px;">
+			<td style="width: 1791px; height: 11px;" colspan="4"><cockpit
+					code="TopHeaderSlot" /></td>
+		</tr>
+		<tr style="height: 5px;">
+			<td style="width: 537px; height: 5px;"><cockpit
+					code="MiddleHeader" /></td>
+			<td style="width: 298px; height: 5px;"><cockpit code="SiteLogo" /></td>
+			<td style="width: 956px; height: 5px;" colspan="2"><cockpit
+					code="HeaderLinks" /> <cockpit code="MiniCart" /> <cockpit
+					code="SearchBox" /></td>
+		</tr>
+		<tr style="height: 13px;">
+			<td style="width: 1791px; height: 13px;" colspan="4"><cockpit
+					code="NavigationBar" /></td>
+		</tr>
+		<tr style="height: 188px;">
+			<td style="width: 1791px; height: 188px;" colspan="4"><cockpit
+					code="CategoryHeroBanner" /></td>
+		</tr>
+		<tr style="height: 30px;">
+			<td style="width: 1791px; height: 30px;" colspan="4"><cockpit
+					code="CategoryCurosel" /></td>
+		</tr>
+		<tr style="height: 30px;">
+			<td style="width: 1791px; height: 30px;" colspan="4"><cockpit
+					code="Categorybanner1" /></td>
+		</tr>
+		<tr style="height: 30px;">
+			<td style="width: 1791px; height: 30px;" colspan="4"><cockpit
+					code="Categorybanner2" /></td>
+		</tr>
+		<tr style="height: 30px;">
+			<td style="width: 1791px; height: 30px;" colspan="4"><cockpit
+					code="Categorybanner3" /></td>
+		</tr>
+		<tr style="height: 31px;">
+			<td style="width: 1791px; height: 30px;" colspan="4"><cockpit
+					code="Categorybanner4" /></td>
+		</tr>
+		<tr style="height: 30px;">
+			<td style="width: 1791px; height: 30px;" colspan="4"><cockpit
+					code="ProductCurosel" /></td>
+		</tr>
+		<tr style="height: 31px;">
+			<td style="width: 1791px; height: 31px;" colspan="4"><cockpit
+					code="WhyShopOnLuxury" /></td>
+		</tr>
+		<tr style="height: 31px;">
+			<td style="width: 1791px; height: 31px;" colspan="4"><cockpit
+					code="EmailFooterHomePage" /></td>
+		</tr>
+		<tr style="height: 31px;">
+			<td style="width: 1791px; height: 31px;" colspan="4"><cockpit
+					code="Footer" /></td>
+		</tr>
+	</tbody>
+</table>
+<div class="cmsContentEditor"
+	style="width: 100%; border-top: 2px solid #bbb;"></div>
+</div>
