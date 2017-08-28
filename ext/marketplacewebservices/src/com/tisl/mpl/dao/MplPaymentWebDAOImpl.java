@@ -10,6 +10,7 @@ import de.hybris.platform.servicelayer.exceptions.UnknownIdentifierException;
 import de.hybris.platform.servicelayer.search.FlexibleSearchQuery;
 import de.hybris.platform.servicelayer.search.FlexibleSearchService;
 import de.hybris.platform.servicelayer.search.exceptions.FlexibleSearchException;
+import de.hybris.platform.store.BaseStoreModel;
 
 import java.util.List;
 
@@ -150,7 +151,8 @@ public class MplPaymentWebDAOImpl implements MplPaymentWebDAO
 	 * @return PaymentTypeModel
 	 */
 	@Override
-	public PaymentTypeModel getPaymentMode(final String paymentMode) throws EtailNonBusinessExceptions
+	public PaymentTypeModel getPaymentMode(final String paymentMode, final BaseStoreModel baseStore)
+			throws EtailNonBusinessExceptions
 	{
 		try
 		{
@@ -161,6 +163,7 @@ public class MplPaymentWebDAOImpl implements MplPaymentWebDAO
 			//forming the flexible search query
 			final FlexibleSearchQuery paymentModeTypeQuery = new FlexibleSearchQuery(queryString);
 			paymentModeTypeQuery.addQueryParameter(MarketplacecommerceservicesConstants.MODE, paymentMode);
+			paymentModeTypeQuery.addQueryParameter(MarketplacecommerceservicesConstants.BASESTORE, baseStore);
 
 			LOG.info("**************** getPaymentMode Query ******************** : paymentModeTypeQuery : " + paymentModeTypeQuery);
 
@@ -355,7 +358,7 @@ public class MplPaymentWebDAOImpl implements MplPaymentWebDAO
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.dao.MplPaymentWebDAO#orderPromotions()
 	 */
 	@Override

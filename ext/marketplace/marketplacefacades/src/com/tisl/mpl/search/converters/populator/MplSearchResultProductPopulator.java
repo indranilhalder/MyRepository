@@ -23,6 +23,8 @@ import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import com.tisl.lux.facade.CommonUtils;
+
 
 /**
  * This class populates data into product data from solr search results
@@ -34,9 +36,32 @@ public class MplSearchResultProductPopulator extends MplSearchResultVariantProdu
 {
 
 
+	private CommonUtils commonUtils;
 
 	@Autowired
 	private SizeAttributeComparator sizeAttributeComparator;
+
+
+
+
+	/**
+	 * @return the commonUtils
+	 */
+	public CommonUtils getCommonUtils()
+	{
+		return commonUtils;
+	}
+
+
+
+	/**
+	 * @param commonUtils
+	 *           the commonUtils to set
+	 */
+	public void setCommonUtils(final CommonUtils commonUtils)
+	{
+		this.commonUtils = commonUtils;
+	}
 
 	//private static final String DELIMETER = ":";
 	//private static final String STOCK = "STOCK";
@@ -305,13 +330,17 @@ public class MplSearchResultProductPopulator extends MplSearchResultVariantProdu
 	{
 		final List<ImageData> result = new ArrayList<ImageData>();
 		//TPR-796
-		if (getValue(source, "isLuxuryProduct") != null && this.<Boolean> getValue(source, "isLuxuryProduct").booleanValue())
+		if (commonUtils.isLuxurySite() || getValue(source, "isLuxuryProduct") != null
+				&& this.<Boolean> getValue(source, "isLuxuryProduct").booleanValue())
 		{
 			addImageData(source, "luxurySearchPage", result);
+			addImageData(source, "luxuryModel", result);
+			addImageData(source, "luxurySecondary", result);
 		}
 		else
 		{
 			addImageData(source, "searchPage", result);
+
 		}
 		addImageData(source, "product", result);
 
@@ -322,20 +351,20 @@ public class MplSearchResultProductPopulator extends MplSearchResultVariantProdu
 	/*
 	 * @Override protected void addImageData(final SearchResultValueData source, final String imageFormat, final String
 	 * mediaFormatQualifier, final ImageDataType type, final List<ImageData> images) {
-	 *
+	 * 
 	 * final Object imgObj = getValue(source, "img-" + mediaFormatQualifier); List<String> imgList = new ArrayList(); if
 	 * (imgObj instanceof ArrayList) { imgList = (List) imgObj; } else { final String imgStr = (String) imgObj;
 	 * imgList.add(imgStr); }
-	 *
-	 *
+	 * 
+	 * 
 	 * if (!imgList.isEmpty()) { for (int i = 0; i < imgList.size(); i++) { final ImageData imageSearchData =
 	 * createImageData(); imageSearchData.setImageType(type); imageSearchData.setFormat(imageFormat);
 	 * imageSearchData.setUrl(imgList.get(i)); images.add(imageSearchData);
-	 *
-	 *
+	 * 
+	 * 
 	 * }
-	 *
-	 *
+	 * 
+	 * 
 	 * } }
 	 */
 	/**
@@ -384,7 +413,7 @@ public class MplSearchResultProductPopulator extends MplSearchResultVariantProdu
 				if (value.length > 3 && null != value[3] && StringUtils.isNotEmpty(value[3].trim()))
 				{
 					sellerStock = Integer.valueOf(value[3]);
-				}   
+				}
 				final PriceData mrpVal = getPriceDataFactory().create(PriceDataType.BUY, BigDecimal.valueOf(Double.parseDouble(mrp)),
 						getCommonI18NService().getCurrentCurrency());//SONAR FIX
 				final PriceData mopVal = getPriceDataFactory().create(PriceDataType.BUY,

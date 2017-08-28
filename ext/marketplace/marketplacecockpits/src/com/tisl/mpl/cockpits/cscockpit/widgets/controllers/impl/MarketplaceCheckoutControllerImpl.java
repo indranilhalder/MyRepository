@@ -95,6 +95,7 @@ import de.hybris.platform.payment.AdapterException;
 import de.hybris.platform.servicelayer.config.ConfigurationService;
 import de.hybris.platform.servicelayer.model.ModelService;
 import de.hybris.platform.servicelayer.user.UserService;
+import de.hybris.platform.site.BaseSiteService;
 import de.hybris.platform.store.services.BaseStoreService;
 import de.hybris.platform.util.WeakArrayList;
 
@@ -190,7 +191,9 @@ public class MarketplaceCheckoutControllerImpl extends
 	@Resource(name = "baseStoreService")
 	private BaseStoreService baseStoreService;
 	
-	
+	@Autowired
+	private BaseSiteService baseSiteService;
+
 	/**
 	 * Gets the product value.
 	 *
@@ -239,12 +242,18 @@ public class MarketplaceCheckoutControllerImpl extends
 
 	@Override
 	public void setCurrentSite() {
-		catalogVersionService.getSessionCatalogVersions();
-		final CatalogVersionModel catalogVersion = catalogVersionService
-				.getCatalogVersion("mplProductCatalog", "Online");
+		CatalogVersionModel catalogVersionModel = null;
+		if (MarketplaceCockpitsConstants.LUXURYPREFIX.equalsIgnoreCase(baseSiteService.getCurrentBaseSite().getUid()))
+		{
+			catalogVersionModel = catalogVersionService.getCatalogVersion("luxProductCatalog", "Online");
+		}
+		else
+		{
+			catalogVersionModel = catalogVersionService.getCatalogVersion("mplProductCatalog", "Online");
+		}
+
 		catalogVersionService.setSessionCatalogVersions(Collections
-				.singleton(catalogVersion));
-	}
+				.singleton(catalogVersionModel));	}
 
 	/**
 	 * Process pin serviceability.

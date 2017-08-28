@@ -38,25 +38,25 @@
 	<cms:pageSlot position="Section2C" var="feature">
 		<cms:component component="${feature}" />
 	</cms:pageSlot>
-	<div id="bestPicks" class="feature-collections"></div> 
-	<div id="brandsYouLove" class="home-brands-you-love-wrapper feature-collections"></div>
-	<div id="bestOffers" class="best-offers feature-collections"></div>
-	<div id="promobannerhomepage" class="buy-banner"></div>
-	<div id="productYouCare" class="feature-collections"></div>
-	<div class="feature-collections">
-	<div id="stayQued" class="qued"></div>
-	<div id="newAndExclusive" class=""></div>
+	<div id="bestPicks" class="feature-collections lazy-reached-bestPics"></div> 
+	<div id="brandsYouLove" class="home-brands-you-love-wrapper feature-collections lazy-reached-brandsYouLove"></div>
+	<div id="bestOffers" class="best-offers feature-collections lazy-reached-bestOffers"></div>
+	<div id="promobannerhomepage" class="buy-banner lazy-reached-promobannerhomepage"></div>
+	<div id="productYouCare" class="feature-collections lazy-reached-productYouCare"></div>
+	<div class="feature-collections ">
+	<div id="stayQued" class="qued lazy-reached-stayQued"></div>
+	<div id="newAndExclusive" class="qued lazy-reached-newAndExclusive"></div>
 	</div>
 	<!-- For Infinite Analytics Start -->
 	<!-- <div class="brands" id="ia_brands_favorites"></div> -->
 	<!-- <div class="feature-categories" id="ia_categories_favorites"></div>
 	<div class="feature-collections" id="ia_collections"></div> -->
 	
-	<div id="stw_widget"></div>
-	<div class="trending" id="ia_products_hot"></div>
-	<div id="showcase" class="showcase feature-collections"></div>
+	<div id="stw_widget" class="lazy-reached-stw"></div>
+	<div class="trending lazy-reached-ia" id="ia_products_hot"></div>
+	<div id="showcase" class="showcase feature-collections lazy-reached-showcase"></div>
 	
-	<div id="showcaseMobile" class="showcase feature-collections"></div>
+	<div id="showcaseMobile" class="showcase feature-collections lazy-reached-showcaseMobile"></div>
 	 <cms:pageSlot position="Section7" var="feature" element="div">
 		<cms:component component="${feature}" />
      </cms:pageSlot>

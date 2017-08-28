@@ -1537,7 +1537,7 @@ $( document ).ready(function() {
 	var productCode = $("#product").val();
 	var variantCodes = $("#product_allVariantsListingId").val();
 	var variantCodesJson = "";
-    var msiteBuyBoxSeller = $("#msiteBuyBoxSellerId").val(); //CKD:TPR-250
+	var msiteBuyBoxSeller = $("#msiteBuyBoxSellerId").val(); //CKD:TPR-250
 	if(typeof(variantCodes)!= 'undefined' && variantCodes!= ""){
 		variantCodes = variantCodes.split(",");
 		variantCodesJson = JSON.stringify(variantCodes);
@@ -1784,21 +1784,20 @@ function displayDeliveryDetails(sellerName) {
 				}
 				if(null != data['returnWindow'])
 				{
-					//TISCR-414 - Chairmans demo feedback 10thMay CR starts
-					var rWindowValue = data['returnWindow'];
-					
-					if(rWindowValue=="LINGERIE1")
+				//TISCR-414 - Chairmans demo feedback 10thMay CR starts
+				var rWindowValue = data['returnWindow'];
+				
+				if(rWindowValue=="LINGERIE1")
 					{
-						$("#lingerieKnowMoreLi1").show();
-						$("#defaultKnowMoreLi").hide();
-						
+					$("#lingerieKnowMoreLi1").show();
+					$("#defaultKnowMoreLi").hide();
 					}
-					else if(rWindowValue=="LINGERIE2")
+				else if(rWindowValue=="LINGERIE2")
 					{
-						$("#lingerieKnowMoreLi2").show();
-						$("#defaultKnowMoreLi").hide();
+					$("#lingerieKnowMoreLi2").show();
+					$("#defaultKnowMoreLi").hide();
 					}
-					//Added for UF-98_start
+				//Added for UF-98_start
 					else if(rWindowValue=="0")
 					{ 
 						var catType = $("#categoryType").val();
@@ -1811,17 +1810,17 @@ function displayDeliveryDetails(sellerName) {
 						$("#defaultRetRefLi").hide();
 						$("#defaultRetLi4").show();
 						$("#defaultRetLi").hide();
-					}
-					else 
+				}
+				else
 					{
 						$("#returnWindow").text(data['returnWindow']);
 						$("#returnWindowRefRet").text(data['returnWindow']);
 						$("#returnWindowRet").text(data['returnWindow']);
 					}
-					//TISCR-414 - Chairmans demo feedback 10thMay CR ends
+				//TISCR-414 - Chairmans demo feedback 10thMay CR ends
 				}
 				else
-				{
+					{
 					$("#defaultKnowMoreLi4").show();
 					$("#defaultKnowMoreLi").hide();
 					$("#defaultRetRefLi4").show();
@@ -3181,7 +3180,12 @@ function loadDefaultWishListName_SizeGuide() {
 				$("#add_to_wishlist").attr("disabled",true);
 				$('.add_to_cart_form .out_of_stock #add_to_wishlist').addClass("wishDisabled");
 			}
-			
+			else if(data == false)//TPR-5787
+			{
+				$('.product-info .picZoomer-pic-wp .zoom a,.product-image-container.device a.wishlist-icon').removeClass("added");
+				$("#add_to_wishlist").attr("disabled",false);
+				$('.add_to_cart_form .out_of_stock #add_to_wishlist').removeClass("wishDisabled");
+			}
 			},
 			error : function(xhr, status, error) {
 				$("#wishlistErrorId_pdp").html("Could not add the product in your wishlist");
@@ -3380,6 +3384,19 @@ function getProductContents() {
 		success : function(data) {
 			if(data){ 
 				$('#productContentDivId').html(data);
+				//UF-403 starts
+				if ($(".youtube-player").length) {
+					var div, n,
+	                v = document.getElementsByClassName("youtube-player");
+		            for (n = 0; n < v.length; n++) {
+		                div = document.createElement("div");
+		                div.setAttribute("data-id", v[n].dataset.id);
+		                div.innerHTML = labnolThumb(v[n].dataset.id); //labnolThumb function implementation in videocomponent.jsp
+		                div.onclick = labnolIframe; //labnolIframe function implementation in videocomponent.jsp
+		                v[n].appendChild(div);
+		            }
+				}
+				//UF-403 ends
 				 if (data.indexOf('class="Manufacturer Temp07"') > -1 ) {
 					 $(".every-scene-carousel").owlCarousel({
 							items:3,
@@ -3441,18 +3458,18 @@ function lazyLoadProductContents(){
 		    //not in ajax.success due to multiple sroll events
 		    $('#productContentDivId').attr('loaded', true);
 
-
-	            //ajax goes here
-	            //by theory, this code still may be called several times
-	            if ($('#productContentDivId').children().length == 0) {
-	            	getProductContents();
-	        }
-	        }
+		
+		    //ajax goes here
+		    //by theory, this code still may be called several times
+		    if ($('#productContentDivId').children().length == 0) {
+		    	getProductContents();
+		    }
 		}
 	}
-	
-	if($('#pageTemplateId').val() == 'ProductDetailsPageTemplate'){
-		$(window).on('scroll load',function() {
+}
+
+if($('#pageTemplateId').val() == 'ProductDetailsPageTemplate'){
+	$(window).on('scroll load',function() {
 		lazyLoadProductContents();
 	});
 }
@@ -3784,7 +3801,7 @@ function onSizeSelectPopulateDOM()//First Method to be called in size select aja
 						
 						
 						//Calling to check if the product already exists in the wishlist,If so fill/unfill heart icon
-						getLastModifiedWishlistForPLP(responseProductCode);
+						//getLastModifiedWishlistForPLP(responseProductCode);//CALL FROM BUYBOX..TPR-5787
 						
 						//Prepare data for buybox call
 						var variantCodes = $("#product_allVariantsListingId").val();
@@ -4312,7 +4329,9 @@ function getBuyBoxDataAjax(productCode,variantCodesJson)
 					$("#ussid").val(data['sellerArticleSKU']);
 					$("#sellerSkuId").val(data['sellerArticleSKU']);
 					//Added for Fine Jewellery Details Section
-					$("#jewelDetailsUssid").html(data['sellerArticleSKU']);
+					if(data['sellerArticleSKU'] != undefined){
+					$("#jewelDetailsUssid").html(data['sellerArticleSKU'].substring(6));
+					}
 
 					var spPrice = data['specialPrice'];
 					var mrpPrice = data['mrp'];
@@ -4521,6 +4540,8 @@ function populateProductPageTabs(jsonData)
 		{
 			var selector='ul.tabs.pdp>li:eq('+index+')';
 			$(selector).html(populateProductDetailsTab(jsonData));
+			//UF-377
+			$("#detailsAccordion").html(populateProductDetailsTab(jsonData));
 		}
 	}
 	if(jsonData['validTabs'].includes('description'))
@@ -4530,6 +4551,8 @@ function populateProductPageTabs(jsonData)
 		{
 			var selector='ul.tabs.pdp>li:eq('+index+')';
 			$(selector).html(populateProductDescriptionTab(jsonData));
+			//UF-377
+			$("#descriptionAccordion").html(populateProductDetailsTab(jsonData));
 		}
 	}
 	if(jsonData['validTabs'].includes('warranty'))
@@ -4539,6 +4562,8 @@ function populateProductPageTabs(jsonData)
 		{
 			var selector='ul.tabs.pdp>li:eq('+index+')';
 			$(selector).html(populateProductWarrantyTab(jsonData));
+			//UF-377
+			$("#warrantyAccordion").html(populateProductDetailsTab(jsonData));
 		}
 	}
 	
@@ -4585,6 +4610,9 @@ function populateClassificationForJewellery(jsonData)
 {
 	var classification = jsonData['fineJewelleryDeatils'];
 	var ussid = $("#ussid").val();
+	if(ussid != undefined){
+		ussid = ussid.substring(6);
+	}
 	var htmlCode="";
 	if(typeof(classification) != "undefined") {
 		$.each(classification, function(key,value){

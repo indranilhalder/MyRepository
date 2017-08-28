@@ -23,6 +23,7 @@ import de.hybris.platform.servicelayer.dto.converter.Converter;
 import de.hybris.platform.servicelayer.exceptions.ModelRemovalException;
 import de.hybris.platform.servicelayer.exceptions.ModelSavingException;
 import de.hybris.platform.servicelayer.model.ModelService;
+import de.hybris.platform.site.BaseSiteService;
 import de.hybris.platform.store.BaseStoreModel;
 import de.hybris.platform.voucher.model.PromotionVoucherModel;
 
@@ -109,7 +110,8 @@ public class MplProcessOrderServiceImpl implements MplProcessOrderService
 	private ExtStockLevelPromotionCheckService stockPromoCheckService;
 
 	final Double skipPendingOrdersTATStFinal = new Double(10);
-
+	@Autowired
+	private BaseSiteService baseSiteService;
 
 	/**
 	 * This method processes pending orders
@@ -153,6 +155,8 @@ public class MplProcessOrderServiceImpl implements MplProcessOrderService
 			//getting list of Juspay req ids for Payment Pending orders
 			for (final OrderModel orderModel : orders)
 			{
+				baseSiteService.setCurrentBaseSite(orderModel.getSite(), true);
+
 				try
 				{
 					//For CAR:127

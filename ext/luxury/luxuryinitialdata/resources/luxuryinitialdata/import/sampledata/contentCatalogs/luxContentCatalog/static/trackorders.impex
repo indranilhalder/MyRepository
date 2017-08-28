@@ -1,0 +1,81 @@
+#
+# Import the CMS content for the site
+#
+$storePrefix=lux
+$contentCatalog=$storePrefixContentCatalog
+$productCatalog=luxProductCatalog
+$contentCV=catalogVersion(CatalogVersion.catalog(Catalog.id[default=$contentCatalog]),CatalogVersion.version[default=Online])[default=$contentCatalog:Online]
+$productCV=catalogVersion(CatalogVersion.catalog(Catalog.id[default=$productCatalog]),CatalogVersion.version[default=Online])[default=$productCatalog:Online]
+$luxuryStoreAddonPrefix=addon:/luxurystoreaddon
+# Import modulegen config properties into impex macros
+UPDATE GenericItem[processor=de.hybris.platform.commerceservices.impex.impl.ConfigPropertyImportProcessor];pk[unique=true]
+$jarResourceCms=$config-jarResourceCmsValue
+
+
+
+INSERT_UPDATE ContentPage;$contentCV[unique=true];uid[unique=true];name;masterTemplate(uid,$contentCV);label;defaultPage[default='true'];approvalStatus(code)[default='approved'];homepage[default='false']
+;;trackorders;Track Orders;LuxuryContentPageTemplate;/trackorders
+
+
+
+# CMS Navigation Nodes  
+INSERT_UPDATE CMSNavigationNode;uid[unique=true];$contentCV[unique=true];name;parent(uid, $contentCV);children(uid,$contentCV)[mode=append];links(uid, $contentCV);&nodeRef;
+
+;NPPageCustomerServiceNavNode;;Customer Service Pages;;;ContactUsLink,FrequentlyAskedQuestionsLink,TrackOrdersLink,ShippingLink,CancellationLink,ReturnsLink;NPPageCustomerServiceNavNode;
+
+
+
+
+
+
+# Navigation Bar Component
+INSERT_UPDATE AccountNavigationComponent;$contentCV[unique=true];uid[unique=true];name;navigationNode(&nodeRef);styleClass;&componentRef
+;;FooterLeftNavigationCustomerComponent; Footer Left Navigation Customer Component;NPPageCustomerServiceNavNode;;FooterLeftNavigationCustomerComponent
+
+
+
+
+INSERT_UPDATE CMSLinkComponent;$contentCV[unique=true];uid[unique=true];name;url;category(code, $productCV);target(code)[default='sameWindow'];;
+
+;;ContactUsLink;Contact Us Link;/contact;;;;
+;;FrequentlyAskedQuestionsLink;Frequently Asked Questions Link;/faq;;;
+;;TrackOrdersLink;Track Orders Link;/trackorders;;;;
+;;ShippingLink;Shipping Link;/shipping;;;;
+;;CancellationLink;Cancellation Link;/cancellation;;;;
+;;ReturnsLink;Returns Link;/returns;;;;
+
+
+
+# CMS Navigation Nodes 
+UPDATE CMSNavigationNode;$contentCV[unique=true];uid[unique=true];title[lang=en]
+;;NPPageCustomerServiceNavNode;""
+
+
+
+
+
+
+# CMSParagraphComponent 
+INSERT_UPDATE CMSParagraphComponent;$contentCV[unique=true];uid[unique=true];name;&componentRef;;;;
+
+;;TrackOrderPageComponent;Track Order Page Component;TrackOrderPageComponent;;;;
+;;TitleForTrackOrderPageComponent;Title for TrackOrderPageComponent;TitleForTrackOrderPageComponent;;;;
+
+
+
+
+
+
+
+
+####Track Order Page#####
+
+# ContentSlot
+INSERT_UPDATE ContentSlot;$contentCV[unique=true];uid[unique=true];name;active;cmsComponents(&componentRef);;;
+;;Section2ASlot-trackorders;Section2A Slot for Track Order Page;true;FooterLeftNavigationCustomerComponent;
+;;Section2BSlot-trackorders;Section2B Slot for Track order Page;true;TitleForTrackOrderPageComponent,TrackOrderPageComponent;
+
+# ContentSlotForPage 
+INSERT_UPDATE ContentSlotForPage;$contentCV[unique=true];uid[unique=true];position[unique=true];page(uid,$contentCV)[unique=true][default='trackorders'];contentSlot(uid,$contentCV)[unique=true];;;
+;;Section2A-trackorders;Section2A;;Section2ASlot-trackorders;;;
+;;Section2B-trackorders;Section2B;;Section2BSlot-trackorders;;;

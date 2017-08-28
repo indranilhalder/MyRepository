@@ -247,4 +247,6 @@ public final class MarketplaceCockpitsConstants extends
 	public static final String JUSPAY_PAYMENT = "paynow";
 	
 	public static final String JUSPAY_PAYMENT_VALUE = "Pay Now";
+	
+	public static final String LUXURYPREFIX = "lux";
 }

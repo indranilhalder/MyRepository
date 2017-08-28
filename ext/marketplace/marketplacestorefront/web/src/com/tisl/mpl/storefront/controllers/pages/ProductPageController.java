@@ -26,6 +26,7 @@ import de.hybris.platform.acceleratorstorefrontcommons.forms.validation.ReviewVa
 import de.hybris.platform.acceleratorstorefrontcommons.util.MetaSanitizerUtil;
 import de.hybris.platform.acceleratorstorefrontcommons.util.XSSFilterUtil;
 import de.hybris.platform.acceleratorstorefrontcommons.variants.VariantSortStrategy;
+import de.hybris.platform.basecommerce.model.site.BaseSiteModel;
 import de.hybris.platform.catalog.model.ProductFeatureModel;
 import de.hybris.platform.category.model.CategoryModel;
 import de.hybris.platform.cms2.exceptions.CMSItemNotFoundException;
@@ -63,6 +64,7 @@ import de.hybris.platform.servicelayer.exceptions.UnknownIdentifierException;
 import de.hybris.platform.servicelayer.search.exceptions.FlexibleSearchException;
 import de.hybris.platform.servicelayer.session.SessionService;
 import de.hybris.platform.servicelayer.user.UserService;
+import de.hybris.platform.site.BaseSiteService;
 import de.hybris.platform.storelocator.location.Location;
 import de.hybris.platform.storelocator.location.impl.LocationDTO;
 import de.hybris.platform.storelocator.location.impl.LocationDtoWrapper;
@@ -117,8 +119,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import atg.taglib.json.util.JSONException;
-
 import com.google.gson.Gson;
 import com.granule.json.JSON;
 import com.granule.json.JSONArray;
@@ -141,6 +141,7 @@ import com.tisl.mpl.facade.product.MplProductFacade;
 import com.tisl.mpl.facade.product.PriceBreakupFacade;
 import com.tisl.mpl.facade.product.SizeGuideFacade;
 import com.tisl.mpl.facade.product.impl.CustomProductFacadeImpl;
+import com.tisl.mpl.facades.constants.MarketplaceFacadesConstants;
 import com.tisl.mpl.facades.data.MplAjaxProductData;
 import com.tisl.mpl.facades.payment.MplPaymentFacade;
 import com.tisl.mpl.facades.product.RichAttributeData;
@@ -163,6 +164,8 @@ import com.tisl.mpl.storefront.controllers.ControllerConstants;
 import com.tisl.mpl.storefront.controllers.helpers.FrontEndErrorHelper;
 import com.tisl.mpl.storefront.web.forms.SellerInformationDetailsForm;
 import com.tisl.mpl.util.ExceptionUtil;
+
+import atg.taglib.json.util.JSONException;
 
 
 
@@ -301,7 +304,8 @@ public class ProductPageController extends MidPageController
 	@Resource(name = "pinCodeFacade")
 	private PinCodeServiceAvilabilityFacade pinCodeFacade;
 
-
+	@Resource(name = "baseSiteService")
+	private BaseSiteService baseSiteService;
 
 	@Resource(name = "sizeGuideFacade")
 	private SizeGuideFacade sizeGuideFacade;
@@ -342,6 +346,7 @@ public class ProductPageController extends MidPageController
 	//private ConfigurationService configService;
 	@Resource(name = "customProductFacade")
 	private CustomProductFacadeImpl customProductFacade;
+
 
 
 	//Exchange Changes
@@ -464,8 +469,8 @@ public class ProductPageController extends MidPageController
 			// TPR- 4389 STARTS FROM HERE
 
 			final ProductModel productModel = productService.getProductForCode(productCode);
-			final Map<String, String> reviewAndRating = mplGigyaReviewService.getReviewsAndRatingByCategoryId(
-					productModel.getProductCategoryType(), productCode);
+			final Map<String, String> reviewAndRating = mplGigyaReviewService
+					.getReviewsAndRatingByCategoryId(productModel.getProductCategoryType(), productCode);
 
 			if (reviewAndRating != null)
 			{
@@ -481,7 +486,8 @@ public class ProductPageController extends MidPageController
 			//   TPR-4389 ENDS HERE
 
 			if (productModel.getLuxIndicator() != null
-					&& productModel.getLuxIndicator().getCode().equalsIgnoreCase(ControllerConstants.Views.Pages.Cart.LUX_INDICATOR))
+					&& productModel.getLuxIndicator().getCode().equalsIgnoreCase(ControllerConstants.Views.Pages.Cart.LUX_INDICATOR)
+					&& !isLuxurySite())
 			{
 				LOG.debug("**********The product is a luxury product.Hence redirecting to luxury website***********" + productCode);
 				final String luxuryHost = configurationService.getConfiguration().getString("luxury.resource.host");
@@ -503,7 +509,8 @@ public class ProductPageController extends MidPageController
 			{
 				if (null != sessionService.getAttribute(ModelAttributetConstants.PINCODE))
 				{
-					model.addAttribute(ModelAttributetConstants.PINCODE, sessionService.getAttribute(ModelAttributetConstants.PINCODE));
+					model.addAttribute(ModelAttributetConstants.PINCODE,
+							sessionService.getAttribute(ModelAttributetConstants.PINCODE));
 
 				}
 
@@ -573,10 +580,11 @@ public class ProductPageController extends MidPageController
 
 				returnStatement = getViewForPage(model);
 			}
-
+      
 			//Added for TPR-6738
 			populateBuyingGuide(productModel, model);
 			//changes for TPR-6738 ends
+
 		}
 		catch (final EtailBusinessExceptions e)
 		{
@@ -593,8 +601,8 @@ public class ProductPageController extends MidPageController
 		}
 		catch (final Exception e)
 		{
-			ExceptionUtil.etailNonBusinessExceptionHandler(new EtailNonBusinessExceptions(e,
-					MarketplacecommerceservicesConstants.E0000));
+			ExceptionUtil
+					.etailNonBusinessExceptionHandler(new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000));
 			returnStatement = frontEndErrorHelper.callNonBusinessError(model, MessageConstants.SYSTEM_PDP_ERROR_PAGE_NON_BUSINESS);
 
 		}
@@ -650,10 +658,10 @@ public class ProductPageController extends MidPageController
 
 		try
 		{
-			final String proxyPort = configService.getConfiguration().getString(
-					MarketplacecclientservicesConstants.RATING_PROXY_PORT);
-			final String proxySet = configService.getConfiguration().getString(
-					MarketplacecclientservicesConstants.RATING_PROXY_ENABLED);
+			final String proxyPort = configService.getConfiguration()
+					.getString(MarketplacecclientservicesConstants.RATING_PROXY_PORT);
+			final String proxySet = configService.getConfiguration()
+					.getString(MarketplacecclientservicesConstants.RATING_PROXY_ENABLED);
 			final String proxyHost = configService.getConfiguration().getString(MarketplacecclientservicesConstants.RATING_PROXY);
 			final int proxyPortInt = Integer.parseInt(proxyPort);
 			final SocketAddress addr = new InetSocketAddress(proxyHost, proxyPortInt);
@@ -873,13 +881,13 @@ public class ProductPageController extends MidPageController
 			//TPR-430 Start
 			if (breadcrumbs.size() > 0)
 			{
-				model.addAttribute(ModelAttributetConstants.PRODUCT_CATEGORY, breadcrumbs.get(0).getName().replaceAll(REGEX, "")
-						.replaceAll(" ", "_").toLowerCase());
+				model.addAttribute(ModelAttributetConstants.PRODUCT_CATEGORY,
+						breadcrumbs.get(0).getName().replaceAll(REGEX, "").replaceAll(" ", "_").toLowerCase());
 			}
 			if (breadcrumbs.size() > 1)
 			{
-				model.addAttribute(ModelAttributetConstants.PAGE_SUBCATEGORY_NAME, breadcrumbs.get(1).getName().replaceAll(REGEX, "")
-						.replaceAll(" ", "_").toLowerCase());
+				model.addAttribute(ModelAttributetConstants.PAGE_SUBCATEGORY_NAME,
+						breadcrumbs.get(1).getName().replaceAll(REGEX, "").replaceAll(" ", "_").toLowerCase());
 			}
 			if (breadcrumbs.size() > 2)
 			{
@@ -941,7 +949,8 @@ public class ProductPageController extends MidPageController
 	 * @throws CMSItemNotFoundException
 	 */
 
-	@RequestMapping(value = PRODUCT_OLD_URL_PATTERN + ControllerConstants.Views.Fragments.Product.SIZE_GUIDE, method = RequestMethod.GET)
+	@RequestMapping(value = PRODUCT_OLD_URL_PATTERN
+			+ ControllerConstants.Views.Fragments.Product.SIZE_GUIDE, method = RequestMethod.GET)
 	public String viewSizeGuide(
 			@RequestParam(value = ControllerConstants.Views.Fragments.Product.PRODUCT_CODE) final String productCode,
 			@RequestParam(value = ControllerConstants.Views.Fragments.Product.SIZESELECTED) final String sizeSelected,
@@ -954,10 +963,11 @@ public class ProductPageController extends MidPageController
 			final StringBuilder allVariants = new StringBuilder();
 			final ProductModel productModel = productService.getProductForCode(productCode);
 
-			final ProductData productData = productFacade.getProductForOptions(productModel, Arrays.asList(ProductOption.BASIC,
-					ProductOption.SUMMARY, ProductOption.DESCRIPTION, ProductOption.CATEGORIES, ProductOption.SELLER,
-					//					ProductOption.GALLERY, ProductOption.PROMOTIONS, ProductOption.CLASSIFICATION,
-					ProductOption.VARIANT_FULL));
+			final ProductData productData = productFacade.getProductForOptions(productModel,
+					Arrays.asList(ProductOption.BASIC, ProductOption.SUMMARY, ProductOption.DESCRIPTION, ProductOption.CATEGORIES,
+							ProductOption.SELLER,
+							//					ProductOption.GALLERY, ProductOption.PROMOTIONS, ProductOption.CLASSIFICATION,
+							ProductOption.VARIANT_FULL));
 
 
 			final List<Breadcrumb> breadcrumbList = productBreadcrumbBuilder.getBreadcrumbs(productModel);
@@ -1070,11 +1080,12 @@ public class ProductPageController extends MidPageController
 	 */
 
 	@SuppressWarnings(BOXING)
-	@RequestMapping(value = PRODUCT_OLD_URL_PATTERN + ControllerConstants.Views.Fragments.Product.BUYBOZFORSIZEGUIDEAJAX, method = RequestMethod.GET)
+	@RequestMapping(value = PRODUCT_OLD_URL_PATTERN
+			+ ControllerConstants.Views.Fragments.Product.BUYBOZFORSIZEGUIDEAJAX, method = RequestMethod.GET)
 	public @ResponseBody JSONObject getBuyboxDataForSizeGuide(
 			@RequestParam(ControllerConstants.Views.Fragments.Product.PRODUCT_CODE) final String productCode,
-			@RequestParam(ControllerConstants.Views.Fragments.Product.SELLER_ID) final String sellerId) throws JSONException,
-			CMSItemNotFoundException, UnsupportedEncodingException, com.granule.json.JSONException
+			@RequestParam(ControllerConstants.Views.Fragments.Product.SELLER_ID) final String sellerId)
+			throws JSONException, CMSItemNotFoundException, UnsupportedEncodingException, com.granule.json.JSONException
 	{
 		LOG.debug(String.format("BUYBOZFORSIZEGUIDEAJAX : productCode:  %s | sellerId : %s ", productCode, sellerId));
 
@@ -1089,18 +1100,18 @@ public class ProductPageController extends MidPageController
 				buyboxJson.put(ControllerConstants.Views.Fragments.Product.AVAILABLESTOCK,
 						null != buyboxdata.getAvailable() ? buyboxdata.getAvailable() : ModelAttributetConstants.NOVALUE);
 
-				buyboxJson.put(ControllerConstants.Views.Fragments.Product.SPECIAL_PRICE, null != buyboxdata.getSpecialPrice()
-						&& null != buyboxdata.getSpecialPrice().getFormattedValue()
-						&& !buyboxdata.getSpecialPrice().getFormattedValue().isEmpty() ? buyboxdata.getSpecialPrice()
-						.getFormattedValue() : ModelAttributetConstants.NOVALUE);
+				buyboxJson.put(ControllerConstants.Views.Fragments.Product.SPECIAL_PRICE,
+						null != buyboxdata.getSpecialPrice() && null != buyboxdata.getSpecialPrice().getFormattedValue()
+								&& !buyboxdata.getSpecialPrice().getFormattedValue().isEmpty()
+										? buyboxdata.getSpecialPrice().getFormattedValue() : ModelAttributetConstants.NOVALUE);
 				buyboxJson.put(ControllerConstants.Views.Fragments.Product.PRICE,
 						null != buyboxdata.getPrice() && null != buyboxdata.getPrice().getFormattedValue()
 								&& !buyboxdata.getPrice().getFormattedValue().isEmpty() ? buyboxdata.getPrice().getFormattedValue()
-								: ModelAttributetConstants.NOVALUE);
+										: ModelAttributetConstants.NOVALUE);
 				buyboxJson.put(ControllerConstants.Views.Fragments.Product.MRP,
 						null != buyboxdata.getMrp() && null != buyboxdata.getMrp().getFormattedValue()
 								&& !buyboxdata.getMrp().getFormattedValue().isEmpty() ? buyboxdata.getMrp().getFormattedValue()
-								: ModelAttributetConstants.NOVALUE);
+										: ModelAttributetConstants.NOVALUE);
 
 				/*
 				 * buyboxJson.put(ControllerConstants.Views.Fragments.Product.SPECIAL_PRICE, null !=
@@ -1233,22 +1244,22 @@ public class ProductPageController extends MidPageController
 						{
 							headerMap.put(configurationService.getConfiguration().getString("fashionaccessories.sizeguide.header.age"),
 									"Y");
-							if (!headerMapData.contains(configurationService.getConfiguration().getString(
-									"fashionaccessories.sizeguide.header.age")))
+							if (!headerMapData.contains(
+									configurationService.getConfiguration().getString("fashionaccessories.sizeguide.header.age")))
 							{
-								headerMapData.add(configurationService.getConfiguration().getString(
-										"fashionaccessories.sizeguide.header.age"));
+								headerMapData
+										.add(configurationService.getConfiguration().getString("fashionaccessories.sizeguide.header.age"));
 							}
 						}
 						if (data.getDimensionSize() != null && StringUtils.isNotBlank(data.getDimensionSize()))
 						{
 							headerMap.put(configurationService.getConfiguration().getString("fashionaccessories.sizeguide.header.size"),
 									"Y");
-							if (!headerMapData.contains(configurationService.getConfiguration().getString(
-									"fashionaccessories.sizeguide.header.size")))
+							if (!headerMapData.contains(
+									configurationService.getConfiguration().getString("fashionaccessories.sizeguide.header.size")))
 							{
-								headerMapData.add(configurationService.getConfiguration().getString(
-										"fashionaccessories.sizeguide.header.size"));
+								headerMapData
+										.add(configurationService.getConfiguration().getString("fashionaccessories.sizeguide.header.size"));
 							}
 						}
 						if (data.getCmsBeltSize() != null && StringUtils.isNotBlank(data.getCmsBeltSize()))
@@ -1256,23 +1267,22 @@ public class ProductPageController extends MidPageController
 							headerMap.put(
 									configurationService.getConfiguration().getString("fashionaccessories.sizeguide.header.cmsbeltsize"),
 									"Y");
-							if (!headerMapData.contains(configurationService.getConfiguration().getString(
-									"fashionaccessories.sizeguide.header.cmsbeltsize")))
+							if (!headerMapData.contains(
+									configurationService.getConfiguration().getString("fashionaccessories.sizeguide.header.cmsbeltsize")))
 							{
-								headerMapData.add(configurationService.getConfiguration().getString(
-										"fashionaccessories.sizeguide.header.cmsbeltsize"));
+								headerMapData.add(configurationService.getConfiguration()
+										.getString("fashionaccessories.sizeguide.header.cmsbeltsize"));
 							}
 						}
 						if (data.getInchesBeltSize() != null && StringUtils.isNotBlank(data.getInchesBeltSize()))
 						{
-							headerMap.put(
-									configurationService.getConfiguration()
-											.getString("fashionaccessories.sizeguide.header.inchesbeltsize"), "Y");
-							if (!headerMapData.contains(configurationService.getConfiguration().getString(
-									"fashionaccessories.sizeguide.header.inchesbeltsize")))
+							headerMap.put(configurationService.getConfiguration()
+									.getString("fashionaccessories.sizeguide.header.inchesbeltsize"), "Y");
+							if (!headerMapData.contains(configurationService.getConfiguration()
+									.getString("fashionaccessories.sizeguide.header.inchesbeltsize")))
 							{
-								headerMapData.add(configurationService.getConfiguration().getString(
-										"fashionaccessories.sizeguide.header.inchesbeltsize"));
+								headerMapData.add(configurationService.getConfiguration()
+										.getString("fashionaccessories.sizeguide.header.inchesbeltsize"));
 							}
 						}
 						if (data.getCmsWaistSize() != null && StringUtils.isNotEmpty(data.getCmsWaistSize()))
@@ -1280,35 +1290,33 @@ public class ProductPageController extends MidPageController
 							headerMap.put(
 									configurationService.getConfiguration().getString("fashionaccessories.sizeguide.header.cmswaistsize"),
 									"Y");
-							if (!headerMapData.contains(configurationService.getConfiguration().getString(
-									"fashionaccessories.sizeguide.header.cmswaistsize")))
+							if (!headerMapData.contains(
+									configurationService.getConfiguration().getString("fashionaccessories.sizeguide.header.cmswaistsize")))
 							{
-								headerMapData.add(configurationService.getConfiguration().getString(
-										"fashionaccessories.sizeguide.header.cmswaistsize"));
+								headerMapData.add(configurationService.getConfiguration()
+										.getString("fashionaccessories.sizeguide.header.cmswaistsize"));
 							}
 						}
 						if (data.getInchesWaistSize() != null && StringUtils.isNotEmpty(data.getInchesWaistSize()))
 						{
-							headerMap.put(
-									configurationService.getConfiguration().getString(
-											"fashionaccessories.sizeguide.header.incheswaistsize"), "Y");
-							if (!headerMapData.contains(configurationService.getConfiguration().getString(
-									"fashionaccessories.sizeguide.header.incheswaistsize")))
+							headerMap.put(configurationService.getConfiguration()
+									.getString("fashionaccessories.sizeguide.header.incheswaistsize"), "Y");
+							if (!headerMapData.contains(configurationService.getConfiguration()
+									.getString("fashionaccessories.sizeguide.header.incheswaistsize")))
 							{
-								headerMapData.add(configurationService.getConfiguration().getString(
-										"fashionaccessories.sizeguide.header.incheswaistsize"));
+								headerMapData.add(configurationService.getConfiguration()
+										.getString("fashionaccessories.sizeguide.header.incheswaistsize"));
 							}
 						}
 						if (data.getInchesBeltLength() != null && StringUtils.isNotEmpty(data.getInchesBeltLength()))
 						{
-							headerMap.put(
-									configurationService.getConfiguration().getString(
-											"fashionaccessories.sizeguide.header.inchesbeltlength"), "Y");
-							if (!headerMapData.contains(configurationService.getConfiguration().getString(
-									"fashionaccessories.sizeguide.header.inchesbeltlength")))
+							headerMap.put(configurationService.getConfiguration()
+									.getString("fashionaccessories.sizeguide.header.inchesbeltlength"), "Y");
+							if (!headerMapData.contains(configurationService.getConfiguration()
+									.getString("fashionaccessories.sizeguide.header.inchesbeltlength")))
 							{
-								headerMapData.add(configurationService.getConfiguration().getString(
-										"fashionaccessories.sizeguide.header.inchesbeltlength"));
+								headerMapData.add(configurationService.getConfiguration()
+										.getString("fashionaccessories.sizeguide.header.inchesbeltlength"));
 							}
 						}
 					}
@@ -1360,7 +1368,8 @@ public class ProductPageController extends MidPageController
 	 * @throws NullPointerException
 	 */
 	@ResponseBody
-	@RequestMapping(value = PRODUCT_OLD_URL_PATTERN + ControllerConstants.Views.Fragments.Product.CHECK_PINCODE, method = RequestMethod.GET)
+	@RequestMapping(value = PRODUCT_OLD_URL_PATTERN
+			+ ControllerConstants.Views.Fragments.Product.CHECK_PINCODE, method = RequestMethod.GET)
 	public List<PinCodeResponseData> getPincodeServicabilityDetails(@RequestParam(value = "pin") final String pin,
 			@RequestParam(value = ControllerConstants.Views.Fragments.Product.PRODUCT_CODE) final String productCode,
 			final Model model) throws CMSItemNotFoundException
@@ -1414,7 +1423,8 @@ public class ProductPageController extends MidPageController
 
 
 	@Deprecated
-	@RequestMapping(value = ControllerConstants.Views.Fragments.Product.PRODUCT_CODE_PATH_NEW_PATTERN + "/zoomImages", method = RequestMethod.GET)
+	@RequestMapping(value = ControllerConstants.Views.Fragments.Product.PRODUCT_CODE_PATH_NEW_PATTERN
+			+ "/zoomImages", method = RequestMethod.GET)
 	public String showZoomImages(@PathVariable(ControllerConstants.Views.Fragments.Product.PRODUCT_CODE) String productCode,
 			@RequestParam(value = "galleryPosition", required = false) final String galleryPosition, final Model model)
 	{
@@ -1473,12 +1483,13 @@ public class ProductPageController extends MidPageController
 			}
 			final ProductModel productModel = productService.getProductForCode(productCode);
 
-			final ProductData productData = productFacade.getProductForOptions(productModel, Arrays.asList(ProductOption.BASIC,
-					ProductOption.SUMMARY, ProductOption.DESCRIPTION, ProductOption.GALLERY, ProductOption.CATEGORIES,
-					//The promotion populator has been added as a business requirement to display promotion details in other sellers page
-					ProductOption.PROMOTIONS,
-					//ProductOption.CLASSIFICATION,
-					ProductOption.VARIANT_FULL));
+			final ProductData productData = productFacade.getProductForOptions(productModel,
+					Arrays.asList(ProductOption.BASIC, ProductOption.SUMMARY, ProductOption.DESCRIPTION, ProductOption.GALLERY,
+							ProductOption.CATEGORIES,
+							//The promotion populator has been added as a business requirement to display promotion details in other sellers page
+							ProductOption.PROMOTIONS,
+							//ProductOption.CLASSIFICATION,
+							ProductOption.VARIANT_FULL));
 			final String sharePath = configurationService.getConfiguration().getString("social.share.path");
 			populateProductData(productData, model);
 			//CKD:TPR-250:Start
@@ -1599,8 +1610,8 @@ public class ProductPageController extends MidPageController
 		}
 		catch (final Exception e)
 		{
-			ExceptionUtil.etailNonBusinessExceptionHandler(new EtailNonBusinessExceptions(e,
-					MarketplacecommerceservicesConstants.E0000));
+			ExceptionUtil
+					.etailNonBusinessExceptionHandler(new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000));
 			returnStatement = frontEndErrorHelper.callNonBusinessError(model, MessageConstants.SYSTEM_PDP_ERROR_PAGE_NON_BUSINESS);
 
 		}
@@ -1636,7 +1647,8 @@ public class ProductPageController extends MidPageController
 	 * @throws CMSItemNotFoundException
 	 * @throws EtailNonBusinessExceptions
 	 */
-	@RequestMapping(value = ControllerConstants.Views.Fragments.Product.PRODUCT_CODE_PATH_NEW_PATTERN + "/quickView", method = RequestMethod.GET)
+	@RequestMapping(value = ControllerConstants.Views.Fragments.Product.PRODUCT_CODE_PATH_NEW_PATTERN
+			+ "/quickView", method = RequestMethod.GET)
 	public String showQuickView(@PathVariable(ControllerConstants.Views.Fragments.Product.PRODUCT_CODE) String productCode,
 			@RequestParam(value = ModelAttributetConstants.SELECTED_SIZE, required = false) final String selectedSize,
 			@RequestParam(value = MarketplacecommerceservicesConstants.SELLERIDPARAM, required = false) final String sellerId, //CKD:TPR-250
@@ -1663,6 +1675,7 @@ public class ProductPageController extends MidPageController
 					ProductOption.SUMMARY, ProductOption.DESCRIPTION, ProductOption.CATEGORIES, ProductOption.CLASSIFICATION,
 					ProductOption.GALLERY, ProductOption.VARIANT_FULL));//Fix for TISPT-150
 		}
+
 		//final String returnStatement = null;
 		//CKD:TPR-250:Start
 		model.addAttribute("msiteBuyBoxSellerId", StringUtils.isNotBlank(sellerId) ? sellerId : null);
@@ -1795,8 +1808,8 @@ public class ProductPageController extends MidPageController
 			review.setRating(form.getRating());
 			review.setAlias(XSSFilterUtil.filter(form.getAlias()));
 			productFacade.postReview(productCode, review);
-			GlobalMessages
-					.addFlashMessage(redirectAttrs, GlobalMessages.CONF_MESSAGES_HOLDER, "review.confirmation.thank.you.title");
+			GlobalMessages.addFlashMessage(redirectAttrs, GlobalMessages.CONF_MESSAGES_HOLDER,
+					"review.confirmation.thank.you.title");
 			returnStatement = REDIRECT_PREFIX + productModelUrlResolver.resolve(productModel);
 		}
 
@@ -1826,8 +1839,8 @@ public class ProductPageController extends MidPageController
 		}
 		else
 		{
-			final int reviewCount = Math.min(Integer.parseInt(numberOfReviews), (productData.getNumberOfReviews() == null ? 0
-					: productData.getNumberOfReviews().intValue()));
+			final int reviewCount = Math.min(Integer.parseInt(numberOfReviews),
+					(productData.getNumberOfReviews() == null ? 0 : productData.getNumberOfReviews().intValue()));
 			reviews = productFacade.getReviews(productCode, Integer.valueOf(reviewCount));
 		}
 
@@ -1840,7 +1853,8 @@ public class ProductPageController extends MidPageController
 	}
 
 	@Deprecated
-	@RequestMapping(value = ControllerConstants.Views.Fragments.Product.PRODUCT_CODE_PATH_NEW_PATTERN + "/writeReview", method = RequestMethod.GET)
+	@RequestMapping(value = ControllerConstants.Views.Fragments.Product.PRODUCT_CODE_PATH_NEW_PATTERN
+			+ "/writeReview", method = RequestMethod.GET)
 	public String writeReview(@PathVariable String productCode, final Model model) throws CMSItemNotFoundException
 	{
 		if (null != productCode)
@@ -1866,7 +1880,8 @@ public class ProductPageController extends MidPageController
 	}
 
 	@Deprecated
-	@RequestMapping(value = ControllerConstants.Views.Fragments.Product.PRODUCT_CODE_PATH_NEW_PATTERN + "/writeReview", method = RequestMethod.POST)
+	@RequestMapping(value = ControllerConstants.Views.Fragments.Product.PRODUCT_CODE_PATH_NEW_PATTERN
+			+ "/writeReview", method = RequestMethod.POST)
 	public String writeReview(@PathVariable String productCode, final ReviewForm form, final BindingResult result,
 			final Model model, final HttpServletRequest request, final RedirectAttributes redirectAttrs)
 			throws CMSItemNotFoundException
@@ -1896,8 +1911,8 @@ public class ProductPageController extends MidPageController
 			review.setRating(form.getRating());
 			review.setAlias(XSSFilterUtil.filter(form.getAlias()));
 			productFacade.postReview(productCode, review);
-			GlobalMessages
-					.addFlashMessage(redirectAttrs, GlobalMessages.CONF_MESSAGES_HOLDER, "review.confirmation.thank.you.title");
+			GlobalMessages.addFlashMessage(redirectAttrs, GlobalMessages.CONF_MESSAGES_HOLDER,
+					"review.confirmation.thank.you.title");
 			returnStatement = REDIRECT_PREFIX + productModelUrlResolver.resolve(productModel);
 		}
 		return returnStatement;
@@ -1944,9 +1959,10 @@ public class ProductPageController extends MidPageController
 		try
 		{
 
-			final ProductData productData = productFacade.getProductForOptions(productModel, Arrays.asList(ProductOption.BASIC,
-					ProductOption.SUMMARY, ProductOption.DESCRIPTION, ProductOption.GALLERY, ProductOption.CATEGORIES,
-					ProductOption.PROMOTIONS, ProductOption.CLASSIFICATION, ProductOption.VARIANT_FULL));
+			final ProductData productData = productFacade.getProductForOptions(productModel,
+					Arrays.asList(ProductOption.BASIC, ProductOption.SUMMARY, ProductOption.DESCRIPTION, ProductOption.GALLERY,
+							ProductOption.CATEGORIES, ProductOption.PROMOTIONS, ProductOption.CLASSIFICATION,
+							ProductOption.VARIANT_FULL));
 			//CKD:TPR-250:Start
 			prepareBrandInfoData(model, productData);
 			//CKD:TPR-250:End
@@ -2000,11 +2016,24 @@ public class ProductPageController extends MidPageController
 			}
 
 
+
 			final String sharePath = configurationService.getConfiguration().getString("social.share.path");
 			//For Gigya
 			final String isGigyaEnabled = configurationService.getConfiguration().getString(MessageConstants.USE_GIGYA);
-			final String gigyaAPIKey = configurationService.getConfiguration().getString("gigya.apikey");
-			final String gigyaRatingURL = configurationService.getConfiguration().getString("gigya.rating.url");
+			final String siteId = getSiteConfigService().getProperty("luxury.site.id");
+			final String gigyaAPIKey;
+			final String gigyaRatingURL;
+			if ((getCmsSiteService().getCurrentSite().getUid()).equalsIgnoreCase(siteId))
+			{
+
+				gigyaAPIKey = configurationService.getConfiguration().getString("luxury.gigya.apikey");
+				gigyaRatingURL = configurationService.getConfiguration().getString("luxury.gigya.rating.url");
+			}
+			else
+			{
+				gigyaAPIKey = configurationService.getConfiguration().getString("gigya.apikey");
+				gigyaRatingURL = configurationService.getConfiguration().getString("gigya.rating.url");
+			}
 			//end gigya
 			final String emiCuttOffAmount = configurationService.getConfiguration().getString("marketplace.emiCuttOffAmount");
 			final String cliqCareNumber = configurationService.getConfiguration().getString("cliq.care.number");
@@ -2052,8 +2081,8 @@ public class ProductPageController extends MidPageController
 			if (ModelAttributetConstants.FASHION_ACCESSORIES.equalsIgnoreCase(productModel.getProductCategoryType()))
 			{
 				final Collection<CategoryModel> superCategories = productModel.getSupercategories();
-				final String configurationFA = configurationService.getConfiguration().getString(
-						"accessories.sideguide.category.showlist");
+				final String configurationFA = configurationService.getConfiguration()
+						.getString("accessories.sideguide.category.showlist");
 				final String[] configurationFAs = configurationFA.split(",");
 				for (final CategoryModel supercategory : superCategories)
 				{
@@ -2138,6 +2167,8 @@ public class ProductPageController extends MidPageController
 
 	}
 
+
+
 	/**
 	 * @param productData
 	 * @param model
@@ -2153,8 +2184,8 @@ public class ProductPageController extends MidPageController
 	}
 
 
-	protected void setUpMetaData(final Model model, final String metaDescription, final String metaTitle,
-			final String productCode, final String metaKeywords)
+	protected void setUpMetaData(final Model model, final String metaDescription, final String metaTitle, final String productCode,
+			final String metaKeywords)
 	{
 		final List<MetaElementData> metadata = new LinkedList<>();
 		metadata.add(createMetaElement(ModelAttributetConstants.DESCRIPTION, metaDescription));
@@ -2214,6 +2245,7 @@ public class ProductPageController extends MidPageController
 							//for jwl certification
 							final String certificationValue = configurationService.getConfiguration().getString(
 									ModelAttributetConstants.CONFIGURABLE_ATTRIBUTE + productData.getRootCategory() + ".certification");
+
 							//apparel
 							final FeatureValueData featureValueData = featureValueList.get(0);
 							if ((ModelAttributetConstants.CLOTHING.equalsIgnoreCase(productData.getRootCategory()))
@@ -2239,7 +2271,7 @@ public class ProductPageController extends MidPageController
 									productFeatureMap.put(featureValueData.getValue(),
 											productFeature != null && productFeature.getUnit() != null
 													&& !productFeature.getUnit().getSymbol().isEmpty() ? productFeature.getUnit().getSymbol()
-													: "");
+															: "");
 									mapConfigurableAttributes.put(featureData.getName(), productFeatureMap);
 								}
 							}
@@ -2272,8 +2304,8 @@ public class ProductPageController extends MidPageController
 											}
 											productFeatureMap.put(featureValueData.getValue(),
 													productFeature != null && productFeature.getUnit() != null
-															&& !productFeature.getUnit().getSymbol().isEmpty() ? productFeature.getUnit()
-															.getSymbol() : "");
+															&& !productFeature.getUnit().getSymbol().isEmpty()
+																	? productFeature.getUnit().getSymbol() : "");
 											mapConfigurableAttributes.put(featureData.getName(), productFeatureMap);
 										}
 
@@ -2338,10 +2370,13 @@ public class ProductPageController extends MidPageController
 
 							else
 							{
+								if (StringUtils.isBlank(properitsValue.toLowerCase()))
+								{
+									mapConfigurableAttribute.put(featureData.getName(), featureValueData.getValue());
+								}
 								if (properitsValue.toLowerCase().contains(configurableAttributData.getCode().toLowerCase()))
 
 								{
-
 									mapConfigurableAttribute.put(featureData.getName(), featureValueData.getValue());
 								}
 
@@ -2493,7 +2528,8 @@ public class ProductPageController extends MidPageController
 	 * @throws CMSItemNotFoundException
 	 */
 	@ResponseBody
-	@RequestMapping(value = PRODUCT_OLD_URL_PATTERN + RequestMappingUrlConstants.VIEW_WISHLISTS_IN_POPUP, method = RequestMethod.GET)
+	@RequestMapping(value = PRODUCT_OLD_URL_PATTERN
+			+ RequestMappingUrlConstants.VIEW_WISHLISTS_IN_POPUP, method = RequestMethod.GET)
 	public List<WishlistData> showWishListsForPDP(
 			@RequestParam(ControllerConstants.Views.Fragments.Product.PRODUCT_CODE) final String productCode, final Model model,
 			final HttpServletRequest request, final HttpServletResponse response) throws CMSItemNotFoundException
@@ -2533,7 +2569,8 @@ public class ProductPageController extends MidPageController
 	 * @throws com.granule.json.JSONException
 	 */
 	@SuppressWarnings(BOXING)
-	@RequestMapping(value = ControllerConstants.Views.Fragments.Product.PRODUCT_CODE_PATH_NEW_PATTERN + "/buybox", method = RequestMethod.GET)
+	@RequestMapping(value = ControllerConstants.Views.Fragments.Product.PRODUCT_CODE_PATH_NEW_PATTERN
+			+ "/buybox", method = RequestMethod.GET)
 	public @ResponseBody JSONObject getBuyboxPrice(
 			@PathVariable(ControllerConstants.Views.Fragments.Product.PRODUCT_CODE) String productCode,
 			@RequestParam("variantCode") String variantCode,
@@ -2591,7 +2628,8 @@ public class ProductPageController extends MidPageController
 	}
 
 	@ResponseBody
-	@RequestMapping(value = ControllerConstants.Views.Fragments.Product.PRODUCT_CODE_PATH_NEW_PATTERN + "/getRichAttributes", method = RequestMethod.GET)
+	@RequestMapping(value = ControllerConstants.Views.Fragments.Product.PRODUCT_CODE_PATH_NEW_PATTERN
+			+ "/getRichAttributes", method = RequestMethod.GET)
 	public RichAttributeData getRichAttributesDetails(
 			@PathVariable(ControllerConstants.Views.Fragments.Product.PRODUCT_CODE) String productCode,
 			@RequestParam("buyboxid") final String buyboxid)
@@ -2653,8 +2691,8 @@ public class ProductPageController extends MidPageController
 		}
 		catch (final Exception e)
 		{
-			ExceptionUtil.etailNonBusinessExceptionHandler(new EtailNonBusinessExceptions(e,
-					MarketplacecommerceservicesConstants.E0000));
+			ExceptionUtil
+					.etailNonBusinessExceptionHandler(new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000));
 		}
 
 		return emiBankNames;
@@ -2852,10 +2890,11 @@ public class ProductPageController extends MidPageController
 	 * @throws com.granule.json.JSONException
 	 */
 	@ResponseBody
-	@RequestMapping(value = ControllerConstants.Views.Fragments.Product.PRODUCT_CODE_PATH_NEW_PATTERN + "/otherSellerDetails", method = RequestMethod.GET)
+	@RequestMapping(value = ControllerConstants.Views.Fragments.Product.PRODUCT_CODE_PATH_NEW_PATTERN
+			+ "/otherSellerDetails", method = RequestMethod.GET)
 	public List<SellerInformationData> getOtherSellerDetails(
-			@PathVariable(ControllerConstants.Views.Fragments.Product.PRODUCT_CODE) String productCode) throws JSONException,
-			CMSItemNotFoundException, UnsupportedEncodingException, com.granule.json.JSONException
+			@PathVariable(ControllerConstants.Views.Fragments.Product.PRODUCT_CODE) String productCode)
+			throws JSONException, CMSItemNotFoundException, UnsupportedEncodingException, com.granule.json.JSONException
 	{
 		if (null != productCode)
 		{
@@ -2993,7 +3032,8 @@ public class ProductPageController extends MidPageController
 	 * @throws com.granule.json.JSONException
 	 */
 	@ResponseBody
-	@RequestMapping(value = ControllerConstants.Views.Fragments.Product.PRODUCT_CODE_PATH_NEW_PATTERN + "/getOfferMessage", method = RequestMethod.GET)
+	@RequestMapping(value = ControllerConstants.Views.Fragments.Product.PRODUCT_CODE_PATH_NEW_PATTERN
+			+ "/getOfferMessage", method = RequestMethod.GET)
 	public JSONObject populateOfferMessage(
 			@RequestParam(ControllerConstants.Views.Fragments.Product.PRODUCT_CODE) final String productCode)
 			throws com.granule.json.JSONException
@@ -3320,8 +3360,8 @@ public class ProductPageController extends MidPageController
 			if (ModelAttributetConstants.FASHION_ACCESSORIES.equalsIgnoreCase(variantProductModel.getProductCategoryType()))
 			{
 				final Collection<CategoryModel> superCategories = variantProductModel.getSupercategories();
-				final String configurationFA = configurationService.getConfiguration().getString(
-						"accessories.sideguide.category.showlist");
+				final String configurationFA = configurationService.getConfiguration()
+						.getString("accessories.sideguide.category.showlist");
 				final String[] configurationFAs = configurationFA.split(",");
 				for (final CategoryModel supercategory : superCategories)
 				{
@@ -3374,8 +3414,8 @@ public class ProductPageController extends MidPageController
 	 */
 	@SuppressWarnings(BOXING)
 	@RequestMapping(value = PRODUCT_OLD_URL_PATTERN + "-getIAResponse", method = RequestMethod.GET)
-	public @ResponseBody JSONObject getIAResponse(@RequestParam(IA_USS_IDS) final String ussids) throws JSONException,
-			com.granule.json.JSONException
+	public @ResponseBody JSONObject getIAResponse(@RequestParam(IA_USS_IDS) final String ussids)
+			throws JSONException, com.granule.json.JSONException
 	{
 		final String ussidList[] = ussids.split(",");
 		final StringBuilder ussidIds = new StringBuilder();
@@ -3387,8 +3427,8 @@ public class ProductPageController extends MidPageController
 			ussidIds.append(',');//Sonar fix
 		}
 		final JSONObject buyboxJson = new JSONObject();
-		final Map<String, List<Double>> dataMap = buyBoxFacade.getBuyBoxDataForUssids(ussidIds.toString().substring(0,
-				ussidIds.lastIndexOf(",")));
+		final Map<String, List<Double>> dataMap = buyBoxFacade
+				.getBuyBoxDataForUssids(ussidIds.toString().substring(0, ussidIds.lastIndexOf(",")));
 		LOG.debug("##################Data Map for IA" + dataMap);
 		return buyboxJson.put("iaResponse", dataMap);
 	}
@@ -3403,7 +3443,8 @@ public class ProductPageController extends MidPageController
 	//update the message for Freebie product TPR-1754
 
 	@ResponseBody
-	@RequestMapping(value = ControllerConstants.Views.Fragments.Product.USSID_CODE_PATH_NEW_PATTERN + "/getFreebieMessage", method = RequestMethod.GET)
+	@RequestMapping(value = ControllerConstants.Views.Fragments.Product.USSID_CODE_PATH_NEW_PATTERN
+			+ "/getFreebieMessage", method = RequestMethod.GET)
 	public JSONObject populateFreebieMessage(@RequestParam(ControllerConstants.Views.Fragments.Product.USSID) final String ussId)
 			throws com.granule.json.JSONException, EtailNonBusinessExceptions, FlexibleSearchException, UnknownIdentifierException
 	{
@@ -3451,8 +3492,8 @@ public class ProductPageController extends MidPageController
 	{
 		if (null != productData.getBrand())
 		{
-			model.addAttribute("msiteBrandName", StringUtils.isNotBlank(productData.getBrand().getBrandname()) ? productData
-					.getBrand().getBrandname().toLowerCase() : null);
+			model.addAttribute("msiteBrandName", StringUtils.isNotBlank(productData.getBrand().getBrandname())
+					? productData.getBrand().getBrandname().toLowerCase() : null);
 			/*
 			 * model.addAttribute("msiteBrandCode", StringUtils.isNotBlank(productData.getBrand().getBrandCode()) ?
 			 * productData .getBrand().getBrandCode().toLowerCase() : null);
@@ -3461,11 +3502,11 @@ public class ProductPageController extends MidPageController
 
 			if (null != productData.getBrand().getBrandDescription())
 			{
-				model.addAttribute(
-						"brandInfo",
-						productData.getBrand().getBrandDescription().length() <= MplConstants.BRANDINFO_CHAR_LIMIT ? productData
-								.getBrand().getBrandDescription() : StringUtils.substring(productData.getBrand().getBrandDescription(),
-								0, MplConstants.BRANDINFO_CHAR_LIMIT));
+				model.addAttribute("brandInfo",
+						productData.getBrand().getBrandDescription().length() <= MplConstants.BRANDINFO_CHAR_LIMIT
+								? productData.getBrand().getBrandDescription()
+								: StringUtils.substring(productData.getBrand().getBrandDescription(), 0,
+										MplConstants.BRANDINFO_CHAR_LIMIT));
 			}
 
 		}
@@ -3608,8 +3649,8 @@ public class ProductPageController extends MidPageController
 		}
 		catch (final Exception e)
 		{
-			ExceptionUtil.etailNonBusinessExceptionHandler(new EtailNonBusinessExceptions(e,
-					MarketplacecommerceservicesConstants.E0000));
+			ExceptionUtil
+					.etailNonBusinessExceptionHandler(new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000));
 			mplAjaxProductData.setError(e.getMessage());
 		}
 		finally
@@ -3642,13 +3683,13 @@ public class ProductPageController extends MidPageController
 					Arrays.asList(ProductOption.CATEGORIES, ProductOption.CLASSIFICATION));
 			mplAjaxProductData = new MplAjaxProductData();
 			displayConfigurableAttribute(productData, model);
-			final String validTabs = configurationService.getConfiguration().getString(
-					"mpl.categories." + productData.getRootCategory());
+			final String validTabs = configurationService.getConfiguration()
+					.getString("mpl.categories." + productData.getRootCategory());
 			mplAjaxProductData.setValidTabs(validTabs);
-			mplAjaxProductData.setMapConfigurableAttribute((Map<String, String>) model.asMap().get(
-					ModelAttributetConstants.MAP_CONFIGURABLE_ATTRIBUTE));
-			mplAjaxProductData.setMapConfigurableAttributes((Map<String, Map>) model.asMap().get(
-					ModelAttributetConstants.MAP_CONFIGURABLE_ATTRIBUTES));
+			mplAjaxProductData.setMapConfigurableAttribute(
+					(Map<String, String>) model.asMap().get(ModelAttributetConstants.MAP_CONFIGURABLE_ATTRIBUTE));
+			mplAjaxProductData.setMapConfigurableAttributes(
+					(Map<String, Map>) model.asMap().get(ModelAttributetConstants.MAP_CONFIGURABLE_ATTRIBUTES));
 			mplAjaxProductData.setWarranty((List<String>) model.asMap().get(ModelAttributetConstants.WARRANTY));
 			if (FINEJEWELLERY.equalsIgnoreCase(productModel.getProductCategoryType()))
 			{
@@ -3670,8 +3711,8 @@ public class ProductPageController extends MidPageController
 		}
 		catch (final Exception e)
 		{
-			ExceptionUtil.etailNonBusinessExceptionHandler(new EtailNonBusinessExceptions(e,
-					MarketplacecommerceservicesConstants.E0000));
+			ExceptionUtil
+					.etailNonBusinessExceptionHandler(new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000));
 			mplAjaxProductData.setError(e.getMessage());
 		}
 		finally
@@ -3679,6 +3720,18 @@ public class ProductPageController extends MidPageController
 			returnStatement = gson.toJson(mplAjaxProductData);
 		}
 		return returnStatement;
+	}
+
+	private boolean isLuxurySite()
+	{
+
+		final BaseSiteModel currentBaseSite = baseSiteService.getCurrentBaseSite();
+		if (null != currentBaseSite && StringUtils.isNotBlank(currentBaseSite.getUid())
+				&& MarketplaceFacadesConstants.LuxuryPrefix.equals(currentBaseSite.getUid()))
+		{
+			return true;
+		}
+		return false;
 	}
 
 	@RequestMapping(value = PRODUCT_OLD_URL_PATTERN + ControllerConstants.Views.Fragments.Product.EXCHANGE, method = RequestMethod.GET)
@@ -3782,3 +3835,4 @@ public class ProductPageController extends MidPageController
 
 
 }
+

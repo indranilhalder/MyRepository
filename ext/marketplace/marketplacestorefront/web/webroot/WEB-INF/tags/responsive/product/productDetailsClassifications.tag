@@ -51,7 +51,7 @@
             <div class="detail" style="display: block;">
                <c:choose>
                   <c:when test="${classification.key=='Product Details'}">
-                     <div class="title">Product Code 
+                     <div class="title"><div id="jewelProductCode">Product Code</div> 
                      <span id="jewelDetailsUssid" ></span>
                      </div>
                      <div id ="jewelTableDetails">
@@ -72,8 +72,8 @@
                   <c:when test="${classification.key=='Diamond Details'}">
                      <c:forEach items="${classification.value}" var="feature" varStatus="inner">
                            <c:if test="${feature.key=='Total Count' or feature.key=='Total Weight' }">
-                                 <div class="t-d-d">${feature.key}
-                                  <span>
+                                 <div class="t-d-d"><div id="tddKey">${feature.key}</div>
+                                  <span id="tddValue">
                                  <c:forEach items="${feature.value}" var="featureValue" varStatus="status">
                                     ${featureValue}
                                  </c:forEach>

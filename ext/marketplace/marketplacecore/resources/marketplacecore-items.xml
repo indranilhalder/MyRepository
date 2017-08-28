@@ -135,9 +135,35 @@
 			
 		<collectiontype code="ChildOrderListInvoice" elementtype="Order"
 			autocreate="true" generate="true" type="list" />
+
+		<collectiontype code="luxuryCategoryCollection"
+			elementtype="Category" autocreate="true" generate="true" type="list" />
+		<collectiontype code="luxuryProductCollection"
+			elementtype="product" autocreate="true" generate="true" type="list" />
+		<collectiontype elementtype="BannerComponent"
+			code="bannerImageCollection" autocreate="true" generate="true" type="list" />	
+			<!-- <collectiontype elementtype="ShowCaseCollectionComponent"
+			code="ShowCaseCollection" autocreate="true" generate="true" type="list" />	 -->
 	</collectiontypes>
 
 	<enumtypes>
+	                <!-- TPR-6272 starts here -->
+	                <!-- <enumtype generate="true" code="registrationPlatform" autocreate="true" dynamic="true">
+			              <description>
+				               This enumeration creates the registration platform.
+			              </description>
+						  <value code="Mkt_Desktop_Web" />
+			              <value code="Mkt_Mobile_Web" />
+			              <value code="Mkt_Mobile_App" />
+			              <value code="Mkt_iOS_App" />
+			              <value code="Mkt_Android_App" />
+			              <value code="Lux_Desktop_Web" />
+			              <value code="Lux_Mobile_Web" />
+			              <value code="Lux_Mobile_App" />
+			              <value code="Lux_iOS_App" />
+			              <value code="Lux_Android_App" />			              
+		            </enumtype> -->
+	                <!-- TPR-6272 ends here -->
 
 		<!-- TPR-628-Make changes to Banners rendering in MObile Viewports -->
 
@@ -867,7 +893,11 @@
  			<value code="no" />
  		</enumtype>
  		<!-- added by i324321 end -->
- 		
+		<enumtype code="imagePosition"       autocreate="true" generate="true" 
+ 			dynamic="true">
+ 			<value code="left" />
+ 			<value code="right" />
+ 		</enumtype> 		
  		<!-- Added for third Party Wallet -->
  		<enumtype code="walletEnum" autocreate="true" generate="true"
 			dynamic="false">
@@ -914,8 +944,7 @@
 			TPR-1316
 			<value code="ProductSliderType" />
 			<value code="ProductListType" />
-		</enumtype> -->
-	</enumtypes>
+		</enumtype> -->	</enumtypes>
 	<!-- Product Feature Enum Ends -->
 
 
@@ -1356,6 +1385,185 @@
        
 	</relations>
 	<itemtypes>
+	<itemtype code="LuxProductCarouselComponent"
+				autocreate="true" generate="true" extends="ProductCarouselComponent"
+				jaloclass="com.tisl.mpl.core.jalo.LuxProductCarouselComponent">
+	</itemtype>
+			
+			
+			
+	<itemtype code="ShopByCategory" autocreate="true"
+				generate="true" extends="SimpleCMSComponent"
+				jaloclass="com.tisl.mpl.jalo.cms.components.ShopByCategory">
+		<attributes>
+			<attribute type="bannerImageCollection" qualifier="relatedImage"
+						autocreate="true" generate="true">
+						<description>Related Images</description>
+						<modifiers read="true" write="true" search="true"
+							optional="false" />
+						<persistence type='property' />
+				</attribute>
+				<attribute type="java.lang.String" qualifier="title"
+						autocreate="true" generate="true">
+						<description>Title</description>
+						<modifiers read="true" write="true" search="true"
+							optional="false" />
+						<persistence type='property' />
+				</attribute>
+		</attributes>
+	</itemtype>	
+
+	
+<!--  
+<itemtype code="ImageShowCaseComponent" autocreate="true"
+				generate="true" extends="SimpleCMSComponent"
+				jaloclass="com.tisl.mpl.jalo.cms.components.ImageShowCaseComponent">
+		<attributes>
+			<attribute type="ShowCaseCollection" qualifier="showCaseBanner"
+						autocreate="true" generate="true">
+						<description>Show Case Banner</description>
+						<modifiers read="true" write="true" search="true"
+							optional="false" />
+						<persistence type='property' />
+				</attribute>
+				<attribute type="java.lang.String" qualifier="title"
+						autocreate="true" generate="true">
+						<description>Title</description>
+						<modifiers read="true" write="true" search="true"
+							optional="false" />
+						<persistence type='property' />
+				</attribute>
+		</attributes>
+	</itemtype> -->
+	
+	
+	
+	 <!-- test MNPGridImageComponent -->
+	<itemtype code="MNPGridImageComponent" extends="SimpleCMSComponent"
+    autocreate="true" generate="true" jaloclass="com.mnp.core.jalo.MNPGridImageComponent">
+    <attributes>
+     <attribute autocreate="true" qualifier="imagesCount"
+      type="java.lang.Integer" generate="true">
+      <defaultvalue>Integer.valueOf(1)</defaultvalue>
+      <persistence type="property" />
+      <modifiers read="true" write="true" search="true"
+       optional="false" />
+     </attribute>
+     <attribute autocreate="true" qualifier="videoUrl" type="java.lang.String"
+      generate="true">
+      <persistence type="property" />
+      <modifiers read="true" write="true" search="true"
+       optional="true" />
+     </attribute>
+     <attribute autocreate="true" qualifier="description"
+      type="java.lang.String" generate="true">
+      <persistence type="property" />
+      <modifiers read="true" write="true" search="true"
+       optional="true" />
+     </attribute>
+     <attribute autocreate="true" qualifier="width" type="java.lang.String"
+      generate="true">
+      <persistence type="property" />
+      <modifiers read="true" write="true" search="true"
+       optional="true" />
+     </attribute>
+     <attribute autocreate="true" qualifier="image" type="Media"
+      generate="true">
+      <persistence type="property" />
+      <modifiers read="true" write="true" search="true"
+       optional="true" />
+     </attribute>
+     <attribute autocreate="true" qualifier="url" type="java.lang.String"
+      generate="true">
+      <persistence type="property" />
+      <modifiers read="true" write="true" search="true"
+       optional="true" />
+     </attribute>
+     <attribute autocreate="true" qualifier="heading" type="java.lang.String"
+      generate="true">
+      <persistence type="property" />
+      <modifiers read="true" write="true" search="true"
+       optional="true" />
+     </attribute>
+     <attribute type="java.lang.Boolean" qualifier="isArrow">
+      <defaultvalue>Boolean.FALSE</defaultvalue>
+      <persistence type="property" />
+      <modifiers optional="false" />
+     </attribute>
+     <attribute type="java.lang.Boolean" qualifier="isGrey">
+      <defaultvalue>Boolean.FALSE</defaultvalue>
+      <persistence type="property" />
+      <modifiers optional="false" />
+     </attribute>
+    </attributes>	
+   </itemtype>
+	
+	<!-- Category landing page Product ShowCase component   -->
+	 <itemtype code="productShowCaseComponent" autocreate="true"
+				generate="true">
+				<attributes>
+				<attribute type="luxuryProductCollection" qualifier="product"
+						autocreate="true" generate="true">
+						<description>Collection of product</description>
+						<modifiers read="true" write="true" search="true"
+							optional="false" />
+						<persistence type='property' />
+				</attribute>
+				<attribute type="Media" qualifier="relatedImage"
+						autocreate="true" generate="true">
+						<description>Related Images</description>
+						<modifiers read="true" write="true" search="true"
+							optional="false" />
+						<persistence type='property' />
+				</attribute>
+				<attribute type="java.lang.String" qualifier="relatedImageUrl"
+						autocreate="true" generate="true">
+						<description>Related Images</description>
+						<modifiers read="true" write="true" search="true"
+							optional="false" />
+						<persistence type='property' />
+				</attribute>
+				<attribute type="java.lang.String" qualifier="title"
+						autocreate="true" generate="true">
+						<description>title</description>
+						<modifiers read="true" write="true" search="true"
+							optional="false" />
+						<persistence type='property' />
+				</attribute>
+				<attribute type="java.lang.String" qualifier="description"
+						autocreate="true" generate="true">
+						<description>title</description>
+						<modifiers read="true" write="true" search="true"
+							optional="false" />
+						<persistence type='property' />
+				</attribute>
+				<attribute type="java.lang.String" qualifier="shopNowLink"
+						autocreate="true" generate="true">
+						<description>shop now button link</description>
+						<modifiers read="true" write="true" search="true"
+							optional="false" />
+						<persistence type='property' />
+				</attribute>
+				<attribute type="java.lang.String" qualifier="shopNowName"
+						autocreate="true" generate="true">
+						<description>shop now button name</description>
+						<modifiers read="true" write="true" search="true"
+							optional="false" />
+						<persistence type='property' />
+				</attribute>
+				<attribute type="imagePosition" qualifier="relatedImagePosition"
+						autocreate="true" generate="true">
+						<description>Related Images Position</description>
+						<modifiers read="true" write="true" search="true"
+							optional="false" />
+						<defaultvalue>
+						em().getEnumerationValue("relatedImagePosition","left")
+					</defaultvalue>	
+						<persistence type='property' />
+				</attribute>					
+				</attributes>	
+	</itemtype>			 
+
 		<!-- TPR-628 : Make changes to Banners rendering in MObile Viewports -->
 
 		<itemtype code="BannerComponent" autocreate="false" generate="false"
@@ -1527,6 +1735,12 @@
 						<persistence type="property" />
 					</attribute>
 					<attribute qualifier="qualifier" type="java.lang.String">
+						<description>Used to define Media Status.</description>
+						<modifiers read="true" write="true" optional="true"
+							unique="false" />
+						<persistence type="property" />
+					</attribute>
+					<attribute qualifier="alternativeURL" type="java.lang.String">
 						<description>Used to define Media Status.</description>
 						<modifiers read="true" write="true" optional="true"
 							unique="false" />
@@ -2012,6 +2226,17 @@
 						<modifiers read="true" write="true" search="true"
 							optional="false" removable="false" initial="true" private="false"
 							partof="false" unique="true" />
+					</attribute>
+					<attribute type="java.lang.String" qualifier="siteId"
+					      autocreate="true" generate="true">
+					      <persistence type='property'>
+					       <columntype database='oracle'>
+					        <value>VARCHAR2(10)</value>
+					       </columntype>
+					      </persistence>
+					      <modifiers read="true" write="true" search="true"
+					       optional="false" removable="false" initial="true" private="false"
+					       partof="false" unique="true" />
 					</attribute>
 					<!-- PDP changes start -->
 					<attribute type="java.lang.Double" qualifier="specialPrice"
@@ -2836,7 +3061,13 @@
 						<persistence type="property" />
 					</attribute>
 					<!-- TPR-970 ends -->
-					
+					<!-- for pancard TPR-6109 -->
+					<attribute qualifier="isRejMailTriggred" autocreate="true" type="java.lang.Boolean" generate="true">
+				        <description>check if mail is already triggred for rejected pan card</description>
+				        <defaultvalue>Boolean.FALSE</defaultvalue>
+				        <modifiers optional="true" read="true" write="true"/>
+				        <persistence type="property"/>
+			    	</attribute> 
 				</attributes>
 			</itemtype>
 
@@ -3319,6 +3550,14 @@
 			</itemtype>
 			<itemtype code="Customer" generate="false" autocreate="false">
 				<attributes>
+				    <!-- TPR-6272 starts here -->				   				    
+				    <attribute qualifier="customerRegistrationPlatform" autocreate="true"
+						type="java.lang.String" generate="true">
+						<modifiers read="true" write="true" search="true"
+							optional="true" />
+						<persistence type="property" />
+					</attribute>
+					<!-- TPR-6272 ends here -->
 					<attribute qualifier="isCustomerCreatedInCScockpit"
 						autocreate="true" type="java.lang.boolean" generate="true">
 						<modifiers read="true" write="true" search="true"
@@ -3440,6 +3679,15 @@
 						login page -->
 					<attribute qualifier="ischeckedMyRewards" autocreate="true"
 						type="java.lang.Boolean" generate="true">
+						<modifiers read="true" write="true" search="true"
+							optional="true" />
+						<defaultvalue>false</defaultvalue>
+						<persistence type="property" />
+					</attribute>
+
+					<attribute qualifier="isLuxuryCustomer" autocreate="true"
+						type="java.lang.Boolean" generate="true">
+						<description>To check if customer is luxury </description>
 						<modifiers read="true" write="true" search="true"
 							optional="true" />
 						<defaultvalue>false</defaultvalue>
@@ -4308,16 +4556,18 @@
 					</attribute>
 				</attributes>
 			</itemtype>
+			<!-- TPR-6410 starts -->
 			<itemtype code="CMSNavigationNode" generate="false"
 				autocreate="false">
 				<attributes>
 					<attribute qualifier="media" generate="true" autocreate="true"
-						type="localized:Media">
+						type="Media">
 						<persistence type="property" />
 						<description>Attribute that stores the localized media in CMS Navigation Node.</description>
 					</attribute>
 				</attributes>
 			</itemtype>
+			<!-- TPR-6410 ends -->
 			<itemtype code="MplNavigationNodeComponent" autocreate="true"
 				generate="true" extends="CMSNavigationNode"
 				jaloclass="com.tisl.mpl.core.jalo.MplNavigationNodeComponent">
@@ -4848,7 +5098,29 @@
 
 				</attributes>
 			</itemtype>
-
+			<!-- Start of Luxury Category collection Component -->
+			<itemtype code="LuxuryCategoryCollectionComponent"
+				autocreate="true" generate="true" extends="SimpleCMSComponent"
+				jaloclass="com.tisl.mpl.core.jalo.LuxuryCategoryCollectionComponent">
+				<attributes>
+				
+				<attribute type="luxuryCategoryCollection" qualifier="categories"
+						autocreate="true" generate="true">
+						<description>Collection of Categories</description>
+						<modifiers read="true" write="true" search="true"
+							optional="false" />
+						<persistence type='property' />
+					</attribute>
+					<attribute type="java.lang.String" qualifier="title"
+						autocreate="true" generate="true">
+						<description>Title to be displayed above the component</description>
+						<modifiers read="true" write="true" search="true" />
+						<persistence type='property' />
+					</attribute>
+				
+				</attributes>
+				</itemtype>
+			<!-- End of Luxury Category collection Component -->
 			<itemtype code="MplImageCategoryComponent" autocreate="true"
 				generate="true" extends="SimpleCMSComponent"
 				jaloclass="com.tisl.mpl.core.jalo.MplImageCategoryComponent">
@@ -6046,6 +6318,7 @@
 					<attribute qualifier="changeDeliveryRejectsCount" type="java.lang.Integer">
 						<modifiers optional="true" />
 						<defaultvalue>Integer.valueOf(0)</defaultvalue>
+
 						<persistence type="property" />
 					</attribute>
 					
@@ -6130,6 +6403,22 @@
 						<defaultvalue>Boolean.FALSE</defaultvalue>
 						<persistence type="property" />
 					</attribute>
+					<!-- TPR-5787 starts here -->
+					<attribute qualifier="isDeleted" autocreate="true"
+						type="java.lang.Boolean">
+						<description>Flag to indicate that the wishlist has been deleted</description>
+						<modifiers read="true" write="true" optional="false" />
+						<defaultvalue>Boolean.FALSE</defaultvalue>
+						<persistence type="property" />
+					</attribute>
+					<attribute autocreate="true" qualifier="deletedDate"
+						type="java.util.Date">
+						<description>To store the date when wishlist item has been deleted</description>
+						<persistence type="property" />
+						<modifiers read="true" write="true" search="true"
+							optional="true" />
+					</attribute>
+					<!-- TPR-5787 ends here -->
 				</attributes>
 			</itemtype>
 
@@ -8237,6 +8526,11 @@
 						autocreate="true" generate="true">
 						<modifiers read="true" write="true" search="true" />
 						<defaultvalue>Boolean.FALSE</defaultvalue>
+						<persistence type="property" />
+					</attribute>
+					<attribute qualifier="gender" type="java.lang.String"
+						autocreate="true" generate="true">
+						<modifiers read="true" write="true" search="true" />
 						<persistence type="property" />
 					</attribute>
 				</attributes>
@@ -12621,12 +12915,6 @@
 			        <modifiers optional="false" read="true" write="true"/>
 			        <persistence type="property"/>
 			    </attribute>
-			   <attribute qualifier="isMailTriggred" autocreate="true" type="java.lang.Boolean" generate="true">
-			        <description>check if mail is already triggred for rejected pan card</description>
-			        <defaultvalue>Boolean.FALSE</defaultvalue>
-			        <modifiers optional="false" read="true" write="true"/>
-			        <persistence type="property"/>
-			    </attribute> 
 			    <attribute qualifier="Status" autocreate="true" type="java.lang.String" generate="true">
 			        <description>status</description>
 			        <modifiers optional="false" read="true" write="true"/>
@@ -12646,5 +12934,42 @@
 		 </attributes>
 		</itemtype>
 		</typegroup>
-	</itemtypes>
+
+		<!-- START TPR-5733 -->
+			<typegroup name="MPL_FOOTER"> 
+			   <itemtype code="MplFooterLink" autocreate="true" generate="true">
+				<description>Added New Links For Tag Cloud</description>
+				<deployment table="MplFooterLink" typecode="21101" />
+				<attributes>
+				<attribute qualifier="footerLinkRow" type="java.lang.Integer">
+				    <modifiers optional="false" unique="false" write="true" read="true"/>
+				   <persistence type="property" />
+				<description>Attribute contains the row id</description>
+			  </attribute>
+			  <attribute qualifier="footerLinkColumn" type="java.lang.Integer">
+				    <modifiers optional="false" unique="false" write="true" read="true"/>
+				    <persistence type="property" />
+				    <description>Attribute contains the column id</description>
+			 </attribute>
+			<attribute qualifier="footerLinkName" type="java.lang.String">
+			      <modifiers optional="false" unique="false" write="true" read="true"/>
+			      <persistence type="property" />
+			      <description>Attribute contains name of the links</description>
+		  </attribute>
+		  <attribute qualifier="footerLinkURL" type="java.lang.String">
+			     <modifiers optional="false" unique="false" write="true" read="true"/>
+			     <persistence type="property" />
+			     <description>Attribute contains the required URL</description>
+		  </attribute>
+		</attributes>
+		<indexes>
+			<index name="INDX_ROW_COLUMN" unique="true">
+				<key attribute="footerLinkRow" />
+				<key attribute="footerLinkColumn" />
+			</index>
+		</indexes>
+	 </itemtype>
+    </typegroup>
+		<!-- END TPR-5733 -->
+  </itemtypes>
 </items>

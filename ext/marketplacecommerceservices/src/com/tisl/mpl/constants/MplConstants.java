@@ -95,8 +95,10 @@ public final class MplConstants
 	public static final String DOUBLE = "\\D+";
 
 	public static final String PIPE = "|";
-
-
+	public static final String MALE = "MALE";
+	public static final String FEMALE = "FEMALE";
+	public static final String FBMALE = "m";
+	public static final String FBFEMALE = "f";
 
 	//	for wishlist
 	public static class USER

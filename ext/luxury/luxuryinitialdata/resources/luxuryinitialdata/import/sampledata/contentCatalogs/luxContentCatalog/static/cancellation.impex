@@ -1,0 +1,166 @@
+#
+# Import the CMS content for the site
+#
+$storePrefix=lux
+$contentCatalog=$storePrefixContentCatalog
+$productCatalog=luxProductCatalog
+$contentCV=catalogVersion(CatalogVersion.catalog(Catalog.id[default=$contentCatalog]),CatalogVersion.version[default=Online])[default=$contentCatalog:Online]
+$productCV=catalogVersion(CatalogVersion.catalog(Catalog.id[default=$productCatalog]),CatalogVersion.version[default=Online])[default=$productCatalog:Online]
+$luxuryStoreAddonPrefix=addon:/luxurystoreaddon
+# Import modulegen config properties into impex macros
+UPDATE GenericItem[processor=de.hybris.platform.commerceservices.impex.impl.ConfigPropertyImportProcessor];pk[unique=true]
+$jarResourceCms=$config-jarResourceCmsValue
+
+
+
+
+# Create PageTemplates
+# These define the layout for pages
+# "FrontendTemplateName" is used to define the JSP that should be used to render the page for pages with multiple possible layouts.
+# "RestrictedPageTypes" is used to restrict templates to page types
+INSERT_UPDATE PageTemplate;$contentCV[unique=true];uid[unique=true];name;frontendTemplateName;restrictedPageTypes(code);active[default=true]
+
+;;LuxuryContentPageTemplate;Luxury Content Page Template;$luxuryStoreAddonPrefix/pages/layout/luxuryContentLayoutPage;ContentPage
+
+
+
+# Add Velocity templates that are in the CMS Cockpit. These give a better layout for editing pages
+# The FileLoaderValueTranslator loads a File into a String property. The templates could also be inserted in-line in this file.
+UPDATE PageTemplate;$contentCV[unique=true];uid[unique=true];velocityTemplate[translator=de.hybris.platform.commerceservices.impex.impl.FileLoaderValueTranslator]
+
+;;LuxuryContentPageTemplate      ;$jarResourceCms/structure-view/structure_luxuryContentPageTemplate.vm
+
+
+
+# Simple Content Page Templates
+INSERT_UPDATE ContentSlotName;name[unique=true];template(uid,$contentCV)[unique=true][default='LuxuryContentPageTemplate'];validComponentTypes(code);compTypeGroup(code)
+;SiteLogo;;;logo
+;HeaderLinks;;;headerlinks
+;SearchBox;;;searchbox
+;MiniCart;;CMSLinkComponent,TrackOrderHeaderComponent,MyWishListInHeaderComponent,SignInFlyOutComponent;minicart
+;NavigationBar;;;navigation
+;Section1;;JspIncludeComponent,CMSParagraphComponent,AccountNavigationComponent,BrandCollectionComponent,SimpleBannerComponent,SimpleResponsiveBannerComponent,BannerComponent,MplBigPromoBannerComponent,MplBigFourPromoBannerComponent;
+;Section2A;;CMSParagraphComponent,AccountNavigationComponent,JspIncludeComponent;
+;Section2B;;CMSParagraphComponent,JspIncludeComponent,AccountNavigationComponent;
+;Section3;;CMSMediaParagraphComponent,CMSParagraphComponent,JspIncludeComponent,AccountNavigationComponent;
+;Section4;;CMSParagraphComponent,AccountNavigationComponent,JspIncludeComponent;
+;Footer;;;footer
+;TopHeaderSlot;;;wide
+;BottomHeaderSlot;;BreadcrumbComponent
+;PlaceholderContentSlot;;;
+
+
+
+INSERT_UPDATE ContentSlotForTemplate;$contentCV[unique=true];uid[unique=true];position[unique=true];pageTemplate(uid,$contentCV)[unique=true][default='LuxuryContentPageTemplate'];contentSlot(uid,$contentCV)[unique=true];allowOverwrite
+;;SiteLogo-LuxuryContentPage;SiteLogo;;SiteLogoSlot;true
+;;HomepageLink-LuxuryContentPage;HomepageNavLink;;HomepageNavLinkSlot;true
+;;NavigationBar-LuxuryContentPage;NavigationBar;;NavigationBarSlot;true
+;;MiniCart-LuxuryContentPage;MiniCart;;MiniCartSlot;true
+;;Footer-LuxuryContentPage;Footer;;FooterSlot;true
+;;HeaderLinks-LuxuryContentPage;HeaderLinks;;HeaderLinksSlot;true
+;;SearchBox-LuxuryContentPage;SearchBox;;SearchBoxSlot;true
+;;TopHeaderSlot-LuxuryContentPage;TopHeaderSlot;;TopHeaderSlot;true
+;;BottomHeaderSlot-LuxuryContentPage;BottomHeaderSlot;;BottomHeaderSlot;true
+
+
+
+
+
+
+INSERT_UPDATE ContentPage;$contentCV[unique=true];uid[unique=true];name;masterTemplate(uid,$contentCV);label;defaultPage[default='true'];approvalStatus(code)[default='approved'];homepage[default='false']
+;;cancellation;Cancellation;LuxuryContentPageTemplate;/cancellation
+
+
+
+# CMS Navigation Nodes  
+INSERT_UPDATE CMSNavigationNode;uid[unique=true];$contentCV[unique=true];name;parent(uid, $contentCV);children(uid,$contentCV)[mode=append];links(uid, $contentCV);&nodeRef;
+;NPPageCustomerServiceNavNode;;Customer Service Pages;;;ContactUsLink,FrequentlyAskedQuestionsLink,TrackOrdersLink,ShippingLink,CancellationLink,ReturnsLink;NPPageCustomerServiceNavNode;
+
+
+
+
+
+# Navigation Bar Component
+INSERT_UPDATE AccountNavigationComponent;$contentCV[unique=true];uid[unique=true];name;navigationNode(&nodeRef);styleClass;&componentRef
+;;FooterLeftNavigationCustomerComponent; Footer Left Navigation Customer Component;NPPageCustomerServiceNavNode;;FooterLeftNavigationCustomerComponent
+
+
+
+
+INSERT_UPDATE CMSLinkComponent;$contentCV[unique=true];uid[unique=true];name;url;category(code, $productCV);target(code)[default='sameWindow'];;
+
+;;ContactUsLink;Contact Us Link;/contact;;;;
+;;FrequentlyAskedQuestionsLink;Frequently Asked Questions Link;/faq;;;
+;;TrackOrdersLink;Track Orders Link;/trackorders;;;;
+;;ShippingLink;Shipping Link;/shipping;;;;
+;;CancellationLink;Cancellation Link;/cancellation;;;;
+;;ReturnsLink;Returns Link;/returns;;;;
+
+
+
+# CMS Navigation Nodes 
+UPDATE CMSNavigationNode;$contentCV[unique=true];uid[unique=true];title[lang=en]
+;;NPPageCustomerServiceNavNode;""
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+# CMSParagraphComponent 
+INSERT_UPDATE CMSParagraphComponent;$contentCV[unique=true];uid[unique=true];name;&componentRef;;;;
+;;CancellationPageComponent;Cancellation Page Component;CancellationPageComponent;;;;
+;;TitleForCancellationPageComponent;Title for CancellationPageComponent;TitleForCancellationPageComponent;;;;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+### CANCELLATION PAGE ####
+
+# ContentSlot
+INSERT_UPDATE ContentSlot;$contentCV[unique=true];uid[unique=true];name;active;cmsComponents(&componentRef);;;
+;;Section2ASlot-Cancellation;Section2A Slot for Cancellation Page;true;FooterLeftNavigationCustomerComponent;
+;;Section2BSlot-Cancellation;Section2B Slot for Cancellation Page;true;TitleForCancellationPageComponent,CancellationPageComponent;
+
+
+
+
+
+
+
+# ContentSlotForPage 
+INSERT_UPDATE ContentSlotForPage;$contentCV[unique=true];uid[unique=true];position[unique=true];page(uid,$contentCV)[unique=true][default='cancellation'];contentSlot(uid,$contentCV)[unique=true];;;
+;;Section2A-Cancellation;Section2A;;Section2ASlot-Cancellation;;;
+;;Section2B-Cancellation;Section2B;;Section2BSlot-Cancellation;;;
+

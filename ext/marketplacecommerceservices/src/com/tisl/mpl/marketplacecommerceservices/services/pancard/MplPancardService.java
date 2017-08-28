@@ -26,22 +26,11 @@ public interface MplPancardService
 
 	public List<PancardInformationModel> getPanCardOrderId(String orderreferancenumber);
 
-	public void refreshPancardDetailsService(PancardInformationModel oModel, MultipartFile file, String pancardnumber);
-
-	public void setPancardFileAndOrderIdservice(final String orderreferancenumber, String transactionid, String customername,
-			String pancardnumber, MultipartFile file);
-
-	/**
-	 * @param oModel
-	 * @return
-	 */
-	public String getCrmStatusForPancardDetailsService(PancardInformationModel oModel);
-
 	//For sending pancard details to SP through PI and save data into database for new pancard entry
 	public void setPanCardDetailsAndPIcall(String orderreferancenumber, List<String> transactionidList, String customername,
 			String pancardnumber, MultipartFile file) throws IllegalStateException, IOException, JAXBException;
 
-	public void refreshPanCardDetailsAndPIcall(List<PancardInformationModel> pModelList, PancardInformationModel pModel,
+	public void refreshPanCardDetailsAndPIcall(List<PancardInformationModel> pModelList, List<PancardInformationModel> pModel,
 			String pancardnumber, MultipartFile file) throws IllegalStateException, IOException, JAXBException;
 
 	public List<OrderModel> getOrderForCode(String orderreferancenumber);

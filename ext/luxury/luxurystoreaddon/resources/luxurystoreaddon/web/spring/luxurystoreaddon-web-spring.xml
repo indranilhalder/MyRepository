@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ [y] hybris Platform
+
+ Copyright (c) 2000-2015 hybris AG
+ All rights reserved.
+
+ This software is the confidential and proprietary information of hybris
+ ("Confidential Information"). You shall not disclose such Confidential
+ Information and shall use it only in accordance with the terms of the
+ license agreement you entered into with hybris.
+-->
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+           http://www.springframework.org/schema/beans/spring-beans.xsd
+           http://www.springframework.org/schema/aop
+           http://www.springframework.org/schema/aop/spring-aop.xsd
+           http://www.springframework.org/schema/context
+           http://www.springframework.org/schema/context/spring-context.xsd">
+           
+    <context:annotation-config/> 
+    <context:component-scan base-package="com.tisl.lux.controllers" scope-resolver="de.hybris.platform.spring.IgnoreTenantScopeMetadataResolver"/>
+
+	<!-- Expose /acceleratoraddon/web/webroot/WEB-INF/messages/base.js.properties  resource bundle as javascript variables -->
+	<bean id="defaultLuxurystoreaddonJavaScriptMessageResourceAccessor" parent="abstractJavaScriptMessageResourceAccessor">
+		<property name="addOnName" value="luxurystoreaddon"/>
+	</bean>
+
+	<bean id="defaultLuxurystoreaddonBeforeViewJsPropsHandlerAdaptee" parent="abstractBeforeViewJsPropsHandlerAdaptee" class="de.hybris.platform.addonsupport.interceptors.ExportJsPropertiesBeforeViewHandler">
+		<property name="messageSource" ref="defaultLuxurystoreaddonJavaScriptMessageResourceAccessor"/>
+	</bean>
+
+	<bean id="getLuxurystoreaddonBeforeViewHandler" parent="beforeViewHandlerAdapter">
+		<property name="adaptee">
+			<ref bean="defaultLuxurystoreaddonBeforeViewJsPropsHandlerAdaptee"/>
+		</property>
+	</bean>
+	<bean id="LuxurystoreaddonBeforeViewHandlerListMergeDirective" depends-on="beforeViewHandlersList" parent="listMergeDirective">
+		<property name="add" ref="getLuxurystoreaddonBeforeViewHandler"/>
+	</bean>
+	
+	
+	<bean parent="addonCmsComponentRendererMapping">
+       <property name="typeCode" value="LuxuryNavigationBarCollectionComponent" />
+       <property name="renderer" ref="genericAddOnCMSComponentRenderer" />
+   </bean>
+   
+   <bean parent="addonCmsComponentRendererMapping">
+       <property name="typeCode" value="LuxuryNavigationBarComponent" />
+       <property name="renderer" ref="genericAddOnCMSComponentRenderer" />
+   </bean>
+   
+   <bean parent="addonCmsComponentRendererMapping">
+       <property name="typeCode" value="WeeklySpecialBanner" />
+       <property name="renderer" ref="genericAddOnCMSComponentRenderer" />
+   </bean>
+   
+   <bean parent="addonCmsComponentRendererMapping">
+       <property name="typeCode" value="WeeklySpecial" />
+       <property name="renderer" ref="genericAddOnCMSComponentRenderer" />
+   </bean>
+   
+   <bean parent="addonCmsComponentRendererMapping">
+       <property name="typeCode" value="ShopOnLuxuryElement" />
+       <property name="renderer" ref="genericAddOnCMSComponentRenderer" />
+   </bean>
+   
+   <bean parent="addonCmsComponentRendererMapping">
+       <property name="typeCode" value="ShopOnLuxury" />
+       <property name="renderer" ref="genericAddOnCMSComponentRenderer" />
+   </bean>
+   
+   <bean parent="addonCmsComponentRendererMapping">
+       <property name="typeCode" value="LuxuryFooterComponent" />
+       <property name="renderer" ref="genericAddOnCMSComponentRenderer" />
+   </bean>
+   
+   <bean parent="addonCmsComponentRendererMapping">
+       <property name="typeCode" value="LuxShowCaseComponent" />
+       <property name="renderer" ref="genericAddOnCMSComponentRenderer" />
+   </bean>
+    <bean parent="addonCmsComponentRendererMapping">
+       <property name="typeCode" value="LuxShowCaseCollectionComponent" />
+       <property name="renderer" ref="genericAddOnCMSComponentRenderer" />
+   </bean>
+
+	 <bean parent="addonCmsComponentRendererMapping">
+       <property name="typeCode" value="LuxShopByCategory" />
+       <property name="renderer" ref="genericAddOnCMSComponentRenderer" />
+   </bean>
+  <bean parent="addonCmsComponentRendererMapping">
+       <property name="typeCode" value="LuxShopByCategory" />
+       <property name="renderer" ref="genericAddOnCMSComponentRenderer" />
+   </bean>
+   
+   <bean parent="addonCmsComponentRendererMapping">
+       <property name="typeCode" value="LuxuryProductAddToCartComponent" />
+       <property name="renderer" ref="genericAddOnCMSComponentRenderer" />
+   </bean>
+   
+   <bean parent="addonCmsComponentRendererMapping">
+       <property name="typeCode" value="LuxuryAddToCartAction" />
+       <property name="renderer" ref="genericAddOnCMSComponentRenderer" />
+   </bean>
+   <bean parent="addonCmsComponentRendererMapping">
+       <property name="typeCode" value="LuxCMSMediaParagraphComponent" />
+       <property name="renderer" ref="genericAddOnCMSComponentRenderer" />
+   </bean>
+   <bean parent="addonCmsComponentRendererMapping">
+       <property name="typeCode" value="LuxurySimpleBannerComponent" />
+       <property name="renderer" ref="genericAddOnCMSComponentRenderer" />
+   </bean>
+    <bean parent="addonCmsComponentRendererMapping">
+       <property name="typeCode" value="LuxEnhancedSearchBoxComponent" />
+       <property name="renderer" ref="genericAddOnCMSComponentRenderer" />
+   </bean>
+   
+   <bean parent="addonCmsComponentRendererMapping">
+       <property name="typeCode" value="LuxuryPincodeServiceComponent" />
+       <property name="renderer" ref="genericAddOnCMSComponentRenderer" />
+   </bean>
+
+    <bean parent="addonCmsComponentRendererMapping">
+       <property name="typeCode" value="LuxuryMiniCartComponent" />
+       <property name="renderer" ref="genericAddOnCMSComponentRenderer" />
+   </bean>
+    <bean parent="addonCmsComponentRendererMapping">
+        <property name="typeCode" value="LuxuryVideoComponent" />
+        <property name="renderer" ref="genericAddOnCMSComponentRenderer" />
+    </bean>
+
+    <bean parent="addonCmsComponentRendererMapping">
+        <property name="typeCode" value="LuxuryLookBookComponent" />
+        <property name="renderer" ref="genericAddOnCMSComponentRenderer" />
+    </bean>
+
+    <bean parent="addonCmsComponentRendererMapping">
+        <property name="typeCode" value="LuxuryMedia" />
+        <property name="renderer" ref="genericAddOnCMSComponentRenderer" />
+    </bean>
+
+</beans>

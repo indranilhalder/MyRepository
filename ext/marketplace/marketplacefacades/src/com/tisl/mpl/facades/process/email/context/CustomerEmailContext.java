@@ -67,7 +67,7 @@ public class CustomerEmailContext extends AbstractEmailContext<StoreFrontCustome
 				put(DISPLAY_NAME, "There");
 			}
 			put(EMAIL, storeFrontCustomerProcessModel.getCustomer().getOriginalUid());
-			//put(DISPLAY_NAME, customerModel.getDisplayName());
+			put(DISPLAY_NAME, customer.getFirstName());
 			if (getCustomer(storeFrontCustomerProcessModel) != null)
 			{
 				put(CUSTOMER_ID, customer.getOriginalUid());
@@ -81,8 +81,8 @@ public class CustomerEmailContext extends AbstractEmailContext<StoreFrontCustome
 			}
 			/* TISPRD-1504 Email Issue Fix */
 			String websiteUrl = null;
-			websiteUrl = getConfigurationService().getConfiguration().getString(
-					MarketplacecommerceservicesConstants.SMS_SERVICE_WEBSITE_URL);
+			websiteUrl = getConfigurationService().getConfiguration()
+					.getString(MarketplacecommerceservicesConstants.SMS_SERVICE_WEBSITE_URL);
 			if (null != websiteUrl)
 			{
 				put(WEBSITE_URL, websiteUrl);

@@ -60,6 +60,8 @@ public interface ControllerConstants
 	/**
 	 * Class with action name constants
 	 */
+	String LUXURY_STORE_ADDON_PREFIX = "addon:/luxurystoreaddon";
+
 	interface Actions
 	{
 		interface Cms
@@ -151,6 +153,7 @@ public interface ControllerConstants
 				String AccountRegisterPage = "pages/account/accountRegisterPage";
 				String ChangePassword = "/my-account/update-password";
 
+
 			}
 
 			interface Oauth2callback
@@ -241,6 +244,9 @@ public interface ControllerConstants
 				String MiscRobotsPage = "pages/misc/miscRobotsPage";
 				String MiscSiteMapPage = "pages/misc/miscSiteMapPage";
 				String MiscIndividualSiteMapPage = "pages/misc/miscIndividualSiteMapPage";
+				//Changes for TPR-5812
+				String manifest = "pages/misc/manifest";
+				String serviceWorker = "pages/misc/service-worker";
 			}
 
 			interface Guest
@@ -302,6 +308,14 @@ public interface ControllerConstants
 				String LatestOffers = "fragments/home/latestOffersPanel";
 				String ShopByBrandImagesPanel = "fragments/home/shopByBrandImagesPanel";
 				String FooterPanel = "fragments/home/footerPanel";
+			}
+
+			interface LuxuryHome
+			{
+				String RegisterFragment = LUXURY_STORE_ADDON_PREFIX + "/fragments/home/luxRegister";
+				String LoginFragment = LUXURY_STORE_ADDON_PREFIX + "/fragments/home/luxLoginPanel";
+				String ForgotPasswordPanel = LUXURY_STORE_ADDON_PREFIX + "/fragments/home/forgottenPwd";
+
 			}
 
 			interface Cart
@@ -424,6 +438,7 @@ public interface ControllerConstants
 				public static final String USSID_CODE_PATH_NEW_PATTERN = "/**/p-{ussId:.*}";
 				public static final String USSID = "ussId";
 			}
+
 
 			interface NPS_Emailer
 			{

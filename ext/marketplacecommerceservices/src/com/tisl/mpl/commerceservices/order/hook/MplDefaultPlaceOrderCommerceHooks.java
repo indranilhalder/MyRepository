@@ -13,7 +13,10 @@ import de.hybris.platform.core.model.order.AbstractOrderEntryModel;
 import de.hybris.platform.core.model.order.OrderEntryModel;
 import de.hybris.platform.core.model.order.OrderModel;
 import de.hybris.platform.core.model.order.payment.CODPaymentInfoModel;
+import de.hybris.platform.core.model.order.payment.CreditCardPaymentInfoModel;
+import de.hybris.platform.core.model.order.payment.DebitCardPaymentInfoModel;
 import de.hybris.platform.core.model.order.payment.JusPayPaymentInfoModel;
+import de.hybris.platform.core.model.order.payment.NetbankingPaymentInfoModel;
 import de.hybris.platform.core.model.order.price.DiscountModel;
 import de.hybris.platform.core.model.product.ProductModel;
 import de.hybris.platform.core.model.user.AddressModel;
@@ -43,6 +46,7 @@ import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -208,7 +212,6 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 			//			}
 
 
-
 			//TPR -965 + TPR-4579 starts
 			if (null != orderModel && CollectionUtils.isNotEmpty(orderModel.getAllPromotionResults())
 					&& isLimitedStockPromoExists(orderModel.getAllPromotionResults()))
@@ -299,14 +302,16 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 				 */
 
 				orderModel.setType("Parent");
-				if (orderModel.getPaymentInfo() instanceof CODPaymentInfoModel
-						|| orderModel.getPaymentInfo() instanceof JusPayPaymentInfoModel)
+				if (orderModel.getPaymentInfo() instanceof CODPaymentInfoModel)
 				{
 					LOG.debug("Payment Info and Status saving COD");
 					orderModel.setModeOfOrderPayment(MarketplacecommerceservicesConstants.COD);
 					getModelService().save(orderModel);
-					//Multiple times status change not required TISSTRT-1562
-					//getOrderStatusSpecifier().setOrderStatus(orderModel, OrderStatus.PAYMENT_SUCCESSFUL);
+				}
+				else if (orderModel.getPaymentInfo() instanceof JusPayPaymentInfoModel)
+				{
+					LOG.debug("Payment Info for juspay");
+					getOrderStatusSpecifier().setOrderStatus(orderModel, OrderStatus.PAYMENT_SUCCESSFUL);
 				}
 				else
 				{
@@ -319,7 +324,7 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 					}
 				}
 
-
+				getModelService().save(orderModel);
 				////////////// Order Issue:- Order  ID updated first then Voucher Invalidation Model update
 
 				//final Collection<DiscountModel> voucherColl = getVoucherService().getAppliedVouchers(orderModel);
@@ -682,6 +687,9 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 			//getModelService().save(orderModel);
 			if (orderModel.getPaymentInfo() instanceof CODPaymentInfoModel
 					|| orderModel.getPaymentInfo() instanceof JusPayPaymentInfoModel
+					|| orderModel.getPaymentInfo() instanceof CreditCardPaymentInfoModel
+					|| orderModel.getPaymentInfo() instanceof DebitCardPaymentInfoModel
+					|| orderModel.getPaymentInfo() instanceof NetbankingPaymentInfoModel
 					|| WalletEnum.MRUPEE.equals(orderModel.getIsWallet()))
 			{
 				getOrderStatusSpecifier().setOrderStatus(orderModel, OrderStatus.PAYMENT_SUCCESSFUL);
@@ -1446,6 +1454,11 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 	{
 		final HashSet masterSet = new HashSet();
 		final List<String> innerList = new ArrayList<String>();
+
+		if (subOrderList == null)
+		{
+			return Collections.EMPTY_LIST;
+		}
 		for (final OrderModel subOrderModel : subOrderList)
 		{
 			final List<AbstractOrderEntryModel> subOrderEntries = subOrderModel.getEntries();

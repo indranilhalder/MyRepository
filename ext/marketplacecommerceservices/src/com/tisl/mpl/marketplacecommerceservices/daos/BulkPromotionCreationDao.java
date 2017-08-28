@@ -10,6 +10,7 @@ import de.hybris.platform.core.model.order.delivery.DeliveryModeModel;
 import de.hybris.platform.core.model.product.ProductModel;
 import de.hybris.platform.promotions.model.AbstractPromotionModel;
 import de.hybris.platform.promotions.model.PromotionGroupModel;
+import de.hybris.platform.store.BaseStoreModel;
 
 import java.util.List;
 
@@ -40,7 +41,7 @@ public interface BulkPromotionCreationDao
 
 	DeliveryModeModel fetchDeliveryModeDetails(final String deliveryMode);
 
-	PaymentTypeModel fetchPaymentModeDetails(final String paymentMode);
+	PaymentTypeModel fetchPaymentModeDetails(final String paymentMode, final BaseStoreModel baseStoreModel);
 
 	BankModel fetchBankDetails(final String bankCode);
 

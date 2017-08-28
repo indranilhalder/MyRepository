@@ -130,7 +130,7 @@
 		  	        		    		Have you seen Tata CLiQ, yet? They've got a curated collection of some of the best fashion, electronics and luxury brands. I think you'll like it! 
 		  	        		    		<br>
 		  	        		    		<br>
-		  	        		    		Explore <a href="${ctx.inviteUrl}" style="font-size:14px;color:#AA133D;">Tata CLiQ </a>now.
+		  	        		    		Explore <a href="${ctx.inviteUrl}" style="font-size:14px;color:#AA133D; text-decoration: underline;">Tata CLiQ </a>now.
 		  	        		    		<br>
 		  	        		    		<br>
 		  	        		    		Regards,
