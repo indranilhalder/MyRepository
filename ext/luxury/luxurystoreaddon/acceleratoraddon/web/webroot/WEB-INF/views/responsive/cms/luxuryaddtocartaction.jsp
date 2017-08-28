@@ -51,6 +51,8 @@ $(document).ready(function(){
 		$(".size-guide").click();
  	    return false;
    	 }
+   	 
+   	ACC.product.addToBag();
 
    	/* if( $("#variant,#sizevariant option:selected").val()=="#")
  	  {

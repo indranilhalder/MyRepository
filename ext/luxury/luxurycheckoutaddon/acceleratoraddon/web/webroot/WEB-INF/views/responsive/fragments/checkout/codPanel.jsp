@@ -79,7 +79,7 @@
 <div class="g-recaptcha" data-sitekey="${grecaptchaKey}"></div>
 <div id="captchaError"></div>
 
-<button type="button" class="make_payment payment-button btn-lg btn-primary" id="paymentButtonId">		
+<button type="button" class="make_payment payment-button btn-lg btn-primary" id="paymentButtonId" onclick="submitCODForm();">		
 									<div id="submitPaymentFormCODButton">	
 										<spring:theme code="checkout.multi.paymentMethod.codContinue" />
 									</div>
