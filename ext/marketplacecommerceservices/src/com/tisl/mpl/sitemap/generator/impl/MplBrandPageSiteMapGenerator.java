@@ -10,7 +10,6 @@ import de.hybris.platform.acceleratorservices.sitemap.generator.impl.AbstractSit
 import de.hybris.platform.acceleratorservices.sitemap.renderer.SiteMapContext;
 import de.hybris.platform.acceleratorservices.urlresolver.SiteBaseUrlResolutionService;
 import de.hybris.platform.category.model.CategoryModel;
-import de.hybris.platform.cms2.model.pages.ContentPageModel;
 import de.hybris.platform.cms2.model.site.CMSSiteModel;
 import de.hybris.platform.cms2.servicelayer.services.CMSPageService;
 import de.hybris.platform.commerceservices.impersonation.ImpersonationContext;
@@ -36,7 +35,6 @@ import javax.annotation.Resource;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.io.IOUtils;
-import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -94,14 +92,14 @@ public class MplBrandPageSiteMapGenerator extends AbstractSiteMapGenerator<Custo
 		final Collection<SiteMapPageModel> siteMapPages = siteModel.getSiteMapConfig().getSiteMapPages();
 		for (final SiteMapPageModel siteMapPage : siteMapPages)
 		{
-			if (siteMapPage.getCode().equals(SiteMapPageEnum.HOMEPAGE))
-			{
-				//Homepage
-				mainSiteMapUrlList = homePageSiteMap(mainSiteMapUrlList, siteMapPage);
-
-				LOG.debug("**Inside HomePage***");
-			}
-			else if (siteMapPage.getCode().equals(SiteMapPageEnum.CATEGORY))
+			//			if (siteMapPage.getCode().equals(SiteMapPageEnum.HOMEPAGE))
+			//			{
+			//				//Homepage
+			//				mainSiteMapUrlList = homePageSiteMap(mainSiteMapUrlList, siteMapPage);
+			//
+			//				LOG.debug("**Inside HomePage***");
+			//			}
+			if (siteMapPage.getCode().equals(SiteMapPageEnum.CATEGORY))
 			{
 				LOG.debug("**Inside CategoryPage***");
 				//CategoryPage
@@ -280,32 +278,32 @@ public class MplBrandPageSiteMapGenerator extends AbstractSiteMapGenerator<Custo
 	 * @param siteMapPage
 	 * @return List<CustomPageData>
 	 */
-	private List<CustomPageData> homePageSiteMap(final List<CustomPageData> mainSiteMapUrlList, final SiteMapPageModel siteMapPage)
-	{
-		final ContentPageModel homepage = getCmsPageService().getHomepage();
-		String relUrl = null;
-		if (homepage != null)
-		{
-			relUrl = StringEscapeUtils.escapeXml(getHomepageUrlResolver().resolve(homepage));
-		}
-		else
-		{
-			relUrl = "/";
-		}
-		final CustomPageData data = new CustomPageData();
-		data.setUrl(relUrl);
-		if (null != siteMapPage.getFrequency())
-		{
-			data.setChangeFrequency(siteMapPage.getFrequency().getCode());
-		}
-		if (null != siteMapPage.getPriority())
-		{
-			data.setPriority(siteMapPage.getPriority().toString());
-		}
-
-		mainSiteMapUrlList.add(data);
-		return mainSiteMapUrlList;
-	}
+	//	private List<CustomPageData> homePageSiteMap(final List<CustomPageData> mainSiteMapUrlList, final SiteMapPageModel siteMapPage)
+	//	{
+	//		final ContentPageModel homepage = getCmsPageService().getHomepage();
+	//		String relUrl = null;
+	//		if (homepage != null)
+	//		{
+	//			relUrl = StringEscapeUtils.escapeXml(getHomepageUrlResolver().resolve(homepage));
+	//		}
+	//		else
+	//		{
+	//			relUrl = "/";
+	//		}
+	//		final CustomPageData data = new CustomPageData();
+	//		data.setUrl(relUrl);
+	//		if (null != siteMapPage.getFrequency())
+	//		{
+	//			data.setChangeFrequency(siteMapPage.getFrequency().getCode());
+	//		}
+	//		if (null != siteMapPage.getPriority())
+	//		{
+	//			data.setPriority(siteMapPage.getPriority().toString());
+	//		}
+	//
+	//		mainSiteMapUrlList.add(data);
+	//		return mainSiteMapUrlList;
+	//	}
 
 
 
