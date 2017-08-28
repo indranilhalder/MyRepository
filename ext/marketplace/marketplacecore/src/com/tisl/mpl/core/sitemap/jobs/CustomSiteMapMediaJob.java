@@ -176,26 +176,28 @@ public class CustomSiteMapMediaJob extends SiteMapMediaJob
 						LOG.debug("L1 Category Not available");
 					}
 
+					//PRDI-423
 					LOG.debug("**START**BRAND***");
 
 					final List modelsFinal = new ArrayList();
 					if (CollectionUtils.isNotEmpty(L1Category))
 					{
-						LOG.debug("100...");
+						LOG.debug("Inside not empty L1...");
 						for (final CategoryModel category : L1Category)
 						{
-							LOG.debug("200...");
+							LOG.debug("L1category code..." + category);
 							final List<CategoryModel> L2Category = fetchL2fromL1(category);
 							if (CollectionUtils.isNotEmpty(L2Category))
 							{
-								LOG.debug("300...");
+								LOG.debug("Inside not empty L2");
 								for (final CategoryModel categoryl2 : L2Category)
 								{
+									LOG.debug("L2category code..." + categoryl2);
 									//Logic For Brand Filter Sitemap
 									final List brandLists = fetchBrand(category.getCode(), categoryl2.getCode());
 									if (CollectionUtils.isNotEmpty(brandLists))
 									{
-										LOG.debug("1*******");
+										LOG.debug("Inside not empty brandlist*******");
 										final List models = getMplbrandPageSiteMapGenerator().getBrandData(contentSite, category,
 												categoryl2, brandLists);
 										LOG.debug("Model Size--->" + models.size());
@@ -247,17 +249,16 @@ public class CustomSiteMapMediaJob extends SiteMapMediaJob
 						if (CollectionUtils.isNotEmpty(modelsFinal))
 						{
 							final List<List> modelUltimate = new ArrayList();
-							LOG.debug("UU*******");
+							LOG.debug("Inside not empty modelsFinal*******");
 							for (int modelIndex = 0; modelIndex < modelsFinal.size(); modelIndex++)
 							{
-								LOG.debug("VV*******");
+								LOG.debug("Inside for loop of modelsFinal*******");
 								final List<List> mod = (List<List>) modelsFinal.get(modelIndex);
-								LOG.debug("AA*******" + mod.size());
+								LOG.debug("modelsFinal size*******" + mod.size());
 								modelUltimate.addAll(mod);
 								LOG.debug("***modelUltimate size****" + modelUltimate.size());
-								//								generateSiteMapFiles(siteMapFiles, contentSite, getMplbrandPageSiteMapGenerator(), siteMapConfig, mod,
-								//										SiteMapPageEnum.CATEGORY, Integer.valueOf(modelIndex), null);
 							}
+							//Logic for splitting files based on model size
 							final Integer MAX_SITEMAP_LIMIT = cronJob.getSiteMapUrlLimitPerFile();
 							if (modelUltimate.size() > MAX_SITEMAP_LIMIT.intValue())
 							{
@@ -284,6 +285,7 @@ public class CustomSiteMapMediaJob extends SiteMapMediaJob
 							LOG.debug("models are empty");
 						}
 					}
+					//PRDI-423
 
 				}
 
@@ -438,12 +440,14 @@ public class CustomSiteMapMediaJob extends SiteMapMediaJob
 					siteMapFiles.add(generator.render(contentSite, siteMapLanguageCurrency.getCurrency(),
 							siteMapLanguageCurrency.getLanguage(), siteMapConfig.getSiteMapTemplate(), models, fileIndex, index));
 				}
+				//PRDI-423
 				else if (pageType.equals(SiteMapPageEnum.CATEGORY))
 				{
 					LOG.debug("**Inside pageType Category**");
 					siteMapFiles.add(generator.render(contentSite, siteMapLanguageCurrency.getCurrency(),
 							siteMapLanguageCurrency.getLanguage(), siteMapConfig.getSiteMapTemplate(), models, fileIndex, index));
 				}
+				//PRDI-423
 
 				else
 				{
@@ -581,12 +585,11 @@ public class CustomSiteMapMediaJob extends SiteMapMediaJob
 		return categoryName;
 	}
 
+	//PRDI-423
 	protected List<String> fetchBrand(final String categoryl1, final String categoryl2)
 	{
 		List<MplbrandfilterModel> brandFilterList = null;
 		final List<String> brandfilterurl = new ArrayList<>();
-		//		final FileWriter fw = new FileWriter("/brandOriginal.txt");
-
 		if (StringUtils.isNotEmpty(categoryl1) && StringUtils.isNotEmpty(categoryl2))
 		{
 			brandFilterList = getMplCategoryDao().fetchBrandFilterforL1L2(categoryl1, categoryl2);
@@ -598,24 +601,8 @@ public class CustomSiteMapMediaJob extends SiteMapMediaJob
 					brandfilterurl.add(brandFilter.getUrl1());
 					brandfilterurl.add(brandFilter.getUrl2());
 					brandfilterurl.add(brandFilter.getUrl3());
-					//					LOG.debug("111" + brandFilter.getUrl1());
-					//					LOG.debug("22222" + brandFilter.getUrl2());
-					//					LOG.debug("333333333" + brandFilter.getUrl3());
-
-					//					fw.write(brandFilter.getUrl1() + "\n");
-					//					fw.write(brandFilter.getUrl2() + "\n");
-					//					fw.write(brandFilter.getUrl3() + "\n");
 				}
-
-				//				fw.close();
-				//				for (int i = 0; i < 2; i++)
-				//				{
-				//					brandfilterurl.add("URL1-" + i + 1);
-				//					brandfilterurl.add("URL2-" + i + 1);
-				//					brandfilterurl.add("URL3-" + i + 1);
-				//				}
 				final Set<String> set = new HashSet<String>(brandfilterurl);
-
 				for (final String myset : set)
 				{
 					LOG.debug("******brandfilterurl in cronjob*******" + myset);
@@ -634,4 +621,5 @@ public class CustomSiteMapMediaJob extends SiteMapMediaJob
 		return brandfilterurl;
 
 	}
+	//PRDI-423
 }
