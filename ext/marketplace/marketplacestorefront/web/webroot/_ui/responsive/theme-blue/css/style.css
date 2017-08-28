@@ -75142,6 +75142,10 @@ body .account.preferences .right-account div.email-pref form .button-set a{
 	color: rgba(0, 0, 0, 0.5);
 	margin-left: 20px;
 	}
+.jewellery-wrapper>div.accordin.FineJewellery div.item div.detail .t-d-d span#tddValue, 
+.jewellery-wrapper>div.accordin.FashionJewellery div.item div.detail .t-d-d span#tddValue{
+	margin-left: 13px;
+}
 .jewellery-wrapper>div.accordin.FineJewellery div.item,
 .jewellery-wrapper>div.accordin.FashionJewellery div.item{
 	border: none;
@@ -75183,7 +75187,7 @@ table#showPriceBreakup{
 .jewellery-wrapper>div.accordin.FashionJewellery .item .detail table tr td:first-child{
 	padding-right: 0px;
     padding-left: 0px;
-    width: 20%;
+    width: 55px;
 }
 .jewellery-wrapper>div.accordin.FineJewellery .item .detail ,
 .jewellery-wrapper>div.accordin.FashionJewellery .item .detail{
@@ -75192,10 +75196,10 @@ table#showPriceBreakup{
     letter-spacing: 0.6px;
     color: rgba(0, 0, 0, 0.5);
 }
-.jewellery-wrapper>div.accordin.FineJewellery .item .detail table tr td:last-child,
+/* .jewellery-wrapper>div.accordin.FineJewellery .item .detail table tr td:last-child,
 .jewellery-wrapper>div.accordin.FashionJewellery .item .detail table tr td:last-child{
 	text-align: right;
-}
+} */
 .jewellery-wrapper>div.accordin.FineJewellery .item .detail table tr:last-child,
 .jewellery-wrapper>div.accordin.FashionJewellery .item .detail table tr:last-child,
 .jewellery-wrapper>div.accordin.FineJewellery .item .detail .t-d-d ~ table:last-child tr,
@@ -75245,11 +75249,11 @@ table#showPriceBreakup{
 }
 .jewellery-wrapper>div.accordin.FineJewellery div.item div.detail .t-d-d div#tddKey, 
 .jewellery-wrapper>div.accordin.FashionJewellery div.item div.detail .t-d-d div#tddKey{
-	width:48px;
+	width:55px;
 }
 .jewellery-wrapper>div.accordin.FineJewellery .item .detail div.title div#jewelProductCode,
 .jewellery-wrapper>div.accordin.FashionJewellery .item .detail div.title div#jewelProductCode{
-	width: 56px;
+	width: 55px;
 }
 .jewellery-wrapper>div.accordin.FineJewellery.smk_accordion .item.accordion_in .detail.acc_content,
 .jewellery-wrapper>div.accordin.FashionJewellery.smk_accordion .item.accordion_in .detail.acc_content{
