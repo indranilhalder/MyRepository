@@ -3055,6 +3055,36 @@
     </bean>
 
 
+   <bean class="com.tisl.mpl.wsdto.LuxRotatingImagesComponentWsDTO">
+        <property name="timeout" type="java.lang.Integer"/>
+    	<property name="effect" type="String" />
+    	<property name="banners" type="java.util.List&lt;com.tisl.mpl.wsdto.LuxBannerComponentWsDTO>"/>
+    </bean>
+    
+    
+    
+   <bean class="com.tisl.mpl.wsdto.LuxBannerComponentWsDTO">
+        <property name="BannersForRotatingComponent" type="String"/>
+    	<property name="headline" type="String" />
+    	<property name="content" type="String"/>
+    	<property name="pageLabelOrId" type="String"/>
+    	<property name="bannerView" type="String"/>
+    	<property name="media" type="String"/>
+    	<property name="urlLink" type="String"/>
+    	<property name="external" type="java.lang.Boolean"/>
+    	<property name="rotatingComponent" type="java.util.List&lt;com.tisl.mpl.wsdto.LuxRotatingImagesComponentWsDTO>"/>
+    </bean>
+
+   
+
+   <bean class="com.tisl.mpl.wsdto.LuxCMSMediaParagraphComponentListWsDTO">
+    	<property name="media" type="String" />
+    	<property name="url" type="String"/>
+    	<property name="content" type="String"/>
+    	<property name="medias" type="java.util.List&lt;com.tisl.mpl.wsdto.LuxBannerComponentWsDTO>"/>
+    </bean>
+
+
 
 	<bean class="com.tisl.mpl.wsdto.LuxuryComponentsListWsDTO">
 		<property name="title" type="String" />
@@ -3066,7 +3096,7 @@
 		<property name="LuxuryShopOnLuxury" type="com.tisl.mpl.wsdto.ShopOnLuxuryElementListWsDTO"/>
 		<property name="LuxuryCMSParagraphComponent" type="String" />
 		<property name="LuxShowCaseCollectionComponent" type="String" />
-		<property name="LuxCMSMediaParagraphComponent" type="String" />
+		<property name="LuxCMSMediaParagraphComponent" type="com.tisl.mpl.wsdto.LuxCMSMediaParagraphComponentListWsDTO" />
 		<property name="LuxShopByCategory" type="String" />
 		<property name="LuxurySimpleBannerComponent" type="String" />
 		<property name="LuxuryPincodeServiceComponent" type="String" />
