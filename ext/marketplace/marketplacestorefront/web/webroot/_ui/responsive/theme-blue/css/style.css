@@ -76434,12 +76434,11 @@ footer #footerLink div.column ul li:last-child:after {
 @media(max-width: 767px){
 	.product-info>.jewellery-wrapper>div.tabs-block.FineJewellery, .product-info>.jewellery-wrapper>div.tabs-block.FashionJewellery{
 	 	width: 100%;
-	 	margin-left: -14px !important;
-    	margin-right: 0px !important;
+   		margin: 0px !important;
     	float: none;
     	display: block;
     	clear: both;
-    	padding: 30px 15px 0;
+    	padding: 30px 0 0;
 	 }
 	 /* TISJEW-3498 start */
 	 .tabs-block.FineJewellery .nav-wrapper {
