@@ -904,7 +904,12 @@ public final class ModelAttributetConstants
 	public static final String LUXURY_USER_FIRST_NAME = "fname";
 
 
+
 	/* TPR-5733 */
 	public static final String FOOTER_LINK_LIST = "footerLinkList";
 	public static final String BUYBOX_AVAILABLE = "buybox_available";
+
+	//TPR-6738
+	public static final String BUYING_GUIDE = "buyingGuide".intern();
+
 }
