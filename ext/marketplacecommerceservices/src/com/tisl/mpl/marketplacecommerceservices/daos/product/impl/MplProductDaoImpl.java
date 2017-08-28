@@ -74,11 +74,11 @@ public class MplProductDaoImpl extends DefaultProductDao implements MplProductDa
 				.append(" AS s ").append("ON {s:").append(SellerInformationModel.PRODUCTSOURCE).append("}={p:")
 				.append(ProductModel.PK).append("} ").append(MarketplacecommerceservicesConstants.QUERYJOIN)
 				.append(CatalogVersionModel._TYPECODE).append(" AS cat ").append("ON {p:").append(ProductModel.CATALOGVERSION)
-				.append("}={cat:").append(CatalogVersionModel.PK).append("} }");
+				.append("}={cat:").append(CatalogVersionModel.PK).append("}}");
 
 		final String inPart = "{p:" + ProductModel.CODE + "} = (?code) AND {cat:" + CatalogVersionModel.PK
 				+ "} = ?catalogVersion and  sysdate between {s.startdate} and {s.enddate} ";
-		stringBuilder.append("WHERE ").append(inPart);
+		stringBuilder.append(" WHERE ").append(inPart);
 
 		LOG.debug("findProductsByCode: stringBuilder******* " + stringBuilder);
 		final FlexibleSearchQuery query = new FlexibleSearchQuery(stringBuilder.toString());

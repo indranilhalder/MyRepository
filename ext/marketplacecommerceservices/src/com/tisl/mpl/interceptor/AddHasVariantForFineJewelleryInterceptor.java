@@ -8,8 +8,6 @@ import de.hybris.platform.servicelayer.interceptor.InterceptorContext;
 import de.hybris.platform.servicelayer.interceptor.InterceptorException;
 import de.hybris.platform.servicelayer.interceptor.PrepareInterceptor;
 
-import java.util.List;
-
 import javax.annotation.Resource;
 
 import org.apache.log4j.Logger;
@@ -46,11 +44,9 @@ public class AddHasVariantForFineJewelleryInterceptor implements PrepareIntercep
 			if (sellerInfo.getProductSource() != null)
 			{
 				listingId = sellerInfo.getProductSource().getCode();
-				final List<ProductModel> findProductsByCode = defaultProductDao.findProductsByCode(listingId);
-				for (final ProductModel product : findProductsByCode)
-				{
-					categoryId = product.getProductCategoryType();
-				}
+				final ProductModel findProductsByCode = defaultProductDao.findProductData(listingId);
+				categoryId = findProductsByCode.getProductCategoryType();
+
 				if (categoryId != null && categoryId.equalsIgnoreCase(MarketplacecommerceservicesConstants.FINEJEWELLERY))
 				{
 					sellerInfo.setHasVariant(isHasVariant);

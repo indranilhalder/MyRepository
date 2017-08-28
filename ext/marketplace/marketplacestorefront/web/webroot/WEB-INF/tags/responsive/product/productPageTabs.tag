@@ -146,11 +146,11 @@ var buyboxskuId='';
 			<product:productReturnsAndRefunds product="${product}" />
 		</li>
 	</c:if>
-	<c:if test="${fn:contains(validTabs, 'Returns')}">
+	<%-- <c:if test="${fn:contains(validTabs, 'Returns')}">
 		<li id="return" class="tab-content">
 			<product:productReturns product="${product}" />
 		</li>
-	</c:if>
+	</c:if> --%>
 	<!-- moved as part of PRDI-96 start -->
 	<c:if test="${fn:contains(validTabs, 'details')}">
 		<li>
@@ -248,6 +248,17 @@ var buyboxskuId='';
 			</div>
 			<div class="acc_content" id="brandInfoAccordion">
 				<product:brandInfoTab product="${product}" />
+			</div>
+		</div>
+	</c:if>
+	<c:if test="${fn:contains(validTabs, 'returnsAndRefunds')}">
+		<div class="choose-address accordion_in">
+			<div class="acc_head">
+				<div class="acc_icon_expand"></div>
+				<h2><spring:theme code="product.product.returnsAndRefunds" /></h2>
+			</div>
+			<div class="acc_content" id="returnRefundAccordion">
+				<product:productReturnsAndRefunds product="${product}" />
 			</div>
 		</div>
 	</c:if>
