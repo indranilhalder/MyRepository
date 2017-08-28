@@ -7,7 +7,9 @@ import de.hybris.platform.cms2.exceptions.CMSItemNotFoundException;
 import de.hybris.platform.cms2.model.contents.components.AbstractCMSComponentModel;
 import de.hybris.platform.cms2.model.contents.contentslot.ContentSlotModel;
 import de.hybris.platform.cms2.model.pages.ContentPageModel;
+import de.hybris.platform.cms2.model.relations.ContentSlotForPageModel;
 import de.hybris.platform.cms2.model.relations.ContentSlotForTemplateModel;
+import de.hybris.platform.cms2lib.model.components.BannerComponentModel;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,11 +17,14 @@ import java.util.List;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
+import com.tisl.lux.model.cms.components.LuxShopByCategoryModel;
 import com.tisl.lux.model.cms.components.ShopOnLuxuryElementModel;
 import com.tisl.lux.model.cms.components.ShopOnLuxuryModel;
 import com.tisl.lux.model.cms.components.WeeklySpecialBannerModel;
 import com.tisl.lux.model.cms.components.WeeklySpecialModel;
 import com.tisl.mpl.marketplacecommerceservices.service.impl.MplCMSPageServiceImpl;
+import com.tisl.mpl.wsdto.LuxBannerComponentWsDTO;
+import com.tisl.mpl.wsdto.LuxShopByCategoryWsDTO;
 import com.tisl.mpl.wsdto.LuxuryComponentsListWsDTO;
 import com.tisl.mpl.wsdto.ShopOnLuxuryElementListWsDTO;
 import com.tisl.mpl.wsdto.ShopOnLuxuryElementWsDTO;
@@ -62,11 +67,17 @@ public class LuxCmsFacadeImpl implements LuxCmsFacade
 	{
 
 		LuxuryComponentsListWsDTO luxuryAllComponents = new LuxuryComponentsListWsDTO();
-		final ContentPageModel contentPage = getMplCMSPageService().getPageByLabelOrId("homepage");
+		final ContentPageModel contentPage = getMplCMSPageService().getPageByLabelOrId("luxuryMenlandingPage");
 		if (contentPage != null)
 		{
 
 			for (final ContentSlotForTemplateModel contentSlotForPage : contentPage.getMasterTemplate().getContentSlots())
+			{
+				final ContentSlotModel contentSlot = contentSlotForPage.getContentSlot();
+				luxuryAllComponents = getLuxuryComponentDtoForSlot(contentSlot, luxuryAllComponents);
+
+			}
+			for (final ContentSlotForPageModel contentSlotForPage : contentPage.getContentSlots())
 			{
 				final ContentSlotModel contentSlot = contentSlotForPage.getContentSlot();
 				luxuryAllComponents = getLuxuryComponentDtoForSlot(contentSlot, luxuryAllComponents);
@@ -100,6 +111,10 @@ public class LuxCmsFacadeImpl implements LuxCmsFacade
 					case "WeeklySpecial":
 						final WeeklySpecialModel weeklySpecialComponent = (WeeklySpecialModel) abstractCMSComponentModel;
 						luxuryComponentsList = getWeeklySpecialWsDTO(weeklySpecialComponent, luxuryComponentsListWsDTO);
+						break;
+					case "LuxShopByCategory":
+						final LuxShopByCategoryModel LuxShopByCategoryComponent = (LuxShopByCategoryModel) abstractCMSComponentModel;
+						luxuryComponentsList = getLuxShopByCategoryWsDTO(LuxShopByCategoryComponent, luxuryComponentsListWsDTO);
 						break;
 
 					default:
@@ -148,7 +163,6 @@ public class LuxCmsFacadeImpl implements LuxCmsFacade
 			weeklySpecialBanner.setImageUrl(imageUrl);
 			weeklySpecialBanner.setSvglogoUrl(svglogoUrl);
 			weeklySpecialBanner.setUrl(url);
-
 			weeklySpecialBannerList.add(weeklySpecialBanner);
 
 		}
@@ -205,4 +219,66 @@ public class LuxCmsFacadeImpl implements LuxCmsFacade
 		return luxuryComponent;
 	}
 
+	private LuxuryComponentsListWsDTO getLuxShopByCategoryWsDTO(final LuxShopByCategoryModel luxShopByCategoryComponent,
+			final LuxuryComponentsListWsDTO luxuryComponentsListWsDTO)
+	{
+		final LuxuryComponentsListWsDTO luxuryComponent = luxuryComponentsListWsDTO;
+		final LuxShopByCategoryWsDTO luxShopByCategoryWsDTO = new LuxShopByCategoryWsDTO();
+		final List<LuxBannerComponentWsDTO> relatedImageList = new ArrayList<LuxBannerComponentWsDTO>();
+
+		if (StringUtils.isNotEmpty(luxShopByCategoryComponent.getTitle()))
+		{
+			luxShopByCategoryWsDTO.setTitle(luxShopByCategoryComponent.getTitle());
+		}
+
+		for (final BannerComponentModel bannerComponent : luxShopByCategoryComponent.getRelatedImage())
+		{
+			final LuxBannerComponentWsDTO luxBannerComponentelement = new LuxBannerComponentWsDTO();
+			String bannerComponentContent = null;
+			String bannerComponentHeadLine = null;
+			String bannerComponentPageLabelOrId = null;
+
+			String bannerComponentbannerView = null;
+			String bannerComponenturlLink = null;
+			String bannerComponentmedia = null;
+			//	final String bannerComponentexternal = null;
+
+			if (StringUtils.isNotEmpty(bannerComponent.getContent()))
+			{
+				bannerComponentContent = bannerComponent.getContent();
+			}
+
+			if (StringUtils.isNotEmpty(bannerComponent.getHeadline()))
+			{
+				bannerComponentHeadLine = bannerComponent.getHeadline();
+			}
+			if (StringUtils.isNotEmpty(bannerComponent.getPageLabelOrId()))
+			{
+				bannerComponentPageLabelOrId = bannerComponent.getPageLabelOrId();
+			}
+			if (StringUtils.isNotBlank(bannerComponent.getBannerView().getCode()))
+			{
+				bannerComponentbannerView = bannerComponent.getBannerView().getCode();
+			}
+			if (StringUtils.isNotBlank(bannerComponent.getUrlLink()))
+			{
+				bannerComponenturlLink = bannerComponent.getUrlLink();
+			}
+			if (StringUtils.isNotBlank(bannerComponent.getMedia().getURL()))
+			{
+				bannerComponentmedia = bannerComponent.getMedia().getURL();
+			}
+			luxBannerComponentelement.setContent(bannerComponentContent);
+			luxBannerComponentelement.setHeadline(bannerComponentHeadLine);
+			luxBannerComponentelement.setPageLabelOrId(bannerComponentPageLabelOrId);
+			luxBannerComponentelement.setBannerView(bannerComponentbannerView);
+			luxBannerComponentelement.setUrlLink(bannerComponenturlLink);
+			luxBannerComponentelement.setUrlLink(bannerComponentmedia);
+			relatedImageList.add(luxBannerComponentelement);
+		}
+
+		luxShopByCategoryWsDTO.setRelatedImage(relatedImageList);
+		luxuryComponent.setLuxShopByCategory(luxShopByCategoryWsDTO);
+		return luxuryComponent;
+	}
 }
