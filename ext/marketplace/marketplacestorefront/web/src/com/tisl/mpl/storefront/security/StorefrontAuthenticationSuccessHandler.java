@@ -210,6 +210,14 @@ public class StorefrontAuthenticationSuccessHandler extends SavedRequestAwareAut
 		final String username = (authentication.getPrincipal() == null) ? "NONE_PROVIDED" : authentication.getName();
 		final CustomerModel customer = extUserService.getUserForUid(username);
 
+		/* TPR-6654 start */
+		if (customer.getDefaultShipmentAddress() != null && customer.getDefaultShipmentAddress().getPostalcode() != null)
+		{
+			getSessionService().setAttribute(MarketplacecommerceservicesConstants.SESSION_PINCODE,
+					customer.getDefaultShipmentAddress().getPostalcode());
+		}
+		/* TPR-6654 end */
+
 		if (username != null && !username.isEmpty() && customer.getIsTemporaryPasswordChanged() != null
 				&& customer.getIsTemporaryPasswordChanged().equals(Boolean.FALSE))
 		{
@@ -331,7 +339,7 @@ public class StorefrontAuthenticationSuccessHandler extends SavedRequestAwareAut
 		{
 			super.onAuthenticationSuccess(request, response, authentication);
 		}
-		
+
 		/** Added for UF-93 for Remember Me functionality **/
 		String rememberMe = "false";
 		if (null != request.getParameter("j_RememberMe"))

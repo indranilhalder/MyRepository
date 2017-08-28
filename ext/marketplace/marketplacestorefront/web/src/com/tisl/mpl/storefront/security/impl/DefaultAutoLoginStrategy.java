@@ -148,13 +148,22 @@ public class DefaultAutoLoginStrategy implements AutoLoginStrategy
 				getRememberMeServices().loginSuccess(request, response, token);
 
 				LOG.debug("Method login SITE USER");
+				/* TPR-6654 start */
+				final CustomerModel customerModel = (CustomerModel) extUserService.getCurrentUser();
+				if (customerModel.getDefaultShipmentAddress() != null
+						&& customerModel.getDefaultShipmentAddress().getPostalcode() != null)
+				{
+					getSessionService().setAttribute(MarketplacecommerceservicesConstants.SESSION_PINCODE,
+							customerModel.getDefaultShipmentAddress().getPostalcode());
+				}
+				/* TPR-6654 end */
 
 				//Start Gigya Integration
 				final String gigyaServiceSwitch = getConfigurationService().getConfiguration().getString(MessageConstants.USE_GIGYA);
 
 				if (gigyaServiceSwitch != null && !gigyaServiceSwitch.equalsIgnoreCase(MessageConstants.NO))
 				{
-					final CustomerModel customerModel = (CustomerModel) extUserService.getCurrentUser();
+					//final CustomerModel customerModel = (CustomerModel) extUserService.getCurrentUser();   //TPR-6654
 
 					if (customerModel.getType().equals(CustomerType.REGISTERED))
 					{

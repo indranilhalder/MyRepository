@@ -1137,6 +1137,7 @@
 		<property name="mapConfigurableAttribute" type="java.util.Map&lt;String,String>"></property>
 		<property name="Warranty" type="java.util.List&lt;String>"></property>
 		<property name="error" type="String"></property>
+		<property name="pincode" type="String"></property>
 	</bean>
 
 	<!-- TPR-258 -->
