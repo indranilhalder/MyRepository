@@ -49054,7 +49054,7 @@ body.page-productDetails .breadcrumbs.wrapper {
 	position: relative;
 	margin: -15px 0 0;
 	display: inline-block;
-	width:100%
+	/* width:100% */
 }
 
 .product-detail .Emi p, .pricebreakup-link {
@@ -70848,12 +70848,12 @@ p#cncpickuppincode_tooltip {
     padding: 7px 18px 6px 19px;
     border-radius: 4px;
     line-height: 15px;
-    opacity: 0;
+    display:none;
     z-index: 10023;
     text-align: left;
 }
 #cncpickuppincode_info:hover p#cncpickuppincode_tooltip {
-    opacity: 1;
+    display:block;
     cursor: text !important;
 }
 span#cncpickuppincode_info{
@@ -76024,7 +76024,10 @@ body .account .right-account .info fieldset form .quarter.phone .mobile_greyed>s
 	padding-bottom: 8px;
 }
 .jewellery-wrapper>div.accordin.FineJewellery .item .detail div.title,
-.jewellery-wrapper>div.accordin.FashionJewellery .item .detail div.title{
+.jewellery-wrapper>div.accordin.FashionJewellery .item .detail div.title,
+.jewellery-wrapper>div.accordin.FineJewellery .item .detail div.title div#jewelProductCode,
+.jewellery-wrapper>div.accordin.FashionJewellery .item .detail div.title div#jewelProductCode
+{
 	padding-top: 24px;
 	padding-bottom: 16px;
     font-size: 12px;
@@ -76034,10 +76037,13 @@ body .account .right-account .info fieldset form .quarter.phone .mobile_greyed>s
     border-bottom: solid 1px #eeeeee;
 }
 .jewellery-wrapper>div.accordin.FineJewellery .item .detail div.title span#jewelDetailsUssid,
-.jewellery-wrapper>div.accordin.FashionJewellery .item .detail div.title span#jewelDetailsUssid{
-	float: right;
+.jewellery-wrapper>div.accordin.FashionJewellery .item .detail div.title span#jewelDetailsUssid,
+.jewellery-wrapper>div.accordin.FineJewellery div.item div.detail .t-d-d span#tddValue, 
+.jewellery-wrapper>div.accordin.FashionJewellery div.item div.detail .t-d-d span#tddValue
+	{
 	color: rgba(0, 0, 0, 0.5);
-}
+	margin-left: 20px;
+	}
 .jewellery-wrapper>div.accordin.FineJewellery div.item,
 .jewellery-wrapper>div.accordin.FashionJewellery div.item{
 	border: none;
@@ -76072,8 +76078,8 @@ table#showPriceBreakup{
 .jewellery-wrapper>div.accordin.FashionJewellery .item .detail table tr td{
 	overflow: hidden;
 	display: table-cell;
-	padding-left: 5px;
-	padding-right: 5px;
+	padding-left: 20px;
+	padding-right: 20px;
 }
 .jewellery-wrapper>div.accordin.FineJewellery .item .detail table tr td:first-child,
 .jewellery-wrapper>div.accordin.FashionJewellery .item .detail table tr td:first-child{
@@ -76112,7 +76118,10 @@ table#showPriceBreakup{
 	display: none;
 } 
 .jewellery-wrapper>div.accordin.FineJewellery div.item div.detail .t-d-d, 
-.jewellery-wrapper>div.accordin.FashionJewellery div.item div.detail .t-d-d{
+.jewellery-wrapper>div.accordin.FashionJewellery div.item div.detail .t-d-d,
+.jewellery-wrapper>div.accordin.FineJewellery div.item div.detail .t-d-d div#tddKey, 
+.jewellery-wrapper>div.accordin.FashionJewellery div.item div.detail .t-d-d div#tddKey
+{
 	padding-top: 24px;
     padding-bottom: 16px;
     font-size: 12px;
@@ -76120,9 +76129,29 @@ table#showPriceBreakup{
     color: rgba(0, 0, 0, 0.5);
     border-bottom: solid 1px #eeeeee;
 }
-.jewellery-wrapper>div.accordin.FineJewellery div.item div.detail .t-d-d span, 
-.jewellery-wrapper>div.accordin.FashionJewellery div.item div.detail .t-d-d span{
-	float: right;
+.jewellery-wrapper>div.accordin.FineJewellery div.item div.detail .t-d-d, 
+.jewellery-wrapper>div.accordin.FashionJewellery div.item div.detail .t-d-d,
+.jewellery-wrapper>div.accordin.FineJewellery .item .detail div.title,
+.jewellery-wrapper>div.accordin.FashionJewellery .item .detail div.title
+	{
+		padding-bottom: 32px;
+	}
+.jewellery-wrapper>div.accordin.FineJewellery div.item div.detail .t-d-d div#tddKey, 
+.jewellery-wrapper>div.accordin.FashionJewellery div.item div.detail .t-d-d div#tddKey,
+.jewellery-wrapper>div.accordin.FineJewellery .item .detail div.title div#jewelProductCode,
+.jewellery-wrapper>div.accordin.FashionJewellery .item .detail div.title div#jewelProductCode
+{
+	border-bottom: none;
+	padding: 0;
+	float: left;
+}
+.jewellery-wrapper>div.accordin.FineJewellery div.item div.detail .t-d-d div#tddKey, 
+.jewellery-wrapper>div.accordin.FashionJewellery div.item div.detail .t-d-d div#tddKey{
+	width:48px;
+}
+.jewellery-wrapper>div.accordin.FineJewellery .item .detail div.title div#jewelProductCode,
+.jewellery-wrapper>div.accordin.FashionJewellery .item .detail div.title div#jewelProductCode{
+	width: 56px;
 }
 .jewellery-wrapper>div.accordin.FineJewellery.smk_accordion .item.accordion_in .detail.acc_content,
 .jewellery-wrapper>div.accordin.FashionJewellery.smk_accordion .item.accordion_in .detail.acc_content{

@@ -4312,7 +4312,9 @@ function getBuyBoxDataAjax(productCode,variantCodesJson)
 					$("#ussid").val(data['sellerArticleSKU']);
 					$("#sellerSkuId").val(data['sellerArticleSKU']);
 					//Added for Fine Jewellery Details Section
-					$("#jewelDetailsUssid").html(data['sellerArticleSKU']);
+					if(data['sellerArticleSKU'] != undefined){
+					$("#jewelDetailsUssid").html(data['sellerArticleSKU'].substring(6));
+					}
 
 					var spPrice = data['specialPrice'];
 					var mrpPrice = data['mrp'];
@@ -4585,6 +4587,9 @@ function populateClassificationForJewellery(jsonData)
 {
 	var classification = jsonData['fineJewelleryDeatils'];
 	var ussid = $("#ussid").val();
+	if(ussid != undefined){
+		ussid = ussid.substring(6);
+	}
 	var htmlCode="";
 	if(typeof(classification) != "undefined") {
 		$.each(classification, function(key,value){

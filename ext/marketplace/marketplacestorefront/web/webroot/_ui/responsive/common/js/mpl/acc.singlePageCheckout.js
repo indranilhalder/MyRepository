@@ -295,7 +295,6 @@ ACC.singlePageCheckout = {
 		    {
 			    var ussid=$('input[name="deliveryMethodEntry['+entryNumbers[i]+'].sellerArticleSKU"]').val();
 			    ACC.singlePageCheckout.fetchStores(entryNumbers[i],ussid,'click-and-collect','','');
-			    disableHideAjaxLoader=true;
 		    }
 		}
 	  //end of fetching cnc stores if only click n collect delivery mode is present
@@ -2012,7 +2011,8 @@ ACC.singlePageCheckout = {
     
     xhrResponse.always(function(){        	
 	});
-  },	
+  },
+  //Function to show hide cod for CNC 
   showHideCodTab:function(){
 	  if(ACC.singlePageCheckout.getIsResponsive()){
 		  //Mobile
@@ -2476,16 +2476,30 @@ ACC.singlePageCheckout = {
 		//fetching cnc stores if only click n collect delivery mode is present
     	var entryNumbersId=$("#selectDeliveryMethodFormMobile #entryNumbersId").val();
 		var isCncPresent=$("#selectDeliveryMethodFormMobile #isCncPresentInSinglePageCart").val();//This will be true if any cart item has CNC as delivery mode
+		var cncSelected="false";
     	var entryNumbers=entryNumbersId.split("#");
 		for(var i=0;i<entryNumbers.length-1;i++)
 		{
 		    if(isCncPresent && $('input:radio[name='+entryNumbers[i]+']:checked').attr("id").includes("click-and-collect"))
 		    {
+		    	cncSelected="true";
 			    var ussid=$('input[name="deliveryMethodEntry['+entryNumbers[i]+'].sellerArticleSKU"]').val();
 			    ACC.singlePageCheckout.fetchStores(entryNumbers[i],ussid,'click-and-collect','','');
-			    disableHideAjaxLoader=true;
 		    }
 		}
+		//Hiding/Showing COD if cnc is selcted
+		if(cncSelected=="true")
+		  {
+		  	$("#viewPaymentCOD, #viewPaymentCODMobile").css("display","none");
+		  	$("#viewPaymentCOD, #viewPaymentCODMobile").parent("li").css("display","none");
+		  	$("#viewPaymentCODMobile").parent("li").removeClass("paymentModeMobile");
+		  }
+		  else
+		  {
+		  	$("#viewPaymentCOD, #viewPaymentCODMobile").css("display","block");
+		  	$("#viewPaymentCOD, #viewPaymentCODMobile").parent("li").css("display","block");
+		  	$("#viewPaymentCODMobile").parent("li").addClass("paymentModeMobile");
+		  }
 	},
 	//Function called when change link of delivery mode is clicked for responsive
 	changeDeliveryMode:function(element){

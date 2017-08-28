@@ -1064,14 +1064,14 @@ $(document).on("click",".quickview .Emi > #EMImodal-content",function(e){
 
 $(document).on('click','#buyNowQv .js-add-to-cart-qv',function(event){
 	var isShowSize= $("#showSizeQuickView").val();
-		 if(!$("#quickViewVariant li ").hasClass("selected")  && typeof($(".variantFormLabel").html())== 'undefined' && $("#categoryType").val()!='Electronics' && $("#categoryType").val()!='Watches' && $("#categoryType").val()!='TravelAndLuggage' && isShowSize=='true') {
+		 /*if(!$("#quickViewVariant li ").hasClass("selected")  && typeof($(".variantFormLabel").html())== 'undefined' && $("#categoryType").val()!='Electronics' && $("#categoryType").val()!='Watches' && $("#categoryType").val()!='TravelAndLuggage' && isShowSize=='true') {
 			 $("#addToCartFormQuickTitle").html("<font color='#ff1c47'>" + $('#selectSizeId').text() + "</font>");
 			 				$("#addToCartFormQuickTitle").show();
 			  				$("#addToCartFormQuickTitle").fadeOut(5000);
 	 	    return false;
 	     }
 		 
-		ACC.product.sendToCartPageQuick("addToCartFormQuick",true);
+		ACC.product.sendToCartPageQuick("addToCartFormQuick",true);*/
 
 	
 	 if(!$("#quickViewVariant li ").hasClass("selected") && typeof($(".variantFormLabel").html())== 'undefined' && $("#categoryType").val()!='Electronics' && $("#categoryType").val()!='Watches' && $("#categoryType").val()!='Accessories' && isShowSize=='true' ){
@@ -1080,9 +1080,9 @@ $(document).on('click','#buyNowQv .js-add-to-cart-qv',function(event){
 		  				$("#addToCartFormQuickTitle").fadeOut(5000);
 		  				errorAddToBag("size_not_selected"); //Error for tealium analytics
  	    return false;
- }else{			 
+	 }	 
 	ACC.product.sendToCartPageQuick("addToCartFormQuick",true);
-}
+
 
 });
 /*End of quickview Emi*/
