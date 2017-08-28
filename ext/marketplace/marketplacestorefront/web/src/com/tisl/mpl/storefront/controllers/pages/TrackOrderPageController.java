@@ -28,6 +28,8 @@ import java.util.Map;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.commons.codec.binary.Base64;
+import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
@@ -64,6 +66,7 @@ import com.tisl.mpl.storefront.constants.ModelAttributetConstants;
 import com.tisl.mpl.storefront.constants.RequestMappingUrlConstants;
 import com.tisl.mpl.storefront.controllers.ControllerConstants;
 import com.tisl.mpl.storefront.controllers.helpers.FrontEndErrorHelper;
+import com.tisl.mpl.storefront.web.data.MplTrackOrderValidationData;
 import com.tisl.mpl.storefront.web.forms.TrackOrderForm;
 import com.tisl.mpl.storefront.web.forms.validator.TrackOrderFormValidator;
 import com.tisl.mpl.util.ExceptionUtil;
@@ -131,8 +134,11 @@ public class TrackOrderPageController extends AbstractPageController
 		}
 		//Retrieve the short URL report model
 		final OrderShortUrlInfoModel shortUrlReport = googleShortUrlService.getShortUrlReportModelByOrderId(orderCode);
-		 boolean isAnonymous = false;
+		//PRDI-757 Removed anonymous order track
+		//boolean isAnonymous = false;
+		/*
 		final OrderModel orderModel = mplOrderFacade.getOrderForAnonymousUser(orderCode);
+		
 		if(null != orderModel && null != orderModel.getUser()) {
 			isAnonymous=userFacade.isAnonymousUser();
 		}
@@ -143,7 +149,7 @@ public class TrackOrderPageController extends AbstractPageController
 			}else {
 				isAnonymous = true;
 			}
-		}
+		}*/
 		//final boolean isAnonymous = userFacade.isAnonymousUser();
 		if (null != shortUrlReport)
 		{
@@ -157,37 +163,39 @@ public class TrackOrderPageController extends AbstractPageController
 
 			//if the user is logged in redirect the user to existing order detail page
 			//else redirect to new non login short order details page
-			if (!isAnonymous)
-			{
-					int noOfLoginClicks = shortUrlReport.getLogin().intValue();
-					noOfLoginClicks += 1;
-					LOG.debug("No of login clicks===" + noOfLoginClicks);
-					shortUrlReport.setLogin(noOfLoginClicks);
-					modelService.save(shortUrlReport);
-					return REDIRECT_PREFIX + RequestMappingUrlConstants.LOGIN_TRACKING_PAGE_URL + orderCode;
-				
-			}
+			//if (!isAnonymous)
+			//{
+			int noOfLoginClicks = shortUrlReport.getLogin().intValue();
+			noOfLoginClicks += 1;
+			LOG.debug("No of login clicks===" + noOfLoginClicks);
+			shortUrlReport.setLogin(noOfLoginClicks);
 			modelService.save(shortUrlReport);
+			//return REDIRECT_PREFIX + RequestMappingUrlConstants.LOGIN_TRACKING_PAGE_URL + orderCode;
+
+			//}
+			//modelService.save(shortUrlReport);
 		}
-		if (!isAnonymous)
-		{
-			return REDIRECT_PREFIX + RequestMappingUrlConstants.LOGIN_TRACKING_PAGE_URL + orderCode;
-		}
-		return REDIRECT_PREFIX + RequestMappingUrlConstants.ANONYMOUS_TRACKING_PAGE_URL + orderCode;
+		//if (!isAnonymous)
+		//{
+		//	return REDIRECT_PREFIX + RequestMappingUrlConstants.LOGIN_TRACKING_PAGE_URL + orderCode;
+		//}
+		//return REDIRECT_PREFIX + RequestMappingUrlConstants.ANONYMOUS_TRACKING_PAGE_URL + orderCode;
+		return REDIRECT_PREFIX + RequestMappingUrlConstants.LOGIN_TRACKING_PAGE_URL + orderCode;
 	}
 
 	/**
 	 * @Description This Method used for showing the track order page data
-	 * @param orderCode
+	 * @param trackKey
 	 * @param model
 	 * @return trackOrderPage
 	 */
 	@RequestMapping(value = RequestMappingUrlConstants.TRACK_ORDER_DETAILS_PAGE_URL, method = RequestMethod.GET)
-	public String shortOrderTrack(@RequestParam("orderCode") final String orderCode, final Model model)
+	public String shortOrderTrack(@RequestParam("trackKey") final String trackKey, final Model model)
 			throws CMSItemNotFoundException
 	{
 		try
 		{
+			final String orderCode = getOrderCode(trackKey);
 			if(LOG.isDebugEnabled()){
 				LOG.debug("In track order - orderCode ***"+orderCode);
 			}
@@ -195,6 +203,11 @@ public class TrackOrderPageController extends AbstractPageController
 			boolean isAnonymous = false;
 			final OrderModel orderModel = mplOrderFacade.getOrderForAnonymousUser(orderCode);
 			if(null != orderModel && null != orderModel.getUser()) {
+				final CustomerModel custModel = (CustomerModel) orderModel.getUser();
+				if (!validateTrackKey(custModel.getOriginalUid(), trackKey))
+				{
+					throw new IllegalArgumentException("Invalid track key: " + trackKey);
+				}
 				isAnonymous=userFacade.isAnonymousUser();
 			}
 			if(orderModel.getUser().equals(userService.getCurrentUser())) {
@@ -326,33 +339,33 @@ public class TrackOrderPageController extends AbstractPageController
 		}
 		catch (final NoSuchMessageException e)
 		{
-			LOG.error(" NoSuchMessageException "+e.getMessage() +"In Tracking the Order 1 =="+orderCode);
+			LOG.error(" NoSuchMessageException "+e.getMessage() +"In Tracking the trackKey 1 =="+trackKey);
 			ExceptionUtil.etailNonBusinessExceptionHandler(new EtailNonBusinessExceptions(e,
 					MarketplacecommerceservicesConstants.E0000));
 			return frontEndErrorHelper.callNonBusinessError(model, MessageConstants.SYSTEM_ERROR_PAGE_NON_BUSINESS);
 		}
 		catch (final UnknownIdentifierException e)
 		{
-			LOG.error(" UnknownIdentifierException "+e.getMessage() +"In Tracking the Order 2 =="+orderCode);
+			LOG.error(" UnknownIdentifierException "+e.getMessage() +"In Tracking the trackKey 2 =="+trackKey);
 			ExceptionUtil.etailNonBusinessExceptionHandler(new EtailNonBusinessExceptions(e,
 					MarketplacecommerceservicesConstants.E0000));
 			return frontEndErrorHelper.callNonBusinessError(model, MessageConstants.SYSTEM_ERROR_PAGE_NON_BUSINESS);
 		}
 		catch (final EtailBusinessExceptions e)
 		{
-			LOG.error(" EtailBusinessExceptions "+e.getMessage() +"In Tracking the Order 3 =="+orderCode);
+			LOG.error(" EtailBusinessExceptions "+e.getMessage() +"In Tracking the trackKey 3 =="+trackKey);
 			ExceptionUtil.etailBusinessExceptionHandler(e, null);
 			return frontEndErrorHelper.callBusinessError(model, MessageConstants.SYSTEM_ERROR_PAGE_BUSINESS);
 		}
 		catch (final EtailNonBusinessExceptions e)
 		{
-			LOG.error(" EtailNonBusinessExceptions "+e.getMessage() +"In Tracking the Order 4 =="+orderCode);
+			LOG.error(" EtailNonBusinessExceptions "+e.getMessage() +"In Tracking the trackKey 4 =="+trackKey);
 			ExceptionUtil.etailNonBusinessExceptionHandler(e);
 			return frontEndErrorHelper.callNonBusinessError(model, MessageConstants.SYSTEM_ERROR_PAGE_NON_BUSINESS);
 		}
 		catch (final Exception e)
 		{
-			LOG.error(" Exception "+e.getMessage() +"In Tracking the Order 5 =="+orderCode);
+			LOG.error(" Exception "+e.getMessage() +"In Tracking the trackKey 5 =="+trackKey);
 			ExceptionUtil.getCustomizedExceptionTrace(e);
 			return frontEndErrorHelper.callNonBusinessError(model, MessageConstants.SYSTEM_ERROR_PAGE_NON_BUSINESS);
 		}
@@ -377,11 +390,11 @@ public class TrackOrderPageController extends AbstractPageController
 
 	@RequestMapping(value = RequestMappingUrlConstants.ANONYMOUS_TRACK_ORDER_VALIDATE_URL, method = RequestMethod.GET)
 	@ResponseBody
-	public String trackOrderWihoutLogin(@RequestParam("orderCode") final String orderCode,
+	public MplTrackOrderValidationData trackOrderWihoutLogin(@RequestParam("orderCode") final String orderCode,
 			@RequestParam("emailId") final String emailId, @RequestParam("captchaCode") final String captchaCode,
 			final HttpServletRequest request) throws CMSItemNotFoundException
 	{
-
+		final MplTrackOrderValidationData resultData = new MplTrackOrderValidationData();
 		try
 		{
 			final TrackOrderForm trackOrderForm = new TrackOrderForm();
@@ -396,7 +409,9 @@ public class TrackOrderPageController extends AbstractPageController
 			{
 				final String message = messageSource.getMessage(new DefaultMessageSourceResolvable(result),
 						localeResolver.resolveLocale(request));
-				return message;
+				resultData.setValidationResult(false);
+				resultData.setErrorMessage(message);
+				return resultData;
 			}
 			//if the result is success ,check for order id and email combination
 			final OrderModel orderModel = mplOrderFacade.getOrderForAnonymousUser(orderCode);
@@ -404,17 +419,25 @@ public class TrackOrderPageController extends AbstractPageController
 			final CustomerModel custModel = (CustomerModel) userModel;
 			if (null != custModel && null != custModel.getOriginalUid() && custModel.getOriginalUid().equals(emailId))
 			{
-				return ModelAttributetConstants.TRUE;
+				resultData.setValidationResult(true);
+				resultData.setTrackKey(generatetrackKey(orderCode, custModel.getOriginalUid()));
+				return resultData;
 			}
 		}
 		catch (final Exception e)
 		{
 			LOG.error("Error while tracking order for " + orderCode + " and " + emailId + " " + e.getMessage());
-		   return messageSource.getMessage(new DefaultMessageSourceResolvable(
+		   String message = messageSource.getMessage(new DefaultMessageSourceResolvable(
 					MessageConstants.ORDERID_EMAILID_MISMATCH_MESSAGE_KEY), localeResolver.resolveLocale(request));
+		   resultData.setValidationResult(false);
+			resultData.setErrorMessage(message);
+			return resultData;
 		}
-		return messageSource.getMessage(new DefaultMessageSourceResolvable(
+			String message = messageSource.getMessage(new DefaultMessageSourceResolvable(
 			MessageConstants.ORDERID_EMAILID_MISMATCH_MESSAGE_KEY), localeResolver.resolveLocale(request));
+			resultData.setValidationResult(false);
+			resultData.setErrorMessage(message);
+			return resultData;
 	}
 
 	/**
@@ -481,6 +504,42 @@ public class TrackOrderPageController extends AbstractPageController
 		final String strMonth = months.get(month);
 		return strMonth;
 	}
-
 	
+	private String generatetrackKey(final String orderCode, final String emailID)
+	{
+		if (null != orderCode && null != emailID)
+		{
+			final String hash = DigestUtils.md5Hex(orderCode.concat(emailID));
+			return new String(Base64.encodeBase64((orderCode + ModelAttributetConstants.COLON + hash).getBytes()));
+		}
+		return null;
+	}
+
+	private boolean validateTrackKey(final String emailID, final String trackKey)
+	{
+		if (null != trackKey && null != emailID)
+		{
+			final String decodedString = new String(Base64.decodeBase64(trackKey.getBytes()));
+			final String[] splitString = decodedString.split(ModelAttributetConstants.COLON);
+			if (null != splitString && splitString.length > 1)
+			{
+				return DigestUtils.md5Hex(splitString[0].concat(emailID)).equals(splitString[1]) ? true : false;
+			}
+		}
+		return false;
+	}
+
+	private String getOrderCode(final String trackKey)
+	{
+		if (null != trackKey)
+		{
+			final String decodedString = new String(Base64.decodeBase64(trackKey.getBytes()));
+			final String[] splitString = decodedString.split(ModelAttributetConstants.COLON);
+			if (null != splitString && splitString.length > 0)
+			{
+				return splitString[0];
+			}
+		}
+		return null;
+	}
 }
