@@ -12,9 +12,10 @@ $(document).ready(function(){
 	var site_region = $("#site_section").val();
 	var site_currency ='INR';
 	var domain_name = document.domain;
+	
 	var user_login_type = $('#userLoginType').val().trim();
 	var pageType = $('#pageType').val();
-	var pageName=$('#pageName').val();
+	var pageName=$('#page_name').val();
 	var brandPagetype ='';
 	if(pageName.includes("BrandStore")){
 		brandPagetype = "brand";
@@ -45,12 +46,18 @@ $(document).ready(function(){
 	var buyboxSellerid = $("#sellerSelId").val();
 	var buyboxSellerName = $("#sellerNameId").val();
 	var sellerList = $('#pdpSellerIDs').val();
+	var subdomain = window.location.href.split("/")[2].split(".")[0];
+	var subDomain= "";
+	if(subdomain != "undefined"){
+		subDomain = subdomain;
+	}
 	
 	digitalData = {
 		page : {
 			pageInfo : {
-				pageName : pageName,
-				domain : domain_name
+				pageName  : pageName,
+				domain    : domain_name,
+				subDomain : subDomain
 			},
 			category : {
 				primaryCategory : pageType

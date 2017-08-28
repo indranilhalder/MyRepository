@@ -1114,7 +1114,7 @@ function tealiumCallOnPageLoad()
 			pdp_video_product_id=$('#product_id').val();
 		}
 	})
-	
+	var isImageHoverTriggered = false;
 	// Added for tealium
 	if (pageType == "homepage") {
 		
@@ -2146,11 +2146,12 @@ $(document).on("mouseover",".zoomContainer",function(e) {
 		else {
 			page = "quickview";
 		}
-		if(typeof utag !="undefined"){
+		if(typeof(utag)!="undefined" && (!isImageHoverTriggered)){
 			utag.link({
 				link_text: page+"_image_hover",
 				event_type : page+"_image_hover"
 			});
+			isImageHoverTriggered = true;
 		}
 	}
 });	
