@@ -76002,14 +76002,13 @@ body.page-cartPage .cart.wrapper .product-block li.item li.price > ul > span.del
 }
 .panfield-wrapper.btn-wrapper a{
 	width: 100%;
-	height: 48px;
 	margin-bottom: 15px;
 	display: block;
 	font-size: 12px;
   line-height: 1.33;
   letter-spacing: 0.6px;
   text-align: center;
-  padding: 17px 0;
+  padding: 16.5px 0;
 }
 .panfield-wrapper.btn-wrapper a.pan-submit-btn{
 	background-color: #a5173c;
