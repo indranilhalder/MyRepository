@@ -27,6 +27,9 @@ public class ExchangeGuidePopulator<SOURCE extends ExchangeCouponValueModel, TAR
 {
 
 	protected static final Logger LOG = Logger.getLogger(ExchangeGuidePopulator.class);
+	private static final String WORKING = "Working";
+	private static final String NON_WORKING = "Working";
+
 
 	/**
 	 * @description method is to populate basic ExchangeGuideData details in pdp
@@ -46,11 +49,11 @@ public class ExchangeGuidePopulator<SOURCE extends ExchangeCouponValueModel, TAR
 			exchangeGuideData.setL3category(exchangeCouponValueModel.getThirdLevelCategory().getName());
 			if (exchangeCouponValueModel.isIsWorking())
 			{
-				exchangeGuideData.setIsWorking("Working");
+				exchangeGuideData.setIsWorking(WORKING);
 			}
 			else
 			{
-				exchangeGuideData.setIsWorking("Not Working");
+				exchangeGuideData.setIsWorking(NON_WORKING);
 			}
 
 			exchangeGuideData.setL4category(exchangeCouponValueModel.getL4categoryName());

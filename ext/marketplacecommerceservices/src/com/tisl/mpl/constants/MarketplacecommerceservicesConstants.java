@@ -1028,6 +1028,7 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	//Added for TPR-1083
 	public static final String B9305 = "B9305";
 	public static final String B9306 = "B9306";
+	public static final String EXCHANGE_REMOVAL_REASON = "Exchange Removed from Cart/Delivery Page due to Pincode Servicability";
 
 	public static final String REVERSE_PINCODE_NOT_SERVICABLE = "Exchange is Not Servicable";
 	//TISPRD-5986  MSH category 404 error handling
