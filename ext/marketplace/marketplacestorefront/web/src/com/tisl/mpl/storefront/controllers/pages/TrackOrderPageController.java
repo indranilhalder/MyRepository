@@ -134,8 +134,11 @@ public class TrackOrderPageController extends AbstractPageController
 		}
 		//Retrieve the short URL report model
 		final OrderShortUrlInfoModel shortUrlReport = googleShortUrlService.getShortUrlReportModelByOrderId(orderCode);
-		 boolean isAnonymous = false;
+		//PRDI-757 Removed anonymous order track
+		//boolean isAnonymous = false;
+		/*
 		final OrderModel orderModel = mplOrderFacade.getOrderForAnonymousUser(orderCode);
+		
 		if(null != orderModel && null != orderModel.getUser()) {
 			isAnonymous=userFacade.isAnonymousUser();
 		}
@@ -146,7 +149,7 @@ public class TrackOrderPageController extends AbstractPageController
 			}else {
 				isAnonymous = true;
 			}
-		}
+		}*/
 		//final boolean isAnonymous = userFacade.isAnonymousUser();
 		if (null != shortUrlReport)
 		{
@@ -160,23 +163,24 @@ public class TrackOrderPageController extends AbstractPageController
 
 			//if the user is logged in redirect the user to existing order detail page
 			//else redirect to new non login short order details page
-			if (!isAnonymous)
-			{
-					int noOfLoginClicks = shortUrlReport.getLogin().intValue();
-					noOfLoginClicks += 1;
-					LOG.debug("No of login clicks===" + noOfLoginClicks);
-					shortUrlReport.setLogin(noOfLoginClicks);
-					modelService.save(shortUrlReport);
-					return REDIRECT_PREFIX + RequestMappingUrlConstants.LOGIN_TRACKING_PAGE_URL + orderCode;
-				
-			}
+			//if (!isAnonymous)
+			//{
+			int noOfLoginClicks = shortUrlReport.getLogin().intValue();
+			noOfLoginClicks += 1;
+			LOG.debug("No of login clicks===" + noOfLoginClicks);
+			shortUrlReport.setLogin(noOfLoginClicks);
 			modelService.save(shortUrlReport);
+			//return REDIRECT_PREFIX + RequestMappingUrlConstants.LOGIN_TRACKING_PAGE_URL + orderCode;
+
+			//}
+			//modelService.save(shortUrlReport);
 		}
-		if (!isAnonymous)
-		{
-			return REDIRECT_PREFIX + RequestMappingUrlConstants.LOGIN_TRACKING_PAGE_URL + orderCode;
-		}
-		return REDIRECT_PREFIX + RequestMappingUrlConstants.ANONYMOUS_TRACKING_PAGE_URL + orderCode;
+		//if (!isAnonymous)
+		//{
+		//	return REDIRECT_PREFIX + RequestMappingUrlConstants.LOGIN_TRACKING_PAGE_URL + orderCode;
+		//}
+		//return REDIRECT_PREFIX + RequestMappingUrlConstants.ANONYMOUS_TRACKING_PAGE_URL + orderCode;
+		return REDIRECT_PREFIX + RequestMappingUrlConstants.LOGIN_TRACKING_PAGE_URL + orderCode;
 	}
 
 	/**
