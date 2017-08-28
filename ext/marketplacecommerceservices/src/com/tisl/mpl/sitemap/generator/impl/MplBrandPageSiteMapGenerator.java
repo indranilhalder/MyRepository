@@ -329,10 +329,6 @@ public class MplBrandPageSiteMapGenerator extends AbstractSiteMapGenerator<Custo
 		//		{
 		try
 		{
-
-			//			final FileWriter fw = new FileWriter(configurationService.getConfiguration().getString(
-			//					MarketplacecommerceservicesConstants.SITEMAP_FILE_LOCATION_BRAND)
-			//					+ File.separator + "brandOriginal.txt");
 			for (final String relUrl : brandLists)
 			{
 				//final String relUrl = StringEscapeUtils.escapeXml(getCategoryModelUrlResolver().resolve(categoryModel));
@@ -352,8 +348,6 @@ public class MplBrandPageSiteMapGenerator extends AbstractSiteMapGenerator<Custo
 				//}
 			}
 
-			//fw.flush();
-			//fw.close();
 		}
 		catch (final Exception ex)
 		{
