@@ -2235,4 +2235,6 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 
 	//jewellery TPR-3765
 	public static final String RETURN_FINEJEWELLERY = "Forward Seal Mismatch";
+	public static final String INVENTORY_RESV_JWLRY_CART = "Price(s) of the selected product(s) has been revised due to unavailability of the product(s) with the weight(s) displayed earlier. You have an outstanding amount of ";
+	public static final String INVENTORY_RESV_JWLRY_PAYMENT = "Price(s) of the selected product(s) has been revised due to unavailability of the product(s) with the weight(s) displayed earlier.";
 }

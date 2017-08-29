@@ -257,7 +257,7 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 
 	@Autowired
 	private SessionService sessionService;
-@Autowired
+	@Autowired
 	private CatalogUtils catalogUtils;
 
 
@@ -1003,41 +1003,41 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 
 	/*
 	 * @Desc : used to fetch delivery mode description details TISEE-950
-	 * 
-	 * 
-	 * 
-	 * 
-	 * 
-	 * 
-
+	 *
+	 *
+	 *
+	 *
+	 *
+	 *
+	 *
 	 * @param ussId
-	 * 
-	 * 
-	 * 
-	 * 
-	 * 
-	 * 
+	 *
+	 *
+	 *
+	 *
+	 *
+	 *
 	 * @param deliveryMode
-	 * 
-	 * 
-	 * 
-	 * 
-	 * 
-	 * 
+	 *
+	 *
+	 *
+	 *
+	 *
+	 *
 	 * @param startTime
-	 * 
-	 * 
-	 * 
-	 * 
-	 * 
-	 * 
+	 *
+	 *
+	 *
+	 *
+	 *
+	 *
 	 * @param endTime
-	 * 
-	 * 
-	 * 
-	 * 
-	 * 
-	 * 
+	 *
+	 *
+	 *
+	 *
+	 *
+	 *
 	 * @return String
 	 */
 
@@ -2750,8 +2750,30 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 									}
 									//  INC144316545 END
 
-									final SellerInformationModel sellerInfoModel = getMplSellerInformationService().getSellerDetail(
-											entry.getSelectedUSSID());
+									SellerInformationModel sellerInfoModel = null;
+									if (null != entry.getProduct()
+											&& entry.getProduct().getProductCategoryType()
+													.equalsIgnoreCase(MarketplacecommerceservicesConstants.FINEJEWELLERY))
+									{
+										final List<JewelleryInformationModel> jewelleryInfo = jewelleryService
+												.getJewelleryInfoByUssid(entry.getSelectedUSSID());
+										if (CollectionUtils.isNotEmpty(jewelleryInfo))
+										{
+											sellerInfoModel = getMplSellerInformationService().getSellerDetail(
+													jewelleryInfo.get(0).getPCMUSSID());
+										}
+										else
+										{
+											LOG.error("No entry in JewelleryInformationModel for ussid " + entry.getSelectedUSSID());
+										}
+									}
+									else
+									{
+										sellerInfoModel = getMplSellerInformationService().getSellerDetail(entry.getSelectedUSSID());
+									}
+
+									//final SellerInformationModel sellerInfoModel = getMplSellerInformationService().getSellerDetail(
+									//entry.getSelectedUSSID());
 									List<RichAttributeModel> richAttributeModel = null;
 									if (sellerInfoModel != null)
 									{
@@ -3039,21 +3061,21 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 
 	/*
 	 * @Desc populating data for soft reservation
-	 * 
-	 * 
-	 * 
-	 * 
+	 *
+	 *
+	 *
+	 *
 	 * @param cartData
-	 * 
-	 * 
-	 * 
-	 * 
+	 *
+	 *
+	 *
+	 *
 	 * @return List<CartSoftReservationData>
-	 * 
-	 * 
-	 * 
-	 * 
-
+	 *
+	 *
+	 *
+	 *
+	 *
 	 * @throws EtailNonBusinessExceptions
 	 */
 	public List<CartSoftReservationData> populateDataForSoftReservation(final CartData cartData) throws EtailNonBusinessExceptions
@@ -3126,26 +3148,26 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 
 	/*
 	 * @DESC MobileWS105 : get top two wish list for mobile web service
-	 * 
-	 * 
-	 * 
-	 * 
+	 *
+	 *
+	 *
+	 *
 	 * @param userModel
-	 * 
-	 * 
-	 * 
-	 * 
+	 *
+	 *
+	 *
+	 *
 	 * @param pincode
-	 * 
-	 * 
-	 * 
-	 * 
-
+	 *
+	 *
+	 *
+	 *
+	 *
 	 * @return GetWishListWsDTO
-	 * 
-	 * 
-	 * 
-	 * 
+	 *
+	 *
+	 *
+	 *
 	 * @throws EtailNonBusinessExceptions
 	 */
 
@@ -3461,18 +3483,19 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 
 	/*
 	 * @Desc For webservice
-	 * 
-	 * 
-	 * 
-	 * 
+	 *
+	 *
+	 *
+	 *
 	 * @param buyBoxModelList
-	 * 
-	 * 
-	 * 
-	 * 
+	 *
+	 *
+	 *
+	 *
 	 *
 	 *
 	 * @param getWishListProductWsObj
+	 *
 	 * @throws EtailNonBusinessExceptions
 	 */
 
@@ -4327,10 +4350,10 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 	 *
 	 *
 	 * @return:List<CartSoftReservationData>
-	 * 
-	 * 
-	 * 
-	 * 
+	 *
+	 *
+	 *
+	 *
 	 * @throws EtailNonBusinessExceptions
 	 */
 	//commented for CAR:127
@@ -4574,7 +4597,8 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 							 * entryModel.getSelectedUSSID());
 							 */
 							SellerInformationModel sellerInfoModel = getMplSellerInformationService().getSellerDetail(
-									entryModel.getSelectedUssid(),abstractOrderModel.getStore().getCatalogs().get(0).getActiveCatalogVersion());
+									entryModel.getSelectedUssid(),
+									abstractOrderModel.getStore().getCatalogs().get(0).getActiveCatalogVersion());
 
 							if (null == sellerInfoModel)
 							{
