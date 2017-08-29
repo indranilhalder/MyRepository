@@ -36,7 +36,7 @@ public class MplCategoryDaoImpl extends DefaultCategoryDao implements MplCategor
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see
 	 * com.tisl.mpl.marketplacecommerceservices.daos.MplCatalogDao#getCategoryModelForName(de.hybris.platform.catalog
 	 * .model.CatalogVersionModel, java.lang.String)
@@ -107,7 +107,7 @@ public class MplCategoryDaoImpl extends DefaultCategoryDao implements MplCategor
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.marketplacecommerceservices.daos.MplCategoryDao#getMplRootCategoriesForCatalogVersion(de.hybris.
 	 * platform .catalog.model.CatalogVersionModel)
 	 */
@@ -187,7 +187,7 @@ public class MplCategoryDaoImpl extends DefaultCategoryDao implements MplCategor
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see
 	 * com.tisl.mpl.marketplacecommerceservices.daos.MplCategoryDao#getProductForL2code(de.hybris.platform.catalog.model
 	 * .CatalogVersionModel, java.lang.String)
@@ -256,15 +256,6 @@ public class MplCategoryDaoImpl extends DefaultCategoryDao implements MplCategor
 			final FlexibleSearchQuery query = new FlexibleSearchQuery(queryString);
 			query.addQueryParameter("l1code", l1CategoryCode);
 			query.addQueryParameter("l2code", l2CategoryCode);
-			//			final String queryString = "SELECT {p:" + MplbrandfilterModel.PK
-			//					+ "} "//
-			//					+ MarketplacecommerceservicesConstants.QUERYFROM + MplbrandfilterModel._TYPECODE + " AS p} where " + "{p."
-			//					+ MplbrandfilterModel.L1 + "} = ?l1code and " + MplbrandfilterModel.L2 + "=?l2code";
-			//
-			//			final FlexibleSearchQuery query = new FlexibleSearchQuery(queryString);
-			//			query.addQueryParameter("l1code", l1CategoryCode);
-			//			query.addQueryParameter("l2code", l2CategoryCode);
-
 			brandFilterList = flexibleSearchService.<MplbrandfilterModel> search(query).getResult();
 		}
 
