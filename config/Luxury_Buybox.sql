@@ -119,7 +119,8 @@ AS
           
          ------ Start INC144314752 OOS issue 
 		 ------Added attribute p_oosmodifiedval PRDI-50
-   UPDATE MplBuyBoxProcTable SET MplBuyBoxProcTable.modifiedts=v_prc_start_time_weightage,MplBuyBoxProcTable.p_oosmodifiedval=v_prc_start_time_weightage where pk in (
+		 ------Removed the current snippet and added it to CAR-302/CAR-303
+   /* UPDATE MplBuyBoxProcTable SET MplBuyBoxProcTable.modifiedts=v_prc_start_time_weightage,MplBuyBoxProcTable.p_oosmodifiedval=v_prc_start_time_weightage where pk in (
    SELECT distinct
           bbox1.pk as pk
           from products p1, 
@@ -137,7 +138,7 @@ AS
           and I.p_sellerarticlesku=bbox2.p_sellerarticlesku
           and ((I.p_available>0 and bbox2.p_available<=0)
          or (I.p_available<=0 and bbox2.p_available>0))
-          and I.modifiedts > v_last_run_weightage);
+          and I.modifiedts > v_last_run_weightage); */
     ------ INC144314752 OOS issue End           
 	COMMIT;
       --Joins Price,Inventory,Delta tables and merge the result data into buybox table
@@ -286,7 +287,37 @@ AS
 
 
       COMMIT;
-
+	  -- CAR-302/CAR-303 size variant  update snippet
+	  	update MplBuyBoxProcTable bbox2 set bbox2.modifiedts=v_prc_start_time_weightage, bbox2.p_oosmodifiedval=v_prc_start_time_weightage 
+			where exists 
+			(SELECT   
+			null 
+			from 
+			MplBuyBoxProcTable bbox1, 
+			MplBuyBox bbox, 
+			products p1, 
+			products p2 
+			WHERE   
+			bbox1.p_sellerarticlesku = bbox.p_sellerarticlesku 
+			and ((bbox.P_MRP <> bbox1.P_MRP) 
+			or (bbox.P_PRICE <> bbox1.P_PRICE) 
+			or (bbox.p_specialpricemobile <> bbox1.p_specialpricemobile) 
+			or (bbox.p_specialprice <> bbox1.p_specialprice) 
+			or (bbox.p_delisted = 1 and bbox1.p_delisted = 0) 
+			or (bbox.p_delisted = 0 and bbox1.p_delisted = 1) 
+			or (bbox.p_available > 0 and bbox1.p_available <= 0) 
+				or (bbox.p_available <= 0 and bbox1.p_available > 0) 
+			) 
+			and bbox1.p_product = p1.p_code 
+			and p1.p_colour=p2.p_colour 
+			and p1.p_baseproduct=p2.p_baseproduct 
+			and bbox2.p_product = p2.p_code 
+			and bbox1.modifiedts > v_last_run_weightage 
+			and p1.p_catalogversion=v_catalogversion_buybox 
+			and p2.p_catalogversion=v_catalogversion_buybox); 
+			
+			COMMIT;
+	  -- CAR-302/CAR-303 size variant  update snippet ends
       --to Update the last run time
       UPDATE MPLBUYBOXUPDTLOG
          SET MPLBUYBOXUPDTLOG.P_LAST_RUN_TIME = v_prc_start_time_weightage
@@ -574,7 +605,40 @@ AS
          UPDATE SET
             B.p_delisted = S.status,
             B.modifiedts = v_prc_start_time_price_update;
-
+		
+		-- CAR-302/CAR-303 size variant  update snippet
+		
+		update MplBuyBoxProcTable bbox2 set bbox2.modifiedts=v_prc_start_time_price_update, bbox2.p_oosmodifiedval=v_prc_start_time_price_update 
+			where exists 
+			(SELECT   
+			null 
+			from 
+			MplBuyBoxProcTable bbox1, 
+			MplBuyBox bbox, 
+			products p1, 
+			products p2 
+			WHERE   
+			bbox1.p_sellerarticlesku = bbox.p_sellerarticlesku 
+			and ((bbox.P_MRP <> bbox1.P_MRP) 
+			or (bbox.P_PRICE <> bbox1.P_PRICE) 
+			or (bbox.p_specialpricemobile <> bbox1.p_specialpricemobile) 
+			or (bbox.p_specialprice <> bbox1.p_specialprice) 
+			or (bbox.p_delisted = 1 and bbox1.p_delisted = 0) 
+			or (bbox.p_delisted = 0 and bbox1.p_delisted = 1) 
+			or (bbox.p_available > 0 and bbox1.p_available <= 0) 
+				or (bbox.p_available <= 0 and bbox1.p_available > 0) 
+			) 
+			and bbox1.p_product = p1.p_code 
+			and p1.p_colour=p2.p_colour 
+			and p1.p_baseproduct=p2.p_baseproduct 
+			and bbox2.p_product = p2.p_code 
+			and bbox1.modifiedts > v_last_run_price_update 
+			and p1.p_catalogversion=v_catalogversion_buybox 
+			and p2.p_catalogversion=v_catalogversion_buybox);
+			
+			COMMIT;
+			-- CAR-302/CAR-303 size variant  update snippet ends
+		
       --to Update the last run time
       UPDATE MPLBUYBOXUPDTLOG
          SET MPLBUYBOXUPDTLOG.P_LAST_RUN_TIME = v_prc_start_time_price_update
@@ -679,6 +743,33 @@ AS
             B.p_delisted = S.status,
             B.modifiedts = v_prc_start_time_dateupdate;
 ------------------------------------------------------------------------------------------
+
+-- CAR-302/CAR-303 size variant  update snippet
+
+	update MplBuyBoxProcTable bbox2 set bbox2.modifiedts=v_prc_start_time_dateupdate, bbox2.p_oosmodifiedval=v_prc_start_time_dateupdate 
+	where exists 
+	(SELECT   
+	null 
+	from 
+	MplBuyBoxProcTable bbox1, 
+	MplBuyBox bbox, 
+	products p1, 
+	products p2 
+	WHERE   
+	bbox1.p_sellerarticlesku = bbox.p_sellerarticlesku 
+	and ((bbox.p_delisted = 1 and bbox1.p_delisted = 0) 
+	or (bbox.p_delisted = 0 and bbox1.p_delisted = 1) 
+	) 
+	and bbox1.p_product = p1.p_code 
+	and p1.p_colour=p2.p_colour 
+	and p1.p_baseproduct=p2.p_baseproduct 
+	and bbox2.p_product = p2.p_code 
+	and bbox1.modifiedts > v_last_run_dateupdate 
+	and p1.p_catalogversion=v_catalogversion_buybox 
+	and p2.p_catalogversion=v_catalogversion_buybox); 
+
+	COMMIT;
+-- CAR-302/CAR-303 size variant  update snippet ends
 
       --to Update the last run time
       UPDATE MPLBUYBOXUPDTLOG

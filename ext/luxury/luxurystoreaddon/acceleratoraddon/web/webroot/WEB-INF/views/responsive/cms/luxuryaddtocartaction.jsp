@@ -51,7 +51,7 @@ $(document).ready(function(){
 		$(".size-guide").click();
  	    return false;
    	 }
-
+   	 
    	/* if( $("#variant,#sizevariant option:selected").val()=="#")
  	  {
  		$("#addToCartFormTitle").html("<font color='#ff1c47'>" + $('#selectSizeId').text() + "</font>");
