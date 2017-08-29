@@ -81,7 +81,7 @@ public class MplPancardServiceImpl implements MplPancardService
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see
 	 * com.tisl.mpl.marketplacecommerceservices.services.pancard.MplPancardService#getPanCardOrderId(java.lang.String)
 	 */
@@ -99,7 +99,7 @@ public class MplPancardServiceImpl implements MplPancardService
 	//For sending pancard details to SP through PI and save data into database for new pancard entry
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see
 	 * com.tisl.mpl.marketplacecommerceservices.services.pancard.MplPancardService#setPanCardDetailsAndPIcall(java.lang
 	 * .String, java.lang.String, java.lang.String, java.lang.String, org.springframework.web.multipart.MultipartFile)
@@ -168,12 +168,12 @@ public class MplPancardServiceImpl implements MplPancardService
 			}
 			if (StringUtils.isNotEmpty(status) && !"faliure".equalsIgnoreCase(status))
 			{
-				LOG.debug("if " + MarketplacecommerceservicesConstants.PENDING_FOR_VERIFICATION + " " + status);
+				LOG.debug(MarketplacecommerceservicesConstants.PENDING_FOR_VERIFICATION + " " + status);
 				panCardModel.setStatus(MarketplacecommerceservicesConstants.PENDING_FOR_VERIFICATION);
 			}
 			else
 			{
-				LOG.debug("if " + MarketplacecommerceservicesConstants.NA + " " + status);
+				LOG.debug(MarketplacecommerceservicesConstants.NA + " " + status);
 				panCardModel.setStatus(MarketplacecommerceservicesConstants.NA);
 			}
 			panCardModelList.add(panCardModel);
@@ -185,7 +185,7 @@ public class MplPancardServiceImpl implements MplPancardService
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see
 	 * com.tisl.mpl.marketplacecommerceservices.services.pancard.MplPancardService#refreshPanCardDetailsAndPIcall(de.
 	 * hybris.platform.core.model.PancardInformationModel, java.lang.String,
@@ -254,7 +254,7 @@ public class MplPancardServiceImpl implements MplPancardService
 					{
 						if (LOG.isDebugEnabled())
 						{
-							LOG.debug("if " + MarketplacecommerceservicesConstants.PENDING_FOR_VERIFICATION + " " + status);
+							LOG.debug(MarketplacecommerceservicesConstants.PENDING_FOR_VERIFICATION + " " + status);
 						}
 						pm.setStatus(MarketplacecommerceservicesConstants.PENDING_FOR_VERIFICATION);
 					}
@@ -262,7 +262,7 @@ public class MplPancardServiceImpl implements MplPancardService
 					{
 						if (LOG.isDebugEnabled())
 						{
-							LOG.debug("if " + MarketplacecommerceservicesConstants.NA + " " + status);
+							LOG.debug(MarketplacecommerceservicesConstants.NA + " " + status);
 						}
 						pm.setStatus(MarketplacecommerceservicesConstants.NA);
 					}
@@ -278,7 +278,7 @@ public class MplPancardServiceImpl implements MplPancardService
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.marketplacecommerceservices.services.pancard.MplPancardService#getOrderForCode(java.lang.String)
 	 */
 	@Override
@@ -290,7 +290,7 @@ public class MplPancardServiceImpl implements MplPancardService
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.marketplacecommerceservices.services.pancard.MplPancardService#setPancardRes(com.tisl.mpl.pojo.
 	 * PanCardResDTO)
 	 */
