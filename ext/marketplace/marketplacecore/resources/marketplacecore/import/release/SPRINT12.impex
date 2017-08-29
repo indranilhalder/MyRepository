@@ -1,0 +1,46 @@
+# Import the CMS content for the site emails
+#
+$storePrefix=mpl
+$contentCatalog=$storePrefixContentCatalog
+$contentCV=catalogVersion(CatalogVersion.catalog(Catalog.id[default=$contentCatalog]),CatalogVersion.version[default=Staged])[default=$contentCatalog:Staged]
+$emailResource=jar:com.tisl.mpl.initialdata.setup.InitialDataSystemSetup&/marketplaceinitialdata/import/coredata/contentCatalogs/$contentCatalog/emails
+
+# Language
+$lang=en 
+
+
+UPDATE EmailPage;$contentCV[unique=true];uid[unique=true];fromEmail[lang=$lang];fromName[lang=$lang]
+ ;;CustomerRegistrationEmail;"no-reply@tatacliq.com";"Tata CLiQ"
+ ;;OrderConfirmationEmail;"no-reply@tatacliq.com";"Tata CLiQ"
+ ;;ShippingConfirmationEmail;"no-reply@tatacliq.com";"Tata CLiQ"
+ ;;DeliverySentEmail;"no-reply@tatacliq.com";"Tata CLiQ"
+ ;;PaymentPendingEmail;"no-reply@tatacliq.com";"Tata CLiQ"
+ ;;PaymentTimeoutEmail;"no-reply@tatacliq.com";"Tata CLiQ"
+ ;;PaymentFailedEmail;"no-reply@tatacliq.com";"Tata CLiQ"
+ ;;OrderOnHoldEmail;"no-reply@tatacliq.com";"Tata CLiQ"
+ ;;OrderRejectRiskEmail;"no-reply@tatacliq.com";"Tata CLiQ"
+ ;;OrderConfRiskEmail;"no-reply@tatacliq.com";"Tata CLiQ"
+ ;;SendInvoiceEmail;"no-reply@tatacliq.com";"Tata CLiQ"
+ ;;PDPEmail;"no-reply@tatacliq.com";"Tata CLiQ"
+ ;;FriendsInviteEmail;"no-reply@tatacliq.com";"Tata CLiQ"
+ ;;CustomerProfileUpdateEmail;"no-reply@tatacliq.com";"Tata CLiQ"
+ ;;OrderRefundEmail;"no-reply@tatacliq.com";"Tata CLiQ"
+ ;;ForgottenPasswordEmail;"no-reply@tatacliq.com";"Tata CLiQ" 
+ ;;CustomerRegistrationInCsEmail;"no-reply@tatacliq.com";"Tata CLiQ"
+ 
+ 
+ ;;ChangePasswordEmail;"no-reply@tatacliq.com";"Tata CLiQ"
+ ;;OrderDeliveryEmail;"no-reply@tatacliq.com";"Tata CLiQ" 
+ ;;InventoryReservationFailedEmail;"no-reply@tatacliq.com";"Tata CLiQ"
+ ;;NpsEmail;"no-reply@tatacliq.com";"Tata CLiQ"
+ 
+ 
+ ;;OrderCancelledEmail;"no-reply@tatacliq.com";"Tata CLiQ"
+ ;;OrderCollectionReminderEmail;"no-reply@tatacliq.com";"Tata CLiQ"
+ ;;OrderMoveToCsEmail;"no-reply@tatacliq.com";"Tata CLiQ"
+ ;;OrderPartiallyCanceledEmail;"no-reply@tatacliq.com";"Tata CLiQ"
+ ;;OrderPartiallyRefundedEmail;"no-reply@tatacliq.com";"Tata CLiQ"
+ ;;ReadyForPickupEmail;"no-reply@tatacliq.com";"Tata CLiQ"
+ ;;SendUpdateEmail;"no-reply@tatacliq.com";"Tata CLiQ" 
+#;;OutForDeliveryEmail;"no-reply@tatacliq.com";"Tata CLiQ"
+  
