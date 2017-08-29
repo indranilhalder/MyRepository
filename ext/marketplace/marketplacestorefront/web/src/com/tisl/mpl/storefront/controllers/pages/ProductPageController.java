@@ -534,7 +534,7 @@ public class ProductPageController extends MidPageController
 				 * final String metaTitle = productData.getSeoMetaTitle(); final String pdCode = productData.getCode();
 				 * final String metaDescription = productData.getSeoMetaDescription(); //TISPRD-4977 final String
 				 * metaKeyword = productData.getSeoMetaKeyword(); //final String metaKeywords = productData.gets
-				 * 
+				 *
 				 * setUpMetaData(model, metaDescription, metaTitle, pdCode, metaKeyword);
 				 */
 				//AKAMAI fix
@@ -1467,11 +1467,12 @@ public class ProductPageController extends MidPageController
 			//			{
 			//				model.addAttribute(ModelAttributetConstants.PINCODE, sessionService.getAttribute(ModelAttributetConstants.PINCODE));
 			//			}
-			//TPR-6654
-			if (null != sessionService.getAttribute(MarketplacecommerceservicesConstants.SESSION_PINCODE))
+			final String pincode = (String) sessionService.getAttribute(MarketplacecommerceservicesConstants.SESSION_PINCODE);
+			if (StringUtils.isNotEmpty(pincode))
 			{
 				model.addAttribute(ModelAttributetConstants.PINCODE,
 						sessionService.getAttribute(MarketplacecommerceservicesConstants.SESSION_PINCODE));
+				model.addAttribute(ControllerConstants.Views.Fragments.Product.STORE_AVAIL, mplProductFacade.storeLocatorPDP(pincode));
 			}
 			getRequestContextData(request).setProduct(productModel);
 			storeCmsPageInModel(model, getContentPageForLabelOrId(ControllerConstants.Views.Fragments.Product.VIEW_SELLERS));
@@ -1892,6 +1893,14 @@ public class ProductPageController extends MidPageController
 			/* final Map<String, String> deliveryModeATMap = productDetailsHelper.getDeliveryModeATMap(deliveryInfo); */
 			final Map<String, Map<String, Integer>> deliveryModeATMap = productDetailsHelper.getDeliveryModeATMap(deliveryInfo);
 			model.addAttribute(ControllerConstants.Views.Fragments.Product.DELIVERY_MODE_MAP, deliveryModeATMap);
+			//TPR-6654
+			final String pincode = (String) sessionService.getAttribute(MarketplacecommerceservicesConstants.SESSION_PINCODE);
+			if (StringUtils.isNotEmpty(pincode))
+			{
+				model.addAttribute(ModelAttributetConstants.PINCODE,
+						sessionService.getAttribute(MarketplacecommerceservicesConstants.SESSION_PINCODE));
+				model.addAttribute(ControllerConstants.Views.Fragments.Product.STORE_AVAIL, mplProductFacade.storeLocatorPDP(pincode));
+			}
 			displayConfigurableAttribute(productData, model);
 			//if (productModel.getProductCategoryType().equalsIgnoreCase(ELECTRONICS))
 			if (ELECTRONICS.equalsIgnoreCase(productModel.getProductCategoryType())
@@ -2585,11 +2594,11 @@ public class ProductPageController extends MidPageController
 	 */
 	/*
 	 * private MarketplaceDeliveryModeData fetchDeliveryModeDataForUSSID(final String deliveryMode, final String ussid) {
-	 * 
+	 *
 	 * final MarketplaceDeliveryModeData deliveryModeData = new MarketplaceDeliveryModeData(); final
 	 * MplZoneDeliveryModeValueModel mplZoneDeliveryModeValueModel = mplCheckoutFacade
 	 * .populateDeliveryCostForUSSIDAndDeliveryMode(deliveryMode, MarketplaceFacadesConstants.INR, ussid);
-	 * 
+	 *
 	 * final PriceData priceData = productDetailsHelper.formPriceData(mplZoneDeliveryModeValueModel.getValue());
 	 * deliveryModeData.setCode(mplZoneDeliveryModeValueModel.getDeliveryMode().getCode());
 	 * deliveryModeData.setDescription(mplZoneDeliveryModeValueModel.getDeliveryMode().getDescription());
@@ -2609,76 +2618,76 @@ public class ProductPageController extends MidPageController
 	 */
 	/*
 	 * private List<PincodeServiceData> populatePinCodeServiceData(final String productCode) {
-	 * 
-	 * 
-	 * 
+	 *
+	 *
+	 *
 	 * final List<PincodeServiceData> requestData = new ArrayList<>(); PincodeServiceData data = null;
-	 * 
+	 *
 	 * MarketplaceDeliveryModeData deliveryModeData = null; try { final ProductModel productModel =
-	 * 
-	 * 
+	 *
+	 *
 	 * productService.getProductForCode(productCode); final ProductData productData =
-	 * 
+	 *
 	 * productFacade.getProductForOptions(productModel, Arrays.asList(ProductOption.BASIC, ProductOption.SELLER,
 	 * ProductOption.PRICE));
-	 * 
-	 * 
+	 *
+	 *
 	 * for (final SellerInformationData seller : productData.getSeller()) { final List<MarketplaceDeliveryModeData>
-	 * 
+	 *
 	 * deliveryModeList = new ArrayList<MarketplaceDeliveryModeData>(); data = new PincodeServiceData(); if ((null !=
-	 * 
+	 *
 	 * seller.getDeliveryModes()) && !(seller.getDeliveryModes().isEmpty())) { for (final MarketplaceDeliveryModeData
-	 * 
+	 *
 	 * deliveryMode : seller.getDeliveryModes()) { deliveryModeData =
-	 * 
+	 *
 	 * fetchDeliveryModeDataForUSSID(deliveryMode.getCode(), seller.getUssid()); deliveryModeList.add(deliveryModeData);
-	 * 
-	 * 
+	 *
+	 *
 	 * } data.setDeliveryModes(deliveryModeList); } if (null != seller.getFullfillment() &&
-	 * 
+	 *
 	 * StringUtils.isNotEmpty(seller.getFullfillment())) {
-	 * 
+	 *
 	 * data.setFullFillmentType(MplGlobalCodeConstants.GLOBALCONSTANTSMAP.get(seller.getFullfillment().toUpperCase())); }
-	 * 
+	 *
 	 * if (null != seller.getShippingMode() && (StringUtils.isNotEmpty(seller.getShippingMode()))) {
-	 * 
+	 *
 	 * data.setTransportMode(MplGlobalCodeConstants.GLOBALCONSTANTSMAP.get(seller.getShippingMode().toUpperCase())); } if
-	 * 
+	 *
 	 * (null != seller.getSpPrice() && !(seller.getSpPrice().equals(ModelAttributetConstants.EMPTY))) { data.setPrice(new
-	 * 
+	 *
 	 * Double(seller.getSpPrice().getValue().doubleValue())); } else if (null != seller.getMopPrice() &&
-	 * 
+	 *
 	 * !(seller.getMopPrice().equals(ModelAttributetConstants.EMPTY))) { data.setPrice(new
-	 * 
+	 *
 	 * Double(seller.getMopPrice().getValue().doubleValue())); } else if (null != seller.getMrpPrice() &&
-	 * 
+	 *
 	 * !(seller.getMrpPrice().equals(ModelAttributetConstants.EMPTY))) { data.setPrice(new
-	 * 
+	 *
 	 * Double(seller.getMrpPrice().getValue().doubleValue())); } else {
-	 * 
-	 * 
-	 * 
+	 *
+	 *
+	 *
 	 * LOG.info("*************** No price avaiable for seller :" + seller.getSellerID()); continue; } if (null !=
-	 * 
-	 * 
+	 *
+	 *
 	 * seller.getIsCod() && StringUtils.isNotEmpty(seller.getIsCod())) { data.setIsCOD(seller.getIsCod()); }
-	 * 
-	 * 
-	 * 
+	 *
+	 *
+	 *
 	 * data.setSellerId(seller.getSellerID()); data.setUssid(seller.getUssid());
-	 * 
+	 *
 	 * data.setIsDeliveryDateRequired(ControllerConstants.Views.Fragments.Product.N); requestData.add(data); } } catch
-	 * 
-	 * 
-	 * 
-	 * 
-	 * 
+	 *
+	 *
+	 *
+	 *
+	 *
 	 * (final EtailBusinessExceptions e) { ExceptionUtil.etailBusinessExceptionHandler(e, null); }
-	 * 
-	 * 
-	 * 
+	 *
+	 *
+	 *
 	 * catch (final Exception e) {
-	 * 
+	 *
 	 * throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000); } return requestData; }
 	 */
 
@@ -3318,9 +3327,6 @@ public class ProductPageController extends MidPageController
 			{
 				final PcmProductVariantModel variantProductModel = (PcmProductVariantModel) productModel;
 				mplAjaxProductData.setProductSize(variantProductModel.getSize());
-				//TPR-6654
-				mplAjaxProductData.setPincode((String) sessionService
-						.getAttribute(MarketplacecommerceservicesConstants.SESSION_PINCODE));
 			}
 			mplAjaxProductData.setPotentialPromotions(productData.getPotentialPromotions());
 			final List<SellerInformationData> sellerInfoList = productData.getSeller();
@@ -3339,6 +3345,13 @@ public class ProductPageController extends MidPageController
 			//			final String msdRESTURL = configurationService.getConfiguration().getString("msd.rest.url");
 			//			mplAjaxProductData.setMsdRESTURL(msdRESTURL);
 			model.addAttribute(ModelAttributetConstants.PRODUCT, productData);
+			//TPR-6654
+			final String pincode = (String) sessionService.getAttribute(MarketplacecommerceservicesConstants.SESSION_PINCODE);
+			if (StringUtils.isNotEmpty(pincode))
+			{
+				model.addAttribute(ControllerConstants.Views.Fragments.Product.STORE_AVAIL, mplProductFacade.storeLocatorPDP(pincode));
+				mplAjaxProductData.setPincode(pincode);
+			}
 		}
 		catch (final EtailBusinessExceptions e)
 		{
@@ -3463,7 +3476,6 @@ public class ProductPageController extends MidPageController
 	 * @return Store details
 	 */
 	@RequestMapping(value = PRODUCT_OLD_URL_PATTERN + ControllerConstants.Views.Fragments.Product.STORE, method = RequestMethod.GET)
-	@ResponseBody
 	public String getAllStoreForPincode(@PathVariable final String pincode, @RequestParam(required = false) final String latitude,
 			@RequestParam(required = false) final String longitude, final Model model)
 
@@ -3472,11 +3484,20 @@ public class ProductPageController extends MidPageController
 		{
 			LOG.debug("from getAllStoreForPincode method");
 		}
-		final ListOfPointOfServiceData pointOfServices = mplStoreLocatorFacade.getAllStoresForPincode(latitude, longitude, pincode);
-		if (pointOfServices != null)
+		try
 		{
-			model.addAttribute(ModelAttributetConstants.POINT_OF_SERVICES, pointOfServices);
+			final ListOfPointOfServiceData pointOfServices = mplStoreLocatorFacade.getAllStoresForPincode(latitude, longitude,
+					pincode);
+			if (pointOfServices != null)
+			{
+				model.addAttribute(ModelAttributetConstants.POINT_OF_SERVICES, pointOfServices);
+			}
 		}
+		catch (final Exception e)
+		{
+			LOG.error(e);
+		}
+
 		return ControllerConstants.Views.Fragments.Product.StoreLocatorPopup;
 	}
 }

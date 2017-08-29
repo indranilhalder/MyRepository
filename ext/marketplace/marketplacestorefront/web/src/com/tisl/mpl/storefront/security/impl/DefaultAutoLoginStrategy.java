@@ -23,6 +23,7 @@ import de.hybris.platform.commerceservices.enums.CustomerType;
 import de.hybris.platform.commerceservices.order.CommerceCartMergingException;
 import de.hybris.platform.commerceservices.order.CommerceCartRestorationException;
 import de.hybris.platform.core.Registry;
+import de.hybris.platform.core.model.user.AddressModel;
 import de.hybris.platform.core.model.user.CustomerModel;
 import de.hybris.platform.core.model.user.UserModel;
 import de.hybris.platform.jalo.JaloSession;
@@ -150,11 +151,10 @@ public class DefaultAutoLoginStrategy implements AutoLoginStrategy
 				LOG.debug("Method login SITE USER");
 				/* TPR-6654 start */
 				final CustomerModel customerModel = (CustomerModel) extUserService.getCurrentUser();
-				if (customerModel.getDefaultShipmentAddress() != null
-						&& customerModel.getDefaultShipmentAddress().getPostalcode() != null)
+				final AddressModel address = customerModel.getDefaultShipmentAddress();
+				if (address != null && address.getPostalcode() != null)
 				{
-					getSessionService().setAttribute(MarketplacecommerceservicesConstants.SESSION_PINCODE,
-							customerModel.getDefaultShipmentAddress().getPostalcode());
+					getSessionService().setAttribute(MarketplacecommerceservicesConstants.SESSION_PINCODE, address.getPostalcode());
 				}
 				/* TPR-6654 end */
 
@@ -163,8 +163,6 @@ public class DefaultAutoLoginStrategy implements AutoLoginStrategy
 
 				if (gigyaServiceSwitch != null && !gigyaServiceSwitch.equalsIgnoreCase(MessageConstants.NO))
 				{
-					//final CustomerModel customerModel = (CustomerModel) extUserService.getCurrentUser();   //TPR-6654
-
 					if (customerModel.getType().equals(CustomerType.REGISTERED))
 					{
 
@@ -208,8 +206,14 @@ public class DefaultAutoLoginStrategy implements AutoLoginStrategy
 				JaloSession.getCurrentSession().setUser(user);
 				LOG.debug("Method login SOCIAL RETURN USER USERNAME " + username);
 				LOG.debug("Method login SOCIAL RETURN USER PASSWORD " + password);
-
-
+				/* TPR-6654 start */
+				final CustomerModel customerModel = (CustomerModel) extUserService.getCurrentUser();
+				final AddressModel address = customerModel.getDefaultShipmentAddress();
+				if (address != null && address.getPostalcode() != null)
+				{
+					getSessionService().setAttribute(MarketplacecommerceservicesConstants.SESSION_PINCODE, address.getPostalcode());
+				}
+				/* TPR-6654 end */
 				request.setAttribute(CART_MERGED, Boolean.FALSE);
 				if (!getCartFacade().hasEntries())
 				{

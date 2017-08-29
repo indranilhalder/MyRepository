@@ -22,6 +22,7 @@ import de.hybris.platform.commerceservices.enums.UiExperienceLevel;
 import de.hybris.platform.commerceservices.order.CommerceCartMergingException;
 import de.hybris.platform.commerceservices.order.CommerceCartRestorationException;
 import de.hybris.platform.core.Registry;
+import de.hybris.platform.core.model.user.AddressModel;
 import de.hybris.platform.core.model.user.CustomerModel;
 import de.hybris.platform.core.model.user.UserModel;
 import de.hybris.platform.servicelayer.config.ConfigurationService;
@@ -167,31 +168,19 @@ public class StorefrontAuthenticationSuccessHandler extends SavedRequestAwareAut
 		//This is present in the filter but in case the login request comes from a microsite,the redirect url will be the microsite url and hence not pass through the filter.
 		//Hence updating the cookie here.
 		updateUserDetailsCookie(request, response);
-
 		final HttpSession session = request.getSession();
-
 		session.setAttribute(LOGIN_SUCCESS, Boolean.TRUE);
-
-
-
 		/* Gigya code commented for non existence in Release1 */
-
-
+		final CustomerModel customerModel = (CustomerModel) extUserService.getCurrentUser();
 		//Code Start For Gigya Integration
-
 		//Switch to control Gigya Services
 		final String gigyaServiceSwitch = getConfigurationService().getConfiguration().getString(MessageConstants.USE_GIGYA);
-
 		if (gigyaServiceSwitch != null && !gigyaServiceSwitch.equalsIgnoreCase(MessageConstants.NO))
 		{
-			final CustomerModel customerModel = (CustomerModel) extUserService.getCurrentUser();
-
 			final Cookie ratingReviewCookie = productDetailsHelper.ratingReviewHelper(customerModel, false);
-
 			if (ratingReviewCookie != null)
 			{
 				response.addCookie(ratingReviewCookie);
-
 			}
 			else
 			{
@@ -208,18 +197,16 @@ public class StorefrontAuthenticationSuccessHandler extends SavedRequestAwareAut
 		//		final CustomerModel customer = extUserService.setCurrentUser(userModel);
 
 		final String username = (authentication.getPrincipal() == null) ? "NONE_PROVIDED" : authentication.getName();
-		final CustomerModel customer = extUserService.getUserForUid(username);
-
 		/* TPR-6654 start */
-		if (customer.getDefaultShipmentAddress() != null && customer.getDefaultShipmentAddress().getPostalcode() != null)
+		final AddressModel address = customerModel.getDefaultShipmentAddress();
+		if (address != null && address.getPostalcode() != null)
 		{
-			getSessionService().setAttribute(MarketplacecommerceservicesConstants.SESSION_PINCODE,
-					customer.getDefaultShipmentAddress().getPostalcode());
+			getSessionService().setAttribute(MarketplacecommerceservicesConstants.SESSION_PINCODE, address.getPostalcode());
 		}
 		/* TPR-6654 end */
 
-		if (username != null && !username.isEmpty() && customer.getIsTemporaryPasswordChanged() != null
-				&& customer.getIsTemporaryPasswordChanged().equals(Boolean.FALSE))
+		if (username != null && !username.isEmpty() && customerModel.getIsTemporaryPasswordChanged() != null
+				&& customerModel.getIsTemporaryPasswordChanged().equals(Boolean.FALSE))
 		{
 			super.clearAuthenticationAttributes(request);
 			response.sendRedirect(request.getContextPath() + ControllerConstants.Views.responsive.Account.ChangePassword);
