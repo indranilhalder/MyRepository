@@ -7,6 +7,7 @@ import de.hybris.platform.cms2.exceptions.CMSItemNotFoundException;
 import de.hybris.platform.cms2.model.contents.components.AbstractCMSComponentModel;
 import de.hybris.platform.cms2.model.contents.contentslot.ContentSlotModel;
 import de.hybris.platform.cms2.model.pages.ContentPageModel;
+import de.hybris.platform.cms2.model.relations.CMSRelationModel;
 import de.hybris.platform.cms2.model.relations.ContentSlotForPageModel;
 import de.hybris.platform.cms2.model.relations.ContentSlotForTemplateModel;
 import de.hybris.platform.cms2lib.model.components.BannerComponentModel;
@@ -73,24 +74,16 @@ public class LuxCmsFacadeImpl implements LuxCmsFacade
 	 * @see com.tisl.mpl.facade.cms.LuxCmsFacade#getLuxuryHomePage()
 	 */
 	@Override
-	public LuxuryComponentsListWsDTO getLuxuryHomePage() throws CMSItemNotFoundException
+	public LuxuryComponentsListWsDTO getLuxuryPage(ContentPageModel contentPage) throws CMSItemNotFoundException
 	{
 
 		LuxuryComponentsListWsDTO luxuryAllComponents = new LuxuryComponentsListWsDTO();
-		final ContentPageModel contentPage = getMplCMSPageService().getPageByLabelOrId("homepage");
 		if (contentPage != null)
 		{
 
-			for (final ContentSlotForTemplateModel contentSlotForPage : contentPage.getMasterTemplate().getContentSlots())
+			for (final CMSRelationModel contentSlotForPage : contentPage.getContentSlots())
 			{
-				final ContentSlotModel contentSlot = contentSlotForPage.getContentSlot();
-				luxuryAllComponents = getLuxuryComponentDtoForSlot(contentSlot, luxuryAllComponents);
-
-			}
-			for (final ContentSlotForPageModel contentSlotForPage : contentPage.getContentSlots())
-			{
-				final ContentSlotModel contentSlot = contentSlotForPage.getContentSlot();
-				luxuryAllComponents = getLuxuryComponentDtoForSlot(contentSlot, luxuryAllComponents);
+				luxuryAllComponents = getLuxuryComponentDtoForSlot(contentSlotForPage, luxuryAllComponents);
 
 			}
 
@@ -99,32 +92,7 @@ public class LuxCmsFacadeImpl implements LuxCmsFacade
 		return luxuryAllComponents;
 	}
 
-	@Override
-	public LuxuryComponentsListWsDTO getWomenlandingPage() throws CMSItemNotFoundException
-	{
 
-		LuxuryComponentsListWsDTO luxuryAllComponents = new LuxuryComponentsListWsDTO();
-		final ContentPageModel contentPage = getMplCMSPageService().getPageByLabelOrId("luxuryMenlandingPage");
-		if (contentPage != null)
-		{
-
-			for (final ContentSlotForTemplateModel contentSlotForPage : contentPage.getMasterTemplate().getContentSlots())
-			{
-				final ContentSlotModel contentSlot = contentSlotForPage.getContentSlot();
-				luxuryAllComponents = getLuxuryComponentDtoForSlot(contentSlot, luxuryAllComponents);
-
-			}
-			for (final ContentSlotForPageModel contentSlotForPage : contentPage.getContentSlots())
-			{
-				final ContentSlotModel contentSlot = contentSlotForPage.getContentSlot();
-				luxuryAllComponents = getLuxuryComponentDtoForSlot(contentSlot, luxuryAllComponents);
-
-			}
-
-
-		}
-		return luxuryAllComponents;
-	}
 
 	@Override
 	public LuxuryComponentsListWsDTO getBrandLandingPage() throws CMSItemNotFoundException
@@ -135,16 +103,10 @@ public class LuxCmsFacadeImpl implements LuxCmsFacade
 		if (contentPage != null)
 		{
 
-			for (final ContentSlotForTemplateModel contentSlotForPage : contentPage.getMasterTemplate().getContentSlots())
-			{
-				final ContentSlotModel contentSlot = contentSlotForPage.getContentSlot();
-				luxuryAllComponents = getLuxuryComponentDtoForSlot(contentSlot, luxuryAllComponents);
 
-			}
-			for (final ContentSlotForPageModel contentSlotForPage : contentPage.getContentSlots())
+			for (final CMSRelationModel contentSlotForPage : contentPage.getContentSlots())
 			{
-				final ContentSlotModel contentSlot = contentSlotForPage.getContentSlot();
-				luxuryAllComponents = getLuxuryComponentDtoForSlot(contentSlot, luxuryAllComponents);
+				luxuryAllComponents = getLuxuryComponentDtoForSlot(contentSlotForPage, luxuryAllComponents);
 
 			}
 
@@ -154,7 +116,7 @@ public class LuxCmsFacadeImpl implements LuxCmsFacade
 	}
 
 
-	public LuxuryComponentsListWsDTO getLuxuryComponentDtoForSlot(final ContentSlotModel contentSlot,
+	public LuxuryComponentsListWsDTO getLuxuryComponentDtoForSlot(final CMSRelationModel contentSlot,
 			final LuxuryComponentsListWsDTO luxuryComponentsListWsDTO) throws CMSItemNotFoundException
 	{
 
