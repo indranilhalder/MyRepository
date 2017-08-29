@@ -62,4 +62,42 @@ public class LuxuryCMSController extends BaseController
 		return null;
 	}
 
+	@RequestMapping(value = "/luxuryWomenlandingPage", method = RequestMethod.GET)
+	@CacheControl(directive = CacheControlDirective.PUBLIC, maxAge = 300)
+	@ResponseBody
+	public LuxuryComponentsListWsDTO getWomenlandingPage(@RequestParam(defaultValue = DEFAULT) final String fields)
+	{
+		try
+		{
+			final LuxuryComponentsListWsDTO luxuryComponentsListWsDTO = luxCmsFacade.getWomenlandingPage();
+			return luxuryComponentsListWsDTO;
+		}
+		catch (final CMSItemNotFoundException e)
+		{
+			// YTODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return null;
+	}
+
+	@RequestMapping(value = "/luxuryBrandLandingPage", method = RequestMethod.GET)
+	@CacheControl(directive = CacheControlDirective.PUBLIC, maxAge = 300)
+	@ResponseBody
+	public LuxuryComponentsListWsDTO getBrandLandingPage(@RequestParam(defaultValue = DEFAULT) final String fields)
+	{
+		try
+		{
+			final LuxuryComponentsListWsDTO luxuryComponentsListWsDTO = luxCmsFacade.getBrandLandingPage();
+			return luxuryComponentsListWsDTO;
+		}
+		catch (final CMSItemNotFoundException e)
+		{
+			// YTODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return null;
+	}
+
+
+
 }
