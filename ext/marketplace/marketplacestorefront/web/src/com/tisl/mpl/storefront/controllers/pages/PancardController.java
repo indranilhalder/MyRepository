@@ -46,7 +46,7 @@ public class PancardController
 
 	/*
 	 * @ResponseBody
-	 *
+	 * 
 	 * @RequestMapping(value = "/pancardupload/test123", method = RequestMethod.GET) public String getTest123() throws
 	 * CMSItemNotFoundException { System.out.println("Test123****************"); return "test123"; }
 	 */
@@ -92,7 +92,7 @@ public class PancardController
 			{
 				if (StringUtils.isNotEmpty(pModel.getStatus()))
 				{
-					if (pModel.getStatus().equalsIgnoreCase(MarketplacecommerceservicesConstants.REJECTED))
+					if (pModel.getStatus().equalsIgnoreCase(MarketplacecommerceservicesConstants.PAN_REJECTED))
 					{
 						ifRejected = true;
 						break;
@@ -158,7 +158,7 @@ public class PancardController
 			{
 				for (final PancardInformationModel pModel : pModelList)
 				{
-					if (pModel.getStatus().equalsIgnoreCase(MarketplacecommerceservicesConstants.REJECTED))
+					if (pModel.getStatus().equalsIgnoreCase(MarketplacecommerceservicesConstants.PAN_REJECTED))
 					{
 						pModelR.add(pModel);
 					}
