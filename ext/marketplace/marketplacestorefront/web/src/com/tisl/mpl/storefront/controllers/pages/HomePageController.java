@@ -107,6 +107,7 @@ import com.tisl.mpl.storefront.controllers.ControllerConstants;
 import com.tisl.mpl.storefront.util.CSRFTokenManager;
 import com.tisl.mpl.util.ExceptionUtil;
 import com.tisl.mpl.util.GenericUtilityMethods;
+import org.apache.commons.lang.StringEscapeUtils;
 //Sonar fix
 //import com.tisl.mpl.constants.MplConstants;
 
@@ -449,7 +450,9 @@ public class HomePageController extends AbstractPageController
 	 */
 	protected void updatePageTitle(final Model model, final AbstractPageModel cmsPage)
 	{
-		storeContentPageTitleInModel(model, getPageTitleResolver().resolveHomePageTitle(cmsPage.getTitle()));
+	//PRDI-422
+		storeContentPageTitleInModel(model,
+				StringEscapeUtils.unescapeHtml(getPageTitleResolver().resolveHomePageTitle(cmsPage.getTitle())));
 	}
 
 	/**
@@ -1839,5 +1842,12 @@ public class HomePageController extends AbstractPageController
 			STWJObject.put("visiterIP", getVisitorIp(request));
 		}
 		return STWJObject;
+	}
+	//PRDI-422
+	@Override
+	public void setUpMetaData(final Model model, final String metaKeywords, final String metaDescription)
+	{
+		model.addAttribute(ModelAttributetConstants.KEYWORDS, metaKeywords);
+		model.addAttribute(ModelAttributetConstants.DESCRIPTION, metaDescription);
 	}
 }

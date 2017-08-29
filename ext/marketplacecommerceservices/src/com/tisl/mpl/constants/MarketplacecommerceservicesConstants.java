@@ -244,7 +244,7 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String RETURNURL = "payment.juspay.returnUrl".intern();
 	public static final String ON = "on".intern();
 	public static final String WAREHOUSE = "mpl_warehouse";
-	
+
 	//Luxury Return URL
 	public static final String RETURNURLLUX = "payment.juspay.returnUrl.lux".intern();
 
@@ -278,7 +278,8 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String MOBILEBLACKLIST = "select {b:pk} from {blacklist As b} where {b.phoneNumber} =?phoneNumber"
 			.intern();
 	public static final String MOBILENO = "phoneNumber".intern();
-	public static final String PAYMENTMODETYPE = "select {b:pk} from {PaymentType As b} where {b.mode}=?mode and {b.basestore}=?baseStore".intern();
+	public static final String PAYMENTMODETYPE = "select {b:pk} from {PaymentType As b} where {b.mode}=?mode and {b.basestore}=?baseStore"
+			.intern();
 	public static final String MODE = "mode".intern();
 	public static final String SAVEDCARDQUERY = "Select {s:pk} from {SavedCard as s},{Customer as c} where {s.customer}={c.pk} and {c.customerid}=?customerId and {s.cardReferenceNumber}=?cardRef"
 			.intern();
@@ -585,7 +586,7 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 
 	public static final String SMS_MESSAGE_ORDER_RISK = "We're sorry! Your Tata CLiQ order no.{0} has been put on hold for some checks. You might get a call from Tata CLiQ Care.";
 	/* 8. Anniversary Changes */
-	public static final String SMS_MESSAGE_ORDER_RISK_CONFIRMED = "Hi, your order no. {0} is now confirmed. While well keep you posted, track your order at {1}. Hope you enjoyed shopping with us.";
+	public static final String SMS_MESSAGE_ORDER_RISK_CONFIRMED = "Hi, your order no. {0} is now confirmed. While we'll keep you posted, track your order at {1}. Hope you enjoyed shopping with us.";
 	/* 9.Anniversary Changes */
 	public static final String SMS_MESSAGE_ORDER_RISK_REJECTED = "Hi, there's been a problem and your order no.{0} has been rejected. Log on to your account {1} or call us on {3} for more details.";
 	// R2.3 Added ShipmentSecondaryStatus NEW SMS
@@ -1898,6 +1899,8 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 
 	public static final String L4CATEGORYQUERY = "SELECT distinct {cat.pk} FROM {Category AS cat},{CatalogVersion AS cv} WHERE  EXISTS ({{ SELECT * FROM {CategoryProductRelation} WHERE {source}={cat:pk} }} ) and {cat.code} like 'MSH%'"
 			.intern();
+
+	public static final String SITEMAP_FILE_LOCATION_BRAND = "mpl.sitemap.brandFileLocation".intern();
 	public static final String SITEMAP_FILE_LOCATION_CUSTOM = "mpl.sitemap.customFileLocation".intern();
 	public static final String SITEMAP_FILE_LOCATION_PRODUCT = "mpl.sitemap.productFileLocation".intern();
 	public static final String SITEMAP_CATEGORY_QUERY = "mpl.sitemap.categoryQuery".intern();
@@ -2126,7 +2129,7 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 
 	// PRDI - 151
 	public static final String TYPE_OF_RETURN_FOR_RSS = "return.typeofreturn";
-	
+
 	//Payment Type changes
 	public static final String BASESTORE = "baseStore".intern();
 
@@ -2172,5 +2175,9 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	// "bankNameforNetbanking";
 	//TPR-5667 | Query to Find categoryCode for product
 	public static final String CATEGORY_CODE_FOR_PRODUCT = "select {c.code} from {CategoryProductRelation as cpr JOIN Category as c ON {cpr.source}={c.pk}} where {cpr.target} in ({{select {p.pk} from { product as p JOIN Catalogversion as cv ON {p.catalogversion}={cv.pk}} where {cv.version} = ?catalogVersion AND {p.code} = ?code }}) AND ({c.code} LIKE ?mplCategoryPrefix OR {c.code} LIKE ?luxuryCategoryprefix)";
-}
 
+	//PRDI-423 Start
+	public static final String SITEMAP_BRANDFILTER_QUERY = "mpl.sitemap.brandFilterQuery".intern();
+	public static final String SITEMAP_BRANDFILTER_QUERY_DEFAULT = "select {mbf:pk} from {mplbrandfilter as mbf} where {mbf.l1}=?l1code and {mbf.l2}=?l2code";
+	//PRDI-423 End
+}

@@ -34,7 +34,7 @@
 			</c:otherwise>
 		   </c:choose>	
 		<title>
-			<c:out value="${titleSocialTags}"/>
+			<c:out value="${titleSocialTags}" escapeXml="false"/>
 			
    </title>
 	<%-- Meta Content --%>
@@ -74,7 +74,12 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	
 	<%-- Additional meta tags --%>
-	<htmlmeta:meta items="${metatags}"/>
+	<!-- commented for PRDI-422 -->
+	<%-- <htmlmeta:meta items="${metatags}"/> --%>
+	<!-- Added for PRDI-422 starts-->
+    <meta name="keywords" content="${keywords}">
+    <meta name="description" content="${description}">
+	<!-- PRDI-422 ends-->
 	
 	
 	<meta name="google-site-verification" content="aArvRu0izzcT9pd1HQ5lSaikeYQ-2Uy1NcCNLuIJkmU" />
@@ -96,8 +101,6 @@
 		<c:when test="${fn:contains(reqURI,'search')}">
 		</c:when>
 		<c:otherwise>
-			
-			
 			<c:choose>
 				<c:when test="${not empty canonicalUrl}">
 					<c:set var="canonical" value="${baseURL}${canonicalUrl}"></c:set>
@@ -116,10 +119,63 @@
 				</c:otherwise>
 			</c:choose> --%>
 			<%-- <link rel="canonical" href="${regex:regExMatchAndRemove(canonical,'[/]$') }" /> --%>
-			
-			<link rel="canonical" href="${canonical}" />
+			<c:choose>
+				<c:when test = "${fn:endsWith(canonical, '/page-1')}"><!-- TISSPTXI-2 Fix -->
+	   				<link rel="canonical" href="${fn:replace(canonical,'/page-1','')}" />
+				</c:when>
+				<c:otherwise>
+					<link rel="canonical" href="${canonical}" />
+				</c:otherwise>
+			</c:choose>
+			<c:choose>
+				<c:when test="${searchPageData ne null && searchPageData.pagination ne null && searchPageData.pagination.numberOfPages gt 0}">
+					<c:set var="totalNumberOfPages" value="${searchPageData.pagination.numberOfPages}"/>
+				</c:when>
+			</c:choose>
+			<!-- UF-265 start --> 
+			<c:if test="${totalNumberOfPages gt 1}">
+				<c:set var="currentPageNumber" value="${fn:substringAfter(canonical,'/page-')}"/>
+				<c:if test="${empty currentPageNumber}">
+					<c:set var="currentPageNumber" value="1"/>
+				</c:if>
+				<c:set var="currentPage" value="page-${currentPageNumber}"/>
+				<c:set var="nextPage" value="page-${currentPageNumber + 1}"/>
+				<c:set var="previousPage" value="page-${currentPageNumber - 1}"/>
+				<c:choose>
+					<c:when test="${currentPageNumber lt totalNumberOfPages}">
+						<c:choose>
+							<c:when test="${currentPageNumber eq 1}">
+								<c:choose>
+									<c:when test="${fn:contains(canonical, currentPage)}">
+										<link rel="next" href="${fn:replace(canonical,currentPage,nextPage)}" />
+									</c:when>
+									<c:otherwise>
+										<link rel="next" href="${canonical}/${nextPage}" />
+									</c:otherwise>
+								</c:choose>
+							</c:when>
+							<c:otherwise>
+								<c:choose>
+									<c:when test="${currentPageNumber eq 2}">
+										<link rel="prev" href="${fn:replace(canonical,'/page-2','')}" />
+										<link rel="next" href="${fn:replace(canonical,currentPage,nextPage)}" />
+									</c:when>
+									<c:otherwise>
+										<link rel="prev" href="${fn:replace(canonical,currentPage,previousPage)}" />
+										<link rel="next" href="${fn:replace(canonical,currentPage,nextPage)}" />
+									</c:otherwise>
+								</c:choose>
+							</c:otherwise>
+						</c:choose>
+					</c:when>
+					<c:otherwise>
+						<link rel="prev" href="${fn:replace(canonical,currentPage,previousPage)}" />
+					</c:otherwise>
+				</c:choose>
+			</c:if>
 		</c:otherwise>
 	</c:choose>
+	<!-- UF-265 ends -->
 	
 	<c:forEach items="${metatags}" var="metatagItem">
 		<c:if test="${metatagItem.name eq 'title'}">

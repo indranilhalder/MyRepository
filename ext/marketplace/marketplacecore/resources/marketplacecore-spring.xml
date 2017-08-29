@@ -1862,6 +1862,9 @@ http://www.springframework.org/schema/aop/spring-aop.xsd">
  	      parent="siteMapMediaJob">
  		<property name="mplCategoryDao" ref="mplCategoryDao"/>
  		<property name="mplCustomPageSiteMapGenerator" ref="mplCustomPageSiteMapGenerator"/>
+ 		<!-- PRDI-423 start -->
+ 		<property name="mplbrandPageSiteMapGenerator" ref="mplbrandPageSiteMapGenerator"/>
+ 		<!-- PRDI-423 end -->
  	</bean>	
 	<!-- TPR-1285 Dynamic Sitemap Stop -->
 	

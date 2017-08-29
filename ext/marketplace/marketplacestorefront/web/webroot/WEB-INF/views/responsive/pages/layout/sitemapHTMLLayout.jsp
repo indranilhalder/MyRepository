@@ -34,11 +34,13 @@
 					<c:set var="catNameChildlevel2" value="${fn:split(l2MegaMap.key.name, '||')}" />
 						<li>
 							<ul>
-								<h5 class="toggle"><c:url var="l2Url" value="/${catNameChildlevel2[1]}/c-${fn:toLowerCase(l2MegaMap.key.code)}"/><a href="${l2Url}">${catNameChildlevel2[0]}</a></h5>
+							<!-- PRDI-462 -->
+								<h5 class="toggle"><c:url var="l2Url" value="/${catNameChildlevel2[2]}/c-${fn:toLowerCase(l2MegaMap.key.code)}"/><a href="${l2Url}">${catNameChildlevel2[0]}</a></h5>
 								<c:forEach var="l3MegaMap" items="${l2MegaMap.value}">
 								<c:set var="catNameChildlevel3" value="${fn:split(l3MegaMap.name, '||')}" />
+								<!-- PRDI-462 -->
 								<c:url
-								value="/${catNameChildlevel3[1]}/c-${fn:toLowerCase(l3MegaMap.code)}"
+								value="/${catNameChildlevel3[2]}/c-${fn:toLowerCase(l3MegaMap.code)}"
 								var="l3Url" />
 								<li><a href="${l3Url}">${catNameChildlevel3[0]}</a></li>
 								</c:forEach>

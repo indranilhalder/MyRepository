@@ -625,6 +625,7 @@
 			<value code="NEW" />
 			<value code="PENDING_VBV" />
 			<value code="REFUND_DELIVERY_CHARGES" />
+			<value code="REFUND_EXPRESS_DELIVERY_CHARGES" />
 			<value code="REFUND_SCHEDULE_DELIVERY_CHARGES" />
 			<value code="MANUAL_REFUND" />
 			<value code="ED_MANUAL_REFUND" />
@@ -764,6 +765,7 @@
 		<enumtype code="JuspayRefundType" generate="true" autocreate="true">
 			<value code="CANCELLED" />
 			<value code="REFUND_DELIVERY_CHARGE" />
+			<value code="REFUND_EXPRESS_DELIVERY_CHARGE" />
 			<value code="REFUND_Schedule_DELIVERY_CHARGE" />
 			<value code="RETURN" />
 			<value code="CANCELLED_FOR_RISK" />
@@ -6084,6 +6086,18 @@
 							optional="true" initial="true" unique="true" />
 						<persistence type="property" />
 					</attribute>
+					<!-- Addded to store HD Delivery Charges START --> 
+					
+					<attribute qualifier="hdDeliveryCharge" autocreate="true"
+						type="java.lang.Double">
+						<defaultvalue>Double.valueOf(0.00D)</defaultvalue>
+						<description>Delivery charge after promotion</description>
+						<modifiers read="true" write="true" removable="true"
+							optional="true" initial="true" unique="true" />
+						<persistence type="property" />
+					</attribute>
+					
+					<!-- Addded to store HD Delivery Charges END --> 
 					<attribute qualifier="imeiDetail" autocreate="true" type="ImeiDetail">
 						<modifiers read="true" write="true" removable="true"
 							optional="true" initial="true" />
@@ -6092,6 +6106,18 @@
 					<attribute autocreate="true" qualifier="refundedDeliveryChargeAmt"
 						type="java.lang.Double">
 						<persistence type="property" qualifier="refundedDeliveryChargeAmt">
+							<columntype>
+								<value>java.math.BigDecimal</value>
+							</columntype>
+						</persistence>
+						<modifiers read="true" write="true" search="true"
+							optional="true" />
+						<defaultvalue>Double.valueOf(0.0d)</defaultvalue>
+					</attribute>
+					
+					<attribute autocreate="true" qualifier="refundedEdChargeAmt"
+						type="java.lang.Double">
+						<persistence type="property" qualifier="refundedEdChargeAmt">
 							<columntype>
 								<value>java.math.BigDecimal</value>
 							</columntype>
@@ -7284,6 +7310,13 @@
 
 					<!-- Added in R2.3 START -->
 					<attribute qualifier="delChargesJuspayRequestId" type="java.lang.String">
+						<description>JuspayRquestId for Refund Delivery/EDToHD Charges </description>
+						<modifiers read="true" write="true" removable="true"
+							optional="true" initial="true" unique="false" search="true" />
+						<persistence type="property" />
+					</attribute>
+					
+					<attribute qualifier="edChargesJuspayRequestId" type="java.lang.String">
 						<description>JuspayRquestId for Refund Delivery/EDToHD Charges </description>
 						<modifiers read="true" write="true" removable="true"
 							optional="true" initial="true" unique="false" search="true" />
@@ -11561,6 +11594,62 @@
 			</itemtype>
 		</typegroup>
 		<!-- End CAR-274 -->
+		<!-- PRDI-423 -->
+		<typegroup name="Mplbrandfilter">
+			<itemtype code="Mplbrandfilter" autocreate="true"
+				generate="false">
+				<deployment table="Mplbrandfilter" typecode="13099" />
+				<attributes>
+			 		<attribute autocreate="true" qualifier="L1"
+						type="java.lang.String" generate="false">
+						<persistence type="property" />
+						<modifiers read="true" write="true" search="true"
+							optional="true" />
+					</attribute>
+
+					<attribute autocreate="true" qualifier="L2"
+						type="java.lang.String" generate="true">
+						<persistence type="property" />
+						<modifiers read="true" write="true" search="true"
+							optional="true" />
+					</attribute>
+
+					<attribute autocreate="true" qualifier="L3" type="java.lang.String"
+						generate="true">
+						<persistence type="property" />
+						<modifiers read="true" write="true" search="true"
+							optional="true" />
+					</attribute>
+
+					<attribute autocreate="true" qualifier="brandCode"
+						type="java.lang.String" generate="true">
+						<persistence type="property" />
+						<modifiers read="true" write="true" search="true"
+							optional="true" />
+					</attribute>
+					<attribute autocreate="true" qualifier="url1"
+						type="java.lang.String" generate="true">
+						<persistence type="property" />
+						<modifiers read="true" write="true" search="true"
+							optional="true" />
+					</attribute>
+					<attribute autocreate="true" qualifier="url2"
+						type="java.lang.String" generate="true">
+						<persistence type="property" />
+						<modifiers read="true" write="true" search="true"
+							optional="true" />
+					</attribute>
+					<attribute autocreate="true" qualifier="url3"
+						type="java.lang.String" generate="true">
+						<persistence type="property" />
+						<modifiers read="true" write="true" search="true"
+							optional="true" />
+					</attribute>
+
+					</attributes>
+			</itemtype>
+
+		</typegroup>
 		<!-- START TPR-5733 -->
 			<typegroup name="MPL_FOOTER"> 
 			   <itemtype code="MplFooterLink" autocreate="true" generate="true">

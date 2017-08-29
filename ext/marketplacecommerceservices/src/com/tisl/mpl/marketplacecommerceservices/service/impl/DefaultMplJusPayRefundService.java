@@ -685,6 +685,7 @@ public class DefaultMplJusPayRefundService implements MplJusPayRefundService
 			paymentTransactionEntryModel.setTransactionStatusDetails(statusDetails);
 			paymentTransactionEntryModel.setPaymentMode(getValidPaymentModeType(orderModel));
 			paymentTransactionEntryModel.setType(paymentTransactionType);
+			modelService.save(paymentTransactionEntryModel);
 			final List<PaymentTransactionEntryModel> entries = new ArrayList<>();
 			entries.add(paymentTransactionEntryModel);
 			paymentTransactionModel.setEntries(entries);
@@ -908,6 +909,13 @@ public class DefaultMplJusPayRefundService implements MplJusPayRefundService
 			final OrderEntryModel orderEntry = modificationEntry.getOrderEntry();
 			if (orderEntry != null)
 			{
+				Double currDelCharges = Double.valueOf(0.0D);
+				if(orderEntry.getIsEDtoHD() != null && orderEntry.getIsEDtoHD().booleanValue() && null != orderEntry.getRefundedEdChargeAmt() && orderEntry.getRefundedEdChargeAmt().doubleValue() != 0D) {
+						currDelCharges = orderEntry.getHdDeliveryCharge() != null ?orderEntry
+								.getHdDeliveryCharge() : NumberUtils.DOUBLE_ZERO;
+				}else {
+					currDelCharges = orderEntry.getCurrDelCharge();
+				}
 				final double deliveryCost = orderEntry.getCurrDelCharge() != null ? orderEntry.getCurrDelCharge().doubleValue()
 						: NumberUtils.DOUBLE_ZERO.doubleValue();
 				// Added in R2.3 START
@@ -915,10 +923,18 @@ public class DefaultMplJusPayRefundService implements MplJusPayRefundService
 						.getScheduledDeliveryCharge().doubleValue() : NumberUtils.DOUBLE_ZERO.doubleValue();
 				// Added in R2.3 END
 
-				final double refundedAmount = orderEntry.getNetAmountAfterAllDisc().doubleValue() + deliveryCost
+				final double refundedAmount = orderEntry.getNetAmountAfterAllDisc().doubleValue() + currDelCharges.doubleValue()
 						+ scheduleDeliveryCost;
 
 				orderEntry.setRefundedDeliveryChargeAmt(Double.valueOf(deliveryCost));
+				if(null != orderEntry.getIsEDtoHD() && orderEntry.getIsEDtoHD().booleanValue() && null != orderEntry.getRefundedEdChargeAmt() && orderEntry.getRefundedEdChargeAmt().doubleValue() == 0D){
+					double hdDeliveryCharges=0.0D;
+					if(null !=orderEntry.getHdDeliveryCharge()) {
+						hdDeliveryCharges = orderEntry.getHdDeliveryCharge().doubleValue();
+					}
+					orderEntry.setRefundedEdChargeAmt(Double.valueOf(deliveryCost-hdDeliveryCharges));
+				}
+				orderEntry.setRefundedEdChargeAmt(orderEntry.getHdDeliveryCharge());
 				orderEntry.setCurrDelCharge(NumberUtils.DOUBLE_ZERO);
 				orderEntry.setRefundedScheduleDeliveryChargeAmt(Double.valueOf(scheduleDeliveryCost));
 				orderEntry.setScheduledDeliveryCharge(NumberUtils.DOUBLE_ZERO);
@@ -971,8 +987,15 @@ public class DefaultMplJusPayRefundService implements MplJusPayRefundService
 			final OrderEntryModel orderEntry = modificationEntry.getOrderEntry();
 			if (orderEntry != null)
 			{
+				Double currDelCharges = Double.valueOf(0.0D);
+				if(orderEntry.getIsEDtoHD() != null && orderEntry.getIsEDtoHD().booleanValue() && null != orderEntry.getRefundedEdChargeAmt() && orderEntry.getRefundedEdChargeAmt().doubleValue() != 0D) {
+						currDelCharges = orderEntry.getHdDeliveryCharge() != null ?orderEntry
+								.getHdDeliveryCharge() : NumberUtils.DOUBLE_ZERO;
+				}else {
+					currDelCharges = orderEntry.getCurrDelCharge();
+				}
 				final double refundedAmount = orderEntry.getNetAmountAfterAllDisc().doubleValue()
-						+ orderEntry.getCurrDelCharge().doubleValue() + orderEntry.getScheduledDeliveryCharge().doubleValue();
+						+ currDelCharges.doubleValue() + orderEntry.getScheduledDeliveryCharge().doubleValue();
 
 
 				final double deliveryCost = orderEntry.getCurrDelCharge() != null ? orderEntry.getCurrDelCharge().doubleValue()
@@ -982,6 +1005,13 @@ public class DefaultMplJusPayRefundService implements MplJusPayRefundService
 
 				orderEntry.setRefundedDeliveryChargeAmt(Double.valueOf(deliveryCost));
 				orderEntry.setCurrDelCharge(NumberUtils.DOUBLE_ZERO);
+				if(null != orderEntry.getIsEDtoHD() && orderEntry.getIsEDtoHD().booleanValue() && null != orderEntry.getRefundedEdChargeAmt() && orderEntry.getRefundedEdChargeAmt().doubleValue() == 0D){
+					double hdDeliveryCharges=0.0D;
+					if(null !=orderEntry.getHdDeliveryCharge()) {
+						hdDeliveryCharges = orderEntry.getHdDeliveryCharge().doubleValue();
+					}
+					orderEntry.setRefundedEdChargeAmt(Double.valueOf(deliveryCost-hdDeliveryCharges));
+				}
 				// Added in R2.3 START
 				orderEntry.setRefundedScheduleDeliveryChargeAmt(Double.valueOf(scheduleDeliveryCost));
 				orderEntry.setScheduledDeliveryCharge(NumberUtils.DOUBLE_ZERO);

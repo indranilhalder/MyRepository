@@ -379,6 +379,9 @@ $(document).ready(function() {
         	if($('input[name=customSku]').length){
         		sortCustomSku($(this),false);
         		}else{
+        			if(lazyPagePush){
+        				lazyPushInitalPage();
+        			}
         		 sort($(this),false);
         	 	}
 
