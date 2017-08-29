@@ -60,10 +60,11 @@ public class LuxuryCMSController extends BaseController
 	{
 		try
 		{
+
 			 ContentPageModel contentPage = new ContentPageModel();
 			LuxuryComponentsListWsDTO luxuryComponentsListWsDTO = new LuxuryComponentsListWsDTO();
-			contentPage =  mplCMSPageService.getPageByLabelOrId(pageLabel);
-			if(null != contentPage){
+			if(brandCode.equalsIgnoreCase(DEFAULT)){
+				contentPage =  mplCMSPageService.getPageByLabelOrId(pageLabel);
 				luxuryComponentsListWsDTO = luxCmsFacade.getLuxuryPage(contentPage);
 			}else{
 				final CategoryModel category = categoryService.getCategoryForCode(brandCode);
