@@ -1,0 +1,6 @@
+# ImpEx for Importing Product taxex into Electronics Store
+
+# Insert Product taxes for US
+INSERT_UPDATE ProductTaxCode;productCode[unique=true];taxCode;taxArea[unique=true]
+
+

@@ -4,6 +4,7 @@
 package com.tisl.mpl.service;
 
 
+import de.hybris.platform.basecommerce.model.site.BaseSiteModel;
 import de.hybris.platform.commercefacades.product.ProductFacade;
 import de.hybris.platform.commercefacades.product.ProductOption;
 import de.hybris.platform.commercefacades.product.data.ProductData;
@@ -14,6 +15,7 @@ import de.hybris.platform.core.model.product.ProductModel;
 import de.hybris.platform.core.model.user.CustomerModel;
 import de.hybris.platform.product.ProductService;
 import de.hybris.platform.servicelayer.config.ConfigurationService;
+import de.hybris.platform.site.BaseSiteService;
 import de.hybris.platform.store.BaseStoreModel;
 
 import java.net.InetSocketAddress;
@@ -62,6 +64,9 @@ public class MplGigyaReviewCommentServiceImpl implements MplGigyaReviewCommentSe
 	public static final String PROXY_SET_STATEMNT = "******************** PROXY SET ";
 	public static final String PROXY_HOST_STATEMNT = "******************** PROXY HOST ";
 	public static final String PROXY_PORT_STATEMNT = "******************** PROXY PORT ";
+
+	@Autowired
+	private BaseSiteService baseSiteService;
 
 	/**
 	 * @return the productFacade
@@ -126,8 +131,18 @@ public class MplGigyaReviewCommentServiceImpl implements MplGigyaReviewCommentSe
 		final String proxySet = configService.getConfiguration()
 				.getString(MarketplacecclientservicesConstants.RATING_PROXY_ENABLED);
 
-		final String secretKey = configService.getConfiguration().getString(MarketplacecclientservicesConstants.RATING_SECRETKEY);
-		final String apiKey = configService.getConfiguration().getString(MarketplacecclientservicesConstants.RATING_APIKEY);
+		String secretKey = configService.getConfiguration().getString(MarketplacecclientservicesConstants.RATING_SECRETKEY);
+		String apiKey = configService.getConfiguration().getString(MarketplacecclientservicesConstants.RATING_APIKEY);
+
+		final BaseSiteModel currentBaseSite = baseSiteService.getCurrentBaseSite();
+		final String site = currentBaseSite.getUid();
+
+		if (MarketplacecclientservicesConstants.LUXURYPREFIX.equals(site))
+		{
+			secretKey = configService.getConfiguration().getString(MarketplacecclientservicesConstants.LUXURY_RATING_SECRETKEY);
+			apiKey = configService.getConfiguration().getString(MarketplacecclientservicesConstants.LUXURY_RATING_APIKEY);
+
+		}
 
 		final String method = "comments.getUserComments";
 		final GSRequest gsRequest = new GSRequest(apiKey, secretKey, method);
@@ -175,9 +190,17 @@ public class MplGigyaReviewCommentServiceImpl implements MplGigyaReviewCommentSe
 		final String proxySet = configService.getConfiguration()
 				.getString(MarketplacecclientservicesConstants.RATING_PROXY_ENABLED);
 
-		final String secretKey = configService.getConfiguration().getString(MarketplacecclientservicesConstants.RATING_SECRETKEY);
-		final String apiKey = configService.getConfiguration().getString(MarketplacecclientservicesConstants.RATING_APIKEY);
+		String secretKey = configService.getConfiguration().getString(MarketplacecclientservicesConstants.RATING_SECRETKEY);
+		String apiKey = configService.getConfiguration().getString(MarketplacecclientservicesConstants.RATING_APIKEY);
+		final BaseSiteModel currentBaseSite = baseSiteService.getCurrentBaseSite();
+		final String site = currentBaseSite.getUid();
 
+		if (MarketplacecclientservicesConstants.LUXURYPREFIX.equals(site))
+		{
+			secretKey = configService.getConfiguration().getString(MarketplacecclientservicesConstants.LUXURY_RATING_SECRETKEY);
+			apiKey = configService.getConfiguration().getString(MarketplacecclientservicesConstants.LUXURY_RATING_APIKEY);
+
+		}
 		final String method = "comments.getUserComments";
 		final GSRequest gsRequest = new GSRequest(apiKey, secretKey, method);
 		gsRequest.setParam(MarketplacecclientservicesConstants.SENDER_UID, customerUID);
@@ -341,9 +364,17 @@ public class MplGigyaReviewCommentServiceImpl implements MplGigyaReviewCommentSe
 	{
 		final String proxySet = configService.getConfiguration()
 				.getString(MarketplacecclientservicesConstants.RATING_PROXY_ENABLED);
-		final String secretKey = configService.getConfiguration().getString(MarketplacecclientservicesConstants.RATING_SECRETKEY);
-		final String apiKey = configService.getConfiguration().getString(MarketplacecclientservicesConstants.RATING_APIKEY);
+		String secretKey = configService.getConfiguration().getString(MarketplacecclientservicesConstants.RATING_SECRETKEY);
+		String apiKey = configService.getConfiguration().getString(MarketplacecclientservicesConstants.RATING_APIKEY);
+		final BaseSiteModel currentBaseSite = baseSiteService.getCurrentBaseSite();
+		final String site = currentBaseSite.getUid();
 
+		if (MarketplacecclientservicesConstants.LUXURYPREFIX.equals(site))
+		{
+			secretKey = configService.getConfiguration().getString(MarketplacecclientservicesConstants.LUXURY_RATING_SECRETKEY);
+			apiKey = configService.getConfiguration().getString(MarketplacecclientservicesConstants.LUXURY_RATING_APIKEY);
+
+		}
 		final String setCategoryInfoMethod = "comments.setCategoryInfo";
 		final GSRequest gsRequestAllowEdit = new GSRequest(apiKey, secretKey, setCategoryInfoMethod);
 		gsRequestAllowEdit.setParam(MarketplacecclientservicesConstants.CATEGORY_ID, categoryID);
@@ -421,9 +452,17 @@ public class MplGigyaReviewCommentServiceImpl implements MplGigyaReviewCommentSe
 	{
 		final String proxySet = configService.getConfiguration()
 				.getString(MarketplacecclientservicesConstants.RATING_PROXY_ENABLED);
-		final String secretKey = configService.getConfiguration().getString(MarketplacecclientservicesConstants.RATING_SECRETKEY);
-		final String apiKey = configService.getConfiguration().getString(MarketplacecclientservicesConstants.RATING_APIKEY);
+		String secretKey = configService.getConfiguration().getString(MarketplacecclientservicesConstants.RATING_SECRETKEY);
+		String apiKey = configService.getConfiguration().getString(MarketplacecclientservicesConstants.RATING_APIKEY);
+		final BaseSiteModel currentBaseSite = baseSiteService.getCurrentBaseSite();
+		final String site = currentBaseSite.getUid();
 
+		if (MarketplacecclientservicesConstants.LUXURYPREFIX.equals(site))
+		{
+			secretKey = configService.getConfiguration().getString(MarketplacecclientservicesConstants.LUXURY_RATING_SECRETKEY);
+			apiKey = configService.getConfiguration().getString(MarketplacecclientservicesConstants.LUXURY_RATING_APIKEY);
+
+		}
 		final String method = "comments.deleteComment";
 		final GSRequest gsRequest = new GSRequest(apiKey, secretKey, method);
 		gsRequest.setParam(MarketplacecclientservicesConstants.CATEGORY_ID, categoryID);

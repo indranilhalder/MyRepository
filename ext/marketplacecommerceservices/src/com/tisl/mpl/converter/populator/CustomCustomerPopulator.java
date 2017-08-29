@@ -99,6 +99,9 @@ public class CustomCustomerPopulator implements Populator<CustomerModel, Custome
 		{
 			target.setTitleCode(title.getCode());
 		}
+		if (source.getGender() != null) {
+		target.setGender(source.getGender().toString());
+		}
 
 		target.setName(source.getName());
 		target.setEmail(source.getContactEmail());

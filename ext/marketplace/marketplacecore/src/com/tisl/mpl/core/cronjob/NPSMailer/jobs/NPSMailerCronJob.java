@@ -56,7 +56,7 @@ public class NPSMailerCronJob extends AbstractJobPerformable<CronJobModel>
 
 	/*
 	 * TPR-1984 This cron job is triggered as configured to run at 12 PM and 4 PM
-	 *
+	 * 
 	 * )
 	 */
 	@Override
@@ -69,7 +69,8 @@ public class NPSMailerCronJob extends AbstractJobPerformable<CronJobModel>
 			 * Query for fetching all the orderModels along with the transaction ids from commerce end whose delivery date
 			 * is 24 hours ago
 			 */
-			Map<OrderModel, OrderEntryModel> parentOrderAbstractEntryModel = null;
+			//Change for TPR-TPR-6033
+			Map<OrderEntryModel, OrderModel> parentOrderAbstractEntryModel = null;
 			final MplConfigurationModel configModel = getFetchSalesOrderService().getCronDetails(oModel.getCode());
 			if (null != configModel && null != configModel.getMplConfigDate())
 			{
@@ -82,17 +83,18 @@ public class NPSMailerCronJob extends AbstractJobPerformable<CronJobModel>
 			if (MapUtils.isNotEmpty(parentOrderAbstractEntryModel))
 			{
 				LOG.info("parentOrderAbstractEntryModel is not empty");
-				for (final Map.Entry<OrderModel, OrderEntryModel> entry : parentOrderAbstractEntryModel.entrySet())
+				//Change for TPR-TPR-6033
+				for (final Map.Entry<OrderEntryModel, OrderModel> entry : parentOrderAbstractEntryModel.entrySet())
 				{
 					LOG.info("Cronjob perform" + parentOrderAbstractEntryModel.entrySet());
 
 					final NPSMailerModel npsEmailerModel = modelService.create(NPSMailerModel.class);
-					npsEmailerModel.setAbstractOrderEntry(entry.getValue());
-					npsEmailerModel.setTransactionId(entry.getValue().getTransactionID());
-					npsEmailerModel.setParentOrderNo(entry.getKey());
-					npsEmailerModel.setCustomer((CustomerModel) entry.getKey().getUser());
+					npsEmailerModel.setAbstractOrderEntry(entry.getKey());
+					npsEmailerModel.setTransactionId(entry.getKey().getTransactionID());
+					npsEmailerModel.setParentOrderNo(entry.getValue());
+					npsEmailerModel.setCustomer((CustomerModel) entry.getValue().getUser());
 
-					final String processState = notificationService.triggerNpsEmail(entry.getValue(), entry.getKey());
+					final String processState = notificationService.triggerNpsEmail(entry.getKey(), entry.getValue());
 					if (processState.equalsIgnoreCase("SUCCEEDED"))
 					{
 						LOG.info("Nps Email have been fired sucessfully>>>>>>>>>>>>>>>");

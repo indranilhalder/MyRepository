@@ -1,0 +1,95 @@
+#
+# ImpEx for Responsive Tata marketplace Site CMS Content 
+# 
+$contentCatalog=luxContentCatalog 
+$contentCV=catalogVersion(CatalogVersion.catalog(Catalog.id[default=$contentCatalog]),CatalogVersion.version[default=Staged])[default=$contentCatalog:Staged] 
+# 
+$productCatalog=luxProductCatalog 
+$productCatalogName=MarketPlace Product Catalog 
+$productCV=catalogVersion(catalog(id[default=$productCatalog]),version[default='Staged'])[unique=true,default=$productCatalog:Staged] 
+$picture=media(code, $contentCV) ;
+$siteResource=jar:com.tisl.lux.setup.InitialDataSystemSetup&/luxuryinitialdata&/marketplaceinitialdata/import/sampledata/contentCatalogs/$contentCatalog
+$jarResourceCms=jar:com.tisl.lux.setup.InitialDataSystemSetup&/luxuryinitialdata&/marketplaceinitialdata/import/sampledata/cockpits/cmscockpit
+
+
+INSERT_UPDATE MplBigPromoBannerComponent;$contentCV[unique=true];uid[unique=true];name;SequenceNumber;&componentRef
+;;TMPApparelHomepageBannerComponent;TMP Apparel Homepage Banner Component;2;TMPApparelHomepageBannerComponent
+
+INSERT_UPDATE CMSParagraphComponent;$contentCV[unique=true];uid[unique=true];name;&componentRef;;;;
+;;BeInspiredParagraphComponent;Be Inspired Paragraph Component;BeInspiredParagraphComponent;;;;
+;;ShopByCollectionLinkComponent;Shop By Collection Link Component Component;ShopByCollectionLinkComponent;;;;
+;;NewLaunchedComponent;New Launched  Component;NewLaunchedComponent;;;;
+;;DiscoverTheLatestComponent;Discover The Latest  Component;DiscoverTheLatestComponent;;;;
+
+INSERT_UPDATE SimpleBannerComponent;$contentCV[unique=true];uid[unique=true];name;&componentRef;urlLink;title;description;
+;;LatestLookBanner1;Latest Look Banner 1;LatestLookBanner1;/;Pretty in Petals;;
+;;LatestLookBanner2;Latest Look Banner 2;LatestLookBanner2;/;
+;;LatestLookBanner3;Latest Look Banner 3;LatestLookBanner3;/;;
+;;BackgroundImages1;Background Images1 Component;BackgroundImages1;;;""
+;;BackgroundImages2;Background Images2 Component;BackgroundImages2;;;""
+
+#Banner
+INSERT_UPDATE MplBigPromoBannerComponent;$contentCV[unique=true];uid[unique=true];name;&componentRef;
+;;TMPElectronicsCategoryBannerComponent;Electronics Category Page Banner Component;TMPElectronicsCategoryBannerComponent
+
+#Category Carousel
+INSERT_UPDATE MplCategoryCarouselComponent;$contentCV[unique=true];uid[unique=true];name;categories(code,$productCV);&componentRef;imageSize(code)
+;;TMPElectronicsMainHottestProductsCarouselComponent;Electronics Main Hottest Product Carousel Component;MSH1210,MSH1211,MSH1212;TMPElectronicsMainHottestProductsCarouselComponent;large
+;;TMPElectronicsSecondaryHottestProductsCarouselComponent;Electronics Secondary Hottest Product Carousel Component;MSH1216,MSH1215,MSH1220,MSH1221;TMPElectronicsSecondaryHottestProductsCarouselComponent;thumbnail
+
+INSERT_UPDATE CMSParagraphComponent;$contentCV[unique=true];uid[unique=true];name;&componentRef;;;;
+;;TechTrendsettersParagraphComponent;Tech Trendsetters Paragraph Component;TechTrendsettersParagraphComponent;;;;
+;;TrySomethingNewComponent;Try Something New Component;TrySomethingNewComponent;;;;
+
+
+INSERT_UPDATE VideoComponent;$contentCV[unique=true];uid[unique=true];name;&componentRef;videoUrl;videoTitle;videoDescription;
+;;ElectroncsCategoryVideoComponent;Electronics Category Video Component;ElectroncsCategoryVideoComponent;https://www.youtube.com/embed/FglqN1jd1tM;;"The latest, greatest, and most life changing electronics across all categories collected and curated for you!<a class='shop_link' href='/'>SHOP THE COLLECTION</a>";
+
+INSERT_UPDATE SimpleBannerComponent;$contentCV[unique=true];uid[unique=true];name;&componentRef;urlLink;title;description;
+;;TechTrendSettersBanner1;Tech Trendsetters Banner 1;TechTrendSettersBanner1;/;Marketplace Spotlight;;
+;;TechTrendSettersBanner2;Tech Trendsetters Banner 2;TechTrendSettersBanner2;/;
+;;TechTrendSettersBanner3;Tech Trendsetters Banner 3;TechTrendSettersBanner3;/;;
+
+INSERT_UPDATE ProductGridComponent;$contentCV[unique=true];uid[unique=true];name;actions(uid,$contentCV);&componentRef
+;;ProductGridComponent;Product Grid Component;ListAddToCartAction;ProductGridComponent
+
+INSERT_UPDATE ProductRefinementComponent;$contentCV[unique=true];uid[unique=true];name;&componentRef
+;;RefinementFacetComponent;Product Refinement Facet Component;RefinementFacetComponent
+
+##############Added By SAP :::: START################
+##########ContentSlot for Watch landing page #########################
+ INSERT_UPDATE ContentSlot;$contentCV[unique=true];uid[unique=true];active;name;cmsComponents(&componentRef)
+;;Section1-Watches;true;Category Banner Slot;TMPElectronicsCategoryBannerComponent
+;;Section2A-Watches;true;Category Carousel Slot;TMPElectronicsMainHottestProductsCarouselComponent,TMPElectronicsSecondaryHottestProductsCarouselComponent
+;;Section2B-Watches;true;Techtrendsetters Row 1 Slot;TechTrendsettersParagraphComponent,TechTrendSettersBanner1,ElectroncsCategoryVideoComponent
+;;Section2C-Watches;true;Background Image Slot;BackgroundImages1,BackgroundImages2
+;;Section3-Watches;true;Techtrendsetters Row 2 Slot;TechTrendSettersBanner2,TechTrendSettersBanner3
+;;Section4A-Watches;true;Product Refinement Component slot;RefinementFacetComponent;
+;;Section4B-Watches;true;Product Grid Component slot;ProductGridComponent;
+
+ # ContentSlotForPage 
+ INSERT_UPDATE ContentSlotForPage;$contentCV[unique=true];uid[unique=true];position[unique=true];page(uid,$contentCV)[unique=true][default='Watches'];contentSlot(uid,$contentCV)[unique=true];;;
+;;Section1-Watches;Section1;;Section1-Watches;;;
+;;Section2A-Watches;Section2A;;Section2A-Watches;;;
+;;Section2B-Watches;Section2B;;Section2B-Watches;;;
+;;Section2C-Watches;Section2C;;Section2C-Watches;;;
+;;Section3-Watches;Section3;;Section3-Watches;;;
+;;Section4A-Watches;Section4A;;Section4A-Watches;;;
+;;Section4B-Watches;Section4B;;Section4B-Watches;;;
+
+ ##########ContentSlot for Fashion Accessories Landing Page
+ INSERT_UPDATE ContentSlot;$contentCV[unique=true];uid[unique=true];active;name;cmsComponents(&componentRef)
+ ;;Section1-FashionAccessories;true;Category Banner Slot;TMPApparelHomepageBannerComponent
+ ;;Section2A-FashionAccessories;true;Category Carousel Slot;ShopByCollectionLinkComponent,NewLaunchedComponent,DiscoverTheLatestComponent
+ ;;Section2B-FashionAccessories;true;Beinspired Row 1 Slot;BeInspiredParagraphComponent,LatestLookBanner1
+ ;;Section2C-FashionAccessories;true;Background Image Slot;BackgroundImages1,BackgroundImages2
+ ;;Section3-FashionAccessories;true;Beinspired Row 2 Slot;LatestLookBanner2,LatestLookBanner3
+
+ # ContentSlotForPage 
+ INSERT_UPDATE ContentSlotForPage;$contentCV[unique=true];uid[unique=true];position[unique=true];page(uid,$contentCV)[unique=true][default='Fashion Accessories'];contentSlot(uid,$contentCV)[unique=true];;;
+ ;;Section1-FashionAccessories;Section1;;Section1-FashionAccessories;;;
+ ;;Section2A-FashionAccessories;Section2A;;Section2A-FashionAccessories;;;
+ ;;Section2B-FashionAccessories;Section2B;;Section2B-FashionAccessories;;;
+ ;;Section2C-FashionAccessories;Section2C;;Section2C-FashionAccessories;;;
+ ;;Section3-FashionAccessories;Section3;;Section3-FashionAccessories;;;
+ ##############Added By SAP :::: END################

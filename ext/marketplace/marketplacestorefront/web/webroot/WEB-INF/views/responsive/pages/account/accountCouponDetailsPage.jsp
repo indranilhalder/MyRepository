@@ -96,10 +96,10 @@
 					<p>
 						<spring:theme code="text.account.coupons.display.description" />
 					</p>
-					<p class="mobile">
+					 <p class="mobile">
 						<spring:theme
 							code="text.account.coupons.display.description.mobile" />
-					</p>
+					</p> 
 					<ul class="coupon-container">
 						<c:choose>
 							<c:when test="${empty searchPageData.results}">
@@ -114,7 +114,7 @@
 								<c:forEach items="${searchPageData.results}"
 									var="closedVoucherDisplay" varStatus="vlstatus">
 									<li class="coupon-box starred">
-										<h2>${closedVoucherDisplay.voucherDescription}</h2> <c:if
+										 <%-- <c:if
 											test="${not empty closedVoucherDisplay.reedemCouponCount}">
 											<div align="center">
 												<c:choose>
@@ -127,15 +127,21 @@
 													</c:otherwise>
 												</c:choose>
 											</div>
-										</c:if>
+										</c:if> --%>
 										<div class="left">
-											<p>Coupon Code</p>
-											${closedVoucherDisplay.voucherCode}
+											<!-- <p>Coupon Code</p> -->
+											<p class="copycode">${closedVoucherDisplay.voucherCode}</p>
+											<a class="copy-code" onclick="copyCode(this)">COPY COUPON CODE</a>
 										</div>
 										<div class="right">
-											<p>Expires on</p>
-											<p>${closedVoucherDisplay.voucherExpiryDate}</p>
+											<p>Coupon code expires on ${closedVoucherDisplay.voucherExpiryDate}</p>
 										</div>
+										<c:if test="${not empty closedVoucherDisplay.voucherDescription}">
+										<h2 class="coupon-desc">
+										<span>Details</span>
+										${closedVoucherDisplay.voucherDescription}</h2>
+										</c:if>
+										<a class="copy-code-mobile" onclick="copyCode(this)">COPY COUPON CODE</a>
 									</li>
 								</c:forEach> 
 							</c:otherwise>
@@ -143,7 +149,7 @@
 
 					</ul>
 					<!--  pagination for upper section  -->
-					<div class="bottom btn-placement">
+					<%-- <div class="bottom btn-placement">
 						<c:if test="${not empty searchPageData.results}">
 							<!-- TISSRT-630 ---- Set values in hidden filed for lazy loading pagination -->
 							<input type="hidden" id="pageIndexC" value="${pageIndex}" />
@@ -158,7 +164,7 @@
 							searchPageData="${searchPageData}"
 							searchUrl="/my-account/coupons?sort=${searchPageData.pagination.sort}"
 							numberPagesShown="${numberPagesShown}" />
-					</div>
+					</div> --%>
 				</div>
 				<!-- for showing  coupons history-start -->
 				<!-- Commented for Performance -->
@@ -320,6 +326,7 @@
 					</ul>
 				</div>
 			</div>
+			<p class="copycode_message">Coupon code copied</p>
 		</div>
 	</div>
 </template:page>

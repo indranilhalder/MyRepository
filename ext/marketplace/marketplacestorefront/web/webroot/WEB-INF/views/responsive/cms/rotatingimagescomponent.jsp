@@ -7,7 +7,13 @@
 
 <script>
 var homePageBannerTimeout='${timeout}';
+$(window).on("load", function(){
+	setTimeout(function(){
 
+
+	
+	}, 2000);
+});
 </script>
 
 

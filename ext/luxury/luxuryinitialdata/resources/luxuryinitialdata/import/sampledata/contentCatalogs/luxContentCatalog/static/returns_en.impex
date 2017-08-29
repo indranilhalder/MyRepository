@@ -1,0 +1,98 @@
+
+# ImpEx for Importing CMS Content
+# English Localisation
+
+# Macros / Replacement Parameter definitions
+$storePrefix=lux
+$contentCatalog=$storePrefixContentCatalog
+
+$contentCV=catalogVersion(CatalogVersion.catalog(Catalog.id[default=$contentCatalog]),CatalogVersion.version[default=Online])[default=$contentCatalog:Online]
+$picture=media(code, $contentCV);
+$siteResource=jar:com.tisl.lux.setup.InitialDataSystemSetup&/luxuryinitialdata/import/contentCatalogs/$contentCatalog
+
+# Language
+$lang=en
+
+# CMS Paragraph Components
+UPDATE CMSParagraphComponent;$contentCV[unique=true];uid[unique=true];content[lang=$lang]
+
+;;TitleForReturnsPageComponent;"Returns"
+
+
+
+
+;;ReturnsPageComponent;"  
+                                 <h3>Frequently Asked Questions:</h3>
+
+
+  <div id='collapsible-panels'> 
+
+
+
+<h5 class='questions'><a href='#'>1.How can I initiate a return?</a></h5>
+<div><p>● Go to ‘Order History’ and select the item(s) you want to return.
+● Click on the ‘Return’ option below the item.
+● Select your reason for returning the item and confirm your return request	You will have to share your order number (the one from your confirmation email or SMS) with us, along with the reason behind your return.
+Note that in some cases, we might not find the reason for returns acceptable because of seller policies, in such cases, we will call and advice you on next </p></div> 
+<h5 class='questions'><a href='#'>2.What is the time-period within which I can return a product?</a></h5>
+<div><p>For Tata CLiQ: Apparel and other non-electronic products can be returned within 30 days of receiving the product. For electronics and appliances, you can return the product within 7 days of delivery only. Returns will be accepted only if the product received is not as described, defective, damaged or not working when reviewed.
+In case of post-usage defects, the manufacturer warranty can be used; please visit their authorised service centre for assistance.
+For Tata CLiQ Luxury: Returns are accepted only within 10 days of receiving the product.
+*Note: Tata CLiQ reserves the right to amend the Returns Policy as and when necessary.</p></div> 
+<h5 class='questions'><a href='#'3.When are returns not possible?</a></h5>
+<div><p>Returns are not possible in cases where the seller has mandated a no return policy, or for hygiene reasons. Also, we cannot accept returns after 30 days from the date of delivery for non-electronic items and 7 days for electronic products on Tata CLiQ. On Tata CLiQ Luxury, we cannot accept returns after 10 days from the date of delivery.
+If you’ve shopped on Tata CLiQ, here are some products we can’t take back at all:
+• Innerwear, lingerie, socks, clothing freebies and swimsuits, for hygiene reasons.
+• Perfumes, personal and beauty care products, as mandated by the seller.
+• Products that have already been used or installed, as mandated by the seller
+• Products that have been tampered with or are missing serial numbers, as mandated by the seller.
+• Personalised/engraved items, as mandated by the seller.
+For complete details please refer to our Returns Policy
+If you’ve shopped on Tata CLiQ Luxury, click here to see to see our guarantee and warranty page.</p></div> 
+<h5 class='questions'><a href='#'>4.What are self-courier returns?</a></h5>
+<div><p>If the pick-up facility is not available, we won’t be able to accept your return pick-up request, and we’ll have to request you to courier the package yourself. If this happens, all you have to do is share your airway bill details/copy with us, and we’ll reimburse you as per the returns policy after product is received and quality check is completed by our seller partners.
+For self-courier returns, refer to the Return Policy for number of days within which the product has been returned.</p></div> 
+<h5 class='questions'><a href='#'>5.How should I pack my product for the return?</a></h5>
+<div><p>There are a few steps you’ll have to follow:
+• Enclose the product(s), in original condition and packaging, along with the original box, as part of the return package.
+Remember, we can’t refund or exchange products if their tags/labels or seals have been tampered with – so be extra careful. Also, don’t forget to retain a proof of the postage until we send you a confirmation of ‘self-courier’.
+To find out all you need to know about returns, refer to our Returns Policy here
+The product code is mentioned on the barcode label stuck on the product tag</p></div> 
+<h5 class='questions'><a href='#'>6.Can I get a replacement for the product I’ve ordered?</a></h5>
+<div><p>Unfortunately, we can’t replace products that you’ve already ordered. On the bright side, you can request a return and place a separate order for the new product(s) you want to order.</p></div> 
+<h5 class='questions'><a href='#'>7.Can I return a part of my order?</a></h5>
+<div><p>Yes you can, just select the product(s) you want to return from your order and initiate the return right away. You should know that we can’t accept returns of incomplete product combos (for example: Buy one get one free combos, free gifts, etc.).</p></div> 
+<h5 class='questions'><a href='#'>8.When I’m returning a product, do I have to return the free gift that I got with it as well?</a></h5>
+<div><p>Unfortunately, any freebies that you got with a product will also need to be returned along with the original product.</p></div> 
+<h5 class='questions'><a href='#'>9.The free gift I’ve received is damaged/not working. What should I do?</a></h5>
+<div><p>Get in touch with us and we’ll send you another gift right away.</p></div> 
+<h5 class='questions'><a href='#'>10.Is it possible to return software on Tata CLiQ?</a></h5>
+<div><p>Yes, it is. Check our returns policy for details.</p></div> 
+<h5 class='questions'><a href='#'>11.	What is the pick-up process for the return of a product?</a></h5>
+<div><p>Once you’ve made a return request with us, it generally takes about 24-48 hours to process your return request. If your request is accepted, a pick-up will be arranged in 7-8 working days on Tata CLiQ and 3-5 working days, depending on your location.</p></div> 
+<h5 class='questions'><a href='#'>12.	Can I cancel my return request and choose to keep the product?</a></h5>
+<div><p>Sorry, but you can’t ‘cancel’ a return request you’ve already made. Here’s what you can do – at the time of pick-up, make it clear that you’d like to keep the product.</p></div> 
+<h5 class='questions'><a href='#'>13.	Within how many days to I need to self-courier a product that I want to return?</a></h5>
+<div><p>In order to find out all that you need to know about returning a product from our Returns Policy.</p></div> 
+<h5 class='questions'><a href='#'>14.	Within how many days can I initiate a return?</a></h5>
+<div><p>Please refer to our Returns Policy.</p></div> 
+<h5 class='questions'><a href='#'>15.	When are refunds possible?</a></h5>
+<div><p>As long as you initiate the cancellation or return of products according to the terms of ‘Returns’ or ‘Cancellation’ in the ‘Terms and Conditions of Sale’, your refund is good to go.
+If an order or part order has been successfully cancelled, we will refund the full amount, along with any taxes or shipping charges. You might have to pay a certain charge in the case of COD orders that you have returned. We’ll have to deduct that amount from your total refund. Your refund will be on its way as soon as we’ve received your product and it has passed the necessary quality checks.</p></div> 
+<h5 class='questions'><a href='#'>16.	What is the mode of payment for refunds?</a></h5>
+<div><p>We will refund the amount to the account you used to place the original order. Once an order has been cancelled or a return has been received, we try and get the refund to you in around 2-4 business days.
+Was yours a COD order? We will refund your money via NEFT transfer to your bank account in 3-4 working days.</p></div> 
+<h5 class='questions'><a href='#'>17.	What do I need to do for a wire-transfer of the refunded amount?</a></h5>
+<div><p>You can provide your bank account number and IFSC code and it will help us process the refund to your account. Refunds cannot be processed to third-party accounts. This means that the name on your Tata CliQ Luxury account and your bank account must match.</p></div> 
+<h5 class='questions'><a href='#'>18.	Can I change the mode of payment for my refund?</a></h5>
+<div><p>Sorry to say this, but no. You can’t change the mode of payment for your refund. The amount will be transferred to the account that you used to make your order. If yours was a COD order, you will be refunded by cheque. If the transaction fails, we’ll get in touch with you for your alternate bank account details. Once we get those, we’ll make sure that the transfer is completed successfully..</p></div> 
+<h5 class='questions'><a href='#'>19.	How will I know that my refund has been initiated?</a></h5>
+<div><p>We will send you an SMS and email confirming the initiation of your refund. Your refund should reach you within 3-4 working days, depending on your bank of transaction.</p></div> 
+<h5 class='questions'><a href='#'>20.	I still haven’t got my refund. Why?</a></h5>
+<div><p>If we’ve sent you a confirmation on the approval of your refund, you will definitely get your refund. Sometimes, we face technical difficulties that can delay payment transfers. If the wait seems too long, contact us for support.</p></div> 
+
+
+</div>
+
+ 
+"

@@ -14,14 +14,19 @@ ACC.micrositeautocomplete = {
 				// get instance specific options form the html data attr
 				var option = this.element.data("options");
 				// set the options to the widget
-				this._setOptions({
-					minLength: option.minCharactersBeforeRequest,
-					displayProductImages: option.displayProductImages,
-					delay: option.waitTimeBeforeRequest,
-					autocompleteUrl: option.autocompleteUrl,
-					source: this.source
-					
-				});
+				//PRDI-564 fix for brand-page undefined fix
+				if(typeof(option) != "undefined"){
+					this._setOptions({
+						//console.log("inside bindMicrositeSearchAutocomplete");
+						minLength: option.minCharactersBeforeRequest,
+						displayProductImages: option.displayProductImages,
+						delay: option.waitTimeBeforeRequest,
+						autocompleteUrl: option.autocompleteUrl,
+						source: this.source
+						
+					});
+				}
+				
 				// call the _super()
 				$.ui.autocomplete.prototype._create.call(this);
 				

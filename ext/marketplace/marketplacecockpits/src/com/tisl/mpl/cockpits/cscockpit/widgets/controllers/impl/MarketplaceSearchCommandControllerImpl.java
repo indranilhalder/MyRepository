@@ -26,6 +26,7 @@ import com.tisl.mpl.model.SellerInformationModel;
 import com.tisl.mpl.service.PinCodeDeliveryModeService;
 
 import de.hybris.platform.catalog.impl.DefaultCatalogVersionService;
+import de.hybris.platform.catalog.model.CatalogModel;
 import de.hybris.platform.catalog.model.CatalogVersionModel;
 import de.hybris.platform.cockpit.model.meta.TypedObject;
 import de.hybris.platform.commercefacades.product.data.PinCodeResponseData;
@@ -40,6 +41,7 @@ import de.hybris.platform.servicelayer.i18n.CommonI18NService;
 import de.hybris.platform.servicelayer.i18n.FormatFactory;
 import de.hybris.platform.servicelayer.session.SessionExecutionBody;
 import de.hybris.platform.servicelayer.session.SessionService;
+import de.hybris.platform.site.BaseSiteService;
 import de.hybris.platform.util.PriceValue;
 
 // TODO: Auto-generated Javadoc
@@ -93,6 +95,9 @@ public class MarketplaceSearchCommandControllerImpl extends
 	
 	@Autowired
 	private FormatFactory formatFactory;
+
+	@Autowired
+	private BaseSiteService baseSiteService;
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -168,12 +173,18 @@ public class MarketplaceSearchCommandControllerImpl extends
 
 	@Override
 	public void setCurrentSite() {
-		catalogVersionService.getSessionCatalogVersions();
-		final CatalogVersionModel catalogVersion = catalogVersionService
-				.getCatalogVersion("mplProductCatalog", "Online");
-		catalogVersionService.setSessionCatalogVersions(Collections
-				.singleton(catalogVersion));
+		CatalogVersionModel catalogVersionModel = null;
+		if (MarketplaceCockpitsConstants.LUXURYPREFIX.equalsIgnoreCase(baseSiteService.getCurrentBaseSite().getUid()))
+		{
+			catalogVersionModel = catalogVersionService.getCatalogVersion("luxProductCatalog", "Online");
+		}
+		else
+		{
+			catalogVersionModel = catalogVersionService.getCatalogVersion("mplProductCatalog", "Online");
+		}
 
+		catalogVersionService.setSessionCatalogVersions(Collections
+				.singleton(catalogVersionModel));
 	}
 	
 	@Override

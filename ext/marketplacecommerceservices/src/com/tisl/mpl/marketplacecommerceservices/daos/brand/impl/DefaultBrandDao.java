@@ -101,9 +101,9 @@ public class DefaultBrandDao extends AbstractItemDao implements BrandDao
 		if (null != emailId && !emailId.isEmpty())
 		{
 			final String queryString = //
-			"SELECT " + P_STR + MplNewsLetterSubscriptionModel.PK + "}" //
-					+ "FROM {" + MplNewsLetterSubscriptionModel._TYPECODE + " AS p} "//
-					+ "WHERE " + P_STR + MplNewsLetterSubscriptionModel.EMAILID + "}=?emailId ";
+					"SELECT " + P_STR + MplNewsLetterSubscriptionModel.PK + "}" //
+							+ "FROM {" + MplNewsLetterSubscriptionModel._TYPECODE + " AS p} "//
+							+ "WHERE " + P_STR + MplNewsLetterSubscriptionModel.EMAILID + "}=?emailId ";
 
 			final FlexibleSearchQuery query = new FlexibleSearchQuery(queryString);
 			query.addQueryParameter("emailId", emailId);
@@ -124,11 +124,11 @@ public class DefaultBrandDao extends AbstractItemDao implements BrandDao
 		if (null != emailId && !emailId.isEmpty())
 		{
 			final String queryString = //
-			"SELECT " + P_STR + MplNewsLetterSubscriptionModel.PK + "}" //
-					+ "FROM {" + MplNewsLetterSubscriptionModel._TYPECODE + " AS p} "//
-					+ "WHERE " + P_STR + MplNewsLetterSubscriptionModel.EMAILID + "}=?emailId "//
-					+ "AND " + P_STR + MplNewsLetterSubscriptionModel.ISLUXURY + "}IS NULL OR"//
-					+ P_STR + MplNewsLetterSubscriptionModel.ISLUXURY + "} = ?isluxury";
+					"SELECT " + P_STR + MplNewsLetterSubscriptionModel.PK + "}" //
+							+ "FROM {" + MplNewsLetterSubscriptionModel._TYPECODE + " AS p} "//
+							+ "WHERE " + P_STR + MplNewsLetterSubscriptionModel.EMAILID + "}=?emailId "//
+							+ "AND " + P_STR + MplNewsLetterSubscriptionModel.ISLUXURY + "}IS NULL OR"//
+							+ P_STR + MplNewsLetterSubscriptionModel.ISLUXURY + "} = ?isluxury";
 
 			final FlexibleSearchQuery query = new FlexibleSearchQuery(queryString);
 			query.addQueryParameter("emailId", emailId);
@@ -149,11 +149,11 @@ public class DefaultBrandDao extends AbstractItemDao implements BrandDao
 		if (null != emailId && !emailId.isEmpty())
 		{
 			final String queryString = //
-			"SELECT " + P_STR + MplNewsLetterSubscriptionModel.PK + "}" //
-					+ "FROM {" + MplNewsLetterSubscriptionModel._TYPECODE + " AS p} "//
-					+ "WHERE " + P_STR + MplNewsLetterSubscriptionModel.EMAILID + "}=?emailId "//
-					+ "AND " + P_STR + MplNewsLetterSubscriptionModel.ISMARKETPLACE + "}IS NULL OR"//
-					+ P_STR + MplNewsLetterSubscriptionModel.ISMARKETPLACE + "} = ?ismarketplace";
+					"SELECT " + P_STR + MplNewsLetterSubscriptionModel.PK + "}" //
+							+ "FROM {" + MplNewsLetterSubscriptionModel._TYPECODE + " AS p} "//
+							+ "WHERE " + P_STR + MplNewsLetterSubscriptionModel.EMAILID + "}=?emailId "//
+							+ "AND " + P_STR + MplNewsLetterSubscriptionModel.ISMARKETPLACE + "}IS NULL OR"//
+							+ P_STR + MplNewsLetterSubscriptionModel.ISMARKETPLACE + "} = ?ismarketplace";
 
 			final FlexibleSearchQuery query = new FlexibleSearchQuery(queryString);
 			query.addQueryParameter("emailId", emailId);
@@ -165,6 +165,34 @@ public class DefaultBrandDao extends AbstractItemDao implements BrandDao
 			return flexibleSearchService.<MplNewsLetterSubscriptionModel> search(query).getResult();
 		}
 		//return true;
+		return null;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 *
+	 * @see com.tisl.mpl.marketplacecommerceservices.daos.brand.BrandDao#checkEmailIdForluxury(java.lang.String,
+	 * java.lang.String)
+	 */
+	@Override
+	public List<MplNewsLetterSubscriptionModel> checkEmailIdForluxury(final String emailId, final String isLuxury)
+	{
+
+		if (null != emailId && !emailId.isEmpty())
+		{
+			final String queryString = //
+					"SELECT " + P_STR + MplNewsLetterSubscriptionModel.PK + "}" //
+							+ "FROM {" + MplNewsLetterSubscriptionModel._TYPECODE + " AS p} "//
+							+ "WHERE " + P_STR + MplNewsLetterSubscriptionModel.EMAILID + "}=?emailId "//
+							+ "AND (" + P_STR + MplNewsLetterSubscriptionModel.ISLUXURY + "}IS NULL OR"//
+							+ P_STR + MplNewsLetterSubscriptionModel.ISLUXURY + "} = ?isluxury)";
+
+			final FlexibleSearchQuery query = new FlexibleSearchQuery(queryString);
+			query.addQueryParameter("emailId", emailId);
+			query.addQueryParameter("isluxury", isLuxury);
+
+			return flexibleSearchService.<MplNewsLetterSubscriptionModel> search(query).getResult();
+		}
 		return null;
 	}
 
@@ -187,5 +215,5 @@ public class DefaultBrandDao extends AbstractItemDao implements BrandDao
 
 	}
 
-
 }
+

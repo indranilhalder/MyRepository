@@ -19,6 +19,9 @@
 	 </c:otherwise>
 </c:choose>
 
+<%-- <link rel="stylesheet" type="text/css" media="all" href="${themeResourcePath}/css/uistyless-min.css"/> --%>
+
+
 <%--  AddOn Theme CSS files --%>
 <c:forEach items="${addOnThemeCssPaths}" var="addOnThemeCss">
 	<link rel="stylesheet" type="text/css" media="all" href="${addOnThemeCss}"/>

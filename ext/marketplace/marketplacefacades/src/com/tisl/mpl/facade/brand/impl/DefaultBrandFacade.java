@@ -33,7 +33,7 @@ public class DefaultBrandFacade implements BrandFacade
 	 *
 	 * @return Map<Character, List<CategoryModel>>
 	 *
-	 * **/
+	 **/
 	@Override
 	public Map<Character, List<CategoryModel>> getAllBrandsInAplhabeticalOrder(final String rootBrandCode)
 	{
@@ -53,7 +53,7 @@ public class DefaultBrandFacade implements BrandFacade
 	 *
 	 * @return boolean value
 	 *
-	 * **/
+	 **/
 	@Override
 	public boolean checkEmailId(final String emailId)
 	{
@@ -78,10 +78,19 @@ public class DefaultBrandFacade implements BrandFacade
 		return brandService.checkEmailIdForMarketplace(emailId);
 	}
 
+	@Override
+	public List<MplNewsLetterSubscriptionModel> checkEmailIdForluxury(final String emailId, final String isLuxury)
+	{
+
+		return brandService.checkEmailIdForluxury(emailId, isLuxury);
+
+
+	}
+
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.tisl.mpl.facade.brand.BrandFacade#getAllBrandsFromCmsCockpit(java.lang.String)
 	 */
 	@Override

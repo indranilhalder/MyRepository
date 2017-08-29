@@ -274,6 +274,9 @@ public class MarketplacecclientservicesConstants
 	public static final String NO = "NO".intern();
 
 	public static final String OMSTIMEOUT = "5000";
+	public static final String LUXURYPREFIX = "lux";
+	public static final String LUXURY_RATING_SECRETKEY = "luxury.gigya.secretkey".intern();
+	public static final String LUXURY_RATING_APIKEY = "luxury.gigya.apikey".intern();
 
 	//For sending pancard details to SP through PI and save data into database for new pancard entry
 	public static final String PENDING_FOR_VERIFICATION = "PENDING_FOR_VERIFICATION";

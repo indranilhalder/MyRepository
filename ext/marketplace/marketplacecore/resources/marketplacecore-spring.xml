@@ -323,6 +323,23 @@ http://www.springframework.org/schema/aop/spring-aop.xsd">
 		<property name="fieldNameProvider" ref="solrFieldNameProvider" />
 		<property name="mediaFormat" value="320Wx357H" />
 	</bean>
+	<bean id="luxuryNewSearchImageHovervalueProvider"
+		class="com.tisl.mpl.core.search.solrfacetsearch.provider.impl.NewCustomSearchImageValueProvider">
+		<property name="mediaService" ref="mediaService" />
+		<property name="mediaContainerService" ref="mediaContainerService" />
+		<property name="fieldNameProvider" ref="solrFieldNameProvider" />
+		<property name="mediaFormat" value="luxuryModel" />
+
+	</bean>
+	<bean id="luxurySearchImageHovervalueProvider"
+		class="com.tisl.mpl.core.search.solrfacetsearch.provider.impl.NewCustomSearchImageValueProvider">
+		<property name="mediaService" ref="mediaService" />
+		<property name="mediaContainerService" ref="mediaContainerService" />
+		<property name="fieldNameProvider" ref="solrFieldNameProvider" />
+		<property name="mediaFormat" value="luxurySecondary" />
+
+	</bean>
+	
 	
 	
 	<!-- Value Provider to display Serach Page Image - End -->
@@ -1990,5 +2007,12 @@ http://www.springframework.org/schema/aop/spring-aop.xsd">
     
 	</bean>
     
+<!--      <bean id="performanceMonitor" -->
+<!--               class="com.tisl.mpl.core.interceptor.PerformanceMonitoring" /> -->
+
+<!--     <aop:config> -->
+<!--         <aop:pointcut id="allServiceMethods" expression="execution(* com.tisl.mpl.core.search.solrfacetsearch.provider.impl.*.*(..))"/> -->
+<!--         <aop:advisor pointcut-ref="allServiceMethods" advice-ref="performanceMonitor" order="2"/> -->
+<!--     </aop:config> -->
 			
 </beans>
