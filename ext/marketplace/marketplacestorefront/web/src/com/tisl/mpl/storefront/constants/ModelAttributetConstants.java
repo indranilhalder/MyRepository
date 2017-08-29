@@ -27,6 +27,7 @@ public final class ModelAttributetConstants
 	public static final String QS = "?";
 	public static final String EQUALS = "=";
 	public static final String AMPARSAND = "&";
+	public static final String COLON = ":";
 	public static final String SUFFIX_TH = "th";
 	public static final String SUFFIX_ST = "st";
 	public static final String SUFFIX_ND = "nd";
