@@ -65,11 +65,11 @@ public class ExtDefaultCommerceUpdateCartEntryStrategy extends DefaultCommerceUp
 
 	/*
 	 * @DESC Update Quantity For Cart
-	 *
+	 * 
 	 * @param parameters
-	 *
+	 * 
 	 * @return CommerceCartModification
-	 *
+	 * 
 	 * @throws CommerceCartModificationException
 	 */
 
@@ -95,9 +95,11 @@ public class ExtDefaultCommerceUpdateCartEntryStrategy extends DefaultCommerceUp
 		}
 		Integer maxOrderQuantity = null;
 
-		if (entryToUpdate.getProduct() != null)
-		{
-			maxOrderQuantity = entryToUpdate.getProduct().getMaxOrderQuantity();
+		//EQA Comment
+		final ProductModel product = entryToUpdate.getProduct();
+		if (product != null)
+		{ //EQA Comment
+			maxOrderQuantity = product.getMaxOrderQuantity();
 		}
 		final long quantityToAdd = newQuantity - entryToUpdate.getQuantity().longValue();
 
@@ -115,17 +117,19 @@ public class ExtDefaultCommerceUpdateCartEntryStrategy extends DefaultCommerceUp
 		 * if (entryToUpdate.getDeliveryPointOfService() != null) { final long actualAllowedQuantityChange =
 		 * getAllowedCartAdjustmentForProduct(cartModel, entryToUpdate.getProduct(), quantityToAdd,
 		 * entryToUpdate.getDeliveryPointOfService());
-		 *
+		 * 
 		 * final CommerceCartModification modification = modifyEntry(cartModel, entryToUpdate,
 		 * actualAllowedQuantityChange, newQuantity, maxOrderQuantity); return modification; }
 		 */
 		//Find stock level From USSID, Sent USSID as a parameter
 		long actualAllowedQuantityChange = 0;
 		CommerceCartModification modification = null;
-		if (entryToUpdate.getProduct() != null)
+		//EQA Comment
+		if (product != null)
 		{
-			actualAllowedQuantityChange = getAllowedCartAdjustmentForProduct(cartModel, entryToUpdate.getProduct(), quantityToAdd,
-					null, entryToUpdate.getSelectedUSSID());
+			//EQA Comment
+			actualAllowedQuantityChange = getAllowedCartAdjustmentForProduct(cartModel, product, quantityToAdd, null,
+					entryToUpdate.getSelectedUSSID());
 			modification = modifyEntry(cartModel, entryToUpdate, actualAllowedQuantityChange, newQuantity, maxOrderQuantity);
 
 			if (modification.getQuantity() == 0 && isExchangeEntry)
@@ -145,17 +149,17 @@ public class ExtDefaultCommerceUpdateCartEntryStrategy extends DefaultCommerceUp
 
 	/*
 	 * @DESC Get allowed cart adjustment for Product
-	 *
+	 * 
 	 * @param cartModel
-	 *
+	 * 
 	 * @param productModel
-	 *
+	 * 
 	 * @param quantityToAdd
-	 *
+	 * 
 	 * @param pointOfServiceModel
-	 *
+	 * 
 	 * @param pointOussidfServiceModel
-	 *
+	 * 
 	 * @return long
 	 */
 	public long getAllowedCartAdjustmentForProduct(final CartModel cartModel, final ProductModel productModel,
@@ -184,11 +188,11 @@ public class ExtDefaultCommerceUpdateCartEntryStrategy extends DefaultCommerceUp
 
 	/*
 	 * @DESC Update For Cart-Update Quantity
-	 *
+	 * 
 	 * @param parameters
-	 *
+	 * 
 	 * @return CommerceCartModification
-	 *
+	 * 
 	 * @throws CommerceCartModificationException
 	 */
 
@@ -290,11 +294,11 @@ public class ExtDefaultCommerceUpdateCartEntryStrategy extends DefaultCommerceUp
 
 	/*
 	 * @DESC Update Point Of Service For Cart-Update Quantity
-	 *
+	 * 
 	 * @param parameters
-	 *
+	 * 
 	 * @return CommerceCartModification
-	 *
+	 * 
 	 * @throws CommerceCartModificationException
 	 */
 	@Override

@@ -167,7 +167,13 @@ public class ExchangeGuideServiceImpl implements ExchangeGuideService
 				exID = getTemporaryExchangeId().generate().toString();
 				exTrax.setExchangeId(exID);
 				modelService.save(exTrax);
+				//Added for EQA Comments
+				modelService.refresh(exTrax);
 			}
+		}
+		catch (final ModelSavingException e)
+		{
+			LOG.error(ERROR_OCCURED + "While Saving" + "getExchangeID");
 		}
 		catch (final EtailNonBusinessExceptions e)
 		{
@@ -233,7 +239,13 @@ public class ExchangeGuideServiceImpl implements ExchangeGuideService
 				exListToSave.add(ex);
 			}
 			modelService.saveAll(exListToSave);
+			//Added for EQA Comments
+			modelService.refresh(exListToSave);
 			isSaved = true;
+		}
+		catch (final ModelSavingException e)
+		{
+			LOG.error(ERROR_OCCURED + "While Saving" + "changePincode");
 		}
 		catch (final EtailNonBusinessExceptions e)
 		{
@@ -276,9 +288,16 @@ public class ExchangeGuideServiceImpl implements ExchangeGuideService
 				{
 					cart.setExchangeAppliedCart(Boolean.FALSE);
 					modelService.save(cart);
+					//Added for EQA Comments
+					modelService.refresh(cart);
 				}
 			}
 		}
+		catch (final ModelSavingException e)
+		{
+			LOG.error(ERROR_OCCURED + "While Saving" + "removeFromTransactionTable");
+		}
+
 		catch (final EtailNonBusinessExceptions e)
 		{
 			LOG.error(ERROR_OCCURED + "removeFromTransactionTable");
@@ -340,30 +359,73 @@ public class ExchangeGuideServiceImpl implements ExchangeGuideService
 					if (entry != null && StringUtils.isNotEmpty(entry.getExchangeId()))
 					{
 						final List<ExchangeTransactionModel> exTraxList = getTeporaryExchangeModelforId(entry.getExchangeId());
-						for (final ExchangeTransactionModel exTrax : exTraxList)
+						if (CollectionUtils.isNotEmpty(exTraxList))
 						{
-							final ExchangeModel exMod = modelService.create(ExchangeModel.class);
-							exReqId = getEXCHANGEREQUESTID().generate().toString();
-							exMod.setBrandName(exTrax.getBrandName());
-							exMod.setExchangeRequestId(exReqId);
-							exMod.setL4categoryCode(exTrax.getExchangeValue().getL4categoryCode());
-							exMod.setL4categoryName(exTrax.getExchangeValue().getL4categoryName());
-							exMod.setThirdLevelCategory(exTrax.getExchangeValue().getThirdLevelCategory());
-							exMod.setCouponValue(exTrax.getExchangeValue().getCouponValue());
-							exMod.setIsWorking(exTrax.getExchangeValue().isIsWorking());
-							exMod.setL4categoryCode(exTrax.getExchangeValue().getL4categoryCode());
+							for (final ExchangeTransactionModel exTrax : exTraxList)
+							{
+								final ExchangeModel exMod = modelService.create(ExchangeModel.class);
+								exReqId = getEXCHANGEREQUESTID().generate().toString();
+								if (exTrax.getBrandName() != null)
+								{
+									exMod.setBrandName(exTrax.getBrandName());
+								}
+								exMod.setExchangeRequestId(exReqId);
+								if (exTrax.getExchangeValue() != null && exTrax.getExchangeValue().getL4categoryCode() != null)
+								{
+									exMod.setL4categoryCode(exTrax.getExchangeValue().getL4categoryCode());
 
-							exMod.setOrderID(child.getParentReference().getCode());
-							exMod.setPincode(exTrax.getPincode());
-							exMod.setProductId(exTrax.getProductId());
-							exMod.setSellerOrderID(child.getCode());
-							exMod.setTransactiondId(entry.getTransactionID());
-							exMod.setUssid(exTrax.getUssid());
-							exModList.add(exMod);
-							exTraxRemovList.add(exTrax);
-							entry.setExchangeId(exReqId);
-							//	changeInChild = true; SONAR FIX JEWELLERY
-							childOrderEntryList.add(entry);
+								}
+								if (exTrax.getExchangeValue() != null && exTrax.getExchangeValue().getL4categoryName() != null)
+								{
+									exMod.setL4categoryName(exTrax.getExchangeValue().getL4categoryName());
+								}
+								if (exTrax.getExchangeValue() != null && exTrax.getExchangeValue().getThirdLevelCategory() != null)
+								{
+									exMod.setThirdLevelCategory(exTrax.getExchangeValue().getThirdLevelCategory());
+								}
+								if (exTrax.getExchangeValue() != null && exTrax.getExchangeValue().getCouponValue() != null)
+								{
+									exMod.setCouponValue(exTrax.getExchangeValue().getCouponValue());
+								}
+								if (exTrax.getExchangeValue() != null)
+								{
+									exMod.setIsWorking(exTrax.getExchangeValue().isIsWorking());
+								}
+								if (exTrax.getExchangeValue() != null && exTrax.getExchangeValue().getL4categoryCode() != null)
+								{
+									exMod.setL4categoryCode(exTrax.getExchangeValue().getL4categoryCode());
+								}
+								if (child.getParentReference() != null && child.getParentReference().getCode() != null)
+								{
+									exMod.setOrderID(child.getParentReference().getCode());
+								}
+								if (exTrax.getPincode() != null)
+								{
+									exMod.setPincode(exTrax.getPincode());
+								}
+								if (exTrax.getProductId() != null)
+								{
+									exMod.setProductId(exTrax.getProductId());
+								}
+								if (child.getCode() != null)
+								{
+									exMod.setSellerOrderID(child.getCode());
+								}
+								if (entry.getTransactionID() != null)
+								{
+									exMod.setTransactiondId(entry.getTransactionID());
+								}
+								if (exTrax.getUssid() != null)
+								{
+									exMod.setUssid(exTrax.getUssid());
+								}
+
+								exModList.add(exMod);
+								exTraxRemovList.add(exTrax);
+								entry.setExchangeId(exReqId);
+								//	changeInChild = true; SONAR FIX JEWELLERY
+								childOrderEntryList.add(entry);
+							}
 						}
 					}
 				}
@@ -381,15 +443,28 @@ public class ExchangeGuideServiceImpl implements ExchangeGuideService
 			}
 
 			modelService.saveAll(exModList);
+			//Added for EQA Comments
+			modelService.refresh(exModList);
 			modelService.saveAll(childOrderEntryList);
+			//Added for EQA Comments
+			modelService.refresh(childOrderEntryList);
 			modelService.saveAll(childModfList);
+			//Added for EQA Comments
+			modelService.refresh(childModfList);
 			modelService.saveAll(parentEntryList);
+			//Added for EQA Comments
+			modelService.refresh(parentEntryList);
 			modelService.removeAll(exTraxRemovList);
+			//Added for EQA Comments
+			modelService.refresh(exTraxRemovList);
 		}
-
+		catch (final ModelSavingException e)
+		{
+			LOG.error(ERROR_OCCURED + "While Saving" + "getExchangeRequestID2");
+		}
 		catch (final EtailNonBusinessExceptions e)
 		{
-			LOG.error(ERROR_OCCURED + "getExchangeRequestID");
+			LOG.error(ERROR_OCCURED + "getExchangeRequestID2");
 
 		}
 		return exReqId;
@@ -404,39 +479,87 @@ public class ExchangeGuideServiceImpl implements ExchangeGuideService
 		String exReqId = MarketplacecommerceservicesConstants.EMPTYSPACE;
 		try
 		{
-			for (final ExchangeTransactionModel exTrax : exTraxList)
+			if (CollectionUtils.isNotEmpty(exTraxList))
 			{
-				final ExchangeModel exMod = new ExchangeModel();
-				exReqId = getEXCHANGEREQUESTID().generate().toString();
-				exMod.setBrandName(exTrax.getBrandName());
-				exMod.setExchangeRequestId(exReqId);
-				exMod.setL4categoryCode(exTrax.getExchangeValue().getL4categoryCode());
-				exMod.setL4categoryName(exTrax.getExchangeValue().getL4categoryName());
-				exMod.setThirdLevelCategory(exTrax.getExchangeValue().getThirdLevelCategory());
-				exMod.setCouponValue(exTrax.getExchangeValue().getCouponValue());
-				exMod.setIsWorking(exTrax.getExchangeValue().isIsWorking());
-				exMod.setL4categoryCode(exTrax.getExchangeValue().getL4categoryCode());
-				exMod.setOrderID(MarketplacecommerceservicesConstants.NOT_APPLICABLE);
-				exMod.setPincode(exTrax.getPincode());
-				exMod.setProductId(exTrax.getProductId());
-				exMod.setSellerOrderID(MarketplacecommerceservicesConstants.NOT_APPLICABLE);
-				exMod.setTransactiondId(MarketplacecommerceservicesConstants.NOT_APPLICABLE);
-				exMod.setUssid(exTrax.getUssid());
-				if (StringUtils.isNotEmpty(reason))
+				for (final ExchangeTransactionModel exTrax : exTraxList)
 				{
-					exMod.setExchangeRemovalReason(reason);
-				}
-				else
-				{
-					exMod.setExchangeRemovalReason(MarketplacecommerceservicesConstants.EXCHANGE_REMOVAL_REASON);
-				}
-				exModList.add(exMod);
-				exTraxRemovList.add(exTrax);
+					final ExchangeModel exMod = new ExchangeModel();
+					exReqId = getEXCHANGEREQUESTID().generate().toString();
+					if (exTrax.getBrandName() != null)
+					{
+						exMod.setBrandName(exTrax.getBrandName());
+					}
+					exMod.setExchangeRequestId(exReqId);
+					if (exTrax.getExchangeValue() != null && exTrax.getExchangeValue().getL4categoryCode() != null)
+					{
+						exMod.setL4categoryCode(exTrax.getExchangeValue().getL4categoryCode());
 
+					}
+					if (exTrax.getExchangeValue() != null && exTrax.getExchangeValue().getL4categoryName() != null)
+					{
+						exMod.setL4categoryName(exTrax.getExchangeValue().getL4categoryName());
+					}
+					if (exTrax.getExchangeValue() != null && exTrax.getExchangeValue().getThirdLevelCategory() != null)
+					{
+						exMod.setThirdLevelCategory(exTrax.getExchangeValue().getThirdLevelCategory());
+					}
+					if (exTrax.getExchangeValue() != null && exTrax.getExchangeValue().getCouponValue() != null)
+					{
+						exMod.setCouponValue(exTrax.getExchangeValue().getCouponValue());
+					}
+
+					if (exTrax.getExchangeValue() != null)
+					{
+						exMod.setIsWorking(exTrax.getExchangeValue().isIsWorking());
+					}
+					if (exTrax.getExchangeValue() != null && exTrax.getExchangeValue().getL4categoryCode() != null)
+					{
+						exMod.setL4categoryCode(exTrax.getExchangeValue().getL4categoryCode());
+					}
+					exMod.setOrderID(MarketplacecommerceservicesConstants.NOT_APPLICABLE);
+					if (exTrax.getPincode() != null)
+					{
+						exMod.setPincode(exTrax.getPincode());
+					}
+					if (exTrax.getProductId() != null)
+					{
+						exMod.setProductId(exTrax.getProductId());
+					}
+					exMod.setSellerOrderID(MarketplacecommerceservicesConstants.NOT_APPLICABLE);
+					exMod.setTransactiondId(MarketplacecommerceservicesConstants.NOT_APPLICABLE);
+					if (exTrax.getUssid() != null)
+					{
+						exMod.setUssid(exTrax.getUssid());
+					}
+					if (StringUtils.isNotEmpty(reason))
+					{
+						exMod.setExchangeRemovalReason(reason);
+					}
+					else
+					{
+						exMod.setExchangeRemovalReason(MarketplacecommerceservicesConstants.EXCHANGE_REMOVAL_REASON);
+					}
+					exModList.add(exMod);
+					//Added for EQA Comments
+					modelService.refresh(exMod);
+					exTraxRemovList.add(exTrax);
+					//Added for EQA Comments
+					modelService.refresh(exTrax);
+
+				}
 			}
 
 			modelService.saveAll(exModList);
+			//Added for EQA Comments
+			modelService.refresh(exModList);
+
 			modelService.removeAll(exTraxRemovList);
+			//Added for EQA Comments
+			modelService.refresh(exTraxRemovList);
+		}
+		catch (final ModelSavingException e)
+		{
+			LOG.error(ERROR_OCCURED + "While Saving" + "getExchangeRequestID");
 		}
 		catch (final EtailNonBusinessExceptions e)
 		{
@@ -470,9 +593,14 @@ public class ExchangeGuideServiceImpl implements ExchangeGuideService
 
 			}
 			modelService.saveAll(entryUpdate);
-
+			//Added for EQA Comments
+			modelService.refresh(entryUpdate);
 
 			removeFromTransactionTable(removeExchangeIdList, null, cartModel);
+		}
+		catch (final ModelSavingException e)
+		{
+			LOG.error(ERROR_OCCURED + "While Saving" + "removeExchangefromCart");
 		}
 		catch (final EtailNonBusinessExceptions e)
 		{
@@ -512,10 +640,13 @@ public class ExchangeGuideServiceImpl implements ExchangeGuideService
 			}
 
 			modelService.saveAll(listToSave);
+			//Added for EQA Comments
+			modelService.refresh(listToSave);
+
 		}
 		catch (final ModelSavingException e)
 		{
-			LOG.error(ERROR_OCCURED + "changeGuidforCartMerge");
+			LOG.error(ERROR_OCCURED + "While Saving" + "changeGuidforCartMerge");
 		}
 		catch (final EtailNonBusinessExceptions e)
 		{
