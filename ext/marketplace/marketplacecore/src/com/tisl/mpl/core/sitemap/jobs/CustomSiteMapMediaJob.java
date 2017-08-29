@@ -46,6 +46,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Required;
 
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
+import com.tisl.mpl.core.constants.MarketplaceCoreConstants;
 import com.tisl.mpl.core.enums.SiteMapUpdateModeEnum;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.marketplacecommerceservices.daos.MplCategoryDao;
@@ -545,7 +546,8 @@ public class CustomSiteMapMediaJob extends SiteMapMediaJob
 	protected List<String> fetchBrand(final String categoryl1, final String categoryl2)
 	{
 		List<MplbrandfilterModel> brandFilterList = null;
-		final List<String> brandfilterurl = new ArrayList<>();
+		List<String> brandfilterurl = null;
+		final Set<String> brandFilterUrlSet = new HashSet<String>();
 		if (StringUtils.isNotEmpty(categoryl1) && StringUtils.isNotEmpty(categoryl2))
 		{
 			brandFilterList = getMplCategoryDao().fetchBrandFilterforL1L2(categoryl1, categoryl2);
@@ -553,15 +555,14 @@ public class CustomSiteMapMediaJob extends SiteMapMediaJob
 			{
 				for (final MplbrandfilterModel brandFilter : brandFilterList)
 				{
-					brandfilterurl.add(brandFilter.getUrl1());
-					brandfilterurl.add(brandFilter.getUrl2());
-					brandfilterurl.add(brandFilter.getUrl3());
+					brandFilter.getUrl1().replaceAll(MarketplaceCoreConstants.DOUBLE_HYPHEN, MarketplaceCoreConstants.SINGLE_HYPHEN);
+					brandFilter.getUrl2().replaceAll(MarketplaceCoreConstants.DOUBLE_HYPHEN, MarketplaceCoreConstants.SINGLE_HYPHEN);
+					brandFilter.getUrl3().replaceAll(MarketplaceCoreConstants.DOUBLE_HYPHEN, MarketplaceCoreConstants.SINGLE_HYPHEN);
+					brandFilterUrlSet.add(brandFilter.getUrl1());
+					brandFilterUrlSet.add(brandFilter.getUrl2());
+					brandFilterUrlSet.add(brandFilter.getUrl3());
 				}
-				final Set<String> set = new HashSet<String>(brandfilterurl);
-				for (final String myset : set)
-				{
-					LOG.debug("******brandfilterurl in cronjob*******" + myset);
-				}
+				brandfilterurl = new ArrayList<String>(brandFilterUrlSet);
 			}
 			else
 			{
