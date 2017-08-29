@@ -2,12 +2,15 @@
  *
  */
 package com.tisl.mpl.facade.cms;
-
 import de.hybris.platform.cms2.exceptions.CMSItemNotFoundException;
 import de.hybris.platform.cms2.model.contents.components.AbstractCMSComponentModel;
 import de.hybris.platform.cms2.model.contents.contentslot.ContentSlotModel;
 import de.hybris.platform.cms2.model.pages.ContentPageModel;
+import de.hybris.platform.cms2.model.relations.ContentSlotForPageModel;
 import de.hybris.platform.cms2.model.relations.ContentSlotForTemplateModel;
+import de.hybris.platform.cms2lib.model.components.BannerComponentModel;
+import de.hybris.platform.core.model.media.MediaContainerModel;
+import de.hybris.platform.core.model.media.MediaModel;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,12 +18,20 @@ import java.util.List;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
+import com.tisl.lux.model.LuxuryMediaModel;
+import com.tisl.lux.model.cms.components.LuxuryLookBookComponentModel;
 import com.tisl.lux.model.cms.components.ShopOnLuxuryElementModel;
 import com.tisl.lux.model.cms.components.ShopOnLuxuryModel;
 import com.tisl.lux.model.cms.components.WeeklySpecialBannerModel;
 import com.tisl.lux.model.cms.components.WeeklySpecialModel;
 import com.tisl.mpl.marketplacecommerceservices.service.impl.MplCMSPageServiceImpl;
+import com.tisl.mpl.model.cms.components.LuxCMSMediaParagraphComponentModel;
+import com.tisl.mpl.wsdto.LuxBannerComponentWsDTO;
+import com.tisl.mpl.wsdto.LuxCMSMediaParagraphComponentListWsDTO;
+import com.tisl.mpl.wsdto.LuxMediaContainerWsDTO;
 import com.tisl.mpl.wsdto.LuxuryComponentsListWsDTO;
+import com.tisl.mpl.wsdto.LuxuryLookBookComponentListWsDTO;
+import com.tisl.mpl.wsdto.LuxuryMediaListWsDTO;
 import com.tisl.mpl.wsdto.ShopOnLuxuryElementListWsDTO;
 import com.tisl.mpl.wsdto.ShopOnLuxuryElementWsDTO;
 import com.tisl.mpl.wsdto.WeeklySpecialBannerListWsDTO;
@@ -62,11 +73,18 @@ public class LuxCmsFacadeImpl implements LuxCmsFacade
 	{
 
 		LuxuryComponentsListWsDTO luxuryAllComponents = new LuxuryComponentsListWsDTO();
-		final ContentPageModel contentPage = getMplCMSPageService().getPageByLabelOrId("homepage");
+		final ContentPageModel contentPage = getMplCMSPageService().getPageByLabelOrId("luxuryWomenlandingPage");
 		if (contentPage != null)
 		{
 
 			for (final ContentSlotForTemplateModel contentSlotForPage : contentPage.getMasterTemplate().getContentSlots())
+			{
+				final ContentSlotModel contentSlot = contentSlotForPage.getContentSlot();
+				luxuryAllComponents = getLuxuryComponentDtoForSlot(contentSlot, luxuryAllComponents);
+
+			}
+
+			for (final ContentSlotForPageModel contentSlotForPage : contentPage.getContentSlots())
 			{
 				final ContentSlotModel contentSlot = contentSlotForPage.getContentSlot();
 				luxuryAllComponents = getLuxuryComponentDtoForSlot(contentSlot, luxuryAllComponents);
@@ -101,9 +119,18 @@ public class LuxCmsFacadeImpl implements LuxCmsFacade
 						final WeeklySpecialModel weeklySpecialComponent = (WeeklySpecialModel) abstractCMSComponentModel;
 						luxuryComponentsList = getWeeklySpecialWsDTO(weeklySpecialComponent, luxuryComponentsListWsDTO);
 						break;
+					case "LuxCMSMediaParagraphComponent":
+						final LuxCMSMediaParagraphComponentModel LuxCMSMediaParagraphComponent = (LuxCMSMediaParagraphComponentModel) abstractCMSComponentModel;
+						luxuryComponentsList = getLuxCMSMediaParagraphWsDTO(LuxCMSMediaParagraphComponent, luxuryComponentsListWsDTO);
+						break;
 
+					case "LuxuryLookBookComponent":
+						final LuxuryLookBookComponentModel luxuryLookBookComponent = (LuxuryLookBookComponentModel) abstractCMSComponentModel;
+						luxuryComponentsList = getLuxuryLookBookComponentWsDTO(luxuryLookBookComponent, luxuryComponentsListWsDTO);
+						break;
 					default:
 						break;
+
 				}
 			}
 
@@ -204,5 +231,250 @@ public class LuxCmsFacadeImpl implements LuxCmsFacade
 		luxuryComponent.setLuxuryShopOnLuxury(shopOnLuxuryElementListObj);
 		return luxuryComponent;
 	}
+
+
+
+	private LuxuryComponentsListWsDTO getLuxCMSMediaParagraphWsDTO(
+			final LuxCMSMediaParagraphComponentModel LuxCMSMediaParagraphComponent,
+			final LuxuryComponentsListWsDTO luxuryComponentsListWsDTO)
+	{
+
+		final LuxuryComponentsListWsDTO luxuryComponent = luxuryComponentsListWsDTO;
+		final List<LuxBannerComponentWsDTO> LuxBannerComponentList = new ArrayList<LuxBannerComponentWsDTO>();
+		final LuxCMSMediaParagraphComponentListWsDTO LuxCMSMediaParagraphComponentListObj = new LuxCMSMediaParagraphComponentListWsDTO();
+
+
+		if (StringUtils.isNotEmpty(LuxCMSMediaParagraphComponent.getUrl()))
+		{
+			LuxCMSMediaParagraphComponentListObj.setUrl(LuxCMSMediaParagraphComponent.getUrl());
+		}
+
+		if (null != LuxCMSMediaParagraphComponent.getMedia()
+				&& StringUtils.isNotEmpty(LuxCMSMediaParagraphComponent.getMedia().getURL()))
+		{
+
+			LuxCMSMediaParagraphComponentListObj.setMedia(LuxCMSMediaParagraphComponent.getMedia().getURL());
+
+		}
+
+		if (StringUtils.isNotEmpty(LuxCMSMediaParagraphComponent.getContent()))
+		{
+			LuxCMSMediaParagraphComponentListObj.setContent(LuxCMSMediaParagraphComponent.getContent());
+		}
+		for (final BannerComponentModel element : LuxCMSMediaParagraphComponent.getMedias())
+		{
+			final LuxBannerComponentWsDTO elements = new LuxBannerComponentWsDTO();
+
+
+			String headline = null;
+			String content = null;
+			String pageLabelOrId = null;
+			String bannerView = null;
+			String media = null;
+			String urlLink = null;
+
+
+
+
+			if (StringUtils.isNotEmpty(element.getHeadline()))
+			{
+				headline = element.getHeadline();
+			}
+
+
+
+			if (StringUtils.isNotEmpty(element.getContent()))
+			{
+				content = element.getContent();
+			}
+
+			if (StringUtils.isNotEmpty(element.getPageLabelOrId()))
+			{
+				pageLabelOrId = element.getPageLabelOrId();
+			}
+
+			if (StringUtils.isNotEmpty(element.getBannerView().getCode()))
+			{
+				bannerView = element.getBannerView().getCode();
+			}
+
+			if (null != element.getMedia() && StringUtils.isNotEmpty(element.getMedia().getUrl()))
+			{
+				media = element.getMedia().getURL();
+			}
+
+
+			if (StringUtils.isNotEmpty(element.getUrlLink()))
+			{
+				urlLink = element.getUrlLink();
+			}
+
+			elements.setHeadline(headline);
+			elements.setContent(content);
+			elements.setBannerView(bannerView);
+			elements.setPageLabelOrId(pageLabelOrId);
+			elements.setMedia(media);
+			elements.setUrlLink(urlLink);
+
+
+
+			LuxBannerComponentList.add(elements);
+
+		}
+
+
+		LuxCMSMediaParagraphComponentListObj.setMedias(LuxBannerComponentList);
+		luxuryComponent.setLuxCMSMediaParagraphComponent(LuxCMSMediaParagraphComponentListObj);
+		return luxuryComponent;
+	}
+
+
+
+	private LuxuryComponentsListWsDTO getLuxuryLookBookComponentWsDTO(final LuxuryLookBookComponentModel luxuryLookBookComponent,
+			final LuxuryComponentsListWsDTO luxuryComponentsListWsDTO)
+	{
+		final LuxuryComponentsListWsDTO luxuryComponent = luxuryComponentsListWsDTO;
+		final List<LuxMediaContainerWsDTO> LuxMediaContainerList = new ArrayList<LuxMediaContainerWsDTO>();
+		final LuxuryLookBookComponentListWsDTO luxuryLookBookComponentListObj = new LuxuryLookBookComponentListWsDTO();
+
+		if (StringUtils.isNotEmpty(luxuryLookBookComponent.getTitle()))
+		{
+			luxuryLookBookComponentListObj.setTitle(luxuryLookBookComponent.getTitle());
+		}
+
+		if (StringUtils.isNotEmpty(luxuryLookBookComponent.getLayoutCode()))
+		{
+			luxuryLookBookComponentListObj.setLayoutCode(luxuryLookBookComponent.getLayoutCode());
+		}
+
+		if (StringUtils.isNotEmpty(luxuryLookBookComponent.getDescription()))
+		{
+			luxuryLookBookComponentListObj.setDescription(luxuryLookBookComponent.getDescription());
+		}
+
+		if (StringUtils.isNotEmpty(luxuryLookBookComponent.getShopNowName()))
+		{
+			luxuryLookBookComponentListObj.setShopNowName(luxuryLookBookComponent.getShopNowName());
+		}
+
+		if (StringUtils.isNotEmpty(luxuryLookBookComponent.getShopNowLink()))
+		{
+			luxuryLookBookComponentListObj.setShopNowLink(luxuryLookBookComponent.getShopNowLink());
+		}
+
+
+		if (null != luxuryLookBookComponent.getTextArea()
+				&& StringUtils.isNotEmpty(luxuryLookBookComponent.getTextArea().getContent()))
+		{
+			luxuryLookBookComponentListObj.setTextArea(luxuryLookBookComponent.getTextArea().getContent());
+
+		}
+		for (final MediaContainerModel mediaContainer : luxuryLookBookComponent.getFirstCol())
+		{
+			final LuxMediaContainerWsDTO luxMediaContainer = new LuxMediaContainerWsDTO();
+			String qualifier = null;
+			String name = null;
+			 List<LuxuryMediaListWsDTO> medias = new ArrayList<LuxuryMediaListWsDTO>();
+
+			if (StringUtils.isNotEmpty(mediaContainer.getQualifier()))
+			{
+				qualifier = mediaContainer.getQualifier();
+
+			}
+			if (StringUtils.isNotEmpty(mediaContainer.getName()))
+			{
+				name = mediaContainer.getName();
+
+			}
+			if (null != mediaContainer.getMedias())
+			{
+				for (final MediaModel media : mediaContainer.getMedias())
+				{
+					final LuxuryMediaModel luxuryMedia = (LuxuryMediaModel) media;
+					final LuxuryMediaListWsDTO luxuryMediaList = new LuxuryMediaListWsDTO();
+					if (null != luxuryMedia.getURL() && StringUtils.isNotEmpty(luxuryMedia.getURL()))
+					{
+						luxuryMediaList.setURL(luxuryMedia.getURL());
+
+					}
+					if (null != luxuryMedia.getUrlLink() && StringUtils.isNotEmpty(luxuryMedia.getUrlLink()))
+					{
+						luxuryMediaList.setURL(luxuryMedia.getUrlLink());
+
+					}
+					medias.add(luxuryMediaList);
+
+				}
+			}
+
+			luxMediaContainer.setQualifier(qualifier);
+			luxMediaContainer.setName(name);
+			luxMediaContainer.setMedias(medias);
+
+			LuxMediaContainerList.add(luxMediaContainer);
+
+
+		}
+
+
+		for (final MediaContainerModel mediaContainer1 : luxuryLookBookComponent.getSecondCol())
+		{
+			final LuxMediaContainerWsDTO luxMediaContainer1 = new LuxMediaContainerWsDTO();
+			String qualifier = null;
+			String name = null;
+			 List<LuxuryMediaListWsDTO> medias = new ArrayList<LuxuryMediaListWsDTO>();
+
+			if (StringUtils.isNotEmpty(mediaContainer1.getQualifier()))
+			{
+				qualifier = mediaContainer1.getQualifier();
+
+			}
+			if (StringUtils.isNotEmpty(mediaContainer1.getName()))
+			{
+				name = mediaContainer1.getName();
+
+			}
+			if (null != mediaContainer1.getMedias())
+			{
+				for (final MediaModel media : mediaContainer1.getMedias())
+				{
+					final LuxuryMediaModel luxuryMedia = (LuxuryMediaModel) media;
+					final LuxuryMediaListWsDTO luxuryMediaList = new LuxuryMediaListWsDTO();
+					if (null != luxuryMedia.getURL() && StringUtils.isNotEmpty(luxuryMedia.getURL()))
+					{
+						luxuryMediaList.setURL(luxuryMedia.getURL());
+
+					}
+					if (null != luxuryMedia.getUrlLink() && StringUtils.isNotEmpty(luxuryMedia.getUrlLink()))
+					{
+						luxuryMediaList.setURL(luxuryMedia.getUrlLink());
+
+					}
+					medias.add(luxuryMediaList);
+
+				}
+			}
+
+			luxMediaContainer1.setQualifier(qualifier);
+			luxMediaContainer1.setName(name);
+			luxMediaContainer1.setMedias(medias);
+
+			LuxMediaContainerList.add(luxMediaContainer1);
+
+
+		}
+		luxuryLookBookComponentListObj.setFirstCol(LuxMediaContainerList);
+		luxuryComponent.setLuxuryLookBookComponent(luxuryLookBookComponentListObj);
+
+		return luxuryComponent;
+	}
+
+
+
+
+
+
+
+
 
 }
