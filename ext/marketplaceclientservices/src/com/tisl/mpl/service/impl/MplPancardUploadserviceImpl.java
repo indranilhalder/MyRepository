@@ -40,7 +40,7 @@ public class MplPancardUploadserviceImpl implements MplPancardUploadService
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.service.MplPancardTicketCRMservice#ticketPancardModeltoDTO(de.hybris.platform.core.model.
 	 * PancardInformationModel)
 	 */
@@ -53,7 +53,7 @@ public class MplPancardUploadserviceImpl implements MplPancardUploadService
 	//For sending pancard details to SP through PI and save data into database for new pancard entry
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.service.MplPancardUploadserviceImpl#generateXmlForPanCard(java.lang.String, java.lang.String,
 	 * java.lang.String, java.lang.String, org.springframework.web.multipart.MultipartFile)
 	 */
@@ -83,7 +83,7 @@ public class MplPancardUploadserviceImpl implements MplPancardUploadService
 				}
 				if (StringUtils.isNotEmpty(pModel.getStatus()))
 				{
-					if (MarketplacecclientservicesConstants.REJECTED.equalsIgnoreCase(pModel.getStatus())
+					if (MarketplacecclientservicesConstants.PAN_REJECTED.equalsIgnoreCase(pModel.getStatus())
 							|| MarketplacecclientservicesConstants.NA.equalsIgnoreCase(pModel.getStatus()))
 					{
 						orderLine.setPancardStatus(MarketplacecclientservicesConstants.PENDING_FOR_VERIFICATION);
