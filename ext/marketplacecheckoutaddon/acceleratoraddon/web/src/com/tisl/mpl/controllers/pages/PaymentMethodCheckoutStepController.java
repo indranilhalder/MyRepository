@@ -3078,13 +3078,23 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 				else
 				{
 					getSessionService().setAttribute(MarketplacecheckoutaddonConstants.PAYMENTMODEFORPROMOTION, paymentMode);
+
 					//INC144317480: Order Threshold Discount Promotion: Netbanking Payment Mode Restriction doesn't work
-					if (StringUtils.isNotEmpty(paymentMode)
-							&& paymentMode.equalsIgnoreCase(MarketplacecheckoutaddonConstants.NETBANKINGMODE))
+					//INC144318909 - EMI Option is not working in "Order threshold discount promotion"
+					//INC144319439 - Tata eTail:Payment mode restricition not appliable on saved cards
+					if (getSessionService().getAttribute(MarketplacecheckoutaddonConstants.BANKFROMBIN) == null
+							&& StringUtils.isNotEmpty(bankName) && !bankName.equalsIgnoreCase(MarketplacecommerceservicesConstants.NULL))
 					{
 						getSessionService().setAttribute(MarketplacecheckoutaddonConstants.BANKFROMBIN, bankName);
-						//getSessionService().setAttribute(MarketplacecheckoutaddonConstants.BANKNAMEFORNETBANKING, bankName);
 					}
+
+					//INC144317480: Order Threshold Discount Promotion: Netbanking Payment Mode Restriction doesn't work
+					//					if (StringUtils.isNotEmpty(paymentMode)
+					//							&& paymentMode.equalsIgnoreCase(MarketplacecheckoutaddonConstants.NETBANKINGMODE))
+					//					{
+					//						getSessionService().setAttribute(MarketplacecheckoutaddonConstants.BANKFROMBIN, bankName);
+					//						//getSessionService().setAttribute(MarketplacecheckoutaddonConstants.BANKNAMEFORNETBANKING, bankName);
+					//					}
 
 					final Map<String, MplZoneDeliveryModeValueModel> freebieModelMap = new HashMap<String, MplZoneDeliveryModeValueModel>();
 					final Map<String, Long> freebieParentQtyMap = new HashMap<String, Long>();
@@ -3391,7 +3401,6 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 		return responseData;
 
 	}
-
 
 
 
@@ -4742,7 +4751,7 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.tisl.mpl.controllers.pages.CheckoutStepController#enterStep(org.springframework.ui.Model,
 	 * org.springframework.web.servlet.mvc.support.RedirectAttributes)
 	 */
