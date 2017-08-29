@@ -155,10 +155,12 @@ $(document).ready(function(){
 	}
 	
 	// For PLP
-	if (pageType == "category") {
+	if (pageType == "category" || pageType == "electronics") {
 		if(typeof _satellite !="undefined"){	
 		   _satellite.track('cpj_category_pages');
 		}
+		  /*  product impressions*/
+				populateFirstFiveProductsPlp();
 	}
 		
 	//Search
@@ -167,6 +169,8 @@ $(document).ready(function(){
 		    _satellite.track('cpj_search_pages');
 		}
 		dtmSearchTags();
+		 /*  product impressions*/
+		populateFirstFiveProductsSerp();	
 		//TPR-6367  | for null search
 	 var isVisible = $('.search-empty.no-results.wrapper:visible').is(':visible');
 	 var searchTerm = $('#search_keyword').val();
@@ -496,6 +500,7 @@ $(document).ready(function(){
     if(tealiumOrderFlag !='undefined' && tealiumOrderFlag == 'true'){
     	dtmErrorTracking("Order not placed: Unsuccesful error","errorName");
     }
+	
 });
 function differentiateSeller(){
 	var sellerList = $('#pdpSellerIDs').val();
@@ -1115,10 +1120,56 @@ if($("#checkoutPageName").val()=="Choose Your Delivery Options"){
 		_satellite.track('cpj_checkout_delivery_option');
 	}	
 }
+/*product impressions start*/
+function populateFirstFiveProductsSerp(){
+	var count = 10; 
+	var productArray= [];
+    var searchResult = $("ul.product-list li.product-item").length;
+	if(searchResult < count ){
+		count = searchResult;
+    }
+   for(var i=0;i< count;i++)
+   {
+	 var selector = 'ul.product-list li.product-item:eq('+i+') span.serpProduct #productCode';
+	product = $(selector).val();
+	productArray.push(product);
+   }
+   if(typeof utag !="undefined"){
+		 utag.link({ serp_first_5_products : productArray,product_id : productArray  });
+	 }
+	if(typeof(digitalData.page)!= "undefined"){
+     	digitalData.page = {
+     		products : { 
+     		impression : productArray
+		}
+      }
+     }
+ }
 
-	
-	
-	
+function populateFirstFiveProductsPlp(){
+	var count = 10; 
+	var productArray= [];
+    var searchResult = $("ul.product-listing.product-grid li.product-item").length;
+	if(searchResult < count ){
+		count = searchResult;
+    }
+   for(var i=0;i< count;i++)
+   {
+      var  selector = 'ul.product-listing.product-grid li.product-item:eq('+i+') span.serpProduct #productCode';
+      if(typeof selector !="undefined"){
+  	    product = $(selector).val();
+      }
+      productArray.push(product);
+    }
+        if(typeof(digitalData.page)!= "undefined"){
+        	digitalData.page = {
+    		   products : { 
+    		     impression : productArray
+	      	}
+          }
+         }
+}	
+/*product impressions end*/	
 	
 	
 	
