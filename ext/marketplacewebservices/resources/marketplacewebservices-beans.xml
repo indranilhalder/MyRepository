@@ -1601,6 +1601,7 @@
 			type="java.util.List&lt;com.tisl.mpl.wsdto.ReservationItemWsDTO>" />
 		<property name="delistedMessage" type="String" />
 		<property name="failedUSSIDs" type="java.util.List&lt;java.lang.String>" />
+		<property name="priceChangeNotificationMsg" type="java.lang.String" />
 	</bean>
 
 
