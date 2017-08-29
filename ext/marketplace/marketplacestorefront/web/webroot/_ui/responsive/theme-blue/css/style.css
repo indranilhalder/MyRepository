@@ -70482,14 +70482,15 @@ TISRLUAT-11
 
 .product-detail .Exchange p {
 	font-size: 14px;
-	color: #92002e;
-	position: relative;
-	display: inline-block;
-	text-decoration: underline;
-	cursor: pointer;
-	padding: 12px;
-   	width: 100%;
-    	text-align: center;
+    color: #92002e;
+    position: relative;
+    display: inline-block;
+    text-decoration: underline;
+    cursor: pointer;
+    padding: 12px;
+    left: -10px;
+    width: 100%;
+    /* text-align: center; */
 }
 
 .product-detail .Exchange p.active:before {
@@ -70511,12 +70512,12 @@ TISRLUAT-11
 
 .product-detail .Exchange p:after {
 	color: #92002e;
-	content: "\f107";
-	display: inline-block;
-	font-size: 16px;
-	position: absolute;
-	right:30px;
-   	top: 12px;
+    content: "\f107";
+    display: inline-block;
+    font-size: 16px;
+    position: absolute;
+    right: 58px;
+    top: 12px;
 }
 @media(max-width:1024px){
 .product-detail .Exchange p:after {
