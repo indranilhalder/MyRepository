@@ -2178,6 +2178,10 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 
 	//PRDI-423 Start
 	public static final String SITEMAP_BRANDFILTER_QUERY = "mpl.sitemap.brandFilterQuery".intern();
-	public static final String SITEMAP_BRANDFILTER_QUERY_DEFAULT = "select {mbf:pk} from {mplbrandfilter as mbf} where {mbf.l1}=?l1code and {mbf.l2}=?l2code";
+	public static final String SITEMAP_BRANDFILTER_QUERY_DEFAULT = "select {mbf:pk} from {mplbrandfilter as mbf} where {mbf.l1}=?l1code and {mbf.l2}=?l2code"
+			.intern();
+	public static final String SITEMAP_BRANDFILTER = "mpl.sitemap.brandFilter.use".intern();
+	public static final String COMMA_CONSTANT = ",".intern();
+	public static final String FRONT_SLASH = "/".intern();
 	//PRDI-423 End
 }

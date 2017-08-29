@@ -47,10 +47,12 @@ import org.springframework.beans.factory.annotation.Required;
 
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.core.enums.SiteMapUpdateModeEnum;
+import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.marketplacecommerceservices.daos.MplCategoryDao;
 import com.tisl.mpl.marketplacecommerceservices.service.CustomMediaService;
 import com.tisl.mpl.sitemap.generator.impl.MplBrandPageSiteMapGenerator;
 import com.tisl.mpl.sitemap.generator.impl.MplCustomPageSiteMapGenerator;
+import com.tisl.mpl.util.ExceptionUtil;
 
 
 /**
@@ -97,286 +99,238 @@ public class CustomSiteMapMediaJob extends SiteMapMediaJob
 	 * @param cronJob
 	 * @return PerformResult
 	 */
+
 	@Override
 	public PerformResult perform(final SiteMapMediaCronJobModel cronJob)
 	{
-
-		final List<MediaModel> siteMapMedias = new ArrayList<MediaModel>();
-		final CMSSiteModel contentSite = cronJob.getContentSite();
-
-		getCmsSiteService().setCurrentSite(contentSite);
-		// set the catalog version for the current session
-		getActivateBaseSiteInSession().activate(contentSite);
-
-		final SiteMapConfigModel siteMapConfig = contentSite.getSiteMapConfig();
-		final Collection<SiteMapPageModel> siteMapPages = siteMapConfig.getSiteMapPages();
-		final SiteMapUpdateModeEnum updateType = cronJob.getUpdateType();
-		for (final SiteMapPageModel siteMapPage : siteMapPages)
+		try
 		{
-			final List<File> siteMapFiles = new ArrayList<File>();
-			final SiteMapPageEnum pageType = siteMapPage.getCode();
-			final SiteMapGenerator generator = this.getGeneratorForSiteMapPage(pageType);
-
-			if (BooleanUtils.isTrue(siteMapPage.getActive()) && generator != null)
+			final List<MediaModel> siteMapMedias = new ArrayList<MediaModel>();
+			final CMSSiteModel contentSite = cronJob.getContentSite();
+			getCmsSiteService().setCurrentSite(contentSite);
+			// set the catalog version for the current session
+			getActivateBaseSiteInSession().activate(contentSite);
+			final SiteMapConfigModel siteMapConfig = contentSite.getSiteMapConfig();
+			final Collection<SiteMapPageModel> siteMapPages = siteMapConfig.getSiteMapPages();
+			final SiteMapUpdateModeEnum updateType = cronJob.getUpdateType();
+			List brandLists = null;//PRDI-423
+			for (final SiteMapPageModel siteMapPage : siteMapPages)
 			{
-				//Logic for ProductPageSiteMapGenerator
-				if (generator instanceof ProductPageSiteMapGenerator
-						&& (updateType.equals(SiteMapUpdateModeEnum.PRODUCT) || updateType.equals(SiteMapUpdateModeEnum.ALL)))
+				final List<File> siteMapFiles = new ArrayList<File>();
+				final SiteMapPageEnum pageType = siteMapPage.getCode();
+				final SiteMapGenerator generator = this.getGeneratorForSiteMapPage(pageType);
+				if (BooleanUtils.isTrue(siteMapPage.getActive()) && generator != null)
 				{
-					final CatalogVersionModel activeCatalog = contentSite.getDefaultCatalog().getActiveCatalogVersion();
-					final List<CategoryModel> L1Category = fetchL1fromL0(activeCatalog);
-
-					if (CollectionUtils.isNotEmpty(L1Category))
+					//Logic for ProductPageSiteMapGenerator
+					if (generator instanceof ProductPageSiteMapGenerator
+							&& (updateType.equals(SiteMapUpdateModeEnum.PRODUCT) || updateType.equals(SiteMapUpdateModeEnum.ALL)))
 					{
-						for (final CategoryModel category : L1Category)
+						final CatalogVersionModel activeCatalog = contentSite.getDefaultCatalog().getActiveCatalogVersion();
+						final List<CategoryModel> L1Category = fetchL1fromL0(activeCatalog);
+						if (CollectionUtils.isNotEmpty(L1Category))
 						{
-							final List<CategoryModel> L2Category = fetchL2fromL1(category);
-							if (CollectionUtils.isNotEmpty(L2Category))
+							for (final CategoryModel category : L1Category)
 							{
-								for (final CategoryModel categoryl2 : L2Category)
+								final List<CategoryModel> L2Category = fetchL2fromL1(category);
+								if (CollectionUtils.isNotEmpty(L2Category))
 								{
-									final String categoryName = getSiteMapNamefromCategories(category, categoryl2);
-
-									//fetchBrand(category.getCode(), categoryl2.getCode());
-
-									final List models = fetchProductforL2code(activeCatalog, categoryl2);
-									if (CollectionUtils.isNotEmpty(models) && StringUtils.isNotEmpty(categoryName))
+									for (final CategoryModel categoryl2 : L2Category)
 									{
-										//Logic for splitting files based on model size
-										final Integer MAX_SITEMAP_LIMIT = cronJob.getSiteMapUrlLimitPerFile();
-										if (models.size() > MAX_SITEMAP_LIMIT.intValue())
+										final String categoryName = getSiteMapNamefromCategories(category, categoryl2);
+										//PRDI-423
+										if (useBrandFilter())
 										{
-											final List<List> modelsList = splitUpTheListIfExceededLimit(models, MAX_SITEMAP_LIMIT);
-											for (int modelIndex = 0; modelIndex < modelsList.size(); modelIndex++)
+											brandLists = fetchBrand(category.getCode(), categoryl2.getCode());
+										}
+										final List models = fetchProductforL2code(activeCatalog, categoryl2);
+										if (CollectionUtils.isNotEmpty(models) && StringUtils.isNotEmpty(categoryName))
+										{
+											//Logic for splitting files based on model size
+											final Integer MAX_SITEMAP_LIMIT = cronJob.getSiteMapUrlLimitPerFile();
+											if (models.size() > MAX_SITEMAP_LIMIT.intValue())
 											{
-												generateSiteMapFiles(siteMapFiles, contentSite, generator, siteMapConfig,
-														modelsList.get(modelIndex), pageType, Integer.valueOf(modelIndex), categoryName);
+												final List<List> modelsList = splitUpTheListIfExceededLimit(models, MAX_SITEMAP_LIMIT);
+												for (int modelIndex = 0; modelIndex < modelsList.size(); modelIndex++)
+												{
+													generateSiteMapFiles(siteMapFiles, contentSite, generator, siteMapConfig,
+															modelsList.get(modelIndex), pageType, Integer.valueOf(modelIndex), categoryName);
+												}
+											}
+											else
+											{
+												generateSiteMapFiles(siteMapFiles, contentSite, generator, siteMapConfig, models, pageType,
+														null, categoryName);
 											}
 										}
 										else
 										{
-											generateSiteMapFiles(siteMapFiles, contentSite, generator, siteMapConfig, models, pageType,
-													null, categoryName);
+											LOG.debug("Product Model or Category Not available");
+										}
+									}
+								}
+								else
+								{
+									LOG.debug("L2 Category Not available");
+								}
+							}
+						}
+						else
+						{
+							LOG.debug("L1 Category Not available");
+						}
+						//PRDI-423
+						//Logic For Brand Filter Sitemap
+						if (CollectionUtils.isNotEmpty(brandLists))
+						{
+							List modelsFinal = null;//PRDI-423
+							LOG.debug("Inside not empty brandlist*******");
+							final List models = getMplbrandPageSiteMapGenerator().getBrandData(contentSite, brandLists);
+							if (CollectionUtils.isNotEmpty(models))
+							{
+								LOG.debug("Adding Models*******");
+								modelsFinal = new ArrayList();
+								modelsFinal.add(models);
+								if (CollectionUtils.isNotEmpty(modelsFinal))
+								{
+									final List<List> modelUltimate = new ArrayList();
+									LOG.debug("Inside not empty modelsFinal*******");
+									for (int modelIndex = 0; modelIndex < modelsFinal.size(); modelIndex++)
+									{
+										LOG.debug("Inside for loop of modelsFinal*******");
+										final List<List> mod = (List<List>) modelsFinal.get(modelIndex);
+										modelUltimate.addAll(mod);
+									}
+									//Logic for splitting files based on model size
+									final Integer MAX_SITEMAP_LIMIT = cronJob.getSiteMapUrlLimitPerFile();
+									if (modelUltimate.size() > MAX_SITEMAP_LIMIT.intValue())
+									{
+										final List<List> modelsList = splitUpTheListIfExceededLimit(modelUltimate, MAX_SITEMAP_LIMIT);
+										for (int modelIndex = 0; modelIndex < modelsList.size(); modelIndex++)
+										{
+											LOG.debug("FOR size greater than 1000*******");
+											generateSiteMapFiles(siteMapFiles, contentSite, getMplbrandPageSiteMapGenerator(),
+													siteMapConfig, modelsList.get(modelIndex), SiteMapPageEnum.CATEGORY,
+													Integer.valueOf(modelIndex), null);
 										}
 									}
 									else
 									{
-										LOG.debug("Product Model or Category Not available");
+										LOG.debug("FOR size less than 1000*******");
+										generateSiteMapFiles(siteMapFiles, contentSite, getMplbrandPageSiteMapGenerator(), siteMapConfig,
+												modelUltimate, SiteMapPageEnum.CATEGORY, null, null);
 									}
+
+								}
+								else
+								{
+									LOG.debug(" Final models are empty");
 								}
 							}
 							else
 							{
-								LOG.debug("L2 Category Not available");
+								LOG.debug("models are empty");
 							}
-						}
-					}
-					else
-					{
-						LOG.debug("L1 Category Not available");
-					}
-
-					//PRDI-423
-					LOG.debug("**START**BRAND***");
-
-					final List modelsFinal = new ArrayList();
-					if (CollectionUtils.isNotEmpty(L1Category))
-					{
-						LOG.debug("Inside not empty L1...");
-						for (final CategoryModel category : L1Category)
-						{
-							LOG.debug("L1category code..." + category);
-							final List<CategoryModel> L2Category = fetchL2fromL1(category);
-							if (CollectionUtils.isNotEmpty(L2Category))
-							{
-								LOG.debug("Inside not empty L2");
-								for (final CategoryModel categoryl2 : L2Category)
-								{
-									LOG.debug("L2category code..." + categoryl2);
-									//Logic For Brand Filter Sitemap
-									final List brandLists = fetchBrand(category.getCode(), categoryl2.getCode());
-									if (CollectionUtils.isNotEmpty(brandLists))
-									{
-										LOG.debug("Inside not empty brandlist*******");
-										final List models = getMplbrandPageSiteMapGenerator().getBrandData(contentSite, category,
-												categoryl2, brandLists);
-										LOG.debug("Model Size--->" + models.size());
-										LOG.debug("Adding Models*******");
-										modelsFinal.add(models);
-
-										LOG.debug("modelsFinal Size***" + modelsFinal.size());
-										//final String categoryName = getSiteMapNamefromCategories(category, categoryl2);
-
-										//										if (CollectionUtils.isNotEmpty(models))
-										//										{
-										//											//Logic for splitting files based on model size
-										//											final Integer MAX_SITEMAP_LIMIT = cronJob.getSiteMapUrlLimitPerFile();
-										//											if (models.size() > MAX_SITEMAP_LIMIT.intValue())
-										//											{
-										//												final List<List> modelsList = splitUpTheListIfExceededLimit(models, MAX_SITEMAP_LIMIT);
-										//												for (int modelIndex = 0; modelIndex < modelsList.size(); modelIndex++)
-										//												{
-										//													LOG.debug("3*******");
-										//													generateSiteMapFiles(siteMapFiles, contentSite, getMplbrandPageSiteMapGenerator(),
-										//															siteMapConfig, modelsList.get(modelIndex), SiteMapPageEnum.CATEGORY,
-										//															Integer.valueOf(modelIndex), categoryName);
-										//												}
-										//											}
-										//											else
-										//											{
-										//												LOG.debug("4*******");
-										//												generateSiteMapFiles(siteMapFiles, contentSite, getMplbrandPageSiteMapGenerator(),
-										//														siteMapConfig, models, SiteMapPageEnum.CATEGORY, null, categoryName);
-										//											}
-										//
-										//
-										//										}
-										//										else
-										//										{
-										//											LOG.debug("models are empty");
-										//										}
-									}
-									else
-									{
-										LOG.debug("brand filter model is empty");
-									}
-
-								}
-							}
-						}
-
-						LOG.debug("Ultimate modelsFinal size::" + modelsFinal.size());
-						if (CollectionUtils.isNotEmpty(modelsFinal))
-						{
-							final List<List> modelUltimate = new ArrayList();
-							LOG.debug("Inside not empty modelsFinal*******");
-							for (int modelIndex = 0; modelIndex < modelsFinal.size(); modelIndex++)
-							{
-								LOG.debug("Inside for loop of modelsFinal*******");
-								final List<List> mod = (List<List>) modelsFinal.get(modelIndex);
-								LOG.debug("modelsFinal size*******" + mod.size());
-								modelUltimate.addAll(mod);
-								LOG.debug("***modelUltimate size****" + modelUltimate.size());
-							}
-							//Logic for splitting files based on model size
-							final Integer MAX_SITEMAP_LIMIT = cronJob.getSiteMapUrlLimitPerFile();
-							if (modelUltimate.size() > MAX_SITEMAP_LIMIT.intValue())
-							{
-								final List<List> modelsList = splitUpTheListIfExceededLimit(modelUltimate, MAX_SITEMAP_LIMIT);
-								for (int modelIndex = 0; modelIndex < modelsList.size(); modelIndex++)
-								{
-									LOG.debug("FOR size greater than 1000*******");
-									generateSiteMapFiles(siteMapFiles, contentSite, getMplbrandPageSiteMapGenerator(), siteMapConfig,
-											modelsList.get(modelIndex), SiteMapPageEnum.CATEGORY, Integer.valueOf(modelIndex), null);
-									LOG.debug("After Generate File for greater than 1000");
-								}
-							}
-							else
-							{
-								LOG.debug("FOR size less than 1000*******");
-								generateSiteMapFiles(siteMapFiles, contentSite, getMplbrandPageSiteMapGenerator(), siteMapConfig,
-										modelUltimate, SiteMapPageEnum.CATEGORY, null, null);
-								LOG.debug("After Generate File for else");
-							}
-
 						}
 						else
 						{
-							LOG.debug("models are empty");
+							LOG.debug("brand filter model is empty");
 						}
+						//PRDI-423
 					}
-					//PRDI-423
-
-				}
-
-				//					final List<CategoryModel> categoryList = getMplCategoryDao().getLowestPrimaryCategories();
-				//
-				//					for (final CategoryModel categoryModel : categoryList)
-				//					{
-				//						final int count = 4;
-				//						final CategoryModel l2Cat = findCategoryLevel(categoryModel, count);
-				//						final CategoryModel l1Cat = findL2CategoryLevel(categoryModel, count);
-				//						String categoryName = l2Cat.getName();
-				//						if (StringUtils.isNotEmpty(l1Cat.getName()))
-				//						{
-				//							categoryName = l1Cat.getName() + " " + l2Cat.getName();
-				//						}
-				//						final List models = categoryModel.getProducts();
-				//						if (CollectionUtils.isNotEmpty(models))
-				//						{
-				//							//Logic for splitting files based on model size
-				//							final Integer MAX_SITEMAP_LIMIT = cronJob.getSiteMapUrlLimitPerFile();
-				//							if (models.size() > MAX_SITEMAP_LIMIT.intValue())
-				//							{
-				//								final List<List> modelsList = splitUpTheListIfExceededLimit(models, MAX_SITEMAP_LIMIT);
-				//								for (int modelIndex = 0; modelIndex < modelsList.size(); modelIndex++)
-				//								{
-				//									generateSiteMapFiles(siteMapFiles, contentSite, generator, siteMapConfig, modelsList.get(modelIndex),
-				//											pageType, Integer.valueOf(modelIndex), categoryName);
-				//								}
-				//							}
-				//							else
-				//							{
-				//								generateSiteMapFiles(siteMapFiles, contentSite, generator, siteMapConfig, models, pageType, null,
-				//										categoryName);
-				//							}
-				//						}
-				//					}
-				//				}
-				//Logic for MplCustomPageSiteMapGenerator
-				else if (generator instanceof CustomPageSiteMapGenerator
-						&& (updateType.equals(SiteMapUpdateModeEnum.CUSTOM) || updateType.equals(SiteMapUpdateModeEnum.ALL)))
-				{
-					//Logic for splitting files based on model size
-					final List models = getMplCustomPageSiteMapGenerator().getCustomData(contentSite);
-					final Integer MAX_SITEMAP_LIMIT = cronJob.getSiteMapUrlLimitPerFile();
-					if (models.size() > MAX_SITEMAP_LIMIT.intValue())
+					//					final List<CategoryModel> categoryList = getMplCategoryDao().getLowestPrimaryCategories();
+					//
+					//					for (final CategoryModel categoryModel : categoryList)
+					//					{
+					//						final int count = 4;
+					//						final CategoryModel l2Cat = findCategoryLevel(categoryModel, count);
+					//						final CategoryModel l1Cat = findL2CategoryLevel(categoryModel, count);
+					//						String categoryName = l2Cat.getName();
+					//						if (StringUtils.isNotEmpty(l1Cat.getName()))
+					//						{
+					//							categoryName = l1Cat.getName() + " " + l2Cat.getName();
+					//						}
+					//						final List models = categoryModel.getProducts();
+					//						if (CollectionUtils.isNotEmpty(models))
+					//						{
+					//							//Logic for splitting files based on model size
+					//							final Integer MAX_SITEMAP_LIMIT = cronJob.getSiteMapUrlLimitPerFile();
+					//							if (models.size() > MAX_SITEMAP_LIMIT.intValue())
+					//							{
+					//								final List<List> modelsList = splitUpTheListIfExceededLimit(models, MAX_SITEMAP_LIMIT);
+					//								for (int modelIndex = 0; modelIndex < modelsList.size(); modelIndex++)
+					//								{
+					//									generateSiteMapFiles(siteMapFiles, contentSite, generator, siteMapConfig, modelsList.get(modelIndex),
+					//											pageType, Integer.valueOf(modelIndex), categoryName);
+					//								}
+					//							}
+					//							else
+					//							{
+					//								generateSiteMapFiles(siteMapFiles, contentSite, generator, siteMapConfig, models, pageType, null,
+					//										categoryName);
+					//							}
+					//						}
+					//					}
+					//				}
+					//Logic for MplCustomPageSiteMapGenerator
+					else if (generator instanceof CustomPageSiteMapGenerator
+							&& (updateType.equals(SiteMapUpdateModeEnum.CUSTOM) || updateType.equals(SiteMapUpdateModeEnum.ALL)))
 					{
-						final List<List> modelsList = splitUpTheListIfExceededLimit(models, MAX_SITEMAP_LIMIT);
-						for (int modelIndex = 0; modelIndex < modelsList.size(); modelIndex++)
+						//Logic for splitting files based on model size
+						final List models = getMplCustomPageSiteMapGenerator().getCustomData(contentSite);
+						final Integer MAX_SITEMAP_LIMIT = cronJob.getSiteMapUrlLimitPerFile();
+						if (models.size() > MAX_SITEMAP_LIMIT.intValue())
 						{
-							generateSiteMapFiles(siteMapFiles, contentSite, getMplCustomPageSiteMapGenerator(), siteMapConfig,
-									modelsList.get(modelIndex), pageType, Integer.valueOf(modelIndex), null);
+							final List<List> modelsList = splitUpTheListIfExceededLimit(models, MAX_SITEMAP_LIMIT);
+							for (int modelIndex = 0; modelIndex < modelsList.size(); modelIndex++)
+							{
+								generateSiteMapFiles(siteMapFiles, contentSite, getMplCustomPageSiteMapGenerator(), siteMapConfig,
+										modelsList.get(modelIndex), pageType, Integer.valueOf(modelIndex), null);
+							}
+						}
+						else
+						{
+							generateSiteMapFiles(siteMapFiles, contentSite, getMplCustomPageSiteMapGenerator(), siteMapConfig, models,
+									pageType, null, null);
 						}
 					}
-					else
+
+				}
+				else
+				{
+					LOG.warn(String.format("Skipping SiteMap page %s active %s", siteMapPage.getCode(), siteMapPage.getActive()));
+				}
+				if (!siteMapFiles.isEmpty())
+				{
+					for (final File siteMapFile : siteMapFiles)
 					{
-						generateSiteMapFiles(siteMapFiles, contentSite, getMplCustomPageSiteMapGenerator(), siteMapConfig, models,
-								pageType, null, null);
+						siteMapMedias.add(createCatalogUnawareMediaModel(siteMapFile));
 					}
 				}
+			}
 
-			}
-			else
+			if (!siteMapMedias.isEmpty())
 			{
-				LOG.warn(String.format("Skipping SiteMap page %s active %s", siteMapPage.getCode(), siteMapPage.getActive()));
-			}
-			if (!siteMapFiles.isEmpty())
-			{
-				for (final File siteMapFile : siteMapFiles)
+				final Collection<MediaModel> existingSiteMaps = contentSite.getSiteMaps();
+
+				contentSite.setSiteMaps(siteMapMedias);
+				modelService.save(contentSite);
+
+				// clean up old sitemap medias
+				if (CollectionUtils.isNotEmpty(existingSiteMaps))
 				{
-					siteMapMedias.add(createCatalogUnawareMediaModel(siteMapFile));
+					modelService.removeAll(existingSiteMaps);
 				}
 			}
 		}
-
-		if (!siteMapMedias.isEmpty())
+		catch (final EtailNonBusinessExceptions exception)
 		{
-			final Collection<MediaModel> existingSiteMaps = contentSite.getSiteMaps();
-
-			contentSite.setSiteMaps(siteMapMedias);
-			modelService.save(contentSite);
-
-			// clean up old sitemap medias
-			if (CollectionUtils.isNotEmpty(existingSiteMaps))
-			{
-				modelService.removeAll(existingSiteMaps);
-			}
+			LOG.error("EtailNonBusinessException Occured", exception);
+			ExceptionUtil.etailNonBusinessExceptionHandler(exception);
+			return new PerformResult(CronJobResult.ERROR, CronJobStatus.ABORTED);
 		}
-
-
 		return new PerformResult(CronJobResult.SUCCESS, CronJobStatus.FINISHED);
 	}
+
 
 	/**
 	 * This method creates CatalogUnawareMediaModel with the file generated for TPR-1285 Dynamic sitemap
@@ -425,25 +379,20 @@ public class CustomSiteMapMediaJob extends SiteMapMediaJob
 			final SiteMapGenerator generator, final SiteMapConfigModel siteMapConfig, final List<List> models,
 			final SiteMapPageEnum pageType, final Integer index, final String fileIndex)
 	{
-
-		LOG.debug("**Inside generateSiteMapFiles**");
-		LOG.debug("**SiteMapGenerator**" + generator);
-		LOG.debug("**pageType**" + pageType);
 		for (final SiteMapLanguageCurrencyModel siteMapLanguageCurrency : siteMapConfig.getSiteMapLanguageCurrencies())
 		{
 			try
 			{
 				if (pageType.equals(SiteMapPageEnum.PRODUCT))
 				{
-					LOG.debug("**Inside pageType Product**");
-
+					LOG.debug("**Inside SiteMapPageEnum Product**");
 					siteMapFiles.add(generator.render(contentSite, siteMapLanguageCurrency.getCurrency(),
 							siteMapLanguageCurrency.getLanguage(), siteMapConfig.getSiteMapTemplate(), models, fileIndex, index));
 				}
 				//PRDI-423
 				else if (pageType.equals(SiteMapPageEnum.CATEGORY))
 				{
-					LOG.debug("**Inside pageType Category**");
+					LOG.debug("**Inside SiteMapPageEnum Category**");
 					siteMapFiles.add(generator.render(contentSite, siteMapLanguageCurrency.getCurrency(),
 							siteMapLanguageCurrency.getLanguage(), siteMapConfig.getSiteMapTemplate(), models, fileIndex, index));
 				}
@@ -451,7 +400,7 @@ public class CustomSiteMapMediaJob extends SiteMapMediaJob
 
 				else
 				{
-					LOG.debug("**Inside pageType else**");
+					LOG.debug("**Inside SiteMapPageEnum else**");
 					siteMapFiles.add(generator.render(contentSite, siteMapLanguageCurrency.getCurrency(),
 							siteMapLanguageCurrency.getLanguage(), siteMapConfig.getSiteMapTemplate(), models, pageType.toString(),
 							index));
@@ -521,6 +470,13 @@ public class CustomSiteMapMediaJob extends SiteMapMediaJob
 	}
 
 
+	//PRDI-423
+	protected boolean useBrandFilter()
+	{
+		return configurationService.getConfiguration().getBoolean(MarketplacecommerceservicesConstants.SITEMAP_BRANDFILTER, true);
+	}
+
+	//PRDI-423
 
 	protected String getHierarchy()
 	{
@@ -593,7 +549,6 @@ public class CustomSiteMapMediaJob extends SiteMapMediaJob
 		if (StringUtils.isNotEmpty(categoryl1) && StringUtils.isNotEmpty(categoryl2))
 		{
 			brandFilterList = getMplCategoryDao().fetchBrandFilterforL1L2(categoryl1, categoryl2);
-
 			if (CollectionUtils.isNotEmpty(brandFilterList))
 			{
 				for (final MplbrandfilterModel brandFilter : brandFilterList)
