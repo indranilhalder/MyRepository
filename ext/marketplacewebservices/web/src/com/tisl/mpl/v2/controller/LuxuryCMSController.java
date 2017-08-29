@@ -4,6 +4,8 @@
 package com.tisl.mpl.v2.controller;
 
 import com.tisl.mpl.marketplacecommerceservices.service.impl.MplCMSPageServiceImpl;
+import de.hybris.platform.category.impl.DefaultCategoryService;
+import de.hybris.platform.category.model.CategoryModel;
 import de.hybris.platform.cms2.exceptions.CMSItemNotFoundException;
 import de.hybris.platform.cms2.model.pages.ContentPageModel;
 import de.hybris.platform.commercewebservicescommons.cache.CacheControl;
@@ -38,6 +40,9 @@ public class LuxuryCMSController extends BaseController
 	@Resource(name = "fieldSetBuilder")
 	private FieldSetBuilder fieldSetBuilder;
 
+	@Resource(name = "categoryService")
+	private DefaultCategoryService categoryService;
+
 	private static final String DEFAULT = "DEFAULT";
 
 	private static final String CHANNEL = "mobile";
@@ -46,17 +51,26 @@ public class LuxuryCMSController extends BaseController
 
 
 
-	@RequestMapping(value = "/cms/{pageLable}", method = RequestMethod.GET)
+	@RequestMapping(value = "/cms/{pageLabel}", method = RequestMethod.GET)
 	@CacheControl(directive = CacheControlDirective.PUBLIC, maxAge = 300)
 	@ResponseBody
 	public LuxuryComponentsListWsDTO getHomepage(
-			@PathVariable final String pageLable,
-			@RequestParam(defaultValue = DEFAULT) final String fields)
+			@PathVariable final String pageLabel,
+			@RequestParam(required = false, defaultValue = DEFAULT) final String brandCode)
 	{
 		try
 		{
-			final ContentPageModel contentPage =  mplCMSPageService.getPageByLabelOrId(pageLable);
-			final LuxuryComponentsListWsDTO luxuryComponentsListWsDTO = luxCmsFacade.getLuxuryPage(contentPage);
+			 ContentPageModel contentPage = new ContentPageModel();
+			LuxuryComponentsListWsDTO luxuryComponentsListWsDTO = new LuxuryComponentsListWsDTO();
+			contentPage =  mplCMSPageService.getPageByLabelOrId(pageLabel);
+			if(null != contentPage){
+				luxuryComponentsListWsDTO = luxCmsFacade.getLuxuryPage(contentPage);
+			}else{
+				final CategoryModel category = categoryService.getCategoryForCode(brandCode);
+				contentPage = mplCMSPageService.getLandingPageForCategory(category);
+				luxuryComponentsListWsDTO = luxCmsFacade.getLuxuryPage(contentPage);
+
+			}
 			return luxuryComponentsListWsDTO;
 		}
 		catch (final CMSItemNotFoundException e)
