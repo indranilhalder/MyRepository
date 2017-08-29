@@ -1038,6 +1038,20 @@ ACC.singlePageCheckout = {
 				$(".cnc_carousel").trigger('to.owl.carousel',[0]);
 				var cnc_count = $(".showStoreAddress").length;	//Used in case of search stores
 				ACC.singlePageCheckout.carouselPageNumberDisplay(cnc_count,0,"page_count_cnc");
+				
+				//Hiding arrows
+				var width=$(window).width();
+				if(cnc_count<=2 && width>=768 && width<1280)
+				{
+					$("#cncStoreContainer"+entryNumber+" .owl-prev").hide();
+					$("#cncStoreContainer"+entryNumber+" .owl-next").hide();
+				}
+				if(cnc_count<=3 && width>=1280)
+				{
+					$("#cncStoreContainer"+entryNumber+" .owl-prev").hide();
+					$("#cncStoreContainer"+entryNumber+" .owl-next").hide();
+				}
+				
 			}else if(searchText=="")
 			{
 				$allListElements.closest("li").show();
@@ -1049,6 +1063,19 @@ ACC.singlePageCheckout = {
 				$(".cnc_carousel").trigger('to.owl.carousel',[0]);
 				var cnc_count = $("#cncUlDiv"+entryNumber+" .cnc_item .removeColor"+entryNumber).length;	//Used in case of search stores
 				ACC.singlePageCheckout.carouselPageNumberDisplay(cnc_count,0,"page_count_cnc");
+				
+				//Showing arrows
+				var width=$(window).width();
+				if(cnc_count>2 && width>=768 && width<1280)
+				{
+					$("#cncStoreContainer"+entryNumber+" .owl-prev").show();
+					$("#cncStoreContainer"+entryNumber+" .owl-next").show();
+				}
+				if(cnc_count>3 && width>=1280)
+				{
+					$("#cncStoreContainer"+entryNumber+" .owl-prev").show();
+					$("#cncStoreContainer"+entryNumber+" .owl-next").show();
+				}
 			}
 			
 			if( typeof utag !="undefined" && searchText!=""){
