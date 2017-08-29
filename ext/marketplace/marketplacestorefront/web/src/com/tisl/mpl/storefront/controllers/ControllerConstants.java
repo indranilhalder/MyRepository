@@ -396,6 +396,9 @@ public interface ControllerConstants
 				public static final String USSID_CODE_PATH_NEW_PATTERN = "/**/p-{ussId:.*}";
 				public static final String USSID = "ussId";
 				public static final String ID_ED_SELLER_HANDLING_TIME = "isEDSeller";
+				//TPR-6654
+				public static final String STORE = "-allStores/{pincode}";
+				String StoreLocatorPopup = "fragments/product/storeLocatorPopup";
 			}
 
 
