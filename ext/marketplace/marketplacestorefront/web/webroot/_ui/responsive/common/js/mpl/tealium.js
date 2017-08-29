@@ -7,9 +7,15 @@ $(document).ready(
 			if($('body').hasClass('pageType-ContentPage') && $('#ia_category_code').val() != '' && $('#ia_category_code').val().toLowerCase().indexOf('mbh') != -1){
  				var pageName = $('#pageName').val();
  				var brandName='';
- 				if(typeof pageName != undefined && pageName != ''){
+ 				//PRDI-564 Fix
+ 				if(typeof pageName != "undefined" && pageName != ''){
  					pageName=pageName.split('BrandStore-');
- 					brandName = pageName[1].trim().toLowerCase();
+ 					if(typeof pageName[1] != "undefined" && pageName[1] != ''){
+ 						brandName = pageName[1].trim().toLowerCase();
+ 					}
+ 					else{
+ 						brandName =	pageName[0];
+ 					}
  					if(typeof(Storage) !== "undefined") {
  						localStorage.setItem("brandName", brandName);
  					}
@@ -470,12 +476,14 @@ $(document).on('mousedown','.owl-prev,.owl-next',function(e){
 $(document).on("click",".product-info > .product-image-container > .productImageGallery .imageListCarousel .thumb",function(){
 	var thumbnail_value = $(this).parent().attr('class');
 	var thumbnail_type = $(this).find('img').attr('data-type');
-	utag.link({
+	if(typeof(utag) != "undefined"){
+	  utag.link({
 		"link_text":"pdp_"+thumbnail_value+"_clicked",
 		"event_type":"pdp_"+thumbnail_type+"_clicked",
 		"thumbnail_value":thumbnail_value,
 		product_id : productIdArray
-	});
+	 });
+	}
 })
 
 /*Product Specification*/
@@ -485,30 +493,36 @@ $(document).on("click",".nav-wrapper .nav.pdp",function(){
 
 /*Out Of Stock During adding to bag*/
 function errorAddToBag(errorMessage){
-	utag.link({"error_type":errorMessage});
+	if(typeof(utag) != "undefined"){
+	   utag.link({"error_type":errorMessage});
+	}
 }
 
 /*On Size selection | PDP*/
 $(document).on('click',".variant-select > li", function(){
 	var product_size = $(this).find('a').html();
-	utag.link({
+	if(typeof(utag) != "undefined"){
+	  utag.link({
 		"link_text":"pdp_size_"+product_size,
 		"event_type":"pdp_size_selected",
 		"product_size":product_size,
 		product_id : productIdArray
 	});
+  }
 })
 
 
 /*On Colour selection | PDP*/
 $(document).on('click',".color-swatch > li", function(){
 	var product_color = $(this).find('img').attr('title').toLowerCase();
-	utag.link({
+	if(typeof(utag) != "undefined"){
+	  utag.link({
 		"link_text":"pdp_color_"+product_color,
 		"event_type":"pdp_color_selected",
 		"product_color":product_color,
 		product_id : productIdArray
-	});
+	  });
+	}
 })
 
 /*TPR-4803| hot now | homepage*/
@@ -566,14 +580,16 @@ function utagAddProductToBag(triggerPoint,productCodeMSD){
 			 productCode= $('#productCode').val();
 			 productCodeArray.push(productCode);
 		}
-if(typeof(utag) != "undefined"){
-	utag.link({
-		link_text: triggerPoint ,
-		event_type : triggerPoint+"_"+ pageName,
-		product_sku : productCodeArray,		// Product code passed as an array for Web Analytics - INC_11511  fix
-		product_id :  productCodeArray
-	});
-}
+
+		//PRDI-564 FIX
+		if(typeof(utag) != "undefined"){
+	          utag.link({
+		          link_text: triggerPoint ,
+		          event_type : triggerPoint+"_"+ pageName,
+		          product_sku : productCodeArray,		// Product code passed as an array for Web Analytics - INC_11511  fix
+		          product_id :  productCodeArray
+	        });
+		}
 }
 
 
@@ -595,8 +611,9 @@ $(document).on("click","#expressCheckoutButtonId",function(){
 
  /*TPR-4745  | Add New Address | Checkout */
 $(document).on('click','.pincode-button',function(){
-				 
-utag.link({ link_text : 'add_new_address_clicked' ,event_type : 'add_new_address_clicked'});
+	if(typeof(utag) != "undefined"){				 
+    utag.link({ link_text : 'add_new_address_clicked' ,event_type : 'add_new_address_clicked'});
+	}
 })
 
 /*TPR-4687 | Broken Image*/
@@ -614,9 +631,11 @@ $(window).load(function() {
 	});
 	if(brokenImageCount > 0){
 		var msg = brokenImageCount+" broken_image_found";
-		utag.link({ 
-			error_type : msg
-		});
+		if(typeof utag !="undefined"){
+			utag.link({ 
+				error_type : msg
+			});
+		}
 	}
 });
 
@@ -1325,8 +1344,25 @@ function tealiumCallOnPageLoad()
 						$('#tealiumHome').html(data);
 					}
 				});*/
-	
-		var pageTypeGeneric = 'generic';
+		var currentPageURL = window.location.href;
+		var pageTypeGeneric = '';
+ 		//done for PRDI-95
+ 		if ( pageType == 'checkout-login'){
+ 			pageTypeGeneric = 'login';
+ 		}
+ 		else if(pageType.indexOf("electronics") !== -1){
+ 			pageTypeGeneric = 'category';
+ 		}
+ 		else if(currentPageURL.indexOf("/c-mbh") > -1){
+ 			pageTypeGeneric = 'brand';
+ 		}
+ 		else if(currentPageURL.indexOf("/c-msh") > -1){
+ 			pageTypeGeneric = 'category';
+ 		}
+ 		else{
+ 			pageTypeGeneric = 'generic';
+ 		}
+ 
 		var site_section = pageName;
         var genericPageTealium = '';
         //TPR-430
@@ -2096,7 +2132,9 @@ $(document).on('click',".color-swatch > li", function(){
  
  /*Out Of Stock During adding to bag*/
 function errorAddToBag(errorMessage){
+	if(typeof(utag) != "undefined"){
 	utag.link({"error_type":errorMessage});
+	}
 }
 
 /*TPR-4687 | Broken Image*/
@@ -2120,9 +2158,12 @@ function tealiumBrokenImage(){
 	});
 	if(brokenImageCount > 0){
 		var msg = brokenImageCount+" broken_image_found";
-		utag.link({ 
-			error_type : msg
-		});
+		if(typeof(utag) != "undefined"){
+		  utag.link({ 
+			  error_type : msg
+		   });
+
+		}
 	}
 }
 /*TPR-4728 | add to compare page  3rd part */

@@ -1,0 +1,123 @@
+$storePrefix=lux
+$contentCatalog=$storePrefixContentCatalog
+$productCatalog=luxProductCatalog
+$contentCV=catalogVersion(CatalogVersion.catalog(Catalog.id[default=$contentCatalog]),CatalogVersion.version[default=Staged])[default=$contentCatalog:Staged]
+$picture=media(code, $contentCV)
+$productCV=catalogVersion(catalog(id[default=$productCatalog]),version[default='Staged'])[unique=true,default=$productCatalog:Staged]
+$luxuryStoreAddonPrefix=addon:/luxurystoreaddon
+$lang=en
+
+# Import modulegen config properties into impex macros
+UPDATE GenericItem[processor=de.hybris.platform.commerceservices.impex.impl.ConfigPropertyImportProcessor];pk[unique=true]
+$jarResourceCms=$config-jarResourceCmsValue
+
+
+INSERT_UPDATE ContentSlotForTemplate;$contentCV[unique=true];uid[unique=true];position[unique=true];pageTemplate(uid,$contentCV)[unique=true][default='CartPageTemplate'];contentSlot(uid,$contentCV)[unique=true];allowOverwrite
+;;SiteLogo-CartPage;SiteLogo;;SiteLogoSlot;true
+;;HomepageLink-CartPage;HomepageNavLink;;HomepageNavLinkSlot;true
+;;NavigationBar-CartPage;NavigationBar;;NavigationBarSlot;true
+;;MiniCart-CartPage;MiniCart;;MiniCartSlot;true
+;;WishList-CartPage;WishList;;WishListSlot;true
+;;Footer-CartPage;Footer;;FooterSlot;true
+;;HeaderLinks-CartPage;HeaderLinks;;HeaderLinksSlot;true
+;;SearchBox-CartPage;SearchBox;;SearchBoxSlot;true
+;;TopHeaderSlot-CartPage;TopHeaderSlot;;TopHeaderSlot;true
+;;BottomHeaderSlot-CartPage;BottomHeaderSlot;;BottomHeaderSlot;true
+;;BottomContentSlot-CartPage;BottomContentSlot;;BottomContentSlot;true
+;;CenterRightContentSlot-CartPage;CenterRightContentSlot;;CenterRightContentSlot;true
+;;CenterLeftContentSlot-CartPage;CenterLeftContentSlot;;CenterLeftContentSlot;true
+;;EmptyCartMiddleContent-CartPage;EmptyCartMiddleContent;;EmptyCartMiddleContent;true
+;;PlaceholderContentSlot-CartPage;PlaceholderContentSlot;;PlaceholderContentSlot;true
+;;WishListCartSlot-CartPage;WishListCartSlot;;WishListCartSlot;true
+
+INSERT_UPDATE ContentPage;$contentCV[unique=true];uid[unique=true];name;masterTemplate(uid,$contentCV);label;defaultPage[default='true'];approvalStatus(code)[default='approved'];homepage[default='false'];previewImage(code, $contentCV)[default='ContentPageModel__function_preview']
+;;cartPage;Cart Page;CartPageTemplate;cart
+
+# Create Content Slots
+INSERT_UPDATE ContentSlot;$contentCV[unique=true];uid[unique=true];name;active
+;;CenterContentSlot;Center Content Slot;true
+;;CenterLeftContentSlot;Center Left Content Slot;true
+;;CenterRightContentSlot;Center Right Content Slot;true
+;;EmptyCartMiddleContent;Empty CartMiddle Content Slot;true
+;;PlaceholderContentSlot;Placeholder for Addon tag files;true
+;;TopContentSlot-cartPage;Top Content Slot for Cart Page;true;
+
+# SimpleBannerComponent
+INSERT_UPDATE SimpleBannerComponent;$contentCV[unique=true];uid[unique=true];name;&componentRef;;;;
+;;FreeDeliverySimpleBannerComponent;Free Delivery Simple Banner Component;FreeDeliverySimpleBannerComponent;;;;
+
+
+INSERT_UPDATE CMSParagraphComponent;$contentCV[unique=true];uid[unique=true];name;&componentRef;;;;
+;;EmptyCartParagraphComponent;Empty Cart Paragraph Component;EmptyCartParagraphComponent;;;;
+
+INSERT_UPDATE JspIncludeComponent;$contentCV[unique=true];uid[unique=true];name;page;actions(uid,$contentCV);&componentRef
+;;CartComponent;Cart Display Component;cartDisplay.jsp;;CartComponent
+;;CartTotalsComponent;Cart Totals Display Component;cartTotalsDisplay.jsp;;CartTotalsComponent
+;;PromotionsComponent;Promotions Component;cartPromotionsDisplay.jsp;;PromotionsComponent
+;;PotentialPromotionsComponent;Potential Promotions Component;potentialPromotionsDisplay.jsp;;PotentialPromotionsComponent
+;;CheckoutComponent;Checkout Display Component;checkoutDisplay.jsp;;CheckoutComponent
+
+# CMS CartSuggestion Components
+INSERT_UPDATE CartSuggestionComponent;$contentCV[unique=true];uid[unique=true];name;productReferenceTypes(code);maximumNumberProducts;filterPurchased;&componentRef
+;;MplCartSuggestions;Cart Suggestions;CROSSELLING,UPSELLING,DIFF_ORDERUNIT,CONSISTS_OF,FOLLOWUP,OTHERS;20;true;MplCartSuggestions
+
+# CMS AddToCart Action
+INSERT_UPDATE AddToCartAction;$contentCV[unique=true];uid[unique=true];url;name;restrictions(uid,$contentCV);&actionRef
+;;AddToCartAction;/cart/add;Product Add To Cart Action;ActionRestriction;AddToCartAction
+
+# CMS ProductAddToCart Components
+INSERT_UPDATE ProductAddToCartComponent;$contentCV[unique=true];uid[unique=true];name;actions(&actionRef);&componentRef
+;;AddToCart;Product Add To Cart;AddToCartAction;AddToCart
+
+# ContentSlot
+INSERT_UPDATE ContentSlot;$contentCV[unique=true];uid[unique=true];name;active;cmsComponents(&componentRef)
+;;EmptyCartMiddleContent-cartPage;Middle Slot for Cart Page;true;EmptyCartParagraphComponent
+;;TopContentSlot-cartPage;Top Content Slot for Cart Page;true;FreeDeliverySimpleBannerComponent,CartComponent
+;;CenterLeftContentSlot-cartPage;Center Left Content Slot for Cart Page;true;PromotionsComponent,PotentialPromotionsComponent
+;;CenterRightContentSlot-cartPage;Center Right Content Slot for Cart Page;true;CartTotalsComponent
+;;BottomContentSlot-cartPage;Bottom Content Slot for Cart Page;true;CheckoutComponent,MplCartSuggestions
+;;WishListCartSlot-cartPage;WishList Cart Slot;true;AddToCart
+
+
+INSERT_UPDATE ContentSlot;$contentCV[unique=true];uid[unique=true];name;active;cmsComponents(uid,$contentCV)
+;;MiddleHeader;helpLink;true;LuxuryHelpLink
+;;SiteLogoSlot;site logo;true;SiteLogoComponent
+;;SearchBoxSlot;Search Box;true;luxury-SearchBox
+;;TopHeaderSlot;Top header slot;true;Home-TopBannerContent
+;;FooterSlot;Footer;true;LuxuryFooterComponent
+;;NavigationBarSlot;Navigation Bar Slot;true;NavBarComponent
+;;WishListSlot;Wish List;true;MyWishList
+;;MiniCartSlot;Mini Cart;true;MiniCart
+;;PinCodeServiceSlot;Pin Code Service;true;PinCodeService
+
+
+
+
+
+
+# ContentSlotForPage
+INSERT_UPDATE ContentSlotForPage;$contentCV[unique=true];uid[unique=true];position[unique=true];page(uid,$contentCV)[unique=true][default='cartPage'];contentSlot(uid,$contentCV)[unique=true]
+;;EmptyCartMiddleForCartPage;EmptyCartMiddleContent;;EmptyCartMiddleContent-cartPage
+;;TopContentSlotForCartPage;TopContent;;TopContentSlot-cartPage
+;;CenterLeftContentSlotForCartPage;CenterLeftContentSlot;;CenterLeftContentSlot-cartPage
+;;CenterRightContentSlotForCartPage;CenterRightContentSlot;;CenterRightContentSlot-cartPage
+;;BottomContentSlotForCartPage;BottomContentSlot;;BottomContentSlot-cartPage
+;;WishListCartSlotforCartPage;WishListCartSlot;;WishListCartSlot-cartPage
+
+
+INSERT_UPDATE ContentSlotName;name[unique=true];template(uid,$contentCV)[unique=true][default='CartPageTemplate'];validComponentTypes(code);compTypeGroup(code)
+;SiteLogo;;;logo
+;HeaderLinks;;;headerlinks
+;SearchBox;;;searchbox
+;MiniCart;;CMSLinkComponent,TrackOrderHeaderComponent,MyWishListInHeaderComponent,SignInFlyOutComponent;minicart
+;NavigationBar;;;navigation
+;TopContent;;;wide
+;EmptyCartMiddleContent;;CMSParagraphComponent
+;Footer;;;footer
+;TopHeaderSlot;;;wide
+;BottomHeaderSlot;;;wide
+;CenterLeftContentSlot;;;narrow
+;CenterRightContentSlot;;;narrow
+;BottomContentSlot;;BreadcrumbComponent
+;PlaceholderContentSlot;;;
+;WishListCartSlot;;ProductAddToCartComponent

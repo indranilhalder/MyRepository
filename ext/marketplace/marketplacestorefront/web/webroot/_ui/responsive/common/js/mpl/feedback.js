@@ -1620,7 +1620,7 @@ $(document).ready(function(){
 		$("input[name='email']").parents("form#loginForm").attr("autocomplete","off");
 		$("input[name='j_username'],input[name='email']").attr("autocomplete","off");
 		$("input[type='password']").attr("autocomplete","new-password");
-		$(window).on("load resize", function() {
+		/*$(window).on("load resize", function() {
 			var $li = $("body .account .right-account.rewards>div.your-activity>ul.coupon-container .coupon-box");
 			var top_margin=$li.css("margin-top");
 			if (top_margin == '0px') {
@@ -1657,7 +1657,7 @@ $(document).ready(function(){
 					$li.eq($li.length - 1).css("height",'auto');
 				}
 			}
-		});
+		});*/
 		
 		if ('ontouchstart' in window) {
 			$('body').addClass("touchDevice");
@@ -1794,7 +1794,7 @@ $(document).ready(function(){
 				if($(this).children('ul').height() > 0) {
 					$(this).children('ul').css("height","0px");
 				} else {
-					$(this).children('ul').css("height","450px");
+					$(this).children('ul').css("height","500px"); //changes for TPR-6410
 				}
 			}
 				
@@ -3831,6 +3831,17 @@ $(".deliveryTrack.status.suman").each(function(){
 	});
 	});
 /* TPR-6013 ends*/
+/* UF-377 starts */
+$(document).ready(function(){
+	if ($(".product-specification-accordion").length) {
+	    $(".product-specification-accordion").smk_Accordion({
+	        closeAble: true,
+	        closeOther: true,
+	        slideSpeed: 750,
+	    });
+	}
+});
+/* UF-377 ends */
 /*PRDI-402 start*/
 $(document).ready(function(){
 	if($(window).width() < 790){
@@ -3922,3 +3933,18 @@ function fixTopAdjustTimeOut(){
 	}  , 100 );
 }
 /*end change of INC144316778*/
+/*TPR-6148 start*/
+function copyCode(elem) {
+	//alert();
+	  var x = $("<input>");
+	  $("body").append(x);
+	  x.val($(elem).parents(".coupon-box").find("p.copycode").text()).select();
+	  document.execCommand("copy");
+	  x.remove();
+	  $('.copycode_message').fadeIn(function() {
+		  window.setTimeout(function() {
+		    $('.copycode_message').fadeOut('slow');
+		  }, 1500);
+		});
+	}
+	/*TPR-6148 end*/

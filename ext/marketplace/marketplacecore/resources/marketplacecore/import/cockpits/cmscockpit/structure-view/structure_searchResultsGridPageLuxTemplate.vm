@@ -1,0 +1,49 @@
+<div>
+	<table width="100%" cellspacing="0" style="margin:0;padding:0;table-layout:auto;border:1px solid #1E4EBF;">
+		<tbody>
+			<tr>
+				<td style="width: 960px; height: 21px;" colspan="3"><cockpit
+						code="TopHeaderSlot" /></td>
+			</tr>
+			<tr>
+				<td style="width: 960px; height: 21px;">
+					<cockpit code="MiddleHeader" />
+				</td>
+				<td style="width: 960px; height: 21px;">
+					<cockpit code="SiteLogo" />
+				</td>
+				<td style="width: 960px; height: 21px;">
+					<cockpit code="HeaderLinks" />
+					<cockpit code="WishList" />
+					<cockpit code="MiniCart" />
+					<cockpit code="SearchBox" />
+				</td>
+			</tr>
+			<tr>
+				<td style="width: 960px; height: 21px;" colspan="3"><cockpit
+						code="NavigationBar" /></td>
+			</tr>
+			<tr>
+				<td colspan="7" class="structureViewSection">
+					<cockpit code="LuxPLPBannerPosition"/>
+				</td>
+			</tr>
+			<tr>
+				<td colspan="7" class="structureViewSection">
+					<cockpit code="LuxPLPVisualFilterPosition"/>
+				</td>
+			</tr>
+			<tr>
+				<td colspan="2" class="structureViewSection">
+					<cockpit code="LuxProductLeftRefinements"/>
+				</td>
+				<td colspan="5" class="structureViewSection">
+					<cockpit code="LuxSearchResultsGridSlot"/>
+				</td>
+			</tr>
+		</tbody>
+	</table>
+	<div style="width:100%; border-top: 2px solid #bbb" class="cmsContentEditor">
+		<cockpit code="editor" />
+	</div>
+</div>

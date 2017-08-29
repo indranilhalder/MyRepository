@@ -6,21 +6,13 @@ $(document).ready(function(){
 		if($(".address_postcode").val().length >= "3") {
 			
 			loadPincodeData("edit").done(function() {
-				console.log("line 394");
 			 var value = $(".address_landmarkOtherDiv").attr("data-value");
-			 console.log("line 396 "+value);
 			 otherLandMarkTri(value,"defult");
 			});
 
 			
 		}
 	}
-	
-
-	
-	
-	
-	
 	
 	
 	$(".address_states").change(function(){
@@ -68,7 +60,7 @@ $(".address_postcode").blur(function() {
 	 }else{
 			$(".address_landmarks").empty();
 			changeFuncLandMark("");
-			$(".address_states,#statesReadOnly,.address_townCity").attr('readonly',false).prop("value","");
+			//$(".address_states,#statesReadOnly,.address_townCity").attr('readonly',false).prop("value","");
 			$(".mainDrop").show();
 			$(".mainDrop select").prop("disabled",false);
 			$(".stateInput input").prop("disabled","disabled");
@@ -160,9 +152,9 @@ function loadPincodeData(parm) {
 				//alert("tmpValue is "+ tmpValue);
 				if(parm != "edit" || tmpValue >= 0) {
 					
-					$(".address_townCity").val('');
+					//$(".address_townCity").val('');
 				//	added by sneha R2.3
-					$(".address_states").prop("value","");
+					//$(".address_states").prop("value","");
 				//	end of sneha R2.3
 					tmpValue = -1;
 			    }

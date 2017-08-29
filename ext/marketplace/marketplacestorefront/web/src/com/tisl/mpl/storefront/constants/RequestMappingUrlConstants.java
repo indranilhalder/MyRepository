@@ -20,7 +20,7 @@ public final class RequestMappingUrlConstants
 	public static final String ROOT = "/";
 	public static final String TENANT = "tenant";
 	public static final String LINK_404 = "/404";
-
+	public static final String LUXURYCATEGORYLANDINGPAGE = "/luxuryCategorylandingPage";
 	public static final String LINK_MY_ACCOUNT = "/my-account";
 	public static final String LINK_ADDRESS_FORM = "/addressform";
 	public static final String LINK_ORDERS = "/orders";
@@ -36,8 +36,8 @@ public final class RequestMappingUrlConstants
 	public static final String CHANGE_DELIVERY_ADDRES_URL = "/{orderCode}/changeDeliveryAddress";
 	public static final String OTP_VALIDATION_URL = "/validationOTP";
 	public static final String NEW_OTP_GENERATE = "/newOTP";
-	public static final String RESCHEDULEDDELIVERYDATE="/{orderCode}/reScheduledDeliveryDate";
-	
+	public static final String RESCHEDULEDDELIVERYDATE = "/{orderCode}/reScheduledDeliveryDate";
+
 
 
 	public static final String LINK_UPDATE_EMAIL = "/update-email";
@@ -166,25 +166,25 @@ public final class RequestMappingUrlConstants
 	public static final String ANONYMOUS_TRACKING_PAGE_URL = "/trackOrder/shortDetails/?orderCode=";
 	public static final String LOGIN_TRACKING_PAGE_URL = "/my-account/order/?orderCode=";
 	//order tracking page end
-	
+
 	public static final String RETURN_TO_STORE_AJAX = "/returnToStore";
-	public static final String LINK_INITIATE_RETURN="/initiateReturn";
+	public static final String LINK_INITIATE_RETURN = "/initiateReturn";
 	public static final String LINK_MY_ACCOUNT_RETRUNS = "/my-account/returns";
 	public static final String LINK_UPDATE_RETURNINFO = "/updateReturnInfo";
 	public static final String LINK_TICKET_UPDATE = "/updateTicket";
 	public static final String LINK_EDIT_RETURN_ADDRESS = "/editReturnAddress";
 	public static final String LINK_ADD_RETURN_ADDRESS = "/addNewReturnAddress";
-	public static final String LINK_PINCODE_CHECK="/pincodeServiceCheck";
-	
-	public static final String FILE_UPLOAD_PATH="return.fileupload.path";
-	public static final String SHIPMENT_CHARGE_AMOUNT="return.shipmentcharge";
-	public static final String TYPE_OF_RETURN_FOR_RSS="return.typeofreturn";
-	public static final String RSS="RSS";
-	public static final String RETURN_TYPE="02";
-	public static final String COD="COD";
-	
-	public static final String RETURN_FILE_DOWNLOAD="/returnFileDownload";
-	public static final String FILE_DOWNLOAD_PATH="return.filedownload.path";
-	public static final String RETURN_FILE_NAME="return.filedownload.filename";
+	public static final String LINK_PINCODE_CHECK = "/pincodeServiceCheck";
+
+	public static final String FILE_UPLOAD_PATH = "return.fileupload.path";
+	public static final String SHIPMENT_CHARGE_AMOUNT = "return.shipmentcharge";
+	public static final String TYPE_OF_RETURN_FOR_RSS = "return.typeofreturn";
+	public static final String RSS = "RSS";
+	public static final String RETURN_TYPE = "02";
+	public static final String COD = "COD";
+
+	public static final String RETURN_FILE_DOWNLOAD = "/returnFileDownload";
+	public static final String FILE_DOWNLOAD_PATH = "return.filedownload.path";
+	public static final String RETURN_FILE_NAME = "return.filedownload.filename";
 
 }

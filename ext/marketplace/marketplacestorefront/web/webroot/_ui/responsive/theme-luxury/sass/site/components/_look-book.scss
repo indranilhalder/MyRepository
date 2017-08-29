@@ -1,0 +1,502 @@
+.page-luxuryCategoryPage{
+	.mainContent-wrapper{
+		> .container{
+			width:100%;
+			padding:0px;
+			.owl-stage-outer{
+				.item{
+					img{
+						width:100%;
+					}
+				}
+			}
+		}
+		footer{
+			.container{
+				max-width:1200px;
+				margin:0 auto;
+			}
+		}
+	}
+}
+.look-book-wrapper{
+	.colmn.left{
+		float:left;
+	}
+	.colmn.right{
+		float:right;
+	}
+	li{
+		width:50%;
+		float:left;
+	}
+	@include media-breakpoint-down(sm){
+		.colmn.lookbook-mob-slider{
+			clear:both;
+			.list-unstyled{
+				overflow: hidden;
+			    position: relative;
+			    li{
+			    	margin: 0 20px;
+				    width: 120px;
+				    line-height: 130px;
+				    text-align: center;
+				    height: 130px;
+			    }
+			}
+			.slick-track{
+				margin-left: -20%;
+			}
+		}
+	}
+}
+.lux-main-banner-slider{
+	margin-bottom:40px;
+	position:relative;
+	.owl-stage-outer{
+		overflow:hidden;
+		.owl-item{
+			float:left;
+		}
+	}
+	.owl-dots {
+		bottom: 15px;
+		position: absolute;
+		text-align: center;
+		width: 100%;
+		.owl-dot {
+			background: gray;
+			display: inline-block;
+			height: 2px;
+			margin-left: 10px;
+			text-align: center;
+			width: 56px;
+		}
+		.owl-dot.active {
+			background: #fff;
+		}
+	}
+
+
+}
+.look-book {
+	max-width: 910px;
+	margin: 0 auto 60px;
+	text-align: center;
+    
+    @include media-breakpoint-down(sm) {
+        margin: 0 auto 20px;
+    }
+    
+    li{
+        list-style: none;
+    }
+    
+    &.layout-2{
+        max-width: 930px;
+    }
+    &.layout-3{
+        max-width: 930px;
+    }
+    &.shortbanner-layout1{
+        max-width: 1127px;
+        .layout-width-25{
+            li{
+                float: right;
+            }
+        }
+    }
+    &.shortbanner-layout2{
+        max-width: 1127px;
+    }
+    &.shortbanner-layout3{
+        max-width: 1127px;
+    }
+	.slick-slide {
+		img {
+			display: inline-block;
+		}
+	}
+	.section-content{
+		font-size: 18px;
+		letter-spacing: 1px;
+	}
+	@include media-breakpoint-up(md) {
+		.colmn, .look-book-carousel li {
+			width: 50%;
+			float: left;
+		}
+	}
+	/* look book carousel */
+	.look-book-carousel {
+		li {
+			float: left;
+			opacity: 0;
+		}
+	}
+	.slick-current ul li {
+		opacity: 1;
+		transition: opacity .5s ease-in-out;
+		@for $i from 1 through 4 {
+		    &:nth-child(#{$i}) {
+		        transition-delay: $i * 0.25s;
+		    }
+		}
+	}
+	/* EOF look book carousel */
+	/* look book 4 column */
+	.look-book-img {
+        .lookbook-pd-5{
+            padding:0 5px;
+        }
+        .lookbook-pd-0{
+            padding:0 0px;
+        }
+        .lookbook-pdr-10{
+           padding:0 5px;
+        }
+        .lookbook-pdl-10{
+            padding:0 5px;
+        }
+		.colmn {
+			&:nth-child(1) {
+				padding-right: 5px;
+			}
+			&:nth-child(2) {
+				padding-left: 5px;
+			}
+		}
+		li {
+			float:left;
+			margin-bottom: 5px;
+
+			& + li {
+				margin-bottom: 5px;
+			}
+		}
+	}
+   .show-lookbok-desktop,.shortbanner-desktop{
+        display: block;
+      
+        @include media-breakpoint-down(sm) {
+            display: none;
+        }
+    }
+    .show-lookbok-mobile,.shortbanner-mobile{
+        display: none;
+        @include media-breakpoint-down(sm) {
+            display: block;
+        }
+    }
+    &.layout-2{
+        .split-lookbook-2{
+            li:first-child{
+                width: 50%;
+                float: left;
+                @include media-breakpoint-down(sm) {
+                     width: 49%;
+                }
+            }
+            li:nth-child(2){
+                width: 50%;
+                float: right;
+                @include media-breakpoint-down(sm) {
+                     width: 49%;
+                }
+            }
+        }
+    }
+    &.layout-3{
+        ul{
+            @include media-breakpoint-down(sm) {
+                margin: 0;
+            }
+        }
+        .split-lookbook-2{
+            li:first-child{
+                width: 50%;
+                float: left;
+                @include media-breakpoint-down(sm) {
+                     width: 49%;
+                }
+            }
+            li:nth-child(2){
+                width: 50%;
+                float: right;
+                @include media-breakpoint-down(sm) {
+                     width: 49%;
+                }
+            }
+        }
+         .split-lookbook-3{
+            li:nth-child(2){
+                width: 50%;
+                float: left;
+                @include media-breakpoint-down(sm) {
+                     width: 49%;
+                }
+            }
+            li:last-child{
+                width: 50%;
+                float: right;
+                @include media-breakpoint-down(sm) {
+                     width: 49%;
+                }
+            }
+        }
+    }
+    .layout-width-75{
+        float: left;
+        width: 75%;
+    }
+    .layout-width-50{
+        float: left;
+        width: 50%;
+    }
+    .layout-width-100{
+        float: left;
+        width: 100%;
+    }
+    .layout-width-25{
+        float: left;
+        width: 25%;
+    }
+    .show-lookbok-desktop,.shortbanner-desktop{    
+        img{
+            border-radius: 5px;
+        }
+    }
+	/* EOF look book 4 column */
+	/* look book link */
+	.look-book-link{
+
+		li{
+			width: 33%;
+			display: inline-block;
+			text-align: left;
+			margin: 10px 0px;
+			vertical-align: top;
+				a{
+					font-size: 15px;
+				}
+		}
+
+	}
+
+	/* EOF look book link */
+}
+.brand-follow {
+    max-width: 920px;
+    margin: 0 auto 35px;
+
+	@include media-breakpoint-up(xs) {
+
+		text-align: center;
+
+		picture{
+			display: inline-block;
+		}
+
+		img, h3 {
+			text-align: center;
+			 font-size: 1.4em;
+		}
+
+	}
+	@include media-breakpoint-up(md) {
+
+		text-align: left;
+
+		picture{
+			display:inline;
+		}
+
+		img, h3 {
+			text-align: left;
+			font-size: 24px;
+			float: left;
+		}
+		h3{
+			margin-left: 20px;
+		}
+	}
+}
+.short_banner-heading{
+    text-align: center;
+}
+.trav-edition{
+
+	position: relative;
+
+	&.single-col{
+		.seastion-content{
+			padding: 20px 50% 20px 40px;
+			top: 50%;
+			position: absolute;
+			left: 65px;
+			right: 0;
+			z-index: 3;
+			-webkit-transform: translateY(-50%);
+			-moz-transform: translateY(-50%);
+			-o-transform: translateY(-50%);
+			-ms-transform: translateY(-50%);
+			transform: translateY(-50%);
+				h2{
+					font: 48px/64px $font-family-base ;
+					color:$white;
+					font-style: italic;
+				}
+		}
+	}
+	&.double-col{
+		max-width: 1120px;
+		margin: 0 auto 35px;
+			img {
+			float: left;
+			&:first-child {
+				margin-right: 10px;
+			}
+		}
+	}
+
+	.col{
+		display: inline-block;
+		margin: 0px 10px;
+	}
+
+}
+.short-banner-heading{
+    text-align: center;
+}
+.shop-by-catagory{
+	.slick-track{
+		margin:auto;
+	}
+
+    @include media-breakpoint-down(sm) {
+
+        .shop-by-catagory-slider{
+            li{
+                margin: 21px;
+
+                a{
+                    img{
+                        border-radius: 50%;
+                        border: 1px solid #ccc
+                    }
+                }
+            }
+        }
+    }
+}
+
+.page-luxuryWomenlandingPage,.page-luxuryMenlandingPage,.page-luxuryBrandLandingPage{
+	.mainContent-wrapper{
+		> .container{
+			width:100%;
+			padding:0px;
+			.owl-stage-outer{
+				.item{
+					img{
+						width:100%;
+					}
+				}
+			}
+		}
+		footer{
+			.container{
+				max-width:1200px;
+				margin:0 auto;
+			}
+		}
+	}
+	.luxgender-carousel.shop-by-catagory{
+		overflow:hidden;
+	}
+	.lux-blp-carousel{
+		display:inline-block;
+		width:100%;
+		.owl-stage-outer{
+			overflow:hidden;
+			.owl-item{
+				float:left;
+			}
+		}
+	}
+	.look-book-img{
+		margin-top:50px;
+	}
+	.luxgender-carousel{
+		.owl-stage-outer{
+			display:inline-block;
+			.owl-item{
+				float:left;
+			}
+		}
+		.owl-dot{
+			background-color: #fff;
+		    border-radius: 50%;
+		    border: 1px solid #2d2d2d;
+		    text-indent: -90000px;
+		    width: 10px;
+		    height: 10px;
+		    padding: 0;
+		    display:inline-block;
+		    margin-right:10px;
+		}
+		.owl-dot.active{
+			background-color: #2d2d2d;
+		}
+	}
+	.lux-blp-carousel{
+		overflow:hidden;
+	}
+}
+
+
+
+@include media-breakpoint-down(sm) {
+	.page-luxuryWomenlandingPage,.page-luxuryMenlandingPage,.page-luxuryBrandLandingPage{
+		.look-book-wrapper{
+			.colmn{
+				width:100%;
+				text-align:center;
+				li{
+					width:50%;
+				}
+			}
+		}
+		.look-book-img{
+			.colmn{
+				width:100%;
+				text-align:center;
+				li{
+					width:100%;
+				}
+			}
+		}
+		.look-book-link li{
+			width:100%;
+			text-align:left;
+			margin: 10px 15px;
+		}
+	}
+}
+.template-pages-addon--luxurystoreaddon-pages-layout-luxuryGenderLandingPage{
+    .container{
+        padding-left: 0px;
+        padding-right: 0px; 
+        width: 100%;
+    }
+    footer{
+        .container{
+            padding-left: 20px;
+            padding-right: 20px;
+        }
+        @media (min-width: 1200px){
+            .container {
+                width: 1200px;
+            } 
+        }       
+    }
+}

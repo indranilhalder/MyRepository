@@ -129,7 +129,6 @@ import com.tisl.mpl.constants.MarketplacewebservicesConstants;
 import com.tisl.mpl.core.constants.MarketplaceCoreConstants;
 import com.tisl.mpl.core.enums.FeedbackCategory;
 import com.tisl.mpl.core.model.MplEnhancedSearchBoxComponentModel;
-import com.tisl.mpl.core.util.DateUtilHelper;
 import com.tisl.mpl.data.CODSelfShipData;
 import com.tisl.mpl.exception.EtailBusinessExceptions;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
@@ -183,6 +182,7 @@ import com.tisl.mpl.wsdto.NewsletterWsDTO;
 import com.tisl.mpl.wsdto.OneTouchCancelReturnCrmRequestDTO;
 import com.tisl.mpl.wsdto.OneTouchCancelReturnCrmRequestList;
 import com.tisl.mpl.wsdto.OneTouchCancelReturnDTO;
+import com.tisl.mpl.wsdto.OrderInfoWsDTO;
 import com.tisl.mpl.wsdto.PaymentInfoWsDTO;
 import com.tisl.mpl.wsdto.PinWsDto;
 import com.tisl.mpl.wsdto.ProductSearchPageWsDto;
@@ -211,6 +211,8 @@ public class MiscsController extends BaseController
 {
 
 	private static final String APPLICATION_JSON = "application/json"; //Sonar fix
+	private static final String ROLE_TRUSTED_CLIENT = "ROLE_TRUSTED_CLIENT"; //Sonar fix
+	private static final String ROLE_CLIENT = "ROLE_CLIENT"; //Sonar fix
 
 
 	@Resource(name = "brandFacade")
@@ -227,13 +229,13 @@ public class MiscsController extends BaseController
 	private CustomerFacade customerFacade;
 	/*
 	 * @Resource private ModelService modelService;
-	 *
+	 * 
 	 * @Autowired private ForgetPasswordFacade forgetPasswordFacade;
-	 *
+	 * 
 	 * @Autowired private ExtendedUserServiceImpl userexService;
-	 *
+	 * 
 	 * @Autowired private WishlistFacade wishlistFacade;
-	 *
+	 * 
 	 * @Autowired private MplSellerMasterService mplSellerInformationService;
 	 */
 	@Autowired
@@ -260,7 +262,7 @@ public class MiscsController extends BaseController
 	private FieldSetBuilder fieldSetBuilder;
 	/*
 	 * @Resource(name = "i18NFacade") private I18NFacade i18NFacade;
-	 *
+	 * 
 	 * @Autowired private MplCommerceCartServiceImpl mplCommerceCartService;
 	 */
 	@Autowired
@@ -296,17 +298,23 @@ public class MiscsController extends BaseController
 	 * @Resource(name = "mplPaymentFacade") private MplPaymentFacade mplPaymentFacade; private static final String
 	 * APPLICATION_TYPE = "application/json"; public static final String EMAIL_REGEX =
 	 * "\\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,4}\\b";
-	 *
+	 * 
 	 * /**
-	 *
+	 * 
 	 * /*
-	 *
+	 * 
 	 * @Resource(name = "mplPaymentFacade") private MplPaymentFacade mplPaymentFacade; private static final String
 	 * APPLICATION_TYPE = "application/json"; public static final String EMAIL_REGEX =
 	 * "\\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,4}\\b";
-	 *
-	 * /**
-	 *
+	 * 
+	 * 
+	 * 
+	 * 
+	 * 
+	 * 
+	 * 
+	 * 
+	 * 
 	 * @return the configurationService
 	 */
 	@Autowired
@@ -342,6 +350,12 @@ public class MiscsController extends BaseController
 	@Autowired
 	private SessionService sessionService;
 
+	//TPR-4512
+	@Resource(name = "mplOrderFacade")
+	private MplOrderFacade mplOrderFacade;
+
+	@Autowired
+	private ConfigurationService configurationService;
 	//Newly added for TPR-1345:One touch CRM
 	@Resource(name = "orderModelService")
 	private OrderModelService orderModelService;
@@ -349,10 +363,11 @@ public class MiscsController extends BaseController
 	private Converter<OrderModel, OrderData> orderConverter;
 	@Resource(name = "cancelReturnFacade")
 	private CancelReturnFacade cancelReturnFacade;
-	@Autowired
-	private DateUtilHelper dateUtilHelper;
-	@Autowired
-	private ConfigurationService configurationService;
+	/* sonar fix */
+	/*
+	 * @Autowired private DateUtilHelper dateUtilHelper;
+	 */
+
 
 
 	/*
@@ -479,7 +494,7 @@ public class MiscsController extends BaseController
 	}
 
 	@Secured(
-	{ "ROLE_CLIENT", "ROLE_CUSTOMERGROUP", "ROLE_TRUSTED_CLIENT", "ROLE_CUSTOMERMANAGERGROUP" })
+	{ ROLE_CLIENT, "ROLE_CUSTOMERGROUP", ROLE_TRUSTED_CLIENT, "ROLE_CUSTOMERMANAGERGROUP" })
 	@RequestMapping(value = "/{baseSiteId}/updateprofile", method = RequestMethod.POST)
 	//	@ResponseStatus(HttpStatus.OK)
 	public void updateUser(final HttpServletRequest request) throws DuplicateUidException
@@ -724,9 +739,9 @@ public class MiscsController extends BaseController
 
 	/*
 	 * restriction set up interface to save the data comming from seller portal
-	 *
+	 * 
 	 * @param restrictionXML
-	 *
+	 * 
 	 * @return void
 	 */
 	@RequestMapping(value = "/{baseSiteId}/miscs/restrictionServer", method = RequestMethod.POST)
@@ -746,7 +761,7 @@ public class MiscsController extends BaseController
 	//reset password or change password arunashis
 
 	@Secured(
-	{ "ROLE_CLIENT", "ROLE_CUSTOMERGROUP", "ROLE_TRUSTED_CLIENT", "ROLE_CUSTOMERMANAGERGROUP" })
+	{ ROLE_CLIENT, "ROLE_CUSTOMERGROUP", ROLE_TRUSTED_CLIENT, "ROLE_CUSTOMERMANAGERGROUP" })
 	@RequestMapping(value = "/{baseSiteId}/{userId}/password", method = RequestMethod.PUT)
 	//@ResponseStatus(value = HttpStatus.ACCEPTED)
 	@ResponseBody
@@ -758,7 +773,7 @@ public class MiscsController extends BaseController
 		final UserSignUpWsDTO customer = new UserSignUpWsDTO();
 		customer.setPassword(newPassword);
 		validate(customer, "password", passwordStrengthValidator);
-		if (containsRole(auth, "ROLE_TRUSTED_CLIENT") || containsRole(auth, "ROLE_CUSTOMERMANAGERGROUP"))
+		if (containsRole(auth, ROLE_TRUSTED_CLIENT) || containsRole(auth, "ROLE_CUSTOMERMANAGERGROUP"))
 		{
 			extUserService.setPassword(userId, newPassword);
 		}
@@ -1671,10 +1686,6 @@ public class MiscsController extends BaseController
 	 * @return userResultWsDto
 	 * @throws CMSItemNotFoundException
 	 */
-	/*
-	 * @Secured( { "ROLE_CUSTOMERGROUP", "ROLE_TRUSTED_CLIENT", "ROLE_CUSTOMERMANAGERGROUP" })
-	 */
-
 	@RequestMapping(value = "/{baseSiteId}/feedbackno", method = RequestMethod.GET, produces = APPLICATION_JSON)
 	@ResponseBody
 	public UserResultWsDto captureFeedbackNo(@RequestParam final String emailId, @RequestParam final String searchCategory,
@@ -1709,10 +1720,6 @@ public class MiscsController extends BaseController
 	 * @description to get Feedback
 	 * @return Map containing feedback categories
 	 */
-	/*
-	 * @Secured( { "ROLE_CUSTOMERGROUP", "ROLE_TRUSTED_CLIENT", "ROLE_CUSTOMERMANAGERGROUP" })
-	 */
-
 	@RequestMapping(value = "/{baseSiteId}/getFeedbackCategory", method = RequestMethod.GET, produces = APPLICATION_JSON)
 	@ResponseBody
 	public UserResultWsDto getFeedbackCategory()
@@ -1899,6 +1906,123 @@ public class MiscsController extends BaseController
 			LOG.error("the exception is **** " + e);
 		}
 	}
+	//TPR-4840 starts
+	@Secured(
+	{ ROLE_CLIENT, ROLE_TRUSTED_CLIENT })
+	@RequestMapping(value = "/{baseSiteId}/orderCustDetailsByOrderId", method = RequestMethod.POST, produces = APPLICATION_JSON)
+	@ResponseBody
+	public OrderInfoWsDTO fetchCustomerOrderInfoByOrderId(
+			@RequestParam(value = "orderRefNo", required = true) final String orderRefNo) throws EtailNonBusinessExceptions
+	{
+		OrderInfoWsDTO orderInfoWsDTO = new OrderInfoWsDTO();
+		OrderModel orderModel = null;
+		try
+		{
+			if (StringUtils.isNotEmpty(orderRefNo))
+			{
+				//Fetching parent order model by order id
+				orderModel = mplOrderFacade.getOrderByParentOrderNo(orderRefNo);
+				orderInfoWsDTO = mplOrderFacade.storeOrderInfoByOrderNo(orderModel);
+			}
+		}
+		catch (final Exception e)
+		{
+			LOG.error("Exception occured", e);
+			orderInfoWsDTO.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
+		}
+		return orderInfoWsDTO;
+	}
+
+	//TPR-4840 ends
+
+	//TPR-4841 starts
+	@Secured(
+	{ ROLE_CLIENT, ROLE_TRUSTED_CLIENT })
+	@RequestMapping(value = "/{baseSiteId}/orderCustDetailsByTransactionId", method = RequestMethod.POST, produces = APPLICATION_JSON)
+	@ResponseBody
+	public OrderInfoWsDTO fetchCustomerOrderInfoByTransactionId(
+			@RequestParam(value = "transactionId", required = true) final String transactionId) throws EtailNonBusinessExceptions
+	{
+
+		OrderInfoWsDTO orderInformationWsDTO = new OrderInfoWsDTO();
+		OrderModel orderModel = null;
+
+		try
+		{
+			if (StringUtils.isNotEmpty(transactionId))
+			{
+				//Fetching sub order model by transaction id
+				orderModel = mplOrderFacade.fetchOrderInfoByTransactionId(transactionId);
+				orderInformationWsDTO = mplOrderFacade.storeOrderInfoByTransactionId(orderModel, transactionId);
+			}
+
+		}
+		catch (final Exception e)
+		{
+			LOG.error("Exception occured", e);
+			orderInformationWsDTO.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
+		}
+		return orderInformationWsDTO;
+
+	}
+
+	//TPR-4841 ends
+
+	//TPR-5225 starts
+	@Secured(
+	{ ROLE_CLIENT, ROLE_TRUSTED_CLIENT })
+	@RequestMapping(value = "/{baseSiteId}/orderCustDetailsByMobileNo", method = RequestMethod.POST, produces = APPLICATION_JSON)
+	@ResponseBody
+	public OrderInfoWsDTO fetchCustomerOrderInfoByMobileNo(@RequestParam(value = "mobileNo", required = true) final String mobileNo)
+			throws EtailNonBusinessExceptions
+	{
+
+		final int countLimit = Integer.parseInt(getConfigurationService().getConfiguration().getString(
+				MarketplacecommerceservicesConstants.TRANSACTION_NO_KEY));
+
+		LOG.debug("**Transaction count Limit**" + countLimit);
+		OrderInfoWsDTO orderInformationWsDTO = new OrderInfoWsDTO();
+		List<OrderModel> orderModels = new ArrayList<OrderModel>();
+		try
+		{
+
+			if (StringUtils.isNotEmpty(mobileNo))
+			{
+				//Fetching parent order models by mobile no
+				orderModels = mplOrderFacade.getOrderWithMobileNo(mobileNo, countLimit);
+				orderInformationWsDTO = mplOrderFacade.storeOrderInfoByMobileNo(orderModels, countLimit);
+			}
+
+		}
+		catch (final Exception e)
+		{
+			LOG.error("Exception occured", e);
+			orderInformationWsDTO.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
+		}
+		return orderInformationWsDTO;
+	}
+
+	//TPR-5225 ends
+
+
+	/**
+	 * @return the configurationService
+	 */
+	public ConfigurationService getConfigurationService()
+	{
+		return configurationService;
+	}
+
+	/**
+	 * @param configurationService
+	 *           the configurationService to set
+	 */
+	public void setConfigurationService(final ConfigurationService configurationService)
+	{
+		this.configurationService = configurationService;
+	}
+
+	//TPR-5225 ends
 
 	/**
 	 * Method: One touch Cancel and return--TPR-1345
@@ -2036,7 +2160,7 @@ public class MiscsController extends BaseController
 										LOG.debug("===Promotion Type of BuyAandBgetC-->" + isBuyAandBgetC);
 									}
 								}
-								if (isBuyAandBgetC == true)
+								if (isBuyAandBgetC)
 								{
 									LOG.debug("===Inside BuyAandBgetC check====");
 
@@ -2045,22 +2169,20 @@ public class MiscsController extends BaseController
 									 * cancelReturnFacade.associatedEntries( subOrderModel, oneTouchCrmObj.getTransactionId());
 									 */
 
-									String consignmentStatusCheck = null;
 									boolean deliverymodeValidator = true;
 									checkloop: for (final AbstractOrderEntryModel orderEntry1 : orderEntriesModel)
 									{
 										LOG.debug("===Inside checkloop check====");
 										checkList.add(orderEntry1.getTransactionID());
 										deliveryCheckFlag = true;
-										consignmentStatusCheck = "";
 										for (final ConsignmentEntryModel con : orderEntry1.getConsignmentEntries())
 										{
 											LOG.debug("===Inside ConsignmentEntryModel loop===="
 													+ con.getConsignment().getStatus().getCode());
-											if (StringUtils.isNotEmpty(con.getConsignment().getStatus().getCode()))
-											{
-												consignmentStatusCheck = con.getConsignment().getStatus().getCode();
-											}
+											//											if (StringUtils.isNotEmpty(con.getConsignment().getStatus().getCode()))
+											//											{
+											//												//consignmentStatusCheck = con.getConsignment().getStatus().getCode();
+											//											}
 											LOG.debug("===========DeliveryMode:====****======"
 													+ orderEntry1.getMplDeliveryMode().getDeliveryMode().getCode());
 											if (orderEntry1.getMplDeliveryMode().getDeliveryMode().getCode()
@@ -2080,7 +2202,7 @@ public class MiscsController extends BaseController
 													break checkloop;
 												}
 											}
-											else if (deliverymodeValidator == false)
+											else if (!deliverymodeValidator)
 											{
 												if (!(con.getConsignment().getStatus().getCode())
 														.equalsIgnoreCase(MarketplacewebservicesConstants.ORDER_COLLECTED_STATUS.toString()))
@@ -2092,7 +2214,7 @@ public class MiscsController extends BaseController
 											}
 										}
 									}
-									if (deliveryCheckFlag == false)
+									if (!deliveryCheckFlag)
 									{
 										LOG.debug("===Inside deliveryCheckFlag loop====");
 										for (final AbstractOrderEntryModel orderEntry2 : orderEntriesModel)
@@ -2104,10 +2226,10 @@ public class MiscsController extends BaseController
 												{
 													output.setOrderRefNum(oneTouchCrmObj.getOrderRefNum());
 													output.setTransactionId(orderEntry2.getTransactionID());
-													output.setServiceability(serviceabilty == true ? "S" : "F");
+													output.setServiceability(serviceabilty ? "S" : "F");
 													//output.setServiceability(MarketplacewebservicesConstants.VALID_FLAG_S);
 													output.setValidFlag(MarketplacewebservicesConstants.VALID_FLAG_S);
-													output.setRemarks(serviceabilty == true ? MarketplacewebservicesConstants.RETURN_ALREADY_INITIATED_CSCP
+													output.setRemarks(serviceabilty ? MarketplacewebservicesConstants.RETURN_ALREADY_INITIATED_CSCP
 															: MarketplacewebservicesConstants.PINCODE_NOT_SERVICEABLE);
 													outputList.add(output);
 												}
@@ -2118,9 +2240,9 @@ public class MiscsController extends BaseController
 													consignmentStatus = "All the products in promotion are not in delivered status";
 													output.setTransactionId(orderEntry2.getTransactionID());
 													output.setValidFlag(MarketplacewebservicesConstants.VALID_FLAG_F);
-													output.setServiceability(serviceabilty == true ? "S" : "F");
+													output.setServiceability(serviceabilty ? "S" : "F");
 													//output.setServiceability(MarketplacewebservicesConstants.VALID_FLAG_S);
-													output.setRemarks(serviceabilty == true ? consignmentStatus
+													output.setRemarks(serviceabilty ? consignmentStatus
 															: MarketplacewebservicesConstants.PINCODE_NOT_SERVICEABLE);
 													outputList.add(output);
 												}
@@ -2346,10 +2468,10 @@ public class MiscsController extends BaseController
 									{
 										output.setOrderRefNum(oneTouchCrmObj.getOrderRefNum());
 										output.setTransactionId(abstractOrderEntryModel.getTransactionID());
-										output.setServiceability(serviceabilty == true ? "S" : "F");
+										output.setServiceability(serviceabilty ? "S" : "F");
 										//output.setServiceability(MarketplacewebservicesConstants.VALID_FLAG_S);
 										output.setValidFlag(MarketplacewebservicesConstants.VALID_FLAG_S);
-										output.setRemarks(serviceabilty == true ? MarketplacewebservicesConstants.RETURN_ALREADY_INITIATED_CSCP
+										output.setRemarks(serviceabilty ? MarketplacewebservicesConstants.RETURN_ALREADY_INITIATED_CSCP
 												: MarketplacewebservicesConstants.PINCODE_NOT_SERVICEABLE);
 										outputList.add(output);
 									}
@@ -2357,7 +2479,7 @@ public class MiscsController extends BaseController
 									{
 										output.setOrderRefNum(oneTouchCrmObj.getOrderRefNum());
 										output.setTransactionId(abstractOrderEntryModel.getTransactionID());
-										output.setServiceability(serviceabilty == true ? "S" : "F");
+										output.setServiceability(serviceabilty ? "S" : "F");
 										output.setValidFlag(MarketplacewebservicesConstants.VALID_FLAG_F);
 										output.setRemarks(MarketplacewebservicesConstants.RETURN_ALREADY_INITIATED);
 										outputList.add(output);
@@ -2440,8 +2562,4 @@ public class MiscsController extends BaseController
 	{
 		this.mplOrderFacade = mplOrderFacade;
 	}
-
-	@Resource(name = "mplOrderFacade")
-	private MplOrderFacade mplOrderFacade;
-
 }

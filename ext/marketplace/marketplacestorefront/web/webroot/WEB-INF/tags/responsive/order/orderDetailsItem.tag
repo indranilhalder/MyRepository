@@ -38,12 +38,12 @@
 					<c:choose>
 						<c:when test="${fn:toLowerCase(entry.product.luxIndicator)=='luxury'}">
 												<a href="${productUrl}"> <product:productPrimaryImage
-														product="${entry.product}" format="luxuryCartIcon" />
+														product="${entry.product}" format="luxuryCartIcon" lazyLoad="false" />
 												</a>
 																	</c:when>
 																	<c:otherwise>
 																			<a href="${productUrl}"> <product:productPrimaryImage
-														product="${entry.product}" format="thumbnail" />
+														product="${entry.product}" format="thumbnail" lazyLoad="false" />
 												</a>
 												
 						</c:otherwise>
@@ -260,9 +260,19 @@
 		<ul class="mobile-product">
 			<li>
 				<div class="product-img">
-					<a href="${productUrl}"> <product:productPrimaryImage
-							product="${entry.product}" format="thumbnail" />
-					</a>
+					<c:choose>
+						<c:when test="${fn:toLowerCase(entry.product.luxIndicator)=='luxury'}">
+							<a href="${productUrl}"> <product:productPrimaryImage
+									product="${entry.product}" format="luxuryCartIcon" lazyLoad="false" />
+							</a>
+						</c:when>
+						<c:otherwise>
+							<a href="${productUrl}"> <product:productPrimaryImage
+								product="${entry.product}" format="thumbnail" lazyLoad="false" />
+							</a>
+						</c:otherwise>
+					</c:choose>
+				<!-- TISPRDT-2131	 -->			
 				</div>
 				<div class="product">
 
@@ -325,10 +335,38 @@
 
 					</ul>
 					<h3 class="price">
-						<ycommerce:testId code="orderDetails_productTotalPrice_label">
+						<%-- <ycommerce:testId code="orderDetails_productTotalPrice_label">
 							<format:price priceData="${entry.totalPrice}"
 								displayFreeForZero="true" />
+						</ycommerce:testId> --%>		<!-- commented for TISPRDT-2133 -->
+						<c:choose>
+					<c:when
+						test="${entry.isBOGOapplied eq true || entry.giveAway eq true}">
+						<%-- <del>
+															 <format:price priceData=0.0
+																displayFreeForZero="true" />
+														</del> --%>
+						<%-- <span> <format:price priceData=0.0 displayFreeForZero="true"/></span> --%>
+						<span>Free</span>
+					</c:when>
+					<c:otherwise>
+						<%-- <ycommerce:testId code="orderDetails_productTotalPrice_label"><format:price priceData="${entry.totalPrice}" displayFreeForZero="true"/></ycommerce:testId> --%>
+						<ycommerce:testId code="orderDetails_productTotalPrice_label">
+							<!-- TISEE-5560 - change from netSellingPrice to amountAfterAllDisc -->
+							<c:choose>
+								<c:when test="${not empty entry.amountAfterAllDisc}">
+									<format:price priceData="${entry.amountAfterAllDisc}"
+										displayFreeForZero="true" />
+								</c:when>
+								<c:otherwise>
+									<format:price priceData="${entry.totalPrice}"
+										displayFreeForZero="true" />
+								</c:otherwise>
+							</c:choose>
 						</ycommerce:testId>
+
+					</c:otherwise>
+				</c:choose>
 					</h3>
 					<!-- <ul class="item-details"></ul> -->
 				</div>

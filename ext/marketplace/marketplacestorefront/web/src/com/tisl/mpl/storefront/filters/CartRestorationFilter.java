@@ -131,6 +131,7 @@ public class CartRestorationFilter extends OncePerRequestFilter
 				}
 			}
 		}
+
 		filterChain.doFilter(request, response);
 	}
 

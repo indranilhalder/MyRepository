@@ -124,9 +124,10 @@ public class CustomOmsOrderLinePopulator implements Populator<OrderEntryModel, O
 			//final SellerInformationModel sellerInfoModel = getMplSellerInformationService().getSellerDetail(
 			//	source.getSelectedUSSID());
 
-			final SellerInformationModel sellerInfoModel = getMplSellerInformationService().getSellerDetail(ussid);
+			final SellerInformationModel sellerInfoModel = getMplSellerInformationService().getSellerDetail(ussid,source.getOrder().getStore().getCatalogs().get(0).getActiveCatalogVersion());
 
 			//jewellery ends
+
 
 			List<RichAttributeModel> richAttributeModel = null;
 			if (sellerInfoModel != null)
@@ -271,6 +272,8 @@ public class CustomOmsOrderLinePopulator implements Populator<OrderEntryModel, O
 				target.setOrderLineStatus(MplCodeMasterUtility.getglobalCode(orderStatus));
 				//PT issue for One touch cancellation--fix
 				//target.setOrderLineStatus(MplCodeMasterUtility.getglobalCode(source.getOrder().getStatus().getCode().toUpperCase()));
+
+
 			}
 			else
 			{
@@ -377,6 +380,7 @@ public class CustomOmsOrderLinePopulator implements Populator<OrderEntryModel, O
 				target.setCrmParentRef(source.getParentTransactionID());
 			}
 			//TPR-1347---END
+
 			if (richAttributeModel.get(0).getDeliveryFulfillModeByP1() != null
 					&& richAttributeModel.get(0).getDeliveryFulfillModeByP1().getCode() != null)
 
@@ -1059,3 +1063,4 @@ public class CustomOmsOrderLinePopulator implements Populator<OrderEntryModel, O
 		return Registry.getApplicationContext().getBean("defaultPromotionManager", DefaultPromotionManager.class);
 	}
 }
+

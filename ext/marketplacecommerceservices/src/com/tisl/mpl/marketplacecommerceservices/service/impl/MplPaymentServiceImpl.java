@@ -55,6 +55,7 @@ import de.hybris.platform.servicelayer.model.ModelService;
 import de.hybris.platform.servicelayer.search.FlexibleSearchService;
 import de.hybris.platform.servicelayer.session.SessionService;
 import de.hybris.platform.servicelayer.user.UserService;
+import de.hybris.platform.store.services.BaseStoreService;
 import de.hybris.platform.util.DiscountValue;
 import de.hybris.platform.voucher.model.PromotionVoucherModel;
 import de.hybris.platform.voucher.model.VoucherModel;
@@ -158,6 +159,10 @@ public class MplPaymentServiceImpl implements MplPaymentService
 	private DiscountUtility discountUtility;
 	@Resource(name = "mplCommerceCartService")
 	private MplCommerceCartService mplCommerceCartService;
+
+	@Autowired
+	private BaseStoreService baseStoreService;
+
 	//@Autowired
 	//private CommerceCartService commerceCartService;
 
@@ -194,6 +199,9 @@ public class MplPaymentServiceImpl implements MplPaymentService
 	//@Autowired
 	//private ExtendedUserService extendedUserService;
 	private static final String ERROR_PAYMENT = "Payment_Timeout order status for orderCode>>>";
+	
+	//Sonar Fix
+	private static final String FAILURE_KEY = "FAILURE";
 
 	@Autowired
 	private MplJusPayRefundService mplJusPayRefundService; //Added for TPR-1348
@@ -664,6 +672,7 @@ public class MplPaymentServiceImpl implements MplPaymentService
 
 				PaymentTypeModel paymentTypeModelCOD = modelService.create(PaymentTypeModel.class);
 				paymentTypeModelCOD.setMode(MarketplacecommerceservicesConstants.COD);
+				paymentTypeModelCOD.setBaseStore(baseStoreService.getCurrentBaseStore());
 				paymentTypeModelCOD = flexibleSearchService.getModelByExample(paymentTypeModelCOD);
 				paymentTransactionEntry.setPaymentMode(paymentTypeModelCOD);
 
@@ -3964,6 +3973,7 @@ public class MplPaymentServiceImpl implements MplPaymentService
 
 				PaymentTypeModel paymentTypeModelCOD = modelService.create(PaymentTypeModel.class);
 				paymentTypeModelCOD.setMode(MarketplacecommerceservicesConstants.COD);
+				paymentTypeModelCOD.setBaseStore(baseStoreService.getCurrentBaseStore());
 				paymentTypeModelCOD = flexibleSearchService.getModelByExample(paymentTypeModelCOD);
 				paymentTransactionEntry.setPaymentMode(paymentTypeModelCOD);
 
@@ -4874,7 +4884,7 @@ public class MplPaymentServiceImpl implements MplPaymentService
 					}
 
 					paymentTransactionModel = mplJusPayRefundService.createPaymentTransactionModel(orderEntryModel.get(0).getOrder(),
-							"FAILURE", totalRefundAmount, PaymentTransactionType.RETURN, "NO Response FROM PG", uniqueRequestId);
+							FAILURE_KEY, totalRefundAmount, PaymentTransactionType.RETURN, "NO Response FROM PG", uniqueRequestId);
 					mplJusPayRefundService.attachPaymentTransactionModel(orderEntryModel.get(0).getOrder(), paymentTransactionModel);
 					//TISSIT-1801
 
@@ -4903,7 +4913,7 @@ public class MplPaymentServiceImpl implements MplPaymentService
 				// TISSIT-1784 Code addition ended
 
 				paymentTransactionModel = mplJusPayRefundService.createPaymentTransactionModel(orderEntryModel.get(0).getOrder(),
-						"FAILURE", totalRefundAmount, PaymentTransactionType.RETURN, "FAILURE", uniqueRequestId);
+						FAILURE_KEY, totalRefundAmount, PaymentTransactionType.RETURN, FAILURE_KEY, uniqueRequestId);
 				mplJusPayRefundService.attachPaymentTransactionModel(orderEntryModel.get(0).getOrder(), paymentTransactionModel);
 
 			}
@@ -4967,7 +4977,7 @@ public class MplPaymentServiceImpl implements MplPaymentService
 								orderEntry.getNetAmountAfterAllDisc(), ConsignmentStatus.REFUND_IN_PROGRESS, null);
 					}
 					paymentTransactionModel = mplJusPayRefundService.createPaymentTransactionModel(orderEntryModel.get(0).getOrder(),
-							"FAILURE", totalRefundAmount, PaymentTransactionType.RETURN, "NO Response FROM PG", uniqueRequestId);
+							FAILURE_KEY, totalRefundAmount, PaymentTransactionType.RETURN, "NO Response FROM PG", uniqueRequestId);
 					mplJusPayRefundService.attachPaymentTransactionModel(orderEntryModel.get(0).getOrder(), paymentTransactionModel);
 				}
 			}
@@ -4982,7 +4992,7 @@ public class MplPaymentServiceImpl implements MplPaymentService
 							orderEntry.getNetAmountAfterAllDisc(), ConsignmentStatus.REFUND_INITIATED, null);
 				}
 				paymentTransactionModel = mplJusPayRefundService.createPaymentTransactionModel(orderEntryModel.get(0).getOrder(),
-						"FAILURE", totalRefundAmount, PaymentTransactionType.RETURN, "FAILURE", uniqueRequestId);
+						FAILURE_KEY, totalRefundAmount, PaymentTransactionType.RETURN, FAILURE_KEY, uniqueRequestId);
 				mplJusPayRefundService.attachPaymentTransactionModel(orderEntryModel.get(0).getOrder(), paymentTransactionModel);
 			}
 		}

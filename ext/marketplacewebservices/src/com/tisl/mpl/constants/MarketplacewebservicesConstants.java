@@ -99,7 +99,7 @@ public class MarketplacewebservicesConstants
 	public static final String GUID = "guid".intern();
 
 	//PaymentMode Query
-	public static final String PAYMENTMODETYPE = "select {b:pk} from {PaymentType As b} where {b.mode}=?mode";
+	public static final String PAYMENTMODETYPE = "select {b:pk} from {PaymentType As b} where {b.mode}=?mode and {b.basestore} = ?baseStore";
 
 	//Country ISO Query
 	public static final String COUNTRYISOQUERY = "select {c:pk} from {Country As c} where {c.name}=?countryName".intern();
@@ -590,7 +590,7 @@ public class MarketplacewebservicesConstants
 	public static final String EXCHANGEAPPLIED = "Exchange Applied";
 	public static final String EXCHANGENOTAPPLIED = "Exchange Is Not Applicable For Pincode";
 	public static final String SPECIAL_MOBILE_FLAG = "special.mobile.flag".intern();
-	public static final String PRICE_DISCLAIMER_JEWELLERY = "Price and Weight are subjected to change on the basis of availability. Please check final Price and Weight before making a payment.";
+	public static final String PRICE_DISCLAIMER_JEWELLERY = "*Price and Weight are subject to change basis availability.";
 
 	//INC144317480: Order Threshold Discount Promotion: Netbanking Payment Mode Restriction doesn't work
 	//public static final String BANKNAMEFORNETBANKING = "bankNameforNetbanking";
