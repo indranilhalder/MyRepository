@@ -17,12 +17,12 @@ import java.util.List;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
-import com.tisl.lux.model.cms.components.LuxShopByCategoryModel;
 import com.tisl.lux.model.cms.components.ShopOnLuxuryElementModel;
 import com.tisl.lux.model.cms.components.ShopOnLuxuryModel;
 import com.tisl.lux.model.cms.components.WeeklySpecialBannerModel;
 import com.tisl.lux.model.cms.components.WeeklySpecialModel;
 import com.tisl.mpl.marketplacecommerceservices.service.impl.MplCMSPageServiceImpl;
+import com.tisl.mpl.model.cms.components.ShopByCategoryModel;
 import com.tisl.mpl.wsdto.LuxBannerComponentWsDTO;
 import com.tisl.mpl.wsdto.LuxShopByCategoryWsDTO;
 import com.tisl.mpl.wsdto.LuxuryComponentsListWsDTO;
@@ -112,8 +112,8 @@ public class LuxCmsFacadeImpl implements LuxCmsFacade
 						final WeeklySpecialModel weeklySpecialComponent = (WeeklySpecialModel) abstractCMSComponentModel;
 						luxuryComponentsList = getWeeklySpecialWsDTO(weeklySpecialComponent, luxuryComponentsListWsDTO);
 						break;
-					case "LuxShopByCategory":
-						final LuxShopByCategoryModel LuxShopByCategoryComponent = (LuxShopByCategoryModel) abstractCMSComponentModel;
+					case "ShopByCategory":
+						final ShopByCategoryModel LuxShopByCategoryComponent = (ShopByCategoryModel) abstractCMSComponentModel;
 						luxuryComponentsList = getLuxShopByCategoryWsDTO(LuxShopByCategoryComponent, luxuryComponentsListWsDTO);
 						break;
 
@@ -219,7 +219,7 @@ public class LuxCmsFacadeImpl implements LuxCmsFacade
 		return luxuryComponent;
 	}
 
-	private LuxuryComponentsListWsDTO getLuxShopByCategoryWsDTO(final LuxShopByCategoryModel luxShopByCategoryComponent,
+	private LuxuryComponentsListWsDTO getLuxShopByCategoryWsDTO(final ShopByCategoryModel luxShopByCategoryComponent,
 			final LuxuryComponentsListWsDTO luxuryComponentsListWsDTO)
 	{
 		final LuxuryComponentsListWsDTO luxuryComponent = luxuryComponentsListWsDTO;
@@ -276,7 +276,6 @@ public class LuxCmsFacadeImpl implements LuxCmsFacade
 			luxBannerComponentelement.setUrlLink(bannerComponentmedia);
 			relatedImageList.add(luxBannerComponentelement);
 		}
-
 		luxShopByCategoryWsDTO.setRelatedImage(relatedImageList);
 		luxuryComponent.setLuxShopByCategory(luxShopByCategoryWsDTO);
 		return luxuryComponent;
