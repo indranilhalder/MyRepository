@@ -1873,7 +1873,7 @@ class="de.hybris.platform.commercefacades.product.impl.DefaultImageFormatMapping
 	
 	<!-- added for pancard details -->
 	
-	<bean id="mplPancardFacadeImpl"   class="com.tisl.mpl.facade.pancard.Impl.MplPancardFacadeImpl">
+	<bean id="mplPancardFacadeImpl"   class="com.tisl.mpl.facade.pancard.impl.MplPancardFacadeImpl">
 	</bean>
 
 	

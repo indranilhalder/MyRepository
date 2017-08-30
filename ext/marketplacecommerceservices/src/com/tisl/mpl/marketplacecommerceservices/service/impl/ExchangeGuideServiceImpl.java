@@ -6,13 +6,16 @@ package com.tisl.mpl.marketplacecommerceservices.service.impl;
 import de.hybris.platform.core.model.order.AbstractOrderEntryModel;
 import de.hybris.platform.core.model.order.CartModel;
 import de.hybris.platform.core.model.order.OrderModel;
+import de.hybris.platform.core.model.product.ProductModel;
 import de.hybris.platform.servicelayer.exceptions.ModelNotFoundException;
 import de.hybris.platform.servicelayer.exceptions.ModelSavingException;
 import de.hybris.platform.servicelayer.keygenerator.impl.PersistentKeyGenerator;
 import de.hybris.platform.servicelayer.model.ModelService;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
@@ -91,9 +94,9 @@ public class ExchangeGuideServiceImpl implements ExchangeGuideService
 
 	/*
 	 * @Javadoc
-	 * 
+	 *
 	 * @returns All L4 for which Exchange is Applicable
-	 * 
+	 *
 	 * @see com.tisl.mpl.marketplacecommerceservices.service.ExchangeGuideService#getDistinctL4()
 	 */
 	@Override
@@ -114,11 +117,11 @@ public class ExchangeGuideServiceImpl implements ExchangeGuideService
 
 	/*
 	 * @Javadoc
-	 * 
+	 *
 	 * @param String categoryCode
-	 * 
+	 *
 	 * @param ExchangeCouponValueModel pricematrix
-	 * 
+	 *
 	 * @see com.tisl.mpl.marketplacecommerceservices.service.ExchangeGuideService#getExchangeGuideList(java.lang.String)
 	 */
 	@Override
@@ -222,7 +225,7 @@ public class ExchangeGuideServiceImpl implements ExchangeGuideService
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.tisl.mpl.marketplacecommerceservices.service.ExchangeGuideService#changePincode(java.lang.String)
 	 */
 	@Override
@@ -257,7 +260,7 @@ public class ExchangeGuideServiceImpl implements ExchangeGuideService
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * com.tisl.mpl.marketplacecommerceservices.service.ExchangeGuideService#removeFromTransactionTable(java.lang.String)
 	 */
@@ -309,7 +312,7 @@ public class ExchangeGuideServiceImpl implements ExchangeGuideService
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * com.tisl.mpl.marketplacecommerceservices.service.ExchangeGuideService#getTeporaryExchangeModelforId(java.lang.
 	 * String)
@@ -347,6 +350,7 @@ public class ExchangeGuideServiceImpl implements ExchangeGuideService
 		final List<AbstractOrderEntryModel> childOrderEntryList = new ArrayList<>();
 		final List<ExchangeTransactionModel> exTraxRemovList = new ArrayList();
 		String exReqId = MarketplacecommerceservicesConstants.EMPTYSPACE;
+		final Map<String, String> productExcId = new HashMap<>();
 
 		try
 		{
@@ -406,6 +410,7 @@ public class ExchangeGuideServiceImpl implements ExchangeGuideService
 								if (exTrax.getProductId() != null)
 								{
 									exMod.setProductId(exTrax.getProductId());
+									productExcId.put(exTrax.getProductId(), exReqId);
 								}
 								if (child.getCode() != null)
 								{
@@ -425,22 +430,28 @@ public class ExchangeGuideServiceImpl implements ExchangeGuideService
 								entry.setExchangeId(exReqId);
 								//	changeInChild = true; SONAR FIX JEWELLERY
 								childOrderEntryList.add(entry);
+								childModfList.add(child);
 							}
 						}
 					}
 				}
 
-				for (final AbstractOrderEntryModel entry : child.getParentReference().getEntries())
-				{
-					if (entry != null && StringUtils.isNotEmpty(entry.getExchangeId()))
-					{
-						entry.setExchangeId(exReqId);
-					}
-					parentEntryList.add(entry);
-				}
-				childModfList.add(child);
-
 			}
+
+			for (final AbstractOrderEntryModel entry : order.getEntries())
+			{
+				ProductModel product = null;
+				if (entry != null && StringUtils.isNotEmpty(entry.getExchangeId()))
+				{
+					product = entry.getProduct();
+				}
+				if (product != null && StringUtils.isNotEmpty(product.getCode()) && productExcId.containsKey(product.getCode()))
+				{
+					entry.setExchangeId(exReqId);
+				}
+				parentEntryList.add(entry);
+			}
+
 
 			modelService.saveAll(exModList);
 			//Added for EQA Comments
@@ -657,7 +668,7 @@ public class ExchangeGuideServiceImpl implements ExchangeGuideService
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * com.tisl.mpl.marketplacecommerceservices.service.ExchangeGuideService#addToExchangeTable(com.tisl.mpl.core.model
 	 * .ExchangeTransactionModel)
