@@ -51,7 +51,11 @@ $(document).ready(function(){
 	if(subdomain != "undefined"){
 		subDomain = subdomain;
 	}
-	
+	 var merchandisePage ="";
+	var promoPageTrack = window.location.href.split("/")[4].split(".")[0];
+	if(promoPageTrack !='undefined'){
+		merchandisePage = promoPageTrack;
+	}
 	digitalData = {
 		page : {
 			pageInfo : {
@@ -501,6 +505,12 @@ $(document).ready(function(){
     	dtmErrorTracking("Order not placed: Unsuccesful error","errorName");
     }
 	
+    //TPR-6299 | for merchandising pages
+    if(pageType == '/deal-of-the-day' || pageType == '/viewalltrending' || merchandisePage == 'viewOnlineProducts'){
+    	if(typeof(_satellite) !="undefined"){
+    		_satellite.track('cpj_merchandising_pages');
+	  	}
+    }
 });
 function differentiateSeller(){
 	var sellerList = $('#pdpSellerIDs').val();
