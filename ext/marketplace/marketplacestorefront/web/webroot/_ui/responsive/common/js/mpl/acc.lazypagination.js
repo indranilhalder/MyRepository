@@ -248,7 +248,9 @@ $(document).ready(function() {
 				
 	}	
     //lazy image load initialization
-	if($('#pageType').val() == "productsearch" || $('#pageType').val() == "product" || $('#pageType').val() == "category" || $('input[name=customSku]').length){
+    //TISPRDT-2225
+    //if($('#pageType').val() == "productsearch" || $('#pageType').val() == "product" || $('#pageType').val() == "category" || $('input[name=customSku]').length){
+    if ($('#pageType').val() != "homepage") {
 	    $("img.lazy").lazyload();	
 	}
     //set the total no of pages 
