@@ -1307,6 +1307,15 @@ function pincodeServiceability(){
 												$("#collectli").addClass("selected");
 											    $("#collectli").css("opacity","1");
 												deliverModeTealium.push("clickandcollect");
+												var requiredUrl = ACC.config.encodedContextPath + "/p-allStores/"+pin;
+												$.ajax({
+													url : requiredUrl,
+													type : "GET",
+													success : function(response) {
+														$("#CNCstores").html(response);
+													}
+												});
+												
 											} else {
 
 												//$("#collect").hide();
@@ -4389,4 +4398,7 @@ function getProductCodeFromPdpUrl(url)
 	return productCode;
 }
 
+function showStoreLocatorModal(){
+	$("#CNCstores").modal();
+}
 //End of UF-60 changes

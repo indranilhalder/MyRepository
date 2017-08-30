@@ -7,26 +7,34 @@
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
 <%@ taglib prefix="product" tagdir="/WEB-INF/tags/responsive/product"%>
 
-<c:url var="storeLocatorURL" value="/p-allStores?pincode=${pincode}" scope="request"></c:url>
+<%-- <c:url var="storeLocatorURL" value="/p-allStores/${pincode}" scope="request"></c:url> --%>
+<div class="content">
+	<div class="cancellation-request-block">
+	<c:if test="${fn:length(storesAvailable) gt 0}" >
+		<span class=""><spring:theme code="nearest.store" arguments="${pincode}"/></span>
+		<c:forEach items="${storesAvailable}" var="store" begin="0" end="0" >
+			<div class="storeName"><b>${store.name}</b></div>
+			<div class="address">${store.address.formattedAddress}</div>
+		    <div class="distance"><b>${store.distanceKm}</b></div>
+		</c:forEach>
+	<c:if test="${fn:length(storesAvailable) gt 1}" >
+		<a class="store-locator" href="" data-toggle="modal"
+			data-target="#storeLocatorModal"
+			data-mylist="<spring:theme code="text.help" />"
+			data-dismiss="modal" >
+			
+			<spring:theme code="more.stores.nearby" arguments="${fn:length(storesAvailable) - 1 }"/>
+		</a>
+	</c:if>
 
-<c:if test="${fn:length(storesAvailable) gt 0}" >
-	<span class=""><spring:theme code="nearest.store" arguments="${pincode}"/></span>
-	<c:forEach items="${storesAvailable}" var="store" begin="0" end="0" >
-		<p>${store.name}</p>
-		<p>${store.address.formattedAddress}</p>
-	</c:forEach>
-
-	<a class="store-locator" href="${storeLocatorURL}" role="button"
-	data-toggle="modal" data-target="#storeLocatorModal" data-pincode="${pincode}"> 
-	<spring:theme code="more.stores.nearby" arguments="${fn:length(storesAvailable) -1 }"/>
-	</a>
-
-	<div id="storeLocatorModal" class="modal cancellation-request fade storeDetails">
-		  <c:forEach items="${storesAvailable}" var="stores" begin="1">
-			 <div class="storeName"><b>${stores.name}</b></div><br>
-			 <div class="addressLine1">${stores.address.formattedAddress}</div><br>
-	         <div class="distance"><b>${stores.distanceKm}</b>></div>
-		  </c:forEach>
+		<div id="storeLocatorModal" class="modal fade storeDetails">
+			  <c:forEach items="${storesAvailable}" var="store" begin="1">
+				 <div class="storeName"><b>${store.name}</b></div>
+				 <div class="address">${store.address.formattedAddress}</div>
+		         <div class="distance"><b>${store.distanceKm}</b></div>
+			  </c:forEach>
+		</div>
+		
+	</c:if>
 	</div>
-	
-</c:if>
+</div>	

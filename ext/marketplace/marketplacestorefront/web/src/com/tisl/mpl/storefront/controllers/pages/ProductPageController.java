@@ -3475,7 +3475,8 @@ public class ProductPageController extends MidPageController
 	 * @return Store details
 	 */
 	@RequestMapping(value = PRODUCT_OLD_URL_PATTERN + ControllerConstants.Views.Fragments.Product.STORE, method = RequestMethod.GET)
-	public String getAllStoreForPincode(@PathVariable final String pincode, final Model model)
+	public String getAllStoreForPincode(
+			@PathVariable(value = ControllerConstants.Views.Fragments.Product.PINCODE) final String pincode, final Model model)
 
 	{
 		if (LOG.isDebugEnabled())
