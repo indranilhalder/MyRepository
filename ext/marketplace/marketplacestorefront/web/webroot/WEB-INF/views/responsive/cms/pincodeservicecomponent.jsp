@@ -1,8 +1,9 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
 	pageEncoding="ISO-8859-1"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
-
+<c:url var="storeLocatorURL" value="/p-allStores?pincode=${pincode}" scope="request"></c:url>
 
     <span id="deliveryPretext" style="display:none;"><spring:theme code="mpl.pdp.delivery.pretext"/></span>
     <span id="deliveryPosttext" style="display:none;"><spring:theme code="mpl.pdp.delivery.posttext"/></span>
@@ -78,24 +79,38 @@
 		<c:if test="${entry.key eq 'click-and-collect'}">
 		
 		<li id="collectli" class="do selected"><p><spring:theme code="text.clickandcollect.shipping"/></p>
-		<span style="display: block;">Buy before 3 PM, PIQ confirmed order same day</span>
-		 <c:forEach var="clickEntry" items="${entry.value}">
+			<span style="display: block;">Buy before 3 PM, PIQ confirmed order same day</span>
+			<c:forEach var="clickEntry" items="${entry.value}">
 	
-			 <c:if test="${clickEntry.key eq 'startForClick'}">
-			 <input type="hidden" value="${clickEntry.value}" id="clickStartId"/>
-			 </c:if>
-			 
-			  <c:if test="${clickEntry.key eq 'endForClick'}">
-			  <input type="hidden" value="${clickEntry.value}" id="clickEndId"/>
-		     </c:if>
-		    </c:forEach>
-		    <span id="clickDate"><%-- <c:out value="${entry.value}" /> --%></span>
-		    </li>
+				 <c:if test="${clickEntry.key eq 'startForClick'}">
+				 <input type="hidden" value="${clickEntry.value}" id="clickStartId"/>
+				 </c:if>
+				 
+				  <c:if test="${clickEntry.key eq 'endForClick'}">
+				  <input type="hidden" value="${clickEntry.value}" id="clickEndId"/>
+			     </c:if>
+			 </c:forEach>
+				<span id="clickDate"><%-- <c:out value="${entry.value}" /> --%></span>
+				
+				<c:if test="${fn:length(storesAvailable) gt 0}" >
+					<span class=""><spring:theme code="nearest.store" arguments="${pincode}"/></span>
+					<c:forEach items="${storesAvailable}" var="store">
+						<p>${store.name}</p>
+						<p>${store.address.formattedAddress}</p>
+					</c:forEach>
+				
+					<a class="store-locator" href="${storeLocatorURL}" role="button"
+					data-toggle="modal" data-target="#popUpModal" data-pincode="${pincode}"> 
+					<spring:theme code="more.stores.nearby" arguments="${fn:length(storesAvailable)}"/>
+					</a>
+				</c:if>	
+		</li>
 		</c:if> 
-	</c:forEach>
+		</c:forEach>
 	
 	<!-- <li><a href="#" class="collect"><span>Click and
 					Collect</span><span>Buy online, collect in-store</span></a></li> -->
+			
 	</ul>
 
 	

@@ -399,6 +399,8 @@ public interface ControllerConstants
 				//TPR-6654
 				public static final String STORE = "-allStores/{pincode}";
 				String StoreLocatorPopup = "fragments/product/storeLocatorPopup";
+				//TPR-6654
+				public static final String STORE_AVAIL = "storesAvailable";
 			}
 
 
