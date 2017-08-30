@@ -3,6 +3,7 @@
  */
 package com.tisl.mpl.marketplacecommerceservices.daos.impl;
 
+import de.hybris.platform.catalog.CatalogVersionService;
 import de.hybris.platform.catalog.model.CatalogVersionModel;
 import de.hybris.platform.servicelayer.search.FlexibleSearchQuery;
 import de.hybris.platform.servicelayer.search.FlexibleSearchService;
@@ -12,6 +13,7 @@ import java.util.List;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.core.model.MarketplaceDelistModel;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.marketplacecommerceservices.daos.MplDelistingDao;
@@ -33,6 +35,10 @@ public class MplDelistingDaoImpl implements MplDelistingDao
 	private final static String C = "{c:";
 	private static final Logger LOG = Logger.getLogger(MplDelistingDaoImpl.class);
 
+
+	@Autowired
+	private CatalogVersionService catalogVersionService;
+
 	/*
 	 * (non-Javadoc)
 	 *
@@ -44,9 +50,9 @@ public class MplDelistingDaoImpl implements MplDelistingDao
 		try
 		{
 			final String queryString = //
-			SELECT + SellerInformationModel.PK + "} " //
-					+ "FROM {" + SellerInformationModel._TYPECODE + " AS c} "//
-					+ "WHERE " + C + SellerInformationModel.SELLERID + "}=?sellerId";
+					SELECT + SellerInformationModel.PK + "} " //
+							+ "FROM {" + SellerInformationModel._TYPECODE + " AS c} "//
+							+ "WHERE " + C + SellerInformationModel.SELLERID + "}=?sellerId";
 
 			LOG.info(QUERY + queryString);
 
@@ -104,15 +110,15 @@ public class MplDelistingDaoImpl implements MplDelistingDao
 		try
 		{
 			final String queryString = //
-			SELECT + SellerInformationModel.PK + "} " //
-					+ "FROM {" + SellerInformationModel._TYPECODE + " AS c} "//
-					+ "WHERE " + C + SellerInformationModel.SELLERARTICLESKU + "}=?ussid";
+					SELECT + SellerInformationModel.PK + "} " //
+							+ "FROM {" + SellerInformationModel._TYPECODE + " AS c} "//
+							+ "WHERE " + C + SellerInformationModel.SELLERARTICLESKU + "}=?ussid";
 			//As Sellerarticlesku is same as USSID
 			LOG.info(QUERY + queryString);
 
 			final FlexibleSearchQuery query = new FlexibleSearchQuery(queryString);
 			query.addQueryParameter("ussid", ussid);
-			//	query.addQueryParameter(SellerInformationModel.CATALOGVERSION, catalogVersionModel);
+			//query.addQueryParameter(SellerInformationModel.CATALOGVERSION, getCatalogVersion());
 
 
 			final List<SellerInformationModel> listSellerInformation = flexibleSearchService.<SellerInformationModel> search(query)
@@ -139,12 +145,10 @@ public class MplDelistingDaoImpl implements MplDelistingDao
 		{
 
 			final String queryString = //
-			SELECT + SellerInformationModel.PK
-					+ "} " //
-					+ "FROM {" + SellerInformationModel._TYPECODE
-					+ " AS c} "//
-					+ "WHERE " + C + SellerInformationModel.SELLERARTICLESKU + "}=?ussid" + " AND {c:"
-					+ SellerInformationModel.CATALOGVERSION + "}=?catalogVersion";
+					SELECT + SellerInformationModel.PK + "} " //
+							+ "FROM {" + SellerInformationModel._TYPECODE + " AS c} "//
+							+ "WHERE " + C + SellerInformationModel.SELLERARTICLESKU + "}=?ussid" + " AND {c:"
+							+ SellerInformationModel.CATALOGVERSION + "}=?catalogVersion";
 			//As Sellerarticlesku is same as USSID
 			LOG.info(QUERY + queryString);
 
@@ -181,8 +185,8 @@ public class MplDelistingDaoImpl implements MplDelistingDao
 			//					+ "FROM {" + MarketplaceDelistModel._TYPECODE + " AS c} "//
 			//					+ "WHERE " + "{c:" + MarketplaceDelistModel.ISPROCESSED + "}='0'";
 			final StringBuilder stbQuery = new StringBuilder(50);
-			stbQuery.append(SELECT + MarketplaceDelistModel.PK + "} FROM " + "{" + MarketplaceDelistModel._TYPECODE
-					+ " AS c} WHERE " + C + MarketplaceDelistModel.ISPROCESSED + "}='0'");
+			stbQuery.append(SELECT + MarketplaceDelistModel.PK + "} FROM " + "{" + MarketplaceDelistModel._TYPECODE + " AS c} WHERE "
+					+ C + MarketplaceDelistModel.ISPROCESSED + "}='0'");
 
 			LOG.info(QUERY + stbQuery);
 
@@ -200,4 +204,7 @@ public class MplDelistingDaoImpl implements MplDelistingDao
 		}
 
 	}
+
+
+	
 }

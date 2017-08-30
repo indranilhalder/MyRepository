@@ -8,8 +8,12 @@ import de.hybris.platform.servicelayer.interceptor.InterceptorContext;
 import de.hybris.platform.servicelayer.interceptor.InterceptorException;
 import de.hybris.platform.servicelayer.interceptor.PrepareInterceptor;
 
+import java.util.List;
+
 import javax.annotation.Resource;
 
+import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
@@ -41,17 +45,30 @@ public class AddHasVariantForFineJewelleryInterceptor implements PrepareIntercep
 			String categoryId = null;
 			//	final Boolean isHasVariant = Boolean.valueOf(true);//SONAR FIX JEWELLERY
 			final Boolean isHasVariant = Boolean.TRUE;
-			if (sellerInfo.getProductSource() != null)
+			if (null != sellerInfo.getProductSource())
 			{
-				listingId = sellerInfo.getProductSource().getCode();
-				final ProductModel findProductsByCode = defaultProductDao.findProductData(listingId);
-				categoryId = findProductsByCode.getProductCategoryType();
-
-				if (categoryId != null && categoryId.equalsIgnoreCase(MarketplacecommerceservicesConstants.FINEJEWELLERY))
+				if (StringUtils.isNotEmpty(sellerInfo.getProductSource().getCode()))
 				{
-					sellerInfo.setHasVariant(isHasVariant);
-				}
+					listingId = sellerInfo.getProductSource().getCode();
+					final List<ProductModel> findProductsByCode = defaultProductDao.findProductForHasVariant(listingId);
+					if (CollectionUtils.isNotEmpty(findProductsByCode))
+					{
+						for (final ProductModel product : findProductsByCode)
+						{
+							if (StringUtils.isNotEmpty(product.getProductCategoryType()))
+							{
+								categoryId = product.getProductCategoryType();
+								break;
+							}
+						}
+					}
+					if (StringUtils.isNotEmpty(categoryId)
+							&& MarketplacecommerceservicesConstants.FINEJEWELLERY.equalsIgnoreCase(categoryId))
+					{
+						sellerInfo.setHasVariant(isHasVariant);
+					}
 
+				}
 			}
 		}
 	}

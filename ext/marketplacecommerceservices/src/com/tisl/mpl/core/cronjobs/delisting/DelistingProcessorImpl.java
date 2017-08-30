@@ -1,5 +1,7 @@
 package com.tisl.mpl.core.cronjobs.delisting;
 
+import de.hybris.platform.catalog.CatalogVersionService;
+import de.hybris.platform.catalog.model.CatalogVersionModel;
 import de.hybris.platform.servicelayer.exceptions.ModelNotFoundException;
 import de.hybris.platform.servicelayer.exceptions.ModelSavingException;
 import de.hybris.platform.servicelayer.model.ModelService;
@@ -14,6 +16,7 @@ import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.StringUtils;
 
+import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.core.model.MarketplaceDelistModel;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.marketplacecommerceservices.service.MplDelistingService;
@@ -33,6 +36,9 @@ public class DelistingProcessorImpl implements DelistingProcessor
 
 	@Autowired
 	private ModelService modelService;
+
+	@Autowired
+	private CatalogVersionService catalogVersionService;
 
 	/**
 	 * @return the modelService
@@ -219,7 +225,7 @@ public class DelistingProcessorImpl implements DelistingProcessor
 
 				for (final String ussid : ussidlist)
 				{
-					final List<SellerInformationModel> list = getMplDelistingService().getModelforUSSID(ussid);
+					final List<SellerInformationModel> list = getMplDelistingService().getModelforUSSID(ussid, getCatalogVersion());
 					if (CollectionUtils.isNotEmpty(list))
 					{
 						delistingSucccessful = getMplDelistingService().delistUSSID(list, line.get(Integer.valueOf(DELISTING)))
@@ -253,5 +259,11 @@ public class DelistingProcessorImpl implements DelistingProcessor
 		return delistingSucccessful;
 	}
 
-
+	private CatalogVersionModel getCatalogVersion()
+	{
+		final CatalogVersionModel catalogVersionModel = catalogVersionService.getCatalogVersion(
+				MarketplacecommerceservicesConstants.DEFAULT_IMPORT_CATALOG_ID,
+				MarketplacecommerceservicesConstants.DEFAULT_IMPORT_CATALOG_VERSION);
+		return catalogVersionModel;
+	}
 }
