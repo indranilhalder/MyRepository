@@ -141,8 +141,14 @@ public class CustomSiteMapMediaJob extends SiteMapMediaJob
 										//PRDI-423
 										if (useBrandFilter())
 										{
+											LOG.debug("Inside useBrandFilter");
 											brandLists = fetchBrand(category.getCode(), categoryl2.getCode());
 										}
+										else
+										{
+											LOG.debug("Not using BrandFilter");
+										}
+										//PRDI-423
 										final List models = fetchProductforL2code(activeCatalog, categoryl2);
 										if (CollectionUtils.isNotEmpty(models) && StringUtils.isNotEmpty(categoryName))
 										{
