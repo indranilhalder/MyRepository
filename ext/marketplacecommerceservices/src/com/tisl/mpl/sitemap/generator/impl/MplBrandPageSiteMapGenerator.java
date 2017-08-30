@@ -106,8 +106,8 @@ public class MplBrandPageSiteMapGenerator extends AbstractSiteMapGenerator<Custo
 						removeUrlBlankList.add(pageData);
 						final CustomPageData cpd = new CustomPageData();
 						cpd.setUrl(MarketplacecommerceservicesConstants.FRONT_SLASH + pageData.getUrl());
-						cpd.setChangeFrequency(pageData.getChangeFrequency());
-						cpd.setPriority(pageData.getPriority());
+						//cpd.setChangeFrequency(pageData.getChangeFrequency());
+						//cpd.setPriority(pageData.getPriority());
 						addfrontSlashList.add(cpd);
 					}
 					//check for excluded keywords that starts with
