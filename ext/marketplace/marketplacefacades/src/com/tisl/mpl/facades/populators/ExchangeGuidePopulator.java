@@ -4,9 +4,11 @@
  */
 package com.tisl.mpl.facades.populators;
 
+import de.hybris.platform.category.model.CategoryModel;
 import de.hybris.platform.converters.Populator;
 import de.hybris.platform.servicelayer.dto.converter.ConversionException;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
 import com.tisl.mpl.core.model.ExchangeCouponValueModel;
@@ -27,6 +29,9 @@ public class ExchangeGuidePopulator<SOURCE extends ExchangeCouponValueModel, TAR
 {
 
 	protected static final Logger LOG = Logger.getLogger(ExchangeGuidePopulator.class);
+	private static final String WORKING = "Working";
+	private static final String NON_WORKING = "Working";
+
 
 	/**
 	 * @description method is to populate basic ExchangeGuideData details in pdp
@@ -43,22 +48,36 @@ public class ExchangeGuidePopulator<SOURCE extends ExchangeCouponValueModel, TAR
 
 		if (null != exchangeCouponValueModel)
 		{
-			exchangeGuideData.setL3category(exchangeCouponValueModel.getThirdLevelCategory().getName());
+			//EQA Comments Incorp
+			final CategoryModel thirdCategory = exchangeCouponValueModel.getThirdLevelCategory();
+			if (thirdCategory != null && StringUtils.isNotEmpty(thirdCategory.getName()))
+			{
+				exchangeGuideData.setL3category(thirdCategory.getName());
+			}
+
 			if (exchangeCouponValueModel.isIsWorking())
 			{
-				exchangeGuideData.setIsWorking("Working");
+				exchangeGuideData.setIsWorking(WORKING);
 			}
 			else
 			{
-				exchangeGuideData.setIsWorking("Not Working");
+				exchangeGuideData.setIsWorking(NON_WORKING);
 			}
-
-			exchangeGuideData.setL4category(exchangeCouponValueModel.getL4categoryName());
-			exchangeGuideData.setPrice(exchangeCouponValueModel.getCouponValue().toString());
+			//EQA Comments Incorp
+			final String couponValue = exchangeCouponValueModel.getL4categoryName();
+			if (StringUtils.isNotEmpty(couponValue))
+			{
+				exchangeGuideData.setL4category(couponValue);
+			}
+			//EQA Comments Incorp
+			final String price = exchangeCouponValueModel.getCouponValue().toString();
+			if (StringUtils.isNotEmpty(price))
+			{
+				exchangeGuideData.setPrice(price);
+			}
 
 		}
 
 	}
-
 
 }

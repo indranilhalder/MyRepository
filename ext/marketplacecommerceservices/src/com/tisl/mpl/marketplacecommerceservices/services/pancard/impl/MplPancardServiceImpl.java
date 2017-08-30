@@ -168,12 +168,12 @@ public class MplPancardServiceImpl implements MplPancardService
 			}
 			if (StringUtils.isNotEmpty(status) && !"faliure".equalsIgnoreCase(status))
 			{
-				LOG.debug("if " + MarketplacecommerceservicesConstants.PENDING_FOR_VERIFICATION + " " + status);
+				LOG.debug(MarketplacecommerceservicesConstants.PENDING_FOR_VERIFICATION + " " + status);
 				panCardModel.setStatus(MarketplacecommerceservicesConstants.PENDING_FOR_VERIFICATION);
 			}
 			else
 			{
-				LOG.debug("if " + MarketplacecommerceservicesConstants.NA + " " + status);
+				LOG.debug(MarketplacecommerceservicesConstants.NA + " " + status);
 				panCardModel.setStatus(MarketplacecommerceservicesConstants.NA);
 			}
 			panCardModelList.add(panCardModel);
@@ -254,7 +254,7 @@ public class MplPancardServiceImpl implements MplPancardService
 					{
 						if (LOG.isDebugEnabled())
 						{
-							LOG.debug("if " + MarketplacecommerceservicesConstants.PENDING_FOR_VERIFICATION + " " + status);
+							LOG.debug(MarketplacecommerceservicesConstants.PENDING_FOR_VERIFICATION + " " + status);
 						}
 						pm.setStatus(MarketplacecommerceservicesConstants.PENDING_FOR_VERIFICATION);
 					}
@@ -262,7 +262,7 @@ public class MplPancardServiceImpl implements MplPancardService
 					{
 						if (LOG.isDebugEnabled())
 						{
-							LOG.debug("if " + MarketplacecommerceservicesConstants.NA + " " + status);
+							LOG.debug(MarketplacecommerceservicesConstants.NA + " " + status);
 						}
 						pm.setStatus(MarketplacecommerceservicesConstants.NA);
 					}
@@ -331,7 +331,7 @@ public class MplPancardServiceImpl implements MplPancardService
 				for (final PancardInformationModel pmNew : pModel)
 				{
 					if (StringUtils.isNotEmpty(pmNew.getStatus())
-							&& MarketplacecommerceservicesConstants.REJECTED.equalsIgnoreCase(pmNew.getStatus()))
+							&& MarketplacecommerceservicesConstants.PAN_REJECTED.equalsIgnoreCase(pmNew.getStatus()))
 					{
 
 						if (BooleanUtils.isTrue(orderModel.getIsRejMailTriggred()))

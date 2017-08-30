@@ -1028,6 +1028,7 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	//Added for TPR-1083
 	public static final String B9305 = "B9305";
 	public static final String B9306 = "B9306";
+	public static final String EXCHANGE_REMOVAL_REASON = "Exchange Removed from Cart/Delivery Page due to Pincode Servicability";
 
 	public static final String REVERSE_PINCODE_NOT_SERVICABLE = "Exchange is Not Servicable";
 	//TISPRD-5986  MSH category 404 error handling
@@ -2201,6 +2202,7 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String HOME = "Home";
 	//For sending pancard details to SP through PI and save data into database for new pancard entry
 	public static final String PENDING_FOR_VERIFICATION = "PENDING_FOR_VERIFICATION";
+	public static final String PAN_REJECTED = "PAN_REJECTED";
 	public static final String PANCARDREDIRECTURL = "/pancard/pancarddetailsupload/";
 	public static final String PANCARDREDIRECTURLSUFFIX = "?status=";
 	//TPR-3782
@@ -2233,4 +2235,6 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 
 	//jewellery TPR-3765
 	public static final String RETURN_FINEJEWELLERY = "Forward Seal Mismatch";
+	public static final String INVENTORY_RESV_JWLRY_CART = "Price(s) of the selected product(s) has been revised due to unavailability of the product(s) with the weight(s) displayed earlier. You have an outstanding amount of ";
+	public static final String INVENTORY_RESV_JWLRY_PAYMENT = "Price(s) of the selected product(s) has been revised due to unavailability of the product(s) with the weight(s) displayed earlier.";
 }

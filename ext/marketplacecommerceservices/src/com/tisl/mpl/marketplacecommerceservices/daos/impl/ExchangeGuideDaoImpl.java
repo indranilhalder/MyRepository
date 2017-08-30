@@ -41,12 +41,15 @@ public class ExchangeGuideDaoImpl implements ExchangeGuideDao
 
 	private static final String logQuery = " ***********Query********* ";
 	private static final String logQueryParam = " ***********QueryParameters********* ";
+	private static final String SELECT_EXCHANGE = "SELECT {exchange.";
+	private static final String CATEGORY_CODE = "categoryCode";
+	private static final String WORKING = "working";
 
 	/*
 	 * @Javadoc
-	 * 
+	 *
 	 * @returns All L4 for which Exchange is Applicable
-	 * 
+	 *
 	 * @see com.tisl.mpl.marketplacecommerceservices.daos.ExchangeGuideDao#getDistinctL4()
 	 */
 
@@ -62,7 +65,7 @@ public class ExchangeGuideDaoImpl implements ExchangeGuideDao
 
 
 			final FlexibleSearchQuery flexExchangeL3Query = new FlexibleSearchQuery(exchangeL3Query.toString());
-			flexExchangeL3Query.addQueryParameter("categoryCode", categoryCode);
+			flexExchangeL3Query.addQueryParameter(CATEGORY_CODE, categoryCode);
 			final List resultClassList = new ArrayList();
 			resultClassList.add(Integer.class);
 			flexExchangeL3Query.setResultClassList(resultClassList);
@@ -108,13 +111,13 @@ public class ExchangeGuideDaoImpl implements ExchangeGuideDao
 
 		try
 		{
-			final String queryString = "SELECT {exchange." + ExchangeCouponValueModel.PK + "} " + "FROM {"
+			final String queryString = SELECT_EXCHANGE + ExchangeCouponValueModel.PK + "} " + "FROM {"
 					+ ExchangeCouponValueModel._TYPECODE + " AS exchange" + " JOIN " + CategoryModel._TYPECODE + " AS category "
 					+ "on {exchange.thirdLevelCategory}={category.pk} " + "} where {category.code} =?categoryCode";
 
 
 			final FlexibleSearchQuery query = new FlexibleSearchQuery(queryString);
-			query.addQueryParameter("categoryCode", categoryCode);
+			query.addQueryParameter(CATEGORY_CODE, categoryCode);
 			LOG.debug(logQuery + query.getQuery() + logQueryParam + query.getQueryParameters());
 			return flexibleSearchService.<ExchangeCouponValueModel> search(query).getResult();
 		}
@@ -188,21 +191,21 @@ public class ExchangeGuideDaoImpl implements ExchangeGuideDao
 	{
 		try
 		{
-			final String queryString = "SELECT {exchange." + ExchangeCouponValueModel.PK + "} " + "FROM {"
+			final String queryString = SELECT_EXCHANGE + ExchangeCouponValueModel.PK + "} " + "FROM {"
 					+ ExchangeCouponValueModel._TYPECODE + " AS exchange" + " JOIN " + CategoryModel._TYPECODE + " AS category "
 					+ "on {exchange.thirdLevelCategory}={category.pk} " + "} where {category.code} =?categoryCode "
 					+ "and {exchange.l4categoryName}=?l4name " + "and {exchange.isWorking}=?working";
 
 			final FlexibleSearchQuery query = new FlexibleSearchQuery(queryString);
-			query.addQueryParameter("categoryCode", l3code);
+			query.addQueryParameter(CATEGORY_CODE, l3code);
 			query.addQueryParameter("l4name", l4);
-			if (isWorking.equalsIgnoreCase("Working"))
+			if (isWorking.equalsIgnoreCase(WORKING))
 			{
-				query.addQueryParameter("working", "1");
+				query.addQueryParameter(WORKING, "1");
 			}
 			else
 			{
-				query.addQueryParameter("working", "0");
+				query.addQueryParameter(WORKING, "0");
 			}
 			LOG.debug(logQuery + query.getQuery() + logQueryParam + query.getQueryParameters());
 			return flexibleSearchService.<ExchangeCouponValueModel> search(query).getResult();
@@ -223,7 +226,7 @@ public class ExchangeGuideDaoImpl implements ExchangeGuideDao
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.marketplacecommerceservices.daos.ExchangeGuideDao#changePincode(java.lang.String)
 	 */
 
@@ -231,22 +234,24 @@ public class ExchangeGuideDaoImpl implements ExchangeGuideDao
 	public List<ExchangeTransactionModel> getTeporaryExchangeModelforId(final String exId)
 	{
 		final StringBuilder queryString = new StringBuilder(500);
-		String exIdString = "";
-		if (exId.indexOf(',') > 0)
+		String exIdString = MarketplacecommerceservicesConstants.NON_EMPTY;
+		if (exId.indexOf(MarketplacecommerceservicesConstants.COMMACONSTANT) > 0)
 		{
-			final String exidArray[] = exId.split(",");
+			final String exidArray[] = exId.split(MarketplacecommerceservicesConstants.COMMACONSTANT);
 
-			exIdString = "'" + StringUtils.join(exidArray, "','") + "'";
+			exIdString = MarketplacecommerceservicesConstants.INVERTED_COMMA + StringUtils.join(exidArray, "','")
+					+ MarketplacecommerceservicesConstants.INVERTED_COMMA;
 		}
 		else
 		{
-			exIdString = "'" + exId + "'";
+			exIdString = MarketplacecommerceservicesConstants.INVERTED_COMMA + exId
+					+ MarketplacecommerceservicesConstants.INVERTED_COMMA;
 		}
 		try
 		{
 
-			queryString.append("SELECT {exchange." + ExchangeTransactionModel.PK + "} " + "FROM {"
-					+ ExchangeTransactionModel._TYPECODE + " AS exchange }" + " where {exchange.exchangeid} in (");
+			queryString.append(SELECT_EXCHANGE + ExchangeTransactionModel.PK + "} " + "FROM {" + ExchangeTransactionModel._TYPECODE
+					+ " AS exchange }" + " where {exchange.exchangeid} in (");
 			queryString.append(exIdString);
 			queryString.append(')');//SONAR FIX JEWELLERY
 			final FlexibleSearchQuery query = new FlexibleSearchQuery(queryString);
