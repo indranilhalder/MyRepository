@@ -35,4 +35,5 @@ public interface MplDelistingService
 	public List<MarketplaceDelistModel> findUnprocessedRecord();
 
 
+
 }

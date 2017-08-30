@@ -648,6 +648,10 @@ INSERT_UPDATE MplConfiguration;mplConfigCode[unique=true];mplConfigVal;mplConfig
 INSERT_UPDATE Trigger;cronjob(code)[unique=true];cronExpression
 ;campaignPromoDataCronJob;0 0 18 * * ?
 
+INSERT_UPDATE Trigger;cronJob(code)[unique=true];second;minute;hour;day;month;year;relative;active;maxAcceptableDelay
+# Run the mplIndexingCompositeCronjob every 15 minutes
+;buybox_proc_dataImport;0;10;0;-1;-1;-1;true;true;-1
+
 INSERT_UPDATE luxIndicatorEnum;code[unique=true];name[lang=en]
 ;marketplace;Marketplace
 ;luxury;Luxury;
