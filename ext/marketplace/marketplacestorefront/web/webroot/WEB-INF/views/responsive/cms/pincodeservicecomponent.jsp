@@ -3,7 +3,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
-<c:url var="storeLocatorURL" value="/p-allStores?pincode=${pincode}" scope="request"></c:url>
+<%@ taglib prefix="product" tagdir="/WEB-INF/tags/responsive/product/"%>
 
     <span id="deliveryPretext" style="display:none;"><spring:theme code="mpl.pdp.delivery.pretext"/></span>
     <span id="deliveryPosttext" style="display:none;"><spring:theme code="mpl.pdp.delivery.posttext"/></span>
@@ -91,19 +91,8 @@
 			     </c:if>
 			 </c:forEach>
 				<span id="clickDate"><%-- <c:out value="${entry.value}" /> --%></span>
-				
-				<c:if test="${fn:length(storesAvailable) gt 0}" >
-					<span class=""><spring:theme code="nearest.store" arguments="${pincode}"/></span>
-					<c:forEach items="${storesAvailable}" var="store">
-						<p>${store.name}</p>
-						<p>${store.address.formattedAddress}</p>
-					</c:forEach>
-				
-					<a class="store-locator" href="${storeLocatorURL}" role="button"
-					data-toggle="modal" data-target="#popUpModal" data-pincode="${pincode}"> 
-					<spring:theme code="more.stores.nearby" arguments="${fn:length(storesAvailable)}"/>
-					</a>
-				</c:if>	
+				<!-- Include Store locator -->
+				<product:productStoreLocator />
 		</li>
 		</c:if> 
 		</c:forEach>

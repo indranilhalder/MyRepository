@@ -53,7 +53,6 @@ import de.hybris.platform.commercefacades.product.data.PromotionData;
 import de.hybris.platform.commercefacades.product.data.ReviewData;
 import de.hybris.platform.commercefacades.product.data.SellerInformationData;
 import de.hybris.platform.commercefacades.product.data.VariantOptionData;
-import de.hybris.platform.commercefacades.storelocator.data.ListOfPointOfServiceData;
 import de.hybris.platform.commerceservices.url.UrlResolver;
 import de.hybris.platform.core.model.product.PincodeModel;
 import de.hybris.platform.core.model.product.ProductModel;
@@ -3471,13 +3470,12 @@ public class ProductPageController extends MidPageController
 	}
 
 	/**
-	 * Returns store location based on its unique name.
+	 * @desc Returns nearby store location based on pincode.
 	 *
 	 * @return Store details
 	 */
 	@RequestMapping(value = PRODUCT_OLD_URL_PATTERN + ControllerConstants.Views.Fragments.Product.STORE, method = RequestMethod.GET)
-	public String getAllStoreForPincode(@PathVariable final String pincode, @RequestParam(required = false) final String latitude,
-			@RequestParam(required = false) final String longitude, final Model model)
+	public String getAllStoreForPincode(@PathVariable final String pincode, final Model model)
 
 	{
 		if (LOG.isDebugEnabled())
@@ -3486,11 +3484,11 @@ public class ProductPageController extends MidPageController
 		}
 		try
 		{
-			final ListOfPointOfServiceData pointOfServices = mplStoreLocatorFacade.getAllStoresForPincode(latitude, longitude,
-					pincode);
-			if (pointOfServices != null)
+			if (StringUtils.isNotEmpty(pincode))
 			{
-				model.addAttribute(ModelAttributetConstants.POINT_OF_SERVICES, pointOfServices);
+				model.addAttribute(ModelAttributetConstants.PINCODE,
+						sessionService.getAttribute(MarketplacecommerceservicesConstants.SESSION_PINCODE));
+				model.addAttribute(ControllerConstants.Views.Fragments.Product.STORE_AVAIL, mplProductFacade.storeLocatorPDP(pincode));
 			}
 		}
 		catch (final Exception e)
