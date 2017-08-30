@@ -9,6 +9,7 @@ import de.hybris.platform.cms2.model.contents.components.CMSImageComponentModel;
 import de.hybris.platform.cms2.model.contents.contentslot.ContentSlotModel;
 import de.hybris.platform.cms2.model.pages.ContentPageModel;
 import de.hybris.platform.cms2.model.relations.ContentSlotForPageModel;
+import de.hybris.platform.cms2.model.relations.ContentSlotForTemplateModel;
 import de.hybris.platform.cms2lib.model.components.BannerComponentModel;
 import de.hybris.platform.cms2lib.model.components.RotatingImagesComponentModel;
 import de.hybris.platform.core.model.media.MediaContainerModel;
@@ -98,6 +99,13 @@ public class LuxCmsFacadeImpl implements LuxCmsFacade
 				luxuryAllComponents = getLuxuryComponentDtoForSlot(contentSlotModel, luxuryAllComponents);
 
 			}
+			for (final ContentSlotForTemplateModel contentSlotForTemplate : contentPage.getMasterTemplate().getContentSlots())
+			{
+				final ContentSlotModel contentSlotModel = contentSlotForTemplate.getContentSlot();
+				luxuryAllComponents = getLuxuryComponentDtoForSlot(contentSlotModel, luxuryAllComponents);
+
+			}
+
 			luxuryAllComponents.setPageTitle(contentPage.getName());
 			luxuryAllComponents.setMetaDescription(contentPage.getDescription());
 			luxuryAllComponents.setMetaKeywords(contentPage.getKeywords());
@@ -783,16 +791,22 @@ public class LuxCmsFacadeImpl implements LuxCmsFacade
 			{
 				for (final MediaModel media : mediaContainer.getMedias())
 				{
-					final LuxuryMediaModel luxuryMedia = (LuxuryMediaModel) media;
+
 					final LuxuryMediaListWsDTO luxuryMediaList = new LuxuryMediaListWsDTO();
-					if (null != luxuryMedia.getURL() && StringUtils.isNotEmpty(luxuryMedia.getURL()))
+					if (null != media.getURL() && StringUtils.isNotEmpty(media.getURL()))
 					{
-						luxuryMediaList.setURL(luxuryMedia.getURL());
+						luxuryMediaList.setURL(media.getURL());
 
 					}
+					final LuxuryMediaModel luxuryMedia = (LuxuryMediaModel) media;
 					if (null != luxuryMedia.getUrlLink() && StringUtils.isNotEmpty(luxuryMedia.getUrlLink()))
 					{
-						luxuryMediaList.setURL(luxuryMedia.getUrlLink());
+						luxuryMediaList.setUrlLink(luxuryMedia.getUrlLink());
+
+					}
+					if (null != luxuryMedia.getMediaFormat() && StringUtils.isNotEmpty(luxuryMedia.getMediaFormat().getQualifier()))
+					{
+						luxuryMediaList.setMdeiaFormat(luxuryMedia.getMediaFormat().getQualifier());
 
 					}
 					medias.add(luxuryMediaList);
@@ -835,12 +849,17 @@ public class LuxCmsFacadeImpl implements LuxCmsFacade
 					final LuxuryMediaListWsDTO luxuryMediaList = new LuxuryMediaListWsDTO();
 					if (null != luxuryMedia.getURL() && StringUtils.isNotEmpty(luxuryMedia.getURL()))
 					{
-						luxuryMediaList.setURL(luxuryMedia.getURL());
+						luxuryMediaList.setURL(luxuryMedia.getLocation());
 
 					}
 					if (null != luxuryMedia.getUrlLink() && StringUtils.isNotEmpty(luxuryMedia.getUrlLink()))
 					{
-						luxuryMediaList.setURL(luxuryMedia.getUrlLink());
+						luxuryMediaList.setUrlLink(luxuryMedia.getUrlLink());
+
+					}
+					if (null != luxuryMedia.getMediaFormat() && StringUtils.isNotEmpty(luxuryMedia.getMediaFormat().getQualifier()))
+					{
+						luxuryMediaList.setMdeiaFormat(luxuryMedia.getMediaFormat().getQualifier());
 
 					}
 					medias.add(luxuryMediaList);

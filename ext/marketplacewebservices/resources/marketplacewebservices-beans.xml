@@ -3090,6 +3090,7 @@
 	<bean class="com.tisl.mpl.wsdto.LuxuryMediaListWsDTO">
     	<property name="URL" type="String" />
     	<property name="urlLink" type="String"/>
+    	<property name="mdeiaFormat" type="String"/>
 	</bean>
 
 
