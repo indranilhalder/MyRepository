@@ -75145,7 +75145,7 @@ body .account.preferences .right-account div.email-pref form .button-set a{
 	}
 .jewellery-wrapper>div.accordin.FineJewellery div.item div.detail .t-d-d span#tddValue, 
 .jewellery-wrapper>div.accordin.FashionJewellery div.item div.detail .t-d-d span#tddValue{
-	margin-left: 13px;
+	margin-left: 20px;
 }
 .jewellery-wrapper>div.accordin.FineJewellery div.item,
 .jewellery-wrapper>div.accordin.FashionJewellery div.item{
@@ -75188,8 +75188,17 @@ table#showPriceBreakup{
 .jewellery-wrapper>div.accordin.FashionJewellery .item .detail table tr td:first-child{
 	padding-right: 0px;
     padding-left: 0px;
-    width: 55px;
+    width: 70px !important;
+    max-width: 70px !important;
 }
+.jewellery-wrapper>div.accordin.FineJewellery .item .detail table tr td div#productDetailsColumn,
+.jewellery-wrapper>div.accordin.FashionJewellery .item .detail table tr td div#productDetailsColumn,
+.jewellery-wrapper>div.accordin.FineJewellery .item .detail table tr td div#diamondDetailsColumn,
+.jewellery-wrapper>div.accordin.FashionJewellery .item .detail table tr td div#diamondDetailsColumn
+  {
+ 	 width: 70px !important;
+     max-width: 70px !important;
+  }
 .jewellery-wrapper>div.accordin.FineJewellery .item .detail ,
 .jewellery-wrapper>div.accordin.FashionJewellery .item .detail{
 	font-size: 12px;
@@ -75197,10 +75206,6 @@ table#showPriceBreakup{
     letter-spacing: 0.6px;
     color: rgba(0, 0, 0, 0.5);
 }
-/* .jewellery-wrapper>div.accordin.FineJewellery .item .detail table tr td:last-child,
-.jewellery-wrapper>div.accordin.FashionJewellery .item .detail table tr td:last-child{
-	text-align: right;
-} */
 .jewellery-wrapper>div.accordin.FineJewellery .item .detail table tr:last-child,
 .jewellery-wrapper>div.accordin.FashionJewellery .item .detail table tr:last-child,
 .jewellery-wrapper>div.accordin.FineJewellery .item .detail .t-d-d ~ table:last-child tr,
@@ -75250,11 +75255,11 @@ table#showPriceBreakup{
 }
 .jewellery-wrapper>div.accordin.FineJewellery div.item div.detail .t-d-d div#tddKey, 
 .jewellery-wrapper>div.accordin.FashionJewellery div.item div.detail .t-d-d div#tddKey{
-	width:55px;
+	width:70px;
 }
 .jewellery-wrapper>div.accordin.FineJewellery .item .detail div.title div#jewelProductCode,
 .jewellery-wrapper>div.accordin.FashionJewellery .item .detail div.title div#jewelProductCode{
-	width: 55px;
+	width: 70px;
 }
 .jewellery-wrapper>div.accordin.FineJewellery.smk_accordion .item.accordion_in .detail.acc_content,
 .jewellery-wrapper>div.accordin.FashionJewellery.smk_accordion .item.accordion_in .detail.acc_content{
