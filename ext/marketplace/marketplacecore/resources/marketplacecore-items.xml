@@ -1385,7 +1385,17 @@
          	    cardinality ="many">
             </targetElement>
         </relation> 
-       
+       <!-- TPR-6665 : relation betwwen slave urls with solr server config start-->
+        <relation code="SolrServerConfig2SolrEndpointUrlforSlave" autocreate="true" generate="true" localized="false">
+			<sourceElement qualifier="solrServerConfig" type="SolrServerConfig" cardinality="one">
+				<modifiers optional="true" read="true" write="true" search="true" />
+			</sourceElement>
+			<targetElement qualifier="solrEndpointUrlsSlave" type="SolrEndpointSlaveUrl" cardinality="many" collectiontype="list">
+				<modifiers optional="true" read="true" write="true" search="false" />
+			</targetElement>
+		</relation>
+     <!-- TPR-6665 : relation betwwen slave urls with solr server config end-->
+     
 	</relations>
 	<itemtypes>
 	<itemtype code="LuxProductCarouselComponent"
@@ -11686,5 +11696,27 @@
 	 </itemtype>
     </typegroup>
 		<!-- END TPR-5733 -->
+		
+		<!-- TPR-6665 : sysnonums update to slave servers start-->
+		<typegroup name="MPL_Slave_URL">
+		<itemtype code="SolrEndpointSlaveUrl" autocreate="true" generate="true"
+				jaloclass="de.hybris.platform.solrfacetsearch.jalo.config.SolrEndpointSlaveUrl" extends="GenericItem">
+				<deployment table="SolrEndpointSlaveUrl" typecode="25999" />
+				<attributes>
+					<attribute qualifier="url" type="java.lang.String">
+						<modifiers read="true" write="true" optional="false" search="true" />
+						<persistence type="property" />
+					</attribute>
+					<attribute qualifier="slave" type="boolean">
+						<defaultvalue>java.lang.Boolean.FALSE</defaultvalue>
+						<persistence type="property" />
+						<modifiers optional="false" />
+					</attribute>
+				</attributes>
+		</itemtype>
+		</typegroup>
+		
+		<!-- TPR-6665 : sysnonums update to slave servers end-->
+		
   </itemtypes>
 </items>
