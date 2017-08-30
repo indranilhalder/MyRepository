@@ -5,8 +5,8 @@
 $storePrefix=lux
 $contentCatalog=$storePrefixContentCatalog
 $productCatalog=luxProductCatalog
-$contentCV=catalogVersion(CatalogVersion.catalog(Catalog.id[default=$contentCatalog]),CatalogVersion.version[default=Staged])[default=$contentCatalog:Staged]
-$productCV=catalogVersion(CatalogVersion.catalog(Catalog.id[default=$productCatalog]),CatalogVersion.version[default=Staged])[default=$productCatalog:Staged]
+$contentCV=catalogVersion(CatalogVersion.catalog(Catalog.id[default=$contentCatalog]),CatalogVersion.version[default=Online])[default=$contentCatalog:Online]
+$productCV=catalogVersion(CatalogVersion.catalog(Catalog.id[default=$productCatalog]),CatalogVersion.version[default=Online])[default=$productCatalog:Online]
 $lang=en
 $siteResource=jar:com.tisl.lux.setup.InitialDataSystemSetup&/luxuryinitialdata/import/sampledata/contentCatalogs/$contentCatalog
 $category=category(code, $productCV)
@@ -874,7 +874,7 @@ INSERT_UPDATE ContentSlot;$contentCV[unique=true];uid[unique=true];name;active;c
 ;;LuxPLPVisualFilterSlot-100009K0001K11;PLP Visual Filter for 100009K0001K11;true;visual-filter-100009K0001K11
 ;;LuxPLPBannerSlot;PLP Hero Banner;true;CategoryBannerRotating
 ;;LuxPLPVisualFilterSlot;PLP Visual Filter;true;Brand-shopbycategory
-;;SearchResultsGridSlot;Search Result Grid Slot for Search List;true;SearchResultsGrid;;;
+#;;SearchResultsGridSlot;Search Result Grid Slot for Search List;true;SearchResultsGrid;;;
 ;;Section1-contact;Section1 slot for Contact Us Page;true;contactUsHeaderComponent;;;
 ;;Section2-contact;Section2 slot for Contact Us Page;true;CallUsMediaParagraphComponent,ChatWithUsMediaParagraphComponent,FrequentlyAskedMediaParagraphComponent;;;
 ;;AppSideContentSlot;;true;AppInfo

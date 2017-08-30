@@ -7,9 +7,7 @@ import de.hybris.platform.cms2.exceptions.CMSItemNotFoundException;
 import de.hybris.platform.cms2.model.contents.components.AbstractCMSComponentModel;
 import de.hybris.platform.cms2.model.contents.contentslot.ContentSlotModel;
 import de.hybris.platform.cms2.model.pages.ContentPageModel;
-import de.hybris.platform.cms2.model.relations.CMSRelationModel;
 import de.hybris.platform.cms2.model.relations.ContentSlotForPageModel;
-import de.hybris.platform.cms2.model.relations.ContentSlotForTemplateModel;
 import de.hybris.platform.cms2lib.model.components.BannerComponentModel;
 import de.hybris.platform.core.model.media.MediaContainerModel;
 import de.hybris.platform.core.model.media.MediaModel;
@@ -47,7 +45,30 @@ import com.tisl.mpl.wsdto.WeeklySpecialBannerWsDTO;
 public class LuxCmsFacadeImpl implements LuxCmsFacade
 {
 
+	private LuxuryComponentsListWsDTO luxuryAllComponents;
+
 	private MplCMSPageServiceImpl mplCMSPageService;
+
+
+
+	/**
+	 * @return the luxuryAllComponents
+	 */
+	public LuxuryComponentsListWsDTO getLuxuryAllComponents()
+	{
+		return luxuryAllComponents;
+	}
+
+	/**
+	 * @param luxuryAllComponents
+	 *           the luxuryAllComponents to set
+	 */
+	public void setLuxuryAllComponents(final LuxuryComponentsListWsDTO luxuryAllComponents)
+	{
+		this.luxuryAllComponents = luxuryAllComponents;
+	}
+
+
 
 	private static final Logger LOG = Logger.getLogger(MplCmsFacadeImpl.class);
 
@@ -74,16 +95,17 @@ public class LuxCmsFacadeImpl implements LuxCmsFacade
 	 * @see com.tisl.mpl.facade.cms.LuxCmsFacade#getLuxuryHomePage()
 	 */
 	@Override
-	public LuxuryComponentsListWsDTO getLuxuryPage(ContentPageModel contentPage) throws CMSItemNotFoundException
+	public LuxuryComponentsListWsDTO getLuxuryPage(final ContentPageModel contentPage) throws CMSItemNotFoundException
 	{
 
-		LuxuryComponentsListWsDTO luxuryAllComponents = new LuxuryComponentsListWsDTO();
+
 		if (contentPage != null)
 		{
 
-			for (final CMSRelationModel contentSlotForPage : contentPage.getContentSlots())
+			for (final ContentSlotForPageModel contentSlotForPage : contentPage.getContentSlots())
 			{
-				luxuryAllComponents = getLuxuryComponentDtoForSlot(contentSlotForPage, luxuryAllComponents);
+				final ContentSlotModel contentSlotModel = contentSlotForPage.getContentSlot();
+				luxuryAllComponents = getLuxuryComponentDtoForSlot(contentSlotModel, getLuxuryAllComponents());
 
 			}
 
@@ -94,29 +116,9 @@ public class LuxCmsFacadeImpl implements LuxCmsFacade
 
 
 
-	@Override
-	public LuxuryComponentsListWsDTO getBrandLandingPage() throws CMSItemNotFoundException
-	{
-
-		LuxuryComponentsListWsDTO luxuryAllComponents = new LuxuryComponentsListWsDTO();
-		final ContentPageModel contentPage = getMplCMSPageService().getPageByLabelOrId("luxuryBrandLandingPage");
-		if (contentPage != null)
-		{
 
 
-			for (final CMSRelationModel contentSlotForPage : contentPage.getContentSlots())
-			{
-				luxuryAllComponents = getLuxuryComponentDtoForSlot(contentSlotForPage, luxuryAllComponents);
-
-			}
-
-
-		}
-		return luxuryAllComponents;
-	}
-
-
-	public LuxuryComponentsListWsDTO getLuxuryComponentDtoForSlot(final CMSRelationModel contentSlot,
+	public LuxuryComponentsListWsDTO getLuxuryComponentDtoForSlot(final ContentSlotModel contentSlot,
 			final LuxuryComponentsListWsDTO luxuryComponentsListWsDTO) throws CMSItemNotFoundException
 	{
 
@@ -208,6 +210,8 @@ public class LuxCmsFacadeImpl implements LuxCmsFacade
 	private LuxuryComponentsListWsDTO getWeeklySpecialWsDTO(final WeeklySpecialModel weeklySpecialComponent,
 			final LuxuryComponentsListWsDTO luxuryComponentsListWsDTO)
 	{
+
+		final List<WeeklySpecialBannerListWsDTO> weeklySpecialBanners = new ArrayList<WeeklySpecialBannerListWsDTO>();
 		final LuxuryComponentsListWsDTO luxuryComponent = luxuryComponentsListWsDTO;
 		final List<WeeklySpecialBannerWsDTO> weeklySpecialBannerList = new ArrayList<WeeklySpecialBannerWsDTO>();
 		final WeeklySpecialBannerListWsDTO weeklySpecialBannerListObj = new WeeklySpecialBannerListWsDTO();
@@ -245,7 +249,8 @@ public class LuxCmsFacadeImpl implements LuxCmsFacade
 
 		}
 		weeklySpecialBannerListObj.setWeeklySpecialBannerList(weeklySpecialBannerList);
-		luxuryComponent.setLuxuryWeeklySpecialBanner(weeklySpecialBannerListObj);
+		weeklySpecialBanners.add(weeklySpecialBannerListObj);
+		luxuryComponent.setLuxuryWeeklySpecialBanner(weeklySpecialBanners);
 		return luxuryComponent;
 	}
 

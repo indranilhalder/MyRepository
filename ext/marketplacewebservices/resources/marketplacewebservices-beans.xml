@@ -3117,7 +3117,7 @@
 		<property name="sectionid" type="String" />
 		<property name="metaKeywords" type="String" />
 		<property name="metaDescription" type="String" />
-		<property name="LuxuryWeeklySpecialBanner" type="com.tisl.mpl.wsdto.WeeklySpecialBannerListWsDTO" />
+		<property name="LuxuryWeeklySpecialBanner" type="java.util.List&lt;com.tisl.mpl.wsdto.WeeklySpecialBannerListWsDTO>" />
 		<property name="LuxuryShopOnLuxury" type="com.tisl.mpl.wsdto.ShopOnLuxuryElementListWsDTO"/>
 		<property name="LuxuryCMSParagraphComponent" type="String" />
 		<property name="LuxShowCaseCollectionComponent" type="String" />
