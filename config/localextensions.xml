@@ -117,6 +117,11 @@
 
 		<extension name="marketplaceatssync" />
 
+		<!--Luxury packages -->
+		<!-- <extension name="luxuryinitialdata" />
+		<extension name="luxurystoreaddon" />		
+		<extension name="luxurycheckoutaddon" /> -->
+		
 		<extension name="ondemandcommon" />
 
 		<extension name="corepluscommons" />
