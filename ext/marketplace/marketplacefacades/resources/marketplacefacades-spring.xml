@@ -2001,5 +2001,31 @@ class="de.hybris.platform.commercefacades.product.impl.DefaultImageFormatMapping
  	 <!--  OrderBulk Cancellation Job Runner-->
 	
 	 <bean id="commonUtils" class="com.tisl.lux.facade.impl.CommonUtilsImpl"/>
+	 
+	 <!-- TPR-6665: Update synonyms in solr slave start -->
+	<alias name="defaultMplClusterConfigPopulator" alias="clusterConfigPopulator" />
+	<bean id="defaultMplClusterConfigPopulator" class="com.tisl.mpl.facade.search.populator.DefaultMplClusterConfigPopulator" parent="defaultClusterConfigPopulator">
+		<!-- <property name="endpointUrlConverter" ref="endpointUrlConverter" />  -->
+		<property name="endpointSlaveUrlConverter" ref="endpointSlaveUrlConverter" /> 
+		
+	</bean>
+	
+
+	
+	
+	<alias name="defaultEndpointSlaveUrlConverter" alias="endpointSlaveUrlConverter" />
+	<bean id="defaultEndpointSlaveUrlConverter" parent="abstractPopulatingConverter">
+		<property name="targetClass" value="com.tisl.mpl.facades.search.data.EndpointSlaveURL" />
+		<property name="populators">
+			<list>
+				<ref bean="endpointSlaveUrlPopulator" />
+			</list>
+		</property>
+	</bean>
+	
+	<alias name="defaultEndpointSlaveUrlPopulator" alias="endpointSlaveUrlPopulator" />
+	<bean id="defaultEndpointSlaveUrlPopulator" class="com.tisl.mpl.facade.search.populator.DefaultEndpointSlaveUrlPopulator" />
+	
+	<!-- TPR-6665: Update synonyms in solr slave  end-->
 </beans>
 

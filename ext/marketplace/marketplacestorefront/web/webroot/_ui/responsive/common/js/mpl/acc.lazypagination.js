@@ -42,6 +42,8 @@ function innerLazyLoad(options) {
     if (initPageLoad) { //TODO: duplicate loading prevention
         $('ul.product-listing.product-grid.lazy-grid,ul.product-listing.product-grid.lazy-grid-facet,ul.product-list,ul.product-listing.product-grid.lazy-grid-normal,ul.product-listing.product-grid.custom-sku').html(gridHTML).hide().fadeIn(500);
         initPageLoad = false;
+        //TISSPTXI-21
+        $("img.lazy").lazyload();
     } else {
         $('ul.product-listing.product-grid.lazy-grid,ul.product-listing.product-grid.lazy-grid-facet,ul.product-list,ul.product-listing.product-grid.lazy-grid-normal,ul.product-listing.product-grid.custom-sku').append(gridHTML);
         $("img.lazy").lazyload();

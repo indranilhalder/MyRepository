@@ -4349,4 +4349,78 @@
 		</defaultreference>
 	</type>
 	<!-- END TPR-5733 -->
+	
+	<!-- TPR-6665 : sysnonums update to slave servers start-->
+<type name="SolrServerConfig" mode="append">
+		<organizer>
+			<search mode="replace">
+				<condition attribute="name"/>
+				<condition attribute="mode"/>
+			</search>
+			<result defaultview="list" mode="replace">
+				<listview>
+					<itemlayout>
+						<attribute name="name"/>
+						<attribute name="mode"/>
+					</itemlayout>
+				</listview>
+				<editview>
+					<itemlayout>
+						<attribute name="name"/>
+						<attribute name="mode"/>
+					</itemlayout>
+				</editview>
+				<treeview>
+					<itemlayout>
+						<attribute name="name"/>
+						<attribute name="mode"/>
+					</itemlayout>
+				</treeview>
+			</result>
+			<editor>
+				<tab name="tab.configuration.serverconfig">
+					<section name="sec.configuration.serverconfig">
+						<listlayout mode="replace">
+							<attribute name="name"/>
+							<attribute name="mode"/>
+							<attribute name="embeddedMaster"/>
+							<attribute name="aliveCheckInterval"/>
+							<attribute name="connectionTimeout"/>
+							<attribute name="socketTimeout"/>
+							<attribute name="maxTotalConnections"/>
+							<attribute name="maxTotalConnectionsPerHostConfig"/>
+							<attribute name="tcpNoDelay"/>
+
+							<attribute name="solrEndpointUrls">
+								<referencecollectioneditor resortable="false" create="true" remove="true" autosave="false"
+																	externalcreate="false" editable="true">
+									<itemlayout>
+										<attribute name="url" width="200"/>
+										<attribute name="master"/>
+									</itemlayout>
+								</referencecollectioneditor>
+							</attribute>
+							<attribute name="solrEndpointUrlsSlave">
+								<referencecollectioneditor resortable="false" create="true" remove="true" autosave="false"
+																	externalcreate="false" editable="true">
+									<itemlayout>
+										<attribute name="url" width="200"/>
+										<attribute name="slave"/>
+									</itemlayout>
+								</referencecollectioneditor>
+							</attribute>
+							<attribute name="useMasterNodeExclusivelyForIndexing"/>
+							<text name="text.usemasternodeexclusivelyforindexing.warning"/>
+						</listlayout>
+					</section>
+				</tab>
+			</editor>
+		</organizer>
+		<defaultreference mode="replace">
+			<itemlayout>
+				<attribute name="name"/>
+			</itemlayout>
+		</defaultreference>
+	</type>
+	<!-- TPR-6665 : sysnonums update to slave servers end-->
 </configuration>
