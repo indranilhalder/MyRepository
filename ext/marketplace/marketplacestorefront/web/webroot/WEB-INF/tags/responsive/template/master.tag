@@ -134,17 +134,20 @@
 			</c:choose>
 			<!-- UF-265 start --> 
 			<c:if test="${totalNumberOfPages gt 1}">
+				<meta name="NumberOfPagesFlag" content="${totalNumberOfPages}" />
 				<c:set var="currentPageNumber" value="${fn:substringAfter(canonical,'/page-')}"/>
 				<c:if test="${empty currentPageNumber}">
 					<c:set var="currentPageNumber" value="1"/>
 				</c:if>
 				<c:set var="currentPage" value="page-${currentPageNumber}"/>
+				<meta name="currentPageNumber" content="${currentPage}" />
 				<c:set var="nextPage" value="page-${currentPageNumber + 1}"/>
 				<c:set var="previousPage" value="page-${currentPageNumber - 1}"/>
 				<c:choose>
-					<c:when test="${currentPageNumber lt totalNumberOfPages}">
+					<c:when test="${currentPageNumber < totalNumberOfPages}">
 						<c:choose>
 							<c:when test="${currentPageNumber eq 1}">
+								<meta name="controlFlow" content="Went in the First page case" />
 								<c:choose>
 									<c:when test="${fn:contains(canonical, currentPage)}">
 										<link rel="next" href="${fn:replace(canonical,currentPage,nextPage)}" />
@@ -157,10 +160,12 @@
 							<c:otherwise>
 								<c:choose>
 									<c:when test="${currentPageNumber eq 2}">
+										<meta name="controlFlow" content="Went in the Second page case" />
 										<link rel="prev" href="${fn:replace(canonical,'/page-2','')}" />
 										<link rel="next" href="${fn:replace(canonical,currentPage,nextPage)}" />
 									</c:when>
 									<c:otherwise>
+										<meta name="controlFlow" content="Went in the intermittent page case" />
 										<link rel="prev" href="${fn:replace(canonical,currentPage,previousPage)}" />
 										<link rel="next" href="${fn:replace(canonical,currentPage,nextPage)}" />
 									</c:otherwise>
@@ -169,6 +174,7 @@
 						</c:choose>
 					</c:when>
 					<c:otherwise>
+						<meta name="controlFlow" content="Went in the last page case" />
 						<link rel="prev" href="${fn:replace(canonical,currentPage,previousPage)}" />
 					</c:otherwise>
 				</c:choose>
