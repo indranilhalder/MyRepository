@@ -294,6 +294,11 @@ share mobile -->
 						<c:when test="${not empty currentColor}">
 							<c:if test="${currentColor eq color}">
 								<c:set var="currentColor" value="${color}" />
+								<!-- UF-422:Changes for PDP when product has only one size -->
+								
+								<c:set var="selectedClass" value=""/>
+								<c:if test= "${fn:length(variantOption.sizeLink)eq 1}">
+								<c:set var ="selectedClass" value ="class='selected'"/></c:if>
 								
 								<c:forEach var="entry" items="${variantOption.sizeLink}">
 									<c:url value="${entry.key}" var="link" />
@@ -304,7 +309,7 @@ share mobile -->
 												<c:when test="${selectedSize eq null}">
 
 												<!--CKD:TPR-250  -->
-													<li><a href="${link}?selectedSize=true${msiteSellerForSize}" data-productCode="${variantOption.code}">${entry.value}</a></li>
+													<li ${selectedClass}><a href="${link}?selectedSize=true${msiteSellerForSize}" data-productCode="${variantOption.code}">${entry.value}</a></li>
 												</c:when>
 												<c:otherwise>
 													<!--CKD:TPR-250  -->
