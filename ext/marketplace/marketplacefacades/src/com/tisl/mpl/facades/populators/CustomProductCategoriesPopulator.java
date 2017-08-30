@@ -14,6 +14,7 @@ import de.hybris.platform.servicelayer.config.ConfigurationService;
 import de.hybris.platform.servicelayer.dto.converter.ConversionException;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 
@@ -100,12 +101,11 @@ public class CustomProductCategoriesPopulator<SOURCE extends ProductModel, TARGE
 		productData.setCategories(Converters.convertAll(resultList, getCategoryConverter()));
 		//TPR-1083 Changes Exchange Start
 		//Check if Exchange is Allowed from properties file
-		final List<String> defaultlist = new ArrayList();
-		defaultlist.add("Electronics");
+
 
 		final Boolean exchangeAllowed = configurationService.getConfiguration().getBoolean("mpl.exchange.enabled", Boolean.FALSE);
-		final List<String> exchangeAllowedRootCategory = configurationService.getConfiguration().getList(
-				"mpl.exchange.enabled.rootCategory", defaultlist);
+		final List<String> exchangeAllowedRootCategory = Arrays.asList(configurationService.getConfiguration()
+				.getString("mpl.exchange.enabled.rootCategory", "Electronics").split(","));
 
 
 		if (exchangeAllowed.booleanValue() && exchangeAllowedRootCategory.contains(productData.getRootCategory()))

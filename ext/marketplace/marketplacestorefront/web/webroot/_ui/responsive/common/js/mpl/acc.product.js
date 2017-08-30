@@ -1223,7 +1223,7 @@ sendAddToBagQuick:function(formId){
 				}
 				//End MSD
 				//TPR-5193
-				if(typeof utag !="undefined"){
+				/*if(typeof utag !="undefined"){
 					utag.link({
 						event_type          : "exchange_success",
 						exchange_brand      : brandExchange ,
@@ -1232,7 +1232,7 @@ sendAddToBagQuick:function(formId){
 						couponcode_exchange : couponValue ,
 						product_id          : productCode
 					});
-				}
+				}*/
 			},
 			complete: function(){
 		        $('#ajax-loader').hide();

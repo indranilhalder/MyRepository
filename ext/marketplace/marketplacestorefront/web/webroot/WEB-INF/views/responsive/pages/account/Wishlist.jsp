@@ -238,7 +238,6 @@
 								<c:set value="${wpproduct.sellerInfoData}" var="seller" />
 								<c:set value="${product.ussID}" var="entry_ussid" />
 								<c:url value="${product.url}" var="productUrl" />
-
 								
 								<li>
 									<div class="product-info">
@@ -361,15 +360,25 @@
 										<c:url value="/cart/add" var="addToCartUrl" />
 										<ycommerce:testId
 											code="searchPage_addToCart_button_${product.code}">
-											<form:form id="addToCartForm_${product.code}_${seller.ussid}"
+											<form:form id="addToCartForm_${product.code}_${entry_ussid}"
 												action="#" method="get"
 												class="add_to_cart_wl_form add_to_bag_wl">
-												<div id="addToCartForm_${product.code}_${seller.ussid}Title" class="addToCartFormTitleSuccessWl"></div>
+												<div id="addToCartForm_${product.code}_${entry_ussid}Title" class="addToCartFormTitleSuccessWl"></div>
 												<input type="hidden" maxlength="3" size="1" id="qty"
 													name="qty" value="1">
-												<input type="hidden" maxlength="3" size="1" id="stock"
-													name="stock" value="${seller.availableStock}">
-												<input type="hidden" name="ussid" value="${seller.ussid}" />
+												<c:choose>
+													<c:when test="${product.rootCategory eq 'FineJewellery'}">
+														<input type="hidden" maxlength="3" size="1" id="stock"
+															name="stock" value="${buybox_available}">
+													</c:when>
+													<c:otherwise>
+														<input type="hidden" maxlength="3" size="1" id="stock"
+															name="stock" value="${seller.availableStock}">
+													</c:otherwise>
+												</c:choose>
+												<%-- <input type="hidden" maxlength="3" size="1" id="stock"
+													name="stock" value="${seller.availableStock}"> --%>
+												<input type="hidden" name="ussid" value="${entry_ussid}" />
 												<input type="hidden" name="productCodePost"
 													value="${product.code}" />
 												<!-- For Infinite Analytics Start-->
@@ -396,7 +405,7 @@
 
 													<c:otherwise>
 													 <c:set var="showSizeGuideForFA" value="${showSizeMap[product.code]}" />
-													<c:if test="${(not empty wpproduct.wishlistProductSize && wpproduct.productCategory eq 'Clothing')||(not empty wpproduct.wishlistProductSize && wpproduct.productCategory eq 'Footwear') ||(showSizeGuideForFA ne 'true' && wpproduct.productCategory eq 'Accessories')}">
+													<c:if test="${(not empty wpproduct.wishlistProductSize && wpproduct.productCategory eq 'Clothing')||(not empty wpproduct.wishlistProductSize && wpproduct.productCategory eq 'Footwear') ||(showSizeGuideForFA ne 'true' && wpproduct.productCategory eq 'Accessories')||(not empty wpproduct.wishlistProductSize && wpproduct.productCategory eq 'FineJewellery') || (not empty wpproduct.wishlistProductSize && wpproduct.productCategory eq 'FashionJewellery')}">
 														<span>
 															<button id="addToCartButtonwl" type="${buttonType}"
 																class="blue button js-add-to-cart_wl">
@@ -413,7 +422,7 @@
 														</span>
 														</c:if>
 														 <!-- Add to cart from wishlist added for Jewellery -->
-														<c:if test="${(empty wpproduct.wishlistProductSize && wpproduct.productCategory eq 'Clothing')||(empty wpproduct.wishlistProductSize &&wpproduct.productCategory eq 'Footwear')||(showSizeGuideForFA eq 'true' &&wpproduct.productCategory eq 'Accessories')|| (empty wpproduct.wishlistProductSize && wpproduct.productCategory eq 'FineJewellery') || (empty wpproduct.wishlistProductSize && wpproduct.productCategory eq 'FashionJewellery')}">
+														<c:if test="${(empty wpproduct.wishlistProductSize && wpproduct.productCategory eq 'Clothing')||(empty wpproduct.wishlistProductSize && wpproduct.productCategory eq 'Footwear')||(showSizeGuideForFA eq 'true' && wpproduct.productCategory eq 'Accessories')|| (empty wpproduct.wishlistProductSize && wpproduct.productCategory eq 'FineJewellery') || (empty wpproduct.wishlistProductSize && wpproduct.productCategory eq 'FashionJewellery')}">
 														<span id="addToCartButtonId" style="display: none">
 															<button type="button" id="addToCartButtonwl" 
 																class="blue button sizeNotSpecified_wl" data-toggle="modal"

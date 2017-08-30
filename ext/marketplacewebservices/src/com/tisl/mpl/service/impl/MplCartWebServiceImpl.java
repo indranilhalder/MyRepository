@@ -988,7 +988,8 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 				 * ProductOption.CATEGORIES ProductOption.PROMOTIONS, ProductOption.STOCK,
 				 * ProductOption.DELIVERY_MODE_AVAILABILITY ));
 				 */
-
+				//TISJEW-3517
+				boolean isExchangeApplicable = false;
 				final int maximum_configured_quantiy = siteConfigService.getInt(MAXIMUM_CONFIGURED_QUANTIY, 0);
 				final GetWishListProductWsDTO gwlp = new GetWishListProductWsDTO();
 				//TPR-1083
@@ -998,12 +999,13 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 					if (StringUtils.isNotEmpty(pincode) && exchangeService.isBackwardServiceble(pincode))
 					{
 						gwlp.setExchangeMessage(MarketplacewebservicesConstants.EXCHANGEAPPLIED);
+						//TISJEW-3517
+						isExchangeApplicable = true;
 					}
 					else
 					{
 						gwlp.setExchangeMessage(MarketplacewebservicesConstants.EXCHANGENOTAPPLIED
-								+ MarketplacecommerceservicesConstants.SINGLE_SPACE + MarketplacecommerceservicesConstants.SINGLE_SPACE
-								+ pincode);
+								+ MarketplacecommerceservicesConstants.SINGLE_SPACE + pincode);
 					}
 				}
 				if (null != abstractOrderEntry.getDeliveryPointOfService())
@@ -1734,6 +1736,11 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 							{
 								obj.setValidDeliveryModes(pinCodeObj.getValidDeliveryModes());
 							}
+							//TISJEW-3517
+							if (isExchangeApplicable)
+							{
+								obj.setExchangeServiceable(isExchangeApplicable);
+							}
 							break;
 						}
 
@@ -2396,6 +2403,7 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 				if (!StringUtil.isEmpty(pincode))
 				{
 					responseData = mplCartFacade.getOMSPincodeResponseData(pincode, cartData, cartModel);
+
 					// Changes for Duplicate Cart fix
 					deliveryModeDataMap = mplCartFacade.getDeliveryMode(cartData, responseData, cartModel);
 				}

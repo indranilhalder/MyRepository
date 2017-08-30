@@ -49054,7 +49054,7 @@ body.page-productDetails .breadcrumbs.wrapper {
 	position: relative;
 	margin: -15px 0 0;
 	display: inline-block;
-	width:100%
+	/* width:100% */
 }
 
 .product-detail .Emi p, .pricebreakup-link {
@@ -69499,7 +69499,7 @@ body.page-multiStepCheckoutSummaryPage header, body.page-checkout-login header {
 	margin:24px 0px 0px;
   	padding-left: 58px;
   	padding-right: 59px;
-  	overflow: hidden;
+  	/* overflow: hidden; */
 }
 .cart.wrapper .cnc_store_wrapper .checkout-shipping-items.left-block.left-block-width .change_pincode_block{
   	padding-left: 58px;
@@ -70838,7 +70838,51 @@ background:#f8f8f8;
     display: inline-block;
     right: 0px;
 }
+p#cncpickuppincode_tooltip {
+    width: 206px;
+    position: absolute;
+    left: -636%;
+    background: #000;
+    color: #fff;
+    top: -94px;
+    padding: 7px 18px 6px 19px;
+    border-radius: 4px;
+    line-height: 15px;
+    display:none;
+    z-index: 10023;
+    text-align: left;
+}
+#cncpickuppincode_info:hover p#cncpickuppincode_tooltip {
+    display:block;
+    cursor: text !important;
+}
+span#cncpickuppincode_info{
+	 position: relative;
+}
+p#cncpickuppincode_tooltip:after{
+	content: "";
+    display: block;
+    width: 10px;
+    height: 10px;
+    background-color: #000;
+    -ms-transform: rotate(45deg);
+    -webkit-transform: rotate(45deg);
+    -moz-transform: rotate(45deg);
+    transform: rotate(45deg);
+    position: absolute;
+    left: 0;
+    right: 0;
+    margin: auto;
+}
 @media(max-width: 768px){
+	p#cncpickuppincode_tooltip {
+    left: 10%;
+    top: -75px;
+}
+p#cncpickuppincode_tooltip:after{
+	content: "";
+    display: none;
+}
 .marketplace-checkout span.need-help-call {
     display: none;
 }
@@ -70897,6 +70941,7 @@ select.update-entry-quantity-input.review-page-select{
 #singlePageMobile .mobileNotDefaultDelAddress{
 	display:none;
 }
+
 /*UF-281 UF-282 single page checkout css ends*/
 
 /* R2.3:START: Date: 2016-12-19- Code Merge */
@@ -75404,6 +75449,7 @@ body .account .right-account .password.responsiveProfile #frmUpdatePassword butt
 	}
 	body .account .right-account .info.responsiveProfile h2{
 	margin-bottom:0px;
+	margin-top: 16px; /* TISJEW-4348 */
 	}
 	body .container .account .wrapper .right-account p.commonAccountPara{
 	margin-bottom: 20px;
@@ -75978,7 +76024,10 @@ body .account .right-account .info fieldset form .quarter.phone .mobile_greyed>s
 	padding-bottom: 8px;
 }
 .jewellery-wrapper>div.accordin.FineJewellery .item .detail div.title,
-.jewellery-wrapper>div.accordin.FashionJewellery .item .detail div.title{
+.jewellery-wrapper>div.accordin.FashionJewellery .item .detail div.title,
+.jewellery-wrapper>div.accordin.FineJewellery .item .detail div.title div#jewelProductCode,
+.jewellery-wrapper>div.accordin.FashionJewellery .item .detail div.title div#jewelProductCode
+{
 	padding-top: 24px;
 	padding-bottom: 16px;
     font-size: 12px;
@@ -75988,10 +76037,13 @@ body .account .right-account .info fieldset form .quarter.phone .mobile_greyed>s
     border-bottom: solid 1px #eeeeee;
 }
 .jewellery-wrapper>div.accordin.FineJewellery .item .detail div.title span#jewelDetailsUssid,
-.jewellery-wrapper>div.accordin.FashionJewellery .item .detail div.title span#jewelDetailsUssid{
-	float: right;
+.jewellery-wrapper>div.accordin.FashionJewellery .item .detail div.title span#jewelDetailsUssid,
+.jewellery-wrapper>div.accordin.FineJewellery div.item div.detail .t-d-d span#tddValue, 
+.jewellery-wrapper>div.accordin.FashionJewellery div.item div.detail .t-d-d span#tddValue
+	{
 	color: rgba(0, 0, 0, 0.5);
-}
+	margin-left: 20px;
+	}
 .jewellery-wrapper>div.accordin.FineJewellery div.item,
 .jewellery-wrapper>div.accordin.FashionJewellery div.item{
 	border: none;
@@ -76026,8 +76078,8 @@ table#showPriceBreakup{
 .jewellery-wrapper>div.accordin.FashionJewellery .item .detail table tr td{
 	overflow: hidden;
 	display: table-cell;
-	padding-left: 5px;
-	padding-right: 5px;
+	padding-left: 20px;
+	padding-right: 20px;
 }
 .jewellery-wrapper>div.accordin.FineJewellery .item .detail table tr td:first-child,
 .jewellery-wrapper>div.accordin.FashionJewellery .item .detail table tr td:first-child{
@@ -76066,7 +76118,10 @@ table#showPriceBreakup{
 	display: none;
 } 
 .jewellery-wrapper>div.accordin.FineJewellery div.item div.detail .t-d-d, 
-.jewellery-wrapper>div.accordin.FashionJewellery div.item div.detail .t-d-d{
+.jewellery-wrapper>div.accordin.FashionJewellery div.item div.detail .t-d-d,
+.jewellery-wrapper>div.accordin.FineJewellery div.item div.detail .t-d-d div#tddKey, 
+.jewellery-wrapper>div.accordin.FashionJewellery div.item div.detail .t-d-d div#tddKey
+{
 	padding-top: 24px;
     padding-bottom: 16px;
     font-size: 12px;
@@ -76074,9 +76129,29 @@ table#showPriceBreakup{
     color: rgba(0, 0, 0, 0.5);
     border-bottom: solid 1px #eeeeee;
 }
-.jewellery-wrapper>div.accordin.FineJewellery div.item div.detail .t-d-d span, 
-.jewellery-wrapper>div.accordin.FashionJewellery div.item div.detail .t-d-d span{
-	float: right;
+.jewellery-wrapper>div.accordin.FineJewellery div.item div.detail .t-d-d, 
+.jewellery-wrapper>div.accordin.FashionJewellery div.item div.detail .t-d-d,
+.jewellery-wrapper>div.accordin.FineJewellery .item .detail div.title,
+.jewellery-wrapper>div.accordin.FashionJewellery .item .detail div.title
+	{
+		padding-bottom: 32px;
+	}
+.jewellery-wrapper>div.accordin.FineJewellery div.item div.detail .t-d-d div#tddKey, 
+.jewellery-wrapper>div.accordin.FashionJewellery div.item div.detail .t-d-d div#tddKey,
+.jewellery-wrapper>div.accordin.FineJewellery .item .detail div.title div#jewelProductCode,
+.jewellery-wrapper>div.accordin.FashionJewellery .item .detail div.title div#jewelProductCode
+{
+	border-bottom: none;
+	padding: 0;
+	float: left;
+}
+.jewellery-wrapper>div.accordin.FineJewellery div.item div.detail .t-d-d div#tddKey, 
+.jewellery-wrapper>div.accordin.FashionJewellery div.item div.detail .t-d-d div#tddKey{
+	width:48px;
+}
+.jewellery-wrapper>div.accordin.FineJewellery .item .detail div.title div#jewelProductCode,
+.jewellery-wrapper>div.accordin.FashionJewellery .item .detail div.title div#jewelProductCode{
+	width: 56px;
 }
 .jewellery-wrapper>div.accordin.FineJewellery.smk_accordion .item.accordion_in .detail.acc_content,
 .jewellery-wrapper>div.accordin.FashionJewellery.smk_accordion .item.accordion_in .detail.acc_content{
@@ -77315,3 +77390,5 @@ body .account .right-account .order-history.order-details li.item .status>ul.nav
     margin-top: 10px;
 }
 /* TISJEW-3497 end */
+
+

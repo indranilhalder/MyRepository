@@ -889,4 +889,5 @@ public final class ModelAttributetConstants
 	public static final String ICID = "icid";
 	public static final String SHARE = "share";
 
+	public static final String BUYBOX_AVAILABLE = "buybox_available";
 }

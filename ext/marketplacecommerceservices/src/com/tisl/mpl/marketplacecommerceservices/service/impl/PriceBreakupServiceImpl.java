@@ -57,7 +57,7 @@ public class PriceBreakupServiceImpl implements PriceBreakupService
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.marketplacecommerceservices.service.PriceBreakupService#getPricebreakup(java.lang.String,
 	 * java.lang.String)
 	 */
@@ -624,6 +624,11 @@ public class PriceBreakupServiceImpl implements PriceBreakupService
 				productConfiguredPopulator.populate(productModel, productData,
 						Arrays.asList(ProductOption.BASIC, ProductOption.CLASSIFICATION));
 				//	getProductClassificationPopulator().populate(entry.getProduct(), productData);
+
+				if (null != productData && null != productData.getBrand() && null != productData.getBrand().getBrandname())
+				{
+					orderJewelEntryModel.setBrandName(productData.getBrand().getBrandname());
+				}
 				if (null != productData.getClassifications())
 				{
 					final List<ClassificationData> ConfigurableAttributeList = new ArrayList<ClassificationData>(

@@ -187,7 +187,7 @@ public class MarketPlaceOrderDetailsOrderItemsWidgetRenderer extends
 		//CKD: TPR-3809
 		listheader = new Listheader(LabelUtils.getLabel(widget, "panCardStatus",
 				new Object[0]));
-		listheader.setWidth("80px");
+		listheader.setWidth("120px");
 		row.appendChild(listheader);
 
 		return row;

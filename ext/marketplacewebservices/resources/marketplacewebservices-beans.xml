@@ -1420,8 +1420,7 @@
 		<property name="pickupPersonMobile" type="String" />
 		<property name="isPickupUpdatable" type="boolean" />
 		<property name="isCDA" type="boolean"/>	
-		<!-- TPR-1083 Start-->
-	<property name="exchangeId" type="String"/>
+		
 	</bean>
 
 	<bean class="com.tisl.mpl.wsdto.ListPinCodeServiceData">
@@ -1530,6 +1529,8 @@
 		<property name="scheduleDeliveryTime" type="String" />
 		<property name="selfCourierDocumentLink" type="String" />
 		<property name="awbPopupLink" type="String" />
+		<!-- TPR-1083 Start-->
+	<property name="exchangeId" type="String"/>
 	</bean>
 	<bean class="com.tisl.mpl.wsdto.StatusResponseListDTO">
 		<property name="statusList"

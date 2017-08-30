@@ -180,6 +180,7 @@ ACC.singlePageCheckout = {
 	            } else {
 	            	ACC.singlePageCheckout.getSelectedAddress();
 	                $("#choosedeliveryMode").html(data);
+	                ACC.singlePageCheckout.callFetchCNCStoresForWeb();
 	                ACC.singlePageCheckout.showAccordion("#choosedeliveryMode");
 		        	//selectDefaultDeliveryMethod();
 		        	$(".click-and-collect").addClass("click-collect");
@@ -256,6 +257,7 @@ ACC.singlePageCheckout = {
 	            }  else {
 					ACC.singlePageCheckout.getSelectedAddress();
 					$("#choosedeliveryMode").html(data);
+					ACC.singlePageCheckout.callFetchCNCStoresForWeb();
 		        	ACC.singlePageCheckout.showAccordion("#choosedeliveryMode");
 		        	//selectDefaultDeliveryMethod();
 		        	$(".click-and-collect").addClass("click-collect");
@@ -279,6 +281,23 @@ ACC.singlePageCheckout = {
     		ACC.singlePageCheckout.processError("#addressMessage",data);
 		}
 		return false;	
+	},
+	//Fetch CNC stores from here for web
+	callFetchCNCStoresForWeb:function()
+	{
+		//fetching cnc stores if only click n collect delivery mode is present
+    	var entryNumbersId=$("#selectDeliveryMethodForm #entryNumbersId").val();
+		var isCncPresent=$("#selectDeliveryMethodForm #isCncPresentInSinglePageCart").val();//This will be true if any cart item has CNC as delivery mode
+    	var entryNumbers=entryNumbersId.split("#");
+		for(var i=0;i<entryNumbers.length-1;i++)
+		{
+		    if(isCncPresent && $('input:radio[name='+entryNumbers[i]+']:checked').attr("id").includes("click-and-collect"))
+		    {
+			    var ussid=$('input[name="deliveryMethodEntry['+entryNumbers[i]+'].sellerArticleSKU"]').val();
+			    ACC.singlePageCheckout.fetchStores(entryNumbers[i],ussid,'click-and-collect','','');
+		    }
+		}
+	  //end of fetching cnc stores if only click n collect delivery mode is present
 	},
 	//Function called when proceed button on delivery options page is clicked. 
 	//This function will fetch slot delivery page or will proceed to review order page
@@ -642,20 +661,7 @@ ACC.singlePageCheckout = {
 	        	$(".click-and-collect").addClass("click-collect");
 	        	$("#selectedAddressMessage").hide();
 	        	
-	        	//fetching cnc stores if only click n collect delivery mode is present
-	        	var entryNumbersId=$("#selectDeliveryMethodForm #entryNumbersId").val();
-	    		var isCncPresent=$("#selectDeliveryMethodForm #isCncPresentInSinglePageCart").val();//This will be true if any cart item has CNC as delivery mode
-	        	var entryNumbers=entryNumbersId.split("#");
-	    		for(var i=0;i<entryNumbers.length-1;i++)
-	    		{
-				    if(isCncPresent && $('input:radio[name='+entryNumbers[i]+']:checked').attr("id").includes("click-and-collect"))
-				    {
-					    var ussid=$('input[name="deliveryMethodEntry['+entryNumbers[i]+'].sellerArticleSKU"]').val();
-					    ACC.singlePageCheckout.fetchStores(entryNumbers[i],ussid,'click-and-collect','','');
-					    disableHideAjaxLoader=true;
-				    }
-	    		}
-			  //end of fetching cnc stores if only click n collect delivery mode is present
+	        	ACC.singlePageCheckout.callFetchCNCStoresForWeb();
 	        	
 	        	ACC.singlePageCheckout.attachDeliveryModeChangeEvent();
 	        	
@@ -1219,7 +1225,7 @@ ACC.singlePageCheckout = {
 		var selector="#"+elementId+" #modalBody"
 		$(selector).html(data);
 		$("#"+elementId).modal('show');
-		$("#newAddressFormMobile.new-address-form-mobile").html('');
+		//$("#newAddressFormMobile.new-address-form-mobile").html('');
 	},
 	//Generic function to showAccordion
 	showAccordion: function(showElementId){
@@ -2007,7 +2013,8 @@ ACC.singlePageCheckout = {
     
     xhrResponse.always(function(){        	
 	});
-  },	
+  },
+  //Function to show hide cod for CNC 
   showHideCodTab:function(){
 	  if(ACC.singlePageCheckout.getIsResponsive()){
 		  //Mobile
@@ -2297,7 +2304,7 @@ ACC.singlePageCheckout = {
 		
 		xhrResponse.done(function(data) {
 			$("#editAddressForResponsive").show();//Show edit address block
-			$("#newAddressFormMobile.new-address-form-mobile").html("");//Removing new address form when new address is selected
+			$("#newAddressFormMobile.new-address-form-mobile").html("");//Removing new address form when edit address is selected
 			$("#newAddressFormMobile.new-address-form-mobile").attr("data-loaded","false");//As the form has been removed above we need to reset data-loaded attribute to false 
 			ACC.singlePageCheckout.changeAddress();//Hiding change link and displaying other addressess
 			//Unchecking the radio button of saved addresses
@@ -2422,6 +2429,7 @@ ACC.singlePageCheckout = {
 		            	//In case of no error at server end below block will execute.
 		            	//alert("Before setting #choosedeliveryModeMobile");
 		            	$("#choosedeliveryModeMobile").html(response);
+		            	ACC.singlePageCheckout.fetchStoresResponsive();//Fetch CNC stores if CNC is selected by default
 		            	ACC.singlePageCheckout.mobileValidationSteps.isPincodeServiceable=true;
 		            	//alert("ACC.singlePageCheckout.mobileValidationSteps.isPincodeServiceable="+ACC.singlePageCheckout.mobileValidationSteps.isPincodeServiceable);
 //		            	var entryNumbersId=$("#entryNumbersId").val();		            	
@@ -2464,6 +2472,36 @@ ACC.singlePageCheckout = {
 			    })
 		      }
 	    //});
+	},
+	//Fetch CNC stores in responsive, This will in turn call fetchStores() method
+	fetchStoresResponsive:function(){
+		//fetching cnc stores if only click n collect delivery mode is present
+    	var entryNumbersId=$("#selectDeliveryMethodFormMobile #entryNumbersId").val();
+		var isCncPresent=$("#selectDeliveryMethodFormMobile #isCncPresentInSinglePageCart").val();//This will be true if any cart item has CNC as delivery mode
+		var cncSelected="false";
+    	var entryNumbers=entryNumbersId.split("#");
+		for(var i=0;i<entryNumbers.length-1;i++)
+		{
+		    if(isCncPresent && $('input:radio[name='+entryNumbers[i]+']:checked').attr("id").includes("click-and-collect"))
+		    {
+		    	cncSelected="true";
+			    var ussid=$('input[name="deliveryMethodEntry['+entryNumbers[i]+'].sellerArticleSKU"]').val();
+			    ACC.singlePageCheckout.fetchStores(entryNumbers[i],ussid,'click-and-collect','','');
+		    }
+		}
+		//Hiding/Showing COD if cnc is selcted
+		if(cncSelected=="true")
+		  {
+		  	$("#viewPaymentCOD, #viewPaymentCODMobile").css("display","none");
+		  	$("#viewPaymentCOD, #viewPaymentCODMobile").parent("li").css("display","none");
+		  	$("#viewPaymentCODMobile").parent("li").removeClass("paymentModeMobile");
+		  }
+		  else
+		  {
+		  	$("#viewPaymentCOD, #viewPaymentCODMobile").css("display","block");
+		  	$("#viewPaymentCOD, #viewPaymentCODMobile").parent("li").css("display","block");
+		  	$("#viewPaymentCODMobile").parent("li").addClass("paymentModeMobile");
+		  }
 	},
 	//Function called when change link of delivery mode is clicked for responsive
 	changeDeliveryMode:function(element){
@@ -2513,7 +2551,7 @@ ACC.singlePageCheckout = {
 		var selector2='change'+"."+id;//Adding change event to handle form autocomplete/autofill scenario
 		$('#'+id+' .address_postcode').off(selector1+" "+selector2);
 		$('#'+id+' .address_postcode').on(selector1+" "+selector2,function(){
-			$("#"+id+" #addressMessage").html("");
+			//$("#"+id+" #addressMessage").html("");
 			var pincode=$('.address_postcode').val();
 			$("#"+id+" .otherLandMarkError").html("");
 			var regPostcode = /^([1-9])([0-9]){5}$/;
@@ -2556,7 +2594,7 @@ ACC.singlePageCheckout = {
 				{
 					url=ACC.config.encodedContextPath + "/checkout/single/new-address-responsive?isEdit=true";
 				}
-				var data=$("#selectAddressFormMobile form#addressForm").serialize().replace(/\+/g,'%20');
+				var data=$("#chooseDeliveryAddressMobileDiv form#addressForm").serialize().replace(/\+/g,'%20');
 				
 				ACC.singlePageCheckout.showAjaxLoader();
 				var xhrResponse=ACC.singlePageCheckout.ajaxRequest(url,"POST",data,false);
@@ -3014,6 +3052,9 @@ $(document).ready(function(){
 			}
 			//For responsive site we are removing payment page laoded for web view inorder to keep unique id's in the view
 			$("#makePaymentDiv").html("");
+			
+			//Fetch CNC stores in responsive if CNC is selected on page load
+			ACC.singlePageCheckout.fetchStoresResponsive();
 		}
 		else
 		{

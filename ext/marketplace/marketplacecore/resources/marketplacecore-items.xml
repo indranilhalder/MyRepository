@@ -2836,7 +2836,13 @@
 						<persistence type="property" />
 					</attribute>
 					<!-- TPR-970 ends -->
-					
+					<!-- for pancard TPR-6109 -->
+					<attribute qualifier="isRejMailTriggred" autocreate="true" type="java.lang.Boolean" generate="true">
+				        <description>check if mail is already triggred for rejected pan card</description>
+				        <defaultvalue>Boolean.FALSE</defaultvalue>
+				        <modifiers optional="true" read="true" write="true"/>
+				        <persistence type="property"/>
+			    	</attribute> 
 				</attributes>
 			</itemtype>
 
@@ -7078,6 +7084,13 @@
 						<persistence type="property" />
 					</attribute>
 					<!-- Added in R2.3 END -->
+					
+					 <attribute qualifier="productRootCatCode" type="java.lang.String">
+						<modifiers optional="true" read="true" write="true" />
+						<description>for ProductRoot Category</description>
+						<persistence type="property" />
+					</attribute>
+					
 				</attributes>
 				<!-- CAR-274 -->
 				<indexes>
@@ -12533,7 +12546,11 @@
 								<persistence type="property" />
 					</attribute>		
 					
-					
+					<attribute qualifier="brandName" type="java.lang.String">
+								<modifiers read="true" write="true" search="true"
+									optional="true" />
+								<persistence type="property" />
+					</attribute>		
 					<!-- relation between OrderJewelEntry and AbstractOredrEntry -->
 					<attribute qualifier="abstractOrderEntryjewel" type="AbstractOrderEntry">
 						<modifiers read="true" write="true" optional="true"
@@ -12610,12 +12627,6 @@
 			        <modifiers optional="false" read="true" write="true"/>
 			        <persistence type="property"/>
 			    </attribute>
-			   <attribute qualifier="isMailTriggred" autocreate="true" type="java.lang.Boolean" generate="true">
-			        <description>check if mail is already triggred for rejected pan card</description>
-			        <defaultvalue>Boolean.FALSE</defaultvalue>
-			        <modifiers optional="false" read="true" write="true"/>
-			        <persistence type="property"/>
-			    </attribute> 
 			    <attribute qualifier="Status" autocreate="true" type="java.lang.String" generate="true">
 			        <description>status</description>
 			        <modifiers optional="false" read="true" write="true"/>

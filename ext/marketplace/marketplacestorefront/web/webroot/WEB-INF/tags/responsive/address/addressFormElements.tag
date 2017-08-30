@@ -425,7 +425,8 @@ $(document).ready(function(){
 	var tmpValue= -1;
 	
 	
-	$(".address_postcode").blur(function() {
+	//$(".address_postcode").blur(function() {
+	$(".address_postcode").keyup(function() {
 		if($(".address_postcode").val().length == "6") {	
 		loadPincodeData("new").done(function() {
 			console.log("addressform blur line 394");
