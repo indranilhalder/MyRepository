@@ -845,13 +845,14 @@ public class LuxCmsFacadeImpl implements LuxCmsFacade
 			{
 				for (final MediaModel media : mediaContainer1.getMedias())
 				{
-					final LuxuryMediaModel luxuryMedia = (LuxuryMediaModel) media;
+
 					final LuxuryMediaListWsDTO luxuryMediaList = new LuxuryMediaListWsDTO();
-					if (null != luxuryMedia.getURL() && StringUtils.isNotEmpty(luxuryMedia.getURL()))
+					if (null != media.getURL() && StringUtils.isNotEmpty(media.getURL()))
 					{
-						luxuryMediaList.setURL(luxuryMedia.getLocation());
+						luxuryMediaList.setURL(media.getUrl());
 
 					}
+					final LuxuryMediaModel luxuryMedia = (LuxuryMediaModel) media;
 					if (null != luxuryMedia.getUrlLink() && StringUtils.isNotEmpty(luxuryMedia.getUrlLink()))
 					{
 						luxuryMediaList.setUrlLink(luxuryMedia.getUrlLink());
