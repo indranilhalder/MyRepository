@@ -3275,7 +3275,7 @@ public class DefaultGetOrderDetailsFacadeImpl implements GetOrderDetailsFacade
 			//seller order no
 			orderproductdto.setSellerorderno(orderDetail.getCode());
 			final ProductData product = entry.getProduct();
-
+			String ussid = "";
 			if (null != product)
 			{
 				final List<ImageData> images = (List<ImageData>) product.getImages();
@@ -3340,14 +3340,34 @@ public class DefaultGetOrderDetailsFacadeImpl implements GetOrderDetailsFacade
 			SellerInformationModel sellerInfoModel = null;
 			if (StringUtils.isNotEmpty(entry.getSelectedUssid()))
 			{
-				sellerInfoModel = getMplSellerInformationService().getSellerDetail(entry.getSelectedUssid());
+				if ((MarketplacecommerceservicesConstants.FINEJEWELLERY).equalsIgnoreCase(product.getRootCategory()))
+				{
+					final List<JewelleryInformationModel> jewelleryInfo = jewelleryService.getJewelleryInfoByUssid(entry
+							.getSelectedUssid());
+					if (CollectionUtils.isNotEmpty(jewelleryInfo))
+					{
+						sellerInfoModel = getMplSellerInformationService().getSellerDetail(jewelleryInfo.get(0).getPCMUSSID());
+						ussid = jewelleryInfo.get(0).getUSSID();
+					}
+					else
+					{
+						LOG.error("No entry in JewelleryInformationModel for ussid " + entry.getSelectedUssid());
+					}
+				}
+				else
+				{
+					sellerInfoModel = getMplSellerInformationService().getSellerDetail(entry.getSelectedUssid());
+					ussid = sellerInfoModel.getUSSID();
+				}
+
 			}
 			if (sellerInfoModel != null && sellerInfoModel.getRichAttribute() != null
 					&& ((List<RichAttributeModel>) sellerInfoModel.getRichAttribute()).get(0).getDeliveryFulfillModes() != null)
 			{
 
 				//Seller info
-				if (sellerInfoModel.getUSSID() != null && sellerInfoModel.getUSSID().equalsIgnoreCase(entry.getSelectedUssid()))
+				//if (sellerInfoModel.getUSSID() != null && sellerInfoModel.getUSSID().equalsIgnoreCase(entry.getSelectedUssid()))
+				if (sellerInfoModel.getUSSID() != null && ussid.equalsIgnoreCase(entry.getSelectedUssid()))
 				{
 					if (null != sellerInfoModel.getSellerID())
 					{

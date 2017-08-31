@@ -17,6 +17,7 @@ import de.hybris.platform.acceleratorservices.model.cms2.pages.EmailPageModel;
 import de.hybris.platform.acceleratorservices.process.email.context.AbstractEmailContext;
 import de.hybris.platform.basecommerce.model.site.BaseSiteModel;
 import de.hybris.platform.commercefacades.order.data.OrderData;
+import de.hybris.platform.core.GenericSearchConstants.LOG;
 import de.hybris.platform.core.model.c2l.LanguageModel;
 import de.hybris.platform.core.model.order.AbstractOrderEntryModel;
 import de.hybris.platform.core.model.order.OrderModel;
@@ -61,20 +62,12 @@ public class PancardRejectEmailContext extends AbstractEmailContext<OrderProcess
 	private static final String TOTALPRICE = "totalPrice";
 	private static final String SHIPPINGCHARGE = "shippingCharge";
 	private static final String CONVENIENCECHARGE = "convenienceChargesVal";
-	private static final String DELIVERYADDRESS = "deliveryAddress";
 	private static final String CNCSTOREADDRESS = "storeAddress";
 	private static final String CUSTOMER_NAME = "customerName";
 	private static final String COD_CHARGES = "codCharge";
 	private static final String SUBTOTALFORJEWELLERY = "subTotalForJewellery";
-
-
-
-	private static final String MOBILENUMBER = "mobilenumber";
-	private static final String NAMEOFPERSON = "nameofperson";
 	public static final String TRACK_ORDER_URL = "trackOrderUrl";
-	private static final String COMMA = ",";
 	private static final String CUSTOMER = "Customer";
-	private static final String SPACE = " ";
 	private static final String NUMBERTOOL = "numberTool";
 	private static final String WEBSITE_URL = "websiteUrl";
 	private static final String PRODUCT_IMAGE_URL = "productImageUrl";
@@ -123,23 +116,11 @@ public class PancardRejectEmailContext extends AbstractEmailContext<OrderProcess
 
 		}
 
-
-
-		//final DecimalFormat myFormatter = new DecimalFormat("#,###");
-		//final String subTotalNew = myFormatter.format(subTotal);
-		//final String totalPriceNew = myFormatter.format(totalPrice);
-		//final String subTotalNew = NumberFormat.getIntegerInstance().format(subTotal);
-
 		LOG.info(" *********************- totalPrice:" + totalPrice + " orderTotalPrice:" + orderTotalPrice
 				+ " convenienceCharges:" + convenienceCharges);
 
 
-		//	final Double shippingCharge = orderProcessModel.getOrder().getDeliveryCost();
-
-
 		final String orderCode = orderProcessModel.getOrder().getCode();
-
-		//final List<OrderModel> childOrders = orderProcessModel.getOrder().getChildOrders();
 
 		final String trackOrderUrl = getConfigurationService().getConfiguration().getString(
 				MarketplacecommerceservicesConstants.MPL_TRACK_ORDER_LONG_URL_FORMAT)
@@ -147,15 +128,6 @@ public class PancardRejectEmailContext extends AbstractEmailContext<OrderProcess
 		/* Added in R2.3 for shortUrl START */
 		final String shortUrl = shortUrlService.genearateShortURL(orderCode);
 		put(TRACK_ORDER_URL, null != shortUrl ? shortUrl : trackOrderUrl);
-
-
-		//final paymentMode = transactionEntry.getEntries().get(0).getPaymentMode().getMode();
-
-		/*
-		 * final String trackOrderUrl = getConfigurationService().getConfiguration().getString(
-		 * MarketplacecommerceservicesConstants.SMS_ORDER_TRACK_URL) + orderProcessModel.getOrder().getCode();
-		 * put(TRACK_ORDER_URL, trackOrderUrl);
-		 */
 		put(ORDER_CODE, orderCode);
 		put(CHILDORDERS, childOrders);
 		put(SUBTOTAL, Double.valueOf(subTotal));
@@ -165,8 +137,7 @@ public class PancardRejectEmailContext extends AbstractEmailContext<OrderProcess
 		//put(TOTALPRICE, totalPriceNew);
 		put(SHIPPINGCHARGE, Double.valueOf(shippingCharge));
 		put(CONVENIENCECHARGE, convenienceChargesVal);
-		//Setting first name and last name to NAMEOFPERSON
-		//final StringBuilder name = new StringBuilder(150);
+		
 		final Set<PointOfServiceModel> storeAddrList = new HashSet<PointOfServiceModel>();
 		//final StringBuilder deliveryAddr = new StringBuilder(150);
 		final List<StateData> stateDataList = getAccountAddressFacade().getStates();

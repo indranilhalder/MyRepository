@@ -461,11 +461,11 @@ public class UsersController extends BaseCommerceController
 
 	@Resource(name = "voucherService")
 	private VoucherService voucherService;
-	
+
 	//Sonar Fix
-	private static final String NO_JUSPAY_URL= "No juspayReturnUrl is defined in local properties";
-	  
-	private static final String NO_JUSPAY_MERCHANTKEY= "No juspayMerchantKey is defined in local properties";
+	private static final String NO_JUSPAY_URL = "No juspayReturnUrl is defined in local properties";
+
+	private static final String NO_JUSPAY_MERCHANTKEY = "No juspayMerchantKey is defined in local properties";
 
 	//@Autowired
 	//private MplPaymentFacadeImpl mplPaymentFacadeImpl;
@@ -3220,7 +3220,8 @@ public class UsersController extends BaseCommerceController
 						for (final Wishlist2EntryModel entryModel : entryModels)
 						{
 							LOG.debug("Step4-************************Wishlist");
-							if (entryModel.getIsDeleted() == null || (entryModel.getIsDeleted() != null && !entryModel.getIsDeleted().booleanValue()))//TPR-5787 check added
+							if (entryModel.getIsDeleted() == null
+									|| (entryModel.getIsDeleted() != null && !entryModel.getIsDeleted().booleanValue()))//TPR-5787 check added
 							{
 								LOG.debug("Step5-************************Wishlist");
 								wldpDTO = new GetWishListProductWsDTO();
@@ -6827,8 +6828,7 @@ public class UsersController extends BaseCommerceController
 			// For Mobile
 			juspayMerchantId = !getConfigurationService().getConfiguration()
 					.getString(MarketplacecommerceservicesConstants.MARCHANTID).isEmpty() ? getConfigurationService()
-					.getConfiguration().getString(MarketplacecommerceservicesConstants.MARCHANTID)
-					: NO_JUSPAY_MERCHANTKEY;
+					.getConfiguration().getString(MarketplacecommerceservicesConstants.MARCHANTID) : NO_JUSPAY_MERCHANTKEY;
 
 			if (commonUtils.isLuxurySite())
 			{
@@ -6836,16 +6836,14 @@ public class UsersController extends BaseCommerceController
 						.getString(MarketplacecommerceservicesConstants.RETURNURLLUX).isEmpty() ? getConfigurationService()
 
 
-				.getConfiguration().getString(MarketplacecommerceservicesConstants.RETURNURLLUX)
-						: NO_JUSPAY_URL;
+				.getConfiguration().getString(MarketplacecommerceservicesConstants.RETURNURLLUX) : NO_JUSPAY_URL;
 
 			}
 			else
 			{
 				juspayReturnUrl = !getConfigurationService().getConfiguration()
 						.getString(MarketplacecommerceservicesConstants.RETURNURL).isEmpty() ? getConfigurationService()
-						.getConfiguration().getString(MarketplacecommerceservicesConstants.RETURNURL)
-						: NO_JUSPAY_URL;
+						.getConfiguration().getString(MarketplacecommerceservicesConstants.RETURNURL) : NO_JUSPAY_URL;
 			}
 
 			returnUrlBuilder.append(juspayReturnUrl);
@@ -6990,23 +6988,20 @@ public class UsersController extends BaseCommerceController
 
 						juspayMerchantId = !getConfigurationService().getConfiguration()
 								.getString(MarketplacecommerceservicesConstants.MARCHANTID).isEmpty() ? getConfigurationService()
-								.getConfiguration().getString(MarketplacecommerceservicesConstants.MARCHANTID)
-								: NO_JUSPAY_MERCHANTKEY;
+								.getConfiguration().getString(MarketplacecommerceservicesConstants.MARCHANTID) : NO_JUSPAY_MERCHANTKEY;
 
 						if (commonUtils.isLuxurySite())
 						{
 							juspayReturnUrl = !getConfigurationService().getConfiguration()
 									.getString(MarketplacecommerceservicesConstants.RETURNURLLUX).isEmpty() ? getConfigurationService()
-									.getConfiguration().getString(MarketplacecommerceservicesConstants.RETURNURLLUX)
-									: NO_JUSPAY_URL;
+									.getConfiguration().getString(MarketplacecommerceservicesConstants.RETURNURLLUX) : NO_JUSPAY_URL;
 
 						}
 						else
 						{
 							juspayReturnUrl = !getConfigurationService().getConfiguration()
 									.getString(MarketplacecommerceservicesConstants.RETURNURL).isEmpty() ? getConfigurationService()
-									.getConfiguration().getString(MarketplacecommerceservicesConstants.RETURNURL)
-									: NO_JUSPAY_URL;
+									.getConfiguration().getString(MarketplacecommerceservicesConstants.RETURNURL) : NO_JUSPAY_URL;
 						}
 
 						juspayOrderId = mplPaymentFacade.createJuspayOrder(cart, null, firstName, lastName, addressLine1, addressLine2,
@@ -7506,6 +7501,11 @@ public class UsersController extends BaseCommerceController
 		ReturnReasonDetails returnReasonData = null;
 		ReturnReasonDTO reasonDto = new ReturnReasonDTO();
 		final List<ReturnReasonDTO> returnReasondtolist = new ArrayList<ReturnReasonDTO>();
+		final String revSealSellerList = getConfigurationService().getConfiguration().getString(
+				"finejewellery.reverseseal.sellername");
+		boolean isFineJew = false;
+		final RevSealJwlryDataWsDTO revSealFrJwlry = new RevSealJwlryDataWsDTO();
+		final Map<String, String> returnModes = new HashMap<String, String>();
 		try
 		{
 			final List<OrderProductWsDTO> orderproductWsDto = getOrderDetailsFacade.getOrderdetailsForApp(orderCode, transactionId,
@@ -7515,11 +7515,54 @@ public class UsersController extends BaseCommerceController
 
 				returnRequestDTO.setOrderProductWsDTO(orderproductWsDto);
 				returnReasonData = mplOrderFacade.getReturnReasonForOrderItem(returnCancelFlag);
+
+				//TPR-4134 starts
+				returnModes.put(MarketplacecommerceservicesConstants.SELFCOURIER, "true");
+				returnModes.put(MarketplacecommerceservicesConstants.SCHEDULE_PICKUP, "true");
+				returnModes.put(MarketplacecommerceservicesConstants.QUICK_DROP, "true");
+				returnRequestDTO.setShowReverseSealFrJwlry("No");
+
+				if (StringUtils.isNotEmpty(revSealSellerList))
+				{
+					final List<String> sellerList = Arrays.asList(revSealSellerList.split(","));
+					for (final OrderProductWsDTO orderEntry : orderproductWsDto)
+					{
+						if (sellerList.contains(orderEntry.getSellerName()))
+						{
+							returnRequestDTO.setShowReverseSealFrJwlry("Yes");
+							revSealFrJwlry.setMessage(MarketplacecommerceservicesConstants.REV_SEAL_JWLRY);
+							revSealFrJwlry.setYes("Y");
+							revSealFrJwlry.setNo("N");
+							LOG.debug("Reverse seal section will be shown");
+							break;
+						}
+					}
+				}
+				for (final OrderProductWsDTO orderEntryDto : orderproductWsDto)
+				{
+					final ProductModel productModel = getMplOrderFacade().getProductForCode(orderEntryDto.getProductcode());
+					if (null != productModel
+							&& MarketplacecommerceservicesConstants.FINEJEWELLERY
+									.equalsIgnoreCase(productModel.getProductCategoryType()))
+					{
+						isFineJew = true;
+						returnModes.put(MarketplacecommerceservicesConstants.SELFCOURIER, "false");
+						returnRequestDTO.setReverseSealFrJwlry(revSealFrJwlry);
+						break;
+					}
+				}
+				returnRequestDTO.setReturnModes(returnModes);
+				//TPR-4134 ends
 			}
 			if (null != returnReasonData && CollectionUtils.isNotEmpty(returnReasonData.getReturnReasonDetailsList()))
 			{
 				for (final ReturnReasonData entry : returnReasonData.getReturnReasonDetailsList())
 				{
+					if (!isFineJew
+							&& MarketplacecommerceservicesConstants.RETURN_FINEJEWELLERY.equalsIgnoreCase(entry.getReasonDescription()))
+					{
+						continue;
+					}
 					reasonDto = dataMapper.map(entry, ReturnReasonDTO.class);
 					returnReasondtolist.add(reasonDto);
 
@@ -7572,10 +7615,7 @@ public class UsersController extends BaseCommerceController
 		List<ReturnReasonData> reasonList = new ArrayList<ReturnReasonData>();
 		List<PointOfServiceData> returnableStores = new ArrayList<PointOfServiceData>();
 		String ussid = "";
-		String sellerName = "";
-		final RevSealJwlryDataWsDTO revSealFrJwlry = new RevSealJwlryDataWsDTO();
 		boolean isFineJew = false;
-		final String revSealSellerList = configurationService.getConfiguration().getString("finejewellery.reverseseal.sellername");
 		try
 		{
 			final OrderModel subOrderModel = orderModelService.getOrder(orderCode);
@@ -7637,34 +7677,10 @@ public class UsersController extends BaseCommerceController
 									sellerRichAttrOfQuickDrop = sellerRichAttributeModel.get(0).getReturnAtStoreEligible().toString();
 								}
 							}
-							sellerName = sellerInformationModel.getSellerName();
 						}
 						if (!(entry.isGiveAway() || entry.isIsBOGOapplied()))
 						{
 							returnLogisticsAvailability = true;
-						}
-					}
-
-
-					if (StringUtils.isNotEmpty(revSealSellerList))
-					{
-						final List<String> sellerList = Arrays.asList(revSealSellerList.split(","));
-						if ((MarketplacecommerceservicesConstants.FINEJEWELLERY)
-								.equalsIgnoreCase(productModel.getProductCategoryType()))
-						{
-							//Checking if seller contains the values
-							if (sellerList.contains(sellerName))
-							{
-								revSealFrJwlry.setMessage(MarketplacecommerceservicesConstants.REV_SEAL_JWLRY);
-								final List<String> revSealRadioYes = new ArrayList<String>();
-								revSealRadioYes.add(MarketplacecommerceservicesConstants.REV_SEAL_RADIO_YES);
-								revSealRadioYes.add("Y");
-								revSealFrJwlry.setYes(revSealRadioYes);
-								final List<String> revSealRadioNo = new ArrayList<String>();
-								revSealRadioNo.add(MarketplacecommerceservicesConstants.REV_SEAL_RADIO_NO);
-								revSealRadioNo.add("N");
-								revSealFrJwlry.setNo(revSealRadioNo);
-							}
 						}
 					}
 					break;
@@ -7771,7 +7787,6 @@ public class UsersController extends BaseCommerceController
 			returnDeatails.setProductRichAttrOfQuickDrop(productRichAttrOfQuickDrop);
 			returnDeatails.setReturnLogisticsAvailability(returnLogisticsAvailability);
 			returnDeatails.setSellerRichAttrOfQuickDrop(sellerRichAttrOfQuickDrop);
-			returnDeatails.setReverseSealFrJwlry(revSealFrJwlry);
 		}
 		catch (final EtailNonBusinessExceptions e)
 		{
@@ -7904,10 +7919,11 @@ public class UsersController extends BaseCommerceController
 				returnAddrData.setState(getStateCode(returnData.getState()));
 				returnAddrData.setPincode(returnData.getPincode());
 				//TPR-4134
-				if (null != returnData.getRevSealJwlry())
+				if (null != returnData.getReverseSealAvailable())
 				{
-					returnInfoData.setReverseSealLostflag(returnData.getRevSealJwlry());
+					returnInfoData.setReverseSealLostflag(returnData.getReverseSealAvailable());
 				}
+
 				if (returnData.getRefundType().equalsIgnoreCase(MarketplacecommerceservicesConstants.RETURN_TYPE))
 				{
 					cancellationStatus = cancelReturnFacade.implementReturnItem(subOrderDetails, subOrderEntry, returnInfoData,

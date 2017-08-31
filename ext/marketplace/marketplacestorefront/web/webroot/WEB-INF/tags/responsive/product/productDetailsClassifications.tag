@@ -58,7 +58,7 @@
                      <table>
                         <c:forEach items="${classification.value}" var="feature" varStatus="inner">
                            <tr>
-                              <td class="title">${feature.key}  </td>
+                              <td class="title"><div id="productDetailsColumn">${feature.key}</div></td>
                               <c:forEach items="${feature.value}" var="featureValue" varStatus="status">
                                  <td >${featureValue}</td>
                               </c:forEach>
@@ -87,7 +87,7 @@
                            	 <c:choose>
                            	 <c:when test="${feature.key ne 'Total Count' and feature.key ne 'Total Weight' }">
                               <tr>
-                                 <td class="title">${feature.key}  </td>
+                                 <td class="title"><div id="diamondDetailsColumn">${feature.key}</div></td>
                                  <c:forEach items="${feature.value}" var="featureValue" varStatus="status">
                                     <td >${featureValue}</td>
                                  </c:forEach>
@@ -119,7 +119,9 @@
      	<div id = "showPrice"  class="item">
 		 <p id = "show" class="title"> </p>
 		 <div class="detail acc_content" style="display: block;">
+		 <div id="priceBreakupTable">
 		  <table id="showPriceBreakup"  style="display:none"></table> 
+		  </div>
 		</div>
 		</div>
 		</div>

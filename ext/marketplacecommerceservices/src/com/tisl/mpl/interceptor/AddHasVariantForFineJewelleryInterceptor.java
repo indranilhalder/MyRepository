@@ -12,6 +12,8 @@ import java.util.List;
 
 import javax.annotation.Resource;
 
+import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
@@ -43,19 +45,30 @@ public class AddHasVariantForFineJewelleryInterceptor implements PrepareIntercep
 			String categoryId = null;
 			//	final Boolean isHasVariant = Boolean.valueOf(true);//SONAR FIX JEWELLERY
 			final Boolean isHasVariant = Boolean.TRUE;
-			if (sellerInfo.getProductSource() != null)
+			if (null != sellerInfo.getProductSource())
 			{
-				listingId = sellerInfo.getProductSource().getCode();
-				final List<ProductModel> findProductsByCode = defaultProductDao.findProductsByCode(listingId);
-				for (final ProductModel product : findProductsByCode)
+				if (StringUtils.isNotEmpty(sellerInfo.getProductSource().getCode()))
 				{
-					categoryId = product.getProductCategoryType();
-				}
-				if (categoryId != null && categoryId.equalsIgnoreCase(MarketplacecommerceservicesConstants.FINEJEWELLERY))
-				{
-					sellerInfo.setHasVariant(isHasVariant);
-				}
+					listingId = sellerInfo.getProductSource().getCode();
+					final List<ProductModel> findProductsByCode = defaultProductDao.findProductForHasVariant(listingId);
+					if (CollectionUtils.isNotEmpty(findProductsByCode))
+					{
+						for (final ProductModel product : findProductsByCode)
+						{
+							if (StringUtils.isNotEmpty(product.getProductCategoryType()))
+							{
+								categoryId = product.getProductCategoryType();
+								break;
+							}
+						}
+					}
+					if (StringUtils.isNotEmpty(categoryId)
+							&& MarketplacecommerceservicesConstants.FINEJEWELLERY.equalsIgnoreCase(categoryId))
+					{
+						sellerInfo.setHasVariant(isHasVariant);
+					}
 
+				}
 			}
 		}
 	}

@@ -1601,6 +1601,7 @@
 			type="java.util.List&lt;com.tisl.mpl.wsdto.ReservationItemWsDTO>" />
 		<property name="delistedMessage" type="String" />
 		<property name="failedUSSIDs" type="java.util.List&lt;java.lang.String>" />
+		<property name="priceChangeNotificationMsg" type="java.lang.String" />
 	</bean>
 
 
@@ -2980,8 +2981,6 @@
 		<property name="deliveryAddress" type="de.hybris.platform.commercefacades.user.data.AddressData"/>
 		<property name="returnEntry" type="de.hybris.platform.commercewebservicescommons.dto.order.OrderEntryListWsDTO"/>
         <property name="selfCourierDocumentLink" type="String" />
-        <!-- TPR-4134 -->
-        <property name="reverseSealFrJwlry" type="com.tisl.mpl.wsdto.RevSealJwlryDataWsDTO"/>
 	</bean>
 	
 	<!-- Added for mobile inventory Reservation START   -->
@@ -3050,7 +3049,10 @@
 			
 		<!--  R2.3 CRM to Commerce end-->
 		<!-- TPR-4134 -->
-		<property name="revSealJwlry" type="java.lang.String"/>
+		<property name="showReverseSealFrJwlry" type="java.lang.String"/>
+        <property name="reverseSealFrJwlry" type="com.tisl.mpl.wsdto.RevSealJwlryDataWsDTO"/>
+        <property name="reverseSealAvailable" type="java.lang.String"/>
+        <property name="returnModes" type="java.util.Map&lt;String,String>"></property>
 	</bean>
 	<!-- For Return Web Services Change Pincode QuickDrop Stores -->
 	<bean class="com.tisl.mpl.wsdto.QuickDropStoresList" extends="com.tisl.mpl.wsdto.ErrorDTO">
@@ -3063,11 +3065,6 @@
 <property name="pincodeResponse" type="boolean"/>
 <property name="priceMatrix" type="java.util.List&lt;com.tisl.mpl.facades.product.data.ExchangeGuideData>"/>
 </bean>
-		<bean class="com.tisl.mpl.wsdto.RevSealJwlryDataWsDTO">
- 	        <property name="message" type="String"/>
- 		    <property name="yes" type="java.util.List&lt;String>"/>
- 			<property name="no" type="java.util.List&lt;String>"/>
- 		</bean>
  
 <!--TPR-6117-->
 	<bean class="com.tisl.mpl.wsdto.MaxLimitWsDto">
@@ -3144,6 +3141,10 @@
 		
 	</bean>
 	
-
+		<bean class="com.tisl.mpl.wsdto.RevSealJwlryDataWsDTO">
+ 	        <property name="message" type="String"/>
+ 		    <property name="yes" type="String"/>
+ 			<property name="no" type="String"/>
+ 		</bean>
 
 </beans>

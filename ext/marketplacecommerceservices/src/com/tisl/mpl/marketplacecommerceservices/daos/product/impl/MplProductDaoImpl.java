@@ -3,6 +3,7 @@
  */
 package com.tisl.mpl.marketplacecommerceservices.daos.product.impl;
 
+import de.hybris.platform.catalog.CatalogVersionService;
 import de.hybris.platform.catalog.model.CatalogVersionModel;
 import de.hybris.platform.catalog.model.ProductFeatureModel;
 import de.hybris.platform.core.model.product.ProductModel;
@@ -44,6 +45,9 @@ public class MplProductDaoImpl extends DefaultProductDao implements MplProductDa
 	@Autowired
 	private CatalogUtils catalogUtils;
 
+	@Autowired
+	private CatalogVersionService catalogVersionService;
+
 	protected static final Logger LOG = Logger.getLogger(MplProductDaoImpl.class);
 
 	private static final String SELECT_STRING = "SELECT  distinct {p:";
@@ -74,11 +78,11 @@ public class MplProductDaoImpl extends DefaultProductDao implements MplProductDa
 				.append(" AS s ").append("ON {s:").append(SellerInformationModel.PRODUCTSOURCE).append("}={p:")
 				.append(ProductModel.PK).append("} ").append(MarketplacecommerceservicesConstants.QUERYJOIN)
 				.append(CatalogVersionModel._TYPECODE).append(" AS cat ").append("ON {p:").append(ProductModel.CATALOGVERSION)
-				.append("}={cat:").append(CatalogVersionModel.PK).append("} }");
+				.append("}={cat:").append(CatalogVersionModel.PK).append("}}");
 
 		final String inPart = "{p:" + ProductModel.CODE + "} = (?code) AND {cat:" + CatalogVersionModel.PK
 				+ "} = ?catalogVersion and  sysdate between {s.startdate} and {s.enddate} ";
-		stringBuilder.append("WHERE ").append(inPart);
+		stringBuilder.append(" WHERE ").append(inPart);
 
 		LOG.debug("findProductsByCode: stringBuilder******* " + stringBuilder);
 		final FlexibleSearchQuery query = new FlexibleSearchQuery(stringBuilder.toString());
@@ -288,15 +292,15 @@ public class MplProductDaoImpl extends DefaultProductDao implements MplProductDa
 		ProductModel prod = new ProductModel();
 
 		LOG.debug("findProductsByCode: code********** " + code);
-		final CatalogVersionModel catalogVersion = catalogUtils.getSessionCatalogVersionForProduct();
+		final String catalogVersion = "Online";
 		final StringBuilder stringBuilder = new StringBuilder(70);
 		stringBuilder.append(SELECT_STRING).append(ProductModel.PK).append("} ");
 		stringBuilder.append(FROM_STRING).append(ProductModel._TYPECODE).append(" AS p ");
 		stringBuilder.append("JOIN ").append(SellerInformationModel._TYPECODE).append(" AS s ");
 		stringBuilder.append("ON {s:").append(SellerInformationModel.PRODUCTSOURCE).append("}={p:").append(ProductModel.PK)
-				.append("} } ");
+				.append("}} ");
 		final String inPart = "{p:" + ProductModel.CODE + CODE_STRING + ProductModel.CATALOGVERSION + "} = ?catalogVersion";
-		stringBuilder.append("WHERE ").append(inPart);
+		stringBuilder.append(" WHERE ").append(inPart);
 		LOG.debug("findProductsByCode: stringBuilder******* " + stringBuilder);
 		final FlexibleSearchQuery query = new FlexibleSearchQuery(stringBuilder.toString());
 		query.addQueryParameter(CODE, code);
@@ -310,5 +314,47 @@ public class MplProductDaoImpl extends DefaultProductDao implements MplProductDa
 			prod = searchResult.getResult().get(0);
 		}
 		return prod;
+	}
+
+
+	/*
+	 * (non-Javadoc)
+	 *
+	 * @see
+	 * com.tisl.mpl.marketplacecommerceservices.daos.product.MplProductDao#findProductForHasVariant(java.lang.String)
+	 */
+	@Override
+	public List<ProductModel> findProductForHasVariant(final String code)
+	{
+		// YTODO Auto-generated method stub
+		LOG.debug("findProductForHasVariant: code********** " + code);
+		List<ProductModel> productString = null;
+		try
+		{
+			final String query = "SELECT  distinct {p:" + ProductModel.PK + "} FROM {" + ProductModel._TYPECODE + " as p JOIN "
+					+ SellerInformationModel._TYPECODE + " as s ON {s:" + SellerInformationModel.PRODUCTSOURCE + "}={p:"
+					+ ProductModel.PK + "}} WHERE {p:" + ProductModel.CODE + "}=?code and {p.catalogversion}=?catalogversion";
+			final FlexibleSearchQuery flexiQuery = new FlexibleSearchQuery(query);
+			flexiQuery.addQueryParameter(CODE, code);
+			flexiQuery.addQueryParameter("catalogversion", getCatalogVersion());
+
+			searchRestrictionService.disableSearchRestrictions();
+			final SearchResult<ProductModel> searchResult = getFlexibleSearchService().search(flexiQuery);
+			LOG.debug("findProductForHasVariant: searchResult********** " + searchResult);
+			productString = searchResult.getResult();
+		}
+		finally
+		{
+			searchRestrictionService.enableSearchRestrictions();
+		}
+		return productString;
+	}
+
+	private CatalogVersionModel getCatalogVersion()
+	{
+		final CatalogVersionModel catalogVersionModel = catalogVersionService.getCatalogVersion(
+				MarketplacecommerceservicesConstants.DEFAULT_IMPORT_CATALOG_ID,
+				MarketplacecommerceservicesConstants.DEFAULT_IMPORT_CATALOG_VERSION);
+		return catalogVersionModel;
 	}
 }
