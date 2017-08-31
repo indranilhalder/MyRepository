@@ -18,6 +18,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.collections.MapUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -436,31 +437,50 @@ public class ExchangeGuideServiceImpl implements ExchangeGuideService
 				}
 
 			}
-
-			for (final AbstractOrderEntryModel entry : order.getEntries())
+			if (MapUtils.isNotEmpty(productExcId))
 			{
-				ProductModel product = null;
-				if (entry != null && StringUtils.isNotEmpty(entry.getExchangeId()))
+				for (final AbstractOrderEntryModel entry : order.getEntries())
 				{
-					product = entry.getProduct();
+					ProductModel product = null;
+					if (entry != null && StringUtils.isNotEmpty(entry.getExchangeId()))
+					{
+						product = entry.getProduct();
+					}
+					if (product != null && StringUtils.isNotEmpty(product.getCode()) && productExcId.containsKey(product.getCode()))
+					{
+						entry.setExchangeId(exReqId);
+					}
+					parentEntryList.add(entry);
 				}
-				if (product != null && StringUtils.isNotEmpty(product.getCode()) && productExcId.containsKey(product.getCode()))
-				{
-					entry.setExchangeId(exReqId);
-				}
-				parentEntryList.add(entry);
 			}
 
+			if (CollectionUtils.isNotEmpty(exModList))
+			{
+				modelService.saveAll(exModList);
+			}
 
-			modelService.saveAll(exModList);
+			if (CollectionUtils.isNotEmpty(childOrderEntryList))
+			{
+				modelService.saveAll(childOrderEntryList);
+			}
 
-			modelService.saveAll(childOrderEntryList);
+			if (CollectionUtils.isNotEmpty(childModfList))
+			{
 
-			modelService.saveAll(childModfList);
+				modelService.saveAll(childModfList);
+			}
 
-			modelService.saveAll(parentEntryList);
+			if (CollectionUtils.isNotEmpty(parentEntryList))
+			{
 
-			modelService.removeAll(exTraxRemovList);
+				modelService.saveAll(parentEntryList);
+			}
+
+			if (CollectionUtils.isNotEmpty(exTraxRemovList))
+			{
+
+				modelService.removeAll(exTraxRemovList);
+			}
 
 		}
 		catch (final ModelSavingException e)
