@@ -1,0 +1,30 @@
+##******************************This file is generated - please do not edit it. It will be regenerated after every build.********************************#
+
+$contentCatalog=luxContentCatalog
+$contentCV=catalogVersion(CatalogVersion.catalog(Catalog.id[default=$contentCatalog]),CatalogVersion.version[default=Staged])[default=$contentCatalog:Staged]
+
+# Language
+$lang=en
+
+# CMS Navigation Nodes
+UPDATE CMSNavigationNode;$contentCV[unique=true];uid[unique=true];title[lang=$lang]              
+;;NewArrivalsNavNode;"New Arrivals"                  
+;;WomenNavNode;"Women"                  
+;;MenNavNode;"Men"                  
+;;LifestyleNavNode;"Lifestyle"                 
+;;BeautyNavNode;"Beauty"                   
+;;DesignersNavNode;"Designers"                
+;;OnSaleNavNode;"On Sale"              
+
+
+# CMS Navigation Nodes
+UPDATE CMSLinkComponent;$contentCV[unique=true];uid[unique=true];linkName[lang=$lang]           
+;;MenCategoryLink;"Men"                  
+;;WomenCategoryLink;"Women"                  
+;;KidsCategoryLink;"Kids"                  
+;;BeautyCategoryLink;"Beauty"                 
+;;SaleCategoryLink;"Sale"                   
+;;TermsAndConditions;"T&C"                   
+;;TermsOfUse;"Terms of Use"                   
+;;BlogLink;"Blog"                   
+    

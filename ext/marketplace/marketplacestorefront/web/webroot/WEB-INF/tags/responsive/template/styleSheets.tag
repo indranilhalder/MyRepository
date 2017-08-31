@@ -5,7 +5,7 @@
 <%@ taglib prefix="compressible" tagdir="/WEB-INF/tags/responsive/template/compressible" %>
 <%@ taglib prefix="cms" tagdir="/WEB-INF/tags/responsive/template/cms" %>
 
-
+	
 <c:choose>
 	<c:when test="${granuleEnabled}">
 		<g:compress urlpattern="${encodingAttributes}">

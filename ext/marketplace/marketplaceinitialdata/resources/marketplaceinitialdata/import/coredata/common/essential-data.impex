@@ -181,8 +181,9 @@ $catalog-id=mplProductCatalog
 $syncJobCode=sync $catalog-id:Staged->Online
 $sourceversion=sourceversion(catalog(id[default=$catalog-id]),version[default=Staged])[unique=true,default=$catalog-id:Staged]
 $targetversion=targetversion(catalog(id[default=$catalog-id]),version[default=Online])[unique=true,default=$catalog-id:Online]
-INSERT_UPDATE CatalogVersionSyncJob;code[unique=true];active;roottypes(code)[mode=append];sessionUser(uid);$sourceversion;$targetversion
-;sync mplProductCatalog:Staged->Online;true;SellerInformation,GlobalIdentifier,Brand,SeoContent,RichAttribute,SizeGuide,ratingReview;syncmanager
+#Commented against CAR-304
+#INSERT_UPDATE CatalogVersionSyncJob;code[unique=true];active;roottypes(code)[mode=append];sessionUser(uid);$sourceversion;$targetversion
+#;sync mplProductCatalog:Staged->Online;true;SellerInformation,GlobalIdentifier,Brand,SeoContent,RichAttribute,SizeGuide,ratingReview;syncmanager
 INSERT_UPDATE SearchRestriction;code[unique=true];name[lang=de];name[lang=en];query;restrictedType(code);principal(UID);active;generate
 ;SyncManagerRestriction;SyncManagerRestriction;SyncManagerRestriction;({approvalStatus}=  ({{select {appstatus:pk} from {ArticleApprovalStatus as appstatus} where {appstatus:code}='approved'}}));Product;syncmanager;true;true
 
@@ -646,6 +647,10 @@ INSERT_UPDATE MplConfiguration;mplConfigCode[unique=true];mplConfigVal;mplConfig
 
 INSERT_UPDATE Trigger;cronjob(code)[unique=true];cronExpression
 ;campaignPromoDataCronJob;0 0 18 * * ?
+
+INSERT_UPDATE Trigger;cronJob(code)[unique=true];second;minute;hour;day;month;year;relative;active;maxAcceptableDelay
+# Run the mplIndexingCompositeCronjob every 15 minutes
+;buybox_proc_dataImport;0;10;0;-1;-1;-1;true;true;-1
 
 INSERT_UPDATE luxIndicatorEnum;code[unique=true];name[lang=en]
 ;marketplace;Marketplace

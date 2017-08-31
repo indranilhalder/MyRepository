@@ -19,6 +19,8 @@ import java.util.List;
 import javax.annotation.Resource;
 import javax.xml.bind.JAXBException;
 
+import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang.BooleanUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.web.multipart.MultipartFile;
@@ -30,7 +32,6 @@ import com.tisl.mpl.marketplacecommerceservices.services.pancard.MplPancardServi
 import com.tisl.mpl.pojo.OrderLineResData;
 import com.tisl.mpl.pojo.PanCardResDTO;
 import com.tisl.mpl.service.MplPancardUploadService;
-import com.tisl.mpl.xml.pojo.CRMpancardResponse;
 
 
 /**
@@ -95,176 +96,6 @@ public class MplPancardServiceImpl implements MplPancardService
 
 	}
 
-
-	//for creating ticket and saving it in the db i.e. first time entry
-	@Override
-	public void setPancardFileAndOrderIdservice(final String orderreferancenumber, final String transactionid,
-			final String customername, final String pancardnumber, final MultipartFile file)
-	{
-		// YTODO Auto-generated method stub
-		try
-		{
-			final String fileUploadDirectory = configurationService.getConfiguration().getString(PANCARD_PATH);
-			//commenting as we will save the extension as it is
-			//final String fileExtension = configurationService.getConfiguration().getString(PANCARD_IMAGE_EXTENSION);
-
-			final String storageDirectory = fileUploadDirectory;
-			final String newFilenameBase = orderreferancenumber;
-			final String fileExtension = file.getOriginalFilename().substring(file.getOriginalFilename().lastIndexOf("."));
-
-			final String newFilename = newFilenameBase + fileExtension;
-
-			final DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd");
-			final LocalDate localDate = LocalDate.now();
-
-			final String datepath = dtf.format(localDate);
-			final String newpath = storageDirectory + "/" + datepath + "/" + newFilename;
-			final File newFile = new File(newpath);
-			if (!newFile.exists())
-			{
-				newFile.mkdirs();
-			}
-
-			file.transferTo(newFile);
-
-			LOG.debug("****pancard image path**" + newpath);
-
-			//final String newpath = storageDirectory + "/" + newFilename;
-			//System.out.println("*******************Pancard details save loaction::::" + newpath);
-
-			//here we have to get the response and set the status and pan card number
-			final String ticket = mplPancardUploadserviceImpl.createticketPancardModeltoDTO(orderreferancenumber, transactionid,
-					newpath, pancardnumber);
-			String response = null;
-
-			if (StringUtils.isNotEmpty(ticket))
-			{
-				response = mplPancardUploadserviceImpl.createCrmTicket(ticket);//For the first time we have to set the order status as In progress
-			}
-
-			final PancardInformationModel consumed = modelService.create(PancardInformationModel.class);
-			consumed.setOrderId(orderreferancenumber);
-			consumed.setPath(newpath);
-			consumed.setTransactionId(transactionid);
-			consumed.setName(customername);
-			consumed.setPancardNumber(pancardnumber);
-
-			if (StringUtils.isNotEmpty(response))//For success submission we need to set the response as In progress for the first time(Hard coded )
-			{
-				consumed.setStatus("In progress");
-			}
-
-			modelService.save(consumed);
-		}
-		catch (final JAXBException ex)
-		{
-			ex.printStackTrace();
-		}
-		catch (final IOException e)
-		{
-			e.printStackTrace();
-		}
-		catch (final Exception e)
-		{
-			e.printStackTrace();
-		}
-	}
-
-
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * com.tisl.mpl.marketplacecommerceservices.services.pancard.MplPancardService#refreshPancardDetailsService(de.hybris
-	 * .platform.core.model.PancardInformationModel, org.springframework.web.multipart.MultipartFile)
-	 */
-
-
-	//for updating the pancard details
-	@Override
-	public void refreshPancardDetailsService(final PancardInformationModel oModel, final MultipartFile file,
-			final String pancardnumber)
-	{
-
-
-		try
-		{
-			// YTODO Auto-generated method stub
-			final String fileExtension = file.getOriginalFilename().substring(file.getOriginalFilename().lastIndexOf("."));
-			String updatedPath = null;
-			String previousExtension = null;
-			if (null != oModel && StringUtils.isNotEmpty(oModel.getPath()))
-			{
-				previousExtension = oModel.getPath().substring(oModel.getPath().lastIndexOf("."));
-				updatedPath = oModel.getPath().replace(previousExtension, fileExtension);
-			}
-			final File newFile = new File(updatedPath);
-			if (!newFile.exists())
-			{
-				newFile.mkdirs();
-			}
-
-			file.transferTo(newFile);
-
-			LOG.debug("****pancard image path update**" + updatedPath);
-
-			final String ticket = mplPancardUploadserviceImpl.ticketPancardModeltoDTO(oModel, updatedPath, pancardnumber);
-			//final String ticket = mplPancardTicketCRMservice.createticketPancardModeltoDTO(oModel.getOrderId(),
-			//	oModel.getTransactionId(), newpath, pancardnumber);
-
-			String response = null;
-			oModel.setPath(updatedPath);
-			oModel.setPancardNumber(pancardnumber);
-			if (StringUtils.isNotEmpty(ticket))
-			{
-				response = mplPancardUploadserviceImpl.createCrmTicket(ticket);
-			}
-			if (StringUtils.isNotEmpty(response) && StringUtils.isNotEmpty(oModel.getStatus()))
-			{
-				oModel.setStatus(oModel.getStatus());
-			}
-			modelService.save(oModel);
-
-		}
-		catch (final JAXBException ex)
-		{
-			ex.printStackTrace();
-		}
-		catch (final IOException e)
-		{
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-
-
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * com.tisl.mpl.marketplacecommerceservices.services.pancard.MplPancardService#getCrmStatusForPancardDetailsFacade
-	 * (de.hybris.platform.core.model.PancardInformationModel)
-	 */
-	@Override
-	public String getCrmStatusForPancardDetailsService(final PancardInformationModel oModel)
-	{
-		// YTODO Auto-generated method stub
-		String crmStatus = null;
-		final CRMpancardResponse crmpancardResponse = mplPancardUploadserviceImpl.getCrmStatusForPancardDetails(oModel);
-		if (crmpancardResponse != null && StringUtils.isNotEmpty(crmpancardResponse.getStatus()))
-		{
-			crmStatus = crmpancardResponse.getStatus();
-		}
-		if (StringUtils.isNotEmpty(crmStatus))
-		{
-			oModel.setStatus(crmStatus);
-			modelService.save(oModel);
-		}
-		return crmStatus;
-	}
-
 	//For sending pancard details to SP through PI and save data into database for new pancard entry
 	/*
 	 * (non-Javadoc)
@@ -308,11 +139,13 @@ public class MplPancardServiceImpl implements MplPancardService
 		//generate xml in PI---->SP ends
 
 		//save data in model starts
-		final PancardInformationModel panCardModel = modelService.create(PancardInformationModel.class);
+		//final PancardInformationModel panCardModel = modelService.create(PancardInformationModel.class);
+		PancardInformationModel panCardModel = null;
 		final List<PancardInformationModel> panCardModelList = new ArrayList<PancardInformationModel>();
 
 		for (final String transId : transactionidList)
 		{
+			panCardModel = modelService.create(PancardInformationModel.class);
 			if (StringUtils.isNotEmpty(orderreferancenumber))
 			{
 				panCardModel.setOrderId(orderreferancenumber);
@@ -335,12 +168,12 @@ public class MplPancardServiceImpl implements MplPancardService
 			}
 			if (StringUtils.isNotEmpty(status) && !"faliure".equalsIgnoreCase(status))
 			{
-				LOG.debug("if " + MarketplacecommerceservicesConstants.PENDING_FOR_VERIFICATION + " " + status);
+				LOG.debug(MarketplacecommerceservicesConstants.PENDING_FOR_VERIFICATION + " " + status);
 				panCardModel.setStatus(MarketplacecommerceservicesConstants.PENDING_FOR_VERIFICATION);
 			}
 			else
 			{
-				LOG.debug("if " + MarketplacecommerceservicesConstants.NA + " " + status);
+				LOG.debug(MarketplacecommerceservicesConstants.NA + " " + status);
 				panCardModel.setStatus(MarketplacecommerceservicesConstants.NA);
 			}
 			panCardModelList.add(panCardModel);
@@ -360,58 +193,86 @@ public class MplPancardServiceImpl implements MplPancardService
 	 */
 	@Override
 	public void refreshPanCardDetailsAndPIcall(final List<PancardInformationModel> pModelList,
-			final PancardInformationModel pModel, final String pancardnumber, final MultipartFile file)
+			final List<PancardInformationModel> pModel, final String pancardnumber, final MultipartFile file)
 			throws IllegalStateException, IOException, JAXBException
 	{
 		// YTODO Auto-generated method stub
+		String previousFolderPath = "";
+		String fileExtension = "";
+		String fileName = "";
+		String updatedImagePath = "";
+		String orderId = "";
+		OrderModel orderModel = null;
+
+		final List<PancardInformationModel> pancardList = new ArrayList<PancardInformationModel>();
+
 		final LocalDateTime localDate = LocalDateTime.now();
 		final String datepath = DateTimeFormatter.ofPattern("yyyy-MM-dd-HH.mm.ss").format(localDate);
 
-		final String previousFolderPath = pModel.getPath().substring(0, pModel.getPath().lastIndexOf("/"));
-		final String fileExtension = file.getOriginalFilename().substring(file.getOriginalFilename().lastIndexOf("."));
-		final String fileName = pModel.getOrderId() + "-" + datepath + fileExtension;
-
-		final String updatedImagePath = previousFolderPath + "/" + fileName;
-
-		final File newFile = new File(updatedImagePath);
-
-		if (!newFile.exists())
+		if (CollectionUtils.isNotEmpty(pModel))
 		{
-			newFile.mkdirs();
-		}
+			orderId = pModel.get(0).getOrderId();
 
-		file.transferTo(newFile);
+			final List<OrderModel> oModel = getOrderForCode(orderId);
 
-		if (LOG.isDebugEnabled())
-		{
-			LOG.debug("****pancard image path update**" + updatedImagePath);
-		}
+			if (CollectionUtils.isNotEmpty(oModel))
+			{
+				orderModel = oModel.get(0);
+			}
+			previousFolderPath = pModel.get(0).getPath().substring(0, pModel.get(0).getPath().lastIndexOf("/"));
+			fileExtension = file.getOriginalFilename().substring(file.getOriginalFilename().lastIndexOf("."));
+			fileName = orderId + "-" + datepath + fileExtension;
 
-		//generate xml in PI---->SP starts
-		final String status = mplPancardUploadserviceImpl.generateXmlForPanCard(pModelList, pModel.getOrderId(), null,
-				updatedImagePath);
-		//generate xml in PI---->SP ends
-		pModel.setPath(updatedImagePath);
-		pModel.setPancardNumber(pancardnumber);
+			updatedImagePath = previousFolderPath + "/" + fileName;
 
-		if (StringUtils.isNotEmpty(status) && !"faliure".equalsIgnoreCase(status))
-		{
+			final File newFile = new File(updatedImagePath);
+			if (!newFile.exists())
+			{
+				newFile.mkdirs();
+			}
+			file.transferTo(newFile);
+
 			if (LOG.isDebugEnabled())
 			{
-				LOG.debug("if " + MarketplacecommerceservicesConstants.PENDING_FOR_VERIFICATION + " " + status);
+				LOG.debug("****pancard image path update**" + updatedImagePath);
 			}
-			pModel.setStatus(MarketplacecommerceservicesConstants.PENDING_FOR_VERIFICATION);
 		}
-		else
-		{
-			if (LOG.isDebugEnabled())
-			{
-				LOG.debug("if " + MarketplacecommerceservicesConstants.NA + " " + status);
-			}
-			pModel.setStatus(MarketplacecommerceservicesConstants.NA);
-		}
-		modelService.save(pModel);
 
+		if (StringUtils.isNotEmpty(orderId) && StringUtils.isNotEmpty(updatedImagePath) && CollectionUtils.isNotEmpty(pModelList))
+		{
+			//generate xml in PI---->SP starts
+			final String status = mplPancardUploadserviceImpl.generateXmlForPanCard(pModelList, orderId, null, updatedImagePath);
+			//generate xml in PI---->SP ends
+
+			if (CollectionUtils.isNotEmpty(pModel) && StringUtils.isNotEmpty(updatedImagePath))
+			{
+				for (final PancardInformationModel pm : pModel)
+				{
+					pm.setPath(updatedImagePath);
+					pm.setPancardNumber(pancardnumber);
+					if (StringUtils.isNotEmpty(status) && !"faliure".equalsIgnoreCase(status))
+					{
+						if (LOG.isDebugEnabled())
+						{
+							LOG.debug(MarketplacecommerceservicesConstants.PENDING_FOR_VERIFICATION + " " + status);
+						}
+						pm.setStatus(MarketplacecommerceservicesConstants.PENDING_FOR_VERIFICATION);
+					}
+					else
+					{
+						if (LOG.isDebugEnabled())
+						{
+							LOG.debug(MarketplacecommerceservicesConstants.NA + " " + status);
+						}
+						pm.setStatus(MarketplacecommerceservicesConstants.NA);
+					}
+					pancardList.add(pm);
+				}
+				modelService.saveAll(pancardList);
+				orderModel.setIsRejMailTriggred(Boolean.FALSE);
+				modelService.save(orderModel);
+			}
+		}
 	}
 
 
@@ -438,11 +299,14 @@ public class MplPancardServiceImpl implements MplPancardService
 	{
 		// YTODO Auto-generated method stub
 		final List<PancardInformationModel> pModel = getPanCardOrderId(resDTO.getOrderId());
-		final List<PancardInformationModel> pModelR = new ArrayList();
-		boolean isMailSent = false;
-		String pancardStatus = null;
+		OrderModel orderModel = null;
 
 		final List<OrderModel> oModel = getOrderForCode(resDTO.getOrderId());
+
+		if (CollectionUtils.isNotEmpty(oModel))
+		{
+			orderModel = oModel.get(0);
+		}
 
 		if (null != pModel)
 		{
@@ -459,54 +323,39 @@ public class MplPancardServiceImpl implements MplPancardService
 							modelService.save(pmNew);
 						}
 					}
-					pancardStatus = olrs.getPancardStatus();
 				}
 			}
-			if (MarketplacecommerceservicesConstants.REJECTED.equalsIgnoreCase(pancardStatus))
+
+			if (null != orderModel)
 			{
-				for (final PancardInformationModel pm : pModel)
+				for (final PancardInformationModel pmNew : pModel)
 				{
-					if (MarketplacecommerceservicesConstants.REJECTED.equalsIgnoreCase(pm.getStatus()))
+					if (StringUtils.isNotEmpty(pmNew.getStatus())
+							&& MarketplacecommerceservicesConstants.PAN_REJECTED.equalsIgnoreCase(pmNew.getStatus()))
 					{
-						if (pm.getIsMailTriggred().equals(Boolean.TRUE))
+
+						if (BooleanUtils.isTrue(orderModel.getIsRejMailTriggred()))
 						{
-							isMailSent = true;
 							break;
 						}
 						else
 						{
-							//trigger mail for pancard reject
 							try
 							{
-								if (null != oModel.get(0))
-								{
-									notificationService.triggerEmailAndSmsOnPancardReject(oModel.get(0));
-									isMailSent = true;
-								}
+								notificationService.triggerEmailAndSmsOnPancardReject(orderModel);
+								orderModel.setIsRejMailTriggred(Boolean.TRUE);
+								modelService.save(orderModel);
 							}
 							catch (final Exception e1)
 							{ // YTODO
 							  // Auto-generated catch block
-								LOG.error("Exception during sending mail >> " + e1.getMessage());
+								LOG.error("Exception during sending mail >> " + e1);
 							}
-
-							break;
 						}
 					}
-				}
-				if (isMailSent)
-				{
-					for (final PancardInformationModel pm : pModel)
-					{
-						if (Boolean.FALSE.equals(pm.getIsMailTriggred()))
-						{
-							pm.setIsMailTriggred(Boolean.TRUE);
-							pModelR.add(pm);
-						}
-					}
-					modelService.saveAll(pModelR);
 				}
 			}
+
 		}
 	}
 

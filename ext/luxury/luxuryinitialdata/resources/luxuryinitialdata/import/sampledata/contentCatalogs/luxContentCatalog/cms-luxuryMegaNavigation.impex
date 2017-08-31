@@ -1,0 +1,145 @@
+#
+# Import the CMS content for the site
+#
+$storePrefix=lux
+$contentCatalog=$storePrefixContentCatalog
+$productCatalog=luxProductCatalog
+$contentCV=catalogVersion(CatalogVersion.catalog(Catalog.id[default=$contentCatalog]),CatalogVersion.version[default=Staged])[default=$contentCatalog:Staged]
+$productCV=catalogVersion(CatalogVersion.catalog(Catalog.id[default=$productCatalog]),CatalogVersion.version[default=Staged])[default=$productCatalog:Staged]
+# Import modulegen config properties into impex macros
+UPDATE GenericItem[processor=de.hybris.platform.commerceservices.impex.impl.ConfigPropertyImportProcessor];pk[unique=true]
+$jarResourceCms=$config-jarResourceCmsValue
+
+$category=category(code, $productCV)
+$product=product(code, $productCV)
+
+# Necessary headers for Responsive Tata marketplace Site CMS Content 
+# 
+$productCatalogName=MarketPlace Product Catalog 
+$picture=media(code, $contentCV) ;
+$siteResource=jar:com.tisl.lux.setup.InitialDataSystemSetup&/luxuryinitialdata/import/sampledata/contentCatalogs/$contentCatalog
+
+
+# 
+# Necessary headers for Responsive_en Tata Marketplace Site CMS Content 
+# 
+$siteResource=jar:com.tisl.lux.setup.InitialDataSystemSetup&/luxuryinitialdata/import/sampledata/contentCatalogs/$contentCatalog
+$medias=medias(code, $contentCV);
+$lang=en
+$mediaContainer=media(qualifier, $contentCV)[lang=$lang];
+
+# Load the storefront context root config param
+$storefrontContextRoot=$config-storefrontContextRoot
+
+
+##########################################################
+INSERT_UPDATE CMSLinkComponent;$contentCV[unique=true];uid[unique=true];name;url;&linkRef;&componentRef;target(code)[default='sameWindow'];$category;$product;linkName[lang=$lang]
+;;XYZComponentCategoryLink;XYZ Categoty Link;/womens-clothing/c-MSH1011105;XYZComponentCategoryLink;XYZComponentCategoryLink;;MSH1011105;;"XYZ Clothing"
+;;MenCategoryLink;Men Categoty Link;/mens-clothing/c-msh11;MenCategoryLink;MenCategoryLink;;MSH11;;"Men Clothing"
+;;WomenCategoryLink;Women Categoty Link;/womens-clothing/c-msh10;WomenCategoryLink;WomenCategoryLink;;MSH10;;"Women Clothing"
+;;KidsCategoryLink;Kids Categoty Link;/electronics/c-msh12;KidsCategoryLink;KidsCategoryLink;;MSH12;;"Kids"
+#### L2
+;;ClothingL2Link;Clothing Link;/womens-clothing-ethnic-wear-sarees/c-msh1012102;ClothingL2Link;ClothingL2Link;;MSH1012102;;"Clothing"
+;;ShoeL2Link;Shoe Link;/womens-clothing-ethnic-wear-sarees/c-msh1012102;ShoeL2Link;ShoeL2Link;;MSH1012102;;"Shoe"
+
+#### L4
+;;AllClothingLink;All Clothing Categoty Link;/footwear/c-msh1013103;AllClothingLink;AllClothingLink;;MSH1013103;;"All Clothing"
+;;CoatsLink;Coats Categoty Link;/footwear/c-msh13;CoatsLink;CoatsLink;;MSH13;;"Coats"
+;;BestsellersLink;Best Seller Link;/footwear/c-msh1013103;BestsellersLink;BestsellersLink;;MSH1013103;;"Bestsellers"
+;;ActivewearLink;Active Wear Link;/footwear/c-msh1013103;ActivewearLink;ActivewearLink;;MSH1013103;;"Activewear"
+;;BurberryLink;Burberry Link;/footwear/c-msh1013103;BurberryLink;BurberryLink;;MSH1013103;;"Burberry"
+;;MichaelCorsLink;Michael Cors Link;/footwear/c-msh1013103;MichaelCorsLink;MichaelCorsLink;;MSH1013103;;"MichaelCors"
+
+### L1
+INSERT_UPDATE CMSNavigationNode;uid[unique=true];$contentCV[unique=true];name;parent(uid, $contentCV);links(&linkRef);&nodeRef;title[lang=en]
+#;XYZComponentNavNode;;XYZ Nav Node Links;SiteRootNode;XYZComponentCategoryLink;XYZComponentNavNode;"XYZ"
+;LuxurySiteRootNode;;LuxurySiteRootNode;root;;LuxurySiteRootNode;
+;MenNavNode;;Men Nav Node Links;LuxurySiteRootNode;MenCategoryLink;MenNavNode;"Men"
+;WomenNavNode;;Women Nav Node Links;LuxurySiteRootNode;WomenCategoryLink;WomenNavNode;"Women"
+;KidsNavNode;;Kids Nav Node Links;LuxurySiteRootNode;KidsCategoryLink;KidsNavNode;"Kids"
+#Subnodes L2
+### subnodes L2
+INSERT_UPDATE MplNavigationNodeComponent;uid[unique=true];$contentCV[unique=true];name;parent(uid, $contentCV);links(&linkRef);&nodeRef;title[lang=en]
+## Men
+;MenClothingsNavNode;;Men's Clothings Nav Node;MenNavNode;ClothingL2Link;MenClothingsNavNode;"Clothings"
+;MenShoesNavNode;;Men's Shoes Nav Node;MenNavNode;ShoeL2Link;MenShoesNavNode;"Shoes"
+
+## Women
+;WomenClothingsNavNode;;Women's Clothings Nav Node;WomenNavNode;ClothingL2Link;WomenClothingsNavNode;"Clothings"
+;WomenShoesNavNode;;Women's Shoes Nav Node;WomenNavNode;ShoeL2Link;WomenShoesNavNode;"Shoes"
+
+## Kids
+;KidsClothingsNavNode;;Kid's Clothings Nav Node;KidsNavNode;ClothingL2Link;KidsClothingsNavNode;"Clothings"
+;KidsShoesNavNode;;Kid's Shoes Nav Node;KidsNavNode;ShoeL2Link;KidsShoesNavNode;"Shoes"
+
+######### Image
+INSERT_UPDATE Media;$contentCV[unique=true];code[unique=true];mime;realfilename;@media[translator=de.hybris.platform.impex.jalo.media.MediaDataTranslator][forceWrite=true];folder(qualifier)[default='images']
+;;AutumnWinter1;text/png;banner_image1.png;$siteResource/images/mobile/banner_image1.png;
+;;AutumnWinter2;text/png;banner_image2.png;$siteResource/images/mobile/banner_image2.png;
+
+INSERT_UPDATE SimpleBannerComponent;$contentCV[unique=true];uid[unique=true];name;title;&componentRef;urlLink;$picture[lang=$lang];description
+;;Autumn_Winter_1;Autumn Winter One;"Autumn Winter 2016";Autumn_Winter_1;"https://plus.google.com";AutumnWinter1;"Discover"
+;;Autumn_Winter_2;Autumn Winter Two;"Autumn Winter 2016 2";Autumn_Winter_2;"https://www.facebook.com";AutumnWinter2;"Shop"
+
+INSERT_UPDATE MplNavigationNodeComponent;uid[unique=true];$contentCV[unique=true];sliders(uid,$contentCV);
+## Clothings
+;MenClothingsNavNode;;Autumn_Winter_1,Autumn_Winter_2;
+;WomenClothingsNavNode;;Autumn_Winter_1,Autumn_Winter_2;
+;KidsClothingsNavNode;;Autumn_Winter_1,Autumn_Winter_2;
+## Shoes
+;MenShoesNavNode;;Autumn_Winter_1,Autumn_Winter_2;
+;WomenShoesNavNode;;Autumn_Winter_1,Autumn_Winter_2;
+;KidsShoesNavNode;;Autumn_Winter_1,Autumn_Winter_2;
+
+
+### subnodes L3
+## Men
+## Clothings
+INSERT_UPDATE CMSNavigationNode;uid[unique=true];$contentCV[unique=true];name;parent(uid, $contentCV);links(&linkRef);&nodeRef;title[lang=en]
+;MenL3ClothingNavNode;;Men's Clothing Nav Node;MenClothingsNavNode;AllClothingLink,CoatsLink;MenL3ClothingNavNode;"Clothing"
+;MenL3EssentialsNavNode;;Men's Essential Nav Node;MenClothingsNavNode;BestsellersLink,ActivewearLink;MenL3EssentialsNavNode;"Essential"
+;MenL3FeaturedNavNode;;Men's Featured Designers Nav Node;MenClothingsNavNode;BurberryLink,MichaelCorsLink;MenL3FeaturedNavNode;"Featured Designers"
+## Shoes
+;MenL3ClothingShoesNavNode;;Men's Clothing Nav Node;MenShoesNavNode;AllClothingLink,CoatsLink;MenL3ClothingShoesNavNode;"Clothing"
+;MenL3EssentialsShoesNavNode;;Men's Essential Nav Node;MenShoesNavNode;BestsellersLink,ActivewearLink;MenL3EssentialsShoesNavNode;"Essential"
+;MenL3FeaturedShoesNavNode;;Men's Featured Designers Nav Node;MenShoesNavNode;BurberryLink,MichaelCorsLink;MenL3FeaturedShoesNavNode;"Featured Designers"
+
+## Women
+;WomenL3ClothingNavNode;;Women's Clothing Nav Node;WomenClothingsNavNode;AllClothingLink,CoatsLink;WomenL3ClothingNavNode;"Clothing"
+;WomenL3EssentialsNavNode;;Women's Essential Nav Node;WomenClothingsNavNode;BestsellersLink,ActivewearLink;WomenL3EssentialsNavNode;"Essential"
+;WomenL3FeaturedNavNode;;Women's Featured Designers Nav Node;WomenClothingsNavNode;BurberryLink,MichaelCorsLink;WomenL3FeaturedNavNode;"Featured Designers"
+## Shoes
+;WomenL3ClothingShoesNavNode;;Men's Clothing Nav Node;WomenShoesNavNode;AllClothingLink,CoatsLink;WomenL3ClothingShoesNavNode;"Clothing"
+;WomenL3EssentialsShoesNavNode;;Men's Essential Nav Node;WomenShoesNavNode;BestsellersLink,ActivewearLink;WomenL3EssentialsShoesNavNode;"Essential"
+;WomenL3FeaturedShoesNavNode;;Men's Featured Designers Nav Node;WomenShoesNavNode;BurberryLink,MichaelCorsLink;WomenL3FeaturedShoesNavNode;"Featured Designers"
+
+## Kids
+;KidsL3ClothingNavNode;;Kid's Clothing Nav Node;KidsClothingsNavNode;AllClothingLink,CoatsLink;KidsL3ClothingNavNode;"Clothing"
+;KidsL3EssentialsNavNode;;Kid's Essential Nav Node;KidsClothingsNavNode;BestsellersLink,ActivewearLink;KidsL3EssentialsNavNode;"Essential"
+;KidsL3FeaturedNavNode;;Kid's Featured Designers Nav Node;KidsClothingsNavNode;BurberryLink,MichaelCorsLink;KidsL3FeaturedNavNode;"Featured Designers"
+## Shoes
+;KidsL3ClothingShoesNavNode;;Men's Clothing Nav Node;KidsShoesNavNode;AllClothingLink,CoatsLink;KidsL3ClothingShoesNavNode;"Clothing"
+;KidsL3EssentialsShoesNavNode;;Men's Essential Nav Node;KidsShoesNavNode;BestsellersLink,ActivewearLink;KidsL3EssentialsShoesNavNode;"Essential"
+;KidsL3FeaturedShoesNavNode;;Men's Featured Designers Nav Node;KidsShoesNavNode;BurberryLink,MichaelCorsLink;KidsL3FeaturedShoesNavNode;"Featured Designers"
+
+INSERT_UPDATE NavigationBarComponent;$contentCV[unique=true];uid[unique=true];name;wrapAfter;navigationNode(&nodeRef);link(uid, $contentCV);styleClass;dropDownLayout(code);&componentRef
+#;;XYZComponent;XYZ Component;10;XYZComponentNavNode;XYZComponentCategoryLink;;AUTO;XYZComponent
+;;menNavigationBarComponent;Men Navigation Bar Component;10;MenNavNode;MenCategoryLink;;AUTO;menNavigationBarComponent
+;;womenNavigationBarComponent;Women Navigation Bar Component;10;WomenNavNode;WomenCategoryLink;;AUTO;womenNavigationBarComponent
+;;kidsNavigationBarComponent;Kids Navigation Bar Component;10;KidsNavNode;KidsCategoryLink;;AUTO;kidsNavigationBarComponent
+
+
+# Navigation Bar Component
+INSERT_UPDATE NavigationBarCollectionComponent;$contentCV[unique=true];uid[unique=true];name;components(uid, $contentCV);&componentRef
+;;luxuryDepartment;Luxury Departments;menNavigationBarComponent,womenNavigationBarComponent,kidsNavigationBarComponent;luxuryDepartment
+
+##################################################
+### Content Slot
+INSERT_UPDATE ContentSlot;$contentCV[unique=true];uid[unique=true];active;name;cmsComponents(&componentRef)
+;;NavigationBarSlot-luxurybrandlandingpage;true;Navigation Bar Slot;luxuryDepartment
+;;NavigationBarSlot-luxuryhomepage;true;Luxury Navigation Bar Slot;luxuryDepartment
+
+## Content Slot for page
+INSERT_UPDATE ContentSlotForPage;$contentCV[unique=true];uid[unique=true];position[unique=true];page(uid,$contentCV)[unique=true];contentSlot(uid,$contentCV)[unique=true];;;
+;;NavigationBarSlot-luxurybrandlandingpage;LuxuryNavigationBar;luxurybrandlandingpage;NavigationBarSlot-luxurybrandlandingpage;;;
+;;NavigationBarSlot-luxuryhomepage;LuxuryNavigationBar;luxuryhomepage;NavigationBarSlot-luxuryhomepage;;;

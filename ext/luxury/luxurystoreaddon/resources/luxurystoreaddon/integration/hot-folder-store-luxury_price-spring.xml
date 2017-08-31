@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ [y] hybris Platform
+ 
+ Copyright (c) 2000-2014 hybris AG
+ All rights reserved.
+ 
+ This software is the confidential and proprietary information of hybris
+ ("Confidential Information"). You shall not disclose such Confidential
+ Information and shall use it only in accordance with the terms of the
+ license agreement you entered into with hybris.
+-->
+ 
+<beans xmlns="http://www.springframework.org/schema/beans"
+   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+   xmlns:int="http://www.springframework.org/schema/integration"
+   xmlns:file="http://www.springframework.org/schema/integration/file"
+   xmlns:p="http://www.springframework.org/schema/p"
+   xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://www.springframework.org/schema/integration
+       http://www.springframework.org/schema/integration/spring-integration.xsd
+       http://www.springframework.org/schema/integration/file
+       http://www.springframework.org/schema/integration/file/spring-integration-file.xsd">
+ 
+ <!-- General setup -->
+    <bean id="baseDirectoryLuxuryPrice" class="java.lang.String">
+        <constructor-arg value="#{baseDirectory}/${tenantId}/luxury-price" />
+    </bean>
+ 
+    <!-- 1) Scan for files -->
+    <file:inbound-channel-adapter id="batchFilesLuxuryPrice" directory="#{baseDirectoryLuxuryPrice}"
+        filename-regex="^(.*)-(\d+)\.csv" comparator="fileOrderComparator" auto-startup="#{configurationService.configuration.getProperty('etail.batch.import.hotfolder.enabled')}">
+        <int:poller fixed-rate="1000" />
+    </file:inbound-channel-adapter>
+ 
+    <!-- 2) move the file to processing and setup header -->
+    <file:outbound-gateway request-channel="batchFilesLuxuryPrice" reply-channel="batchFilesLuxuryPriceProc"
+        directory="#{baseDirectoryLuxuryPrice}/processing" delete-source-files="true" />
+	
+ <int:service-activator input-channel="batchFilesLuxuryPriceProc" output-channel="batchFilesHeaderInitPrice"
+        ref="LuxuryPriceHeaderSetupTask" method="execute" />
+ 
+ <int:service-activator input-channel="batchFilesHeaderInitPrice" output-channel="batchFilesHeaderPrice" ref="headerInitTaskPrice"
+		method="execute" />
+	<bean id="headerInitTaskPrice" class="de.hybris.platform.acceleratorservices.dataimport.batch.task.HeaderInitTask">
+		<property name="sequenceIdParser" ref="batchSequenceIdParser"/>
+		<property name="languageParser" ref="batchLanguageParser"/>
+		<property name="fallbackLanguage" value="en" />
+	</bean>
+ 
+  <!-- 3) transform csv to impex file -->
+ <int:service-activator input-channel="batchFilesHeaderPrice" output-channel="batchFilesTranPrice" ref="batchTransformerTask"
+		method="execute" />
+	<bean id="batchTransformerTask" 
+		  class="de.hybris.platform.acceleratorservices.dataimport.batch.task.ImpexTransformerTask" 
+		  init-method="initConvertersMap">
+		<property name="fieldSeparator" value="," />
+		<property name="encoding" value="UTF-8" />
+		<property name="linesToSkip" value="0"/>
+		<property name="cleanupHelper" ref="cleanupHelper" />
+	</bean>
+
+ 	<bean id="LuxuryPriceHeaderSetupTask" class="de.hybris.platform.acceleratorservices.dataimport.batch.task.HeaderSetupTask">
+        <property name="catalog" value="luxProductCatalog" />
+        <property name="net" value="false" />
+        <property name="storeBaseDirectory" ref="baseDirectoryLuxuryPrice" />
+    </bean>   
+ 
+
+ 
+ <int:service-activator input-channel="batchFilesTranPrice" output-channel="batchFilesImp" ref="batchPriceRunnerTask"
+		method="execute" />
+	<bean id="batchPriceRunnerTask" class="com.tisl.mpl.priceTask.PriceRunnerTask">
+		<property name="sessionService" ref="sessionService" />
+		<property name="importService" ref="importService" />
+		<property name="failedPriceImpexCreator" ref="failedImpexCreator" />
+		<lookup-method name="getImportConfig" bean="importConfigprice" /> 
+	</bean>
+ 
+    <bean id="failedImpexCreator" class="com.tisl.mpl.priceTask.FailedPriceImpexCreator" />
+		
+	
+   <bean id="importConfigprice" class="de.hybris.platform.servicelayer.impex.ImportConfig" scope="prototype">
+		<property name="removeOnSuccess" value="true" />
+		<property name="failOnError" value="false" />
+		<property name="synchronous" value="true" />
+		<property name="legacyMode" value="false" />
+		<property name="maxThreads" value="#{configurationService.configuration.getProperty('mpl.price.batch.impex.max-threads')}" />
+		<property name="locale" value="en"/>
+	</bean>
+   
+     <!-- Transformer converters mappings -->
+    
+     <!-- Transformer for Price Import -->
+    <bean id="batchLuxpriceConverterMapping"
+    class="de.hybris.platform.acceleratorservices.dataimport.batch.converter.mapping.impl.DefaultConverterMapping"
+    p:mapping="mplprice"
+    p:converter-ref="batchLuxpriceConverter"/>
+           
+     
+    
+     <!-- Transformer for Product Approval when price is given Import -->      
+    <bean id="batchLuxuryHomedeliveryConverterMapping"
+    class="de.hybris.platform.acceleratorservices.dataimport.batch.converter.mapping.impl.DefaultConverterMapping"
+    p:mapping="mplprice"
+    p:converter-ref="batchLuxuryHomedeliveryConverter"/>
+    
+    	 
+ 	 <!-- Converters -->
+ 	
+ 	<!-- Converter for Price Import --> 
+       <bean id="batchLuxpriceConverter" class="com.tisl.mpl.dataimport.batch.converter.impl.ExtDefaultImpexConverter">
+        <property name="header">
+            <value>#{defaultImpexProductHeader}
+            	$productCatalog=luxProductCatalog
+					$catalogVersion=catalogversion(catalog(id[default=$productCatalog]),version[default='Online'])[unique=true,default='$productCatalog:Online']
+					$taxGroup=Europe1PriceFactory_PTG(code)[default=jp-vat-full]
+					# Set product approval status to Approved only for those products that have prices.
+					$approved=approvalstatus(code)[default='approved']
+					$unit=unit(code[unique=true,default=pieces])
+					$currency=currency(isocode)[unique=true][default=INR]
+					$minqtd=minqtd[default=1]
+					$unitFactor=unitFactor[default=1]
+					$net=net[default=false]					
+             INSERT_UPDATE PriceRow;product(code,$catalogVersion)[unique=true];sellerArticleSKU[unique=true][mode=append];price[translator=de.hybris.platform.acceleratorservices.dataimport.batch.converter.PriceTranslator];mrp;siteId[default='lux'];$unit;$currency;$minqtd;$unitFactor;$net;
+            </value>
+        </property>
+        <property name="impexRow">
+            <value>;{+0};{+1};{+2};{+3}</value>
+        </property>
+        </bean>
+        
+        
+        <!-- Converter for Product Approval when price is given Import --> 
+        <bean id="batchLuxuryHomedeliveryConverter" class="de.hybris.platform.acceleratorservices.dataimport.batch.converter.impl.DefaultImpexConverter" >
+        <property name="header">
+            <value>#{defaultImpexProductHeader}
+            	$productCatalog=luxProductCatalog
+					$catalogVersion=catalogversion(catalog(id[default=$productCatalog]),version[default='Online'])[unique=true,default='$productCatalog:Online']
+					$taxGroup=Europe1PriceFactory_PTG(code)[default=jp-vat-full]
+
+					# Set product approval status to Approved only for those products that have prices.
+					$approved=approvalstatus(code)[default='approved']
+
+					$inCurrency=INR
+					$value=value[default='0.0']
+                    $homedelivery=deliveryMode(code)[unique=true][default='home-delivery'] 
+                    $zone=zone(code)[default='in']
+                    $currency=currency(isocode)[default=$inCurrency]
+                    $minimum=minimum[default='0.0']
+                    $deliveryFulfillModes=deliveryFulfillModes(Code)[default='sship']
+				INSERT_UPDATE MplZoneDeliveryModeValue;$value;sellerArticleSKU[unique=true](sellerArticleSKU,$catalogVersion);productCode[unique=true](code,$catalogVersion);$homedelivery;$zone;$currency;$minimum;$deliveryFulfillModes
+            </value>
+        </property>
+        <property name="impexRow">
+            <value>;{4};{+1};{+0};home-delivery
+            		;{5};{+1};{+0};express-delivery
+            		;{6};{+1};{+0};click-and-collect
+            		</value>
+        </property>
+        <!-- <property name="rowFilter">
+			<bean class="de.hybris.platform.acceleratorservices.dataimport.batch.converter.impl.DefaultImpexRowFilter">
+				Row Filter to check Price Greater than 0 
+				<property name="expression" value="Double.valueOf(row[4]) > 0"/>
+			</bean>
+		</property> -->
+         </bean>
+         
+      
+      </beans>

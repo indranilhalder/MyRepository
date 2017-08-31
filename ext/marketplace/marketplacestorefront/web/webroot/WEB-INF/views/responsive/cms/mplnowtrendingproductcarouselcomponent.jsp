@@ -53,7 +53,7 @@
 					<div class="item slide">
 						<a href="${productUrl}" class="product-tile">
 							<div class="image">
-								<product:productPrimaryImage product="${product}"
+								<product:productPrimaryImage product="${product}" lazyLoad="false"
 									format="product" />
 							</div>
 							<div class="short-info">

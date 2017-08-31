@@ -19,6 +19,7 @@ import de.hybris.platform.servicelayer.i18n.I18NService;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.log4j.Logger;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.context.ThemeSource;
@@ -36,7 +37,7 @@ public class FavIconController extends AbstractController
 {
 	private static final String FAVICON_THEME_CODE = "img.favIcon";
 	private static final String ORIGINAL_CONTEXT = "originalContextPath";
-
+	private static final Logger LOG = Logger.getLogger(FavIconController.class);
 	@Resource(name = "themeResolver")
 	private ThemeResolver themeResolver;
 
@@ -51,15 +52,20 @@ public class FavIconController extends AbstractController
 	public String getFavIcon(final HttpServletRequest request)
 	{
 		final String themeName = themeResolver.resolveThemeName(request);
-		String iconPath = themeSource.getTheme(themeName).getMessageSource()
-				.getMessage(FAVICON_THEME_CODE, new Object[]{}, i18nService.getCurrentLocale());
+		LOG.debug("ThemeName:" + themeName);
+		String iconPath = themeSource.getTheme(themeName).getMessageSource().getMessage(FAVICON_THEME_CODE, new Object[] {},
+				i18nService.getCurrentLocale());
+		LOG.debug("IconPath Before If Condition:" + iconPath);
 		final String originalContextPath = (String) request.getAttribute(ORIGINAL_CONTEXT);
+		LOG.debug("originalContextPath:" + originalContextPath);
 
 		if (originalContextPath != null)
 		{
 			final String requestUrl = String.valueOf(request.getRequestURL());
-			iconPath = requestUrl.substring(0, requestUrl.indexOf(originalContextPath)
-					+ originalContextPath.length()) + "/" + iconPath;
+			LOG.debug("RequestUrl Inside If Condition:" + requestUrl);
+			iconPath = requestUrl.substring(0, requestUrl.indexOf(originalContextPath) + originalContextPath.length()) + "/"
+					+ iconPath;
+			LOG.debug("IconPath Inside If Condition:" + iconPath);
 		}
 
 		return REDIRECT_PREFIX + iconPath;

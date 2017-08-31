@@ -1,0 +1,372 @@
+.accordtionTataCliq {
+    border: 1px solid #ebeff0;
+    height: auto;
+    padding: 0 !important;
+	
+	.accHeading {
+		padding: 15px;
+		background: #ebeff0;
+		color: #596161;
+		font-size: 16px;
+		cursor: pointer;
+		margin-bottom: 1px;
+	}
+	.accContents .productDetails .productName {
+		font-size: 14px;
+	}
+	.accContents span {
+		clear: both;
+	}
+    
+    input[type="checkbox"]:checked {
+        content: '';
+        text-align: center;
+        background-color: #B9966B;
+        -webkit-transition: color .15s,box-shadow .15s,background .15s;
+        -moz-transition: color .15s,box-shadow .15s,background .15s;
+        transition: color .15s,box-shadow .15s,background .15s;
+    }
+	
+}
+.firstTataCliq span {
+    margin-bottom: -4px !important;
+    display: block !important;
+}
+.accordtionTataCliq .reasonType, .accordtionTataCliq .returnMethod, .accordtionTataCliq .accContents .quickDrop .mapArea, .accordtionTataCliq .accContents .scheduledPickup {
+    display: none;
+}
+.accordtionTataCliq .accContents {
+    padding: 0 0 15px 0 !important;
+    margin-top: 10px;
+     @include media-breakpoint-down(sm) {
+        .selectReasonForReturn{
+            .reasonSelectBox{
+                width:100%;
+            }
+        }
+    }
+}
+.accordtionTataCliq .errorText, .accordtionTataCliq .errorTextSelection {
+    color: red;
+    text-align: center;
+}
+.accordtionTataCliq .accContents .button_holder {  
+    width: 100%;
+    text-align: center;
+	
+	.submit-request{
+		margin: 0 auto;
+		text-align: center;
+		font-size: 12px;
+		margin-top: 0;
+		display: inline-block;
+	}
+}
+.accordtionTataCliq .accContents .radioButton:checked{
+    background-color: #B9966B;
+    border: 2px solid #B9966B !important;
+}
+.accordtionTataCliq .accContents .radioButton{
+    display: block !important;
+    height: 15px !important;
+    width: 15px !important;
+    color: #fff;
+    padding: 0 !important;
+    margin-right: 5px;
+    border: 1px solid #B9966B !important;
+    cursor: pointer;
+    margin-top: 5px;
+    border-radius: 50%;
+    z-index: 9999999999;
+    position: static;
+    overflow: auto;
+}
+.accordtionTataCliq .accContents .quickDropAreaPincode{
+    background: #fff;
+    margin-top: 30px;
+    
+    .quickDropAreaPincode-left, .quickDropAreaPincode-right{
+        padding: 5px;
+    }
+    .pincodeSubmit, .pincodeSubmit:hover{
+        color: #fff!important;
+        background: #2d2d2d !important;
+        border-color: #2d2d2d !important;
+        height: auto !important;
+        font-weight: normal!important;
+    }
+} 
+.accordtionTataCliq .radioButton,  .accordtionTataCliq .checkButton{
+      -webkit-appearance: none;
+	  appearance: none;
+}
+.accordtionTataCliq .returnMethod .col-sm-6, .accordtionTataCliq .returnMethod .col-sm-12, .accordtionTataCliq .returnMethod .col-sm-2 {
+    z-index: 99;
+}
+.accordtionTataCliq .accContents .checkButton {
+    display: block !important;
+    height: 15px !important;
+    width: 15px !important;
+    color: #fff;
+    padding: 5px !important;
+    margin-right: 5px;
+    cursor: pointer;
+    margin-top: 5px;
+    z-index: 9999999999;
+    border: 1px solid #B9966B !important;   
+}
+.accordtionTataCliq .accContents .checkButton:checked{
+    background-color: #B9966B;
+    border: 2px solid #B9966B !important;    
+}
+.accordtionTataCliq .accContents .quickDropArea, .accordtionTataCliq .accContents .scheduledPickupArea {
+    height: 211px;
+    overflow-x: hidden;
+    overflow-y: scroll;
+    margin-top: 10px;
+}
+.accordtionTataCliq .accContents .quickDrop span, .accordtionTataCliq .accContents .scheduledPickup span {
+    line-height: 25px;
+}
+.accordtionTataCliq .accContents .selectReason, .accordtionTataCliq .accContents .selectReturnMethod, .accordtionTataCliq .accContents .selectquickDrop {
+    margin-top: 15px;
+}
+.accordtionTataCliq .blackColor {
+    color: #000;
+}
+.accordtionTataCliq .accContents .quickDropArea, .accordtionTataCliq .accContents .scheduledPickupArea {
+    height: 211px;
+    overflow-x: hidden;
+    overflow-y: scroll;
+    margin-top: 10px;
+}
+.accordtionTataCliq .returnMethod .col-sm-6, .accordtionTataCliq .returnMethod .col-sm-12, .accordtionTataCliq .returnMethod .col-sm-2 {
+    z-index: 99;
+}
+.accordtionTataCliq .greyColor {
+    color: #ccc;
+}
+.accordtionTataCliq .greyColor.blackColor{
+    color: #000;
+}
+.accordtionTataCliq .accContents .selectReason, .accordtionTataCliq .accContents .selectReturnMethod, .accordtionTataCliq .accContents .selectquickDrop {
+    margin-top: 15px;
+}
+.accordtionTataCliq .returnMethod .col-sm-6, .accordtionTataCliq .returnMethod .col-sm-12, .accordtionTataCliq .returnMethod .col-sm-2 {
+    z-index: 99;
+}
+.accordtionTataCliq .accContents .button_holder .newRequest {
+    text-align: center;
+    font-size: 12px;
+    margin-top: 0;
+    display: inline-block;
+    margin-right: 15px;
+	color: #fff;
+	background-color: #2d2d2d;
+}
+.accordtionTataCliq .accContents .selectReason, .accordtionTataCliq .accContents .selectReturnMethod, .accordtionTataCliq .accContents .selectScheduledPickup{
+ width: 100%;
+ }
+ .accordtionTataCliq .accContents .selectReason .selectRadio, .accordtionTataCliq .accContents .selectReturnMethod .selectRadio, .accordtionTataCliq .accContents .selectScheduledPickup .selectRadio{
+ width: 20px;
+    display: inline-block;
+    vertical-align: top;
+ }
+
+.accordtionTataCliq .accContents .scheduledPickupArea .selectScheduledPickup .selectRadio{
+    margin-top: 5px;    
+}
+ .accordtionTataCliq .accContents .selectReason .select-content, .accordtionTataCliq .accContents .selectReturnMethod .select-content, .accordtionTataCliq .accContents .selectScheduledPickup .select-content{
+ display: inline-block;
+    width: 80%;
+    vertical-align: top;
+ }
+ .accordtionTataCliq .slectionRefund .paymentCC {
+    background: #ebeff0;
+    margin: 30px;
+    padding: 25px;
+}
+.accordtionTataCliq .accContents span {
+    clear: both;
+}
+.accordtionTataCliq .accContents .fa-angle-right:before {
+    font-family: FontAwesome;
+    font-weight: lighter;
+    color: #B9966B;
+    content: "\f105";
+    font-size: 70px;
+    line-height: 18px;
+    margin-right: 5px;
+    top: 2px;
+    position: relative;
+}
+.accordtionTataCliq .fa-angle-right:before {
+    content: "\f105";
+}
+.accordtionTataCliq .selectScheduledPickup .select-content ul{
+ margin: 0px;
+    padding: 0px;
+} 
+.accordtionTataCliq .selectScheduledPickup .select-content ul li{
+     list-style: none;
+    padding: 0px;
+    margin: 0px;
+} 
+.accordtionTataCliq .selectScheduledPickup .select-content ul li span{
+ word-wrap: break-word;
+ 
+}
+.scheduledPickup div{
+ padding: 10px;
+ 
+}
+.accordtionTataCliq .scheduledPickup{
+    .selectRadio{
+        text-align: center;
+    }
+    .radioButton{
+        margin: auto;
+    }
+}
+.modal-dialog.changeAdddd{
+   width:700px;
+    @include media-breakpoint-down(sm) {
+        width: 300px;
+    }
+}
+
+.modal-dialog.changeAdddd .close span{
+  line-height: 14px;
+ 
+}
+.modal-dialog.changeAdddd .modal-body .optionsLandmark, .modal-dialog.changeAdddd .modal-body .mainDrop{
+ margin-top: 10px;
+}
+.modal-dialog.changeAdddd .defaultAddCheck{margin-top: 10px;}
+.modal-dialog.changeAdddd .modal-body{overflow-x: hidden;}
+.page-returnSuccess{
+    .account{
+        .page-header{             
+            border-bottom: 1px solid #eee;
+            text-align: center;
+            width: 100%;
+            background-color: #fafafa;
+            padding: 50px 0;
+            margin: 0;
+            
+            h2{
+                font-size: 24px;
+                margin: 0px;
+                text-align: center;
+            }
+            
+            span {
+                display: inline-block;
+                font-size: 16px;
+                max-width: 650px;
+                line-height: 30px;
+            }
+        }
+    }
+    .return-form.success .return-container {
+        border: 2px solid #ccc;
+        padding: 10px;
+    }
+    .return-form .return-container .products .item .product-info {
+        position: relative;
+        padding: 0;
+    }
+    .return-form.success .order-details {
+            font-size: 24px;
+            margin: 0px;
+     }
+    .return-form .return-container .products .item .product-info .product-img {
+        float: left;
+        width: 35%;
+        max-width: 120px;
+        margin-right: 5%;
+    }
+    .return-form .return-container .products .item .product-info .product {
+        float: left;
+        width: 55%;
+        margin-right: 5%;
+    }
+    .return-form .return-container .products .item .product-info .item-details {
+        display: none;
+    }
+    .page-returnSuccess .return-form.success .return-container .products{
+        .item{
+           list-style:none;
+        }
+        .product-info{
+            li{
+               list-style:none; 
+            }            
+        }
+    }
+    @media (min-width: 791px){
+        .return-form.success .return-container .products {
+            width: 35%;
+            margin-right: 5%;
+        }
+        .return-form .order-details {
+            display: none;
+        }
+        .return-form.success .return-container .reason, .return-form.success .return-container .method {
+            width: 60%;
+            float: left;  
+            margin-top: -10px;
+            
+            label{
+                display: block;
+            }
+        }
+        .return-form.success .return-container .method{
+            h3{
+                font-size: 14px;
+                margin: 0px;
+            }
+            span{
+                font-weight: normal;
+            }
+        }
+        
+        .return-form.success .return-container .reason{
+            margin-bottom: 30px;           
+        }
+        .return-form .return-container::after {
+            clear: both;
+            content: "";
+            display: table;
+        }
+    }
+}
+.products .item.look{
+    list-style: none;
+    .product-info{
+        li{
+            list-style: none;
+        }
+    }
+}
+.page-returnSuccess{
+    .account .wrapper{
+        margin-top: 20px;
+    }
+}
+.page-returnSuccess .return-form .return-container .products .item .product-info{
+    .product{
+        .product-name{
+            font-size: 18px;
+            font-weight: bold;
+            line-height: 19px;
+            margin: 0px;
+        }
+        .item-info{
+            margin-top: 30px;
+        }
+        .item-info> span{
+            display: block;
+        }
+    }
+}

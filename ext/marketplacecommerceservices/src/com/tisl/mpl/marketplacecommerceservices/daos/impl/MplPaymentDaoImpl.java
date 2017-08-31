@@ -12,6 +12,7 @@ import de.hybris.platform.servicelayer.exceptions.UnknownIdentifierException;
 import de.hybris.platform.servicelayer.search.FlexibleSearchQuery;
 import de.hybris.platform.servicelayer.search.FlexibleSearchService;
 import de.hybris.platform.servicelayer.search.exceptions.FlexibleSearchException;
+import de.hybris.platform.store.BaseStoreModel;
 
 import java.util.List;
 
@@ -274,7 +275,7 @@ public class MplPaymentDaoImpl implements MplPaymentDao
 	 *
 	 */
 	@Override
-	public PaymentTypeModel getPaymentTypeForApportion(final String paymentType)
+	public PaymentTypeModel getPaymentTypeForApportion(final String paymentType, final BaseStoreModel baseStore)
 	{
 		try
 		{
@@ -284,6 +285,7 @@ public class MplPaymentDaoImpl implements MplPaymentDao
 			//forming the flexible search query
 			final FlexibleSearchQuery paymentTypeQuery = new FlexibleSearchQuery(queryString);
 			paymentTypeQuery.addQueryParameter(MarketplacecommerceservicesConstants.PAYMENTMODE, paymentType);
+			paymentTypeQuery.addQueryParameter(MarketplacecommerceservicesConstants.BASESTORE, baseStore);
 
 			//fetching payment types from DB using flexible search query
 			final List<PaymentTypeModel> paymentTypeList = flexibleSearchService.<PaymentTypeModel> search(paymentTypeQuery)
@@ -390,7 +392,7 @@ public class MplPaymentDaoImpl implements MplPaymentDao
 	 * @return PaymentTypeModel
 	 */
 	@Override
-	public PaymentTypeModel getPaymentMode(final String paymentMode)
+	public PaymentTypeModel getPaymentMode(final String paymentMode, final BaseStoreModel baseStore)
 	{
 		try
 		{
@@ -401,6 +403,7 @@ public class MplPaymentDaoImpl implements MplPaymentDao
 			//forming the flexible search query
 			final FlexibleSearchQuery paymentModeTypeQuery = new FlexibleSearchQuery(queryString);
 			paymentModeTypeQuery.addQueryParameter(MarketplacecommerceservicesConstants.MODE, paymentMode);
+			paymentModeTypeQuery.addQueryParameter(MarketplacecommerceservicesConstants.BASESTORE, baseStore);
 
 			final List<PaymentTypeModel> paymentModeTypeList = flexibleSearchService.<PaymentTypeModel> search(paymentModeTypeQuery)
 					.getResult();

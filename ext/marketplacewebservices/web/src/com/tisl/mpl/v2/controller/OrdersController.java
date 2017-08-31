@@ -740,13 +740,13 @@ public class OrdersController extends BaseCommerceController
 
 				//TPR-6117 exchange field added
 
-				for (final OrderEntryData entry : orderDetail.getEntries())
-				{
-					if (StringUtils.isNotEmpty(entry.getExchangeApplied()))
-					{
-						orderWsDTO.setExchangeId(entry.getExchangeApplied());
-					}
-				}
+//				for (final OrderEntryData entry : orderDetail.getEntries())
+//				{
+//					if (StringUtils.isNotEmpty(entry.getExchangeApplied()))
+//					{
+//						orderWsDTO.setExchangeId(entry.getExchangeApplied());
+//					}
+//				}
 				if (orderDetail.getDeliveryCost() != null)
 				{
 					deliveryTotal = orderDetail.getDeliveryCost().getValue().doubleValue();
@@ -881,6 +881,12 @@ public class OrdersController extends BaseCommerceController
 										}
 									}
 								}
+							}
+
+							//TISJEW-3519 && TPR-1083 && TPR-6117
+							if (StringUtils.isNotEmpty(entry.getExchangeApplied()))
+							{
+								orderProductDTO.setExchangeId(entry.getExchangeApplied());
 							}
 
 							/* capacity */

@@ -8,13 +8,16 @@
 <script type="text/javascript">
 $(document).ready(function() {
 	var regpan = /^([a-zA-Z]){5}([0-9]){4}([a-zA-Z]){1}?$/;
+	var panv = true;
 	
 	 $("#pancard_No").keyup(function(){
 		
 		if(regpan.test($(this).val()) == false)
 		{
+			panv = false;
 			$(".pancard-img-msg").show();
 		}else{
+			panv = true;
 			$(".pancard-img-msg").hide();
 		}
 	}); 	
@@ -23,8 +26,10 @@ $(document).ready(function() {
 		
 		if(regpan.test($("#pancard_No").val())==false)
 		{
+			panv = false;
 			$(".pancard-img-msg").show();
 		}else{
+			panv = true;
 			$(".pancard-img-msg").hide();
 		}
 	
@@ -32,8 +37,7 @@ $(document).ready(function() {
 	        return $.trim(this.value) != ''
 	    }).length  > 0 ;
 
-		
-	    if (has_selected_file) {
+	    if ((has_selected_file) && (panv)) {
 	    	$(".pancard-img-msg").hide();
 	    } else {
 	    	$(".pancard-img-msg").show();
@@ -59,7 +63,7 @@ $(document).ready(function() {
 			 return false;
 		 }
 		 else{
-				if (has_selected_file) {
+			if (has_selected_file) {
 					$("#uploadPanDetails").submit();
 			    }else{
 					e.preventDefault();
@@ -75,9 +79,6 @@ $(document).ready(function() {
 	$("input[type='file']").change(function () {
 		$('#val').text(this.value.replace(/C:\\fakepath\\/i, ''))
 	});
-	
-	
-	
 });
 </script>
 </head>
@@ -103,18 +104,23 @@ $(document).ready(function() {
 							<div class="pan-label-value disable-color">${customername}</div>
 						</div>
 						<div class="pan-card-fields">
+						
+						<c:if test="${not empty failure}">
+							<div class = "pan-failure-msg"><span class = "pan-failure-span">${failure}</span></div>
+						</c:if>
+						
 						<div class="panfield-wrapper clearfix pan-num">
 							<div class="pan-label">PAN Card Number * <br>
 								<span class="pancard-img-msg">Please provide the PAN Card Number of the person whose name appears on the invoice</span>
 							</div>
 							<div class="pan-label-value">
-								<input type="text" name="Pancard_number" id="pancard_No">
+								<input type="text" name="Pancard_number" id="pancard_No" maxlength = "10">
 								<!-- <span class="pancard-msg">Please enter correct pancard number.</span>  -->
 							</div>
 						</div>
 						<div class="panfield-wrapper clearfix pan-img">
 							<div class="pan-label">Upload a copy of the PAN Card * <br>
-								<span class="pancard-img-msg">Please upload a copy of the PAN Card</span>
+								<span class="pancard-img-msg" style = "display:none">Please upload a copy of the PAN Card</span>
 							</div>
 							<div class="pan-label-value fileupload">
 								<input  type="file" name="file" id="pancard_Img"> 
@@ -125,7 +131,7 @@ $(document).ready(function() {
 						<div class="panfield-wrapper btn-wrapper clearfix">
 							<div class="pan-label-value">
 								<a href="javascript:;" class="pan-submit-btn" title="SUBMIT" id="btn_PanDetails">SUBMIT</a>
-								<a href="javascript:;" class="pan-cancel-btn" title="CANCEL">CANCEL</a>
+								<!-- <a href="javascript:;" class="pan-cancel-btn" title="CANCEL" id="btncncl_PanDetails">CANCEL</a> -->
 							</div>
 						</div>
 						</div>

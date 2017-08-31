@@ -2,6 +2,7 @@
 package com.tisl.mpl.marketplacecommerceservices.strategy;
 
 
+import de.hybris.platform.category.model.CategoryModel;
 import de.hybris.platform.commercefacades.order.data.OrderData;
 import de.hybris.platform.commerceservices.delivery.DeliveryService;
 import de.hybris.platform.commerceservices.externaltax.ExternalTaxesService;
@@ -144,8 +145,20 @@ public class MplCommercePlaceOrderStrategyImpl implements MplCommercePlaceOrderS
 					priceBreakupService.createPricebreakupOrder(abstractOrderEntryModel, null);
 
 				}
-				//End of changes for TPR-3782
+				if (null != abstractOrderEntryModel.getProduct()
+						&& CollectionUtils.isNotEmpty(abstractOrderEntryModel.getProduct().getSupercategories()))
+				{
+					for (final CategoryModel cat : abstractOrderEntryModel.getProduct().getSupercategories())
+					{
+						if (StringUtils.isNotEmpty(cat.getCode()) && (cat.getCode().length() >= 5))
+						{
+							abstractOrderEntryModel.setProductRootCatCode(cat.getCode().substring(0, 5));
+							break;
+						}
+					}
+				}
 			}
+			//End of changes for TPR-3782
 
 			final OrderModel orderModelExists = isOrderAlreadyExists(cartModel);
 			if (orderModelExists != null)
@@ -472,11 +485,11 @@ public class MplCommercePlaceOrderStrategyImpl implements MplCommercePlaceOrderS
 
 	/*
 	 * @Desc To identify if already a order model exists with same cart guid //TISPRD-181
-	 * 
-	 * 
+	 *
+	 *
 	 * @param cartModel
-	 * 
-	 * 
+	 *
+	 *
 	 * @return boolean
 	 */
 	private OrderModel isOrderAlreadyExists(final CartModel cartModel)
@@ -533,19 +546,19 @@ public class MplCommercePlaceOrderStrategyImpl implements MplCommercePlaceOrderS
 	/*
 	 * private Double getTotalDiscountForTotalPrice(final List<AbstractOrderEntryModel> entries) { Double discount =
 	 * Double.valueOf(0);
-	 * 
-	 * 
+	 *
+	 *
 	 * double promoDiscount = 0.0D; double couponDiscount = 0.0D;
-	 * 
-	 * 
+	 *
+	 *
 	 * if (CollectionUtils.isNotEmpty(entries)) { for (final AbstractOrderEntryModel oModel : entries) { if (null !=
 	 * oModel && !oModel.getGiveAway().booleanValue()) { couponDiscount += (null == oModel.getCouponValue() ? 0.0d :
 	 * oModel.getCouponValue().doubleValue()); promoDiscount += (null == oModel.getTotalProductLevelDisc() ? 0.0d :
 	 * oModel.getTotalProductLevelDisc() .doubleValue()) + (null == oModel.getCartLevelDisc() ? 0.0d :
 	 * oModel.getCartLevelDisc().doubleValue()); } }
-	 * 
-	 * 
-	 * 
+	 *
+	 *
+	 *
 	 * discount = Double.valueOf(couponDiscount + promoDiscount); } return discount; }
 	 */
 

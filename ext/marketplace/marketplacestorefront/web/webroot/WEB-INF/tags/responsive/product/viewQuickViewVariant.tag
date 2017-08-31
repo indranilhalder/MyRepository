@@ -58,7 +58,27 @@
 	});
 </script>
 <c:set var="clothing"><spring:theme code='product.clothing'/></c:set>
-<span id="selectSizeId" style="display: none;color:#ff1c47"><spring:theme code="variant.pleaseselectsize"/></span>
+
+<spring:eval expression="T(de.hybris.platform.util.Config).getParameter('mpl.jewellery.category')" var="lengthVariant"/>
+<c:set var = "categoryListArray" value = "${fn:split(lengthVariant, ',')}" />
+<c:forEach items="${product.categories}" var="categories">
+   	<c:forEach items = "${categoryListArray}" var="lengthVariantArray">
+   		<c:if test="${categories.code eq lengthVariantArray}">
+   			<c:set var="lengthSize" value="true"/>
+   		</c:if> 
+   	</c:forEach>
+</c:forEach>
+
+<c:choose>
+	<c:when test="${lengthSize eq true }">
+		<span id="selectSizeId" style="display: none;color:#ff1c47"><spring:theme code="variant.pleaseselectlength"/></span>
+	</c:when>
+	<c:otherwise>
+		<span id="selectSizeId" style="display: none;color:#ff1c47"><spring:theme code="variant.pleaseselectsize"/></span>
+	</c:otherwise>
+</c:choose>	
+
+<%-- <span id="selectSizeId" style="display: none;color:#ff1c47"><spring:theme code="variant.pleaseselectsize"/></span> --%>
 <c:url var="sizeGuideUrl" value="/p-sizeGuide?productCode=${product.code}&sizeSelected=${selectedSize}"  scope="request"></c:url>
 <!--CKD:TPR-250 Start -->
 <c:choose>
@@ -218,16 +238,7 @@
      
     <p class="sizetext">
     <c:choose> 
-	<c:when test="${ product.rootCategory =='FineJewellery' || product.rootCategory =='FashionJewellery'}">
-	    <spring:eval expression="T(de.hybris.platform.util.Config).getParameter('mpl.jewellery.category')" var="lengthVariant"/>
-     	<c:set var = "categoryListArray" value = "${fn:split(lengthVariant, ',')}" />
-		<c:forEach items="${product.categories}" var="categories">
-   			<c:forEach items = "${categoryListArray}" var="lengthVariantArray">
-   				<c:if test="${categories.code eq lengthVariantArray}">
-   				 	<c:set var="lengthSize" value="true"/>
-   				</c:if> 
-   			</c:forEach>
-   		</c:forEach>	  
+	<c:when test="${ product.rootCategory =='FineJewellery' || product.rootCategory =='FashionJewellery'}">  
    		<c:choose>
    			<c:when test="${true eq lengthSize}">
    				<span><spring:theme code="product.variant.length"></spring:theme><c:if test="${not empty productSizeType}">(${productSizeType})</c:if>
@@ -287,7 +298,7 @@
 				<c:otherwise>
 				 <%-- <li><spring:theme
 							code="text.select.size" /></li> --%>
-							abjfhsihfsui
+							
 					<c:forEach items="${product.variantOptions}" var="variantOption">
 					<c:url	value="${variantOption.url}/quickView"	var="variantUrl" />
 					<c:forEach items="${variantOption.colourCode}" var="color">

@@ -14,6 +14,7 @@ import de.hybris.platform.servicelayer.config.ConfigurationService;
 import de.hybris.platform.servicelayer.dto.converter.ConversionException;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 
@@ -42,6 +43,14 @@ public class CustomProductCategoriesPopulator<SOURCE extends ProductModel, TARGE
 	private ConfigurationService configurationService;
 
 	protected static final Logger LOG = Logger.getLogger(CustomProductCategoriesPopulator.class);
+
+	private static final String MPL_EXCHANGE_ENABLED = "mpl.exchange.enabled";
+
+	private static final String MPL_EXCHANGE_ROOTCATEGORY = "mpl.exchange.enabled.rootCategory";
+	private static final String MPL_EXCHANGE_ROOTCATEGORY_DEFAULT = "Electronics";
+	private static final String MPL_EXCHANGE_HIERARCHY = "mpl.exchange.hierarchy";
+	private static final String MPL_EXCHANGE_HIERARCHY_DEFAULT = "MPH";
+	private static final String MPL_EXCHANGE_HIERARCHY_SEPERATOR = ",";
 
 	//Exchange Changes
 	@Resource(name = "exchangeGuideFacade")
@@ -91,7 +100,8 @@ public class CustomProductCategoriesPopulator<SOURCE extends ProductModel, TARGE
 		//		  .getSuperCategoriesExceptClassificationClassesForProduct(productModel);
 		final List<CategoryModel> resultList = new ArrayList<>();
 		// For TISSQAUAT-665
-		for (final CategoryModel categoryModel : productModel.getSupercategories())
+		final Collection<CategoryModel> superCategories = productModel.getSupercategories();
+		for (final CategoryModel categoryModel : superCategories)
 		{
 			resultList.add(categoryModel);
 		}
@@ -100,20 +110,20 @@ public class CustomProductCategoriesPopulator<SOURCE extends ProductModel, TARGE
 		productData.setCategories(Converters.convertAll(resultList, getCategoryConverter()));
 		//TPR-1083 Changes Exchange Start
 		//Check if Exchange is Allowed from properties file
-		final List<String> defaultlist = new ArrayList();
-		defaultlist.add("Electronics");
 
-		final Boolean exchangeAllowed = configurationService.getConfiguration().getBoolean("mpl.exchange.enabled", Boolean.FALSE);
-		final List<String> exchangeAllowedRootCategory = configurationService.getConfiguration().getList(
-				"mpl.exchange.enabled.rootCategory", defaultlist);
+
+		final Boolean exchangeAllowed = configurationService.getConfiguration().getBoolean(MPL_EXCHANGE_ENABLED, Boolean.FALSE);
+		final List<String> exchangeAllowedRootCategory = Arrays.asList(configurationService.getConfiguration()
+				.getString(MPL_EXCHANGE_ROOTCATEGORY, MPL_EXCHANGE_ROOTCATEGORY_DEFAULT).split(MPL_EXCHANGE_HIERARCHY_SEPERATOR));
 
 
 		if (exchangeAllowed.booleanValue() && exchangeAllowedRootCategory.contains(productData.getRootCategory()))
 		{
 			CategoryModel l4category = null;
-			for (final CategoryModel cat : productModel.getSupercategories())
+			for (final CategoryModel cat : superCategories)
 			{ //Fetch Hierarchy Based on Local Properties
-				if (cat.getCode().startsWith(configurationService.getConfiguration().getString("mpl.exchange.hierarchy", "MPH")))
+				if (cat.getCode().startsWith(
+						configurationService.getConfiguration().getString(MPL_EXCHANGE_HIERARCHY, MPL_EXCHANGE_HIERARCHY_DEFAULT)))
 				{
 					l4category = cat;
 				}
@@ -149,7 +159,8 @@ public class CustomProductCategoriesPopulator<SOURCE extends ProductModel, TARGE
 		for (final CategoryModel category : source)
 		{
 
-			if (category.getCode().startsWith(configurationService.getConfiguration().getString("mpl.exchange.hierarchy", "MPH"))
+			if (category.getCode().startsWith(
+					configurationService.getConfiguration().getString(MPL_EXCHANGE_HIERARCHY, MPL_EXCHANGE_HIERARCHY_DEFAULT))
 					&& !(category instanceof ClassificationClassModel) && exchangeGuideFacade.isExchangable(category.getCode()))
 			{
 

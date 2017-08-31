@@ -76,6 +76,7 @@ import de.hybris.platform.order.exceptions.CalculationException;
 import de.hybris.platform.servicelayer.dto.converter.ConversionException;
 import de.hybris.platform.servicelayer.dto.converter.Converter;
 import de.hybris.platform.servicelayer.model.ModelService;
+import de.hybris.platform.servicelayer.session.SessionService;
 import de.hybris.platform.servicelayer.user.UserService;
 import de.hybris.platform.site.BaseSiteService;
 import de.hybris.platform.storelocator.model.PointOfServiceModel;
@@ -267,6 +268,9 @@ public class CartsController extends BaseCommerceController
 
 	@Resource(name = "mplCouponFacade")
 	private MplCouponFacade mplCouponFacade;
+
+	@Resource(name = "sessionService")
+	private SessionService sessionService;
 
 	/**
 	 * @return the mplCouponFacade
@@ -2637,6 +2641,16 @@ public class CartsController extends BaseCommerceController
 				reservationList = mplCommerceCartService.getReservation(caData, pincode, type, cart, item, SalesApplication.MOBILE);
 				LOG.debug("******************* Soft reservation Mobile web service response received from OMS ******************"
 						+ cartId);
+
+				Boolean replaced = Boolean.FALSE;
+				replaced = sessionService.getAttribute(MarketplacecommerceservicesConstants.REPLACEDUSSID);
+				LOG.debug("Replaced Soft reservation ForJewellery is " + replaced);
+				if (null != replaced && replaced.booleanValue())
+				{
+					reservationList.setPriceChangeNotificationMsg(MarketplacecommerceservicesConstants.INVENTORY_RESV_JWLRY_CART
+							+ caData.getTotalPrice().getFormattedValue());
+					sessionService.removeAttribute(MarketplacecommerceservicesConstants.REPLACEDUSSID);
+				}
 			}
 			else
 			{
@@ -2711,7 +2725,7 @@ public class CartsController extends BaseCommerceController
 			 * bin = null; if (StringUtils.isNotEmpty(binNo)) { bin = getBinService().checkBin(binNo); } if (null != bin &&
 			 * StringUtils.isNotEmpty(bin.getBankName())) {
 			 * getSessionService().setAttribute(MarketplacewebservicesConstants.BANKFROMBIN, bin.getBankName());
-			 * 
+			 *
 			 * LOG.debug("************ Logged-in cart mobile soft reservation BANKFROMBIN **************" +
 			 * bin.getBankName()); } }
 			 */
@@ -2761,6 +2775,17 @@ public class CartsController extends BaseCommerceController
 					reservationList = mplCommerceCartService.getReservation(caData, pincode,
 							MarketplacecclientservicesConstants.OMS_INVENTORY_RESV_TYPE_PAYMENTPENDING, cart, item,
 							SalesApplication.MOBILE);
+
+					Boolean replaced = Boolean.FALSE;
+					replaced = sessionService.getAttribute(MarketplacecommerceservicesConstants.REPLACEDUSSID);
+					LOG.debug("Replaced Soft reservation ForJewellery is " + replaced);
+					if (null != replaced && replaced.booleanValue())
+					{
+						reservationList
+								.setPriceChangeNotificationMsg(MarketplacecommerceservicesConstants.INVENTORY_RESV_JWLRY_PAYMENT);
+						sessionService.removeAttribute(MarketplacecommerceservicesConstants.REPLACEDUSSID);
+					}
+
 				}
 				else
 				{
@@ -2808,6 +2833,17 @@ public class CartsController extends BaseCommerceController
 					reservationList = mplCommerceCartService.getReservation(orderData, pincode,
 							MarketplacecclientservicesConstants.OMS_INVENTORY_RESV_TYPE_PAYMENTPENDING, orderModel, item,
 							SalesApplication.MOBILE);
+
+					Boolean replacedPay = Boolean.FALSE;
+					replacedPay = sessionService.getAttribute(MarketplacecommerceservicesConstants.REPLACEDUSSID);
+					LOG.debug("Replaced Soft reservation ForJewellery is " + replacedPay);
+					if (null != replacedPay && replacedPay.booleanValue())
+					{
+						reservationList
+								.setPriceChangeNotificationMsg(MarketplacecommerceservicesConstants.INVENTORY_RESV_JWLRY_PAYMENT);
+						sessionService.removeAttribute(MarketplacecommerceservicesConstants.REPLACEDUSSID);
+					}
+
 				}
 				else
 				{

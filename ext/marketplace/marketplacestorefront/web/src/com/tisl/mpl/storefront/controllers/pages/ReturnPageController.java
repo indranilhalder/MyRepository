@@ -289,6 +289,8 @@ public class ReturnPageController extends AbstractMplSearchPageController
 			}
 
 			model.addAttribute(ModelAttributetConstants.REASON_DATA_LIST, reasonDataList);
+			//JWLSPCUAT-282
+			model.addAttribute(ModelAttributetConstants.ORDERCODE, orderCode);
 			//if logistic partner not available for the given pin code
 			model.addAttribute(ModelAttributetConstants.PINCODE_NOT_SERVICEABLE,
 					MarketplacecommerceservicesConstants.REVERCE_LOGISTIC_PINCODE_SERVICEABLE_NOTAVAIL_MESSAGE);

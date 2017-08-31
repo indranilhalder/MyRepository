@@ -342,6 +342,7 @@ display:none;
 <input type="hidden" value="false"  id="isBinded"/>
 <input type="hidden" value="true"  id="isQuickView"/>
 <input type="hidden" value="${product.rootCategory}" id="categoryType"/>
+<input type="hidden" name="showSizeQuickView" id="showSizeQuickView" value="${showSizeGuideForFA}"/>
 
 <!-- CKD:TPR-250:Start -->
 <c:choose>

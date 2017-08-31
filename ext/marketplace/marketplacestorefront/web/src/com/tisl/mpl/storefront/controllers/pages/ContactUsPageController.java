@@ -254,8 +254,8 @@ public class ContactUsPageController extends AbstractPageController
 		}
 		catch (final Exception e)
 		{
-			ExceptionUtil.etailNonBusinessExceptionHandler(new EtailNonBusinessExceptions(e,
-					MarketplacecommerceservicesConstants.B2002));
+			ExceptionUtil
+					.etailNonBusinessExceptionHandler(new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.B2002));
 			return frontEndErrorHelper.callNonBusinessError(model, MessageConstants.CONTACT_SYSTEM_ERROR);
 
 		}

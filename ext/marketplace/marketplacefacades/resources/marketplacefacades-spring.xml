@@ -154,6 +154,8 @@ class="de.hybris.platform.commercefacades.product.impl.DefaultImageFormatMapping
 <entry key="luxuryVideo" value="97Wx108H" />
 <entry key="luxuryCartIcon" value="97Wx108H" />
 <entry key="luxuryStyleSwatch" value="97Wx108H" />
+<entry key="luxuryModel" value="luxuryModel" />
+<entry key="luxurySecondary" value="luxurySecondary" />
 <!-- TPR-1694 new resolution for Mobile App-->
 <entry key="mobilePdpView" value="450Wx545H" />
 </map>
@@ -635,6 +637,7 @@ class="de.hybris.platform.commercefacades.product.impl.DefaultImageFormatMapping
         <property name="categoryManager" ref="solrFirstVariantCategoryManager"/>
         <property name="priceDataFactory" ref="priceDataFactory"/>
         <property name="imageFormatMapping" ref="mplImageFormatMapping"/>
+        <property name="commonUtils" ref="commonUtils"/>
         
     </bean>
 	
@@ -1176,6 +1179,8 @@ class="de.hybris.platform.commercefacades.product.impl.DefaultImageFormatMapping
 			<entry key="Section9" value="Section9-ourJourney" />
 			</map>
 			</property>
+			<!-- TPR-5733 -->
+			<property name="footerLinkConverter" ref="mplFooterLinkConverter" />
 			
 			</bean>
 			
@@ -1868,7 +1873,7 @@ class="de.hybris.platform.commercefacades.product.impl.DefaultImageFormatMapping
 	
 	<!-- added for pancard details -->
 	
-	<bean id="mplPancardFacadeImpl"   class="com.tisl.mpl.facade.pancard.Impl.MplPancardFacadeImpl">
+	<bean id="mplPancardFacadeImpl"   class="com.tisl.mpl.facade.pancard.impl.MplPancardFacadeImpl">
 	</bean>
 
 	
@@ -2001,7 +2006,23 @@ class="de.hybris.platform.commercefacades.product.impl.DefaultImageFormatMapping
 		parent="abstractEmailContext" scope="prototype">
 		<property name="orderConverter" ref="orderConverter" />
 	</bean>
+	
+	
 	<!-- close R2.3 Changes -->
+
+	<!-- TPR-5733 : creating n new converter -->
+	<bean id="mplFooterLinkConverter" parent="abstractPopulatingConverter">
+		<property name="targetClass" value="com.tisl.mpl.facades.cms.data.FooterLinkData"/>
+		<property name="populators">
+			<list>
+				<ref bean="mplFooterLinkPopulator"/>
+			</list>
+		</property>
+	</bean>
+	
+	<bean id="mplFooterLinkPopulator"
+			class="com.tisl.mpl.facades.populators.MplFooterLinkPopulator">
+	</bean>
 	
 	<!-- TPR-1083 Exchange Changes Start -->
 	<bean id="exchangeGuideFacade"
@@ -2027,6 +2048,7 @@ class="de.hybris.platform.commercefacades.product.impl.DefaultImageFormatMapping
 	
 	
 	<!--  TPR-1083 Addition for Exchange Populator Ends -->
+
 	 <!--  OrderBulk Cancellation Job Runner-->
  	 <alias name="omsOrderCancelTaskRunner" alias="omsOrderCancelTaskRunner"/>
  	 <bean id="omsOrderCancelTaskRunner" class="com.tisl.mpl.dataimport.batch.task.OmsOrderCancelTaskRunner">
@@ -2034,6 +2056,6 @@ class="de.hybris.platform.commercefacades.product.impl.DefaultImageFormatMapping
  	 </bean>
  	 <!--  OrderBulk Cancellation Job Runner-->
 	
-	
+	 <bean id="commonUtils" class="com.tisl.lux.facade.impl.CommonUtilsImpl"/>
 </beans>
 

@@ -3,8 +3,6 @@
  */
 package com.tisl.mpl.integration.oms.order.populators;
 
-import de.hybris.platform.catalog.CatalogVersionService;
-import de.hybris.platform.category.model.CategoryModel;
 import de.hybris.platform.commerceservices.externaltax.TaxCodeStrategy;
 import de.hybris.platform.converters.Populator;
 import de.hybris.platform.core.Registry;
@@ -12,11 +10,9 @@ import de.hybris.platform.core.model.JewelleryInformationModel;
 import de.hybris.platform.core.model.OrderJewelEntryModel;
 import de.hybris.platform.core.model.order.OrderEntryModel;
 import de.hybris.platform.core.model.order.payment.CODPaymentInfoModel;
-import de.hybris.platform.core.model.product.ProductModel;
 import de.hybris.platform.integration.commons.services.OndemandTaxCalculationService;
 import de.hybris.platform.integration.oms.order.service.ProductAttributeStrategy;
 import de.hybris.platform.integration.oms.order.strategies.OrderEntryNoteStrategy;
-import de.hybris.platform.product.ProductService;
 import de.hybris.platform.servicelayer.dto.converter.ConversionException;
 
 import java.text.ParseException;
@@ -44,7 +40,6 @@ import com.hybris.oms.domain.types.Amount;
 import com.hybris.oms.domain.types.Quantity;
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.constants.MarketplaceomsservicesConstants;
-import com.tisl.mpl.core.model.BrandModel;
 import com.tisl.mpl.core.model.MplZoneDeliveryModeValueModel;
 import com.tisl.mpl.core.model.PcmProductVariantModel;
 import com.tisl.mpl.core.model.RichAttributeModel;
@@ -95,11 +90,11 @@ public class CustomOmsOrderLinePopulator implements Populator<OrderEntryModel, O
 	@Resource(name = "mplJewelleryService")
 	private MplJewelleryService jewelleryService;
 
-	@Resource(name = "productService")
-	private ProductService productService;
-
-	@Resource(name = "catalogVersionService")
-	private CatalogVersionService catalogVersionService;
+	//	@Resource(name = "productService")
+	//	private ProductService productService;
+	//
+	//	@Resource(name = "catalogVersionService")
+	//	private CatalogVersionService catalogVersionService;
 
 	@Override
 	public void populate(final OrderEntryModel source, final OrderLine target) throws ConversionException
@@ -108,6 +103,7 @@ public class CustomOmsOrderLinePopulator implements Populator<OrderEntryModel, O
 		{
 			//Added for jewellery
 			String ussid = null;
+			String jwlSkuid = null;
 
 			if (null != source.getProduct()
 					&& source.getProduct().getProductCategoryType()
@@ -116,6 +112,7 @@ public class CustomOmsOrderLinePopulator implements Populator<OrderEntryModel, O
 				final List<JewelleryInformationModel> jewelleryInfo = jewelleryService.getJewelleryInfoByUssid(source
 						.getSelectedUSSID());
 				ussid = jewelleryInfo.get(0).getPCMUSSID();
+				jwlSkuid = source.getSelectedUSSID().substring(6, source.getSelectedUSSID().length());
 			}
 			else
 			{
@@ -125,14 +122,24 @@ public class CustomOmsOrderLinePopulator implements Populator<OrderEntryModel, O
 			//final SellerInformationModel sellerInfoModel = getMplSellerInformationService().getSellerDetail(
 			//	source.getSelectedUSSID());
 
-			final SellerInformationModel sellerInfoModel = getMplSellerInformationService().getSellerDetail(ussid);
+			final SellerInformationModel sellerInfoModel = getMplSellerInformationService().getSellerDetail(ussid,
+					source.getOrder().getStore().getCatalogs().get(0).getActiveCatalogVersion());
 
 			//jewellery ends
+
 
 			List<RichAttributeModel> richAttributeModel = null;
 			if (sellerInfoModel != null)
 			{
-				target.setSkuId(sellerInfoModel.getSellerSKU());
+
+				if (StringUtils.isNotEmpty(jwlSkuid))
+				{
+					target.setSkuId(jwlSkuid); //Added for jewellery
+				}
+				else
+				{
+					target.setSkuId(sellerInfoModel.getSellerSKU());
+				}
 				target.setSellerId(sellerInfoModel.getSellerID());
 				richAttributeModel = (List<RichAttributeModel>) sellerInfoModel.getRichAttribute();
 			}
@@ -221,25 +228,6 @@ public class CustomOmsOrderLinePopulator implements Populator<OrderEntryModel, O
 				target.setProductName(source.getProduct().getName());
 			}
 
-			catalogVersionService.setSessionCatalogVersion("mplProductCatalog", "Online");
-
-			final ProductModel productModel = productService.getProductForCode(source.getProduct().getCode());
-
-			if (null != productModel)
-			{
-				final List<CategoryModel> productCategoryList = getDefaultPromotionsManager().getPrimarycategoryData(productModel);
-				if (CollectionUtils.isNotEmpty(productCategoryList))
-				{
-					for (final CategoryModel cat : productCategoryList)
-					{
-						if (StringUtils.isNotEmpty(cat.getCode()) && (cat.getCode().length() >= 5))
-						{
-							target.setCategoryName(cat.getCode().substring(0, 5));
-							break;
-						}
-					}
-				}
-			}
 
 			/* Added For Jewellery */
 			if (null != source.getProduct()
@@ -260,12 +248,11 @@ public class CustomOmsOrderLinePopulator implements Populator<OrderEntryModel, O
 					}
 				}
 				populateJewelleryInfo(source, target);
+			}
 
-				final List<BrandModel> brands = (List<BrandModel>) productModel.getBrands();
-				if (CollectionUtils.isNotEmpty(brands))
-				{
-					target.setBrandName(brands.get(0).getName());
-				}
+			if (StringUtils.isNotEmpty(source.getProductRootCatCode()))
+			{
+				target.setCategoryName(source.getProductRootCatCode());
 			}
 
 			if (source.getOrder() != null && source.getOrder().getStatus() != null
@@ -284,6 +271,8 @@ public class CustomOmsOrderLinePopulator implements Populator<OrderEntryModel, O
 				target.setOrderLineStatus(MplCodeMasterUtility.getglobalCode(orderStatus));
 				//PT issue for One touch cancellation--fix
 				//target.setOrderLineStatus(MplCodeMasterUtility.getglobalCode(source.getOrder().getStatus().getCode().toUpperCase()));
+
+
 			}
 			else
 			{
@@ -390,6 +379,7 @@ public class CustomOmsOrderLinePopulator implements Populator<OrderEntryModel, O
 				target.setCrmParentRef(source.getParentTransactionID());
 			}
 			//TPR-1347---END
+
 			if (richAttributeModel.get(0).getDeliveryFulfillModeByP1() != null
 					&& richAttributeModel.get(0).getDeliveryFulfillModeByP1().getCode() != null)
 
@@ -405,14 +395,14 @@ public class CustomOmsOrderLinePopulator implements Populator<OrderEntryModel, O
 			/*
 			 * if (richAttributeModel.get(0).getDeliveryFulfillModeByP1() != null &&
 			 * richAttributeModel.get(0).getDeliveryFulfillModeByP1().getCode() != null)
-			 * 
+			 *
 			 * { final String fulfilmentType =
 			 * richAttributeModel.get(0).getDeliveryFulfillModeByP1().getCode().toUpperCase();
 			 * target.setFulfillmentTypeP1(fulfilmentType); }
-			 * 
+			 *
 			 * if (richAttributeModel.get(0).getDeliveryFulfillModes() != null &&
 			 * richAttributeModel.get(0).getDeliveryFulfillModes().getCode() != null)
-			 * 
+			 *
 			 * { final String fulfilmentType = richAttributeModel.get(0).getDeliveryFulfillModes().getCode().toUpperCase();
 			 * if(fulfilmentType.equalsIgnoreCase(MarketplaceomsservicesConstants.BOTH)){
 			 * if(richAttributeModel.get(0).getDeliveryFulfillModeByP1
@@ -616,7 +606,7 @@ public class CustomOmsOrderLinePopulator implements Populator<OrderEntryModel, O
 	 * (!category.getSupercategories().isEmpty()) { for (final CategoryModel superCategory :
 	 * category.getSupercategories()) { getCategoryName(superCategory); } } } catch (final Exception e) { throw new
 	 * EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000); }
-	 *
+	 * 
 	 * }
 	 */
 
@@ -895,6 +885,10 @@ public class CustomOmsOrderLinePopulator implements Populator<OrderEntryModel, O
 				target.setMetalName(jewelleryEntry.getMetalName());
 			}
 
+			if (null != jewelleryEntry.getBrandName())
+			{
+				target.setBrandName(jewelleryEntry.getBrandName());
+			}
 
 		}
 	}

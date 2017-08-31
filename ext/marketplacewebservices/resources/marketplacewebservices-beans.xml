@@ -142,6 +142,7 @@
 		extends="de.hybris.platform.commercefacades.user.data.PrincipalData">
 		<property name="title" type="String" />
 		<property name="registrationDate" type="java.util.Date" />
+		<property name="gender" type="String" />
 		<!-- <property name="ipAddress" type="String" /> -->
 	</bean>
 
@@ -1420,8 +1421,7 @@
 		<property name="pickupPersonMobile" type="String" />
 		<property name="isPickupUpdatable" type="boolean" />
 		<property name="isCDA" type="boolean"/>	
-		<!-- TPR-1083 Start-->
-	<property name="exchangeId" type="String"/>
+		
 	</bean>
 
 	<bean class="com.tisl.mpl.wsdto.ListPinCodeServiceData">
@@ -1530,6 +1530,8 @@
 		<property name="scheduleDeliveryTime" type="String" />
 		<property name="selfCourierDocumentLink" type="String" />
 		<property name="awbPopupLink" type="String" />
+		<!-- TPR-1083 Start-->
+	<property name="exchangeId" type="String"/>
 	</bean>
 	<bean class="com.tisl.mpl.wsdto.StatusResponseListDTO">
 		<property name="statusList"
@@ -1599,6 +1601,7 @@
 			type="java.util.List&lt;com.tisl.mpl.wsdto.ReservationItemWsDTO>" />
 		<property name="delistedMessage" type="String" />
 		<property name="failedUSSIDs" type="java.util.List&lt;java.lang.String>" />
+		<property name="priceChangeNotificationMsg" type="java.lang.String" />
 	</bean>
 
 
@@ -2978,8 +2981,6 @@
 		<property name="deliveryAddress" type="de.hybris.platform.commercefacades.user.data.AddressData"/>
 		<property name="returnEntry" type="de.hybris.platform.commercewebservicescommons.dto.order.OrderEntryListWsDTO"/>
         <property name="selfCourierDocumentLink" type="String" />
-        <!-- TPR-4134 -->
-        <property name="reverseSealFrJwlry" type="com.tisl.mpl.wsdto.RevSealJwlryDataWsDTO"/>
 	</bean>
 	
 	<!-- Added for mobile inventory Reservation START   -->
@@ -3048,7 +3049,10 @@
 			
 		<!--  R2.3 CRM to Commerce end-->
 		<!-- TPR-4134 -->
-		<property name="revSealJwlry" type="java.lang.String"/>
+		<property name="showReverseSealFrJwlry" type="java.lang.String"/>
+        <property name="reverseSealFrJwlry" type="com.tisl.mpl.wsdto.RevSealJwlryDataWsDTO"/>
+        <property name="reverseSealAvailable" type="java.lang.String"/>
+        <property name="returnModes" type="java.util.Map&lt;String,String>"></property>
 	</bean>
 	<!-- For Return Web Services Change Pincode QuickDrop Stores -->
 	<bean class="com.tisl.mpl.wsdto.QuickDropStoresList" extends="com.tisl.mpl.wsdto.ErrorDTO">
@@ -3061,11 +3065,6 @@
 <property name="pincodeResponse" type="boolean"/>
 <property name="priceMatrix" type="java.util.List&lt;com.tisl.mpl.facades.product.data.ExchangeGuideData>"/>
 </bean>
-		<bean class="com.tisl.mpl.wsdto.RevSealJwlryDataWsDTO">
- 	        <property name="message" type="String"/>
- 		    <property name="yes" type="java.util.List&lt;String>"/>
- 			<property name="no" type="java.util.List&lt;String>"/>
- 		</bean>
  
 <!--TPR-6117-->
 	<bean class="com.tisl.mpl.wsdto.MaxLimitWsDto">
@@ -3087,4 +3086,65 @@
 	<bean class="com.tisl.mpl.wsdto.FineJwlryClassificationListValueDTO">
 		<property name="classificationListValueJwlry" type="java.util.List&lt;String>" />
 	</bean>
+       <!-- TPR-4512 -->
+	<bean class="com.tisl.mpl.wsdto.CustomerOrderInfoWsDTO">
+		
+		<property name="transactionId" type="String" />
+		<property name="productName" type="String" />
+		<property name="sellerName" type="String" />
+		<property name="shippingType" type="String" />
+		<property name="shippingMode" type="String" />
+		<property name="edd" type="String" />
+		<property name="apportionedPrice" type="String" />
+		<property name="orderStatus" type="String" />
+		<property name="paymentType" type="String" />
+		<property name="paymentMode" type="String" />
+		<property name="l4CategoryName" type="String" />
+		<property name="transactionTimestamp" type="String" />
+		<property name="transactionCreationDate" type="String" />
+		<property name="orderTimestamp" type="String" />
+		<property name="transactionStatus" type="String" />
+		<property name="transactionStatusDetails" type="String" />
+		<property name="carrierName" type="String" />
+		<property name="awbNumber" type="String" />
+		<property name="qcRejectionReason" type="String" />
+		<property name="returnCarrier" type="String" />
+		<property name="returnAwbNumber" type="String" />
+		<property name="returnType" type="String" />
+		<property name="returnRequestStatus" type="String" />
+		<property name="returnRequestTimestamp" type="String" />
+		<property name="refundDate" type="String" />
+		<property name="shippingStatus" type="String" />
+		<property name="shippingTimestamp" type="String" />
+		<property name="deliverytrackingDetails" type="java.util.List&lt;com.tisl.mpl.wsdto.DeliveryTrackingInfoWsDTO>" />
+		
+		
+		
+		
+	</bean>
+	
+	<bean class="com.tisl.mpl.wsdto.OrderInfoWsDTO" extends="com.tisl.mpl.wsdto.ErrorDTO">
+	
+	<property name="orderDate" type="String" />
+	<property name="custName" type="String" />
+	<property name="custMobileNo" type="String" />
+	<property name="orderTotal" type="String" />
+	<property name="customerOrderInfoWsDTO" type="java.util.List&lt;com.tisl.mpl.wsdto.CustomerOrderInfoWsDTO>" />
+	
+	</bean>
+	
+	<bean class="com.tisl.mpl.wsdto.DeliveryTrackingInfoWsDTO">
+	
+	<property name="deliveryTrackingDate" type="String" />
+	<property name="deliveryTrackingLocation" type="String" />
+	<property name="deliveryTrackingDescription" type="String" />
+		
+	</bean>
+	
+		<bean class="com.tisl.mpl.wsdto.RevSealJwlryDataWsDTO">
+ 	        <property name="message" type="String"/>
+ 		    <property name="yes" type="String"/>
+ 			<property name="no" type="String"/>
+ 		</bean>
+
 </beans>

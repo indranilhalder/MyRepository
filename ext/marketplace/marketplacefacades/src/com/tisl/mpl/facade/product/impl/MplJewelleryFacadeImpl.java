@@ -12,6 +12,7 @@ import javax.annotation.Resource;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 
+import com.tisl.mpl.core.model.BuyBoxModel;
 import com.tisl.mpl.facade.product.MplJewelleryFacade;
 import com.tisl.mpl.marketplacecommerceservices.service.MplJewelleryService;
 import com.tisl.mpl.marketplacecommerceservices.service.impl.BuyBoxServiceImpl;
@@ -38,7 +39,7 @@ public class MplJewelleryFacadeImpl implements MplJewelleryFacade
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see
 	 * com.tisl.mpl.facade.product.MplJewelleryFacade#getSellerMsgForRetRefTab(de.hybris.platform.commercefacades.product
 	 * .data.ProductData)
@@ -48,21 +49,27 @@ public class MplJewelleryFacadeImpl implements MplJewelleryFacade
 	{
 		// YTODO Auto-generated method stub
 		final List<String> descList = new ArrayList<String>();
-		final String sellerId = buyBoxService.buyboxPrice(productData.getCode()).get(0).getSellerId();
-		final List<JewellerySellerDetailsModel> jewellerySellerDetails = mplJewelleryService.getSellerMsgForRetRefTab(sellerId);
-		if (CollectionUtils.isNotEmpty(jewellerySellerDetails))
+		final List<BuyBoxModel> buyBoxList = buyBoxService.buyboxPrice(productData.getCode());
+		if (CollectionUtils.isNotEmpty(buyBoxList))
 		{
-			for (final JewellerySellerDetailsModel jsInfo : jewellerySellerDetails)
+			final String sellerId = buyBoxList.get(0).getSellerId();
+			if (StringUtils.isNotEmpty(sellerId))
 			{
-				if (StringUtils.isNotEmpty(jsInfo.getDescription()))
+				final List<JewellerySellerDetailsModel> jewellerySellerDetails = mplJewelleryService
+						.getSellerMsgForRetRefTab(sellerId);
+				if (CollectionUtils.isNotEmpty(jewellerySellerDetails))
 				{
-					descList.add(jsInfo.getDescription());
+					for (final JewellerySellerDetailsModel jsInfo : jewellerySellerDetails)
+					{
+						if (StringUtils.isNotEmpty(jsInfo.getDescription()))
+						{
+							descList.add(jsInfo.getDescription());
+						}
+					}
 				}
 			}
 		}
 		return descList;
 	}
-
-
 
 }

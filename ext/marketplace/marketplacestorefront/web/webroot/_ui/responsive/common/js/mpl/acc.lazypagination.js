@@ -147,12 +147,22 @@ function getProductSetData() {
 function getProductSetDataCustomSku() {
 	 	 
 	  	var pathName = $('input[name=customSkuUrl]').val();
-	      var query = window.location.search;
+	  	var browserPathName = window.location.pathname;
+	    var query = window.location.search;
+	    
 	     if (pageNoPagination <= totalNoOfPages) {
 	  
 	          //url with page no occourance found.
 	          if (/page-[0-9]+/.test(pathName)) {
-	              var currentPageNo = pathName.match(/page-[0-9]+/);
+	        	/* TISSPTEN-124 & TISSPTEN-123 starts */
+	        	//var currentPageNo = pathName.match(/page-[0-9]+/);
+	        	if (/page-[0-9]+/.test(browserPathName)) {
+	        	  var currentPageNo = browserPathName.match(/page-[0-9]+/);
+	        	}
+	        	else {
+	        	  var currentPageNo = pathName.match(/page-[0-9]+/);  
+	        	}
+	        	/* TISSPTEN-124 & TISSPTEN-123 ends */
 	  
 	              currentPageNo = currentPageNo[0].split("-");
 	              currentPageNo = parseInt(currentPageNo[1]);
@@ -162,24 +172,48 @@ function getProductSetDataCustomSku() {
 	                  currentPageNo++; 
 	              }
 	              if (currentPageNo <= totalNoOfPages) {
-	              	if(facetAjaxUrl){
-	              		ajaxUrl = facetAjaxUrl.replace(/page-[0-9]+/, 'page-' + currentPageNo);
-	              		var sort = findGetParameter('sort');
+	            	if(facetAjaxUrl){
+	              		//ajaxUrl = facetAjaxUrl.replace(/page-[0-9]+/, 'page-' + currentPageNo);
+	            		//TISSPTEN-130 starts
+	            		nextPaginatedUrl = facetAjaxUrl.replace(/page-[0-9]+/, 'page-' + currentPageNo);
+	            		var lookId = $('input[name=customSkuCollectionId]').val();
+	            		ajaxUrl = '/CustomSkuCollection/'+lookId+'/page-'+currentPageNo;
+	            		if (facetAjaxUrl.indexOf("?") > -1) {
+	            			var facetAjaxUrlArr = facetAjaxUrl.split('?');
+	            			if (facetAjaxUrlArr[1] != "") {
+	            				ajaxUrl = ajaxUrl + '?' + facetAjaxUrlArr[1];
+	            			}
+	            		}
+	            		var sort = findGetParameter('sort');
 	              		if(sort){            			
 	              			ajaxUrl = ajaxUrl + '&sort='+ sort;
-	              			
+	              			nextPaginatedUrl = nextPaginatedUrl + '&sort='+ sort;
 	              		}
-	              		window.history.replaceState({}, "", ajaxUrl);
+	              		window.history.replaceState({}, "", nextPaginatedUrl);
+	              		//TISSPTEN-130 ends
 	              	}else{
 	              		ajaxUrl = pathName.replace(/page-[0-9]+/, 'page-' + currentPageNo);
-	              		var nextPaginatedAjaxUrl = pathName.replace(/page-[0-9]+/, 'page-' + currentPageNo);
-	                      if (query) {
-	                          ajaxUrl = ajaxUrl + query;
-	                          nextPaginatedAjaxUrl = nextPaginatedAjaxUrl + query;
+	              		/* TISSPTEN-124 & TISSPTEN-123 starts */
+		              	//var nextPaginatedUrl = browserPathName.replace(/page-[0-9]+/, 'page-' + currentPageNo);
+		              	if (/page-[0-9]+/.test(browserPathName)) {
+		              		var nextPaginatedUrl = browserPathName.replace(/page-[0-9]+/, 'page-' + currentPageNo);
+		              	}
+		              	else {
+		              		var nextPaginatedUrl = browserPathName.replace(/[/]$/,"") + '/page-' + currentPageNo;
+		              	}
+		              	//alert(nextPaginatedUrl);
+		              	/* TISSPTEN-124 & TISSPTEN-123 ends */
+	                    if (query != "?q=") {
+		              		  ajaxUrl = ajaxUrl + query;
+		              		//TISSPTEN-130 starts
+		              		  if(/\?q=\?/.test(ajaxUrl)){
+			              		ajaxUrl = ajaxUrl.replace("?q=?","?"); 
+		                      }
+		              		//TISSPTEN-130 ends
+		              		  nextPaginatedUrl = nextPaginatedUrl + query;
 	                      }
-	                      window.history.replaceState({}, "", nextPaginatedAjaxUrl);
+	                      window.history.replaceState({}, "", nextPaginatedUrl);
 	              	}
-	              	
 	  				ajaxPLPLoad(ajaxUrl);
 	              }
 	          } else { // if no url with page no occourance found.
@@ -193,8 +227,28 @@ function getProductSetDataCustomSku() {
 }
 
 $(document).ready(function() {
+	//INC144318859 remove previous cache data | old cache issue
+    if ($('#pageType').val() != 'productsearch' && $('#pageType').val() != 'product' && $('#pageType').val() != 'category') 
+	{ 
+	    //console.log("trying to remove previous cache data not for plp(category&productsearch) & pdp ");
+	        var lastUrlpathNameprvdata = window.localStorage.getItem('lastUrlpathName');
+                var lastUrlqueryprvdata    = window.localStorage.getItem('lastUrlquery');
+		var htmlprvdata            = window.localStorage.getItem('productlazyarray');
+		var lazyfrompdpprvdata     = window.localStorage.getItem("lazyfrompdp");
+		if(lastUrlpathNameprvdata != null || lastUrlqueryprvdata != null || htmlprvdata != null || lazyfrompdpprvdata != null) 
+		    {
+			   // console.log("removed cache data");
+        		window.localStorage.removeItem('lazyfrompdp');
+          		window.localStorage.removeItem('productlazyarray');
+          		window.localStorage.removeItem('lastUrlpathName');
+          		window.localStorage.removeItem('lastUrlquery');
+		    }	
+				
+	}	
     //lazy image load initialization
-    $("img.lazy").lazyload();	
+	if($('#pageType').val() == "productsearch" || $('#pageType').val() == "product" || $('#pageType').val() == "category" || $('input[name=customSku]').length){
+	    $("img.lazy").lazyload();	
+	}
     //set the total no of pages 
     totalNoOfPages = $('input[name=noOfPages]').val();
     totalNoOfPages == '' ? 0 : parseInt(totalNoOfPages);
@@ -368,9 +422,9 @@ $(document).ready(function() {
 });
 //UF-409 -> added for ajax complete events to auto lazy load
 $( document ).ajaxComplete(function( event, xhr, settings ) {
-	//if($('#pageType').val() == "productsearch" || $('#pageType').val() == "product"){
+	if($('#pageType').val() == "productsearch" || $('#pageType').val() == "product" || $('#pageType').val() == "category" || $('input[name=customSku]').length){
 		$("img.lazy").lazyload();
-	//}
+	}
 });
 function findGetParameter(parameterName) {
     var result = null,
@@ -477,24 +531,19 @@ function sortReplaceState(url){
 		 window.history.replaceState({}, '', nextPaginatedAjaxUrl);
 }
 
-
-//Added for custom sku
-//INC144315462 and INC144315104
-function sortReplaceStateCustomSku(url){
-	
-	console.log(url);
-	var customSkuCollectionId = $('input[name=customSkuCollectionId]').val();
-	url = url.replace(customSkuCollectionId,customSkuCollectionId+'/page-1')
-	$('input[name=customSkuUrl]').val(url);
-}
-
+//TISSPTEN-130 starts
 //INC144315462 and INC144315104  
-function sortReplaceStateCustomSku(url){
-	 	console.log(url);
-	 	var customSkuCollectionId = $('input[name=customSkuCollectionId]').val();
-	 	url = url.replace(customSkuCollectionId,customSkuCollectionId+'/page-1')
-	 	$('input[name=customSkuUrl]').val(url);
-	 }
+function sortReplaceStateCustomSku(url, browserPathName){
+	 	//$('input[name=customSkuUrl]').val(url);
+	 	if (/page-[0-9]+/.test(browserPathName)) {
+      		var nextPaginatedUrl = browserPathName.replace(/page-[0-9]+/, 'page-1');
+      	}
+      	else {
+      		var nextPaginatedUrl = browserPathName.replace(/[/]$/,"") + '/page-1';
+      	}
+      	window.history.replaceState({}, "", nextPaginatedUrl);
+}
+//TISSPTEN-130 ends
 
 function sort(this_data,drop_down){
 	var item = $(this_data).attr('data-name');
@@ -583,16 +632,29 @@ function sortCustomSku(this_data,drop_down){
 		$(this_data).css('color', 'red');
 	}
 	var url = '';
+	var browserPathName = window.location.pathname;
+	
 	switch (item) {
 	case 'relevance':
 		if($('input[name=customSku]').length == 1){
 			var lookId = $('input[name=customSkuCollectionId]').val();
 			if($('#searchPageDeptHierTreeForm').serialize()!=""){
  				url = '/CustomSkuCollection/'+lookId+'?'+$('#searchPageDeptHierTreeForm').serialize()+'&sort=relevance';
- 			}else{
+ 				browserPathName = browserPathName +'?'+$('#searchPageDeptHierTreeForm').serialize()+'&sort=relevance';
+ 			}
+			//TISSPTEN-130 starts
+			else if($('#categoryPageDeptHierTreeForm').serialize()!="") {
+				url = '/CustomSkuCollection/'+lookId+'/page-1?'+$('#categoryPageDeptHierTreeForm').serialize()+'&sort=relevance';
+ 				browserPathName = browserPathName +'?'+$('#categoryPageDeptHierTreeForm').serialize()+'&sort=relevance';
+			}
+			//TISSPTEN-130 ends
+			else{
  				url = '/CustomSkuCollection/'+lookId+'?q='+$('#js-site-search-input').val()+'&sort=relevance';
+ 				browserPathName = browserPathName +'?q='+$('#js-site-search-input').val()+'&sort=relevance';
  			}
 			ajaxPLPLoad(url);
+			//TISSPTEN-130
+			sortReplaceStateCustomSku(url, browserPathName);
 		}
 		initPageLoad = true;
 		break;
@@ -601,10 +663,21 @@ function sortCustomSku(this_data,drop_down){
 			var lookId = $('input[name=customSkuCollectionId]').val();
 			if($('#searchPageDeptHierTreeForm').serialize()!=""){
  				url = '/CustomSkuCollection/'+lookId+'?'+$('#searchPageDeptHierTreeForm').serialize()+'&sort=new';
- 			}else{
+ 				browserPathName = browserPathName +'?'+$('#searchPageDeptHierTreeForm').serialize()+'&sort=new';
+ 			}
+			//TISSPTEN-130 starts
+			else if($('#categoryPageDeptHierTreeForm').serialize()!="") {
+				url = '/CustomSkuCollection/'+lookId+'/page-1?'+$('#categoryPageDeptHierTreeForm').serialize()+'&sort=new';
+ 				browserPathName = browserPathName +'?'+$('#categoryPageDeptHierTreeForm').serialize()+'&sort=new';
+			}
+			//TISSPTEN-130 ends
+			else{
  				url = '/CustomSkuCollection/'+lookId+'?q='+$('#js-site-search-input').val()+'&sort=new';
+ 				browserPathName = browserPathName +'?q='+$('#js-site-search-input').val()+'&sort=new';
  			}
 			ajaxPLPLoad(url);
+			//TISSPTEN-130
+			sortReplaceStateCustomSku(url, browserPathName);
 		}
 		initPageLoad = true;
 		break;
@@ -613,10 +686,21 @@ function sortCustomSku(this_data,drop_down){
 			var lookId = $('input[name=customSkuCollectionId]').val();
 			if($('#searchPageDeptHierTreeForm').serialize()!=""){
  				url = '/CustomSkuCollection/'+lookId+'?'+$('#searchPageDeptHierTreeForm').serialize()+'&sort=isDiscountedPrice';
- 			}else{
+ 				browserPathName = browserPathName +'?'+$('#searchPageDeptHierTreeForm').serialize()+'&sort=isDiscountedPrice';
+ 			}
+			//TISSPTEN-130 starts
+			else if($('#categoryPageDeptHierTreeForm').serialize()!="") {
+				url = '/CustomSkuCollection/'+lookId+'/page-1?'+$('#categoryPageDeptHierTreeForm').serialize()+'&sort=isDiscountedPrice';
+ 				browserPathName = browserPathName +'?'+$('#categoryPageDeptHierTreeForm').serialize()+'&sort=isDiscountedPrice';
+			}
+			//TISSPTEN-130 ends
+			else{
  				url = '/CustomSkuCollection/'+lookId+'?q='+$('#js-site-search-input').val()+'&sort=isDiscountedPrice';
+ 				browserPathName = browserPathName +'?q='+$('#js-site-search-input').val()+'&sort=isDiscountedPrice';
  			}
 			ajaxPLPLoad(url);
+			//TISSPTEN-130
+			sortReplaceStateCustomSku(url, browserPathName);
 		}
 		initPageLoad = true;
 		break;
@@ -624,11 +708,22 @@ function sortCustomSku(this_data,drop_down){
 		if($('input[name=customSku]').length == 1){
 			var lookId = $('input[name=customSkuCollectionId]').val();
 			if($('#searchPageDeptHierTreeForm').serialize()!=""){
- 				url = '/CustomSkuCollection/'+lookId+'?'+$('#searchPageDeptHierTreeForm').serialize()+'&sort=price-asc';
- 			}else{
- 				url = '/CustomSkuCollection/'+lookId+'?q='+$('#js-site-search-input').val()+'&sort=price-asc';
+ 				url = '/CustomSkuCollection/'+lookId+'/page-1?'+$('#searchPageDeptHierTreeForm').serialize()+'&sort=price-asc';
+ 				browserPathName = browserPathName +'?'+$('#searchPageDeptHierTreeForm').serialize()+'&sort=price-asc';
+ 			}
+			//TISSPTEN-130 starts
+			else if($('#categoryPageDeptHierTreeForm').serialize()!="") {
+				url = '/CustomSkuCollection/'+lookId+'/page-1?'+$('#categoryPageDeptHierTreeForm').serialize()+'&sort=price-asc';
+ 				browserPathName = browserPathName +'?'+$('#categoryPageDeptHierTreeForm').serialize()+'&sort=price-asc';
+			}
+			//TISSPTEN-130 ends
+			else{
+ 				url = '/CustomSkuCollection/'+lookId+'/page-1?q='+$('#js-site-search-input').val()+'&sort=price-asc';
+ 				browserPathName = browserPathName +'?q='+$('#js-site-search-input').val()+'&sort=price-asc';
  			}
 			ajaxPLPLoad(url);
+			//TISSPTEN-130
+			sortReplaceStateCustomSku(url, browserPathName);
 		}
 		initPageLoad = true;
 		break;
@@ -636,11 +731,22 @@ function sortCustomSku(this_data,drop_down){
 		if($('input[name=customSku]').length == 1){
 			var lookId = $('input[name=customSkuCollectionId]').val();
 			if($('#searchPageDeptHierTreeForm').serialize()!=""){
- 				url = '/CustomSkuCollection/'+lookId+'?'+$('#searchPageDeptHierTreeForm').serialize()+'&sort=price-desc';
- 			}else{
- 				url = '/CustomSkuCollection/'+lookId+'?q='+$('#js-site-search-input').val()+'&sort=price-desc';
+ 				url = '/CustomSkuCollection/'+lookId+'/page-1?'+$('#searchPageDeptHierTreeForm').serialize()+'&sort=price-desc';
+ 				browserPathName = browserPathName +'?'+$('#searchPageDeptHierTreeForm').serialize()+'&sort=price-desc';
+ 			}
+			//TISSPTEN-130 starts
+			else if($('#categoryPageDeptHierTreeForm').serialize()!="") {
+				url = '/CustomSkuCollection/'+lookId+'/page-1?'+$('#categoryPageDeptHierTreeForm').serialize()+'&sort=price-desc';
+ 				browserPathName = browserPathName +'?'+$('#categoryPageDeptHierTreeForm').serialize()+'&sort=price-desc';
+			}
+			//TISSPTEN-130 ends
+			else{
+ 				url = '/CustomSkuCollection/'+lookId+'/page-1?q='+$('#js-site-search-input').val()+'&sort=price-desc';
+ 				browserPathName = browserPathName +'?q='+$('#js-site-search-input').val()+'&sort=price-desc';
  			}
 			ajaxPLPLoad(url);
+			//TISSPTEN-130
+			sortReplaceStateCustomSku(url, browserPathName);
 		}
 		initPageLoad = true;
 		break;

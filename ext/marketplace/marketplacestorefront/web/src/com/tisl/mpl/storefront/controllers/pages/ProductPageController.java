@@ -26,6 +26,7 @@ import de.hybris.platform.acceleratorstorefrontcommons.forms.validation.ReviewVa
 import de.hybris.platform.acceleratorstorefrontcommons.util.MetaSanitizerUtil;
 import de.hybris.platform.acceleratorstorefrontcommons.util.XSSFilterUtil;
 import de.hybris.platform.acceleratorstorefrontcommons.variants.VariantSortStrategy;
+import de.hybris.platform.basecommerce.model.site.BaseSiteModel;
 import de.hybris.platform.catalog.model.ProductFeatureModel;
 import de.hybris.platform.category.model.CategoryModel;
 import de.hybris.platform.cms2.exceptions.CMSItemNotFoundException;
@@ -63,6 +64,7 @@ import de.hybris.platform.servicelayer.exceptions.UnknownIdentifierException;
 import de.hybris.platform.servicelayer.search.exceptions.FlexibleSearchException;
 import de.hybris.platform.servicelayer.session.SessionService;
 import de.hybris.platform.servicelayer.user.UserService;
+import de.hybris.platform.site.BaseSiteService;
 import de.hybris.platform.storelocator.location.Location;
 import de.hybris.platform.storelocator.location.impl.LocationDTO;
 import de.hybris.platform.storelocator.location.impl.LocationDtoWrapper;
@@ -141,6 +143,7 @@ import com.tisl.mpl.facade.product.MplProductFacade;
 import com.tisl.mpl.facade.product.PriceBreakupFacade;
 import com.tisl.mpl.facade.product.SizeGuideFacade;
 import com.tisl.mpl.facade.product.impl.CustomProductFacadeImpl;
+import com.tisl.mpl.facades.constants.MarketplaceFacadesConstants;
 import com.tisl.mpl.facades.data.MplAjaxProductData;
 import com.tisl.mpl.facades.payment.MplPaymentFacade;
 import com.tisl.mpl.facades.product.RichAttributeData;
@@ -299,7 +302,8 @@ public class ProductPageController extends MidPageController
 	@Resource(name = "pinCodeFacade")
 	private PinCodeServiceAvilabilityFacade pinCodeFacade;
 
-
+	@Resource(name = "baseSiteService")
+	private BaseSiteService baseSiteService;
 
 	@Resource(name = "sizeGuideFacade")
 	private SizeGuideFacade sizeGuideFacade;
@@ -340,6 +344,7 @@ public class ProductPageController extends MidPageController
 	//private ConfigurationService configService;
 	@Resource(name = "customProductFacade")
 	private CustomProductFacadeImpl customProductFacade;
+
 
 
 	//Exchange Changes
@@ -479,7 +484,8 @@ public class ProductPageController extends MidPageController
 			//   TPR-4389 ENDS HERE
 
 			if (productModel.getLuxIndicator() != null
-					&& productModel.getLuxIndicator().getCode().equalsIgnoreCase(ControllerConstants.Views.Pages.Cart.LUX_INDICATOR))
+					&& productModel.getLuxIndicator().getCode().equalsIgnoreCase(ControllerConstants.Views.Pages.Cart.LUX_INDICATOR)
+					&& !isLuxurySite())
 			{
 				LOG.debug("**********The product is a luxury product.Hence redirecting to luxury website***********" + productCode);
 				final String luxuryHost = configurationService.getConfiguration().getString("luxury.resource.host");
@@ -559,7 +565,7 @@ public class ProductPageController extends MidPageController
 				 * final String metaTitle = productData.getSeoMetaTitle(); final String pdCode = productData.getCode();
 				 * final String metaDescription = productData.getSeoMetaDescription(); //TISPRD-4977 final String
 				 * metaKeyword = productData.getSeoMetaKeyword(); //final String metaKeywords = productData.gets
-				 * 
+				 *
 				 * setUpMetaData(model, metaDescription, metaTitle, pdCode, metaKeyword);
 				 */
 				//AKAMAI fix
@@ -571,7 +577,6 @@ public class ProductPageController extends MidPageController
 
 				returnStatement = getViewForPage(model);
 			}
-
 		}
 		catch (final EtailBusinessExceptions e)
 		{
@@ -1618,6 +1623,7 @@ public class ProductPageController extends MidPageController
 					ProductOption.SUMMARY, ProductOption.DESCRIPTION, ProductOption.CATEGORIES, ProductOption.CLASSIFICATION,
 					ProductOption.GALLERY, ProductOption.VARIANT_FULL));//Fix for TISPT-150
 		}
+
 		//final String returnStatement = null;
 		//CKD:TPR-250:Start
 		model.addAttribute("msiteBuyBoxSellerId", StringUtils.isNotBlank(sellerId) ? sellerId : null);
@@ -1943,15 +1949,36 @@ public class ProductPageController extends MidPageController
 			if (FINEJEWELLERY.equalsIgnoreCase(productModel.getProductCategoryType()))
 			{
 				final List<String> retRefTabList = mplJewelleryFacade.getSellerMsgForRetRefTab(productData);
-				model.addAttribute(ModelAttributetConstants.RET_REF_TAB, retRefTabList);
+
+				if (CollectionUtils.isNotEmpty(retRefTabList))
+				{
+					model.addAttribute(ModelAttributetConstants.RET_REF_TAB, retRefTabList);
+				}
+				else
+				{
+					model.addAttribute(ModelAttributetConstants.RET_REF_TAB, "");
+				}
 			}
+
 
 
 			final String sharePath = configurationService.getConfiguration().getString("social.share.path");
 			//For Gigya
 			final String isGigyaEnabled = configurationService.getConfiguration().getString(MessageConstants.USE_GIGYA);
-			final String gigyaAPIKey = configurationService.getConfiguration().getString("gigya.apikey");
-			final String gigyaRatingURL = configurationService.getConfiguration().getString("gigya.rating.url");
+			final String siteId = getSiteConfigService().getProperty("luxury.site.id");
+			final String gigyaAPIKey;
+			final String gigyaRatingURL;
+			if ((getCmsSiteService().getCurrentSite().getUid()).equalsIgnoreCase(siteId))
+			{
+
+				gigyaAPIKey = configurationService.getConfiguration().getString("luxury.gigya.apikey");
+				gigyaRatingURL = configurationService.getConfiguration().getString("luxury.gigya.rating.url");
+			}
+			else
+			{
+				gigyaAPIKey = configurationService.getConfiguration().getString("gigya.apikey");
+				gigyaRatingURL = configurationService.getConfiguration().getString("gigya.rating.url");
+			}
 			//end gigya
 			final String emiCuttOffAmount = configurationService.getConfiguration().getString("marketplace.emiCuttOffAmount");
 			final String cliqCareNumber = configurationService.getConfiguration().getString("cliq.care.number");
@@ -2085,6 +2112,8 @@ public class ProductPageController extends MidPageController
 
 	}
 
+
+
 	/**
 	 * @param productData
 	 * @param model
@@ -2161,6 +2190,7 @@ public class ProductPageController extends MidPageController
 							//for jwl certification
 							final String certificationValue = configurationService.getConfiguration().getString(
 									ModelAttributetConstants.CONFIGURABLE_ATTRIBUTE + productData.getRootCategory() + ".certification");
+
 							//apparel
 							final FeatureValueData featureValueData = featureValueList.get(0);
 							if ((ModelAttributetConstants.CLOTHING.equalsIgnoreCase(productData.getRootCategory()))
@@ -2227,9 +2257,9 @@ public class ProductPageController extends MidPageController
 										/*
 										 * else if (value.equalsIgnoreCase(featureData.getCode().substring(
 										 * featureData.getCode().lastIndexOf(".") + 1))) {
-										 * 
+										 *
 										 * if (productFeatureMap.size() > 0) { productFeatureMap.clear(); }
-										 * 
+										 *
 										 * productFeatureMap.put(featureValueData.getValue(), jewelleryDescMapping.get(value));
 										 * mapConfigurableAttributes.put(featureData.getName(), productFeatureMap); }
 										 */
@@ -2285,10 +2315,13 @@ public class ProductPageController extends MidPageController
 
 							else
 							{
+								if (StringUtils.isBlank(properitsValue.toLowerCase()))
+								{
+									mapConfigurableAttribute.put(featureData.getName(), featureValueData.getValue());
+								}
 								if (properitsValue.toLowerCase().contains(configurableAttributData.getCode().toLowerCase()))
 
 								{
-
 									mapConfigurableAttribute.put(featureData.getName(), featureValueData.getValue());
 								}
 
@@ -2687,11 +2720,11 @@ public class ProductPageController extends MidPageController
 	 */
 	/*
 	 * private MarketplaceDeliveryModeData fetchDeliveryModeDataForUSSID(final String deliveryMode, final String ussid) {
-	 * 
+	 *
 	 * final MarketplaceDeliveryModeData deliveryModeData = new MarketplaceDeliveryModeData(); final
 	 * MplZoneDeliveryModeValueModel mplZoneDeliveryModeValueModel = mplCheckoutFacade
 	 * .populateDeliveryCostForUSSIDAndDeliveryMode(deliveryMode, MarketplaceFacadesConstants.INR, ussid);
-	 * 
+	 *
 	 * final PriceData priceData = productDetailsHelper.formPriceData(mplZoneDeliveryModeValueModel.getValue());
 	 * deliveryModeData.setCode(mplZoneDeliveryModeValueModel.getDeliveryMode().getCode());
 	 * deliveryModeData.setDescription(mplZoneDeliveryModeValueModel.getDeliveryMode().getDescription());
@@ -2711,76 +2744,76 @@ public class ProductPageController extends MidPageController
 	 */
 	/*
 	 * private List<PincodeServiceData> populatePinCodeServiceData(final String productCode) {
-	 * 
-	 * 
-	 * 
+	 *
+	 *
+	 *
 	 * final List<PincodeServiceData> requestData = new ArrayList<>(); PincodeServiceData data = null;
-	 * 
+	 *
 	 * MarketplaceDeliveryModeData deliveryModeData = null; try { final ProductModel productModel =
-	 * 
-	 * 
+	 *
+	 *
 	 * productService.getProductForCode(productCode); final ProductData productData =
-	 * 
+	 *
 	 * productFacade.getProductForOptions(productModel, Arrays.asList(ProductOption.BASIC, ProductOption.SELLER,
 	 * ProductOption.PRICE));
-	 * 
-	 * 
+	 *
+	 *
 	 * for (final SellerInformationData seller : productData.getSeller()) { final List<MarketplaceDeliveryModeData>
-	 * 
+	 *
 	 * deliveryModeList = new ArrayList<MarketplaceDeliveryModeData>(); data = new PincodeServiceData(); if ((null !=
-	 * 
+	 *
 	 * seller.getDeliveryModes()) && !(seller.getDeliveryModes().isEmpty())) { for (final MarketplaceDeliveryModeData
-	 * 
+	 *
 	 * deliveryMode : seller.getDeliveryModes()) { deliveryModeData =
-	 * 
+	 *
 	 * fetchDeliveryModeDataForUSSID(deliveryMode.getCode(), seller.getUssid()); deliveryModeList.add(deliveryModeData);
-	 * 
-	 * 
+	 *
+	 *
 	 * } data.setDeliveryModes(deliveryModeList); } if (null != seller.getFullfillment() &&
-	 * 
+	 *
 	 * StringUtils.isNotEmpty(seller.getFullfillment())) {
-	 * 
+	 *
 	 * data.setFullFillmentType(MplGlobalCodeConstants.GLOBALCONSTANTSMAP.get(seller.getFullfillment().toUpperCase())); }
-	 * 
+	 *
 	 * if (null != seller.getShippingMode() && (StringUtils.isNotEmpty(seller.getShippingMode()))) {
-	 * 
+	 *
 	 * data.setTransportMode(MplGlobalCodeConstants.GLOBALCONSTANTSMAP.get(seller.getShippingMode().toUpperCase())); } if
-	 * 
+	 *
 	 * (null != seller.getSpPrice() && !(seller.getSpPrice().equals(ModelAttributetConstants.EMPTY))) { data.setPrice(new
-	 * 
+	 *
 	 * Double(seller.getSpPrice().getValue().doubleValue())); } else if (null != seller.getMopPrice() &&
-	 * 
+	 *
 	 * !(seller.getMopPrice().equals(ModelAttributetConstants.EMPTY))) { data.setPrice(new
-	 * 
+	 *
 	 * Double(seller.getMopPrice().getValue().doubleValue())); } else if (null != seller.getMrpPrice() &&
-	 * 
+	 *
 	 * !(seller.getMrpPrice().equals(ModelAttributetConstants.EMPTY))) { data.setPrice(new
-	 * 
+	 *
 	 * Double(seller.getMrpPrice().getValue().doubleValue())); } else {
-	 * 
-	 * 
-	 * 
+	 *
+	 *
+	 *
 	 * LOG.info("*************** No price avaiable for seller :" + seller.getSellerID()); continue; } if (null !=
-	 * 
-	 * 
+	 *
+	 *
 	 * seller.getIsCod() && StringUtils.isNotEmpty(seller.getIsCod())) { data.setIsCOD(seller.getIsCod()); }
-	 * 
-	 * 
-	 * 
+	 *
+	 *
+	 *
 	 * data.setSellerId(seller.getSellerID()); data.setUssid(seller.getUssid());
-	 * 
+	 *
 	 * data.setIsDeliveryDateRequired(ControllerConstants.Views.Fragments.Product.N); requestData.add(data); } } catch
-	 * 
-	 * 
-	 * 
-	 * 
-	 * 
+	 *
+	 *
+	 *
+	 *
+	 *
 	 * (final EtailBusinessExceptions e) { ExceptionUtil.etailBusinessExceptionHandler(e, null); }
-	 * 
-	 * 
-	 * 
+	 *
+	 *
+	 *
 	 * catch (final Exception e) {
-	 * 
+	 *
 	 * throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000); } return requestData; }
 	 */
 
@@ -2999,7 +3032,10 @@ public class ProductPageController extends MidPageController
 		{
 			final String displayConfigurableAttributeForPriceBreakup = displayConfigurableAttributeForPriceBreakup(buyboxdata
 					.getSellerArticleSKU());
-			LOG.debug("display " + displayConfigurableAttributeForPriceBreakup);
+			if (LOG.isDebugEnabled())
+			{
+				LOG.debug("display " + displayConfigurableAttributeForPriceBreakup);
+			}
 			if (StringUtils.isNotEmpty(displayConfigurableAttributeForPriceBreakup))
 			{
 				final List<PriceBreakupData> PriceMap = priceBreakupFacade.getPricebreakup(buyboxdata.getSellerArticleSKU(),
@@ -3460,10 +3496,12 @@ public class ProductPageController extends MidPageController
 		}
 
 		final ProductModel productModel = productService.getProductForCode(productCode);
-		final ProductData productData = productFacade.getProductForOptions(productModel, Arrays.asList(ProductOption.BASIC,
-				ProductOption.SELLER, ProductOption.SUMMARY, ProductOption.DESCRIPTION, ProductOption.CATEGORIES,
-				//ProductOption.GALLERY, ProductOption.PROMOTIONS, ProductOption.VARIANT_FULL, ProductOption.CLASSIFICATION));
-				ProductOption.GALLERY, ProductOption.CLASSIFICATION, ProductOption.VARIANT_FULL));
+		//		final ProductData productData = productFacade.getProductForOptions(productModel, Arrays.asList(ProductOption.BASIC,
+		//				ProductOption.SELLER, ProductOption.SUMMARY, ProductOption.DESCRIPTION, ProductOption.CATEGORIES,
+		//				ProductOption.GALLERY, ProductOption.CLASSIFICATION, ProductOption.VARIANT_FULL));
+
+		final ProductData productData = productFacade.getProductForOptions(productModel,
+				Arrays.asList(ProductOption.CLASSIFICATION));
 
 		if (null != productData.getClassifications())
 		{
@@ -3471,27 +3509,32 @@ public class ProductPageController extends MidPageController
 					productData.getClassifications());
 			for (final ClassificationData configurableAttributData : ConfigurableAttributeList)
 			{
-				if (configurableAttributData.getCode().equals("19na"))
+				if (ModelAttributetConstants.CLASSNAME_19NA.equals(configurableAttributData.getCode()))
 				{
-					final List<FeatureData> featureDataList = new ArrayList<FeatureData>(configurableAttributData.getFeatures());
-
-					for (final FeatureData featureData : featureDataList)
+					if (null != configurableAttributData.getFeatures())
 					{
-						if (featureData.getCode().equals("pcmClassification/1/19na.pricebreakuponpdpfinejwlry"))
+						final List<FeatureData> featureDataList = new ArrayList<FeatureData>(configurableAttributData.getFeatures());
+
+						for (final FeatureData featureData : featureDataList)
 						{
-							final List<FeatureValueData> featureValueList = new ArrayList<FeatureValueData>(
-									featureData.getFeatureValues());
-
-							for (final FeatureValueData featureValueData : featureValueList)
+							if (ModelAttributetConstants.FEATURE_NAME.equals(featureData.getCode()))
 							{
-								displayConfigurableAttributeForPriceBreakup = featureValueData.getValue();
-							}
-							LOG.debug("display price breakup on pdp :" + displayConfigurableAttributeForPriceBreakup);
-						}
+								final List<FeatureValueData> featureValueList = new ArrayList<FeatureValueData>(
+										featureData.getFeatureValues());
 
+								for (final FeatureValueData featureValueData : featureValueList)
+								{
+									displayConfigurableAttributeForPriceBreakup = featureValueData.getValue();
+								}
+								if (LOG.isDebugEnabled())
+								{
+									LOG.debug("display price breakup on pdp :" + displayConfigurableAttributeForPriceBreakup);
+								}
+							}
+
+						}
 					}
 				}
-
 			}
 		}
 		return displayConfigurableAttributeForPriceBreakup;
@@ -3626,6 +3669,18 @@ public class ProductPageController extends MidPageController
 			returnStatement = gson.toJson(mplAjaxProductData);
 		}
 		return returnStatement;
+	}
+
+	private boolean isLuxurySite()
+	{
+
+		final BaseSiteModel currentBaseSite = baseSiteService.getCurrentBaseSite();
+		if (null != currentBaseSite && StringUtils.isNotBlank(currentBaseSite.getUid())
+				&& MarketplaceFacadesConstants.LuxuryPrefix.equals(currentBaseSite.getUid()))
+		{
+			return true;
+		}
+		return false;
 	}
 
 	@RequestMapping(value = PRODUCT_OLD_URL_PATTERN + ControllerConstants.Views.Fragments.Product.EXCHANGE, method = RequestMethod.GET)

@@ -120,28 +120,21 @@ public class PriceBreakupServiceImpl implements PriceBreakupService
 
 		if (CollectionUtils.isNotEmpty(jewelleryInfoList) && null != jPrice)
 		{
-			//for (final JewelleryPriceRowModel jPrice : jewelleryPriceRowList)
-			//{
 			for (final JewelleryInformationModel jInfo : jewelleryInfoList)
 			{
 				if (null != jInfo.getPIMAttributeId())
 				{
-					if (jInfo.getPIMAttributeId().equalsIgnoreCase("metalweightfinejwlry"))
+					if (jInfo.getPIMAttributeId().equalsIgnoreCase(MarketplacecommerceservicesConstants.METALWEIGHTFINEJEWELLERY))
 					{
-						//priceBreakupData = new PriceBreakupData();
-						//weightRateList = new ArrayList();
-
-						if (null != jPrice.getGoldValue() && null != jPrice.getGoldRate() && null != jInfo.getWeight())
+						if (null != jPrice.getGoldValue() && null != jPrice.getGoldRate() && null != jInfo.getWeight()
+								&& jPrice.getGoldValue().doubleValue() > 0 && jPrice.getGoldRate().doubleValue() > 0)
 						{
 							priceBreakupData = new PriceBreakupData();
 							weightRateList = new ArrayList();
 
 							priceBreakupData.setName(MarketplacecommerceservicesConstants.GOLD);
-							//key = jInfo.getWeight() + "/" + jPrice.getGoldRate();
-							key = jInfo.getWeight()
-									+ MarketplacecommerceservicesConstants.GM
-									+ MarketplacecommerceservicesConstants.SPACE
-									+ MarketplacecommerceservicesConstants.ATTHERATE
+							key = jInfo.getWeight() + MarketplacecommerceservicesConstants.GM
+									+ MarketplacecommerceservicesConstants.SPACE + MarketplacecommerceservicesConstants.ATTHERATE
 									+ MarketplacecommerceservicesConstants.SPACE
 									+ createPriceSign(PriceDataType.BUY, new BigDecimal(jPrice.getGoldRate().doubleValue()),
 											commonI18NService.getCurrency(INR)).getFormattedValue()
@@ -162,24 +155,22 @@ public class PriceBreakupServiceImpl implements PriceBreakupService
 								key = key + MarketplacecommerceservicesConstants.GM;
 							}
 							weightRateList.add(key);
-							final PriceData price = createPriceSign(PriceDataType.BUY, new BigDecimal(jPrice.getGoldValue()
-									.doubleValue()), commonI18NService.getCurrency(INR));
+							final PriceData price = createPriceSign(PriceDataType.BUY,
+									new BigDecimal(jPrice.getGoldValue().doubleValue()), commonI18NService.getCurrency(INR));
 							priceBreakupData.setWeightRateList(weightRateList);
 							priceBreakupData.setPrice(price);
 
 							priceBreakupDataList.add(priceBreakupData);
 						}
-						if (null != jPrice.getSilverValue() && null != jPrice.getSilverRate() && null != jInfo.getWeight())
+						if (null != jPrice.getSilverValue() && null != jPrice.getSilverRate() && null != jInfo.getWeight()
+								&& jPrice.getSilverValue().doubleValue() > 0 && jPrice.getSilverRate().doubleValue() > 0)
 						{
 							priceBreakupData = new PriceBreakupData();
 							weightRateList = new ArrayList();
 
 							priceBreakupData.setName(MarketplacecommerceservicesConstants.SILVER);
-							//key = jInfo.getWeight() + "/" + jPrice.getSilverRate();
-							key = jInfo.getWeight()
-									+ MarketplacecommerceservicesConstants.GM
-									+ MarketplacecommerceservicesConstants.SPACE
-									+ MarketplacecommerceservicesConstants.ATTHERATE
+							key = jInfo.getWeight() + MarketplacecommerceservicesConstants.GM
+									+ MarketplacecommerceservicesConstants.SPACE + MarketplacecommerceservicesConstants.ATTHERATE
 									+ MarketplacecommerceservicesConstants.SPACE
 									+ createPriceSign(PriceDataType.BUY, new BigDecimal(jPrice.getSilverRate().doubleValue()),
 											commonI18NService.getCurrency(INR)).getFormattedValue()
@@ -200,24 +191,22 @@ public class PriceBreakupServiceImpl implements PriceBreakupService
 								key = key + MarketplacecommerceservicesConstants.KG;
 							}
 							weightRateList.add(key);
-							final PriceData price = createPriceSign(PriceDataType.BUY, new BigDecimal(jPrice.getSilverValue()
-									.doubleValue()), commonI18NService.getCurrency(INR));
+							final PriceData price = createPriceSign(PriceDataType.BUY,
+									new BigDecimal(jPrice.getSilverValue().doubleValue()), commonI18NService.getCurrency(INR));
 							priceBreakupData.setWeightRateList(weightRateList);
 							priceBreakupData.setPrice(price);
 
 							priceBreakupDataList.add(priceBreakupData);
 						}
-						if (null != jPrice.getPlatinumValue() && null != jPrice.getPlatinumRate() && null != jInfo.getWeight())
+						if (null != jPrice.getPlatinumValue() && null != jPrice.getPlatinumRate() && null != jInfo.getWeight()
+								&& jPrice.getPlatinumValue().doubleValue() > 0 && jPrice.getPlatinumRate().doubleValue() > 0)
 						{
 							priceBreakupData = new PriceBreakupData();
 							weightRateList = new ArrayList();
 
 							priceBreakupData.setName(MarketplacecommerceservicesConstants.PLATINUM);
-							//key = jInfo.getWeight() + "/" + jPrice.getPlatinumRate();
-							key = jInfo.getWeight()
-									+ MarketplacecommerceservicesConstants.GM
-									+ MarketplacecommerceservicesConstants.SPACE
-									+ MarketplacecommerceservicesConstants.ATTHERATE
+							key = jInfo.getWeight() + MarketplacecommerceservicesConstants.GM
+									+ MarketplacecommerceservicesConstants.SPACE + MarketplacecommerceservicesConstants.ATTHERATE
 									+ MarketplacecommerceservicesConstants.SPACE
 									+ createPriceSign(PriceDataType.BUY, new BigDecimal(jPrice.getPlatinumRate().doubleValue()),
 											commonI18NService.getCurrency(INR)).getFormattedValue()
@@ -238,56 +227,44 @@ public class PriceBreakupServiceImpl implements PriceBreakupService
 								key = key + MarketplacecommerceservicesConstants.GM;
 							}
 							weightRateList.add(key);
-							final PriceData price = createPriceSign(PriceDataType.BUY, new BigDecimal(jPrice.getPlatinumValue()
-									.doubleValue()), commonI18NService.getCurrency(INR));
+							final PriceData price = createPriceSign(PriceDataType.BUY,
+									new BigDecimal(jPrice.getPlatinumValue().doubleValue()), commonI18NService.getCurrency(INR));
 							priceBreakupData.setWeightRateList(weightRateList);
 							priceBreakupData.setPrice(price);
 
 							priceBreakupDataList.add(priceBreakupData);
 						}
-						if (null != jPrice.getSolitaireValue() && null != jPrice.getSolitaireRate() && null != jInfo.getWeight())
+						if (null != jPrice.getSolitaireValue() && null != jPrice.getSolitaireRate() && null != jInfo.getWeight()
+								&& jPrice.getSolitaireValue().doubleValue() > 0 && jPrice.getSolitaireRate().doubleValue() > 0)
 						{
 							priceBreakupData = new PriceBreakupData();
 							weightRateList = new ArrayList();
 
 							priceBreakupData.setName(MarketplacecommerceservicesConstants.SOLITAIRE);
-							//key = jInfo.getWeight() + "/" + jPrice.getSolitaireRate();
-							key = jInfo.getWeight()
-									+ MarketplacecommerceservicesConstants.CT
-									+ MarketplacecommerceservicesConstants.SPACE
-									+ MarketplacecommerceservicesConstants.ATTHERATE
+							key = jInfo.getWeight() + MarketplacecommerceservicesConstants.CT
+									+ MarketplacecommerceservicesConstants.SPACE + MarketplacecommerceservicesConstants.ATTHERATE
 									+ MarketplacecommerceservicesConstants.SPACE
 									+ createPriceSign(PriceDataType.BUY, new BigDecimal(jPrice.getSolitaireRate().doubleValue()),
 											commonI18NService.getCurrency(INR)).getFormattedValue()
 									+ MarketplacecommerceservicesConstants.FRONTSLASH + MarketplacecommerceservicesConstants.CT;
 							weightRateList.add(key);
-							final PriceData price = createPriceSign(PriceDataType.BUY, new BigDecimal(jPrice.getSolitaireValue()
-									.doubleValue()), commonI18NService.getCurrency(INR));
+							final PriceData price = createPriceSign(PriceDataType.BUY,
+									new BigDecimal(jPrice.getSolitaireValue().doubleValue()), commonI18NService.getCurrency(INR));
 							priceBreakupData.setWeightRateList(weightRateList);
 							priceBreakupData.setPrice(price);
 
 							priceBreakupDataList.add(priceBreakupData);
 						}
-						//priceBreakupDataList.add(priceBreakupData);
-						//break;
 					}
-					//}
-					//}
-					if (null != jPrice.getTotalDiamondValue())
+					if (null != jPrice.getTotalDiamondValue() && jPrice.getTotalDiamondValue().doubleValue() > 0)
 					{
-						//for (final JewelleryInformationModel jInfo : jewelleryInfoList)
-						//{
-						//if (null != jInfo.getPIMAttributeId())
-						//	{
-						if (jInfo.getPIMAttributeId().equalsIgnoreCase("diamondweightfinejwlry1"))
+						if (jInfo.getPIMAttributeId()
+								.equalsIgnoreCase(MarketplacecommerceservicesConstants.DIAMONDWEIGHTFINEJEWELLERY1))
 						{
 							if (null != jInfo.getWeight() && null != jPrice.getDiamondRateType1())
 							{
-								//key = jInfo.getWeight() + "/" + jPrice.getDiamondRateType1().toString();
-								key = jInfo.getWeight()
-										+ MarketplacecommerceservicesConstants.CT
-										+ MarketplacecommerceservicesConstants.SPACE
-										+ MarketplacecommerceservicesConstants.ATTHERATE
+								key = jInfo.getWeight() + MarketplacecommerceservicesConstants.CT
+										+ MarketplacecommerceservicesConstants.SPACE + MarketplacecommerceservicesConstants.ATTHERATE
 										+ MarketplacecommerceservicesConstants.SPACE
 										+ createPriceSign(PriceDataType.BUY, new BigDecimal(jPrice.getDiamondRateType1().doubleValue()),
 												commonI18NService.getCurrency(INR)).getFormattedValue()
@@ -295,15 +272,13 @@ public class PriceBreakupServiceImpl implements PriceBreakupService
 								diamondWeightRateList.add(key);
 							}
 						}
-						if (jInfo.getPIMAttributeId().equalsIgnoreCase("diamondweightfinejwlry2"))
+						if (jInfo.getPIMAttributeId()
+								.equalsIgnoreCase(MarketplacecommerceservicesConstants.DIAMONDWEIGHTFINEJEWELLERY2))
 						{
 							if (null != jInfo.getWeight() && null != jPrice.getDiamondRateType2())
 							{
-								//key = jInfo.getWeight() + "/" + jPrice.getDiamondRateType2().toString();
-								key = jInfo.getWeight()
-										+ MarketplacecommerceservicesConstants.CT
-										+ MarketplacecommerceservicesConstants.SPACE
-										+ MarketplacecommerceservicesConstants.ATTHERATE
+								key = jInfo.getWeight() + MarketplacecommerceservicesConstants.CT
+										+ MarketplacecommerceservicesConstants.SPACE + MarketplacecommerceservicesConstants.ATTHERATE
 										+ MarketplacecommerceservicesConstants.SPACE
 										+ createPriceSign(PriceDataType.BUY, new BigDecimal(jPrice.getDiamondRateType2().doubleValue()),
 												commonI18NService.getCurrency(INR)).getFormattedValue()
@@ -311,15 +286,13 @@ public class PriceBreakupServiceImpl implements PriceBreakupService
 								diamondWeightRateList.add(key);
 							}
 						}
-						if (jInfo.getPIMAttributeId().equalsIgnoreCase("diamondweightfinejwlry3"))
+						if (jInfo.getPIMAttributeId()
+								.equalsIgnoreCase(MarketplacecommerceservicesConstants.DIAMONDWEIGHTFINEJEWELLERY3))
 						{
 							if (null != jInfo.getWeight() && null != jPrice.getDiamondRateType3())
 							{
-								//key = jInfo.getWeight() + "/" + jPrice.getDiamondRateType3().toString();
-								key = jInfo.getWeight()
-										+ MarketplacecommerceservicesConstants.CT
-										+ MarketplacecommerceservicesConstants.SPACE
-										+ MarketplacecommerceservicesConstants.ATTHERATE
+								key = jInfo.getWeight() + MarketplacecommerceservicesConstants.CT
+										+ MarketplacecommerceservicesConstants.SPACE + MarketplacecommerceservicesConstants.ATTHERATE
 										+ MarketplacecommerceservicesConstants.SPACE
 										+ createPriceSign(PriceDataType.BUY, new BigDecimal(jPrice.getDiamondRateType3().doubleValue()),
 												commonI18NService.getCurrency(INR)).getFormattedValue()
@@ -327,15 +300,13 @@ public class PriceBreakupServiceImpl implements PriceBreakupService
 								diamondWeightRateList.add(key);
 							}
 						}
-						if (jInfo.getPIMAttributeId().equalsIgnoreCase("diamondweightfinejwlry4"))
+						if (jInfo.getPIMAttributeId()
+								.equalsIgnoreCase(MarketplacecommerceservicesConstants.DIAMONDWEIGHTFINEJEWELLERY4))
 						{
 							if (null != jInfo.getWeight() && null != jPrice.getDiamondRateType4())
 							{
-								//key = jInfo.getWeight() + "/" + jPrice.getDiamondRateType4().toString();
-								key = jInfo.getWeight()
-										+ MarketplacecommerceservicesConstants.CT
-										+ MarketplacecommerceservicesConstants.SPACE
-										+ MarketplacecommerceservicesConstants.ATTHERATE
+								key = jInfo.getWeight() + MarketplacecommerceservicesConstants.CT
+										+ MarketplacecommerceservicesConstants.SPACE + MarketplacecommerceservicesConstants.ATTHERATE
 										+ MarketplacecommerceservicesConstants.SPACE
 										+ createPriceSign(PriceDataType.BUY, new BigDecimal(jPrice.getDiamondRateType4().doubleValue()),
 												commonI18NService.getCurrency(INR)).getFormattedValue()
@@ -343,15 +314,13 @@ public class PriceBreakupServiceImpl implements PriceBreakupService
 								diamondWeightRateList.add(key);
 							}
 						}
-						if (jInfo.getPIMAttributeId().equalsIgnoreCase("diamondweightfinejwlry5"))
+						if (jInfo.getPIMAttributeId()
+								.equalsIgnoreCase(MarketplacecommerceservicesConstants.DIAMONDWEIGHTFINEJEWELLERY5))
 						{
 							if (null != jInfo.getWeight() && null != jPrice.getDiamondRateType5())
 							{
-								//key = jInfo.getWeight() + "/" + jPrice.getDiamondRateType5().toString();
-								key = jInfo.getWeight()
-										+ MarketplacecommerceservicesConstants.CT
-										+ MarketplacecommerceservicesConstants.SPACE
-										+ MarketplacecommerceservicesConstants.ATTHERATE
+								key = jInfo.getWeight() + MarketplacecommerceservicesConstants.CT
+										+ MarketplacecommerceservicesConstants.SPACE + MarketplacecommerceservicesConstants.ATTHERATE
 										+ MarketplacecommerceservicesConstants.SPACE
 										+ createPriceSign(PriceDataType.BUY, new BigDecimal(jPrice.getDiamondRateType5().doubleValue()),
 												commonI18NService.getCurrency(INR)).getFormattedValue()
@@ -359,15 +328,13 @@ public class PriceBreakupServiceImpl implements PriceBreakupService
 								diamondWeightRateList.add(key);
 							}
 						}
-						if (jInfo.getPIMAttributeId().equalsIgnoreCase("diamondweightfinejwlry6"))
+						if (jInfo.getPIMAttributeId()
+								.equalsIgnoreCase(MarketplacecommerceservicesConstants.DIAMONDWEIGHTFINEJEWELLERY6))
 						{
 							if (null != jInfo.getWeight() && null != jPrice.getDiamondRateType6())
 							{
-								//key = jInfo.getWeight() + "/" + jPrice.getDiamondRateType6().toString();
-								key = jInfo.getWeight()
-										+ MarketplacecommerceservicesConstants.CT
-										+ MarketplacecommerceservicesConstants.SPACE
-										+ MarketplacecommerceservicesConstants.ATTHERATE
+								key = jInfo.getWeight() + MarketplacecommerceservicesConstants.CT
+										+ MarketplacecommerceservicesConstants.SPACE + MarketplacecommerceservicesConstants.ATTHERATE
 										+ MarketplacecommerceservicesConstants.SPACE
 										+ createPriceSign(PriceDataType.BUY, new BigDecimal(jPrice.getDiamondRateType6().doubleValue()),
 												commonI18NService.getCurrency(INR)).getFormattedValue()
@@ -375,15 +342,13 @@ public class PriceBreakupServiceImpl implements PriceBreakupService
 								diamondWeightRateList.add(key);
 							}
 						}
-						if (jInfo.getPIMAttributeId().equalsIgnoreCase("diamondweightfinejwlry7"))
+						if (jInfo.getPIMAttributeId()
+								.equalsIgnoreCase(MarketplacecommerceservicesConstants.DIAMONDWEIGHTFINEJEWELLERY7))
 						{
 							if (null != jInfo.getWeight() && null != jPrice.getDiamondRateType7())
 							{
-								//key = jInfo.getWeight() + "/" + jPrice.getDiamondRateType7().toString();
-								key = jInfo.getWeight()
-										+ MarketplacecommerceservicesConstants.CT
-										+ MarketplacecommerceservicesConstants.SPACE
-										+ MarketplacecommerceservicesConstants.ATTHERATE
+								key = jInfo.getWeight() + MarketplacecommerceservicesConstants.CT
+										+ MarketplacecommerceservicesConstants.SPACE + MarketplacecommerceservicesConstants.ATTHERATE
 										+ MarketplacecommerceservicesConstants.SPACE
 										+ createPriceSign(PriceDataType.BUY, new BigDecimal(jPrice.getDiamondRateType7().doubleValue()),
 												commonI18NService.getCurrency(INR)).getFormattedValue()
@@ -393,25 +358,19 @@ public class PriceBreakupServiceImpl implements PriceBreakupService
 						}
 					}
 				}
-				//				final PriceData diamondprice = createPriceSign(PriceDataType.BUY, new BigDecimal(jPrice.getTotalDiamondValue()
-				//						.doubleValue()), commonI18NService.getCurrency(INR));
-				//				diamondPriceData.setName(MarketplacecommerceservicesConstants.DIAMOND);
-				//				diamondPriceData.setPrice(diamondprice);
-				//				diamondPriceData.setWeightRateList(diamondWeightRateList);
-				//				priceBreakupDataList.add(diamondPriceData);
 			}
 
 			if (CollectionUtils.isNotEmpty(diamondWeightRateList))
 			{
-				final PriceData diamondprice = createPriceSign(PriceDataType.BUY, new BigDecimal(jPrice.getTotalDiamondValue()
-						.doubleValue()), commonI18NService.getCurrency(INR));
+				final PriceData diamondprice = createPriceSign(PriceDataType.BUY,
+						new BigDecimal(jPrice.getTotalDiamondValue().doubleValue()), commonI18NService.getCurrency(INR));
 				diamondPriceData.setName(MarketplacecommerceservicesConstants.DIAMOND);
 				diamondPriceData.setPrice(diamondprice);
 				diamondPriceData.setWeightRateList(diamondWeightRateList);
 				priceBreakupDataList.add(diamondPriceData);
 			}
 
-			if (null != jPrice.getTotalStoneValue())
+			if (null != jPrice.getTotalStoneValue() && jPrice.getTotalStoneValue().doubleValue() > 0)
 			{
 				priceBreakupData = new PriceBreakupData();
 				final PriceData price = createPriceSign(PriceDataType.BUY, new BigDecimal(jPrice.getTotalStoneValue().doubleValue()),
@@ -420,7 +379,7 @@ public class PriceBreakupServiceImpl implements PriceBreakupService
 				priceBreakupData.setPrice(price);
 				priceBreakupDataList.add(priceBreakupData);
 			}
-			if (null != jPrice.getMakingCharges())
+			if (null != jPrice.getMakingCharges() && jPrice.getMakingCharges().doubleValue() > 0)
 			{
 				priceBreakupData = new PriceBreakupData();
 				final PriceData price = createPriceSign(PriceDataType.BUY, new BigDecimal(jPrice.getMakingCharges().doubleValue()),
@@ -429,7 +388,7 @@ public class PriceBreakupServiceImpl implements PriceBreakupService
 				priceBreakupData.setPrice(price);
 				priceBreakupDataList.add(priceBreakupData);
 			}
-			if (null != jPrice.getWastageCharges())
+			if (null != jPrice.getWastageCharges() && jPrice.getWastageCharges().doubleValue() > 0)
 			{
 				priceBreakupData = new PriceBreakupData();
 				final PriceData price = createPriceSign(PriceDataType.BUY, new BigDecimal(jPrice.getWastageCharges().doubleValue()),
@@ -438,7 +397,6 @@ public class PriceBreakupServiceImpl implements PriceBreakupService
 				priceBreakupData.setPrice(price);
 				priceBreakupDataList.add(priceBreakupData);
 			}
-			//}
 		}
 
 
@@ -624,6 +582,11 @@ public class PriceBreakupServiceImpl implements PriceBreakupService
 				productConfiguredPopulator.populate(productModel, productData,
 						Arrays.asList(ProductOption.BASIC, ProductOption.CLASSIFICATION));
 				//	getProductClassificationPopulator().populate(entry.getProduct(), productData);
+
+				if (null != productData && null != productData.getBrand() && null != productData.getBrand().getBrandname())
+				{
+					orderJewelEntryModel.setBrandName(productData.getBrand().getBrandname());
+				}
 				if (null != productData.getClassifications())
 				{
 					final List<ClassificationData> ConfigurableAttributeList = new ArrayList<ClassificationData>(
@@ -654,7 +617,7 @@ public class PriceBreakupServiceImpl implements PriceBreakupService
 
 							else if (featureData.getCode().contains("stonefinejwlry1"))
 							{
-								if (name.equalsIgnoreCase("Stone"))
+								if (name.equalsIgnoreCase(MarketplacecommerceservicesConstants.STONE))
 								{
 									orderJewelEntryModel.setStoneType1(value);
 								}
@@ -662,7 +625,7 @@ public class PriceBreakupServiceImpl implements PriceBreakupService
 
 							else if (featureData.getCode().contains("stonesizefinejwlry1"))
 							{
-								if (name.equalsIgnoreCase("size"))
+								if (name.equalsIgnoreCase(MarketplacecommerceservicesConstants.SIZE))
 								{
 									orderJewelEntryModel.setStoneSizeType1(value);
 								}
@@ -670,14 +633,14 @@ public class PriceBreakupServiceImpl implements PriceBreakupService
 
 							else if (featureData.getCode().contains("stonefinejwlry2"))
 							{
-								if (name.equalsIgnoreCase("Stone"))
+								if (name.equalsIgnoreCase(MarketplacecommerceservicesConstants.STONE))
 								{
 									orderJewelEntryModel.setStoneType2(value);
 								}
 							}
 							else if (featureData.getCode().contains("stonesizefinejwlry2"))
 							{
-								if (name.equalsIgnoreCase("size"))
+								if (name.equalsIgnoreCase(MarketplacecommerceservicesConstants.SIZE))
 								{
 									orderJewelEntryModel.setStoneSizeType2(value);
 								}
@@ -685,14 +648,14 @@ public class PriceBreakupServiceImpl implements PriceBreakupService
 
 							else if (featureData.getCode().contains("stonefinejwlry3"))
 							{
-								if (name.equalsIgnoreCase("Stone"))
+								if (name.equalsIgnoreCase(MarketplacecommerceservicesConstants.STONE))
 								{
 									orderJewelEntryModel.setStoneType3(value);
 								}
 							}
 							else if (featureData.getCode().contains("stonesizefinejwlry3"))
 							{
-								if (name.equalsIgnoreCase("size"))
+								if (name.equalsIgnoreCase(MarketplacecommerceservicesConstants.SIZE))
 								{
 									orderJewelEntryModel.setStoneSizeType3(value);
 								}
@@ -700,14 +663,14 @@ public class PriceBreakupServiceImpl implements PriceBreakupService
 
 							else if (featureData.getCode().contains("stonefinejwlry4"))
 							{
-								if (name.equalsIgnoreCase("Stone"))
+								if (name.equalsIgnoreCase(MarketplacecommerceservicesConstants.STONE))
 								{
 									orderJewelEntryModel.setStoneType4(value);
 								}
 							}
 							else if (featureData.getCode().contains("stonesizefinejwlry4"))
 							{
-								if (name.equalsIgnoreCase("size"))
+								if (name.equalsIgnoreCase(MarketplacecommerceservicesConstants.SIZE))
 								{
 									orderJewelEntryModel.setStoneSizeType4(value);
 								}
@@ -715,14 +678,14 @@ public class PriceBreakupServiceImpl implements PriceBreakupService
 
 							else if (featureData.getCode().contains("stonefinejwlry5"))
 							{
-								if (name.equalsIgnoreCase("Stone"))
+								if (name.equalsIgnoreCase(MarketplacecommerceservicesConstants.STONE))
 								{
 									orderJewelEntryModel.setStoneType5(value);
 								}
 							}
 							else if (featureData.getCode().contains("stonesizefinejwlry5"))
 							{
-								if (name.equalsIgnoreCase("size"))
+								if (name.equalsIgnoreCase(MarketplacecommerceservicesConstants.SIZE))
 								{
 									orderJewelEntryModel.setStoneSizeType5(value);
 								}
@@ -730,14 +693,14 @@ public class PriceBreakupServiceImpl implements PriceBreakupService
 
 							else if (featureData.getCode().contains("stonefinejwlry6"))
 							{
-								if (name.equalsIgnoreCase("Stone"))
+								if (name.equalsIgnoreCase(MarketplacecommerceservicesConstants.STONE))
 								{
 									orderJewelEntryModel.setStoneType6(value);
 								}
 							}
 							else if (featureData.getCode().contains("stonesizefinejwlry6"))
 							{
-								if (name.equalsIgnoreCase("size"))
+								if (name.equalsIgnoreCase(MarketplacecommerceservicesConstants.SIZE))
 								{
 									orderJewelEntryModel.setStoneSizeType6(value);
 								}
@@ -745,14 +708,14 @@ public class PriceBreakupServiceImpl implements PriceBreakupService
 
 							else if (featureData.getCode().contains("stonefinejwlry7"))
 							{
-								if (name.equalsIgnoreCase("Stone"))
+								if (name.equalsIgnoreCase(MarketplacecommerceservicesConstants.STONE))
 								{
 									orderJewelEntryModel.setStoneType7(value);
 								}
 							}
 							else if (featureData.getCode().contains("stonesizefinejwlry7"))
 							{
-								if (name.equalsIgnoreCase("size"))
+								if (name.equalsIgnoreCase(MarketplacecommerceservicesConstants.SIZE))
 								{
 									orderJewelEntryModel.setStoneSizeType7(value);
 								}
@@ -760,14 +723,14 @@ public class PriceBreakupServiceImpl implements PriceBreakupService
 
 							else if (featureData.getCode().contains("stonefinejwlry8"))
 							{
-								if (name.equalsIgnoreCase("Stone"))
+								if (name.equalsIgnoreCase(MarketplacecommerceservicesConstants.STONE))
 								{
 									orderJewelEntryModel.setStoneType8(value);
 								}
 							}
 							else if (featureData.getCode().contains("stonesizefinejwlry8"))
 							{
-								if (name.equalsIgnoreCase("size"))
+								if (name.equalsIgnoreCase(MarketplacecommerceservicesConstants.SIZE))
 								{
 									orderJewelEntryModel.setStoneSizeType8(value);
 								}
@@ -775,14 +738,14 @@ public class PriceBreakupServiceImpl implements PriceBreakupService
 
 							else if (featureData.getCode().contains("stonefinejwlry9"))
 							{
-								if (name.equalsIgnoreCase("Stone"))
+								if (name.equalsIgnoreCase(MarketplacecommerceservicesConstants.STONE))
 								{
 									orderJewelEntryModel.setStoneType9(value);
 								}
 							}
 							else if (featureData.getCode().contains("stonesizefinejwlry9"))
 							{
-								if (name.equalsIgnoreCase("size"))
+								if (name.equalsIgnoreCase(MarketplacecommerceservicesConstants.SIZE))
 								{
 									orderJewelEntryModel.setStoneSizeType9(value);
 								}
@@ -790,14 +753,14 @@ public class PriceBreakupServiceImpl implements PriceBreakupService
 
 							else if (featureData.getCode().contains("stonefinejwlry10"))
 							{
-								if (name.equalsIgnoreCase("Stone"))
+								if (name.equalsIgnoreCase(MarketplacecommerceservicesConstants.STONE))
 								{
 									orderJewelEntryModel.setStoneType10(value);
 								}
 							}
 							else if (featureData.getCode().contains("stonesizefinejwlry10"))
 							{
-								if (name.equalsIgnoreCase("size"))
+								if (name.equalsIgnoreCase(MarketplacecommerceservicesConstants.SIZE))
 								{
 									orderJewelEntryModel.setStoneSizeType10(value);
 								}

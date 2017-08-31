@@ -124,6 +124,8 @@ public class ProductDetailsHelper
 	/*
 	 * Added for Fashion Jewellery
 	 */
+	//	added for fine jewellery
+	private static final String CLASSIFICATION_ATTRIBUTES_DETAILS_ORDER = "classification.attributes.details.order";
 	/**
 	 *
 	 */
@@ -637,7 +639,7 @@ public class ProductDetailsHelper
 			}
 			//JWLSPCUAT-101:Product details section should be top in PDP page
 			final String featureDetailsOrder = configurationService.getConfiguration().getString(
-					"classification.attributes.details.order");
+					CLASSIFICATION_ATTRIBUTES_DETAILS_ORDER);
 			if (StringUtils.isNotEmpty(featureDetailsOrder))
 			{
 				final String[] featureDetailsOrderArray = featureDetailsOrder.split(",");
@@ -774,7 +776,8 @@ public class ProductDetailsHelper
 					{
 						//TISEE-6376
 						if (wlEntry.getProduct() != null && wlEntry.getProduct().getCode() != null
-								&& wlEntry.getProduct().getCode().equals(productCode))
+								&& wlEntry.getProduct().getCode().equals(productCode)
+								&& (!wlEntry.getIsDeleted().booleanValue() || wlEntry.getIsDeleted() == null))//TPR-5787 TISSPTEN-9 check added
 						{
 							ussidEntries.add(wlEntry.getUssid());
 						}
@@ -1458,7 +1461,8 @@ public class ProductDetailsHelper
 			{
 				for (final Wishlist2EntryModel entry : lastCreatedWishlist.getEntries())
 				{
-					if (null != (entry) && null != entry.getUssid() && (entry.getUssid()).equalsIgnoreCase(ussid))
+					if (null != (entry) && null != entry.getUssid() && (entry.getUssid()).equalsIgnoreCase(ussid)
+							&& (!entry.getIsDeleted().booleanValue() || entry.getIsDeleted() == null))//TPR-5787 condition added
 					{
 						existUssid = true;
 						break;
