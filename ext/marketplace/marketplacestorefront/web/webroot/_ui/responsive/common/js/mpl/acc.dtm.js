@@ -85,23 +85,61 @@ $(document).ready(function(){
 	// For PDP
 	if (pageType == "product"
 			|| pageType == "/sellersdetailpage") {
-		//TPR-6300
-		var product_id = $("#product_id").val();
-		var product_category = $("#product_category").val();
-		var product_brand = $("#product_brand").val();
-		var product_discount = $("#product_discount").val();
-		var pincode = $('#pin').val();
-		digitalData.cpj = {
-			product : {
-				id : product_id,
-				category : product_category,
-				discount : product_discount
-			},
-			brand : {
-				name : product_brand
-			}
-		}
 		
+		   var product_id = $("#product_id").val();
+		   var product_category = $("#product_category").val();
+		   var product_brand = $("#product_brand").val();
+		   var product_discount = $("#product_discount").val();
+		   var pincode = $('#pin').val();
+		   var prevPageUrl = document.referrer;
+		   var findingMethod ="";
+		   
+        //TPR-6300 | Track pdp starts
+		      if(typeof _satellite !="undefined"){
+		          _satellite.track('cpj_pdp');
+		       }	
+			
+		           digitalData.cpj = {
+			                 product : {
+				                    id : product_id,
+				              category : product_category,
+				              discount : product_discount
+			           },
+			                brand : {
+				                 name : product_brand
+			           }
+	                 }
+		
+		       if(prevPageUrl != "" && prevPageUrl != 'undefined'){
+			           if(prevPageUrl.indexOf('/c-msh') > -1){
+				           findingMethod = 'category_landing_page';
+			            }
+			           else if(prevPageUrl.indexOf("/s/") > -1 || prevPageUrl.indexOf('/m/') > -1){
+				           findingMethod = 'seller';
+			            }
+			           else if(prevPageUrl.indexOf('/c-mbh') > -1){
+				           findingMethod = 'brand';
+			             }
+			           else if(prevPageUrl == document.location.href){
+				           findingMethod = 'homePage';
+			             }
+			           else if(prevPageUrl.indexOf(' /search/') > -1){
+			        	   findingMethod = 'search_results_page';
+			           }
+			          else{
+				           findingMethod = '';
+			             }
+		               } 
+		
+	             if(findingMethod != ''){
+		            digitalData.cpj = {
+				            pdp : {
+			               findingMethod  : findingMethod
+				          }
+		              }
+	           }  
+	     //TPR-6300 | Track pdp ends
+	             
 		//TPR-6333 | Track Geo-location of users
 		if(pincode != ''){
 			digitalData.geolocation = {
@@ -136,12 +174,12 @@ $(document).ready(function(){
 				buyBoxWinner : buyboxSellerName
 			}   
 		}
+		
 		digitalData.page.category.subCategory1 = product_category;
 		digitalData.page.category.subCategory2 = page_subcategory_name; 
 		digitalData.page.category.subCategory3 = page_subcategory_name_L3;
-		if(typeof _satellite !="undefined"){
-		    _satellite.track('cpj_pdp');
-		}
+		
+		
 	}		
 	// Generic Page Script
 	if (pageType != 'homepage' && pageType != 'product' && pageType != '/sellersdetailpage' && pageType != 'productsearch'
@@ -157,7 +195,7 @@ $(document).ready(function(){
 			
 	}
 	
-	// For PLP
+	// TPR-6297 | For PLP
 	if (pageType == "category" || pageType == "electronics") {
 		if(typeof _satellite !="undefined"){	
 		   _satellite.track('cpj_category_pages');
@@ -387,7 +425,7 @@ $(document).ready(function(){
 		}
 	});
 	
-	/*On Size selection | PDP #29*/ 
+	/*On Size selection | PDP #29  | tpr- 6301*/ 
 	   $(document).on('click',".variant-select > li", function(){
 		var product_size = $(this).find('a').html();
 		if(typeof _satellite !="undefined"){
@@ -464,10 +502,10 @@ $(document).ready(function(){
     }*/
     
     
-    // For product colour #30
+    // For product colour #30 |TPR-6302
     $(document).on('click',".color-swatch > li", function(){
     	var product_color = $(this).find('img').attr('title').toLowerCase();
-    	if(typeof _satellite !="undefined"){
+    	if(typeof(_satellite)!="undefined" &&  pageType == "product"){
     	    _satellite.track('cpj_pdp_product_color');
     	}
     	if(typeof digitalData.cpj.product != "undefined"){
