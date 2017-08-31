@@ -139,6 +139,7 @@ public class CustomSiteMapMediaJob extends SiteMapMediaJob
 									{
 										final String categoryName = getSiteMapNamefromCategories(category, categoryl2);
 										//PRDI-423
+
 										if (useBrandFilter())
 										{
 											LOG.debug("Inside useBrandFilter");
@@ -148,6 +149,7 @@ public class CustomSiteMapMediaJob extends SiteMapMediaJob
 										{
 											LOG.debug("Not using BrandFilter");
 										}
+
 										//PRDI-423
 										final List models = fetchProductforL2code(activeCatalog, categoryl2);
 										if (CollectionUtils.isNotEmpty(models) && StringUtils.isNotEmpty(categoryName))
