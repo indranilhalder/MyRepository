@@ -269,7 +269,6 @@
 	
 	<%-- <analytics:analytics/> --%>
 	<%-- <generatedVariables:generatedVariables/> --%>
-	
 
 <c:if test="${param.frame ne null}">	
 <base target="_parent">

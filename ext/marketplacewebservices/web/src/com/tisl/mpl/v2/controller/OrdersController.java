@@ -35,6 +35,7 @@ import de.hybris.platform.commercewebservicescommons.errors.exceptions.Webservic
 import de.hybris.platform.commercewebservicescommons.mapping.DataMapper;
 import de.hybris.platform.commercewebservicescommons.strategies.CartLoaderStrategy;
 import de.hybris.platform.core.enums.OrderStatus;
+import de.hybris.platform.core.model.JewelleryInformationModel;
 import de.hybris.platform.core.model.order.AbstractOrderEntryModel;
 import de.hybris.platform.core.model.order.OrderModel;
 import de.hybris.platform.core.model.product.ProductModel;
@@ -117,6 +118,7 @@ import com.tisl.mpl.facades.data.ScheduledDeliveryData;
 import com.tisl.mpl.facades.data.StatusRecordData;
 import com.tisl.mpl.facades.product.data.MarketplaceDeliveryModeData;
 import com.tisl.mpl.facades.product.data.SendInvoiceData;
+import com.tisl.mpl.marketplacecommerceservices.service.MplJewelleryService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplOrderService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplSellerInformationService;
 import com.tisl.mpl.marketplacecommerceservices.service.OrderModelService;
@@ -238,7 +240,10 @@ public class OrdersController extends BaseCommerceController
 	private CancelReturnFacade cancelReturnFacade;
 	@Autowired
 	private DateUtilHelper dateUtilHelper;
-	
+
+	@Resource(name = "mplJewelleryService")
+	private MplJewelleryService jewelleryService;
+
 
 	/**
 	 * @return the mplSellerInformationService
@@ -713,6 +718,16 @@ public class OrdersController extends BaseCommerceController
 				{
 					orderWsDTO.setPickupPersonMobile(orderDetail.getPickupPhoneNumber());
 				}
+
+				//TPR-6117 exchange field added
+
+				for (final OrderEntryData entry : orderDetail.getEntries())
+				{
+					if (StringUtils.isNotEmpty(entry.getExchangeApplied()))
+					{
+						orderWsDTO.setExchangeId(entry.getExchangeApplied());
+					}
+				}
 				/*
 				 * if (orderDetail.getTotalPriceWithTax() != null) {
 				 * orderWsDTO.setFinalAmount(orderDetail.getTotalPriceWithTax().getValue().toString()); } if
@@ -722,6 +737,16 @@ public class OrdersController extends BaseCommerceController
 				 * null != orderDetail.getTotalPrice()) { discount = (orderDetail.getSubTotal().getValue().doubleValue() -
 				 * orderDetail.getTotalPrice().getValue() .doubleValue()); }
 				 */
+
+				//TPR-6117 exchange field added
+
+//				for (final OrderEntryData entry : orderDetail.getEntries())
+//				{
+//					if (StringUtils.isNotEmpty(entry.getExchangeApplied()))
+//					{
+//						orderWsDTO.setExchangeId(entry.getExchangeApplied());
+//					}
+//				}
 				if (orderDetail.getDeliveryCost() != null)
 				{
 					deliveryTotal = orderDetail.getDeliveryCost().getValue().doubleValue();
@@ -858,13 +883,39 @@ public class OrdersController extends BaseCommerceController
 								}
 							}
 
+							//TISJEW-3519 && TPR-1083 && TPR-6117
+							if (StringUtils.isNotEmpty(entry.getExchangeApplied()))
+							{
+								orderProductDTO.setExchangeId(entry.getExchangeApplied());
+							}
+
 							/* capacity */
 
 							SellerInformationModel sellerInfoModel = null;
 							String fulfillmentType = null;
 							if (StringUtils.isNotEmpty(entry.getSelectedUssid()))
 							{
-								sellerInfoModel = getMplSellerInformationService().getSellerDetail(entry.getSelectedUssid());
+								//sellerInfoModel = getMplSellerInformationService().getSellerDetail(entry.getSelectedUssid());
+
+								if (productModel.getProductCategoryType().equalsIgnoreCase(
+										MarketplacecommerceservicesConstants.FINEJEWELLERY))
+								{
+									final List<JewelleryInformationModel> jewelleryInfo = jewelleryService.getJewelleryInfoByUssid(entry
+											.getSelectedUssid());
+									if (CollectionUtils.isNotEmpty(jewelleryInfo))
+									{
+										sellerInfoModel = getMplSellerInformationService().getSellerDetail(
+												jewelleryInfo.get(0).getPCMUSSID());
+									}
+									else
+									{
+										LOG.error("No entry in JewelleryInformationModel for ussid " + entry.getSelectedUssid());
+									}
+								}
+								else
+								{
+									sellerInfoModel = getMplSellerInformationService().getSellerDetail(entry.getSelectedUssid());
+								}
 							}
 							if (sellerInfoModel != null
 									&& CollectionUtils.isNotEmpty(sellerInfoModel.getRichAttribute())
@@ -986,7 +1037,24 @@ public class OrdersController extends BaseCommerceController
 		SellerInformationModel sellerInfoModel = null;
 		if (StringUtils.isNotEmpty(product.getSelectedUssid()))
 		{
-			sellerInfoModel = getMplSellerInformationService().getSellerDetail(product.getSelectedUssid());
+			//sellerInfoModel = getMplSellerInformationService().getSellerDetail(product.getSelectedUssid());
+			if (product.getProduct().getRootCategory().equalsIgnoreCase(MarketplacecommerceservicesConstants.FINEJEWELLERY))
+			{
+				String ussid = "";
+				final List<JewelleryInformationModel> jewelleryInfo = jewelleryService.getJewelleryInfoByUssid(product
+						.getSelectedUssid());
+				if (CollectionUtils.isNotEmpty(jewelleryInfo))
+				{
+					ussid = jewelleryInfo.get(0).getPCMUSSID();
+				}
+				LOG.debug("pcm ussid : " + ussid);
+				sellerInfoModel = getMplSellerInformationService().getSellerDetail(ussid);
+
+			}
+			else
+			{
+				sellerInfoModel = getMplSellerInformationService().getSellerDetail(product.getSelectedUssid());
+			}
 
 			if (null != sellerInfoModel && StringUtils.isNotEmpty(sellerInfoModel.getSellerID()))
 			{

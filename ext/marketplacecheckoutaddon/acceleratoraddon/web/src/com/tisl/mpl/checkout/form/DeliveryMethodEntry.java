@@ -12,6 +12,7 @@ public class DeliveryMethodEntry
 	private String entryNumber;
 	private String sellerArticleSKU;
 	private String deliveryCode;
+	private String selectedStore;
 
 	/**
 	 * @return the entryNumber
@@ -62,6 +63,23 @@ public class DeliveryMethodEntry
 	public void setSellerArticleSKU(final String sellerArticleSKU)
 	{
 		this.sellerArticleSKU = sellerArticleSKU;
+	}
+
+	/**
+	 * @return the selectedStore
+	 */
+	public String getSelectedStore()
+	{
+		return selectedStore;
+	}
+
+	/**
+	 * @param selectedStore
+	 *           the selectedStore to set
+	 */
+	public void setSelectedStore(final String selectedStore)
+	{
+		this.selectedStore = selectedStore;
 	}
 
 }

@@ -17,6 +17,7 @@ import de.hybris.platform.europe1.model.PriceRowModel;
 import de.hybris.platform.servicelayer.dto.converter.ConversionException;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -25,8 +26,10 @@ import javax.annotation.Resource;
 
 import org.springframework.beans.factory.annotation.Required;
 
+import com.tisl.mpl.core.model.BuyBoxModel;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.facades.constants.MarketplaceFacadesConstants;
+import com.tisl.mpl.marketplacecommerceservices.service.BuyBoxService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplPriceRowService;
 import com.tisl.mpl.util.GenericUtilityMethods;
 
@@ -95,7 +98,9 @@ public class CustomProductPricePopulator<SOURCE extends ProductModel, TARGET ext
 	 * @throws ConversionException
 	 * @throws EtailNonBusinessExceptions
 	 */
-
+	//for Jewellery
+	@Resource
+	private BuyBoxService buyBoxService;
 
 
 	@Override
@@ -106,18 +111,50 @@ public class CustomProductPricePopulator<SOURCE extends ProductModel, TARGET ext
 		{
 			final List<SellerInformationData> sellerDataList = productData.getSeller();
 			final Date sysDate = new Date();
-			String sellerArticleSKUs = GenericUtilityMethods.getSellersUSSIDs(sellerDataList);
+			String sellerArticleSKUs = null;
+			final StringBuilder sellerArticleSKUsBuilder = new StringBuilder();
+
+			//changes for Jewellery pincode service in pdp
+			if (productModel.getProductCategoryType().equalsIgnoreCase(MarketplaceFacadesConstants.PRODUCT_TYPE))
+			{
+				List<BuyBoxModel> buyboxModelListAll = new ArrayList<BuyBoxModel>();
+				String sellerArticleSKU = null;
+				for (final SellerInformationData sellerDList : sellerDataList)
+				{
+					sellerArticleSKU = fetchVariantUSSID(sellerDList);
+					buyboxModelListAll = buyBoxService.buyboxPriceForJewellery(sellerDList.getUssid());
+					sellerArticleSKU = buyboxModelListAll.get(0).getSellerArticleSKU();
+					sellerArticleSKUsBuilder.append('\'').append(sellerArticleSKU).append('\'').append(',');
+					sellerArticleSKUs = sellerArticleSKUsBuilder.toString();
+				}
+			}
+			//end
+			else
+			{
+				sellerArticleSKUs = GenericUtilityMethods.getSellersUSSIDs(sellerDataList);
+			}
+
+
 			if (null != sellerArticleSKUs && sellerArticleSKUs.length() > 0)
 			{
 				sellerArticleSKUs = sellerArticleSKUs.substring(0, sellerArticleSKUs.length() - 1);
 				final Map<String, PriceRowModel> mopMap = mplPriceRowService.getAllPriceRowDetail(sellerArticleSKUs);
 				for (final SellerInformationData sellerInformationData : sellerDataList)
 				{
-					final PriceRowModel priceRowModel = mopMap.get(sellerInformationData.getUssid());
+					PriceRowModel priceRowModel = null;
+					if (productModel.getProductCategoryType().equalsIgnoreCase(MarketplaceFacadesConstants.PRODUCT_TYPE))
+					{
+						final String sellerArticleSKU = fetchVariantUSSID(sellerInformationData);
+						priceRowModel = mopMap.get(sellerArticleSKU);
+					}
+					else
+					{
+						priceRowModel = mopMap.get(sellerInformationData.getUssid());
+					}
+
 					if (null != priceRowModel)
 					{
 						//set MOP
-
 						final Double mopPrice = priceRowModel.getPrice();
 						if (null != priceRowModel.getPrice())
 						{
@@ -142,7 +179,6 @@ public class CustomProductPricePopulator<SOURCE extends ProductModel, TARGET ext
 							else
 							{
 								sellerInformationData.setSpPrice(formPriceData(new Double(0.0)));
-
 							}
 						}
 					}
@@ -153,6 +189,25 @@ public class CustomProductPricePopulator<SOURCE extends ProductModel, TARGET ext
 		}
 	}
 
+
+
+	/**
+	 * Converting variantussid from pcmussid
+	 *
+	 * @param sellerDataList
+	 * @return variantussid
+	 */
+	//added for jewellery
+	public String fetchVariantUSSID(final SellerInformationData sellerDataList)
+	{
+		List<BuyBoxModel> buyboxModelListAll = new ArrayList<BuyBoxModel>();
+		String sellerArticleSKU = null;
+		buyboxModelListAll = buyBoxService.buyboxPriceForJewellery(sellerDataList.getUssid());
+		sellerArticleSKU = buyboxModelListAll.get(0).getSellerArticleSKU();
+		return sellerArticleSKU;
+	}
+
+	//end
 
 	/**
 	 * Converting datatype of price

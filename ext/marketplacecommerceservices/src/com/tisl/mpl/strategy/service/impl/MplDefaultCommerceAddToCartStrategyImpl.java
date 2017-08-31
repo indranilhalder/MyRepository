@@ -17,9 +17,13 @@ import de.hybris.platform.servicelayer.exceptions.ModelNotFoundException;
 import de.hybris.platform.storelocator.model.PointOfServiceModel;
 
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.annotation.Resource;
+
+import net.sourceforge.pmd.util.StringUtil;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
@@ -29,6 +33,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.core.model.MplZoneDeliveryModeValueModel;
 import com.tisl.mpl.marketplacecommerceservices.daos.MplStockDao;
+import com.tisl.mpl.marketplacecommerceservices.service.ExchangeGuideService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplDeliveryCostService;
 import com.tisl.mpl.marketplacecommerceservices.strategy.MplCommerceAddToCartStrategy;
 import com.tisl.mpl.model.SellerInformationModel;
@@ -48,6 +53,8 @@ public class MplDefaultCommerceAddToCartStrategyImpl extends DefaultCommerceAddT
 	protected static final Logger LOG = Logger.getLogger(MplDefaultCommerceAddToCartStrategyImpl.class);
 	@Resource(name = "mplDeliveryCostService")
 	private MplDeliveryCostService mplDeliveryCostService;
+	@Resource(name = "exchangeGuideService")
+	private ExchangeGuideService exchangeService;
 	//@Resource(name = "mplCheckCartLevelStrategy")
 	//private MplCheckCartLevelStrategy mplCheckCartLevelStrategy;
 	@Autowired
@@ -75,13 +82,14 @@ public class MplDefaultCommerceAddToCartStrategyImpl extends DefaultCommerceAddT
 
 			final CartModel cartModel = parameter.getCart();
 			final ProductModel productModel = parameter.getProduct();
+			Boolean exchangeApplied = Boolean.FALSE;
 			final long quantityToAdd = parameter.getQuantity();
 			//final UnitModel unit = parameter.getUnit();
 			final String ussid = parameter.getUssid();
 			cartModel.setCheckUssid(ussid);
 			final boolean forceNewEntry = parameter.isCreateNewEntry();
 			final PointOfServiceModel deliveryPointOfService = parameter.getPointOfService();
-			CommerceCartModification localCommerceCartModification1;
+			final CommerceCartModification localCommerceCartModification1;
 			UnitModel orderableUnit = parameter.getUnit();
 			if (orderableUnit == null)
 			{
@@ -98,9 +106,33 @@ public class MplDefaultCommerceAddToCartStrategyImpl extends DefaultCommerceAddT
 			final long actualAllowedQuantityChange = getAllowedCartAdjustmentForProduct(cartModel, productModel, quantityToAdd,
 					deliveryPointOfService, ussid);
 			final Integer maxOrderQuantity = productModel.getMaxOrderQuantity();
+
+
 			final long cartLevel = checkCartLevel(productModel, cartModel, deliveryPointOfService);
 			final long cartLevelAfterQuantityChange = actualAllowedQuantityChange + cartLevel;
 
+			final long maxqtyExc = 1L;
+			String existingExcId = null;
+			if (StringUtils.isNotEmpty(parameter.getExchangeParam()) && cartLevelAfterQuantityChange > maxqtyExc)
+			{
+
+				final Long actualAllowedQuantityChangeExc = Long.valueOf(maxqtyExc - cartLevelAfterQuantityChange);
+				final List<CartEntryModel> modelList = getCartService().getEntriesForProduct(cartModel, productModel);
+				final Map<Integer, Long> updateMap = new HashMap<>();
+				for (final CartEntryModel model : modelList)
+				{
+					if (model.getSelectedUSSID().equals(parameter.getUssid()))
+					{
+						updateMap.put(model.getEntryNumber(), actualAllowedQuantityChangeExc);
+						if (StringUtils.isNotEmpty(model.getExchangeId()))
+						{
+							existingExcId = model.getExchangeId();
+						}
+					}
+				}
+				getCartService().updateQuantities(cartModel, updateMap);
+
+			}
 			if (actualAllowedQuantityChange > 0L)
 			{
 				CartEntryModel cartEntryModel = null;
@@ -124,6 +156,7 @@ public class MplDefaultCommerceAddToCartStrategyImpl extends DefaultCommerceAddT
 					cartEntryModel = getCartService().addNewEntry(cartModel, productModel, actualAllowedQuantityChange, orderableUnit,
 							entryNumber.intValue(), entryNumber.intValue() >= 0);
 
+
 					if (cartEntryModel != null)
 					{
 						cartEntryModel.setDeliveryPointOfService(deliveryPointOfService);
@@ -142,6 +175,32 @@ public class MplDefaultCommerceAddToCartStrategyImpl extends DefaultCommerceAddT
 				//getModelService().save(cartEntryModel);
 				//setSellerInformationinCartEntry(cartEntryModel, productModel);
 				setSellerInformationinCartEntry(cartEntryModel, productModel.getSellerInformationRelator());
+
+				//TPR-1083
+				//Set Temporary Exchange ID
+
+				if (StringUtils.isNotEmpty(parameter.getExchangeParam()))
+				{
+					if (StringUtil.isEmpty(existingExcId))
+					{
+						cartEntryModel.setExchangeId(parameter.getExchangeParam());
+					}
+					else
+					{
+						//set the anonymous cart exchange id
+						cartEntryModel.setExchangeId(existingExcId);
+						existingExcId = parameter.getExchangeParam();
+
+					}
+					exchangeApplied = Boolean.TRUE;
+
+				}
+
+				if (StringUtil.isNotEmpty(existingExcId))
+				{
+					exchangeService.removeFromTransactionTable(existingExcId, "Removed Due to Merge Cart", null);
+				}
+
 				getCommerceCartCalculationStrategy().calculateCart(cartModel);
 				getModelService().save(cartEntryModel);
 
@@ -162,6 +221,12 @@ public class MplDefaultCommerceAddToCartStrategyImpl extends DefaultCommerceAddT
 				else if (actualAllowedQuantityChange == quantityToAdd)
 				{
 					modification.setStatusCode(MarketplacecommerceservicesConstants.SUCCESS);
+					if (exchangeApplied.booleanValue())
+					{
+						final CartModel updateCart = parameter.getCart();
+						updateCart.setExchangeAppliedCart(exchangeApplied);
+						getModelService().save(updateCart);
+					}
 				}
 				else
 				{

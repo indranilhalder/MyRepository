@@ -76,6 +76,7 @@ import de.hybris.platform.order.exceptions.CalculationException;
 import de.hybris.platform.servicelayer.dto.converter.ConversionException;
 import de.hybris.platform.servicelayer.dto.converter.Converter;
 import de.hybris.platform.servicelayer.model.ModelService;
+import de.hybris.platform.servicelayer.session.SessionService;
 import de.hybris.platform.servicelayer.user.UserService;
 import de.hybris.platform.site.BaseSiteService;
 import de.hybris.platform.storelocator.model.PointOfServiceModel;
@@ -261,11 +262,15 @@ public class CartsController extends BaseCommerceController
 	@Resource(name = "addToCartHelper")
 	private AddToCartHelper addToCartHelper;
 
+
 	@Resource(name = "voucherService")
 	private VoucherService voucherService;
 
 	@Resource(name = "mplCouponFacade")
 	private MplCouponFacade mplCouponFacade;
+
+	@Resource(name = "sessionService")
+	private SessionService sessionService;
 
 	/**
 	 * @return the mplCouponFacade
@@ -1678,7 +1683,9 @@ public class CartsController extends BaseCommerceController
 
 				try
 				{
-					cartFacade.restoreAnonymousCartAndMerge(oldCartId, toMergeCartGuid);
+					//TPR-1083 Online Exchange facilities to the customer for Large Appliances
+					//	cartFacade.restoreAnonymousCartAndMerge(oldCartId, toMergeCartGuid);
+					mplCartWebService.restoreAnonymousCartAndMerge(oldCartId, toMergeCartGuid);
 					cart = getSessionCart();
 					if (null != cart && StringUtils.isNotEmpty(cart.getCode()))
 					{
@@ -1886,7 +1893,9 @@ public class CartsController extends BaseCommerceController
 	public WebSerResponseWsDTO addProductToCartMobile(@PathVariable final String cartId,
 			@RequestParam(required = true) final String productCode, @RequestParam(required = true) final String USSID,
 			@RequestParam(required = false, defaultValue = "1") final String quantity,
-			@RequestParam(required = true) final boolean addedToCartWl, @RequestParam(required = false) final String channel)
+			@RequestParam(required = true) final boolean addedToCartWl, @RequestParam(required = false) final String channel,
+			@RequestParam(required = false) final String l3code, @RequestParam(required = false) final String exchangeParam,
+			@RequestParam(required = false) final String brandParam, @RequestParam(required = false) final String pinParam)
 			throws InvalidCartException, CommerceCartModificationException
 	{
 		WebSerResponseWsDTO result = new WebSerResponseWsDTO();
@@ -1897,6 +1906,7 @@ public class CartsController extends BaseCommerceController
 		}
 		try
 		{
+			final String exParam = l3code + "|" + exchangeParam + "|" + brandParam + "|" + pinParam;
 			//INC144313608
 			//final boolean isProductFreebie = getAddToCartHelper().isProductFreebie(productCode);
 
@@ -1910,6 +1920,12 @@ public class CartsController extends BaseCommerceController
 			{
 				result.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
 
+			}
+			else if (StringUtils.isNotEmpty(l3code) && StringUtils.isNotEmpty(exchangeParam) && StringUtils.isNotEmpty(brandParam)
+					&& StringUtils.isNotEmpty(pinParam))
+			{
+				result = mplCartWebService.addProductToCartwithExchange(productCode, cartId, quantity, USSID, addedToCartWl, channel,
+						exParam);
 			}
 			else
 			{
@@ -2207,6 +2223,7 @@ public class CartsController extends BaseCommerceController
 
 				cartData = mplExtendedCartConverter.convert(cartModel);
 				final OrderEntryData orderEntry = getCartEntryForNumber(cartData, entryNumber);
+
 				if (quantity == null && StringUtils.isEmpty(pickupStore))
 				{
 					LOG.debug(MarketplacecommerceservicesConstants.FIELD_NOT_EMPTY_MSG);
@@ -2268,8 +2285,13 @@ public class CartsController extends BaseCommerceController
 							////////
 							gwlp.setQtySelectedByUser(abstractOrderEntry.getQuantity().toString());
 
+							//TPR-1083
+							if (StringUtils.isNotEmpty(abstractOrderEntry.getExchangeId()))
+							{
+								gwlp.setMaxQuantityAllowed(MarketplacewebservicesConstants.MAXIMUM_CONFIGURED_QUANTIY_FOR_EXCHANGE);
+							}
 							//TPR-6117 STARTS
-							if (abstractOrderEntry.getProduct().getMaxOrderQuantity() != null
+							else if (abstractOrderEntry.getProduct().getMaxOrderQuantity() != null
 									&& abstractOrderEntry.getProduct().getMaxOrderQuantity().intValue() > 0
 									&& abstractOrderEntry.getProduct().getMaxOrderQuantity().intValue() < maximum_configured_quantiy)
 							{
@@ -2452,12 +2474,12 @@ public class CartsController extends BaseCommerceController
 				if (StringUtils.isNotEmpty(postalCode))
 				{
 					//CAR-57
-					gwlpList = mplCartWebService.productDetails(cartModel, deliveryModeDataMap, true, false, pinCodeRes);
+					gwlpList = mplCartWebService.productDetails(cartModel, deliveryModeDataMap, true, false, pinCodeRes, postalCode);
 				}
 				else
 				{
 					//CAR-57
-					gwlpList = mplCartWebService.productDetails(cartModel, deliveryModeDataMap, false, false, pinCodeRes);
+					gwlpList = mplCartWebService.productDetails(cartModel, deliveryModeDataMap, false, false, pinCodeRes, postalCode);
 				}
 
 				cartDetailsData.setProducts(gwlpList);
@@ -2619,6 +2641,16 @@ public class CartsController extends BaseCommerceController
 				reservationList = mplCommerceCartService.getReservation(caData, pincode, type, cart, item, SalesApplication.MOBILE);
 				LOG.debug("******************* Soft reservation Mobile web service response received from OMS ******************"
 						+ cartId);
+
+				Boolean replaced = Boolean.FALSE;
+				replaced = sessionService.getAttribute(MarketplacecommerceservicesConstants.REPLACEDUSSID);
+				LOG.debug("Replaced Soft reservation ForJewellery is " + replaced);
+				if (null != replaced && replaced.booleanValue())
+				{
+					reservationList.setPriceChangeNotificationMsg(MarketplacecommerceservicesConstants.INVENTORY_RESV_JWLRY_CART
+							+ caData.getTotalPrice().getFormattedValue());
+					sessionService.removeAttribute(MarketplacecommerceservicesConstants.REPLACEDUSSID);
+				}
 			}
 			else
 			{
@@ -2693,7 +2725,7 @@ public class CartsController extends BaseCommerceController
 			 * bin = null; if (StringUtils.isNotEmpty(binNo)) { bin = getBinService().checkBin(binNo); } if (null != bin &&
 			 * StringUtils.isNotEmpty(bin.getBankName())) {
 			 * getSessionService().setAttribute(MarketplacewebservicesConstants.BANKFROMBIN, bin.getBankName());
-			 * 
+			 *
 			 * LOG.debug("************ Logged-in cart mobile soft reservation BANKFROMBIN **************" +
 			 * bin.getBankName()); } }
 			 */
@@ -2743,6 +2775,17 @@ public class CartsController extends BaseCommerceController
 					reservationList = mplCommerceCartService.getReservation(caData, pincode,
 							MarketplacecclientservicesConstants.OMS_INVENTORY_RESV_TYPE_PAYMENTPENDING, cart, item,
 							SalesApplication.MOBILE);
+
+					Boolean replaced = Boolean.FALSE;
+					replaced = sessionService.getAttribute(MarketplacecommerceservicesConstants.REPLACEDUSSID);
+					LOG.debug("Replaced Soft reservation ForJewellery is " + replaced);
+					if (null != replaced && replaced.booleanValue())
+					{
+						reservationList
+								.setPriceChangeNotificationMsg(MarketplacecommerceservicesConstants.INVENTORY_RESV_JWLRY_PAYMENT);
+						sessionService.removeAttribute(MarketplacecommerceservicesConstants.REPLACEDUSSID);
+					}
+
 				}
 				else
 				{
@@ -2790,6 +2833,17 @@ public class CartsController extends BaseCommerceController
 					reservationList = mplCommerceCartService.getReservation(orderData, pincode,
 							MarketplacecclientservicesConstants.OMS_INVENTORY_RESV_TYPE_PAYMENTPENDING, orderModel, item,
 							SalesApplication.MOBILE);
+
+					Boolean replacedPay = Boolean.FALSE;
+					replacedPay = sessionService.getAttribute(MarketplacecommerceservicesConstants.REPLACEDUSSID);
+					LOG.debug("Replaced Soft reservation ForJewellery is " + replacedPay);
+					if (null != replacedPay && replacedPay.booleanValue())
+					{
+						reservationList
+								.setPriceChangeNotificationMsg(MarketplacecommerceservicesConstants.INVENTORY_RESV_JWLRY_PAYMENT);
+						sessionService.removeAttribute(MarketplacecommerceservicesConstants.REPLACEDUSSID);
+					}
+
 				}
 				else
 				{

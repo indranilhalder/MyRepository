@@ -189,6 +189,19 @@ class="de.hybris.platform.commercefacades.product.impl.DefaultImageFormatMapping
 	</bean>
 	
 	
+	<!--pan card reject  -->
+	
+	<bean id="pancardRejectEmailContext"
+		class="com.tisl.mpl.facades.process.email.context.PancardRejectEmailContext"
+		parent="abstractEmailContext" scope="prototype">
+		<property name="orderConverter" ref="orderConverter" />
+	</bean>
+	
+	<!--  end--> 
+	
+	
+	
+	
 	  <!--R2.3 Secondary Status Context class  -->
 	<bean id="orderSecondaryStatusEmailContext"
 		class="com.tisl.mpl.facades.process.email.context.OrderSecondaryStatusEmailContext"
@@ -381,7 +394,7 @@ class="de.hybris.platform.commercefacades.product.impl.DefaultImageFormatMapping
 				<value>luxurySearchPage</value>
 				<!-- TPR-1694 new resolution for Mobile App-->
 				<value>mobilePdpView</value>
-				</list>
+			</list>
 		</property>
 	</bean>
 	<alias name="acceleratorProductPrimaryImagePopulator" alias="productPrimaryImagePopulator"/>
@@ -852,6 +865,13 @@ class="de.hybris.platform.commercefacades.product.impl.DefaultImageFormatMapping
 		<property name="mplExtendedCartConverter" ref="mplExtendedCartConverter"/>
 
 	</bean>
+	
+	<!-- Jewellery Changes Added -->
+	 
+	    <bean id="priceBreakupFacade"
+		class="com.tisl.mpl.facade.product.impl.MplPriceBreakupFacadeImpl">
+	</bean> 
+	   
 		<!-- for mobility change starts -->
 	
 	<alias name="defaultAddressConverter" alias="addressConverter"/>
@@ -1843,6 +1863,18 @@ class="de.hybris.platform.commercefacades.product.impl.DefaultImageFormatMapping
 	<bean id="customProductFacadeImpl" class="com.tisl.mpl.facade.product.impl.CustomProductFacadeImpl" parent="productFacade">
 		<property name="customProductConverter" ref="customAjaxProductConverter"/>
 	</bean>
+   <!-- //TPR-3752 Jewel Heading Added -->
+	 <alias name="mplJewelleryFacade" alias="mplJewelleryFacade"/>
+	    <bean id="mplJewelleryFacade"
+		class="com.tisl.mpl.facade.product.impl.MplJewelleryFacadeImpl">
+	</bean> 
+	
+	
+	
+	<!-- added for pancard details -->
+	
+	<bean id="mplPancardFacadeImpl"   class="com.tisl.mpl.facade.pancard.impl.MplPancardFacadeImpl">
+	</bean>
 
 	
 	<!-- UF-258 -->
@@ -1992,6 +2024,30 @@ class="de.hybris.platform.commercefacades.product.impl.DefaultImageFormatMapping
 			class="com.tisl.mpl.facades.populators.MplFooterLinkPopulator">
 	</bean>
 	
+	<!-- TPR-1083 Exchange Changes Start -->
+	<bean id="exchangeGuideFacade"
+		class="com.tisl.mpl.facade.product.impl.ExchangeGuideFacadeImpl">
+		<property name="exchangeGuideService" ref="exchangeGuideService"></property>
+	</bean>
+	
+	<!-- Addition for Exchange Populator Start-->
+	<alias name="defaultExchangeGuideConverter" alias="exchangeGuideConverter"/>
+	<bean id="defaultExchangeGuideConverter" parent="abstractPopulatingConverter">
+		<property name="targetClass" value="com.tisl.mpl.facades.product.data.ExchangeGuideData"/>
+		<property name="populators">
+			<list>
+				<ref bean="exchangeGuidePopulator"/>
+			</list>
+		</property>
+	</bean>
+
+	<alias name="defaultExchangeGuidePopulator" alias="exchangeGuidePopulator"/>
+	<bean id="defaultExchangeGuidePopulator"
+			class="com.tisl.mpl.facades.populators.ExchangeGuidePopulator">
+	</bean>
+	
+	
+	<!--  TPR-1083 Addition for Exchange Populator Ends -->
 
 	 <!--  OrderBulk Cancellation Job Runner-->
  	 <alias name="omsOrderCancelTaskRunner" alias="omsOrderCancelTaskRunner"/>

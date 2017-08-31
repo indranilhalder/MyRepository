@@ -82,7 +82,10 @@ public class AddToCartController extends AbstractController
 	@RequestMapping(value = "/cart/add", method = RequestMethod.POST, produces = "application/json")
 	public String addToCart(@RequestParam("productCodePost") final String code, final Model model,
 			@Valid final MplAddToCartForm form, @RequestParam("wishlistNamePost") final String wishlistName,
-			@RequestParam("ussid") final String ussid)
+			@RequestParam("ussid") final String ussid, @RequestParam(value = "l3", required = false) final String l3,
+			@RequestParam(value = "exchangeParam", required = false) final String exchangeParam,
+			@RequestParam(value = "brandParam", required = false) final String brand,
+			@RequestParam(value = "pinParam", required = false) final String pincode)
 	{
 		try
 		{
@@ -148,14 +151,28 @@ public class AddToCartController extends AbstractController
 
 			final int maximum_configured_quantiy = siteConfigService.getInt(
 
-			MarketplacecommerceservicesConstants.MAXIMUM_CONFIGURED_QUANTIY, 0);
+					MarketplacecommerceservicesConstants.MAXIMUM_CONFIGURED_QUANTIY, 0);
 
 			final ProductModel product = productService.getProductForCode(code);
+
+			final int maximum_configured_quantiy_jewellery = siteConfigService
+					.getInt(MarketplacecommerceservicesConstants.MAXIMUM_CONFIGURED_QUANTIY_JEWELLERY, 0);
 
 			if (product.getMaxOrderQuantity() == null || product.getMaxOrderQuantity().intValue() <= 0
 					|| product.getMaxOrderQuantity().intValue() >= maximum_configured_quantiy)
 			{
 				maxQuantityAlreadyAdded = mplCartFacade.isMaxQuantityAlreadyAdded(code, qty, stock, ussid);
+
+				//TISJEWST-10
+				if (StringUtils.isNotEmpty(product.getProductCategoryType())
+						&& MarketplacecommerceservicesConstants.FINEJEWELLERY.equalsIgnoreCase(product.getProductCategoryType())
+						&& stock > 1)
+				{
+					if (StringUtils.isNotEmpty(maxQuantityAlreadyAdded))
+					{
+						maxQuantityAlreadyAdded = maxQuantityAlreadyAdded + "|" + maximum_configured_quantiy_jewellery;
+					}
+				}
 			}
 			else
 			{
@@ -173,7 +190,19 @@ public class AddToCartController extends AbstractController
 			if (maxQuantityAlreadyAdded.isEmpty())
 			{
 				LOG.debug("We are allowed to add this product by checking max quantity");
-				final CartModificationData cartModification = mplCartFacade.addToCart(code, qty, ussid);
+				CartModificationData cartModification = null;
+				//Normal Add to Cart Flow
+				if (StringUtils.isEmpty(l3) && StringUtils.isEmpty(exchangeParam))
+				{
+					cartModification = mplCartFacade.addToCart(code, qty, ussid);
+				}
+				//Exchange Cart Flow
+				else
+				{
+					cartModification = mplCartFacade.addToCartwithExchange(code, qty, ussid,
+							l3 + "|" + exchangeParam + "|" + brand + "|" + pincode);
+
+				}
 				/*
 				 * model.addAttribute(ModelAttributetConstants.QUANTITY, Long.valueOf(cartModification.getQuantityAdded()));
 				 * model.addAttribute(ModelAttributetConstants.ENTRY, cartModification.getEntry());

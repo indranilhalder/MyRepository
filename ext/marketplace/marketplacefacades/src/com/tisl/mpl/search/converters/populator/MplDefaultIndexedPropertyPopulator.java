@@ -97,6 +97,6 @@ public class MplDefaultIndexedPropertyPopulator extends DefaultIndexedPropertyPo
 		{
 			target.setIsNumeric(source.getIsNumeric());
 		}
-		////Search POC end
+
 	}
 }

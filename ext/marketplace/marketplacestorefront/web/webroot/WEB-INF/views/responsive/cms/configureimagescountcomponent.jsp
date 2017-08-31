@@ -68,11 +68,13 @@ $(window).on("load resize", function() {
 </c:if>
 			
 	<div class="imageList" style="overflow: hidden;">
+
 		<ul class="jcarousel-skin imageListCarousel" style="display:block; position: relative; top: 0; width: 100%;"> 
 			<c:forEach items="${galleryImages}" var="container" varStatus="varStatus" begin="0" end="${thumbNailImageLength}">
 			
 				<li id="addiImage${varStatus.index}" class="thumbailItem${varStatus.index +1}"> <!-- For TPR-4687 -->
 					<span class="thumb ${(varStatus.index==0)? "active":""}">
+
 					<c:if test="${container.thumbnail.mediaType.code eq 'Image'}">
 						<img src="${container.thumbnail.url}" data-type="image" data-zoomimagesrc="${container.superZoom.url}"  data-primaryimagesrc="${container.product.url}" data-galleryposition="${varStatus.index}" alt="${container.thumbnail.altText}" title="${container.thumbnail.altText}" style="${(varStatus.index < count)? "":"display:none;"}" />	
 					</c:if>
@@ -80,8 +82,7 @@ $(window).on("load resize", function() {
 					<img src="${commonResourcePath}/images/video-play.png"  data-type="video" data-videosrc="${container.thumbnail.url}?rel=0&enablejsapi=1" style="${(varStatus.index < count)? "":"display:none;"}" />
 					<%-- <iframe src="${commonResourcePath}/images/video-play.png"  data-type="video" data-videosrc="${container.thumbnail.url}?rel=0&enablejsapi=1" id="player"></iframe> --%>
 					</c:if>
-					
-					</span>
+				</span>
 				</li>
 			</c:forEach>
 		</ul>
@@ -100,5 +101,4 @@ $(window).on("load resize", function() {
 	display: block;
 	clear: both;
 }
-
 </style>

@@ -24,6 +24,7 @@ import de.hybris.platform.ordersplitting.model.ConsignmentModel;
 import de.hybris.platform.payment.enums.PaymentTransactionType;
 import de.hybris.platform.payment.model.PaymentTransactionEntryModel;
 import de.hybris.platform.payment.model.PaymentTransactionModel;
+import de.hybris.platform.processengine.BusinessProcessService;
 import de.hybris.platform.returns.ReturnService;
 import de.hybris.platform.returns.model.RefundEntryModel;
 import de.hybris.platform.returns.model.ReturnEntryModel;
@@ -34,7 +35,6 @@ import de.hybris.platform.servicelayer.event.EventService;
 import de.hybris.platform.servicelayer.model.ModelService;
 import de.hybris.platform.servicelayer.search.FlexibleSearchService;
 import de.hybris.platform.servicelayer.time.TimeService;
-import de.hybris.platform.processengine.BusinessProcessService;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -83,11 +83,11 @@ public class CustomOmsShipmentSyncAdapter extends DefaultOmsShipmentSyncAdapter 
 		CustomOmsSyncAdapter<OrderWrapper, ConsignmentModel>
 {
 	/**
-	 * 
+	 *
 	 */
 	private static final String LOG_MSG_STRING = " ::";
 	/**
-	 * 
+	 *
 	 */
 	private static final String COD = "COD";
 	@Autowired
@@ -124,10 +124,11 @@ public class CustomOmsShipmentSyncAdapter extends DefaultOmsShipmentSyncAdapter 
 
 	@Autowired
 	private MplDeliveryCostService mplDeliveryCostService;
-@Autowired private MplJusPayRefundService mplJusPayRefundService;
+	@Autowired
+	private MplJusPayRefundService mplJusPayRefundService;
 
 	@Autowired
-	private BusinessProcessService businessProcessService;  // Added for TPR-1348
+	private BusinessProcessService businessProcessService; // Added for TPR-1348
 
 	@Override
 	public ConsignmentModel update(final OrderWrapper wrapper, final ItemModel parent)
@@ -205,7 +206,7 @@ public class CustomOmsShipmentSyncAdapter extends DefaultOmsShipmentSyncAdapter 
 						}
 
 					}
-					
+
 					if (StringUtils.isNotEmpty(line.getAwbSecondaryStatus()) && StringUtils.isNotEmpty(line.getCommunication()))
 					{
 						LOG.debug(" AwbSecondaryStatus for transaction id :" + line.getAwbSecondaryStatus());
@@ -213,9 +214,9 @@ public class CustomOmsShipmentSyncAdapter extends DefaultOmsShipmentSyncAdapter 
 						{
 							sendNotification(line, existingConsignmentModel.getAwbSecondaryStatus(), orderModel);
 						}
-					
+
 					}
-				
+
 					existingConsignmentModel.setAwbSecondaryStatus(line.getAwbSecondaryStatus());
 					existingConsignmentModel.setTrackingID(line.getAwbNumber());
 					existingConsignmentModel.setEstimatedDelivery(line.getEstimatedDelivery());
@@ -227,6 +228,13 @@ public class CustomOmsShipmentSyncAdapter extends DefaultOmsShipmentSyncAdapter 
 					existingConsignmentModel.setReturnCarrier(line.getReverseLogisticProviderName());
 					existingConsignmentModel.setReceivedBy(line.getReceivedBy());
 					existingConsignmentModel.setCarrier(line.getLogisticProviderName());
+					//TPR-3809 changes start
+					existingConsignmentModel.setForwardSealNum(line.getForwardSealNo());
+					existingConsignmentModel.setReverseSealNum(line.getReverseSealNo());
+					//TPR-3809 changes end
+
+
+
 					if (line.getInvoiceNo() != null || line.getInvoiceUrl() != null)
 					{
 						final boolean isInvoiceToBeCreated = validateAndUpdateInvoice(existingConsignmentModel, line.getInvoiceNo(),
@@ -501,55 +509,61 @@ public class CustomOmsShipmentSyncAdapter extends DefaultOmsShipmentSyncAdapter 
 					&& shipmentNewStatus.equals(ConsignmentStatus.CANCELLATION_INITIATED))
 			{
 
-				         LOG.debug("Calling cancel Initiation process started");
-								final SendUnCollectedOrderToCRMEvent sendUnCollectedOrderToCRMEvent = new SendUnCollectedOrderToCRMEvent(shipment,consignmentModel,orderModel,shipmentNewStatus,MarketplaceomsordersConstants.TICKET_TYPE_CODE);
-								final UnCollectedOrderToInitiateRefundEvent unCollectedOrderToInitiateRefundEvent= new UnCollectedOrderToInitiateRefundEvent(shipment,consignmentModel,orderModel,shipmentNewStatus,eventService,configurationService);
-								try
-								{
-									LOG.debug("Create CRM Ticket for Cancel Initiated Orders");
-									eventService.publishEvent(sendUnCollectedOrderToCRMEvent);
-								}
-								catch(final Exception e)
-								{
-									LOG.error("Exception during CRM Ticket for Cancel Initiated Order Id >> " + orderModel.getCode()+LOG_MSG_STRING + e.getMessage());	
-								}
-								try
-								{
-									checkConsignmentStatus=true;
-									LOG.debug("Refund Initiation  for Cancel Initiated Orders");
-									eventService.publishEvent(unCollectedOrderToInitiateRefundEvent);
-								}
-								catch(final Exception e)
-								{
-									LOG.error("Exception during Refund Initiation  for Un-Collected Orders >> "+ orderModel.getCode()+LOG_MSG_STRING + e.getMessage());	
-								}
-							
-			      }
+				LOG.debug("Calling cancel Initiation process started");
+				final SendUnCollectedOrderToCRMEvent sendUnCollectedOrderToCRMEvent = new SendUnCollectedOrderToCRMEvent(shipment,
+						consignmentModel, orderModel, shipmentNewStatus, MarketplaceomsordersConstants.TICKET_TYPE_CODE);
+				final UnCollectedOrderToInitiateRefundEvent unCollectedOrderToInitiateRefundEvent = new UnCollectedOrderToInitiateRefundEvent(
+						shipment, consignmentModel, orderModel, shipmentNewStatus, eventService, configurationService);
+				try
+				{
+					LOG.debug("Create CRM Ticket for Cancel Initiated Orders");
+					eventService.publishEvent(sendUnCollectedOrderToCRMEvent);
+				}
+				catch (final Exception e)
+				{
+					LOG.error("Exception during CRM Ticket for Cancel Initiated Order Id >> " + orderModel.getCode() + LOG_MSG_STRING
+							+ e.getMessage());
+				}
+				try
+				{
+					checkConsignmentStatus = true;
+					LOG.debug("Refund Initiation  for Cancel Initiated Orders");
+					eventService.publishEvent(unCollectedOrderToInitiateRefundEvent);
+				}
+				catch (final Exception e)
+				{
+					LOG.error("Exception during Refund Initiation  for Un-Collected Orders >> " + orderModel.getCode()
+							+ LOG_MSG_STRING + e.getMessage());
+				}
+
+			}
 
 			if (ObjectUtils.notEqual(shipmentCurrentStatus, shipmentNewStatus)
 					&& shipmentNewStatus.equals(ConsignmentStatus.ORDER_COLLECTED))
 			{
 				final OrderProcessModel orderProcessModel = new OrderProcessModel();
 				orderProcessModel.setOrder(orderModel);
-				final  OrderCollectedByPersonEvent orderCollectedByPersonEvent = new OrderCollectedByPersonEvent(orderProcessModel);
+				final OrderCollectedByPersonEvent orderCollectedByPersonEvent = new OrderCollectedByPersonEvent(orderProcessModel);
 				try
 				{
 					eventService.publishEvent(orderCollectedByPersonEvent);
-					sendOrderNotification(shipment, consignmentModel,orderModel,shipmentNewStatus);
+					sendOrderNotification(shipment, consignmentModel, orderModel, shipmentNewStatus);
 				}
 				catch (final Exception e1)
 				{
-					LOG.error("Exception during sending mail or SMS for Order Id:  >> " + orderModel.getCode()+LOG_MSG_STRING + e1.getMessage());
+					LOG.error("Exception during sending mail or SMS for Order Id:  >> " + orderModel.getCode() + LOG_MSG_STRING
+							+ e1.getMessage());
 				}
-				
+
 			}
-				createRefundEntry(shipment,shipmentNewStatus, consignmentModel, orderModel);
-				if (ObjectUtils.notEqual(shipmentCurrentStatus, shipmentNewStatus))
+			createRefundEntry(shipment, shipmentNewStatus, consignmentModel, orderModel);
+			if (ObjectUtils.notEqual(shipmentCurrentStatus, shipmentNewStatus))
+			{
+				if (!checkConsignmentStatus)
 				{
-					if(!checkConsignmentStatus){
-						//if(shipmentCurrentStatus.equals(ConsignmentStatus.RETURN_INITIATED) && shipmentNewStatus.equals(ConsignmentStatus.DELIVERED) ){
-						//	return false;
-						//}else{
+					//if(shipmentCurrentStatus.equals(ConsignmentStatus.RETURN_INITIATED) && shipmentNewStatus.equals(ConsignmentStatus.DELIVERED) ){
+					//	return false;
+					//}else{
 					LOG.info("updateConsignment:: Inside ObjectUtils.notEqual(shipmentCurrentStatus, shipmentNewStatus) >>> shipmentCurrentStatus >>"
 							+ shipmentCurrentStatus
 							+ "<<shipmentNewStatus>>"
@@ -568,24 +582,24 @@ public class CustomOmsShipmentSyncAdapter extends DefaultOmsShipmentSyncAdapter 
 					//call send notification method
 					sendOrderNotification(shipment, consignmentModel, orderModel, shipmentNewStatus);
 					//}
-					}
-					
-					//Added TPR-1348
-					if ("Y".equalsIgnoreCase(configurationService.getConfiguration().getString(
-							MarketplaceomsservicesConstants.AUTO_REFUND_ENABLED))
-							&& ConsignmentStatus.RETURN_CLOSED.equals(shipmentNewStatus))
-					{
-						startAutomaticRefundProcess(orderModel); //Start the new Automatic Process
-					}
-
-					return true;
 				}
-				//R2.3  Start Bug Id TISRLUAT-986 20-02-2017 Start
-				try
+
+				//Added TPR-1348
+				if ("Y".equalsIgnoreCase(configurationService.getConfiguration().getString(
+						MarketplaceomsservicesConstants.AUTO_REFUND_ENABLED))
+						&& ConsignmentStatus.RETURN_CLOSED.equals(shipmentNewStatus))
 				{
-					LOG.info("CustomOmsShipmentSyncAdapte:::InScan::::" + shipment.getInScan());
-					if (shipment.getInScan() != null && shipment.getInScan().booleanValue())
-					{
+					startAutomaticRefundProcess(orderModel); //Start the new Automatic Process
+				}
+
+				return true;
+			}
+			//R2.3  Start Bug Id TISRLUAT-986 20-02-2017 Start
+			try
+			{
+				LOG.info("CustomOmsShipmentSyncAdapte:::InScan::::" + shipment.getInScan());
+				if (shipment.getInScan() != null && shipment.getInScan().booleanValue())
+				{
 					if (consignmentModel.getIsInscan() == null)
 					{
 						sendOrderNotification(shipment, consignmentModel, orderModel, shipmentNewStatus);
@@ -598,13 +612,13 @@ public class CustomOmsShipmentSyncAdapter extends DefaultOmsShipmentSyncAdapter 
 						consignmentModel.setIsInscan(Boolean.TRUE);
 						modelService.saveAll(consignmentModel);
 					}
-					}
 				}
-				catch (final Exception exception)
-				{
-					LOG.info("Exception ouccer trigger email " + exception.getMessage());
-				}
-				//R2.3  Start Bug Id TISRLUAT-986 20-02-2017 END
+			}
+			catch (final Exception exception)
+			{
+				LOG.info("Exception ouccer trigger email " + exception.getMessage());
+			}
+			//R2.3  Start Bug Id TISRLUAT-986 20-02-2017 END
 		}
 		catch (final Exception e)
 		{
@@ -737,18 +751,19 @@ public class CustomOmsShipmentSyncAdapter extends DefaultOmsShipmentSyncAdapter 
 		newConsignmentEntry.setQuantity(Long.valueOf(1));
 		return newConsignmentEntry;
 	}
-	
+
 	private void createRefundEntryModel(final ConsignmentStatus newStatus, final ConsignmentModel consignmentModel,
-			final OrderModel orderModel ,final Boolean isEDtoHDCheck,final Boolean isSDBCheck,final Boolean isRetrunInitiatedCheck){
+			final OrderModel orderModel, final Boolean isEDtoHDCheck, final Boolean isSDBCheck, final Boolean isRetrunInitiatedCheck)
+	{
 		try
 		{
 			final AbstractOrderEntryModel orderEntry = consignmentModel.getConsignmentEntries().iterator().next().getOrderEntry();
 			RefundEntryModel refundEntryModel = new RefundEntryModel();
-			boolean returnAndRefundStatus=false;
+			boolean returnAndRefundStatus = false;
 			refundEntryModel.setOrderEntry(orderEntry);
 			//Create Multiple Refund Entry Models for SDB and IsEDTOHD
 			//if (CollectionUtils.isEmpty(flexibleSearchService.getModelsByExample(refundEntryModel)))
-			if (isEDtoHDCheck.booleanValue() || isSDBCheck.booleanValue() ||isRetrunInitiatedCheck.booleanValue())
+			if (isEDtoHDCheck.booleanValue() || isSDBCheck.booleanValue() || isRetrunInitiatedCheck.booleanValue())
 			{
 				final ReturnRequestModel returnRequestModel = returnService.createReturnRequest(orderModel);
 				returnRequestModel.setRMA(returnService.createRMA(returnRequestModel));
@@ -780,29 +795,35 @@ public class CustomOmsShipmentSyncAdapter extends DefaultOmsShipmentSyncAdapter 
 				{
 					refundEntryModel.setReason(RefundReason.LOSTINTRANSIT);
 				}
-				else if(isEDtoHDCheck.booleanValue())
+				else if (isEDtoHDCheck.booleanValue())
 				{
 					refundEntryModel.setReason(RefundReason.ISEDTOHD);
 					refundEntryModel.setStatus(ReturnStatus.ISEDTOHD);
 				}
-				else if(isSDBCheck.booleanValue()){
+				else if (isSDBCheck.booleanValue())
+				{
 					refundEntryModel.setReason(RefundReason.ISSDB);
 					refundEntryModel.setStatus(ReturnStatus.ISSDB);
 				}
 				else
 				{
-					returnAndRefundStatus=true;
+					returnAndRefundStatus = true;
 					refundEntryModel.setReason(RefundReason.SITEERROR);
 					refundEntryModel.setStatus(ReturnStatus.RETURN_INITIATED);
 				}
 				refundEntryModel.setAction(ReturnAction.IMMEDIATE);
-				
-				if(isEDtoHDCheck.booleanValue()){
-					refundEntryModel.setNotes("IsEDToHD Breach "); 
-				}else if(isSDBCheck.booleanValue()){
-					 refundEntryModel.setNotes("IsSDB Breach "); 
-				}else{
-					 refundEntryModel.setNotes("Return Initiated by Seller Portal");
+
+				if (isEDtoHDCheck.booleanValue())
+				{
+					refundEntryModel.setNotes("IsEDToHD Breach ");
+				}
+				else if (isSDBCheck.booleanValue())
+				{
+					refundEntryModel.setNotes("IsSDB Breach ");
+				}
+				else
+				{
+					refundEntryModel.setNotes("Return Initiated by Seller Portal");
 				}
 				refundEntryModel.setStatus(ReturnStatus.RETURN_INITIATED);
 				refundEntryModel.setAction(ReturnAction.IMMEDIATE);
@@ -810,7 +831,8 @@ public class CustomOmsShipmentSyncAdapter extends DefaultOmsShipmentSyncAdapter 
 				refundEntryModel.setExpectedQuantity(orderEntry.getQuantity());//Single line quantity
 				refundEntryModel.setReceivedQuantity(orderEntry.getQuantity());//Single line quantity
 				refundEntryModel.setRefundedDate(new Date());
-				if(isSDBCheck.booleanValue()) {
+				if (isSDBCheck.booleanValue())
+				{
 					orderEntry.setIsSdb(Boolean.TRUE);
 					modelService.save(orderEntry);
 				}
@@ -818,51 +840,58 @@ public class CustomOmsShipmentSyncAdapter extends DefaultOmsShipmentSyncAdapter 
 				if (CollectionUtils.isNotEmpty(tranactions))
 				{
 					final PaymentTransactionEntryModel entry = tranactions.iterator().next().getEntries().iterator().next();
-					
-					 if(isEDtoHDCheck.booleanValue() ){
-   						if (entry.getPaymentMode() != null && entry.getPaymentMode().getMode() != null
-   								&& COD.intern().equalsIgnoreCase(entry.getPaymentMode().getMode()))
-   						{
-   							refundEntryModel.setAmount(NumberUtils.createBigDecimal("0"));
-   						}
-   						else
-   						{
-   							final Double amount = orderEntry.getCurrDelCharge() ;
-   
-   							refundEntryModel.setAmount(NumberUtils.createBigDecimal(amount.toString()));
-   						}
-   						
-					 }else if(isSDBCheck.booleanValue()){
-						 
-						 if (entry.getPaymentMode() != null && entry.getPaymentMode().getMode() != null
- 								&& COD.intern().equalsIgnoreCase(entry.getPaymentMode().getMode()))
- 						{
- 							refundEntryModel.setAmount(NumberUtils.createBigDecimal("0"));
- 						}
- 						else
- 						{
- 							final Double amount = orderEntry.getScheduledDeliveryCharge() ;
- 
- 							refundEntryModel.setAmount(NumberUtils.createBigDecimal(amount.toString()));
- 						}
-					 }else {
-						 if (entry.getPaymentMode() != null && entry.getPaymentMode().getMode() != null
- 								&& COD.intern().equalsIgnoreCase(entry.getPaymentMode().getMode()))
- 						{
- 							refundEntryModel.setAmount(NumberUtils.createBigDecimal("0"));
- 						}
- 						else
- 						{
- 							final Double amount = orderEntry.getNetAmountAfterAllDisc() + (orderEntry.getCurrDelCharge() != null ? orderEntry.getCurrDelCharge() : 0D);
- 
- 							refundEntryModel.setAmount(NumberUtils.createBigDecimal(amount.toString()));
- 						}
-					 }
+
+					if (isEDtoHDCheck.booleanValue())
+					{
+						if (entry.getPaymentMode() != null && entry.getPaymentMode().getMode() != null
+								&& COD.intern().equalsIgnoreCase(entry.getPaymentMode().getMode()))
+						{
+							refundEntryModel.setAmount(NumberUtils.createBigDecimal("0"));
+						}
+						else
+						{
+							final Double amount = orderEntry.getCurrDelCharge();
+
+							refundEntryModel.setAmount(NumberUtils.createBigDecimal(amount.toString()));
+						}
+
+					}
+					else if (isSDBCheck.booleanValue())
+					{
+
+						if (entry.getPaymentMode() != null && entry.getPaymentMode().getMode() != null
+								&& COD.intern().equalsIgnoreCase(entry.getPaymentMode().getMode()))
+						{
+							refundEntryModel.setAmount(NumberUtils.createBigDecimal("0"));
+						}
+						else
+						{
+							final Double amount = orderEntry.getScheduledDeliveryCharge();
+
+							refundEntryModel.setAmount(NumberUtils.createBigDecimal(amount.toString()));
+						}
+					}
+					else
+					{
+						if (entry.getPaymentMode() != null && entry.getPaymentMode().getMode() != null
+								&& COD.intern().equalsIgnoreCase(entry.getPaymentMode().getMode()))
+						{
+							refundEntryModel.setAmount(NumberUtils.createBigDecimal("0"));
+						}
+						else
+						{
+							final Double amount = orderEntry.getNetAmountAfterAllDisc()
+									+ (orderEntry.getCurrDelCharge() != null ? orderEntry.getCurrDelCharge() : 0D);
+
+							refundEntryModel.setAmount(NumberUtils.createBigDecimal(amount.toString()));
+						}
+					}
 				}
-           if(!returnAndRefundStatus){
-				modelService.save(refundEntryModel);
-				modelService.save(returnRequestModel);
-           }
+				if (!returnAndRefundStatus)
+				{
+					modelService.save(refundEntryModel);
+					modelService.save(returnRequestModel);
+				}
 			}
 		}
 		catch (final Exception e)
@@ -872,269 +901,317 @@ public class CustomOmsShipmentSyncAdapter extends DefaultOmsShipmentSyncAdapter 
 	}
 
 	/**
-	 * @param entry 
-	 * 
-	 * R2.3 for refund info call to oms 
-	 * 
+	 * @param entry
+	 *
+	 *           R2.3 for refund info call to oms
+	 *
 	 */
-	private void refundInfoCallToOMS(AbstractOrderEntryModel orderEntry , String refundcategoryType)
+	private void refundInfoCallToOMS(final AbstractOrderEntryModel orderEntry, final String refundcategoryType)
 	{
 		PaymentTransactionModel paymentTransactionModel = null;
 
-		double totalRefundAmount = null !=orderEntry.getCurrDelCharge()?orderEntry.getCurrDelCharge().doubleValue():0.0D;
-		if (totalRefundAmount > 0D) {
-			paymentTransactionModel = mplJusPayRefundService
-					.createPaymentTransactionModel((OrderModel) orderEntry.getOrder(), "FAILURE",
-							Double.valueOf(totalRefundAmount),
-							PaymentTransactionType.RETURN, "FAILURE", UUID
-									.randomUUID().toString());
-			mplJusPayRefundService.attachPaymentTransactionModel((OrderModel) orderEntry.getOrder(),
-					paymentTransactionModel);
+		final double totalRefundAmount = null != orderEntry.getCurrDelCharge() ? orderEntry.getCurrDelCharge().doubleValue() : 0.0D;
+		if (totalRefundAmount > 0D)
+		{
+			paymentTransactionModel = mplJusPayRefundService.createPaymentTransactionModel((OrderModel) orderEntry.getOrder(),
+					"FAILURE", Double.valueOf(totalRefundAmount), PaymentTransactionType.RETURN, "FAILURE", UUID.randomUUID()
+							.toString());
+			mplJusPayRefundService.attachPaymentTransactionModel((OrderModel) orderEntry.getOrder(), paymentTransactionModel);
 		}
 		ConsignmentStatus newStatus = null;
-		 if(null != orderEntry.getConsignmentEntries()) {
-			 newStatus = orderEntry.getConsignmentEntries().iterator().next().getConsignment().getStatus();
-		 }
-			if (paymentTransactionModel != null) {
-				mplJusPayRefundService.makeRefundOMSCall(orderEntry,
-						paymentTransactionModel,
-						orderEntry.getNetAmountAfterAllDisc(), newStatus,refundcategoryType); // sending null as no status update needed
-			}
+		if (null != orderEntry.getConsignmentEntries())
+		{
+			newStatus = orderEntry.getConsignmentEntries().iterator().next().getConsignment().getStatus();
 		}
-		
+		if (paymentTransactionModel != null)
+		{
+			mplJusPayRefundService.makeRefundOMSCall(orderEntry, paymentTransactionModel, orderEntry.getNetAmountAfterAllDisc(),
+					newStatus, refundcategoryType); // sending null as no status update needed
+		}
+	}
+
 
 	private void createRefundEntry(final Shipment shipment, ConsignmentStatus newStatus, final ConsignmentModel consignmentModel,
 			final OrderModel orderModel)
 	{
-		try{
-		Boolean isEDtoHDCheck=Boolean.FALSE;
-		Boolean isSDBCheck=Boolean.FALSE;
-		Boolean isRetrunInitiatedCheck=Boolean.FALSE;
-		SendUnCollectedOrderToCRMEvent sendUnCollectedOrderToCRMEvent =null;
-		final UnCollectedOrderToInitiateRefundEvent unCollectedOrderToInitiateRefundEvent= new UnCollectedOrderToInitiateRefundEvent(shipment,consignmentModel,orderModel,newStatus,eventService,configurationService);
-		     if(null!= shipment && null!=shipment.getIsEDtoHD()){
-         		if(shipment.getIsEDtoHD().booleanValue() && ( CollectionUtils.isNotEmpty(consignmentModel.getConsignmentEntries())) && (consignmentModel.getIsEDtoHDCheck()==null || consignmentModel.getIsEDtoHDCheck() ==Boolean.FALSE )){
-         			 LOG.debug("************************In IsEDtoHD Check .......");
-         			  isEDtoHDCheck=Boolean.TRUE;
-         			  /*Duplicate Return Model is Creating in R2.3 */
-         			 // createRefundEntryModel(newStatus,consignmentModel,orderModel,isEDtoHDCheck,isSDBCheck,isRetrunInitiatedCheck);
-         			 
-         			  consignmentModel.setIsEDtoHD(Boolean.TRUE);
-         			  consignmentModel.setIsEDtoHDCheck(Boolean.TRUE);
-         			  modelService.save(consignmentModel);
-         			  try
-							{
-         				  sendUnCollectedOrderToCRMEvent = new SendUnCollectedOrderToCRMEvent(shipment,consignmentModel,orderModel,newStatus,MarketplaceomsordersConstants.TICKET_TYPE_CODE_EDTOHD_SDB);
-								LOG.debug("Create CRM Ticket for EDtoHD Order Cancel Initiated ");
-								eventService.publishEvent(sendUnCollectedOrderToCRMEvent);
-							}
-							catch(final Exception e)
-							{
-								LOG.error("Exception during Create CRM Ticket for EDtoHD Order Cancel Initiated Id  >> " + orderModel.getCode()+LOG_MSG_STRING + e.getMessage());	
-							}
-         			  
-         			  AbstractOrderEntryModel entry= consignmentModel.getConsignmentEntries().iterator().next().getOrderEntry();
-         			/*  R2.3 REFUND INFO CALL TO OMS  START*/
-         			  try {
-         				 
-         				  List<PaymentTransactionModel> tranactions = new ArrayList<PaymentTransactionModel>(
-         						  entry.getOrder().getPaymentTransactions());
-         					boolean flag = false;
-         					flag = checkIsOrderCod(tranactions);
-         					if(flag) {
-         						refundInfoCallToOMS(entry,MarketplacecommerceservicesConstants.REFUND_CATEGORY_E);
-         					}
-         			  }catch(Exception e) {
-         				  LOG.error("Exception occurred while  refund info call to oms "+e.getMessage());
-         			  }
-         			  /*  R2.3 REFUND INFO CALL TO OMS  END*/
-         						if (MarketplacecommerceservicesConstants.EXPRESS_DELIVERY.equalsIgnoreCase(entry.getMplDeliveryMode().getDeliveryMode().getCode()))
-         						{
-         							if(entry.getTransactionID().equalsIgnoreCase(shipment.getShipmentId())){
-         								MplZoneDeliveryModeValueModel deliveryModel = mplDeliveryCostService.getDeliveryCost(
-         										MarketplacecommerceservicesConstants.HOME_DELIVERY, MarketplacecommerceservicesConstants.INR,
-         										entry.getSelectedUSSID());
-         								      entry.setMplDeliveryMode(deliveryModel);
-         								      entry.setIsEDtoHD(Boolean.TRUE);
-         								modelService.save(entry);
-         							}
-         							
-         						}
-         			  
-         			  isEDtoHDCheck=Boolean.FALSE;
-         		}
-		     }
-		     if(null!= shipment && null!=shipment.getSdb()){
-		   	  
-         		if(shipment.getSdb().booleanValue() &&  ( CollectionUtils.isNotEmpty(consignmentModel.getConsignmentEntries()))  &&  (consignmentModel.getSdbCheck()==null || consignmentModel.getSdbCheck() ==Boolean.FALSE)){
-         			
-         			  LOG.debug("************************In SDB Check .......");
-         			  isSDBCheck=Boolean.TRUE;
-         			 /*Duplicate Return Model is Creating in R2.3 */
-         			  //createRefundEntryModel(newStatus,consignmentModel,orderModel,isEDtoHDCheck,isSDBCheck,isRetrunInitiatedCheck);
-         			  consignmentModel.setSdb(Boolean.TRUE);
-         			  consignmentModel.setSdbCheck(Boolean.TRUE);
-         			  modelService.save(consignmentModel);
-         			  /*  R2.3 REFUND INFO CALL TO OMS  START*/
-         			  AbstractOrderEntryModel entry= consignmentModel.getConsignmentEntries().iterator().next().getOrderEntry();
-         			  try {
-            			  ConsignmentModel consignment = entry
-            						 .getConsignmentEntries().iterator().next()
-            						 .getConsignment();
-            						 
-            						if (consignment.getDeliveryDate() != null) {
-            							newStatus = ConsignmentStatus.REFUND_IN_PROGRESS;
-            						} else {
-            							newStatus = ConsignmentStatus.COD_CLOSED_WITHOUT_REFUND;
-            						}
-            						List<PaymentTransactionModel> tranactions = new ArrayList<PaymentTransactionModel>(
-                						  entry.getOrder().getPaymentTransactions());
-                					boolean flag = false;
-                					flag = checkIsOrderCod(tranactions);
-                					if(flag) {
-                						refundInfoCallToOMS(entry,MarketplacecommerceservicesConstants.REFUND_CATEGORY_S);
-                					}
-            			  }catch(Exception e) {
-            				  LOG.error("Exception occurred while  refund info call to oms "+e.getMessage());
-            			  }
-         			  /*  R2.3 REFUND INFO CALL TO OMS  END*/
-         			  if(entry.getTransactionID().equalsIgnoreCase(shipment.getShipmentId())){
-         				  Boolean sdb = Boolean.TRUE;
-         				  LOG.debug("Before setting IsSdb "+entry.getIsSdb());
-         				  LOG.debug("Before setting Sdb "+entry.getSdb());
-         				  entry.setIsSdb(sdb);
-         				  entry.setSdb(sdb);
-         				  modelService.save(entry);
-         				  LOG.debug("Before setting IsSdb "+entry.getIsSdb());
-         				  LOG.debug("Before setting Sdb "+entry.getSdb());
-         			  }
-         			  try
-							{
-         				  sendUnCollectedOrderToCRMEvent = new SendUnCollectedOrderToCRMEvent(shipment,consignmentModel,orderModel,newStatus,MarketplaceomsordersConstants.TICKET_TYPE_CODE_EDTOHD_SDB);
-								LOG.debug("Create CRM Ticket for SDB Order Cancel Initiated ");
-								eventService.publishEvent(sendUnCollectedOrderToCRMEvent);
-							}
-							catch(final Exception e)
-							{
-								LOG.error("Exception during Create CRM Ticket for SDB Order Cancel Initiated Id  >> " + orderModel.getCode()+LOG_MSG_STRING + e.getMessage());	
-							}
-         			  isSDBCheck=Boolean.FALSE;
-         		}
-		     }
-		     if(null!= shipment && null!=shipment.getSsb()){
-		   	  
-		   	  if(shipment.getSsb().booleanValue() &&  ( CollectionUtils.isNotEmpty(consignmentModel.getConsignmentEntries()))  &&  (consignmentModel.getSsbCheck()==null || consignmentModel.getSsbCheck() ==Boolean.FALSE)){
-		   		  if(newStatus.equals(ConsignmentStatus.CANCELLATION_INITIATED)){
-		   			  LOG.debug("Calling cancel Initiation process started");
-							
-							try
-							{
-								 sendUnCollectedOrderToCRMEvent = new SendUnCollectedOrderToCRMEvent(shipment,consignmentModel,orderModel,newStatus,MarketplaceomsordersConstants.TICKET_TYPE_CODE);
-								LOG.debug("Create CRM Ticket for SSB Order Cancel Initiated ");
-								eventService.publishEvent(sendUnCollectedOrderToCRMEvent);
-							}
-							catch(final Exception e)
-							{
-								LOG.error("Exception during Create CRM Ticket for SSB Order Cancel Initiated Id  >> " + orderModel.getCode()+LOG_MSG_STRING + e.getMessage());	
-							}
-							try
-							{
-								LOG.debug("Refund Initiation  for SSB Order Cancel Initiated");
-								eventService.publishEvent(unCollectedOrderToInitiateRefundEvent);
-							}
-							catch(final Exception e)
-							{
-								LOG.error("Exception during Refund Initiation  SSB Order Cancel Initiated  >> "+ orderModel.getCode()+LOG_MSG_STRING + e.getMessage());	
-							}
-		   		  }
-		   		  
-		   	  }
-		     }
-      		if ((ConsignmentStatus.RETURN_INITIATED.equals(newStatus) 
-      				|| ConsignmentStatus.LOST_IN_TRANSIT.equals(newStatus) 
-      				|| ConsignmentStatus.RETURN_TO_ORIGIN.equals(newStatus))
-      				|| (ConsignmentStatus.RETURNINITIATED_BY_RTO.equals(newStatus))
-      				|| (ConsignmentStatus.QC_FAILED.equals(newStatus))
-      				|| (ConsignmentStatus.RETURN_CLOSED.equals(newStatus))
-      				|| (ConsignmentStatus.RETURN_CANCELLED.equals(newStatus))
-      				&& CollectionUtils.isNotEmpty(consignmentModel.getConsignmentEntries()))
-      		{
-   				LOG.debug("************************In "+newStatus +" Check .......");
-   				isRetrunInitiatedCheck=Boolean.TRUE;
+		try
+		{
+			Boolean isEDtoHDCheck = Boolean.FALSE;
+			Boolean isSDBCheck = Boolean.FALSE;
+			Boolean isRetrunInitiatedCheck = Boolean.FALSE;
+			SendUnCollectedOrderToCRMEvent sendUnCollectedOrderToCRMEvent = null;
+			final UnCollectedOrderToInitiateRefundEvent unCollectedOrderToInitiateRefundEvent = new UnCollectedOrderToInitiateRefundEvent(
+					shipment, consignmentModel, orderModel, newStatus, eventService, configurationService);
+			if (null != shipment && null != shipment.getIsEDtoHD())
+			{
+				if (shipment.getIsEDtoHD().booleanValue() && (CollectionUtils.isNotEmpty(consignmentModel.getConsignmentEntries()))
+						&& (consignmentModel.getIsEDtoHDCheck() == null || consignmentModel.getIsEDtoHDCheck() == Boolean.FALSE))
+				{
+					LOG.debug("************************In IsEDtoHD Check .......");
+					isEDtoHDCheck = Boolean.TRUE;
+					/* Duplicate Return Model is Creating in R2.3 */
+					// createRefundEntryModel(newStatus,consignmentModel,orderModel,isEDtoHDCheck,isSDBCheck,isRetrunInitiatedCheck);
 
-   				 RefundEntryModel refundEntryModel = modelService.create(RefundEntryModel.class);
-   				boolean refundEntryModelExists = false;  
-   				try {
-      				if(null != orderModel.getReturnRequests()) {
-         				if(null != orderModel.getReturnRequests()) {
-         					for (ReturnRequestModel returnRequest : orderModel.getReturnRequests()) {
-         						if(null != returnRequest.getReturnEntries()) {
-         							for (ReturnEntryModel returnEntry : returnRequest.getReturnEntries()) {
-         								if(null != returnEntry.getOrderEntry() && null != returnEntry.getOrderEntry().getTransactionID()) {
-         									if(returnEntry.getOrderEntry().getTransactionID().equalsIgnoreCase(shipment.getShipmentId())) {
-         										refundEntryModel = (RefundEntryModel) returnEntry;
-         										refundEntryModelExists  = true;
-         										break;
-         									}
-         								}
-         							}
-         						}
-         					}
-         				}
-      				}
-      				
-      				if(!refundEntryModelExists) {
-      					createRefundEntryModel(newStatus,consignmentModel,orderModel,isEDtoHDCheck,isSDBCheck,isRetrunInitiatedCheck);
-      				}else if(null != refundEntryModel){
-      							String refundMode = shipment.getRefundType();
-      							if(LOG.isDebugEnabled()) {
-      								LOG.debug(" Refund Mode for the order Line id :"+shipment.getShipmentId()+" is "+refundMode);
-      							}
-      							if(null != refundMode) {
-      								refundEntryModel.setRefundMode(refundMode);
-      								modelService.save(refundEntryModel);
-      							}
-      					}
-   				}catch(Exception e) {
-   					LOG.error("Exception occurred while checking return requests for order entry"+shipment.getShipmentId());
-   				}
-   				
-   				consignmentModel.setReturnInitiateCheck(Boolean.TRUE);
+					consignmentModel.setIsEDtoHD(Boolean.TRUE);
+					consignmentModel.setIsEDtoHDCheck(Boolean.TRUE);
 					modelService.save(consignmentModel);
-					isRetrunInitiatedCheck=Boolean.FALSE; 
-   			}
+					try
+					{
+						sendUnCollectedOrderToCRMEvent = new SendUnCollectedOrderToCRMEvent(shipment, consignmentModel, orderModel,
+								newStatus, MarketplaceomsordersConstants.TICKET_TYPE_CODE_EDTOHD_SDB);
+						LOG.debug("Create CRM Ticket for EDtoHD Order Cancel Initiated ");
+						eventService.publishEvent(sendUnCollectedOrderToCRMEvent);
+					}
+					catch (final Exception e)
+					{
+						LOG.error("Exception during Create CRM Ticket for EDtoHD Order Cancel Initiated Id  >> " + orderModel.getCode()
+								+ LOG_MSG_STRING + e.getMessage());
+					}
+
+					final AbstractOrderEntryModel entry = consignmentModel.getConsignmentEntries().iterator().next().getOrderEntry();
+					/* R2.3 REFUND INFO CALL TO OMS START */
+					try
+					{
+
+						final List<PaymentTransactionModel> tranactions = new ArrayList<PaymentTransactionModel>(entry.getOrder()
+								.getPaymentTransactions());
+						boolean flag = false;
+						flag = checkIsOrderCod(tranactions);
+						if (flag)
+						{
+							refundInfoCallToOMS(entry, MarketplacecommerceservicesConstants.REFUND_CATEGORY_E);
+						}
+					}
+					catch (final Exception e)
+					{
+						LOG.error("Exception occurred while  refund info call to oms " + e.getMessage());
+					}
+					/* R2.3 REFUND INFO CALL TO OMS END */
+					if (MarketplacecommerceservicesConstants.EXPRESS_DELIVERY.equalsIgnoreCase(entry.getMplDeliveryMode()
+							.getDeliveryMode().getCode()))
+					{
+						if (entry.getTransactionID().equalsIgnoreCase(shipment.getShipmentId()))
+						{
+							final MplZoneDeliveryModeValueModel deliveryModel = mplDeliveryCostService.getDeliveryCost(
+									MarketplacecommerceservicesConstants.HOME_DELIVERY, MarketplacecommerceservicesConstants.INR,
+									entry.getSelectedUSSID());
+							entry.setMplDeliveryMode(deliveryModel);
+							entry.setIsEDtoHD(Boolean.TRUE);
+							modelService.save(entry);
+						}
+
+					}
+
+					isEDtoHDCheck = Boolean.FALSE;
+				}
+			}
+			if (null != shipment && null != shipment.getSdb())
+			{
+
+				if (shipment.getSdb().booleanValue() && (CollectionUtils.isNotEmpty(consignmentModel.getConsignmentEntries()))
+						&& (consignmentModel.getSdbCheck() == null || consignmentModel.getSdbCheck() == Boolean.FALSE))
+				{
+
+					LOG.debug("************************In SDB Check .......");
+					isSDBCheck = Boolean.TRUE;
+					/* Duplicate Return Model is Creating in R2.3 */
+					//createRefundEntryModel(newStatus,consignmentModel,orderModel,isEDtoHDCheck,isSDBCheck,isRetrunInitiatedCheck);
+					consignmentModel.setSdb(Boolean.TRUE);
+					consignmentModel.setSdbCheck(Boolean.TRUE);
+					modelService.save(consignmentModel);
+					/* R2.3 REFUND INFO CALL TO OMS START */
+					final AbstractOrderEntryModel entry = consignmentModel.getConsignmentEntries().iterator().next().getOrderEntry();
+					try
+					{
+						final ConsignmentModel consignment = entry.getConsignmentEntries().iterator().next().getConsignment();
+
+						if (consignment.getDeliveryDate() != null)
+						{
+							newStatus = ConsignmentStatus.REFUND_IN_PROGRESS;
+						}
+						else
+						{
+							newStatus = ConsignmentStatus.COD_CLOSED_WITHOUT_REFUND;
+						}
+						final List<PaymentTransactionModel> tranactions = new ArrayList<PaymentTransactionModel>(entry.getOrder()
+								.getPaymentTransactions());
+						boolean flag = false;
+						flag = checkIsOrderCod(tranactions);
+						if (flag)
+						{
+							refundInfoCallToOMS(entry, MarketplacecommerceservicesConstants.REFUND_CATEGORY_S);
+						}
+					}
+					catch (final Exception e)
+					{
+						LOG.error("Exception occurred while  refund info call to oms " + e.getMessage());
+					}
+					/* R2.3 REFUND INFO CALL TO OMS END */
+					if (entry.getTransactionID().equalsIgnoreCase(shipment.getShipmentId()))
+					{
+						final Boolean sdb = Boolean.TRUE;
+						LOG.debug("Before setting IsSdb " + entry.getIsSdb());
+						LOG.debug("Before setting Sdb " + entry.getSdb());
+						entry.setIsSdb(sdb);
+						entry.setSdb(sdb);
+						modelService.save(entry);
+						LOG.debug("Before setting IsSdb " + entry.getIsSdb());
+						LOG.debug("Before setting Sdb " + entry.getSdb());
+					}
+					try
+					{
+						sendUnCollectedOrderToCRMEvent = new SendUnCollectedOrderToCRMEvent(shipment, consignmentModel, orderModel,
+								newStatus, MarketplaceomsordersConstants.TICKET_TYPE_CODE_EDTOHD_SDB);
+						LOG.debug("Create CRM Ticket for SDB Order Cancel Initiated ");
+						eventService.publishEvent(sendUnCollectedOrderToCRMEvent);
+					}
+					catch (final Exception e)
+					{
+						LOG.error("Exception during Create CRM Ticket for SDB Order Cancel Initiated Id  >> " + orderModel.getCode()
+								+ LOG_MSG_STRING + e.getMessage());
+					}
+					isSDBCheck = Boolean.FALSE;
+				}
+			}
+			if (null != shipment && null != shipment.getSsb())
+			{
+
+				if (shipment.getSsb().booleanValue() && (CollectionUtils.isNotEmpty(consignmentModel.getConsignmentEntries()))
+						&& (consignmentModel.getSsbCheck() == null || consignmentModel.getSsbCheck() == Boolean.FALSE))
+				{
+					if (newStatus.equals(ConsignmentStatus.CANCELLATION_INITIATED))
+					{
+						LOG.debug("Calling cancel Initiation process started");
+
+						try
+						{
+							sendUnCollectedOrderToCRMEvent = new SendUnCollectedOrderToCRMEvent(shipment, consignmentModel, orderModel,
+									newStatus, MarketplaceomsordersConstants.TICKET_TYPE_CODE);
+							LOG.debug("Create CRM Ticket for SSB Order Cancel Initiated ");
+							eventService.publishEvent(sendUnCollectedOrderToCRMEvent);
+						}
+						catch (final Exception e)
+						{
+							LOG.error("Exception during Create CRM Ticket for SSB Order Cancel Initiated Id  >> " + orderModel.getCode()
+									+ LOG_MSG_STRING + e.getMessage());
+						}
+						try
+						{
+							LOG.debug("Refund Initiation  for SSB Order Cancel Initiated");
+							eventService.publishEvent(unCollectedOrderToInitiateRefundEvent);
+						}
+						catch (final Exception e)
+						{
+							LOG.error("Exception during Refund Initiation  SSB Order Cancel Initiated  >> " + orderModel.getCode()
+									+ LOG_MSG_STRING + e.getMessage());
+						}
+					}
+
+				}
+			}
+			if ((ConsignmentStatus.RETURN_INITIATED.equals(newStatus) || ConsignmentStatus.LOST_IN_TRANSIT.equals(newStatus) || ConsignmentStatus.RETURN_TO_ORIGIN
+					.equals(newStatus))
+					|| (ConsignmentStatus.RETURNINITIATED_BY_RTO.equals(newStatus))
+					|| (ConsignmentStatus.QC_FAILED.equals(newStatus))
+					|| (ConsignmentStatus.RETURN_CLOSED.equals(newStatus))
+					|| (ConsignmentStatus.RETURN_CANCELLED.equals(newStatus))
+					&& CollectionUtils.isNotEmpty(consignmentModel.getConsignmentEntries()))
+			{
+				LOG.debug("************************In " + newStatus + " Check .......");
+				isRetrunInitiatedCheck = Boolean.TRUE;
+
+				RefundEntryModel refundEntryModel = modelService.create(RefundEntryModel.class);
+				boolean refundEntryModelExists = false;
+				try
+				{
+					if (null != orderModel.getReturnRequests())
+					{
+						if (null != orderModel.getReturnRequests())
+						{
+							for (final ReturnRequestModel returnRequest : orderModel.getReturnRequests())
+							{
+								if (null != returnRequest.getReturnEntries())
+								{
+									for (final ReturnEntryModel returnEntry : returnRequest.getReturnEntries())
+									{
+										if (null != returnEntry.getOrderEntry() && null != returnEntry.getOrderEntry().getTransactionID())
+										{
+											if (returnEntry.getOrderEntry().getTransactionID().equalsIgnoreCase(shipment.getShipmentId()))
+											{
+												refundEntryModel = (RefundEntryModel) returnEntry;
+												refundEntryModelExists = true;
+												break;
+											}
+										}
+									}
+								}
+							}
+						}
+					}
+
+					if (!refundEntryModelExists)
+					{
+						createRefundEntryModel(newStatus, consignmentModel, orderModel, isEDtoHDCheck, isSDBCheck,
+								isRetrunInitiatedCheck);
+					}
+					else if (null != refundEntryModel)
+					{
+						final String refundMode = shipment.getRefundType();
+						if (LOG.isDebugEnabled())
+						{
+							LOG.debug(" Refund Mode for the order Line id :" + shipment.getShipmentId() + " is " + refundMode);
+						}
+						if (null != refundMode)
+						{
+							refundEntryModel.setRefundMode(refundMode);
+							modelService.save(refundEntryModel);
+						}
+					}
+				}
+				catch (final Exception e)
+				{
+					LOG.error("Exception occurred while checking return requests for order entry" + shipment.getShipmentId());
+				}
+
+				consignmentModel.setReturnInitiateCheck(Boolean.TRUE);
+				modelService.save(consignmentModel);
+				isRetrunInitiatedCheck = Boolean.FALSE;
+			}
 		}
 		catch (final Exception e)
 		{
 			LOG.error(e.getMessage(), e);
 		}
-			
-			
+
+
 	}
 
-	
+
 	/**
 	 * @param tranactions
 	 * @return
 	 */
-	private boolean checkIsOrderCod(List<PaymentTransactionModel> tranactions)
+	private boolean checkIsOrderCod(final List<PaymentTransactionModel> tranactions)
 	{
 		boolean flag = false;
-		if (CollectionUtils.isNotEmpty(tranactions)) {
-			for (PaymentTransactionModel transaction : tranactions) {
-				if (CollectionUtils.isNotEmpty(transaction.getEntries())) {
-					for (PaymentTransactionEntryModel entry : transaction
-							.getEntries()) {
-						if (entry.getPaymentMode() != null
-								&& entry.getPaymentMode().getMode() != null
-								&& entry.getPaymentMode().getMode()
-										.equalsIgnoreCase(COD.intern())) {
+		if (CollectionUtils.isNotEmpty(tranactions))
+		{
+			for (final PaymentTransactionModel transaction : tranactions)
+			{
+				if (CollectionUtils.isNotEmpty(transaction.getEntries()))
+				{
+					for (final PaymentTransactionEntryModel entry : transaction.getEntries())
+					{
+						if (entry.getPaymentMode() != null && entry.getPaymentMode().getMode() != null
+								&& entry.getPaymentMode().getMode().equalsIgnoreCase(COD.intern()))
+						{
 							flag = true;
 							break;
 						}
 					}
 				}
-				if (flag) {
+				if (flag)
+				{
 					break;
 				}
 			}
@@ -1142,38 +1219,41 @@ public class CustomOmsShipmentSyncAdapter extends DefaultOmsShipmentSyncAdapter 
 		return flag;
 	}
 
-	// R2.3 SendNotification for SecondaryStatus 
-	private void sendNotification(OrderLine line, String oldAwbSecondaryStatus, OrderModel orderModel)
+	// R2.3 SendNotification for SecondaryStatus
+	private void sendNotification(final OrderLine line, final String oldAwbSecondaryStatus, final OrderModel orderModel)
 	{
-      LOG.info(" old awbSecondary status "+oldAwbSecondaryStatus+" and new awbSecondary status"+line.getAwbSecondaryStatus()+" for order line id"+line.getOrderLineId()); 
+		LOG.info(" old awbSecondary status " + oldAwbSecondaryStatus + " and new awbSecondary status"
+				+ line.getAwbSecondaryStatus() + " for order line id" + line.getOrderLineId());
 		if (!line.getAwbSecondaryStatus().equalsIgnoreCase(oldAwbSecondaryStatus)
-				&& (MarketplacecommerceservicesConstants.ADDRESS_ISSUE.equalsIgnoreCase(line.getAwbSecondaryStatus())
-				|| MarketplacecommerceservicesConstants.OFD.equalsIgnoreCase(line.getAwbSecondaryStatus())))
+				&& (MarketplacecommerceservicesConstants.ADDRESS_ISSUE.equalsIgnoreCase(line.getAwbSecondaryStatus()) || MarketplacecommerceservicesConstants.OFD
+						.equalsIgnoreCase(line.getAwbSecondaryStatus())))
 		{
-			LOG.info(" For "+ line.getAwbSecondaryStatus()+" old awbSecondary status  and new awbSecondary status are different for order line id"+line.getOrderLineId()); 
-			SendNotificationSecondaryStatusEvent sendNotificationSecondaryStatusEvent = new SendNotificationSecondaryStatusEvent(
+			LOG.info(" For " + line.getAwbSecondaryStatus()
+					+ " old awbSecondary status  and new awbSecondary status are different for order line id" + line.getOrderLineId());
+			final SendNotificationSecondaryStatusEvent sendNotificationSecondaryStatusEvent = new SendNotificationSecondaryStatusEvent(
 					line.getAwbSecondaryStatus(), line.getOrderLineId(), orderModel);
 			eventService.publishEvent(sendNotificationSecondaryStatusEvent);
 		}
 		else if (!line.getAwbSecondaryStatus().equalsIgnoreCase(oldAwbSecondaryStatus)
-				&& (MarketplacecommerceservicesConstants.MIS_ROUTE.equalsIgnoreCase(line.getAwbSecondaryStatus())
-				|| MarketplacecommerceservicesConstants.RTO_INITIATED.equalsIgnoreCase(line.getAwbSecondaryStatus())))
+				&& (MarketplacecommerceservicesConstants.MIS_ROUTE.equalsIgnoreCase(line.getAwbSecondaryStatus()) || MarketplacecommerceservicesConstants.RTO_INITIATED
+						.equalsIgnoreCase(line.getAwbSecondaryStatus())))
 		{
-			LOG.info(" For "+ line.getAwbSecondaryStatus()+" old awbSecondary status  and new awbSecondary status are different for order line id"+line.getOrderLineId()); 
-			 sendSecondarySms(line, orderModel);
+			LOG.info(" For " + line.getAwbSecondaryStatus()
+					+ " old awbSecondary status  and new awbSecondary status are different for order line id" + line.getOrderLineId());
+			sendSecondarySms(line, orderModel);
 		}
-		LOG.info("AwbSecondaryStatus:::" + line.getAwbSecondaryStatus()+"Order Line ID "+line.getOrderLineId());
+		LOG.info("AwbSecondaryStatus:::" + line.getAwbSecondaryStatus() + "Order Line ID " + line.getOrderLineId());
 	}
-	
-	
+
+
 	//send sms data For Secondary data R2.3 Change BUG ID E2E 1563
-	private void sendSecondarySms(OrderLine entry, OrderModel orderModel)
+	private void sendSecondarySms(final OrderLine entry, final OrderModel orderModel)
 	{
 		try
 		{
 			String mobileNumber = null;
 			String content = null;
-			String productName=	getProductName(entry.getOrderLineId(), orderModel);
+			final String productName = getProductName(entry.getOrderLineId(), orderModel);
 			if (orderModel.getDeliveryAddress() != null)
 			{
 
@@ -1201,12 +1281,12 @@ public class CustomOmsShipmentSyncAdapter extends DefaultOmsShipmentSyncAdapter 
 				sendSMSService.sendSMS(smsRequestData);
 			}
 		}
-		catch (Exception exption)
+		catch (final Exception exption)
 		{
-			LOG.error("CustomOmsShipmentSyncAdapter::::::::::::::Sending Secondary SMS "+exption.getMessage());
+			LOG.error("CustomOmsShipmentSyncAdapter::::::::::::::Sending Secondary SMS " + exption.getMessage());
 		}
 	}
-	
+
 	private String getProductName(final String orderLine, final OrderModel orderModel)
 	{
 		try
@@ -1219,14 +1299,14 @@ public class CustomOmsShipmentSyncAdapter extends DefaultOmsShipmentSyncAdapter 
 				}
 			}
 		}
-		catch (NullPointerException nullPointer)
+		catch (final NullPointerException nullPointer)
 		{
-			LOG.error("CustomOmsShipmentSyncAdapte::::"+nullPointer.getMessage());
+			LOG.error("CustomOmsShipmentSyncAdapte::::" + nullPointer.getMessage());
 		}
 
 		return null;
 	}
-	
+
 	//send sms data For Secondary data R2.3 Change BUG ID E2E 1563 END
 	/**
 	 * @return the sendSMSService
@@ -1279,22 +1359,22 @@ public class CustomOmsShipmentSyncAdapter extends DefaultOmsShipmentSyncAdapter 
 		this.flexibleSearchService = flexibleSearchService;
 	}
 
-//	/**
-//	 * @return the returnService
-//	 */
-//	public ReturnService getReturnService()
-//	{
-//		return returnService;
-//	}
-//
-//	/**
-//	 * @param returnService
-//	 *           the returnService to set
-//	 */
-//	public void setReturnService(final ReturnService returnService)
-//	{
-//		this.returnService = returnService;
-//	}
+	//	/**
+	//	 * @return the returnService
+	//	 */
+	//	public ReturnService getReturnService()
+	//	{
+	//		return returnService;
+	//	}
+	//
+	//	/**
+	//	 * @param returnService
+	//	 *           the returnService to set
+	//	 */
+	//	public void setReturnService(final ReturnService returnService)
+	//	{
+	//		this.returnService = returnService;
+	//	}
 
 	/**
 	 * @return the mplSNSMobilePushService
@@ -1332,15 +1412,15 @@ public class CustomOmsShipmentSyncAdapter extends DefaultOmsShipmentSyncAdapter 
 	 * ConsignmentModel consignment : orderModel.getConsignments()) { for (final ConsignmentEntryModel s :
 	 * consignment.getConsignmentEntries()) { if (s.getOrderEntry().getEntryNumber().equals(line.getOrderLineId())) {
 	 * return consignment; } }
-	 *
-	 *
-	 *
-	 *
+	 * 
+	 * 
+	 * 
+	 * 
 	 * }
-	 *
-	 *
-	 *
-	 *
+	 * 
+	 * 
+	 * 
+	 * 
 	 * return null; }
 	 */
 
@@ -1501,7 +1581,7 @@ public class CustomOmsShipmentSyncAdapter extends DefaultOmsShipmentSyncAdapter 
 	{
 		this.customOmsCollectedAdapter = customOmsCollectedAdapter;
 	}
-	
+
 	//Added for TPR-1348
 	/**
 	 * @return the businessProcessService

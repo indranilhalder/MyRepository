@@ -3325,6 +3325,8 @@ div.csWizardMediaUploadPage {
 /* List column left padding */
 div.z-list-footer-cnt, div.z-list-cell-cnt, div.z-list-header-cnt {
 	padding-left: 2px;
+	/*CKD: JWLSPCUAT-1402 : Adding word wrap   */
+	word-wrap: break-word;
 }
 
 .z-east-colpsd {

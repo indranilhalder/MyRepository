@@ -104,6 +104,10 @@
  <!--   tpr-250 CHANGES -->
 <input type ="hidden"  id="ussidVal" value="${ussidVal}"/>
  <!--   tpr-250 CHANGES -->
+<!--TPR-1886 | JEWELLERY  -->
+ <input type ="hidden"  id="priceRangeJewellery" value='${product.priceRangeJewellery}'/>
+
+
 
 <!-- <input type ="hidden"  id="productPromotion" value='${product.displayPromotion}'/> -->
 
@@ -268,11 +272,15 @@
 						<c:if
 							test="${not empty product.productCategoryType && product.isVariant &&  (product.productCategoryType eq 'Apparel' 
 							                          || product.productCategoryType eq 'Footwear') }">
-
-
 							<%-- <li class="product-size-list"><span class="product-size">Size : ${fn:toUpperCase(product.displaySize)} </span></li> --%>
 							<li class="product-size-list"><span class="product-size">Size: <span class="size-col">${product.displaySize}</span><%-- Price : ${product.displayPrice}### ${product.displayUrl} --%>
 							</span></li>
+						</c:if>
+						<c:if test="${not empty product.productCategoryType && product.isVariant && (product.productCategoryType eq 'FineJewellery'|| product.productCategoryType eq 'FashonJewellery')}">
+							<c:if test="${not empty product.displaySize && product.displaySize ne '[NO SIZE]'}">
+									<li class="product-size-list"><span class="product-size">Size: <span class="size-col">${product.displaySize}</span><%-- Price : ${product.displayPrice}### ${product.displayUrl} --%>
+								</span></li>
+							</c:if>
 						</c:if>
 						<%-- <li>Color: ${product.swatchColor}</li> --%>
 						<c:if
@@ -386,8 +394,13 @@
 				</c:if>
 
 					<ycommerce:testId code="product_productPrice">
-				<!-- tpr-250 CHANGES -->
+				<!-- tpr-250 CHANGES --><!-- TPR-1886 | jewellery   -->
 				<c:choose>
+						<c:when test="${not empty product.priceRangeJewellery}">
+							<div class="price">
+								${product.priceRangeJewellery}
+							</div>
+						</c:when>
 				<c:when test="${fn:contains(currentQuery, 'sellerId')|| not empty msiteSellerId}">
 				<c:if
 						test="${priceValue.value > 0 && (mrpPriceValue.value > priceValue.value)}">

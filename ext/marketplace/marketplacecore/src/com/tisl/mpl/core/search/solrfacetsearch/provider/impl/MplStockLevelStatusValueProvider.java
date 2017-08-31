@@ -33,6 +33,8 @@ public class MplStockLevelStatusValueProvider extends AbstractPropertyFieldValue
 	private FieldNameProvider fieldNameProvider;
 
 	private BuyBoxService buyBoxService;
+	private static final String PRODUCT_CATEGORY_TYPE_FINE = "FineJewellery";
+	private static final String PRODUCT_CATEGORY_TYPE_FASHION = "FashionJewellery";
 
 	/*
 	 * (non-Javadoc)
@@ -53,8 +55,17 @@ public class MplStockLevelStatusValueProvider extends AbstractPropertyFieldValue
 		{
 			if (model instanceof PcmProductVariantModel)
 			{
-				productType = "variant";
 				final PcmProductVariantModel product = (PcmProductVariantModel) model;
+				//productType will set jewelleryVariant for Jewellery otherwise variant
+				if ((product.getProductCategoryType().equalsIgnoreCase(PRODUCT_CATEGORY_TYPE_FINE))
+						|| (product.getProductCategoryType().equalsIgnoreCase(PRODUCT_CATEGORY_TYPE_FASHION)))
+				{
+					productType = "jewelleryVariant";
+				}
+				else
+				{
+					productType = "variant";
+				}
 				productCode = product.getCode();
 				return getFieldValues(productCode, productType, indexedProperty);
 			}

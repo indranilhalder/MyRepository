@@ -134,6 +134,8 @@ import com.tisl.mpl.exception.EtailBusinessExceptions;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.facade.brand.BrandFacade;
 import com.tisl.mpl.facade.netbank.MplNetBankingFacade;
+import com.tisl.mpl.facade.pancard.MplPancardFacade;
+import com.tisl.mpl.facade.product.ExchangeGuideFacade;
 import com.tisl.mpl.facades.account.address.MplAccountAddressFacade;
 import com.tisl.mpl.facades.account.cancelreturn.CancelReturnFacade;
 import com.tisl.mpl.facades.account.register.MplOrderFacade;
@@ -149,6 +151,7 @@ import com.tisl.mpl.model.cms.components.MplNewsLetterSubscriptionModel;
 import com.tisl.mpl.order.data.CardTypeDataList;
 import com.tisl.mpl.pincode.facade.PinCodeServiceAvilabilityFacade;
 import com.tisl.mpl.pincode.facade.PincodeServiceFacade;
+import com.tisl.mpl.pojo.PanCardResDTO;
 import com.tisl.mpl.populator.HttpRequestCustomerUpdatePopulator;
 import com.tisl.mpl.search.feedback.facades.UpdateFeedbackFacade;
 import com.tisl.mpl.service.HomescreenService;
@@ -185,6 +188,7 @@ import com.tisl.mpl.wsdto.PinWsDto;
 import com.tisl.mpl.wsdto.ProductSearchPageWsDto;
 import com.tisl.mpl.wsdto.ResponseMaster;
 import com.tisl.mpl.wsdto.RestrictionPins;
+import com.tisl.mpl.wsdto.ReversePincodeExchangeData;
 import com.tisl.mpl.wsdto.SearchDropdownWsDTO;
 import com.tisl.mpl.wsdto.SellerMasterWsDTO;
 import com.tisl.mpl.wsdto.SellerSlaveDTO;
@@ -279,6 +283,14 @@ public class MiscsController extends BaseController
 	private PincodeServiceFacade pincodeServiceFacade;
 	@Resource(name = "categoryService")
 	private CategoryService categoryService;
+
+	//Exchange Changes
+	@Resource(name = "exchangeGuideFacade")
+	private ExchangeGuideFacade exchangeGuideFacade;
+
+	@Resource(name = "mplPancardFacadeImpl")
+	private MplPancardFacade mplPancardFacade;
+
 
 	//	private static final String APPLICATION_TYPE = "application/json";
 	//	public static final String EMAIL_REGEX = "\\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,4}\\b";
@@ -1444,7 +1456,6 @@ public class MiscsController extends BaseController
 
 	// check brand or category TPR-816
 	/**
-	 * <<<<<<< HEAD
 	 *
 	 * @param deliveryMode
 	 * @param ussid
@@ -1469,11 +1480,11 @@ public class MiscsController extends BaseController
 	 * deliveryModeData.setName(MplZoneDeliveryModeValueModel.getDeliveryMode().getName()); } if (null != ussid) {
 	 * deliveryModeData.setSellerArticleSKU(ussid); }
 	 *
-	 * } return deliveryModeData; } =======
+	 * } return deliveryModeData; }
 	 *
 	 * @param code
 	 *
-	 * @return >>>>>>> origin/GOLDEN_PROD_SUPPORT_07122016
+	 * @return
 	 */
 	@RequestMapping(value = "/{baseSiteId}/checkBrandOrCategory", method = RequestMethod.GET)
 	@ResponseBody
@@ -1834,6 +1845,67 @@ public class MiscsController extends BaseController
 		return matcher.matches();
 	}//LW-176 ends
 
+
+
+	/**
+	 * Is Pincode Exchange Serviceable
+	 *
+	 * @param pincode
+	 * @param l3code
+	 * @return reverseCheckdata
+	 * @throws CMSItemNotFoundException
+	 */
+
+	@RequestMapping(value = "/{baseSiteId}/reversePincodeCheck/{pincode}", method = RequestMethod.POST)
+	@ResponseBody
+	public ReversePincodeExchangeData reversePincodeCheck(@PathVariable final String pincode,
+			@RequestParam(required = false) final String l3code) throws CMSItemNotFoundException
+	{
+
+		final ReversePincodeExchangeData reverseCheckdata = new ReversePincodeExchangeData();
+		final boolean isServicable = exchangeGuideFacade.isBackwardServiceble(pincode);
+		reverseCheckdata.setPincodeResponse(exchangeGuideFacade.isBackwardServiceble(pincode));
+		if (isServicable && StringUtils.isNotEmpty(l3code))
+		{
+			reverseCheckdata.setPriceMatrix(exchangeGuideFacade.getExchangeGuide(l3code));
+		}
+
+
+		return reverseCheckdata;
+	}
+
+	/*
+	 * to receive pancard status from SP for jewellery
+	 *
+	 * @param restrictionXML
+	 *
+	 * @return void
+	 */
+	@RequestMapping(value = "/{baseSiteId}/miscs/pancardStatus", method = RequestMethod.POST)
+	@ResponseBody
+	public void pancardStatusFromSP(final InputStream panStatusXML) throws RequestParameterException, JAXBException
+	{
+		try
+		{
+			final JAXBContext jaxbContext = JAXBContext.newInstance(PanCardResDTO.class);
+			final Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
+			final PanCardResDTO resDTO = (PanCardResDTO) jaxbUnmarshaller.unmarshal(panStatusXML);
+
+			mplPancardFacade.setPancardRes(resDTO);
+		}
+		catch (final RequestParameterException e)
+		{
+			LOG.error("the exception is **** " + e);
+		}
+		catch (final JAXBException e)
+		{
+			LOG.error("the exception is **** " + e);
+		}
+		catch (final Exception e)
+		{
+			LOG.error("the exception is **** " + e);
+		}
+	}
 	//TPR-4840 starts
 	@Secured(
 	{ ROLE_CLIENT, ROLE_TRUSTED_CLIENT })
@@ -1951,6 +2023,7 @@ public class MiscsController extends BaseController
 	}
 
 	//TPR-5225 ends
+
 	/**
 	 * Method: One touch Cancel and return--TPR-1345
 	 *

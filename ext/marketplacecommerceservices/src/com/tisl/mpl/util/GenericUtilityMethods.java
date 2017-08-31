@@ -749,11 +749,11 @@ public class GenericUtilityMethods
 
 	/*
 	 * @description Setting DeliveryAddress
-	 *
+	 * 
 	 * @param orderDetail
-	 *
+	 * 
 	 * @param type (1-Billing, 2-Shipping)
-	 *
+	 * 
 	 * @return BillingAddressWsDTO
 	 */
 	public static BillingAddressWsDTO setAddress(final OrderData orderDetail, final int type)
@@ -1082,6 +1082,7 @@ public class GenericUtilityMethods
 		String productCatL1 = null;
 		String productCatL2 = null;
 		String productCatL3 = null;
+		String cartLevelSellerID = null;
 		//for tealium
 		//For kidswear L4 needs to be populated
 		String productCatL4 = null;
@@ -1144,6 +1145,7 @@ public class GenericUtilityMethods
 
 						if (null != entry.getBrandName())
 						{
+
 							//	brand = appendQuote(entry.getBrandName());
 							//PRDI-560 fix
 							brand = appendQuote(entry.getBrandName().replaceAll("[^\\w\\s]", "").replaceAll(" ", "_").replace("__", "_")
@@ -1255,6 +1257,21 @@ public class GenericUtilityMethods
 					count++;
 				}
 
+				final List<OrderEntryData> sellerList = cartData.getEntries();
+				for (final OrderEntryData seller : sellerList)
+				{
+					final String sellerID = seller.getSelectedSellerInformation().getSellerID();
+					if (cartLevelSellerID != null)
+					{
+						cartLevelSellerID += "_" + sellerID;
+					}
+					else
+					{
+						cartLevelSellerID = sellerID;
+					}
+				}
+
+				model.addAttribute("cartLevelSellerID", cartLevelSellerID);
 				model.addAttribute("productBrandList", productBrandList);
 
 				model.addAttribute("productIdList", productIdList);
@@ -1700,6 +1717,7 @@ public class GenericUtilityMethods
 		if (null != responseData)
 		{
 			responseData.setTotalDiscntIncMrp(totalDiscountVal);
+
 			////TISSTRT-1605
 			if (totalDeliveryCharge > 0)
 			{

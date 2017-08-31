@@ -19,6 +19,7 @@
 	src="${commonResourcePath}/bootstrap/js/popover.js"></script>
 	
 <script type="text/javascript" src="https://apis.google.com/js/plusone.js"></script>
+
  <style type="text/css">
 tr.d0 td {
   background-color:#E0E0E0 ;
@@ -341,6 +342,7 @@ display:none;
 <input type="hidden" value="false"  id="isBinded"/>
 <input type="hidden" value="true"  id="isQuickView"/>
 <input type="hidden" value="${product.rootCategory}" id="categoryType"/>
+<input type="hidden" name="showSizeQuickView" id="showSizeQuickView" value="${showSizeGuideForFA}"/>
 
 <!-- CKD:TPR-250:Start -->
 <c:choose>
@@ -384,7 +386,7 @@ display:none;
 	<div class="imageList" style="overflow: hidden;${(thumbNailImageLength > imgCount)?"height:480px":""}">
 		<ul class="jcarousel-skin imageListCarousel" style="display:block; position: relative; top: 0; width: 100%;"> 
 			<c:forEach items="${galleryImages}" var="container" varStatus="varStatus" begin="0" end="${thumbNailImageLength}">
-				<li id="addiImage${varStatus.index}" class="thumbailItem${varStatus.index +1}"> <!-- For TPR-4712 -->
+			<li id="addiImage${varStatus.index}" class="thumbailItem${varStatus.index +1}"> <!-- For TPR-4712 -->
 					<span class="thumb ${(varStatus.index==0)? "active":""}">
 						<c:if test="${container.thumbnail.mediaType.code eq 'Image'}">
 							<img src="${container.thumbnail.url}" data-type="image" data-zoomimagesrc="${container.superZoom.url}"  data-primaryimagesrc="${container.product.url}" data-galleryposition="${varStatus.index}" alt="${container.thumbnail.altText}" title="${container.thumbnail.altText}" style="${(varStatus.index < imgCount)? "":"display:none;"}" />	
@@ -410,10 +412,9 @@ display:none;
     <div class="main-image">
 	<a onClick="openPop_quick();" class="wishlist-icon-qv normal"></a>
 	<a onClick="openPop_quick();" class="wishlist-icon-qv zoom-qv" style="display: none;"></a>
-    <a href="${productUrl}"> <product:productPrimaryImage lazyLoad="false"
+	<a href="${productUrl}"> <product:productPrimaryImage lazyLoad="false"
 				product="${product}" format="product" />
-		</a>
-<!-- 		<div class="zoom" style="z-index:10000;">
+		</a><!-- 		<div class="zoom" style="z-index:10000;">
 		<a onClick="openPop_quick();" id="wishlist_quick" class="wishlist" data-toggle="popover" data-placement='bottom'></a>
 		</div> -->
 		 <%-- <c:if test="${isCodEligible=='Y'}">
@@ -509,6 +510,26 @@ display:none;
               <%-- &nbsp;<spring:theme code="product.by"/>&nbsp;<span id="sellerNameIdQuick"></span>${sellerName} --%>
             <!-- Convert into AJAX call -->    
     <h3 class="product-name"><a href="${productUrl}">${product.productTitle}</a></h3>
+    
+    <!-- //TPR-3752 Jewel Heading Added -->
+			<%-- <c:choose>
+					<c:when test="${product.rootCategory=='FineJewellery'}">
+						<div class="product-desc">
+							<span class="key-label">
+							 <c:forEach var="classification" items="${mapConfigurableAttributes}">
+							 <c:if test="${not empty classification.value }">
+   						 		<c:forEach var="classValue" items="${classification.value }">
+   						 			${classValue.key} &nbsp;&nbsp;${classValue.value}
+   						 			 </c:forEach>
+   						 			<!--  <a href="" class="more-link">More</a> -->
+							  </c:if> 
+								</c:forEach>
+							</span> 
+						</div>
+					</c:when>
+				</c:choose>
+     --%>
+    
     <div class="price">
     
     
@@ -558,6 +579,23 @@ display:none;
 	  <span></span>
 	</p>
     
+    
+    <%--for price breakup(TPR-3752) --%>
+
+	
+	<!-- Price Breakup removed From Quickview -->
+	<!-- <div id = "showPricequick">
+	
+	<p id = "showquick" class="pricebreakup-link">Price Breakup</p>
+	
+	</div>
+	<ul id="showPriceBreakupquick" class="price-breakuplist clearfix" style="display:none"></ul>
+ -->
+	<%-- </c:if> --%>
+	
+	<%--for price breakup(TPR-3752) --%>
+  
+  
   </div>  
 	<%-- <div id="emiStickerId" class="Emi Emi_wrapper" style="display:none;">		
 				<spring:theme code="marketplace.emiavailable" />&nbsp;		
@@ -1109,5 +1147,4 @@ $(window).resize(function(){
 });
 
 /*add to wishlist st*/
-
 </script>

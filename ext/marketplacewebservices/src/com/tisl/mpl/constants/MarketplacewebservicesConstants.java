@@ -546,6 +546,9 @@ public class MarketplacewebservicesConstants
 	public final static String MRUPEE_NARRATION_VALUE = "payment.mRupee.narration".intern();
 	public final static String MRUPEE_MERCHANT_CODE = "payment.mRupee.merchantID".intern();
 	public final static String FAIL = "fail";
+	public static final String TRAVELANDLUGGAGE = "travelandluggage";
+
+
 	public static final String ORDER_HISTORY_PAGESIZE_WEBSERVICE = "orderHistory.pagesize.defaultValue";
 
 	public static final String TO = "TO";
@@ -557,6 +560,8 @@ public class MarketplacewebservicesConstants
 	public static final String FORWARD_SLASHES = "//";
 	//TPR-6117
 	public static final String REACHED_MAX_LIMIT_FOR_PRODUCT = "MAX QUANTITY ADDED";
+	public static final String FINEJEWELLERY = "finejewellery";
+	public static final String FASHIONJEWELLERY = "fashionjewellery";
 	//One touch Cancel return constants
 	public static final String VALID_FLAG_S = "S".intern();
 	public static final String CANCEL_TICKET = "C".intern();
@@ -580,7 +585,12 @@ public class MarketplacewebservicesConstants
 	public static final String DELIVERED_STATUS = "DELIVERED".intern();
 	public static final String ORDER_COLLECTED_STATUS = "ORDER_COLLECTED".intern();
 
+	//TPR-1083
+	public static final String MAXIMUM_CONFIGURED_QUANTIY_FOR_EXCHANGE = "1";
+	public static final String EXCHANGEAPPLIED = "Exchange Applied";
+	public static final String EXCHANGENOTAPPLIED = "Exchange Is Not Applicable For Pincode";
 	public static final String SPECIAL_MOBILE_FLAG = "special.mobile.flag".intern();
+	public static final String PRICE_DISCLAIMER_JEWELLERY = "*Price and Weight are subject to change basis availability.";
 
 	//INC144317480: Order Threshold Discount Promotion: Netbanking Payment Mode Restriction doesn't work
 	//public static final String BANKNAMEFORNETBANKING = "bankNameforNetbanking";

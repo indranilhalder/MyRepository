@@ -37,8 +37,19 @@ public class MplClassificationColourCodeValueProvider extends ClassificationProp
 {
 	private FieldNameProvider fieldNameProvider;
 
+
+	public static final String COLORFAMILYFOOTWEAR = "colorfamilyfootwear";
+	//For TPR-3955
+	public static final String COLORFAMILYTRLG = "colorfamilytrlg";
+	public static final String COLORFAMILY_BLANK = "";
+
+	// For TPR-1886 | Fine jewellery
+	public static final String COLOR_FINE_JEWELLERY = "colorfinejwlry";
+	public static final String COMMA = ",";
+
 	//public static final String COLORFAMILYFOOTWEAR = "colorfamilyfootwear";
 	//public static final String COLORFAMILYFOOTWEARBLANK = "";
+
 
 	@Autowired
 	private ConfigurationService configurationService;
@@ -145,9 +156,35 @@ public class MplClassificationColourCodeValueProvider extends ClassificationProp
 				value = ((ClassificationAttributeValue) value).getCode();
 				value = value.toString().toLowerCase();
 				if (value.toString().startsWith(MarketplaceCoreConstants.COLORFAMILYFOOTWEAR))
+
 				{
 					value = value.toString().replaceAll(MarketplaceCoreConstants.COLORFAMILYFOOTWEAR,
 							MarketplaceCoreConstants.COLORFAMILYFOOTWEARBLANK);
+					//value = value.toString().replaceAll(COLORFAMILYFOOTWEAR, COLORFAMILY_BLANK);
+				}
+				//For TPR-3955
+				else if (value.toString().startsWith(COLORFAMILYTRLG))
+				{
+					value = value.toString().replaceAll(COLORFAMILYTRLG, COLORFAMILY_BLANK);
+				}
+				// For TPR-1886 | Fine jewellery
+				else if (value.toString().contains(COLOR_FINE_JEWELLERY))
+				{
+					final String jewelleryColourFeatures = configurationService.getConfiguration()
+							.getString("jewelleryColourFeatures");
+					final String[] jewelleryColourFeatureList = jewelleryColourFeatures.split(COMMA);
+					for (final String colorFeature : jewelleryColourFeatureList)
+					{
+						if (value.toString().startsWith(colorFeature))
+						{
+							//value = value.toString().replaceAll(colorFeature.toString(), COLORFAMILY_BLANK); SONAR FIX JEWELLERY
+							value = value.toString().replaceAll(colorFeature, COLORFAMILY_BLANK);
+							break;
+						}
+					}
+
+
+
 				}
 				// INC_12606 starts
 				else if (value.toString().startsWith(MarketplaceCoreConstants.DIALCOLORELECTRONICS))

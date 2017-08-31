@@ -479,7 +479,7 @@
 									
 
 
-									<div class="half no-display">
+									<div class="half no-display" id="stateListDropDown">
 										<div class="mainDrop">
 										<label><spring:theme code="text.addressBook.State" text="State *" /></label>
 

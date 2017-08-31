@@ -15,6 +15,7 @@ import de.hybris.platform.commerceservices.search.pagedata.SearchPageData;
 import de.hybris.platform.commerceservices.strategies.CheckoutCustomerStrategy;
 import de.hybris.platform.converters.Converters;
 import de.hybris.platform.core.enums.OrderStatus;
+import de.hybris.platform.core.model.JewelleryInformationModel;
 import de.hybris.platform.core.model.order.AbstractOrderEntryModel;
 import de.hybris.platform.core.model.order.OrderModel;
 import de.hybris.platform.core.model.product.ProductModel;
@@ -43,6 +44,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.annotation.Resource;
 import javax.xml.bind.JAXBException;
 
 import org.apache.commons.collections.CollectionUtils;
@@ -69,6 +71,7 @@ import com.tisl.mpl.facades.product.data.ReturnReasonData;
 import com.tisl.mpl.facades.product.data.ReturnReasonDetails;
 import com.tisl.mpl.integration.oms.order.service.impl.CustomOmsOrderService;
 import com.tisl.mpl.marketplacecommerceservices.daos.OrderModelDao;
+import com.tisl.mpl.marketplacecommerceservices.service.MplJewelleryService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplOrderService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplSellerInformationService;
 import com.tisl.mpl.marketplacecommerceservices.service.OrderModelService;
@@ -132,6 +135,8 @@ public class DefaultMplOrderFacade implements MplOrderFacade
 	@Autowired
 	private CheckoutCustomerStrategy checkoutCustomerStrategy; //TISPT-175
 
+	@Resource(name = "mplJewelleryService")
+	private MplJewelleryService jewelleryService;
 	@Autowired
 	private MplAwbStatusService mplAwbStatusService;
 
@@ -544,6 +549,7 @@ public class DefaultMplOrderFacade implements MplOrderFacade
 			throws EtailNonBusinessExceptions
 	{
 		ConsignmentModel consignmentModel = null;
+		String ussid = null;
 		if (null != orderEntryData.getConsignment() && orderEntryData.getConsignment().getStatus() != null)
 		{
 
@@ -595,9 +601,28 @@ public class DefaultMplOrderFacade implements MplOrderFacade
 			}
 		}
 
+		if ((MarketplacecommerceservicesConstants.FINEJEWELLERY).equalsIgnoreCase(productModel.getProductCategoryType()))
+
+		{
+			final List<JewelleryInformationModel> jewelleryInfo = jewelleryService.getJewelleryInfoByUssid(orderEntryData
+					.getSelectedUssid());
+			ussid = jewelleryInfo.get(0).getPCMUSSID();
+			//sellerInfoModel = getMplSellerInformationService().getSellerDetail(jewelleryInfo.get(0).getPCMUSSID());
+			//added for jewellery
+		}
+		else
+		{
+			ussid = orderEntryData.getSelectedUssid();
+		}
+
 		List<RichAttributeModel> richAttributeModel = new ArrayList<RichAttributeModel>();
-		final SellerInformationModel sellerInfoModel = getMplSellerInformationService().getSellerDetail(
-				orderEntryData.getSelectedUssid());
+		/*
+		 * final SellerInformationModel sellerInfoModel = getMplSellerInformationService().getSellerDetail(
+		 * orderEntryData.getSelectedUssid());
+		 */
+
+		final SellerInformationModel sellerInfoModel = getMplSellerInformationService().getSellerDetail(ussid);
+
 
 		if (sellerInfoModel != null && CollectionUtils.isNotEmpty(sellerInfoModel.getRichAttribute()))
 		{

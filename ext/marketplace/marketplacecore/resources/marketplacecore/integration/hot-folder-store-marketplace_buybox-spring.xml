@@ -61,12 +61,13 @@
 		<property name="header">
 			<value>
 				# InsertUpdate BuyBox Data
+				# Three new columns added for jewellery
 				<!-- Changes PRDI-50 Start Added oosmodifiedval-->
-				INSERT_UPDATE BuyBox;product;price;mrp;sellerArticleSKU[unique=true];specialPrice;available;weightage;sellerId;sellerName;sellerType;delisted;sellerStartDate[dateformat=yyyyMMddHHmmss];sellerEndDate[dateformat=yyyyMMddHHmmss];oosmodifiedval;specialPriceMobile;weightageMobile
+				INSERT_UPDATE BuyBox;product;price;mrp;sellerArticleSKU[unique=true];specialPrice;available;weightage;sellerId;sellerName;sellerType;delisted;sellerStartDate[dateformat=yyyyMMddHHmmss];sellerEndDate[dateformat=yyyyMMddHHmmss];oosmodifiedval;specialPriceMobile;weightageMobile;PUSSID;PLPMaxPrice;PLPMinPrice
 			</value>
 		</property>
 		<property name="impexRow">
-			<value>;{+0};{1};{2};{3};{4};{5};{6};{7};{8};{9};{10};{11};{12};{13};{14};{15}</value>
+			<value>;{+0};{1};{2};{3};{4};{5};{6};{7};{8};{9};{10};{11};{12};{13};{14};{15};{16};{17};{18}</value>
 			<!-- Changes PRDI-50 End Added oosmodifiedval -->
 		</property>
 	</bean> 

@@ -10,6 +10,9 @@
 	<classpathentry kind="lib" path="lib/oms-core-api-5.5.1.0-RC4.jar"/>
 	<classpathentry kind="lib" path="lib/oms-core-rest-client-5.5.1.0-RC4.jar"/>
 	<classpathentry kind="lib" path="lib/omsordersserver.jar"/>
+	<classpathentry kind="lib" path="lib/oms-api-5.5.1.17.jar"/>
+	<classpathentry kind="lib" path="lib/oms-rest-client-5.5.1.17.jar"/>
+	<classpathentry kind="lib" path="lib/oms-domain-objects-5.5.1.17.jar"/>
 	<classpathentry kind="src" output="eclipsebin/classes" path="src"/>
 	<classpathentry kind="src" output="eclipsebin/hmc/classes" path="hmc/src"/>
 	<classpathentry kind="src" output="eclipsebin/classes" path="testsrc"/>
