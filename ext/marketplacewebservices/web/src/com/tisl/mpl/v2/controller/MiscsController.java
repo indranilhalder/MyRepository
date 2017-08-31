@@ -2342,9 +2342,9 @@ public class MiscsController extends BaseController
 								{
 									LOG.debug("========Initiating Return of consignment=========");
 									resultFlag = cancelReturnFacade.oneTouchReturn(orderData, orderEntry,
-											oneTouchCrmObj.getReturnReasonCode(), oneTouchCrmObj.getTicketType(),
-											SalesApplication.CALLCENTER, oneTouchCrmObj.getPincode(), orderEntriesModel, subOrderModel,
-											codSelfShipData, oneTouchCrmObj.getUSSID(), oneTouchCrmObj.getTransactionId());
+											oneTouchCrmObj.getReturnReasonCode(), oneTouchCrmObj.getTicketType(), SalesApplication.ONETOUCH,
+											oneTouchCrmObj.getPincode(), orderEntriesModel, subOrderModel, codSelfShipData,
+											oneTouchCrmObj.getUSSID(), oneTouchCrmObj.getTransactionId());
 									//Return is successfull
 									for (final AbstractOrderEntryModel abstractOrderEntryModel : orderEntriesModel)
 									{
