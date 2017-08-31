@@ -170,6 +170,7 @@ public class MarketplaceFacadesConstants extends GeneratedMarketplaceFacadesCons
 	public static final String LuxuryPrefix = "lux";
 	public static final String PRODUCT_TYPE = "FineJewellery";
 
+
 	private MarketplaceFacadesConstants()
 	{
 		//empty
