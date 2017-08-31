@@ -64,7 +64,7 @@ public class ExchangeGuideDaoImpl implements ExchangeGuideDao
 					+ "} where {category.code} =?categoryCode";
 
 
-			final FlexibleSearchQuery flexExchangeL3Query = new FlexibleSearchQuery(exchangeL3Query.toString());
+			final FlexibleSearchQuery flexExchangeL3Query = new FlexibleSearchQuery(exchangeL3Query);
 			flexExchangeL3Query.addQueryParameter(CATEGORY_CODE, categoryCode);
 			final List resultClassList = new ArrayList();
 			resultClassList.add(Integer.class);

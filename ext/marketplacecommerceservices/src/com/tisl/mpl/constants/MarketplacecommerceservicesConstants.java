@@ -2237,4 +2237,7 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String RETURN_FINEJEWELLERY = "Forward Seal Mismatch";
 	public static final String INVENTORY_RESV_JWLRY_CART = "Price(s) of the selected product(s) has been revised due to unavailability of the product(s) with the weight(s) displayed earlier. You have an outstanding amount of ";
 	public static final String INVENTORY_RESV_JWLRY_PAYMENT = "Price(s) of the selected product(s) has been revised due to unavailability of the product(s) with the weight(s) displayed earlier.";
+	public static final String SELFCOURIER = "selfCourier";
+	public static final String SCHEDULE_PICKUP = "schedulePickup";
+	public static final String QUICK_DROP = "quickDrop";
 }
