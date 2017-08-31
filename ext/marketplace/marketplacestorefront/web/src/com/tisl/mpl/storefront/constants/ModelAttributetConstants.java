@@ -228,6 +228,8 @@ public final class ModelAttributetConstants
 	//Added  for Fine Jewellery  :::  START
 	public static final String FINEJEWELLERY = "FineJewellery";
 	public static final String NOSIZE = "NO SIZE";
+	public static final String CLASSNAME_19NA = "19na";
+	public static final String FEATURE_NAME = "pcmClassification/1/19na.pricebreakuponpdpfinejwlry";
 	//Added  for Fine Jewellery  :::  END
 
 	//Added  for Fashion Jewellery  :::  START
@@ -897,7 +899,7 @@ public final class ModelAttributetConstants
 	public static final String TITLE_TEXT2 = " Online at Tata CLiQ ";
 	public static final String ICID = "icid";
 	public static final String SHARE = "share";
-	
+
 	public static final String MESSAGE = "message";
 
 	public static final String EMAILORPASSINVALID = "Email or Password invalid";

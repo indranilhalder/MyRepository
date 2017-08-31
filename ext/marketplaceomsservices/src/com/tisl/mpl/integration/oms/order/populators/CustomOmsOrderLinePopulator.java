@@ -3,7 +3,6 @@
  */
 package com.tisl.mpl.integration.oms.order.populators;
 
-import de.hybris.platform.catalog.CatalogVersionService;
 import de.hybris.platform.commerceservices.externaltax.TaxCodeStrategy;
 import de.hybris.platform.converters.Populator;
 import de.hybris.platform.core.Registry;
@@ -14,7 +13,6 @@ import de.hybris.platform.core.model.order.payment.CODPaymentInfoModel;
 import de.hybris.platform.integration.commons.services.OndemandTaxCalculationService;
 import de.hybris.platform.integration.oms.order.service.ProductAttributeStrategy;
 import de.hybris.platform.integration.oms.order.strategies.OrderEntryNoteStrategy;
-import de.hybris.platform.product.ProductService;
 import de.hybris.platform.servicelayer.dto.converter.ConversionException;
 
 import java.text.ParseException;
@@ -92,11 +90,11 @@ public class CustomOmsOrderLinePopulator implements Populator<OrderEntryModel, O
 	@Resource(name = "mplJewelleryService")
 	private MplJewelleryService jewelleryService;
 
-	@Resource(name = "productService")
-	private ProductService productService;
-
-	@Resource(name = "catalogVersionService")
-	private CatalogVersionService catalogVersionService;
+	//	@Resource(name = "productService")
+	//	private ProductService productService;
+	//
+	//	@Resource(name = "catalogVersionService")
+	//	private CatalogVersionService catalogVersionService;
 
 	@Override
 	public void populate(final OrderEntryModel source, final OrderLine target) throws ConversionException
@@ -124,7 +122,8 @@ public class CustomOmsOrderLinePopulator implements Populator<OrderEntryModel, O
 			//final SellerInformationModel sellerInfoModel = getMplSellerInformationService().getSellerDetail(
 			//	source.getSelectedUSSID());
 
-			final SellerInformationModel sellerInfoModel = getMplSellerInformationService().getSellerDetail(ussid,source.getOrder().getStore().getCatalogs().get(0).getActiveCatalogVersion());
+			final SellerInformationModel sellerInfoModel = getMplSellerInformationService().getSellerDetail(ussid,
+					source.getOrder().getStore().getCatalogs().get(0).getActiveCatalogVersion());
 
 			//jewellery ends
 
@@ -396,14 +395,14 @@ public class CustomOmsOrderLinePopulator implements Populator<OrderEntryModel, O
 			/*
 			 * if (richAttributeModel.get(0).getDeliveryFulfillModeByP1() != null &&
 			 * richAttributeModel.get(0).getDeliveryFulfillModeByP1().getCode() != null)
-			 * 
+			 *
 			 * { final String fulfilmentType =
 			 * richAttributeModel.get(0).getDeliveryFulfillModeByP1().getCode().toUpperCase();
 			 * target.setFulfillmentTypeP1(fulfilmentType); }
-			 * 
+			 *
 			 * if (richAttributeModel.get(0).getDeliveryFulfillModes() != null &&
 			 * richAttributeModel.get(0).getDeliveryFulfillModes().getCode() != null)
-			 * 
+			 *
 			 * { final String fulfilmentType = richAttributeModel.get(0).getDeliveryFulfillModes().getCode().toUpperCase();
 			 * if(fulfilmentType.equalsIgnoreCase(MarketplaceomsservicesConstants.BOTH)){
 			 * if(richAttributeModel.get(0).getDeliveryFulfillModeByP1
@@ -607,7 +606,7 @@ public class CustomOmsOrderLinePopulator implements Populator<OrderEntryModel, O
 	 * (!category.getSupercategories().isEmpty()) { for (final CategoryModel superCategory :
 	 * category.getSupercategories()) { getCategoryName(superCategory); } } } catch (final Exception e) { throw new
 	 * EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000); }
-	 *
+	 * 
 	 * }
 	 */
 
@@ -1063,4 +1062,3 @@ public class CustomOmsOrderLinePopulator implements Populator<OrderEntryModel, O
 		return Registry.getApplicationContext().getBean("defaultPromotionManager", DefaultPromotionManager.class);
 	}
 }
-

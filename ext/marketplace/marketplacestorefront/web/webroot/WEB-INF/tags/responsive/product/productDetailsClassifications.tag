@@ -119,7 +119,9 @@
      	<div id = "showPrice"  class="item">
 		 <p id = "show" class="title"> </p>
 		 <div class="detail acc_content" style="display: block;">
+		 <div id="priceBreakupTable">
 		  <table id="showPriceBreakup"  style="display:none"></table> 
+		  </div>
 		</div>
 		</div>
 		</div>

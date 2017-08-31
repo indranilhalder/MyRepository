@@ -2242,4 +2242,7 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String INVENTORY_RESV_JWLRY_PAYMENT = "Price(s) of the selected product(s) has been revised due to unavailability of the product(s) with the weight(s) displayed earlier.";
 	//Sonar Fix
 	public static final String REPLACEDUSSID = "replacedUssid";
+	public static final String SELFCOURIER = "selfCourier";
+	public static final String SCHEDULE_PICKUP = "schedulePickup";
+	public static final String QUICK_DROP = "quickDrop";
 }

@@ -73,7 +73,7 @@ public class InventoryReservationServiceImpl implements InventoryReservationServ
 		this.configurationService = configurationService;
 	}
 
-	private static final String OMS_INVENTORY_RESV_TYPE_PAYMENTPENDING = "paymentPending";
+	//private static final String OMS_INVENTORY_RESV_TYPE_PAYMENTPENDING = "paymentPending";
 
 	/**
 	 * @Description : For storing soft reservation details to InventoryReservListResponse object

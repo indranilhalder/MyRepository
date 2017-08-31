@@ -92,7 +92,7 @@ public class PancardController
 			{
 				if (StringUtils.isNotEmpty(pModel.getStatus()))
 				{
-					if (pModel.getStatus().equalsIgnoreCase(MarketplacecommerceservicesConstants.PAN_REJECTED))
+					if (MarketplacecommerceservicesConstants.PAN_REJECTED.equalsIgnoreCase(pModel.getStatus()))
 					{
 						ifRejected = true;
 						break;
@@ -112,7 +112,8 @@ public class PancardController
 				{
 					if (StringUtils.isNotEmpty(pModel.getStatus()))
 					{
-						if (pModel.getStatus().equalsIgnoreCase(MarketplacecommerceservicesConstants.PENDING_FOR_VERIFICATION))
+						if (MarketplacecommerceservicesConstants.PENDING_FOR_VERIFICATION.equalsIgnoreCase(pModel.getStatus())
+								|| MarketplacecommerceservicesConstants.NA.equalsIgnoreCase(pModel.getStatus()))
 						{
 							ifPending = true;
 							break;

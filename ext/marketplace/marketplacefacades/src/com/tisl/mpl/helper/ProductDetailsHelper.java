@@ -124,6 +124,8 @@ public class ProductDetailsHelper
 	/*
 	 * Added for Fashion Jewellery
 	 */
+	//	added for fine jewellery
+	private static final String CLASSIFICATION_ATTRIBUTES_DETAILS_ORDER = "classification.attributes.details.order";
 	/**
 	 *
 	 */
@@ -232,8 +234,8 @@ public class ProductDetailsHelper
 
 	/*
 	 * @Resource(name = "GigyaService") private GigyaService gigyaservice;
-	 *
-	 *
+	 * 
+	 * 
 	 * @Autowired private ExtendedUserServiceImpl userexService;
 	 *//**
 	 * @return the gigyaservice
@@ -637,7 +639,7 @@ public class ProductDetailsHelper
 			}
 			//JWLSPCUAT-101:Product details section should be top in PDP page
 			final String featureDetailsOrder = configurationService.getConfiguration().getString(
-					"classification.attributes.details.order");
+					CLASSIFICATION_ATTRIBUTES_DETAILS_ORDER);
 			if (StringUtils.isNotEmpty(featureDetailsOrder))
 			{
 				final String[] featureDetailsOrderArray = featureDetailsOrder.split(",");
@@ -1254,15 +1256,15 @@ public class ProductDetailsHelper
 
 	/*
 	 * @description: It is used for populating delivery code and cost for sellerartickeSKU
-	 *
+	 * 
 	 * @param deliveryCode
-	 *
+	 * 
 	 * @param currencyIsoCode
-	 *
+	 * 
 	 * @param sellerArticleSKU
-	 *
+	 * 
 	 * @return MplZoneDeliveryModeValueModel
-	 *
+	 * 
 	 * @throws EtailNonBusinessExceptions
 	 */
 	private MplZoneDeliveryModeValueModel populateDeliveryCostForUSSIDAndDeliveryMode(final String deliveryCode,
