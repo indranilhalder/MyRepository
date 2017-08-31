@@ -59,7 +59,7 @@ BEGIN
 			B.p_brandcode,
 			B.p_url3,
 			B.p_url2,
-			B.p_url1,
+			--B.p_url1,
       B.ACLTS,
       B.PROPTS
       --B.OWNERPKSTRING
@@ -76,7 +76,7 @@ BEGIN
                   sub.BrandCode,
                   sub.URL3,
                   sub.URL2,
-                  sub.URL1,
+                  --sub.URL1,
                    '0',
                    '0'
                   --'0'
@@ -86,9 +86,9 @@ BEGIN
 									c2.p_code L2,
 									c1.p_code L3,
 									b1.p_code BrandCode, 
-									REPLACE(REPLACE(REPLACE(REPLACE(LOWER(cname2.p_name||'-'||cname1.p_name||'-'||cname.p_name||'-'||bname.p_name||'/c-'||c1.p_code||'/b-'||b1.p_code),' ', '-'),'''',''),'!',''),'&','') "URL3", 
-									REPLACE(REPLACE(REPLACE(REPLACE(LOWER(cname2.p_name||'-'||cname1.p_name||'-'||bname.p_name||'/c-'||c2.p_code||'/b-'||b1.p_code),' ','-'),'''',''),'!',''),'&','')"URL2",
-									REPLACE(REPLACE(REPLACE(REPLACE(LOWER(cname2.p_name||'-'||bname.p_name||'/c-'||c3.p_code||'/b-'||b1.p_code),' ','-'),'''',''),'!',''),'&','') "URL1"
+									REPLACE(REPLACE(REPLACE(LOWER(cname2.p_name||'-'||cname1.p_name||'-'||cname.p_name||'-'||bname.p_name||'/c-'||c1.p_code||'/b-'||b1.p_code),' ', '-'),'''',''),'&','&amp;') "URL3", 
+									REPLACE(REPLACE(REPLACE(LOWER(cname2.p_name||'-'||cname1.p_name||'-'||bname.p_name||'/c-'||c2.p_code||'/b-'||b1.p_code),' ','-'),'''',''),'&','&amp;')"URL2"
+									--REPLACE(REPLACE(REPLACE(LOWER(cname2.p_name||'-'||bname.p_name||'/c-'||c3.p_code||'/b-'||b1.p_code),' ','-'),'''',''),'&',';') "URL1"
                   --'0',
                   --'0'
                   --'0'

@@ -46,7 +46,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Required;
 
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
-import com.tisl.mpl.core.constants.MarketplaceCoreConstants;
 import com.tisl.mpl.core.enums.SiteMapUpdateModeEnum;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.marketplacecommerceservices.daos.MplCategoryDao;
@@ -114,7 +113,7 @@ public class CustomSiteMapMediaJob extends SiteMapMediaJob
 			final SiteMapConfigModel siteMapConfig = contentSite.getSiteMapConfig();
 			final Collection<SiteMapPageModel> siteMapPages = siteMapConfig.getSiteMapPages();
 			final SiteMapUpdateModeEnum updateType = cronJob.getUpdateType();
-			List brandLists = null;//PRDI-423
+			final List<String> brandLists = new ArrayList<>();//PRDI-423
 			for (final SiteMapPageModel siteMapPage : siteMapPages)
 			{
 				final List<File> siteMapFiles = new ArrayList<File>();
@@ -128,6 +127,7 @@ public class CustomSiteMapMediaJob extends SiteMapMediaJob
 					{
 						final CatalogVersionModel activeCatalog = contentSite.getDefaultCatalog().getActiveCatalogVersion();
 						final List<CategoryModel> L1Category = fetchL1fromL0(activeCatalog);
+
 						if (CollectionUtils.isNotEmpty(L1Category))
 						{
 							for (final CategoryModel category : L1Category)
@@ -139,15 +139,17 @@ public class CustomSiteMapMediaJob extends SiteMapMediaJob
 									{
 										final String categoryName = getSiteMapNamefromCategories(category, categoryl2);
 										//PRDI-423
+
 										if (useBrandFilter())
 										{
 											LOG.debug("Inside useBrandFilter");
-											brandLists = fetchBrand(category.getCode(), categoryl2.getCode());
+											brandLists.addAll(fetchBrand(category.getCode(), categoryl2.getCode()));
 										}
 										else
 										{
 											LOG.debug("Not using BrandFilter");
 										}
+
 										//PRDI-423
 										final List models = fetchProductforL2code(activeCatalog, categoryl2);
 										if (CollectionUtils.isNotEmpty(models) && StringUtils.isNotEmpty(categoryName))
@@ -552,23 +554,28 @@ public class CustomSiteMapMediaJob extends SiteMapMediaJob
 	protected List<String> fetchBrand(final String categoryl1, final String categoryl2)
 	{
 		List<MplbrandfilterModel> brandFilterList = null;
-		List<String> brandfilterurl = null;
-		final Set<String> brandFilterUrlSet = new HashSet<String>();
+		final List<String> brandfilterurl = new ArrayList<>();
 		if (StringUtils.isNotEmpty(categoryl1) && StringUtils.isNotEmpty(categoryl2))
 		{
 			brandFilterList = getMplCategoryDao().fetchBrandFilterforL1L2(categoryl1, categoryl2);
+
 			if (CollectionUtils.isNotEmpty(brandFilterList))
 			{
 				for (final MplbrandfilterModel brandFilter : brandFilterList)
 				{
-					brandFilter.getUrl1().replaceAll(MarketplaceCoreConstants.DOUBLE_HYPHEN, MarketplaceCoreConstants.SINGLE_HYPHEN);
-					brandFilter.getUrl2().replaceAll(MarketplaceCoreConstants.DOUBLE_HYPHEN, MarketplaceCoreConstants.SINGLE_HYPHEN);
-					brandFilter.getUrl3().replaceAll(MarketplaceCoreConstants.DOUBLE_HYPHEN, MarketplaceCoreConstants.SINGLE_HYPHEN);
-					brandFilterUrlSet.add(brandFilter.getUrl1());
-					brandFilterUrlSet.add(brandFilter.getUrl2());
-					brandFilterUrlSet.add(brandFilter.getUrl3());
+					//As per nausheer's comment
+					//brandFilter.getUrl1().replaceAll(MarketplaceCoreConstants.DOUBLE_HYPHEN, MarketplaceCoreConstants.SINGLE_HYPHEN);
+					//brandFilter.getUrl2().replaceAll(MarketplaceCoreConstants.DOUBLE_HYPHEN, MarketplaceCoreConstants.SINGLE_HYPHEN);
+					//brandFilter.getUrl3().replaceAll(MarketplaceCoreConstants.DOUBLE_HYPHEN, MarketplaceCoreConstants.SINGLE_HYPHEN);
+					//As per nausheer's comment
+					//brandFilterUrlSet.add(brandFilter.getUrl1());
+					//brandfilterurl.add(brandFilter.getUrl1());
+					brandfilterurl.add(brandFilter.getUrl2());
+					brandfilterurl.add(brandFilter.getUrl3());
 				}
-				brandfilterurl = new ArrayList<String>(brandFilterUrlSet);
+				final Set<String> brandfilterurlset = new HashSet<String>(brandfilterurl);
+				brandfilterurl.clear();
+				brandfilterurl.addAll(brandfilterurlset);
 			}
 			else
 			{
