@@ -2643,13 +2643,13 @@ public class CartsController extends BaseCommerceController
 						+ cartId);
 
 				Boolean replaced = Boolean.FALSE;
-				replaced = sessionService.getAttribute("replacedUssid");
+				replaced = sessionService.getAttribute(MarketplacecommerceservicesConstants.REPLACEDUSSID);
 				LOG.debug("Replaced Soft reservation ForJewellery is " + replaced);
 				if (null != replaced && replaced.booleanValue())
 				{
 					reservationList.setPriceChangeNotificationMsg(MarketplacecommerceservicesConstants.INVENTORY_RESV_JWLRY_CART
 							+ caData.getTotalPrice().getFormattedValue());
-					sessionService.removeAttribute("replacedUssid");
+					sessionService.removeAttribute(MarketplacecommerceservicesConstants.REPLACEDUSSID);
 				}
 			}
 			else
@@ -2777,13 +2777,13 @@ public class CartsController extends BaseCommerceController
 							SalesApplication.MOBILE);
 
 					Boolean replaced = Boolean.FALSE;
-					replaced = sessionService.getAttribute("replacedUssid");
+					replaced = sessionService.getAttribute(MarketplacecommerceservicesConstants.REPLACEDUSSID);
 					LOG.debug("Replaced Soft reservation ForJewellery is " + replaced);
 					if (null != replaced && replaced.booleanValue())
 					{
 						reservationList
 								.setPriceChangeNotificationMsg(MarketplacecommerceservicesConstants.INVENTORY_RESV_JWLRY_PAYMENT);
-						sessionService.removeAttribute("replacedUssid");
+						sessionService.removeAttribute(MarketplacecommerceservicesConstants.REPLACEDUSSID);
 					}
 
 				}
@@ -2835,13 +2835,13 @@ public class CartsController extends BaseCommerceController
 							SalesApplication.MOBILE);
 
 					Boolean replacedPay = Boolean.FALSE;
-					replacedPay = sessionService.getAttribute("replacedUssid");
+					replacedPay = sessionService.getAttribute(MarketplacecommerceservicesConstants.REPLACEDUSSID);
 					LOG.debug("Replaced Soft reservation ForJewellery is " + replacedPay);
 					if (null != replacedPay && replacedPay.booleanValue())
 					{
 						reservationList
 								.setPriceChangeNotificationMsg(MarketplacecommerceservicesConstants.INVENTORY_RESV_JWLRY_PAYMENT);
-						sessionService.removeAttribute("replacedUssid");
+						sessionService.removeAttribute(MarketplacecommerceservicesConstants.REPLACEDUSSID);
 					}
 
 				}

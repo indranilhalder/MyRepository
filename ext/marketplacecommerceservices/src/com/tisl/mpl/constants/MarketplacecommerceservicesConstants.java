@@ -115,6 +115,9 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String TRUE_UPPER = "TRUE";
 	public static final String ZERO = "0";
 	public static final String LINK_PASSWORD_CHANGE = "/login/pw/change";
+	//Sonar Fix Jewellery
+	public static final String STONE = "Stone";
+	public static final String SIZE = "size";
 
 	//For Promotion Intercepter
 
@@ -2237,4 +2240,6 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String RETURN_FINEJEWELLERY = "Forward Seal Mismatch";
 	public static final String INVENTORY_RESV_JWLRY_CART = "Price(s) of the selected product(s) has been revised due to unavailability of the product(s) with the weight(s) displayed earlier. You have an outstanding amount of ";
 	public static final String INVENTORY_RESV_JWLRY_PAYMENT = "Price(s) of the selected product(s) has been revised due to unavailability of the product(s) with the weight(s) displayed earlier.";
+	//Sonar Fix
+	public static final String REPLACEDUSSID = "replacedUssid";
 }
