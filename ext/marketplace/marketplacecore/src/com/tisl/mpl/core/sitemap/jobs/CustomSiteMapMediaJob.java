@@ -552,11 +552,11 @@ public class CustomSiteMapMediaJob extends SiteMapMediaJob
 	protected List<String> fetchBrand(final String categoryl1, final String categoryl2)
 	{
 		List<MplbrandfilterModel> brandFilterList = null;
-		List<String> brandfilterurl = null;
-		final Set<String> brandFilterUrlSet = new HashSet<String>();
+		final List<String> brandfilterurl = new ArrayList<>();
 		if (StringUtils.isNotEmpty(categoryl1) && StringUtils.isNotEmpty(categoryl2))
 		{
 			brandFilterList = getMplCategoryDao().fetchBrandFilterforL1L2(categoryl1, categoryl2);
+
 			if (CollectionUtils.isNotEmpty(brandFilterList))
 			{
 				for (final MplbrandfilterModel brandFilter : brandFilterList)
@@ -567,10 +567,13 @@ public class CustomSiteMapMediaJob extends SiteMapMediaJob
 					//brandFilter.getUrl3().replaceAll(MarketplaceCoreConstants.DOUBLE_HYPHEN, MarketplaceCoreConstants.SINGLE_HYPHEN);
 					//As per nausheer's comment
 					//brandFilterUrlSet.add(brandFilter.getUrl1());
-					brandFilterUrlSet.add(brandFilter.getUrl2());
-					brandFilterUrlSet.add(brandFilter.getUrl3());
+					//brandfilterurl.add(brandFilter.getUrl1());
+					brandfilterurl.add(brandFilter.getUrl2());
+					brandfilterurl.add(brandFilter.getUrl3());
 				}
-				brandfilterurl = new ArrayList<String>(brandFilterUrlSet);
+				final Set<String> brandfilterurlset = new HashSet<String>(brandfilterurl);
+				brandfilterurl.clear();
+				brandfilterurl.addAll(brandfilterurlset);
 			}
 			else
 			{
