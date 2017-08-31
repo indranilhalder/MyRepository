@@ -174,6 +174,7 @@ public interface ControllerConstants
 			interface Account
 			{
 				String AccountLoginPage = "pages/account/accountLoginPage";
+				String AccountLoginPopPage = "pages/account/accountLoginPopPage";
 				String AccountHomePage = "pages/account/accountHomePage";
 				String AccountOrderHistoryPage = "pages/account/accountOrderHistoryPage";
 				String AccountOrderPage = "pages/account/accountOrderPage";
