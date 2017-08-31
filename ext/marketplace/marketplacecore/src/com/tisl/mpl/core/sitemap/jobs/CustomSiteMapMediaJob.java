@@ -139,15 +139,15 @@ public class CustomSiteMapMediaJob extends SiteMapMediaJob
 									{
 										final String categoryName = getSiteMapNamefromCategories(category, categoryl2);
 										//PRDI-423
-										if (useBrandFilter())
-										{
-											LOG.debug("Inside useBrandFilter");
-											brandLists.addAll(fetchBrand(category.getCode(), categoryl2.getCode()));
-										}
-										else
-										{
-											LOG.debug("Not using BrandFilter");
-										}
+										//										if (useBrandFilter())
+										//										{
+										LOG.debug("Inside useBrandFilter");
+										brandLists.addAll(fetchBrand(category.getCode(), categoryl2.getCode()));
+										//}
+										//else
+										//{
+										//	LOG.debug("Not using BrandFilter");
+										//}
 										//PRDI-423
 										final List models = fetchProductforL2code(activeCatalog, categoryl2);
 										if (CollectionUtils.isNotEmpty(models) && StringUtils.isNotEmpty(categoryName))
