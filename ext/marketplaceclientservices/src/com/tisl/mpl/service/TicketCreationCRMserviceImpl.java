@@ -560,6 +560,11 @@ public class TicketCreationCRMserviceImpl implements TicketCreationCRMservice
 						ticketLineObj.setTimeSlotTo(sendTicketLineItemData.getTimeSlotTo());
 					}
 					//R2.3 start
+					//TPR-4134
+					if (StringUtils.isNotEmpty(sendTicketLineItemData.getReverseSealLostflag()))
+					{
+						ticketLineObj.setReverseSealLostflag(sendTicketLineItemData.getReverseSealLostflag());
+					}
 					ticketlineItemsXMLDataList.add(ticketLineObj);
 					ticket.setLineItemDataList(ticketlineItemsXMLDataList);
 					ticketCreationCRM(ticket);
