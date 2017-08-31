@@ -617,7 +617,7 @@ public class PriceBreakupServiceImpl implements PriceBreakupService
 
 							else if (featureData.getCode().contains("stonefinejwlry1"))
 							{
-								if (name.equalsIgnoreCase("Stone"))
+								if (name.equalsIgnoreCase(MarketplacecommerceservicesConstants.STONE))
 								{
 									orderJewelEntryModel.setStoneType1(value);
 								}
@@ -625,7 +625,7 @@ public class PriceBreakupServiceImpl implements PriceBreakupService
 
 							else if (featureData.getCode().contains("stonesizefinejwlry1"))
 							{
-								if (name.equalsIgnoreCase("size"))
+								if (name.equalsIgnoreCase(MarketplacecommerceservicesConstants.SIZE))
 								{
 									orderJewelEntryModel.setStoneSizeType1(value);
 								}
@@ -633,14 +633,14 @@ public class PriceBreakupServiceImpl implements PriceBreakupService
 
 							else if (featureData.getCode().contains("stonefinejwlry2"))
 							{
-								if (name.equalsIgnoreCase("Stone"))
+								if (name.equalsIgnoreCase(MarketplacecommerceservicesConstants.STONE))
 								{
 									orderJewelEntryModel.setStoneType2(value);
 								}
 							}
 							else if (featureData.getCode().contains("stonesizefinejwlry2"))
 							{
-								if (name.equalsIgnoreCase("size"))
+								if (name.equalsIgnoreCase(MarketplacecommerceservicesConstants.SIZE))
 								{
 									orderJewelEntryModel.setStoneSizeType2(value);
 								}
@@ -648,14 +648,14 @@ public class PriceBreakupServiceImpl implements PriceBreakupService
 
 							else if (featureData.getCode().contains("stonefinejwlry3"))
 							{
-								if (name.equalsIgnoreCase("Stone"))
+								if (name.equalsIgnoreCase(MarketplacecommerceservicesConstants.STONE))
 								{
 									orderJewelEntryModel.setStoneType3(value);
 								}
 							}
 							else if (featureData.getCode().contains("stonesizefinejwlry3"))
 							{
-								if (name.equalsIgnoreCase("size"))
+								if (name.equalsIgnoreCase(MarketplacecommerceservicesConstants.SIZE))
 								{
 									orderJewelEntryModel.setStoneSizeType3(value);
 								}
@@ -663,14 +663,14 @@ public class PriceBreakupServiceImpl implements PriceBreakupService
 
 							else if (featureData.getCode().contains("stonefinejwlry4"))
 							{
-								if (name.equalsIgnoreCase("Stone"))
+								if (name.equalsIgnoreCase(MarketplacecommerceservicesConstants.STONE))
 								{
 									orderJewelEntryModel.setStoneType4(value);
 								}
 							}
 							else if (featureData.getCode().contains("stonesizefinejwlry4"))
 							{
-								if (name.equalsIgnoreCase("size"))
+								if (name.equalsIgnoreCase(MarketplacecommerceservicesConstants.SIZE))
 								{
 									orderJewelEntryModel.setStoneSizeType4(value);
 								}
@@ -678,14 +678,14 @@ public class PriceBreakupServiceImpl implements PriceBreakupService
 
 							else if (featureData.getCode().contains("stonefinejwlry5"))
 							{
-								if (name.equalsIgnoreCase("Stone"))
+								if (name.equalsIgnoreCase(MarketplacecommerceservicesConstants.STONE))
 								{
 									orderJewelEntryModel.setStoneType5(value);
 								}
 							}
 							else if (featureData.getCode().contains("stonesizefinejwlry5"))
 							{
-								if (name.equalsIgnoreCase("size"))
+								if (name.equalsIgnoreCase(MarketplacecommerceservicesConstants.SIZE))
 								{
 									orderJewelEntryModel.setStoneSizeType5(value);
 								}
@@ -693,14 +693,14 @@ public class PriceBreakupServiceImpl implements PriceBreakupService
 
 							else if (featureData.getCode().contains("stonefinejwlry6"))
 							{
-								if (name.equalsIgnoreCase("Stone"))
+								if (name.equalsIgnoreCase(MarketplacecommerceservicesConstants.STONE))
 								{
 									orderJewelEntryModel.setStoneType6(value);
 								}
 							}
 							else if (featureData.getCode().contains("stonesizefinejwlry6"))
 							{
-								if (name.equalsIgnoreCase("size"))
+								if (name.equalsIgnoreCase(MarketplacecommerceservicesConstants.SIZE))
 								{
 									orderJewelEntryModel.setStoneSizeType6(value);
 								}
@@ -708,14 +708,14 @@ public class PriceBreakupServiceImpl implements PriceBreakupService
 
 							else if (featureData.getCode().contains("stonefinejwlry7"))
 							{
-								if (name.equalsIgnoreCase("Stone"))
+								if (name.equalsIgnoreCase(MarketplacecommerceservicesConstants.STONE))
 								{
 									orderJewelEntryModel.setStoneType7(value);
 								}
 							}
 							else if (featureData.getCode().contains("stonesizefinejwlry7"))
 							{
-								if (name.equalsIgnoreCase("size"))
+								if (name.equalsIgnoreCase(MarketplacecommerceservicesConstants.SIZE))
 								{
 									orderJewelEntryModel.setStoneSizeType7(value);
 								}
@@ -723,14 +723,14 @@ public class PriceBreakupServiceImpl implements PriceBreakupService
 
 							else if (featureData.getCode().contains("stonefinejwlry8"))
 							{
-								if (name.equalsIgnoreCase("Stone"))
+								if (name.equalsIgnoreCase(MarketplacecommerceservicesConstants.STONE))
 								{
 									orderJewelEntryModel.setStoneType8(value);
 								}
 							}
 							else if (featureData.getCode().contains("stonesizefinejwlry8"))
 							{
-								if (name.equalsIgnoreCase("size"))
+								if (name.equalsIgnoreCase(MarketplacecommerceservicesConstants.SIZE))
 								{
 									orderJewelEntryModel.setStoneSizeType8(value);
 								}
@@ -738,14 +738,14 @@ public class PriceBreakupServiceImpl implements PriceBreakupService
 
 							else if (featureData.getCode().contains("stonefinejwlry9"))
 							{
-								if (name.equalsIgnoreCase("Stone"))
+								if (name.equalsIgnoreCase(MarketplacecommerceservicesConstants.STONE))
 								{
 									orderJewelEntryModel.setStoneType9(value);
 								}
 							}
 							else if (featureData.getCode().contains("stonesizefinejwlry9"))
 							{
-								if (name.equalsIgnoreCase("size"))
+								if (name.equalsIgnoreCase(MarketplacecommerceservicesConstants.SIZE))
 								{
 									orderJewelEntryModel.setStoneSizeType9(value);
 								}
@@ -753,14 +753,14 @@ public class PriceBreakupServiceImpl implements PriceBreakupService
 
 							else if (featureData.getCode().contains("stonefinejwlry10"))
 							{
-								if (name.equalsIgnoreCase("Stone"))
+								if (name.equalsIgnoreCase(MarketplacecommerceservicesConstants.STONE))
 								{
 									orderJewelEntryModel.setStoneType10(value);
 								}
 							}
 							else if (featureData.getCode().contains("stonesizefinejwlry10"))
 							{
-								if (name.equalsIgnoreCase("size"))
+								if (name.equalsIgnoreCase(MarketplacecommerceservicesConstants.SIZE))
 								{
 									orderJewelEntryModel.setStoneSizeType10(value);
 								}
