@@ -21,6 +21,7 @@ import de.hybris.platform.solrfacetsearch.provider.FieldValue;
 import de.hybris.platform.solrfacetsearch.provider.impl.ClassificationPropertyValueProvider;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
@@ -48,6 +49,8 @@ public class MplClassificationPropertyValueProvider extends ClassificationProper
 
 	//private static final String DYNAMICATTRIBUTE = "classification.attirbutes.dynamic.";
 
+	private static final String ELECTRONICS = "Electronics".intern();
+
 	@Override
 	public Collection<FieldValue> getFieldValues(final IndexConfig indexConfig, final IndexedProperty indexedProperty,
 			final Object model) throws FieldValueProviderException
@@ -58,13 +61,15 @@ public class MplClassificationPropertyValueProvider extends ClassificationProper
 			{
 				//Added for Tata-24 Start :::
 				final ProductModel productModel = (ProductModel) model;
+				final String classificationType = indexedProperty.getClassificationProductType();
+
 				/********** TISPRO-326 changes **********/
-				if (!"Electronics".equalsIgnoreCase(((ProductModel) model).getProductCategoryType())
-						&& StringUtils.isEmpty(indexedProperty.getClassificationProductType())
+				if ((!ELECTRONICS.equalsIgnoreCase(((ProductModel) model).getProductCategoryType()) && (StringUtils
+						.isEmpty(classificationType) || isAllowedClassificationType(classificationType)))
 						||
 
-						("Electronics".equalsIgnoreCase(((ProductModel) model).getProductCategoryType()) && "Electronics"
-								.equalsIgnoreCase(indexedProperty.getClassificationProductType())))
+						(ELECTRONICS.equalsIgnoreCase(((ProductModel) model).getProductCategoryType()) && ELECTRONICS
+								.equalsIgnoreCase(classificationType)))
 				{
 
 					final List<ClassAttributeAssignmentModel> classAttrAssignmentList = new ArrayList<ClassAttributeAssignmentModel>();
@@ -225,6 +230,22 @@ public class MplClassificationPropertyValueProvider extends ClassificationProper
 					+ super.getClass().getName() + "exception" + e, e);
 		}
 		//throw new FieldValueProviderException("Cannot provide classification property of non-product item");
+	}
+
+
+	private boolean isAllowedClassificationType(final String classificationType)
+	{
+		final String categoryNameList = configurationService.getConfiguration().getString("classification.index.category", " ");
+		if (StringUtils.isNotEmpty(classificationType) && StringUtils.isNotEmpty(categoryNameList))
+		{
+			LOG.debug("Validating ClassificationType>> " + classificationType);
+			final List<String> categoryList = new ArrayList<String>(Arrays.asList(categoryNameList.split(" , ")));
+			if (categoryList.contains(classificationType))
+			{
+				return true;
+			}
+		}
+		return false;
 	}
 
 	@Override
