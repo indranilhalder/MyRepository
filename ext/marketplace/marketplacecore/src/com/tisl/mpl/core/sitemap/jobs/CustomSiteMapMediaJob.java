@@ -46,7 +46,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Required;
 
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
-import com.tisl.mpl.core.constants.MarketplaceCoreConstants;
 import com.tisl.mpl.core.enums.SiteMapUpdateModeEnum;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.marketplacecommerceservices.daos.MplCategoryDao;
@@ -114,7 +113,7 @@ public class CustomSiteMapMediaJob extends SiteMapMediaJob
 			final SiteMapConfigModel siteMapConfig = contentSite.getSiteMapConfig();
 			final Collection<SiteMapPageModel> siteMapPages = siteMapConfig.getSiteMapPages();
 			final SiteMapUpdateModeEnum updateType = cronJob.getUpdateType();
-			List brandLists = null;//PRDI-423
+			final List<String> brandLists = new ArrayList<>();//PRDI-423
 			for (final SiteMapPageModel siteMapPage : siteMapPages)
 			{
 				final List<File> siteMapFiles = new ArrayList<File>();
@@ -128,6 +127,7 @@ public class CustomSiteMapMediaJob extends SiteMapMediaJob
 					{
 						final CatalogVersionModel activeCatalog = contentSite.getDefaultCatalog().getActiveCatalogVersion();
 						final List<CategoryModel> L1Category = fetchL1fromL0(activeCatalog);
+
 						if (CollectionUtils.isNotEmpty(L1Category))
 						{
 							for (final CategoryModel category : L1Category)
@@ -142,7 +142,7 @@ public class CustomSiteMapMediaJob extends SiteMapMediaJob
 										if (useBrandFilter())
 										{
 											LOG.debug("Inside useBrandFilter");
-											brandLists = fetchBrand(category.getCode(), categoryl2.getCode());
+											brandLists.addAll(fetchBrand(category.getCode(), categoryl2.getCode()));
 										}
 										else
 										{
@@ -561,10 +561,12 @@ public class CustomSiteMapMediaJob extends SiteMapMediaJob
 			{
 				for (final MplbrandfilterModel brandFilter : brandFilterList)
 				{
-					brandFilter.getUrl1().replaceAll(MarketplaceCoreConstants.DOUBLE_HYPHEN, MarketplaceCoreConstants.SINGLE_HYPHEN);
-					brandFilter.getUrl2().replaceAll(MarketplaceCoreConstants.DOUBLE_HYPHEN, MarketplaceCoreConstants.SINGLE_HYPHEN);
-					brandFilter.getUrl3().replaceAll(MarketplaceCoreConstants.DOUBLE_HYPHEN, MarketplaceCoreConstants.SINGLE_HYPHEN);
-					brandFilterUrlSet.add(brandFilter.getUrl1());
+					//As per nausheer's comment
+					//brandFilter.getUrl1().replaceAll(MarketplaceCoreConstants.DOUBLE_HYPHEN, MarketplaceCoreConstants.SINGLE_HYPHEN);
+					//brandFilter.getUrl2().replaceAll(MarketplaceCoreConstants.DOUBLE_HYPHEN, MarketplaceCoreConstants.SINGLE_HYPHEN);
+					//brandFilter.getUrl3().replaceAll(MarketplaceCoreConstants.DOUBLE_HYPHEN, MarketplaceCoreConstants.SINGLE_HYPHEN);
+					//As per nausheer's comment
+					//brandFilterUrlSet.add(brandFilter.getUrl1());
 					brandFilterUrlSet.add(brandFilter.getUrl2());
 					brandFilterUrlSet.add(brandFilter.getUrl3());
 				}
