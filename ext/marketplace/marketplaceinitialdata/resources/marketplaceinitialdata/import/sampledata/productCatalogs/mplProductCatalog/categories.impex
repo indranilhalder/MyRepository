@@ -1164,3 +1164,110 @@ INSERT_UPDATE Category;code[unique=true];name[lang=en];$supercategories;$catalog
 #;MBH13A00001;Nike;MBH13;mplProductCatalog:Staged;admingroup
 #### Footwear Categories End ########
 
+#### Travel & Luggage Categories Start ########
+
+INSERT_UPDATE Category;code[unique=true];name[lang=en];$supercategories;$catalogVersion;allowedPrincipals(uid)
+;MPH18;TravelAndLuggage;MPH1;mplProductCatalog:Staged;$uidGroup
+;MPH1810;Luggage;MPH18;mplProductCatalog:Staged;$uidGroup
+;MPH1811;Business;MPH18;mplProductCatalog:Staged;$uidGroup
+;MPH1812;Outdoor & Sport;MPH18;mplProductCatalog:Staged;$uidGroup
+;MPH1813;Kids;MPH18;mplProductCatalog:Staged;$uidGroup
+;MPH1814;Accessories;MPH18;mplProductCatalog:Staged;$uidGroup
+
+;MPH1810100;Hard-sided;MPH1810;mplProductCatalog:Staged;$uidGroup
+;MPH1810101;Soft-sided;MPH1810;mplProductCatalog:Staged;$uidGroup
+;MPH1811100;Leather;MPH1811;mplProductCatalog:Staged;$uidGroup
+;MPH1811101;Non-Leather;MPH1811;mplProductCatalog:Staged;$uidGroup
+;MPH1812100;Leather;MPH1812;mplProductCatalog:Staged;$uidGroup
+;MPH1812101;Non-Leather;MPH1812;mplProductCatalog:Staged;$uidGroup
+;MPH1813100;School;MPH1813;mplProductCatalog:Staged;$uidGroup
+;MPH1813101;Luggage;MPH1813;mplProductCatalog:Staged;$uidGroup
+;MPH1814100;Essentials;MPH1814;mplProductCatalog:Staged;$uidGroup
+;MPH1814101;Add Ons;MPH1814;mplProductCatalog:Staged;$uidGroup
+
+;MPH1810100100;Suitcases;MPH1810100;mplProductCatalog:Staged;$uidGroup
+;MPH1810100101;Strolleys;MPH1810100;mplProductCatalog:Staged;$uidGroup
+;MPH1810100102;Luggage Sets;MPH1810100;mplProductCatalog:Staged;$uidGroup
+;MPH1810100103;Others1;MPH1810100;mplProductCatalog:Staged;$uidGroup
+;MPH1810100104;Others2;MPH1810100;mplProductCatalog:Staged;$uidGroup
+
+;MPH1810101100;Suitcases;MPH1810101;mplProductCatalog:Staged;$uidGroup
+;MPH1810101101;Strolleys;MPH1810101;mplProductCatalog:Staged;$uidGroup
+;MPH1810101102;Duffels;MPH1810101;mplProductCatalog:Staged;$uidGroup
+;MPH1810101103;Luggage Sets;MPH1810101;mplProductCatalog:Staged;$uidGroup
+;MPH1810101104;Others1;MPH1810101;mplProductCatalog:Staged;$uidGroup
+;MPH1810101105;Others2;MPH1810101;mplProductCatalog:Staged;$uidGroup
+
+;MPH1811100100;Laptop;MPH1811100;mplProductCatalog:Staged;$uidGroup
+;MPH1811100101;Duffels;MPH1811100;mplProductCatalog:Staged;$uidGroup
+;MPH1811100102;Briefcase;MPH1811100;mplProductCatalog:Staged;$uidGroup
+;MPH1811100103;Messenger Bags;MPH1811100;mplProductCatalog:Staged;$uidGroup
+;MPH1811100104;Satchels;MPH1811100;mplProductCatalog:Staged;$uidGroup
+;MPH1811100105;Others1;MPH1811100;mplProductCatalog:Staged;$uidGroup
+;MPH1811100106;Others2;MPH1811100;mplProductCatalog:Staged;$uidGroup
+
+;MPH1811101100;Laptop;MPH1811101;mplProductCatalog:Staged;$uidGroup
+;MPH1811101101;Duffels;MPH1811101;mplProductCatalog:Staged;$uidGroup
+;MPH1811101102;Briefcase;MPH1811101;mplProductCatalog:Staged;$uidGroup
+;MPH1811101103;Messenger Bags;MPH1811101;mplProductCatalog:Staged;$uidGroup
+;MPH1811101104;Satchels;MPH1811101;mplProductCatalog:Staged;$uidGroup
+;MPH1811101105;Others1;MPH1811101;mplProductCatalog:Staged;$uidGroup
+;MPH1811101106;Others2;MPH1811101;mplProductCatalog:Staged;$uidGroup
+
+;MPH1812100100;Backpacks;MPH1812100;mplProductCatalog:Staged;$uidGroup
+;MPH1812100101;Gym Bags;MPH1812100;mplProductCatalog:Staged;$uidGroup
+;MPH1812100102;Duffels;MPH1812100;mplProductCatalog:Staged;$uidGroup
+;MPH1812100103;Messenger Bags;MPH1812100;mplProductCatalog:Staged;$uidGroup
+;MPH1812100104;Rucksack;MPH1812100;mplProductCatalog:Staged;$uidGroup
+;MPH1812100105;Knapsack;MPH1812100;mplProductCatalog:Staged;$uidGroup
+;MPH1812100106;Others1;MPH1812100;mplProductCatalog:Staged;$uidGroup
+;MPH1812100107;Others2;MPH1812100;mplProductCatalog:Staged;$uidGroup
+
+;MPH1812101100;Backpacks;MPH1812101;mplProductCatalog:Staged;$uidGroup
+;MPH1812101101;Gym Bags;MPH1812101;mplProductCatalog:Staged;$uidGroup
+;MPH1812101102;Duffels;MPH1812101;mplProductCatalog:Staged;$uidGroup
+;MPH1812101103;Messenger Bags;MPH1812101;mplProductCatalog:Staged;$uidGroup
+;MPH1812101104;Rucksack;MPH1812101;mplProductCatalog:Staged;$uidGroup
+;MPH1812101105;Knapsack;MPH1812101;mplProductCatalog:Staged;$uidGroup
+;MPH1812101106;Others1;MPH1812101;mplProductCatalog:Staged;$uidGroup
+;MPH1812101107;Others2;MPH1812101;mplProductCatalog:Staged;$uidGroup
+
+;MPH1813100100;Backpacks;MPH1813100;mplProductCatalog:Staged;$uidGroup
+;MPH1813100101;Tiffin Bags;MPH1813100;mplProductCatalog:Staged;$uidGroup
+;MPH1813100102;Others1;MPH1813100;mplProductCatalog:Staged;$uidGroup
+;MPH1813100103;Others2;MPH1813100;mplProductCatalog:Staged;$uidGroup
+
+;MPH1813101100;Suitcases;MPH1813101;mplProductCatalog:Staged;$uidGroup
+;MPH1813101101;Strolleys;MPH1813101;mplProductCatalog:Staged;$uidGroup
+;MPH1813101102;Luggage Sets;MPH1813101;mplProductCatalog:Staged;$uidGroup
+;MPH1813101103;Duffels;MPH1813101;mplProductCatalog:Staged;$uidGroup
+;MPH1813101104;Others1;MPH1813101;mplProductCatalog:Staged;$uidGroup
+;MPH1813101105;Others2;MPH1813101;mplProductCatalog:Staged;$uidGroup
+
+;MPH1814100100;Toiletry Kit;MPH1814100;mplProductCatalog:Staged;$uidGroup
+;MPH1814100101;Passport Holder;MPH1814100;mplProductCatalog:Staged;$uidGroup
+;MPH1814100102;Vanity Case;MPH1814100;mplProductCatalog:Staged;$uidGroup
+;MPH1814100103;Travel Pouche;MPH1814100;mplProductCatalog:Staged;$uidGroup
+;MPH1814100104;Cosmetic Pouches;MPH1814100;mplProductCatalog:Staged;$uidGroup
+;MPH1814100105;Document Case;MPH1814100;mplProductCatalog:Staged;$uidGroup
+;MPH1814100106;Waist Pouches;MPH1814100;mplProductCatalog:Staged;$uidGroup
+;MPH1814100107;Shoesack;MPH1814100;mplProductCatalog:Staged;$uidGroup
+;MPH1814100108;Garment Bags;MPH1814100;mplProductCatalog:Staged;$uidGroup
+;MPH1814100109;Jewelery Rolls & Cases;MPH1814100;mplProductCatalog:Staged;$uidGroup
+;MPH1814100110;Travel Organiser;MPH1814100;mplProductCatalog:Staged;$uidGroup
+;MPH1814100111;Coolers & Insulated Bags;MPH1814100;mplProductCatalog:Staged;$uidGroup
+;MPH1814100112;Diaper Bags;MPH1814100;mplProductCatalog:Staged;$uidGroup
+;MPH1814100113;Others1;MPH1814100;mplProductCatalog:Staged;$uidGroup
+;MPH1814100114;Others2;MPH1814100;mplProductCatalog:Staged;$uidGroup
+
+;MPH1814101100;Neck Pillow;MPH1814101;mplProductCatalog:Staged;$uidGroup
+;MPH1814101101;Eye Shade;MPH1814101;mplProductCatalog:Staged;$uidGroup
+;MPH1814101102;Luggage Carts;MPH1814101;mplProductCatalog:Staged;$uidGroup
+;MPH1814101103;Luggage Scales;MPH1814101;mplProductCatalog:Staged;$uidGroup
+;MPH1814101104;Luggage Straps;MPH1814101;mplProductCatalog:Staged;$uidGroup
+;MPH1814101105;Luggage Tags;MPH1814101;mplProductCatalog:Staged;$uidGroup
+;MPH1814101106;Locks;MPH1814101;mplProductCatalog:Staged;$uidGroup
+;MPH1814101107;Others1;MPH1814101;mplProductCatalog:Staged;$uidGroup
+;MPH1814101108;Others2 Bags;MPH1814101;mplProductCatalog:Staged;$uidGroup
+
+#### Travel & Luggage Categories End ########

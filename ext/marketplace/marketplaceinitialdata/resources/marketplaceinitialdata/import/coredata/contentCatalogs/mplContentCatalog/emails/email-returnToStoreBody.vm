@@ -15,7 +15,7 @@ width:100%;
 	<table width="598" border="0" cellspacing="0" cellpadding="0">
       <tr>
         <td align="left" valign="top" bgcolor="#ffffff">
-<span>${ctx.cmsSlotContents.SiteLogo}</span></td>
+<span style="display: inline-block;">${ctx.cmsSlotContents.SiteLogo}</span></td>
       </tr>
  
       <tr>

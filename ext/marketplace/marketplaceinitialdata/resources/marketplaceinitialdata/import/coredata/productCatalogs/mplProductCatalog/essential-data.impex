@@ -123,6 +123,8 @@ INSERT_UPDATE MediaFormat;qualifier[unique=true];name
 ;658Wx734H;658Wx734H
 ;97Wx108H;97Wx108H
 
+
+
 INSERT_UPDATE ProductTaxGroup;code[unique=true]
 ;jp-vat-full
 ;eu-vat-full
@@ -216,7 +218,7 @@ INSERT_UPDATE mediaStatusEnum;code[unique=true];name[lang=en]
 ;pcm_updatedpcm;Updated Pcm;
 ;pcm_mediaupdated;Media Updated;
 ;pcm_updatedservice;Updated Service;
-pcm_imageprocessingcompleted;Image Processing Completed;
+;pcm_imageprocessingcompleted;Image Processing Completed;
 
 INSERT_UPDATE productType;code[unique=true];name[lang=en]
 ;pcm_simple;Simple;

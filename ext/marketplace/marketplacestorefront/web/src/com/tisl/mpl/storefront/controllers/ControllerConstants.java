@@ -279,6 +279,19 @@ public interface ControllerConstants
 
 			}
 
+			interface Pancard
+			{
+
+				String PanCardDetail = "pages/pancard/pancardupload";
+				String panCardUploadSuccess = "pages/pancard/pancarduploadsuccess";
+				String panCardUploadUpdate = "pages/pancard/pancarduploadupdate";
+				String panCardApproved = "pages/pancard/pancardapproved";
+				String panCardUploadDetailsError = "pages/pancard/pancarduploaddetailserror";
+
+
+
+			}
+
 		}
 
 		interface Fragments
@@ -312,7 +325,7 @@ public interface ControllerConstants
 				String MiniCartErrorPanel = "fragments/cart/miniCartErrorPanel";
 				String CartPopup = "fragments/cart/cartPopup";
 				String GiftList = "fragments/cart/cartGiftList";
-
+				public static final String pincode = "pincode";
 			}
 
 			interface Account
@@ -379,6 +392,17 @@ public interface ControllerConstants
 				public static final String ALL_OF_STOCK = "allOOStock";
 				public static final String BUYBOZFORSIZEGUIDEAJAX = "-buyboxDataForSizeGuide";
 
+
+				//for price breakup(TPR-3752)
+				public static final String PRICE_BREAKUP = "priceBreakup";
+				public static final String JEWEL_DESCRIPTION = "jewelDescription";
+				/*
+				 * <!-- //TPR-3752 Jewel Heading Added -->
+				 */public static final String DISPLAYCONFIGATTR = "displayconfigattr";
+
+				//ends
+
+
 				//TISPRM-56
 				public static final String AVAILABILITY = "availibility";
 
@@ -393,9 +417,26 @@ public interface ControllerConstants
 				//UF-60
 				public static final String AJAXPRODUCTDATA = "fragments/product/productPromotionSection";
 
+				public static final String ID_ED_SELLER_HANDLING_TIME = "isEDSeller";
+
+				//Addition for Exchange Start
+				String ExchangeGuidePopup = "fragments/product/exchangeGuidePopup";
+				public static final String EXCHANGE = "-exchange";
+				public static final String L3CATEGORY = "l3code";
+				public static final String L3CATEGORYNAME = "l3name";
+				public static final String GENARATEEXCHANGEID = "-generateExchangeId";
+				public static final String PINCODE = "pincode";
+				public static final String L4NAME = "l4name";
+				public static final String BRAND = "brand";
+				public static final String ISWORKING = "isWorking";
+				public static final String COUPONVALUE = "couponValue";
+				public static final String CHECK_REVERSE_PINCODE = "-checkReversePincode";
+				//Addition for Exchange Ends
+
+
+
 				public static final String USSID_CODE_PATH_NEW_PATTERN = "/**/p-{ussId:.*}";
 				public static final String USSID = "ussId";
-				public static final String ID_ED_SELLER_HANDLING_TIME = "isEDSeller";
 			}
 
 

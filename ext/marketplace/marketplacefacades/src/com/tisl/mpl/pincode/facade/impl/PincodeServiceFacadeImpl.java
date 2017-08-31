@@ -38,6 +38,7 @@ import org.apache.log4j.Logger;
 
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.constants.MplGlobalCodeConstants;
+import com.tisl.mpl.core.model.BuyBoxModel;
 import com.tisl.mpl.core.model.MplZoneDeliveryModeValueModel;
 import com.tisl.mpl.core.model.RichAttributeModel;
 import com.tisl.mpl.core.mplconfig.service.MplConfigService;
@@ -51,6 +52,7 @@ import com.tisl.mpl.facades.data.StoreLocationRequestData;
 import com.tisl.mpl.facades.data.StoreLocationResponseData;
 import com.tisl.mpl.facades.product.data.MarketplaceDeliveryModeData;
 import com.tisl.mpl.helper.ProductDetailsHelper;
+import com.tisl.mpl.marketplacecommerceservices.service.BuyBoxService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplSellerInformationService;
 import com.tisl.mpl.marketplacecommerceservices.service.PincodeService;
 import com.tisl.mpl.model.SellerInformationModel;
@@ -89,6 +91,9 @@ public class PincodeServiceFacadeImpl implements PincodeServiceFacade
 
 	@Resource(name = "mplConfigService")
 	private MplConfigService mplConfigService;
+	//for Jewellery
+	@Resource
+	private BuyBoxService buyBoxService;
 
 	/**
 	 * This method is used to check pincode is serviceable are not
@@ -329,7 +334,22 @@ public class PincodeServiceFacadeImpl implements PincodeServiceFacade
 				{
 					for (final MarketplaceDeliveryModeData deliveryMode : seller.getDeliveryModes())
 					{
-						deliveryModeData = fetchDeliveryModeDataForUSSID(deliveryMode.getCode(), seller.getUssid());
+						//changes for Jewellery pincode service in pdp
+						if (productModel.getProductCategoryType().equalsIgnoreCase(MarketplaceFacadesConstants.PRODUCT_TYPE))
+						{
+							final List<BuyBoxModel> buyboxModelListAll = new ArrayList<BuyBoxModel>(
+									buyBoxService.buyboxPrice(productModel.getCode()));
+
+							final String sellerArticleSKU = buyboxModelListAll.get(0).getSellerArticleSKU();
+							deliveryModeData = fetchDeliveryModeDataForUSSID(deliveryMode.getCode(), sellerArticleSKU);
+						}
+						//end
+
+						else
+						{
+							deliveryModeData = fetchDeliveryModeDataForUSSID(deliveryMode.getCode(), seller.getUssid());
+						}
+						//deliveryModeData = fetchDeliveryModeDataForUSSID(deliveryMode.getCode(), seller.getUssid());
 						deliveryModeList.add(deliveryModeData);
 					}
 					data.setDeliveryModes(deliveryModeList);
@@ -420,7 +440,21 @@ public class PincodeServiceFacadeImpl implements PincodeServiceFacade
 				}
 
 				data.setSellerId(seller.getSellerID());
-				data.setUssid(seller.getUssid());
+
+				//added for jewellery
+				if (productModel.getProductCategoryType().equalsIgnoreCase(MarketplaceFacadesConstants.PRODUCT_TYPE))
+				{
+					final List<BuyBoxModel> buyboxModelListAll = new ArrayList<BuyBoxModel>(
+							buyBoxService.buyboxPriceForJewellery(sellerInfoModel.getSellerArticleSKU()));
+					final String sellerArticleSKU = buyboxModelListAll.get(0).getSellerArticleSKU();
+					data.setUssid(sellerArticleSKU);
+				}
+				//end
+				else
+				{
+					data.setUssid(seller.getUssid());
+				}
+				//data.setUssid(seller.getUssid());
 				data.setIsDeliveryDateRequired("N");
 				requestData.add(data);
 			}

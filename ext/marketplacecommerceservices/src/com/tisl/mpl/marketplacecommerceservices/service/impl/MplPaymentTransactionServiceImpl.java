@@ -12,7 +12,7 @@ import de.hybris.platform.payment.model.PaymentTransactionModel;
 import de.hybris.platform.servicelayer.exceptions.ModelSavingException;
 import de.hybris.platform.servicelayer.model.ModelService;
 import de.hybris.platform.store.BaseStoreModel;
-import de.hybris.platform.store.services.BaseStoreService;
+//import de.hybris.platform.store.services.BaseStoreService;
 
 import java.math.BigDecimal;
 import java.util.Date;
@@ -44,8 +44,9 @@ public class MplPaymentTransactionServiceImpl implements MplPaymentTransactionSe
 	private ModelService modelService;
 	@Autowired
 	private MplPaymentDao mplPaymentDao;
-	@Autowired
-	private BaseStoreService baseStoreService;
+
+	//	@Autowired
+	//	private BaseStoreService baseStoreService;
 
 
 	/**
@@ -425,9 +426,9 @@ public class MplPaymentTransactionServiceImpl implements MplPaymentTransactionSe
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
-	 * 
+	 *
 	 * @desc SprintPaymentFixes:-:- To handle missing paymentTransaction for specific order
 	 */
 	@Override
@@ -517,9 +518,9 @@ public class MplPaymentTransactionServiceImpl implements MplPaymentTransactionSe
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
-	 * 
+	 *
 	 * @desc SprintPaymentFixes:-:- To handle missing paymentTransaction for specific order
 	 */
 	@Override

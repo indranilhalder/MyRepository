@@ -12,7 +12,24 @@
 	<%-- <ycommerce:testId code="productDetails_content_label"> --%> 
 	<ycommerce:testId code="productStyleNotes_content_label">
 		<ul style="list-style:none; padding-left:0;">
-  			<li class="stylenote" itemprop="description">${product.articleDescription}</li>
+		<c:choose>
+					<c:when test="${product.rootCategory=='FineJewellery' || product.rootCategory=='FashionJewellery'}">
+						<div class="product-desc">
+							<span class="key-label">
+							 <c:forEach var="classification" items="${mapConfigurableAttributes}">
+							 <c:if test="${not empty classification.value }">
+   						 		<c:forEach var="classValue" items="${classification.value }">
+   						 			${classValue.key} &nbsp;&nbsp;${classValue.value}
+   						 			 </c:forEach>
+							  </c:if> 
+								</c:forEach>
+								<li class="stylenote" itemprop="description">${product.articleDescription}</li>
+							</span> 
+						</div>
+					</c:when>
+					<c:otherwise>
+					<li class="stylenote" itemprop="description">${product.articleDescription}</li></c:otherwise>
+				</c:choose>
   		</ul>
 	</ycommerce:testId>
 </div>

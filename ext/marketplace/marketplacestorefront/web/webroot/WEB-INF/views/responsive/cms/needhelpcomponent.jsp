@@ -74,7 +74,13 @@
 					$(this).removeClass("used");
 				}
 			});
-
+			//UF-281 Starts
+			var pageType=$("#pageType").val();
+			if(pageType=="multistepcheckoutsummary")
+			{
+				ACC.singlePageCheckout.needHelpContactNumber="${contactNumber}";
+			}
+			//UF-281 Ends
 		});
 	</script>
 

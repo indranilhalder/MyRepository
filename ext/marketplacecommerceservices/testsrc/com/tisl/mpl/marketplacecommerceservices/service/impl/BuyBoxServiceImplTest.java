@@ -119,9 +119,15 @@ public class BuyBoxServiceImplTest
 	{
 		final Set<Map<BuyBoxModel, RichAttributeModel>> resultset = new HashSet<Map<BuyBoxModel, RichAttributeModel>>();
 		final String productCode = MarketplacecclientservicesConstants.EMPTY;//TODO :Please enter product code
-		assertNotNull(buyBoxDao.getsellersDetails(productCode));
+		//TPR-3809
+		final String productCatType = MarketplacecclientservicesConstants.EMPTY;//TODO :Please enter product Category Type
+		/*assertNotNull(buyBoxDao.getsellersDetails(productCode));
 		assertFalse(buyBoxDao.getsellersDetails(productCode).isEmpty());
 		assertEquals(resultset, buyBoxDao.getsellersDetails(productCode));
+		*/
+		assertNotNull(buyBoxDao.getsellersDetails(productCode,productCatType));
+		assertFalse(buyBoxDao.getsellersDetails(productCode,productCatType).isEmpty());
+		assertEquals(resultset, buyBoxDao.getsellersDetails(productCode,productCatType));
 	}
 
 	@Test

@@ -17,6 +17,7 @@ import de.hybris.platform.commercefacades.user.UserFacade;
 import de.hybris.platform.commercefacades.user.data.AddressData;
 import de.hybris.platform.commercefacades.user.data.CustomerData;
 import de.hybris.platform.commerceservices.enums.SalesApplication;
+import de.hybris.platform.core.model.JewelleryInformationModel;
 import de.hybris.platform.core.model.order.AbstractOrderEntryModel;
 import de.hybris.platform.core.model.order.OrderModel;
 import de.hybris.platform.core.model.product.ProductModel;
@@ -83,6 +84,7 @@ import com.tisl.mpl.facades.account.register.MplOrderFacade;
 import com.tisl.mpl.facades.data.ReturnItemAddressData;
 import com.tisl.mpl.facades.product.data.ReturnReasonData;
 import com.tisl.mpl.facades.product.data.StateData;
+import com.tisl.mpl.marketplacecommerceservices.service.MplJewelleryService;
 import com.tisl.mpl.marketplacecommerceservices.service.OrderModelService;
 import com.tisl.mpl.model.SellerInformationModel;
 import com.tisl.mpl.pincode.facade.PincodeServiceFacade;
@@ -154,6 +156,9 @@ public class ReturnPageController extends AbstractMplSearchPageController
 	@Autowired
 	ModelService modelService;
 
+	@Resource(name = "mplJewelleryService")
+	private MplJewelleryService jewelleryService;
+
 	public static final String RETURN_TYPE_COD = "01";
 
 	private static final String RETURN_SUCCESS = "returnSuccess";
@@ -182,6 +187,7 @@ public class ReturnPageController extends AbstractMplSearchPageController
 
 		String productRichAttrOfQuickDrop = null;
 		String sellerRichAttrOfQuickDrop = null;
+		String ussid = "";
 
 		try
 		{
@@ -215,17 +221,35 @@ public class ReturnPageController extends AbstractMplSearchPageController
 					if (null != productModel && productModel.getRichAttribute() != null)
 					{
 						productRichAttributeModel = (List<RichAttributeModel>) productModel.getRichAttribute();
-						if (productRichAttributeModel != null && !productRichAttributeModel.isEmpty() && productRichAttributeModel.get(0).getReturnAtStoreEligible() != null)
+						if (productRichAttributeModel != null && !productRichAttributeModel.isEmpty()
+								&& productRichAttributeModel.get(0).getReturnAtStoreEligible() != null)
 						{
 							productRichAttrOfQuickDrop = productRichAttributeModel.get(0).getReturnAtStoreEligible().toString();
 						}
 					}
+
+					if (productModel.getProductCategoryType().equalsIgnoreCase(MarketplacecommerceservicesConstants.FINEJEWELLERY))
+
+					{ //SellerInformationModel sellerInfoModel = null;
+						final List<JewelleryInformationModel> jewelleryInfo = jewelleryService.getJewelleryInfoByUssid(entry
+								.getSelectedUssid());
+						ussid = (CollectionUtils.isNotEmpty(jewelleryInfo)) ? jewelleryInfo.get(0).getPCMUSSID() : "";
+
+						LOG.debug("PCMUSSID FOR JEWELLERY :::::::::: " + "for " + entry.getSelectedUssid() + " is "
+								+ jewelleryInfo.get(0).getPCMUSSID());
+					}
+					else
+					{
+						ussid = entry.getSelectedUssid();
+					}
+
 					final List<SellerInformationModel> sellerInfo = (List<SellerInformationModel>) productModel
 							.getSellerInformationRelator();
 
 					for (final SellerInformationModel sellerInformationModel : sellerInfo)
 					{
-						if (sellerInformationModel.getSellerArticleSKU().equals(entry.getSelectedUssid()))
+						/* if (sellerInformationModel.getSellerArticleSKU().equals(entry.getSelectedUssid())) */
+						if (sellerInformationModel.getSellerArticleSKU().equals(ussid))
 						{
 							List<RichAttributeModel> sellerRichAttributeModel = null;
 							if (sellerInformationModel.getRichAttribute() != null)
@@ -265,6 +289,8 @@ public class ReturnPageController extends AbstractMplSearchPageController
 			}
 
 			model.addAttribute(ModelAttributetConstants.REASON_DATA_LIST, reasonDataList);
+			//JWLSPCUAT-282
+			model.addAttribute(ModelAttributetConstants.ORDERCODE, orderCode);
 			//if logistic partner not available for the given pin code
 			model.addAttribute(ModelAttributetConstants.PINCODE_NOT_SERVICEABLE,
 					MarketplacecommerceservicesConstants.REVERCE_LOGISTIC_PINCODE_SERVICEABLE_NOTAVAIL_MESSAGE);
@@ -446,6 +472,11 @@ public class ReturnPageController extends AbstractMplSearchPageController
 				returnData.setReturnMethod(returnForm.getReturnMethod());
 				returnData.setReturnFulfillmentMode(returnFulfillmentType);
 
+				// TPR-4134
+				if (null != returnForm.getReverseSeal())
+				{
+					returnData.setReverseSealLostflag(returnForm.getReverseSeal());
+				}
 				returnAddrData.setAddressLane1(returnForm.getAddrLine1());
 				returnAddrData.setAddressLane2(returnForm.getAddrLine2());
 				returnAddrData.setAddressLine3(returnForm.getAddrLine3());

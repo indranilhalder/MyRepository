@@ -17,6 +17,7 @@
 
 <template:page pageTitle="${pageTitle}" hideHeaderLinks="true" showOnlySiteLogo="true">
 <cart:tealiumCartParameters/>
+<br/><br/><br/><br/><br/><br/><br/><br/><br/>
 				<div class="alert alert-danger alert-dismissable" id="juspayconnErrorDiv">	<!-- TPR-629 changes for error -->
 					<button class="close juspayCloseButton" type="button">&times;</button>
 					<span id="juspayErrorMsg">Some issues are there with payment</span>
@@ -41,8 +42,8 @@
 		<spring:theme code="checkout.multi.secure.checkout"/>
 	</div>
 	<div class="checkout-content checkout-payment cart checkout wrapper">
-		<multiCheckout:checkoutSteps checkoutSteps="${checkoutSteps}" progressBarId="${progressBarId}" isCart="${isCart}">
-			<jsp:body>
+		<%-- <multiCheckout:checkoutSteps checkoutSteps="${checkoutSteps}" progressBarId="${progressBarId}" isCart="${isCart}">
+			<jsp:body> --%>
 				<script>
     				$(document).ready(function(){
     					<%-- var updateItHereLink = "<%=request.getParameter("Id")%>";  --%>
@@ -194,6 +195,12 @@
 					<button type="button" class="button positive right cod_payment_button_top proceed-button" onclick="submitForm()" id="paymentButtonId_up"><spring:theme code="checkout.multi.paymentMethod.codContinue" /></button>
 					<button type="button" class="button btn-block payment-button make_payment_top_savedCard proceed-button" id="make_mrupee_payment_up"><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.paymentButton"/></button>
 					<h1 class="payment-options"><spring:theme code="text.payment.options"/></h1>
+					                                 
+					           <c:if test="${dispMsg eq true }">
+						           <p class="disclaimer-txt">
+										<spring:theme code="pay.price.change.notification"></spring:theme>
+									</p>
+					           </c:if>               
 						<p class="cart-items">You have an outstanding amount of &nbsp;&nbsp;<span class="prices"  id="outstanding-amount">
 					<ycommerce:testId code="cart_totalPrice_label"><format:price priceData="${cartData.totalPrice}"/> <!-- TISPRDT-693 -->
 				<!-- Unwanted code commented -->
@@ -225,7 +232,7 @@
 												<li class="active">
 
 
-													<span id="viewPaymentCredit" >
+													<span id="viewPaymentCredit" onclick="viewPaymentCredit();">
 														<spring:theme code="checkout.multi.paymentMethod.selectMode.CC" />
 													</span>
 												</li>
@@ -240,7 +247,7 @@
 		    									<input type="hidden" id="DebitCard" value="${map.value}" />
 		    								
 		    									<li>
-		    										<span id="viewPaymentDebit" >
+		    										<span id="viewPaymentDebit"  onclick="viewPaymentDebit();">
 														<spring:theme code="checkout.multi.paymentMethod.selectMode.DC" />
 													</span>
 												</li>
@@ -255,7 +262,7 @@
 			    								<input type="hidden" id="Netbanking" value="${map.value}" />
 			    							
 			    								<li>
-			      	 								<span id="viewPaymentNetbanking" >
+			      	 								<span id="viewPaymentNetbanking"  onclick="viewPaymentNetbanking();">
 			      	 									<spring:theme code="checkout.multi.paymentMethod.selectMode.NB" />
 			      	 								</span>
 			      	 							</li>
@@ -268,7 +275,7 @@
 										<c:choose>
 			    							<c:when test="${map.key eq 'EMI'}">
 											<li>
-				       								<span id="viewPaymentEMI" >
+				       								<span id="viewPaymentEMI" onclick="viewPaymentEMI();">
 														<spring:theme code="checkout.multi.paymentMethod.selectMode.EMI" />
 													</span>
 												</li>
@@ -283,7 +290,7 @@
 			    							<c:when test="${map.key eq 'COD'}">
 			    								<input type="hidden" id="COD" value="${map.value}" />
 												<li>
-				       								<span id="viewPaymentCOD" >
+				       								<span id="viewPaymentCOD" onclick="viewPaymentCOD();">
 				       									<spring:theme code="checkout.multi.paymentMethod.selectMode.COD" />
 				       								</span>
 			       								</li>
@@ -299,7 +306,7 @@
 			    							<c:when test="${map.key eq 'TW'}">
 			    								<input type="hidden" id="TW" value="${map.value}" />
 												<li>
-				       								<span id="viewPaymentMRupee" >
+				       								<span id="viewPaymentMRupee" onclick="viewPaymentMRupee();">
 				       									<spring:theme code="checkout.multi.paymentMethod.selectMode.ThrdPrtWllt" />
 				       								</span>
 			       								</li>
@@ -320,7 +327,7 @@
 												<li class="paymentModeMobile">
 
 
-													<span id="viewPaymentCreditMobile" >
+													<span id="viewPaymentCreditMobile" onclick="viewPaymentCredit();">
 														<spring:theme code="checkout.multi.paymentMethod.selectMode.CC" />
 													</span>
 												</li>
@@ -357,7 +364,7 @@
 										        			<div class="radio">
 										        				 <c:choose>
 														           <c:when test="${fn:containsIgnoreCase(map.value.cardBrand, 'visa')}">
-														           <span class="visa card_image"><img src="${commonResourcePath}/images/Visa.png" alt=""></span>
+														           <span class="visa card_image payment-failed-card-image"><img src="${commonResourcePath}/images/Visa.png" alt=""></span>
 														           </c:when> 
 														           	<c:when test="${fn:containsIgnoreCase(map.value.cardBrand, 'master')}">
 														           <span class="visa card_image"><img src="${commonResourcePath}/images/Master_Card.png" alt=""></span>
@@ -381,7 +388,7 @@
 																	<span class="visa card_image"><img src="${commonResourcePath}/images/Visa.png" alt=""></span>
 																	</c:otherwise>   
 														        </c:choose>		
-										                 		<input type="radio" data-id="savedCCard" name="creditCards" class="card_token creditCardsRadio" id="cc${status.index}"  value="${map.value.cardToken}" />
+										                 		<input type="radio" data-id="savedCCard" name="creditCards" class="card_token creditCardsRadio" id="cc${status.index}"  value="${map.value.cardToken}" onchange="savedCreditCardRadioChange(cc${status.index});"/>
 									                 	 		<label for="cc${status.index}" data-id="savedCCard" class="numbers">
 									                 	 			<span>${map.value.cardBrand}</span> ending in ${map.value.cardEndingDigits}</label>
 									                 	 			<!-- <span class="saved">Saved card</span> -->
@@ -642,7 +649,7 @@
 		    									<input type="hidden" id="DebitCard" value="${map.value}" />
 		    								
 		    									<li class="paymentModeMobile">
-		    										<span id="viewPaymentDebitMobile" >
+		    										<span id="viewPaymentDebitMobile" onclick="viewPaymentDebit();">
 														<spring:theme code="checkout.multi.paymentMethod.selectMode.DC" />
 													</span>
 												</li>
@@ -678,7 +685,7 @@
 										        				<div class="radio">
 															     <c:choose>
 														           <c:when test="${fn:containsIgnoreCase(map.value.cardBrand, 'visa')}">
-														           <span class="visa card_image"><img src="${commonResourcePath}/images/Visa.png" alt=""></span>
+														           <span class="visa card_image payment-failed-card-image"><img src="${commonResourcePath}/images/Visa.png" alt=""></span>
 														           </c:when> 
 														           	<c:when test="${fn:containsIgnoreCase(map.value.cardBrand, 'master')}">
 														           <span class="visa card_image"><img src="${commonResourcePath}/images/Master_Card.png" alt=""></span>
@@ -704,7 +711,7 @@
 														        </c:choose>															 
 				        							
 										        			<%-- <span class="visa card_image"><img src="${commonResourcePath}/images/Visa.png" alt=""></span> --%>
-										                    		<input type="radio" data-id="savedDCard" name="debitCards" class="card_token  debitCardsRadio" id="dc${status.index}"  value="${map.value.cardToken}"/>
+										                    		<input type="radio" data-id="savedDCard" name="debitCards" class="card_token  debitCardsRadio" id="dc${status.index}"  value="${map.value.cardToken}" onchange="savedDebitCardRadioChange(dc${status.index});"/>
 										                    		<label for="dc${status.index}" data-id="savedDCard" class="numbers"><span>${map.value.cardBrand}</span> ending in ${map.value.cardEndingDigits}</label>
 										                  				<p>${map.value.nameOnCard}</p>
 										                  				<p><spring:theme code="text.expires.on"/> ${map.value.expiryMonth}/${map.value.expiryYear}</p>
@@ -884,7 +891,7 @@
 			    								<input type="hidden" id="Netbanking" value="${map.value}" />
 			    							
 			    								<li class="paymentModeMobile">
-			      	 								<span id="viewPaymentNetbankingMobile" >
+			      	 								<span id="viewPaymentNetbankingMobile" onclick="viewPaymentNetbanking();">
 			      	 									<spring:theme code="checkout.multi.paymentMethod.selectMode.NB" />
 			      	 								</span>
 			      	 							</li>
@@ -915,7 +922,7 @@
 										<c:choose>
 			    							<c:when test="${map.key eq 'EMI'}">
 											<li class="paymentModeMobile">
-				       								<span id="viewPaymentEMIMobile" >
+				       								<span id="viewPaymentEMIMobile"  onclick="viewPaymentEMI();">
 														<spring:theme code="checkout.multi.paymentMethod.selectMode.EMI" />
 													</span>
 												</li>
@@ -1148,7 +1155,7 @@
 			    							<c:when test="${map.key eq 'COD'}">
 			    								<input type="hidden" id="COD" value="${map.value}" />
 												<li class="paymentModeMobile">
-				       								<span id="viewPaymentCODMobile" >
+				       								<span id="viewPaymentCODMobile"  onclick="viewPaymentCOD();">
 				       									<spring:theme code="checkout.multi.paymentMethod.selectMode.COD" />
 				       								</span>
 			       								</li>
@@ -1296,7 +1303,7 @@
 												<input type="hidden" id="TW" value="${map.value}" />
 	
 												<li class="paymentModeMobile">
-													<span id="viewPaymentMRupeeMobile" >
+													<span id="viewPaymentMRupeeMobile"  onclick="viewPaymentMRupee();">
 														<spring:theme code="checkout.multi.paymentMethod.selectMode.ThrdPrtWllt" />
 													</span>
 												</li>
@@ -1352,8 +1359,8 @@
 			</ul>
 				</div>
 				</div>				
-				</jsp:body>
-		</multiCheckout:checkoutSteps>	
+				<%-- </jsp:body>
+		</multiCheckout:checkoutSteps> --%>	
 		<multiCheckout:checkoutOrderDetails cartData="${cartData}" showDeliveryAddress="true" showPaymentInfo="false" showTaxEstimate="false" showTax="true" isCart="${isCart}" orderData="${orderData}"/>
 	</div>		
 </template:page>

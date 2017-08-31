@@ -48,6 +48,7 @@ import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.marketplacecommerceservices.daos.NotificationDao;
 import com.tisl.mpl.marketplacecommerceservices.event.InventoryReservationFailedEvent;
 import com.tisl.mpl.marketplacecommerceservices.event.OrderPlacedEvent;
+import com.tisl.mpl.marketplacecommerceservices.event.PancardRejectEvent;
 import com.tisl.mpl.marketplacecommerceservices.event.PaymentFailedEvent;
 import com.tisl.mpl.marketplacecommerceservices.event.PaymentPendingEvent;
 import com.tisl.mpl.marketplacecommerceservices.event.PaymentTimeoutEvent;
@@ -84,10 +85,10 @@ public class NotificationServiceImpl implements NotificationService
 	//SONAR FIX
 	/*
 	 * @Autowired private BaseSiteService baseSiteService;
-	 * 
-	 * 
+	 *
+	 *
 	 * @Autowired private BaseStoreService baseStoreService;
-	 * 
+	 *
 	 * @Autowired private CommonI18NService commonI18NService;
 	 */
 
@@ -107,7 +108,7 @@ public class NotificationServiceImpl implements NotificationService
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.marketplacecommerceservices.service.NotificationService#getNotification()
 	 */
 	@Override
@@ -119,7 +120,7 @@ public class NotificationServiceImpl implements NotificationService
 
 	/*
 	 * Getting notificationDetails of logged User (non-Javadoc) (non-Javadoc)
-	 *
+	 * 
 	 * @see
 	 * com.tisl.mpl.marketplacecommerceservices.service.NotificationService#getNotificationDetails(com.tisl.mpl.data.
 	 * NotificationData)
@@ -150,7 +151,7 @@ public class NotificationServiceImpl implements NotificationService
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see
 	 * com.tisl.mpl.marketplacecommerceservices.service.NotificationService#checkCustomerFacingEntry(com.tisl.mpl.core
 	 * .model.OrderStatusNotificationModel)
@@ -172,7 +173,7 @@ public class NotificationServiceImpl implements NotificationService
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.marketplacecommerceservices.service.NotificationService#markNotificationRead(java.lang.String,
 	 * java.lang.String, java.lang.String)
 	 */
@@ -233,7 +234,7 @@ public class NotificationServiceImpl implements NotificationService
 
 			/*
 			 * for (final VoucherStatusNotificationModel vsn : voucherNotificationList) {
-			 *
+			 * 
 			 * if (vsn.getVoucherCode().equalsIgnoreCase(orderNo)) { //continue; //voucherNotificationTobeRemoved = vsn;
 			 * break; }
 			 */
@@ -275,7 +276,7 @@ public class NotificationServiceImpl implements NotificationService
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.marketplacecommerceservices.service.NotificationService#markNotificationRead(java.lang.String,
 	 * java.lang.String, java.lang.String)
 	 */
@@ -368,7 +369,7 @@ public class NotificationServiceImpl implements NotificationService
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see
 	 * com.tisl.mpl.marketplacecommerceservices.service.NotificationService#triggerEmailAndSmsOnInventoryFail(de.hybris
 	 * .platform.core.model.order.OrderModel)
@@ -395,7 +396,7 @@ public class NotificationServiceImpl implements NotificationService
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see
 	 * com.tisl.mpl.marketplacecommerceservices.service.NotificationService#triggerEmailAndSmsOnOrderConfirmation(de.
 	 * hybris.platform.core.model.order.OrderModel, java.lang.String)
@@ -451,9 +452,47 @@ public class NotificationServiceImpl implements NotificationService
 
 	}
 
+
+
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
+	 * pan card email
+	 */
+	@Override
+	public void triggerEmailAndSmsOnPancardReject(final OrderModel orderDetails) throws JAXBException
+	{
+		//Email and sms for Payment_Successful
+		final String trackOrderUrl = getConfigurationService().getConfiguration().getString(
+				MarketplacecommerceservicesConstants.SMS_ORDER_TRACK_URL)
+				+ orderDetails.getCode();
+
+		if (orderDetails.getStatus().equals(OrderStatus.PAYMENT_SUCCESSFUL))
+		{
+			final OrderProcessModel orderProcessModel = new OrderProcessModel();
+			orderProcessModel.setOrder(orderDetails);
+			orderProcessModel.setOrderTrackUrl(trackOrderUrl);
+			final PancardRejectEvent pancardRejectEvent = new PancardRejectEvent(orderProcessModel);
+			try
+			{
+				eventService.publishEvent(pancardRejectEvent);
+			}
+			catch (final Exception e1)
+			{ // YTODO
+			  // Auto-generated catch block
+				LOG.error("Exception during sending mail or SMS >> " + e1.getMessage());
+			}
+
+
+		}
+
+	}
+
+
+
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see
 	 * com.tisl.mpl.marketplacecommerceservices.service.NotificationService#sendMobileNotifications(de.hybris.platform
 	 * .core.model.order.OrderModel)
@@ -542,7 +581,7 @@ public class NotificationServiceImpl implements NotificationService
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.marketplacecommerceservices.service.NotificationService#getPromotion()
 	 */
 	@Override
@@ -562,7 +601,7 @@ public class NotificationServiceImpl implements NotificationService
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see
 	 * com.tisl.mpl.marketplacecommerceservices.service.NotificationService#getSortedNotificationData(java.util.List)
 	 */

@@ -711,9 +711,12 @@
 		<property name="returnAWB" type="String" />
 		<property name="storeDetails"
 			type="de.hybris.platform.commercewebservicescommons.dto.store.PointOfServiceWsDTO" />
-			
-			<!-- TPR-6117 -->
+	<!-- TPR-1083 Start-->
+	<property name="exchangeId" type="String"/>
+	<property name="exchangeMessage" type="String"/>
+		<!-- TPR-6117 -->
 			<property name="maxQuantityAllowed" type="String" />
+			<property name="priceDisclaimerTextJwlry" type="String" />
 	</bean>
 	<!-- -->
 	<bean class="com.tisl.mpl.wsdto.MobdeliveryModeWsDTO">
@@ -1024,14 +1027,32 @@
 
 		<property name="productOfferMsg" type="com.tisl.mpl.wsdto.ProductOfferMsgDTO" />
 		<property name="allOOStock" type="Boolean" />
+	<!-- Added for Exchange TPR-1083 -->
+		<property name="l3code" type="String"></property>
+ 		<property name="l3name" type="String"></property>
 		<property name="aPlusContent" type="com.tisl.mpl.wsdto.ProductAPlusWsData" />
         <property name="imageUrl" type="String" />
 	  	<!-- Added for luxury products -->
 		<property name="luxIndicator" type="String" />
+		<!-- Mobile Service for Jewellery -->
+		<property name="priceBreakUpDetailsMap" type="java.util.List&lt;com.tisl.mpl.wsdto.PriceBreakUpDto>" />
+		<property name="certificationMapFrJwlry" type="java.util.List&lt;String>" />
+		<property name="priceDisclaimerTextPDP" type="String" />
+		<property name="showPriceBrkUpPDP" type="String" />
+		<!-- <property name="fineJewelleryClassification" type="java.util.Map&lt;String,java.util.Map&lt;String,java.util.List&lt;String>>>"></property> -->
+		<property name="fineJewelleryClassificationList" type="java.util.Map&lt;String,com.tisl.mpl.wsdto.FineJwlryClassificationListDTO>" />
+
+		<property name="returnAndRefund"
+			type="java.util.List&lt;com.tisl.mpl.wsdto.RefundReturnDTO>"></property>
+		<property name="returns"
+			type="java.util.List&lt;com.tisl.mpl.wsdto.RefundReturnDTO>"></property>
+
+		<property name="isSizeOrLength" type="String" />
 
 <!-- TPR-6117 -->
 			<property name="maxQuantityAllowed" type="String" />
 	</bean>
+	
 	<!-- Added for OfferDetail of a product TPR-TPR-1299 -->
 	<bean class="com.tisl.mpl.wsdto.ProductOfferMsgDTO">
 		<property name="messageDetails" type="String" />
@@ -1043,6 +1064,12 @@
 	<bean class="com.tisl.mpl.wsdto.KnowMoreDTO">
 		<property name="knowMoreItem" type="java.lang.String"></property>
 	</bean>
+	
+	<!-- for a new tab return and refund for fine and fashion jewellery -->
+	<bean class="com.tisl.mpl.wsdto.RefundReturnDTO">
+		<property name="refundReturnItem" type="java.lang.String"></property>
+	</bean>
+	
 	<bean class="com.tisl.mpl.wsdto.FreebieDTO">
 		<property name="productName" type="String" />
 		<property name="productDescription" type="String" />
@@ -1394,6 +1421,7 @@
 		<property name="pickupPersonMobile" type="String" />
 		<property name="isPickupUpdatable" type="boolean" />
 		<property name="isCDA" type="boolean"/>	
+		
 	</bean>
 
 	<bean class="com.tisl.mpl.wsdto.ListPinCodeServiceData">
@@ -1426,6 +1454,8 @@
 		<property name="couponDiscount" type="String" />
 		<property name="pickupPersonName" type="String" />
 		<property name="pickupPersonMobile" type="String" />
+		<!-- TPR-1083 Start-->
+	<property name="exchangeId" type="String"/>
 	</bean>
 	<bean class="com.tisl.mpl.wsdto.FreebieWsDTO">
 		<property name="name" type="String" />
@@ -1500,6 +1530,8 @@
 		<property name="scheduleDeliveryTime" type="String" />
 		<property name="selfCourierDocumentLink" type="String" />
 		<property name="awbPopupLink" type="String" />
+		<!-- TPR-1083 Start-->
+	<property name="exchangeId" type="String"/>
 	</bean>
 	<bean class="com.tisl.mpl.wsdto.StatusResponseListDTO">
 		<property name="statusList"
@@ -1552,6 +1584,8 @@
 		<property name="totalDiscounts" type="String" />
 		<property name="pickupPersonName" type="String" />
 		<property name="pickupPersonMobile" type="String" />
+		<!-- TPR-1083 Start-->
+	<property name="exchangeId" type="String"/>
 	</bean>
 
 	<bean class="com.tisl.mpl.wsdto.PaymentMethodListWsDTO">
@@ -1567,6 +1601,7 @@
 			type="java.util.List&lt;com.tisl.mpl.wsdto.ReservationItemWsDTO>" />
 		<property name="delistedMessage" type="String" />
 		<property name="failedUSSIDs" type="java.util.List&lt;java.lang.String>" />
+		<property name="priceChangeNotificationMsg" type="java.lang.String" />
 	</bean>
 
 
@@ -1918,6 +1953,14 @@
 			type="de.hybris.platform.commercefacades.product.data.PriceData" />
 		<property name="mrpPrice"
 			type="de.hybris.platform.commercefacades.product.data.PriceData" />
+			
+		<!-- added for mobile web service changes for jewellery start-->
+		<property name="maxSellingPrice"
+ 			type="de.hybris.platform.commercefacades.product.data.PriceData" />
+ 		<property name="minSellingPrice"
+ 			type="de.hybris.platform.commercefacades.product.data.PriceData" />
+ 			<!-- added for mobile web service changes for jewellery end-->
+ 			
 		<property name="colour" type="String" />
 		<property name="colourCode" type="String" />
 		<property name="productTag"
@@ -3005,13 +3048,24 @@
 			type="java.util.List&lt;com.tisl.mpl.wsdto.ReturnReasonDTO>" />
 			
 		<!--  R2.3 CRM to Commerce end-->
+		<!-- TPR-4134 -->
+		<property name="showReverseSealFrJwlry" type="java.lang.String"/>
+        <property name="reverseSealFrJwlry" type="com.tisl.mpl.wsdto.RevSealJwlryDataWsDTO"/>
+        <property name="reverseSealAvailable" type="java.lang.String"/>
+        <property name="returnModes" type="java.util.Map&lt;String,String>"></property>
 	</bean>
 	<!-- For Return Web Services Change Pincode QuickDrop Stores -->
 	<bean class="com.tisl.mpl.wsdto.QuickDropStoresList" extends="com.tisl.mpl.wsdto.ErrorDTO">
 		<property name="returnStoreDetailsList"
 			type="java.util.List&lt;de.hybris.platform.commercefacades.storelocator.data.PointOfServiceData>" />
 	</bean>
+<!-- TPR 1083 Start -->
 
+<bean class="com.tisl.mpl.wsdto.ReversePincodeExchangeData">
+<property name="pincodeResponse" type="boolean"/>
+<property name="priceMatrix" type="java.util.List&lt;com.tisl.mpl.facades.product.data.ExchangeGuideData>"/>
+</bean>
+ 
 <!--TPR-6117-->
 	<bean class="com.tisl.mpl.wsdto.MaxLimitWsDto">
 		<property name="productCode" type="String" />
@@ -3019,6 +3073,18 @@
 		<property name="ussid" type="String" />
 		<property name="maxQuantityAllowed" type="String" />
 		<property name="userSelectedQty" type="String" />
+	</bean>
+
+	<bean class="com.tisl.mpl.wsdto.PriceBreakUpDto">
+		<property name="name" type="String" />
+		<property name="weightRateList" type="java.util.List&lt;String>" />
+ 		<property name="price" type="de.hybris.platform.commercefacades.product.data.PriceData" />
+	</bean>
+	<bean class="com.tisl.mpl.wsdto.FineJwlryClassificationListDTO">
+		<property name="classificationListJwlry" type="java.util.Map&lt;String,com.tisl.mpl.wsdto.FineJwlryClassificationListValueDTO>" />
+	</bean>
+	<bean class="com.tisl.mpl.wsdto.FineJwlryClassificationListValueDTO">
+		<property name="classificationListValueJwlry" type="java.util.List&lt;String>" />
 	</bean>
        <!-- TPR-4512 -->
 	<bean class="com.tisl.mpl.wsdto.CustomerOrderInfoWsDTO">
@@ -3075,7 +3141,10 @@
 		
 	</bean>
 	
-
+		<bean class="com.tisl.mpl.wsdto.RevSealJwlryDataWsDTO">
+ 	        <property name="message" type="String"/>
+ 		    <property name="yes" type="String"/>
+ 			<property name="no" type="String"/>
+ 		</bean>
 
 </beans>
-

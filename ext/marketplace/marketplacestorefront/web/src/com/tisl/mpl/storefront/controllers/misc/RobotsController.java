@@ -49,6 +49,7 @@ public class RobotsController extends AbstractController
 		return ControllerConstants.Views.Pages.Misc.MiscRobotsPage;
 	}
 
+
 	//Changes start  for TPR-5812
 	@RequestMapping(value = "/manifest.json", method = RequestMethod.GET)
 	public String getManifest(final Model model)

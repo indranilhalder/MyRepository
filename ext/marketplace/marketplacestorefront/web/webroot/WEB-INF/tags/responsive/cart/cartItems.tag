@@ -64,7 +64,7 @@ tr.d0 td {
    <c:if test="${not empty cartLevelDiscountModified}">
    	<li class="promo-msg"># ${cartLevelDiscountModified}</li>
    </c:if>
-  
+    <input type="hidden" id="exchangeApplicable" value="${cartData.exchangeAppliedCart}">
   <%---start changes for TISPRD-9417 --%> 
   <%--<c:forEach items="${cartData.entries}" var="entry"> --%>
   <c:forEach items="${cartData.entries}" var="entry" varStatus="status">
@@ -98,13 +98,14 @@ tr.d0 td {
    
    <div class="product-img">
    
-   <c:if test="${fn:toLowerCase(entry.product.luxIndicator)=='marketplace' or empty entry.product.luxIndicator}">
+<c:if test="${fn:toLowerCase(entry.product.luxIndicator)=='marketplace' or empty entry.product.luxIndicator}">
    <a href="${productUrl}"><product:productPrimaryImage
 												product="${entry.product}" format="cartPage" lazyLoad="false" /></a>
 												</c:if>
 												
    <c:if test="${fn:toLowerCase(entry.product.luxIndicator)=='luxury' and not empty entry.product.luxIndicator}">
    <a href="${productUrl}"><product:productPrimaryImage
+
 												product="${entry.product}" format="luxuryCartPage" lazyLoad="false" /></a>
 												</c:if>
    
@@ -141,40 +142,133 @@ tr.d0 td {
 										</c:when>
 										<c:otherwise>
 												<div class="name">
-													<spring:theme code="mpl.myBag.fulfillment" /> &nbsp; ${entry.selectedSellerInformation.sellername} 
-												</div>	
-										</c:otherwise>
-									</c:choose>
-								</c:if>
-							</c:forEach>
-		                </p>
-		                
-		                <c:if test="${not empty entry.product.size}">
-		                 <p class="size"><ycommerce:testId code="cart_product_size">
-											<spring:theme code="product.variant.size"/>:&nbsp;${entry.product.size}
-										</ycommerce:testId>
+													<spring:theme code="mpl.myBag.fulfillment" />
+													&nbsp; ${entry.selectedSellerInformation.sellername}
+												</div>
+											</c:otherwise>
+										</c:choose>
+									</c:if>
+								</c:forEach>
+							</p>
+							<!-- TPR-3780 STARTS HERE -->
+							<spring:eval expression="T(de.hybris.platform.util.Config).getParameter('cart.price.disclaimer')" var="disclaimer"/>	
+							<c:if test="${not empty entry.product.size}">
+								<c:choose>
+									<c:when test="${not empty entry.product.rootCategory && entry.product.rootCategory=='FineJewellery'}">
+										<spring:theme code="product.variant.size.noSize" var="noSize"/>
+										<c:choose>
+											<c:when test="${entry.product.size ne noSize }">
+												<p class="size disclaimer-txt more-cart">
+													<ycommerce:testId code="cart_product_size">
+														<spring:eval expression="T(de.hybris.platform.util.Config).getParameter('mpl.jewellery.category')" var="lengthVariant"/>
+														<c:set var = "categoryListArray" value = "${fn:split(lengthVariant, ',')}" />
+														<c:forEach items="${entry.product.categories}" var="categories">
+															<c:forEach items = "${categoryListArray}" var="lengthVariantArray">
+																<c:if test="${categories.code eq lengthVariantArray}">
+																	<c:set var="lengthSize" value="true"/>
+																</c:if> 
+															</c:forEach>
+														</c:forEach> 	  
+														<c:choose>
+															<c:when test="${true eq lengthSize}">
+															  <spring:theme code="product.variant.length"/>:&nbsp;${entry.product.size}&nbsp;
+															  ${disclaimer}
+															</c:when>
+															<c:otherwise>
+															  <spring:theme code="product.variant.size" />:&nbsp;${entry.product.size}&nbsp;
+															  ${disclaimer}
+															</c:otherwise>
+														</c:choose>
+													</ycommerce:testId>
+												</p>
+											</c:when>
+											<c:otherwise>
+													<p class="size disclaimer-txt more-cart">
+														<ycommerce:testId code="cart_product_size">
+															${disclaimer}
+														</ycommerce:testId>
+													</p>
+											</c:otherwise>
+										</c:choose>
+									</c:when>
+									<c:when test="${not empty entry.product.rootCategory && entry.product.rootCategory=='FashionJewellery'}">
+										<spring:theme code="product.variant.size.noSize" var="noSize"/>
+										<c:if test="${entry.product.size ne noSize }">
+											<p class="size disclaimer-txt more">
+												<ycommerce:testId code="cart_product_size">
+													<spring:eval expression="T(de.hybris.platform.util.Config).getParameter('mpl.jewellery.category')" var="lengthVariant"/>
+														<c:set var = "categoryListArray" value = "${fn:split(lengthVariant, ',')}" />
+														<c:forEach items="${entry.product.categories}" var="categories">
+															<c:forEach items = "${categoryListArray}" var="lengthVariantArray">
+																<c:if test="${categories.code eq lengthVariantArray}">
+																	<c:set var="lengthSize" value="true"/>
+																</c:if> 
+															</c:forEach>
+														</c:forEach> 	  
+														<c:choose>
+															<c:when test="${true eq lengthSize}">
+															  <spring:theme code="product.variant.length"/>:&nbsp;${entry.product.size}&nbsp;
+															</c:when>
+															<c:otherwise>
+															  <spring:theme code="product.variant.size" />:&nbsp;${entry.product.size}&nbsp;
+															</c:otherwise>
+														</c:choose>
+												</ycommerce:testId>
+											</p>		
+										</c:if>
+									</c:when>
+									<c:otherwise>
+										<p class="size disclaimer-txt more">
+											<ycommerce:testId code="cart_product_size">
+												<spring:theme code="product.variant.size" />:&nbsp;${entry.product.size}&nbsp;
+											</ycommerce:testId>
 										</p>
-						</c:if>
-		             </div>
-		              
-		                
-		              <ul class="item-edit-details">
-		              	<c:if test="${entry.updateable}">
-		              			<c:forEach items="${entry.product.seller}" var="seller">
-								<c:if test="${seller.ussid eq entry.selectedSellerInformation.ussid }">
-								<c:set var="stock" value="${seller.availableStock }"/>
-								</c:if>
+									</c:otherwise>
+								</c:choose>
+							</c:if>
+							<!-- TPR-3780 ENDS HERE -->
+							
+							<!-- TISJEW-3478 start -->
+							<ul class="exchange-applied-ul">
+							<c:if test="${not empty entry.exchangeApplied}">
+		              			<li class="cart_exchange" style="display:none">
+<%-- 			              		<c:set var="exchangeId" value="${entry.exchangeApplied}"/> --%>
+			              		<input type="hidden" id="exc_cart" value="${entry.exchangeApplied}">
+			              		<c:set var="isExchangeavailable" value="Exchange Applied"/>
+   										${isExchangeavailable} 
+			              		</li>
+			              		</c:if>
+			              		</ul>
+			              <!-- TISJEW-3478 ENDS HERE -->
+						</div>
+
+
+						<ul class="item-edit-details">
+						<%-- <c:if test="${not empty entry.exchangeApplied}">
+		              			<li class="cart_exchange" style="display:none">
+			              		<c:set var="exchangeId" value="${entry.exchangeApplied}"/>
+			              		<input type="hidden" id="exc_cart" value="${entry.exchangeApplied}">
+			              		<c:set var="isExchangeavailable" value="Exchange Applied"/>
+   										${isExchangeavailable} 
+			              		</li>
+			              		</c:if> --%>
+							<c:if test="${entry.updateable}">
+								<c:forEach items="${entry.product.seller}" var="seller">
+									<c:if test="${seller.ussid eq entry.selectedUssid }">
+										<c:set var="stock" value="${seller.availableStock }" />
+									</c:if>
 								</c:forEach>
 							<ycommerce:testId code="cart_product_removeProduct">
 		                  		<li> 
-			              			<a class="remove-entry-button" id="removeEntry_${entry.entryNumber}_${entry.selectedSellerInformation.ussid}"><span><spring:theme code="cart.remove"/></span></a>
+			              			<a class="remove-entry-button" id="removeEntry_${entry.entryNumber}_${entry.selectedUssid}"><span><spring:theme code="cart.remove"/></span></a>
 			              		</li>
+			              	
 			              		<li><form:form name="addToCartForm" method="post" action="#" class="mybag-undo-form">
 								<input type="hidden" name="qty" value="${entry.quantity}" />
 								<input type="hidden" name=pinCodeChecked value="true" />
 								<input type="hidden" name="productCodePost" value="${entry.product.code}" />
 								<input type="hidden" name="wishlistNamePost" value="N" />
-								<input type="hidden" name="ussid" value="${entry.selectedSellerInformation.ussid}" />
+								<input type="hidden" name="ussid" value="${entry.selectedUssid}" />
 								<input type="hidden" name="stock" value="${stock}" />
 								<div class="undo-text-wrapper">
 								<p><spring:theme code="mpl.myBag.product.remove.text"/></p>
@@ -470,10 +564,10 @@ tr.d0 td {
    <!-- TISUTO-124 -->
     <c:choose>
 		<c:when test="${entry.giveAway}">
-				<li id ="${entry.selectedSellerInformation.ussid}_qty_${entry.giveAway}" class="qty">
+				<li id ="${entry.selectedUssid}_qty_${entry.giveAway}" class="qty">
 		</c:when>
 		<c:otherwise>
-				<li id ="${entry.selectedSellerInformation.ussid}_qty" class="qty">
+				<li id ="${entry.selectedUssid}_qty" class="qty">
 		</c:otherwise>	
 	</c:choose>		
    <!-- TISUTO-124 -->
@@ -482,10 +576,10 @@ tr.d0 td {
         
    <c:choose>
 		<c:when test="${entry.giveAway}">
-			<c:set var="updateFormId" value="updateCartForm${entry.selectedSellerInformation.ussid}_${entry.giveAway}" />
+			<c:set var="updateFormId" value="updateCartForm${entry.selectedUssid}_${entry.giveAway}" />
 		</c:when>
 		<c:otherwise>
-			<c:set var="updateFormId" value="updateCartForm${entry.selectedSellerInformation.ussid}" />
+			<c:set var="updateFormId" value="updateCartForm${entry.selectedUssid}" />
 		</c:otherwise>	
   </c:choose>				
     
@@ -499,8 +593,9 @@ tr.d0 td {
 					<fmt:parseNumber var="price" type="number" value="${subPrice}" />
 											
 					<c:choose>
+
 							<c:when test="${price lt 0.1 && entry.giveAway}">
-								<form:select path="quantity" id="quantity_${entry.selectedSellerInformation.ussid}_${entry.giveAway}"	cssClass="update-entry-quantity-input" disabled="true" onchange="updateCart(this.id);">
+								<form:select path="quantity" id="quantity_${entry.selectedUssid}_${entry.giveAway}"	cssClass="update-entry-quantity-input" disabled="true" onchange="updateCart(this.id);">
 									<c:forEach items="${configuredQuantityList}"
 										var="quantity">
 										<form:option value="${quantity}"></form:option>
@@ -508,17 +603,32 @@ tr.d0 td {
 								</form:select>
 							</c:when>
 							<c:when test="${price lt 0.1}">
-								<form:select path="quantity" id="quantity_${entry.selectedSellerInformation.ussid}"	cssClass="update-entry-quantity-input" disabled="true" onchange="updateCart(this.id);">
-									<c:forEach items="${configuredQuantityList}"
+								<form:select path="quantity"
+									id="quantity_${entry.selectedUssid}"
+									cssClass="update-entry-quantity-input" disabled="true"
+									onchange="updateCart(this.id);">
+									<c:forEach items="${configuredQuantityList}" var="quantity">
+										<form:option value="${quantity}"></form:option>
+									</c:forEach>
+								</form:select>
+							</c:when>
+							<c:when test="${'FineJewellery' eq entry.product.rootCategory}">
+								<form:select path="quantity"
+									id="quantity_${entry.selectedUssid}"
+									cssClass="update-entry-quantity-input"
+									onchange="updateCart(this.id);">
+									<c:forEach items="${configuredQuantityForJewellery}"
 										var="quantity">
 										<form:option value="${quantity}"></form:option>
 									</c:forEach>
 								</form:select>
 							</c:when>
 							<c:otherwise>
-								<form:select path="quantity" id="quantity_${entry.selectedSellerInformation.ussid}"	cssClass="update-entry-quantity-input" onchange="updateCart(this.id);">
-									<c:forEach items="${configuredQuantityList}"
-										var="quantity">
+								<form:select path="quantity"
+									id="quantity_${entry.selectedUssid}"
+									cssClass="update-entry-quantity-input"
+									onchange="updateCart(this.id);">
+									<c:forEach items="${configuredQuantityList}" var="quantity">
 										<form:option value="${quantity}"></form:option>
 									</c:forEach>
 								</form:select>
@@ -531,17 +641,17 @@ tr.d0 td {
 		            
 	            	<c:choose>
 	            		<c:when test="${entry.giveAway}"> <!-- For Freebie item delivery mode will no tbe displayed -->
-	            			<li id ="${entry.selectedSellerInformation.ussid}_li_${entry.giveAway}" class="delivery freebie-delivery">
-	            				<ul id="${entry.selectedSellerInformation.ussid}_${entry.giveAway}">	
+	            			<li id ="${entry.selectedUssid}_li_${entry.giveAway}" class="delivery freebie-delivery">
+	            				<ul id="${entry.selectedUssid}_${entry.giveAway}">	
 						</c:when>
 						<c:otherwise>
-							<li id ="${entry.selectedSellerInformation.ussid}_li" class="delivery">
+							<li id ="${entry.selectedUssid}_li" class="delivery">
 							<p class="mobile-delivery"><spring:theme code="basket.delivery.options"/></p>
 							<!-- TPR-1458-->
 							<!-- <span class='pincodeServiceError'></span> -->
 							<!-- 1341 -->
 							<p class="cartItemBlankPincode"><a href="#defaultPinCodeIds"><spring:theme code="cart.pincode.blanklink"/>&nbsp;</a><spring:theme code="cart.pincode.blank"/></p>	
-							<ul id="${entry.selectedSellerInformation.ussid}">
+							<ul id="${entry.selectedUssid}">
 						</c:otherwise>
 					</c:choose>	
 	             	 
@@ -1308,8 +1418,8 @@ tr.d0 td {
           
 				
 				<ul class="checkout-types onlyCheckoutButton checkOutBtnBtm">
-				<li id="checkout-id-down" class="checkout-button">
-				<a  id="checkout-down-enabled" class="checkoutButton checkout button red"  onclick="return checkServiceabilityRequired('typeCheckout',this);"><spring:theme code="checkout.checkout" /></a>
+				<li id="checkout-id-down" class="checkout-button" style="cursor: not-allowed;">
+				<a  id="checkout-down-enabled" class="checkoutButton checkout button red checkout-disabled" style="pointer-events: none; cursor: not-allowed; opacity: 0.5;"  onclick="return checkServiceabilityRequired('typeCheckout',this);"><spring:theme code="checkout.checkout" /></a>
 				<input type="hidden" id="checkoutLinkURlId" value="${checkoutUrl}"> 
 				<p id="unserviceablepincode_tooltip_btm" style="display:none">One or more item(s) are not available at this location. Please remove the item(s) to proceed or try another <span>pincode</span>?</p>
      			<p id="error-Id_tooltip_btm" style="display:none" >Oops! Invalid <span>pincode</span>.Please enter a valid <span>pincode</span>.</p>
@@ -1402,4 +1512,4 @@ tr.d0 td {
            <!-- commented as part of TISPRD-9245, TPR-3691 -->
          
 <storepickup:pickupStorePopup />
-
+	

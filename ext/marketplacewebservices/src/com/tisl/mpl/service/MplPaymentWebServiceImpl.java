@@ -2,6 +2,7 @@ package com.tisl.mpl.service;
 
 import de.hybris.platform.commerceservices.enums.SalesApplication;
 import de.hybris.platform.commerceservices.order.CommerceCartService;
+import de.hybris.platform.core.model.JewelleryInformationModel;
 import de.hybris.platform.core.model.order.AbstractOrderEntryModel;
 import de.hybris.platform.core.model.order.AbstractOrderModel;
 import de.hybris.platform.core.model.order.CartModel;
@@ -48,6 +49,7 @@ import com.tisl.mpl.exception.EtailBusinessExceptions;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.juspay.response.GetOrderStatusResponse;
 import com.tisl.mpl.marketplacecommerceservices.service.ExtendedUserService;
+import com.tisl.mpl.marketplacecommerceservices.service.MplJewelleryService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplPaymentService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplSellerInformationService;
 import com.tisl.mpl.model.PaymentModeSpecificPromotionRestrictionModel;
@@ -94,6 +96,9 @@ public class MplPaymentWebServiceImpl implements MplPaymentWebService
 	private MplSellerInformationService mplSellerInformationService;
 	@Autowired
 	private CartService cartService;
+
+	@Resource(name = "mplJewelleryService")
+	private MplJewelleryService jewelleryService;
 
 
 	/**
@@ -154,8 +159,32 @@ public class MplPaymentWebServiceImpl implements MplPaymentWebService
 				if (entry != null && entry.getSelectedUSSID() != null)
 				{
 					LOG.debug("Sellected USSID******************* " + entry.getSelectedUSSID());
-					final SellerInformationModel sellerInfoModel = getMplSellerInformationService().getSellerDetail(
-							entry.getSelectedUSSID());
+					/*
+					 * final SellerInformationModel sellerInfoModel = getMplSellerInformationService().getSellerDetail(
+					 * entry.getSelectedUSSID());
+					 */
+
+					SellerInformationModel sellerInfoModel = null;
+
+					if ((MarketplacecommerceservicesConstants.FINEJEWELLERY).equalsIgnoreCase(entry.getProduct()
+							.getProductCategoryType()))
+					{
+						final List<JewelleryInformationModel> jewelleryInfo = jewelleryService.getJewelleryInfoByUssid(entry
+								.getSelectedUSSID());
+						if (CollectionUtils.isNotEmpty(jewelleryInfo))
+						{
+							sellerInfoModel = getMplSellerInformationService().getSellerDetail(jewelleryInfo.get(0).getPCMUSSID());
+						}
+						else
+						{
+							LOG.error("No entry in JewelleryInformationModel for ussid " + entry.getSelectedUSSID());
+						}
+					}
+					else
+					{
+						sellerInfoModel = getMplSellerInformationService().getSellerDetail(entry.getSelectedUSSID());
+					}
+
 					//List<RichAttributeModel> richAttributeModel = null;
 					//TISPT-400
 					if (sellerInfoModel != null && sellerInfoModel.getRichAttribute() != null)

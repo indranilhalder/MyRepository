@@ -122,4 +122,13 @@ public interface MplCustomAddressFacade
 	 * @return
 	 */
 	List<AddressData> getDeliveryAddresses(AddressData deliveryAddress, CartModel cartModel); //CAR-194
+
+	/**
+	 * UF:281
+	 *
+	 * @Description: Method to get delivery address.
+	 * @return AddressData
+	 *
+	 */
+	public AddressData getDeliveryAddress();
 }

@@ -44,8 +44,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import atg.taglib.json.util.JSONException;
-
 import com.granule.json.JSONObject;
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.core.model.RichAttributeModel;
@@ -58,6 +56,8 @@ import com.tisl.mpl.promotion.service.SellerBasedPromotionService;
 import com.tisl.mpl.storefront.constants.RequestMappingUrlConstants;
 import com.tisl.mpl.storefront.controllers.ControllerConstants;
 import com.tisl.mpl.util.ExceptionUtil;
+
+import atg.taglib.json.util.JSONException;
 
 
 /**
@@ -116,8 +116,7 @@ public class MiniCartController extends AbstractController
 	}
 
 	@RequestMapping(value = "/cart/rollover/" + COMPONENT_UID_PATH_VARIABLE_PATTERN, method = RequestMethod.GET)
-	public String rolloverMiniCartPopup(@PathVariable final String componentUid, final Model model)
-			throws CMSItemNotFoundException
+	public String rolloverMiniCartPopup(@PathVariable final String componentUid, final Model model) throws CMSItemNotFoundException
 	{
 		final CartData cartData = cartFacade.getSessionCart();
 		model.addAttribute("cartData", cartData);
@@ -170,8 +169,8 @@ public class MiniCartController extends AbstractController
 
 
 	@RequestMapping(value = RequestMappingUrlConstants.TRANSIENTCARTAJAX, method = RequestMethod.GET)
-	public @ResponseBody JSONObject showTransientCart(@RequestParam("ussid") final String ussid) throws JSONException,
-			CMSItemNotFoundException, UnsupportedEncodingException, com.granule.json.JSONException
+	public @ResponseBody JSONObject showTransientCart(@RequestParam("ussid") final String ussid)
+			throws JSONException, CMSItemNotFoundException, UnsupportedEncodingException, com.granule.json.JSONException
 	{
 		final JSONObject transientCartJSON = new JSONObject();
 		try
@@ -247,8 +246,8 @@ public class MiniCartController extends AbstractController
 
 					catch (final Exception e)
 					{
-						ExceptionUtil.etailNonBusinessExceptionHandler(new EtailNonBusinessExceptions(e,
-								MarketplacecommerceservicesConstants.E0000));
+						ExceptionUtil.etailNonBusinessExceptionHandler(
+								new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000));
 
 					}
 
@@ -271,8 +270,8 @@ public class MiniCartController extends AbstractController
 		}
 		catch (final Exception e)
 		{
-			ExceptionUtil.etailNonBusinessExceptionHandler(new EtailNonBusinessExceptions(e,
-					MarketplacecommerceservicesConstants.E0000));
+			ExceptionUtil
+					.etailNonBusinessExceptionHandler(new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000));
 
 		}
 

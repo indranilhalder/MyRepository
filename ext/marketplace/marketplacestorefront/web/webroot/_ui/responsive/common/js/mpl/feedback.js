@@ -338,6 +338,8 @@ $(document).ready(function(){
 				if(typeof(Storage) !== "undefined") {
 						if($(this).parents().hasClass("facet_mobile")){
 							$(".facet-name.js-facet-name h3").removeClass("active-mob");
+							$(".js-facet-top-values.active").removeClass("selectedMobile");
+							$(".facet-list.js-facet-list.facet-list-hidden.js-facet-list-hidden").removeClass("selectedMobile");
 							$(this).parents(".facet_mobile").siblings().find(".facet-values.js-facet-values.js-facet-form").hide();
 							if($(this).parent().siblings('#searchPageDeptHierTreeForm').length == 0){
 								$('#searchPageDeptHierTreeForm').find("#searchPageDeptHierTree").hide();
@@ -356,6 +358,8 @@ $(document).ready(function(){
 							$(this).siblings('.brandSelectAllMain').show();
 							$(this).parent().siblings('#searchPageDeptHierTreeForm').find("#searchPageDeptHierTree").show();
 							$(this).parent().siblings('#categoryPageDeptHierTreeForm').find("#categoryPageDeptHierTree").show();
+							$(this).parent().closest("li").find(".js-facet-top-values.active").addClass("selectedMobile");
+							$(this).parent().closest("li").find(".facet-list.js-facet-list.facet-list-hidden.js-facet-list-hidden").addClass("selectedMobile");
 						}
 						else{
 					    if($(this).hasClass('active')) {
@@ -575,6 +579,56 @@ $(document).ready(function(){
 				// $("ul.tabs.pdp>li").eq(count).addClass("active");
 			    }); 
 	/*----END of  PDP tabs -----*/
+
+	/*----START-- Added for tab horizontal scrolling while working on Jewellery  -----
+			 
+			 
+			 $(".FineJewellery .nav.pdp, .FashionJewellery .nav.pdp").owlCarousel({
+					items: 5,
+					loop: false,
+					nav: false,
+					dots: false,
+					navText: [],
+					touchDrag: true,
+					mouseDrag: true,
+				    responsive: {
+						0 : {
+						  items: 2,
+						  autoHeight: false,
+						  stagePadding: 0,
+						},
+						480 : {
+						   items: 2,
+						  autoHeight: false,
+						},
+						768 : {
+						   items: 4,
+						   autoHeight: false,
+						   stagePadding: 0,
+						},
+						980 : {
+						   items: 4,
+						},
+						1024 : {
+						   items: 4,
+						}
+					 }
+				});
+			 
+	----END-- Added for tab horizontal scrolling while working on Jewellery  -----*/
+			 
+	/*----Start of  PDP tabs for Jewellery -----*/
+			 
+			 if($(".tabs-block").hasClass("FineJewellery") || $(".tabs-block").hasClass("FashionJewellery")){			 
+				 $(".tabs-block.FineJewellery .nav.pdp .owl-item, .tabs-block.FashionJewellery .nav.pdp .owl-item").on("click",function(e) {
+					 var count = $(".tabs-block .nav.pdp .owl-item").index(this);
+					 $(".tabs-block .nav.pdp .owl-item").removeClass("current");
+					 $(this).addClass("current");
+					 $("ul.tabs.pdp>li").removeClass("active");
+					 $("ul.tabs.pdp>li").eq(count).addClass("active");
+			    }); 
+			 }
+	/*----END of  PDP tabs for Jewellery -----*/
 	
 	/*----Start of  SHop by brand A_E hover functionality  -----*/
 			 $(".range").hide();
@@ -3631,7 +3685,6 @@ $("#sameAsShippingEmi").click(function(){
 	}
 	});
 
-
 $("header .content nav > ul > li > ul > li").on("mouseover",function(){
 	$(this).parent().parent().find(".toggle").addClass("show_arrow");
 });
@@ -3644,6 +3697,19 @@ $("header .content nav > ul > li > ul > li").on("mouseout",function(){
 /*TISSQAEE-335*/
 $(window).on("load resize",function(){
 	topLeftLocator();
+	
+	/* UF-338 starts */
+	$(".product-info>div.tabs-block .tabs .tab-details > ul li:contains(Brand Color)").each(function(){
+		var original = $(this).text();
+		var result = original.substr(original.indexOf(" ") + 1);
+		$(this).text(result);
+
+		var original = $(this).text();
+		var result = original.substr(original.indexOf(" ") + 1);
+		$(this).text(result);		//Code Repeat
+	});
+	
+	/* UF-338 ends */
 	
 	/* UF-338 starts */
 	$(".product-info>div.tabs-block .tabs .tab-details > ul li:contains(Brand Color)").each(function(){
@@ -3810,6 +3876,56 @@ $(window).on("load resize click",function(){
 	},500);
 });
 /* end change of PRDI-92 */
+$(".accordin").smk_Accordion({
+    closeAble: true,
+    closeOther: false,
+    slideSpeed: 750,
+});
+/*$(".accordin").on("click", function(){
+	$(this).parent().find(".accordin.FineJewellery .item div.title").slideToggle();
+	$(this).parent().toggleClass("accordion-open");
+	$(this).parent().siblings().find(".accordin.FineJewellery .item div.title").slideUp();
+	$(this).parent().siblings().removeClass("accordion-open");
+});*/
+
+/*price breakup scroll start*/
+$("span.price-breakup").click(function() {
+	  $("body,html").animate({ scrollTop: $("#showPrice").offset().top - 150 }, "slow");
+	  $("#showPrice").addClass("acc_active");
+	  $("#showPrice").find(".detail.acc_content").slideDown();
+});
+/*price breakup scroll end*/
+/*Feature for FineJewellery scroll start*/
+$("span.more-link").click(function() {
+	  if ($(window).width() > 767) {
+		  $("body,html").animate({ scrollTop: $("#tabs_styleNotes").offset().top - 150 }, "slow");
+		  $("#tabs_styleNotes").addClass("active");
+		  $("#tabs_styleNotes_Refunds").removeClass("active");
+		  $("#tabs_knowmore").removeClass("active");
+		  $("#tabs_brandInfo").removeClass("active");
+		  $("ul.tabs.pdp.productTabs li").removeClass('active'); 
+		  $("ul.tabs.pdp.productTabs li").eq(0).addClass('active');  
+	  }
+	  else {
+		  $("body,html").animate({ scrollTop: $(".product-specification-accordion.smk_accordion.acc_with_icon div#styleNotesMobile").offset().top - 150 }, "slow");
+		  $(".product-specification-accordion.smk_accordion.acc_with_icon div#styleNotesMobile").addClass("acc_active");
+		  $(".product-specification-accordion.smk_accordion.acc_with_icon div#styleNotesMobile .acc_content#stylenoteAccordion").css("display","block");
+		  $(".product-specification-accordion.smk_accordion.acc_with_icon div#knowmoreMobile").removeClass("acc_active");
+		  /*$(".product-specification-accordion.smk_accordion.acc_with_icon div#detailsMobile").removeClass("acc_active");*/
+		  /*$(".product-specification-accordion.smk_accordion.acc_with_icon div#descriptionMobile").removeClass("acc_active");*/
+		  /*$(".product-specification-accordion.smk_accordion.acc_with_icon div#warrantyMobile").removeClass("acc_active");*/
+		  $(".product-specification-accordion.smk_accordion.acc_with_icon div#brandInfoMobile").removeClass("acc_active");
+		  $(".product-specification-accordion.smk_accordion.acc_with_icon div#returnsAndRefundsMobile").removeClass("acc_active");
+		  $(".product-specification-accordion.smk_accordion.acc_with_icon div#knowmoreMobile .acc_content#knowmoreAccordion").css("display","none");
+		  /*$(".product-specification-accordion.smk_accordion.acc_with_icon div#detailsMobile .acc_content#detailsAccordion").css("display","none");*/
+		  /*$(".product-specification-accordion.smk_accordion.acc_with_icon div#descriptionMobile .acc_content#descriptionAccordion").css("display","none");*/
+		  /*$(".product-specification-accordion.smk_accordion.acc_with_icon div#warrantyMobile .acc_content#warrantyAccordion").css("display","none");*/
+		  $(".product-specification-accordion.smk_accordion.acc_with_icon div#brandInfoMobile .acc_content#brandInfoAccordion").css("display","none");
+		  $(".product-specification-accordion.smk_accordion.acc_with_icon div#returnsAndRefundsMobile .acc_content#returnRefundAccordion").css("display","none");
+	  }
+	  
+});
+/*Feature for FineJewellery scroll end*/
 
 /*start change of INC144316778*/
 $(window).on("scroll resize",function(){
