@@ -42,7 +42,7 @@ import com.tisl.mpl.marketplacecommerceservices.service.BuyBoxService;
 public class MplBuyBoxUtility
 {
 
-	private static final Logger LOG = Logger.getLogger(MplBuyBoxUtility.class); //comment out for TISPRD-8944 
+	private static final Logger LOG = Logger.getLogger(MplBuyBoxUtility.class); //comment out for TISPRD-8944
 
 
 	//---------------Solve for Issue TISPRD-58---------------------//
@@ -52,6 +52,8 @@ public class MplBuyBoxUtility
 	private static final String FOOTWEAR = "footwear";
 	private static final String COLORFAMILYFOOTWEAR = "brandcolorfootwear";
 	private static final String COLORELECTRONICS = "colorelectronics";
+	private static final String HYPHEN = " - ";
+	private static final String FINE_JEWELLERY = "FineJewellery";
 
 	//---------------Solve for Issue TISPRD-58---------------------//
 
@@ -71,11 +73,31 @@ public class MplBuyBoxUtility
 		Double price = Double.valueOf(0);
 		if (buyBoxWinnerModel != null)
 		{
-			price = buyBoxWinnerModel.getPrice();
-
-			if (null != buyBoxWinnerModel.getSpecialPrice() && buyBoxWinnerModel.getSpecialPrice().intValue() > 0)
+			// TPR-1886 | Fetch price logic for Jewellery
+			if (productModel.getProductCategoryType().equalsIgnoreCase(FINE_JEWELLERY))
 			{
-				price = buyBoxWinnerModel.getSpecialPrice();
+				if ((buyBoxWinnerModel.getPLPMaxPrice() != null && buyBoxWinnerModel.getPLPMaxPrice().doubleValue() > 0)
+						&& (buyBoxWinnerModel.getPLPMinPrice() != null && buyBoxWinnerModel.getPLPMinPrice().doubleValue() > 0))//SONAR FIX JEWELLERY
+				{
+					final double maxPrice = buyBoxWinnerModel.getPLPMaxPrice().doubleValue();
+					final double minPrice = buyBoxWinnerModel.getPLPMinPrice().doubleValue();
+					final double avgPrice = (maxPrice + minPrice) / 2;
+					price = Double.valueOf(avgPrice);
+				}
+				else
+				{
+					// Any of Max price and min price is null
+					price = productModel.getMrp();
+				}
+			} /// end of Jewellery
+			else
+			{
+				price = buyBoxWinnerModel.getPrice();
+
+				if (null != buyBoxWinnerModel.getSpecialPrice() && buyBoxWinnerModel.getSpecialPrice().intValue() > 0)
+				{
+					price = buyBoxWinnerModel.getSpecialPrice();
+				}
 			}
 		}
 		else
@@ -205,14 +227,30 @@ public class MplBuyBoxUtility
 		}
 		final List<Map.Entry<BuyBoxModel, Double>> priceList = new LinkedList<Map.Entry<BuyBoxModel, Double>>(
 				finalpriceValueMap.entrySet());
-		Collections.sort(priceList, new Comparator<Map.Entry<BuyBoxModel, Double>>()
+		if (productModel.getProductCategoryType() != null && productModel.getProductCategoryType().equalsIgnoreCase(FINE_JEWELLERY))
 		{
-			@Override
-			public int compare(final Map.Entry<BuyBoxModel, Double> o1, final Map.Entry<BuyBoxModel, Double> o2)
+			//TPR-1886 | Sorts descending against price, for fine jewellery products
+			Collections.sort(priceList, new Comparator<Map.Entry<BuyBoxModel, Double>>()
 			{
-				return (o1.getValue()).compareTo(o2.getValue());
-			}
-		});
+				@Override
+				public int compare(final Map.Entry<BuyBoxModel, Double> o1, final Map.Entry<BuyBoxModel, Double> o2)
+				{
+					return (o2.getValue()).compareTo(o1.getValue());
+				}
+			});
+		}
+		else
+		{
+			Collections.sort(priceList, new Comparator<Map.Entry<BuyBoxModel, Double>>()
+			{
+				@Override
+				public int compare(final Map.Entry<BuyBoxModel, Double> o1, final Map.Entry<BuyBoxModel, Double> o2)
+				{
+					return (o1.getValue()).compareTo(o2.getValue());
+				}
+			});
+		}
+
 		final Map<BuyBoxModel, Double> sortedMap = new LinkedHashMap<BuyBoxModel, Double>();
 		for (final Iterator<Map.Entry<BuyBoxModel, Double>> it = priceList.iterator(); it.hasNext();)
 		{
@@ -554,4 +592,45 @@ public class MplBuyBoxUtility
 		return mobileprice;
 
 	}
+
+	/*
+	 * @param sellerArticleSKUList
+	 *
+	 * @param currency
+	 *
+	 * @return priceRange
+	 */
+
+	public String getBuyBoxSellingVariantsPrice(final List<String> sellerArticleSKUList, final String currency)
+			throws EtailNonBusinessExceptions
+	{
+		Double min = Double.valueOf(0);
+		Double max = Double.valueOf(0);
+
+		final List<BuyBoxModel> listBuyBox = buyBoxService.getBuyboxSellerPricesForSearch(sellerArticleSKUList);
+		if (CollectionUtils.isNotEmpty(listBuyBox))
+		{
+			if (listBuyBox.get(0).getPLPMinPrice() != null && listBuyBox.get(0).getPLPMaxPrice() != null)
+			{
+				min = listBuyBox.get(0).getPLPMinPrice();
+				max = listBuyBox.get(0).getPLPMaxPrice();
+			}
+		}
+		String priceRange = null;
+		if (min.doubleValue() > 0 && max.doubleValue() > 0)
+		{
+			if (min.doubleValue() == max.doubleValue())
+			{
+				//priceRange = currency + String.valueOf(min);//SONAR FIX JEWELLERY
+				priceRange = currency + Math.round(min.doubleValue());
+			}
+			else
+			{
+				//	priceRange = currency + String.valueOf(min) + HYPHEN + currency + String.valueOf(max);//SONAR FIX JEWELLERY
+				priceRange = currency + Math.round(min.doubleValue()) + HYPHEN + currency + Math.round(max.doubleValue());
+			}
+		}
+		return priceRange;
+	}
+
 }

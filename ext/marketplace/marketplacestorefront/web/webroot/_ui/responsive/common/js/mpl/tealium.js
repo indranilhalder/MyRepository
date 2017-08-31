@@ -580,6 +580,7 @@ function utagAddProductToBag(triggerPoint,productCodeMSD){
 			 productCode= $('#productCode').val();
 			 productCodeArray.push(productCode);
 		}
+
 		//PRDI-564 FIX
 		if(typeof(utag) != "undefined"){
 	          utag.link({
@@ -1277,7 +1278,12 @@ function tealiumCallOnPageLoad()
 					+ $("#pdpOtherSellerIDs").val() + '",';
 				}
 				//TPR-429 END
-				
+				//TPR-5193|Req-1 starts
+				if($("#tealiumExchangeVar").val() != 'undefined' && $("#tealiumExchangeVar").val() !='' &&  $("#tealiumExchangeVar").val()!= "notAvailable"){ 
+					tealiumData += '"exchange_value":"'
+					+ $("#tealiumExchangeVar").val() + '",';
+				}
+				//TPR-5193|Req-1 ends
 				//TPR-4688
 				var sizeVariantList=$('#variant').find('li');
 				if(sizeVariantList.length > 0){
@@ -2199,3 +2205,24 @@ $(window).unload(function(event) {
 		}
 	}
 });
+
+//UF-398
+$(document).on('click','#selectedAddressDivId span:last-child',function(){
+	if(typeof utag !="undefined"){
+		utag.link({
+			link_text: "change_address_clicked",
+			event_type : "change_address_clicked"
+		});
+	   }
+});
+
+$(document).on('click','#selectedDeliveryOptionsDivId span:last-child',function(){
+	if(typeof utag !="undefined"){
+		utag.link({
+			link_text: "change_delivery_option_clicked",
+			event_type : "change_delivery_option_clicked"
+		});
+	   }
+	});
+//UF-398 ends
+

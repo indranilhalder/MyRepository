@@ -52,8 +52,10 @@ if(loginStatus){
 		fn:contains(requestScope['javax.servlet.forward.request_uri'],'/new-address') or
 		fn:contains(requestScope['javax.servlet.forward.request_uri'],'/edit-address') or
 		fn:contains(requestScope['javax.servlet.forward.request_uri'],'/delivery-method') or
-		fn:contains(requestScope['javax.servlet.forward.request_uri'],'/my-account')}">
-	<script type="text/javascript" src="${commonResourcePath}/js/addresslandmark.js"></script>
+		fn:contains(requestScope['javax.servlet.forward.request_uri'],'/my-account')or
+		fn:contains(requestScope['javax.servlet.forward.request_uri'],'/single')}">
+	<script type="text/javascript" src="${commonResourcePath}/js/addresslandmark.js"></script><!-- R2.3: One line -->
+
 </c:if>
 <c:if test="${fn:contains(requestScope['javax.servlet.forward.request_uri'],'/my-account')}">
 	<script type="text/javascript" src="${commonResourcePath}/js/moment.min.js"></script>

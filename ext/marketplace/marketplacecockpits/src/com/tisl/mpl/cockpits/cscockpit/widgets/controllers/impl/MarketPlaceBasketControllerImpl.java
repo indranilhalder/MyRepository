@@ -46,6 +46,7 @@ import com.tisl.mpl.sellerinfo.facades.MplSellerInformationFacade;
 import com.tisl.mpl.service.InventoryReservationService;
 import com.tisl.mpl.strategy.service.impl.MplDefaultCommerceAddToCartStrategyImpl;
 import com.tisl.mpl.util.ExceptionUtil;
+import com.tisl.mpl.wsdto.InventoryReservListRequest;
 import com.tisl.mpl.wsdto.InventoryReservListResponse;
 import com.tisl.mpl.wsdto.InventoryReservResponse;
 
@@ -335,11 +336,35 @@ public class MarketPlaceBasketControllerImpl extends DefaultBasketController
 					MarketplacecommerceservicesConstants.CSCOCKPIT_USER_GROUP_STOREMANAGERAGENTGROUP);
 	      
 			for(AbstractOrderEntryModel entry : cart.getEntries()){
-				if((!mplFindDeliveryFulfillModeStrategy.isTShip(entry.getSelectedUSSID()))
+				//CKD:TPR-3809
+				if(null!=entry.getProduct().getProductCategoryType() && 
+						entry.getProduct().getProductCategoryType().equalsIgnoreCase(
+								MarketplacecommerceservicesConstants.FINEJEWELLERY)){
+					String pussid= buyBoxFacade.findPussid(entry.getSelectedUSSID());
+					if(StringUtils.isNotEmpty(pussid)){
+						if((!mplFindDeliveryFulfillModeStrategy.isTShip(pussid))
+								&& !(StringUtils.isNotEmpty(agentId))){						
+							errorMessages.add(new ResourceMessage("placeOrder.validation.sship",Arrays.asList(entry.getInfo())));
+							break;
+						} 
+					}else{
+						LOG.error("Unable to find PUSSID for cart:"+cart.getGuid()+" for USSID: " +entry.getSelectedUSSID());
+					}
+				}
+				else{
+					if((!mplFindDeliveryFulfillModeStrategy.isTShip(entry.getSelectedUSSID()))
+							&& !(StringUtils.isNotEmpty(agentId))){						
+						errorMessages.add(new ResourceMessage("placeOrder.validation.sship",Arrays.asList(entry.getInfo())));
+						break;
+					} 
+				}
+				
+				/*if((!mplFindDeliveryFulfillModeStrategy.isTShip(entry.getSelectedUSSID()))
 						&& !(StringUtils.isNotEmpty(agentId))){						
 					errorMessages.add(new ResourceMessage("placeOrder.validation.sship",Arrays.asList(entry.getInfo())));
 					break;
-				} 
+				}*/ 
+				
 			}
 //			for(AbstractOrderEntryModel entry : cart.getEntries()){
 //				if(!mplFindDeliveryFulfillModeStrategy.isTShip(entry.getSelectedUSSID())){						
@@ -405,7 +430,20 @@ public class MarketPlaceBasketControllerImpl extends DefaultBasketController
 	
 						// refer TIS-276 for details
 						
-						cartSoftReservationRequestData.setFulfillmentType(mplFindDeliveryFulfillModeStrategy.findDeliveryFulfillMode(cartEntry.getSelectedUSSID()));
+						//CKD:TPR-3809
+						//cartSoftReservationRequestData.setFulfillmentType(mplFindDeliveryFulfillModeStrategy.findDeliveryFulfillMode(cartEntry.getSelectedUSSID()));
+						if(null!=cartEntry.getProduct().getProductCategoryType()&&cartEntry.getProduct().getProductCategoryType().equalsIgnoreCase(MarketplacecommerceservicesConstants.FINEJEWELLERY)){
+							String pussid= buyBoxFacade.findPussid(cartEntry.getSelectedUSSID());
+							if(StringUtils.isNotEmpty(pussid)){
+								cartSoftReservationRequestData.setFulfillmentType(mplFindDeliveryFulfillModeStrategy.findDeliveryFulfillMode(pussid));
+							}else{
+								LOG.error("Unable to find parent USSID for cart:"+cart.getGuid()+" for USSID: " +cartEntry.getSelectedUSSID());
+							}
+							
+						}
+						else{
+							cartSoftReservationRequestData.setFulfillmentType(mplFindDeliveryFulfillModeStrategy.findDeliveryFulfillMode(cartEntry.getSelectedUSSID()));
+						}
 						//cartSoftReservationRequestData.setServiceableSlaves(cartEntry.getv\);
 						//	final List<PinCodeResponseData> pincoderesponseDataList = getSessionService().getAttribute(
 						//		MarketplacecommerceservicesConstants.PINCODE_RESPONSE_DATA_TO_SESSION);
@@ -526,10 +564,10 @@ public class MarketPlaceBasketControllerImpl extends DefaultBasketController
 					
 					InventoryReservListResponse inventoryReservListResponse = null;
 					try
-					{
-						inventoryReservListResponse = inventoryReservationService
-								.convertDatatoWsdto(cartdatalist, cart.getGuid(),
-										pincode,MarketplacecclientservicesConstants.OMS_INVENTORY_RESV_TYPE_CART);
+					{	//added for jewellery
+						final InventoryReservListRequest reqestData = inventoryReservationService.convertDatatoWsdto(
+								cartdatalist, cart.getGuid(), pincode, MarketplacecclientservicesConstants.OMS_INVENTORY_RESV_TYPE_CART);
+						inventoryReservListResponse = inventoryReservationService.reserveInventoryAtCheckout(reqestData);
 					}
 					catch (final ClientEtailNonBusinessExceptions e)
 					{

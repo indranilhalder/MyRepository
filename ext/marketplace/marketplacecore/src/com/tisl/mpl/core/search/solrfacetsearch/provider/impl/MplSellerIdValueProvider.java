@@ -63,7 +63,9 @@ public class MplSellerIdValueProvider extends AbstractPropertyFieldValueProvider
 		Set<Map<BuyBoxModel, RichAttributeModel>> sellerDetailsSet = null;
 		try
 		{
-			sellerDetailsSet = buyBoxService.getsellersDetails(productModel.getCode());
+			//TPR-3809
+			//sellerDetailsSet = buyBoxService.getsellersDetails(productModel.getCode());
+			sellerDetailsSet = buyBoxService.getsellersDetails(productModel.getCode(),productModel.getProductCategoryType());
 			if (sellerDetailsSet != null)
 			{
 				for (final Map<BuyBoxModel, RichAttributeModel> resultMap : sellerDetailsSet)

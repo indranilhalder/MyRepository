@@ -192,17 +192,27 @@ public final class MarketplacecheckoutaddonConstants extends GeneratedMarketplac
 	// Request Mapping URL
 
 	public static final String MPLDELIVERYMETHODURL = "/checkout/multi/delivery-method";
+	public static final String MPLSINGLEPAGEURL = "/checkout/single";//UF-281
 	public static final String MPLDELIVERYCHOOSEURL = "/choose";
 	public static final String MPLDELIVERYSELECTURL = "/select";
+	public static final String MPLDELIVERYSELECTURLRESPONSIVE = "/select-responsive";
 	public static final String MPLDELIVERYCHECKURL = "/check";
+	public static final String GETCNCSTRORES = "/cncStores";
+	public static final String GETREVIEWORDER = "/reviewOrder";//UF-281;
 	public static final String MPLDELIVERYCNCINVRESV = "/invReservation";
 	public static final String MPLDELIVERYNEWADDRESSURL = "/new-address";
+	public static final String MPLRESPONSIVEDELIVERYNEWADDRESSURL = "/new-address-responsive";//UF-282
+	public static final String SLOTDELIVERYRESPONSIVE = "/slotDelivery-responsive";//UF-282
+	public static final String MPLSHOWMESSAGE = "/message";
 	public static final String MPLDELIVERYSELECTADDRESSURL = "/select-address";
+	public static final String MPLRESPONSIVESELECTADDRESSURL = "/select-address-responsive";//UF-282
+	public static final String CHECKLOCATIONRESTRICTEDPINCODE = "/delModesOnAddrSelect/{pincode:.*}";
 	public static final String ADDRESS_CODE_PATH_VARIABLE_PATTERN = "{addressCode:.*}";
 	public static final String CALCULATEDELIVERYCOST = "/calculateDeliveryCost/{deliveryCost:.*}";
 	public static final String DELIVERYCOST = "deliveryCost";
 	public static final String MPLSELECTSAVEDADDRESS = "/selectaddress";
 	public static final String CHECKPINCODESERVICEABILITY = "/checkPincodeServiceability/{pincode:.*}";
+	public static final String CHECKPINCODE = "/checkPincodeServiceability/{pincode:.*}";
 	public static final String PINCODE = "pincode";
 	public static final String CHECKEXPRESSCHECKOUTPINOCDESERVICEABILITY = "/checkExCheckoutPincodeServiceability/{selectedAddressId:.*}";
 	public static final String SELECTEDADDRESSID = "selectedAddressId";
@@ -305,7 +315,14 @@ public final class MarketplacecheckoutaddonConstants extends GeneratedMarketplac
 	public static final String GUID = "guid";
 	public static final String REDIRECTSTRING = "redirect";
 	public static final String REDIRECTTOPAYMENT = "redirect_to_payment";
+	//TPR-3780:fine jewellery
+	public static final String INVENTORYRESERVED = "reload_for_inventory";
 	public final static String PAYMENTIMEOUTRRORMSG = "checkout.multi.paymentMethod.addPaymentDetails.PaymentTimeoutError";
+
+	//TPR-3780
+	public final static String UPDATED = "updated";
+
+
 
 	private MarketplacecheckoutaddonConstants()
 	{
@@ -342,9 +359,13 @@ public final class MarketplacecheckoutaddonConstants extends GeneratedMarketplac
 	public static final String MPLDELIVERYSLOTSURL = "/deliverySlotsUrl";
 
 	public static final String DELIVERY_SLOTS_TO_SESSION = "deliverySlotstoSession";
+	public static final String VALIDATION_FAILURE_MESSAGE = "Sorry, your address validation failed";
 
 	//INC144315475
 	public static final String CARTTOORDERCONVERT = "cartToOrderConvert";
+
+	//TPR-1083
+	public static final String REMOVEEXCHANGEFROMCART = "/removeExchangeFromCart";
 	//INC144316212
 	public static final String IS_DELIVERY_OPTION_PAGE = "isDeliveryOptionPage";
 

@@ -167,11 +167,18 @@
 		<bean id="gigyaCommentService" class="com.tisl.mpl.service.MplGigyaReviewCommentServiceImpl"/>
 		<bean id="mplGigyaReviewCommentDao" class="com.tisl.mpl.review.daos.impl.MplGigyaReviewCommentDaoImpl"/>
 		
+		<!-- for pancard changes -->
+		
+		<!-- <bean id="mplPancardTicketCRMserviceImpl" class="com.tisl.mpl.service.impl.MplPancardTicketCRMserviceImpl"/> -->
+		
+		<bean id="mplPancardUploadserviceImpl" class="com.tisl.mpl.service.impl.MplPancardUploadserviceImpl"/>
+		
 		<bean id="googleShortUrlService"
 		class="com.tisl.mpl.shorturl.service.ShortUrlServiceGoogleImpl"/>
 		
 		<bean id="shortUrlReportDaoImpl"
 		class="com.tisl.mpl.shorturl.report.dao.OrderShortUrlDaoImpl"/>
+
 		
 		<!-- TPR-5667 -->
 		<bean id="mplSendOrderFromCommerceToSamsung" class="com.tisl.mpl.service.impl.MplSendOrderFromCommerceToSamsungImpl" />

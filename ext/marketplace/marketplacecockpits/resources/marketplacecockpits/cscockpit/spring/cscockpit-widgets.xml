@@ -501,6 +501,12 @@
 		<property name="formatFactory" ref="formatFactory"/>
 	</bean>	
 	
+	<!--TPR-3809 : Changes for PAN CARD | overriding default order controller -->
+	<alias alias="csOrderController" name="mplDefaultCsOrderController"/>
+	<bean id="mplDefaultCsOrderController" scope="session" parent="defaultCsOrderController" class="com.tisl.mpl.cockpits.cscockpit.widgets.controllers.impl.MplDefaultOrderControllerImpl">
+	<property name="ticketStrategy" ref="csTicketStrategy"/>
+	</bean>
+	
 	<alias alias="csOrderConsignmentsWidgetRenderer" name="marketPlacedefaultCsOrderConsignmentsWidgetRenderer"/>
 	<bean id="marketPlacedefaultCsOrderConsignmentsWidgetRenderer" parent="defaultCsOrderConsignmentsWidgetRenderer" class="com.tisl.mpl.cockpits.cscockpit.widgets.renderers.impl.MarketPlaceConfigurableCsMasterDetailListboxWidgetRenderer">
 		<property name="listConfigurationCode" value="consignmentList"/>

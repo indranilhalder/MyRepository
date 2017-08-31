@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Locale;
 
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.apache.lucene.analysis.en.EnglishAnalyzer;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,10 +27,13 @@ import org.zkoss.zul.Window;
 import com.sun.xml.internal.ws.api.pipe.Engine;
 import com.tisl.mpl.cockpits.constants.MarketplaceCockpitsConstants;
 import com.tisl.mpl.cockpits.cscockpit.strategies.MplFindDeliveryFulfillModeStrategy;
+import com.tisl.mpl.cockpits.cscockpit.widgets.controllers.MarketplaceCheckoutController;
+import com.tisl.mpl.constants.MplConstants;
 import com.tisl.mpl.core.constants.GeneratedMarketplaceCoreConstants.Enumerations.ClickAndCollectEnum;
 import com.tisl.mpl.core.enums.DeliveryFulfillModesEnum;
 import com.tisl.mpl.core.model.MplZoneDeliveryModeValueModel;
 import com.tisl.mpl.core.model.RichAttributeModel;
+import com.tisl.mpl.cockpits.cscockpit.widgets.controllers.MplDefaultOrderController;
 
 import de.hybris.platform.basecommerce.enums.ConsignmentStatus;
 import de.hybris.platform.cockpit.model.meta.PropertyDescriptor;
@@ -39,6 +43,7 @@ import de.hybris.platform.cockpit.services.config.impl.DefaultColumnGroupConfigu
 import de.hybris.platform.cockpit.services.values.ObjectValueContainer;
 import de.hybris.platform.cockpit.widgets.ListboxWidget;
 import de.hybris.platform.cockpit.widgets.Widget;
+import de.hybris.platform.core.model.PancardInformationModel;
 import de.hybris.platform.core.model.c2l.CurrencyModel;
 import de.hybris.platform.core.model.order.AbstractOrderEntryModel;
 import de.hybris.platform.core.model.order.AbstractOrderModel;
@@ -164,7 +169,6 @@ public class MarketPlaceOrderDetailsOrderItemsWidgetRenderer extends
 			listheader.setWidth("95px");
 			row.appendChild(listheader);
 		}
-
 		listheader = new Listheader(LabelUtils.getLabel(widget, "basePrice",
 				new Object[0]));
 		listheader.setWidth("80px");
@@ -178,6 +182,12 @@ public class MarketPlaceOrderDetailsOrderItemsWidgetRenderer extends
 		listheader = new Listheader(LabelUtils.getLabel(widget, "qty",
 				new Object[0]));
 		listheader.setWidth("40px");
+		row.appendChild(listheader);
+		
+		//CKD: TPR-3809
+		listheader = new Listheader(LabelUtils.getLabel(widget, "panCardStatus",
+				new Object[0]));
+		listheader.setWidth("120px");
 		row.appendChild(listheader);
 
 		return row;
@@ -319,7 +329,7 @@ public class MarketPlaceOrderDetailsOrderItemsWidgetRenderer extends
 			}
 	
 		}
-
+		
 		Double basePriceValue = ObjectGetValueUtils.getDoubleValue(
 				valueContainer, basePricePD);
 		String basePriceString = (basePriceValue != null) ? currencyInstance
@@ -360,6 +370,16 @@ public class MarketPlaceOrderDetailsOrderItemsWidgetRenderer extends
 		Long qty = ObjectGetValueUtils.getLongValue(valueContainer, qtyPD);
 		String qtyString = (qty != null) ? qty.toString() : "";
 		row.appendChild(new Listcell(qtyString));
+		
+		//CKD-TPR-3809
+		String panCardStatus = ((MplDefaultOrderController)widget.getWidgetController()).getPanCardStatus(entrymodel.getOrderLineId());
+		if (StringUtils.isNotBlank(panCardStatus)){
+			row.appendChild(new Listcell(panCardStatus));
+		}
+		else{
+			row.appendChild(new Listcell(MplConstants.NOT_AVAILABLE));
+		}
+
 	}
 
 	

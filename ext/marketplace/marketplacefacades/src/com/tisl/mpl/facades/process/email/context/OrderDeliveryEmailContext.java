@@ -10,6 +10,7 @@ import de.hybris.platform.commercefacades.order.data.OrderData;
 import de.hybris.platform.core.model.c2l.LanguageModel;
 import de.hybris.platform.core.model.order.AbstractOrderEntryModel;
 import de.hybris.platform.core.model.order.OrderModel;
+import de.hybris.platform.core.model.product.ProductModel;
 import de.hybris.platform.core.model.user.AddressModel;
 import de.hybris.platform.core.model.user.CustomerModel;
 import de.hybris.platform.ordersplitting.model.ConsignmentModel;
@@ -72,6 +73,9 @@ public class OrderDeliveryEmailContext extends AbstractEmailContext<OrderUpdateP
 	private static final String ORDERPLACEDATE = "orderPlaceDate";
 	private static final String SUBTOTAL = "subTotal";
 	private static final String CONVENIENCECHARGE = "convenienceChargesVal";
+	private static final String COUNT = "count"; //added for jewellery
+	private static final String WEBSITE_URL = "websiteUrl";
+
 
 	@Autowired
 	private ConfigurationService configurationService;
@@ -131,6 +135,7 @@ public class OrderDeliveryEmailContext extends AbstractEmailContext<OrderUpdateP
 		double shippingCharge = 0;
 		double subTotal = 0;
 		double totalPrice = 0;
+		double count = 0; //added for jewellery
 
 		for (final String entryNumber : entryNumbers)
 		{
@@ -147,6 +152,15 @@ public class OrderDeliveryEmailContext extends AbstractEmailContext<OrderUpdateP
 					formatter = new SimpleDateFormat("MMM d, yyyy");
 					final String orderPlaceDate = formatter.format(childOrder.getCreationtime());
 					put(ORDERPLACEDATE, orderPlaceDate);
+
+					//added for jewellery-TPR-3765 start
+					final ProductModel prod = childOrder.getProduct();
+					if (prod != null && prod.getProductCategoryType().equalsIgnoreCase("FineJewellery"))
+					{
+						count += 1;
+					}
+					//added for jewellery-TPR-3765 end
+
 
 					//					final ProductModel productModel = childOrder.getProduct();
 					//					final String productImageUrl = productModel.getPicture().getURL();
@@ -182,8 +196,19 @@ public class OrderDeliveryEmailContext extends AbstractEmailContext<OrderUpdateP
 		put(AWBNUMBER, orderUpdateProcessModel.getAwbNumber());
 		put(SUBTOTAL, Double.valueOf(subTotal));
 		put(CONVENIENCECHARGE, Double.valueOf(convenienceChargesVal));
-
 		put(NAMEOFPERSON, deliveryAddress.getFirstname());
+
+		//added for jewellery
+		put(COUNT, Double.valueOf(count));
+		String websiteUrl = null;
+		websiteUrl = getConfigurationService().getConfiguration().getString(
+				MarketplacecommerceservicesConstants.SMS_SERVICE_WEBSITE_URL);
+		if (null != websiteUrl)
+		{
+			put(WEBSITE_URL, websiteUrl);
+		}
+		//end
+
 		final StringBuilder deliveryAddr = new StringBuilder(150);
 
 

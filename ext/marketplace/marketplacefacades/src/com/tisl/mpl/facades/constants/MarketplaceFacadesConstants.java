@@ -32,9 +32,9 @@ public class MarketplaceFacadesConstants extends GeneratedMarketplaceFacadesCons
 
 	public static final String TSHIPTHRESHOLDVALUE = "tship.item.threshold.value";
 	public static final String TSHIPCODE = "TSHIP";
-	// INC-144316545 START   
+	// INC-144316545 START
 	public static final String SSHIPCODE = "SSHIP";
-	// INC-144316545 END   
+	// INC-144316545 END
 	public static final String HOMEDELIVERYCODE = "home-delivery";
 
 	public static final String EXPRESS = "express-delivery";
@@ -168,6 +168,7 @@ public class MarketplaceFacadesConstants extends GeneratedMarketplaceFacadesCons
 	public static final String FORWARD_SLASHES = "//";
 	//Adding code for Luxury Facades
 	public static final String LuxuryPrefix = "lux";
+	public static final String PRODUCT_TYPE = "FineJewellery";
 
 	private MarketplaceFacadesConstants()
 	{

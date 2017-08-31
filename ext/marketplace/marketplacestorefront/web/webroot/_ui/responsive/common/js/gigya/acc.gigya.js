@@ -231,7 +231,9 @@ function registerUserGigya(eventObject)
     				$('#customer').text("Customer Reviews (" + data.streamInfo.ratingCount + ")");
     				
     				//added for tealium to get average product rating
+    				if(typeof utag !="undefined"){
    				     utag.link({"product_rating":avgreview});
+    				}
     				
     		  }
     		  

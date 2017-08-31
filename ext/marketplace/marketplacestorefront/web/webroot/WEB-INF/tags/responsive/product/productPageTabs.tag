@@ -29,7 +29,7 @@ var buyboxskuId='';
 </script>
 
 <!-- Displaying different tabs in PDP page -->
-
+<!-- About Product, reviewsAndRatings and returnsAndRefunds Tab added for jewellery change  -->
 <c:set var="validTabs" value="${VALID_TABS}" />
 <div class="nav-wrapper">
 <ul class="nav pdp productNav">
@@ -55,6 +55,11 @@ var buyboxskuId='';
 
 	</c:if> --%>
 	<!-- commented as part of PRDI-96 end -->
+	 <c:if test="${fn:contains(validTabs, 'aboutproduct')}">
+			<li id="tabs_aboutProduct" class="active">
+				<spring:theme code="product.product.aboutProduct" />
+			</li>
+		</c:if>
 <!-- 	TISPRD-7604 fix start -->
 	<c:if test="${fn:contains(validTabs, 'stylenote')}">
 		<li id="tabs_styleNotes" class="active">			<!-- added class 'active' PRDI-96 -->
@@ -62,6 +67,21 @@ var buyboxskuId='';
 		</li>
 	</c:if>
 <!-- 	TISPRD-7604 fix end -->
+	<c:if test="${fn:contains(validTabs, 'reviewsAndRatings')}">
+			<li id="tabs_review">
+				 <spring:theme code="product.product.reviewsAndRatings" />
+			</li>
+		</c:if>
+		<c:if test="${fn:contains(validTabs, 'returnsAndRefunds')}">
+			<li id="tabs_styleNotes_Refunds">
+				 <spring:theme code="product.product.returnsAndRefunds" />
+			</li>
+		</c:if>
+		<c:if test="${fn:contains(validTabs, 'Returns')}">
+			<li id="tabs_ret">
+				 <spring:theme code="product.product.returns" />
+			</li>
+		</c:if>
 <!-- moved as part of PRDI-96 start -->
 <c:if test="${fn:contains(validTabs, 'details')}">
 		<li id="tabs_details">
@@ -106,11 +126,31 @@ var buyboxskuId='';
 	</c:if> --%>
 	<!-- commented as part of PRDI-96 end -->
 	<!-- INC144313814 fix end -->
+	<c:if test="${fn:contains(validTabs, 'aboutproduct')}">
+		<li id="about" class="tab-content active">
+			<product:productAboutProductTab product="${product}" />
+		</li>
+	</c:if>
 	<c:if test="${fn:contains(validTabs, 'stylenote')}">
 		<li  class="active">				<!-- added class 'active' PRDI-96 -->
 			<product:productStyleNotesTab product="${product}" />
 		</li>
 	</c:if>
+	<c:if test="${fn:contains(validTabs, 'reviewsAndRatings')}">
+		<li id="review" class="tab-content">
+			<product:productReveiwsAndRatings product="${product}" />
+		</li>
+	</c:if>
+	<c:if test="${fn:contains(validTabs, 'returnsAndRefunds')}">
+		<li id="returnrefund" class="tab-content">
+			<product:productReturnsAndRefunds product="${product}" />
+		</li>
+	</c:if>
+	<%-- <c:if test="${fn:contains(validTabs, 'Returns')}">
+		<li id="return" class="tab-content">
+			<product:productReturns product="${product}" />
+		</li>
+	</c:if> --%>
 	<!-- moved as part of PRDI-96 start -->
 	<c:if test="${fn:contains(validTabs, 'details')}">
 		<li>
@@ -142,10 +182,11 @@ var buyboxskuId='';
 	</c:if>
 	<!--CKD:TPR-250:End -->
 </ul>
+
 <%-- UF-377 starts --%>
 <div class="product-specification-accordion smk_accordion acc_with_icon">
 	<c:if test="${fn:contains(validTabs, 'stylenote')}">
-		<div class="choose-address accordion_in acc_active">
+		<div  id="styleNotesMobile" class="choose-address accordion_in acc_active">
 			<div class="acc_head">
 				<div class="acc_icon_expand"></div>
 				<h2><spring:theme code="product.product.styleNotes" /></h2>
@@ -156,7 +197,7 @@ var buyboxskuId='';
 		</div>
 	</c:if>
 	<c:if test="${fn:contains(validTabs, 'details')}">
-		<div class="choose-address accordion_in">
+		<div id="detailsMobile" class="choose-address accordion_in">
 			<div class="acc_head">
 				<div class="acc_icon_expand"></div>
 				<h2><spring:theme code="product.product.details" /></h2>
@@ -167,7 +208,7 @@ var buyboxskuId='';
 		</div>
 	</c:if>
 	<c:if test="${fn:contains(validTabs, 'description')}">
-		<div class="choose-address accordion_in">
+		<div id="descriptionMobile" class="choose-address accordion_in">
 			<div class="acc_head">
 				<div class="acc_icon_expand"></div>
 				<h2><spring:theme code="product.product.description" /></h2>
@@ -178,7 +219,7 @@ var buyboxskuId='';
 		</div>
 	</c:if>
 	<c:if test="${fn:contains(validTabs, 'warranty')}">
-		<div class="choose-address accordion_in">
+		<div id="warrantyMobile" class="choose-address accordion_in">
 			<div class="acc_head">
 				<div class="acc_icon_expand"></div>
 				<h2><spring:theme code="product.product.warranty" /></h2>
@@ -189,7 +230,7 @@ var buyboxskuId='';
 		</div>
 	</c:if>
 	<c:if test="${fn:contains(validTabs, 'knowmore')}">
-		<div class="choose-address accordion_in">
+		<div id="knowmoreMobile" class="choose-address accordion_in">
 			<div class="acc_head">
 				<div class="acc_icon_expand"></div>
 				<h2><spring:theme code="product.product.knowmore" /></h2>
@@ -200,13 +241,24 @@ var buyboxskuId='';
 		</div>
 	</c:if>
 	<c:if test="${fn:contains(validTabs, 'brandInfo')}">
-		<div class="choose-address accordion_in">
+		<div id="brandInfoMobile" class="choose-address accordion_in">
 			<div class="acc_head">
 				<div class="acc_icon_expand"></div>
 				<h2><spring:theme code="product.product.brandInfo" /></h2>
 			</div>
 			<div class="acc_content" id="brandInfoAccordion">
 				<product:brandInfoTab product="${product}" />
+			</div>
+		</div>
+	</c:if>
+	<c:if test="${fn:contains(validTabs, 'returnsAndRefunds')}">
+		<div id="returnsAndRefundsMobile" class="choose-address accordion_in">
+			<div class="acc_head">
+				<div class="acc_icon_expand"></div>
+				<h2><spring:theme code="product.product.returnsAndRefunds" /></h2>
+			</div>
+			<div class="acc_content" id="returnRefundAccordion">
+				<product:productReturnsAndRefunds product="${product}" />
 			</div>
 		</div>
 	</c:if>
@@ -299,3 +351,4 @@ var buyboxskuId='';
 </div>
 <%-- UF-377 ends --%>
  <div id="servicableUssid"></div>
+
