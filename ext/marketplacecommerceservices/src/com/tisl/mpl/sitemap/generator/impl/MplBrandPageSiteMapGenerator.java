@@ -194,8 +194,8 @@ public class MplBrandPageSiteMapGenerator extends AbstractSiteMapGenerator<Custo
 	{
 
 		LOG.debug("::::::::::Inside render of MplBrandPageSiteMapGenerator generator::::::::::");
-		String prefix = (index != null) ? String.format("brand" + "-%s-%s", "sitemap", Integer.valueOf(index.intValue() + 1))
-				: String.format("brand" + "-%s", "sitemap");
+		String prefix = (index != null) ? String.format("filter-urls" + "-%s-%s", "sitemap", Integer.valueOf(index.intValue() + 1))
+				: String.format("filter-urls" + "-%s", "sitemap");
 		prefix = GenericUtilityMethods.changePrefix(prefix);
 		final File siteMap = new File(configurationService.getConfiguration().getString(
 				MarketplacecommerceservicesConstants.SITEMAP_FILE_LOCATION_BRAND), prefix + ".xml");
