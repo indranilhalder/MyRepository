@@ -1088,6 +1088,7 @@ function pincodeServiceability(){
 			var checkBuyBoxIdPresent = false;
 			var buyboxSeller = $("#ussid").val();
 			var pin = $("#pin").val();
+			console.log("pincode"+pin);
 			var requiredUrl = ACC.config.encodedContextPath + "/p"
 					+ "-checkPincode";
 
@@ -1099,6 +1100,8 @@ function pincodeServiceability(){
 				
 				$('#addToCartButton').show();
 				$('#buyNowButton').attr("disabled",false);
+				//TPR-6654
+				$("#CNCstores").html("");
 				//TPR-794
 				//$("#pdpPinCodeAvailable").html("Enter your pincode to see your available delivery options.");
 				//$("#pdpPinCodeAvailable").show();
@@ -1111,6 +1114,8 @@ function pincodeServiceability(){
 			//	$("#pdpPinCodeAvailable").hide();
 				$('#addToCartButton').show();
 				$('#buyNowButton').attr("disabled",false);
+				//TPR-6654
+				$("#CNCstores").html("");
 				//TPR-794
 				//$("#pdpPinCodeAvailable").show();
 				//$("#pdpPinCodeAvailable").html("Enter your pincode to see your available delivery options.");
@@ -1151,8 +1156,9 @@ function pincodeServiceability(){
 								$('#addToCartButton').hide();
 								$('#unsevisablePin').show();
 								$("#pdpPinCodeAvailable").hide();
-								
 								$('#buyNowButton').attr("disabled",true);
+								//TPR-6654
+								$("#CNCstores").html("");
 								//TPR-794
 								$("#pdpPinCodeAvailable").html("Available delivery options for the pincode " +pin+ " are");
 								
@@ -1307,6 +1313,7 @@ function pincodeServiceability(){
 												$("#collectli").addClass("selected");
 											    $("#collectli").css("opacity","1");
 												deliverModeTealium.push("clickandcollect");
+												//TPR-6654
 												var requiredUrl = ACC.config.encodedContextPath + "/p-allStores/"+pin;
 												$.ajax({
 													url : requiredUrl,
@@ -1336,7 +1343,6 @@ function pincodeServiceability(){
 													pdp_pin_delivery : deliverModeTealium.join("_")
 												});
 											/*TPR-642 & 640 ends*/
-
 										} else {
 											//$("#home").hide();
 											//$("#homeli").hide();
@@ -1350,6 +1356,8 @@ function pincodeServiceability(){
 											//$("#collectli").hide();
 											$("#collectli").css("opacity","0.5");
 											$("#collectli").removeClass("selected");
+											//TPR-6654
+											$("#CNCstores").html("");
 											$('#wrongPin,#unableprocessPin,#emptyPin,#serviceablePin')
 													.hide();
 											$('#addToCartFormTitle')
@@ -1363,7 +1371,6 @@ function pincodeServiceability(){
 											}
 											$('#addToCartButton').hide();
 											$('#unsevisablePin').show();
-											
 											/*TPR-642 & 640 */
 											utag.link({
 												link_text: 'pdp_pincode_check_failure' , 
@@ -1671,8 +1678,6 @@ function displayDeliveryDetails(sellerName) {
 					$("#expressli").css("opacity","0.5");
 					$("#expressli").removeClass("selected");
 				} else {		
-					
-			    
 					$("#expressDate").html(pretext+start_ed+"-"+end_ed+posttext);
 					$("#express").show();
 					$("#expressli").show();
@@ -4399,6 +4404,7 @@ function getProductCodeFromPdpUrl(url)
 }
 
 function showStoreLocatorModal(){
-	$("#CNCstores").modal();
+	//$("#CNCstores").modal();
+	$("#storeLocatorModal").modal();
 }
 //End of UF-60 changes

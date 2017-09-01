@@ -57,8 +57,10 @@ import com.tisl.mpl.storefront.constants.MessageConstants;
 import com.tisl.mpl.storefront.constants.ModelAttributetConstants;
 import com.tisl.mpl.storefront.constants.RequestMappingUrlConstants;
 import com.tisl.mpl.storefront.controllers.ControllerConstants;
+import com.tisl.mpl.storefront.security.cookie.PDPPincodeCookieGenerator;
 import com.tisl.mpl.storefront.security.cookie.UserCookieGenerator;
 import com.tisl.mpl.storefront.security.cookie.UserTypeCookieGenerator;
+import com.tisl.mpl.util.GenericUtilityMethods;
 
 
 /**
@@ -131,6 +133,26 @@ public class StorefrontAuthenticationSuccessHandler extends SavedRequestAwareAut
 	private ProductDetailsHelper productDetailsHelper;
 
 
+	@Resource(name = "PdpPincodeCookieGenerator")
+	private PDPPincodeCookieGenerator pdpPincodeCookie;
+
+	/**
+	 * @return the pdpPincodeCookie
+	 */
+	public PDPPincodeCookieGenerator getPdpPincodeCookie()
+	{
+		return pdpPincodeCookie;
+	}
+
+	/**
+	 * @param pdpPincodeCookie
+	 *           the pdpPincodeCookie to set
+	 */
+	public void setPdpPincodeCookie(final PDPPincodeCookieGenerator pdpPincodeCookie)
+	{
+		this.pdpPincodeCookie = pdpPincodeCookie;
+	}
+
 	/**
 	 * @return the productDetailsHelper
 	 */
@@ -197,13 +219,6 @@ public class StorefrontAuthenticationSuccessHandler extends SavedRequestAwareAut
 		//		final CustomerModel customer = extUserService.setCurrentUser(userModel);
 
 		final String username = (authentication.getPrincipal() == null) ? "NONE_PROVIDED" : authentication.getName();
-		/* TPR-6654 start */
-		final AddressModel address = customerModel.getDefaultShipmentAddress();
-		if (address != null && address.getPostalcode() != null)
-		{
-			getSessionService().setAttribute(MarketplacecommerceservicesConstants.SESSION_PINCODE, address.getPostalcode());
-		}
-		/* TPR-6654 end */
 
 		if (username != null && !username.isEmpty() && customerModel.getIsTemporaryPasswordChanged() != null
 				&& customerModel.getIsTemporaryPasswordChanged().equals(Boolean.FALSE))
@@ -345,7 +360,6 @@ public class StorefrontAuthenticationSuccessHandler extends SavedRequestAwareAut
 					+ " SessionTimeout: " + request.getSession().getMaxInactiveInterval());
 		}
 		/** Added for UF-93 Ends **/
-
 	}
 
 	/**
@@ -429,6 +443,23 @@ public class StorefrontAuthenticationSuccessHandler extends SavedRequestAwareAut
 				getUserTypeCookieGenerator().addCookie(response, userType);
 			}
 		}
+		/* TPR-6654 start */
+		final Cookie cookie = GenericUtilityMethods.getCookieByName(request, "pdpPincode");
+		final AddressModel address = currCust.getDefaultShipmentAddress();
+		if (address != null && address.getPostalcode() != null)
+		{
+			if (cookie != null)
+			{
+				cookie.setValue(address.getPostalcode());
+			}
+			else
+			{
+				getPdpPincodeCookie().addCookie(response, address.getPostalcode());
+			}
+			//getSessionService().setAttribute(MarketplacecommerceservicesConstants.SESSION_PINCODE, address.getPostalcode());
+		}
+		/* TPR-6654 end */
+
 
 	}
 

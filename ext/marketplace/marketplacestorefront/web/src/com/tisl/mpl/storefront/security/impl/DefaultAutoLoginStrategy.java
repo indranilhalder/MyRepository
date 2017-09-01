@@ -57,6 +57,8 @@ import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.helper.ProductDetailsHelper;
 import com.tisl.mpl.marketplacecommerceservices.service.ExtendedUserService;
 import com.tisl.mpl.storefront.constants.MessageConstants;
+import com.tisl.mpl.storefront.security.cookie.PDPPincodeCookieGenerator;
+import com.tisl.mpl.util.GenericUtilityMethods;
 
 
 /**
@@ -76,6 +78,26 @@ public class DefaultAutoLoginStrategy implements AutoLoginStrategy
 
 	@Resource(name = "productDetailsHelper")
 	private ProductDetailsHelper productDetailsHelper;
+
+	@Resource(name = "PdpPincodeCookieGenerator")
+	private PDPPincodeCookieGenerator pdpPincodeCookie;
+
+	/**
+	 * @return the pdpPincodeCookie
+	 */
+	public PDPPincodeCookieGenerator getPdpPincodeCookie()
+	{
+		return pdpPincodeCookie;
+	}
+
+	/**
+	 * @param pdpPincodeCookie
+	 *           the pdpPincodeCookie to set
+	 */
+	public void setPdpPincodeCookie(final PDPPincodeCookieGenerator pdpPincodeCookie)
+	{
+		this.pdpPincodeCookie = pdpPincodeCookie;
+	}
 
 	@Autowired
 	private ExtendedUserService userService;
@@ -150,11 +172,20 @@ public class DefaultAutoLoginStrategy implements AutoLoginStrategy
 
 				LOG.debug("Method login SITE USER");
 				/* TPR-6654 start */
+				final Cookie cookie = GenericUtilityMethods.getCookieByName(request, "pdpPincode");
 				final CustomerModel customerModel = (CustomerModel) extUserService.getCurrentUser();
 				final AddressModel address = customerModel.getDefaultShipmentAddress();
 				if (address != null && address.getPostalcode() != null)
 				{
-					getSessionService().setAttribute(MarketplacecommerceservicesConstants.SESSION_PINCODE, address.getPostalcode());
+					if (cookie != null)
+					{
+						cookie.setValue(address.getPostalcode());
+					}
+					else
+					{
+						getPdpPincodeCookie().addCookie(response, address.getPostalcode());
+					}
+					//getSessionService().setAttribute(MarketplacecommerceservicesConstants.SESSION_PINCODE, address.getPostalcode());
 				}
 				/* TPR-6654 end */
 
@@ -207,11 +238,20 @@ public class DefaultAutoLoginStrategy implements AutoLoginStrategy
 				LOG.debug("Method login SOCIAL RETURN USER USERNAME " + username);
 				LOG.debug("Method login SOCIAL RETURN USER PASSWORD " + password);
 				/* TPR-6654 start */
+				final Cookie cookie = GenericUtilityMethods.getCookieByName(request, "pdpPincode");
 				final CustomerModel customerModel = (CustomerModel) extUserService.getCurrentUser();
 				final AddressModel address = customerModel.getDefaultShipmentAddress();
 				if (address != null && address.getPostalcode() != null)
 				{
-					getSessionService().setAttribute(MarketplacecommerceservicesConstants.SESSION_PINCODE, address.getPostalcode());
+					if (cookie != null)
+					{
+						cookie.setValue(address.getPostalcode());
+					}
+					else
+					{
+						getPdpPincodeCookie().addCookie(response, address.getPostalcode());
+					}
+					//getSessionService().setAttribute(MarketplacecommerceservicesConstants.SESSION_PINCODE, address.getPostalcode());
 				}
 				/* TPR-6654 end */
 				request.setAttribute(CART_MERGED, Boolean.FALSE);

@@ -92,7 +92,8 @@
 			 </c:forEach>
 				<span id="clickDate"><%-- <c:out value="${entry.value}" /> --%></span>
 				<!-- Include Store locator -->
-				<div id="CNCstores" onclick="showStoreLocatorModal();"></div>
+				<!-- <div id="CNCstores" onclick="showStoreLocatorModal();"></div> -->
+				<div id="CNCstores"></div>
 				<%-- <product:productStoreLocator /> --%>
 		</li>
 		</c:if> 

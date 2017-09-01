@@ -7,7 +7,7 @@
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
 <%@ taglib prefix="product" tagdir="/WEB-INF/tags/responsive/product"%>
 
-<%-- <c:url var="storeLocatorURL" value="/p-allStores/${pincode}" scope="request"></c:url> --%>
+
 <div class="content">
 	<div class="cancellation-request-block">
 	<c:if test="${fn:length(storesAvailable) gt 0}" >
@@ -21,8 +21,8 @@
 		<a class="store-locator" href="" data-toggle="modal"
 			data-target="#storeLocatorModal"
 			data-mylist="<spring:theme code="text.help" />"
-			data-dismiss="modal" >
-			
+			data-dismiss="modal" onclick="showStoreLocatorModal();">
+			 
 			<spring:theme code="more.stores.nearby" arguments="${fn:length(storesAvailable) - 1 }"/>
 		</a>
 	</c:if>

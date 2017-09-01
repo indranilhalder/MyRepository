@@ -91,6 +91,7 @@ import java.util.Map;
 import java.util.TreeMap;
 
 import javax.annotation.Resource;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
@@ -156,8 +157,10 @@ import com.tisl.mpl.storefront.constants.ModelAttributetConstants;
 import com.tisl.mpl.storefront.constants.RequestMappingUrlConstants;
 import com.tisl.mpl.storefront.controllers.ControllerConstants;
 import com.tisl.mpl.storefront.controllers.helpers.FrontEndErrorHelper;
+import com.tisl.mpl.storefront.security.cookie.PDPPincodeCookieGenerator;
 import com.tisl.mpl.storefront.web.forms.SellerInformationDetailsForm;
 import com.tisl.mpl.util.ExceptionUtil;
+import com.tisl.mpl.util.GenericUtilityMethods;
 
 
 
@@ -312,6 +315,27 @@ public class ProductPageController extends MidPageController
 
 	@Resource(name = "prodOfferDetFacade")
 	private ProductOfferDetailFacade prodOfferDetFacade;
+
+	//TPR-6654
+	@Resource(name = "PdpPincodeCookieGenerator")
+	private PDPPincodeCookieGenerator pdpPincodeCookie;
+
+	/**
+	 * @return the pdpPincodeCookie
+	 */
+	public PDPPincodeCookieGenerator getPdpPincodeCookie()
+	{
+		return pdpPincodeCookie;
+	}
+
+	/**
+	 * @param pdpPincodeCookie
+	 *           the pdpPincodeCookie to set
+	 */
+	public void setPdpPincodeCookie(final PDPPincodeCookieGenerator pdpPincodeCookie)
+	{
+		this.pdpPincodeCookie = pdpPincodeCookie;
+	}
 
 	//TPR-978
 	@Resource(name = "cmsPageService")
@@ -1295,10 +1319,10 @@ public class ProductPageController extends MidPageController
 	@RequestMapping(value = PRODUCT_OLD_URL_PATTERN + ControllerConstants.Views.Fragments.Product.CHECK_PINCODE, method = RequestMethod.GET)
 	public List<PinCodeResponseData> getPincodeServicabilityDetails(@RequestParam(value = "pin") final String pin,
 			@RequestParam(value = ControllerConstants.Views.Fragments.Product.PRODUCT_CODE) final String productCode,
-			final Model model) throws CMSItemNotFoundException
+			final Model model, final HttpServletRequest request, final HttpServletResponse response) throws CMSItemNotFoundException
 	{
-		List<PinCodeResponseData> response = null;
-
+		List<PinCodeResponseData> pincodeResponse = null;
+		final Cookie cookie = GenericUtilityMethods.getCookieByName(request, "pdpPincode");
 		try
 		{
 			//TISSEC-11
@@ -1319,13 +1343,22 @@ public class ProductPageController extends MidPageController
 						myLocation = new LocationDtoWrapper(dto);
 						LOG.debug("Selected Location for Latitude:" + myLocation.getGPS().getDecimalLatitude());
 						LOG.debug("Selected Location for Longitude:" + myLocation.getGPS().getDecimalLongitude());
-						//sessionService.setAttribute(ModelAttributetConstants.PINCODE, pin);
 						//TPR-6654
-						sessionService.setAttribute(MarketplacecommerceservicesConstants.SESSION_PINCODE, pin);
-						response = pinCodeFacade.getResonseForPinCode(productCode, pin,
+						if (cookie != null && cookie.getValue() != null)
+						{
+							cookie.setValue(pin);
+							response.addCookie(cookie);
+							sessionService.setAttribute(MarketplacecommerceservicesConstants.SESSION_PINCODE, cookie.getValue());
+						}
+						else
+						{
+							getPdpPincodeCookie().addCookie(response, pin);
+							sessionService.setAttribute(MarketplacecommerceservicesConstants.SESSION_PINCODE, pin);
+						}
+						pincodeResponse = pinCodeFacade.getResonseForPinCode(productCode, pin,
 								pincodeServiceFacade.populatePinCodeServiceData(productCode, myLocation.getGPS()));
 
-						return response;
+						return pincodeResponse;
 					}
 					catch (final Exception e)
 					{
@@ -1341,7 +1374,7 @@ public class ProductPageController extends MidPageController
 		{
 			ExceptionUtil.etailNonBusinessExceptionHandler(e);
 		}
-		return response;
+		return pincodeResponse;
 
 	}
 
@@ -1462,15 +1495,11 @@ public class ProductPageController extends MidPageController
 			model.addAttribute(ModelAttributetConstants.SHARED_PATH, sharePath);
 			model.addAttribute(ControllerConstants.Views.Fragments.Product.PRODUCT_CODE, productData.getCode());
 			model.addAttribute(ModelAttributetConstants.SHARED_PATH, sharePath);
-			//			if (null != sessionService.getAttribute(ModelAttributetConstants.PINCODE))
-			//			{
-			//				model.addAttribute(ModelAttributetConstants.PINCODE, sessionService.getAttribute(ModelAttributetConstants.PINCODE));
-			//			}
+			//TPR-6654
 			final String pincode = (String) sessionService.getAttribute(MarketplacecommerceservicesConstants.SESSION_PINCODE);
 			if (StringUtils.isNotEmpty(pincode))
 			{
-				model.addAttribute(ModelAttributetConstants.PINCODE,
-						sessionService.getAttribute(MarketplacecommerceservicesConstants.SESSION_PINCODE));
+				model.addAttribute(ModelAttributetConstants.PINCODE, pincode);
 				model.addAttribute(ControllerConstants.Views.Fragments.Product.STORE_AVAIL, mplProductFacade.storeLocatorPDP(pincode));
 			}
 			getRequestContextData(request).setProduct(productModel);
@@ -1894,10 +1923,10 @@ public class ProductPageController extends MidPageController
 			model.addAttribute(ControllerConstants.Views.Fragments.Product.DELIVERY_MODE_MAP, deliveryModeATMap);
 			//TPR-6654
 			final String pincode = (String) sessionService.getAttribute(MarketplacecommerceservicesConstants.SESSION_PINCODE);
+			//			sessionService.setAttribute(MarketplacecommerceservicesConstants.SESSION_PINCODE, pincode);
 			if (StringUtils.isNotEmpty(pincode))
 			{
-				model.addAttribute(ModelAttributetConstants.PINCODE,
-						sessionService.getAttribute(MarketplacecommerceservicesConstants.SESSION_PINCODE));
+				model.addAttribute(ModelAttributetConstants.PINCODE, pincode);
 				model.addAttribute(ControllerConstants.Views.Fragments.Product.STORE_AVAIL, mplProductFacade.storeLocatorPDP(pincode));
 			}
 			displayConfigurableAttribute(productData, model);
