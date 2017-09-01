@@ -651,7 +651,7 @@ ACC.singlePageCheckout = {
 			console.log("ERROR:"+textStatus + ': ' + errorThrown);
 		});
         //calling tealium
-        //$("#checkoutPageName").val("Choose Your Delivery Options");
+        $("#checkoutPageName").val("Choose Your Delivery Options");
         if(typeof utag_data !="undefined"){
         	var checkoutDeliveryPage = "Multi Checkout Summary Page:Choose Your Delivery Options";
         	utag_data.page_name = checkoutDeliveryPage;
@@ -1118,6 +1118,8 @@ ACC.singlePageCheckout = {
 				event_type : storeName+'_store_seleted'
 			});
 		}
+		//TPR-6029 | DTM For checkout
+		dtmStoreSelection(storeName);
 		
 	},
 	//Function to validate and submit pick up person form
@@ -1393,7 +1395,7 @@ ACC.singlePageCheckout = {
         		$("#selectedReviewOrderHighlight").html(countItemsText+" Items, "+$("#reviewOrder #totPriceWithoutRupeeSymbol").text());
         	}
         	//added for tealium
-  		  //$("#checkoutPageName").val("Review Order");
+  		  $("#checkoutPageName").val("Review Order");
         	if(typeof utag_data !="undefined"){
             	var checkoutDeliveryPage = "Multi Checkout Summary Page:Review Order";
             	utag_data.page_name = checkoutDeliveryPage;
@@ -1853,7 +1855,7 @@ ACC.singlePageCheckout = {
 			console.log("ERROR:"+textStatus + ': ' + errorThrown);
 		});
 		//tealium page name addition
-		//$("#checkoutPageName").val("Payment Options");
+		$("#checkoutPageName").val("Payment Options");
 		if(typeof utag_data !="undefined"){
         	var checkoutDeliveryPage = "Multi Checkout Summary Page:Payment Options";
         	utag_data.page_name = checkoutDeliveryPage;

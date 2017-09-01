@@ -187,6 +187,10 @@ public final class MessageConstants
 	public static final String BOGO_CANCEL = "cancel.bogo.message".intern();
 	public static final String ORDER_HISTORY_PAGEBLEDATA_COUNT = "orderHistory.pagebleData.count";
 
+	// For TPR-6334,6338
+	public static final String DTM_SIGNIN_STATUS = "dtmSigninStatus";
+	public static final String DTM_SIGNOUT_STATUS = "dtmSignoutStatus";
+
 	//coupons
 	public static final String PAZE_SIZE_COUPONS = "mpl.account.coupon.pazesize";
 	//closed coupon
