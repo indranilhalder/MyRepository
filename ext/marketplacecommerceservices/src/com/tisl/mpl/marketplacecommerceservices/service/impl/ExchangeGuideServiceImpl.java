@@ -96,9 +96,9 @@ public class ExchangeGuideServiceImpl implements ExchangeGuideService
 
 	/*
 	 * @Javadoc
-	 *
+	 * 
 	 * @returns All L4 for which Exchange is Applicable
-	 *
+	 * 
 	 * @see com.tisl.mpl.marketplacecommerceservices.service.ExchangeGuideService#getDistinctL4()
 	 */
 	@Override
@@ -119,11 +119,11 @@ public class ExchangeGuideServiceImpl implements ExchangeGuideService
 
 	/*
 	 * @Javadoc
-	 *
+	 * 
 	 * @param String categoryCode
-	 *
+	 * 
 	 * @param ExchangeCouponValueModel pricematrix
-	 *
+	 * 
 	 * @see com.tisl.mpl.marketplacecommerceservices.service.ExchangeGuideService#getExchangeGuideList(java.lang.String)
 	 */
 	@Override
@@ -227,7 +227,7 @@ public class ExchangeGuideServiceImpl implements ExchangeGuideService
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.marketplacecommerceservices.service.ExchangeGuideService#changePincode(java.lang.String)
 	 */
 	@Override
@@ -260,7 +260,7 @@ public class ExchangeGuideServiceImpl implements ExchangeGuideService
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see
 	 * com.tisl.mpl.marketplacecommerceservices.service.ExchangeGuideService#removeFromTransactionTable(java.lang.String)
 	 */
@@ -312,7 +312,7 @@ public class ExchangeGuideServiceImpl implements ExchangeGuideService
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see
 	 * com.tisl.mpl.marketplacecommerceservices.service.ExchangeGuideService#getTeporaryExchangeModelforId(java.lang.
 	 * String)
@@ -565,11 +565,9 @@ public class ExchangeGuideServiceImpl implements ExchangeGuideService
 						exMod.setExchangeRemovalReason(MarketplacecommerceservicesConstants.EXCHANGE_REMOVAL_REASON);
 					}
 					exModList.add(exMod);
-					//Added for EQA Comments
-					modelService.refresh(exMod);
+
 					exTraxRemovList.add(exTrax);
-					//Added for EQA Comments
-					modelService.refresh(exTrax);
+
 
 				}
 			}
@@ -688,7 +686,7 @@ public class ExchangeGuideServiceImpl implements ExchangeGuideService
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see
 	 * com.tisl.mpl.marketplacecommerceservices.service.ExchangeGuideService#addToExchangeTable(com.tisl.mpl.core.model
 	 * .ExchangeTransactionModel)
