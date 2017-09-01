@@ -7517,10 +7517,10 @@ public class UsersController extends BaseCommerceController
 				returnReasonData = mplOrderFacade.getReturnReasonForOrderItem(returnCancelFlag);
 
 				//TPR-4134 starts
-				returnModes.put(MarketplacecommerceservicesConstants.SELFCOURIER, "true");
-				returnModes.put(MarketplacecommerceservicesConstants.SCHEDULE_PICKUP, "true");
-				returnModes.put(MarketplacecommerceservicesConstants.QUICK_DROP, "true");
-				returnRequestDTO.setShowReverseSealFrJwlry("No");
+				returnModes.put(MarketplacecommerceservicesConstants.SELFCOURIER, MarketplacecommerceservicesConstants.TRUE);
+				returnModes.put(MarketplacecommerceservicesConstants.SCHEDULE_PICKUP, MarketplacecommerceservicesConstants.TRUE);
+				returnModes.put(MarketplacecommerceservicesConstants.QUICK_DROP, MarketplacecommerceservicesConstants.TRUE);
+				returnRequestDTO.setShowReverseSealFrJwlry(MarketplacecommerceservicesConstants.NO);
 
 				if (StringUtils.isNotEmpty(revSealSellerList))
 				{
@@ -7529,7 +7529,7 @@ public class UsersController extends BaseCommerceController
 					{
 						if (sellerList.contains(orderEntry.getSellerName()))
 						{
-							returnRequestDTO.setShowReverseSealFrJwlry("Yes");
+							returnRequestDTO.setShowReverseSealFrJwlry(MarketplacecommerceservicesConstants.YES);
 							revSealFrJwlry.setMessage(MarketplacecommerceservicesConstants.REV_SEAL_JWLRY);
 							revSealFrJwlry.setYes("Y");
 							revSealFrJwlry.setNo("N");
