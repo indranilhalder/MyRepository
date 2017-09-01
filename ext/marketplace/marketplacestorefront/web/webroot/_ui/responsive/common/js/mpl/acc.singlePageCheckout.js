@@ -2313,7 +2313,7 @@ ACC.singlePageCheckout = {
 			ACC.singlePageCheckout.showAjaxLoader();
 			$('#selectAddressFormMobile input[name=selectedAddressCode]').prop('checked', false);
         	$("#addNewAddressForResponsive .mobile_add_address").addClass("form_open");
-			$(".newAddressFormMobile").slideDown();
+        	$("#newAddressFormMobile.new-address-form-mobile").slideDown();
 			ACC.singlePageCheckout.hideAjaxLoader();
 		} 
 		
