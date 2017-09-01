@@ -338,7 +338,6 @@ public class LoginPageController extends AbstractLoginPageController
 				model.addAttribute(ModelAttributetConstants.IS_SIGN_IN_ACTIVE, ModelAttributetConstants.Y_CAPS_VAL);
 			}
 
-
 			/** Added for UF-93 to show the last logged in user in log in field for the remembered Users **/
 			final String rememberMeEnabled = configurationService.getConfiguration().getString("rememberMe.enabled"); //unblocked for testing
 			model.addAttribute("rememberMeEnabled", rememberMeEnabled); //unblocked for testing
@@ -356,6 +355,7 @@ public class LoginPageController extends AbstractLoginPageController
 			//				}
 			//			}
 			/** End UF-93 **/
+
 
 
 			/** Added for UF-93 to show the last logged in user in log in field for the remembered Users **/
@@ -631,6 +631,10 @@ public class LoginPageController extends AbstractLoginPageController
 					getAutoLoginStrategy().login(form.getEmail().toLowerCase(), form.getPwd(), request, response);
 					final HttpSession session = request.getSession();
 					session.setAttribute(LOGIN_SUCCESS, Boolean.TRUE);
+					//For TPR-6334 : creating cookie object
+					final Cookie dtmRegistrationCookie = new Cookie(MessageConstants.DTM_SIGNIN_STATUS, "RegistrationSuccess");
+					dtmRegistrationCookie.setPath(ModelAttributetConstants.SLASH);
+					response.addCookie(dtmRegistrationCookie);
 					//	updating the isRegistered flag in friends model (in case of valid affiliated id)
 					if (null != form.getAffiliateId() && !StringUtils.isBlank(form.getAffiliateId()))
 					{

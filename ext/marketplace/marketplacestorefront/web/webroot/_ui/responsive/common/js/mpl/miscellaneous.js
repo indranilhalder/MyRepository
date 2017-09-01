@@ -229,7 +229,7 @@
  
  // For TISLUX-1865
 function deleteCookie(name){
-    document.cookie = name + '=;expires=Thu, 01 Jan 1970 00:00:01 GMT;';
+    document.cookie = name + '=;expires=Thu, 01 Jan 1970 00:00:01 GMT; path=/;';	// TPR-6334 : path added
 };
 
 //Script from facetNavAppliedFilters.tag

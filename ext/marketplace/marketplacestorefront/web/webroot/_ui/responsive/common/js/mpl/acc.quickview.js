@@ -967,7 +967,11 @@ function openPopForBankEMI_quick() {
 				link_text: 'emi_more_information' ,
 				event_type : 'emi_more_information'
 			});
-
+			//TPR-6029-EMI link click#43--start
+			if(typeof _satellite != "undefined"){
+				_satellite.track('cpj_qw_emi');
+				}
+			//TPR-6029-EMI link click#43--end
 		},
 		error : function(xhr, status, error) {
 

@@ -165,6 +165,9 @@
 	
 	<script type="text/javascript"
 	src="${commonResourcePath}/js/mpl/tealium.js"></script>
+	
+	<%-- <script type="text/javascript"
+	src="${commonResourcePath}/js/mpl/acc.dtm.js"></script> --%>
 
 <!--[if lt IE 9]>
 <link rel="stylesheet" type="text/css" med="all" href="${themeResourcePath}/css/main-ie8.css"/>

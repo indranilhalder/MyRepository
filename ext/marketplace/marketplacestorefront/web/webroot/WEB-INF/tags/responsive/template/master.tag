@@ -60,7 +60,8 @@
 <link rel="stylesheet" type="text/css" media="all" href="//${productMediadnsHost1}/preload.css?${rand}"/>
 </c:if> --%>
 
-
+<spring:eval expression="T(de.hybris.platform.util.Config).getParameter('dtm.static.url')" var="dtmUrl"/>
+<script src="${dtmUrl}"></script>
 
 
 <%-- <link rel="stylesheet" type="text/css" media="all" href="${themeResourcePath}/css/preload.css"/> --%>
@@ -266,8 +267,8 @@
 	src="${commonResourcePath}/js/jquery-2.1.1.min.js"></script>
 	<%-- Inject any additional CSS required by the page --%>
 	<jsp:invoke fragment="pageCss"/>
-	
 	<%-- <analytics:analytics/> --%>
+<div id ="DTMhome"></div>
 	<%-- <generatedVariables:generatedVariables/> --%>
 
 <c:if test="${param.frame ne null}">	
@@ -276,6 +277,7 @@
 <c:if test="${fn:contains(requestScope['javax.servlet.forward.request_uri'],'/my-account')}">
 	<link rel="stylesheet" type="text/css" media="all" href="${themeResourcePath}/css/pikaday.css"/>
 </c:if>
+
 <!--Added for TPR-5812  -->
 <c:if test="${isIzootoEnabled=='Y'}">
  <script> window._izq = window._izq || []; window._izq.push(["init"]); </script>
@@ -283,6 +285,7 @@
 <script src="${izootoScript}"></script>
 </c:if>
  <!-- Changes End  TPR-5812 -->
+
 </head>
 <c:if test="${empty buildNumber}">
 <c:set var="buildNumber" value= "100000"/>
@@ -409,10 +412,9 @@
 
 	<%-- Load JavaScript required by the site --%>
 	<template:javaScript/>
-	
+	<script type="text/javascript">_satellite.pageBottom();</script>
 	<%-- Inject any additional JavaScript required by the page --%>
 	<jsp:invoke fragment="pageScripts"/>	
-	
 </body>
 
 <debug:debugFooter/>

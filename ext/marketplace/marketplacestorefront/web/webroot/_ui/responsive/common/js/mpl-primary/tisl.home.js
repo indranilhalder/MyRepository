@@ -535,8 +535,8 @@ $(document).ready(function()
 		if($('header .content nav > ul > li:first-child').hasClass('hovered')) 
 		{
 			var id = $('header .content nav > ul > li.hovered > ul > li:first-child .departmenthover').attr('id');
-		   // var code = id.substring(4);
 
+		    //var code = id.substring(4);
 		    if (!$.cookie("dept-list") && window.localStorage) {
 		        for (var key in localStorage) {
 		            if (key.indexOf("deptmenuhtml") >= 0) {

@@ -24,19 +24,25 @@
 			
 			var popUpWidth=500;
 			var popUpHeight=450;
-				 var PopUpLeftPosition = screen.width/2 - popUpWidth/2;
-				    var PopUpTopPosition= screen.height/2 - popUpHeight/2;
+			var PopUpLeftPosition = screen.width/2 - popUpWidth/2;
+		    var PopUpTopPosition= screen.height/2 - popUpHeight/2;
 			function openPopup(url,buttontype) {
-				//TPR-674 //tpr-5344 
-				utag.link({link_text: buttontype , event_type : 'share_button_click' ,product_id : productIdArray});
-				    window.open(url, 'popup_id','scrollbars,resizable,height='+popUpHeight+',width='+ popUpWidth +',left='+ PopUpLeftPosition +',top='+ PopUpTopPosition);
+			//TPR-674 tpr-5344
+			     if(typeof(utag) != "undefined"){
+				         utag.link({link_text: buttontype , event_type : 'share_button_click' ,product_id : productIdArray});
+			       }
+				   window.open(url, 'popup_id','scrollbars,resizable,height='+popUpHeight+',width='+ popUpWidth +',left='+ PopUpLeftPosition +',top='+ PopUpTopPosition);
 			      return false;
 			    }
 			$(document).on('click','.mail.mailproduct',function(){
-				utag.link({link_text: 'share_email' , event_type : 'share_button_click',product_id : productIdArray });
+				if(typeof(utag) != "undefined"){
+				    utag.link({ link_text: 'share_email' , event_type : 'share_button_click',product_id : productIdArray });
+				}
 			})
 			$(document).on('click','.g-interactivepost',function(){
-		utag.link({ link_text: 'share_googleplus' , event_type : 'share_button_click',product_id : productIdArray });
+				if(typeof(utag) != "undefined"){
+		             utag.link({ link_text: 'share_googleplus' , event_type : 'share_button_click',product_id : productIdArray });
+				}
 			})
 </script>
 
