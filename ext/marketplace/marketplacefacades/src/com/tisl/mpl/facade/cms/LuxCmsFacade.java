@@ -14,4 +14,10 @@ public interface LuxCmsFacade
 
 	LuxuryComponentsListWsDTO getLuxuryPage(ContentPageModel contentPage) throws CMSItemNotFoundException;
 
+	LuxuryComponentsListWsDTO getBrandById(String brandCode);
+
+	LuxuryComponentsListWsDTO getContentPagesBylableOrId(String label);
+
+	LuxuryComponentsListWsDTO getLuxHomepage();
+
 }

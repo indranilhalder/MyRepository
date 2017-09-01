@@ -49,17 +49,17 @@ public class LuxuryDeviceDetectionFacade extends DefaultDeviceDetectionFacade
 		// YTODO Auto-generated method stub
 		super.initializeRequest(request);
 
-		if (getCurrentDetectedDevice() == null || "true".equals(request.getParameter("clear")))
-		{
-			final DeviceData deviceData = getRequestDeviceDataConverter().convert(request);
-			final UiExperienceData uiExperienceData = getDeviceDataUiExperienceDataConverter().convert(deviceData);
+		//if (getCurrentDetectedDevice() == null || "true".equals(request.getParameter("clear")))
+		//{
+		final DeviceData deviceData = getRequestDeviceDataConverter().convert(request);
+		final UiExperienceData uiExperienceData = getDeviceDataUiExperienceDataConverter().convert(deviceData);
 
-			if (uiExperienceData != null && uiExperienceData.getLevel() != null)
-			{
-				sessionService.setAttribute("detectedUI", uiExperienceData.getLevel());
-				LOG.error("Detected UI - " + uiExperienceData.getLevel());
-			}
+		if (uiExperienceData != null && uiExperienceData.getLevel() != null)
+		{
+			sessionService.setAttribute("detectedUI", uiExperienceData.getLevel());
+			LOG.error("Detected UI - " + uiExperienceData.getLevel());
 		}
+		//}
 
 	}
 }

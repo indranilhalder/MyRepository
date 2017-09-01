@@ -3,6 +3,8 @@
  */
 package com.tisl.mpl.facade.cms;
 
+import de.hybris.platform.category.CategoryService;
+import de.hybris.platform.category.model.CategoryModel;
 import de.hybris.platform.cms2.exceptions.CMSItemNotFoundException;
 import de.hybris.platform.cms2.model.contents.components.AbstractCMSComponentModel;
 import de.hybris.platform.cms2.model.contents.components.CMSImageComponentModel;
@@ -10,13 +12,19 @@ import de.hybris.platform.cms2.model.contents.contentslot.ContentSlotModel;
 import de.hybris.platform.cms2.model.pages.ContentPageModel;
 import de.hybris.platform.cms2.model.relations.ContentSlotForPageModel;
 import de.hybris.platform.cms2.model.relations.ContentSlotForTemplateModel;
+import de.hybris.platform.cms2.servicelayer.services.CMSRestrictionService;
 import de.hybris.platform.cms2lib.model.components.BannerComponentModel;
 import de.hybris.platform.cms2lib.model.components.RotatingImagesComponentModel;
+import de.hybris.platform.commerceservices.enums.UiExperienceLevel;
 import de.hybris.platform.core.model.media.MediaContainerModel;
 import de.hybris.platform.core.model.media.MediaModel;
+import de.hybris.platform.servicelayer.session.SessionExecutionBody;
+import de.hybris.platform.servicelayer.session.SessionService;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import javax.annotation.Resource;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
@@ -55,11 +63,22 @@ public class LuxCmsFacadeImpl implements LuxCmsFacade
 {
 
 
+	@Resource(name = "cmsRestrictionService")
+	private CMSRestrictionService cmsRestrictionService;
+
+	@Resource(name = "categoryService")
+	private CategoryService categoryService;
+
+	@Resource(name = "sessionService")
+	private SessionService sessionService;
+
 	private MplCMSPageServiceImpl mplCMSPageService;
 
 
+	private static final Logger LOG = Logger.getLogger(LuxCmsFacadeImpl.class);
 
-	private static final Logger LOG = Logger.getLogger(MplCmsFacadeImpl.class);
+
+
 
 	/**
 	 * @return the mplCMSPageService
@@ -69,6 +88,10 @@ public class LuxCmsFacadeImpl implements LuxCmsFacade
 		return mplCMSPageService;
 	}
 
+
+
+
+
 	/**
 	 * @param mplCMSPageService
 	 *           the mplCMSPageService to set
@@ -77,6 +100,10 @@ public class LuxCmsFacadeImpl implements LuxCmsFacade
 	{
 		this.mplCMSPageService = mplCMSPageService;
 	}
+
+
+
+
 
 	/*
 	 * (non-Javadoc)
@@ -122,12 +149,14 @@ public class LuxCmsFacadeImpl implements LuxCmsFacade
 			final LuxuryComponentsListWsDTO luxuryComponentsListWsDTO) throws CMSItemNotFoundException
 	{
 
+		final List<AbstractCMSComponentModel> abstractCMSComponentModelList = cmsRestrictionService
+				.evaluateCMSComponents(contentSlot.getCmsComponents(), null);
 		LuxuryComponentsListWsDTO luxuryComponentsList = luxuryComponentsListWsDTO;
 
-		if (null != contentSlot)
+		if (null != abstractCMSComponentModelList)
 		{
 			//			final int count = 0;
-			for (final AbstractCMSComponentModel abstractCMSComponentModel : contentSlot.getCmsComponents())
+			for (final AbstractCMSComponentModel abstractCMSComponentModel : abstractCMSComponentModelList)
 			{
 				final String typecode = abstractCMSComponentModel.getTypeCode();
 
@@ -887,6 +916,120 @@ public class LuxCmsFacadeImpl implements LuxCmsFacade
 		return luxuryComponent;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 *
+	 * @see com.tisl.mpl.facade.cms.LuxCmsFacade#getBrandById(java.lang.String)
+	 */
+	@Override
+	public LuxuryComponentsListWsDTO getBrandById(final String brandCode)
+	{
+
+		{
+			final LuxuryComponentsListWsDTO luxuryComponentsListWsDTO = sessionService.executeInLocalView(new SessionExecutionBody()
+			{
+				@Override
+				public LuxuryComponentsListWsDTO execute()
+				{
+					sessionService.setAttribute("detectedUI", UiExperienceLevel.MOBILE);
+					sessionService.setAttribute("UiExperienceService-Detected-Level", UiExperienceLevel.MOBILE);
+					sessionService.setAttribute("UiExperienceService-Override-Level", UiExperienceLevel.MOBILE);
 
 
+					final CategoryModel category = categoryService.getCategoryForCode(brandCode);
+					try
+					{
+						final ContentPageModel contentPage = mplCMSPageService.getLandingPageForCategory(category);
+						return getLuxuryPage(contentPage);
+					}
+					catch (final CMSItemNotFoundException e)
+					{
+						LOG.error("CMSItemNotFoundException : ", e);
+					}
+					return null;
+
+				}
+			});
+			return luxuryComponentsListWsDTO;
+		}
+	}
+
+
+
+
+
+	/*
+	 * (non-Javadoc)
+	 *
+	 * @see com.tisl.mpl.facade.cms.LuxCmsFacade#getContentPagesBylable(java.lang.String)
+	 */
+	@Override
+	public LuxuryComponentsListWsDTO getContentPagesBylableOrId(final String label)
+	{
+		{
+			final LuxuryComponentsListWsDTO luxuryComponentsListWsDTO = sessionService.executeInLocalView(new SessionExecutionBody()
+			{
+				@Override
+				public LuxuryComponentsListWsDTO execute()
+				{
+					sessionService.setAttribute("detectedUI", UiExperienceLevel.MOBILE);
+					sessionService.setAttribute("UiExperienceService-Detected-Level", UiExperienceLevel.MOBILE);
+					sessionService.setAttribute("UiExperienceService-Override-Level", UiExperienceLevel.MOBILE);
+
+					try
+					{
+						final ContentPageModel contentPage = mplCMSPageService.getPageByLabelOrId(label);
+						return getLuxuryPage(contentPage);
+					}
+					catch (final CMSItemNotFoundException e)
+					{
+						LOG.error("CMSItemNotFoundException : ", e);
+					}
+					return null;
+				}
+			});
+			return luxuryComponentsListWsDTO;
+		}
+	}
+
+
+
+
+
+
+	/*
+	 * (non-Javadoc)
+	 *
+	 * @see com.tisl.mpl.facade.cms.LuxCmsFacade#getLuxHomepage()
+	 */
+	@Override
+	public LuxuryComponentsListWsDTO getLuxHomepage()
+	{
+
+		final LuxuryComponentsListWsDTO luxuryComponentsListWsDTO = sessionService.executeInLocalView(new SessionExecutionBody()
+		{
+
+			@Override
+			public LuxuryComponentsListWsDTO execute()
+			{
+
+				sessionService.setAttribute("detectedUI", UiExperienceLevel.MOBILE);
+				sessionService.setAttribute("UiExperienceService-Detected-Level", UiExperienceLevel.MOBILE);
+				sessionService.setAttribute("UiExperienceService-Override-Level", UiExperienceLevel.MOBILE);
+
+				try
+				{
+					final ContentPageModel contentPage = mplCMSPageService.getHomepage();
+					return getLuxuryPage(contentPage);
+				}
+				catch (final CMSItemNotFoundException e)
+				{
+					LOG.error("CMSItemNotFoundException : ", e);
+				}
+				return null;
+			}
+
+		});
+		return luxuryComponentsListWsDTO;
+	}
 }
