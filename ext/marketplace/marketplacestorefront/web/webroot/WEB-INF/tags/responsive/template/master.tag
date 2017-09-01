@@ -416,6 +416,13 @@
 		<input type="hidden" id="accesibility_refreshScreenReaderBufferField" name="accesibility_refreshScreenReaderBufferField" value=""/>
 	</form>
 	<div id="ariaStatusMsg" class="skip" role="status" aria-relevant="text" aria-live="polite"></div>
+	
+	<c:if test="${isSamsungPage eq true }">
+		<spring:eval expression="T(de.hybris.platform.util.Config).getParameter('samsung.chat.icon.uri')" var="samsungChatIconURI"/>
+		<div class="samsung-chat-div" id="samsung-chat-icon-id">
+			<img title="Samsung Live Chat" alt="Samsung Live Chat" src="${samsungChatIconURI}">
+		</div>
+	</c:if>
 
 	<%-- Load JavaScript required by the site --%>
 	<template:javaScript/>

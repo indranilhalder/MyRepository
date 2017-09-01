@@ -76858,7 +76858,6 @@ body .account .right-account form label.invite-text-lbl{
 /* TISSPTEN-120 END */
 
 
-
 #login-modal{
 	min-width: 320px;
 }
@@ -76994,3 +76993,19 @@ body .account .right-account form label.invite-text-lbl{
 #login-modal  .sign-in.tab-view .tabs>li .left form .forgotten-password_register {
     display: block;
 }
+
+/*TPR-6405 start*/
+.samsung-chat-div{
+	position: fixed;
+    bottom: 40px;
+    right: 10px;
+    background: transparent;
+	cursor: pointer;
+	z-index: 10;
+}
+@media (max-width: 790px){
+	.samsung-chat-div{
+		display: none;
+	}
+}
+/*TPR-6405 end*/
