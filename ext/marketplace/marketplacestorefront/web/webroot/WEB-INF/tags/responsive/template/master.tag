@@ -390,7 +390,14 @@
 		</c:otherwise>
 		</c:choose>
 	</c:if>
-
+	<script>
+	$(window).on("load", function(){
+		var forceLoginUser = "${forced_login_user}";
+		if(forceLoginUser == "Y"){
+			 $("#login-modal").modal();
+		}
+	});
+</script>
 
 	<tealium:sync/> 
 <%-- <script type="text/javascript">
@@ -415,6 +422,14 @@
 	<script type="text/javascript">_satellite.pageBottom();</script>
 	<%-- Inject any additional JavaScript required by the page --%>
 	<jsp:invoke fragment="pageScripts"/>	
+	<%-- TPR-6399 --%>
+	<!-- Modal -->
+<div class="modal fade login-modal" id="login-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+		<div class="overlay" data-dismiss="modal"></div>
+		<div class="content">
+		${login_register_html}
+		</div>
+</div>
 </body>
 
 <debug:debugFooter/>
