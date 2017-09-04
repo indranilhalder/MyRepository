@@ -140,7 +140,6 @@ function registerUserGigya(eventObject)
     		//TPR-675 PART- A  starts
    		 var categoryId = $('input[name=gigya_product_root_category]').val();
    		 var title= response.commentTitle;
-   		 console.log("Review Count inside show comments ui   "+response);
    		 var overall= response.ratings._overall; 
    		 var fit = "not_applicable";
    		 
@@ -229,7 +228,12 @@ function registerUserGigya(eventObject)
     						$('#ratingDiv .gig-rating-readReviewsLink').text(data.streamInfo.ratingCount+" REVIEWS");
     						}
     				$('#customer').text("Customer Reviews (" + data.streamInfo.ratingCount + ")");
-    				
+    				//TPR-6655
+    				if(avgreview != undefined && $('#isGigyaforPdpEnabled').val() =='false' && avgreview  > 0.0){
+    					console.log("val from js call  "+data.streamInfo.avgRatings._overall);
+    					$('#ratingvalue').text(data.streamInfo.avgRatings._overall);
+    					$('#reviewcount').text(data.streamInfo.ratingCount);
+    				}
     				//added for tealium to get average product rating
    				     utag.link({"product_rating":avgreview});
     				

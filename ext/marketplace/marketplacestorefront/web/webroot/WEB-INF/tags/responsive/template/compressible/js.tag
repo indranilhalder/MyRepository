@@ -42,10 +42,7 @@ if(loginStatus){
 	src="${commonResourcePath}/bootstrap/dist/js/bootstrap.min.js"></script>
 <%-- <script type="text/javascript" src="${themeResourcePath}/js/plpSearch.js"></script> --%>
 
-<c:if test="${fn:contains(themeResourcePath,'theme-luxury')}">
-	<script type="text/javascript" src="${themeResourcePath}/combined/luxury-main.js"></script>
-	<script type="text/javascript" src="${themeResourcePath}/combined/luxury-tmpmain.min.js"></script>
-</c:if>
+
 <%-- <script type="text/javascript" src="${themeResourcePath}/js/plpSearch.js"></script> --%>
 
 <c:if test="${fn:contains(requestScope['javax.servlet.forward.request_uri'],'/address-book') or
@@ -78,10 +75,10 @@ if(loginStatus){
 	<script type="text/javascript" src="${headerWidgetJsSource}"></script>
 </c:if>  --%>
 
+
 <c:choose>
 	<c:when test="${isMinificationEnabled}">
 		<compressible:mplminjs/>
-
 	</c:when>
 	<c:otherwise>
 		<compressible:mpljs/>

@@ -2036,6 +2036,16 @@
 	    <property name="cmsPageService" ref="cmsPageService"/>
 	</bean> 
 	
+	<!-- PRDI-423 start -->
+	<alias name="mplbrandPageSiteMapGenerator" alias="mplbrandPageSiteMapGenerator"/>
+	<bean id="mplbrandPageSiteMapGenerator"
+		class="com.tisl.mpl.sitemap.generator.impl.MplBrandPageSiteMapGenerator"
+	    parent="abstractSiteMapGenerator">
+		<property name="siteMapUrlDataConverter" ref="mplCustomPageToSiteMapUrlDataConverter"/>
+		<property name="siteMapPageEnum" value="CUSTOM"/>
+	    <property name="cmsPageService" ref="cmsPageService"/>
+	</bean> 
+	<!-- PRDI-423 end-->
 	
 	<alias name="mplCustomPageToSiteMapUrlDataConverter" alias="mplCustomPageToSiteMapUrlDataConverter"/>
 	<bean id="mplCustomPageToSiteMapUrlDataConverter" parent="abstractPopulatingConverter">

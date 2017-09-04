@@ -12,24 +12,24 @@
 -->
 
 <beans xmlns="http://www.springframework.org/schema/beans"
-       xmlns:security="http://www.springframework.org/schema/security"
-       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-       xmlns:context="http://www.springframework.org/schema/context"
-       xsi:schemaLocation="http://www.springframework.org/schema/beans
+	   xmlns:security="http://www.springframework.org/schema/security"
+	   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	   xmlns:context="http://www.springframework.org/schema/context"
+	   xsi:schemaLocation="http://www.springframework.org/schema/beans
 		http://www.springframework.org/schema/beans/spring-beans.xsd
 		http://www.springframework.org/schema/security
 		http://www.springframework.org/schema/security/spring-security.xsd
 		http://www.springframework.org/schema/context
         http://www.springframework.org/schema/context/spring-context.xsd
 		">
-		
+
 	<context:annotation-config/>
 
 	<security:http pattern="/_ui/**" security="none" />
 
 	<!--Security config for checkout - it has its own login page-->
 	<security:http disable-url-rewriting="true" pattern="/checkout/**" use-expressions="true">
-        <security:anonymous username="anonymous" granted-authority="ROLE_ANONYMOUS" />
+		<security:anonymous username="anonymous" granted-authority="ROLE_ANONYMOUS" />
 		<security:access-denied-handler error-page="/login"/>
 
 		<security:session-management session-authentication-strategy-ref="fixation" />
@@ -47,7 +47,7 @@
 
 		<security:port-mappings>
 			<security:port-mapping http="#{configurationService.configuration.getProperty('tomcat.http.port')}"
-			                       https="#{configurationService.configuration.getProperty('tomcat.ssl.port')}" />
+								   https="#{configurationService.configuration.getProperty('tomcat.ssl.port')}" />
 			<security:port-mapping http="80" https="443" />
 			<!--security:port-mapping http="#{configurationService.configuration.getProperty('proxy.http.port')}"
 				https="#{configurationService.configuration.getProperty('proxy.ssl.port')}" /-->
@@ -88,7 +88,7 @@
 		<security:intercept-url pattern="/checkout/multi/billingaddressform" access="hasAnyRole('ROLE_ANONYMOUS','ROLE_CUSTOMERGROUP')" requires-channel="http" />
 		<security:intercept-url pattern="/my-account*" access="hasRole('ROLE_CUSTOMERGROUP')" requires-channel="http" />
 		<security:intercept-url pattern="/my-account/**" access="hasRole('ROLE_CUSTOMERGROUP')" requires-channel="http" />
-	        
+
 		<!-- <security:intercept-url pattern="/**" requires-channel="http" /> --> <!-- Everything should be secure -->
 		<security:intercept-url pattern="/login" requires-channel="http" />
 		<security:intercept-url pattern="/login/checkout" requires-channel="http" />
@@ -102,7 +102,7 @@
 
 		<security:port-mappings>
 			<security:port-mapping http="#{configurationService.configuration.getProperty('tomcat.http.port')}"
-			                       https="#{configurationService.configuration.getProperty('tomcat.ssl.port')}" />
+								   https="#{configurationService.configuration.getProperty('tomcat.ssl.port')}" />
 			<security:port-mapping http="80" https="443" />
 			<!--security:port-mapping http="#{configurationService.configuration.getProperty('proxy.http.port')}"
 				https="#{configurationService.configuration.getProperty('proxy.ssl.port')}" /-->
@@ -126,7 +126,7 @@
 		<property name="cookieDomain" value="#{configurationService.configuration.getProperty('shared.cookies.domain')}"/>
 	</bean>
 	<!-- POC End -->
-	
+
 	<bean id="acceleratorAuthenticationProvider" class="com.tisl.mpl.storefront.security.AcceleratorAuthenticationProvider">
 		<property name="bruteForceAttackCounter" ref="bruteForceAttackCounter" />
 		<property name="userService" ref="extendedUserService" />
@@ -134,19 +134,19 @@
 		<property name="userDetailsService" ref="extendedUserDetailsService" />
 		<property name="adminGroup" value="ROLE_ADMINGROUP"/>
 	</bean>
-	
+
 	<bean id="extendedUserDetailsService" class="com.tisl.mpl.marketplacecommerceservices.service.impl.ExtendedUserDetailsService" scope="tenant" />
 	<bean id="extendedUserService" class="com.tisl.mpl.marketplacecommerceservices.service.impl.ExtendedUserServiceImpl" parent="defaultUserService" scope="tenant" />
 
 	<bean id="coreUserDetailsService" class="de.hybris.platform.spring.security.CoreUserDetailsService"  />
 
 	<bean id="guidCookieStrategy" class="com.tisl.mpl.storefront.security.impl.DefaultGUIDCookieStrategy"
-	      >
+	>
 		<property name="cookieGenerator" ref="guidCookieGenerator" />
 		<property name="keepAliveCookieGenerator" ref="keepAliveCookieGenerator" />
 		<property name="luxuryUserCookieGenerator" ref="luxuryUserCookieGenerator" />
 		<property name="luxuryEmailCookieGenerator" ref="luxuryEmailCookieGenerator" />
-		<property name="lastUserLoggedInCookieGenerator" ref="lastUserLoggedInCookieGenerator" />  <!-- Added for UF-93 -->	
+		<property name="lastUserLoggedInCookieGenerator" ref="lastUserLoggedInCookieGenerator" />  <!-- Added for UF-93 -->
 		<property name="userService" ref="extendedUserService" />
 	</bean>
 	<!-- UF-93 -->
@@ -157,8 +157,8 @@
 		<property name="useDefaultPath" value="false"/>
 		<property name="cookieDomain" value="#{configurationService.configuration.getProperty('shared.cookies.domain')}"/>
 	</bean>
-	<!-- UF-93 Ends -->	
-	
+	<!-- UF-93 Ends -->
+
 	<alias name="defaultGuestCheckoutCartCleanStrategy" alias="guestCheckoutCartCleanStrategy"/>
 	<bean id="defaultGuestCheckoutCartCleanStrategy" class="com.tisl.mpl.storefront.security.impl.DefaultGuestCheckoutCartCleanStrategy">
 		<property name="checkoutURLPattern" value="#{configurationService.configuration.getProperty('marketplacestorefront.checkout.url.pattern')}" />
@@ -183,7 +183,7 @@
 	</bean>
 
 	<bean id="httpSessionRequestCache" class="com.tisl.mpl.storefront.security.impl.WebHttpSessionRequestCache">
-        <property name="requestMatcher" ref="excludeRedirectUrlRequestMatcher" />
+		<property name="requestMatcher" ref="excludeRedirectUrlRequestMatcher" />
 		<property name="sessionService" ref="sessionService"/>
 	</bean>
 
@@ -196,15 +196,15 @@
 
 	<!-- Ignores url(s) that match paths specified in the set -->
 	<bean id="excludeRedirectUrlRequestMatcher" class="com.tisl.mpl.storefront.security.ExcludeUrlRequestMatcher">
-	<property name="excludeUrlSet">
-		<set>
-			<value>.*/guest/.*</value>
-			<value>.*/orderConfirmation/.*</value>
-			<value>.*/login</value>
-			<value>.*/login/checkout</value>
-		</set>
-	</property>
-	<property name="pathMatcher" ref="defaultPathMatcher" />
+		<property name="excludeUrlSet">
+			<set>
+				<value>.*/guest/.*</value>
+				<value>.*/orderConfirmation/.*</value>
+				<value>.*/login</value>
+				<value>.*/login/checkout</value>
+			</set>
+		</property>
+		<property name="pathMatcher" ref="defaultPathMatcher" />
 	</bean>
 
 	<bean id="redirectStrategy" class="org.springframework.security.web.DefaultRedirectStrategy"  />
@@ -230,7 +230,7 @@
 				<entry key="MOBILE" value="false"/>
 			</map>
 		</property>
-        <property name="bruteForceAttackCounter" ref="bruteForceAttackCounter" />
+		<property name="bruteForceAttackCounter" ref="bruteForceAttackCounter" />
 		<property name="restrictedPages">
 			<list>
 				<value>/login</value>
@@ -270,22 +270,22 @@
 	<bean name="defaultCommerceRedirectStrategy" class="com.tisl.mpl.storefront.security.impl.DefaultCommerceRedirectStrategy" parent="redirectStrategy">
 		<property name="checkoutFlowFacade" ref="checkoutFlowFacade"/>
 		<property name="expressTargetUrl" value="/checkout/multi/express"/>
-   </bean>
+	</bean>
 
 	<!-- Login Failure Handlers -->
-    <bean id="bruteForceAttackCounter" class="com.tisl.mpl.storefront.security.impl.DefaultBruteForceAttackCounter">
-        <constructor-arg name="maxFailedLogins" value="5" />
-        <constructor-arg name="cacheExpiration" value="60" />
-        <constructor-arg name="cacheSizeLimit" value="1000" />
-    </bean>
+	<bean id="bruteForceAttackCounter" class="com.tisl.mpl.storefront.security.impl.DefaultBruteForceAttackCounter">
+		<constructor-arg name="maxFailedLogins" value="5" />
+		<constructor-arg name="cacheExpiration" value="60" />
+		<constructor-arg name="cacheSizeLimit" value="1000" />
+	</bean>
 
 	<bean id="loginAuthenticationFailureHandler" class="com.tisl.mpl.storefront.security.LoginAuthenticationFailureHandler" >
-        <property name="bruteForceAttackCounter" ref="bruteForceAttackCounter" />
+		<property name="bruteForceAttackCounter" ref="bruteForceAttackCounter" />
 		<property name="defaultFailureUrl" value="/login?error=true"/>
 	</bean>
 
 	<bean id="loginCheckoutAuthenticationFailureHandler" class="com.tisl.mpl.storefront.security.LoginAuthenticationFailureHandler" >
-        <property name="bruteForceAttackCounter" ref="bruteForceAttackCounter" />
+		<property name="bruteForceAttackCounter" ref="bruteForceAttackCounter" />
 		<property name="defaultFailureUrl" value="/checkout/multi/checkoutlogin/login?error=true"/>
 	</bean>
 
@@ -310,7 +310,7 @@
 		<property name="authenticationManager" ref="authenticationManager"/>
 	</bean>
 
-	
+
 	<alias name="defaultRememberMeServices" alias="rememberMeServices"/>
 	<bean id="defaultRememberMeServices" class="com.tisl.mpl.storefront.security.AcceleratorRememberMeServices" >
 		<property name="userDetailsService" ref="extendedUserDetailsService" />

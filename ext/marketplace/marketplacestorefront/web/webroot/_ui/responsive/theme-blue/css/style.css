@@ -33799,6 +33799,8 @@ body.page-cartPage .product-block.wishlist .item .desktop .treat-urself-button{
 }
 body.page-cartPage .product-block.wishlist .item .desktop .treat-urself-button#addToCartButton{
     height: 32px !important;
+    z-index: 2; /*PRDI-753 fix*/
+    position: relative; /*PRDI-753 fix*/
 }
 body.page-cartPage .cart.wrapper .product-block.wishlist{
 	margin-top:0;
@@ -52483,6 +52485,13 @@ word-wrap: break-word;
 		.template-pages-layout-apparelCategoryLandingPageV1 #rotatingImage {
 		padding: 0;
 	}
+	
+	 .template-pages-layout-apparelCategoryLandingPageV1 #rotatingImageTimeoutMobile,
+ 		.template-pages-layout-apparelCategoryLandingPageV1 #rotatingImageMobile ,
+ 	.template-pages-layout-newBrandLandingPageTemplate #rotatingImageTimeoutMobile,
+ 		.template-pages-layout-newBrandLandingPageTemplate #rotatingImageMobile {
+ 		display: none;
+ 	}
 	.style_edit .style_edit_left>div>div:first-child >span:first-child {
 		font-size: 24px;
 		margin: 40px 0;
