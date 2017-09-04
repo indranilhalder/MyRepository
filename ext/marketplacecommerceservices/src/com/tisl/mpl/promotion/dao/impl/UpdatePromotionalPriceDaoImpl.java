@@ -43,79 +43,79 @@ public class UpdatePromotionalPriceDaoImpl implements UpdatePromotionalPriceDao
 	 *
 	 * @param productList
 	 */
-	@Override
-	public List<PriceRowModel> fetchPricedData(final List<String> productList)
-	{
-		//Defect : Modified for TISPRD-938
-		final int oracleSafetyLimit = 900; // Keeping Safety Limit as 900 (Max Permissible Value : 1000)
-		int startIndex = 0;
-		int endIndex = oracleSafetyLimit;
-
-		List<PriceRowModel> priceRow = null;
-		final StringBuilder query = new StringBuilder(100);
-		final String queryPart1 = "SELECT {pri." + PriceRowModel.PK + "} ";
-		final String queryPart2 = "FROM {" + PriceRowModel._TYPECODE + " AS pri} ";
-		final String queryPart3 = "WHERE {pri." + PriceRowModel.PRODUCT + "} in (?";
-		final String queryPart4 = ")";
-		final String queryHead = "SELECT * FROM (";
-		final String queryTail = "	) query";
-		final Map<String, Object> queryParams = new HashMap<String, Object>();
-		int count = 0;
-
-		if (productList.size() > oracleSafetyLimit) // Logic Condition : Product PK List exceeds the oracleSafetyLimit
-		{
-			query.append(queryHead);
-			while (true)
-			{
-				if (startIndex != 0)
-				{
-					query.append(" UNION ALL ");
-				}
-				query.append("{{");
-				final List<String> subList = productList.subList(startIndex, endIndex);
-				final String paramName = "param" + (++count);
-				queryParams.put(paramName, subList);
-				query.append(queryPart1).append(queryPart2).append(queryPart3).append(paramName).append(queryPart4);
-				startIndex = endIndex;
-				if ((endIndex + oracleSafetyLimit) > productList.size())
-				{
-					endIndex = productList.size();
-				}
-				else
-				{
-					endIndex = endIndex + oracleSafetyLimit;
-				}
-
-				query.append("}}");
-
-				if (startIndex == endIndex)
-				{
-					break;
-				}
-
-				LOG.info("Sub Query for Price Row Fetch->:" + query.toString());
-			}
-
-			query.append(queryTail);
-			LOG.info("--------FINAL-----------Query-->:" + query.toString());
-		}
-		else
-		{
-			// Logic Condition : Product PK List is less than the oracleSafetyLimit, Normal Query formation
-			query.append("SELECT {priMdl." + PriceRowModel.PK + "} ");
-			query.append("FROM {" + PriceRowModel._TYPECODE + " AS priMdl} ");
-			query.append("WHERE {priMdl." + PriceRowModel.PRODUCT + "} in (?" + PriceRowModel.PRODUCT + ")");
-
-			queryParams.put(PriceRowModel.PRODUCT, productList);
-		}
-
-		final SearchResult<PriceRowModel> searchRes = flexibleSearchService.search(query.toString(), queryParams);
-		if (searchRes != null)
-		{
-			priceRow = searchRes.getResult();
-		}
-		return priceRow;
-	}
+	//@Override
+	//	public List<PriceRowModel> fetchPricedData(final List<String> productList)
+	//	{
+	//		//Defect : Modified for TISPRD-938
+	//		final int oracleSafetyLimit = 900; // Keeping Safety Limit as 900 (Max Permissible Value : 1000)
+	//		int startIndex = 0;
+	//		int endIndex = oracleSafetyLimit;
+	//
+	//		List<PriceRowModel> priceRow = null;
+	//		final StringBuilder query = new StringBuilder(100);
+	//		final String queryPart1 = "SELECT {pri." + PriceRowModel.PK + "} ";
+	//		final String queryPart2 = "FROM {" + PriceRowModel._TYPECODE + " AS pri} ";
+	//		final String queryPart3 = "WHERE {pri." + PriceRowModel.PRODUCT + "} in (?";
+	//		final String queryPart4 = ")";
+	//		final String queryHead = "SELECT * FROM (";
+	//		final String queryTail = "	) query";
+	//		final Map<String, Object> queryParams = new HashMap<String, Object>();
+	//		int count = 0;
+	//
+	//		if (productList.size() > oracleSafetyLimit) // Logic Condition : Product PK List exceeds the oracleSafetyLimit
+	//		{
+	//			query.append(queryHead);
+	//			while (true)
+	//			{
+	//				if (startIndex != 0)
+	//				{
+	//					query.append(" UNION ALL ");
+	//				}
+	//				query.append("{{");
+	//				final List<String> subList = productList.subList(startIndex, endIndex);
+	//				final String paramName = "param" + (++count);
+	//				queryParams.put(paramName, subList);
+	//				query.append(queryPart1).append(queryPart2).append(queryPart3).append(paramName).append(queryPart4);
+	//				startIndex = endIndex;
+	//				if ((endIndex + oracleSafetyLimit) > productList.size())
+	//				{
+	//					endIndex = productList.size();
+	//				}
+	//				else
+	//				{
+	//					endIndex = endIndex + oracleSafetyLimit;
+	//				}
+	//
+	//				query.append("}}");
+	//
+	//				if (startIndex == endIndex)
+	//				{
+	//					break;
+	//				}
+	//
+	//				LOG.info("Sub Query for Price Row Fetch->:" + query.toString());
+	//			}
+	//
+	//			query.append(queryTail);
+	//			LOG.info("--------FINAL-----------Query-->:" + query.toString());
+	//		}
+	//		else
+	//		{
+	//			// Logic Condition : Product PK List is less than the oracleSafetyLimit, Normal Query formation
+	//			query.append("SELECT {priMdl." + PriceRowModel.PK + "} ");
+	//			query.append("FROM {" + PriceRowModel._TYPECODE + " AS priMdl} ");
+	//			query.append("WHERE {priMdl." + PriceRowModel.PRODUCT + "} in (?" + PriceRowModel.PRODUCT + ")");
+	//
+	//			queryParams.put(PriceRowModel.PRODUCT, productList);
+	//		}
+	//
+	//		final SearchResult<PriceRowModel> searchRes = flexibleSearchService.search(query.toString(), queryParams);
+	//		if (searchRes != null)
+	//		{
+	//			priceRow = searchRes.getResult();
+	//		}
+	//		return priceRow;
+	//	}
 
 	/**
 	 * @Description : Fetch Cron Details for Last Run time
@@ -125,9 +125,10 @@ public class UpdatePromotionalPriceDaoImpl implements UpdatePromotionalPriceDao
 	public MplConfigurationModel getCronDetails(final String code)
 	{
 		final String queryString = //
-				"SELECT {cm:" + MplConfigurationModel.PK + "} "//
-						+ MarketplacecommerceservicesConstants.QUERYFROM + MplConfigurationModel._TYPECODE + " AS cm } where" + "{cm."
-						+ MplConfigurationModel.MPLCONFIGCODE + "} = ?code";
+		"SELECT {cm:" + MplConfigurationModel.PK
+				+ "} "//
+				+ MarketplacecommerceservicesConstants.QUERYFROM + MplConfigurationModel._TYPECODE + " AS cm } where" + "{cm."
+				+ MplConfigurationModel.MPLCONFIGCODE + "} = ?code";
 
 		final FlexibleSearchQuery query = new FlexibleSearchQuery(queryString);
 		query.addQueryParameter(MarketplacecommerceservicesConstants.CODE, code);
@@ -188,5 +189,78 @@ public class UpdatePromotionalPriceDaoImpl implements UpdatePromotionalPriceDao
 		return null;
 	}
 
+	@Override
+	public List<PriceRowModel> fetchPricedData(final List<String> ussidList)
+	{
+		//Defect : Modified for TISPRD-938
+		final int oracleSafetyLimit = 900; // Keeping Safety Limit as 900 (Max Permissible Value : 1000)
+		int startIndex = 0;
+		int endIndex = oracleSafetyLimit;
+
+		List<PriceRowModel> priceRow = null;
+		final StringBuilder query = new StringBuilder(100);
+		final String queryPart1 = "SELECT {pri." + PriceRowModel.PK + "} ";
+		final String queryPart2 = "FROM {" + PriceRowModel._TYPECODE + " AS pri} ";
+		final String queryPart3 = "WHERE {pri." + PriceRowModel.SELLERARTICLESKU + "} in (?";
+		final String queryPart4 = ")";
+		final String queryHead = "SELECT * FROM (";
+		final String queryTail = "	) query";
+		final Map<String, Object> queryParams = new HashMap<String, Object>();
+		int count = 0;
+
+		if (ussidList.size() > oracleSafetyLimit) // Logic Condition : Product PK List exceeds the oracleSafetyLimit
+		{
+			query.append(queryHead);
+			while (true)
+			{
+				if (startIndex != 0)
+				{
+					query.append(" UNION ALL ");
+				}
+				query.append("{{");
+				final List<String> subList = ussidList.subList(startIndex, endIndex);
+				final String paramName = "param" + (++count);
+				queryParams.put(paramName, subList);
+				query.append(queryPart1).append(queryPart2).append(queryPart3).append(paramName).append(queryPart4);
+				startIndex = endIndex;
+				if ((endIndex + oracleSafetyLimit) > ussidList.size())
+				{
+					endIndex = ussidList.size();
+				}
+				else
+				{
+					endIndex = endIndex + oracleSafetyLimit;
+				}
+
+				query.append("}}");
+
+				if (startIndex == endIndex)
+				{
+					break;
+				}
+
+				LOG.info("Sub Query for Price Row Fetch->:" + query.toString());
+			}
+
+			query.append(queryTail);
+			LOG.info("--------FINAL-----------Query-->:" + query.toString());
+		}
+		else
+		{
+			// Logic Condition : Product PK List is less than the oracleSafetyLimit, Normal Query formation
+			query.append("SELECT {priMdl." + PriceRowModel.PK + "} ");
+			query.append("FROM {" + PriceRowModel._TYPECODE + " AS priMdl} ");
+			query.append("WHERE {priMdl." + PriceRowModel.SELLERARTICLESKU + "} in (?" + PriceRowModel.SELLERARTICLESKU + ")");
+
+			queryParams.put(PriceRowModel.SELLERARTICLESKU, ussidList);
+		}
+
+		final SearchResult<PriceRowModel> searchRes = flexibleSearchService.search(query.toString(), queryParams);
+		if (searchRes != null)
+		{
+			priceRow = searchRes.getResult();
+		}
+		return priceRow;
+	}
 
 }
