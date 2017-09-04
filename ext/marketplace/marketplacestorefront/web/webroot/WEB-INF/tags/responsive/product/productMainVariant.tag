@@ -314,11 +314,14 @@ share mobile -->
 					<spring:theme code="product.variant.size"></spring:theme><c:if test="${not empty productSizeType}">(${productSizeType})</c:if>
 			  </span>
     </c:otherwise>
-	</c:choose>				  
-				 <a class="size-guide" href="${sizeGuideUrl}" role="button"
-			data-toggle="modal" data-target="#popUpModal" data-productcode="${product.code}" data-sizeSelected="${selectedSize}"> <spring:theme
-				code="product.variants.size.guide" />
-			</a>
+	</c:choose>		
+	
+			<c:if test="${empty removeSizeGuide}">		  
+						 <a class="size-guide" href="${sizeGuideUrl}" role="button"
+					data-toggle="modal" data-target="#popUpModal" data-productcode="${product.code}" data-sizeSelected="${selectedSize}"> <spring:theme
+						code="product.variants.size.guide" />
+					</a>
+			</c:if>	
 			<!-- Size guide Pop-up -->	
 			
 			

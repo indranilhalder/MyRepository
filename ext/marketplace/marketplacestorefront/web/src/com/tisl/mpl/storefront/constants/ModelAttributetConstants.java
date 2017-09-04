@@ -897,7 +897,7 @@ public final class ModelAttributetConstants
 	public static final String TITLE_TEXT2 = " Online at Tata CLiQ ";
 	public static final String ICID = "icid";
 	public static final String SHARE = "share";
-	
+
 	public static final String MESSAGE = "message";
 
 	public static final String EMAILORPASSINVALID = "Email or Password invalid";
@@ -911,5 +911,6 @@ public final class ModelAttributetConstants
 
 	//TPR-6738
 	public static final String BUYING_GUIDE = "buyingGuide".intern();
+	public static final String REMOVE_SIZEGUIDE = "removeSizeGuide".intern();
 
 }
