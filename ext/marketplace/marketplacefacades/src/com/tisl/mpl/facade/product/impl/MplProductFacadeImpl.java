@@ -22,9 +22,9 @@ import org.apache.log4j.Logger;
 import com.tisl.mpl.facade.config.MplConfigFacade;
 import com.tisl.mpl.facade.product.MplProductFacade;
 import com.tisl.mpl.facades.constants.MarketplaceFacadesConstants;
+import com.tisl.mpl.marketplacecommerceservices.service.MplPincodeDistanceService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplProductService;
 import com.tisl.mpl.marketplacecommerceservices.service.PincodeService;
-import com.tisl.mpl.marketplacecommerceservices.service.impl.MplPincodeDistanceService;
 import com.tisl.mpl.pincode.facade.PincodeServiceFacade;
 
 
@@ -73,7 +73,7 @@ public class MplProductFacadeImpl implements MplProductFacade
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.facade.product.MplProductFacade#getProductFeatureModelByProductAndQualifier(de.hybris.platform.
 	 * commercefacades.product.data.ProductData, java.lang.String)
 	 */
