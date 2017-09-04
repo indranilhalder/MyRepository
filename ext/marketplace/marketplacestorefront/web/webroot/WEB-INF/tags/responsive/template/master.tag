@@ -394,7 +394,10 @@
 	$(window).on("load", function(){
 		var forceLoginUser = "${forced_login_user}";
 		if(forceLoginUser == "Y"){
-			 $("#login-modal").modal();
+			 $("#login-modal").modal({
+				 backdrop: 'static',
+				 keyboard: false
+			 });
 		}
 	});
 </script>
