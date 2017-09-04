@@ -22,6 +22,7 @@ import de.hybris.platform.acceleratorstorefrontcommons.forms.LoginForm;
 import de.hybris.platform.cms2.exceptions.CMSItemNotFoundException;
 import de.hybris.platform.cms2.model.pages.AbstractPageModel;
 import de.hybris.platform.commercefacades.order.CartFacade;
+import de.hybris.platform.servicelayer.config.ConfigurationService;
 import de.hybris.platform.servicelayer.session.SessionService;
 
 import java.io.IOException;
@@ -109,6 +110,11 @@ public class Oauth2callbackPageController extends AbstractLoginPageController
 	private String signature;
 	private String timestamp;
 
+	@Autowired
+	private ConfigurationService configurationService;
+
+	private static final String GIGYA_USER_VALIDATION_ENABLED = "gigya.validateuser.enabled";
+	private static final String TRUE_STATUS = "true";
 
 	public GigyaService getGigyaservice()
 	{
@@ -313,7 +319,7 @@ public class Oauth2callbackPageController extends AbstractLoginPageController
 			LOG.debug("Method socialLogin,PROVIDER " + provider);
 			LOG.debug("Method socialLogin, GENDER " + gender);
 
-
+			boolean isValidUser = true;
 			final String fbEmail = emailId;
 
 			if (fbEmail != null && !fbEmail.isEmpty())
@@ -378,7 +384,16 @@ public class Oauth2callbackPageController extends AbstractLoginPageController
 				storeReferer(referer, request, response);
 			}
 
-			if (gigyaservice.validateSignature(getGigyaUID(), getTimestamp(), getSignature()))
+			//INC144319511
+
+			final String isUserValidationEnabled = configurationService.getConfiguration().getString(GIGYA_USER_VALIDATION_ENABLED);
+			if (null != isUserValidationEnabled && isUserValidationEnabled.equalsIgnoreCase(TRUE_STATUS)
+					&& !gigyaservice.validateUser(getGigyaUID(), emailId))
+			{
+				isValidUser = false;
+			}
+
+			if (isValidUser && gigyaservice.validateSignature(getGigyaUID(), getTimestamp(), getSignature()))
 			{
 				return processRegisterUserRequestForOAuth2(form, bindingResult, model, request, response, socialLogin);
 			}
