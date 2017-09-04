@@ -1863,7 +1863,7 @@
 							unique="false" />
 						<persistence type="property">
 							<columntype database='oracle'>
-								<value>VARCHAR2(450)</value>
+								<value>VARCHAR2(600)</value>
 							</columntype>
 						</persistence>
 					</attribute>
