@@ -83,6 +83,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.math.BigDecimal;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -129,6 +130,7 @@ import com.tisl.mpl.constants.MarketplacewebservicesConstants;
 import com.tisl.mpl.core.constants.MarketplaceCoreConstants;
 import com.tisl.mpl.core.enums.FeedbackCategory;
 import com.tisl.mpl.core.model.MplEnhancedSearchBoxComponentModel;
+import com.tisl.mpl.core.util.DateUtilHelper;
 import com.tisl.mpl.data.CODSelfShipData;
 import com.tisl.mpl.exception.EtailBusinessExceptions;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
@@ -290,33 +292,6 @@ public class MiscsController extends BaseController
 
 	@Resource(name = "mplPancardFacadeImpl")
 	private MplPancardFacade mplPancardFacade;
-
-
-	//	private static final String APPLICATION_TYPE = "application/json";
-	//	public static final String EMAIL_REGEX = "\\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,4}\\b";
-	/*
-	 * @Resource(name = "mplPaymentFacade") private MplPaymentFacade mplPaymentFacade; private static final String
-	 * APPLICATION_TYPE = "application/json"; public static final String EMAIL_REGEX =
-	 * "\\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,4}\\b";
-	 * 
-	 * /**
-	 * 
-	 * /*
-	 * 
-	 * @Resource(name = "mplPaymentFacade") private MplPaymentFacade mplPaymentFacade; private static final String
-	 * APPLICATION_TYPE = "application/json"; public static final String EMAIL_REGEX =
-	 * "\\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,4}\\b";
-	 * 
-	 * 
-	 * 
-	 * 
-	 * 
-	 * 
-	 * 
-	 * 
-	 * 
-	 * @return the configurationService
-	 */
 	@Autowired
 	private MplVersionService mplVersionService;
 	//Priority
@@ -363,10 +338,11 @@ public class MiscsController extends BaseController
 	private Converter<OrderModel, OrderData> orderConverter;
 	@Resource(name = "cancelReturnFacade")
 	private CancelReturnFacade cancelReturnFacade;
-	/* sonar fix */
-	/*
-	 * @Autowired private DateUtilHelper dateUtilHelper;
-	 */
+
+
+	@Autowired
+	private DateUtilHelper dateUtilHelper;
+
 
 
 
@@ -1906,6 +1882,7 @@ public class MiscsController extends BaseController
 			LOG.error("the exception is **** " + e);
 		}
 	}
+
 	//TPR-4840 starts
 	@Secured(
 	{ ROLE_CLIENT, ROLE_TRUSTED_CLIENT })
@@ -2291,38 +2268,15 @@ public class MiscsController extends BaseController
 								return oneTouchReturnDTOList;
 							}
 						}
-						//Bank details to be sent to FICO for COD return
-						//						if (subOrderModel.getModeOfOrderPayment().equalsIgnoreCase("COD")
-						//								&& oneTouchCrmObj.getTicketType().equalsIgnoreCase(MarketplacewebservicesConstants.RETURN_TICKET))
-						//						{
-						//							codSelfShipData = new CODSelfShipData();
-						//							if (null != subOrderModel.getUser().getUid())
-						//							{
-						//								codSelfShipData.setCustomerNumber(subOrderModel.getUser().getUid());
-						//							}
-						//							codSelfShipData.setOrderRefNo(oneTouchCrmObj.getOrderRefNum());
-						//							//codSelfShipData.getOrderNo(oneTouchCrmObj.getSubOrderNum());
-						//							codSelfShipData.setBankName(oneTouchCrmObj.getBankName());
-						//							codSelfShipData.setBankBranch(oneTouchCrmObj.getBranch());
-						//							codSelfShipData.setName(oneTouchCrmObj.getAccHolderName());
-						//							codSelfShipData.setBankKey(oneTouchCrmObj.getIFSC());
-						//							codSelfShipData.setBankAccount(oneTouchCrmObj.getAccNum());
-						//							codSelfShipData.setTransactionID(oneTouchCrmObj.getTransactionId());
-						//							codSelfShipData.setTransactionType(subOrderModel.getModeOfOrderPayment());
-						//							codSelfShipData.setOrderTag(MarketplacewebservicesConstants.ORDERTAG_TYPE_POSTPAID);
-						//							codSelfShipData.setPaymentMode(oneTouchCrmObj.getRefundType());
-						//							codSelfShipData.setAmount(orderEntry.getAmountAfterAllDisc().toString());
-						//							codSelfShipData.setTransactionType(RETURN_TYPE_COD);
-						//							if (null != orderData.getCreated())
-						//							{
-						//								final SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy");
-						//								codSelfShipData
-						//										.setOrderDate(dateUtilHelper.convertDateWithFormat(formatter.format(orderData.getCreated())));
-						//								codSelfShipData.setTransactionDate(dateUtilHelper.convertDateWithFormat(formatter.format(orderData
-						//										.getCreated())));
-						//							}
-						//
-						//						}
+						//TPR-6389 :: NEFT details have to be passed on to FICO after a one touch return
+						LOG.debug("--------Populating bank details for return of COD orders--------");
+						if (subOrderModel.getModeOfOrderPayment().equalsIgnoreCase(MarketplacewebservicesConstants.COD)
+								&& oneTouchCrmObj.getTicketType().equalsIgnoreCase(MarketplacewebservicesConstants.RETURN_TICKET)
+								&& null != oneTouchCrmObj.getAccNum())
+						{
+							codSelfShipData = populateCODDataForFICO(subOrderModel, oneTouchCrmObj, orderData, orderEntry);
+						}
+						//TPR-6389--END
 
 
 
@@ -2527,6 +2481,42 @@ public class MiscsController extends BaseController
 		}
 		LOG.info("==========Finished executing oneTouchCancelReturn controller==========");
 		return oneTouchReturnDTOList;
+	}
+
+	/**
+	 * Method to populate bank details that will sent to FICO for COD return orders.
+	 */
+	private CODSelfShipData populateCODDataForFICO(final OrderModel subOrderModel,
+			final OneTouchCancelReturnCrmRequestDTO oneTouchdto, final OrderData orderData, final OrderEntryData orderEntry)
+	{
+		final CODSelfShipData codSelfShipData = new CODSelfShipData();
+		if (null != subOrderModel.getUser().getUid())
+		{
+			codSelfShipData.setCustomerNumber(subOrderModel.getUser().getUid());
+		}
+		codSelfShipData.setOrderRefNo(oneTouchdto.getOrderRefNum());
+		//codSelfShipData.getOrderNo(oneTouchCrmObj.getSubOrderNum());
+		codSelfShipData.setBankName(oneTouchdto.getBankName());
+		codSelfShipData.setBankBranch(oneTouchdto.getBranch());
+		codSelfShipData.setName(oneTouchdto.getAccHolderName());
+		codSelfShipData.setBankKey(oneTouchdto.getIFSC());
+		codSelfShipData.setBankAccount(oneTouchdto.getAccNum());
+		codSelfShipData.setTransactionID(oneTouchdto.getTransactionId());
+		codSelfShipData.setTransactionType(subOrderModel.getModeOfOrderPayment());
+		codSelfShipData.setOrderTag(MarketplacewebservicesConstants.ORDERTAG_TYPE_POSTPAID);
+		codSelfShipData.setPaymentMode(oneTouchdto.getRefundType());
+		codSelfShipData.setAmount(orderEntry.getAmountAfterAllDisc().toString());
+		codSelfShipData.setTransactionType(RETURN_TYPE_COD);
+		if (null != orderData.getCreated())
+		{
+			final SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy");
+			codSelfShipData.setOrderDate(dateUtilHelper.convertDateWithFormat(formatter.format(orderData.getCreated())));
+			codSelfShipData.setTransactionDate(dateUtilHelper.convertDateWithFormat(formatter.format(orderData.getCreated())));
+
+
+		}
+
+		return codSelfShipData;
 	}
 
 	/**
