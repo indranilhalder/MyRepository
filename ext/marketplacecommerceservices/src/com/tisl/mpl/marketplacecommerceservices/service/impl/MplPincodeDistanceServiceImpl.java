@@ -4,10 +4,15 @@
 package com.tisl.mpl.marketplacecommerceservices.service.impl;
 
 import de.hybris.platform.commercefacades.storelocator.data.PointOfServiceData;
+import de.hybris.platform.servicelayer.config.ConfigurationService;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
+import javax.annotation.Resource;
+
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.log4j.Logger;
 
 import com.tisl.mpl.marketplacecommerceservices.service.MplPincodeDistanceService;
@@ -23,7 +28,8 @@ public class MplPincodeDistanceServiceImpl implements MplPincodeDistanceService
 	@SuppressWarnings("unused")
 	private static final Logger LOG = Logger.getLogger(MplPincodeDistanceServiceImpl.class);
 	private static final String API_KEY = "YOUR_API_KEY";
-
+	@Resource
+	private ConfigurationService configurationService;
 
 	/*
 	 * (non-Javadoc)
@@ -37,36 +43,100 @@ public class MplPincodeDistanceServiceImpl implements MplPincodeDistanceService
 	{
 		final StringBuffer origins = new StringBuffer();
 		final StringBuffer destinations = new StringBuffer();
-		List<Integer> distanceList = new ArrayList<>();
+		List<Double> distanceList = new ArrayList<>();
 		try
 		{
-			final DistanceMatrixUtility distance = new DistanceMatrixUtility();
-			origins.append(latitude);
-			origins.append(",");
-			origins.append(longitude);
-
-			for (final PointOfServiceData pointOfServiceData : posData)
+			final boolean distanceFlag = configurationService.getConfiguration().getBoolean("google.distance.enable");
+			if (distanceFlag)
 			{
-				destinations.append(pointOfServiceData.getGeoPoint().getLatitude());
-				destinations.append(",");
-				destinations.append(pointOfServiceData.getGeoPoint().getLongitude());
-				destinations.append("|");
-			}
+				final DistanceMatrixUtility distance = new DistanceMatrixUtility();
+				origins.append(latitude);
+				origins.append(",");
+				origins.append(longitude);
 
-			distanceList = distance.calcDistance(origins, destinations);
-			for (final PointOfServiceData pointOfServiceData : posData)
-			{
-				for (final Integer distanceKM : distanceList)
+				for (final PointOfServiceData pointOfServiceData : posData)
 				{
-					pointOfServiceData.setDistanceKm(distanceKM);
+					destinations.append(pointOfServiceData.getGeoPoint().getLatitude());
+					destinations.append(",");
+					destinations.append(pointOfServiceData.getGeoPoint().getLongitude());
+					destinations.append("|");
+				}
+
+				distanceList = distance.calcDistance(origins, destinations);
+				distanceList = getSortedSetData(distanceList);
+				for (final PointOfServiceData pointOfServiceData : posData)
+				{
+					for (final Double distanceKM : distanceList)
+					{
+						pointOfServiceData.setDistanceKm(distanceKM);
+					}
 				}
 			}
+			else
+			{
+				for (final PointOfServiceData pointOfServiceData : posData)
+				{
+					pointOfServiceData.setDistanceKm(distFrom(latitude.doubleValue(), longitude.doubleValue(), pointOfServiceData
+							.getGeoPoint().getLatitude(), pointOfServiceData.getGeoPoint().getLongitude()));
+				}
 
+			}
 		}
 		catch (final Exception e)
 		{
 			LOG.debug(e);
 		}
 		return posData;
+	}
+
+	public static Double distFrom(final double lat1, final double lng1, final double lat2, final double lng2)
+	{
+		float dist = 0;
+		try
+		{
+			final double earthRadius = 6371000; //meters
+			final double dLat = Math.toRadians(lat2 - lat1);
+			final double dLng = Math.toRadians(lng2 - lng1);
+			final double a = Math.sin(dLat / 2) * Math.sin(dLat / 2) + Math.cos(Math.toRadians(lat1))
+					* Math.cos(Math.toRadians(lat2)) * Math.sin(dLng / 2) * Math.sin(dLng / 2);
+			final double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+			dist = (float) (earthRadius * c);
+		}
+		catch (final Exception e)
+		{
+			LOG.debug(e);
+		}
+
+		return Double.valueOf(dist);
+	}
+
+	private static List<Double> getSortedSetData(final List<Double> ascendingDistance)
+	{
+		//		final List<String> finalSet = new ArrayList<String>();
+		//		final List<String> listData = null;
+		if (CollectionUtils.isNotEmpty(ascendingDistance))
+		{
+			Collections.sort(ascendingDistance);
+
+			for (final Double intObj : ascendingDistance)
+			{
+				System.out.println("***" + intObj.intValue());
+			}
+			//listData = new ArrayList<String>(ascendingDistance);
+			//Collections.sort(listData, new Comparator<String>()
+			//			{
+			//				@Override
+			//				public final int compare(final String a, final String b)
+			//				{
+			//					return b.compareTo(a);
+			//				}
+			//			});
+		}
+
+		//		if (CollectionUtils.isNotEmpty(listData))
+		//		{
+		//			finalSet.addAll(listData);
+		//		}
+		return ascendingDistance;
 	}
 }

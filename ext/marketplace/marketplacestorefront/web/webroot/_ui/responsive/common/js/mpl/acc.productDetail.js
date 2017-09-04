@@ -1088,7 +1088,7 @@ function pincodeServiceability(){
 			var checkBuyBoxIdPresent = false;
 			var buyboxSeller = $("#ussid").val();
 			var pin = $("#pin").val();
-			console.log("pincode"+pin);
+			
 			var requiredUrl = ACC.config.encodedContextPath + "/p"
 					+ "-checkPincode";
 

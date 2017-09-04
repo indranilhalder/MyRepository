@@ -11,10 +11,8 @@ import java.io.Reader;
 import java.net.URL;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
-import org.apache.commons.collections.CollectionUtils;
 import org.apache.log4j.Logger;
 
 import com.granule.json.JSONArray;
@@ -61,43 +59,14 @@ public class DistanceMatrixUtility
 	}
 
 
-	private static List<Integer> getSortedSetData(final List<Integer> ascendingDistance)
-	{
-		//		final List<String> finalSet = new ArrayList<String>();
-		//		final List<String> listData = null;
-		if (CollectionUtils.isNotEmpty(ascendingDistance))
-		{
-			Collections.sort(ascendingDistance);
-
-			for (final Integer intObj : ascendingDistance)
-			{
-				System.out.println("***" + intObj.intValue());
-			}
-			//listData = new ArrayList<String>(ascendingDistance);
-			//Collections.sort(listData, new Comparator<String>()
-			//			{
-			//				@Override
-			//				public final int compare(final String a, final String b)
-			//				{
-			//					return b.compareTo(a);
-			//				}
-			//			});
-		}
-
-		//		if (CollectionUtils.isNotEmpty(listData))
-		//		{
-		//			finalSet.addAll(listData);
-		//		}
-		return ascendingDistance;
-	}
 
 
-	public List<Integer> calcDistance(final StringBuffer beg, final StringBuffer end)
+
+	public List<Double> calcDistance(final StringBuffer beg, final StringBuffer end)
 	{
 		JSONObject json = null;
 		JSONArray jsonArray = null;
-		final List<Integer> distance = new ArrayList<>();
-		List<Integer> sortDistance = null;
+		final List<Double> distance = new ArrayList<>();
 		try
 		{
 
@@ -110,9 +79,8 @@ public class DistanceMatrixUtility
 			for (int i = 0; i < jsonArray.length(); i++)
 			{
 				final JSONObject jsonObj = jsonArray.getJSONObject(i);
-				distance.add(new Integer(Integer.parseInt(jsonObj.getJSONObject("distance").getString("value"))));
+				distance.add(Double.valueOf(jsonObj.getJSONObject("distance").getDouble("value")));
 			}
-			sortDistance = getSortedSetData(distance);
 
 		}
 		catch (final JSONException e)
@@ -123,6 +91,6 @@ public class DistanceMatrixUtility
 		{
 			e.printStackTrace();
 		}
-		return sortDistance;
+		return distance;
 	}
 }
