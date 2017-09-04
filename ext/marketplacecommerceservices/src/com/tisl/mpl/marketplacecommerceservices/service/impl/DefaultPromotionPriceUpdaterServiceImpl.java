@@ -1142,7 +1142,7 @@ public class DefaultPromotionPriceUpdaterServiceImpl implements PromotionPriceUp
 			 * pm.setPromotionValue(null); pm.setPromotionIdentifier(MarketplacecommerceservicesConstants.EMPTY);
 			 * pm.setMaxDiscount(null); pm.setPromotionChannel(null); pmList.addAll(price.getPromotionalPriceRow());
 			 * pmList.add(pm); price.setPromotionalPriceRow(pmList); priceRowtobeSaved.add(price); }
-			 *
+			 * 
 			 * if (CollectionUtils.isNotEmpty(promoPriceList)) { modelService.saveAll(priceRowtobeSaved); }
 			 */
 			final List<PromotionalPriceRowModel> priceRowModelList = updatePromotionalPriceDao.fetchPromoPriceData(promoCode);
@@ -1365,33 +1365,33 @@ public class DefaultPromotionPriceUpdaterServiceImpl implements PromotionPriceUp
 	 * clearExistingData(promoCode); final List<String> product = new ArrayList<String>(); //List<String>
 	 * stagedProductList = new ArrayList<String>();//why? // final List<String> promoproductList = new
 	 * ArrayList<String>();//Car-153 final List<PriceRowModel> priceList = new ArrayList<PriceRowModel>();
-	 *
+	 * 
 	 * if (CollectionUtils.isNotEmpty(products)) { for (final ProductModel itrProduct : products) { if
 	 * (getBrandsForProduct(itrProduct, brands, rejectBrandList) && validateProductData(itrProduct, priority)) {
 	 * product.add(itrProduct.getPk().toString()); //promoproductList.add(itrProduct.getCode());//Car-158 } } }
-	 *
+	 * 
 	 * if (CollectionUtils.isNotEmpty(categories)) { //TISPRO-352 : Fix final List<ProductModel> productList =
 	 * fetchProductList(categories); if (CollectionUtils.isNotEmpty(productList)) { for (final ProductModel itrProduct :
 	 * productList) { if (getBrandsForProduct(itrProduct, brands, rejectBrandList) && validateProductData(itrProduct,
 	 * priority)) { product.add(itrProduct.getPk().toString()); //promoproductList.add(itrProduct.getCode());//CAR-158 }
 	 * } }
-	 *
-	 *
+	 * 
+	 * 
 	 * //Car-158 // final ConcurrentHashMap<List<String>, List<String>> categoryDetailsMap =
 	 * getEligibleProductList(brands, // rejectBrandList, priority, categories); // if
 	 * (MapUtils.isNotEmpty(categoryDetailsMap)) // { // for (final ConcurrentHashMap.Entry<List<String>, List<String>>
 	 * entry : categoryDetailsMap.entrySet()) // { // product.addAll(entry.getKey()); // //
 	 * promoproductList.addAll(entry.getValue());//Car-158 // LOG.debug("Key = " + entry.getKey() + ", Value = " +
 	 * entry.getValue()); // } // } }
-	 *
-	 *
+	 * 
+	 * 
 	 * LOG.debug("******** Special Price - Disable Promotion Applicable product List:" + product);
-	 *
-	 *
+	 * 
+	 * 
 	 * if (!product.isEmpty()) { //Car-158 // stagedProductList = getStagedProductDetails(promoproductList); // For
 	 * adding the staged catalog price Row for Product // if (CollectionUtils.isNotEmpty(stagedProductList)) // { //
 	 * product.addAll(stagedProductList); // }
-	 *
+	 * 
 	 * final List<PriceRowModel> priceRow = updatePromotionalPriceDao.fetchPricedData(product); for (final PriceRowModel
 	 * price : priceRow) { if (!isEnabled) { price.setPromotionStartDate(null); price.setPromotionEndDate(null);
 	 * price.setIsPercentage(null); price.setPromotionValue(null);
@@ -1400,11 +1400,11 @@ public class DefaultPromotionPriceUpdaterServiceImpl implements PromotionPriceUp
 	 * price.setPromotionStartDate(null); price.setPromotionEndDate(null); price.setIsPercentage(null);
 	 * price.setPromotionValue(null); price.setPromotionIdentifier(MarketplacecommerceservicesConstants.EMPTY);
 	 * price.setMaxDiscount(null); } priceList.add(price); }
-	 *
+	 * 
 	 * if (CollectionUtils.isNotEmpty(priceList)) { modelService.saveAll(priceList); //NEED CHANGE }
-	 *
+	 * 
 	 * } }
-	 *
+	 * 
 	 * catch (final EtailBusinessExceptions e) { throw e; } catch (final EtailNonBusinessExceptions e) { throw e; } catch
 	 * (final Exception e) { throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000); } }
 	 */
@@ -2119,14 +2119,14 @@ public class DefaultPromotionPriceUpdaterServiceImpl implements PromotionPriceUp
 		/////////////////-------------------------//////////////////////////////////////////
 
 		////////////////////////////////////////////////////////////////////////////////
-		List<ProductPromotionModel> validPromosForProduct = new ArrayList<ProductPromotionModel>();
+		final List<ProductPromotionModel> validPromosForProduct = new ArrayList<ProductPromotionModel>();
 		final Collection<CategoryModel> categories = getcategoryData(product);
 
 		if (promoCurrent instanceof BuyAPercentageDiscountModel)
 		{
-			final StringBuilder queryString = new StringBuilder("SELECT DISTINCT pprom.pk FROM (");
-			queryString.append(" {{ SELECT {" + BuyAPercentageDiscountModel.PK + "} FROM {" + BuyAPercentageDiscountModel._TYPECODE
-					+ " AS p ");
+			final StringBuilder queryString = new StringBuilder("SELECT DISTINCT pprom.pk, pprom.prio FROM (");
+			queryString.append(" {{ SELECT {p." + BuyAPercentageDiscountModel.PK + "} AS pk, {p."
+					+ BuyAPercentageDiscountModel.PRIORITY + "} AS prio FROM {" + BuyAPercentageDiscountModel._TYPECODE + " AS p ");
 			queryString.append(" JOIN " + GeneratedPromotionsConstants.Relations.PRODUCTPROMOTIONRELATION + " AS p2p ");
 			queryString.append(" ON {p2p.target} = {p." + BuyAPercentageDiscountModel.PK + "}");
 			queryString.append(" AND {p2p.source} = ?product }");
@@ -2142,8 +2142,8 @@ public class DefaultPromotionPriceUpdaterServiceImpl implements PromotionPriceUp
 			if (CollectionUtils.isNotEmpty(categories))
 			{
 				queryString.append(MarketplacecommerceservicesConstants.QUERYUNION);
-				queryString.append(" {{ SELECT {" + BuyAPercentageDiscountModel.PK + "} FROM {"
-						+ BuyAPercentageDiscountModel._TYPECODE + " AS p ");
+				queryString.append(" {{ SELECT {p." + BuyAPercentageDiscountModel.PK + "} AS pk, {p."
+						+ BuyAPercentageDiscountModel.PRIORITY + "} AS prio FROM {" + BuyAPercentageDiscountModel._TYPECODE + " AS p ");
 				queryString.append(" JOIN " + GeneratedPromotionsConstants.Relations.CATEGORYPROMOTIONRELATION + " AS c2p ");
 				queryString.append(" ON {p." + BuyAPercentageDiscountModel.PK + "} = {c2p.target} ");
 				queryString.append(" AND {c2p.source} IN (?categories) }");
@@ -2176,16 +2176,24 @@ public class DefaultPromotionPriceUpdaterServiceImpl implements PromotionPriceUp
 				query.addQueryParameter("sysdate", new Date());
 				query.addQueryParameter("true", Boolean.TRUE);
 
+				query.setResultClassList(Arrays.asList(ProductPromotionModel.class, Integer.class));
+
 				LOG.debug("QUERY>>>>>>" + queryString);
 
-				validPromosForProduct = flexibleSearchService.<ProductPromotionModel> search(query).getResult();
+				final SearchResult<List<Object>> result = flexibleSearchService.search(query);
+				for (final List<Object> row : result.getResult())
+				{
+					validPromosForProduct.add((ProductPromotionModel) row.get(0));
+					//final String priority = (String) row.get(1);
+				}
 			}
 		}
 		else if (promoCurrent instanceof BuyABFreePrecentageDiscountModel)
 		{
-			final StringBuilder queryString = new StringBuilder("SELECT DISTINCT pprom.pk FROM (");
-			queryString.append(" {{ SELECT {" + BuyABFreePrecentageDiscountModel.PK + "} FROM {"
-					+ BuyABFreePrecentageDiscountModel._TYPECODE + " AS p ");
+			final StringBuilder queryString = new StringBuilder("SELECT DISTINCT pprom.pk, pprom.prio FROM (");
+			queryString.append(" {{ SELECT {p." + BuyABFreePrecentageDiscountModel.PK + "} AS pk, {p."
+					+ BuyABFreePrecentageDiscountModel.PRIORITY + "} AS prio FROM {" + BuyABFreePrecentageDiscountModel._TYPECODE
+					+ " AS p ");
 			queryString.append(" JOIN " + GeneratedPromotionsConstants.Relations.PRODUCTPROMOTIONRELATION + " AS p2p ");
 			queryString.append(" ON {p2p.target} = {p." + BuyABFreePrecentageDiscountModel.PK + "}");
 			queryString.append(" AND {p2p.source} = ?product }");
@@ -2201,8 +2209,9 @@ public class DefaultPromotionPriceUpdaterServiceImpl implements PromotionPriceUp
 			if (CollectionUtils.isNotEmpty(categories))
 			{
 				queryString.append(MarketplacecommerceservicesConstants.QUERYUNION);
-				queryString.append(" {{ SELECT {" + BuyABFreePrecentageDiscountModel.PK + "} FROM {"
-						+ BuyABFreePrecentageDiscountModel._TYPECODE + " AS p ");
+				queryString.append(" {{ SELECT {p." + BuyABFreePrecentageDiscountModel.PK + "} AS pk, {p."
+						+ BuyABFreePrecentageDiscountModel.PRIORITY + "} AS prio FROM {" + BuyABFreePrecentageDiscountModel._TYPECODE
+						+ " AS p ");
 				queryString.append(" JOIN " + GeneratedPromotionsConstants.Relations.CATEGORYPROMOTIONRELATION + " AS c2p ");
 				queryString.append(" ON {p." + BuyABFreePrecentageDiscountModel.PK + "} = {c2p.target} ");
 				queryString.append(" AND {c2p.source} IN (?categories) }");
@@ -2230,15 +2239,22 @@ public class DefaultPromotionPriceUpdaterServiceImpl implements PromotionPriceUp
 
 			query.addQueryParameter("product", product);
 			query.addQueryParameter("categories", categories);
-			query.addQueryParameter("promotionGroup", "mplPromoGrp");
+			//query.addQueryParameter("promotionGroup", "mplPromoGrp");
 			query.addQueryParameter("promoCurrPriority", promoCurrent.getPriority());
 			query.addQueryParameter("qualifyingCount", "1");
 			query.addQueryParameter("sysdate", new Date());
 			query.addQueryParameter("true", Boolean.TRUE);
 
+			query.setResultClassList(Arrays.asList(ProductPromotionModel.class, Integer.class));
+
 			LOG.debug("QUERY>>>>>>" + queryString);
 
-			validPromosForProduct = flexibleSearchService.<ProductPromotionModel> search(query).getResult();
+			final SearchResult<List<Object>> result = flexibleSearchService.search(query);
+			for (final List<Object> row : result.getResult())
+			{
+				validPromosForProduct.add((ProductPromotionModel) row.get(0));
+				//final String priority = (String) row.get(1);
+			}
 		}
 		///////////////////////////////////////////////////
 		return validPromosForProduct;
