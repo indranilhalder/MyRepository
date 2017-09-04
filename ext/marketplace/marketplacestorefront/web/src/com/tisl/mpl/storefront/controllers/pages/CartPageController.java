@@ -37,6 +37,7 @@ import de.hybris.platform.commercefacades.product.data.PinCodeResponseData;
 import de.hybris.platform.commercefacades.product.data.PriceData;
 import de.hybris.platform.commercefacades.product.data.PriceDataType;
 import de.hybris.platform.commercefacades.product.data.ProductData;
+import de.hybris.platform.commercefacades.product.data.PromotionResultData;
 import de.hybris.platform.commercefacades.user.UserFacade;
 import de.hybris.platform.commercefacades.user.data.AddressData;
 import de.hybris.platform.commerceservices.enums.SalesApplication;
@@ -449,9 +450,48 @@ public class CartPageController extends AbstractPageController
 				cartDataOnLoad = cartData;
 				prepareDataForPage(model, cartDataOnLoad);
 
+				//TPR-6371| DTM Track promotions start
+				List<PromotionResultData> productPromoList = new ArrayList<PromotionResultData>();
+				List<PromotionResultData> orderPromoList = new ArrayList<PromotionResultData>();
+				String promoTitle = "";
+				String promoCode = "";
+				String promo_id_product = "";
+				String promo_id_cart = "";
+				final List<String> promolist = new ArrayList<String>();
+				productPromoList = cartData.getAppliedOrderPromotions();
+				orderPromoList = cartData.getAppliedProductPromotions();
+
+				if (CollectionUtils.isNotEmpty(productPromoList))
+				{
+					if (productPromoList.get(0).getPromotionData() != null)
+					{
+						promoTitle = productPromoList.get(0).getPromotionData().getTitle();
+						promoCode = productPromoList.get(0).getPromotionData().getCode();
+						promo_id_product = promoTitle + ":" + promoCode;
+						promolist.add(promo_id_product);
+					}
+
+				}
+				if (CollectionUtils.isNotEmpty(orderPromoList))
+				{
+					if (orderPromoList.get(0).getPromotionData() != null)
+					{
+						promoTitle = orderPromoList.get(0).getPromotionData().getTitle();
+						promoCode = orderPromoList.get(0).getPromotionData().getCode();
+						promo_id_cart = promoTitle + ":" + promoCode;
+						promolist.add(promo_id_cart);
+					}
+
+				}
+				model.addAttribute("promolist", promolist);
+				//TPR-6371| DTM Track promotions end
+
+
+
 
 				model.addAttribute("isPincodeRestrictedPromoPresent",
 						mplCartFacade.checkPincodeRestrictedPromoOnCartProduct(cartModel));
+
 			}
 			else if (isLux)
 			{

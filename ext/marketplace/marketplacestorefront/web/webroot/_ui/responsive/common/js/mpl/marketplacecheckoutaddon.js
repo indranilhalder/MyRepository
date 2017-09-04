@@ -45,6 +45,10 @@ function viewPaymentCredit(){
 			
 	});
 	}
+	//TPR-6029|DTM CHECKOUT Changes
+	dtmPaymentModeSelection('credit card');
+		
+	
 //});
 }
 
@@ -82,6 +86,9 @@ function viewPaymentDebit(){
 			"link_text": "pay_debit_card_selected" , "event_type" : "payment_mode_selection"
 		});
 	}
+	
+	//TPR-6029|DTM CHECKOUT Changes
+	dtmPaymentModeSelection('debit card');
 //});
 }
 
@@ -107,6 +114,10 @@ function viewPaymentNetbanking(){
 			"link_text": "pay_net_banking_selected" , "event_type" : "payment_mode_selection"
 		});
 	}
+	
+	//TPR-6029|DTM CHECKOUT Changes
+	dtmPaymentModeSelection('net banking');
+	
 //});
 }
 
@@ -138,6 +149,9 @@ function viewPaymentCOD(){
 			"link_text": "pay_cod_selected" , "event_type" : "payment_mode_selection"
 		});
 	}
+	
+	//TPR-6029|DTM CHECKOUT Changes
+	dtmPaymentModeSelection('cod');
 //});
 }
 
@@ -163,6 +177,9 @@ function viewPaymentEMI(){
 			"link_text": "pay_emi_selected" , "event_type" : "payment_mode_selection"
 		});
 	}
+	
+	//TPR-6029|DTM CHECKOUT Changes
+	dtmPaymentModeSelection('emi');
 //});
 }
 // Mode button click function ends
@@ -5434,6 +5451,10 @@ function calculateDeliveryCost(radioId,deliveryCode)
 		  	event_type : shippingMode+"_delivery_selected"
 		  });
 		}
+		
+		if(typeof _satellite != "undefined") {  
+		  _satellite.track('cpj_checkout_delivery_option_select');
+		}
 }
 
 //TPR-1214
@@ -5840,11 +5861,37 @@ function checkServiceabilityRequired(buttonType,el){
 			);
 		}*/
 	}
+
+	// TPR-6029 | for checkout button click from cart | start
+	if(typeof _satellite != "undefined"){
+		_satellite.track('cpj_cart_checkout');
+	}
+	var buttonId = $(el).attr('id');
+	var buttonPosition;
+	if(buttonId.indexOf('down') < 0){
+		buttonPosition = "top";
+	}
+	else{
+		buttonPosition = "bottom";
+	}
+	
+	if(typeof digitalData.cpj.button != "undefined"){
+		digitalData.cpj.button.place = buttonPosition;
+	}
+	else{
+		digitalData.cpj.button = {
+			place : buttonPosition	
+		}
+	}
+	
+	// TPR-6029 | for checkout button click from cart | end
+
 	//TISPRDT-680
 	if(selectedPin == null || selectedPin.length === 0)
 	{	
 	   $('#defaultPinCodeIdsBtm').val("");
 	}
+
 	if(sessionPin != selectedPin){
 		checkPincodeServiceability(buttonType,el);
 		removeExchangeFromCart(selectedPin);
@@ -6877,6 +6924,8 @@ function checkIsServicable()
  	 					"error_type" : "pincode_check_error",
  	 				});
  	 			}
+ 	 			// TPR-6369 |Error tracking for  dtm
+ 	 			dtmErrorTracking("pincode_check_error","Issue in PincodeServiceability");
 	 		},
 
 			complete : function(resp){
@@ -7754,6 +7803,10 @@ function updateCart(formId){
 		"event_type": "quantity_updated"
 	});
 	}
+	//TPR-6029
+	if(typeof _satellite != "undefined"){
+	_satellite.track('cpj_cart_quantity_change');
+	}
 }
 
 
@@ -7967,6 +8020,8 @@ $("#couponSubmitButton").click(function(){
 	 				if(typeof utag !="undefined"){
 		 				   utag.link({error_type : 'offer_error'});
 		 				}
+	 				//TPR-6369 |Error tracking dtm
+	 				dtmErrorTracking(" Coupon not applied Error","errorname");
 	 			}
 	 			else{
 		 			if(response.couponRedeemed==true){
@@ -8010,6 +8065,8 @@ $("#couponSubmitButton").click(function(){
 	 			if(typeof utag !="undefined"){
 	 				   utag.link({error_type : 'offer_error'});
 	 				}
+	 			//TPR-6369 |Error tracking dtm
+ 				dtmErrorTracking(" Coupon not applied Error","errorname");
 	 		}
 	 	});	 
 	}
@@ -8025,6 +8082,10 @@ function onSubmitAnalytics(msg){
 		event_type : 'apply_coupon',
 		coupon_code : couponCode
 	});
+	
+	// TPR-6029 | for checkout button click from cart | start
+	
+	dtmCouponCheck(msg,couponCode);
 }
 // TPR-658 END
 
@@ -8213,7 +8274,19 @@ function sendTealiumData(){
 				        });
 		        	}
 		        }
-	        
+		        
+		     // TPR-6029 | for checkout button click from cart | start
+		    	if(typeof _satellite != "undefined"){
+		    		_satellite.track('cpj_place_order');
+		    	}
+		    	if(typeof (digitalData.cpj.product) != undefined){
+		    		digitalData.cpj.product.id = $('#product_id').val();
+		    		digitalData.cpj.product.category =$('#product_category').val();
+		    	}
+		    	
+		    	if(typeof (digitalData.cpj.payment) != undefined){
+		    	    digitalData.cpj.payment.finalMode = payment_mode ;
+		    	}
 	   } catch (e) {
 		// TODO: handle exception
 
@@ -8427,6 +8500,7 @@ function addToWishlistForCart(ussid,productCode,alreadyAddedWlName)
 				}
 				/*TPR-656 Ends*/
 				
+				dtmAddToWishlist(cart);      /*TPR-6364*/
 				localStorage.setItem("movedToWishlist_msgFromCart", "Y");
 				
 				
@@ -9134,6 +9208,8 @@ function submitCODForm(){
 						$(".pay .loaderDiv").remove();
 						$("#no-click,.loaderDiv").remove();
 						$('#paymentButtonId').prop('disabled', false); // TISPRD-958
+						//TPR-6369 |Error tracking dtm
+		 				dtmErrorTracking("Payment error","pay_cod_otp_error");
 					}
 				}
 			},
@@ -9142,7 +9218,8 @@ function submitCODForm(){
 				if(typeof utag !="undefined"){
 				utag.link({link_text: 'pay_cod_otp_error' , event_type : 'payment_mode_cod'});
 				}
-				
+				//TPR-6369 |Error tracking dtm
+ 				dtmErrorTracking("Payment error","pay_cod_otp_error");
 				alert("Error validating OTP. Please select another payment mode and proceed");
 				$(".pay button,.cod_payment_button_top").prop("disabled",false);
 				$(".pay button,.cod_payment_button_top").css("opacity","1");
@@ -9160,7 +9237,9 @@ function submitCODForm(){
 function paymentErrorTrack(msg){
 	if(typeof utag !="undefined"){
 		utag.link({"error_type": msg});
-		}
+	}
+	    //TPR-6369 |Error tracking dtm
+		dtmErrorTracking("Payment error",msg);
 }
 
 

@@ -22,6 +22,7 @@ import java.util.List;
 
 import javax.annotation.Resource;
 import javax.servlet.ServletException;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -32,6 +33,7 @@ import org.springframework.security.web.authentication.logout.SimpleUrlLogoutSuc
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.helper.ProductDetailsHelper;
 import com.tisl.mpl.storefront.constants.MessageConstants;
+import com.tisl.mpl.storefront.constants.ModelAttributetConstants;
 import com.tisl.mpl.storefront.security.cookie.CartRestoreCookieGenerator;
 
 
@@ -109,7 +111,10 @@ public class StorefrontLogoutSuccessHandler extends SimpleUrlLogoutSuccessHandle
 			}
 		}
 		getGuidCookieStrategy().deleteCookie(request, response);
-
+		//For TPR-6334 : creating cookie object
+		final Cookie dtmLoginCookie = new Cookie(MessageConstants.DTM_SIGNOUT_STATUS, "success");
+		dtmLoginCookie.setPath(ModelAttributetConstants.SLASH);
+		response.addCookie(dtmLoginCookie);
 
 		// Delegate to default redirect behaviour
 		super.onLogoutSuccess(request, response, authentication);

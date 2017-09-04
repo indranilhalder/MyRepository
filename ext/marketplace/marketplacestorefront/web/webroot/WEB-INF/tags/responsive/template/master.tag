@@ -60,7 +60,8 @@
 <link rel="stylesheet" type="text/css" media="all" href="//${productMediadnsHost1}/preload.css?${rand}"/>
 </c:if> --%>
 
-
+<spring:eval expression="T(de.hybris.platform.util.Config).getParameter('dtm.static.url')" var="dtmUrl"/>
+<script src="${dtmUrl}"></script>
 
 
 <%-- <link rel="stylesheet" type="text/css" media="all" href="${themeResourcePath}/css/preload.css"/> --%>
@@ -266,8 +267,8 @@
 	src="${commonResourcePath}/js/jquery-2.1.1.min.js"></script>
 	<%-- Inject any additional CSS required by the page --%>
 	<jsp:invoke fragment="pageCss"/>
-	
 	<%-- <analytics:analytics/> --%>
+<div id ="DTMhome"></div>
 	<%-- <generatedVariables:generatedVariables/> --%>
 
 <c:if test="${param.frame ne null}">	
@@ -276,6 +277,7 @@
 <c:if test="${fn:contains(requestScope['javax.servlet.forward.request_uri'],'/my-account')}">
 	<link rel="stylesheet" type="text/css" media="all" href="${themeResourcePath}/css/pikaday.css"/>
 </c:if>
+
 <!--Added for TPR-5812  -->
 <c:if test="${isIzootoEnabled=='Y'}">
  <script> window._izq = window._izq || []; window._izq.push(["init"]); </script>
@@ -283,6 +285,7 @@
 <script src="${izootoScript}"></script>
 </c:if>
  <!-- Changes End  TPR-5812 -->
+
 </head>
 <c:if test="${empty buildNumber}">
 <c:set var="buildNumber" value= "100000"/>
@@ -387,7 +390,14 @@
 		</c:otherwise>
 		</c:choose>
 	</c:if>
-
+	<script>
+	$(window).on("load", function(){
+		var forceLoginUser = "${forced_login_user}";
+		if(forceLoginUser == "Y"){
+			 $("#login-modal").modal();
+		}
+	});
+</script>
 
 	<tealium:sync/> 
 <%-- <script type="text/javascript">
@@ -406,13 +416,27 @@
 		<input type="hidden" id="accesibility_refreshScreenReaderBufferField" name="accesibility_refreshScreenReaderBufferField" value=""/>
 	</form>
 	<div id="ariaStatusMsg" class="skip" role="status" aria-relevant="text" aria-live="polite"></div>
+	
+	<c:if test="${isSamsungPage eq true }">
+		<spring:eval expression="T(de.hybris.platform.util.Config).getParameter('samsung.chat.icon.uri')" var="samsungChatIconURI"/>
+		<div class="samsung-chat-div" id="samsung-chat-icon-id">
+			<img title="Samsung Live Chat" alt="Samsung Live Chat" src="${samsungChatIconURI}">
+		</div>
+	</c:if>
 
 	<%-- Load JavaScript required by the site --%>
 	<template:javaScript/>
-	
+	<script type="text/javascript">_satellite.pageBottom();</script>
 	<%-- Inject any additional JavaScript required by the page --%>
 	<jsp:invoke fragment="pageScripts"/>	
-	
+	<%-- TPR-6399 --%>
+	<!-- Modal -->
+<div class="modal fade login-modal" id="login-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+		<div class="overlay" data-dismiss="modal"></div>
+		<div class="content">
+		${login_register_html}
+		</div>
+</div>
 </body>
 
 <debug:debugFooter/>
