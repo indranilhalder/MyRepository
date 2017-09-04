@@ -86,12 +86,12 @@
 			<property name="cartService" ref="cartService" />
 		</bean>
 		<bean
-			class="com.tisl.mpl.storefront.interceptors.beforecontroller.DeviceDetectionBeforeControllerHandler" >
+			class="com.tisl.mpl.storefront.interceptors.beforecontroller.DeviceDetectionBeforeControllerHandler">
 			<property name="uiExperienceService" ref="uiExperienceService" />
 			<property name="baseSiteService" ref="baseSiteService" />
 			<property name="configurationService" ref="configurationService"></property>
 			<property name="sessionService" ref="sessionService"></property>
-			
+
 		</bean>
 		<bean
 			class="com.tisl.mpl.storefront.interceptors.beforecontroller.SetLanguageBeforeControllerHandler" />
@@ -119,16 +119,15 @@
 				</map>
 			</property>
 		</bean>
-		<!-- <bean
-			class="com.tisl.mpl.storefront.interceptors.beforeview.UiExperienceMetadataViewHandler" />
-		<bean
-			class="com.tisl.mpl.storefront.interceptors.beforeview.AnalyticsPropertiesBeforeViewHandler" /> -->
+		<!-- <bean class="com.tisl.mpl.storefront.interceptors.beforeview.UiExperienceMetadataViewHandler" 
+			/> <bean class="com.tisl.mpl.storefront.interceptors.beforeview.AnalyticsPropertiesBeforeViewHandler" 
+			/> -->
 		<bean
 			class="com.tisl.mpl.storefront.interceptors.beforeview.ConfigGranuleBeforeViewHandler">
 			<property name="siteConfigService" ref="siteConfigService" />
 		</bean>
-		<!-- <bean
-			class="com.tisl.mpl.storefront.interceptors.beforeview.DebugInfoBeforeViewHandler" /> -->
+		<!-- <bean class="com.tisl.mpl.storefront.interceptors.beforeview.DebugInfoBeforeViewHandler" 
+			/> -->
 		<bean
 			class="com.tisl.mpl.storefront.interceptors.beforeview.CartRestorationBeforeViewHandler">
 			<property name="sessionService" ref="sessionService" />
@@ -139,16 +138,21 @@
 			</property>
 		</bean>
 		<!-- BTG event publisher for CMS page visit -->
-		<!-- <bean
-			class="com.tisl.mpl.storefront.interceptors.beforeview.BtgPageVisitedPublisherBeforeViewHandler" /> -->
-		<!-- 
+		<!-- <bean class="com.tisl.mpl.storefront.interceptors.beforeview.BtgPageVisitedPublisherBeforeViewHandler" 
+			/> -->
+		<!-- <bean class="com.tisl.mpl.storefront.interceptors.beforeview.BtgSegmentBeforeViewHandler"> 
+			<property name="btgSegmentStrategy" ref="btgSegmentStrategy" /> </bean> -->
+		<!-- <bean class="com.tisl.mpl.storefront.interceptors.beforeview.GoogleMapsBeforeViewHandler" 
+			/> -->
 		<bean
-			class="com.tisl.mpl.storefront.interceptors.beforeview.BtgSegmentBeforeViewHandler">
-			<property name="btgSegmentStrategy" ref="btgSegmentStrategy" />
+			class="com.tisl.mpl.storefront.interceptors.beforeview.PromotionalForcedLoginBeforeViewHandler">
+			<property name="proxyPort"
+				value="#{configurationService.configuration.getProperty('proxy.port')}" />
+			<property name="proxyEnabled"
+				value="#{configurationService.configuration.getProperty('proxy.enabled')}" />
+			<property name="proxyAddress"
+				value="#{configurationService.configuration.getProperty('proxy.address')}" />
 		</bean>
-		-->
-		<!-- <bean
-			class="com.tisl.mpl.storefront.interceptors.beforeview.GoogleMapsBeforeViewHandler" /> -->
 	</util:list>
 
 	<!-- Interceptor that runs once per request and before the controller handler 
@@ -349,26 +353,21 @@
 		<entry key="notFound" value="/error" />
 
 		<!--Configuration WCMS Mobile Page to URL -->
-		<!-- <entry key="mobile-homepage" value="/" />
-		<entry key="mobile-cartPage" value="/cart" />
-		<entry key="mobile-search" value="/search" />
-		<entry key="mobile-searchEmpty" value="/search" />
-		<entry key="mobile-account" value="/my-account" />
-		<entry key="mobile-profile" value="/my-account/profile" />
-		<entry key="mobile-address-book" value="/my-account/address-book" />
-		<entry key="mobile-add-edit-address" value="/my-account/add-edit-address" />
-		<entry key="mobile-payment-details" value="/my-account/payment-details" />
-		<entry key="mobile-order" value="/my-account/order" />
-		<entry key="mobile-orders" value="/my-account/orders" />
-		<entry key="mobile-multiStepCheckoutSummaryPage" value="/checkout/multi/add-delivery-address" />
-		<entry key="mobile-storefinderPage" value="/store-finder" />
-		<entry key="mobile-login" value="/login" />
-		<entry key="mobile-checkout-login" value="/login/checkout" />
-		<entry key="mobile-forgottenPassword" value="/login/pw/request" />
-		<entry key="mobile-updatePassword" value="/my-account/update-password" />
-		<entry key="mobile-register" value="/register" />
-		<entry key="mobile-orderConfirmationPage" value="/my-account/order" />
-		<entry key="mobile-notFound" value="/error" /> -->
+		<!-- <entry key="mobile-homepage" value="/" /> <entry key="mobile-cartPage" 
+			value="/cart" /> <entry key="mobile-search" value="/search" /> <entry key="mobile-searchEmpty" 
+			value="/search" /> <entry key="mobile-account" value="/my-account" /> <entry 
+			key="mobile-profile" value="/my-account/profile" /> <entry key="mobile-address-book" 
+			value="/my-account/address-book" /> <entry key="mobile-add-edit-address" 
+			value="/my-account/add-edit-address" /> <entry key="mobile-payment-details" 
+			value="/my-account/payment-details" /> <entry key="mobile-order" value="/my-account/order" 
+			/> <entry key="mobile-orders" value="/my-account/orders" /> <entry key="mobile-multiStepCheckoutSummaryPage" 
+			value="/checkout/multi/add-delivery-address" /> <entry key="mobile-storefinderPage" 
+			value="/store-finder" /> <entry key="mobile-login" value="/login" /> <entry 
+			key="mobile-checkout-login" value="/login/checkout" /> <entry key="mobile-forgottenPassword" 
+			value="/login/pw/request" /> <entry key="mobile-updatePassword" value="/my-account/update-password" 
+			/> <entry key="mobile-register" value="/register" /> <entry key="mobile-orderConfirmationPage" 
+			value="/my-account/order" /> <entry key="mobile-notFound" value="/error" 
+			/> -->
 	</util:map>
 
 	<alias name="defaultPreviewDataModelUrlResolver" alias="previewDataModelUrlResolver" />
@@ -381,16 +380,13 @@
 		</property>
 	</bean>
 
-	<!-- <bean id="pageTitleResolver"
-		class="de.hybris.platform.acceleratorservices.storefront.util.PageTitleResolver">
-		<property name="cmsSiteService" ref="cmsSiteService" />
-		<property name="commerceCategoryService" ref="commerceCategoryService" />
-		<property name="productService" ref="productService" />
-	</bean> -->
-	
-	
-	<bean id="pageTitleResolver"
-		class="com.tisl.mpl.storefront.util.MplPageTitleResolver">
+	<!-- <bean id="pageTitleResolver" class="de.hybris.platform.acceleratorservices.storefront.util.PageTitleResolver"> 
+		<property name="cmsSiteService" ref="cmsSiteService" /> <property name="commerceCategoryService" 
+		ref="commerceCategoryService" /> <property name="productService" ref="productService" 
+		/> </bean> -->
+
+
+	<bean id="pageTitleResolver" class="com.tisl.mpl.storefront.util.MplPageTitleResolver">
 		<property name="cmsSiteService" ref="cmsSiteService" />
 		<property name="commerceCategoryService" ref="commerceCategoryService" />
 		<property name="productService" ref="productService" />
@@ -440,7 +436,8 @@
 			<aop:around pointcut-ref="entryCheckoutStepPoint" method="validateCheckoutStep" />
 		</aop:aspect>
 	</aop:config>
-	<bean id="frontEndErrorHelper" class="com.tisl.mpl.storefront.controllers.helpers.FrontEndErrorHelper">
+	<bean id="frontEndErrorHelper"
+		class="com.tisl.mpl.storefront.controllers.helpers.FrontEndErrorHelper">
 	</bean>
 	<mvc:annotation-driven>
     <mvc:argument-resolvers>

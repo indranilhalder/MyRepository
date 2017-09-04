@@ -673,7 +673,9 @@
 																				<h2 class="product-name">
 																					<a href="${productUrl}">${entryCancel.product.name}</a>
 																				</h2>
-																				
+																				<!-- 	TPR-6288:Order cancel changes -->
+                                                                               <input type="hidden" id ="dtmPrdtCat" value ="${entryCancel.product.rootCategory}"/>
+                                                                               <input type="hidden" id ="dtmPrdtCode" value ="${entryCancel.product.code}"/>
 																				<p class="item-info">
 																					<span><b><c:if test="${entryCancel.quantity > 1}"><spring:theme code="text.orderHistory.quantity"/>
 																					&nbsp;${entryCancel.quantity}

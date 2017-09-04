@@ -19,7 +19,8 @@ import de.hybris.platform.acceleratorstorefrontcommons.controllers.util.GlobalMe
 import de.hybris.platform.acceleratorstorefrontcommons.forms.GuestForm;
 import de.hybris.platform.acceleratorstorefrontcommons.forms.LoginForm;
 import de.hybris.platform.cms2.exceptions.CMSItemNotFoundException;
-import de.hybris.platform.core.GenericSearchConstants.LOG;
+import de.hybris.platform.cms2.model.pages.AbstractPageModel;
+import de.hybris.platform.cms2.model.pages.ContentPageModel;
 import de.hybris.platform.servicelayer.config.ConfigurationService;
 import de.hybris.platform.servicelayer.session.SessionService;
 
@@ -36,8 +37,6 @@ import javax.servlet.http.HttpSession;
 
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.lang.StringUtils;
-import de.hybris.platform.cms2.model.pages.AbstractPageModel;
-import de.hybris.platform.cms2.model.pages.ContentPageModel;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
@@ -54,8 +53,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.lux.facade.CommonUtils;
+import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.data.FriendsInviteData;
 import com.tisl.mpl.exception.EtailBusinessExceptions;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
@@ -111,6 +110,7 @@ public class LoginPageController extends AbstractLoginPageController
 	private LastUserLoggedInCookieGenerator lastUserLoggedInCookieGenerator;
 	@Autowired
 	private CommonUtils commonUtils;
+
 	/**
 	 * @return the lastUserLoggedInCookieGenerator
 	 */
@@ -195,9 +195,8 @@ public class LoginPageController extends AbstractLoginPageController
 			setUpMetaDataForContentPage(model, (ContentPageModel) getCmsPage());
 			model.addAttribute(ModelAttributetConstants.METAROBOTS, ModelAttributetConstants.INDEX_NOFOLLOW);
 
-			final Breadcrumb loginBreadcrumbEntry = new Breadcrumb(ModelAttributetConstants.HASH_VAL,
-					getMessageSource().getMessage(MessageConstants.HEADER_LINK_LOGIN, null, getI18nService().getCurrentLocale()),
-					null);
+			final Breadcrumb loginBreadcrumbEntry = new Breadcrumb(ModelAttributetConstants.HASH_VAL, getMessageSource().getMessage(
+					MessageConstants.HEADER_LINK_LOGIN, null, getI18nService().getCurrentLocale()), null);
 			model.addAttribute(ModelAttributetConstants.BREADCRUMBS, Collections.singletonList(loginBreadcrumbEntry));
 
 			if (null != sessionService.getAttribute(ModelAttributetConstants.ERROR_ATTEPT))
@@ -256,6 +255,12 @@ public class LoginPageController extends AbstractLoginPageController
 	protected String getView()
 	{
 		return ControllerConstants.Views.Pages.Account.AccountLoginPage;
+	}
+
+
+	protected String getViewLoginDialog()
+	{
+		return ControllerConstants.Views.Pages.Account.AccountLoginPopPage;
 	}
 
 	@Override
@@ -338,7 +343,6 @@ public class LoginPageController extends AbstractLoginPageController
 				model.addAttribute(ModelAttributetConstants.IS_SIGN_IN_ACTIVE, ModelAttributetConstants.Y_CAPS_VAL);
 			}
 
-
 			/** Added for UF-93 to show the last logged in user in log in field for the remembered Users **/
 			final String rememberMeEnabled = configurationService.getConfiguration().getString("rememberMe.enabled"); //unblocked for testing
 			model.addAttribute("rememberMeEnabled", rememberMeEnabled); //unblocked for testing
@@ -358,6 +362,7 @@ public class LoginPageController extends AbstractLoginPageController
 			/** End UF-93 **/
 
 
+
 			/** Added for UF-93 to show the last logged in user in log in field for the remembered Users **/
 			final Cookie cookie = GenericUtilityMethods.getCookieByName(request, "LastUserLogedIn");
 			if (null != cookie && null != cookie.getValue())
@@ -370,8 +375,17 @@ public class LoginPageController extends AbstractLoginPageController
 				//LOG.error("Last user set into model: " + model.asMap().get("lastLoggedInUser"));
 			}
 			/** End UF-93 **/
+			/** TPR-6399 -- Check if the boxed-login param is present as part of HTTP GET request **/
+			if (null != request.getParameter("box-login"))
+			{
+				getDefaultLoginPage(false, session, model);
+				returnPage = getViewLoginDialog();
+			}
+			else
+			{
+				returnPage = getDefaultLoginPage(false, session, model);
+			}
 
-			returnPage = getDefaultLoginPage(false, session, model);
 		}
 		catch (final EtailBusinessExceptions e)
 		{
@@ -396,8 +410,8 @@ public class LoginPageController extends AbstractLoginPageController
 	 */
 	private String getCaptchaKey()
 	{
-		final String recaptchaKey = configurationService.getConfiguration()
-				.getString(ModelAttributetConstants.RECAPTCHA_PUBLIC_KEY_PROPERTY);
+		final String recaptchaKey = configurationService.getConfiguration().getString(
+				ModelAttributetConstants.RECAPTCHA_PUBLIC_KEY_PROPERTY);
 
 		return recaptchaKey;
 	}
@@ -631,6 +645,10 @@ public class LoginPageController extends AbstractLoginPageController
 					getAutoLoginStrategy().login(form.getEmail().toLowerCase(), form.getPwd(), request, response);
 					final HttpSession session = request.getSession();
 					session.setAttribute(LOGIN_SUCCESS, Boolean.TRUE);
+					//For TPR-6334 : creating cookie object
+					final Cookie dtmRegistrationCookie = new Cookie(MessageConstants.DTM_SIGNIN_STATUS, "RegistrationSuccess");
+					dtmRegistrationCookie.setPath(ModelAttributetConstants.SLASH);
+					response.addCookie(dtmRegistrationCookie);
 					//	updating the isRegistered flag in friends model (in case of valid affiliated id)
 					if (null != form.getAffiliateId() && !StringUtils.isBlank(form.getAffiliateId()))
 					{
