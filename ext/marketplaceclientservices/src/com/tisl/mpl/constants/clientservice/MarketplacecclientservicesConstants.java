@@ -285,4 +285,9 @@ public class MarketplacecclientservicesConstants
 	public static final String S0002_EXCEP = "S0002";
 	public static final String S0003_EXCEP = "S0003";
 	public static final String SAMSUNG_LOGGER_HEAD = "######## CreateSamsungOrder :: ";
+	
+	//INC144319511
+	public static final String EMAIL = "email";
+	public static final String IDENTITIES = "identities";
+	public static final String METHOD_GET_USERINFO = "gigya.getuserinfo.method".intern();
 }
