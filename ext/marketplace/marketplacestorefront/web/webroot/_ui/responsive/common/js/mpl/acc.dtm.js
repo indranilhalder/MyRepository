@@ -738,7 +738,7 @@ function dtmSearchTags(){
 		return "["+finalCategoryArray+"]";
 	}
 
-	/*PDP, quickview image hover*/
+	/*PDP, quickview image hover- TPR-6340*/
 	$(document).on("mouseover",".zoomContainer",function(e) {
 		if($('#pageType').val() != "/compare"){
 			if($('#pageType').val() == "product"
@@ -750,7 +750,13 @@ function dtmSearchTags(){
 					}
 				}
 			}
-		}
+			else {
+				   if(typeof _satellite != "undefined" && (!isImageHoverTriggered)){
+					    _satellite.track('cpj_qw_image_hover');
+					  isImageHoverTriggered = true;
+			        }
+			    }
+		   }
 	});	
 	
 	/*PDP thumbnail image click*/
@@ -758,7 +764,7 @@ function dtmSearchTags(){
 		var thumbnail_value = $(this).parent().attr('class');
 		var thumbnail_type = $(this).find('img').attr('data-type');
 		if(thumbnail_type == "image"){
-			if (typeof _satellite != "undefined") {
+			if (typeof _satellite != "undefined"  && pageType == 'product') {
 				_satellite.track('cpj_pdp_image_click');
 		    }
 		}
@@ -789,6 +795,13 @@ function dtmSearchTags(){
 			}
 		}
 	})
+	
+	//TPR-6340 |qv image click
+	$(document).on("click",".quick-view-popup > .product-image-container > .productImageGallery .imageListCarousel .thumb",function(){
+		if(typeof _satellite != "undefined") {
+			_satellite.track('cpj_qw_image_click');
+	    }
+   });
 	
 	// TPR-6287 | filter tacking start
 	var restrictionFlag='false';
@@ -1000,6 +1013,22 @@ function dtmSearchTags(){
     	 }
     	}
     }
+    
+  //TPR-6305 |track emi options starts
+    function  dtmEmiTrack(){
+    	if(typeof(_satellite) != "undefined"){
+	 		_satellite.track('cpj_pdp_emi');
+	 	}
+    }
+    
+    function dtmEmiBankTrack(emiBankSelected){
+    	digitalData.cpj = {
+    		    	emi :  {
+    			    bank : emiBankSelected
+    			}
+    	}
+    }
+    //track emi options ends
     
   //TPR-6367  | for  search
 	$(document).on('click','#searchButton',function(){
@@ -1241,6 +1270,23 @@ function populateFirstFiveProductsPlp(){
 }	
 /*product impressions end*/	
 
+// TPR-6292 | product qv
+function dtmQVTrack(productCodeArray,category,brand){
+	if(typeof(_satellite) !="undefined"){
+		_satellite.track('cpj_qw');
+  	}
+	
+	digitalData.cpj = {
+    		product : {
+    				     id  :  productCodeArray,
+    		      category   :  category	
+    	      },
+    	    brand : { 
+    		   name : brand
+    		}      
+    	}
+	
+}
 //TPR-6299 | for merchandising pages
 $(document).on('click','.new_exclusive_viewAll',function()
  {
