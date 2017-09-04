@@ -114,6 +114,13 @@ var buyboxskuId='';
 				code="product.product.brandInfo" /></li>
 	</c:if>
 	<!--CKD:TPR-250:End -->
+	
+		<!--CKD:TPR-6804:Start -->
+	<c:if test="${fn:contains(validTabs, 'overview')}">
+		<li id="tabs_productOverview"><spring:theme
+				code="product.product.overview" /></li>
+	</c:if>
+	<!--CKD:TPR-6804:End -->
 </ul>
 </div>
 <ul class="tabs pdp productTabs">
@@ -181,6 +188,14 @@ var buyboxskuId='';
 		</li>
 	</c:if>
 	<!--CKD:TPR-250:End -->
+	
+	<!--CKD:TPR-TPR-6804:Start -->
+	<c:if test="${fn:contains(validTabs, 'overview')}">
+		<li >
+			<product:productOverviewTab product="${product}" />
+		</li>
+	</c:if>
+	<!--CKD:TPR-TPR-6804:End -->
 </ul>
 
 <%-- UF-377 starts --%>
