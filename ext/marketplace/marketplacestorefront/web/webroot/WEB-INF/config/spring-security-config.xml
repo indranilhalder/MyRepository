@@ -331,7 +331,7 @@
 		<property name="key" value="marketplacestorefront"/>
 	</bean>
 	<!-- TPR-6654 -->
-	<bean id="PdpPincodeCookieGenerator" class="com.tisl.mpl.storefront.security.cookie.PDPPincodeCookieGenerator" >
+	<bean id="pdpPincodeCookieGenerator" class="com.tisl.mpl.storefront.security.cookie.PDPPincodeCookieGenerator" >
 		<property name="cookieSecure" value="true" />
 		<property name="cookieName" value="pdpPincode" />
 		<property name="cookieMaxAge" value="#{configurationService.configuration.getProperty('pdpPincode.cookie.age')}"/>

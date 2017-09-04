@@ -4404,7 +4404,9 @@ function getProductCodeFromPdpUrl(url)
 }
 
 function showStoreLocatorModal(){
-	//$("#CNCstores").modal();
-	$("#storeLocatorModal").modal();
+	$('body').on('hidden.bs.modal', '#storeLocatorModal', function () {
+		  $(this).removeData('bs.modal');
+		});
+	$("#storeLocatorModal").modal("show");
 }
 //End of UF-60 changes

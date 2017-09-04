@@ -203,7 +203,6 @@ public class ProductPageController extends MidPageController
 	private static final String PINCODE_CHECKED = "pincodeChecked";
 
 
-
 	/**
 	 *
 	 */
@@ -245,11 +244,8 @@ public class ProductPageController extends MidPageController
 
 	private static final String NEW_LINE = "\n";//Sonar Fix
 
-
-
 	@SuppressWarnings("unused")
 	private static final Logger LOG = Logger.getLogger(ProductPageController.class);
-
 
 	@Resource(name = "frontEndErrorHelper")
 	private FrontEndErrorHelper frontEndErrorHelper;
@@ -279,8 +275,9 @@ public class ProductPageController extends MidPageController
 	@Resource(name = "reviewValidator")
 	private ReviewValidator reviewValidator;
 
-	@Autowired
+	@Resource
 	private ConfigurationService configurationService;
+
 	@Resource(name = ModelAttributetConstants.SESSION_SERVICE)
 	private SessionService sessionService;
 
@@ -298,9 +295,6 @@ public class ProductPageController extends MidPageController
 	@Resource(name = "mplStoreLocatorFacade")
 	private MplStoreLocatorFacade mplStoreLocatorFacade;
 
-	//	@Autowired
-	//	private MplCheckoutFacade mplCheckoutFacade;
-
 	@Autowired
 	private SizeGuideHeaderComparator sizeGuideHeaderComparator;
 
@@ -317,25 +311,8 @@ public class ProductPageController extends MidPageController
 	private ProductOfferDetailFacade prodOfferDetFacade;
 
 	//TPR-6654
-	@Resource(name = "PdpPincodeCookieGenerator")
+	@Resource(name = "pdpPincodeCookieGenerator")
 	private PDPPincodeCookieGenerator pdpPincodeCookie;
-
-	/**
-	 * @return the pdpPincodeCookie
-	 */
-	public PDPPincodeCookieGenerator getPdpPincodeCookie()
-	{
-		return pdpPincodeCookie;
-	}
-
-	/**
-	 * @param pdpPincodeCookie
-	 *           the pdpPincodeCookie to set
-	 */
-	public void setPdpPincodeCookie(final PDPPincodeCookieGenerator pdpPincodeCookie)
-	{
-		this.pdpPincodeCookie = pdpPincodeCookie;
-	}
 
 	//TPR-978
 	@Resource(name = "cmsPageService")
@@ -344,57 +321,8 @@ public class ProductPageController extends MidPageController
 	@Autowired
 	private MplGigyaReviewCommentServiceImpl mplGigyaReviewService;
 
-
-	//TPR-4389
-	/*
-	 * @SuppressWarnings("unused") private BrowserType bType;
-	 */
-
-	//Sonar fix
-	//@Autowired
-	//private ConfigurationService configService;
 	@Resource(name = "customProductFacade")
 	private CustomProductFacadeImpl customProductFacade;
-
-
-	/**
-	 * @param buyBoxFacade
-	 *           the buyBoxFacade to set
-	 */
-	public void setBuyBoxFacade(final BuyBoxFacade buyBoxFacade)
-	{
-		this.buyBoxFacade = buyBoxFacade;
-	}
-
-	/**
-	 * @return the mplProductFacade
-	 */
-	public MplProductFacade getMplProductFacade()
-	{
-		return mplProductFacade;
-	}
-
-
-	/**
-	 * @param mplProductFacade
-	 *           the mplProductFacade to set
-	 */
-	public void setMplProductFacade(final MplProductFacade mplProductFacade)
-	{
-		this.mplProductFacade = mplProductFacade;
-	}
-
-	@Autowired
-	private ConfigurationService configService;
-
-	/**
-	 * @return the configService
-	 */
-	@Autowired
-	public ConfigurationService getConfigService()
-	{
-		return configService;
-	}
 
 	/**
 	 *
@@ -557,7 +485,7 @@ public class ProductPageController extends MidPageController
 				 * final String metaTitle = productData.getSeoMetaTitle(); final String pdCode = productData.getCode();
 				 * final String metaDescription = productData.getSeoMetaDescription(); //TISPRD-4977 final String
 				 * metaKeyword = productData.getSeoMetaKeyword(); //final String metaKeywords = productData.gets
-				 *
+				 * 
 				 * setUpMetaData(model, metaDescription, metaTitle, pdCode, metaKeyword);
 				 */
 				//AKAMAI fix
@@ -606,11 +534,12 @@ public class ProductPageController extends MidPageController
 
 		try
 		{
-			final String proxyPort = configService.getConfiguration().getString(
+			final String proxyPort = configurationService.getConfiguration().getString(
 					MarketplacecclientservicesConstants.RATING_PROXY_PORT);
-			final String proxySet = configService.getConfiguration().getString(
+			final String proxySet = configurationService.getConfiguration().getString(
 					MarketplacecclientservicesConstants.RATING_PROXY_ENABLED);
-			final String proxyHost = configService.getConfiguration().getString(MarketplacecclientservicesConstants.RATING_PROXY);
+			final String proxyHost = configurationService.getConfiguration().getString(
+					MarketplacecclientservicesConstants.RATING_PROXY);
 			final int proxyPortInt = Integer.parseInt(proxyPort);
 			final SocketAddress addr = new InetSocketAddress(proxyHost, proxyPortInt);
 			final Proxy proxy = new Proxy(Proxy.Type.HTTP, addr);
@@ -1352,7 +1281,7 @@ public class ProductPageController extends MidPageController
 						}
 						else
 						{
-							getPdpPincodeCookie().addCookie(response, pin);
+							pdpPincodeCookie.addCookie(response, pin);
 							sessionService.setAttribute(MarketplacecommerceservicesConstants.SESSION_PINCODE, pin);
 						}
 						pincodeResponse = pinCodeFacade.getResonseForPinCode(productCode, pin,
@@ -2622,11 +2551,11 @@ public class ProductPageController extends MidPageController
 	 */
 	/*
 	 * private MarketplaceDeliveryModeData fetchDeliveryModeDataForUSSID(final String deliveryMode, final String ussid) {
-	 *
+	 * 
 	 * final MarketplaceDeliveryModeData deliveryModeData = new MarketplaceDeliveryModeData(); final
 	 * MplZoneDeliveryModeValueModel mplZoneDeliveryModeValueModel = mplCheckoutFacade
 	 * .populateDeliveryCostForUSSIDAndDeliveryMode(deliveryMode, MarketplaceFacadesConstants.INR, ussid);
-	 *
+	 * 
 	 * final PriceData priceData = productDetailsHelper.formPriceData(mplZoneDeliveryModeValueModel.getValue());
 	 * deliveryModeData.setCode(mplZoneDeliveryModeValueModel.getDeliveryMode().getCode());
 	 * deliveryModeData.setDescription(mplZoneDeliveryModeValueModel.getDeliveryMode().getDescription());
@@ -2646,76 +2575,76 @@ public class ProductPageController extends MidPageController
 	 */
 	/*
 	 * private List<PincodeServiceData> populatePinCodeServiceData(final String productCode) {
-	 *
-	 *
-	 *
+	 * 
+	 * 
+	 * 
 	 * final List<PincodeServiceData> requestData = new ArrayList<>(); PincodeServiceData data = null;
-	 *
+	 * 
 	 * MarketplaceDeliveryModeData deliveryModeData = null; try { final ProductModel productModel =
-	 *
-	 *
+	 * 
+	 * 
 	 * productService.getProductForCode(productCode); final ProductData productData =
-	 *
+	 * 
 	 * productFacade.getProductForOptions(productModel, Arrays.asList(ProductOption.BASIC, ProductOption.SELLER,
 	 * ProductOption.PRICE));
-	 *
-	 *
+	 * 
+	 * 
 	 * for (final SellerInformationData seller : productData.getSeller()) { final List<MarketplaceDeliveryModeData>
-	 *
+	 * 
 	 * deliveryModeList = new ArrayList<MarketplaceDeliveryModeData>(); data = new PincodeServiceData(); if ((null !=
-	 *
+	 * 
 	 * seller.getDeliveryModes()) && !(seller.getDeliveryModes().isEmpty())) { for (final MarketplaceDeliveryModeData
-	 *
+	 * 
 	 * deliveryMode : seller.getDeliveryModes()) { deliveryModeData =
-	 *
+	 * 
 	 * fetchDeliveryModeDataForUSSID(deliveryMode.getCode(), seller.getUssid()); deliveryModeList.add(deliveryModeData);
-	 *
-	 *
+	 * 
+	 * 
 	 * } data.setDeliveryModes(deliveryModeList); } if (null != seller.getFullfillment() &&
-	 *
+	 * 
 	 * StringUtils.isNotEmpty(seller.getFullfillment())) {
-	 *
+	 * 
 	 * data.setFullFillmentType(MplGlobalCodeConstants.GLOBALCONSTANTSMAP.get(seller.getFullfillment().toUpperCase())); }
-	 *
+	 * 
 	 * if (null != seller.getShippingMode() && (StringUtils.isNotEmpty(seller.getShippingMode()))) {
-	 *
+	 * 
 	 * data.setTransportMode(MplGlobalCodeConstants.GLOBALCONSTANTSMAP.get(seller.getShippingMode().toUpperCase())); } if
-	 *
+	 * 
 	 * (null != seller.getSpPrice() && !(seller.getSpPrice().equals(ModelAttributetConstants.EMPTY))) { data.setPrice(new
-	 *
+	 * 
 	 * Double(seller.getSpPrice().getValue().doubleValue())); } else if (null != seller.getMopPrice() &&
-	 *
+	 * 
 	 * !(seller.getMopPrice().equals(ModelAttributetConstants.EMPTY))) { data.setPrice(new
-	 *
+	 * 
 	 * Double(seller.getMopPrice().getValue().doubleValue())); } else if (null != seller.getMrpPrice() &&
-	 *
+	 * 
 	 * !(seller.getMrpPrice().equals(ModelAttributetConstants.EMPTY))) { data.setPrice(new
-	 *
+	 * 
 	 * Double(seller.getMrpPrice().getValue().doubleValue())); } else {
-	 *
-	 *
-	 *
+	 * 
+	 * 
+	 * 
 	 * LOG.info("*************** No price avaiable for seller :" + seller.getSellerID()); continue; } if (null !=
-	 *
-	 *
+	 * 
+	 * 
 	 * seller.getIsCod() && StringUtils.isNotEmpty(seller.getIsCod())) { data.setIsCOD(seller.getIsCod()); }
-	 *
-	 *
-	 *
+	 * 
+	 * 
+	 * 
 	 * data.setSellerId(seller.getSellerID()); data.setUssid(seller.getUssid());
-	 *
+	 * 
 	 * data.setIsDeliveryDateRequired(ControllerConstants.Views.Fragments.Product.N); requestData.add(data); } } catch
-	 *
-	 *
-	 *
-	 *
-	 *
+	 * 
+	 * 
+	 * 
+	 * 
+	 * 
 	 * (final EtailBusinessExceptions e) { ExceptionUtil.etailBusinessExceptionHandler(e, null); }
-	 *
-	 *
-	 *
+	 * 
+	 * 
+	 * 
 	 * catch (final Exception e) {
-	 *
+	 * 
 	 * throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000); } return requestData; }
 	 */
 

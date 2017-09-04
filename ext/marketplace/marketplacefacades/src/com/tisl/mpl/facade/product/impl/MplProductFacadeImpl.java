@@ -7,6 +7,7 @@ import de.hybris.platform.catalog.model.ProductFeatureModel;
 import de.hybris.platform.commercefacades.product.data.ProductData;
 import de.hybris.platform.commercefacades.storelocator.data.PointOfServiceData;
 import de.hybris.platform.core.model.product.PincodeModel;
+import de.hybris.platform.servicelayer.config.ConfigurationService;
 import de.hybris.platform.storelocator.location.Location;
 import de.hybris.platform.storelocator.location.impl.LocationDTO;
 import de.hybris.platform.storelocator.location.impl.LocationDtoWrapper;
@@ -23,6 +24,7 @@ import com.tisl.mpl.facade.product.MplProductFacade;
 import com.tisl.mpl.facades.constants.MarketplaceFacadesConstants;
 import com.tisl.mpl.marketplacecommerceservices.service.MplProductService;
 import com.tisl.mpl.marketplacecommerceservices.service.PincodeService;
+import com.tisl.mpl.marketplacecommerceservices.service.impl.MplPincodeDistanceService;
 import com.tisl.mpl.pincode.facade.PincodeServiceFacade;
 
 
@@ -41,8 +43,12 @@ public class MplProductFacadeImpl implements MplProductFacade
 	private PincodeService pincodeService;
 	@Resource
 	private MplConfigFacade mplConfigFacade;
+	@Resource
+	private MplPincodeDistanceService mplPincodeDistanceService;
 	@SuppressWarnings("unused")
 	private static final Logger LOG = Logger.getLogger(MplProductFacadeImpl.class);
+	@Resource
+	private ConfigurationService configurationService;
 
 	/**
 	 * @return the mplProductService
@@ -104,6 +110,7 @@ public class MplProductFacadeImpl implements MplProductFacade
 		final LocationDTO dto = new LocationDTO();
 		try
 		{
+			final boolean distanceFlag = configurationService.getConfiguration().getBoolean("google.distance.enable");
 			String radius = mplConfigFacade.getCongigValue(MarketplaceFacadesConstants.CONFIGURABLE_RADIUS);
 			LOG.debug("configurableRadius is:" + radius);
 			if (null == radius)
@@ -113,12 +120,18 @@ public class MplProductFacadeImpl implements MplProductFacade
 			Location myLocation = null;
 			//fetch latitude and longitude for a pincode from comm
 			final PincodeModel pincodeModel = pincodeService.getLatAndLongForPincode(pincode);
+
 			if (null != pincodeModel)
 			{
 				dto.setLatitude(pincodeModel.getLatitude().toString());
 				dto.setLongitude(pincodeModel.getLongitude().toString());
 				myLocation = new LocationDtoWrapper(dto);
 				posData = pincodeServiceFacade.getStoresForPincode(myLocation.getGPS(), radius);
+				if (distanceFlag)
+				{
+					posData = mplPincodeDistanceService.pincodeDistance(posData, pincodeModel.getLatitude(),
+							pincodeModel.getLongitude(), pincode);
+				}
 			}
 		}
 		catch (final Exception e)
@@ -127,5 +140,4 @@ public class MplProductFacadeImpl implements MplProductFacade
 		}
 		return posData;
 	}
-
 }
