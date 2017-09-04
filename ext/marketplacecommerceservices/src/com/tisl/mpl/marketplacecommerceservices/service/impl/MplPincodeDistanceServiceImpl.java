@@ -27,7 +27,7 @@ public class MplPincodeDistanceServiceImpl implements MplPincodeDistanceService
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see
 	 * com.tisl.mpl.marketplacecommerceservices.service.impl.MplPincodeDistanceService#pincodeDistance(java.util.List)
 	 */
@@ -37,7 +37,7 @@ public class MplPincodeDistanceServiceImpl implements MplPincodeDistanceService
 	{
 		final StringBuffer origins = new StringBuffer();
 		final StringBuffer destinations = new StringBuffer();
-		List<String> distanceList = new ArrayList<>();
+		List<Integer> distanceList = new ArrayList<>();
 		try
 		{
 			final DistanceMatrixUtility distance = new DistanceMatrixUtility();
@@ -56,9 +56,9 @@ public class MplPincodeDistanceServiceImpl implements MplPincodeDistanceService
 			distanceList = distance.calcDistance(origins, destinations);
 			for (final PointOfServiceData pointOfServiceData : posData)
 			{
-				for (final String distanceKM : distanceList)
+				for (final Integer distanceKM : distanceList)
 				{
-					pointOfServiceData.setDistanceKm(Double.valueOf(distanceKM));
+					pointOfServiceData.setDistanceKm(distanceKM);
 				}
 			}
 

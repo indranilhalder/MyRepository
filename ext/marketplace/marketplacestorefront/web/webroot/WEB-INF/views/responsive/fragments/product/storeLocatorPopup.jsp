@@ -11,7 +11,7 @@
 	<div class="store-locator-block">
 	<c:if test="${fn:length(storesAvailable) gt 0}" >
 		<span class=""><spring:theme code="nearest.store" arguments="${pincode}"/></span>
-		<c:forEach items="${storesAvailable}" var="store" >
+		<c:forEach items="${storesAvailable}" var="store" varStatus="loop" >
 			<c:if test="${loop.first}">
 			<div class="storeName"><b>${store.name}</b></div>
 			<div class="address">${store.address.formattedAddress}</div>

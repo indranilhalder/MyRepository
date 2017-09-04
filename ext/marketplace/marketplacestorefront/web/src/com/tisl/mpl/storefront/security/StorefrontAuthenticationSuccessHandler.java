@@ -406,9 +406,10 @@ public class StorefrontAuthenticationSuccessHandler extends SavedRequestAwareAut
 		final AddressModel address = currCust.getDefaultShipmentAddress();
 		if (address != null && address.getPostalcode() != null)
 		{
-			if (cookie != null)
+			if (cookie != null && cookie.getValue() != null)
 			{
 				cookie.setValue(address.getPostalcode());
+				response.addCookie(cookie);
 			}
 			else
 			{

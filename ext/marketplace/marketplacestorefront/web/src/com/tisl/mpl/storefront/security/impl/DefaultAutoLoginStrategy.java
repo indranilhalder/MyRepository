@@ -160,9 +160,10 @@ public class DefaultAutoLoginStrategy implements AutoLoginStrategy
 				final AddressModel address = customerModel.getDefaultShipmentAddress();
 				if (address != null && address.getPostalcode() != null)
 				{
-					if (cookie != null)
+					if (cookie != null && cookie.getValue() != null)
 					{
 						cookie.setValue(address.getPostalcode());
+						response.addCookie(cookie);
 					}
 					else
 					{
@@ -226,9 +227,10 @@ public class DefaultAutoLoginStrategy implements AutoLoginStrategy
 				final AddressModel address = customerModel.getDefaultShipmentAddress();
 				if (address != null && address.getPostalcode() != null)
 				{
-					if (cookie != null)
+					if (cookie != null && cookie.getValue() != null)
 					{
 						cookie.setValue(address.getPostalcode());
+						response.addCookie(cookie);
 					}
 					else
 					{

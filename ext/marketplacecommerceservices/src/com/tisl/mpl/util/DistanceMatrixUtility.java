@@ -11,7 +11,11 @@ import java.io.Reader;
 import java.net.URL;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+
+import org.apache.commons.collections.CollectionUtils;
+import org.apache.log4j.Logger;
 
 import com.granule.json.JSONArray;
 import com.granule.json.JSONException;
@@ -24,6 +28,8 @@ import com.granule.json.JSONObject;
  */
 public class DistanceMatrixUtility
 {
+	@SuppressWarnings("unused")
+	private static final Logger LOG = Logger.getLogger(DistanceMatrixUtility.class);
 
 	private static String readAll(final Reader rd) throws IOException
 	{
@@ -43,7 +49,9 @@ public class DistanceMatrixUtility
 		{
 			final BufferedReader rd = new BufferedReader(new InputStreamReader(is, Charset.forName("UTF-8")));
 			final String jsonText = readAll(rd);
+			LOG.debug(jsonText);
 			final JSONObject json = new JSONObject(jsonText);
+			LOG.debug(json);
 			return json;
 		}
 		finally
@@ -53,11 +61,43 @@ public class DistanceMatrixUtility
 	}
 
 
-	public List<String> calcDistance(final StringBuffer beg, final StringBuffer end)
+	private static List<Integer> getSortedSetData(final List<Integer> ascendingDistance)
+	{
+		//		final List<String> finalSet = new ArrayList<String>();
+		//		final List<String> listData = null;
+		if (CollectionUtils.isNotEmpty(ascendingDistance))
+		{
+			Collections.sort(ascendingDistance);
+
+			for (final Integer intObj : ascendingDistance)
+			{
+				System.out.println("***" + intObj.intValue());
+			}
+			//listData = new ArrayList<String>(ascendingDistance);
+			//Collections.sort(listData, new Comparator<String>()
+			//			{
+			//				@Override
+			//				public final int compare(final String a, final String b)
+			//				{
+			//					return b.compareTo(a);
+			//				}
+			//			});
+		}
+
+		//		if (CollectionUtils.isNotEmpty(listData))
+		//		{
+		//			finalSet.addAll(listData);
+		//		}
+		return ascendingDistance;
+	}
+
+
+	public List<Integer> calcDistance(final StringBuffer beg, final StringBuffer end)
 	{
 		JSONObject json = null;
 		JSONArray jsonArray = null;
-		final List<String> distance = new ArrayList<>();
+		final List<Integer> distance = new ArrayList<>();
+		List<Integer> sortDistance = null;
 		try
 		{
 
@@ -70,8 +110,10 @@ public class DistanceMatrixUtility
 			for (int i = 0; i < jsonArray.length(); i++)
 			{
 				final JSONObject jsonObj = jsonArray.getJSONObject(i);
-				distance.add(jsonObj.getJSONObject("distance").getString("value"));
+				distance.add(new Integer(Integer.parseInt(jsonObj.getJSONObject("distance").getString("value"))));
 			}
+			sortDistance = getSortedSetData(distance);
+
 		}
 		catch (final JSONException e)
 		{
@@ -81,6 +123,6 @@ public class DistanceMatrixUtility
 		{
 			e.printStackTrace();
 		}
-		return distance;
+		return sortDistance;
 	}
 }
