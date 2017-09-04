@@ -2129,10 +2129,10 @@ public class DefaultPromotionPriceUpdaterServiceImpl implements PromotionPriceUp
 					+ " AS p ");
 			queryString.append(" JOIN " + GeneratedPromotionsConstants.Relations.PRODUCTPROMOTIONRELATION + " AS p2p ");
 			queryString.append(" ON {p2p.target} = {p." + BuyAPercentageDiscountModel.PK + "}");
-			queryString.append(" AND {p2p.source} IN (?product) }");
-			queryString.append(" WHERE {p." + BuyAPercentageDiscountModel.PROMOTIONGROUP + "} = ?promotionGroup ");
+			queryString.append(" AND {p2p.source} = ?product) }");
+			//queryString.append(" WHERE {p." + BuyAPercentageDiscountModel.PROMOTIONGROUP + "} = ?promotionGroup ");
 			//			queryString.append(" AND {p2p.source} IN (?product) ");
-			queryString.append(" AND {p." + BuyAPercentageDiscountModel.PRIORITY + "} >= ?promoCurrPriority ");
+			queryString.append(" WHERE {p." + BuyAPercentageDiscountModel.PRIORITY + "} >= ?promoCurrPriority ");
 			queryString.append(" AND {p." + BuyAPercentageDiscountModel.IMMUTABLEKEY + "} is NULL ");
 			queryString.append(" AND {p." + BuyAPercentageDiscountModel.ENABLED + "} = ?true ");
 			queryString.append(" AND {p." + BuyAPercentageDiscountModel.QUANTITY + "} = ?qualifyingCount ");//TODO quantity is for BuyAPercentageDiscount only, not for PRODUCTPROMOTION
@@ -2147,9 +2147,9 @@ public class DefaultPromotionPriceUpdaterServiceImpl implements PromotionPriceUp
 				queryString.append(" JOIN " + GeneratedPromotionsConstants.Relations.CATEGORYPROMOTIONRELATION + " AS c2p ");
 				queryString.append(" ON {p." + BuyAPercentageDiscountModel.PK + "} = {c2p.target} ");
 				queryString.append(" AND {c2p.source} IN (?categories) }");
-				queryString.append(" WHERE {p." + BuyAPercentageDiscountModel.PROMOTIONGROUP + "} = ?promotionGroup ");
+				//queryString.append(" WHERE {p." + BuyAPercentageDiscountModel.PROMOTIONGROUP + "} = ?promotionGroup ");
 				//				queryString.append(" AND {c2p.source} IN (?categories) ");
-				queryString.append(" AND {p." + BuyAPercentageDiscountModel.PRIORITY + "} >= ?promoCurrPriority ");
+				queryString.append(" WHERE {p." + BuyAPercentageDiscountModel.PRIORITY + "} >= ?promoCurrPriority ");
 				queryString.append(" AND {p." + BuyAPercentageDiscountModel.IMMUTABLEKEY + "} is NULL ");
 				queryString.append(" AND {p." + BuyAPercentageDiscountModel.ENABLED + "} = ?true ");
 				queryString.append(" AND {p." + BuyAPercentageDiscountModel.QUANTITY + "} = ?qualifyingCount ");//TODO quantity is for BuyAPercentageDiscount only, not for PRODUCTPROMOTION
@@ -2172,7 +2172,7 @@ public class DefaultPromotionPriceUpdaterServiceImpl implements PromotionPriceUp
 				query.addQueryParameter("categories", categories);
 				query.addQueryParameter("promotionGroup", "mplPromoGrp");
 				query.addQueryParameter("promoCurrPriority", promoCurrent.getPriority());
-				query.addQueryParameter("qualifyingCount", "1");
+				query.addQueryParameter("qualifyingCount", Integer.valueOf(1));
 				query.addQueryParameter("sysdate", new Date());
 				query.addQueryParameter("true", Boolean.TRUE);
 
@@ -2188,10 +2188,10 @@ public class DefaultPromotionPriceUpdaterServiceImpl implements PromotionPriceUp
 					+ BuyABFreePrecentageDiscountModel._TYPECODE + " AS p ");
 			queryString.append(" JOIN " + GeneratedPromotionsConstants.Relations.PRODUCTPROMOTIONRELATION + " AS p2p ");
 			queryString.append(" ON {p2p.target} = {p." + BuyABFreePrecentageDiscountModel.PK + "}");
-			queryString.append(" AND {p2p.source} IN (?product) }");
-			queryString.append(" WHERE {p." + BuyABFreePrecentageDiscountModel.PROMOTIONGROUP + "} = ?promotionGroup ");
+			queryString.append(" AND {p2p.source} = ?product }");
+			//queryString.append(" WHERE {p." + BuyABFreePrecentageDiscountModel.PROMOTIONGROUP + "} = ?promotionGroup ");
 			//			queryString.append(" AND {p2p.source} IN (?product) ");
-			queryString.append(" AND {p." + BuyABFreePrecentageDiscountModel.PRIORITY + "} >= ?promoCurrPriority ");
+			queryString.append(" WHERE {p." + BuyABFreePrecentageDiscountModel.PRIORITY + "} >= ?promoCurrPriority ");
 			queryString.append(" AND {p." + BuyABFreePrecentageDiscountModel.IMMUTABLEKEY + "} is NULL ");
 			queryString.append(" AND {p." + BuyABFreePrecentageDiscountModel.ENABLED + "} = ?true ");
 			queryString.append(" AND {p." + BuyABFreePrecentageDiscountModel.QUANTITY + "} = ?qualifyingCount ");//TODO quantity is for BuyAPercentageDiscount only, not for PRODUCTPROMOTION
@@ -2206,9 +2206,9 @@ public class DefaultPromotionPriceUpdaterServiceImpl implements PromotionPriceUp
 				queryString.append(" JOIN " + GeneratedPromotionsConstants.Relations.CATEGORYPROMOTIONRELATION + " AS c2p ");
 				queryString.append(" ON {p." + BuyABFreePrecentageDiscountModel.PK + "} = {c2p.target} ");
 				queryString.append(" AND {c2p.source} IN (?categories) }");
-				queryString.append(" WHERE {p." + BuyABFreePrecentageDiscountModel.PROMOTIONGROUP + "} = ?promotionGroup ");
-				//				queryString.append(" AND {c2p.source} IN (?categories) ");
-				queryString.append(" AND {p." + BuyABFreePrecentageDiscountModel.PRIORITY + "} >= ?promoCurrPriority ");
+				//queryString.append(" WHERE {p." + BuyABFreePrecentageDiscountModel.PROMOTIONGROUP + "} = ?promotionGroup ");
+				//queryString.append(" WHERE {c2p.source} IN (?categories) ");
+				queryString.append(" WHERE {p." + BuyABFreePrecentageDiscountModel.PRIORITY + "} >= ?promoCurrPriority ");
 				queryString.append(" AND {p." + BuyABFreePrecentageDiscountModel.IMMUTABLEKEY + "} is NULL ");
 				queryString.append(" AND {p." + BuyABFreePrecentageDiscountModel.ENABLED + "} = ?true ");
 				queryString.append(" AND {p." + BuyABFreePrecentageDiscountModel.QUANTITY + "} = ?qualifyingCount ");//TODO quantity is for BuyAPercentageDiscount only, not for PRODUCTPROMOTION
