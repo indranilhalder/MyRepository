@@ -7,6 +7,7 @@ $emailResource=jar:com.tisl.mpl.initialdata.setup.InitialDataSystemSetup&/market
 
 # Language
 $lang=en 
+$jarResourceCms=jar:com.tisl.mpl.core.setup.CoreSystemSetup&/marketplacecore/import/cockpits/cmscockpit
 
 
 UPDATE EmailPage;$contentCV[unique=true];uid[unique=true];fromEmail[lang=$lang];fromName[lang=$lang]
@@ -43,4 +44,26 @@ UPDATE EmailPage;$contentCV[unique=true];uid[unique=true];fromEmail[lang=$lang];
  ;;ReadyForPickupEmail;"no-reply@tatacliq.com";"Tata CLiQ"
  ;;SendUpdateEmail;"no-reply@tatacliq.com";"Tata CLiQ" 
 #;;OutForDeliveryEmail;"no-reply@tatacliq.com";"Tata CLiQ"
+
+
+
+
+########################### Creating Provition for Samsung chat  ###########################
+
+INSERT_UPDATE PageTemplate;$contentCV[unique=true];uid[unique=true];name;frontendTemplateName;restrictedPageTypes(code);active[default=true]
+;;ApparelCategoryLandingPageTemplateV1;Apparel Category Landing Page Template V1;layout/apparelCategoryLandingPageV1;CategoryPage,ContentPage
+;;NewBrandLandingPageTemplate;New Brand Landing Page Template;layout/newBrandLandingPageTemplate;CategoryPage,ContentPage
+
+UPDATE PageTemplate;$contentCV[unique=true];uid[unique=true];velocityTemplate[translator=de.hybris.platform.commerceservices.impex.impl.FileLoaderValueTranslator]
+;;ApparelCategoryLandingPageTemplateV1      ;$jarResourceCms/structure-view/structure_BrandCategoryLandingPageTemplate.vm
+;;NewBrandLandingPageTemplate      			;$jarResourceCms/structure-view/structure_BrandCategoryLandingPageTemplate.vm
+
+
+
+INSERT_UPDATE ContentSlotName;name[unique=true];template(uid,$contentCV)[unique=true][default='ApparelCategoryLandingPageTemplateV1'];validComponentTypes(code);compTypeGroup(code)
+;SamsungChat;;SimpleBannerComponent;
+
+
+INSERT_UPDATE ContentSlotName;name[unique=true];template(uid,$contentCV)[unique=true][default='NewBrandLandingPageTemplate'];validComponentTypes(code);compTypeGroup(code)
+;SamsungChat;;SimpleBannerComponent;
   

@@ -154,6 +154,7 @@ import com.tisl.mpl.xml.pojo.ReturnLogisticsResponse;
 
 
 
+
 /**
  * @author TCS
  *
@@ -188,6 +189,7 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 	 *
 	 */
 	private static final String COD = "COD";
+
 
 	@Resource
 	private MplOrderService mplOrderService;
@@ -1147,13 +1149,6 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 					sendTicketLineItemData.setCancelReasonCode(reasonCode);
 					sendTicketRequestData.setRefundType(refundType);
 				}
-				//				else
-				//				{
-				//					sendTicketLineItemData.setReturnReasonCode(reasonCode);
-				//					sendTicketRequestData.setRefundType(refundType);
-				//					sendTicketRequestData.setReturnCategory(RETURN_CATEGORY_RSP);
-				//				}
-				//				lineItemDataList.add(sendTicketLineItemData);
 				else
 				{
 					sendTicketLineItemData.setReturnReasonCode(reasonCode);
@@ -1176,67 +1171,6 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 
 				lineItemDataList.add(sendTicketLineItemData);
 			}
-			//			final List<OrderEntryData> allEntries = subOrderDetails.getEntries();
-			//			final List<OrderEntryData> assosiatedEntryList = new ArrayList<OrderEntryData>();
-			//			for (final OrderEntryData eachEntry : allEntries)
-			//			{
-			//				if (!eachEntry.getTransactionId().equalsIgnoreCase(subOrderEntry.getTransactionId()))
-			//				{
-			//					assosiatedEntryList.add(eachEntry);
-			//				}
-			//			}
-			//			if (subOrderEntry.getMplDeliveryMode().getSellerArticleSKU().equalsIgnoreCase(ussid))
-			//			{
-			//				final SendTicketLineItemData sendTicketLineItemData = new SendTicketLineItemData();
-			//				if (StringUtils.isNotEmpty(subOrderEntry.getOrderLineId()))
-			//				{
-			//					sendTicketLineItemData.setLineItemId(subOrderEntry.getOrderLineId());
-			//				}
-			//				else
-			//				{
-			//					sendTicketLineItemData.setLineItemId(subOrderEntry.getTransactionId());
-			//				}
-			//				if (ticketTypeCode.equalsIgnoreCase("C"))
-			//				{
-			//					sendTicketLineItemData.setCancelReasonCode(reasonCode);
-			//					sendTicketRequestData.setRefundType(refundType);
-			//				}
-			//				else
-			//				{
-			//					sendTicketLineItemData.setReturnReasonCode(reasonCode);
-			//					sendTicketRequestData.setRefundType(refundType);
-			//					sendTicketRequestData.setReturnCategory(RETURN_CATEGORY_RSP);
-			//				}
-			//				lineItemDataList.add(sendTicketLineItemData);
-			//			}
-			//
-			//			if (null != subOrderEntry.getAssociatedItems() && !subOrderEntry.getAssociatedItems().isEmpty())
-			//			{
-			//				for (final OrderEntryData eachAssociatedEntry : assosiatedEntryList)
-			//				{
-			//					final SendTicketLineItemData sendTicketLineItemData = new SendTicketLineItemData();
-			//					if (StringUtils.isNotEmpty(eachAssociatedEntry.getOrderLineId()))
-			//					{
-			//						sendTicketLineItemData.setLineItemId(eachAssociatedEntry.getOrderLineId());
-			//					}
-			//					else
-			//					{
-			//						sendTicketLineItemData.setLineItemId(eachAssociatedEntry.getTransactionId());
-			//					}
-			//					if (ticketTypeCode.equalsIgnoreCase("C"))
-			//					{
-			//						sendTicketLineItemData.setCancelReasonCode(reasonCode);
-			//					}
-			//					else
-			//					{
-			//						sendTicketLineItemData.setReturnReasonCode(reasonCode);
-			//						sendTicketRequestData.setRefundType(refundType);
-			//						sendTicketRequestData.setReturnCategory(RETURN_CATEGORY_RSP);
-			//					}
-			//					lineItemDataList.add(sendTicketLineItemData);
-			//				}
-			//			}
-
 			sendTicketRequestData.setCustomerID(customerData.getUid());
 			sendTicketRequestData.setLineItemDataList(lineItemDataList);
 			sendTicketRequestData.setOrderId(subOrderModel.getParentReference().getCode());
@@ -1254,7 +1188,7 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 			//create ticket only if async is not working
 			if (asyncEnabled.equalsIgnoreCase("N"))
 			{
-				ticketCreate.ticketCreationModeltoWsDTO(sendTicketRequestData);
+				ticketCreate.ticketCreationModeltoWsDTO(sendTicketRequestData, true);
 			}
 			else
 			{
@@ -1360,14 +1294,6 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 						{
 							sendTicketRequestData.setTicketSubType(MarketplacecommerceservicesConstants.RETURN_TYPE_RTS);
 						}
-						/*
-						 * else if(returnInfoData.getReturnMethod().equalsIgnoreCase(MarketplacecommerceservicesConstants.
-						 * RETURN_SCHEDULE)) { if (returnLogisticsCheck) { //LOG.info("Setting Type of Return::::::" +
-						 * returnLogisticsCheck);
-						 * sendTicketRequestData.setTicketSubType(MarketplacecommerceservicesConstants.RETURN_TYPE_RSP); }
-						 *
-						 * }
-						 */
 					}
 				}
 
@@ -1484,7 +1410,7 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 			//create ticket only if async is not working
 			if (asyncEnabled.equalsIgnoreCase("N"))
 			{
-				ticketCreate.ticketCreationModeltoWsDTO(sendTicketRequestData);
+				ticketCreate.ticketCreationModeltoWsDTO(sendTicketRequestData, true);
 			}
 			else
 			{
@@ -1608,7 +1534,7 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 			//create ticket only if async is not working
 			if (asyncEnabled.equalsIgnoreCase("N"))
 			{
-				ticketCreate.ticketCreationModeltoWsDTO(sendTicketRequestData);
+				ticketCreate.ticketCreationModeltoWsDTO(sendTicketRequestData, true);
 			}
 			else
 			{
@@ -4872,10 +4798,6 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 				{
 					updateConsignmentStatus(abstractOrderEntryModel, ConsignmentStatus.RETURN_INITIATED);
 				}
-			}
-			if (null != codSelfShipData)
-			{
-				saveCODReturnsBankDetails(codSelfShipData);
 			}
 
 		}
