@@ -390,7 +390,22 @@
 		</c:otherwise>
 		</c:choose>
 	</c:if>
-
+	<script>
+	$(document).ready(function(){
+		var forceLoginUser = "${forced_login_user}";
+		if(forceLoginUser == "Y"){
+			setTimeout(function(){
+				$("#login-modal").modal({
+					 backdrop: 'static',
+					 keyboard: false
+				 });
+			},2000);
+		}
+	});
+	$(document).on("click",".close",function(){
+		window.location.href="/";
+	})
+</script>
 
 	<tealium:sync/> 
 <%-- <script type="text/javascript">
@@ -409,12 +424,28 @@
 		<input type="hidden" id="accesibility_refreshScreenReaderBufferField" name="accesibility_refreshScreenReaderBufferField" value=""/>
 	</form>
 	<div id="ariaStatusMsg" class="skip" role="status" aria-relevant="text" aria-live="polite"></div>
+	
+	<c:if test="${isSamsungPage eq true }">
+		<spring:eval expression="T(de.hybris.platform.util.Config).getParameter('samsung.chat.icon.uri')" var="samsungChatIconURI"/>
+		<div class="samsung-chat-div" id="samsung-chat-icon-id">
+			<img title="Samsung Live Chat" alt="Samsung Live Chat" src="${samsungChatIconURI}">
+		</div>
+	</c:if>
 
 	<%-- Load JavaScript required by the site --%>
 	<template:javaScript/>
 	<script type="text/javascript">_satellite.pageBottom();</script>
 	<%-- Inject any additional JavaScript required by the page --%>
 	<jsp:invoke fragment="pageScripts"/>	
+	<%-- TPR-6399 --%>
+	<!-- Modal -->
+<div class="modal fade login-modal" id="login-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+		<div class="overlay"></div>
+		<div class="content">
+		<button type="button" class="close"></button>
+		${login_register_html}
+		</div>
+</div>
 </body>
 
 <debug:debugFooter/>

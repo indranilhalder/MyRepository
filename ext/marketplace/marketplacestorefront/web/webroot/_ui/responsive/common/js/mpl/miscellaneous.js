@@ -285,3 +285,11 @@ $(document).on('click','.right-account .yCmsComponent',function(){
 	return false;
 });
 // TISLUX-1468 end
+
+//TPR-6405
+$(document).on('click','#samsung-chat-icon-id img',function(){
+	var referringUrl = window.location.href;
+	var samsungUrl= "https://shop.samsung.com/in/chatsupport?refurl="+referringUrl;
+	window.open(samsungUrl,'newwindow','scrollbars,resizable,height=530,width=460,left=100px,top=100px');
+    return false;
+})

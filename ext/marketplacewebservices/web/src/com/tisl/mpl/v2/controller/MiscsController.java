@@ -83,6 +83,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.math.BigDecimal;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -129,7 +130,9 @@ import com.tisl.mpl.constants.MarketplacewebservicesConstants;
 import com.tisl.mpl.core.constants.MarketplaceCoreConstants;
 import com.tisl.mpl.core.enums.FeedbackCategory;
 import com.tisl.mpl.core.model.MplEnhancedSearchBoxComponentModel;
+import com.tisl.mpl.core.util.DateUtilHelper;
 import com.tisl.mpl.data.CODSelfShipData;
+import com.tisl.mpl.data.CODSelfShipResponseData;
 import com.tisl.mpl.exception.EtailBusinessExceptions;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.facade.brand.BrandFacade;
@@ -290,33 +293,6 @@ public class MiscsController extends BaseController
 
 	@Resource(name = "mplPancardFacadeImpl")
 	private MplPancardFacade mplPancardFacade;
-
-
-	//	private static final String APPLICATION_TYPE = "application/json";
-	//	public static final String EMAIL_REGEX = "\\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,4}\\b";
-	/*
-	 * @Resource(name = "mplPaymentFacade") private MplPaymentFacade mplPaymentFacade; private static final String
-	 * APPLICATION_TYPE = "application/json"; public static final String EMAIL_REGEX =
-	 * "\\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,4}\\b";
-	 * 
-	 * /**
-	 * 
-	 * /*
-	 * 
-	 * @Resource(name = "mplPaymentFacade") private MplPaymentFacade mplPaymentFacade; private static final String
-	 * APPLICATION_TYPE = "application/json"; public static final String EMAIL_REGEX =
-	 * "\\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,4}\\b";
-	 * 
-	 * 
-	 * 
-	 * 
-	 * 
-	 * 
-	 * 
-	 * 
-	 * 
-	 * @return the configurationService
-	 */
 	@Autowired
 	private MplVersionService mplVersionService;
 	//Priority
@@ -363,10 +339,11 @@ public class MiscsController extends BaseController
 	private Converter<OrderModel, OrderData> orderConverter;
 	@Resource(name = "cancelReturnFacade")
 	private CancelReturnFacade cancelReturnFacade;
-	/* sonar fix */
-	/*
-	 * @Autowired private DateUtilHelper dateUtilHelper;
-	 */
+
+
+	@Autowired
+	private DateUtilHelper dateUtilHelper;
+
 
 
 
@@ -378,6 +355,7 @@ public class MiscsController extends BaseController
 	 */
 	private static final Logger LOG = Logger.getLogger(MiscsController.class);
 	public static final String RETURN_TYPE_COD = "01";
+	private static final String SUCCESS = "Success";
 
 	/**
 	 * Lists all available languages (all languages used for a particular store). If the list of languages for a base
@@ -1906,6 +1884,7 @@ public class MiscsController extends BaseController
 			LOG.error("the exception is **** " + e);
 		}
 	}
+
 	//TPR-4840 starts
 	@Secured(
 	{ ROLE_CLIENT, ROLE_TRUSTED_CLIENT })
@@ -2291,38 +2270,7 @@ public class MiscsController extends BaseController
 								return oneTouchReturnDTOList;
 							}
 						}
-						//Bank details to be sent to FICO for COD return
-						//						if (subOrderModel.getModeOfOrderPayment().equalsIgnoreCase("COD")
-						//								&& oneTouchCrmObj.getTicketType().equalsIgnoreCase(MarketplacewebservicesConstants.RETURN_TICKET))
-						//						{
-						//							codSelfShipData = new CODSelfShipData();
-						//							if (null != subOrderModel.getUser().getUid())
-						//							{
-						//								codSelfShipData.setCustomerNumber(subOrderModel.getUser().getUid());
-						//							}
-						//							codSelfShipData.setOrderRefNo(oneTouchCrmObj.getOrderRefNum());
-						//							//codSelfShipData.getOrderNo(oneTouchCrmObj.getSubOrderNum());
-						//							codSelfShipData.setBankName(oneTouchCrmObj.getBankName());
-						//							codSelfShipData.setBankBranch(oneTouchCrmObj.getBranch());
-						//							codSelfShipData.setName(oneTouchCrmObj.getAccHolderName());
-						//							codSelfShipData.setBankKey(oneTouchCrmObj.getIFSC());
-						//							codSelfShipData.setBankAccount(oneTouchCrmObj.getAccNum());
-						//							codSelfShipData.setTransactionID(oneTouchCrmObj.getTransactionId());
-						//							codSelfShipData.setTransactionType(subOrderModel.getModeOfOrderPayment());
-						//							codSelfShipData.setOrderTag(MarketplacewebservicesConstants.ORDERTAG_TYPE_POSTPAID);
-						//							codSelfShipData.setPaymentMode(oneTouchCrmObj.getRefundType());
-						//							codSelfShipData.setAmount(orderEntry.getAmountAfterAllDisc().toString());
-						//							codSelfShipData.setTransactionType(RETURN_TYPE_COD);
-						//							if (null != orderData.getCreated())
-						//							{
-						//								final SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy");
-						//								codSelfShipData
-						//										.setOrderDate(dateUtilHelper.convertDateWithFormat(formatter.format(orderData.getCreated())));
-						//								codSelfShipData.setTransactionDate(dateUtilHelper.convertDateWithFormat(formatter.format(orderData
-						//										.getCreated())));
-						//							}
-						//
-						//						}
+
 
 
 
@@ -2396,14 +2344,7 @@ public class MiscsController extends BaseController
 						//For Return
 						else if (oneTouchCrmObj.getTicketType().equalsIgnoreCase(MarketplacewebservicesConstants.RETURN_TICKET))
 						{
-							/*
-							 * //Pincode serviceablity check for RSP tickets if
-							 * (oneTouchCrmObj.getTicketSubType().equalsIgnoreCase
-							 * (MarketplacewebservicesConstants.TICKET_TYPE_RSP)) { serviceabilty =
-							 * cancelReturnFacade.oneTouchPincodeCheck(orderData, oneTouchCrmObj.getPincode(),
-							 * oneTouchCrmObj.getTransactionId());
-							 * LOG.debug("========Pincode serviceablity check result is=========" + serviceabilty); }
-							 */
+							boolean FICO = false;
 							//-----------IF CONSIGNMENT IS ALREADY RETURNED--------
 							if (!getMplOrderFacade().checkCancelStatus(consignmentStatus,
 									MarketplacewebservicesConstants.RETURN_ORDER_STATUS)
@@ -2415,9 +2356,9 @@ public class MiscsController extends BaseController
 								{
 									LOG.debug("========Initiating Return of consignment=========");
 									resultFlag = cancelReturnFacade.oneTouchReturn(orderData, orderEntry,
-											oneTouchCrmObj.getReturnReasonCode(), oneTouchCrmObj.getTicketType(),
-											SalesApplication.CALLCENTER, oneTouchCrmObj.getPincode(), orderEntriesModel, subOrderModel,
-											codSelfShipData, oneTouchCrmObj.getUSSID(), oneTouchCrmObj.getTransactionId());
+											oneTouchCrmObj.getReturnReasonCode(), oneTouchCrmObj.getTicketType(), SalesApplication.ONETOUCH,
+											oneTouchCrmObj.getPincode(), orderEntriesModel, subOrderModel, codSelfShipData,
+											oneTouchCrmObj.getUSSID(), oneTouchCrmObj.getTransactionId());
 									//Return is successfull
 									for (final AbstractOrderEntryModel abstractOrderEntryModel : orderEntriesModel)
 									{
@@ -2428,6 +2369,22 @@ public class MiscsController extends BaseController
 											output.setTransactionId(abstractOrderEntryModel.getTransactionID());
 											output.setValidFlag(MarketplacewebservicesConstants.VALID_FLAG_S);
 											output.setServiceability(MarketplacewebservicesConstants.VALID_FLAG_S);
+
+											//TPR-6389 :: NEFT details have to be passed on to FICO after a one touch return
+											LOG.debug("--------Populating bank details for return of COD orders--------");
+											if (subOrderModel.getModeOfOrderPayment().equalsIgnoreCase(MarketplacewebservicesConstants.COD)
+													&& null != oneTouchCrmObj.getAccNum())
+											{
+												codSelfShipData = null;
+												codSelfShipData = populateCODDataForFICO(subOrderModel, oneTouchCrmObj, orderData,
+														abstractOrderEntryModel);
+												FICO = sendBankDetailsToFICO(codSelfShipData);
+											}
+											//TPR-6389--END
+											if (FICO)
+											{
+												output.setRemarks("Bank details successfully sent to FICO");
+											}
 											outputList.add(output);
 										}
 										//Return is failure
@@ -2527,6 +2484,70 @@ public class MiscsController extends BaseController
 		}
 		LOG.info("==========Finished executing oneTouchCancelReturn controller==========");
 		return oneTouchReturnDTOList;
+	}
+
+	/**
+	 * Method to populate bank details that will sent to FICO for COD return orders.
+	 */
+	private CODSelfShipData populateCODDataForFICO(final OrderModel subOrderModel,
+			final OneTouchCancelReturnCrmRequestDTO oneTouchdto, final OrderData orderData, final AbstractOrderEntryModel orderEntry)
+	{
+		final CODSelfShipData codSelfShipData = new CODSelfShipData();
+		if (null != subOrderModel.getUser().getUid())
+		{
+			codSelfShipData.setCustomerNumber(subOrderModel.getUser().getUid());
+		}
+		codSelfShipData.setOrderRefNo(oneTouchdto.getOrderRefNum());
+		//codSelfShipData.getOrderNo(oneTouchCrmObj.getSubOrderNum());
+		codSelfShipData.setBankName(oneTouchdto.getBankName());
+		codSelfShipData.setBankBranch(oneTouchdto.getBranch());
+		codSelfShipData.setName(oneTouchdto.getAccHolderName());
+		codSelfShipData.setBankKey(oneTouchdto.getIFSC());
+		codSelfShipData.setBankAccount(oneTouchdto.getAccNum());
+		codSelfShipData.setTransactionID(oneTouchdto.getTransactionId());
+		codSelfShipData.setTransactionType(subOrderModel.getModeOfOrderPayment());
+		codSelfShipData.setOrderTag(MarketplacewebservicesConstants.ORDERTAG_TYPE_POSTPAID);
+		codSelfShipData.setPaymentMode(oneTouchdto.getRefundType());
+		codSelfShipData.setAmount(orderEntry.getNetAmountAfterAllDisc().toString());
+		codSelfShipData.setTransactionType(RETURN_TYPE_COD);
+		if (null != orderData.getCreated())
+		{
+			final SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy");
+			codSelfShipData.setOrderDate(dateUtilHelper.convertDateWithFormat(formatter.format(orderData.getCreated())));
+			codSelfShipData.setTransactionDate(dateUtilHelper.convertDateWithFormat(formatter.format(orderData.getCreated())));
+
+
+		}
+
+		return codSelfShipData;
+	}
+
+	private boolean sendBankDetailsToFICO(final CODSelfShipData codSelfShipData)
+	{
+		LOG.info("Starting sending bank details to FICO");
+		try
+		{
+			//TPR-6389 :: NEFT details have to be passed on to FICO after a one touch return
+			if (null != codSelfShipData)
+			{
+				final CODSelfShipResponseData codSelfShipResponseData = cancelReturnFacade.codPaymentInfoToFICO(codSelfShipData);
+				if (null == codSelfShipResponseData || !codSelfShipResponseData.getSuccess().equalsIgnoreCase(SUCCESS))
+				{
+					cancelReturnFacade.saveCODReturnsBankDetails(codSelfShipData);
+					LOG.debug("Failed to post COD return paymnet details to FICO Order No:" + codSelfShipData.getOrderRefNo());
+
+				}
+				cancelReturnFacade.insertUpdateCustomerBankDetails(codSelfShipData);
+			}
+		}
+		catch (final Exception ex)
+		{
+			LOG.error(ex.getMessage());
+			return false;
+		}
+		LOG.info("Finished sending bank details to FICO");
+		return true;
+		//TPR-6389 :: END
 	}
 
 	/**

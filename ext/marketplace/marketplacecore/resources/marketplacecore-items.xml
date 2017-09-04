@@ -777,6 +777,8 @@
 			<value code="Mobile" />
 			<!-- TPR-5666, TPR-5667 | Enum value added for samsung -->
 			<value code="Samsung" />
+			<!-- TPR-1345, TPR-5667 | Enum value added for one touch -->
+			<value code="Onetouch" />
 		</enumtype>
 
 
