@@ -315,11 +315,13 @@ var buyingGuideData ='${buyingGuide}';
 						</span>
 				    </c:otherwise>
 				</c:choose>	
-			<a class="size-guide" href="${sizeGuideUrl}" role="button"
-			data-toggle="modal" data-target="#popUpModal" data-productcode="${product.code}" data-sizeSelected="${selectedSize}"> <spring:theme
-				code="product.variants.size.guide" />
-			</a>
-			
+				
+			<c:if test="${empty removeSizeGuide}">	
+					<a class="size-guide" href="${sizeGuideUrl}" role="button"
+					data-toggle="modal" data-target="#popUpModal" data-productcode="${product.code}" data-sizeSelected="${selectedSize}"> <spring:theme
+						code="product.variants.size.guide" />
+					</a>
+			</c:if>
 			<!-- Added for PDP Changes for Home Furnishing : TPR-6738-->
 			<c:if test="${not empty buyingGuide}">
 					<a class="buying-guide" role="button" onclick = "redirectURL(buyingGuideData);"> 
