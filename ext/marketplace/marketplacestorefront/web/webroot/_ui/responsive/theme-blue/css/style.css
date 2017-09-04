@@ -72957,7 +72957,7 @@ header .content nav > ul > li.ShopByBrand > ul > li > ul > li {
 	width: 100%;
 }
 header .content .search .select-list{
-	z-index: 10000;  /* JWLSPCUAT-680 */ 
+	z-index: 10000 !important;  /* JWLSPCUAT-680 */ 
 }
 header.brand-header .content .bottom nav>ul>li>ul:before {
     background-image: linear-gradient(to bottom,#000,#000);
