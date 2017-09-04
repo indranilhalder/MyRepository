@@ -2129,7 +2129,7 @@ public class DefaultPromotionPriceUpdaterServiceImpl implements PromotionPriceUp
 					+ " AS p ");
 			queryString.append(" JOIN " + GeneratedPromotionsConstants.Relations.PRODUCTPROMOTIONRELATION + " AS p2p ");
 			queryString.append(" ON {p2p.target} = {p." + BuyAPercentageDiscountModel.PK + "}");
-			queryString.append(" AND {p2p.source} = ?product) }");
+			queryString.append(" AND {p2p.source} = ?product }");
 			//queryString.append(" WHERE {p." + BuyAPercentageDiscountModel.PROMOTIONGROUP + "} = ?promotionGroup ");
 			//			queryString.append(" AND {p2p.source} IN (?product) ");
 			queryString.append(" WHERE {p." + BuyAPercentageDiscountModel.PRIORITY + "} >= ?promoCurrPriority ");
@@ -2170,7 +2170,7 @@ public class DefaultPromotionPriceUpdaterServiceImpl implements PromotionPriceUp
 
 				query.addQueryParameter("product", product);
 				query.addQueryParameter("categories", categories);
-				query.addQueryParameter("promotionGroup", "mplPromoGrp");
+				//query.addQueryParameter("promotionGroup", "mplPromoGrp");
 				query.addQueryParameter("promoCurrPriority", promoCurrent.getPriority());
 				query.addQueryParameter("qualifyingCount", Integer.valueOf(1));
 				query.addQueryParameter("sysdate", new Date());
