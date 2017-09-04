@@ -132,52 +132,10 @@ public class StorefrontAuthenticationSuccessHandler extends SavedRequestAwareAut
 	@Resource(name = "productDetailsHelper")
 	private ProductDetailsHelper productDetailsHelper;
 
-
-	@Resource(name = "PdpPincodeCookieGenerator")
+	@Resource(name = "pdpPincodeCookieGenerator")
 	private PDPPincodeCookieGenerator pdpPincodeCookie;
 
-	/**
-	 * @return the pdpPincodeCookie
-	 */
-	public PDPPincodeCookieGenerator getPdpPincodeCookie()
-	{
-		return pdpPincodeCookie;
-	}
-
-	/**
-	 * @param pdpPincodeCookie
-	 *           the pdpPincodeCookie to set
-	 */
-	public void setPdpPincodeCookie(final PDPPincodeCookieGenerator pdpPincodeCookie)
-	{
-		this.pdpPincodeCookie = pdpPincodeCookie;
-	}
-
-	/**
-	 * @return the productDetailsHelper
-	 */
-	public ProductDetailsHelper getProductDetailsHelper()
-	{
-		return productDetailsHelper;
-	}
-
-	/**
-	 * @param productDetailsHelper
-	 *           the productDetailsHelper to set
-	 */
-	public void setProductDetailsHelper(final ProductDetailsHelper productDetailsHelper)
-	{
-		this.productDetailsHelper = productDetailsHelper;
-	}
-
 	private static final Logger LOG = Logger.getLogger(StorefrontAuthenticationSuccessHandler.class);
-
-
-	protected ConfigurationService getConfigurationService()
-	{
-		return Registry.getApplicationContext().getBean(MarketplacecommerceservicesConstants.CONFIGURATION_SER,
-				ConfigurationService.class);
-	}
 
 	@SuppressWarnings("boxing")
 	@Override
@@ -454,7 +412,7 @@ public class StorefrontAuthenticationSuccessHandler extends SavedRequestAwareAut
 			}
 			else
 			{
-				getPdpPincodeCookie().addCookie(response, address.getPostalcode());
+				pdpPincodeCookie.addCookie(response, address.getPostalcode());
 			}
 			//getSessionService().setAttribute(MarketplacecommerceservicesConstants.SESSION_PINCODE, address.getPostalcode());
 		}
@@ -611,6 +569,11 @@ public class StorefrontAuthenticationSuccessHandler extends SavedRequestAwareAut
 		this.uiExperienceService = uiExperienceService;
 	}
 
+	protected ConfigurationService getConfigurationService()
+	{
+		return Registry.getApplicationContext().getBean(MarketplacecommerceservicesConstants.CONFIGURATION_SER,
+				ConfigurationService.class);
+	}
 
 
 }

@@ -79,25 +79,8 @@ public class DefaultAutoLoginStrategy implements AutoLoginStrategy
 	@Resource(name = "productDetailsHelper")
 	private ProductDetailsHelper productDetailsHelper;
 
-	@Resource(name = "PdpPincodeCookieGenerator")
+	@Resource(name = "pdpPincodeCookieGenerator")
 	private PDPPincodeCookieGenerator pdpPincodeCookie;
-
-	/**
-	 * @return the pdpPincodeCookie
-	 */
-	public PDPPincodeCookieGenerator getPdpPincodeCookie()
-	{
-		return pdpPincodeCookie;
-	}
-
-	/**
-	 * @param pdpPincodeCookie
-	 *           the pdpPincodeCookie to set
-	 */
-	public void setPdpPincodeCookie(final PDPPincodeCookieGenerator pdpPincodeCookie)
-	{
-		this.pdpPincodeCookie = pdpPincodeCookie;
-	}
 
 	@Autowired
 	private ExtendedUserService userService;
@@ -183,7 +166,7 @@ public class DefaultAutoLoginStrategy implements AutoLoginStrategy
 					}
 					else
 					{
-						getPdpPincodeCookie().addCookie(response, address.getPostalcode());
+						pdpPincodeCookie.addCookie(response, address.getPostalcode());
 					}
 					//getSessionService().setAttribute(MarketplacecommerceservicesConstants.SESSION_PINCODE, address.getPostalcode());
 				}
@@ -249,7 +232,7 @@ public class DefaultAutoLoginStrategy implements AutoLoginStrategy
 					}
 					else
 					{
-						getPdpPincodeCookie().addCookie(response, address.getPostalcode());
+						pdpPincodeCookie.addCookie(response, address.getPostalcode());
 					}
 					//getSessionService().setAttribute(MarketplacecommerceservicesConstants.SESSION_PINCODE, address.getPostalcode());
 				}
