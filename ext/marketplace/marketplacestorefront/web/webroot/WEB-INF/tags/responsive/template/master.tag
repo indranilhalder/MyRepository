@@ -391,15 +391,20 @@
 		</c:choose>
 	</c:if>
 	<script>
-	$(window).on("load", function(){
+	$(document).ready(function(){
 		var forceLoginUser = "${forced_login_user}";
 		if(forceLoginUser == "Y"){
-			 $("#login-modal").modal({
-				 backdrop: 'static',
-				 keyboard: false
-			 });
+			setTimeout(function(){
+				$("#login-modal").modal({
+					 backdrop: 'static',
+					 keyboard: false
+				 });
+			},2000);
 		}
 	});
+	$(document).on("click",".close",function(){
+		window.location.href="/";
+	})
 </script>
 
 	<tealium:sync/> 
@@ -435,8 +440,9 @@
 	<%-- TPR-6399 --%>
 	<!-- Modal -->
 <div class="modal fade login-modal" id="login-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-		<div class="overlay" data-dismiss="modal"></div>
+		<div class="overlay"></div>
 		<div class="content">
+		<button type="button" class="close"></button>
 		${login_register_html}
 		</div>
 </div>

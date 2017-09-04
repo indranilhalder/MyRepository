@@ -77020,3 +77020,21 @@ body .account .right-account form label.invite-text-lbl{
 	}
 }
 /*TPR-6405 end*/
+
+/* TPR-6399 start */
+#login-modal .content .close {
+    float: right;
+    border-radius: 50%;
+    width: 30px;
+    height: 30px;
+    border: 1px solid #ccc ! important;
+    margin-top: -8px!important;
+    margin-right: -8px!important;
+}
+@media (min-width: 768px)
+{
+.sign-in.wrapper {
+    margin-top: 26px !important;
+}
+}
+/* TPR-6399 end */
