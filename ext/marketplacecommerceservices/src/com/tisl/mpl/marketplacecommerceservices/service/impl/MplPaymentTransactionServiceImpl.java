@@ -45,8 +45,8 @@ public class MplPaymentTransactionServiceImpl implements MplPaymentTransactionSe
 	@Autowired
 	private MplPaymentDao mplPaymentDao;
 
-	//	@Autowired
-	//	private BaseStoreService baseStoreService;
+//	@Autowired
+//	private BaseStoreService baseStoreService;//Sonar Fix
 
 
 	/**

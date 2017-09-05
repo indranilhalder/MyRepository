@@ -1934,6 +1934,9 @@ http://www.springframework.org/schema/aop/spring-aop.xsd">
  	      parent="siteMapMediaJob">
  		<property name="mplCategoryDao" ref="mplCategoryDao"/>
  		<property name="mplCustomPageSiteMapGenerator" ref="mplCustomPageSiteMapGenerator"/>
+ 		<!-- PRDI-423 start -->
+ 		<property name="mplbrandPageSiteMapGenerator" ref="mplbrandPageSiteMapGenerator"/>
+ 		<!-- PRDI-423 end -->
  	</bean>	
 	<!-- TPR-1285 Dynamic Sitemap Stop -->
 	
@@ -2014,5 +2017,12 @@ http://www.springframework.org/schema/aop/spring-aop.xsd">
 <!--         <aop:pointcut id="allServiceMethods" expression="execution(* com.tisl.mpl.core.search.solrfacetsearch.provider.impl.*.*(..))"/> -->
 <!--         <aop:advisor pointcut-ref="allServiceMethods" advice-ref="performanceMonitor" order="2"/> -->
 <!--     </aop:config> -->
+
+    <!-- TPR-6665: solr server : synonyms injection start-->
+	<alias alias="standaloneSolrService" name="mplSolrServiceStandalone"/> 
+	<bean id="mplSolrServiceStandalone" class="com.tisl.mpl.core.mplsearch.impl.MplSolrServiceStandaloneImpl" parent="defaultStandaloneSolrService">
+	<property name="solrCoreNameResolver" ref="solrCoreNameResolver" />
+	</bean>
+	<!-- TPR-6665: solr server : synonyms injection end-->	
 			
 </beans>

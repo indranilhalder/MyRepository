@@ -148,8 +148,15 @@ public class MarketPlaceDefaultCancellationController extends
 
 					long totalquantity = orderEntry.getQuantity();
 					// Returning delivery cost in case of cancellation.
-					double deliveryCost = orderEntry.getCurrDelCharge() != null ? orderEntry
-							.getCurrDelCharge() : NumberUtils.DOUBLE_ZERO;
+					double deliveryCost = 0.0D;
+					if(null != orderEntry.getIsEDtoHD() && orderEntry.getIsEDtoHD() && null != orderEntry.getRefundedEdChargeAmt() && orderEntry.getRefundedEdChargeAmt().doubleValue() != 0D) {
+							deliveryCost = orderEntry.getHdDeliveryCharge() != null ? orderEntry
+									.getHdDeliveryCharge() : NumberUtils.DOUBLE_ZERO;
+					}else {
+						 deliveryCost = orderEntry.getCurrDelCharge() != null ? orderEntry
+								.getCurrDelCharge() : NumberUtils.DOUBLE_ZERO;
+					}
+					
 						//  Added in R2.3 Returning Schedule Delivery delivery cost in case of cancellation 	START
 							deliveryCost+=	orderEntry.getScheduledDeliveryCharge() != null ? orderEntry
 									.getScheduledDeliveryCharge() : NumberUtils.DOUBLE_ZERO;
@@ -214,10 +221,22 @@ public class MarketPlaceDefaultCancellationController extends
 									.getOrderEntriesModificationEntries()) {
 								OrderEntryModel orderEntry = modificationEntry
 										.getOrderEntry();
-								double deliveryCost = orderEntry
+								
+								double currDeliveryCharges = orderEntry
 										.getCurrDelCharge() != null ? orderEntry
 										.getCurrDelCharge()
 										: NumberUtils.DOUBLE_ZERO;
+										double deliveryCost  = 0.0D;
+										if(null != orderEntry.getIsEDtoHD() && orderEntry.getIsEDtoHD() && null != orderEntry.getRefundedEdChargeAmt() && orderEntry.getRefundedEdChargeAmt().doubleValue() != 0D) {
+											deliveryCost=orderEntry.getHdDeliveryCharge() != null ? orderEntry
+													.getHdDeliveryCharge() : NumberUtils.DOUBLE_ZERO;
+										}else {
+											deliveryCost = orderEntry.getCurrDelCharge();
+										}
+//								double deliveryCost = orderEntry
+//										.getCurrDelCharge() != null ? orderEntry
+//										.getCurrDelCharge()
+//										: NumberUtils.DOUBLE_ZERO;
 										// Added in R2.3 START  
 								double	scheduleDeliveryCost=orderEntry
 												.getScheduledDeliveryCharge() != null ? orderEntry
@@ -279,7 +298,15 @@ public class MarketPlaceDefaultCancellationController extends
 								}
 
 								double totalprice = orderEntry.getNetAmountAfterAllDisc();
-								orderEntry.setRefundedDeliveryChargeAmt(deliveryCost);
+								orderEntry.setRefundedDeliveryChargeAmt(currDeliveryCharges);
+								if(null != orderEntry.getIsEDtoHD() && orderEntry.getIsEDtoHD() && null != orderEntry.getRefundedEdChargeAmt() && orderEntry.getRefundedEdChargeAmt().doubleValue() == 0D){
+									double hdDeliveryCharges=0.0D;
+									if(null !=orderEntry.getHdDeliveryCharge() ) {
+										hdDeliveryCharges = orderEntry.getHdDeliveryCharge();
+									}
+									orderEntry.setRefundedEdChargeAmt(currDeliveryCharges - hdDeliveryCharges);
+								}
+								
 								orderEntry.setCurrDelCharge(0D);
 								
 								orderEntry.setRefundedScheduleDeliveryChargeAmt(scheduleDeliveryCost);

@@ -1,16 +1,3 @@
-/*
- * [y] hybris Platform
- *
- * Copyright (c) 2000-2015 hybris AG
- * All rights reserved.
- *
- * This software is the confidential and proprietary information of hybris
- * ("Confidential Information"). You shall not disclose such Confidential
- * Information and shall use it only in accordance with the terms of the
- * license agreement you entered into with hybris.
- *
- *
- */
 package com.tisl.mpl.v2.controller;
 
 import de.hybris.platform.category.model.CategoryModel;
@@ -97,6 +84,7 @@ import de.hybris.platform.voucher.model.VoucherModel;
 import de.hybris.platform.wishlist2.Wishlist2Service;
 import de.hybris.platform.wishlist2.model.Wishlist2EntryModel;
 import de.hybris.platform.wishlist2.model.Wishlist2Model;
+
 
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -461,7 +449,7 @@ public class UsersController extends BaseCommerceController
 
 	@Resource(name = "voucherService")
 	private VoucherService voucherService;
-
+	
 	//Sonar Fix
 	private static final String NO_JUSPAY_URL = "No juspayReturnUrl is defined in local properties";
 
@@ -3694,7 +3682,10 @@ public class UsersController extends BaseCommerceController
 		List<OAuthAccessTokenModel> accessTokenModelList = null;
 		try
 		{
-			currentUser = mplPaymentWebFacade.getCustomer(userId);
+			//currentUser = mplPaymentWebFacade.getCustomer(userId);
+			final String userIdLwCase = userId.toLowerCase(); //INC144318796
+			currentUser = mplPaymentWebFacade.getCustomer(userIdLwCase);
+			
 			final String authorization = httpRequest.getHeader("Authorization");
 			String username = null;
 			if (authorization != null && authorization.startsWith("Basic"))
@@ -3863,7 +3854,9 @@ public class UsersController extends BaseCommerceController
 		}
 		else
 		{
-			final MplCustomerProfileData customerToSave = mplCustomerProfileService.getCustomerProfileDetail(userId);
+            final String userIdLwCase = userId.toLowerCase(); //INC144318796
+			final MplCustomerProfileData customerToSave = mplCustomerProfileService.getCustomerProfileDetail(userIdLwCase);
+			//final MplCustomerProfileData customerToSave = mplCustomerProfileService.getCustomerProfileDetail(userId);
 			// Get the data before editing
 			final String channel = MarketplacecommerceservicesConstants.UPDATE_CHANNEL_MOBILE;
 			final Map<String, String> preSavedDetailMap = mplCustomerProfileFacade.setPreviousDataToMap(
@@ -3879,7 +3872,8 @@ public class UsersController extends BaseCommerceController
 			else
 			{
 				customerToSave.setUid(customerData.getUid());
-				customerToSave.setDisplayUid(userId);
+				customerToSave.setDisplayUid(userIdLwCase);
+				//customerToSave.setDisplayUid(userId);
 				try
 				{
 					if (!StringUtils.isEmpty(firstName) && DefaultCommonAsciiValidator.validateAlphaWithSpaceNoSpCh(firstName)
@@ -4309,12 +4303,15 @@ public class UsersController extends BaseCommerceController
 		{
 			try
 			{
-				customerData = mplCustomerProfileService.getCustomerProfileDetail(emailid);
+                final String emailIdLwCase = emailid.toLowerCase(); //INC144318796
+				customerData = mplCustomerProfileService.getCustomerProfileDetail(emailIdLwCase);
+
+				//customerData = mplCustomerProfileService.getCustomerProfileDetail(emailid);
 				if (null != customerData)
 				{
-					if (null != emailid && StringUtils.isNotEmpty(emailid))
+					if (null != emailIdLwCase && StringUtils.isNotEmpty(emailIdLwCase))
 					{
-						customer.setEmailID(emailid);
+						customer.setEmailID(emailIdLwCase);
 					}
 					if (StringUtils.isNotEmpty(customerData.getFirstName())
 							&& !customerData.getFirstName().equals(MarketplacecommerceservicesConstants.SPACE))
@@ -4408,7 +4405,8 @@ public class UsersController extends BaseCommerceController
 		MplUserResultWsDto validated = new MplUserResultWsDto();
 		try
 		{
-			validated = mplUserHelper.validateRegistrationData(userId, newPassword);
+            final String userIdLwCase = userId.toLowerCase(); //INC144318796
+			validated = mplUserHelper.validateRegistrationData(userIdLwCase, newPassword);
 			if (null != validated.getStatus()
 					&& validated.getStatus().equalsIgnoreCase(MarketplacecommerceservicesConstants.ERROR_FLAG))
 			{
@@ -4418,7 +4416,7 @@ public class UsersController extends BaseCommerceController
 			{
 				if (containsRole(auth, TRUSTED_CLIENT) || containsRole(auth, CUSTOMERMANAGER))
 				{
-					extUserService.setPassword(userId, newPassword);
+					extUserService.setPassword(userIdLwCase, newPassword);
 				}
 				else
 				{

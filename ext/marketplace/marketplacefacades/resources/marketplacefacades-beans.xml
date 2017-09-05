@@ -1258,4 +1258,18 @@
 		<property name="maxQuantityAllowed" type="String" />
 		<property name="userSelectedQty" type="String" />
 	</bean>
+	
+	<!-- TPR-6665: Update synonyms in solr slave  start -->
+	<bean class="com.tisl.mpl.facades.search.data.EndpointSlaveURL">
+		<property name="url" type="String" />
+		<property name="slave" type="boolean" />
+	</bean>
+	
+	<bean class="de.hybris.platform.solrfacetsearch.config.ClusterConfig">
+		
+		<property name="endpointSlaveURLs" type="java.util.List&lt;com.tisl.mpl.facades.search.data.EndpointSlaveURL>"></property>
+		
+	</bean>
+	
+	<!-- TPR-6665: Update synonyms in solr slave  end -->
 </beans>
