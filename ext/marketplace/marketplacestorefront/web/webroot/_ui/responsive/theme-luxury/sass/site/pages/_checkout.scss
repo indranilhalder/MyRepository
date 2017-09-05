@@ -368,6 +368,23 @@
     }
     
  }
+.page-multiStepCheckoutSummaryPage{
+    .checkout-content .checkout-items{
+            padding: 0px;
+    }
+    .checkout-content.delivery .checkout-shipping.left-block .product-block li.item{
+            padding: 20px 0px 0px 0px;
+            background: #fff;
+            margin: 0px;
+    }
+    .checkout-content .deliverymethod .item.delivery_options .delivery{
+            background: #f9f9f9;
+        
+            @include media-breakpoint-down(sm) {
+                padding-left: 10px;
+            }
+    }
+}
 .right-block .coupon-code{
     border: 1px solid #ccc;  
     border-radius: 5px 5px 5px 5px;
@@ -1477,7 +1494,7 @@ ul.delivered.scrollThis {
 }
 .checkout-content.delivery .checkout-shipping.left-block .product-block li.item {
     border: 0;
-    border-top: 1px solid #eee;
+    /*border-top: 1px solid #eee;*/
 }
 .cart.wrapper .checkout-shipping-items.left-block.left-block-width ul.headline .store.header5{
     width: 32%!important;

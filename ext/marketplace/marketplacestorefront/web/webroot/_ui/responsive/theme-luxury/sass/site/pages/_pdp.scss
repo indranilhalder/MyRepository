@@ -463,6 +463,7 @@
             border: 2px solid #dde2eb;
             border-radius: 5px;
             padding: 0;
+            display: table;
             
             .rating-count{
                 font-size: 16px;
@@ -499,14 +500,17 @@
         .right{
             float: right;
         }
-        .emibox-left{
-            display: inline-block;
+        .emibox-left{            
             width: 20%;
             vertical-align: top;
             padding:10px;
-              border-right: 1px solid #d2d2d2;
+            display: table-cell;
+            border-right: 1px solid #d2d2d2;            
+            
+            
             @media (max-width: 767px) { 
             	width : 100%;
+                display: inline-block;
             }
             
             ul{
@@ -523,7 +527,7 @@
                     }
             	}
                 li.active{
-                    &.after{
+                    &:after{
                         content:'>';
                         width:30px;
                         height:30px;
@@ -541,11 +545,26 @@
             }
             
         }
-        .emibox-right{
-            display: inline-block;
+        .emibox-right{            
             width: 78%;
             vertical-align: top;
-          
+            display: table-cell;
+            
+            @media (max-width: 767px) { 
+                display: inline-block;
+            }
+            #emiSelectBank, #emiNoData{
+                text-align: center;
+            } 
+            #emiSelectBank{
+                padding: 20px 0px 10px 0px;
+            }            
+            .emifselectbank{
+                display: none;
+                text-align: center;
+                padding: 20px;
+            }
+            
             table{
             	padding:10px;
             	td,th{
