@@ -11,7 +11,6 @@ import de.hybris.platform.category.model.CategoryModel;
 import de.hybris.platform.commerceservices.enums.SalesApplication;
 import de.hybris.platform.core.Registry;
 import de.hybris.platform.core.model.product.ProductModel;
-import de.hybris.platform.core.model.type.ComposedTypeModel;
 import de.hybris.platform.cronjob.model.CronJobModel;
 import de.hybris.platform.europe1.model.PriceRowModel;
 import de.hybris.platform.jalo.JaloInvalidParameterException;
@@ -40,12 +39,14 @@ import java.util.Set;
 import javax.annotation.Resource;
 
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.collections.MapUtils;
 import org.apache.commons.lang.BooleanUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
+import com.tisl.mpl.core.model.BrandModel;
 import com.tisl.mpl.core.model.PromotionalPriceRowModel;
 import com.tisl.mpl.exception.EtailBusinessExceptions;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
@@ -1941,184 +1942,104 @@ public class DefaultPromotionPriceUpdaterServiceImpl implements PromotionPriceUp
 		else
 		{
 			sortedPromoListForProduct.remove(promoCurrent);
+			checkExProdAndBrandForHigherPrioPromos(product, sortedPromoListForProduct);
 
-			final StringBuilder queryStringSeller = new StringBuilder("SELECT DISTINCT pprom.sellers, pprom.restrType  FROM (");
-			queryStringSeller.append(" {{ SELECT {sellerRestr." + EtailSellerSpecificRestrictionModel.SELLERMASTERLIST
-					+ " AS sellers } , {composedType." + ComposedTypeModel.CODE + " AS restrType } ");
-			queryStringSeller.append(MarketplacecommerceservicesConstants.QUERYFROM + "{ "
-					+ EtailSellerSpecificRestrictionModel._TYPECODE + " AS sellerRestr ");
-			queryStringSeller.append("JOIN " + ComposedTypeModel._TYPECODE + " AS composedType ");
-			queryStringSeller.append("ON sellerRestr." + EtailSellerSpecificRestrictionModel.ITEMTYPE + " = composedType."
-					+ ComposedTypeModel.PK + "} ");
+			final StringBuilder queryStringSeller = new StringBuilder("SELECT {sellerRestr."
+					+ EtailSellerSpecificRestrictionModel.SELLERMASTERLIST + "} AS sellers ");
+			queryStringSeller.append(MarketplacecommerceservicesConstants.QUERYFROM + EtailSellerSpecificRestrictionModel._TYPECODE
+					+ " AS sellerRestr }");
 			queryStringSeller.append(" WHERE {sellerRestr." + EtailSellerSpecificRestrictionModel.PROMOTION
-					+ "} IN (?highestPriorityPromo) }} ");
-
-			queryStringSeller.append(MarketplacecommerceservicesConstants.QUERYUNION);
-
-			queryStringSeller.append(" {{ SELECT {exSellerRestr." + EtailExcludeSellerSpecificRestrictionModel.SELLERMASTERLIST
-					+ "AS exSellers } , {composedType." + ComposedTypeModel.CODE + " AS restrType } ");
-			queryStringSeller.append(MarketplacecommerceservicesConstants.QUERYFROM + "{ "
-					+ EtailExcludeSellerSpecificRestrictionModel._TYPECODE + " AS exSellerRestr ");
-			queryStringSeller.append("JOIN " + ComposedTypeModel._TYPECODE + " AS composedType ");
-			queryStringSeller.append("ON exSellerRestr." + EtailExcludeSellerSpecificRestrictionModel.ITEMTYPE + " = composedType."
-					+ ComposedTypeModel.PK + "} ");
-			queryStringSeller.append(" WHERE {exSellerRestr." + EtailExcludeSellerSpecificRestrictionModel.PROMOTION
-					+ "} IN (?highestPriorityPromo) }} ");
-
-			if (!(Config.isOracleUsed()))
-			{
-				queryStringSeller.append(" ) AS pprom");
-			}
-			else
-			{
-				queryStringSeller.append(" ) pprom");
-			}
+					+ "} IN (?highestPriorityPromo)");
 
 			LOG.debug("QUERY IS : " + queryStringSeller);
 
 			final FlexibleSearchQuery querySeller = new FlexibleSearchQuery(queryStringSeller);
 			querySeller.addQueryParameter("highestPriorityPromo", sortedPromoListForProduct);
-			querySeller.setResultClassList(Arrays.asList(String.class, String.class));
+			final List<String> result = flexibleSearchService.<String> search(querySeller).getResult();
 
-			final SearchResult<List<Object>> result = flexibleSearchService.search(querySeller);
-			for (final List<Object> row : result.getResult())
+			for (final String row : result)
 			{
-				final String sellers = (String) row.get(0);
-				final String restrType = (String) row.get(1);
-				final List<String> sellerList = Arrays.asList(sellers.substring(4).split(","));
-				for (final String seller : sellerList)
+				if (StringUtils.isEmpty(row))
 				{
-					if (sellerIdUssidMap.containsKey(seller)
-							&& restrType.equalsIgnoreCase(EtailSellerSpecificRestrictionModel._TYPECODE))
+					sellerIdUssidMap.clear();
+					break;
+				}
+				else
+				{
+					final List<String> sellerList = Arrays.asList(row.substring(4).split(","));
+					for (final String seller : sellerList)
 					{
-						sellerIdUssidMap.remove(seller);
+						if (sellerIdUssidMap.containsKey(seller))
+						{
+							sellerIdUssidMap.remove(seller);
+							break;
+						}
 					}
 				}
 			}
 
-			return new ArrayList<String>(sellerIdUssidMap.values());
+			return MapUtils.isNotEmpty(sellerIdUssidMap) ? new ArrayList<String>(sellerIdUssidMap.values())
+					: new ArrayList<String>();
+
+			//final StringBuilder queryStringSeller = new StringBuilder("SELECT DISTINCT pprom.sellers, pprom.restrType  FROM ( {{");
+			//			final StringBuilder queryStringSeller = new StringBuilder("SELECT {sellerRestr."
+			//					+ EtailSellerSpecificRestrictionModel.SELLERMASTERLIST + " AS sellers } , {composedType." + ComposedTypeModel.CODE
+			//					+ " AS restrType } ");
+			//			queryStringSeller.append(MarketplacecommerceservicesConstants.QUERYFROM + "{ "
+			//					+ EtailSellerSpecificRestrictionModel._TYPECODE + " AS sellerRestr ");
+			//			queryStringSeller.append("JOIN " + ComposedTypeModel._TYPECODE + " AS composedType ");
+			//			queryStringSeller.append("ON sellerRestr." + EtailSellerSpecificRestrictionModel.ITEMTYPE + " = composedType."
+			//					+ ComposedTypeModel.PK + "} ");
+			//			queryStringSeller.append(" WHERE {sellerRestr." + EtailSellerSpecificRestrictionModel.PROMOTION
+			//					+ "} IN (?highestPriorityPromo)");
+			//queryStringSeller.append(" }} ");
+
+			//			queryStringSeller.append(MarketplacecommerceservicesConstants.QUERYUNION);
+			//
+			//			queryStringSeller.append(" {{ SELECT {exSellerRestr." + EtailExcludeSellerSpecificRestrictionModel.SELLERMASTERLIST
+			//					+ "AS exSellers } , {composedType." + ComposedTypeModel.CODE + " AS restrType } ");
+			//			queryStringSeller.append(MarketplacecommerceservicesConstants.QUERYFROM + "{ "
+			//					+ EtailExcludeSellerSpecificRestrictionModel._TYPECODE + " AS exSellerRestr ");
+			//			queryStringSeller.append("JOIN " + ComposedTypeModel._TYPECODE + " AS composedType ");
+			//			queryStringSeller.append("ON exSellerRestr." + EtailExcludeSellerSpecificRestrictionModel.ITEMTYPE + " = composedType."
+			//					+ ComposedTypeModel.PK + "} ");
+			//			queryStringSeller.append(" WHERE {exSellerRestr." + EtailExcludeSellerSpecificRestrictionModel.PROMOTION
+			//					+ "} IN (?highestPriorityPromo) }} ");
+			//
+			//			if (!(Config.isOracleUsed()))
+			//			{
+			//				queryStringSeller.append(" ) AS pprom");
+			//			}
+			//			else
+			//			{
+			//				queryStringSeller.append(" ) pprom");
+			//			}
+
+			//querySeller.setResultClassList(Arrays.asList(String.class, String.class));
+
+			//			final SearchResult<List<Object>> result = flexibleSearchService.search(querySeller);
+			//			for (final List<Object> row : result.getResult())
+			//			{
+			//				final String sellers = (String) row.get(0);
+			//				final String restrType = (String) row.get(1);
+			//				final List<String> sellerList = Arrays.asList(sellers.substring(4).split(","));
+			//				for (final String seller : sellerList)
+			//				{
+			//					if (sellerIdUssidMap.containsKey(seller)
+			//							&& restrType.equalsIgnoreCase(EtailSellerSpecificRestrictionModel._TYPECODE))
+			//					{
+			//						sellerIdUssidMap.remove(seller);
+			//					}
+			//				}
+			//			}
+
+
 		}
 	}
 
 	private List<ProductPromotionModel> getSortedPromoListForProduct(final ProductModel product,
 			final ProductPromotionModel promoCurrent)
 	{
-		/////////////////-------------------------//////////////////////////////////////////
-		//		final List<ProductPromotionModel> productPromoData = new ArrayList<ProductPromotionModel>(product.getPromotions());
-		//		final Collection<CategoryModel> categoriesList = getcategoryData(product);
-		//		final List<ProductPromotionModel> validPromosForProduct = new ArrayList<ProductPromotionModel>();
-		//
-		//		//		final List<BuyAPercentageDiscountModel> validBuyAPerOffPromosForProduct = new ArrayList<BuyAPercentageDiscountModel>();
-		//		//		final List<BuyABFreePrecentageDiscountModel> validBuyAgetBFreePerOffPromosForProduct = new ArrayList<BuyABFreePrecentageDiscountModel>();
-		//
-		//		if (CollectionUtils.isNotEmpty(categoriesList))
-		//		{
-		//			for (final CategoryModel category : categoriesList)
-		//			{
-		//				if (CollectionUtils.isNotEmpty(productPromoData))
-		//				{
-		//					productPromoData.addAll(category.getPromotions());
-		//				}
-		//			}
-		//		}
-		//
-		//		if (promoCurrent instanceof BuyAPercentageDiscountModel)
-		//		{
-		//			for (final ProductPromotionModel promo : productPromoData)
-		//			{
-		//				final Date sysdate = new Date();
-		//				if (promo instanceof BuyAPercentageDiscountModel)
-		//				{
-		//					final BuyAPercentageDiscountModel buyAgetPerOff = (BuyAPercentageDiscountModel) promo;
-		//					if (StringUtils.isEmpty(buyAgetPerOff.getImmutableKey()) && buyAgetPerOff.getEnabled().booleanValue()
-		//							&& buyAgetPerOff.getStartDate().compareTo(sysdate) <= 0
-		//							&& buyAgetPerOff.getEndDate().compareTo(sysdate) >= 0
-		//							&& buyAgetPerOff.getPriority().intValue() >= promoCurrent.getPriority().intValue()
-		//							//					&& (promo.getStartDate().equals(sysdate) || promo.getStartDate().before(sysdate))
-		//							//					&& (promo.getEndDate().equals(sysdate) || promo.getEndDate().after(sysdate))
-		//							&& buyAgetPerOff.getQuantity().intValue() == 1)
-		//					{
-		//						//validBuyAPerOffPromosForProduct.add(buyAgetPerOff);
-		//						validPromosForProduct.add(buyAgetPerOff);
-		//					}
-		//				}
-		//			}
-		//
-		//			//Sorting promotion collection on priority DESC
-		//			//			Collections.sort(validPromosForProduct, new Comparator<ProductPromotionModel>()
-		//			//			{
-		//			//				public int compare(final ProductPromotionModel o1, final ProductPromotionModel o2)
-		//			//				{
-		//			//					if (o1.getPriority().intValue() > o2.getPriority().intValue())
-		//			//					{
-		//			//						return 1;
-		//			//					}
-		//			//					else
-		//			//					{
-		//			//						return -1;
-		//			//					}
-		//			//				}
-		//			//			});
-		//			//return validBuyAPerOffPromosForProduct;
-		//		}
-		//		else if (promoCurrent instanceof BuyABFreePrecentageDiscountModel)
-		//		{
-		//			for (final ProductPromotionModel promo : productPromoData)
-		//			{
-		//				final Date sysdate = new Date();
-		//				if (promo instanceof BuyABFreePrecentageDiscountModel)
-		//				{
-		//					final BuyABFreePrecentageDiscountModel buyAgetBfreePerOff = (BuyABFreePrecentageDiscountModel) promo;
-		//					if (StringUtils.isEmpty(buyAgetBfreePerOff.getImmutableKey()) && buyAgetBfreePerOff.getEnabled().booleanValue()
-		//							&& buyAgetBfreePerOff.getStartDate().compareTo(sysdate) <= 0
-		//							&& buyAgetBfreePerOff.getEndDate().compareTo(sysdate) >= 0
-		//							&& buyAgetBfreePerOff.getPriority().intValue() >= promoCurrent.getPriority().intValue()
-		//							//					&& (promo.getStartDate().equals(sysdate) || promo.getStartDate().before(sysdate))
-		//							//					&& (promo.getEndDate().equals(sysdate) || promo.getEndDate().after(sysdate))
-		//							&& buyAgetBfreePerOff.getQuantity().intValue() == 1)
-		//					{
-		//						//validBuyAgetBFreePerOffPromosForProduct.add(buyAgetBfreePerOff);
-		//						validPromosForProduct.add(buyAgetBfreePerOff);
-		//					}
-		//				}
-		//			}
-		//
-		//			//Sorting promotion collection on priority DESC
-		//			//			Collections.sort(validPromosForProduct, new Comparator<ProductPromotionModel>()
-		//			//			{
-		//			//				public int compare(final ProductPromotionModel o1, final ProductPromotionModel o2)
-		//			//				{
-		//			//					if (o1.getPriority().intValue() > o2.getPriority().intValue())
-		//			//					{
-		//			//						return 1;
-		//			//					}
-		//			//					else
-		//			//					{
-		//			//						return -1;
-		//			//					}
-		//			//				}
-		//			//			});
-		//			//return validBuyAgetBFreePerOffPromosForProduct;
-		//		}
-		//
-		//		//Sorting promotion collection on priority DESC
-		//		Collections.sort(validPromosForProduct, new Comparator<ProductPromotionModel>()
-		//		{
-		//			public int compare(final ProductPromotionModel o1, final ProductPromotionModel o2)
-		//			{
-		//				if (o1.getPriority().intValue() > o2.getPriority().intValue())
-		//				{
-		//					return 1;
-		//				}
-		//				else
-		//				{
-		//					return -1;
-		//				}
-		//			}
-		//		});
-		/////////////////-------------------------//////////////////////////////////////////
-
-		////////////////////////////////////////////////////////////////////////////////
 		final List<ProductPromotionModel> validPromosForProduct = new ArrayList<ProductPromotionModel>();
 		final Collection<CategoryModel> categories = getcategoryData(product);
 
@@ -2256,7 +2177,121 @@ public class DefaultPromotionPriceUpdaterServiceImpl implements PromotionPriceUp
 				//final String priority = (String) row.get(1);
 			}
 		}
-		///////////////////////////////////////////////////
+		/////////////////-------------------------//////////////////////////////////////////
+		//		final List<ProductPromotionModel> productPromoData = new ArrayList<ProductPromotionModel>(product.getPromotions());
+		//		final Collection<CategoryModel> categoriesList = getcategoryData(product);
+		//		final List<ProductPromotionModel> validPromosForProduct = new ArrayList<ProductPromotionModel>();
+		//
+		//		//		final List<BuyAPercentageDiscountModel> validBuyAPerOffPromosForProduct = new ArrayList<BuyAPercentageDiscountModel>();
+		//		//		final List<BuyABFreePrecentageDiscountModel> validBuyAgetBFreePerOffPromosForProduct = new ArrayList<BuyABFreePrecentageDiscountModel>();
+		//
+		//		if (CollectionUtils.isNotEmpty(categoriesList))
+		//		{
+		//			for (final CategoryModel category : categoriesList)
+		//			{
+		//				if (CollectionUtils.isNotEmpty(productPromoData))
+		//				{
+		//					productPromoData.addAll(category.getPromotions());
+		//				}
+		//			}
+		//		}
+		//
+		//		if (promoCurrent instanceof BuyAPercentageDiscountModel)
+		//		{
+		//			for (final ProductPromotionModel promo : productPromoData)
+		//			{
+		//				final Date sysdate = new Date();
+		//				if (promo instanceof BuyAPercentageDiscountModel)
+		//				{
+		//					final BuyAPercentageDiscountModel buyAgetPerOff = (BuyAPercentageDiscountModel) promo;
+		//					if (StringUtils.isEmpty(buyAgetPerOff.getImmutableKey()) && buyAgetPerOff.getEnabled().booleanValue()
+		//							&& buyAgetPerOff.getStartDate().compareTo(sysdate) <= 0
+		//							&& buyAgetPerOff.getEndDate().compareTo(sysdate) >= 0
+		//							&& buyAgetPerOff.getPriority().intValue() >= promoCurrent.getPriority().intValue()
+		//							//					&& (promo.getStartDate().equals(sysdate) || promo.getStartDate().before(sysdate))
+		//							//					&& (promo.getEndDate().equals(sysdate) || promo.getEndDate().after(sysdate))
+		//							&& buyAgetPerOff.getQuantity().intValue() == 1)
+		//					{
+		//						//validBuyAPerOffPromosForProduct.add(buyAgetPerOff);
+		//						validPromosForProduct.add(buyAgetPerOff);
+		//					}
+		//				}
+		//			}
+		//
+		//			//Sorting promotion collection on priority DESC
+		//			//			Collections.sort(validPromosForProduct, new Comparator<ProductPromotionModel>()
+		//			//			{
+		//			//				public int compare(final ProductPromotionModel o1, final ProductPromotionModel o2)
+		//			//				{
+		//			//					if (o1.getPriority().intValue() > o2.getPriority().intValue())
+		//			//					{
+		//			//						return 1;
+		//			//					}
+		//			//					else
+		//			//					{
+		//			//						return -1;
+		//			//					}
+		//			//				}
+		//			//			});
+		//			//return validBuyAPerOffPromosForProduct;
+		//		}
+		//		else if (promoCurrent instanceof BuyABFreePrecentageDiscountModel)
+		//		{
+		//			for (final ProductPromotionModel promo : productPromoData)
+		//			{
+		//				final Date sysdate = new Date();
+		//				if (promo instanceof BuyABFreePrecentageDiscountModel)
+		//				{
+		//					final BuyABFreePrecentageDiscountModel buyAgetBfreePerOff = (BuyABFreePrecentageDiscountModel) promo;
+		//					if (StringUtils.isEmpty(buyAgetBfreePerOff.getImmutableKey()) && buyAgetBfreePerOff.getEnabled().booleanValue()
+		//							&& buyAgetBfreePerOff.getStartDate().compareTo(sysdate) <= 0
+		//							&& buyAgetBfreePerOff.getEndDate().compareTo(sysdate) >= 0
+		//							&& buyAgetBfreePerOff.getPriority().intValue() >= promoCurrent.getPriority().intValue()
+		//							//					&& (promo.getStartDate().equals(sysdate) || promo.getStartDate().before(sysdate))
+		//							//					&& (promo.getEndDate().equals(sysdate) || promo.getEndDate().after(sysdate))
+		//							&& buyAgetBfreePerOff.getQuantity().intValue() == 1)
+		//					{
+		//						//validBuyAgetBFreePerOffPromosForProduct.add(buyAgetBfreePerOff);
+		//						validPromosForProduct.add(buyAgetBfreePerOff);
+		//					}
+		//				}
+		//			}
+		//
+		//			//Sorting promotion collection on priority DESC
+		//			//			Collections.sort(validPromosForProduct, new Comparator<ProductPromotionModel>()
+		//			//			{
+		//			//				public int compare(final ProductPromotionModel o1, final ProductPromotionModel o2)
+		//			//				{
+		//			//					if (o1.getPriority().intValue() > o2.getPriority().intValue())
+		//			//					{
+		//			//						return 1;
+		//			//					}
+		//			//					else
+		//			//					{
+		//			//						return -1;
+		//			//					}
+		//			//				}
+		//			//			});
+		//			//return validBuyAgetBFreePerOffPromosForProduct;
+		//		}
+		//
+		//		//Sorting promotion collection on priority DESC
+		//		Collections.sort(validPromosForProduct, new Comparator<ProductPromotionModel>()
+		//		{
+		//			public int compare(final ProductPromotionModel o1, final ProductPromotionModel o2)
+		//			{
+		//				if (o1.getPriority().intValue() > o2.getPriority().intValue())
+		//				{
+		//					return 1;
+		//				}
+		//				else
+		//				{
+		//					return -1;
+		//				}
+		//			}
+		//		});
+		/////////////////-------------------------//////////////////////////////////////////
+
 		return validPromosForProduct;
 	}
 
@@ -2269,7 +2304,7 @@ public class DefaultPromotionPriceUpdaterServiceImpl implements PromotionPriceUp
 
 		final StringBuilder queryString = new StringBuilder("SELECT DISTINCT pprom.pk FROM (");
 		queryString.append(" {{ SELECT {c2p.target} as pk " + queryString.append(MarketplacecommerceservicesConstants.QUERYFROM)
-				+ "{" + GeneratedCatalogConstants.Relations.CATEGORYPRODUCTRELATION + " AS c2p }");
+				+ GeneratedCatalogConstants.Relations.CATEGORYPRODUCTRELATION + " AS c2p }");
 		queryString.append(" WHERE {c2p.source} IN (?categories)");
 
 		if (CollectionUtils.isEmpty(exProductList) && CollectionUtils.isEmpty(brands) && CollectionUtils.isEmpty(rejectBrandList))
@@ -2326,7 +2361,51 @@ public class DefaultPromotionPriceUpdaterServiceImpl implements PromotionPriceUp
 				.getResult();
 
 		return productValidList;
+	}
 
+	public void checkExProdAndBrandForHigherPrioPromos(final ProductModel product,
+			final List<ProductPromotionModel> sortedPromoListForProduct)
+	{
+		final Iterator iter = sortedPromoListForProduct.iterator();
+		final String productBrandCode = (new ArrayList<BrandModel>(product.getBrands())).get(0).getBrandCode();
+
+
+		while (iter.hasNext())
+		{
+			final List<String> brandStr = new ArrayList<String>();
+			final List<String> excludedBrandStr = new ArrayList<String>();
+			final ProductPromotionModel promo = (ProductPromotionModel) iter.next();
+
+			for (final AbstractPromotionRestrictionModel restr : promo.getRestrictions())
+			{
+				if (restr instanceof ManufacturersRestrictionModel)
+				{
+					final List<CategoryModel> brands = new ArrayList<CategoryModel>(
+							((ManufacturersRestrictionModel) restr).getManufacturers());
+					for (final CategoryModel brand : brands)
+					{
+						brandStr.add(brand.getCode().substring(5));
+					}
+				}
+				else if (restr instanceof ExcludeManufacturersRestrictionModel)
+				{
+					final List<CategoryModel> excludedBrands = new ArrayList<CategoryModel>(
+							((ExcludeManufacturersRestrictionModel) restr).getManufacturers());
+					for (final CategoryModel excludeBrand : excludedBrands)
+					{
+						excludedBrandStr.add(excludeBrand.getCode().substring(5));
+					}
+				}
+			}
+
+			final List<ProductModel> excludedProductList = new ArrayList<ProductModel>(promo.getExcludedProducts());
+			if ((CollectionUtils.isNotEmpty(excludedProductList) && excludedProductList.contains(product))
+					|| (CollectionUtils.isNotEmpty(brandStr) && !brandStr.contains(productBrandCode))
+					|| (CollectionUtils.isNotEmpty(excludedBrandStr) && excludedBrandStr.contains(productBrandCode)))
+			{
+				iter.remove();
+			}
+		}
 	}
 
 	@Autowired
