@@ -238,6 +238,33 @@ $(".checkout-accordion-wrapper .checkout-accordion .checkout-accordion-heading")
 	$(this).parent().toggleClass("accordion-open");
 	//$(this).parent().siblings().find(".checkout-accordion-body").slideUp();
 	$(this).parent().siblings().removeClass("accordion-open");
+	//UF-437 fix
+	var selector = $(this).find('h4').text();
+	var checkoutDeliveryPage = "Multi Checkout Summary Page:Select Address";
+	if(selector.indexOf("Delivery Address") > -1){
+    	checkoutDeliveryPage = "Multi Checkout Summary Page:Select Address";
+    	 if(typeof(utag_data) != "undefined"){
+    	    utag_data.page_name = checkoutDeliveryPage;	
+    	 }
+    }
+    else if(selector.indexOf("Delivery Method") > -1){
+    	 checkoutDeliveryPage = "Multi Checkout Summary Page:Choose Your Delivery Options";
+    	  if(typeof(utag_data) != "undefined"){
+     	     utag_data.page_name = checkoutDeliveryPage;
+    	  }
+    }
+    else if(selector.indexOf("Review Order") > -1){
+    	checkoutDeliveryPage = "Multi Checkout Summary Page:Review Order";
+    	  if(typeof(utag_data) != "undefined"){
+    	    utag_data.page_name = checkoutDeliveryPage;
+    	  }
+    }
+    else if(selector.indexOf("Payment") > -1){
+    	checkoutDeliveryPage = "Multi Checkout Summary Page:Payment Options";
+    	  if(typeof(utag_data) != "undefined"){
+    	       utag_data.page_name = checkoutDeliveryPage;
+    	  }
+    } 
 });
 </script>
 <c:if test="${isCart eq true}">
