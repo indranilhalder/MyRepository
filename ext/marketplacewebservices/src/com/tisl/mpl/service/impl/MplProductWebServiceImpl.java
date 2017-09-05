@@ -10,9 +10,13 @@ import de.hybris.platform.category.model.CategoryModel;
 import de.hybris.platform.cms2.exceptions.CMSItemNotFoundException;
 import de.hybris.platform.cms2.model.contents.components.AbstractCMSComponentModel;
 import de.hybris.platform.cms2.model.contents.components.CMSImageComponentModel;
+import de.hybris.platform.cms2.model.contents.components.CMSLinkComponentModel;
 import de.hybris.platform.cms2.model.contents.components.CMSParagraphComponentModel;
+import de.hybris.platform.cms2.model.contents.components.SimpleCMSComponentModel;
+import de.hybris.platform.cms2.model.contents.contentslot.ContentSlotModel;
 import de.hybris.platform.cms2.model.pages.ContentPageModel;
 import de.hybris.platform.cms2.model.relations.ContentSlotForPageModel;
+import de.hybris.platform.cms2.servicelayer.services.impl.DefaultCMSContentSlotService;
 import de.hybris.platform.commercefacades.product.ProductFacade;
 import de.hybris.platform.commercefacades.product.ProductOption;
 import de.hybris.platform.commercefacades.product.data.CategoryData;
@@ -60,6 +64,7 @@ import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.MapUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.constants.MarketplacewebservicesConstants;
@@ -90,6 +95,7 @@ import com.tisl.mpl.wsdto.CapacityLinkData;
 import com.tisl.mpl.wsdto.ClassificationMobileWsData;
 import com.tisl.mpl.wsdto.ColorLinkData;
 import com.tisl.mpl.wsdto.DeliveryModeData;
+import com.tisl.mpl.wsdto.ExchangeLinkUrl;
 import com.tisl.mpl.wsdto.FineJwlryClassificationListDTO;
 import com.tisl.mpl.wsdto.FineJwlryClassificationListValueDTO;
 import com.tisl.mpl.wsdto.GalleryImageData;
@@ -171,6 +177,8 @@ public class MplProductWebServiceImpl implements MplProductWebService
 	// Jewellery Changes
 	@Resource(name = "priceBreakupFacade")
 	private PriceBreakupFacade priceBreakupFacade;
+	@Autowired
+	private DefaultCMSContentSlotService contentSlotService;
 
 
 	/**
@@ -856,6 +864,45 @@ public class MplProductWebServiceImpl implements MplProductWebService
 				{
 					productDetailMobile.setL3code(productData.getLevel3CategoryCode());
 					productDetailMobile.setL3name(productData.getLevel3CategoryName());
+
+					final ContentSlotModel contentSlotModel = contentSlotService.getContentSlotForId("ExchangeSlot");
+					final List<ExchangeLinkUrl> linkUrlList = new ArrayList<>();
+
+					if (contentSlotModel != null)
+					{
+
+						final List<AbstractCMSComponentModel> componentLists = contentSlotModel.getCmsComponents();
+						if (CollectionUtils.isNotEmpty(componentLists))
+						{
+							for (final AbstractCMSComponentModel model : componentLists)
+							{
+								final ExchangeLinkUrl linkUrl = new ExchangeLinkUrl();
+								if (model != null && model instanceof SimpleCMSComponentModel)
+
+								{
+									final SimpleCMSComponentModel simpleComponent = (SimpleCMSComponentModel) model;
+
+									if (simpleComponent instanceof CMSLinkComponentModel)
+									{
+										final CMSLinkComponentModel model2 = (CMSLinkComponentModel) simpleComponent;
+										if (StringUtils.isNotEmpty(model2.getName()))
+										{
+											linkUrl.setName(model2.getName());
+										}
+										if (StringUtils.isNotEmpty(model2.getUrl()))
+										{
+
+											linkUrl.setUrl(model2.getUrl());
+										}
+									}
+									linkUrlList.add(linkUrl);
+								}
+							}
+							productDetailMobile.setLinkUrls(linkUrlList);
+
+
+						}
+					}
 				}
 
 				//Added for jewellery
@@ -1833,12 +1880,12 @@ public class MplProductWebServiceImpl implements MplProductWebService
 	/*
 	 * private PromotionData checkHighestPriority(final List<PromotionData> enabledPromotionList) {
 	 * Collections.sort(enabledPromotionList, new Comparator<PromotionData>() {
-	 * 
+	 *
 	 * @Override public int compare(final PromotionData promo1, final PromotionData promo2) { int priority = 0; if (null
 	 * != promo1.getPriority() && null != promo2.getPriority()) { priority =
 	 * promo1.getPriority().compareTo(promo2.getPriority()); } return priority; }
-	 * 
-	 * 
+	 *
+	 *
 	 * }); Collections.reverse(enabledPromotionList); return enabledPromotionList.get(0); }
 	 */
 
