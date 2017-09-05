@@ -76857,26 +76857,30 @@ body .account .right-account form label.invite-text-lbl{
 
 /* TISSPTEN-120 END */
 
-
-#login-modal{
+/*TPR-6399 start*/
+#login-modal .content{
 	min-width: 320px;
+}
+#login-modal .sign-in.wrapper{
+	padding: 0;
+    max-width: 100%;
 }
 #login-modal .sign-in.tab-view .tabs > li .left{
 	    width: 100%;}
-#login-modal  .sign-in.tab-view .tabs{
-    margin-bottom: 25px;
+#login-modal .sign-in.tab-view .tabs{
+    margin-bottom: 0;
 }
-#login-modal  .sign-in.tab-view .tabs > li{
+#login-modal .sign-in.tab-view .tabs > li{
 	padding: 35px 12px 0;
     width: 100%;
     margin-top: 0;
 }
 
-#login-modal  .sign-in.tab-view .tabs{
+#login-modal .sign-in.tab-view .tabs{
 	border: 1px solid #cccccc;
 }
-#login-modal  .sign-in.tab-view .nav li{
-	    width: 25.3%;
+#login-modal .sign-in.tab-view .nav li{
+	    width: 50%;
     padding: 18px 15px;
     text-align: center;
     font-size: 12px;
@@ -76885,19 +76889,19 @@ body .account .right-account form label.invite-text-lbl{
     color:#fff;
     letter-spacing: 1px;
         border: 1px solid #cccccc;
-            margin-right: -3px;
+            margin-right: 0;
 }
-#login-modal  .sign-in.tab-view .tabs > li .left form {
+#login-modal .sign-in.tab-view .tabs > li .left form {
     width: 52%;
     float: left;
     padding: 0 38px 0px 10px;
 }
-#login-modal  .sign-in.tab-view .tabs > li .left form .forgotten-password{
+#login-modal .sign-in.tab-view .tabs > li .left form .forgotten-password{
     border-bottom: 0 none;
     padding-bottom: 30px;
 }
 
-#login-modal  .else-sec {
+#login-modal .else-sec {
 	display:block;
     width: 5%;
     float: left;
@@ -76905,20 +76909,20 @@ body .account .right-account form label.invite-text-lbl{
     top: 30px;
     left: 50%;
 }
-#login-modal  .else-brdrbtm,#login-modal  .else-brdrtp {
+#login-modal .else-brdrbtm,#login-modal .else-brdrtp {
     height: 95px;
     width: 1px;
     background: #eaeaeb;
     float: left;
     margin: 0 20px;
 }
-#login-modal  .else-brdrtp {
+#login-modal .else-brdrtp {
     margin-bottom: 10px;
 }
- #login-modal  .else-brdrbtm {
+ #login-modal .else-brdrbtm {
     margin-top: 10px;
 }
-#login-modal  .else {
+#login-modal .else {
     float: left;
     border: 1px solid #e4e4e4;
     padding: 7px 9px 10px;
@@ -76930,39 +76934,41 @@ body .account .right-account form label.invite-text-lbl{
 }
 #login-modal  .accept-cond {
     margin-bottom: 22px;
+    text-align: left;
 }
 #login-modal .sign-in.tab-view .tabs > li .left form#extRegisterForm {
-        padding-top: 30px;
-            padding-left: 0px;
+    padding-top: 0;
+    padding-left: 0px;
 }
-#login-modal  .sign-in.tab-view .tabs > li .left form button {
+#login-modal .sign-in.tab-view .tabs > li .left form button {
     margin-bottom: 17px;
 }
 #login-modal  .sign-in.tab-view .tabs > li .left form#extRegisterForm button {
    margin-bottom: 10px;
 }
-#login-modal  .sign-in.tab-view .tabs > li#sign_in_content .social-connect{
+#login-modal .sign-in.tab-view .tabs > li#sign_in_content .social-connect{
 	padding-top:0px;
 }
-#login-modal  .sign-in.tab-view .tabs > li .left form div#checkBox{
+#login-modal .sign-in.tab-view .tabs > li .left form div#checkBox{
 	overflow:hidden;
 	text-align: left;
 }
-#login-modal  .sign-in.tab-view .tabs > li .left form div#checkBox label:before {
+#login-modal .sign-in.tab-view .tabs > li .left form div#checkBox label:before {
     margin-left: 2px;
     margin-top: 2px;
 }
-#login-modal  .sign-in.tab-view .tabs > li#sign_up_content .social-connect{
+#login-modal .sign-in.tab-view .tabs > li#sign_up_content .social-connect{
 	display:block;
 	padding-top:30px;
 }
-#login-modal  .sign-in.tab-view {
-    margin-top: 24px;
+#login-modal .sign-in.tab-view {
+    margin: 0;
+    padding: 10px;
 }
-#login-modal  .sign-in.tab-view .tabs>li .left form div#checkBox label {
+#login-modal .sign-in.tab-view .tabs>li .left form div#checkBox label {
     width: 86%;
 }
-#login-modal  .sign-in.tab-view .nav li.active {
+#login-modal .sign-in.tab-view .nav li.active {
     background: #fff;
     color: #a9143c;
     -webkit-transition: background .3s;
@@ -76970,29 +76976,34 @@ body .account .right-account form label.invite-text-lbl{
     transition: background .3s;
     position: relative;
 }
-#login-modal  .sign-in.tab-view .nav {
+#login-modal .sign-in.tab-view .nav {
     width: 100%;
     float: left;
     display: block;
     text-align: left;
 }
-#login-modal  .sign-in.tab-view .tabs>li{
+#login-modal .sign-in.tab-view .tabs>li{
 	display: none;
 }
-#login-modal  .sign-in.tab-view .tabs>li.active {
+#login-modal .sign-in.tab-view .tabs>li.active {
     display: inline-block;
 }
-#login-modal  .sign-in.tab-view .tabs>li#sign_in_content .social-connect {
+#login-modal .sign-in.tab-view .tabs>li#sign_in_content .social-connect {
     position: static;
     width: 40%;
     float: right;
 }
-#login-modal  .sign-in.tab-view .tabs > li .left form  .button_fwd_wrapper{
+#login-modal .sign-in.tab-view .tabs > li .left form  .button_fwd_wrapper{
 	text-align: left;
 }
-#login-modal  .sign-in.tab-view .tabs>li .left form .forgotten-password_register {
+#login-modal .sign-in.tab-view .tabs>li .left form .forgotten-password_register {
     display: block;
 }
+#login-modal .sign-in.tab-view .tabs>li .left p, #login-modal .sign-in.tab-view .form-actions.clearfix,
+#login-modal .sign-in.tab-view .tabs > li .left form a.js-password-forgotten{
+	text-align: left;
+}
+/*TPR-6399 end*/
 
 /*TPR-6405 start*/
 .samsung-chat-div{
@@ -77009,3 +77020,21 @@ body .account .right-account form label.invite-text-lbl{
 	}
 }
 /*TPR-6405 end*/
+
+/* TPR-6399 start */
+#login-modal .content .close {
+    float: right;
+    border-radius: 50%;
+    width: 30px;
+    height: 30px;
+    border: 1px solid #ccc ! important;
+    margin-top: -8px!important;
+    margin-right: -8px!important;
+}
+@media (min-width: 768px)
+{
+.sign-in.wrapper {
+    margin-top: 26px !important;
+}
+}
+/* TPR-6399 end */
