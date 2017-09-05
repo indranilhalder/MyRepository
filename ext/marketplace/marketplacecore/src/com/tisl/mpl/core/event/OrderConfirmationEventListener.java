@@ -87,8 +87,14 @@ public class OrderConfirmationEventListener extends AbstractSiteEventListener<Or
 		final OrderProcessModel orderProcessModel = (OrderProcessModel) getBusinessProcessService().createProcess(
 				"orderConfirmationEmailProcess-" + orderModel.getCode() + "-" + System.currentTimeMillis(),
 				"orderConfirmationEmailProcess");
+		final String shortTrackingUrl = googleShortUrlService
+				.genearateShortURL(orderModel.getParentReference() == null ? orderModel.getCode() : orderModel
+						.getParentReference().getCode());
 		orderProcessModel.setOrder(orderModel);
 		getModelService().save(orderProcessModel);
+		if(null != shortTrackingUrl) {
+			orderProcessModel.setOrderTrackUrl(shortTrackingUrl);
+		}
 		getBusinessProcessService().startProcess(orderProcessModel);
 
 		//send SMS
@@ -122,9 +128,9 @@ public class OrderConfirmationEventListener extends AbstractSiteEventListener<Or
 					MarketplacecommerceservicesConstants.MPL_TRACK_ORDER_LONG_URL_FORMAT)
 					+ orderReferenceNumber;
 
-			final String shortTrackingUrl = googleShortUrlService
-					.genearateShortURL(orderModel.getParentReference() == null ? orderModel.getCode() : orderModel
-							.getParentReference().getCode());
+//			final String shortTrackingUrl = googleShortUrlService
+//					.genearateShortURL(orderModel.getParentReference() == null ? orderModel.getCode() : orderModel
+//							.getParentReference().getCode());
 			final String content = MarketplacecommerceservicesConstants.SMS_MESSAGE_ORDER_PLACED
 					.replace(MarketplacecommerceservicesConstants.SMS_VARIABLE_ZERO, firstName)
 					.replace(MarketplacecommerceservicesConstants.SMS_VARIABLE_ONE, orderReferenceNumber)

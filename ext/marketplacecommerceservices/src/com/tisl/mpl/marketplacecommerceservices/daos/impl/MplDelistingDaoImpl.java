@@ -3,7 +3,6 @@
  */
 package com.tisl.mpl.marketplacecommerceservices.daos.impl;
 
-import de.hybris.platform.catalog.CatalogVersionService;
 import de.hybris.platform.catalog.model.CatalogVersionModel;
 import de.hybris.platform.servicelayer.search.FlexibleSearchQuery;
 import de.hybris.platform.servicelayer.search.FlexibleSearchService;
@@ -13,7 +12,6 @@ import java.util.List;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.core.model.MarketplaceDelistModel;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.marketplacecommerceservices.daos.MplDelistingDao;
@@ -35,9 +33,6 @@ public class MplDelistingDaoImpl implements MplDelistingDao
 	private final static String C = "{c:";
 	private static final Logger LOG = Logger.getLogger(MplDelistingDaoImpl.class);
 
-
-	@Autowired
-	private CatalogVersionService catalogVersionService;
 
 	/*
 	 * (non-Javadoc)
@@ -154,7 +149,7 @@ public class MplDelistingDaoImpl implements MplDelistingDao
 
 			final FlexibleSearchQuery query = new FlexibleSearchQuery(queryString);
 			query.addQueryParameter("ussid", ussid);
-			query.addQueryParameter(SellerInformationModel.CATALOGVERSION, catalogVersion);
+			query.addQueryParameter("catalogVersion", catalogVersion);
 
 
 			//			final List<SellerInformationModel> listSellerInformation = flexibleSearchService.<SellerInformationModel> search(query)
@@ -206,5 +201,5 @@ public class MplDelistingDaoImpl implements MplDelistingDao
 	}
 
 
-	
+
 }

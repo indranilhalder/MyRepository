@@ -115,6 +115,9 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String TRUE_UPPER = "TRUE";
 	public static final String ZERO = "0";
 	public static final String LINK_PASSWORD_CHANGE = "/login/pw/change";
+	//Sonar Fix Jewellery
+	public static final String STONE = "Stone";
+	public static final String SIZE = "size";
 
 	//For Promotion Intercepter
 
@@ -588,7 +591,7 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 
 	public static final String SMS_MESSAGE_ORDER_RISK = "We're sorry! Your Tata CLiQ order no.{0} has been put on hold for some checks. You might get a call from Tata CLiQ Care.";
 	/* 8. Anniversary Changes */
-	public static final String SMS_MESSAGE_ORDER_RISK_CONFIRMED = "Hi, your order no. {0} is now confirmed. While we�ll keep you posted, track your order at {1}. Hope you enjoyed shopping with us.";
+	public static final String SMS_MESSAGE_ORDER_RISK_CONFIRMED = "Hi, your order no. {0} is now confirmed. While we'll keep you posted, track your order at {1}. Hope you enjoyed shopping with us.";
 	/* 9.Anniversary Changes */
 	public static final String SMS_MESSAGE_ORDER_RISK_REJECTED = "Hi, there's been a problem and your order no.{0} has been rejected. Log on to your account {1} or call us on {3} for more details.";
 	//R2.3 Added ShipmentSecondaryStatus NEW SMS
@@ -1031,7 +1034,7 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String EXCHANGE_REMOVAL_REASON = "Exchange Removed from Cart/Delivery Page due to Pincode Servicability";
 
 	public static final String REVERSE_PINCODE_NOT_SERVICABLE = "Exchange is Not Servicable";
-	//TISPRD-5986  MSH category 404 error handling
+	//TISPRD-5986 MSH category 404 error handling
 	public static final String E0023 = "E0023";
 
 	//Search error codes ends
@@ -1812,7 +1815,7 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	//"SELECT {o.pk} FROM {order as o},{OrderStatus as os} WHERE {creationtime} > (to_date(sysdate,'YYYY/MM/DD HH24:MI:SS') - INTERVAL '10' MINUTE) and {o.status}={os.pk} and {os.code}=?status"
 	//.intern();
 
-	//SprintPaymentFixes:- New query added 			//PaymentFix2017:- queryTAT added
+	//SprintPaymentFixes:- New query added //PaymentFix2017:- queryTAT added
 	public static final String PAYMENTPENDINGQUERY = "select {o.pk} from {Order as o},{OrderStatus as os} where  {o.creationtime} <= ?queryTAT and {o.status}={os.pk} and {os.code}=?status"
 			.intern();
 
@@ -1823,7 +1826,7 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String PAYMENTPENDINGSTATUS = "status".intern();
 	//PaymentFix2017:- queryTAT added
 	public static final String PAYMENTPENDINGSKIPTIME = "queryTAT".intern();
-	//PaymentFix2017:-  order by {jw.creationtime} desc added
+	//PaymentFix2017:- order by {jw.creationtime} desc added
 	public static final String PAYMENTPENDINGWEBHOOKUERY = "select {jw.pk} from {JuspayWebhook as jw}, {JuspayOrderStatus as js} where {jw.orderstatus}={js.pk} and {js.orderId}=?reqId order by {jw.creationtime} desc"
 			.intern();
 	public static final String WEBHOOKREQSTATUS = "reqId".intern();
@@ -1921,6 +1924,8 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 
 	public static final String L4CATEGORYQUERY = "SELECT distinct {cat.pk} FROM {Category AS cat},{CatalogVersion AS cv} WHERE  EXISTS ({{ SELECT * FROM {CategoryProductRelation} WHERE {source}={cat:pk} }} ) and {cat.code} like 'MSH%'"
 			.intern();
+
+	public static final String SITEMAP_FILE_LOCATION_BRAND = "mpl.sitemap.brandFileLocation".intern();
 	public static final String SITEMAP_FILE_LOCATION_CUSTOM = "mpl.sitemap.customFileLocation".intern();
 	public static final String SITEMAP_FILE_LOCATION_PRODUCT = "mpl.sitemap.productFileLocation".intern();
 	public static final String SITEMAP_CATEGORY_QUERY = "mpl.sitemap.categoryQuery".intern();
@@ -2196,6 +2201,14 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	//TPR-5667 | Query to Find categoryCode for product
 	public static final String CATEGORY_CODE_FOR_PRODUCT = "select {c.code} from {CategoryProductRelation as cpr JOIN Category as c ON {cpr.source}={c.pk}} where {cpr.target} in ({{select {p.pk} from { product as p JOIN Catalogversion as cv ON {p.catalogversion}={cv.pk}} where {cv.version} = ?catalogVersion AND {p.code} = ?code }}) AND ({c.code} LIKE ?mplCategoryPrefix OR {c.code} LIKE ?luxuryCategoryprefix)";
 
+	//PRDI-423 Start
+	public static final String SITEMAP_BRANDFILTER_QUERY = "mpl.sitemap.brandFilterQuery".intern();
+	public static final String SITEMAP_BRANDFILTER_QUERY_DEFAULT = "select {mbf:pk} from {mplbrandfilter as mbf} where {mbf.l1}=?l1code and {mbf.l2}=?l2code"
+			.intern();
+	public static final String SITEMAP_BRANDFILTER = "mpl.sitemap.brandFilter.use".intern();
+	public static final String COMMA_CONSTANT = ",".intern();
+	public static final String FRONT_SLASH = "/".intern();
+	//PRDI-423 End
 	//UF-281
 	public static final String B1002 = "B1002";
 
@@ -2235,9 +2248,11 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 
 	//jewellery TPR-3765
 	public static final String RETURN_FINEJEWELLERY = "Forward Seal Mismatch";
-	public static final String INVENTORY_RESV_JWLRY_CART = "Price(s) of the selected product(s) has been revised due to unavailability of the product(s) with the weight(s) displayed earlier. You have an outstanding amount of ";
-	public static final String INVENTORY_RESV_JWLRY_PAYMENT = "Price(s) of the selected product(s) has been revised due to unavailability of the product(s) with the weight(s) displayed earlier.";
+	public static final String INVENTORY_RESV_JWLRY_CART = "Price of the product(s) has changed as per current availability.";
+	//Sonar Fix
+	public static final String REPLACEDUSSID = "replacedUssid";
 	public static final String SELFCOURIER = "selfCourier";
 	public static final String SCHEDULE_PICKUP = "schedulePickup";
 	public static final String QUICK_DROP = "quickDrop";
+	public static final String ISCHECKOUT_PINCODE_SERVICEABLE = "isCheckoutPincodeServiceable";
 }

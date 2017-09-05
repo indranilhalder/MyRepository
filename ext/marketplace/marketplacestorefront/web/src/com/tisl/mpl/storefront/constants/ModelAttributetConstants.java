@@ -27,6 +27,7 @@ public final class ModelAttributetConstants
 	public static final String QS = "?";
 	public static final String EQUALS = "=";
 	public static final String AMPARSAND = "&";
+	public static final String COLON = ":";
 	public static final String SUFFIX_TH = "th";
 	public static final String SUFFIX_ST = "st";
 	public static final String SUFFIX_ND = "nd";
@@ -228,6 +229,8 @@ public final class ModelAttributetConstants
 	//Added  for Fine Jewellery  :::  START
 	public static final String FINEJEWELLERY = "FineJewellery";
 	public static final String NOSIZE = "NO SIZE";
+	public static final String CLASSNAME_19NA = "19na";
+	public static final String FEATURE_NAME = "pcmClassification/1/19na.pricebreakuponpdpfinejwlry";
 	//Added  for Fine Jewellery  :::  END
 
 	//Added  for Fashion Jewellery  :::  START
@@ -903,6 +906,8 @@ public final class ModelAttributetConstants
 	public static final String EMAILORPASSINVALID = "Email or Password invalid";
 	public static final String LUXURY_USER_FIRST_NAME = "fname";
 
+	//PRDI-422
+	public static final String METAPAGETITLE = "metaPageTitle";
 
 
 	/* TPR-5733 */

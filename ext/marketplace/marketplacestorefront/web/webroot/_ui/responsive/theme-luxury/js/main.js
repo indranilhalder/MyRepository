@@ -1440,6 +1440,8 @@ TATA.Pages = {
                 $("#EMITermTable").hide();
                 $("#emiTableTHead").hide();
                 $("#emiTableTbody").hide();
+                $(".emifselectbank").show();
+                
                 var requiredUrl = ACC.config.encodedContextPath + "/p" + "-enlistEMIBanks";
                 var dataString = 'productVal=' + productVal;
                 $.ajax({
@@ -1476,6 +1478,8 @@ TATA.Pages = {
                 var contentData = '';
                 var productId=[];
                 productId.push($('#product_id').val());
+                $(".emifselectbank").hide();
+                
                 if (selectedBank != "select") {
                     var dataString = 'selectedEMIBank=' + selectedBank + '&productVal=' + productVal;
                     $.ajax({

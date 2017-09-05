@@ -40,7 +40,7 @@ public class MplPancardUploadserviceImpl implements MplPancardUploadService
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.tisl.mpl.service.MplPancardTicketCRMservice#ticketPancardModeltoDTO(de.hybris.platform.core.model.
 	 * PancardInformationModel)
 	 */
@@ -53,7 +53,7 @@ public class MplPancardUploadserviceImpl implements MplPancardUploadService
 	//For sending pancard details to SP through PI and save data into database for new pancard entry
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.tisl.mpl.service.MplPancardUploadserviceImpl#generateXmlForPanCard(java.lang.String, java.lang.String,
 	 * java.lang.String, java.lang.String, org.springframework.web.multipart.MultipartFile)
 	 */
@@ -139,7 +139,7 @@ public class MplPancardUploadserviceImpl implements MplPancardUploadService
 	 * @return
 	 * @throws JAXBException
 	 */
-	private String getResponseFromPIforPanCard(final LPAWBUpdate lpAwbUpdate) throws JAXBException
+	public String getResponseFromPIforPanCard(final LPAWBUpdate lpAwbUpdate) throws JAXBException
 	{
 		// YTODO Auto-generated method stub
 		final Client client = Client.create();

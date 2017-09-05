@@ -34348,6 +34348,8 @@ body.page-cartPage .product-block.wishlist .item .desktop .treat-urself-button{
 }
 body.page-cartPage .product-block.wishlist .item .desktop .treat-urself-button#addToCartButton{
     height: 32px !important;
+    z-index: 2; /*PRDI-753 fix*/
+    position: relative; /*PRDI-753 fix*/
 }
 body.page-cartPage .cart.wrapper .product-block.wishlist{
 	margin-top:0;
@@ -53245,6 +53247,13 @@ word-wrap: break-word;
 		.template-pages-layout-apparelCategoryLandingPageV1 #rotatingImage {
 		padding: 0;
 	}
+	
+	 .template-pages-layout-apparelCategoryLandingPageV1 #rotatingImageTimeoutMobile,
+ 		.template-pages-layout-apparelCategoryLandingPageV1 #rotatingImageMobile ,
+ 	.template-pages-layout-newBrandLandingPageTemplate #rotatingImageTimeoutMobile,
+ 		.template-pages-layout-newBrandLandingPageTemplate #rotatingImageMobile {
+ 		display: none;
+ 	}
 	.style_edit .style_edit_left>div>div:first-child >span:first-child {
 		font-size: 24px;
 		margin: 40px 0;
@@ -72957,7 +72966,7 @@ header .content nav > ul > li.ShopByBrand > ul > li > ul > li {
 	width: 100%;
 }
 header .content .search .select-list{
-	z-index: 10000;  /* JWLSPCUAT-680 */ 
+	z-index: 10000 !important;  /* JWLSPCUAT-680 */ 
 }
 header.brand-header .content .bottom nav>ul>li>ul:before {
     background-image: linear-gradient(to bottom,#000,#000);
@@ -75505,7 +75514,7 @@ body.page-returnSubmit .accordtionTataCliq .accContents.returnMethod .button_hol
 .product-info .product-detail.FineJewellery .product-desc .key-label #jwlryTitle,
 .product-info .product-detail.FashionJewellery .product-desc .key-label #jwlryTitle{		
 	float: left;
-	max-width: 200px;
+	max-width: 365px;
     overflow: hidden;
     white-space: nowrap;		
 }		
@@ -75813,6 +75822,13 @@ ul.jqtree-tree .jqtree-element{
 	}
 	.col-md-7.col-sm-7.col-xs-12.reverseSealJwlry .popover{
 		margin-left: 0;
+	}
+}
+@media(max-width: 1125px){
+	.product-info .product-detail.FineJewellery .product-desc .key-label #jwlryTitle,
+	.product-info .product-detail.FashionJewellery .product-desc .key-label #jwlryTitle
+	{
+		max-width: 200px;
 	}
 }
 /*TPR-4134 starts*/

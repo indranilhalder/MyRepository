@@ -17,7 +17,6 @@ import de.hybris.platform.acceleratorservices.model.cms2.pages.EmailPageModel;
 import de.hybris.platform.acceleratorservices.process.email.context.AbstractEmailContext;
 import de.hybris.platform.basecommerce.model.site.BaseSiteModel;
 import de.hybris.platform.commercefacades.order.data.OrderData;
-import de.hybris.platform.core.GenericSearchConstants.LOG;
 import de.hybris.platform.core.model.c2l.LanguageModel;
 import de.hybris.platform.core.model.order.AbstractOrderEntryModel;
 import de.hybris.platform.core.model.order.OrderModel;
@@ -26,14 +25,12 @@ import de.hybris.platform.core.model.user.AddressModel;
 import de.hybris.platform.core.model.user.CustomerModel;
 import de.hybris.platform.orderprocessing.model.OrderProcessModel;
 import de.hybris.platform.servicelayer.dto.converter.Converter;
-import de.hybris.platform.storelocator.model.PointOfServiceModel;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.apache.velocity.tools.generic.MathTool;
 import org.apache.velocity.tools.generic.NumberTool;
@@ -42,8 +39,6 @@ import org.springframework.beans.factory.annotation.Required;
 
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.facades.account.address.MplAccountAddressFacade;
-import com.tisl.mpl.facades.constants.MarketplaceFacadesConstants;
-import com.tisl.mpl.facades.product.data.StateData;
 import com.tisl.mpl.shorturl.service.ShortUrlService;
 
 
@@ -62,7 +57,7 @@ public class PancardRejectEmailContext extends AbstractEmailContext<OrderProcess
 	private static final String TOTALPRICE = "totalPrice";
 	private static final String SHIPPINGCHARGE = "shippingCharge";
 	private static final String CONVENIENCECHARGE = "convenienceChargesVal";
-	private static final String CNCSTOREADDRESS = "storeAddress";
+	//private static final String CNCSTOREADDRESS = "storeAddress";
 	private static final String CUSTOMER_NAME = "customerName";
 	private static final String COD_CHARGES = "codCharge";
 	private static final String SUBTOTALFORJEWELLERY = "subTotalForJewellery";
@@ -137,10 +132,10 @@ public class PancardRejectEmailContext extends AbstractEmailContext<OrderProcess
 		//put(TOTALPRICE, totalPriceNew);
 		put(SHIPPINGCHARGE, Double.valueOf(shippingCharge));
 		put(CONVENIENCECHARGE, convenienceChargesVal);
-		
-		final Set<PointOfServiceModel> storeAddrList = new HashSet<PointOfServiceModel>();
+
+		//final Set<PointOfServiceModel> storeAddrList = new HashSet<PointOfServiceModel>();
 		//final StringBuilder deliveryAddr = new StringBuilder(150);
-		final List<StateData> stateDataList = getAccountAddressFacade().getStates();
+		//final List<StateData> stateDataList = getAccountAddressFacade().getStates();
 		for (final AbstractOrderEntryModel entryModel : orderProcessModel.getOrder().getEntries())
 
 		{
@@ -161,8 +156,6 @@ public class PancardRejectEmailContext extends AbstractEmailContext<OrderProcess
 			{
 				productImageUrl = "";
 			}
-
-
 			put(PRODUCT_IMAGE_URL, productImageUrl);
 
 
@@ -174,25 +167,27 @@ public class PancardRejectEmailContext extends AbstractEmailContext<OrderProcess
 
 			put(ORDERPLACEDATE, orderPlaceDate);
 
-			if (entryModel.getMplDeliveryMode().getDeliveryMode().getCode().equalsIgnoreCase(MarketplaceFacadesConstants.C_C))
-			{
-				final PointOfServiceModel model = entryModel.getDeliveryPointOfService();
-				final AddressModel address = model.getAddress();
-				for (final StateData state : stateDataList)
-				{
-					if (address.getState().equalsIgnoreCase(state.getCode()))
-					{
-						address.setState(state.getName());
-						model.setAddress(address);
-						break;
-					}
-				}
-				storeAddrList.add(model);
-				put(CNCSTOREADDRESS, storeAddrList);
-				put(CUSTOMER_NAME, CUSTOMER);
-			}
+
 		}
 		put(CHILDENTRIES, childEntries);
+
+		//TISJEW-4487
+		final CustomerModel customer = (CustomerModel) orderProcessModel.getOrder().getUser();
+		final AddressModel deliveryAddress = orderProcessModel.getOrder().getDeliveryAddress();
+		String displayName = "";
+		if (deliveryAddress != null)
+		{
+			displayName = deliveryAddress.getFirstname();
+		}
+
+		if (StringUtils.isEmpty(displayName))
+		{
+			put(CUSTOMER_NAME, CUSTOMER);
+		}
+		else
+		{
+			put(CUSTOMER_NAME, displayName);
+		}
 
 
 		String websiteUrl = null;
@@ -205,7 +200,7 @@ public class PancardRejectEmailContext extends AbstractEmailContext<OrderProcess
 
 		put(COD_CHARGES, orderProcessModel.getOrder().getConvenienceCharges());
 
-		final CustomerModel customer = (CustomerModel) orderProcessModel.getOrder().getUser();
+		//final CustomerModel customer = (CustomerModel) orderProcessModel.getOrder().getUser();
 		put(EMAIL, customer.getOriginalUid());
 		put("math", new MathTool());
 		put(NUMBERTOOL, new NumberTool());

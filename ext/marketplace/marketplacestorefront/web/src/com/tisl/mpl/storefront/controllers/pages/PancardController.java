@@ -46,7 +46,7 @@ public class PancardController
 
 	/*
 	 * @ResponseBody
-	 * 
+	 *
 	 * @RequestMapping(value = "/pancardupload/test123", method = RequestMethod.GET) public String getTest123() throws
 	 * CMSItemNotFoundException { System.out.println("Test123****************"); return "test123"; }
 	 */
@@ -77,6 +77,36 @@ public class PancardController
 		model.addAttribute("orderreferancenumber", orderReferanceNumber);
 		model.addAttribute("customername", customerName);
 
+		final List<OrderModel> oModelList = mplPancardFacade.getOrderForCode(orderReferanceNumber);
+		if (CollectionUtils.isEmpty(oModelList))
+		{
+			LOG.error("OrderId does not exist: " + orderReferanceNumber);
+			return MarketplacecommerceservicesConstants.REDIRECT + "/404";
+		}
+		if (CollectionUtils.isNotEmpty(oModelList))
+		{
+			if (null != oModelList.get(0).getDeliveryAddress())
+			{
+				if (StringUtils.isEmpty(oModelList.get(0).getDeliveryAddress().getFirstname()))
+				{
+					LOG.error("Customer Name does not exist");
+					return MarketplacecommerceservicesConstants.REDIRECT + "/404";
+				}
+				if (!customerName.equals(oModelList.get(0).getDeliveryAddress().getFirstname()))
+				{
+					LOG.error("Customer Name " + customerName
+							+ " does not match with the firstname of the delivery address from order: "
+							+ oModelList.get(0).getDeliveryAddress().getFirstname());
+					return MarketplacecommerceservicesConstants.REDIRECT + "/404";
+				}
+			}
+			else
+			{
+				LOG.error("Delivery address is null. Hence customer name can not be verified..");
+				return MarketplacecommerceservicesConstants.REDIRECT + "/404";
+			}
+		}
+
 		if (StringUtils.isNotEmpty(status))
 		{
 			model.addAttribute("failure", "Something went wrong.Please try again!!.");
@@ -92,7 +122,7 @@ public class PancardController
 			{
 				if (StringUtils.isNotEmpty(pModel.getStatus()))
 				{
-					if (pModel.getStatus().equalsIgnoreCase(MarketplacecommerceservicesConstants.PAN_REJECTED))
+					if (MarketplacecommerceservicesConstants.PAN_REJECTED.equalsIgnoreCase(pModel.getStatus()))
 					{
 						ifRejected = true;
 						break;
@@ -112,7 +142,8 @@ public class PancardController
 				{
 					if (StringUtils.isNotEmpty(pModel.getStatus()))
 					{
-						if (pModel.getStatus().equalsIgnoreCase(MarketplacecommerceservicesConstants.PENDING_FOR_VERIFICATION))
+						if (MarketplacecommerceservicesConstants.PENDING_FOR_VERIFICATION.equalsIgnoreCase(pModel.getStatus())
+								|| MarketplacecommerceservicesConstants.NA.equalsIgnoreCase(pModel.getStatus()))
 						{
 							ifPending = true;
 							break;

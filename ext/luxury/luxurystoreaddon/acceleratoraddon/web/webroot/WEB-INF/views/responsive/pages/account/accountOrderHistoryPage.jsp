@@ -451,7 +451,7 @@
 														  	</c:when>
 														  	<c:otherwise>
 														  		<c:if test="${entry.isCancellationMissed eq 'true'}">
-																						<spring:theme code="orderHistory.cancellationDeadlineMissed.msg" />
+																						<div class="mt-10 mb-10"><spring:theme code="orderHistory.cancellationDeadlineMissed.msg" /></div>
 																</c:if>
 														  	</c:otherwise>
 														</c:choose>

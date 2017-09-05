@@ -201,7 +201,7 @@ var buyboxskuId='';
 <%-- UF-377 starts --%>
 <div class="product-specification-accordion smk_accordion acc_with_icon">
 	<c:if test="${fn:contains(validTabs, 'stylenote')}">
-		<div class="choose-address accordion_in acc_active">
+		<div  id="styleNotesMobile" class="choose-address accordion_in acc_active">
 			<div class="acc_head">
 				<div class="acc_icon_expand"></div>
 				<h2><spring:theme code="product.product.styleNotes" /></h2>
@@ -212,7 +212,7 @@ var buyboxskuId='';
 		</div>
 	</c:if>
 	<c:if test="${fn:contains(validTabs, 'details')}">
-		<div class="choose-address accordion_in">
+		<div id="detailsMobile" class="choose-address accordion_in">
 			<div class="acc_head">
 				<div class="acc_icon_expand"></div>
 				<h2><spring:theme code="product.product.details" /></h2>
@@ -223,7 +223,7 @@ var buyboxskuId='';
 		</div>
 	</c:if>
 	<c:if test="${fn:contains(validTabs, 'description')}">
-		<div class="choose-address accordion_in">
+		<div id="descriptionMobile" class="choose-address accordion_in">
 			<div class="acc_head">
 				<div class="acc_icon_expand"></div>
 				<h2><spring:theme code="product.product.description" /></h2>
@@ -234,7 +234,7 @@ var buyboxskuId='';
 		</div>
 	</c:if>
 	<c:if test="${fn:contains(validTabs, 'warranty')}">
-		<div class="choose-address accordion_in">
+		<div id="warrantyMobile" class="choose-address accordion_in">
 			<div class="acc_head">
 				<div class="acc_icon_expand"></div>
 				<h2><spring:theme code="product.product.warranty" /></h2>
@@ -245,7 +245,7 @@ var buyboxskuId='';
 		</div>
 	</c:if>
 	<c:if test="${fn:contains(validTabs, 'knowmore')}">
-		<div class="choose-address accordion_in">
+		<div id="knowmoreMobile" class="choose-address accordion_in">
 			<div class="acc_head">
 				<div class="acc_icon_expand"></div>
 				<h2><spring:theme code="product.product.knowmore" /></h2>
@@ -256,7 +256,7 @@ var buyboxskuId='';
 		</div>
 	</c:if>
 	<c:if test="${fn:contains(validTabs, 'brandInfo')}">
-		<div class="choose-address accordion_in">
+		<div id="brandInfoMobile" class="choose-address accordion_in">
 			<div class="acc_head">
 				<div class="acc_icon_expand"></div>
 				<h2><spring:theme code="product.product.brandInfo" /></h2>
@@ -267,7 +267,7 @@ var buyboxskuId='';
 		</div>
 	</c:if>
 	<c:if test="${fn:contains(validTabs, 'returnsAndRefunds')}">
-		<div class="choose-address accordion_in">
+		<div id="returnsAndRefundsMobile" class="choose-address accordion_in">
 			<div class="acc_head">
 				<div class="acc_icon_expand"></div>
 				<h2><spring:theme code="product.product.returnsAndRefunds" /></h2>
