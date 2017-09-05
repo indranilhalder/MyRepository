@@ -10,6 +10,7 @@ import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.MapUtils;
 import org.apache.commons.collections.Predicate;
 import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang.math.NumberUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.zkoss.zk.ui.api.HtmlBasedComponent;
 import org.zkoss.zk.ui.event.Event;
@@ -143,9 +144,18 @@ public class MarketPlaceRefundDeliveryChargeWidgetRenderer extends
 
 										for (Map.Entry<AbstractOrderEntryModel, RefundDeliveryData> refundEntry : refundMap
 												.entrySet()) {
+											if(null != refundEntry.getKey().getIsEDtoHD() && refundEntry.getKey().getIsEDtoHD() ) {
+												Double hdDeliveryCharges = 0.0D;
+												if(null != refundEntry.getKey().getHdDeliveryCharge()) {
+													hdDeliveryCharges = refundEntry.getKey().getHdDeliveryCharge();
+												 }
+												totalRefundDeliveryCharges = totalRefundDeliveryCharges
+														+ hdDeliveryCharges;
+											}else {
 											totalRefundDeliveryCharges = totalRefundDeliveryCharges
 													+ refundEntry.getKey()
 															.getCurrDelCharge();
+											}
 											if (StringUtils.isEmpty(refundEntry
 													.getValue().getReason())) {
 												flag = false;
@@ -192,7 +202,7 @@ public class MarketPlaceRefundDeliveryChargeWidgetRenderer extends
 													.createRefundDeliveryChargesRequest(
 															(OrderModel) orderTypedObject
 																	.getObject(),
-															refundMap);
+															refundMap,false);
 											if (refundDeliveryChargesRequest != null) {
 												popupWidgetHelper
 														.dismissCurrentPopup();
@@ -283,7 +293,15 @@ public class MarketPlaceRefundDeliveryChargeWidgetRenderer extends
 				@Override
 				public boolean evaluate(Object o) {
 					AbstractOrderEntryModel entry = (AbstractOrderEntryModel) o;
-					return entry.getCurrDelCharge() != 0D;
+					if(null != entry.getIsEDtoHD() && entry.getIsEDtoHD() ) {
+						Double hdDelCharges = entry.getHdDeliveryCharge() != null ?entry
+								.getHdDeliveryCharge() : NumberUtils.DOUBLE_ZERO;
+						return	entry.getCurrDelCharge() != 0D && hdDelCharges !=0D;
+					}else 
+					{
+						return entry.getCurrDelCharge() != 0D;
+					}
+					
 				}
 			});
 			for (AbstractOrderEntryModel orderEntry : orderEntryList) {
@@ -357,17 +375,25 @@ public class MarketPlaceRefundDeliveryChargeWidgetRenderer extends
 							tableRow);
 					
 					Listcell rowLabel5 = new Listcell();
-					String isEdToHdLabelString =  ((null != orderEntry
-							.getIsEDtoHD() && orderEntry.getIsEDtoHD()) ? "YES" : "NO");
+					String isEdToHdLabelString =  (null != orderEntry
+							.getIsEDtoHD() && orderEntry.getIsEDtoHD()) ? "YES" : "NO";
 					final Label isEdToHdLabel = new Label(
 							isEdToHdLabelString);
 					rowLabel5.appendChild(isEdToHdLabel);
 					tableRow.appendChild(rowLabel5);
 					
 					Listcell rowLabel3 = new Listcell();
-					String deliveryChargesString = (null != orderEntry
-							.getCurrDelCharge()) ? currencyInstance
-							.format(orderEntry.getCurrDelCharge()) : "";
+					String deliveryChargesString;
+					if(null != orderEntry.getIsEDtoHD() && orderEntry.getIsEDtoHD()) {
+						 deliveryChargesString = (null != orderEntry
+								.getHdDeliveryCharge()) ? currencyInstance
+								.format(orderEntry.getHdDeliveryCharge()) : "";
+					}else {
+						 deliveryChargesString = (null != orderEntry
+									.getCurrDelCharge()) ? currencyInstance
+									.format(orderEntry.getCurrDelCharge()) : "";
+					}
+					
 					final Label deliveryChargesStringLabel = new Label(
 							deliveryChargesString);
 					rowLabel3.appendChild(deliveryChargesStringLabel);

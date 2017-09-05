@@ -1977,17 +1977,21 @@ public class CategoryPageController extends AbstractCategoryPageController
 			final String metaTitle)
 	{
 		final List<MetaElementData> metadata = new LinkedList<>();
-		metadata.add(createMetaElement("keywords", metaKeywords));
-		metadata.add(createMetaElement("description", metaDescription));
+		//Add the String constant in the ModelAttributeConstants file
+		metadata.add(createMetaElement(ModelAttributetConstants.KEYWORDS, metaKeywords));
+		metadata.add(createMetaElement(ModelAttributetConstants.DESCRIPTION, metaDescription));
 		//metadata.add(createMetaElement("title", metaTitle));
-		model.addAttribute("metatags", metadata);
-
+		model.addAttribute(ModelAttributetConstants.METATAGS, metadata);
+		//PRDI-422
+		model.addAttribute(ModelAttributetConstants.KEYWORDS, metaKeywords);
+		model.addAttribute(ModelAttributetConstants.DESCRIPTION, metaDescription);
 	}
 
 	/* PageTitle in header - (TPR-243) SEO Meta Tags and Titles */
 	private void updatePageTitle(final Model model, final String metaTitle)
 	{
-		model.addAttribute("metaPageTitle", metaTitle);
+		//Add the String constant in the ModelAttributeConstants file
+		model.addAttribute(ModelAttributetConstants.METAPAGETITLE, metaTitle);
 	}
 
 

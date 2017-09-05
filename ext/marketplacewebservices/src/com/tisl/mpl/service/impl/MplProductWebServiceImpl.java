@@ -312,7 +312,7 @@ public class MplProductWebServiceImpl implements MplProductWebService
 
 	/*
 	 * To get product details for a product code
-	 *
+	 * 
 	 * @see com.tisl.mpl.service.MplProductWebService#getProductdetailsForProductCode(java.lang.String)
 	 */
 	@Override
@@ -877,7 +877,7 @@ public class MplProductWebServiceImpl implements MplProductWebService
 							for (final AbstractCMSComponentModel model : componentLists)
 							{
 								final ExchangeLinkUrl linkUrl = new ExchangeLinkUrl();
-								if (model != null && model instanceof SimpleCMSComponentModel)
+								if (model instanceof SimpleCMSComponentModel)
 
 								{
 									final SimpleCMSComponentModel simpleComponent = (SimpleCMSComponentModel) model;
@@ -1880,12 +1880,12 @@ public class MplProductWebServiceImpl implements MplProductWebService
 	/*
 	 * private PromotionData checkHighestPriority(final List<PromotionData> enabledPromotionList) {
 	 * Collections.sort(enabledPromotionList, new Comparator<PromotionData>() {
-	 *
+	 * 
 	 * @Override public int compare(final PromotionData promo1, final PromotionData promo2) { int priority = 0; if (null
 	 * != promo1.getPriority() && null != promo2.getPriority()) { priority =
 	 * promo1.getPriority().compareTo(promo2.getPriority()); } return priority; }
-	 *
-	 *
+	 * 
+	 * 
 	 * }); Collections.reverse(enabledPromotionList); return enabledPromotionList.get(0); }
 	 */
 
