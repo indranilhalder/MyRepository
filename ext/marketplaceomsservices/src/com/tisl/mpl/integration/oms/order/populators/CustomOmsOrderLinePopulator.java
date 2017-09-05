@@ -344,7 +344,10 @@ public class CustomOmsOrderLinePopulator implements Populator<OrderEntryModel, O
 			{
 				target.setShippingCharge(source.getPrevDelCharge().doubleValue());
 			}
-
+			if (source.getHdDeliveryCharge() != null)
+			{
+				target.setHDShippingCharge(source.getHdDeliveryCharge().doubleValue());
+			}
 			/*
 			 * if (source.getPrevDelCharge() != null && source.getPrevDelCharge().doubleValue() > 0) {
 			 * target.setShippingCharge(source.getPrevDelCharge().doubleValue()); } else if (source.getCurrDelCharge() !=

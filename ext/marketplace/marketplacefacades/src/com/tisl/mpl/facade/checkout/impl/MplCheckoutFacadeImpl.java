@@ -1344,7 +1344,11 @@ public class MplCheckoutFacadeImpl extends DefaultCheckoutFacade implements MplC
 		{
 			final OrderProcessModel orderProcessModel = new OrderProcessModel();
 			orderProcessModel.setOrder(order);
-			orderProcessModel.setOrderTrackUrl(trackorderurl);
+			if(null != shortTrackingUrl) {
+				orderProcessModel.setOrderTrackUrl(shortTrackingUrl);
+			}else {
+				orderProcessModel.setOrderTrackUrl(trackorderurl);
+			}
 			final OrderPlacedEvent orderplacedEvent = new OrderPlacedEvent(orderProcessModel);
 			try
 			{
