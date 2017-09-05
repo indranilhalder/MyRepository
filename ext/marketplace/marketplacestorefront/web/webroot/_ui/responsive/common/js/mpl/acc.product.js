@@ -825,7 +825,6 @@ sendAddToBagQuick:function(formId){
 				var productCodeArray=[];
 				productCodeArray.push(productCode);	// Product code passed as an array for Web Analytics
 				utag.link({
-					link_obj: this, 
 					link_text: 'quick_view_addtobag' , 
 					event_type : 'quick_view_addtobag', 
 					product_sku_quick_view : productCodeArray
@@ -835,7 +834,7 @@ sendAddToBagQuick:function(formId){
 			//End MSD
 			//TPR-6029 | add to bag on quickview #42--start
 			if(!digitalDataError){
-				if(typeof _satellite != "undefined"){
+				if(typeof(_satellite)!= "undefined"){
 					_satellite.track('cpj_qw_add_to_bag');
 				}
 			}
@@ -980,14 +979,13 @@ sendAddToBagQuick:function(formId){
 					//TISQAEE-64 Buy Now Quick View
 					if(typeof utag !="undefined"){
 						utag.link({
-							link_obj: this,
 							link_text: 'quickview_buynow' ,
 							event_type : 'quickview_buynow',
 							product_sku : productCodeArray
 						});
 					}
 					//TPR-6029 | buy now on quickview #41
-					if(typeof _satellite != "undefined"){
+					if(typeof(_satellite) != "undefined"){
 						 _satellite.track('cpj_qw_buy_now');
 					 }
 					location.href=ACC.config.encodedContextPath + '/cart';

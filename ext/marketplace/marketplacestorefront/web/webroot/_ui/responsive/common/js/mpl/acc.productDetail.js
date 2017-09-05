@@ -2063,10 +2063,7 @@ function openPopForBankEMI() {
 				event_type : 'emi_more_information',
 				product_id : productIdArray
 			});
-			if(typeof _satellite != "undefined"){
-		 		_satellite.track('cpj_pdp_emi');
-		 	}	
-
+			dtmEmiTrack();
 		},
 		error : function(xhr, status, error) {
 
@@ -2130,6 +2127,8 @@ function populateEMIDetailsForPDP(){
 					});
 					}
 					/*TPR-641 ends*/
+					//track pdp and qw emi bank details
+					dtmEmiBankTrack(emiBankSelected);
 				},
 				error : function(resp) {
 					$('#emiSelectBank').show();
