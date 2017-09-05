@@ -3,12 +3,17 @@
  */
 package com.tisl.mpl.storefront.interceptors.beforeview;
 
+import de.hybris.platform.acceleratorfacades.device.DeviceDetectionFacade;
+import de.hybris.platform.acceleratorfacades.device.data.DeviceData;
 import de.hybris.platform.commercefacades.user.UserFacade;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
+import java.net.InetSocketAddress;
+import java.net.Proxy;
+import java.net.SocketAddress;
 import java.net.URL;
 
 import javax.annotation.Resource;
@@ -33,11 +38,23 @@ public class PromotionalForcedLoginBeforeViewHandler implements BeforeViewHandle
 	Logger LOG = Logger.getLogger(this.getClass().getName());
 	@Resource(name = "userFacade")
 	private UserFacade userFacade;
+	@Resource(name = "deviceDetectionFacade")
+	private DeviceDetectionFacade deviceDetectionFacade;
 
 	private String domain;
 	private String proxyPort;
 	private String proxyEnabled;
 	private String proxyAddress;
+
+	SocketAddress addr = null;
+	Proxy proxy = null;
+
+	void setProxy()
+	{
+		final int portproxy = Integer.parseInt(getProxyPort());
+		addr = new InetSocketAddress(getProxyAddress(), portproxy);
+		proxy = new Proxy(Proxy.Type.HTTP, addr);
+	}
 
 	@Override
 	public void beforeView(final HttpServletRequest request, final HttpServletResponse response, final ModelAndView modelAndView)
@@ -58,6 +75,10 @@ public class PromotionalForcedLoginBeforeViewHandler implements BeforeViewHandle
 			modelAndView.addObject("forced_login_user", "Y");
 			final String loginHTML = this.getHTMLFromURL("/login?frame=true&box-login");
 			modelAndView.addObject("login_register_html", loginHTML);
+			//device detection
+			deviceDetectionFacade.initializeRequest(request);
+			final DeviceData deviceData = deviceDetectionFacade.getCurrentDetectedDevice();
+			modelAndView.addObject("is_mobile", deviceData.getMobileBrowser());
 		}
 		else
 		{
@@ -78,10 +99,10 @@ public class PromotionalForcedLoginBeforeViewHandler implements BeforeViewHandle
 		BufferedReader br = null;
 		try
 		{
-			//setProxy();
+			setProxy();
 			final String Url = getDomain() + urlto;
 			final URL url = new URL(Url);
-			urlConnection = (HttpURLConnection) url.openConnection();
+			urlConnection = (HttpURLConnection) url.openConnection(proxy);
 			urlConnection.setConnectTimeout(15000);//15 secs
 			urlConnection.setRequestMethod("GET");
 			urlConnection.setRequestProperty("Content-length", "0");
