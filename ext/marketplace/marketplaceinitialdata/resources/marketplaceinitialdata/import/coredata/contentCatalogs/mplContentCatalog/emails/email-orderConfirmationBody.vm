@@ -290,17 +290,17 @@
                                           <table width="100%" border="0" cellspacing="0" cellpadding="0">
                                              <tbody>
                                                 <tr>
-                                                   <td class="smFull dsnone" width="300">&nbsp;</td>
+                                                   <td class="smFull dsnone" width="100">&nbsp;</td>
                                                    <td class="smFull">
                                                       <table width="100%" border="0" cellspacing="0" cellpadding="0" class="content">
                                                          <tbody>
                                                             <tr>
                                                                <td style="font-size:12px;font-family:Arial, Helvetica, sans-serif;color: #000000;">Subtotal</td>
-                                                               <td align="right" class="taleft" style="font-size:12px;font-family:Arial, Helvetica, sans-serif;color: #000000;">&#x20b9; $ctx.numberTool.format("#0.00",$ctx.subTotal)</td>
+                                                               <td align="right" class="taleft" style="font-size:12px;font-family:Arial, Helvetica, sans-serif;color: #000000; text-align: right;">&#x20b9; $ctx.numberTool.format("#0.00",$ctx.subTotal)</td>
                                                             </tr>
                                                             <tr>
                                                                <td style="font-size:12px;font-family:Arial, Helvetica, sans-serif;color: #000000;">Shipping Charges</td>
-                                                               <td align="right" class="taleft" style="font-size:12px;font-family:Arial, Helvetica, sans-serif;color: #000000;">#if($ctx.shippingCharge == 0)
+                                                               <td align="right" class="taleft" style="font-size:12px;font-family:Arial, Helvetica, sans-serif;color: #000000; text-align: right;">#if($ctx.shippingCharge == 0)
                                                                   Free
                                                                   #else
                                                                   &#x20b9; $ctx.numberTool.format("#0.00",$ctx.shippingCharge)
@@ -309,7 +309,7 @@
                                                             </tr>
                                                             <tr>
                                                                <td style="font-size:12px;font-family:Arial, Helvetica, sans-serif;color: #000000;">Convenience Charges</td>
-                                                               <td align="right" class="taleft" style="font-size:12px;font-family:Arial, Helvetica, sans-serif;color: #000000;">#if($ctx.convenienceChargesVal == 0)
+                                                               <td align="right" class="taleft" style="font-size:12px;font-family:Arial, Helvetica, sans-serif;color: #000000; text-align: right;">#if($ctx.convenienceChargesVal == 0)
                                                                   Free
                                                                   #else
                                                                   &#x20b9; $ctx.numberTool.format("#0.00",$ctx.convenienceChargesVal)
@@ -325,7 +325,7 @@
                                                             </tr>
                                                             <tr>
                                                                <td class="borTotal" style="font-size:12px;font-weight:bold;font-family:Arial, Helvetica, sans-serif;color: #000000;">Total</td>
-                                                               <td class="borTotal taleft" align="right"  style="font-size:12px;font-weight:bold;font-family:Arial, Helvetica, sans-serif;color: #000000;">&#x20b9; $ctx.numberTool.format("#0.00",$ctx.totalPrice)</td>
+                                                               <td class="borTotal taleft" align="right"  style="font-size:12px;font-weight:bold;font-family:Arial, Helvetica, sans-serif;color: #000000; text-align: right;">&#x20b9; $ctx.numberTool.format("#0.00",$ctx.totalPrice)</td>
                                                             </tr>
                                                          </tbody>
                                                       </table>
