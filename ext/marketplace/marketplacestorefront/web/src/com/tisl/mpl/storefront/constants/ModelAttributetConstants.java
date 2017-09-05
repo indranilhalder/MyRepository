@@ -914,6 +914,6 @@ public final class ModelAttributetConstants
 	public static final String REMOVE_SIZEGUIDE = "removeSizeGuide".intern();
 
 	//CKD:TPR-6804
-	public static final String HOME_FURNISHING = "Home&Furnishing".intern();
+	public static final String HOME_FURNISHING = "HomeFurnishing".intern();
 
 }
