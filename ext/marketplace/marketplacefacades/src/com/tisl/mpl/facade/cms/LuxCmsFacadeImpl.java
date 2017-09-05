@@ -38,6 +38,7 @@ import com.tisl.lux.model.cms.components.ShopOnLuxuryElementModel;
 import com.tisl.lux.model.cms.components.ShopOnLuxuryModel;
 import com.tisl.lux.model.cms.components.WeeklySpecialBannerModel;
 import com.tisl.lux.model.cms.components.WeeklySpecialModel;
+import com.tisl.mpl.marketplacecommerceservices.service.MplCmsPageService;
 import com.tisl.mpl.marketplacecommerceservices.service.impl.MplCMSPageServiceImpl;
 import com.tisl.mpl.model.cms.components.LuxCMSMediaParagraphComponentModel;
 import com.tisl.mpl.model.cms.components.ShopByCategoryModel;
@@ -71,13 +72,13 @@ public class LuxCmsFacadeImpl implements LuxCmsFacade
 
 	@Resource(name = "sessionService")
 	private SessionService sessionService;
-
+	
 	private MplCMSPageServiceImpl mplCMSPageService;
-
+	
 
 	private static final Logger LOG = Logger.getLogger(LuxCmsFacadeImpl.class);
-
-
+	
+	
 
 
 	/**
@@ -93,10 +94,9 @@ public class LuxCmsFacadeImpl implements LuxCmsFacade
 
 
 	/**
-	 * @param mplCMSPageService
-	 *           the mplCMSPageService to set
+	 * @param mplCMSPageService the mplCMSPageService to set
 	 */
-	public void setMplCMSPageService(final MplCMSPageServiceImpl mplCMSPageService)
+	public void setMplCMSPageService(MplCMSPageServiceImpl mplCMSPageService)
 	{
 		this.mplCMSPageService = mplCMSPageService;
 	}
