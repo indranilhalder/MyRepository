@@ -8,6 +8,7 @@ import de.hybris.platform.servicelayer.config.ConfigurationService;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import javax.annotation.Resource;
@@ -33,7 +34,7 @@ public class MplPincodeDistanceServiceImpl implements MplPincodeDistanceService
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * com.tisl.mpl.marketplacecommerceservices.service.impl.MplPincodeDistanceService#pincodeDistance(java.util.List)
 	 */
@@ -43,7 +44,8 @@ public class MplPincodeDistanceServiceImpl implements MplPincodeDistanceService
 	{
 		final StringBuffer origins = new StringBuffer();
 		final StringBuffer destinations = new StringBuffer();
-		List<Double> distanceList = new ArrayList<>();
+		List<Double> distanceList = new ArrayList<Double>();
+		List<PointOfServiceData> sortPOS = new ArrayList<PointOfServiceData>();
 		try
 		{
 			final boolean distanceFlag = configurationService.getConfiguration().getBoolean("google.distance.enable");
@@ -63,13 +65,11 @@ public class MplPincodeDistanceServiceImpl implements MplPincodeDistanceService
 				}
 
 				distanceList = distance.calcDistance(origins, destinations);
-				distanceList = getSortedSetData(distanceList);
+				int count = 0;
 				for (final PointOfServiceData pointOfServiceData : posData)
 				{
-					for (final Double distanceKM : distanceList)
-					{
-						pointOfServiceData.setDistanceKm(distanceKM);
-					}
+					pointOfServiceData.setDistanceKm(distanceList.get(count));
+					count++;
 				}
 			}
 			else
@@ -81,12 +81,13 @@ public class MplPincodeDistanceServiceImpl implements MplPincodeDistanceService
 				}
 
 			}
+			sortPOS = getSortedSetData(posData);
 		}
 		catch (final Exception e)
 		{
 			LOG.debug(e);
 		}
-		return posData;
+		return sortPOS;
 	}
 
 	public static Double distFrom(final double lat1, final double lng1, final double lat2, final double lng2)
@@ -110,33 +111,27 @@ public class MplPincodeDistanceServiceImpl implements MplPincodeDistanceService
 		return Double.valueOf(dist);
 	}
 
-	private static List<Double> getSortedSetData(final List<Double> ascendingDistance)
+	private static List<PointOfServiceData> getSortedSetData(final List<PointOfServiceData> pointOfServiceData)
 	{
-		//		final List<String> finalSet = new ArrayList<String>();
-		//		final List<String> listData = null;
-		if (CollectionUtils.isNotEmpty(ascendingDistance))
+		final List<PointOfServiceData> sortedList = new ArrayList<PointOfServiceData>();
+		List<PointOfServiceData> listData = null;
+		if (CollectionUtils.isNotEmpty(pointOfServiceData))
 		{
-			Collections.sort(ascendingDistance);
-
-			for (final Double intObj : ascendingDistance)
+			listData = new ArrayList<PointOfServiceData>(pointOfServiceData);
+			Collections.sort(listData, new Comparator<PointOfServiceData>()
 			{
-				System.out.println("***" + intObj.intValue());
-			}
-			//listData = new ArrayList<String>(ascendingDistance);
-			//Collections.sort(listData, new Comparator<String>()
-			//			{
-			//				@Override
-			//				public final int compare(final String a, final String b)
-			//				{
-			//					return b.compareTo(a);
-			//				}
-			//			});
+				@Override
+				public int compare(final PointOfServiceData pos1, final PointOfServiceData pos2)
+				{
+					return pos1.getDistanceKm().compareTo(pos2.getDistanceKm());
+				}
+			});
 		}
 
-		//		if (CollectionUtils.isNotEmpty(listData))
-		//		{
-		//			finalSet.addAll(listData);
-		//		}
-		return ascendingDistance;
+		if (CollectionUtils.isNotEmpty(listData))
+		{
+			sortedList.addAll(listData);
+		}
+		return sortedList;
 	}
 }
