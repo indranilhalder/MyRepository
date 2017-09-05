@@ -12971,5 +12971,45 @@
 	 </itemtype>
     </typegroup>
 		<!-- END TPR-5733 -->
+		
+		
+		<typegroup name="SellerMonograming">
+			<itemtype code="MplSellerMonograming" autocreate="true" generate="true">
+				<deployment table="MplSellerMonograming" typecode="25678" />
+				<attributes>
+					<attribute autocreate="true" qualifier="productCode" type="java.lang.String"
+						generate="true">
+						<persistence type="property" />
+						<modifiers unique="true" optional="false" search="true"/>
+					</attribute>
+					<attribute autocreate="true" qualifier="sellerId"
+						type="java.lang.String" generate="true">
+						<persistence type="property" />
+						<modifiers unique="true" optional="true" search="true"/>
+					</attribute>
+					<attribute qualifier="message" type="java.lang.String">
+						<modifiers read="true" write="true" search="true"
+							optional="true" />
+						<persistence type="property">
+							<columntype database="oracle">
+								<value>CLOB</value>
+							</columntype>
+							<columntype database="mysql">
+								<value>text</value>
+							</columntype>
+							<columntype database="sqlserver">
+								<value>nvarchar(max)</value>
+							</columntype>
+							<columntype database="hsqldb">
+								<value>LONGVARCHAR</value>
+							</columntype>
+							<columntype>
+								<value>varchar</value>
+							</columntype>
+						</persistence>
+					</attribute>
+				</attributes>
+			</itemtype>
+		</typegroup>
   </itemtypes>
 </items>
