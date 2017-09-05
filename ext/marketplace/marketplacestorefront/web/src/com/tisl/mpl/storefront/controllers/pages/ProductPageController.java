@@ -1711,7 +1711,16 @@ public class ProductPageController extends MidPageController
 		try
 		{
 			populateProductData(productData, model);
-			displayConfigurableAttribute(productData, model);
+			//CKD:TPR-6804
+			if (ModelAttributetConstants.HOME_FURNISHING.equalsIgnoreCase(productData.getRootCategory()))
+			{
+				displayConfigurableAttributeForHF(productData, model);
+			}
+			else
+			{
+				displayConfigurableAttribute(productData, model);
+			}
+			//displayConfigurableAttribute(productData, model);
 			getRequestContextData(request).setProduct(productModel);
 			model.addAttribute(IMG_COUNT, Integer.valueOf(productDetailsHelper.getCountForGalleryImages()));
 			model.addAttribute(SELECTED_SIZE, selectedSize);
@@ -2007,6 +2016,7 @@ public class ProductPageController extends MidPageController
 			/* final Map<String, String> deliveryModeATMap = productDetailsHelper.getDeliveryModeATMap(deliveryInfo); */
 			final Map<String, Map<String, Integer>> deliveryModeATMap = productDetailsHelper.getDeliveryModeATMap(deliveryInfo);
 			model.addAttribute(ControllerConstants.Views.Fragments.Product.DELIVERY_MODE_MAP, deliveryModeATMap);
+			//CKD:TPR-6804
 			if (ModelAttributetConstants.HOME_FURNISHING.equalsIgnoreCase(productData.getRootCategory()))
 			{
 				displayConfigurableAttributeForHF(productData, model);
@@ -3835,7 +3845,16 @@ public class ProductPageController extends MidPageController
 			final ProductData productData = customProductFacade.getProductForAjaxOptions(productModel,
 					Arrays.asList(ProductOption.CATEGORIES, ProductOption.CLASSIFICATION));
 			mplAjaxProductData = new MplAjaxProductData();
-			displayConfigurableAttribute(productData, model);
+			//CKD:TPR-6804
+			if (ModelAttributetConstants.HOME_FURNISHING.equalsIgnoreCase(productData.getRootCategory()))
+			{
+				displayConfigurableAttributeForHF(productData, model);
+			}
+			else
+			{
+				displayConfigurableAttribute(productData, model);
+			}
+			//displayConfigurableAttribute(productData, model);
 			final String validTabs = configurationService.getConfiguration().getString(
 					"mpl.categories." + productData.getRootCategory());
 			mplAjaxProductData.setValidTabs(validTabs);
