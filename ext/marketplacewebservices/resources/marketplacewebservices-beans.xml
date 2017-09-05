@@ -1030,6 +1030,7 @@
 	<!-- Added for Exchange TPR-1083 -->
 		<property name="l3code" type="String"></property>
  		<property name="l3name" type="String"></property>
+ 		<property name="linkUrls" type="java.util.List&lt;com.tisl.mpl.wsdto.ExchangeLinkUrl>"/>
 		<property name="aPlusContent" type="com.tisl.mpl.wsdto.ProductAPlusWsData" />
         <property name="imageUrl" type="String" />
 	  	<!-- Added for luxury products -->
@@ -3065,6 +3066,12 @@
 <property name="pincodeResponse" type="boolean"/>
 <property name="priceMatrix" type="java.util.List&lt;com.tisl.mpl.facades.product.data.ExchangeGuideData>"/>
 </bean>
+
+<bean class="com.tisl.mpl.wsdto.ExchangeLinkUrl">
+<property name="name" type="java.lang.String"/>
+<property name="url" type="java.lang.String"/>
+</bean>
+
  
 <!--TPR-6117-->
 	<bean class="com.tisl.mpl.wsdto.MaxLimitWsDto">

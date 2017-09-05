@@ -57,12 +57,12 @@
 											<c:choose>
 												<c:when test="${fn:toLowerCase(entryReturn.product.luxIndicator)=='luxury'}">
 														<product:productPrimaryImage
-															product="${entryReturn.product}" format="luxuryCartIcon" />
+															product="${entryReturn.product}" format="luxuryCartIcon" lazyLoad="false"/>
 							
 												</c:when>
 												<c:otherwise>
 														<product:productPrimaryImage
-															product="${entryReturn.product}" format="thumbnail" />
+															product="${entryReturn.product}" format="thumbnail" lazyLoad="false"/>
 														
 												</c:otherwise>
 											</c:choose>

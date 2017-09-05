@@ -736,3 +736,64 @@ INSERT_UPDATE ContentSlotForTemplate;$contentCV[unique=true];uid[unique=true];po
 
 UPDATE EmailPage;$contentCV[unique=true];uid[unique=true];fromEmail[lang=$lang];fromName[lang=$lang]
 ;;PancardRejectEmail;"customercare@tatacliq.com";"TataCLiQ Care"
+
+
+###########################################################################################################################
+
+# ImpEx for Importing CMS Content
+
+# Macros / Replacement Parameter definitions
+$storePrefix=mpl
+$contentCatalog=$storePrefixContentCatalog
+$contentCatalogName=Marketplace Content Catalog
+$productCatalog=mplProductCatalog
+$productCatalogName=Marketplace Product Catalog
+
+$contentCV=catalogVersion(CatalogVersion.catalog(Catalog.id[default=$contentCatalog]),CatalogVersion.version[default=Staged])[default=$contentCatalog:Staged]
+$productCV=catalogVersion(catalog(id[default=$productCatalog]),version[default='Staged'])[unique=true,default=$productCatalog:Staged]
+$picture=media(code, $contentCV);
+$image=image(code, $contentCV);
+$media=media(code, $contentCV);
+$page=page(uid, $contentCV);
+$category=category(code, $productCV)
+$product=product(code, $productCV)
+$contentPage=contentPage(uid, $contentCV);
+$siteResource=jar:com.tisl.mpl.initialdata.setup.InitialDataSystemSetup&/marketplaceinitialdata/import/contentCatalogs/$contentCatalog
+$productResource=jar:com.tisl.mpl.initialdata.setup.InitialDataSystemSetup&/marketplaceinitialdata/import/productCatalogs/$productCatalog
+$jarResourceCms=jar:com.tisl.mpl.core.setup.CoreSystemSetup&/marketplacecore/import/cockpits/cmscockpit
+# Load the storefront context root config param
+$storefrontContextRoot=$config-storefrontContextRoot
+
+# Language
+$lang=en
+
+# Product Details Page Template
+# The CrossSelling and UpSelling slots are designed for related products, cross-sells and up-sells.
+INSERT_UPDATE ContentSlotName;name[unique=true];template(uid,$contentCV)[unique=true][default='ProductDetailsPageTemplate'];validComponentTypes(code);compTypeGroup(code)
+;ExchangeSlot;;CMSLinkComponent
+
+
+INSERT_UPDATE ContentSlotForTemplate;$contentCV[unique=true];uid[unique=true];position[unique=true];pageTemplate(uid,$contentCV)[unique=true][default='ProductDetailsPageTemplate'];contentSlot(uid,$contentCV)[unique=true];allowOverwrite
+;;ExchangeSlot-ProductDetails;ExchangeSlot;;ExchangeSlot;true
+
+
+# Add Velocity templates that are in the CMS Cockpit. These give a better layout for editing pages
+# The FileLoaderValueTranslator loads a File into a String property. The templates could also be inserted in-line in this file.
+UPDATE PageTemplate;$contentCV[unique=true];uid[unique=true];velocityTemplate[translator=de.hybris.platform.commerceservices.impex.impl.FileLoaderValueTranslator]
+;;ProductDetailsPageTemplate;$jarResourceCms/structure-view/structure_productDetails1PageTemplate.vm
+
+INSERT_UPDATE CMSLinkComponent;$contentCV[unique=true];uid[unique=true];name;url;category(code, $productCV);target(code)[default='sameWindow'];;
+;;TermsAndConditionsPaymentLink;Terms And Conditions Payment Link;/tncPayment;;;;
+
+# CMS Link Components
+UPDATE CMSLinkComponent;$contentCV[unique=true];uid[unique=true];linkName[lang=$lang]
+;;TermsAndConditionsPaymentLink;"Terms and Conditions"
+
+# ContentSlot 
+INSERT_UPDATE ContentSlot;$contentCV[unique=true];uid[unique=true];name;cmsComponents(uid,$contentCV)
+;;ExchangeSlot;Exchange slot for PDP;TermsAndConditionsPaymentLink
+
+########################################################################Jewellery BuyBox Changes ######################################################
+
+INSERT_UPDATE BBWeightage;weigtagetype[unique=true];weightagevalue
+;jpriceweightage;0.00000001

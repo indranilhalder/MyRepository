@@ -740,7 +740,7 @@ ACC.singlePageCheckout = {
 	//Function used to hide CNC store block when a user toggels between HD/ED and CNC
 	attachDeliveryModeChangeEvent:function()
 	{
-		$("#choosedeliveryMode input:radio")
+		//$("#choosedeliveryMode input:radio")
 		var entryNumbersId=$("#entryNumbersId").val();
 		var entryNumbers=entryNumbersId.split("#");
 		for(var i=0;i<entryNumbers.length-1;i++)
@@ -2576,7 +2576,8 @@ ACC.singlePageCheckout = {
 	//Method to reset validation flags and payment mode form on delivery mode change after payment mode is selected(For responsive)
 	attachEventToResetFlagsOnDelModeChange:function()
 	{
-		$("#choosedeliveryModeMobile input[type=radio]").on("change",function(){
+		$("#choosedeliveryModeMobile input[type=radio]").off("change.deliveryModeRadioChange");
+		$("#choosedeliveryModeMobile input[type=radio]").on("change.deliveryModeRadioChange",function(){
     		ACC.singlePageCheckout.resetValidationSteps();
     		ACC.singlePageCheckout.resetPaymentModes();
     	});
@@ -2746,9 +2747,9 @@ ACC.singlePageCheckout = {
     				{
         				cncSelected="true";		
         				ACC.singlePageCheckout.mobileValidationSteps.isCncSelected=true;
+        				//Below if will execute if no stores are selected
         				if($("input[name='address"+entryNumbers[i]+"']:checked").length<=0)
 						{
-        					//If no stores are selected
 							$("."+entryNumbers[i]+"_select_store").show();
 							ACC.singlePageCheckout.scrollToDiv("cncStoreContainer"+entryNumbers[i],100);
 							//Removing payment mode selection incase of pickup location has not been selected
@@ -2756,11 +2757,13 @@ ACC.singlePageCheckout = {
 								ACC.singlePageCheckout.resetPaymentModes();
 								$("#cncStoreContainer"+entryNumbers[i]).off("click.cncStoreRadioValidationFailed,focus.cncStoreRadioValidationFailed,change.cncStoreRadioValidationFailed");
 							});
+							//If delivery modes will be changed all the validation flags will be reset.
+		            		ACC.singlePageCheckout.attachEventToResetFlagsOnDelModeChange();
 							return false;
 						}
         				else if($("input[name='address"+entryNumbers[i]+"']:checked").length>0 && !ACC.singlePageCheckout.mobileValidationSteps.isPickUpPersonDetailsSaved)
 						{
-        					//If a stores is selected but pick up person details are not saved
+        					//Else If will execute if a stores is selected but pick up person details are not saved, Display the pick up person form.
 							ACC.singlePageCheckout.getPickUpPersonPopUpMobile();
 							return false;
 						}
@@ -2802,14 +2805,17 @@ ACC.singlePageCheckout = {
 			});
 			return false;
 		}
+		//Below is for if a new address has been selected or an existing address has been edited. First validate the form and then submit the form using ajax.
 		if((ACC.singlePageCheckout.mobileValidationSteps.saveNewAddress||ACC.singlePageCheckout.mobileValidationSteps.saveEditAddress) && !ACC.singlePageCheckout.mobileValidationSteps.isAddressSet)
 		{
 			if(ACC.singlePageCheckout.mobileValidationSteps.saveNewAddress)
 			{
+				//Validate and submit form for new address
 				formValidationSuccess=ACC.singlePageCheckout.saveAndSetDeliveryAddress(true,false);
 			}
 			else if(ACC.singlePageCheckout.mobileValidationSteps.saveEditAddress)
 			{
+				//Validate and submit form for edit address
 				formValidationSuccess=ACC.singlePageCheckout.saveAndSetDeliveryAddress(false,true);
 			}
 			if(!formValidationSuccess)
@@ -2827,9 +2833,11 @@ ACC.singlePageCheckout = {
 		}
 		else if(ACC.singlePageCheckout.mobileValidationSteps.selectedAddressId!="" && !ACC.singlePageCheckout.mobileValidationSteps.saveNewAddress  && !ACC.singlePageCheckout.mobileValidationSteps.saveEditAddress && !ACC.singlePageCheckout.mobileValidationSteps.isAddressSet)
 		{
+			//This block will execute if an existing address is selected. On selection of an existing address, The selected existing address is set as delivery address using ajax call here.
 			ACC.singlePageCheckout.showAjaxLoader();
 			ACC.singlePageCheckout.setDeliveryAddress();
 		}
+		//Below block will execute to set delivery modes using ajax and also reserve inventory.
 		if(formValidationSuccess && !ACC.singlePageCheckout.mobileValidationSteps.isDeliveryModeSet && !ACC.singlePageCheckout.mobileValidationSteps.isInventoryReserved)
 		{	
 			ACC.singlePageCheckout.showAjaxLoader();
