@@ -14,7 +14,6 @@
 package com.tisl.mpl.storefront.controllers.pages;
 
 import de.hybris.platform.acceleratorstorefrontcommons.controllers.pages.AbstractPageController;
-import de.hybris.platform.category.model.CategoryModel;
 import de.hybris.platform.cms2.exceptions.CMSItemNotFoundException;
 import de.hybris.platform.cms2.model.contents.components.AbstractCMSComponentModel;
 import de.hybris.platform.cms2.model.contents.contentslot.ContentSlotModel;
@@ -45,8 +44,6 @@ import java.util.HashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
-import java.util.TreeMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -405,38 +402,38 @@ public class HomePageController extends AbstractPageController
 		return super.getContentPageForLabelOrId(labelOrId);
 	}
 
-	/**
-	 * @param AtoZ
-	 *           brands range
-	 * @param endCharacter
-	 * @param sortedMap
-	 * @return map
-	 */
-	@SuppressWarnings(
-	{ "boxing", "javadoc" })
-	private Map<Character, List<CategoryModel>> getBrandsForRange(final Character startCharacter, final Character endCharacter,
-			final Map<Character, List<CategoryModel>> sortedMap)
-	{
-		final Map<Character, List<CategoryModel>> brandsByRange = new HashMap();
-
-		for (final Entry<Character, List<CategoryModel>> entry : sortedMap.entrySet())
-		{ //ASCII Value of entry key
-			final int entryKeyCharacterASCII = entry.getKey();
-
-			//ASCII value of startCharacter
-			final int startCharacterASCII = startCharacter;
-
-			//ASCII value of endCharacter
-			final int endCharacterASCII = endCharacter;
-
-			if (entryKeyCharacterASCII >= startCharacterASCII && entryKeyCharacterASCII <= endCharacterASCII)
-			{
-				brandsByRange.put(entry.getKey(), entry.getValue());
-			}
-
-		}
-		return new TreeMap<Character, List<CategoryModel>>(brandsByRange);
-	}
+	//	/**
+	//	 * @param AtoZ
+	//	 *           brands range
+	//	 * @param endCharacter
+	//	 * @param sortedMap
+	//	 * @return map
+	//	 */
+	//	@SuppressWarnings(
+	//	{ "boxing", "javadoc" })
+	//	private Map<Character, List<CategoryModel>> getBrandsForRange(final Character startCharacter, final Character endCharacter,
+	//			final Map<Character, List<CategoryModel>> sortedMap)
+	//	{
+	//		final Map<Character, List<CategoryModel>> brandsByRange = new HashMap();
+	//
+	//		for (final Entry<Character, List<CategoryModel>> entry : sortedMap.entrySet())
+	//		{ //ASCII Value of entry key
+	//			final int entryKeyCharacterASCII = entry.getKey();
+	//
+	//			//ASCII value of startCharacter
+	//			final int startCharacterASCII = startCharacter;
+	//
+	//			//ASCII value of endCharacter
+	//			final int endCharacterASCII = endCharacter;
+	//
+	//			if (entryKeyCharacterASCII >= startCharacterASCII && entryKeyCharacterASCII <= endCharacterASCII)
+	//			{
+	//				brandsByRange.put(entry.getKey(), entry.getValue());
+	//			}
+	//
+	//		}
+	//		return new TreeMap<Character, List<CategoryModel>>(brandsByRange);
+	//	}
 
 	/**
 	 * @description this is called to update the page title

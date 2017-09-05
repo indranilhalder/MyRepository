@@ -3,7 +3,7 @@
  */
 package com.tisl.mpl.core.mplsearch.impl;
 
-import de.hybris.platform.servicelayer.config.ConfigurationService;
+//import de.hybris.platform.servicelayer.config.ConfigurationService;
 import de.hybris.platform.servicelayer.util.ServicesUtil;
 import de.hybris.platform.solrfacetsearch.config.EndpointURL;
 import de.hybris.platform.solrfacetsearch.config.FacetSearchConfig;
@@ -39,8 +39,9 @@ public class MplSolrServiceStandaloneImpl extends SolrServiceStandaloneImpl impl
 	@Resource
 	private SolrCoreNameResolver solrCoreNameResolver;
 	private final String multicoreInstanceDir = Config.getString("solr.standalone.multicore.instancedir", ".");
-	@Resource(name = "configurationService")
-	private ConfigurationService configurationService;
+
+	// @Resource(name = "configurationService")
+	// private ConfigurationService configurationService;
 
 	@Override
 	public Set<SolrServer> getRegistredServersForFacetSearchConfig(final FacetSearchConfig facetSearchConfig)
