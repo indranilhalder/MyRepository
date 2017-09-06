@@ -648,7 +648,7 @@ public class UpdatePromotionalPriceDaoImpl implements UpdatePromotionalPriceDao
 		queryString.append(" AS cat2prod JOIN ").append(CategoryModel._TYPECODE)
 				.append(" AS category on {cat2prod.source} = {category.pk}} ");
 		queryString.append("WHERE {cat2prod:target} =?product AND {category.code} like '%")
-				.append(MarketplacecommerceservicesConstants.BRAND_NAME_PREFIX).append("%' }} ");
+				.append(MarketplacecommerceservicesConstants.BRAND_NAME_PREFIX).append("%' ");
 
 		LOG.debug("QUERY>>>>>>" + queryString);
 
