@@ -2352,7 +2352,7 @@ public class ProductPageController extends MidPageController
 					}
 					//System.out.println(mapConfigurableAttributes);
 
-					for (final Entry<String, List<String>> entry : mapConfigurableAttributes.entrySet())
+					/*for (final Entry<String, List<String>> entry : mapConfigurableAttributes.entrySet())
 					{
 						System.out.println(entry.getKey());
 						for (final String featureList : entry.getValue())
@@ -2360,7 +2360,7 @@ public class ProductPageController extends MidPageController
 							//System.out.println(valList);
 							System.out.println(featureList);
 						}
-					}
+					}*/
 				}
 			}
 			else
