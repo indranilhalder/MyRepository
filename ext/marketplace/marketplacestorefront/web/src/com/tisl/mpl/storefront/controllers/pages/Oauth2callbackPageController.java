@@ -319,7 +319,6 @@ public class Oauth2callbackPageController extends AbstractLoginPageController
 			LOG.debug("Method socialLogin,PROVIDER " + provider);
 			LOG.debug("Method socialLogin, GENDER " + gender);
 
-			boolean isValidUser = true;
 			final String fbEmail = emailId;
 
 			if (fbEmail != null && !fbEmail.isEmpty())
@@ -387,13 +386,15 @@ public class Oauth2callbackPageController extends AbstractLoginPageController
 			//INC144319511
 
 			final String isUserValidationEnabled = configurationService.getConfiguration().getString(GIGYA_USER_VALIDATION_ENABLED);
-			if (null != isUserValidationEnabled && isUserValidationEnabled.equalsIgnoreCase(TRUE_STATUS)
-					&& !gigyaservice.validateUser(getGigyaUID(), emailId))
+			if (null != isUserValidationEnabled && isUserValidationEnabled.equalsIgnoreCase(TRUE_STATUS))
 			{
-				isValidUser = false;
+				if(!gigyaservice.validateUser(getGigyaUID(), emailId))
+				{
+					return ModelAttributetConstants.LOGIN;
+				}
 			}
 
-			if (isValidUser && gigyaservice.validateSignature(getGigyaUID(), getTimestamp(), getSignature()))
+			if (gigyaservice.validateSignature(getGigyaUID(), getTimestamp(), getSignature()))
 			{
 				return processRegisterUserRequestForOAuth2(form, bindingResult, model, request, response, socialLogin);
 			}
