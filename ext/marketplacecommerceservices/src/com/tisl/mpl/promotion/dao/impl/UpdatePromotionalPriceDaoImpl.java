@@ -545,8 +545,8 @@ public class UpdatePromotionalPriceDaoImpl implements UpdatePromotionalPriceDao
 		params.put("categories", categoryList);
 
 		final StringBuilder queryString = new StringBuilder("SELECT DISTINCT pprom.pk FROM (");
-		queryString.append(" {{ SELECT {c2p.target} as pk " + queryString.append(MarketplacecommerceservicesConstants.QUERYFROM)
-				+ GeneratedCatalogConstants.Relations.CATEGORYPRODUCTRELATION + " AS c2p }");
+		queryString.append(" {{ SELECT {c2p.target} as pk " + MarketplacecommerceservicesConstants.QUERYFROM);
+		queryString.append(GeneratedCatalogConstants.Relations.CATEGORYPRODUCTRELATION + " AS c2p }");
 		queryString.append(" WHERE {c2p.source} IN (?categories)");
 
 		if (CollectionUtils.isEmpty(exProductList) && CollectionUtils.isEmpty(brands) && CollectionUtils.isEmpty(rejectBrandList))
