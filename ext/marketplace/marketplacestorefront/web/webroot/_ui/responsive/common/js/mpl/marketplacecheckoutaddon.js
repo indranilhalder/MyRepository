@@ -8279,12 +8279,12 @@ function sendTealiumData(){
 		    	if(typeof _satellite != "undefined"){
 		    		_satellite.track('cpj_place_order');
 		    	}
-		    	if(typeof (digitalData.cpj.product) != undefined){
+		    	if(typeof (digitalData.cpj.product) != 'undefined'){
 		    		digitalData.cpj.product.id = $('#product_id').val();
 		    		digitalData.cpj.product.category =$('#product_category').val();
 		    	}
 		    	
-		    	if(typeof (digitalData.cpj.payment) != undefined){
+		    	if(typeof (digitalData.cpj.payment) != 'undefined'){
 		    	    digitalData.cpj.payment.finalMode = payment_mode ;
 		    	}
 	   } catch (e) {
