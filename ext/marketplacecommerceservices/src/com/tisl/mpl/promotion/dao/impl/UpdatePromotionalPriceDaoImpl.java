@@ -563,7 +563,7 @@ public class UpdatePromotionalPriceDaoImpl implements UpdatePromotionalPriceDao
 
 			if (CollectionUtils.isNotEmpty(brands))
 			{
-				queryString.append(" INTERSECT ");
+				queryString.append(" }} INTERSECT ");
 				queryString.append("{{ SELECT {cat2prod.target} as pk  ");
 				queryString.append(MarketplacecommerceservicesConstants.QUERYFROM)
 						.append(GeneratedCatalogConstants.Relations.CATEGORYPRODUCTRELATION).append(" AS cat2prod } ");
@@ -573,7 +573,7 @@ public class UpdatePromotionalPriceDaoImpl implements UpdatePromotionalPriceDao
 			}
 			else if (CollectionUtils.isNotEmpty(rejectBrandList))
 			{
-				queryString.append(" INTERSECT ");
+				queryString.append(" }} INTERSECT ");
 				queryString.append("{{ SELECT {cat2prod:target} as pk  ");
 				queryString.append(MarketplacecommerceservicesConstants.QUERYFROM).append(
 						GeneratedCatalogConstants.Relations.CATEGORYPRODUCTRELATION);
