@@ -655,7 +655,7 @@ public class UpdatePromotionalPriceDaoImpl implements UpdatePromotionalPriceDao
 		final List<CategoryModel> productValidList = flexibleSearchService.<CategoryModel> search(queryString.toString(), params)
 				.getResult();
 
-		return productValidList.get(0);
+		return CollectionUtils.isNotEmpty(productValidList) ? productValidList.get(0) : null;
 
 
 	}
