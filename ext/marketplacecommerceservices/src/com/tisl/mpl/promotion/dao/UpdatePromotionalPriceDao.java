@@ -41,4 +41,6 @@ public interface UpdatePromotionalPriceDao
 	List<SellerInformationModel> getValidSellersForPromotion(final ProductModel product, final List<String> promoSellersList,
 			final List<String> promoRejectSellerList);
 
+	CategoryModel getBrandForProduct(final ProductModel product);
+
 }

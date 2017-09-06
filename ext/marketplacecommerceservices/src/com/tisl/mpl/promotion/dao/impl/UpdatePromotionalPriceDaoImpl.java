@@ -632,6 +632,34 @@ public class UpdatePromotionalPriceDaoImpl implements UpdatePromotionalPriceDao
 		return productValidSellerList;
 	}
 
+	@Override
+	public CategoryModel getBrandForProduct(final ProductModel product)
+	{
+		final Map params = new HashMap();
+		params.put("product", product);
+
+		//		final StringBuilder queryString = new StringBuilder("SELECT {c2p.source} as pk " + MarketplacecommerceservicesConstants.QUERYFROM);
+		//		queryString.append(GeneratedCatalogConstants.Relations.CATEGORYPRODUCTRELATION + " AS c2p }");
+		//		queryString.append(" WHERE {c2p.target} =?product)");
+
+		final StringBuilder queryString = new StringBuilder("SELECT {cat2prod:source} as pk  ");
+		queryString.append(MarketplacecommerceservicesConstants.QUERYFROM).append(
+				GeneratedCatalogConstants.Relations.CATEGORYPRODUCTRELATION);
+		queryString.append(" AS cat2prod JOIN ").append(CategoryModel._TYPECODE)
+				.append(" AS category on {cat2prod.source} = {category.pk}} ");
+		queryString.append("WHERE {cat2prod:target} =?product AND {category.code} like '%")
+				.append(MarketplacecommerceservicesConstants.BRAND_NAME_PREFIX).append("%' }} ");
+
+		LOG.debug("QUERY>>>>>>" + queryString);
+
+		final List<CategoryModel> productValidList = flexibleSearchService.<CategoryModel> search(queryString.toString(), params)
+				.getResult();
+
+		return productValidList.get(0);
+
+
+	}
+
 	@Resource(name = "mplPromotionHelper")
 	MplPromotionHelper mplPromotionHelper;
 
