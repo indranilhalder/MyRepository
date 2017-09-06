@@ -2028,6 +2028,73 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 
 	}
 
+
+	/**
+	 * @Desc Method for checking if maximum quantity already added to cart
+	 * @param cartData
+	 * @param code
+	 * @return boolean
+	 *
+	 * @throws EtailNonBusinessExceptions
+	 *
+	 */
+	@SuppressWarnings("javadoc")
+	//commented for car project implementation CAR:62: added cartModel instead of carData as param
+	//private boolean isMaxQuantityAlreadyAdded(final CartData cartData, final String ussid, final long quantity,
+	private boolean isMaxQuantityAlreadyAddedExchange(final CartModel cartModel, final String ussid, final long quantity,
+			final String productCode)
+	{
+		boolean addToCartFlag = true;
+		final int maximum_configured_exc_quantity = 1;
+		final int maximum_configured_quantiy = getSiteConfigService().getInt(MAXIMUM_CONFIGURED_QUANTIY, 0);
+		//commented for car project implementation CAR:62
+		//if (cartData.getEntries() != null && ussid != null && !cartData.getEntries().isEmpty())
+		if (cartModel.getEntries() != null && ussid != null && !cartModel.getEntries().isEmpty())
+		{
+			//commented for car project implementation CAR:62
+			//for (final OrderEntryData entry : cartData.getEntries())
+			for (final AbstractOrderEntryModel entry : cartModel.getEntries())
+			{
+				//commented for car project implementation CAR:62
+				//final ProductData productData = entry.getProduct();
+				final ProductModel productModel = entry.getProduct();
+
+				//commented for car project implementation CAR:62
+				//if (productCode.equals(productData.getCode()) && entry.getSelectedUssid().equalsIgnoreCase(ussid))
+				if (productCode.equals(productModel.getCode()) && entry.getSelectedUSSID().equalsIgnoreCase(ussid))
+				{
+
+					LOG.debug(" Product already present in the cart so now we will check the qunatity present in the cart already");
+					if (entry.getQuantity().longValue() >= maximum_configured_quantiy + maximum_configured_exc_quantity)
+					{
+						addToCartFlag = false;
+						LOG.debug("You are about to exceede the max quantity");
+						break;
+					}
+					if (quantity + entry.getQuantity().longValue() > maximum_configured_quantiy + maximum_configured_exc_quantity)
+					{
+						addToCartFlag = false;
+						LOG.debug("You are about to exceede the max quantity");
+						break;
+					}
+					break;
+
+				}
+			}
+		}
+		else
+		{
+			if (quantity > maximum_configured_quantiy)
+			{
+				addToCartFlag = false;
+				LOG.debug("You are about to exceede the max quantity");
+			}
+
+		}
+		return addToCartFlag;
+
+	}
+
 	//private boolean isMaxQuantityAlreadyAdded(final CartData cartData, final String code)
 	//	@SuppressWarnings("javadoc")
 	//	private boolean isMaxQuantityAlreadyAdded(final CartData cartData, final String ussid)
@@ -6851,6 +6918,7 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 	 * , de.hybris.platform.core.model.order.CartModel, de.hybris.platform.core.model.product.ProductModel, long,
 	 * java.lang.String, java.lang.String)
 	 */
+
 	@Override
 	public boolean addItemToCartWithExchange(final String cartId, final CartModel cartModel, final ProductModel productModel,
 			final long quantity, final String ussid, final String exchangeParam) throws InvalidCartException,
@@ -6892,7 +6960,8 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 			//			if (isMaxQuantityAlreadyAdded(cartData, productCode))
 			//commented for car project implementation CAR:62: added cartModel instead of carData as param in isMaxQuantityAlreadyAdded
 			//if (isMaxQuantityAlreadyAdded(cartData, sellerUssId, quantity, productModel.getCode()))
-			if (isMaxQuantityAlreadyAdded(cartModel, sellerUssId, quantity, productModel.getCode()))
+			//TISJEW-4496
+			if (isMaxQuantityAlreadyAddedExchange(cartModel, sellerUssId, quantity, productModel.getCode()))
 			{
 				parameter.setEnableHooks(true);
 				parameter.setCart(cartModel);
