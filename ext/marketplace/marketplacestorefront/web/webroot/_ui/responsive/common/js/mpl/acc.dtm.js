@@ -238,9 +238,9 @@ $(document).ready(function(){
 	  }
 	
 	// Cart page
-	if(pageType =="cart"){
+	if(pageType == "cart"){
 		var pinCode = $('#pinId').val();
-		if(typeof _satellite !="undefined"){
+		if(typeof _satellite != "undefined"){
 		    _satellite.track('cpj_cart_page');
 		}
 		digitalData.cpj = {

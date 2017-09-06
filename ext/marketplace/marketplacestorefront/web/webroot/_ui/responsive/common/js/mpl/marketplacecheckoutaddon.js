@@ -8500,7 +8500,7 @@ function addToWishlistForCart(ussid,productCode,alreadyAddedWlName)
 				}
 				/*TPR-656 Ends*/
 				
-				dtmAddToWishlist(cart);      /*TPR-6364*/
+				dtmAddToWishlist("cart");      /*TPR-6364*/
 				localStorage.setItem("movedToWishlist_msgFromCart", "Y");
 				
 				
