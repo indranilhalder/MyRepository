@@ -728,7 +728,7 @@ function addToWishlist(alreadyAddedWlName_pdp) {
 						product_sku_wishlist : productcodearray
 					});
 				/*TPR-656 Ends*/
-					dtmAddToWishlist(pdp); 
+					dtmAddToWishlist("pdp"); 
 					
 					//openPop(ussidValue);
 				//	$('#myModal').modal('hide');
