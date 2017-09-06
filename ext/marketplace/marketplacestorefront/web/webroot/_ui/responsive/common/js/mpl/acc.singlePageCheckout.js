@@ -279,6 +279,10 @@ ACC.singlePageCheckout = {
 		        	if(typeof utag !="undefined"){
 						utag.link({ link_text : 'add_new_address_saved' ,event_type : 'add_new_address_saved'});
 					}
+		        	//TPR-6362 |track checkout activity
+		        	if(typeof (_satellite)!= "undefined") {  
+		        		_satellite.track('cpj_checkout_save_address');
+		        	}
 	            }
 			});
 	        
@@ -658,6 +662,10 @@ ACC.singlePageCheckout = {
         	//$("#pageName").val(checkoutDeliveryPage);
         	 
         }
+        //tpr-TPR-6362 | track checkout activity
+        if(typeof _satellite != "undefined") {  
+    		_satellite.track('cpj_checkout_delivery_option');
+    	}
         //disableHideAjaxLoader will make sure that loader is not removed until CNC stores are fetched.
         var disableHideAjaxLoader=false;
         xhrResponse.done(function(data, textStatus, jqXHR) {
@@ -1396,13 +1404,17 @@ ACC.singlePageCheckout = {
         	}
         	//added for tealium
   		  $("#checkoutPageName").val("Review Order");
-        	if(typeof utag_data !="undefined"){
+        	if(typeof utag_data != "undefined"){
             	var checkoutDeliveryPage = "Multi Checkout Summary Page:Review Order";
             	utag_data.page_name = checkoutDeliveryPage;
             	$("#pageName").val(checkoutDeliveryPage);
             	 
             }
-  	      // tealiumCallOnPageLoad();
+        	 //tpr-TPR-6362 | track checkout activity
+        	if(typeof (_satellite)!= "undefined") {  
+        		_satellite.track('cpj_checkout_proceed_to_review');
+        	}	
+        	
         	//START:Code to show strike off price
         	ACC.singlePageCheckout.addReviewOrderPriceStrikeThrough();
     		//END:Code to show strike off price
@@ -1862,7 +1874,11 @@ ACC.singlePageCheckout = {
         	$("#pageName").val(checkoutDeliveryPage);
         	 
         }
-		  //tealiumCallOnPageLoad();
+		
+		//tpr-TPR-6362 | track checkout activity
+		if(typeof _satellite != "undefined") {  
+    		_satellite.track('cpj_checkout_proceed_to_payment');
+    	}
 		xhrValidateResponse.done(function(data, textStatus, jqXHR) {
         	if (jqXHR.responseJSON) {
         		if(data.type!="response")

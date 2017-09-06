@@ -571,6 +571,30 @@ $(document).ready(function(){
     	dtmErrorTracking("Order not placed: Unsuccesful error","errorName");
     }
    
+    //tpr-TPR-6362 | track checkout activity
+    if($("#checkoutPageName").val()=="Select Address"){
+    	if(typeof _satellite != "undefined") {  
+    		_satellite.track('cpj_checkout_proceed_to_address');
+    	}	
+    }
+
+   /* if($("#checkoutPageName").val()=="Payment Options"){
+    	if(typeof _satellite != "undefined") {  
+    		_satellite.track('cpj_checkout_proceed_to_payment');
+    	}	
+    }
+
+    if($("#checkoutPageName").val()=="Choose Your Delivery Options"){
+    	if(typeof _satellite != "undefined") {  
+    		_satellite.track('cpj_checkout_delivery_option');
+    	}	
+    }*/
+    
+    /* if($("#checkoutPageName").val()=="Review Order"){
+     	if(typeof (_satellite)!= "undefined") {  
+     		_satellite.track('cpj_checkout_proceed_to_review');
+     	}	
+     }*/
 });
 function differentiateSeller(){
 	var sellerList = $('#pdpSellerIDs').val();
@@ -1182,7 +1206,8 @@ function dtmSearchTags(){
 	           }
 	 }
   });
-	
+
+	//tpr-6362 |track checkout activity |8
 $(document).on('click','.add_address_button',function(){
 	if(typeof (_satellite)!= "undefined") {  
 		_satellite.track('cpj_checkout_add_address');
@@ -1190,35 +1215,12 @@ $(document).on('click','.add_address_button',function(){
 })	
 	
 
-$(document).on('click','#newAddressButton .button',function(){
+/*$(document).on('click','#newAddressButton .button',function(){
 	if(typeof (_satellite)!= "undefined") {  
 		_satellite.track('cpj_checkout_save_address');
 	}
-})
+})*/
 
-if($("#checkoutPageName").val()=="Review Order"){
-	if(typeof (_satellite)!= "undefined") {  
-		_satellite.track('cpj_checkout_proceed_to_review');
-	}	
-}
-
-if($("#checkoutPageName").val()=="Select Address"){
-	if(typeof _satellite != "undefined") {  
-		_satellite.track('cpj_checkout_proceed_to_address');
-	}	
-}
-
-if($("#checkoutPageName").val()=="Payment Options"){
-	if(typeof _satellite != "undefined") {  
-		_satellite.track('cpj_checkout_proceed_to_payment');
-	}	
-}
-
-if($("#checkoutPageName").val()=="Choose Your Delivery Options"){
-	if(typeof _satellite != "undefined") {  
-		_satellite.track('cpj_checkout_delivery_option');
-	}	
-}
 /*product impressions start*/
 function populateFirstFiveProductsSerp(){
 	var count = 10; 
