@@ -906,9 +906,10 @@ public final class ModelAttributetConstants
 	public static final String EMAILORPASSINVALID = "Email or Password invalid";
 	public static final String LUXURY_USER_FIRST_NAME = "fname";
 
-
 	/* TPR-5733 */
 	public static final String FOOTER_LINK_LIST = "footerLinkList";
+	//TPR-6654
+	public static final String POINT_OF_SERVICES = "pointOfServices";
 	/* UF-432 */
 	public static final String MULTI_COLOUR_FLAG = "multiColorFlag";
 	public static final String BUYBOX_AVAILABLE = "buybox_available";
