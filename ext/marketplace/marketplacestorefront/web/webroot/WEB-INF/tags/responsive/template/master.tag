@@ -393,13 +393,18 @@
 	<script>
 	$(document).ready(function(){
 		var forceLoginUser = "${forced_login_user}";
+		var isMobile = "${is_mobile}";
 		if(forceLoginUser == "Y"){
-			setTimeout(function(){
-				$("#login-modal").modal({
-					 backdrop: 'static',
-					 keyboard: false
-				 });
-			},2000);
+			if(isMobile == "true"){
+				window.location.href="/login";
+			}else{
+				setTimeout(function(){
+					$("#login-modal").modal({
+						 backdrop: 'static',
+						 keyboard: false
+					 });
+				},2000);
+			}
 		}
 	});
 	$(document).on("click",".close",function(){
