@@ -22,6 +22,7 @@ import de.hybris.platform.commerceservices.enums.UiExperienceLevel;
 import de.hybris.platform.commerceservices.order.CommerceCartMergingException;
 import de.hybris.platform.commerceservices.order.CommerceCartRestorationException;
 import de.hybris.platform.core.Registry;
+import de.hybris.platform.core.model.user.AddressModel;
 import de.hybris.platform.core.model.user.CustomerModel;
 import de.hybris.platform.core.model.user.UserModel;
 import de.hybris.platform.servicelayer.config.ConfigurationService;
@@ -56,8 +57,10 @@ import com.tisl.mpl.storefront.constants.MessageConstants;
 import com.tisl.mpl.storefront.constants.ModelAttributetConstants;
 import com.tisl.mpl.storefront.constants.RequestMappingUrlConstants;
 import com.tisl.mpl.storefront.controllers.ControllerConstants;
+import com.tisl.mpl.storefront.security.cookie.PDPPincodeCookieGenerator;
 import com.tisl.mpl.storefront.security.cookie.UserCookieGenerator;
 import com.tisl.mpl.storefront.security.cookie.UserTypeCookieGenerator;
+import com.tisl.mpl.util.GenericUtilityMethods;
 
 
 /**
@@ -129,32 +132,10 @@ public class StorefrontAuthenticationSuccessHandler extends SavedRequestAwareAut
 	@Resource(name = "productDetailsHelper")
 	private ProductDetailsHelper productDetailsHelper;
 
-
-	/**
-	 * @return the productDetailsHelper
-	 */
-	public ProductDetailsHelper getProductDetailsHelper()
-	{
-		return productDetailsHelper;
-	}
-
-	/**
-	 * @param productDetailsHelper
-	 *           the productDetailsHelper to set
-	 */
-	public void setProductDetailsHelper(final ProductDetailsHelper productDetailsHelper)
-	{
-		this.productDetailsHelper = productDetailsHelper;
-	}
+	@Resource(name = "pdpPincodeCookieGenerator")
+	private PDPPincodeCookieGenerator pdpPincodeCookie;
 
 	private static final Logger LOG = Logger.getLogger(StorefrontAuthenticationSuccessHandler.class);
-
-
-	protected ConfigurationService getConfigurationService()
-	{
-		return Registry.getApplicationContext().getBean(MarketplacecommerceservicesConstants.CONFIGURATION_SER,
-				ConfigurationService.class);
-	}
 
 	@SuppressWarnings("boxing")
 	@Override
@@ -167,11 +148,8 @@ public class StorefrontAuthenticationSuccessHandler extends SavedRequestAwareAut
 		//This is present in the filter but in case the login request comes from a microsite,the redirect url will be the microsite url and hence not pass through the filter.
 		//Hence updating the cookie here.
 		updateUserDetailsCookie(request, response);
-
 		final HttpSession session = request.getSession();
-
 		session.setAttribute(LOGIN_SUCCESS, Boolean.TRUE);
-
 		final String requestUrl = request.getRequestURL().toString();
 		//For TPR-6334 : creating cookie object
 		final Cookie dtmLoginCookie;
@@ -187,23 +165,16 @@ public class StorefrontAuthenticationSuccessHandler extends SavedRequestAwareAut
 		response.addCookie(dtmLoginCookie);
 
 		/* Gigya code commented for non existence in Release1 */
-
-
+		final CustomerModel customerModel = (CustomerModel) extUserService.getCurrentUser();
 		//Code Start For Gigya Integration
-
 		//Switch to control Gigya Services
 		final String gigyaServiceSwitch = getConfigurationService().getConfiguration().getString(MessageConstants.USE_GIGYA);
-
 		if (gigyaServiceSwitch != null && !gigyaServiceSwitch.equalsIgnoreCase(MessageConstants.NO))
 		{
-			final CustomerModel customerModel = (CustomerModel) extUserService.getCurrentUser();
-
 			final Cookie ratingReviewCookie = productDetailsHelper.ratingReviewHelper(customerModel, false);
-
 			if (ratingReviewCookie != null)
 			{
 				response.addCookie(ratingReviewCookie);
-
 			}
 			else
 			{
@@ -220,10 +191,9 @@ public class StorefrontAuthenticationSuccessHandler extends SavedRequestAwareAut
 		//		final CustomerModel customer = extUserService.setCurrentUser(userModel);
 
 		final String username = (authentication.getPrincipal() == null) ? "NONE_PROVIDED" : authentication.getName();
-		final CustomerModel customer = extUserService.getUserForUid(username);
 
-		if (username != null && !username.isEmpty() && customer.getIsTemporaryPasswordChanged() != null
-				&& customer.getIsTemporaryPasswordChanged().equals(Boolean.FALSE))
+		if (username != null && !username.isEmpty() && customerModel.getIsTemporaryPasswordChanged() != null
+				&& customerModel.getIsTemporaryPasswordChanged().equals(Boolean.FALSE))
 		{
 			super.clearAuthenticationAttributes(request);
 			response.sendRedirect(request.getContextPath() + ControllerConstants.Views.responsive.Account.ChangePassword);
@@ -343,7 +313,7 @@ public class StorefrontAuthenticationSuccessHandler extends SavedRequestAwareAut
 		{
 			super.onAuthenticationSuccess(request, response, authentication);
 		}
-		
+
 		/** Added for UF-93 for Remember Me functionality **/
 		String rememberMe = "false";
 		if (null != request.getParameter("j_RememberMe"))
@@ -362,7 +332,6 @@ public class StorefrontAuthenticationSuccessHandler extends SavedRequestAwareAut
 					+ " SessionTimeout: " + request.getSession().getMaxInactiveInterval());
 		}
 		/** Added for UF-93 Ends **/
-
 	}
 
 	/**
@@ -446,6 +415,24 @@ public class StorefrontAuthenticationSuccessHandler extends SavedRequestAwareAut
 				getUserTypeCookieGenerator().addCookie(response, userType);
 			}
 		}
+		/* TPR-6654 start */
+		final Cookie cookie = GenericUtilityMethods.getCookieByName(request, "pdpPincode");
+		final AddressModel address = currCust.getDefaultShipmentAddress();
+		if (address != null && address.getPostalcode() != null)
+		{
+			if (cookie != null && cookie.getValue() != null)
+			{
+				cookie.setValue(address.getPostalcode());
+				response.addCookie(cookie);
+			}
+			else
+			{
+				pdpPincodeCookie.addCookie(response, address.getPostalcode());
+			}
+			//getSessionService().setAttribute(MarketplacecommerceservicesConstants.SESSION_PINCODE, address.getPostalcode());
+		}
+		/* TPR-6654 end */
+
 
 	}
 
@@ -597,6 +584,11 @@ public class StorefrontAuthenticationSuccessHandler extends SavedRequestAwareAut
 		this.uiExperienceService = uiExperienceService;
 	}
 
+	protected ConfigurationService getConfigurationService()
+	{
+		return Registry.getApplicationContext().getBean(MarketplacecommerceservicesConstants.CONFIGURATION_SER,
+				ConfigurationService.class);
+	}
 
 
 }
