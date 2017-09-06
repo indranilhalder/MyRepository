@@ -398,6 +398,17 @@
 			if(isMobile == "true"){
 				window.location.href="/login";
 			}else{
+				$.ajax({
+					url: "/login?frame=true&box-login",
+					type: "GET",
+					responseType: "text/html",
+					success: function(response){
+						$("#login-modal").find(".content").html('<button type="button" class="close"></button>'+response);
+					},
+					fail: function(response){
+						alert(response);
+					}
+				});
 				setTimeout(function(){
 					$("#login-modal").modal({
 						 backdrop: 'static',
@@ -447,8 +458,6 @@
 <div class="modal fade login-modal" id="login-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
 		<div class="overlay"></div>
 		<div class="content">
-		<button type="button" class="close"></button>
-		${login_register_html}
 		</div>
 </div>
 </body>

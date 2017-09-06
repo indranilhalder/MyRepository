@@ -146,12 +146,6 @@
 			/> -->
 		<bean
 			class="com.tisl.mpl.storefront.interceptors.beforeview.PromotionalForcedLoginBeforeViewHandler">
-			<property name="proxyPort"
-				value="#{configurationService.configuration.getProperty('proxy.port')}" />
-			<property name="proxyEnabled"
-				value="#{configurationService.configuration.getProperty('proxy.enabled')}" />
-			<property name="proxyAddress"
-				value="#{configurationService.configuration.getProperty('proxy.address')}" />
 		</bean>
 	</util:list>
 
