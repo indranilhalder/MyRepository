@@ -29,7 +29,7 @@ import org.springframework.beans.factory.annotation.Required;
 
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.core.model.OrderUpdateProcessModel;
-import com.tisl.mpl.shorturl.service.ShortUrlService;
+
 
 
 /**
@@ -79,8 +79,9 @@ public class OrderDeliveryEmailContext extends AbstractEmailContext<OrderUpdateP
 
 	@Autowired
 	private ConfigurationService configurationService;
-//	@Autowired
-//	private ShortUrlService shortUrlService;//Sonar Fix
+
+	//	@Autowired
+	//	private ShortUrlService shortUrlService;//Sonar Fix
 
 
 	@Override
@@ -181,7 +182,7 @@ public class OrderDeliveryEmailContext extends AbstractEmailContext<OrderUpdateP
 				MarketplacecommerceservicesConstants.MPL_TRACK_ORDER_LONG_URL_FORMAT)
 				+ orderReferenceNumber;
 		/* Added in R2.3 for shortUrl START */
-	//	final String shortUrl = shortUrlService.genearateShortURL(orderReferenceNumber);
+		//	final String shortUrl = shortUrlService.genearateShortURL(orderReferenceNumber);
 		final String shortUrl = orderUpdateProcessModel.getOrderTrackUrl();
 		put(TRACK_ORDER_URL, null != shortUrl ? shortUrl : trackOrderUrl);
 

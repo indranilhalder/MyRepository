@@ -5,7 +5,23 @@
 	<c:set var="buildNumber" value="100000" />
 </c:if>
 
+<!-- Luxury Specific JS Include Starts-->
+
+<c:if test="${fn:contains(themeResourcePath,'theme-luxury')}">
+	
+	<script type="text/javascript" src="${themeResourcePath}/combined/luxury-main.js"></script>
+	<script type="text/javascript" src="${themeResourcePath}/combined/luxury-tmpmain.min.js"></script>
+	
+	<script type="text/javascript" src="${commonResourcePath}/js/minified/plugins.min.js?v=${buildNumber}"></script>
+	<c:if test="${isIAEnabled}">
+		<script type="text/javascript" src="${commonResourcePath}/js/minified/ia.min.js?v=${buildNumber}"></script>
+	</c:if>
+	
+</c:if>
+<!-- Luxury Specific JS Include Ends-->
+
 <!-- UF-439 -->
+<c:if test="${!fn:contains(themeResourcePath,'theme-luxury')}">
 <c:choose>
 	<c:when test="${fn:contains(pageBodyCssClasses, 'homepage')}">
 		<script type="text/javascript">
@@ -304,7 +320,7 @@
 		</c:if>
 	</c:otherwise>
 </c:choose>
-
+</c:if>
 <!--[if lt IE 9]>
 <script type="text/javascript" src="${commonResourcePath}/js/minified/ie9.min.js"></script>
 <![endif]-->

@@ -91,9 +91,10 @@
 	src="${commonResourcePath}/js/mpl/acc.sellerDetails.js"></script>	--%>
 	
 <c:if test="${fn:contains(requestScope['javax.servlet.forward.request_uri'],'/p')}">
-    <script type="text/javascript"
-	src="${commonResourcePath}/js/mpl/acc.productDetail.js"></script>
-	</c:if> 
+	<c:if test="${fn:contains(themeResourcePath,'theme-luxury')}">
+    	<script type="text/javascript" src="${commonResourcePath}/js/mpl/acc.productDetail.js"></script>
+	</c:if>
+</c:if>
 <script type="text/javascript"
 	src="${commonResourcePath}/js/mpl/acc.quickview.js"></script>
 <script type="text/javascript"
@@ -292,4 +293,17 @@ fn:contains(requestScope['javax.servlet.forward.request_uri'],'/cancelSuccess')}
 <c:if test="${fn:contains(requestScope['javax.servlet.forward.request_uri'],'/checkout/single')}">
 <script type="text/javascript"
 	src="${commonResourcePath}/js/mpl/acc.singlePageCheckout.js"></script>	
+</c:if>
+
+<c:if test="${fn:contains(themeResourcePath,'theme-luxury')}">
+	<script type="text/javascript" src="${themeResourcePath}/js/lib/jquery-2.1.1.min.js"></script>
+	<script type="text/javascript" src="${themeResourcePath}/js/lib/jquery-ui-1.11.2.min.js"></script>
+	<script type="text/javascript" src="${themeResourcePath}/js/lib/jquery.selectBoxIt.min.js"></script>
+	<script type="text/javascript" src="${themeResourcePath}/js/lib/slick.min.js"></script>
+	<script type="text/javascript" src="${themeResourcePath}/js/lib/jquery.elevatezoom.js"></script>
+	<script type="text/javascript" src="${themeResourcePath}/js/lib/bootstrap.min.js"></script>
+	<script type="text/javascript" src="${themeResourcePath}/js/lib/jquery.validate.min.js"></script>
+	<script type="text/javascript" src="${themeResourcePath}/js/main.js"></script>
+	<script type="text/javascript" src="${themeResourcePath}/js/acc.accountaddress.js"></script>
+	<script type="text/javascript" src="${themeResourcePath}/js/acc.productDetail.js"></script>
 </c:if>
