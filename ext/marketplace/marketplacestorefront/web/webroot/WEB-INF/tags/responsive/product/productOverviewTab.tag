@@ -13,10 +13,12 @@
 			<div class="product-desc">
 							<span class="key-label">
 							 <c:forEach var="classification" items="${mapConfigurableAttributes}">
-						<li>	 ${classification.key} </li>
+							 <ul class="homefurnishing-overview">
+								<li class="homefurnishing-overview-title"> ${classification.key} </li>
    						 		<c:forEach var="classValue" items="${classification.value }">
-   						 		 <li>	${classValue}</li>
+   						 		 <li class="homefurnishing-overview-desc">${classValue}</li>
    						 			 </c:forEach>
+   						 			 </ul>
 								</c:forEach>
 								<%-- <li class="stylenote" itemprop="description">${product.articleDescription}</li> --%>
 							</span> 

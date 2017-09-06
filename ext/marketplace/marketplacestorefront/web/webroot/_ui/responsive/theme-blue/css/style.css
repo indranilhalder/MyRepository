@@ -76872,3 +76872,33 @@ body .account .right-account form label.invite-text-lbl{
 }
 
 /* TISSPTEN-120 END */
+
+/*homefurinshing-overview-tab start*/
+.product-info>div.tabs-block.HomeFurnishing{
+	width: 100%;
+    margin: 0 !important;
+    padding: 70px 30px 30px 30px;
+}
+.pdp .product-info.wrapper .tabs-block .tabs.pdp li ul.homefurnishing-overview{
+	display: inline-block;
+	width: 49%;
+	vertical-align: top;
+	margin-bottom: 40px;
+}
+.pdp .product-info.wrapper .tabs-block .tabs.pdp li ul.homefurnishing-overview li{
+	font-size: 12px;
+  	line-height: 1.33;
+  	letter-spacing: 0.6px;
+  	color: rgba(0, 0, 0, 0.6);
+  	margin-bottom: 8px;
+  	list-style: square;
+}
+.pdp .product-info.wrapper .tabs-block .tabs.pdp li ul.homefurnishing-overview li.homefurnishing-overview-title{
+	list-style: none;
+	color: #000;
+	text-transform: uppercase;
+	margin-bottom: 16px;
+	margin-left: -15px;
+	
+}
+/*homefurinshing-overview-tab end*/
