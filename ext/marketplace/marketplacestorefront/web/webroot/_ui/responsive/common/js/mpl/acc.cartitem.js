@@ -32,8 +32,11 @@ ACC.cartitem = {
 			  }
 			  /*TPR-4776 ends*/
 			  // TPR-6029 - product removal from cart
-			  digitalData.cpj.product.id = productRemoved;
 			  var categoryRemoved = $(this).closest("li.item").prev().find("input[name='rootCategoryMSD']").val();
+			  if(typeof (digitalData.cpj.product) != undefined){
+				  digitalData.cpj.product.id = productRemoved;
+				  digitalData.cpj.product.category = categoryRemoved;
+				  }
 			  digitalData.cpj.product.category = categoryRemoved;
 			  var location = $(this).closest("li.item").attr('id');
 			  if(typeof digitalData.cpj.cart != "undefined"){
