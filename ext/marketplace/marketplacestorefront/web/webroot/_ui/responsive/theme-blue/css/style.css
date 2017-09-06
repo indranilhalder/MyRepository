@@ -76902,3 +76902,17 @@ body .account .right-account form label.invite-text-lbl{
 	
 }
 /*homefurinshing-overview-tab end*/
+/*home furnishing pdp monogramming start*/
+.sellerMonogramming{
+	font-size: 12px;
+  line-height: 1.5;
+  letter-spacing: 0.6px;
+  margin-top: 12px;
+}
+.product-info .size span+a.buying-guide:after{
+	display: none;
+}
+.product-info .size span+a {
+    color: #a5173c;
+}
+/*home furnishing pdp monogramming end*/
