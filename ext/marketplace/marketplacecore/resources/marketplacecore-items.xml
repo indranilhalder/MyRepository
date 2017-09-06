@@ -13109,6 +13109,12 @@
 						</persistence>
 					</attribute>
 				</attributes>
+				<indexes>
+					<index name="IDX_SELLER_MSG">
+						<key attribute="productCode" />
+						<key attribute="sellerId" />
+					</index>
+					</indexes>
 			</itemtype>
 		</typegroup>
 
