@@ -27,6 +27,7 @@ public final class ModelAttributetConstants
 	public static final String QS = "?";
 	public static final String EQUALS = "=";
 	public static final String AMPARSAND = "&";
+	public static final String COLON = ":";
 	public static final String SUFFIX_TH = "th";
 	public static final String SUFFIX_ST = "st";
 	public static final String SUFFIX_ND = "nd";
@@ -220,6 +221,22 @@ public final class ModelAttributetConstants
 	public static final String WATCHES = "Watches";
 	//Added by SAP for Watches & FashionAccessories  :::  END
 
+	//Added  for Travel and Luggage  :::  START
+
+	public static final String TRAVELANDLUGGAGE = "TravelAndLuggage";
+	//Added  for Travel and Luggage  :::  END
+
+	//Added  for Fine Jewellery  :::  START
+	public static final String FINEJEWELLERY = "FineJewellery";
+	public static final String NOSIZE = "NO SIZE";
+	public static final String CLASSNAME_19NA = "19na";
+	public static final String FEATURE_NAME = "pcmClassification/1/19na.pricebreakuponpdpfinejwlry";
+	//Added  for Fine Jewellery  :::  END
+
+	//Added  for Fashion Jewellery  :::  START
+	public static final String FASHIONJEWELLERY = "FashionJewellery";
+	//Added  for Fashion Jewellery  :::  END
+
 	public static final String INVITE_URL = "/store/mpl/en/login/?affiliateId=";
 	public static final String SELECT_DAY = "selectDay";
 	public static final String SELECT_MONTH = "selectmonth";
@@ -283,6 +300,9 @@ public final class ModelAttributetConstants
 	public static final String SHARED_PATH = "SHARED_PATH";
 
 	public static final String VALID_TABS = "VALID_TABS";
+
+	//for return refund tab fine jewellery
+	public static final String RET_REF_TAB = "RetRefTab";
 
 	public static final String FRIENDS_INVITE_FORM = "friendsInviteForm";
 	public static final String J_FRIENDSEMAIL = "j_friendsEmail";
@@ -870,6 +890,8 @@ public final class ModelAttributetConstants
 
 	public static final String NO = "no";
 
+	//TPR-4134
+	public static final String SHOW_REVERSESEAL_JWLRY = "showReverseSeal";
 	//TPR-1283
 	public static final String DESCRIPTION_TEXT1 = " - Shop for ";
 	public static final String DESCRIPTION_TEXT2 = " Online at best price in India at Tata CLiQ. Choose from wide range of ";
@@ -884,10 +906,13 @@ public final class ModelAttributetConstants
 	public static final String EMAILORPASSINVALID = "Email or Password invalid";
 	public static final String LUXURY_USER_FIRST_NAME = "fname";
 
-
 	/* TPR-5733 */
 	public static final String FOOTER_LINK_LIST = "footerLinkList";
 	//TPR-6654
 	public static final String POINT_OF_SERVICES = "pointOfServices";
-
+	/* UF-432 */
+	public static final String MULTI_COLOUR_FLAG = "multiColorFlag";
+	public static final String BUYBOX_AVAILABLE = "buybox_available";
+	//TPR-6405
+	public static final String IS_SAMSUNG_PAGE = "isSamsungPage";
 }

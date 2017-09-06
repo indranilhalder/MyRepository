@@ -22,8 +22,7 @@
        http://www.springframework.org/schema/integration/spring-integration.xsd
        http://www.springframework.org/schema/integration/file
        http://www.springframework.org/schema/integration/file/spring-integration-file.xsd">
- 
- 
+  
  		<!-- General setup -->
  		
  		 <bean id="fileOrderComparator" class="de.hybris.platform.acceleratorservices.dataimport.batch.FileOrderComparator">
@@ -39,7 +38,7 @@
 				<entry key="variant_product" value="13" />
 				<entry key="seller" value="12" />
 				<entry key="richattribute_seller" value="11" />
-				<entry key="richattribute_product" value="10" />
+			    <entry key="richattribute_product" value="10" /> 
 				<entry key="brand" value="9" />
 				<entry key="seocontent" value="8" />
 				<entry key="global_identifier" value="7" />
@@ -56,6 +55,7 @@
 				<entry key="promoted_product" value="0"/>
 				<entry key="bulk_return_initiation" value="0"/>
 				<entry key="bulk_cancel_initiation" value="0"/>
+				<entry key="pcmmplassociation" value="0" />
 					</map>
 		</property>
 	</bean>
@@ -158,11 +158,10 @@
 	 p:converter-ref="batchCategoryMediaConverter" />
     
      <!-- Transformer for Rich attributes Import -->
-    
-    <bean id="batchProductRichAttributesMapping"
+     <bean id="batchProductRichAttributesMapping"
      class="de.hybris.platform.acceleratorservices.dataimport.batch.converter.mapping.impl.DefaultConverterMapping"
      p:mapping="richattribute_product"
-     p:converter-ref="batchProductRichAttributesConverter"/>
+     p:converter-ref="batchProductRichAttributesConverter"/> 
     
     <!-- Transformer for Global Identifier Import -->
     
@@ -267,6 +266,10 @@
     class="de.hybris.platform.acceleratorservices.dataimport.batch.converter.mapping.impl.DefaultConverterMapping"
     p:mapping="promoted_product"
     p:converter-ref="batchPromotedProductConverter"/>
+    
+    <bean id="batchMplLeadAssociationConverterMapping"
+		class="de.hybris.platform.acceleratorservices.dataimport.batch.converter.mapping.impl.DefaultConverterMapping"
+		p:mapping="pcmmplassociation" p:converter-ref="batchLeadUssidMplAssociationConverter" />
     
       <!-- Converter for seller Import -->
       <bean id="batchSellerPriorityConverter" class="de.hybris.platform.acceleratorservices.dataimport.batch.converter.impl.DefaultImpexConverter">
@@ -624,11 +627,11 @@ $classSystemVersion=systemVersion(catalog(id[default='$classificationCatalog']),
 $categories=target(code, $catalogVersion)[unique=true]
 $classAttributeAssignment=classificationAttributeAssignment(classificationAttribute(code),classificationClass(code))
 $language=language(isocode)[default='en'][unique=true];
- INSERT_UPDATE ProductFeature;classificationAttributeAssignment(classificationAttribute(code,systemVersion(catalog(id),version)),classificationClass(catalogVersion(catalog(id),version),code),systemVersion(catalog(id),version));product(code,$catalogVersion)[unique=true,forceWrite=true,allownull=true];qualifier[unique=true,forceWrite=true,allownull=true];unit(code,systemVersion(catalog(id),version),unitType)[unique=true];valueType;value[translator=de.hybris.platform.catalog.jalo.classification.impex.ProductFeatureValueTranslator,allownull=true]
+ INSERT_UPDATE ProductFeature;classificationAttributeAssignment(classificationAttribute(code,systemVersion(catalog(id),version)),classificationClass(catalogVersion(catalog(id),version),code),systemVersion(catalog(id),version));product(code,$catalogVersion)[unique=true,forceWrite=true,allownull=true];qualifier[unique=true,forceWrite=true,allownull=true];unit(code,systemVersion(catalog(id),version),unitType)[unique=true];valueType;value[translator=de.hybris.platform.catalog.jalo.classification.impex.ProductFeatureValueTranslator,allownull=true];valueposition[unique=true]
          </value>
         </property>
         <property name="impexRow">
-            <value>;{+0};{+1};{2};{3};{4};{5}</value>
+            <value>;{+0};{+1};{2};{3};{4};{5};{6}</value>
         </property>
         
        </bean>
@@ -699,7 +702,7 @@ $language=language(isocode)[default='en'][unique=true];
         <property name="impexRow">
             <value>;{0};{1};{2};{+3};{+4};{5};{6};{7};{8};{9};{10};{11};{12};{13};{14};{15};{+16};{17};{18};{+19};{+20};{+21};{+22};{+23};{+24};{+25}</value>
         </property>
-        </bean>
+        </bean> 
          <!-- Converter for SizeGuide For Product Import --> 
      <bean id="batchProdSizeguideConverter" class="de.hybris.platform.acceleratorservices.dataimport.batch.converter.impl.DefaultImpexConverter">
         <property name="header">
@@ -1413,4 +1416,34 @@ INSERT_UPDATE SellerInformation;productSource(code,$catalogVersion);sellerSKU[un
             <value>;{+0};{+1};{+2};{3}</value>
         </property>
         </bean>
+        
+          <bean id="batchLeadUssidMplAssociationConverter"
+		class="de.hybris.platform.acceleratorservices.dataimport.batch.converter.impl.DefaultImpexConverter">
+		<property name="header">
+			<value>
+				$productCatalog=mplProductCatalog
+				$productCatalogName=Marketplace Product Catalog
+				$catalogVersion=catalogversion(catalog(id[default=$productCatalog]),version[default='Online'])[unique=true,default=$productCatalog:Online]
+				$approved=approvalstatus(code)[default='approved']
+				INSERT_UPDATE JewelleryInformation;ProductCode;PCMUSSID;USSID[unique=true];PIMAttributeId[unique=true];Weight
+			</value>
+		</property>
+		<property name="impexRow">
+			<value>
+				;{0};{1};{1};grossweightfinejwlry;{2}
+				;{0};{1};{1};metalweightfinejwlry;{3}
+				;{0};{1};{1};coinbarweightfinejwlry;{4}
+				;{0};{1};{1};solitaireweightfinejwlry;{5}
+				;{0};{1};{1};diamondtotalweightfinejwlry;{6}
+				;{0};{1};{1};diamondweightfinejwlry1;{7}
+				;{0};{1};{1};diamondweightfinejwlry2;{8}
+				;{0};{1};{1};diamondweightfinejwlry3;{9}
+				;{0};{1};{1};diamondweightfinejwlry4;{10}
+				;{0};{1};{1};diamondweightfinejwlry5;{11}
+				;{0};{1};{1};diamondweightfinejwlry6;{12}
+				;{0};{1};{1};diamondweightfinejwlry7;{13}
+			</value>
+			
+		</property>
+	</bean>   
   </beans>

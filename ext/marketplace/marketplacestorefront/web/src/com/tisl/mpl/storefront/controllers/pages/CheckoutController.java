@@ -74,6 +74,7 @@ import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.facade.checkout.MplCartFacade;
 import com.tisl.mpl.facade.checkout.MplCheckoutFacade;
 import com.tisl.mpl.facade.checkout.MplCustomAddressFacade;
+import com.tisl.mpl.facade.product.MplJewelleryFacade;
 import com.tisl.mpl.facade.wishlist.WishlistFacade;
 import com.tisl.mpl.facades.account.register.MplOrderFacade;
 import com.tisl.mpl.facades.payment.MplPaymentFacade;
@@ -167,6 +168,12 @@ public class CheckoutController extends AbstractCheckoutController
 	@Resource(name = "mplPaymentFacade")
 	//TISSQAEE-242
 	private MplPaymentFacade mplPaymentFacade;
+
+	//JEWELLERY CHANGES STARTS
+	@Resource(name = "mplJewelleryFacade")
+	private MplJewelleryFacade mplJewelleryFacade;
+
+	//JEWELLERY CHANGES ENDS
 
 	/**
 	 * @return the modelService
@@ -550,22 +557,16 @@ public class CheckoutController extends AbstractCheckoutController
 					}
 				}
 				//bug TISRLUAT-954 Start
-			/*	Map<String ,String> selectedDateMap=getSessionService().getAttribute(MarketplacecheckoutaddonConstants.DELIVERY_SLOTS_TO_SESSION);
-				for(OrderData data:orderDetails.getSellerOrderList()){
-				      for( DeliveryOrderEntryGroupData orderEntry:data.getDeliveryOrderGroups()){
-				      	 for(OrderEntryData orderEntryData:orderEntry.getEntries()){
-				      		 if(null!=selectedDateMap){
-				      			 for (Entry<String, String> entryForDate :selectedDateMap.entrySet()) {
-				      				 if(entryForDate.getKey().equalsIgnoreCase(orderEntryData.getSelectedUssid())){
-				      					 orderEntryData.setEddDateBetWeen(entryForDate.getValue());
-				      				 }
-				      			 }
-				      		 }
-				      	 }	
-				      }
-				}
-				*/
-				//bug TISRLUAT-954 End 
+				/*
+				 * Map<String ,String>
+				 * selectedDateMap=getSessionService().getAttribute(MarketplacecheckoutaddonConstants.DELIVERY_SLOTS_TO_SESSION
+				 * ); for(OrderData data:orderDetails.getSellerOrderList()){ for( DeliveryOrderEntryGroupData
+				 * orderEntry:data.getDeliveryOrderGroups()){ for(OrderEntryData orderEntryData:orderEntry.getEntries()){
+				 * if(null!=selectedDateMap){ for (Entry<String, String> entryForDate :selectedDateMap.entrySet()) {
+				 * if(entryForDate.getKey().equalsIgnoreCase(orderEntryData.getSelectedUssid())){
+				 * orderEntryData.setEddDateBetWeen(entryForDate.getValue()); } } } } } }
+				 */
+				//bug TISRLUAT-954 End
 				//saving IP of the Customer
 				try
 				{
@@ -681,7 +682,14 @@ public class CheckoutController extends AbstractCheckoutController
 
 		for (final AbstractOrderEntryModel entry : orderModel.getEntries())
 		{
-			final String selectedUSSID = entry.getSelectedUSSID();
+			String selectedUSSID = entry.getSelectedUSSID();
+
+			//JEWELLERY CHANGES STARTS
+			if (entry.getProduct().getProductCategoryType().equalsIgnoreCase("FineJewellery"))
+			{
+				selectedUSSID = mplJewelleryFacade.getJewelleryInfoByUssid(selectedUSSID).get(0).getPCMUSSID();
+			}
+			//JEWELLERY CHANGES ENDS
 			final String selectedDeliveryMode = entry.getMplDeliveryMode().getDeliveryMode().getCode();
 			final MplZoneDeliveryModeValueModel deliveryModel = mplDeliveryCostService.getDeliveryCost(selectedDeliveryMode,
 					MarketplacecommerceservicesConstants.INR, selectedUSSID);
@@ -690,7 +698,9 @@ public class CheckoutController extends AbstractCheckoutController
 			String endValue = deliveryModel.getDeliveryMode().getEnd() != null ? deliveryModel.getDeliveryMode().getEnd().toString()
 					: MarketplacecommerceservicesConstants.DEFAULT_END_TIME;
 			List<RichAttributeModel> richAttributeModel = new ArrayList<RichAttributeModel>();
+
 			final SellerInformationModel sellerInfoModel = mplSellerInformationService.getSellerDetail(selectedUSSID);
+
 
 			if (sellerInfoModel != null && sellerInfoModel.getRichAttribute() != null)
 			{

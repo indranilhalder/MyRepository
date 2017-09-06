@@ -272,7 +272,9 @@ public class MplGigyaReviewCommentServiceImpl implements MplGigyaReviewCommentSe
 
 					//	if (category.equals("Clothing"))
 					if (MarketplacecclientservicesConstants.CLOTHING.equalsIgnoreCase(category)
-							|| MarketplacecclientservicesConstants.FOOTWEAR.equalsIgnoreCase(category)) //removing unnecessary comparison of boolean objects(Sonar Fix)
+							|| MarketplacecclientservicesConstants.FOOTWEAR.equalsIgnoreCase(category)
+							|| MarketplacecclientservicesConstants.FINEJEWELLERY.equalsIgnoreCase(category)
+							|| MarketplacecclientservicesConstants.FASHIONJEWELLERY.equalsIgnoreCase(category)) //removing unnecessary comparison of boolean objects(Sonar Fix)
 					{
 						if (checkItemKey(ratings, MarketplacecclientservicesConstants.FIT))
 						{

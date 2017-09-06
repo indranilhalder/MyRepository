@@ -59,6 +59,7 @@ import de.hybris.platform.commerceservices.order.CommerceCartModificationExcepti
 import de.hybris.platform.commerceservices.search.pagedata.PageableData;
 import de.hybris.platform.commerceservices.search.pagedata.SearchPageData;
 import de.hybris.platform.constants.GeneratedCoreConstants.Enumerations.Gender;
+import de.hybris.platform.core.model.JewelleryInformationModel;
 import de.hybris.platform.core.model.enumeration.EnumerationValueModel;
 import de.hybris.platform.core.model.order.AbstractOrderEntryModel;
 import de.hybris.platform.core.model.order.OrderModel;
@@ -97,6 +98,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -201,6 +203,7 @@ import com.tisl.mpl.facades.product.data.StateData;
 import com.tisl.mpl.facades.product.data.YearData;
 import com.tisl.mpl.helper.MplEnumerationHelper;
 import com.tisl.mpl.helper.ProductDetailsHelper;
+import com.tisl.mpl.marketplacecommerceservices.service.MplJewelleryService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplOrderService;
 import com.tisl.mpl.marketplacecommerceservices.service.OrderModelService;
 import com.tisl.mpl.model.SellerInformationModel;
@@ -306,6 +309,11 @@ public class AccountPageController extends AbstractMplSearchPageController
 	public static final String RETURN_PINCODE = "returnPincodeAvailabilityCheck";
 	public static final String RETURN_ADDRESS = "returnAddress";
 	public static final String RETURN_Logistics_Availability = "returnLogisticsAvailability";
+
+	private static final String FINEJEWELLERY = "FineJewellery";
+
+	@Resource(name = "mplJewelleryService")
+	private MplJewelleryService jewelleryService;
 
 	//	Variable declaration with @Resource annotation
 	@Resource(name = ModelAttributetConstants.ACCELERATOR_CHECKOUT_FACADE)
@@ -1046,6 +1054,9 @@ public class AccountPageController extends AbstractMplSearchPageController
 		OrderModel orderModel = null;
 		boolean luxFlag = false;
 		boolean addressChangeEligible = false;
+
+		String ussid = null;
+
 		try
 		{
 
@@ -1146,13 +1157,28 @@ public class AccountPageController extends AbstractMplSearchPageController
 									}
 								}
 							}
+							final ProductModel productModl = getMplOrderFacade().getProductForCode(orderEntry.getProduct().getCode());
+
+							if (productModl.getProductCategoryType().equalsIgnoreCase(FINEJEWELLERY))
+
+							{ //SellerInformationModel sellerInfoModel = null;
+								final List<JewelleryInformationModel> jewelleryInfo = jewelleryService.getJewelleryInfoByUssid(orderEntry
+										.getSelectedUssid());
+								ussid = jewelleryInfo.get(0).getPCMUSSID();
+								//sellerInfoModel = getMplSellerInformationService().getSellerDetail(jewelleryInfo.get(0).getPCMUSSID());
+								//added for jewellery
+							}
+							else
+							{
+								ussid = orderEntry.getSelectedUssid();
+							}
 
 							final List<SellerInformationModel> sellerInfo = (List<SellerInformationModel>) productModel
 									.getSellerInformationRelator();
 
 							for (final SellerInformationModel sellerInformationModel : sellerInfo)
 							{
-								if (sellerInformationModel.getSellerArticleSKU().equals(orderEntry.getSelectedUssid()))
+								if (sellerInformationModel.getSellerArticleSKU().equals(ussid))
 								{
 									final List<RichAttributeModel> richAttributeModelForSeller = (List<RichAttributeModel>) sellerInformationModel
 											.getRichAttribute();
@@ -1334,6 +1360,7 @@ public class AccountPageController extends AbstractMplSearchPageController
 									luxFlag = true; //Setting true if at least one luxury product found
 								}
 							}
+
 
 							final List<ReturnRequestModel> returnRequestModelList = cancelReturnFacade.getListOfReturnRequest(subOrder
 									.getCode());
@@ -1806,7 +1833,10 @@ public class AccountPageController extends AbstractMplSearchPageController
 		List<PointOfServiceData> returnableStores = new ArrayList<PointOfServiceData>();
 		String productRichAttrOfQuickDrop = null;
 		String sellerRichAttrOfQuickDrop = null;
-
+		String ussidForJwlry = null;
+		String sellerName = "";
+		boolean isFineJew = false;
+		final String revSealSellerList = configurationService.getConfiguration().getString("finejewellery.reverseseal.sellername");
 
 		try
 		{
@@ -1841,12 +1871,26 @@ public class AccountPageController extends AbstractMplSearchPageController
 						}
 					}
 
+					//This is added for jewellery
+					if (productModel.getProductCategoryType().equalsIgnoreCase(FINEJEWELLERY))
+					{
+						isFineJew = true;
+						final List<JewelleryInformationModel> jewelleryInfo = jewelleryService.getJewelleryInfoByUssid(orderEntry
+								.getSelectedUssid());
+						ussidForJwlry = jewelleryInfo.get(0).getPCMUSSID();
+					}
+					else
+					{
+						ussidForJwlry = orderEntry.getSelectedUssid();
+					}
+
 					final List<SellerInformationModel> sellerInfo = (List<SellerInformationModel>) productModel
 							.getSellerInformationRelator();
 
 					for (final SellerInformationModel sellerInformationModel : sellerInfo)
 					{
-						if (sellerInformationModel.getSellerArticleSKU().equals(orderEntry.getSelectedUssid()))
+						//if (sellerInformationModel.getSellerArticleSKU().equals(orderEntry.getSelectedUssid()))
+						if (sellerInformationModel.getSellerArticleSKU().equals(ussidForJwlry)) //Added for jewellery
 						{
 							List<RichAttributeModel> sellerRichAttributeModel = null;
 							if (sellerInformationModel.getRichAttribute() != null)
@@ -1858,8 +1902,24 @@ public class AccountPageController extends AbstractMplSearchPageController
 									sellerRichAttrOfQuickDrop = sellerRichAttributeModel.get(0).getReturnAtStoreEligible().toString();
 								}
 							}
+							sellerName = sellerInformationModel.getSellerName();
 						}
 					}
+
+					//TPR-4134 starts
+					if (StringUtils.isNotEmpty(revSealSellerList))
+					{
+						final List<String> sellerList = Arrays.asList(revSealSellerList.split(","));
+						if ((FINEJEWELLERY).equalsIgnoreCase(productModel.getProductCategoryType()))
+						{
+							//Checking if seller contains the values
+							if (sellerList.contains(sellerName))
+							{
+								model.addAttribute(ModelAttributetConstants.SHOW_REVERSESEAL_JWLRY, "true");
+							}
+						}
+					}
+					//TPR-4134 ends
 					model.addAttribute(ModelAttributetConstants.QUCK_DROP_PROD_LEVEL, productRichAttrOfQuickDrop);
 					model.addAttribute(ModelAttributetConstants.QUCK_DROP_SELLER_LEVEL, sellerRichAttrOfQuickDrop);
 
@@ -1908,6 +1968,17 @@ public class AccountPageController extends AbstractMplSearchPageController
 			}
 			model.addAttribute(ModelAttributetConstants.ADDRESS_DATA, addressDataList);
 			final List<ReturnReasonData> reasonDataList = getMplOrderFacade().getReturnReasonForOrderItem();
+			if (!isFineJew)
+			{
+				for (final Iterator<ReturnReasonData> iterator = reasonDataList.iterator(); iterator.hasNext();)
+				{
+					final ReturnReasonData returnData = iterator.next();
+					if (MarketplacecommerceservicesConstants.RETURN_FINEJEWELLERY.equalsIgnoreCase(returnData.getReasonDescription()))
+					{
+						iterator.remove();
+					}
+				}
+			}
 			model.addAttribute(ModelAttributetConstants.REASON_DATA_LIST, reasonDataList);
 			model.addAttribute(ModelAttributetConstants.RETURN_PRODUCT_MAP, returnProductMap);
 			model.addAttribute(ModelAttributetConstants.SUBORDER_ENTRY, orderEntry);
@@ -2459,7 +2530,7 @@ public class AccountPageController extends AbstractMplSearchPageController
 			if (ticketTypeCode.equalsIgnoreCase("R"))
 			{
 				cancellationStatus = cancelReturnFacade.implementReturnItem(subOrderDetails, subOrderEntry, reasonCode, ussid,
-						ticketTypeCode, customerData, refundType, true, SalesApplication.WEB, returnAddrData);
+						ticketTypeCode, customerData, refundType, true, SalesApplication.WEB, returnAddrData, "");
 			}
 			else
 			{
@@ -5198,6 +5269,9 @@ public class AccountPageController extends AbstractMplSearchPageController
 			Boolean isDelisted = Boolean.FALSE;
 			boolean luxProduct = false;
 			final String catalogVersion = catalogUtils.getSessionCatalogVersionForProduct().getCatalog().getId().toString();
+
+			Integer available = 0;
+
 			if (null != particularWishlist && null != particularWishlist.getEntries() && !particularWishlist.getEntries().isEmpty())
 			{
 				final List<Wishlist2EntryModel> entryModels = particularWishlist.getEntries();
@@ -5318,6 +5392,7 @@ public class AccountPageController extends AbstractMplSearchPageController
 									ProductOption.STOCK, ProductOption.SELLER));
 
 							final BuyBoxModel buyboxmodel = buyBoxFacade.getpriceForUssid(entryModel.getUssid());
+
 							double price = 0.0;
 							if (null != buyboxmodel)
 							{
@@ -5347,20 +5422,42 @@ public class AccountPageController extends AbstractMplSearchPageController
 								final List<SellerInformationData> sellerDatas = productData1.getSeller();
 								for (final SellerInformationData sellerData : sellerDatas)
 								{
-									if (sellerData.getUssid().equals(entryModel.getUssid()))
+									if (MarketplacecommerceservicesConstants.FINEJEWELLERY
+											.equalsIgnoreCase(productData1.getRootCategory()))
 									{
-										wishlistProductData.setSellerInfoData(sellerData);
-
-										if (sellerData.getAvailableStock() <= 0)
+										if (buyboxmodel.getPUSSID().equals(sellerData.getUssid()))
 										{
-											wishlistProductData.setIsOutOfStock(ModelAttributetConstants.Y_CAPS_VAL);
-										}
-										else
-										{
-											wishlistProductData.setIsOutOfStock(ModelAttributetConstants.N_CAPS_VAL);
-										}
+											wishlistProductData.setSellerInfoData(sellerData);
 
-										break;
+											if (buyboxmodel.getAvailable() <= 0)
+											{
+												wishlistProductData.setIsOutOfStock(ModelAttributetConstants.Y_CAPS_VAL);
+											}
+											else
+											{
+												wishlistProductData.setIsOutOfStock(ModelAttributetConstants.N_CAPS_VAL);
+											}
+											available = buyboxmodel.getAvailable();
+											break;
+										}
+									}
+									else
+									{
+										if (sellerData.getUssid().equals(entryModel.getUssid()))
+										{
+											wishlistProductData.setSellerInfoData(sellerData);
+
+											if (sellerData.getAvailableStock() <= 0)
+											{
+												wishlistProductData.setIsOutOfStock(ModelAttributetConstants.Y_CAPS_VAL);
+											}
+											else
+											{
+												wishlistProductData.setIsOutOfStock(ModelAttributetConstants.N_CAPS_VAL);
+											}
+
+											break;
+										}
 									}
 								}
 								wishlistProductData.setWishlistAddedDate(simpleDateFormat.format(entryModel.getAddedDate()));
@@ -5387,6 +5484,8 @@ public class AccountPageController extends AbstractMplSearchPageController
 
 			}
 			sessionService.setAttribute(ModelAttributetConstants.MY_WISHLIST_FLAG, ModelAttributetConstants.Y_CAPS_VAL);
+
+			model.addAttribute(ModelAttributetConstants.BUYBOX_AVAILABLE, available);
 
 			model.addAttribute(ModelAttributetConstants.IS_DELISTED, isDelisted);
 			model.addAttribute(ModelAttributetConstants.WISHLIST_SIZE, pageSizeInWl);
@@ -8144,6 +8243,4 @@ public class AccountPageController extends AbstractMplSearchPageController
 		}
 
 	}
-
-
 }

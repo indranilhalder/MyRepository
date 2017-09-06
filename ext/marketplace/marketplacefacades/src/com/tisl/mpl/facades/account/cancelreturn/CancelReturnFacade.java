@@ -187,12 +187,13 @@ public interface CancelReturnFacade
 	 * @param refundType
 	 * @param isReturn
 	 * @param salesApplication
+	 * @param revSealJwlry
 	 * @param pinCode
 	 * @return Return Item Status
 	 */
 	public boolean implementReturnItem(OrderData subOrderDetails, OrderEntryData subOrderEntry, String reasonCode, String ussid,
 			String ticketTypeCode, CustomerData customerData, String refundType, boolean isReturn,
-			SalesApplication salesApplication, ReturnItemAddressData returnAddress);
+			SalesApplication salesApplication, ReturnItemAddressData returnAddress, String revSealJwlry);
 
 
 	/**
@@ -218,7 +219,8 @@ public interface CancelReturnFacade
 	 * @return
 	 */
 	boolean createTicketInCRM(OrderData subOrderDetails, OrderEntryData subOrderEntry, String ticketTypeCode, String reasonCode,
-			String refundType, String ussid, CustomerData customerData, OrderModel subOrderModel, ReturnItemAddressData returnAddress);
+			String refundType, String ussid, CustomerData customerData, OrderModel subOrderModel,
+			ReturnItemAddressData returnAddress, String revSealJwlry);
 
 	/**
 	 *

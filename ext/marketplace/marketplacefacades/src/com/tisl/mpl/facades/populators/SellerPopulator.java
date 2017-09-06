@@ -30,6 +30,7 @@ import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.facades.constants.MarketplaceFacadesConstants;
 import com.tisl.mpl.helper.ProductDetailsHelper;
 import com.tisl.mpl.marketplacecommerceservices.service.AgentIdForStore;
+//import com.tisl.mpl.marketplacecommerceservices.service.BuyBoxService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplDeliveryCostService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplPriceRowService;
 import com.tisl.mpl.model.SellerInformationModel;
@@ -66,6 +67,10 @@ public class SellerPopulator<SOURCE extends ProductModel, TARGET extends Product
 
 	@Resource
 	private AgentIdForStore agentIdForStore;
+
+	//for Jewellery
+	//	@Resource
+	//	private BuyBoxService buyBoxService;
 
 	/**
 	 * @return the mplPriceRowService
@@ -196,7 +201,7 @@ public class SellerPopulator<SOURCE extends ProductModel, TARGET extends Product
 					sellerData.setSellerAssociationstatus(SellerAssociationStatusEnum.YES.toString());
 					for (final RichAttributeModel rm : sellerInformationModel.getRichAttribute())
 					{
-
+						//JWLSPCUAT-76
 						sellerData.setDeliveryModes(productDetailsHelper.getDeliveryModeLlist(rm,
 								sellerInformationModel.getSellerArticleSKU()));
 

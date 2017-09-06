@@ -160,6 +160,7 @@ ACC.product = {
 					$("#addToCartFormQuickTitle").html("<font color='#ff1c47'>" + $('#selectSizeId').text() + "</font>");
 					$("#addToCartFormQuickTitle").show().fadeOut(6000);
 					errorAddToBag("size_not_selected");
+					dtmErrorTracking("size_not_selected","errorname");
 				}
 				event.preventDefault();
 				return false;
@@ -181,6 +182,27 @@ ACC.product = {
 			 {
 				ACC.product.sendAddToBagSizeGuide("addToCartSizeGuide");
 				$(".modal").modal('hide');	 //INC144315891
+			 
+			}else{
+					$("#sizeSelectedSizeGuide").html("<font color='#ff1c47'>" + $('#sizeSelectedSizeGuide').text() + "</font>");
+					$("#sizeSelectedSizeGuide").show();
+			}
+			event.preventDefault();
+			return false;
+		});
+		
+		//Exchange
+		$(document).off('click', '#addToCartExchange .js-add-to-cart').on('click','#addToCartExchange .js-add-to-cart',function(event){
+			
+			var selectedSizeFlag = $("#sizeSelectedVal").val();
+			
+			
+			
+			 $("#sizeQty").val($("#sizeGuideQty").val());
+			//alert($('#variant.size-g option:selected').val());
+			 if($('#variant.size-g option:selected').val()!="#")
+			 {
+				ACC.product.sendAddToBagExchange("addToCartExchange");
 			 
 			}else{
 					$("#sizeSelectedSizeGuide").html("<font color='#ff1c47'>" + $('#sizeSelectedSizeGuide').text() + "</font>");
@@ -463,7 +485,6 @@ sendAddToBag : function(formId, isBuyNow) {
 	 * $('#inventory').text() + "</font>");
 	 * $("#"+formId+"noInventory").show().fadeOut(6000); return false; }
 	 */
-
 	if ($("#variant,#sizevariant option:selected").val() == "#") {
 		$("#" + formId + "Title").html(
 				"<font color='#ff1c47'>" + $('#selectSizeId').text()
@@ -522,7 +543,19 @@ sendAddToBag : function(formId, isBuyNow) {
 							
 							// ACC.product.displayAddToCart(data,formId,false);
 							$("span.js-mini-cart-count,span.js-mini-cart-count-hover,span.responsive-bag-count").text(data.substring(4));
-						}else if (values[0] == "reachedMaxLimitforproduct") {//TPR-5346 STARTS
+
+						}
+						//TISJEWST-10
+						else if(values[0]=="maxqtyaddedforfinejewellery"){
+							$("#" + formId + "Title").html("<br/><font color='#ff1c47'>You can only order upto"+" "+values[1]+ " "+"pieces of this item.</font>");
+							$("#" + formId + "Title").show().fadeOut(5000);
+						}
+						else if(data=="maxqtyexchange")
+						{
+							$("#"+formId+"Title").html("<br/><font color='#ff1c47'>"+$('#exchangeRestriction').html()+"</font>");
+							$("#"+formId+"Title").show().fadeOut(5000);
+						}
+						else if (values[0] == "reachedMaxLimitforproduct") {//TPR-5346 STARTS
 							$("#" + formId + "Title").html("You can only order upto" +" "+values[1]+ " "+"pieces of this item.");
 							$("#" + formId + "Title").show().fadeOut(5000);//TPR-5346 ENDS
 						} else if (data == "reachedMaxLimit") {
@@ -540,6 +573,7 @@ sendAddToBag : function(formId, isBuyNow) {
 											+ "</font>");
 							$("#" + formId + "Title").show().fadeOut(5000);
 							errorAddToBag("bag_is_full");
+							dtmErrorTracking("bag_is_full","errorname");
 							utagError=true;
 						} else if (data == "outofinventory") {
 							$("#" + formId + "noInventory")
@@ -552,6 +586,7 @@ sendAddToBag : function(formId, isBuyNow) {
 							$("#" + formId + "noInventory").show().fadeOut(
 									6000);
 							errorAddToBag("out_of_stock");
+							dtmErrorTracking("out_of_stock","errorname");
 							utagError=true;
 							return false;
 						} else if (data == "willexceedeinventory") {
@@ -635,9 +670,13 @@ sendAddToBag : function(formId, isBuyNow) {
 						if(!utagError){
 							if(isBuyNow){
 								utagAddProductToBag("buy_now",productCodeMSD);
+								//TPR-6029
+								dtmAddProductToBag("buy_now");
 							}
 							else{
 								utagAddProductToBag("add_to_bag",productCodeMSD);
+								//TPR-6029
+								dtmAddProductToBag("add_to_bag");
 							}
 						}
 						
@@ -669,6 +708,7 @@ sendAddToBagQuick:function(formId){
 	 var ussid=$('#ussid_quick').val();
 	var productCode = $("#productCode").val();
 	var utagError=false;
+	var digitalDataError=false;
 		
 	 /*if(parseInt(stock)<parseInt(quantity)){
 		    $("#"+formId+"noInventory").html("<font color='#ff1c47'>" + $('#inventory').text() + "</font>");
@@ -717,13 +757,17 @@ sendAddToBagQuick:function(formId){
 				$("#"+formId+"Title").html("<font color='#ff1c47'>"+$('#bagfull').text()+"</font>");
 				$("#"+formId+"Title").show().fadeOut(5000);
 				errorAddToBag("bag_is_full");
+				dtmErrorTracking("bag_is_full","errorname");
 				utagError=true;
+				digitalDataError=true;
 			}
 			else if(data=="outofinventory"){
 				 //$("#"+formId+"noInventory").html("<font color='#ff1c47'>" + $('#addToCartFormnoInventory').text() + "</font>");
 				$("#addToCartFormnoInventory").show().fadeOut(6000);
 				errorAddToBag("out_of_stock");
+				dtmErrorTracking("bag_is_full","errorname");
 				utagError=true;
+				digitalDataError=true;
 		   	     return false;
 			}
 			else if(data=="willexceedeinventory"){
@@ -781,7 +825,6 @@ sendAddToBagQuick:function(formId){
 				var productCodeArray=[];
 				productCodeArray.push(productCode);	// Product code passed as an array for Web Analytics
 				utag.link({
-					link_obj: this, 
 					link_text: 'quick_view_addtobag' , 
 					event_type : 'quick_view_addtobag', 
 					product_sku_quick_view : productCodeArray
@@ -789,6 +832,13 @@ sendAddToBagQuick:function(formId){
 			}
 			/*TPR-681 Ends*/
 			//End MSD
+			//TPR-6029 | add to bag on quickview #42--start
+			if(!digitalDataError){
+				if(typeof(_satellite)!= "undefined"){
+					_satellite.track('cpj_qw_add_to_bag');
+				}
+			}
+			//TPR-6029 | add to bag on quickview #42--end
 			
 		},
 		complete: function(){
@@ -812,6 +862,7 @@ sendAddToBagQuick:function(formId){
 		 var stock = $("#"+formId+" :input[name='" +  stock_id +"']").val(); 
 		 var ussid=$('#ussid_quick').val();
 		 var utagError=false;
+		 var digitalDataError=false;
 		 /*if(parseInt(stock)<parseInt(quantity)){
 			    $("#"+formId+"noInventory").html("<font color='#ff1c47'>" + $('#inventory').text() + "</font>");
 			    $("#"+formId+"noInventory").show().fadeOut(6000);
@@ -861,13 +912,17 @@ sendAddToBagQuick:function(formId){
 					$("#"+formId+"Title").html("<font color='#ff1c47'>"+$('#bagfull').text()+"</font>");
 					$("#"+formId+"Title").show().fadeOut(5000);
 					errorAddToBag("bag_is_full");
+					dtmErrorTracking("bag_is_full","errorname");
 					utagError=true;
+					digitalDataError=true;
 				}
 				else if(data=="outofinventory"){
 					 //$("#"+formId+"noInventory").html("<font color='#ff1c47'>" + $('#addToCartFormnoInventory').text() + "</font>");
 					$("#addToCartFormnoInventory").show().fadeOut(6000);
 					errorAddToBag("out_of_stock");
+					dtmErrorTracking("out_of_stock","errorname");
 					utagError=true;
+					digitalDataError=true;
 			   	     return false;
 				}
 				else if(data=="willexceedeinventory"){
@@ -920,16 +975,19 @@ sendAddToBagQuick:function(formId){
 					}	
 				}
 				//if(isSuccess){
-				if(!utagError){
+				if(!utagError && !digitalDataError){
 					//TISQAEE-64 Buy Now Quick View
 					if(typeof utag !="undefined"){
 						utag.link({
-							link_obj: this,
 							link_text: 'quickview_buynow' ,
 							event_type : 'quickview_buynow',
 							product_sku : productCodeArray
 						});
 					}
+					//TPR-6029 | buy now on quickview #41
+					if(typeof(_satellite) != "undefined"){
+						 _satellite.track('cpj_qw_buy_now');
+					 }
 					location.href=ACC.config.encodedContextPath + '/cart';
 				}
 				//End MSD
@@ -1064,6 +1122,143 @@ sendAddToBagQuick:function(formId){
 		});
 	},
 	
+	//Exchange Start
+	sendAddToBagExchange: function(formId){
+				
+		var input_name="qty";
+		var stock_id="stock";
+		var ussid="ussid";
+		var dataString=$('#'+formId).serialize();	
+		var quantity = $("#"+formId+" :input[name='" + input_name +"']").val(); 
+		var stock = $("#"+formId+" :input[name='" +  stock_id +"']").val(); 
+		var ussid = $("#"+formId+" :input[name='" +  ussid +"']").val(); 
+		//TPR-5193 Analytics starts
+		var brandExchange = $('#brandExchange').val();
+		var couponValue = $('#priceselect').text();
+		var l3 =$('#l3').val();
+	    var selector	 = $('#activeselect option:selected').val();
+	    var exchangeDropdown = selector.split('|');
+	    var exchangeCondition = exchangeDropdown[1] ;
+	    var productCode =  $('#product_id').val();
+		var productArray =[];
+		productArray.push(productCode);
+		//TPR-5193 Analytics ends
+		$.ajax({
+			url : ACC.config.encodedContextPath + "/cart/add",
+			data : dataString,
+			type : "POST",
+			cache : false,
+			beforeSend: function(){
+		        $('#ajax-loader').show();
+		    },
+			success : function(data) {
+				//alert("data: "+data);
+				if(data.indexOf("cnt:") >= 0){
+					//alert("addtobag");
+				//$("#"+formId+"TitleSuccess").html("");
+				//$("#"+formId+"TitleSuccess").html("<font color='#00CBE9'>"+$('#addtobag').text()+"</font>");
+
+				//$("#"+formId+"TitleSuccess").show().fadeOut(5000);
+
+				//$("#"+formId+"Title.sellerAddToBagTitle").show().fadeOut(5000);
+				//$("#"+formId+" "+".addToCartSerpTitle").show().fadeOut(5000);
+
+				//alert("data form id: "+$("#"+formId+" "+".addToCartSerpTitle"));
+				ACC.product.showTransientCart(ussid);
+				ACC.product.scrollForTransientCart();
+					
+				//ACC.product.displayAddToCart(data,formId,false);
+				$("span.js-mini-cart-count,span.js-mini-cart-count-hover,span.responsive-bag-count").text(data.substring(4));
+				}
+				else if(data=="maxqtyexchange")
+				{
+					$("#"+formId+"Titlebagtofull").html("<br/><font color='#ff1c47'>"+$('#addToCartExchangeExceededmaxqtyExc').html()+"</font>");
+					$("#"+formId+"Titlebagtofull").show().fadeOut(5000);
+				}
+				else if(data=="reachedMaxLimit") {
+					//$("#"+formId+"Title").html("");
+					
+				}
+				else if(data=="crossedMaxLimit"){
+					//alert("bagfull:  "+ formId+"Titlebagfull");
+					//$("#"+formId+"Titlebagfull").html("");
+					$("#"+formId+"Titlebagfull").html("<font color='#ff1c47'>"+$('#addToCartExchangeTitlebagfull').text()+"</font>");
+					$("#"+formId+"Titlebagfull").show().fadeOut(5000);
+				}
+				else if(data=="outofinventory"){
+					
+					//alert("outofinventory: "+data);
+					 $("#"+formId+"noInventorySize").html("<font color='#ff1c47'>" + $('#addToCartExchangenoInventorySize').text() + "</font>");
+					 $("#"+formId+"noInventorySize").show().fadeOut(6000);
+			   	     return false;
+				}
+				else if(data=="willexceedeinventory"){
+					 $("#"+formId+"excedeInventorySize").html("<font color='#ff1c47'>" + $('#addToCartExchangeexcedeInventorySize').text() + "</font>");
+					 $("#"+formId+"excedeInventorySize").show().fadeOut(6000);
+			   		 return false;
+				}
+				
+				
+				else{
+					$("#"+formId+"Titleaddtobagerror").html("");
+					$("#"+formId+"Titleaddtobagerror").html("<br/><font color='#ff1c47'>"+$('#addToCartExchangeTitleaddtobagerror').text()+"</font>");
+					$("#"+formId+"Titleaddtobagerror").show().fadeOut(5000);
+					
+				}
+			
+				//For MSD
+				var isMSDEnabled =  $("input[name=isMSDEnabled]").val();								
+				if(isMSDEnabled === 'true')
+				{
+				//console.log(isMSDEnabled);
+				var isApparelExist  = $("input[name=isApparelExist]").val();
+				//console.log(isApparelExist);				
+				var salesHierarchyCategoryMSD =  $("input[name=salesHierarchyCategoryMSD]").val();
+				//console.log(salesHierarchyCategoryMSD);
+				var rootCategoryMSD  = $("input[name=rootCategoryMSD]").val();
+				//console.log(rootCategoryMSD);				
+				var productCodeMSD =  $("input[name=productCodeMSD]").val();
+				//console.log(productCodeMSD);				
+				var priceformad =  $("input[id=price-for-mad]").val();
+				//console.log(priceformad);				
+				
+				if(typeof isMSDEnabled === 'undefined')
+				{
+					isMSDEnabled = false;						
+				}
+				
+				if(typeof isApparelExist === 'undefined')
+				{
+					isApparelExist = false;						
+				}	
+				
+				if(Boolean(isMSDEnabled) && Boolean(isApparelExist) && (rootCategoryMSD === 'Clothing'))
+					{					
+					ACC.track.trackAddToCartForMAD(productCodeMSD, salesHierarchyCategoryMSD, priceformad,"INR");
+					}	
+				}
+				//End MSD
+				//TPR-5193
+				/*if(typeof utag !="undefined"){
+					utag.link({
+						event_type          : "exchange_success",
+						exchange_brand      : brandExchange ,
+						exchange_condition  : exchangeCondition ,
+						exchange_l3         : l3 ,
+						couponcode_exchange : couponValue ,
+						product_id          : productCode
+					});
+				}*/
+			},
+			complete: function(){
+		        $('#ajax-loader').hide();
+		    },
+			error : function(resp) {
+				//alert("Add to Bag unsuccessful: "+resp.responseText);
+			}
+		});
+	},
+	//Exchange Ends
 	
 	
 	displayAddToCart: function (cartResult,formId,isUpdateCartCount)

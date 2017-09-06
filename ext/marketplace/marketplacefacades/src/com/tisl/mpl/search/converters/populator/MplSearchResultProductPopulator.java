@@ -179,6 +179,15 @@ public class MplSearchResultProductPopulator extends MplSearchResultVariantProdu
 				target.setDisplayPromotion(displayPromotion);
 			}
 
+			/* TPR-1886 | JEWELLERY START */
+			if (getValue(source, "priceRangeJewellery") != null)
+			{
+				final String priceRangeJewellery = (String) getValue(source, "priceRangeJewellery");
+				target.setPriceRangeJewellery(priceRangeJewellery);
+			}
+
+
+			/* JEWELLERY END */
 			if (getValue(source, "isOffersExisting") != null)
 			{
 

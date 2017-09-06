@@ -17,7 +17,8 @@ import javax.xml.bind.annotation.XmlType;
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "invReserve", propOrder =
-{ "USSID", "quantity", "parentUSSID", "isAFreebie", "storeId", "fulfillmentType", "deliveryMode","transportMode","ServiceableSlaves"})
+{ "USSID", "quantity", "parentUSSID", "isAFreebie", "storeId", "fulfillmentType", "deliveryMode", "transportMode",
+		"ServiceableSlaves" })
 public class InventoryReservRequest
 {
 	@XmlElement(name = "ussId")
@@ -34,14 +35,10 @@ public class InventoryReservRequest
 	private String deliveryMode;
 	@XmlElement(name = "quantity")
 	private String quantity;
-	
 	@XmlElement(name = "ServiceableSlaves")
 	private List<ServiceableSlavesDTO> ServiceableSlaves;
-	
 	@XmlElement(name = "transportMode")
 	private String transportMode;
-	
-	
 
 	/**
 	 * @return the uSSID
@@ -178,9 +175,10 @@ public class InventoryReservRequest
 	}
 
 	/**
-	 * @param serviceableSlaves the serviceableSlaves to set
+	 * @param serviceableSlaves
+	 *           the serviceableSlaves to set
 	 */
-	public void setServiceableSlaves(List<ServiceableSlavesDTO> serviceableSlaves)
+	public void setServiceableSlaves(final List<ServiceableSlavesDTO> serviceableSlaves)
 	{
 		ServiceableSlaves = serviceableSlaves;
 	}
@@ -194,9 +192,10 @@ public class InventoryReservRequest
 	}
 
 	/**
-	 * @param transportMode the transportMode to set
+	 * @param transportMode
+	 *           the transportMode to set
 	 */
-	public void setTransportMode(String transportMode)
+	public void setTransportMode(final String transportMode)
 	{
 		this.transportMode = transportMode;
 	}

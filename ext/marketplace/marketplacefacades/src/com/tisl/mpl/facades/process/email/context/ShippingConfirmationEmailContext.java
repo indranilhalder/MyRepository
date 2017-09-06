@@ -20,6 +20,7 @@ import de.hybris.platform.commercefacades.order.data.OrderData;
 import de.hybris.platform.core.model.c2l.LanguageModel;
 import de.hybris.platform.core.model.order.AbstractOrderEntryModel;
 import de.hybris.platform.core.model.order.OrderModel;
+import de.hybris.platform.core.model.product.ProductModel;
 import de.hybris.platform.core.model.user.AddressModel;
 import de.hybris.platform.core.model.user.CustomerModel;
 import de.hybris.platform.ordersplitting.model.ConsignmentModel;
@@ -74,6 +75,8 @@ public class ShippingConfirmationEmailContext extends AbstractEmailContext<Order
 	private static final String SPACE = " "; //TISUATSE-80
 	private static final String CUSTOMER_CARE_NUMBER = "customerCareNumber";
 	private static final String CUSTOMER_CARE_EMAIL = "customerCareEmail";
+
+	private static final String COUNT = "count"; //added for jewellery
 
 	//TPR-5329
 	//Sonar Issue Fixed For Kidswear
@@ -130,6 +133,7 @@ public class ShippingConfirmationEmailContext extends AbstractEmailContext<Order
 		double shippingCharge = 0;
 		double subTotal = 0;
 		double totalPrice = 0;
+		double count = 0; //added for jewellery
 
 		for (final String entryNumber : entryNumbers)
 		{
@@ -141,6 +145,15 @@ public class ShippingConfirmationEmailContext extends AbstractEmailContext<Order
 					convenienceChargesVal += childOrder.getConvenienceChargeApportion().doubleValue();
 					shippingCharge += childOrder.getCurrDelCharge().doubleValue();
 					subTotal += childOrder.getNetAmountAfterAllDisc().doubleValue();
+
+
+					//added for jewellery
+					final ProductModel prod = childOrder.getProduct();
+					if (prod != null && prod.getProductCategoryType().equalsIgnoreCase("FineJewellery"))
+					{
+						count += 1;
+					}
+
 					//creation Time
 					SimpleDateFormat formatter;
 					formatter = new SimpleDateFormat("MMM d, yyyy");
@@ -183,7 +196,7 @@ public class ShippingConfirmationEmailContext extends AbstractEmailContext<Order
 
 		put(NAMEOFPERSON, deliveryAddress.getFirstname());
 		final StringBuilder deliveryAddr = new StringBuilder(150);
-
+		put(COUNT, Double.valueOf(count)); //added for jewellery
 
 
 		deliveryAddr.append(deliveryAddress.getStreetname());

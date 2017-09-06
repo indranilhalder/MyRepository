@@ -580,6 +580,7 @@ function utagAddProductToBag(triggerPoint,productCodeMSD){
 			 productCode= $('#productCode').val();
 			 productCodeArray.push(productCode);
 		}
+
 		//PRDI-564 FIX
 		if(typeof(utag) != "undefined"){
 	          utag.link({
@@ -1132,7 +1133,7 @@ function tealiumCallOnPageLoad()
 			pdp_video_product_id=$('#product_id').val();
 		}
 	})
-	
+	var isImageHoverTriggered = false;
 	// Added for tealium
 	if (pageType == "homepage") {
 		
@@ -1277,7 +1278,12 @@ function tealiumCallOnPageLoad()
 					+ $("#pdpOtherSellerIDs").val() + '",';
 				}
 				//TPR-429 END
-				
+				//TPR-5193|Req-1 starts
+				if($("#tealiumExchangeVar").val() != 'undefined' && $("#tealiumExchangeVar").val() !='' &&  $("#tealiumExchangeVar").val()!= "notAvailable"){ 
+					tealiumData += '"exchange_value":"'
+					+ $("#tealiumExchangeVar").val() + '",';
+				}
+				//TPR-5193|Req-1 ends
 				//TPR-4688
 				var sizeVariantList=$('#variant').find('li');
 				if(sizeVariantList.length > 0){
@@ -1945,7 +1951,7 @@ $(document).on('click','.list_title .UlContainer .sort',function(){
 /*TPR-4719, TPR-4704 | Search Filter in SERP|PLP*/
 var restrictionFlag='false';
 
-function setupSessionValues(){
+function setupSessionValuesUtag(){
 	if($('.bottom-pagination .facet-list.filter-opt').children().length > 0){
 		var filterTypeList=[];
 		var filterTypeFinalList=[];
@@ -2181,11 +2187,12 @@ $(document).on("mouseover",".zoomContainer",function(e) {
 		else {
 			page = "quickview";
 		}
-		if(typeof utag !="undefined"){
+		if(typeof(utag)!="undefined" && (!isImageHoverTriggered)){
 			utag.link({
 				link_text: page+"_image_hover",
 				event_type : page+"_image_hover"
 			});
+			isImageHoverTriggered = true;
 		}
 	}
 });	
@@ -2195,7 +2202,28 @@ $(window).unload(function(event) {
 	var pageType = $('#pageType').val();
 	if(pageType == 'category' || pageType == 'productsearch'){
 		if(restrictionFlag != 'true'){
-			setupSessionValues();
+			setupSessionValuesUtag();
 		}
 	}
 });
+
+//UF-398
+$(document).on('click','#selectedAddressDivId span:last-child',function(){
+	if(typeof utag !="undefined"){
+		utag.link({
+			link_text: "change_address_clicked",
+			event_type : "change_address_clicked"
+		});
+	   }
+});
+
+$(document).on('click','#selectedDeliveryOptionsDivId span:last-child',function(){
+	if(typeof utag !="undefined"){
+		utag.link({
+			link_text: "change_delivery_option_clicked",
+			event_type : "change_delivery_option_clicked"
+		});
+	   }
+	});
+//UF-398 ends
+

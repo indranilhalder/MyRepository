@@ -690,6 +690,7 @@ ReturnRequestCreateWidgetRenderer {
 		final Radiogroup radioGroup = new Radiogroup();
 		modes.appendChild(radioGroup);
 		boolean isOrderEligibleForQuickDrop = ((MarketPlaceReturnsController)widget.getWidgetController()).checkProductEligibilityForRTS(entries);
+		boolean isFineJewellery = ((MarketPlaceReturnsController)widget.getWidgetController()).checkIfFineJewellery(entries);
 		if(isOrderEligibleForQuickDrop) {
 			Radio quickDrop = new Radio();
 			radioGroup.appendChild(quickDrop);
@@ -724,7 +725,8 @@ ReturnRequestCreateWidgetRenderer {
 			}
 		});
 		
-		
+		//JWLSPCUAT-1405 If condition added
+		if(!isFineJewellery){
 		Div9.setParent(modelSelctionDiv);
 		Radio selfShipRadio = new Radio();
 		selfShipRadio.setLabel(TypeofReturn.SELF_COURIER);
@@ -740,6 +742,7 @@ ReturnRequestCreateWidgetRenderer {
 						entries, subOrder,TypeofReturn.SELF_COURIER));
 			}
 		});
+		}
 		radioGroup.setSelectedIndex(0);
 		if (null != radioGroup.getSelectedItem() && null != radioGroup.getSelectedItem().getLabel()) {
 			try {

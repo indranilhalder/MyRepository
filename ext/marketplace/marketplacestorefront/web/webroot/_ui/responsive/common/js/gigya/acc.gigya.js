@@ -170,9 +170,10 @@ function registerUserGigya(eventObject)
    						"review_ease_of_use" : ease_of_use	, "review_fit" : fit , "review_value_for_money": value_for_money,"user_product_rating":overall,"Seller_rating" : " " ,product_id : productIdArray}
    				);
     		  
-    		 
     		//TPR-675 PART-A  ends
-    		  
+    		 if(typeof _satellite !="undefined"){
+        		  _satellite.track('review_submit_click');
+        	 }
     		getRating($('input[name=gigya_api_key]').val(),$('input[name=gigya_product_code]').val(),$('input[name=gigya_product_root_category]').val());
     	}
     	
@@ -231,7 +232,9 @@ function registerUserGigya(eventObject)
     				$('#customer').text("Customer Reviews (" + data.streamInfo.ratingCount + ")");
     				
     				//added for tealium to get average product rating
+    				if(typeof utag !="undefined"){
    				     utag.link({"product_rating":avgreview});
+    				}
     				
     		  }
     		  

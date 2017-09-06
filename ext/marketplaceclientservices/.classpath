@@ -23,5 +23,6 @@
 	<classpathentry kind="lib" path="lib/oms-api-5.5.1.17.jar"/>
 	<classpathentry kind="lib" path="lib/oms-domain-objects-5.5.1.17.jar"/>
 	<classpathentry kind="lib" path="lib/oms-rest-client-5.5.1.17.jar"/>
+	<classpathentry kind="lib" path="/marketplaceomsservices/lib/oms-domain-objects-5.5.1.17.jar"/>
 	<classpathentry kind="output" path="eclipsebin/notused"/>
 </classpath>

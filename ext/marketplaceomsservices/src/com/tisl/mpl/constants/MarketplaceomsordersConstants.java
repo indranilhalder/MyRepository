@@ -106,10 +106,8 @@ public final class MarketplaceomsordersConstants extends GeneratedMarketplaceoms
 	public static final String SINGLE_SPACE = " ".intern();
 
 
-
-	
 	public static final String TICKET_TYPE_CODE_EDTOHD_SDB = "A";
-	
+
 
 	private MarketplaceomsordersConstants()
 	{

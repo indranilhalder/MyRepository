@@ -165,6 +165,9 @@
 	
 	<script type="text/javascript"
 	src="${commonResourcePath}/js/mpl/tealium.js"></script>
+	
+	<%-- <script type="text/javascript"
+	src="${commonResourcePath}/js/mpl/acc.dtm.js"></script> --%>
 
 <!--[if lt IE 9]>
 <link rel="stylesheet" type="text/css" med="all" href="${themeResourcePath}/css/main-ie8.css"/>
@@ -287,3 +290,9 @@ fn:contains(requestScope['javax.servlet.forward.request_uri'],'/cancelSuccess')}
 <!--Returns Page   -->
 <script type="text/javascript"
 	src="${commonResourcePath}/js/mpl/acc.returns.js"></script>
+
+<!--Single page  -->
+<c:if test="${fn:contains(requestScope['javax.servlet.forward.request_uri'],'/checkout/single')}">
+<script type="text/javascript"
+	src="${commonResourcePath}/js/mpl/acc.singlePageCheckout.js"></script>	
+</c:if>

@@ -28,19 +28,24 @@ $(document).ready(function(){
 	var code='${product.code}';
 	if( $("#variant,#sizevariant option:selected").val()=="#"){
 		$("#selectedSizeVariant").val("");
-	}
-	else{
-		$("#selectedSizeVariant").val(code);
+	
 	}
 	
+	else {
+		$("#selectedSizeVariant").val(code);
+	
+	}
+	 
     $("#addToCartButton").click(function(){  	
      $("#selectSizeId").hide();
+     
    	 var stock=$("#stock").val();
    	 var quantity= $("#qty").val();
   	 var isShowSize= $("#showSize").val();
   	 
   	 
    	 //Changes for pdp CR
+
    	if(!$("#variant li ").hasClass("selected") && typeof($(".variantFormLabel").html())== 'undefined' && $("#ia_product_rootCategory_type").val()!='Electronics' && $("#ia_product_rootCategory_type").val()!='Watches' && isShowSize=='true'){
   		/* alert("please select size !"+isShowSize); */
    		$("#addToCartFormTitle").html("<font color='#fff'>" + $('#selectSizeId').text() + "</font>");
@@ -57,6 +62,17 @@ $(document).ready(function(){
 		//For pdp analytics changes
 		utag.link({"error_type":"size_not_selected"});
  	    return false;
+
+   /* 	 }     	 
+   	} 	
+   		  	
+    	utag.link({
+			link_obj: this,
+			link_text: 'addtobag' ,
+			event_type : 'addtobag_winner_seller' ,
+			product_sku : productCodeArray              // Product code passed as an array for Web Analytics - INC_11511  fix
+		}); */
+
    	 }
 
    	/* if( $("#variant,#sizevariant option:selected").val()=="#")
@@ -91,7 +107,9 @@ $(document).ready(function(){
        	 }
 
    	 } */
-   	   
+   	  		
+   		 
+   	  
    }); 
 }); 
 
@@ -107,6 +125,7 @@ $(document).ready(function(){
 <span id="addtobagerror" style="display:none"><spring:theme code="product.wishlist.outOfStock"/></span>
 <span id="bagtofull" style="display:none"><spring:theme code="product.addtocart.aboutfull"/></span>
 <span id="bagfull" style="display:none"><spring:theme code="product.bag"/></span>
+<span id="exchangeRestriction" style="display:none"><spring:theme code="product.addtocart.exchange.qty.error"/></span>
 
 <%--TPR-5346 --%>
  <span id="bagfullproduct" style="display:none"><spring:theme code="product.bag.maxlimit"/></span>
@@ -157,9 +176,36 @@ $(document).ready(function(){
 		<%-- <input type="button" id="add_to_wishlist" onClick="openPop();" id="wishlist" class="wishlist" data-toggle="popover" data-placement="bottom" value="<spring:theme code="text.add.to.wishlist"/>"/> --%>
 		<input type="button" id="add_to_wishlist" onClick="addToWishlist();" id="wishlist" class="wishlist" data-toggle="popover" value="<spring:theme code="text.add.to.wishlist"/>"/>
 	</span>
-	<span id="selectSizeId" style="display: none;color:#ff1c47"><spring:theme code="variant.pleaseselectsize"/></span>
+	<%-- <span id="selectSizeId" style="display: none;color:#ff1c47"><spring:theme code="variant.pleaseselectsize"/></span> --%>
+	
+	<c:choose> 
+	<c:when test="${ product.rootCategory =='FineJewellery' || product.rootCategory =='FashionJewellery'}">
+	    <spring:eval expression="T(de.hybris.platform.util.Config).getParameter('mpl.jewellery.category')" var="lengthVariant"/>
+     	<c:set var = "categoryListArray" value = "${fn:split(lengthVariant, ',')}" />
+		<c:forEach items="${product.categories}" var="categories">
+   			<c:forEach items = "${categoryListArray}" var="lengthVariantArray">
+   				<c:if test="${categories.code eq lengthVariantArray}">
+   				 	<c:set var="lengthSize" value="true"/>
+   				</c:if> 
+   			</c:forEach>
+   		</c:forEach>	  
+   		<c:choose>
+   			<c:when test="${true eq lengthSize}">
+   				<span id="selectSizeId" style="display: none;color:#ff1c47"><spring:theme code="variant.pleaseselectlength"/></span>
+   			</c:when>
+   			<c:otherwise>
+				<span id="selectSizeId" style="display: none;color:#ff1c47"><spring:theme code="variant.pleaseselectsize"/></span> 
+   			</c:otherwise>
+   		</c:choose>
+	</c:when>
+	<c:otherwise>
+    	<span id="selectSizeId" style="display: none;color:#ff1c47"><spring:theme code="variant.pleaseselectsize"/></span>
+	</c:otherwise>
+	</c:choose>	
+	
 	<!-- UF-160 -->
 	<span id="addToCartLargeAppliance" style="display: none;color:#ff1c47"><spring:theme code="product.addToCart.largeAppliance.error"/></span>
+
 	<span id="addToCartButtonId">
 		<span id="addToCartFormTitleSuccess"></span>
 		<button style="display: none;"

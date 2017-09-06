@@ -75,13 +75,14 @@ public class DefaultExtendedCartPopulator extends CartPopulator
 				/* TPR-928 */
 				final DecimalFormat formatter = new DecimalFormat("0.00");
 				//Defect-Fix ProductLevelDiscounts were Not Considered
-				if (target != null && (target.getOrderDiscounts().getDoubleValue().doubleValue() > 0.0
-						|| (target.getProductDiscounts() != null && target.getProductDiscounts().getDoubleValue().doubleValue() > 0.0)))
+				if (target != null
+						&& (target.getOrderDiscounts().getDoubleValue().doubleValue() > 0.0 || (target.getProductDiscounts() != null && target
+								.getProductDiscounts().getDoubleValue().doubleValue() > 0.0)))
 				{
 
-					final String formate = formatter.format(100 * ((target.getOrderDiscounts().getDoubleValue().doubleValue()
-							+ target.getProductDiscounts().getDoubleValue().doubleValue())
-							/ (target.getSubTotal().getDoubleValue().doubleValue())));
+					final String formate = formatter.format(100 * ((target.getOrderDiscounts().getDoubleValue().doubleValue() + target
+							.getProductDiscounts().getDoubleValue().doubleValue()) / (target.getSubTotal().getDoubleValue()
+							.doubleValue())));
 
 					target.setDiscountPercentage(formate);
 
@@ -97,7 +98,7 @@ public class DefaultExtendedCartPopulator extends CartPopulator
 
 				/*
 				 * else if (target != null) {
-				 *
+				 * 
 				 * final String formate = formatter.format(100 * (target.getTotalDiscounts().getDoubleValue().doubleValue()
 				 * / (target .getSubTotal().getDoubleValue().doubleValue()))); target.setDiscountPercentage(formate); }
 				 */
@@ -118,8 +119,7 @@ public class DefaultExtendedCartPopulator extends CartPopulator
 
 						if (promotionResultModel.getCertainty().floatValue() == 1.0F
 								&& (promotion instanceof BuyAGetPromotionOnShippingChargesModel
-										|| promotion instanceof BuyAandBGetPromotionOnShippingChargesModel
-										|| promotion instanceof BuyAboveXGetPromotionOnShippingChargesModel))
+										|| promotion instanceof BuyAandBGetPromotionOnShippingChargesModel || promotion instanceof BuyAboveXGetPromotionOnShippingChargesModel))
 						{
 							isShippingPromoApplied = true;
 							break;
@@ -152,6 +152,14 @@ public class DefaultExtendedCartPopulator extends CartPopulator
 				if (null != source.getMerged())
 				{
 					target.setGotMerged(source.getMerged().booleanValue());
+				}
+				if (null != source.getExchangeAppliedCart())
+				{
+					target.setExchangeAppliedCart(source.getExchangeAppliedCart());
+				}
+				else
+				{
+					target.setExchangeAppliedCart(Boolean.FALSE);
 				}
 			}
 			else

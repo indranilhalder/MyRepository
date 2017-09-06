@@ -33,6 +33,7 @@ import de.hybris.platform.commercefacades.user.data.AddressData;
 import de.hybris.platform.commercefacades.user.data.CountryData;
 import de.hybris.platform.commercefacades.user.data.RegionData;
 import de.hybris.platform.commerceservices.order.CommerceCartService;
+import de.hybris.platform.core.model.c2l.CurrencyModel;
 import de.hybris.platform.core.model.order.AbstractOrderEntryModel;
 import de.hybris.platform.core.model.order.CartModel;
 import de.hybris.platform.core.model.product.PincodeModel;
@@ -45,6 +46,7 @@ import de.hybris.platform.product.ProductService;
 import de.hybris.platform.servicelayer.config.ConfigurationService;
 import de.hybris.platform.servicelayer.dto.converter.Converter;
 import de.hybris.platform.servicelayer.exceptions.ModelSavingException;
+import de.hybris.platform.servicelayer.i18n.CommonI18NService;
 import de.hybris.platform.servicelayer.model.ModelService;
 import de.hybris.platform.servicelayer.user.UserService;
 import de.hybris.platform.storelocator.GPS;
@@ -248,6 +250,9 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 	@Autowired
 	ProductService productService;
 
+	@Resource(name = "commonI18NService")
+	private CommonI18NService commonI18NService;
+
 	private static final Logger LOG = Logger.getLogger(DeliveryMethodCheckoutStepController.class);
 
 	@RequestMapping(value = MarketplacecheckoutaddonConstants.CHOOSEVALUE, method = RequestMethod.GET)
@@ -266,6 +271,12 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 			{
 				return getCheckoutStep().previousStep();
 			}
+			//JWLSPCUAT-68 - Redirecting to one page if by chance this method is called
+			if (Boolean.valueOf(MarketplacecheckoutaddonConstants.TRUE).booleanValue())
+			{
+				return getCheckoutStep().previousStep();//This will take you to single page
+			}
+
 			final CartModel serviceCart = getCartService().getSessionCart();
 			setExpressCheckout(serviceCart);
 
@@ -461,12 +472,18 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 	@RequestMapping(value = MarketplacecheckoutaddonConstants.MPLDELIVERYSELECTURL)
 	@RequireHardLogIn
 	public String doSelectDeliveryMode(@ModelAttribute("deliveryMethodForm") DeliveryMethodForm deliveryMethodForm,
-			final BindingResult bindingResult, final Model model, final HttpServletRequest request) throws CMSItemNotFoundException
+			final BindingResult bindingResult, final Model model, final HttpServletRequest request,
+			final RedirectAttributes redirectAttributes) throws CMSItemNotFoundException
 	{
 		//TISPT-400
 		if (getUserFacade().isAnonymousUser())
 		{
 			return getCheckoutStep().previousStep();
+		}
+		//JWLSPCUAT-68 - Redirecting to one page if by chance this method is called
+		if (Boolean.valueOf(MarketplacecheckoutaddonConstants.TRUE).booleanValue())
+		{
+			return getCheckoutStep().previousStep();//This will take you to single page
 		}
 
 		String returnPage = MarketplacecommerceservicesConstants.EMPTY;
@@ -578,6 +595,10 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 			timeOutSet(model);
 
 			/*** Inventory Soft Reservation Start ***/
+			//TPR3780 STARTS HERE
+			final CartModel cartModelBeforeinventoryCheck = getCartService().getSessionCart();
+			final double prevTotalCartPrice = cartModelBeforeinventoryCheck.getTotalPrice().doubleValue();
+			//TPR3780 ENDS HERE
 
 			//commented for CAR:127
 
@@ -590,11 +611,29 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 			//final CartData caData = getMplCartFacade().getCartDataFromCartModel(cartModel, false);
 			CartData cartUssidData = getMplCartFacade().getSessionCartWithEntryOrdering(true);
 			//TISST-13012
-
 			final boolean inventoryReservationStatus = getMplCartFacade().isInventoryReserved(
 					MarketplacecclientservicesConstants.OMS_INVENTORY_RESV_TYPE_CART, cartUssidData, cartModel);
+			/* MarketplacecclientservicesConstants.OMS_INVENTORY_RESV_TYPE_CART, null); */
 
+			//TPR3780 STARTS HERE
+			final CartModel cartModelAfterinventoryCheck = getCartService().getSessionCart();
+			final double newTotalCartPrice = cartModelAfterinventoryCheck.getTotalPrice().doubleValue();
 
+			if (prevTotalCartPrice == newTotalCartPrice)
+			{
+				final String updateStatus = null;
+			}
+			else
+			{
+				//final String updateStatus = "updated";
+				final String updateStatus = MarketplacecheckoutaddonConstants.UPDATED;
+				final String totalCartPriceAsString = String.valueOf(newTotalCartPrice);
+				redirectAttributes.addFlashAttribute("flashupdateStatus", updateStatus);
+				redirectAttributes.addFlashAttribute("flashtotalCartPriceAsString", totalCartPriceAsString);
+				return MarketplacecheckoutaddonConstants.REDIRECT + MarketplacecheckoutaddonConstants.CART;
+			}
+
+			//TPR3780 ENDS HERE
 			if (!inventoryReservationStatus)
 			{
 				getSessionService().setAttribute(MarketplacecclientservicesConstants.OMS_INVENTORY_RESV_SESSION_ID, "TRUE");
@@ -805,6 +844,11 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 		if (LOG.isDebugEnabled())
 		{
 			LOG.debug("from doFindDelivaryMode methodin Controller");
+		}
+		//JWLSPCUAT-68 - Redirecting to one page if by chance this method is called
+		if (Boolean.valueOf(MarketplacecheckoutaddonConstants.TRUE).booleanValue())
+		{
+			return getCheckoutStep().previousStep();//This will take you to single page
 		}
 
 		//INC144315801 starts
@@ -2202,12 +2246,45 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 		String formatDeliveryCost = MarketplacecommerceservicesConstants.EMPTY;
 		final CartModel cartModel = getCartService().getSessionCart();
 		final List<AbstractOrderEntryModel> cartEntryList = cartModel.getEntries();
+		final CurrencyModel currency = commonI18NService.getCurrency(MarketplacecommerceservicesConstants.INR);
+		final String currencySymbol = currency.getSymbol();
 		for (final AbstractOrderEntryModel cartEntryModel : cartEntryList)
 		{
 			if (null != cartEntryModel && null != cartEntryModel.getMplDeliveryMode())
 			{
 				if (cartEntryModel.getSelectedUSSID().equalsIgnoreCase(ussId))
 				{
+					//Start of UF-281
+					boolean isSaveRequired = false;
+					if (null != cartEntryModel.getEdScheduledDate() && StringUtils.isNotEmpty(cartEntryModel.getEdScheduledDate()))
+					{
+						cartEntryModel.setEdScheduledDate("".trim());
+						cartEntryModel.setTimeSlotFrom("".trim());
+						cartEntryModel.setTimeSlotTo("".trim());
+					}
+					if (cartEntryModel.getScheduledDeliveryCharge() != null
+							&& cartEntryModel.getScheduledDeliveryCharge().doubleValue() != 0.0)
+					{
+						isSaveRequired = true;
+						if (cartModel.getTotalPriceWithConv() != null)
+						{
+							cartModel.setTotalPriceWithConv(new Double(cartModel.getTotalPriceWithConv().doubleValue()
+									- Double.valueOf(cartEntryModel.getScheduledDeliveryCharge().doubleValue()).doubleValue()));
+						}
+						final Double finalDeliveryCost = Double.valueOf(cartModel.getDeliveryCost().doubleValue()
+								- cartEntryModel.getScheduledDeliveryCharge().doubleValue());
+						cartModel.setDeliveryCost(finalDeliveryCost);
+						final Double totalPriceAfterDeliveryCost = Double.valueOf(cartModel.getTotalPrice().doubleValue()
+								- cartEntryModel.getScheduledDeliveryCharge().doubleValue());
+						cartModel.setTotalPrice(totalPriceAfterDeliveryCost);
+						cartEntryModel.setScheduledDeliveryCharge(Double.valueOf(0));
+					}
+					if (isSaveRequired)
+					{
+						modelService.save(cartModel);
+						modelService.refresh(cartModel);
+					}
+					//End of UF-281
 					cartEntryModel.setEdScheduledDate(deliverySlotDate);
 					if (null != deliverySlotTime)
 					{
@@ -2249,7 +2326,8 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 			formatDeliveryCost = df.format(finalDeliveryCost);
 		}
 
-		return formatDeliveryCost + MarketplacecommerceservicesConstants.HYPHEN + totalPriceFormatted;
+		return currencySymbol + formatDeliveryCost + MarketplacecommerceservicesConstants.HYPHEN + currencySymbol
+				+ totalPriceFormatted;
 	}
 
 	// = "updateDeliverySlotCostForEd";
@@ -2261,6 +2339,8 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 		String totalPriceFormatted = MarketplacecommerceservicesConstants.EMPTY;
 		String formatDeliveryCost = MarketplacecommerceservicesConstants.EMPTY;
 		final CartModel cartModel = getCartService().getSessionCart();
+		final CurrencyModel currency = commonI18NService.getCurrency(MarketplacecommerceservicesConstants.INR);
+		final String currencySymbol = currency.getSymbol();
 		final List<AbstractOrderEntryModel> cartEntryList = cartModel.getEntries();
 		for (final AbstractOrderEntryModel cartEntryModel : cartEntryList)
 		{
@@ -2308,7 +2388,8 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 			formatDeliveryCost = df.format(finalDeliveryCost);
 		}
 
-		return formatDeliveryCost + MarketplacecommerceservicesConstants.HYPHEN + totalPriceFormatted;
+		return currencySymbol + formatDeliveryCost + MarketplacecommerceservicesConstants.HYPHEN + currencySymbol
+				+ totalPriceFormatted;
 	}
 
 
@@ -2796,6 +2877,13 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 			//final CartData cartData = mplExtendedCartConverter.convert(cartModel); //TISPT-104
 
 			cartData = mplExtendedPromoCartConverter.convert(cartModel);
+			//TISSTRT-1647
+			final CurrencyModel currency = commonI18NService.getCurrency(MarketplacecommerceservicesConstants.INR);
+			final String currencySymbol = currency.getSymbol();
+			if (null != cartData && StringUtils.isEmpty(cartData.getCurrencySymbol()))
+			{
+				cartData.setCurrencySymbol(currencySymbol);
+			}
 
 			if (null != cartData && cartData.getTotalDiscounts() != null && cartData.getTotalDiscounts().getValue() != null)
 			{

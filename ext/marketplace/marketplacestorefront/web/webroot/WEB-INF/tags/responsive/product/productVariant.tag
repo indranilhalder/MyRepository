@@ -81,9 +81,11 @@ function loadVariant(x){
 				</c:if>
 				<c:choose>
 		   <c:when test="${not empty product.variantOptions}">
-			<p>
-				<spring:theme code="text.colour" />
-			</p>
+		   <c:if test="${(product.rootCategory ne 'FineJewellery' && product.rootCategory ne 'FashionJewellery') || (multiColorFlag eq 'true')}">	<!-- UF-432 -->
+				<p>
+					<spring:theme code="text.colour" />
+				</p>
+			</c:if>
 			<c:forEach items="${product.variantOptions}" var="variantOption">
 				<c:choose>
 					<c:when test="${not empty variantOption.defaultUrl}">
@@ -100,24 +102,25 @@ function loadVariant(x){
 									</c:choose>
 									<!--CKD:TPR-250 End  -->
 								 <a href="${variantUrl}">								
-								 <c:forEach
-									items="${variantOption.colourCode}" var="color">
-								<c:choose>
-							    <c:when test="${fn:startsWith(color, 'multi') && empty variantOption.image}">
-						     	<img src="${commonResourcePath}/images/multi.jpg" height="74" width="50" title="${variantOption.colour}" />
-								</c:when>
-								<c:when test="${empty variantOption.image}">
-						     	<span style="background-color: ${color};border: 1px solid rgb(204, 211, 217); width:50px; height:73px" title="${variantOption.colour}"></span>
-								</c:when>							
-								<c:otherwise>
-								<c:set var="imageData" value="${variantOption.image}" />
-								<img src="${imageData.url}" title="${variantOption.colour}" alt="${styleValue}" style="display: inline-block;width: 50px;"/>								
-                               </c:otherwise>
-                               </c:choose>
-								<c:if test="${variantOption.code eq product.code}">
-										<c:set var="currentColor" value="${color}" />
-										<!--  set current selected color -->
-								</c:if>
+								 <c:forEach items="${variantOption.colourCode}" var="color">
+								 	<c:if test="${multiColorFlag eq 'true'}">	<!-- UF-432 -->
+										<c:choose>
+									    <c:when test="${fn:startsWith(color, 'multi') && empty variantOption.image}">
+								     	<img src="${commonResourcePath}/images/multi.jpg" height="74" width="50" title="${variantOption.colour}" />
+										</c:when>
+										<c:when test="${empty variantOption.image}">
+								     	<span style="background-color: ${color};border: 1px solid rgb(204, 211, 217); width:50px; height:73px" title="${variantOption.colour}"></span>
+										</c:when>							
+										<c:otherwise>
+										<c:set var="imageData" value="${variantOption.image}" />
+										<img src="${imageData.url}" title="${variantOption.colour}" alt="${styleValue}" style="display: inline-block;width: 50px;"/>								
+		                               </c:otherwise>
+		                               </c:choose>
+										<c:if test="${variantOption.code eq product.code}">
+												<c:set var="currentColor" value="${color}" />
+												<!--  set current selected color -->
+										</c:if>
+									</c:if>
 								</c:forEach>
 						</a></li>
 					</c:when>
@@ -266,17 +269,46 @@ function loadVariant(x){
 </li>
 </ul> -->
 <!-- share mobile -->
-
 <c:if test="${noVariant!=true&&notApparel!=true}">
+<c:if test="${showSizeGuideForFA eq true}">
 <div class="size" style="font-size: 12px;">
 	<form:form action="/" id="sizevariantForm" method="post">
 		<input type="hidden" maxlength="10" size="1" id="sellersSkuListId"
 			name="sellersSkuListId" value="" />
 		<product:sellerForm></product:sellerForm>
 		<div class="selectSize">
-			<span>
+			<%-- <span>
 				<spring:theme code="product.variant.size"></spring:theme><c:if test="${not empty productSizeType}">(${productSizeType})</c:if>
-			</span>
+			</span> --%>
+			    <c:choose> 
+					<c:when test="${ product.rootCategory =='FineJewellery' || product.rootCategory =='FashionJewellery'}">
+					    <spring:eval expression="T(de.hybris.platform.util.Config).getParameter('mpl.jewellery.category')" var="lengthVariant"/>
+				     	<c:set var = "categoryListArray" value = "${fn:split(lengthVariant, ',')}" />
+						<c:forEach items="${product.categories}" var="categories">
+				   			<c:forEach items = "${categoryListArray}" var="lengthVariantArray">
+				   				<c:if test="${categories.code eq lengthVariantArray}">
+				   				 	<c:set var="lengthSize" value="true"/>
+				   				</c:if> 
+				   			</c:forEach>
+				   		</c:forEach>	  
+				   		<c:choose>
+				   			<c:when test="${true eq lengthSize}">
+				   				<span><spring:theme code="product.variant.length"></spring:theme><c:if test="${not empty productSizeType}">(${productSizeType})</c:if>
+							  </span>
+				   			</c:when>
+				   			<c:otherwise>
+				   				<span>
+									<spring:theme code="product.variant.size"></spring:theme><c:if test="${not empty productSizeType}">(${productSizeType})</c:if>
+							  </span> 
+				   			</c:otherwise>
+				   		</c:choose>
+					</c:when>
+					<c:otherwise>
+				        <span>
+							<spring:theme code="product.variant.size"></spring:theme><c:if test="${not empty productSizeType}">(${productSizeType})</c:if>
+						</span>
+				    </c:otherwise>
+				</c:choose>	
 			<a class="size-guide" href="${sizeGuideUrl}" role="button"
 			data-toggle="modal" data-target="#popUpModal" data-productcode="${product.code}" data-sizeSelected="${selectedSize}"> <spring:theme
 				code="product.variants.size.guide" />
@@ -294,6 +326,29 @@ function loadVariant(x){
 				</c:choose> --%>
 
 				<!-- <option value="#">select size</option> -->
+				<!-- JWLSPCUAT-99:After click on other seller link in PDP Size in not loading and color attribute is showing -->
+				<c:choose>
+				<c:when test="${ product.rootCategory =='FineJewellery' || product.rootCategory =='FashionJewellery'}">
+						<c:forEach items="${product.variantOptions}" var="variantOption">
+							<c:forEach var="entry" items="${variantOption.sizeLink}">
+									<c:url value="/p/${variantOption.code}/viewSellers" var="variantUrl" />
+									<c:choose>
+										<c:when test="${(variantOption.code eq product.code)}">
+											<c:url value="/p/${variantOption.code}/viewSellers"	var="variantUrl" />
+											<c:choose>
+												<c:when test="${selectedSize eq null}">
+													<li><a href="${variantUrl}?selectedSize=true${msiteSellerForSize}">${entry.value}</a></li>
+												</c:when>
+												<c:otherwise>
+													<li class="selected"><a href="${variantUrl}?selectedSize=true${msiteSellerForSize}">${entry.value}</a></li>
+												</c:otherwise>
+											</c:choose>
+										</c:when>
+									</c:choose>
+							</c:forEach>
+						</c:forEach>
+				</c:when>
+				<c:otherwise>
 				<c:forEach items="${product.variantOptions}" var="variantOption">
 				<c:url value="/p/${variantOption.code}/viewSellers" var="variantUrl" />
 				<c:forEach items="${variantOption.colourCode}" var="color">
@@ -373,6 +428,8 @@ function loadVariant(x){
 					</c:choose>
 				</c:forEach>
 			</c:forEach>
+			</c:otherwise>
+			</c:choose>
 			</ul>
 			
 		</div>
@@ -382,6 +439,7 @@ function loadVariant(x){
 				code="product.variants.size.guide" />
 		</a> --%>
 	</div>
+	</c:if>
 </c:if>
 
 <div id="allVariantOutOfStock" style="display: none;">

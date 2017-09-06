@@ -19,7 +19,7 @@ import javax.xml.bind.annotation.XmlType;
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlRootElement(name = "InventoryReservationRequest")
 @XmlType(propOrder =
-{ "cartId", "pinCode", "duration", "isFreebieCart", "isNewCart", "Item" })
+{ "cartId", "pinCode", "duration", "isFreebieCart", "isNewCart", "Item","JewelleryItem" })
 public class InventoryReservListRequest
 {
 
@@ -39,6 +39,9 @@ public class InventoryReservListRequest
 	
 	@XmlElement(name = "Item")
 	private List<InventoryReservRequest> Item;
+	
+	@XmlElement(name = "JewelleryItem")
+	private List<InventoryReservJewelleryRequest> JewelleryItem;
 
 	/**
 	 * @return the cartId
@@ -142,6 +145,24 @@ public class InventoryReservListRequest
 	public void setIsNewCart(Boolean isNewCart)
 	{
 		this.isNewCart = isNewCart;
+	}
+	
+	/**
+	 * @return the Jewelleryitem
+	 */
+
+	public List<InventoryReservJewelleryRequest> getJewelleryItem()
+	{
+		return JewelleryItem;
+	}
+
+	/**
+	 * @param JewelleryItem
+	 *           the item to set
+	 */
+	public void setJewelleryItem(final List<InventoryReservJewelleryRequest> jewelleryItem)
+	{
+		JewelleryItem = jewelleryItem;
 	}
 
 }

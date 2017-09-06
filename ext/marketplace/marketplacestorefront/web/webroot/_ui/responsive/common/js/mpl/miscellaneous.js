@@ -229,7 +229,7 @@
  
  // For TISLUX-1865
 function deleteCookie(name){
-    document.cookie = name + '=;expires=Thu, 01 Jan 1970 00:00:01 GMT;';
+    document.cookie = name + '=;expires=Thu, 01 Jan 1970 00:00:01 GMT; path=/;';	// TPR-6334 : path added
 };
 
 //Script from facetNavAppliedFilters.tag
@@ -285,3 +285,11 @@ $(document).on('click','.right-account .yCmsComponent',function(){
 	return false;
 });
 // TISLUX-1468 end
+
+//TPR-6405
+$(document).on('click','#samsung-chat-icon-id img',function(){
+	var referringUrl = window.location.href;
+	var samsungUrl= "https://shop.samsung.com/in/chatsupport?refurl="+referringUrl;
+	window.open(samsungUrl,'newwindow','scrollbars,resizable,height=530,width=460,left=100px,top=100px');
+    return false;
+})

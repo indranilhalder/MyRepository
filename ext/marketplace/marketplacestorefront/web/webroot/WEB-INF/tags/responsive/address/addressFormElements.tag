@@ -195,32 +195,36 @@ display: none;}
 		<%-- <c:forEach items="${addressType}" var="type"> --%>
 		<%-- <label  class="asd" for="${type}"></label><form:radiobutton path="addressType" value="${type}" /> --%>
 		
+		<input type="hidden" id="contExchnageAddEdit" name="contExchnageAddEdit" value="">
 		
-
+		
 		<div class="row">
 		<div class="col-md-6 col-sm-6 col-xs-6 padd">
-		<input type="radio" name="addressType" id="new-address-option-1" value="Home"  checked="checked"/>
+		<!-- <input type="radio" name="addressType" id="new-address-option-1" value="Home"  checked="checked"/> -->
+		<form:radiobutton path="addressType" id="new-address-option-1" value="Home"/>
 		<label class="residential" for="new-address-option-1"><spring:theme code="text.addressBook.Residentialaddress" text="Residential Address" /></label>
 		</div>
 		<div class="col-md-6 col-sm-6 col-xs-6 padd">
-		<input type="radio" id="new-address-option-2" value="Work" name="addressType" />
+		<!-- <input type="radio" id="new-address-option-2" value="Work" name="addressType" /> -->
+		<form:radiobutton path="addressType" id="new-address-option-2" value="Work"/>
 		<label class="commercial" for="new-address-option-2"><spring:theme code="text.addressBook.commercialaddress" text="Commercial Address" /></label>
-        </div></div>
-		<fieldset> 
+		</div></div>
+		<fieldset>
+		<div id="addressMessage" class='full' style=""></div>
 		<div class='half'>
 
 
 		<formElement:formInputBox idKey="address.firstName" labelKey="First Name*"
 			 path="firstName" 
 			mandatory="true" maxLength="40"/>
-			<div class="help-block has-error" id="firstnameError" style="display: none;">		
+			<div class="help-block has-error" id="addressfirstNameError" style="display: none;">		
 			</div>	
 			</div>
 			<div class='half'>
 		<formElement:formInputBox idKey="address.surname" labelKey="Last Name*"
 			 path="lastName" 
 			mandatory="true" maxLength="40"/>
-			<div class="help-block has-error" id="lastnameError" style="display: none;">		
+			<div class="help-block has-error" id="addresssurnameError" style="display: none;">		
 			</div>
 			</div>
 			<!-- <div class='half'> -->
@@ -236,8 +240,8 @@ display: none;}
 
 	 	<form:input type="text" idKey="address.mobile" id="mobileNonewForm" 
 			 path="MobileNo" inputCSS="form-control"
-			mandatory="true" maxLength="10"/> 
-			<div class="help-block has-error" id="mobileError" style="display: none;">		
+			mandatory="true" maxLength="10" /> 
+			<div class="help-block has-error" id="addressmobileError" style="display: none;">		
 			</div>	 
 		</div>	
 		</div>
@@ -248,36 +252,33 @@ display: none;}
 			mandatory="true" maxLength="6" inputCSS="address_postcode" />
 		<div class="help-block has-error" id="addressPincodeServicableDiv"
 			style="display: none;"></div>
-			<div class="help-block has-error" id="pincodeError" style="display: none;">
+			<div class="help-block has-error" id="addresspostcodeError" style="display: none;">
 			</div>
 			</div>
 			<div class='full'>
 			<!-- TISUAT-4696  /TPR-215-->
 <!-- TPR-3402 --><formElement:formTextArea idKey="address.line1"   labelKey="address.line1" path="line1" areaCSS="textarea" mandatory="true" />
-
-			 <div class="help-block has-error" id="address1Error" style="display: none;">
+			 <div class="help-block has-error" id="addressline1Error" style="display: none;">
 			</div>
 			</div>
 <!-- TPR-3402 --><div class='hide'>
 			<!-- TISUAT-4696  /TPR-215-->
-		<formElement:formInputBox idKey="address.line2" labelKey="Address Line 2"
-			 path="line2" 
-
-			mandatory="true" maxLength="40"/>
-			 <div class="help-block has-error" id="address2Error" style="display: none;">
+		<formElement:formInputBox idKey="address.line2"
+			 path="line2"  labelKey="Address Line 2"
+			mandatory="true" maxLength="40" />
+			 <div class="help-block has-error" id="addressline2Error" style="display: none;">
 			</div>
 			</div>
 <!-- TPR-3402 --><div class='hide'>
 			<!-- TISUAT-4696  /TPR-215-->
-		<formElement:formInputBox idKey="address.line3" labelKey="Address Line 3"
-			 path="line3" 
-
-			mandatory="true" maxLength="40"/>
-			 <div class="help-block has-error" id="address3Error" style="display: none;">
+		<formElement:formInputBox idKey="address.line3"
+			 path="line3"  labelKey="Address Line 3"
+			mandatory="true" maxLength="40" />
+			 <div class="help-block has-error" id="addressline3Error" style="display: none;">
 			</div>
 			</div>
-				<!-- R2.3: START -->
-			<div class='full'>
+			<!-- R2.3: START -->
+			<!-- <div class='full'> -->
 			<div class='half'>
 				<div class="optionsLandmark">
 					<formElement:formSelectBox  idKey="address.landmarks" selectCSSClass="address_landmarks"
@@ -285,26 +286,27 @@ display: none;}
 						skipBlank="false" 
 						items="${abc}"
 						itemValue="name" />
+						<div class="error_text selectLandMarkError"></div>
 				</div>
 			</div>
 			<div class='half'>
 			
-				<div class='half address_landmarkOtherDiv' data-value="${addressForm.landmark}" style="display: none;">
+				<div class='address_landmarkOtherDiv' data-value="${addressForm.landmark}" style="display: none;">
 						<formElement:formInputBox inputCSS="address_landmarkOther" idKey="otherLandmark"
 							labelKey="Nearest Landmark" path="otherLandmark"
 							maxLength="30" />
 							<div class="error_text otherLandMarkError"></div>
 				</div>
 			</div>
-			</div>
+			<!-- </div> -->
 			<!-- R2.3: END -->
 		<%-- <formElement:formInputBox idKey="address.locality" labelKey="address.locality" path="locality" inputCSS="form-control" mandatory="true"/> --%>
-		<div class='full'>
-		<!-- TISUAT-4696  /TPR-215-->
-		<formElement:formInputBox idKey="address.townCity" labelKey="City*"
-			 path="townCity" 
-			mandatory="true" maxLength="40" inputCSS="address_townCity"/>
-			<div class="help-block has-error" id="cityError" style="display: none;">
+		<div class='half'>
+		<!-- TISUAT-4696  /TPR-215 / R2.3 --> 
+		<formElement:formInputBox idKey="address.townCity" inputCSS="address_townCity"
+			labelKey="address.townCity" path="townCity" 
+			mandatory="true" maxLength="40" />
+			<div class="help-block has-error" id="addresstownCityError" style="display: none;">
 			</div>
 			</div>
 			<!-- <div class="half address-select"> -->
@@ -320,7 +322,7 @@ display: none;}
 			</div> 
 			</div> --><!-- R2.3: END: Commented -->
 			<!-- R2.3: START -->
-			<div class="full address-select">
+			<div class="half address-select">
 				<div class="mainDrop">
 				<formElement:formSelectBox idKey="address.states" 
 					selectCSSClass="address_states addressRead" labelKey="address.states"
@@ -328,7 +330,7 @@ display: none;}
 					skipBlankMessageKey="${addressForm.state}"
 					items="${stateDataList}"
 					itemValue="name" />
-				<div class="help-block has-error" id="stateError"
+				<div class="help-block has-error" id="addressstatesError"
 					style="display: none;"></div>
 				</div>
 				
@@ -349,7 +351,7 @@ display: none;}
 			</div> --%>
 			</div>
 			<!-- R2.3: END -->
-
+			
 		<!-- <div class="half country-select"> -->
 		<div class="full country-select">
 		<c:set var='count'  value='1' />
@@ -423,7 +425,8 @@ $(document).ready(function(){
 	var tmpValue= -1;
 	
 	
-	$(".address_postcode").blur(function() {
+	//$(".address_postcode").blur(function() {
+	$(".address_postcode").keyup(function() {
 		if($(".address_postcode").val().length == "6") {	
 		loadPincodeData("new").done(function() {
 			console.log("addressform blur line 394");

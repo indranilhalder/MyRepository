@@ -13,7 +13,7 @@
 <%@ taglib prefix="theme" tagdir="/WEB-INF/tags/shared/theme"%>
 <%@ taglib prefix="format" tagdir="/WEB-INF/tags/shared/format"%>
 <%@ taglib prefix="order" tagdir="/WEB-INF/tags/responsive/order"%>
-<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
 <!-- <div class="orderList"> -->
 <%-- 	<div class="headline"><spring:theme code="basket.page.title.yourDeliveryItems" text="Your Delivery Items"/></div>
  --%>
@@ -23,11 +23,10 @@
 
 <c:set var="bogoGiveaway" value="false" />
 <c:forEach items="${orderGroup.entries}" var="entry">
-	<c:if 
-	test="${ entry.isBOGOapplied || entry.giveAway}">
-	<c:set var="bogoGiveaway" value="true" />	
+	<c:if test="${ entry.isBOGOapplied || entry.giveAway}">
+		<c:set var="bogoGiveaway" value="true" />
 	</c:if>
-</c:forEach> 
+</c:forEach>
 
 <c:forEach items="${orderGroup.entries}" var="entry">
 
@@ -78,53 +77,108 @@
 					<c:if test="${not empty parentOrder.appliedProductPromotions}">
 						<ul>
 							<c:set var="displayed" value="false" />
-						
+
 							<c:forEach items="${parentOrder.appliedProductPromotions}"
 								var="promotion">
-								
+
 								<c:forEach items="${promotion.consumedEntries}"
 									var="consumedEntry">
-									
-						 <c:if test="${consumedEntry.ussid eq entry.selectedUssid}">
-									
-									<c:if 
-										test="${not displayed &&  entry.isBOGOapplied || entry.giveAway && ((consumedEntry.adjustedUnitPrice - entry.amountAfterAllDisc.doubleValue) == '0.0' ||(consumedEntry.adjustedUnitPrice - entry.amountAfterAllDisc.doubleValue) == '0.00')}">
-										<c:set var="displayed" value="true" />
-										<li><span>${promotion.description}</span></li>
-									</c:if>
 
-									<c:if
-										test="${not displayed &&  not bogoGiveaway && not empty entry.productPromoCode && ((consumedEntry.adjustedUnitPrice - entry.amountAfterAllDisc.doubleValue) == '0.0' ||(consumedEntry.adjustedUnitPrice - entry.amountAfterAllDisc.doubleValue) == '0.00')}">
-										<c:set var="displayed" value="true" />
-										<li><span>${promotion.description}</span></li>
+									<c:if test="${consumedEntry.ussid eq entry.selectedUssid}">
+
+										<c:if
+											test="${not displayed &&  entry.isBOGOapplied || entry.giveAway && ((consumedEntry.adjustedUnitPrice - entry.amountAfterAllDisc.doubleValue) == '0.0' ||(consumedEntry.adjustedUnitPrice - entry.amountAfterAllDisc.doubleValue) == '0.00')}">
+											<c:set var="displayed" value="true" />
+											<li><span>${promotion.description}</span></li>
+										</c:if>
+
+										<c:if
+											test="${not displayed &&  not bogoGiveaway && not empty entry.productPromoCode && ((consumedEntry.adjustedUnitPrice - entry.amountAfterAllDisc.doubleValue) == '0.0' ||(consumedEntry.adjustedUnitPrice - entry.amountAfterAllDisc.doubleValue) == '0.00')}">
+											<c:set var="displayed" value="true" />
+											<li><span>${promotion.description}</span></li>
+										</c:if>
 									</c:if>
-									</c:if>
-									</c:forEach>
-						</c:forEach>
+								</c:forEach>
+							</c:forEach>
 						</ul>
 					</c:if>
+					<ul>
+					<!-- TPR 1083 Start -->
+						  <c:if test="${not empty entry.exchangeApplied}">
+		              			<li class="cart_exchange">
 
+			              		<input type="hidden" id="exc_cart" value="${entry.exchangeApplied}">
+			              		<c:set var="isExchangeavailable" value="Exchange Applied"/>
+   										${isExchangeavailable} 
+			              		</li>
+			              		</c:if>
+			              		<!-- TPR 1083 End -->
+</ul>
 					<p class="item-info">
 						<span> <spring:theme code="order.qty" /> <ycommerce:testId
 								code="orderDetails_productQuantity_label">&nbsp;${entry.quantity}</ycommerce:testId>
 							<c:if test="${not empty entry.product.size}">
-								<ycommerce:testId code="cart_product_size">
-									<div class="size">
-										<spring:theme code="text.size" />${entry.product.size}</div>
-								</ycommerce:testId>
+								<c:choose>
+									<c:when test="${(not empty entry.product.rootCategory) && (entry.product.rootCategory == 'FineJewellery' || entry.product.rootCategory == 'FashionJewellery') }">
+										<spring:theme code="product.variant.size.noSize" var="noSize"/>
+										<c:if test="${entry.product.size ne noSize }">
+											<ycommerce:testId code="cart_product_size">
+												<div class="size">
+													<spring:eval expression="T(de.hybris.platform.util.Config).getParameter('mpl.jewellery.category')" var="lengthVariant"/>
+											     	<c:set var = "categoryListArray" value = "${fn:split(lengthVariant, ',')}" />
+													<c:forEach items="${entry.product.categories}" var="categories">
+											   			<c:forEach items = "${categoryListArray}" var="lengthVariantArray">
+											   				<c:if test="${categories.code eq lengthVariantArray}">
+											   				 	<c:set var="lengthSize" value="true"/>
+											   				</c:if> 
+											   			</c:forEach>
+											   		</c:forEach>	  
+											   		<c:choose>
+											   			<c:when test="${true eq lengthSize}">
+														  <spring:theme code="product.variant.length.colon"/>${entry.product.size}
+											   			</c:when>
+											   			<c:otherwise>
+														  <spring:theme code="text.size" />${entry.product.size}
+											   			</c:otherwise>
+											   		</c:choose>
+												</div>
+											</ycommerce:testId>
+										</c:if>
+									</c:when>
+									<c:otherwise>
+										<ycommerce:testId code="cart_product_size">
+											<div class="size">
+												<spring:theme code="text.size" />${entry.product.size}
+											</div>
+										</ycommerce:testId>
+									</c:otherwise>
+								</c:choose>
 							</c:if>
 
 						</span>
 					</p>
 					<ul class="item-details">
-					 <%-- <li><b><spring:theme code="seller.order.code"/>&nbsp;${order.code}</b></li> --%>
-					</ul> 
-					</div>
-					  
-					</li>
+						<%-- <li><b><spring:theme code="seller.order.code"/>&nbsp;${order.code}</b></li> --%>
+					</ul>
+				</div>
+
+			</li>
 			<li class="shipping">
 				<ul class="${entry.mplDeliveryMode.name}">
-					<li class="deliver-type">${entry.mplDeliveryMode.name}</li>
+					 <!-- UF-306 starts -->
+					 <%-- <li class="deliver-type">${entry.mplDeliveryMode.name}</li> --%>
+					 <c:choose>
+				   		<c:when test="${entry.mplDeliveryMode.code eq 'home-delivery'}">
+				   			<li class="deliver-type"><spring:theme code="text.home.delivery"/></li>
+				   		</c:when>
+				   		<c:when test="${entry.mplDeliveryMode.code eq 'express-delivery'}">
+				   			<li class="deliver-type"><spring:theme code="text.express.shipping"/></li>
+				   		</c:when>
+				   		<c:otherwise>
+				   			<li class="deliver-type"><spring:theme code="text.clickandcollect.delivery"/></li>
+				   		</c:otherwise>
+				   	</c:choose>
+				   	<!-- UF-306 ends -->	
 					<li class="deliver">
 					<c:choose>
 					<%-- PRDI-378 starts here --%>
@@ -151,7 +205,7 @@
 							<c:otherwise>
 								<format:price priceData="${entry.currDelCharge}" />
 							</c:otherwise>
-						</c:choose>
+						</c:choose>						
 						</c:otherwise>
 				</c:choose>
 						
@@ -257,7 +311,18 @@
 							</c:forEach>
 						</ul>
 					</c:if>
+							<ul>
+					<!-- TPR 1083 Start -->
+						  <c:if test="${not empty entry.exchangeApplied}">
+		              			<li class="cart_exchange">
 
+			              		<input type="hidden" id="exc_cart" value="${entry.exchangeApplied}">
+			              		<c:set var="isExchangeavailable" value="Exchange Applied"/>
+   										${isExchangeavailable} 
+			              		</li>
+			              		</c:if>
+			              		<!-- TPR 1083 End -->
+							</ul>
 					<p class="item-info">
 						<span> <spring:theme code="order.qty" /> <ycommerce:testId
 								code="orderDetails_productQuantity_label">&nbsp;${entry.quantity}</ycommerce:testId>

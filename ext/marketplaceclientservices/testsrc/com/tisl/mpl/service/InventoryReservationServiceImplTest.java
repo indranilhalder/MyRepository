@@ -6,6 +6,7 @@ package com.tisl.mpl.service;
 import static org.mockito.BDDMockito.given;
 
 import de.hybris.bootstrap.annotations.UnitTest;
+import de.hybris.platform.core.model.order.AbstractOrderModel;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -55,8 +56,10 @@ public class InventoryReservationServiceImplTest
 	{
 		final List<CartSoftReservationData> cartdatalist = new ArrayList<CartSoftReservationData>();
 
+		final AbstractOrderModel cart = new AbstractOrderModel();
+
 		//TISSEC-50
-		final String cartId = MarketplacecclientservicesConstants.EMPTY;//TODO : Please enter cart id
+		//final String cartId = MarketplacecclientservicesConstants.EMPTY;//TODO : Please enter cart id
 		final String pincode = MarketplacecclientservicesConstants.EMPTY;//TODO : Please enter pincode
 		final String requestType = MarketplacecclientservicesConstants.EMPTY;//TODO : Please enter req type
 
@@ -85,7 +88,7 @@ public class InventoryReservationServiceImplTest
 			reqObj.setQuantity("");//TODO : Please enter quantity
 			freebieItemslist.add(reqObj);
 			reqlist.addAll(freebieItemslist);
-			reqdata.setCartId(cartId);
+			reqdata.setCartId(cart.getGuid());
 			reqdata.setPinCode(pincode);
 
 			reqdata.setDuration("");//TODO : Please enter duration
@@ -98,7 +101,19 @@ public class InventoryReservationServiceImplTest
 
 		}
 
-		given(inventoryReservationServiceImpl.convertDatatoWsdto(cartdatalist, cartId, pincode, requestType)).willReturn(response);
+		//added for jewellery
+		final InventoryReservListRequest req = inventoryReservationServiceImpl.convertDatatoWsdto(cartdatalist, cart.getGuid(),
+				pincode, requestType);
+		try
+		{
+			given(inventoryReservationServiceImpl.reserveInventoryAtCheckout(req)).willReturn(response);
+		}
+		catch (final JAXBException e)
+		{
+			LOG.error(MarketplacecclientservicesConstants.JAXB_EXCEPTION);
+		}
+		//end
+		//given(inventoryReservationServiceImpl.convertDatatoWsdto(cartdatalist, cart, pincode, requestType)).willReturn(response);
 	}
 
 	@Test
