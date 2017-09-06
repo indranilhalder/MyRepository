@@ -797,3 +797,10 @@ INSERT_UPDATE ContentSlot;$contentCV[unique=true];uid[unique=true];name;cmsCompo
 
 INSERT_UPDATE BBWeightage;weigtagetype[unique=true];weightagevalue
 ;jpriceweightage;0.00000001
+
+##################################################################################
+
+INSERT_UPDATE DeliveryMode;code[unique=true];priority					
+;home-delivery;1					
+;express-delivery;0					
+;click-and-collect;2					
