@@ -48,7 +48,8 @@ public interface BuyBoxDao
 	//get seller details
 	//CKD: TPR-3809
 	//Set<Map<BuyBoxModel, RichAttributeModel>> getsellersDetails(String productCode) throws EtailNonBusinessExceptions;
-	Set<Map<BuyBoxModel, RichAttributeModel>> getsellersDetails(String productCode,String prodCatType) throws EtailNonBusinessExceptions;
+	Set<Map<BuyBoxModel, RichAttributeModel>> getsellersDetails(String productCode, String prodCatType)
+			throws EtailNonBusinessExceptions;
 
 	public List<BuyBoxModel> buyBoxStockForSeller(final String sellerID);
 
@@ -106,5 +107,14 @@ public interface BuyBoxDao
 	 * @return
 	 */
 	String findPussid(String selectedUSSID);
+
+	/**
+	 * This Method is for Seller Monogramming Message Changes
+	 *
+	 * @param sellerId
+	 * @param productCode
+	 * @return String
+	 */
+	public String getSellerMonogrammingMsg(String productCode, String sellerId);
 
 }

@@ -921,4 +921,6 @@ public final class ModelAttributetConstants
 	//CKD:TPR-6804
 	public static final String HOME_FURNISHING = "HomeFurnishing";
 
+	public static final String SELLERMESSAGE = "sellerMessage".intern();
+
 }

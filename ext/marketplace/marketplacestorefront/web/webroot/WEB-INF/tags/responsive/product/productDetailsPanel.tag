@@ -316,6 +316,8 @@ tr.d0 td {
 			<cms:pageSlot position="AddToCart" var="component">
 					<cms:component component="${component}" />
 				</cms:pageSlot>
+				
+			<div class="sellerMonogramming"></div>	
 			<div class="SoldWrap">
 				<%-- <ycommerce:testId
 					code="productDetails_productNamePrice_label_${product.code}">

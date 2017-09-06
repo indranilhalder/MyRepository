@@ -520,6 +520,7 @@ var allSellers='${allsellers}';
 			<input type="hidden" id="freebiePriceThreshId" value="${freebiePriceThreshVal}">
 			<!-- TISPRD-5467 end  -->
 			<product:productMainVariant />
+			<div class="sellerMonogramming"></div>
 			<div class="SoldWrap">
 				<ycommerce:testId
 					code="productDetails_productNamePrice_label_${product.code}">

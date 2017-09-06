@@ -4385,6 +4385,13 @@ function getBuyBoxDataAjax(productCode,variantCodesJson)
 				 }
 				 //INC144316346
 			}
+			
+			if(data['sellerMessage'] != undefined)
+			{
+				$(".sellerMonogramming").text(data['sellerMessage']);
+			}else{
+				$(".sellerMonogramming").text('');
+			}
 		},
 		// For buybox seller and other seller in PDP
 		//TPR-429

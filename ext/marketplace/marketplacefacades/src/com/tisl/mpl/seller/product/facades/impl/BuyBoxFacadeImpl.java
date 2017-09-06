@@ -340,8 +340,8 @@ public class BuyBoxFacadeImpl implements BuyBoxFacade
 			else if (!isSellerPresent && StringUtils.isNotBlank(bBoxSellerId))
 			{
 
-				final List<BuyBoxModel> mSiteBuyboxModelList = new ArrayList<BuyBoxModel>(buyBoxService.buyboxPriceForMicrosite(
-						pdpProduct, bBoxSellerId));
+				final List<BuyBoxModel> mSiteBuyboxModelList = new ArrayList<BuyBoxModel>(
+						buyBoxService.buyboxPriceForMicrosite(pdpProduct, bBoxSellerId));
 
 				buyBoxMod = mSiteBuyboxModelList.get(0);
 				// Adding the msite buybox winner to the front of the buy box list
@@ -389,8 +389,8 @@ public class BuyBoxFacadeImpl implements BuyBoxFacade
 					//buyBoxDataList.add(populateBuyBoxData(buyBoxModel, onlyBuyBoxHasStock, buyboxModelList, buyboxData.getAllOOStock()));
 
 					//TPR-250
-					buyBoxDataList.add(populateBuyBoxData(buyBoxModel, onlyBuyBoxHasStock, buyboxModelList,
-							buyboxData.getAllOOStock(), isSellerPresent, isMicroSellerOOS));
+					buyBoxDataList.add(populateBuyBoxData(buyBoxModel, onlyBuyBoxHasStock, buyboxModelList, buyboxData.getAllOOStock(),
+							isSellerPresent, isMicroSellerOOS));
 				}
 
 			}
@@ -847,8 +847,8 @@ public class BuyBoxFacadeImpl implements BuyBoxFacade
 					sellerData.setFullfillment(rich.getDeliveryFulfillModes().getCode());
 				}
 				if (null != rich.getPaymentModes()
-						&& (PaymentModesEnum.COD.toString().equalsIgnoreCase(rich.getPaymentModes().getCode()) || (PaymentModesEnum.BOTH
-								.toString().equalsIgnoreCase(rich.getPaymentModes().getCode()))))
+						&& (PaymentModesEnum.COD.toString().equalsIgnoreCase(rich.getPaymentModes().getCode())
+								|| (PaymentModesEnum.BOTH.toString().equalsIgnoreCase(rich.getPaymentModes().getCode()))))
 
 
 				{
@@ -911,10 +911,10 @@ public class BuyBoxFacadeImpl implements BuyBoxFacade
 		final String configSellerHandlingTime = configurationService.getConfiguration().getString("buybox.sellerhandling.time");
 		for (final SellerInformationModel seller : productModel.getSellerInformationRelator())
 		{
-			if ((seller.getSellerAssociationStatus() == null || seller.getSellerAssociationStatus().equals(
-					SellerAssociationStatusEnum.YES))
-					&& (null != seller.getStartDate() && new Date().after(seller.getStartDate()) && null != seller.getEndDate() && new Date()
-							.before(seller.getEndDate())))
+			if ((seller.getSellerAssociationStatus() == null
+					|| seller.getSellerAssociationStatus().equals(SellerAssociationStatusEnum.YES))
+					&& (null != seller.getStartDate() && new Date().after(seller.getStartDate()) && null != seller.getEndDate()
+							&& new Date().before(seller.getEndDate())))
 			{
 				if (null != seller.getOnlineExclusive()
 						&& (OnlineExclusiveEnum.YES).toString().equalsIgnoreCase(seller.getOnlineExclusive().getCode()))
@@ -929,8 +929,8 @@ public class BuyBoxFacadeImpl implements BuyBoxFacade
 					for (final RichAttributeModel rich : seller.getRichAttribute())
 					{
 						if (null != rich.getPaymentModes()
-								&& (PaymentModesEnum.COD.toString().equalsIgnoreCase(rich.getPaymentModes().getCode()) || (PaymentModesEnum.BOTH
-										.toString().equalsIgnoreCase(rich.getPaymentModes().getCode()))))
+								&& (PaymentModesEnum.COD.toString().equalsIgnoreCase(rich.getPaymentModes().getCode())
+										|| (PaymentModesEnum.BOTH.toString().equalsIgnoreCase(rich.getPaymentModes().getCode()))))
 
 
 						{
@@ -954,8 +954,8 @@ public class BuyBoxFacadeImpl implements BuyBoxFacade
 							if (null != rich.getSellerHandlingTime() && StringUtils.isNotEmpty(rich.getSellerHandlingTime().toString()))
 							{
 								//configure the seller handling time
-								final int sellerHandlingTimeForConfig = configSellerHandlingTime == null ? 0 : Integer
-										.parseInt(configSellerHandlingTime);
+								final int sellerHandlingTimeForConfig = configSellerHandlingTime == null ? 0
+										: Integer.parseInt(configSellerHandlingTime);
 
 								final Integer sellerHandlingTime = rich.getSellerHandlingTime();
 								if (sellerHandlingTime.intValue() >= 0 && sellerHandlingTime.intValue() <= sellerHandlingTimeForConfig)
@@ -1088,10 +1088,10 @@ public class BuyBoxFacadeImpl implements BuyBoxFacade
 
 	/*
 	 * This method is used to get the price of a product by giving the ussid
-	 * 
-	 * 
-	 * 
-	 * 
+	 *
+	 *
+	 *
+	 *
 	 * @see com.tisl.mpl.seller.product.facades.BuyBoxFacade#getpriceForUssid(java.lang.String)
 	 */
 
@@ -1314,7 +1314,7 @@ public class BuyBoxFacadeImpl implements BuyBoxFacade
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.tisl.mpl.seller.product.facades.BuyBoxFacade#getBuyBoxDataForUssids(java.util.List, java.lang.String)
 	 */
 	//TPR-3736
@@ -1388,5 +1388,18 @@ public class BuyBoxFacadeImpl implements BuyBoxFacade
 	public String findPussid(final String selectedUSSID)
 	{
 		return buyBoxService.findPussid(selectedUSSID);
+	}
+
+	/**
+	 * This Method is for Seller Monogramming Message Changes
+	 *
+	 * @param sellerId
+	 * @param productCode
+	 * @return String
+	 */
+	@Override
+	public String getSellerMonogrammingMsg(final String productCode, final String sellerId)
+	{
+		return buyBoxService.getSellerMonogrammingMsg(productCode, sellerId);
 	}
 }
