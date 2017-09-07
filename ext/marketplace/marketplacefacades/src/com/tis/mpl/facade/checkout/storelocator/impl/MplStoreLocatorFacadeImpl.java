@@ -32,15 +32,12 @@ import org.springframework.ui.Model;
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.core.model.RichAttributeModel;
 import com.tisl.mpl.facade.checkout.storelocator.MplStoreLocatorFacade;
-import com.tisl.mpl.facade.config.MplConfigFacade;
 import com.tisl.mpl.facades.constants.MarketplaceFacadesConstants;
 import com.tisl.mpl.facades.data.ATSResponseData;
 import com.tisl.mpl.facades.data.FreebieProduct;
 import com.tisl.mpl.facades.data.ProudctWithPointOfServicesData;
 import com.tisl.mpl.facades.data.StoreLocationResponseData;
-import com.tisl.mpl.marketplacecommerceservices.service.PincodeService;
 import com.tisl.mpl.model.SellerInformationModel;
-import com.tisl.mpl.pincode.facade.PincodeServiceFacade;
 import com.tisl.mpl.sellerinfo.facades.MplSellerInformationFacade;
 
 
@@ -69,15 +66,6 @@ public class MplStoreLocatorFacadeImpl implements MplStoreLocatorFacade
 
 	@Resource(name = "modelService")
 	private ModelService modelService;
-
-	@Resource(name = "pincodeServiceFacade")
-	private PincodeServiceFacade pincodeServiceFacade;
-
-	@Resource(name = "pincodeService")
-	private PincodeService pincodeService;
-
-	@Autowired
-	private MplConfigFacade mplConfigFacade;
 
 	/**
 	 * This method is to add freebie products to the map.
