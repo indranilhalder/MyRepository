@@ -180,9 +180,9 @@
 												<c:when test="${deliveryAddress.defaultAddress}">
 													<span class="default default-selected"> <input
 														type="radio" value="Make this my default address"
-														class="regular-radio" name="default"
+														class="/*regular-radio*/" name="default"
 														id="radio-default2_${deliveryAddress.id}"
-														data-address-id="${deliveryAddress.id}"> <label
+														data-address-id="${deliveryAddress.id}" onchange="event.stopPropagation();"/> <label
 														class="radio-checked"
 														for="radio-default2_${deliveryAddress.id}">Make
 															this my default address</label>
@@ -191,9 +191,9 @@
 											</c:choose>
 	
 											<span class="default"> <input type="radio"
-												value="Make this my default address" class="regular-radio"
+												value="Make this my default address" class="/*regular-radio*/"
 												name="default" id="radio-default2_${deliveryAddress.id}"
-												data-address-id="${deliveryAddress.id}"> <label
+												data-address-id="${deliveryAddress.id}" onchange="event.stopPropagation();"/> <label
 												for="radio-default2_${deliveryAddress.id}">Make this
 													my default address</label>
 											</span>
