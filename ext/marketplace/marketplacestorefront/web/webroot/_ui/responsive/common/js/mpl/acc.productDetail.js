@@ -1869,7 +1869,7 @@ function dispPrice(mrp, mop, spPrice, savingsOnProduct) {
 		$("#spPriceId").append(spPrice.formattedValueNoDecimal);
 	} 
 	////TISPRM-33 , TPR-140
-	if(null!= savingsOnProduct){
+	if(null!= savingsOnProduct && savingsOnProduct != 0){
 		//$("#savingsOnProductId").html("");
 		$("#savingsOnProductId").append("(-"+savingsOnProduct+" %)");
 	} 
