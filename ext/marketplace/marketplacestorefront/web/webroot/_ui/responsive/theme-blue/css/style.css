@@ -77039,3 +77039,68 @@ body .account .right-account form label.invite-text-lbl{
 }
 }
 /* TPR-6399 end */
+/*TPR-6654 start*/
+#CNCstores{
+	margin-top: 15px;
+	line-height: 1.33;
+}
+#CNCstores .store-locator-block > span > b{
+	color: #000;
+	margin-bottom: 5px;
+	display: inline-block;
+}
+#CNCstores .store-locator-block  a[data-target="#storeLocatorModal"]{
+	margin-top: 5px;
+	color: blue;
+	text-decoration: underline;
+	display: inline-block;
+	cursor: pointer;
+}
+#CNCstores .store-locator-block .store-address{
+	padding-left: 15px;
+	position: relative;
+}
+#CNCstores .store-locator-block .store-address span{
+	color: #fff;
+    position: absolute;
+    left: -2px;
+    font-size: 11px;
+    font-weight: bold;
+    top: 2px;
+}
+#CNCstores .store-locator-block .store-address:before{
+	content: "";
+	position: absolute;
+	left: -10px;
+	width: 20px;
+    height: 20px;
+    border-radius: 50% 50% 50% 0;
+    background: red;
+    transform: rotate(-45deg);
+	
+}
+/*modal*/
+#storeLocatorModal .content{
+	text-align: left;
+	padding: 5px 10px;
+	max-width: 600px;
+}
+#storeLocatorModal  .nearby-stores{
+	font-size: 14px;
+	color: #000;
+	text-transform: none;
+	margin-bottom: 25px;
+}
+#storeLocatorModal  .store-address-block{
+	width: 49%;
+	display: inline-block;
+	vertical-align: top;
+	padding-left: 20px;
+	padding-bottom: 40px;
+	color: #000;
+	line-height: 1.33;
+}
+#storeLocatorModal .content > div {
+    white-space: normal;
+}
+/*TPR-6654 end*/

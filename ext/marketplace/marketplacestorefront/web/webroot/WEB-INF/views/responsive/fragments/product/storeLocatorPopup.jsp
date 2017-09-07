@@ -6,15 +6,19 @@
 <%@ taglib prefix="format" tagdir="/WEB-INF/tags/shared/format"%>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
 
-<%-- <c:url var="storeLocatorURL" value="/p-allStores/${pincode}" scope="request"></c:url> --%>
 <div class="store-locator-block">
 	<c:if test="${fn:length(storesAvailable) gt 0}" >
-		<span class=""><spring:theme code="nearest.store" arguments="${pincode}"/></span>
+		<span class=""><b><spring:theme code="nearest.store" arguments="${pincode}"/></b></span>
 		<c:forEach items="${storesAvailable}" var="store" varStatus="loop" >
 			<c:if test="${loop.first}">
-			<div class="storeName"><b>${store.name}</b></div>
-			<div class="address">${store.address.formattedAddress}</div>
-		    <div class="distance"><b>${store.distanceKm}</b></div>
+			<div class="store-address">
+			<span>1</span>
+			<c:if test="${not empty store.name}"><div class="store-name"><b>${store.name}</b></div></c:if>
+			<c:if test="${not empty store.address.line1}"><div class="addressLine1">${store.address.line1}</div></c:if>
+			<c:if test="${not empty store.address.line2}"><div class="addressLine2">${store.address.line2}</div></c:if>
+			<%-- <c:if test="${not empty store.address.postalcode}"><div class="addressLine2">${store.address.postalcode}</div></c:if> --%>
+		    <c:if test="${not empty store.distanceKm}"><div class="distance"><b>${store.distanceKm} Kms</b></div></c:if>
+		   </div>
 		    </c:if>
 		</c:forEach>
 		
@@ -29,27 +33,28 @@
 		</c:if>
 
 		<div id="storeLocatorModal" class="modal cancellation-request fade">
+		<div class="overlay" data-dismiss="modal"></div>
 			  <div class="content">
 				<!-- 	<button type="button" class="close pull-right" 		
 		           aria-hidden="true" data-dismiss="modal">		
 		            </button> -->
 				<div class="cancellation-request-block">
-					<h2 class="">Stores Nearby</h2>
+					<p class="nearby-stores">Stores Near &nbsp; ${pincode}</p>
 					<div class="store-popup-block"></div>
 					  <c:forEach items="${storesAvailable}" var="store" varStatus="storeLoop">
 						 <c:if test="${not storeLoop.first}">
-						 <div class="pull-left">
-							 <span class="storeName"><b>${store.name}</b></span>
-							 <span class="address">${store.address.formattedAddress}</span>
-					         <span class="distance"><b>${store.distanceKm}</b></span>
+						 <div class="store-address-block">
+						     <c:if test="${not empty store.name}"><div class="store-name"><b>${store.name}</b></div></c:if>
+					         <c:if test="${not empty store.address.line1}"><div class="addressLine1">${store.address.line1}</div></c:if>
+			                 <c:if test="${not empty store.address.line2}"><div class="addressLine2">${store.address.line2}</div></c:if>
+			                <%--  <c:if test="${not empty store.address.city && not empty store.address.postalcode}"><div class="district">${store.address.city} - ${store.address.postalcode}</div></c:if> --%>
+			                <%--  <c:if test="${not empty store.address.country}"><div class="country">${store.address.country}</div></c:if> --%>
+			                 <c:if test="${not empty store.distanceKm}"><div class="distance"><b>${store.distanceKm} Kms</b></div></c:if>
 					      </div>   
 				         </c:if>
 					  </c:forEach>
 				  </div>
 			  </div>
 			 </div> 
-		</div>
-		
 	</c:if>
 </div>
-	

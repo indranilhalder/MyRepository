@@ -3,11 +3,17 @@
  */
 package com.tisl.mpl.util;
 
+import de.hybris.platform.core.Registry;
+import de.hybris.platform.servicelayer.config.ConfigurationService;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
+import java.net.InetSocketAddress;
+import java.net.Proxy;
+import java.net.SocketAddress;
 import java.net.URL;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
@@ -24,8 +30,10 @@ import com.granule.json.JSONObject;
  * @author TCS
  *
  */
+
 public class DistanceMatrixUtility
 {
+
 	@SuppressWarnings("unused")
 	private static final Logger LOG = Logger.getLogger(DistanceMatrixUtility.class);
 
@@ -40,16 +48,14 @@ public class DistanceMatrixUtility
 		return sb.toString();
 	}
 
-	public static JSONObject readJsonFromUrl(final String url) throws IOException, JSONException
+	public static JSONObject readJsonFromUrl(final String url, final Proxy proxy) throws IOException, JSONException
 	{
-		final InputStream is = new URL(url).openStream();
+		final InputStream is = new URL(url).openConnection(proxy).getInputStream();
 		try
 		{
 			final BufferedReader rd = new BufferedReader(new InputStreamReader(is, Charset.forName("UTF-8")));
 			final String jsonText = readAll(rd);
-			LOG.debug(jsonText);
 			final JSONObject json = new JSONObject(jsonText);
-			LOG.debug(json);
 			return json;
 		}
 		finally
@@ -67,11 +73,17 @@ public class DistanceMatrixUtility
 		JSONObject json = null;
 		JSONArray jsonArray = null;
 		final List<Double> distance = new ArrayList<>();
+		double disKM = 0;
+		SocketAddress addr = null;
+		Proxy proxy = null;
+		final int portproxy = Integer.parseInt(getConfigurationService().getConfiguration().getString("proxy.port"));
+		addr = new InetSocketAddress(getConfigurationService().getConfiguration().getString("proxy.address"), portproxy);
+		proxy = new Proxy(Proxy.Type.HTTP, addr);
 		try
 		{
 
 			json = readJsonFromUrl("https://maps.googleapis.com/maps/api/distancematrix/json?origins=" + beg + "&destinations="
-					+ end + "&mode=driving&sensor=false");
+					+ end + "&mode=driving&sensor=false", proxy);
 			json.get("rows");
 			JSONArray arr = null;
 			arr = json.getJSONArray("rows");
@@ -79,7 +91,9 @@ public class DistanceMatrixUtility
 			for (int i = 0; i < jsonArray.length(); i++)
 			{
 				final JSONObject jsonObj = jsonArray.getJSONObject(i);
-				distance.add(Double.valueOf(jsonObj.getJSONObject("distance").getDouble("value")));
+				disKM = (jsonObj.getJSONObject("distance").getDouble("value")) / 1000;
+				disKM = (double) Math.round(disKM * 100) / 100;
+				distance.add(Double.valueOf(disKM));
 			}
 
 		}
@@ -92,5 +106,11 @@ public class DistanceMatrixUtility
 			e.printStackTrace();
 		}
 		return distance;
+	}
+
+
+	protected ConfigurationService getConfigurationService()
+	{
+		return Registry.getApplicationContext().getBean("configurationService", ConfigurationService.class);
 	}
 }
