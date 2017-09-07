@@ -64497,7 +64497,7 @@ footer .banner{
     top: 0;
 }
 .cart.wrapper.checkout-payment .blocks {
-    padding: 26px 115px 36px 35.5px;
+    padding: 26px 115px 31px 35.5px;
 }
 .cart.wrapper.checkout-payment .left-block .payments.tab-view .tabs .product-block li.saved.active, .cart.wrapper.checkout-payment .left-block .payments.tab-view .tabs .product-block li.new-form.active, .confirmation .left-block .payments.tab-view .tabs .product-block li.saved.active, .confirmation .left-block .payments.tab-view .tabs .product-block li.new-form.active{
 	padding:0;
@@ -68654,7 +68654,7 @@ body.page-multiStepCheckoutSummaryPage header, body.page-checkout-login header {
 #makePayment .cart.wrapper.checkout-payment .right-block.billing.checkout-list-right{
 	padding: 0;
 }
-.cart.wrapper.checkout-payment .left-block .payments.tab-view{
+ #makePaymentDiv .cart.wrapper.checkout-payment .left-block .payments.tab-view{
 	border: none;
 }
 #makePayment .cart.wrapper.checkout-payment .right-block.billing.checkout-list-right .block.coupon {
@@ -76872,3 +76872,19 @@ body .account .right-account form label.invite-text-lbl{
 }
 
 /* TISSPTEN-120 END */
+
+@media(min-width: 1080px){
+.cart.wrapper.checkout-payment .left-block.choose-payment{
+	padding-bottom: 0px;
+	margin-bottom: 0px;
+}
+	.checkout-accordion.accordion-open .checkout-accordion-body div#makePaymentDiv{
+	border: 1px solid #eee;
+}
+.checkout-accordion.accordion-open .checkout-accordion-body div#makePaymentDiv{
+	border: 1px solid #eee !important;
+}
+.cart.wrapper.checkout-payment .left-block .payments.tab-view .nav{
+	min-height: 544px;
+}
+}
