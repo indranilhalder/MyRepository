@@ -803,4 +803,31 @@ INSERT_UPDATE BBWeightage;weigtagetype[unique=true];weightagevalue
 INSERT_UPDATE DeliveryMode;code[unique=true];priority					
 ;home-delivery;1					
 ;express-delivery;0					
-;click-and-collect;2					
+;click-and-collect;2	
+###########################################################Forward Seal Mismatch Reason In Case of Jewellery###########################
+$lang='en'
+
+$jarResource=jar:com.tisl.mpl.cockpits.constants.MarketplaceCockpitsConstants&/marketplacecockpits/cscockpit
+
+$storePrefix=mpl
+$contentCatalog=$storePrefixContentCatalog
+$contentCV=catalogVersion(CatalogVersion.catalog(Catalog.id[default=$contentCatalog]),CatalogVersion.version[default=Staged])[default=$contentCatalog:Staged]
+$emailResource=jar:com.tisl.mpl.initialdata.setup.InitialDataSystemSetup&/marketplaceinitialdata/import/coredata/contentCatalogs/$contentCatalog/emails
+
+# Language
+$lang=en
+
+INSERT_UPDATE GLOBALCODEMASTER;enumCode[unique=true];globalCode[unique=true];description[optional=true]
+;revrseSealFineJew;09;Forward Seal Mismatch
+
+#
+# Import essential data for the Accelerator
+#
+
+# Language
+$lang=en
+
+# Return Reason
+INSERT_UPDATE ReturnReason;reasonCode[unique=true];reasonDescription
+;09;Forward Seal Mismatch				
+######################################################################################################################################
