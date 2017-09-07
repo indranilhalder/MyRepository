@@ -85,7 +85,6 @@ import de.hybris.platform.wishlist2.Wishlist2Service;
 import de.hybris.platform.wishlist2.model.Wishlist2EntryModel;
 import de.hybris.platform.wishlist2.model.Wishlist2Model;
 
-
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.charset.Charset;
@@ -248,6 +247,7 @@ import com.tisl.mpl.wsdto.QuickDropStoresList;
 import com.tisl.mpl.wsdto.ReturnDetailsWsDTO;
 import com.tisl.mpl.wsdto.ReturnLogisticsResponseDTO;
 import com.tisl.mpl.wsdto.ReturnLogisticsResponseDetailsWsDTO;
+import com.tisl.mpl.wsdto.ReturnModesWsDTO;
 import com.tisl.mpl.wsdto.ReturnPincodeDTO;
 import com.tisl.mpl.wsdto.ReturnReasonDTO;
 import com.tisl.mpl.wsdto.ReturnReasonDetailsWsDTO;
@@ -449,7 +449,7 @@ public class UsersController extends BaseCommerceController
 
 	@Resource(name = "voucherService")
 	private VoucherService voucherService;
-	
+
 	//Sonar Fix
 	private static final String NO_JUSPAY_URL = "No juspayReturnUrl is defined in local properties";
 
@@ -3685,7 +3685,7 @@ public class UsersController extends BaseCommerceController
 			//currentUser = mplPaymentWebFacade.getCustomer(userId);
 			final String userIdLwCase = userId.toLowerCase(); //INC144318796
 			currentUser = mplPaymentWebFacade.getCustomer(userIdLwCase);
-			
+
 			final String authorization = httpRequest.getHeader("Authorization");
 			String username = null;
 			if (authorization != null && authorization.startsWith("Basic"))
@@ -3854,7 +3854,7 @@ public class UsersController extends BaseCommerceController
 		}
 		else
 		{
-            final String userIdLwCase = userId.toLowerCase(); //INC144318796
+			final String userIdLwCase = userId.toLowerCase(); //INC144318796
 			final MplCustomerProfileData customerToSave = mplCustomerProfileService.getCustomerProfileDetail(userIdLwCase);
 			//final MplCustomerProfileData customerToSave = mplCustomerProfileService.getCustomerProfileDetail(userId);
 			// Get the data before editing
@@ -4303,7 +4303,7 @@ public class UsersController extends BaseCommerceController
 		{
 			try
 			{
-                final String emailIdLwCase = emailid.toLowerCase(); //INC144318796
+				final String emailIdLwCase = emailid.toLowerCase(); //INC144318796
 				customerData = mplCustomerProfileService.getCustomerProfileDetail(emailIdLwCase);
 
 				//customerData = mplCustomerProfileService.getCustomerProfileDetail(emailid);
@@ -4405,7 +4405,7 @@ public class UsersController extends BaseCommerceController
 		MplUserResultWsDto validated = new MplUserResultWsDto();
 		try
 		{
-            final String userIdLwCase = userId.toLowerCase(); //INC144318796
+			final String userIdLwCase = userId.toLowerCase(); //INC144318796
 			validated = mplUserHelper.validateRegistrationData(userIdLwCase, newPassword);
 			if (null != validated.getStatus()
 					&& validated.getStatus().equalsIgnoreCase(MarketplacecommerceservicesConstants.ERROR_FLAG))
@@ -7503,7 +7503,7 @@ public class UsersController extends BaseCommerceController
 				"finejewellery.reverseseal.sellername");
 		boolean isFineJew = false;
 		final RevSealJwlryDataWsDTO revSealFrJwlry = new RevSealJwlryDataWsDTO();
-		final Map<String, String> returnModes = new HashMap<String, String>();
+		final ReturnModesWsDTO returnModes = new ReturnModesWsDTO();
 		try
 		{
 			final List<OrderProductWsDTO> orderproductWsDto = getOrderDetailsFacade.getOrderdetailsForApp(orderCode, transactionId,
@@ -7515,9 +7515,9 @@ public class UsersController extends BaseCommerceController
 				returnReasonData = mplOrderFacade.getReturnReasonForOrderItem(returnCancelFlag);
 
 				//TPR-4134 starts
-				returnModes.put(MarketplacecommerceservicesConstants.SELFCOURIER, MarketplacecommerceservicesConstants.TRUE);
-				returnModes.put(MarketplacecommerceservicesConstants.SCHEDULE_PICKUP, MarketplacecommerceservicesConstants.TRUE);
-				returnModes.put(MarketplacecommerceservicesConstants.QUICK_DROP, MarketplacecommerceservicesConstants.TRUE);
+				returnModes.setSelfCourier(true);
+				returnModes.setSchedulePickup(true);
+				returnModes.setQuickDrop(true);
 				returnRequestDTO.setShowReverseSealFrJwlry(MarketplacecommerceservicesConstants.NO);
 
 				if (StringUtils.isNotEmpty(revSealSellerList))
@@ -7544,7 +7544,7 @@ public class UsersController extends BaseCommerceController
 									.equalsIgnoreCase(productModel.getProductCategoryType()))
 					{
 						isFineJew = true;
-						returnModes.put(MarketplacecommerceservicesConstants.SELFCOURIER, "false");
+						returnModes.setSelfCourier(false);
 						returnRequestDTO.setReverseSealFrJwlry(revSealFrJwlry);
 						break;
 					}
