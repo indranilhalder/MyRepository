@@ -267,7 +267,15 @@ $(document).ready(function(){
 	
 	// Checkout pages
 	if(pageType =="multistepcheckoutsummary"){
-		//
+		
+		var product_id = $("#product_id").val();
+		var product_category = $("#product_category").val();
+		digitalData.cpj = {
+				product : {
+					id     :  product_id ,
+			      category :  product_category
+			 }
+		  }
 	}
 	
 	//TPR-6296 | brand pages
@@ -1079,9 +1087,9 @@ function dtmSearchTags(){
 	    }
 		digitalData.cpj = {
 	    		    product : {
-	    			 	    id  :  productId,
-	    		     category   :  category,	
-	    		     price      : $('#product_unit_price').val()
+	    			 	         id  :  $("#product_id").val(),
+	    		            category :  $("#product_category").val(),	
+	    		              price  :  $('#product_unit_price').val()
 	    	 } 
 	    }
 		if(typeof (digitalData.cpj.payment)!= "undefined"){
@@ -1132,12 +1140,20 @@ function dtmSearchTags(){
 	
 	//TPR-6029|DTM CHECKOUT Changes
 	function dtmPaymentModeSelection(mode){
-		if(typeof (_satellite)!= undefined){
+		if(typeof (_satellite)!= 'undefined'){
 			_satellite.track('cpj_checkout_payment_selection');
 		}
 		
-		if(typeof (digitalData.cpj.payment)!= undefined){
-			digitalData.cpj.payment.mode = mode;
+		if(typeof(digitalData.cpj)!= 'undefined' ){
+			if(typeof(digitalData.cpj.payment) != 'undefined' ){
+				digitalData.cpj.payment.mode = mode;
+			}
+			else{
+				digitalData.cpj.payment = {
+					mode : mode
+				}
+			}
+			
 		}
 	}
 	
@@ -1146,20 +1162,16 @@ function dtmSearchTags(){
 			 if(typeof (_satellite)!= 'undefined'){
 				_satellite.track('cpj_checkout_payment_coupon_success');
 		    }
-			
-			 if(typeof (digitalData.cpj.coupon)!= 'undefined'){
-				digitalData.cpj.coupon.code = couponCode;
-			 }
 		 }
 		else{
-			 if(typeof (_satellite)!= 'undefined'){
+			  if(typeof (_satellite)!= 'undefined'){
 				_satellite.track('cpj_checkout_payment_coupon_fail');
 			 }
-			
-			 if(typeof (digitalData.cpj.coupon)!= 'undefined'){
-				digitalData.cpj.coupon.code = couponCode;
-			 }
 		}	
+		
+		if(typeof(digitalData.cpj)!= 'undefined' && typeof (digitalData.cpj.coupon)!= 'undefined'){
+			digitalData.cpj.coupon.code = couponCode;
+		 }
 	}
 	
 	function dtmStoreSelection(storeName){

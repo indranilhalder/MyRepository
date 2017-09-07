@@ -355,9 +355,10 @@ share mobile -->
 			   </c:when>
 			   <c:otherwise>
 			       <!-- UF-422:Changes for PDP when product has only one size -->
-													<c:set var="selectedClass" value=""/>
-													<c:if test= "${fn:length(variantOption) eq 1}">
-													<c:set var ="selectedClass" value ="class='selected'"/></c:if>	
+				<c:set var="selectedClass" value=""/>
+				<c:if test= "${fn:length(product.variantOptions) eq 1}">
+				<c:set var ="selectedClass" value ="class='selected'"/></c:if>	
+				
 			    <c:forEach items="${product.variantOptions}" var="variantOption">
 			      <c:forEach items="${variantOption.colourCode}" var="color">                  
 					<c:choose>
@@ -385,7 +386,7 @@ share mobile -->
 										 </c:when>
 										 <c:otherwise>
 											<!--CKD:TPR-250  -->
-										    <li data-vcode="${link}"><a href="${link}?selectedSize=true${msiteSellerForSize}"  data-productCode="${variantOption.code}">${entry.value}</a></li>
+										    <li ${selectedClass}><a href="${link}?selectedSize=true${msiteSellerForSize}"  data-productCode="${variantOption.code}">${entry.value}</a></li>
 										 </c:otherwise>
 									</c:choose>
 								  </c:forEach>
