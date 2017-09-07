@@ -69535,6 +69535,21 @@ select.update-entry-quantity-input.review-page-select{
 	display:none;
 }
 
+@media(min-width: 981px){
+.cart.wrapper.checkout-payment .left-block.choose-payment{
+	padding-bottom: 0px;
+	margin-bottom: 0px;
+}
+	.checkout-accordion.accordion-open .checkout-accordion-body div#makePaymentDiv{
+	border: 1px solid #eee;
+}
+.checkout-accordion.accordion-open .checkout-accordion-body div#makePaymentDiv{
+	border: 1px solid #eee !important;
+}
+.cart.wrapper.checkout-payment .left-block .payments.tab-view .nav{
+	min-height: 544px;
+}
+}
 /*UF-281 UF-282 single page checkout css ends*/
 
 /* R2.3:START: Date: 2016-12-19- Code Merge */
@@ -76873,18 +76888,3 @@ body .account .right-account form label.invite-text-lbl{
 
 /* TISSPTEN-120 END */
 
-@media(min-width: 1080px){
-.cart.wrapper.checkout-payment .left-block.choose-payment{
-	padding-bottom: 0px;
-	margin-bottom: 0px;
-}
-	.checkout-accordion.accordion-open .checkout-accordion-body div#makePaymentDiv{
-	border: 1px solid #eee;
-}
-.checkout-accordion.accordion-open .checkout-accordion-body div#makePaymentDiv{
-	border: 1px solid #eee !important;
-}
-.cart.wrapper.checkout-payment .left-block .payments.tab-view .nav{
-	min-height: 544px;
-}
-}
