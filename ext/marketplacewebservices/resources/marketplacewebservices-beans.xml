@@ -1053,6 +1053,7 @@
 <!-- TPR-6117 -->
 			<property name="maxQuantityAllowed" type="String" />
 			<property name="customizationInfoText" type="String" />
+			<property name="buyingGuideUrl" type="String" />
 	</bean>
 	
 	<!-- Added for OfferDetail of a product TPR-TPR-1299 -->

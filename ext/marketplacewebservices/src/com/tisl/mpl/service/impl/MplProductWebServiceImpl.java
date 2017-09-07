@@ -348,6 +348,7 @@ public class MplProductWebServiceImpl implements MplProductWebService
 		//Added for TPR-6869
 		String sellerID = MarketplacecommerceservicesConstants.EMPTY;
 		String sellerMonogramMessage = MarketplacecommerceservicesConstants.EMPTY;
+		String buyingGuideURL = MarketplacecommerceservicesConstants.EMPTY;
 
 		//for new tab return refund for fine and fashion jewellery
 		List<RefundReturnDTO> refundReturnList = null;
@@ -364,6 +365,10 @@ public class MplProductWebServiceImpl implements MplProductWebService
 						Arrays.asList(ProductOption.BASIC, ProductOption.SUMMARY, ProductOption.DESCRIPTION, ProductOption.GALLERY,
 								ProductOption.CATEGORIES, ProductOption.PROMOTIONS, ProductOption.CLASSIFICATION,
 								ProductOption.VARIANT_FULL, ProductOption.SELLER));
+
+				//Added for TPR-6869
+
+				buyingGuideURL = populateBuyingGuide(productModel);
 
 				//TISPT-396
 				/*
@@ -687,6 +692,11 @@ public class MplProductWebServiceImpl implements MplProductWebService
 				if (StringUtils.isNotEmpty(sellerMonogramMessage))
 				{
 					productDetailMobile.setCustomizationInfoText(sellerMonogramMessage);
+				}
+
+				if (StringUtils.isNotEmpty(buyingGuideURL))
+				{
+					productDetailMobile.setBuyingGuideUrl(buyingGuideURL);
 				}
 
 				if (null != buyboxdataCheck && null != buyboxdataCheck.getFullfillment())
@@ -1037,6 +1047,40 @@ public class MplProductWebServiceImpl implements MplProductWebService
 	//		}
 	//		return warrantyList;
 	//	}
+	/**
+	 * This Method deals with population of Buying Guide details on PDP
+	 *
+	 * @param productModel
+	 */
+	private String populateBuyingGuide(final ProductModel productModel)
+	{
+		String buyingGuideCode = MarketplacecommerceservicesConstants.EMPTY;
+		try
+		{
+			final List<CategoryModel> superCategoryDetails = new ArrayList<>(productModel.getSupercategories());
+
+			if (CollectionUtils.isNotEmpty(superCategoryDetails))
+			{
+				for (final CategoryModel category : superCategoryDetails)
+				{
+					buyingGuideCode = category.getBuyingGuide();
+
+					if (StringUtils.isNotEmpty(buyingGuideCode))
+					{
+						LOG.error("Buying Guide redirect URL" + buyingGuideCode);
+						break;
+					}
+				}
+			}
+		}
+		catch (final Exception exception)
+		{
+			LOG.error("Error during population of Buying Guide Details >> for Product >>" + productModel.getCode() + "Error>>"
+					+ exception);
+		}
+
+		return buyingGuideCode;
+	}
 
 	/**
 	 * Gets Seller ID Data
