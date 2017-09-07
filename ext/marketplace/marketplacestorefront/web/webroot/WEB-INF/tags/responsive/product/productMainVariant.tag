@@ -110,7 +110,7 @@ var productSizeVar = '${productSize}';
 	<c:choose>
 		<c:when test="${not empty product.variantOptions}">
  <!-- Color heading will not come for FineJewellery -->
-		<c:if test="${(product.rootCategory !='FineJewellery' && product.rootCategory !='FashionJewellery') || (multiColorFlag eq 'true')}">	<!-- UF-432 -->
+		<c:if test="${(product.rootCategory !='FineJewellery' && product.rootCategory !='FashionJewellery') && (multiColorFlag eq 'true')}">	<!-- UF-432 -->
 			<p>
 				<spring:theme code="text.colour" />
 			</p>

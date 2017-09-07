@@ -81,7 +81,7 @@ function loadVariant(x){
 				</c:if>
 				<c:choose>
 		   <c:when test="${not empty product.variantOptions}">
-		   <c:if test="${(product.rootCategory ne 'FineJewellery' && product.rootCategory ne 'FashionJewellery') || (multiColorFlag eq 'true')}">	<!-- UF-432 -->
+		   <c:if test="${(product.rootCategory ne 'FineJewellery' && product.rootCategory ne 'FashionJewellery') && (multiColorFlag eq 'true')}">	<!-- UF-432 -->
 				<p>
 					<spring:theme code="text.colour" />
 				</p>
