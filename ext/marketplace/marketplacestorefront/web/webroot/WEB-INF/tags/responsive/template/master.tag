@@ -118,7 +118,74 @@
 			</c:choose> --%>
 			<%-- <link rel="canonical" href="${regex:regExMatchAndRemove(canonical,'[/]$') }" /> --%>
 			
-			<link rel="canonical" href="${canonical}" />
+			<c:choose>
+				<c:when test = "${fn:endsWith(canonical, '/page-1')}"><!-- TISSPTXI-2 Fix -->
+	   				<link rel="canonical" href="${fn:replace(canonical,'/page-1','')}" />
+				</c:when>
+				<c:otherwise>
+					<link rel="canonical" href="${canonical}" />
+				</c:otherwise>
+			</c:choose>
+			<c:choose>
+				<c:when test="${searchPageData ne null && searchPageData.pagination ne null && searchPageData.pagination.numberOfPages gt 0}">
+					<c:set var="totalNumberOfPages" value="${searchPageData.pagination.numberOfPages}"/>
+				</c:when>
+			</c:choose>
+			<!-- UF-265 start --> 
+			<c:if test="${totalNumberOfPages gt 1}">
+				<meta name="NumberOfPagesFlag" content="${totalNumberOfPages}" />
+				<c:set var="currentPageNumber" value="${fn:substringAfter(canonical,'/page-')}"/>
+				<c:if test="${empty currentPageNumber}">
+					<c:set var="currentPageNumber" value="1"/>
+				</c:if>
+				<c:set var="currentPage" value="page-${currentPageNumber}"/>
+				<meta name="currentPageNumber" content="${currentPage}" />
+				<c:set var="nextPage" value="page-${currentPageNumber + 1}"/>
+				<c:set var="previousPage" value="page-${currentPageNumber - 1}"/>
+				<c:choose>
+					<c:when test="${currentPageNumber < totalNumberOfPages}">
+						<c:choose>
+							<c:when test="${currentPageNumber eq 1}">
+								<meta name="controlFlow" content="Went in the First page case" />
+								<c:choose>
+									<c:when test="${fn:contains(canonical, currentPage)}">
+										<link rel="next" href="${fn:replace(canonical,currentPage,nextPage)}" />
+									</c:when>
+									<c:otherwise>
+										<link rel="next" href="${canonical}/${nextPage}" />
+									</c:otherwise>
+								</c:choose>
+							</c:when>
+							<c:otherwise>
+								<c:choose>
+									<c:when test="${currentPageNumber eq 2}">
+										<meta name="controlFlow" content="Went in the Second page case" />
+										<link rel="prev" href="${fn:replace(canonical,'/page-2','')}" />
+										<link rel="next" href="${fn:replace(canonical,currentPage,nextPage)}" />
+									</c:when>
+									<c:otherwise>
+										<meta name="controlFlow" content="Went in the intermittent page case" />
+										<link rel="prev" href="${fn:replace(canonical,currentPage,previousPage)}" />
+										<link rel="next" href="${fn:replace(canonical,currentPage,nextPage)}" />
+									</c:otherwise>
+								</c:choose>
+							</c:otherwise>
+						</c:choose>
+					</c:when>
+					<c:otherwise>
+						<meta name="controlFlow" content="Went in the last page case" />
+						<c:choose>
+							<c:when test="${currentPageNumber eq 2}">
+								<link rel="prev" href="${fn:replace(canonical,'/page-2','')}" />
+							</c:when>
+							<c:otherwise>
+								<link rel="prev" href="${fn:replace(canonical,currentPage,previousPage)}" />
+							</c:otherwise>
+						</c:choose>
+						
+					</c:otherwise>
+				</c:choose>
+			</c:if>
 		</c:otherwise>
 	</c:choose>
 	
@@ -398,6 +465,17 @@
 			if(isMobile == "true"){
 				window.location.href="/login";
 			}else{
+				$.ajax({
+					url: "/login?frame=true&box-login",
+					type: "GET",
+					responseType: "text/html",
+					success: function(response){
+						$("#login-modal").find(".content").html('<button type="button" class="close"></button>'+response);
+					},
+					fail: function(response){
+						alert(response);
+					}
+				});
 				setTimeout(function(){
 					$("#login-modal").modal({
 						 backdrop: 'static',
@@ -447,8 +525,6 @@
 <div class="modal fade login-modal" id="login-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
 		<div class="overlay"></div>
 		<div class="content">
-		<button type="button" class="close"></button>
-		${login_register_html}
 		</div>
 </div>
 </body>

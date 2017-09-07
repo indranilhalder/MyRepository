@@ -548,12 +548,12 @@ $(document).ready(function(){
 			
 	/*----Start of SignIn & SignUp tab Switching -----*/
 			
-			 $("#signIn_link").on("click",function(e) {
+			 $(document).on("click","#signIn_link",function(e) {
 			      $(this).addClass('active');
 			      $("#SignUp_link,#sign_up_content").removeClass("active");
 			      $("#sign_in_content").addClass("active");
 			    });
-			 $("#SignUp_link").on("click",function(e) {
+			 $(document).on("click","#SignUp_link",function(e) {
 			      $(this).addClass('active');
 			      $("#signIn_link, #sign_in_content").removeClass("active");
 			      $("#sign_up_content").addClass("active");

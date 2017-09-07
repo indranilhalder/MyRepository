@@ -1,21 +1,25 @@
 /**
- * 
+ *
  */
 package com.tis.mpl.facade.checkout.storelocator.impl;
 
 import de.hybris.platform.commercefacades.product.ProductFacade;
 import de.hybris.platform.commercefacades.product.ProductOption;
 import de.hybris.platform.commercefacades.product.data.ProductData;
+import de.hybris.platform.commercefacades.storelocator.data.ListOfPointOfServiceData;
 import de.hybris.platform.commercefacades.storelocator.data.PointOfServiceData;
 import de.hybris.platform.core.model.order.AbstractOrderEntryModel;
 import de.hybris.platform.core.model.order.AbstractOrderModel;
 import de.hybris.platform.core.model.order.CartModel;
+import de.hybris.platform.core.model.product.PincodeModel;
 import de.hybris.platform.core.model.product.ProductModel;
 import de.hybris.platform.order.CartService;
 import de.hybris.platform.servicelayer.dto.converter.Converter;
 import de.hybris.platform.servicelayer.model.ModelService;
+import de.hybris.platform.storelocator.location.Location;
+import de.hybris.platform.storelocator.location.impl.LocationDTO;
+import de.hybris.platform.storelocator.location.impl.LocationDtoWrapper;
 import de.hybris.platform.storelocator.model.PointOfServiceModel;
-import com.tisl.mpl.core.model.RichAttributeModel;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -31,42 +35,60 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ui.Model;
 
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
+import com.tisl.mpl.core.model.RichAttributeModel;
+import com.tisl.mpl.exception.EtailBusinessExceptions;
 import com.tisl.mpl.facade.checkout.storelocator.MplStoreLocatorFacade;
+import com.tisl.mpl.facade.config.MplConfigFacade;
 import com.tisl.mpl.facades.constants.MarketplaceFacadesConstants;
 import com.tisl.mpl.facades.data.ATSResponseData;
 import com.tisl.mpl.facades.data.FreebieProduct;
 import com.tisl.mpl.facades.data.ProudctWithPointOfServicesData;
 import com.tisl.mpl.facades.data.StoreLocationResponseData;
+import com.tisl.mpl.marketplacecommerceservices.service.PincodeService;
 import com.tisl.mpl.model.SellerInformationModel;
+import com.tisl.mpl.pincode.facade.PincodeServiceFacade;
 import com.tisl.mpl.sellerinfo.facades.MplSellerInformationFacade;
+import com.tisl.mpl.util.ExceptionUtil;
+
 
 /**
  * MplStoreLocatorFacade interface impl class.
+ *
  * @author TECH
- * 
+ *
  *
  */
 public class MplStoreLocatorFacadeImpl implements MplStoreLocatorFacade
 {
 	private static final Logger LOG = Logger.getLogger(MplStoreLocatorFacadeImpl.class);
-	
+
 	@Autowired
 	private CartService cartService;
-	
+
 	@Autowired
 	private MplSellerInformationFacade mplSellerInformationFacade;
-	
+
 	@Resource(name = "pointOfServiceConverter")
 	private Converter<PointOfServiceModel, PointOfServiceData> pointOfServiceConverter;
-	
+
 	@Resource(name = "accProductFacade")
 	private ProductFacade productFacade;
-	
+
 	@Resource(name = "modelService")
 	private ModelService modelService;
 
+	@Resource(name = "pincodeServiceFacade")
+	private PincodeServiceFacade pincodeServiceFacade;
+
+	@Resource(name = "pincodeService")
+	private PincodeService pincodeService;
+
+	@Autowired
+	private MplConfigFacade mplConfigFacade;
+
 	/**
 	 * This method is to add freebie products to the map.
+	 *
 	 * @param parentCartEntry
 	 * @return map holding ussid and qty.
 	 */
@@ -78,17 +100,17 @@ public class MplStoreLocatorFacadeImpl implements MplStoreLocatorFacade
 			LOG.debug("from populateFreebieProducts method");
 		}
 		final Map<String, Long> freebieProductsWithQuant = new HashMap<String, Long>();
-		if (parentCartEntry != null &&  CollectionUtils.isNotEmpty(parentCartEntry.getAssociatedItems()))
+		if (parentCartEntry != null && CollectionUtils.isNotEmpty(parentCartEntry.getAssociatedItems()))
 		{
 			for (final String ussid : parentCartEntry.getAssociatedItems())
 			{
 				//find parent cart Entry for ussid
-				final AbstractOrderEntryModel childCartEntry =  getCartEntry(ussid);
+				final AbstractOrderEntryModel childCartEntry = getCartEntry(ussid);
 				if (childCartEntry != null && childCartEntry.getGiveAway() != null && childCartEntry.getGiveAway().booleanValue())
 				{
 					LOG.info("Freebie Parent Product USSID" + parentCartEntry.getSelectedUSSID());
 					LOG.info("Freebie Product USSID" + ussid);
-					 
+
 					//display Freebie on store locator page, only if it has only one parent.
 					if (childCartEntry.getAssociatedItems().size() == 1)
 					{
@@ -102,6 +124,7 @@ public class MplStoreLocatorFacadeImpl implements MplStoreLocatorFacade
 
 	/**
 	 * This method is to filter only those stores which has qty more than ordered qty.
+	 *
 	 * @param abstractCartEntry
 	 * @param storeLocationResponseData
 	 */
@@ -133,16 +156,17 @@ public class MplStoreLocatorFacadeImpl implements MplStoreLocatorFacade
 
 	/**
 	 * This method populates product with stores for a ussid and oms response object storeLocationResponseData.
+	 *
 	 * @param ussid
 	 * @param model
 	 * @param freebieProductsWithQuant
 	 * @param posModelList
-	 * @param	sellerInfoModel
+	 * @param sellerInfoModel
 	 * @return product with stores.
 	 */
 	@Override
 	public ProudctWithPointOfServicesData populateProductWithStoresForUssid(final String ussid, final Model model,
-			final Map<String, Long> freebieProductsWithQuant, final List<PointOfServiceModel> posModelList, 
+			final Map<String, Long> freebieProductsWithQuant, final List<PointOfServiceModel> posModelList,
 			final SellerInformationModel sellerInfoModel)
 	{
 		if (LOG.isDebugEnabled())
@@ -152,17 +176,17 @@ public class MplStoreLocatorFacadeImpl implements MplStoreLocatorFacade
 		List<FreebieProduct> freebieProducts = new ArrayList<FreebieProduct>();
 		final ProudctWithPointOfServicesData pwPOS = new ProudctWithPointOfServicesData();
 		List<PointOfServiceData> posDataList = new ArrayList<PointOfServiceData>();
-		
+
 		if (sellerInfoModel != null)
 		{
-			ProductData productData = null; 
+			ProductData productData = null;
 			final ProductModel productModel = sellerInfoModel.getProductSource();
 			if (null != productModel)
 			{
 				productData = productFacade.getProductForOptions(productModel,
 						Arrays.asList(ProductOption.BASIC, ProductOption.SELLER, ProductOption.PRICE));
 			}
-			if (! freebieProductsWithQuant.isEmpty())
+			if (!freebieProductsWithQuant.isEmpty())
 			{
 				freebieProducts = populateFreebieProductsData(freebieProductsWithQuant);
 			}
@@ -171,42 +195,47 @@ public class MplStoreLocatorFacadeImpl implements MplStoreLocatorFacade
 				LOG.debug("Total freebie products are:::::::" + freebieProducts.size());
 			}
 			//set freebie product to productData
-			if (null != productData && ! freebieProducts.isEmpty())
+			if (null != productData && !freebieProducts.isEmpty())
 			{
 				productData.setFreebieProducts(freebieProducts);
 			}
 			//get stores from commerce from ats response
 			posDataList = getStoresDataFromCommerce(posModelList);
-			//BUG-ID: TISRLEE-1561 04-01-2017 
+			//BUG-ID: TISRLEE-1561 04-01-2017
 			String sellerName = null;
-			 List<RichAttributeModel> richAttributeModelList = (List<RichAttributeModel>) sellerInfoModel.getRichAttribute(); 
-			if (richAttributeModelList.get(0).getDeliveryFulfillModes().getCode().equalsIgnoreCase(MarketplacecommerceservicesConstants.FULFILMENT_TYPE_BOTH)
-					&& richAttributeModelList.get(0).getDeliveryFulfillModeByP1().getCode().equalsIgnoreCase(MarketplacecommerceservicesConstants.TSHIPCODE)
-					|| richAttributeModelList.get(0).getDeliveryFulfillModes().getCode().equalsIgnoreCase(MarketplacecommerceservicesConstants.TSHIPCODE))
+			final List<RichAttributeModel> richAttributeModelList = (List<RichAttributeModel>) sellerInfoModel.getRichAttribute();
+			if (richAttributeModelList.get(0).getDeliveryFulfillModes().getCode()
+					.equalsIgnoreCase(MarketplacecommerceservicesConstants.FULFILMENT_TYPE_BOTH)
+					&& richAttributeModelList.get(0).getDeliveryFulfillModeByP1().getCode()
+							.equalsIgnoreCase(MarketplacecommerceservicesConstants.TSHIPCODE)
+					|| richAttributeModelList.get(0).getDeliveryFulfillModes().getCode()
+							.equalsIgnoreCase(MarketplacecommerceservicesConstants.TSHIPCODE))
 			{
 				sellerName = MarketplaceFacadesConstants.TATA_CLIQ;
-			}else
+			}
+			else
 			{
-				sellerName=sellerInfoModel.getSellerName();
+				sellerName = sellerInfoModel.getSellerName();
 			}
 			//get qty for a product from cart
 			final Long productQty = getQtyForProduct(ussid);
-			
+
 			pwPOS.setUssId(ussid);
 			pwPOS.setSellerName(sellerName);
 			pwPOS.setQuantity(productQty);
 			pwPOS.setProduct(productData);
 			pwPOS.setPointOfServices(posDataList);
-			
+
 			model.addAttribute("ussid", ussid);
 		}
 		return pwPOS;
 	}
-	
+
 	/**
 	 * This method saves stores for a normal product as well as freebie at store locator page.
+	 *
 	 * @param posModel
-	 * @param ussId 
+	 * @param ussId
 	 * @return yes if successfully saved else no.
 	 */
 	@Override
@@ -218,13 +247,13 @@ public class MplStoreLocatorFacadeImpl implements MplStoreLocatorFacade
 		}
 		String result = MarketplaceFacadesConstants.SAVE_STORE_TOPORUDCT_SUCCESS_MSG;
 		//call service to retrieve POSModel for given posName from commerce
-	
+
 		//get sellerInformation for ussid
 		final SellerInformationModel sellerInfoModel = mplSellerInformationFacade.getSellerDetail(ussId);
 		try
 		{
 			//find parent cartEntry based on given ussid
-			final AbstractOrderEntryModel parentCartEntry =  getCartEntry(ussId);
+			final AbstractOrderEntryModel parentCartEntry = getCartEntry(ussId);
 			if (null != parentCartEntry)
 			{
 				final String collectionDays = mplSellerInformationFacade.getSellerColloctionDays(sellerInfoModel.getSellerID());
@@ -236,7 +265,7 @@ public class MplStoreLocatorFacadeImpl implements MplStoreLocatorFacade
 				saveStoreForFreebieProducts(parentCartEntry, posModel);
 			}
 		}
-		catch (Exception e)
+		catch (final Exception e)
 		{
 			LOG.error("Exception while saving stores for a product at store locator page" + e.getMessage());
 			LOG.error("USSID is::::::::::::" + ussId + "Seller Id is:::::::::::" + sellerInfoModel.getSellerID());
@@ -244,11 +273,12 @@ public class MplStoreLocatorFacadeImpl implements MplStoreLocatorFacade
 		}
 		return result;
 	}
-	
+
 	/**
 	 * This method calls commerce to get stores from ats response store id with valid inventory.
+	 *
 	 * @param posModelList
-	 * @return list of PointOfServiceData 
+	 * @return list of PointOfServiceData
 	 */
 	private List<PointOfServiceData> getStoresDataFromCommerce(final List<PointOfServiceModel> posModelList)
 	{
@@ -257,7 +287,7 @@ public class MplStoreLocatorFacadeImpl implements MplStoreLocatorFacade
 			LOG.debug("from getStoresDataFromCommerce method");
 		}
 		final List<PointOfServiceData> posDataList = new ArrayList<PointOfServiceData>();
-	
+
 		if (CollectionUtils.isNotEmpty(posModelList))
 		{
 			//populate model to data
@@ -271,9 +301,10 @@ public class MplStoreLocatorFacadeImpl implements MplStoreLocatorFacade
 		}
 		return posDataList;
 	}
-	
+
 	/**
 	 * This methods populates freebie product data from map to list of freebieProduct object.
+	 *
 	 * @param freebieProductsWithQuant
 	 * @return list of freebie product
 	 */
@@ -312,6 +343,7 @@ public class MplStoreLocatorFacadeImpl implements MplStoreLocatorFacade
 
 	/**
 	 * Gets qty for a product from cart entry for a ussid.
+	 *
 	 * @param ussId
 	 * @return qty for a product.
 	 */
@@ -336,14 +368,14 @@ public class MplStoreLocatorFacadeImpl implements MplStoreLocatorFacade
 		}
 		return quantity;
 	}
-	
+
 	/**
 	 * Saves stores for a freebie product at store locator page.
+	 *
 	 * @param cartEntryModel
 	 * @param posModel
 	 */
-	private void saveStoreForFreebieProducts(final AbstractOrderEntryModel cartEntryModel,
-			final PointOfServiceModel posModel)
+	private void saveStoreForFreebieProducts(final AbstractOrderEntryModel cartEntryModel, final PointOfServiceModel posModel)
 	{
 		if (LOG.isDebugEnabled())
 		{
@@ -361,9 +393,10 @@ public class MplStoreLocatorFacadeImpl implements MplStoreLocatorFacade
 			saveStoreForFreebieABgetC(ussid, cartEntryModel, posModel);
 		}
 	}
-	
+
 	/**
 	 * Finds parent for freebie in case of ABgetC and saves stores for it.
+	 *
 	 * @param ussid
 	 * @param cartEntryModel
 	 * @param posModel
@@ -375,11 +408,10 @@ public class MplStoreLocatorFacadeImpl implements MplStoreLocatorFacade
 		{
 			LOG.debug("from saveStoreForFreebieABgetC method");
 		}
-		final AbstractOrderEntryModel childCartEntry =  getCartEntry(ussid);
+		final AbstractOrderEntryModel childCartEntry = getCartEntry(ussid);
 		if (null != childCartEntry)
 		{
-			if (childCartEntry.getGiveAway() != null
-					&& childCartEntry.getGiveAway().booleanValue())
+			if (childCartEntry.getGiveAway() != null && childCartEntry.getGiveAway().booleanValue())
 			{
 				LOG.info("Save Store for freebie product " + childCartEntry.getSelectedUSSID());
 				if (cartEntryModel.getAssociatedItems().size() == 1)
@@ -395,7 +427,7 @@ public class MplStoreLocatorFacadeImpl implements MplStoreLocatorFacade
 			}
 		}
 	}
-	
+
 	/**
 	 * This method finds delivery mode for freebie if it has more than one parents.
 	 *
@@ -473,9 +505,10 @@ public class MplStoreLocatorFacadeImpl implements MplStoreLocatorFacade
 
 	/**
 	 * Finds qty for freebie products.
+	 *
 	 * @param ussid
 	 * @param abstractOrderModel
-	 * @return 
+	 * @return
 	 */
 	private Long getQuantity(final String ussid, final AbstractOrderModel abstractOrderModel)
 	{
@@ -492,11 +525,12 @@ public class MplStoreLocatorFacadeImpl implements MplStoreLocatorFacade
 		}
 		return qty;
 	}
-	
+
 	/**
 	 * This method finds cart entry for a ussid.
+	 *
 	 * @param ussId
-	 * @return abstractCartEntry 
+	 * @return abstractCartEntry
 	 */
 	public AbstractOrderEntryModel getCartEntry(final String ussId)
 	{
@@ -513,10 +547,11 @@ public class MplStoreLocatorFacadeImpl implements MplStoreLocatorFacade
 			}
 		}
 		return null;
-	}	
-	
+	}
+
 	/**
 	 * Saves stores for freebie ABgetC
+	 *
 	 * @param childCartEntry
 	 */
 	private void saveStoreForABgetC(final AbstractOrderEntryModel childCartEntry)
@@ -531,14 +566,77 @@ public class MplStoreLocatorFacadeImpl implements MplStoreLocatorFacade
 		if (null != freebieParentUssId)
 		{
 			//find cartEntry for parentUssid
-			final AbstractOrderEntryModel parentCartEntry =  getCartEntry(freebieParentUssId);
+			final AbstractOrderEntryModel parentCartEntry = getCartEntry(freebieParentUssId);
 			if (null != parentCartEntry)
 			{
 				//find parent store
 				final PointOfServiceModel freebiePosModel = parentCartEntry.getDeliveryPointOfService();
 				childCartEntry.setDeliveryPointOfService(freebiePosModel);
 			}
-			
+
 		}
+	}
+
+	//TPR-6654
+	@Override
+	public ListOfPointOfServiceData getAllStoresForPincode(final String latitude, final String longitude, final String pincode)
+	{
+		if (LOG.isDebugEnabled())
+		{
+			LOG.debug("from getAllStoresForPincode method");
+		}
+		List<PointOfServiceData> posData = new ArrayList<PointOfServiceData>();
+		final ListOfPointOfServiceData listOfPosData = new ListOfPointOfServiceData();
+		final LocationDTO dto = new LocationDTO();
+		String radius = mplConfigFacade.getCongigValue(MarketplaceFacadesConstants.CONFIGURABLE_RADIUS);
+		LOG.debug("configurableRadius is:" + radius);
+		if (null == radius)
+		{
+			radius = "0";
+		}
+		Location myLocation = null;
+		try
+		{
+			if (latitude != null && longitude != null)
+			{
+				dto.setLatitude(latitude);
+				dto.setLongitude(longitude);
+				myLocation = new LocationDtoWrapper(dto);
+				posData = pincodeServiceFacade.getStoresForPincode(myLocation.getGPS(), radius);
+			}
+			else
+			{
+				//fetch latitude and longitude for a pincode from comm
+				final PincodeModel pincodeModel = pincodeService.getLatAndLongForPincode(pincode);
+				if (null != pincodeModel)
+				{
+					dto.setLatitude(pincodeModel.getLatitude().toString());
+					dto.setLongitude(pincodeModel.getLongitude().toString());
+					myLocation = new LocationDtoWrapper(dto);
+					posData = pincodeServiceFacade.getStoresForPincode(myLocation.getGPS(), radius);
+				}
+				else
+				{
+					LOG.error(" pincode model not found for given pincode " + pincode);
+					final EtailBusinessExceptions error = new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9516);
+					ExceptionUtil.etailBusinessExceptionHandler(error, null);
+					listOfPosData.setError(error.getErrorMessage());
+					listOfPosData.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
+
+				}
+			}
+		}
+		catch (final Exception e)
+		{
+			LOG.error("Something went wrong in calling getAllStoresForPincode");
+
+			if (null != e.getMessage())
+			{
+				listOfPosData.setError(e.getMessage());
+			}
+			listOfPosData.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
+		}
+		listOfPosData.setStores(posData);
+		return listOfPosData;
 	}
 }

@@ -132,71 +132,18 @@ public class ProductDetailsHelper
 	private static final String N_A = "n/a";
 	@Resource
 	private ClassificationService classificationService;
-	/*
-	 * private MplCheckoutFacade mplCheckoutFacade;
-	 *//**
-	 * @return the mplCheckoutFacade
-	 */
-	/*
-	 * public MplCheckoutFacade getMplCheckoutFacade() { return mplCheckoutFacade; }
-	 *//**
-	 * @param mplCheckoutFacade
-	 *           the mplCheckoutFacade to set
-	 */
-	/*
-	 * public void setMplCheckoutFacade(final MplCheckoutFacade mplCheckoutFacade) { this.mplCheckoutFacade =
-	 * mplCheckoutFacade; }
-	 */
 
 	@Autowired
 	private MplDeliveryCostService deliveryCostService;
 
-
 	@Resource(name = "GigyaService")
 	private GigyaService gigyaservice;
-
 
 	@Autowired
 	private ExtendedUserServiceImpl userexService;
 
 	@Resource(name = "buyBoxService")
 	private BuyBoxService buyBoxService;
-
-	//SOnar fixes
-	//@Autowired
-	//private SiteConfigService siteConfigService;
-
-	public GigyaService getGigyaservice()
-	{
-		return gigyaservice;
-	}
-
-	public void setGigyaservice(final GigyaService gigyaservice)
-	{
-		this.gigyaservice = gigyaservice;
-	}
-
-	/**
-	 * @return the deliveryCostService
-	 */
-	public MplDeliveryCostService getDeliveryCostService()
-	{
-		return deliveryCostService;
-	}
-
-	/**
-	 * @param deliveryCostService
-	 *           the deliveryCostService to set
-	 */
-	public void setDeliveryCostService(final MplDeliveryCostService deliveryCostService)
-	{
-		this.deliveryCostService = deliveryCostService;
-	}
-
-
-	/**
-	 *
-	 */
 
 	private static final String MPL_CONTENT_CATALOG = "mplContentCatalog";
 	private static final String MEDIA_PRIORITY = "mediaPriority";
@@ -232,43 +179,7 @@ public class ProductDetailsHelper
 	@Resource(name = "accProductFacade")
 	private ProductFacade productFacade;
 
-	/*
-	 * @Resource(name = "GigyaService") private GigyaService gigyaservice;
-	 * 
-	 * 
-	 * @Autowired private ExtendedUserServiceImpl userexService;
-	 *//**
-	 * @return the gigyaservice
-	 */
-
-	/*
-	 * public GigyaService getGigyaservice() { return gigyaservice; }
-	 *//**
-	 * @param gigyaservice
-	 *           the gigyaservice to set
-	 */
-	/*
-	 * public void setGigyaservice(final GigyaService gigyaservice) { this.gigyaservice = gigyaservice; }
-	 */
-
-	public MplDeliveryCostService getMplDeliveryCostService()
-	{
-		return mplDeliveryCostService;
-	}
-
-
 	private PriceDataFactory priceDataFactory;
-
-	protected PriceDataFactory getPriceDataFactory()
-	{
-		return priceDataFactory;
-	}
-
-	@Required
-	public void setPriceDataFactory(final PriceDataFactory priceDataFactory)
-	{
-		this.priceDataFactory = priceDataFactory;
-	}
 
 	@SuppressWarnings("unused")
 	private static final Logger LOG = Logger.getLogger(ProductDetailsHelper.class);
@@ -1668,4 +1579,243 @@ public class ProductDetailsHelper
 		}
 		return buyBox;
 	}
+
+
+
+	@Required
+	public void setPriceDataFactory(final PriceDataFactory priceDataFactory)
+	{
+		this.priceDataFactory = priceDataFactory;
+	}
+
+	/**
+	 * @return the classificationService
+	 */
+	public ClassificationService getClassificationService()
+	{
+		return classificationService;
+	}
+
+	/**
+	 * @param classificationService
+	 *           the classificationService to set
+	 */
+	public void setClassificationService(final ClassificationService classificationService)
+	{
+		this.classificationService = classificationService;
+	}
+
+	/**
+	 * @return the deliveryCostService
+	 */
+	public MplDeliveryCostService getDeliveryCostService()
+	{
+		return deliveryCostService;
+	}
+
+	/**
+	 * @param deliveryCostService
+	 *           the deliveryCostService to set
+	 */
+	public void setDeliveryCostService(final MplDeliveryCostService deliveryCostService)
+	{
+		this.deliveryCostService = deliveryCostService;
+	}
+
+	/**
+	 * @return the gigyaservice
+	 */
+	public GigyaService getGigyaservice()
+	{
+		return gigyaservice;
+	}
+
+	/**
+	 * @param gigyaservice
+	 *           the gigyaservice to set
+	 */
+	public void setGigyaservice(final GigyaService gigyaservice)
+	{
+		this.gigyaservice = gigyaservice;
+	}
+
+	/**
+	 * @return the userexService
+	 */
+	public ExtendedUserServiceImpl getUserexService()
+	{
+		return userexService;
+	}
+
+	/**
+	 * @param userexService
+	 *           the userexService to set
+	 */
+	public void setUserexService(final ExtendedUserServiceImpl userexService)
+	{
+		this.userexService = userexService;
+	}
+
+	/**
+	 * @return the mplDeliveryCostService
+	 */
+	public MplDeliveryCostService getMplDeliveryCostService()
+	{
+		return mplDeliveryCostService;
+	}
+
+	/**
+	 * @param mplDeliveryCostService
+	 *           the mplDeliveryCostService to set
+	 */
+	public void setMplDeliveryCostService(final MplDeliveryCostService mplDeliveryCostService)
+	{
+		this.mplDeliveryCostService = mplDeliveryCostService;
+	}
+
+	/**
+	 * @return the wishlistFacade
+	 */
+	public WishlistFacade getWishlistFacade()
+	{
+		return wishlistFacade;
+	}
+
+	/**
+	 * @param wishlistFacade
+	 *           the wishlistFacade to set
+	 */
+	public void setWishlistFacade(final WishlistFacade wishlistFacade)
+	{
+		this.wishlistFacade = wishlistFacade;
+	}
+
+	/**
+	 * @return the userService
+	 */
+	public UserService getUserService()
+	{
+		return userService;
+	}
+
+	/**
+	 * @param userService
+	 *           the userService to set
+	 */
+	public void setUserService(final UserService userService)
+	{
+		this.userService = userService;
+	}
+
+	/**
+	 * @return the mplDeliveryInformationService
+	 */
+	public MplDeliveryInformationService getMplDeliveryInformationService()
+	{
+		return mplDeliveryInformationService;
+	}
+
+	/**
+	 * @param mplDeliveryInformationService
+	 *           the mplDeliveryInformationService to set
+	 */
+	public void setMplDeliveryInformationService(final MplDeliveryInformationService mplDeliveryInformationService)
+	{
+		this.mplDeliveryInformationService = mplDeliveryInformationService;
+	}
+
+	/**
+	 * @return the flexibleSearchService
+	 */
+	public FlexibleSearchService getFlexibleSearchService()
+	{
+		return flexibleSearchService;
+	}
+
+	/**
+	 * @param flexibleSearchService
+	 *           the flexibleSearchService to set
+	 */
+	public void setFlexibleSearchService(final FlexibleSearchService flexibleSearchService)
+	{
+		this.flexibleSearchService = flexibleSearchService;
+	}
+
+	/**
+	 * @return the configurationService
+	 */
+	public ConfigurationService getConfigurationService()
+	{
+		return configurationService;
+	}
+
+	/**
+	 * @param configurationService
+	 *           the configurationService to set
+	 */
+	public void setConfigurationService(final ConfigurationService configurationService)
+	{
+		this.configurationService = configurationService;
+	}
+
+	/**
+	 * @return the catalogVersionService
+	 */
+	public CatalogVersionService getCatalogVersionService()
+	{
+		return catalogVersionService;
+	}
+
+	/**
+	 * @param catalogVersionService
+	 *           the catalogVersionService to set
+	 */
+	public void setCatalogVersionService(final CatalogVersionService catalogVersionService)
+	{
+		this.catalogVersionService = catalogVersionService;
+	}
+
+	/**
+	 * @return the productService
+	 */
+	public ProductService getProductService()
+	{
+		return productService;
+	}
+
+	/**
+	 * @param productService
+	 *           the productService to set
+	 */
+	public void setProductService(final ProductService productService)
+	{
+		this.productService = productService;
+	}
+
+	/**
+	 * @return the productFacade
+	 */
+	public ProductFacade getProductFacade()
+	{
+		return productFacade;
+	}
+
+	/**
+	 * @param productFacade
+	 *           the productFacade to set
+	 */
+	public void setProductFacade(final ProductFacade productFacade)
+	{
+		this.productFacade = productFacade;
+	}
+
+	/**
+	 * @return the priceDataFactory
+	 */
+	public PriceDataFactory getPriceDataFactory()
+	{
+		return priceDataFactory;
+	}
+
+
 }
