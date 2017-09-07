@@ -2319,6 +2319,7 @@
     <bean id="catalogUtils" class="com.tisl.mpl.util.CatalogUtils" />
     
     <bean id="mplPincodeDistanceService" class="com.tisl.mpl.marketplacecommerceservices.service.impl.MplPincodeDistanceServiceImpl" ></bean>
+    <bean id="mplDistanceMatrixUtility" class="com.tisl.mpl.util.DistanceMatrixUtility" />
 </beans>
 
 
