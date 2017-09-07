@@ -110,7 +110,7 @@ var productSizeVar = '${productSize}';
 	<c:choose>
 		<c:when test="${not empty product.variantOptions}">
  <!-- Color heading will not come for FineJewellery -->
-		<c:if test="${(product.rootCategory !='FineJewellery' && product.rootCategory !='FashionJewellery') || (multiColorFlag eq 'true')}">	<!-- UF-432 -->
+		<c:if test="${(product.rootCategory !='FineJewellery' && product.rootCategory !='FashionJewellery') && (multiColorFlag eq 'true')}">	<!-- UF-432 -->
 			<p>
 				<spring:theme code="text.colour" />
 			</p>
@@ -353,20 +353,22 @@ share mobile -->
 					</c:forEach>
 			     </c:forEach>								
 			   </c:when>
-			   <c:otherwise>	
+			   <c:otherwise>
+			       <!-- UF-422:Changes for PDP when product has only one size -->
+				<c:set var="selectedClass" value=""/>
+				<c:if test= "${fn:length(product.variantOptions) eq 1}">
+				<c:set var ="selectedClass" value ="class='selected'"/></c:if>	
+				
 			    <c:forEach items="${product.variantOptions}" var="variantOption">
 			      <c:forEach items="${variantOption.colourCode}" var="color">                  
 					<c:choose>
 						<c:when test="${not empty currentColor}">
 							<c:if test="${currentColor eq color}">
 								<c:set var="currentColor" value="${color}" />
-								<!-- UF-422:Changes for PDP when product has only one size -->
 								
-								<c:set var="selectedClass" value=""/>
-								<c:if test= "${fn:length(variantOption)eq 1}">
-								<c:set var ="selectedClass" value ="class='selected'"/></c:if>
 								
 								<c:forEach var="entry" items="${variantOption.sizeLink}">
+								
 									<c:url value="${entry.key}" var="link" />
 									<%--  <a href="${link}?selectedSize=true${msiteSellerForSize}">${entry.value}</a> --%>
 									<c:choose>
@@ -384,7 +386,7 @@ share mobile -->
 										 </c:when>
 										 <c:otherwise>
 											<!--CKD:TPR-250  -->
-										    <li data-vcode="${link}"><a href="${link}?selectedSize=true${msiteSellerForSize}"  data-productCode="${variantOption.code}">${entry.value}</a></li>
+										    <li ${selectedClass}><a href="${link}?selectedSize=true${msiteSellerForSize}"  data-productCode="${variantOption.code}">${entry.value}</a></li>
 										 </c:otherwise>
 									</c:choose>
 								  </c:forEach>
@@ -404,10 +406,7 @@ share mobile -->
 										<c:url value="${entry.key}" var="link" />
 										    <c:choose>
 											      <c:when test="${(variantOption.code eq product.code)}">
-											      <!-- UF-422:Changes for PDP when product has only one size -->
-													<c:set var="selectedClass" value=""/>
-													<c:if test= "${fn:length(variantOption) eq 1}">
-													<c:set var ="selectedClass" value ="class='selected'"/></c:if>
+											  
 													<c:choose>
 															<c:when test="${selectedSize eq null}">
 														<!--CKD:TPR-250  -->
