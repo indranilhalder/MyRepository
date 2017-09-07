@@ -1082,22 +1082,25 @@ function dtmSearchTags(){
 			}
 		}
 		//order failure track
-		if (typeof(_satellite)!= "undefined") {
-			_satellite.track('cpj_order_fail');
-	    }
-		digitalData.cpj = {
-	    		    product : {
-	    			 	         id  :  $("#product_id").val(),
-	    		            category :  $("#product_category").val(),	
-	    		              price  :  $('#product_unit_price').val()
-	    	 } 
-	    }
-		if(typeof (digitalData.cpj.payment)!= "undefined"){
-			digitalData.cpj.payment.quantity =$('#product_quantity').val();
+		if(errorType == "Order not placed: Unsuccesful error"){
+			if (typeof(_satellite)!= "undefined") {
+				_satellite.track('cpj_order_fail');
+		    }
+			digitalData.cpj = {
+		    		    product : {
+		    			 	         id  :  $("#product_id").val(),
+		    		            category :  $("#product_category").val(),	
+		    		              price  :  $('#product_unit_price').val()
+		    	 } 
+		    }
+			if(typeof (digitalData.cpj.payment)!= "undefined"){
+				digitalData.cpj.payment.quantity =$('#product_quantity').val();
+			}
+			if(typeof (digitalData.cpj.order)!= "undefined"){
+				digitalData.cpj.order.failureReason = errorName;
+			}
 		}
-		if(typeof (digitalData.cpj.order)!= "undefined"){
-			digitalData.cpj.order.failureReason = errorName;
-		}
+		
 	
 	}
    //TPR-6288 | My account Order cancel
@@ -1169,8 +1172,15 @@ function dtmSearchTags(){
 			 }
 		}	
 		
-		if(typeof(digitalData.cpj)!= 'undefined' && typeof (digitalData.cpj.coupon)!= 'undefined'){
-			digitalData.cpj.coupon.code = couponCode;
+		if(typeof(digitalData.cpj)!= 'undefined'){
+			  if(typeof (digitalData.cpj.coupon)!= 'undefined'){
+				  digitalData.cpj.coupon.code = couponCode;
+			  }
+			else{
+				  digitalData.cpj.coupon = {
+						code : couponCode
+					}
+			  } 
 		 }
 	}
 	
