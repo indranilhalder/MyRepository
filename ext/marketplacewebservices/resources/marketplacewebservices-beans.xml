@@ -3053,7 +3053,7 @@
 		<property name="showReverseSealFrJwlry" type="java.lang.String"/>
         <property name="reverseSealFrJwlry" type="com.tisl.mpl.wsdto.RevSealJwlryDataWsDTO"/>
         <property name="reverseSealAvailable" type="java.lang.String"/>
-        <property name="returnModes" type="java.util.Map&lt;String,String>"></property>
+        <property name="returnModes" type="com.tisl.mpl.wsdto.ReturnModesWsDTO"></property>
 	</bean>
 	<!-- For Return Web Services Change Pincode QuickDrop Stores -->
 	<bean class="com.tisl.mpl.wsdto.QuickDropStoresList" extends="com.tisl.mpl.wsdto.ErrorDTO">
@@ -3153,5 +3153,11 @@
  		    <property name="yes" type="String"/>
  			<property name="no" type="String"/>
  		</bean>
+ 		<bean class="com.tisl.mpl.wsdto.ReturnModesWsDTO">
+ 	        <property name="selfCourier" type="boolean"/>
+ 		    <property name="schedulePickup" type="boolean"/>
+ 			<property name="quickDrop" type="boolean"/>
+ 		</bean>
+ 		
 
 </beans>
