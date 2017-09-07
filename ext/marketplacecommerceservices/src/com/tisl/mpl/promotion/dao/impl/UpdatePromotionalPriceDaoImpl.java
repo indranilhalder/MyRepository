@@ -283,6 +283,7 @@ public class UpdatePromotionalPriceDaoImpl implements UpdatePromotionalPriceDao
 	{
 		final List<ProductPromotionModel> validPromosForProduct = new ArrayList<ProductPromotionModel>();
 		final Collection<CategoryModel> categories = mplPromotionHelper.getcategoryData(product);
+		final Map<String, Object> params = new HashMap<String, Object>();
 
 		if (promoCurrent instanceof BuyAPercentageDiscountModel)
 		{
@@ -318,36 +319,37 @@ public class UpdatePromotionalPriceDaoImpl implements UpdatePromotionalPriceDao
 				queryString.append(" AND {p." + BuyAPercentageDiscountModel.STARTDATE + "} <= ?sysdate ");
 				queryString.append(" AND ?sysdate <= {p." + BuyAPercentageDiscountModel.ENDDATE + "} }}");
 
-				if (!(Config.isOracleUsed()))
-				{
-					queryString.append(" ) AS pprom ORDER BY pprom.prio DESC");
-				}
-				else
-				{
-					queryString.append(" ) pprom ORDER BY pprom.prio DESC");
-				}
+				params.put("categories", categories);
+			}
+			if (!(Config.isOracleUsed()))
+			{
+				queryString.append(" ) AS pprom ORDER BY pprom.prio DESC");
+			}
+			else
+			{
+				queryString.append(" ) pprom ORDER BY pprom.prio DESC");
+			}
 
-				LOG.debug("QUERY>>>>>>" + queryString);
-				final FlexibleSearchQuery query = new FlexibleSearchQuery(queryString);
+			LOG.debug("QUERY>>>>>>" + queryString);
+			params.put("product", product);
+			//query.addQueryParameter("categories", categories);
+			//query.addQueryParameter("promotionGroup", "mplPromoGrp");
+			params.put("promoCurrPriority", promoCurrent.getPriority());
+			params.put("qualifyingCount", Integer.valueOf(1));
+			params.put("sysdate", new Date());
+			params.put("true", Boolean.TRUE);
 
-				query.addQueryParameter("product", product);
-				query.addQueryParameter("categories", categories);
-				//query.addQueryParameter("promotionGroup", "mplPromoGrp");
-				query.addQueryParameter("promoCurrPriority", promoCurrent.getPriority());
-				query.addQueryParameter("qualifyingCount", Integer.valueOf(1));
-				query.addQueryParameter("sysdate", new Date());
-				query.addQueryParameter("true", Boolean.TRUE);
+			final FlexibleSearchQuery query = new FlexibleSearchQuery(queryString);
+			query.addQueryParameters(params);
+			query.setResultClassList(Arrays.asList(ProductPromotionModel.class, Integer.class));
 
-				query.setResultClassList(Arrays.asList(ProductPromotionModel.class, Integer.class));
+			LOG.debug("QUERY>>>>>>" + queryString);
 
-				LOG.debug("QUERY>>>>>>" + queryString);
-
-				final SearchResult<List<Object>> result = flexibleSearchService.search(query);
-				for (final List<Object> row : result.getResult())
-				{
-					validPromosForProduct.add((ProductPromotionModel) row.get(0));
-					//final String priority = (String) row.get(1);
-				}
+			final SearchResult<List<Object>> result = flexibleSearchService.search(query);
+			for (final List<Object> row : result.getResult())
+			{
+				validPromosForProduct.add((ProductPromotionModel) row.get(0));
+				//final String priority = (String) row.get(1);
 			}
 		}
 		else if (promoCurrent instanceof BuyABFreePrecentageDiscountModel)
@@ -385,6 +387,8 @@ public class UpdatePromotionalPriceDaoImpl implements UpdatePromotionalPriceDao
 				queryString.append(" AND {p." + BuyABFreePrecentageDiscountModel.QUANTITY + "} = ?qualifyingCount ");//TODO quantity is for BuyAPercentageDiscount only, not for PRODUCTPROMOTION
 				queryString.append(" AND {p." + BuyABFreePrecentageDiscountModel.STARTDATE + "} <= ?sysdate ");
 				queryString.append(" AND ?sysdate <= {p." + BuyABFreePrecentageDiscountModel.ENDDATE + "} }}");
+
+				params.put("categories", categories);
 			}
 
 			if (!(Config.isOracleUsed()))
@@ -397,16 +401,16 @@ public class UpdatePromotionalPriceDaoImpl implements UpdatePromotionalPriceDao
 			}
 
 			LOG.debug("QUERY>>>>>>" + queryString);
-			final FlexibleSearchQuery query = new FlexibleSearchQuery(queryString);
-
-			query.addQueryParameter("product", product);
-			query.addQueryParameter("categories", categories);
+			params.put("product", product);
+			//params.putquery.addQueryParameter("categories", categories);
 			//query.addQueryParameter("promotionGroup", "mplPromoGrp");
-			query.addQueryParameter("promoCurrPriority", promoCurrent.getPriority());
-			query.addQueryParameter("qualifyingCount", "1");
-			query.addQueryParameter("sysdate", new Date());
-			query.addQueryParameter("true", Boolean.TRUE);
+			params.put("promoCurrPriority", promoCurrent.getPriority());
+			params.put("qualifyingCount", "1");
+			params.put("sysdate", new Date());
+			params.put("true", Boolean.TRUE);
 
+			final FlexibleSearchQuery query = new FlexibleSearchQuery(queryString);
+			query.addQueryParameters(params);
 			query.setResultClassList(Arrays.asList(ProductPromotionModel.class, Integer.class));
 
 			LOG.debug("QUERY>>>>>>" + queryString);
