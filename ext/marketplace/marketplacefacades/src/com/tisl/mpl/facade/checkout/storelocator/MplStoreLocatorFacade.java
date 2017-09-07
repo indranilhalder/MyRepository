@@ -3,7 +3,6 @@
  */
 package com.tisl.mpl.facade.checkout.storelocator;
 
-import de.hybris.platform.commercefacades.storelocator.data.ListOfPointOfServiceData;
 import de.hybris.platform.core.model.order.AbstractOrderEntryModel;
 import de.hybris.platform.storelocator.model.PointOfServiceModel;
 
@@ -66,12 +65,5 @@ public interface MplStoreLocatorFacade
 	 * @return abstractOrderEntryModel
 	 */
 	public AbstractOrderEntryModel getCartEntry(final String ussId);
-
-	/**
-	 * @param latitude
-	 * @param longitude
-	 * @param pincode
-	 */
-	public ListOfPointOfServiceData getAllStoresForPincode(String latitude, String longitude, String pincode);
 
 }
