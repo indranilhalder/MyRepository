@@ -1916,13 +1916,16 @@ public class ProductPageController extends MidPageController
 				findColourVariants(productData, model);
 			}
 			//TPR-6405
-			if (productData.getBrand().getBrandname().equalsIgnoreCase(SAMSUNG))
+			if (productData != null && productData.getBrand() != null && productData.getBrand().getBrandname() != null)
 			{
-				model.addAttribute(ModelAttributetConstants.IS_SAMSUNG_PAGE, Boolean.TRUE);
-			}
-			else
-			{
-				model.addAttribute(ModelAttributetConstants.IS_SAMSUNG_PAGE, Boolean.FALSE);
+				if (productData.getBrand().getBrandname().equalsIgnoreCase(SAMSUNG))
+				{
+					model.addAttribute(ModelAttributetConstants.IS_SAMSUNG_PAGE, Boolean.TRUE);
+				}
+				else
+				{
+					model.addAttribute(ModelAttributetConstants.IS_SAMSUNG_PAGE, Boolean.FALSE);
+				}
 			}
 			//CKD:TPR-250:Start
 			prepareBrandInfoData(model, productData);
@@ -2140,12 +2143,11 @@ public class ProductPageController extends MidPageController
 	 */
 	private void findColourVariants(final ProductData productData, final Model model)
 	{
-		final List<VariantOptionData> variants = productData.getVariantOptions();
-		if (CollectionUtils.isNotEmpty(variants))
+		if (CollectionUtils.isNotEmpty(productData.getVariantOptions()))
 		{
 			final List<String> colourList = new ArrayList<String>();
 			Boolean multiColor = Boolean.FALSE;
-			for (final VariantOptionData colour : variants)
+			for (final VariantOptionData colour : productData.getVariantOptions())
 			{
 				if (!colourList.contains(colour.getColourCode()))
 				{
