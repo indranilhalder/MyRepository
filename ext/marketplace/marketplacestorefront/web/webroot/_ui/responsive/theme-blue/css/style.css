@@ -76952,3 +76952,18 @@ body .account .right-account form label.invite-text-lbl{
 		letter-spacing: normal;
 	}
 }
+
+/* TPR-6740:changes for STW widget in Home Furnishing */
+#stw_widget_hf .carousel-component .gotopdp{
+	width: 225px;
+    height: 36px;
+    background-color: #ffffff;
+    border: solid 1px #444444;
+}
+#stw_widget_hf .carousel-component .gotopdp a{
+	font-size: 12px;
+    line-height: 3;
+    letter-spacing: 0.6px;
+    text-align: center;
+    color: #000000;
+}
