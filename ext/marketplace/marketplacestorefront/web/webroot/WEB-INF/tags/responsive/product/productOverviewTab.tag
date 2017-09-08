@@ -26,6 +26,6 @@
   		</ul>
 
 	
-</div>
+<!-- </div> -->
 
 <!-- PDP changes end  -->
