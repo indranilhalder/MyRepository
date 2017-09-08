@@ -164,12 +164,13 @@ public class DefaultAutoLoginStrategy implements AutoLoginStrategy
 					{
 						cookie.setValue(address.getPostalcode());
 						response.addCookie(cookie);
+						getSessionService().setAttribute(MarketplacecommerceservicesConstants.SESSION_PINCODE, address.getPostalcode());
 					}
 					else
 					{
 						pdpPincodeCookie.addCookie(response, address.getPostalcode());
+						getSessionService().setAttribute(MarketplacecommerceservicesConstants.SESSION_PINCODE, address.getPostalcode());
 					}
-					//getSessionService().setAttribute(MarketplacecommerceservicesConstants.SESSION_PINCODE, address.getPostalcode());
 				}
 				/* TPR-6654 end */
 
@@ -231,12 +232,13 @@ public class DefaultAutoLoginStrategy implements AutoLoginStrategy
 					{
 						cookie.setValue(address.getPostalcode());
 						response.addCookie(cookie);
+						getSessionService().setAttribute(MarketplacecommerceservicesConstants.SESSION_PINCODE, address.getPostalcode());
 					}
 					else
 					{
 						pdpPincodeCookie.addCookie(response, address.getPostalcode());
+						getSessionService().setAttribute(MarketplacecommerceservicesConstants.SESSION_PINCODE, address.getPostalcode());
 					}
-					//getSessionService().setAttribute(MarketplacecommerceservicesConstants.SESSION_PINCODE, address.getPostalcode());
 				}
 				/* TPR-6654 end */
 				request.setAttribute(CART_MERGED, Boolean.FALSE);

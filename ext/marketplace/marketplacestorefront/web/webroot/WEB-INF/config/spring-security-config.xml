@@ -336,6 +336,7 @@
 		<property name="cookieName" value="pdpPincode" />
 		<property name="cookieMaxAge" value="#{configurationService.configuration.getProperty('pdpPincode.cookie.age')}"/>
 		<property name="useDefaultPath" value="false"/>
+		<property name="useDefaultDomain" value="false"/>
 		<property name="cookieDomain" value="#{configurationService.configuration.getProperty('shared.cookies.domain')}"/>
 	</bean>
 

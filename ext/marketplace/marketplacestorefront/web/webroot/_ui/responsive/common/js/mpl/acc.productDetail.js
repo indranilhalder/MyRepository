@@ -1092,6 +1092,8 @@ function pincodeServiceability(){
 			//$("#collectli").hide();
 			$("#collectli").css("opacity","0.5");
 			$("#collectli").removeClass("selected");
+			//TPR-6654
+			$("#CNCstores").empty();
 			$("#codId").hide();
 			$('#wrongPin,#unableprocessPin,#unsevisablePin,#emptyPin').hide();
 			$('#addToCartButton-wrong').attr("disable", true);
@@ -1115,7 +1117,7 @@ function pincodeServiceability(){
 				$('#addToCartButton').show();
 				$('#buyNowButton').attr("disabled",false);
 				//TPR-6654
-				$("#CNCstores").html("");
+				$("#CNCstores").empty(); 
 				//TPR-794
 				//$("#pdpPinCodeAvailable").html("Enter your pincode to see your available delivery options.");
 				//$("#pdpPinCodeAvailable").show();
@@ -1129,7 +1131,7 @@ function pincodeServiceability(){
 				$('#addToCartButton').show();
 				$('#buyNowButton').attr("disabled",false);
 				//TPR-6654
-				$("#CNCstores").html("");
+				$("#CNCstores").empty(); 
 				//TPR-794
 				//$("#pdpPinCodeAvailable").show();
 				//$("#pdpPinCodeAvailable").html("Enter your pincode to see your available delivery options.");
@@ -1163,16 +1165,15 @@ function pincodeServiceability(){
 								//$("#collectli").hide();
 								$("#collectli").css("opacity","0.5");
 								$("#collectli").removeClass("selected");
-
+								//TPR-6654
+								$("#CNCstores").empty();
 								$('#wrongPin,#unableprocessPin,#emptyPin,#serviceablePin').hide();
 								$('#addToCartFormTitle').hide();
 								$('#addToCartButton-wrong').show();
 								$('#addToCartButton').hide();
 								$('#unsevisablePin').show();
 								$("#pdpPinCodeAvailable").hide();
-								$('#buyNowButton').attr("disabled",true);
-								//TPR-6654
-								$("#CNCstores").html("");
+								$('#buyNowButton').attr("disabled",true); 
 								//TPR-794
 								$("#pdpPinCodeAvailable").html("Available delivery options for the pincode " +pin+ " are");
 								
@@ -1343,6 +1344,8 @@ function pincodeServiceability(){
 												//$("#collectli").hide();
 												$("#collectli").css("opacity","0.5");
 												$("#collectli").removeClass("selected");
+												//TPR-6654
+												$("#CNCstores").empty();
 											}
 											// }
 											
@@ -1371,7 +1374,7 @@ function pincodeServiceability(){
 											$("#collectli").css("opacity","0.5");
 											$("#collectli").removeClass("selected");
 											//TPR-6654
-											$("#CNCstores").html("");
+											$("#CNCstores").empty(); 
 											$('#wrongPin,#unableprocessPin,#emptyPin,#serviceablePin')
 													.hide();
 											$('#addToCartFormTitle')
@@ -1594,7 +1597,6 @@ $( document ).ready(function() {
  * This method is used to display delivery modes against a sku id
  */
 function displayDeliveryDetails(sellerName) {
-
 	var buyboxSeller = $("#ussid").val();
 	var productCode = $("#product").val();
 	var productCategoryType=$('#productCategoryType').val();
@@ -1734,7 +1736,9 @@ function displayDeliveryDetails(sellerName) {
 						//$("#collectli").hide();
 						$("#collectli").css("opacity","0.5");
 						$("#collectli").removeClass("selected");
-					} else {
+						//TPR-6654
+						$("#CNCstores").empty();
+					} else{
 						var start=$("#clickStartId").val();
 						var end=$("#clickEndId").val();
 						$("#clickDate").html(pretext+start+"-"+end+posttext);
@@ -1760,6 +1764,8 @@ function displayDeliveryDetails(sellerName) {
 					$("#clickDate").html(pretext+start_cnc+"-"+end_cnc+posttext);
 					$("#collectli").css("opacity","0.5");
 					$("#collectli").removeClass("selected");
+					//TPR-6654
+					$("#CNCstores").empty();
 				} else {
 				    //var start=$("#clickStartId").val();
 		        	//var end=$("#clickEndId").val();
@@ -3694,6 +3700,7 @@ function onSizeSelectPopulateDOM()//First Method to be called in size select aja
 					$('#sizeSelectAjaxData').remove();
 					if(typeof(jsonData['error'])=='undefined')
 					{
+						
 						//UF-33 starts//   //TISSTRT-1587//
 						//Update Page Title
 						document.title = jsonData['mapConfigurableAttribute']['metaTitle'];
@@ -3729,7 +3736,8 @@ function onSizeSelectPopulateDOM()//First Method to be called in size select aja
 						$('a.size-guide').attr('href','/p-sizeGuide?productCode='+responseProductCode+'&sizeSelected=true');
 						$('a.size-guide').data("productcode",responseProductCode);
 						$('a.size-guide').data("sizeSelected",'true');
-						$('#pdpPincodeCheck').data('clicked', false);
+						//TPR-6654
+						//$('#pdpPincodeCheck').data('clicked', false);
 						$('#ia_product_code').val(responseProductCode);
 						$("#dListedErrorMsg").hide();//TISSTRT-1469
 						$(".reviews").show();
