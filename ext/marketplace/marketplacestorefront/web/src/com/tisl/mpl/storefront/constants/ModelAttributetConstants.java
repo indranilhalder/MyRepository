@@ -920,6 +920,16 @@ public final class ModelAttributetConstants
 
 	//CKD:TPR-6804
 	public static final String HOME_FURNISHING = "HomeFurnishing";
+	public static final String CLASSIFICATION_ATTR = "classification.attributes.";
+	public static final String CLASSIFICATION_ATTR_HF = "HomeFurnishing.";
+	public static final String CLASSIFICATION_ATTR_PD = "ProductDetails";
+	public static final String CLASSIFICATION_ATTR_SI = "SetInformation";
+	public static final String CLASSIFICATION_ATTR_CAINS = "CareInstructions";
+	public static final String CLASSIFICATION_ATTR_WASHCARE = "WashCare";
+	public static final String CLASSIFICATION_ATTR_PF = "ProductFeatures";
+	public static final String CLASSIFICATION_ATTR_CARE_INS = "Care Instructions";
+	public static final String CLASSIFICATION_ATTR_WASH_CARE = "Wash Care";
+	public static final String KEY_PROD_PTS = "Key Product Points";
 
 	public static final String SELLERMESSAGE = "sellerMessage".intern();
 

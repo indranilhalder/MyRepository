@@ -86,6 +86,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -2261,7 +2262,6 @@ public class ProductPageController extends MidPageController
 
 	private void displayConfigurableAttributeForHF(final ProductData productData, final Model model)
 	{
-
 		final Map<String, String> mapConfigurableAttribute = new HashMap<String, String>();
 		final Map<String, List<String>> mapConfigurableAttributes = new LinkedHashMap<String, List<String>>();
 		final List<String> warrentyList = new ArrayList<String>();
@@ -2270,105 +2270,155 @@ public class ProductPageController extends MidPageController
 			/* Checking the presence of classification attributes */
 			if (null != productData.getClassifications())
 			{
-				final String properitsValue = configurationService.getConfiguration()
-						.getString(ModelAttributetConstants.CONFIGURABLE_ATTRIBUTE + productData.getRootCategory());
-				final String descValues = configurationService.getConfiguration()
-						.getString(ModelAttributetConstants.DESC_PDP_PROPERTIES + productData.getRootCategory());
+				final String properitsValue = configurationService.getConfiguration().getString(
+						ModelAttributetConstants.CONFIGURABLE_ATTRIBUTE + productData.getRootCategory());
+				final String descValues = configurationService.getConfiguration().getString(
+						ModelAttributetConstants.DESC_PDP_PROPERTIES + productData.getRootCategory());
 				final List<ClassificationData> ConfigurableAttributeList = new ArrayList<ClassificationData>(
 						productData.getClassifications());
+				String headerName = null;
 				for (final ClassificationData configurableAttributData : ConfigurableAttributeList)
 				{
+					headerName = configurableAttributData.getName();
 					final List<FeatureData> featureDataList = new ArrayList<FeatureData>(configurableAttributData.getFeatures());
 					final List<String> productFeatureDataList = new ArrayList<String>();
-
-					for (final FeatureData featureData : featureDataList)
+					if (configurationService.getConfiguration()
+							.getString((ModelAttributetConstants.CONFIGURABLE_ATTRIBUTE + ModelAttributetConstants.HOME_FURNISHING))
+							.contains(configurableAttributData.getName()))
 					{
-						final List<FeatureValueData> featureValueList = new ArrayList<FeatureValueData>(featureData.getFeatureValues());
-						if (null != productData.getRootCategory())
+						for (final FeatureData featureData : featureDataList)
 						{
-							final FeatureValueData featureValueData = featureValueList.get(0);
-
-							if (null != properitsValue && featureValueData.getValue() != null
-									&& properitsValue.toLowerCase().contains(featureData.getName().toLowerCase()))
+							final List<FeatureValueData> featureValueList = new ArrayList<FeatureValueData>(
+									featureData.getFeatureValues());
+							if (null != productData.getRootCategory())
 							{
-								//CKD:CAR-289
-								final ProductFeatureModel productFeature = mplProductFacade
-										.getProductFeatureModelByProductAndQualifier(productData, featureData.getCode());
-								String unit = "";
+								final FeatureValueData featureValueData = featureValueList.get(0);
 
-								if (productFeature.getUnit() != null && !productFeature.getUnit().getSymbol().isEmpty())
+								if (featureData.getFeatureValues().iterator().hasNext()
+										&& configurationService
+												.getConfiguration()
+												.getString(
+														ModelAttributetConstants.CLASSIFICATION_ATTR
+																+ ModelAttributetConstants.CLASSIFICATION_ATTR_HF
+																+ configurableAttributData.getName().replaceAll("\\s", ""))
+												.contains(featureData.getName()))
 								{
-									unit = productFeature.getUnit().getSymbol();
-								}
-								productFeatureDataList.add(featureData.getName() + ":" + featureValueData.getValue() + " " + unit);
-							}
+									//CKD:CAR-289
+									final ProductFeatureModel productFeature = mplProductFacade
+											.getProductFeatureModelByProductAndQualifier(productData, featureData.getCode());
+									String unit = "";
 
-							if (descValues != null && StringUtils.isNotBlank(descValues))
-							{
-								final String[] descValue = descValues.split(",");
-								if (descValue != null && descValue.length > 0)
-								{
-									for (final String value : descValue)
+									if (productFeature.getUnit() != null && !productFeature.getUnit().getSymbol().isEmpty())
 									{
-										if (value.equalsIgnoreCase(featureData.getName()))
+										unit = productFeature.getUnit().getSymbol();
+									}
+
+									if (configurableAttributData.getName().replaceAll("\\s", "")
+											.equals(ModelAttributetConstants.CLASSIFICATION_ATTR_PF))
+									{
+										headerName = ModelAttributetConstants.KEY_PROD_PTS;
+										productFeatureDataList.add(featureData.getFeatureValues().iterator().next().getValue());
+									}
+									else if (configurableAttributData.getName().replaceAll("\\s", "")
+											.equals(ModelAttributetConstants.CLASSIFICATION_ATTR_WASHCARE))
+									{
+										productFeatureDataList.add(configurableAttributData.getName() + " : "
+												+ featureData.getFeatureValues().iterator().next().getValue());
+									}
+									else if (configurableAttributData.getName().replaceAll("\\s", "")
+											.equals(ModelAttributetConstants.CLASSIFICATION_ATTR_CAINS))
+									{
+										for (final FeatureValueData data : featureData.getFeatureValues())
 										{
-											mapConfigurableAttribute.put(featureData.getName(), featureValueData.getValue());
+											productFeatureDataList.add(data.getValue());
 										}
+									}
+									else
+									{
+										productFeatureDataList.add(featureData.getName() + ":" + featureValueData.getValue() + " " + unit);
 									}
 								}
 
-							}
-
-							if (featureData.getName().toLowerCase().contains(ModelAttributetConstants.WARRANTY.toLowerCase()))
-							{
-								warrentyList.add(featureValueData.getValue());
-							}
-
-							else
-							{
-								if (StringUtils.isBlank(properitsValue.toLowerCase()))
+								if (descValues != null && StringUtils.isNotBlank(descValues))
 								{
-									mapConfigurableAttribute.put(featureData.getName(), featureValueData.getValue());
-								}
-								if (properitsValue.toLowerCase().contains(configurableAttributData.getCode().toLowerCase()))
+									final String[] descValue = descValues.split(",");
+									if (descValue != null && descValue.length > 0)
+									{
+										for (final String value : descValue)
+										{
+											if (value.equalsIgnoreCase(featureData.getName()))
+											{
+												mapConfigurableAttribute.put(featureData.getName(), featureValueData.getValue());
+											}
+										}
+									}
 
-								{
-									mapConfigurableAttribute.put(featureData.getName(), featureValueData.getValue());
 								}
 
 								if (featureData.getName().toLowerCase().contains(ModelAttributetConstants.WARRANTY.toLowerCase()))
 								{
 									warrentyList.add(featureValueData.getValue());
 								}
-							}
 
+								else
+								{
+									if (StringUtils.isBlank(properitsValue.toLowerCase()))
+									{
+										mapConfigurableAttribute.put(featureData.getName(), featureValueData.getValue());
+									}
+									if (properitsValue.toLowerCase().contains(configurableAttributData.getCode().toLowerCase()))
+
+									{
+										mapConfigurableAttribute.put(featureData.getName(), featureValueData.getValue());
+									}
+
+									if (featureData.getName().toLowerCase().contains(ModelAttributetConstants.WARRANTY.toLowerCase()))
+									{
+										warrentyList.add(featureValueData.getValue());
+									}
+								}
+
+							}
 						}
 					}
-
+					else
+					{
+						continue;
+					}
+					List tempList;
 					if (mapConfigurableAttributes.containsKey(configurableAttributData.getName()))
 					{
-						final List tempList = mapConfigurableAttributes.get(configurableAttributData.getName());
+						tempList = mapConfigurableAttributes.get(configurableAttributData.getName());
 						tempList.addAll(productFeatureDataList);
-						mapConfigurableAttributes.put(configurableAttributData.getName(), tempList);
+						mapConfigurableAttributes.put(headerName, tempList);
+						tempList = null;
+					}
+					else if (mapConfigurableAttributes.containsKey(ModelAttributetConstants.CLASSIFICATION_ATTR_CARE_INS)
+							&& configurableAttributData.getName().equals(ModelAttributetConstants.CLASSIFICATION_ATTR_WASH_CARE))
+					{
+						tempList = mapConfigurableAttributes.get(ModelAttributetConstants.CLASSIFICATION_ATTR_CARE_INS);
+						tempList.addAll(productFeatureDataList);
+						Collections.reverse(tempList);
+						mapConfigurableAttributes.put(ModelAttributetConstants.CLASSIFICATION_ATTR_CARE_INS, tempList);
+						tempList = null;
+					}
+					else if (mapConfigurableAttributes.containsKey(ModelAttributetConstants.CLASSIFICATION_ATTR_WASH_CARE)
+							&& configurableAttributData.getName().equals(ModelAttributetConstants.CLASSIFICATION_ATTR_CARE_INS))
+					{
+						tempList = mapConfigurableAttributes.get(ModelAttributetConstants.CLASSIFICATION_ATTR_WASH_CARE);
+						tempList.addAll(productFeatureDataList);
+						Collections.reverse(tempList);
+						mapConfigurableAttributes.put(ModelAttributetConstants.CLASSIFICATION_ATTR_CARE_INS, tempList);
+						tempList = null;
+						removeKeyfromMap(mapConfigurableAttributes, ModelAttributetConstants.CLASSIFICATION_ATTR_WASH_CARE);
 					}
 					else if (!productFeatureDataList.isEmpty())
 					{
 						{
-							mapConfigurableAttributes.put(configurableAttributData.getName(), productFeatureDataList);
+							mapConfigurableAttributes.put(headerName, productFeatureDataList);
 						}
 
 					}
-					//System.out.println(mapConfigurableAttributes);
-
-					/*for (final Entry<String, List<String>> entry : mapConfigurableAttributes.entrySet())
-					{
-						System.out.println(entry.getKey());
-						for (final String featureList : entry.getValue())
-						{
-							//System.out.println(valList);
-							System.out.println(featureList);
-						}
-					}*/
 				}
 			}
 			else
@@ -2384,7 +2434,22 @@ public class ProductPageController extends MidPageController
 		{
 			throw new EtailNonBusinessExceptions(e, ModelAttributetConstants.E0000);
 		}
+		}
 
+	/**
+	 * @param mapConfigurableAttributes
+	 * @param classKey
+	 */
+	private void removeKeyfromMap(final Map<String, List<String>> mapConfigurableAttributes, final String classKey)
+	{
+		for (final Iterator<Map.Entry<String, List<String>>> it = mapConfigurableAttributes.entrySet().iterator(); it.hasNext();)
+		{
+			final Entry<String, List<String>> entry = it.next();
+			if (entry.getKey().equals(classKey))
+			{
+				it.remove();
+			}
+		}
 	}
 
 	/**
