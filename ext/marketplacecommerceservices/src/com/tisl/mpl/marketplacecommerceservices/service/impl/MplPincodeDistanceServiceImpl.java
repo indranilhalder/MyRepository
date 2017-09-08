@@ -16,6 +16,7 @@ import javax.annotation.Resource;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.log4j.Logger;
 
+import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.marketplacecommerceservices.service.MplPincodeDistanceService;
 import com.tisl.mpl.util.DistanceMatrixUtility;
 
@@ -28,7 +29,6 @@ public class MplPincodeDistanceServiceImpl implements MplPincodeDistanceService
 {
 	@SuppressWarnings("unused")
 	private static final Logger LOG = Logger.getLogger(MplPincodeDistanceServiceImpl.class);
-	private static final String API_KEY = "YOUR_API_KEY";
 	@Resource
 	private ConfigurationService configurationService;
 
@@ -36,7 +36,7 @@ public class MplPincodeDistanceServiceImpl implements MplPincodeDistanceService
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * com.tisl.mpl.marketplacecommerceservices.service.impl.MplPincodeDistanceService#pincodeDistance(java.util.List)
 	 */
@@ -55,15 +55,15 @@ public class MplPincodeDistanceServiceImpl implements MplPincodeDistanceService
 			{
 				final DistanceMatrixUtility distance = new DistanceMatrixUtility();
 				origins.append(latitude);
-				origins.append(",");
+				origins.append(MarketplacecommerceservicesConstants.COMMA);
 				origins.append(longitude);
 
 				for (final PointOfServiceData pointOfServiceData : posData)
 				{
 					destinations.append(pointOfServiceData.getGeoPoint().getLatitude());
-					destinations.append(",");
+					destinations.append(MarketplacecommerceservicesConstants.COMMA);
 					destinations.append(pointOfServiceData.getGeoPoint().getLongitude());
-					destinations.append("|");
+					destinations.append(MarketplacecommerceservicesConstants.CONCTASTRING);
 				}
 
 				distanceList = distance.calcDistance(origins, destinations);

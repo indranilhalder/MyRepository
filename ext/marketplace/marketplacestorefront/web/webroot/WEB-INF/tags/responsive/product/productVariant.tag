@@ -81,7 +81,7 @@ function loadVariant(x){
 				</c:if>
 				<c:choose>
 		   <c:when test="${not empty product.variantOptions}">
-		   <c:if test="${(product.rootCategory ne 'FineJewellery' && product.rootCategory ne 'FashionJewellery') || (multiColorFlag eq 'true')}">	<!-- UF-432 -->
+		   <c:if test="${(product.rootCategory ne 'FineJewellery' && product.rootCategory ne 'FashionJewellery') && (multiColorFlag eq 'true')}">	<!-- UF-432 -->
 				<p>
 					<spring:theme code="text.colour" />
 				</p>
@@ -349,6 +349,12 @@ function loadVariant(x){
 						</c:forEach>
 				</c:when>
 				<c:otherwise>
+				<!-- UF-422:Changes for PDP when product has only one size -->
+						<c:set var="selectedClass" value=""/>
+							<c:if test= "${fn:length(product.variantOptions) eq 1}">
+								<c:set var ="selectedClass" value ="class='selected'"/></c:if>	
+								
+								
 				<c:forEach items="${product.variantOptions}" var="variantOption">
 				<c:url value="/p/${variantOption.code}/viewSellers" var="variantUrl" />
 				<c:forEach items="${variantOption.colourCode}" var="color">
@@ -365,7 +371,7 @@ function loadVariant(x){
 											<c:choose>
 												<c:when test="${selectedSize eq null}">
 												<!--CKD:TPR-250:  -->
-													<li><a href="${variantUrl}?selectedSize=true${msiteSellerForSize}">${entry.value}</a></li>
+													<li ${selectedClass}><a href="${variantUrl}?selectedSize=true${msiteSellerForSize}">${entry.value}</a></li>
 												</c:when>
 												<c:otherwise>
 												<!--CKD:TPR-250:  -->
@@ -376,7 +382,7 @@ function loadVariant(x){
 										<c:otherwise>
 											<%-- <c:url value="/p/${variantOption.code}/viewSellers"	var="variantUrl" /> --%>
 											<!--CKD:TPR-250:  -->
-											<li><a href="${variantUrl}?selectedSize=true${msiteSellerForSize}">${entry.value}</a></li>
+											<li ${selectedClass}><a href="${variantUrl}?selectedSize=true${msiteSellerForSize}">${entry.value}</a></li>
 										</c:otherwise>
 									</c:choose>
 								</c:forEach>

@@ -137,7 +137,6 @@ import com.tisl.mpl.data.PriceBreakupData;
 import com.tisl.mpl.data.WishlistData;
 import com.tisl.mpl.exception.EtailBusinessExceptions;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
-import com.tisl.mpl.facade.checkout.storelocator.MplStoreLocatorFacade;
 import com.tisl.mpl.facade.comparator.SizeGuideHeaderComparator;
 import com.tisl.mpl.facade.product.ExchangeGuideFacade;
 import com.tisl.mpl.facade.product.MplJewelleryFacade;
@@ -309,9 +308,6 @@ public class ProductPageController extends MidPageController
 
 	@Resource(name = "sizeGuideFacade")
 	private SizeGuideFacade sizeGuideFacade;
-
-	@Resource(name = "mplStoreLocatorFacade")
-	private MplStoreLocatorFacade mplStoreLocatorFacade;
 
 	@Autowired
 	private SizeGuideHeaderComparator sizeGuideHeaderComparator;

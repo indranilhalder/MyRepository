@@ -8014,6 +8014,7 @@ $("#couponSubmitButton").click(function(){
 	 				}
 	 				//TPR-658
 	 				onSubmitAnalytics("invalid_coupon");
+	 				dtmCouponCheck("invalid_coupon",couponCode);
 	 				// $("#couponError").css("display","block");
 	 				// document.getElementById("couponError").innerHTML=response.redeemErrorMsg;
 	 				/*TPR-4746*/
@@ -8085,7 +8086,7 @@ function onSubmitAnalytics(msg){
 	
 	// TPR-6029 | for checkout button click from cart | start
 	
-	dtmCouponCheck(msg,couponCode);
+	//dtmCouponCheck(msg,couponCode);
 }
 // TPR-658 END
 
@@ -8279,12 +8280,12 @@ function sendTealiumData(){
 		    	if(typeof _satellite != "undefined"){
 		    		_satellite.track('cpj_place_order');
 		    	}
-		    	if(typeof (digitalData.cpj.product) != undefined){
+		    	if(typeof (digitalData.cpj.product) != 'undefined'){
 		    		digitalData.cpj.product.id = $('#product_id').val();
 		    		digitalData.cpj.product.category =$('#product_category').val();
 		    	}
 		    	
-		    	if(typeof (digitalData.cpj.payment) != undefined){
+		    	if(typeof (digitalData.cpj.payment) != 'undefined'){
 		    	    digitalData.cpj.payment.finalMode = payment_mode ;
 		    	}
 	   } catch (e) {

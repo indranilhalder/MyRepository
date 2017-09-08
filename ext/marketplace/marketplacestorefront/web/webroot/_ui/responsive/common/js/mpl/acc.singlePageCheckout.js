@@ -192,6 +192,20 @@ ACC.singlePageCheckout = {
 		        	ACC.singlePageCheckout.getDeliveryAddresses();
 		        	$("#selectedAddressMessage").hide();
 		        	ACC.singlePageCheckout.attachDeliveryModeChangeEvent();
+		        	//TISPRDT-2353
+		        	if(typeof utag !="undefined"){
+						utag.link({ link_text : 'edit_address_saved' ,event_type : 'edit_address_saved'});
+					}
+		        	//calling tealium 
+		            $("#checkoutPageName").val("Choose Your Delivery Options");
+		            if(typeof utag_data !="undefined"){
+		            	var checkoutDeliveryPage = "Multi Checkout Summary Page:Choose Your Delivery Options";
+		            	utag_data.page_name = checkoutDeliveryPage;
+		            }
+		        	//TPR-6362 |track checkout activity
+		        	if(typeof (_satellite)!= "undefined") {  
+		        		_satellite.track('cpj_checkout_save_address');
+		        	}
 	            }
 	        });
 	        
@@ -1122,8 +1136,8 @@ ACC.singlePageCheckout = {
 		if(typeof(utag)!='undefined')
 		{
 			utag.link({
-				link_text  : storeName+'_store_seleted', 
-				event_type : storeName+'_store_seleted'
+				link_text  : storeName+'_store_selected', 
+				event_type : storeName+'_store_selected'
 			});
 		}
 		//TPR-6029 | DTM For checkout

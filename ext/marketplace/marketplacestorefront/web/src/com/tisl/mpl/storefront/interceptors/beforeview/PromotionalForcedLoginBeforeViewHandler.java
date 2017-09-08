@@ -11,7 +11,6 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.log4j.Logger;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.tisl.mpl.storefront.interceptors.BeforeViewHandler;
@@ -26,7 +25,6 @@ public class PromotionalForcedLoginBeforeViewHandler implements BeforeViewHandle
 	/**
 	 * This class checks whether user browsing is logged in or anonymous user.
 	 */
-	Logger LOG = Logger.getLogger(this.getClass().getName());
 	@Resource(name = "userFacade")
 	private UserFacade userFacade;
 	@Resource(name = "deviceDetectionFacade")
