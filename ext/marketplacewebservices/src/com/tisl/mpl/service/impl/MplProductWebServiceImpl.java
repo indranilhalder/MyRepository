@@ -312,7 +312,7 @@ public class MplProductWebServiceImpl implements MplProductWebService
 
 	/*
 	 * To get product details for a product code
-	 * 
+	 *
 	 * @see com.tisl.mpl.service.MplProductWebService#getProductdetailsForProductCode(java.lang.String)
 	 */
 	@Override
@@ -865,7 +865,8 @@ public class MplProductWebServiceImpl implements MplProductWebService
 					productDetailMobile.setL3code(productData.getLevel3CategoryCode());
 					productDetailMobile.setL3name(productData.getLevel3CategoryName());
 
-					final ContentSlotModel contentSlotModel = contentSlotService.getContentSlotForId("ExchangeSlot");
+					final ContentSlotModel contentSlotModel = contentSlotService
+							.getContentSlotForId(MarketplacecommerceservicesConstants.Exchange_Slot);
 					final List<ExchangeLinkUrl> linkUrlList = new ArrayList<>();
 
 					if (contentSlotModel != null)
@@ -892,7 +893,11 @@ public class MplProductWebServiceImpl implements MplProductWebService
 										if (StringUtils.isNotEmpty(model2.getUrl()))
 										{
 
-											linkUrl.setUrl(model2.getUrl());
+											linkUrl.setUrl(model2.getUrl() + MarketplacecommerceservicesConstants.MOBILE_SOURCE2);
+										}
+										if (StringUtils.isNotEmpty(model2.getUid()))
+										{
+											linkUrl.setId(model2.getUid());
 										}
 									}
 									linkUrlList.add(linkUrl);
@@ -1880,12 +1885,12 @@ public class MplProductWebServiceImpl implements MplProductWebService
 	/*
 	 * private PromotionData checkHighestPriority(final List<PromotionData> enabledPromotionList) {
 	 * Collections.sort(enabledPromotionList, new Comparator<PromotionData>() {
-	 * 
+	 *
 	 * @Override public int compare(final PromotionData promo1, final PromotionData promo2) { int priority = 0; if (null
 	 * != promo1.getPriority() && null != promo2.getPriority()) { priority =
 	 * promo1.getPriority().compareTo(promo2.getPriority()); } return priority; }
-	 * 
-	 * 
+	 *
+	 *
 	 * }); Collections.reverse(enabledPromotionList); return enabledPromotionList.get(0); }
 	 */
 

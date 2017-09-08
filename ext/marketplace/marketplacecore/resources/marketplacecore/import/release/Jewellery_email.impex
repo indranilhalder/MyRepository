@@ -783,7 +783,8 @@ UPDATE PageTemplate;$contentCV[unique=true];uid[unique=true];velocityTemplate[tr
 ;;ProductDetailsPageTemplate;$jarResourceCms/structure-view/structure_productDetails1PageTemplate.vm
 
 INSERT_UPDATE CMSLinkComponent;$contentCV[unique=true];uid[unique=true];name;url;category(code, $productCV);target(code)[default='sameWindow'];;
-;;TermsAndConditionsPaymentLink;Terms And Conditions Payment Link;/tncPayment;;;;
+;;TermsAndConditionsExchangeLink;Terms And Conditions ;/tncPayment;;;;
+;;HowExchangeWorksLink;How Exchange Works;/tncPayment;;;;
 
 # CMS Link Components
 UPDATE CMSLinkComponent;$contentCV[unique=true];uid[unique=true];linkName[lang=$lang]
@@ -791,7 +792,7 @@ UPDATE CMSLinkComponent;$contentCV[unique=true];uid[unique=true];linkName[lang=$
 
 # ContentSlot 
 INSERT_UPDATE ContentSlot;$contentCV[unique=true];uid[unique=true];name;cmsComponents(uid,$contentCV)
-;;ExchangeSlot;Exchange slot for PDP;TermsAndConditionsPaymentLink
+;;ExchangeSlot;Exchange slot for PDP;TermsAndConditionsExchangeLink,HowExchangeWorksLink
 
 ########################################################################Jewellery BuyBox Changes ######################################################
 

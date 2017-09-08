@@ -3068,6 +3068,7 @@
 </bean>
 
 <bean class="com.tisl.mpl.wsdto.ExchangeLinkUrl">
+<property name="id" type="java.lang.String"/>
 <property name="name" type="java.lang.String"/>
 <property name="url" type="java.lang.String"/>
 </bean>
