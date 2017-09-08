@@ -28,7 +28,6 @@ import com.tisl.mpl.constants.MarketplacecheckoutaddonConstants;
 import com.tisl.mpl.facade.checkout.MplCheckoutFacade;
 import com.tisl.mpl.facades.payment.MplPaymentFacade;
 import com.tisl.mpl.facades.wallet.MplWalletFacade;
-import com.tisl.mpl.pojo.request.QCRedeemRequest;
 import com.tisl.mpl.pojo.response.QCInitializationResponse;
 import com.tisl.mpl.storefront.constants.ModelAttributetConstants;
 import com.tisl.mpl.storefront.constants.RequestMappingUrlConstants;
@@ -97,9 +96,9 @@ public class WalletController extends AbstractPageController
 
 		//mplWalletFacade.addEGVToWallet();
 
-		mplWalletFacade.getQCBucketBalance();
-		final QCRedeemRequest qw = new QCRedeemRequest();
-		mplWalletFacade.getWalletRedeem("", "", qw);
+		//mplWalletFacade.getQCBucketBalance();
+		//final QCRedeemRequest qw = new QCRedeemRequest();
+		//mplWalletFacade.getWalletRedeem("", "", qw);
 
 
 		storeCmsPageInModel(model, getContentPageForLabelOrId("TULWalletPage"));
