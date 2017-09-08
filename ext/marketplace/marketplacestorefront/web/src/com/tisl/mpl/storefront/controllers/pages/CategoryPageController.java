@@ -1087,7 +1087,7 @@ public class CategoryPageController extends AbstractCategoryPageController
 					this.getSEOContents(category, model, categoryLandingPage);
 
 
-					if (isCustomSkuPresent == false && isPlpPresentInLanding == true)
+					if (!isCustomSkuPresent && isPlpPresentInLanding)
 					{
 						//TISPRD-2315(checking whether the link has been clicked for pagination)
 						if (checkIfPagination(request) && searchQuery == null)
@@ -1393,7 +1393,7 @@ public class CategoryPageController extends AbstractCategoryPageController
 						}
 					}
 
-					if (isCustomSkuPresent == false)
+					if (!isCustomSkuPresent)
 					{
 						//TISPRD-2315(checking whether the link has been clicked for pagination)
 						if (checkIfPagination(request) && searchQuery == null)

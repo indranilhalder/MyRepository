@@ -56,7 +56,6 @@ public class PancardRejectEmailContext extends AbstractEmailContext<OrderProcess
 	private static final String TOTALPRICE = "totalPrice";
 	private static final String SHIPPINGCHARGE = "shippingCharge";
 	private static final String CONVENIENCECHARGE = "convenienceChargesVal";
-	private static final String CNCSTOREADDRESS = "storeAddress";
 	private static final String CUSTOMER_NAME = "customerName";
 	private static final String COD_CHARGES = "codCharge";
 	private static final String SUBTOTALFORJEWELLERY = "subTotalForJewellery";
