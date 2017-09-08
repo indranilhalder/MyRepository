@@ -30,7 +30,6 @@ import de.hybris.platform.cms2.model.contents.components.AbstractCMSComponentMod
 import de.hybris.platform.cms2.model.pages.CategoryPageModel;
 import de.hybris.platform.cms2.model.pages.ContentPageModel;
 import de.hybris.platform.cms2.servicelayer.data.ContentSlotData;
-import de.hybris.platform.cms2.servicelayer.services.CMSPageService;
 import de.hybris.platform.commercefacades.product.data.CategoryData;
 import de.hybris.platform.commercefacades.product.data.ProductData;
 import de.hybris.platform.commercefacades.search.ProductSearchFacade;
@@ -155,9 +154,6 @@ public class CategoryPageController extends AbstractCategoryPageController
 
 	@Resource(name = "defaultMplProductSearchFacade")
 	private DefaultMplProductSearchFacade searchFacade;
-
-	@Resource(name = "cmsPageService")
-	private CMSPageService cmsPageService;
 
 	private static final String NEW_CATEGORY_URL_PATTERN = "/**/c-{categoryCode:.*}";
 	private static final String NEW_CATEGORY_URL_PATTERN_PAGINATION = "/**/c-{categoryCode:.*}/page-{page}";
@@ -1044,8 +1040,11 @@ public class CategoryPageController extends AbstractCategoryPageController
 					//category = categoryService.getCategoryForCode(categoryCode);
 					final ContentPageModel categoryLandingPage = getLandingPageForCategory(category); // CAR-237 moved here for called only Once rather  line # 409 , 469 & 1053 available Code review pt#4
 					//PRDI-802 : check for availability of ProductGridComponent in the page
-					ContentSlotData contentSlotData = cmsPageService.getContentSlotForPage(categoryLandingPage,
-							PRODUCT_GRID_COMPONENT_POSITION);
+					ContentSlotData contentSlotData = null;
+					if (categoryLandingPage != null)
+					{
+						contentSlotData = mplCmsPageService.getContentSlotForPage(categoryLandingPage, PRODUCT_GRID_COMPONENT_POSITION);
+					}
 					if (contentSlotData != null && CollectionUtils.isNotEmpty(contentSlotData.getCMSComponents()))
 					{
 						for (final AbstractCMSComponentModel component : contentSlotData.getCMSComponents())
@@ -1065,7 +1064,11 @@ public class CategoryPageController extends AbstractCategoryPageController
 					/* CAR-242 Moved here for calling once */
 					ProductCategorySearchPageData<SearchStateData, ProductData, CategoryData> searchPageData = null;
 					//PRDI-802 : check for availability of CustomSkuComponent in the page
-					contentSlotData = cmsPageService.getContentSlotForPage(categoryLandingPage, CUSTOM_SKU_COMPONENT_POSITION);
+					if (categoryLandingPage != null)
+					{
+						contentSlotData = mplCmsPageService.getContentSlotForPage(categoryLandingPage, CUSTOM_SKU_COMPONENT_POSITION);
+					}
+
 					if (contentSlotData != null && CollectionUtils.isNotEmpty(contentSlotData.getCMSComponents()))
 					{
 						for (final AbstractCMSComponentModel component : contentSlotData.getCMSComponents())
@@ -1373,8 +1376,11 @@ public class CategoryPageController extends AbstractCategoryPageController
 					/* CAR-242 Moved here for calling once */
 					ProductCategorySearchPageData<SearchStateData, ProductData, CategoryData> searchPageData = null;
 					//PRDI-802 : check for availability of CustomSkuComponent in the page
-					final ContentSlotData contentSlotData = cmsPageService.getContentSlotForPage(categoryLandingPage,
-							CUSTOM_SKU_COMPONENT_POSITION);
+					ContentSlotData contentSlotData = null;
+					if (categoryLandingPage != null)
+					{
+						contentSlotData = mplCmsPageService.getContentSlotForPage(categoryLandingPage, CUSTOM_SKU_COMPONENT_POSITION);
+					}
 					if (contentSlotData != null && CollectionUtils.isNotEmpty(contentSlotData.getCMSComponents()))
 					{
 						for (final AbstractCMSComponentModel component : contentSlotData.getCMSComponents())
