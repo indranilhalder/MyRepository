@@ -629,6 +629,8 @@ public final class ModelAttributetConstants
 	public static final String IS_MSD_ENABLED = "isMSDEnabled";
 	public static final String IS_PRODUCTPAGE = "isProductPage";
 	public static final String MSD_REST_URL = "msdRESTURL";
+	//STW :TPR-6740
+	public static final String STW_HEADER_PDP = "isStwheaderforPDP";
 	// Friends Invite **************
 
 	public static final String ERROR_EMAIL_SENDING = "error_email_sending";

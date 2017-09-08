@@ -66,18 +66,15 @@ var stwService = {
                     }
 
                 } else {
-                	
-                    var header = stwRender.blpheader(json);
-                    
-                    if ($("#stw_widget_blp").length)
-                    {
-                     var carousel = stwRender.carousel(json);
-                    }
-                    else {
-                    
-                    	var carousel = stwRender.carouselHF(json);
-                    	
-                    }
+                	if ($("#stw_widget_blp").length)
+                	{
+                		var header = stwRender.blpheader(json);
+                		var carousel = stwRender.carousel(json);
+                	}
+                	else{
+                		var header = stwRender.HFheader(json);
+                		var carousel = stwRender.carouselHF(json);
+                	}
                     
                     if(( carousel != undefined && carousel !="") && carousel!=null)
                     {
@@ -155,6 +152,15 @@ var stwRender = {
         var stwWidgetHeading = "";
         stwWidgetHeading += '<div class="best_seller_section hide_clplist">';
         stwWidgetHeading += '<div class="content">' + STWJObject.STWBlpHeading + '</div>';
+        stwWidgetHeading += '</div>';
+        return stwWidgetHeading;
+
+    },
+    
+   HFheader: function() {
+        var stwWidgetHeading = "";
+        stwWidgetHeading += '<div class="best_seller_section hide_clplist">';
+        stwWidgetHeading += '<div class="content">' + isStwheaderforPDP + '</div>';
         stwWidgetHeading += '</div>';
         return stwWidgetHeading;
 
