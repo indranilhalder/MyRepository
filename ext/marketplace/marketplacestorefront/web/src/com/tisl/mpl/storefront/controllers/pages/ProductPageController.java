@@ -1343,12 +1343,12 @@ public class ProductPageController extends MidPageController
 						{
 							cookie.setValue(pin);
 							response.addCookie(cookie);
-							//sessionService.setAttribute(MarketplacecommerceservicesConstants.SESSION_PINCODE, cookie.getValue());
+							sessionService.setAttribute(MarketplacecommerceservicesConstants.SESSION_PINCODE, pin);
 						}
 						else
 						{
 							pdpPincodeCookie.addCookie(response, pin);
-							//sessionService.setAttribute(MarketplacecommerceservicesConstants.SESSION_PINCODE, pin);
+							sessionService.setAttribute(MarketplacecommerceservicesConstants.SESSION_PINCODE, pin);
 						}
 						pincodeResponse = pinCodeFacade.getResonseForPinCode(productCode, pin,
 								pincodeServiceFacade.populatePinCodeServiceData(productCode, myLocation.getGPS()));
