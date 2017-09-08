@@ -34,6 +34,28 @@ public final class MarketplaceclientservicesConstants extends GeneratedMarketpla
 	public static final String LuxuryPrefix = "lux";
 	public static final String LUX_TRACK_ORDER_LONG_URL_FORMAT = "lux.order.track.longurl.format".intern();
 
+
+	// QC Wallet
+	public static final String QC_INITIALIZATION_URL = "http://qc3.qwikcilver.com/Qwikcilver/eGMS.RestApi/api/initialize";
+	public static final String FORWARDING_ENTITY_ID = "ForwardingEntityId";
+	public static final String FORWARDING_ENTITY_PASSWORD = "ForwardingEntityPassword";
+	public static final String TERMINAL_ID = "TerminalId";
+	public static final String USERNAME = "Username";
+	public static final String PASSWORD = "Password";
+	public static final String TRANSACTION_ID = "TransactionId";
+	public static final String DATE_AT_CLIENT = "DateAtClient";
+	public static final String IS_FORWARDING_ENTIRY_EXISTS = "IsForwardingEntityExists";
+	public static final String CONTENT_TYPE = "Content-Type";
+	public static final String ACQUIRERID = "AcquirerId";
+	public static final String MERCHANT_OUTLET_NAME = "MerchantOutletName";
+	public static final String ORGANIZATION_NAME = "OrganizationName";
+	public static final String POS_ENTRY_MODE = "POSEntryMode";
+	public static final String POS_TYPE_ID = "POSTypeId";
+	public static final String POS_NAME = "POSName";
+	public static final String TERM_APP_VERSION = "TermAppVersion";
+	public static final String CURRENT_BATCH_NUMBER = "CurrentBatchNumber";
+	// QC Wallet
+
 	// Pincode Serviceabilty constants
 	/*
 	 * public static final String URLFIRSTPHASE =

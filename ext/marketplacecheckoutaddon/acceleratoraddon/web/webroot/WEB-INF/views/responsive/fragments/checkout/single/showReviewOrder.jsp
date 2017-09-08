@@ -742,7 +742,7 @@
 		</ul>
 		</div>
 		<button class="button checkout-review-button"
-				type="button" id="del_continue_btn" onclick="ACC.singlePageCheckout.proceedToPayment(this)";>
+				type="button" id="del_continue_btn" onclick="ACC.singlePageCheckout.proceedToPayment(this)">
 				<spring:theme code="checkout.single.deliveryMethod.continue" text="PROCEED" /></button>
 
 </div>

@@ -16,6 +16,7 @@ import de.hybris.platform.jalo.security.JaloSecurityException;
 import de.hybris.platform.order.exceptions.CalculationException;
 import de.hybris.platform.servicelayer.exceptions.ModelSavingException;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -115,7 +116,7 @@ public interface MplPaymentService
 
 	/**
 	 * juspay payment specific changes from cscockpit
-	 * 
+	 *
 	 * @param custName
 	 * @param cartValue
 	 * @param totalCharge
@@ -135,7 +136,8 @@ public interface MplPaymentService
 	 * @param cart
 	 *
 	 */
-	void setPaymentTransaction(GetOrderStatusResponse orderStatusResponse, Map<String, Double> paymentMode, AbstractOrderModel cart);
+	void setPaymentTransaction(GetOrderStatusResponse orderStatusResponse, Map<String, Double> paymentMode,
+			AbstractOrderModel cart);
 
 
 	/**
@@ -191,9 +193,9 @@ public interface MplPaymentService
 	 * @throws EtailNonBusinessExceptions
 	 */
 	MplPromoPriceData applyPromotions(final CartData cartData, final OrderData orderData, final CartModel cartModel,
-			final OrderModel orderModel, final MplPromoPriceData promoPriceData) throws ModelSavingException, NumberFormatException,
-			JaloInvalidParameterException, VoucherOperationException, CalculationException, JaloSecurityException,
-			JaloPriceFactoryException, EtailNonBusinessExceptions;
+			final OrderModel orderModel, final MplPromoPriceData promoPriceData)
+			throws ModelSavingException, NumberFormatException, JaloInvalidParameterException, VoucherOperationException,
+			CalculationException, JaloSecurityException, JaloPriceFactoryException, EtailNonBusinessExceptions;
 
 
 	/**
@@ -273,20 +275,20 @@ public interface MplPaymentService
 
 	/*
 	 * @description : fetching bank model for a bank name TISPRO-179\
-	 * 
+	 *
 	 * @param : bankName
-	 * 
+	 *
 	 * @return : BankModel
-	 * 
+	 *
 	 * @throws EtailNonBusinessExceptions
 	 */
 	BankModel getBankDetailsForBank(final String bankName) throws EtailNonBusinessExceptions;
 
 	/*
 	 * @Description : Fetching bank name for net banking-- TISPT-169
-	 * 
+	 *
 	 * @return List<BankforNetbankingModel>
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	List<BankforNetbankingModel> getNetBankingBanks() throws EtailNonBusinessExceptions;
@@ -385,7 +387,8 @@ public interface MplPaymentService
 	 * @param order
 	 *
 	 */
-	void setPaymentTransactionFromJob(GetOrderStatusResponse orderStatusResponse, Map<String, Double> paymentMode, OrderModel order);
+	void setPaymentTransactionFromJob(GetOrderStatusResponse orderStatusResponse, Map<String, Double> paymentMode,
+			OrderModel order);
 
 	/**
 	 * SprintPaymentFixes:- ModeOfpayment set same as in Payment Info
@@ -416,6 +419,32 @@ public interface MplPaymentService
 	 *
 	 */
 	public String doRefundPayment(List<OrderEntryModel> orderEntryModel);
+
+	/**
+	 * @param rs
+	 * @param paymentMode
+	 * @param order
+	 * @throws EtailNonBusinessExceptions
+	 */
+	void setQCPaymentTransaction(ArrayList<String> rs, Map<String, Double> paymentMode, AbstractOrderModel order,
+			String cliqCashPaymentMode, final String WalletTotal) throws EtailNonBusinessExceptions;
+
+	/**
+	 * @param qcOrderID
+	 * @param channel
+	 * @param cartGuId
+	 * @param qcAmount
+	 * @return
+	 * @throws EtailNonBusinessExceptions
+	 */
+	boolean createQCEntryInAudit(String qcOrderID, String channel, String cartGuId, String qcAmount)
+			throws EtailNonBusinessExceptions;
+
+	/**
+	 * @return
+	 */
+	public String createQCPaymentId();
+
 
 
 }

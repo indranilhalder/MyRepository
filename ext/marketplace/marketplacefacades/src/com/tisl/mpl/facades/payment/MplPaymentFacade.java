@@ -299,9 +299,9 @@ public interface MplPaymentFacade
 	 */
 
 	MplPromoPriceData applyPromotions(final CartData cartData, final OrderData orderData, final CartModel cartModel,
-			final OrderModel orderModel, final MplPromoPriceData mplPromoPriceData) throws ModelSavingException,
-			NumberFormatException, JaloInvalidParameterException, VoucherOperationException, CalculationException,
-			JaloSecurityException, JaloPriceFactoryException, EtailNonBusinessExceptions;
+			final OrderModel orderModel, final MplPromoPriceData mplPromoPriceData)
+			throws ModelSavingException, NumberFormatException, JaloInvalidParameterException, VoucherOperationException,
+			CalculationException, JaloSecurityException, JaloPriceFactoryException, EtailNonBusinessExceptions;
 
 
 
@@ -480,9 +480,10 @@ public interface MplPaymentFacade
 	 * @param refNo
 	 */
 	String getWalletAuditEntries(String refNo);
+
 	/***
 	 * cscockpit specific order payment status call
-	 * 
+	 *
 	 * @param url
 	 * @return
 	 */
@@ -492,12 +493,25 @@ public interface MplPaymentFacade
 
 	/**
 	 * Added for TPR-4461
-	 * 
+	 *
 	 * @param banklist
 	 * @param bank
 	 * @param boolean
 	 */
 	public boolean validateBank(final List<BankModel> bankList, final String bank);
+
+	/**
+	 * @param guid
+	 * @param orderToBeUpdated
+	 * @return
+	 */
+	public String createQCOrderRequest(String guid, AbstractOrderModel orderToBeUpdated, final String WalletId,
+			String cliqCashPaymentMode, final String qcTransactionId);
+
+	/**
+	 * @return
+	 */
+	public String generateQCCode();
 
 
 

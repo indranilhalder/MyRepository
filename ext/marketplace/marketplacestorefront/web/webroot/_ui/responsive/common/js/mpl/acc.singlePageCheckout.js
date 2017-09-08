@@ -3044,6 +3044,8 @@ ACC.singlePageCheckout = {
 			}
 		}
 	}
+	
+	
 /****************MOBILE ENDS HERE************************/
 }
 //Calls to be made on dom ready.
@@ -3119,4 +3121,5 @@ $(document).ready(function(){
 //	        $( this ).attr( 'autocomplete', 'false' );
 //	    });
 	}
+	
 });

@@ -183,5 +183,7 @@
 		<!-- TPR-5667 -->
 		<bean id="mplSendOrderFromCommerceToSamsung" class="com.tisl.mpl.service.impl.MplSendOrderFromCommerceToSamsungImpl" />
 		
+		<bean id="mplWalletServices" class="com.tisl.mpl.service.impl.MplWalletServicesImpl"/>
+		
 </beans>
 

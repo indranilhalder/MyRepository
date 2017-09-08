@@ -5496,6 +5496,7 @@ $(".edit_address").click(function(){
  		});
 	return false;
 });
+
 });
 //TPR-1215
 $(".regular-radio").click(function(){
@@ -9241,3 +9242,69 @@ function populateIsExchangeApplied(response,stringCaller)
 		}
 		}
 }
+
+/**
+function setCliqCashPaymentMode()
+{
+	$(document).on("click","#useGiftCardCheckbox",function() {
+		alert("In");
+		
+		var walletMode = document.getElementById('useGiftCardCheckbox');
+		var url=ACC.config.encodedContextPath + "/checkout/multi/payment-method/useWalletForPayment";
+		var data=walletMode;
+		var xhrResponse=ACC.singlePageCheckout.ajaxRequest(url,"POST",data,false);
+        
+        xhrResponse.fail(function(xhr, textStatus, errorThrown) {
+        	console.log("ERROR:"+textStatus + ': ' + errorThrown);
+		});
+        
+        xhrResponse.done(function(data, textStatus, jqXHR) {
+            if (jqXHR.responseJSON) {
+            	if(data.type==="response")
+                {            		
+            		$("#unUseGiftBtnText").hide();
+            		
+            			if(walletMode.checked){
+            				$("#useGiftBtnText").hide();
+            				$("#unUseGiftBtnText").show();
+            			} else {
+            				$("#unUseGiftBtnText").hide();
+            				$("#useGiftBtnText").show();
+            			}
+                }
+            } 
+        });
+	});
+}
+	
+
+$( "#makePaymentDiv" ).load(function() {
+	alert("in");
+	$.ajax({
+		url : ACC.config.encodedContextPath + "/checkout/multi/payment-method/useWalletDetail",
+		//data : dataString,
+		type : "GET",
+		cache : false,
+//		beforeSend : function() {
+//			$('#ajax-loader').show();
+//		},
+		success : function(data) {
+			
+			$(".cliqTotalBalanceLabel").html(data.totalWalletAmt);
+			$("#qcCashId").html(data.totalCash);
+			$("#qcGiftCardId").html(data.totalEgvBalance);	
+			
+			var balAmt = 0;
+			
+//			if(data.totalWalletAmt < TotalOrderAmt){
+//				balAmt = TotalOrderAmt - data.totalWalletAmt;
+//			}
+		},	
+	   
+		fail : function(fail){
+		//alert("Sorry we are unable to connect to Click 2 Call service. Please try again later.");
+	}
+		
+	});
+});
+**/

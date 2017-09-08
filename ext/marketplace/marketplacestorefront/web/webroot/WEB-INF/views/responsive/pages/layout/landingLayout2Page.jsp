@@ -20,6 +20,9 @@
 <!-- TPR-1072 END -->
 
 <template:page pageTitle="${pageTitle}">
+
+<a href="/wallet">View Wallet</a>
+
 	<div class="no-space homepage-banner">
 		<cms:pageSlot position="Section1" var="feature">
 			<cms:component component="${feature}" />

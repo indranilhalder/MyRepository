@@ -13092,5 +13092,208 @@
 		
 		<!-- TPR-6665 : sysnonums update to slave servers end-->
 		
+		
+		
+				
+	<typegroup name="TULWallet">
+
+	<itemtype code="QCInitResponseDetail" autocreate="true" generate="true">
+		<description>QC Response Detail Table</description>
+		<deployment table="QCInitResponseDetail" typecode="21102" />
+
+		<attributes>
+
+			<attribute qualifier="merchantOutletName" type="java.lang.String">
+				<modifiers read="true" write="true" search="true" />
+				<persistence type="property" />
+			</attribute>
+
+			<attribute qualifier="acquirerId" type="java.lang.String">
+				<modifiers read="true" write="true" search="true" />
+				<persistence type="property" />
+			</attribute>
+
+			<attribute qualifier="organizationName" type="java.lang.String">
+				<modifiers read="true" write="true" search="true" />
+				<persistence type="property" />
+			</attribute>
+
+			<attribute qualifier="pOSEntryMode" type="java.lang.Integer">
+				<modifiers read="true" write="true" search="true" />
+				<persistence type="property" />
+			</attribute>
+
+			<attribute qualifier="pOSTypeId" type="java.lang.Integer">
+				<modifiers read="true" write="true" search="true" />
+				<persistence type="property" />
+			</attribute>
+
+			<attribute qualifier="pOSName" type="java.lang.String">
+				<modifiers read="true" write="true" search="true" />
+				<persistence type="property" />
+			</attribute>
+
+			<attribute qualifier="termAppVersion" type="java.lang.String">
+				<modifiers read="true" write="true" search="true" />
+				<persistence type="property" />
+			</attribute>
+
+			<attribute qualifier="currentBatchNumber" type="java.lang.Long">
+				<modifiers read="true" write="true" search="true" />
+				<persistence type="property" />
+			</attribute>
+
+			<attribute qualifier="terminalId" type="java.lang.String">
+				<modifiers read="true" write="true" search="true" />
+				<persistence type="property" />
+			</attribute>
+
+			<attribute qualifier="userName" type="java.lang.String">
+				<modifiers read="true" write="true" search="true" />
+				<persistence type="property" />
+			</attribute>
+
+			<attribute qualifier="password" type="java.lang.String">
+				<modifiers read="true" write="true" search="true" />
+				<persistence type="property" />
+			</attribute>
+
+			<attribute qualifier="forwardingEntityId" type="java.lang.String">
+				<modifiers read="true" write="true" search="true" />
+				<persistence type="property" />
+			</attribute>
+
+			<attribute qualifier="forwardingEntityPassword" type="java.lang.String">
+				<modifiers read="true" write="true" search="true" />
+				<persistence type="property" />
+			</attribute>
+
+			<attribute qualifier="dateAtClient" type="java.util.Date">
+				<modifiers read="true" write="true" search="true" />
+				<persistence type="property" />
+			</attribute>
+
+			<attribute qualifier="merchantName" type="java.lang.String">
+				<modifiers read="true" write="true" search="true" />
+				<persistence type="property" />
+			</attribute>
+
+			<attribute qualifier="responseCode" type="java.lang.Integer">
+				<modifiers read="true" write="true" search="true" />
+				<persistence type="property" />
+			</attribute>
+
+			<attribute qualifier="responseMessage" type="java.lang.String">
+				<modifiers read="true" write="true" search="true" />
+				<persistence type="property" />
+			</attribute>
+
+		</attributes>
+	</itemtype>
+	
+	<itemtype code="Customer" generate="false" autocreate="false">
+		<attributes>
+			<attribute qualifier="isWalletActivated"
+				autocreate="true" type="java.lang.boolean" generate="true" >
+				<modifiers read="true" write="true" search="true" optional="true" />
+				<defaultvalue>false</defaultvalue>
+				<persistence type="property" />
+		 </attribute>
+		 
+		 <attribute qualifier="customerWalletDetail"
+				autocreate="true" type="CustomerWalletDetail" generate="true" >
+				<persistence type="property" />
+				<modifiers read="true" write="true" optional="true" search="true" />
+		 </attribute>
+		 
+		</attributes>
+      </itemtype>
+
+
+	<itemtype code="CustomerWalletDetail" generate="true"
+		autocreate="true">
+		<deployment table="CustomerWalletDetail" typecode="21103"/>
+
+		<attributes>
+			<attribute qualifier="walletId" autocreate="true"
+				type="java.lang.String" generate="true">
+				<modifiers read="true" write="true" search="true"
+					optional="false" unique="true" />
+				<persistence type="property" />
+			</attribute>
+
+			<attribute qualifier="walletPin" autocreate="true"
+				type="java.lang.String" generate="true">
+				<modifiers read="true" write="true" search="true"
+					optional="true" />
+				<persistence type="property" />
+			</attribute>
+
+			<attribute qualifier="walletState" autocreate="true"
+				type="java.lang.String" generate="true">
+				<modifiers read="true" write="true" search="true" />
+				<persistence type="property" />
+			</attribute>
+
+			<attribute autocreate="true" qualifier="customer" type="Customer">
+				<persistence type="property" />
+				<modifiers read="true" write="true" optional="false"
+					search="true" />
+			</attribute>
+			
+			<attribute autocreate="true" generate="true" qualifier="serviceProvider" type="java.lang.String">
+				<persistence type="property" />
+				<modifiers read="true" write="true" optional="false"
+					search="true" />
+			</attribute>
+
+		</attributes>
+	</itemtype>
+	
+	<itemtype code="CardBinNumberDetail" generate="true"
+		autocreate="true">
+		<deployment table="CardBinNumberDetail" typecode="21104"/>
+
+		<attributes>
+			<attribute qualifier="binNumber" autocreate="true"
+				type="java.lang.String" generate="true">
+				<modifiers read="true" write="true" search="true"
+					optional="false"/>
+				<persistence type="property" />
+			</attribute>
+
+			<attribute qualifier="sellerId" autocreate="true"
+				type="java.lang.String" generate="true">
+				<modifiers read="true" write="true" search="true"
+					optional="false" />
+				<persistence type="property" />
+			</attribute>
+
+			<attribute qualifier="brands" autocreate="true"
+				type="java.lang.String" generate="true">
+				<modifiers read="true" write="true" search="true" />
+				<persistence type="property" />
+			</attribute>
+
+			<attribute autocreate="true" generate="true" qualifier="terminalId" type="java.lang.String">
+				<persistence type="property" />
+				<modifiers read="true" write="true" optional="false"
+					search="true" />
+			</attribute>
+			
+			<attribute autocreate="true"  generate="true" qualifier="projectCode" type="java.lang.String">
+				<persistence type="property" />
+				<modifiers read="true" write="true" search="true" />
+			</attribute>
+			
+			<attribute autocreate="true"  generate="true" qualifier="serviceProvider" type="java.lang.String">
+				<persistence type="property" />
+				<modifiers read="true" write="true" search="true" />
+			</attribute>
+
+		</attributes>
+	</itemtype>
+		</typegroup>
+		
   </itemtypes>
 </items>
