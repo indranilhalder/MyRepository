@@ -108,7 +108,7 @@ public class NotificationServiceImpl implements NotificationService
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.marketplacecommerceservices.service.NotificationService#getNotification()
 	 */
 	@Override
@@ -120,7 +120,7 @@ public class NotificationServiceImpl implements NotificationService
 
 	/*
 	 * Getting notificationDetails of logged User (non-Javadoc) (non-Javadoc)
-	 *
+	 * 
 	 * @see
 	 * com.tisl.mpl.marketplacecommerceservices.service.NotificationService#getNotificationDetails(com.tisl.mpl.data.
 	 * NotificationData)
@@ -151,7 +151,7 @@ public class NotificationServiceImpl implements NotificationService
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see
 	 * com.tisl.mpl.marketplacecommerceservices.service.NotificationService#checkCustomerFacingEntry(com.tisl.mpl.core
 	 * .model.OrderStatusNotificationModel)
@@ -173,13 +173,13 @@ public class NotificationServiceImpl implements NotificationService
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.marketplacecommerceservices.service.NotificationService#markNotificationRead(java.lang.String,
 	 * java.lang.String, java.lang.String)
 	 */
 	@Override
-	public void markNotificationRead(final String customerId, final String orderNo, final String consignmentNo,
-			final String shopperStatus) throws EtailNonBusinessExceptions
+	public void markNotificationRead(final String emailId, final String customerId, final String orderNo,
+			final String consignmentNo, final String shopperStatus) throws EtailNonBusinessExceptions
 	{
 		try
 		{
@@ -199,7 +199,7 @@ public class NotificationServiceImpl implements NotificationService
 			}
 
 			//For voucher notification
-			final UserModel user = extendedUserService.getUserForUid(customerId);
+			final UserModel user = extendedUserService.getUserForUid(emailId);
 
 			final List<VoucherStatusNotificationModel> voucherNotificationList = user.getVoucher();
 
@@ -220,7 +220,6 @@ public class NotificationServiceImpl implements NotificationService
 			user.setVoucher(voucherNotifListModifiable);
 			modelService.save(user);
 
-
 			/*
 			 * for (final VoucherStatusNotificationModel vsn : voucherList) { vsn.setIsRead(isRead); } if
 			 * (CollectionUtils.isNotEmpty(voucherList)) //Saving the voucherList { getModelService().saveAll(voucherList);
@@ -234,7 +233,7 @@ public class NotificationServiceImpl implements NotificationService
 
 			/*
 			 * for (final VoucherStatusNotificationModel vsn : voucherNotificationList) {
-			 *
+			 * 
 			 * if (vsn.getVoucherCode().equalsIgnoreCase(orderNo)) { //continue; //voucherNotificationTobeRemoved = vsn;
 			 * break; }
 			 */
@@ -276,7 +275,7 @@ public class NotificationServiceImpl implements NotificationService
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.marketplacecommerceservices.service.NotificationService#markNotificationRead(java.lang.String,
 	 * java.lang.String, java.lang.String)
 	 */
@@ -369,7 +368,7 @@ public class NotificationServiceImpl implements NotificationService
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see
 	 * com.tisl.mpl.marketplacecommerceservices.service.NotificationService#triggerEmailAndSmsOnInventoryFail(de.hybris
 	 * .platform.core.model.order.OrderModel)
@@ -396,7 +395,7 @@ public class NotificationServiceImpl implements NotificationService
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see
 	 * com.tisl.mpl.marketplacecommerceservices.service.NotificationService#triggerEmailAndSmsOnOrderConfirmation(de.
 	 * hybris.platform.core.model.order.OrderModel, java.lang.String)
@@ -496,7 +495,7 @@ public class NotificationServiceImpl implements NotificationService
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see
 	 * com.tisl.mpl.marketplacecommerceservices.service.NotificationService#sendMobileNotifications(de.hybris.platform
 	 * .core.model.order.OrderModel)
@@ -585,7 +584,7 @@ public class NotificationServiceImpl implements NotificationService
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.marketplacecommerceservices.service.NotificationService#getPromotion()
 	 */
 	@Override
@@ -605,7 +604,7 @@ public class NotificationServiceImpl implements NotificationService
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see
 	 * com.tisl.mpl.marketplacecommerceservices.service.NotificationService#getSortedNotificationData(java.util.List)
 	 */
