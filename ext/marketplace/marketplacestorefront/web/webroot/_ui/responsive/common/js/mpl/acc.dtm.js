@@ -154,7 +154,7 @@ $(document).ready(function(){
 		   }
 		}
 		
-	      if($("#out_of_stock").val() =='true' ){
+	      if($("#out_of_stock").val() == "true"){
 			  if(typeof _satellite !="undefined"){
 			   _satellite.track('out_of_stock');
 		      }
