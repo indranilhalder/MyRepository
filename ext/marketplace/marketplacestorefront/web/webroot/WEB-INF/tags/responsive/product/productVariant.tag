@@ -347,6 +347,91 @@ var buyingGuideData ='${buyingGuide}';
 				<!-- <option value="#">select size</option> -->
 				<!-- JWLSPCUAT-99:After click on other seller link in PDP Size in not loading and color attribute is showing -->
 				<c:choose>
+				<c:when test="${product.rootCategory =='HomeFurnishing'}">
+				
+				
+				<select id="variant_dropdown" class="variant-select">
+   				<c:forEach items="${product.variantOptions}" var="variantOption">
+			      <c:forEach items="${variantOption.colourCode}" var="color">                  
+					<c:choose>
+						<c:when test="${not empty currentColor}">
+							<c:if test="${currentColor eq color}">
+								<c:set var="currentColor" value="${color}" />						
+								<c:forEach var="entry" items="${variantOption.sizeLink}">
+									<c:url value="${entry.key}" var="link" />
+									<%--  <a href="${link}?selectedSize=true${msiteSellerForSize}">${entry.value}</a> --%>
+									<c:choose>
+										<c:when test="${(variantOption.code eq product.code)}">
+											<c:choose>
+												<c:when test="${selectedSize eq null}">
+												<!--CKD:TPR-250  -->
+												 <option value="${link}?selectedSize=true${msiteSellerForSize}" data-productCode="${variantOption.code}" >${entry.value}</option>
+													
+												</c:when>
+												<c:otherwise>
+													<!--CKD:TPR-250  -->
+													 <option value="${link}?selectedSize=true${msiteSellerForSize}" data-productCode="${variantOption.code}" selected>${entry.value}</option>
+													
+												</c:otherwise>
+											 </c:choose>
+										 </c:when>
+										 <c:otherwise>
+											<!--CKD:TPR-250  -->
+											 <option data-vcode="${link}" value="${link}?selectedSize=true${msiteSellerForSize}" data-productCode="${variantOption.code}" >${entry.value}</option>
+										 </c:otherwise>
+									</c:choose>
+								  </c:forEach>
+							  </c:if>
+						</c:when>	
+					    <c:otherwise>									
+						  <c:forEach var="entry" items="${variantOption.sizeLink}">
+						   <c:url value="${entry.key}" var="link" />
+						   <c:if test="${entry.key eq product.url}">
+						   <c:set var="currentColor" value="${color}" />
+						   <c:set var="currentColor" value="${variantOption.colour}" />
+						   </c:if>
+						   <c:forEach items="${product.variantOptions}" var="variantOption">
+							 <c:forEach items="${variantOption.colour}" var="color">
+								<c:if test="${currentColor eq color}">
+									<c:forEach var="entry" items="${variantOption.sizeLink}">
+										<c:url value="${entry.key}" var="link" />
+										    <c:choose>
+											      <c:when test="${(variantOption.code eq product.code)}">
+														<c:choose>
+															<c:when test="${selectedSize eq null}">
+														<!--CKD:TPR-250  -->
+														 <option value="${link}?selectedSize=true${msiteSellerForSize}" data-productCode="${variantOption.code}">${entry.value}</option>
+																
+															</c:when>
+															<c:otherwise>
+															<!--CKD:TPR-250  -->
+															 <option value="${link}?selectedSize=true${msiteSellerForSize}" data-productCode="${variantOption.code}" selected>${entry.value}</option>
+																
+															</c:otherwise>
+														</c:choose>
+												</c:when>	
+												<c:otherwise>
+													<!--CKD:TPR-250  -->
+													 <option data-vcode="${link}" value="${link}?selectedSize=true${msiteSellerForSize}" data-productCode="${variantOption.code}" >${entry.value}</option>
+												</c:otherwise>												
+											</c:choose>
+										</c:forEach>
+									  </c:if>
+								</c:forEach>
+							</c:forEach>
+				    	</c:forEach>
+					  </c:otherwise>
+			      </c:choose>
+			    </c:forEach>
+			  </c:forEach>
+			  </select>
+				
+				
+				
+				
+				</c:when>
+				<c:otherwise>
+				<c:choose>
 				<c:when test="${ product.rootCategory =='FineJewellery' || product.rootCategory =='FashionJewellery'}">
 						<c:forEach items="${product.variantOptions}" var="variantOption">
 							<c:forEach var="entry" items="${variantOption.sizeLink}">
@@ -447,6 +532,8 @@ var buyingGuideData ='${buyingGuide}';
 					</c:choose>
 				</c:forEach>
 			</c:forEach>
+			</c:otherwise>
+			</c:choose>
 			</c:otherwise>
 			</c:choose>
 			</ul>
