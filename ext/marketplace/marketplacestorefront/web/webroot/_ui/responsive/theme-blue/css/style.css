@@ -76901,6 +76901,9 @@ body .account .right-account form label.invite-text-lbl{
 	margin-left: -15px;
 	
 }
+.product-info>div.tabs-block.HomeFurnishing .nav-wrapper .nav.pdp.productNav li{
+	padding-bottom: 8px;
+}
 /*homefurinshing-overview-tab end*/
 /*home furnishing pdp monogramming start*/
 .sellerMonogramming{
@@ -76916,3 +76919,36 @@ body .account .right-account form label.invite-text-lbl{
     color: #a5173c;
 }
 /*home furnishing pdp monogramming end*/
+@media(max-width: 767px){
+	.product-specification-accordion.smk_accordion .accordion_in .acc_content ul .product-desc .key-label .homefurnishing-overview{
+		list-style-type: disc;
+    	margin-left: 16px;
+    	margin-bottom: 48px;
+	}
+	.product-specification-accordion.smk_accordion .accordion_in .acc_content ul .product-desc .key-label .homefurnishing-overview .homefurnishing-overview-title{
+		list-style: none;
+    	color: #000;
+    	text-transform: uppercase;
+    	margin-bottom: 16px;
+	}
+	.product-specification-accordion.smk_accordion .accordion_in .acc_content ul .product-desc .key-label .homefurnishing-overview .homefurnishing-overview-desc{
+		font-size: 12px;
+    	line-height: 1.33;
+    	letter-spacing: 0.6px;
+    	color: rgba(0, 0, 0, 0.6);
+   	 	margin-bottom: 8px;
+    	list-style: square;
+    	margin-left: 15px;
+	}
+	.product-info>div.tabs-block.HomeFurnishing{
+    	float: none;
+    	display: block;
+    	clear: both;
+    	padding: 30px 0 0;
+}
+}
+@media(max-width: 380px){
+	.product-specification-accordion.smk_accordion .accordion_in .acc_content ul .product-desc .key-label .homefurnishing-overview .homefurnishing-overview-desc{
+		letter-spacing: normal;
+	}
+}
