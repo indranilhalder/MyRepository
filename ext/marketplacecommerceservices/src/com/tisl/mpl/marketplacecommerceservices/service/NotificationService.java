@@ -31,8 +31,8 @@ public interface NotificationService
 	public boolean checkCustomerFacingEntry(final OrderStatusNotificationModel osnm);
 
 
-	public void markNotificationRead(final String customerId, final String orderNo, final String consignmentNo,
-			final String shopperStatus) throws EtailNonBusinessExceptions;
+	public void markNotificationRead(final String emailId, final String customerId, final String orderNo,
+			final String consignmentNo, final String shopperStatus) throws EtailNonBusinessExceptions;
 
 
 
