@@ -4952,6 +4952,8 @@ function changePrice(value) {
 function onSubmitExc()
 {
 	var brand= $("#brandExchangeParam").val();
+	
+	
 	var l4select=$('#l4select').val();
 	var isError=false;
 	var isWorking=$('#activeselect').val();
@@ -4966,7 +4968,8 @@ function onSubmitExc()
 	var productArray =[];
 	productArray.push(productCode);
 	//TPR-5193 Analytics ends
-		if(!brand)
+	//JWLSPCUAT-1590
+		if(!brand || brand.trim().length==0)
 			{
 			$("#lbrand").text("Please Enter Brand");
 			document.getElementById('lbrand').style.color = "red";
