@@ -45,7 +45,7 @@ var stwService = {
             		var vistingIp = stwRender.visitingIpAddress(json);
                 var isIpAvialable = true;//stwRender.wigetLoaderOnIp(vistingIp);
                 if (($("#pageType").val() == "homepage") && (isIpAvialable == true)) {
-                	alert('12345');
+                	
                     var stw_block = null;
                     if (tabsLoaded) {
                         var carousel = stwRender.carousel(json);
@@ -175,12 +175,11 @@ var stwRender = {
     
 
     carousel: function(STWJObject) {
-    	alert(STWJObject);
     	if(STWJObject !=null && (STWJObject.STWElements !="" && STWJObject.STWElements !=null ))
     		
     	//if(STWJObject.STWElements)
     	{
-    	alert(STWJObject);
+    	
         var stwWidgetProducts = "";
         stwWidgetProducts += '<div class="carousel-component">';
         stwWidgetProducts += '<div class="carousel js-owl-carousel js-owl-lazy-reference js-owl-carousel-reference stw-widget-owl">';
@@ -209,12 +208,12 @@ var stwRender = {
     },
     
     carouselHF: function(STWJObject) {
-    	alert(STWJObject);
+    	
     	if(STWJObject !=null && (STWJObject.STWElements !="" && STWJObject.STWElements !=null ))
     		
     	//if(STWJObject.STWElements)
     	{
-    	alert(STWJObject);
+    	
         var stwWidgetProducts = "";
         stwWidgetProducts += '<div class="carousel-component">';
         stwWidgetProducts += '<div class="carousel js-owl-carousel js-owl-lazy-reference js-owl-carousel-reference stw-widget-owl">';
