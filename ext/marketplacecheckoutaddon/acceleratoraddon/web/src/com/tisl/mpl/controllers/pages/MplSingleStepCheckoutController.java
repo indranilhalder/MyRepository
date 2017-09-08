@@ -1059,6 +1059,8 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 			if (LOG.isDebugEnabled())
 			{
 				LOG.debug("Inside selectAddress Method...");
+				LOG.debug("selectedAddressCode=" + selectedAddressCode);
+				LOG.debug("exchangeEnabled=" + exchangeEnabled);
 			}
 			if (getUserFacade().isAnonymousUser())
 			{
@@ -1098,13 +1100,14 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 			finaladdressData.setVisibleInAddressBook(true);
 
 			final String selectedPincode = finaladdressData.getPostalCode();
-
+			LOG.debug("selectedPincode=" + selectedPincode);
 			//TISSEC-11
 			final String regex = "\\d{6}";
 
 			if (selectedPincode.matches(regex))
 			{
 				final String sessionPincode = getSessionService().getAttribute(MarketplacecommerceservicesConstants.SESSION_PINCODE);
+				LOG.debug("sessionPincode=" + sessionPincode);
 				if (StringUtils.isEmpty(sessionPincode))
 				{
 					final String requestQueryParam = UriUtils.encodeQuery("?url=" + MarketplacecommerceservicesConstants.CART
@@ -1163,6 +1166,7 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 		catch (final Exception e)
 		{
 			LOG.error("Exception occured while selecting  address:" + e);
+			e.printStackTrace();
 			final String requestQueryParam = UriUtils.encodeQuery("?msg=Opps...Something went wrong&type=error", UTF);
 			return FORWARD_PREFIX + "/checkout/single/message" + requestQueryParam;
 
@@ -1186,6 +1190,7 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 			if (LOG.isDebugEnabled())
 			{
 				LOG.debug("Inside selectAddress Responsive Method...");
+				LOG.debug("selectedAddressCode=" + selectedAddressCode);
 			}
 			if (getUserFacade().isAnonymousUser())
 			{
@@ -1228,20 +1233,21 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 		catch (final EtailBusinessExceptions e)
 		{
 			ExceptionUtil.etailBusinessExceptionHandler(e, null);
-			LOG.error("EtailBusinessExceptions  while selecting address ", e);
+			LOG.error("EtailBusinessExceptions  while selecting address for responsive", e);
 			jsonObj.put("displaymessage", "jsonExceptionMsg");
 			jsonObj.put("type", "errorCode");
 		}
 		catch (final EtailNonBusinessExceptions e)
 		{
 			ExceptionUtil.etailNonBusinessExceptionHandler(e);
-			LOG.error("EtailNonBusinessExceptions  while selecting address ", e);
+			LOG.error("EtailNonBusinessExceptions  while selecting address for responsive", e);
 			jsonObj.put("displaymessage", "jsonExceptionMsg");
 			jsonObj.put("type", "errorCode");
 		}
 		catch (final Exception e)
 		{
-			LOG.error("Exception occured while selecting  address:" + e);
+			LOG.error("Exception occured while selecting  address for responsive:" + e);
+			e.printStackTrace();
 			jsonObj.put("displaymessage", "jsonExceptionMsg");
 			jsonObj.put("type", "errorCode");
 
