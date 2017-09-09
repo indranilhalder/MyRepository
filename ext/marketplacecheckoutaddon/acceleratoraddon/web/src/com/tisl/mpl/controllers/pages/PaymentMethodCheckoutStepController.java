@@ -4002,17 +4002,16 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 				}
 				else
 				{
-
 					boolean splitPayment = false;
 					String cliqCashPaymentMode = StringUtils.EMPTY;
 
-					if (StringUtils.isNotEmpty(getSessionService().getAttribute("getCliqCashMode").toString()))
+					if (null != (getSessionService().getAttribute("getCliqCashMode").toString()))
 					{
 
 						splitPayment = Boolean.parseBoolean(getSessionService().getAttribute("getCliqCashMode").toString());
 					}
 
-					if (StringUtils.isNotEmpty(getSessionService().getAttribute("cliqCashPaymentMode").toString()))
+					if (null != (getSessionService().getAttribute("cliqCashPaymentMode").toString()))
 					{
 
 						cliqCashPaymentMode = getSessionService().getAttribute("cliqCashPaymentMode").toString();
@@ -5953,9 +5952,6 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 	public @ResponseBody String UseWalletForPayment(@RequestParam("walletMode") final String value)
 			throws UnsupportedEncodingException
 	{
-
-		System.out.println("walletMode --- " + value);
-
 		if (StringUtils.isEmpty(value))
 		{
 			getSessionService().setAttribute("getCliqCashMode", value);
@@ -5971,46 +5967,56 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 	}
 
 
+	/**
+	 * @param request
+	 * @throws JSONException
+	 */
 	@RequestMapping(value = "/useWalletDetail", method = RequestMethod.GET)
 	@RequireHardLogIn
-	public @ResponseBody JSONObject getCurrentUserWallet(final HttpServletRequest request) throws UnsupportedEncodingException
+	public @ResponseBody JSONObject getCurrentUserWallet(final HttpServletRequest request)
+			throws UnsupportedEncodingException, JSONException
 	{
 		final JSONObject jsonObject = new JSONObject();
-		final CustomerModel customer = (CustomerModel) getUserService().getCurrentUser();
-
-		final BalanceBucketWise balBucketwise = mplWalletFacade
-				.getQCBucketBalance(customer.getCustomerWalletDetail().getWalletId());
-
+		BalanceBucketWise balBucketwise = new BalanceBucketWise();
 		int cashBalance = 0;
 		int egvBalance = 0;
 
-		for (final Bucket bucketType : balBucketwise.getBuckets())
-		{
-			if (bucketType.getType().equalsIgnoreCase("CUSTOMER"))
-			{
-				egvBalance = Integer.parseInt(bucketType.getAmount().toString().isEmpty() ? "0" : bucketType.getAmount().toString());
-			}
-			else
-			{
-
-				cashBalance += Integer
-						.parseInt(bucketType.getAmount().toString().isEmpty() ? "0" : bucketType.getAmount().toString());
-			}
-		}
-
 		try
 		{
+			final CustomerModel customer = (CustomerModel) getUserService().getCurrentUser();
+			balBucketwise = mplWalletFacade.getQCBucketBalance(customer.getCustomerWalletDetail().getWalletId());
+
+
+			for (final Bucket bucketType : balBucketwise.getBuckets())
+			{
+				if (bucketType.getType().equalsIgnoreCase("CUSTOMER"))
+				{
+					egvBalance = Integer
+							.parseInt(bucketType.getAmount().toString().isEmpty() ? "0" : bucketType.getAmount().toString());
+				}
+				else
+				{
+
+					cashBalance += Integer
+							.parseInt(bucketType.getAmount().toString().isEmpty() ? "0" : bucketType.getAmount().toString());
+				}
+			}
+
+
 			jsonObject.put("totalWalletAmt", balBucketwise.getWallet().getBalance().toString().isEmpty() ? "0"
 					: balBucketwise.getWallet().getBalance().toString());
 			jsonObject.put("totalCash", "" + cashBalance);
 			jsonObject.put("totalEgvBalance", "" + egvBalance);
 
 		}
-		catch (
-
-		final JSONException e)
+		catch (final Exception e)
 		{
 			e.printStackTrace();
+			System.out.println(" Error in QuickSilver Api --" + balBucketwise.getResponseCode() + " Message-"
+					+ balBucketwise.getResponseMessage());
+			jsonObject.put("totalWalletAmt", "0");
+			jsonObject.put("totalCash", "" + cashBalance);
+			jsonObject.put("totalEgvBalance", "" + egvBalance);
 		}
 
 		return jsonObject;

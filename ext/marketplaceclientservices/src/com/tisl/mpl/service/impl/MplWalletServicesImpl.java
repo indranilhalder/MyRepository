@@ -4,6 +4,7 @@
 package com.tisl.mpl.service.impl;
 
 import de.hybris.platform.servicelayer.config.ConfigurationService;
+import de.hybris.platform.servicelayer.model.ModelService;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -20,8 +21,10 @@ import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.WebResource;
 import com.tisl.mpl.constants.MarketplaceclientservicesConstants;
+import com.tisl.mpl.pojo.request.QCCustomerRegisterRequest;
 import com.tisl.mpl.pojo.request.QCRedeemRequest;
 import com.tisl.mpl.pojo.response.BalanceBucketWise;
+import com.tisl.mpl.pojo.response.QCCustomerRegisterResponse;
 import com.tisl.mpl.pojo.response.QCInitializationResponse;
 import com.tisl.mpl.pojo.response.QCRedeeptionResponse;
 import com.tisl.mpl.service.MplWalletServices;
@@ -39,7 +42,29 @@ public class MplWalletServicesImpl implements MplWalletServices
 	@Resource(name = "configurationService")
 	private ConfigurationService configurationService;
 
+	@Resource(name = "modelService")
+	private ModelService modelService;
 
+
+
+
+	/**
+	 * @return the modelService
+	 */
+	public ModelService getModelService()
+	{
+		return modelService;
+	}
+
+
+	/**
+	 * @param modelService
+	 *           the modelService to set
+	 */
+	public void setModelService(final ModelService modelService)
+	{
+		this.modelService = modelService;
+	}
 
 
 	/**
@@ -62,7 +87,7 @@ public class MplWalletServicesImpl implements MplWalletServices
 
 
 	@Override
-	public QCInitializationResponse walletInitilization()
+	public void walletInitilization()
 	{
 		QCInitializationResponse qcInitializationResponse = new QCInitializationResponse();
 		final Client client = Client.create();
@@ -107,68 +132,64 @@ public class MplWalletServicesImpl implements MplWalletServices
 				final ObjectMapper objectMapper = new ObjectMapper();
 
 				qcInitializationResponse = objectMapper.readValue(output, QCInitializationResponse.class);
-				return qcInitializationResponse;
+
+				if (Integer.parseInt("" + qcInitializationResponse.getResponseCode()) == 0)
+				{
+					//final QCInitResponseDetailModel qcInitModel = getModelService().create(QCInitResponseDetailModel.class);
+				}
+
 			}
 		}
 		catch (final Exception e)
 		{
 			LOG.error(e.getMessage());
 		}
-
-		return qcInitializationResponse;
 	}
 
 	@Override
-	public void createWallet()
+	public QCCustomerRegisterResponse registerCustomerWallet(final QCCustomerRegisterRequest registerCustomerRequest,
+			final String transactionId)
 	{
 
 		final Client client = Client.create();
 		ClientResponse response = null;
 		WebResource webResource = null;
-		//final ReturnLogisticsResponse responsefromOMS = new ReturnLogisticsResponse();
 		final DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
-
-
+		QCCustomerRegisterResponse custResponse = new QCCustomerRegisterResponse();
 		try
 		{
 			webResource = client
 					.resource(UriBuilder.fromUri("http://qc3.qwikcilver.com/Qwikcilver/eGMS.RestApi/api/wallet/").build());
 
-			//need to create marshalling for request body
-			final String requestBody = "{\"Externalwalletid\":\"nb@tataunistore.com\",\"Customer\":{\"CustomerType\":null,\"Salutation\":\"\",\"Firstname\":\"Nirav\",\"LastName\":\"B\",\"PhoneNumber\":\"9876543288\",\"Email\":\"nb@tataunistore.com\",\"DOB\":\"\",\"AddressLine1\":\"add1\",\"AddressLine2\":\"add2\",\"AddressLine3\":\"add3\",\"City\":\"Bangalore\",\"State\":\"Karnataka\",\"Country\":\"India\",\"Gender\":\"\",\"Anniversary\":\"\",\"MaritalStatus\":\"\",\"EmployeeID\":\"\",\"PhoneAlternate\":\"2709201601\",\"PinCode\":\"\",\"Region\":null,\"Area\":\"\",\"CorporateName\":\"Tata Unistore Ltd\"},\"Notes\":\"Wallet creation\"}";
+			final ObjectMapper objectMapper = new ObjectMapper();
+			final String requestBody = objectMapper.writeValueAsString(registerCustomerRequest);
 
 			response = webResource.type(MediaType.APPLICATION_JSON).header("ForwardingEntityId", "tatacliq.com")
 					.header("ForwardingEntityPassword", "tatacliq.com").header("TerminalId", "webpos-tul-dev10")
-					.header("Username", "tulwebuser").header("Password", "webusertul").header("TransactionId", "1") //(random number logic)
+					.header("Username", "tulwebuser").header("Password", "webusertul").header("TransactionId", transactionId) //(random number logic)
 					.header("DateAtClient", dateFormat.format(new Date())).header("IsForwardingEntityExists", "true")
 					.header("Content-Type", "application/json").header("MerchantOutletName", "TUL-Online")
 					.header("AcquirerId", "Tata Unistore Ltd").header("OrganizationName", "Tata Unistore Ltd")
 					.header("POSEntryMode", "2").header("POSTypeId", "1").header("POSName", "webpos-tul-qc-01")
-					.header("TermAppVersion", "null").header("CurrentBatchNumber", "10208532").type(MediaType.APPLICATION_JSON)
+					.header("TermAppVersion", "null").header("CurrentBatchNumber", "10208682").type(MediaType.APPLICATION_JSON)
 					.post(ClientResponse.class, requestBody);
-
-
 
 			if (null != response)
 			{
 				final String output = response.getEntity(String.class);
-				LOG.debug(" ************** Initilization for  WALLET" + output); //need to create marshalling for response object
-				System.out.println(" ************** Initilization for  WALLET" + output);
-
+				custResponse = objectMapper.readValue(output, QCCustomerRegisterResponse.class);
+				return custResponse;
 			}
 		}
 		catch (
 
 		final Exception ex)
 		{
-
 			ex.printStackTrace();
 			System.out.println("Error response Status:------" + response.getStatus());
 		}
-
-
+		return custResponse;
 	}
-
 
 
 	@Override
@@ -349,7 +370,6 @@ public class MplWalletServicesImpl implements MplWalletServices
 			{
 				final String output = response.getEntity(String.class);
 				qcRedeeptionResponse = objectMapper.readValue(output, QCRedeeptionResponse.class);
-				System.out.println("Reedem--" + qcRedeeptionResponse.getResponseMessage());
 				return qcRedeeptionResponse;
 			}
 		}

@@ -7,11 +7,49 @@
 <spring:url value="/my-account/profile" var="profileUrl" />
 
 
+
+
 <template:page pageTitle="${pageTitle}">
 	
+	
+	
+<script type="text/javascript">
+
+$(document).ready(function() {
+var modelAttributeValue = '${isWalletActive}';
+
+if(modelAttributeValue !== false){	
+		$.ajax({
+			url : ACC.config.encodedContextPath + "/wallet/registerCustomerWallet",
+			//data : dataString,
+			type : "GET",
+			cache : false,
+			success : function(data) {
+				
+			if(data === "Success"){
+				
+				alert("Wallet Created");
+			}
+
+			},	
+		   
+			fail : function(fail){
+			//alert("Sorry we are unable to connect to Click 2 Call service. Please try again later.");
+		}	
+		
+});
+}	
+});
+
+</script>
+	
+	
+	<html>
+	<c:choose>
+	<c:when test="${isWalletActive eq true}">
+	
 	<div class="account">
-	<h1>Total Cliq Cash: 300</h1>
-	<h1>Cliq Back: 100</h1>
+	<h1>Total Cliq Cash: random Number</h1>
 	
 	
 	
@@ -21,5 +59,14 @@
 	<button>View Statement</button>
 	
 	</div>
+	
+	
+	</c:when>
+	<c:otherwise>
+	<p class="desk-view"><spring:theme text="Please Active Wallet" /></p>
+	Hellllloooooo
+	</c:otherwise>
+	</c:choose> 
+</html>
 
 </template:page>

@@ -3,9 +3,10 @@
  */
 package com.tisl.mpl.service;
 
+import com.tisl.mpl.pojo.request.QCCustomerRegisterRequest;
 import com.tisl.mpl.pojo.request.QCRedeemRequest;
 import com.tisl.mpl.pojo.response.BalanceBucketWise;
-import com.tisl.mpl.pojo.response.QCInitializationResponse;
+import com.tisl.mpl.pojo.response.QCCustomerRegisterResponse;
 import com.tisl.mpl.pojo.response.QCRedeeptionResponse;
 
 
@@ -16,9 +17,11 @@ import com.tisl.mpl.pojo.response.QCRedeeptionResponse;
 public interface MplWalletServices
 {
 
-	public QCInitializationResponse walletInitilization();
+	public void walletInitilization();
 
-	public void createWallet();
+
+	public QCCustomerRegisterResponse registerCustomerWallet(final QCCustomerRegisterRequest registerCustomerRequest,
+			final String transactionId);
 
 	public void purchaseEgv();
 

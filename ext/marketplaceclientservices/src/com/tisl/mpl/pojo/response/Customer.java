@@ -1,5 +1,12 @@
+/**
+ *
+ */
+package com.tisl.mpl.pojo.response;
 
-package com.tisl.mpl.pojo.request;
+/**
+ * @author Nirav Bhanushali
+ *
+ */
 
 import java.util.HashMap;
 import java.util.Map;
@@ -21,7 +28,7 @@ public class Customer
 {
 
 	@JsonProperty("CustomerType")
-	private Object customerType;
+	private String customerType;
 	@JsonProperty("Salutation")
 	private String salutation;
 	@JsonProperty("Firstname")
@@ -39,7 +46,7 @@ public class Customer
 	@JsonProperty("AddressLine2")
 	private String addressLine2;
 	@JsonProperty("AddressLine3")
-	private String addressLine3;
+	private Object addressLine3;
 	@JsonProperty("City")
 	private String city;
 	@JsonProperty("State")
@@ -68,13 +75,13 @@ public class Customer
 	private final Map<String, Object> additionalProperties = new HashMap<String, Object>();
 
 	@JsonProperty("CustomerType")
-	public Object getCustomerType()
+	public String getCustomerType()
 	{
 		return customerType;
 	}
 
 	@JsonProperty("CustomerType")
-	public void setCustomerType(final Object customerType)
+	public void setCustomerType(final String customerType)
 	{
 		this.customerType = customerType;
 	}
@@ -176,13 +183,13 @@ public class Customer
 	}
 
 	@JsonProperty("AddressLine3")
-	public String getAddressLine3()
+	public Object getAddressLine3()
 	{
 		return addressLine3;
 	}
 
 	@JsonProperty("AddressLine3")
-	public void setAddressLine3(final String addressLine3)
+	public void setAddressLine3(final Object addressLine3)
 	{
 		this.addressLine3 = addressLine3;
 	}

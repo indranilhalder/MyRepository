@@ -3,14 +3,14 @@
  */
 package com.tisl.mpl.facades.wallet.impl;
 
-import de.hybris.platform.servicelayer.keygenerator.impl.PersistentKeyGenerator;
-
 import javax.annotation.Resource;
 
 import com.tisl.mpl.facades.wallet.MplWalletFacade;
+import com.tisl.mpl.marketplacecommerceservices.service.MplPaymentService;
+import com.tisl.mpl.pojo.request.QCCustomerRegisterRequest;
 import com.tisl.mpl.pojo.request.QCRedeemRequest;
 import com.tisl.mpl.pojo.response.BalanceBucketWise;
-import com.tisl.mpl.pojo.response.QCInitializationResponse;
+import com.tisl.mpl.pojo.response.QCCustomerRegisterResponse;
 import com.tisl.mpl.pojo.response.QCRedeeptionResponse;
 import com.tisl.mpl.service.MplWalletServices;
 
@@ -19,12 +19,36 @@ import com.tisl.mpl.service.MplWalletServices;
  * @author TUL
  *
  */
-public class MplWalletFacadeImpl extends PersistentKeyGenerator implements MplWalletFacade
+public class MplWalletFacadeImpl implements MplWalletFacade
 {
 
 
 	@Resource(name = "mplWalletServices")
 	private MplWalletServices mplWalletServices;
+
+	@Resource
+	private MplPaymentService mplPaymentService;
+
+
+
+	/**
+	 * @return the mplPaymentService
+	 */
+	public MplPaymentService getMplPaymentService()
+	{
+		return mplPaymentService;
+	}
+
+
+
+	/**
+	 * @param mplPaymentService
+	 *           the mplPaymentService to set
+	 */
+	public void setMplPaymentService(final MplPaymentService mplPaymentService)
+	{
+		this.mplPaymentService = mplPaymentService;
+	}
 
 
 
@@ -50,10 +74,10 @@ public class MplWalletFacadeImpl extends PersistentKeyGenerator implements MplWa
 
 
 	@Override
-	public QCInitializationResponse getWalletInitilization()
+	public void getWalletInitilization()
 	{
 
-		return getMplWalletServices().walletInitilization();
+		getMplWalletServices().walletInitilization();
 	}
 
 
@@ -64,9 +88,9 @@ public class MplWalletFacadeImpl extends PersistentKeyGenerator implements MplWa
 	 * @see com.tisl.mpl.facades.wallet.MplWalletFacade#createWalletContainer()
 	 */
 	@Override
-	public void createWalletContainer()
+	public QCCustomerRegisterResponse createWalletContainer(final QCCustomerRegisterRequest registerCustomerRequest)
 	{
-		getMplWalletServices().createWallet();
+		return getMplWalletServices().registerCustomerWallet(registerCustomerRequest, generateQCTransactionId());
 
 	}
 
@@ -184,7 +208,7 @@ public class MplWalletFacadeImpl extends PersistentKeyGenerator implements MplWa
 	@Override
 	public String generateQCTransactionId()
 	{
-		return super.generate().toString();
+		return getMplPaymentService().createQCPaymentId();
 	}
 
 }
