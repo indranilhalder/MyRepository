@@ -11717,6 +11717,11 @@
 				</attribute>
 				
 			</attributes>
+			<indexes>
+					<index name="Exchng_Coupon_Value_IDX">
+						<key attribute="thirdLevelCategory" />
+					</index>
+			</indexes>
 			</itemtype>
 		
 		
@@ -11750,6 +11755,11 @@
 					</persistence>
 				</attribute>			
 			</attributes>
+			<indexes>
+					<index name="Exchange_Pincode_IDX">
+						<key attribute="pincode" />
+					</index>
+			</indexes>
 			</itemtype>
 		
 		
