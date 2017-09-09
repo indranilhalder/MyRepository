@@ -1055,18 +1055,18 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 	{
 		try
 		{
-
-			if (LOG.isDebugEnabled())
-			{
-				LOG.debug("Inside selectAddress Method...");
-				LOG.debug("selectedAddressCode=" + selectedAddressCode);
-				LOG.debug("exchangeEnabled=" + exchangeEnabled);
-			}
 			if (getUserFacade().isAnonymousUser())
 			{
 				final String requestQueryParam = UriUtils.encodeQuery("?url=" + MarketplacecheckoutaddonConstants.CART
 						+ "&type=redirect", UTF);
 				return FORWARD_PREFIX + "/checkout/single/message" + requestQueryParam;
+			}
+			if (LOG.isDebugEnabled())
+			{
+				LOG.debug("Inside selectAddress Method...");
+				LOG.debug("selectedAddressCode=" + selectedAddressCode);
+				LOG.debug("exchangeEnabled=" + exchangeEnabled);
+				LOG.debug("CurrentUser=" + userService.getCurrentUser().getUid());
 			}
 			//TISST-13012
 			final CartModel cart = getCartService().getSessionCart();
@@ -1187,16 +1187,17 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 		final JSONObject jsonObj = new JSONObject();
 		try
 		{
-			if (LOG.isDebugEnabled())
-			{
-				LOG.debug("Inside selectAddress Responsive Method...");
-				LOG.debug("selectedAddressCode=" + selectedAddressCode);
-			}
 			if (getUserFacade().isAnonymousUser())
 			{
 				jsonObj.put("url", MarketplacecheckoutaddonConstants.CART);
 				jsonObj.put("type", "redirect");
 				return jsonObj;
+			}
+			if (LOG.isDebugEnabled())
+			{
+				LOG.debug("Inside selectAddress Responsive Method...");
+				LOG.debug("selectedAddressCode=" + selectedAddressCode);
+				LOG.debug("CurrentUser=" + userService.getCurrentUser().getUid());
 			}
 			final String isCheckoutPincodeServiceable = getSessionService().getAttribute("isCheckoutPincodeServiceable");
 			if (isCheckoutPincodeServiceable.equalsIgnoreCase(MarketplacecommerceservicesConstants.N))
