@@ -168,20 +168,20 @@ $(document).ready(function(){
 			}
 
 			var isLux = findGetParameter('isLux');
-			console.log("isLux"+ isLux);
+			//console.log("isLux"+ isLux);
 			var isLuxury = $("#isLuxury").val();
-			console.log("isLuxury"+ isLuxury);
+			//console.log("isLuxury"+ isLuxury);
 			if (isLuxury != "true" || isLuxury == "undefined"){
-				console.log("isLuxury"+ isLuxury);
+				//console.log("isLuxury"+ isLuxury);
 				isLuxury = false ;
 			}
 			if ( isLux == "false"){
-				console.log("isLux"+ isLux);
+				//console.log("isLux"+ isLux);
 				isLux = false ;
 			}
 			
 			var marketplaceHeader = (isLux || isLuxury) ? false : true ;
-			console.log("marketplaceHeader"+ marketplaceHeader);
+			//console.log("marketplaceHeader"+ marketplaceHeader);
 			if (isLux == "true"){
 				$(".marketplace-header").css("visibility","hidden");
 			}
@@ -2728,7 +2728,7 @@ function sortByFilterResult(top){
 			url : requiredUrl,
 			data : dataString,
 			success : function(response) {
-				console.log(response);
+				//console.log(response);
 				// putting AJAX respons to view
 				$('#facetSearchAjaxData .right-block, #facetSearchAjaxData .bottom-pagination, #facetSearchAjaxData .facet-list.filter-opt').remove();
 				$('#facetSearchAjaxData .left-block').after(response);
@@ -2775,7 +2775,7 @@ function viewByFilterResult(top){
 			url : requiredUrl,
 			data : dataString,
 			success : function(response) {
-				console.log(response);
+				//console.log(response);
 				// putting AJAX respons to view
 				$('#facetSearchAjaxData .right-block, #facetSearchAjaxData .bottom-pagination, #facetSearchAjaxData .facet-list.filter-opt').remove();
 				$('#facetSearchAjaxData .left-block').after(response);
@@ -2878,14 +2878,14 @@ $(document).ready(function(){
 	
 	$(".timeout-slider").find(".owl-item.active").find(".item.slide").click(function(){
 		var link = $(this).find("a").attr("href");
-		console.log(link);
+		//console.log(link);
 	});
 	
 	$(".item.slide").find("a").click(function(){
 		  var link= $(this).attr("href"); //$(".item.slide").find("a").attr("href"); 
 		  var sublink=link.substr(0, link.indexOf('?')); 
 		  var id = "#"+sublink.split("#")[1];
-		  console.log(id);
+		  //console.log(id);
 		  $('html, body').animate({
 		        scrollTop: $(id).offset().top -100
 		    }, 1000);
