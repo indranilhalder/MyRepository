@@ -4771,19 +4771,20 @@ $("#pdpPincodeCheckExchnage").on("click",function(){
     
 	$.when(pinCodeCheckajax).done(function(pincoeData){
 		
+		var pinExc = $('#pinExc').val();
+		var productCode =  $('#product_id').val();
+		var productArray =[];
+		productArray.push(productCode);
 	for (var i = 0; i < pincoeData.length; i++) {
 		
-		//check pincodeData if it is servicable
+		 //check pincodeData if it is servicable
 		if (pincoeData[i]['isServicable'] == 'Y') 
 				
 {
   //ajax call to check greendust
 	var dataString = 'pin=' + $("#pinExc").val();
     var reversecheck=false;
-    var pinExc = $('#pinExc').val();
-	var productCode =  $('#product_id').val();
-	var productArray =[];
-	productArray.push(productCode);
+   
 	
 var req1=$.ajax({
 		url : ACC.config.encodedContextPath + "/p-checkReversePincode",
@@ -4835,10 +4836,20 @@ $.when(req1).done(function(data1){
   
  // return false;
 				}
+		
+	
 				
 				}
 	
-    //check all ok
+	//Message for unsuccessful exchange Pincode check forward check
+	if(typeof utag !="undefined"){
+		utag.link({
+			event_type : "exchange_pincode_false",
+			pincode  : pinExc,
+			product_id : productArray
+		});
+	}
+		
     
 });
 
