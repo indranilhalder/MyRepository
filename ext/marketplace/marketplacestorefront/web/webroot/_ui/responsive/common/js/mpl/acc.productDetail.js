@@ -4947,7 +4947,7 @@ function changePrice(value) {
 	    var catOptions = "";
         for (i = 0; i < pricelist.length; i++)
         {
-        	var price=pricelist[i].split("-");
+        	var price=pricelist[i].split(":");
         	
         	 if(l4wokinval===price[0].trim())
        	   	{
