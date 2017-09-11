@@ -69,7 +69,7 @@
 <div id="exchangeDetails" style="display:none">
   <div class="half">
   <label for="l3">Product Category</label>
-  <input type="text" id="l3" value="${l3name}">
+  <input type="text" id="l3" value="${l3name}" disabled="disabled">
   </div>
    <div class="half">
    <label id="lbrand" for="brandExchange">Brand</label>
