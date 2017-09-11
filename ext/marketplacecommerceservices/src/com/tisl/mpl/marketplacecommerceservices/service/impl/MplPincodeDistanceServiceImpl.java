@@ -16,6 +16,7 @@ import javax.annotation.Resource;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.log4j.Logger;
 
+import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.marketplacecommerceservices.service.MplPincodeDistanceService;
 import com.tisl.mpl.util.DistanceMatrixUtility;
 
@@ -28,9 +29,10 @@ public class MplPincodeDistanceServiceImpl implements MplPincodeDistanceService
 {
 	@SuppressWarnings("unused")
 	private static final Logger LOG = Logger.getLogger(MplPincodeDistanceServiceImpl.class);
-	private static final String API_KEY = "YOUR_API_KEY";
 	@Resource
 	private ConfigurationService configurationService;
+
+
 
 	/*
 	 * (non-Javadoc)
@@ -53,15 +55,15 @@ public class MplPincodeDistanceServiceImpl implements MplPincodeDistanceService
 			{
 				final DistanceMatrixUtility distance = new DistanceMatrixUtility();
 				origins.append(latitude);
-				origins.append(",");
+				origins.append(MarketplacecommerceservicesConstants.COMMA);
 				origins.append(longitude);
 
 				for (final PointOfServiceData pointOfServiceData : posData)
 				{
 					destinations.append(pointOfServiceData.getGeoPoint().getLatitude());
-					destinations.append(",");
+					destinations.append(MarketplacecommerceservicesConstants.COMMA);
 					destinations.append(pointOfServiceData.getGeoPoint().getLongitude());
-					destinations.append("|");
+					destinations.append(MarketplacecommerceservicesConstants.CONCTASTRING);
 				}
 
 				distanceList = distance.calcDistance(origins, destinations);
@@ -70,6 +72,7 @@ public class MplPincodeDistanceServiceImpl implements MplPincodeDistanceService
 				{
 					pointOfServiceData.setDistanceKm(distanceList.get(count));
 					count++;
+					//}
 				}
 			}
 			else
@@ -92,7 +95,7 @@ public class MplPincodeDistanceServiceImpl implements MplPincodeDistanceService
 
 	public static Double distFrom(final double lat1, final double lng1, final double lat2, final double lng2)
 	{
-		float dist = 0;
+		double dist = 0;
 		try
 		{
 			final double earthRadius = 6371000; //meters
@@ -101,7 +104,8 @@ public class MplPincodeDistanceServiceImpl implements MplPincodeDistanceService
 			final double a = Math.sin(dLat / 2) * Math.sin(dLat / 2) + Math.cos(Math.toRadians(lat1))
 					* Math.cos(Math.toRadians(lat2)) * Math.sin(dLng / 2) * Math.sin(dLng / 2);
 			final double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-			dist = (float) (earthRadius * c);
+			dist = ((earthRadius * c) / 1000);
+			dist = (double) Math.round(dist * 100) / 100;
 		}
 		catch (final Exception e)
 		{

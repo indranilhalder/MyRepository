@@ -110,7 +110,7 @@ var productSizeVar = '${productSize}';
 	<c:choose>
 		<c:when test="${not empty product.variantOptions}">
  <!-- Color heading will not come for FineJewellery -->
-		<c:if test="${(product.rootCategory !='FineJewellery' && product.rootCategory !='FashionJewellery') || (multiColorFlag eq 'true')}">	<!-- UF-432 -->
+		<c:if test="${(product.rootCategory !='FineJewellery' && product.rootCategory !='FashionJewellery') && (multiColorFlag eq 'true')}">	<!-- UF-432 -->
 			<p>
 				<spring:theme code="text.colour" />
 			</p>
@@ -355,12 +355,10 @@ share mobile -->
 			   </c:when>
 			   <c:otherwise>
 			       <!-- UF-422:Changes for PDP when product has only one size -->
-						<c:set var="selectedClass" value=""/>
-							<c:if test= "${fn:length(product.variantOptions) eq 1}">
-								<c:set var ="selectedClass" value ="class='selected'"/></c:if>	
-													
-													
-													
+				<c:set var="selectedClass" value=""/>
+				<c:if test= "${fn:length(product.variantOptions) eq 1}">
+				<c:set var ="selectedClass" value ="class='selected'"/></c:if>	
+				
 			    <c:forEach items="${product.variantOptions}" var="variantOption">
 			      <c:forEach items="${variantOption.colourCode}" var="color">                  
 					<c:choose>

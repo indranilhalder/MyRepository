@@ -280,6 +280,7 @@
 			   <c:when test="${product.rootCategory=='FineJewellery' || product.rootCategory=='FashionJewellery'}">		     
 		 			<c:forEach items="${product.variantOptions}" var="variantOption">
 					<c:forEach var="entry" items="${variantOption.sizeLink}">
+				
 					<c:url value="${entry.key}/quickView" var="link" />							
 					<c:choose>
 						<c:when test="${(variantOption.code eq product.code)}">
@@ -334,7 +335,14 @@
 								</c:forEach>
 							  </c:if>
 						 </c:when>	
-						 <c:otherwise>									
+						 <c:otherwise>	
+						 
+						   <!-- UF-422:Changes for PDP when product has only one size -->
+								<c:set var="selectedClass" value=""/>
+									<c:if test= "${fn:length(product.variantOptions) eq 1}">
+										<c:set var ="selectedClass" value ="class='selected'"/></c:if>	
+								
+																
 							<c:forEach var="entry" items="${variantOption.sizeLink}">
 								<c:url value="${entry.key}" var="link" />
 								<c:if test="${entry.key eq product.url}">
@@ -353,7 +361,7 @@
 													<c:choose>
 														<c:when test="${selectedSize eq null}">
 														<!--CKD:TPR-250:  -->
-															<li><a href="${variantUrl}?selectedSize=true${msiteSellerForSize}" class="js-reference-item cboxElement">${entry.value}</a></li>
+															<li ${selectedClass}><a href="${variantUrl}?selectedSize=true${msiteSellerForSize}" class="js-reference-item cboxElement">${entry.value}</a></li>
 														</c:when>
 													<c:otherwise>
 													<!--CKD:TPR-250:  -->
@@ -363,7 +371,7 @@
 											  	</c:when>	
 												<c:otherwise>
 													<!--CKD:TPR-250:  -->
-													<li data-vcode="${link}"><a href="${variantUrl}?selectedSize=true${msiteSellerForSize}" class="js-reference-item cboxElement">${entry.value}</a></li>
+													<li ${selectedClass}><a href="${variantUrl}?selectedSize=true${msiteSellerForSize}" class="js-reference-item cboxElement">${entry.value}</a></li>
 												</c:otherwise>												
 											</c:choose>
 											</c:forEach>

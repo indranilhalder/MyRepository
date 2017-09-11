@@ -6,19 +6,14 @@ package com.tis.mpl.facade.checkout.storelocator.impl;
 import de.hybris.platform.commercefacades.product.ProductFacade;
 import de.hybris.platform.commercefacades.product.ProductOption;
 import de.hybris.platform.commercefacades.product.data.ProductData;
-import de.hybris.platform.commercefacades.storelocator.data.ListOfPointOfServiceData;
 import de.hybris.platform.commercefacades.storelocator.data.PointOfServiceData;
 import de.hybris.platform.core.model.order.AbstractOrderEntryModel;
 import de.hybris.platform.core.model.order.AbstractOrderModel;
 import de.hybris.platform.core.model.order.CartModel;
-import de.hybris.platform.core.model.product.PincodeModel;
 import de.hybris.platform.core.model.product.ProductModel;
 import de.hybris.platform.order.CartService;
 import de.hybris.platform.servicelayer.dto.converter.Converter;
 import de.hybris.platform.servicelayer.model.ModelService;
-import de.hybris.platform.storelocator.location.Location;
-import de.hybris.platform.storelocator.location.impl.LocationDTO;
-import de.hybris.platform.storelocator.location.impl.LocationDtoWrapper;
 import de.hybris.platform.storelocator.model.PointOfServiceModel;
 
 import java.util.ArrayList;
@@ -36,19 +31,14 @@ import org.springframework.ui.Model;
 
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.core.model.RichAttributeModel;
-import com.tisl.mpl.exception.EtailBusinessExceptions;
 import com.tisl.mpl.facade.checkout.storelocator.MplStoreLocatorFacade;
-import com.tisl.mpl.facade.config.MplConfigFacade;
 import com.tisl.mpl.facades.constants.MarketplaceFacadesConstants;
 import com.tisl.mpl.facades.data.ATSResponseData;
 import com.tisl.mpl.facades.data.FreebieProduct;
 import com.tisl.mpl.facades.data.ProudctWithPointOfServicesData;
 import com.tisl.mpl.facades.data.StoreLocationResponseData;
-import com.tisl.mpl.marketplacecommerceservices.service.PincodeService;
 import com.tisl.mpl.model.SellerInformationModel;
-import com.tisl.mpl.pincode.facade.PincodeServiceFacade;
 import com.tisl.mpl.sellerinfo.facades.MplSellerInformationFacade;
-import com.tisl.mpl.util.ExceptionUtil;
 
 
 /**
@@ -76,15 +66,6 @@ public class MplStoreLocatorFacadeImpl implements MplStoreLocatorFacade
 
 	@Resource(name = "modelService")
 	private ModelService modelService;
-
-	@Resource(name = "pincodeServiceFacade")
-	private PincodeServiceFacade pincodeServiceFacade;
-
-	@Resource(name = "pincodeService")
-	private PincodeService pincodeService;
-
-	@Autowired
-	private MplConfigFacade mplConfigFacade;
 
 	/**
 	 * This method is to add freebie products to the map.
@@ -575,68 +556,5 @@ public class MplStoreLocatorFacadeImpl implements MplStoreLocatorFacade
 			}
 
 		}
-	}
-
-	//TPR-6654
-	@Override
-	public ListOfPointOfServiceData getAllStoresForPincode(final String latitude, final String longitude, final String pincode)
-	{
-		if (LOG.isDebugEnabled())
-		{
-			LOG.debug("from getAllStoresForPincode method");
-		}
-		List<PointOfServiceData> posData = new ArrayList<PointOfServiceData>();
-		final ListOfPointOfServiceData listOfPosData = new ListOfPointOfServiceData();
-		final LocationDTO dto = new LocationDTO();
-		String radius = mplConfigFacade.getCongigValue(MarketplaceFacadesConstants.CONFIGURABLE_RADIUS);
-		LOG.debug("configurableRadius is:" + radius);
-		if (null == radius)
-		{
-			radius = "0";
-		}
-		Location myLocation = null;
-		try
-		{
-			if (latitude != null && longitude != null)
-			{
-				dto.setLatitude(latitude);
-				dto.setLongitude(longitude);
-				myLocation = new LocationDtoWrapper(dto);
-				posData = pincodeServiceFacade.getStoresForPincode(myLocation.getGPS(), radius);
-			}
-			else
-			{
-				//fetch latitude and longitude for a pincode from comm
-				final PincodeModel pincodeModel = pincodeService.getLatAndLongForPincode(pincode);
-				if (null != pincodeModel)
-				{
-					dto.setLatitude(pincodeModel.getLatitude().toString());
-					dto.setLongitude(pincodeModel.getLongitude().toString());
-					myLocation = new LocationDtoWrapper(dto);
-					posData = pincodeServiceFacade.getStoresForPincode(myLocation.getGPS(), radius);
-				}
-				else
-				{
-					LOG.error(" pincode model not found for given pincode " + pincode);
-					final EtailBusinessExceptions error = new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9516);
-					ExceptionUtil.etailBusinessExceptionHandler(error, null);
-					listOfPosData.setError(error.getErrorMessage());
-					listOfPosData.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
-
-				}
-			}
-		}
-		catch (final Exception e)
-		{
-			LOG.error("Something went wrong in calling getAllStoresForPincode");
-
-			if (null != e.getMessage())
-			{
-				listOfPosData.setError(e.getMessage());
-			}
-			listOfPosData.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
-		}
-		listOfPosData.setStores(posData);
-		return listOfPosData;
 	}
 }

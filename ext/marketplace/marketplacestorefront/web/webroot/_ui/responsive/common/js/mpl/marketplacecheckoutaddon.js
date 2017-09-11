@@ -8014,6 +8014,7 @@ $("#couponSubmitButton").click(function(){
 	 				}
 	 				//TPR-658
 	 				onSubmitAnalytics("invalid_coupon");
+	 				dtmCouponCheck("invalid_coupon",couponCode);
 	 				// $("#couponError").css("display","block");
 	 				// document.getElementById("couponError").innerHTML=response.redeemErrorMsg;
 	 				/*TPR-4746*/
@@ -8085,7 +8086,7 @@ function onSubmitAnalytics(msg){
 	
 	// TPR-6029 | for checkout button click from cart | start
 	
-	dtmCouponCheck(msg,couponCode);
+	//dtmCouponCheck(msg,couponCode);
 }
 // TPR-658 END
 
