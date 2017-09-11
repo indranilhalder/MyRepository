@@ -13,18 +13,19 @@
 	    	<spring:theme code="text.account.login.failure" text="Oops! Your email ID and password don't match"/>
   		</div>
 	</c:if>
-	<input type="hidden" id="isSignInActive" value="${isSignInActive}">
+	<%-- <input type="hidden" id="isSignInActive" value="${isSignInActive}"> --%>
+	<input type="hidden" id="isSignInActive" value="N">
 	<div class="sign-in wrapper">
 		<div class="sign-in tab-view">
 			<ul class="nav">
-				<li id="signIn_link" class="active"><spring:theme code="text.signin"/></li>
-				<li id="SignUp_link" onclick="removeErrorDiv()"><spring:theme code="text.signup"/></li>
+				<li id="signIn_link" class=""><spring:theme code="text.signin"/></li>
+				<li id="SignUp_link" class="active" onclick="removeErrorDiv()"><spring:theme code="text.signup"/></li>
 				
 			</ul>
 
 	
 		<ul class="tabs">
-			<li id="sign_in_content" class="active">
+			<li id="sign_in_content" class="">
 				<cms:pageSlot position="RightContentSlot" var="feature">
 					<cms:component component="${feature}" />
 				</cms:pageSlot>
