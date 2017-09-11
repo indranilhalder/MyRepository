@@ -301,7 +301,7 @@ display:none;
 			  <input type="hidden" value="${homeEntry.value}" id="homeEndId"/>
 		     </c:if>
 		 </c:forEach>
-		 <span id="standardShippingText"><spring:theme code="text.home.delivery.hiphenated" /></span><!-- UF-306 -->
+		 <span id="standardShippingText" style="display:none"><spring:theme code="text.home.delivery.hiphenated" /></span><!-- UF-306 -->
 		 <script>
 		 //var deliveryKey=firstToUpperCase('${delivery.key}');
 		// availableDeliveryATPForHD=deliveryKey.concat("-").concat(deliveryValue);
@@ -318,7 +318,7 @@ display:none;
 			  <input type="hidden" value="${expressEntry.value}" id="expressEndId"/>
 		     </c:if>
 		    </c:forEach>
-		    <span id="expressShippingText"><spring:theme code="text.express.shipping.hiphenated" /></span><!-- UF-306 -->
+		    <span id="expressShippingText" style="display:none"><spring:theme code="text.express.shipping.hiphenated" /></span><!-- UF-306 -->
 		     <script>
 		 //var deliveryKey=firstToUpperCase('${delivery.key}');
 		 var deliveryKey=$("#expressShippingText").text();//UF-306
@@ -339,7 +339,7 @@ display:none;
 			  <input type="hidden" value="${clickEntry.value}" id="clickEndId"/>
 		     </c:if>
 		    </c:forEach>
-		    <span id="clickandcollectShippingText"><spring:theme code="text.clickandcollect.delivery" /></span><!-- UF-306 -->
+		    <span id="clickandcollectShippingText" style="display:none"><spring:theme code="text.clickandcollect.delivery" /></span><!-- UF-306 -->
 		     <script>
 		 //var deliveryKey=firstToUpperCase('${delivery.key}');
 		 var deliveryKey=$("#clickandcollectShippingText").text();//UF-306

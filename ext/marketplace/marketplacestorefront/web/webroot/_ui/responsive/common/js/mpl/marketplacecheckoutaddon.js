@@ -8674,6 +8674,25 @@ $("*[data-id=savedCCard]").change(function(){
 	$(".card_cvvErrorSavedCard_popup").css("display","none");	//UF-211
 	$("#make_saved_cc_payment").removeClass("saved_card_disabled");	//UF-211
 	//$("#payment_form").find(".error-message").hide();
+	
+	//TISPRDT-2441 issue fix starts here
+	$("input[name=debitCards]:radio.card_token,input[name=creditCards]:radio.card_token,input[name=emiCards]:radio.card_token").removeClass("card_token").addClass("card_token_hide");
+	$('#savedCreditCard input:radio[name=creditCards]:checked').removeClass("card_token_hide").addClass("card_token");
+	$(".card_token_hide").parent().parent().parent().find(".cvv").find(".security_code").removeClass("security_code").addClass("security_code_hide");
+	$(".card_token_hide").parent().find('.card_bank').removeClass("card_bank").addClass("card_bank_hide");
+	$(".card_token_hide").parent().find('.card_brand').removeClass("card_brand").addClass("card_brand_hide");
+	$(".card_token_hide").parent().find('.card_is_domestic').removeClass("card_is_domestic").addClass("card_is_domestic_hide");
+	$(".card_token_hide").parent().find('.card_ebsErrorSavedCard').removeClass("card_ebsErrorSavedCard").addClass("card_ebsErrorSavedCard_hide");
+	$(".card_token_hide").parent().parent().parent().find(".cvv").find('.card_cvvErrorSavedCard').removeClass("card_cvvErrorSavedCard").addClass("card_cvvErrorSavedCard_hide");
+	$(".card_token").parent().parent().parent().find(".cvv").find(".security_code_hide").removeClass("security_code_hide").addClass("security_code");
+	$(".card_token").parent().find('.card_bank_hide').removeClass("card_bank_hide").addClass("card_bank");
+	$(".card_token").parent().find('.card_brand_hide').removeClass("card_brand_hide").addClass("card_brand");
+	$(".card_token").parent().find('.card_is_domestic_hide').removeClass("card_is_domestic_hide").addClass("card_is_domestic");
+	$(".card_token").parent().find('.card_ebsErrorSavedCard_hide').removeClass("card_ebsErrorSavedCard_hide").addClass("card_ebsErrorSavedCard");
+	$(".card_token").parent().parent().parent().find(".cvv").find('.card_cvvErrorSavedCard_hide').removeClass("card_cvvErrorSavedCard_hide").addClass("card_cvvErrorSavedCard");
+	$('.security_code_hide').prop('disabled', true);
+	$('.security_code').prop('disabled', false);
+	//TISPRDT-2441 issue fix ends here
 });
 
 $("*[data-id=newDCard]").click(function(){
@@ -8705,6 +8724,25 @@ $("*[data-id=savedDCard]").change(function(){
 	$(".card_cvvErrorSavedCard_popup").css("display","none");	//UF-217
 	$("#make_saved_dc_payment").removeClass("saved_card_disabled");	//UF-217
 	//$("#debit_payment_form").find(".error-message").hide();
+	
+	//TISPRDT-2441 issue fix starts here
+	$("input[name=debitCards]:radio.card_token,input[name=creditCards]:radio.card_token,input[name=emiCards]:radio.card_token").removeClass("card_token").addClass("card_token_hide");
+	$('#savedDebitCard input:radio[name=debitCards]:checked').removeClass("card_token_hide").addClass("card_token");
+	$(".card_token_hide").parent().parent().parent().find(".cvv").find(".security_code").removeClass("security_code").addClass("security_code_hide");
+	$(".card_token_hide").parent().find('.card_bank').removeClass("card_bank").addClass("card_bank_hide");
+	$(".card_token_hide").parent().find('.card_brand').removeClass("card_brand").addClass("card_brand_hide");
+	$(".card_token_hide").parent().find('.card_is_domestic').removeClass("card_is_domestic").addClass("card_is_domestic_hide");
+	$(".card_token_hide").parent().find('.card_ebsErrorSavedCard').removeClass("card_ebsErrorSavedCard").addClass("card_ebsErrorSavedCard_hide");
+	$(".card_token_hide").parent().parent().parent().find(".cvv").find('.card_cvvErrorSavedCard').removeClass("card_cvvErrorSavedCard").addClass("card_cvvErrorSavedCard_hide");
+	$(".card_token").parent().parent().parent().find(".cvv").find(".security_code_hide").removeClass("security_code_hide").addClass("security_code");
+	$(".card_token").parent().find('.card_bank_hide').removeClass("card_bank_hide").addClass("card_bank");
+	$(".card_token").parent().find('.card_brand_hide').removeClass("card_brand_hide").addClass("card_brand");
+	$(".card_token").parent().find('.card_is_domestic_hide').removeClass("card_is_domestic_hide").addClass("card_is_domestic");
+	$(".card_token").parent().find('.card_ebsErrorSavedCard_hide').removeClass("card_ebsErrorSavedCard_hide").addClass("card_ebsErrorSavedCard");
+	$(".card_token").parent().parent().parent().find(".cvv").find('.card_cvvErrorSavedCard_hide').removeClass("card_cvvErrorSavedCard_hide").addClass("card_cvvErrorSavedCard");
+	$('.security_code_hide').prop('disabled', true);
+	$('.security_code').prop('disabled', false);
+	//TISPRDT-2441 issue fix ends here
 });
 
 $("#payment_form").find("input[type=text]").click(function(){
