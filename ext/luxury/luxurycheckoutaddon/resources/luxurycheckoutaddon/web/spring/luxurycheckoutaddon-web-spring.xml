@@ -225,7 +225,9 @@
 	
 	
 	<!--Checkout GroupMap-->
-	<util:map id="checkoutFlowGroupMap" >
+	<util:map id="checkoutFlowGroupMap">
+		<entry key="responsiveCheckoutGroup" value-ref="responsiveCheckoutGroup"/>
+		<entry key="marketplaceMultiPathCheckoutGroup"  value-ref="marketplaceMultiPathCheckoutGroup"/>
 		<entry key="luxuryMultiPathCheckoutGroup"  value-ref="luxuryMultiPathCheckoutGroup"/>
 	</util:map>
 	<!--Checkout GroupMap-->
