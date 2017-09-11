@@ -47853,9 +47853,13 @@ body.page-productDetails .breadcrumbs.wrapper {
 	position: relative;
 	margin: -15px 0 0;
 	display: inline-block;
-	 width: 100%;
+	/* width: 100%; */
 }
-
+/* TISPRDT-2422 start */
+.quickview .quick-view-popup .product-detail .Emi {
+    width: 100%;
+}
+/* TISPRDT-2422 End */
 .product-detail .Emi p, .pricebreakup-link {
 	font-size: 14px;
 	letter-spacing: 1px;
@@ -75690,6 +75694,11 @@ body.page-returnSubmit .account .wrapper{
   	color: #a5173c;
   	cursor: pointer;
  	}
+ 	/* TISPRDT-2436 start */
+ 	span.price-breakup#pricebreakupIdSpan{
+	margin: 0 0 0 5px;
+	}
+	/* TISPRDT-2436 end /
  	span.more-link{
  	cursor: pointer;
  	}
@@ -76895,8 +76904,10 @@ body .account .right-account form label.invite-text-lbl{
 }
 
 /* TISSPTEN-120 END */
+
 /* TISPRDT-2410 start */
 #singlePageAddressPopup .product-block.addresses.new-form .half .dupDisplay label{
 	    margin-bottom: 5px;
 	    }
 /* TISPRDT-2410 start */
+
