@@ -463,7 +463,9 @@
 		var isMobile = "${is_mobile}";
 		if(forceLoginUser == "Y"){
 			if(isMobile == "true"){
-				window.location.href="/login";
+				setTimeout(function(){
+					window.location.href="/login";
+				},10000);
 			}else{
 				$.ajax({
 					url: "/login?frame=true&box-login",
