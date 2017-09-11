@@ -2768,7 +2768,10 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 		requestData.setTransactionID(codSelfShipData.getTransactionID());
 		requestData.setOrderDate(codSelfShipData.getOrderDate());
 		requestData.setTransactionDate(codSelfShipData.getTransactionDate());
-		requestData.setTitle(codSelfShipData.getTitle().toUpperCase());
+		if (null != codSelfShipData.getTitle())
+		{
+			requestData.setTitle(codSelfShipData.getTitle().toUpperCase());
+		}
 		requestData.setPaymentMode(codSelfShipData.getPaymentMode());
 		requestData.setBankName(codSelfShipData.getBankName());
 		requestData.setName(codSelfShipData.getName());
