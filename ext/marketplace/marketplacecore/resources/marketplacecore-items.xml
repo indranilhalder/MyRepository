@@ -3081,6 +3081,12 @@
 				        <persistence type="property"/>
 			    	</attribute> 
 				</attributes>
+				<indexes>
+					<index name="IDX_CART_SEARCH_ONLOAD">
+						<key attribute="user" />
+						<key attribute="code" />
+					</index>
+				</indexes>
 			</itemtype>
 
 			<!--Attribute for COD Charges apportionment -->
@@ -6247,6 +6253,12 @@
 					</attribute>
 					
 				</attributes>
+				<indexes>
+					<index name="IDX_ENTRY_FETCH">
+						<key attribute="entryNumber" />
+						<key attribute="order" />
+					</index>
+				</indexes>
 			</itemtype>
 			<!-- Tata Etail change - Apportioned value capturing ends -->
 			<!-- SearchBoxComponent DropDown List Start -->
