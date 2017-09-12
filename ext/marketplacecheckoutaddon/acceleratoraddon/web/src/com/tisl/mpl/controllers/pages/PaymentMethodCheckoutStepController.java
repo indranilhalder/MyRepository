@@ -25,6 +25,7 @@ import de.hybris.platform.commercefacades.order.data.CartData;
 import de.hybris.platform.commercefacades.order.data.OrderData;
 import de.hybris.platform.commercefacades.order.data.OrderEntryData;
 import de.hybris.platform.commercefacades.product.data.PriceData;
+import de.hybris.platform.commercefacades.user.data.AddressData;
 import de.hybris.platform.commercefacades.voucher.exceptions.VoucherOperationException;
 import de.hybris.platform.commerceservices.order.CommerceCartModificationException;
 import de.hybris.platform.commerceservices.order.CommerceCartService;
@@ -2984,25 +2985,38 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 			if (null == orderModel)
 			{
 				//Existing code for cartModel
-				CartData cartData = new CartData();
+				//CartData cartData = new CartData(); //Blocked for PT fix
 
-				if (null != getMplCustomAddressFacade().getCheckoutCart())
-				{
-					cartData = getMplCustomAddressFacade().getCheckoutCart();
-				}
+				//				if (null != getMplCustomAddressFacade().getCheckoutCart())
+				//				{
+				//					cartData = getMplCustomAddressFacade().getCheckoutCart();
+				//				}
 				//Getting the fields from delivery address
 
-				if (null != cartData && cartData.getDeliveryAddress() != null)
+				final AddressData addressData = mplCustomAddressFacade.getDeliveryAddress();
+
+				//if (null != cartData && cartData.getDeliveryAddress() != null)
+				if (null != addressData)
 				{
-					final String firstName = cartData.getDeliveryAddress().getFirstName();
-					final String lastName = cartData.getDeliveryAddress().getLastName();
-					final String addressLine1 = cartData.getDeliveryAddress().getLine1();
-					final String addressLine2 = cartData.getDeliveryAddress().getLine2();
-					final String addressLine3 = cartData.getDeliveryAddress().getLine3();
-					final String country = cartData.getDeliveryAddress().getCountry().getName();
-					final String state = cartData.getDeliveryAddress().getState();
-					final String city = cartData.getDeliveryAddress().getTown();
-					final String pincode = cartData.getDeliveryAddress().getPostalCode();
+					//					final String firstName = cartData.getDeliveryAddress().getFirstName();
+					//					final String lastName = cartData.getDeliveryAddress().getLastName();
+					//					final String addressLine1 = cartData.getDeliveryAddress().getLine1();
+					//					final String addressLine2 = cartData.getDeliveryAddress().getLine2();
+					//					final String addressLine3 = cartData.getDeliveryAddress().getLine3();
+					//					final String country = cartData.getDeliveryAddress().getCountry().getName();
+					//					final String state = cartData.getDeliveryAddress().getState();
+					//					final String city = cartData.getDeliveryAddress().getTown();
+					//					final String pincode = cartData.getDeliveryAddress().getPostalCode();
+
+					final String firstName = addressData.getFirstName();
+					final String lastName = addressData.getLastName();
+					final String addressLine1 = addressData.getLine1();
+					final String addressLine2 = addressData.getLine2();
+					final String addressLine3 = addressData.getLine3();
+					final String country = addressData.getCountry().getName();
+					final String state = addressData.getState();
+					final String city = addressData.getTown();
+					final String pincode = addressData.getPostalCode();
 
 					final StringBuilder addressBuilder = new StringBuilder();
 
