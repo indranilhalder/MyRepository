@@ -1367,18 +1367,6 @@ public class ProductPageController extends MidPageController
 						myLocation = new LocationDtoWrapper(dto);
 						LOG.debug("Selected Location for Latitude:" + myLocation.getGPS().getDecimalLatitude());
 						LOG.debug("Selected Location for Longitude:" + myLocation.getGPS().getDecimalLongitude());
-						//TPR-6654
-						if (cookie != null && cookie.getValue() != null)
-						{
-							cookie.setValue(pin);
-							response.addCookie(cookie);
-							sessionService.setAttribute(MarketplacecommerceservicesConstants.SESSION_PINCODE, pin);
-						}
-						else
-						{
-							pdpPincodeCookie.addCookie(response, pin);
-							sessionService.setAttribute(MarketplacecommerceservicesConstants.SESSION_PINCODE, pin);
-						}
 						pincodeResponse = pinCodeFacade.getResonseForPinCode(productCode, pin,
 								pincodeServiceFacade.populatePinCodeServiceData(productCode, myLocation.getGPS()));
 
