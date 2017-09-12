@@ -38,7 +38,7 @@ public class MplPincodeDistanceServiceImpl implements MplPincodeDistanceService
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * com.tisl.mpl.marketplacecommerceservices.service.impl.MplPincodeDistanceService#pincodeDistance(java.util.List)
 	 */
@@ -51,36 +51,59 @@ public class MplPincodeDistanceServiceImpl implements MplPincodeDistanceService
 		List<Double> distanceList = new ArrayList<Double>();
 		List<PointOfServiceData> sortPOS = new ArrayList<PointOfServiceData>();
 		Double dist = null;
+		double distanceCal = 0;
+		double distRound = 0;
 		try
 		{
 			final boolean distanceFlag = configurationService.getConfiguration().getBoolean("google.distance.enable");
+			final boolean distanceCalculationFlag = configurationService.getConfiguration().getBoolean("show.distance.calculation");
 			if (distanceFlag)
 			{
-				final DistanceMatrixUtility distance = new DistanceMatrixUtility();
-				origins.append(latitude);
-				origins.append(MarketplacecommerceservicesConstants.COMMA);
-				origins.append(longitude);
-
-				for (final PointOfServiceData pointOfServiceData : posData)
+				if (distanceCalculationFlag)
 				{
-					destinations.append(pointOfServiceData.getGeoPoint().getLatitude());
-					destinations.append(MarketplacecommerceservicesConstants.COMMA);
-					destinations.append(pointOfServiceData.getGeoPoint().getLongitude());
-					destinations.append(MarketplacecommerceservicesConstants.CONCTASTRING);
-				}
+					final DistanceMatrixUtility distance = new DistanceMatrixUtility();
+					origins.append(latitude);
+					origins.append(MarketplacecommerceservicesConstants.COMMA);
+					origins.append(longitude);
 
-				distanceList = distance.calcDistance(origins, destinations);
-				int count = 0;
-				for (final PointOfServiceData pointOfServiceData : posData)
-				{
-					pointOfServiceData.setDistanceKm(distanceList.get(count));
-					count++;
-					//}
+					for (final PointOfServiceData pointOfServiceData : posData)
+					{
+						destinations.append(pointOfServiceData.getGeoPoint().getLatitude());
+						destinations.append(MarketplacecommerceservicesConstants.COMMA);
+						destinations.append(pointOfServiceData.getGeoPoint().getLongitude());
+						destinations.append(MarketplacecommerceservicesConstants.CONCTASTRING);
+					}
+
+					distanceList = distance.calcDistance(origins, destinations);
+					int count = 0;
+					for (final PointOfServiceData pointOfServiceData : posData)
+					{
+						if (distanceList != null && distanceList.get(count).doubleValue() > 1000)
+						{
+							distanceCal = distanceList.get(count).doubleValue() / 1000;
+							distRound = new BigDecimal(distanceCal).setScale(2, RoundingMode.HALF_UP).doubleValue();
+							pointOfServiceData.setDistanceKm(new Double(distRound));
+							pointOfServiceData.setStatus("Km");
+							count++;
+						}
+						else
+						{
+							if (distanceList != null)
+							{
+								distanceCal = distanceList.get(count).doubleValue();
+								distRound = new BigDecimal(distanceCal).setScale(2, RoundingMode.HALF_UP).doubleValue();
+								pointOfServiceData.setDistanceKm(new Double(distRound));
+								pointOfServiceData.setStatus("m");
+								count++;
+							}
+
+						}
+					}
 				}
 			}
 			else
 			{
-				if (latitude != null && longitude != null)
+				if (latitude != null && longitude != null && distanceCalculationFlag)
 				{
 					for (final PointOfServiceData pointOfServiceData : posData)
 					{
@@ -89,19 +112,27 @@ public class MplPincodeDistanceServiceImpl implements MplPincodeDistanceService
 						if (dist != null && dist.doubleValue() > 1000)
 						{
 							dist = Double.valueOf(dist.doubleValue() / 1000);
-							dist = new BigDecimal(dist).setScale(2, RoundingMode.HALF_UP).doubleValue();
+							dist = Double.valueOf(new BigDecimal(dist.doubleValue()).setScale(2, RoundingMode.HALF_UP).doubleValue());
 							pointOfServiceData.setDistanceKm(dist);
 							pointOfServiceData.setStatus("Km");
 						}
 						else
 						{
+							dist = Double.valueOf(new BigDecimal(dist.doubleValue()).setScale(2, RoundingMode.HALF_UP).doubleValue());
 							pointOfServiceData.setDistanceKm(dist);
 							pointOfServiceData.setStatus("m");
 						}
 					}
 				}
 			}
-			sortPOS = getSortedSetData(posData);
+			if (distanceCalculationFlag)
+			{
+				sortPOS = getSortedSetData(posData);
+			}
+			else
+			{
+				sortPOS = posData;
+			}
 		}
 		catch (final Exception e)
 		{
