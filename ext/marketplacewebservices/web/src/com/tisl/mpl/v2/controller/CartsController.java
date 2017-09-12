@@ -2647,9 +2647,10 @@ public class CartsController extends BaseCommerceController
 				LOG.debug("Replaced Soft reservation ForJewellery is " + replaced);
 				if (null != replaced && replaced.booleanValue())
 				{
-					reservationList.setPriceChangeNotificationMsg(MarketplacecommerceservicesConstants.INVENTORY_RESV_JWLRY_CART
-							+ caData.getTotalPrice().getFormattedValue());
+					reservationList.setPriceChangeNotificationMsg(MarketplacecommerceservicesConstants.INVENTORY_RESV_JWLRY_CART);
 					sessionService.removeAttribute(MarketplacecommerceservicesConstants.REPLACEDUSSID);
+					//Added as per comments in TISJEW-4481
+					reservationList.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
 				}
 			}
 			else
@@ -2725,7 +2726,7 @@ public class CartsController extends BaseCommerceController
 			 * bin = null; if (StringUtils.isNotEmpty(binNo)) { bin = getBinService().checkBin(binNo); } if (null != bin &&
 			 * StringUtils.isNotEmpty(bin.getBankName())) {
 			 * getSessionService().setAttribute(MarketplacewebservicesConstants.BANKFROMBIN, bin.getBankName());
-			 *
+			 * 
 			 * LOG.debug("************ Logged-in cart mobile soft reservation BANKFROMBIN **************" +
 			 * bin.getBankName()); } }
 			 */
@@ -2781,9 +2782,10 @@ public class CartsController extends BaseCommerceController
 					LOG.debug("Replaced Soft reservation ForJewellery is " + replaced);
 					if (null != replaced && replaced.booleanValue())
 					{
-						reservationList
-								.setPriceChangeNotificationMsg(MarketplacecommerceservicesConstants.INVENTORY_RESV_JWLRY_PAYMENT);
+						reservationList.setPriceChangeNotificationMsg(MarketplacecommerceservicesConstants.INVENTORY_RESV_JWLRY_CART);
 						sessionService.removeAttribute(MarketplacecommerceservicesConstants.REPLACEDUSSID);
+						//Added as per comments in TISJEW-4481
+						reservationList.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
 					}
 
 				}
@@ -2839,9 +2841,10 @@ public class CartsController extends BaseCommerceController
 					LOG.debug("Replaced Soft reservation ForJewellery is " + replacedPay);
 					if (null != replacedPay && replacedPay.booleanValue())
 					{
-						reservationList
-								.setPriceChangeNotificationMsg(MarketplacecommerceservicesConstants.INVENTORY_RESV_JWLRY_PAYMENT);
+						reservationList.setPriceChangeNotificationMsg(MarketplacecommerceservicesConstants.INVENTORY_RESV_JWLRY_CART);
 						sessionService.removeAttribute(MarketplacecommerceservicesConstants.REPLACEDUSSID);
+						//Added as per comments in TISJEW-4481
+						reservationList.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
 					}
 
 				}

@@ -18,6 +18,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.collections.MapUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,6 +41,7 @@ public class ExchangeGuideServiceImpl implements ExchangeGuideService
 	//SONAR FIX JEWELLERY
 	protected static final Logger LOG = Logger.getLogger(ExchangeGuideServiceImpl.class);
 	private static final String ERROR_OCCURED = "Error Occured At ";
+	private static final String WHILE_SAVING = "While Saving";
 
 	@Autowired
 	private PersistentKeyGenerator temporaryExchangeId;
@@ -94,9 +96,9 @@ public class ExchangeGuideServiceImpl implements ExchangeGuideService
 
 	/*
 	 * @Javadoc
-	 *
+	 * 
 	 * @returns All L4 for which Exchange is Applicable
-	 *
+	 * 
 	 * @see com.tisl.mpl.marketplacecommerceservices.service.ExchangeGuideService#getDistinctL4()
 	 */
 	@Override
@@ -117,11 +119,11 @@ public class ExchangeGuideServiceImpl implements ExchangeGuideService
 
 	/*
 	 * @Javadoc
-	 *
+	 * 
 	 * @param String categoryCode
-	 *
+	 * 
 	 * @param ExchangeCouponValueModel pricematrix
-	 *
+	 * 
 	 * @see com.tisl.mpl.marketplacecommerceservices.service.ExchangeGuideService#getExchangeGuideList(java.lang.String)
 	 */
 	@Override
@@ -176,7 +178,7 @@ public class ExchangeGuideServiceImpl implements ExchangeGuideService
 		}
 		catch (final ModelSavingException e)
 		{
-			LOG.error(ERROR_OCCURED + "While Saving" + "getExchangeID");
+			LOG.error(ERROR_OCCURED + WHILE_SAVING + "getExchangeID");
 		}
 		catch (final EtailNonBusinessExceptions e)
 		{
@@ -225,7 +227,7 @@ public class ExchangeGuideServiceImpl implements ExchangeGuideService
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.marketplacecommerceservices.service.ExchangeGuideService#changePincode(java.lang.String)
 	 */
 	@Override
@@ -242,13 +244,11 @@ public class ExchangeGuideServiceImpl implements ExchangeGuideService
 				exListToSave.add(ex);
 			}
 			modelService.saveAll(exListToSave);
-			//Added for EQA Comments
-			modelService.refresh(exListToSave);
 			isSaved = true;
 		}
 		catch (final ModelSavingException e)
 		{
-			LOG.error(ERROR_OCCURED + "While Saving" + "changePincode");
+			LOG.error(ERROR_OCCURED + WHILE_SAVING + "changePincode");
 		}
 		catch (final EtailNonBusinessExceptions e)
 		{
@@ -260,7 +260,7 @@ public class ExchangeGuideServiceImpl implements ExchangeGuideService
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see
 	 * com.tisl.mpl.marketplacecommerceservices.service.ExchangeGuideService#removeFromTransactionTable(java.lang.String)
 	 */
@@ -298,7 +298,7 @@ public class ExchangeGuideServiceImpl implements ExchangeGuideService
 		}
 		catch (final ModelSavingException e)
 		{
-			LOG.error(ERROR_OCCURED + "While Saving" + "removeFromTransactionTable");
+			LOG.error(ERROR_OCCURED + WHILE_SAVING + "removeFromTransactionTable");
 		}
 
 		catch (final EtailNonBusinessExceptions e)
@@ -312,7 +312,7 @@ public class ExchangeGuideServiceImpl implements ExchangeGuideService
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see
 	 * com.tisl.mpl.marketplacecommerceservices.service.ExchangeGuideService#getTeporaryExchangeModelforId(java.lang.
 	 * String)
@@ -437,41 +437,55 @@ public class ExchangeGuideServiceImpl implements ExchangeGuideService
 				}
 
 			}
-
-			for (final AbstractOrderEntryModel entry : order.getEntries())
+			if (MapUtils.isNotEmpty(productExcId))
 			{
-				ProductModel product = null;
-				if (entry != null && StringUtils.isNotEmpty(entry.getExchangeId()))
+				for (final AbstractOrderEntryModel entry : order.getEntries())
 				{
-					product = entry.getProduct();
+					ProductModel product = null;
+					if (entry != null && StringUtils.isNotEmpty(entry.getExchangeId()))
+					{
+						product = entry.getProduct();
+					}
+					if (product != null && StringUtils.isNotEmpty(product.getCode()) && productExcId.containsKey(product.getCode()))
+					{
+						entry.setExchangeId(exReqId);
+					}
+					parentEntryList.add(entry);
 				}
-				if (product != null && StringUtils.isNotEmpty(product.getCode()) && productExcId.containsKey(product.getCode()))
-				{
-					entry.setExchangeId(exReqId);
-				}
-				parentEntryList.add(entry);
 			}
 
+			if (CollectionUtils.isNotEmpty(exModList))
+			{
+				modelService.saveAll(exModList);
+			}
 
-			modelService.saveAll(exModList);
-			//Added for EQA Comments
-			modelService.refresh(exModList);
-			modelService.saveAll(childOrderEntryList);
-			//Added for EQA Comments
-			modelService.refresh(childOrderEntryList);
-			modelService.saveAll(childModfList);
-			//Added for EQA Comments
-			modelService.refresh(childModfList);
-			modelService.saveAll(parentEntryList);
-			//Added for EQA Comments
-			modelService.refresh(parentEntryList);
-			modelService.removeAll(exTraxRemovList);
-			//Added for EQA Comments
-			modelService.refresh(exTraxRemovList);
+			if (CollectionUtils.isNotEmpty(childOrderEntryList))
+			{
+				modelService.saveAll(childOrderEntryList);
+			}
+
+			if (CollectionUtils.isNotEmpty(childModfList))
+			{
+
+				modelService.saveAll(childModfList);
+			}
+
+			if (CollectionUtils.isNotEmpty(parentEntryList))
+			{
+
+				modelService.saveAll(parentEntryList);
+			}
+
+			if (CollectionUtils.isNotEmpty(exTraxRemovList))
+			{
+
+				modelService.removeAll(exTraxRemovList);
+			}
+
 		}
 		catch (final ModelSavingException e)
 		{
-			LOG.error(ERROR_OCCURED + "While Saving" + "getExchangeRequestID2");
+			LOG.error(ERROR_OCCURED + WHILE_SAVING + "getExchangeRequestID2");
 		}
 		catch (final EtailNonBusinessExceptions e)
 		{
@@ -551,26 +565,25 @@ public class ExchangeGuideServiceImpl implements ExchangeGuideService
 						exMod.setExchangeRemovalReason(MarketplacecommerceservicesConstants.EXCHANGE_REMOVAL_REASON);
 					}
 					exModList.add(exMod);
-					//Added for EQA Comments
-					modelService.refresh(exMod);
+
 					exTraxRemovList.add(exTrax);
-					//Added for EQA Comments
-					modelService.refresh(exTrax);
+
 
 				}
 			}
 
-			modelService.saveAll(exModList);
-			//Added for EQA Comments
-			modelService.refresh(exModList);
-
-			modelService.removeAll(exTraxRemovList);
-			//Added for EQA Comments
-			modelService.refresh(exTraxRemovList);
+			if (CollectionUtils.isNotEmpty(exModList))
+			{
+				modelService.saveAll(exModList);
+			}
+			if (CollectionUtils.isNotEmpty(exTraxRemovList))
+			{
+				modelService.removeAll(exTraxRemovList);
+			}
 		}
 		catch (final ModelSavingException e)
 		{
-			LOG.error(ERROR_OCCURED + "While Saving" + "getExchangeRequestID");
+			LOG.error(ERROR_OCCURED + WHILE_SAVING + "getExchangeRequestID");
 		}
 		catch (final EtailNonBusinessExceptions e)
 		{
@@ -603,15 +616,17 @@ public class ExchangeGuideServiceImpl implements ExchangeGuideService
 				}
 
 			}
-			modelService.saveAll(entryUpdate);
-			//Added for EQA Comments
-			modelService.refresh(entryUpdate);
+			if (CollectionUtils.isNotEmpty(entryUpdate))
+			{
+				modelService.saveAll(entryUpdate);
+			}
+
 
 			removeFromTransactionTable(removeExchangeIdList, null, cartModel);
 		}
 		catch (final ModelSavingException e)
 		{
-			LOG.error(ERROR_OCCURED + "While Saving" + "removeExchangefromCart");
+			LOG.error(ERROR_OCCURED + WHILE_SAVING + "removeExchangefromCart");
 		}
 		catch (final EtailNonBusinessExceptions e)
 		{
@@ -650,14 +665,17 @@ public class ExchangeGuideServiceImpl implements ExchangeGuideService
 				listToSave.add(exTrax);
 			}
 
-			modelService.saveAll(listToSave);
-			//Added for EQA Comments
-			modelService.refresh(listToSave);
+			if (CollectionUtils.isNotEmpty(listToSave))
+			{
+				modelService.saveAll(listToSave);
+
+			}
+
 
 		}
 		catch (final ModelSavingException e)
 		{
-			LOG.error(ERROR_OCCURED + "While Saving" + "changeGuidforCartMerge");
+			LOG.error(ERROR_OCCURED + WHILE_SAVING + "changeGuidforCartMerge");
 		}
 		catch (final EtailNonBusinessExceptions e)
 		{
@@ -668,7 +686,7 @@ public class ExchangeGuideServiceImpl implements ExchangeGuideService
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see
 	 * com.tisl.mpl.marketplacecommerceservices.service.ExchangeGuideService#addToExchangeTable(com.tisl.mpl.core.model
 	 * .ExchangeTransactionModel)

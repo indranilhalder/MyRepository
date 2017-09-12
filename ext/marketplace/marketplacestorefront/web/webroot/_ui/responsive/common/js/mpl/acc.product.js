@@ -1124,7 +1124,7 @@ sendAddToBagQuick:function(formId){
 	
 	//Exchange Start
 	sendAddToBagExchange: function(formId){
-				
+		 $('#ajax-loader').show();	
 		var input_name="qty";
 		var stock_id="stock";
 		var ussid="ussid";
@@ -1142,6 +1142,8 @@ sendAddToBagQuick:function(formId){
 	    var productCode =  $('#product_id').val();
 		var productArray =[];
 		productArray.push(productCode);
+		//TISPRDT-2439
+		var isError=false;
 		//TPR-5193 Analytics ends
 		$.ajax({
 			url : ACC.config.encodedContextPath + "/cart/add",
@@ -1172,11 +1174,13 @@ sendAddToBagQuick:function(formId){
 				}
 				else if(data=="maxqtyexchange")
 				{
+					isError=true;
 					$("#"+formId+"Titlebagtofull").html("<br/><font color='#ff1c47'>"+$('#addToCartExchangeExceededmaxqtyExc').html()+"</font>");
 					$("#"+formId+"Titlebagtofull").show().fadeOut(5000);
 				}
 				else if(data=="reachedMaxLimit") {
 					//$("#"+formId+"Title").html("");
+					isError=true;
 					
 				}
 				else if(data=="crossedMaxLimit"){
@@ -1184,17 +1188,20 @@ sendAddToBagQuick:function(formId){
 					//$("#"+formId+"Titlebagfull").html("");
 					$("#"+formId+"Titlebagfull").html("<font color='#ff1c47'>"+$('#addToCartExchangeTitlebagfull').text()+"</font>");
 					$("#"+formId+"Titlebagfull").show().fadeOut(5000);
+					isError=true;
 				}
 				else if(data=="outofinventory"){
 					
 					//alert("outofinventory: "+data);
 					 $("#"+formId+"noInventorySize").html("<font color='#ff1c47'>" + $('#addToCartExchangenoInventorySize').text() + "</font>");
 					 $("#"+formId+"noInventorySize").show().fadeOut(6000);
+					 isError=true;
 			   	     return false;
 				}
 				else if(data=="willexceedeinventory"){
 					 $("#"+formId+"excedeInventorySize").html("<font color='#ff1c47'>" + $('#addToCartExchangeexcedeInventorySize').text() + "</font>");
 					 $("#"+formId+"excedeInventorySize").show().fadeOut(6000);
+					 isError=true;
 			   		 return false;
 				}
 				
@@ -1203,6 +1210,7 @@ sendAddToBagQuick:function(formId){
 					$("#"+formId+"Titleaddtobagerror").html("");
 					$("#"+formId+"Titleaddtobagerror").html("<br/><font color='#ff1c47'>"+$('#addToCartExchangeTitleaddtobagerror').text()+"</font>");
 					$("#"+formId+"Titleaddtobagerror").show().fadeOut(5000);
+					isError=true;
 					
 				}
 			
@@ -1252,6 +1260,14 @@ sendAddToBagQuick:function(formId){
 			},
 			complete: function(){
 		        $('#ajax-loader').hide();
+		        //TISPRDT-2439
+		        if(!isError)
+		        	{
+		        	$(".Exchange > p").removeClass("active mobile");
+					$(".Exchange-overlay").remove();
+					$("body").removeClass("no-scroll");
+		        	}
+		       
 		    },
 			error : function(resp) {
 				//alert("Add to Bag unsuccessful: "+resp.responseText);

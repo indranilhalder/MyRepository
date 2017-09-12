@@ -117,6 +117,15 @@ public class MarketPlaceOrderManagementActionsWidgetRenderer extends
 		if (isUserInRole(configurationService.getConfiguration().getString(
 				"cscockpit.user.group.refunddelcsagentgroup"))) {
 
+			createButton(widget, (Div) component, "refundExpressDeliveryCharge",
+					"csRefundExpressDeliveryChargeWidgetConfig",
+					"refundExpressDeliveryCharge-popup", "refundExpressDeliveryCharge",
+					"refundExpressDeliveryCharge.request", false);
+		}
+		
+		if (isUserInRole(configurationService.getConfiguration().getString(
+				"cscockpit.user.group.refunddelcsagentgroup"))) {
+
 			createButton(widget, (Div) component, "refundScheduleDeliveryCharge",
 					"csRefundScheduleDeliveryChargeWidgetConfig",
 					"ScheduleDeliveryCharge-popup", "ScheduleDeliveryCharge",

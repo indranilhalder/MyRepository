@@ -289,7 +289,21 @@ ACC.carousel = {
 				autoHeight : true,
 				autoplayTimeout: timeout
 			});
-		
+		       //TISPRDT-2196 starts    
+ 		       if ( $(".style_edit_blp .home-rotatingImage").length || $(".style_edit .home-rotatingImage").length) {
+ 			    	 if ($("#rotatingImageTimeout img").length) { 
+ 		    	   		$("#rotatingImageTimeout img").each(function() {
+ 						    if ($(this).attr("data-src")) {
+ 								$(this).attr("src",$(this).attr("data-src"));
+ 								$(this).removeAttr("data-src");
+ 								$(this).load(function(){
+ 									$(this).css("display", "block");
+ 								});
+ 							}	
+ 						});
+ 			    	 }	
+ 		       }
+ 		     //TISPRDT-2196 ends		
 	},
 	
 	/*homePageBannerCarousel: function(count){

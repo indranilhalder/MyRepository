@@ -44,6 +44,8 @@ public class ExchangeGuideDaoImpl implements ExchangeGuideDao
 	private static final String SELECT_EXCHANGE = "SELECT {exchange.";
 	private static final String CATEGORY_CODE = "categoryCode";
 	private static final String WORKING = "working";
+	private static final String FROM_EX = "FROM {";
+
 
 	/*
 	 * @Javadoc
@@ -59,7 +61,7 @@ public class ExchangeGuideDaoImpl implements ExchangeGuideDao
 		boolean isExchangable = false;
 		try
 		{
-			final String exchangeL3Query = "SELECT count(*)" + "FROM {" + ExchangeCouponValueModel._TYPECODE + " AS exchange"
+			final String exchangeL3Query = "SELECT count(*)" + FROM_EX + ExchangeCouponValueModel._TYPECODE + " AS exchange"
 					+ " JOIN " + CategoryModel._TYPECODE + " AS category " + "on {exchange.thirdLevelCategory}={category.pk} "
 					+ "} where {category.code} =?categoryCode";
 
@@ -111,7 +113,7 @@ public class ExchangeGuideDaoImpl implements ExchangeGuideDao
 
 		try
 		{
-			final String queryString = SELECT_EXCHANGE + ExchangeCouponValueModel.PK + "} " + "FROM {"
+			final String queryString = SELECT_EXCHANGE + ExchangeCouponValueModel.PK + "} " + FROM_EX
 					+ ExchangeCouponValueModel._TYPECODE + " AS exchange" + " JOIN " + CategoryModel._TYPECODE + " AS category "
 					+ "on {exchange.thirdLevelCategory}={category.pk} " + "} where {category.code} =?categoryCode";
 
@@ -191,7 +193,7 @@ public class ExchangeGuideDaoImpl implements ExchangeGuideDao
 	{
 		try
 		{
-			final String queryString = SELECT_EXCHANGE + ExchangeCouponValueModel.PK + "} " + "FROM {"
+			final String queryString = SELECT_EXCHANGE + ExchangeCouponValueModel.PK + "} " + FROM_EX
 					+ ExchangeCouponValueModel._TYPECODE + " AS exchange" + " JOIN " + CategoryModel._TYPECODE + " AS category "
 					+ "on {exchange.thirdLevelCategory}={category.pk} " + "} where {category.code} =?categoryCode "
 					+ "and {exchange.l4categoryName}=?l4name " + "and {exchange.isWorking}=?working";
@@ -226,7 +228,7 @@ public class ExchangeGuideDaoImpl implements ExchangeGuideDao
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.tisl.mpl.marketplacecommerceservices.daos.ExchangeGuideDao#changePincode(java.lang.String)
 	 */
 
@@ -250,7 +252,7 @@ public class ExchangeGuideDaoImpl implements ExchangeGuideDao
 		try
 		{
 
-			queryString.append(SELECT_EXCHANGE + ExchangeTransactionModel.PK + "} " + "FROM {" + ExchangeTransactionModel._TYPECODE
+			queryString.append(SELECT_EXCHANGE + ExchangeTransactionModel.PK + "} " + FROM_EX + ExchangeTransactionModel._TYPECODE
 					+ " AS exchange }" + " where {exchange.exchangeid} in (");
 			queryString.append(exIdString);
 			queryString.append(')');//SONAR FIX JEWELLERY
