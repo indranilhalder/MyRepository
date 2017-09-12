@@ -1184,6 +1184,10 @@ class="de.hybris.platform.commercefacades.product.impl.DefaultImageFormatMapping
 			
 			</bean>
 			
+			<bean id="luxCmsFacade" class="com.tisl.mpl.facade.cms.LuxCmsFacadeImpl">
+				<property name="mplCMSPageService" ref="cmsPageService"></property>
+			</bean>
+			
 			
 	<bean id="mobileHeroComponentConverter" parent="abstractPopulatingConverter">
 			<property name="populators">
