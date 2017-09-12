@@ -4,42 +4,43 @@
 <c:if test="${empty buildNumber}">
 <c:set var="buildNumber" value= "100000"/>
 </c:if>
-<c:choose>
-	<c:when test="${fn:contains(pageBodyCssClasses, 'homepage')}">
-<%-- <noscript id="deferred-styles">
-      <link rel="stylesheet" type="text/css" media="all" href="${themeResourcePath}/css/tmpmain.min.css?v=${buildNumber}" />
-</noscript> --%>
 
-<script>
-       var loadDeferredStyles = function() {
-       /* var addStylesNode = document.getElementById("deferred-styles");
-        var replacement = document.createElement("div");
-        replacement.innerHTML = addStylesNode.textContent;
-        document.body.appendChild(replacement);
-        addStylesNode.parentElement.removeChild(addStylesNode); */
-        
-        
-        var head = document.head ;
-        var link = document.getElementById('mincss');
+	<c:choose>
+		<c:when test="${!fn:contains(themeResourcePath,'theme-luxury') && fn:contains(pageBodyCssClasses, 'homepage')}">
+		<%-- <noscript id="deferred-styles">
+			  <link rel="stylesheet" type="text/css" media="all" href="${themeResourcePath}/css/tmpmain.min.css?v=${buildNumber}" />
+		</noscript> --%>
 
-  		link.type = 'text/css';
-  		link.rel = 'stylesheet';
-  		link.media = 'all';
-  		link.href = '${themeResourcePath}/css/tmpmain.min.css?v=${buildNumber}';
+		<script>
+		   var loadDeferredStyles = function() {
+		   /* var addStylesNode = document.getElementById("deferred-styles");
+			var replacement = document.createElement("div");
+			replacement.innerHTML = addStylesNode.textContent;
+			document.body.appendChild(replacement);
+			addStylesNode.parentElement.removeChild(addStylesNode); */
 
-  		//head.appendChild(link);
-        
-      };
-      var raf = requestAnimationFrame || mozRequestAnimationFrame ||
-          webkitRequestAnimationFrame || msRequestAnimationFrame;
-      if (raf) raf(function() { window.setTimeout(loadDeferredStyles, 0); });
-      else window.addEventListener('load', loadDeferredStyles);
-</script>
-	</c:when>
-	<c:otherwise>
-	 <link rel="stylesheet" type="text/css" media="all" href="${themeResourcePath}/css/tmpmain.min.css?v=${buildNumber}" />
-	</c:otherwise>
-</c:choose>
+
+			var head = document.head ;
+			var link = document.getElementById('mincss');
+
+			link.type = 'text/css';
+			link.rel = 'stylesheet';
+			link.media = 'all';
+			link.href = '${themeResourcePath}/css/tmpmain.min.css?v=${buildNumber}';
+
+			//head.appendChild(link);
+
+		  };
+		  var raf = requestAnimationFrame || mozRequestAnimationFrame ||
+			  webkitRequestAnimationFrame || msRequestAnimationFrame;
+		  if (raf) raf(function() { window.setTimeout(loadDeferredStyles, 0); });
+		  else window.addEventListener('load', loadDeferredStyles);
+	</script>
+		</c:when>
+		<c:otherwise>
+		 <link rel="stylesheet" type="text/css" media="all" href="${themeResourcePath}/css/tmpmain.min.css?v=${buildNumber}" />
+		</c:otherwise>
+	</c:choose>
 <!-- UF-439 -->
 
 

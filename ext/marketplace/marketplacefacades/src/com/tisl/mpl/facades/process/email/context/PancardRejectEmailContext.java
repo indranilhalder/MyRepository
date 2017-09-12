@@ -21,6 +21,7 @@ import de.hybris.platform.core.model.c2l.LanguageModel;
 import de.hybris.platform.core.model.order.AbstractOrderEntryModel;
 import de.hybris.platform.core.model.order.OrderModel;
 import de.hybris.platform.core.model.product.ProductModel;
+import de.hybris.platform.core.model.user.AddressModel;
 import de.hybris.platform.core.model.user.CustomerModel;
 import de.hybris.platform.orderprocessing.model.OrderProcessModel;
 import de.hybris.platform.servicelayer.dto.converter.Converter;
@@ -56,6 +57,7 @@ public class PancardRejectEmailContext extends AbstractEmailContext<OrderProcess
 	private static final String TOTALPRICE = "totalPrice";
 	private static final String SHIPPINGCHARGE = "shippingCharge";
 	private static final String CONVENIENCECHARGE = "convenienceChargesVal";
+	//private static final String CNCSTOREADDRESS = "storeAddress";
 	private static final String CUSTOMER_NAME = "customerName";
 	private static final String COD_CHARGES = "codCharge";
 	private static final String SUBTOTALFORJEWELLERY = "subTotalForJewellery";
@@ -171,7 +173,13 @@ public class PancardRejectEmailContext extends AbstractEmailContext<OrderProcess
 
 		//TISJEW-4487
 		final CustomerModel customer = (CustomerModel) orderProcessModel.getOrder().getUser();
-		final String displayName = customer.getDisplayName();
+		final AddressModel deliveryAddress = orderProcessModel.getOrder().getDeliveryAddress();
+		String displayName = "";
+		if (deliveryAddress != null)
+		{
+			displayName = deliveryAddress.getFirstname();
+		}
+
 		if (StringUtils.isEmpty(displayName))
 		{
 			put(CUSTOMER_NAME, CUSTOMER);

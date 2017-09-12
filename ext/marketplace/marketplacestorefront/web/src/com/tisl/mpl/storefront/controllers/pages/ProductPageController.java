@@ -458,22 +458,27 @@ public class ProductPageController extends MidPageController
 			// TPR- 4389 STARTS FROM HERE
 
 			final ProductModel productModel = productService.getProductForCode(productCode);
-			final Map<String, String> reviewAndRating = mplGigyaReviewService.getReviewsAndRatingByCategoryId(
-					productModel.getProductCategoryType(), productCode);
-
-			if (reviewAndRating != null)
+			//TPR-6655
+			final boolean isGigyaforPdpEnabled = configurationService.getConfiguration().getBoolean("gigya.pdpCall");
+			if (isGigyaforPdpEnabled)
 			{
-				for (final Map.Entry<String, String> entry : reviewAndRating.entrySet())
+				final Map<String, String> reviewAndRating = mplGigyaReviewService.getReviewsAndRatingByCategoryId(
+						productModel.getProductCategoryType(), productCode);
+
+				if (reviewAndRating != null)
 				{
-					final String commentCount = entry.getKey();
-					final String ratingCount = entry.getValue();
-					model.addAttribute("commentCount", commentCount);
-					model.addAttribute("averageRating", ratingCount);
+					for (final Map.Entry<String, String> entry : reviewAndRating.entrySet())
+					{
+						final String commentCount = entry.getKey();
+						final String ratingCount = entry.getValue();
+						model.addAttribute("commentCount", commentCount);
+						model.addAttribute("averageRating", ratingCount);
 
+					}
 				}
+				//   TPR-4389 ENDS HERE
 			}
-			//   TPR-4389 ENDS HERE
-
+			model.addAttribute("isGigyaforPdpEnabled", isGigyaforPdpEnabled);
 			if (productModel.getLuxIndicator() != null
 					&& productModel.getLuxIndicator().getCode().equalsIgnoreCase(ControllerConstants.Views.Pages.Cart.LUX_INDICATOR)
 					&& !isLuxurySite())
@@ -1625,6 +1630,7 @@ public class ProductPageController extends MidPageController
 					ProductOption.GALLERY, ProductOption.VARIANT_FULL));//Fix for TISPT-150
 		}
 
+
 		//final String returnStatement = null;
 		//CKD:TPR-250:Start
 		model.addAttribute("msiteBuyBoxSellerId", StringUtils.isNotBlank(sellerId) ? sellerId : null);
@@ -1987,6 +1993,7 @@ public class ProductPageController extends MidPageController
 				}
 			}
 
+
 			final String sharePath = configurationService.getConfiguration().getString("social.share.path");
 			//For Gigya
 			final String isGigyaEnabled = configurationService.getConfiguration().getString(MessageConstants.USE_GIGYA);
@@ -2183,10 +2190,12 @@ public class ProductPageController extends MidPageController
 	{
 		final List<MetaElementData> metadata = new LinkedList<>();
 		metadata.add(createMetaElement(ModelAttributetConstants.DESCRIPTION, metaDescription));
+		model.addAttribute(ModelAttributetConstants.DESCRIPTION, metaDescription); //PRDI-422
 		//TISPRD-4977
 		if (null != metaKeywords)
 		{
 			metadata.add(createMetaElement(ModelAttributetConstants.KEYWORDS, metaKeywords));
+			model.addAttribute(ModelAttributetConstants.KEYWORDS, metaKeywords); //PRDI-422
 		}
 		//metadata.add(createMetaElement(ModelAttributetConstants.TITLE, metaTitle));
 		metadata.add(createMetaElement("productCode", productCode));
@@ -3753,7 +3762,7 @@ public class ProductPageController extends MidPageController
 			{
 				l4list.add(ex.getL4category());
 				activelist.add(ex.getIsWorking());
-				pricelist.add(ex.getL4category() + "|" + ex.getIsWorking() + "-" + ex.getPrice());
+				pricelist.add(ex.getL4category() + "|" + ex.getIsWorking() + ":" + ex.getPrice());
 			}
 			exDropData = new ExchangeGuideDropdownData();
 			exDropData.setL4categorylist(l4list);

@@ -906,6 +906,9 @@ public final class ModelAttributetConstants
 	public static final String EMAILORPASSINVALID = "Email or Password invalid";
 	public static final String LUXURY_USER_FIRST_NAME = "fname";
 
+	//PRDI-422
+	public static final String METAPAGETITLE = "metaPageTitle";
+
 	/* TPR-5733 */
 	public static final String FOOTER_LINK_LIST = "footerLinkList";
 	//TPR-6654

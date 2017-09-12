@@ -113,7 +113,7 @@
 					$minqtd=minqtd[default=1]
 					$unitFactor=unitFactor[default=1]
 					$net=net[default=false]					
-             INSERT_UPDATE PriceRow;product(code,$catalogVersion)[unique=true];sellerArticleSKU[unique=true][mode=append];price[translator=de.hybris.platform.acceleratorservices.dataimport.batch.converter.PriceTranslator];mrp;$unit;$currency;$minqtd;$unitFactor;$net
+             INSERT_UPDATE PriceRow;product(code,$catalogVersion)[unique=true];sellerArticleSKU[unique=true][mode=append];price[translator=de.hybris.platform.acceleratorservices.dataimport.batch.converter.PriceTranslator];mrp;siteId[default='mpl'];$unit;$currency;$minqtd;$unitFactor;$net
             </value>
         </property>
         <property name="impexRow">

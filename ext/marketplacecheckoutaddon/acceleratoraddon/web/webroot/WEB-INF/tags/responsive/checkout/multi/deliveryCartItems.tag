@@ -470,7 +470,7 @@
 		<li class="item">
 			<div class="product-img">
 				<a href="${productUrl}">
-					<product:productPrimaryImage product="${entry.product}" format="thumbnail"/>
+					<product:productPrimaryImage lazyLoad="false" product="${entry.product}" format="thumbnail"/>
 				</a>
 			</div>
 			<div class="product">

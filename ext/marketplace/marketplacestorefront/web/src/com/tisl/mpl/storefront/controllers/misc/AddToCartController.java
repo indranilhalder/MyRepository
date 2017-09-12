@@ -98,7 +98,7 @@ public class AddToCartController extends AbstractController
 			 * "storing new wishlist data after login in session"); final List<WishlistData> wishlistDatas = new
 			 * ArrayList<>(); sessionService.setAttribute(ModelAttributetConstants.WISHLISTDATA, wishlistDatas); }
 			 * LOG.info("wishlsit name : " + wishlistName); LOG.info("product code:" + code);
-			 *
+			 * 
 			 * final WishlistData wishlistData = new WishlistData(); wishlistData.setParticularWishlistName(wishlistName);
 			 * wishlistData.setProductCode(code); final Collection<WishlistData> wishlistDatas =
 			 * sessionService.getAttribute(ModelAttributetConstants.WISHLISTDATA); final Iterator<WishlistData> iterator =
@@ -113,7 +113,7 @@ public class AddToCartController extends AbstractController
 			/*
 			 * final boolean isProductFreebie = getAddToCartHelper().isProductFreebie(code); if (isProductFreebie)
 			 * //freebie product or not { return MarketplacecommerceservicesConstants.ERROR_MSG_TYPE_FREEBIE;
-			 *
+			 * 
 			 * }
 			 */
 			/* cart not opening issue --due to ussid mismatch */
@@ -151,12 +151,12 @@ public class AddToCartController extends AbstractController
 
 			final int maximum_configured_quantiy = siteConfigService.getInt(
 
-					MarketplacecommerceservicesConstants.MAXIMUM_CONFIGURED_QUANTIY, 0);
+			MarketplacecommerceservicesConstants.MAXIMUM_CONFIGURED_QUANTIY, 0);
 
 			final ProductModel product = productService.getProductForCode(code);
 
-			final int maximum_configured_quantiy_jewellery = siteConfigService
-					.getInt(MarketplacecommerceservicesConstants.MAXIMUM_CONFIGURED_QUANTIY_JEWELLERY, 0);
+			final int maximum_configured_quantiy_jewellery = siteConfigService.getInt(
+					MarketplacecommerceservicesConstants.MAXIMUM_CONFIGURED_QUANTIY_JEWELLERY, 0);
 
 			if (product.getMaxOrderQuantity() == null || product.getMaxOrderQuantity().intValue() <= 0
 					|| product.getMaxOrderQuantity().intValue() >= maximum_configured_quantiy)
@@ -187,7 +187,9 @@ public class AddToCartController extends AbstractController
 			//TPR-5346 end
 
 			//final String maxQuantityAlreadyAdded = mplCartFacade.isMaxQuantityAlreadyAdded(code, qty, stock, ussid);
-			if (maxQuantityAlreadyAdded.isEmpty())
+			if (maxQuantityAlreadyAdded.isEmpty()
+					|| (!maxQuantityAlreadyAdded.isEmpty() && (StringUtils.isNotEmpty(l3) || StringUtils.isNotEmpty(exchangeParam)) && maxQuantityAlreadyAdded
+							.equalsIgnoreCase("crossedMaxLimit")))
 			{
 				LOG.debug("We are allowed to add this product by checking max quantity");
 				CartModificationData cartModification = null;
@@ -199,8 +201,8 @@ public class AddToCartController extends AbstractController
 				//Exchange Cart Flow
 				else
 				{
-					cartModification = mplCartFacade.addToCartwithExchange(code, qty, ussid,
-							l3 + "|" + exchangeParam + "|" + brand + "|" + pincode);
+					cartModification = mplCartFacade.addToCartwithExchange(code, qty, ussid, l3 + "|" + exchangeParam + "|" + brand
+							+ "|" + pincode);
 
 				}
 				/*
@@ -247,7 +249,7 @@ public class AddToCartController extends AbstractController
 	 * MarketplacecommerceservicesConstants.QUANTITY_INVALID_BINDING_MESSAGE_KEY); } else {
 	 * model.addAttribute(MarketplacecommerceservicesConstants.ERROR_MSG_TYPE, error.getDefaultMessage()); } } return
 	 * ControllerConstants.Views.Fragments.Cart.AddToCartPopup; }
-	 *
+	 * 
 	 * protected boolean isTypeMismatchError(final ObjectError error) { return
 	 * error.getCode().equals(MarketplacecommerceservicesConstants.TYPE_MISMATCH_ERROR_CODE); }
 	 */
