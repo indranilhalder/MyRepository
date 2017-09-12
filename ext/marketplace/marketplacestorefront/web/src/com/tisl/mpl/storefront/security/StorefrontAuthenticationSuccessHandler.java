@@ -417,12 +417,24 @@ public class StorefrontAuthenticationSuccessHandler extends SavedRequestAwareAut
 		}
 		/* TPR-6654 start */
 		final Cookie cookie = GenericUtilityMethods.getCookieByName(request, "pdpPincode");
+		int pincodeCookieMaxAge;
+		final String cookieMaxAge = getConfigurationService().getConfiguration().getString("pdpPincode.cookie.age");
+		pincodeCookieMaxAge = (Integer.valueOf(cookieMaxAge)).intValue();
+		final String domain = getConfigurationService().getConfiguration().getString("shared.cookies.domain");
 		final AddressModel address = currCust.getDefaultShipmentAddress();
 		if (address != null && address.getPostalcode() != null)
 		{
 			if (cookie != null && cookie.getValue() != null)
 			{
 				cookie.setValue(address.getPostalcode());
+				cookie.setMaxAge(pincodeCookieMaxAge);
+				cookie.setPath("/");
+
+				if (null != domain && !domain.equalsIgnoreCase("localhost"))
+				{
+					cookie.setSecure(true);
+				}
+				cookie.setDomain(domain);
 				response.addCookie(cookie);
 				getSessionService().setAttribute(MarketplacecommerceservicesConstants.SESSION_PINCODE, address.getPostalcode());
 			}

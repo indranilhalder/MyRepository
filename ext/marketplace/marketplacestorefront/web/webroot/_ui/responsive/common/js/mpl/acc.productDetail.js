@@ -932,7 +932,7 @@ function setSeller(index) {
 /* refeshing seller data after getting response from pincode service */
 /* refeshing seller data after getting response from pincode service */
 function refreshSellers(dataArray, ussid) {
-	console.log("dataArray"+dataArray+"ussid"+ussid);
+	//console.log("dataArray"+dataArray+"ussid"+ussid);
 	var stockArray = [];
 
 	var nonservicableussids = [];
@@ -966,7 +966,7 @@ function refreshSellers(dataArray, ussid) {
 				usidList[i] = "'" + dataArray[i]['ussid'] + "'";
 				count = count + 1;
 				if (dataArray[i]['stockCount'] == 0) {
-					console.log("ussid"+dataArray[i]['ussid']);
+					//console.log("ussid"+dataArray[i]['ussid']);
 					ussidListWithNoStock[++n] = "'" + dataArray[i]['ussid']
 							+ "'";// setting all the skuIds without stock
 
@@ -1963,7 +1963,7 @@ function displayDeliveryDetails(sellerName) {
 		dataType : "json",
 		success : function(data) {
 			if (data != null) {
-				console.log("success");
+				//console.log("success");
 				var pretext=$("#deliveryPretext").text();
 				var posttext=$("#deliveryPosttext").text();
 				var fulFillment = data['fulfillment'];
@@ -2016,7 +2016,8 @@ function displayDeliveryDetails(sellerName) {
 				/*TISPRDT-878 END*/
 
 				//INC144314017 start
-				if(!$('#pdpPincodeCheck').data('clicked')) {
+				 //TPR-6654
+				if(typeof $('#pdpPincodeCheck').data('clicked') != "undefined" && !$('#pdpPincodeCheck').data('clicked')) {
 					var start_hd=parseInt($("#homeStartId").val())+leadTime;
 					var end_hd=parseInt($("#homeEndId").val())+leadTime;
 				if (null != deliveryModes && deliveryModes.indexOf("HD") == -1) {
