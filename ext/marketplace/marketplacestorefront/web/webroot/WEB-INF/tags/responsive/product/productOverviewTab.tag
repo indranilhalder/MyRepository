@@ -15,9 +15,12 @@
 		<c:forEach var="overViewSection"
 				items="${overviewTabSeq}">
 				<%-- <c:forEach var="classification" items="${mapConfigurableAttributes}"> --%>
+				<c:set var="list" value="${mapConfigurableAttributes[overViewSection]}" />
 					<ul class="homefurnishing-overview">
+					<c:if test="${not empty list}">
 						<li class="homefurnishing-overview-title">
 							${overViewSection}</li>
+							</c:if>
 						<c:forEach var="classValue" items="${mapConfigurableAttributes[overViewSection] }">
 							<li class="homefurnishing-overview-desc">${classValue}</li>
 						</c:forEach>
