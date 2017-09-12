@@ -128,6 +128,12 @@ public class DefaultGetOrderDetailsFacadeImpl implements GetOrderDetailsFacade
 	@Resource(name = "mplJewelleryService")
 	private MplJewelleryService jewelleryService;
 
+	
+	//TPR-5975 starts here
+	public static final String ZERODELCOST = "0.0".intern();//IQA
+
+	//TPR-5975 ends here
+	
 	/**
 	 * @description method is called to fetch the details of a particular orders for the user
 	 * @param orderDetails
@@ -2186,15 +2192,17 @@ public class DefaultGetOrderDetailsFacadeImpl implements GetOrderDetailsFacade
 									{
 										selectedDeliveryModeWsDTO.setCode(mplDeliveryMode.getCode());
 									}
+									String value = "";
 									if (!entry.isGiveAway() && entry.getCurrDelCharge() != null
-											&& StringUtils.isNotEmpty(entry.getCurrDelCharge().getFormattedValue()))
+											&& StringUtils.isNotEmpty(value = entry.getCurrDelCharge().getFormattedValue()))//IQA
 									{
+										LOG.debug("The Delivery Cost is not empty block1" + value);
 										//selectedDeliveryModeWsDTO.setDeliveryCost(mplDeliveryMode.getDeliveryCost().getValue().toString());
-										selectedDeliveryModeWsDTO.setDeliveryCost(entry.getCurrDelCharge().getFormattedValue());
+										selectedDeliveryModeWsDTO.setDeliveryCost(value);
 									}
 									else
 									{
-										selectedDeliveryModeWsDTO.setDeliveryCost("0.0");
+										selectedDeliveryModeWsDTO.setDeliveryCost(ZERODELCOST);//IQA
 									}
 									if (StringUtils.isNotEmpty(mplDeliveryMode.getDescription()))
 									{
@@ -2554,15 +2562,17 @@ public class DefaultGetOrderDetailsFacadeImpl implements GetOrderDetailsFacade
 								{
 									selectedDeliveryModeWsDTO.setCode(mplDeliveryMode.getCode());
 								}
+								String value = "";
 								if (!orderEntry.isGiveAway() && orderEntry.getCurrDelCharge() != null
-										&& StringUtils.isNotEmpty(orderEntry.getCurrDelCharge().getFormattedValue()))
+										&& StringUtils.isNotEmpty(value = orderEntry.getCurrDelCharge().getFormattedValue()))//IQA
 								{
+									LOG.debug("The Delivery Cost is not empty block2" + value);
 									//selectedDeliveryModeWsDTO.setDeliveryCost(mplDeliveryMode.getDeliveryCost().getValue().toString());
-									selectedDeliveryModeWsDTO.setDeliveryCost(orderEntry.getCurrDelCharge().getFormattedValue());
+									selectedDeliveryModeWsDTO.setDeliveryCost(value);
 								}
 								else
 								{
-									selectedDeliveryModeWsDTO.setDeliveryCost("0.0");
+									selectedDeliveryModeWsDTO.setDeliveryCost(ZERODELCOST);//IQA
 								}
 								if (StringUtils.isNotEmpty(mplDeliveryMode.getDescription()))
 								{

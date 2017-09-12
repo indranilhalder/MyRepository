@@ -650,7 +650,8 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 		}
 		catch (final Exception e)
 		{
-			LOG.error("Exception occured while selecting  address:" + e);
+			LOG.error("Exception occured while checkingLocationRestrictedPincode:" + e);
+			LOG.error("Stack trace:", e);
 			final String requestQueryParam = UriUtils.encodeQuery("?msg=Opps...Something went wrong&type=error", UTF);
 			return FORWARD_PREFIX + "/checkout/single/message" + requestQueryParam;
 		}
@@ -1078,16 +1079,18 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 	{
 		try
 		{
-
-			if (LOG.isDebugEnabled())
-			{
-				LOG.debug("Inside selectAddress Method...");
-			}
 			if (getUserFacade().isAnonymousUser())
 			{
 				final String requestQueryParam = UriUtils.encodeQuery("?url=" + MarketplacecheckoutaddonConstants.CART
 						+ "&type=redirect", UTF);
 				return FORWARD_PREFIX + "/checkout/single/message" + requestQueryParam;
+			}
+			if (LOG.isDebugEnabled())
+			{
+				LOG.debug("Inside selectAddress Method...");
+				LOG.debug("selectedAddressCode=" + selectedAddressCode);
+				LOG.debug("exchangeEnabled=" + exchangeEnabled);
+				LOG.debug("CurrentUser=" + userService.getCurrentUser().getUid());
 			}
 			//TISST-13012
 			final CartModel cart = getCartService().getSessionCart();
@@ -1121,13 +1124,14 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 			finaladdressData.setVisibleInAddressBook(true);
 
 			final String selectedPincode = finaladdressData.getPostalCode();
-
+			LOG.debug("selectedPincode=" + selectedPincode);
 			//TISSEC-11
 			final String regex = "\\d{6}";
 
 			if (selectedPincode.matches(regex))
 			{
 				final String sessionPincode = getSessionService().getAttribute(MarketplacecommerceservicesConstants.SESSION_PINCODE);
+				LOG.debug("sessionPincode=" + sessionPincode);
 				if (StringUtils.isEmpty(sessionPincode))
 				{
 					final String requestQueryParam = UriUtils.encodeQuery("?url=" + MarketplacecommerceservicesConstants.CART
@@ -1186,6 +1190,7 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 		catch (final Exception e)
 		{
 			LOG.error("Exception occured while selecting  address:" + e);
+			LOG.error("Stack trace:", e);
 			final String requestQueryParam = UriUtils.encodeQuery("?msg=Opps...Something went wrong&type=error", UTF);
 			return FORWARD_PREFIX + "/checkout/single/message" + requestQueryParam;
 
@@ -1206,15 +1211,17 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 		final JSONObject jsonObj = new JSONObject();
 		try
 		{
-			if (LOG.isDebugEnabled())
-			{
-				LOG.debug("Inside selectAddress Responsive Method...");
-			}
 			if (getUserFacade().isAnonymousUser())
 			{
 				jsonObj.put("url", MarketplacecheckoutaddonConstants.CART);
 				jsonObj.put("type", "redirect");
 				return jsonObj;
+			}
+			if (LOG.isDebugEnabled())
+			{
+				LOG.debug("Inside selectAddress Responsive Method...");
+				LOG.debug("selectedAddressCode=" + selectedAddressCode);
+				LOG.debug("CurrentUser=" + userService.getCurrentUser().getUid());
 			}
 			final String isCheckoutPincodeServiceable = getSessionService().getAttribute("isCheckoutPincodeServiceable");
 			if (isCheckoutPincodeServiceable.equalsIgnoreCase(MarketplacecommerceservicesConstants.N))
@@ -1251,23 +1258,23 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 		catch (final EtailBusinessExceptions e)
 		{
 			ExceptionUtil.etailBusinessExceptionHandler(e, null);
-			LOG.error("EtailBusinessExceptions  while selecting address ", e);
+			LOG.error("EtailBusinessExceptions  while selecting address for responsive", e);
 			jsonObj.put("displaymessage", "jsonExceptionMsg");
 			jsonObj.put("type", "errorCode");
 		}
 		catch (final EtailNonBusinessExceptions e)
 		{
 			ExceptionUtil.etailNonBusinessExceptionHandler(e);
-			LOG.error("EtailNonBusinessExceptions  while selecting address ", e);
+			LOG.error("EtailNonBusinessExceptions  while selecting address for responsive", e);
 			jsonObj.put("displaymessage", "jsonExceptionMsg");
 			jsonObj.put("type", "errorCode");
 		}
 		catch (final Exception e)
 		{
-			LOG.error("Exception occured while selecting  address:" + e);
+			LOG.error("Exception occured while selecting  address for responsive:" + e);
+			LOG.error("Stack trace:", e);
 			jsonObj.put("displaymessage", "jsonExceptionMsg");
 			jsonObj.put("type", "errorCode");
-
 		}
 		return jsonObj;
 	}
@@ -1822,6 +1829,7 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 					catch (final Exception e)
 					{
 						LOG.error("Exception occured while checking inventory " + e.getCause());
+						LOG.error("Stack trace:", e);
 					}
 				}
 				//  TISPRD-1951  END //
@@ -2276,7 +2284,8 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 		}
 		catch (final Exception e)
 		{
-			LOG.error("Exception occured while selecting  address:" + e);
+			LOG.error("Exception occured while selecting  delivery slots:" + e);
+			LOG.error("Stack trace:", e);
 		}
 		final String requestQueryParam = UriUtils.encodeQuery("?redirectString=" + "redirectToReviewOrder" + "&type=ajaxRedirect",
 				UTF);
@@ -2341,6 +2350,7 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 			{
 				ExceptionUtil.etailNonBusinessExceptionHandler(new EtailNonBusinessExceptions(e,
 						MarketplacecommerceservicesConstants.E0000));
+				LOG.error("Stack trace:", e);
 				getSessionService().setAttribute(MarketplacecclientservicesConstants.DELIVERY_MODE_ENTER_STEP_ERROR_ID, "TRUE");
 				final String requestQueryParam = UriUtils.encodeQuery("?msg=Opps...Something went wrong&type=error", UTF);
 				return FORWARD_PREFIX + "/checkout/single/message" + requestQueryParam;
@@ -3260,7 +3270,8 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 		}
 		catch (final Exception e)
 		{
-			LOG.error("Exception occured while selecting  address:" + e);
+			LOG.error("Exception occured in getSlotAvailability:" + e);
+			LOG.error("Stack trace:", e);
 		}
 		return isScheduleServiceble;
 	}
@@ -4704,7 +4715,7 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 
 	/*
 	 * @Description adding wishlist popup in cart page
-	 * 
+	 *
 	 * @param String productCode,String wishName, model
 	 */
 
@@ -4762,7 +4773,7 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 
 	/*
 	 * @Description showing wishlist popup in cart page
-	 *
+	 * 
 	 * @param String productCode, model
 	 */
 	@ResponseBody

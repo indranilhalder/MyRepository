@@ -724,6 +724,9 @@
 							<attribute name="invoice" />
 							<attribute name="returnAWBNum" />
 							<attribute name="returnCarrier" />
+							<!-- TPR-3809-->							
+							<attribute name="forwardSealNum" />
+							<attribute name="reverseSealNum" /> 
 
 
 
@@ -4129,9 +4132,9 @@
  
  <!-- TPR-3893 : Item HMC structure Declaration BundlingPromotionWithPercentageSlab ends here-->
  
- 
- 
- 
+
+
+
   
 <!-- TPR-965 Limited stock Promotion started-->
 
@@ -4371,252 +4374,252 @@
 		 </organizer>
 	</type>
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+ <!-- TPR-1083 Start -->
+	<explorertree>
+	
+		<group name="exchangeModule" description="group.exchangeModule.description">
+			<typeref type="ExchangeCouponValue" description="mpl.exchange.PriceMatrix" />
+			<typeref type="ExchangePincode" description="mpl.exchange.ExchangePincode" />
+			<typeref type="ExchangeTransaction" description="mpl.exchange.ExchangeTransaction" />
+			<typeref type="Exchange" description="mpl.exchange.Exchange"/>
+		</group>
+ </explorertree>
+
+
+ <type name="ExchangeCouponValue"  mode="append">
+		<organizer>
+			<search mode="append">
+				<condition attribute="thirdLevelCategory" />
+				<condition attribute="l4categoryCode" />
+				<condition attribute="l4categoryName" />
+				<condition attribute="isWorking" />
+				<condition attribute="couponValue" />
+			</search>
+			<result defaultview="list">
+				<listview>
+					<itemlayout mode="replace">
+						<attribute name="thirdLevelCategory" width="200"/>
+						<attribute name="l4categoryName" width="200"/>
+						<attribute name="isWorking"  width="20"/>
+						 <attribute name="couponValue" width="20"/>
+					</itemlayout>
+				</listview>
+				<editview mode="replace">
+					<itemlayout>
+						<attribute name="thirdLevelCategory" width="200"/>
+						<attribute name="l4categoryCode" width="200"/>
+						<attribute name="l4categoryName" width="200"/>
+						<attribute name="isWorking"  width="20"/>
+						 <attribute name="couponValue" width="20"/>
+					</itemlayout>
+				</editview>
+				<treeview mode="replace">
+					<itemlayout>
+						<attribute name="thirdLevelCategory" width="200"/>
+						<attribute name="l4categoryCode" width="200"/>
+						<attribute name="l4categoryName" width="200"/>
+						<attribute name="isWorking"  width="200"/>
+						 <attribute name="couponValue" width="200"/>
+					</itemlayout>
+				</treeview>
+			</result>
+			<editor>
+				
+				<tab name="mpl.exchange.priceMatrix.tab" position="0">
+				  <section name="mpl.exchange.priceMatrix.CategorySection">
+						<listlayout>
+							<attribute name="thirdLevelCategory"/>
+							<attribute name="l4categoryCode"/>
+							<attribute name="l4categoryName"/>
+						</listlayout>
+					</section>
+					<section name="mpl.exchange.priceMatrix.PricingSection">
+						<listlayout>
+						    <attribute name="isWorking" />
+							<attribute name="couponValue" />
+						</listlayout>
+					</section>
+				</tab>
+				
+			</editor>
+		</organizer>
+	</type>
+	
+<type name="ExchangePincode"  mode="append">
+		<organizer>
+			<search mode="append">
+				<condition attribute="pincode" />
+				<condition attribute="isServicable" />
+				<condition attribute="city" />
+				<condition attribute="state" />
+				
+			</search>
+			<result defaultview="list">
+				<listview>
+					<itemlayout mode="replace">
+						<attribute name="pincode" width="200"/>
+						<attribute name="isServicable" width="200"/>
+						<attribute name="city" width="200"/>
+						<attribute name="state" width="200"/>
+						
+					</itemlayout>
+				</listview>
+				<editview mode="replace">
+					<itemlayout>
+						<attribute name="pincode" width="200"/>
+						<attribute name="isServicable" width="200"/>
+						<attribute name="city" width="200"/>
+						<attribute name="state" width="200"/>
+						
+					</itemlayout>
+				</editview>
+				<treeview mode="replace">
+					<itemlayout>
+						<attribute name="pincode" width="200"/>
+						<attribute name="isServicable" width="200"/>
+						<attribute name="city" width="200"/>
+						<attribute name="state" width="200"/>
+					</itemlayout>
+				</treeview>
+			</result>
+			<editor>
+				
+				<tab name="properties" position="0">
+				  <section name="section.common">
+						<listlayout>
+							<attribute name="Pincode"/>
+							<attribute name="isServicable"/>
+						</listlayout>
+					</section>
+					
+				</tab>
+				
+			</editor>
+		</organizer>
+	</type>
+	<type name="ExchangeTransaction"  mode="append">
+		<organizer>
+			<search mode="append">
+				<condition attribute="Pincode" />
+				<condition attribute="ExchangeValue" />
+				<condition attribute="brandName" />
+				<condition attribute="productId" />
+				<condition attribute="ussid" />
+				<condition attribute="ExchangeId" />
+				<condition attribute="cartguid" />
+			</search>
+			<result defaultview="list">
+				<listview>
+					<itemlayout mode="replace">
+						<attribute name="ExchangeId" width="200"/>
+						<attribute name="cartguid" width="200"/>
+						<attribute name="productId"  width="200"/>
+						 <attribute name="ussid" width="200"/>
+					</itemlayout>
+				</listview>
+				<editview mode="replace">
+					<itemlayout>
+						<attribute name="ExchangeId" width="200"/>
+						<attribute name="cartguid" width="200"/>
+						<attribute name="productId"  width="200"/>
+						 <attribute name="ussid" width="200"/>
+					</itemlayout>
+				</editview>
+				<treeview mode="replace">
+					<itemlayout>
+						<attribute name="ExchangeId" width="200"/>
+						<attribute name="cartguid" width="200"/>
+						<attribute name="productId"  width="200"/>
+						 <attribute name="ussid" width="200"/>
+					</itemlayout>
+				</treeview>
+			</result>
+			<editor>
+				
+				<tab name="properties" position="0">
+				  <section name="section.common">
+						<listlayout>
+							<attribute name="Pincode"/>
+							<attribute name="ExchangeValue"/>
+							<attribute name="brandName"/>
+						</listlayout>
+					</section>
+					<section name="section.common">
+						<listlayout>
+						    <attribute name="productId" />
+							<attribute name="ussid" />
+							<attribute name="ExchangeId" />
+							<attribute name="cartguid" />
+						</listlayout>
+					</section>
+				</tab>
+				
+			</editor>
+		</organizer>
+	</type>
+	<type name="Exchange"  mode="append">
+		<organizer>
+			<search mode="append">
+				<condition attribute="Pincode" />
+				<condition attribute="brandName" />
+				<condition attribute="productId" />
+				<condition attribute="ussid" />
+				<condition attribute="ExchangeId" />
+				<condition attribute="cartguid" />
+				<condition attribute="ExchangeRequestId" />
+				<condition attribute="OrderID" />
+				<condition attribute="SellerOrderID" />
+				<condition attribute="TransactiondId" />
+			</search>
+			<result defaultview="list">
+				<listview>
+					<itemlayout mode="replace">
+						<attribute name="ExchangeRequestId" width="200"/>
+						<attribute name="OrderID" width="200"/>
+						<attribute name="SellerOrderID"  width="200"/>
+						 <attribute name="TransactiondId" width="200"/>
+					</itemlayout>
+				</listview>
+				<editview mode="replace">
+					<itemlayout>
+						<attribute name="ExchangeRequestId" width="200"/>
+						<attribute name="OrderID" width="200"/>
+						<attribute name="SellerOrderID"  width="200"/>
+						 <attribute name="TransactiondId" width="200"/>
+					</itemlayout>
+				</editview>
+				<treeview mode="replace">
+					<itemlayout>
+						<attribute name="ExchangeRequestId" width="200"/>
+						<attribute name="OrderID" width="200"/>
+						<attribute name="SellerOrderID"  width="200"/>
+						 <attribute name="TransactiondId" width="200"/>
+					</itemlayout>
+				</treeview>
+			</result>
+			<editor>
+				
+				<tab name="properties" position="0">
+				  <section name="section.common">
+						<listlayout>
+							<attribute name="Pincode"/>
+							<attribute name="brandName"/>
+						</listlayout>
+					</section>
+					<section name="section.common">
+						<listlayout>
+						    <attribute name="productId" />
+							<attribute name="ussid" />
+							<attribute name="ExchangeRequestId" />
+							<attribute name="cartguid" />
+						</listlayout>
+					</section>
+				</tab>
+				
+			</editor>
+		</organizer>
+	</type>
+	<!-- TPR-1083 End -->
 
 <!-- Added for TPR-4461 -->
  
@@ -4724,4 +4727,78 @@
 		</defaultreference>
 	</type>
 	<!-- END TPR-5733 -->
+	
+	<!-- TPR-6665 : sysnonums update to slave servers start-->
+<type name="SolrServerConfig" mode="append">
+		<organizer>
+			<search mode="replace">
+				<condition attribute="name"/>
+				<condition attribute="mode"/>
+			</search>
+			<result defaultview="list" mode="replace">
+				<listview>
+					<itemlayout>
+						<attribute name="name"/>
+						<attribute name="mode"/>
+					</itemlayout>
+				</listview>
+				<editview>
+					<itemlayout>
+						<attribute name="name"/>
+						<attribute name="mode"/>
+					</itemlayout>
+				</editview>
+				<treeview>
+					<itemlayout>
+						<attribute name="name"/>
+						<attribute name="mode"/>
+					</itemlayout>
+				</treeview>
+			</result>
+			<editor>
+				<tab name="tab.configuration.serverconfig">
+					<section name="sec.configuration.serverconfig">
+						<listlayout mode="replace">
+							<attribute name="name"/>
+							<attribute name="mode"/>
+							<attribute name="embeddedMaster"/>
+							<attribute name="aliveCheckInterval"/>
+							<attribute name="connectionTimeout"/>
+							<attribute name="socketTimeout"/>
+							<attribute name="maxTotalConnections"/>
+							<attribute name="maxTotalConnectionsPerHostConfig"/>
+							<attribute name="tcpNoDelay"/>
+
+							<attribute name="solrEndpointUrls">
+								<referencecollectioneditor resortable="false" create="true" remove="true" autosave="false"
+																	externalcreate="false" editable="true">
+									<itemlayout>
+										<attribute name="url" width="200"/>
+										<attribute name="master"/>
+									</itemlayout>
+								</referencecollectioneditor>
+							</attribute>
+							<attribute name="solrEndpointUrlsSlave">
+								<referencecollectioneditor resortable="false" create="true" remove="true" autosave="false"
+																	externalcreate="false" editable="true">
+									<itemlayout>
+										<attribute name="url" width="200"/>
+										<attribute name="slave"/>
+									</itemlayout>
+								</referencecollectioneditor>
+							</attribute>
+							<attribute name="useMasterNodeExclusivelyForIndexing"/>
+							<text name="text.usemasternodeexclusivelyforindexing.warning"/>
+						</listlayout>
+					</section>
+				</tab>
+			</editor>
+		</organizer>
+		<defaultreference mode="replace">
+			<itemlayout>
+				<attribute name="name"/>
+			</itemlayout>
+		</defaultreference>
+	</type>
+	<!-- TPR-6665 : sysnonums update to slave servers end-->
 </configuration>
