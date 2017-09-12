@@ -47853,9 +47853,13 @@ body.page-productDetails .breadcrumbs.wrapper {
 	position: relative;
 	margin: -15px 0 0;
 	display: inline-block;
-	/* width:100% */
+	/* width: 100%; */
 }
-
+/* TISPRDT-2422 start */
+.quickview .quick-view-popup .product-detail .Emi {
+    width: 100%;
+}
+/* TISPRDT-2422 End */
 .product-detail .Emi p, .pricebreakup-link {
 	font-size: 14px;
 	letter-spacing: 1px;
@@ -47874,7 +47878,7 @@ body.page-productDetails .breadcrumbs.wrapper {
 .pricebreakup-link p{
 	float: left;
 }
-.product-detail .Emi p:before, .pricebreakup-link:before {
+.product-detail .Emi p.active:before, .pricebreakup-link:before {
 	background: #fff;
 	bottom: 0;
 	content: "";
@@ -61456,7 +61460,7 @@ p.savings.pdp-savings {
    /*  font-weight: 500; */
 }
 
-.product-detail .Emi p:before {
+.product-detail .Emi p.active:before {
     width: 130px;
 }
 
@@ -70566,6 +70570,10 @@ width: 105px;
 	box-shadow: 0px 0px 10px 0px rgba(138, 134, 138, 1);
 }
 
+.product-detail .Emi[style="display:none"] ~ .Exchange p+.modal-content {
+	left: -10px; /*JWLSPCUAT-1589 fix*/
+}
+
 .product-detail .Exchange p.active+.modal-content {
 	display: block;
 }
@@ -70701,6 +70709,7 @@ width: 105px;
 .product-detail .Exchange #submitExchange {
 	width: 150px;
     height: 46px;
+    line-height: 1;
     background-color: #666666;
     border: none;
     color: #fff;
@@ -75685,6 +75694,11 @@ body.page-returnSubmit .account .wrapper{
   	color: #a5173c;
   	cursor: pointer;
  	}
+ 	/* TISPRDT-2436 start */
+ 	span.price-breakup#pricebreakupIdSpan{
+		margin: 0 0 0 5px;
+	}
+	/* TISPRDT-2436 end */
  	span.more-link{
  	cursor: pointer;
  	}
@@ -76655,6 +76669,9 @@ footer #footerLink div.column ul li a {
     padding-right: 5px;
     color: #92002e;
 } 
+#reviewOrder .exchange-applied-ul li.cart_exchange{
+	margin-bottom: -12px;
+}
 /*  TISJEW-3478 End  */
 
 
@@ -76887,4 +76904,10 @@ body .account .right-account form label.invite-text-lbl{
 }
 
 /* TISSPTEN-120 END */
+
+/* TISPRDT-2410 start */
+#singlePageAddressPopup .product-block.addresses.new-form .half .dupDisplay label{
+	    margin-bottom: 5px;
+	    }
+/* TISPRDT-2410 end */
 

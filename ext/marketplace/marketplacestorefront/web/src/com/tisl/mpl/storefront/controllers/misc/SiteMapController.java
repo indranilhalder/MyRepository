@@ -187,14 +187,16 @@ public class SiteMapController extends AbstractPageController
 									if (department != null)
 									{
 										final Collection<CategoryModel> secondLevelCategories = department.getCategories();
-
-										//code changes for INC_10885
-										if (department.getName() != null && CollectionUtils.isNotEmpty(department.getLinkComponents())
-												&& StringUtils.isNotEmpty(department.getLinkComponents().get(0).getUrl()))
+										if (department.getName() != null)
 										{
 											//PRDI-462 Check if any special characters are present and remove them
 											l1CatName = department.getName().replaceAll(REGEX, "").replaceAll(" ", "-").replace("--", "-")
 													.toLowerCase();
+										}
+										//code changes for INC_10885
+										if (department.getName() != null && CollectionUtils.isNotEmpty(department.getLinkComponents())
+												&& StringUtils.isNotEmpty(department.getLinkComponents().get(0).getUrl()))
+										{
 											final StringBuilder catName1 = new StringBuilder();
 											catName1.append(department.getName()).append(pipe_key)//Sonar Fix
 													.append(department.getLinkComponents().get(0).getUrl());

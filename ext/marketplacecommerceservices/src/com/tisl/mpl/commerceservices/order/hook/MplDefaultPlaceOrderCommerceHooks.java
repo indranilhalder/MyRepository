@@ -164,6 +164,9 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 	@Resource(name = "mplDeliveryCostService")
 	private MplDeliveryCostService deliveryCostService;
 
+	@Resource(name = "mplJewelleryService")
+	private MplJewelleryService jewelleryService;
+
 	//	@Autowired
 	//	private MplFraudModelService mplFraudModelService;
 
@@ -600,11 +603,34 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 			// Setting HD Delivery Charges Start
 			for (final AbstractOrderEntryModel entry : orderModel.getEntries())
 			{
-				final MplZoneDeliveryModeValueModel valueModel = deliveryCostService.getDeliveryCost(
-						MarketplacecommerceservicesConstants.HOME_DELIVERY, orderModel.getCurrency().getIsocode(),
-						entry.getSelectedUSSID());
+				MplZoneDeliveryModeValueModel valueModel = null;
+				if ((null != entry.getProduct())
+						&& (entry.getProduct().getProductCategoryType()
+								.equalsIgnoreCase(MarketplacecommerceservicesConstants.FINEJEWELLERY)))
+				{
+					//Below will execute for fine jewellery
+					final List<JewelleryInformationModel> jewelleryInfo = jewelleryService.getJewelleryInfoByUssid(entry
+							.getSelectedUSSID());
+
+					if (CollectionUtils.isNotEmpty(jewelleryInfo) && StringUtils.isNotEmpty(jewelleryInfo.get(0).getPCMUSSID()))
+					{
+						valueModel = deliveryCostService.getDeliveryCost(MarketplacecommerceservicesConstants.HOME_DELIVERY, orderModel
+								.getCurrency().getIsocode(), jewelleryInfo.get(0).getPCMUSSID());
+					}
+					else
+					{
+						LOG.error("No entry in JewelleryInformationModel for ussid " + entry.getSelectedUSSID());
+					}
+				}
+				else
+				{
+					valueModel = deliveryCostService.getDeliveryCost(MarketplacecommerceservicesConstants.HOME_DELIVERY, orderModel
+							.getCurrency().getIsocode(), entry.getSelectedUSSID());
+				}
+
 				double delCost = 0.0d;
-				if (entry.getGiveAway() != null && !entry.getGiveAway().booleanValue() && !entry.getIsBOGOapplied().booleanValue())//TISPRDT-1226
+				if (null != valueModel && entry.getGiveAway() != null && !entry.getGiveAway().booleanValue()
+						&& !entry.getIsBOGOapplied().booleanValue())//TISPRDT-1226
 				{
 					if (StringUtils.equalsIgnoreCase(entry.getFulfillmentMode(), valueModel.getDeliveryFulfillModes().getCode()))
 					{

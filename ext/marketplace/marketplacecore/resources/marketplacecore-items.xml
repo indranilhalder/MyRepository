@@ -1862,7 +1862,7 @@
 							unique="false" />
 						<persistence type="property">
 							<columntype database='oracle'>
-								<value>VARCHAR2(450)</value>
+								<value>VARCHAR2(600)</value>
 							</columntype>
 						</persistence>
 					</attribute>
@@ -3081,6 +3081,12 @@
 				        <persistence type="property"/>
 			    	</attribute> 
 				</attributes>
+				<indexes>
+					<index name="IDX_CART_SEARCH_ONLOAD">
+						<key attribute="user" />
+						<key attribute="code" />
+					</index>
+				</indexes>
 			</itemtype>
 
 			<!--Attribute for COD Charges apportionment -->
@@ -6247,6 +6253,12 @@
 					</attribute>
 					
 				</attributes>
+				<indexes>
+					<index name="IDX_ENTRY_FETCH">
+						<key attribute="entryNumber" />
+						<key attribute="order" />
+					</index>
+				</indexes>
 			</itemtype>
 			<!-- Tata Etail change - Apportioned value capturing ends -->
 			<!-- SearchBoxComponent DropDown List Start -->
@@ -6909,6 +6921,9 @@
 						<key attribute="price" />
 						<key attribute="itemtype" />
 					</index>
+					<index name="BuyBox_PUSSID_IDX">
+					    <key attribute="PUSSID"/>
+					</index>
 				</indexes>
 			</itemtype>
 
@@ -7050,6 +7065,9 @@
 				<indexes>
 					<index name="BuyBoxCommerce_IDX">
 						<key attribute="product" />
+					</index>
+					<index name="BuyBoxCommerce_PUSSID_IDX">
+					    <key attribute="PUSSID"/>
 					</index>
 				</indexes>
 			</itemtype>
@@ -11297,6 +11315,11 @@
 						<defaultvalue>Integer.valueOf(0)</defaultvalue>
 					</attribute>
 				</attributes>
+				<indexes>
+					<index name="orderShortUrlInfo_Index">
+						<key attribute="shortURL" />
+					</index>
+				</indexes>
 			</itemtype>
 		</typegroup>
 
@@ -11717,6 +11740,11 @@
 				</attribute>
 				
 			</attributes>
+			<indexes>
+					<index name="Exchng_Coupon_Value_IDX">
+						<key attribute="thirdLevelCategory" />
+					</index>
+			</indexes>
 			</itemtype>
 		
 		
@@ -11750,6 +11778,11 @@
 					</persistence>
 				</attribute>			
 			</attributes>
+			<indexes>
+					<index name="Exchange_Pincode_IDX">
+						<key attribute="pincode" />
+					</index>
+			</indexes>
 			</itemtype>
 		
 		
@@ -11990,6 +12023,14 @@
 			    </attribute>
 			 
 			   </attributes>
+			   <indexes>
+					<index name="JewelleryInfoUSSID_IDX">
+						<key attribute="USSID" />
+					</index>
+					<index name="JewelleryInfoPCMUSSID_IDX">
+						<key attribute="PCMUSSID" />
+					</index>
+				</indexes>
 		  </itemtype>
 		  
 		   <itemtype code="JewelleryPriceRow" extends="GenericItem" autocreate="true" generate="true" jaloclass="de.hybris.platform.jalo.JewelleryPriceRow">
@@ -12927,6 +12968,11 @@
 			        <persistence type="property"/>
 			 </attribute>
 		</attributes>
+		 <indexes>
+					<index name="jewelSellerID_IDX">
+						<key attribute="sellerId" />
+					</index>
+				</indexes>
 	</itemtype>
 
 
@@ -12975,6 +13021,11 @@
 			    </attribute>
 			    
 		 </attributes>
+       		    <indexes>
+					<index name="PancardOrderId_IDX">
+						<key attribute="orderId" />
+					</index>
+				</indexes>
 		</itemtype>
 		</typegroup>
 
