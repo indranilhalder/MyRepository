@@ -19,14 +19,15 @@ $systemVersion=systemVersion(catalog(id[default='MplClassification']),version[de
  
  ############################Added By SAP Sample Data for Classification Unit For Fashion Accessories & Watches ::: END 
  
- #### Added for Footwear & Travel and Luggage 
+ #### Added for Footwear & Jewellery
  
  ;gms;gms;gms;Grams;1;
  ;inches;inches;inches;Inches;1;
  ;kg;kg;kg;Kilograms;1;
  ;cm;cm;cm;Centimeters;1;
  ;litres;litres;litres;Litres;1;
-  
+ ;g;g;g;Grams;1;
+ ;ct;ct;ct;Carat;1; 
 INSERT_UPDATE ClassificationAttributeUnit;code[unique=true];symbol;unitType;name[lang=en];;name[lang=de];$systemVersion[unique=true]
 
 
