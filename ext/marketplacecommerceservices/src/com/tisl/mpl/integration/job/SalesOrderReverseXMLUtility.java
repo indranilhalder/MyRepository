@@ -13,10 +13,10 @@ import de.hybris.platform.orderhistory.model.OrderHistoryEntryModel;
 import de.hybris.platform.payment.enums.PaymentTransactionType;
 import de.hybris.platform.payment.model.PaymentTransactionEntryModel;
 import de.hybris.platform.payment.model.PaymentTransactionModel;
-import de.hybris.platform.servicelayer.config.ConfigurationService;
 import de.hybris.platform.returns.model.RefundEntryModel;
 import de.hybris.platform.returns.model.ReturnEntryModel;
 import de.hybris.platform.returns.model.ReturnRequestModel;
+import de.hybris.platform.servicelayer.config.ConfigurationService;
 import de.hybris.platform.servicelayer.model.ModelService;
 
 import java.io.StringReader;
@@ -399,8 +399,13 @@ public class SalesOrderReverseXMLUtility
 						//TISSIT-1780
 						if (salesXMLData != null && xmlToFico)
 						{
-							bulkSalesDataList.add(salesXMLData);
-							LOG.debug("xml order:" + salesXMLData.getOrderId());
+							if (salesXMLData.getMerchantCode() != null && !(salesXMLData.getMerchantCode().isEmpty())
+									&& salesXMLData.getSubOrderList() != null && !(salesXMLData.getSubOrderList().isEmpty()))//SDI-85 Fix
+							{
+								bulkSalesDataList.add(salesXMLData);
+								LOG.debug("xml order:" + salesXMLData.getOrderId());
+							}
+
 						}
 						LOG.debug("bulkSalesDataList Size" + bulkSalesDataList.size());
 					}
@@ -455,7 +460,7 @@ public class SalesOrderReverseXMLUtility
 				 * ptModel.getType().equals(PaymentTransactionType.MANUAL_REFUND) ||
 				 * ptModel.getType().equals(PaymentTransactionType.RETURN)) { reversepayemntrefid = payTransModel.getCode();
 				 * LOG.info(reversepayemntrefid); LOG.debug(ptModel.getType()); break; } }
-				 *
+				 * 
 				 * } } } }
 				 */
 				final SubOrderXMLData xmlData = new SubOrderXMLData();
@@ -523,7 +528,8 @@ public class SalesOrderReverseXMLUtility
 					LOG.debug("Is EdToHd" + entry.getIsEDtoHD() + "IsSdbSendToFico" + entry.getIsEdToHdSendToFico()
 							+ LOG_MSG_AND_GET_REFUNDED_SCHEDULE_DELIVERY_CHARGE_AMT + entry.getRefundedEdChargeAmt());
 				}
-				final boolean edAmountRefunded = getAmountRefunded(entry, PaymentTransactionType.REFUND_EXPRESS_DELIVERY_CHARGES.getCode());
+				final boolean edAmountRefunded = getAmountRefunded(entry,
+						PaymentTransactionType.REFUND_EXPRESS_DELIVERY_CHARGES.getCode());
 				if (edAmountRefunded && null != entry.getIsEDtoHD() && entry.getIsEDtoHD().booleanValue())
 				{
 					edToHdFlag = true;
@@ -686,7 +692,7 @@ public class SalesOrderReverseXMLUtility
 
 						/*
 						 * final String ussId = entry.getSelectedUSSID();
-						 *
+						 * 
 						 * final SellerInformationModel sellerInfoModel = mplSellerInformationService.getSellerDetail(ussId);
 						 * if (sellerInfoModel != null && sellerInfoModel.getRichAttribute() != null &&
 						 * ((List<RichAttributeModel>) sellerInfoModel.getRichAttribute()).get(0) != null &&
@@ -1021,7 +1027,8 @@ public class SalesOrderReverseXMLUtility
 				LOG.debug("IsEdToHdSendToFico" + entry.getIsEdToHdSendToFico()
 						+ LOG_MSG_AND_GET_REFUNDED_SCHEDULE_DELIVERY_CHARGE_AMT + entry.getRefundedEdChargeAmt());
 			}
-			final boolean isAmountRefunded = getAmountRefunded(entry, PaymentTransactionType.REFUND_EXPRESS_DELIVERY_CHARGES.getCode());
+			final boolean isAmountRefunded = getAmountRefunded(entry,
+					PaymentTransactionType.REFUND_EXPRESS_DELIVERY_CHARGES.getCode());
 			if (isAmountRefunded && (null != entry && null != entry.getIsEDtoHD() && entry.getIsEDtoHD().booleanValue())
 					&& (null == entry.getIsEdToHdSendToFico() || !entry.getIsEdToHdSendToFico().booleanValue())
 					&& (null != entry.getRefundedEdChargeAmt() && entry.getRefundedEdChargeAmt().doubleValue() != 0.0D))

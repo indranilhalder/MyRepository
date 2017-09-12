@@ -41,4 +41,13 @@ public interface GigyaService
 	 * @Desc used to check duplicate id's in gigya
 	 */
 	public int checkGigyaUID(final String siteUid);
+	
+	/*
+	 * @param uid
+	 * 
+	 * @param emailId
+	 * 
+	 * @Desc used to validate the emailId
+	 */
+	public boolean validateUser(final String uid, final String emailId);
 }
