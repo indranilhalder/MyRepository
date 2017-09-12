@@ -2258,6 +2258,9 @@ public class ProductPageController extends MidPageController
 		final Map<String, String> mapConfigurableAttribute = new HashMap<String, String>();
 		final Map<String, List<String>> mapConfigurableAttributes = new LinkedHashMap<String, List<String>>();
 		final List<String> warrentyList = new ArrayList<String>();
+		List<String> name=new ArrayList<String>();
+		List<String> qty=new ArrayList<String>();
+		List<String> details=new ArrayList<String>();	
 		try
 		{
 			/* Checking the presence of classification attributes */
@@ -2265,14 +2268,18 @@ public class ProductPageController extends MidPageController
 			{
 				final String properitsValue = configurationService.getConfiguration().getString(
 						ModelAttributetConstants.CONFIGURABLE_ATTRIBUTE + productData.getRootCategory());
+				final String [] overviewSectionSeq = configurationService.getConfiguration().getString(
+						ModelAttributetConstants.OVERVIEW_SEC_SEQ).split(",");
+				model.addAttribute("overviewTabSeq",overviewSectionSeq);
 				final String descValues = configurationService.getConfiguration().getString(
 						ModelAttributetConstants.DESC_PDP_PROPERTIES + productData.getRootCategory());
 				final List<ClassificationData> ConfigurableAttributeList = new ArrayList<ClassificationData>(
 						productData.getClassifications());
-				String headerName = null;
+				String keyProdptsHeaderName = null;
+				//String setInsFlag=null;
 				for (final ClassificationData configurableAttributData : ConfigurableAttributeList)
 				{
-					headerName = configurableAttributData.getName();
+					keyProdptsHeaderName = configurableAttributData.getName();
 					final List<FeatureData> featureDataList = new ArrayList<FeatureData>(configurableAttributData.getFeatures());
 					final List<String> productFeatureDataList = new ArrayList<String>();
 					if (configurationService.getConfiguration()
@@ -2309,7 +2316,7 @@ public class ProductPageController extends MidPageController
 									if (configurableAttributData.getName().replaceAll("\\s", "")
 											.equals(ModelAttributetConstants.CLASSIFICATION_ATTR_PF))
 									{
-										headerName = ModelAttributetConstants.KEY_PROD_PTS;
+										keyProdptsHeaderName = ModelAttributetConstants.KEY_PROD_PTS;
 										productFeatureDataList.add(featureData.getFeatureValues().iterator().next().getValue());
 									}
 									else if (configurableAttributData.getName().replaceAll("\\s", "")
@@ -2324,6 +2331,28 @@ public class ProductPageController extends MidPageController
 										for (final FeatureValueData data : featureData.getFeatureValues())
 										{
 											productFeatureDataList.add(data.getValue());
+										}
+									}
+									else if (configurableAttributData.getName().replaceAll("\\s", "")
+											.equals(ModelAttributetConstants.CLASSIFICATION_ATTR_SI))
+									{
+
+										/*if(featureData.getName().equalsIgnoreCase(ModelAttributetConstants.SET)){
+											setInsFlag = featureData.getFeatureValues().iterator().next().getValue();
+										}*/
+										if (featureData.getName().contains(ModelAttributetConstants.SET_COMPONENT) && featureData.getName().contains(ModelAttributetConstants.NAME))
+										{
+											name.add(featureData.getFeatureValues().iterator().next().getValue());
+										}
+
+										if (featureData.getName().contains(ModelAttributetConstants.SET_COMPONENT) && featureData.getName().contains(ModelAttributetConstants.QTY))
+										{
+											qty.add(featureData.getFeatureValues().iterator().next().getValue());
+										}
+
+										if (featureData.getName().contains(ModelAttributetConstants.SET_COMPONENT_DETAILS) && featureData.getName().contains(ModelAttributetConstants.DETAILS))
+										{
+											details.add(featureData.getFeatureValues().iterator().next().getValue());
 										}
 									}
 									else
@@ -2373,6 +2402,17 @@ public class ProductPageController extends MidPageController
 
 							}
 						}
+						if (!(qty.isEmpty() && details.isEmpty()) && name.size() == qty.size() && qty.size() == details.size())
+						{
+							for (int i = 0; i < details.size(); i++)
+							{
+								final String temp = qty.get(i) + " " + name.get(i) + " : " + details.get(i);
+								productFeatureDataList.add(temp);
+							}
+							name.clear();
+							qty.clear();
+							details.clear();
+						}
 					}
 					else
 					{
@@ -2383,7 +2423,7 @@ public class ProductPageController extends MidPageController
 					{
 						tempList = mapConfigurableAttributes.get(configurableAttributData.getName());
 						tempList.addAll(productFeatureDataList);
-						mapConfigurableAttributes.put(headerName, tempList);
+						mapConfigurableAttributes.put(keyProdptsHeaderName, tempList);
 						tempList = null;
 					}
 					else if (mapConfigurableAttributes.containsKey(ModelAttributetConstants.CLASSIFICATION_ATTR_CARE_INS)
@@ -2408,7 +2448,7 @@ public class ProductPageController extends MidPageController
 					else if (!productFeatureDataList.isEmpty())
 					{
 						{
-							mapConfigurableAttributes.put(headerName, productFeatureDataList);
+							mapConfigurableAttributes.put(keyProdptsHeaderName, productFeatureDataList);
 						}
 
 					}

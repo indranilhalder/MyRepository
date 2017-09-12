@@ -932,6 +932,13 @@ public final class ModelAttributetConstants
 	public static final String CLASSIFICATION_ATTR_CARE_INS = "Care Instructions";
 	public static final String CLASSIFICATION_ATTR_WASH_CARE = "Wash Care";
 	public static final String KEY_PROD_PTS = "Key Product Points";
+	public static final String SET_COMPONENT = "Set Component";
+	public static final String SET_COMPONENT_DETAILS = "Set Componenent";
+	public static final String NAME = "Name";
+	public static final String QTY = "Quantity";
+	public static final String DETAILS = "Details";
+	public static final String OVERVIEW_SEC_SEQ = "classification.attributes.HomeFurnishing.sectionSeq";
+	public static final String SET = "Set";
 
 	public static final String SELLERMESSAGE = "sellerMessage".intern();
 
