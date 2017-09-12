@@ -11317,7 +11317,7 @@
 				</attributes>
 				<indexes>
 					<index name="orderShortUrlInfo_Index">
-						<key attribute="shortURL" />
+						<key attribute="orderId" />
 					</index>
 				</indexes>
 			</itemtype>
@@ -12937,10 +12937,10 @@
 	<itemtype code="JewellerySellerDetails"  extends="GenericItem" autocreate="true" generate="true" jaloclass="de.hybris.platform.jalo.JewellerySellerInfo">
 		<deployment table="JewellerySellerInfo" typecode="16989" />
 		<attributes>
-			 <attribute qualifier="index" type="java.lang.Integer" autocreate="true" generate="true">
+			 <attribute qualifier="index" type="java.lang.String" autocreate="true" generate="true">
+			 		 <description>this index is used as a unique value</description>
 					<persistence type="property" />
 					<modifiers optional="false" read="true" write="true" search="true" unique="true"/>
-					<defaultvalue>Integer.valueOf(0)</defaultvalue>
 			 </attribute>
 			 <attribute qualifier="sellerId" autocreate="true" type="java.lang.String" generate="true">
 			        <description>seller Id</description>
