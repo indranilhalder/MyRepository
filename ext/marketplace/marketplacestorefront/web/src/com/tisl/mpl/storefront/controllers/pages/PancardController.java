@@ -46,7 +46,7 @@ public class PancardController
 
 	/*
 	 * @ResponseBody
-	 *
+	 * 
 	 * @RequestMapping(value = "/pancardupload/test123", method = RequestMethod.GET) public String getTest123() throws
 	 * CMSItemNotFoundException { System.out.println("Test123****************"); return "test123"; }
 	 */
@@ -70,8 +70,7 @@ public class PancardController
 
 	//For displaying pancard upload page
 	@RequestMapping(value = "/pancarddetailsupload/{orderReferanceNumber}/{customerName}", method = RequestMethod.GET)
-	public String pancardDetailsUploadPage(@PathVariable final String orderReferanceNumber,
-			@PathVariable final String customerName,
+	public String pancardDetailsUploadPage(@PathVariable final String orderReferanceNumber, @PathVariable String customerName,
 			@RequestParam(value = "status", defaultValue = "", required = false) final String status, final Model model)
 	{
 		model.addAttribute("orderreferancenumber", orderReferanceNumber);
@@ -83,30 +82,10 @@ public class PancardController
 			LOG.error("OrderId does not exist: " + orderReferanceNumber);
 			return MarketplacecommerceservicesConstants.REDIRECT + "/404";
 		}
-		if (CollectionUtils.isNotEmpty(oModelList))
+		if (StringUtils.isEmpty(customerName))
 		{
-			if (null != oModelList.get(0).getDeliveryAddress())
-			{
-				if (StringUtils.isEmpty(oModelList.get(0).getDeliveryAddress().getFirstname()))
-				{
-					LOG.error("Customer Name does not exist");
-					return MarketplacecommerceservicesConstants.REDIRECT + "/404";
-				}
-				if (!customerName.equals(oModelList.get(0).getDeliveryAddress().getFirstname()))
-				{
-					LOG.error("Customer Name " + customerName
-							+ " does not match with the firstname of the delivery address from order: "
-							+ oModelList.get(0).getDeliveryAddress().getFirstname());
-					return MarketplacecommerceservicesConstants.REDIRECT + "/404";
-				}
-			}
-			else
-			{
-				LOG.error("Delivery address is null. Hence customer name can not be verified..");
-				return MarketplacecommerceservicesConstants.REDIRECT + "/404";
-			}
+			customerName = "Customer";
 		}
-
 		if (StringUtils.isNotEmpty(status))
 		{
 			model.addAttribute("failure", "Something went wrong.Please try again!!.");
@@ -126,18 +105,15 @@ public class PancardController
 					{
 						ifRejected = true;
 						break;
-						//return ControllerConstants.Views.Pages.Pancard.PanCardDetail;
 					}
 				}
 			}
 			if (ifRejected)
 			{
-				//model.addAttribute(status, MarketplacecommerceservicesConstants.REJECTED);
 				return ControllerConstants.Views.Pages.Pancard.PanCardDetail;
 			}
 			else
 			{
-				//model.addAttribute(MarketplacecommerceservicesConstants.APPROVED);
 				for (final PancardInformationModel pModel : pModelList)
 				{
 					if (StringUtils.isNotEmpty(pModel.getStatus()))
@@ -153,16 +129,13 @@ public class PancardController
 				if (ifPending)
 				{
 					model.addAttribute(Checkstatus, MarketplacecommerceservicesConstants.PENDING_FOR_VERIFICATION);
-					//return ControllerConstants.Views.Pages.Pancard.panCardApproved;
 					return ControllerConstants.Views.Pages.Pancard.PanCardDetail;
 				}
 				else
 				{
 					model.addAttribute(Checkstatus, MarketplacecommerceservicesConstants.APPROVED);
-					//return ControllerConstants.Views.Pages.Pancard.panCardApproved;
 					return ControllerConstants.Views.Pages.Pancard.PanCardDetail;
 				}
-				//return ControllerConstants.Views.Pages.Pancard.panCardApproved;
 			}
 		}
 		return ControllerConstants.Views.Pages.Pancard.PanCardDetail;

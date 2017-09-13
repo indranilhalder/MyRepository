@@ -331,8 +331,7 @@
 		              			<p class="cart_exchange">
 
 			              		<input type="hidden" id="exc_cart" value="${entry.exchangeApplied}">
-			              		<c:set var="isExchangeavailable" value="Exchange Applied"/>
-   										${isExchangeavailable} 
+			              		<spring:theme code="marketplace.exchange.messageLabel"/>
 			              		</p>
 			              		</c:if>
 			              		<!-- TPR-1083 End -->

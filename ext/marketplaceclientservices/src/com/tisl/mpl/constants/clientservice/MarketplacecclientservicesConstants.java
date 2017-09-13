@@ -276,7 +276,6 @@ public class MarketplacecclientservicesConstants
 	public static final String OMSTIMEOUT = "5000";
 	public static final String LUXURYPREFIX = "lux";
 	public static final String LUXURY_RATING_SECRETKEY = "luxury.gigya.secretkey".intern();
-	public static final String LUXURY_RATING_APIKEY = "luxury.gigya.apikey".intern();
 
 	//For sending pancard details to SP through PI and save data into database for new pancard entry
 	public static final String PENDING_FOR_VERIFICATION = "PENDING_FOR_VERIFICATION";
@@ -286,6 +285,9 @@ public class MarketplacecclientservicesConstants
 	public static final String NA = "NA".intern();
 	public static final String PANCARD = "PANCARD";
 	public static final String PANCARD_UPLOAD_URL = "pancard.upload.pi.url";
+	
+	public static final String LUXURY_RATING_APIKEY = "luxury.gigya.apikey".intern();
+
 	//TPR-5667
 	public static final String SAMSUNG_API_USERNAME = "samsung.api.username";
 	public static final String SAMSUNG_API_PASSWORD = "samsung.api.password";
@@ -298,4 +300,9 @@ public class MarketplacecclientservicesConstants
 	public static final String S0002_EXCEP = "S0002";
 	public static final String S0003_EXCEP = "S0003";
 	public static final String SAMSUNG_LOGGER_HEAD = "######## CreateSamsungOrder :: ";
+	
+	//INC144319511
+	public static final String EMAIL = "email";
+	public static final String IDENTITIES = "identities";
+	public static final String METHOD_GET_USERINFO = "gigya.getuserinfo.method".intern();
 }

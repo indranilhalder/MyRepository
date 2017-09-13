@@ -835,7 +835,8 @@ public class MplProductWebServiceImpl implements MplProductWebService
 								if (entry.getKey().equalsIgnoreCase("Product Details"))
 								{
 									final FineJwlryClassificationListValueDTO classUssid = new FineJwlryClassificationListValueDTO();
-									classUssid.setClassificationListValueJwlry(Arrays.asList(buyBoxData.getSellerArticleSKU()));
+									classUssid.setClassificationListValueJwlry(Arrays
+											.asList(buyBoxData.getSellerArticleSKU().substring(6)));
 									classificationListJwlry.put("PRODUCT CODE", classUssid);
 								}
 								for (final Entry<String, List<String>> innerLoopEntry : innerEntry.entrySet())
@@ -994,7 +995,8 @@ public class MplProductWebServiceImpl implements MplProductWebService
 					productDetailMobile.setL3code(productData.getLevel3CategoryCode());
 					productDetailMobile.setL3name(productData.getLevel3CategoryName());
 
-					final ContentSlotModel contentSlotModel = contentSlotService.getContentSlotForId("ExchangeSlot");
+					final ContentSlotModel contentSlotModel = contentSlotService
+							.getContentSlotForId(MarketplacecommerceservicesConstants.Exchange_Slot);
 					final List<ExchangeLinkUrl> linkUrlList = new ArrayList<>();
 
 					if (contentSlotModel != null)
@@ -1021,7 +1023,11 @@ public class MplProductWebServiceImpl implements MplProductWebService
 										if (StringUtils.isNotEmpty(model2.getUrl()))
 										{
 
-											linkUrl.setUrl(model2.getUrl());
+											linkUrl.setUrl(model2.getUrl() + MarketplacecommerceservicesConstants.MOBILE_SOURCE2);
+										}
+										if (StringUtils.isNotEmpty(model2.getUid()))
+										{
+											linkUrl.setId(model2.getUid());
 										}
 									}
 									linkUrlList.add(linkUrl);

@@ -4079,7 +4079,7 @@ public class ProductPageController extends MidPageController
 			{
 				l4list.add(ex.getL4category());
 				activelist.add(ex.getIsWorking());
-				pricelist.add(ex.getL4category() + "|" + ex.getIsWorking() + "-" + ex.getPrice());
+				pricelist.add(ex.getL4category() + "|" + ex.getIsWorking() + ":" + ex.getPrice());
 			}
 			exDropData = new ExchangeGuideDropdownData();
 			exDropData.setL4categorylist(l4list);
