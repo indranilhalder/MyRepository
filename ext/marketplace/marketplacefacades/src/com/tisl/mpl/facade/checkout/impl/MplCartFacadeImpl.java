@@ -7,6 +7,7 @@ import de.hybris.platform.acceleratorservices.config.SiteConfigService;
 import de.hybris.platform.basecommerce.model.site.BaseSiteModel;
 import de.hybris.platform.catalog.model.CatalogVersionModel;
 import de.hybris.platform.cms2.exceptions.CMSItemNotFoundException;
+import de.hybris.platform.cms2.servicelayer.services.CMSSiteService;
 import de.hybris.platform.commercefacades.order.data.AbstractOrderData;
 import de.hybris.platform.commercefacades.order.data.CartData;
 import de.hybris.platform.commercefacades.order.data.CartModificationData;
@@ -33,11 +34,13 @@ import de.hybris.platform.core.model.order.AbstractOrderEntryModel;
 import de.hybris.platform.core.model.order.AbstractOrderModel;
 import de.hybris.platform.core.model.order.CartModel;
 import de.hybris.platform.core.model.order.OrderModel;
+import de.hybris.platform.core.model.order.payment.PaymentInfoModel;
 import de.hybris.platform.core.model.product.PincodeModel;
 import de.hybris.platform.core.model.product.ProductModel;
 import de.hybris.platform.core.model.user.UserModel;
 import de.hybris.platform.order.CartService;
 import de.hybris.platform.order.InvalidCartException;
+import de.hybris.platform.ordersplitting.model.ConsignmentEntryModel;
 import de.hybris.platform.product.ProductService;
 import de.hybris.platform.promotions.PromotionsService;
 import de.hybris.platform.promotions.model.AbstractPromotionRestrictionModel;
@@ -69,6 +72,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -76,6 +80,8 @@ import java.util.Set;
 
 import javax.annotation.Resource;
 import javax.xml.bind.JAXBException;
+
+import net.sourceforge.pmd.util.StringUtil;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.MapUtils;
@@ -90,6 +96,7 @@ import com.tis.mpl.facade.changedelivery.MplDeliveryAddressFacade;
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.constants.MplGlobalCodeConstants;
 import com.tisl.mpl.constants.clientservice.MarketplacecclientservicesConstants;
+import com.tisl.mpl.core.model.MplZoneDeliveryModeValueModel;
 import com.tisl.mpl.core.model.RichAttributeModel;
 import com.tisl.mpl.core.mplconfig.service.MplConfigService;
 import com.tisl.mpl.exception.ClientEtailNonBusinessExceptions;
@@ -101,6 +108,7 @@ import com.tisl.mpl.facade.product.ExchangeGuideFacade;
 import com.tisl.mpl.facades.constants.MarketplaceFacadesConstants;
 import com.tisl.mpl.facades.data.StoreLocationRequestData;
 import com.tisl.mpl.facades.data.StoreLocationResponseData;
+import com.tisl.mpl.facades.egv.data.EgvDetailsData;
 import com.tisl.mpl.facades.product.data.MarketplaceDeliveryModeData;
 import com.tisl.mpl.marketplacecommerceservices.order.MplCommerceCartCalculationStrategy;
 import com.tisl.mpl.marketplacecommerceservices.service.MplCommerceCartService;
@@ -131,8 +139,6 @@ import com.tisl.mpl.wsdto.MplEDDInfoWsDTO;
 import com.tisl.mpl.wsdto.MplEstimateDeliveryDateWsDTO;
 import com.tisl.mpl.wsdto.MplSelectedEDDForUssID;
 
-import net.sourceforge.pmd.util.StringUtil;
-
 
 /**
  * @author TCS
@@ -148,6 +154,10 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 	private ModelService modelService;
 	private Converter<CartModel, CartData> mplExtendedCartConverter;
 	private Converter<CartModel, CartData> mplExtendedPromoCartConverter;
+	/**
+	 * 
+	 */
+	private Converter<CartModel, CartData> cartConverter;
 	@Autowired
 	private CommerceCartService commerceCartService;
 
@@ -169,6 +179,8 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 	@Autowired
 	private MplDelistingService mplDelistingService;
 
+	@Autowired
+	private CMSSiteService cmsSiteService;
 	//sonar fix
 	/*
 	 * @Autowired private CatalogService catalogService;
@@ -4285,5 +4297,163 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 			throws InvalidCartException, CommerceCartModificationException
 	{
 		return mplCommerceCartService.addItemToCartWithExchange(cartId, cartModel, productModel, quantity, ussid, exchangeParam);
+	}
+	
+	/**
+	 * @param egvDetailForm
+	 */
+	@Override
+	public CartData getGiftCartModel(final EgvDetailsData egvDetailForm)
+	{
+		CartData cartData = null;
+		CartData cartData2=null;
+		try
+		{
+			 CartModel cardModel=cartService.getSessionCart();
+			final UserModel user = userService.getCurrentUser();
+			cardModel.setUser(user);
+			cardModel.setCurrency(user.getSessionCurrency());
+			cardModel.setPincodeNumber("542621");
+			 List<AbstractOrderEntryModel> orderModelList = new ArrayList<AbstractOrderEntryModel>();
+		    AbstractOrderEntryModel abstractOrderEntryModel = new AbstractOrderEntryModel();
+			 ProductModel productModel = productService.getProductForCode("987654321");
+			abstractOrderEntryModel.setQualifyingCount(Integer.valueOf(1));
+			abstractOrderEntryModel.setQuantity(Long.valueOf(1));
+			abstractOrderEntryModel.setProduct(productModel);
+			abstractOrderEntryModel.setBasePrice(Double.valueOf(egvDetailForm.getGiftRange()));
+			abstractOrderEntryModel.setUnit(productModel.getUnit());
+			abstractOrderEntryModel.setSelectedUSSID("96664875211");
+			abstractOrderEntryModel.setCalculated(Boolean.valueOf(true));
+			abstractOrderEntryModel.setSellerInfo("555");
+			abstractOrderEntryModel.setCalculated(Boolean.valueOf(true));
+			abstractOrderEntryModel.setActualDeliveryDate(new Date());
+			abstractOrderEntryModel.setCartAdditionalDiscPerc(Double.valueOf(0.0));
+			abstractOrderEntryModel.setCartLevelDisc(Double.valueOf(0.0));
+			abstractOrderEntryModel.setCartLevelPercentageDisc(Double.valueOf(0.0));
+			abstractOrderEntryModel.setCartPromoCode("");
+			abstractOrderEntryModel.setCollectionDays(Integer.valueOf(0));
+			abstractOrderEntryModel.setConvenienceChargeApportion(Double.valueOf(0));
+			abstractOrderEntryModel.setCouponValue(Double.valueOf(0));
+			abstractOrderEntryModel.setCreationtime(new Date());
+			abstractOrderEntryModel.setDiscountValuesInternal("");
+			abstractOrderEntryModel.setEntryNumber(Integer.valueOf(0));
+			abstractOrderEntryModel.setFreeCount(Integer.valueOf(0));
+			abstractOrderEntryModel.setFulfillmentMode("SHIP");
+			abstractOrderEntryModel.setFulfillmentType("SHIP");
+			abstractOrderEntryModel.setFulfillmentTypeP1("SHIP");
+			abstractOrderEntryModel.setFulfillmentTypeP2("SHIP");
+			abstractOrderEntryModel.setHdDeliveryCharge(Double.valueOf(0.0));
+			abstractOrderEntryModel.setInfo("Product Name");
+			abstractOrderEntryModel.setIsBOGOapplied(Boolean.valueOf(false));
+			abstractOrderEntryModel.setIsEdToHdSendToFico(Boolean.FALSE);
+			abstractOrderEntryModel.setIsPercentageDisc(Boolean.FALSE);
+			abstractOrderEntryModel.setIsRefundable(false);
+			abstractOrderEntryModel.setIsSdbSendToFico(Boolean.FALSE);
+			abstractOrderEntryModel.setMaxCountReached(false);
+			abstractOrderEntryModel.setModifiedtime( new Date());
+		   Collection<MplZoneDeliveryModeValueModel> value6=new  ArrayList<MplZoneDeliveryModeValueModel>();
+		   abstractOrderEntryModel.setMplZoneDeliveryModeValue(value6);
+		   abstractOrderEntryModel.setMrp(Double.valueOf(egvDetailForm.getGiftRange()));
+		   abstractOrderEntryModel.setNetAmountAfterAllDisc(Double.valueOf(egvDetailForm.getGiftRange()));
+		   abstractOrderEntryModel.setNetSellingPrice(Double.valueOf(egvDetailForm.getGiftRange()));
+		   abstractOrderEntryModel.setOrder(cardModel);
+		   abstractOrderEntryModel.setCurrDelCharge(Double.valueOf(0));
+		   abstractOrderEntryModel.setPrevDelCharge(Double.valueOf(0));
+		   abstractOrderEntryModel.setProductPerDiscDisplay(Double.valueOf(0));
+		   abstractOrderEntryModel.setRefundedDeliveryChargeAmt(Double.valueOf(0));
+		   abstractOrderEntryModel.setRefundedEdChargeAmt(Double.valueOf(0));
+		   abstractOrderEntryModel.setProdLevelPercentageDisc(Double.valueOf(0));
+		   abstractOrderEntryModel.setRejected(Boolean.FALSE);
+		   abstractOrderEntryModel.setGiveAway(Boolean.FALSE);
+		   abstractOrderEntryModel.setScheduledDeliveryCharge(Double.valueOf(0));
+		   abstractOrderEntryModel.setSelectedUSSID("123653098765485130011719");
+		   abstractOrderEntryModel.setSellerInfo("PALTALOONS");
+		   abstractOrderEntryModel.setTotalSalePrice(Double.valueOf(egvDetailForm.getGiftRange()));
+		   abstractOrderEntryModel.setTotalMrp(Double.valueOf(egvDetailForm.getGiftRange()));
+		   abstractOrderEntryModel.setTotalPrice(Double.valueOf(egvDetailForm.getGiftRange()));
+		   abstractOrderEntryModel.setTaxValuesInternal("[<TV<jp-vat-full#5.0#false#42.86#INR>VT>]");
+		   Set<ConsignmentEntryModel> value3=new HashSet<ConsignmentEntryModel>();
+			abstractOrderEntryModel.setConsignmentEntries(value3);
+			List<String> value2=new ArrayList<String>();
+			abstractOrderEntryModel.setAssociatedItems(value2);
+			abstractOrderEntryModel.setTotalPrice(Double.valueOf(egvDetailForm.getGiftRange()));
+			abstractOrderEntryModel.setTotalMrp(Double.valueOf(egvDetailForm.getGiftRange()));
+			orderModelList.add(abstractOrderEntryModel);
+			cardModel.setEntries(orderModelList);
+			Set<PromotionResultModel> value = new HashSet<PromotionResultModel>();
+			cardModel.setAllPromotionResults(value);
+			cardModel.setCalculated(Boolean.valueOf(false));
+			cardModel.setCityForPincode("Hyderabad");
+			cardModel.setCode("987654321998855");
+			cardModel.setConvenienceCharges(Double.valueOf(0.0));
+			cardModel.setDate(new Date());
+			cardModel.setExchangeAppliedCart(Boolean.FALSE);
+			cardModel.setGlobalDiscountValuesInternal("");
+			cardModel.setGuid("6ba-5497e-3e90-435b-ab66-b51185ac32b");
+			cardModel.setDeliveryCost(Double.valueOf(0.0));
+			cardModel.setDiscountsIncludeDeliveryCost(false);
+			cardModel.setIsCODEligible(Boolean.FALSE);
+			cardModel.setDiscountsIncludePaymentCost(false);
+			cardModel.setIsExpressCheckoutSelected(Boolean.FALSE);
+			cardModel.setIsPendingNotSent(Boolean.FALSE);
+			cardModel.setIsRejMailTriggred(Boolean.TRUE);
+			cardModel.setIsSentToOMS(Boolean.FALSE);
+			cardModel.setMerged(Boolean.FALSE);
+			cardModel.setModeOfPayment("Creadi Card");
+			cardModel.setModifiedtime( new Date());
+			cardModel.setNet(Boolean.FALSE);
+			cardModel.setPaymentCost(Double.valueOf(0.0));
+			cardModel.setScheduleDelCharge(Double.valueOf(0));
+			cardModel.setSite(cmsSiteService.getCurrentSite());
+			//cardModel.setStore(cmsSiteService.gets);
+			cardModel.setSubtotal(Double.valueOf(egvDetailForm.getGiftRange()));
+			cardModel.setSubtotal(Double.valueOf(egvDetailForm.getGiftRange()));
+			cardModel.setTotalDiscounts(Double.valueOf(0.0));
+			cardModel.setTotalPrice(Double.valueOf(egvDetailForm.getGiftRange()));
+			cardModel.setTotalPriceWithConv(Double.valueOf(0.0));
+			cardModel.setTotalTax(Double.valueOf(0.0));
+			cardModel.setTotalTaxValuesInternal("[<TV<jp-vat-full#5.0#false#42.86#INR>VT>]");
+			PaymentInfoModel paymentInfoModel=new PaymentInfoModel();
+			cardModel.setPaymentInfo(paymentInfoModel);
+			sessionService.setAttribute("giftcardmodel", cardModel);
+			try
+			{
+				cartData = getCartConverter().convert(cardModel);
+			}
+			catch (final Exception exception)
+			{
+				System.out.println("###################" + exception);
+
+			}
+			final CartModel cartModel2 = cartService.getSessionCart();
+			cartData2 = getCartConverter().convert(cartModel2);
+			System.out.println("################" + cartData);
+			System.out.println("################" + cartData2);
+		}
+		catch (final Exception exception)
+		{
+			System.out.println("###################" + exception);
+
+		}
+
+		return cartData2;
+	}
+
+
+	/**
+	 * @return the cartConverter
+	 */
+	public Converter<CartModel, CartData> getCartConverter()
+	{
+		return cartConverter;
+	}
+
+
+	/**
+	 * @param cartConverter the cartConverter to set
+	 */
+	public void setCartConverter(Converter<CartModel, CartData> cartConverter)
+	{
+		this.cartConverter = cartConverter;
 	}
 }
