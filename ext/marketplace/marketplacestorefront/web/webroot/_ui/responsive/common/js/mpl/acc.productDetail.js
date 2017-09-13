@@ -932,7 +932,7 @@ function setSeller(index) {
 /* refeshing seller data after getting response from pincode service */
 /* refeshing seller data after getting response from pincode service */
 function refreshSellers(dataArray, ussid) {
-	console.log("dataArray"+dataArray+"ussid"+ussid);
+	//console.log("dataArray"+dataArray+"ussid"+ussid);
 	var stockArray = [];
 
 	var nonservicableussids = [];
@@ -966,7 +966,7 @@ function refreshSellers(dataArray, ussid) {
 				usidList[i] = "'" + dataArray[i]['ussid'] + "'";
 				count = count + 1;
 				if (dataArray[i]['stockCount'] == 0) {
-					console.log("ussid"+dataArray[i]['ussid']);
+					//console.log("ussid"+dataArray[i]['ussid']);
 					ussidListWithNoStock[++n] = "'" + dataArray[i]['ussid']
 							+ "'";// setting all the skuIds without stock
 
@@ -1076,12 +1076,6 @@ function isNum(evt) {
 	    return true;
 }
 
-
-
-
-
-
-
 function pincodeServiceability(){
 	        var regExp = /^([1-9])([0-9]){5}$/;
             //INC144314017
@@ -1117,27 +1111,6 @@ function pincodeServiceability(){
 			
 			var requiredUrl = ACC.config.encodedContextPath + "/p"
 					+ "-checkPincode";
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 			if (pin == "") {
 				$('#unsevisablePin,#unableprocessPin,#wrongPin,#serviceablePin')
 						.hide();
@@ -1159,9 +1132,6 @@ function pincodeServiceability(){
 				$("#serviceablePin").hide();
 			//	$("#pdpPinCodeAvailable").hide();
 
-
-
-
 				$('#addToCartButton').show();
 				$('#buyNowButton').attr("disabled",false);
 				//TPR-6654
@@ -1175,13 +1145,6 @@ function pincodeServiceability(){
 			var productCode = $('#product').val();
 			var dataString  = "pin=" + pin + "&productCode="+ productCode;
 			
-
-
-
-
-
-
-
 			jQuery
 					.ajax({
 						// type: 'POST',
@@ -1238,10 +1201,6 @@ function pincodeServiceability(){
 								});
 							/*TPR-642 & 640 ends*/
 								return false;
-
-
-
-
 							}
 							// check if oms service is down
 							else if (data[0]['isServicable'] == 'NA') {
@@ -1251,12 +1210,6 @@ function pincodeServiceability(){
 							    $("#homeli").css("opacity","1");
 								$("#express").show();
 								$("#expressli").show();
-
-
-
-
-
-
 								$("#expressli").addClass("selected");
 							    $("#expressli").css("opacity","1");
 								$("#collect").show();
@@ -1280,11 +1233,7 @@ function pincodeServiceability(){
 								});
 							/*TPR-642 & 640 ends*/
 								return false;
-
-
-
-
-
+								
 							} else {
 								// TPR-1375
 								//populating  buybox details agian after checking pincode response
@@ -1297,13 +1246,6 @@ function pincodeServiceability(){
 								for ( var i in data) {
 									var pincodedata = data[i];
 									ussid = pincodedata['ussid'];
-
-
-
-
-
-
-
 									if (ussid == buyboxSeller) {
 										if (pincodedata['isServicable'] == 'Y') {
 											
@@ -1331,22 +1273,6 @@ function pincodeServiceability(){
 											if (pincodedata['cod'] == 'Y') {
 												$("#codId").show();
 											}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 											for ( var j in deliveryModes) {
 												var mode = deliveryModes[j];
 												deliveryModeName = mode['type'];
@@ -1358,33 +1284,6 @@ function pincodeServiceability(){
 												// mode
 												if (deliveryModeName == 'HD') {
 													home = true;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 												}
 												// checking
 												// click&collect(CnC)
@@ -1452,8 +1351,7 @@ function pincodeServiceability(){
 													success : function(response) {
 														$("#CNCstores").html(response);
 													}
-												});
-												
+												});		
 											} else {
 
 												//$("#collect").hide();
@@ -1500,68 +1398,6 @@ function pincodeServiceability(){
 												$('#addToCartButton-wrong').show();
 												$('#buyNowButton').attr("disabled",true);
 											} else {
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 												$("#outOfStockId").show();
 												$("#buyNowButton").hide();
 											}
@@ -1600,25 +1436,6 @@ function pincodeServiceability(){
 									} else {
 										$("#outOfStockId").show();
 										$("#buyNowButton").hide();
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 									}
 									// $('#addToCartButton-wrong').show();
 									$('#addToCartButton').hide();
@@ -1633,14 +1450,6 @@ function pincodeServiceability(){
 							$("#pdpPinCodeAvailable").html("Available delivery options for the pincode " +pin+ " are");
 						},
 						error : function(xhr, status, error) {
-
-
-
-
-
-
-
-
 							$('#wrongPin,#unsevisablePin,#emptyPin')
 									.hide();
 							$('#unableprocessPin').show();
@@ -1653,17 +1462,6 @@ function pincodeServiceability(){
                             }
 						}
 					});
-
-
-
-
-
-
-
-
-
-
-
 
 			//TPR-900
 			$('#pin').blur();
@@ -1679,149 +1477,13 @@ function pincodeServiceability(){
 			//TPR-900
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 var pinCodeChecked = false;
 $(function() {
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 	var regExp = /^([1-9])([0-9]){5}$/;
 	$("#codId").hide();
-
-
-
-
-
 	$(".submit").click(function(){
 		if($("#pdpPincodeCheck").hasClass("Check"))//UF-71
-
-
-
-
-
-
-
-
-
-
+			
 		{
 			pincodeServiceability();
 		}
@@ -1963,7 +1625,7 @@ function displayDeliveryDetails(sellerName) {
 		dataType : "json",
 		success : function(data) {
 			if (data != null) {
-				console.log("success");
+				//console.log("success");
 				var pretext=$("#deliveryPretext").text();
 				var posttext=$("#deliveryPosttext").text();
 				var fulFillment = data['fulfillment'];
@@ -2016,7 +1678,8 @@ function displayDeliveryDetails(sellerName) {
 				/*TISPRDT-878 END*/
 
 				//INC144314017 start
-				if(!$('#pdpPincodeCheck').data('clicked')) {
+				 //TPR-6654
+				if(typeof $('#pdpPincodeCheck').data('clicked') != "undefined" && !$('#pdpPincodeCheck').data('clicked')) {
 					var start_hd=parseInt($("#homeStartId").val())+leadTime;
 					var end_hd=parseInt($("#homeEndId").val())+leadTime;
 				if (null != deliveryModes && deliveryModes.indexOf("HD") == -1) {

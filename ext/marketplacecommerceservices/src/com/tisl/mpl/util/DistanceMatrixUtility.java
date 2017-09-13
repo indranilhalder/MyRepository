@@ -73,7 +73,6 @@ public class DistanceMatrixUtility
 		JSONObject json = null;
 		JSONArray jsonArray = null;
 		final List<Double> distance = new ArrayList<>();
-		double disKM = 0;
 		SocketAddress addr = null;
 		Proxy proxy = null;
 		final int portproxy = Integer.parseInt(getConfigurationService().getConfiguration().getString("proxy.port"));
@@ -91,9 +90,7 @@ public class DistanceMatrixUtility
 			for (int i = 0; i < jsonArray.length(); i++)
 			{
 				final JSONObject jsonObj = jsonArray.getJSONObject(i);
-				disKM = (jsonObj.getJSONObject("distance").getDouble("value")) / 1000;
-				disKM = (double) Math.round(disKM * 100) / 100;
-				distance.add(Double.valueOf(disKM));
+				distance.add(Double.valueOf(jsonObj.getJSONObject("distance").getDouble("value")));
 			}
 
 		}
