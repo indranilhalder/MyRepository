@@ -74,7 +74,7 @@ public class PancardRejectEventListener extends AbstractSiteEventListener<Pancar
 	protected void onSiteEvent(final PancardRejectEvent PancardRejectEvent)
 	{
 		//send Email
-		final OrderModel orderModel = PancardRejectEvent.getProcess().getOrder();
+		final OrderModel orderModel = PancardRejectEvent.getOrder();
 
 		final OrderProcessModel orderProcessModel = (OrderProcessModel) getBusinessProcessService().createProcess(
 				"pancardRejectEmailProcess-" + orderModel.getCode() + "-" + System.currentTimeMillis(), "pancardRejectEmailProcess");
@@ -113,16 +113,16 @@ public class PancardRejectEventListener extends AbstractSiteEventListener<Pancar
 		 * smsRequestData.setContent(content); smsRequestData.setRecipientPhoneNumber(mobileNumber);
 		 * sendSMSService.sendSMS(smsRequestData);
 		 *
-		 * } catch (final EtailNonBusinessExceptions ex) {
-		 * LOG.error("EtailNonBusinessExceptions occured while sending sms " + ex); } catch (final Exception ex) {
-		 * LOG.error("Exceptions occured while sending sms " + ex); }
+		 * } catch (final EtailNonBusinessExceptions ex) { LOG.error(
+		 * "EtailNonBusinessExceptions occured while sending sms " + ex); } catch (final Exception ex) { LOG.error(
+		 * "Exceptions occured while sending sms " + ex); }
 		 */
 	}
 
 	@Override
 	protected boolean shouldHandleEvent(final PancardRejectEvent event)
 	{
-		final OrderModel order = event.getProcess().getOrder();
+		final OrderModel order = event.getOrder();
 		ServicesUtil.validateParameterNotNullStandardMessage("event.order", order);
 		final BaseSiteModel site = order.getSite();
 		ServicesUtil.validateParameterNotNullStandardMessage("event.order.site", site);
