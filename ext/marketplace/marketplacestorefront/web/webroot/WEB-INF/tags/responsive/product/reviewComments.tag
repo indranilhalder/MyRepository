@@ -8,12 +8,23 @@
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn"%>
 <!-- TPR 4389 STARTS HERE -->
-<c:if test="${averageRating != null && averageRating > 0.0}">
-<div itemprop="aggregateRating" itemscope itemtype="http://schema.org/AggregateRating" style="display: none;">
-
-	<span id="ratingvalue" itemprop="ratingValue">${averageRating}</span> based on <span id="reviewcount" itemprop="reviewCount">${commentCount}</span> reviews 
-</div>
-</c:if>	
+<!-- TPR-6655 start -->
+<input type="hidden" id="isGigyaforPdpEnabled" name="isGigyaforPdpEnabled" value="${isGigyaforPdpEnabled}"> 
+<c:choose>
+   <c:when test="${isGigyaforPdpEnabled=='true'}">
+      <c:if test="${ averageRating != null && averageRating > 0.0}"> 
+        <div itemprop="aggregateRating" itemscope itemtype="http://schema.org/AggregateRating" style="display: none;">
+	      <span id="ratingvalue" itemprop="ratingValue">${averageRating}</span> based on <span id="reviewcount" itemprop="reviewCount">${commentCount}</span> reviews
+        </div>
+      </c:if>	 
+   </c:when>
+  <c:otherwise>
+     <div itemprop="aggregateRating" itemscope itemtype="http://schema.org/AggregateRating" style="display: none;">
+	    <span id="ratingvalue" itemprop="ratingValue"></span> based on <span id="reviewcount" itemprop="reviewCount"></span> reviews 
+    </div>
+  </c:otherwise>
+</c:choose>
+<!-- TPR-6655  end-->
 <div id="ReviewSecion" class="reviews">
 <div class="header">
       <h3>Ratings and Reviews</h3>		<!-- UF-57 -->

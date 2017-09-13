@@ -176,10 +176,13 @@ public class BundlingPromotionWithPercentageSlab extends GeneratedBundlingPromot
 
 				if (flagForDeliveryModeRestrEval && flagForPaymentModeRestrEval && flagForPincodeRestriction)
 				{
-					for (final AbstractOrderEntry entry : validProductUssidMap.values())
+				        if (validProductUssidMap != null)//iqa
 					{
+					   for (final AbstractOrderEntry entry : validProductUssidMap.values())
+					   {
 						totalCount += entry.getQuantity().intValue(); // Fetches total count of Valid Products
 						totalPrice += entry.getTotalPrice().doubleValue();
+					   }
 					}
 					LOG.debug("Total Eligible Count of Products" + totalCount);
 

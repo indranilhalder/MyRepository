@@ -25,5 +25,5 @@ public interface PriceBreakupService
 	 * @param childOrderEntry
 	 * @return
 	 */
-	public boolean createPricebreakupOrder(AbstractOrderEntryModel entry, AbstractOrderEntryModel childOrderEntry);
+	public void createPricebreakupOrder(AbstractOrderEntryModel entry, AbstractOrderEntryModel childOrderEntry);
 }

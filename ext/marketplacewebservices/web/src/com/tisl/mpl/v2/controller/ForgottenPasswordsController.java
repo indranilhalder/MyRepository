@@ -103,13 +103,14 @@ public class ForgottenPasswordsController extends BaseController
 			}
 			else
 			{
-				validateEmail(emailid);
+			        final String emailidLwCase = emailid.toLowerCase(); //INC144318796
+				validateEmail(emailidLwCase);
 				final URL requestUrl = new URL(request.getRequestURL().toString());
 				final String portString = requestUrl.getPort() == -1 ? "" : ":" + requestUrl.getPort();
 				//final String baseUrl = requestUrl.getProtocol() + "://" + requestUrl.getHost() + portString + ""; Do not add empty strings
 				final String baseUrl = requestUrl.getProtocol() + "://" + requestUrl.getHost() + portString;
 				final String securePasswordUrl = baseUrl + MarketplacecommerceservicesConstants.LINK_PASSWORD_CHANGE;
-				forgetPasswordFacade.forgottenPasswordForEmail(emailid, securePasswordUrl, Boolean.TRUE);
+				forgetPasswordFacade.forgottenPasswordForEmail(emailidLwCase, securePasswordUrl, Boolean.TRUE);
 				userResultWsDto.setStatus(MarketplacecommerceservicesConstants.SUCCESS_FLAG);
 			}
 		}

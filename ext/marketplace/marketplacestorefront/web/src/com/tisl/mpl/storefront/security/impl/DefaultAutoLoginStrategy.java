@@ -156,6 +156,10 @@ public class DefaultAutoLoginStrategy implements AutoLoginStrategy
 				LOG.debug("Method login SITE USER");
 				/* TPR-6654 start */
 				final Cookie cookie = GenericUtilityMethods.getCookieByName(request, "pdpPincode");
+				int pincodeCookieMaxAge;
+				final String cookieMaxAge = getConfigurationService().getConfiguration().getString("pdpPincode.cookie.age");
+				pincodeCookieMaxAge = (Integer.valueOf(cookieMaxAge)).intValue();
+				final String domain = getConfigurationService().getConfiguration().getString("shared.cookies.domain");
 				final CustomerModel customerModel = (CustomerModel) extUserService.getCurrentUser();
 				final AddressModel address = customerModel.getDefaultShipmentAddress();
 				if (address != null && address.getPostalcode() != null)
@@ -163,6 +167,14 @@ public class DefaultAutoLoginStrategy implements AutoLoginStrategy
 					if (cookie != null && cookie.getValue() != null)
 					{
 						cookie.setValue(address.getPostalcode());
+						cookie.setMaxAge(pincodeCookieMaxAge);
+						cookie.setPath("/");
+
+						if (null != domain && !domain.equalsIgnoreCase("localhost"))
+						{
+							cookie.setSecure(true);
+						}
+						cookie.setDomain(domain);
 						response.addCookie(cookie);
 						getSessionService().setAttribute(MarketplacecommerceservicesConstants.SESSION_PINCODE, address.getPostalcode());
 					}
@@ -224,6 +236,10 @@ public class DefaultAutoLoginStrategy implements AutoLoginStrategy
 				LOG.debug("Method login SOCIAL RETURN USER PASSWORD " + password);
 				/* TPR-6654 start */
 				final Cookie cookie = GenericUtilityMethods.getCookieByName(request, "pdpPincode");
+				int pincodeCookieMaxAge;
+				final String cookieMaxAge = getConfigurationService().getConfiguration().getString("pdpPincode.cookie.age");
+				pincodeCookieMaxAge = (Integer.valueOf(cookieMaxAge)).intValue();
+				final String domain = getConfigurationService().getConfiguration().getString("shared.cookies.domain");
 				final CustomerModel customerModel = (CustomerModel) extUserService.getCurrentUser();
 				final AddressModel address = customerModel.getDefaultShipmentAddress();
 				if (address != null && address.getPostalcode() != null)
@@ -231,6 +247,14 @@ public class DefaultAutoLoginStrategy implements AutoLoginStrategy
 					if (cookie != null && cookie.getValue() != null)
 					{
 						cookie.setValue(address.getPostalcode());
+						cookie.setMaxAge(pincodeCookieMaxAge);
+						cookie.setPath("/");
+
+						if (null != domain && !domain.equalsIgnoreCase("localhost"))
+						{
+							cookie.setSecure(true);
+						}
+						cookie.setDomain(domain);
 						response.addCookie(cookie);
 						getSessionService().setAttribute(MarketplacecommerceservicesConstants.SESSION_PINCODE, address.getPostalcode());
 					}

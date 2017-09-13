@@ -40,7 +40,7 @@ import org.springframework.beans.factory.annotation.Required;
 
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.core.model.OrderUpdateProcessModel;
-import com.tisl.mpl.shorturl.service.ShortUrlService;
+
 
 
 
@@ -78,6 +78,7 @@ public class ShippingConfirmationEmailContext extends AbstractEmailContext<Order
 
 	private static final String COUNT = "count"; //added for jewellery
 
+
 	//TPR-5329
 	//Sonar Issue Fixed For Kidswear
 	//private static final String PRODUCT_IMAGE_URL = "productImageUrl";
@@ -87,8 +88,8 @@ public class ShippingConfirmationEmailContext extends AbstractEmailContext<Order
 
 	@Autowired
 	private ConfigurationService configurationService;
-	@Autowired
-	private ShortUrlService shortUrlService;
+//	@Autowired
+//	private ShortUrlService shortUrlService;//Sonar Fix
 
 	@Override
 	public void init(final OrderUpdateProcessModel orderUpdateProcessModel, final EmailPageModel emailPageModel)
@@ -177,7 +178,8 @@ public class ShippingConfirmationEmailContext extends AbstractEmailContext<Order
 				MarketplacecommerceservicesConstants.MPL_TRACK_ORDER_LONG_URL_FORMAT)
 				+ pOrderCode;
 		/* Added in R2.3 for shortUrl START */
-		final String shortUrl = shortUrlService.genearateShortURL(pOrderCode);
+		// final String shortUrl = shortUrlService.genearateShortURL(pOrderCode);
+		final String shortUrl = orderUpdateProcessModel.getOrderTrackUrl();
 		put(TRACK_ORDER_URL, null != shortUrl ? shortUrl : trackOrderUrl);
 
 

@@ -42,6 +42,8 @@ function innerLazyLoad(options) {
     if (initPageLoad) { //TODO: duplicate loading prevention
         $('ul.product-listing.product-grid.lazy-grid,ul.product-listing.product-grid.lazy-grid-facet,ul.product-list,ul.product-listing.product-grid.lazy-grid-normal,ul.product-listing.product-grid.custom-sku').html(gridHTML).hide().fadeIn(500);
         initPageLoad = false;
+        //TISSPTXI-21
+        $("img.lazy").lazyload();
     } else {
         $('ul.product-listing.product-grid.lazy-grid,ul.product-listing.product-grid.lazy-grid-facet,ul.product-list,ul.product-listing.product-grid.lazy-grid-normal,ul.product-listing.product-grid.custom-sku').append(gridHTML);
         $("img.lazy").lazyload();
@@ -246,7 +248,9 @@ $(document).ready(function() {
 				
 	}	
     //lazy image load initialization
-	if($('#pageType').val() == "productsearch" || $('#pageType').val() == "product" || $('#pageType').val() == "category" || $('input[name=customSku]').length){
+    //TISPRDT-2225
+    //if($('#pageType').val() == "productsearch" || $('#pageType').val() == "product" || $('#pageType').val() == "category" || $('input[name=customSku]').length){
+    if ($('#pageType').val() != "homepage") {
 	    $("img.lazy").lazyload();	
 	}
     //set the total no of pages 
@@ -379,6 +383,9 @@ $(document).ready(function() {
         	if($('input[name=customSku]').length){
         		sortCustomSku($(this),false);
         		}else{
+        			if(lazyPagePush){
+        				lazyPushInitalPage();
+        			}
         		 sort($(this),false);
         	 	}
 

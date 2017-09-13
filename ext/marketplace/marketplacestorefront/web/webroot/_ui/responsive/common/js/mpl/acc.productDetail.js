@@ -723,11 +723,13 @@ function addToWishlist(alreadyAddedWlName_pdp) {
 					
 					/*TPR-656*/
 					utag.link({
+
 						link_text: 'add_to_wishlist_pdp' , 
 						event_type : 'add_to_wishlist_pdp', 
 						product_sku_wishlist : productcodearray
 					});
 				/*TPR-656 Ends*/
+
 					dtmAddToWishlist("pdp"); 
 					
 					//openPop(ussidValue);
@@ -930,7 +932,7 @@ function setSeller(index) {
 /* refeshing seller data after getting response from pincode service */
 /* refeshing seller data after getting response from pincode service */
 function refreshSellers(dataArray, ussid) {
-	console.log("dataArray"+dataArray+"ussid"+ussid);
+	//console.log("dataArray"+dataArray+"ussid"+ussid);
 	var stockArray = [];
 
 	var nonservicableussids = [];
@@ -964,7 +966,7 @@ function refreshSellers(dataArray, ussid) {
 				usidList[i] = "'" + dataArray[i]['ussid'] + "'";
 				count = count + 1;
 				if (dataArray[i]['stockCount'] == 0) {
-					console.log("ussid"+dataArray[i]['ussid']);
+					//console.log("ussid"+dataArray[i]['ussid']);
 					ussidListWithNoStock[++n] = "'" + dataArray[i]['ussid']
 							+ "'";// setting all the skuIds without stock
 
@@ -1100,6 +1102,8 @@ function pincodeServiceability(){
 			$('#addToCartButton-wrong').hide();
 			$("#outOfStockId").hide();
 
+
+
 			// $('#addToCartButton').show();
 			var checkBuyBoxIdPresent = false;
 			var buyboxSeller = $("#ussid").val();
@@ -1107,7 +1111,6 @@ function pincodeServiceability(){
 			
 			var requiredUrl = ACC.config.encodedContextPath + "/p"
 					+ "-checkPincode";
-
 			if (pin == "") {
 				$('#unsevisablePin,#unableprocessPin,#wrongPin,#serviceablePin')
 						.hide();
@@ -1128,6 +1131,7 @@ function pincodeServiceability(){
 				$("#pdpPinCodeAvailable").hide();
 				$("#serviceablePin").hide();
 			//	$("#pdpPinCodeAvailable").hide();
+
 				$('#addToCartButton').show();
 				$('#buyNowButton').attr("disabled",false);
 				//TPR-6654
@@ -1141,7 +1145,6 @@ function pincodeServiceability(){
 			var productCode = $('#product').val();
 			var dataString  = "pin=" + pin + "&productCode="+ productCode;
 			
-
 			jQuery
 					.ajax({
 						// type: 'POST',
@@ -1149,6 +1152,7 @@ function pincodeServiceability(){
 						url : requiredUrl,
 						data : dataString,
 						success : function(data) {
+
 
 							if (data == "" || data == []
 									|| data == null) {
@@ -1168,14 +1172,21 @@ function pincodeServiceability(){
 								//TPR-6654
 								$("#CNCstores").empty();
 								$('#wrongPin,#unableprocessPin,#emptyPin,#serviceablePin').hide();
+
+
 								$('#addToCartFormTitle').hide();
+
+
 								$('#addToCartButton-wrong').show();
 								$('#addToCartButton').hide();
 								$('#unsevisablePin').show();
 								$("#pdpPinCodeAvailable").hide();
+
+
 								$('#buyNowButton').attr("disabled",true); 
 								//TPR-794
 								$("#pdpPinCodeAvailable").html("Available delivery options for the pincode " +pin+ " are");
+
 								
 								/*TPR-642 & 640*/
 								utag.link({
@@ -1207,6 +1218,7 @@ function pincodeServiceability(){
 							    $("#collectli").css("opacity","1");
 								$("#codId").show();
 								//TPR-794
+
 								$("#pdpPinCodeAvailable").html("Available delivery options for the pincode " +pin+ " are");
 								
 								/*TPR-642 & 640*/
@@ -1221,6 +1233,7 @@ function pincodeServiceability(){
 								});
 							/*TPR-642 & 640 ends*/
 								return false;
+								
 							} else {
 								// TPR-1375
 								//populating  buybox details agian after checking pincode response
@@ -1233,7 +1246,6 @@ function pincodeServiceability(){
 								for ( var i in data) {
 									var pincodedata = data[i];
 									ussid = pincodedata['ussid'];
-
 									if (ussid == buyboxSeller) {
 										if (pincodedata['isServicable'] == 'Y') {
 											
@@ -1261,7 +1273,6 @@ function pincodeServiceability(){
 											if (pincodedata['cod'] == 'Y') {
 												$("#codId").show();
 											}
-
 											for ( var j in deliveryModes) {
 												var mode = deliveryModes[j];
 												deliveryModeName = mode['type'];
@@ -1273,7 +1284,6 @@ function pincodeServiceability(){
 												// mode
 												if (deliveryModeName == 'HD') {
 													home = true;
-
 												}
 												// checking
 												// click&collect(CnC)
@@ -1296,6 +1306,8 @@ function pincodeServiceability(){
 													exp = true;
 												}
 											}
+
+
 											if (home == true) {
 												$("#home").show();
 												$("#homeli").show();
@@ -1327,6 +1339,9 @@ function pincodeServiceability(){
 												$("#collectli").show();
 												$("#collectli").addClass("selected");
 											    $("#collectli").css("opacity","1");
+
+
+
 												deliverModeTealium.push("clickandcollect");
 												//TPR-6654
 												var requiredUrl = ACC.config.encodedContextPath + "/p-allStores/"+pin;
@@ -1336,8 +1351,7 @@ function pincodeServiceability(){
 													success : function(response) {
 														$("#CNCstores").html(response);
 													}
-												});
-												
+												});		
 											} else {
 
 												//$("#collect").hide();
@@ -1360,6 +1374,7 @@ function pincodeServiceability(){
 													pdp_pin_delivery : deliverModeTealium.join("_")
 												});
 											/*TPR-642 & 640 ends*/
+
 										} else {
 											//$("#home").hide();
 											//$("#homeli").hide();
@@ -1421,7 +1436,6 @@ function pincodeServiceability(){
 									} else {
 										$("#outOfStockId").show();
 										$("#buyNowButton").hide();
-
 									}
 									// $('#addToCartButton-wrong').show();
 									$('#addToCartButton').hide();
@@ -1436,7 +1450,6 @@ function pincodeServiceability(){
 							$("#pdpPinCodeAvailable").html("Available delivery options for the pincode " +pin+ " are");
 						},
 						error : function(xhr, status, error) {
-
 							$('#wrongPin,#unsevisablePin,#emptyPin')
 									.hide();
 							$('#unableprocessPin').show();
@@ -1464,16 +1477,13 @@ function pincodeServiceability(){
 			//TPR-900
 }
 
-
-
 var pinCodeChecked = false;
 $(function() {
-
 	var regExp = /^([1-9])([0-9]){5}$/;
 	$("#codId").hide();
-
 	$(".submit").click(function(){
 		if($("#pdpPincodeCheck").hasClass("Check"))//UF-71
+			
 		{
 			pincodeServiceability();
 		}
@@ -1481,6 +1491,8 @@ $(function() {
 		{
 			 $('#pin').focus();
 			 $('#emptyPin').hide();
+
+
 		}
 	});
 
@@ -1558,6 +1570,8 @@ $( document ).ready(function() {
 
 	/*var data =*/ getBuyBoxDataAjax(productCode,variantCodesJson);//Moving buybox call on load in a method so that it can be reused.UF-60
 
+
+
 //}
 	$(".size-guide").click(function(){
 		if(null!= availibility){
@@ -1597,6 +1611,7 @@ $( document ).ready(function() {
  * This method is used to display delivery modes against a sku id
  */
 function displayDeliveryDetails(sellerName) {
+
 	var buyboxSeller = $("#ussid").val();
 	var productCode = $("#product").val();
 	var productCategoryType=$('#productCategoryType').val();
@@ -1610,7 +1625,7 @@ function displayDeliveryDetails(sellerName) {
 		dataType : "json",
 		success : function(data) {
 			if (data != null) {
-				console.log("success");
+				//console.log("success");
 				var pretext=$("#deliveryPretext").text();
 				var posttext=$("#deliveryPosttext").text();
 				var fulFillment = data['fulfillment'];
@@ -1663,7 +1678,8 @@ function displayDeliveryDetails(sellerName) {
 				/*TISPRDT-878 END*/
 
 				//INC144314017 start
-				if(!$('#pdpPincodeCheck').data('clicked')) {
+				 //TPR-6654
+				if(typeof $('#pdpPincodeCheck').data('clicked') != "undefined" && !$('#pdpPincodeCheck').data('clicked')) {
 					var start_hd=parseInt($("#homeStartId").val())+leadTime;
 					var end_hd=parseInt($("#homeEndId").val())+leadTime;
 				if (null != deliveryModes && deliveryModes.indexOf("HD") == -1) {
@@ -1694,6 +1710,8 @@ function displayDeliveryDetails(sellerName) {
 					$("#expressli").css("opacity","0.5");
 					$("#expressli").removeClass("selected");
 				} else {		
+
+
 					$("#expressDate").html(pretext+start_ed+"-"+end_ed+posttext);
 					$("#express").show();
 					$("#expressli").show();
@@ -1873,7 +1891,7 @@ function dispPrice(mrp, mop, spPrice, savingsOnProduct) {
 		$("#spPriceId").append(spPrice.formattedValueNoDecimal);
 	} 
 	////TISPRM-33 , TPR-140
-	if(null!= savingsOnProduct){
+	if(null!= savingsOnProduct && savingsOnProduct != 0){
 		//$("#savingsOnProductId").html("");
 		$("#savingsOnProductId").append("(-"+savingsOnProduct+" %)");
 	} 
@@ -2060,10 +2078,12 @@ function openPopForBankEMI() {
 			$("#bankNameForEMI").html(optionData);
 			/*TPR-641*/
 			utag.link({
+				link_obj: this,
 				link_text: 'emi_more_information' ,
 				event_type : 'emi_more_information',
 				product_id : productIdArray
 			});
+
 			dtmEmiTrack();
 		},
 		error : function(xhr, status, error) {
@@ -3237,6 +3257,7 @@ function loadDefaultWishListName_SizeGuide() {
 				
 				/*TPR-646 Changes*/
 				utag.link({
+					"link_obj" : this,
 			        "link_text": 'remove_from_wishlist',
 			        "event_type": 'remove_from_wishlist',
 			        "product_sku_wishlist": "" + productCode
@@ -3727,6 +3748,7 @@ function onSizeSelectPopulateDOM()//First Method to be called in size select aja
 							var responsePotentialPromotions=[];
 						}
 						
+
 						$('#selectedSize').val("true");
 						
 						$("input[name=productCodeMSD]").val(responseProductCode);
@@ -3956,6 +3978,7 @@ function onSizeSelectPopulateDOM()//First Method to be called in size select aja
 //								}
 							});//End of buybox and tealium call
 						}
+
 					}//End of server side error check if
 					else
 					{	
@@ -4591,7 +4614,7 @@ function populateProductPageTabs(jsonData)
 	}
 	
 	var catType = $("#categoryType").val();
-	if((catType != undefined) && ("FINEJEWELLERY" == catType.toUpperCase()) && ("FASHIONJEWELLERY" == catType.toUpperCase())){
+	if((catType != undefined) && (("FINEJEWELLERY" == catType.toUpperCase()) || ("FASHIONJEWELLERY" == catType.toUpperCase()))){
 		populateClassificationForJewellery(jsonData);
 	}
 	
@@ -4800,6 +4823,10 @@ $("#pdpPincodeCheckExchnage").on("click",function(){
     
 	$.when(pinCodeCheckajax).done(function(pincoeData){
 		
+		var pinExc = $('#pinExc').val();
+		var productCode =  $('#product_id').val();
+		var productArray =[];
+		productArray.push(productCode);
 	for (var i = 0; i < pincoeData.length; i++) {
 		
 		//check pincodeData if it is servicable
@@ -4809,10 +4836,7 @@ $("#pdpPincodeCheckExchnage").on("click",function(){
   //ajax call to check greendust
 	var dataString = 'pin=' + $("#pinExc").val();
     var reversecheck=false;
-    var pinExc = $('#pinExc').val();
-	var productCode =  $('#product_id').val();
-	var productArray =[];
-	productArray.push(productCode);
+
 	
 var req1=$.ajax({
 		url : ACC.config.encodedContextPath + "/p-checkReversePincode",
@@ -4864,10 +4888,23 @@ $.when(req1).done(function(data1){
   
  // return false;
 				}
+
+
 				
 				}
 	
-    //check all ok
+
+
+
+
+//Message for unsuccessful exchange Pincode check forward check
+	if(typeof utag !="undefined"){
+		utag.link({
+			event_type : "exchange_pincode_false",
+			pincode  : pinExc,
+			product_id : productArray
+		});
+	}
     
 });
 
@@ -4965,7 +5002,7 @@ function changePrice(value) {
 	    var catOptions = "";
         for (i = 0; i < pricelist.length; i++)
         {
-        	var price=pricelist[i].split("-");
+        	var price=pricelist[i].split(":");
         	
         	 if(l4wokinval===price[0].trim())
        	   	{
@@ -4981,6 +5018,8 @@ function changePrice(value) {
 function onSubmitExc()
 {
 	var brand= $("#brandExchangeParam").val();
+
+
 	var l4select=$('#l4select').val();
 	var isError=false;
 	var isWorking=$('#activeselect').val();
@@ -4995,7 +5034,8 @@ function onSubmitExc()
 	var productArray =[];
 	productArray.push(productCode);
 	//TPR-5193 Analytics ends
-		if(!brand)
+	//JWLSPCUAT-1590
+		if(!brand || brand.trim().length==0)
 			{
 			$("#lbrand").text("Please Enter Brand");
 			document.getElementById('lbrand').style.color = "red";

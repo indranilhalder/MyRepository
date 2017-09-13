@@ -26,7 +26,7 @@
  
  		<!-- General setup -->
  		
- 		 <bean id="fileOrderComparator" class="de.hybris.platform.acceleratorservices.dataimport.batch.FileOrderComparator">
+ 		 <bean id="luxFileOrderComparator" class="de.hybris.platform.acceleratorservices.dataimport.batch.FileOrderComparator">
 		<property name="prefixPriority">
 			<map>
 				<!-- default priority is 0 -->
@@ -60,14 +60,14 @@
     <!-- 1) Scan for files -->
     
     <file:inbound-channel-adapter id="batchFilesLuxuryCategory" directory="#{baseDirectoryLuxuryCategory}"
-        filename-regex="^(.*)-(\d+)\.csv" comparator="fileOrderComparator" auto-startup="#{configurationService.configuration.getProperty('etail.batch.import.hotfolder.enabled')}">
+        filename-regex="^(.*)-(\d+)\.csv" comparator="luxFileOrderComparator" auto-startup="#{configurationService.configuration.getProperty('etail.batch.import.hotfolder.enabled')}">
         <int:poller fixed-rate="1000" />
     </file:inbound-channel-adapter>
  
     <!-- 2) move the file to processing and setup header -->
     
     <file:outbound-gateway request-channel="batchFilesLuxuryCategory" reply-channel="batchFilesLuxuryCategoryProc"
-        directory="#{baseDirectoryLuxuryCategory}/processing" delete-source-files="true" />
+        directory="#{baseDirectoryLuxuryCategory}/processing" delete-source-files="true" filename-generator-expression="'lux_' + payload.name"/>
 
 	<!-- 3) transform csv to impex file -->
 	
@@ -85,102 +85,102 @@
  		 <!-- Transformer for Category Import -->
     <bean id="batchLuxuryCategoryConverterMapping"
     class="de.hybris.platform.acceleratorservices.dataimport.batch.converter.mapping.impl.DefaultConverterMapping"
-    p:mapping="category"
+    p:mapping="lux_category"
     p:converter-ref="batchLuxuryCategoryConverter"/>
                 
 	<bean id="batchLuxuryMediaNewConverterMapping" 
 		  class="de.hybris.platform.acceleratorservices.dataimport.batch.converter.mapping.impl.DefaultConverterMapping" 
-		  p:mapping="mplmedia" 
+		  p:mapping="lux_mplmedia" 
 		  p:converter-ref="batchLuxuryMediaNewConverter"/>
 		  
 	<bean id="batchLuxuryMediaMimeConverterMapping" 
 		  class="de.hybris.platform.acceleratorservices.dataimport.batch.converter.mapping.impl.DefaultConverterMapping" 
-		  p:mapping="mplmedia" 
+		  p:mapping="lux_mplmedia" 
 		  p:converter-ref="batchLuxuryMediaMimeConverter"/>
 
 	<bean id="batchLuxuryMediaContainerNewConverterMapping" 
 		  class="de.hybris.platform.acceleratorservices.dataimport.batch.converter.mapping.impl.DefaultConverterMapping" 
-		  p:mapping="mplmedia_container" 
+		  p:mapping="lux_mplmedia_container" 
 		  p:converter-ref="batchLuxuryMediaContainerNewConverter"/>
 
 	<bean id="batchLuxuryMediaProductNewConverterMapping"
 	class="de.hybris.platform.acceleratorservices.dataimport.batch.converter.mapping.impl.DefaultConverterMapping"
-	p:mapping="mplmedia_product"
+	p:mapping="lux_mplmedia_product"
 	 p:converter-ref="batchLuxuryMediaProductNewConverter" />
 	 
 	 <bean id="batchLuxuryCategoryMediaConverterMapping"
 	class="de.hybris.platform.acceleratorservices.dataimport.batch.converter.mapping.impl.DefaultConverterMapping"
-	p:mapping="category_media"
+	p:mapping="lux_category_media"
 	 p:converter-ref="batchLuxuryCategoryMediaConverter" />
     
      <!-- Transformer for Rich attributes Import -->
     
     <bean id="batchLuxuryProductRichAttributesMapping"
      class="de.hybris.platform.acceleratorservices.dataimport.batch.converter.mapping.impl.DefaultConverterMapping"
-     p:mapping="richattribute_product"
+     p:mapping="lux_richattribute_product"
      p:converter-ref="batchLuxuryProductRichAttributesConverter"/>
     
     <!-- Transformer for Global Identifier Import -->
     
     <bean id="batchLuxuryGlobalIdentifierMapping"
      class="de.hybris.platform.acceleratorservices.dataimport.batch.converter.mapping.impl.DefaultConverterMapping"
-     p:mapping="global_identifier"
+     p:mapping="lux_global_identifier"
      p:converter-ref="batchLuxuryGlobalIdentifierConverter"/>
       
       <!-- Transformer for Seo Import -->
     
     <bean id="batchLuxurySEOMapping"
      class="de.hybris.platform.acceleratorservices.dataimport.batch.converter.mapping.impl.DefaultConverterMapping"
-     p:mapping="seocontent"
+     p:mapping="lux_seocontent"
      p:converter-ref="batchLuxurySeoConverter"/>
      
       <!-- Transformer for Brand Import -->
    
     <bean id="batchLuxuryBrandMapping"
      class="de.hybris.platform.acceleratorservices.dataimport.batch.converter.mapping.impl.DefaultConverterMapping"
-     p:mapping="brand"
+     p:mapping="lux_brand"
      p:converter-ref="batchLuxuryBrandConverter"/>
      
     
       <!-- Transformer for Product Feature Import -->
       <bean id="batchLuxuryProductFeatureMapping"
      class="de.hybris.platform.acceleratorservices.dataimport.batch.converter.mapping.impl.DefaultConverterMapping"
-     p:mapping="product_feature"
+     p:mapping="lux_product_feature"
      p:converter-ref="batchLuxuryProductFeatureConverter"/>
      
       <!-- Transformer for Product Import -->
      <bean id="batchLuxuryProductConverterMapping"
     class="de.hybris.platform.acceleratorservices.dataimport.batch.converter.mapping.impl.DefaultConverterMapping"
-    p:mapping="mplproduct"
+    p:mapping="lux_mplproduct"
     p:converter-ref="batchLuxuryProductConverter"/>
     
      <!-- Transformer for  Variant Product Import -->
     <bean id="batchLuxuryVarProductConverterMapping"
     class="de.hybris.platform.acceleratorservices.dataimport.batch.converter.mapping.impl.DefaultConverterMapping"
-    p:mapping="variant_product"
+    p:mapping="lux_variant_product"
     p:converter-ref="batchLuxuryVarProductConverter"/>
     
      <!-- Transformer for Product Relation Import -->
     <bean id="batchLuxuryProdReferenceConverterMapping"
     class="de.hybris.platform.acceleratorservices.dataimport.batch.converter.mapping.impl.DefaultConverterMapping"
-    p:mapping="product_reference"
+    p:mapping="lux_product_reference"
     p:converter-ref="batchLuxuryProdReferenceConverter"/>
     
  <!-- Transformer for Size Guide Import -->
     <bean id="bbatchLuxuryProdSizeguideConverterMapping"
     class="de.hybris.platform.acceleratorservices.dataimport.batch.converter.mapping.impl.DefaultConverterMapping"
-    p:mapping="product_sizeguide"
+    p:mapping="lux_product_sizeguide"
     p:converter-ref="batchLuxuryProdSizeguideConverter"/>
     
     <bean id="batchLuxurySellerRichAttributesMapping"
      class="de.hybris.platform.acceleratorservices.dataimport.batch.converter.mapping.impl.DefaultConverterMapping"
-     p:mapping="richattribute_seller"
+     p:mapping="lux_richattribute_seller"
      p:converter-ref="batchLuxurySellerRichAttributesConverter"/>
      
     <!-- Transformer for Seller Import -->    
      <bean id="batchLuxurySellerMapping"
      class="de.hybris.platform.acceleratorservices.dataimport.batch.converter.mapping.impl.DefaultConverterMapping"
-     p:mapping="seller"
+     p:mapping="lux_seller"
      p:converter-ref="batchLuxurySellerConverter"/>
      
      
@@ -188,14 +188,14 @@
    
     <bean id="batchSellerDelistingConverterMapping"
     class="de.hybris.platform.acceleratorservices.dataimport.batch.converter.mapping.impl.DefaultConverterMapping"
-    p:mapping="delist_seller"
+    p:mapping="lux_delist_seller"
     p:converter-ref="batchSellerDelistingConverter"/>
    
   <!--     Transformer for  SkuID Delisting Import   --> 
    
    <bean id="batchSkuIDDelistingConverterMapping"
     class="de.hybris.platform.acceleratorservices.dataimport.batch.converter.mapping.impl.DefaultConverterMapping"
-    p:mapping="delist_sku"
+    p:mapping="lux_delist_sku"
     p:converter-ref="batchSkuIDDelistingConverter"/>
     
     
@@ -203,20 +203,20 @@
     
      <bean id="batchLuxuryOnlineExclusiveConverterMapping"
     class="de.hybris.platform.acceleratorservices.dataimport.batch.converter.mapping.impl.DefaultConverterMapping"
-    p:mapping="online_exclusive"
+    p:mapping="lux_online_exclusive"
     p:converter-ref="batchLuxuryOnlineExclusiveConverter"/>
     
     
      <!-- Transformer for SellerPriority update -->
     <bean id="batchLuxurySellerPriorityConverterMapping"
     class="de.hybris.platform.acceleratorservices.dataimport.batch.converter.mapping.impl.DefaultConverterMapping"
-    p:mapping="priority_seller"
+    p:mapping="lux_priority_seller"
     p:converter-ref="batchLuxurySellerPriorityConverter"/>
     
      <!-- Transformer for PromotedProduct update -->
     <bean id="batchLuxuryPromotedProductConverterMapping"
     class="de.hybris.platform.acceleratorservices.dataimport.batch.converter.mapping.impl.DefaultConverterMapping"
-    p:mapping="promoted_product"
+    p:mapping="lux_promoted_product"
     p:converter-ref="batchLuxuryPromotedProductConverter"/>
     
       <!-- Converter for seller Import -->

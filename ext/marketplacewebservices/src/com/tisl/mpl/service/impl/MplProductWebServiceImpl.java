@@ -10,9 +10,13 @@ import de.hybris.platform.category.model.CategoryModel;
 import de.hybris.platform.cms2.exceptions.CMSItemNotFoundException;
 import de.hybris.platform.cms2.model.contents.components.AbstractCMSComponentModel;
 import de.hybris.platform.cms2.model.contents.components.CMSImageComponentModel;
+import de.hybris.platform.cms2.model.contents.components.CMSLinkComponentModel;
 import de.hybris.platform.cms2.model.contents.components.CMSParagraphComponentModel;
+import de.hybris.platform.cms2.model.contents.components.SimpleCMSComponentModel;
+import de.hybris.platform.cms2.model.contents.contentslot.ContentSlotModel;
 import de.hybris.platform.cms2.model.pages.ContentPageModel;
 import de.hybris.platform.cms2.model.relations.ContentSlotForPageModel;
+import de.hybris.platform.cms2.servicelayer.services.impl.DefaultCMSContentSlotService;
 import de.hybris.platform.commercefacades.product.ProductFacade;
 import de.hybris.platform.commercefacades.product.ProductOption;
 import de.hybris.platform.commercefacades.product.data.CategoryData;
@@ -60,6 +64,7 @@ import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.MapUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.constants.MarketplacewebservicesConstants;
@@ -90,6 +95,7 @@ import com.tisl.mpl.wsdto.CapacityLinkData;
 import com.tisl.mpl.wsdto.ClassificationMobileWsData;
 import com.tisl.mpl.wsdto.ColorLinkData;
 import com.tisl.mpl.wsdto.DeliveryModeData;
+import com.tisl.mpl.wsdto.ExchangeLinkUrl;
 import com.tisl.mpl.wsdto.FineJwlryClassificationListDTO;
 import com.tisl.mpl.wsdto.FineJwlryClassificationListValueDTO;
 import com.tisl.mpl.wsdto.GalleryImageData;
@@ -171,6 +177,8 @@ public class MplProductWebServiceImpl implements MplProductWebService
 	// Jewellery Changes
 	@Resource(name = "priceBreakupFacade")
 	private PriceBreakupFacade priceBreakupFacade;
+	@Autowired
+	private DefaultCMSContentSlotService contentSlotService;
 
 
 	/**
@@ -304,7 +312,7 @@ public class MplProductWebServiceImpl implements MplProductWebService
 
 	/*
 	 * To get product details for a product code
-	 *
+	 * 
 	 * @see com.tisl.mpl.service.MplProductWebService#getProductdetailsForProductCode(java.lang.String)
 	 */
 	@Override
@@ -698,7 +706,8 @@ public class MplProductWebServiceImpl implements MplProductWebService
 								if (entry.getKey().equalsIgnoreCase("Product Details"))
 								{
 									final FineJwlryClassificationListValueDTO classUssid = new FineJwlryClassificationListValueDTO();
-									classUssid.setClassificationListValueJwlry(Arrays.asList(buyBoxData.getSellerArticleSKU()));
+									classUssid.setClassificationListValueJwlry(Arrays
+											.asList(buyBoxData.getSellerArticleSKU().substring(6)));
 									classificationListJwlry.put("PRODUCT CODE", classUssid);
 								}
 								for (final Entry<String, List<String>> innerLoopEntry : innerEntry.entrySet())
@@ -856,6 +865,50 @@ public class MplProductWebServiceImpl implements MplProductWebService
 				{
 					productDetailMobile.setL3code(productData.getLevel3CategoryCode());
 					productDetailMobile.setL3name(productData.getLevel3CategoryName());
+
+					final ContentSlotModel contentSlotModel = contentSlotService
+							.getContentSlotForId(MarketplacecommerceservicesConstants.Exchange_Slot);
+					final List<ExchangeLinkUrl> linkUrlList = new ArrayList<>();
+
+					if (contentSlotModel != null)
+					{
+
+						final List<AbstractCMSComponentModel> componentLists = contentSlotModel.getCmsComponents();
+						if (CollectionUtils.isNotEmpty(componentLists))
+						{
+							for (final AbstractCMSComponentModel model : componentLists)
+							{
+								final ExchangeLinkUrl linkUrl = new ExchangeLinkUrl();
+								if (model instanceof SimpleCMSComponentModel)
+
+								{
+									final SimpleCMSComponentModel simpleComponent = (SimpleCMSComponentModel) model;
+
+									if (simpleComponent instanceof CMSLinkComponentModel)
+									{
+										final CMSLinkComponentModel model2 = (CMSLinkComponentModel) simpleComponent;
+										if (StringUtils.isNotEmpty(model2.getName()))
+										{
+											linkUrl.setName(model2.getName());
+										}
+										if (StringUtils.isNotEmpty(model2.getUrl()))
+										{
+
+											linkUrl.setUrl(model2.getUrl() + MarketplacecommerceservicesConstants.MOBILE_SOURCE2);
+										}
+										if (StringUtils.isNotEmpty(model2.getUid()))
+										{
+											linkUrl.setId(model2.getUid());
+										}
+									}
+									linkUrlList.add(linkUrl);
+								}
+							}
+							productDetailMobile.setLinkUrls(linkUrlList);
+
+
+						}
+					}
 				}
 
 				//Added for jewellery

@@ -158,6 +158,23 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 	@Resource(name = "configurationService")
 	private ConfigurationService configurationService;
 
+	/**
+	 * @return the configurationService
+	 */
+	public ConfigurationService getConfigurationService()
+	{
+		return configurationService;
+	}
+
+	/**
+	 * @param configurationService
+	 *           the configurationService to set
+	 */
+	public void setConfigurationService(final ConfigurationService configurationService)
+	{
+		this.configurationService = configurationService;
+	}
+
 	@Resource(name = "userFacade")
 	private UserFacade userFacade;
 
@@ -2411,7 +2428,11 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 		// Save call has been changed to Ajax for saving a new address instead of HTTP request submission.
 		final JSONObject jsonObj = new JSONObject();
 		final CartModel oModel = getCartService().getSessionCart();
+		int pincodeCookieMaxAge;
 		final Cookie cookie = GenericUtilityMethods.getCookieByName(request, "pdpPincode");
+		final String cookieMaxAge = getConfigurationService().getConfiguration().getString("pdpPincode.cookie.age");
+		pincodeCookieMaxAge = (Integer.valueOf(cookieMaxAge)).intValue();
+		final String domain = getConfigurationService().getConfiguration().getString("shared.cookies.domain");
 		try
 		{
 			final String errorMsg = mplAddressValidator.validate(addressForm);
@@ -2500,7 +2521,15 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 				{
 					if (cookie != null && cookie.getValue() != null)
 					{
-						cookie.setValue(addressForm.getPostcode());
+						cookie.setValue(newAddress.getPostalCode());
+						cookie.setMaxAge(pincodeCookieMaxAge);
+						cookie.setPath("/");
+
+						if (null != domain && !domain.equalsIgnoreCase("localhost"))
+						{
+							cookie.setSecure(true);
+						}
+						cookie.setDomain(domain);
 						response.addCookie(cookie);
 						getSessionService().setAttribute(MarketplacecommerceservicesConstants.SESSION_PINCODE,
 								newAddress.getPostalCode());
@@ -2639,7 +2668,11 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 	public String edit(final AccountAddressForm addressForm, final BindingResult bindingResult, final Model model,
 			final HttpServletRequest request, final HttpServletResponse response) throws CMSItemNotFoundException
 	{
+		int pincodeCookieMaxAge;
 		final Cookie cookie = GenericUtilityMethods.getCookieByName(request, "pdpPincode");
+		final String cookieMaxAge = getConfigurationService().getConfiguration().getString("pdpPincode.cookie.age");
+		pincodeCookieMaxAge = (Integer.valueOf(cookieMaxAge)).intValue();
+		final String domain = getConfigurationService().getConfiguration().getString("shared.cookies.domain");
 		try
 		{
 			//TISST-13012
@@ -2742,6 +2775,14 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 				if (cookie != null && cookie.getValue() != null)
 				{
 					cookie.setValue(newAddress.getPostalCode());
+					cookie.setMaxAge(pincodeCookieMaxAge);
+					cookie.setPath("/");
+
+					if (null != domain && !domain.equalsIgnoreCase("localhost"))
+					{
+						cookie.setSecure(true);
+					}
+					cookie.setDomain(domain);
 					response.addCookie(cookie);
 					getSessionService().setAttribute(MarketplacecommerceservicesConstants.SESSION_PINCODE, newAddress.getPostalCode());
 				}

@@ -34,7 +34,7 @@
 			</c:otherwise>
 		   </c:choose>	
 		<title>
-			<c:out value="${titleSocialTags}"/>
+			<c:out value="${titleSocialTags}" escapeXml="false"/>
 			
    </title>
 	<%-- Meta Content --%>
@@ -75,7 +75,12 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	
 	<%-- Additional meta tags --%>
-	<htmlmeta:meta items="${metatags}"/>
+	<!-- commented for PRDI-422 -->
+	<%-- <htmlmeta:meta items="${metatags}"/> --%>
+	<!-- Added for PRDI-422 starts-->
+    <meta name="keywords" content="${keywords}">
+    <meta name="description" content="${description}">
+	<!-- PRDI-422 ends-->
 	
 	
 	<meta name="google-site-verification" content="aArvRu0izzcT9pd1HQ5lSaikeYQ-2Uy1NcCNLuIJkmU" />
@@ -97,8 +102,6 @@
 		<c:when test="${fn:contains(reqURI,'search')}">
 		</c:when>
 		<c:otherwise>
-			
-			
 			<c:choose>
 				<c:when test="${not empty canonicalUrl}">
 					<c:set var="canonical" value="${baseURL}${canonicalUrl}"></c:set>
@@ -117,7 +120,6 @@
 				</c:otherwise>
 			</c:choose> --%>
 			<%-- <link rel="canonical" href="${regex:regExMatchAndRemove(canonical,'[/]$') }" /> --%>
-			
 			<c:choose>
 				<c:when test = "${fn:endsWith(canonical, '/page-1')}"><!-- TISSPTXI-2 Fix -->
 	   				<link rel="canonical" href="${fn:replace(canonical,'/page-1','')}" />
@@ -174,20 +176,13 @@
 					</c:when>
 					<c:otherwise>
 						<meta name="controlFlow" content="Went in the last page case" />
-						<c:choose>
-							<c:when test="${currentPageNumber eq 2}">
-								<link rel="prev" href="${fn:replace(canonical,'/page-2','')}" />
-							</c:when>
-							<c:otherwise>
-								<link rel="prev" href="${fn:replace(canonical,currentPage,previousPage)}" />
-							</c:otherwise>
-						</c:choose>
-						
+						<link rel="prev" href="${fn:replace(canonical,currentPage,previousPage)}" />
 					</c:otherwise>
 				</c:choose>
 			</c:if>
 		</c:otherwise>
 	</c:choose>
+	<!-- UF-265 ends -->
 	
 	<c:forEach items="${metatags}" var="metatagItem">
 		<c:if test="${metatagItem.name eq 'title'}">
