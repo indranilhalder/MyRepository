@@ -5017,171 +5017,161 @@ public class MplPaymentServiceImpl implements MplPaymentService
 			throws EtailNonBusinessExceptions //Changed to abstractOrderModel for TPR-629
 	{
 
-		System.out.println("---- ::::: IN SIDE TRANSACTION CREATION ::::-----");
-		Collection<PaymentTransactionModel> collection = order.getPaymentTransactions();
-		final List<PaymentTransactionModel> paymentTransactionList = new ArrayList<PaymentTransactionModel>();
-		final List<PaymentTransactionEntryModel> paymentTransactionEntryList = new ArrayList<PaymentTransactionEntryModel>();
-		//Soln Changes
-		//final PaymentTransactionModel payTranModel = null;
-		if (null == collection || collection.isEmpty())
+		try
 		{
-			collection = new ArrayList<PaymentTransactionModel>();
-		}
+			System.out.println("---- ::::: IN SIDE TRANSACTION CREATION ::::-----");
 
+			final List<PaymentTransactionEntryModel> paymentTransactionEntryList = new ArrayList<PaymentTransactionEntryModel>();
+			Collection<PaymentTransactionModel> collection = order.getPaymentTransactions();
+			final List<PaymentTransactionModel> paymentTransactionList = new ArrayList<PaymentTransactionModel>();
+			//final PaymentTransactionModel payTranModel = null;
 
-		final String walletAmt = WalletTotal;
-
-		paymentTransactionList.addAll(collection);
-		//List<PaymentTransactionEntryModel> paymentTransactionEntryList = new ArrayList<PaymentTransactionEntryModel>();
-
-		//final PaymentTransactionModel paymentTransactionModel = getModelService().create(PaymentTransactionModel.class);
-		final Date date = new Date();
-
-		final List<PaymentTransactionModel> listPay = new ArrayList<PaymentTransactionModel>();
-
-		final PaymentTypeModel paymenttype = getMplPaymentDao().getPaymentMode(cliqCashPaymentMode, order.getStore());
-
-		//final PaymentTypeModel paymenttype1 = getMplPaymentDao().getPaymentMode("Credit Card", order.getStore());
-
-
-
-		for (final Map.Entry<String, Double> entry : paymentMode.entrySet())
-		//for (int count = 1; count <= 2; count++)
-		{
-			System.out.println("$$$$$$$$$$$$$$$$$$$$$$$$$$$  --  paymentMode.entrySet() -- " + paymentMode.entrySet().toString());
-			//Setting fields of paymentTransactionEntry with Payment Gateway Responses for Wallet
-			if ("Wallet".equalsIgnoreCase(entry.getKey()))
-			//			if (count == 2)
-			//			{
-			//
-			//				paymenttype = paymenttype1;
-			//			}
+			if (null == collection || collection.isEmpty())
 			{
-				final PaymentTransactionEntryModel paymentTransactionEntry = getModelService()
-						.create(PaymentTransactionEntryModel.class);
-				//TODO:Change required when Order Ref No. is ready
-				if (StringUtils.isNotEmpty(rs.get(0)))
-				{
-					paymentTransactionEntry.setCode(rs.get(0) + "-" + System.currentTimeMillis());
-				}
-				paymentTransactionEntry.setAmount(BigDecimal.valueOf(Double.parseDouble(walletAmt)));
-				paymentTransactionEntry.setTime(date);
-				paymentTransactionEntry.setCurrency(order.getCurrency());
-
-				paymentTransactionEntry.setPaymentMode(paymenttype);
-				//paymentTransactionEntry.setType("");
-				//	paymentTransactionEntry.setPaymentMode(MarketplacecommerceservicesConstants.WALLET);//TODO::Wallet not in scope of Release 1
-				paymentTransactionEntry.setTransactionStatus(MarketplacecommerceservicesConstants.SUCCESS);
-
-				try
-				{
-
-					getModelService().save(paymentTransactionEntry);
-					paymentTransactionEntryList.add(paymentTransactionEntry);
-
-					final PaymentTransactionModel paymentTransactionModel = getModelService().create(PaymentTransactionModel.class);
-
-					paymentTransactionModel.setEntries(paymentTransactionEntryList);
-					paymentTransactionModel.setPaymentProvider(paymenttype.getMode());
-					paymentTransactionModel.setCreationtime(date);
-					paymentTransactionModel.setRequestId(rs.get(0));
-					paymentTransactionModel.setRequestToken(rs.get(1));
-					//	paymentTransactionModel.setCode(rs.get(0) + 1); // remove +1
-
-					paymentTransactionModel.setPlannedAmount(BigDecimal.valueOf(Double.parseDouble(walletAmt)));
-
-					listPay.add(paymentTransactionModel);
-					System.out.println("Payment LIST COUNT---- " + listPay.size());
-					getModelService().save(paymentTransactionModel);
-
-					//	paymentTransactionEntryList = new ArrayList<PaymentTransactionEntryModel>();
-
-
-				}
-				catch (final ModelSavingException e)
-				{
-					LOG.error(MarketplacecommerceservicesConstants.PAYMENT_TRAN_EXC_LOG + e);
-					throw new ModelSavingException(e + ": Exception while saving payment transaction entry with");
-				}
-				//}
+				collection = new ArrayList<PaymentTransactionModel>();
 			}
+
+			paymentTransactionList.addAll(collection);
+
+			final String walletAmt = WalletTotal;
+
+			final Date date = new Date();
+
+			final List<PaymentTransactionModel> listPay = new ArrayList<PaymentTransactionModel>();
+
+			final PaymentTypeModel paymenttype = getMplPaymentDao().getPaymentMode(cliqCashPaymentMode, order.getStore());
+
+			final PaymentTransactionEntryModel paymentTransactionEntry = getModelService()
+					.create(PaymentTransactionEntryModel.class);
+			//TODO:Change required when Order Ref No. is ready
+			if (StringUtils.isNotEmpty(rs.get(0)))
+			{
+				paymentTransactionEntry.setCode(rs.get(0) + "-" + rs.get(2));
+			}
+			paymentTransactionEntry.setAmount(BigDecimal.valueOf(Double.parseDouble(walletAmt)));
+			paymentTransactionEntry.setTime(date);
+			paymentTransactionEntry.setRequestToken(rs.get(2));
+			paymentTransactionEntry.setRequestId(rs.get(1));
+			paymentTransactionEntry.setCurrency(order.getCurrency());
+			paymentTransactionEntry.setType(PaymentTransactionType.CREATE_SUBSCRIPTION); /////////////////////////////////////////////////   Change it to QC Capture
+			paymentTransactionEntry.setTransactionStatus(MarketplacecommerceservicesConstants.SUCCESS);
+			paymentTransactionEntry.setPaymentMode(paymenttype);
+
+
+
+			getModelService().save(paymentTransactionEntry);
+			paymentTransactionEntryList.add(paymentTransactionEntry);
+
+			final PaymentTransactionModel paymentTransactionModel = getModelService().create(PaymentTransactionModel.class);
+
+			paymentTransactionModel.setEntries(paymentTransactionEntryList);
+			paymentTransactionModel.setPaymentProvider(paymenttype.getMode());
+			paymentTransactionModel.setCreationtime(date);
+			paymentTransactionModel.setRequestId(rs.get(1));
+			paymentTransactionModel.setRequestToken("0");
+			paymentTransactionModel.setCode(rs.get(0) + "-" + System.currentTimeMillis());
+			paymentTransactionModel.setStatus(MarketplacecommerceservicesConstants.SUCCESS);
+			paymentTransactionModel.setOrder(order);
+
+			paymentTransactionModel.setPlannedAmount(BigDecimal.valueOf(Double.parseDouble(walletAmt)));
+
+			getModelService().save(paymentTransactionModel);
+			listPay.add(paymentTransactionModel);
+
+			paymentTransactionList.addAll(listPay);
+
+			order.setPaymentTransactions(paymentTransactionList);
+
+			getModelService().save(order);
 		}
-
-		order.setPaymentTransactions(listPay);
-		getModelService().save(order);
-
+		catch (final ModelSavingException e)
+		{
+			LOG.error(MarketplacecommerceservicesConstants.PAYMENT_TRAN_EXC_LOG + e);
+			throw new ModelSavingException(e + ": Exception while saving payment transaction entry with");
+		}
 	}
 
 	@Override
-	public boolean createQCEntryInAudit(final String qcOrderID, final String channel, final String cartGuId, final String qcAmount)
-			throws EtailNonBusinessExceptions
+	public boolean createQCEntryInAudit(final String qcOrderID, final String channel, final String cartGuId, final String qcAmount,
+			final String qcResponseCode, final String transactionId) throws EtailNonBusinessExceptions
 	{
 		try
 		{
-			Assert.notNull(qcOrderID, "Parameter juspayOrderId cannot be null.");
+			Assert.notNull(qcOrderID, "Parameter QC cannot be null.");
 			//Make entry in Audit Table
 			boolean flag = false;
-			final MplPaymentAuditModel auditModel = getMplPaymentDao().getAuditEntries(qcOrderID);
-
-			if (null != auditModel)
+			//			final MplPaymentAuditModel auditModel = getMplPaymentDao().getAuditEntries(qcOrderID);
+			//
+			//			if (null != auditModel)
+			//			{
+			//				System.out.println("************** Saving auditModel *************" + qcOrderID);
+			//				List<MplPaymentAuditEntryModel> collection = auditModel.getAuditEntries();
+			//				final List<MplPaymentAuditEntryModel> auditEntryList = new ArrayList<MplPaymentAuditEntryModel>();
+			//				if (null == collection || collection.isEmpty())
+			//				{
+			//					collection = new ArrayList<MplPaymentAuditEntryModel>();
+			//				}
+			//
+			//				auditEntryList.addAll(collection);
+			//
+			//				final MplPaymentAuditEntryModel auditEntry = getModelService().create(MplPaymentAuditEntryModel.class);
+			//				auditEntry.setAuditId(qcOrderID);
+			//
+			//				if (qcResponseCode.equalsIgnoreCase("0"))
+			//				{
+			//
+			//					auditEntry.setStatus(MplPaymentAuditStatusEnum.COMPLETED);
+			//
+			//				}
+			//				else
+			//				{
+			//					auditEntry.setStatus(MplPaymentAuditStatusEnum.DECLINED);
+			//				}
+			//				auditModel.setIsExpired(Boolean.TRUE);
+			//				getModelService().save(auditEntry);
+			//
+			//				auditEntryList.add(auditEntry);
+			//
+			//				auditModel.setAuditEntries(auditEntryList);
+			//				getModelService().save(auditModel);
+			//				flag = true;
+			//			}
+			//	else
+			//	{
+			System.out.println("************** Creating and  Saving auditModel *************" + qcOrderID);
+			//	final CartModel cartModel = getMplPaymentDao().getCart(cartGuId);
+			final List<MplPaymentAuditEntryModel> auditEntryList = new ArrayList<MplPaymentAuditEntryModel>();
+			final MplPaymentAuditEntryModel auditEntry = getModelService().create(MplPaymentAuditEntryModel.class);
+			auditEntry.setAuditId(qcOrderID);
+			if (qcResponseCode.equalsIgnoreCase("0"))
 			{
-				System.out.println("************** Saving auditModel *************" + qcOrderID);
-				List<MplPaymentAuditEntryModel> collection = auditModel.getAuditEntries();
-				final List<MplPaymentAuditEntryModel> auditEntryList = new ArrayList<MplPaymentAuditEntryModel>();
-				if (null == collection || collection.isEmpty())
-				{
-					collection = new ArrayList<MplPaymentAuditEntryModel>();
-				}
 
-				auditEntryList.addAll(collection);
+				auditEntry.setStatus(MplPaymentAuditStatusEnum.COMPLETED);
 
-				final MplPaymentAuditEntryModel auditEntry = getModelService().create(MplPaymentAuditEntryModel.class);
-				auditEntry.setAuditId(qcOrderID);
-				auditEntry.setStatus(MplPaymentAuditStatusEnum.SUBMITTED);
-				getModelService().save(auditEntry);
-
-				auditEntryList.add(auditEntry);
-
-				auditModel.setAuditEntries(auditEntryList);
-				getModelService().save(auditModel);
-				flag = true;
 			}
 			else
 			{
-				System.out.println("************** Creating and  Saving auditModel *************" + qcOrderID);
-				//	final CartModel cartModel = getMplPaymentDao().getCart(cartGuId);
-				final List<MplPaymentAuditEntryModel> auditEntryList = new ArrayList<MplPaymentAuditEntryModel>();
-				final MplPaymentAuditEntryModel auditEntry = getModelService().create(MplPaymentAuditEntryModel.class);
-				auditEntry.setAuditId(qcOrderID);
-				auditEntry.setStatus(MplPaymentAuditStatusEnum.CREATED);
-				getModelService().save(auditEntry);
-
-				auditEntryList.add(auditEntry);
-
-				final MplPaymentAuditModel newAuditModel = getModelService().create(MplPaymentAuditModel.class);
-				newAuditModel.setChannel(GenericUtilityMethods.returnChannelData(channel));
-				newAuditModel.setAuditId(qcOrderID);
-				newAuditModel.setCartGUID(cartGuId);
-				newAuditModel.setRequestDate(new Date());
-				newAuditModel.setAuditEntries(auditEntryList);
-				//if (cartModel != null && cartModel.getTotalPrice() != null)
-				//{
-				newAuditModel.setPaymentAmount(Double.valueOf(qcAmount));
-				//}
-
-				getModelService().save(newAuditModel);
-				flag = true;
+				auditEntry.setStatus(MplPaymentAuditStatusEnum.DECLINED);
 			}
+			getModelService().save(auditEntry);
+
+			auditEntryList.add(auditEntry);
+
+			final MplPaymentAuditModel newAuditModel = getModelService().create(MplPaymentAuditModel.class);
+			newAuditModel.setChannel(GenericUtilityMethods.returnChannelData(channel));
+			newAuditModel.setAuditId(transactionId);
+			newAuditModel.setCartGUID(cartGuId);
+			newAuditModel.setRequestDate(new Date());
+			newAuditModel.setAuditEntries(auditEntryList);
+
+			newAuditModel.setPaymentAmount(Double.valueOf(qcAmount));
+			getModelService().save(newAuditModel);
+			flag = true;
 			//}
 			System.out.println("************** Saved auditModel *************" + qcOrderID + ":::" + flag);
 			return flag;
 
 		}
-		//Commented for TPR-629
-		//		catch (final NullPointerException e)
-		//		{
-		//			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0001);
-		//		}
 		catch (
 
 		final ModelSavingException e)

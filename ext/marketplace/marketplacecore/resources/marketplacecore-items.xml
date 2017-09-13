@@ -632,6 +632,7 @@
 			<value code="JUSPAY_DECLINED" />
 			<value code="RETURN" />
 			<value code="COD_PAYMENT" />
+<!-- 			<value code="QC Capture" /> -->
 		</enumtype>
 		<enumtype code="CodCheckMessage" autocreate="true" dynamic="true"
 			generate="true">
@@ -6245,6 +6246,24 @@
 							optional="true" initial="true" unique="true" />
 						<persistence type="property" />
 					</attribute>
+					
+					<!-- QC Changes -->
+					<attribute qualifier="juspayValue" autocreate="true"
+						type="java.lang.String">
+						<description>juspay Value</description>
+						<modifiers read="true" write="true" removable="true"
+							optional="true"  unique="false" />
+						<persistence type="property" />
+					</attribute>
+					
+						<attribute qualifier="qcValue" autocreate="true"
+						type="java.lang.String">
+						<description>qc Value</description>
+						<modifiers read="true" write="true" removable="true"
+							optional="true" unique="false" />
+						<persistence type="property" />
+					</attribute>
+					<!-- QC Changes End -->
 					
 				</attributes>
 			</itemtype>
@@ -13218,7 +13237,7 @@
 			<attribute qualifier="walletId" autocreate="true"
 				type="java.lang.String" generate="true">
 				<modifiers read="true" write="true" search="true"
-					optional="false" unique="true" />
+					optional="true" unique="true" />
 				<persistence type="property" />
 			</attribute>
 
@@ -13237,13 +13256,13 @@
 
 			<attribute autocreate="true" qualifier="customer" type="Customer">
 				<persistence type="property" />
-				<modifiers read="true" write="true" optional="false"
+				<modifiers read="true" write="true" optional="true"
 					search="true" />
 			</attribute>
 			
 			<attribute autocreate="true" generate="true" qualifier="serviceProvider" type="java.lang.String">
 				<persistence type="property" />
-				<modifiers read="true" write="true" optional="false"
+				<modifiers read="true" write="true" optional="true"
 					search="true" />
 			</attribute>
 

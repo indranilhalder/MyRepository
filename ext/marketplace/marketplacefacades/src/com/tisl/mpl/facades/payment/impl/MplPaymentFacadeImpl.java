@@ -10,6 +10,7 @@ import de.hybris.platform.commercefacades.order.data.OrderData;
 import de.hybris.platform.commercefacades.order.data.OrderEntryData;
 import de.hybris.platform.commercefacades.product.data.PromotionResultData;
 import de.hybris.platform.commercefacades.voucher.exceptions.VoucherOperationException;
+import de.hybris.platform.core.enums.OrderStatus;
 import de.hybris.platform.core.model.order.AbstractOrderEntryModel;
 import de.hybris.platform.core.model.order.AbstractOrderModel;
 import de.hybris.platform.core.model.order.CartModel;
@@ -2254,6 +2255,7 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 				final GetOrderStatusResponse orderStatusResponse = juspayService.getOrderStatus(orderStatusRequest);
 				if (null != orderStatusResponse)
 				{
+
 					//Payment Changes - Order before Payment
 					updAuditErrStatus = getMplPaymentService().updateAuditEntry(orderStatusResponse, orderStatusRequest, orderModel,
 							paymentMode);
@@ -2450,13 +2452,91 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 			juspayOrderId = getMplPaymentService().createPaymentId();
 			LOG.debug("Order Id created by key generator is " + juspayOrderId);
 
+
 			//Create entry in Audit table
 			if (null != cart)
 			{
+
+				/**
+				 * QC CHANGE
+				 */
+				boolean splitPayment = false;
+				String cliqCashPaymentMode = StringUtils.EMPTY;
+				boolean jsPayMode = false;
+
+				if (null != (getSessionService().getAttribute("getCliqCashMode").toString()))
+				{
+
+					splitPayment = Boolean.parseBoolean(getSessionService().getAttribute("getCliqCashMode").toString());
+				}
+
+				if (null != (getSessionService().getAttribute("cliqCashPaymentMode").toString()))
+				{
+
+					cliqCashPaymentMode = getSessionService().getAttribute("cliqCashPaymentMode").toString();
+				}
+
+				if (StringUtils.isNotEmpty(getSessionService().getAttribute("jsPayMode").toString()))
+				{
+
+					jsPayMode = Boolean.parseBoolean(getSessionService().getAttribute("jsPayMode").toString());
+				}
+
+				LOG.info("cliqCashPaymentMode" + cliqCashPaymentMode);
+
+				if (splitPayment && jsPayMode)
+				{
+
+					cart.setTotalPrice(Double.valueOf("" + getSessionService().getAttribute("juspayTotalAmt")));
+				}
+
+				/**
+				 * QC CHANGE end
+				 */
+
 				flag = getMplPaymentService().createEntryInAudit(juspayOrderId, channel, cart.getGuid());
 			}
 			else if (null != order)
 			{
+
+				/**
+				 * QC CHANGE
+				 */
+				boolean splitPayment = false;
+				String cliqCashPaymentMode = StringUtils.EMPTY;
+				boolean jsPayMode = false;
+
+				if (null != (getSessionService().getAttribute("getCliqCashMode").toString()))
+				{
+
+					splitPayment = Boolean.parseBoolean(getSessionService().getAttribute("getCliqCashMode").toString());
+				}
+
+				if (null != (getSessionService().getAttribute("cliqCashPaymentMode").toString()))
+				{
+
+					cliqCashPaymentMode = getSessionService().getAttribute("cliqCashPaymentMode").toString();
+				}
+
+				if (StringUtils.isNotEmpty(getSessionService().getAttribute("jsPayMode").toString()))
+				{
+
+					jsPayMode = Boolean.parseBoolean(getSessionService().getAttribute("jsPayMode").toString());
+				}
+
+				LOG.info("cliqCashPaymentMode" + cliqCashPaymentMode);
+
+				if (splitPayment && jsPayMode)
+				{
+
+					order.setTotalPrice(Double.valueOf("" + getSessionService().getAttribute("juspayTotalAmt")));
+				}
+
+				/**
+				 * QC CHANGE end
+				 */
+
+
 				flag = getMplPaymentService().createEntryInAudit(juspayOrderId, channel, order.getGuid());
 			}
 
@@ -2475,6 +2555,9 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 					// For netbanking firstname will be set as Bank Code
 					//TISCR-421:With sessionID for WEB orders
 					//Create entry in Audit table
+
+
+
 					if (null != cart)
 					{
 						request = new InitOrderRequest().withOrderId(juspayOrderId).withAmount(cart.getTotalPrice()).withCustomerId(uid)
@@ -3404,60 +3487,56 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 	public String createQCOrderRequest(final String guid, final AbstractOrderModel orderToBeUpdated, final String WalletId,
 			final String cliqCashPaymentMode, final String qcOrderId)
 	{
-		final String walletTotal = getSessionService().getAttribute("WalletTotal");
-
-		System.out.println("REDEM from QC FOR CURRENT CUSTOMER WALLET AMT IS ****************** " + walletTotal);
-
-		getMplPaymentService().createQCEntryInAudit(qcOrderId, "WEB", guid, walletTotal);
-
-		System.out.println("--------------- QC AUDIT ENTRY CREATED---- ---- ");
-
-		final ArrayList<String> rs = new ArrayList<String>();
-
-		//make service call for QC for redeemption
-		// on the response from QC go ahead
-
-		//String customerWalletId, String transactionId,
-		final QCRedeemRequest qcRedeemRequest = new QCRedeemRequest();
-
-		qcRedeemRequest.setAmount(walletTotal);
-		qcRedeemRequest.setBillAmount(orderToBeUpdated.getTotalPrice().toString());
-		qcRedeemRequest.setNotes("Redeem Request Amount " + walletTotal);
-		qcRedeemRequest.setInvoiceNumber(qcOrderId);
-
-		//final String transactionId = "22";
-
-		final QCRedeeptionResponse qcRedeeptionResponse = mplWalletFacade.getWalletRedeem(WalletId, qcRedeemRequest);
-
-		if (Integer.parseInt(qcRedeeptionResponse.getResponseCode().toString()) == 0)
+		try
 		{
-			rs.add(orderToBeUpdated.getCode());
-			rs.add(qcOrderId);
+			final String walletTotal = getSessionService().getAttribute("WalletTotal");
 
-			getMplPaymentService().createQCEntryInAudit(qcOrderId, "WEB", guid, walletTotal);
+			System.out.println("REDEM from QC FOR CURRENT CUSTOMER WALLET AMT IS ****************** " + walletTotal);
 
-			// create transaction entey for QC of same order number
+			final ArrayList<String> rs = new ArrayList<String>();
 
-			final Map<String, Double> paymentMode = new HashMap<String, Double>();
-			paymentMode.put("Cliq Cash", Double.valueOf("2"));
+			final QCRedeemRequest qcRedeemRequest = new QCRedeemRequest();
 
-			//final GetOrderStatusResponse rs = new GetOrderStatusResponse();
+			qcRedeemRequest.setAmount(walletTotal);
+			qcRedeemRequest.setBillAmount(orderToBeUpdated.getTotalPrice().toString());
+			qcRedeemRequest.setNotes("Redeem Request Amount " + walletTotal);
+			qcRedeemRequest.setInvoiceNumber(qcOrderId);
 
-			getMplPaymentService().setQCPaymentTransaction(rs, paymentMode, orderToBeUpdated, cliqCashPaymentMode, walletTotal);
+			final QCRedeeptionResponse qcRedeeptionResponse = mplWalletFacade.getWalletRedeem(WalletId, qcRedeemRequest);
 
-			System.out.println("---------------QCPaymentTransaction CREATED---- ---- ");
+			if (Integer.parseInt(qcRedeeptionResponse.getResponseCode().toString()) == 0)
+			{
+				rs.add(orderToBeUpdated.getCode());
+				rs.add(qcOrderId);
+				rs.add("" + qcRedeeptionResponse.getTransactionId());
 
-			/// CURRENT
+				getMplPaymentService().createQCEntryInAudit(qcOrderId, "WEB", guid, walletTotal,
+						qcRedeeptionResponse.getResponseCode().toString(), qcRedeeptionResponse.getTransactionId().toString());
 
-			return "Success";
+				System.out.println("--------------- QC AUDIT ENTRY CREATED---- ---- ");
+
+				final Map<String, Double> paymentMode = new HashMap<String, Double>();
+				paymentMode.put("Cliq Cash", Double.valueOf("2"));
+
+
+				getMplPaymentService().setQCPaymentTransaction(rs, paymentMode, orderToBeUpdated, cliqCashPaymentMode, walletTotal);
+
+				System.out.println("---------------QCPaymentTransaction DONE---- ---- ");
+
+				return "Success";
+			}
+			else
+			{
+				orderToBeUpdated.setStatus(OrderStatus.RMS_VERIFICATION_FAILED);
+				return "Fail";
+
+			}
 		}
-		else
+		catch (final Exception ex)
 		{
-			// set parent order Status RMS_VERIFICATION_FAILED
+			ex.printStackTrace();
 		}
-
 		return "Success";
-
 	}
 
 	@Override

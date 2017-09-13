@@ -16,6 +16,7 @@
 <script type="text/javascript">
 
 $(document).ready(function() {
+	
 var modelAttributeValue = '${isWalletActive}';
 
 if(modelAttributeValue !== false){	
@@ -28,7 +29,7 @@ if(modelAttributeValue !== false){
 				
 			if(data === "Success"){
 				
-				alert("Wallet Created");
+				window.location.href = ACC.config.encodedContextPath+"/wallet";
 			}
 
 			},	
@@ -45,8 +46,8 @@ if(modelAttributeValue !== false){
 	
 	
 	<html>
-	<c:choose>
-	<c:when test="${isWalletActive eq true}">
+<%-- 	<c:choose> --%>
+<%-- 	<c:when test="${isWalletActive eq true}"> --%>
 	
 	<div class="account">
 	<h1>Total Cliq Cash: random Number</h1>
@@ -61,12 +62,7 @@ if(modelAttributeValue !== false){
 	</div>
 	
 	
-	</c:when>
-	<c:otherwise>
-	<p class="desk-view"><spring:theme text="Please Active Wallet" /></p>
-	Hellllloooooo
-	</c:otherwise>
-	</c:choose> 
+ 
 </html>
 
 </template:page>

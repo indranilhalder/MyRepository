@@ -437,8 +437,8 @@ public interface MplPaymentService
 	 * @return
 	 * @throws EtailNonBusinessExceptions
 	 */
-	boolean createQCEntryInAudit(String qcOrderID, String channel, String cartGuId, String qcAmount)
-			throws EtailNonBusinessExceptions;
+	boolean createQCEntryInAudit(String qcOrderID, String channel, String cartGuId, String qcAmount, String qcResponseCode,
+			String transactionId) throws EtailNonBusinessExceptions;
 
 	/**
 	 * @return

@@ -185,5 +185,13 @@
 		
 		<bean id="mplWalletServices" class="com.tisl.mpl.service.impl.MplWalletServicesImpl"/>
 		
+		<bean id="mplQCInitDataImpl" class="com.tisl.mpl.daos.impl.MplQCInitDataImpl"/>
+		
+		<bean id="qcInitDataBean" class="com.tisl.mpl.service.QCInitDataBean" scope="singleton"/>
+		
+<!-- 		<bean id="mplQCInitService" class="com.tisl.mpl.service.MplQCInitServiceImpl"  init-method="loadQCInit" /> -->
+		
+		<bean id="mplQCInitService" class="com.tisl.mpl.service.MplQCInitServiceImpl" scope="singleton"/>
+		
 </beans>
 

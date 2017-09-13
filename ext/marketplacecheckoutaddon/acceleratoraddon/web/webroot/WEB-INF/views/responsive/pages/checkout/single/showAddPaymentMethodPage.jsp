@@ -199,16 +199,272 @@
 					<button type="button" class="button btn-block payment-button make_payment_top_savedCard proceed-button" id="make_emi_payment_up"><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.paymentButton"/></button>
 					<%-- <button type="button" class="positive right cod-otp-button_top" onclick="mobileBlacklist()" ><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.sendOTP" text="Verify Number" /></button> --%>
 					<button type="button" class="button positive right cod_payment_button_top proceed-button" onclick="submitForm()" id="paymentButtonId_up"><spring:theme code="checkout.multi.paymentMethod.codContinue" /></button>
-					<button type="button" class="button btn-block payment-button make_payment_top_savedCard proceed-button" id="make_mrupee_payment_up"><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.paymentButton"/></button>
+					<button type="button" class="button" id="make_qc_payment_up"><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.paymentButton"/></button>
+
+
+<!-- Added for Cliq Cash -->
+<style>
+	.giftCheckoutContainer {
+		border: solid 1px #dddddd;
+		padding: 10px;
+		padding-top: 6px;
+	}
+	
+	.cliqTotalBalance {padding-left: 5%; vertical-align: middle;}
+	.cliqTotalBalance p {padding: 2px;}
+	.cliqTotalBalanceLabel {font-size: 10px;}
+	.giftCheckoutContainer input[type="checkbox"] {display: block;}
+	
+	.giftCheckoutInnerCols3 input[type="checkbox"]+label:before {display: none;}
+	.useGiftCardBtn input[type="checkbox"] {display: none;}
+	.useGiftCardBtn, .useGiftCardBtn:hover {
+	    border: solid 1px #a5173c;
+	    color: #a5173c;
+	    background-color: white;
+	    font-size: 12px;
+	    padding: 0px 20px;
+	    letter-spacing: normal;
+	    height: 25px !important;
+	    cursor: pointer;
+	}
+	
+	.addNewGiftCard .viewCardTerms {float: right;}
+	.addNewGiftCard .viewCardTerms a {color: #a5173c; font-weight: bold;}
+	.addNewGiftCard .addNewCard a {color: #a5173c; font-weight: bold;}
+	.payRemainingDesc {color: #666666; font-size: 12px;}
+	
+	.giftInfoLeft {border-right: 1px solid #dddddd; border-bottom: none; padding: 4%; padding-left: 0;}
+	.giftWalletImg {vertical-align: middle;}
+	.giftCheckoutInnerCols1, .giftCheckoutInnerCols2, .giftCheckoutInnerCols3 {padding: 4%;}
+	.giftInfoBottom {border-top: 1px solid #dddddd; padding: 0; margin-top: 1%; padding-top: 1%;}
+	
+	@media(min-width: 651px){
+		.useGiftCardBtn, .useGiftCardBtn:hover {float: right; line-height: normal; padding-top: 5px;}
+		.giftCheckoutInnerCols1 {text-align: center;}
+		.giftCheckoutInnerCols2 {text-align: center;}
+	}
+	
+	@media(max-width: 650px){
+	.giftInfoLeft {border-bottom: 1px solid #dddddd; border-right: none; padding: 4%; padding-left: 0;}
+	.giftCheckoutInnerCols1 {padding: 20% 0%; text-align: left;}
+	.giftCheckoutInnerCols2 {padding: 20% 0%; text-align: left;}
+	.giftCheckoutInnerCols3 {padding: 20% 0%; text-align: right;}
+	.giftCheckoutContainer button {height: 18px !important;}
+	.giftCheckoutContainer {margin: 3%; border-radius: 8px; font-size: 10px;}
+	.giftInfoBottom {border-top: 1px solid #dddddd; padding: 4% 0; margin-top: 0;}
+	.useGiftCardBtn {height: 25px !important; line-height: normal !important; padding: 5px 20px !important;}
+	}
+	
+</style>
+
+<script>
+	$(document).ready(function(){
+		
+		
+		$("#unUseGiftBtnText").hide();
+		
+		//Gift Inner Col Container
+		if($(window).width()>650){
+			$(".giftCheckoutSectionSize").removeClass("col-xs-4");
+			$(".giftCheckoutSectionSize").addClass("col-xs-3");
+		} else {
+			$(".giftCheckoutSectionSize").removeClass("col-xs-3");
+			$(".giftCheckoutSectionSize").addClass("col-xs-4");
+		}		
+		
+		$.ajax({
+			url : ACC.config.encodedContextPath + "/checkout/multi/payment-method/useWalletDetail",
+			type : "GET",
+			cache : false,
+			success : function(data) {
+				
+				$(".cliqTotalBalanceLabel").html(data.totalWalletAmt);
+				$("#qcCashId").html(data.totalCash);
+				$("#qcGiftCardId").html(data.totalEgvBalance);	
+				
+				if(data.disableWallet){
+					
+					 $('#useGiftBtnText').attr('disabled','disabled');
+				}
+			},	
+		   
+			fail : function(data){
+			//alert("Sorry we are unable to connect to Click 2 Call service. Please try again later.");
+			 $('#useGiftBtnText').attr('disabled','disabled');
+		}
+			
+		});
+		
+		
+
+		$(document).on("click","#useGiftCardCheckbox",function() {
+			
+			var value = document.getElementById('useGiftCardCheckbox');	
+			$.ajax({
+				url : ACC.config.encodedContextPath + "/checkout/multi/payment-method/useWalletForPayment",
+				data : {"walletMode":value.checked},
+				type : "POST",
+				cache : false,
+//				beforeSend : function() {
+//					$('#ajax-loader').show();
+//				},
+				success : function(data) {
+					
+					if(value.checked){
+	    				$("#useGiftBtnText").hide();
+	    				$("#unUseGiftBtnText").show();
+	    			} else {
+	    				$("#unUseGiftBtnText").hide();
+	    				$("#useGiftBtnText").show();
+	    			}
+					
+					if(data.disableJsMode){
+						
+						alert("Disable JP");
+					}else{
+						
+						alert("Enable JP");
+					}
+				},	
+			   
+				fail : function(data){
+				alert("FAIL");
+			}
+				
+			});
+			
+		});
+		
+		
+		
+		//Third Party Wallet mRupee
+		$(document).on("click","#make_qc_payment_up",function(){
+			 if(isSessionActive()==false){
+				 redirectToCheckoutLogin();
+				}
+				else{
+// 					var staticHost=$('#staticHost').val();
+// 					$("body").append("<div id='no-click' style='opacity:0.5; background:#000; z-index: 100000; width:100%; height:100%; position: fixed; top: 0; left:0;'></div>");
+// 					$("body").append('<div class="loaderDiv" style="position: fixed; left: 45%;top:45%;z-index: 10000"><img src="'+staticHost+'/_ui/responsive/common/images/red_loader.gif" class="spinner"></div>');
+// 					$(".pay button, #make_mrupee_payment").prop("disabled",true);
+// 					$(".pay button, #make_mrupee_payment").css("opacity","0.5");
+					
+// 					var paymentMode=$("#paymentMode").val();
+// 					var guid=$("#guid").val();
+// 					var walletName = $("#radioButton_MRupee").val();
+// 					var dataString = 'walletName=' + walletName +'&cartGuid=' + guid ;
+					//console.log("Calling createWalletOrder");
+					
+					
+					 alert("only QC MODE");
+		 
+		 $.ajax({
+				url : ACC.config.encodedContextPath + "/checkout/multi/payment-method/createWalletOrder",
+				//data : {"walletMode":value.checked},
+				type : "GET",
+				cache : false,
+//				beforeSend : function() {
+//					$('#ajax-loader').show();
+//				},
+				success : function(response) {
+					
+					if(response=='redirect'){
+						
+						$(location).attr('href',ACC.config.encodedContextPath+"/cart");
+						
+					}
+					
+					else if(response=="" || response==null){
+						console.log("Response for QC is null");
+					}
+					else if(response=='redirect_with_coupon'){
+						document.getElementById("juspayErrorMsg").innerHTML="Sorry! The coupon cannot be used for this purchase. You can either change your payment method/bank or <a href='javascript:explicit_coupon_release_function();'><b><u>save your coupon</u></b></a> for your next purchase.";
+						$("#juspayconnErrorDiv").css("display","block");
+// 						$("body,html").animate({ scrollTop: 0 });
+// 						$(".pay button, #make_mrupee_payment_up").prop("disabled",false);
+// 						$(".pay button, #make_mrupee_payment_up").css("opacity","1");
+// 						$(".pay .loaderDiv").remove();
+// 						$("#no-click,.spinner").remove();										    
+					}
+					
+				},	
+			   
+				fail : function(data){
+					console.log("Error occured for QC Host");
+			}
+				
+			});
+		}
+	});
+		
+		
+	});
+
+</script>
+
+			
+<div class="giftCheckoutContainer">
+	<div class="giftCheckoutContainerTable">
+		<div class="clearfix">
+			<div class="col-sm-3">
+				<div class="giftInfoLeft">
+					<table>
+						<tr>
+							<td class="giftWalletImg"><img src="https://cdn.zeplin.io/58987458375db68f0b01107e/assets/2E3534B4-7ACC-45DF-A140-E91174789999.png" alt="wallet" /></td>
+							<td class="cliqTotalBalance"><p><strong>CliQ Cash</strong></p><p class="cliqTotalBalanceLabel">Total Balance <strong>&#8377;</strong></p></td>
+						</tr>
+					</table>
+				</div>
+			</div>
+			<div class="giftCheckoutSectionSize">
+				<div class="giftCheckoutInnerCols1"><label for="cashOtherThanGiftCard"><p>Cash</p><p id="qcCashId"><strong>&#8377;0</strong></p></label></div>
+			</div>
+			<div class="giftCheckoutSectionSize">
+				<div class="giftCheckoutInnerCols2"><label for="giftCardAmt"><p>Gift Card</p><p id="qcGiftCardId"><strong>&#8377;0</strong></p></label></div>
+			</div>
+			<div class="giftCheckoutSectionSize">
+				<div class="giftCheckoutInnerCols3">
+					<label class="useGiftCardBtn"><input id="useGiftCardCheckbox" type="checkbox" />
+						<span id="useGiftBtnText">USE</span>
+						<span id="unUseGiftBtnText">UNUSE</span>
+					</label>
+				</div>
+			</div>
+			<div class="col-xs-12">
+				<div class="giftInfoBottom">
+					<div class="addNewGiftCard">
+						<span class="addNewCard"><a href="#">Add new Gift Card</a></span>
+						<span class="viewCardTerms"><a href="#">View</a> Terms & Conditions</span>
+					</div>
+					<br />
+					<div class="payRemainingDesc">
+						<i>You can pay the remaining amount <strong>&#8377;358</strong> from the below payment options.</i>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<br />&nbsp; <br />
+			
+
+
+
+
+
+<!-- End for Wallet -->
+
+
+
 
 				<!-- TISCR-305 ends -->	
 				<div class="left-block choose-payment">
 
 				<div class="checkout-indent payments tab-view">
 				<c:if test="${not is_responsive}">
+				
+				
 					<ul class="checkout-paymentmethod nav">
-
-
 
 
 					<c:forEach var="map" items="${paymentModes}">
@@ -1676,6 +1932,8 @@
 					<!-- mRupee Changes ends -->
 						
 			</ul>
+								<button type="button" class="button" id="make_qc_payment_up"><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.paymentButton"/></button>
+			
 				</div>
 				</div>
 		<div id="orderDetailsSectionId">

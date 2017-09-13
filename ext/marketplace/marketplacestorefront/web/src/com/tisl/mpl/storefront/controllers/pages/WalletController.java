@@ -32,12 +32,14 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.tisl.mpl.constants.MarketplacecheckoutaddonConstants;
 import com.tisl.mpl.core.model.CustomerWalletDetailModel;
+import com.tisl.mpl.exception.QCServiceCallException;
 import com.tisl.mpl.facade.checkout.MplCheckoutFacade;
 import com.tisl.mpl.facades.payment.MplPaymentFacade;
 import com.tisl.mpl.facades.wallet.MplWalletFacade;
 import com.tisl.mpl.pojo.request.Customer;
 import com.tisl.mpl.pojo.request.QCCustomerRegisterRequest;
 import com.tisl.mpl.pojo.response.QCCustomerRegisterResponse;
+import com.tisl.mpl.service.MplQCInitServiceImpl;
 import com.tisl.mpl.storefront.constants.ModelAttributetConstants;
 import com.tisl.mpl.storefront.constants.RequestMappingUrlConstants;
 
@@ -78,6 +80,9 @@ public class WalletController extends AbstractPageController
 	private MplWalletFacade mplWalletFacade;
 
 
+	@Resource(name = "mplQCInitService")
+	private MplQCInitServiceImpl mplQCInitService;
+
 	private static final Logger LOG = Logger.getLogger(WalletController.class);
 
 
@@ -87,30 +92,10 @@ public class WalletController extends AbstractPageController
 	@RequireHardLogIn
 	public String getWalletView(final Model model)
 
-			throws CMSItemNotFoundException
+			throws CMSItemNotFoundException, QCServiceCallException
 	{
-		if (false)
-		{
-			//final QCInitializationResponse qcresp = mplWalletFacade.getWalletInitilization();
-			//qcresp.getTransactionId();
-		}
 
-		if (false)
-		{
-			//mplWalletFacade.createWalletContainer();
-		}
-
-		if (false)
-		{
-			mplWalletFacade.purchaseEGV();
-		}
-
-		//mplWalletFacade.addEGVToWallet();
-
-		//mplWalletFacade.getQCBucketBalance();
-		//final QCRedeemRequest qw = new QCRedeemRequest();
-		//mplWalletFacade.getWalletRedeem("", "", qw);
-
+		mplQCInitService.loadQCInit();
 
 		final CustomerModel currentCustomer = (CustomerModel) userService.getCurrentUser();
 
@@ -132,16 +117,23 @@ public class WalletController extends AbstractPageController
 	}
 
 
-	static
-	{
+	//	static
+	//	{
+	//		try
+	//		{
+	//			mplQCInitService.loadQCInit();
+	//		}
+	//		catch (final QCServiceCallException e)
+	//		{
+	//			e.printStackTrace();
+	//		}
+	//
+	//	}
 
-		System.out.println("QC Initilization ******************");
-
-		//static final String batchNumber = "10208682";
-
-	}
-
-
+	/**
+	 * @param request
+	 * @param model
+	 */
 	@SuppressWarnings("boxing")
 	@RequestMapping(value = "/registerCustomerWallet", method = RequestMethod.GET)
 	@RequireHardLogIn

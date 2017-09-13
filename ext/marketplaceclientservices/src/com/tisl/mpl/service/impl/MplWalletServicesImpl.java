@@ -28,6 +28,7 @@ import com.tisl.mpl.pojo.response.QCCustomerRegisterResponse;
 import com.tisl.mpl.pojo.response.QCInitializationResponse;
 import com.tisl.mpl.pojo.response.QCRedeeptionResponse;
 import com.tisl.mpl.service.MplWalletServices;
+import com.tisl.mpl.service.QCInitDataBean;
 
 
 /**
@@ -45,7 +46,29 @@ public class MplWalletServicesImpl implements MplWalletServices
 	@Resource(name = "modelService")
 	private ModelService modelService;
 
+	@Resource(name = "qcInitDataBean")
+	public QCInitDataBean qcInitDataBean;
 
+
+
+
+	/**
+	 * @return the qcInitDataBean
+	 */
+	public QCInitDataBean getQcInitDataBean()
+	{
+		return qcInitDataBean;
+	}
+
+
+	/**
+	 * @param qcInitDataBean
+	 *           the qcInitDataBean to set
+	 */
+	public void setQcInitDataBean(final QCInitDataBean qcInitDataBean)
+	{
+		this.qcInitDataBean = qcInitDataBean;
+	}
 
 
 	/**
@@ -87,7 +110,7 @@ public class MplWalletServicesImpl implements MplWalletServices
 
 
 	@Override
-	public void walletInitilization()
+	public QCInitializationResponse walletInitilization()
 	{
 		QCInitializationResponse qcInitializationResponse = new QCInitializationResponse();
 		final Client client = Client.create();
@@ -110,8 +133,8 @@ public class MplWalletServicesImpl implements MplWalletServices
 					.getString(MarketplaceclientservicesConstants.USERNAME);
 			final String password = getConfigurationService().getConfiguration()
 					.getString(MarketplaceclientservicesConstants.PASSWORD);
-			final String transactionID = getConfigurationService().getConfiguration()
-					.getString(MarketplaceclientservicesConstants.TRANSACTION_ID);
+			//			final String transactionID = getConfigurationService().getConfiguration()
+			//					.getString(MarketplaceclientservicesConstants.TRANSACTION_ID);
 			final String isForwardingEntryExists = getConfigurationService().getConfiguration()
 					.getString(MarketplaceclientservicesConstants.IS_FORWARDING_ENTIRY_EXISTS);
 
@@ -121,7 +144,7 @@ public class MplWalletServicesImpl implements MplWalletServices
 					.header(MarketplaceclientservicesConstants.TERMINAL_ID, terminalID)
 					.header(MarketplaceclientservicesConstants.USERNAME, userName)
 					.header(MarketplaceclientservicesConstants.PASSWORD, password)
-					.header(MarketplaceclientservicesConstants.TRANSACTION_ID, transactionID) //(random number logic)
+					.header(MarketplaceclientservicesConstants.TRANSACTION_ID, "100") //(random number logic)
 					.header(MarketplaceclientservicesConstants.DATE_AT_CLIENT, dateFormat.format(new Date()))
 					.header(MarketplaceclientservicesConstants.IS_FORWARDING_ENTIRY_EXISTS, isForwardingEntryExists)
 					.header(MarketplaceclientservicesConstants.CONTENT_TYPE, MediaType.APPLICATION_JSON).get(ClientResponse.class);
@@ -133,17 +156,17 @@ public class MplWalletServicesImpl implements MplWalletServices
 
 				qcInitializationResponse = objectMapper.readValue(output, QCInitializationResponse.class);
 
-				if (Integer.parseInt("" + qcInitializationResponse.getResponseCode()) == 0)
-				{
-					//final QCInitResponseDetailModel qcInitModel = getModelService().create(QCInitResponseDetailModel.class);
-				}
+				return qcInitializationResponse;
 
 			}
 		}
 		catch (final Exception e)
 		{
 			LOG.error(e.getMessage());
+			return null;
 		}
+
+		return null;
 	}
 
 	@Override
@@ -171,8 +194,8 @@ public class MplWalletServicesImpl implements MplWalletServices
 					.header("Content-Type", "application/json").header("MerchantOutletName", "TUL-Online")
 					.header("AcquirerId", "Tata Unistore Ltd").header("OrganizationName", "Tata Unistore Ltd")
 					.header("POSEntryMode", "2").header("POSTypeId", "1").header("POSName", "webpos-tul-qc-01")
-					.header("TermAppVersion", "null").header("CurrentBatchNumber", "10208682").type(MediaType.APPLICATION_JSON)
-					.post(ClientResponse.class, requestBody);
+					.header("TermAppVersion", "null").header("CurrentBatchNumber", getQcInitDataBean().getCurrentBatchNumber())
+					.type(MediaType.APPLICATION_JSON).post(ClientResponse.class, requestBody);
 
 			if (null != response)
 			{
@@ -218,8 +241,8 @@ public class MplWalletServicesImpl implements MplWalletServices
 					.header("Content-Typ", "application/json").header("MerchantOutletName", "TUL-Online")
 					.header("AcquirerId", "Tata Unistore Ltd").header("OrganizationName", "Tata Unistore Ltd")
 					.header("POSEntryMode", "2").header("POSTypeId", "1").header("POSName", "webpos-tul-qc-01")
-					.header("TermAppVersion", "null").header("CurrentBatchNumber", "10208532").type(MediaType.APPLICATION_JSON)
-					.post(ClientResponse.class, requestBody);
+					.header("TermAppVersion", "null").header("CurrentBatchNumber", getQcInitDataBean().getCurrentBatchNumber())
+					.type(MediaType.APPLICATION_JSON).post(ClientResponse.class, requestBody);
 
 			if (null != response)
 			{
@@ -265,8 +288,8 @@ public class MplWalletServicesImpl implements MplWalletServices
 					.header("Content-Typ", "application/json").header("MerchantOutletName", "TUL-Online")
 					.header("AcquirerId", "Tata Unistore Ltd").header("OrganizationName", "Tata Unistore Ltd")
 					.header("POSEntryMode", "2").header("POSTypeId", "1").header("POSName", "webpos-tul-qc-01")
-					.header("TermAppVersion", "null").header("CurrentBatchNumber", "10208532").type(MediaType.APPLICATION_JSON)
-					.post(ClientResponse.class, requestBody);
+					.header("TermAppVersion", "null").header("CurrentBatchNumber", getQcInitDataBean().getCurrentBatchNumber())
+					.type(MediaType.APPLICATION_JSON).post(ClientResponse.class, requestBody);
 
 
 			if (null != response)
@@ -288,6 +311,7 @@ public class MplWalletServicesImpl implements MplWalletServices
 	}
 
 
+
 	@Override
 	public BalanceBucketWise getQCBucketBalance(final String customerWalletId, final String transactionId)
 	{
@@ -300,6 +324,9 @@ public class MplWalletServicesImpl implements MplWalletServices
 
 		try
 		{
+			//client.property(ClientProperties.CONNECT_TIMEOUT, 1000);
+			//client.property(ClientProperties.READ_TIMEOUT, 1000);
+
 			webResource = client.resource(UriBuilder
 					.fromUri("http://qc3.qwikcilver.com/QwikCilver/eGMS.RestAPI/api/wallet/" + customerWalletId + "/balance").build());
 
@@ -319,8 +346,8 @@ public class MplWalletServicesImpl implements MplWalletServices
 					.header(MarketplaceclientservicesConstants.POS_TYPE_ID, "1")
 					.header(MarketplaceclientservicesConstants.POS_NAME, "webpos-tul-qc-01")
 					.header(MarketplaceclientservicesConstants.TERM_APP_VERSION, "null")
-					.header(MarketplaceclientservicesConstants.CURRENT_BATCH_NUMBER, "10208532").type(MediaType.APPLICATION_JSON)
-					.get(ClientResponse.class);
+					.header(MarketplaceclientservicesConstants.CURRENT_BATCH_NUMBER, getQcInitDataBean().getCurrentBatchNumber())
+					.type(MediaType.APPLICATION_JSON).get(ClientResponse.class);
 
 			if (null != response)
 			{
@@ -363,8 +390,8 @@ public class MplWalletServicesImpl implements MplWalletServices
 					.header("Content-Type", "application/json").header("MerchantOutletName", "TUL-Online")
 					.header("AcquirerId", "Tata Unistore Ltd").header("OrganizationName", "Tata Unistore Ltd")
 					.header("POSEntryMode", "2").header("POSTypeId", "1").header("POSName", "webpos-tul-qc-01")
-					.header("TermAppVersion", "null").header("CurrentBatchNumber", "10208532").type(MediaType.APPLICATION_JSON)
-					.post(ClientResponse.class, requestBody);
+					.header("TermAppVersion", "null").header("CurrentBatchNumber", getQcInitDataBean().getCurrentBatchNumber())
+					.type(MediaType.APPLICATION_JSON).post(ClientResponse.class, requestBody);
 
 			if (null != response)
 			{
@@ -410,8 +437,8 @@ public class MplWalletServicesImpl implements MplWalletServices
 					.header("Content-Type", "application/json").header("MerchantOutletName", "TUL-Online")
 					.header("AcquirerId", "Tata Unistore Ltd").header("OrganizationName", "Tata Unistore Ltd")
 					.header("POSEntryMode", "2").header("POSTypeId", "1").header("POSName", "webpos-tul-qc-01")
-					.header("TermAppVersion", "null").header("CurrentBatchNumber", "10208532").type(MediaType.APPLICATION_JSON)
-					.post(ClientResponse.class, requestBody);
+					.header("TermAppVersion", "null").header("CurrentBatchNumber", getQcInitDataBean().getCurrentBatchNumber())
+					.type(MediaType.APPLICATION_JSON).post(ClientResponse.class, requestBody);
 
 
 
@@ -462,8 +489,8 @@ public class MplWalletServicesImpl implements MplWalletServices
 					.header("Content-Typ", "application/json").header("MerchantOutletName", "TUL-Online")
 					.header("AcquirerId", "Tata Unistore Ltd").header("OrganizationName", "Tata Unistore Ltd")
 					.header("POSEntryMode", "2").header("POSTypeId", "1").header("POSName", "webpos-tul-qc-01")
-					.header("TermAppVersion", "null").header("CurrentBatchNumber", "10208532").type(MediaType.APPLICATION_JSON)
-					.post(ClientResponse.class, requestBody);
+					.header("TermAppVersion", "null").header("CurrentBatchNumber", getQcInitDataBean().getCurrentBatchNumber())
+					.type(MediaType.APPLICATION_JSON).post(ClientResponse.class, requestBody);
 
 			if (null != response)
 			{
@@ -509,8 +536,8 @@ public class MplWalletServicesImpl implements MplWalletServices
 					.header("Content-Typ", "application/json").header("MerchantOutletName", "TUL-Online")
 					.header("AcquirerId", "Tata Unistore Ltd").header("OrganizationName", "Tata Unistore Ltd")
 					.header("POSEntryMode", "2").header("POSTypeId", "1").header("POSName", "webpos-tul-qc-01")
-					.header("TermAppVersion", "null").header("CurrentBatchNumber", "10208532").type(MediaType.APPLICATION_JSON)
-					.post(ClientResponse.class, requestBody);
+					.header("TermAppVersion", "null").header("CurrentBatchNumber", getQcInitDataBean().getCurrentBatchNumber())
+					.type(MediaType.APPLICATION_JSON).post(ClientResponse.class, requestBody);
 
 			if (null != response)
 			{
@@ -555,8 +582,8 @@ public class MplWalletServicesImpl implements MplWalletServices
 					.header("Content-Typ", "application/json").header("MerchantOutletName", "TUL-Online")
 					.header("AcquirerId", "Tata Unistore Ltd").header("OrganizationName", "Tata Unistore Ltd")
 					.header("POSEntryMode", "2").header("POSTypeId", "1").header("POSName", "webpos-tul-qc-01")
-					.header("TermAppVersion", "null").header("CurrentBatchNumber", "10208532").type(MediaType.APPLICATION_JSON)
-					.get(ClientResponse.class);
+					.header("TermAppVersion", "null").header("CurrentBatchNumber", getQcInitDataBean().getCurrentBatchNumber())
+					.type(MediaType.APPLICATION_JSON).get(ClientResponse.class);
 
 			if (null != response)
 			{
