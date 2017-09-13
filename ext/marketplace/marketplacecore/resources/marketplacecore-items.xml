@@ -12928,6 +12928,37 @@
 			 </attribute>
 		</attributes>
 	</itemtype>
+	
+		<itemtype code="JwlryRevSealInfo"  extends="GenericItem" autocreate="true" generate="true" jaloclass="de.hybris.platform.jalo.JwlryRevSealInfo">
+			<deployment table="JwlryRevSealInfo" typecode="16990" />
+			<attributes>
+				 <attribute qualifier="sellerId" autocreate="true" type="java.lang.String" generate="true">
+				        <description>seller Id</description>
+				        <modifiers optional="false" read="true" write="true"/>
+				        <persistence type="property"/>
+				 </attribute>
+				 <attribute qualifier="frwrdSealDescription" autocreate="true" type="java.lang.String" generate="true">
+				        <description>Forward Seal description message in case of email</description>
+				        <modifiers optional="true" read="true" write="true"/>
+				        <persistence type="property"/>
+				 </attribute>
+				 <attribute qualifier="frwrdSealImageUrl" type="java.lang.String">
+					<description>Image URL</description>
+					<modifiers optional="true" read="true" write="true"/>
+					<persistence type="property" />
+				</attribute>
+				<attribute qualifier="revSealDescription" autocreate="true" type="java.lang.String" generate="true">
+				        <description>Reverse Seal description message in case of email</description>
+				        <modifiers optional="true" read="true" write="true"/>
+				        <persistence type="property"/>
+				 </attribute>
+				 <attribute qualifier="revSealImageUrl" type="java.lang.String">
+					<description>Image URL</description>
+					<modifiers optional="true" read="true" write="true"/>
+					<persistence type="property" />
+				</attribute>
+			</attributes>
+		</itemtype>
 
 
 	  
