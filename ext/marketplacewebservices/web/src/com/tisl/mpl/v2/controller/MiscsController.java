@@ -2292,17 +2292,21 @@ public class MiscsController extends BaseController
 												codSelfShipData = null;
 												codSelfShipData = populateCODDataForFICO(subOrderModel, oneTouchCrmObj, orderData,
 														abstractOrderEntryModel);
-												FICO = sendBankDetailsToFICO(codSelfShipData);
+												if (null != codSelfShipData)
+												{
+													FICO = sendBankDetailsToFICO(codSelfShipData);
+												}
+												if (FICO)
+												{
+													output.setRemarks("Bank details successfully sent to FICO");
+												}
+												else
+												{
+													output.setRemarks("Failed to send Bank details to FICO");
+												}
 											}
 											//TPR-6389--END
-											if (FICO)
-											{
-												output.setRemarks("Bank details successfully sent to FICO");
-											}
-											else
-											{
-												output.setRemarks("Failed to send Bank details to FICO");
-											}
+
 											outputList.add(output);
 										}
 										//Return is failure
@@ -2410,40 +2414,52 @@ public class MiscsController extends BaseController
 	private CODSelfShipData populateCODDataForFICO(final OrderModel subOrderModel,
 			final OneTouchCancelReturnCrmRequestDTO oneTouchdto, final OrderData orderData, final AbstractOrderEntryModel orderEntry)
 	{
-		final CODSelfShipData codSelfShipData = new CODSelfShipData();
-		if (null != subOrderModel.getUser().getUid())
+		CODSelfShipData codSelfShipData = new CODSelfShipData();
+		try
 		{
-			codSelfShipData.setCustomerNumber(subOrderModel.getUser().getUid());
+			final String title = getConfigurationService().getConfiguration()
+					.getString(oneTouchdto.getTitle().toString() + "_title");
+			if (null != subOrderModel.getUser().getUid())
+			{
+				codSelfShipData.setCustomerNumber(subOrderModel.getUser().getUid());
+			}
+			codSelfShipData.setTitle(title);
+			codSelfShipData.setOrderRefNo(oneTouchdto.getOrderRefNum());
+			codSelfShipData.setOrderNo(oneTouchdto.getSubOrderNum());
+			codSelfShipData.setBankName(oneTouchdto.getBankName());
+			codSelfShipData.setBankBranch(oneTouchdto.getBranch());
+			codSelfShipData.setName(oneTouchdto.getAccHolderName());
+			codSelfShipData.setBankKey(oneTouchdto.getIFSC());
+			codSelfShipData.setBankAccount(oneTouchdto.getAccNum());
+			codSelfShipData.setTransactionID(orderEntry.getTransactionID());
+			codSelfShipData.setTransactionType(subOrderModel.getModeOfOrderPayment());
+			codSelfShipData.setOrderTag(MarketplacewebservicesConstants.ORDERTAG_TYPE_POSTPAID);
+			codSelfShipData.setPaymentMode(oneTouchdto.getRefundType());
+			codSelfShipData.setAmount(orderEntry.getNetAmountAfterAllDisc().toString());
+			codSelfShipData.setTransactionType(RETURN_TYPE_COD);
+			if (null != orderData.getCreated())
+			{
+				final SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy");
+				codSelfShipData.setOrderDate(dateUtilHelper.convertDateWithFormat(formatter.format(orderData.getCreated())));
+				codSelfShipData.setTransactionDate(dateUtilHelper.convertDateWithFormat(formatter.format(orderData.getCreated())));
+			}
 		}
-		codSelfShipData.setOrderRefNo(oneTouchdto.getOrderRefNum());
-		codSelfShipData.setOrderNo(oneTouchdto.getSubOrderNum());
-		codSelfShipData.setBankName(oneTouchdto.getBankName());
-		codSelfShipData.setBankBranch(oneTouchdto.getBranch());
-		codSelfShipData.setName(oneTouchdto.getAccHolderName());
-		codSelfShipData.setBankKey(oneTouchdto.getIFSC());
-		codSelfShipData.setBankAccount(oneTouchdto.getAccNum());
-		codSelfShipData.setTransactionID(orderEntry.getTransactionID());
-		codSelfShipData.setTransactionType(subOrderModel.getModeOfOrderPayment());
-		codSelfShipData.setOrderTag(MarketplacewebservicesConstants.ORDERTAG_TYPE_POSTPAID);
-		codSelfShipData.setPaymentMode(oneTouchdto.getRefundType());
-		codSelfShipData.setAmount(orderEntry.getNetAmountAfterAllDisc().toString());
-		codSelfShipData.setTransactionType(RETURN_TYPE_COD);
-		if (null != orderData.getCreated())
+		catch (final Exception e)
 		{
-			final SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy");
-			codSelfShipData.setOrderDate(dateUtilHelper.convertDateWithFormat(formatter.format(orderData.getCreated())));
-			codSelfShipData.setTransactionDate(dateUtilHelper.convertDateWithFormat(formatter.format(orderData.getCreated())));
+			LOG.error(e.getMessage());
+			codSelfShipData = null;
+			return codSelfShipData;
 		}
 
 		return codSelfShipData;
 	}
 
+	//TPR-6389 :: NEFT details have to be passed on to FICO after a one touch return
 	private boolean sendBankDetailsToFICO(final CODSelfShipData codSelfShipData)
 	{
 		LOG.info("Starting sending bank details to FICO");
 		try
 		{
-			//TPR-6389 :: NEFT details have to be passed on to FICO after a one touch return
 			if (null != codSelfShipData)
 			{
 				final CODSelfShipResponseData codSelfShipResponseData = cancelReturnFacade.codPaymentInfoToFICO(codSelfShipData);
@@ -2466,6 +2482,7 @@ public class MiscsController extends BaseController
 		//TPR-6389 :: END
 	}
 
+	//populate response data for CRM response
 	private OneTouchCancelReturnDTO populateResponseDateForCRM(final String orderNum, final String txnId,
 			final boolean serviceabilty, final String validFlag, final String msgCategory, final boolean returnCancelFlag)
 	{
