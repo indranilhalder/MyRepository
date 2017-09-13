@@ -918,4 +918,6 @@ public final class ModelAttributetConstants
 	public static final String BUYBOX_AVAILABLE = "buybox_available";
 	//TPR-6405
 	public static final String IS_SAMSUNG_PAGE = "isSamsungPage";
+	//UF-422
+	public static final String PDP_SIZE_COUNTER = "pdpSizeCounter";
 }
