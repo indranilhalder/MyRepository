@@ -66,26 +66,13 @@
 		<property name="progressBarId" value="multi"/>
 	</bean>
 
-	<alias name="defaultDeliveryAddressCheckoutStep" alias="deliveryAddressCheckoutStep" />
-	<bean id="defaultDeliveryAddressCheckoutStep" parent="checkoutStep">
-		<property name="checkoutGroup" ref="luxuryMultiPathCheckoutGroup"/>
-		<property name="checkoutStepValidator" ref="deliveryAddressCheckoutValidator"/>
-		<property name="transitions">
-			<map merge="true">
-				<entry key="previous" value-ref="REDIRECT_TO_CART"/>
-				<entry key="current" value-ref="REDIRECT_TO_DELIVERY_ADDRESS"/>
-				<entry key="next" value-ref="REDIRECT_TO_DELIVERY_METHOD"/>
-			</map>
-		</property>
-		<property name="progressBarId" value="deliveryAddress"/>
-	</bean>
 	
 	
 	
 <!-- 	modification for login -->
 
-<alias name="defaultCheckoutLoginCheckoutStep" alias="checkoutLoginCheckoutStep" />
-	<bean id="defaultCheckoutLoginCheckoutStep" parent="checkoutStep">
+<alias name="luxuryCheckoutLoginCheckoutStep" alias="luxuryCheckoutLoginCheckoutStep" />
+	<bean id="luxuryCheckoutLoginCheckoutStep" parent="checkoutStep">
 		<property name="checkoutGroup" ref="luxuryMultiPathCheckoutGroup"/>
 		<property name="transitions">
 			<map merge="true">
@@ -100,8 +87,8 @@
 <!-- modificatin for login ended -->
 	
 
-	<alias name="defaultDeliveryMethodCheckoutStep" alias="deliveryMethodCheckoutStep" />
-	<bean id="defaultDeliveryMethodCheckoutStep"  parent="checkoutStep">
+	<alias name="luxuryDeliveryMethodCheckoutStep" alias="luxuryDeliveryMethodCheckoutStep" />
+	<bean id="luxuryDeliveryMethodCheckoutStep"  parent="checkoutStep">
 		<property name="checkoutGroup" ref="luxuryMultiPathCheckoutGroup"/>
 		<property name="checkoutStepValidator" ref="defaultResponsiveDeliveryMethodCheckoutValidator"/>
 		<property name="transitions">
@@ -114,8 +101,8 @@
 		<property name="progressBarId" value="deliveryMethod"/>
 	</bean>
 
-	<alias name="defaultPickupLocationCheckoutStep" alias="pickupLocationCheckoutStep" />
-	<bean id="defaultPickupLocationCheckoutStep" parent="checkoutStep">
+	<alias name="luxuryPickupLocationCheckoutStep" alias="luxuryPickupLocationCheckoutStep" />
+	<bean id="luxuryPickupLocationCheckoutStep" parent="checkoutStep">
 		<property name="checkoutGroup" ref="luxuryMultiPathCheckoutGroup"/>
 		<property name="checkoutStepValidator" ref="defaultPickupCheckoutValidator"/>
 		<property name="transitions">
@@ -128,8 +115,8 @@
 		<property name="progressBarId" value="deliveryMethod"/>
 	</bean>
 
-	<alias name="defaultPaymentMethodCheckoutStep" alias="paymentMethodCheckoutStep" />
-	<bean id="defaultPaymentMethodCheckoutStep" parent="checkoutStep">
+	<alias name="luxuryPaymentMethodCheckoutStep" alias="luxuryPaymentMethodCheckoutStep" />
+	<bean id="luxuryPaymentMethodCheckoutStep" parent="checkoutStep">
 		<property name="checkoutGroup" ref="luxuryMultiPathCheckoutGroup"/>
 		<property name="transitions">
 			<map merge="true">
@@ -141,8 +128,8 @@
 		<property name="progressBarId" value="paymentMethod"/>
 	</bean>
 
-	<alias name="defaultSummaryCheckoutStep" alias="summaryCheckoutStep" />
-	<bean id="defaultSummaryCheckoutStep"  parent="checkoutStep">
+	<alias name="luxurySummaryCheckoutStep" alias="luxurySummaryCheckoutStep" />
+	<bean id="luxurySummaryCheckoutStep"  parent="checkoutStep">
 		<property name="checkoutGroup" ref="luxuryMultiPathCheckoutGroup"/>
 		<property name="checkoutStepValidator" ref="defaultResponsiveSummaryCheckoutValidator"/>
 		<property name="transitions">
@@ -161,12 +148,11 @@
         <property name="checkoutStepMap">
             <map merge="true">
                 <entry key="multi" value-ref="multiStepMultiPathCheckout"/>
-<!--                 <entry key="delivery-address" value-ref="deliveryAddressCheckoutStep"/> -->
-                <entry key="checkout-login" value-ref="checkoutLoginCheckoutStep"/>
-                <entry key="delivery-method" value-ref="deliveryMethodCheckoutStep"/>
-                <entry key="pickup-location" value-ref="pickupLocationCheckoutStep"/>
-                <entry key="payment-method" value-ref="paymentMethodCheckoutStep"/>
-                <entry key="summary" value-ref="summaryCheckoutStep"/>
+                <entry key="checkout-login" value-ref="luxuryCheckoutLoginCheckoutStep"/>
+                <entry key="delivery-method" value-ref="luxuryDeliveryMethodCheckoutStep"/>
+                <entry key="pickup-location" value-ref="luxuryPickupLocationCheckoutStep"/>
+                <entry key="payment-method" value-ref="luxuryPaymentMethodCheckoutStep"/>
+                <entry key="summary" value-ref="luxurySummaryCheckoutStep"/>
             </map>
         </property>
         <property name="validationResultsMap">
@@ -181,9 +167,9 @@
         </property>
         <property name="checkoutProgressBar">
             <map merge="true">
-                <entry key="1" value-ref="checkoutLoginCheckoutStep"/>
-                <entry key="2" value-ref="deliveryMethodCheckoutStep"/>
-                <entry key="3" value-ref="paymentMethodCheckoutStep"/>
+                <entry key="1" value-ref="luxuryCheckoutLoginCheckoutStep"/>
+                <entry key="2" value-ref="luxuryDeliveryMethodCheckoutStep"/>
+                <entry key="3" value-ref="luxuryPaymentMethodCheckoutStep"/>
                </map>
         </property>
     </bean>    
