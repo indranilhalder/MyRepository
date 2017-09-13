@@ -5,6 +5,7 @@ package com.tisl.mpl.marketplacecommerceservices.daos;
 
 import de.hybris.platform.core.model.JewelleryInformationModel;
 import de.hybris.platform.core.model.JewellerySellerDetailsModel;
+import de.hybris.platform.core.model.JwlryRevSealInfoModel;
 
 import java.util.List;
 
@@ -53,5 +54,12 @@ public interface MplJewelleryDao
 	List<BuyBoxModel> getAllWeightVariant(String ussid);
 
 	List<JewellerySellerDetailsModel> getSellerMsgForRetRefTab(String sellerId);
+
+
+	/**
+	 * @param sellerId
+	 * @return
+	 */
+	List<JwlryRevSealInfoModel> getSealInfo(String sellerId);
 
 }
