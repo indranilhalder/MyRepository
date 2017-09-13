@@ -13,10 +13,10 @@ import de.hybris.platform.orderhistory.model.OrderHistoryEntryModel;
 import de.hybris.platform.payment.enums.PaymentTransactionType;
 import de.hybris.platform.payment.model.PaymentTransactionEntryModel;
 import de.hybris.platform.payment.model.PaymentTransactionModel;
-import de.hybris.platform.servicelayer.config.ConfigurationService;
 import de.hybris.platform.returns.model.RefundEntryModel;
 import de.hybris.platform.returns.model.ReturnEntryModel;
 import de.hybris.platform.returns.model.ReturnRequestModel;
+import de.hybris.platform.servicelayer.config.ConfigurationService;
 import de.hybris.platform.servicelayer.model.ModelService;
 
 import java.io.StringReader;
@@ -399,8 +399,13 @@ public class SalesOrderReverseXMLUtility
 						//TISSIT-1780
 						if (salesXMLData != null && xmlToFico)
 						{
-							bulkSalesDataList.add(salesXMLData);
-							LOG.debug("xml order:" + salesXMLData.getOrderId());
+							if (salesXMLData.getMerchantCode() != null && !(salesXMLData.getMerchantCode().isEmpty())
+									&& salesXMLData.getSubOrderList() != null && !(salesXMLData.getSubOrderList().isEmpty()))//SDI-85 Fix
+							{
+								bulkSalesDataList.add(salesXMLData);
+								LOG.debug("xml order:" + salesXMLData.getOrderId());
+							}
+
 						}
 						LOG.debug("bulkSalesDataList Size" + bulkSalesDataList.size());
 					}
@@ -455,7 +460,7 @@ public class SalesOrderReverseXMLUtility
 				 * ptModel.getType().equals(PaymentTransactionType.MANUAL_REFUND) ||
 				 * ptModel.getType().equals(PaymentTransactionType.RETURN)) { reversepayemntrefid = payTransModel.getCode();
 				 * LOG.info(reversepayemntrefid); LOG.debug(ptModel.getType()); break; } }
-				 *
+				 * 
 				 * } } } }
 				 */
 				final SubOrderXMLData xmlData = new SubOrderXMLData();
@@ -521,9 +526,10 @@ public class SalesOrderReverseXMLUtility
 				{
 					LOG.debug("Checking EDToHd for transaction ID " + entry.getTransactionID());
 					LOG.debug("Is EdToHd" + entry.getIsEDtoHD() + "IsSdbSendToFico" + entry.getIsEdToHdSendToFico()
-							+ LOG_MSG_AND_GET_REFUNDED_SCHEDULE_DELIVERY_CHARGE_AMT + entry.getRefundedDeliveryChargeAmt());
+							+ LOG_MSG_AND_GET_REFUNDED_SCHEDULE_DELIVERY_CHARGE_AMT + entry.getRefundedEdChargeAmt());
 				}
-				final boolean edAmountRefunded = getAmountRefunded(entry, PaymentTransactionType.REFUND_DELIVERY_CHARGES.getCode());
+				final boolean edAmountRefunded = getAmountRefunded(entry,
+						PaymentTransactionType.REFUND_EXPRESS_DELIVERY_CHARGES.getCode());
 				if (edAmountRefunded && null != entry.getIsEDtoHD() && entry.getIsEDtoHD().booleanValue())
 				{
 					edToHdFlag = true;
@@ -686,7 +692,7 @@ public class SalesOrderReverseXMLUtility
 
 						/*
 						 * final String ussId = entry.getSelectedUSSID();
-						 *
+						 * 
 						 * final SellerInformationModel sellerInfoModel = mplSellerInformationService.getSellerDetail(ussId);
 						 * if (sellerInfoModel != null && sellerInfoModel.getRichAttribute() != null &&
 						 * ((List<RichAttributeModel>) sellerInfoModel.getRichAttribute()).get(0) != null &&
@@ -954,22 +960,18 @@ public class SalesOrderReverseXMLUtility
 								edToHdXmlData.setScheduleDelCharge(0.0D);
 								edToHdXmlData.setExpressdeliveryCharge(0.0D);
 								edToHdXmlData.setOrderTag(EDTOHD);
-								if (null != entry.getRefundedDeliveryChargeAmt())
+								if (null != entry.getRefundedEdChargeAmt())
 								{
-									edToHdXmlData.setAmount(entry.getRefundedDeliveryChargeAmt().doubleValue());
-								}
-								else if (null != entry.getCurrDelCharge())
-								{
-									edToHdXmlData.setAmount(entry.getCurrDelCharge().doubleValue());
+									edToHdXmlData.setAmount(entry.getRefundedEdChargeAmt().doubleValue());
 								}
 								else
 								{
 									edToHdXmlData.setAmount(0.0D);
 								}
 
-								if (null != entry.getDelChargesJuspayRequestId())
+								if (null != entry.getEdChargesJuspayRequestId())
 								{
-									edToHdXmlData.setReversePaymentRefId(entry.getDelChargesJuspayRequestId());
+									edToHdXmlData.setReversePaymentRefId(entry.getEdChargesJuspayRequestId());
 								}
 								LOG.info("Adding EdToHd data for transaction Id " + entry.getTransactionID());
 								childOrderDataList.add(edToHdXmlData);
@@ -1023,12 +1025,13 @@ public class SalesOrderReverseXMLUtility
 			{
 				LOG.debug("Checking SDB for transaction ID " + entry.getTransactionID());
 				LOG.debug("IsEdToHdSendToFico" + entry.getIsEdToHdSendToFico()
-						+ LOG_MSG_AND_GET_REFUNDED_SCHEDULE_DELIVERY_CHARGE_AMT + entry.getRefundedDeliveryChargeAmt());
+						+ LOG_MSG_AND_GET_REFUNDED_SCHEDULE_DELIVERY_CHARGE_AMT + entry.getRefundedEdChargeAmt());
 			}
-			final boolean isAmountRefunded = getAmountRefunded(entry, PaymentTransactionType.REFUND_DELIVERY_CHARGES.getCode());
+			final boolean isAmountRefunded = getAmountRefunded(entry,
+					PaymentTransactionType.REFUND_EXPRESS_DELIVERY_CHARGES.getCode());
 			if (isAmountRefunded && (null != entry && null != entry.getIsEDtoHD() && entry.getIsEDtoHD().booleanValue())
 					&& (null == entry.getIsEdToHdSendToFico() || !entry.getIsEdToHdSendToFico().booleanValue())
-					&& (null != entry.getRefundedDeliveryChargeAmt() && entry.getRefundedDeliveryChargeAmt().doubleValue() != 0.0D))
+					&& (null != entry.getRefundedEdChargeAmt() && entry.getRefundedEdChargeAmt().doubleValue() != 0.0D))
 			{
 
 				isEdToHd = true;
@@ -1108,14 +1111,14 @@ public class SalesOrderReverseXMLUtility
 				{
 					for (final PaymentTransactionEntryModel paymentObj : oModel.getEntries())
 					{
-						if (type.equalsIgnoreCase(PaymentTransactionType.REFUND_DELIVERY_CHARGES.getCode()))
+						if (type.equalsIgnoreCase(PaymentTransactionType.REFUND_EXPRESS_DELIVERY_CHARGES.getCode()))
 						{
 							if (null != paymentObj.getType() && null != paymentObj.getType().getCode()
 									&& paymentObj.getType().getCode().equalsIgnoreCase(type))
 							{
-								if (null != paymentObj.getRequestId() && null != entry.getDelChargesJuspayRequestId())
+								if (null != paymentObj.getRequestId() && null != entry.getEdChargesJuspayRequestId())
 								{
-									if (paymentObj.getRequestId().equalsIgnoreCase(entry.getDelChargesJuspayRequestId()))
+									if (paymentObj.getRequestId().equalsIgnoreCase(entry.getEdChargesJuspayRequestId()))
 									{
 										if (null != paymentObj.getTransactionStatus()
 												&& paymentObj.getTransactionStatus().equalsIgnoreCase("SUCCESS"))

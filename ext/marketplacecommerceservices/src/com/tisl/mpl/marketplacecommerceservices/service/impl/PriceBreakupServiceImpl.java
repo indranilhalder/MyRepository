@@ -57,7 +57,7 @@ public class PriceBreakupServiceImpl implements PriceBreakupService
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.tisl.mpl.marketplacecommerceservices.service.PriceBreakupService#getPricebreakup(java.lang.String,
 	 * java.lang.String)
 	 */
@@ -457,7 +457,8 @@ public class PriceBreakupServiceImpl implements PriceBreakupService
 	{
 		try
 		{
-			OrderJewelEntryModel orderJewelEntryModel = modelService.create(OrderJewelEntryModel.class);
+			//EQA : do modelService.create in the else block
+			OrderJewelEntryModel orderJewelEntryModel = null;
 
 			if (null != childOrderEntry && null != childOrderEntry.getOrderJewelEntry())
 			{
@@ -465,6 +466,7 @@ public class PriceBreakupServiceImpl implements PriceBreakupService
 			}
 			else
 			{
+				orderJewelEntryModel = modelService.create(OrderJewelEntryModel.class);
 				JewelleryPriceRowModel jewelleryModel = null;
 				final List<JewelleryPriceRowModel> jewelleryPriceRow = priceBreakupDao.getPricebreakup(entry.getSelectedUSSID());
 				if (CollectionUtils.isNotEmpty(jewelleryPriceRow))
@@ -587,7 +589,8 @@ public class PriceBreakupServiceImpl implements PriceBreakupService
 				}
 
 				final List<ProductModel> productList = productDao.findProductsByCodeHero(entry.getProduct().getCode());
-				ProductModel productModel = new ProductModel();
+				//EQA : To replace with null
+				ProductModel productModel = null;
 				if (CollectionUtils.isNotEmpty(productList))
 				{
 					productModel = productList.get(0);
@@ -828,7 +831,7 @@ public class PriceBreakupServiceImpl implements PriceBreakupService
 		}
 		catch (final Exception e)
 		{
-			LOG.debug("Exception while Price Breakup Create" + e.getMessage());
+			LOG.debug("Exception while Price Breakup Create", e);
 		}
 	}
 

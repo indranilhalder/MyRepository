@@ -103,7 +103,8 @@ public class MplDefaultCommerceAddToCartStrategyImpl extends DefaultCommerceAddT
 				}
 			}
 
-			final long actualAllowedQuantityChange = getAllowedCartAdjustmentForProduct(cartModel, productModel, quantityToAdd,
+			//TISJEW-4496
+			long actualAllowedQuantityChange = getAllowedCartAdjustmentForProduct(cartModel, productModel, quantityToAdd,
 					deliveryPointOfService, ussid);
 			final Integer maxOrderQuantity = productModel.getMaxOrderQuantity();
 
@@ -131,6 +132,10 @@ public class MplDefaultCommerceAddToCartStrategyImpl extends DefaultCommerceAddT
 					}
 				}
 				getCartService().updateQuantities(cartModel, updateMap);
+				//TISJEW-4496
+				//check again when the product qauntity is updated in cart while Exchange is applied
+				actualAllowedQuantityChange = getAllowedCartAdjustmentForProduct(cartModel, productModel, quantityToAdd,
+						deliveryPointOfService, ussid);
 
 			}
 			if (actualAllowedQuantityChange > 0L)

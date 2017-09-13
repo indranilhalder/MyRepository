@@ -624,6 +624,7 @@
 			<value code="NEW" />
 			<value code="PENDING_VBV" />
 			<value code="REFUND_DELIVERY_CHARGES" />
+			<value code="REFUND_EXPRESS_DELIVERY_CHARGES" />
 			<value code="REFUND_SCHEDULE_DELIVERY_CHARGES" />
 			<value code="MANUAL_REFUND" />
 			<value code="ED_MANUAL_REFUND" />
@@ -763,6 +764,7 @@
 		<enumtype code="JuspayRefundType" generate="true" autocreate="true">
 			<value code="CANCELLED" />
 			<value code="REFUND_DELIVERY_CHARGE" />
+			<value code="REFUND_EXPRESS_DELIVERY_CHARGE" />
 			<value code="REFUND_Schedule_DELIVERY_CHARGE" />
 			<value code="RETURN" />
 			<value code="CANCELLED_FOR_RISK" />
@@ -1382,7 +1384,17 @@
          	    cardinality ="many">
             </targetElement>
         </relation> 
-       
+       <!-- TPR-6665 : relation betwwen slave urls with solr server config start-->
+        <relation code="SolrServerConfig2SolrEndpointUrlforSlave" autocreate="true" generate="true" localized="false">
+			<sourceElement qualifier="solrServerConfig" type="SolrServerConfig" cardinality="one">
+				<modifiers optional="true" read="true" write="true" search="true" />
+			</sourceElement>
+			<targetElement qualifier="solrEndpointUrlsSlave" type="SolrEndpointSlaveUrl" cardinality="many" collectiontype="list">
+				<modifiers optional="true" read="true" write="true" search="false" />
+			</targetElement>
+		</relation>
+     <!-- TPR-6665 : relation betwwen slave urls with solr server config end-->
+     
 	</relations>
 	<itemtypes>
 	<itemtype code="LuxProductCarouselComponent"
@@ -1850,7 +1862,7 @@
 							unique="false" />
 						<persistence type="property">
 							<columntype database='oracle'>
-								<value>VARCHAR2(450)</value>
+								<value>VARCHAR2(600)</value>
 							</columntype>
 						</persistence>
 					</attribute>
@@ -3069,6 +3081,12 @@
 				        <persistence type="property"/>
 			    	</attribute> 
 				</attributes>
+				<indexes>
+					<index name="IDX_CART_SEARCH_ONLOAD">
+						<key attribute="user" />
+						<key attribute="code" />
+					</index>
+				</indexes>
 			</itemtype>
 
 			<!--Attribute for COD Charges apportionment -->
@@ -6097,6 +6115,18 @@
 							optional="true" initial="true" unique="true" />
 						<persistence type="property" />
 					</attribute>
+					<!-- Addded to store HD Delivery Charges START --> 
+					
+					<attribute qualifier="hdDeliveryCharge" autocreate="true"
+						type="java.lang.Double">
+						<defaultvalue>Double.valueOf(0.00D)</defaultvalue>
+						<description>Delivery charge after promotion</description>
+						<modifiers read="true" write="true" removable="true"
+							optional="true" initial="true" unique="true" />
+						<persistence type="property" />
+					</attribute>
+					
+					<!-- Addded to store HD Delivery Charges END --> 
 					<attribute qualifier="imeiDetail" autocreate="true" type="ImeiDetail">
 						<modifiers read="true" write="true" removable="true"
 							optional="true" initial="true" />
@@ -6105,6 +6135,18 @@
 					<attribute autocreate="true" qualifier="refundedDeliveryChargeAmt"
 						type="java.lang.Double">
 						<persistence type="property" qualifier="refundedDeliveryChargeAmt">
+							<columntype>
+								<value>java.math.BigDecimal</value>
+							</columntype>
+						</persistence>
+						<modifiers read="true" write="true" search="true"
+							optional="true" />
+						<defaultvalue>Double.valueOf(0.0d)</defaultvalue>
+					</attribute>
+					
+					<attribute autocreate="true" qualifier="refundedEdChargeAmt"
+						type="java.lang.Double">
+						<persistence type="property" qualifier="refundedEdChargeAmt">
 							<columntype>
 								<value>java.math.BigDecimal</value>
 							</columntype>
@@ -6211,6 +6253,12 @@
 					</attribute>
 					
 				</attributes>
+				<indexes>
+					<index name="IDX_ENTRY_FETCH">
+						<key attribute="entryNumber" />
+						<key attribute="order" />
+					</index>
+				</indexes>
 			</itemtype>
 			<!-- Tata Etail change - Apportioned value capturing ends -->
 			<!-- SearchBoxComponent DropDown List Start -->
@@ -6873,6 +6921,9 @@
 						<key attribute="price" />
 						<key attribute="itemtype" />
 					</index>
+					<index name="BuyBox_PUSSID_IDX">
+					    <key attribute="PUSSID"/>
+					</index>
 				</indexes>
 			</itemtype>
 
@@ -7014,6 +7065,9 @@
 				<indexes>
 					<index name="BuyBoxCommerce_IDX">
 						<key attribute="product" />
+					</index>
+					<index name="BuyBoxCommerce_PUSSID_IDX">
+					    <key attribute="PUSSID"/>
 					</index>
 				</indexes>
 			</itemtype>
@@ -7353,6 +7407,13 @@
 
 					<!-- Added in R2.3 START -->
 					<attribute qualifier="delChargesJuspayRequestId" type="java.lang.String">
+						<description>JuspayRquestId for Refund Delivery/EDToHD Charges </description>
+						<modifiers read="true" write="true" removable="true"
+							optional="true" initial="true" unique="false" search="true" />
+						<persistence type="property" />
+					</attribute>
+					
+					<attribute qualifier="edChargesJuspayRequestId" type="java.lang.String">
 						<description>JuspayRquestId for Refund Delivery/EDToHD Charges </description>
 						<modifiers read="true" write="true" removable="true"
 							optional="true" initial="true" unique="false" search="true" />
@@ -11254,6 +11315,11 @@
 						<defaultvalue>Integer.valueOf(0)</defaultvalue>
 					</attribute>
 				</attributes>
+				<indexes>
+					<index name="orderShortUrlInfo_Index">
+						<key attribute="orderId" />
+					</index>
+				</indexes>
 			</itemtype>
 		</typegroup>
 
@@ -11674,6 +11740,11 @@
 				</attribute>
 				
 			</attributes>
+			<indexes>
+					<index name="Exchng_Coupon_Value_IDX">
+						<key attribute="thirdLevelCategory" />
+					</index>
+			</indexes>
 			</itemtype>
 		
 		
@@ -11707,6 +11778,11 @@
 					</persistence>
 				</attribute>			
 			</attributes>
+			<indexes>
+					<index name="Exchange_Pincode_IDX">
+						<key attribute="pincode" />
+					</index>
+			</indexes>
 			</itemtype>
 		
 		
@@ -11947,6 +12023,14 @@
 			    </attribute>
 			 
 			   </attributes>
+			   <indexes>
+					<index name="JewelleryInfoUSSID_IDX">
+						<key attribute="USSID" />
+					</index>
+					<index name="JewelleryInfoPCMUSSID_IDX">
+						<key attribute="PCMUSSID" />
+					</index>
+				</indexes>
 		  </itemtype>
 		  
 		   <itemtype code="JewelleryPriceRow" extends="GenericItem" autocreate="true" generate="true" jaloclass="de.hybris.platform.jalo.JewelleryPriceRow">
@@ -12853,10 +12937,10 @@
 	<itemtype code="JewellerySellerDetails"  extends="GenericItem" autocreate="true" generate="true" jaloclass="de.hybris.platform.jalo.JewellerySellerInfo">
 		<deployment table="JewellerySellerInfo" typecode="16989" />
 		<attributes>
-			 <attribute qualifier="index" type="java.lang.Integer" autocreate="true" generate="true">
+			 <attribute qualifier="index" type="java.lang.String" autocreate="true" generate="true">
+			 		 <description>this index is used as a unique value</description>
 					<persistence type="property" />
 					<modifiers optional="false" read="true" write="true" search="true" unique="true"/>
-					<defaultvalue>Integer.valueOf(0)</defaultvalue>
 			 </attribute>
 			 <attribute qualifier="sellerId" autocreate="true" type="java.lang.String" generate="true">
 			        <description>seller Id</description>
@@ -12884,6 +12968,11 @@
 			        <persistence type="property"/>
 			 </attribute>
 		</attributes>
+		 <indexes>
+					<index name="jewelSellerID_IDX">
+						<key attribute="sellerId" />
+					</index>
+				</indexes>
 	</itemtype>
 
 
@@ -12932,9 +13021,70 @@
 			    </attribute>
 			    
 		 </attributes>
+       		    <indexes>
+					<index name="PancardOrderId_IDX">
+						<key attribute="orderId" />
+					</index>
+				</indexes>
 		</itemtype>
 		</typegroup>
 
+		<!-- PRDI-423 -->
+		<typegroup name="Mplbrandfilter">
+			<itemtype code="Mplbrandfilter" autocreate="true"
+				generate="false">
+				<deployment table="Mplbrandfilter" typecode="13099" />
+				<attributes>
+			 		<attribute autocreate="true" qualifier="L1"
+						type="java.lang.String" generate="false">
+						<persistence type="property" />
+						<modifiers read="true" write="true" search="true"
+							optional="true" />
+					</attribute>
+
+					<attribute autocreate="true" qualifier="L2"
+						type="java.lang.String" generate="true">
+						<persistence type="property" />
+						<modifiers read="true" write="true" search="true"
+							optional="true" />
+					</attribute>
+
+					<attribute autocreate="true" qualifier="L3" type="java.lang.String"
+						generate="true">
+						<persistence type="property" />
+						<modifiers read="true" write="true" search="true"
+							optional="true" />
+					</attribute>
+
+					<attribute autocreate="true" qualifier="brandCode"
+						type="java.lang.String" generate="true">
+						<persistence type="property" />
+						<modifiers read="true" write="true" search="true"
+							optional="true" />
+					</attribute>
+					<attribute autocreate="true" qualifier="url1"
+						type="java.lang.String" generate="true">
+						<persistence type="property" />
+						<modifiers read="true" write="true" search="true"
+							optional="true" />
+					</attribute>
+					<attribute autocreate="true" qualifier="url2"
+						type="java.lang.String" generate="true">
+						<persistence type="property" />
+						<modifiers read="true" write="true" search="true"
+							optional="true" />
+					</attribute>
+					<attribute autocreate="true" qualifier="url3"
+						type="java.lang.String" generate="true">
+						<persistence type="property" />
+						<modifiers read="true" write="true" search="true"
+							optional="true" />
+					</attribute>
+
+					</attributes>
+			</itemtype>
+
+		</typegroup>
 		<!-- START TPR-5733 -->
 			<typegroup name="MPL_FOOTER"> 
 			   <itemtype code="MplFooterLink" autocreate="true" generate="true">
@@ -12971,5 +13121,27 @@
 	 </itemtype>
     </typegroup>
 		<!-- END TPR-5733 -->
+		
+		<!-- TPR-6665 : sysnonums update to slave servers start-->
+		<typegroup name="MPL_Slave_URL">
+		<itemtype code="SolrEndpointSlaveUrl" autocreate="true" generate="true"
+				jaloclass="de.hybris.platform.solrfacetsearch.jalo.config.SolrEndpointSlaveUrl" extends="GenericItem">
+				<deployment table="SolrEndpointSlaveUrl" typecode="25999" />
+				<attributes>
+					<attribute qualifier="url" type="java.lang.String">
+						<modifiers read="true" write="true" optional="false" search="true" />
+						<persistence type="property" />
+					</attribute>
+					<attribute qualifier="slave" type="boolean">
+						<defaultvalue>java.lang.Boolean.FALSE</defaultvalue>
+						<persistence type="property" />
+						<modifiers optional="false" />
+					</attribute>
+				</attributes>
+		</itemtype>
+		</typegroup>
+		
+		<!-- TPR-6665 : sysnonums update to slave servers end-->
+		
   </itemtypes>
 </items>

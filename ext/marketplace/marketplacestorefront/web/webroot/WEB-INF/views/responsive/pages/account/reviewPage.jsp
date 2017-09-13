@@ -60,9 +60,8 @@
 								<c:forEach items="${productDataModifyMap}" var="product">
 								<div class="slide item" id="no-image-link${product.value.code}"><a
 									class="product-tile" href='<c:url value="${product.value.url}"></c:url>'>
-										<div class="image">
-											
-												<product:productPrimaryImage product="${product.value}" format="searchPage" />
+										<div class="image">											
+												<product:productPrimaryImage product="${product.value}" format="searchPage" lazyLoad="false" />
 										</div>
 										<div class="short-info">
 											<p class="company">${product.value.brand.brandname}</p>

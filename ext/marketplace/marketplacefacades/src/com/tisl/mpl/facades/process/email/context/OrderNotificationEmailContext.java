@@ -158,6 +158,8 @@ public class OrderNotificationEmailContext extends AbstractEmailContext<OrderPro
 				MarketplacecommerceservicesConstants.MPL_TRACK_ORDER_LONG_URL_FORMAT)
 				+ orderCode;
 		/* Added in R2.3 for shortUrl START */
+		//final String shortUrl = shortUrlService.genearateShortURL(orderCode);
+		//final String shortUrl = orderProcessModel.getOrderTrackUrl();
 
 		final OrderShortUrlInfoModel orderShortUrlInfoModel = shortUrlService.getShortUrlReportModelByOrderId(orderCode);
 
@@ -188,6 +190,7 @@ public class OrderNotificationEmailContext extends AbstractEmailContext<OrderPro
 		 * MarketplacecommerceservicesConstants.SMS_ORDER_TRACK_URL) + orderProcessModel.getOrder().getCode();
 		 * put(TRACK_ORDER_URL, trackOrderUrl);
 		 */
+
 		put(ORDER_CODE, orderCode);
 		put(CHILDORDERS, childOrders);
 		put(SUBTOTAL, Double.valueOf(subTotal));
@@ -360,3 +363,4 @@ public class OrderNotificationEmailContext extends AbstractEmailContext<OrderPro
 	}
 
 }
+
