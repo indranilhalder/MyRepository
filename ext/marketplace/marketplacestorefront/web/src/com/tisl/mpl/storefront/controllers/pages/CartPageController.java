@@ -272,7 +272,19 @@ public class CartPageController extends AbstractPageController
 
 				cartModel = getCartService().getSessionCart();
 				CartData cartDataOnLoad = mplCartFacade.getSessionCartWithEntryOrdering(true);
-
+				if (LOG.isDebugEnabled())
+				{
+					LOG.debug("cartDataOnLoad.getGuid()=" + cartDataOnLoad.getGuid());
+					LOG.debug("cartDataOnLoad.getGuid().size()="
+							+ (null != cartDataOnLoad.getEntries() ? cartDataOnLoad.getEntries().size() : "0"));
+					if (CollectionUtils.isNotEmpty(cartDataOnLoad.getEntries()) && cartDataOnLoad.getEntries().size() > 0)
+					{
+						for (int i = 0; i < cartDataOnLoad.getEntries().size(); i++)
+						{
+							LOG.debug("CartUssid Entry=" + i + "=>" + cartDataOnLoad.getEntries().get(i).getSelectedUssid());
+						}
+					}
+				}
 
 				//TPR-5346 STARTS
 
