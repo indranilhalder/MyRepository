@@ -1462,6 +1462,19 @@ public class ProductPageController extends MidPageController
 			//CKD:TPR-250:Start
 			prepareBrandInfoData(model, productData);
 			//CKD:TPR-250:End
+
+			//UF-422 starts
+			int sizeCounter = 0;
+			for (int i = 0; i < productData.getVariantOptions().size(); i++)
+			{
+				if (productData.getVariantOptions().get(i).getColour().equalsIgnoreCase(productData.getColour()))
+				{
+					sizeCounter++;
+				}
+			}
+			model.addAttribute(ModelAttributetConstants.PDP_SIZE_COUNTER, sizeCounter);
+			//UF-422 ends
+
 			final List<String> deliveryInfoList = new ArrayList<String>();
 
 			deliveryInfoList.add(ModelAttributetConstants.EXPRESS_DELIVERY);
@@ -1651,6 +1664,17 @@ public class ProductPageController extends MidPageController
 		try
 		{
 			populateProductData(productData, model);
+			//UF-422 starts
+			int sizeCounter = 0;
+			for (int i = 0; i < productData.getVariantOptions().size(); i++)
+			{
+				if (productData.getVariantOptions().get(i).getColour().equalsIgnoreCase(productData.getColour()))
+				{
+					sizeCounter++;
+				}
+			}
+			model.addAttribute(ModelAttributetConstants.PDP_SIZE_COUNTER, sizeCounter);
+			//UF-422 ends
 			displayConfigurableAttribute(productData, model);
 			getRequestContextData(request).setProduct(productModel);
 			model.addAttribute(IMG_COUNT, Integer.valueOf(productDetailsHelper.getCountForGalleryImages()));
@@ -1954,6 +1978,18 @@ public class ProductPageController extends MidPageController
 			//		sortVariantOptionData(productData);
 			storeCmsPageInModel(model, getPageForProduct(productModel));
 			populateProductData(productData, model);
+
+			//UF-422 starts
+			int sizeCounter = 0;
+			for (int i = 0; i < productData.getVariantOptions().size(); i++)
+			{
+				if (productData.getVariantOptions().get(i).getColour().equalsIgnoreCase(productData.getColour()))
+				{
+					sizeCounter++;
+				}
+			}
+			model.addAttribute(ModelAttributetConstants.PDP_SIZE_COUNTER, sizeCounter);
+			//UF-422 ends
 
 			final List<String> deliveryInfo = new ArrayList<String>();
 
