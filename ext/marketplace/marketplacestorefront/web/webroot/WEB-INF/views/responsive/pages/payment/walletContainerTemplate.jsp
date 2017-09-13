@@ -16,30 +16,30 @@
 
 $(document).ready(function() {
 	
-var modelAttributeValue = '${isWalletActive}';
+	var modelAttributeValue = '${isWalletActive}';
 
-if(modelAttributeValue !== false){	
-		$.ajax({
-			url : ACC.config.encodedContextPath + "/wallet/registerCustomerWallet",
-			//data : dataString,
-			type : "GET",
-			cache : false,
-			success : function(data) {
-				
-			if(data === "Success"){
-				
-				window.location.href = ACC.config.encodedContextPath+"/wallet";
-			}
+	if(modelAttributeValue === 'false'){	
+			$.ajax({
+				url : ACC.config.encodedContextPath + "/wallet/registerCustomerWallet",
+				//data : dataString,
+				type : "GET",
+				cache : false,
+				success : function(data) {
+					
+				if(data === "Success"){
+					
+					window.location.href = ACC.config.encodedContextPath+"/wallet";
+				}
 
-			},	
-		   
-			fail : function(fail){
-			//alert("Sorry we are unable to connect to Click 2 Call service. Please try again later.");
-		}	
-		
-});
-}	
-});
+				},	
+			   
+				fail : function(fail){
+				//alert("Sorry we are unable to connect to Click 2 Call service. Please try again later.");
+			}	
+			
+	});
+	}	
+	});
 
 </script>
 <style>

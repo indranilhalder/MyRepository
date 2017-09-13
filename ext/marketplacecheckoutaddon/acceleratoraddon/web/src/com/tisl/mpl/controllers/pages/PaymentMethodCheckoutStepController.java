@@ -2880,41 +2880,6 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 				jsPayMode = Boolean.parseBoolean(getSessionService().getAttribute("jsPayMode").toString());
 			}
 
-			/**
-			 *
-			 * Changes for wallet Payment Only PAY MODE
-			 *
-			 */
-			if (!jsPayMode && splitPayment) ///////////////////// REMOVE THIS
-			{
-				final OrderModel orderToBeUpdated = getMplPaymentFacade().getOrderByGuid(guid);
-				try
-				{
-
-					final String qcUniqueCode = getMplPaymentFacade().generateQCCode();
-					final CustomerModel currentCustomer = (CustomerModel) getUserService().getCurrentUser();
-					final String qcResponse = getMplPaymentFacade().createQCOrderRequest(orderToBeUpdated.getGuid(), orderToBeUpdated,
-							currentCustomer.getCustomerWalletDetail().getWalletId(), cliqCashPaymentMode, qcUniqueCode);
-					System.out.println(" ********* Order Id ONLY FOR QC created by key generator is " + qcUniqueCode);
-
-					//CHECK FOR QC RESPONSE
-					if (!qcResponse.equalsIgnoreCase("Success"))
-					{
-
-						//QC FAIL";
-					}
-
-				}
-				catch (final Exception ex)
-				{
-					ex.printStackTrace();
-					return "QC FAIL"; ////// need to change this if qc fail
-				}
-				System.out.println("-------------------ONLY FOR QC PAYMENT MODE SELECTED- CREATING CHILD ORDER --------- ");
-
-				return updateOrder(orderToBeUpdated, redirectAttributes);
-			}
-
 			//Order Status from Juspay
 
 			final Map<String, Boolean> duplicateJuspayResMap = getSessionService()
@@ -2940,10 +2905,14 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 							//return placeOrder(model, redirectAttributes);
 							//Code commented and new code added for TPR-629
 
+							/**
+							 * Wallet Changes
+							 */
 							if (jsPayMode && splitPayment)
 							{
 								try
 								{
+
 									final String qcUniqueCode = getMplPaymentFacade().generateQCCode();
 									final CustomerModel currentCustomer = (CustomerModel) getUserService().getCurrentUser();
 									final String qcResponse = getMplPaymentFacade().createQCOrderRequest(orderToBeUpdated.getGuid(),
@@ -2957,6 +2926,8 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 										//QC FAIL";
 									}
 
+									calculateSplitValue(orderToBeUpdated);
+
 								}
 								catch (final Exception ex)
 								{
@@ -2968,6 +2939,9 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 								}
 
 							}
+							/**
+							 * Wallet Changes End
+							 */
 
 							return updateOrder(orderToBeUpdated, redirectAttributes);
 						}
@@ -4017,6 +3991,9 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 					 * Wallet Changes
 					 */
 
+					getSessionService().setAttribute("qcCardValue", "NA");
+					getSessionService().setAttribute("qcCashValue", "NA");
+					getSessionService().setAttribute("qcRefundValue", "NA");
 					final Double totalCartVal = cart.getTotalPrice();
 					boolean splitPayment = false;
 					boolean jsPayMode = false;
@@ -4098,11 +4075,6 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 						 */
 
 						System.out.println(" %%%%%%% PLACING PARENT ORDER %%%%%%%%%%%%%%%%%%%%%%%  ");
-
-
-						calculateSplitValue(cart);
-
-
 
 						getMplCheckoutFacade().placeOrder();
 					}
@@ -6069,29 +6041,35 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 			final CustomerModel customer = (CustomerModel) getUserService().getCurrentUser();
 			balBucketwise = mplWalletFacade.getQCBucketBalance(customer.getCustomerWalletDetail().getWalletId());
 
-
-			for (final Bucket bucketType : balBucketwise.getBuckets())
+			if (null != balBucketwise.getBuckets())
 			{
-				if (bucketType.getType().equalsIgnoreCase("CUSTOMER"))
-				{
-					egvBalance = Integer
-							.parseInt(bucketType.getAmount().toString().isEmpty() ? "0" : bucketType.getAmount().toString());
-				}
-				else
-				{
 
-					cashBalance += Integer
-							.parseInt(bucketType.getAmount().toString().isEmpty() ? "0" : bucketType.getAmount().toString());
+				for (final Bucket bucketType : balBucketwise.getBuckets())
+				{
+					if (bucketType.getType().equalsIgnoreCase("CUSTOMER"))
+					{
+						egvBalance += Integer
+								.parseInt(bucketType.getAmount().toString().isEmpty() ? "0" : bucketType.getAmount().toString());
+					}
+					else
+					{
+
+						cashBalance += Integer
+								.parseInt(bucketType.getAmount().toString().isEmpty() ? "0" : bucketType.getAmount().toString());
+					}
 				}
+
+				totalWalletAmt = Integer.parseInt(balBucketwise.getWallet().getBalance().toString().isEmpty() ? "0"
+						: balBucketwise.getWallet().getBalance().toString());
 			}
-
-			totalWalletAmt = Integer.parseInt(balBucketwise.getWallet().getBalance().toString().isEmpty() ? "0"
-					: balBucketwise.getWallet().getBalance().toString());
 
 			if (totalWalletAmt == 0)
 			{
 				getSessionService().setAttribute("getCliqCashMode", "false");
 				getSessionService().setAttribute("cliqCashPaymentMode", StringUtils.EMPTY);
+				jsonObject.put("totalWalletAmt", "0");
+				jsonObject.put("totalCash", "" + "0");
+				jsonObject.put("totalEgvBalance", "" + "0");
 				jsonObject.put("disableWallet", true);
 
 			}
@@ -6302,6 +6280,9 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 
 			if (splitPayment && !jsPayMode)
 			{
+				getSessionService().setAttribute("qcCardValue", "NA");
+				getSessionService().setAttribute("qcCashValue", "NA");
+				getSessionService().setAttribute("qcRefundValue", "NA");
 				//// DO VALIDATION FOR QC PAY ONLY ======= After that parent order will create
 
 				final OrderData orderData;
@@ -6450,29 +6431,69 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 	}
 
 
-	public void calculateSplitValue(final CartModel cartModelData)
+	public void calculateSplitValue(final AbstractOrderModel orderToBeUpdated)
 	{
 
 		final double juspayTotalValue = Double.parseDouble("" + getSessionService().getAttribute("juspayTotalAmt"));
-		final double qcTotalValue = Double.parseDouble("" + getSessionService().getAttribute("WalletTotal"));
-		final double totalOrderValue = Double.parseDouble("" + "" + cartModelData.getTotalPrice());
+		//final double qcTotalValue = Double.parseDouble("" + getSessionService().getAttribute("WalletTotal"));
+		final double totalOrderValue = Double.parseDouble("" + "" + orderToBeUpdated.getTotalPrice());
+
+		final boolean calQCCashFlag = Boolean
+				.parseBoolean((getSessionService().getAttribute("qcCardValue").equals("NA") ? "false" : "true"));
+		final boolean calQCCardFlag = Boolean
+				.parseBoolean((getSessionService().getAttribute("qcCashValue").equals("NA") ? "false" : "true"));
+		final boolean calQCRefundFlag = Boolean
+				.parseBoolean((getSessionService().getAttribute("qcRefundValue").equals("NA") ? "false" : "true"));
 
 
-		for (final AbstractOrderEntryModel abstractOrderEntryModel : cartModelData.getEntries())
+		for (final AbstractOrderEntryModel abstractOrderEntryModel : orderToBeUpdated.getEntries())
 		{
 
 			final double productPrice = Double.parseDouble("" + abstractOrderEntryModel.getTotalPrice());
-			final double qcPartValue = (productPrice / totalOrderValue) * qcTotalValue;
-			final double juspayPartValue = (productPrice / totalOrderValue) * juspayTotalValue;
 
-			abstractOrderEntryModel.setQcValue("" + qcPartValue);
+			if (calQCCashFlag)
+			{
+
+				final double qcCashValue = (productPrice / totalOrderValue)
+						* Double.parseDouble("" + getSessionService().getAttribute("qcCashValue"));
+
+				abstractOrderEntryModel.setQcCashValue("" + qcCashValue);
+
+			}
+			else
+			{
+
+				abstractOrderEntryModel.setQcCashValue("" + 0);
+
+			}
+			if (calQCCardFlag)
+			{
+
+				final double qcCardValue = (productPrice / totalOrderValue)
+						* Double.parseDouble("" + getSessionService().getAttribute("qcCardValue"));
+				abstractOrderEntryModel.setQcCardValue("" + qcCardValue);
+			}
+			else
+			{
+				abstractOrderEntryModel.setQcCardValue("" + 0);
+			}
+			if (calQCRefundFlag)
+			{
+				final double qcRefundValue = (productPrice / totalOrderValue)
+						* Double.parseDouble("" + getSessionService().getAttribute("qcRefundValue"));
+				abstractOrderEntryModel.setQcRefundValue("" + qcRefundValue);
+			}
+			else
+			{
+				abstractOrderEntryModel.setQcRefundValue("" + 0);
+			}
+
+			final double juspayPartValue = (productPrice / totalOrderValue) * juspayTotalValue;
 			abstractOrderEntryModel.setJuspayValue("" + juspayPartValue);
 
-			System.out.println("Total ---" + abstractOrderEntryModel.getTotalPrice() + " qcPartValue " + qcPartValue
-					+ " juspayPartValue " + juspayPartValue);
 		}
 
-		getModelService().save(cartModelData);
+		getModelService().save(orderToBeUpdated);
 	}
 
 }

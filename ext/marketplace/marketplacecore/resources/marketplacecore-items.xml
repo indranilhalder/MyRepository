@@ -632,7 +632,7 @@
 			<value code="JUSPAY_DECLINED" />
 			<value code="RETURN" />
 			<value code="COD_PAYMENT" />
-<!-- 			<value code="QC Capture" /> -->
+			<value code="QC_CAPTURE" />
 		</enumtype>
 		<enumtype code="CodCheckMessage" autocreate="true" dynamic="true"
 			generate="true">
@@ -6248,6 +6248,7 @@
 					</attribute>
 					
 					<!-- QC Changes -->
+					
 					<attribute qualifier="juspayValue" autocreate="true"
 						type="java.lang.String">
 						<description>juspay Value</description>
@@ -6256,13 +6257,30 @@
 						<persistence type="property" />
 					</attribute>
 					
-						<attribute qualifier="qcValue" autocreate="true"
+						<attribute qualifier="qcCardValue" autocreate="true"
 						type="java.lang.String">
-						<description>qc Value</description>
+						<description>qc Card Value</description>
 						<modifiers read="true" write="true" removable="true"
 							optional="true" unique="false" />
 						<persistence type="property" />
 					</attribute>
+					
+						<attribute qualifier="qcCashValue" autocreate="true"
+						type="java.lang.String">
+						<description>qc Cash Value</description>
+						<modifiers read="true" write="true" removable="true"
+							optional="true" unique="false" />
+						<persistence type="property" />
+					   </attribute>
+					   
+					   <attribute qualifier="qcRefundValue" autocreate="true"
+						type="java.lang.String">
+						<description>qc Refund Value</description>
+						<modifiers read="true" write="true" removable="true"
+							optional="true" unique="false" />
+						<persistence type="property" />
+					   </attribute>
+					
 					<!-- QC Changes End -->
 					
 				</attributes>
@@ -13312,6 +13330,29 @@
 
 		</attributes>
 	</itemtype>
+	
+	<itemtype code="QCWalletPaymentInfo" extends="PaymentInfo"
+				autocreate="true" generate="false">
+				<attributes>
+					<attribute qualifier="cashOwner" autocreate="true"
+						type="java.lang.String">
+						<modifiers read="true" write="true" search="true"
+							optional="true" />
+						<persistence type="property" />
+						<custom-properties>
+							<property name="hmcIndexField">
+								<value>"thefield"</value>
+							</property>
+						</custom-properties>
+					</attribute>
+					<attribute qualifier="type" autocreate="true" type="java.lang.String">
+						<modifiers read="true" write="true" search="true"
+							optional="true" />
+						<persistence type="property" />
+					</attribute>
+				</attributes>
+			</itemtype>
+	
 		</typegroup>
 		
   </itemtypes>

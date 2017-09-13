@@ -45,6 +45,7 @@ public interface MplWalletServices
 
 	public WalletTransacationsList getWalletTransactionList(String cardNumber, String transactionId);
 
-	public QCCustomerRegisterResponse createWalletContainer(QCCustomerRegisterRequest registerCustomerRequest, String transactionId);
+	public QCCustomerRegisterResponse createWalletContainer(QCCustomerRegisterRequest registerCustomerRequest,
+			String transactionId);
 
 }

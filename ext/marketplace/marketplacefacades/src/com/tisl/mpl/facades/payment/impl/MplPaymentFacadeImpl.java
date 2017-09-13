@@ -91,6 +91,7 @@ import com.tisl.mpl.marketplacecommerceservices.service.OTPGenericService;
 import com.tisl.mpl.model.BankModel;
 import com.tisl.mpl.model.PaymentTypeModel;
 import com.tisl.mpl.pojo.request.QCRedeemRequest;
+import com.tisl.mpl.pojo.response.QCCard;
 import com.tisl.mpl.pojo.response.QCRedeeptionResponse;
 import com.tisl.mpl.sms.facades.SendSMSFacade;
 import com.tisl.mpl.util.ExceptionUtil;
@@ -3506,6 +3507,33 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 
 			if (Integer.parseInt(qcRedeeptionResponse.getResponseCode().toString()) == 0)
 			{
+
+				long totalQCCardValue = 0;
+				long totalQCCashValue = 0;
+				long totalQCRefundValue = 0;
+
+
+				for (final QCCard cardList : qcRedeeptionResponse.getCards())
+				{
+					if (cardList.getBucketType().equalsIgnoreCase("CASHBACK") || cardList.getBucketType().equalsIgnoreCase("GOODWILL")
+							|| cardList.getBucketType().equalsIgnoreCase("PROMOTION"))
+					{
+						totalQCCashValue += Long.parseLong("" + cardList.getAmount());
+					}
+					if (cardList.getBucketType().equalsIgnoreCase("CREDIT"))
+					{
+						totalQCRefundValue += Long.parseLong("" + cardList.getAmount());
+					}
+					if (cardList.getBucketType().equalsIgnoreCase("CUSTOMER"))
+					{
+						totalQCCardValue += Long.parseLong("" + cardList.getAmount());
+					}
+				}
+
+				getSessionService().setAttribute("qcCardValue", "" + totalQCCardValue);
+				getSessionService().setAttribute("qcCashValue", "" + totalQCCashValue);
+				getSessionService().setAttribute("qcRefundValue", "" + totalQCRefundValue);
+
 				rs.add(orderToBeUpdated.getCode());
 				rs.add(qcOrderId);
 				rs.add("" + qcRedeeptionResponse.getTransactionId());

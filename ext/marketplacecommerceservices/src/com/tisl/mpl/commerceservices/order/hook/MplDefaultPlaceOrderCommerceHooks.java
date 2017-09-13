@@ -2475,8 +2475,10 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 			{
 				ArrayList<String> apporstioPayList = new ArrayList<String>();
 				apporstioPayList = setPaymentModeApporsionValue(abstractOrderEntryModel, quantity);
-				orderEntryModel.setQcValue(apporstioPayList.get(0));
-				orderEntryModel.setJuspayValue(apporstioPayList.get(1));
+				orderEntryModel.setQcCardValue(apporstioPayList.get(0));
+				orderEntryModel.setQcCashValue(apporstioPayList.get(1));
+				orderEntryModel.setQcRefundValue(apporstioPayList.get(2));
+				orderEntryModel.setJuspayValue(apporstioPayList.get(3));
 			}
 
 			/**
@@ -3322,18 +3324,40 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 
 		final ArrayList<String> listData = new ArrayList<String>();
 
-		final double qcVlaue = Double.parseDouble(abstractOrderEntryModel.getQcValue()) / quantity;
-		final double juspayVlaue = Double.parseDouble(abstractOrderEntryModel.getJuspayValue()) / quantity;
+		if (!abstractOrderEntryModel.getQcCardValue().equals("0"))
+		{
+			final double qcCardVlaue = Double.parseDouble(abstractOrderEntryModel.getQcCardValue()) / quantity;
+			listData.add("" + qcCardVlaue);
+		}
+		else
+		{
+			listData.add("" + 0);
+		}
 
-		listData.add("" + qcVlaue);
+		if (!abstractOrderEntryModel.getQcCashValue().equals("0"))
+		{
+			final double qcCashVlaue = Double.parseDouble(abstractOrderEntryModel.getQcCashValue()) / quantity;
+			listData.add("" + qcCashVlaue);
+		}
+		else
+		{
+			listData.add("" + 0);
+		}
+
+		if (!abstractOrderEntryModel.getQcRefundValue().equals("0"))
+		{
+			final double qcRefundVlaue = Double.parseDouble(abstractOrderEntryModel.getQcRefundValue()) / quantity;
+			listData.add("" + qcRefundVlaue);
+		}
+		else
+		{
+			listData.add("" + 0);
+		}
+		final double juspayVlaue = Double.parseDouble(abstractOrderEntryModel.getJuspayValue()) / quantity;
 		listData.add("" + juspayVlaue);
 
 		return listData;
 
 	}
-
-
-
-
 
 }
