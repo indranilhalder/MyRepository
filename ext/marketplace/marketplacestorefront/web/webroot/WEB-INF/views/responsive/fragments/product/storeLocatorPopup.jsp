@@ -16,7 +16,7 @@
 			<c:if test="${not empty store.name}"><div class="store-name"><b>${store.name}</b></div></c:if>
 			<c:if test="${not empty store.address.line1}"><div class="addressLine1">${store.address.line1}</div></c:if>
 			<c:if test="${not empty store.address.line2}"><div class="addressLine2">${store.address.line2}</div></c:if>
-			<%-- <c:if test="${not empty store.address.postalcode}"><div class="addressLine2">${store.address.postalcode}</div></c:if> --%>
+			<c:if test="${not empty store.address.postalCode}"><div class="pin_code">${store.address.postalCode}</div></c:if>
 		    <c:if test="${not empty store.distanceKm}"><div class="distance"><b>${store.distanceKm} ${store.status}</b></div></c:if>
 		   </div>
 		    </c:if>
@@ -47,8 +47,8 @@
 						     <c:if test="${not empty store.name}"><div class="store-name"><b>${store.name}</b></div></c:if>
 					         <c:if test="${not empty store.address.line1}"><div class="addressLine1">${store.address.line1}</div></c:if>
 			                 <c:if test="${not empty store.address.line2}"><div class="addressLine2">${store.address.line2}</div></c:if>
-			                <%--  <c:if test="${not empty store.address.city && not empty store.address.postalcode}"><div class="district">${store.address.city} - ${store.address.postalcode}</div></c:if> --%>
-			                <%--  <c:if test="${not empty store.address.country}"><div class="country">${store.address.country}</div></c:if> --%>
+			                 <c:if test="${not empty store.address.city && not empty store.address.postalCode}"><div class="city">${store.address.city} - ${store.address.postalCode}</div></c:if>
+			                 <c:if test="${not empty store.address.country.name}"><div class="country">${store.address.country.name}</div></c:if>
 			                 <c:if test="${not empty store.distanceKm}"><div class="distance"><b>${store.distanceKm} ${store.status}</b></div></c:if>
 					      </div>   
 				         </c:if>
