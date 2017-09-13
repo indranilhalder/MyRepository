@@ -21,12 +21,16 @@ import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.WebResource;
 import com.tisl.mpl.constants.MarketplaceclientservicesConstants;
+import com.tisl.mpl.pojo.request.AddToCardWallet;
 import com.tisl.mpl.pojo.request.QCCustomerRegisterRequest;
 import com.tisl.mpl.pojo.request.QCRedeemRequest;
 import com.tisl.mpl.pojo.response.BalanceBucketWise;
 import com.tisl.mpl.pojo.response.QCCustomerRegisterResponse;
 import com.tisl.mpl.pojo.response.QCInitializationResponse;
 import com.tisl.mpl.pojo.response.QCRedeeptionResponse;
+import com.tisl.mpl.pojo.response.RedimGiftCardResponse;
+import com.tisl.mpl.pojo.response.WalletBalanceResponse;
+import com.tisl.mpl.pojo.response.WalletTransacationsList;
 import com.tisl.mpl.service.MplWalletServices;
 import com.tisl.mpl.service.QCInitDataBean;
 
@@ -122,29 +126,31 @@ public class MplWalletServicesImpl implements MplWalletServices
 		try
 		{
 			webResource = client.resource(UriBuilder.fromUri(MarketplaceclientservicesConstants.QC_INITIALIZATION_URL).build());
-			final String forwardEntityID = getConfigurationService().getConfiguration()
-					.getString(MarketplaceclientservicesConstants.FORWARDING_ENTITY_ID);
-			final String forwardEntityPassword = getConfigurationService().getConfiguration()
-					.getString(MarketplaceclientservicesConstants.FORWARDING_ENTITY_PASSWORD);
+			final String forwardEntityID = getConfigurationService().getConfiguration().getString(
+					MarketplaceclientservicesConstants.FORWARDING_ENTITY_ID);
+			final String forwardEntityPassword = getConfigurationService().getConfiguration().getString(
+					MarketplaceclientservicesConstants.FORWARDING_ENTITY_PASSWORD);
 
-			final String terminalID = getConfigurationService().getConfiguration()
-					.getString(MarketplaceclientservicesConstants.TERMINAL_ID);
-			final String userName = getConfigurationService().getConfiguration()
-					.getString(MarketplaceclientservicesConstants.USERNAME);
-			final String password = getConfigurationService().getConfiguration()
-					.getString(MarketplaceclientservicesConstants.PASSWORD);
+			final String terminalID = getConfigurationService().getConfiguration().getString(
+					MarketplaceclientservicesConstants.TERMINAL_ID);
+			final String userName = getConfigurationService().getConfiguration().getString(
+					MarketplaceclientservicesConstants.USERNAME);
+			final String password = getConfigurationService().getConfiguration().getString(
+					MarketplaceclientservicesConstants.PASSWORD);
 			//			final String transactionID = getConfigurationService().getConfiguration()
 			//					.getString(MarketplaceclientservicesConstants.TRANSACTION_ID);
-			final String isForwardingEntryExists = getConfigurationService().getConfiguration()
-					.getString(MarketplaceclientservicesConstants.IS_FORWARDING_ENTIRY_EXISTS);
+			final String isForwardingEntryExists = getConfigurationService().getConfiguration().getString(
+					MarketplaceclientservicesConstants.IS_FORWARDING_ENTIRY_EXISTS);
 
-			response = webResource.type(MediaType.APPLICATION_JSON)
+			response = webResource
+					.type(MediaType.APPLICATION_JSON)
 					.header(MarketplaceclientservicesConstants.FORWARDING_ENTITY_ID, forwardEntityID)
 					.header(MarketplaceclientservicesConstants.FORWARDING_ENTITY_PASSWORD, forwardEntityPassword)
 					.header(MarketplaceclientservicesConstants.TERMINAL_ID, terminalID)
 					.header(MarketplaceclientservicesConstants.USERNAME, userName)
 					.header(MarketplaceclientservicesConstants.PASSWORD, password)
-					.header(MarketplaceclientservicesConstants.TRANSACTION_ID, "100") //(random number logic)
+					.header(MarketplaceclientservicesConstants.TRANSACTION_ID, "100")
+					//(random number logic)
 					.header(MarketplaceclientservicesConstants.DATE_AT_CLIENT, dateFormat.format(new Date()))
 					.header(MarketplaceclientservicesConstants.IS_FORWARDING_ENTIRY_EXISTS, isForwardingEntryExists)
 					.header(MarketplaceclientservicesConstants.CONTENT_TYPE, MediaType.APPLICATION_JSON).get(ClientResponse.class);
@@ -181,15 +187,20 @@ public class MplWalletServicesImpl implements MplWalletServices
 		QCCustomerRegisterResponse custResponse = new QCCustomerRegisterResponse();
 		try
 		{
-			webResource = client
-					.resource(UriBuilder.fromUri("http://qc3.qwikcilver.com/Qwikcilver/eGMS.RestApi/api/wallet/").build());
+			webResource = client.resource(UriBuilder.fromUri("http://qc3.qwikcilver.com/Qwikcilver/eGMS.RestApi/api/wallet/")
+					.build());
 
 			final ObjectMapper objectMapper = new ObjectMapper();
 			final String requestBody = objectMapper.writeValueAsString(registerCustomerRequest);
 
-			response = webResource.type(MediaType.APPLICATION_JSON).header("ForwardingEntityId", "tatacliq.com")
-					.header("ForwardingEntityPassword", "tatacliq.com").header("TerminalId", "webpos-tul-dev10")
-					.header("Username", "tulwebuser").header("Password", "webusertul").header("TransactionId", transactionId) //(random number logic)
+			response = webResource.type(MediaType.APPLICATION_JSON)
+					.header("ForwardingEntityId", "tatacliq.com")
+					.header("ForwardingEntityPassword", "tatacliq.com")
+					.header("TerminalId", "webpos-tul-dev10")
+					.header("Username", "tulwebuser")
+					.header("Password", "webusertul")
+					.header("TransactionId", transactionId)
+					//(random number logic)
 					.header("DateAtClient", dateFormat.format(new Date())).header("IsForwardingEntityExists", "true")
 					.header("Content-Type", "application/json").header("MerchantOutletName", "TUL-Online")
 					.header("AcquirerId", "Tata Unistore Ltd").header("OrganizationName", "Tata Unistore Ltd")
@@ -227,16 +238,21 @@ public class MplWalletServicesImpl implements MplWalletServices
 
 		try
 		{
-			webResource = client
-					.resource(UriBuilder.fromUri("http://qc3.qwikcilver.com/Qwikcilver/eGMS.RestApi/api/gc/createandissue").build());
+			webResource = client.resource(UriBuilder.fromUri(
+					"http://qc3.qwikcilver.com/Qwikcilver/eGMS.RestApi/api/gc/createandissue").build());
 
 			//need to create marshalling for request body
 			//IdempotencyKey random unique logic use UUID for generat key
 			final String requestBody = "{\"CardProgramGroupName\": \"TUL B2C eGift Card\",\"Amount\": 2000,\"BillAmount\": 0,\"InvoiceNumber\": \"27092016001\",\"ExternalCardNumber\": null,\"Customer\": {\"CustomerType\": null,\"Salutation\": \"\",\"Firstname\": \"Gift Card\",\"LastName\": \"user\",\"PhoneNumber\": \"2709201600\",\"Email\": \"nbhanushali@tataunistore.com\",\"DOB\": \"\",\"AddressLine1\": \"\",\"AddressLine2\": \"\",\"AddressLine3\": null,\"City\": \"\",\"State\": \"\",\"Country\": \"\",\"Gender\": \"\",\"Anniversary\": \"\",\"MaritalStatus\": \"\",\"EmployeeID\": \"\",\"PhoneAlternate\": \"2709201601\",\"PinCode\": \"\",\"Region\": null,\"Area\": \"\",\"CorporateName\": \"Tata Unistore Ltd\"},\"Expiry\":\"0001-01-01T00:00:00\",\"Notes\": \"create egiftcard\",\"IdempotencyKey\":\"tq2408201701\"}";
 
-			response = webResource.type(MediaType.APPLICATION_JSON).header("ForwardingEntityId", "tatacliq.com")
-					.header("ForwardingEntityPassword", "tatacliq.com").header("TerminalId", "webpos-tul-dev10")
-					.header("Username", "tulwebuser").header("Password", "webusertul").header("TransactionId", "22") //(random number logic)
+			response = webResource.type(MediaType.APPLICATION_JSON)
+					.header("ForwardingEntityId", "tatacliq.com")
+					.header("ForwardingEntityPassword", "tatacliq.com")
+					.header("TerminalId", "webpos-tul-dev10")
+					.header("Username", "tulwebuser")
+					.header("Password", "webusertul")
+					.header("TransactionId", "22")
+					//(random number logic)
 					.header("DateAtClient", dateFormat.format(new Date())).header("IsForwardingEntityExists", "true")
 					.header("Content-Typ", "application/json").header("MerchantOutletName", "TUL-Online")
 					.header("AcquirerId", "Tata Unistore Ltd").header("OrganizationName", "Tata Unistore Ltd")
@@ -275,15 +291,20 @@ public class MplWalletServicesImpl implements MplWalletServices
 		try
 		{
 			//get Wallet number from facade
-			webResource = client.resource(
-					UriBuilder.fromUri("http://qc3.qwikcilver.com/QwikCilver/eGMS.RestAPI/api/wallet/4000162010020032/card").build());
+			webResource = client.resource(UriBuilder.fromUri(
+					"http://qc3.qwikcilver.com/QwikCilver/eGMS.RestAPI/api/wallet/4000162010020032/card").build());
 
 			//need to create marshalling for request body
 			final String requestBody = "{\"CardNumber\":\"4000161013166520\", \"CardPin\":\"368719\"}";
 
-			response = webResource.type(MediaType.APPLICATION_JSON).header("ForwardingEntityId", "tatacliq.com")
-					.header("ForwardingEntityPassword", "tatacliq.com").header("TerminalId", "webpos-tul-dev10")
-					.header("Username", "tulwebuser").header("Password", "webusertul").header("TransactionId", "21") //(random number logic)
+			response = webResource.type(MediaType.APPLICATION_JSON)
+					.header("ForwardingEntityId", "tatacliq.com")
+					.header("ForwardingEntityPassword", "tatacliq.com")
+					.header("TerminalId", "webpos-tul-dev10")
+					.header("Username", "tulwebuser")
+					.header("Password", "webusertul")
+					.header("TransactionId", "21")
+					//(random number logic)
 					.header("DateAtClient", dateFormat.format(new Date())).header("IsForwardingEntityExists", "true")
 					.header("Content-Typ", "application/json").header("MerchantOutletName", "TUL-Online")
 					.header("AcquirerId", "Tata Unistore Ltd").header("OrganizationName", "Tata Unistore Ltd")
@@ -327,15 +348,19 @@ public class MplWalletServicesImpl implements MplWalletServices
 			//client.property(ClientProperties.CONNECT_TIMEOUT, 1000);
 			//client.property(ClientProperties.READ_TIMEOUT, 1000);
 
-			webResource = client.resource(UriBuilder
-					.fromUri("http://qc3.qwikcilver.com/QwikCilver/eGMS.RestAPI/api/wallet/" + customerWalletId + "/balance").build());
+			webResource = client.resource(UriBuilder.fromUri(
+					"http://qc3.qwikcilver.com/QwikCilver/eGMS.RestAPI/api/wallet/" + customerWalletId + "/balance").build());
 
 
-			response = webResource.type(MediaType.APPLICATION_JSON)
+			response = webResource
+					.type(MediaType.APPLICATION_JSON)
 					.header(MarketplaceclientservicesConstants.FORWARDING_ENTITY_ID, "tatacliq.com")
 					.header(MarketplaceclientservicesConstants.FORWARDING_ENTITY_PASSWORD, "tatacliq.com")
-					.header(MarketplaceclientservicesConstants.TERMINAL_ID, "webpos-tul-dev10").header("Username", "tulwebuser")
-					.header(MarketplaceclientservicesConstants.PASSWORD, "webusertul").header("TransactionId", transactionId) //(random number logic)
+					.header(MarketplaceclientservicesConstants.TERMINAL_ID, "webpos-tul-dev10")
+					.header("Username", "tulwebuser")
+					.header(MarketplaceclientservicesConstants.PASSWORD, "webusertul")
+					.header("TransactionId", transactionId)
+					//(random number logic)
 					.header(MarketplaceclientservicesConstants.DATE_AT_CLIENT, dateFormat.format(new Date()))
 					.header(MarketplaceclientservicesConstants.IS_FORWARDING_ENTIRY_EXISTS, "true")
 					.header(MarketplaceclientservicesConstants.CONTENT_TYPE, MediaType.APPLICATION_JSON)
@@ -379,13 +404,18 @@ public class MplWalletServicesImpl implements MplWalletServices
 		try
 		{
 			//get Wallet number from facade
-			webResource = client.resource(UriBuilder
-					.fromUri("http://qc3.qwikcilver.com/QwikCilver/eGMS.RestAPI/api/wallet/" + customerWalletId + "/Redeem").build());
+			webResource = client.resource(UriBuilder.fromUri(
+					"http://qc3.qwikcilver.com/QwikCilver/eGMS.RestAPI/api/wallet/" + customerWalletId + "/Redeem").build());
 			final ObjectMapper objectMapper = new ObjectMapper();
 			final String requestBody = objectMapper.writeValueAsString(qcRedeemRequest);
-			response = webResource.header("ForwardingEntityId", "tatacliq.com").header("ForwardingEntityPassword", "tatacliq.com")
-					.header("TerminalId", "webpos-tul-dev10").header("Username", "tulwebuser").header("Password", "webusertul")
-					.header("TransactionId", transactionId) //(random number logic)
+			response = webResource
+					.header("ForwardingEntityId", "tatacliq.com")
+					.header("ForwardingEntityPassword", "tatacliq.com")
+					.header("TerminalId", "webpos-tul-dev10")
+					.header("Username", "tulwebuser")
+					.header("Password", "webusertul")
+					.header("TransactionId", transactionId)
+					//(random number logic)
 					.header("DateAtClient", dateFormat.format(new Date())).header("IsForwardingEntityExists", "true")
 					.header("Content-Type", "application/json").header("MerchantOutletName", "TUL-Online")
 					.header("AcquirerId", "Tata Unistore Ltd").header("OrganizationName", "Tata Unistore Ltd")
@@ -423,16 +453,21 @@ public class MplWalletServicesImpl implements MplWalletServices
 		try
 		{
 			//get Wallet number from facade
-			webResource = client.resource(UriBuilder
-					.fromUri("http://qc3.qwikcilver.com/QwikCilver/eGMS.RestAPI/api/wallet/4000162010020032/Cancelredeem").build());
+			webResource = client.resource(UriBuilder.fromUri(
+					"http://qc3.qwikcilver.com/QwikCilver/eGMS.RestAPI/api/wallet/4000162010020032/Cancelredeem").build());
 
 			//need to create marshalling for request body
 			//Transaction ID will be same as Wallet redeem
 			final String requestBody = "{\"OriginalTransactionId\":\"20\",\"OriginalBatchNumber\":\"10207477\"}";
 
-			response = webResource.type(MediaType.APPLICATION_JSON).header("ForwardingEntityId", "tatacliq.com")
-					.header("ForwardingEntityPassword", "tatacliq.com").header("TerminalId", "webpos-tul-dev10")
-					.header("Username", "tulwebuser").header("Password", "webusertul").header("TransactionId", "33") //(random number logic)
+			response = webResource.type(MediaType.APPLICATION_JSON)
+					.header("ForwardingEntityId", "tatacliq.com")
+					.header("ForwardingEntityPassword", "tatacliq.com")
+					.header("TerminalId", "webpos-tul-dev10")
+					.header("Username", "tulwebuser")
+					.header("Password", "webusertul")
+					.header("TransactionId", "33")
+					//(random number logic)
 					.header("DateAtClient", dateFormat.format(new Date())).header("IsForwardingEntityExists", "true")
 					.header("Content-Type", "application/json").header("MerchantOutletName", "TUL-Online")
 					.header("AcquirerId", "Tata Unistore Ltd").header("OrganizationName", "Tata Unistore Ltd")
@@ -476,15 +511,20 @@ public class MplWalletServicesImpl implements MplWalletServices
 			//get Wallet number from facade
 			//TransactionId unique
 			// InvoiceNo Unique
-			webResource = client.resource(UriBuilder
-					.fromUri("http://qc3.qwikcilver.com/QwikCilver/eGMS.RestAPI/api/wallet/4000162010020028/load/CASHBACK").build());
+			webResource = client.resource(UriBuilder.fromUri(
+					"http://qc3.qwikcilver.com/QwikCilver/eGMS.RestAPI/api/wallet/4000162010020028/load/CASHBACK").build());
 
 			//need to create marshalling for request body
 			final String requestBody = "{\"Amount\":\"500\",\"InvoiceNumber\":\"1003\",\"Notes\":\"Sample load for 500 for CASHBACK\"}";
 
-			response = webResource.type(MediaType.APPLICATION_JSON).header("ForwardingEntityId", "tatacliq.com")
-					.header("ForwardingEntityPassword", "tatacliq.com").header("TerminalId", "webpos-tul-dev10")
-					.header("Username", "tulwebuser").header("Password", "webusertul").header("TransactionId", "24") //(random number logic)
+			response = webResource.type(MediaType.APPLICATION_JSON)
+					.header("ForwardingEntityId", "tatacliq.com")
+					.header("ForwardingEntityPassword", "tatacliq.com")
+					.header("TerminalId", "webpos-tul-dev10")
+					.header("Username", "tulwebuser")
+					.header("Password", "webusertul")
+					.header("TransactionId", "24")
+					//(random number logic)
 					.header("DateAtClient", dateFormat.format(new Date())).header("IsForwardingEntityExists", "true")
 					.header("Content-Typ", "application/json").header("MerchantOutletName", "TUL-Online")
 					.header("AcquirerId", "Tata Unistore Ltd").header("OrganizationName", "Tata Unistore Ltd")
@@ -524,14 +564,19 @@ public class MplWalletServicesImpl implements MplWalletServices
 			//get Wallet number from facade
 			//TransactionId unique
 			// InvoiceNo Unique
-			webResource = client.resource(UriBuilder
-					.fromUri("http://qc3.qwikcilver.com/QwikCilver/eGMS.RestAPI/api/wallet/4000162010020032/CancelLoad").build());
+			webResource = client.resource(UriBuilder.fromUri(
+					"http://qc3.qwikcilver.com/QwikCilver/eGMS.RestAPI/api/wallet/4000162010020032/CancelLoad").build());
 
 			//need to create marshalling for request body
 			final String requestBody = "{\"OriginalTransactionId\":\"24\",\"OriginalBatchNumber\":\"10207477\"}";
-			response = webResource.type(MediaType.APPLICATION_JSON).header("ForwardingEntityId", "tatacliq.com")
-					.header("ForwardingEntityPassword", "tatacliq.com").header("TerminalId", "webpos-tul-dev10")
-					.header("Username", "tulwebuser").header("Password", "webusertul").header("TransactionId", "45") //(random number logic)
+			response = webResource.type(MediaType.APPLICATION_JSON)
+					.header("ForwardingEntityId", "tatacliq.com")
+					.header("ForwardingEntityPassword", "tatacliq.com")
+					.header("TerminalId", "webpos-tul-dev10")
+					.header("Username", "tulwebuser")
+					.header("Password", "webusertul")
+					.header("TransactionId", "45")
+					//(random number logic)
 					.header("DateAtClient", dateFormat.format(new Date())).header("IsForwardingEntityExists", "true")
 					.header("Content-Typ", "application/json").header("MerchantOutletName", "TUL-Online")
 					.header("AcquirerId", "Tata Unistore Ltd").header("OrganizationName", "Tata Unistore Ltd")
@@ -571,13 +616,18 @@ public class MplWalletServicesImpl implements MplWalletServices
 			//get Wallet number from facade
 			//TransactionId unique
 			// InvoiceNo Unique
-			webResource = client.resource(
-					UriBuilder.fromUri("http://qc3.qwikcilver.com/QwikCilver/eGMS.RestAPI/api/wallet/4000162010020032").build());
+			webResource = client.resource(UriBuilder.fromUri(
+					"http://qc3.qwikcilver.com/QwikCilver/eGMS.RestAPI/api/wallet/4000162010020032").build());
 
 			//need to create marshalling for request body
-			response = webResource.type(MediaType.APPLICATION_JSON).header("ForwardingEntityId", "tatacliq.com")
-					.header("ForwardingEntityPassword", "tatacliq.com").header("TerminalId", "webpos-tul-dev10")
-					.header("Username", "tulwebuser").header("Password", "webusertul").header("TransactionId", "46") //(random number logic)
+			response = webResource.type(MediaType.APPLICATION_JSON)
+					.header("ForwardingEntityId", "tatacliq.com")
+					.header("ForwardingEntityPassword", "tatacliq.com")
+					.header("TerminalId", "webpos-tul-dev10")
+					.header("Username", "tulwebuser")
+					.header("Password", "webusertul")
+					.header("TransactionId", "46")
+					//(random number logic)
 					.header("DateAtClient", dateFormat.format(new Date())).header("IsForwardingEntityExists", "true")
 					.header("Content-Typ", "application/json").header("MerchantOutletName", "TUL-Online")
 					.header("AcquirerId", "Tata Unistore Ltd").header("OrganizationName", "Tata Unistore Ltd")
@@ -602,6 +652,242 @@ public class MplWalletServicesImpl implements MplWalletServices
 		}
 
 	}
+
+
+	@Override
+	public String getRedimWallet(final String cardNumber, final String cardPin, final String transactionId)
+	{
+
+		System.out.println("***********************************in Mpl Wallet classssssssss");
+
+		System.out.println("in Mpl Wallet cardNumber:" + cardNumber);
+		System.out.println("in Mpl Wallet cardPin:" + cardPin);
+		System.out.println("in Mpl Wallet transactionId:" + transactionId);
+
+		final Client client = Client.create();
+		ClientResponse response = null;
+		WebResource webResource = null;
+		String requestBody = null;
+		String output = null;
+		RedimGiftCardResponse redimGiftCardResponse = null;
+		//final ReturnLogisticsResponse responsefromOMS = new ReturnLogisticsResponse();
+		final DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
+		final AddToCardWallet addToCardWallet = buildAddtoCardWallet(cardNumber, cardPin);
+		final ObjectMapper objectMapper = new ObjectMapper();
+		try
+		{
+			requestBody = objectMapper.writeValueAsString(addToCardWallet);
+		}
+		catch (final Exception e)
+		{
+			// YTODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		try
+		{
+			webResource = client.resource(UriBuilder.fromUri(
+					MarketplaceclientservicesConstants.ADD_TO_CARD_TO_WALLET + cardNumber + "/card").build());
+
+			//need to create marshalling for request body
+			response = webResource.type(MediaType.APPLICATION_JSON)
+					.header(MarketplaceclientservicesConstants.FORWARDING_ENTITY_ID, "tatacliq.com")
+					.header(MarketplaceclientservicesConstants.FORWARDING_ENTITY_PASSWORD, "tatacliq.com")
+					.header(MarketplaceclientservicesConstants.TERMINAL_ID, "webpos-tul-dev10")
+					.header(MarketplaceclientservicesConstants.USERNAME, "tulwebuser")
+					.header(MarketplaceclientservicesConstants.PASSWORD, "webusertul")
+					.header(MarketplaceclientservicesConstants.DATE_AT_CLIENT, dateFormat.format(new Date()))
+					.header(MarketplaceclientservicesConstants.IS_FORWARDING_ENTIRY_EXISTS, "true")
+					.header(MarketplaceclientservicesConstants.CONTENT_TYPE, "application/json")
+					.header(MarketplaceclientservicesConstants.MERCHANT_OUTLET_NAME, "TUL-Online")
+					.header(MarketplaceclientservicesConstants.ACQUIRERID, "Tata Unistore Ltd")
+					.header(MarketplaceclientservicesConstants.ORGANIZATION_NAME, "Tata Unistore Ltd")
+					.header(MarketplaceclientservicesConstants.POS_ENTRY_MODE, "2")
+					.header(MarketplaceclientservicesConstants.POS_TYPE_ID, "1")
+					.header(MarketplaceclientservicesConstants.POS_NAME, "webpos-tul-qc-01")
+					.header(MarketplaceclientservicesConstants.TERM_APP_VERSION, "null")
+					.header(MarketplaceclientservicesConstants.CURRENT_BATCH_NUMBER, "10209396")
+					.header(MarketplaceclientservicesConstants.TRANSACTION_ID, transactionId).type(MediaType.APPLICATION_JSON)
+					.post(ClientResponse.class, requestBody);
+
+			if (null != response)
+			{
+				output = response.getEntity(String.class);
+				redimGiftCardResponse = objectMapper.readValue(output, RedimGiftCardResponse.class);
+				LOG.debug(" ************** GET CUSTOMER WALLET----" + RedimGiftCardResponse.class); //need to create marshalling for response object
+				System.out.println(" ************** GET CUSTOMER WALLET----" + redimGiftCardResponse.getResponseCode());
+
+
+			}
+		}
+		catch (
+
+		final Exception ex)
+		{
+			ex.printStackTrace();
+			System.out.println("Error response Status:------" + response.getStatus());
+		}
+		String balaenceFromWallet = "";
+		final WalletBalanceResponse walletBalanceResponse = getBalenceForWallet(cardNumber, transactionId);
+		if (null != walletBalanceResponse && null != walletBalanceResponse.getWallet())
+		{
+			balaenceFromWallet = String.valueOf(walletBalanceResponse.getWallet().getBalance());
+		}
+		System.out.println("balaenceFromWallet:" + walletBalanceResponse);
+		return balaenceFromWallet;
+
+	}
+
+
+	public WalletBalanceResponse getBalenceForWallet(final String cardNumber, final String transactionId)
+	{
+
+		System.out.println("***********************************in Mpl Wallet classssssssss");
+
+		System.out.println("in Mpl Wallet cardNumber:" + cardNumber);
+
+		final Client client = Client.create();
+		ClientResponse response = null;
+		WebResource webResource = null;
+		WalletBalanceResponse walletBalanceResponse = null;
+		String output = null;
+		//final ReturnLogisticsResponse responsefromOMS = new ReturnLogisticsResponse();
+		final DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
+		final ObjectMapper objectMapper = new ObjectMapper();
+		try
+		{
+			webResource = client.resource(UriBuilder.fromUri(
+					MarketplaceclientservicesConstants.GET_BALANCE_FOR_WALLET + cardNumber + "/balance").build());
+
+			//need to create marshalling for request body
+			response = webResource.type(MediaType.APPLICATION_JSON)
+					.header(MarketplaceclientservicesConstants.FORWARDING_ENTITY_ID, "tatacliq.com")
+					.header(MarketplaceclientservicesConstants.FORWARDING_ENTITY_PASSWORD, "tatacliq.com")
+					.header(MarketplaceclientservicesConstants.TERMINAL_ID, "webpos-tul-dev10")
+					.header(MarketplaceclientservicesConstants.USERNAME, "tulwebuser")
+					.header(MarketplaceclientservicesConstants.PASSWORD, "webusertul")
+					.header(MarketplaceclientservicesConstants.DATE_AT_CLIENT, dateFormat.format(new Date()))
+					.header(MarketplaceclientservicesConstants.IS_FORWARDING_ENTIRY_EXISTS, "true")
+					.header(MarketplaceclientservicesConstants.CONTENT_TYPE, "application/json")
+					.header(MarketplaceclientservicesConstants.MERCHANT_OUTLET_NAME, "TUL-Online")
+					.header(MarketplaceclientservicesConstants.ACQUIRERID, "Tata Unistore Ltd")
+					.header(MarketplaceclientservicesConstants.ORGANIZATION_NAME, "Tata Unistore Ltd")
+					.header(MarketplaceclientservicesConstants.POS_ENTRY_MODE, "2")
+					.header(MarketplaceclientservicesConstants.POS_TYPE_ID, "1")
+					.header(MarketplaceclientservicesConstants.POS_NAME, "webpos-tul-qc-01")
+					.header(MarketplaceclientservicesConstants.TERM_APP_VERSION, "null")
+					.header(MarketplaceclientservicesConstants.CURRENT_BATCH_NUMBER, "10209396")
+					.header(MarketplaceclientservicesConstants.TRANSACTION_ID, transactionId).type(MediaType.APPLICATION_JSON)
+					.get(ClientResponse.class);
+
+			if (null != response)
+			{
+				output = response.getEntity(String.class);
+				walletBalanceResponse = objectMapper.readValue(output, WalletBalanceResponse.class);
+				if (null != walletBalanceResponse && null != walletBalanceResponse.getWallet())
+				{
+					LOG.debug(" ************** GET CUSTOMER WALLET BALENCE----" + walletBalanceResponse.getWallet().getBalance()); //need to create marshalling for response object
+				}
+				System.out.println(" ************** GET CUSTOMER WALLET BALENCE----" + walletBalanceResponse.getResponseCode());
+
+
+			}
+		}
+		catch (
+
+		final Exception ex)
+		{
+			ex.printStackTrace();
+			System.out.println("Error response Status:------" + response.getStatus());
+		}
+
+		return walletBalanceResponse;
+	}
+
+	@Override
+	public WalletTransacationsList getWalletTransactionList(final String walletCardNumber, final String transactionId)
+	{
+
+		System.out.println("***********************************in Mpl Wallet listOfTransactionsForWallet...............");
+
+		System.out.println("in Mpl Wallet cardNumber:" + walletCardNumber);
+
+		final Client client = Client.create();
+		ClientResponse response = null;
+		WebResource webResource = null;
+		WalletTransacationsList walletTransacationsList = null;
+		String output = null;
+		//final ReturnLogisticsResponse responsefromOMS = new ReturnLogisticsResponse();
+		final DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
+		final ObjectMapper objectMapper = new ObjectMapper();
+		try
+		{
+			webResource = client.resource(UriBuilder.fromUri(
+					MarketplaceclientservicesConstants.GET_BALANCE_FOR_WALLET + walletCardNumber + "/transactions").build());
+
+			//need to create marshalling for request body
+			response = webResource.type(MediaType.APPLICATION_JSON)
+					.header(MarketplaceclientservicesConstants.FORWARDING_ENTITY_ID, "tatacliq.com")
+					.header(MarketplaceclientservicesConstants.FORWARDING_ENTITY_PASSWORD, "tatacliq.com")
+					.header(MarketplaceclientservicesConstants.TERMINAL_ID, "webpos-tul-dev10")
+					.header(MarketplaceclientservicesConstants.USERNAME, "tulwebuser")
+					.header(MarketplaceclientservicesConstants.PASSWORD, "webusertul")
+					.header(MarketplaceclientservicesConstants.DATE_AT_CLIENT, dateFormat.format(new Date()))
+					.header(MarketplaceclientservicesConstants.IS_FORWARDING_ENTIRY_EXISTS, "true")
+					.header(MarketplaceclientservicesConstants.CONTENT_TYPE, "application/json")
+					.header(MarketplaceclientservicesConstants.MERCHANT_OUTLET_NAME, "TUL-Online")
+					.header(MarketplaceclientservicesConstants.ACQUIRERID, "Tata Unistore Ltd")
+					.header(MarketplaceclientservicesConstants.ORGANIZATION_NAME, "Tata Unistore Ltd")
+					.header(MarketplaceclientservicesConstants.POS_ENTRY_MODE, "2")
+					.header(MarketplaceclientservicesConstants.POS_TYPE_ID, "1")
+					.header(MarketplaceclientservicesConstants.POS_NAME, "webpos-tul-qc-01")
+					.header(MarketplaceclientservicesConstants.TERM_APP_VERSION, "null")
+					.header(MarketplaceclientservicesConstants.CURRENT_BATCH_NUMBER, "10209396")
+					.header(MarketplaceclientservicesConstants.TRANSACTION_ID, transactionId).type(MediaType.APPLICATION_JSON)
+					.get(ClientResponse.class);
+
+			if (null != response)
+			{
+				output = response.getEntity(String.class);
+				walletTransacationsList = objectMapper.readValue(output, WalletTransacationsList.class);
+				if (null != walletTransacationsList && null != walletTransacationsList.getWalletTransactions())
+				{
+					LOG.debug(" ************** GET CUSTOMER WALLET BALENCE----" + walletTransacationsList); //need to create marshalling for response object
+				}
+				System.out.println(" ************** GET CUSTOMER WALLET BALENCE Size :----" + walletTransacationsList);
+
+
+			}
+		}
+		catch (
+
+		final Exception ex)
+		{
+			ex.printStackTrace();
+			System.out.println("Error response Status:------" + response.getStatus());
+		}
+
+		return walletTransacationsList;
+	}
+
+	public AddToCardWallet buildAddtoCardWallet(final String cardNumber, final String cardPin)
+	{
+
+		final AddToCardWallet addToCardWallet = new AddToCardWallet();
+		addToCardWallet.setCardNumber(cardNumber);
+		addToCardWallet.setCardPin(cardPin);
+		return addToCardWallet;
+
+	}
+
+	@Override
+	public QCCustomerRegisterResponse createWalletContainer(final QCCustomerRegisterRequest registerCustomerRequest,
+			final String transactionId)
+	{
+		// YTODO Auto-generated method stub
+		return registerCustomerWallet(registerCustomerRequest, transactionId);
+	}
+
+
 
 
 }

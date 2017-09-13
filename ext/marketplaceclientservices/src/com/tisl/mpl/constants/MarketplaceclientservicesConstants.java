@@ -54,6 +54,10 @@ public final class MarketplaceclientservicesConstants extends GeneratedMarketpla
 	public static final String POS_NAME = "POSName";
 	public static final String TERM_APP_VERSION = "TermAppVersion";
 	public static final String CURRENT_BATCH_NUMBER = "CurrentBatchNumber";
+
+	public static final String ADD_TO_CARD_TO_WALLET = "http://qc3.qwikcilver.com/QwikCilver/eGMS.RestAPI/api/wallet/";
+	public static final String GET_BALANCE_FOR_WALLET = "http://qc3.qwikcilver.com/QwikCilver/eGMS.RestAPI/api/wallet/";
+
 	// QC Wallet
 
 	// Pincode Serviceabilty constants
@@ -63,7 +67,7 @@ public final class MarketplaceclientservicesConstants extends GeneratedMarketpla
 	 * ; public static final String URLSECONDPHASE =
 	 * "<Item><USSID><replaceUssid></USSID><FulfilmentType>TSHIP</FulfilmentType><TransportMode>AIR</TransportMode><DeliveryMode><Type>HD</Type><Inventory>449</Inventory><isPincodeServiceable>Y</isPincodeServiceable><isCOD>N</isCOD><isPrepaidEligible>N</isPrepaidEligible><DeliveryDate>2015-07-21T15:54:04Z</DeliveryDate></DeliveryMode></Item>"
 	 * ; public static final String URLTHIRDPHASE = "</PincodeServiceability>";
-	 *
+	 * 
 	 * public static final String URLSOFTFIRSTPHASE =
 	 * "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\" ?><inventoryReservationResponseDTO>"; public static
 	 * final String URLSOFTSECONDPHASE =

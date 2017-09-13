@@ -8,6 +8,7 @@ import de.hybris.platform.acceleratorstorefrontcommons.breadcrumb.ResourceBreadc
 import de.hybris.platform.acceleratorstorefrontcommons.constants.WebConstants;
 import de.hybris.platform.acceleratorstorefrontcommons.controllers.pages.AbstractPageController;
 import de.hybris.platform.cms2.exceptions.CMSItemNotFoundException;
+import de.hybris.platform.cms2.model.pages.ContentPageModel;
 import de.hybris.platform.core.model.user.CustomerModel;
 import de.hybris.platform.order.CartService;
 import de.hybris.platform.servicelayer.config.ConfigurationService;
@@ -42,8 +43,13 @@ import com.tisl.mpl.pojo.response.QCCustomerRegisterResponse;
 import com.tisl.mpl.service.MplQCInitServiceImpl;
 import com.tisl.mpl.storefront.constants.ModelAttributetConstants;
 import com.tisl.mpl.storefront.constants.RequestMappingUrlConstants;
+import com.tisl.mpl.storefront.web.forms.AddToCardWalletForm;
 
+import org.springframework.web.bind.annotation.ModelAttribute;
 
+import java.util.List;
+
+import com.tisl.mpl.pojo.response.WalletTrasacationsListData;
 /**
  * @author Nirav Bhanushali TUL
  *
@@ -84,7 +90,7 @@ public class WalletController extends AbstractPageController
 	private MplQCInitServiceImpl mplQCInitService;
 
 	private static final Logger LOG = Logger.getLogger(WalletController.class);
-
+	protected static final String REDIM_WALLET_CODE_PATTERN = "/redimWallet";
 
 
 	@SuppressWarnings("boxing")
@@ -113,6 +119,7 @@ public class WalletController extends AbstractPageController
 		model.addAttribute(WebConstants.BREADCRUMBS_KEY,
 				resourceBreadcrumbBuilder.getBreadcrumbs(MarketplacecheckoutaddonConstants.PAYMENTBREADCRUMB));
 		model.addAttribute(ModelAttributetConstants.METAROBOTS, ModelAttributetConstants.NOINDEX_NOFOLLOW);
+		model.addAttribute("addToCardWalletForm", new AddToCardWalletForm());
 		return getViewForPage(model);
 	}
 
@@ -202,6 +209,30 @@ public class WalletController extends AbstractPageController
 		}
 
 		return response;
+	}
+	@RequestMapping(value = REDIM_WALLET_CODE_PATTERN, method = RequestMethod.POST)
+	public String getRedimWalletView(@ModelAttribute("addToCardWalletForm")  AddToCardWalletForm addToCardWalletForm,  Model model) throws CMSItemNotFoundException{
+		System.out.println("**************cardNumber*********************************"+addToCardWalletForm.getCardNumber());
+		System.out.println("**************cardPin*********************************"+addToCardWalletForm.getCardPin());
+		String balanceAmount ="0";
+		balanceAmount = mplWalletFacade.getRedimWallet(addToCardWalletForm.getCardNumber(),addToCardWalletForm.getCardPin());
+	   if(balanceAmount.isEmpty()){
+	   	balanceAmount="0";
+	   }
+
+	   List<WalletTrasacationsListData> walletTrasacationsListData = mplWalletFacade.getWalletTransactionList();
+		System.out.println("walletTrasacationsListData List :"+walletTrasacationsListData.size());
+		
+		 List<WalletTrasacationsListData> cashBackWalletTrasacationsList =mplWalletFacade.getCashBackWalletTrasacationsList(walletTrasacationsListData ,"ADD CARD TO WALLET");
+	    System.out.println("***************cashBackWalletTrasacationsListData:"+cashBackWalletTrasacationsList.size());
+		final ContentPageModel contentPage = getContentPageForLabelOrId("cliqcashPage");
+		storeCmsPageInModel(model, contentPage);
+		setUpMetaDataForContentPage(model, contentPage);
+		model.addAttribute("WalletBalance", balanceAmount);
+		model.addAttribute("walletTrasacationsListData", walletTrasacationsListData);
+		model.addAttribute("cashBackWalletTrasacationsList", cashBackWalletTrasacationsList);
+		
+		return "addon:/marketplacecheckoutaddon/pages/checkout/single/cliqcash";
 	}
 
 }

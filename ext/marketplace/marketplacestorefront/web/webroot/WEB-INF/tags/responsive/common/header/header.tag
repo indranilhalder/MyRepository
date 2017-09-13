@@ -151,6 +151,13 @@
 								</c:if> 
 					         </c:if>
 								<!-- R2.3 for track order END -->
+								
+								
+									<li class="track_order_header"><a href="/cliqCash/getcliqcashPage" >
+										<spring:theme code="trackorder.header.cliqcash" text="CliQ Cash"/></a>
+										
+							       </li>
+							    
 								<%-- <li class="store-locator-header"><a href="${request.contextPath}/store-finder">Our Stores</a></li> //commented for UF-353--%>
 								<li class="download-app"><a href="${request.contextPath}/apps">Download App</a></li>
 							</c:if>

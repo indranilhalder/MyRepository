@@ -9,6 +9,7 @@ import com.tisl.mpl.pojo.response.BalanceBucketWise;
 import com.tisl.mpl.pojo.response.QCCustomerRegisterResponse;
 import com.tisl.mpl.pojo.response.QCInitializationResponse;
 import com.tisl.mpl.pojo.response.QCRedeeptionResponse;
+import com.tisl.mpl.pojo.response.WalletTransacationsList;
 
 
 /**
@@ -40,5 +41,10 @@ public interface MplWalletServices
 
 	public void getCustomerWallet();
 
+	public String getRedimWallet(String cardNumber, String cardPin, String transactionId);
+
+	public WalletTransacationsList getWalletTransactionList(String cardNumber, String transactionId);
+
+	public QCCustomerRegisterResponse createWalletContainer(QCCustomerRegisterRequest registerCustomerRequest, String transactionId);
 
 }
