@@ -1054,6 +1054,22 @@
 			<property name="maxQuantityAllowed" type="String" />
 			<property name="customizationInfoText" type="String" />
 			<property name="buyingGuideUrl" type="String" />
+			<property name="classificationList" type="java.util.List&lt;com.tisl.mpl.wsdto.ClassificationDTOLister>" />
+	</bean>
+	
+	<bean class="com.tisl.mpl.wsdto.ClassificationDTOLister">
+		<property name="key" type="String" />
+		<property name="value" type="com.tisl.mpl.wsdto.Classifications" />
+	</bean>
+	
+	<bean class="com.tisl.mpl.wsdto.Classifications">
+		<property name="classificationList" type="java.util.List&lt;com.tisl.mpl.wsdto.ClassificationDTO>" />
+		<property name="classificationValues" type="java.util.List&lt;String>" />
+	</bean>
+	
+	<bean class="com.tisl.mpl.wsdto.ClassificationDTO">
+		<property name="key" type="String" />
+		<property name="value" type="String" />
 	</bean>
 	
 	<!-- Added for OfferDetail of a product TPR-TPR-1299 -->

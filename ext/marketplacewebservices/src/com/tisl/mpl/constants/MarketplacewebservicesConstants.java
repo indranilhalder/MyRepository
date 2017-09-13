@@ -592,6 +592,30 @@ public class MarketplacewebservicesConstants
 	public static final String SPECIAL_MOBILE_FLAG = "special.mobile.flag".intern();
 	public static final String PRICE_DISCLAIMER_JEWELLERY = "*Price and Weight are subject to change basis availability.";
 
+	//CKD:TPR-6804
+	public static final String HOME_FURNISHING = "HomeFurnishing";
+	public static final String CLASSIFICATION_ATTR = "classification.attributes.";
+	public static final String CLASSIFICATION_ATTR_HF = "HomeFurnishing.";
+	public static final String CLASSIFICATION_ATTR_PD = "ProductDetails";
+	public static final String CLASSIFICATION_ATTR_SI = "SetInformation";
+	public static final String CLASSIFICATION_ATTR_CAINS = "CareInstructions";
+	public static final String CLASSIFICATION_ATTR_WASHCARE = "WashCare";
+	public static final String CLASSIFICATION_ATTR_PF = "ProductFeatures";
+	public static final String CLASSIFICATION_ATTR_CARE_INS = "Care Instructions";
+	public static final String CLASSIFICATION_ATTR_WASH_CARE = "Wash Care";
+	public static final String KEY_PROD_PTS = "Key Product Points";
+	public static final String SET_COMPONENT = "Set Component";
+	public static final String SET_COMPONENT_DETAILS = "Set Componenent";
+	public static final String NAME = "Name";
+	public static final String QTY = "Quantity";
+	public static final String DETAILS = "Details";
+	public static final String OVERVIEW_SEC_SEQ = "classification.attributes.HomeFurnishing.sectionSeq";
+	public static final String SET = "Set";
+
 	//INC144317480: Order Threshold Discount Promotion: Netbanking Payment Mode Restriction doesn't work
 	//public static final String BANKNAMEFORNETBANKING = "bankNameforNetbanking";
+	public static final String MAP_CONFIGURABLE_ATTRIBUTE = "mapConfigurableAttribute";
+	public static final String MAP_CONFIGURABLE_ATTRIBUTES = "mapConfigurableAttributes";
+	public static final String E0000 = "E0000";
+	public static final String DESC_PDP_PROPERTIES = "pdp.desc.tab.";
 }
