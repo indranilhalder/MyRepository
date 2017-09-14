@@ -730,7 +730,7 @@ function addToWishlist(alreadyAddedWlName_pdp) {
 					});
 				/*TPR-656 Ends*/
 
-					dtmAddToWishlist("pdp"); 
+					dtmAddToWishlist("pdp",productCodePost,rootCategoryMSD); 
 					
 					//openPop(ussidValue);
 				//	$('#myModal').modal('hide');
@@ -3268,13 +3268,12 @@ function loadDefaultWishListName_SizeGuide() {
 				
 				/*TPR-646 Changes*/
 				utag.link({
-					"link_obj" : this,
 			        "link_text": 'remove_from_wishlist',
 			        "event_type": 'remove_from_wishlist',
 			        "product_sku_wishlist": "" + productCode
 			    });
 				
-				dtmRemoveFromWishlist(pdp);
+				dtmRemoveFromWishlist("pdp",productCode,rootCategoryMSD);
 				//END MSD
 //				window.location.href = ACC.config.encodedContextPath + "/my-account/wishList";
 				//window.location.href = ACC.config.encodedContextPath + "/my-account/viewParticularWishlist?particularWishlist="+wishlistName;
