@@ -77166,3 +77166,20 @@ body .account .right-account form label.invite-text-lbl{
 }
 }
 /* TISCSXII-2177 End */
+
+/*TPR-6907 start*/
+#codEli{
+	display: inline-block;
+	margin-left: 10px;
+}
+#codEli #codLink{
+	color: #92002e;
+	font-size: 14px;
+	text-decoration: underline;
+}
+@media( max-width: 1024px){
+#codEli{
+	margin-left: 0;
+}
+}
+/*TPR-6907 end*/

@@ -6433,6 +6433,11 @@ function populateCartDetailsafterPincodeCheck(responseData){
 		}
 		}
 		}
+	//refresh for pincode restricted promotion
+	if(null!=responseData['isPincodeRestrictedPromotionPresent']&&""!=responseData['isPincodeRestrictedPromotionPresent']&&responseData['isPincodeRestrictedPromotionPresent']==true)
+	{
+		location.reload();
+	}
 	
 }
 

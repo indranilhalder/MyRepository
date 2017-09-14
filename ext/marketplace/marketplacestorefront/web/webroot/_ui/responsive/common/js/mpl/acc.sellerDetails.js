@@ -221,17 +221,17 @@ function focusOnElement() {
 	  //TPR-6907
 	    if($("#isPinCodeChecked").val()=="true"){
 	    	if(ussidIdsForCOD.indexOf(ussid)!=-1){
-	    		 tbodycontent+='<span class="cod" id="codEligible">'
+	    		 tbodycontent+='<p class="cod" id="codEligible">'
 	    	     tbodycontent+=$('#cashondeliveryid').text();
-	    		 tbodycontent+='</span>'
+	    		 tbodycontent+='</p>'
 	    	} 
 	    	
 	    }
 	    else{
 	    	if(sellersArray[i].isCod=='Y'){
-	    		tbodycontent+='<span class="cod" id="codEligible">'
+	    		tbodycontent+='<p class="cod" id="codEligible">'
     		    tbodycontent+=$('#cashondeliveryid').text();
-	    		tbodycontent+='</span>'
+	    		tbodycontent+='</p>'
     		    }
 	    }
 	  	tbodycontent+="</div>"; 
