@@ -1189,7 +1189,7 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 			//create ticket only if async is not working
 			if (asyncEnabled.equalsIgnoreCase("N"))
 			{
-				ticketCreate.ticketCreationModeltoWsDTO(sendTicketRequestData, true);
+				ticketCreate.ticketCreationModeltoWsDTO(sendTicketRequestData, Boolean.TRUE);
 			}
 			else
 			{
@@ -1411,7 +1411,7 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 			//create ticket only if async is not working
 			if (asyncEnabled.equalsIgnoreCase("N"))
 			{
-				ticketCreate.ticketCreationModeltoWsDTO(sendTicketRequestData, true);
+				ticketCreate.ticketCreationModeltoWsDTO(sendTicketRequestData, Boolean.TRUE);
 			}
 			else
 			{
@@ -1535,7 +1535,7 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 			//create ticket only if async is not working
 			if (asyncEnabled.equalsIgnoreCase("N"))
 			{
-				ticketCreate.ticketCreationModeltoWsDTO(sendTicketRequestData, true);
+				ticketCreate.ticketCreationModeltoWsDTO(sendTicketRequestData, Boolean.TRUE);
 			}
 			else
 			{
@@ -1940,14 +1940,19 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 			double deliveryCost = 0D;
 			if (orderEntry.getCurrDelCharge() != null)
 			{
-				if(null != orderEntry.getIsEDtoHD() && orderEntry.getIsEDtoHD().booleanValue() && null != orderEntry.getRefundedEdChargeAmt() && orderEntry.getRefundedEdChargeAmt().doubleValue() != 0D) {
-					if(null != orderEntry.getHdDeliveryCharge() && orderEntry.getHdDeliveryCharge().doubleValue() > 0.0D) {
+				if (null != orderEntry.getIsEDtoHD() && orderEntry.getIsEDtoHD().booleanValue()
+						&& null != orderEntry.getRefundedEdChargeAmt() && orderEntry.getRefundedEdChargeAmt().doubleValue() != 0D)
+				{
+					if (null != orderEntry.getHdDeliveryCharge() && orderEntry.getHdDeliveryCharge().doubleValue() > 0.0D)
+					{
 						deliveryCost = orderEntry.getHdDeliveryCharge().doubleValue();
 					}
-				}else {
+				}
+				else
+				{
 					deliveryCost = orderEntry.getCurrDelCharge().doubleValue();
 				}
-				
+
 			}
 
 			double scheduleDeliveryCost = 0D;
@@ -2135,11 +2140,16 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 								double refundAmount = 0D;
 								final Double currDeliveryCharges = orderEntry.getCurrDelCharge() != null ? orderEntry.getCurrDelCharge()
 										: NumberUtils.DOUBLE_ZERO;
-								 Double deliveryCost = Double.valueOf(0.0D);
-								if(null != orderEntry.getIsEDtoHD() && orderEntry.getIsEDtoHD().booleanValue() && null != orderEntry.getRefundedEdChargeAmt() && orderEntry.getRefundedEdChargeAmt().doubleValue() != 0D) {
-									 deliveryCost = orderEntry.getHdDeliveryCharge() != null ? orderEntry.getHdDeliveryCharge()
+								Double deliveryCost = Double.valueOf(0.0D);
+								if (null != orderEntry.getIsEDtoHD() && orderEntry.getIsEDtoHD().booleanValue()
+										&& null != orderEntry.getRefundedEdChargeAmt()
+										&& orderEntry.getRefundedEdChargeAmt().doubleValue() != 0D)
+								{
+									deliveryCost = orderEntry.getHdDeliveryCharge() != null ? orderEntry.getHdDeliveryCharge()
 											: NumberUtils.DOUBLE_ZERO;
-								}else {
+								}
+								else
+								{
 									deliveryCost = orderEntry.getCurrDelCharge() != null ? orderEntry.getCurrDelCharge()
 											: NumberUtils.DOUBLE_ZERO;
 								}
@@ -2177,12 +2187,17 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 
 								orderEntry.setRefundedDeliveryChargeAmt(currDeliveryCharges);
 								orderEntry.setCurrDelCharge(new Double(0D));
-								if(null != orderEntry.getIsEDtoHD() && orderEntry.getIsEDtoHD().booleanValue() && null != orderEntry.getRefundedEdChargeAmt() && orderEntry.getRefundedEdChargeAmt().doubleValue() == 0D){
-									double hdDeliveryCharges=0.0D;
-									if(null !=orderEntry.getHdDeliveryCharge()) {
+								if (null != orderEntry.getIsEDtoHD() && orderEntry.getIsEDtoHD().booleanValue()
+										&& null != orderEntry.getRefundedEdChargeAmt()
+										&& orderEntry.getRefundedEdChargeAmt().doubleValue() == 0D)
+								{
+									double hdDeliveryCharges = 0.0D;
+									if (null != orderEntry.getHdDeliveryCharge())
+									{
 										hdDeliveryCharges = orderEntry.getHdDeliveryCharge().doubleValue();
 									}
-									orderEntry.setRefundedEdChargeAmt(Double.valueOf(currDeliveryCharges.doubleValue()-hdDeliveryCharges));
+									orderEntry
+											.setRefundedEdChargeAmt(Double.valueOf(currDeliveryCharges.doubleValue() - hdDeliveryCharges));
 								}
 								// Added in R2.3 START
 								orderEntry.setRefundedScheduleDeliveryChargeAmt(scheduleDeliveryCost);
@@ -5021,7 +5036,7 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 	}
 
 	@Override
-	public boolean appliedPromotion(final OrderModel subOrderModel)
+	public boolean appliedPromotionCheckOnetouch(final OrderModel subOrderModel)
 	{
 		LOG.info("Starting executing appliedPromotion method of cancelReturnFacadeImpl....");
 		final List<PromotionResultModel> promotionlist = new ArrayList<PromotionResultModel>(subOrderModel.getAllPromotionResults());
