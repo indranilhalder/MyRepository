@@ -232,7 +232,20 @@ function focusOnElement() {
 		  		if(modes[j]['code'].toLowerCase().indexOf("collect")!=-1){
 		  			isClickDelivery=true;
 		  		}
-		  		deliveryMap+=modes[j]['code']+"-"+modes[j]['deliveryCost'].formattedValue;
+		  		//UF-306 Starts here
+		  		if(modes[j]['code']=='home-delivery')
+	  			{
+		  			deliveryMap+='standard-shipping'+"-"+modes[j]['deliveryCost'].formattedValue;
+	  			}
+		  		else if(modes[j]['code']=='express-delivery')
+	  			{
+		  			deliveryMap+='express-shipping'+"-"+modes[j]['deliveryCost'].formattedValue;
+	  			}
+		  		else if(modes[j]['code']=='click-and-collect')
+	  			{
+		  			deliveryMap+='CLiQ AND PiQ'+"-"+modes[j]['deliveryCost'].formattedValue;
+	  			}
+		  		//UF-306 Ends here
 		  	
 		  	}
 		  	var deliveryModeMap="";
