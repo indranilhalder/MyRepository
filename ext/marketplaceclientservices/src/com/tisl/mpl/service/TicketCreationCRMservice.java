@@ -30,11 +30,11 @@ public interface TicketCreationCRMservice
 	/**
 	 * The existing ticket population method has been overloaded to incorporate the changes need for ticket structure for
 	 * return and cancel scenarios || TPR-6778
-	 * 
+	 *
 	 * @param sendTicketRequestData
 	 * @param overloadParam
 	 * @throws JAXBException
 	 */
-	public void ticketCreationModeltoWsDTO(final SendTicketRequestData sendTicketRequestData, boolean overloadParam)
+	public void ticketCreationModeltoWsDTO(final SendTicketRequestData sendTicketRequestData, Boolean overloadParam)
 			throws JAXBException;
 }
