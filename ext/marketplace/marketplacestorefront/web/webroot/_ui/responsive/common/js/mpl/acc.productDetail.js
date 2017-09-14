@@ -1200,6 +1200,8 @@ function pincodeServiceability(){
 									
 								});
 							/*TPR-642 & 640 ends*/
+								//tpr-6029| DTM
+								 dtmPdpPincode("failure",productCode,pin);
 								return false;
 							}
 							// check if oms service is down
@@ -1232,6 +1234,8 @@ function pincodeServiceability(){
 									pdp_pin_delivery : 'error'
 								});
 							/*TPR-642 & 640 ends*/
+								//tpr-6029| DTM
+								 dtmPdpPincode("failure",productCode,pin);
 								return false;
 								
 							} else {
