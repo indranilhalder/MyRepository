@@ -124,92 +124,7 @@ public class WalletController extends AbstractPageController
 	}
 
 
-	//	static
-	//	{
-	//		try
-	//		{
-	//			mplQCInitService.loadQCInit();
-	//		}
-	//		catch (final QCServiceCallException e)
-	//		{
-	//			e.printStackTrace();
-	//		}
-	//
-	//	}
-
-	/**
-	 * @param request
-	 * @param model
-	 */
-	@SuppressWarnings("boxing")
-	@RequestMapping(value = "/registerCustomerWallet", method = RequestMethod.GET)
-	@RequireHardLogIn
-	public @ResponseBody String registerCustomerWallet(final HttpServletRequest request, final Model model)
-			throws UnsupportedEncodingException
-	{
-
-		String response = StringUtils.EMPTY;
-		try
-		{
-			final QCCustomerRegisterRequest customerRegisterReq = new QCCustomerRegisterRequest();
-			final Customer custInfo = new Customer();
-
-			final CustomerModel currentCustomer = (CustomerModel) userService.getCurrentUser();
-
-			custInfo.setEmail(currentCustomer.getOriginalUid());
-			custInfo.setEmployeeID(currentCustomer.getUid());
-			custInfo.setCorporateName("Tata Unistore Ltd");
-
-			if (null != currentCustomer.getFirstName())
-			{
-
-				custInfo.setFirstname(currentCustomer.getFirstName());
-			}
-			if (null != currentCustomer.getLastName())
-			{
-
-				custInfo.setLastName(currentCustomer.getLastName());
-			}
-
-			customerRegisterReq.setExternalwalletid(currentCustomer.getOriginalUid());
-
-			customerRegisterReq.setCustomer(custInfo);
-
-			customerRegisterReq.setNotes("Activating Customer " + currentCustomer.getOriginalUid());
-
-			final QCCustomerRegisterResponse customerRegisterResponse = mplWalletFacade.createWalletContainer(customerRegisterReq);
-
-			if (customerRegisterResponse.getResponseCode() == 0)
-			{
-				final CustomerWalletDetailModel custWalletDetail = modelService.create(CustomerWalletDetailModel.class);
-				custWalletDetail.setWalletId(customerRegisterResponse.getWallet().getWalletNumber());
-				custWalletDetail.setWalletState(customerRegisterResponse.getWallet().getStatus());
-				custWalletDetail.setCustomer(currentCustomer);
-				custWalletDetail.setServiceProvider("Tata Unistore Ltd");
-
-				modelService.save(custWalletDetail);
-
-				currentCustomer.setCustomerWalletDetail(custWalletDetail);
-				currentCustomer.setIsWalletActivated(true);
-				modelService.save(currentCustomer);
-
-				response = "Success";
-			}
-			else
-			{
-				response = "Fail to Active Customer Wallet " + customerRegisterResponse.getErrorCode() + "|"
-						+ customerRegisterResponse.getResponseMessage();
-			}
-		}
-		catch (final Exception ex)
-		{
-			ex.printStackTrace();
-			response = "Fail";
-			return response;
-		}
-
-		return response;
-	}
+	
 	@RequestMapping(value = REDIM_WALLET_CODE_PATTERN, method = RequestMethod.POST)
 	public String getRedimWalletView(@ModelAttribute("addToCardWalletForm")  AddToCardWalletForm addToCardWalletForm,  Model model) throws CMSItemNotFoundException{
 		System.out.println("**************cardNumber*********************************"+addToCardWalletForm.getCardNumber());
@@ -235,6 +150,72 @@ public class WalletController extends AbstractPageController
 		return "addon:/marketplacecheckoutaddon/pages/checkout/single/cliqcash";
 	}
 
+@SuppressWarnings("boxing")
+	@RequestMapping(value = "/getcliqcashPage", method = RequestMethod.GET)
+	@RequireHardLogIn
+	public String getCliqCash(final Model model) throws CMSItemNotFoundException, QCServiceCallException{
+		
+		mplQCInitService.loadQCInit();
+      String balanceAmount ="0";
+		
+		List<WalletTrasacationsListData> walletTrasacationsListData = null;
+		List<WalletTrasacationsListData> cashBackWalletTrasacationsList = null;
+		final CustomerModel currentCustomer = (CustomerModel) userService.getCurrentUser();
+		
+		if (null != currentCustomer.getIsWalletActivated()){
+			walletTrasacationsListData = mplWalletFacade.getWalletTransactionList();
+			System.out.println("walletTrasacationsListData List :"+walletTrasacationsListData.size());
+			cashBackWalletTrasacationsList = mplWalletFacade.getCashBackWalletTrasacationsList(walletTrasacationsListData ,"ADD CARD TO WALLET");
+		   System.out.println("***************cashBackWalletTrasacationsListData:"+cashBackWalletTrasacationsList.size());
+		
+		}else{
+			  try{
+				final QCCustomerRegisterRequest customerRegisterReq = new QCCustomerRegisterRequest();
+				final Customer custInfo = new Customer();
+				custInfo.setEmail(currentCustomer.getOriginalUid());
+				custInfo.setEmployeeID(currentCustomer.getUid());
+				custInfo.setCorporateName("Tata Unistore Ltd");
+				
+				if (null != currentCustomer.getFirstName()){
+					custInfo.setFirstname(currentCustomer.getFirstName());
+				}if (null != currentCustomer.getLastName()){
+					custInfo.setLastName(currentCustomer.getLastName());
+				}
+
+				customerRegisterReq.setExternalwalletid(currentCustomer.getOriginalUid());
+				customerRegisterReq.setCustomer(custInfo);
+				customerRegisterReq.setNotes("Activating Customer " + currentCustomer.getOriginalUid());
+				final QCCustomerRegisterResponse customerRegisterResponse = mplWalletFacade.createWalletContainer(customerRegisterReq);
+				if (customerRegisterResponse.getResponseCode() == 0)
+				{
+					final CustomerWalletDetailModel custWalletDetail = modelService.create(CustomerWalletDetailModel.class);
+					custWalletDetail.setWalletId(customerRegisterResponse.getWallet().getWalletNumber());
+					custWalletDetail.setWalletState(customerRegisterResponse.getWallet().getStatus());
+					custWalletDetail.setCustomer(currentCustomer);
+					custWalletDetail.setServiceProvider("Tata Unistore Ltd");
+
+					modelService.save(custWalletDetail);
+
+					currentCustomer.setCustomerWalletDetail(custWalletDetail);
+					currentCustomer.setIsWalletActivated(true);
+					modelService.save(currentCustomer);
+				}
+			}
+			catch (final Exception ex)
+			{
+				ex.printStackTrace();
+			}
+		}
+		final ContentPageModel contentPage = getContentPageForLabelOrId("cliqcashPage");
+		storeCmsPageInModel(model, contentPage);
+		setUpMetaDataForContentPage(model, contentPage);
+		model.addAttribute("WalletBalance", balanceAmount);
+		model.addAttribute("walletTrasacationsListData", walletTrasacationsListData);
+		model.addAttribute("cashBackWalletTrasacationsList", cashBackWalletTrasacationsList);
+		
+		//return getViewForPage(model);
+		return "addon:/marketplacecheckoutaddon/pages/checkout/single/cliqcash";
+	}
 }
 
 

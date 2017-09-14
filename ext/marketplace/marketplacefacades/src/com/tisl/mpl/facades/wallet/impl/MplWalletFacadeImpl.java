@@ -235,38 +235,7 @@ public class MplWalletFacadeImpl implements MplWalletFacade
 		if (null != currentCustomer.getIsWalletActivated()){
 			System.out.println("Customer has Actived try to redim the card");
 			 balance = getMplWalletServices().getRedimWallet(cardNumber, cardPin,transactionId);
-		 }else{
-			 System.out.println("Customer Not Wallet Id need to create wallet id ");
-			 final QCCustomerRegisterRequest customerRegisterReq = new QCCustomerRegisterRequest();
-	 			final Customer custInfo = new Customer();
-   	 			custInfo.setEmail(currentCustomer.getOriginalUid());
-   	 			custInfo.setEmployeeID(currentCustomer.getUid());
-   	 			custInfo.setCorporateName("Tata Unistore Ltd");
-   	 			if (null != currentCustomer.getFirstName()){
-   	 				custInfo.setFirstname(currentCustomer.getFirstName());
-   	 			}if (null != currentCustomer.getLastName()){
-   	 				custInfo.setLastName(currentCustomer.getLastName());
-   	 			}
-   	 			customerRegisterReq.setExternalwalletid(currentCustomer.getOriginalUid());
-   	 			customerRegisterReq.setCustomer(custInfo);
-   	 			customerRegisterReq.setNotes("Activating Customer " + currentCustomer.getOriginalUid());
-   	 			final QCCustomerRegisterResponse customerRegisterResponse = getMplWalletServices().createWalletContainer(customerRegisterReq,transactionId);
-   	 			if (null != customerRegisterResponse && customerRegisterResponse.getResponseCode() == Integer.valueOf(0)){
-   	 				final CustomerWalletDetailModel custWalletDetail = modelService.create(CustomerWalletDetailModel.class);
-   	 				custWalletDetail.setWalletId(customerRegisterResponse.getWallet().getWalletNumber());
-   	 				custWalletDetail.setWalletPin(customerRegisterResponse.getWallet().getWalletPin());
-   	 				custWalletDetail.setWalletState(customerRegisterResponse.getWallet().getStatus());
-   	 				custWalletDetail.setCustomer(currentCustomer);
-   	 				custWalletDetail.setServiceProvider("Tata Unistore Ltd");
-   	 				modelService.save(currentCustomer);
-   	 				currentCustomer.setCustomerWalletDetail(custWalletDetail);
-   	 				currentCustomer.setIsWalletActivated(Boolean.TRUE);
-   	 				modelService.save(currentCustomer);
-   	 				System.out.println("SuccessFully Saved Customer and CustomerWalletDetail "+currentCustomer.getUid());
-   	 				System.out.println("Try to redim the gift card for this customer");
-   	 				balance = getMplWalletServices().getRedimWallet(cardNumber, cardPin,transactionId);
-   	 			}
-			 	}
+		 }
 		return balance;
 	}
 	

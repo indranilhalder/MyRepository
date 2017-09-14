@@ -153,7 +153,7 @@
 								<!-- R2.3 for track order END -->
 								
 								
-									<li class="track_order_header"><a href="/cliqCash/getcliqcashPage" >
+									<li class="track_order_header"><a href="/wallet/getcliqcashPage" >
 										<spring:theme code="trackorder.header.cliqcash" text="CliQ Cash"/></a>
 										
 							       </li>
