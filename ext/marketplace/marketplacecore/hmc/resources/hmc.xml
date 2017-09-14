@@ -4356,8 +4356,8 @@
 			</result>
 			<editor>
 				
-				<tab name="mpl.exchange.priceMatrix.tab" position="0">
-				  <section name="mpl.exchange.priceMatrix.CategorySection">
+				<tab name="properties" position="0">
+				  <section name="section.common">
 						<listlayout>
 							<attribute name="Pincode"/>
 							<attribute name="isServicable"/>
@@ -4408,15 +4408,15 @@
 			</result>
 			<editor>
 				
-				<tab name="mpl.exchange.priceMatrix.tab" position="0">
-				  <section name="mpl.exchange.priceMatrix.CategorySection">
+				<tab name="properties" position="0">
+				  <section name="section.common">
 						<listlayout>
 							<attribute name="Pincode"/>
 							<attribute name="ExchangeValue"/>
 							<attribute name="brandName"/>
 						</listlayout>
 					</section>
-					<section name="mpl.exchange.priceMatrix.PricingSection">
+					<section name="section.common">
 						<listlayout>
 						    <attribute name="productId" />
 							<attribute name="ussid" />
@@ -4471,14 +4471,14 @@
 			</result>
 			<editor>
 				
-				<tab name="mpl.exchange.priceMatrix.tab" position="0">
-				  <section name="mpl.exchange.priceMatrix.CategorySection">
+				<tab name="properties" position="0">
+				  <section name="section.common">
 						<listlayout>
 							<attribute name="Pincode"/>
 							<attribute name="brandName"/>
 						</listlayout>
 					</section>
-					<section name="mpl.exchange.priceMatrix.PricingSection">
+					<section name="section.common">
 						<listlayout>
 						    <attribute name="productId" />
 							<attribute name="ussid" />
