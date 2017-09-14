@@ -1416,6 +1416,7 @@ function pincodeServiceability(){
 										/*TPR-642 & 640 ends*/
 										}
 									}
+
 								}
 								if (!checkBuyBoxIdPresent) {
 									//$("#home").hide();
@@ -1801,8 +1802,12 @@ function displayDeliveryDetails(sellerName) {
 				// enable COD flag if COD enabled
 				if (data['isCod'] == 'Y') {
 					$("#codId").show();
+					var codLink = "/p-" + productCode + "/viewSellers"; //TPR-6907
+					$("#codLink").attr("href",codLink);
+					$("#codEli").show();
 				} else {
 					$("#codId").hide();
+					$("#codEli").hide(); //TPR-6907
 				}
 				if(null != data['returnWindow'])
 				{
