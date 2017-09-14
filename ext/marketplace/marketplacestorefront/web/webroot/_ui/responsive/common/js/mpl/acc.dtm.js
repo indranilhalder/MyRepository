@@ -99,7 +99,7 @@ $(document).ready(function(){
 		          _satellite.track('cpj_pdp');
 		       }	
 			
-		           digitalData.cpj = {
+		              digitalData.cpj = {
 			                 product : {
 				                    id : product_id,
 				              category : product_category,
@@ -108,11 +108,11 @@ $(document).ready(function(){
 			                brand : {
 				                 name : product_brand
 			           }
-	                 }
+	               }
 		
 		       if(prevPageUrl != "" && prevPageUrl != 'undefined'){
 			           if(prevPageUrl.indexOf('/c-msh') > -1){
-				           findingMethod = 'category_landing_page';
+				           findingMethod = 'product grid';
 			            }
 			           else if(prevPageUrl.indexOf("/s/") > -1 || prevPageUrl.indexOf('/m/') > -1){
 				           findingMethod = 'seller';
@@ -123,14 +123,40 @@ $(document).ready(function(){
 			           else if(prevPageUrl == document.location.href){
 				           findingMethod = 'homePage';
 			             }
-			           else if(prevPageUrl.indexOf(' /search/') > -1){
+			           else if(prevPageUrl.indexOf('/search/') > -1){
 			        	   findingMethod = 'search_results_page';
+			           }
+			           else if(prevPageUrl.indexOf('/cart') > -1){
+			        	   findingMethod = 'cart';
+			           }
+			           else if(prevPageUrl.indexOf('/checkout/orderConfirmation') > -1){
+			        	   findingMethod = 'orderConfirmation';
+			           }
+			           else if(prevPageUrl.indexOf('/my-account/viewParticularWishlist') > -1){
+			        	   findingMethod = 'wishlist';
+			           }
+			           else if(prevPageUrl.indexOf('/my-account/reviews') > -1 || prevPageUrl.indexOf('/my-account/orders') > -1){
+			        	   findingMethod = 'my-account';
 			           }
 			          else{
 				           findingMethod = '';
 			             }
-		               } 
+		           } 
 		
+		           //for external campaigns,banners,recommendations
+		           if((currentPageURL.indexOf('icid2') > -1) && (currentPageURL.indexOf('icid') > -1 )){
+		        	   findingMethod = 'banner';
+		           }
+		           
+		           if(currentPageURL.indexOf('cid') > -1){
+		        	   findingMethod = 'external-campaign';
+		           }
+		           
+		           if(currentPageURL.indexOf('iaclick=true') > -1){
+		        	   findingMethod = 'recommendations';
+		           }
+		          
+		           
 	             if(findingMethod != ''){
 		            digitalData.cpj = {
 				            pdp : {
@@ -216,7 +242,7 @@ $(document).ready(function(){
 	     var isVisible = $('.search-empty.no-results.wrapper:visible').is(':visible');
 	     var searchTerm = $('#search_keyword').val();
 	     var searchCategory = $('#searchCategory').val();
-	     var searchResults = $('#search_results').val();
+	     var searchResults =  $('.search-result h2 span:first').text().replace(/"/g, "");
 		    if(isVisible && typeof _satellite !="undefined" ){
 			         _satellite.track('null_search');
 			        digitalData.internal = {
@@ -338,11 +364,20 @@ $(document).ready(function(){
 	}
 	
 	 //TPR-6299 | for merchandising pages
-    if(pageType == '/deal-of-the-day' || pageType == '/viewalltrending'){
+	
+   /* if(pageType == '/deal-of-the-day' || pageType == '/viewalltrending'){
     	if(typeof(_satellite) !="undefined"){
     		_satellite.track('cpj_merchandising_pages');
 	  	}
+    }*/
+	
+    if(pageName != 'Product Grid' || pageName != 'Product Details' || pageName != 'Cart Page' || 
+    		pageName != 'Checkout-Login Page' ||  pageName != 'Multi Checkout Summary Page' || pageName != 'Order Confirmation Page '){
+    	if(typeof(_satellite) != "undefined"){
+    		_satellite.track('cpj_merchandising_pages');
+	  	}
     }
+    
 /*  Direct call rule starts here*/
 	
     // For icid
@@ -1312,11 +1347,11 @@ function dtmQVTrack(productCodeArray,category,brand){
 	
 }
 //TPR-6299 | for merchandising pages
-$(document).on('click','.new_exclusive_viewAll',function()
+/*$(document).on('click','.new_exclusive_viewAll',function()
  {
 	if(typeof(_satellite) !="undefined"){
 		_satellite.track('cpj_merchandising_pages');
   	}
-});
+});*/
 	
 	

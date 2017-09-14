@@ -1374,6 +1374,8 @@ function pincodeServiceability(){
 													pdp_pin_delivery : deliverModeTealium.join("_")
 												});
 											/*TPR-642 & 640 ends*/
+												//TPR-6029 |DTM IMPLEMENTATION
+												 dtmPdpPincode("success",productCode,pin);
 
 										} else {
 											//$("#home").hide();
@@ -1414,6 +1416,8 @@ function pincodeServiceability(){
 												pdp_pin_delivery : 'error'
 											});
 										/*TPR-642 & 640 ends*/
+											//tpr-6029| DTM
+											 dtmPdpPincode("failure",productCode,pin);
 										}
 									}
 
@@ -1461,6 +1465,8 @@ function pincodeServiceability(){
 							if(typeof utag !="undefined"){
 							utag.link({error_type: error  });
                             }
+							//TPR-6369 |Error tracking dtm
+			 				dtmErrorTracking("Pin Code Servicability Error",error);
 						}
 					});
 
