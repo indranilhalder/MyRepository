@@ -359,7 +359,8 @@ Free
                                                             <tr>
                                                                <td>
                                                               <!-- <span style="display:block; line-height:0;font-size:0;">${ctx.cmsSlotContents.ForwardSeal}</span> -->
-                                                               <img src="http:${ctx.jwlryFrwrdSealImg}" width="51" height="75" style="border:1px solid #cbcbcb;">
+                                                              <span style="display:block; line-height:0;font-size:0;"><img src="http:${ctx.jwlryFrwrdSealImg}"></span>
+                                 
                                                                </td>
                                                                
                                                             </tr>
@@ -379,7 +380,8 @@ Free
                                                             <tr>
                                                                <td>
                                                               <!-- <span style="display:block; line-height:0;font-size:0;">${ctx.cmsSlotContents.ReverseSeal}</span> -->
-                                                               <img src="http:${ctx.jwlryRevSealImg}" width="51" height="75" style="border:1px solid #cbcbcb;">
+                                                              <span style="display:block; line-height:0;font-size:0;"><img src="http:${ctx.jwlryRevSealImg}"></span>
+                             
                                                                </td>
                                                                
                                                             </tr>
