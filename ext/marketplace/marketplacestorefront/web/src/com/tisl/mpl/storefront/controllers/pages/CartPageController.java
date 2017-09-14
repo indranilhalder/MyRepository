@@ -111,6 +111,7 @@ import com.tisl.mpl.storefront.constants.MessageConstants;
 import com.tisl.mpl.storefront.constants.ModelAttributetConstants;
 import com.tisl.mpl.storefront.controllers.ControllerConstants;
 import com.tisl.mpl.storefront.controllers.helpers.FrontEndErrorHelper;
+import com.tisl.mpl.storefront.security.cookie.PDPPincodeCookieGenerator;
 import com.tisl.mpl.util.ExceptionUtil;
 import com.tisl.mpl.util.GenericUtilityMethods;
 import com.tisl.mpl.wsdto.MaxLimitData;
@@ -143,6 +144,10 @@ public class CartPageController extends AbstractPageController
 
 	@Resource(name = "siteConfigService")
 	private SiteConfigService siteConfigService;
+
+	//TPR-6654
+	@Resource(name = "pdpPincodeCookieGenerator")
+	private PDPPincodeCookieGenerator pdpPincodeCookie;
 
 	@Autowired
 	private WishlistFacade wishlistFacade;
@@ -576,7 +581,7 @@ public class CartPageController extends AbstractPageController
 	 * private void setExpressCheckout(final CartModel serviceCart) {
 	 * serviceCart.setIsExpressCheckoutSelected(Boolean.FALSE); if (serviceCart.getDeliveryAddress() != null) {
 	 * serviceCart.setDeliveryAddress(null); modelService.save(serviceCart); }
-	 * 
+	 *
 	 * }
 	 */
 
@@ -858,7 +863,7 @@ public class CartPageController extends AbstractPageController
 	/*
 	 * @description This controller method is used to allow the site to force the visitor through a specified checkout
 	 * flow. If you only have a static configured checkout flow then you can remove this method.
-	 * 
+	 *
 	 * @param model ,redirectModel
 	 */
 
@@ -1595,7 +1600,8 @@ public class CartPageController extends AbstractPageController
 	@RequestMapping(value = MarketplacecheckoutaddonConstants.CHECKPINCODESERVICEABILITY, method = RequestMethod.GET)
 	//@RequireHardLogIn
 	public @ResponseBody JSONObject checkPincodeServiceability(
-			@PathVariable(MarketplacecheckoutaddonConstants.PINCODE) final String selectedPincode)
+			@PathVariable(MarketplacecheckoutaddonConstants.PINCODE) final String selectedPincode, final HttpServletRequest request,
+			final HttpServletResponse response)
 	{
 		String returnStatement = null;
 		final JSONObject jsonObject = new JSONObject();
@@ -1603,6 +1609,11 @@ public class CartPageController extends AbstractPageController
 		final String regex = "\\d{6}";
 		//final CartModel cart = getCartService().getSessionCart();
 		CartData cartData = null;
+		int pincodeCookieMaxAge;
+		final Cookie cookie = GenericUtilityMethods.getCookieByName(request, "pdpPincode");
+		final String cookieMaxAge = getConfigurationService().getConfiguration().getString("pdpPincode.cookie.age");
+		pincodeCookieMaxAge = (Integer.valueOf(cookieMaxAge)).intValue();
+		final String domain = getConfigurationService().getConfiguration().getString("shared.cookies.domain");
 		try
 		{
 			String isServicable = MarketplacecommerceservicesConstants.Y;
@@ -1617,7 +1628,26 @@ public class CartPageController extends AbstractPageController
 
 				if (StringUtil.isNotEmpty(selectedPincode))
 				{
-					getSessionService().setAttribute(MarketplacecommerceservicesConstants.SESSION_PINCODE, selectedPincode);
+					//TPR-6654
+					if (cookie != null && cookie.getValue() != null)
+					{
+						cookie.setValue(selectedPincode);
+						cookie.setMaxAge(pincodeCookieMaxAge);
+						cookie.setPath("/");
+
+						if (null != domain && !domain.equalsIgnoreCase("localhost"))
+						{
+							cookie.setSecure(true);
+						}
+						cookie.setDomain(domain);
+						response.addCookie(cookie);
+						getSessionService().setAttribute(MarketplacecommerceservicesConstants.SESSION_PINCODE, selectedPincode);
+					}
+					else
+					{
+						pdpPincodeCookie.addCookie(response, selectedPincode);
+						getSessionService().setAttribute(MarketplacecommerceservicesConstants.SESSION_PINCODE, selectedPincode);
+					}
 				}
 				try
 				{
@@ -1685,9 +1715,25 @@ public class CartPageController extends AbstractPageController
 
 							getMplCartFacade().setCartSubTotal(cart);
 
+
+							final String var_prev = getSessionService().getAttribute("lastpercentage").toString();
+
+							LOG.debug(">> var_prev :" + var_prev);
+
 							//To calculate discount percentage amount for display purpose
 							// TPR-774-- Total MRP calculation and the Product percentage calculation
 							getMplCartFacade().totalMrpCal(cart);
+
+							final String var_next = getSessionService().getAttribute("lastpercentage").toString();
+
+							LOG.debug(">> var_next :" + var_next);
+
+							if (!var_prev.equalsIgnoreCase(var_next))
+							{
+								LOG.debug("var_prev not equal to var_next :");
+								jsonObject.put("isPincodeRestrictedPromotionPresent", true);
+							}
+
 							cartData = getMplCartFacade().getSessionCartWithEntryOrdering(true);
 							jsonObject.put("cartData", cartData);
 							jsonObject.put("cartEntries", cartData.getEntries());
@@ -1765,7 +1811,7 @@ public class CartPageController extends AbstractPageController
 
 	/*
 	 * @Description adding wishlist popup in cart page
-	 * 
+	 *
 	 * @param String productCode,String wishName, model
 	 */
 
@@ -1822,7 +1868,7 @@ public class CartPageController extends AbstractPageController
 
 	/*
 	 * @Description showing wishlist popup in cart page
-	 * 
+	 *
 	 * @param String productCode, model
 	 */
 	@ResponseBody
