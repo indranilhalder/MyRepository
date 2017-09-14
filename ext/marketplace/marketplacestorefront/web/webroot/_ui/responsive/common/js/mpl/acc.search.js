@@ -773,7 +773,7 @@ $(document).on("click",".plp-wishlist",function(e){
 							},3000)
 						}
 						//TPR-6364
-						dtmRemoveFromWishlist($('#pageType').val());
+						dtmRemoveFromWishlist($('#pageType').val(),productCode,$('#categoryType').val());
 						
 					},
 					error : function(xhr, status, error){
@@ -853,7 +853,7 @@ $(document).on("click",".plp-wishlist",function(e){
 								}
 						}
 						//TPR-6364
-						dtmAddToWishlist($('#pageType').val());
+						dtmAddToWishlist($('#pageType').val(),productCode,$('#categoryType').val());
 						
 					},
 					error : function(xhr, status, error){

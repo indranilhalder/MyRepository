@@ -730,7 +730,7 @@ function addToWishlist(alreadyAddedWlName_pdp) {
 					});
 				/*TPR-656 Ends*/
 
-					dtmAddToWishlist("pdp"); 
+					dtmAddToWishlist("pdp",productCodePost,rootCategoryMSD); 
 					
 					//openPop(ussidValue);
 				//	$('#myModal').modal('hide');
@@ -1200,6 +1200,8 @@ function pincodeServiceability(){
 									
 								});
 							/*TPR-642 & 640 ends*/
+								//tpr-6029| DTM
+								 dtmPdpPincode("failure",productCode,pin);
 								return false;
 							}
 							// check if oms service is down
@@ -1232,6 +1234,8 @@ function pincodeServiceability(){
 									pdp_pin_delivery : 'error'
 								});
 							/*TPR-642 & 640 ends*/
+								//tpr-6029| DTM
+								 dtmPdpPincode("failure",productCode,pin);
 								return false;
 								
 							} else {
@@ -1374,6 +1378,8 @@ function pincodeServiceability(){
 													pdp_pin_delivery : deliverModeTealium.join("_")
 												});
 											/*TPR-642 & 640 ends*/
+												//TPR-6029 |DTM IMPLEMENTATION
+												 dtmPdpPincode("success",productCode,pin);
 
 										} else {
 											//$("#home").hide();
@@ -1414,6 +1420,8 @@ function pincodeServiceability(){
 												pdp_pin_delivery : 'error'
 											});
 										/*TPR-642 & 640 ends*/
+											//tpr-6029| DTM
+											 dtmPdpPincode("failure",productCode,pin);
 										}
 									}
 
@@ -1461,6 +1469,8 @@ function pincodeServiceability(){
 							if(typeof utag !="undefined"){
 							utag.link({error_type: error  });
                             }
+							//TPR-6369 |Error tracking dtm
+			 				dtmErrorTracking("Pin Code Servicability Error",error);
 						}
 					});
 
@@ -3262,13 +3272,12 @@ function loadDefaultWishListName_SizeGuide() {
 				
 				/*TPR-646 Changes*/
 				utag.link({
-					"link_obj" : this,
 			        "link_text": 'remove_from_wishlist',
 			        "event_type": 'remove_from_wishlist',
 			        "product_sku_wishlist": "" + productCode
 			    });
 				
-				dtmRemoveFromWishlist(pdp);
+				dtmRemoveFromWishlist("pdp",productCode,rootCategoryMSD);
 				//END MSD
 //				window.location.href = ACC.config.encodedContextPath + "/my-account/wishList";
 				//window.location.href = ACC.config.encodedContextPath + "/my-account/viewParticularWishlist?particularWishlist="+wishlistName;

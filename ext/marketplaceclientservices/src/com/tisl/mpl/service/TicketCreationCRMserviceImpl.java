@@ -249,7 +249,7 @@ public class TicketCreationCRMserviceImpl implements TicketCreationCRMservice
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.tisl.mpl.service.TicketCreationCRMservice#ticketCreationModeltoXMLData(com.tisl.mpl.data.
 	 * SendTicketRequestData)
 	 */
@@ -362,7 +362,7 @@ public class TicketCreationCRMserviceImpl implements TicketCreationCRMservice
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.tisl.mpl.service.TicketCreationCRMservice#createTicketInCRM(com.tisl.mpl.wsdto.TicketMasterXMLData)
 	 */
 	@Override
@@ -424,7 +424,7 @@ public class TicketCreationCRMserviceImpl implements TicketCreationCRMservice
 	 * @throws JAXBException
 	 */
 	@Override
-	public void ticketCreationModeltoWsDTO(final SendTicketRequestData sendTicketRequestData, final boolean overloadParam)
+	public void ticketCreationModeltoWsDTO(final SendTicketRequestData sendTicketRequestData, final Boolean overloadParam)
 			throws JAXBException
 	{
 		LOG.info("Inside overloaded method ticketCreationModeltoWsDTO....");
