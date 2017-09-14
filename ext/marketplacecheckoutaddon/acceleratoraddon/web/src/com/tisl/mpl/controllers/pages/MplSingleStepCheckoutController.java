@@ -630,6 +630,9 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 		catch (final Exception e)
 		{
 			LOG.error("Exception occured while checkingLocationRestrictedPincode:" + e);
+			LOG.error("Method selectedPincode==>" + selectedPincode);
+			LOG.error("Method locRestrictedPromoPresent==>" + locRestrictedPromoPresent);
+			LOG.error("CurrentUser=" + userService.getCurrentUser().getUid());
 			LOG.error("Stack trace:", e);
 			final String requestQueryParam = UriUtils.encodeQuery("?msg=Opps...Something went wrong&type=error", UTF);
 			return FORWARD_PREFIX + "/checkout/single/message" + requestQueryParam;
@@ -1169,6 +1172,9 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 		catch (final Exception e)
 		{
 			LOG.error("Exception occured while selecting  address:" + e);
+			LOG.error("selectedAddressCode=" + selectedAddressCode);
+			LOG.error("exchangeEnabled=" + exchangeEnabled);
+			LOG.error("CurrentUser=" + userService.getCurrentUser().getUid());
 			LOG.error("Stack trace:", e);
 			final String requestQueryParam = UriUtils.encodeQuery("?msg=Opps...Something went wrong&type=error", UTF);
 			return FORWARD_PREFIX + "/checkout/single/message" + requestQueryParam;
@@ -1251,6 +1257,8 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 		catch (final Exception e)
 		{
 			LOG.error("Exception occured while selecting  address for responsive:" + e);
+			LOG.error("selectedAddressCode=" + selectedAddressCode);
+			LOG.error("CurrentUser=" + userService.getCurrentUser().getUid());
 			LOG.error("Stack trace:", e);
 			jsonObj.put("displaymessage", "jsonExceptionMsg");
 			jsonObj.put("type", "errorCode");
