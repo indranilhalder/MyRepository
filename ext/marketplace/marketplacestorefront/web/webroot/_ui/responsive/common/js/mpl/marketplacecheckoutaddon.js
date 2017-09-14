@@ -5455,6 +5455,15 @@ function calculateDeliveryCost(radioId,deliveryCode)
 		if(typeof _satellite != "undefined") {  
 		  _satellite.track('cpj_checkout_delivery_option_select');
 		}
+		
+		if(typeof (digitalData.cpj.checkout) != 'undefined'){
+    		digitalData.cpj.checkout.deliveryOption = shippingMode.toLowerCase();
+    	}
+		else{
+			digitalData.cpj.checkout = {
+					deliveryOption :	shippingMode.toLowerCase()
+			}
+		}
 }
 
 //TPR-1214
@@ -8505,7 +8514,7 @@ function addToWishlistForCart(ussid,productCode,alreadyAddedWlName)
 				}
 				/*TPR-656 Ends*/
 				
-				dtmAddToWishlist("cart",productCode,'');      /*TPR-6364*/
+				dtmAddToWishlist("cart",productCode,"");      /*TPR-6364*/
 				localStorage.setItem("movedToWishlist_msgFromCart", "Y");
 				
 				
