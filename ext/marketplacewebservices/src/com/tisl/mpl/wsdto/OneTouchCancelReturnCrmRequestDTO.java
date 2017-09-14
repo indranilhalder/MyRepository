@@ -36,6 +36,7 @@ public class OneTouchCancelReturnCrmRequestDTO
 	private String AccHolderName;
 	private String IFSC;
 	private String AccNum;
+	private String Title;
 
 
 
@@ -435,5 +436,22 @@ public class OneTouchCancelReturnCrmRequestDTO
 	public void setUSSID(final String uSSID)
 	{
 		USSID = uSSID;
+	}
+
+	/**
+	 * @return the title
+	 */
+	public String getTitle()
+	{
+		return Title;
+	}
+
+	/**
+	 * @param title
+	 *           the title to set
+	 */
+	public void setTitle(final String title)
+	{
+		Title = title;
 	}
 }

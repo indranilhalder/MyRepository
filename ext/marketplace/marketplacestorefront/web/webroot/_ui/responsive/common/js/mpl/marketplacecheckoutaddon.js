@@ -6433,6 +6433,11 @@ function populateCartDetailsafterPincodeCheck(responseData){
 		}
 		}
 		}
+	//refresh for pincode restricted promotion
+	if(null!=responseData['isPincodeRestrictedPromotionPresent']&&""!=responseData['isPincodeRestrictedPromotionPresent']&&responseData['isPincodeRestrictedPromotionPresent']==true)
+	{
+		location.reload();
+	}
 	
 }
 
@@ -8493,7 +8498,6 @@ function addToWishlistForCart(ussid,productCode,alreadyAddedWlName)
 				/*TPR-656*//*TPR-4738*/
 				if(typeof utag !="undefined"){
 					utag.link({
-						link_obj: this, 
 						link_text: 'cart_add_to_wishlist' , 
 						event_type : 'cart_add_to_wishlist', 
 						product_sku_wishlist : productcodearray
@@ -8501,7 +8505,7 @@ function addToWishlistForCart(ussid,productCode,alreadyAddedWlName)
 				}
 				/*TPR-656 Ends*/
 				
-				dtmAddToWishlist("cart");      /*TPR-6364*/
+				dtmAddToWishlist("cart",productCode,'');      /*TPR-6364*/
 				localStorage.setItem("movedToWishlist_msgFromCart", "Y");
 				
 				
