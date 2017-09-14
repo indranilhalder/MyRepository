@@ -1940,7 +1940,14 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 			double deliveryCost = 0D;
 			if (orderEntry.getCurrDelCharge() != null)
 			{
-				deliveryCost = orderEntry.getCurrDelCharge().doubleValue();
+				if(null != orderEntry.getIsEDtoHD() && orderEntry.getIsEDtoHD().booleanValue() && null != orderEntry.getRefundedEdChargeAmt() && orderEntry.getRefundedEdChargeAmt().doubleValue() != 0D) {
+					if(null != orderEntry.getHdDeliveryCharge() && orderEntry.getHdDeliveryCharge().doubleValue() > 0.0D) {
+						deliveryCost = orderEntry.getHdDeliveryCharge().doubleValue();
+					}
+				}else {
+					deliveryCost = orderEntry.getCurrDelCharge().doubleValue();
+				}
+				
 			}
 
 			double scheduleDeliveryCost = 0D;
@@ -2126,8 +2133,16 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 							{
 								//TISPRO-216 Starts
 								double refundAmount = 0D;
-								final Double deliveryCost = orderEntry.getCurrDelCharge() != null ? orderEntry.getCurrDelCharge()
+								final Double currDeliveryCharges = orderEntry.getCurrDelCharge() != null ? orderEntry.getCurrDelCharge()
 										: NumberUtils.DOUBLE_ZERO;
+								 Double deliveryCost = Double.valueOf(0.0D);
+								if(null != orderEntry.getIsEDtoHD() && orderEntry.getIsEDtoHD().booleanValue() && null != orderEntry.getRefundedEdChargeAmt() && orderEntry.getRefundedEdChargeAmt().doubleValue() != 0D) {
+									 deliveryCost = orderEntry.getHdDeliveryCharge() != null ? orderEntry.getHdDeliveryCharge()
+											: NumberUtils.DOUBLE_ZERO;
+								}else {
+									deliveryCost = orderEntry.getCurrDelCharge() != null ? orderEntry.getCurrDelCharge()
+											: NumberUtils.DOUBLE_ZERO;
+								}
 								// Added in r2.3 START
 								final Double scheduleDeliveryCost = orderEntry.getScheduledDeliveryCharge() != null ? orderEntry
 										.getScheduledDeliveryCharge() : NumberUtils.DOUBLE_ZERO;
@@ -2160,8 +2175,15 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 								}
 
 
-								orderEntry.setRefundedDeliveryChargeAmt(deliveryCost);
+								orderEntry.setRefundedDeliveryChargeAmt(currDeliveryCharges);
 								orderEntry.setCurrDelCharge(new Double(0D));
+								if(null != orderEntry.getIsEDtoHD() && orderEntry.getIsEDtoHD().booleanValue() && null != orderEntry.getRefundedEdChargeAmt() && orderEntry.getRefundedEdChargeAmt().doubleValue() == 0D){
+									double hdDeliveryCharges=0.0D;
+									if(null !=orderEntry.getHdDeliveryCharge()) {
+										hdDeliveryCharges = orderEntry.getHdDeliveryCharge().doubleValue();
+									}
+									orderEntry.setRefundedEdChargeAmt(Double.valueOf(currDeliveryCharges.doubleValue()-hdDeliveryCharges));
+								}
 								// Added in R2.3 START
 								orderEntry.setRefundedScheduleDeliveryChargeAmt(scheduleDeliveryCost);
 								orderEntry.setScheduledDeliveryCharge(new Double(0D));
@@ -2768,7 +2790,10 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 		requestData.setTransactionID(codSelfShipData.getTransactionID());
 		requestData.setOrderDate(codSelfShipData.getOrderDate());
 		requestData.setTransactionDate(codSelfShipData.getTransactionDate());
-		requestData.setTitle(codSelfShipData.getTitle().toUpperCase());
+		if (null != codSelfShipData.getTitle())
+		{
+			requestData.setTitle(codSelfShipData.getTitle().toUpperCase());
+		}
 		requestData.setPaymentMode(codSelfShipData.getPaymentMode());
 		requestData.setBankName(codSelfShipData.getBankName());
 		requestData.setName(codSelfShipData.getName());
@@ -2853,9 +2878,6 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 	 * @param subOrderModel
 	 * @param orderRequestRecord
 	 */
-
-
-
 	//	private void initiateRefundMrupee(final OrderModel subOrderModel, final OrderCancelRecordEntryModel orderRequestRecord,
 	//			final String ticketTypeCode)
 	//	{

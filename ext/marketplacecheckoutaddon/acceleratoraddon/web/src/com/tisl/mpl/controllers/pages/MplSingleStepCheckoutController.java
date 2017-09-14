@@ -88,6 +88,7 @@ import java.util.Map.Entry;
 import java.util.TreeMap;
 
 import javax.annotation.Resource;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
@@ -171,6 +172,7 @@ import com.tisl.mpl.sellerinfo.facades.MplSellerInformationFacade;
 import com.tisl.mpl.storefront.constants.ModelAttributetConstants;
 import com.tisl.mpl.storefront.constants.RequestMappingUrlConstants;
 import com.tisl.mpl.storefront.controllers.helpers.FrontEndErrorHelper;
+import com.tisl.mpl.storefront.security.cookie.PDPPincodeCookieGenerator;
 import com.tisl.mpl.storefront.util.CSRFTokenManager;
 import com.tisl.mpl.storefront.web.forms.AccountAddressForm;
 import com.tisl.mpl.storefront.web.forms.PaymentForm;
@@ -199,6 +201,26 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 
 	@Resource(name = "configurationService")
 	private ConfigurationService configurationService;
+
+	@Resource(name = "pdpPincodeCookieGenerator")
+	private PDPPincodeCookieGenerator pdpPincodeCookie;
+
+	/**
+	 * @return the configurationService
+	 */
+	public ConfigurationService getConfigurationService()
+	{
+		return configurationService;
+	}
+
+	/**
+	 * @param configurationService
+	 *           the configurationService to set
+	 */
+	public void setConfigurationService(final ConfigurationService configurationService)
+	{
+		this.configurationService = configurationService;
+	}
 
 	@Resource(name = "modelService")
 	private ModelService modelService;
@@ -628,7 +650,8 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 		}
 		catch (final Exception e)
 		{
-			LOG.error("Exception occured while selecting  address:" + e);
+			LOG.error("Exception occured while checkingLocationRestrictedPincode:" + e);
+			LOG.error("Stack trace:", e);
 			final String requestQueryParam = UriUtils.encodeQuery("?msg=Opps...Something went wrong&type=error", UTF);
 			return FORWARD_PREFIX + "/checkout/single/message" + requestQueryParam;
 		}
@@ -784,6 +807,7 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 	@RequestMapping(value = RequestMappingUrlConstants.LINK_EDIT_ADDRESS
 			+ MarketplacecheckoutaddonConstants.ADDRESS_CODE_PATH_VARIABLE_PATTERN, method = RequestMethod.POST)
 	public String edit(final AccountAddressForm addressForm, final BindingResult bindingResult, final Model model,
+			final HttpServletRequest request, final HttpServletResponse response,
 			@RequestParam(value = "contExchnageAddEdit", required = false) final String exchangeEnabled)
 			throws CMSItemNotFoundException, UnsupportedEncodingException
 	{
@@ -863,7 +887,7 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 			{
 				exchangeGuideFacade.removeExchangefromCart(cart);
 			}
-			saveAndSetDeliveryAddress(addressForm, true);
+			saveAndSetDeliveryAddress(addressForm, true, request, response);
 
 			//Recalculating Cart Model
 			LOG.debug(">> Delivery cost " + cartData.getDeliveryCost().getValue());
@@ -1055,16 +1079,18 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 	{
 		try
 		{
-
-			if (LOG.isDebugEnabled())
-			{
-				LOG.debug("Inside selectAddress Method...");
-			}
 			if (getUserFacade().isAnonymousUser())
 			{
 				final String requestQueryParam = UriUtils.encodeQuery("?url=" + MarketplacecheckoutaddonConstants.CART
 						+ "&type=redirect", UTF);
 				return FORWARD_PREFIX + "/checkout/single/message" + requestQueryParam;
+			}
+			if (LOG.isDebugEnabled())
+			{
+				LOG.debug("Inside selectAddress Method...");
+				LOG.debug("selectedAddressCode=" + selectedAddressCode);
+				LOG.debug("exchangeEnabled=" + exchangeEnabled);
+				LOG.debug("CurrentUser=" + userService.getCurrentUser().getUid());
 			}
 			//TISST-13012
 			final CartModel cart = getCartService().getSessionCart();
@@ -1098,13 +1124,14 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 			finaladdressData.setVisibleInAddressBook(true);
 
 			final String selectedPincode = finaladdressData.getPostalCode();
-
+			LOG.debug("selectedPincode=" + selectedPincode);
 			//TISSEC-11
 			final String regex = "\\d{6}";
 
 			if (selectedPincode.matches(regex))
 			{
 				final String sessionPincode = getSessionService().getAttribute(MarketplacecommerceservicesConstants.SESSION_PINCODE);
+				LOG.debug("sessionPincode=" + sessionPincode);
 				if (StringUtils.isEmpty(sessionPincode))
 				{
 					final String requestQueryParam = UriUtils.encodeQuery("?url=" + MarketplacecommerceservicesConstants.CART
@@ -1163,6 +1190,7 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 		catch (final Exception e)
 		{
 			LOG.error("Exception occured while selecting  address:" + e);
+			LOG.error("Stack trace:", e);
 			final String requestQueryParam = UriUtils.encodeQuery("?msg=Opps...Something went wrong&type=error", UTF);
 			return FORWARD_PREFIX + "/checkout/single/message" + requestQueryParam;
 
@@ -1183,15 +1211,17 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 		final JSONObject jsonObj = new JSONObject();
 		try
 		{
-			if (LOG.isDebugEnabled())
-			{
-				LOG.debug("Inside selectAddress Responsive Method...");
-			}
 			if (getUserFacade().isAnonymousUser())
 			{
 				jsonObj.put("url", MarketplacecheckoutaddonConstants.CART);
 				jsonObj.put("type", "redirect");
 				return jsonObj;
+			}
+			if (LOG.isDebugEnabled())
+			{
+				LOG.debug("Inside selectAddress Responsive Method...");
+				LOG.debug("selectedAddressCode=" + selectedAddressCode);
+				LOG.debug("CurrentUser=" + userService.getCurrentUser().getUid());
 			}
 			final String isCheckoutPincodeServiceable = getSessionService().getAttribute("isCheckoutPincodeServiceable");
 			if (isCheckoutPincodeServiceable.equalsIgnoreCase(MarketplacecommerceservicesConstants.N))
@@ -1228,23 +1258,23 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 		catch (final EtailBusinessExceptions e)
 		{
 			ExceptionUtil.etailBusinessExceptionHandler(e, null);
-			LOG.error("EtailBusinessExceptions  while selecting address ", e);
+			LOG.error("EtailBusinessExceptions  while selecting address for responsive", e);
 			jsonObj.put("displaymessage", "jsonExceptionMsg");
 			jsonObj.put("type", "errorCode");
 		}
 		catch (final EtailNonBusinessExceptions e)
 		{
 			ExceptionUtil.etailNonBusinessExceptionHandler(e);
-			LOG.error("EtailNonBusinessExceptions  while selecting address ", e);
+			LOG.error("EtailNonBusinessExceptions  while selecting address for responsive", e);
 			jsonObj.put("displaymessage", "jsonExceptionMsg");
 			jsonObj.put("type", "errorCode");
 		}
 		catch (final Exception e)
 		{
-			LOG.error("Exception occured while selecting  address:" + e);
+			LOG.error("Exception occured while selecting  address for responsive:" + e);
+			LOG.error("Stack trace:", e);
 			jsonObj.put("displaymessage", "jsonExceptionMsg");
 			jsonObj.put("type", "errorCode");
-
 		}
 		return jsonObj;
 	}
@@ -1260,6 +1290,7 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 
 	@RequestMapping(value = MarketplacecheckoutaddonConstants.MPLDELIVERYNEWADDRESSURL, method = RequestMethod.POST)
 	public String add(final AccountAddressForm addressForm, final BindingResult bindingResult, final Model model,
+			final HttpServletRequest request, final HttpServletResponse response,
 			@RequestParam(value = "contExchnageAddEdit", required = false) final String exchangeEnabled)
 			throws UnsupportedEncodingException
 	{
@@ -1326,7 +1357,7 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 					return FORWARD_PREFIX + "/checkout/single/message" + requestQueryParam;
 				}
 				//Recalculating Cart Model
-				saveAndSetDeliveryAddress(addressForm, false);
+				saveAndSetDeliveryAddress(addressForm, false, request, response);
 				LOG.debug(">> Delivery cost " + cartData.getDeliveryCost().getValue());
 				getMplCheckoutFacade().reCalculateCart(cartData);
 			}
@@ -1363,9 +1394,9 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 	 * @throws JSONException
 	 */
 	@RequestMapping(value = MarketplacecheckoutaddonConstants.MPLRESPONSIVEDELIVERYNEWADDRESSURL, method = RequestMethod.POST)
-	public @ResponseBody JSONObject addAddressResponsive(final AccountAddressForm addressForm,
-			@RequestParam(required = false, defaultValue = "false") final boolean isEdit, final BindingResult bindingResult)
-			throws JSONException
+	public @ResponseBody JSONObject addAddressResponsive(final AccountAddressForm addressForm, final HttpServletRequest request,
+			final HttpServletResponse response, @RequestParam(required = false, defaultValue = "false") final boolean isEdit,
+			final BindingResult bindingResult) throws JSONException
 	{
 		final JSONObject jsonObj = new JSONObject();
 		try
@@ -1406,7 +1437,7 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 					jsonObj.put("type", "error");
 					return jsonObj;
 				}
-				saveAndSetDeliveryAddress(addressForm, isEdit);
+				saveAndSetDeliveryAddress(addressForm, isEdit, request, response);
 				jsonObj.put("isAddressSaved", "true");
 				jsonObj.put("isAddressSet", "true");
 				jsonObj.put("type", "response");
@@ -1590,9 +1621,15 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 	 * @param addressForm
 	 * @param isEditAddress
 	 */
-	public void saveAndSetDeliveryAddress(final AccountAddressForm addressForm, final boolean isEditAddress)
+	public void saveAndSetDeliveryAddress(final AccountAddressForm addressForm, final boolean isEditAddress,
+			final HttpServletRequest request, final HttpServletResponse response)
 	{
 		CartModel oModel = null;
+		int pincodeCookieMaxAge;
+		final Cookie cookie = GenericUtilityMethods.getCookieByName(request, "pdpPincode");
+		final String cookieMaxAge = getConfigurationService().getConfiguration().getString("pdpPincode.cookie.age");
+		pincodeCookieMaxAge = (Integer.valueOf(cookieMaxAge)).intValue();
+		final String domain = getConfigurationService().getConfiguration().getString("shared.cookies.domain");
 		if (!isEditAddress)//For add address
 		{
 			oModel = getCartService().getSessionCart();
@@ -1641,6 +1678,29 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 		newAddress.setState(addressForm.getState());
 		newAddress.setPhone(addressForm.getMobileNo());
 		newAddress.setLocality(addressForm.getLocality());
+		//TPR-6654
+		if (StringUtils.isNotEmpty(newAddress.getPostalCode()))
+		{
+			if (cookie != null && cookie.getValue() != null)
+			{
+				cookie.setValue(newAddress.getPostalCode());
+				cookie.setMaxAge(pincodeCookieMaxAge);
+				cookie.setPath("/");
+
+				if (null != domain && !domain.equalsIgnoreCase("localhost"))
+				{
+					cookie.setSecure(true);
+				}
+				cookie.setDomain(domain);
+				response.addCookie(cookie);
+				getSessionService().setAttribute(MarketplacecommerceservicesConstants.SESSION_PINCODE, newAddress.getPostalCode());
+			}
+			else
+			{
+				pdpPincodeCookie.addCookie(response, newAddress.getPostalCode());
+				getSessionService().setAttribute(MarketplacecommerceservicesConstants.SESSION_PINCODE, newAddress.getPostalCode());
+			}
+		}
 		// R2.3 changes
 		if (StringUtils.isNotBlank(addressForm.getLandmark())
 				&& !addressForm.getLandmark().equalsIgnoreCase(MarketplacecommerceservicesConstants.OTHER))
@@ -1769,6 +1829,7 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 					catch (final Exception e)
 					{
 						LOG.error("Exception occured while checking inventory " + e.getCause());
+						LOG.error("Stack trace:", e);
 					}
 				}
 				//  TISPRD-1951  END //
@@ -2223,7 +2284,8 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 		}
 		catch (final Exception e)
 		{
-			LOG.error("Exception occured while selecting  address:" + e);
+			LOG.error("Exception occured while selecting  delivery slots:" + e);
+			LOG.error("Stack trace:", e);
 		}
 		final String requestQueryParam = UriUtils.encodeQuery("?redirectString=" + "redirectToReviewOrder" + "&type=ajaxRedirect",
 				UTF);
@@ -2288,6 +2350,7 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 			{
 				ExceptionUtil.etailNonBusinessExceptionHandler(new EtailNonBusinessExceptions(e,
 						MarketplacecommerceservicesConstants.E0000));
+				LOG.error("Stack trace:", e);
 				getSessionService().setAttribute(MarketplacecclientservicesConstants.DELIVERY_MODE_ENTER_STEP_ERROR_ID, "TRUE");
 				final String requestQueryParam = UriUtils.encodeQuery("?msg=Opps...Something went wrong&type=error", UTF);
 				return FORWARD_PREFIX + "/checkout/single/message" + requestQueryParam;
@@ -3207,7 +3270,8 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 		}
 		catch (final Exception e)
 		{
-			LOG.error("Exception occured while selecting  address:" + e);
+			LOG.error("Exception occured in getSlotAvailability:" + e);
+			LOG.error("Stack trace:", e);
 		}
 		return isScheduleServiceble;
 	}
@@ -4651,7 +4715,7 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 
 	/*
 	 * @Description adding wishlist popup in cart page
-	 * 
+	 *
 	 * @param String productCode,String wishName, model
 	 */
 
@@ -4709,7 +4773,7 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 
 	/*
 	 * @Description showing wishlist popup in cart page
-	 *
+	 * 
 	 * @param String productCode, model
 	 */
 	@ResponseBody

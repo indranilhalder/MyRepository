@@ -44,7 +44,7 @@
 						href="${productUrl}/quickView" class="product-tile">
 							<div class="image">
 								<product:productPrimaryImage product="${product}"
-									format="product" />
+									format="product" lazyLoad="false" />
 							</div>
 							<div class="short-info">
 

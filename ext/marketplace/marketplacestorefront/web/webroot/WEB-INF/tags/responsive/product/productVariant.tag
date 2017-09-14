@@ -351,7 +351,7 @@ function loadVariant(x){
 				<c:otherwise>
 				<!-- UF-422:Changes for PDP when product has only one size -->
 						<c:set var="selectedClass" value=""/>
-							<c:if test= "${fn:length(product.variantOptions) eq 1}">
+							<c:if test= "${fn:length(product.variantOptions) eq 1 || pdpSizeCounter eq 1}">
 								<c:set var ="selectedClass" value ="class='selected'"/></c:if>	
 								
 								
@@ -411,7 +411,7 @@ function loadVariant(x){
 												
 													<c:when test="${selectedSize eq null}">
 													<!--CKD:TPR-250:  -->
-														<li><a href="${variantUrl}?selectedSize=true${msiteSellerForSize}">${entry.value}</a></li>
+														<li ${selectedClass}><a href="${variantUrl}?selectedSize=true${msiteSellerForSize}">${entry.value}</a></li>
 													</c:when>
 													
 												<c:otherwise>
@@ -422,7 +422,7 @@ function loadVariant(x){
 											</c:when>	
 										<c:otherwise>
 										<!--CKD:TPR-250:  -->
-											<li data-vcode="${link}"><a href="${variantUrl}?selectedSize=true${msiteSellerForSize}">${entry.value}</a></li>
+											<li ${selectedClass} data-vcode="${link}"><a href="${variantUrl}?selectedSize=true${msiteSellerForSize}">${entry.value}</a></li>
 										</c:otherwise>												
 												</c:choose>
 											</c:forEach>

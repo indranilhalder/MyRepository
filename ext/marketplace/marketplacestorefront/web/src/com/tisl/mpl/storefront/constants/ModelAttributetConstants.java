@@ -906,6 +906,9 @@ public final class ModelAttributetConstants
 	public static final String EMAILORPASSINVALID = "Email or Password invalid";
 	public static final String LUXURY_USER_FIRST_NAME = "fname";
 
+	//PRDI-422
+	public static final String METAPAGETITLE = "metaPageTitle";
+
 	/* TPR-5733 */
 	public static final String FOOTER_LINK_LIST = "footerLinkList";
 	//TPR-6654
@@ -915,4 +918,6 @@ public final class ModelAttributetConstants
 	public static final String BUYBOX_AVAILABLE = "buybox_available";
 	//TPR-6405
 	public static final String IS_SAMSUNG_PAGE = "isSamsungPage";
+	//UF-422
+	public static final String PDP_SIZE_COUNTER = "pdpSizeCounter";
 }

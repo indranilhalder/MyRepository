@@ -23,7 +23,7 @@ public interface MarketPlaceOrderController extends OrderController {
 	public String doRefundPayment(List<OrderEntryModel> orderEntryModel);
 
 	public TypedObject createRefundDeliveryChargesRequest(OrderModel object,
-			Map<AbstractOrderEntryModel, RefundDeliveryData> refundMap);
+			Map<AbstractOrderEntryModel, RefundDeliveryData> refundMap,boolean isEdToHdRefund);
 	
 	public TypedObject createRefundScheduleDeliveryChargesRequest(OrderModel object,
 			Map<AbstractOrderEntryModel, RefundDeliveryData> refundMap);
@@ -47,4 +47,6 @@ public interface MarketPlaceOrderController extends OrderController {
 			List<OrderEntryModel> manualRefundList);
 	public boolean syncOrder(OrderModel order);
 	public String getShortUrl(String orderCode);
+
+	
 }

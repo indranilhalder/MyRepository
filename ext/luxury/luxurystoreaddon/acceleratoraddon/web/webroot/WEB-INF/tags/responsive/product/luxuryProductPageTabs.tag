@@ -109,6 +109,7 @@ var buyboxskuId='';
                 	<input id="prodPrice" type="hidden" />
                    <div class="emibox-left" id="bankNameForEMI"></div>
                    <div class="emibox-right">
+                    <h5 class="emifselectbank">Please select a bank</h5>
                    	<table id="EMITermTable" class="other-sellers-table emi-table">
 				        <thead id="emiTableTHead" style="display:none">
 							<th width="5%"><spring:theme
