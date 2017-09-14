@@ -77182,4 +77182,23 @@ body .account .right-account form label.invite-text-lbl{
 	margin-left: 0;
 }
 }
+.pincode-modal .content {
+    width: 130px;
+    border: 0px solid transparent;
+}
+button#homepagePincodeCheck {
+   font-size: 12px;
+    background: #a9143c;
+    color: #fff;
+    float: right;
+    line-height: 0;
+    padding: 0px 15px;
+    height: 39px;
+}
+.pincode-modal button.close {
+    top: 14px;
+}
+.pincode-modal .modal .overlay{
+	background: rgba(0, 0, 0, 0.5);
+}
 /*TPR-6907 end*/

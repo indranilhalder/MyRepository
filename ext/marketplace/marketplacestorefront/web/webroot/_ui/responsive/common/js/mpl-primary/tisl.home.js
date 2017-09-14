@@ -858,3 +858,34 @@ $(document).ready(function()
 			$(".body-Content").css("padding-bottom",ht);
 		}
 		/*End TISSQAEE-325*/
+		
+		//TPR-6654
+		$(function() {
+		$("#homepagePincodeCheck").click(function(){
+		var pin = $("#home_pin").val();
+		var regExp = /^([1-9])([0-9]){5}$/;
+		if (pin == "") {
+			$("#errorMessage").html("Please enter a valid pincode");
+			$("#errorMessage").css('display', 'inline');
+		}
+		else if(!regExp.test(pin)){
+			$("#errorMessage").html("Please enter a valid pincode");
+			$("#errorMessage").css('display', 'inline');
+		}
+		else
+		{
+		var requiredUrl = ACC.config.encodedContextPath + "/homePincode";
+		var dataString  = "pin=" + pin;
+		jQuery
+		.ajax({
+			type: 'GET',
+			contentType : "application/json; charset=utf-8",
+			url : requiredUrl,
+			data : dataString,
+			success : function(data) {
+				$("#pincode-modal").modal('hide');
+			  }
+		  });
+	    }
+    });
+});
