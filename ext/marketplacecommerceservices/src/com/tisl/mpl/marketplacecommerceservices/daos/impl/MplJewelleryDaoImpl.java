@@ -5,6 +5,7 @@ package com.tisl.mpl.marketplacecommerceservices.daos.impl;
 
 import de.hybris.platform.core.model.JewelleryInformationModel;
 import de.hybris.platform.core.model.JewellerySellerDetailsModel;
+import de.hybris.platform.core.model.JwlryRevSealInfoModel;
 import de.hybris.platform.core.model.PancardInformationModel;
 import de.hybris.platform.servicelayer.exceptions.UnknownIdentifierException;
 import de.hybris.platform.servicelayer.search.FlexibleSearchQuery;
@@ -251,5 +252,41 @@ public class MplJewelleryDaoImpl implements MplJewelleryDao
 			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000);
 		}
 	}
+
+	/*
+	 * (non-Javadoc)
+	 *
+	 * @see com.tisl.mpl.marketplacecommerceservices.daos.MplJewelleryDao#getSealInfo(java.lang.String)
+	 */
+	@Override
+	public List<JwlryRevSealInfoModel> getSealInfo(final String sellerId)
+	{
+		try
+		{
+			final String query = "select pk from {" + JwlryRevSealInfoModel._TYPECODE + "} where {" + JwlryRevSealInfoModel.SELLERID
+					+ "} =?sellerId";
+			final FlexibleSearchQuery sealInfoQuery = new FlexibleSearchQuery(query);
+			sealInfoQuery.addQueryParameter("sellerId", sellerId);
+			return flexibleSearchService.<JwlryRevSealInfoModel> search(sealInfoQuery).getResult();
+		}
+		catch (final FlexibleSearchException e)
+		{
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0002);
+		}
+		catch (final UnknownIdentifierException e)
+		{
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0006);
+		}
+		catch (final EtailNonBusinessExceptions e)
+		{
+			throw e;
+		}
+		catch (final Exception e)
+		{
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000);
+		}
+	}
+
+
 
 }

@@ -234,8 +234,8 @@ tr.d0 td {
 		              			<li class="cart_exchange" style="display:none">
 <%-- 			              		<c:set var="exchangeId" value="${entry.exchangeApplied}"/> --%>
 			              		<input type="hidden" id="exc_cart" value="${entry.exchangeApplied}">
-			              		<c:set var="isExchangeavailable" value="Exchange Applied"/>
-   										${isExchangeavailable} 
+			              		<spring:theme code="marketplace.exchange.messageLabel"/>
+   										
 			              		</li>
 			              		</c:if>
 			              		</ul>
@@ -248,8 +248,7 @@ tr.d0 td {
 		              			<li class="cart_exchange" style="display:none">
 			              		<c:set var="exchangeId" value="${entry.exchangeApplied}"/>
 			              		<input type="hidden" id="exc_cart" value="${entry.exchangeApplied}">
-			              		<c:set var="isExchangeavailable" value="Exchange Applied"/>
-   										${isExchangeavailable} 
+			              		
 			              		</li>
 			              		</c:if> --%>
 							<c:if test="${entry.updateable}">

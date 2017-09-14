@@ -3149,19 +3149,19 @@
 		
 	</bean>
 	
-		<bean class="com.tisl.mpl.wsdto.RevSealJwlryDataWsDTO">
- 	        <property name="message" type="String"/>
- 		    <property name="yes" type="String"/>
- 			<property name="no" type="String"/>
- 		</bean>
- 		<bean class="com.tisl.mpl.wsdto.ReturnModesWsDTO">
- 	        <property name="selfCourier" type="boolean"/>
- 		    <property name="schedulePickup" type="boolean"/>
- 			<property name="quickDrop" type="boolean"/>
- 		</bean>
 
 <!-- =======================================luxury Components========================================================= -->
-
+	<bean class="com.tisl.mpl.wsdto.RevSealJwlryDataWsDTO">
+        <property name="message" type="String"/>
+	    <property name="yes" type="String"/>
+		<property name="no" type="String"/>
+	</bean>
+	<bean class="com.tisl.mpl.wsdto.ReturnModesWsDTO">
+        <property name="selfCourier" type="boolean"/>
+	    <property name="schedulePickup" type="boolean"/>
+		<property name="quickDrop" type="boolean"/>
+	</bean>
+ 		
 	<!--============= luxuryHomePage =============-->
 	<bean class="com.tisl.mpl.wsdto.LuxuryHomePageCompWsDTO">
 		<property name="sectionId" type="String" />
@@ -3292,6 +3292,5 @@
     	<property name="Luxurysocialfeedcomponent" type="com.tisl.mpl.wsdto.LuxSocialFeedComponentWsDTO"/>
 
 	</bean>
- 		
 
 </beans>

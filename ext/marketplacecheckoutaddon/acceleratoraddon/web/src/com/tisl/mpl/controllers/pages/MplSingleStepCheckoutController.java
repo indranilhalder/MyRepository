@@ -554,6 +554,7 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 			if (StringUtils.isEmpty(exchangeEnabled) && !cartItemDelistedStatus)
 			{
 				exchangeAppliedCart = cart.getExchangeAppliedCart();
+				LOG.debug("exchangeAppliedCart=" + exchangeAppliedCart);
 			}
 
 			final CartData cartData = getMplCustomAddressFacade().getCheckoutCart();
@@ -591,8 +592,8 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 				final String requestQueryParam = UriUtils.encodeQuery("?msg=Provide valid pincode&type=error", UTF);
 				return FORWARD_PREFIX + "/checkout/single/message" + requestQueryParam;
 			}
-			if (exchangeAppliedCart.booleanValue() && selectedPincode.matches(regex) && StringUtils.isEmpty(exchangeEnabled)
-					&& !cartItemDelistedStatus)
+			if (null != exchangeAppliedCart && exchangeAppliedCart.booleanValue() && selectedPincode.matches(regex)
+					&& StringUtils.isEmpty(exchangeEnabled) && !cartItemDelistedStatus)
 			{
 				if (!exchangeGuideFacade.isBackwardServiceble(selectedPincode))
 				{
@@ -628,7 +629,8 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 		}
 		catch (final Exception e)
 		{
-			LOG.error("Exception occured while selecting  address:" + e);
+			LOG.error("Exception occured while checkingLocationRestrictedPincode:" + e);
+			LOG.error("Stack trace:", e);
 			final String requestQueryParam = UriUtils.encodeQuery("?msg=Opps...Something went wrong&type=error", UTF);
 			return FORWARD_PREFIX + "/checkout/single/message" + requestQueryParam;
 		}
@@ -952,11 +954,11 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 		}
 		catch (final JSONException e)
 		{
-			LOG.debug("JSONException occured in displayMessage:" + e);
+			LOG.debug("JSONException occured in displayMessage:", e);
 		}
 		catch (final Exception e)
 		{
-			LOG.debug("Exception occured in displayMessage:" + e);
+			LOG.debug("Exception occured in displayMessage:", e);
 		}
 		return jsonObj;
 	}
@@ -1083,7 +1085,8 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 			boolean exchangeAppliedCart = false;
 			if ((StringUtils.isEmpty(exchangeEnabled) && !cartItemDelistedStatus) && (null != (cart.getExchangeAppliedCart())))
 			{
-				exchangeAppliedCart = cart.getExchangeAppliedCart().booleanValue();
+				exchangeAppliedCart = (null != cart.getExchangeAppliedCart()) ? cart.getExchangeAppliedCart().booleanValue() : false;
+				LOG.debug("exchangeAppliedCart=" + exchangeAppliedCart);
 			}
 
 			final CartData cartData = getMplCustomAddressFacade().getCheckoutCart();
@@ -1166,7 +1169,7 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 		catch (final Exception e)
 		{
 			LOG.error("Exception occured while selecting  address:" + e);
-			e.printStackTrace();
+			LOG.error("Stack trace:", e);
 			final String requestQueryParam = UriUtils.encodeQuery("?msg=Opps...Something went wrong&type=error", UTF);
 			return FORWARD_PREFIX + "/checkout/single/message" + requestQueryParam;
 
@@ -1248,10 +1251,9 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 		catch (final Exception e)
 		{
 			LOG.error("Exception occured while selecting  address for responsive:" + e);
-			e.printStackTrace();
+			LOG.error("Stack trace:", e);
 			jsonObj.put("displaymessage", "jsonExceptionMsg");
 			jsonObj.put("type", "errorCode");
-
 		}
 		return jsonObj;
 	}
@@ -1301,9 +1303,10 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 				if (null != cart.getExchangeAppliedCart())
 				{
 					exchangeAppliedCart = cart.getExchangeAppliedCart();
+					LOG.debug("exchangeAppliedCart=" + exchangeAppliedCart);
 				}
 				//Throw popup box for confirmation
-				if (exchangeAppliedCart.booleanValue() && StringUtils.isEmpty(exchangeEnabled))
+				if (null != exchangeAppliedCart && exchangeAppliedCart.booleanValue() && StringUtils.isEmpty(exchangeEnabled))
 				{
 					if (!exchangeGuideFacade.isBackwardServiceble(addressForm.getPostcode()))
 					{
@@ -1776,6 +1779,7 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 					catch (final Exception e)
 					{
 						LOG.error("Exception occured while checking inventory " + e.getCause());
+						LOG.error("Stack trace:", e);
 					}
 				}
 				//  TISPRD-1951  END //
@@ -2230,7 +2234,8 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 		}
 		catch (final Exception e)
 		{
-			LOG.error("Exception occured while selecting  address:" + e);
+			LOG.error("Exception occured while selecting  delivery slots:" + e);
+			LOG.error("Stack trace:", e);
 		}
 		final String requestQueryParam = UriUtils.encodeQuery("?redirectString=" + "redirectToReviewOrder" + "&type=ajaxRedirect",
 				UTF);
@@ -2295,6 +2300,7 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 			{
 				ExceptionUtil.etailNonBusinessExceptionHandler(new EtailNonBusinessExceptions(e,
 						MarketplacecommerceservicesConstants.E0000));
+				LOG.error("Stack trace:", e);
 				getSessionService().setAttribute(MarketplacecclientservicesConstants.DELIVERY_MODE_ENTER_STEP_ERROR_ID, "TRUE");
 				final String requestQueryParam = UriUtils.encodeQuery("?msg=Opps...Something went wrong&type=error", UTF);
 				return FORWARD_PREFIX + "/checkout/single/message" + requestQueryParam;
@@ -3214,7 +3220,8 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 		}
 		catch (final Exception e)
 		{
-			LOG.error("Exception occured while selecting  address:" + e);
+			LOG.error("Exception occured in getSlotAvailability:" + e);
+			LOG.error("Stack trace:", e);
 		}
 		return isScheduleServiceble;
 	}
@@ -5333,7 +5340,7 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 			if (!cartItemDelistedStatus)
 			{
 				final Boolean exchangeCart = cart.getExchangeAppliedCart();
-				if (exchangeCart.booleanValue())
+				if (null != exchangeCart && exchangeCart.booleanValue())
 				{
 					exchangeGuideFacade.removeExchangefromCart(cart);
 					jsonObj.put("exchangeItemsRemoved", "true");
@@ -5360,7 +5367,7 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 		}
 		catch (final Exception e)
 		{
-			LOG.error("Exception occured while Removing Exchange from Cart" + e);
+			LOG.error("Exception occured while Removing Exchange from Cart", e);
 			jsonObj.put("displaymessage", "jsonExceptionMsg");
 			jsonObj.put("type", "errorCode");
 		}

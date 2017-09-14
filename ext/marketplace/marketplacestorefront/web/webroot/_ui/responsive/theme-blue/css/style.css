@@ -75696,9 +75696,9 @@ body.page-returnSubmit .account .wrapper{
  	}
  	/* TISPRDT-2436 start */
  	span.price-breakup#pricebreakupIdSpan{
-	margin: 0 0 0 5px;
+		margin: 0 0 0 5px;
 	}
-	/* TISPRDT-2436 end /
+	/* TISPRDT-2436 end */
  	span.more-link{
  	cursor: pointer;
  	}
@@ -76909,5 +76909,5 @@ body .account .right-account form label.invite-text-lbl{
 #singlePageAddressPopup .product-block.addresses.new-form .half .dupDisplay label{
 	    margin-bottom: 5px;
 	    }
-/* TISPRDT-2410 start */
+/* TISPRDT-2410 end */
 
