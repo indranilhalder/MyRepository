@@ -112,10 +112,10 @@ public class PancardRejectEventListener extends AbstractSiteEventListener<Pancar
 		 * smsRequestData.setSenderID(MarketplacecommerceservicesConstants.SMS_SENDER_ID);
 		 * smsRequestData.setContent(content); smsRequestData.setRecipientPhoneNumber(mobileNumber);
 		 * sendSMSService.sendSMS(smsRequestData);
-		 * 
-		 * } catch (final EtailNonBusinessExceptions ex) {
-		 * LOG.error("EtailNonBusinessExceptions occured while sending sms " + ex); } catch (final Exception ex) {
-		 * LOG.error("Exceptions occured while sending sms " + ex); }
+		 *
+		 * } catch (final EtailNonBusinessExceptions ex) { LOG.error(
+		 * "EtailNonBusinessExceptions occured while sending sms " + ex); } catch (final Exception ex) { LOG.error(
+		 * "Exceptions occured while sending sms " + ex); }
 		 */
 	}
 
