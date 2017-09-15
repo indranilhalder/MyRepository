@@ -681,7 +681,7 @@ ACC.singlePageCheckout = {
     	}
         //TISCSXII-2176 fix 
         if(typeof (digitalData.page.pageInfo)!= 'undefined'){
-    		digitalData.page.pageInfo.pageName = $('#pageName').val() ;
+    		digitalData.page.pageInfo.pageName = $('#pageName').val().toLowerCase() ;
     	}
         //disableHideAjaxLoader will make sure that loader is not removed until CNC stores are fetched.
         var disableHideAjaxLoader=false;
@@ -1432,7 +1432,7 @@ ACC.singlePageCheckout = {
         		_satellite.track('cpj_checkout_proceed_to_review');
         	}	
         	 if(typeof (digitalData.page.pageInfo)!= 'undefined'){
-         		digitalData.page.pageInfo.pageName =  $('#pageName').val();
+         		digitalData.page.pageInfo.pageName =  $('#pageName').val().toLowerCase();
          	}
         	
         	//START:Code to show strike off price
@@ -1900,7 +1900,7 @@ ACC.singlePageCheckout = {
     		_satellite.track('cpj_checkout_proceed_to_payment');
     	}
 		 if(typeof (digitalData.page.pageInfo)!= 'undefined'){
-	    		digitalData.page.pageInfo.pageName =  $('#pageName').val();
+	    		digitalData.page.pageInfo.pageName =  $('#pageName').val().toLowerCase();
 	    }
 		xhrValidateResponse.done(function(data, textStatus, jqXHR) {
         	if (jqXHR.responseJSON) {
