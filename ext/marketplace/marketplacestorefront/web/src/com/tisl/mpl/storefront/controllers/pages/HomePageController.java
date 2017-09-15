@@ -35,6 +35,7 @@ import de.hybris.platform.core.model.product.ProductModel;
 import de.hybris.platform.core.model.user.CustomerModel;
 import de.hybris.platform.servicelayer.config.ConfigurationService;
 import de.hybris.platform.servicelayer.model.ModelService;
+import de.hybris.platform.servicelayer.session.SessionService;
 import de.hybris.platform.servicelayer.user.UserService;
 
 import java.util.ArrayList;
@@ -48,7 +49,9 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import javax.annotation.Resource;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.apache.commons.collections.CollectionUtils;
@@ -97,6 +100,7 @@ import com.tisl.mpl.storefront.constants.MessageConstants;
 import com.tisl.mpl.storefront.constants.ModelAttributetConstants;
 import com.tisl.mpl.storefront.constants.RequestMappingUrlConstants;
 import com.tisl.mpl.storefront.controllers.ControllerConstants;
+import com.tisl.mpl.storefront.security.cookie.PDPPincodeCookieGenerator;
 import com.tisl.mpl.storefront.util.CSRFTokenManager;
 import com.tisl.mpl.util.ExceptionUtil;
 import com.tisl.mpl.util.GenericUtilityMethods;
@@ -139,6 +143,13 @@ public class HomePageController extends AbstractPageController
 
 	@Resource(name = "buyBoxFacade")
 	private BuyBoxFacade buyBoxFacade;
+
+	@Resource(name = ModelAttributetConstants.SESSION_SERVICE)
+	private SessionService sessionService;
+
+	//TPR-6654
+	@Resource(name = "pdpPincodeCookieGenerator")
+	private PDPPincodeCookieGenerator pdpPincodeCookie;
 
 	@Resource(name = "homepageComponentService")
 	private HomepageComponentService homepageComponentService;
@@ -1534,9 +1545,9 @@ public class HomePageController extends AbstractPageController
 			}
 			/*
 			 * else { //newsLetter.setEmailId(emailId); final boolean result = brandFacade.checkEmailId(emailId);
-			 * 
+			 *
 			 * //newsLetter.setIsSaved(Boolean.TRUE);
-			 * 
+			 *
 			 * if (result) { newsLetter.setEmailId(emailId); newsLetter.setIsMarketplace(Boolean.TRUE);
 			 * modelService.save(newsLetter); return "success"; }
 			 */
@@ -1640,7 +1651,7 @@ public class HomePageController extends AbstractPageController
 					/*
 					 * for (final NotificationData single : notificationMessagelist) { if (single.getNotificationRead() !=
 					 * null && !single.getNotificationRead().booleanValue()) { notificationCount++; }
-					 * 
+					 *
 					 * }
 					 */
 
@@ -1841,5 +1852,41 @@ public class HomePageController extends AbstractPageController
 	{
 		model.addAttribute(ModelAttributetConstants.KEYWORDS, metaKeywords);
 		model.addAttribute(ModelAttributetConstants.DESCRIPTION, metaDescription);
+	}
+
+	//TPR-6654
+	@ResponseBody
+	@RequestMapping(value = "/homePincode", method = RequestMethod.GET)
+	public void persistPincode(@RequestParam(value = "pin") final String pin, final HttpServletRequest request,
+			final HttpServletResponse response)
+	{
+		int pincodeCookieMaxAge;
+		final Cookie cookie = GenericUtilityMethods.getCookieByName(request, "pdpPincode");
+		final String cookieMaxAge = configurationService.getConfiguration().getString("pdpPincode.cookie.age");
+		pincodeCookieMaxAge = (Integer.valueOf(cookieMaxAge)).intValue();
+		final String domain = configurationService.getConfiguration().getString("shared.cookies.domain");
+		final String regex = "\\d{6}";
+		if (pin.matches(regex))
+		{
+			if (cookie != null && cookie.getValue() != null)
+			{
+				cookie.setValue(pin);
+				cookie.setMaxAge(pincodeCookieMaxAge);
+				cookie.setPath("/");
+
+				if (null != domain && !domain.equalsIgnoreCase("localhost"))
+				{
+					cookie.setSecure(true);
+				}
+				cookie.setDomain(domain);
+				response.addCookie(cookie);
+				sessionService.setAttribute(MarketplacecommerceservicesConstants.SESSION_PINCODE, pin);
+			}
+			else
+			{
+				pdpPincodeCookie.addCookie(response, pin);
+				sessionService.setAttribute(MarketplacecommerceservicesConstants.SESSION_PINCODE, pin);
+			}
+		}
 	}
 }

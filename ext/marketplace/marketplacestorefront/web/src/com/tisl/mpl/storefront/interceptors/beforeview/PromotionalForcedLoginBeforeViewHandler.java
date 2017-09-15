@@ -8,12 +8,14 @@ import de.hybris.platform.acceleratorfacades.device.data.DeviceData;
 import de.hybris.platform.commercefacades.user.UserFacade;
 
 import javax.annotation.Resource;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.web.servlet.ModelAndView;
 
 import com.tisl.mpl.storefront.interceptors.BeforeViewHandler;
+import com.tisl.mpl.util.GenericUtilityMethods;
 
 
 /**
@@ -46,6 +48,25 @@ public class PromotionalForcedLoginBeforeViewHandler implements BeforeViewHandle
 		else
 		{
 			modelAndView.addObject("forced_login_user", "N");
+		}
+
+		//TPR-6654
+		final Cookie cookie = GenericUtilityMethods.getCookieByName(request, "pdpPincode");
+		if (userFacade.isAnonymousUser())
+		{
+			modelAndView.addObject("anonymous_user", "Y");
+		}
+		else
+		{
+			modelAndView.addObject("anonymous_user", "N");
+		}
+		if (cookie != null && cookie.getValue() != null)
+		{
+			modelAndView.addObject("pincode_available", "Y");
+		}
+		else
+		{
+			modelAndView.addObject("pincode_available", "N");
 		}
 
 	}

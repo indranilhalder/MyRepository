@@ -227,7 +227,7 @@ $(document).ready(function(){
 		   _satellite.track('cpj_category_pages');
 		}
 		  /*  product impressions*/
-				populateFirstFiveProductsPlp();
+		    dtmProductImpressionsPlp();
 	}
 		
 	//Search
@@ -261,7 +261,7 @@ $(document).ready(function(){
 		      /*offercount,newcount */
 		  dtmSearchTags();
 		       /*  product impressions*/
-		  populateFirstFiveProductsSerp();	
+		       dtmProductImpressionsSerp();	
 	
 	  }
 	
@@ -273,7 +273,7 @@ $(document).ready(function(){
 		}
 		digitalData.cpj = {
 			product : {
-				id : $("#product_id").val(),
+				id : $("#product_id").val().toLowerCase(),
 				category : getListValue("product_category")
 			}
 		}
@@ -286,9 +286,9 @@ $(document).ready(function(){
 			}
 		}
 		//TPR-6371 | track promotions
-		if($('#promolist').val() != "") {
+		if($('#promolist').val() != '[]') {
 			   digitalData.cpj.promo = {
-					id : $('#promolist').val()
+					id : $('#promolist').val().toLowerCase().replace(/'/g, "")
 			   }
 			}
 	}
@@ -677,7 +677,7 @@ function dtmAddProductToBag(triggerValue){
 
 //for pdp pincode check
 function dtmPdpPincode(msg,productCode,pin){
-	       if(typeof _satellite !="undefined"){
+	       if(typeof _satellite != "undefined"){
                 if(msg == 'success'){
                      _satellite.track('pin_successful');
                      }	
@@ -698,20 +698,13 @@ function dtmPdpPincode(msg,productCode,pin){
  }
 
 function dtmSearchTags(){
-	//var offerCount = '';
-	//var newCount = '';
 	if( $('.on-sale').length > 0 ){
 	   var offerCount = $('.on-sale').length ;
 	}
 	if( $('.new').length > 0 ){
 	   var newCount =	$('.new').length ;
 	}
-	/*if(typeof digitalData.cpj != "undefined"){
-         	digitalData.cpj.search = {
-				offersCount : offerCount,
-				newCount    : newCount
-	}
-	}*/
+	
 	digitalData.cpj = {
 			search : {
 				offersCount : offerCount,
@@ -723,7 +716,7 @@ function dtmSearchTags(){
 	/*Product Specification*/
 	$(document).on("click",".nav-wrapper .nav.pdp",function(){
 		if(typeof _satellite !="undefined"){
-	   _satellite.track('product_specification_link_click');
+	      _satellite.track('product_specification_link_click');
 		}
 	})
 	
@@ -782,7 +775,7 @@ function dtmSearchTags(){
 /*Compare now page*/
    $(document).on('click','.shop-now',function(){
 		 if(typeof _satellite !="undefined"){
-			 _satellite.track('shop_now_clicks');
+			  _satellite.track('shop_now_clicks');
 		 }
 	 });
    
@@ -1282,7 +1275,7 @@ $(document).on('click','.add_address_button',function(){
 })*/
 
 /*product impressions start*/
-function populateFirstFiveProductsSerp(){
+function dtmProductImpressionsSerp(){
 	var count = 10; 
 	var productArray= [];
     var searchResult = $("ul.product-list li.product-item").length;
@@ -1298,20 +1291,16 @@ function populateFirstFiveProductsSerp(){
    }
      var impressions = productArray.join("|");
    
-     	  digitalData.page = {
-     	    	products : { 
+     	  digitalData.page.products = {
      	    	impression : impressions
-	 	       }
           }
 	
-     	  digitalData.cpj = {
-     			   product : { 
+     	  digitalData.cpj.product = {
      		         id : productArray
-		          }
               }
  }
 
-function populateFirstFiveProductsPlp(){
+function dtmProductImpressionsPlp(){
 	var count = 10; 
 	var productArray= [];
     var searchResult = $("ul.product-listing.product-grid li.product-item").length;

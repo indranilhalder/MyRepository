@@ -454,6 +454,8 @@
 	</c:if>
 	<script>
 	$(document).ready(function(){
+		var anonymousUser = "${anonymous_user}";
+		var pincodeAvailable = "${pincode_available}";
 		var forceLoginUser = "${forced_login_user}";
 		var isMobile = "${is_mobile}";
 		if(forceLoginUser == "Y"){
@@ -467,7 +469,7 @@
 					type: "GET",
 					responseType: "text/html",
 					success: function(response){
-						$("#login-modal").find(".content").html('<button type="button" class="close"></button>'+response);
+						$("#login-modal").find(".content").html('<button id="close-login" type="button" class="close"></button>'+response);
 					},
 					fail: function(response){
 						alert(response);
@@ -481,8 +483,16 @@
 				},2000);
 			}
 		}
+		//TPR-6654
+		if($("#pageType").val() == "homepage" && anonymousUser == "Y" && pincodeAvailable == "N"){
+	    $("#pincode-modal").modal({
+			 backdrop: 'static',
+			 keyboard: true
+		 });
+	   }
+
 	});
-	$(document).on("click",".close",function(){
+	$(document).on("click","#close-login",function(){
 		window.location.href="/";
 	})
 </script>
@@ -524,6 +534,22 @@
 		<div class="content">
 		</div>
 </div>
+<!-- TPR-6654 starts-->
+<div class="modal fade pincode-modal" id="pincode-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+		<div class="overlay"></div>
+		<div class="content">
+		<div class="modal-body">
+		<button class="close" data-dismiss="modal"><span aria-hidden="true">×</span></button>
+		<h4>Enter Pincode</h4>
+		<input id="home_pin" type="text" placeholder="Pincode" maxlength="6" onkeypress="return isNum(event)"/>
+		<button class="viewOrderButton homepage_submit" id="homepagePincodeCheck"><spring:theme code="product.submit"/></button>
+		<br/>
+		<br/>
+        <div id="errorMessage" class="error_text"></div>
+		</div>
+		</div>
+</div>
+<!-- TPR-6654 starts-->
 </body>
 
 <debug:debugFooter/>
