@@ -6497,7 +6497,7 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 				addParameter.setUssid(ussid);
 
 				//mplCommerceCartService.addToCartWithUSSID(addParameter);
-				modification = getMplDefaultCommerceAddToCartStrategyImpl().addToCart(addParameter); //
+				modification = getMplDefaultCommerceAddToCartStrategyImpl().addToCartJwlReplacedItm(addParameter); //
 				if (LOG.isDebugEnabled())
 				{
 					LOG.debug("Add to cart modification status code=" + modification.getStatusCode());

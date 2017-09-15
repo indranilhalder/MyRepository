@@ -858,7 +858,7 @@ ACC.singlePageCheckout = {
                 	$("#selectedDeliveryOptionsHighlight").html(str);
                 	
                 	// For Review Order Highlight Display
-                	$("#selectedReviewOrderHighlight").html(data.CountItems + " Items, " + data.totalPrice);
+                	$("#selectedReviewOrderHighlight").html(data.CountItems + " Item(s), " + data.totalPrice);
                 	ACC.singlePageCheckout.countItemsForReviewOrder=data.CountItems;
                 	
                 	if(callFrom=="removeCartItem")
@@ -1400,7 +1400,7 @@ ACC.singlePageCheckout = {
         	if($("#reviewOrder #totPriceWithoutRupeeSymbol").text()!="")
         	{
         		var countItemsText=ACC.singlePageCheckout.countItemsForReviewOrder;
-        		$("#selectedReviewOrderHighlight").html(countItemsText+" Items, "+$("#reviewOrder #totPriceWithoutRupeeSymbol").text());
+        		$("#selectedReviewOrderHighlight").html(countItemsText+" Item(s), "+$("#reviewOrder #totPriceWithoutRupeeSymbol").text());
         	}
         	//added for tealium
   		  //$("#checkoutPageName").val("Review Order");
