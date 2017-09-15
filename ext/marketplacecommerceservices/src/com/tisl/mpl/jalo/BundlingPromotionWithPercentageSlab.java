@@ -49,6 +49,8 @@ public class BundlingPromotionWithPercentageSlab extends GeneratedBundlingPromot
 	@SuppressWarnings("unused")
 	private final static Logger LOG = Logger.getLogger(BundlingPromotionWithPercentageSlab.class.getName());
 
+	private int noOfAllowedCartProducts = 0;
+	private int maxSlabProuductQuantity = 0;
 
 	@Override
 	protected Item createItem(final SessionContext ctx, final ComposedType type, final ItemAttributeMap allAttributes)
@@ -164,6 +166,7 @@ public class BundlingPromotionWithPercentageSlab extends GeneratedBundlingPromot
 				List<PromotionOrderEntryConsumed> remainingItemsFromTail = null;
 				double totalAdjustOffPricePercentageDiscount = 0.0D;
 				double totalEligiblePrice = 0.0D;
+				Map<String, Integer> validProductList = null;
 
 				LOG.debug("Validated Steps for Bundle Promotions");
 				LOG.debug("Checking Delivery Mode Restriction ");
@@ -176,15 +179,16 @@ public class BundlingPromotionWithPercentageSlab extends GeneratedBundlingPromot
 
 				if (flagForDeliveryModeRestrEval && flagForPaymentModeRestrEval && flagForPincodeRestriction)
 				{
-				        if (validProductUssidMap != null)//iqa
+					if (validProductUssidMap != null)//iqa
 					{
-					   for (final AbstractOrderEntry entry : validProductUssidMap.values())
-					   {
-						totalCount += entry.getQuantity().intValue(); // Fetches total count of Valid Products
-						totalPrice += entry.getTotalPrice().doubleValue();
-					   }
+						for (final AbstractOrderEntry entry : validProductUssidMap.values())
+						{
+							totalCount += entry.getQuantity().intValue(); // Fetches total count of Valid Products
+							totalPrice += entry.getTotalPrice().doubleValue();
+						}
 					}
 					LOG.debug("Total Eligible Count of Products" + totalCount);
+					noOfAllowedCartProducts = (int) totalCount;
 
 					if (totalCount > 0)
 					{
@@ -201,6 +205,7 @@ public class BundlingPromotionWithPercentageSlab extends GeneratedBundlingPromot
 						for (final QuantityPrice priceCountData : steps)//for getting the highest step quantity for potential promotion evaluation
 						{
 							highestStepQuantityValue = priceCountData.quantity;
+							maxSlabProuductQuantity = (int) highestStepQuantityValue;
 							break;
 						}
 
@@ -231,9 +236,18 @@ public class BundlingPromotionWithPercentageSlab extends GeneratedBundlingPromot
 						}
 					}
 
-					final Map<String, Integer> validProductList = getDefaultPromotionsManager().getSortedValidProdUssidMap(
-							validProductUssidMap, (int) promotionEligibleCountFinal, promotionEligibleCountFinal, paramSessionContext,
-							restrictionList, getCode());//for getting the validProductList eligible for qualifying for promotion
+					if (promotionEligibleCountFinal == 0)//Condition to avoid NumberFormatException without no effect in business logic
+					{
+						validProductList = getDefaultPromotionsManager().getSortedValidProdUssidMap(validProductUssidMap, 0, 1,
+								paramSessionContext, restrictionList, getCode());//for getting the validProductList eligible for qualifying for promotion
+
+					}
+					else
+					{
+						validProductList = getDefaultPromotionsManager().getSortedValidProdUssidMap(validProductUssidMap,
+								(int) promotionEligibleCountFinal, promotionEligibleCountFinal, paramSessionContext, restrictionList,
+								getCode());//for getting the validProductList eligible for qualifying for promotion
+					}
 
 					LOG.debug("The totalAdjustOffPricePercentageDiscount is" + totalAdjustOffPricePercentageDiscount);
 
@@ -485,7 +499,7 @@ public class BundlingPromotionWithPercentageSlab extends GeneratedBundlingPromot
 	public String getResultDescription(final SessionContext paramSessionContext, final PromotionResult paramPromotionResult,
 			final Locale paramLocale)
 	{
-		if (paramPromotionResult.getFired(paramSessionContext))
+		if (noOfAllowedCartProducts > maxSlabProuductQuantity)
 		{
 			final Object[] args = {};
 			return formatMessage(this.getMessageFired(paramSessionContext), args, paramLocale);
@@ -537,6 +551,40 @@ public class BundlingPromotionWithPercentageSlab extends GeneratedBundlingPromot
 	protected ModelService getModelService()
 	{
 		return Registry.getApplicationContext().getBean("modelService", ModelService.class);
+	}
+
+	/**
+	 * @return the noOfAllowedCartProducts
+	 */
+	public int getNoOfAllowedCartProducts()
+	{
+		return noOfAllowedCartProducts;
+	}
+
+	/**
+	 * @param noOfAllowedCartProducts
+	 *           the noOfAllowedCartProducts to set
+	 */
+	public void setNoOfAllowedCartProducts(final int noOfAllowedCartProducts)
+	{
+		this.noOfAllowedCartProducts = noOfAllowedCartProducts;
+	}
+
+	/**
+	 * @return the maxSlabProuductQuantity
+	 */
+	public int getMaxSlabProuductQuantity()
+	{
+		return maxSlabProuductQuantity;
+	}
+
+	/**
+	 * @param maxSlabProuductQuantity
+	 *           the maxSlabProuductQuantity to set
+	 */
+	public void setMaxSlabProuductQuantity(final int maxSlabProuductQuantity)
+	{
+		this.maxSlabProuductQuantity = maxSlabProuductQuantity;
 	}
 
 }
