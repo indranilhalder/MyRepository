@@ -673,12 +673,15 @@ ACC.singlePageCheckout = {
         if(typeof utag_data !="undefined"){
         	var checkoutDeliveryPage = "Multi Checkout Summary Page:Choose Your Delivery Options";
         	utag_data.page_name = checkoutDeliveryPage;
-        	//$("#pageName").val(checkoutDeliveryPage);
-        	 
+        	$("#pageName").val(checkoutDeliveryPage);
         }
         //tpr-TPR-6362 | track checkout activity
         if(typeof _satellite != "undefined") {  
     		_satellite.track('cpj_checkout_delivery_option');
+    	}
+        //TISCSXII-2176 fix 
+        if(typeof (digitalData.page.pageInfo)!= 'undefined'){
+    		digitalData.page.pageInfo.pageName = $('#pageName').val() ;
     	}
         //disableHideAjaxLoader will make sure that loader is not removed until CNC stores are fetched.
         var disableHideAjaxLoader=false;
@@ -1428,6 +1431,9 @@ ACC.singlePageCheckout = {
         	if(typeof (_satellite)!= "undefined") {  
         		_satellite.track('cpj_checkout_proceed_to_review');
         	}	
+        	 if(typeof (digitalData.page.pageInfo)!= 'undefined'){
+         		digitalData.page.pageInfo.pageName =  $('#pageName').val();
+         	}
         	
         	//START:Code to show strike off price
         	ACC.singlePageCheckout.addReviewOrderPriceStrikeThrough();
@@ -1893,6 +1899,9 @@ ACC.singlePageCheckout = {
 		if(typeof _satellite != "undefined") {  
     		_satellite.track('cpj_checkout_proceed_to_payment');
     	}
+		 if(typeof (digitalData.page.pageInfo)!= 'undefined'){
+	    		digitalData.page.pageInfo.pageName =  $('#pageName').val();
+	    }
 		xhrValidateResponse.done(function(data, textStatus, jqXHR) {
         	if (jqXHR.responseJSON) {
         		if(data.type!="response")
