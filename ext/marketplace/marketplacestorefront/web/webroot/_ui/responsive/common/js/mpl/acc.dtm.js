@@ -734,6 +734,28 @@ function dtmPdpPincode(msg,productCode,pin){
                       }
  }
 
+function dtmCartPincodeCheck(selectedPincode,msg){
+	 if(typeof(_satellite) != "undefined"){
+         if(msg == 'success'){
+              _satellite.track('pin_successful');
+          }	
+      else{
+           _satellite.track('pin_failed');
+          }	
+       } 
+         digitalData.page.pin = {
+                 value : selectedPincode
+        }
+         
+         digitalData.cpj = {
+		            product : {
+                    id      :  $('#product_id').val().toLowerCase(),
+                    category : $('#product_category').val().toLowerCase()
+               } 
+           }
+}
+
+
 function dtmSearchTags(){
 	if( $('.on-sale').length > 0 ){
 	   var offerCount = $('.on-sale').length ;
@@ -783,7 +805,7 @@ function dtmSearchTags(){
 			channel_name = 'googleplus';
 		}
 		if (selector == 'mail mailproduct'){
-			channel_name = 'googleplus';
+			channel_name = 'email';
 		}
 		
 		
