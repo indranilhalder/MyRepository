@@ -786,10 +786,32 @@ public class HomePageController extends AbstractPageController
 			if (showcaseItem.getProduct1() != null)
 			{
 
-				firstProduct = productFacade.getProductForOptions(showcaseItem.getProduct1(), PRODUCT_OPTIONS);
-				showCaseItemJson.put("firstProductImageUrl", getProductPrimaryImageUrl(firstProduct));
-				showCaseItemJson.put("firstProductTitle", firstProduct.getProductTitle());
-				showCaseItemJson.put("firstProductUrl", firstProduct.getUrl());
+				//PT fix : Thread Lock found in brands you love component
+				firstProduct = productFacade.getProductForOptions(showcaseItem.getProduct1(), PRODUCT_OPTIONS2);
+				if (StringUtils.isBlank(firstProduct.getHomepageImageurl()))
+				{
+					showCaseItemJson.put("firstProductImageUrl", GenericUtilityMethods.getMissingImageUrl());
+				}
+				else
+				{
+					showCaseItemJson.put("firstProductImageUrl", firstProduct.getHomepageImageurl());
+				}
+				if (StringUtils.isBlank(firstProduct.getProductTitle()))
+				{
+					showCaseItemJson.put("firstProductTitle", "");
+				}
+				else
+				{
+					showCaseItemJson.put("firstProductTitle", firstProduct.getProductTitle());
+				}
+				if (StringUtils.isBlank(firstProduct.getUrl()))
+				{
+					showCaseItemJson.put("firstProductUrl", "");
+				}
+				else
+				{
+					showCaseItemJson.put("firstProductUrl", firstProduct.getUrl());
+				}
 				String price = null;
 				try
 				{
@@ -1534,9 +1556,9 @@ public class HomePageController extends AbstractPageController
 			}
 			/*
 			 * else { //newsLetter.setEmailId(emailId); final boolean result = brandFacade.checkEmailId(emailId);
-			 * 
+			 *
 			 * //newsLetter.setIsSaved(Boolean.TRUE);
-			 * 
+			 *
 			 * if (result) { newsLetter.setEmailId(emailId); newsLetter.setIsMarketplace(Boolean.TRUE);
 			 * modelService.save(newsLetter); return "success"; }
 			 */
@@ -1640,7 +1662,7 @@ public class HomePageController extends AbstractPageController
 					/*
 					 * for (final NotificationData single : notificationMessagelist) { if (single.getNotificationRead() !=
 					 * null && !single.getNotificationRead().booleanValue()) { notificationCount++; }
-					 * 
+					 *
 					 * }
 					 */
 
