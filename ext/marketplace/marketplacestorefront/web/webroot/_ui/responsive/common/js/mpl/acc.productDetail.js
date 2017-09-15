@@ -3624,8 +3624,19 @@ $(document).ready(function(){
 	onSizeSelectPopulateDOM();
 	//Home Furnishing Start
 	onSizeSelectDropDownPopulateDOM();
+	onQuantitySelectDropDown();
 	//Home Furnishing End
 });
+
+function onQuantitySelectDropDown()
+{
+	$("select#quantity_dropdown.variant-select").on('change',function(e){
+		//console.log("================>called while size is selected================>");
+		
+		$("#qty").val(this.value);
+		
+	});
+}
 function onSizeSelectPopulateDOM()//First Method to be called in size select ajax call
 {	//Attaching click event on size variant <li>
 	$("ul#variant.variant-select li a").on('click',function(e){

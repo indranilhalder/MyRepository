@@ -77003,4 +77003,11 @@ body .account .right-account form label.invite-text-lbl{
 	    margin-bottom: 5px;
 	    }
 /* TISPRDT-2410 end */
-
+/* Quantity dropdown in homefurnishing start */ nmk
+.pdp select#quantity_dropdown{
+	margin-left: 24px;
+	}
+.pdp .product-detail.HomeFurnishing select#variant_dropdown{
+	padding-right: 20px;
+	}
+/* Quantity dropdown in homefurnishing end */
