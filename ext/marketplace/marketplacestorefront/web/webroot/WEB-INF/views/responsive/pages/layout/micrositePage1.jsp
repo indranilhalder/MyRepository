@@ -77,7 +77,7 @@
 			</cms:pageSlot>
 
 	<!-- For Infinite Analytics Start -->
-	<div class="trending lazy-reached-ia"  id="ia_products_hot"></div>
+	<div class="trending"  id="ia_products_hot"></div>
 <!-- For Infinite Analytics End -->
 </div>
 </template:micrositePage>

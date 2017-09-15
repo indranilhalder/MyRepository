@@ -103,8 +103,13 @@ if (currentPageURL.indexOf("/c-mbh") > -1) {
 }
 // changes end
 if (currentPageURL.indexOf("/m/") > -1) {
-	site_page_type = 'seller';
+	
 	seller_id = $('#mSellerID').val();
+	//INC144319294
+	if(seller_id != undefined)
+	{
+		site_page_type = 'seller';
+	}
 }
 var footerPageType = $('#ia_footer_page_id').val();
 if (footerPageType === 'footerLinkPage') {
