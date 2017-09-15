@@ -37,7 +37,8 @@
 	 $(".view-button").show();
 	 $(".product-classifications").fadeToggle();
 	 });
-	 });
+	 });  
+	 */
 	 		
 </script>
 <c:choose>
