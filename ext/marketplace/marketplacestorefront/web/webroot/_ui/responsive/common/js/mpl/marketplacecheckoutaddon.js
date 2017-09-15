@@ -435,7 +435,6 @@ function displayCODForm()
 	//var cartValue=$("#cartValue").val();
 	var httpRequest=$("#httpRequest").val();
 	var guid=$("#guid").val();
-
 	$.ajax({
 		url: ACC.config.encodedContextPath + "/checkout/multi/payment-method/setupMplCODForm",
 		type: "GET",
@@ -452,7 +451,6 @@ function displayCODForm()
 			else
 			{
 				$("#codNotAllowedMessage").css("display","none");
-				$("#paymentButtonId_up,#paymentButtonId").css("display","block");
 			}
 			//UF-281/282:Ends
 			$("#otpNUM").html(response);
