@@ -33,6 +33,8 @@
 			<button class="orange submit" id="pdpPincodeCheck"><spring:theme code="text.submit"/></button>
 			
 			<button class="gray submitDList" id="pdpPincodeCheckDList" style="display:none;"><spring:theme code="text.submit"/></button>
+			<!-- TPR-6654 -->
+			<div id="pdp_change_pincode"><a id="change_pincode" href="javascript:void(0)"><spring:theme code="change.pincode"/></a></div>
 		</div></li>
 		 
 		<%-- <span>
@@ -58,7 +60,6 @@
 		    </c:forEach>
 		  <span id="homeDate"></span>
 			<%-- <li><a  id="home" class="HomeDelivery  home deliveryDisabled" style="display: block"> <span><spring:theme code="text.home.delivery"/></span> <span><c:out value="${entry.value}" /></span> --%>
-			
 		</li>
 		  </c:if>
 		  <c:if test="${entry.key eq 'express-delivery'}">
