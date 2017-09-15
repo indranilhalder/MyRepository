@@ -33,11 +33,11 @@ public class PancardRejectEvent extends AbstractEvent
 
 	/**
 	 * Attention: for backward compatibility this constructor invokes
-	 * 
+	 *
 	 * <pre>
 	 * setOrder(source)
 	 * </pre>
-	 * 
+	 *
 	 * in case the source object is a OrderModel!
 	 */
 	public PancardRejectEvent(final Serializable source)

@@ -302,6 +302,7 @@ public class NotificationServiceImpl implements NotificationService
 		return notificationList;
 	}
 
+
 	@Override
 	public boolean triggerEmailAndSmsOnPaymentPending(final OrderModel orderDetails, final String trackorderurl)
 			throws JAXBException
@@ -310,10 +311,11 @@ public class NotificationServiceImpl implements NotificationService
 		boolean flag = false;
 		if (orderDetails.getStatus().equals(OrderStatus.PAYMENT_PENDING))
 		{
-			final OrderProcessModel orderProcessModel = new OrderProcessModel();
-			orderProcessModel.setOrder(orderDetails);
-			orderProcessModel.setOrderTrackUrl(trackorderurl);
-			final PaymentPendingEvent paymentPendingEvent = new PaymentPendingEvent(orderProcessModel);
+			//EQA Comment
+			//			final OrderProcessModel orderProcessModel = new OrderProcessModel();
+			//			orderProcessModel.setOrder(orderDetails);
+			//			orderProcessModel.setOrderTrackUrl(trackorderurl);
+			final PaymentPendingEvent paymentPendingEvent = new PaymentPendingEvent();
 			try
 			{
 				eventService.publishEvent(paymentPendingEvent);
@@ -332,10 +334,11 @@ public class NotificationServiceImpl implements NotificationService
 	{
 		if (orderDetails.getStatus().equals(OrderStatus.PAYMENT_FAILED))
 		{
-			final OrderProcessModel orderProcessModel = new OrderProcessModel();
-			orderProcessModel.setOrder(orderDetails);
-			orderProcessModel.setOrderTrackUrl(trackorderurl);
-			final PaymentFailedEvent paymentFailedEvent = new PaymentFailedEvent(orderProcessModel);
+			//EQA Comments
+			//			final OrderProcessModel orderProcessModel = new OrderProcessModel();
+			//			orderProcessModel.setOrder(orderDetails);
+			//			orderProcessModel.setOrderTrackUrl(trackorderurl);
+			final PaymentFailedEvent paymentFailedEvent = new PaymentFailedEvent();
 			try
 			{
 				eventService.publishEvent(paymentFailedEvent);
@@ -352,10 +355,11 @@ public class NotificationServiceImpl implements NotificationService
 	{
 		if (orderDetails.getStatus().equals(OrderStatus.PAYMENT_TIMEOUT))
 		{
-			final OrderProcessModel orderProcessModel = new OrderProcessModel();
-			orderProcessModel.setOrder(orderDetails);
-			orderProcessModel.setOrderTrackUrl(trackorderurl);
-			final PaymentTimeoutEvent paymentTimeoutEvent = new PaymentTimeoutEvent(orderProcessModel);
+			//EQA Comments
+			//			final OrderProcessModel orderProcessModel = new OrderProcessModel();
+			//			orderProcessModel.setOrder(orderDetails);
+			//			orderProcessModel.setOrderTrackUrl(trackorderurl);
+			final PaymentTimeoutEvent paymentTimeoutEvent = new PaymentTimeoutEvent();
 			try
 			{
 				eventService.publishEvent(paymentTimeoutEvent);
@@ -379,10 +383,11 @@ public class NotificationServiceImpl implements NotificationService
 	{
 		if (orderDetails.getStatus().equals(OrderStatus.PAYMENT_PENDING))
 		{
-			final OrderProcessModel orderProcessModel = new OrderProcessModel();
-			orderProcessModel.setOrder(orderDetails);
-			orderProcessModel.setOrderTrackUrl(trackorderurl);
-			final InventoryReservationFailedEvent invReservationFailedEvent = new InventoryReservationFailedEvent(orderProcessModel);
+			//EQA Comments Inocrporated
+			//			final OrderProcessModel orderProcessModel = new OrderProcessModel();
+			//			orderProcessModel.setOrder(orderDetails);
+			//			orderProcessModel.setOrderTrackUrl(trackorderurl);
+			final InventoryReservationFailedEvent invReservationFailedEvent = new InventoryReservationFailedEvent();
 			try
 			{
 				eventService.publishEvent(invReservationFailedEvent);
@@ -464,17 +469,19 @@ public class NotificationServiceImpl implements NotificationService
 	{
 		//Commented as part of EQA
 		//Email and sms for Payment_Successful
-		//		final String trackOrderUrl = getConfigurationService().getConfiguration().getString(
-		//				MarketplacecommerceservicesConstants.SMS_ORDER_TRACK_URL)
-		//				+ orderDetails.getCode();
+		//Code commented for EQA
+		/*
+		 * final String trackOrderUrl = getConfigurationService().getConfiguration()
+		 * .getString(MarketplacecommerceservicesConstants.SMS_ORDER_TRACK_URL) + orderDetails.getCode();
+		 */
 
 		if (orderDetails.getStatus().equals(OrderStatus.PAYMENT_SUCCESSFUL))
 		{
-
-			//Commented as part of EQA
-			//			final OrderProcessModel orderProcessModel = new OrderProcessModel();
-			//			orderProcessModel.setOrder(orderDetails);
-			//			orderProcessModel.setOrderTrackUrl(trackOrderUrl);
+			//Code commented for EQA
+			/*
+			 * final OrderProcessModel orderProcessModel = new OrderProcessModel();
+			 * orderProcessModel.setOrder(orderDetails); orderProcessModel.setOrderTrackUrl(trackOrderUrl);
+			 */
 			final PancardRejectEvent pancardRejectEvent = new PancardRejectEvent();
 			pancardRejectEvent.setOrder(orderDetails);
 			try

@@ -68,7 +68,7 @@ public class PaymentFailedEventListener extends AbstractSiteEventListener<Paymen
 	protected void onSiteEvent(final PaymentFailedEvent paymentFailedEvent)
 	{
 		//send Email
-		final OrderModel orderModel = paymentFailedEvent.getProcess().getOrder();
+		final OrderModel orderModel = paymentFailedEvent.getOrder();
 		final OrderProcessModel orderProcessModel = (OrderProcessModel) getBusinessProcessService().createProcess(
 				"paymentFailedEmailProcess-" + orderModel.getCode() + "-" + System.currentTimeMillis(), "paymentFailedEmailProcess");
 		orderProcessModel.setOrder(orderModel);
@@ -114,9 +114,8 @@ public class PaymentFailedEventListener extends AbstractSiteEventListener<Paymen
 			}
 
 			final String orderReferenceNumber = orderDetails.getCode();
-			final String trackingUrl = configurationService.getConfiguration().getString(
-					MarketplacecommerceservicesConstants.SMS_ORDER_TRACK_URL)
-					+ orderReferenceNumber;
+			final String trackingUrl = configurationService.getConfiguration()
+					.getString(MarketplacecommerceservicesConstants.SMS_ORDER_TRACK_URL) + orderReferenceNumber;
 			final String content = MarketplacecommerceservicesConstants.SMS_MESSAGE_PAYMENT_FAILED
 					.replace(MarketplacecommerceservicesConstants.SMS_VARIABLE_ZERO, firstName)
 					.replace(MarketplacecommerceservicesConstants.SMS_VARIABLE_ONE, orderReferenceNumber)
@@ -143,14 +142,13 @@ public class PaymentFailedEventListener extends AbstractSiteEventListener<Paymen
 	/*
 	 * (non-Javadoc)
 	 *
-	 * @see
-	 * de.hybris.platform.commerceservices.event.AbstractSiteEventListener#shouldHandleEvent(de.hybris.platform.servicelayer
-	 * .event.events.AbstractEvent)
+	 * @see de.hybris.platform.commerceservices.event.AbstractSiteEventListener#shouldHandleEvent(de.hybris.platform.
+	 * servicelayer .event.events.AbstractEvent)
 	 */
 	@Override
 	protected boolean shouldHandleEvent(final PaymentFailedEvent event)
 	{
-		final OrderModel order = event.getProcess().getOrder();
+		final OrderModel order = event.getOrder();
 		ServicesUtil.validateParameterNotNullStandardMessage("event.order", order);
 		final BaseSiteModel site = order.getSite();
 		ServicesUtil.validateParameterNotNullStandardMessage("event.order.site", site);
