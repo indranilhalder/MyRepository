@@ -14,8 +14,9 @@ $(document).ready(function(){
 	var domain_name = document.domain;
 	
 	var user_login_type = $('#userLoginType').val().trim();
-	var pageType = $('#pageType').val().toLowerCase();
-	var pageName=$('#pageName').val().toLowerCase();
+	var pageType = $('#pageType').val();
+	var pageName= $('#pageName').val().toLowerCase();
+	var pageNameU = $('#pageName').val();
 	var tealiumOrderFlag = $('#tealiumOrderFlag').val();
 	var Promo_Id ="";
 	if($("#product_applied_promotion_title").val() && $("#product_applied_promotion_code").val() !=undefined)
@@ -367,9 +368,9 @@ $(document).ready(function(){
 	
 	 //TPR-6299 | for merchandising pages
 	
-     if(pageName != 'Product Grid' &&   pageName != 'Product Details' &&
-        pageName != 'Cart Page'    &&   pageName != 'Checkout-Login Page'  &&  pageName != 'Login Page' &&
-        pageName != 'Multi Checkout Summary Page' && pageName != 'Order Confirmation Page')
+     if(pageNameU != 'Product Grid' &&   pageNameU != 'Product Details' &&
+    		 pageNameU != 'Cart Page'    &&   pageNameU != 'Checkout-Login Page'  &&  pageNameU != 'Login Page' &&
+    		 pageNameU != 'Multi Checkout Summary Page' && pageNameU != 'Order Confirmation Page')
       {	 
             	if(typeof(_satellite) != "undefined"){
     		      _satellite.track('cpj_merchandising_pages');
@@ -377,22 +378,26 @@ $(document).ready(function(){
       }
      
    //TPR-6369 |Error tracking dtm
-     if(pageType == 'login' && currentPageURL.indexOf('/login?error=true')  || currentPageURL.indexOf('/login/register')){
-     	//for login page error 
-			dtmErrorTracking("login error","login  error");
-     }
+     if(pageType == 'login'){
+    	    if(currentPageURL.indexOf('/login?error=true') > -1  || currentPageURL.indexOf('/login/register') > -1 ){
+    			  dtmErrorTracking("login error","login error");
+    		  }
+        }
      
-     if(pageType == 'checkout-login' && currentPageURL.indexOf('/login?error=true') ){
-     	//for checkout login page error
-    	 dtmErrorTracking("login error","checkoutlogin  error");
+   //for checkout login page error
+     if(pageType == 'checkout-login'){
+    	 if(currentPageURL.indexOf('/login?error=true') > -1){
+    		 dtmErrorTracking("login error","checkoutlogin error"); 
+    	 }
      }
-     
-     if(pageType == "notfound" && currentPageURL.indexOf('/checkoutRegister')){
-    	//checkout register error 
-    	 dtmErrorTracking("login error","checkout register error");
+    	
+   //checkout register error 
+     if(pageType == "notfound"){
+    	 if(currentPageURL.indexOf('/checkoutRegister') > -1){
+        	 dtmErrorTracking("login error","checkout register error"); 
+    	 }
      }
-     
-    
+    	
 /*  Direct call rule starts here*/
 	
     // For icid
