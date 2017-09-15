@@ -178,7 +178,7 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 
 	@Autowired
 	private CommerceCartService commerceCartService;
-	
+
 	@Autowired
 	private CommonUtils utils;
 
@@ -267,7 +267,8 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 				return getCheckoutStep().previousStep();
 			}
 			//JWLSPCUAT-68 - Redirecting to one page if by chance this method is called
-			if (Boolean.valueOf(MarketplacecheckoutaddonConstants.TRUE).booleanValue())
+			//Luxury site still continues on multi step checkout
+			if (!utils.isLuxurySite() && Boolean.valueOf(MarketplacecheckoutaddonConstants.TRUE).booleanValue())
 			{
 				return getCheckoutStep().previousStep();//This will take you to single page
 			}
@@ -326,12 +327,13 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 
 			//TISBOX-1618
 			//final CartModel cartModel = getCartService().getSessionCart();
-			if(!utils.isLuxurySite()){
+			if (!utils.isLuxurySite())
+			{
 				getMplCouponFacade().releaseVoucherInCheckout(serviceCart);
 				//TISPT-104 // Cart recalculation method invoked inside this method
 				//applyPromotions();
 			}
-			getMplCartFacade().removeDeliveryMode(serviceCart); 
+			getMplCartFacade().removeDeliveryMode(serviceCart);
 
 			final CartData cartData = getMplCartFacade().getSessionCartWithEntryOrdering(true);
 			final String defaultPinCodeId = getSessionService().getAttribute(MarketplacecommerceservicesConstants.SESSION_PINCODE);
@@ -417,9 +419,9 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 			{
 				return MarketplacecommerceservicesConstants.REDIRECT + "/cart";
 			}
-			
-				returnPage = MarketplacecheckoutaddonControllerConstants.Views.Pages.MultiStepCheckout.ChooseDeliveryMethodPage;
-			
+
+			returnPage = MarketplacecheckoutaddonControllerConstants.Views.Pages.MultiStepCheckout.ChooseDeliveryMethodPage;
+
 		}
 
 		catch (final CMSItemNotFoundException e)
@@ -475,7 +477,8 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 			return getCheckoutStep().previousStep();
 		}
 		//JWLSPCUAT-68 - Redirecting to one page if by chance this method is called
-		if (Boolean.valueOf(MarketplacecheckoutaddonConstants.TRUE).booleanValue())
+		//Luxury site still continues on multi step checkout
+		if (!utils.isLuxurySite() && Boolean.valueOf(MarketplacecheckoutaddonConstants.TRUE).booleanValue())
 		{
 			return getCheckoutStep().previousStep();//This will take you to single page
 		}
@@ -844,7 +847,8 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 			LOG.debug("from doFindDelivaryMode methodin Controller");
 		}
 		//JWLSPCUAT-68 - Redirecting to one page if by chance this method is called
-		if (Boolean.valueOf(MarketplacecheckoutaddonConstants.TRUE).booleanValue())
+		//Luxury site still continues on multi step checkout
+		if (!utils.isLuxurySite() && Boolean.valueOf(MarketplacecheckoutaddonConstants.TRUE).booleanValue())
 		{
 			return getCheckoutStep().previousStep();//This will take you to single page
 		}
