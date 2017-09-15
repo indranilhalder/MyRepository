@@ -3,6 +3,9 @@
  */
 package com.tisl.mpl.core.search.solrfacetsearch.provider.impl;
 
+import de.hybris.platform.category.model.CategoryModel;
+import de.hybris.platform.core.Registry;
+import de.hybris.platform.servicelayer.config.ConfigurationService;
 import de.hybris.platform.solrfacetsearch.config.IndexConfig;
 import de.hybris.platform.solrfacetsearch.config.IndexedProperty;
 import de.hybris.platform.solrfacetsearch.config.exceptions.FieldValueProviderException;
@@ -14,14 +17,18 @@ import de.hybris.platform.variants.model.VariantProductModel;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
 
+import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Required;
 
+import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.core.model.PcmProductVariantModel;
 import com.tisl.mpl.util.MplBuyBoxUtility;
 
@@ -81,13 +88,38 @@ public class MplSizeValueProvider extends AbstractPropertyFieldValueProvider imp
 
 		if (model instanceof PcmProductVariantModel)
 		{
+			String qualifier = "";
 			//Model should be instance of PcmProductVariantModel
 			final PcmProductVariantModel pcmVariantModel = (PcmProductVariantModel) model;
 
 
 			final Set<String> sizes = new TreeSet<String>();
-
-
+			if (pcmVariantModel.getProductCategoryType().equalsIgnoreCase("FineJewellery")
+					|| pcmVariantModel.getProductCategoryType().equalsIgnoreCase("FashionJewellery"))
+			{
+				final List<String> lengthCategoryList = Arrays.asList(getConfigurationService().getConfiguration()
+						.getString("mpl.jewellery.category", "").split(","));
+				final Collection<CategoryModel> superCategories = pcmVariantModel.getSupercategories();
+				if (CollectionUtils.isNotEmpty(superCategories))
+				{
+					for (final CategoryModel primaryCategory : superCategories)
+					{
+						if (primaryCategory != null && StringUtils.isNotEmpty(primaryCategory.getCode())
+								&& primaryCategory.getCode().startsWith("MPH"))
+						{
+							if (lengthCategoryList.contains(primaryCategory.getCode()))
+							{
+								//sizes.add("Length:");
+								qualifier = "Length";
+							}
+						}
+					}
+				}
+			}
+			if (StringUtils.isNotEmpty(qualifier))
+			{
+				sizes.add(qualifier);
+			}
 			//	Fetch sizes in all the Variants
 			for (final VariantProductModel pcmProductVariantModel : pcmVariantModel.getBaseProduct().getVariants())
 			{
@@ -173,6 +205,12 @@ public class MplSizeValueProvider extends AbstractPropertyFieldValueProvider imp
 	public void setFieldNameProvider(final FieldNameProvider fieldNameProvider)
 	{
 		this.fieldNameProvider = fieldNameProvider;
+	}
+
+	protected ConfigurationService getConfigurationService()
+	{
+		return Registry.getApplicationContext().getBean(MarketplacecommerceservicesConstants.CONFIGURATION_SER,
+				ConfigurationService.class);
 	}
 
 }
