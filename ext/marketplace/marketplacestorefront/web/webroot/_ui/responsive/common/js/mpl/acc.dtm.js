@@ -261,7 +261,7 @@ $(document).ready(function(){
 		      /*offercount,newcount */
 		  dtmSearchTags();
 		       /*  product impressions*/
-		       dtmProductImpressionsSerp();	
+		  dtmProductImpressionsSerp();	
 	
 	  }
 	
@@ -368,13 +368,30 @@ $(document).ready(function(){
 	 //TPR-6299 | for merchandising pages
 	
      if(pageName != 'Product Grid' &&   pageName != 'Product Details' &&
-        pageName != 'Cart Page'    &&   pageName != 'Checkout-Login Page'  &&
+        pageName != 'Cart Page'    &&   pageName != 'Checkout-Login Page'  &&  pageName != 'Login Page' &&
         pageName != 'Multi Checkout Summary Page' && pageName != 'Order Confirmation Page')
       {	 
             	if(typeof(_satellite) != "undefined"){
     		      _satellite.track('cpj_merchandising_pages');
 	  	        }
       }
+     
+   //TPR-6369 |Error tracking dtm
+     if(pageType == 'login' && currentPageURL.indexOf('/login?error=true')  || currentPageURL.indexOf('/login/register')){
+     	//for login page error 
+			dtmErrorTracking("login error","login  error");
+     }
+     
+     if(pageType == 'checkout-login' && currentPageURL.indexOf('/login?error=true') ){
+     	//for checkout login page error
+    	 dtmErrorTracking("login error","checkoutlogin  error");
+     }
+     
+     if(pageType == "notfound" && currentPageURL.indexOf('/checkoutRegister')){
+    	//checkout register error 
+    	 dtmErrorTracking("login error","checkout register error");
+     }
+     
     
 /*  Direct call rule starts here*/
 	
