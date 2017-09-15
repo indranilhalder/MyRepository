@@ -38,7 +38,7 @@
 	 $(".product-classifications").fadeToggle();
 	 });
 	 });
-	 		
+	 */		
 </script>
 <c:choose>
 <c:when test="${product.rootCategory =='FashionJewellery' or product.rootCategory=='FineJewellery'}">		
