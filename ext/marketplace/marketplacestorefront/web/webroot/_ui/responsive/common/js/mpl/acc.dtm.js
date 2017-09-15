@@ -296,9 +296,24 @@ $(document).ready(function(){
 	
 	// Checkout pages
 	if(pageType =="multistepcheckoutsummary"){
+		var checkoutPageName = pageName +":" + $('#checkoutPageName').val().toLowerCase();
 		
-		var product_id = $("#product_id").val();
-		var product_category = $("#product_category").val();
+		digitalData = {
+				page : {
+					pageInfo : {
+						pageName  : checkoutPageName,
+						domain    : domain_name,
+						subDomain : subDomain
+					},
+					category : {
+						primaryCategory : "checkout"
+					}
+				}
+			}
+		
+		
+		var product_id = $("#product_id").val().toLowerCase();
+		var product_category = $("#product_category").val().toLowerCase();
 		digitalData.cpj = {
 				product : {
 					id     :  product_id ,

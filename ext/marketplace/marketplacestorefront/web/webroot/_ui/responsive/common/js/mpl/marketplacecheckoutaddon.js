@@ -8300,7 +8300,7 @@ function sendTealiumData(){
 		    	}
 		    	
 		    	if(typeof (digitalData.cpj.payment) != 'undefined'){
-		    	    digitalData.cpj.payment.finalMode = payment_mode ;
+		    	    digitalData.cpj.payment.finalMode = payment_mode.toLowerCase() ;
 		    	}
 	   } catch (e) {
 		// TODO: handle exception
