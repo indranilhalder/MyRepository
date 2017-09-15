@@ -77182,6 +77182,8 @@ body .account .right-account form label.invite-text-lbl{
 	margin-left: 0;
 }
 }
+/*TPR-6907 end*/
+/*TPR-6654 start*/
 .pincode-modal .content {
     width: 130px;
     border: 0px solid transparent;
@@ -77201,4 +77203,11 @@ button#homepagePincodeCheck {
 .pincode-modal .modal .overlay{
 	background: rgba(0, 0, 0, 0.5);
 }
-/*TPR-6907 end*/
+.product-info .product-content .delivery-block li .inline-form div#pdp_change_pincode #change_pincode{
+	margin-top: 10px;
+    display: block;
+    font-size: 14px;
+    font-weight: bold;
+    margin-left: 5px;
+	}
+/*TPR-6654 end*/
