@@ -94,16 +94,16 @@ public class WalletController extends AbstractPageController
 	protected static final String REDIM_WALLET_CODE_PATTERN = "/redimWallet";
 
 
-//	@SuppressWarnings("boxing")
-//	@RequestMapping(method = RequestMethod.GET)
-//	@RequireHardLogIn
-//	public String getWalletView(final Model model)
-//
-//			throws CMSItemNotFoundException, QCServiceCallException
-//	{
-//
-//		//mplQCInitService.loadQCInit();
-//
+	@SuppressWarnings("boxing")
+	@RequestMapping(method = RequestMethod.GET)
+	@RequireHardLogIn
+	public String getWalletView(final Model model)
+
+			throws CMSItemNotFoundException, QCServiceCallException
+	{
+
+		//mplQCInitService.loadQCInit();
+
 //		final CustomerModel currentCustomer = (CustomerModel) userService.getCurrentUser();
 //
 //		if (null != currentCustomer.getIsWalletActivated())
@@ -114,15 +114,15 @@ public class WalletController extends AbstractPageController
 //		{
 //			model.addAttribute("isWalletActive", false);
 //		}
-//
-//		storeCmsPageInModel(model, getContentPageForLabelOrId("TULWalletPage"));
-//		setUpMetaDataForContentPage(model, getContentPageForLabelOrId("TULWalletPage"));
-//		model.addAttribute(WebConstants.BREADCRUMBS_KEY,
-//				resourceBreadcrumbBuilder.getBreadcrumbs(MarketplacecheckoutaddonConstants.PAYMENTBREADCRUMB));
-//		model.addAttribute(ModelAttributetConstants.METAROBOTS, ModelAttributetConstants.NOINDEX_NOFOLLOW);
-//		model.addAttribute("addToCardWalletForm", new AddToCardWalletForm());
-//		return getViewForPage(model);
-//	}
+
+		storeCmsPageInModel(model, getContentPageForLabelOrId("TULWalletPage"));
+		setUpMetaDataForContentPage(model, getContentPageForLabelOrId("TULWalletPage"));
+		model.addAttribute(WebConstants.BREADCRUMBS_KEY,
+				resourceBreadcrumbBuilder.getBreadcrumbs(MarketplacecheckoutaddonConstants.PAYMENTBREADCRUMB));
+		model.addAttribute(ModelAttributetConstants.METAROBOTS, ModelAttributetConstants.NOINDEX_NOFOLLOW);
+		model.addAttribute("addToCardWalletForm", new AddToCardWalletForm());
+		return getViewForPage(model);
+	}
 
 
 	

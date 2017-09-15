@@ -613,7 +613,7 @@ public class MplWalletServicesImpl implements MplWalletServices
 
 
 	@Override
-	public String getRedimWallet(final String cardNumber, final String cardPin, final String transactionId)
+	public String getRedimWallet(final String cardNumber, final String cardPin, final String transactionId,String customerWalletId)
 	{
 
 		System.out.println("***********************************in Mpl Wallet classssssssss");
@@ -644,7 +644,7 @@ public class MplWalletServicesImpl implements MplWalletServices
 		try
 		{
 			webResource = client.resource(
-					UriBuilder.fromUri(MarketplaceclientservicesConstants.ADD_TO_CARD_TO_WALLET + cardNumber + "/card").build());
+					UriBuilder.fromUri(MarketplaceclientservicesConstants.ADD_TO_CARD_TO_WALLET + customerWalletId + "/card").build());
 
 			//need to create marshalling for request body
 			response = webResource.type(MediaType.APPLICATION_JSON)

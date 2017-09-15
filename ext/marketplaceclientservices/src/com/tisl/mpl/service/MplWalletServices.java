@@ -42,7 +42,7 @@ public interface MplWalletServices
 
 	public CustomerWalletDetailResponse getCustomerWallet(String customerWalletId, String transactionId);
 
-	public String getRedimWallet(String cardNumber, String cardPin, String transactionId);
+	public String getRedimWallet(String cardNumber, String cardPin, String transactionId, String customerWalletId);
 
 	public WalletTransacationsList getWalletTransactionList(String cardNumber, String transactionId);
 

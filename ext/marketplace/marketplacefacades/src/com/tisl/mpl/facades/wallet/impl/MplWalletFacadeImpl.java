@@ -235,7 +235,7 @@ public class MplWalletFacadeImpl implements MplWalletFacade
 		final CustomerModel currentCustomer = (CustomerModel) userService.getCurrentUser();
 		if (null != currentCustomer.getIsWalletActivated()){
 			System.out.println("Customer has Actived try to redim the card");
-			 balance = getMplWalletServices().getRedimWallet(cardNumber, cardPin,transactionId);
+			 balance = getMplWalletServices().getRedimWallet(cardNumber, cardPin,transactionId,currentCustomer.getCustomerWalletDetail().getWalletId());
 		 }
 		return balance;
 	}

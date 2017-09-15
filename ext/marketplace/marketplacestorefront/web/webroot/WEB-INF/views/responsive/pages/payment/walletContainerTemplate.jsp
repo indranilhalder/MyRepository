@@ -12,36 +12,7 @@
 <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&libraries=geometry,places&callback=initializeGoogleMaps"></script>
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">	
 	
-<script type="text/javascript">
 
-$(document).ready(function() {
-	
-	var modelAttributeValue = '${isWalletActive}';
-
-	if(modelAttributeValue === 'false'){	
-			$.ajax({
-				url : ACC.config.encodedContextPath + "/wallet/registerCustomerWallet",
-				//data : dataString,
-				type : "GET",
-				cache : false,
-				success : function(data) {
-					
-				if(data === "Success"){
-					
-					window.location.href = ACC.config.encodedContextPath+"/wallet";
-				}
-
-				},	
-			   
-				fail : function(fail){
-				//alert("Sorry we are unable to connect to Click 2 Call service. Please try again later.");
-			}	
-			
-	});
-	}	
-	});
-
-</script>
 <style>
 	.addGiftContainer {border: 1px solid #ddd;}
 	/* .addGiftVoucherSection {padding: 0 !important;}
