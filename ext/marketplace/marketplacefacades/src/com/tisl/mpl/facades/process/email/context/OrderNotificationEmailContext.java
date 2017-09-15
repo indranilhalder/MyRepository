@@ -24,16 +24,19 @@ import de.hybris.platform.core.model.product.ProductModel;
 import de.hybris.platform.core.model.user.AddressModel;
 import de.hybris.platform.core.model.user.CustomerModel;
 import de.hybris.platform.orderprocessing.model.OrderProcessModel;
+import de.hybris.platform.ordersplitting.model.ConsignmentEntryModel;
 import de.hybris.platform.servicelayer.dto.converter.Converter;
 import de.hybris.platform.storelocator.model.PointOfServiceModel;
 
 //import de.hybris.platform.core.model.product.ProductModel;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.apache.velocity.tools.generic.MathTool;
@@ -59,6 +62,7 @@ public class OrderNotificationEmailContext extends AbstractEmailContext<OrderPro
 	private Converter<OrderModel, OrderData> orderConverter;
 	private static final String ORDER_CODE = "orderReferenceNumber";
 	private static final String CHILDORDERS = "childOrders";
+	private static final String PARENTORDER = "p_order";
 	private static final String CHILDENTRIES = "childEntries";
 	private static final String SUBTOTAL = "subTotal";
 	private static final String TOTALPRICE = "totalPrice";
@@ -83,6 +87,8 @@ public class OrderNotificationEmailContext extends AbstractEmailContext<OrderPro
 	private static final String WEBSITE_URL = "websiteUrl";
 	//private static final String PRODUCT_IMAGE_URL = "productImageUrl";//commented as part of TISSPTEN-7
 	private static final String ORDERPLACEDATE = "orderPlaceDate";
+	private static final String DELIVERYDATE = "deliveryDate";
+
 	@Autowired
 	private MplAccountAddressFacade accountAddressFacade;
 	private static final Logger LOG = Logger.getLogger(OrderNotificationEmailContext.class);
@@ -98,10 +104,10 @@ public class OrderNotificationEmailContext extends AbstractEmailContext<OrderPro
 		//		final double orderSubTotalPrice = orderProcessModel.getOrder().getSubtotal() == null ? 0D : orderProcessModel.getOrder()
 		//				.getSubtotal().doubleValue();
 
-		final double orderTotalPrice = orderProcessModel.getOrder().getTotalPrice() == null ? 0D : orderProcessModel.getOrder()
-				.getTotalPrice().doubleValue();
-		final double convenienceCharges = orderProcessModel.getOrder().getConvenienceCharges() == null ? 0D : orderProcessModel
-				.getOrder().getConvenienceCharges().doubleValue();
+		final double orderTotalPrice = orderProcessModel.getOrder().getTotalPrice() == null ? 0D
+				: orderProcessModel.getOrder().getTotalPrice().doubleValue();
+		final double convenienceCharges = orderProcessModel.getOrder().getConvenienceCharges() == null ? 0D
+				: orderProcessModel.getOrder().getConvenienceCharges().doubleValue();
 		//final List<AbstractOrderEntryModel> childEntries = orderProcessModel.getOrder().getEntries();
 		final Double totalPrice = Double.valueOf(orderTotalPrice + convenienceCharges);
 		final Double convenienceChargesVal = Double.valueOf(convenienceCharges);
@@ -110,14 +116,56 @@ public class OrderNotificationEmailContext extends AbstractEmailContext<OrderPro
 		double totalFineJewelleryPrice = 0.0d;
 		double isPancardRequired = 0.0d;
 		//final String amount = getConfigurationService().getConfiguration().getString(MarketplacecommerceservicesConstants.ORDER_AMOUNT_FOR_PANCARD_UPLOAD);
+		final List<OrderModel> childOrders = orderProcessModel.getOrder().getChildOrders();
+		Date deliveryDate = null;
 
-		final double totalAmount = Integer.parseInt(getConfigurationService().getConfiguration().getString(
-				"order.amount.for.pancard.upload"));
+		final OrderModel p_order = orderProcessModel.getOrder();
+
+		if (CollectionUtils.isEmpty(p_order.getChildOrders()))
+		{
+			for (final AbstractOrderEntryModel orderEntries : p_order.getEntries())
+			{
+				if (StringUtils.isEmpty(orderEntries.getProductPromoCode()) || (StringUtils.isEmpty(orderEntries.getCartPromoCode())))
+				{
+					subTotal += orderEntries.getTotalPrice().doubleValue();
+				}
+				else
+				{
+					subTotal += orderEntries.getNetAmountAfterAllDisc().doubleValue();
+				}
+			}
+		}
+		else
+		{
+			for (final OrderModel childOrder : childOrders)
+			{
+				for (final AbstractOrderEntryModel childOrderEntries : childOrder.getEntries())
+				{
+					subTotal += childOrderEntries.getNetAmountAfterAllDisc().doubleValue();
+					shippingCharge += childOrderEntries.getCurrDelCharge().doubleValue();
+
+					//childOrderEntries.getConsignmentEntries()
+
+					for (final ConsignmentEntryModel con : childOrderEntries.getConsignmentEntries())
+					{
+						if ((con.getConsignment().getStatus().getCode()).equalsIgnoreCase("DELIVERED"))
+						{
+							deliveryDate = con.getConsignment().getDeliveryDate();
+						}
+
+					}
+				}
+
+			}
+		}
+
+		final double totalAmount = Integer
+				.parseInt(getConfigurationService().getConfiguration().getString("order.amount.for.pancard.upload"));
 
 		//final double totalAmount1 = amount;
 		//Changes for discount
 		//final Double subTotal = Double.valueOf(orderSubTotalPrice);
-		final List<OrderModel> childOrders = orderProcessModel.getOrder().getChildOrders();
+		//final List<OrderModel> childOrders = orderProcessModel.getOrder().getChildOrders();
 		for (final OrderModel childOrder : childOrders)
 		{
 			for (final AbstractOrderEntryModel childOrderEntries : childOrder.getEntries())
@@ -143,8 +191,8 @@ public class OrderNotificationEmailContext extends AbstractEmailContext<OrderPro
 		//final String totalPriceNew = myFormatter.format(totalPrice);
 		//final String subTotalNew = NumberFormat.getIntegerInstance().format(subTotal);
 
-		LOG.info(" *********************- totalPrice:" + totalPrice + " orderTotalPrice:" + orderTotalPrice
-				+ " convenienceCharges:" + convenienceCharges);
+		LOG.info(" *********************- totalPrice:" + totalPrice + " orderTotalPrice:" + orderTotalPrice + " convenienceCharges:"
+				+ convenienceCharges);
 
 
 		//	final Double shippingCharge = orderProcessModel.getOrder().getDeliveryCost();
@@ -154,9 +202,8 @@ public class OrderNotificationEmailContext extends AbstractEmailContext<OrderPro
 
 		//final List<OrderModel> childOrders = orderProcessModel.getOrder().getChildOrders();
 
-		final String trackOrderUrl = getConfigurationService().getConfiguration().getString(
-				MarketplacecommerceservicesConstants.MPL_TRACK_ORDER_LONG_URL_FORMAT)
-				+ orderCode;
+		final String trackOrderUrl = getConfigurationService().getConfiguration()
+				.getString(MarketplacecommerceservicesConstants.MPL_TRACK_ORDER_LONG_URL_FORMAT) + orderCode;
 		/* Added in R2.3 for shortUrl START */
 		//final String shortUrl = shortUrlService.genearateShortURL(orderCode);
 		//final String shortUrl = orderProcessModel.getOrderTrackUrl();
@@ -193,7 +240,9 @@ public class OrderNotificationEmailContext extends AbstractEmailContext<OrderPro
 
 		put(ORDER_CODE, orderCode);
 		put(CHILDORDERS, childOrders);
+		put(PARENTORDER, p_order);
 		put(SUBTOTAL, Double.valueOf(subTotal));
+		put(DELIVERYDATE, deliveryDate);
 		//put(SUBTOTAL, subTotalNew);
 		put(TOTALPRICE, totalPrice);
 		put(SUBTOTALFORJEWELLERY, Double.valueOf(totalFineJewelleryPrice));
@@ -295,8 +344,8 @@ public class OrderNotificationEmailContext extends AbstractEmailContext<OrderPro
 			put(DELIVERYADDRESS, deliveryAddr);
 		}
 		String websiteUrl = null;
-		websiteUrl = getConfigurationService().getConfiguration().getString(
-				MarketplacecommerceservicesConstants.SMS_SERVICE_WEBSITE_URL);
+		websiteUrl = getConfigurationService().getConfiguration()
+				.getString(MarketplacecommerceservicesConstants.SMS_SERVICE_WEBSITE_URL);
 		if (null != websiteUrl)
 		{
 			put(WEBSITE_URL, websiteUrl);

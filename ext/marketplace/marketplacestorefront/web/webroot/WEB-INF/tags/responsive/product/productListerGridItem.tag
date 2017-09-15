@@ -276,7 +276,7 @@
 							<li class="product-size-list"><span class="product-size">Size: <span class="size-col">${product.displaySize}</span><%-- Price : ${product.displayPrice}### ${product.displayUrl} --%>
 							</span></li>
 						</c:if>
-						<c:if test="${not empty product.productCategoryType && product.isVariant && (product.productCategoryType eq 'FineJewellery'|| product.productCategoryType eq 'FashonJewellery')}">
+						<c:if test="${not empty product.productCategoryType && product.isVariant && (product.productCategoryType eq 'FineJewellery'|| product.productCategoryType eq 'FashionJewellery')}">
 							<c:if test="${not empty product.displaySize && product.displaySize ne '[NO SIZE]'}">
 									<li class="product-size-list"><span class="product-size">Size: <span class="size-col">${product.displaySize}</span><%-- Price : ${product.displayPrice}### ${product.displayUrl} --%>
 								</span></li>

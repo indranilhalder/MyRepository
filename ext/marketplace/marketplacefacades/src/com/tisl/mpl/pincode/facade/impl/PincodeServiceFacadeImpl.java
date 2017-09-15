@@ -335,20 +335,22 @@ public class PincodeServiceFacadeImpl implements PincodeServiceFacade
 					for (final MarketplaceDeliveryModeData deliveryMode : seller.getDeliveryModes())
 					{
 						//changes for Jewellery pincode service in pdp
-						if (productModel.getProductCategoryType().equalsIgnoreCase(MarketplaceFacadesConstants.PRODUCT_TYPE))
-						{
-							final List<BuyBoxModel> buyboxModelListAll = new ArrayList<BuyBoxModel>(
-									buyBoxService.buyboxPrice(productModel.getCode()));
-
-							final String sellerArticleSKU = buyboxModelListAll.get(0).getSellerArticleSKU();
-							deliveryModeData = fetchDeliveryModeDataForUSSID(deliveryMode.getCode(), sellerArticleSKU);
-						}
+						//						if (productModel.getProductCategoryType().equalsIgnoreCase(MarketplaceFacadesConstants.PRODUCT_TYPE))
+						//						{
+						//							final List<BuyBoxModel> buyboxModelListAll = new ArrayList<BuyBoxModel>(
+						//									buyBoxService.buyboxPrice(productModel.getCode()));
+						//
+						//							//final String sellerArticleSKU = buyboxModelListAll.get(0).getSellerArticleSKU();
+						//
+						//							deliveryModeData = fetchDeliveryModeDataForUSSID(deliveryMode.getCode(),
+						//									buyboxModelListAll.get(0).getPUSSID());
+						//						}
 						//end
 
-						else
-						{
-							deliveryModeData = fetchDeliveryModeDataForUSSID(deliveryMode.getCode(), seller.getUssid());
-						}
+						//else
+
+						deliveryModeData = fetchDeliveryModeDataForUSSID(deliveryMode.getCode(), seller.getUssid());
+
 						//deliveryModeData = fetchDeliveryModeDataForUSSID(deliveryMode.getCode(), seller.getUssid());
 						deliveryModeList.add(deliveryModeData);
 					}
@@ -594,8 +596,8 @@ public class PincodeServiceFacadeImpl implements PincodeServiceFacade
 			posData = new ArrayList<PointOfServiceData>();
 			try
 			{
-				final Collection<PointOfServiceModel> pointOfServiceModels = pincodeService.getAllReturnableStores(
-						myLocation.getGPS(), configurableRadius, sellerId);
+				final Collection<PointOfServiceModel> pointOfServiceModels = pincodeService
+						.getAllReturnableStores(myLocation.getGPS(), configurableRadius, sellerId);
 
 				if (CollectionUtils.isNotEmpty(pointOfServiceModels))
 				{
