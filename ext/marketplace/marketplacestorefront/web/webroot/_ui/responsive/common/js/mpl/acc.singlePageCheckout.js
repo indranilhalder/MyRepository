@@ -160,7 +160,12 @@ ACC.singlePageCheckout = {
 			//disableHideAjaxLoader will make sure that loader is not removed until CNC stores are fetched.
 	        var disableHideAjaxLoader=false;
 			var addressId=$(form).find(" #addressId").val();
-			var url=ACC.config.encodedContextPath + "/checkout/single/edit-address/"+addressId;
+			var isPincodeRestrictedPromoPresent=false;
+			if(typeof($("#isPincodeRestrictedPromoPresent").text())!='undefined')
+			{
+				isPincodeRestrictedPromoPresent=$("#isPincodeRestrictedPromoPresent").text().trim();
+			}
+			var url=ACC.config.encodedContextPath + "/checkout/single/edit-address/"+addressId+"?isPincodeRestrictedPromoPresent="+isPincodeRestrictedPromoPresent;
 			var data=$(form).serialize().replace(/\+/g,'%20');
 			ACC.singlePageCheckout.showAjaxLoader();
 			var xhrResponse=ACC.singlePageCheckout.ajaxRequest(url,"POST",data,false);
@@ -252,7 +257,12 @@ ACC.singlePageCheckout = {
 		{
 			//disableHideAjaxLoader will make sure that loader is not removed until stores are fetched.
 			var disableHideAjaxLoader=false;
-			var url=ACC.config.encodedContextPath + "/checkout/single/new-address";
+			var isPincodeRestrictedPromoPresent=false;
+			if(typeof($("#isPincodeRestrictedPromoPresent").text())!='undefined')
+			{
+				isPincodeRestrictedPromoPresent=$("#isPincodeRestrictedPromoPresent").text().trim();
+			}
+			var url=ACC.config.encodedContextPath + "/checkout/single/new-address"+"?isPincodeRestrictedPromoPresent="+isPincodeRestrictedPromoPresent;
 			var data=$(form).serialize().replace(/\+/g,'%20');
 			
 			ACC.singlePageCheckout.showAjaxLoader();
@@ -375,7 +385,7 @@ ACC.singlePageCheckout = {
 		}
 		ACC.singlePageCheckout.showAjaxLoader();
 		//var url=ACC.config.encodedContextPath + $("#selectDeliveryMethodForm").prop("action");
-		var url=$("#selectDeliveryMethodForm").prop("action");
+		var url=$("#selectDeliveryMethodForm").prop("action")+"?isDelModeRestrictedPromoPresent="+$("#isDelModeRestrictedPromoPresent").text();
 		var data=$("#selectDeliveryMethodForm").serialize();
 		var xhrResponse=ACC.singlePageCheckout.ajaxRequest(url,"POST",data,false);
         
@@ -651,7 +661,12 @@ ACC.singlePageCheckout = {
             !1;
         ACC.singlePageCheckout.showAjaxLoader();
         var data=$(form).serialize();
-        var url=ACC.config.encodedContextPath + form.attr("action");
+        var isPincodeRestrictedPromoPresent=false;
+		if(typeof($("#isPincodeRestrictedPromoPresent").text())!='undefined')
+		{
+			isPincodeRestrictedPromoPresent=$("#isPincodeRestrictedPromoPresent").text().trim();
+		}
+        var url=ACC.config.encodedContextPath + form.attr("action")+"?isPincodeRestrictedPromoPresent="+isPincodeRestrictedPromoPresent;
         var xhrResponse=ACC.singlePageCheckout.ajaxRequest(url,"GET",data,false);
         
         var radio = $("#radio-default2_"+addressId);
@@ -1562,6 +1577,33 @@ ACC.singlePageCheckout = {
         	ACC.singlePageCheckout.hideAjaxLoader();
         });
 	},
+	checkPromotionRestriction: function(){
+		var url=ACC.config.encodedContextPath + "/checkout/single/checkPromotions";
+		var data="";
+		var xhrResponse=ACC.singlePageCheckout.ajaxRequest(url,"GET",data,false);
+        
+        xhrResponse.fail(function(xhr, textStatus, errorThrown) {
+			console.log("ERROR:"+textStatus + ': ' + errorThrown);
+		});
+        
+        xhrResponse.done(function(data, textStatus, jqXHR) {
+        	if (jqXHR.responseJSON) {
+        		if(data.type!="response")
+                {
+        			ACC.singlePageCheckout.processError("#reviewOrderMessage",data);
+                }
+        		if(data.type=="response")
+                {
+	        		$("#isPincodeRestrictedPromoPresent").text(data.isPincodeRestrictedPromoPresent);
+	        		$("#isDelModeRestrictedPromoPresent").text(data.isDelModeRestrictedPromoPresent);
+                }
+            }
+		});
+        
+        xhrResponse.always(function(){
+        	ACC.singlePageCheckout.hideAjaxLoader();
+        });
+	},
 	//Function to removeCart entry number for reviewOrder page[For Web]
 	removeCartItem : function(element,clickFrom) {			
 		ACC.singlePageCheckout.showAjaxLoader();
@@ -1613,6 +1655,7 @@ ACC.singlePageCheckout = {
 	        		{
 	        			$("#reviewOrder").html(data);
 	        		}
+	        		ACC.singlePageCheckout.checkPromotionRestriction();//Method to check and update if promotion calls have changed after item removal
 	        		ACC.singlePageCheckout.getTealiumData();
 	        		//START:Code to show strike off price
 	        		ACC.singlePageCheckout.addReviewOrderPriceStrikeThrough();
@@ -2413,7 +2456,12 @@ ACC.singlePageCheckout = {
 		}
 		if(selectedPincode!=null && selectedPincode != undefined && selectedPincode!=""){
 			 ACC.singlePageCheckout.mobileValidationSteps.isPincodeServiceable=false;
-			 var url= ACC.config.encodedContextPath + "/checkout/single/delModesOnAddrSelect/"+selectedPincode;
+			 var isPincodeRestrictedPromoPresent=false;
+			if(typeof($("#isPincodeRestrictedPromoPresent").text())!='undefined')
+			{
+				isPincodeRestrictedPromoPresent=$("#isPincodeRestrictedPromoPresent").text().trim();
+			}
+			 var url= ACC.config.encodedContextPath + "/checkout/single/delModesOnAddrSelect/"+selectedPincode+"?locRestrictedPromoPresent="+isPincodeRestrictedPromoPresent;
 			 var xhrResponse=ACC.singlePageCheckout.ajaxRequest(url,"GET","",false);
 			  xhrResponse.fail(function(xhr, textStatus, errorThrown) {
 					console.log("ERROR:"+textStatus + ': ' + errorThrown);
@@ -2851,12 +2899,13 @@ ACC.singlePageCheckout = {
 		if(formValidationSuccess && !ACC.singlePageCheckout.mobileValidationSteps.isDeliveryModeSet && !ACC.singlePageCheckout.mobileValidationSteps.isInventoryReserved)
 		{	
 			ACC.singlePageCheckout.showAjaxLoader();
-			var isPincodeRestrictedPromoPresent="";
-			if(typeof($("#isPincodeRestrictedPromoPresent").text())!='undefined')
-			{
-				isPincodeRestrictedPromoPresent=$("#isPincodeRestrictedPromoPresent").text().trim();
-			}
-			var url=$("#selectDeliveryMethodFormMobile").attr("action")+"?locRestrictedPromoPresent="+isPincodeRestrictedPromoPresent;
+//			var isPincodeRestrictedPromoPresent=false;
+//			if(typeof($("#isPincodeRestrictedPromoPresent").text())!='undefined')
+//			{
+//				isPincodeRestrictedPromoPresent=$("#isPincodeRestrictedPromoPresent").text().trim();
+//			}
+			//var url=$("#selectDeliveryMethodFormMobile").attr("action")+"?locRestrictedPromoPresent="+isPincodeRestrictedPromoPresent;
+			var url=$("#selectDeliveryMethodFormMobile").attr("action");
 			var data=$("#selectDeliveryMethodFormMobile").serialize();
 		    var xhrResponse=ACC.singlePageCheckout.ajaxRequest(url,"POST",data,false);
 	      

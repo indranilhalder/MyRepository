@@ -442,8 +442,14 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 
 			if (!isAjax)
 			{
+				final Map<String, Boolean> restrictedMap = mplCartFacade.checkRestrictedPromoOnCartProduct(cartModel);
+
 				model.addAttribute("isPincodeRestrictedPromoPresent",
-						Boolean.valueOf(mplCartFacade.checkPincodeRestrictedPromoOnCartProduct(cartModel)));
+						(null != restrictedMap) ? restrictedMap.get("isPincodeRestrictedPromoPresent") : Boolean.FALSE);
+				model.addAttribute("isDelModeRestrictedPromoPresent",
+						(null != restrictedMap) ? restrictedMap.get("isDelModeRestrictedPromoPresent") : Boolean.FALSE);
+
+				//model.addAttribute("isDelModeRestrictedPromotionApplied", restrictedMap.get("isDelModeRestrictedPromotionApplied"));
 				//Tealium related data population
 				final String cartLevelSellerID = populateCheckoutSellers(cartUssidData);
 				model.addAttribute(MarketplacecheckoutaddonConstants.CHECKOUT_SELLER_IDS, cartLevelSellerID);
@@ -789,8 +795,12 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 
 	@RequestMapping(value = RequestMappingUrlConstants.LINK_EDIT_ADDRESS
 			+ MarketplacecheckoutaddonConstants.ADDRESS_CODE_PATH_VARIABLE_PATTERN, method = RequestMethod.POST)
-	public String edit(final AccountAddressForm addressForm, final BindingResult bindingResult, final Model model,
-			@RequestParam(value = "contExchnageAddEdit", required = false) final String exchangeEnabled)
+	public String edit(
+			final AccountAddressForm addressForm,
+			final BindingResult bindingResult,
+			final Model model,
+			@RequestParam(value = "contExchnageAddEdit", required = false) final String exchangeEnabled,
+			@RequestParam(value = "isPincodeRestrictedPromoPresent", required = false, defaultValue = "false") final boolean isPincodeRestrictedPromoPresent)
 			throws CMSItemNotFoundException, UnsupportedEncodingException
 	{
 		try
@@ -873,7 +883,10 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 
 			//Recalculating Cart Model
 			LOG.debug(">> Delivery cost " + cartData.getDeliveryCost().getValue());
-			getMplCheckoutFacade().reCalculateCart(cartData);
+			if (isPincodeRestrictedPromoPresent)
+			{
+				getMplCheckoutFacade().reCalculateCart(cartData);
+			}
 
 		}
 		catch (final EtailBusinessExceptions e)
@@ -1055,8 +1068,11 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 	 * @throws UnsupportedEncodingException
 	 */
 	@RequestMapping(value = MarketplacecheckoutaddonConstants.MPLDELIVERYSELECTADDRESSURL, method = RequestMethod.GET)
-	public String selectAddress(@RequestParam("selectedAddressCode") final String selectedAddressCode,
-			@RequestParam(value = "contExchnage", required = false) final String exchangeEnabled) throws UnsupportedEncodingException
+	public String selectAddress(
+			@RequestParam("selectedAddressCode") final String selectedAddressCode,
+			@RequestParam(value = "contExchnage", required = false) final String exchangeEnabled,
+			@RequestParam(value = "isPincodeRestrictedPromoPresent", required = false, defaultValue = "false") final boolean isPincodeRestrictedPromoPresent)
+			throws UnsupportedEncodingException
 	{
 		try
 		{
@@ -1134,7 +1150,10 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 
 				// Recalculating Cart Model check location restricted promotion
 				LOG.debug(">> Delivery cost " + cartData.getDeliveryCost().getValue());
-				getMplCheckoutFacade().reCalculateCart(cartData);
+				if (isPincodeRestrictedPromoPresent)
+				{
+					getMplCheckoutFacade().reCalculateCart(cartData);
+				}
 			}
 			if (exchangeAppliedCart && selectedPincode.matches(regex) && StringUtils.isEmpty(exchangeEnabled)
 					&& !cartItemDelistedStatus)
@@ -1280,8 +1299,12 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 	 */
 
 	@RequestMapping(value = MarketplacecheckoutaddonConstants.MPLDELIVERYNEWADDRESSURL, method = RequestMethod.POST)
-	public String add(final AccountAddressForm addressForm, final BindingResult bindingResult, final Model model,
-			@RequestParam(value = "contExchnageAddEdit", required = false) final String exchangeEnabled)
+	public String add(
+			final AccountAddressForm addressForm,
+			final BindingResult bindingResult,
+			final Model model,
+			@RequestParam(value = "contExchnageAddEdit", required = false) final String exchangeEnabled,
+			@RequestParam(value = "isPincodeRestrictedPromoPresent", required = false, defaultValue = "false") final boolean isPincodeRestrictedPromoPresent)
 			throws UnsupportedEncodingException
 	{
 		try
@@ -1351,7 +1374,10 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 				//Recalculating Cart Model
 				saveAndSetDeliveryAddress(addressForm, false);
 				LOG.debug(">> Delivery cost " + cartData.getDeliveryCost().getValue());
-				getMplCheckoutFacade().reCalculateCart(cartData);
+				if (isPincodeRestrictedPromoPresent)
+				{
+					getMplCheckoutFacade().reCalculateCart(cartData);
+				}
 			}
 		}
 		catch (final EtailBusinessExceptions e)
@@ -2592,8 +2618,12 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 	 * @throws UnsupportedEncodingException
 	 */
 	@RequestMapping(value = MarketplacecheckoutaddonConstants.MPLDELIVERYSELECTURL, method = RequestMethod.POST)
-	public String doSelectDeliveryMode(@ModelAttribute("deliveryMethodForm") final DeliveryMethodForm deliveryMethodForm,
-			final BindingResult bindingResult, final Model model, final HttpSession session)
+	public String doSelectDeliveryMode(
+			@ModelAttribute("deliveryMethodForm") final DeliveryMethodForm deliveryMethodForm,
+			final BindingResult bindingResult,
+			final Model model,
+			final HttpSession session,
+			@RequestParam(value = "isDelModeRestrictedPromoPresent", required = false, defaultValue = "false") final boolean isDelModeRestrictedPromoPresent)
 			throws CMSItemNotFoundException, UnsupportedEncodingException
 	{
 		try
@@ -2641,7 +2671,10 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 			final Map<String, MplZoneDeliveryModeValueModel> freebieModelMap = new HashMap<String, MplZoneDeliveryModeValueModel>();
 			final Map<String, Long> freebieParentQtyMap = new HashMap<String, Long>();
 
-			applyPromotions();
+			if (isDelModeRestrictedPromoPresent)
+			{
+				applyPromotions();
+			}
 
 			//populate freebie data
 			populateFreebieProductData(cartModel, freebieModelMap, freebieParentQtyMap);
@@ -3690,6 +3723,53 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 			jsonObj.put("type", "errorCode");
 		}
 
+		return jsonObj;
+	}
+
+	@RequestMapping(value = "/checkPromotions", method = RequestMethod.GET)
+	public @ResponseBody JSONObject getCheckPromotionResult() throws UnsupportedEncodingException, JSONException
+	{
+		final JSONObject jsonObj = new JSONObject();
+		if (LOG.isDebugEnabled())
+		{
+			LOG.debug("Inside getCheckPromotionResult...");
+		}
+		try
+		{
+			if (getUserFacade().isAnonymousUser())
+			{
+				jsonObj.put("url", MarketplacecheckoutaddonConstants.CART);
+				jsonObj.put("type", "redirect");
+				return jsonObj;
+			}
+			final CartModel cartModel = getCartService().getSessionCart();
+			final Map<String, Boolean> restrictedMap = mplCartFacade.checkRestrictedPromoOnCartProduct(cartModel);
+			jsonObj.put("type", "response");
+			jsonObj.put("isPincodeRestrictedPromoPresent",
+					(null != restrictedMap) ? restrictedMap.get("isPincodeRestrictedPromoPresent") : Boolean.FALSE);
+			jsonObj.put("isDelModeRestrictedPromoPresent",
+					(null != restrictedMap) ? restrictedMap.get("isDelModeRestrictedPromoPresent") : Boolean.FALSE);
+		}
+		catch (final EtailBusinessExceptions e)
+		{
+			ExceptionUtil.etailBusinessExceptionHandler(e, null);
+			LOG.error("EtailBusinessExceptions Removing Exchange from Cart ", e);
+			jsonObj.put("displaymessage", "jsonExceptionMsg");
+			jsonObj.put("type", "errorCode");
+		}
+		catch (final EtailNonBusinessExceptions e)
+		{
+			ExceptionUtil.etailNonBusinessExceptionHandler(e);
+			LOG.error("EtailNonBusinessExceptions  Removing Exchange from Cart ", e);
+			jsonObj.put("displaymessage", "jsonExceptionMsg");
+			jsonObj.put("type", "errorCode");
+		}
+		catch (final Exception e)
+		{
+			LOG.error("Exception occured while Removing Exchange from Cart", e);
+			jsonObj.put("displaymessage", "jsonExceptionMsg");
+			jsonObj.put("type", "errorCode");
+		}
 		return jsonObj;
 	}
 
