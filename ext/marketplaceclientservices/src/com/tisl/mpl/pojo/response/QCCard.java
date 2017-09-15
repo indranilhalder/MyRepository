@@ -28,9 +28,9 @@ public class QCCard
 	@JsonProperty("CardNumber")
 	private String cardNumber;
 	@JsonProperty("Amount")
-	private Integer amount;
+	private Double amount;
 	@JsonProperty("CardBalance")
-	private Integer cardBalance;
+	private Double cardBalance;
 	@JsonProperty("CardProgramName")
 	private String cardProgramName;
 	@JsonProperty("CardStatus")
@@ -59,25 +59,25 @@ public class QCCard
 	}
 
 	@JsonProperty("Amount")
-	public Integer getAmount()
+	public Double getAmount()
 	{
 		return amount;
 	}
 
 	@JsonProperty("Amount")
-	public void setAmount(final Integer amount)
+	public void setAmount(final Double amount)
 	{
 		this.amount = amount;
 	}
 
 	@JsonProperty("CardBalance")
-	public Integer getCardBalance()
+	public Double getCardBalance()
 	{
 		return cardBalance;
 	}
 
 	@JsonProperty("CardBalance")
-	public void setCardBalance(final Integer cardBalance)
+	public void setCardBalance(final Double cardBalance)
 	{
 		this.cardBalance = cardBalance;
 	}

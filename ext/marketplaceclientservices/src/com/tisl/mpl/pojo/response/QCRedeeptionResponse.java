@@ -37,11 +37,11 @@ public class QCRedeeptionResponse
 	@JsonProperty("BatchNumber")
 	private Integer batchNumber;
 	@JsonProperty("Amount")
-	private Integer amount;
+	private Double amount;
 	@JsonProperty("Balance")
-	private Integer balance;
+	private Double balance;
 	@JsonProperty("BillAmount")
-	private Integer billAmount;
+	private Double billAmount;
 	@JsonProperty("WalletPIN")
 	private Object walletPIN;
 	@JsonProperty("Cards")
@@ -118,37 +118,37 @@ public class QCRedeeptionResponse
 	}
 
 	@JsonProperty("Amount")
-	public Integer getAmount()
+	public Double getAmount()
 	{
 		return amount;
 	}
 
 	@JsonProperty("Amount")
-	public void setAmount(final Integer amount)
+	public void setAmount(final Double amount)
 	{
 		this.amount = amount;
 	}
 
 	@JsonProperty("Balance")
-	public Integer getBalance()
+	public Double getBalance()
 	{
 		return balance;
 	}
 
 	@JsonProperty("Balance")
-	public void setBalance(final Integer balance)
+	public void setBalance(final Double balance)
 	{
 		this.balance = balance;
 	}
 
 	@JsonProperty("BillAmount")
-	public Integer getBillAmount()
+	public Double getBillAmount()
 	{
 		return billAmount;
 	}
 
 	@JsonProperty("BillAmount")
-	public void setBillAmount(final Integer billAmount)
+	public void setBillAmount(final Double billAmount)
 	{
 		this.billAmount = billAmount;
 	}

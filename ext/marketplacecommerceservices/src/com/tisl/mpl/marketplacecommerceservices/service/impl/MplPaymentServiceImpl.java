@@ -26,6 +26,7 @@ import de.hybris.platform.core.model.order.payment.EMIPaymentInfoModel;
 import de.hybris.platform.core.model.order.payment.JusPayPaymentInfoModel;
 import de.hybris.platform.core.model.order.payment.NetbankingPaymentInfoModel;
 import de.hybris.platform.core.model.order.payment.PaymentInfoModel;
+import de.hybris.platform.core.model.order.payment.QCWalletPaymentInfoModel;
 import de.hybris.platform.core.model.order.payment.ThirdPartyWalletInfoModel;
 import de.hybris.platform.core.model.order.price.DiscountModel;
 import de.hybris.platform.core.model.user.AddressModel;
@@ -5033,7 +5034,7 @@ public class MplPaymentServiceImpl implements MplPaymentService
 
 			paymentTransactionList.addAll(collection);
 
-			final String walletAmt = WalletTotal;
+			final double walletAmt = Double.parseDouble(WalletTotal);
 
 			final Date date = new Date();
 
@@ -5048,12 +5049,12 @@ public class MplPaymentServiceImpl implements MplPaymentService
 			{
 				paymentTransactionEntry.setCode(rs.get(0) + "-" + rs.get(2));
 			}
-			paymentTransactionEntry.setAmount(BigDecimal.valueOf(Double.parseDouble(walletAmt)));
+			paymentTransactionEntry.setAmount(BigDecimal.valueOf(walletAmt));
 			paymentTransactionEntry.setTime(date);
 			paymentTransactionEntry.setRequestToken(rs.get(2));
 			paymentTransactionEntry.setRequestId(rs.get(1));
 			paymentTransactionEntry.setCurrency(order.getCurrency());
-			paymentTransactionEntry.setType(PaymentTransactionType.CREATE_SUBSCRIPTION); /////////////////////////////////////////////////   Change it to QC Capture
+			paymentTransactionEntry.setType(PaymentTransactionType.QC_CAPTURE); /////////////////////////////////////////////////   Change it to QC Capture
 			paymentTransactionEntry.setTransactionStatus(MarketplacecommerceservicesConstants.SUCCESS);
 			paymentTransactionEntry.setPaymentMode(paymenttype);
 
@@ -5073,10 +5074,23 @@ public class MplPaymentServiceImpl implements MplPaymentService
 			paymentTransactionModel.setStatus(MarketplacecommerceservicesConstants.SUCCESS);
 			paymentTransactionModel.setOrder(order);
 
-			paymentTransactionModel.setPlannedAmount(BigDecimal.valueOf(Double.parseDouble(walletAmt)));
+			paymentTransactionModel.setPlannedAmount(BigDecimal.valueOf(walletAmt));
 
 			getModelService().save(paymentTransactionModel);
 			listPay.add(paymentTransactionModel);
+
+			if (null == order.getPaymentInfo())
+			{
+				final QCWalletPaymentInfoModel qcPaymentInfo = getModelService().create(QCWalletPaymentInfoModel.class);
+
+				qcPaymentInfo.setCode(rs.get(2));
+				qcPaymentInfo.setType(paymenttype.getMode());
+				qcPaymentInfo.setOwner(order.getOwner());
+				//qcPaymentInfo.setCashOwner("NA");
+				qcPaymentInfo.setUser(order.getUser());
+
+				order.setPaymentInfo(qcPaymentInfo);
+			}
 
 			paymentTransactionList.addAll(listPay);
 
@@ -5188,5 +5202,4 @@ public class MplPaymentServiceImpl implements MplPaymentService
 			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000);
 		}
 	}
-
 }

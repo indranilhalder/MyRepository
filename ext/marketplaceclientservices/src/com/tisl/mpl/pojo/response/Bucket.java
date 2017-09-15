@@ -23,7 +23,7 @@ public class Bucket
 	@JsonProperty("Type")
 	private String type;
 	@JsonProperty("Amount")
-	private Integer amount;
+	private Double amount;
 	@JsonProperty("NumOfCards")
 	private Integer numOfCards;
 	@JsonIgnore
@@ -42,13 +42,13 @@ public class Bucket
 	}
 
 	@JsonProperty("Amount")
-	public Integer getAmount()
+	public Double getAmount()
 	{
 		return amount;
 	}
 
 	@JsonProperty("Amount")
-	public void setAmount(final Integer amount)
+	public void setAmount(final Double amount)
 	{
 		this.amount = amount;
 	}

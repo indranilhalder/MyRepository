@@ -38,7 +38,7 @@ public class Wallet
 	@JsonProperty("WalletHolderName")
 	private String walletHolderName;
 	@JsonProperty("Balance")
-	private Integer balance;
+	private Double balance;
 	@JsonProperty("Notes")
 	private String notes;
 	@JsonProperty("Card")
@@ -145,13 +145,13 @@ public class Wallet
 	}
 
 	@JsonProperty("Balance")
-	public Integer getBalance()
+	public Double getBalance()
 	{
 		return balance;
 	}
 
 	@JsonProperty("Balance")
-	public void setBalance(final Integer balance)
+	public void setBalance(final Double balance)
 	{
 		this.balance = balance;
 	}

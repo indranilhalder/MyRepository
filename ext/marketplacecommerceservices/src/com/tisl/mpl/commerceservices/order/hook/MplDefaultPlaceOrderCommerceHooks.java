@@ -3324,7 +3324,7 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 
 		final ArrayList<String> listData = new ArrayList<String>();
 
-		if (!abstractOrderEntryModel.getQcCardValue().equals("0"))
+		if (Double.parseDouble(abstractOrderEntryModel.getQcCardValue()) != 0)
 		{
 			final double qcCardVlaue = Double.parseDouble(abstractOrderEntryModel.getQcCardValue()) / quantity;
 			listData.add("" + qcCardVlaue);
@@ -3334,7 +3334,7 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 			listData.add("" + 0);
 		}
 
-		if (!abstractOrderEntryModel.getQcCashValue().equals("0"))
+		if (Double.parseDouble(abstractOrderEntryModel.getQcCashValue()) != 0)
 		{
 			final double qcCashVlaue = Double.parseDouble(abstractOrderEntryModel.getQcCashValue()) / quantity;
 			listData.add("" + qcCashVlaue);
@@ -3344,7 +3344,7 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 			listData.add("" + 0);
 		}
 
-		if (!abstractOrderEntryModel.getQcRefundValue().equals("0"))
+		if (Double.parseDouble(abstractOrderEntryModel.getQcRefundValue()) != 0)
 		{
 			final double qcRefundVlaue = Double.parseDouble(abstractOrderEntryModel.getQcRefundValue()) / quantity;
 			listData.add("" + qcRefundVlaue);
@@ -3353,9 +3353,15 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 		{
 			listData.add("" + 0);
 		}
-		final double juspayVlaue = Double.parseDouble(abstractOrderEntryModel.getJuspayValue()) / quantity;
-		listData.add("" + juspayVlaue);
 
+		if (!abstractOrderEntryModel.getJuspayValue().equals("0"))
+		{
+			if (Double.parseDouble(abstractOrderEntryModel.getJuspayValue()) != 0)
+			{
+				final double juspayVlaue = Double.parseDouble(abstractOrderEntryModel.getJuspayValue()) / quantity;
+				listData.add("" + juspayVlaue);
+			}
+		}
 		return listData;
 
 	}

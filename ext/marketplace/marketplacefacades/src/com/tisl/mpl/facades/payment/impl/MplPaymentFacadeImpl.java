@@ -3490,7 +3490,7 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 	{
 		try
 		{
-			final String walletTotal = getSessionService().getAttribute("WalletTotal");
+			final double walletTotal = Double.parseDouble(""+getSessionService().getAttribute("WalletTotal"));
 
 			System.out.println("REDEM from QC FOR CURRENT CUSTOMER WALLET AMT IS ****************** " + walletTotal);
 
@@ -3498,7 +3498,7 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 
 			final QCRedeemRequest qcRedeemRequest = new QCRedeemRequest();
 
-			qcRedeemRequest.setAmount(walletTotal);
+			qcRedeemRequest.setAmount(""+walletTotal);
 			qcRedeemRequest.setBillAmount(orderToBeUpdated.getTotalPrice().toString());
 			qcRedeemRequest.setNotes("Redeem Request Amount " + walletTotal);
 			qcRedeemRequest.setInvoiceNumber(qcOrderId);
@@ -3508,9 +3508,9 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 			if (Integer.parseInt(qcRedeeptionResponse.getResponseCode().toString()) == 0)
 			{
 
-				long totalQCCardValue = 0;
-				long totalQCCashValue = 0;
-				long totalQCRefundValue = 0;
+				double totalQCCardValue = 0;
+				double totalQCCashValue = 0;
+				double totalQCRefundValue = 0;
 
 
 				for (final QCCard cardList : qcRedeeptionResponse.getCards())
@@ -3518,15 +3518,15 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 					if (cardList.getBucketType().equalsIgnoreCase("CASHBACK") || cardList.getBucketType().equalsIgnoreCase("GOODWILL")
 							|| cardList.getBucketType().equalsIgnoreCase("PROMOTION"))
 					{
-						totalQCCashValue += Long.parseLong("" + cardList.getAmount());
+						totalQCCashValue += Double.parseDouble("" + cardList.getAmount());
 					}
 					if (cardList.getBucketType().equalsIgnoreCase("CREDIT"))
 					{
-						totalQCRefundValue += Long.parseLong("" + cardList.getAmount());
+						totalQCRefundValue += Double.parseDouble("" + cardList.getAmount());
 					}
 					if (cardList.getBucketType().equalsIgnoreCase("CUSTOMER"))
 					{
-						totalQCCardValue += Long.parseLong("" + cardList.getAmount());
+						totalQCCardValue += Double.parseDouble("" + cardList.getAmount());
 					}
 				}
 
@@ -3538,7 +3538,7 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 				rs.add(qcOrderId);
 				rs.add("" + qcRedeeptionResponse.getTransactionId());
 
-				getMplPaymentService().createQCEntryInAudit(qcOrderId, "WEB", guid, walletTotal,
+				getMplPaymentService().createQCEntryInAudit(qcOrderId, "WEB", guid, ""+walletTotal,
 						qcRedeeptionResponse.getResponseCode().toString(), qcRedeeptionResponse.getTransactionId().toString());
 
 				System.out.println("--------------- QC AUDIT ENTRY CREATED---- ---- ");
@@ -3547,7 +3547,7 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 				paymentMode.put("Cliq Cash", Double.valueOf("2"));
 
 
-				getMplPaymentService().setQCPaymentTransaction(rs, paymentMode, orderToBeUpdated, cliqCashPaymentMode, walletTotal);
+				getMplPaymentService().setQCPaymentTransaction(rs, paymentMode, orderToBeUpdated, cliqCashPaymentMode, ""+walletTotal);
 
 				System.out.println("---------------QCPaymentTransaction DONE---- ---- ");
 

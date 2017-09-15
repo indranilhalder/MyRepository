@@ -39,6 +39,7 @@ import com.tisl.mpl.facades.payment.MplPaymentFacade;
 import com.tisl.mpl.facades.wallet.MplWalletFacade;
 import com.tisl.mpl.pojo.request.Customer;
 import com.tisl.mpl.pojo.request.QCCustomerRegisterRequest;
+import com.tisl.mpl.pojo.response.CustomerWalletDetailResponse;
 import com.tisl.mpl.pojo.response.QCCustomerRegisterResponse;
 import com.tisl.mpl.service.MplQCInitServiceImpl;
 import com.tisl.mpl.storefront.constants.ModelAttributetConstants;
@@ -51,7 +52,7 @@ import java.util.List;
 
 import com.tisl.mpl.pojo.response.WalletTrasacationsListData;
 /**
- * @author Nirav Bhanushali TUL
+ * @author TUL
  *
  */
 
@@ -93,35 +94,35 @@ public class WalletController extends AbstractPageController
 	protected static final String REDIM_WALLET_CODE_PATTERN = "/redimWallet";
 
 
-	@SuppressWarnings("boxing")
-	@RequestMapping(method = RequestMethod.GET)
-	@RequireHardLogIn
-	public String getWalletView(final Model model)
-
-			throws CMSItemNotFoundException, QCServiceCallException
-	{
-
-		mplQCInitService.loadQCInit();
-
-		final CustomerModel currentCustomer = (CustomerModel) userService.getCurrentUser();
-
-		if (null != currentCustomer.getIsWalletActivated())
-		{
-			model.addAttribute("isWalletActive", currentCustomer.getIsWalletActivated());
-		}
-		else
-		{
-			model.addAttribute("isWalletActive", false);
-		}
-
-		storeCmsPageInModel(model, getContentPageForLabelOrId("TULWalletPage"));
-		setUpMetaDataForContentPage(model, getContentPageForLabelOrId("TULWalletPage"));
-		model.addAttribute(WebConstants.BREADCRUMBS_KEY,
-				resourceBreadcrumbBuilder.getBreadcrumbs(MarketplacecheckoutaddonConstants.PAYMENTBREADCRUMB));
-		model.addAttribute(ModelAttributetConstants.METAROBOTS, ModelAttributetConstants.NOINDEX_NOFOLLOW);
-		model.addAttribute("addToCardWalletForm", new AddToCardWalletForm());
-		return getViewForPage(model);
-	}
+//	@SuppressWarnings("boxing")
+//	@RequestMapping(method = RequestMethod.GET)
+//	@RequireHardLogIn
+//	public String getWalletView(final Model model)
+//
+//			throws CMSItemNotFoundException, QCServiceCallException
+//	{
+//
+//		//mplQCInitService.loadQCInit();
+//
+//		final CustomerModel currentCustomer = (CustomerModel) userService.getCurrentUser();
+//
+//		if (null != currentCustomer.getIsWalletActivated())
+//		{
+//			model.addAttribute("isWalletActive", currentCustomer.getIsWalletActivated());
+//		}
+//		else
+//		{
+//			model.addAttribute("isWalletActive", false);
+//		}
+//
+//		storeCmsPageInModel(model, getContentPageForLabelOrId("TULWalletPage"));
+//		setUpMetaDataForContentPage(model, getContentPageForLabelOrId("TULWalletPage"));
+//		model.addAttribute(WebConstants.BREADCRUMBS_KEY,
+//				resourceBreadcrumbBuilder.getBreadcrumbs(MarketplacecheckoutaddonConstants.PAYMENTBREADCRUMB));
+//		model.addAttribute(ModelAttributetConstants.METAROBOTS, ModelAttributetConstants.NOINDEX_NOFOLLOW);
+//		model.addAttribute("addToCardWalletForm", new AddToCardWalletForm());
+//		return getViewForPage(model);
+//	}
 
 
 	
@@ -147,7 +148,9 @@ public class WalletController extends AbstractPageController
 		model.addAttribute("walletTrasacationsListData", walletTrasacationsListData);
 		model.addAttribute("cashBackWalletTrasacationsList", cashBackWalletTrasacationsList);
 		
-		return "addon:/marketplacecheckoutaddon/pages/checkout/single/cliqcash";
+		//return "addon:/marketplacecheckoutaddon/pages/checkout/single/cliqcash";
+		
+		return REDIRECT_PREFIX +"/wallet/getcliqcashPage";
 	}
 
 @SuppressWarnings("boxing")
@@ -156,14 +159,24 @@ public class WalletController extends AbstractPageController
 	public String getCliqCash(final Model model) throws CMSItemNotFoundException, QCServiceCallException{
 		
 		mplQCInitService.loadQCInit();
-      String balanceAmount ="0";
+      double balanceAmount =0;
 		
 		List<WalletTrasacationsListData> walletTrasacationsListData = null;
 		List<WalletTrasacationsListData> cashBackWalletTrasacationsList = null;
 		final CustomerModel currentCustomer = (CustomerModel) userService.getCurrentUser();
 		
 		if (null != currentCustomer.getIsWalletActivated()){
-			walletTrasacationsListData = mplWalletFacade.getWalletTransactionList();
+			
+			CustomerWalletDetailResponse customerWalletDetailData= mplWalletFacade.getCustomerWallet(currentCustomer.getCustomerWalletDetail().getWalletId());
+			
+			if(customerWalletDetailData.getResponseCode() == 0){
+				
+				balanceAmount = customerWalletDetailData.getWallet().getBalance();
+			}
+			
+		
+			
+		   walletTrasacationsListData = mplWalletFacade.getWalletTransactionList();
 			System.out.println("walletTrasacationsListData List :"+walletTrasacationsListData.size());
 			cashBackWalletTrasacationsList = mplWalletFacade.getCashBackWalletTrasacationsList(walletTrasacationsListData ,"ADD CARD TO WALLET");
 		   System.out.println("***************cashBackWalletTrasacationsListData:"+cashBackWalletTrasacationsList.size());

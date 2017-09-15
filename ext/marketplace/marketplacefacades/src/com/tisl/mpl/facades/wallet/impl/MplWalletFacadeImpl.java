@@ -17,6 +17,7 @@ import com.tisl.mpl.marketplacecommerceservices.service.MplPaymentService;
 import com.tisl.mpl.pojo.request.QCCustomerRegisterRequest;
 import com.tisl.mpl.pojo.request.QCRedeemRequest;
 import com.tisl.mpl.pojo.response.BalanceBucketWise;
+import com.tisl.mpl.pojo.response.CustomerWalletDetailResponse;
 import com.tisl.mpl.pojo.response.QCCustomerRegisterResponse;
 import com.tisl.mpl.pojo.response.QCRedeeptionResponse;
 import com.tisl.mpl.pojo.response.WalletTransacationsList;
@@ -200,9 +201,9 @@ public class MplWalletFacadeImpl implements MplWalletFacade
 	 * @see com.tisl.mpl.facades.wallet.MplWalletFacade#getCustomerWallet()
 	 */
 	@Override
-	public void getCustomerWallet()
+	public CustomerWalletDetailResponse getCustomerWallet(String customerWalletId)
 	{
-		getMplWalletServices().getCustomerWallet();
+		return getMplWalletServices().getCustomerWallet(customerWalletId, generateQCTransactionId());
 
 	}
 

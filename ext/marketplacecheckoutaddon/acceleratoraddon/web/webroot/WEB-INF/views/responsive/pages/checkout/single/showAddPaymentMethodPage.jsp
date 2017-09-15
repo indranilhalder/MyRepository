@@ -199,7 +199,7 @@
 					<button type="button" class="button btn-block payment-button make_payment_top_savedCard proceed-button" id="make_emi_payment_up"><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.paymentButton"/></button>
 					<%-- <button type="button" class="positive right cod-otp-button_top" onclick="mobileBlacklist()" ><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.sendOTP" text="Verify Number" /></button> --%>
 					<button type="button" class="button positive right cod_payment_button_top proceed-button" onclick="submitForm()" id="paymentButtonId_up"><spring:theme code="checkout.multi.paymentMethod.codContinue" /></button>
-					<button type="button" class="button" id="make_qc_payment_up"><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.paymentButton"/></button>
+					<button type="button" class="button btn-block payment-button make_payment_top_savedCard proceed-button" id="make_mrupee_payment_up"><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.paymentButton"/></button>
 
 
 <!-- Added for Cliq Cash -->
@@ -252,7 +252,8 @@
 	.giftCheckoutContainer button {height: 18px !important;}
 	.giftCheckoutContainer {margin: 3%; border-radius: 8px; font-size: 10px;}
 	.giftInfoBottom {border-top: 1px solid #dddddd; padding: 4% 0; margin-top: 0;}
-	.useGiftCardBtn {height: 25px !important; line-height: normal !important; padding: 5px 20px !important;}
+	.useGiftCardBtn {height: 25px !important; line-height: normal !important; padding: 5px 6px !important;}
+    .cliqCashApplyAlert {border-radius: 4px; margin: 3%;}
 	}
 	
 </style>
@@ -260,8 +261,9 @@
 <script>
 	$(document).ready(function(){
 		
-		
+		$(".cliqCashApplyAlert").hide();
 		$("#unUseGiftBtnText").hide();
+		$(".topPlaceOrderBtn").hide();
 		
 		//Gift Inner Col Container
 		if($(window).width()>650){
@@ -280,7 +282,9 @@
 				
 				$(".cliqTotalBalanceLabel").html(data.totalWalletAmt);
 				$("#qcCashId").html(data.totalCash);
-				$("#qcGiftCardId").html(data.totalEgvBalance);	
+				$("#qcGiftCardId").html(data.totalEgvBalance);
+				$("#JuspayAmtId").html(data.juspayAmt);
+				
 				
 				if(data.disableWallet){
 					
@@ -299,6 +303,8 @@
 
 		$(document).on("click","#useGiftCardCheckbox",function() {
 			
+			$(".cliqCashApplyAlert").hide();
+			$(".topPlaceOrderBtn").hide();
 			var value = document.getElementById('useGiftCardCheckbox');	
 			$.ajax({
 				url : ACC.config.encodedContextPath + "/checkout/multi/payment-method/useWalletForPayment",
@@ -313,17 +319,25 @@
 					if(value.checked){
 	    				$("#useGiftBtnText").hide();
 	    				$("#unUseGiftBtnText").show();
+	    				$(".cliqCashApplyAlert").text('CliQ Cash applied successfully.');
+					    $(".cliqCashApplyAlert").show();
 	    			} else {
 	    				$("#unUseGiftBtnText").hide();
 	    				$("#useGiftBtnText").show();
+	    				$(".cliqCashApplyAlert").hide();
 	    			}
 					
 					if(data.disableJsMode){
+						alert("disable");
+						//$(".choose-payment")
 						
-						alert("Disable JP");
+					      $(".topPlaceOrderBtn").show();
+						
 					}else{
 						
-						alert("Enable JP");
+						  alert("Enable JP");
+						 
+						
 					}
 				},	
 			   
@@ -338,7 +352,7 @@
 		
 		
 		//Third Party Wallet mRupee
-		$(document).on("click","#make_qc_payment_up",function(){
+		$(document).on("click","#paymentTypeCC",function(){
 			 if(isSessionActive()==false){
 				 redirectToCheckoutLogin();
 				}
@@ -426,7 +440,7 @@
 				<div class="giftCheckoutInnerCols3">
 					<label class="useGiftCardBtn"><input id="useGiftCardCheckbox" type="checkbox" />
 						<span id="useGiftBtnText">USE</span>
-						<span id="unUseGiftBtnText">UNUSE</span>
+						<span id="unUseGiftBtnText">REMOVE</span>
 					</label>
 				</div>
 			</div>
@@ -438,14 +452,18 @@
 					</div>
 					<br />
 					<div class="payRemainingDesc">
-						<i>You can pay the remaining amount <strong>&#8377;358</strong> from the below payment options.</i>
+						<i>You can pay the remaining amount <strong id="JuspayAmtId">&#8377;</strong> from the below payment options.</i>
 					</div>
 				</div>
 			</div>
 		</div>
 	</div>
 </div>
+<div class="col-sm-12 alert alert-success cliqCashApplyAlert"></div>
 <br />&nbsp; <br />
+<div class="col-xs-12">
+	<button type="button" class="button pull-right topPlaceOrderBtn" id="paymentTypeCC"><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.paymentButton"/></button>
+</div>
 			
 
 
@@ -1932,7 +1950,6 @@
 					<!-- mRupee Changes ends -->
 						
 			</ul>
-								<button type="button" class="button" id="make_qc_payment_up"><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.paymentButton"/></button>
 			
 				</div>
 				</div>
@@ -2034,4 +2051,4 @@
 		 $(this).parent().addClass("active"); 
 		 $('ul.accepted-cards li').removeClass('active-card');
 	 });
-	</script>
+	</script>	

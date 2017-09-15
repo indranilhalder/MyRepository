@@ -6,6 +6,7 @@ package com.tisl.mpl.service;
 import com.tisl.mpl.pojo.request.QCCustomerRegisterRequest;
 import com.tisl.mpl.pojo.request.QCRedeemRequest;
 import com.tisl.mpl.pojo.response.BalanceBucketWise;
+import com.tisl.mpl.pojo.response.CustomerWalletDetailResponse;
 import com.tisl.mpl.pojo.response.QCCustomerRegisterResponse;
 import com.tisl.mpl.pojo.response.QCInitializationResponse;
 import com.tisl.mpl.pojo.response.QCRedeeptionResponse;
@@ -39,7 +40,7 @@ public interface MplWalletServices
 
 	public void refundTULPromotionalCash();
 
-	public void getCustomerWallet();
+	public CustomerWalletDetailResponse getCustomerWallet(String customerWalletId, String transactionId);
 
 	public String getRedimWallet(String cardNumber, String cardPin, String transactionId);
 

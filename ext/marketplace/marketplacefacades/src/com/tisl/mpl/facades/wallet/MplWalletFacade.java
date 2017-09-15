@@ -8,6 +8,7 @@ import java.util.List;
 import com.tisl.mpl.pojo.request.QCCustomerRegisterRequest;
 import com.tisl.mpl.pojo.request.QCRedeemRequest;
 import com.tisl.mpl.pojo.response.BalanceBucketWise;
+import com.tisl.mpl.pojo.response.CustomerWalletDetailResponse;
 import com.tisl.mpl.pojo.response.QCCustomerRegisterResponse;
 import com.tisl.mpl.pojo.response.QCRedeeptionResponse;
 import com.tisl.mpl.pojo.response.WalletTrasacationsListData;
@@ -38,7 +39,7 @@ public interface MplWalletFacade
 
 	public void refundTULPromotionalCash();
 
-	public void getCustomerWallet();
+	public CustomerWalletDetailResponse getCustomerWallet(String customerWalletId);
 
 	public String generateQCTransactionId();
 
@@ -48,5 +49,6 @@ public interface MplWalletFacade
 
 	public List<WalletTrasacationsListData> getCashBackWalletTrasacationsList(
 			List<WalletTrasacationsListData> walletTrasacationsListData, String transactionType);
+	
 
 }

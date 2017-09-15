@@ -25,6 +25,7 @@ import com.tisl.mpl.pojo.request.AddToCardWallet;
 import com.tisl.mpl.pojo.request.QCCustomerRegisterRequest;
 import com.tisl.mpl.pojo.request.QCRedeemRequest;
 import com.tisl.mpl.pojo.response.BalanceBucketWise;
+import com.tisl.mpl.pojo.response.CustomerWalletDetailResponse;
 import com.tisl.mpl.pojo.response.QCCustomerRegisterResponse;
 import com.tisl.mpl.pojo.response.QCInitializationResponse;
 import com.tisl.mpl.pojo.response.QCRedeeptionResponse;
@@ -565,23 +566,22 @@ public class MplWalletServicesImpl implements MplWalletServices
 
 
 	@Override
-	public void getCustomerWallet()
+	public CustomerWalletDetailResponse getCustomerWallet(String customerWalletId, String transactionId)
 	{
 		final Client client = Client.create();
 		ClientResponse response = null;
 		WebResource webResource = null;
 		//final ReturnLogisticsResponse responsefromOMS = new ReturnLogisticsResponse();
 		final DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
+		CustomerWalletDetailResponse custWalletDetail = new CustomerWalletDetailResponse();
+		final ObjectMapper objectMapper = new ObjectMapper();
 
 		try
 		{
-			//get Wallet number from facade
-			//TransactionId unique
-			// InvoiceNo Unique
-			webResource = client.resource(
-					UriBuilder.fromUri("http://qc3.qwikcilver.com/QwikCilver/eGMS.RestAPI/api/wallet/4000162010020032").build());
 
-			//need to create marshalling for request body
+			webResource = client.resource(
+					UriBuilder.fromUri("http://qc3.qwikcilver.com/QwikCilver/eGMS.RestAPI/api/wallet/"+customerWalletId).build());
+
 			response = webResource.type(MediaType.APPLICATION_JSON).header("ForwardingEntityId", "tatacliq.com")
 					.header("ForwardingEntityPassword", "tatacliq.com").header("TerminalId", "webpos-tul-dev10")
 					.header("Username", "tulwebuser").header("Password", "webusertul").header("TransactionId", "46")
@@ -595,19 +595,19 @@ public class MplWalletServicesImpl implements MplWalletServices
 
 			if (null != response)
 			{
+				
 				final String output = response.getEntity(String.class);
-				LOG.debug(" ************** GET CUSTOMER WALLET----" + output); //need to create marshalling for response object
-				System.out.println(" ************** GET CUSTOMER WALLET----" + output);
+				custWalletDetail = objectMapper.readValue(output, CustomerWalletDetailResponse.class);
+				return custWalletDetail;
 
 			}
 		}
-		catch (
-
-		final Exception ex)
+		catch (final Exception ex)
 		{
 			ex.printStackTrace();
 			System.out.println("Error response Status:------" + response.getStatus());
 		}
+		return custWalletDetail;
 
 	}
 

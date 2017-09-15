@@ -4027,27 +4027,6 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 
 					LOG.info("cliqCashPaymentMode" + cliqCashPaymentMode);
 
-
-					//					if (splitPayment && !jsPayMode) ////////////////////////////////////// REMOVE THIS  New LOgic
-					//					{
-					//						//// DO VALIDATION FOR QC PAY ONLY ======= After that parent order will create
-					//
-					//
-					//						//orderId = getMplPaymentFacade().generateQCCode();
-					//
-					//
-					//						//getSessionService().setAttribute("qcCode", orderId);
-					//
-					//						final OrderData od = getMplCheckoutFacade().placeOrder();
-					//
-					//						//	getSessionService().setAttribute("qcOrderIdCode", od.getCode()); /////////////////////////////////////////////////////////////////////////
-					//
-					//						System.out.println("Get Order Code---" + od.getCode());
-					//
-					//						return orderId + "|" + guid;
-					//
-					//					}
-
 					/**
 					 * Wallet Changes END
 					 */
@@ -4059,7 +4038,6 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 							cardSaved + MarketplacecheckoutaddonConstants.STRINGSEPARATOR + sameAsShipping, returnUrlBuilder.toString(),
 							uid, MarketplacecheckoutaddonConstants.CHANNEL_WEB);
 
-					//orderId = "987654321";
 
 					LOG.info("::Created Juspay OrderId::" + orderId);
 
@@ -4075,7 +4053,6 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 						 */
 						if (splitPayment && jsPayMode)
 						{
-
 							cart.setTotalPrice(totalCartVal);
 						}
 						/**
@@ -5977,10 +5954,10 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 						final BalanceBucketWise balBucketwise = mplWalletFacade
 								.getQCBucketBalance(currentCustomer.getCustomerWalletDetail().getWalletId());
 
-						final String WalletAmt = balBucketwise.getWallet().getBalance().toString();
+						final Double WalletAmt = balBucketwise.getWallet().getBalance();
 						final Double totalAmt = cart.getTotalPrice();
 
-						if (Double.parseDouble(WalletAmt) > Double.parseDouble("" + totalAmt))
+						if (Double.parseDouble(""+WalletAmt) >= Double.parseDouble("" + totalAmt))
 						{
 
 							getSessionService().setAttribute("WalletTotal", "" + totalAmt);
@@ -5993,19 +5970,15 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 						else
 						{
 
-							final double juspayTotalAmt = Double.parseDouble("" + totalAmt) - Double.parseDouble(WalletAmt);
-
-							System.out.println("Total AMT ----------------------------" + totalAmt);
-							System.out.println("juspayTotalAmt -----------------------" + juspayTotalAmt);
-							System.out.println("WalletAmt -----------------------" + WalletAmt);
-
+							final double juspayTotalAmt = Double.parseDouble("" + totalAmt) - Double.parseDouble(""+WalletAmt);
+							
 							getSessionService().setAttribute("WalletTotal", "" + WalletAmt);
 							getSessionService().setAttribute("juspayTotalAmt", "" + juspayTotalAmt);
 
 							getSessionService().setAttribute("getCliqCashMode", value);
 							getSessionService().setAttribute("cliqCashPaymentMode", "Cliq Cash");
 							getSessionService().setAttribute("jsPayMode", "true");
-							jsonObject.put("disableJsMode", false); ////////////////////////////////////////////////////////////////////////////// SET it on UI
+							jsonObject.put("disableJsMode", false); 
 						}
 
 					}
@@ -6038,11 +6011,13 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 	{
 		final JSONObject jsonObject = new JSONObject();
 		BalanceBucketWise balBucketwise = new BalanceBucketWise();
-		///final CartModel cart = getCartService().getSessionCart();
+		final CartModel cart = getCartService().getSessionCart();
+		final Double totalCartAmt = cart.getTotalPrice();
 
-		int cashBalance = 0;
-		int egvBalance = 0;
-		int totalWalletAmt = 0;
+		double cashBalance = 0;
+		double egvBalance = 0;
+		double totalWalletAmt = 0;
+		double juspayAmt =0;
 
 		try
 		{
@@ -6056,19 +6031,31 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 				{
 					if (bucketType.getType().equalsIgnoreCase("CUSTOMER"))
 					{
-						egvBalance += Integer
-								.parseInt(bucketType.getAmount().toString().isEmpty() ? "0" : bucketType.getAmount().toString());
+						egvBalance += Double
+								.parseDouble(bucketType.getAmount().toString().isEmpty() ? "0" : ""+Double
+										.parseDouble(bucketType.getAmount().toString()));
 					}
 					else
 					{
 
-						cashBalance += Integer
-								.parseInt(bucketType.getAmount().toString().isEmpty() ? "0" : bucketType.getAmount().toString());
+						cashBalance += Double
+								.parseDouble(bucketType.getAmount().toString().isEmpty() ? "0" : ""+Double
+										.parseDouble(bucketType.getAmount().toString()));
 					}
+				
 				}
-
-				totalWalletAmt = Integer.parseInt(balBucketwise.getWallet().getBalance().toString().isEmpty() ? "0"
-						: balBucketwise.getWallet().getBalance().toString());
+				
+				totalWalletAmt = Double
+						.parseDouble(balBucketwise.getWallet().getBalance().toString().isEmpty() ? "0"
+						:""+Double
+						.parseDouble( balBucketwise.getWallet().getBalance().toString()));
+				
+				if (Double.parseDouble(""+totalWalletAmt) < Double.parseDouble("" + totalCartAmt))
+				{
+					juspayAmt = Double.parseDouble("" + totalCartAmt) - Double.parseDouble(""+totalWalletAmt);
+	
+				}
+			
 			}
 
 			if (totalWalletAmt == 0)
@@ -6079,6 +6066,7 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 				jsonObject.put("totalCash", "" + "0");
 				jsonObject.put("totalEgvBalance", "" + "0");
 				jsonObject.put("disableWallet", true);
+				jsonObject.put("juspayAmt", "0");
 
 			}
 			else
@@ -6088,6 +6076,7 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 				jsonObject.put("totalCash", "" + cashBalance);
 				jsonObject.put("totalEgvBalance", "" + egvBalance);
 				jsonObject.put("disableWallet", false);
+				jsonObject.put("juspayAmt", juspayAmt);
 			}
 		}
 		catch (final Exception e)
@@ -6098,7 +6087,8 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 			jsonObject.put("totalWalletAmt", "0");
 			jsonObject.put("totalCash", "" + cashBalance);
 			jsonObject.put("totalEgvBalance", "" + egvBalance);
-			jsonObject.put("disableWallet", true);/////////////////////////////////////////////////////////////////////////////////////////// SET it on UI
+			jsonObject.put("disableWallet", true);
+			jsonObject.put("juspayAmt", "0");
 
 		}
 
@@ -6335,6 +6325,7 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 					}
 					else
 					{
+						calculateSplitValue(orderToBeUpdated);
 						orderToBeUpdated.setStatus(OrderStatus.CONFIRMED);
 						//getModelService().save(orderToBeUpdated);
 						return updateQCOrder(orderToBeUpdated, redirectAttributes);
@@ -6390,7 +6381,8 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 		System.out.println("========================Inside Update Order============================");
 		try
 		{
-			if (null != orderToBeUpdated && CollectionUtils.isEmpty(orderToBeUpdated.getChildOrders()))
+			if (null != orderToBeUpdated && CollectionUtils.isEmpty(orderToBeUpdated.getChildOrders())
+					&& null != orderToBeUpdated.getPaymentInfo())
 			{
 				getMplCheckoutFacade().beforeSubmitOrder(orderToBeUpdated);
 
@@ -6441,8 +6433,6 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 
 	public void calculateSplitValue(final AbstractOrderModel orderToBeUpdated)
 	{
-
-		final double juspayTotalValue = Double.parseDouble("" + getSessionService().getAttribute("juspayTotalAmt"));
 		//final double qcTotalValue = Double.parseDouble("" + getSessionService().getAttribute("WalletTotal"));
 		final double totalOrderValue = Double.parseDouble("" + "" + orderToBeUpdated.getTotalPrice());
 
@@ -6456,27 +6446,28 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 
 		for (final AbstractOrderEntryModel abstractOrderEntryModel : orderToBeUpdated.getEntries())
 		{
-
 			final double productPrice = Double.parseDouble("" + abstractOrderEntryModel.getTotalPrice());
+
+			if (null != getSessionService().getAttribute("juspayTotalAmt"))
+			{
+				final double juspayTotalValue = Double.parseDouble("" + getSessionService().getAttribute("juspayTotalAmt"));
+				final double juspayPartValue = (productPrice / totalOrderValue) * juspayTotalValue;
+				abstractOrderEntryModel.setJuspayValue("" + juspayPartValue);
+			}
 
 			if (calQCCashFlag)
 			{
-
 				final double qcCashValue = (productPrice / totalOrderValue)
 						* Double.parseDouble("" + getSessionService().getAttribute("qcCashValue"));
 
 				abstractOrderEntryModel.setQcCashValue("" + qcCashValue);
-
 			}
 			else
 			{
-
 				abstractOrderEntryModel.setQcCashValue("" + 0);
-
 			}
 			if (calQCCardFlag)
 			{
-
 				final double qcCardValue = (productPrice / totalOrderValue)
 						* Double.parseDouble("" + getSessionService().getAttribute("qcCardValue"));
 				abstractOrderEntryModel.setQcCardValue("" + qcCardValue);
@@ -6495,10 +6486,6 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 			{
 				abstractOrderEntryModel.setQcRefundValue("" + 0);
 			}
-
-			final double juspayPartValue = (productPrice / totalOrderValue) * juspayTotalValue;
-			abstractOrderEntryModel.setJuspayValue("" + juspayPartValue);
-
 		}
 
 		getModelService().save(orderToBeUpdated);
