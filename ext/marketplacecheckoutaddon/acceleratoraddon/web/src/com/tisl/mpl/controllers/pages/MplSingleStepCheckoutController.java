@@ -1158,14 +1158,16 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 		{
 			ExceptionUtil.etailBusinessExceptionHandler(e, null);
 			LOG.error("EtailBusinessExceptions  while selecting address ", e);
-			final String requestQueryParam = UriUtils.encodeQuery("?msg=Opps...Something went wrong&type=error", UTF);
+			getSessionService().setAttribute(MarketplacecclientservicesConstants.DELIVERY_MODE_ENTER_STEP_ERROR_ID, "TRUE");
+			final String requestQueryParam = UriUtils.encodeQuery("?url=/cart&type=redirect", UTF);
 			return FORWARD_PREFIX + "/checkout/single/message" + requestQueryParam;
 		}
 		catch (final EtailNonBusinessExceptions e)
 		{
 			ExceptionUtil.etailNonBusinessExceptionHandler(e);
 			LOG.error("EtailNonBusinessExceptions  while selecting address ", e);
-			final String requestQueryParam = UriUtils.encodeQuery("?msg=Opps...Something went wrong&type=error", UTF);
+			getSessionService().setAttribute(MarketplacecclientservicesConstants.DELIVERY_MODE_ENTER_STEP_ERROR_ID, "TRUE");
+			final String requestQueryParam = UriUtils.encodeQuery("?url=/cart&type=redirect", UTF);
 			return FORWARD_PREFIX + "/checkout/single/message" + requestQueryParam;
 
 		}
@@ -1176,7 +1178,8 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 			LOG.error("exchangeEnabled=" + exchangeEnabled);
 			LOG.error("CurrentUser=" + userService.getCurrentUser().getUid());
 			LOG.error("Stack trace:", e);
-			final String requestQueryParam = UriUtils.encodeQuery("?msg=Opps...Something went wrong&type=error", UTF);
+			getSessionService().setAttribute(MarketplacecclientservicesConstants.DELIVERY_MODE_ENTER_STEP_ERROR_ID, "TRUE");
+			final String requestQueryParam = UriUtils.encodeQuery("?url=/cart&type=redirect", UTF);
 			return FORWARD_PREFIX + "/checkout/single/message" + requestQueryParam;
 
 		}
@@ -2301,7 +2304,7 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 			{
 				ExceptionUtil.etailBusinessExceptionHandler(e, null);
 				getSessionService().setAttribute(MarketplacecclientservicesConstants.DELIVERY_MODE_ENTER_STEP_ERROR_ID, "TRUE");
-				final String requestQueryParam = UriUtils.encodeQuery("?msg=Opps...Something went wrong&type=error", UTF);
+				final String requestQueryParam = UriUtils.encodeQuery("?url=/cart&type=redirect", UTF);
 				return FORWARD_PREFIX + "/checkout/single/message" + requestQueryParam;
 			}
 			catch (final Exception e)
@@ -2310,7 +2313,7 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 						MarketplacecommerceservicesConstants.E0000));
 				LOG.error("Stack trace:", e);
 				getSessionService().setAttribute(MarketplacecclientservicesConstants.DELIVERY_MODE_ENTER_STEP_ERROR_ID, "TRUE");
-				final String requestQueryParam = UriUtils.encodeQuery("?msg=Opps...Something went wrong&type=error", UTF);
+				final String requestQueryParam = UriUtils.encodeQuery("?url=/cart&type=redirect", UTF);
 				return FORWARD_PREFIX + "/checkout/single/message" + requestQueryParam;
 			}
 

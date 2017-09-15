@@ -1371,6 +1371,7 @@ public class ProductPageController extends MidPageController
 					catch (final Exception e)
 					{
 						ExceptionUtil.getCustomizedExceptionTrace(e);
+						LOG.error("getPincodeServicabilityDetails Stack trace=", e);
 						LOG.debug("configurableRadius values is empty please add radius property in properties file ");
 					}
 				}
