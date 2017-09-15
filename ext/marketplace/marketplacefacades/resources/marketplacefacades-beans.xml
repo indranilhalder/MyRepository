@@ -187,6 +187,8 @@
 			type="de.hybris.platform.commercefacades.product.data.PriceData" />
 		<property name="swatchColor" type="java.util.List&lt;java.lang.String>"></property>
 		<property name="displaySize" type="java.util.List&lt;java.lang.String>"></property>
+		<!-- to set the length instead of size for the length category product in serp/plp-->
+		<property name="displayLength" type="String"></property>
 		<property name="deliveryFulfillMode" type="String"></property>
 		<property name="paymentMode" type="String"></property>
 		<property name="size" type="String"></property>
@@ -307,7 +309,6 @@
 		<property name="isFragile" type="String" />
 		<property name="isPrecious" type="String" />
 		<property name="sellerHandlingTime" type="Integer" />
-		
 	</bean>
 
 
