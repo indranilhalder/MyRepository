@@ -12030,6 +12030,9 @@
 					<index name="JewelleryInfoPCMUSSID_IDX">
 						<key attribute="PCMUSSID" />
 					</index>
+					<index name="JewelleryInfoProductCode_IDX">
+						<key attribute="ProductCode" />
+					</index>
 				</indexes>
 		  </itemtype>
 		  
@@ -12436,6 +12439,11 @@
 							partof="false" />
 			</attribute>
 		  </attributes>
+		    <indexes>
+					<index name="JewelleryPriceRowUSSID_IDX">
+						<key attribute="Ussid" />
+					</index>
+        	</indexes>
 		  </itemtype>  
 		  
 		  
