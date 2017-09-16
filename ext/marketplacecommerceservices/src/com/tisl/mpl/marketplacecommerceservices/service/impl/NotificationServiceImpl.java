@@ -476,11 +476,11 @@ public class NotificationServiceImpl implements NotificationService
 		 */
 		if (orderDetails.getStatus().equals(OrderStatus.PAYMENT_SUCCESSFUL))
 		{
-
-			//Commented as part of EQA
-			//			final OrderProcessModel orderProcessModel = new OrderProcessModel();
-			//			orderProcessModel.setOrder(orderDetails);
-			//			orderProcessModel.setOrderTrackUrl(trackOrderUrl);
+			//Code commented for EQA
+			/*
+			 * final OrderProcessModel orderProcessModel = new OrderProcessModel();
+			 * orderProcessModel.setOrder(orderDetails); orderProcessModel.setOrderTrackUrl(trackOrderUrl);
+			 */
 			final PancardRejectEvent pancardRejectEvent = new PancardRejectEvent();
 			pancardRejectEvent.setOrder(orderDetails);
 			try
