@@ -40,8 +40,8 @@ $(document).ready(function(){
 		page_subcategory_name_L3 = $("#page_subcategory_name_l3").val().replace(/_+/g, '_');
 	}
 	
-	var buyboxSellerid = $("#sellerSelId").val();
-	var buyboxSellerName = $("#sellerNameId").val();
+	//var buyboxSellerid = $("#sellerSelId").val();
+	//var buyboxSellerName = $("#sellerNameId").val();
 	var sellerList = $('#pdpSellerIDs').val();
 	var subdomain = window.location.href.split("/")[2].split(".")[0];
 	var subDomain= "";
@@ -194,13 +194,13 @@ $(document).ready(function(){
 			  
 		}
 		
-		digitalData.product = {
+		/*digitalData.product = {
 			seller : {
 				list : sellerList,
-				id   : buyboxSellerid,
-				buyBoxWinner : buyboxSellerName
+				id   : $("#pdpBuyboxWinnerSellerID").val(),
+				buyBoxWinner : $("#sellerNameId").html()
 			}   
-		}
+		}*/
 		
 		digitalData.page.category.subCategory1 = product_category;
 		digitalData.page.category.subCategory2 = page_subcategory_name_L2; 
@@ -693,7 +693,7 @@ $(document).ready(function(){
      	}	
      }*/
 });
-function differentiateSeller(){
+function differentiateSellerDtm(){
 	var sellerList = $('#pdpSellerIDs').val();
 	var buyboxSeller = $("#sellerSelId").val();
 	sellerList = sellerList.substr(1,(sellerList.length)-2);
@@ -710,12 +710,19 @@ function differentiateSeller(){
 			}
 		}
 	}
-
 	
 	$('#pdpBuyboxWinnerSellerID').val(buyboxSeller);
 	$('#pdpOtherSellerIDs').val(otherSellers);
 
-	return "["+finalCategoryArray+"]";
+	//TISCSXII-2186 | pdp fix
+	digitalData.product = {
+			seller : {
+				list : sellerList,
+				id   : $("#pdpBuyboxWinnerSellerID").val(),
+				buyBoxWinner : $("#sellerNameId").html()
+			}   
+		}
+	//return "["+finalCategoryArray+"]";
 }
 
 // For add to bag and buy now #31, 32
