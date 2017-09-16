@@ -452,7 +452,6 @@ function displayCODForm()
 			else
 			{
 				$("#codNotAllowedMessage").css("display","none");
-				$("#paymentButtonId_up,#paymentButtonId").css("display","block");
 			}
 			//UF-281/282:Ends
 			$("#otpNUM").html(response);
