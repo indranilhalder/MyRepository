@@ -3098,6 +3098,12 @@
 							optional="false" />
 					</attribute>
 				</attributes>
+				<indexes>
+					<index name="INDX_PINCODE_FETCH" unique="true">
+						<key attribute="pincode" />
+						<key attribute="active" />
+					</index>
+		</indexes>
 			</itemtype>
 		</typegroup>
 		

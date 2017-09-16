@@ -23,8 +23,6 @@ import java.util.Map;
 
 import javax.annotation.Resource;
 
-import net.sourceforge.pmd.util.StringUtil;
-
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
@@ -38,6 +36,8 @@ import com.tisl.mpl.marketplacecommerceservices.service.MplDeliveryCostService;
 import com.tisl.mpl.marketplacecommerceservices.strategy.MplCommerceAddToCartStrategy;
 import com.tisl.mpl.model.SellerInformationModel;
 
+import net.sourceforge.pmd.util.StringUtil;
+
 
 
 
@@ -45,8 +45,8 @@ import com.tisl.mpl.model.SellerInformationModel;
  * @author TCS
  *
  */
-public class MplDefaultCommerceAddToCartStrategyImpl extends DefaultCommerceAddToCartStrategy implements
-		MplCommerceAddToCartStrategy
+public class MplDefaultCommerceAddToCartStrategyImpl extends DefaultCommerceAddToCartStrategy
+		implements MplCommerceAddToCartStrategy
 {
 
 	private final String maxOrderQuantityConstant = "mpl.cart.maximumConfiguredQuantity.lineItem";
@@ -64,11 +64,11 @@ public class MplDefaultCommerceAddToCartStrategyImpl extends DefaultCommerceAddT
 
 	/*
 	 * @Desc Adding product to cart
-	 * 
+	 *
 	 * @param parameter
-	 * 
+	 *
 	 * @return CommerceCartModification
-	 * 
+	 *
 	 * @throws CommerceCartModificationException
 	 */
 	@Override
@@ -269,11 +269,11 @@ public class MplDefaultCommerceAddToCartStrategyImpl extends DefaultCommerceAddT
 
 	/*
 	 * @Desc Adding replaced jwellery product to cart
-	 * 
+	 *
 	 * @param parameter
-	 * 
+	 *
 	 * @return CommerceCartModification
-	 * 
+	 *
 	 * @throws CommerceCartModificationException
 	 */
 	@Override
@@ -485,16 +485,20 @@ public class MplDefaultCommerceAddToCartStrategyImpl extends DefaultCommerceAddT
 			final Collection<SellerInformationModel> sellerCollection)
 	{
 		//if (CollectionUtils.isNotEmpty(collection.getSellerInformationRelator()))
+
+		final String cartEnrtyUssid = cartEntryModel.getSelectedUSSID();
+
 		if (CollectionUtils.isNotEmpty(sellerCollection))
 		{
 			for (final SellerInformationModel sellerModel : sellerCollection)
 			{
-				if (StringUtils.isNotEmpty(cartEntryModel.getSelectedUSSID())
-						&& StringUtils.isNotEmpty(sellerModel.getSellerArticleSKU())
-						&& StringUtils.equalsIgnoreCase(cartEntryModel.getSelectedUSSID(), sellerModel.getSellerArticleSKU())
-						&& StringUtils.isNotEmpty(sellerModel.getSellerName()))
+				final String sellerInfoUssid = sellerModel.getSellerArticleSKU();
+				final String sellerName = sellerModel.getSellerName();
+
+				if (StringUtils.isNotEmpty(cartEnrtyUssid) && StringUtils.isNotEmpty(sellerInfoUssid)
+						&& StringUtils.equalsIgnoreCase(cartEnrtyUssid, sellerInfoUssid) && StringUtils.isNotEmpty(sellerName))
 				{
-					cartEntryModel.setSellerInfo(sellerModel.getSellerName());
+					cartEntryModel.setSellerInfo(sellerName);
 					getModelService().save(cartEntryModel);
 					break;
 				}
@@ -505,19 +509,19 @@ public class MplDefaultCommerceAddToCartStrategyImpl extends DefaultCommerceAddT
 
 	/*
 	 * @Desc Fetching eligible quantity for a ussid which can be added in cart
-	 * 
+	 *
 	 * @param cartModel
-	 * 
+	 *
 	 * @param productModel
-	 * 
+	 *
 	 * @param quantityToAdd
-	 * 
+	 *
 	 * @param pointOfServiceModel
-	 * 
+	 *
 	 * @param ussid
-	 * 
+	 *
 	 * @return long
-	 * 
+	 *
 	 * @throws CommerceCartModificationException
 	 */
 	private long getAllowedCartAdjustmentForProduct(final CartModel cartModel, final ProductModel productModel,
@@ -548,11 +552,11 @@ public class MplDefaultCommerceAddToCartStrategyImpl extends DefaultCommerceAddT
 
 	/*
 	 * @Desc Fetching available stock information for a ussid from Stock Level
-	 * 
+	 *
 	 * @param ussid
-	 * 
+	 *
 	 * @return long
-	 * 
+	 *
 	 * @throws CommerceCartModificationException
 	 */
 	private long getAvailableStockLevel(final String ussid) throws CommerceCartModificationException
