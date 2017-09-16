@@ -127,7 +127,7 @@ public class CartPageController extends AbstractPageController
 {
 	private static final Logger LOG = Logger.getLogger(CartPageController.class);
 	private static final String className = "CartPageController";
-	private Map<String, String> fullfillmentDataMap = new HashMap<String, String>();
+	//private Map<String, String> fullfillmentDataMap = new HashMap<String, String>();
 	//private final Map<String, List<MarketplaceDeliveryModeData>> deliveryModeDataMap = new HashMap<String, List<MarketplaceDeliveryModeData>>();
 	private Map<String, String> sellerInfoMap = new HashMap<String, String>();
 
@@ -1511,6 +1511,7 @@ public class CartPageController extends AbstractPageController
 			throws CMSItemNotFoundException, EtailNonBusinessExceptions, EtailBusinessExceptions, Exception
 	{
 		LOG.debug("Entring into showPincode" + "Class NameshowPincod :" + className);
+		Map<String, String> fullfillmentDataMap = new HashMap<String, String>();
 
 		model.addAttribute(MarketplacecommerceservicesConstants.SESSION_PINCODE, defaultPinCodeId);
 
@@ -1589,13 +1590,12 @@ public class CartPageController extends AbstractPageController
 							getSessionService().setAttribute(MarketplacecommerceservicesConstants.SESSION_PINCODE_RES, responseData); //CAR-126/128/129
 
 						}
-						if (null != responseData)
+
+						if (responseData != null)
 						{
 							getSessionService().setAttribute(MarketplacecommerceservicesConstants.PINCODE_RESPONSE_DATA_TO_SESSION,
 									responseData);
-						}
-						if (responseData != null)
-						{
+
 							for (PinCodeResponseData pinCodeResponseData : responseData)
 							{
 
@@ -1634,17 +1634,20 @@ public class CartPageController extends AbstractPageController
 						}
 						if (isServicable.equals(MarketplacecommerceservicesConstants.Y))
 						{
-							//TPR-970 changes
 							CartModel cart = getCartService().getSessionCart();
-							mplCartFacade.populatePinCodeData(cart, selectedPincode);
-							cart = getMplCartFacade().getCalculatedCart(cart);
+							if (mplCartFacade.validatePincodeRestrictedPromoOnCartProduct(cart))
+							{
+								mplCartFacade.populatePinCodeData(cart, selectedPincode);
+								cart = getMplCartFacade().getCalculatedCart(cart);
+								getMplCartFacade().setCartSubTotal(cart);
 
-							getMplCartFacade().setCartSubTotal(cart);
+								//To calculate discount percentage amount for display purpose
+								// TPR-774-- Total MRP calculation and the Product percentage calculation
+								getMplCartFacade().totalMrpCal(cart);
+								cartData = getMplCartFacade().getSessionCartWithEntryOrdering(true);
+							}
+							//TPR-970 changes
 
-							//To calculate discount percentage amount for display purpose
-							// TPR-774-- Total MRP calculation and the Product percentage calculation
-							getMplCartFacade().totalMrpCal(cart);
-							cartData = getMplCartFacade().getSessionCartWithEntryOrdering(true);
 							jsonObject.put("cartData", cartData);
 							jsonObject.put("cartEntries", cartData.getEntries());
 

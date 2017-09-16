@@ -4439,4 +4439,40 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 	{
 		return mplCommerceCartService.addItemToCartWithExchange(cartId, cartModel, productModel, quantity, ussid, exchangeParam);
 	}
+
+
+
+	@Override
+	public boolean validatePincodeRestrictedPromoOnCartProduct(final CartModel cart)
+	{
+		boolean isPincodeRestrictedPromotionPresent = false;
+		exitLoop:
+
+		{
+			final Set<PromotionResultModel> promotions = cart.getAllPromotionResults();
+
+			if (CollectionUtils.isNotEmpty(promotions))
+			{
+				for (final PromotionResultModel productPromotion : promotions)
+				{
+					final AbstractPromotionModel promotion = productPromotion.getPromotion() != null
+							? (productPromotion.getPromotion()) : (null);
+					if (null != promotion && CollectionUtils.isNotEmpty(promotion.getRestrictions())) //CustomOrderThresholdFreeGiftPromotionModel
+					{
+						for (final AbstractPromotionRestrictionModel restriction : promotion.getRestrictions())
+						{
+							if (restriction instanceof EtailPincodeRestrictionModel)
+							{
+								isPincodeRestrictedPromotionPresent = true;
+								break exitLoop;
+							}
+
+						}
+					}
+				} //end promotion for loop
+			}
+
+		}
+		return isPincodeRestrictedPromotionPresent;
+	}
 }
