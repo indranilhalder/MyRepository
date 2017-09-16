@@ -119,6 +119,9 @@ public class OrderNotificationEmailContext extends AbstractEmailContext<OrderPro
 		final List<OrderModel> childOrders = orderProcessModel.getOrder().getChildOrders();
 		Date deliveryDate = null;
 
+		final double totalAmount = Integer
+				.parseInt(getConfigurationService().getConfiguration().getString("order.amount.for.pancard.upload"));
+
 		final OrderModel p_order = orderProcessModel.getOrder();
 
 		if (CollectionUtils.isEmpty(p_order.getChildOrders()))
@@ -154,36 +157,19 @@ public class OrderNotificationEmailContext extends AbstractEmailContext<OrderPro
 						}
 
 					}
+
+					final ProductModel prod = childOrderEntries.getProduct();
+					//added for jewellery
+					if (prod != null && prod.getProductCategoryType().equalsIgnoreCase("FineJewellery"))
+					{
+						totalFineJewelleryPrice += childOrderEntries.getNetAmountAfterAllDisc().doubleValue();
+						isPancardRequired = (totalFineJewelleryPrice >= totalAmount) ? 1 : 0;
+
+					}
 				}
 
 			}
 		}
-
-		final double totalAmount = Integer
-				.parseInt(getConfigurationService().getConfiguration().getString("order.amount.for.pancard.upload"));
-
-		//final double totalAmount1 = amount;
-		//Changes for discount
-		//final Double subTotal = Double.valueOf(orderSubTotalPrice);
-		//final List<OrderModel> childOrders = orderProcessModel.getOrder().getChildOrders();
-		for (final OrderModel childOrder : childOrders)
-		{
-			for (final AbstractOrderEntryModel childOrderEntries : childOrder.getEntries())
-			{
-				subTotal += childOrderEntries.getNetAmountAfterAllDisc().doubleValue();
-				shippingCharge += childOrderEntries.getCurrDelCharge().doubleValue();
-				final ProductModel prod = childOrderEntries.getProduct();
-				//added for jewellery
-				if (prod != null && prod.getProductCategoryType().equalsIgnoreCase("FineJewellery"))
-				{
-					totalFineJewelleryPrice += childOrderEntries.getNetAmountAfterAllDisc().doubleValue();
-					isPancardRequired = (totalFineJewelleryPrice >= totalAmount) ? 1 : 0;
-
-				}
-			}
-
-		}
-
 
 
 		//final DecimalFormat myFormatter = new DecimalFormat("#,###");
