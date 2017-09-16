@@ -22,6 +22,7 @@ import java.util.List;
 import javax.annotation.Resource;
 
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -257,16 +258,17 @@ public class AccountAddressFacade implements MplAccountAddressFacade
 
 			if (addresses != null && !addresses.isEmpty())
 			{
-				final Collection<CountryModel> deliveryCountries = commerceCommonI18NService.getAllCountries();
+				//final Collection<CountryModel> deliveryCountries = commerceCommonI18NService.getAllCountries(); // Tata Cliq is Domestic Website
 
 				final List<AddressData> result = new ArrayList<AddressData>();
 				final AddressData defaultAddress = getDefaultAddress();
 
 				for (final AddressModel address : addresses)
 				{
-					if (address.getCountry() != null)
+					final CountryModel country = address.getCountry();
+					if (country != null)
 					{
-						final boolean validForSite = deliveryCountries != null && deliveryCountries.contains(address.getCountry());
+						final boolean validForSite = StringUtils.equalsIgnoreCase(country.getName(), "India");
 						if (validForSite)
 						{
 							final AddressData addressData = addressConverter.convert(address);

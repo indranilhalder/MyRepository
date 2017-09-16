@@ -3,6 +3,7 @@
  */
 package com.tisl.mpl.order.impl;
 
+import de.hybris.platform.core.model.c2l.CurrencyModel;
 import de.hybris.platform.core.model.order.AbstractOrderEntryModel;
 import de.hybris.platform.core.model.order.AbstractOrderModel;
 import de.hybris.platform.jalo.order.AbstractOrderEntry;
@@ -15,6 +16,7 @@ import de.hybris.platform.util.DiscountValue;
 import de.hybris.platform.util.PriceValue;
 import de.hybris.platform.util.TaxValue;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
@@ -88,17 +90,23 @@ public class MplDefaultCalculationService extends DefaultCalculationService
 	protected void resetAllValues(final AbstractOrderEntryModel entry) throws CalculationException
 	{
 		// taxes
-		final Collection<TaxValue> entryTaxes = findTaxValues(entry);
+		//final Collection<TaxValue> entryTaxes = findTaxValues(entry); // Tax is not considered at Commerce end
+		final Collection<TaxValue> entryTaxes = new ArrayList<>();
 		entry.setTaxValues(entryTaxes);
-		final Tuple2<PriceValue, PriceValue> pv = findBasePriceForAddtoCart(entry);
+
 		final AbstractOrderModel order = entry.getOrder();
-		final PriceValue basePrice = convertPriceIfNecessary(pv.getFirst(), order.getNet().booleanValue(), order.getCurrency(),
-				entryTaxes);
-		final PriceValue mrpPrice = convertPriceIfNecessary(pv.getSecond(), order.getNet().booleanValue(), order.getCurrency(),
-				entryTaxes);
+		final CurrencyModel currency = order.getCurrency();
+
+		final Tuple2<PriceValue, PriceValue> pv = findBasePriceForAddtoCart(entry);
+
+
+		final PriceValue basePrice = convertPriceIfNecessary(pv.getFirst(), false, currency, entryTaxes);
+		final PriceValue mrpPrice = convertPriceIfNecessary(pv.getSecond(), false, currency, entryTaxes);
 		entry.setBasePrice(Double.valueOf(basePrice.getValue()));
+
 		final List<DiscountValue> entryDiscounts = findDiscountValues(entry);
 		entry.setDiscountValues(entryDiscounts);
+
 		entry.setMrp(Double.valueOf(mrpPrice.getValue()));
 	}
 
@@ -173,7 +181,7 @@ public class MplDefaultCalculationService extends DefaultCalculationService
 			}
 
 		}
-		return new Tuple2(new PriceValue("INR", finalPrice.doubleValue(), false), new PriceValue("INR",
-				finalMrpPrice.doubleValue(), false));
+		return new Tuple2(new PriceValue("INR", finalPrice.doubleValue(), false),
+				new PriceValue("INR", finalMrpPrice.doubleValue(), false));
 	}
 }

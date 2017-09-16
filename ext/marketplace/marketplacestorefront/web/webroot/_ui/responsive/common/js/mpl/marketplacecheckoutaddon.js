@@ -435,7 +435,6 @@ function displayCODForm()
 	//var cartValue=$("#cartValue").val();
 	var httpRequest=$("#httpRequest").val();
 	var guid=$("#guid").val();
-
 	$.ajax({
 		url: ACC.config.encodedContextPath + "/checkout/multi/payment-method/setupMplCODForm",
 		type: "GET",
