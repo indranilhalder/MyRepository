@@ -35,6 +35,7 @@ import de.hybris.platform.servicelayer.util.ServicesUtil;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
@@ -46,6 +47,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.Assert;
 
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
+import com.tisl.mpl.core.enums.DeliveryFulfillModesEnum;
 import com.tisl.mpl.core.model.MplZoneDeliveryModeValueModel;
 import com.tisl.mpl.core.model.RichAttributeModel;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
@@ -436,10 +438,10 @@ public class MplCustomAddressFacadeImpl extends DefaultCheckoutFacade implements
 		final CartModel cartModel = getCart();
 		Double deliveryCost = Double.valueOf(0.0);
 		String fulfillmentType = "";
-		String tshipThresholdValue = configurationService.getConfiguration()
-				.getString(MarketplaceFacadesConstants.TSHIPTHRESHOLDVALUE);
-		tshipThresholdValue = (tshipThresholdValue != null && !tshipThresholdValue.isEmpty()) ? tshipThresholdValue
-				: Integer.toString(0);
+		String tshipThresholdValue = configurationService.getConfiguration().getString(
+				MarketplaceFacadesConstants.TSHIPTHRESHOLDVALUE);
+		tshipThresholdValue = (tshipThresholdValue != null && !tshipThresholdValue.isEmpty()) ? tshipThresholdValue : Integer
+				.toString(0);
 
 		if (cartModel != null)
 		{
@@ -448,8 +450,8 @@ public class MplCustomAddressFacadeImpl extends DefaultCheckoutFacade implements
 				if (sellerArticleSKU.equals(entry.getSelectedUSSID()) && !entry.getGiveAway().booleanValue())
 				{
 					//Retrieve delivery modes and delivery charges for a USSID and saving them in cart entry.This will be taken forward to Order entry
-					final MplZoneDeliveryModeValueModel mplZoneDeliveryModeValueModel = mplDeliveryCostService
-							.getDeliveryCost(deliveryCode, MarketplacecommerceservicesConstants.INR, sellerArticleSKU);
+					final MplZoneDeliveryModeValueModel mplZoneDeliveryModeValueModel = mplDeliveryCostService.getDeliveryCost(
+							deliveryCode, MarketplacecommerceservicesConstants.INR, sellerArticleSKU);
 
 					//TISEE-289
 					//final SellerInformationModel sellerInfoModel = getMplSellerInformationService().getSellerDetail(sellerArticleSKU);
@@ -509,8 +511,8 @@ public class MplCustomAddressFacadeImpl extends DefaultCheckoutFacade implements
 						}
 						else
 						{
-							deliveryCost = Double
-									.valueOf(entry.getQuantity().doubleValue() * mplZoneDeliveryModeValueModel.getValue().doubleValue());
+							deliveryCost = Double.valueOf(entry.getQuantity().doubleValue()
+									* mplZoneDeliveryModeValueModel.getValue().doubleValue());
 						}
 
 					}
@@ -553,10 +555,10 @@ public class MplCustomAddressFacadeImpl extends DefaultCheckoutFacade implements
 		{
 			final CartModel cartModel = getCart();
 
-			String tshipThresholdValue = configurationService.getConfiguration()
-					.getString(MarketplaceFacadesConstants.TSHIPTHRESHOLDVALUE);
-			tshipThresholdValue = (tshipThresholdValue != null && !tshipThresholdValue.isEmpty()) ? tshipThresholdValue
-					: Integer.toString(0);
+			String tshipThresholdValue = configurationService.getConfiguration().getString(
+					MarketplaceFacadesConstants.TSHIPTHRESHOLDVALUE);
+			tshipThresholdValue = (tshipThresholdValue != null && !tshipThresholdValue.isEmpty()) ? tshipThresholdValue : Integer
+					.toString(0);
 
 			if (cartModel != null)
 			{
@@ -565,8 +567,8 @@ public class MplCustomAddressFacadeImpl extends DefaultCheckoutFacade implements
 					if (sellerArticleSKU.equals(entry.getSelectedUSSID()))
 					{
 						//Retrieve delivery modes and delivery charges for a USSID and saving them in cart entry.This will be taken forward to Order entry
-						final MplZoneDeliveryModeValueModel mplZoneDeliveryModeValueModel = mplDeliveryCostService
-								.getDeliveryCost(deliveryCode, MarketplacecommerceservicesConstants.INR, sellerArticleSKU);
+						final MplZoneDeliveryModeValueModel mplZoneDeliveryModeValueModel = mplDeliveryCostService.getDeliveryCost(
+								deliveryCode, MarketplacecommerceservicesConstants.INR, sellerArticleSKU);
 
 						if (mplZoneDeliveryModeValueModel.getDeliveryFulfillModes() != null
 								&& mplZoneDeliveryModeValueModel.getDeliveryFulfillModes().getCode() != null
@@ -756,10 +758,10 @@ public class MplCustomAddressFacadeImpl extends DefaultCheckoutFacade implements
 
 		Double deliveryCost = Double.valueOf(0.0);
 		String fulfillmentType = "";
-		String tshipThresholdValue = configurationService.getConfiguration()
-				.getString(MarketplaceFacadesConstants.TSHIPTHRESHOLDVALUE);
-		tshipThresholdValue = (tshipThresholdValue != null && !tshipThresholdValue.isEmpty()) ? tshipThresholdValue
-				: Integer.toString(0);
+		String tshipThresholdValue = configurationService.getConfiguration().getString(
+				MarketplaceFacadesConstants.TSHIPTHRESHOLDVALUE);
+		tshipThresholdValue = (tshipThresholdValue != null && !tshipThresholdValue.isEmpty()) ? tshipThresholdValue : Integer
+				.toString(0);
 
 		List<PinCodeResponseData> pincoderesponseDataList = null;
 		pincoderesponseDataList = sessionService
@@ -801,12 +803,19 @@ public class MplCustomAddressFacadeImpl extends DefaultCheckoutFacade implements
 						mplZoneDeliveryModeValueModel = mplDeliveryCostService.getDeliveryCost(deliveryCode,
 								MarketplacecommerceservicesConstants.INR, sellerArticleSKU);
 					}
-
-					if (null != mplZoneDeliveryModeValueModel && sellerInfoModel != null && sellerInfoModel.getRichAttribute() != null
-							&& ((List<RichAttributeModel>) sellerInfoModel.getRichAttribute()).get(0).getDeliveryFulfillModes() != null)
+					Collection<RichAttributeModel> richAttributeModelList = null;
+					if (null != sellerInfoModel)
 					{
-						fulfillmentType = ((List<RichAttributeModel>) sellerInfoModel.getRichAttribute()).get(0)
-								.getDeliveryFulfillModes().getCode();
+						richAttributeModelList = sellerInfoModel.getRichAttribute();
+					}
+					DeliveryFulfillModesEnum deliveryFulfillModes = null;
+					if (null != sellerInfoModel)
+					{
+						deliveryFulfillModes = ((List<RichAttributeModel>) richAttributeModelList).get(0).getDeliveryFulfillModes();
+					}
+					if (deliveryFulfillModes != null)
+					{
+						fulfillmentType = deliveryFulfillModes.getCode();
 
 
 						//Blocked for TPR-579
@@ -848,9 +857,13 @@ public class MplCustomAddressFacadeImpl extends DefaultCheckoutFacade implements
 					}
 
 					entry.setMplDeliveryMode(mplZoneDeliveryModeValueModel);
-					if (null != mplZoneDeliveryModeValueModel && mplZoneDeliveryModeValueModel.getValue() != null
-							&& null != mplZoneDeliveryModeValueModel.getDeliveryFulfillModes()
-							&& fulfillmentType.equalsIgnoreCase(mplZoneDeliveryModeValueModel.getDeliveryFulfillModes().getCode()))
+					DeliveryFulfillModesEnum deliveryFulfillModesEnum = null;
+					if (null != mplZoneDeliveryModeValueModel)
+					{
+						deliveryFulfillModesEnum = mplZoneDeliveryModeValueModel.getDeliveryFulfillModes();
+					}
+					if (null != deliveryFulfillModesEnum && mplZoneDeliveryModeValueModel.getValue() != null
+							&& fulfillmentType.equalsIgnoreCase(deliveryFulfillModesEnum.getCode()))
 					{
 						if (entry.getIsBOGOapplied().booleanValue())
 						{
@@ -866,8 +879,8 @@ public class MplCustomAddressFacadeImpl extends DefaultCheckoutFacade implements
 						}
 						else
 						{
-							deliveryCost = Double
-									.valueOf(entry.getQuantity().doubleValue() * mplZoneDeliveryModeValueModel.getValue().doubleValue());
+							deliveryCost = Double.valueOf(entry.getQuantity().doubleValue()
+									* mplZoneDeliveryModeValueModel.getValue().doubleValue());
 						}
 
 					}
@@ -876,9 +889,14 @@ public class MplCustomAddressFacadeImpl extends DefaultCheckoutFacade implements
 					LOG.debug(" >>> Delivery cost for ussid  " + sellerArticleSKU + " of fulfilment type " + fulfillmentType + " is "
 							+ deliveryCost);
 
+					final MplZoneDeliveryModeValueModel mplZoneDeliveryModeValueModelEntry = entry.getMplDeliveryMode();
+					DeliveryModeModel deliveryModeModel = null;
+					if (null != mplZoneDeliveryModeValueModelEntry)
+					{
+						deliveryModeModel = mplZoneDeliveryModeValueModelEntry.getDeliveryMode();
+					}
 					//if delivery mode is changed from  c-n-c to other and if it contains POS then we need to remove the POS from that entry
-					if (null != entry.getMplDeliveryMode() && null != entry.getMplDeliveryMode().getDeliveryMode()
-							&& !entry.getMplDeliveryMode().getDeliveryMode().getCode().equals(MarketplaceFacadesConstants.C_C)
+					if (null != deliveryModeModel && !deliveryModeModel.getCode().equals(MarketplaceFacadesConstants.C_C)
 							&& null != entry.getDeliveryPointOfService())
 					{
 						entry.setDeliveryPointOfService(null);
