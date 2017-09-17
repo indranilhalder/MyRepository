@@ -90,14 +90,14 @@
 	}
 </style>
 <div class="cliqCashContainer">
-<c:if test="${ WalletBalance gt 0 }">
-	<div class="">
-		<div class="alert alert-success cliqCashSuccessAlert">
-			<span class="closeCashSuccess" data-dismiss="alert">&times;</span>
-			Voucher has redeemed successfully and updated to your Cliq Cash balance.
-		</div>
-	</div>
-	</c:if>
+<%-- <c:if test="${ WalletBalance gt 0 }"> --%>
+<!-- 	<div class=""> -->
+<!-- 		<div class="alert alert-success cliqCashSuccessAlert"> -->
+<!-- 			<span class="closeCashSuccess" data-dismiss="alert">&times;</span> -->
+<!-- 			Voucher has redeemed successfully and updated to your Cliq Cash balance. -->
+<!-- 		</div> -->
+<!-- 	</div> -->
+<%-- 	</c:if> --%>
 	<div class="cliqCashContainerHead">
 		<p class="cliqCashInnerTop"><strong>Add CLiQ Cash</strong></p><br />
 		<p>When you Add Money or Gift Card, the amount will be instantly added to your CLiQ cash balance.</p><br />&nbsp;
@@ -144,24 +144,24 @@
 			<thead>
 				<tr>
 					<td>DATE</td>
-					<td>CARD NUMBER</td>
-					<td>WITHDRAWL</td>
+					<td>Wallet NUMBER</td>
+<!-- 					<td>WITHDRAWL</td> -->
 					<td>DEPOSIT</td>
 					<td>STATUS</td>
 					<td>INVOICE NO.</td>
-					<td>COMMENT</td>
+<!-- 					<td>COMMENT</td> -->
 				</tr>
 			</thead>
 			<tbody>
 			<c:forEach items="${walletTrasacationsListData}" var="statementwallet">
 				<tr>
 					<td>${statementwallet.transactionPostDate}</td>
-					<td>***********${statementwallet.walletNumber}</td>
-					<td>&nbsp;</td>
+					<td>${statementwallet.walletNumber}</td>
+<!-- 					<td>&nbsp;</td> -->
 					<td>&#8377; ${statementwallet.amount}</td>
 					<td>${statementwallet.transactionStatus}</td>
 					<td>${statementwallet.transactionId}</td>
-					<td>${statementwallet.notes}</td>
+<%-- 					<td>${statementwallet.notes}</td> --%>
 				</tr>
 				</c:forEach>
 			</tbody>
@@ -173,24 +173,24 @@
 			<thead>
 				<tr>
 					<td>DATE</td>
-					<td>CARD NUMBER</td>
-					<td>WITHDRAWL</td>
+					<td>Wallet NUMBER</td>
+<!-- 					<td>WITHDRAWL</td> -->
 					<td>DEPOSIT</td>
 					<td>STATUS</td>
 					<td>INVOICE NO.</td>
-					<td>COMMENT</td>
+<!-- 					<td>COMMENT</td> -->
 				</tr>
 			</thead>
 			<tbody>
 			<c:forEach items="${cashBackWalletTrasacationsList}" var="cashBaskwallet">
 				<tr>
 					<td>${cashBaskwallet.transactionPostDate}</td>
-					<td>***********${cashBaskwallet.walletNumber}</td>
-					<td>&nbsp;</td>
+					<td>${cashBaskwallet.walletNumber}</td>
+<!-- 					<td>&nbsp;</td> -->
 					<td>&#8377; ${cashBaskwallet.amount}</td>
 					<td>${cashBaskwallet.transactionStatus}</td>
 					<td>${cashBaskwallet.transactionId}</td>
-					<td>${cashBaskwallet.notes}</td>
+<%-- 					<td>${cashBaskwallet.notes}</td> --%>
 				</tr>
 				</c:forEach>
 			</tbody>
