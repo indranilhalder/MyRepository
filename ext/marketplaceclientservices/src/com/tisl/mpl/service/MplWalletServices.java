@@ -10,6 +10,7 @@ import com.tisl.mpl.pojo.response.CustomerWalletDetailResponse;
 import com.tisl.mpl.pojo.response.QCCustomerRegisterResponse;
 import com.tisl.mpl.pojo.response.QCInitializationResponse;
 import com.tisl.mpl.pojo.response.QCRedeeptionResponse;
+import com.tisl.mpl.pojo.response.RedimGiftCardResponse;
 import com.tisl.mpl.pojo.response.WalletTransacationsList;
 
 
@@ -42,7 +43,7 @@ public interface MplWalletServices
 
 	public CustomerWalletDetailResponse getCustomerWallet(String customerWalletId, String transactionId);
 
-	public String getRedimWallet(String cardNumber, String cardPin, String transactionId, String customerWalletId);
+	public RedimGiftCardResponse getAddEGVToWallet(String cardNumber, String cardPin, String transactionId, String customerWalletId);
 
 	public WalletTransacationsList getWalletTransactionList(String cardNumber, String transactionId);
 

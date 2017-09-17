@@ -20,6 +20,7 @@ import com.tisl.mpl.pojo.response.BalanceBucketWise;
 import com.tisl.mpl.pojo.response.CustomerWalletDetailResponse;
 import com.tisl.mpl.pojo.response.QCCustomerRegisterResponse;
 import com.tisl.mpl.pojo.response.QCRedeeptionResponse;
+import com.tisl.mpl.pojo.response.RedimGiftCardResponse;
 import com.tisl.mpl.pojo.response.WalletTransacationsList;
 import com.tisl.mpl.pojo.response.WalletTransactions;
 import com.tisl.mpl.pojo.response.WalletTrasacationsListData;
@@ -229,15 +230,20 @@ public class MplWalletFacadeImpl implements MplWalletFacade
 	}
 	
 	@Override
-	public String getRedimWallet(String cardNumber, String cardPin){
+	public RedimGiftCardResponse getAddEGVToWallet(String cardNumber, String cardPin){
 		final String transactionId = generateQCTransactionId();
-		String balance = "";
+		RedimGiftCardResponse balance = new RedimGiftCardResponse ();
 		final CustomerModel currentCustomer = (CustomerModel) userService.getCurrentUser();
 		if (null != currentCustomer.getIsWalletActivated()){
-			System.out.println("Customer has Actived try to redim the card");
-			 balance = getMplWalletServices().getRedimWallet(cardNumber, cardPin,transactionId,currentCustomer.getCustomerWalletDetail().getWalletId());
+			 balance = getMplWalletServices().getAddEGVToWallet(cardNumber, cardPin,transactionId,currentCustomer.getCustomerWalletDetail().getWalletId());
+			 if(null != balance){				 
+				 return balance;
+			 }
+			 
 		 }
-		return balance;
+		  balance.setResponseMessage("error");
+		 return balance;
+		
 	}
 	
 	@Override

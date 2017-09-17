@@ -17,6 +17,7 @@ import de.hybris.platform.core.model.order.payment.CreditCardPaymentInfoModel;
 import de.hybris.platform.core.model.order.payment.DebitCardPaymentInfoModel;
 import de.hybris.platform.core.model.order.payment.JusPayPaymentInfoModel;
 import de.hybris.platform.core.model.order.payment.NetbankingPaymentInfoModel;
+import de.hybris.platform.core.model.order.payment.QCWalletPaymentInfoModel;
 import de.hybris.platform.core.model.order.price.DiscountModel;
 import de.hybris.platform.core.model.product.ProductModel;
 import de.hybris.platform.core.model.user.AddressModel;
@@ -729,6 +730,7 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 					|| orderModel.getPaymentInfo() instanceof CreditCardPaymentInfoModel
 					|| orderModel.getPaymentInfo() instanceof DebitCardPaymentInfoModel
 					|| orderModel.getPaymentInfo() instanceof NetbankingPaymentInfoModel
+					|| orderModel.getPaymentInfo() instanceof QCWalletPaymentInfoModel
 					|| WalletEnum.MRUPEE.equals(orderModel.getIsWallet()))
 			{
 				getOrderStatusSpecifier().setOrderStatus(orderModel, OrderStatus.PAYMENT_SUCCESSFUL);
@@ -2473,12 +2475,14 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 			 */
 			if (splitPayment && jsPayMode)
 			{
+				/**
 				ArrayList<String> apporstioPayList = new ArrayList<String>();
 				apporstioPayList = setPaymentModeApporsionValue(abstractOrderEntryModel, quantity);
 				orderEntryModel.setQcCardValue(apporstioPayList.get(0));
 				orderEntryModel.setQcCashValue(apporstioPayList.get(1));
 				orderEntryModel.setQcRefundValue(apporstioPayList.get(2));
 				orderEntryModel.setJuspayValue(apporstioPayList.get(3));
+				*/
 			}
 
 			/**
@@ -3321,7 +3325,7 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 	public ArrayList<String> setPaymentModeApporsionValue(final AbstractOrderEntryModel abstractOrderEntryModel,
 			final int quantity)
 	{
-
+/**
 		final ArrayList<String> listData = new ArrayList<String>();
 
 		if (Double.parseDouble(abstractOrderEntryModel.getQcCardValue()) != 0)
@@ -3363,7 +3367,10 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 			}
 		}
 		return listData;
-
+		*/
+       return (ArrayList<String>) CollectionUtils.EMPTY_COLLECTION;
 	}
+	
 
+		
 }

@@ -15,7 +15,6 @@ import org.apache.log4j.Logger;
 
 import com.tisl.mpl.core.model.QCInitResponseDetailModel;
 import com.tisl.mpl.daos.MplQCInitDetailData;
-import com.tisl.mpl.review.daos.impl.MplGigyaReviewCommentDaoImpl;
 
 
 /**
@@ -25,7 +24,7 @@ import com.tisl.mpl.review.daos.impl.MplGigyaReviewCommentDaoImpl;
 public class MplQCInitDataImpl implements MplQCInitDetailData
 {
 
-	private final static Logger LOG = Logger.getLogger(MplGigyaReviewCommentDaoImpl.class.getName());
+	private final static Logger LOG = Logger.getLogger(MplQCInitDataImpl.class.getName());
 
 	@Resource
 	private FlexibleSearchService flexibleSearchService;
@@ -60,7 +59,6 @@ public class MplQCInitDataImpl implements MplQCInitDetailData
 
 			final String searchQuery = "SELECT {" + QCInitResponseDetailModel.PK + "}  FROM {QCInitResponseDetail}";
 			final FlexibleSearchQuery query = new FlexibleSearchQuery(searchQuery);
-
 			final SearchResult<QCInitResponseDetailModel> searchResult = getFlexibleSearchService().search(query);
 			final List<QCInitResponseDetailModel> results = searchResult.getResult();
 			return results.get(0);
@@ -68,7 +66,8 @@ public class MplQCInitDataImpl implements MplQCInitDetailData
 		}
 		catch (final Exception e)
 		{
-			LOG.error(e);
+			//LOG.error(e);
+			e.printStackTrace();
 		}
 		return null;
 	}

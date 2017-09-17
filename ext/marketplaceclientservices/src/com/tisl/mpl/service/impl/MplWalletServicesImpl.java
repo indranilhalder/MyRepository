@@ -55,8 +55,6 @@ public class MplWalletServicesImpl implements MplWalletServices
 	public QCInitDataBean qcInitDataBean;
 
 
-
-
 	/**
 	 * @return the qcInitDataBean
 	 */
@@ -112,8 +110,7 @@ public class MplWalletServicesImpl implements MplWalletServices
 	{
 		this.configurationService = configurationService;
 	}
-
-
+	
 	@Override
 	public QCInitializationResponse walletInitilization()
 	{
@@ -121,11 +118,13 @@ public class MplWalletServicesImpl implements MplWalletServices
 		final Client client = Client.create();
 		ClientResponse response = null;
 		WebResource webResource = null;
-		//final ReturnLogisticsResponse responsefromOMS = new ReturnLogisticsResponse();
 		final DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
-
+		
 		try
 		{
+         client.setConnectTimeout(Integer.valueOf(20));
+         client.setReadTimeout(Integer.valueOf(20));
+         
 			webResource = client.resource(UriBuilder.fromUri(MarketplaceclientservicesConstants.QC_INITIALIZATION_URL).build());
 			final String forwardEntityID = getConfigurationService().getConfiguration()
 					.getString(MarketplaceclientservicesConstants.FORWARDING_ENTITY_ID);
@@ -138,8 +137,6 @@ public class MplWalletServicesImpl implements MplWalletServices
 					.getString(MarketplaceclientservicesConstants.USERNAME);
 			final String password = getConfigurationService().getConfiguration()
 					.getString(MarketplaceclientservicesConstants.PASSWORD);
-			//			final String transactionID = getConfigurationService().getConfiguration()
-			//					.getString(MarketplaceclientservicesConstants.TRANSACTION_ID);
 			final String isForwardingEntryExists = getConfigurationService().getConfiguration()
 					.getString(MarketplaceclientservicesConstants.IS_FORWARDING_ENTIRY_EXISTS);
 
@@ -149,8 +146,7 @@ public class MplWalletServicesImpl implements MplWalletServices
 					.header(MarketplaceclientservicesConstants.TERMINAL_ID, terminalID)
 					.header(MarketplaceclientservicesConstants.USERNAME, userName)
 					.header(MarketplaceclientservicesConstants.PASSWORD, password)
-					.header(MarketplaceclientservicesConstants.TRANSACTION_ID, "100")
-					//(random number logic)
+					.header(MarketplaceclientservicesConstants.TRANSACTION_ID, "11")
 					.header(MarketplaceclientservicesConstants.DATE_AT_CLIENT, dateFormat.format(new Date()))
 					.header(MarketplaceclientservicesConstants.IS_FORWARDING_ENTIRY_EXISTS, isForwardingEntryExists)
 					.header(MarketplaceclientservicesConstants.CONTENT_TYPE, MediaType.APPLICATION_JSON).get(ClientResponse.class);
@@ -169,10 +165,13 @@ public class MplWalletServicesImpl implements MplWalletServices
 		catch (final Exception e)
 		{
 			LOG.error(e.getMessage());
-			return null;
+			if(e.getMessage().contains("Timeout Exception"))
+			qcInitializationResponse.setResponseMessage("Timeout Exception");
+			qcInitializationResponse.setResponseCode(Integer.valueOf(3001));
+			return qcInitializationResponse;
 		}
 
-		return null;
+		return qcInitializationResponse;
 	}
 
 	@Override
@@ -196,7 +195,6 @@ public class MplWalletServicesImpl implements MplWalletServices
 			response = webResource.type(MediaType.APPLICATION_JSON).header("ForwardingEntityId", "tatacliq.com")
 					.header("ForwardingEntityPassword", "tatacliq.com").header("TerminalId", "webpos-tul-dev10")
 					.header("Username", "tulwebuser").header("Password", "webusertul").header("TransactionId", transactionId)
-					//(random number logic)
 					.header("DateAtClient", dateFormat.format(new Date())).header("IsForwardingEntityExists", "true")
 					.header("Content-Type", "application/json").header("MerchantOutletName", "TUL-Online")
 					.header("AcquirerId", "Tata Unistore Ltd").header("OrganizationName", "Tata Unistore Ltd")
@@ -613,40 +611,26 @@ public class MplWalletServicesImpl implements MplWalletServices
 
 
 	@Override
-	public String getRedimWallet(final String cardNumber, final String cardPin, final String transactionId,String customerWalletId)
+	public RedimGiftCardResponse getAddEGVToWallet(final String cardNumber, final String cardPin, final String transactionId, String customerWalletId)
 	{
-
-		System.out.println("***********************************in Mpl Wallet classssssssss");
-
-		System.out.println("in Mpl Wallet cardNumber:" + cardNumber);
-		System.out.println("in Mpl Wallet cardPin:" + cardPin);
-		System.out.println("in Mpl Wallet transactionId:" + transactionId);
-
+		
+		RedimGiftCardResponse redimGiftCardResponse = null;
+		try
+		{
 		final Client client = Client.create();
 		ClientResponse response = null;
 		WebResource webResource = null;
 		String requestBody = null;
 		String output = null;
-		RedimGiftCardResponse redimGiftCardResponse = null;
-		//final ReturnLogisticsResponse responsefromOMS = new ReturnLogisticsResponse();
+		
 		final DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
 		final AddToCardWallet addToCardWallet = buildAddtoCardWallet(cardNumber, cardPin);
 		final ObjectMapper objectMapper = new ObjectMapper();
-		try
-		{
+	
 			requestBody = objectMapper.writeValueAsString(addToCardWallet);
-		}
-		catch (final Exception e)
-		{
-			// YTODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		try
-		{
 			webResource = client.resource(
 					UriBuilder.fromUri(MarketplaceclientservicesConstants.ADD_TO_CARD_TO_WALLET + customerWalletId + "/card").build());
 
-			//need to create marshalling for request body
 			response = webResource.type(MediaType.APPLICATION_JSON)
 					.header(MarketplaceclientservicesConstants.FORWARDING_ENTITY_ID, "tatacliq.com")
 					.header(MarketplaceclientservicesConstants.FORWARDING_ENTITY_PASSWORD, "tatacliq.com")
@@ -663,7 +647,7 @@ public class MplWalletServicesImpl implements MplWalletServices
 					.header(MarketplaceclientservicesConstants.POS_TYPE_ID, "1")
 					.header(MarketplaceclientservicesConstants.POS_NAME, "webpos-tul-qc-01")
 					.header(MarketplaceclientservicesConstants.TERM_APP_VERSION, "null")
-					.header(MarketplaceclientservicesConstants.CURRENT_BATCH_NUMBER, "10209396")
+					.header(MarketplaceclientservicesConstants.CURRENT_BATCH_NUMBER, getQcInitDataBean().getCurrentBatchNumber())
 					.header(MarketplaceclientservicesConstants.TRANSACTION_ID, transactionId).type(MediaType.APPLICATION_JSON)
 					.post(ClientResponse.class, requestBody);
 
@@ -671,27 +655,15 @@ public class MplWalletServicesImpl implements MplWalletServices
 			{
 				output = response.getEntity(String.class);
 				redimGiftCardResponse = objectMapper.readValue(output, RedimGiftCardResponse.class);
-				LOG.debug(" ************** GET CUSTOMER WALLET----" + RedimGiftCardResponse.class); //need to create marshalling for response object
-				System.out.println(" ************** GET CUSTOMER WALLET----" + redimGiftCardResponse.getResponseCode());
-
-
+				return redimGiftCardResponse;
 			}
 		}
-		catch (
-
-		final Exception ex)
+		catch (final Exception ex)
 		{
 			ex.printStackTrace();
-			System.out.println("Error response Status:------" + response.getStatus());
 		}
-		String balaenceFromWallet = "";
-		final WalletBalanceResponse walletBalanceResponse = getBalenceForWallet(cardNumber, transactionId);
-		if (null != walletBalanceResponse && null != walletBalanceResponse.getWallet())
-		{
-			balaenceFromWallet = String.valueOf(walletBalanceResponse.getWallet().getBalance());
-		}
-		System.out.println("balaenceFromWallet:" + walletBalanceResponse);
-		return balaenceFromWallet;
+		
+		return redimGiftCardResponse;
 
 	}
 
@@ -708,7 +680,6 @@ public class MplWalletServicesImpl implements MplWalletServices
 		WebResource webResource = null;
 		WalletBalanceResponse walletBalanceResponse = null;
 		String output = null;
-		//final ReturnLogisticsResponse responsefromOMS = new ReturnLogisticsResponse();
 		final DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
 		final ObjectMapper objectMapper = new ObjectMapper();
 		try
@@ -716,7 +687,6 @@ public class MplWalletServicesImpl implements MplWalletServices
 			webResource = client.resource(
 					UriBuilder.fromUri(MarketplaceclientservicesConstants.GET_BALANCE_FOR_WALLET + cardNumber + "/balance").build());
 
-			//need to create marshalling for request body
 			response = webResource.type(MediaType.APPLICATION_JSON)
 					.header(MarketplaceclientservicesConstants.FORWARDING_ENTITY_ID, "tatacliq.com")
 					.header(MarketplaceclientservicesConstants.FORWARDING_ENTITY_PASSWORD, "tatacliq.com")
@@ -733,7 +703,7 @@ public class MplWalletServicesImpl implements MplWalletServices
 					.header(MarketplaceclientservicesConstants.POS_TYPE_ID, "1")
 					.header(MarketplaceclientservicesConstants.POS_NAME, "webpos-tul-qc-01")
 					.header(MarketplaceclientservicesConstants.TERM_APP_VERSION, "null")
-					.header(MarketplaceclientservicesConstants.CURRENT_BATCH_NUMBER, "10209396")
+					.header(MarketplaceclientservicesConstants.CURRENT_BATCH_NUMBER, getQcInitDataBean().getCurrentBatchNumber())
 					.header(MarketplaceclientservicesConstants.TRANSACTION_ID, transactionId).type(MediaType.APPLICATION_JSON)
 					.get(ClientResponse.class);
 
@@ -782,7 +752,6 @@ public class MplWalletServicesImpl implements MplWalletServices
 			webResource = client.resource(UriBuilder
 					.fromUri(MarketplaceclientservicesConstants.GET_BALANCE_FOR_WALLET + walletCardNumber + "/transactions").build());
 
-			//need to create marshalling for request body
 			response = webResource.type(MediaType.APPLICATION_JSON)
 					.header(MarketplaceclientservicesConstants.FORWARDING_ENTITY_ID, "tatacliq.com")
 					.header(MarketplaceclientservicesConstants.FORWARDING_ENTITY_PASSWORD, "tatacliq.com")
@@ -799,7 +768,7 @@ public class MplWalletServicesImpl implements MplWalletServices
 					.header(MarketplaceclientservicesConstants.POS_TYPE_ID, "1")
 					.header(MarketplaceclientservicesConstants.POS_NAME, "webpos-tul-qc-01")
 					.header(MarketplaceclientservicesConstants.TERM_APP_VERSION, "null")
-					.header(MarketplaceclientservicesConstants.CURRENT_BATCH_NUMBER, "10209396")
+					.header(MarketplaceclientservicesConstants.CURRENT_BATCH_NUMBER, getQcInitDataBean().getCurrentBatchNumber())
 					.header(MarketplaceclientservicesConstants.TRANSACTION_ID, transactionId).type(MediaType.APPLICATION_JSON)
 					.get(ClientResponse.class);
 
@@ -844,8 +813,6 @@ public class MplWalletServicesImpl implements MplWalletServices
 		// YTODO Auto-generated method stub
 		return registerCustomerWallet(registerCustomerRequest, transactionId);
 	}
-
-
 
 
 }

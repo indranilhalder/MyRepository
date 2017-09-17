@@ -52,6 +52,7 @@ import org.springframework.security.web.savedrequest.SavedRequest;
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.helper.ProductDetailsHelper;
 import com.tisl.mpl.marketplacecommerceservices.service.ExtendedUserService;
+import com.tisl.mpl.service.MplQCInitServiceImpl;
 import com.tisl.mpl.storefront.constants.MessageConstants;
 import com.tisl.mpl.storefront.constants.ModelAttributetConstants;
 import com.tisl.mpl.storefront.constants.RequestMappingUrlConstants;
@@ -129,6 +130,26 @@ public class StorefrontAuthenticationSuccessHandler extends SavedRequestAwareAut
 	@Resource(name = "productDetailsHelper")
 	private ProductDetailsHelper productDetailsHelper;
 
+	@Resource(name = "mplQCInitService")
+	private MplQCInitServiceImpl mplQCInitService;
+	
+
+
+	/**
+	 * @return the mplQCInitService
+	 */
+	public MplQCInitServiceImpl getMplQCInitService()
+	{
+		return mplQCInitService;
+	}
+
+	/**
+	 * @param mplQCInitService the mplQCInitService to set
+	 */
+	public void setMplQCInitService(MplQCInitServiceImpl mplQCInitService)
+	{
+		this.mplQCInitService = mplQCInitService;
+	}
 
 	/**
 	 * @return the productDetailsHelper
@@ -163,6 +184,8 @@ public class StorefrontAuthenticationSuccessHandler extends SavedRequestAwareAut
 	{
 
 		getCustomerFacade().loginSuccess();
+		
+		getMplQCInitService().init();
 		//Microsite POC
 		//This is present in the filter but in case the login request comes from a microsite,the redirect url will be the microsite url and hence not pass through the filter.
 		//Hence updating the cookie here.

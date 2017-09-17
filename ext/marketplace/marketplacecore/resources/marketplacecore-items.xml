@@ -143,6 +143,7 @@
 			elementtype="product" autocreate="true" generate="true" type="list" />
 		<collectiontype elementtype="BannerComponent" code="bannerImageCollection"
 			autocreate="true" generate="true" type="list" />
+			
 		<!-- <collectiontype elementtype="ShowCaseCollectionComponent" code="ShowCaseCollection" 
 			autocreate="true" generate="true" type="list" /> -->
 	</collectiontypes>
@@ -6225,40 +6226,12 @@
 					</attribute>
 
 					<!-- QC Changes -->
-					
-					<attribute qualifier="juspayValue" autocreate="true"
-						type="java.lang.String">
-						<description>juspay Value</description>
-						<defaultvalue>"0"</defaultvalue>
+  
+					   <attribute qualifier="qcTransactionDetail" autocreate="true"
+						type="QCWalletCardDetail">
+						<description>QC Wallet Card Detail</description>
 						<modifiers read="true" write="true" removable="true"
-							optional="true"  unique="false" />
-						<persistence type="property" />
-					</attribute>
-					
-						<attribute qualifier="qcCardValue" autocreate="true"
-						type="java.lang.String">
-						<description>qc Card Value</description>
-						<defaultvalue>"0"</defaultvalue>
-						<modifiers read="true" write="true" removable="true"
-							optional="true" unique="false" />
-						<persistence type="property" />
-					</attribute>
-					
-						<attribute qualifier="qcCashValue" autocreate="true"
-						type="java.lang.String">
-						<description>qc Cash Value</description>
-						<defaultvalue>"0"</defaultvalue>
-						<modifiers read="true" write="true" removable="true"
-							optional="true" unique="false" />
-						<persistence type="property" />
-					   </attribute>
-					   
-					   <attribute qualifier="qcRefundValue" autocreate="true"
-						type="java.lang.String">
-						<description>qc Refund Value</description>
-						<defaultvalue>"0"</defaultvalue>
-						<modifiers read="true" write="true" removable="true"
-							optional="true" unique="false" />
+							optional="true" />
 						<persistence type="property" />
 					   </attribute>
 
@@ -13345,6 +13318,115 @@
 							optional="true" />
 						<persistence type="property" />
 					</attribute>
+				</attributes>
+			</itemtype>
+			
+			<itemtype code="QCWalletCardDetail" generate="true"
+				autocreate="true">
+				<deployment table="QCWalletCardDetail" typecode="21105" />
+
+				<attributes>
+					<attribute autocreate="true" generate="true" qualifier="orderId"
+						type="java.lang.String">
+						<persistence type="property" />
+						<modifiers read="true" write="true" search="true" />
+					</attribute>
+					
+					<attribute autocreate="true" generate="true" qualifier="transactionId"
+						type="java.lang.String">
+						<persistence type="property" />
+						<modifiers read="true" write="true" search="true" />
+					</attribute>
+
+					<attribute qualifier="transactionType" autocreate="true"
+						type="java.lang.String" generate="true">
+						<modifiers read="true" write="true" search="true"
+							optional="false" />
+						<persistence type="property" />
+					</attribute>
+					
+						<attribute qualifier="cardNumber" autocreate="true"
+						type="java.lang.String" generate="true">
+						<modifiers read="true" write="true" search="true"
+							optional="false" />
+						<persistence type="property" />
+					</attribute>
+					
+					<attribute autocreate="true" generate="true" qualifier="cardPin"
+						type="java.lang.String">
+						<persistence type="property" />
+						<modifiers read="true" write="true" optional="false"
+							search="true" />
+					</attribute>
+					<attribute qualifier="cardAmount" autocreate="true"
+						type="java.lang.String" generate="true">
+						<modifiers read="true" write="true" search="true"
+							optional="false" />
+						<persistence type="property" />
+					</attribute>
+
+					<attribute qualifier="cardExpiry" autocreate="true"
+						type="java.lang.String" generate="true">
+						<modifiers read="true" write="true" search="true" />
+						<persistence type="property" />
+					</attribute>
+
+					<attribute autocreate="true" generate="true" 
+					qualifier="bucketType" type="java.lang.String">
+						<persistence type="property" />
+						<modifiers read="true" write="true" optional="false"
+							search="true" />
+					</attribute>
+					
+					<attribute autocreate="true" generate="true" 
+					qualifier="productCode" type="java.lang.String">
+						<persistence type="property" />
+						<modifiers read="true" write="true" optional="false"
+							search="true" />
+					</attribute>
+
+					<attribute autocreate="true" generate="true" qualifier="qcApportionValue"
+						type="java.lang.String">
+						<persistence type="property" />
+						<modifiers read="true" write="true" search="true" />
+						<defaultvalue>"0"</defaultvalue>
+					</attribute>
+
+					<attribute autocreate="true" generate="true" qualifier="qcShippingValue"
+						type="java.lang.String">
+						<persistence type="property" />
+						<modifiers read="true" write="true" search="true" />
+						<defaultvalue>"0"</defaultvalue>
+					</attribute>
+					
+					<attribute autocreate="true" generate="true" qualifier="qcSchedulingValue"
+						type="java.lang.String">
+						<persistence type="property" />
+						<modifiers read="true" write="true" search="true" />
+						<defaultvalue>"0"</defaultvalue>
+					</attribute>
+					
+					<attribute autocreate="true" generate="true" qualifier="juspayApportionValue"
+						type="java.lang.String">
+						<persistence type="property" />
+						<modifiers read="true" write="true" search="true" />
+						<defaultvalue>"0"</defaultvalue>
+					</attribute>
+
+					<attribute autocreate="true" generate="true" qualifier="juspayShippingValue"
+						type="java.lang.String">
+						<persistence type="property" />
+						<modifiers read="true" write="true" search="true" />
+						<defaultvalue>"0"</defaultvalue>
+					</attribute>
+					
+					<attribute autocreate="true" generate="true" qualifier="juspaySchedulingValue"
+						type="java.lang.String">
+						<persistence type="property" />
+						<modifiers read="true" write="true" search="true" />
+						<defaultvalue>"0"</defaultvalue>
+					</attribute>
+
 				</attributes>
 			</itemtype>
 

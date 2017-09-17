@@ -3,13 +3,13 @@
  */
 package com.tisl.mpl.service;
 
+import de.hybris.platform.servicelayer.dto.converter.Converter;
 import de.hybris.platform.servicelayer.model.ModelService;
 
 import javax.annotation.Resource;
 
 import com.tisl.mpl.core.model.QCInitResponseDetailModel;
 import com.tisl.mpl.daos.impl.MplQCInitDataImpl;
-import com.tisl.mpl.exception.QCServiceCallException;
 import com.tisl.mpl.pojo.response.QCInitializationResponse;
 
 
@@ -28,9 +28,11 @@ public class MplQCInitServiceImpl
 
 	@Resource(name = "modelService")
 	private ModelService modelService;
-
+	
 	@Resource(name = "qcInitDataBean")
-	public QCInitDataBean qcInitDataBean;
+	private QCInitDataBean qcInitDataBean;
+	
+	
 
 	/**
 	 * @return the qcInitDataBean
@@ -41,13 +43,32 @@ public class MplQCInitServiceImpl
 	}
 
 	/**
-	 * @param qcInitDataBean
-	 *           the qcInitDataBean to set
+	 * @param qcInitDataBean the qcInitDataBean to set
 	 */
-	public void setQcInitDataBean(final QCInitDataBean qcInitDataBean)
+	public void setQcInitDataBean(QCInitDataBean qcInitDataBean)
 	{
 		this.qcInitDataBean = qcInitDataBean;
 	}
+
+	private Converter<QCInitResponseDetailModel, QCInitDataBean> mplWalletInitConvertor;
+	
+
+	/**
+	 * @return the mplWalletInitConvertor
+	 */
+	public Converter<QCInitResponseDetailModel, QCInitDataBean> getMplWalletInitConvertor()
+	{
+		return mplWalletInitConvertor;
+	}
+
+	/**
+	 * @param mplWalletInitConvertor the mplWalletInitConvertor to set
+	 */
+	public void setMplWalletInitConvertor(Converter<QCInitResponseDetailModel, QCInitDataBean> mplWalletInitConvertor)
+	{
+		this.mplWalletInitConvertor = mplWalletInitConvertor;
+	}
+
 
 	/**
 	 * @return the modelService
@@ -103,30 +124,21 @@ public class MplQCInitServiceImpl
 	/**
 	 * Initializes Check For QC
 	 */
-	public void loadQCInit() throws QCServiceCallException
+	public void init() 
 	{
-
-
-		QCInitResponseDetailModel qcInitModel = new QCInitResponseDetailModel();
-
 		try
-		{
-			//			if (null == getQcInitDataBean().getCurrentBatchNumber()
-			//					&& StringUtils.isEmpty(getQcInitDataBean().getCurrentBatchNumber()))
-			//			{
-
-			System.out.println("******************************************  Start INIT *********************************");
-			qcInitModel = getMplQCInitDataImpl().getQCInitDetailDataImpl();
+		{			
+			QCInitResponseDetailModel qcInitModel = getMplQCInitDataImpl().getQCInitDetailDataImpl();
 
 			if (null != qcInitModel)
 			{
+				//getMplWalletInitConvertor().convert(qcInitModel);
+				
 				getQcInitDataBean().setCurrentBatchNumber("" + qcInitModel.getCurrentBatchNumber());
 
 			}
 			else
 			{
-
-				System.out.println("******* QC SERVICE CALL FOR INITILIZATION *****");
 				final QCInitializationResponse initResponse = getMplWalletServices().walletInitilization();
 
 				if (null != initResponse && Integer.parseInt("" + initResponse.getResponseCode()) == 0)
@@ -139,21 +151,20 @@ public class MplQCInitServiceImpl
 
 					getModelService().save(qcInitModal);
 
-					qcInitModel = getMplQCInitDataImpl().getQCInitDetailDataImpl();
+					final QCInitResponseDetailModel qcInitModelData = getMplQCInitDataImpl().getQCInitDetailDataImpl();
 
-
-					if (null != qcInitModel)
+					if (null != qcInitModelData)
 					{
-						getQcInitDataBean().setCurrentBatchNumber("" + qcInitModel.getCurrentBatchNumber());
+						//getMplWalletInitConvertor().convert(qcInitModelData);
+						getQcInitDataBean().setCurrentBatchNumber("" + qcInitModelData.getCurrentBatchNumber());
 
 					}
 				}
 			}
-			//}
 		}
 		catch (final Exception ex)
 		{
-
+			
 			ex.printStackTrace();
 		}
 

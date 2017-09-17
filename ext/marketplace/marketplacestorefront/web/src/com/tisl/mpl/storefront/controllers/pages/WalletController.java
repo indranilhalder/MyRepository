@@ -41,6 +41,7 @@ import com.tisl.mpl.pojo.request.Customer;
 import com.tisl.mpl.pojo.request.QCCustomerRegisterRequest;
 import com.tisl.mpl.pojo.response.CustomerWalletDetailResponse;
 import com.tisl.mpl.pojo.response.QCCustomerRegisterResponse;
+import com.tisl.mpl.pojo.response.RedimGiftCardResponse;
 import com.tisl.mpl.service.MplQCInitServiceImpl;
 import com.tisl.mpl.storefront.constants.ModelAttributetConstants;
 import com.tisl.mpl.storefront.constants.RequestMappingUrlConstants;
@@ -101,20 +102,6 @@ public class WalletController extends AbstractPageController
 
 			throws CMSItemNotFoundException, QCServiceCallException
 	{
-
-		//mplQCInitService.loadQCInit();
-
-//		final CustomerModel currentCustomer = (CustomerModel) userService.getCurrentUser();
-//
-//		if (null != currentCustomer.getIsWalletActivated())
-//		{
-//			model.addAttribute("isWalletActive", currentCustomer.getIsWalletActivated());
-//		}
-//		else
-//		{
-//			model.addAttribute("isWalletActive", false);
-//		}
-
 		storeCmsPageInModel(model, getContentPageForLabelOrId("TULWalletPage"));
 		setUpMetaDataForContentPage(model, getContentPageForLabelOrId("TULWalletPage"));
 		model.addAttribute(WebConstants.BREADCRUMBS_KEY,
@@ -126,31 +113,25 @@ public class WalletController extends AbstractPageController
 
 
 	
+	/**
+	 * @param model  
+	 */
 	@RequestMapping(value = REDIM_WALLET_CODE_PATTERN, method = RequestMethod.POST)
 	public String getRedimWalletView(@ModelAttribute("addToCardWalletForm")  AddToCardWalletForm addToCardWalletForm,  Model model) throws CMSItemNotFoundException{
-		System.out.println("**************cardNumber*********************************"+addToCardWalletForm.getCardNumber());
-		System.out.println("**************cardPin*********************************"+addToCardWalletForm.getCardPin());
-		String balanceAmount ="0";
-		balanceAmount = mplWalletFacade.getRedimWallet(addToCardWalletForm.getCardNumber(),addToCardWalletForm.getCardPin());
-	   if(balanceAmount.isEmpty()){
-	   	balanceAmount="0";
+		
+		try{
+		RedimGiftCardResponse response = mplWalletFacade.getAddEGVToWallet(addToCardWalletForm.getCardNumber(),addToCardWalletForm.getCardPin());
+	     
+		if(!response.getResponseMessage().equalsIgnoreCase("error")){
+	   	
+			return REDIRECT_PREFIX +"/wallet/getcliqcashPage";
 	   }
-
-	   List<WalletTrasacationsListData> walletTrasacationsListData = mplWalletFacade.getWalletTransactionList();
-		System.out.println("walletTrasacationsListData List :"+walletTrasacationsListData.size());
-		
-		 List<WalletTrasacationsListData> cashBackWalletTrasacationsList =mplWalletFacade.getCashBackWalletTrasacationsList(walletTrasacationsListData ,"ADD CARD TO WALLET");
-	    System.out.println("***************cashBackWalletTrasacationsListData:"+cashBackWalletTrasacationsList.size());
-		final ContentPageModel contentPage = getContentPageForLabelOrId("cliqcashPage");
-		storeCmsPageInModel(model, contentPage);
-		setUpMetaDataForContentPage(model, contentPage);
-		model.addAttribute("WalletBalance", balanceAmount);
-		model.addAttribute("walletTrasacationsListData", walletTrasacationsListData);
-		model.addAttribute("cashBackWalletTrasacationsList", cashBackWalletTrasacationsList);
-		
-		//return "addon:/marketplacecheckoutaddon/pages/checkout/single/cliqcash";
-		
+		}catch(Exception ex){
+			
+			ex.printStackTrace();
+		}
 		return REDIRECT_PREFIX +"/wallet/getcliqcashPage";
+	
 	}
 
 @SuppressWarnings("boxing")
@@ -158,7 +139,6 @@ public class WalletController extends AbstractPageController
 	@RequireHardLogIn
 	public String getCliqCash(final Model model) throws CMSItemNotFoundException, QCServiceCallException{
 		
-		mplQCInitService.loadQCInit();
       double balanceAmount =0;
 		
 		List<WalletTrasacationsListData> walletTrasacationsListData = null;
@@ -172,14 +152,9 @@ public class WalletController extends AbstractPageController
 			if(customerWalletDetailData.getResponseCode() == 0){
 				
 				balanceAmount = customerWalletDetailData.getWallet().getBalance();
-			}
-			
-		
-			
+			}		
 		   walletTrasacationsListData = mplWalletFacade.getWalletTransactionList();
-			System.out.println("walletTrasacationsListData List :"+walletTrasacationsListData.size());
 			cashBackWalletTrasacationsList = mplWalletFacade.getCashBackWalletTrasacationsList(walletTrasacationsListData ,"ADD CARD TO WALLET");
-		   System.out.println("***************cashBackWalletTrasacationsListData:"+cashBackWalletTrasacationsList.size());
 		
 		}else{
 			  try{

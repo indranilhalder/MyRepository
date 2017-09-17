@@ -11,6 +11,7 @@ import com.tisl.mpl.pojo.response.BalanceBucketWise;
 import com.tisl.mpl.pojo.response.CustomerWalletDetailResponse;
 import com.tisl.mpl.pojo.response.QCCustomerRegisterResponse;
 import com.tisl.mpl.pojo.response.QCRedeeptionResponse;
+import com.tisl.mpl.pojo.response.RedimGiftCardResponse;
 import com.tisl.mpl.pojo.response.WalletTrasacationsListData;
 
 
@@ -43,12 +44,10 @@ public interface MplWalletFacade
 
 	public String generateQCTransactionId();
 
-	public String getRedimWallet(String cardNumber, String cardPin);
+	public RedimGiftCardResponse getAddEGVToWallet(String cardNumber, String cardPin);
 
 	public List<WalletTrasacationsListData> getWalletTransactionList();
 
 	public List<WalletTrasacationsListData> getCashBackWalletTrasacationsList(
 			List<WalletTrasacationsListData> walletTrasacationsListData, String transactionType);
-	
-
 }

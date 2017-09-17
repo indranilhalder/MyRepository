@@ -6318,7 +6318,7 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 
 						orderToBeUpdated.setStatus(OrderStatus.RMS_VERIFICATION_FAILED);
 						//getModelService().save(orderToBeUpdated);
-						return updateQCOrder(orderToBeUpdated, redirectAttributes);
+						//return updateQCOrder(orderToBeUpdated, redirectAttributes);
 
 
 
@@ -6326,7 +6326,7 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 					else
 					{
 						calculateSplitValue(orderToBeUpdated);
-						orderToBeUpdated.setStatus(OrderStatus.CONFIRMED);
+						//orderToBeUpdated.setStatus(OrderStatus.CONFIRMED);
 						//getModelService().save(orderToBeUpdated);
 						return updateQCOrder(orderToBeUpdated, redirectAttributes);
 					}
@@ -6335,7 +6335,7 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 				catch (final Exception ex)
 				{
 					orderToBeUpdated.setStatus(OrderStatus.RMS_VERIFICATION_FAILED);
-					return updateQCOrder(orderToBeUpdated, redirectAttributes);
+					//return updateQCOrder(orderToBeUpdated, redirectAttributes);
 				}
 
 
@@ -6390,11 +6390,11 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 				getMplCheckoutFacade().submitOrder(orderToBeUpdated);
 
 				//order confirmation email and sms
-				//	getNotificationFacade().sendOrderConfirmationNotification(orderToBeUpdated);
+					getNotificationFacade().sendOrderConfirmationNotification(orderToBeUpdated);
 
 				final OrderData orderData = getMplCheckoutFacade().getOrderDetailsForCode(orderToBeUpdated);
 
-				System.out.println("------------------------  OrderData " + orderData);
+				System.out.println("------------------------ Final QC OrderData Status ::::::::: " + orderData.getStatus());
 
 				return redirectToOrderConfirmationPage(orderData);
 			}
@@ -6433,6 +6433,7 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 
 	public void calculateSplitValue(final AbstractOrderModel orderToBeUpdated)
 	{
+		/**
 		//final double qcTotalValue = Double.parseDouble("" + getSessionService().getAttribute("WalletTotal"));
 		final double totalOrderValue = Double.parseDouble("" + "" + orderToBeUpdated.getTotalPrice());
 
@@ -6442,6 +6443,7 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 				.parseBoolean((getSessionService().getAttribute("qcCashValue").equals("NA") ? "false" : "true"));
 		final boolean calQCRefundFlag = Boolean
 				.parseBoolean((getSessionService().getAttribute("qcRefundValue").equals("NA") ? "false" : "true"));
+
 
 
 		for (final AbstractOrderEntryModel abstractOrderEntryModel : orderToBeUpdated.getEntries())
@@ -6487,7 +6489,8 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 				abstractOrderEntryModel.setQcRefundValue("" + 0);
 			}
 		}
-
+ * 
+ */
 		getModelService().save(orderToBeUpdated);
 	}
 	
