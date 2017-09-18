@@ -467,11 +467,7 @@
 				</div>
 						<input  class="giftCard_input" id="customGiftValue" type="text" placeholder="Enter Custom Amount" onkeypress="return isNumber(event)" /><br />&nbsp;
 						<form:input path="giftRange" type="hidden" id="customAmount" />
-						 <%-- <form:input path="productCode" type="hidden" value="987654321" id="productCode" />   --%>
-						
-		
-					
-				
+						<form:input path="productCode" type="hidden" value="${product.code}" id="productCode" />
 			</div>
 		</div>
 		<div class="clearfix">

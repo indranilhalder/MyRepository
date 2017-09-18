@@ -333,19 +333,26 @@ public class DefaultExtendedCartPopulator extends CartPopulator
 	protected double getOrderDiscountsAmount(final AbstractOrderModel source)
 	{
 		double discounts = 0.0d;
-		final List<DiscountValue> discountList = source.getGlobalDiscountValues(); // discounts on the cart itself
-		if (discountList != null && !discountList.isEmpty())
+		try
 		{
-			for (final DiscountValue discount : discountList)
+			List<DiscountValue> discountList = new ArrayList<>();
+			discountList = source.getGlobalDiscountValues();
+			if (discountList != null && !discountList.isEmpty())
 			{
-				final double value = discount.getValue();
-				if (value > 0.0d)
+				for (final DiscountValue discount : discountList)
 				{
-					discounts += value;
+					final double value = discount.getValue();
+					if (value > 0.0d)
+					{
+						discounts += value;
+					}
 				}
 			}
 		}
-
+		catch (Exception exception)
+		{
+			LOG.info("Error occureing while getting discount order level " + exception.getMessage());
+		}
 		return discounts;
 
 	}

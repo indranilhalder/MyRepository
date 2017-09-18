@@ -32,12 +32,13 @@ import de.hybris.platform.converters.Converters;
 import de.hybris.platform.core.model.JewelleryInformationModel;
 import de.hybris.platform.core.model.order.AbstractOrderEntryModel;
 import de.hybris.platform.core.model.order.AbstractOrderModel;
+import de.hybris.platform.core.model.order.CartEntryModel;
 import de.hybris.platform.core.model.order.CartModel;
 import de.hybris.platform.core.model.order.OrderModel;
-import de.hybris.platform.core.model.order.payment.PaymentInfoModel;
 import de.hybris.platform.core.model.product.PincodeModel;
 import de.hybris.platform.core.model.product.ProductModel;
 import de.hybris.platform.core.model.user.UserModel;
+import de.hybris.platform.order.CartFactory;
 import de.hybris.platform.order.CartService;
 import de.hybris.platform.order.InvalidCartException;
 import de.hybris.platform.ordersplitting.model.ConsignmentEntryModel;
@@ -146,6 +147,16 @@ import com.tisl.mpl.wsdto.MplSelectedEDDForUssID;
  */
 public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacade
 {
+	/**
+	 * 
+	 */
+	private static final String GIFT_CART_MODEL = "giftCartModel";
+	/**
+	 * 
+	 */
+	@Autowired
+	private CartFactory cartFactory;
+	private static final String ERROR_OCCER_WHILE_CREATING_CART_MODEL_FOR_GIFT = "Error occer while Creating CartModel for Gift";
 	private static final Logger LOG = Logger.getLogger(MplCartFacadeImpl.class);
 	private static final String FINEJEWELLERY = "FineJewellery";
 	private ProductService productService;
@@ -154,6 +165,7 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 	private ModelService modelService;
 	private Converter<CartModel, CartData> mplExtendedCartConverter;
 	private Converter<CartModel, CartData> mplExtendedPromoCartConverter;
+
 	/**
 	 * 
 	 */
@@ -4306,137 +4318,154 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 	public CartData getGiftCartModel(final EgvDetailsData egvDetailForm)
 	{
 		CartData cartData = null;
-		CartData cartData2=null;
 		try
 		{
-			 CartModel cardModel=cartService.getSessionCart();
-			final UserModel user = userService.getCurrentUser();
-			cardModel.setUser(user);
-			cardModel.setCurrency(user.getSessionCurrency());
-			cardModel.setPincodeNumber("542621");
-			 List<AbstractOrderEntryModel> orderModelList = new ArrayList<AbstractOrderEntryModel>();
-		    AbstractOrderEntryModel abstractOrderEntryModel = new AbstractOrderEntryModel();
-			 ProductModel productModel = productService.getProductForCode("987654321");
-			abstractOrderEntryModel.setQualifyingCount(Integer.valueOf(1));
-			abstractOrderEntryModel.setQuantity(Long.valueOf(1));
-			abstractOrderEntryModel.setProduct(productModel);
-			abstractOrderEntryModel.setBasePrice(Double.valueOf(egvDetailForm.getGiftRange()));
-			abstractOrderEntryModel.setUnit(productModel.getUnit());
-			abstractOrderEntryModel.setSelectedUSSID("96664875211");
-			abstractOrderEntryModel.setCalculated(Boolean.valueOf(true));
-			abstractOrderEntryModel.setSellerInfo("555");
-			abstractOrderEntryModel.setCalculated(Boolean.valueOf(true));
-			abstractOrderEntryModel.setActualDeliveryDate(new Date());
-			abstractOrderEntryModel.setCartAdditionalDiscPerc(Double.valueOf(0.0));
-			abstractOrderEntryModel.setCartLevelDisc(Double.valueOf(0.0));
-			abstractOrderEntryModel.setCartLevelPercentageDisc(Double.valueOf(0.0));
-			abstractOrderEntryModel.setCartPromoCode("");
-			abstractOrderEntryModel.setCollectionDays(Integer.valueOf(0));
-			abstractOrderEntryModel.setConvenienceChargeApportion(Double.valueOf(0));
-			abstractOrderEntryModel.setCouponValue(Double.valueOf(0));
-			abstractOrderEntryModel.setCreationtime(new Date());
-			abstractOrderEntryModel.setDiscountValuesInternal("");
-			abstractOrderEntryModel.setEntryNumber(Integer.valueOf(0));
-			abstractOrderEntryModel.setFreeCount(Integer.valueOf(0));
-			abstractOrderEntryModel.setFulfillmentMode("SHIP");
-			abstractOrderEntryModel.setFulfillmentType("SHIP");
-			abstractOrderEntryModel.setFulfillmentTypeP1("SHIP");
-			abstractOrderEntryModel.setFulfillmentTypeP2("SHIP");
-			abstractOrderEntryModel.setHdDeliveryCharge(Double.valueOf(0.0));
-			abstractOrderEntryModel.setInfo("Product Name");
-			abstractOrderEntryModel.setIsBOGOapplied(Boolean.valueOf(false));
-			abstractOrderEntryModel.setIsEdToHdSendToFico(Boolean.FALSE);
-			abstractOrderEntryModel.setIsPercentageDisc(Boolean.FALSE);
-			abstractOrderEntryModel.setIsRefundable(false);
-			abstractOrderEntryModel.setIsSdbSendToFico(Boolean.FALSE);
-			abstractOrderEntryModel.setMaxCountReached(false);
-			abstractOrderEntryModel.setModifiedtime( new Date());
-		   Collection<MplZoneDeliveryModeValueModel> value6=new  ArrayList<MplZoneDeliveryModeValueModel>();
-		   abstractOrderEntryModel.setMplZoneDeliveryModeValue(value6);
-		   abstractOrderEntryModel.setMrp(Double.valueOf(egvDetailForm.getGiftRange()));
-		   abstractOrderEntryModel.setNetAmountAfterAllDisc(Double.valueOf(egvDetailForm.getGiftRange()));
-		   abstractOrderEntryModel.setNetSellingPrice(Double.valueOf(egvDetailForm.getGiftRange()));
-		   abstractOrderEntryModel.setOrder(cardModel);
-		   abstractOrderEntryModel.setCurrDelCharge(Double.valueOf(0));
-		   abstractOrderEntryModel.setPrevDelCharge(Double.valueOf(0));
-		   abstractOrderEntryModel.setProductPerDiscDisplay(Double.valueOf(0));
-		   abstractOrderEntryModel.setRefundedDeliveryChargeAmt(Double.valueOf(0));
-		   abstractOrderEntryModel.setRefundedEdChargeAmt(Double.valueOf(0));
-		   abstractOrderEntryModel.setProdLevelPercentageDisc(Double.valueOf(0));
-		   abstractOrderEntryModel.setRejected(Boolean.FALSE);
-		   abstractOrderEntryModel.setGiveAway(Boolean.FALSE);
-		   abstractOrderEntryModel.setScheduledDeliveryCharge(Double.valueOf(0));
-		   abstractOrderEntryModel.setSelectedUSSID("123653098765485130011719");
-		   abstractOrderEntryModel.setSellerInfo("PALTALOONS");
-		   abstractOrderEntryModel.setTotalSalePrice(Double.valueOf(egvDetailForm.getGiftRange()));
-		   abstractOrderEntryModel.setTotalMrp(Double.valueOf(egvDetailForm.getGiftRange()));
-		   abstractOrderEntryModel.setTotalPrice(Double.valueOf(egvDetailForm.getGiftRange()));
-		   abstractOrderEntryModel.setTaxValuesInternal("[<TV<jp-vat-full#5.0#false#42.86#INR>VT>]");
-		   Set<ConsignmentEntryModel> value3=new HashSet<ConsignmentEntryModel>();
-			abstractOrderEntryModel.setConsignmentEntries(value3);
-			List<String> value2=new ArrayList<String>();
-			abstractOrderEntryModel.setAssociatedItems(value2);
-			abstractOrderEntryModel.setTotalPrice(Double.valueOf(egvDetailForm.getGiftRange()));
-			abstractOrderEntryModel.setTotalMrp(Double.valueOf(egvDetailForm.getGiftRange()));
-			orderModelList.add(abstractOrderEntryModel);
-			cardModel.setEntries(orderModelList);
-			Set<PromotionResultModel> value = new HashSet<PromotionResultModel>();
-			cardModel.setAllPromotionResults(value);
-			cardModel.setCalculated(Boolean.valueOf(false));
-			cardModel.setCityForPincode("Hyderabad");
-			cardModel.setCode("987654321998855");
-			cardModel.setConvenienceCharges(Double.valueOf(0.0));
-			cardModel.setDate(new Date());
-			cardModel.setExchangeAppliedCart(Boolean.FALSE);
-			cardModel.setGlobalDiscountValuesInternal("");
-			cardModel.setGuid("6ba-5497e-3e90-435b-ab66-b51185ac32b");
-			cardModel.setDeliveryCost(Double.valueOf(0.0));
-			cardModel.setDiscountsIncludeDeliveryCost(false);
-			cardModel.setIsCODEligible(Boolean.FALSE);
-			cardModel.setDiscountsIncludePaymentCost(false);
-			cardModel.setIsExpressCheckoutSelected(Boolean.FALSE);
-			cardModel.setIsPendingNotSent(Boolean.FALSE);
-			cardModel.setIsRejMailTriggred(Boolean.TRUE);
-			cardModel.setIsSentToOMS(Boolean.FALSE);
-			cardModel.setMerged(Boolean.FALSE);
-			cardModel.setModeOfPayment("Creadi Card");
-			cardModel.setModifiedtime( new Date());
-			cardModel.setNet(Boolean.FALSE);
-			cardModel.setPaymentCost(Double.valueOf(0.0));
-			cardModel.setScheduleDelCharge(Double.valueOf(0));
-			cardModel.setSite(cmsSiteService.getCurrentSite());
-			//cardModel.setStore(cmsSiteService.gets);
-			cardModel.setSubtotal(Double.valueOf(egvDetailForm.getGiftRange()));
-			cardModel.setSubtotal(Double.valueOf(egvDetailForm.getGiftRange()));
-			cardModel.setTotalDiscounts(Double.valueOf(0.0));
-			cardModel.setTotalPrice(Double.valueOf(egvDetailForm.getGiftRange()));
-			cardModel.setTotalPriceWithConv(Double.valueOf(0.0));
-			cardModel.setTotalTax(Double.valueOf(0.0));
-			cardModel.setTotalTaxValuesInternal("[<TV<jp-vat-full#5.0#false#42.86#INR>VT>]");
-			PaymentInfoModel paymentInfoModel=new PaymentInfoModel();
-			cardModel.setPaymentInfo(paymentInfoModel);
-			sessionService.setAttribute("giftcardmodel", cardModel);
+			CartModel cardModel = getCartModelForEGVProduct(egvDetailForm);   
+			sessionService.setAttribute(GIFT_CART_MODEL, cardModel);
 			try
 			{
 				cartData = getCartConverter().convert(cardModel);
 			}
 			catch (final Exception exception)
 			{
-				System.out.println("###################" + exception);
-
+				LOG.error(ERROR_OCCER_WHILE_CREATING_CART_MODEL_FOR_GIFT + exception);
+				return null;
 			}
-			final CartModel cartModel2 = cartService.getSessionCart();
-			cartData2 = getCartConverter().convert(cartModel2);
-			System.out.println("################" + cartData);
-			System.out.println("################" + cartData2);
 		}
 		catch (final Exception exception)
 		{
-			System.out.println("###################" + exception);
-
+			LOG.error(ERROR_OCCER_WHILE_CREATING_CART_MODEL_FOR_GIFT + exception);
+			return null;
 		}
+		return cartData;
+	}
 
-		return cartData2;
+
+	/**
+	 * @param egvDetailForm
+	 * @return
+	 */
+	private CartModel getCartModelForEGVProduct(final EgvDetailsData egvDetailForm)
+	{
+		CartModel cardModel =cartFactory.createCart();
+		cardModel.setPincodeNumber("542621");
+		List<AbstractOrderEntryModel> orderModelList = new ArrayList<AbstractOrderEntryModel>();
+		CartEntryModel abstractOrderEntryModel = getEGVCartEntry(egvDetailForm, cardModel);
+		orderModelList.add(abstractOrderEntryModel);
+		cardModel.setEntries(orderModelList);
+		cardModel.setCityForPincode("Hyderabad");
+		cardModel.setIsCODEligible(Boolean.FALSE);
+		cardModel.setDiscountsIncludePaymentCost(false);
+		cardModel.setIsExpressCheckoutSelected(Boolean.FALSE);
+		cardModel.setIsPendingNotSent(Boolean.FALSE);
+		cardModel.setIsRejMailTriggred(Boolean.TRUE);
+		cardModel.setIsSentToOMS(Boolean.FALSE);
+		cardModel.setMerged(Boolean.FALSE);
+		cardModel.setModeOfPayment("Creadi Card");
+		cardModel.setNet(Boolean.FALSE);
+		cardModel.setSite(cmsSiteService.getCurrentSite());
+		cardModel.setSubtotal(Double.valueOf(egvDetailForm.getGiftRange()));
+		cardModel.setSubtotal(Double.valueOf(egvDetailForm.getGiftRange()));
+		cardModel.setTotalPrice(Double.valueOf(egvDetailForm.getGiftRange()));
+		cardModel.setTotalPriceWithConv(Double.valueOf(egvDetailForm.getGiftRange()));
+		cardModel.setIsEGVCart(Boolean.TRUE);
+		
+		try
+		{
+			getModelService().saveAll(cardModel);
+		}
+		catch (Exception exception)
+		{
+			LOG.error("Error occureing  While Saving CartModel " + exception);
+		}
+		return cardModel;
+	}
+
+
+	/**
+	 * @param egvDetailForm
+	 * @param cardModel
+	 * @return
+	 */
+	private CartEntryModel getEGVCartEntry(final EgvDetailsData egvDetailForm, CartModel cardModel)
+	{
+		CartEntryModel abstractOrderEntryModel = getModelService().create(CartEntryModel.class);
+		ProductModel productModel = productService.getProductForCode(egvDetailForm.getProductCode());
+		abstractOrderEntryModel.setQualifyingCount(Integer.valueOf(1));
+		abstractOrderEntryModel.setQuantity(Long.valueOf(1));
+		abstractOrderEntryModel.setProduct(productModel);
+		abstractOrderEntryModel.setBasePrice(Double.valueOf(egvDetailForm.getGiftRange()));
+		abstractOrderEntryModel.setUnit(productModel.getUnit());
+		RichAttributeModel richAttributeModel=(RichAttributeModel) productModel.getRichAttribute().toArray()[0];
+		abstractOrderEntryModel.setFulfillmentMode(richAttributeModel.getDeliveryFulfillModes().getCode());
+		abstractOrderEntryModel.setFulfillmentType(richAttributeModel.getDeliveryFulfillModes().getCode());
+		abstractOrderEntryModel.setFulfillmentTypeP1(richAttributeModel.getDeliveryFulfillModeByP1().getCode());
+		abstractOrderEntryModel.setFulfillmentTypeP2(richAttributeModel.getDeliveryFulfillModeByP1().getCode());
+		if( richAttributeModel.getSellerInfo() != null && StringUtil.isNotEmpty(richAttributeModel.getSellerInfo().getUSSID())){
+			abstractOrderEntryModel.setSelectedUSSID(richAttributeModel.getSellerInfo().getUSSID());	
+			abstractOrderEntryModel.setSellerInfo(richAttributeModel.getSellerInfo().getSellerName());
+		}else{
+			abstractOrderEntryModel.setSelectedUSSID("TATA");
+			abstractOrderEntryModel.setSellerInfo("TTTTT");
+		}
+		
+		abstractOrderEntryModel.setCalculated(Boolean.valueOf(true));
+		abstractOrderEntryModel.setActualDeliveryDate(new Date());
+		abstractOrderEntryModel.setCartAdditionalDiscPerc(Double.valueOf(0.0));
+		abstractOrderEntryModel.setCartLevelDisc(Double.valueOf(0.0));
+		abstractOrderEntryModel.setCartLevelPercentageDisc(Double.valueOf(0.0));
+		abstractOrderEntryModel.setCartPromoCode("");
+		abstractOrderEntryModel.setCollectionDays(Integer.valueOf(0));
+		abstractOrderEntryModel.setConvenienceChargeApportion(Double.valueOf(0));
+		abstractOrderEntryModel.setCouponValue(Double.valueOf(0));
+		abstractOrderEntryModel.setCreationtime(new Date());
+		abstractOrderEntryModel.setDiscountValuesInternal("[]");
+		abstractOrderEntryModel.setEntryNumber(Integer.valueOf(0));
+		abstractOrderEntryModel.setFreeCount(Integer.valueOf(0));
+		abstractOrderEntryModel.setHdDeliveryCharge(Double.valueOf(0.0));
+		abstractOrderEntryModel.setInfo("Product Name");
+		abstractOrderEntryModel.setIsBOGOapplied(Boolean.valueOf(false));
+		abstractOrderEntryModel.setIsEdToHdSendToFico(Boolean.FALSE);
+		abstractOrderEntryModel.setIsPercentageDisc(Boolean.FALSE);
+		abstractOrderEntryModel.setIsRefundable(false);
+		abstractOrderEntryModel.setIsSdbSendToFico(Boolean.FALSE);
+		abstractOrderEntryModel.setMaxCountReached(false);
+		abstractOrderEntryModel.setModifiedtime(new Date());
+		Collection<MplZoneDeliveryModeValueModel> value6 = new ArrayList<MplZoneDeliveryModeValueModel>();
+		abstractOrderEntryModel.setMplZoneDeliveryModeValue(value6);
+		abstractOrderEntryModel.setMrp(Double.valueOf(egvDetailForm.getGiftRange()));
+		abstractOrderEntryModel.setNetAmountAfterAllDisc(Double.valueOf(egvDetailForm.getGiftRange()));
+		abstractOrderEntryModel.setNetSellingPrice(Double.valueOf(egvDetailForm.getGiftRange()));
+		abstractOrderEntryModel.setOrder(cardModel);
+		abstractOrderEntryModel.setCurrDelCharge(Double.valueOf(0));
+		abstractOrderEntryModel.setPrevDelCharge(Double.valueOf(0));
+		abstractOrderEntryModel.setProductPerDiscDisplay(Double.valueOf(0));
+		abstractOrderEntryModel.setRefundedDeliveryChargeAmt(Double.valueOf(0));
+		abstractOrderEntryModel.setRefundedEdChargeAmt(Double.valueOf(0));
+		abstractOrderEntryModel.setProdLevelPercentageDisc(Double.valueOf(0));
+		abstractOrderEntryModel.setRejected(Boolean.FALSE);
+		abstractOrderEntryModel.setGiveAway(Boolean.FALSE);
+		abstractOrderEntryModel.setScheduledDeliveryCharge(Double.valueOf(0));
+		abstractOrderEntryModel.setSelectedUSSID("123653098765485130011719");
+		abstractOrderEntryModel.setSellerInfo("PALTALOONS");
+		abstractOrderEntryModel.setTotalSalePrice(Double.valueOf(egvDetailForm.getGiftRange()));
+		abstractOrderEntryModel.setTotalMrp(Double.valueOf(egvDetailForm.getGiftRange()));
+		abstractOrderEntryModel.setTotalPrice(Double.valueOf(egvDetailForm.getGiftRange()));
+		abstractOrderEntryModel.setTaxValuesInternal("[<TV<jp-vat-full#5.0#false#42.86#INR>VT>]");
+		Set<ConsignmentEntryModel> value3 = new HashSet<ConsignmentEntryModel>();
+		abstractOrderEntryModel.setConsignmentEntries(value3);
+		List<String> value2 = new ArrayList<String>();
+		abstractOrderEntryModel.setAssociatedItems(value2);
+		abstractOrderEntryModel.setTotalPrice(Double.valueOf(egvDetailForm.getGiftRange()));
+		abstractOrderEntryModel.setTotalMrp(Double.valueOf(egvDetailForm.getGiftRange()));
+		try{
+			getModelService().saveAll(abstractOrderEntryModel);
+		
+		}catch(Exception exception){
+			
+			LOG.error("Preparing CartEntry Data "+exception);
+		}
+		return abstractOrderEntryModel;
 	}
 
 
