@@ -11,6 +11,8 @@ import java.util.List;
 
 import javax.annotation.Resource;
 
+import org.apache.commons.collections.CollectionUtils;
+
 import com.tisl.mpl.core.model.CustomerWalletDetailModel;
 import com.tisl.mpl.facades.wallet.MplWalletFacade;
 import com.tisl.mpl.marketplacecommerceservices.service.MplPaymentService;
@@ -247,85 +249,51 @@ public class MplWalletFacadeImpl implements MplWalletFacade
 	}
 	
 	@Override
-	public List<WalletTrasacationsListData> getWalletTransactionList(){
-		List<WalletTrasacationsListData> walletTrasacationsListDataList=new ArrayList<WalletTrasacationsListData>();
+	public WalletTransacationsList getWalletTransactionList(){
+		//List<WalletTrasacationsListData> walletTrasacationsListDataList=new ArrayList<WalletTrasacationsListData>();
 		WalletTransacationsList walletTransacationsList = null;
 		final CustomerModel currentCustomer = (CustomerModel) userService.getCurrentUser();
-		if (null != currentCustomer && null != currentCustomer.getIsWalletActivated()){
-			System.out.println("Customer has Actived try to redim the card");
-			if(null != currentCustomer.getCustomerWalletDetail() && null!= currentCustomer.getCustomerWalletDetail().getWalletId()){
-				final String transactionId = generateQCTransactionId();
+//		if (null != currentCustomer && null != currentCustomer.getIsWalletActivated()){
+//			System.out.println("Customer has Actived try to redim the card");
+//			if(null != currentCustomer.getCustomerWalletDetail() && null!= currentCustomer.getCustomerWalletDetail().getWalletId()){
+			final String transactionId = generateQCTransactionId();
 			walletTransacationsList =getMplWalletServices().getWalletTransactionList(currentCustomer.getCustomerWalletDetail().getWalletId(),transactionId);
-			}
-		 }
+//			}
+//		 }
 
-		if(null != walletTransacationsList && null != walletTransacationsList.getWalletTransactions()){
-		for(WalletTransactions trasaction :walletTransacationsList.getWalletTransactions()){
-			WalletTrasacationsListData data = new WalletTrasacationsListData();
-			data.setWalletNumber(trasaction.getWalletNumber());
-			data.setInvoiceNumber(trasaction.getInvoiceNumber());
-			data.setDateAtServer(trasaction.getDateAtServer());
-			data.setBatchNumber(trasaction.getBatchNumber());
-			data.setAmount(trasaction.getAmount());
-			data.setBalance(trasaction.getBalance());
-			data.setBillAmount(trasaction.getBillAmount());
-			data.setMerchantOutletName(trasaction.getMerchantOutletName());
-			data.setTransactionPostDate(trasaction.getTransactionPostDate());
-			data.setTransactionStatus(trasaction.getTransactionStatus());
-			data.setUser(trasaction.getUser());
-			data.setMerchantName(trasaction.getMerchantName());
-			data.setpOSName(trasaction.getpOSName());
-			data.setCustomerName(trasaction.getCustomerName());
-			data.setWalletPIN(trasaction.getWalletPIN());
-			data.setNotes(trasaction.getNotes());
-			data.setApprovalCode(trasaction.getApprovalCode());
-			data.setResponseCode(trasaction.getResponseCode());
-			data.setResponseMessage(trasaction.getResponseMessage());
-			data.setTransactionId(trasaction.getTransactionId());
-			data.setTransactionType(trasaction.getTransactionType());
-			data.setErrorCode(trasaction.getErrorCode());
-			data.setErrorDescription(trasaction.getErrorDescription());
+		if(null != walletTransacationsList ){
+//		for(WalletTransactions trasaction :walletTransacationsList.getWalletTransactions()){
+//			WalletTrasacationsListData data = new WalletTrasacationsListData();
+//			data.setWalletNumber(trasaction.getWalletNumber());
+//			data.setInvoiceNumber(trasaction.getInvoiceNumber());
+//			data.setDateAtServer(trasaction.getDateAtServer());
+//			data.setBatchNumber(trasaction.getBatchNumber());
+//			data.setAmount(trasaction.getAmount());
+//			data.setBalance(trasaction.getBalance());
+//			data.setBillAmount(trasaction.getBillAmount());
+//			data.setMerchantOutletName(trasaction.getMerchantOutletName());
+//			data.setTransactionPostDate(trasaction.getTransactionPostDate());
+//			data.setTransactionStatus(trasaction.getTransactionStatus());
+//			data.setUser(trasaction.getUser());
+//			data.setMerchantName(trasaction.getMerchantName());
+//			data.setpOSName(trasaction.getpOSName());
+//			data.setCustomerName(trasaction.getCustomerName());
+//			data.setWalletPIN(trasaction.getWalletPIN());
+//			data.setNotes(trasaction.getNotes());
+//			data.setApprovalCode(trasaction.getApprovalCode());
+//			data.setResponseCode(trasaction.getResponseCode());
+//			data.setResponseMessage(trasaction.getResponseMessage());
+//			data.setTransactionId(trasaction.getTransactionId());
+//			data.setTransactionType(trasaction.getTransactionType());
+//			data.setErrorCode(trasaction.getErrorCode());
+//			data.setErrorDescription(trasaction.getErrorDescription());
+//			
+//			walletTrasacationsListDataList.add(data);
+//		  }
 			
-			walletTrasacationsListDataList.add(data);
+			return walletTransacationsList;
 		}
-		}
-		return walletTrasacationsListDataList;
+		return (WalletTransacationsList) CollectionUtils.EMPTY_COLLECTION;
 	}
 	
-	@Override
-	public List<WalletTrasacationsListData> getCashBackWalletTrasacationsList(List<WalletTrasacationsListData> walletTrasacationsListData,String transactionType){
-		List<WalletTrasacationsListData> transactionList = new ArrayList<WalletTrasacationsListData>();
-		for(WalletTrasacationsListData dataObject :walletTrasacationsListData){
-			if(dataObject.getTransactionType().equalsIgnoreCase(transactionType)){
-				WalletTrasacationsListData data = new WalletTrasacationsListData();
-				data.setWalletNumber(dataObject.getWalletNumber());
-				data.setInvoiceNumber(dataObject.getInvoiceNumber());
-				data.setDateAtServer(dataObject.getDateAtServer());
-				data.setBatchNumber(dataObject.getBatchNumber());
-				data.setAmount(dataObject.getAmount());
-				data.setBalance(dataObject.getBalance());
-				data.setBillAmount(dataObject.getBillAmount());
-				data.setMerchantOutletName(dataObject.getMerchantOutletName());
-				data.setTransactionPostDate(dataObject.getTransactionPostDate());
-				data.setTransactionStatus(dataObject.getTransactionStatus());
-				data.setUser(dataObject.getUser());
-				data.setMerchantName(dataObject.getMerchantName());
-				data.setpOSName(dataObject.getpOSName());
-				data.setCustomerName(dataObject.getCustomerName());
-				data.setWalletPIN(dataObject.getWalletPIN());
-				data.setNotes(dataObject.getNotes());
-				data.setApprovalCode(dataObject.getApprovalCode());
-				data.setResponseCode(dataObject.getResponseCode());
-				data.setResponseMessage(dataObject.getResponseMessage());
-				data.setTransactionId(dataObject.getTransactionId());
-				data.setTransactionType(dataObject.getTransactionType());
-				data.setErrorCode(dataObject.getErrorCode());
-				data.setErrorDescription(dataObject.getErrorDescription());
-				transactionList.add(data);
-			}
-		}
-		
-		return transactionList;
-	}
-
 }

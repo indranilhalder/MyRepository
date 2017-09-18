@@ -24,6 +24,7 @@ import com.tisl.mpl.daos.MplQCInitDetailData;
 public class MplQCInitDataImpl implements MplQCInitDetailData
 {
 
+	@SuppressWarnings("unused")
 	private final static Logger LOG = Logger.getLogger(MplQCInitDataImpl.class.getName());
 
 	@Resource
@@ -66,7 +67,6 @@ public class MplQCInitDataImpl implements MplQCInitDetailData
 		}
 		catch (final Exception e)
 		{
-			//LOG.error(e);
 			e.printStackTrace();
 		}
 		return null;

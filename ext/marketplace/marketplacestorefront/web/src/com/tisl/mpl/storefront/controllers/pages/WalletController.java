@@ -42,6 +42,7 @@ import com.tisl.mpl.pojo.request.QCCustomerRegisterRequest;
 import com.tisl.mpl.pojo.response.CustomerWalletDetailResponse;
 import com.tisl.mpl.pojo.response.QCCustomerRegisterResponse;
 import com.tisl.mpl.pojo.response.RedimGiftCardResponse;
+import com.tisl.mpl.pojo.response.WalletTransacationsList;
 import com.tisl.mpl.service.MplQCInitServiceImpl;
 import com.tisl.mpl.storefront.constants.ModelAttributetConstants;
 import com.tisl.mpl.storefront.constants.RequestMappingUrlConstants;
@@ -88,8 +89,8 @@ public class WalletController extends AbstractPageController
 	private MplWalletFacade mplWalletFacade;
 
 
-	@Resource(name = "mplQCInitService")
-	private MplQCInitServiceImpl mplQCInitService;
+	//	@Resource(name = "mplQCInitService")
+	//	private MplQCInitServiceImpl mplQCInitService;
 
 	private static final Logger LOG = Logger.getLogger(WalletController.class);
 	protected static final String REDIM_WALLET_CODE_PATTERN = "/redimWallet";
@@ -112,58 +113,54 @@ public class WalletController extends AbstractPageController
 	}
 
 
-	
+
 	/**
 	 * @param model  
 	 */
 	@RequestMapping(value = REDIM_WALLET_CODE_PATTERN, method = RequestMethod.POST)
 	public String getRedimWalletView(@ModelAttribute("addToCardWalletForm")  AddToCardWalletForm addToCardWalletForm,  Model model) throws CMSItemNotFoundException{
-		
+
 		try{
-		RedimGiftCardResponse response = mplWalletFacade.getAddEGVToWallet(addToCardWalletForm.getCardNumber(),addToCardWalletForm.getCardPin());
-	     
-		if(!response.getResponseMessage().equalsIgnoreCase("error")){
-	   	
-			return REDIRECT_PREFIX +"/wallet/getcliqcashPage";
-	   }
+			RedimGiftCardResponse response = mplWalletFacade.getAddEGVToWallet(addToCardWalletForm.getCardNumber(),addToCardWalletForm.getCardPin());
+
+			if(!response.getResponseMessage().equalsIgnoreCase("error")){
+
+				return REDIRECT_PREFIX +"/wallet/getcliqcashPage";
+			}
 		}catch(Exception ex){
-			
+
 			ex.printStackTrace();
 		}
 		return REDIRECT_PREFIX +"/wallet/getcliqcashPage";
-	
 	}
 
-@SuppressWarnings("boxing")
+	@SuppressWarnings("boxing")
 	@RequestMapping(value = "/getcliqcashPage", method = RequestMethod.GET)
 	@RequireHardLogIn
 	public String getCliqCash(final Model model) throws CMSItemNotFoundException, QCServiceCallException{
-		
-      double balanceAmount =0;
-		
-		List<WalletTrasacationsListData> walletTrasacationsListData = null;
-		List<WalletTrasacationsListData> cashBackWalletTrasacationsList = null;
+
+		double balanceAmount = 0;
+		CustomerWalletDetailResponse customerWalletDetailData = new CustomerWalletDetailResponse();
+		WalletTransacationsList walletTrasacationsListData = new WalletTransacationsList();
 		final CustomerModel currentCustomer = (CustomerModel) userService.getCurrentUser();
-		
-		if (null != currentCustomer.getIsWalletActivated()){
-			
-			CustomerWalletDetailResponse customerWalletDetailData= mplWalletFacade.getCustomerWallet(currentCustomer.getCustomerWalletDetail().getWalletId());
-			
-			if(customerWalletDetailData.getResponseCode() == 0){
-				
-				balanceAmount = customerWalletDetailData.getWallet().getBalance();
-			}		
-		   walletTrasacationsListData = mplWalletFacade.getWalletTransactionList();
-			cashBackWalletTrasacationsList = mplWalletFacade.getCashBackWalletTrasacationsList(walletTrasacationsListData ,"ADD CARD TO WALLET");
-		
-		}else{
-			  try{
+
+		try{
+			if (null != currentCustomer.getIsWalletActivated() && currentCustomer.getIsWalletActivated()){
+
+				customerWalletDetailData = mplWalletFacade.getCustomerWallet(currentCustomer.getCustomerWalletDetail().getWalletId());
+				if(customerWalletDetailData.getWallet().getBalance() >0){
+					walletTrasacationsListData = mplWalletFacade.getWalletTransactionList();				
+					balanceAmount = customerWalletDetailData.getWallet().getBalance();		
+				}
+
+			}else{
+
 				final QCCustomerRegisterRequest customerRegisterReq = new QCCustomerRegisterRequest();
 				final Customer custInfo = new Customer();
 				custInfo.setEmail(currentCustomer.getOriginalUid());
 				custInfo.setEmployeeID(currentCustomer.getUid());
 				custInfo.setCorporateName("Tata Unistore Ltd");
-				
+
 				if (null != currentCustomer.getFirstName()){
 					custInfo.setFirstname(currentCustomer.getFirstName());
 				}if (null != currentCustomer.getLastName()){
@@ -187,21 +184,25 @@ public class WalletController extends AbstractPageController
 					currentCustomer.setCustomerWalletDetail(custWalletDetail);
 					currentCustomer.setIsWalletActivated(true);
 					modelService.save(currentCustomer);
+
+					customerWalletDetailData= mplWalletFacade.getCustomerWallet(currentCustomer.getCustomerWalletDetail().getWalletId());
+					if(customerWalletDetailData.getWallet().getBalance() >0){
+						walletTrasacationsListData = mplWalletFacade.getWalletTransactionList();
+						balanceAmount = customerWalletDetailData.getWallet().getBalance();
+					}
 				}
+
 			}
-			catch (final Exception ex)
-			{
-				ex.printStackTrace();
-			}
+			final ContentPageModel contentPage = getContentPageForLabelOrId("cliqcashPage");
+			storeCmsPageInModel(model, contentPage);
+			setUpMetaDataForContentPage(model, contentPage);
+			model.addAttribute("WalletBalance", balanceAmount);
+			model.addAttribute("walletTrasacationsListData", walletTrasacationsListData.getWalletTransactions());
 		}
-		final ContentPageModel contentPage = getContentPageForLabelOrId("cliqcashPage");
-		storeCmsPageInModel(model, contentPage);
-		setUpMetaDataForContentPage(model, contentPage);
-		model.addAttribute("WalletBalance", balanceAmount);
-		model.addAttribute("walletTrasacationsListData", walletTrasacationsListData);
-		model.addAttribute("cashBackWalletTrasacationsList", cashBackWalletTrasacationsList);
-		
-		//return getViewForPage(model);
+		catch (final Exception ex)
+		{
+			ex.printStackTrace();
+		}
 		return "addon:/marketplacecheckoutaddon/pages/checkout/single/cliqcash";
 	}
 }

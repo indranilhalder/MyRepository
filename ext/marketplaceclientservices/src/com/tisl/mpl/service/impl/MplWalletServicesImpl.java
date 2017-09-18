@@ -14,6 +14,7 @@ import javax.annotation.Resource;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.UriBuilder;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.log4j.Logger;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -32,6 +33,7 @@ import com.tisl.mpl.pojo.response.QCRedeeptionResponse;
 import com.tisl.mpl.pojo.response.RedimGiftCardResponse;
 import com.tisl.mpl.pojo.response.WalletBalanceResponse;
 import com.tisl.mpl.pojo.response.WalletTransacationsList;
+import com.tisl.mpl.service.MplQCInitServiceImpl;
 import com.tisl.mpl.service.MplWalletServices;
 import com.tisl.mpl.service.QCInitDataBean;
 
@@ -53,8 +55,7 @@ public class MplWalletServicesImpl implements MplWalletServices
 
 	@Resource(name = "qcInitDataBean")
 	public QCInitDataBean qcInitDataBean;
-
-
+	
 	/**
 	 * @return the qcInitDataBean
 	 */
@@ -425,7 +426,6 @@ public class MplWalletServicesImpl implements MplWalletServices
 
 		try
 		{
-			//get Wallet number from facade
 			webResource = client.resource(UriBuilder
 					.fromUri("http://qc3.qwikcilver.com/QwikCilver/eGMS.RestAPI/api/wallet/4000162010020032/Cancelredeem").build());
 
@@ -569,7 +569,6 @@ public class MplWalletServicesImpl implements MplWalletServices
 		final Client client = Client.create();
 		ClientResponse response = null;
 		WebResource webResource = null;
-		//final ReturnLogisticsResponse responsefromOMS = new ReturnLogisticsResponse();
 		final DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
 		CustomerWalletDetailResponse custWalletDetail = new CustomerWalletDetailResponse();
 		final ObjectMapper objectMapper = new ObjectMapper();
@@ -735,16 +734,11 @@ public class MplWalletServicesImpl implements MplWalletServices
 	public WalletTransacationsList getWalletTransactionList(final String walletCardNumber, final String transactionId)
 	{
 
-		System.out.println("***********************************in Mpl Wallet listOfTransactionsForWallet...............");
-
-		System.out.println("in Mpl Wallet cardNumber:" + walletCardNumber);
-
 		final Client client = Client.create();
 		ClientResponse response = null;
 		WebResource webResource = null;
 		WalletTransacationsList walletTransacationsList = null;
 		String output = null;
-		//final ReturnLogisticsResponse responsefromOMS = new ReturnLogisticsResponse();
 		final DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
 		final ObjectMapper objectMapper = new ObjectMapper();
 		try
@@ -778,22 +772,16 @@ public class MplWalletServicesImpl implements MplWalletServices
 				walletTransacationsList = objectMapper.readValue(output, WalletTransacationsList.class);
 				if (null != walletTransacationsList && null != walletTransacationsList.getWalletTransactions())
 				{
-					LOG.debug(" ************** GET CUSTOMER WALLET BALENCE----" + walletTransacationsList); //need to create marshalling for response object
+					return walletTransacationsList;
 				}
-				System.out.println(" ************** GET CUSTOMER WALLET BALENCE Size :----" + walletTransacationsList);
-
-
 			}
 		}
-		catch (
-
-		final Exception ex)
+		catch (final Exception ex)
 		{
 			ex.printStackTrace();
 			System.out.println("Error response Status:------" + response.getStatus());
 		}
-
-		return walletTransacationsList;
+		return (WalletTransacationsList) CollectionUtils.EMPTY_COLLECTION;
 	}
 
 	public AddToCardWallet buildAddtoCardWallet(final String cardNumber, final String cardPin)

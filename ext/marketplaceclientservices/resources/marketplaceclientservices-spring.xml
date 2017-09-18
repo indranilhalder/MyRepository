@@ -179,11 +179,11 @@
 	<bean id="mplSendOrderFromCommerceToSamsung"
 		class="com.tisl.mpl.service.impl.MplSendOrderFromCommerceToSamsungImpl" />
 
-	<bean id="mplWalletServices" class="com.tisl.mpl.service.impl.MplWalletServicesImpl" />
+	<bean id="mplWalletServices" class="com.tisl.mpl.service.impl.MplWalletServicesImpl"/>
 
 	<bean id="mplQCInitDataImpl" class="com.tisl.mpl.daos.impl.MplQCInitDataImpl" />
 
-	<bean id="qcInitDataBean" class="com.tisl.mpl.service.QCInitDataBean" scope="singleton" />
+	<bean id="qcInitDataBean" class="com.tisl.mpl.service.QCInitDataBean" />
 
 	<bean id="mplWalletInitPopulator" class="com.tisl.mpl.populators.MplWalletInitPopulator"  />
 
@@ -197,7 +197,7 @@
 		<property name="targetClass" value="com.tisl.mpl.service.QCInitDataBean" />
 	</bean>
 
-	 <bean id="mplQCInitService" class="com.tisl.mpl.service.MplQCInitServiceImpl" >
+	 <bean id="mplQCInitService" class="com.tisl.mpl.service.MplQCInitServiceImpl">
 	 <property name="mplWalletInitConvertor" ref="mplWalletInitConvertor" />
 	 </bean> 
 

@@ -3,8 +3,6 @@
  */
 package com.tisl.mpl.facades.wallet;
 
-import java.util.List;
-
 import com.tisl.mpl.pojo.request.QCCustomerRegisterRequest;
 import com.tisl.mpl.pojo.request.QCRedeemRequest;
 import com.tisl.mpl.pojo.response.BalanceBucketWise;
@@ -12,11 +10,11 @@ import com.tisl.mpl.pojo.response.CustomerWalletDetailResponse;
 import com.tisl.mpl.pojo.response.QCCustomerRegisterResponse;
 import com.tisl.mpl.pojo.response.QCRedeeptionResponse;
 import com.tisl.mpl.pojo.response.RedimGiftCardResponse;
-import com.tisl.mpl.pojo.response.WalletTrasacationsListData;
+import com.tisl.mpl.pojo.response.WalletTransacationsList;
 
 
 /**
- * @author Nirav Bhanushali
+ * @author TUL
  *
  */
 public interface MplWalletFacade
@@ -46,8 +44,5 @@ public interface MplWalletFacade
 
 	public RedimGiftCardResponse getAddEGVToWallet(String cardNumber, String cardPin);
 
-	public List<WalletTrasacationsListData> getWalletTransactionList();
-
-	public List<WalletTrasacationsListData> getCashBackWalletTrasacationsList(
-			List<WalletTrasacationsListData> walletTrasacationsListData, String transactionType);
+	public  WalletTransacationsList getWalletTransactionList();
 }

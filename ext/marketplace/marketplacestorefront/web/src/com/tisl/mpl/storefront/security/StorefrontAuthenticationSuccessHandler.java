@@ -186,6 +186,7 @@ public class StorefrontAuthenticationSuccessHandler extends SavedRequestAwareAut
 		getCustomerFacade().loginSuccess();
 		
 		getMplQCInitService().init();
+		
 		//Microsite POC
 		//This is present in the filter but in case the login request comes from a microsite,the redirect url will be the microsite url and hence not pass through the filter.
 		//Hence updating the cookie here.
