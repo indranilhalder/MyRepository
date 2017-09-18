@@ -30,13 +30,13 @@ $(document).ready(function(){
 	var product_category ="";
 	var page_subcategory_name_L2 ="";
 	var page_subcategory_name_l3 ="";
-	if($("#product_category").val() !=undefined || $("#product_category").val() !=null){ 
+	if($("#product_category").val() !=undefined && $("#product_category").val() !=null){ 
 		product_category = $("#product_category").val().replace(/_+/g, '_') ;  
 	}
-	if($("#page_subcategory_name").val() !=undefined || $("#page_subcategory_name").val() !=null){ 
+	if($("#page_subcategory_name").val() !=undefined && $("#page_subcategory_name").val() !=null){ 
 		page_subcategory_name_L2 = $("#page_subcategory_name").val().replace(/_+/g, '_') ;
 	}
-	if($("#page_subcategory_name_l3").val() !=undefined || $("#page_subcategory_name_l3").val() !=null){ 
+	if($("#page_subcategory_name_l3").val() !=undefined && $("#page_subcategory_name_l3").val() != null){ 
 		page_subcategory_name_L3 = $("#page_subcategory_name_l3").val().replace(/_+/g, '_');
 	}
 	
@@ -94,7 +94,6 @@ $(document).ready(function(){
 		   var pincode = $('#pin').val();
 		   var prevPageUrl = document.referrer;
 		   var findingMethod ="";
-		   
         //TPR-6300 | Track pdp starts
 		      if(typeof _satellite !="undefined"){
 		          _satellite.track('cpj_pdp');
@@ -459,7 +458,9 @@ $(document).ready(function(){
 	}
 	if(breadcrum.length > 0){
 		digitalData.page.display = {
-			hierarchy : JSON.stringify( breadcrum )
+			//hierarchy : JSON.stringify( breadcrum )
+				hierarchy :  breadcrum,
+				
 		}
 	}
 	
@@ -783,19 +784,29 @@ function dtmCartPincodeCheck(selectedPincode,msg){
 
 
 function dtmSearchTags(){
+	var finalOfferCount ='';
+	var finalNewCount='';
+	var offerCount ='';
+	var newCount='';
 	if( $('.on-sale').length > 0 ){
-	   var offerCount = $('.on-sale').length ;
+	    offerCount = $('.on-sale').length ;
+	}
+	if(offerCount !='undefined' && offerCount !='null' && offerCount != ''){
+		finalOfferCount =offerCount;
 	}
 	if( $('.new').length > 0 ){
-	   var newCount =	$('.new').length ;
+	    newCount =	$('.new').length ;
+	}
+	if(newCount != 'undefined' && newCount != 'null'  && newCount != ''){
+		finalNewCount =newCount;
 	}
 	
-	digitalData.cpj = {
-			search : {
-				offersCount : offerCount,
-				newCount    : newCount
+		digitalData.cpj = {
+				search : {
+					offersCount : finalOfferCount,
+					newCount    : finalNewCount
+				}
 			}
-		}
 	
 }
 	/*Product Specification*/
