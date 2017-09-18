@@ -713,6 +713,11 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 										deliveryModeSelectedForEntry = true;
 										deliveryModeData.setIsSelected(true);
 										defaultPriorityDeliveryMode = deliveryMode;
+										if (deliveryMode.equalsIgnoreCase(MarketplacecommerceservicesConstants.CLICK_COLLECT)
+												&& null != entry.getDeliveryPointOfService())
+										{
+											deliveryModeData.setStoreSelected(entry.getDeliveryPointOfService().getName());
+										}
 
 									}
 									else

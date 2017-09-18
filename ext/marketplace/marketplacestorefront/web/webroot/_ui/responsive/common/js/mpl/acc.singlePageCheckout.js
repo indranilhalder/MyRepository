@@ -402,6 +402,7 @@ ACC.singlePageCheckout = {
                 }
             	else if(data.type=="ajaxRedirect" && data.redirectString=="redirectToReviewOrder")
         		{
+            		ACC.singlePageCheckout.getSelectedDeliveryModes("");
                 	if(isCncPresent=="true" && cncSelected=="true")
                 	{//If cnc selected show pickup person pop up
                 		ACC.singlePageCheckout.hidePickupDetailsErrors();
@@ -411,7 +412,6 @@ ACC.singlePageCheckout = {
                 	{//get review order
                 		ACC.singlePageCheckout.getReviewOrder();
                 	}
-            		ACC.singlePageCheckout.getSelectedDeliveryModes("");
         		}
             } else {//Below block will execute if slot delivery is present
             	ACC.singlePageCheckout.getSelectedDeliveryModes("");
@@ -869,7 +869,16 @@ ACC.singlePageCheckout = {
                 	{
                 		str=str.substring(0,len-1);
                 	}
-                	$("#selectedDeliveryOptionsHighlight").hide();//Hide here show in getReviewOrder
+                	if(!ACC.singlePageCheckout.isReviewOrderCalled)
+                	{
+                		$("#selectedDeliveryOptionsHighlight").hide();//Hide here show in getReviewOrder
+                	}
+                	else
+            		{
+                		//If review order has completed its call before this method returns show it here
+                		$("#selectedDeliveryOptionsHighlight").show();
+                		$("#selectedDeliveryOptionsDivId").show();
+            		}
                 	$("#selectedDeliveryOptionsHighlight").html(str);
                 	
                 	// For Review Order Highlight Display
@@ -1392,8 +1401,11 @@ ACC.singlePageCheckout = {
     },
     //Function to fetch review order page from server
     getReviewOrder:function(){
-    	$("#selectedDeliveryOptionsHighlight").show();
-    	$("#selectedDeliveryOptionsDivId").show();
+    	{
+	    	$("#selectedDeliveryOptionsHighlight").show();
+	    	$("#selectedDeliveryOptionsDivId").show();
+	    	ACC.singlePageCheckout.isReviewOrderCalled=true;
+    	}
     	ACC.singlePageCheckout.showAjaxLoader();
 		var url=ACC.config.encodedContextPath + "/checkout/single/reviewOrder";
 		var data="";
@@ -2182,6 +2194,7 @@ ACC.singlePageCheckout = {
 	needHelpContactNumber:"",
 	currentPincode:"",
 	previousPincode:"",
+	isReviewOrderCalled:false,
 /****************MOBILE STARTS HERE************************/
 //-----------------------------COMMENTS ON mobileValidationSteps object-----------------------------//
 //	1.isAddressSaved		:	Used to track if new address has been saved in cartModel for responsive

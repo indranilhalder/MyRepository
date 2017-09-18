@@ -42,6 +42,7 @@ import de.hybris.platform.commercefacades.voucher.exceptions.VoucherOperationExc
 import de.hybris.platform.commerceservices.order.CommerceCartModificationException;
 import de.hybris.platform.commerceservices.order.CommerceCartService;
 import de.hybris.platform.core.Constants.USER;
+import de.hybris.platform.core.model.JewelleryInformationModel;
 import de.hybris.platform.core.model.c2l.CurrencyModel;
 import de.hybris.platform.core.model.order.AbstractOrderEntryModel;
 import de.hybris.platform.core.model.order.CartModel;
@@ -161,6 +162,7 @@ import com.tisl.mpl.facades.product.data.MarketplaceDeliveryModeData;
 import com.tisl.mpl.facades.product.data.StateData;
 import com.tisl.mpl.juspay.response.ListCardsResponse;
 import com.tisl.mpl.marketplacecommerceservices.service.MplDeliveryCostService;
+import com.tisl.mpl.marketplacecommerceservices.service.MplJewelleryService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplSellerInformationService;
 import com.tisl.mpl.model.SellerInformationModel;
 import com.tisl.mpl.mplcommerceservices.service.data.CartSoftReservationData;
@@ -280,6 +282,9 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 
 	@Resource(name = "frontEndErrorHelper")
 	private FrontEndErrorHelper frontEndErrorHelper;
+
+	@Resource(name = "mplJewelleryService")
+	MplJewelleryService mplJewelleryService;
 
 	private final String checkoutPageName1 = "New Address";
 	private final String selectAddress = "Select Address";
@@ -4104,8 +4109,29 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 			//filter only those stores which has qty greater than user ordered qty.
 			mplStoreLocatorFacade.filterStoresWithQtyGTSelectedUserQty(parentCartEntry, storeLocationResponseData);
 
-			//get seller information for a ussid
-			final SellerInformationModel sellerInfoModel = mplSellerInformationFacade.getSellerDetail(ussId);
+
+			SellerInformationModel sellerInfoModel = null;
+			//JEWELLERY CHANGES
+			if (MarketplacecommerceservicesConstants.FINEJEWELLERY.equalsIgnoreCase(parentCartEntry.getProduct()
+					.getProductCategoryType()))
+			{
+				final List<JewelleryInformationModel> jewelleryInfo = mplJewelleryService.getJewelleryInfoByUssid(ussId);
+				if (CollectionUtils.isNotEmpty(jewelleryInfo))
+				{
+					if (StringUtils.isNotEmpty(jewelleryInfo.get(0).getPCMUSSID()))
+					{
+						//get seller information for a ussid
+						sellerInfoModel = mplSellerInformationFacade.getSellerDetail(jewelleryInfo.get(0).getPCMUSSID());
+					}
+				}
+			}
+			else
+			{
+				//get seller information for a ussid
+				sellerInfoModel = mplSellerInformationFacade.getSellerDetail(ussId);
+			}
+			//ENDS
+
 
 			//get stores from commerce
 			if (LOG.isDebugEnabled())
@@ -4114,8 +4140,12 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 			}
 			for (final ATSResponseData atsResponseData : storeLocationResponseData.getAts())
 			{
-				final PointOfServiceModel posModel = mplSlaveMasterFacade.findPOSBySellerAndSlave(sellerInfoModel.getSellerID(),
-						atsResponseData.getStoreId());
+				PointOfServiceModel posModel = null;
+				if (null != sellerInfoModel)
+				{
+					posModel = mplSlaveMasterFacade.findPOSBySellerAndSlave(sellerInfoModel.getSellerID(),
+							atsResponseData.getStoreId());
+				}
 				if (null != posModel)
 				{
 					posModelList.add(posModel);
@@ -4157,6 +4187,8 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 			final Map<String, Long> freebieProductsWithQuant = new HashMap<String, Long>();
 			final List<PointOfServiceData> posDataList = new ArrayList<PointOfServiceData>();
 			final String ussId = storeLocationRequestData.getUssId();
+			//find parent cartEntry based on given ussid
+			final AbstractOrderEntryModel parentCartEntry = mplStoreLocatorFacade.getCartEntry(cartModel, ussId);
 			//			final CartModel cartModel = getCartService().getSessionCart(); TISPT-163
 			//			//get only those stores which have quantity greater or equal to selected user quantity
 			//			final CartModel cartModel1 = getCartService().getSessionCart();
@@ -4208,7 +4240,27 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 			{
 				LOG.debug("call to commerce db to get the seller details");
 			}
-			final SellerInformationModel sellerInfoModel = mplSellerInformationFacade.getSellerDetail(ussId);
+			SellerInformationModel sellerInfoModel = null;
+			//JEWELLERY CHANGES
+			final ProductModel productEntryModel = parentCartEntry.getProduct();
+			if (null != productEntryModel
+					&& MarketplacecommerceservicesConstants.FINEJEWELLERY.equalsIgnoreCase(productEntryModel.getProductCategoryType()))
+			{
+				final List<JewelleryInformationModel> jewelleryInfo = mplJewelleryService.getJewelleryInfoByUssid(ussId);
+				if (CollectionUtils.isNotEmpty(jewelleryInfo))
+				{
+					if (StringUtils.isNotEmpty(jewelleryInfo.get(0).getPCMUSSID()))
+					{
+						//get seller information for a ussid
+						sellerInfoModel = mplSellerInformationFacade.getSellerDetail(jewelleryInfo.get(0).getPCMUSSID());
+					}
+				}
+			}
+			else
+			{
+				//get seller information for a ussid
+				sellerInfoModel = mplSellerInformationFacade.getSellerDetail(ussId);
+			}
 			if (sellerInfoModel != null)
 			{
 				final String sellerName = sellerInfoModel.getSellerName();
@@ -4225,7 +4277,26 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 						final FreebieProduct freebieProductData = new FreebieProduct();
 						final String uss = entry.getKey();
 						final Long qty = entry.getValue();
-						final SellerInformationModel sellerInfo = mplSellerInformationFacade.getSellerDetail(uss);
+						SellerInformationModel sellerInfo = null;
+						//JEWELLERY CHANGES
+						if (MarketplacecommerceservicesConstants.FINEJEWELLERY.equalsIgnoreCase(productEntryModel
+								.getProductCategoryType()))
+						{
+							final List<JewelleryInformationModel> jewelleryInfo = mplJewelleryService.getJewelleryInfoByUssid(uss);
+							if (CollectionUtils.isNotEmpty(jewelleryInfo))
+							{
+								if (StringUtils.isNotEmpty(jewelleryInfo.get(0).getPCMUSSID()))
+								{
+									//get seller information for a ussid
+									sellerInfo = mplSellerInformationFacade.getSellerDetail(jewelleryInfo.get(0).getPCMUSSID());
+								}
+							}
+						}
+						else
+						{
+							//get seller information for a ussid
+							sellerInfo = mplSellerInformationFacade.getSellerDetail(uss);
+						}
 						if (null != sellerInfo)
 						{
 							LOG.info("Associated Product USSID " + uss);
@@ -4767,7 +4838,7 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 
 	/*
 	 * @Description adding wishlist popup in cart page
-	 * 
+	 *
 	 * @param String productCode,String wishName, model
 	 */
 
@@ -4825,7 +4896,7 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 
 	/*
 	 * @Description showing wishlist popup in cart page
-	 * 
+	 *
 	 * @param String productCode, model
 	 */
 	@ResponseBody

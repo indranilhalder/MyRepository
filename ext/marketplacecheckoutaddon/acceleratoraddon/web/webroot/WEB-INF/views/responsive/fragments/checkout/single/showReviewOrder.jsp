@@ -64,9 +64,7 @@
 						</c:if>
 
 					</div> 
-					<span id="defaultWishId" style="display: none">
-						<spring:theme code="wishlist.defaultname" />
-					</span>
+					<span id="defaultWishId" style="display: none"><spring:theme code="wishlist.defaultname" /></span>
 
 					<div class="product">
 						<div class="cart-product-info">

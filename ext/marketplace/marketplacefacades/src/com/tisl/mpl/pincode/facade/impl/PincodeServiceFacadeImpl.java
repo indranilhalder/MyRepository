@@ -13,6 +13,7 @@ import de.hybris.platform.commercefacades.product.data.ProductData;
 import de.hybris.platform.commercefacades.product.data.SellerInformationData;
 import de.hybris.platform.commercefacades.storelocator.data.PointOfServiceData;
 import de.hybris.platform.commerceservices.converter.Converters;
+import de.hybris.platform.core.model.JewelleryInformationModel;
 import de.hybris.platform.core.model.order.CartModel;
 import de.hybris.platform.core.model.product.PincodeModel;
 import de.hybris.platform.core.model.product.ProductModel;
@@ -53,6 +54,7 @@ import com.tisl.mpl.facades.data.StoreLocationResponseData;
 import com.tisl.mpl.facades.product.data.MarketplaceDeliveryModeData;
 import com.tisl.mpl.helper.ProductDetailsHelper;
 import com.tisl.mpl.marketplacecommerceservices.service.BuyBoxService;
+import com.tisl.mpl.marketplacecommerceservices.service.MplJewelleryService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplSellerInformationService;
 import com.tisl.mpl.marketplacecommerceservices.service.PincodeService;
 import com.tisl.mpl.model.SellerInformationModel;
@@ -94,6 +96,9 @@ public class PincodeServiceFacadeImpl implements PincodeServiceFacade
 	//for Jewellery
 	@Resource
 	private BuyBoxService buyBoxService;
+
+	@Resource(name = "mplJewelleryService")
+	MplJewelleryService mplJewelleryService;
 
 	/**
 	 * This method is used to check pincode is serviceable are not
@@ -236,7 +241,21 @@ public class PincodeServiceFacadeImpl implements PincodeServiceFacade
 			}
 			//populate newly added fields
 			//get SellerInfo based on sellerUssid
-			final SellerInformationModel sellerInfoModel = mplSellerInformationService.getSellerDetail(sellerUssId);
+			SellerInformationModel sellerInfoModel = mplSellerInformationService.getSellerDetail(sellerUssId);
+			//JEWELLERY CHANGES
+			if (null == sellerInfoModel)
+			{
+				final List<JewelleryInformationModel> jewelleryInfo = mplJewelleryService.getJewelleryInfoByUssid(sellerUssId);
+				if (CollectionUtils.isNotEmpty(jewelleryInfo))
+				{
+					if (StringUtils.isNotEmpty(jewelleryInfo.get(0).getPCMUSSID()))
+					{
+						//get seller information for a ussid
+						sellerInfoModel = mplSellerInformationService.getSellerDetail(jewelleryInfo.get(0).getPCMUSSID());
+					}
+				}
+			}
+			//ENDS HERE
 			ProductModel productModel = null;
 			ProductData productData = null;
 			if (null != sellerInfoModel)
@@ -596,8 +615,8 @@ public class PincodeServiceFacadeImpl implements PincodeServiceFacade
 			posData = new ArrayList<PointOfServiceData>();
 			try
 			{
-				final Collection<PointOfServiceModel> pointOfServiceModels = pincodeService
-						.getAllReturnableStores(myLocation.getGPS(), configurableRadius, sellerId);
+				final Collection<PointOfServiceModel> pointOfServiceModels = pincodeService.getAllReturnableStores(
+						myLocation.getGPS(), configurableRadius, sellerId);
 
 				if (CollectionUtils.isNotEmpty(pointOfServiceModels))
 				{
