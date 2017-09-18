@@ -394,7 +394,7 @@ ACC.singlePageCheckout = {
 		});
         
         xhrResponse.done(function(data, textStatus, jqXHR) {
-            if (jqXHR.responseJSON) {
+            if (jqXHR.responseJSON) {//Below block will execute if slot delivery is not present
             	ACC.singlePageCheckout.isSlotDeliveryAndCncPresent=false;
             	if(data.type!="response" && data.type!="ajaxRedirect")
                 {
@@ -403,17 +403,17 @@ ACC.singlePageCheckout = {
             	else if(data.type=="ajaxRedirect" && data.redirectString=="redirectToReviewOrder")
         		{
                 	if(isCncPresent=="true" && cncSelected=="true")
-                	{
+                	{//If cnc selected show pickup person pop up
                 		ACC.singlePageCheckout.hidePickupDetailsErrors();
                 		$("#singlePagePickupPersonPopup").modal('show');
                 	}
                 	else
-                	{
+                	{//get review order
                 		ACC.singlePageCheckout.getReviewOrder();
                 	}
             		ACC.singlePageCheckout.getSelectedDeliveryModes("");
         		}
-            } else {
+            } else {//Below block will execute if slot delivery is present
             	ACC.singlePageCheckout.getSelectedDeliveryModes("");
             	if(isCncPresent=="true" && cncSelected=="true")
             	{
@@ -849,7 +849,6 @@ ACC.singlePageCheckout = {
         	if (jqXHR.responseJSON) {
                 if(data.type=="response")
                 {              
-                	$("#selectedDeliveryOptionsDivId").show();
                 	var str ="";
                 	if(data.hd>0)
                 	{
@@ -870,6 +869,7 @@ ACC.singlePageCheckout = {
                 	{
                 		str=str.substring(0,len-1);
                 	}
+                	$("#selectedDeliveryOptionsHighlight").hide();//Hide here show in getReviewOrder
                 	$("#selectedDeliveryOptionsHighlight").html(str);
                 	
                 	// For Review Order Highlight Display
@@ -889,6 +889,7 @@ ACC.singlePageCheckout = {
                 		    	ACC.singlePageCheckout.fetchStores(entryNumber,obj.ussid,obj.deliveryMode,callFrom,obj.storeName);
                 		    }
                 		});
+                		$("#selectedDeliveryOptionsHighlight").show();
                 	}
                 }
             }
@@ -1391,6 +1392,8 @@ ACC.singlePageCheckout = {
     },
     //Function to fetch review order page from server
     getReviewOrder:function(){
+    	$("#selectedDeliveryOptionsHighlight").show();
+    	$("#selectedDeliveryOptionsDivId").show();
     	ACC.singlePageCheckout.showAjaxLoader();
 		var url=ACC.config.encodedContextPath + "/checkout/single/reviewOrder";
 		var data="";

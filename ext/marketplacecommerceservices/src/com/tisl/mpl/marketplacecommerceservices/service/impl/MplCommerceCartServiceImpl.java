@@ -6423,6 +6423,7 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 		{
 			LOG.debug("Inside updateCart...");
 		}
+		sessionService.removeAttribute("newUssidsAfterReplace");
 		// YTODO Auto-generated method stub
 		for (final InventoryReservJewelleryRequest item : request.getJewelleryItem())
 		{
@@ -6447,6 +6448,16 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 
 									replaceItemForJewellery(cart, responseItem.getUSSID(), cartEntry, productModel);
 									sessionService.setAttribute("replacedUssid", Boolean.TRUE);
+									String newUssidsAfterReplace = sessionService.getAttribute("newUssidsAfterReplace");
+									if (StringUtils.isNotEmpty(newUssidsAfterReplace))
+									{
+										newUssidsAfterReplace += responseItem.getUSSID() + "#";
+										sessionService.setAttribute("newUssidsAfterReplace", newUssidsAfterReplace);
+									}
+									else
+									{
+										sessionService.setAttribute("newUssidsAfterReplace", responseItem.getUSSID());
+									}
 								}
 
 
