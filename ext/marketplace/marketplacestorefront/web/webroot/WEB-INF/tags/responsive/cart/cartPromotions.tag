@@ -21,19 +21,20 @@
 
 <!-- TPR-3893 starts here -->
 <c:if test="${not empty cartData.appliedProductPromotions}">
-	<div class="cartPromotions">
-
+    <div class="cartPromotions">
+    <c:set var="alreadyPrinted" value="false"/>
 		<c:forEach items="${cartData.appliedProductPromotions}" var="promotion">
-			<c:if test="${fn:contains(promotion.promotionData.promotionType, 'Tata Etail - Bundling Promotion With Percentage Slabs') && promotion.description != null && promotion.description != ''}">
+			<c:if test="${fn:contains(promotion.promotionData.promotionType, 'Tata Etail - Bundling Promotion With Percentage Slabs') && promotion.description != null && promotion.description != '' && !alreadyPrinted}">
 				<div class="promotions cartproline ">
 					<spring:theme code="basket.received.promotions" />
 				</div>
 				<ycommerce:testId code="cart_recievedPromotions_labels">
 					<div class="promotionDesc">${promotion.description}</div>
 				</ycommerce:testId>
+				<c:set var="alreadyPrinted" value="true"/>
 			</c:if>
 		</c:forEach>
 
-	</div>
+     </div>
 </c:if>
 <!-- TPR-3893 ends here -->
