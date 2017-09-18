@@ -555,7 +555,7 @@ public class CustomSiteMapMediaJob extends SiteMapMediaJob
 	protected List<String> fetchBrand(final String categoryl1, final String categoryl2)
 	{
 		List<MplbrandfilterModel> brandFilterList = null;
-		final List<String> brandfilterurl = new ArrayList<>();
+		final List<String> brandfilterurl = new ArrayList<String>();
 		if (StringUtils.isNotEmpty(categoryl1) && StringUtils.isNotEmpty(categoryl2))
 		{
 			brandFilterList = getMplCategoryDao().fetchBrandFilterforL1L2(categoryl1, categoryl2);
@@ -603,13 +603,17 @@ public class CustomSiteMapMediaJob extends SiteMapMediaJob
 					}
 					finalFilterUrl3 = finalFilterUrl3.replaceAll(MarketplaceCoreConstants.HYPHEN_REGEX,
 							MarketplaceCoreConstants.SINGLE_HYPHEN);
-					brandfilterurl.add(finalFilterUrl2);
-					brandfilterurl.add(finalFilterUrl3);
-
 					//As per nausheer's comment
+					if (!isCheck(finalFilterUrl2))
+					{
+						brandfilterurl.add(finalFilterUrl2);
+					}
+					if (!isCheck(finalFilterUrl3))
+					{
+						brandfilterurl.add(finalFilterUrl3);
+					}
 					//brandfilterurl.add(brandFilter.getUrl1());
-					//					brandfilterurl.add(brandFilter.getUrl2());
-					//					brandfilterurl.add(brandFilter.getUrl3());
+					//As per nausheer's comment
 				}
 				final Set<String> brandfilterurlset = new HashSet<String>(brandfilterurl);
 				brandfilterurl.clear();
@@ -626,7 +630,11 @@ public class CustomSiteMapMediaJob extends SiteMapMediaJob
 		}
 
 		return brandfilterurl;
+	}
 
+	public boolean isCheck(final String url)
+	{
+		return url.contains(MarketplaceCoreConstants.AMPERSAND);
 	}
 	//PRDI-423
 }

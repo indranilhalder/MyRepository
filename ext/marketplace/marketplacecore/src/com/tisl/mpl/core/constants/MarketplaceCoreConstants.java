@@ -117,4 +117,5 @@ public final class MarketplaceCoreConstants extends GeneratedMarketplaceCoreCons
 	public static final String APOSTROPHE = "'".intern();
 	//public static final String AND = "and".intern();
 	public static final String WHOLE_WORD_REGEX = "\\band\\b".intern();
+	public static final String AMPERSAND = "&".intern();
 }
