@@ -4444,6 +4444,7 @@ function getBuyBoxDataAjax(productCode,variantCodesJson)
 		//TPR-429
 		complete: function() {
 			differentiateSeller();
+			differentiateSellerDtm();
 			//TPR-6654
 			var pin = $('#pin').val();
 			if(pin != ""){

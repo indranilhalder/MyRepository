@@ -6291,6 +6291,8 @@ function checkPincodeServiceability(buttonType,el)
 	 			 	 				"cart_pin_non_servicable" : selectedPincode
 	 			 	 			});
 	 			  			}
+	  					//TISCSXII-2203 |dtm cart pincode check
+	  						dtmCartPincodeCheck(selectedPincode,"failure");
  						}
 	  					else{
 	  						if(typeof utag !="undefined"){
@@ -6300,6 +6302,8 @@ function checkPincodeServiceability(buttonType,el)
 	  				 				"cart_pin_servicable" : selectedPincode
 	  				 			});
 	 			  			}
+	  					//TISCSXII-2203 |dtm cart pincode check
+	  						dtmCartPincodeCheck(selectedPincode,"success");
 	  					}
  			   		}
 
@@ -6945,9 +6949,13 @@ function checkIsServicable()
 			complete : function(resp){
 				if(utagCheckPincodeStatus == true){
 					pincodeServicabilitySuccess(selectedPincode);
+					//TISCSXII-2203 |dtm cart pincode check
+					dtmCartPincodeCheck(selectedPincode,"success");
 				}
 				else{
 					pincodeServicabilityFailure(selectedPincode);
+					//TISCSXII-2203 |dtm cart pincode check
+					dtmCartPincodeCheck(selectedPincode,"failure");
 				}
 			} 
 
@@ -8300,7 +8308,7 @@ function sendTealiumData(){
 		    	}
 		    	
 		    	if(typeof (digitalData.cpj.payment) != 'undefined'){
-		    	    digitalData.cpj.payment.finalMode = payment_mode ;
+		    	    digitalData.cpj.payment.finalMode = payment_mode.toLowerCase() ;
 		    	}
 	   } catch (e) {
 		// TODO: handle exception
