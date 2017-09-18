@@ -67,3 +67,8 @@ INSERT_UPDATE ContentSlotName;name[unique=true];template(uid,$contentCV)[unique=
 INSERT_UPDATE ContentSlotName;name[unique=true];template(uid,$contentCV)[unique=true][default='NewBrandLandingPageTemplate'];validComponentTypes(code);compTypeGroup(code)
 ;SamsungChat;;SimpleBannerComponent;
   
+####################### UF-392 #############
+
+# CMS Navigation Nodes  
+INSERT_UPDATE CMSNavigationNode;uid[unique=true];$contentCV[unique=true];name;parent(uid, $contentCV);
+;NPPageCustomerServiceNavNode;;Customer Service Pages;SiteRootNode;
