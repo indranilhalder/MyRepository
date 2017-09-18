@@ -32,13 +32,13 @@ public class WalletTransactions
 	private Integer batchNumber;
 	
 	@JsonProperty("Amount")
-	private Integer amount;
+	private Double amount;
 	
 	@JsonProperty("Balance")
-	private Integer balance;
+	private Double balance;
 	
 	@JsonProperty("BillAmount")
-	private Integer billAmount;
+	private Double billAmount;
 	
 	@JsonProperty("MerchantOutletName")
 	private String merchantOutletName;
