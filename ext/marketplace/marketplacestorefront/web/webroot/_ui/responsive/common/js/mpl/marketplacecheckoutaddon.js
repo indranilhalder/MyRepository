@@ -8070,6 +8070,8 @@ $("#couponSubmitButton").click(function(){
 			 				setTimeout(function(){ $("#couponMessage").html(""); }, 2500);
 			 				//TPR-658
 			 				onSubmitAnalytics("success");
+			 				//TISCSXII-2217 |Coupon success 
+			 				dtmCouponCheck("success",couponCode);
 			 			}
 		 				else
 		 				{
