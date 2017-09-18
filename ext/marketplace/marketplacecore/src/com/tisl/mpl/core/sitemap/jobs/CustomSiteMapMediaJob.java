@@ -555,7 +555,7 @@ public class CustomSiteMapMediaJob extends SiteMapMediaJob
 	protected List<String> fetchBrand(final String categoryl1, final String categoryl2)
 	{
 		List<MplbrandfilterModel> brandFilterList = null;
-		final List<String> brandfilterurl = new ArrayList<>();
+		final List<String> brandfilterurl = new ArrayList<String>();
 		if (StringUtils.isNotEmpty(categoryl1) && StringUtils.isNotEmpty(categoryl2))
 		{
 			brandFilterList = getMplCategoryDao().fetchBrandFilterforL1L2(categoryl1, categoryl2);
@@ -569,19 +569,14 @@ public class CustomSiteMapMediaJob extends SiteMapMediaJob
 					String beginningBrandUrl3 = null;
 					String finalFilterUrl2 = null;
 					String finalFilterUrl3 = null;
-					//final String regex = MarketplaceCoreConstants.WHOLE_WORD_REGEX;
 					final int indexOfUrl2 = brandFilter.getUrl2().indexOf(MarketplaceCoreConstants.BRAND_TAG);
 					if (indexOfUrl2 > MarketplaceCoreConstants.ZERO_INT)
 					{
 						beginningBrandUrl2 = brandFilter.getUrl2().substring(MarketplaceCoreConstants.ZERO_INT, indexOfUrl2)
+								.replaceAll(MarketplaceCoreConstants.APOSTROPHE, MarketplaceCoreConstants.EMPTY)
 								.replaceAll(MarketplaceCoreConstants.REGEX, MarketplaceCoreConstants.SINGLE_HYPHEN);
-						//final Pattern pattern = Pattern.compile(regex, Pattern.CASE_INSENSITIVE);
-						//final Matcher matcher = pattern.matcher(beginningBrandUrl2);
-						//while (matcher.find())
-						//{
 						beginningBrandUrl2 = beginningBrandUrl2.replaceAll(MarketplaceCoreConstants.WHOLE_WORD_REGEX,
 								MarketplaceCoreConstants.SINGLE_HYPHEN);
-						//}
 						final String endBrandUrl2 = brandFilter.getUrl2().substring(indexOfUrl2, brandFilter.getUrl2().length());
 						final String finalBrandUrl2 = beginningBrandUrl2 + MarketplaceCoreConstants.SINGLE_HYPHEN + endBrandUrl2;
 						if (finalBrandUrl2.contains(MarketplaceCoreConstants.BRAND_TAG))
@@ -595,14 +590,10 @@ public class CustomSiteMapMediaJob extends SiteMapMediaJob
 					if (indexOfUrl3 > MarketplaceCoreConstants.ZERO_INT)
 					{
 						beginningBrandUrl3 = brandFilter.getUrl3().substring(MarketplaceCoreConstants.ZERO_INT, indexOfUrl3)
+								.replaceAll(MarketplaceCoreConstants.APOSTROPHE, MarketplaceCoreConstants.EMPTY)
 								.replaceAll(MarketplaceCoreConstants.REGEX, MarketplaceCoreConstants.SINGLE_HYPHEN);
-						//final Pattern pattern = Pattern.compile(regex, Pattern.CASE_INSENSITIVE);
-						//final Matcher matcher = pattern.matcher(beginningBrandUrl3);
-						//while (matcher.find())
-						//{
 						beginningBrandUrl3 = beginningBrandUrl3.replaceAll(MarketplaceCoreConstants.WHOLE_WORD_REGEX,
 								MarketplaceCoreConstants.SINGLE_HYPHEN);
-						//}
 						final String endBrandUrl3 = brandFilter.getUrl3().substring(indexOfUrl3, brandFilter.getUrl3().length());
 						final String finalBrandUrl3 = beginningBrandUrl3 + MarketplaceCoreConstants.SINGLE_HYPHEN + endBrandUrl3;
 						if (finalBrandUrl3.contains(MarketplaceCoreConstants.BRAND_TAG))
@@ -612,17 +603,17 @@ public class CustomSiteMapMediaJob extends SiteMapMediaJob
 					}
 					finalFilterUrl3 = finalFilterUrl3.replaceAll(MarketplaceCoreConstants.HYPHEN_REGEX,
 							MarketplaceCoreConstants.SINGLE_HYPHEN);
-					brandfilterurl.add(finalFilterUrl2);
-					brandfilterurl.add(finalFilterUrl3);
-
-					//					brandFilter.getUrl2().replaceAll(MarketplaceCoreConstants.TRIPLE_HYPHEN, MarketplaceCoreConstants.SINGLE_HYPHEN);
-					//					brandFilter.getUrl3().replaceAll(MarketplaceCoreConstants.TRIPLE_HYPHEN, MarketplaceCoreConstants.SINGLE_HYPHEN);
-					//					brandFilter.getUrl2().replaceAll(MarketplaceCoreConstants.DOUBLE_HYPHEN, MarketplaceCoreConstants.SINGLE_HYPHEN);
-					//					brandFilter.getUrl3().replaceAll(MarketplaceCoreConstants.DOUBLE_HYPHEN, MarketplaceCoreConstants.SINGLE_HYPHEN);
 					//As per nausheer's comment
+					if (!isCheck(finalFilterUrl2))
+					{
+						brandfilterurl.add(finalFilterUrl2);
+					}
+					if (!isCheck(finalFilterUrl3))
+					{
+						brandfilterurl.add(finalFilterUrl3);
+					}
 					//brandfilterurl.add(brandFilter.getUrl1());
-					//					brandfilterurl.add(brandFilter.getUrl2());
-					//					brandfilterurl.add(brandFilter.getUrl3());
+					//As per nausheer's comment
 				}
 				final Set<String> brandfilterurlset = new HashSet<String>(brandfilterurl);
 				brandfilterurl.clear();
@@ -639,7 +630,11 @@ public class CustomSiteMapMediaJob extends SiteMapMediaJob
 		}
 
 		return brandfilterurl;
+	}
 
+	public boolean isCheck(final String url)
+	{
+		return url.contains(MarketplaceCoreConstants.AMPERSAND);
 	}
 	//PRDI-423
 }
