@@ -201,11 +201,15 @@ ACC.singlePageCheckout = {
 		            if(typeof utag_data !="undefined"){
 		            	var checkoutDeliveryPage = "Multi Checkout Summary Page:Choose Your Delivery Options";
 		            	utag_data.page_name = checkoutDeliveryPage;
+		            	$("#pageName").val(checkoutDeliveryPage);
 		            }
 		        	//TPR-6362 |track checkout activity
 		        	if(typeof (_satellite)!= "undefined") {  
 		        		_satellite.track('cpj_checkout_save_address');
 		        	}
+		        	  if(typeof (digitalData.page.pageInfo)!= 'undefined'){
+		          		digitalData.page.pageInfo.pageName = $('#pageName').val().toLowerCase() ;
+		          	}
 	            }
 	        });
 	        

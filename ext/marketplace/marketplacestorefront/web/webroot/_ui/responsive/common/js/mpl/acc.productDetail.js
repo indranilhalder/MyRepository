@@ -4444,11 +4444,13 @@ function getBuyBoxDataAjax(productCode,variantCodesJson)
 		//TPR-429
 		complete: function() {
 			differentiateSeller();
+			differentiateSellerDtm();
 			//TPR-6654
 			var pin = $('#pin').val();
 			if(pin != ""){
 				pincodeServiceability();
-				$("#pdpPinCodeAvailable").html("Available delivery options for the pincode " +pin+ " are");				
+				$("#pdpPinCodeAvailable").html("Available delivery options for the pincode " +pin+ " are");
+				document.getElementById("pdpPincodeCheck").className = "Check";
 			}
 		}
 		
@@ -5091,3 +5093,7 @@ function onSubmitExc()
 	
 }
 //TPR-1083 End
+//TPR-6654
+$("#change_pincode").click(function(){
+	$("#pin").focus();
+});

@@ -34,14 +34,14 @@ $(document).ready(function(){
 		product_category = $("#product_category").val().replace(/_+/g, '_') ;  
 	}
 	if($("#page_subcategory_name").val() !=undefined || $("#page_subcategory_name").val() !=null){ 
-		page_subcategory_name = $("#page_subcategory_name").val().replace(/_+/g, '_') ;
+		page_subcategory_name_L2 = $("#page_subcategory_name").val().replace(/_+/g, '_') ;
 	}
 	if($("#page_subcategory_name_l3").val() !=undefined || $("#page_subcategory_name_l3").val() !=null){ 
 		page_subcategory_name_L3 = $("#page_subcategory_name_l3").val().replace(/_+/g, '_');
 	}
 	
-	var buyboxSellerid = $("#sellerSelId").val();
-	var buyboxSellerName = $("#sellerNameId").val();
+	//var buyboxSellerid = $("#sellerSelId").val();
+	//var buyboxSellerName = $("#sellerNameId").val();
 	var sellerList = $('#pdpSellerIDs').val();
 	var subdomain = window.location.href.split("/")[2].split(".")[0];
 	var subDomain= "";
@@ -194,16 +194,16 @@ $(document).ready(function(){
 			  
 		}
 		
-		digitalData.product = {
+		/*digitalData.product = {
 			seller : {
 				list : sellerList,
-				id   : buyboxSellerid,
-				buyBoxWinner : buyboxSellerName
+				id   : $("#pdpBuyboxWinnerSellerID").val(),
+				buyBoxWinner : $("#sellerNameId").html()
 			}   
-		}
+		}*/
 		
 		digitalData.page.category.subCategory1 = product_category;
-		digitalData.page.category.subCategory2 = page_subcategory_name; 
+		digitalData.page.category.subCategory2 = page_subcategory_name_L2; 
 		digitalData.page.category.subCategory3 = page_subcategory_name_L3;
 		
 		
@@ -229,6 +229,9 @@ $(document).ready(function(){
 		}
 		  /*  product impressions*/
 		    dtmProductImpressionsPlp();
+			digitalData.page.category.subCategory1 = ListValue("product_category");
+			digitalData.page.category.subCategory2 = page_subcategory_name_L2; 
+			digitalData.page.category.subCategory3 = page_subcategory_name_L3;
 	}
 		
 	//Search
@@ -263,6 +266,9 @@ $(document).ready(function(){
 		  dtmSearchTags();
 		       /*  product impressions*/
 		  dtmProductImpressionsSerp();	
+			digitalData.page.category.subCategory1 = product_category;
+			digitalData.page.category.subCategory2 =  page_subcategory_name_L2; 
+			digitalData.page.category.subCategory3 = page_subcategory_name_L3;
 	
 	  }
 	
@@ -274,8 +280,8 @@ $(document).ready(function(){
 		}
 		digitalData.cpj = {
 			product : {
-				id : $("#product_id").val().toLowerCase(),
-				category : getListValue("product_category")
+				id : JSON.parse($("#product_id").val().toLowerCase()),
+				category : JSON.parse(ListValue("product_category"))
 			}
 		}
 		//TPR-6333 | Track Geo-location of users
@@ -289,9 +295,13 @@ $(document).ready(function(){
 		//TPR-6371 | track promotions
 		if($('#promolist').val() != '[]') {
 			   digitalData.cpj.promo = {
-					id : $('#promolist').val().toLowerCase().replace(/'/g, "")
+					id : $('#promolist').val().toLowerCase().replace(/"/g, "")
 			   }
-			}
+		}
+		digitalData.page.category.subCategory1 = ListValue("product_category") ;
+		digitalData.page.category.subCategory2 =  page_subcategory_name_L2; 
+		digitalData.page.category.subCategory3 = page_subcategory_name_L3;
+		
 	}
 	
 	// Checkout pages
@@ -320,6 +330,9 @@ $(document).ready(function(){
 			      category :  product_category
 			 }
 		  }
+		digitalData.page.category.subCategory1 = ListValue("product_category") ;
+		digitalData.page.category.subCategory2 =  page_subcategory_name_L2; 
+		digitalData.page.category.subCategory3 = page_subcategory_name_L3;
 	}
 	
 	//TPR-6296 | brand pages
@@ -350,6 +363,9 @@ $(document).ready(function(){
 							  name : brandName
 						 }
 				     }
+		  //  digitalData.page.category.subCategory1 = ListValue("product_category") ;
+		   // digitalData.page.category.subCategory2 =  page_subcategory_name_L2; 
+		   // digitalData.page.category.subCategory3 = page_subcategory_name_L3;
 		}
 	
 	//TPR-6029|Checkout changes
@@ -372,6 +388,9 @@ $(document).ready(function(){
 			}
 			
 		}
+		digitalData.page.category.subCategory1 = ListValue("product_category") ;
+		digitalData.page.category.subCategory2 =  page_subcategory_name_L2; 
+		digitalData.page.category.subCategory3 = page_subcategory_name_L3;
 	}
 	
 	//TPR-6707 | track 404 pages
@@ -674,7 +693,7 @@ $(document).ready(function(){
      	}	
      }*/
 });
-function differentiateSeller(){
+function differentiateSellerDtm(){
 	var sellerList = $('#pdpSellerIDs').val();
 	var buyboxSeller = $("#sellerSelId").val();
 	sellerList = sellerList.substr(1,(sellerList.length)-2);
@@ -691,12 +710,19 @@ function differentiateSeller(){
 			}
 		}
 	}
-
 	
 	$('#pdpBuyboxWinnerSellerID').val(buyboxSeller);
 	$('#pdpOtherSellerIDs').val(otherSellers);
 
-	return "["+finalCategoryArray+"]";
+	//TISCSXII-2186 | pdp fix
+	digitalData.product = {
+			seller : {
+				list : sellerList,
+				id   : $("#pdpBuyboxWinnerSellerID").val(),
+				buyBoxWinner : $("#sellerNameId").html()
+			}   
+		}
+	//return "["+finalCategoryArray+"]";
 }
 
 // For add to bag and buy now #31, 32
@@ -733,6 +759,28 @@ function dtmPdpPincode(msg,productCode,pin){
     	                  } 
                       }
  }
+
+function dtmCartPincodeCheck(selectedPincode,msg){
+	 if(typeof(_satellite) != "undefined"){
+         if(msg == 'success'){
+              _satellite.track('pin_successful');
+          }	
+      else{
+           _satellite.track('pin_failed');
+          }	
+       } 
+         digitalData.page.pin = {
+                 value : selectedPincode
+        }
+         
+         digitalData.cpj = {
+		            product : {
+                    id      :  $('#product_id').val().toLowerCase(),
+                    category : $('#product_category').val().toLowerCase()
+               } 
+           }
+}
+
 
 function dtmSearchTags(){
 	if( $('.on-sale').length > 0 ){
@@ -783,7 +831,7 @@ function dtmSearchTags(){
 			channel_name = 'googleplus';
 		}
 		if (selector == 'mail mailproduct'){
-			channel_name = 'googleplus';
+			channel_name = 'email';
 		}
 		
 		
@@ -828,7 +876,7 @@ function dtmSearchTags(){
 	});
  
    //Comma separated strings changed to array of strings
-	function getListValue(divId){
+	function ListValue(divId){
 		var categoryList = $("#"+divId).val().replace(/_+/g, '_');
 		var categoryArray = categoryList.split(",");
 		var finalCategoryArray=[];
@@ -1305,11 +1353,6 @@ $(document).on('click','.add_address_button',function(){
 })	
 	
 
-/*$(document).on('click','#newAddressButton .button',function(){
-	if(typeof (_satellite)!= "undefined") {  
-		_satellite.track('cpj_checkout_save_address');
-	}
-})*/
 
 /*product impressions start*/
 function dtmProductImpressionsSerp(){

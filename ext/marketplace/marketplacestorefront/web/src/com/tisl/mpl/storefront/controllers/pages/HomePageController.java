@@ -1545,9 +1545,9 @@ public class HomePageController extends AbstractPageController
 			}
 			/*
 			 * else { //newsLetter.setEmailId(emailId); final boolean result = brandFacade.checkEmailId(emailId);
-			 *
+			 * 
 			 * //newsLetter.setIsSaved(Boolean.TRUE);
-			 *
+			 * 
 			 * if (result) { newsLetter.setEmailId(emailId); newsLetter.setIsMarketplace(Boolean.TRUE);
 			 * modelService.save(newsLetter); return "success"; }
 			 */
@@ -1651,7 +1651,7 @@ public class HomePageController extends AbstractPageController
 					/*
 					 * for (final NotificationData single : notificationMessagelist) { if (single.getNotificationRead() !=
 					 * null && !single.getNotificationRead().booleanValue()) { notificationCount++; }
-					 *
+					 * 
 					 * }
 					 */
 
@@ -1865,28 +1865,35 @@ public class HomePageController extends AbstractPageController
 		final String cookieMaxAge = configurationService.getConfiguration().getString("pdpPincode.cookie.age");
 		pincodeCookieMaxAge = (Integer.valueOf(cookieMaxAge)).intValue();
 		final String domain = configurationService.getConfiguration().getString("shared.cookies.domain");
-		final String regex = "\\d{6}";
-		if (pin.matches(regex))
+		try
 		{
-			if (cookie != null && cookie.getValue() != null)
+			final String regex = "\\d{6}";
+			if (pin.matches(regex))
 			{
-				cookie.setValue(pin);
-				cookie.setMaxAge(pincodeCookieMaxAge);
-				cookie.setPath("/");
-
-				if (null != domain && !domain.equalsIgnoreCase("localhost"))
+				if (cookie != null && cookie.getValue() != null)
 				{
-					cookie.setSecure(true);
+					cookie.setValue(pin);
+					cookie.setMaxAge(pincodeCookieMaxAge);
+					cookie.setPath("/");
+
+					if (null != domain && !domain.equalsIgnoreCase("localhost"))
+					{
+						cookie.setSecure(true);
+					}
+					cookie.setDomain(domain);
+					response.addCookie(cookie);
+					sessionService.setAttribute(MarketplacecommerceservicesConstants.SESSION_PINCODE, pin);
 				}
-				cookie.setDomain(domain);
-				response.addCookie(cookie);
-				sessionService.setAttribute(MarketplacecommerceservicesConstants.SESSION_PINCODE, pin);
+				else
+				{
+					pdpPincodeCookie.addCookie(response, pin);
+					sessionService.setAttribute(MarketplacecommerceservicesConstants.SESSION_PINCODE, pin);
+				}
 			}
-			else
-			{
-				pdpPincodeCookie.addCookie(response, pin);
-				sessionService.setAttribute(MarketplacecommerceservicesConstants.SESSION_PINCODE, pin);
-			}
+		}
+		catch (final EtailNonBusinessExceptions e)
+		{
+			ExceptionUtil.etailNonBusinessExceptionHandler(e);
 		}
 	}
 }

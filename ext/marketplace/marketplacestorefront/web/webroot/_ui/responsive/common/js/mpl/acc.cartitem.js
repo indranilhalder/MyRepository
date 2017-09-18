@@ -37,18 +37,18 @@ ACC.cartitem = {
 				  digitalData.cpj.product.id = productRemoved;
 				  digitalData.cpj.product.category = categoryRemoved;
 				  }
-			  digitalData.cpj.product.category = categoryRemoved;
-			  var location = $(this).closest("li.item").attr('id');
-			  if(typeof digitalData.cpj.cart != "undefined"){
-				  digitalData.cpj.cart.removeLocation = location;
+			  //digitalData.cpj.product.category = categoryRemoved;
+			  //var location = $(this).closest("li.item").attr('id');
+			  if(typeof(digitalData.cpj.cart) != "undefined"){
+				  digitalData.cpj.cart.removeLocation = "my bag";
 			  }
 			  else{
-				  digitalData.cpj.cart = {
-						removeLocation : location
-				  }
-			  }
-			  if(typeof _satellite !="undefined"){
-			  _satellite.track('cpj_cart_removal');
+				     digitalData.cpj.cart = {
+						removeLocation : "my bag"
+				        }
+			    }
+			  if(typeof(_satellite) !="undefined"){
+			      _satellite.track('cpj_cart_removal');
 			  }
 					// for MSD	
 					var x = $(this).closest("li.item").prev();

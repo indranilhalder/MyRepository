@@ -114,6 +114,7 @@ public final class MarketplaceCoreConstants extends GeneratedMarketplaceCoreCons
 	public static final String BRAND_TAG = "<brand>".intern();
 	public static final String REGEX = "[^a-zA-Z0-9+-]".intern();
 	public static final int ZERO_INT = 0;
+	public static final String APOSTROPHE = "'".intern();
 	//public static final String AND = "and".intern();
 	public static final String WHOLE_WORD_REGEX = "\\band\\b".intern();
 }

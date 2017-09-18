@@ -884,7 +884,10 @@ $(document).ready(function()
 			data : dataString,
 			success : function(data) {
 				$("#pincode-modal").modal('hide');
-			  }
+			  },
+		    error : function(data) {
+		    	console.log("pincode taken at homepage has failed");
+		    }
 		  });
 	    }
     });
