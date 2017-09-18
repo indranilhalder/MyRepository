@@ -12,16 +12,19 @@
 	<%-- <ycommerce:testId code="productDetails_content_label"> --%>
 	<ycommerce:testId code="productTataPromise_content_label">
 		<ul>
-		<li><spring:theme code="know.more.first"/></li>
+		<li><spring:theme code="lux.know.more.first"/></li>
 		<!-- 	TISCR-414 - Chairmans demo feedback 10thMay CR -->
 		<c:if test="${productCategoryType ne 'FineJewellery' && productCategoryType ne 'FashionJewellery'}">
 			<li id="defaultKnowMoreLi"><spring:theme code="know.more.second"/>&nbsp;<span id="returnWindow">0</span>&nbsp;<spring:theme code="know.more.third"/></li>
+			<li id="defaultKnowMoreLi"><spring:theme code="lux.know.more.second"/>&nbsp;</li>
+			<li id="defaultKnowMoreLi2"><spring:theme code="lux.know.more.third"/></li>
+			
 		</c:if>
 		<li id="lingerieKnowMoreLi1" style="display:none"><spring:theme code="know.more.second.lingerie1"/></li>
 		<li id="lingerieKnowMoreLi2" style="display:none"><spring:theme code="know.more.second.lingerie2"/></li>
 		<!-- Added for UF-98 -->
 		<li id="defaultKnowMoreLi4" style="display:none"><spring:theme code="know.more.sixth"/>&nbsp;</li>
-		<li><spring:theme code="know.more.fourth"/>&nbsp;${cliqCareNumber}&nbsp;<spring:theme code="know.more.fifth"/>&nbsp;${cliqCareMail}&nbsp;</li>
+		<li><spring:theme code="lux.know.more.fourth"/></li>
 		
 		<c:if test="${productCategoryType eq 'FineJewellery' || productCategoryType eq 'FashionJewellery'}">
 			<c:forEach items="${Warranty}" var="warranty">
