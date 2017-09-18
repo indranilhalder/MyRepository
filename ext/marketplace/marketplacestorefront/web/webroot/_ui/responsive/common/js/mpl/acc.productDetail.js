@@ -1080,6 +1080,7 @@ function pincodeServiceability(){
 	        var regExp = /^([1-9])([0-9]){5}$/;
             //INC144314017
 			$(".submit").data('clicked', true);
+			$("#pdpPincodeCheck").data('clicked', true); //TPR-6654
 			pinCodeChecked = true;
 			
 			//$("#home").hide();
@@ -1809,11 +1810,22 @@ function displayDeliveryDetails(sellerName) {
 
 				//INC144314017 end
 
+				//TPR-6907
+                var sellerIdCount = $("#pdpSellerIDs").val();
+                sellerIdCount = sellerIdCount.replace('[','');
+                sellerIdCount = sellerIdCount.replace(']','');
+                var sellerCountArray = sellerIdCount.split(',');
+                var sellerCount = sellerCountArray.length;
 				// enable COD flag if COD enabled
 				if (data['isCod'] == 'Y') {
 					$("#codId").show();
+					if(sellerCount > 1){
 					var codLink = "/p-" + productCode + "/viewSellers"; //TPR-6907
 					$("#codLink").attr("href",codLink);
+					}
+					else{
+					$("#codLink").removeAttr("href");
+					}
 					$("#codEli").show();
 				} else {
 					$("#codId").hide();

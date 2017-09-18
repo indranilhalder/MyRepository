@@ -457,6 +457,7 @@
 		var anonymousUser = "${anonymous_user}";
 		var pincodeAvailable = "${pincode_available}";
 		var forceLoginUser = "${forced_login_user}";
+		var pageTypeVal = $("#pageType").val();
 		var isMobile = "${is_mobile}";
 		if(forceLoginUser == "Y"){
 			if(isMobile == "true"){
@@ -484,17 +485,15 @@
 			}
 		}
 		//TPR-6654
-		if($("#pageType").val() == "homepage" && anonymousUser == "Y" && pincodeAvailable == "N"){
-	    $("#pincode-modal").modal({
-			 backdrop: 'static',
-			 keyboard: true
-		 });
-	   }
-
+		if(pageTypeVal == "homepage" && anonymousUser == "Y" && pincodeAvailable == "N"){
+			$(".enter-pincode").show();
+			
+	}
 	});
 	$(document).on("click","#close-login",function(){
 		window.location.href="/";
-	})
+	});
+
 </script>
 
 	<tealium:sync/> 
@@ -540,6 +539,7 @@
 		<div class="content">
 		<div class="modal-body">
 		<button class="close" data-dismiss="modal"><span aria-hidden="true">×</span></button>
+		<!-- <button class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span></button> -->
 		<h4>Enter Pincode</h4>
 		<input id="home_pin" type="text" placeholder="Pincode" maxlength="6" onkeypress="return isNum(event)"/>
 		<button class="viewOrderButton homepage_submit" id="homepagePincodeCheck"><spring:theme code="product.submit"/></button>

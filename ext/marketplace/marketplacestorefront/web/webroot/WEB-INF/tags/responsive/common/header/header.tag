@@ -153,6 +153,7 @@
 								<!-- R2.3 for track order END -->
 								<%-- <li class="store-locator-header"><a href="${request.contextPath}/store-finder">Our Stores</a></li> //commented for UF-353--%>
 								<li class="download-app"><a href="${request.contextPath}/apps">Download App</a></li>
+								<li class="enter-pincode"><a data-toggle="modal" data-target="#pincode-modal">Enter Your Pincode</a></li>
 							</c:if>
 						</c:if>
 						

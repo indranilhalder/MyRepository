@@ -59846,6 +59846,17 @@ body.template-pages-account-accountOrderDetailPage .product-block.order-details 
 	.SpecWrap .Padd .tab-details li span + span{ font-size:12px;font-weight:normal;}
 	.SpecWrap .Padd .tabs-block .nav.pdp{ padding:0;}
 	}
+	
+	@media(min-width: 1201px){
+	.SpecWrap .Padd .tabs-block .nav{
+		white-space: normal;
+	}
+	.SpecWrap .Padd .tabs-block .nav>li {
+		padding-left: 2px;
+		padding-right: 2px;
+	}
+}
+
  /* Start of TPR-860 */
  .OtherSellers .Padd .InfoWrap .Content > div.Buying .btn-buy-now.oosOtherSeller{
     opacity: .5;
@@ -62176,6 +62187,7 @@ body.page-cartPage .cart.wrapper .product-block li.item .productItemInfo h2.prod
 }
 body.page-cartPage .cart.wrapper .product-block li.item .productItemInfo p.size{
 	color:#000;
+	font-style: normal;
 }
 body.page-cartPage .cart.wrapper .product-block li.item>ul.desktop>li.qty,
 body.page-cartPage .cart.wrapper .product-block li.header ul li.quantity{
@@ -77171,6 +77183,7 @@ body .account .right-account form label.invite-text-lbl{
 #codEli{
 	display: inline-block;
 	margin-left: 10px;
+	margin-bottom: 10px; /*TISCSXII-2218*/
 }
 #codEli #codLink{
 	color: #92002e;
@@ -77210,4 +77223,17 @@ button#homepagePincodeCheck {
     font-weight: bold;
     margin-left: 5px;
 	}
+
+.enter-pincode{
+	display:none;
+}
+li.enter-pincode a::before {
+    font-family: FontAwesome;
+    content: "\f041";
+    font-weight: lighter;
+    margin-top: 3px;
+    font-size: 16px;
+    margin-right: 10px;
+    color: #f3f2f2;
+}
 /*TPR-6654 end*/
