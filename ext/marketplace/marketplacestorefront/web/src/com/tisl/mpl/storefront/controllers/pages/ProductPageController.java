@@ -560,7 +560,7 @@ public class ProductPageController extends MidPageController
 				 * final String metaTitle = productData.getSeoMetaTitle(); final String pdCode = productData.getCode();
 				 * final String metaDescription = productData.getSeoMetaDescription(); //TISPRD-4977 final String
 				 * metaKeyword = productData.getSeoMetaKeyword(); //final String metaKeywords = productData.gets
-				 *
+				 * 
 				 * setUpMetaData(model, metaDescription, metaTitle, pdCode, metaKeyword);
 				 */
 				//AKAMAI fix
@@ -1945,6 +1945,7 @@ public class ProductPageController extends MidPageController
 	protected void populateProductDetailForDisplay(final ProductModel productModel, final Model model,
 			final HttpServletRequest request) throws CMSItemNotFoundException
 	{
+		LOG.debug("=========Inside populateProductDetailForDisplay method==================");
 		getRequestContextData(request).setProduct(productModel);
 		try
 		{
@@ -1969,6 +1970,7 @@ public class ProductPageController extends MidPageController
 					model.addAttribute(ModelAttributetConstants.IS_SAMSUNG_PAGE, Boolean.FALSE);
 				}
 			}
+			LOG.debug("===========After Samsung block=================");
 			//CKD:TPR-250:Start
 			prepareBrandInfoData(model, productData);
 			//CKD:TPR-250:End
@@ -1978,16 +1980,20 @@ public class ProductPageController extends MidPageController
 			//		sortVariantOptionData(productData);
 			storeCmsPageInModel(model, getPageForProduct(productModel));
 			populateProductData(productData, model);
-
+			LOG.debug("===========After populateProductData block=================");
 			//UF-422 starts
 			int sizeCounter = 0;
-			for (int i = 0; i < productData.getVariantOptions().size(); i++)
+			if (null != productData.getVariantOptions())
 			{
-				if (productData.getVariantOptions().get(i).getColour().equalsIgnoreCase(productData.getColour()))
+				for (int i = 0; i < productData.getVariantOptions().size(); i++)
 				{
-					sizeCounter++;
+					if (productData.getVariantOptions().get(i).getColour().equalsIgnoreCase(productData.getColour()))
+					{
+						sizeCounter++;
+					}
 				}
 			}
+			LOG.debug("===========After productData.getVariantOptions().size() block=================");
 			model.addAttribute(ModelAttributetConstants.PDP_SIZE_COUNTER, sizeCounter);
 			//UF-422 ends
 
@@ -2011,6 +2017,7 @@ public class ProductPageController extends MidPageController
 			}
 			displayConfigurableAttribute(productData, model);
 			//if (productModel.getProductCategoryType().equalsIgnoreCase(ELECTRONICS))
+
 			if (ELECTRONICS.equalsIgnoreCase(productModel.getProductCategoryType())
 					|| WATCHES.equalsIgnoreCase(productModel.getProductCategoryType())
 					|| TRAVELANDLUGGAGE.equalsIgnoreCase(productModel.getProductCategoryType()))
@@ -2018,11 +2025,13 @@ public class ProductPageController extends MidPageController
 			{
 				productDetailsHelper.groupGlassificationData(productData);
 			}
+			LOG.debug("===========After Electronics block=================");
 			if (FINEJEWELLERY.equalsIgnoreCase(productModel.getProductCategoryType())
 					|| FASHIONJEWELLERY.equalsIgnoreCase(productModel.getProductCategoryType()))
 			{
 				productDetailsHelper.groupGlassificationDataForJewelDetails(productData);
 			}
+			LOG.debug("===========After FASHIONJEWELLERY block=================");
 			final String validTabs = configurationService.getConfiguration().getString(
 					"mpl.categories." + productData.getRootCategory());
 
@@ -2041,7 +2050,7 @@ public class ProductPageController extends MidPageController
 				}
 			}
 
-
+			LOG.debug("===========After step1 block=================");
 			final String sharePath = configurationService.getConfiguration().getString("social.share.path");
 			//For Gigya
 			final String isGigyaEnabled = configurationService.getConfiguration().getString(MessageConstants.USE_GIGYA);
@@ -2059,13 +2068,14 @@ public class ProductPageController extends MidPageController
 				gigyaAPIKey = configurationService.getConfiguration().getString("gigya.apikey");
 				gigyaRatingURL = configurationService.getConfiguration().getString("gigya.rating.url");
 			}
+			LOG.debug("===========After step2 block=================");
 			//end gigya
 			final String emiCuttOffAmount = configurationService.getConfiguration().getString("marketplace.emiCuttOffAmount");
 			final String cliqCareNumber = configurationService.getConfiguration().getString("cliq.care.number");
 			final String cliqCareMail = configurationService.getConfiguration().getString("cliq.care.mail");
 			final String googleClientid = configurationService.getConfiguration().getString("google.data-clientid");
 			final String facebookAppid = configurationService.getConfiguration().getString("facebook.app_id");
-
+			LOG.debug("===========After step3 block=================");
 			/* Configurable tabs to be displayed in the PDP page */
 			model.addAttribute(ModelAttributetConstants.VALID_TABS, validTabs);
 			model.addAttribute(ModelAttributetConstants.SHARED_PATH, sharePath);
@@ -2098,7 +2108,7 @@ public class ProductPageController extends MidPageController
 			final String metaKeyword = productData.getSeoMetaKeyword();
 			setUpMetaData(model, metaDescription, metaTitle, productCode, metaKeyword);
 			populateTealiumData(productData, model, breadcrumbs);
-
+			LOG.debug("===========After step3 block=================");
 			/**
 			 * Add Filter for FA START :::::
 			 */
@@ -2131,7 +2141,7 @@ public class ProductPageController extends MidPageController
 					}
 				}
 
-
+				LOG.debug("===========After step4 block=================");
 			}
 
 			if (ModelAttributetConstants.FINEJEWELLERY.equalsIgnoreCase(productModel.getProductCategoryType())
@@ -2150,7 +2160,7 @@ public class ProductPageController extends MidPageController
 
 				}
 			}
-
+			LOG.debug("===========After step5 block=================");
 			model.addAttribute("showSizeGuideForFA", showSizeGuideForFA);
 			/**
 			 * Add Filter for FA END :::::
@@ -2174,7 +2184,7 @@ public class ProductPageController extends MidPageController
 			{
 				findCanonicalProduct(productData, model);
 			}
-
+			LOG.debug("===========After step6 block=================");
 		}
 		//populateVariantSizes(productData);
 		catch (final EtailBusinessExceptions e)
@@ -2362,9 +2372,9 @@ public class ProductPageController extends MidPageController
 										/*
 										 * else if (value.equalsIgnoreCase(featureData.getCode().substring(
 										 * featureData.getCode().lastIndexOf(".") + 1))) {
-										 * 
+										 *
 										 * if (productFeatureMap.size() > 0) { productFeatureMap.clear(); }
-										 * 
+										 *
 										 * productFeatureMap.put(featureValueData.getValue(), jewelleryDescMapping.get(value));
 										 * mapConfigurableAttributes.put(featureData.getName(), productFeatureMap); }
 										 */
@@ -2825,11 +2835,11 @@ public class ProductPageController extends MidPageController
 	 */
 	/*
 	 * private MarketplaceDeliveryModeData fetchDeliveryModeDataForUSSID(final String deliveryMode, final String ussid) {
-	 *
+	 * 
 	 * final MarketplaceDeliveryModeData deliveryModeData = new MarketplaceDeliveryModeData(); final
 	 * MplZoneDeliveryModeValueModel mplZoneDeliveryModeValueModel = mplCheckoutFacade
 	 * .populateDeliveryCostForUSSIDAndDeliveryMode(deliveryMode, MarketplaceFacadesConstants.INR, ussid);
-	 *
+	 * 
 	 * final PriceData priceData = productDetailsHelper.formPriceData(mplZoneDeliveryModeValueModel.getValue());
 	 * deliveryModeData.setCode(mplZoneDeliveryModeValueModel.getDeliveryMode().getCode());
 	 * deliveryModeData.setDescription(mplZoneDeliveryModeValueModel.getDeliveryMode().getDescription());
@@ -2849,76 +2859,76 @@ public class ProductPageController extends MidPageController
 	 */
 	/*
 	 * private List<PincodeServiceData> populatePinCodeServiceData(final String productCode) {
-	 *
-	 *
-	 *
+	 * 
+	 * 
+	 * 
 	 * final List<PincodeServiceData> requestData = new ArrayList<>(); PincodeServiceData data = null;
-	 *
+	 * 
 	 * MarketplaceDeliveryModeData deliveryModeData = null; try { final ProductModel productModel =
-	 *
-	 *
+	 * 
+	 * 
 	 * productService.getProductForCode(productCode); final ProductData productData =
-	 *
+	 * 
 	 * productFacade.getProductForOptions(productModel, Arrays.asList(ProductOption.BASIC, ProductOption.SELLER,
 	 * ProductOption.PRICE));
-	 *
-	 *
+	 * 
+	 * 
 	 * for (final SellerInformationData seller : productData.getSeller()) { final List<MarketplaceDeliveryModeData>
-	 *
+	 * 
 	 * deliveryModeList = new ArrayList<MarketplaceDeliveryModeData>(); data = new PincodeServiceData(); if ((null !=
-	 *
+	 * 
 	 * seller.getDeliveryModes()) && !(seller.getDeliveryModes().isEmpty())) { for (final MarketplaceDeliveryModeData
-	 *
+	 * 
 	 * deliveryMode : seller.getDeliveryModes()) { deliveryModeData =
-	 *
+	 * 
 	 * fetchDeliveryModeDataForUSSID(deliveryMode.getCode(), seller.getUssid()); deliveryModeList.add(deliveryModeData);
-	 *
-	 *
+	 * 
+	 * 
 	 * } data.setDeliveryModes(deliveryModeList); } if (null != seller.getFullfillment() &&
-	 *
+	 * 
 	 * StringUtils.isNotEmpty(seller.getFullfillment())) {
-	 *
+	 * 
 	 * data.setFullFillmentType(MplGlobalCodeConstants.GLOBALCONSTANTSMAP.get(seller.getFullfillment().toUpperCase())); }
-	 *
+	 * 
 	 * if (null != seller.getShippingMode() && (StringUtils.isNotEmpty(seller.getShippingMode()))) {
-	 *
+	 * 
 	 * data.setTransportMode(MplGlobalCodeConstants.GLOBALCONSTANTSMAP.get(seller.getShippingMode().toUpperCase())); } if
-	 *
+	 * 
 	 * (null != seller.getSpPrice() && !(seller.getSpPrice().equals(ModelAttributetConstants.EMPTY))) { data.setPrice(new
-	 *
+	 * 
 	 * Double(seller.getSpPrice().getValue().doubleValue())); } else if (null != seller.getMopPrice() &&
-	 *
+	 * 
 	 * !(seller.getMopPrice().equals(ModelAttributetConstants.EMPTY))) { data.setPrice(new
-	 *
+	 * 
 	 * Double(seller.getMopPrice().getValue().doubleValue())); } else if (null != seller.getMrpPrice() &&
-	 *
+	 * 
 	 * !(seller.getMrpPrice().equals(ModelAttributetConstants.EMPTY))) { data.setPrice(new
-	 *
+	 * 
 	 * Double(seller.getMrpPrice().getValue().doubleValue())); } else {
-	 *
-	 *
-	 *
+	 * 
+	 * 
+	 * 
 	 * LOG.info("*************** No price avaiable for seller :" + seller.getSellerID()); continue; } if (null !=
-	 *
-	 *
+	 * 
+	 * 
 	 * seller.getIsCod() && StringUtils.isNotEmpty(seller.getIsCod())) { data.setIsCOD(seller.getIsCod()); }
-	 *
-	 *
-	 *
+	 * 
+	 * 
+	 * 
 	 * data.setSellerId(seller.getSellerID()); data.setUssid(seller.getUssid());
-	 *
+	 * 
 	 * data.setIsDeliveryDateRequired(ControllerConstants.Views.Fragments.Product.N); requestData.add(data); } } catch
-	 *
-	 *
-	 *
-	 *
-	 *
+	 * 
+	 * 
+	 * 
+	 * 
+	 * 
 	 * (final EtailBusinessExceptions e) { ExceptionUtil.etailBusinessExceptionHandler(e, null); }
-	 *
-	 *
-	 *
+	 * 
+	 * 
+	 * 
 	 * catch (final Exception e) {
-	 *
+	 * 
 	 * throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000); } return requestData; }
 	 */
 
