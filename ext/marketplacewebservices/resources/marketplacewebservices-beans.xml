@@ -847,7 +847,9 @@
 		<property name="cartGuid" type="String"></property>
 		<!-- TPR-6117 -->
 		<property name="reachedMaxLimitforproduct" type="java.util.List&lt;com.tisl.mpl.wsdto.MaxLimitWsDto>" />
-
+                <!-- TPR-3893 starts here -->
+		<property name="firedMessage" type="String" />
+		<!-- TPR-3893 ends here -->	 
 	</bean>
 	<bean class="com.tisl.mpl.wsdto.CartProductsDeliveryDetailsWsDTO">
 		<property name="data" type="String" />
