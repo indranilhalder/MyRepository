@@ -435,14 +435,32 @@ $(document).ready(function(){
 			_satellite.track('cpj_order_successful');
 		}	
 		
+		var product ='';
+		var productCategory ='';
+		var price ='';
+		var quantity ='';
+			
+		if($("#product_sku").val()!= ''){
+			product = JSON.parse($("#product_id").val().toLowerCase());
+		}
+		if($("#product_category").val()!= ''){
+			productCategory = JSON.parse($("#product_category").val().toLowerCase());
+		}
+		if($("#product_unit_price").val()!= ''){
+			price = JSON.parse($("#product_unit_price").val());
+		}
+		if($("#product_quantity").val()!= ''){
+			quantity = JSON.parse($("#product_quantity").val());
+		}
+		
 		digitalData.cpj = {
 				        product : {
-					       id       :  JSON.parse($('#product_sku').val().toLowerCase()) ,
-			               category :  JSON.parse($('#product_category').val().toLowerCase()),
-			               price    :  $('#product_unit_price').val()
+					       id       :  product ,
+			               category :  productCategory,
+			               price    :  price
 			          },
 			             payment : {
-			        	    quantity : $('#product_quantity').val()
+			        	    quantity : quantity
 			           } 
 		  }
 		
