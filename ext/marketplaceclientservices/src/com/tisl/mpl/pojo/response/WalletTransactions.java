@@ -139,37 +139,37 @@ public class WalletTransactions
 	}
 
 	@JsonProperty("Amount")
-	public Integer getAmount()
+	public Double getAmount()
 	{
 		return amount;
 	}
 
 	@JsonProperty("Amount")
-	public void setAmount(Integer amount)
+	public void setAmount(Double amount)
 	{
 		this.amount = amount;
 	}
 
 	@JsonProperty("Balance")
-	public Integer getBalance()
+	public Double getBalance()
 	{
 		return balance;
 	}
 
 	@JsonProperty("Balance")
-	public void setBalance(Integer balance)
+	public void setBalance(Double balance)
 	{
 		this.balance = balance;
 	}
 
 	@JsonProperty("BillAmount")
-	public Integer getBillAmount()
+	public Double getBillAmount()
 	{
 		return billAmount;
 	}
 
 	@JsonProperty("BillAmount")
-	public void setBillAmount(Integer billAmount)
+	public void setBillAmount(Double billAmount)
 	{
 		this.billAmount = billAmount;
 	}
