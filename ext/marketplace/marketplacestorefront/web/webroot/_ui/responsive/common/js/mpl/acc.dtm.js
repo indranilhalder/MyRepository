@@ -244,8 +244,8 @@ $(document).ready(function(){
 		    dtmProductImpressionsPlp();
 			//digitalData.page.category.subCategory1 = ListValue("product_category");
 		    digitalData.page.category.subCategory1 = product_category;
-			digitalData.page.category.subCategory2 = $('#page_subcategory_name').val(); 
-			digitalData.page.category.subCategory3 = $('#page_subcategory_name_l3').val();
+			digitalData.page.category.subCategory2 = $('#page_subcategory_name').val().toLowerCase().replace(/_+/g, '_'); 
+			digitalData.page.category.subCategory3 = $('#page_subcategory_name_l3').val().toLowerCase().replace(/_+/g, '_');
 	}
 		
 	//Search
@@ -294,11 +294,9 @@ $(document).ready(function(){
 		  dtmSearchTags();
 		       /*  product impressions*/
 		  dtmProductImpressionsSerp();	
-			digitalData.page.category.subCategory1 = product_category;
-			digitalData.page.category.subCategory2 =  $('#page_subcategory_name').val();
-			digitalData.page.category.subCategory3 = $('#page_subcategory_name_l3').val();
-		
-			
+			//digitalData.page.category.subCategory1 = product_category;
+		//	digitalData.page.category.subCategory2 =  $('#page_subcategory_name').val().toLowerCase().replace(/_+/g, '_');
+		//	digitalData.page.category.subCategory3 = $('#page_subcategory_name_l3').val().toLowerCase().replace(/_+/g, '_');
 	
 	  }
 	
