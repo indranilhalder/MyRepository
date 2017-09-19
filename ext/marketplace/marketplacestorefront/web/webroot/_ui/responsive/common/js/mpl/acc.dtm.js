@@ -205,14 +205,6 @@ $(document).ready(function(){
 			  
 		}
 		
-		/*digitalData.product = {
-			seller : {
-				list : sellerList,
-				id   : $("#pdpBuyboxWinnerSellerID").val(),
-				buyBoxWinner : $("#sellerNameId").html()
-			}   
-		}*/
-		
 		digitalData.page.category.subCategory1 = product_category;
 		digitalData.page.category.subCategory2 = page_subcategory_name_L2; 
 		digitalData.page.category.subCategory3 = page_subcategory_name_L3;
@@ -434,7 +426,7 @@ $(document).ready(function(){
 			}
 			
 		}
-		digitalData.page.category.subCategory1 = ListValue("product_category") ;
+		digitalData.page.category.subCategory1 = product_category ;
 		digitalData.page.category.subCategory2 =  page_subcategory_name_L2; 
 		digitalData.page.category.subCategory3 = page_subcategory_name_L3;
 	}
