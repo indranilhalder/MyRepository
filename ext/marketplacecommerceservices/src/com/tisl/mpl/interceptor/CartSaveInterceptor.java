@@ -28,20 +28,22 @@ public class CartSaveInterceptor implements PrepareInterceptor
 	@Override
 	public void onPrepare(final Object object, final InterceptorContext arg1) throws InterceptorException
 	{
-		LOG.debug(Localization.getLocalizedString("payment.cartsaveinterceptor.message"));
+		LOG.debug(Localization.getLocalizedString("Cart Save Interceptor"));
 		if (object instanceof AbstractOrderModel) //Changes made from cartModel to abstractOrderModel TPR-629
 		{
-			final AbstractOrderModel abstractOrderModel = (AbstractOrderModel) object;
 
-			if (null != abstractOrderModel.getConvenienceCharges())
+			final AbstractOrderModel abstractOrderModel = (AbstractOrderModel) object;
+			final Double convinienceCharge = abstractOrderModel.getConvenienceCharges();
+			final Double totalPrice = abstractOrderModel.getTotalPrice();
+
+			if (null != convinienceCharge)
 			{
-				abstractOrderModel.setTotalPriceWithConv(Double.valueOf(abstractOrderModel.getTotalPrice().doubleValue()
-						+ abstractOrderModel.getConvenienceCharges().doubleValue()));
+				abstractOrderModel.setTotalPriceWithConv(Double.valueOf(totalPrice.doubleValue() + convinienceCharge.doubleValue()));
 			}
 			else
 			{
 				abstractOrderModel.setConvenienceCharges(Double.valueOf(0.0));
-				abstractOrderModel.setTotalPriceWithConv(abstractOrderModel.getTotalPrice());
+				abstractOrderModel.setTotalPriceWithConv(totalPrice);
 			}
 		}
 

@@ -13,7 +13,7 @@
 <!-- <h3 class="company author"></h3> -->
 <div itemprop="offers" itemscope="" itemtype="http://schema.org/Offer" class="price">
 	<div class="price-feature">
-	   <span class="strike-price" id="mrpPriceId" style="display:none"></span>
+	   <span id="mrpPriceId" style="display:none"></span>
 	   
 	   <span class="saving-price text-danger" sale" id="spPriceId" style="display:none"><span itemprop="price">${product_list_price}</span>
 	   

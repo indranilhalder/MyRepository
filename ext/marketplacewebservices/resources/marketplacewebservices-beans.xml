@@ -3149,6 +3149,8 @@
 		
 	</bean>
 	
+
+<!-- =======================================luxury Components========================================================= -->
 	<bean class="com.tisl.mpl.wsdto.RevSealJwlryDataWsDTO">
         <property name="message" type="String"/>
 	    <property name="yes" type="String"/>
@@ -3160,8 +3162,6 @@
 		<property name="quickDrop" type="boolean"/>
 	</bean>
  		
-	<!-- =======================================luxury Components========================================================= -->
-
 	<!--============= luxuryHomePage =============-->
 	<bean class="com.tisl.mpl.wsdto.LuxuryHomePageCompWsDTO">
 		<property name="sectionId" type="String" />
@@ -3292,6 +3292,5 @@
     	<property name="Luxurysocialfeedcomponent" type="com.tisl.mpl.wsdto.LuxSocialFeedComponentWsDTO"/>
 
 	</bean>
-
 
 </beans>

@@ -16,9 +16,10 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import org.apache.log4j.Logger;
+
 /**
  * @author TCS
  *
@@ -35,8 +36,8 @@ public class ExtDefaultPromotionsService extends DefaultPromotionsService
 	public PromotionOrderResults updatePromotions(final Collection<PromotionGroupModel> promotionGroups,
 			final AbstractOrderModel order)
 	{
-		final PromotionOrderResults result = getPromotionsManager().updatePromotions(
-				getModelService().getAllSources(promotionGroups, new ArrayList()), getOrder(order));
+		final PromotionOrderResults result = getPromotionsManager()
+				.updatePromotions(getModelService().getAllSources(promotionGroups, new ArrayList()), getOrder(order));
 		refreshOrder(order);
 		return result;
 	}
@@ -52,9 +53,9 @@ public class ExtDefaultPromotionsService extends DefaultPromotionsService
 				productPromotionMode, orderPromotionMode, date);
 
 		if (result == null)
- 		{
- 			LOG.error("Failed to update promotion for orderId::" + order.getCode());
- 		}
+		{
+			LOG.error("Failed to update promotion for orderId::" + order.getCode());
+		}
 		refreshOrder(order);
 		return result;
 	}
@@ -78,9 +79,12 @@ public class ExtDefaultPromotionsService extends DefaultPromotionsService
 			final List<AbstractOrderEntryModel> entries = orderModel.getEntries();
 			for (final AbstractOrderEntryModel entry : entries)
 			{
-				if (entry.getQuantity() != null && entry.getBasePrice() != null)
+				final Long quantity = entry.getQuantity();
+				final Double basePrice = entry.getBasePrice();
+
+				if (quantity != null && basePrice != null)
 				{
-					final double entryTotal = entry.getQuantity().doubleValue() * entry.getBasePrice().doubleValue();
+					final double entryTotal = basePrice.doubleValue() * quantity.doubleValue();
 					subtotal += entryTotal;
 				}
 			}
