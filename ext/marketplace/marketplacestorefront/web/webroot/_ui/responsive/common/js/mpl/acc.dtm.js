@@ -243,9 +243,9 @@ $(document).ready(function(){
 		  /*  product impressions*/
 		    dtmProductImpressionsPlp();
 			//digitalData.page.category.subCategory1 = ListValue("product_category");
-		    digitalData.page.category.subCategory1 = product_category
-			digitalData.page.category.subCategory2 = page_subcategory_name_L2; 
-			digitalData.page.category.subCategory3 = page_subcategory_name_L3;
+		    digitalData.page.category.subCategory1 = product_category;
+			digitalData.page.category.subCategory2 = $('#page_subcategory_name').val(); 
+			digitalData.page.category.subCategory3 = $('#page_subcategory_name_l3').val();
 	}
 		
 	//Search
@@ -295,10 +295,9 @@ $(document).ready(function(){
 		       /*  product impressions*/
 		  dtmProductImpressionsSerp();	
 			digitalData.page.category.subCategory1 = product_category;
-			digitalData.page.category.subCategory2 =  page_subcategory_name_L2; 
-			if(page_subcategory_name_L3  != undefined ){
-				digitalData.page.category.subCategory3 = page_subcategory_name_L3;
-			}
+			digitalData.page.category.subCategory2 =  $('#page_subcategory_name').val();
+			digitalData.page.category.subCategory3 = $('#page_subcategory_name_l3').val();
+		
 			
 	
 	  }
