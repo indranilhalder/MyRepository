@@ -77237,3 +77237,8 @@ li.enter-pincode a::before {
     color: #f3f2f2;
 }
 /*TPR-6654 end*/
+/* TISCSXII-2224 start */
+body.template-pages-LoginPageTemplate .sign-in.tab-view .form-group #password_login_bar .progress-bar{
+	margin-bottom: 10px;
+	} 
+/* TISCSXII-2224 end */
