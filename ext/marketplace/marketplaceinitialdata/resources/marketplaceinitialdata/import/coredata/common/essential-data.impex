@@ -691,3 +691,10 @@ INSERT_UPDATE RendererTemplate;code[unique=true];templatescript[lang=en];
 </urlset>"
 
 ####SiteMap CronJob Ends
+
+#TPR-6945:Near Real time Stock and Price changes in PLP and PDP
+INSERT_UPDATE CronJob;code[unique=true];job(code);singleExecutable;sessionLanguage(isocode)
+;real_time_stock_price_update_groovy_job;real_time_stock_price_update_groovy_job;false;en
+;AkamaiRefreshCronJob;akamaiRefreshCronJob;false;en
+;ProductSpecificIndexerCronJob;productSpecificIndexerCronJob;false;en
+;SolrSlaveReplicatorJob;solrSlaveReplicatorJob;false;en

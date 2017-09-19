@@ -130,6 +130,53 @@
 	</relations>
 
 	<itemtypes>
+	
+		<!-- 168108:TPR-6945:Near Real time Stock and Price changes in PLP and PDP -->
+		
+		<itemtype code="FlashSaleProductList" autocreate="true" generate="true">
+			<deployment table="FlashSaleProductList" typecode="24677" /> --> 
+			<attributes>
+					<attribute autocreate="true" qualifier="productListingId"
+						type="java.lang.String">
+						<persistence type="property" />
+						<modifiers read="true" write="true" search="true"
+							optional="false" />
+						<description>This Attribute represents the ProductLists to be updated</description>
+					</attribute>
+			</attributes>
+		</itemtype>
+		
+		<itemtype code="AkamaiRefreshUrlList" autocreate="true" generate="true">
+			<deployment table="AkamaiRefreshUrlList" typecode="24678" /> --> 
+			<attributes>
+					<attribute autocreate="true" qualifier="refreshUrl"
+						type="java.lang.String">
+						<persistence type="property">
+							<columntype database="oracle">
+								<value>CLOB</value>
+							</columntype>
+							<columntype database="mysql">
+								<value>text</value>
+							</columntype>
+							<columntype database="sqlserver">
+								<value>nvarchar(max)</value>
+							</columntype>
+							<columntype database="hsqldb">
+								<value>LONGVARCHAR</value>
+							</columntype>
+							<columntype>
+								<value>varchar</value>
+							</columntype>
+						</persistence>
+						<description>This Attribute represents the URL those are to be refreshed.</description>
+						<modifiers read="true" write="true" search="true"
+							optional="false" />
+					</attribute>
+			</attributes>
+		</itemtype>
+		
+		<!-- End 168108:TPR-6945 -->
+	
 		<!-- <itemtype generate="true" code="MyProduct" jaloclass="com.tisl.mpl.jalo.MyProduct" 
 			extends="Product" autocreate="true" > <attributes> <attribute qualifier="myExampleInitialStringField" 
 			type="java.lang.String"> <description>My Example Initial String Value</description> 
