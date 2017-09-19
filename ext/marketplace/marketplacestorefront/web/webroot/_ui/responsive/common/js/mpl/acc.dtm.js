@@ -306,17 +306,32 @@ $(document).ready(function(){
 	// Cart page
 	if(pageType == "cart"){
 		var pinCode = $('#pinId').val();
+		var product_id ='';
+		var product_category ='';
 		if(typeof _satellite != "undefined"){
 		    _satellite.track('cpj_cart_page');
 		}
 		
+		if($("#product_id").val()!= ''){
+			 product_id = JSON.parse($("#product_id").val().toLowerCase());
+		}
+		if($("#product_category").val()!= ''){
+			 product_category = JSON.parse($("#product_category").val().toLowerCase());
+		}
 		
-		digitalData.cpj = {
+	/*	digitalData.cpj = {
 			product : {
 				id : JSON.parse($("#product_id").val().toLowerCase()),
 				category : JSON.parse(ListValue("product_category"))
 			}
-		}
+		}*/
+		digitalData.cpj = {
+				product : {
+					id : product_id,
+					category : product_category
+				}
+			}
+		
 		//TPR-6333 | Track Geo-location of users
 		  if(pinCode != ''){
 			   digitalData.geolocation = {
@@ -325,6 +340,7 @@ $(document).ready(function(){
 					}
 			}
 		}
+		
 		//TPR-6371 | track promotions
 		if($('#promolist').val() != '[]') {
 			   digitalData.cpj.promo = {
@@ -347,7 +363,8 @@ $(document).ready(function(){
 	// Checkout pages
 	if(pageType =="multistepcheckoutsummary"){
 		var checkoutPageName = pageName +":" + $('#checkoutPageName').val().toLowerCase();
-		
+		var product ='';
+		var productCategory ='';
 		digitalData = {
 				page : {
 					pageInfo : {
@@ -361,13 +378,19 @@ $(document).ready(function(){
 				}
 			}
 		
+		if($("#product_id").val()!= ''){
+			product = JSON.parse($("#product_id").val().toLowerCase());
+		}
+		if($("#product_category").val()!= ''){
+			productCategory = JSON.parse($("#product_category").val().toLowerCase());
+		}
+		//var product_id = JSON.parse($("#product_id").val().toLowerCase());
+		//var product_category = JSON.parse($("#product_category").val().toLowerCase());
 		
-		var product_id = JSON.parse($("#product_id").val().toLowerCase());
-		var product_category = JSON.parse($("#product_category").val().toLowerCase());
 		digitalData.cpj = {
 				product : {
-					id     :  product_id ,
-			      category :  product_category
+					id     :  product ,
+			      category :  productCategory
 			 }
 		  }
 		digitalData.page.category.subCategory1 = product_category;
@@ -413,19 +436,24 @@ $(document).ready(function(){
 		}	
 		
 		digitalData.cpj = {
-				   product : {
-					   id       :  JSON.parse($('#product_sku').val().toLowerCase()) ,
-			           category :  JSON.parse($('#product_category').val().toLowerCase()),
-			           price    :  $('#product_unit_price').val()
-			 }
+				        product : {
+					       id       :  JSON.parse($('#product_sku').val().toLowerCase()) ,
+			               category :  JSON.parse($('#product_category').val().toLowerCase()),
+			               price    :  $('#product_unit_price').val()
+			          },
+			             payment : {
+			        	    quantity : $('#product_quantity').val()
+			           } 
 		  }
 		
-		if(typeof digitalData.cpj.payment !='undefined'){
+	/*	if(typeof digitalData.cpj.payment !='undefined'){
+			digitalData.cpj.payment.quantity = $('#product_quantity').val();
+		}
+		else{
 			digitalData.cpj.payment = {
 					quantity : $('#product_quantity').val()
 			}
-			
-		}
+		}*/
 		digitalData.page.category.subCategory1 = product_category ;
 		digitalData.page.category.subCategory2 =  page_subcategory_name_L2; 
 		digitalData.page.category.subCategory3 = page_subcategory_name_L3;
