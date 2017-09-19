@@ -567,13 +567,13 @@ public class MarketplaceServiceabilityCheckHelperImpl implements MarketplaceServ
 				{
 					for (final MarketplaceDeliveryModeData deliveryMode : seller.getDeliveryModes())
 					{
-						//CKD:TPR-3809
-						if (productModel.getProductCategoryType().equalsIgnoreCase(MarketplacecommerceservicesConstants.FINEJEWELLERY)){
-							deliveryModeData = fetchDeliveryModeDataForUSSID(deliveryMode.getCode(), ussid);
-						}
-						else{
-							deliveryModeData = fetchDeliveryModeDataForUSSID(deliveryMode.getCode(), seller.getUssid());
-						}
+						//CKD:TPR-3809//TISPRDT-2671
+//						if (productModel.getProductCategoryType().equalsIgnoreCase(MarketplacecommerceservicesConstants.FINEJEWELLERY)){
+//							deliveryModeData = fetchDeliveryModeDataForUSSID(deliveryMode.getCode(), ussid);
+//						}
+//						else{
+						deliveryModeData = fetchDeliveryModeDataForUSSID(deliveryMode.getCode(), seller.getUssid());
+						//}
 						//deliveryModeData = fetchDeliveryModeDataForUSSID(deliveryMode.getCode(), seller.getUssid());
 						deliveryModeList.add(deliveryModeData);
 					}

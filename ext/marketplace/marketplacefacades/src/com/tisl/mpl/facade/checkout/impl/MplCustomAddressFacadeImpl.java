@@ -35,6 +35,7 @@ import de.hybris.platform.servicelayer.util.ServicesUtil;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
@@ -46,6 +47,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.Assert;
 
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
+import com.tisl.mpl.core.enums.DeliveryFulfillModesEnum;
 import com.tisl.mpl.core.model.MplZoneDeliveryModeValueModel;
 import com.tisl.mpl.core.model.RichAttributeModel;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
@@ -693,7 +695,10 @@ public class MplCustomAddressFacadeImpl extends DefaultCheckoutFacade implements
 			if (isValidDeliveryAddress(cartModel, addressModel))
 			{
 				getModelService().save(cartModel);
-				getModelService().save(addressModel);
+				if (null != addressModel)
+				{
+					getModelService().save(addressModel);
+				}
 				getModelService().refresh(cartModel);
 				return true;
 			}
@@ -798,12 +803,19 @@ public class MplCustomAddressFacadeImpl extends DefaultCheckoutFacade implements
 						mplZoneDeliveryModeValueModel = mplDeliveryCostService.getDeliveryCost(deliveryCode,
 								MarketplacecommerceservicesConstants.INR, sellerArticleSKU);
 					}
-
-					if (null != mplZoneDeliveryModeValueModel && sellerInfoModel != null && sellerInfoModel.getRichAttribute() != null
-							&& ((List<RichAttributeModel>) sellerInfoModel.getRichAttribute()).get(0).getDeliveryFulfillModes() != null)
+					Collection<RichAttributeModel> richAttributeModelList = null;
+					if (null != sellerInfoModel)
 					{
-						fulfillmentType = ((List<RichAttributeModel>) sellerInfoModel.getRichAttribute()).get(0)
-								.getDeliveryFulfillModes().getCode();
+						richAttributeModelList = sellerInfoModel.getRichAttribute();
+					}
+					DeliveryFulfillModesEnum deliveryFulfillModes = null;
+					if (null != sellerInfoModel)
+					{
+						deliveryFulfillModes = ((List<RichAttributeModel>) richAttributeModelList).get(0).getDeliveryFulfillModes();
+					}
+					if (deliveryFulfillModes != null)
+					{
+						fulfillmentType = deliveryFulfillModes.getCode();
 
 
 						//Blocked for TPR-579
@@ -831,23 +843,27 @@ public class MplCustomAddressFacadeImpl extends DefaultCheckoutFacade implements
 						/*
 						 * if (fulfillmentType.equalsIgnoreCase(MarketplaceFacadesConstants.TSHIPCODE) &&
 						 * entry.getTotalPrice().doubleValue() > Double.parseDouble(tshipThresholdValue))
-						 * 
-						 * 
-						 * 
+						 *
+						 *
+						 *
 						 * // For Release 1 , TShip delivery cost will always be zero . Hence , commenting the below code
 						 * which check configuration from HAC // if
 						 * (fulfillmentType.equalsIgnoreCase(MarketplaceFacadesConstants.TSHIPCODE) // &&
 						 * entry.getTotalPrice().doubleValue() > Double.parseDouble(tshipThresholdValue)) // // { //
 						 * mplZoneDeliveryModeValueModel.setValue(Double.valueOf(0.0)); // }
-						 * 
+						 *
 						 * { mplZoneDeliveryModeValueModel.setValue(Double.valueOf(0.0)); }
 						 */
 					}
 
 					entry.setMplDeliveryMode(mplZoneDeliveryModeValueModel);
-					if (null != mplZoneDeliveryModeValueModel && mplZoneDeliveryModeValueModel.getValue() != null
-							&& null != mplZoneDeliveryModeValueModel.getDeliveryFulfillModes()
-							&& fulfillmentType.equalsIgnoreCase(mplZoneDeliveryModeValueModel.getDeliveryFulfillModes().getCode()))
+					DeliveryFulfillModesEnum deliveryFulfillModesEnum = null;
+					if (null != mplZoneDeliveryModeValueModel)
+					{
+						deliveryFulfillModesEnum = mplZoneDeliveryModeValueModel.getDeliveryFulfillModes();
+					}
+					if (null != deliveryFulfillModesEnum && mplZoneDeliveryModeValueModel.getValue() != null
+							&& fulfillmentType.equalsIgnoreCase(deliveryFulfillModesEnum.getCode()))
 					{
 						if (entry.getIsBOGOapplied().booleanValue())
 						{
@@ -873,9 +889,14 @@ public class MplCustomAddressFacadeImpl extends DefaultCheckoutFacade implements
 					LOG.debug(" >>> Delivery cost for ussid  " + sellerArticleSKU + " of fulfilment type " + fulfillmentType + " is "
 							+ deliveryCost);
 
+					final MplZoneDeliveryModeValueModel mplZoneDeliveryModeValueModelEntry = entry.getMplDeliveryMode();
+					DeliveryModeModel deliveryModeModel = null;
+					if (null != mplZoneDeliveryModeValueModelEntry)
+					{
+						deliveryModeModel = mplZoneDeliveryModeValueModelEntry.getDeliveryMode();
+					}
 					//if delivery mode is changed from  c-n-c to other and if it contains POS then we need to remove the POS from that entry
-					if (null != entry.getMplDeliveryMode() && null != entry.getMplDeliveryMode().getDeliveryMode()
-							&& !entry.getMplDeliveryMode().getDeliveryMode().getCode().equals(MarketplaceFacadesConstants.C_C)
+					if (null != deliveryModeModel && !deliveryModeModel.getCode().equals(MarketplaceFacadesConstants.C_C)
 							&& null != entry.getDeliveryPointOfService())
 					{
 						entry.setDeliveryPointOfService(null);

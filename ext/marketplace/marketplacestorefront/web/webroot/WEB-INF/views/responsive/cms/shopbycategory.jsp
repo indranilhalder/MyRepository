@@ -11,7 +11,7 @@
 	<ul class="list-unstyled shop-by-catagory-slider circle-pager">
 		<c:forEach items="${component.relatedImage}" var="Image" varStatus="status">
 		<li>
-			<a href="javascript:;">
+			<a href="${Image.urlLink}">
 				<img src="${Image.media.url}" alt="${Image.headline}">
 				<h5>${Image.headline}</h5>
 			</a>
