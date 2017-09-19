@@ -4,9 +4,9 @@
 <%@ taglib prefix="cms" uri="http://hybris.com/tld/cmstags"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn"%>
-<template:page pageTitle="${pageTitle}">
+<%@ taglib prefix="common" tagdir="/WEB-INF/tags/desktop/common"%>
 
-	<style>
+<style>
 .closeCashSuccess {
 	float: right;
 	font-size: initial;
@@ -143,6 +143,15 @@
 	}
 }
 </style>
+
+
+<template:page pageTitle="${pageTitle}">
+
+	
+	<div id="globalMessages">
+		<common:globalMessages />
+	</div>
+
 	<div class="cliqCashContainer">
 		<%-- <c:if test="${ WalletBalance gt 0 }"> --%>
 		<!-- 	<div class=""> -->

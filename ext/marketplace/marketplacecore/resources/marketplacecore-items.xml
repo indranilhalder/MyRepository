@@ -7723,8 +7723,8 @@
 						<description>True if ant entry has exchange applied to It</description>
 						<persistence type="property" />
 					</attribute>
-					
-					<!-- EGV CartFlag Start -->
+					<!-- TPR-1083 End -->
+						<!-- EGV CartFlag Start -->
 				   <attribute autocreate="true" qualifier="isEGVCart"
 						type="java.lang.Boolean">
 						<persistence type="property" qualifier="isEGVCart">
@@ -7735,7 +7735,6 @@
 					</attribute>
 					<!-- EGV CartFlag End -->
 					
-					<!-- TPR-1083 End -->
 				</attributes>
 				<!-- new indexes added for performace improvement -->
 				<indexes>

@@ -7,6 +7,7 @@ import de.hybris.platform.acceleratorstorefrontcommons.annotations.RequireHardLo
 import de.hybris.platform.acceleratorstorefrontcommons.breadcrumb.ResourceBreadcrumbBuilder;
 import de.hybris.platform.acceleratorstorefrontcommons.constants.WebConstants;
 import de.hybris.platform.acceleratorstorefrontcommons.controllers.pages.AbstractPageController;
+import de.hybris.platform.acceleratorstorefrontcommons.controllers.util.GlobalMessages;
 import de.hybris.platform.cms2.exceptions.CMSItemNotFoundException;
 import de.hybris.platform.cms2.model.pages.ContentPageModel;
 import de.hybris.platform.core.model.user.CustomerModel;
@@ -17,19 +18,16 @@ import de.hybris.platform.servicelayer.session.SessionService;
 import de.hybris.platform.servicelayer.user.UserService;
 import de.hybris.platform.store.services.BaseStoreService;
 
-import java.io.UnsupportedEncodingException;
-
 import javax.annotation.Resource;
-import javax.servlet.http.HttpServletRequest;
 
-import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.tisl.mpl.constants.MarketplacecheckoutaddonConstants;
 import com.tisl.mpl.core.model.CustomerWalletDetailModel;
@@ -43,16 +41,9 @@ import com.tisl.mpl.pojo.response.CustomerWalletDetailResponse;
 import com.tisl.mpl.pojo.response.QCCustomerRegisterResponse;
 import com.tisl.mpl.pojo.response.RedimGiftCardResponse;
 import com.tisl.mpl.pojo.response.WalletTransacationsList;
-import com.tisl.mpl.service.MplQCInitServiceImpl;
 import com.tisl.mpl.storefront.constants.ModelAttributetConstants;
 import com.tisl.mpl.storefront.constants.RequestMappingUrlConstants;
 import com.tisl.mpl.storefront.web.forms.AddToCardWalletForm;
-
-import org.springframework.web.bind.annotation.ModelAttribute;
-
-import java.util.List;
-
-import com.tisl.mpl.pojo.response.WalletTrasacationsListData;
 /**
  * @author TUL
  *
@@ -118,18 +109,23 @@ public class WalletController extends AbstractPageController
 	 * @param model  
 	 */
 	@RequestMapping(value = REDIM_WALLET_CODE_PATTERN, method = RequestMethod.POST)
-	public String getRedimWalletView(@ModelAttribute("addToCardWalletForm")  AddToCardWalletForm addToCardWalletForm,  Model model) throws CMSItemNotFoundException{
+	public String getRedimWalletView(@ModelAttribute("addToCardWalletForm")  AddToCardWalletForm addToCardWalletForm,  Model model, final RedirectAttributes redirectAttributes) throws CMSItemNotFoundException{
 
 		try{
 			RedimGiftCardResponse response = mplWalletFacade.getAddEGVToWallet(addToCardWalletForm.getCardNumber(),addToCardWalletForm.getCardPin());
 
-			if(!response.getResponseMessage().equalsIgnoreCase("error")){
-
+			if(null != response && response.getResponseCode() == Integer.valueOf(0)){
+				
+				GlobalMessages.addFlashMessage(redirectAttributes, GlobalMessages.INFO_MESSAGES_HOLDER,
+						"text.cliqcash.add.money.success", null);
 				return REDIRECT_PREFIX +"/wallet/getcliqcashPage";
 			}
 		}catch(Exception ex){
-
 			ex.printStackTrace();
+			GlobalMessages.addErrorMessage(model, "text.cliqcash.add.money.Fail");
+			if(ex.getMessage().contains("SocketTimeoutException")){
+			GlobalMessages.addErrorMessage(model, "text.cliqcash.timeout.massege");
+			}
 		}
 		return REDIRECT_PREFIX +"/wallet/getcliqcashPage";
 	}
@@ -148,7 +144,7 @@ public class WalletController extends AbstractPageController
 			if (null != currentCustomer.getIsWalletActivated() && currentCustomer.getIsWalletActivated()){
 
 				customerWalletDetailData = mplWalletFacade.getCustomerWallet(currentCustomer.getCustomerWalletDetail().getWalletId());
-				if(customerWalletDetailData.getWallet().getBalance() >0){
+				if(null != customerWalletDetailData.getWallet() && customerWalletDetailData.getWallet().getBalance() >0){
 					walletTrasacationsListData = mplWalletFacade.getWalletTransactionList();				
 					balanceAmount = customerWalletDetailData.getWallet().getBalance();		
 				}
@@ -186,7 +182,7 @@ public class WalletController extends AbstractPageController
 					modelService.save(currentCustomer);
 
 					customerWalletDetailData= mplWalletFacade.getCustomerWallet(currentCustomer.getCustomerWalletDetail().getWalletId());
-					if(customerWalletDetailData.getWallet().getBalance() >0){
+					if(null != customerWalletDetailData.getWallet() && customerWalletDetailData.getWallet().getBalance() >0){
 						walletTrasacationsListData = mplWalletFacade.getWalletTransactionList();
 						balanceAmount = customerWalletDetailData.getWallet().getBalance();
 					}
@@ -198,11 +194,15 @@ public class WalletController extends AbstractPageController
 			setUpMetaDataForContentPage(model, contentPage);
 			model.addAttribute("WalletBalance", balanceAmount);
 			model.addAttribute("walletTrasacationsListData", walletTrasacationsListData.getWalletTransactions());
-		}
-		catch (final Exception ex)
-		{
+			
+		}catch(Exception ex){
 			ex.printStackTrace();
-		}
+			GlobalMessages.addErrorMessage(model, "text.cliqcash.add.money.Fail");
+			if(ex.getMessage().contains("SocketTimeoutException")){
+			GlobalMessages.addErrorMessage(model, "text.cliqcash.timeout.massege");
+			}
+		return "addon:/marketplacecheckoutaddon/pages/checkout/single/cliqcash";
+	}
 		return "addon:/marketplacecheckoutaddon/pages/checkout/single/cliqcash";
 	}
 }

@@ -3505,7 +3505,7 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 
 			final QCRedeeptionResponse qcRedeeptionResponse = mplWalletFacade.getWalletRedeem(WalletId, qcRedeemRequest);
 
-			if (Integer.parseInt(qcRedeeptionResponse.getResponseCode().toString()) == 0)
+			if (null != qcRedeeptionResponse && Integer.parseInt(qcRedeeptionResponse.getResponseCode().toString()) == 0)
 			{
 
 				double totalQCCardValue = 0;
