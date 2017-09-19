@@ -44896,7 +44896,7 @@ bottom:35px;
 #new_exclusive.owl-theme .owl-controls,
 .home-product-you-care-carousel .owl-theme .owl-controls,
 .home-best-pick-carousel.owl-theme .owl-controls,
-#ia_products_hot_list.owl-theme .owl-controls {top: 38%;margin: 0;}
+#ia_products_hot_list.owl-theme .owl-controls {top: 38%;margin: 0;display: block;}
 
 
 /*Upgraded Owl carousel CSS ends*/
