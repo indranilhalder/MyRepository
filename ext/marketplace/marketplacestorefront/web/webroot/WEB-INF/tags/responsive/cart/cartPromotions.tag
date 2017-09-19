@@ -19,7 +19,7 @@
 </c:if>
 
 
-<!-- TPR-3893 starts here -->
+<!-- TPR-3893 starts here TISCSXII-2223 FIX -->
 <c:if test="${not empty cartData.appliedProductPromotions}">
     <div class="cartPromotions">
     <c:set var="alreadyPrinted" value="false"/>
