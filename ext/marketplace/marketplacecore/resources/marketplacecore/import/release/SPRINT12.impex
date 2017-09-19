@@ -72,3 +72,10 @@ INSERT_UPDATE ContentSlotName;name[unique=true];template(uid,$contentCV)[unique=
 # CMS Navigation Nodes  
 INSERT_UPDATE CMSNavigationNode;uid[unique=true];$contentCV[unique=true];name;parent(uid, $contentCV);
 ;NPPageCustomerServiceNavNode;;Customer Service Pages;SiteRootNode;
+
+#TPR-6945:Near Real time Stock and Price changes in PLP and PDP
+INSERT_UPDATE CronJob;code[unique=true];job(code);singleExecutable;sessionLanguage(isocode)
+;real_time_stock_price_update_groovy_job;real_time_stock_price_update_groovy_job;false;en
+;AkamaiRefreshCronJob;akamaiRefreshCronJob;false;en
+;ProductSpecificIndexerCronJob;productSpecificIndexerCronJob;false;en
+;SolrSlaveReplicatorJob;solrSlaveReplicatorJob;false;en
