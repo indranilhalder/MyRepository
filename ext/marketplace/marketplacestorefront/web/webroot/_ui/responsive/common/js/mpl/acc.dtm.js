@@ -345,16 +345,14 @@ $(document).ready(function(){
 		digitalData.page.category.subCategory3 = page_subcategory_name_L3;
 		
 		var sellerList = $('#checkoutSellerIDs').val();
-		var sellerPipe='';
-		if(sellerList != undefined || sellerList !=null){
-			sellerPipe = sellerList.join('|');	
-		}
+		//var sellerPipe='';
+		//if(sellerList != undefined || sellerList !=null){
+		//	sellerPipe = sellerList.join('|');	
+		//}
 		
 		digitalData.product = {
 				seller : {
-					//list : sellerPipe
-					id   : sellerPipe
-					//buyBoxWinner : $("#sellerNameId").html().toLowerCase()
+					id   : sellerList
 				}   
 			}
 	}
@@ -734,10 +732,10 @@ $(document).ready(function(){
 });
 function differentiateSellerDtm(){
 	var sellerList = $('#pdpSellerIDs').val();
-	var sellerPipe='';
-	if(sellerList != undefined || sellerList !=null){
-		sellerPipe = sellerList.join('|');	
-	}
+	//var sellerPipe='';
+	//if(sellerList != undefined || sellerList !=null){
+	//	sellerPipe = sellerList.join('|');	
+	//}
 	var buyboxSeller = $("#sellerSelId").val();
 	sellerList = sellerList.substr(1,(sellerList.length)-2);
 	sellerList = sellerList.split(',');
@@ -760,7 +758,7 @@ function differentiateSellerDtm(){
 	//TISCSXII-2186 | pdp fix
 	digitalData.product = {
 			seller : {
-				list : sellerPipe,
+				list : sellerList,
 				id   : $("#pdpBuyboxWinnerSellerID").val(),
 				buyBoxWinner : $("#sellerNameId").html().toLowerCase()
 			}   
