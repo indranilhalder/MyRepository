@@ -971,7 +971,9 @@ TATA.Pages = {
                 success: function(x) {
                     var filtered = $.parseHTML(x);
                     if($(filtered).has('.product-grid')){
-                        $('.product-grid-wrapper').append($(filtered).find(".product-grid-wrapper"));
+                        $(".product-grid",filtered).each(function(){
+                            $(".product-grid-wrapper").append($(this));
+                        });
                     }
                     $("#pageQuery").val(ajaxUrl);
                 },
