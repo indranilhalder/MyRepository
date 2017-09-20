@@ -98,7 +98,7 @@ public class SubmitOrderEventListener extends AbstractSiteEventListener<SubmitOr
 	{
 		final OrderModel order = event.getOrder();
 		ServicesUtil.validateParameterNotNullStandardMessage("event.order", order);
-
+		boolean isFlashSale = false;
 		// Try the store set on the Order first, then fallback to the session
 		BaseStoreModel store = order.getStore();
 		if (store == null)
@@ -126,10 +126,24 @@ public class SubmitOrderEventListener extends AbstractSiteEventListener<SubmitOr
 						processCode, fulfilmentProcessDefinitionName);
 				businessProcessModel.setOrder(order);
 				getModelService().save(businessProcessModel);
-				getBusinessProcessService().startProcess(businessProcessModel);
-				if (LOG.isInfoEnabled())
+				if (null != store.getFlashSaleEnabled() && store.getFlashSaleEnabled().equals(Boolean.TRUE))
 				{
-					LOG.info(String.format("Started the process %s", processCode));
+					if (null != order.getContainsFlashSaleItem() && order.getContainsFlashSaleItem().equals(Boolean.TRUE))
+					{
+						isFlashSale = true;
+					}
+				}
+				if(!isFlashSale)
+				{
+					getBusinessProcessService().startProcess(businessProcessModel);
+					if (LOG.isInfoEnabled())
+					{
+						LOG.info(String.format("Started the process %s", processCode));
+					}
+				}
+				else
+				{
+					LOG.debug("FlashSale order blocked. orderID: " + order.getCode());
 				}
 			}
 		}
