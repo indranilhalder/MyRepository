@@ -145,10 +145,10 @@ public class AkamaiRefreshCronJob extends AbstractJobPerformable
 					else
 					{
 						LOG.error("ERROR: in getting URLs which are to be purged ::" + purgeUrl);
-						LOG.error("DEBUG: Going to try again after 4 Seconds....(total 5 tries) This is:: " + tryCount + " Try");
-						Thread.sleep(4000);
-						LOG.error("DEBUG: Trying now after 4 Seconds........This is::" + tryCount + " Try");
-						gotSomeError = true;
+						//						LOG.error("DEBUG: Going to try again after 4 Seconds....(total 5 tries) This is:: " + tryCount + " Try");
+						//						Thread.sleep(4000);
+						//						LOG.error("DEBUG: Trying now after 4 Seconds........This is::" + tryCount + " Try");
+						//						gotSomeError = true;
 					}
 				}
 				catch (final Exception ex)
@@ -163,8 +163,8 @@ public class AkamaiRefreshCronJob extends AbstractJobPerformable
 				}
 				tryCount++;
 			}
-			LOG.error("DEBUG: Tried calling Akamai Fast Purge Service:: " + tryCount + " times.........");
-			LOG.error("DEBUG: Now going to read Status of the Akamai Purge Call.........");
+			LOG.error("DEBUG: Already tried calling Akamai Fast Purge Service:: " + (tryCount - 1) + " times.........");
+			LOG.error("DEBUG: Now going to read Status(if any) of the Akamai Purge Call.........");
 
 			/********************** End Section for sending FAST PURGE REQUEST to Akamai ********************/
 
@@ -398,7 +398,7 @@ public class AkamaiRefreshCronJob extends AbstractJobPerformable
 			}
 			else
 			{
-				LOG.error("Error !!No URL List found in DB...");
+				LOG.error("ERROR !!No URL List found in DB...");
 				return null;
 			}
 		}

@@ -92,6 +92,8 @@ public class SolrSlaveReplicatorJob extends AbstractJobPerformable
 				try
 				{
 					reader = new BufferedReader(new InputStreamReader(slaveHTTPConnection.getInputStream()));
+					LOG.error("DEBUG: Requested Replication for Slave:: " + slaveURL + "/replication?command=fetchindex");
+
 					sb = new StringBuffer();
 					String line;
 					while ((line = reader.readLine()) != null)
@@ -205,10 +207,10 @@ public class SolrSlaveReplicatorJob extends AbstractJobPerformable
 			{
 				final int threadWaitTimeinSec = Integer.parseInt(waittimeForAllSlaveReplicationToComplete);
 				LOG.error("DEBUG: Going to Sleep SolrSlaveReplicatorJob for ::" + threadWaitTimeinSec
-						+ " Seconds to Let all Slave Complete Replicate");
+						+ " Seconds to Let all Slaves Complete Replication");
 				Thread.sleep(threadWaitTimeinSec * 1000);
 				LOG.error("DEBUG: UP after Sleep SolrSlaveReplicatorJob for ::" + threadWaitTimeinSec
-						+ " Seconds to Let all Slave Complete Replicate");
+						+ " Seconds to Let all Slaves Complete Replication");
 			}
 		}
 		catch (final Exception e)
@@ -217,7 +219,7 @@ public class SolrSlaveReplicatorJob extends AbstractJobPerformable
 			e.printStackTrace();
 		}
 
-		LOG.error("DEBUG: Now going to END SolrSlaveReplicatorJob........");
+		LOG.error("DEBUG: Going to END SolrSlaveReplicatorJob........");
 		return new PerformResult(CronJobResult.SUCCESS, CronJobStatus.FINISHED);
 	}
 

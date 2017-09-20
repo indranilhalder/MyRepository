@@ -58,8 +58,8 @@ public class ProductSpecificIndexerCronJob extends AbstractJobPerformable
 
 			if (productList == null || productList.size() == 0)
 			{
-				LOG.error("ERROR: No product found in the File to Index existing..:");
-				LOG.error("ERROR: to ABORT ProductSpecificIndexerCronJob .................");
+				LOG.error("ERROR: No product found in the DB to Index ....:");
+				LOG.error("ERROR: Going to ABORT ProductSpecificIndexerCronJob .................");
 
 				return new PerformResult(CronJobResult.ERROR, CronJobStatus.ABORTED);
 			}
@@ -81,7 +81,7 @@ public class ProductSpecificIndexerCronJob extends AbstractJobPerformable
 			if (facetSearchConfig == null)
 			{
 				LOG.error("ERROR: ..facetSearchConfig found null");
-				LOG.error("ERROR: to ABORT ProductSpecificIndexerCronJob .................");
+				LOG.error("ERROR: Going to ABORT ProductSpecificIndexerCronJob .................");
 
 				return new PerformResult(CronJobResult.ERROR, CronJobStatus.ABORTED);
 			}
