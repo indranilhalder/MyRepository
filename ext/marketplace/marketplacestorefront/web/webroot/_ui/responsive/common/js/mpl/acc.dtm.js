@@ -1467,7 +1467,13 @@ $(document).on('click','.add_address_button',function(){
 	}
 })	
 	
+//samsung chat tracking
 
+$(document).on('mouseup','.samsung-chat-div',function(){
+	if(typeof (_satellite)!= "undefined") {  
+		_satellite.track('samsung_chat');
+	}
+})
 
 /*product impressions start*/
 function dtmProductImpressionsSerp(){

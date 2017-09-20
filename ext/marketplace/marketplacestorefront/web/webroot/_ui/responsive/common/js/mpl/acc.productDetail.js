@@ -1190,17 +1190,20 @@ function pincodeServiceability(){
 
 								
 								/*TPR-642 & 640*/
-								utag.link({
-									link_text: 'pdp_pincode_check_failure' , 
-									event_type : 'pdp_pincode_check' , 
-									pdp_pin_sku : productCode, 
-									pdp_pin_status : 'not_servicable', 
-									pdp_pin_value : pin, 
-									pdp_pincode_non_serviceable : pin,
-									pdp_pin_delivery : 'error'
-									
-								});
-							/*TPR-642 & 640 ends*/
+								if(typeof(utag) != "undefined"){
+									utag.link({
+										link_text: 'pdp_pincode_check_failure' , 
+										event_type : 'pdp_pincode_check' , 
+										pdp_pin_sku : productCode, 
+										pdp_pin_status : 'not_servicable', 
+										pdp_pin_value : pin, 
+										pdp_pincode_non_serviceable : pin,
+										pdp_pin_delivery : 'error'
+										
+									});
+								/*TPR-642 & 640 ends*/
+								}
+								
 								//tpr-6029| DTM
 								 dtmPdpPincode("failure",productCode,pin);
 								return false;
@@ -1225,16 +1228,18 @@ function pincodeServiceability(){
 								$("#pdpPinCodeAvailable").html("Available delivery options for the pincode " +pin+ " are");
 								
 								/*TPR-642 & 640*/
-								utag.link({
-									link_text: 'pdp_pincode_check_failure' , 
-									event_type : 'pdp_pincode_check' , 
-									pdp_pin_sku : productCode, 
-									pdp_pin_status : 'not_servicable', 
-									pdp_pin_value : pin, 
-									pdp_pincode_non_serviceable : pin,
-									pdp_pin_delivery : 'error'
-								});
-							/*TPR-642 & 640 ends*/
+								if(typeof(utag) != "undefined"){
+									utag.link({
+										link_text: 'pdp_pincode_check_failure' , 
+										event_type : 'pdp_pincode_check' , 
+										pdp_pin_sku : productCode, 
+										pdp_pin_status : 'not_servicable', 
+										pdp_pin_value : pin, 
+										pdp_pincode_non_serviceable : pin,
+										pdp_pin_delivery : 'error'
+									});
+								/*TPR-642 & 640 ends*/	
+								}
 								//tpr-6029| DTM
 								 dtmPdpPincode("failure",productCode,pin);
 								return false;
@@ -1369,6 +1374,7 @@ function pincodeServiceability(){
 											// }
 											
 											/*TPR- 642 & 640*/
+											if(typeof utag !="undefined"){
 												utag.link({
 													link_text: 'pdp_pincode_check_success' , 
 													event_type : 'pdp_pincode_check' , 
@@ -1378,6 +1384,7 @@ function pincodeServiceability(){
 													pdp_pincode_serviceable :pin,
 													pdp_pin_delivery : deliverModeTealium.join("_")
 												});
+											}
 											/*TPR-642 & 640 ends*/
 												//TPR-6029 |DTM IMPLEMENTATION
 												 dtmPdpPincode("success",productCode,pin);
@@ -1411,16 +1418,18 @@ function pincodeServiceability(){
 											$('#addToCartButton').hide();
 											$('#unsevisablePin').show();
 											/*TPR-642 & 640 */
-											utag.link({
-												link_text: 'pdp_pincode_check_failure' , 
-												event_type : 'pdp_pincode_check' , 
-												pdp_pin_sku : productCode, 
-												pdp_pin_status : 'not_servicable', 
-												pdp_pin_value : pin, 
-												pdp_pincode_non_serviceable : pin,
-												pdp_pin_delivery : 'error'
-											});
-										/*TPR-642 & 640 ends*/
+											if(typeof(utag) != "undefined"){
+												utag.link({
+													link_text: 'pdp_pincode_check_failure' , 
+													event_type : 'pdp_pincode_check' , 
+													pdp_pin_sku : productCode, 
+													pdp_pin_status : 'not_servicable', 
+													pdp_pin_value : pin, 
+													pdp_pincode_non_serviceable : pin,
+													pdp_pin_delivery : 'error'
+												});
+											/*TPR-642 & 640 ends*/	
+											}
 											//tpr-6029| DTM
 											 dtmPdpPincode("failure",productCode,pin);
 										}
