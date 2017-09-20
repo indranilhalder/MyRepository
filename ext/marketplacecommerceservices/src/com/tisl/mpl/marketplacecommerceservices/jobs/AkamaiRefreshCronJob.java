@@ -231,8 +231,8 @@ public class AkamaiRefreshCronJob extends AbstractJobPerformable
 						+ "\n purgeStatus:: " + purgeStatus + "\n submissionTime:: " + submissionTime + "\n pingAfterSeconds:: "
 						+ pingAfterSeconds);
 
-				if (purgeStatusUrl != null && purgeStatusUrl.trim().length() != 0 && progressUri != null
-						&& progressUri.trim().length() != 0)
+				if (purgeStatusUrl != null && purgeStatusUrl.trim().length() > 0 && progressUri != null
+						&& progressUri.trim().length() > 0)
 				{
 					if (((200 <= httpStatus) && (httpStatus <= 226)) || (detail != null && detail.contains("Request accepted")))
 					{
