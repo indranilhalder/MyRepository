@@ -2463,6 +2463,7 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 				/**
 				 * QC CHANGE
 				 */
+				if(!cart.getIsEGVCart().booleanValue()){
 				boolean splitPayment = false;
 				String cliqCashPaymentMode = StringUtils.EMPTY;
 				boolean jsPayMode = false;
@@ -2496,6 +2497,7 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 				/**
 				 * QC CHANGE end
 				 */
+				}
 
 				flag = getMplPaymentService().createEntryInAudit(juspayOrderId, channel, cart.getGuid());
 			}

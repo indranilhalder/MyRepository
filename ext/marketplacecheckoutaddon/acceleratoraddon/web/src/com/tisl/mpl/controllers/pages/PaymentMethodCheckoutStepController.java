@@ -49,6 +49,7 @@ import de.hybris.platform.promotions.util.Tuple2;
 import de.hybris.platform.servicelayer.config.ConfigurationService;
 import de.hybris.platform.servicelayer.exceptions.ModelSavingException;
 import de.hybris.platform.servicelayer.model.ModelService;
+import de.hybris.platform.servicelayer.search.FlexibleSearchService;
 import de.hybris.platform.servicelayer.user.UserService;
 import de.hybris.platform.store.services.BaseStoreService;
 import de.hybris.platform.voucher.VoucherService;
@@ -193,7 +194,9 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 	}
 
 	//TPR-4461 ends here
-
+	//need to remove (for test )
+	@Autowired
+	FlexibleSearchService flexibleSearchService;
 	@Resource(name = "mplPaymentFacade")
 	private MplPaymentFacade mplPaymentFacade;
 	@Resource(name = "baseStoreService")
@@ -3708,7 +3711,7 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 	public @ResponseBody String createJuspayOrder(final String firstName, final String lastName, final String netBankName,
 			final String addressLine1, final String addressLine2, final String addressLine3, final String country,
 			final String state, final String city, final String pincode, final String cardSaved, final String sameAsShipping,
-			final String guid, final Model model) //Parameter guid added for TPR-629 //parameter netBankName added for TPR-4461
+			final String guid, final Model model,boolean isEGVOrder) //Parameter guid added for TPR-629 //parameter netBankName added for TPR-4461
 					throws EtailNonBusinessExceptions
 	{
 		//TPR-4461 parameter netBankName added starts here added only for getting bank name for netbanking/saved credit card/saved debit card
@@ -3771,7 +3774,22 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 			if (orderModel == null)
 			{
 				//Existing code for catModel
-				final CartModel cart = getCartService().getSessionCart();
+				CartModel cart;
+				if(isEGVOrder){
+					cart=new CartModel();
+					cart.setGuid(uid);
+					cart = flexibleSearchService.getModelByExample(cart);
+					cart=getSessionService().getAttribute("giftCartModel");
+					LOG.info("::Going to Create Juspay OrderId::");
+					orderId = getMplPaymentFacade().createJuspayOrder(cart, null, firstName, lastName, paymentAddressLine1,
+							paymentAddressLine2, paymentAddressLine3, country, state, city, pincode,
+							cardSaved + MarketplacecheckoutaddonConstants.STRINGSEPARATOR + sameAsShipping, returnUrlBuilder.toString(),
+							uid, MarketplacecheckoutaddonConstants.CHANNEL_WEB);
+					getMplCheckoutFacade().placeEGVOrder(cart);
+					return "isEGVCart";	
+				}else{
+					cart=getCartService().getSessionCart();	
+				}
 
 				//TPR-4461 Starts here for payment mode and bank restriction validation for Voucher
 				final ArrayList<DiscountModel> voucherList = new ArrayList<DiscountModel>(
@@ -6615,7 +6633,8 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 				setupMplCardForm(model, cartTotal);
 				//Adding all the details in model to be accessed from jsp
 				model.addAttribute(MarketplacecheckoutaddonConstants.ORDERDATA, orderData);
-				model.addAttribute("isCart", Boolean.FALSE);
+				model.addAttribute("isCart", Boolean.TRUE);
+				model.addAttribute("isEGVCart", Boolean.TRUE);
 
 				model.addAttribute(MarketplacecheckoutaddonConstants.MRUPEE_MERCHANT_URL, getConfigurationService()
 						.getConfiguration().getString(MarketplacecheckoutaddonConstants.MRUPEEURL));

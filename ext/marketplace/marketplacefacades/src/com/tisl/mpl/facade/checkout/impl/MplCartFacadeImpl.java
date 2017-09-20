@@ -35,6 +35,7 @@ import de.hybris.platform.core.model.order.AbstractOrderModel;
 import de.hybris.platform.core.model.order.CartEntryModel;
 import de.hybris.platform.core.model.order.CartModel;
 import de.hybris.platform.core.model.order.OrderModel;
+import de.hybris.platform.core.model.order.delivery.DeliveryModeModel;
 import de.hybris.platform.core.model.product.PincodeModel;
 import de.hybris.platform.core.model.product.ProductModel;
 import de.hybris.platform.core.model.user.UserModel;
@@ -111,6 +112,7 @@ import com.tisl.mpl.facades.data.StoreLocationRequestData;
 import com.tisl.mpl.facades.data.StoreLocationResponseData;
 import com.tisl.mpl.facades.egv.data.EgvDetailsData;
 import com.tisl.mpl.facades.product.data.MarketplaceDeliveryModeData;
+import com.tisl.mpl.marketplacecommerceservices.daos.MplDeliveryCostDao;
 import com.tisl.mpl.marketplacecommerceservices.order.MplCommerceCartCalculationStrategy;
 import com.tisl.mpl.marketplacecommerceservices.service.MplCommerceCartService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplDelistingService;
@@ -154,6 +156,8 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 	/**
 	 * 
 	 */
+	@Autowired
+	MplDeliveryCostDao mplDeliveryCostDao;
 	@Autowired
 	private CartFactory cartFactory;
 	private static final String ERROR_OCCER_WHILE_CREATING_CART_MODEL_FOR_GIFT = "Error occer while Creating CartModel for Gift";
@@ -4432,6 +4436,8 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 		abstractOrderEntryModel.setMaxCountReached(false);
 		abstractOrderEntryModel.setModifiedtime(new Date());
 		Collection<MplZoneDeliveryModeValueModel> value6 = new ArrayList<MplZoneDeliveryModeValueModel>();
+		MplZoneDeliveryModeValueModel mplZoneDeliveryModeValueModel=mplDeliveryCostDao.getDeliveryCost("home-delivery","INR", "123653098765485130011719");
+		value6.add(mplZoneDeliveryModeValueModel);
 		abstractOrderEntryModel.setMplZoneDeliveryModeValue(value6);
 		abstractOrderEntryModel.setMrp(Double.valueOf(egvDetailForm.getGiftRange()));
 		abstractOrderEntryModel.setNetAmountAfterAllDisc(Double.valueOf(egvDetailForm.getGiftRange()));

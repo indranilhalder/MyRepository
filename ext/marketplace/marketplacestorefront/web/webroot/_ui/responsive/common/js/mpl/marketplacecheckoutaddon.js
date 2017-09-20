@@ -1763,9 +1763,12 @@ function savedDebitCardRadioChange(radioId){
 		//if($(".redirect").val()=="false"){
 			//Juspay.startSecondFactor();
 		//}
+		debugger;
+		var isEGVOrder=$("#isEGVOrder").val();
+		alert(isEGVOrder+"3");
 		$.ajax({
 			url: ACC.config.encodedContextPath + "/checkout/multi/payment-method/createJuspayOrder",
-			data: { 'firstName' : firstName , 'lastName' : lastName , 'netBankName' : netBankName, 'addressLine1' : addressLine1, 'addressLine2' : addressLine2 , 'addressLine3' : addressLine3, 'country' : country , 'state' : state, 'city' : city , 'pincode' : pincode, 'cardSaved' : cardSaved, 'sameAsShipping' : sameAsShipping , 'guid' : guid},
+			data: { 'firstName' : firstName , 'lastName' : lastName , 'netBankName' : netBankName, 'addressLine1' : addressLine1, 'addressLine2' : addressLine2 , 'addressLine3' : addressLine3, 'country' : country , 'state' : state, 'city' : city , 'pincode' : pincode, 'cardSaved' : cardSaved, 'sameAsShipping' : sameAsShipping , 'guid' : guid,'isEGVOrder':isEGVOrder},
 			type: "GET",
 			cache: false,
 			async: false,
@@ -1910,9 +1913,12 @@ function savedDebitCardRadioChange(radioId){
 
 		//}
 		var guid=$("#guid").val();
+		debugger;
+		var isEGVOrder=$("#isEGVOrder").val();
+		alert(isEGVOrder+"4");
 		$.ajax({
 			url: ACC.config.encodedContextPath + "/checkout/multi/payment-method/createJuspayOrder",
-			data: { 'firstName' : firstName , 'lastName' : lastName , 'netBankName' : netBankName, 'addressLine1' : addressLine1, 'addressLine2' : addressLine2 , 'addressLine3' : addressLine3, 'country' : country , 'state' : state, 'city' : city , 'pincode' : pincode, 'cardSaved' : cardSaved, 'sameAsShipping' : sameAsShipping, 'guid' : guid},
+			data: { 'firstName' : firstName , 'lastName' : lastName , 'netBankName' : netBankName, 'addressLine1' : addressLine1, 'addressLine2' : addressLine2 , 'addressLine3' : addressLine3, 'country' : country , 'state' : state, 'city' : city , 'pincode' : pincode, 'cardSaved' : cardSaved, 'sameAsShipping' : sameAsShipping, 'guid' : guid,'isEGVOrder':isEGVOrder},
 			type: "GET",
 			cache: false,
 			async: false,
@@ -2075,10 +2081,12 @@ function savedDebitCardRadioChange(radioId){
 		// For Payement Page CR Changes starts
 		
 		// For Payement Page CR Changes ends
-		
+		debugger;
+		var isEGVOrder=$("#isEGVOrder").val();isEGVCart
+		alert(isEGVOrder+"5");
 		$.ajax({
 			url: ACC.config.encodedContextPath + "/checkout/multi/payment-method/createJuspayOrder",
-			data: { 'firstName' : firstName , 'lastName' : lastName , 'addressLine1' : addressLine1, 'addressLine2' : addressLine2 , 'addressLine3' : addressLine3, 'country' : country , 'state' : state, 'city' : city , 'pincode' : pincode, 'cardSaved' : cardSaved, 'sameAsShipping' : sameAsShipping, 'guid' : guid},
+			data: { 'firstName' : firstName , 'lastName' : lastName , 'addressLine1' : addressLine1, 'addressLine2' : addressLine2 , 'addressLine3' : addressLine3, 'country' : country , 'state' : state, 'city' : city , 'pincode' : pincode, 'cardSaved' : cardSaved, 'sameAsShipping' : sameAsShipping, 'guid' : guid,'isEGVOrder':isEGVOrder},
 			type: "GET",
 			cache: false,
 			async: false,
@@ -2086,6 +2094,8 @@ function savedDebitCardRadioChange(radioId){
 				//TPR:3780:jewellery
 				if(response=='reload_for_inventory'){
 					$(location).attr('href',ACC.config.encodedContextPath+"/checkout/multi/payment-method/pay?dispMsg=true");
+				}else if(response==''){
+					$(location).attr('href',ACC.config.encodedContextPath+"/checkout/multi/payment-method/cardPayment/"+guid); //TPR-629
 				}
 				//TPR:3780:jewellery
 				else if(response=='redirect'){
@@ -2262,10 +2272,12 @@ function savedDebitCardRadioChange(radioId){
 		// For Payement Page CR Changes starts
 		
 		// For Payement Page CR Changes ends
-		
+		debugger;
+		var isEGVOrder=$("#isEGVOrder").val();
+		alert(isEGVOrder+"6");
 		$.ajax({
 			url: ACC.config.encodedContextPath + "/checkout/multi/payment-method/createJuspayOrder",
-			data: { 'firstName' : firstName , 'lastName' : lastName , 'addressLine1' : addressLine1, 'addressLine2' : addressLine2 , 'addressLine3' : addressLine3, 'country' : country , 'state' : state, 'city' : city , 'pincode' : pincode, 'cardSaved' : cardSaved, 'sameAsShipping' : sameAsShipping, 'guid' : guid},
+			data: { 'firstName' : firstName , 'lastName' : lastName , 'addressLine1' : addressLine1, 'addressLine2' : addressLine2 , 'addressLine3' : addressLine3, 'country' : country , 'state' : state, 'city' : city , 'pincode' : pincode, 'cardSaved' : cardSaved, 'sameAsShipping' : sameAsShipping, 'guid' : guid,'isEGVOrder':isEGVOrder},
 			type: "GET",
 			cache: false,
 			async: false,
@@ -5182,9 +5194,12 @@ function submitNBForm(){
 		
 		var cardSaved=false;
 		var guid=$("#guid").val();
+		debugger;
+		var isEGVOrder=$("#isEGVOrder").val();
+		alert(isEGVOrder+"7");
 		$.ajax({
 			url: ACC.config.encodedContextPath + "/checkout/multi/payment-method/createJuspayOrder",
-			data: { 'firstName' : firstName , 'lastName' : lastName , 'netBankName' : netBankName, 'addressLine1' : addressLine1, 'addressLine2' : addressLine2 , 'addressLine3' : addressLine3, 'country' : country , 'state' : state, 'city' : city , 'pincode' : pincode, 'cardSaved' : cardSaved, 'guid' : guid},
+			data: { 'firstName' : firstName , 'lastName' : lastName , 'netBankName' : netBankName, 'addressLine1' : addressLine1, 'addressLine2' : addressLine2 , 'addressLine3' : addressLine3, 'country' : country , 'state' : state, 'city' : city , 'pincode' : pincode, 'cardSaved' : cardSaved, 'guid' : guid,'isEGVOrder':isEGVOrder},
 			type: "GET",
 			cache: false,
 			success : function(response) {
