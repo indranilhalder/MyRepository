@@ -370,7 +370,6 @@
 					//console.log("Calling createWalletOrder");
 					
 					
-					 alert("only QC MODE");
 		 
 		 $.ajax({
 				url : ACC.config.encodedContextPath + "/checkout/multi/payment-method/createWalletOrder",
@@ -447,7 +446,7 @@
 			<div class="col-xs-12">
 				<div class="giftInfoBottom">
 					<div class="addNewGiftCard">
-						<span class="addNewCard"><a href="#">Add new Gift Card</a></span>
+						<span class="addNewCard"><a href="/wallet">Add new Gift Card</a></span>
 						<span class="viewCardTerms"><a href="#">View</a> Terms & Conditions</span>
 					</div>
 					<br />
