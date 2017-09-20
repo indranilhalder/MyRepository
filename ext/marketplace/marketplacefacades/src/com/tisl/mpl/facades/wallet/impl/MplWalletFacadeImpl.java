@@ -3,19 +3,17 @@
  */
 package com.tisl.mpl.facades.wallet.impl;
 
+import de.hybris.platform.core.model.user.CustomerModel;
 import de.hybris.platform.servicelayer.model.ModelService;
 import de.hybris.platform.servicelayer.user.UserService;
-
-import java.util.ArrayList;
-import java.util.List;
 
 import javax.annotation.Resource;
 
 import org.apache.commons.collections.CollectionUtils;
 
-import com.tisl.mpl.core.model.CustomerWalletDetailModel;
 import com.tisl.mpl.facades.wallet.MplWalletFacade;
 import com.tisl.mpl.marketplacecommerceservices.service.MplPaymentService;
+import com.tisl.mpl.pojo.request.QCCustomerPromotionRequest;
 import com.tisl.mpl.pojo.request.QCCustomerRegisterRequest;
 import com.tisl.mpl.pojo.request.QCRedeemRequest;
 import com.tisl.mpl.pojo.response.BalanceBucketWise;
@@ -24,12 +22,7 @@ import com.tisl.mpl.pojo.response.QCCustomerRegisterResponse;
 import com.tisl.mpl.pojo.response.QCRedeeptionResponse;
 import com.tisl.mpl.pojo.response.RedimGiftCardResponse;
 import com.tisl.mpl.pojo.response.WalletTransacationsList;
-import com.tisl.mpl.pojo.response.WalletTransactions;
-import com.tisl.mpl.pojo.response.WalletTrasacationsListData;
 import com.tisl.mpl.service.MplWalletServices;
-import com.tisl.mpl.pojo.request.Customer;
-
-import de.hybris.platform.core.model.user.CustomerModel;
 
 /**
  * @author TUL
@@ -176,10 +169,11 @@ public class MplWalletFacadeImpl implements MplWalletFacade
 	 * @see com.tisl.mpl.facades.wallet.MplWalletFacade#addTULWalletCashBack()
 	 */
 	@Override
-	public void addTULWalletCashBack()
+	public QCRedeeptionResponse addTULWalletCashBack(String walletId ,QCCustomerPromotionRequest request)
 	{
-
-		getMplWalletServices().addTULWalletCashBack();
+		final String transactionId = generateQCTransactionId();
+		request.setInvoiceNumber(transactionId);
+		return getMplWalletServices().addTULWalletCashBack(walletId ,request);
 	}
 
 
@@ -190,12 +184,11 @@ public class MplWalletFacadeImpl implements MplWalletFacade
 	 * @see com.tisl.mpl.facades.wallet.MplWalletFacade#refundTULPromotionalCash()
 	 */
 	@Override
-	public void refundTULPromotionalCash()
+	public QCRedeeptionResponse refundTULPromotionalCash(String walletId, String transactionId)
 	{
 
-		getMplWalletServices().refundTULPromotionalCash();
+		return getMplWalletServices().refundTULPromotionalCash(walletId,transactionId);
 	}
-
 
 
 	/*
@@ -294,6 +287,15 @@ public class MplWalletFacadeImpl implements MplWalletFacade
 			return walletTransacationsList;
 		}
 		return (WalletTransacationsList) CollectionUtils.EMPTY_COLLECTION;
+	}
+
+
+
+	@Override
+	public QCRedeeptionResponse createPromotion(String walletId, QCCustomerPromotionRequest request){
+		final String transactionId = generateQCTransactionId();
+		request.setInvoiceNumber(transactionId);
+		return getMplWalletServices().createPromotion(walletId,request);
 	}
 	
 }

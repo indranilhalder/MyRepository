@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+ 
+<widget xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://www.zkoss.org/2005/zul">
+	<style>
+	.uploadContainer{margin:250px auto 0;background:#fff;padding:15px;}
+	.uploadContainer .z-div {width:100%;text-algin:center;}
+	.uploadContainer .z-div input{width:280px;}
+	.uploadContainer .z-div button{margin:0px 30px 0 5px;}
+	.heading {font-weight:bold;display:block;font-size:16px;margin-bottom:15px;text-align:left;}
+	.error_class{ color:red;}
+	</style>
+	<div class="uploadContainer">
+	   <hlayout>
+		 <vlayout>
+		 <label sclass="heading" value="Bulk Upload Wallet For CashBack"></label>
+	    <div>
+	    	<textbox id="textbox"  disabled="true"/>
+	         <button sclass="uploadTxtbox" label="Load Amount" upload="true,maxsize=302400,accept=.csv" id="upload_button"></button> 
+			 <button sclass="cancleTxtbox" label="Cancel Load" upload="true,maxsize=302400,accept=.csv" id="cancle_upload_button"></button> 
+	    </div>
+		
+		
+	    <label id="emptyFileError" sclass="error_class" value="Invalid ShipmentStatus upload format file " > </label>
+		
+		 <hbox pack="center">
+				<button id="savecsv" sclass="cng-action-icon"
+					style="margin-left:2px;padding:0px 3px 0px 0px;font-size:12px"
+					image="${wr}/images/csv_text.png" label="Bulk Wallet Upload File Download " />
+			</hbox>
+			
+		 <hbox pack="center">
+				<button id="cancelcsv" sclass="cng-action-icon"
+					style="margin-left:2px;padding:0px 3px 0px 0px;font-size:12px"
+					image="${wr}/images/csv_text.png" label="Bulk  Wallet Cancle File Download " />
+			</hbox>
+	
+	   </vlayout>
+	   </hlayout>
+	   </div>
+</widget>

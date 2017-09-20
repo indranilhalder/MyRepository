@@ -24,8 +24,10 @@ import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.WebResource;
 import com.tisl.mpl.constants.MarketplaceclientservicesConstants;
 import com.tisl.mpl.pojo.request.AddToCardWallet;
+import com.tisl.mpl.pojo.request.QCCustomerPromotionRequest;
 import com.tisl.mpl.pojo.request.QCCustomerRegisterRequest;
 import com.tisl.mpl.pojo.request.QCRedeemRequest;
+import com.tisl.mpl.pojo.request.QCRefundRequest;
 import com.tisl.mpl.pojo.response.BalanceBucketWise;
 import com.tisl.mpl.pojo.response.CustomerWalletDetailResponse;
 import com.tisl.mpl.pojo.response.QCCustomerRegisterResponse;
@@ -480,97 +482,116 @@ public class MplWalletServicesImpl implements MplWalletServices
 
 
 	@Override
-	public void addTULWalletCashBack()
+	public QCRedeeptionResponse addTULWalletCashBack(String walletId ,QCCustomerPromotionRequest request)
 	{
+		System.out.println("***********************************in Mpl Wallet request..............."+request.toString());
 
 		final Client client = Client.create();
 		ClientResponse response = null;
 		WebResource webResource = null;
+		String requestBody = null;
+		QCRedeeptionResponse qcRedeeptionResponse = null;
+		String output = null;
 		//final ReturnLogisticsResponse responsefromOMS = new ReturnLogisticsResponse();
 		final DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
-
-		try
-		{
-			client.setConnectTimeout(Integer.valueOf(getConfigurationService().getConfiguration().getString("qcTimeout")));
-         client.setReadTimeout(Integer.valueOf(getConfigurationService().getConfiguration().getString("qcTimeout")));
+		final ObjectMapper objectMapper = new ObjectMapper();
+		try{
+			requestBody = objectMapper.writeValueAsString(request);
 			webResource = client.resource(UriBuilder
-					.fromUri("http://"+ getConfigurationService().getConfiguration().getString("qcUrl")+"/QwikCilver/eGMS.RestAPI/api/wallet/4000162010020028/load/CASHBACK").build());
+					.fromUri(MarketplaceclientservicesConstants.GET_BALANCE_FOR_WALLET + walletId + "/load/CASHBACK").build());
 
-			//need to create marshalling for request body
-			final String requestBody = "{\"Amount\":\"500\",\"InvoiceNumber\":\"1003\",\"Notes\":\"Sample load for 500 for CASHBACK\"}";
+			response = webResource.type(MediaType.APPLICATION_JSON)
+					.header(MarketplaceclientservicesConstants.FORWARDING_ENTITY_ID, "tatacliq.com")
+					.header(MarketplaceclientservicesConstants.FORWARDING_ENTITY_PASSWORD, "tatacliq.com")
+					.header(MarketplaceclientservicesConstants.TERMINAL_ID, "webpos-tul-dev10")
+					.header(MarketplaceclientservicesConstants.USERNAME, "tulwebuser")
+					.header(MarketplaceclientservicesConstants.PASSWORD, "webusertul")
+					.header(MarketplaceclientservicesConstants.DATE_AT_CLIENT, dateFormat.format(new Date()))
+					.header(MarketplaceclientservicesConstants.IS_FORWARDING_ENTIRY_EXISTS, "true")
+					.header(MarketplaceclientservicesConstants.CONTENT_TYPE, "application/json")
+					.header(MarketplaceclientservicesConstants.MERCHANT_OUTLET_NAME, "TUL-Online")
+					.header(MarketplaceclientservicesConstants.ACQUIRERID, "Tata Unistore Ltd")
+					.header(MarketplaceclientservicesConstants.ORGANIZATION_NAME, "Tata Unistore Ltd")
+					.header(MarketplaceclientservicesConstants.POS_ENTRY_MODE, "2")
+					.header(MarketplaceclientservicesConstants.POS_TYPE_ID, "1")
+					.header(MarketplaceclientservicesConstants.POS_NAME, "webpos-tul-qc-01")
+					.header(MarketplaceclientservicesConstants.TERM_APP_VERSION, "null")
+					.header(MarketplaceclientservicesConstants.CURRENT_BATCH_NUMBER, getQcInitDataBean().getCurrentBatchNumber())
+					.header(MarketplaceclientservicesConstants.TRANSACTION_ID, request.getInvoiceNumber()).type(MediaType.APPLICATION_JSON)
+					.post(ClientResponse.class, requestBody);
 
-			response = webResource.type(MediaType.APPLICATION_JSON).header("ForwardingEntityId", "tatacliq.com")
-					.header("ForwardingEntityPassword", "tatacliq.com").header("TerminalId", "webpos-tul-dev10")
-					.header("Username", "tulwebuser").header("Password", "webusertul").header("TransactionId", "24")
-					//(random number logic)
-					.header("DateAtClient", dateFormat.format(new Date())).header("IsForwardingEntityExists", "true")
-					.header("Content-Typ", "application/json").header("MerchantOutletName", "TUL-Online")
-					.header("AcquirerId", "Tata Unistore Ltd").header("OrganizationName", "Tata Unistore Ltd")
-					.header("POSEntryMode", "2").header("POSTypeId", "1").header("POSName", "webpos-tul-qc-01")
-					.header("TermAppVersion", "null").header("CurrentBatchNumber", getQcInitDataBean().getCurrentBatchNumber())
-					.type(MediaType.APPLICATION_JSON).post(ClientResponse.class, requestBody);
-
-			if (null != response)
-			{
-				final String output = response.getEntity(String.class);
-				LOG.debug(" ************** Adding CashBack Balance----" + output); //need to create marshalling for response object
-				System.out.println(" **************Adding CashBack Balance----" + output);
-
+			if (null != response){
+				output = response.getEntity(String.class);
+				qcRedeeptionResponse = objectMapper.readValue(output, QCRedeeptionResponse.class);
+				if (null != qcRedeeptionResponse){
+					LOG.debug(" ************** GET CUSTOMER WALLET BALENCE----" + qcRedeeptionResponse); //need to create marshalling for response object
+				}
 			}
+		}catch (final Exception ex){
+			ex.printStackTrace();
+			System.out.println("Error response Status:------" + response.getStatus());
 		}
-		catch (final Exception ex)
-		{
-			LOG.error(ex.getMessage());
-			if(ex instanceof SocketTimeoutException){
-				//
-			}
-		}
+		return qcRedeeptionResponse;
 	}
 
 
 	@Override
-	public void refundTULPromotionalCash()
+	public QCRedeeptionResponse refundTULPromotionalCash(String walletId, String transactionId)
 	{
 		final Client client = Client.create();
 		ClientResponse response = null;
 		WebResource webResource = null;
+		String requestBody = null;
+		String output = null;
+		QCRedeeptionResponse qcRedeeptionResponse = null;
 		//final ReturnLogisticsResponse responsefromOMS = new ReturnLogisticsResponse();
 		final DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
-
+		QCRefundRequest request = new  QCRefundRequest();
+		request.setOriginalTransactionId(transactionId);
+		request.setOriginalBatchNumber(getQcInitDataBean().getCurrentBatchNumber());
 		try
 		{
-			client.setConnectTimeout(Integer.valueOf(getConfigurationService().getConfiguration().getString("qcTimeout")));
-         client.setReadTimeout(Integer.valueOf(getConfigurationService().getConfiguration().getString("qcTimeout")));
+			//get Wallet number from facade
+			//TransactionId unique
+			// InvoiceNo Unique
 			webResource = client.resource(UriBuilder
-					.fromUri("http://"+ getConfigurationService().getConfiguration().getString("qcUrl")+"/QwikCilver/eGMS.RestAPI/api/wallet/4000162010020032/CancelLoad").build());
+					.fromUri(MarketplaceclientservicesConstants.ADD_TO_CARD_TO_WALLET+walletId+"/CancelLoad").build());
+			final ObjectMapper objectMapper = new ObjectMapper();
+			requestBody = objectMapper.writeValueAsString(request);
 
-			//need to create marshalling for request body
-			final String requestBody = "{\"OriginalTransactionId\":\"24\",\"OriginalBatchNumber\":\"10207477\"}";
-			response = webResource.type(MediaType.APPLICATION_JSON).header("ForwardingEntityId", "tatacliq.com")
-					.header("ForwardingEntityPassword", "tatacliq.com").header("TerminalId", "webpos-tul-dev10")
-					.header("Username", "tulwebuser").header("Password", "webusertul").header("TransactionId", "45")
-					//(random number logic)
-					.header("DateAtClient", dateFormat.format(new Date())).header("IsForwardingEntityExists", "true")
-					.header("Content-Typ", "application/json").header("MerchantOutletName", "TUL-Online")
-					.header("AcquirerId", "Tata Unistore Ltd").header("OrganizationName", "Tata Unistore Ltd")
-					.header("POSEntryMode", "2").header("POSTypeId", "1").header("POSName", "webpos-tul-qc-01")
-					.header("TermAppVersion", "null").header("CurrentBatchNumber", getQcInitDataBean().getCurrentBatchNumber())
-					.type(MediaType.APPLICATION_JSON).post(ClientResponse.class, requestBody);
+			response = webResource.type(MediaType.APPLICATION_JSON)
+					.header(MarketplaceclientservicesConstants.FORWARDING_ENTITY_ID, "tatacliq.com")
+					.header(MarketplaceclientservicesConstants.FORWARDING_ENTITY_PASSWORD, "tatacliq.com")
+					.header(MarketplaceclientservicesConstants.TERMINAL_ID, "webpos-tul-dev10")
+					.header(MarketplaceclientservicesConstants.USERNAME, "tulwebuser")
+					.header(MarketplaceclientservicesConstants.PASSWORD, "webusertul")
+					.header(MarketplaceclientservicesConstants.DATE_AT_CLIENT, dateFormat.format(new Date()))
+					.header(MarketplaceclientservicesConstants.IS_FORWARDING_ENTIRY_EXISTS, "true")
+					.header(MarketplaceclientservicesConstants.CONTENT_TYPE, "application/json")
+					.header(MarketplaceclientservicesConstants.MERCHANT_OUTLET_NAME, "TUL-Online")
+					.header(MarketplaceclientservicesConstants.ACQUIRERID, "Tata Unistore Ltd")
+					.header(MarketplaceclientservicesConstants.ORGANIZATION_NAME, "Tata Unistore Ltd")
+					.header(MarketplaceclientservicesConstants.POS_ENTRY_MODE, "2")
+					.header(MarketplaceclientservicesConstants.POS_TYPE_ID, "1")
+					.header(MarketplaceclientservicesConstants.POS_NAME, "webpos-tul-qc-01")
+					.header(MarketplaceclientservicesConstants.TERM_APP_VERSION, "null")
+					.header(MarketplaceclientservicesConstants.CURRENT_BATCH_NUMBER, getQcInitDataBean().getCurrentBatchNumber())
+					.header(MarketplaceclientservicesConstants.TRANSACTION_ID, transactionId).type(MediaType.APPLICATION_JSON)
+					.post(ClientResponse.class, requestBody);
 
-			if (null != response)
-			{
-				final String output = response.getEntity(String.class);
-				LOG.debug(" ************** Adding CashBack Balance----" + output); //need to create marshalling for response object
-				System.out.println(" **************Adding CashBack Balance----" + output);
+			if (null != response){
+				output = response.getEntity(String.class);
+				qcRedeeptionResponse = objectMapper.readValue(output, QCRedeeptionResponse.class);
+				if (null != qcRedeeptionResponse){
+					LOG.debug(" ************** GET CUSTOMER WALLET BALENCE----" + qcRedeeptionResponse); //need to create marshalling for response object
+				}
 
 			}
-		}catch (final Exception ex)
-		{
-			LOG.error(ex.getMessage());
-			if(ex instanceof SocketTimeoutException){
-				//
-			}
+		}catch (final Exception ex){
+			ex.printStackTrace();
+			System.out.println("Error response Status:------" + response.getStatus());
 		}
+		return qcRedeeptionResponse;
 	}
 
 
@@ -827,6 +848,59 @@ public class MplWalletServicesImpl implements MplWalletServices
 	{
 		// YTODO Auto-generated method stub
 		return registerCustomerWallet(registerCustomerRequest, transactionId);
+	}
+
+
+	@Override
+	public QCRedeeptionResponse createPromotion(String  walletId ,QCCustomerPromotionRequest request){
+		System.out.println("***********************************in Mpl Wallet request..............."+request.toString());
+
+		final Client client = Client.create();
+		ClientResponse response = null;
+		WebResource webResource = null;
+		String requestBody = null;
+		QCRedeeptionResponse qcRedeeptionResponse = null;
+		String output = null;
+		//final ReturnLogisticsResponse responsefromOMS = new ReturnLogisticsResponse();
+		final DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
+		final ObjectMapper objectMapper = new ObjectMapper();
+		try{
+			requestBody = objectMapper.writeValueAsString(request);
+			webResource = client.resource(UriBuilder
+					.fromUri(MarketplaceclientservicesConstants.GET_BALANCE_FOR_WALLET + walletId + "/load/PROMOTION").build());
+
+			response = webResource.type(MediaType.APPLICATION_JSON)
+					.header(MarketplaceclientservicesConstants.FORWARDING_ENTITY_ID, "tatacliq.com")
+					.header(MarketplaceclientservicesConstants.FORWARDING_ENTITY_PASSWORD, "tatacliq.com")
+					.header(MarketplaceclientservicesConstants.TERMINAL_ID, "webpos-tul-dev10")
+					.header(MarketplaceclientservicesConstants.USERNAME, "tulwebuser")
+					.header(MarketplaceclientservicesConstants.PASSWORD, "webusertul")
+					.header(MarketplaceclientservicesConstants.DATE_AT_CLIENT, dateFormat.format(new Date()))
+					.header(MarketplaceclientservicesConstants.IS_FORWARDING_ENTIRY_EXISTS, "true")
+					.header(MarketplaceclientservicesConstants.CONTENT_TYPE, "application/json")
+					.header(MarketplaceclientservicesConstants.MERCHANT_OUTLET_NAME, "TUL-Online")
+					.header(MarketplaceclientservicesConstants.ACQUIRERID, "Tata Unistore Ltd")
+					.header(MarketplaceclientservicesConstants.ORGANIZATION_NAME, "Tata Unistore Ltd")
+					.header(MarketplaceclientservicesConstants.POS_ENTRY_MODE, "2")
+					.header(MarketplaceclientservicesConstants.POS_TYPE_ID, "1")
+					.header(MarketplaceclientservicesConstants.POS_NAME, "webpos-tul-qc-01")
+					.header(MarketplaceclientservicesConstants.TERM_APP_VERSION, "null")
+					.header(MarketplaceclientservicesConstants.CURRENT_BATCH_NUMBER, getQcInitDataBean().getCurrentBatchNumber())
+					.header(MarketplaceclientservicesConstants.TRANSACTION_ID, request.getInvoiceNumber()).type(MediaType.APPLICATION_JSON)
+					.post(ClientResponse.class, requestBody);
+
+			if (null != response){
+				output = response.getEntity(String.class);
+				qcRedeeptionResponse = objectMapper.readValue(output, QCRedeeptionResponse.class);
+				if (null != qcRedeeptionResponse){
+					LOG.debug(" ************** GET CUSTOMER WALLET BALENCE----" + qcRedeeptionResponse); //need to create marshalling for response object
+				}
+			}
+		}catch (final Exception ex){
+			ex.printStackTrace();
+			System.out.println("Error response Status:------" + response.getStatus());
+		}
+		return qcRedeeptionResponse;
 	}
 
 

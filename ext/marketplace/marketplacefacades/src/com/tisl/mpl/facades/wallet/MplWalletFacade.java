@@ -3,6 +3,7 @@
  */
 package com.tisl.mpl.facades.wallet;
 
+import com.tisl.mpl.pojo.request.QCCustomerPromotionRequest;
 import com.tisl.mpl.pojo.request.QCCustomerRegisterRequest;
 import com.tisl.mpl.pojo.request.QCRedeemRequest;
 import com.tisl.mpl.pojo.response.BalanceBucketWise;
@@ -34,9 +35,9 @@ public interface MplWalletFacade
 
 	public void getWalletRefundRedeem();
 
-	public void addTULWalletCashBack();
+	public QCRedeeptionResponse addTULWalletCashBack(String walletId ,QCCustomerPromotionRequest request);
 
-	public void refundTULPromotionalCash();
+	public QCRedeeptionResponse refundTULPromotionalCash(String walletId, String transactionId);
 
 	public CustomerWalletDetailResponse getCustomerWallet(String customerWalletId);
 
@@ -45,4 +46,6 @@ public interface MplWalletFacade
 	public RedimGiftCardResponse getAddEGVToWallet(String cardNumber, String cardPin);
 
 	public  WalletTransacationsList getWalletTransactionList();
+	
+	public QCRedeeptionResponse createPromotion(String walletId ,QCCustomerPromotionRequest request);
 }
