@@ -38,7 +38,7 @@ public class MplPincodeDistanceServiceImpl implements MplPincodeDistanceService
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see
 	 * com.tisl.mpl.marketplacecommerceservices.service.impl.MplPincodeDistanceService#pincodeDistance(java.util.List)
 	 */
@@ -114,7 +114,7 @@ public class MplPincodeDistanceServiceImpl implements MplPincodeDistanceService
 							dist = Double.valueOf(dist.doubleValue() / 1000);
 							dist = Double.valueOf(new BigDecimal(dist.doubleValue()).setScale(2, RoundingMode.HALF_UP).doubleValue());
 							pointOfServiceData.setDistanceKm(dist);
-							pointOfServiceData.setStatus("Km");
+							pointOfServiceData.setStatus("Kms");
 						}
 						else
 						{
