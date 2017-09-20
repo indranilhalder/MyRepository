@@ -1465,11 +1465,14 @@ public class ProductPageController extends MidPageController
 
 			//UF-422 starts
 			int sizeCounter = 0;
-			for (int i = 0; i < productData.getVariantOptions().size(); i++)
+			if (null != productData.getVariantOptions())
 			{
-				if (productData.getVariantOptions().get(i).getColour().equalsIgnoreCase(productData.getColour()))
+				for (int i = 0; i < productData.getVariantOptions().size(); i++)
 				{
-					sizeCounter++;
+					if (productData.getVariantOptions().get(i).getColour().equalsIgnoreCase(productData.getColour()))
+					{
+						sizeCounter++;
+					}
 				}
 			}
 			model.addAttribute(ModelAttributetConstants.PDP_SIZE_COUNTER, sizeCounter);
@@ -1666,11 +1669,14 @@ public class ProductPageController extends MidPageController
 			populateProductData(productData, model);
 			//UF-422 starts
 			int sizeCounter = 0;
-			for (int i = 0; i < productData.getVariantOptions().size(); i++)
+			if (null != productData.getVariantOptions())
 			{
-				if (productData.getVariantOptions().get(i).getColour().equalsIgnoreCase(productData.getColour()))
+				for (int i = 0; i < productData.getVariantOptions().size(); i++)
 				{
-					sizeCounter++;
+					if (productData.getVariantOptions().get(i).getColour().equalsIgnoreCase(productData.getColour()))
+					{
+						sizeCounter++;
+					}
 				}
 			}
 			model.addAttribute(ModelAttributetConstants.PDP_SIZE_COUNTER, sizeCounter);

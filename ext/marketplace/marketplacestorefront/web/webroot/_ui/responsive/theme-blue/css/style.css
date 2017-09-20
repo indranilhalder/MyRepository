@@ -67700,7 +67700,7 @@ body.page-multiStepCheckoutSummaryPage header, body.page-checkout-login header {
       font-size: 16px;
     color: #666;
     position: absolute;
-    left: 20px;
+    left: 25px; /*TISCSXII-2235*/
     top: 0px;
     }
 .new-address-form-mobile .product-block.addresses.new-form li.item input[type="radio"] + label.commercial:after {
@@ -77142,7 +77142,7 @@ body .account .right-account form label.invite-text-lbl{
 /*modal*/
 #storeLocatorModal .content{
 	text-align: left;
-	padding: 5px 10px;
+	padding: 0;
 	max-width: 600px;
 }
 #storeLocatorModal  .nearby-stores{
@@ -77150,15 +77150,18 @@ body .account .right-account form label.invite-text-lbl{
 	color: #000;
 	text-transform: none;
 	margin-bottom: 25px;
+	padding: 10px;
+    background: #f2f2f2;
+    width: 100%;
 }
 #storeLocatorModal  .store-address-block{
 	width: 49%;
 	display: inline-block;
 	vertical-align: top;
-	padding-left: 20px;
+	padding-left: 30px;
 	padding-bottom: 40px;
 	color: #000;
-	line-height: 1.33;
+	line-height: 1.7;
 }
 #storeLocatorModal .content > div {
     white-space: normal;

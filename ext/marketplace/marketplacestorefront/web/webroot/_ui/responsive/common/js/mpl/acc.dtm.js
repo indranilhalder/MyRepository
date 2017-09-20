@@ -1269,10 +1269,19 @@ function dtmSearchTags(){
 	 }
     
     function dtmAddToCompare(productId,category){
+    	
+    	var productL = '';
+    	var categoryL = '';
+    	if(productId !=undefined &&  productId !=null){
+    		productL = productId.toLowerCase(); 
+    	}
+    	if(category !=undefined &&  category !=null){
+    		categoryL = category.toLowerCase(); 
+    	}
     	digitalData.cpj = {
     		product : {
-    				id  :  productId.toLowerCase(),
-    		 category   :  category.toLowerCase()	
+    				id  :  productL,
+    		 category   :  categoryL	
     	 }
     	}
     }
@@ -1317,13 +1326,21 @@ function dtmSearchTags(){
 			if (typeof(_satellite)!= "undefined") {
 				_satellite.track('cpj_order_fail');
 		    }
+			var product ='';
+			var productCategory ='';
+			if($("#product_id").val()!= ''){
+				product = JSON.parse($("#product_id").val().toLowerCase());
+			}
+			if($("#product_category").val()!= ''){
+				productCategory =  $("#product_category").val().toLowerCase().split(",");	
+			}	
 			digitalData.cpj = {
 		    		    product : {
-		    			 	         id  :  $("#product_id").val().toLowerCase(),
-		    		            category :  $("#product_category").val().toLowerCase,	
+		    			 	         id  :  product,
+		    		            category :  productCategory,	
 		    		              price  :  $('#product_unit_price').val()
-		    	 } 
-		    }
+		    	               } 
+		                 }
 			if(typeof (digitalData.cpj.payment)!= "undefined"){
 				digitalData.cpj.payment.quantity =$('#product_quantity').val();
 			}
@@ -1467,7 +1484,13 @@ $(document).on('click','.add_address_button',function(){
 	}
 })	
 	
+//samsung chat tracking
 
+$(document).on('mouseup','.samsung-chat-div',function(){
+	if(typeof (_satellite)!= "undefined") {  
+		_satellite.track('samsung_chat');
+	}
+})
 
 /*product impressions start*/
 function dtmProductImpressionsSerp(){
