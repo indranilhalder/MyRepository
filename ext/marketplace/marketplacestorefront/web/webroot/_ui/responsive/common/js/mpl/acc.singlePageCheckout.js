@@ -1470,11 +1470,15 @@ ACC.singlePageCheckout = {
 			//$(showElementId).closest(".checkout-accordion").addClass("accordion-open");
 			$(showElementId).html("<span class='alert alert-danger alert-dismissable' style='padding:10px;'>"+jsonResponse.displaymessage+"</span>");
 			$(showElementId).show();
+			// TPR-6369 |Error tracking for  dtm
+	 			dtmErrorTracking("pincode_servicability_error","Issue in PincodeServiceability");
 		}
 		if(jsonResponse.type=="errorCode")
 		{
 			$(showElementId).html("<span class='alert alert-danger alert-dismissable' style='padding:10px;'>"+ACC.singlePageCheckout.ajaxErrorMessages(jsonResponse.displaymessage)+"</span>");
 			$(showElementId).show();
+			// TPR-6369 |Error tracking for  dtm
+	 			dtmErrorTracking("pincode_servicability_error","Issue in PincodeServiceability");
 		}
 		if(jsonResponse.type=="redirect")
 		{
