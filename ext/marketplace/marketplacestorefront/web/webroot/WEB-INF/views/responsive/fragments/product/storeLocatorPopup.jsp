@@ -17,7 +17,7 @@
 			<c:if test="${not empty store.address.line1}"><div class="addressLine1">${store.address.line1}</div></c:if>
 			<c:if test="${not empty store.address.line2}"><div class="addressLine2">${store.address.line2}</div></c:if>
 			<c:if test="${not empty store.address.postalCode}"><div class="pin_code">${store.address.postalCode}</div></c:if>
-		    <c:if test="${not empty store.distanceKm}"><div class="distance"><b>${store.distanceKm} ${store.status}</b></div></c:if>
+		    <%-- <c:if test="${not empty store.distanceKm}"><div class="distance"><b>${store.distanceKm} ${store.status}</b></div></c:if> --%>
 		   </div>
 		    </c:if>
 		</c:forEach>
@@ -35,9 +35,9 @@
 		<div id="storeLocatorModal" class="modal cancellation-request fade">
 		<div class="overlay" data-dismiss="modal"></div>
 			  <div class="content">
-				<!-- 	<button type="button" class="close pull-right" 		
+					<button type="button" class="close pull-right" 		
 		           aria-hidden="true" data-dismiss="modal">		
-		            </button> -->
+		            </button>
 				<div class="cancellation-request-block">
 					<p class="nearby-stores">Stores Near &nbsp; ${pincode}</p>
 					<div class="store-popup-block"></div>
@@ -48,8 +48,9 @@
 					         <c:if test="${not empty store.address.line1}"><div class="addressLine1">${store.address.line1}</div></c:if>
 			                 <c:if test="${not empty store.address.line2}"><div class="addressLine2">${store.address.line2}</div></c:if>
 			                 <c:if test="${not empty store.address.city && not empty store.address.postalCode}"><div class="city">${store.address.city} - ${store.address.postalCode}</div></c:if>
-			                 <c:if test="${not empty store.address.country.name}"><div class="country">${store.address.country.name}</div></c:if>
-			                 <c:if test="${not empty store.distanceKm}"><div class="distance"><b>${store.distanceKm} ${store.status}</b></div></c:if>
+			                 <%-- <c:if test="${not empty store.address.country.name}"><div class="country">${store.address.country.name}</div></c:if> --%>
+			                 <c:if test="${not empty store.address.country.name}"><div class="country">IN</div></c:if>
+			                 <c:if test="${not empty store.distanceKm}"><div class="distance"><b>${store.distanceKm}&nbsp;${store.status}</b></div></c:if>
 					      </div>   
 				         </c:if>
 					  </c:forEach>
