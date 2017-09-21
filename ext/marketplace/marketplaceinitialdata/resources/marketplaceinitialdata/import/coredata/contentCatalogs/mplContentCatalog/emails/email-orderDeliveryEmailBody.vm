@@ -332,7 +332,7 @@
                                  </tr>
                                  <tr>
                                     <td>
-                                    #if($ctx.count > 0)
+                                     #if($ctx.count > 0 && ((${ctx.jwlryFrwrdSealDesc} || ${ctx.jwlryFrwrdSealImg}) || (${ctx.jwlryRevSealDesc} || ${ctx.jwlryRevSealImg})))
                                        <table width="100%">
                                           <tr>
                                              <td align="left" valign="top">&nbsp;</td>
@@ -341,41 +341,55 @@
                                                    <tbody>
                                                       <tr>
                                                          <td align="center" valign="top" width="270">
+														 #if(${ctx.jwlryFrwrdSealDesc} || ${ctx.jwlryFrwrdSealImg})
                                                             <table border="0" cellspacing="0" cellpadding="0" style="border:1px solid #d7d7d7;">
                                                                <tbody>
+															   #if(${ctx.jwlryFrwrdSealDesc})
                                                                   <tr>
-                                                                     <td align="center" valign="middle" height="45" style="font-family:Arial, Helvetica, sans-serif; font-size:11px; font-weight:bold; color:#333333;">Do ensure the Forward Seal mentioned on your invoice matches the one on your product.</td>
+                                                                     <td align="center" valign="middle" height="45" style="font-family:Arial, Helvetica, sans-serif; font-size:11px; font-weight:bold; color:#333333;">${ctx.jwlryFrwrdSealDesc}</td>
                                                                   </tr>
+																#end
+																 #if(${ctx.jwlryFrwrdSealImg})
                                                                   <tr>
                                                                      <td align="center" valign="middle" height="25" style="font-family:Arial, Helvetica, sans-serif; font-size:11px; color:#333333;">Your Forward Seal will look like this:</td>
                                                                   </tr>
                                                                   <tr>
                                                                      <td>
-                                                                     <span style="display:block; line-height:0;font-size:0;">${ctx.cmsSlotContents.ForwardSeal}</span>
+                                                                     <!--<span style="display:block; line-height:0;font-size:0;">${ctx.cmsSlotContents.ForwardSeal}</span>-->
+                                                                     <span style="display:block; line-height:0;font-size:0;"><img src="http:${ctx.jwlryFrwrdSealImg}"></span>
                                                                      </td>
                                                                      
                                                                   </tr>
+																  #end
                                                                </tbody>
                                                             </table>
+															#end
                                                          </td>
                                                          <td align="left" valign="top">&nbsp;</td>
                                                          <td align="center" valign="top" width="270">
+														 #if(${ctx.jwlryRevSealDesc} || ${ctx.jwlryRevSealImg})
                                                             <table border="0" cellspacing="0" cellpadding="0" style="border:1px solid #d7d7d7;">
                                                                <tbody>
+															   #if(${ctx.jwlryRevSealDesc})
                                                                   <tr>
-                                                                     <td align="center" valign="middle" height="45" style="font-family:Arial, Helvetica, sans-serif; font-size:11px; font-weight:bold; color:#333333;">If you need to return this product, do use the reverse seal number provided in your package.</td>
+                                                                     <td align="center" valign="middle" height="45" style="font-family:Arial, Helvetica, sans-serif; font-size:11px; font-weight:bold; color:#333333;">${ctx.jwlryRevSealDesc}</td>
                                                                   </tr>
+																#end
+																#if(${ctx.jwlryRevSealImg})
                                                                   <tr>
                                                                      <td align="center" valign="middle" height="25" style="font-family:Arial, Helvetica, sans-serif; font-size:11px; color:#333333;">Your Reverse Seal will look like this:</td>
                                                                   </tr>
                                                                   <tr>
                                                                      <td>
-                                                                     <span style="display:block; line-height:0;font-size:0;">${ctx.cmsSlotContents.ReverseSeal}</span>
+                                                                    <!-- <span style="display:block; line-height:0;font-size:0;">${ctx.cmsSlotContents.ReverseSeal}</span> -->
+                                                                    <span style="display:block; line-height:0;font-size:0;"><img src="http:${ctx.jwlryRevSealImg}"></span>
                                                                      </td>
                                                                      
                                                                   </tr>
+																 #end
                                                                </tbody>
                                                             </table>
+														#end
                                                          </td>
                                                       </tr>
                                                    </tbody>

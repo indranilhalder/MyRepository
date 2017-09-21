@@ -176,8 +176,16 @@
 					</c:when>
 					<c:otherwise>
 						<meta name="controlFlow" content="Went in the last page case" />
-						<link rel="prev" href="${fn:replace(canonical,currentPage,previousPage)}" />
-					</c:otherwise>
+						<c:choose>
+							<c:when test="${currentPageNumber eq 2}">
+								<link rel="prev" href="${fn:replace(canonical,'/page-2','')}" />
+							</c:when>
+							<c:otherwise>
+								<link rel="prev" href="${fn:replace(canonical,currentPage,previousPage)}" />
+							</c:otherwise>
+						</c:choose>
+
+					</c:otherwise> 
 				</c:choose>
 			</c:if>
 		</c:otherwise>

@@ -129,9 +129,9 @@ tr.d0 td {
 							<c:forEach items="${galleryImages}" var="container">
 								<c:if test="${container.luxuryThumbnail.mediaType.code eq 'Image'}">
 										<c:set var="isImgAdded" value="true"/>
-									<div><img src="${container.luxurySuperZoom.url}" data-zoom-image="${container.luxurySuperZoom.url}" class="zoomer"></div>
+									<div><img src="${container.luxuryProduct.url}" data-zoom-image="${container.luxurySuperZoom.url}" class="zoomer"></div>
 								</c:if>
-								<c:if test="${empty container.luxurySuperZoom && isImgAdded ne 'true'}">
+								<c:if test="${empty container.luxuryProduct && isImgAdded ne 'true'}">
 									<theme:luxuryImage imgClass="${imgClass}" code="img.missingProductImage.product" alt="${fn:escapeXml(product.name)}" title="${fn:escapeXml(product.name)}"/>
 								</c:if>
 							</c:forEach>
@@ -531,5 +531,4 @@ tr.d0 td {
 </div>
 </div>
 </div>
-
 

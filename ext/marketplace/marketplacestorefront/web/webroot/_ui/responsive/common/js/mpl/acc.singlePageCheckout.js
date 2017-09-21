@@ -160,7 +160,12 @@ ACC.singlePageCheckout = {
 			//disableHideAjaxLoader will make sure that loader is not removed until CNC stores are fetched.
 	        var disableHideAjaxLoader=false;
 			var addressId=$(form).find(" #addressId").val();
-			var url=ACC.config.encodedContextPath + "/checkout/single/edit-address/"+addressId;
+			var isPincodeRestrictedPromoPresent=false;
+			if(typeof($("#isPincodeRestrictedPromoPresent").text())!='undefined')
+			{
+				isPincodeRestrictedPromoPresent=$("#isPincodeRestrictedPromoPresent").text().trim();
+			}
+			var url=ACC.config.encodedContextPath + "/checkout/single/edit-address/"+addressId+"?isPincodeRestrictedPromoPresent="+isPincodeRestrictedPromoPresent;
 			var data=$(form).serialize().replace(/\+/g,'%20');
 			ACC.singlePageCheckout.showAjaxLoader();
 			var xhrResponse=ACC.singlePageCheckout.ajaxRequest(url,"POST",data,false);
@@ -260,7 +265,12 @@ ACC.singlePageCheckout = {
 		{
 			//disableHideAjaxLoader will make sure that loader is not removed until stores are fetched.
 			var disableHideAjaxLoader=false;
-			var url=ACC.config.encodedContextPath + "/checkout/single/new-address";
+			var isPincodeRestrictedPromoPresent=false;
+			if(typeof($("#isPincodeRestrictedPromoPresent").text())!='undefined')
+			{
+				isPincodeRestrictedPromoPresent=$("#isPincodeRestrictedPromoPresent").text().trim();
+			}
+			var url=ACC.config.encodedContextPath + "/checkout/single/new-address"+"?isPincodeRestrictedPromoPresent="+isPincodeRestrictedPromoPresent;
 			var data=$(form).serialize().replace(/\+/g,'%20');
 			
 			ACC.singlePageCheckout.showAjaxLoader();
@@ -387,7 +397,7 @@ ACC.singlePageCheckout = {
 		}
 		ACC.singlePageCheckout.showAjaxLoader();
 		//var url=ACC.config.encodedContextPath + $("#selectDeliveryMethodForm").prop("action");
-		var url=$("#selectDeliveryMethodForm").prop("action");
+		var url=$("#selectDeliveryMethodForm").prop("action")+"?isDelModeRestrictedPromoPresent="+$("#isDelModeRestrictedPromoPresent").text();
 		var data=$("#selectDeliveryMethodForm").serialize();
 		var xhrResponse=ACC.singlePageCheckout.ajaxRequest(url,"POST",data,false);
         
@@ -396,7 +406,7 @@ ACC.singlePageCheckout = {
 		});
         
         xhrResponse.done(function(data, textStatus, jqXHR) {
-            if (jqXHR.responseJSON) {
+            if (jqXHR.responseJSON) {//Below block will execute if slot delivery is not present
             	ACC.singlePageCheckout.isSlotDeliveryAndCncPresent=false;
             	if(data.type!="response" && data.type!="ajaxRedirect")
                 {
@@ -404,18 +414,18 @@ ACC.singlePageCheckout = {
                 }
             	else if(data.type=="ajaxRedirect" && data.redirectString=="redirectToReviewOrder")
         		{
+            		ACC.singlePageCheckout.getSelectedDeliveryModes("");
                 	if(isCncPresent=="true" && cncSelected=="true")
-                	{
+                	{//If cnc selected show pickup person pop up
                 		ACC.singlePageCheckout.hidePickupDetailsErrors();
                 		$("#singlePagePickupPersonPopup").modal('show');
                 	}
                 	else
-                	{
+                	{//get review order
                 		ACC.singlePageCheckout.getReviewOrder();
                 	}
-            		ACC.singlePageCheckout.getSelectedDeliveryModes("");
         		}
-            } else {
+            } else {//Below block will execute if slot delivery is present
             	ACC.singlePageCheckout.getSelectedDeliveryModes("");
             	if(isCncPresent=="true" && cncSelected=="true")
             	{
@@ -663,7 +673,12 @@ ACC.singlePageCheckout = {
             !1;
         ACC.singlePageCheckout.showAjaxLoader();
         var data=$(form).serialize();
-        var url=ACC.config.encodedContextPath + form.attr("action");
+        var isPincodeRestrictedPromoPresent=false;
+		if(typeof($("#isPincodeRestrictedPromoPresent").text())!='undefined')
+		{
+			isPincodeRestrictedPromoPresent=$("#isPincodeRestrictedPromoPresent").text().trim();
+		}
+        var url=ACC.config.encodedContextPath + form.attr("action")+"?isPincodeRestrictedPromoPresent="+isPincodeRestrictedPromoPresent;
         var xhrResponse=ACC.singlePageCheckout.ajaxRequest(url,"GET",data,false);
         
         var radio = $("#radio-default2_"+addressId);
@@ -853,7 +868,6 @@ ACC.singlePageCheckout = {
         	if (jqXHR.responseJSON) {
                 if(data.type=="response")
                 {              
-                	$("#selectedDeliveryOptionsDivId").show();
                 	var str ="";
                 	if(data.hd>0)
                 	{
@@ -874,10 +888,20 @@ ACC.singlePageCheckout = {
                 	{
                 		str=str.substring(0,len-1);
                 	}
+                	if(!ACC.singlePageCheckout.isReviewOrderCalled)
+                	{
+                		$("#selectedDeliveryOptionsHighlight").hide();//Hide here show in getReviewOrder
+                	}
+                	else
+            		{
+                		//If review order has completed its call before this method returns show it here
+                		$("#selectedDeliveryOptionsHighlight").show();
+                		$("#selectedDeliveryOptionsDivId").show();
+            		}
                 	$("#selectedDeliveryOptionsHighlight").html(str);
                 	
                 	// For Review Order Highlight Display
-                	$("#selectedReviewOrderHighlight").html(data.CountItems + " Items, " + data.totalPrice);
+                	$("#selectedReviewOrderHighlight").html(data.CountItems + " Item(s), " + data.totalPrice);
                 	ACC.singlePageCheckout.countItemsForReviewOrder=data.CountItems;
                 	
                 	if(callFrom=="removeCartItem")
@@ -893,6 +917,7 @@ ACC.singlePageCheckout = {
                 		    	ACC.singlePageCheckout.fetchStores(entryNumber,obj.ussid,obj.deliveryMode,callFrom,obj.storeName);
                 		    }
                 		});
+                		$("#selectedDeliveryOptionsHighlight").show();
                 	}
                 }
             }
@@ -1397,6 +1422,11 @@ ACC.singlePageCheckout = {
     },
     //Function to fetch review order page from server
     getReviewOrder:function(){
+    	{
+	    	$("#selectedDeliveryOptionsHighlight").show();
+	    	$("#selectedDeliveryOptionsDivId").show();
+	    	ACC.singlePageCheckout.isReviewOrderCalled=true;
+    	}
     	ACC.singlePageCheckout.showAjaxLoader();
 		var url=ACC.config.encodedContextPath + "/checkout/single/reviewOrder";
 		var data="";
@@ -1421,7 +1451,7 @@ ACC.singlePageCheckout = {
         	if($("#reviewOrder #totPriceWithoutRupeeSymbol").text()!="")
         	{
         		var countItemsText=ACC.singlePageCheckout.countItemsForReviewOrder;
-        		$("#selectedReviewOrderHighlight").html(countItemsText+" Items, "+$("#reviewOrder #totPriceWithoutRupeeSymbol").text());
+        		$("#selectedReviewOrderHighlight").html(countItemsText+" Item(s), "+$("#reviewOrder #totPriceWithoutRupeeSymbol").text());
         	}
         	//added for tealium
   		  $("#checkoutPageName").val("Review Order");
@@ -1594,6 +1624,33 @@ ACC.singlePageCheckout = {
         	ACC.singlePageCheckout.hideAjaxLoader();
         });
 	},
+	checkPromotionRestriction: function(){
+		var url=ACC.config.encodedContextPath + "/checkout/single/checkPromotions";
+		var data="";
+		var xhrResponse=ACC.singlePageCheckout.ajaxRequest(url,"GET",data,false);
+        
+        xhrResponse.fail(function(xhr, textStatus, errorThrown) {
+			console.log("ERROR:"+textStatus + ': ' + errorThrown);
+		});
+        
+        xhrResponse.done(function(data, textStatus, jqXHR) {
+        	if (jqXHR.responseJSON) {
+        		if(data.type!="response")
+                {
+        			ACC.singlePageCheckout.processError("#reviewOrderMessage",data);
+                }
+        		if(data.type=="response")
+                {
+	        		$("#isPincodeRestrictedPromoPresent").text(data.isPincodeRestrictedPromoPresent);
+	        		$("#isDelModeRestrictedPromoPresent").text(data.isDelModeRestrictedPromoPresent);
+                }
+            }
+		});
+        
+        xhrResponse.always(function(){
+        	ACC.singlePageCheckout.hideAjaxLoader();
+        });
+	},
 	//Function to removeCart entry number for reviewOrder page[For Web]
 	removeCartItem : function(element,clickFrom) {			
 		ACC.singlePageCheckout.showAjaxLoader();
@@ -1645,6 +1702,7 @@ ACC.singlePageCheckout = {
 	        		{
 	        			$("#reviewOrder").html(data);
 	        		}
+	        		ACC.singlePageCheckout.checkPromotionRestriction();//Method to check and update if promotion calls have changed after item removal
 	        		ACC.singlePageCheckout.getTealiumData();
 	        		//START:Code to show strike off price
 	        		ACC.singlePageCheckout.addReviewOrderPriceStrikeThrough();
@@ -2175,6 +2233,7 @@ ACC.singlePageCheckout = {
 	needHelpContactNumber:"",
 	currentPincode:"",
 	previousPincode:"",
+	isReviewOrderCalled:false,
 /****************MOBILE STARTS HERE************************/
 //-----------------------------COMMENTS ON mobileValidationSteps object-----------------------------//
 //	1.isAddressSaved		:	Used to track if new address has been saved in cartModel for responsive
@@ -2452,7 +2511,12 @@ ACC.singlePageCheckout = {
 		}
 		if(selectedPincode!=null && selectedPincode != undefined && selectedPincode!=""){
 			 ACC.singlePageCheckout.mobileValidationSteps.isPincodeServiceable=false;
-			 var url= ACC.config.encodedContextPath + "/checkout/single/delModesOnAddrSelect/"+selectedPincode;
+			 var isPincodeRestrictedPromoPresent=false;
+			if(typeof($("#isPincodeRestrictedPromoPresent").text())!='undefined')
+			{
+				isPincodeRestrictedPromoPresent=$("#isPincodeRestrictedPromoPresent").text().trim();
+			}
+			 var url= ACC.config.encodedContextPath + "/checkout/single/delModesOnAddrSelect/"+selectedPincode+"?locRestrictedPromoPresent="+isPincodeRestrictedPromoPresent;
 			 var xhrResponse=ACC.singlePageCheckout.ajaxRequest(url,"GET","",false);
 			  xhrResponse.fail(function(xhr, textStatus, errorThrown) {
 					console.log("ERROR:"+textStatus + ': ' + errorThrown);
@@ -2890,12 +2954,13 @@ ACC.singlePageCheckout = {
 		if(formValidationSuccess && !ACC.singlePageCheckout.mobileValidationSteps.isDeliveryModeSet && !ACC.singlePageCheckout.mobileValidationSteps.isInventoryReserved)
 		{	
 			ACC.singlePageCheckout.showAjaxLoader();
-			var isPincodeRestrictedPromoPresent="";
-			if(typeof($("#isPincodeRestrictedPromoPresent").text())!='undefined')
-			{
-				isPincodeRestrictedPromoPresent=$("#isPincodeRestrictedPromoPresent").text().trim();
-			}
-			var url=$("#selectDeliveryMethodFormMobile").attr("action")+"?locRestrictedPromoPresent="+isPincodeRestrictedPromoPresent;
+//			var isPincodeRestrictedPromoPresent=false;
+//			if(typeof($("#isPincodeRestrictedPromoPresent").text())!='undefined')
+//			{
+//				isPincodeRestrictedPromoPresent=$("#isPincodeRestrictedPromoPresent").text().trim();
+//			}
+			//var url=$("#selectDeliveryMethodFormMobile").attr("action")+"?locRestrictedPromoPresent="+isPincodeRestrictedPromoPresent;
+			var url=$("#selectDeliveryMethodFormMobile").attr("action");
 			var data=$("#selectDeliveryMethodFormMobile").serialize();
 		    var xhrResponse=ACC.singlePageCheckout.ajaxRequest(url,"POST",data,false);
 	      

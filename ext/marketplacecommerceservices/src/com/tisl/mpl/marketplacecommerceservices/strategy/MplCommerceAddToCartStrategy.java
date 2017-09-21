@@ -16,4 +16,12 @@ public interface MplCommerceAddToCartStrategy
 {
 	public abstract CommerceCartModification addToCart(CommerceCartParameter paramCommerceCartParameter)
 			throws CommerceCartModificationException;
+
+	/**
+	 * @param parameter
+	 * @return
+	 * @throws CommerceCartModificationException
+	 */
+	public CommerceCartModification addToCartJwlReplacedItm(CommerceCartParameter parameter)
+			throws CommerceCartModificationException;
 }

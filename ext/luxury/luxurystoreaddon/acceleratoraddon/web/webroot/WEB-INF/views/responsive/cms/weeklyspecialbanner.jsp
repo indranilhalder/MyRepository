@@ -6,14 +6,10 @@
 
 
 <div>
-	<a href="#">
+	<a href="${url}">
 		<div class="brand-img">
 			<div class="brand-bg"><img src="${image.url}" alt="brand logo"></div>
 			<div class="brand-logo"><img src="${svglogo.url}" alt="brand logo"></div>
 		</div>
 	</a>
 </div>
-
-	
-
-

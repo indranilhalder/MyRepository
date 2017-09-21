@@ -74,7 +74,7 @@ public class PancardRejectEventListener extends AbstractSiteEventListener<Pancar
 	protected void onSiteEvent(final PancardRejectEvent PancardRejectEvent)
 	{
 		//send Email
-		final OrderModel orderModel = PancardRejectEvent.getProcess().getOrder();
+		final OrderModel orderModel = PancardRejectEvent.getOrder();
 
 		final OrderProcessModel orderProcessModel = (OrderProcessModel) getBusinessProcessService().createProcess(
 				"pancardRejectEmailProcess-" + orderModel.getCode() + "-" + System.currentTimeMillis(), "pancardRejectEmailProcess");
@@ -85,7 +85,7 @@ public class PancardRejectEventListener extends AbstractSiteEventListener<Pancar
 		//send SMS
 		/*
 		 * try { String mobileNumber = null; String firstName = null;
-		 *
+		 * 
 		 * final OrderModel orderDetails = orderProcessModel.getOrder(); CustomerModel customer = null; if
 		 * (orderModel.getUser() != null && orderModel.getUser() instanceof CustomerModel) { customer = (CustomerModel)
 		 * orderModel.getUser(); } if (null != orderDetails && orderDetails.getDeliveryAddress() != null &&
@@ -95,11 +95,11 @@ public class PancardRejectEventListener extends AbstractSiteEventListener<Pancar
 		 * orderDetails.getDeliveryAddress().getFirstname() != null) { firstName =
 		 * orderDetails.getDeliveryAddress().getFirstname(); } else { if (null != customer && customer.getFirstName() !=
 		 * null) { firstName = customer.getFirstName(); } else { firstName = "Customer"; } }
-		 *
+		 * 
 		 * final String orderReferenceNumber = orderDetails.getCode(); final String trackingUrl =
 		 * configurationService.getConfiguration().getString(
 		 * MarketplacecommerceservicesConstants.MPL_TRACK_ORDER_LONG_URL_FORMAT) + orderReferenceNumber;
-		 *
+		 * 
 		 * final String shortTrackingUrl = googleShortUrlService .genearateShortURL(orderModel.getParentReference() ==
 		 * null ? orderModel.getCode() : orderModel .getParentReference().getCode()); final String content =
 		 * MarketplacecommerceservicesConstants.SMS_MESSAGE_ORDER_PLACED
@@ -107,22 +107,22 @@ public class PancardRejectEventListener extends AbstractSiteEventListener<Pancar
 		 * .replace(MarketplacecommerceservicesConstants.SMS_VARIABLE_ONE, orderReferenceNumber)
 		 * .replace(MarketplacecommerceservicesConstants.SMS_VARIABLE_TWO, null != shortTrackingUrl ? shortTrackingUrl :
 		 * trackingUrl);
-		 *
+		 * 
 		 * final SendSMSRequestData smsRequestData = new SendSMSRequestData();
 		 * smsRequestData.setSenderID(MarketplacecommerceservicesConstants.SMS_SENDER_ID);
 		 * smsRequestData.setContent(content); smsRequestData.setRecipientPhoneNumber(mobileNumber);
 		 * sendSMSService.sendSMS(smsRequestData);
 		 *
-		 * } catch (final EtailNonBusinessExceptions ex) {
-		 * LOG.error("EtailNonBusinessExceptions occured while sending sms " + ex); } catch (final Exception ex) {
-		 * LOG.error("Exceptions occured while sending sms " + ex); }
+		 * } catch (final EtailNonBusinessExceptions ex) { LOG.error(
+		 * "EtailNonBusinessExceptions occured while sending sms " + ex); } catch (final Exception ex) { LOG.error(
+		 * "Exceptions occured while sending sms " + ex); }
 		 */
 	}
 
 	@Override
 	protected boolean shouldHandleEvent(final PancardRejectEvent event)
 	{
-		final OrderModel order = event.getProcess().getOrder();
+		final OrderModel order = event.getOrder();
 		ServicesUtil.validateParameterNotNullStandardMessage("event.order", order);
 		final BaseSiteModel site = order.getSite();
 		ServicesUtil.validateParameterNotNullStandardMessage("event.order.site", site);

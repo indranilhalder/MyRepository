@@ -40,6 +40,7 @@ import de.hybris.platform.order.CartService;
 import de.hybris.platform.order.InvalidCartException;
 import de.hybris.platform.product.ProductService;
 import de.hybris.platform.promotions.PromotionsService;
+import de.hybris.platform.promotions.model.AbstractPromotionModel;
 import de.hybris.platform.promotions.model.AbstractPromotionRestrictionModel;
 import de.hybris.platform.promotions.model.PromotionGroupModel;
 import de.hybris.platform.promotions.model.PromotionResultModel;
@@ -113,9 +114,13 @@ import com.tisl.mpl.marketplacecommerceservices.service.MplStockService;
 import com.tisl.mpl.marketplacecommerceservices.service.NotificationService;
 import com.tisl.mpl.marketplacecommerceservices.service.PincodeService;
 import com.tisl.mpl.model.BuyABFreePrecentageDiscountModel;
+import com.tisl.mpl.model.BuyAGetPromotionOnShippingChargesModel;
+import com.tisl.mpl.model.BuyAandBGetPromotionOnShippingChargesModel;
 import com.tisl.mpl.model.BuyAandBgetCModel;
+import com.tisl.mpl.model.BuyAboveXGetPromotionOnShippingChargesModel;
 import com.tisl.mpl.model.BuyXItemsofproductAgetproductBforfreeModel;
 import com.tisl.mpl.model.CustomProductBOGOFPromotionModel;
+import com.tisl.mpl.model.DeliveryModePromotionRestrictionModel;
 import com.tisl.mpl.model.EtailPincodeRestrictionModel;
 import com.tisl.mpl.model.SellerInformationModel;
 import com.tisl.mpl.mplcommerceservices.service.data.InvReserForDeliverySlotsItemEDDInfoData;
@@ -1519,7 +1524,20 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 				for (final OrderEntryData entry : cartData.getEntries())
 				{
 					final ProductData productData = entry.getProduct();
-					if (productCode.equals(productData.getCode()) && ussid.equals(entry.getSelectedUssid()))
+					if (StringUtils.isNotEmpty(productData.getRootCategory())
+							&& MarketplacecommerceservicesConstants.FINEJEWELLERY.equalsIgnoreCase(productData.getRootCategory())
+							&& productCode.equals(productData.getCode()) && !ussid.equals(entry.getSelectedUssid()))
+					{
+						LOG.debug(
+								"Product already present in the cart so now we will check the qunatity present in the cart already for fine jewellery different weight variant.");
+						if (qty + entry.getQuantity().longValue() >= maximum_configured_quantiy_jewellery)
+						{
+							addToCartFlag = MarketplacecommerceservicesConstants.MAX_QUANTITY_ADDED_FOR_FINEJEWELLERY;
+							LOG.debug("You can add Only one Product for Fine Jewellery irrespective of the weight variant");
+							break;
+						}
+					}
+					else if (productCode.equals(productData.getCode()) && ussid.equals(entry.getSelectedUssid()))
 					{
 						LOG.debug("Product already present in the cart so now we will check the qunatity present in the cart already");
 
@@ -1977,6 +1995,50 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 			LOG.info("Some issue may be happend while removing Dellivery mode from Cart to remove Delivery Specific promotion", e);
 		}
 
+		return cart;
+	}
+
+	/**
+	 * @description: Method to remove delivery modes and point of service without recalculate cart
+	 * @param cart
+	 * @return CartModel
+	 */
+	@Override
+	public CartModel removeDeliveryModeWdoutRecalclt(final CartModel cart)
+	{
+		boolean reCalculationRequired = false;
+		boolean deliverypointOfService = false;
+		try
+		{
+			final List<AbstractOrderEntryModel> entryList = cart.getEntries();
+			if (CollectionUtils.isNotEmpty(entryList))
+			{
+				for (final AbstractOrderEntryModel entry : entryList)
+				{
+					if (entry.getMplDeliveryMode() != null)
+					{
+						entry.setMplDeliveryMode(null);
+						//modelService.save(entry); TISPT-104
+						reCalculationRequired = true;
+					}
+					if (entry.getDeliveryPointOfService() != null)
+					{
+						entry.setDeliveryPointOfService(null);
+						//modelService.save(entry); TISPT-104
+						deliverypointOfService = true;
+					}
+				}
+			}
+			if (reCalculationRequired || deliverypointOfService) //TISPT-104
+			{
+				modelService.saveAll(entryList);
+				modelService.save(cart);
+			}
+		}
+		catch (final Exception e)
+		{
+			LOG.error("Some issue may be happend while removing Dellivery mode from Cart to remove Delivery Specific promotion", e);
+		}
 		return cart;
 	}
 
@@ -3424,6 +3486,96 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 		return isPincodeRestrictedPromotionPresent;
 	}
 
+	/**
+	 * This method is used to check if any product in the cart is having pincode/delivery mode restricted promotion
+	 * configured.
+	 *
+	 * @param cart
+	 * @return boolean
+	 */
+	@Override
+	public Map<String, Boolean> checkRestrictedPromoOnCartProduct(final CartModel cart)
+	{
+		final Map<String, Boolean> restrictionMap = new HashMap<String, Boolean>();
+		restrictionMap.put("isPincodeRestrictedPromoPresent", Boolean.FALSE);
+		restrictionMap.put("isDelModeRestrictedPromoPresent", Boolean.FALSE);
+		//restrictionMap.put("isDelModeRestrictedPromotionApplied", Boolean.FALSE);
+		//exitLoop:
+
+		//{
+		final BaseSiteModel baseSiteModel = getBaseSiteService().getCurrentBaseSite();
+		PromotionGroupModel defaultPromotionGroup = null;
+		//final Date currentTimeRoundedToMinute = DateUtils.round(getTimeService().getCurrentTime(), Calendar.MINUTE);
+		if (baseSiteModel != null)
+		{
+			defaultPromotionGroup = baseSiteModel.getDefaultPromotionGroup();
+		}
+		if (defaultPromotionGroup == null)
+		{
+			return null;
+		}
+		final Set<PromotionResultModel> promotions = cart.getAllPromotionResults();
+
+		if (CollectionUtils.isNotEmpty(promotions))
+		{
+			for (final PromotionResultModel promotionResult : promotions)
+			{
+				final AbstractPromotionModel promoModel = (null != promotionResult) ? promotionResult.getPromotion() : null;
+				if (promoModel != null && promoModel.getEnabled() == Boolean.TRUE
+						&& promotionResult.getCertainty().floatValue() < 1.0F)
+				{
+					//Checking all the cart promotion restrictions to see if any locationRestrictedPromotion/deliveryModeSpecificPromotion can be present
+					final Collection<AbstractPromotionRestrictionModel> restrictionList = promotionResult.getPromotion()
+							.getRestrictions();
+					if (CollectionUtils.isNotEmpty(restrictionList))
+					{
+						for (final AbstractPromotionRestrictionModel restriction : restrictionList)
+						{
+							if (restriction instanceof EtailPincodeRestrictionModel)
+							{
+								restrictionMap.put("isPincodeRestrictedPromoPresent", Boolean.TRUE);
+							}
+							if (restriction instanceof DeliveryModePromotionRestrictionModel)
+							{
+								restrictionMap.put("isDelModeRestrictedPromoPresent", Boolean.TRUE);
+							}
+						}
+					}
+				}
+				if ((null != promoModel && promoModel.getEnabled() == Boolean.TRUE
+						&& promotionResult.getCertainty().floatValue() < 1.0F)
+						&& (promoModel instanceof BuyAboveXGetPromotionOnShippingChargesModel
+								|| promoModel instanceof BuyAGetPromotionOnShippingChargesModel
+								|| promoModel instanceof BuyAandBGetPromotionOnShippingChargesModel))
+				{
+					//Checking shipping charges promotion are present, In that case isDelModeRestrictedPromotionPresent will be true
+					restrictionMap.put("isDelModeRestrictedPromoPresent", Boolean.TRUE);
+				}
+				//					if ((null != promoModel && promoModel.getEnabled() == Boolean.TRUE && promotionResult.getCertainty().floatValue() == 1.0F)
+				//							&& (promoModel instanceof BuyAboveXGetPromotionOnShippingChargesModel
+				//									|| promoModel instanceof BuyAGetPromotionOnShippingChargesModel || promoModel instanceof BuyAandBGetPromotionOnShippingChargesModel))
+				//					{
+				//						//Checking shipping charges promotion are applied, In that case isDelModeRestrictedPromotionPresent will be true
+				//						restrictionMap.put("isDelModeRestrictedPromotionApplied", Boolean.TRUE);
+				//					}
+				//					if ((null != promoModel && promoModel.getEnabled() == Boolean.TRUE && promotionResult.getCertainty().floatValue() == 1.0F)
+				//							&& !(promoModel instanceof BuyAboveXGetPromotionOnShippingChargesModel
+				//									|| promoModel instanceof BuyAGetPromotionOnShippingChargesModel || promoModel instanceof BuyAandBGetPromotionOnShippingChargesModel))
+				//					{
+				//						//Checking all the cart promotion restrictions to see if any deliveryModeSpecificPromotion is applied
+				//						for (final AbstractPromotionRestrictionModel restriction : promotionResult.getPromotion().getRestrictions())
+				//						{
+				//							if (restriction instanceof DeliveryModePromotionRestrictionModel)
+				//							{
+				//								restrictionMap.put("isDelModeRestrictedPromotionApplied", Boolean.TRUE);
+				//							}
+				//						}
+				//					}
+			} //end promotion for loop
+			  //}
+		}
+		return restrictionMap;
+	}
 
 	/**
 	 *
@@ -4037,24 +4189,28 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 		int updateEntryCount;
 		int entryCount = 0;
 
-		if (CollectionUtils.isNotEmpty(cartModel.getEntries()))
+		final List<AbstractOrderEntryModel> entryList = new ArrayList<AbstractOrderEntryModel>(cartModel.getEntries());
+
+		if (CollectionUtils.isNotEmpty(entryList))
 		{
-			for (final AbstractOrderEntryModel entry : cartModel.getEntries())
+			for (final AbstractOrderEntryModel entry : entryList)
 			{
 				//				if (entry.getProduct().getMaxOrderQuantity() != null && entry.getProduct().getMaxOrderQuantity().intValue() > 0
 				//						&& entry.getProduct().getMaxOrderQuantity().intValue() < 5)
-				if (entry.getProduct().getMaxOrderQuantity() != null && entry.getProduct().getMaxOrderQuantity().intValue() > 0
-						&& entry.getProduct().getMaxOrderQuantity().intValue() < maximum_configured_quantiy)
-				{
 
-					if (entry.getQuantity().longValue() > entry.getProduct().getMaxOrderQuantity().intValue())
+				final Integer maxQuantity = entry.getProduct().getMaxOrderQuantity();
+
+				if (maxQuantity != null && maxQuantity.intValue() > 0 && maxQuantity.intValue() < maximum_configured_quantiy)
+				{
+					if (entry.getQuantity().longValue() > maxQuantity.intValue())
 					{
 						try
 						{
-							final CartModificationData cartModification = updateCartEntry(entry.getEntryNumber().intValue(), entry
-									.getProduct().getMaxOrderQuantity().intValue());
 
-							if (cartModification.getQuantity() == entry.getProduct().getMaxOrderQuantity().intValue())
+							final CartModificationData cartModification = updateCartEntry(entry.getEntryNumber().intValue(),
+									maxQuantity.intValue());
+
+							if (cartModification.getQuantity() == maxQuantity.intValue())
 							{
 								maxLimitData = new MaxLimitData();
 								LOG.debug("updating from cart........");
@@ -4063,13 +4219,15 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 								//updateCartOnMaxLimExceeds = false;
 								//	hMap.put(entry.getProduct().getCode(), "true");
 
-								maxLimitData.setMaxQuantityAllowed(entry.getProduct().getMaxOrderQuantity().toString());
-								maxLimitData.setProductCode(entry.getProduct().getCode());
-								maxLimitData.setProductName(entry.getProduct().getName());
+								final ProductModel product = entry.getProduct();
+
+								maxLimitData.setMaxQuantityAllowed(maxQuantity.toString());
+								maxLimitData.setProductCode(product.getCode());
+								maxLimitData.setProductName(product.getName());
 								maxLimitData.setUserSelectedQty(String.valueOf(cartModification.getQuantity()));
 								maxLimitData.setUssid(entry.getSelectedUSSID());
 
-								hMap.put(entry.getProduct().getCode(), maxLimitData);
+								hMap.put(product.getCode(), maxLimitData);
 							}
 						}
 						catch (final CommerceCartModificationException ex)
@@ -4083,36 +4241,37 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 
 		//		for (final AbstractOrderEntryModel entry : cartModel.getEntries()) keeping the lastest entry in the cart
 
-		if (CollectionUtils.isNotEmpty(cartModel.getEntries()))
+		if (CollectionUtils.isNotEmpty(entryList))
 		{
-			for (final AbstractOrderEntryModel entry : Lists.reverse(cartModel.getEntries()))
+			for (final AbstractOrderEntryModel entry : Lists.reverse(entryList))
 			{
-				entryCount = entryCount + entry.getQuantity().intValue();
+				final Long quantity = entry.getQuantity();
+				entryCount = entryCount + quantity.intValue();
+
+				final ProductModel product = entry.getProduct();
+
 				if (MapUtils.isNotEmpty(productMap))
 				{
-
-					if (productMap.get(entry.getProduct().getCode()) != null)
+					if (productMap.get(product.getCode()) != null)
 					{
-
+						final Integer maxQuantity = entry.getProduct().getMaxOrderQuantity();
 
 						//					if (entry.getProduct().getMaxOrderQuantity() != null && entry.getProduct().getMaxOrderQuantity().intValue() > 0
 						//							&& entry.getProduct().getMaxOrderQuantity().intValue() < 5)
 
-						if (entry.getProduct().getMaxOrderQuantity() != null && entry.getProduct().getMaxOrderQuantity().intValue() > 0
-								&& entry.getProduct().getMaxOrderQuantity().intValue() < maximum_configured_quantiy)
+						if (maxQuantity != null && maxQuantity.intValue() > 0 && maxQuantity.intValue() < maximum_configured_quantiy)
 						{
 
-							if (entry.getQuantity().longValue() + productMap.get(entry.getProduct().getCode()).longValue() > entry
-									.getProduct().getMaxOrderQuantity().intValue())
+							if (quantity.longValue() + productMap.get(product.getCode()).longValue() > maxQuantity.intValue())
 							{
 
 								try
 								{
 									//remainingcount = entry.getQuantity().intValue() - entry.getProduct().getMaxOrderQuantity().intValue();
-									remainingcount = entryCount - entry.getProduct().getMaxOrderQuantity().intValue();
+									remainingcount = entryCount - maxQuantity.intValue();
 									if (remainingcount >= 0)
 									{
-										updateEntryCount = entry.getQuantity().intValue() - remainingcount;
+										updateEntryCount = quantity.intValue() - remainingcount;
 										//									final CartModificationData cartModification = updateCartEntry(entry.getEntryNumber().intValue(), 0);
 
 										final CartModificationData cartModification = updateCartEntry(entry.getEntryNumber().intValue(),
@@ -4126,13 +4285,13 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 											//updateCartOnMaxLimExceeds = false;
 											//return false;
 											//hMap.put(entry.getProduct().getCode(), "true");
-											maxLimitData.setMaxQuantityAllowed(entry.getProduct().getMaxOrderQuantity().toString());
-											maxLimitData.setProductCode(entry.getProduct().getCode());
-											maxLimitData.setProductName(entry.getProduct().getName());
+											maxLimitData.setMaxQuantityAllowed(maxQuantity.toString());
+											maxLimitData.setProductCode(product.getCode());
+											maxLimitData.setProductName(product.getName());
 											maxLimitData.setUserSelectedQty(String.valueOf(cartModification.getQuantity()));
 											maxLimitData.setUssid(entry.getSelectedUSSID());
 
-											hMap.put(entry.getProduct().getCode(), maxLimitData);
+											hMap.put(product.getCode(), maxLimitData);
 										}
 									}
 								}
@@ -4145,28 +4304,22 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 							else
 							{
 
-								productMap.put(
-										entry.getProduct().getCode(),
-										Long.valueOf(productMap.get(entry.getProduct().getCode()).longValue()
-												+ entry.getQuantity().longValue()));
+								productMap.put(product.getCode(),
+										Long.valueOf(productMap.get(product.getCode()).longValue() + quantity.longValue()));
 							}
 						}
 
 					}
 					else
 					{
-						productMap.put(entry.getProduct().getCode(), entry.getQuantity());
+						productMap.put(product.getCode(), quantity);
 					}
 				}
 				else
 				{
-					productMap.put(entry.getProduct().getCode(), entry.getQuantity());
+					productMap.put(product.getCode(), quantity);
 				}
 			}
-
-
-
-
 		}
 
 		//return true;
@@ -4286,5 +4439,41 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 			CommerceCartModificationException
 	{
 		return mplCommerceCartService.addItemToCartWithExchange(cartId, cartModel, productModel, quantity, ussid, exchangeParam);
+	}
+
+
+
+	@Override
+	public boolean validatePincodeRestrictedPromoOnCartProduct(final CartModel cart)
+	{
+		boolean isPincodeRestrictedPromotionPresent = false;
+		exitLoop:
+
+		{
+			final Set<PromotionResultModel> promotions = cart.getAllPromotionResults();
+
+			if (CollectionUtils.isNotEmpty(promotions))
+			{
+				for (final PromotionResultModel productPromotion : promotions)
+				{
+					final AbstractPromotionModel promotion = productPromotion.getPromotion() != null
+							? (productPromotion.getPromotion()) : (null);
+					if (null != promotion && CollectionUtils.isNotEmpty(promotion.getRestrictions())) //CustomOrderThresholdFreeGiftPromotionModel
+					{
+						for (final AbstractPromotionRestrictionModel restriction : promotion.getRestrictions())
+						{
+							if (restriction instanceof EtailPincodeRestrictionModel)
+							{
+								isPincodeRestrictedPromotionPresent = true;
+								break exitLoop;
+							}
+
+						}
+					}
+				} //end promotion for loop
+			}
+
+		}
+		return isPincodeRestrictedPromotionPresent;
 	}
 }

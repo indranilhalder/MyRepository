@@ -64,9 +64,7 @@
 						</c:if>
 
 					</div> 
-					<span id="defaultWishId" style="display: none">
-						<spring:theme code="wishlist.defaultname" />
-					</span>
+					<span id="defaultWishId" style="display: none"><spring:theme code="wishlist.defaultname" /></span>
 
 					<div class="product">
 						<div class="cart-product-info">
@@ -155,8 +153,7 @@
 		              			<li class="cart_exchange">
 
 			              		<input type="hidden" id="exc_cart" value="${entry.exchangeApplied}">
-			              		<c:set var="isExchangeavailable" value="Exchange Applied"/>
-   										${isExchangeavailable} 
+			              		<spring:theme code="marketplace.exchange.messageLabel"/>
 			              		</li>
 			              		</ul>
 			              		</c:if>

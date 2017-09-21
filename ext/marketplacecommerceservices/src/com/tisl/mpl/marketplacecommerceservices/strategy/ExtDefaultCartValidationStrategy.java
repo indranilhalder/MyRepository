@@ -11,12 +11,17 @@ import de.hybris.platform.order.CartService;
 import de.hybris.platform.product.ProductService;
 import de.hybris.platform.servicelayer.exceptions.UnknownIdentifierException;
 import de.hybris.platform.servicelayer.model.ModelService;
+import de.hybris.platform.servicelayer.session.SessionService;
 import de.hybris.platform.servicelayer.user.UserService;
 import de.hybris.platform.store.services.BaseStoreService;
 import de.hybris.platform.storelocator.model.PointOfServiceModel;
 
+import java.util.Arrays;
+import java.util.List;
+
 import javax.annotation.Resource;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Required;
 
@@ -43,6 +48,8 @@ public class ExtDefaultCartValidationStrategy extends DefaultCartValidationStrat
 	private BaseStoreService baseStoreService;
 	@Resource
 	private UserService userService;
+	@Resource
+	private SessionService sessionService;
 
 	@Override
 	public CommerceCartModification validateCartEntry(final CartModel cartModel, final CartEntryModel cartEntryModel)
@@ -178,6 +185,17 @@ public class ExtDefaultCartValidationStrategy extends DefaultCartValidationStrat
 
 		final PointOfServiceModel pointOfService = cartEntryModel.getDeliveryPointOfService();
 
+		//Below is for jewellery
+		final String newUssidsAfterReplace = sessionService.getAttribute("newUssidsAfterReplace");
+		if (StringUtils.isNotEmpty(newUssidsAfterReplace))
+		{
+			final List<String> ussidList = Arrays.asList(newUssidsAfterReplace.split("#"));
+			if (ussidList.contains(cartEntryModel.getSelectedUSSID()))
+			{
+				return null;
+			}
+		}
+		//Above is for jewellery
 		if (null != cartEntryModel.getDeliveryPointOfService())
 		{
 

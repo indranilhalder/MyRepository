@@ -12,12 +12,12 @@
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
 <%@ taglib prefix="format" tagdir="/WEB-INF/tags/shared/format" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
-<c:set var="hasShippedItems" value="${cartData.deliveryItemsQuantity > 0}" />
+<%-- <c:set var="hasShippedItems" value="${cartData.deliveryItemsQuantity > 0}" /> --%>
 <c:set var="deliveryAddress" value="${cartData.deliveryAddress}"/>
 <c:set var="firstShippedItem" value="true"></c:set>
 <c:set var="defaultPinCode" value="${defaultPincode}"></c:set>
 
-<c:if test="${hasShippedItems}">
+<%-- <c:if test="${hasShippedItems}"> --%>
 <script>
 	/* $(document).ready(function(){
 		$(".click-and-collect").addClass("click-collect");
@@ -223,7 +223,7 @@
 															<c:if test="${count==1}">
 																<form:input type="hidden" path="deliveryMethodEntry[${entry.entryNumber}].sellerArticleSKU" value="${delMode.sellerArticleSKU}" />
 																<form:input id="radio_${entry.entryNumber}" type="hidden" path="deliveryMethodEntry[${entry.entryNumber}].deliveryCode" value="${delMode.defaultSelectedDelMode}" />
-																<form:input type="hidden" path="deliveryMethodEntry[${entry.entryNumber}].selectedStore" value="" />
+																<form:input type="hidden" path="deliveryMethodEntry[${entry.entryNumber}].selectedStore" value="${delMode.storeSelected}" />
 															</c:if>
 														   <c:set var='count'  value='${count+1}' />
 
@@ -299,4 +299,4 @@
 	<input type="hidden" name="isCncPresentInSinglePageCart" id="isCncPresentInSinglePageCart" value="${isCncPresentInSinglePageCart}"/>
 	<input type="hidden" name="entryNumbersId" id="entryNumbersId" value="${entryNumbersId}" />
 	<input type="hidden" name="hideChangeLink" id="hideChangeLink" value="${hideChangeLink}" />
-	</c:if>
+<%-- 	</c:if> --%>

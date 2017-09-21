@@ -104,7 +104,7 @@
 <div class="couponMsg">
 <spring:theme code="marketplace.exchange.success"/>
 <br>
- <spring:theme code="marketplace.exchange.couponWorth"/><span id="priceselect"></span>
+ <spring:theme code="marketplace.exchange.couponWorth"/><span id="priceselect"></span><span> (Applicable on your next purchase) will be issued within 7 days of successful exchange</span>
  </div>
 <!--   <input type="button" value="Add to Bag" onclick="generateExchnangId()"> -->
  

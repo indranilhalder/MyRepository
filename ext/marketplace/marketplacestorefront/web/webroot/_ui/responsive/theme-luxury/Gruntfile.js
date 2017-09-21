@@ -66,7 +66,8 @@ grunt.initConfig({
 				    'js/lib/jquery.validate.min.js',
 				    'js/main.js',
                     'js/acc.accountaddress.js',                
-                    'js/acc.productDetail.js'
+                    'js/acc.productDetail.js',
+                    'js/marketplacecheckoutaddon.js'
 				    /*'js/login.js',
 				    'js/tulvalidation.js',*/
 				   
