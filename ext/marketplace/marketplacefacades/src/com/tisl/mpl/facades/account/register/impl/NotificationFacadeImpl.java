@@ -234,11 +234,11 @@ public class NotificationFacadeImpl implements NotificationFacade
 	 * java.lang.String, java.lang.String)
 	 */
 	@Override
-	public void markNotificationRead(final String customerId, final String orderNo, final String consignmentNo,
-			final String shopperStatus) throws EtailNonBusinessExceptions
+	public void markNotificationRead(final String emailId, final String customerId, final String orderNo,
+			final String consignmentNo, final String shopperStatus) throws EtailNonBusinessExceptions
 	{
 
-		notificationService.markNotificationRead(customerId, orderNo, consignmentNo, shopperStatus);
+		notificationService.markNotificationRead(emailId, customerId, orderNo, consignmentNo, shopperStatus);
 
 	}
 
@@ -252,7 +252,7 @@ public class NotificationFacadeImpl implements NotificationFacade
 		if (user != null)
 		{
 			//markNotificationRead(user.getUid(), orderNo, consignmentNo, shopperStatus);
-			markNotificationRead(user.getOriginalUid(), orderNo, consignmentNo, shopperStatus);
+			markNotificationRead(user.getOriginalUid(), user.getUid(), orderNo, consignmentNo, shopperStatus);
 		}
 	}
 
