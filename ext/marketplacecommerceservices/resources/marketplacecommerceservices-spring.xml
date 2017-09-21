@@ -2327,6 +2327,13 @@
  	</bean>
  	<!-- //Added for 3782 -->
     <bean id="catalogUtils" class="com.tisl.mpl.util.CatalogUtils" />
+    
+    
+    <bean id="SendRefundSmsCronJob"
+		class="com.tisl.mpl.marketplacecommerceservices.jobs.SendRefundSmsCronJob"
+		autowire="byName">
+	</bean>
+    
 </beans>
 
 
