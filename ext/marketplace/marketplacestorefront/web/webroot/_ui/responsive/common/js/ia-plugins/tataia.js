@@ -106,7 +106,7 @@ if (currentPageURL.indexOf("/m/") > -1) {
 	
 	seller_id = $('#mSellerID').val();
 	//INC144319294
-	if(seller_id != undefined)
+	if(seller_id != undefined && seller_id != "")
 	{
 		site_page_type = 'seller';
 	}
