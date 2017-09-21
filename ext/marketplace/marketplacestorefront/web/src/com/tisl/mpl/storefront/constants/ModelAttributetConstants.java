@@ -924,7 +924,7 @@ public final class ModelAttributetConstants
 	public static final String BUYING_GUIDE = "buyingGuide".intern();
 	public static final String REMOVE_SIZEGUIDE = "removeSizeGuide".intern();
 
-	//CKD:TPR-6804
+	//CKD:TPR-6804 / TPR-6869
 	public static final String HOME_FURNISHING = "HomeFurnishing";
 	public static final String CLASSIFICATION_ATTR = "classification.attributes.";
 	public static final String CLASSIFICATION_ATTR_HF = "HomeFurnishing.";
@@ -943,6 +943,11 @@ public final class ModelAttributetConstants
 	public static final String DETAILS = "Details";
 	public static final String OVERVIEW_SEC_SEQ = "classification.attributes.HomeFurnishing.sectionSeq";
 	public static final String SET = "Set";
+	public static final String YES = "Yes";
+	public static final String ALPHBET_REGEX = "[*a-zA-Z]";
+	public static final String SPACE_REGEX = "\\s";
+	public static final String PIPE_REGEX = "\\|";
+	public static final String NO_SPACE = "";
 
 	public static final String SELLERMESSAGE = "sellerMessage".intern();
 

@@ -609,8 +609,15 @@ public class MarketplacewebservicesConstants
 	public static final String NAME = "Name";
 	public static final String QTY = "Quantity";
 	public static final String DETAILS = "Details";
-	public static final String OVERVIEW_SEC_SEQ = "classification.attributes.HomeFurnishing.sectionSeq";
+	//public static final String OVERVIEW_SEC_SEQ = "classification.attributes.HomeFurnishing.sectionSeq";
 	public static final String SET = "Set";
+	public static final String COMMA = ",";
+	public static final String ALPHBET_REGEX = "[*a-zA-Z]";
+	public static final String SPACE_REGEX = "\\s";
+	public static final String PIPE_REGEX = "\\|";
+	public static final String SINGLE_SPACE = " ";
+	public static final Object PIPE = "|";
+	public static final String NO_SPACE = "";
 
 	//INC144317480: Order Threshold Discount Promotion: Netbanking Payment Mode Restriction doesn't work
 	//public static final String BANKNAMEFORNETBANKING = "bankNameforNetbanking";
