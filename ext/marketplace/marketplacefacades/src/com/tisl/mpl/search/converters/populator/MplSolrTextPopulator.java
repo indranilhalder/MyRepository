@@ -69,8 +69,14 @@ public class MplSolrTextPopulator<FACET_SEARCH_CONFIG_TYPE, INDEXED_TYPE_TYPE, I
 		{
 			return;
 		}
-
-		setUpQuery(target.getSearchQuery(), cleanSearchText);
+		//PR-23 start
+		boolean TwoTokenNextSearch = false;
+		if (null != source.getSearchQueryData() && source.getSearchQueryData().isNextSearch())
+		{
+			TwoTokenNextSearch = source.getSearchQueryData().isNextSearch();
+		}
+		//PR-23 end
+		setUpQuery(target.getSearchQuery(), cleanSearchText, TwoTokenNextSearch);
 
 		target.setSearchText(searchText);
 
@@ -117,7 +123,7 @@ public class MplSolrTextPopulator<FACET_SEARCH_CONFIG_TYPE, INDEXED_TYPE_TYPE, I
 	 */
 
 
-	private void setUpQuery(final SearchQuery searchQuery, final String cleanSearchText)
+	private void setUpQuery(final SearchQuery searchQuery, final String cleanSearchText, final boolean TwoTokenNextSearch)
 	{
 		final Map<String, IndexedProperty> originalProps = searchQuery.getIndexedType().getIndexedProperties();
 		final Map<String, IndexedProperty> props = new HashMap<>();
@@ -155,8 +161,18 @@ public class MplSolrTextPopulator<FACET_SEARCH_CONFIG_TYPE, INDEXED_TYPE_TYPE, I
 		// phrase slop for getting better relevance
 		searchQuery.addSolrParams("ps", "5");
 		// minimum match changes for TPR-6335
-		searchQuery.addSolrParams("mm", "50%");
-
+		//PR-23 start
+		if (TwoTokenNextSearch)
+		{
+			searchQuery.addSolrParams("mm", "50%");
+		}
+		else
+		{
+			searchQuery.addSolrParams("mm", "2<75% 3<50%");
+		}
+		//PR-23 end
+		// Tie param added for better search score
+		searchQuery.addSolrParams("tie", "0.1");
 
 	}
 
