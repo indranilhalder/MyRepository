@@ -137,7 +137,7 @@ public class WalletController extends AbstractPageController
 
 		double balanceAmount = 0;
 		CustomerWalletDetailResponse customerWalletDetailData = new CustomerWalletDetailResponse();
-		WalletTransacationsList walletTrasacationsListData = new WalletTransacationsList();
+		WalletTransacationsList walletTrasacationsListData1 = new WalletTransacationsList();
 		final CustomerModel currentCustomer = (CustomerModel) userService.getCurrentUser();
 
 		try{
@@ -145,8 +145,12 @@ public class WalletController extends AbstractPageController
 
 				customerWalletDetailData = mplWalletFacade.getCustomerWallet(currentCustomer.getCustomerWalletDetail().getWalletId());
 				if(null != customerWalletDetailData.getWallet() && customerWalletDetailData.getWallet().getBalance() >0){
-					walletTrasacationsListData = mplWalletFacade.getWalletTransactionList();				
 					balanceAmount = customerWalletDetailData.getWallet().getBalance();		
+				}
+				WalletTransacationsList walletTrasacationsListData = mplWalletFacade.getWalletTransactionList();	
+				if(null != walletTrasacationsListData && walletTrasacationsListData.getResponseCode() == 0){
+					
+					walletTrasacationsListData1 = walletTrasacationsListData;
 				}
 
 			}else{
@@ -183,8 +187,13 @@ public class WalletController extends AbstractPageController
 
 					customerWalletDetailData= mplWalletFacade.getCustomerWallet(currentCustomer.getCustomerWalletDetail().getWalletId());
 					if(null != customerWalletDetailData.getWallet() && customerWalletDetailData.getWallet().getBalance() >0){
-						walletTrasacationsListData = mplWalletFacade.getWalletTransactionList();
 						balanceAmount = customerWalletDetailData.getWallet().getBalance();
+					}
+					WalletTransacationsList	walletTrasacationsListData = mplWalletFacade.getWalletTransactionList();
+					
+					if(null != walletTrasacationsListData && walletTrasacationsListData.getResponseCode() == 0){
+						
+						walletTrasacationsListData1 = walletTrasacationsListData;
 					}
 				}
 
@@ -193,7 +202,7 @@ public class WalletController extends AbstractPageController
 			storeCmsPageInModel(model, contentPage);
 			setUpMetaDataForContentPage(model, contentPage);
 			model.addAttribute("WalletBalance", balanceAmount);
-			model.addAttribute("walletTrasacationsListData", walletTrasacationsListData.getWalletTransactions());
+			model.addAttribute("walletTrasacationsListData", walletTrasacationsListData1.getWalletTransactions());
 			
 		}catch(Exception ex){
 			ex.printStackTrace();
