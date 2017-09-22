@@ -85,7 +85,7 @@
 									</div>
 								</button> 
 <script type="text/javascript" >
- $(document).ready(function (){
+(function($) {
 	$.ajax({
 		url: ACC.config.encodedContextPath + "/login/captcha/widget/recaptcha",
 		type: 'GET',
@@ -115,6 +115,5 @@
 			}
 		}
 	});
-	
-}); 
+})(jQuery);
 </script>
