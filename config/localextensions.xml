@@ -115,6 +115,9 @@
 		<extension name="marketplaceclientservices" />
 		<extension name="marketplacecaptchaaddon" />
 
+
+		<extension name="marketplaceatssync" />
+
 		<!--Luxury packages -->
 		<extension name="luxuryinitialdata" />
 		<extension name="luxurystoreaddon" />		
@@ -167,3 +170,5 @@
 
 	</extensions>
 </hybrisconfig>
+
+
