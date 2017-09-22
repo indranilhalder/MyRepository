@@ -174,7 +174,10 @@ public class MplCommercePlaceOrderStrategyImpl implements MplCommercePlaceOrderS
 			final OrderModel orderModel = getOrderService().createOrderFromCart(cartModel);
 
 			//TISPRO-540
-			final boolean isValidOrder = checkOrder(orderModel);
+			 boolean isValidOrder = checkOrder(orderModel);
+			if(cartModel.getIsEGVCart().booleanValue()){
+				isValidOrder=cartModel.getIsEGVCart().booleanValue();
+			}
 
 			if (!isValidOrder)
 			{

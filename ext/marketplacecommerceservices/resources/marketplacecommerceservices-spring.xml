@@ -2327,6 +2327,16 @@
  	</bean>
  	<!-- //Added for 3782 -->
     <bean id="catalogUtils" class="com.tisl.mpl.util.CatalogUtils" />
+    
+    
+   <!--  Added EGV Beans 22-09-2017 --> 
+   <bean id="MplEGVCartServiceImpl" class="com.tisl.mpl.marketplacecommerceservices.egv.service.cart.impl.MplEGVCartServiceImpl">
+   </bean>
+   <bean id="MplEGVCartDaoImpl" class="com.tisl.mpl.marketplacecommerceservices.egv.dao.cart.impl.MplEGVCartDaoImpl">
+   </bean>
+   
+   <!--  END EGV Beans 22-09-2017 -->
+   
 </beans>
 
 

@@ -49,6 +49,7 @@ import de.hybris.platform.promotions.util.Tuple2;
 import de.hybris.platform.servicelayer.config.ConfigurationService;
 import de.hybris.platform.servicelayer.exceptions.ModelSavingException;
 import de.hybris.platform.servicelayer.model.ModelService;
+import de.hybris.platform.servicelayer.search.FlexibleSearchQuery;
 import de.hybris.platform.servicelayer.search.FlexibleSearchService;
 import de.hybris.platform.servicelayer.user.UserService;
 import de.hybris.platform.store.services.BaseStoreService;
@@ -116,6 +117,7 @@ import com.tisl.mpl.core.enums.DeliveryFulfillModesEnum;
 import com.tisl.mpl.core.enums.PaymentModesEnum;
 import com.tisl.mpl.core.enums.WalletEnum;
 import com.tisl.mpl.core.model.BankforNetbankingModel;
+import com.tisl.mpl.core.model.MplDeliveryAddressInfoModel;
 import com.tisl.mpl.core.model.MplZoneDeliveryModeValueModel;
 import com.tisl.mpl.core.model.RichAttributeModel;
 import com.tisl.mpl.core.model.SavedCardModel;
@@ -140,6 +142,7 @@ import com.tisl.mpl.facades.payment.MplPaymentFacade;
 import com.tisl.mpl.facades.product.data.MarketplaceDeliveryModeData;
 import com.tisl.mpl.facades.wallet.MplWalletFacade;
 import com.tisl.mpl.juspay.response.ListCardsResponse;
+import com.tisl.mpl.marketplacecommerceservices.egv.service.cart.MplEGVCartService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplSellerInformationService;
 import com.tisl.mpl.model.BankModel;
 import com.tisl.mpl.model.PaymentModeRestrictionModel;
@@ -173,8 +176,7 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 	public static String bankNameUserPaymentMode;
 
 	private static final String GIFT_CART_PAYMENT = "/giftCartPayment";
-
-
+	
 	/**
 	 * @return the bankNameUserPaymentMode
 	 */
@@ -284,7 +286,8 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 	@Autowired
 	private MplConfigFacade mplConfigFacade;
 
-
+	@Autowired
+	MplEGVCartService mplEGVCartService;
 
 	private final String checkoutPageName = "Payment Options";
 	private final String RECEIVED_INR = "Received INR ";
@@ -2870,7 +2873,13 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 		try
 		{
 
-
+		          	//Egv Order changes 
+			    CartModel cart=mplEGVCartService.getEGVCartModel(guid);
+               if(cart!=null&& cart.getIsEGVCart().booleanValue() ){
+               	return getEGVOrderStatus(model, redirectAttributes, guid);               	
+               }	 
+               	 
+			
 			boolean splitPayment = false;
 			boolean jsPayMode = false;
 			String cliqCashPaymentMode = StringUtils.EMPTY;
@@ -3045,6 +3054,95 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 					+ MarketplacecheckoutaddonConstants.PAYVALUE + MarketplacecheckoutaddonConstants.VALUE + guid;
 		}
 	}
+
+
+	/**
+	 * @param model
+	 * @param redirectAttributes
+	 * @param guid
+	 * @return
+	 * @throws InvalidCartException
+	 * @throws CalculationException
+	 */
+	private String getEGVOrderStatus(final Model model, final RedirectAttributes redirectAttributes, final String guid)
+			throws InvalidCartException, CalculationException
+	{
+		OrderModel orderToBeUpdated = getMplPaymentFacade().getOrderByGuid(guid);
+		
+		 String orderStatusResponse=null;
+		
+		try{
+		
+			orderStatusResponse= getMplPaymentFacade().getOrderStatusFromJuspay(guid, null, orderToBeUpdated,
+				null);
+		}catch(Exception exception){
+			
+			return updateOrder(orderToBeUpdated, redirectAttributes);
+		}
+		
+		
+		updateOrder(orderToBeUpdated, redirectAttributes);
+		try{
+		getMplCheckoutFacade().beforeSubmitOrder(orderToBeUpdated);
+		}catch(Exception exception){
+			
+			LOG.error("Error ouccer while gettingg xception ");
+		}
+		
+		try{
+			getMplCheckoutFacade().submitOrder(orderToBeUpdated);
+			}catch(Exception exception){
+				
+				LOG.error("Error ouccer while gettingg xception ");
+			}
+		
+		
+		final OrderData orderData = getMplCheckoutFacade().getOrderDetailsForCode(orderToBeUpdated);
+		if(orderData!=null){
+			return redirectToOrderConfirmationPage(orderData);
+		}
+
+		 
+		//Redirection when transaction is successful i.e. CHARGED
+		if (null != orderStatusResponse)
+		{
+			if (MarketplacecheckoutaddonConstants.CHARGED.equalsIgnoreCase(orderStatusResponse))
+			{
+				model.addAttribute(MarketplacecheckoutaddonConstants.PAYMENTID, null);
+				setCheckoutStepLinksForModel(model, getCheckoutStep());
+				return updateOrder(orderToBeUpdated, redirectAttributes);
+			}
+			else if (MarketplacecheckoutaddonConstants.JUSPAY_DECLINED.equalsIgnoreCase(orderStatusResponse))
+			{
+				GlobalMessages.addFlashMessage(redirectAttributes, GlobalMessages.ERROR_MESSAGES_HOLDER,
+						MarketplacecheckoutaddonConstants.DECLINEDERRORMSG);
+				return MarketplacecheckoutaddonConstants.REDIRECT + MarketplacecheckoutaddonConstants.MPLPAYMENTURL
+						+ MarketplacecheckoutaddonConstants.PAYVALUE + MarketplacecheckoutaddonConstants.VALUE + guid;
+			}
+			else if (MarketplacecheckoutaddonConstants.AUTHORIZATION_FAILED.equalsIgnoreCase(orderStatusResponse)
+					|| MarketplacecheckoutaddonConstants.AUTHENTICATION_FAILED.equalsIgnoreCase(orderStatusResponse)
+					|| MarketplacecheckoutaddonConstants.PENDING_VBV.equalsIgnoreCase(orderStatusResponse))
+			{
+				GlobalMessages.addFlashMessage(redirectAttributes, GlobalMessages.ERROR_MESSAGES_HOLDER,
+						MarketplacecheckoutaddonConstants.VBVERRORMSG);
+				return MarketplacecheckoutaddonConstants.REDIRECT + MarketplacecheckoutaddonConstants.MPLPAYMENTURL
+						+ MarketplacecheckoutaddonConstants.PAYVALUE + MarketplacecheckoutaddonConstants.VALUE + guid;
+			}
+			else
+			{
+				GlobalMessages.addFlashMessage(redirectAttributes, GlobalMessages.ERROR_MESSAGES_HOLDER,
+						MarketplacecheckoutaddonConstants.TRANERRORMSG);
+				return MarketplacecheckoutaddonConstants.REDIRECT + MarketplacecheckoutaddonConstants.MPLPAYMENTURL
+						+ MarketplacecheckoutaddonConstants.PAYVALUE + MarketplacecheckoutaddonConstants.VALUE + guid;
+			}
+		}
+		else
+		{
+			return updateOrder(orderToBeUpdated, redirectAttributes);
+		}
+		 
+	}
+
 
 
 	/**
@@ -3776,16 +3874,8 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 				//Existing code for catModel
 				CartModel cart;
 				if(isEGVOrder){
-					cart=new CartModel();
-					cart.setGuid(uid);
-					cart = flexibleSearchService.getModelByExample(cart);
-					cart=getSessionService().getAttribute("giftCartModel");
-					LOG.info("::Going to Create Juspay OrderId::");
-					orderId = getMplPaymentFacade().createJuspayOrder(cart, null, firstName, lastName, paymentAddressLine1,
-							paymentAddressLine2, paymentAddressLine3, country, state, city, pincode,
-							cardSaved + MarketplacecheckoutaddonConstants.STRINGSEPARATOR + sameAsShipping, returnUrlBuilder.toString(),
-							uid, MarketplacecheckoutaddonConstants.CHANNEL_WEB);
-					getMplCheckoutFacade().placeEGVOrder(cart);
+					orderId = createJuspayOrderFroEGV(firstName, lastName, country, state, city, pincode, cardSaved, sameAsShipping,
+							guid, orderId, returnUrlBuilder, paymentAddressLine1, paymentAddressLine2, paymentAddressLine3, uid);
 					return "isEGVCart";	
 				}else{
 					cart=getCartService().getSessionCart();	
@@ -4253,6 +4343,45 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 			LOG.error(MarketplacecheckoutaddonConstants.LOGERROR, e);
 		}
 
+		return orderId;
+	}
+
+
+	/**
+	 * @param firstName
+	 * @param lastName
+	 * @param country
+	 * @param state
+	 * @param city
+	 * @param pincode
+	 * @param cardSaved
+	 * @param sameAsShipping
+	 * @param guid
+	 * @param orderId
+	 * @param returnUrlBuilder
+	 * @param paymentAddressLine1
+	 * @param paymentAddressLine2
+	 * @param paymentAddressLine3
+	 * @param uid
+	 * @return
+	 */
+	private String createJuspayOrderFroEGV(final String firstName, final String lastName, final String country, final String state,
+			final String city, final String pincode, final String cardSaved, final String sameAsShipping, final String guid,
+			String orderId, final StringBuilder returnUrlBuilder, String paymentAddressLine1, String paymentAddressLine2,
+			String paymentAddressLine3, String uid)
+	{
+		try{
+			
+			CartModel cart=mplEGVCartService.getEGVCartModel(guid);
+		LOG.info("::Going to Create Juspay OrderId::");
+		orderId = getMplPaymentFacade().createJuspayOrder(cart, null, firstName, lastName, paymentAddressLine1,
+				paymentAddressLine2, paymentAddressLine3, country, state, city, pincode,
+				cardSaved + MarketplacecheckoutaddonConstants.STRINGSEPARATOR + sameAsShipping, returnUrlBuilder.toString(),
+				uid, MarketplacecheckoutaddonConstants.CHANNEL_WEB);
+		getMplCheckoutFacade().placeEGVOrder(cart);
+		}catch(Exception exc){
+			LOG.error("juspay Order Create  exception"+exc);
+		}
 		return orderId;
 	}
 

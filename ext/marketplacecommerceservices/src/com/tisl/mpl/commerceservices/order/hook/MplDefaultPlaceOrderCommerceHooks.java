@@ -2450,7 +2450,7 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 
 		boolean splitPayment = false;
 
-		if (StringUtils.isNotEmpty(getSessionService().getAttribute("getCliqCashMode").toString()))
+		if (StringUtils.isNotEmpty(getSessionService().getAttribute("getCliqCashMode")))
 		{
 
 			splitPayment = Boolean.parseBoolean(getSessionService().getAttribute("getCliqCashMode").toString());

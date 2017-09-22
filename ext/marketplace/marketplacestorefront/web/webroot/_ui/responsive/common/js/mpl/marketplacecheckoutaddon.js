@@ -2082,7 +2082,7 @@ function savedDebitCardRadioChange(radioId){
 		
 		// For Payement Page CR Changes ends
 		debugger;
-		var isEGVOrder=$("#isEGVOrder").val();isEGVCart
+		var isEGVOrder=$("#isEGVOrder").val();
 		alert(isEGVOrder+"5");
 		$.ajax({
 			url: ACC.config.encodedContextPath + "/checkout/multi/payment-method/createJuspayOrder",

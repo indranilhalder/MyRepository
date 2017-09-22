@@ -35,7 +35,6 @@ import de.hybris.platform.core.model.order.AbstractOrderModel;
 import de.hybris.platform.core.model.order.CartEntryModel;
 import de.hybris.platform.core.model.order.CartModel;
 import de.hybris.platform.core.model.order.OrderModel;
-import de.hybris.platform.core.model.order.delivery.DeliveryModeModel;
 import de.hybris.platform.core.model.product.PincodeModel;
 import de.hybris.platform.core.model.product.ProductModel;
 import de.hybris.platform.core.model.user.UserModel;
@@ -83,8 +82,6 @@ import java.util.Set;
 import javax.annotation.Resource;
 import javax.xml.bind.JAXBException;
 
-import net.sourceforge.pmd.util.StringUtil;
-
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.MapUtils;
 import org.apache.commons.lang.StringUtils;
@@ -113,6 +110,7 @@ import com.tisl.mpl.facades.data.StoreLocationResponseData;
 import com.tisl.mpl.facades.egv.data.EgvDetailsData;
 import com.tisl.mpl.facades.product.data.MarketplaceDeliveryModeData;
 import com.tisl.mpl.marketplacecommerceservices.daos.MplDeliveryCostDao;
+import com.tisl.mpl.marketplacecommerceservices.egv.service.cart.MplEGVCartService;
 import com.tisl.mpl.marketplacecommerceservices.order.MplCommerceCartCalculationStrategy;
 import com.tisl.mpl.marketplacecommerceservices.service.MplCommerceCartService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplDelistingService;
@@ -142,6 +140,7 @@ import com.tisl.mpl.wsdto.MplEDDInfoWsDTO;
 import com.tisl.mpl.wsdto.MplEstimateDeliveryDateWsDTO;
 import com.tisl.mpl.wsdto.MplSelectedEDDForUssID;
 
+import net.sourceforge.pmd.util.StringUtil;
 
 /**
  * @author TCS
@@ -241,6 +240,9 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 
 	@Autowired
 	private MplSellerInformationService mplSellerInformationService;
+	
+	@Autowired 
+	MplEGVCartService mplEGVCartService;
 
 
 	//TPR-5346
@@ -4351,6 +4353,7 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 	 */
 	private CartModel getCartModelForEGVProduct(final EgvDetailsData egvDetailForm)
 	{
+		
 		CartModel cardModel =cartFactory.createCart();
 		cardModel.setPincodeNumber("542621");
 		List<AbstractOrderEntryModel> orderModelList = new ArrayList<AbstractOrderEntryModel>();
@@ -4393,6 +4396,8 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 	 */
 	private CartEntryModel getEGVCartEntry(final EgvDetailsData egvDetailForm, CartModel cardModel)
 	{
+		//remove old EGA Cart
+		     mplEGVCartService.removeOldEGVCartCurrentCustomer();
 		CartEntryModel abstractOrderEntryModel = getModelService().create(CartEntryModel.class);
 		ProductModel productModel = productService.getProductForCode(egvDetailForm.getProductCode());
 		abstractOrderEntryModel.setQualifyingCount(Integer.valueOf(1));
@@ -4409,10 +4414,9 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 			abstractOrderEntryModel.setSelectedUSSID(richAttributeModel.getSellerInfo().getUSSID());	
 			abstractOrderEntryModel.setSellerInfo(richAttributeModel.getSellerInfo().getSellerName());
 		}else{
-			abstractOrderEntryModel.setSelectedUSSID("TATA");
-			abstractOrderEntryModel.setSellerInfo("TTTTT");
+			abstractOrderEntryModel.setSelectedUSSID("123653098765485130011719");
+			abstractOrderEntryModel.setSellerInfo("PALTALOONS");
 		}
-		
 		abstractOrderEntryModel.setCalculated(Boolean.valueOf(true));
 		abstractOrderEntryModel.setActualDeliveryDate(new Date());
 		abstractOrderEntryModel.setCartAdditionalDiscPerc(Double.valueOf(0.0));
@@ -4427,7 +4431,7 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 		abstractOrderEntryModel.setEntryNumber(Integer.valueOf(0));
 		abstractOrderEntryModel.setFreeCount(Integer.valueOf(0));
 		abstractOrderEntryModel.setHdDeliveryCharge(Double.valueOf(0.0));
-		abstractOrderEntryModel.setInfo("Product Name");
+		abstractOrderEntryModel.setInfo(productModel.getName());
 		abstractOrderEntryModel.setIsBOGOapplied(Boolean.valueOf(false));
 		abstractOrderEntryModel.setIsEdToHdSendToFico(Boolean.FALSE);
 		abstractOrderEntryModel.setIsPercentageDisc(Boolean.FALSE);
@@ -4452,8 +4456,6 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 		abstractOrderEntryModel.setRejected(Boolean.FALSE);
 		abstractOrderEntryModel.setGiveAway(Boolean.FALSE);
 		abstractOrderEntryModel.setScheduledDeliveryCharge(Double.valueOf(0));
-		abstractOrderEntryModel.setSelectedUSSID("123653098765485130011719");
-		abstractOrderEntryModel.setSellerInfo("PALTALOONS");
 		abstractOrderEntryModel.setTotalSalePrice(Double.valueOf(egvDetailForm.getGiftRange()));
 		abstractOrderEntryModel.setTotalMrp(Double.valueOf(egvDetailForm.getGiftRange()));
 		abstractOrderEntryModel.setTotalPrice(Double.valueOf(egvDetailForm.getGiftRange()));
