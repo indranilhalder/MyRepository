@@ -951,4 +951,6 @@ public final class ModelAttributetConstants
 
 	public static final String SELLERMESSAGE = "sellerMessage".intern();
 
+	public static final String QUANTITY_DROPDOWN_LIST = "quantityList".intern();
+
 }

@@ -410,12 +410,11 @@ share mobile -->
 			    </c:forEach>
 			  </c:forEach>
 			  </select>
+			  
 			   <select id="quantity_dropdown" class="variant-select">
-			   <option value="1">1</option>
-			     <option value="2">2</option>
-			       <option value="3">3</option>
-			         <option value="4">4</option>
-			           <option value="5">5</option>
+			   <c:forEach items="${quantityList}" var="quantity">
+					<option value="${quantity}">${quantity}</option>
+				</c:forEach>
 			   </select>
   </c:when>
   <c:otherwise>
