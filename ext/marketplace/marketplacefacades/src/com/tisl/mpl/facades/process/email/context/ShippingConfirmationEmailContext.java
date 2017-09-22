@@ -17,6 +17,7 @@ import de.hybris.platform.acceleratorservices.model.cms2.pages.EmailPageModel;
 import de.hybris.platform.acceleratorservices.process.email.context.AbstractEmailContext;
 import de.hybris.platform.basecommerce.model.site.BaseSiteModel;
 import de.hybris.platform.commercefacades.order.data.OrderData;
+import de.hybris.platform.core.model.JwlryRevSealInfoModel;
 import de.hybris.platform.core.model.c2l.LanguageModel;
 import de.hybris.platform.core.model.order.AbstractOrderEntryModel;
 import de.hybris.platform.core.model.order.OrderModel;
@@ -32,6 +33,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
+import javax.annotation.Resource;
+
 import org.apache.commons.lang.StringUtils;
 import org.apache.velocity.tools.generic.MathTool;
 import org.apache.velocity.tools.generic.NumberTool;
@@ -40,6 +43,7 @@ import org.springframework.beans.factory.annotation.Required;
 
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.core.model.OrderUpdateProcessModel;
+import com.tisl.mpl.marketplacecommerceservices.service.MplJewelleryService;
 
 
 
@@ -77,6 +81,10 @@ public class ShippingConfirmationEmailContext extends AbstractEmailContext<Order
 	private static final String CUSTOMER_CARE_EMAIL = "customerCareEmail";
 
 	private static final String COUNT = "count"; //added for jewellery
+	private static final String JWLRY_FRWRD_SEAL_DESCRIPTION = "jwlryFrwrdSealDesc";
+	private static final String JWLRY_FRWRD_SEAL_IMAGE = "jwlryFrwrdSealImg";
+	private static final String JWLRY_REV_SEAL_DESCRIPTION = "jwlryRevSealDesc";
+	private static final String JWLRY_REV_SEAL_IMAGE = "jwlryRevSealImg";
 
 
 	//TPR-5329
@@ -88,6 +96,10 @@ public class ShippingConfirmationEmailContext extends AbstractEmailContext<Order
 
 	@Autowired
 	private ConfigurationService configurationService;
+	
+	@Resource(name = "mplJewelleryService")
+	private MplJewelleryService mplJewelleryService;
+	
 //	@Autowired
 //	private ShortUrlService shortUrlService;//Sonar Fix
 
@@ -153,6 +165,16 @@ public class ShippingConfirmationEmailContext extends AbstractEmailContext<Order
 					if (prod != null && prod.getProductCategoryType().equalsIgnoreCase("FineJewellery"))
 					{
 						count += 1;
+						final String sellerId = childOrder.getSelectedUSSID().substring(0, 6);
+						final JwlryRevSealInfoModel sealInfo = mplJewelleryService.getSealInfo(sellerId);
+						if (null != sealInfo)
+						{
+							put(JWLRY_FRWRD_SEAL_DESCRIPTION, sealInfo.getFrwrdSealDescription());
+							put(JWLRY_FRWRD_SEAL_IMAGE, sealInfo.getFrwrdSealImageUrl());
+							put(JWLRY_REV_SEAL_DESCRIPTION, sealInfo.getRevSealDescription());
+							put(JWLRY_REV_SEAL_IMAGE, sealInfo.getRevSealImageUrl());
+						}
+
 					}
 
 					//creation Time

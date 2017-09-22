@@ -303,6 +303,10 @@ public final class ModelAttributetConstants
 
 	//for return refund tab fine jewellery
 	public static final String RET_REF_TAB = "RetRefTab";
+	//for not showing the disclaimer in pdp for one weight variant for fine jewellery product
+	public static final String TO_SHOW_DISCLAIMER = "to_show_disclaimer";
+	public static final String YES_DISCLAIMER = "yes";
+	public static final String NO_DISCLAIMER = "no";
 
 	public static final String FRIENDS_INVITE_FORM = "friendsInviteForm";
 	public static final String J_FRIENDSEMAIL = "j_friendsEmail";

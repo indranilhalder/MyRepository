@@ -7,6 +7,7 @@ import de.hybris.platform.commercefacades.product.ProductFacade;
 import de.hybris.platform.commercefacades.product.ProductOption;
 import de.hybris.platform.commercefacades.product.data.ProductData;
 import de.hybris.platform.commercefacades.storelocator.data.PointOfServiceData;
+import de.hybris.platform.core.model.JewelleryInformationModel;
 import de.hybris.platform.core.model.order.AbstractOrderEntryModel;
 import de.hybris.platform.core.model.order.AbstractOrderModel;
 import de.hybris.platform.core.model.order.CartModel;
@@ -25,6 +26,7 @@ import java.util.Map;
 import javax.annotation.Resource;
 
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ui.Model;
@@ -37,6 +39,7 @@ import com.tisl.mpl.facades.data.ATSResponseData;
 import com.tisl.mpl.facades.data.FreebieProduct;
 import com.tisl.mpl.facades.data.ProudctWithPointOfServicesData;
 import com.tisl.mpl.facades.data.StoreLocationResponseData;
+import com.tisl.mpl.marketplacecommerceservices.service.MplJewelleryService;
 import com.tisl.mpl.model.SellerInformationModel;
 import com.tisl.mpl.sellerinfo.facades.MplSellerInformationFacade;
 
@@ -66,6 +69,9 @@ public class MplStoreLocatorFacadeImpl implements MplStoreLocatorFacade
 
 	@Resource(name = "modelService")
 	private ModelService modelService;
+
+	@Resource(name = "mplJewelleryService")
+	MplJewelleryService mplJewelleryService;
 
 	/**
 	 * This method is to add freebie products to the map.
@@ -230,14 +236,38 @@ public class MplStoreLocatorFacadeImpl implements MplStoreLocatorFacade
 		//call service to retrieve POSModel for given posName from commerce
 
 		//get sellerInformation for ussid
-		final SellerInformationModel sellerInfoModel = mplSellerInformationFacade.getSellerDetail(ussId);
+		SellerInformationModel sellerInfoModel = null;
 		try
 		{
 			//find parent cartEntry based on given ussid
 			final AbstractOrderEntryModel parentCartEntry = getCartEntry(ussId);
 			if (null != parentCartEntry)
 			{
-				final String collectionDays = mplSellerInformationFacade.getSellerColloctionDays(sellerInfoModel.getSellerID());
+				//JEWELLERY CHANGES
+				if (MarketplacecommerceservicesConstants.FINEJEWELLERY.equalsIgnoreCase(parentCartEntry.getProduct()
+						.getProductCategoryType()))
+				{
+					final List<JewelleryInformationModel> jewelleryInfo = mplJewelleryService.getJewelleryInfoByUssid(ussId);
+					if (CollectionUtils.isNotEmpty(jewelleryInfo))
+					{
+						if (StringUtils.isNotEmpty(jewelleryInfo.get(0).getPCMUSSID()))
+						{
+							//get seller information for a ussid
+							sellerInfoModel = mplSellerInformationFacade.getSellerDetail(jewelleryInfo.get(0).getPCMUSSID());
+						}
+					}
+				}
+				else
+				{
+					//get seller information for a ussid
+					sellerInfoModel = mplSellerInformationFacade.getSellerDetail(ussId);
+				}
+				//ENDS
+				String collectionDays = "0";
+				if (null != sellerInfoModel)
+				{
+					collectionDays = mplSellerInformationFacade.getSellerColloctionDays(sellerInfoModel.getSellerID());
+				}
 				parentCartEntry.setCollectionDays(Integer.valueOf(collectionDays));
 				//save store for normal product
 				parentCartEntry.setDeliveryPointOfService(posModel);
@@ -516,6 +546,30 @@ public class MplStoreLocatorFacadeImpl implements MplStoreLocatorFacade
 	public AbstractOrderEntryModel getCartEntry(final String ussId)
 	{
 		final CartModel cartModel1 = cartService.getSessionCart();
+		//find cartEntry for ussid
+		if (cartModel1 != null)
+		{
+			for (final AbstractOrderEntryModel abstractCartEntry : cartModel1.getEntries())
+			{
+				if (null != abstractCartEntry && abstractCartEntry.getSelectedUSSID().equalsIgnoreCase(ussId))
+				{
+					return abstractCartEntry;
+				}
+			}
+		}
+		return null;
+	}
+
+	/**
+	 * This method finds cart entry for a ussid.
+	 *
+	 * @param ussId
+	 * @return abstractCartEntry
+	 */
+	@Override
+	public AbstractOrderEntryModel getCartEntry(final CartModel cartModel, final String ussId)
+	{
+		final CartModel cartModel1 = cartModel;
 		//find cartEntry for ussid
 		if (cartModel1 != null)
 		{

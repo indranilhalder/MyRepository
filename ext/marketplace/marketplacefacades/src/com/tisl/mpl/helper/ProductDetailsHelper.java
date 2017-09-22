@@ -5,6 +5,7 @@ package com.tisl.mpl.helper;
 
 import de.hybris.platform.catalog.CatalogVersionService;
 import de.hybris.platform.catalog.model.CatalogVersionModel;
+import de.hybris.platform.catalog.model.ProductFeatureModel;
 import de.hybris.platform.catalog.model.classification.ClassificationAttributeValueModel;
 import de.hybris.platform.category.model.CategoryModel;
 import de.hybris.platform.classification.ClassificationService;
@@ -75,6 +76,7 @@ import com.tisl.mpl.core.model.RichAttributeModel;
 import com.tisl.mpl.data.WishlistData;
 import com.tisl.mpl.exception.EtailBusinessExceptions;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
+import com.tisl.mpl.facade.product.MplProductFacade;
 import com.tisl.mpl.facade.wishlist.WishlistFacade;
 import com.tisl.mpl.facades.constants.MarketplaceFacadesConstants;
 import com.tisl.mpl.facades.product.data.MarketplaceDeliveryModeData;
@@ -145,6 +147,17 @@ public class ProductDetailsHelper
 	@Resource(name = "buyBoxService")
 	private BuyBoxService buyBoxService;
 
+	//SOnar fixes
+	//@Autowired
+	//private SiteConfigService siteConfigService;
+
+
+	@Resource(name = "mplProductFacade")
+	private MplProductFacade mplProductFacade;
+
+	/**
+	 *
+	 */
 	private static final String MPL_CONTENT_CATALOG = "mplContentCatalog";
 	private static final String MEDIA_PRIORITY = "mediaPriority";
 	private static final String COLOUR = "Colour";
@@ -495,6 +508,10 @@ public class ProductDetailsHelper
 						classificationName = classData.getName();
 						for (final FeatureData feature : classDataName)
 						{
+							final ProductFeatureModel productFeature = mplProductFacade.getProductFeatureModelByProductAndQualifier(
+									productData, feature.getCode());
+							final String unit = productFeature != null && productFeature.getUnit() != null
+									&& !productFeature.getUnit().getSymbol().isEmpty() ? productFeature.getUnit().getSymbol() : "";
 							final String featurename = feature.getName();
 							final List<FeatureValueData> featuredvalue = new ArrayList<FeatureValueData>(feature.getFeatureValues());
 							final List<String> featureValueList = new ArrayList<String>();
@@ -512,13 +529,13 @@ public class ProductDetailsHelper
 									{
 										if (key != null && key.equalsIgnoreCase(featurename))
 										{
-											featureMap.get(featurename).add(featureV);
+											featureMap.get(featurename).add(featureV + MarketplaceFacadesConstants.SPACE + unit);
 										}
 									}
 								}
 								else
 								{
-									featureValueList.add(featureV);
+									featureValueList.add(featureV + MarketplaceFacadesConstants.SPACE + unit);
 									featureMap.put(featurename, featureValueList);
 								}
 							}

@@ -16,6 +16,8 @@ import de.hybris.platform.solrfacetsearch.config.FacetSearchConfigService;
 import de.hybris.platform.solrfacetsearch.config.IndexedType;
 import de.hybris.platform.solrfacetsearch.indexer.IndexerService;
 import de.hybris.platform.solrfacetsearch.model.config.SolrFacetSearchConfigModel;
+import de.hybris.platform.store.BaseStoreModel;
+import de.hybris.platform.store.services.BaseStoreService;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -43,6 +45,9 @@ public class ProductSpecificIndexerCronJob extends AbstractJobPerformable
 
 	@Autowired
 	private FacetSearchConfigService facetSearchConfigService;
+
+	@Autowired
+	BaseStoreService baseStoreService; // For Testing
 
 	@Override
 	public PerformResult perform(final CronJobModel cronJob)
@@ -132,11 +137,42 @@ public class ProductSpecificIndexerCronJob extends AbstractJobPerformable
 		final String prodListFilePath = "";
 		String listingId = "";
 		final Set<String> listingIdSet = new TreeSet();
+		String flashSaleUSSIDList = "";
 
 		try
 		{
 			try
 			{
+				/***************************** Test for ***************************************/
+
+				final List<BaseStoreModel> allBaseStoresList = baseStoreService.getAllBaseStores();
+
+				for (final BaseStoreModel baseStoreModel : allBaseStoresList)
+				{
+					if ("mpl".equalsIgnoreCase(baseStoreModel.getUid()))
+					{
+						flashSaleUSSIDList = baseStoreModel.getFlashSaleUSSIDList();
+						if (flashSaleUSSIDList != null && flashSaleUSSIDList.length() > 0)
+						{
+							LOG.error("flashSaleUSSIDList ::" + flashSaleUSSIDList);
+						}
+						else
+						{
+							LOG.error("flashSaleUSSIDList is empty::");
+						}
+
+						LOG.error("************");
+						LOG.error("baseStoreModel.getName()" + baseStoreModel.getName());
+						LOG.error("baseStoreModel.getUid()" + baseStoreModel.getUid());
+						LOG.error("baseStoreModel.getItemtype()" + baseStoreModel.getItemtype());
+						LOG.error("baseStoreModel.getCheckoutFlowGroup()" + baseStoreModel.getCheckoutFlowGroup());
+						LOG.error("baseStoreModel.getTenantId()" + baseStoreModel.getTenantId());
+						LOG.error("$$$$$$$$$$$$$");
+					}
+				}
+
+				/******************************************************************************/
+
 				//Fetch the Product ListIds from DB table 'FlashSaleProduct' and then pass it to get the PKs of those List Ids.
 				//final String qString = "select distinct{productListingId} from {FlashSaleProductList}";
 				final String qString = "select distinct{PK} from {FlashSaleProductList}";

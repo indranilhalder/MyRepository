@@ -25,6 +25,8 @@ import com.tisl.mpl.marketplacecommerceservices.service.MplPincodeDistanceServic
 import com.tisl.mpl.marketplacecommerceservices.service.MplProductService;
 import com.tisl.mpl.marketplacecommerceservices.service.PincodeService;
 import com.tisl.mpl.pincode.facade.PincodeServiceFacade;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 
 
 /**
@@ -35,15 +37,40 @@ public class MplProductFacadeImpl implements MplProductFacade
 {
 
 	private MplProductService mplProductService;
-	@Resource(name = "pincodeServiceFacade")
+	
+//	@Autowired
+//	@Qualifier("pincodeServiceFacade")
+	//@Resource(name = "pincodeServiceFacade")
 	private PincodeServiceFacade pincodeServiceFacade;
+	
+	/**
+	 * @return the pincodeServiceFacade
+	 */
+	public PincodeServiceFacade getPincodeServiceFacade() {
+		return pincodeServiceFacade;
+	}
 
-	@Resource(name = "pincodeService")
+
+
+	/**
+	 * @param pincodeServiceFacade the pincodeServiceFacade to set
+	 */
+	public void setPincodeServiceFacade(PincodeServiceFacade pincodeServiceFacade) {
+		this.pincodeServiceFacade = pincodeServiceFacade;
+	}
+
+	@Autowired
+	@Qualifier("pincodeService")
 	private PincodeService pincodeService;
-	@Resource
+	
+	@Autowired
+	@Qualifier("mplConfigFacade")
 	private MplConfigFacade mplConfigFacade;
-	@Resource
+	
+	@Autowired
+	@Qualifier("mplPincodeDistanceService")
 	private MplPincodeDistanceService mplPincodeDistanceService;
+	
 	@SuppressWarnings("unused")
 	private static final Logger LOG = Logger.getLogger(MplProductFacadeImpl.class);
 

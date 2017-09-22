@@ -4,6 +4,7 @@
 package com.tisl.mpl.facade.checkout.storelocator;
 
 import de.hybris.platform.core.model.order.AbstractOrderEntryModel;
+import de.hybris.platform.core.model.order.CartModel;
 import de.hybris.platform.storelocator.model.PointOfServiceModel;
 
 import java.util.List;
@@ -65,5 +66,12 @@ public interface MplStoreLocatorFacade
 	 * @return abstractOrderEntryModel
 	 */
 	public AbstractOrderEntryModel getCartEntry(final String ussId);
+
+	/**
+	 * @param cartModel
+	 * @param ussId
+	 * @return
+	 */
+	public AbstractOrderEntryModel getCartEntry(CartModel cartModel, String ussId);
 
 }

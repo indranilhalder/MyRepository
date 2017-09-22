@@ -321,6 +321,7 @@
 						<arg line="--js !${mpstorefront.js.dir}/mpl/**acc.accountaddress.js"/>
 						<arg line="--js !${mpstorefront.js.dir}/mpl/**feedback.js"/>
 						<arg line="--js !${mpstorefront.js.dir}/mpl/**acc.productDetail.js"/>
+						<arg line="--js !${mpstorefront.js.dir}/mpl/**marketplacecheckoutaddon.js"/>
 						<arg line="--js_output_file ${lxstorefront.minjs.dir}/luxury-tmpmain.min.js" />
 					</java>
 					<java jar="${google.closure.jar}" dir="${mpstorefront.webroot.ui}" fork="true">

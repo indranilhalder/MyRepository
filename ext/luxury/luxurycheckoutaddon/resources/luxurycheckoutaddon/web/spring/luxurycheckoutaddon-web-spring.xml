@@ -15,12 +15,14 @@
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xmlns:aop="http://www.springframework.org/schema/aop"
        xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:util="http://www.springframework.org/schema/util"
        xsi:schemaLocation="http://www.springframework.org/schema/beans
            http://www.springframework.org/schema/beans/spring-beans.xsd
            http://www.springframework.org/schema/aop
            http://www.springframework.org/schema/aop/spring-aop.xsd
            http://www.springframework.org/schema/context
-           http://www.springframework.org/schema/context/spring-context.xsd">
+           http://www.springframework.org/schema/context/spring-context.xsd
+           http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd"> 
            
     <context:annotation-config/> 
 
@@ -42,5 +44,178 @@
 	<bean id="LuxurycheckoutaddonBeforeViewHandlerListMergeDirective" depends-on="beforeViewHandlersList" parent="listMergeDirective">
 		<property name="add" ref="getLuxurycheckoutaddonBeforeViewHandler"/>
 	</bean>
+	
+	
+	<!-- Checkout Steps -->
+
+	<!-- <alias name="abstractCheckoutStep" alias="checkoutStep"/>
+	<bean id="abstractCheckoutStep" class="de.hybris.platform.acceleratorstorefrontcommons.checkout.steps.CheckoutStep" abstract="true" /> -->
+
+
+ <alias name="multiStepMultiPathCheckout" alias="multiStepMultiPathCheckout" />
+	<bean id="multiStepMultiPathCheckout" parent="checkoutStep">
+		<property name="checkoutGroup" ref="luxuryMultiPathCheckoutGroup"/>
+		<property name="checkoutStepValidator" ref="defaultMultiStepCheckoutValidator"/>
+		<property name="transitions">
+			<map>
+				<entry key="previous" value-ref="REDIRECT_TO_CART"/>
+				<entry key="current" value-ref="REDIRECT_MULTI_STEP_CHECKOUT"/>
+				<entry key="next" value-ref="REDIRECT_MULTI_STEP_CHECKOUTLOGGIN"/>
+			</map>
+		</property>
+		<property name="progressBarId" value="multi"/>
+	</bean>
+
+	
+	
+	
+<!-- 	modification for login -->
+
+<alias name="luxuryCheckoutLoginCheckoutStep" alias="luxuryCheckoutLoginCheckoutStep" />
+	<bean id="luxuryCheckoutLoginCheckoutStep" parent="checkoutStep">
+		<property name="checkoutGroup" ref="luxuryMultiPathCheckoutGroup"/>
+		<property name="transitions">
+			<map merge="true">
+				<entry key="previous" value-ref="REDIRECT_TO_CART"/>
+				<entry key="current" value-ref="REDIRECT_MULTI_STEP_CHECKOUTLOGGIN"/>
+				<entry key="next" value-ref="REDIRECT_TO_DELIVERY_METHOD"/>
+			</map>
+		</property>
+		<property name="progressBarId" value="checkoutloggin"/>
+	</bean>
+	
+<!-- modificatin for login ended -->
+	
+
+	<alias name="luxuryDeliveryMethodCheckoutStep" alias="luxuryDeliveryMethodCheckoutStep" />
+	<bean id="luxuryDeliveryMethodCheckoutStep"  parent="checkoutStep">
+		<property name="checkoutGroup" ref="luxuryMultiPathCheckoutGroup"/>
+		<property name="checkoutStepValidator" ref="defaultResponsiveDeliveryMethodCheckoutValidator"/>
+		<property name="transitions">
+			<map merge="true">
+				<entry key="previous" value-ref="REDIRECT_MULTI_STEP_CHECKOUTLOGGIN"/>
+				<entry key="current" value-ref="REDIRECT_TO_DELIVERY_METHOD"/>
+				<entry key="next" value-ref="REDIRECT_TO_PAYMENT_METHOD"/>
+			</map>
+		</property>
+		<property name="progressBarId" value="deliveryMethod"/>
+	</bean>
+
+	<alias name="luxuryPickupLocationCheckoutStep" alias="luxuryPickupLocationCheckoutStep" />
+	<bean id="luxuryPickupLocationCheckoutStep" parent="checkoutStep">
+		<property name="checkoutGroup" ref="luxuryMultiPathCheckoutGroup"/>
+		<property name="checkoutStepValidator" ref="defaultPickupCheckoutValidator"/>
+		<property name="transitions">
+			<map merge="true">
+				<entry key="previous" value-ref="REDIRECT_TO_DELIVERY_METHOD"/>
+				<entry key="current" value-ref="REDIRECT_TO_PICKUP_LOCATION"/>
+				<entry key="next" value-ref="REDIRECT_TO_PAYMENT_METHOD"/>
+			</map>
+		</property>
+		<property name="progressBarId" value="deliveryMethod"/>
+	</bean>
+
+	<alias name="luxuryPaymentMethodCheckoutStep" alias="luxuryPaymentMethodCheckoutStep" />
+	<bean id="luxuryPaymentMethodCheckoutStep" parent="checkoutStep">
+		<property name="checkoutGroup" ref="luxuryMultiPathCheckoutGroup"/>
+		<property name="transitions">
+			<map merge="true">
+				<entry key="previous" value-ref="REDIRECT_TO_DELIVERY_METHOD"/>
+				<entry key="current" value-ref="REDIRECT_TO_PAYMENT_METHOD"/>
+				<entry key="next" value="redirect:/checkout/orderConfirmation/%s"/> 
+			</map>
+		</property>
+		<property name="progressBarId" value="paymentMethod"/>
+	</bean>
+
+	<alias name="luxurySummaryCheckoutStep" alias="luxurySummaryCheckoutStep" />
+	<bean id="luxurySummaryCheckoutStep"  parent="checkoutStep">
+		<property name="checkoutGroup" ref="luxuryMultiPathCheckoutGroup"/>
+		<property name="checkoutStepValidator" ref="defaultResponsiveSummaryCheckoutValidator"/>
+		<property name="transitions">
+			<map merge="true">
+				<entry key="previous" value-ref="REDIRECT_TO_PAYMENT_METHOD"/>
+				<entry key="current" value-ref="REDIRECT_TO_SUMMARY"/>
+				<entry key="next" value="redirect:/checkout/orderConfirmation/%s"/>
+			</map>
+		</property>
+		<property name="progressBarId" value="confirmOrder"/>
+	</bean>
+	
+	<alias name="luxuryMultiPathCheckoutGroup" alias="luxuryMultiPathCheckoutGroup" />
+    <bean id="luxuryMultiPathCheckoutGroup"  class="de.hybris.platform.acceleratorstorefrontcommons.checkout.steps.CheckoutGroup">
+        <property name="groupId"  value="luxuryMultiPathCheckoutGroup"/>
+        <property name="checkoutStepMap">
+            <map merge="true">
+                <entry key="multi" value-ref="multiStepMultiPathCheckout"/>
+                <entry key="checkout-login" value-ref="luxuryCheckoutLoginCheckoutStep"/>
+                <entry key="delivery-method" value-ref="luxuryDeliveryMethodCheckoutStep"/>
+                <entry key="pickup-location" value-ref="luxuryPickupLocationCheckoutStep"/>
+                <entry key="payment-method" value-ref="luxuryPaymentMethodCheckoutStep"/>
+                <entry key="summary" value-ref="luxurySummaryCheckoutStep"/>
+            </map>
+        </property>
+        <property name="validationResultsMap">
+            <map merge="true">
+                <entry key="FAILED" value-ref="REDIRECT_TO_CART"/>
+                <entry key="REDIRECT_TO_DELIVERY_ADDRESS" value-ref="REDIRECT_TO_DELIVERY_ADDRESS"/>
+                <entry key="REDIRECT_TO_PICKUP_LOCATION" value-ref="REDIRECT_TO_PICKUP_LOCATION"/>
+                <entry key="REDIRECT_TO_CART" value-ref="REDIRECT_TO_CART"/>
+                <entry key="REDIRECT_TO_PAYMENT_METHOD" value-ref="REDIRECT_TO_PAYMENT_METHOD"/>
+                <entry key="REDIRECT_TO_DELIVERY_METHOD" value-ref="REDIRECT_TO_DELIVERY_METHOD"/>
+            </map>
+        </property>
+        <property name="checkoutProgressBar">
+            <map merge="true">
+                <entry key="1" value-ref="luxuryCheckoutLoginCheckoutStep"/>
+                <entry key="2" value-ref="luxuryDeliveryMethodCheckoutStep"/>
+                <entry key="3" value-ref="luxuryPaymentMethodCheckoutStep"/>
+               </map>
+        </property>
+    </bean>    
+
+	<!-- Redirects -->
+
+	<bean id="REDIRECT_TO_CART" class="java.lang.String">
+		<constructor-arg value="redirect:/cart"/>
+	</bean>
+
+	<bean id="REDIRECT_MULTI_STEP_CHECKOUT" class="java.lang.String">
+		<constructor-arg value="redirect:/checkout/multi"/>
+	</bean>
+	
+	<bean id="REDIRECT_MULTI_STEP_CHECKOUTLOGGIN" class="java.lang.String">
+		<constructor-arg value="redirect:/checkout/multi/checkoutlogin/login"/>
+	</bean>
+
+	<bean id="REDIRECT_TO_DELIVERY_ADDRESS" class="java.lang.String">
+		<constructor-arg value="redirect:/checkout/multi/delivery-address/add"/>
+	</bean>
+
+	<bean id="REDIRECT_TO_DELIVERY_METHOD" class="java.lang.String">
+		<constructor-arg value="redirect:/checkout/multi/delivery-method/choose"/>
+	</bean>
+
+	<bean id="REDIRECT_TO_PICKUP_LOCATION" class="java.lang.String">
+		<constructor-arg value="redirect:/checkout/multi/pickup-location/choose"/>
+	</bean>
+
+	<!-- TPR-629 -->
+	<bean id="REDIRECT_TO_PAYMENT_METHOD" class="java.lang.String">
+		<constructor-arg value="redirect:/checkout/multi/payment-method/pay"/>
+	</bean>
+
+	<bean id="REDIRECT_TO_SUMMARY" class="java.lang.String">
+		<constructor-arg value="redirect:/checkout/multi/summary/view"/>
+	</bean>
+	
+	
+	<!--Checkout GroupMap-->
+	<util:map id="checkoutFlowGroupMap">
+		<entry key="responsiveCheckoutGroup" value-ref="responsiveCheckoutGroup"/>
+		<entry key="marketplaceMultiPathCheckoutGroup"  value-ref="marketplaceMultiPathCheckoutGroup"/>
+		<entry key="luxuryMultiPathCheckoutGroup"  value-ref="luxuryMultiPathCheckoutGroup"/>
+	</util:map>
+	<!--Checkout GroupMap-->
 
 </beans>
