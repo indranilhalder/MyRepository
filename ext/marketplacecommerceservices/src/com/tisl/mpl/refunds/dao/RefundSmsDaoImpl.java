@@ -27,12 +27,20 @@ public class RefundSmsDaoImpl extends AbstractItemDao implements RefundSmsDao
 
 
 	@Override
-	public List<RefundSmsData> searchResultsForRefund(final FlexibleSearchQuery fx)
+	public List<RefundSmsData> searchResultsForRefund(final String dynamicQuery)
 	{
+		final StringBuilder query = new StringBuilder();
+
+		query.append("select {a:orderlineid},{add:firstname},{add:phone1} from {orderentry as a join order as b on {a:order}={b:pk} join address as add on {b:deliveryAddress}={add:pk}} where p_orderlineid in (");
+		query.append(dynamicQuery);
+		query.append(") and {b:type}='SubOrder' and {b:VersionID} is null");
+
+		System.out.println("===================== :::::::::::" + query.toString());
+
 		RefundSmsData refundSmsData = null;
 		final List<RefundSmsData> refundSmsDataList = new ArrayList<RefundSmsData>();
-		final String queryString = "select {a:orderlineid},{add:firstname},{add:phone1} from {orderentry as a join order as b on {a:order}={b:pk} join address as add on {b:deliveryAddress}={add:pk}} where p_orderlineid ='242424000946947' and {b:type}='SubOrder' and {b:VersionID} is null";
-		final FlexibleSearchQuery fQuery = new FlexibleSearchQuery(queryString);
+		//final String queryString = "select {a:orderlineid},{add:firstname},{add:phone1} from {orderentry as a join order as b on {a:order}={b:pk} join address as add on {b:deliveryAddress}={add:pk}} where p_orderlineid ='242424000946947' and {b:type}='SubOrder' and {b:VersionID} is null";
+		final FlexibleSearchQuery fQuery = new FlexibleSearchQuery(query);
 		fQuery.setResultClassList(Arrays.asList(String.class, String.class, String.class));
 
 
@@ -50,24 +58,24 @@ public class RefundSmsDaoImpl extends AbstractItemDao implements RefundSmsDao
 	}
 
 	@Override
-	public StringBuilder getAllTransactionsForSms()
+	public String getAllTransactionsForSms()
 	{
-
-		final StringBuilder dynamicQuery = new StringBuilder();
+		String dynamicQuery = null;
+		final StringBuilder query = new StringBuilder();
 		final String queryString = "select {transactionId} from {RefundTransactionEntry}";
 		final FlexibleSearchQuery fQuery = new FlexibleSearchQuery(queryString);
 		fQuery.setResultClassList(Arrays.asList(String.class));
 
-		final SearchResult<List<Object>> rows = search(fQuery);
+		final SearchResult<String> rows = search(fQuery);
 
-		for (final List<Object> row : rows.getResult())
+		for (final String row : rows.getResult())
 		{
-			dynamicQuery.append("'");
-			dynamicQuery.append(row.get(0));
-			dynamicQuery.append("'");
-			dynamicQuery.append(",");
+			query.append("'");
+			query.append(row);
+			query.append("'");
+			query.append(",");
 		}
-		dynamicQuery.substring(0, dynamicQuery.length() - 1);
+		dynamicQuery = query.substring(0, query.length() - 1);
 
 		System.out.println("=========================================" + dynamicQuery.toString());
 		return dynamicQuery;

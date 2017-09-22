@@ -3,8 +3,6 @@
  */
 package com.tisl.mpl.refunds.dao;
 
-import de.hybris.platform.servicelayer.search.FlexibleSearchQuery;
-
 import java.util.List;
 
 import com.tisl.mpl.data.RefundSmsData;
@@ -16,7 +14,7 @@ import com.tisl.mpl.data.RefundSmsData;
  */
 public interface RefundSmsDao
 {
-	public List<RefundSmsData> searchResultsForRefund(FlexibleSearchQuery fx);
+	public List<RefundSmsData> searchResultsForRefund(final String dynamicQuery);
 
-	public StringBuilder getAllTransactionsForSms();
+	public String getAllTransactionsForSms();
 }

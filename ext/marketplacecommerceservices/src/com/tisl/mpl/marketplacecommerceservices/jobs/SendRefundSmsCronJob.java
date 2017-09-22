@@ -3,6 +3,8 @@
  */
 package com.tisl.mpl.marketplacecommerceservices.jobs;
 
+import de.hybris.platform.cronjob.enums.CronJobResult;
+import de.hybris.platform.cronjob.enums.CronJobStatus;
 import de.hybris.platform.cronjob.model.CronJobModel;
 import de.hybris.platform.servicelayer.cronjob.AbstractJobPerformable;
 import de.hybris.platform.servicelayer.cronjob.PerformResult;
@@ -33,19 +35,26 @@ public class SendRefundSmsCronJob extends AbstractJobPerformable<CronJobModel>
 	public PerformResult perform(final CronJobModel arg0)
 	{
 		LOG.debug("Inside perform method of SendRefundSmsCronJob class...");
+		try
+		{
+			final String query = refundSmsDao.getAllTransactionsForSms();
 
-		refundSmsDao.getAllTransactionsForSms();
+			final List<RefundSmsData> result = refundSmsDao.searchResultsForRefund(query);
 
-		final List<RefundSmsData> result = refundSmsDao.searchResultsForRefund(null);
+			for (final RefundSmsData obj : result)
+			{
+				System.out.println("============" + obj.getName() + "::::::::::::::" + obj.getTransactionId() + ":::::::::::::"
+						+ obj.getPhoneNo());
+			}
 
-		System.out.println("============" + result.get(0).getName() + "::::::::::::::" + result.get(0).getTransactionId()
-				+ ":::::::::::::" + result.get(0).getPhoneNo());
 
 
-
-		LOG.debug("Finished executing perform method of SendRefundSmsCronJob class...");
-
-		// YTODO Auto-generated method stub
-		return null;
+			LOG.debug("Finished executing perform method of SendRefundSmsCronJob class...");
+			return new PerformResult(CronJobResult.SUCCESS, CronJobStatus.FINISHED);
+		}
+		catch (final Exception ex)
+		{
+			return new PerformResult(CronJobResult.ERROR, CronJobStatus.ABORTED);
+		}
 	}
 }
