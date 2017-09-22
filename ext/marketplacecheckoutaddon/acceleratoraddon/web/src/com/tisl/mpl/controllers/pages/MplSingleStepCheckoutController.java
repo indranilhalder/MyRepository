@@ -443,7 +443,7 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 
 			storeCmsPageInModel(model, getContentPageForLabelOrId(MULTI_CHECKOUT_SUMMARY_CMS_PAGE_LABEL));
 			setUpMetaDataForContentPage(model, getContentPageForLabelOrId(MULTI_CHECKOUT_SUMMARY_CMS_PAGE_LABEL));
-			final CartData cartUssidData = getMplCustomAddressFacade().getCheckoutCart();
+			final CartData cartUssidData = getMplCustomAddressFacade().getCheckoutCart(cartModel);
 			List<AddressData> deliveryAddress = null;
 			if (cartUssidData != null)
 			{
@@ -591,7 +591,7 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 				LOG.debug("exchangeAppliedCart=" + exchangeAppliedCart);
 			}
 
-			final CartData cartData = getMplCustomAddressFacade().getCheckoutCart();
+			final CartData cartData = getMplCustomAddressFacade().getCheckoutCart(cart);//CAR-323
 
 			//TISSEC-11
 			final String regex = "\\d{6}";
@@ -703,8 +703,8 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 						+ "&type=redirect", UTF);
 				return FORWARD_PREFIX + "/checkout/single/message" + requestQueryParam;
 			}
-			final CartData cartData = getMplCustomAddressFacade().getCheckoutCart();
-			model.addAttribute(MarketplacecheckoutaddonConstants.CARTDATA, cartData);
+			//final CartData cartData = getMplCustomAddressFacade().getCheckoutCart();//Commenting for CAR-323
+			//model.addAttribute(MarketplacecheckoutaddonConstants.CARTDATA, cartData);//Commenting for CAR-323
 			model.addAttribute(MarketplacecheckoutaddonConstants.ADDRESSTYPE, getMplCheckoutFacade().getAddressType());
 			model.addAttribute(ModelAttributetConstants.COUNTRY_DATA, checkoutFacade.getDeliveryCountries());
 			model.addAttribute(ModelAttributetConstants.TITLE_DATA, userFacade.getTitles());
@@ -856,7 +856,7 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 
 			final List<StateData> stateDataList = accountAddressFacade.getStates();
 			final String errorMsg = mplAddressValidator.validate(addressForm);
-			final CartData cartData = getMplCustomAddressFacade().getCheckoutCart();
+			//final CartData cartData = getMplCustomAddressFacade().getCheckoutCart(cart);//CAR-323
 
 			if ((!StringUtils.isEmpty(errorMsg) && !errorMsg.equalsIgnoreCase(ModelAttributetConstants.SUCCESS))
 					|| bindingResult.hasErrors())
@@ -906,12 +906,13 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 			{
 				exchangeGuideFacade.removeExchangefromCart(cart);
 			}
-			saveAndSetDeliveryAddress(addressForm, true, request, response);
+			saveAndSetDeliveryAddress(addressForm, true, cart,request, response);
 
-			//Recalculating Cart Model
-			LOG.debug(">> Delivery cost " + cartData.getDeliveryCost().getValue());
 			if (isPincodeRestrictedPromoPresent)
 			{
+				//Recalculating Cart Model
+				final CartData cartData = getMplCustomAddressFacade().getCheckoutCart(cart);//CAR-323
+				LOG.debug(">> Delivery cost " + cartData.getDeliveryCost().getValue());
 				getMplCheckoutFacade().reCalculateCart(cartData);
 			}
 
@@ -1030,16 +1031,17 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 						+ "&type=redirect", UTF);
 				return FORWARD_PREFIX + "/checkout/single/message" + requestQueryParam;
 			}
-			final CartData cartData = getMplCustomAddressFacade().getCheckoutCart();
+			//final CartData cartData = getMplCustomAddressFacade().getCheckoutCart();//CAR-323
 			final CartModel cartModel = getCartService().getSessionCart();
 			final AccountAddressForm addressForm = new AccountAddressForm();
 			addressForm.setCountryIso(MarketplacecheckoutaddonConstants.COUNTRYISO);
 			addressForm.setAddressType("Home");
 			final List<StateData> stateDataList = accountAddressFacade.getStates();
-
-			if (null != cartData)
+			final AddressData addressData = getMplCustomAddressFacade().getDeliveryAddress(cartModel);
+			if (null != addressData)
 			{
-				deliveryAddress = getMplCustomAddressFacade().getDeliveryAddresses(cartData.getDeliveryAddress(), cartModel); //CAR-194
+
+				deliveryAddress = getMplCustomAddressFacade().getDeliveryAddresses(addressData, cartModel); //CAR-194//CAR-323
 			}
 
 
@@ -1060,7 +1062,7 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 
 			model.addAttribute(MarketplacecheckoutaddonConstants.ADDRESSFLAG, addressFlag);
 			model.addAttribute(MarketplacecheckoutaddonConstants.DELIVERYADDRESSES, deliveryAddress);
-			model.addAttribute(MarketplacecheckoutaddonConstants.CARTDATA, cartData);
+			//model.addAttribute(MarketplacecheckoutaddonConstants.CARTDATA, cartData);//CAR-323
 			model.addAttribute(ModelAttributetConstants.STATE_DATA_LIST, stateDataList);
 			model.addAttribute(MarketplacecheckoutaddonConstants.ADDRESSFORM, addressForm);
 			model.addAttribute(MarketplacecheckoutaddonConstants.SHOWSAVEDTOADDRESSBOOK, Boolean.TRUE);
@@ -1135,7 +1137,7 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 				LOG.debug("exchangeAppliedCart=" + exchangeAppliedCart);
 			}
 
-			final CartData cartData = getMplCustomAddressFacade().getCheckoutCart();
+			//final CartData cartData = getMplCustomAddressFacade().getCheckoutCart(cart);//CAR-323
 			AddressData finaladdressData = new AddressData();
 			for (final AddressData addressData : accountAddressFacade.getAddressBook())
 			{
@@ -1174,10 +1176,12 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 				getMplCustomAddressFacade().setDeliveryAddress(finaladdressData);
 				userFacade.setDefaultAddress(finaladdressData);
 
-				// Recalculating Cart Model check location restricted promotion
-				LOG.debug(">> Delivery cost " + cartData.getDeliveryCost().getValue());
+
 				if (isPincodeRestrictedPromoPresent)
 				{
+					final CartData cartData = getMplCustomAddressFacade().getCheckoutCart(cart);//CAR-323
+					// Recalculating Cart Model check location restricted promotion
+					LOG.debug(">> Delivery cost " + cartData.getDeliveryCost().getValue());
 					getMplCheckoutFacade().reCalculateCart(cartData);
 				}
 			}
@@ -1343,7 +1347,7 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 			}
 			final String errorMsg = mplAddressValidator.validate(addressForm);
 			//final List<StateData> stateDataList = accountAddressFacade.getStates();
-			final CartData cartData = getMplCustomAddressFacade().getCheckoutCart();
+			//final CartData cartData = getMplCustomAddressFacade().getCheckoutCart();
 			if ((!StringUtils.isEmpty(errorMsg) && !errorMsg.equalsIgnoreCase(ModelAttributetConstants.SUCCESS))
 					|| bindingResult.hasErrors())
 			{
@@ -1396,11 +1400,14 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 							+ MarketplacecclientservicesConstants.OMS_PINCODE_SERVICEABILTY_FAILURE_MESSAGE + "&type=error", UTF);
 					return FORWARD_PREFIX + "/checkout/single/message" + requestQueryParam;
 				}
-				//Recalculating Cart Model
-				saveAndSetDeliveryAddress(addressForm, false, request, response);
-				LOG.debug(">> Delivery cost " + cartData.getDeliveryCost().getValue());
+
+				saveAndSetDeliveryAddress(addressForm, false, cart, request, response);
+
 				if (isPincodeRestrictedPromoPresent)
 				{
+					//Recalculating Cart Model
+					final CartData cartData = getMplCustomAddressFacade().getCheckoutCart(cart);
+					LOG.debug(">> Delivery cost " + cartData.getDeliveryCost().getValue());
 					getMplCheckoutFacade().reCalculateCart(cartData);
 				}
 			}
@@ -1480,7 +1487,7 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 					jsonObj.put("type", "error");
 					return jsonObj;
 				}
-				saveAndSetDeliveryAddress(addressForm, isEdit, request, response);
+				saveAndSetDeliveryAddress(addressForm, isEdit, getCartService().getSessionCart(), request, response);
 				jsonObj.put("isAddressSaved", "true");
 				jsonObj.put("isAddressSet", "true");
 				jsonObj.put("type", "response");
@@ -1664,10 +1671,10 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 	 * @param addressForm
 	 * @param isEditAddress
 	 */
-	public void saveAndSetDeliveryAddress(final AccountAddressForm addressForm, final boolean isEditAddress,
+	public void saveAndSetDeliveryAddress(final AccountAddressForm addressForm, final boolean isEditAddress,final CartModel cartModel,
 			final HttpServletRequest request, final HttpServletResponse response)
 	{
-		CartModel oModel = null;
+		CartModel oModel = cartModel;
 		int pincodeCookieMaxAge;
 		final Cookie cookie = GenericUtilityMethods.getCookieByName(request, "pdpPincode");
 		final String cookieMaxAge = getConfigurationService().getConfiguration().getString("pdpPincode.cookie.age");
