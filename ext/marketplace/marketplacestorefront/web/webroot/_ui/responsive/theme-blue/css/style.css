@@ -77245,3 +77245,8 @@ body.template-pages-LoginPageTemplate .sign-in.tab-view .form-group #password_lo
 	margin-bottom: 10px;
 	} 
 /* TISCSXII-2224 end */
+/* TISCSXII-2240 Start */
+.cartPromotions .promotionDesc {
+    padding-bottom: 24px;
+} 
+/* TISCSXII-2240 END */
