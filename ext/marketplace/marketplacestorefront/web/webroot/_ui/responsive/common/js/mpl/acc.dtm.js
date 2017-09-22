@@ -87,7 +87,7 @@ $(document).ready(function(){
 			|| pageType == "/sellersdetailpage") {
 		try{
 			
-			var product_id = $("#product_id").val().toLowerCase();
+			   var product_id = $("#product_id").val().toLowerCase();
 			   var product_category = $("#product_category").val().toLowerCase();
 			   var product_brand = $("#product_brand").val().toLowerCase();
 			   var product_discount = $("#product_discount").val();
@@ -197,6 +197,9 @@ $(document).ready(function(){
 				  if(typeof _satellite !="undefined"){
 				   _satellite.track('out_of_stock');
 			      }
+				//  TISCSXII-2243 |out of stock fix
+				  dtmErrorTracking("out_of_stock","errorname");
+				  
 				    digitalData.cpj = {
 						product : {
 							id     :  product_id ,
