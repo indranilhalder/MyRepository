@@ -20,28 +20,15 @@ import de.hybris.platform.acceleratorstorefrontcommons.controllers.pages.Abstrac
 import de.hybris.platform.acceleratorstorefrontcommons.controllers.util.GlobalMessages;
 import de.hybris.platform.acceleratorstorefrontcommons.forms.PaymentDetailsForm;
 import de.hybris.platform.cms2.exceptions.CMSItemNotFoundException;
-import de.hybris.platform.cms2.model.pages.ContentPageModel;
 import de.hybris.platform.commercefacades.order.CheckoutFacade;
-import de.hybris.platform.commercefacades.order.data.CartData;
-import de.hybris.platform.commercefacades.order.data.CartModificationData;
-import de.hybris.platform.commercefacades.order.data.OrderData;
-import de.hybris.platform.commercefacades.order.data.OrderEntryData;
 import de.hybris.platform.commercefacades.product.PriceDataFactory;
 import de.hybris.platform.commercefacades.product.ProductFacade;
-import de.hybris.platform.commercefacades.product.ProductOption;
-import de.hybris.platform.commercefacades.product.data.PinCodeResponseData;
-import de.hybris.platform.commercefacades.product.data.PriceData;
-import de.hybris.platform.commercefacades.product.data.PriceDataType;
-import de.hybris.platform.commercefacades.product.data.ProductData;
-import de.hybris.platform.commercefacades.storelocator.data.PointOfServiceData;
 import de.hybris.platform.commercefacades.user.UserFacade;
-import de.hybris.platform.commercefacades.user.data.AddressData;
-import de.hybris.platform.commercefacades.user.data.CountryData;
-import de.hybris.platform.commercefacades.user.data.RegionData;
 import de.hybris.platform.commercefacades.voucher.exceptions.VoucherOperationException;
 import de.hybris.platform.commerceservices.order.CommerceCartModificationException;
 import de.hybris.platform.commerceservices.order.CommerceCartService;
 import de.hybris.platform.core.Constants.USER;
+import de.hybris.platform.core.GenericSearchConstants.LOG;
 import de.hybris.platform.core.model.JewelleryInformationModel;
 import de.hybris.platform.core.model.c2l.CurrencyModel;
 import de.hybris.platform.core.model.order.AbstractOrderEntryModel;
@@ -64,6 +51,7 @@ import de.hybris.platform.servicelayer.i18n.CommonI18NService;
 import de.hybris.platform.servicelayer.model.ModelService;
 import de.hybris.platform.servicelayer.user.UserService;
 import de.hybris.platform.storelocator.GPS;
+import de.hybris.platform.storelocator.data.AddressData;
 import de.hybris.platform.storelocator.location.Location;
 import de.hybris.platform.storelocator.location.impl.LocationDTO;
 import de.hybris.platform.storelocator.location.impl.LocationDtoWrapper;
@@ -175,7 +163,6 @@ import com.tisl.mpl.sellerinfo.facades.MplSellerInformationFacade;
 import com.tisl.mpl.storefront.constants.ModelAttributetConstants;
 import com.tisl.mpl.storefront.constants.RequestMappingUrlConstants;
 import com.tisl.mpl.storefront.controllers.helpers.FrontEndErrorHelper;
-import com.tisl.mpl.storefront.security.cookie.PDPPincodeCookieGenerator;
 import com.tisl.mpl.storefront.util.CSRFTokenManager;
 import com.tisl.mpl.storefront.web.forms.AccountAddressForm;
 import com.tisl.mpl.storefront.web.forms.PaymentForm;
@@ -443,7 +430,7 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 
 			storeCmsPageInModel(model, getContentPageForLabelOrId(MULTI_CHECKOUT_SUMMARY_CMS_PAGE_LABEL));
 			setUpMetaDataForContentPage(model, getContentPageForLabelOrId(MULTI_CHECKOUT_SUMMARY_CMS_PAGE_LABEL));
-			final CartData cartUssidData = getMplCustomAddressFacade().getCheckoutCart(cartModel);
+			final CartData cartUssidData = getMplCustomAddressFacade().getCheckoutCart(cartModel); //CAR-323
 			List<AddressData> deliveryAddress = null;
 			if (cartUssidData != null)
 			{
@@ -825,7 +812,9 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 	public String edit(
 			final AccountAddressForm addressForm,
 			final BindingResult bindingResult,
-			final Model model,final HttpServletRequest request, final HttpServletResponse response,
+			final Model model,
+			final HttpServletRequest request,
+			final HttpServletResponse response,
 			@RequestParam(value = "contExchnageAddEdit", required = false) final String exchangeEnabled,
 			@RequestParam(value = "isPincodeRestrictedPromoPresent", required = false, defaultValue = "false") final boolean isPincodeRestrictedPromoPresent)
 			throws CMSItemNotFoundException, UnsupportedEncodingException
@@ -906,7 +895,7 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 			{
 				exchangeGuideFacade.removeExchangefromCart(cart);
 			}
-			saveAndSetDeliveryAddress(addressForm, true, cart,request, response);
+			saveAndSetDeliveryAddress(addressForm, true, cart, request, response);
 
 			if (isPincodeRestrictedPromoPresent)
 			{
@@ -1332,7 +1321,9 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 	public String add(
 			final AccountAddressForm addressForm,
 			final BindingResult bindingResult,
-			final Model model,final HttpServletRequest request, final HttpServletResponse response,
+			final Model model,
+			final HttpServletRequest request,
+			final HttpServletResponse response,
 			@RequestParam(value = "contExchnageAddEdit", required = false) final String exchangeEnabled,
 			@RequestParam(value = "isPincodeRestrictedPromoPresent", required = false, defaultValue = "false") final boolean isPincodeRestrictedPromoPresent)
 			throws UnsupportedEncodingException
@@ -1671,8 +1662,8 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 	 * @param addressForm
 	 * @param isEditAddress
 	 */
-	public void saveAndSetDeliveryAddress(final AccountAddressForm addressForm, final boolean isEditAddress,final CartModel cartModel,
-			final HttpServletRequest request, final HttpServletResponse response)
+	public void saveAndSetDeliveryAddress(final AccountAddressForm addressForm, final boolean isEditAddress,
+			final CartModel cartModel, final HttpServletRequest request, final HttpServletResponse response)
 	{
 		CartModel oModel = cartModel;
 		int pincodeCookieMaxAge;
@@ -2410,7 +2401,7 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 			List<StoreLocationResponseData> response = null;
 
 			// CAR-197  start
-			final CartData cartData = getMplCustomAddressFacade().getCheckoutCart(); //CAR-197
+			final CartData cartData = getMplCustomAddressFacade().getCheckoutCart(cartModel); //CAR-197, CAR-323
 
 			model.addAttribute(MarketplacecheckoutaddonConstants.CARTDATA, cartData);
 
@@ -3683,7 +3674,7 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 				return jsonObj;
 			}
 			final CartModel cartModel = getCartService().getSessionCart();
-			final CartData cartData = getMplCustomAddressFacade().getCheckoutCart();
+			final CartData cartData = getMplCustomAddressFacade().getCheckoutCart(cartModel);
 			ValidationResults validationResult = null;
 
 			//Below code is not required as this section is suuposed to execute only for payment failure scenario,Where as on payment failure this method is never called.
@@ -4896,7 +4887,7 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 
 	/*
 	 * @Description adding wishlist popup in cart page
-	 *
+	 * 
 	 * @param String productCode,String wishName, model
 	 */
 
@@ -4954,7 +4945,7 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 
 	/*
 	 * @Description showing wishlist popup in cart page
-	 *
+	 * 
 	 * @param String productCode, model
 	 */
 	@ResponseBody
