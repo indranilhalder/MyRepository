@@ -20,15 +20,28 @@ import de.hybris.platform.acceleratorstorefrontcommons.controllers.pages.Abstrac
 import de.hybris.platform.acceleratorstorefrontcommons.controllers.util.GlobalMessages;
 import de.hybris.platform.acceleratorstorefrontcommons.forms.PaymentDetailsForm;
 import de.hybris.platform.cms2.exceptions.CMSItemNotFoundException;
+import de.hybris.platform.cms2.model.pages.ContentPageModel;
 import de.hybris.platform.commercefacades.order.CheckoutFacade;
+import de.hybris.platform.commercefacades.order.data.CartData;
+import de.hybris.platform.commercefacades.order.data.CartModificationData;
+import de.hybris.platform.commercefacades.order.data.OrderData;
+import de.hybris.platform.commercefacades.order.data.OrderEntryData;
 import de.hybris.platform.commercefacades.product.PriceDataFactory;
 import de.hybris.platform.commercefacades.product.ProductFacade;
+import de.hybris.platform.commercefacades.product.ProductOption;
+import de.hybris.platform.commercefacades.product.data.PinCodeResponseData;
+import de.hybris.platform.commercefacades.product.data.PriceData;
+import de.hybris.platform.commercefacades.product.data.PriceDataType;
+import de.hybris.platform.commercefacades.product.data.ProductData;
+import de.hybris.platform.commercefacades.storelocator.data.PointOfServiceData;
 import de.hybris.platform.commercefacades.user.UserFacade;
+import de.hybris.platform.commercefacades.user.data.AddressData;
+import de.hybris.platform.commercefacades.user.data.CountryData;
+import de.hybris.platform.commercefacades.user.data.RegionData;
 import de.hybris.platform.commercefacades.voucher.exceptions.VoucherOperationException;
 import de.hybris.platform.commerceservices.order.CommerceCartModificationException;
 import de.hybris.platform.commerceservices.order.CommerceCartService;
 import de.hybris.platform.core.Constants.USER;
-import de.hybris.platform.core.GenericSearchConstants.LOG;
 import de.hybris.platform.core.model.JewelleryInformationModel;
 import de.hybris.platform.core.model.c2l.CurrencyModel;
 import de.hybris.platform.core.model.order.AbstractOrderEntryModel;
@@ -51,7 +64,6 @@ import de.hybris.platform.servicelayer.i18n.CommonI18NService;
 import de.hybris.platform.servicelayer.model.ModelService;
 import de.hybris.platform.servicelayer.user.UserService;
 import de.hybris.platform.storelocator.GPS;
-import de.hybris.platform.storelocator.data.AddressData;
 import de.hybris.platform.storelocator.location.Location;
 import de.hybris.platform.storelocator.location.impl.LocationDTO;
 import de.hybris.platform.storelocator.location.impl.LocationDtoWrapper;
@@ -163,6 +175,7 @@ import com.tisl.mpl.sellerinfo.facades.MplSellerInformationFacade;
 import com.tisl.mpl.storefront.constants.ModelAttributetConstants;
 import com.tisl.mpl.storefront.constants.RequestMappingUrlConstants;
 import com.tisl.mpl.storefront.controllers.helpers.FrontEndErrorHelper;
+import com.tisl.mpl.storefront.security.cookie.PDPPincodeCookieGenerator;
 import com.tisl.mpl.storefront.util.CSRFTokenManager;
 import com.tisl.mpl.storefront.web.forms.AccountAddressForm;
 import com.tisl.mpl.storefront.web.forms.PaymentForm;
@@ -2347,9 +2360,7 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 	 */
 	@RequestMapping(value = MarketplacecheckoutaddonConstants.GETCNCSTRORES, method = RequestMethod.GET)
 	public String doFindCncStores(final String entryNumber, final String sellerArticleSKU, final String deliveryCode,
-			final Model model, final RedirectAttributes redirectAttributes, final HttpServletRequest request,
-			final HttpServletResponse response1, final HttpSession session) throws CMSItemNotFoundException,
-			UnsupportedEncodingException
+			final Model model, final HttpServletRequest request) throws CMSItemNotFoundException, UnsupportedEncodingException
 	{
 		if (LOG.isDebugEnabled())
 		{
@@ -2367,35 +2378,36 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 		{
 			final CartModel cartModel = getCartService().getSessionCart();
 
-			try
-			{
-				final boolean cartItemDelistedStatus = mplCartFacade.isCartEntryDelisted(cartModel);
-				if (cartItemDelistedStatus)
-				{
-					getSessionService().setAttribute(MarketplacecommerceservicesConstants.CART_DELISTED_SESSION_ID,
-							MarketplacecommerceservicesConstants.TRUE_UPPER);
-					final String requestQueryParam = UriUtils.encodeQuery("?url=" + MarketplacecheckoutaddonConstants.CART
-							+ "&type=redirect", UTF);
-					return FORWARD_PREFIX + "/checkout/single/message" + requestQueryParam;
-					//return MarketplacecheckoutaddonConstants.REDIRECT + MarketplacecheckoutaddonConstants.CART;
-				}
-			}
-			catch (final EtailBusinessExceptions e)
-			{
-				ExceptionUtil.etailBusinessExceptionHandler(e, null);
-				getSessionService().setAttribute(MarketplacecclientservicesConstants.DELIVERY_MODE_ENTER_STEP_ERROR_ID, "TRUE");
-				final String requestQueryParam = UriUtils.encodeQuery("?url=/cart&type=redirect", UTF);
-				return FORWARD_PREFIX + "/checkout/single/message" + requestQueryParam;
-			}
-			catch (final Exception e)
-			{
-				ExceptionUtil.etailNonBusinessExceptionHandler(new EtailNonBusinessExceptions(e,
-						MarketplacecommerceservicesConstants.E0000));
-				LOG.error("Stack trace:", e);
-				getSessionService().setAttribute(MarketplacecclientservicesConstants.DELIVERY_MODE_ENTER_STEP_ERROR_ID, "TRUE");
-				final String requestQueryParam = UriUtils.encodeQuery("?url=/cart&type=redirect", UTF);
-				return FORWARD_PREFIX + "/checkout/single/message" + requestQueryParam;
-			}
+			//Commeting below as a part of CAR-323
+			//			try
+			//			{
+			//				final boolean cartItemDelistedStatus = mplCartFacade.isCartEntryDelisted(cartModel);
+			//				if (cartItemDelistedStatus)
+			//				{
+			//					getSessionService().setAttribute(MarketplacecommerceservicesConstants.CART_DELISTED_SESSION_ID,
+			//							MarketplacecommerceservicesConstants.TRUE_UPPER);
+			//					final String requestQueryParam = UriUtils.encodeQuery("?url=" + MarketplacecheckoutaddonConstants.CART
+			//							+ "&type=redirect", UTF);
+			//					return FORWARD_PREFIX + "/checkout/single/message" + requestQueryParam;
+			//					//return MarketplacecheckoutaddonConstants.REDIRECT + MarketplacecheckoutaddonConstants.CART;
+			//				}
+			//			}
+			//			catch (final EtailBusinessExceptions e)
+			//			{
+			//				ExceptionUtil.etailBusinessExceptionHandler(e, null);
+			//				getSessionService().setAttribute(MarketplacecclientservicesConstants.DELIVERY_MODE_ENTER_STEP_ERROR_ID, "TRUE");
+			//				final String requestQueryParam = UriUtils.encodeQuery("?url=/cart&type=redirect", UTF);
+			//				return FORWARD_PREFIX + "/checkout/single/message" + requestQueryParam;
+			//			}
+			//			catch (final Exception e)
+			//			{
+			//				ExceptionUtil.etailNonBusinessExceptionHandler(new EtailNonBusinessExceptions(e,
+			//						MarketplacecommerceservicesConstants.E0000));
+			//				LOG.error("Stack trace:", e);
+			//				getSessionService().setAttribute(MarketplacecclientservicesConstants.DELIVERY_MODE_ENTER_STEP_ERROR_ID, "TRUE");
+			//				final String requestQueryParam = UriUtils.encodeQuery("?url=/cart&type=redirect", UTF);
+			//				return FORWARD_PREFIX + "/checkout/single/message" + requestQueryParam;
+			//			}
 
 
 			List<StoreLocationResponseData> response = null;
@@ -4887,7 +4899,7 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 
 	/*
 	 * @Description adding wishlist popup in cart page
-	 * 
+	 *
 	 * @param String productCode,String wishName, model
 	 */
 
@@ -4945,7 +4957,7 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 
 	/*
 	 * @Description showing wishlist popup in cart page
-	 * 
+	 *
 	 * @param String productCode, model
 	 */
 	@ResponseBody
