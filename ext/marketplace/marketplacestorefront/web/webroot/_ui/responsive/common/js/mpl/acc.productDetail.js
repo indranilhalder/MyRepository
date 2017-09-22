@@ -1831,9 +1831,11 @@ function displayDeliveryDetails(sellerName) {
 					if(sellerCount > 1){
 					var codLink = "/p-" + productCode + "/viewSellers"; //TPR-6907
 					$("#codLink").attr("href",codLink);
+					$("#codLink").css("cursor","pointer");
 					}
 					else{
 					$("#codLink").removeAttr("href");
+					$("#codLink").css("cursor","default");
 					}
 					$("#codEli").show();
 				} else {

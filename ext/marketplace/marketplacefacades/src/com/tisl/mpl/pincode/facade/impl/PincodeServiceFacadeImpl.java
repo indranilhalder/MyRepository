@@ -32,10 +32,13 @@ import java.util.Collection;
 import java.util.List;
 
 import javax.annotation.Resource;
+import javax.inject.Provider;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.constants.MplGlobalCodeConstants;
@@ -74,13 +77,17 @@ public class PincodeServiceFacadeImpl implements PincodeServiceFacade
 
 	private PinCodeServiceAvilabilityFacade pinCodeFacade;
 	private ProductService productService;
-	private ProductFacade productFacade;
+	//private ProductFacade productFacade;
 	private MplCheckoutFacade mplCheckoutFacade;
 	private ProductDetailsHelper productDetailsHelper;
 	private MplCartFacade mplCartFacade;
 	private PincodeService pincodeService;
 
 	private Converters converters;
+
+	@Autowired
+	@Qualifier("accProductFacade")
+	private Provider<ProductFacade> productFacadeProvider;
 
 	@Resource(name = "pointOfServiceConverter")
 	private Converter<PointOfServiceModel, PointOfServiceData> pointOfServiceConverter;
@@ -261,6 +268,7 @@ public class PincodeServiceFacadeImpl implements PincodeServiceFacade
 			if (null != sellerInfoModel)
 			{
 				productModel = sellerInfoModel.getProductSource();
+				final ProductFacade productFacade = productFacadeProvider.get();
 				productData = productFacade.getProductForOptions(productModel,
 						Arrays.asList(ProductOption.BASIC, ProductOption.SELLER, ProductOption.PRICE));
 				storeLocationRequestData.setSellerId(sellerInfoModel.getSellerID());
@@ -342,6 +350,7 @@ public class PincodeServiceFacadeImpl implements PincodeServiceFacade
 		try
 		{
 			final ProductModel productModel = productService.getProductForCode(productCode);
+			final ProductFacade productFacade = productFacadeProvider.get();
 			final ProductData productData = productFacade.getProductForOptions(productModel,
 					Arrays.asList(ProductOption.BASIC, ProductOption.SELLER, ProductOption.PRICE));
 
@@ -683,19 +692,19 @@ public class PincodeServiceFacadeImpl implements PincodeServiceFacade
 	/**
 	 * @return the productFacade
 	 */
-	public ProductFacade getProductFacade()
-	{
-		return productFacade;
-	}
+	//	public ProductFacade getProductFacade()
+	//	{
+	//		final ProductFacade productFacade = ProductFacadeProvider.get();
+	//		return productFacade;
+	//	}
 
 	/**
 	 * @param productFacade
 	 *           the productFacade to set
 	 */
-	public void setProductFacade(final ProductFacade productFacade)
-	{
-		this.productFacade = productFacade;
-	}
+	/*
+	 * @Autowired public void setProductFacade(final ProductFacade productFacade) { this.productFacade = productFacade; }
+	 */
 
 	/**
 	 * @return the mplCheckoutFacade
