@@ -13432,6 +13432,12 @@
 						<modifiers read="true" write="true" search="true" />
 					</attribute>
 					
+					<attribute autocreate="true" generate="true" qualifier="cardPinNumber"
+						type="java.lang.String">
+						<persistence type="property" />
+						<modifiers read="true" write="true" search="true" />
+					</attribute>
+					
 					<attribute autocreate="true" generate="true" qualifier="cardAmount"
 						type="java.lang.String">
 						<persistence type="property" />
