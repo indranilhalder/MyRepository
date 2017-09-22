@@ -151,32 +151,6 @@ public class ProductDetailsHelper
 	//@Autowired
 	//private SiteConfigService siteConfigService;
 
-	public GigyaService getGigyaservice()
-	{
-		return gigyaservice;
-	}
-
-	public void setGigyaservice(final GigyaService gigyaservice)
-	{
-		this.gigyaservice = gigyaservice;
-	}
-
-	/**
-	 * @return the deliveryCostService
-	 */
-	public MplDeliveryCostService getDeliveryCostService()
-	{
-		return deliveryCostService;
-	}
-
-	/**
-	 * @param deliveryCostService
-	 *           the deliveryCostService to set
-	 */
-	public void setDeliveryCostService(final MplDeliveryCostService deliveryCostService)
-	{
-		this.deliveryCostService = deliveryCostService;
-	}
 
 	@Resource(name = "mplProductFacade")
 	private MplProductFacade mplProductFacade;

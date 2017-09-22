@@ -38,10 +38,27 @@ public class MplProductFacadeImpl implements MplProductFacade
 
 	private MplProductService mplProductService;
 	
-	@Autowired
-	@Qualifier("pincodeServiceFacade")
+//	@Autowired
+//	@Qualifier("pincodeServiceFacade")
+	//@Resource(name = "pincodeServiceFacade")
 	private PincodeServiceFacade pincodeServiceFacade;
 	
+	/**
+	 * @return the pincodeServiceFacade
+	 */
+	public PincodeServiceFacade getPincodeServiceFacade() {
+		return pincodeServiceFacade;
+	}
+
+
+
+	/**
+	 * @param pincodeServiceFacade the pincodeServiceFacade to set
+	 */
+	public void setPincodeServiceFacade(PincodeServiceFacade pincodeServiceFacade) {
+		this.pincodeServiceFacade = pincodeServiceFacade;
+	}
+
 	@Autowired
 	@Qualifier("pincodeService")
 	private PincodeService pincodeService;
