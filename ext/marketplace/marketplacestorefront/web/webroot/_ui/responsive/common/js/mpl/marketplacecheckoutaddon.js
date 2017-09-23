@@ -5494,7 +5494,121 @@ $(".edit_address").click(function(){
  		});
 	return false;
 });
+
+
+/**
+ * Wallet Changes
+ */
+	$(".cliqCashApplyAlert").hide();
+	$("#unUseGiftBtnText").hide();
+	$(".topPlaceOrderBtn").hide();
+	
+	if($(window).width()>650){
+		$(".giftCheckoutSectionSize").removeClass("col-xs-4");
+		$(".giftCheckoutSectionSize").addClass("col-xs-3");
+	} else {
+		$(".giftCheckoutSectionSize").removeClass("col-xs-3");
+		$(".giftCheckoutSectionSize").addClass("col-xs-4");
+	}		
+	
+	$.ajax({
+		url : ACC.config.encodedContextPath + "/checkout/multi/payment-method/useWalletDetail",
+		type : "GET",
+		cache : false,
+		success : function(data) {
+			
+			$(".cliqTotalBalanceLabel").html(data.totalWalletAmt);
+			$("#qcCashId").html(data.totalCash);
+			$("#qcGiftCardId").html(data.totalEgvBalance);
+			$("#JuspayAmtId").html(data.juspayAmt);
+			
+			
+			if(data.disableWallet){
+				
+				 $('#useGiftBtnText').attr('disabled','disabled');
+			}
+		},	
+	   
+		fail : function(data){
+		 $('#useGiftBtnText').attr('disabled','disabled');
+	}
+		
+	});
+	
+	$(document).on("click","#useGiftCardCheckbox",function() {
+		
+		$(".cliqCashApplyAlert").hide();
+		$(".topPlaceOrderBtn").hide();
+		var value = document.getElementById('useGiftCardCheckbox');	
+		$.ajax({
+			url : ACC.config.encodedContextPath + "/checkout/multi/payment-method/useWalletForPayment",
+			data : {"walletMode":value.checked},
+			type : "POST",
+			cache : false,
+			success : function(data) {
+				
+				if(value.checked){
+    				$("#useGiftBtnText").hide();
+    				$("#unUseGiftBtnText").show();
+    				$(".cliqCashApplyAlert").text('CliQ Cash applied successfully.');
+				    $(".cliqCashApplyAlert").show();
+    			} else {
+    				$("#unUseGiftBtnText").hide();
+    				$("#useGiftBtnText").show();
+    				$(".cliqCashApplyAlert").hide();
+    			}
+				
+				if(data.disableJsMode){
+					alert("disable");
+				      $(".topPlaceOrderBtn").show();
+					
+				}else{
+					
+					  alert("Enable JP");	
+				}
+			},	
+		   
+			fail : function(data){
+			alert("FAIL");
+		}
+			
+		});
+		
+	});
+	
+	$(document).on("click","#paymentTypeCC",function(){
+		 if(isSessionActive()==false){
+			 redirectToCheckoutLogin();
+			}
+			else{	
+				var staticHost = $('#staticHost').val();
+				$("body").append("<div id='no-click' style='opacity:0.5; background:#000; z-index: 100000; width:100%; height:100%; position: fixed; top: 0; left:0;'></div>");
+				$("body").append('<div class="loaderDiv" style="position: fixed; left: 45%;top:45%;z-index: 10000"><img src="'+staticHost+'/_ui/responsive/common/images/red_loader.gif" class="spinner"></div>');
+				$(".pay button, #make_mrupee_payment").prop("disabled",true);
+				$(".pay button, #make_mrupee_payment").css("opacity","0.5");
+				
+	 $.ajax({
+			url : ACC.config.encodedContextPath + "/checkout/multi/payment-method/createWalletOrder",
+			type : "GET",
+			cache : false,
+			contentType : "html/text",
+			success : function(response) {
+				alert(response);
+				$(location).attr('href',response);
+				console.log("Response for QC "+response);
+			},	
+			fail : function(data){
+				$(location).attr('href',ACC.config.encodedContextPath+"/cart");
+			}	
+		});
+	} 
 });
+	/**
+	 * Wallet Changes END
+	 */
+
+});
+
 //TPR-1215
 $(".regular-radio").click(function(){
 	var radio = $(this);

@@ -2303,8 +2303,6 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 							orderModel.setModeOfOrderPayment(paymentModeFromInfo);
 							modelService.save(orderModel);
 						}
-
-
 					}
 					//TIS-3168
 					else
@@ -2463,40 +2461,41 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 				/**
 				 * QC CHANGE
 				 */
-				if(!cart.getIsEGVCart().booleanValue()){
-				boolean splitPayment = false;
-				String cliqCashPaymentMode = StringUtils.EMPTY;
-				boolean jsPayMode = false;
-
-				if (null != (getSessionService().getAttribute("getCliqCashMode").toString()))
+				if (!cart.getIsEGVCart().booleanValue())
 				{
+					boolean splitPayment = false;
+					String cliqCashPaymentMode = StringUtils.EMPTY;
+					boolean jsPayMode = false;
 
-					splitPayment = Boolean.parseBoolean(getSessionService().getAttribute("getCliqCashMode").toString());
-				}
+					if (null != (getSessionService().getAttribute("getCliqCashMode").toString()))
+					{
 
-				if (null != (getSessionService().getAttribute("cliqCashPaymentMode").toString()))
-				{
+						splitPayment = Boolean.parseBoolean(getSessionService().getAttribute("getCliqCashMode").toString());
+					}
 
-					cliqCashPaymentMode = getSessionService().getAttribute("cliqCashPaymentMode").toString();
-				}
+					if (null != (getSessionService().getAttribute("cliqCashPaymentMode").toString()))
+					{
 
-				if (StringUtils.isNotEmpty(getSessionService().getAttribute("jsPayMode").toString()))
-				{
+						cliqCashPaymentMode = getSessionService().getAttribute("cliqCashPaymentMode").toString();
+					}
 
-					jsPayMode = Boolean.parseBoolean(getSessionService().getAttribute("jsPayMode").toString());
-				}
+					if (StringUtils.isNotEmpty(getSessionService().getAttribute("jsPayMode").toString()))
+					{
 
-				LOG.info("cliqCashPaymentMode" + cliqCashPaymentMode);
+						jsPayMode = Boolean.parseBoolean(getSessionService().getAttribute("jsPayMode").toString());
+					}
 
-				if (splitPayment && jsPayMode)
-				{
+					LOG.info("cliqCashPaymentMode" + cliqCashPaymentMode);
 
-					cart.setTotalPrice(Double.valueOf("" + getSessionService().getAttribute("juspayTotalAmt")));
-				}
+					if (splitPayment && jsPayMode)
+					{
 
-				/**
-				 * QC CHANGE end
-				 */
+						cart.setTotalPrice(Double.valueOf("" + getSessionService().getAttribute("juspayTotalAmt")));
+					}
+
+					/**
+					 * QC CHANGE end
+					 */
 				}
 
 				flag = getMplPaymentService().createEntryInAudit(juspayOrderId, channel, cart.getGuid());
@@ -2611,7 +2610,8 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 					final String orderStatus = initOrderResponse.getStatus();
 					if (StringUtils.isNotEmpty(orderStatus))
 					{
-						LOG.info(MarketplacecommerceservicesConstants.JUSPAY_ORDER_RESP + resJusOrderId + " " + orderStatus);
+						System.out.println("**********************##############************************** "
+								+ MarketplacecommerceservicesConstants.JUSPAY_ORDER_RESP + resJusOrderId + " " + orderStatus);
 					}
 				}
 
@@ -3494,15 +3494,13 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 	{
 		try
 		{
-			final double walletTotal = Double.parseDouble(""+getSessionService().getAttribute("WalletTotal"));
-
-			System.out.println("REDEM from QC FOR CURRENT CUSTOMER WALLET AMT IS ****************** " + walletTotal);
+			final double walletTotal = Double.parseDouble("" + getSessionService().getAttribute("WalletTotal"));
 
 			final ArrayList<String> rs = new ArrayList<String>();
 
 			final QCRedeemRequest qcRedeemRequest = new QCRedeemRequest();
 
-			qcRedeemRequest.setAmount(""+walletTotal);
+			qcRedeemRequest.setAmount("" + walletTotal);
 			qcRedeemRequest.setBillAmount(orderToBeUpdated.getTotalPrice().toString());
 			qcRedeemRequest.setNotes("Redeem Request Amount " + walletTotal);
 			qcRedeemRequest.setInvoiceNumber(qcOrderId);
@@ -3511,32 +3509,31 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 
 			if (null != qcRedeeptionResponse && Integer.parseInt(qcRedeeptionResponse.getResponseCode().toString()) == 0)
 			{
-		
+
 				rs.add(orderToBeUpdated.getCode());
 				rs.add(qcOrderId);
 				rs.add("" + qcRedeeptionResponse.getTransactionId());
 
-				getMplPaymentService().createQCEntryInAudit(qcOrderId, "WEB", guid, ""+walletTotal,
+				getMplPaymentService().createQCEntryInAudit(qcOrderId, "WEB", guid, "" + walletTotal,
 						qcRedeeptionResponse.getResponseCode().toString(), qcRedeeptionResponse.getTransactionId().toString());
 
-				System.out.println("--------------- QC AUDIT ENTRY CREATED---- ---- ");
 
 				final Map<String, Double> paymentMode = new HashMap<String, Double>();
 				paymentMode.put("Cliq Cash", Double.valueOf("2"));
 
 
-				getMplPaymentService().setQCPaymentTransaction(rs, paymentMode, orderToBeUpdated, cliqCashPaymentMode, ""+walletTotal);
+				getMplPaymentService().setQCPaymentTransaction(rs, paymentMode, orderToBeUpdated, cliqCashPaymentMode,
+						"" + walletTotal);
 
-				System.out.println("---------------QCPaymentTransaction DONE---- ---- ");
-				
-				calculateSplitModeApportionValue(orderToBeUpdated, qcRedeeptionResponse,  walletTotal);
 
-				return "Success";
+				calculateSplitModeApportionValue(orderToBeUpdated, qcRedeeptionResponse, walletTotal);
+
+				return "SUCCESS";
 			}
 			else
 			{
 				orderToBeUpdated.setStatus(OrderStatus.RMS_VERIFICATION_FAILED);
-				return "Fail";
+				return "FAIL";
 
 			}
 		}
@@ -3544,7 +3541,7 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 		{
 			ex.printStackTrace();
 		}
-		return "Success";
+		return "FAIL";
 	}
 
 	@Override
@@ -3552,179 +3549,195 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 	{
 		return getMplPaymentService().createQCPaymentId();
 	}
-	
-	
-	public void calculateSplitModeApportionValue(final AbstractOrderModel orderToBeUpdated, QCRedeeptionResponse qcRedeeptionResponse, double walletTotal)
+
+
+	public void calculateSplitModeApportionValue(final AbstractOrderModel orderToBeUpdated,
+			final QCRedeeptionResponse qcRedeeptionResponse, final double walletTotal)
 	{
-		 double juspayTotalValue = 0;
-		
+		double juspayTotalValue = 0;
+
 		if (null != getSessionService().getAttribute("juspayTotalAmt"))
 		{
 			juspayTotalValue = Double.parseDouble("" + getSessionService().getAttribute("juspayTotalAmt"));
 		}
-		
-		double totalBillingAmount = walletTotal + juspayTotalValue;
-		
+
+		final double totalBillingAmount = walletTotal + juspayTotalValue;
+
 
 		for (final AbstractOrderEntryModel abstractOrderEntryModel : orderToBeUpdated.getEntries())
 		{
-			WalletApportionPaymentInfoModel walletApportionPayment = getModelService().create(WalletApportionPaymentInfoModel.class);
-			
-			List <WalletCardApportionDetailModel> WalletCardApportionList = new ArrayList<WalletCardApportionDetailModel>();
-			
+			final WalletApportionPaymentInfoModel walletApportionPayment = getModelService()
+					.create(WalletApportionPaymentInfoModel.class);
+
+			final List<WalletCardApportionDetailModel> WalletCardApportionList = new ArrayList<WalletCardApportionDetailModel>();
+
 			walletApportionPayment.setOrderId(orderToBeUpdated.getCode());
-			walletApportionPayment.setTransactionId(""+qcRedeeptionResponse.getTransactionId());
+			walletApportionPayment.setTransactionId("" + qcRedeeptionResponse.getTransactionId());
 
 			Double deliveryCharge = Double.valueOf(0.0);
 			Double hdDeliveryCharge = Double.valueOf(0.0);
 			Double scheduleDeliveryCharge = Double.valueOf(0.0);
-			double productprice = abstractOrderEntryModel.getTotalPrice().doubleValue() ;
+			final double productprice = abstractOrderEntryModel.getTotalPrice().doubleValue();
 			//double productPriceA =abstractOrderEntryModel.getTotalSalePrice().doubleValue();
-			
-			double cliqCashPartVal= (productprice / totalBillingAmount) * walletTotal;
-			
-			walletApportionPayment.setQcApportionPartValue(""+cliqCashPartVal);
-			
+
+			final double cliqCashPartVal = (productprice / totalBillingAmount) * walletTotal;
+
+			walletApportionPayment.setQcApportionPartValue("" + cliqCashPartVal);
+
 			double qcDeliveryCharge = 0;
 			double qcHdDeliveryCharge = 0;
 			double qcScheduleDeliveryCharge = 0;
-			
+
 			if (null != abstractOrderEntryModel.getCurrDelCharge())
 			{
 				deliveryCharge = abstractOrderEntryModel.getCurrDelCharge();
-				
-				qcDeliveryCharge = (deliveryCharge.doubleValue() / totalBillingAmount)  * walletTotal;
-				
-				walletApportionPayment.setQcDeliveryPartValue(""+qcDeliveryCharge);
+
+				qcDeliveryCharge = (deliveryCharge.doubleValue() / totalBillingAmount) * walletTotal;
+
+				walletApportionPayment.setQcDeliveryPartValue("" + qcDeliveryCharge);
 			}
 
 			if (null != abstractOrderEntryModel.getHdDeliveryCharge())
 			{
 				hdDeliveryCharge = abstractOrderEntryModel.getHdDeliveryCharge();
-				qcHdDeliveryCharge = (hdDeliveryCharge.doubleValue() / totalBillingAmount)  * walletTotal;
-				walletApportionPayment.setQcShippingPartValue(""+qcHdDeliveryCharge);
-				
+				qcHdDeliveryCharge = (hdDeliveryCharge.doubleValue() / totalBillingAmount) * walletTotal;
+				walletApportionPayment.setQcShippingPartValue("" + qcHdDeliveryCharge);
+
 			}
 
 			if (null != abstractOrderEntryModel.getScheduledDeliveryCharge())
 			{
 				scheduleDeliveryCharge = abstractOrderEntryModel.getScheduledDeliveryCharge();
-				qcScheduleDeliveryCharge = (scheduleDeliveryCharge.doubleValue() / totalBillingAmount)  * walletTotal;
-				walletApportionPayment.setQcSchedulingPartValue(""+qcScheduleDeliveryCharge);
+				qcScheduleDeliveryCharge = (scheduleDeliveryCharge.doubleValue() / totalBillingAmount) * walletTotal;
+				walletApportionPayment.setQcSchedulingPartValue("" + qcScheduleDeliveryCharge);
 			}
 
 			if (juspayTotalValue > 0)
 			{
-				 double juspayPartValue = (productprice / totalBillingAmount) * juspayTotalValue;
-				 walletApportionPayment.setJuspayApportionValue(""+juspayPartValue);
-				 
-				 if(deliveryCharge.doubleValue() > 0){
-					 
-					 double juspayPartdelCharge = (deliveryCharge.doubleValue() / totalBillingAmount) * juspayTotalValue;
-					 walletApportionPayment.setJuspayDeliveryValue(""+juspayPartdelCharge);
-				 }
-            if(hdDeliveryCharge.doubleValue() > 0){
-            					 
-            	double juspayPartHdDeliveryCharge = (hdDeliveryCharge.doubleValue() / totalBillingAmount) * juspayTotalValue;
-            	walletApportionPayment.setJuspayShippingValue(""+juspayPartHdDeliveryCharge);
-              }
-            if(scheduleDeliveryCharge.doubleValue() > 0){ 
-            	 double juspayPartSchDelCharge = (scheduleDeliveryCharge.doubleValue() / totalBillingAmount) * juspayTotalValue;
-            	 walletApportionPayment.setJuspaySchedulingValue(""+juspayPartSchDelCharge);
-            }	 
+				final double juspayPartValue = (productprice / totalBillingAmount) * juspayTotalValue;
+				walletApportionPayment.setJuspayApportionValue("" + juspayPartValue);
+
+				if (deliveryCharge.doubleValue() > 0)
+				{
+
+					final double juspayPartdelCharge = (deliveryCharge.doubleValue() / totalBillingAmount) * juspayTotalValue;
+					walletApportionPayment.setJuspayDeliveryValue("" + juspayPartdelCharge);
+				}
+				if (hdDeliveryCharge.doubleValue() > 0)
+				{
+
+					final double juspayPartHdDeliveryCharge = (hdDeliveryCharge.doubleValue() / totalBillingAmount) * juspayTotalValue;
+					walletApportionPayment.setJuspayShippingValue("" + juspayPartHdDeliveryCharge);
+				}
+				if (scheduleDeliveryCharge.doubleValue() > 0)
+				{
+					final double juspayPartSchDelCharge = (scheduleDeliveryCharge.doubleValue() / totalBillingAmount)
+							* juspayTotalValue;
+					walletApportionPayment.setJuspaySchedulingValue("" + juspayPartSchDelCharge);
+				}
 			}
-			
+
 			for (final QCCard cardList : qcRedeeptionResponse.getCards())
 			{
-				WalletCardApportionDetailModel walletCardApportionObj = getModelService().create(WalletCardApportionDetailModel.class);
-				
+				final WalletCardApportionDetailModel walletCardApportionObj = getModelService()
+						.create(WalletCardApportionDetailModel.class);
+
 				if (cardList.getBucketType().equalsIgnoreCase("CASHBACK") || cardList.getBucketType().equalsIgnoreCase("GOODWILL")
 						|| cardList.getBucketType().equalsIgnoreCase("PROMOTION"))
 				{
 					walletCardApportionObj.setCardNumber(cardList.getCardNumber());
 					walletCardApportionObj.setCardExpiry(cardList.getExpiry());
-					walletCardApportionObj.setBucketType(cardList.getBucketType());					
-					double totalQCCashValue = Double.parseDouble("" + cardList.getAmount());
-					walletCardApportionObj.setCardAmount(""+totalQCCashValue);
+					walletCardApportionObj.setBucketType(cardList.getBucketType());
+					final double totalQCCashValue = Double.parseDouble("" + cardList.getAmount());
+					walletCardApportionObj.setCardAmount("" + totalQCCashValue);
 
-					double cliqCashPartValue = (totalQCCashValue/walletTotal) * cliqCashPartVal;
-					walletCardApportionObj.setQcApportionValue(""+cliqCashPartValue);
-					
-					if(qcDeliveryCharge > 0){
-					double qcDeliveryPartValue = (totalQCCashValue/walletTotal) * qcDeliveryCharge;
-					walletCardApportionObj.setQcDeliveryValue(""+qcDeliveryPartValue);
-				    }
-					if(qcHdDeliveryCharge > 0){
-					double qcHdDeliveryPartValue = (totalQCCashValue/walletTotal) * qcHdDeliveryCharge;
-					walletCardApportionObj.setQcShippingValue(""+qcHdDeliveryPartValue);
+					final double cliqCashPartValue = (totalQCCashValue / walletTotal) * cliqCashPartVal;
+					walletCardApportionObj.setQcApportionValue("" + cliqCashPartValue);
+
+					if (qcDeliveryCharge > 0)
+					{
+						final double qcDeliveryPartValue = (totalQCCashValue / walletTotal) * qcDeliveryCharge;
+						walletCardApportionObj.setQcDeliveryValue("" + qcDeliveryPartValue);
 					}
-					if(qcScheduleDeliveryCharge > 0){
-					double qcScheduleDeliveryPartValue = (totalQCCashValue/walletTotal) * qcScheduleDeliveryCharge; 
-					walletCardApportionObj.setQcSchedulingValue(""+qcScheduleDeliveryPartValue);
+					if (qcHdDeliveryCharge > 0)
+					{
+						final double qcHdDeliveryPartValue = (totalQCCashValue / walletTotal) * qcHdDeliveryCharge;
+						walletCardApportionObj.setQcShippingValue("" + qcHdDeliveryPartValue);
 					}
-										
+					if (qcScheduleDeliveryCharge > 0)
+					{
+						final double qcScheduleDeliveryPartValue = (totalQCCashValue / walletTotal) * qcScheduleDeliveryCharge;
+						walletCardApportionObj.setQcSchedulingValue("" + qcScheduleDeliveryPartValue);
+					}
+
 				}
-				if (cardList.getBucketType().equalsIgnoreCase("CREDIT"))  // refund
+				if (cardList.getBucketType().equalsIgnoreCase("CREDIT")) // refund
 				{
 					walletCardApportionObj.setCardNumber(cardList.getCardNumber());
 					walletCardApportionObj.setCardExpiry(cardList.getExpiry());
-					walletCardApportionObj.setBucketType(cardList.getBucketType());					
-					double totalQCCashValue = Double.parseDouble("" + cardList.getAmount());
-					walletCardApportionObj.setCardAmount(""+totalQCCashValue);
+					walletCardApportionObj.setBucketType(cardList.getBucketType());
+					final double totalQCCashValue = Double.parseDouble("" + cardList.getAmount());
+					walletCardApportionObj.setCardAmount("" + totalQCCashValue);
 
-					double cliqCashPartValue = (totalQCCashValue/walletTotal) * cliqCashPartVal;
-					walletCardApportionObj.setQcApportionValue(""+cliqCashPartValue);
-					
-					if(qcDeliveryCharge > 0){
-					double qcDeliveryPartValue = (totalQCCashValue/walletTotal) * qcDeliveryCharge;
-					walletCardApportionObj.setQcDeliveryValue(""+qcDeliveryPartValue);
-				    }
-					if(qcHdDeliveryCharge > 0){
-					double qcHdDeliveryPartValue = (totalQCCashValue/walletTotal) * qcHdDeliveryCharge;
-					walletCardApportionObj.setQcShippingValue(""+qcHdDeliveryPartValue);
+					final double cliqCashPartValue = (totalQCCashValue / walletTotal) * cliqCashPartVal;
+					walletCardApportionObj.setQcApportionValue("" + cliqCashPartValue);
+
+					if (qcDeliveryCharge > 0)
+					{
+						final double qcDeliveryPartValue = (totalQCCashValue / walletTotal) * qcDeliveryCharge;
+						walletCardApportionObj.setQcDeliveryValue("" + qcDeliveryPartValue);
 					}
-					if(qcScheduleDeliveryCharge > 0){
-					double qcScheduleDeliveryPartValue = (totalQCCashValue/walletTotal) * qcScheduleDeliveryCharge; 
-					walletCardApportionObj.setQcSchedulingValue(""+qcScheduleDeliveryPartValue);
+					if (qcHdDeliveryCharge > 0)
+					{
+						final double qcHdDeliveryPartValue = (totalQCCashValue / walletTotal) * qcHdDeliveryCharge;
+						walletCardApportionObj.setQcShippingValue("" + qcHdDeliveryPartValue);
+					}
+					if (qcScheduleDeliveryCharge > 0)
+					{
+						final double qcScheduleDeliveryPartValue = (totalQCCashValue / walletTotal) * qcScheduleDeliveryCharge;
+						walletCardApportionObj.setQcSchedulingValue("" + qcScheduleDeliveryPartValue);
 					}
 				}
 				if (cardList.getBucketType().equalsIgnoreCase("CUSTOMER")) //EGV Added to card
 				{
 					walletCardApportionObj.setCardNumber(cardList.getCardNumber());
 					walletCardApportionObj.setCardExpiry(cardList.getExpiry());
-					walletCardApportionObj.setBucketType(cardList.getBucketType());					
-					double totalQCCashValue = Double.parseDouble("" + cardList.getAmount());
-					walletCardApportionObj.setCardAmount(""+totalQCCashValue);
+					walletCardApportionObj.setBucketType(cardList.getBucketType());
+					final double totalQCCashValue = Double.parseDouble("" + cardList.getAmount());
+					walletCardApportionObj.setCardAmount("" + totalQCCashValue);
 
-					double cliqCashPartValue = (totalQCCashValue/walletTotal) * cliqCashPartVal;
-					walletCardApportionObj.setQcApportionValue(""+cliqCashPartValue);
-					
-					if(qcDeliveryCharge > 0){
-					double qcDeliveryPartValue = (totalQCCashValue/walletTotal) * qcDeliveryCharge;
-					walletCardApportionObj.setQcDeliveryValue(""+qcDeliveryPartValue);
-				    }
-					if(qcHdDeliveryCharge > 0){
-					double qcHdDeliveryPartValue = (totalQCCashValue/walletTotal) * qcHdDeliveryCharge;
-					walletCardApportionObj.setQcShippingValue(""+qcHdDeliveryPartValue);
+					final double cliqCashPartValue = (totalQCCashValue / walletTotal) * cliqCashPartVal;
+					walletCardApportionObj.setQcApportionValue("" + cliqCashPartValue);
+
+					if (qcDeliveryCharge > 0)
+					{
+						final double qcDeliveryPartValue = (totalQCCashValue / walletTotal) * qcDeliveryCharge;
+						walletCardApportionObj.setQcDeliveryValue("" + qcDeliveryPartValue);
 					}
-					if(qcScheduleDeliveryCharge > 0){
-					double qcScheduleDeliveryPartValue = (totalQCCashValue/walletTotal) * qcScheduleDeliveryCharge; 
-					walletCardApportionObj.setQcSchedulingValue(""+qcScheduleDeliveryPartValue);
+					if (qcHdDeliveryCharge > 0)
+					{
+						final double qcHdDeliveryPartValue = (totalQCCashValue / walletTotal) * qcHdDeliveryCharge;
+						walletCardApportionObj.setQcShippingValue("" + qcHdDeliveryPartValue);
+					}
+					if (qcScheduleDeliveryCharge > 0)
+					{
+						final double qcScheduleDeliveryPartValue = (totalQCCashValue / walletTotal) * qcScheduleDeliveryCharge;
+						walletCardApportionObj.setQcSchedulingValue("" + qcScheduleDeliveryPartValue);
 					}
 				}
-				
+
 				WalletCardApportionList.add(walletCardApportionObj);
-				
+
 			}
 
-				walletApportionPayment.setWalletCardList(WalletCardApportionList);
-				getModelService().save(walletApportionPayment);
-				abstractOrderEntryModel.setWalletApportionPaymentInfo(walletApportionPayment);
-				getModelService().save(abstractOrderEntryModel);
+			walletApportionPayment.setWalletCardList(WalletCardApportionList);
+			getModelService().save(walletApportionPayment);
+			abstractOrderEntryModel.setWalletApportionPaymentInfo(walletApportionPayment);
+			getModelService().save(abstractOrderEntryModel);
 		}
-		 
+
 		getModelService().save(orderToBeUpdated);
 		getModelService().refresh(orderToBeUpdated);
 	}
-	
+
 }

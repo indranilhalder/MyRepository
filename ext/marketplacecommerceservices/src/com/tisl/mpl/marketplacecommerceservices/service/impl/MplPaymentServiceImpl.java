@@ -3412,6 +3412,7 @@ public class MplPaymentServiceImpl implements MplPaymentService
 					{
 						LOG.debug("orderStatusResponse status ------> " + orderStatusResponse.getStatus());
 						//Condition when PG Response status is available and charged
+
 						if (StringUtils.isNotEmpty(orderStatusResponse.getStatus())
 								&& orderStatusResponse.getStatus().equalsIgnoreCase(MarketplacecommerceservicesConstants.CHARGED))
 						{
@@ -5054,7 +5055,7 @@ public class MplPaymentServiceImpl implements MplPaymentService
 			paymentTransactionEntry.setRequestToken(rs.get(2));
 			paymentTransactionEntry.setRequestId(rs.get(1));
 			paymentTransactionEntry.setCurrency(order.getCurrency());
-			paymentTransactionEntry.setType(PaymentTransactionType.QC_CAPTURE); /////////////////////////////////////////////////   Change it to QC Capture
+			paymentTransactionEntry.setType(PaymentTransactionType.QC_CAPTURE);
 			paymentTransactionEntry.setTransactionStatus(MarketplacecommerceservicesConstants.SUCCESS);
 			paymentTransactionEntry.setPaymentMode(paymenttype);
 
@@ -5159,9 +5160,7 @@ public class MplPaymentServiceImpl implements MplPaymentService
 			auditEntry.setAuditId(qcOrderID);
 			if (qcResponseCode.equalsIgnoreCase("0"))
 			{
-
 				auditEntry.setStatus(MplPaymentAuditStatusEnum.COMPLETED);
-
 			}
 			else
 			{
