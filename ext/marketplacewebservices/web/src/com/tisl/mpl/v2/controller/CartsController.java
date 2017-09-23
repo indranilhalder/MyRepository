@@ -2639,6 +2639,11 @@ public class CartsController extends BaseCommerceController
 				//commented for CAR:127
 				//reservationList = mplCommerceCartService.getReservation(cart, pincode, type);
 				reservationList = mplCommerceCartService.getReservation(caData, pincode, type, cart, item, SalesApplication.MOBILE);
+				//INC144317815
+				if (reservationList == null || CollectionUtils.isEmpty(reservationList.getReservationItem()))//INC144317815
+				{
+					throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9201);
+				}
 				LOG.debug("******************* Soft reservation Mobile web service response received from OMS ******************"
 						+ cartId);
 
@@ -2726,7 +2731,7 @@ public class CartsController extends BaseCommerceController
 			 * bin = null; if (StringUtils.isNotEmpty(binNo)) { bin = getBinService().checkBin(binNo); } if (null != bin &&
 			 * StringUtils.isNotEmpty(bin.getBankName())) {
 			 * getSessionService().setAttribute(MarketplacewebservicesConstants.BANKFROMBIN, bin.getBankName());
-			 * 
+			 *
 			 * LOG.debug("************ Logged-in cart mobile soft reservation BANKFROMBIN **************" +
 			 * bin.getBankName()); } }
 			 */

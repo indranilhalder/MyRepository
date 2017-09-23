@@ -13,7 +13,7 @@ $(document).ready(function(){
 	var site_currency ='INR';
 	var domain_name = document.domain;
 	
-	var user_login_type = $('#userLoginType').val().trim();
+	//var user_login_type = $('#userLoginType').val().trim();
 	var pageType = $('#pageType').val();
 	var pageName= $('#pageName').val().toLowerCase();
 	var pageNameU = $('#pageName').val();
@@ -87,7 +87,7 @@ $(document).ready(function(){
 			|| pageType == "/sellersdetailpage") {
 		try{
 			
-			var product_id = $("#product_id").val().toLowerCase();
+			   var product_id = $("#product_id").val().toLowerCase();
 			   var product_category = $("#product_category").val().toLowerCase();
 			   var product_brand = $("#product_brand").val().toLowerCase();
 			   var product_discount = $("#product_discount").val();
@@ -197,6 +197,9 @@ $(document).ready(function(){
 				  if(typeof _satellite !="undefined"){
 				   _satellite.track('out_of_stock');
 			      }
+				//  TISCSXII-2243 |out of stock fix
+				  dtmErrorTracking("out_of_stock","errorname");
+				  
 				    digitalData.cpj = {
 						product : {
 							id     :  product_id ,
@@ -794,7 +797,12 @@ $(document).ready(function(){
   
 });
 function differentiateSellerDtm(){
-	var sellerList = $('#pdpSellerIDs').val().replace('_','|');
+	var sellerList = $('#pdpSellerIDs').val();
+	var sellerArray='';
+	if(sellerList != undefined &&  sellerList != '' && sellerList != null){
+		 sellerArray = $('#pdpSellerIDs').val().split(',').join('|');
+	}
+	
 	var buyboxSeller = $("#sellerSelId").val();
 	sellerList = sellerList.substr(1,(sellerList.length)-2);
 	sellerList = sellerList.split(',');
@@ -817,7 +825,7 @@ function differentiateSellerDtm(){
 	//TISCSXII-2186 | pdp fix
 	digitalData.product = {
 			seller : {
-				list : sellerList,
+				list : sellerArray,
 				id   : $("#pdpBuyboxWinnerSellerID").val(),
 				buyBoxWinner : $("#sellerNameId").html().toLowerCase()
 			}   

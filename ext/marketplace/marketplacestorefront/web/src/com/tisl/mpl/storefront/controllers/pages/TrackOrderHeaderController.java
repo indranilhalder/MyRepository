@@ -111,7 +111,7 @@ public class TrackOrderHeaderController
 
 	@ResponseBody
 	@RequestMapping(value = MarketplacecheckoutaddonConstants.MARKREAD, method = RequestMethod.GET, produces = "application/json")
-	public void markAsRead(final String currentId, final String consignmentNo, final String shopperStatus)
+	public void markAsRead(final String emailId, final String currentId, final String consignmentNo, final String shopperStatus)
 	{
 		try
 		{
@@ -120,7 +120,7 @@ public class TrackOrderHeaderController
 			final String customerUID = currentCustomer.getOriginalUid();
 			if (null != customerUID)
 			{
-				getNotificationFacade().markNotificationRead(customerUID, currentId, consignmentNo, shopperStatus);
+				getNotificationFacade().markNotificationRead(emailId, customerUID, currentId, consignmentNo, shopperStatus);
 			}
 
 		}

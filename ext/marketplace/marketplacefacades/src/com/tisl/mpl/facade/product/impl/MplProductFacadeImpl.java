@@ -14,9 +14,11 @@ import de.hybris.platform.storelocator.location.impl.LocationDtoWrapper;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.annotation.Resource;
+import javax.inject.Provider;
 
 import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 
 import com.tisl.mpl.facade.config.MplConfigFacade;
 import com.tisl.mpl.facade.product.MplProductFacade;
@@ -25,8 +27,6 @@ import com.tisl.mpl.marketplacecommerceservices.service.MplPincodeDistanceServic
 import com.tisl.mpl.marketplacecommerceservices.service.MplProductService;
 import com.tisl.mpl.marketplacecommerceservices.service.PincodeService;
 import com.tisl.mpl.pincode.facade.PincodeServiceFacade;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 
 
 /**
@@ -37,40 +37,25 @@ public class MplProductFacadeImpl implements MplProductFacade
 {
 
 	private MplProductService mplProductService;
-	
-//	@Autowired
-//	@Qualifier("pincodeServiceFacade")
-	//@Resource(name = "pincodeServiceFacade")
-	private PincodeServiceFacade pincodeServiceFacade;
-	
-	/**
-	 * @return the pincodeServiceFacade
-	 */
-	public PincodeServiceFacade getPincodeServiceFacade() {
-		return pincodeServiceFacade;
-	}
 
 
+	//private PincodeServiceFacade pincodeServiceFacade;
 
-	/**
-	 * @param pincodeServiceFacade the pincodeServiceFacade to set
-	 */
-	public void setPincodeServiceFacade(PincodeServiceFacade pincodeServiceFacade) {
-		this.pincodeServiceFacade = pincodeServiceFacade;
-	}
+	@Autowired
+	private Provider<PincodeServiceFacade> pincodeServiceFacadeProvider;
 
 	@Autowired
 	@Qualifier("pincodeService")
 	private PincodeService pincodeService;
-	
+
 	@Autowired
 	@Qualifier("mplConfigFacade")
 	private MplConfigFacade mplConfigFacade;
-	
+
 	@Autowired
 	@Qualifier("mplPincodeDistanceService")
 	private MplPincodeDistanceService mplPincodeDistanceService;
-	
+
 	@SuppressWarnings("unused")
 	private static final Logger LOG = Logger.getLogger(MplProductFacadeImpl.class);
 
@@ -151,6 +136,7 @@ public class MplProductFacadeImpl implements MplProductFacade
 				dto.setLatitude(pincodeModel.getLatitude().toString());
 				dto.setLongitude(pincodeModel.getLongitude().toString());
 				myLocation = new LocationDtoWrapper(dto);
+				final PincodeServiceFacade pincodeServiceFacade = pincodeServiceFacadeProvider.get();
 				posData = pincodeServiceFacade.getStoresForPincode(myLocation.getGPS(), radius);
 
 				posData = mplPincodeDistanceService.pincodeDistance(posData, pincodeModel.getLatitude(), pincodeModel.getLongitude(),
