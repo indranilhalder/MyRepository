@@ -243,7 +243,7 @@ public class MplWalletServicesImpl implements MplWalletServices
 		ClientResponse response = null;
 		WebResource webResource = null;
 		final DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
-		final PurchaseEGVResponse purchaseEgvResponse = new PurchaseEGVResponse();
+		PurchaseEGVResponse purchaseEgvResponse = new PurchaseEGVResponse();
 
 		try
 		{
