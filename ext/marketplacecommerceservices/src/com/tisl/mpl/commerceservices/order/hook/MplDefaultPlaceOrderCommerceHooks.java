@@ -1088,6 +1088,8 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 						 * .getMplDeliveryMode().getDeliveryMode().getCode(), sellerOrderList.getCurrency().getIsocode(),
 						 * entryModelList.getSelectedUSSID());
 						 */
+						//EGV Order change
+						if(!sellerOrderList.getIsEGVCart().booleanValue()){
 
 						final MplZoneDeliveryModeValueModel valueModel = deliveryCostService.getDeliveryCost(
 								entryModelList.getMplDeliveryMode().getDeliveryMode().getCode(),
@@ -1126,6 +1128,7 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 							totalDeliveryPrice += delCost; //TISPRDT-1649
 
 							LOG.warn("skipping deliveryCost for freebee [" + entryModelList.getSelectedUSSID() + "] due to freebee ");
+						}
 						}
 						modelService.save(entryModelList);
 						modelService.refresh(entryModelList);
