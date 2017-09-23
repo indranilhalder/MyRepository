@@ -11,6 +11,7 @@ import de.hybris.platform.servicelayer.config.ConfigurationService;
 import de.hybris.platform.servicelayer.cronjob.AbstractJobPerformable;
 import de.hybris.platform.servicelayer.cronjob.PerformResult;
 import de.hybris.platform.servicelayer.search.FlexibleSearchQuery;
+import de.hybris.platform.servicelayer.search.SearchResult;
 import de.hybris.platform.solrfacetsearch.config.FacetSearchConfig;
 import de.hybris.platform.solrfacetsearch.config.FacetSearchConfigService;
 import de.hybris.platform.solrfacetsearch.config.IndexedType;
@@ -20,6 +21,7 @@ import de.hybris.platform.store.BaseStoreModel;
 import de.hybris.platform.store.services.BaseStoreService;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -30,10 +32,11 @@ import org.apache.commons.collections.MapUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import com.tisl.mpl.model.FlashSaleProductListModel;
+import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
+import com.tisl.mpl.core.model.BuyBoxModel;
 
 
-public class ProductSpecificIndexerCronJob extends AbstractJobPerformable
+public class ProductSpecificIndexerCronJob extends AbstractJobPerformable //,AbstractItemDao
 {
 	private static final Logger LOG = Logger.getLogger(ProductSpecificIndexerCronJob.class.getName());
 
@@ -133,17 +136,20 @@ public class ProductSpecificIndexerCronJob extends AbstractJobPerformable
 		final String propLine = "";
 		StringBuffer productString = new StringBuffer();
 		List<PK> prodList = null;
-		List<FlashSaleProductListModel> flashSaleProductListModelList = null;
+		final List<String> flashSaleProductListModelList = new ArrayList();
+		final List<BuyBoxModel> flashSaleProductListModelListBB = null;
 		final String prodListFilePath = "";
-		String listingId = "";
 		final Set<String> listingIdSet = new TreeSet();
-		String flashSaleUSSIDList = "";
+		String flashSaleUSSIDListString = "";
+		String formattedFlashSaleUSSIDListString = "";
+		List<String> flashSaleUSSIDList = new ArrayList();
+		StringBuffer sb = null;
 
 		try
 		{
 			try
 			{
-				/***************************** Test for ***************************************/
+				/************* Pick Up the FlashSaleUSSIDList from BaseStore and then the ProductListingIds from BuyBox ******************/
 
 				final List<BaseStoreModel> allBaseStoresList = baseStoreService.getAllBaseStores();
 
@@ -151,47 +157,74 @@ public class ProductSpecificIndexerCronJob extends AbstractJobPerformable
 				{
 					if ("mpl".equalsIgnoreCase(baseStoreModel.getUid()))
 					{
-						flashSaleUSSIDList = baseStoreModel.getFlashSaleUSSIDList();
-						if (flashSaleUSSIDList != null && flashSaleUSSIDList.length() > 0)
+						flashSaleUSSIDListString = baseStoreModel.getFlashSaleUSSIDList();
+						if (flashSaleUSSIDListString != null && flashSaleUSSIDListString.trim().length() > 0)
 						{
-							LOG.error("flashSaleUSSIDList ::" + flashSaleUSSIDList);
+							LOG.error("DEBUG: flashSaleUSSIDList from {BaseStore}:: " + flashSaleUSSIDList);
+							flashSaleUSSIDList = Arrays.asList(flashSaleUSSIDListString.trim().split(
+									MarketplacecommerceservicesConstants.COMMA));
+
+							if (flashSaleUSSIDList != null && flashSaleUSSIDList.size() > 0)
+							{
+								for (final String ussId : flashSaleUSSIDList)
+								{
+									if (!formattedFlashSaleUSSIDListString.contains(ussId.trim()))
+									{
+										formattedFlashSaleUSSIDListString = formattedFlashSaleUSSIDListString + "\'" + ussId.trim() + "\',";
+									}
+								}
+							}
+							else
+							{
+								LOG.error("ERROR: flashSaleUSSIDList is null or empty");
+							}
+							if (formattedFlashSaleUSSIDListString != null && formattedFlashSaleUSSIDListString.length() > 0)
+							{
+								sb = new StringBuffer(formattedFlashSaleUSSIDListString);
+								if (sb != null && sb.length() > 0)
+								{
+									sb.deleteCharAt(sb.toString().lastIndexOf(",")); // remove the last `,` from the string.
+
+									final String qStringBuyBox = "select distinct{product} from {BuyBox} where {sellerarticlesku} in ("
+											+ sb + ")";
+									final FlexibleSearchQuery queryProductListBB = new FlexibleSearchQuery(qStringBuyBox);
+									queryProductListBB.setResultClassList(Arrays.asList(String.class));
+									final SearchResult<String> rows = flexibleSearchService.search(queryProductListBB);
+
+									if (rows != null)
+									{
+										for (final String row : rows.getResult())
+										{
+											flashSaleProductListModelList.add(row);
+										}
+									}
+								}
+							}
+							else
+							{
+								LOG.error("ERROR: formattedFlashSaleUSSIDListString is null or empty");
+							}
 						}
 						else
 						{
 							LOG.error("flashSaleUSSIDList is empty::");
 						}
-
-						LOG.error("************");
-						LOG.error("baseStoreModel.getName()" + baseStoreModel.getName());
-						LOG.error("baseStoreModel.getUid()" + baseStoreModel.getUid());
-						LOG.error("baseStoreModel.getItemtype()" + baseStoreModel.getItemtype());
-						LOG.error("baseStoreModel.getCheckoutFlowGroup()" + baseStoreModel.getCheckoutFlowGroup());
-						LOG.error("baseStoreModel.getTenantId()" + baseStoreModel.getTenantId());
-						LOG.error("$$$$$$$$$$$$$");
 					}
 				}
 
 				/******************************************************************************/
 
-				//Fetch the Product ListIds from DB table 'FlashSaleProduct' and then pass it to get the PKs of those List Ids.
-				//final String qString = "select distinct{productListingId} from {FlashSaleProductList}";
-				final String qString = "select distinct{PK} from {FlashSaleProductList}";
-				final FlexibleSearchQuery queryProductList = new FlexibleSearchQuery(qString);
-				flashSaleProductListModelList = flexibleSearchService.<FlashSaleProductListModel> search(queryProductList)
-						.getResult();
-
 				if (CollectionUtils.isNotEmpty(flashSaleProductListModelList))
 				{
-					for (final FlashSaleProductListModel prodListModel : flashSaleProductListModelList)
+					for (final String listingId : flashSaleProductListModelList)
 					{
-						listingId = prodListModel.getProductListingId();
+						//listingId = prodListModel.getProductListingId();
 						if (listingId != null && listingId.trim().length() > 0 && !listingIdSet.contains(listingId))
 						{
 							productString.append("'" + listingId.trim() + "',");
 							listingIdSet.add(listingId);
 						}
 					}
-
 					if (productString != null && productString.length() > 0)
 					{
 						productString.deleteCharAt(productString.toString().lastIndexOf(",")); // remove the last `,` from the string.
@@ -205,7 +238,7 @@ public class ProductSpecificIndexerCronJob extends AbstractJobPerformable
 				}
 				else
 				{
-					LOG.error("ERROR: Seems No Products found in DB table 'FlashSaleProductList' plz Check ...:");
+					LOG.error("ERROR: Seems No Products found in flashSaleProductListModelList  plz Check ...:");
 					return null;
 				}
 			}
@@ -214,8 +247,6 @@ public class ProductSpecificIndexerCronJob extends AbstractJobPerformable
 				LOG.error("ERROR: getProductData() ..No Products found in the FIle:" + e);
 				e.printStackTrace();
 			}
-
-
 			if (productString != null && productString.length() > 0)
 			{
 				final String queryString = "select distinct{PK} from {product}  where {CODE} in (" + productString.toString() + ")";
