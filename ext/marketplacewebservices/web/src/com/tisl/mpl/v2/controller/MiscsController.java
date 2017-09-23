@@ -2289,11 +2289,14 @@ public class MiscsController extends BaseController
 											if (subOrderModel.getModeOfOrderPayment().equalsIgnoreCase(MarketplacewebservicesConstants.COD)
 													&& null != oneTouchCrmObj.getAccNum())
 											{
+												LOG.debug("Step 1");
 												codSelfShipData = null;
 												codSelfShipData = populateCODDataForFICO(subOrderModel, oneTouchCrmObj, orderData,
 														abstractOrderEntryModel);
+												LOG.debug("Step 2");
 												if (null != codSelfShipData)
 												{
+													LOG.debug("Sending bank details to FICO start.....");
 													FICO = sendBankDetailsToFICO(codSelfShipData);
 												}
 												if (FICO)
@@ -2303,6 +2306,7 @@ public class MiscsController extends BaseController
 												else
 												{
 													output.setRemarks("Failed to send Bank details to FICO");
+													LOG.debug("Failed to send Bank details to FICO");
 												}
 											}
 											//TPR-6389--END
@@ -2414,6 +2418,7 @@ public class MiscsController extends BaseController
 	private CODSelfShipData populateCODDataForFICO(final OrderModel subOrderModel,
 			final OneTouchCancelReturnCrmRequestDTO oneTouchdto, final OrderData orderData, final AbstractOrderEntryModel orderEntry)
 	{
+		LOG.debug("Inside populateCODDataForFICO method.....");
 		CODSelfShipData codSelfShipData = new CODSelfShipData();
 		try
 		{
@@ -2446,11 +2451,11 @@ public class MiscsController extends BaseController
 		}
 		catch (final Exception e)
 		{
-			LOG.error(e.getMessage());
+			LOG.error(e.getStackTrace());
 			codSelfShipData = null;
 			return codSelfShipData;
 		}
-
+		LOG.debug("finished executing populateCODDataForFICO method.....");
 		return codSelfShipData;
 	}
 
@@ -2474,7 +2479,7 @@ public class MiscsController extends BaseController
 		}
 		catch (final Exception ex)
 		{
-			LOG.error(ex.getMessage());
+			LOG.error(e.getStackTrace());
 			return false;
 		}
 		LOG.info("Finished sending bank details to FICO");
