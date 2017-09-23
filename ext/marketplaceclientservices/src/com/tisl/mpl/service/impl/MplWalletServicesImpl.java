@@ -24,12 +24,14 @@ import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.WebResource;
 import com.tisl.mpl.constants.MarketplaceclientservicesConstants;
 import com.tisl.mpl.pojo.request.AddToCardWallet;
+import com.tisl.mpl.pojo.request.PurchaseEGVRequest;
 import com.tisl.mpl.pojo.request.QCCustomerPromotionRequest;
 import com.tisl.mpl.pojo.request.QCCustomerRegisterRequest;
 import com.tisl.mpl.pojo.request.QCRedeemRequest;
 import com.tisl.mpl.pojo.request.QCRefundRequest;
 import com.tisl.mpl.pojo.response.BalanceBucketWise;
 import com.tisl.mpl.pojo.response.CustomerWalletDetailResponse;
+import com.tisl.mpl.pojo.response.PurchaseEGVResponse;
 import com.tisl.mpl.pojo.response.QCCustomerRegisterResponse;
 import com.tisl.mpl.pojo.response.QCInitializationResponse;
 import com.tisl.mpl.pojo.response.QCRedeeptionResponse;
@@ -57,7 +59,7 @@ public class MplWalletServicesImpl implements MplWalletServices
 
 	@Resource(name = "qcInitDataBean")
 	public QCInitDataBean qcInitDataBean;
-	
+
 	/**
 	 * @return the qcInitDataBean
 	 */
@@ -113,7 +115,7 @@ public class MplWalletServicesImpl implements MplWalletServices
 	{
 		this.configurationService = configurationService;
 	}
-	
+
 	@Override
 	public QCInitializationResponse walletInitilization()
 	{
@@ -122,13 +124,15 @@ public class MplWalletServicesImpl implements MplWalletServices
 		ClientResponse response = null;
 		WebResource webResource = null;
 		final DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
-		
+
 		try
 		{
-         client.setConnectTimeout(Integer.valueOf(getConfigurationService().getConfiguration().getString("qcTimeout")));
-         client.setReadTimeout(Integer.valueOf(getConfigurationService().getConfiguration().getString("qcTimeout")));
-         
-			webResource = client.resource(UriBuilder.fromUri("http://"+ getConfigurationService().getConfiguration().getString("qcUrl")+"/Qwikcilver/eGMS.RestApi/api/initialize").build());
+			client.setConnectTimeout(Integer.valueOf(getConfigurationService().getConfiguration().getString("qcTimeout")));
+			client.setReadTimeout(Integer.valueOf(getConfigurationService().getConfiguration().getString("qcTimeout")));
+
+			webResource = client
+					.resource(UriBuilder.fromUri("http://" + getConfigurationService().getConfiguration().getString("qcUrl")
+							+ "/Qwikcilver/eGMS.RestApi/api/initialize").build());
 			final String forwardEntityID = getConfigurationService().getConfiguration()
 					.getString(MarketplaceclientservicesConstants.FORWARDING_ENTITY_ID);
 			final String forwardEntityPassword = getConfigurationService().getConfiguration()
@@ -168,9 +172,10 @@ public class MplWalletServicesImpl implements MplWalletServices
 		catch (final Exception ex)
 		{
 			LOG.error(ex.getMessage());
-			if(ex.getMessage().contains("SocketTimeoutException")){
-			qcInitializationResponse.setResponseMessage("Timeout Exception");
-			qcInitializationResponse.setResponseCode(Integer.valueOf(3001));
+			if (ex.getMessage().contains("SocketTimeoutException"))
+			{
+				qcInitializationResponse.setResponseMessage("Timeout Exception");
+				qcInitializationResponse.setResponseCode(Integer.valueOf(3001));
 			}
 			return qcInitializationResponse;
 		}
@@ -191,9 +196,10 @@ public class MplWalletServicesImpl implements MplWalletServices
 		try
 		{
 			client.setConnectTimeout(Integer.valueOf(getConfigurationService().getConfiguration().getString("qcTimeout")));
-         client.setReadTimeout(Integer.valueOf(getConfigurationService().getConfiguration().getString("qcTimeout")));
+			client.setReadTimeout(Integer.valueOf(getConfigurationService().getConfiguration().getString("qcTimeout")));
 			webResource = client
-					.resource(UriBuilder.fromUri("http://"+ getConfigurationService().getConfiguration().getString("qcUrl")+"/Qwikcilver/eGMS.RestApi/api/wallet/").build());
+					.resource(UriBuilder.fromUri("http://" + getConfigurationService().getConfiguration().getString("qcUrl")
+							+ "/Qwikcilver/eGMS.RestApi/api/wallet/").build());
 
 			final ObjectMapper objectMapper = new ObjectMapper();
 			final String requestBody = objectMapper.writeValueAsString(registerCustomerRequest);
@@ -218,7 +224,8 @@ public class MplWalletServicesImpl implements MplWalletServices
 		catch (final Exception ex)
 		{
 			LOG.error(ex.getMessage());
-			if(ex.getMessage().contains("SocketTimeoutException")){
+			if (ex.getMessage().contains("SocketTimeoutException"))
+			{
 				custResponse.setResponseMessage("Timeout Exception");
 				custResponse.setResponseCode(Integer.valueOf(3001));
 			}
@@ -229,28 +236,29 @@ public class MplWalletServicesImpl implements MplWalletServices
 
 
 	@Override
-	public void purchaseEgv()
+	public PurchaseEGVResponse purchaseEgv(final PurchaseEGVRequest purchaseEGVRequest, final String transactionId)
 	{
 
 		final Client client = Client.create();
 		ClientResponse response = null;
 		WebResource webResource = null;
 		final DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
+		final PurchaseEGVResponse purchaseEgvResponse = new PurchaseEGVResponse();
 
 		try
 		{
 			client.setConnectTimeout(Integer.valueOf(getConfigurationService().getConfiguration().getString("qcTimeout")));
-         client.setReadTimeout(Integer.valueOf(getConfigurationService().getConfiguration().getString("qcTimeout")));
+			client.setReadTimeout(Integer.valueOf(getConfigurationService().getConfiguration().getString("qcTimeout")));
 			webResource = client
-					.resource(UriBuilder.fromUri("http://"+ getConfigurationService().getConfiguration().getString("qcUrl")+"/Qwikcilver/eGMS.RestApi/api/gc/createandissue").build());
+					.resource(UriBuilder.fromUri("http://" + getConfigurationService().getConfiguration().getString("qcUrl")
+							+ "/Qwikcilver/eGMS.RestApi/api/gc/createandissue").build());
 
-			//need to create marshalling for request body
-			//IdempotencyKey random unique logic use UUID for generat key
-			final String requestBody = "{\"CardProgramGroupName\": \"TUL B2C eGift Card\",\"Amount\": 2000,\"BillAmount\": 0,\"InvoiceNumber\": \"27092016001\",\"ExternalCardNumber\": null,\"Customer\": {\"CustomerType\": null,\"Salutation\": \"\",\"Firstname\": \"Gift Card\",\"LastName\": \"user\",\"PhoneNumber\": \"2709201600\",\"Email\": \"nbhanushali@tataunistore.com\",\"DOB\": \"\",\"AddressLine1\": \"\",\"AddressLine2\": \"\",\"AddressLine3\": null,\"City\": \"\",\"State\": \"\",\"Country\": \"\",\"Gender\": \"\",\"Anniversary\": \"\",\"MaritalStatus\": \"\",\"EmployeeID\": \"\",\"PhoneAlternate\": \"2709201601\",\"PinCode\": \"\",\"Region\": null,\"Area\": \"\",\"CorporateName\": \"Tata Unistore Ltd\"},\"Expiry\":\"0001-01-01T00:00:00\",\"Notes\": \"create egiftcard\",\"IdempotencyKey\":\"tq2408201701\"}";
+			final ObjectMapper objectMapper = new ObjectMapper();
+			final String requestBody = objectMapper.writeValueAsString(purchaseEGVRequest);
 
 			response = webResource.type(MediaType.APPLICATION_JSON).header("ForwardingEntityId", "tatacliq.com")
 					.header("ForwardingEntityPassword", "tatacliq.com").header("TerminalId", "webpos-tul-dev10")
-					.header("Username", "tulwebuser").header("Password", "webusertul").header("TransactionId", "22")
+					.header("Username", "tulwebuser").header("Password", "webusertul").header("TransactionId", transactionId)
 					//(random number logic)
 					.header("DateAtClient", dateFormat.format(new Date())).header("IsForwardingEntityExists", "true")
 					.header("Content-Typ", "application/json").header("MerchantOutletName", "TUL-Online")
@@ -262,17 +270,21 @@ public class MplWalletServicesImpl implements MplWalletServices
 			if (null != response)
 			{
 				final String output = response.getEntity(String.class);
-				LOG.debug(" ************** Purchase EGV----" + output); //need to create marshalling for response object
-				System.out.println(" ************** Purchase EGV----" + output);
-
+				purchaseEgvResponse = objectMapper.readValue(output, PurchaseEGVResponse.class);
+				return purchaseEgvResponse;
 			}
-		}catch (final Exception ex)
-				{
-					LOG.error(ex.getMessage());
-					if(ex instanceof SocketTimeoutException){
-						//
-					}
-				}
+		}
+		catch (final Exception ex)
+		{
+			LOG.error(ex.getMessage());
+			if (ex.getMessage().contains("SocketTimeoutException"))
+			{
+				purchaseEgvResponse.setResponseMessage("Timeout Exception");
+				purchaseEgvResponse.setResponseCode(Integer.valueOf(3001));
+			}
+			return purchaseEgvResponse;
+		}
+		return purchaseEgvResponse;
 	}
 
 	@Override
@@ -288,9 +300,10 @@ public class MplWalletServicesImpl implements MplWalletServices
 		try
 		{
 			client.setConnectTimeout(Integer.valueOf(getConfigurationService().getConfiguration().getString("qcTimeout")));
-         client.setReadTimeout(Integer.valueOf(getConfigurationService().getConfiguration().getString("qcTimeout")));			
-         webResource = client.resource(
-					UriBuilder.fromUri("http://"+ getConfigurationService().getConfiguration().getString("qcUrl")+"/QwikCilver/eGMS.RestAPI/api/wallet/4000162010020032/card").build());
+			client.setReadTimeout(Integer.valueOf(getConfigurationService().getConfiguration().getString("qcTimeout")));
+			webResource = client
+					.resource(UriBuilder.fromUri("http://" + getConfigurationService().getConfiguration().getString("qcUrl")
+							+ "/QwikCilver/eGMS.RestAPI/api/wallet/4000162010020032/card").build());
 
 			//need to create marshalling for request body
 			final String requestBody = "{\"CardNumber\":\"4000161013166520\", \"CardPin\":\"368719\"}";
@@ -318,10 +331,11 @@ public class MplWalletServicesImpl implements MplWalletServices
 		catch (final Exception ex)
 		{
 			LOG.error(ex.getMessage());
-			if(ex instanceof SocketTimeoutException){
+			if (ex instanceof SocketTimeoutException)
+			{
 				//
 			}
-			}
+		}
 	}
 
 
@@ -339,10 +353,11 @@ public class MplWalletServicesImpl implements MplWalletServices
 		try
 		{
 			client.setConnectTimeout(Integer.valueOf(getConfigurationService().getConfiguration().getString("qcTimeout")));
-         client.setReadTimeout(Integer.valueOf(getConfigurationService().getConfiguration().getString("qcTimeout")));
-			
-			webResource = client.resource(UriBuilder
-					.fromUri("http://"+ getConfigurationService().getConfiguration().getString("qcUrl")+"/QwikCilver/eGMS.RestAPI/api/wallet/" + customerWalletId + "/balance").build());
+			client.setReadTimeout(Integer.valueOf(getConfigurationService().getConfiguration().getString("qcTimeout")));
+
+			webResource = client
+					.resource(UriBuilder.fromUri("http://" + getConfigurationService().getConfiguration().getString("qcUrl")
+							+ "/QwikCilver/eGMS.RestAPI/api/wallet/" + customerWalletId + "/balance").build());
 			response = webResource.type(MediaType.APPLICATION_JSON)
 					.header(MarketplaceclientservicesConstants.FORWARDING_ENTITY_ID, "tatacliq.com")
 					.header(MarketplaceclientservicesConstants.FORWARDING_ENTITY_PASSWORD, "tatacliq.com")
@@ -373,7 +388,8 @@ public class MplWalletServicesImpl implements MplWalletServices
 		catch (final Exception ex)
 		{
 			LOG.error(ex.getMessage());
-			if(ex.getMessage().contains("SocketTimeoutException")){
+			if (ex.getMessage().contains("SocketTimeoutException"))
+			{
 				walletBalance.setResponseMessage("Timeout Exception");
 				walletBalance.setResponseCode(Integer.valueOf(3001));
 			}
@@ -395,11 +411,12 @@ public class MplWalletServicesImpl implements MplWalletServices
 
 		try
 		{
-			
+
 			client.setConnectTimeout(Integer.valueOf(getConfigurationService().getConfiguration().getString("qcTimeout")));
-         client.setReadTimeout(Integer.valueOf(getConfigurationService().getConfiguration().getString("qcTimeout")));
-			webResource = client.resource(UriBuilder
-					.fromUri("http://"+ getConfigurationService().getConfiguration().getString("qcUrl")+"/QwikCilver/eGMS.RestAPI/api/wallet/" + customerWalletId + "/Redeem").build());
+			client.setReadTimeout(Integer.valueOf(getConfigurationService().getConfiguration().getString("qcTimeout")));
+			webResource = client
+					.resource(UriBuilder.fromUri("http://" + getConfigurationService().getConfiguration().getString("qcUrl")
+							+ "/QwikCilver/eGMS.RestAPI/api/wallet/" + customerWalletId + "/Redeem").build());
 			final ObjectMapper objectMapper = new ObjectMapper();
 			final String requestBody = objectMapper.writeValueAsString(qcRedeemRequest);
 			response = webResource.header("ForwardingEntityId", "tatacliq.com").header("ForwardingEntityPassword", "tatacliq.com")
@@ -419,15 +436,17 @@ public class MplWalletServicesImpl implements MplWalletServices
 				qcRedeeptionResponse = objectMapper.readValue(output, QCRedeeptionResponse.class);
 				return qcRedeeptionResponse;
 			}
-		}catch (final Exception ex)
-				{
-					LOG.error(ex.getMessage());
-					if(ex.getMessage().contains("SocketTimeoutException")){
-						qcRedeeptionResponse.setResponseMessage("Timeout Exception");
-						qcRedeeptionResponse.setResponseCode(Integer.valueOf(3001));
-					}
-					return qcRedeeptionResponse;
-				}
+		}
+		catch (final Exception ex)
+		{
+			LOG.error(ex.getMessage());
+			if (ex.getMessage().contains("SocketTimeoutException"))
+			{
+				qcRedeeptionResponse.setResponseMessage("Timeout Exception");
+				qcRedeeptionResponse.setResponseCode(Integer.valueOf(3001));
+			}
+			return qcRedeeptionResponse;
+		}
 		return qcRedeeptionResponse;
 	}
 
@@ -444,9 +463,10 @@ public class MplWalletServicesImpl implements MplWalletServices
 		try
 		{
 			client.setConnectTimeout(Integer.valueOf(getConfigurationService().getConfiguration().getString("qcTimeout")));
-         client.setReadTimeout(Integer.valueOf(getConfigurationService().getConfiguration().getString("qcTimeout")));
-			webResource = client.resource(UriBuilder
-					.fromUri("http://"+ getConfigurationService().getConfiguration().getString("qcUrl")+"/QwikCilver/eGMS.RestAPI/api/wallet/4000162010020032/Cancelredeem").build());
+			client.setReadTimeout(Integer.valueOf(getConfigurationService().getConfiguration().getString("qcTimeout")));
+			webResource = client
+					.resource(UriBuilder.fromUri("http://" + getConfigurationService().getConfiguration().getString("qcUrl")
+							+ "/QwikCilver/eGMS.RestAPI/api/wallet/4000162010020032/Cancelredeem").build());
 
 			//need to create marshalling for request body
 			//Transaction ID will be same as Wallet redeem
@@ -470,10 +490,12 @@ public class MplWalletServicesImpl implements MplWalletServices
 				LOG.debug(" ************** redeem Refund Wallet Balance----" + output); //need to create marshalling for response object
 
 			}
-		}catch (final Exception ex)
+		}
+		catch (final Exception ex)
 		{
 			LOG.error(ex.getMessage());
-			if(ex instanceof SocketTimeoutException){
+			if (ex instanceof SocketTimeoutException)
+			{
 				//
 			}
 		}
@@ -482,9 +504,9 @@ public class MplWalletServicesImpl implements MplWalletServices
 
 
 	@Override
-	public QCRedeeptionResponse addTULWalletCashBack(String walletId ,QCCustomerPromotionRequest request)
+	public QCRedeeptionResponse addTULWalletCashBack(final String walletId, final QCCustomerPromotionRequest request)
 	{
-		System.out.println("***********************************in Mpl Wallet request..............."+request.toString());
+		System.out.println("***********************************in Mpl Wallet request..............." + request.toString());
 
 		final Client client = Client.create();
 		ClientResponse response = null;
@@ -495,7 +517,8 @@ public class MplWalletServicesImpl implements MplWalletServices
 		//final ReturnLogisticsResponse responsefromOMS = new ReturnLogisticsResponse();
 		final DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
 		final ObjectMapper objectMapper = new ObjectMapper();
-		try{
+		try
+		{
 			requestBody = objectMapper.writeValueAsString(request);
 			webResource = client.resource(UriBuilder
 					.fromUri(MarketplaceclientservicesConstants.GET_BALANCE_FOR_WALLET + walletId + "/load/CASHBACK").build());
@@ -517,17 +540,21 @@ public class MplWalletServicesImpl implements MplWalletServices
 					.header(MarketplaceclientservicesConstants.POS_NAME, "webpos-tul-qc-01")
 					.header(MarketplaceclientservicesConstants.TERM_APP_VERSION, "null")
 					.header(MarketplaceclientservicesConstants.CURRENT_BATCH_NUMBER, getQcInitDataBean().getCurrentBatchNumber())
-					.header(MarketplaceclientservicesConstants.TRANSACTION_ID, request.getInvoiceNumber()).type(MediaType.APPLICATION_JSON)
-					.post(ClientResponse.class, requestBody);
+					.header(MarketplaceclientservicesConstants.TRANSACTION_ID, request.getInvoiceNumber())
+					.type(MediaType.APPLICATION_JSON).post(ClientResponse.class, requestBody);
 
-			if (null != response){
+			if (null != response)
+			{
 				output = response.getEntity(String.class);
 				qcRedeeptionResponse = objectMapper.readValue(output, QCRedeeptionResponse.class);
-				if (null != qcRedeeptionResponse){
+				if (null != qcRedeeptionResponse)
+				{
 					LOG.debug(" ************** GET CUSTOMER WALLET BALENCE----" + qcRedeeptionResponse); //need to create marshalling for response object
 				}
 			}
-		}catch (final Exception ex){
+		}
+		catch (final Exception ex)
+		{
 			ex.printStackTrace();
 			System.out.println("Error response Status:------" + response.getStatus());
 		}
@@ -536,7 +563,7 @@ public class MplWalletServicesImpl implements MplWalletServices
 
 
 	@Override
-	public QCRedeeptionResponse refundTULPromotionalCash(String walletId, String transactionId)
+	public QCRedeeptionResponse refundTULPromotionalCash(final String walletId, final String transactionId)
 	{
 		final Client client = Client.create();
 		ClientResponse response = null;
@@ -546,7 +573,7 @@ public class MplWalletServicesImpl implements MplWalletServices
 		QCRedeeptionResponse qcRedeeptionResponse = null;
 		//final ReturnLogisticsResponse responsefromOMS = new ReturnLogisticsResponse();
 		final DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
-		QCRefundRequest request = new  QCRefundRequest();
+		final QCRefundRequest request = new QCRefundRequest();
 		request.setOriginalTransactionId(transactionId);
 		request.setOriginalBatchNumber(getQcInitDataBean().getCurrentBatchNumber());
 		try
@@ -554,8 +581,8 @@ public class MplWalletServicesImpl implements MplWalletServices
 			//get Wallet number from facade
 			//TransactionId unique
 			// InvoiceNo Unique
-			webResource = client.resource(UriBuilder
-					.fromUri(MarketplaceclientservicesConstants.ADD_TO_CARD_TO_WALLET+walletId+"/CancelLoad").build());
+			webResource = client.resource(
+					UriBuilder.fromUri(MarketplaceclientservicesConstants.ADD_TO_CARD_TO_WALLET + walletId + "/CancelLoad").build());
 			final ObjectMapper objectMapper = new ObjectMapper();
 			requestBody = objectMapper.writeValueAsString(request);
 
@@ -579,15 +606,19 @@ public class MplWalletServicesImpl implements MplWalletServices
 					.header(MarketplaceclientservicesConstants.TRANSACTION_ID, transactionId).type(MediaType.APPLICATION_JSON)
 					.post(ClientResponse.class, requestBody);
 
-			if (null != response){
+			if (null != response)
+			{
 				output = response.getEntity(String.class);
 				qcRedeeptionResponse = objectMapper.readValue(output, QCRedeeptionResponse.class);
-				if (null != qcRedeeptionResponse){
+				if (null != qcRedeeptionResponse)
+				{
 					LOG.debug(" ************** GET CUSTOMER WALLET BALENCE----" + qcRedeeptionResponse); //need to create marshalling for response object
 				}
 
 			}
-		}catch (final Exception ex){
+		}
+		catch (final Exception ex)
+		{
 			ex.printStackTrace();
 			System.out.println("Error response Status:------" + response.getStatus());
 		}
@@ -596,7 +627,7 @@ public class MplWalletServicesImpl implements MplWalletServices
 
 
 	@Override
-	public CustomerWalletDetailResponse getCustomerWallet(String customerWalletId, String transactionId)
+	public CustomerWalletDetailResponse getCustomerWallet(final String customerWalletId, final String transactionId)
 	{
 		final Client client = Client.create();
 		ClientResponse response = null;
@@ -608,9 +639,10 @@ public class MplWalletServicesImpl implements MplWalletServices
 		try
 		{
 			client.setConnectTimeout(Integer.valueOf(getConfigurationService().getConfiguration().getString("qcTimeout")));
-         client.setReadTimeout(Integer.valueOf(getConfigurationService().getConfiguration().getString("qcTimeout")));
-			webResource = client.resource(
-					UriBuilder.fromUri("http://"+ getConfigurationService().getConfiguration().getString("qcUrl")+"/QwikCilver/eGMS.RestAPI/api/wallet/"+customerWalletId).build());
+			client.setReadTimeout(Integer.valueOf(getConfigurationService().getConfiguration().getString("qcTimeout")));
+			webResource = client
+					.resource(UriBuilder.fromUri("http://" + getConfigurationService().getConfiguration().getString("qcUrl")
+							+ "/QwikCilver/eGMS.RestAPI/api/wallet/" + customerWalletId).build());
 
 			response = webResource.type(MediaType.APPLICATION_JSON).header("ForwardingEntityId", "tatacliq.com")
 					.header("ForwardingEntityPassword", "tatacliq.com").header("TerminalId", "webpos-tul-dev10")
@@ -625,7 +657,7 @@ public class MplWalletServicesImpl implements MplWalletServices
 
 			if (null != response)
 			{
-				
+
 				final String output = response.getEntity(String.class);
 				custWalletDetail = objectMapper.readValue(output, CustomerWalletDetailResponse.class);
 				return custWalletDetail;
@@ -635,7 +667,8 @@ public class MplWalletServicesImpl implements MplWalletServices
 		catch (final Exception ex)
 		{
 			LOG.error(ex.getMessage());
-			if(ex.getMessage().contains("SocketTimeoutException")){
+			if (ex.getMessage().contains("SocketTimeoutException"))
+			{
 				custWalletDetail.setResponseMessage("Timeout Exception");
 				custWalletDetail.setResponseCode(Integer.valueOf(3001));
 			}
@@ -647,28 +680,30 @@ public class MplWalletServicesImpl implements MplWalletServices
 
 
 	@Override
-	public RedimGiftCardResponse getAddEGVToWallet(final String cardNumber, final String cardPin, final String transactionId, String customerWalletId)
+	public RedimGiftCardResponse getAddEGVToWallet(final String cardNumber, final String cardPin, final String transactionId,
+			final String customerWalletId)
 	{
-		
-		RedimGiftCardResponse redimGiftCardResponse =  new RedimGiftCardResponse();
+
+		RedimGiftCardResponse redimGiftCardResponse = new RedimGiftCardResponse();
 		try
 		{
-		final Client client = Client.create();
-		ClientResponse response = null;
-		WebResource webResource = null;
-		String requestBody = null;
-		String output = null;
-		
-		client.setConnectTimeout(Integer.valueOf(getConfigurationService().getConfiguration().getString("qcTimeout")));
-      client.setReadTimeout(Integer.valueOf(getConfigurationService().getConfiguration().getString("qcTimeout")));
-		
-		final DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
-		final AddToCardWallet addToCardWallet = buildAddtoCardWallet(cardNumber, cardPin);
-		final ObjectMapper objectMapper = new ObjectMapper();
-	
+			final Client client = Client.create();
+			ClientResponse response = null;
+			WebResource webResource = null;
+			String requestBody = null;
+			String output = null;
+
+			client.setConnectTimeout(Integer.valueOf(getConfigurationService().getConfiguration().getString("qcTimeout")));
+			client.setReadTimeout(Integer.valueOf(getConfigurationService().getConfiguration().getString("qcTimeout")));
+
+			final DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
+			final AddToCardWallet addToCardWallet = buildAddtoCardWallet(cardNumber, cardPin);
+			final ObjectMapper objectMapper = new ObjectMapper();
+
 			requestBody = objectMapper.writeValueAsString(addToCardWallet);
-			webResource = client.resource(
-					UriBuilder.fromUri("http://"+getConfigurationService().getConfiguration().getString("qcUrl")+"/QwikCilver/eGMS.RestAPI/api/wallet/" + customerWalletId + "/card").build());
+			webResource = client
+					.resource(UriBuilder.fromUri("http://" + getConfigurationService().getConfiguration().getString("qcUrl")
+							+ "/QwikCilver/eGMS.RestAPI/api/wallet/" + customerWalletId + "/card").build());
 
 			response = webResource.type(MediaType.APPLICATION_JSON)
 					.header(MarketplaceclientservicesConstants.FORWARDING_ENTITY_ID, "tatacliq.com")
@@ -700,7 +735,8 @@ public class MplWalletServicesImpl implements MplWalletServices
 		catch (final Exception ex)
 		{
 			LOG.error(ex.getMessage());
-			if(ex.getMessage().contains("SocketTimeoutException")){
+			if (ex.getMessage().contains("SocketTimeoutException"))
+			{
 				redimGiftCardResponse.setResponseMessage("Timeout Exception");
 				redimGiftCardResponse.setResponseCode(Integer.valueOf(3001));
 			}
@@ -723,9 +759,10 @@ public class MplWalletServicesImpl implements MplWalletServices
 		try
 		{
 			client.setConnectTimeout(Integer.valueOf(getConfigurationService().getConfiguration().getString("qcTimeout")));
-         client.setReadTimeout(Integer.valueOf(getConfigurationService().getConfiguration().getString("qcTimeout")));
-			webResource = client.resource(
-					UriBuilder.fromUri("http://"+getConfigurationService().getConfiguration().getString("qcUrl")+"/QwikCilver/eGMS.RestAPI/api/wallet/"+ cardNumber + "/balance").build());
+			client.setReadTimeout(Integer.valueOf(getConfigurationService().getConfiguration().getString("qcTimeout")));
+			webResource = client
+					.resource(UriBuilder.fromUri("http://" + getConfigurationService().getConfiguration().getString("qcUrl")
+							+ "/QwikCilver/eGMS.RestAPI/api/wallet/" + cardNumber + "/balance").build());
 
 			response = webResource.type(MediaType.APPLICATION_JSON)
 					.header(MarketplaceclientservicesConstants.FORWARDING_ENTITY_ID, "tatacliq.com")
@@ -759,10 +796,12 @@ public class MplWalletServicesImpl implements MplWalletServices
 
 
 			}
-		}	catch (final Exception ex)
+		}
+		catch (final Exception ex)
 		{
 			LOG.error(ex.getMessage());
-			if(ex.getMessage().contains("SocketTimeoutException")){
+			if (ex.getMessage().contains("SocketTimeoutException"))
+			{
 				walletBalanceResponse.setResponseMessage("Timeout Exception");
 				walletBalanceResponse.setResponseCode(Integer.valueOf(3001));
 			}
@@ -786,9 +825,10 @@ public class MplWalletServicesImpl implements MplWalletServices
 		try
 		{
 			client.setConnectTimeout(Integer.valueOf(getConfigurationService().getConfiguration().getString("qcTimeout")));
-         client.setReadTimeout(Integer.valueOf(getConfigurationService().getConfiguration().getString("qcTimeout")));
-			webResource = client.resource(UriBuilder
-					.fromUri("http://"+getConfigurationService().getConfiguration().getString("qcUrl")+"/QwikCilver/eGMS.RestAPI/api/wallet/" + walletCardNumber + "/transactions").build());
+			client.setReadTimeout(Integer.valueOf(getConfigurationService().getConfiguration().getString("qcTimeout")));
+			webResource = client
+					.resource(UriBuilder.fromUri("http://" + getConfigurationService().getConfiguration().getString("qcUrl")
+							+ "/QwikCilver/eGMS.RestAPI/api/wallet/" + walletCardNumber + "/transactions").build());
 
 			response = webResource.type(MediaType.APPLICATION_JSON)
 					.header(MarketplaceclientservicesConstants.FORWARDING_ENTITY_ID, "tatacliq.com")
@@ -823,7 +863,8 @@ public class MplWalletServicesImpl implements MplWalletServices
 		catch (final Exception ex)
 		{
 			LOG.error(ex.getMessage());
-			if(ex.getMessage().contains("SocketTimeoutException")){
+			if (ex.getMessage().contains("SocketTimeoutException"))
+			{
 				walletTransacationsList.setResponseMessage("Timeout Exception");
 				walletTransacationsList.setResponseCode(Integer.valueOf(3001));
 			}
@@ -852,8 +893,9 @@ public class MplWalletServicesImpl implements MplWalletServices
 
 
 	@Override
-	public QCRedeeptionResponse createPromotion(String  walletId ,QCCustomerPromotionRequest request){
-		System.out.println("***********************************in Mpl Wallet request..............."+request.toString());
+	public QCRedeeptionResponse createPromotion(final String walletId, final QCCustomerPromotionRequest request)
+	{
+		System.out.println("***********************************in Mpl Wallet request..............." + request.toString());
 
 		final Client client = Client.create();
 		ClientResponse response = null;
@@ -864,7 +906,8 @@ public class MplWalletServicesImpl implements MplWalletServices
 		//final ReturnLogisticsResponse responsefromOMS = new ReturnLogisticsResponse();
 		final DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
 		final ObjectMapper objectMapper = new ObjectMapper();
-		try{
+		try
+		{
 			requestBody = objectMapper.writeValueAsString(request);
 			webResource = client.resource(UriBuilder
 					.fromUri(MarketplaceclientservicesConstants.GET_BALANCE_FOR_WALLET + walletId + "/load/PROMOTION").build());
@@ -886,17 +929,21 @@ public class MplWalletServicesImpl implements MplWalletServices
 					.header(MarketplaceclientservicesConstants.POS_NAME, "webpos-tul-qc-01")
 					.header(MarketplaceclientservicesConstants.TERM_APP_VERSION, "null")
 					.header(MarketplaceclientservicesConstants.CURRENT_BATCH_NUMBER, getQcInitDataBean().getCurrentBatchNumber())
-					.header(MarketplaceclientservicesConstants.TRANSACTION_ID, request.getInvoiceNumber()).type(MediaType.APPLICATION_JSON)
-					.post(ClientResponse.class, requestBody);
+					.header(MarketplaceclientservicesConstants.TRANSACTION_ID, request.getInvoiceNumber())
+					.type(MediaType.APPLICATION_JSON).post(ClientResponse.class, requestBody);
 
-			if (null != response){
+			if (null != response)
+			{
 				output = response.getEntity(String.class);
 				qcRedeeptionResponse = objectMapper.readValue(output, QCRedeeptionResponse.class);
-				if (null != qcRedeeptionResponse){
+				if (null != qcRedeeptionResponse)
+				{
 					LOG.debug(" ************** GET CUSTOMER WALLET BALENCE----" + qcRedeeptionResponse); //need to create marshalling for response object
 				}
 			}
-		}catch (final Exception ex){
+		}
+		catch (final Exception ex)
+		{
 			ex.printStackTrace();
 			System.out.println("Error response Status:------" + response.getStatus());
 		}

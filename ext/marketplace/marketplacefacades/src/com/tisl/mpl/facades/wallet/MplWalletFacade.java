@@ -25,8 +25,6 @@ public interface MplWalletFacade
 
 	public QCCustomerRegisterResponse createWalletContainer(final QCCustomerRegisterRequest registerCustomerRequest);
 
-	public void purchaseEGV();
-
 	public void addEGVToWallet();
 
 	public BalanceBucketWise getQCBucketBalance(final String customerWalletId);
@@ -35,7 +33,7 @@ public interface MplWalletFacade
 
 	public void getWalletRefundRedeem();
 
-	public QCRedeeptionResponse addTULWalletCashBack(String walletId ,QCCustomerPromotionRequest request);
+	public QCRedeeptionResponse addTULWalletCashBack(String walletId, QCCustomerPromotionRequest request);
 
 	public QCRedeeptionResponse refundTULPromotionalCash(String walletId, String transactionId);
 
@@ -45,7 +43,7 @@ public interface MplWalletFacade
 
 	public RedimGiftCardResponse getAddEGVToWallet(String cardNumber, String cardPin);
 
-	public  WalletTransacationsList getWalletTransactionList();
-	
-	public QCRedeeptionResponse createPromotion(String walletId ,QCCustomerPromotionRequest request);
+	public WalletTransacationsList getWalletTransactionList();
+
+	public QCRedeeptionResponse createPromotion(String walletId, QCCustomerPromotionRequest request);
 }

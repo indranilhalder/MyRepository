@@ -24,6 +24,7 @@ import com.tisl.mpl.pojo.response.RedimGiftCardResponse;
 import com.tisl.mpl.pojo.response.WalletTransacationsList;
 import com.tisl.mpl.service.MplWalletServices;
 
+
 /**
  * @author TUL
  *
@@ -40,7 +41,7 @@ public class MplWalletFacadeImpl implements MplWalletFacade
 
 	@Resource(name = "userService")
 	private UserService userService;
-	
+
 	@Resource(name = "modelService")
 	private ModelService modelService;
 
@@ -107,22 +108,6 @@ public class MplWalletFacadeImpl implements MplWalletFacade
 
 	}
 
-
-
-	/*
-	 * (non-Javadoc)
-	 *
-	 * @see com.tisl.mpl.facades.wallet.MplWalletFacade#purchaseEGV()
-	 */
-	@Override
-	public void purchaseEGV()
-	{
-		getMplWalletServices().purchaseEgv();
-
-	}
-
-
-
 	/*
 	 * (non-Javadoc)
 	 *
@@ -169,11 +154,11 @@ public class MplWalletFacadeImpl implements MplWalletFacade
 	 * @see com.tisl.mpl.facades.wallet.MplWalletFacade#addTULWalletCashBack()
 	 */
 	@Override
-	public QCRedeeptionResponse addTULWalletCashBack(String walletId ,QCCustomerPromotionRequest request)
+	public QCRedeeptionResponse addTULWalletCashBack(final String walletId, final QCCustomerPromotionRequest request)
 	{
 		final String transactionId = generateQCTransactionId();
 		request.setInvoiceNumber(transactionId);
-		return getMplWalletServices().addTULWalletCashBack(walletId ,request);
+		return getMplWalletServices().addTULWalletCashBack(walletId, request);
 	}
 
 
@@ -184,10 +169,10 @@ public class MplWalletFacadeImpl implements MplWalletFacade
 	 * @see com.tisl.mpl.facades.wallet.MplWalletFacade#refundTULPromotionalCash()
 	 */
 	@Override
-	public QCRedeeptionResponse refundTULPromotionalCash(String walletId, String transactionId)
+	public QCRedeeptionResponse refundTULPromotionalCash(final String walletId, final String transactionId)
 	{
 
-		return getMplWalletServices().refundTULPromotionalCash(walletId,transactionId);
+		return getMplWalletServices().refundTULPromotionalCash(walletId, transactionId);
 	}
 
 
@@ -197,7 +182,7 @@ public class MplWalletFacadeImpl implements MplWalletFacade
 	 * @see com.tisl.mpl.facades.wallet.MplWalletFacade#getCustomerWallet()
 	 */
 	@Override
-	public CustomerWalletDetailResponse getCustomerWallet(String customerWalletId)
+	public CustomerWalletDetailResponse getCustomerWallet(final String customerWalletId)
 	{
 		return getMplWalletServices().getCustomerWallet(customerWalletId, generateQCTransactionId());
 
@@ -223,67 +208,74 @@ public class MplWalletFacadeImpl implements MplWalletFacade
 	{
 		return getMplPaymentService().createQCPaymentId();
 	}
-	
+
 	@Override
-	public RedimGiftCardResponse getAddEGVToWallet(String cardNumber, String cardPin){
+	public RedimGiftCardResponse getAddEGVToWallet(final String cardNumber, final String cardPin)
+	{
 		final String transactionId = generateQCTransactionId();
-		RedimGiftCardResponse balance = new RedimGiftCardResponse ();
+		RedimGiftCardResponse balance = new RedimGiftCardResponse();
 		final CustomerModel currentCustomer = (CustomerModel) userService.getCurrentUser();
-		if (null != currentCustomer.getIsWalletActivated()){
-			 balance = getMplWalletServices().getAddEGVToWallet(cardNumber, cardPin,transactionId,currentCustomer.getCustomerWalletDetail().getWalletId());
-			 if(null != balance){				 
-				 return balance;
-			 }
-			 
-		 }
-		  balance.setResponseMessage("error");
-		 return balance;
-		
+		if (null != currentCustomer.getIsWalletActivated())
+		{
+			balance = getMplWalletServices().getAddEGVToWallet(cardNumber, cardPin, transactionId,
+					currentCustomer.getCustomerWalletDetail().getWalletId());
+			if (null != balance)
+			{
+				return balance;
+			}
+
+		}
+		balance.setResponseMessage("error");
+		return balance;
+
 	}
-	
+
 	@Override
-	public WalletTransacationsList getWalletTransactionList(){
+	public WalletTransacationsList getWalletTransactionList()
+	{
 		//List<WalletTrasacationsListData> walletTrasacationsListDataList=new ArrayList<WalletTrasacationsListData>();
 		WalletTransacationsList walletTransacationsList = null;
 		final CustomerModel currentCustomer = (CustomerModel) userService.getCurrentUser();
-//		if (null != currentCustomer && null != currentCustomer.getIsWalletActivated()){
-//			System.out.println("Customer has Actived try to redim the card");
-//			if(null != currentCustomer.getCustomerWalletDetail() && null!= currentCustomer.getCustomerWalletDetail().getWalletId()){
-			final String transactionId = generateQCTransactionId();
-			walletTransacationsList =getMplWalletServices().getWalletTransactionList(currentCustomer.getCustomerWalletDetail().getWalletId(),transactionId);
-//			}
-//		 }
+		//		if (null != currentCustomer && null != currentCustomer.getIsWalletActivated()){
+		//			System.out.println("Customer has Actived try to redim the card");
+		//			if(null != currentCustomer.getCustomerWalletDetail() && null!= currentCustomer.getCustomerWalletDetail().getWalletId()){
+		final String transactionId = generateQCTransactionId();
+		walletTransacationsList = getMplWalletServices()
+				.getWalletTransactionList(currentCustomer.getCustomerWalletDetail().getWalletId(), transactionId);
+		//			}
+		//		 }
 
-		if(null != walletTransacationsList ){
-//		for(WalletTransactions trasaction :walletTransacationsList.getWalletTransactions()){
-//			WalletTrasacationsListData data = new WalletTrasacationsListData();
-//			data.setWalletNumber(trasaction.getWalletNumber());
-//			data.setInvoiceNumber(trasaction.getInvoiceNumber());
-//			data.setDateAtServer(trasaction.getDateAtServer());
-//			data.setBatchNumber(trasaction.getBatchNumber());
-//			data.setAmount(trasaction.getAmount());
-//			data.setBalance(trasaction.getBalance());
-//			data.setBillAmount(trasaction.getBillAmount());
-//			data.setMerchantOutletName(trasaction.getMerchantOutletName());
-//			data.setTransactionPostDate(trasaction.getTransactionPostDate());
-//			data.setTransactionStatus(trasaction.getTransactionStatus());
-//			data.setUser(trasaction.getUser());
-//			data.setMerchantName(trasaction.getMerchantName());
-//			data.setpOSName(trasaction.getpOSName());
-//			data.setCustomerName(trasaction.getCustomerName());
-//			data.setWalletPIN(trasaction.getWalletPIN());
-//			data.setNotes(trasaction.getNotes());
-//			data.setApprovalCode(trasaction.getApprovalCode());
-//			data.setResponseCode(trasaction.getResponseCode());
-//			data.setResponseMessage(trasaction.getResponseMessage());
-//			data.setTransactionId(trasaction.getTransactionId());
-//			data.setTransactionType(trasaction.getTransactionType());
-//			data.setErrorCode(trasaction.getErrorCode());
-//			data.setErrorDescription(trasaction.getErrorDescription());
-//			
-//			walletTrasacationsListDataList.add(data);
-//		  }
-			
+		if (null != walletTransacationsList)
+		{
+			//		for(WalletTransactions trasaction :walletTransacationsList.getWalletTransactions()){
+			//			WalletTrasacationsListData data = new WalletTrasacationsListData();
+			//			data.setWalletNumber(trasaction.getWalletNumber());
+			//			data.setInvoiceNumber(trasaction.getInvoiceNumber());
+			//			data.setDateAtServer(trasaction.getDateAtServer());
+			//			data.setBatchNumber(trasaction.getBatchNumber());
+			//			data.setAmount(trasaction.getAmount());
+			//			data.setBalance(trasaction.getBalance());
+			//			data.setBillAmount(trasaction.getBillAmount());
+			//			data.setMerchantOutletName(trasaction.getMerchantOutletName());
+			//			data.setTransactionPostDate(trasaction.getTransactionPostDate());
+			//			data.setTransactionStatus(trasaction.getTransactionStatus());
+			//			data.setUser(trasaction.getUser());
+			//			data.setMerchantName(trasaction.getMerchantName());
+			//			data.setpOSName(trasaction.getpOSName());
+			//			data.setCustomerName(trasaction.getCustomerName());
+			//			data.setWalletPIN(trasaction.getWalletPIN());
+			//			data.setNotes(trasaction.getNotes());
+			//			data.setApprovalCode(trasaction.getApprovalCode());
+			//			data.setResponseCode(trasaction.getResponseCode());
+			//			data.setResponseMessage(trasaction.getResponseMessage());
+			//			data.setTransactionId(trasaction.getTransactionId());
+			//			data.setTransactionType(trasaction.getTransactionType());
+			//			data.setErrorCode(trasaction.getErrorCode());
+			//			data.setErrorDescription(trasaction.getErrorDescription());
+			//			
+			//			walletTrasacationsListDataList.add(data);
+			//		  }
+
 			return walletTransacationsList;
 		}
 		return (WalletTransacationsList) CollectionUtils.EMPTY_COLLECTION;
@@ -292,10 +284,11 @@ public class MplWalletFacadeImpl implements MplWalletFacade
 
 
 	@Override
-	public QCRedeeptionResponse createPromotion(String walletId, QCCustomerPromotionRequest request){
+	public QCRedeeptionResponse createPromotion(final String walletId, final QCCustomerPromotionRequest request)
+	{
 		final String transactionId = generateQCTransactionId();
 		request.setInvoiceNumber(transactionId);
-		return getMplWalletServices().createPromotion(walletId,request);
+		return getMplWalletServices().createPromotion(walletId, request);
 	}
-	
+
 }
