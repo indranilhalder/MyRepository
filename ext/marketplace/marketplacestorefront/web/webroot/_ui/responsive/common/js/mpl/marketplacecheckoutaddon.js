@@ -435,7 +435,6 @@ function displayCODForm()
 	//var cartValue=$("#cartValue").val();
 	var httpRequest=$("#httpRequest").val();
 	var guid=$("#guid").val();
-
 	$.ajax({
 		url: ACC.config.encodedContextPath + "/checkout/multi/payment-method/setupMplCODForm",
 		type: "GET",
@@ -452,7 +451,6 @@ function displayCODForm()
 			else
 			{
 				$("#codNotAllowedMessage").css("display","none");
-				$("#paymentButtonId_up,#paymentButtonId").css("display","block");
 			}
 			//UF-281/282:Ends
 			$("#otpNUM").html(response);
@@ -1763,12 +1761,9 @@ function savedDebitCardRadioChange(radioId){
 		//if($(".redirect").val()=="false"){
 			//Juspay.startSecondFactor();
 		//}
-		debugger;
-		var isEGVOrder=$("#isEGVOrder").val();
-		alert(isEGVOrder+"3");
 		$.ajax({
 			url: ACC.config.encodedContextPath + "/checkout/multi/payment-method/createJuspayOrder",
-			data: { 'firstName' : firstName , 'lastName' : lastName , 'netBankName' : netBankName, 'addressLine1' : addressLine1, 'addressLine2' : addressLine2 , 'addressLine3' : addressLine3, 'country' : country , 'state' : state, 'city' : city , 'pincode' : pincode, 'cardSaved' : cardSaved, 'sameAsShipping' : sameAsShipping , 'guid' : guid,'isEGVOrder':isEGVOrder},
+			data: { 'firstName' : firstName , 'lastName' : lastName , 'netBankName' : netBankName, 'addressLine1' : addressLine1, 'addressLine2' : addressLine2 , 'addressLine3' : addressLine3, 'country' : country , 'state' : state, 'city' : city , 'pincode' : pincode, 'cardSaved' : cardSaved, 'sameAsShipping' : sameAsShipping , 'guid' : guid},
 			type: "GET",
 			cache: false,
 			async: false,
@@ -1913,12 +1908,9 @@ function savedDebitCardRadioChange(radioId){
 
 		//}
 		var guid=$("#guid").val();
-		debugger;
-		var isEGVOrder=$("#isEGVOrder").val();
-		alert(isEGVOrder+"4");
 		$.ajax({
 			url: ACC.config.encodedContextPath + "/checkout/multi/payment-method/createJuspayOrder",
-			data: { 'firstName' : firstName , 'lastName' : lastName , 'netBankName' : netBankName, 'addressLine1' : addressLine1, 'addressLine2' : addressLine2 , 'addressLine3' : addressLine3, 'country' : country , 'state' : state, 'city' : city , 'pincode' : pincode, 'cardSaved' : cardSaved, 'sameAsShipping' : sameAsShipping, 'guid' : guid,'isEGVOrder':isEGVOrder},
+			data: { 'firstName' : firstName , 'lastName' : lastName , 'netBankName' : netBankName, 'addressLine1' : addressLine1, 'addressLine2' : addressLine2 , 'addressLine3' : addressLine3, 'country' : country , 'state' : state, 'city' : city , 'pincode' : pincode, 'cardSaved' : cardSaved, 'sameAsShipping' : sameAsShipping, 'guid' : guid},
 			type: "GET",
 			cache: false,
 			async: false,
@@ -2081,12 +2073,10 @@ function savedDebitCardRadioChange(radioId){
 		// For Payement Page CR Changes starts
 		
 		// For Payement Page CR Changes ends
-		debugger;
-		var isEGVOrder=$("#isEGVOrder").val();
-		alert(isEGVOrder+"5");
+		
 		$.ajax({
 			url: ACC.config.encodedContextPath + "/checkout/multi/payment-method/createJuspayOrder",
-			data: { 'firstName' : firstName , 'lastName' : lastName , 'addressLine1' : addressLine1, 'addressLine2' : addressLine2 , 'addressLine3' : addressLine3, 'country' : country , 'state' : state, 'city' : city , 'pincode' : pincode, 'cardSaved' : cardSaved, 'sameAsShipping' : sameAsShipping, 'guid' : guid,'isEGVOrder':isEGVOrder},
+			data: { 'firstName' : firstName , 'lastName' : lastName , 'addressLine1' : addressLine1, 'addressLine2' : addressLine2 , 'addressLine3' : addressLine3, 'country' : country , 'state' : state, 'city' : city , 'pincode' : pincode, 'cardSaved' : cardSaved, 'sameAsShipping' : sameAsShipping, 'guid' : guid},
 			type: "GET",
 			cache: false,
 			async: false,
@@ -2094,8 +2084,6 @@ function savedDebitCardRadioChange(radioId){
 				//TPR:3780:jewellery
 				if(response=='reload_for_inventory'){
 					$(location).attr('href',ACC.config.encodedContextPath+"/checkout/multi/payment-method/pay?dispMsg=true");
-				}else if(response==''){
-					$(location).attr('href',ACC.config.encodedContextPath+"/checkout/multi/payment-method/cardPayment/"+guid); //TPR-629
 				}
 				//TPR:3780:jewellery
 				else if(response=='redirect'){
@@ -2272,12 +2260,10 @@ function savedDebitCardRadioChange(radioId){
 		// For Payement Page CR Changes starts
 		
 		// For Payement Page CR Changes ends
-		debugger;
-		var isEGVOrder=$("#isEGVOrder").val();
-		alert(isEGVOrder+"6");
+		
 		$.ajax({
 			url: ACC.config.encodedContextPath + "/checkout/multi/payment-method/createJuspayOrder",
-			data: { 'firstName' : firstName , 'lastName' : lastName , 'addressLine1' : addressLine1, 'addressLine2' : addressLine2 , 'addressLine3' : addressLine3, 'country' : country , 'state' : state, 'city' : city , 'pincode' : pincode, 'cardSaved' : cardSaved, 'sameAsShipping' : sameAsShipping, 'guid' : guid,'isEGVOrder':isEGVOrder},
+			data: { 'firstName' : firstName , 'lastName' : lastName , 'addressLine1' : addressLine1, 'addressLine2' : addressLine2 , 'addressLine3' : addressLine3, 'country' : country , 'state' : state, 'city' : city , 'pincode' : pincode, 'cardSaved' : cardSaved, 'sameAsShipping' : sameAsShipping, 'guid' : guid},
 			type: "GET",
 			cache: false,
 			async: false,
@@ -5194,12 +5180,9 @@ function submitNBForm(){
 		
 		var cardSaved=false;
 		var guid=$("#guid").val();
-		debugger;
-		var isEGVOrder=$("#isEGVOrder").val();
-		alert(isEGVOrder+"7");
 		$.ajax({
 			url: ACC.config.encodedContextPath + "/checkout/multi/payment-method/createJuspayOrder",
-			data: { 'firstName' : firstName , 'lastName' : lastName , 'netBankName' : netBankName, 'addressLine1' : addressLine1, 'addressLine2' : addressLine2 , 'addressLine3' : addressLine3, 'country' : country , 'state' : state, 'city' : city , 'pincode' : pincode, 'cardSaved' : cardSaved, 'guid' : guid,'isEGVOrder':isEGVOrder},
+			data: { 'firstName' : firstName , 'lastName' : lastName , 'netBankName' : netBankName, 'addressLine1' : addressLine1, 'addressLine2' : addressLine2 , 'addressLine3' : addressLine3, 'country' : country , 'state' : state, 'city' : city , 'pincode' : pincode, 'cardSaved' : cardSaved, 'guid' : guid},
 			type: "GET",
 			cache: false,
 			success : function(response) {
@@ -5511,7 +5494,6 @@ $(".edit_address").click(function(){
  		});
 	return false;
 });
-
 });
 //TPR-1215
 $(".regular-radio").click(function(){
@@ -8690,6 +8672,25 @@ $("*[data-id=savedCCard]").change(function(){
 	$(".card_cvvErrorSavedCard_popup").css("display","none");	//UF-211
 	$("#make_saved_cc_payment").removeClass("saved_card_disabled");	//UF-211
 	//$("#payment_form").find(".error-message").hide();
+	
+	//TISPRDT-2441 issue fix starts here
+	$("input[name=debitCards]:radio.card_token,input[name=creditCards]:radio.card_token,input[name=emiCards]:radio.card_token").removeClass("card_token").addClass("card_token_hide");
+	$('#savedCreditCard input:radio[name=creditCards]:checked').removeClass("card_token_hide").addClass("card_token");
+	$(".card_token_hide").parent().parent().parent().find(".cvv").find(".security_code").removeClass("security_code").addClass("security_code_hide");
+	$(".card_token_hide").parent().find('.card_bank').removeClass("card_bank").addClass("card_bank_hide");
+	$(".card_token_hide").parent().find('.card_brand').removeClass("card_brand").addClass("card_brand_hide");
+	$(".card_token_hide").parent().find('.card_is_domestic').removeClass("card_is_domestic").addClass("card_is_domestic_hide");
+	$(".card_token_hide").parent().find('.card_ebsErrorSavedCard').removeClass("card_ebsErrorSavedCard").addClass("card_ebsErrorSavedCard_hide");
+	$(".card_token_hide").parent().parent().parent().find(".cvv").find('.card_cvvErrorSavedCard').removeClass("card_cvvErrorSavedCard").addClass("card_cvvErrorSavedCard_hide");
+	$(".card_token").parent().parent().parent().find(".cvv").find(".security_code_hide").removeClass("security_code_hide").addClass("security_code");
+	$(".card_token").parent().find('.card_bank_hide').removeClass("card_bank_hide").addClass("card_bank");
+	$(".card_token").parent().find('.card_brand_hide').removeClass("card_brand_hide").addClass("card_brand");
+	$(".card_token").parent().find('.card_is_domestic_hide').removeClass("card_is_domestic_hide").addClass("card_is_domestic");
+	$(".card_token").parent().find('.card_ebsErrorSavedCard_hide').removeClass("card_ebsErrorSavedCard_hide").addClass("card_ebsErrorSavedCard");
+	$(".card_token").parent().parent().parent().find(".cvv").find('.card_cvvErrorSavedCard_hide').removeClass("card_cvvErrorSavedCard_hide").addClass("card_cvvErrorSavedCard");
+	$('.security_code_hide').prop('disabled', true);
+	$('.security_code').prop('disabled', false);
+	//TISPRDT-2441 issue fix ends here
 });
 
 $("*[data-id=newDCard]").click(function(){
@@ -8721,6 +8722,25 @@ $("*[data-id=savedDCard]").change(function(){
 	$(".card_cvvErrorSavedCard_popup").css("display","none");	//UF-217
 	$("#make_saved_dc_payment").removeClass("saved_card_disabled");	//UF-217
 	//$("#debit_payment_form").find(".error-message").hide();
+	
+	//TISPRDT-2441 issue fix starts here
+	$("input[name=debitCards]:radio.card_token,input[name=creditCards]:radio.card_token,input[name=emiCards]:radio.card_token").removeClass("card_token").addClass("card_token_hide");
+	$('#savedDebitCard input:radio[name=debitCards]:checked').removeClass("card_token_hide").addClass("card_token");
+	$(".card_token_hide").parent().parent().parent().find(".cvv").find(".security_code").removeClass("security_code").addClass("security_code_hide");
+	$(".card_token_hide").parent().find('.card_bank').removeClass("card_bank").addClass("card_bank_hide");
+	$(".card_token_hide").parent().find('.card_brand').removeClass("card_brand").addClass("card_brand_hide");
+	$(".card_token_hide").parent().find('.card_is_domestic').removeClass("card_is_domestic").addClass("card_is_domestic_hide");
+	$(".card_token_hide").parent().find('.card_ebsErrorSavedCard').removeClass("card_ebsErrorSavedCard").addClass("card_ebsErrorSavedCard_hide");
+	$(".card_token_hide").parent().parent().parent().find(".cvv").find('.card_cvvErrorSavedCard').removeClass("card_cvvErrorSavedCard").addClass("card_cvvErrorSavedCard_hide");
+	$(".card_token").parent().parent().parent().find(".cvv").find(".security_code_hide").removeClass("security_code_hide").addClass("security_code");
+	$(".card_token").parent().find('.card_bank_hide').removeClass("card_bank_hide").addClass("card_bank");
+	$(".card_token").parent().find('.card_brand_hide').removeClass("card_brand_hide").addClass("card_brand");
+	$(".card_token").parent().find('.card_is_domestic_hide').removeClass("card_is_domestic_hide").addClass("card_is_domestic");
+	$(".card_token").parent().find('.card_ebsErrorSavedCard_hide').removeClass("card_ebsErrorSavedCard_hide").addClass("card_ebsErrorSavedCard");
+	$(".card_token").parent().parent().parent().find(".cvv").find('.card_cvvErrorSavedCard_hide').removeClass("card_cvvErrorSavedCard_hide").addClass("card_cvvErrorSavedCard");
+	$('.security_code_hide').prop('disabled', true);
+	$('.security_code').prop('disabled', false);
+	//TISPRDT-2441 issue fix ends here
 });
 
 $("#payment_form").find("input[type=text]").click(function(){
@@ -9257,69 +9277,3 @@ function populateIsExchangeApplied(response,stringCaller)
 		}
 		}
 }
-
-/**
-function setCliqCashPaymentMode()
-{
-	$(document).on("click","#useGiftCardCheckbox",function() {
-		alert("In");
-		
-		var walletMode = document.getElementById('useGiftCardCheckbox');
-		var url=ACC.config.encodedContextPath + "/checkout/multi/payment-method/useWalletForPayment";
-		var data=walletMode;
-		var xhrResponse=ACC.singlePageCheckout.ajaxRequest(url,"POST",data,false);
-        
-        xhrResponse.fail(function(xhr, textStatus, errorThrown) {
-        	console.log("ERROR:"+textStatus + ': ' + errorThrown);
-		});
-        
-        xhrResponse.done(function(data, textStatus, jqXHR) {
-            if (jqXHR.responseJSON) {
-            	if(data.type==="response")
-                {            		
-            		$("#unUseGiftBtnText").hide();
-            		
-            			if(walletMode.checked){
-            				$("#useGiftBtnText").hide();
-            				$("#unUseGiftBtnText").show();
-            			} else {
-            				$("#unUseGiftBtnText").hide();
-            				$("#useGiftBtnText").show();
-            			}
-                }
-            } 
-        });
-	});
-}
-	
-
-$( "#makePaymentDiv" ).load(function() {
-	alert("in");
-	$.ajax({
-		url : ACC.config.encodedContextPath + "/checkout/multi/payment-method/useWalletDetail",
-		//data : dataString,
-		type : "GET",
-		cache : false,
-//		beforeSend : function() {
-//			$('#ajax-loader').show();
-//		},
-		success : function(data) {
-			
-			$(".cliqTotalBalanceLabel").html(data.totalWalletAmt);
-			$("#qcCashId").html(data.totalCash);
-			$("#qcGiftCardId").html(data.totalEgvBalance);	
-			
-			var balAmt = 0;
-			
-//			if(data.totalWalletAmt < TotalOrderAmt){
-//				balAmt = TotalOrderAmt - data.totalWalletAmt;
-//			}
-		},	
-	   
-		fail : function(fail){
-		//alert("Sorry we are unable to connect to Click 2 Call service. Please try again later.");
-	}
-		
-	});
-});
-**/

@@ -683,7 +683,6 @@ class="de.hybris.platform.commercefacades.product.impl.DefaultImageFormatMapping
 		<property name="orderConverter" ref="orderConverter"></property>
 		<!-- UF-70 -->
 		<property name="promotionsService" ref="promotionsService"/>
-		<property name="cartConverter" ref="cartConverter" />
 		<property name="timeService" ref="timeService"/>
 	</bean>
 	
@@ -1183,6 +1182,10 @@ class="de.hybris.platform.commercefacades.product.impl.DefaultImageFormatMapping
 			<!-- TPR-5733 -->
 			<property name="footerLinkConverter" ref="mplFooterLinkConverter" />
 			
+			</bean>
+			
+			<bean id="luxCmsFacade" class="com.tisl.mpl.facade.cms.LuxCmsFacadeImpl">
+				<property name="mplCMSPageService" ref="cmsPageService"></property>
 			</bean>
 			
 			
@@ -2084,11 +2087,5 @@ class="de.hybris.platform.commercefacades.product.impl.DefaultImageFormatMapping
 	<bean id="defaultEndpointSlaveUrlPopulator" class="com.tisl.mpl.facade.search.populator.DefaultEndpointSlaveUrlPopulator" />
 	
 	<!-- TPR-6665: Update synonyms in solr slave  end-->
-	
-	
-	 	<bean id="mplWalletFacade" class="com.tisl.mpl.facades.wallet.impl.MplWalletFacadeImpl" >
-<!--      	<property name="mplWalletServices" ref="mplWalletServices" /> -->
-        </bean>
-	
 </beans>
 

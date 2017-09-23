@@ -7,7 +7,6 @@ import de.hybris.platform.acceleratorservices.config.SiteConfigService;
 import de.hybris.platform.basecommerce.model.site.BaseSiteModel;
 import de.hybris.platform.catalog.model.CatalogVersionModel;
 import de.hybris.platform.cms2.exceptions.CMSItemNotFoundException;
-import de.hybris.platform.cms2.servicelayer.services.CMSSiteService;
 import de.hybris.platform.commercefacades.order.data.AbstractOrderData;
 import de.hybris.platform.commercefacades.order.data.CartData;
 import de.hybris.platform.commercefacades.order.data.CartModificationData;
@@ -32,18 +31,16 @@ import de.hybris.platform.converters.Converters;
 import de.hybris.platform.core.model.JewelleryInformationModel;
 import de.hybris.platform.core.model.order.AbstractOrderEntryModel;
 import de.hybris.platform.core.model.order.AbstractOrderModel;
-import de.hybris.platform.core.model.order.CartEntryModel;
 import de.hybris.platform.core.model.order.CartModel;
 import de.hybris.platform.core.model.order.OrderModel;
 import de.hybris.platform.core.model.product.PincodeModel;
 import de.hybris.platform.core.model.product.ProductModel;
 import de.hybris.platform.core.model.user.UserModel;
-import de.hybris.platform.order.CartFactory;
 import de.hybris.platform.order.CartService;
 import de.hybris.platform.order.InvalidCartException;
-import de.hybris.platform.ordersplitting.model.ConsignmentEntryModel;
 import de.hybris.platform.product.ProductService;
 import de.hybris.platform.promotions.PromotionsService;
+import de.hybris.platform.promotions.model.AbstractPromotionModel;
 import de.hybris.platform.promotions.model.AbstractPromotionRestrictionModel;
 import de.hybris.platform.promotions.model.PromotionGroupModel;
 import de.hybris.platform.promotions.model.PromotionResultModel;
@@ -73,7 +70,6 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -95,7 +91,6 @@ import com.tis.mpl.facade.changedelivery.MplDeliveryAddressFacade;
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.constants.MplGlobalCodeConstants;
 import com.tisl.mpl.constants.clientservice.MarketplacecclientservicesConstants;
-import com.tisl.mpl.core.model.MplZoneDeliveryModeValueModel;
 import com.tisl.mpl.core.model.RichAttributeModel;
 import com.tisl.mpl.core.mplconfig.service.MplConfigService;
 import com.tisl.mpl.exception.ClientEtailNonBusinessExceptions;
@@ -107,10 +102,7 @@ import com.tisl.mpl.facade.product.ExchangeGuideFacade;
 import com.tisl.mpl.facades.constants.MarketplaceFacadesConstants;
 import com.tisl.mpl.facades.data.StoreLocationRequestData;
 import com.tisl.mpl.facades.data.StoreLocationResponseData;
-import com.tisl.mpl.facades.egv.data.EgvDetailsData;
 import com.tisl.mpl.facades.product.data.MarketplaceDeliveryModeData;
-import com.tisl.mpl.marketplacecommerceservices.daos.MplDeliveryCostDao;
-import com.tisl.mpl.marketplacecommerceservices.egv.service.cart.MplEGVCartService;
 import com.tisl.mpl.marketplacecommerceservices.order.MplCommerceCartCalculationStrategy;
 import com.tisl.mpl.marketplacecommerceservices.service.MplCommerceCartService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplDelistingService;
@@ -120,9 +112,13 @@ import com.tisl.mpl.marketplacecommerceservices.service.MplStockService;
 import com.tisl.mpl.marketplacecommerceservices.service.NotificationService;
 import com.tisl.mpl.marketplacecommerceservices.service.PincodeService;
 import com.tisl.mpl.model.BuyABFreePrecentageDiscountModel;
+import com.tisl.mpl.model.BuyAGetPromotionOnShippingChargesModel;
+import com.tisl.mpl.model.BuyAandBGetPromotionOnShippingChargesModel;
 import com.tisl.mpl.model.BuyAandBgetCModel;
+import com.tisl.mpl.model.BuyAboveXGetPromotionOnShippingChargesModel;
 import com.tisl.mpl.model.BuyXItemsofproductAgetproductBforfreeModel;
 import com.tisl.mpl.model.CustomProductBOGOFPromotionModel;
+import com.tisl.mpl.model.DeliveryModePromotionRestrictionModel;
 import com.tisl.mpl.model.EtailPincodeRestrictionModel;
 import com.tisl.mpl.model.SellerInformationModel;
 import com.tisl.mpl.mplcommerceservices.service.data.InvReserForDeliverySlotsItemEDDInfoData;
@@ -142,24 +138,13 @@ import com.tisl.mpl.wsdto.MplSelectedEDDForUssID;
 
 import net.sourceforge.pmd.util.StringUtil;
 
+
 /**
  * @author TCS
  *
  */
 public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacade
 {
-	/**
-	 * 
-	 */
-	private static final String GIFT_CART_MODEL = "giftCartModel";
-	/**
-	 * 
-	 */
-	@Autowired
-	MplDeliveryCostDao mplDeliveryCostDao;
-	@Autowired
-	private CartFactory cartFactory;
-	private static final String ERROR_OCCER_WHILE_CREATING_CART_MODEL_FOR_GIFT = "Error occer while Creating CartModel for Gift";
 	private static final Logger LOG = Logger.getLogger(MplCartFacadeImpl.class);
 	private static final String FINEJEWELLERY = "FineJewellery";
 	private ProductService productService;
@@ -168,11 +153,6 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 	private ModelService modelService;
 	private Converter<CartModel, CartData> mplExtendedCartConverter;
 	private Converter<CartModel, CartData> mplExtendedPromoCartConverter;
-
-	/**
-	 * 
-	 */
-	private Converter<CartModel, CartData> cartConverter;
 	@Autowired
 	private CommerceCartService commerceCartService;
 
@@ -194,8 +174,6 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 	@Autowired
 	private MplDelistingService mplDelistingService;
 
-	@Autowired
-	private CMSSiteService cmsSiteService;
 	//sonar fix
 	/*
 	 * @Autowired private CatalogService catalogService;
@@ -240,9 +218,6 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 
 	@Autowired
 	private MplSellerInformationService mplSellerInformationService;
-	
-	@Autowired 
-	MplEGVCartService mplEGVCartService;
 
 
 	//TPR-5346
@@ -1550,7 +1525,20 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 				for (final OrderEntryData entry : cartData.getEntries())
 				{
 					final ProductData productData = entry.getProduct();
-					if (productCode.equals(productData.getCode()) && ussid.equals(entry.getSelectedUssid()))
+					if (StringUtils.isNotEmpty(productData.getRootCategory())
+							&& MarketplacecommerceservicesConstants.FINEJEWELLERY.equalsIgnoreCase(productData.getRootCategory())
+							&& productCode.equals(productData.getCode()) && !ussid.equals(entry.getSelectedUssid()))
+					{
+						LOG.debug(
+								"Product already present in the cart so now we will check the qunatity present in the cart already for fine jewellery different weight variant.");
+						if (qty + entry.getQuantity().longValue() >= maximum_configured_quantiy_jewellery)
+						{
+							addToCartFlag = MarketplacecommerceservicesConstants.MAX_QUANTITY_ADDED_FOR_FINEJEWELLERY;
+							LOG.debug("You can add Only one Product for Fine Jewellery irrespective of the weight variant");
+							break;
+						}
+					}
+					else if (productCode.equals(productData.getCode()) && ussid.equals(entry.getSelectedUssid()))
 					{
 						LOG.debug("Product already present in the cart so now we will check the qunatity present in the cart already");
 
@@ -2008,6 +1996,50 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 			LOG.info("Some issue may be happend while removing Dellivery mode from Cart to remove Delivery Specific promotion", e);
 		}
 
+		return cart;
+	}
+
+	/**
+	 * @description: Method to remove delivery modes and point of service without recalculate cart
+	 * @param cart
+	 * @return CartModel
+	 */
+	@Override
+	public CartModel removeDeliveryModeWdoutRecalclt(final CartModel cart)
+	{
+		boolean reCalculationRequired = false;
+		boolean deliverypointOfService = false;
+		try
+		{
+			final List<AbstractOrderEntryModel> entryList = cart.getEntries();
+			if (CollectionUtils.isNotEmpty(entryList))
+			{
+				for (final AbstractOrderEntryModel entry : entryList)
+				{
+					if (entry.getMplDeliveryMode() != null)
+					{
+						entry.setMplDeliveryMode(null);
+						//modelService.save(entry); TISPT-104
+						reCalculationRequired = true;
+					}
+					if (entry.getDeliveryPointOfService() != null)
+					{
+						entry.setDeliveryPointOfService(null);
+						//modelService.save(entry); TISPT-104
+						deliverypointOfService = true;
+					}
+				}
+			}
+			if (reCalculationRequired || deliverypointOfService) //TISPT-104
+			{
+				modelService.saveAll(entryList);
+				modelService.save(cart);
+			}
+		}
+		catch (final Exception e)
+		{
+			LOG.error("Some issue may be happend while removing Dellivery mode from Cart to remove Delivery Specific promotion", e);
+		}
 		return cart;
 	}
 
@@ -3456,6 +3488,96 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 		return isPincodeRestrictedPromotionPresent;
 	}
 
+	/**
+	 * This method is used to check if any product in the cart is having pincode/delivery mode restricted promotion
+	 * configured.
+	 *
+	 * @param cart
+	 * @return boolean
+	 */
+	@Override
+	public Map<String, Boolean> checkRestrictedPromoOnCartProduct(final CartModel cart)
+	{
+		final Map<String, Boolean> restrictionMap = new HashMap<String, Boolean>();
+		restrictionMap.put("isPincodeRestrictedPromoPresent", Boolean.FALSE);
+		restrictionMap.put("isDelModeRestrictedPromoPresent", Boolean.FALSE);
+		//restrictionMap.put("isDelModeRestrictedPromotionApplied", Boolean.FALSE);
+		//exitLoop:
+
+		//{
+		final BaseSiteModel baseSiteModel = getBaseSiteService().getCurrentBaseSite();
+		PromotionGroupModel defaultPromotionGroup = null;
+		//final Date currentTimeRoundedToMinute = DateUtils.round(getTimeService().getCurrentTime(), Calendar.MINUTE);
+		if (baseSiteModel != null)
+		{
+			defaultPromotionGroup = baseSiteModel.getDefaultPromotionGroup();
+		}
+		if (defaultPromotionGroup == null)
+		{
+			return null;
+		}
+		final Set<PromotionResultModel> promotions = cart.getAllPromotionResults();
+
+		if (CollectionUtils.isNotEmpty(promotions))
+		{
+			for (final PromotionResultModel promotionResult : promotions)
+			{
+				final AbstractPromotionModel promoModel = (null != promotionResult) ? promotionResult.getPromotion() : null;
+				if (promoModel != null && promoModel.getEnabled() == Boolean.TRUE
+						&& promotionResult.getCertainty().floatValue() < 1.0F)
+				{
+					//Checking all the cart promotion restrictions to see if any locationRestrictedPromotion/deliveryModeSpecificPromotion can be present
+					final Collection<AbstractPromotionRestrictionModel> restrictionList = promotionResult.getPromotion()
+							.getRestrictions();
+					if (CollectionUtils.isNotEmpty(restrictionList))
+					{
+						for (final AbstractPromotionRestrictionModel restriction : restrictionList)
+						{
+							if (restriction instanceof EtailPincodeRestrictionModel)
+							{
+								restrictionMap.put("isPincodeRestrictedPromoPresent", Boolean.TRUE);
+							}
+							if (restriction instanceof DeliveryModePromotionRestrictionModel)
+							{
+								restrictionMap.put("isDelModeRestrictedPromoPresent", Boolean.TRUE);
+							}
+						}
+					}
+				}
+				if ((null != promoModel && promoModel.getEnabled() == Boolean.TRUE
+						&& promotionResult.getCertainty().floatValue() < 1.0F)
+						&& (promoModel instanceof BuyAboveXGetPromotionOnShippingChargesModel
+								|| promoModel instanceof BuyAGetPromotionOnShippingChargesModel
+								|| promoModel instanceof BuyAandBGetPromotionOnShippingChargesModel))
+				{
+					//Checking shipping charges promotion are present, In that case isDelModeRestrictedPromotionPresent will be true
+					restrictionMap.put("isDelModeRestrictedPromoPresent", Boolean.TRUE);
+				}
+				//					if ((null != promoModel && promoModel.getEnabled() == Boolean.TRUE && promotionResult.getCertainty().floatValue() == 1.0F)
+				//							&& (promoModel instanceof BuyAboveXGetPromotionOnShippingChargesModel
+				//									|| promoModel instanceof BuyAGetPromotionOnShippingChargesModel || promoModel instanceof BuyAandBGetPromotionOnShippingChargesModel))
+				//					{
+				//						//Checking shipping charges promotion are applied, In that case isDelModeRestrictedPromotionPresent will be true
+				//						restrictionMap.put("isDelModeRestrictedPromotionApplied", Boolean.TRUE);
+				//					}
+				//					if ((null != promoModel && promoModel.getEnabled() == Boolean.TRUE && promotionResult.getCertainty().floatValue() == 1.0F)
+				//							&& !(promoModel instanceof BuyAboveXGetPromotionOnShippingChargesModel
+				//									|| promoModel instanceof BuyAGetPromotionOnShippingChargesModel || promoModel instanceof BuyAandBGetPromotionOnShippingChargesModel))
+				//					{
+				//						//Checking all the cart promotion restrictions to see if any deliveryModeSpecificPromotion is applied
+				//						for (final AbstractPromotionRestrictionModel restriction : promotionResult.getPromotion().getRestrictions())
+				//						{
+				//							if (restriction instanceof DeliveryModePromotionRestrictionModel)
+				//							{
+				//								restrictionMap.put("isDelModeRestrictedPromotionApplied", Boolean.TRUE);
+				//							}
+				//						}
+				//					}
+			} //end promotion for loop
+			  //}
+		}
+		return restrictionMap;
+	}
 
 	/**
 	 *
@@ -4068,24 +4190,27 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 		int updateEntryCount;
 		int entryCount = 0;
 
-		if (CollectionUtils.isNotEmpty(cartModel.getEntries()))
+		final List<AbstractOrderEntryModel> entryList = new ArrayList<AbstractOrderEntryModel>(cartModel.getEntries());
+
+		if (CollectionUtils.isNotEmpty(entryList))
 		{
-			for (final AbstractOrderEntryModel entry : cartModel.getEntries())
+			for (final AbstractOrderEntryModel entry : entryList)
 			{
 				//				if (entry.getProduct().getMaxOrderQuantity() != null && entry.getProduct().getMaxOrderQuantity().intValue() > 0
 				//						&& entry.getProduct().getMaxOrderQuantity().intValue() < 5)
-				if (entry.getProduct().getMaxOrderQuantity() != null && entry.getProduct().getMaxOrderQuantity().intValue() > 0
-						&& entry.getProduct().getMaxOrderQuantity().intValue() < maximum_configured_quantiy)
-				{
 
-					if (entry.getQuantity().longValue() > entry.getProduct().getMaxOrderQuantity().intValue())
+				final Integer maxQuantity = entry.getProduct().getMaxOrderQuantity();
+
+				if (maxQuantity != null && maxQuantity.intValue() > 0 && maxQuantity.intValue() < maximum_configured_quantiy)
+				{
+					if (entry.getQuantity().longValue() > maxQuantity.intValue())
 					{
 						try
 						{
 							final CartModificationData cartModification = updateCartEntry(entry.getEntryNumber().intValue(),
-									entry.getProduct().getMaxOrderQuantity().intValue());
+									maxQuantity.intValue());
 
-							if (cartModification.getQuantity() == entry.getProduct().getMaxOrderQuantity().intValue())
+							if (cartModification.getQuantity() == maxQuantity.intValue())
 							{
 								maxLimitData = new MaxLimitData();
 								LOG.debug("updating from cart........");
@@ -4094,13 +4219,15 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 								//updateCartOnMaxLimExceeds = false;
 								//	hMap.put(entry.getProduct().getCode(), "true");
 
-								maxLimitData.setMaxQuantityAllowed(entry.getProduct().getMaxOrderQuantity().toString());
-								maxLimitData.setProductCode(entry.getProduct().getCode());
-								maxLimitData.setProductName(entry.getProduct().getName());
+								final ProductModel product = entry.getProduct();
+
+								maxLimitData.setMaxQuantityAllowed(maxQuantity.toString());
+								maxLimitData.setProductCode(product.getCode());
+								maxLimitData.setProductName(product.getName());
 								maxLimitData.setUserSelectedQty(String.valueOf(cartModification.getQuantity()));
 								maxLimitData.setUssid(entry.getSelectedUSSID());
 
-								hMap.put(entry.getProduct().getCode(), maxLimitData);
+								hMap.put(product.getCode(), maxLimitData);
 							}
 						}
 						catch (final CommerceCartModificationException ex)
@@ -4114,36 +4241,37 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 
 		//		for (final AbstractOrderEntryModel entry : cartModel.getEntries()) keeping the lastest entry in the cart
 
-		if (CollectionUtils.isNotEmpty(cartModel.getEntries()))
+		if (CollectionUtils.isNotEmpty(entryList))
 		{
-			for (final AbstractOrderEntryModel entry : Lists.reverse(cartModel.getEntries()))
+			for (final AbstractOrderEntryModel entry : Lists.reverse(entryList))
 			{
-				entryCount = entryCount + entry.getQuantity().intValue();
+				final Long quantity = entry.getQuantity();
+				entryCount = entryCount + quantity.intValue();
+
+				final ProductModel product = entry.getProduct();
+
 				if (MapUtils.isNotEmpty(productMap))
 				{
-
-					if (productMap.get(entry.getProduct().getCode()) != null)
+					if (productMap.get(product.getCode()) != null)
 					{
-
+						final Integer maxQuantity = entry.getProduct().getMaxOrderQuantity();
 
 						//					if (entry.getProduct().getMaxOrderQuantity() != null && entry.getProduct().getMaxOrderQuantity().intValue() > 0
 						//							&& entry.getProduct().getMaxOrderQuantity().intValue() < 5)
 
-						if (entry.getProduct().getMaxOrderQuantity() != null && entry.getProduct().getMaxOrderQuantity().intValue() > 0
-								&& entry.getProduct().getMaxOrderQuantity().intValue() < maximum_configured_quantiy)
+						if (maxQuantity != null && maxQuantity.intValue() > 0 && maxQuantity.intValue() < maximum_configured_quantiy)
 						{
 
-							if (entry.getQuantity().longValue() + productMap.get(entry.getProduct().getCode()).longValue() > entry
-									.getProduct().getMaxOrderQuantity().intValue())
+							if (quantity.longValue() + productMap.get(product.getCode()).longValue() > maxQuantity.intValue())
 							{
 
 								try
 								{
 									//remainingcount = entry.getQuantity().intValue() - entry.getProduct().getMaxOrderQuantity().intValue();
-									remainingcount = entryCount - entry.getProduct().getMaxOrderQuantity().intValue();
+									remainingcount = entryCount - maxQuantity.intValue();
 									if (remainingcount >= 0)
 									{
-										updateEntryCount = entry.getQuantity().intValue() - remainingcount;
+										updateEntryCount = quantity.intValue() - remainingcount;
 										//									final CartModificationData cartModification = updateCartEntry(entry.getEntryNumber().intValue(), 0);
 
 										final CartModificationData cartModification = updateCartEntry(entry.getEntryNumber().intValue(),
@@ -4157,13 +4285,13 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 											//updateCartOnMaxLimExceeds = false;
 											//return false;
 											//hMap.put(entry.getProduct().getCode(), "true");
-											maxLimitData.setMaxQuantityAllowed(entry.getProduct().getMaxOrderQuantity().toString());
-											maxLimitData.setProductCode(entry.getProduct().getCode());
-											maxLimitData.setProductName(entry.getProduct().getName());
+											maxLimitData.setMaxQuantityAllowed(maxQuantity.toString());
+											maxLimitData.setProductCode(product.getCode());
+											maxLimitData.setProductName(product.getName());
 											maxLimitData.setUserSelectedQty(String.valueOf(cartModification.getQuantity()));
 											maxLimitData.setUssid(entry.getSelectedUSSID());
 
-											hMap.put(entry.getProduct().getCode(), maxLimitData);
+											hMap.put(product.getCode(), maxLimitData);
 										}
 									}
 								}
@@ -4175,27 +4303,22 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 
 							else
 							{
-
-								productMap.put(entry.getProduct().getCode(), Long.valueOf(
-										productMap.get(entry.getProduct().getCode()).longValue() + entry.getQuantity().longValue()));
+								productMap.put(product.getCode(),
+										Long.valueOf(productMap.get(product.getCode()).longValue() + quantity.longValue()));
 							}
 						}
 
 					}
 					else
 					{
-						productMap.put(entry.getProduct().getCode(), entry.getQuantity());
+						productMap.put(product.getCode(), quantity);
 					}
 				}
 				else
 				{
-					productMap.put(entry.getProduct().getCode(), entry.getQuantity());
+					productMap.put(product.getCode(), quantity);
 				}
 			}
-
-
-
-
 		}
 
 		//return true;
@@ -4316,181 +4439,40 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 	{
 		return mplCommerceCartService.addItemToCartWithExchange(cartId, cartModel, productModel, quantity, ussid, exchangeParam);
 	}
-	
-	/**
-	 * @param egvDetailForm
-	 */
+
+
+
 	@Override
-	public CartData getGiftCartModel(final EgvDetailsData egvDetailForm)
+	public boolean validatePincodeRestrictedPromoOnCartProduct(final CartModel cart)
 	{
-		CartData cartData = null;
-		try
+		boolean isPincodeRestrictedPromotionPresent = false;
+		exitLoop:
+
 		{
-			CartModel cardModel = getCartModelForEGVProduct(egvDetailForm);   
-			sessionService.setAttribute(GIFT_CART_MODEL, cardModel);
-			try
+			final Set<PromotionResultModel> promotions = cart.getAllPromotionResults();
+
+			if (CollectionUtils.isNotEmpty(promotions))
 			{
-				cartData = getCartConverter().convert(cardModel);
+				for (final PromotionResultModel productPromotion : promotions)
+				{
+					final AbstractPromotionModel promotion = productPromotion.getPromotion() != null
+							? (productPromotion.getPromotion()) : (null);
+					if (null != promotion && CollectionUtils.isNotEmpty(promotion.getRestrictions())) //CustomOrderThresholdFreeGiftPromotionModel
+					{
+						for (final AbstractPromotionRestrictionModel restriction : promotion.getRestrictions())
+						{
+							if (restriction instanceof EtailPincodeRestrictionModel)
+							{
+								isPincodeRestrictedPromotionPresent = true;
+								break exitLoop;
+							}
+
+						}
+					}
+				} //end promotion for loop
 			}
-			catch (final Exception exception)
-			{
-				LOG.error(ERROR_OCCER_WHILE_CREATING_CART_MODEL_FOR_GIFT + exception);
-				return null;
-			}
+
 		}
-		catch (final Exception exception)
-		{
-			LOG.error(ERROR_OCCER_WHILE_CREATING_CART_MODEL_FOR_GIFT + exception);
-			return null;
-		}
-		return cartData;
-	}
-
-
-	/**
-	 * @param egvDetailForm
-	 * @return
-	 */
-	private CartModel getCartModelForEGVProduct(final EgvDetailsData egvDetailForm)
-	{
-		
-		CartModel cardModel =cartFactory.createCart();
-		cardModel.setPincodeNumber("542621");
-		List<AbstractOrderEntryModel> orderModelList = new ArrayList<AbstractOrderEntryModel>();
-		CartEntryModel abstractOrderEntryModel = getEGVCartEntry(egvDetailForm, cardModel);
-		orderModelList.add(abstractOrderEntryModel);
-		cardModel.setEntries(orderModelList);
-		cardModel.setCityForPincode("Hyderabad");
-		cardModel.setIsCODEligible(Boolean.FALSE);
-		cardModel.setDiscountsIncludePaymentCost(false);
-		cardModel.setIsExpressCheckoutSelected(Boolean.FALSE);
-		cardModel.setIsPendingNotSent(Boolean.FALSE);
-		cardModel.setIsRejMailTriggred(Boolean.TRUE);
-		cardModel.setIsSentToOMS(Boolean.FALSE);
-		cardModel.setMerged(Boolean.FALSE);
-		cardModel.setModeOfPayment("Creadi Card");
-		cardModel.setNet(Boolean.FALSE);
-		cardModel.setSite(cmsSiteService.getCurrentSite());
-		cardModel.setSubtotal(Double.valueOf(egvDetailForm.getGiftRange()));
-		cardModel.setSubtotal(Double.valueOf(egvDetailForm.getGiftRange()));
-		cardModel.setTotalPrice(Double.valueOf(egvDetailForm.getGiftRange()));
-		cardModel.setTotalPriceWithConv(Double.valueOf(egvDetailForm.getGiftRange()));
-		cardModel.setIsEGVCart(Boolean.TRUE);
-		
-		try
-		{
-			getModelService().saveAll(cardModel);
-		}
-		catch (Exception exception)
-		{
-			LOG.error("Error occureing  While Saving CartModel " + exception);
-		}
-		return cardModel;
-	}
-
-
-	/**
-	 * @param egvDetailForm
-	 * @param cardModel
-	 * @return
-	 */
-	private CartEntryModel getEGVCartEntry(final EgvDetailsData egvDetailForm, CartModel cardModel)
-	{
-		//remove old EGA Cart
-		     mplEGVCartService.removeOldEGVCartCurrentCustomer();
-		CartEntryModel abstractOrderEntryModel = getModelService().create(CartEntryModel.class);
-		ProductModel productModel = productService.getProductForCode(egvDetailForm.getProductCode());
-		abstractOrderEntryModel.setQualifyingCount(Integer.valueOf(1));
-		abstractOrderEntryModel.setQuantity(Long.valueOf(1));
-		abstractOrderEntryModel.setProduct(productModel);
-		abstractOrderEntryModel.setBasePrice(Double.valueOf(egvDetailForm.getGiftRange()));
-		abstractOrderEntryModel.setUnit(productModel.getUnit());
-		RichAttributeModel richAttributeModel=(RichAttributeModel) productModel.getRichAttribute().toArray()[0];
-		abstractOrderEntryModel.setFulfillmentMode(richAttributeModel.getDeliveryFulfillModes().getCode());
-		abstractOrderEntryModel.setFulfillmentType(richAttributeModel.getDeliveryFulfillModes().getCode());
-		abstractOrderEntryModel.setFulfillmentTypeP1(richAttributeModel.getDeliveryFulfillModeByP1().getCode());
-		abstractOrderEntryModel.setFulfillmentTypeP2(richAttributeModel.getDeliveryFulfillModeByP1().getCode());
-		if( richAttributeModel.getSellerInfo() != null && StringUtil.isNotEmpty(richAttributeModel.getSellerInfo().getUSSID())){
-			abstractOrderEntryModel.setSelectedUSSID(richAttributeModel.getSellerInfo().getUSSID());	
-			abstractOrderEntryModel.setSellerInfo(richAttributeModel.getSellerInfo().getSellerName());
-		}else{
-			abstractOrderEntryModel.setSelectedUSSID("123653098765485130011719");
-			abstractOrderEntryModel.setSellerInfo("PALTALOONS");
-		}
-		abstractOrderEntryModel.setCalculated(Boolean.valueOf(true));
-		abstractOrderEntryModel.setActualDeliveryDate(new Date());
-		abstractOrderEntryModel.setCartAdditionalDiscPerc(Double.valueOf(0.0));
-		abstractOrderEntryModel.setCartLevelDisc(Double.valueOf(0.0));
-		abstractOrderEntryModel.setCartLevelPercentageDisc(Double.valueOf(0.0));
-		abstractOrderEntryModel.setCartPromoCode("");
-		abstractOrderEntryModel.setCollectionDays(Integer.valueOf(0));
-		abstractOrderEntryModel.setConvenienceChargeApportion(Double.valueOf(0));
-		abstractOrderEntryModel.setCouponValue(Double.valueOf(0));
-		abstractOrderEntryModel.setCreationtime(new Date());
-		abstractOrderEntryModel.setDiscountValuesInternal("[]");
-		abstractOrderEntryModel.setEntryNumber(Integer.valueOf(0));
-		abstractOrderEntryModel.setFreeCount(Integer.valueOf(0));
-		abstractOrderEntryModel.setHdDeliveryCharge(Double.valueOf(0.0));
-		abstractOrderEntryModel.setInfo(productModel.getName());
-		abstractOrderEntryModel.setIsBOGOapplied(Boolean.valueOf(false));
-		abstractOrderEntryModel.setIsEdToHdSendToFico(Boolean.FALSE);
-		abstractOrderEntryModel.setIsPercentageDisc(Boolean.FALSE);
-		abstractOrderEntryModel.setIsRefundable(false);
-		abstractOrderEntryModel.setIsSdbSendToFico(Boolean.FALSE);
-		abstractOrderEntryModel.setMaxCountReached(false);
-		abstractOrderEntryModel.setModifiedtime(new Date());
-		Collection<MplZoneDeliveryModeValueModel> value6 = new ArrayList<MplZoneDeliveryModeValueModel>();
-		MplZoneDeliveryModeValueModel mplZoneDeliveryModeValueModel=mplDeliveryCostDao.getDeliveryCost("home-delivery","INR", "123653098765485130011719");
-		value6.add(mplZoneDeliveryModeValueModel);
-		abstractOrderEntryModel.setMplZoneDeliveryModeValue(value6);
-		abstractOrderEntryModel.setMrp(Double.valueOf(egvDetailForm.getGiftRange()));
-		abstractOrderEntryModel.setNetAmountAfterAllDisc(Double.valueOf(egvDetailForm.getGiftRange()));
-		abstractOrderEntryModel.setNetSellingPrice(Double.valueOf(egvDetailForm.getGiftRange()));
-		abstractOrderEntryModel.setOrder(cardModel);
-		abstractOrderEntryModel.setCurrDelCharge(Double.valueOf(0));
-		abstractOrderEntryModel.setPrevDelCharge(Double.valueOf(0));
-		abstractOrderEntryModel.setProductPerDiscDisplay(Double.valueOf(0));
-		abstractOrderEntryModel.setRefundedDeliveryChargeAmt(Double.valueOf(0));
-		abstractOrderEntryModel.setRefundedEdChargeAmt(Double.valueOf(0));
-		abstractOrderEntryModel.setProdLevelPercentageDisc(Double.valueOf(0));
-		abstractOrderEntryModel.setRejected(Boolean.FALSE);
-		abstractOrderEntryModel.setGiveAway(Boolean.FALSE);
-		abstractOrderEntryModel.setScheduledDeliveryCharge(Double.valueOf(0));
-		abstractOrderEntryModel.setTotalSalePrice(Double.valueOf(egvDetailForm.getGiftRange()));
-		abstractOrderEntryModel.setTotalMrp(Double.valueOf(egvDetailForm.getGiftRange()));
-		abstractOrderEntryModel.setTotalPrice(Double.valueOf(egvDetailForm.getGiftRange()));
-		abstractOrderEntryModel.setTaxValuesInternal("[<TV<jp-vat-full#5.0#false#42.86#INR>VT>]");
-		Set<ConsignmentEntryModel> value3 = new HashSet<ConsignmentEntryModel>();
-		abstractOrderEntryModel.setConsignmentEntries(value3);
-		List<String> value2 = new ArrayList<String>();
-		abstractOrderEntryModel.setAssociatedItems(value2);
-		abstractOrderEntryModel.setTotalPrice(Double.valueOf(egvDetailForm.getGiftRange()));
-		abstractOrderEntryModel.setTotalMrp(Double.valueOf(egvDetailForm.getGiftRange()));
-		try{
-			getModelService().saveAll(abstractOrderEntryModel);
-		
-		}catch(Exception exception){
-			
-			LOG.error("Preparing CartEntry Data "+exception);
-		}
-		return abstractOrderEntryModel;
-	}
-
-
-	/**
-	 * @return the cartConverter
-	 */
-	public Converter<CartModel, CartData> getCartConverter()
-	{
-		return cartConverter;
-	}
-
-
-	/**
-	 * @param cartConverter the cartConverter to set
-	 */
-	public void setCartConverter(Converter<CartModel, CartData> cartConverter)
-	{
-		this.cartConverter = cartConverter;
+		return isPincodeRestrictedPromotionPresent;
 	}
 }
