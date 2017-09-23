@@ -7799,6 +7799,19 @@
 							optional="true" />
 						<defaultvalue>false</defaultvalue>
 					</attribute>
+					  <attribute type="java.lang.String" qualifier="recipientId"
+						autocreate="true" generate="true">
+						<modifiers read="true" write="true" search="true" optional="true" />
+						<description></description>
+						<persistence type="property" />
+					</attribute>
+					
+					<attribute type="java.lang.String" qualifier="recipientMessage"
+						autocreate="true" generate="true">
+						<modifiers read="true" write="true" search="true" optional="true" />
+						<description></description>
+						<persistence type="property" />
+					</attribute>
 					<!-- EGV CartFlag End -->
 					
 				</attributes>
