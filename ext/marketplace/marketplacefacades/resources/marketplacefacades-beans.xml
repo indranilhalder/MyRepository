@@ -1273,5 +1273,15 @@
 		
 	</bean>
 	
+	<bean class="com.tisl.mpl.facades.egv.data.EgvDetailsData">
+		<property name="giftRange" type="double" />
+		<property name="openTextAmount" type="double" />
+		<property name="toEmailAddress" type="String" />
+		<property name="fromEmailAddress" type="String" />
+		<property name="messageBox" type="String" />	
+		<property name="totalEGV" type="int" />
+    	<property name="productCode" type="String" />
+	</bean>
+	
 	<!-- TPR-6665: Update synonyms in solr slave  end -->
 </beans>
