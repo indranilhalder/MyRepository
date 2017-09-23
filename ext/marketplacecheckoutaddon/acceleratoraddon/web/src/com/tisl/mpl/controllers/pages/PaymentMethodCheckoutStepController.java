@@ -5102,6 +5102,7 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 		final List<OrderEntryData> sellerList = cartData.getEntries();
 		for (final OrderEntryData seller : sellerList)
 		{
+			if(seller.getSelectedSellerInformation()!=null){
 			final String sellerID = seller.getSelectedSellerInformation().getSellerID();
 			if (cartLevelSellerID != null)
 			{
@@ -5110,6 +5111,7 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 			else
 			{
 				cartLevelSellerID = sellerID;
+			}
 			}
 		}
 		return cartLevelSellerID;
@@ -6525,8 +6527,8 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 
 
 	//GiFT CART Payment Start 13-09-2017
-	@RequestMapping(value = GIFT_CART_PAYMENT, method = RequestMethod.POST)
 	@RequireHardLogIn
+	@RequestMapping(value = GIFT_CART_PAYMENT, method = RequestMethod.POST)
 	public String getGiftPayment(@ModelAttribute("egvDetailsform") final EgvDetailForm egvDetailForm,
 			final BindingResult bindingResult, final Model model, final HttpServletRequest request)
 			throws UnsupportedEncodingException

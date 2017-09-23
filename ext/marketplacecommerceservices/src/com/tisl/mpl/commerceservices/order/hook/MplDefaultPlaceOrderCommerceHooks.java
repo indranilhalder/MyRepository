@@ -33,6 +33,7 @@ import de.hybris.platform.promotions.model.ProductPromotionModel;
 import de.hybris.platform.promotions.model.PromotionOrderEntryConsumedModel;
 import de.hybris.platform.promotions.model.PromotionResultModel;
 import de.hybris.platform.servicelayer.config.ConfigurationService;
+import de.hybris.platform.servicelayer.event.EventService;
 import de.hybris.platform.servicelayer.exceptions.ModelSavingException;
 import de.hybris.platform.servicelayer.model.ModelService;
 import de.hybris.platform.servicelayer.session.SessionService;
@@ -92,6 +93,10 @@ import com.tisl.mpl.marketplacecommerceservices.service.RMSVerificationNotificat
 import com.tisl.mpl.model.CustomProductBOGOFPromotionModel;
 import com.tisl.mpl.model.EtailLimitedStockRestrictionModel;
 import com.tisl.mpl.model.SellerInformationModel;
+import com.tisl.mpl.pojo.request.Customer;
+import com.tisl.mpl.pojo.request.PurchaseEGVRequest;
+import com.tisl.mpl.pojo.response.PurchaseEGVResponse;
+import com.tisl.mpl.service.MplWalletServices;
 import com.tisl.mpl.util.DiscountUtility;
 import com.tisl.mpl.util.OrderStatusSpecifier;
 
@@ -140,7 +145,8 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 	@Resource
 	private MplCommerceCartService mplCommerceCartService;
 
-
+	@Autowired
+	private EventService eventService;
 	//	@Autowired
 	//	private MplFraudModelService mplFraudModelService;
 
@@ -173,6 +179,8 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 	@Autowired
 	private SessionService sessionService;
 
+	@Autowired
+   private MplWalletServices mplWalletServices;
 
 	//	@Autowired
 	//	private MplFraudModelService mplFraudModelService;
@@ -762,6 +770,8 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 					|| WalletEnum.MRUPEE.equals(orderModel.getIsWallet()))
 			{
 				getOrderStatusSpecifier().setOrderStatus(orderModel, OrderStatus.PAYMENT_SUCCESSFUL);
+				//After Success Qc call 
+				getPurchaseEGVRequestPopulate(orderModel);
 			}
 			else
 			{
@@ -794,6 +804,41 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 		{
 			LOG.error("MplDefaultPlaceOrderCommerceHooks--beforeSubmitOrder--Without parent trying to create suborder");
 		}
+	}
+
+	/**
+	 * @param orderModel
+	 */
+	private void getPurchaseEGVRequestPopulate(final OrderModel orderModel)
+	{
+		try{
+		if(orderModel.getIsEGVCart().booleanValue()){
+			Customer customer=new Customer();
+			PurchaseEGVRequest purchaseEGVRequest=new PurchaseEGVRequest();
+			purchaseEGVRequest.setAmount(orderModel.getTotalPrice());
+			purchaseEGVRequest.setCardProgramGroupName("TUL B2C eGift Card");
+			purchaseEGVRequest.setBillAmount(orderModel.getTotalPrice());
+			purchaseEGVRequest.setInvoiceNumber(orderModel.getCode());
+			customer.setEmail(orderModel.getUser().getUid());
+			customer.setFirstname("TATA");
+			customer.setAddressLine1("Adedd");
+			customer.setAddressLine2("Address");
+			customer.setAddressLine3("Address");
+			purchaseEGVRequest.setCustomer(customer);
+			purchaseEGVRequest.setIdempotencyKey(orderModel.getCode());
+			PurchaseEGVResponse data =mplWalletServices.purchaseEgv(purchaseEGVRequest, orderModel.getCode());
+			/*if(data.getResponseCode()!=null && data.getResponseCode().intValue()==0){
+			}*/
+			
+			
+			
+			System.out.println("QC Request"+data+""+data.getResponseCode());
+			
+		}
+		}catch(Exception exceeption){
+			LOG.error("TTTTTTTTTTTTTT");
+			}
+	
 	}
 
 	//}
