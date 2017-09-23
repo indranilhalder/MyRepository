@@ -161,7 +161,7 @@ public class CashBackWalletController extends DefaultWidgetController
 	      	 
 	      	  if(null!= currentCustomer  ){
 	      	  System.out.println("First Name :"+currentCustomer.getDisplayName());
-   	      	  if (null != currentCustomer.getIsWalletActivated()){
+   	      	  if (null != currentCustomer.getIsWalletActivated() && currentCustomer.getIsWalletActivated().booleanValue()){
    	      		  QCCustomerPromotionRequest request = new QCCustomerPromotionRequest();
    	      		  request.setAmount(Double.valueOf(walletObj.getAmount()));
    	      		  if(walletObj.getBucketName().equalsIgnoreCase("PROMOTION")){
