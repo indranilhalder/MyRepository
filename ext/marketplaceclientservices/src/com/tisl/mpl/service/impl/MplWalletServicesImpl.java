@@ -15,7 +15,6 @@ import javax.annotation.Resource;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.UriBuilder;
 
-import org.apache.commons.collections.CollectionUtils;
 import org.apache.log4j.Logger;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -816,10 +815,9 @@ public class MplWalletServicesImpl implements MplWalletServices
 	{
 
 		final Client client = Client.create();
-		ClientResponse response = null;
 		WebResource webResource = null;
-		WalletTransacationsList walletTransacationsList = null;
-		String output = null;
+		WalletTransacationsList walletTransacationsList = new WalletTransacationsList();
+
 		final DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
 		final ObjectMapper objectMapper = new ObjectMapper();
 		try
@@ -830,7 +828,7 @@ public class MplWalletServicesImpl implements MplWalletServices
 					.resource(UriBuilder.fromUri("http://" + getConfigurationService().getConfiguration().getString("qcUrl")
 							+ "/QwikCilver/eGMS.RestAPI/api/wallet/" + walletCardNumber + "/transactions").build());
 
-			response = webResource.type(MediaType.APPLICATION_JSON)
+			final ClientResponse response = webResource.type(MediaType.APPLICATION_JSON)
 					.header(MarketplaceclientservicesConstants.FORWARDING_ENTITY_ID, "tatacliq.com")
 					.header(MarketplaceclientservicesConstants.FORWARDING_ENTITY_PASSWORD, "tatacliq.com")
 					.header(MarketplaceclientservicesConstants.TERMINAL_ID, "webpos-tul-dev10")
@@ -852,7 +850,7 @@ public class MplWalletServicesImpl implements MplWalletServices
 
 			if (null != response)
 			{
-				output = response.getEntity(String.class);
+				final String output = response.getEntity(String.class);
 				walletTransacationsList = objectMapper.readValue(output, WalletTransacationsList.class);
 				if (null != walletTransacationsList && null != walletTransacationsList.getWalletTransactions())
 				{
@@ -870,7 +868,7 @@ public class MplWalletServicesImpl implements MplWalletServices
 			}
 			return walletTransacationsList;
 		}
-		return (WalletTransacationsList) CollectionUtils.EMPTY_COLLECTION;
+		return walletTransacationsList;
 	}
 
 	public AddToCardWallet buildAddtoCardWallet(final String cardNumber, final String cardPin)
@@ -900,15 +898,13 @@ public class MplWalletServicesImpl implements MplWalletServices
 		final Client client = Client.create();
 		ClientResponse response = null;
 		WebResource webResource = null;
-		String requestBody = null;
-		QCRedeeptionResponse qcRedeeptionResponse = null;
-		String output = null;
+		QCRedeeptionResponse qcRedeeptionResponse = new QCRedeeptionResponse();
 		//final ReturnLogisticsResponse responsefromOMS = new ReturnLogisticsResponse();
 		final DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
 		final ObjectMapper objectMapper = new ObjectMapper();
 		try
 		{
-			requestBody = objectMapper.writeValueAsString(request);
+			final String requestBody = objectMapper.writeValueAsString(request);
 			webResource = client.resource(UriBuilder
 					.fromUri(MarketplaceclientservicesConstants.GET_BALANCE_FOR_WALLET + walletId + "/load/PROMOTION").build());
 
@@ -934,7 +930,7 @@ public class MplWalletServicesImpl implements MplWalletServices
 
 			if (null != response)
 			{
-				output = response.getEntity(String.class);
+				final String output = response.getEntity(String.class);
 				qcRedeeptionResponse = objectMapper.readValue(output, QCRedeeptionResponse.class);
 				if (null != qcRedeeptionResponse)
 				{
@@ -945,7 +941,6 @@ public class MplWalletServicesImpl implements MplWalletServices
 		catch (final Exception ex)
 		{
 			ex.printStackTrace();
-			System.out.println("Error response Status:------" + response.getStatus());
 		}
 		return qcRedeeptionResponse;
 	}
