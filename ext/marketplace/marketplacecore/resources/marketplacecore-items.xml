@@ -6430,6 +6430,32 @@
 							optional="true" />
 					</attribute>
 					<!-- TPR-5667 | End : Attribute added to store samsung reuqest and response json for audit purpose -->
+				<!--Start  EGV Order purpose Added Attibute -->	
+						
+				   <attribute autocreate="true" qualifier="isEGVCart"
+						type="java.lang.Boolean">
+						<persistence type="property" qualifier="isEGVCart">
+						</persistence>
+						<modifiers read="true" write="true" search="true"
+							optional="true" />
+						<defaultvalue>false</defaultvalue>
+					</attribute>
+					
+				  <attribute type="java.lang.String" qualifier="recipientId"
+						autocreate="true" generate="true">
+						<modifiers read="true" write="true" search="true" optional="true" />
+						<description></description>
+						<persistence type="property" />
+					</attribute>
+					
+					<attribute type="java.lang.String" qualifier="recipientMessage"
+						autocreate="true" generate="true">
+						<modifiers read="true" write="true" search="true" optional="true" />
+						<description></description>
+						<persistence type="property" />
+					</attribute>
+					
+				<!-- End EGV Order purpose Added Attibute -->	
 				</attributes>
 				<!-- CAR-274 -->
 				<indexes>
