@@ -72,6 +72,16 @@ $(document).ready(function(){
 		}
 	}
 	
+	if(user_login_type != '' && user_login_type != undefined && user_login_type != null && user_login_type != 'email' && user_login_type!= 'guest_user'){
+		
+		digitalData.account = {
+				login : {
+					type : user_login_type
+				}	
+			}
+	}
+	
+	
 	/*DTM Implementation page wise for on load variables starts*/
 	
 	// TPR-6295 | For Homepage
@@ -187,7 +197,7 @@ $(document).ready(function(){
 						}
 				}
 			}
-			if(Promo_Id != "" && Promo_Id !=""){
+			if(Promo_Id != ""){
 			   digitalData.cpj.promo = {
 					id : Promo_Id
 			   }
