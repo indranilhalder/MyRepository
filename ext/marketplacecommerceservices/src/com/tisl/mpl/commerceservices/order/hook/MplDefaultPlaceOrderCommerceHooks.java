@@ -773,7 +773,19 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 			{
 				getOrderStatusSpecifier().setOrderStatus(orderModel, OrderStatus.PAYMENT_SUCCESSFUL);
 				//After Success Qc call 
-				getPurchaseEGVRequestPopulate(orderModel);
+			
+				if(orderModel.getIsEGVCart().booleanValue()){
+				
+				String response = getPurchaseEGVRequestPopulate(orderModel);
+				if(response.equalsIgnoreCase("success")){
+					
+					//Email
+				}else
+				{
+					getOrderStatusSpecifier().setOrderStatus(orderModel, OrderStatus.PAYMENT_TIMEOUT);
+				}
+				}
+					
 			}
 			else
 			{
@@ -811,8 +823,10 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 	/**
 	 * @param orderModel
 	 */
-	private void getPurchaseEGVRequestPopulate(final OrderModel orderModel)
+	private String getPurchaseEGVRequestPopulate(final OrderModel orderModel)
 	{
+		
+		String status = "fail";
 		try{
 		if(orderModel.getIsEGVCart().booleanValue()){
 			Customer customer=new Customer();
@@ -829,17 +843,53 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 			purchaseEGVRequest.setCustomer(customer);
 			purchaseEGVRequest.setIdempotencyKey(orderModel.getCode());
 			PurchaseEGVResponse data =mplWalletServices.purchaseEgv(purchaseEGVRequest, orderModel.getCode());
-			/*if(data.getResponseCode()!=null && data.getResponseCode().intValue()==0){
-			}*/
 			
+			AbstractOrderEntryModel orderEntry=	orderModel.getEntries().get(0);
 			
+			if(data.getResponseCode()!=null && data.getResponseCode().intValue()==0){
+				
+				WalletApportionPaymentInfoModel walletApportionPaymentInfo =	getModelService().create(WalletApportionPaymentInfoModel.class);
+				walletApportionPaymentInfo.setOrderId(orderModel.getCode());
+				walletApportionPaymentInfo.setTransactionId(orderModel.getCode());
+				
+			 List<WalletCardApportionDetailModel> cardQtyWiseList = new ArrayList<WalletCardApportionDetailModel>();
+
+				final WalletCardApportionDetailModel chlidCardApportionDetail = getModelService()
+								.create(WalletCardApportionDetailModel.class);
+				
+				chlidCardApportionDetail.setCardAmount(""+data.getAmount());
+				chlidCardApportionDetail.setCardNumber(data.getCardNumber());
+				chlidCardApportionDetail.setCardExpiry(data.getExpiry());
+				cardQtyWiseList.add(chlidCardApportionDetail);
+				
+				walletApportionPaymentInfo.setWalletCardList(cardQtyWiseList);
+				
+				orderEntry.setWalletApportionPaymentInfo(walletApportionPaymentInfo);
+				
+				AbstractOrderEntryModel AbstractOrderEntryChild= orderModel.getChildOrders().get(0).getEntries().get(0);
+				
+				AbstractOrderEntryChild.setWalletApportionPaymentInfo(walletApportionPaymentInfo);
+				
+				getModelService().save(AbstractOrderEntryChild);
+				
+				getModelService().save(orderEntry);
+				
+				getModelService().save(orderModel);
+				
+				status = "success";
 			
-			System.out.println("QC Request"+data+""+data.getResponseCode());
+			}else{
+				
+				status = "fail";
+			}
+			
+			return status;
 			
 		}
 		}catch(Exception exceeption){
 			LOG.error("TTTTTTTTTTTTTT");
 			}
+		return status;
 	
 	}
 
