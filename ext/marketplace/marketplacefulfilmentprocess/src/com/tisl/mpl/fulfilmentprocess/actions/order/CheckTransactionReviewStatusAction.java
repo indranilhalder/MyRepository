@@ -290,39 +290,39 @@ public class CheckTransactionReviewStatusAction extends AbstractAction<OrderProc
 				 * mplCommerceCartService.isInventoryReserved(orderModel,
 				 * MarketplaceFulfilmentProcessConstants.OMS_INVENTORY_RESV_TYPE_ORDERDEALLOCATE, defaultPinCode);
 				 */
-
-				//Initiating refund
-				final PaymentTransactionModel paymentTransactionModel = initiateRefund(orderModel);
-				//Creating cancel order ticket
-				final boolean ticketstatus = mplCancelOrderTicketImpl.createCancelTicket(orderModel);
-				if (ticketstatus)
-				{
-					orderStatusSpecifier.setOrderStatus(orderModel, OrderStatus.CANCELLATION_INITIATED);
-				}
-				//Refund model mapping for initiated refund
-				//Refund code executed first to avoid refund failure during oms inventory call
-				if (null != paymentTransactionModel && StringUtils.isNotEmpty(paymentTransactionModel.getCode()))
-				{
-					final String status = paymentTransactionModel.getStatus();
-					if (StringUtils.isNotEmpty(status) && status.equalsIgnoreCase("SUCCESS"))
-					{
-						orderStatusSpecifier.setOrderStatus(orderModel, OrderStatus.ORDER_CANCELLED);
-					}
-					else if (StringUtils.isNotEmpty(status) && status.equalsIgnoreCase("FAILURE"))
-					{
-						orderStatusSpecifier.setOrderStatus(orderModel, OrderStatus.REFUND_IN_PROGRESS);
-					}
-					else if (StringUtils.isNotEmpty(status) && status.equalsIgnoreCase("PENDING"))
-					{
-						orderStatusSpecifier.setOrderStatus(orderModel, OrderStatus.REFUND_INITIATED);
-						mplCancelOrderTicketImpl.refundMapping(paymentTransactionModel.getCode(), orderModel);
-					}
-				}
-				else
-				{
-					orderStatusSpecifier.setOrderStatus(orderModel, OrderStatus.REFUND_INITIATED);
-				}
-
+				//commented call of Refund for RMS failed... INC144318239
+				//				//Initiating refund
+				//				final PaymentTransactionModel paymentTransactionModel = initiateRefund(orderModel);
+				//				//Creating cancel order ticket
+				//				final boolean ticketstatus = mplCancelOrderTicketImpl.createCancelTicket(orderModel);
+				//				if (ticketstatus)
+				//				{
+				//					orderStatusSpecifier.setOrderStatus(orderModel, OrderStatus.CANCELLATION_INITIATED);
+				//				}
+				//				//				Refund model mapping for initiated refund
+				//				//				Refund code executed first to avoid refund failure during oms inventory call
+				//				if (null != paymentTransactionModel && StringUtils.isNotEmpty(paymentTransactionModel.getCode()))
+				//				{
+				//					final String status = paymentTransactionModel.getStatus();
+				//					if (StringUtils.isNotEmpty(status) && status.equalsIgnoreCase("SUCCESS"))
+				//					{
+				//						orderStatusSpecifier.setOrderStatus(orderModel, OrderStatus.ORDER_CANCELLED);
+				//					}
+				//					else if (StringUtils.isNotEmpty(status) && status.equalsIgnoreCase("FAILURE"))
+				//					{
+				//						orderStatusSpecifier.setOrderStatus(orderModel, OrderStatus.REFUND_IN_PROGRESS);
+				//					}
+				//					else if (StringUtils.isNotEmpty(status) && status.equalsIgnoreCase("PENDING"))
+				//					{
+				//						orderStatusSpecifier.setOrderStatus(orderModel, OrderStatus.REFUND_INITIATED);
+				//						mplCancelOrderTicketImpl.refundMapping(paymentTransactionModel.getCode(), orderModel);
+				//					}
+				//				}
+				//				else
+				//				{
+				//					orderStatusSpecifier.setOrderStatus(orderModel, OrderStatus.REFUND_INITIATED);
+				//				}
+				//commented call of Refund for RMS failed... INC144318239--ends
 				try
 				{
 					getCatalogVersionService().setSessionCatalogVersion(MPLPRODUCT_CATALOG, ONLINE_KEY);

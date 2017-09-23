@@ -540,7 +540,8 @@ ACC.refinements = {
 				filterCount+=$(".facet_mobile .filter-size.selected-size").length;
 			});
 			//TISQAUATS-27 starts
-			if ($('#customMinPriceMob').val() && $('#customMaxPriceMob').val()) {
+			//INC144318011
+			if ($('#customMinPriceMob').val() || $('#customMaxPriceMob').val()) {
 				filterCount++;
 			}
 			
@@ -558,15 +559,21 @@ ACC.refinements = {
 				var nonEmptyDataString= null;
 				
 				//TISQAUATS-27 starts 
-				if ($('#customMinPriceMob').val() && $('#customMaxPriceMob').val()) {
+				//INC144318011
+				if ($('#customMinPriceMob').val() || $('#customMaxPriceMob').val()) {
 					//TISPRDT-1645 starts
 					if(countCustomPrice==0){
 						countCustomPrice=1;
 						$("#applyCustomPriceFilterMob").click();
 					}
 					//TISPRDT-1645 ends
-					var minPriceSearchTxt = $('#customMinPriceMob').val();
-					var maxPriceSearchTxt = $('#customMaxPriceMob').val();
+					//var minPriceSearchTxt = $('#customMinPriceMob').val();
+					//var maxPriceSearchTxt = $('#customMaxPriceMob').val();
+					
+					//INC144318011 start
+					var minPriceSearchTxt = ($('#customMinPriceMob').val() == null || $('#customMinPriceMob').val() == "") ? 0 : $('#customMinPriceMob').val() ;
+		            		var maxPriceSearchTxt = ($('#customMaxPriceMob').val() == null || $('#customMaxPriceMob').val() == "") ? 99999999 : $('#customMaxPriceMob').val() ;
+		            		//INC144318011 end
 					var price = "₹" + minPriceSearchTxt + "-" + "₹" + maxPriceSearchTxt;
 					//$('#facetValue').val(facetValue);
 					if (/:price:(.*)/.test(updatedsearchQuery)) {

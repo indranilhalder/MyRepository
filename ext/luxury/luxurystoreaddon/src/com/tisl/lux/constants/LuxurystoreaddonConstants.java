@@ -20,6 +20,22 @@ public final class LuxurystoreaddonConstants extends GeneratedLuxurystoreaddonCo
 {
 	public static final String EXTENSIONNAME = "luxurystoreaddon";
 
+	// For SuperCategoryDecorator
+	public static final String CONFIGURATION_SER = "configurationService";
+	public static final String PRIMARYHIERARCHY = "decorator.primary";
+	public static final String CLASSIFICATIONCATEGORYCATALOG = "decorator.classificationcatalog";
+	public static final String LUXURYCLASSIFICATIONCATALOG = "decorator.luxurycatalog";
+
+	// For AddProductCategory Intercepter
+	public static final String COMMA = ",";
+
+	// Luxury Changes
+	public static final String MARKETPLACE = "marketplace";
+	public static final String LUXURY = "luxury";
+	public static final String MSH = "MSH";
+	public static final String LSH = "LSH";
+
+
 	private LuxurystoreaddonConstants()
 	{
 		//empty to avoid instantiating this constant class

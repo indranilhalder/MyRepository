@@ -3025,20 +3025,14 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 						for (final ReservationItemWsDTO reservationData : reservationDataList)
 
 						{
+							//INC144317815
 							if (null != reservationData
 									&& null != reservationData.getReservationStatus()
-									&& reservationData.getReservationStatus().equalsIgnoreCase(
+									&& !reservationData.getReservationStatus().equalsIgnoreCase(
 											MarketplacecclientservicesConstants.OMS_INVENTORY_RESV_SUCCESS))
-							{
-								flag = true;
-
-
-							}
-							else
 							{
 								failedUSSIDs.add(reservationData.getUSSID());
 								flag = false;
-
 
 							}
 						}
