@@ -13,7 +13,7 @@ $(document).ready(function(){
 	var site_currency ='INR';
 	var domain_name = document.domain;
 	
-	var user_login_type = $('#userLoginType').val().trim();
+	//var user_login_type = $('#userLoginType').val().trim();
 	var pageType = $('#pageType').val();
 	var pageName= $('#pageName').val().toLowerCase();
 	var pageNameU = $('#pageName').val();
@@ -797,7 +797,12 @@ $(document).ready(function(){
   
 });
 function differentiateSellerDtm(){
-	var sellerList = $('#pdpSellerIDs').val().replace('_','|');
+	var sellerList = $('#pdpSellerIDs').val();
+	var sellerArray='';
+	if(sellerList != undefined &&  sellerList != '' && sellerList != null){
+		 sellerArray = $('#pdpSellerIDs').val().split(',').join('|');
+	}
+	
 	var buyboxSeller = $("#sellerSelId").val();
 	sellerList = sellerList.substr(1,(sellerList.length)-2);
 	sellerList = sellerList.split(',');
@@ -820,7 +825,7 @@ function differentiateSellerDtm(){
 	//TISCSXII-2186 | pdp fix
 	digitalData.product = {
 			seller : {
-				list : sellerList,
+				list : sellerArray,
 				id   : $("#pdpBuyboxWinnerSellerID").val(),
 				buyBoxWinner : $("#sellerNameId").html().toLowerCase()
 			}   
