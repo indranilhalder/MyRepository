@@ -117,15 +117,18 @@ public class CustomProductPricePopulator<SOURCE extends ProductModel, TARGET ext
 			//changes for Jewellery pincode service in pdp
 			if (productModel.getProductCategoryType().equalsIgnoreCase(MarketplaceFacadesConstants.PRODUCT_TYPE))
 			{
-				List<BuyBoxModel> buyboxModelListAll = new ArrayList<BuyBoxModel>();
+				//List<BuyBoxModel> buyboxModelListAll = new ArrayList<BuyBoxModel>();
 				String sellerArticleSKU = null;
 				for (final SellerInformationData sellerDList : sellerDataList)
 				{
 					sellerArticleSKU = fetchVariantUSSID(sellerDList);
-					buyboxModelListAll = buyBoxService.buyboxPriceForJewellery(sellerDList.getUssid());
-					sellerArticleSKU = buyboxModelListAll.get(0).getSellerArticleSKU();
-					sellerArticleSKUsBuilder.append('\'').append(sellerArticleSKU).append('\'').append(',');
-					sellerArticleSKUs = sellerArticleSKUsBuilder.toString();
+					//buyboxModelListAll = buyBoxService.buyboxPriceForJewellery(sellerDList.getUssid());
+					//sellerArticleSKU = buyboxModelListAll.get(0).getSellerArticleSKU();
+					if (null != sellerArticleSKU)//TISPRDT-2449 issue fix
+					{
+						sellerArticleSKUsBuilder.append('\'').append(sellerArticleSKU).append('\'').append(',');
+						sellerArticleSKUs = sellerArticleSKUsBuilder.toString();
+					}
 				}
 			}
 			//end
@@ -145,7 +148,10 @@ public class CustomProductPricePopulator<SOURCE extends ProductModel, TARGET ext
 					if (productModel.getProductCategoryType().equalsIgnoreCase(MarketplaceFacadesConstants.PRODUCT_TYPE))
 					{
 						final String sellerArticleSKU = fetchVariantUSSID(sellerInformationData);
-						priceRowModel = mopMap.get(sellerArticleSKU);
+						if (null != sellerArticleSKU)//TISPRDT-2449 issue fix
+						{
+							priceRowModel = mopMap.get(sellerArticleSKU);
+						}
 					}
 					else
 					{
@@ -203,7 +209,10 @@ public class CustomProductPricePopulator<SOURCE extends ProductModel, TARGET ext
 		List<BuyBoxModel> buyboxModelListAll = new ArrayList<BuyBoxModel>();
 		String sellerArticleSKU = null;
 		buyboxModelListAll = buyBoxService.buyboxPriceForJewellery(sellerDataList.getUssid());
-		sellerArticleSKU = buyboxModelListAll.get(0).getSellerArticleSKU();
+		if (null != buyboxModelListAll && buyboxModelListAll.size() > 0)//TISPRDT-2449 issue fix
+		{
+			sellerArticleSKU = buyboxModelListAll.get(0).getSellerArticleSKU();
+		}
 		return sellerArticleSKU;
 	}
 

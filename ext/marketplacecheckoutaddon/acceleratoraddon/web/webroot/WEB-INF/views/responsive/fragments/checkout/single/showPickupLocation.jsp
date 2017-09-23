@@ -132,8 +132,8 @@ $(document).ready(function() {
 					$(".pincodeValidation").text("Enter Only Digits");
 				}
 				else {
-				var productcode${entryNumber} = $("#productcode"+${entryNumber}).html();
-				var sellerId${entryNumber} = $("#sellerId"+${entryNumber}).html();
+				var productcode${entryNumber} = $("#productcode"+${entryNumber}).text();
+				var sellerId${entryNumber} = $("#sellerId"+${entryNumber}).text();
 				var dataString${entryNumber} = "pin=" + pinvalue${entryNumber} + "&productCode="+ productcode${entryNumber} + "&sellerId="+sellerId${entryNumber} + "&entryNumber="+${entryNumber};
 				$.ajax({
 			          url :  ACC.config.encodedContextPath +"/checkout/single/updatePincodeCheck",

@@ -64,9 +64,7 @@
 						</c:if>
 
 					</div> 
-					<span id="defaultWishId" style="display: none">
-						<spring:theme code="wishlist.defaultname" />
-					</span>
+					<span id="defaultWishId" style="display: none"><spring:theme code="wishlist.defaultname" /></span>
 
 					<div class="product">
 						<div class="cart-product-info">
@@ -149,18 +147,21 @@
 									</c:otherwise>
 								</c:choose>
 							</c:if>
+							<!-- Exchange UI Defects -->
+							<c:if test="${not empty entry.exchangeApplied}">
+		              			<ul class="exchange-applied-ul">
+		              			<li class="cart_exchange">
+
+			              		<input type="hidden" id="exc_cart" value="${entry.exchangeApplied}">
+			              		<spring:theme code="marketplace.exchange.messageLabel"/>
+			              		</li>
+			              		</ul>
+			              		</c:if>
 						</div>
 
 
 						<ul class="item-edit-details">
-						  <c:if test="${not empty entry.exchangeApplied}">
-		              			<li class="cart_exchange">
-
-			              		<input type="hidden" id="exc_cart" value="${entry.exchangeApplied}">
-			              		<c:set var="isExchangeavailable" value="Exchange Applied"/>
-   										${isExchangeavailable} 
-			              		</li>
-			              		</c:if>
+						  
 							<c:if test="${entry.updateable}">
 								<c:forEach items="${entry.product.seller}" var="seller">
 									<c:if

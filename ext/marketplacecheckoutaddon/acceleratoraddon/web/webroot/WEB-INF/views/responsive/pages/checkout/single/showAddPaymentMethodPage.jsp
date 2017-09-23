@@ -1689,11 +1689,12 @@
 									<div id="codItemEligibilityMessage" class="error-message"><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.codItemEligibilityMessage"/>
 									</div>
 									
-									<div id="emptyOTPMessage" class="error-message"><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.emptyOTPMessage"/>
+									<!-- Removing due to TISPRDT-2641, as it is not used any more -->
+									<div id="emptyOTPMessage" class="error-message"><!--<spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.emptyOTPMessage"/>-->
 									</div>
 									
 									<!-- UF-281/282 Starts -->
-									<div id="codNotAllowedMessage" class="error-message payment-notification"><spring:theme code="checkout.single.paymentMethod.addPaymentDetails.codNotAllowed"/>
+									<div id="codNotAllowedMessage" class="error-message payment-notification" style="display: none"><spring:theme code="checkout.single.paymentMethod.addPaymentDetails.codNotAllowed"/>
 									</div>
 									<!-- UF-281/282 Ends -->
 									

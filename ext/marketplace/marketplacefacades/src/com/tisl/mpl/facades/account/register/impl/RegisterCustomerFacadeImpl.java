@@ -555,42 +555,27 @@ public class RegisterCustomerFacadeImpl extends DefaultCustomerFacade implements
 				registerData.setSocialLogin(true);
 				LOG.debug(MplConstants.USER_ALREADY_REGISTERED + " via site login");
 				final String gigyaMethod = configurationService.getConfiguration().getString(
-						MarketplacecclientservicesConstants.GIGYA_METHOD_LINK_ACCOUNTS);
+						MarketplacecclientservicesConstants.METHOD_NOTIFY_REGISTRATION);
 				LOG.debug("GIGYA METHOD" + gigyaMethod);
 
 
 				//changes start for gigya duplicate uid  check start
-				if ((customerModel.getUid().toString()) == (registerData.getUid().toString()))
+				//TISUAT-5868
+				if (!(customerModel.getUid().toString()).equals(registerData.getUid().toString()))
 				{
 
 					final int errorcode = gigyaservice.checkGigyaUID(customerModel.getUid().toString());
-					if (errorcode == 0)
+					if (errorcode == 403005)
 					{
+						LOG.debug("Customer model UID is different as of Gigya UID:Error code is " + errorcode);
 						gigyaservice.notifyGigya(customerModel.getUid(), registerData.getUid(), registerData.getFirstName(),
 								registerData.getLastName(), registerData.getLogin(), gigyaMethod);
-						LOG.debug("Customer model UID is same as of Gigya UID:Error code is " + errorcode);
+						
 					}
 				}
 				else
-				{/* gigya uid didnot match with hybris */
-
-					final int errorcode2 = gigyaservice.checkGigyaUID(registerData.getUid());
-					LOG.debug("Customer model UID is different from Gigya UID :Error code is " + errorcode2);
-					LOG.debug("Customer model UID is different from Gigya UID :Email id is  " + registerData.getLogin());
-					LOG.debug("Customer model UID is different from Gigya UID :UID is   " + registerData.getUid());
-					LOG.debug("Customer model UID is different from Gigya UID :customer model email is   "
-							+ customerModel.getOriginalUid());
-					//added to check : if we deleted the mismatched data,then to set the site uid
-					final int errorcode3 = gigyaservice.checkGigyaUID(customerModel.getUid());
-					if (errorcode3 == 403005)
-					{
-						final String gigyaMethodNotify = configurationService.getConfiguration().getString(
-								MarketplacecclientservicesConstants.METHOD_NOTIFY_REGISTRATION);
-						LOG.debug("GIGYA METHOD" + gigyaMethodNotify);
-						gigyaservice.notifyGigya(customerModel.getUid(), registerData.getUid(), registerData.getFirstName(),
-								registerData.getLastName(), registerData.getLogin(), gigyaMethodNotify);
-					}
-
+				{/* gigya uid  matches with hybris */
+					LOG.debug("Customer model UID is same as of Gigya UID:UID is   " + registerData.getUid());
 				}
 				//changes start for gigya duplicate uid  check end
 				return registerData;

@@ -5,10 +5,13 @@ package com.tisl.mpl.marketplacecommerceservices.service.impl;
 
 import de.hybris.platform.core.model.JewelleryInformationModel;
 import de.hybris.platform.core.model.JewellerySellerDetailsModel;
+import de.hybris.platform.core.model.JwlryRevSealInfoModel;
 
 import java.util.List;
 
 import javax.annotation.Resource;
+
+import org.apache.commons.collections.CollectionUtils;
 
 import com.tisl.mpl.core.model.BuyBoxModel;
 import com.tisl.mpl.marketplacecommerceservices.daos.MplJewelleryDao;
@@ -94,5 +97,26 @@ public class MplJewelleryServiceImpl implements MplJewelleryService
 		// YTODO Auto-generated method stub
 		return mplJewelleryDao.getSellerMsgForRetRefTab(sellerId);
 	}
+
+	/*
+	 * (non-Javadoc)
+	 *
+	 * @see com.tisl.mpl.marketplacecommerceservices.service.MplJewelleryService#getSealInfo(java.lang.String)
+	 */
+	@Override
+	public JwlryRevSealInfoModel getSealInfo(final String sellerId)
+	{
+		final List<JwlryRevSealInfoModel> sealList = mplJewelleryDao.getSealInfo(sellerId);
+		if (CollectionUtils.isNotEmpty(sealList))
+		{
+			return sealList.get(0);
+		}
+		else
+		{
+			return null;
+		}
+
+	}
+
 
 }

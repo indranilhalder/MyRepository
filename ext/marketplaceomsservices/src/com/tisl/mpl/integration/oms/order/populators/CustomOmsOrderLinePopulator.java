@@ -10,6 +10,7 @@ import de.hybris.platform.core.model.JewelleryInformationModel;
 import de.hybris.platform.core.model.OrderJewelEntryModel;
 import de.hybris.platform.core.model.order.OrderEntryModel;
 import de.hybris.platform.core.model.order.payment.CODPaymentInfoModel;
+import de.hybris.platform.core.model.product.ProductModel;
 import de.hybris.platform.integration.commons.services.OndemandTaxCalculationService;
 import de.hybris.platform.integration.oms.order.service.ProductAttributeStrategy;
 import de.hybris.platform.integration.oms.order.strategies.OrderEntryNoteStrategy;
@@ -104,14 +105,21 @@ public class CustomOmsOrderLinePopulator implements Populator<OrderEntryModel, O
 			//Added for jewellery
 			String ussid = null;
 			String jwlSkuid = null;
-
-			if (null != source.getProduct()
-					&& source.getProduct().getProductCategoryType()
-							.equalsIgnoreCase(MarketplacecommerceservicesConstants.FINEJEWELLERY))
+			//EQA fix
+			final ProductModel prodModel = source.getProduct();
+			if (null != prodModel
+					&& MarketplacecommerceservicesConstants.FINEJEWELLERY.equalsIgnoreCase(prodModel.getProductCategoryType()))
 			{
 				final List<JewelleryInformationModel> jewelleryInfo = jewelleryService.getJewelleryInfoByUssid(source
 						.getSelectedUSSID());
-				ussid = jewelleryInfo.get(0).getPCMUSSID();
+				if (CollectionUtils.isNotEmpty(jewelleryInfo))
+				{
+					ussid = jewelleryInfo.get(0).getPCMUSSID();
+				}
+				else
+				{
+					LOG.error("No entry in JewelleryInformationModel for ussid " + source.getSelectedUSSID());
+				}
 				jwlSkuid = source.getSelectedUSSID().substring(6, source.getSelectedUSSID().length());
 			}
 			else
@@ -230,9 +238,9 @@ public class CustomOmsOrderLinePopulator implements Populator<OrderEntryModel, O
 
 
 			/* Added For Jewellery */
-			if (null != source.getProduct()
-					&& source.getProduct().getProductCategoryType()
-							.equalsIgnoreCase(MarketplacecommerceservicesConstants.FINEJEWELLERY))
+			//EQA fix
+			if (null != prodModel
+					&& MarketplacecommerceservicesConstants.FINEJEWELLERY.equalsIgnoreCase(prodModel.getProductCategoryType()))
 			{
 
 				if (null != source.getOrder() && null != source.getOrder().getParentReference())

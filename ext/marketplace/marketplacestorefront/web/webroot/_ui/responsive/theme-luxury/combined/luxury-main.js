@@ -1759,6 +1759,2612 @@ function getProductCodeFromPdpUrl(url) {
     productCode;
 }
 
+function refresh() {
+    if ($(".pay button, #make_cc_payment_up, #make_saved_cc_payment_up, .cod_payment_button_top , .make_mrupee_payment_up").prop("disabled", !1), 
+    $(".pay button, #make_cc_payment_up, #make_saved_cc_payment_up, .cod_payment_button_top , .make_mrupee_payment_up").css("opacity", "1"), 
+    $(".pay .spinner").remove(), $("#no-click,.spinner").remove(), $("#paymentMode, #bankNameForEMI, #selectedTerm, #bankCodeSelection").val("select"), 
+    null != document.getElementById("silentOrderPostForm") && document.getElementById("silentOrderPostForm").reset(), 
+    $(".card_number, .name_on_card, #cardType, #otpNUMField, .security_code").val(""), 
+    $(".card_exp_month").val("month"), $(".card_exp_year").val("year"), $(".juspay_locker_save").attr("checked", !1), 
+    $(".form-group span").text(""), $(".new-card").find("#is_emi").val("false"), $(".new-card").find("#emi_bank").val(""), 
+    $(".new-card").find("#emi_tenure").val(""), $("#is_emi").val("false"), $("#emi_bank").val(""), 
+    $("#emi_tenure").val(""), $("#COD, #emi, #netbanking, #card,#cardEmi, #paymentFormButton, #submitPaymentFormButton, #mobileNoError, #OTPGenerationErrorMessage, #codMessage, #customerBlackListMessage, #otpValidationMessage, #wrongOtpValidationMessage, #expiredOtpValidationMessage, #fulfillmentMessage, #codItemEligibilityMessage, #emptyOTPMessage, #resendOTPMessage, .nbAjaxError").css("display", "none"), 
+    $("#netbankingError,.newCard, #emiRangeError, #juspayconnErrorDiv").css("display", "none"), 
+    $("#bankNameForEMI, #listOfEMiBank, #netbankingIssueError, #emiPromoError, #codErrorMessage").css("display", "none"), 
+    $("#convChargeFieldId, #convChargeField").css("display", "none"), $(".card_ebsErrorSavedCard, .card_cvvErrorSavedCard, #maestroMessage, #newMaestroMessage").css("display", "none"), 
+    $(".make_payment_top_nb, .make_payment_top_savedCard, .make_payment_top_newCard, .cod_payment_button_top").css("display", "none"), 
+    $("").css("display", "none"), $(".card_cvvErrorSavedCard_popup").css("display", "none"), 
+    $("#make_saved_cc_payment").removeClass("saved_card_disabled"), $("#make_saved_dc_payment").removeClass("saved_card_disabled"), 
+    hideTable(), void 0 !== document.silentOrderPostForm) {
+        var selection = document.silentOrderPostForm.EMIBankCode;
+        if (void 0 != selection) for (i = 0; i < selection.length; i++) selection[i].checked = !1;
+    }
+    $("#savedEMICard").find(".credit-card-group").remove();
+    var selection2 = $(".NBBankCode");
+    for (i = 0; i < selection2.length; i++) selection2[i].checked = !1;
+    $("input[name=creditCards]:radio").first().prop("checked", !1), $("input[name=debitCards]:radio").first().prop("checked", !1), 
+    $("input[name=emiCards]:radio").first().prop("checked", !1), $("input[name=debitCards]:radio.card_token,input[name=creditCards]:radio.card_token,input[name=emiCards]:radio.card_token").removeClass("card_token").addClass("card_token_hide"), 
+    $(".card_token_hide").parent().parent().parent().find(".cvv").find(".security_code").removeClass("security_code").addClass("security_code_hide"), 
+    $(".card_token_hide").parent().find(".card_bank").removeClass("card_bank").addClass("card_bank_hide"), 
+    $(".card_token_hide").parent().find(".card_brand").removeClass("card_brand").addClass("card_brand_hide"), 
+    $(".card_token_hide").parent().find(".card_is_domestic").removeClass("card_is_domestic").addClass("card_is_domestic_hide"), 
+    $(".card_token_hide").parent().find(".card_ebsErrorSavedCard").removeClass("card_ebsErrorSavedCard").addClass("card_ebsErrorSavedCard_hide"), 
+    $(".card_token_hide").parent().parent().parent().find(".cvv").find(".card_cvvErrorSavedCard").removeClass("card_cvvErrorSavedCard").addClass("card_cvvErrorSavedCard_hide"), 
+    $(".security_code_hide").prop("disabled", !0), $(".security_code").prop("disabled", !1), 
+    $(".cart.wrapper .left-block .payments.tab-view .tabs > li").hide();
+}
+
+function displayNetbankingForm() {
+    refresh(), $("#paymentMode").val("Netbanking"), $("#paymentModeValue").val("Netbanking"), 
+    $("#netbanking").css("display", "block"), $.ajax({
+        url: ACC.config.encodedContextPath + "/checkout/multi/payment-method/setupMplNetbankingForm",
+        type: "GET",
+        cache: !1,
+        success: function(response) {
+            $(".netbankingPanel").html(response), $("input:password").val(""), $(".name_on_card").val(""), 
+            applyPromotion(null, "none", "none"), $("#paymentDetails, #make_nb_payment").css("display", "block"), 
+            $(".make_payment_top_nb").css("display", "block"), $("#submitButtons, #paymentFormButton, #submitPaymentFormButton, #submitPaymentFormCODButton").css("display", "none");
+        },
+        error: function(resp) {
+            $(".nbButton").css("display", "none"), $(".nbAjaxError").css("display", "block"), 
+            $("#no-click,.loaderDiv").remove(), $(".make_payment").removeAttr("disabled");
+        }
+    });
+}
+
+function displayEMIForm() {
+    refresh(), $("#emi").css("display", "block");
+    var select = document.getElementById("bankNameForEMI"), length = select.options.length;
+    for (i = 0; i < length; i++) select.options[i] = null;
+    $("#bankNameForEMI option").remove(), $("#paymentMode").val("EMI"), $("#paymentModeValue").val("EMI"), 
+    $("input:password").val(""), $(".name_on_card").val(""), applyPromotion(null, "none", "none"), 
+    $("#paymentDetails, #emi").css("display", "block"), $("#emi-notice").hide(), $("#emiNoBankError").hide();
+}
+
+function displayCODForm() {
+    refresh(), $("#paymentMode").val("COD"), $("#paymentModeValue").val("COD"), $("li#COD").css("display", "block");
+    var paymentMode = $("#paymentMode").val(), httpRequest = $("#httpRequest").val(), guid = $("#guid").val();
+    $.ajax({
+        url: ACC.config.encodedContextPath + "/checkout/multi/payment-method/setupMplCODForm",
+        type: "GET",
+        data: {
+            request: httpRequest,
+            guid: guid
+        },
+        cache: !1,
+        success: function(response) {
+            console.log(response), $("#otpNUM").html(response);
+            var codEligible = $("#codEligible").val();
+            console.log(codEligible), $("#paymentDetails, #otpNUM, #sendOTPNumber, #sendOTPButton").css("display", "block"), 
+            $("#enterOTP, #submitPaymentFormButton, #submitPaymentFormCODButton, #paymentFormButton, #otpSentMessage").css("display", "none"), 
+            "BLACKLISTED" == codEligible ? (paymentErrorTrack("cod_unavailable"), $("#customerBlackListMessage").css("display", "block"), 
+            $("#otpNUM").css("display", "none"), $("#otpSentMessage").css("display", "none"), 
+            $(".terms.cod").remove(), $("#paymentButtonId").css("display", "none"), $("#paymentFormButton").attr("style", "display: none !important"), 
+            applyPromotion(null, "none", "none")) : "NOT_TSHIP" == codEligible ? (paymentErrorTrack("cod_unavailable"), 
+            $("#fulfillmentMessage").css("display", "block"), $("#otpNUM").css("display", "none"), 
+            $("#otpSentMessage").css("display", "none"), $(".terms.cod").remove(), $("#paymentButtonId").css("display", "none"), 
+            $("#paymentFormButton").attr("style", "display: none !important"), applyPromotion(null, "none", "none")) : "ITEMS_NOT_ELIGIBLE" == codEligible ? (paymentErrorTrack("cod_unavailable"), 
+            $("#codItemEligibilityMessage").css("display", "block"), $("#otpNUM").css("display", "none"), 
+            $("#otpSentMessage").css("display", "none"), $(".terms.cod").remove(), $("#paymentButtonId").css("display", "none"), 
+            $("#paymentFormButton").attr("style", "display: none !important"), applyPromotion(null, "none", "none")) : "NOT_PINCODE_SERVICEABLE" == codEligible ? (paymentErrorTrack("cod_unavailable"), 
+            $("#codMessage").css("display", "block"), $("#otpNUM").css("display", "none"), $("#otpSentMessage").css("display", "none"), 
+            $(".terms.cod").remove(), $("#paymentButtonId").css("display", "none"), $("#paymentFormButton").attr("style", "display: none !important"), 
+            applyPromotion(null, "none", "none")) : 0 == isCodSet ? $.ajax({
+                url: ACC.config.encodedContextPath + "/checkout/multi/payment-method/setConvCharge",
+                type: "GET",
+                data: {
+                    paymentMode: paymentMode,
+                    guid: guid
+                },
+                cache: !1,
+                success: function(response) {
+                    if (console.log(response), null == response) $(location).attr("href", ACC.config.encodedContextPath + "/cart"); else {
+                        $("#paymentButtonId #submitPaymentFormCODButton").css("display", "block"), $("#OTPGenerationErrorMessage").css("display", "none"), 
+                        $("#sendOTPNumber, #convCharge").css("display", "block");
+                        var convCharge = (response.totalPrice.formattedValue, response.convCharge.formattedValue);
+                        $("#convChargeFieldId, #convChargeField").css("display", "block"), "" == response.cellNo ? $("#otpMobileNUMField").val("") : $("#otpMobileNUMField").val(response.cellNo), 
+                        0 != response.convCharge.value ? (document.getElementById("convChargeField").innerHTML = convCharge, 
+                        $("#convChargeMessage").css("display", "inline-block")) : (document.getElementById("convChargeField").innerHTML = "Free", 
+                        $("#convChargeMessage").css("display", "none")), null != paymentMode && applyPromotion(null, "none", "none"), 
+                        isCodSet = !0;
+                    }
+                },
+                error: function(resp) {
+                    paymentErrorTrack("cod_unavailable"), $("#paymentDetails").css("display", "block"), 
+                    $("#otpSentMessage").css("display", "none"), $("#codErrorMessage").css("display", "block"), 
+                    $("#no-click,.loaderDiv").remove();
+                }
+            }) : ($("#convChargeFieldId, #convChargeField").css("display", "block"), $("#no-click,.loaderDiv").remove());
+        },
+        error: function(resp) {
+            paymentErrorTrack("cod_unavailable"), $("#paymentDetails").css("display", "block"), 
+            $("#otpSentMessage").css("display", "none"), $("#codErrorMessage").css("display", "block"), 
+            $("#no-click,.loaderDiv").remove();
+        }
+    });
+}
+
+function displayDebitCardForm() {
+    refresh(), $("#paymentMode").val("Debit Card"), $("#paymentModeValue").val("Debit Card"), 
+    $("input:password").val(""), $(".name_on_card").val(""), displayDCForm();
+}
+
+function displayDCForm() {
+    $("#is_emi").val("false"), $(".saved-card-button").show(), $("#cardDebit").css("display", "block"), 
+    $("input[name=debitCards]:radio.card_token,input[name=creditCards]:radio.card_token,input[name=emiCards]:radio.card_token").removeClass("card_token").addClass("card_token_hide"), 
+    $("input[name=debitCards]:radio").first().removeClass("card_token_hide").addClass("card_token"), 
+    $(".card_token_hide").parent().parent().parent().find(".cvv").find(".security_code").removeClass("security_code").addClass("security_code_hide"), 
+    $(".card_token_hide").parent().find(".card_bank").removeClass("card_bank").addClass("card_bank_hide"), 
+    $(".card_token_hide").parent().find(".card_brand").removeClass("card_brand").addClass("card_brand_hide"), 
+    $(".card_token_hide").parent().find(".card_is_domestic").removeClass("card_is_domestic").addClass("card_is_domestic_hide"), 
+    $(".card_token_hide").parent().find(".card_ebsErrorSavedCard").removeClass("card_ebsErrorSavedCard").addClass("card_ebsErrorSavedCard_hide"), 
+    $(".card_token_hide").parent().parent().parent().find(".cvv").find(".card_cvvErrorSavedCard").removeClass("card_cvvErrorSavedCard").addClass("card_cvvErrorSavedCard_hide"), 
+    $(".card_token").parent().parent().parent().find(".cvv").find("security_code_hide").removeClass("security_code_hide").addClass("security_code"), 
+    $(".card_token").parent().find(".card_bank_hide").removeClass("card_bank_hide").addClass("card_bank"), 
+    $(".card_token").parent().find(".card_brand_hide").removeClass("card_brand_hide").addClass("card_brand"), 
+    $(".card_token").parent().find(".card_is_domestic_hide").removeClass("card_is_domestic_hide").addClass("card_is_domestic"), 
+    $(".card_token").parent().find(".card_ebsErrorSavedCard_hide").removeClass("card_ebsErrorSavedCard_hide").addClass("card_ebsErrorSavedCard"), 
+    $(".card_token").parent().parent().parent().find(".cvv").find(".card_cvvErrorSavedCard_hide").removeClass("card_cvvErrorSavedCard_hide").addClass("card_cvvErrorSavedCard"), 
+    $("#save-card-dc").prop("checked", !0), $("#newCard, .newCardPayment").css("display", "block"), 
+    $(".make_payment_top_savedCard").css("display", "none"), $(".make_payment_top_newCard").css("display", "block"), 
+    $(".accepted-cards .maestro").parent().css("display", "inline-block"), $(".accepted-cards .visa").parent().css("display", "inline-block"), 
+    $(".accepted-cards .master").parent().css("display", "inline-block"), $(".accepted-cards .amex").parent().css("display", "none"), 
+    $(".make_payment_top_savedCard").css("display", "block"), $(".make_payment_top_newCard").css("display", "none"), 
+    $(".newCard").css("display", "table-cell"), $("input[name=creditCards]:radio").first().prop("checked", !1), 
+    $("input[name=debitCards]:radio").first().prop("checked", !0), $(".card_token").parent().parent().parent().find(".cvv").find(".security_code_hide").removeClass("security_code_hide").addClass("security_code"), 
+    $(".card_token").parent().find(".card_bank_hide").removeClass("card_bank_hide").addClass("card_bank"), 
+    $(".card_token").parent().find(".card_brand_hide").removeClass("card_brand_hide").addClass("card_brand"), 
+    $(".card_token").parent().find(".card_is_domestic_hide").removeClass("card_is_domestic_hide").addClass("card_is_domestic"), 
+    $(".card_token").parent().find(".card_ebsErrorSavedCard_hide").removeClass("card_ebsErrorSavedCard_hide").addClass("card_ebsErrorSavedCard"), 
+    $(".card_token").parent().parent().parent().find(".cvv").find(".card_cvvErrorSavedCard_hide").removeClass("card_cvvErrorSavedCard_hide").addClass("card_cvvErrorSavedCard"), 
+    $("#card li.header ul").append($("#emi li.newCard")), $("#card li.header ul").append($("#emi li.savedCard")), 
+    "AMEX" == $(".card_bank").val() ? $(".security_code").attr("maxlength", "4") : $(".security_code").attr("maxlength", "3");
+    var bankName = $(".card_bank").val();
+    void 0 === bankName && (bankName = null), setBankForSavedCard(bankName), "MAESTRO" == $(".card_brand").val() ? $("#maestroMessage").css("display", "block") : $("#maestroMessage").css("display", "none"), 
+    $(".security_code_hide").prop("disabled", !0), $(".security_code").prop("disabled", !1);
+}
+
+function displayCreditCardForm() {
+    refresh(), $("#paymentMode").val("Credit Card"), $("#paymentModeValue").val("Credit Card"), 
+    $("#is_emi").val("false"), $("#card, #ccHeader").css("display", "block"), $("#dcHeader").css("display", "none"), 
+    $("input:password").val(""), $(".name_on_card").val(""), displayFormForCC();
+}
+
+function submitForm() {
+    if ("Netbanking" == $("#paymentMode").val()) {
+        bankCodeCheck() ? submitNBForm() : $("#netbankingIssueError").css("display", "block");
+    } else if ("COD" == $("#paymentMode").val()) {
+        var otpNUMField = $("#otpNUMField").val();
+        if ("undefined" != typeof utag && utag.link({
+            link_text: "pay_cod_validate_otp",
+            event_type: "payment_mode_cod"
+        }), "" == otpNUMField) "undefined" != typeof utag && utag.link({
+            link_text: "pay_cod_otp_error",
+            event_type: "payment_mode_cod"
+        }), $("#otpNUM, #sendOTPNumber, #emptyOTPMessage, #otpSentMessage").css("display", "block"); else {
+            $("#otpNUM, #sendOTPNumber, #paymentFormButton, #sendOTPButton, #otpSentMessage").css("display", "block"), 
+            $("#emptyOTPMessage").css("display", "none"), $("#paymentButtonId").prop("disabled", !0);
+            var guid = $("#guid").val();
+            $.ajax({
+                url: ACC.config.encodedContextPath + "/checkout/multi/payment-method/validateOTP/" + otpNUMField,
+                type: "POST",
+                data: {
+                    guid: guid
+                },
+                cache: !1,
+                success: function(response) {
+                    if ("redirect" == response) $(location).attr("href", ACC.config.encodedContextPath + "/cart"); else if ("redirect_to_payment" == response) $(location).attr("href", ACC.config.encodedContextPath + "/checkout/multi/payment-method/pay?value=" + guid); else if ($("#emptyOTPMessage").css("display", "none"), 
+                    null != response) if ("INVALID" == response) utag.link({
+                        link_text: "pay_cod_otp_error",
+                        event_type: "payment_mode_cod"
+                    }), $("#otpNUM, #sendOTPNumber, #enterOTP, #wrongOtpValidationMessage").css("display", "block"), 
+                    $("#expiredOtpValidationMessage").css("display", "none"), $("#otpSentMessage").css("display", "none"), 
+                    $("#paymentButtonId").prop("disabled", !1); else if ("EXPIRED" == response) "undefined" != typeof utag && utag.link({
+                        link_text: "pay_cod_otp_timeout",
+                        event_type: "payment_mode_cod"
+                    }), $("#otpNUM, #sendOTPNumber, #enterOTP, #expiredOtpValidationMessage").css("display", "block"), 
+                    $("#wrongOtpValidationMessage").css("display", "none"), $("#otpSentMessage").css("display", "none"), 
+                    $("#paymentButtonId").prop("disabled", !1); else {
+                        "undefined" != typeof utag && utag.link({
+                            link_text: "pay_cod_otp_success",
+                            event_type: "payment_mode_cod"
+                        });
+                        var staticHost = $("#staticHost").val();
+                        sendTealiumData(), $("#form-actions, #otpNUM").css("display", "block"), $("#wrongOtpValidationMessage, #expiredOtpValidationMessage").css("display", "none"), 
+                        $("#otpSentMessage").css("display", "none"), $(".pay .payment-button,.cod_payment_button_top").prop("disabled", !0), 
+                        $(".pay .payment-button,.cod_payment_button_top").css("opacity", "0.5"), $("body").append("<div id='no-click' style='opacity:0.5; background:#000; z-index: 100000; width:100%; height:100%; position: fixed; top: 0; left:0;'></div>"), 
+                        $("body").append('<div class="loaderDiv" style="position: fixed; left: 45%;top:45%;z-index: 10000"><img src="' + staticHost + '/_ui/responsive/common/images/red_loader.gif" class="spinner"></div>'), 
+                        $("#silentOrderPostForm").submit();
+                    } else "undefined" != typeof utag && utag.link({
+                        link_text: "pay_cod_otp_error",
+                        event_type: "payment_mode_cod"
+                    }), alert("Error validating OTP. Please select another payment mode and proceed"), 
+                    $(".pay button,.cod_payment_button_top").prop("disabled", !1), $(".pay button,.cod_payment_button_top").css("opacity", "1"), 
+                    $(".pay .loaderDiv").remove(), $("#no-click,.loaderDiv").remove(), $("#paymentButtonId").prop("disabled", !1);
+                },
+                error: function(resp) {
+                    "undefined" != typeof utag && utag.link({
+                        link_text: "pay_cod_otp_error",
+                        event_type: "payment_mode_cod"
+                    }), alert("Error validating OTP. Please select another payment mode and proceed"), 
+                    $(".pay button,.cod_payment_button_top").prop("disabled", !1), $(".pay button,.cod_payment_button_top").css("opacity", "1"), 
+                    $(".pay .loaderDiv").remove(), $("#no-click,.loaderDiv").remove(), paymentErrorTrack("pay_cod_otp_error");
+                }
+            });
+        }
+    } else alert("Please make valid selection and proceed");
+}
+
+function hideErrorMsg() {
+    $("#wrongOtpValidationMessage #expiredOtpValidationMessage").css("display", "none");
+}
+
+function bankCodeCheck() {
+    $("#netbankingIssueError").css("display", "none");
+    var checkedValue, selection = $(".NBBankCode");
+    for (i = 0; i < selection.length; i++) 1 == selection[i].checked && (checkedValue = selection[i].value);
+    return "select" == $("#bankCodeSelection").value ? null != checkedValue : null == checkedValue;
+}
+
+function deselectRadio() {
+    $("#netbankingIssueError").css("display", "none");
+    var handle = $("#bankCodeSelection"), number = handle.val(), selection = $(".NBBankCode"), bankName = $("#bankCodeSelection option:selected").html();
+    if ($("#netbankingError").css("display", "none"), "select" != number) {
+        for (i = 0; i < selection.length; i++) 1 == selection[i].checked && (checkedValue = selection[i].value, 
+        selection[i].checked = !1);
+        "undefined" != typeof utag && utag.link({
+            link_text: "net_banking_dropdown_" + bankName.replace(/ /g, "_").toLowerCase(),
+            event_type: "payment_mode_dropdown"
+        }), setBankForSavedCard($("#bankCodeSelection option:selected").html());
+    } else setBankForSavedCard(null);
+}
+
+function deselectSelection() {
+    $("#netbankingIssueError").css("display", "none");
+    var handle = $("#bankCodeSelection"), selection = (handle.val(), $(".NBBankCode"));
+    for ($("#netbankingError").css("display", "none"), i = 0; i < selection.length; i++) if (1 == selection[i].checked) {
+        var bankName = $("#NBBankName" + i).val();
+        $("#bankCodeSelection").val("select"), setBankForSavedCard(bankName), "undefined" != typeof utag && utag.link({
+            link_text: "net_banking_popular_" + bankName.replace(/ /g, "_").toLowerCase(),
+            event_type: "payment_mode_popular"
+        });
+    }
+}
+
+function getSelectedEMIBank() {
+    $("#emiPromoError").css("display", "none");
+    var selectedBank = $("select[id='bankNameForEMI']").find("option:selected").text();
+    $(".card_number, .name_on_card, .security_code, #cardType, #otpNUMField").val(""), 
+    $("ul.accepted-cards li").removeClass("active-card"), $(".card_exp_month").val("month"), 
+    $(".card_exp_year").val("year"), $(".juspay_locker_save").attr("checked", !1), $(".form-group span").text(""), 
+    "Select" != selectedBank ? setBankForSavedCard(selectedBank) : (hideTable(), $("#card, #emi-notice").css("display", "none"), 
+    applyPromotion(null, "none", "none"));
+}
+
+function hideTable() {
+    $("#radioForEMI").css("display", "none"), $("#savedEMICard").find(".credit-card-group").remove(), 
+    $("#EMITermTable tbody").empty();
+}
+
+function validateSelection() {
+    for (var elements = document.getElementsByName("termRadio"), i = 0; i < elements.length; i++) if (elements[i].checked) {
+        $("#selectedTerm, #emi_tenure").val(elements[i].value);
+        var selectedBank = $("#bankNameForEMI").val();
+        $("#is_emi").val("true"), $("#emi_bank").val(selectedBank), $("#dcHeader").css("display", "none"), 
+        $("#ccHeader").css("display", "block"), $("#savedEMICard").find(".credit-card-group").remove(), 
+        displayEMICards();
+    }
+}
+
+function displayEMICards() {
+    var bankName = $("select[id='bankNameForEMI']").find("option:selected").text();
+    $("input[name=debitCards]:radio.card_token,input[name=creditCards]:radio.card_token,input[name=emiCards]:radio.card_token").removeClass("card_token").addClass("card_token_hide"), 
+    $(".card_token_hide").parent().parent().parent().find(".cvv").find(".security_code").removeClass("security_code").addClass("security_code_hide"), 
+    $(".card_token_hide").parent().find(".card_bank").removeClass("card_bank").addClass("card_bank_hide"), 
+    $(".card_token_hide").parent().find(".card_brand").removeClass("card_brand").addClass("card_brand_hide"), 
+    $(".card_token_hide").parent().find(".card_is_domestic").removeClass("card_is_domestic").addClass("card_is_domestic_hide"), 
+    $(".card_token_hide").parent().find(".card_ebsErrorSavedCard").removeClass("card_ebsErrorSavedCard").addClass("card_ebsErrorSavedCard_hide"), 
+    $(".card_token_hide").parent().parent().parent().find(".cvv").find(".card_cvvErrorSavedCard").removeClass("card_cvvErrorSavedCard").addClass("card_cvvErrorSavedCard_hide"), 
+    $("#save-card-emi").prop("checked", !0), $.ajax({
+        url: ACC.config.encodedContextPath + "/checkout/multi/payment-method/listEMICards",
+        data: {
+            bankName: bankName
+        },
+        type: "GET",
+        cache: !1,
+        success: function(myMap) {
+            var len = Object.keys(myMap).length;
+            if ($("#cardEmi").css("display", "block"), $("#cardEmi").find(".product-block").css("display", "block"), 
+            $("#cardEmi").find(".product-block").find(".header").css("display", "table"), $("#ccHeader").css("display", "block"), 
+            $("#dcHeader").css("display", "none"), "0" == len) $("#savedEMICard").css("display", "none"), 
+            $("#billingAddressEmi, .make_payment").css("display", "block"), $(".newCard, .savedCard, .saved-card-button").css("display", "none"), 
+            $("#newCard, .newCardPayment, .accepted-cards").css("display", "block"), $(".proceed-button").each(function() {
+                $(this).hide();
+            }), $("#make_emi_payment_up").show(), $(".accepted-cards .maestro").parent().css("display", "none"), 
+            $(".accepted-cards .visa").parent().css("display", "inline-block"), $(".accepted-cards .master").parent().css("display", "inline-block"), 
+            $(".accepted-cards .amex").parent().css("display", "inline-block"), populateBillingAddressEmi(); else {
+                $("#savedCard, #savedEMICard,.saved-card-button, #make_saved_emi_payment").css("display", "block"), 
+                $(".newCard").css("display", "table-cell"), $("#newCard, .newCardPayment").css("display", "none"), 
+                $(".proceed-button").each(function() {
+                    $(this).hide();
+                }), $("#make_emi_payment_up").show();
+                var index = -1, index1 = 0;
+                $.each(myMap, function(i, val) {
+                    index += 1, index1 += 1, $("#savedEMICard").css("display", "block"), void 0 == $("#savedEMICard").find("#credit-card-group" + index1).find(".card").find(".radio").find("#ec" + index).val() && ($("#savedEMICard").append($("<div />", {
+                        class: "credit-card-group",
+                        id: "credit-card-group" + index1
+                    })), $("#savedEMICard").find("#credit-card-group" + index1).append($("<div />", {
+                        class: "card",
+                        id: "card" + index1
+                    })), $("#savedEMICard").find("#credit-card-group" + index1).append($("<div />", {
+                        class: "cvv right-align-form",
+                        id: "cvv" + index1
+                    })), $("#savedEMICard").find("#credit-card-group" + index1).find("#card" + index1).append($("<div />", {
+                        class: "radio",
+                        id: "radio" + index1
+                    })), $("#savedEMICard").find("#credit-card-group" + index1).find("#card" + index1).find("#radio" + index1).append($("<input />", {
+                        type: "radio",
+                        name: "emiCards",
+                        class: "card_token emiCardsRadio",
+                        id: "ec" + index,
+                        value: val.cardToken
+                    })), $("#savedEMICard").find("#credit-card-group" + index1).find("#card" + index1).find("#radio" + index1).append($("<label />", {
+                        text: val.cardBrand + " ending in " + val.cardEndingDigits,
+                        for: "ec" + index
+                    })), $("#savedEMICard").find("#credit-card-group" + index1).find("#card" + index1).find("#radio" + index1).append($("<p />", {
+                        text: val.nameOnCard
+                    })), $("#savedEMICard").find("#credit-card-group" + index1).find("#card" + index1).find("#radio" + index1).append($("<p />", {
+                        text: "Expires on: " + val.expiryMonth + "/" + val.expiryYear
+                    })), $("#savedEMICard").find("#credit-card-group" + index1).find("#card" + index1).find("#radio" + index1).append($("<hidden />", {
+                        name: "emiCardsBank",
+                        class: "card_bank",
+                        value: val.cardIssuer,
+                        id: "card_bank" + index
+                    })), $("#savedEMICard").find("#credit-card-group" + index1).find("#card" + index1).find("#radio" + index1).append($("<hidden />", {
+                        name: "emiCardsBrand",
+                        class: "card_brand",
+                        value: val.cardBrand
+                    })), $("#savedEMICard").find("#credit-card-group" + index1).find("#card" + index1).find("#radio" + index1).append($("<hidden />", {
+                        name: "emiIsDomestic",
+                        class: "card_is_domestic",
+                        value: val.isDomestic
+                    })), $("#savedEMICard").find("#credit-card-group" + index1).find("#card" + index1).find("#radio" + index1).append($("<div />", {
+                        class: "card_ebsErrorSavedCard error-message",
+                        id: "ebsErrorSavedCard"
+                    })), $("#savedEMICard").find("#credit-card-group" + index1).find("#card" + index1).find("#radio" + index1).find(".card_ebsErrorSavedCard").append($('<spring:theme code="checkout.multi.paymentMethod.savedCard.ebsError"/>', {})), 
+                    $("#savedEMICard").find("#credit-card-group" + index1).find("#cvv" + index1).append($("<label />", {
+                        text: "CVV*"
+                    })), $("#savedEMICard").find("#credit-card-group" + index1).find("#cvv" + index1).append($('<input type="password" class="cvvValdiation form-control cvv_show security_code_hide" maxlength="4" onkeypress="return isNumber(event)" onclick="hideError()" />', {
+                        id: "cvv" + index
+                    })), $("#savedEMICard").find("#credit-card-group" + index1).find("#cvv" + index1).append($("<br />", {})), 
+                    $("#savedEMICard").find("#credit-card-group" + index1).find("#cvv" + index1).append($("<div />", {
+                        class: "card_cvvErrorSavedCard error-message",
+                        id: "cvvErrorSavedCard"
+                    })), $("#savedEMICard").find("#credit-card-group" + index1).find("#cvv" + index1).find(".card_cvvErrorSavedCard").html("Please enter a valid CVV"));
+                }), $("input[name=debitCards]:radio.card_token,input[name=creditCards]:radio.card_token,input[name=emiCards]:radio.card_token").removeClass("card_token").addClass("card_token_hide"), 
+                $(".card_token_hide").parent().parent().parent().find(".cvv").find(".security_code").removeClass("security_code").addClass("security_code_hide"), 
+                $(".card_token_hide").parent().find(".card_bank").removeClass("card_bank").addClass("card_bank_hide"), 
+                $(".card_token_hide").parent().find(".card_brand").removeClass("card_brand").addClass("card_brand_hide"), 
+                $(".card_token_hide").parent().find(".card_is_domestic").removeClass("card_is_domestic").addClass("card_is_domestic_hide"), 
+                $(".card_token_hide").parent().find(".card_ebsErrorSavedCard").removeClass("card_ebsErrorSavedCard").addClass("card_ebsErrorSavedCard_hide"), 
+                $(".card_token_hide").parent().parent().parent().find(".cvv").find(".card_cvvErrorSavedCard").removeClass("card_cvvErrorSavedCard").addClass("card_cvvErrorSavedCard_hide"), 
+                $("input[name=emiCards]:radio").first().prop("checked", !0), $("input[name=emiCards]:radio").first().removeClass("card_token_hide").addClass("card_token"), 
+                $(".card_token").parent().parent().parent().find(".cvv").find(".security_code_hide").removeClass("security_code_hide").addClass("security_code"), 
+                $(".card_token").parent().find(".card_bank_hide").removeClass("card_bank_hide").addClass("card_bank"), 
+                $(".card_token").parent().find(".card_brand_hide").removeClass("card_brand_hide").addClass("card_brand"), 
+                $(".card_token").parent().find(".card_is_domestic_hide").removeClass("card_is_domestic_hide").addClass("card_is_domestic"), 
+                $(".card_token").parent().find(".card_ebsErrorSavedCard_hide").removeClass("card_ebsErrorSavedCard_hide").addClass("card_ebsErrorSavedCard"), 
+                $(".card_token").parent().parent().parent().find(".cvv").find(".card_cvvErrorSavedCard_hide").removeClass("card_cvvErrorSavedCard_hide").addClass("card_cvvErrorSavedCard");
+            }
+        },
+        error: function(resp) {
+            paymentErrorTrack("emi_unavailable");
+        }
+    }), $(".security_code_hide").prop("disabled", !0), $(".security_code").prop("disabled", !1);
+}
+
+function displayFormForCC() {
+    if ($(".saved-card-button").show(), $("input[name=debitCards]:radio.card_token,input[name=creditCards]:radio.card_token,input[name=emiCards]:radio.card_token").removeClass("card_token").addClass("card_token_hide"), 
+    $("input[name=creditCards]:radio").first().removeClass("card_token_hide").addClass("card_token"), 
+    $(".card_token_hide").parent().parent().parent().find(".cvv").find(".security_code").removeClass("security_code").addClass("security_code_hide"), 
+    $(".card_token_hide").parent().find(".card_bank").removeClass("card_bank").addClass("card_bank_hide"), 
+    $(".card_token_hide").parent().find(".card_brand").removeClass("card_brand").addClass("card_brand_hide"), 
+    $(".card_token_hide").parent().find(".card_is_domestic").removeClass("card_is_domestic").addClass("card_is_domestic_hide"), 
+    $(".card_token_hide").parent().find(".card_ebsErrorSavedCard").removeClass("card_ebsErrorSavedCard").addClass("card_ebsErrorSavedCard_hide"), 
+    $(".card_token_hide").parent().parent().parent().find(".cvv").find(".card_cvvErrorSavedCard").removeClass("card_cvvErrorSavedCard").addClass("card_cvvErrorSavedCard_hide"), 
+    $("#save-card").prop("checked", !0), $("#newCard, .newCardPayment").css("display", "block"), 
+    $("#make_cc_payment_up").show(), $(".accepted-cards .maestro").parent().css("display", "none"), 
+    $(".accepted-cards .visa").parent().css("display", "inline-block"), $(".accepted-cards .master").parent().css("display", "inline-block"), 
+    $(".accepted-cards .amex").parent().css("display", "inline-block"), populateBillingAddress(), 
+    "EMI" != $("#paymentMode").val()) {
+        $(".card_token").parent().parent().parent().find(".cvv").find(".security_code_hide").removeClass("security_code_hide").addClass("security_code"), 
+        $(".card_token").parent().find(".card_bank_hide").removeClass("card_bank_hide").addClass("card_bank"), 
+        $(".card_token").parent().find(".card_brand_hide").removeClass("card_brand_hide").addClass("card_brand"), 
+        $(".card_token").parent().find(".card_is_domestic_hide").removeClass("card_is_domestic_hide").addClass("card_is_domestic"), 
+        $(".card_token").parent().find(".card_ebsErrorSavedCard_hide").removeClass("card_ebsErrorSavedCard_hide").addClass("card_ebsErrorSavedCard"), 
+        $(".card_token").parent().parent().parent().find(".cvv").find(".card_cvvErrorSavedCard_hide").removeClass("card_cvvErrorSavedCard_hide").addClass("card_cvvErrorSavedCard"), 
+        $(".make_payment_top_savedCard").css("display", "block"), $(".make_payment_top_newCard").css("display", "none"), 
+        $(".newCard").css("display", "table-cell"), $("input[name=debitCards]:radio").first().prop("checked", !1), 
+        $("input[name=creditCards]:radio").first().prop("checked", !0), $("#card li.header ul").append($("#emi li.newCard")), 
+        $("#card li.header ul").append($("#emi li.savedCard"));
+        var bankName = $(".card_bank").val();
+        void 0 === bankName && (bankName = null), "AMEX" == $(".card_brand").val() ? $(".security_code").attr("maxlength", "4") : $(".security_code").attr("maxlength", "3"), 
+        setBankForSavedCard(bankName);
+    }
+    $(".security_code_hide").prop("disabled", !0), $(".security_code").prop("disabled", !1);
+}
+
+function mobileBlacklist() {
+    var number = $("#otpMobileNUMField").val();
+    if ($("#otpNUMField").val(""), $("#wrongOtpValidationMessage, #expiredOtpValidationMessage").css("display", "none"), 
+    10 != number.length) $("#mobileNoError").css("display", "block"), $("#resendOTPMessage, #enterOTP, #otpSentMessage, #paymentFormButton").css("display", "none"); else if ("0" == number.charAt(0)) $("#mobileNoError").css("display", "block"); else if (isSessionActive()) {
+        $("#mobileNoError").css("display", "none");
+        var staticHost = $("#staticHost").val();
+        $("body").append("<div id='no-click' style='opacity:0.5; background:#000; z-index: 100000; width:100%; height:100%; position: fixed; top: 0; left:0;'></div>"), 
+        $("body").append('<div class="loaderDiv" style="position: fixed; left: 45%;top:45%;z-index: 10000"><img src="' + staticHost + '/_ui/responsive/common/images/red_loader.gif" class="spinner"></div>'), 
+        "block" == $("#sendOTPButton #resendOTPMessage").css("display") && $("#sendOTPButton .loaderDiv").css("bottom", "33px");
+        var number = $("#otpMobileNUMField").val();
+        $.ajax({
+            url: ACC.config.encodedContextPath + "/checkout/multi/payment-method/mobileBlacklist",
+            data: {
+                mobileNumber: number
+            },
+            type: "POST",
+            cache: !1,
+            success: function(response) {
+                1 == response ? (generateOTP(), $("#customerBlackListMessage").css("display", "none"), 
+                $("#otpSentMessage").css("display", "none")) : ($("#enterOTP, #paymentFormButton, #resendOTPMessage").css("display", "none"), 
+                $("#customerBlackListMessage").css("display", "block"), $("#sendOTPButton .loaderDiv").remove(), 
+                $("#no-click,.loaderDiv").remove());
+            },
+            error: function(resp) {
+                $("#sendOTPButton .loaderDiv").remove(), $("#no-click,.loaderDiv").remove();
+            }
+        });
+    } else redirectToCheckoutLogin();
+}
+
+function generateOTP() {
+    $("#submitButtons").css("display", "none");
+    var number = $("#otpMobileNUMField").val(), mobileNumber = number;
+    if ($("#otpNUMField").val(""), $("#wrongOtpValidationMessage, #expiredOtpValidationMessage").css("display", "none"), 
+    10 != number.length) $("#mobileNoError").css("display", "block"), $("#resendOTPMessage, #enterOTP, #otpSentMessage, #paymentFormButton").css("display", "none"); else if ("0" == number.charAt(0)) $("#mobileNoError").css("display", "block"); else {
+        var guid = $("#guid").val();
+        "undefined" != typeof utag && utag.link({
+            link_text: "pay_cod_verify_number",
+            event_type: "payment_mode_cod"
+        }), $.ajax({
+            url: ACC.config.encodedContextPath + "/checkout/multi/payment-method/generateOTP",
+            data: {
+                mobileNumber: mobileNumber,
+                guid: guid
+            },
+            type: "POST",
+            cache: !1,
+            success: function(response) {
+                "redirect" == response ? $(location).attr("href", ACC.config.encodedContextPath + "/cart") : "redirect_to_payment" == response ? $(location).attr("href", ACC.config.encodedContextPath + "/checkout/multi/payment-method/pay?value=" + guid) : "fail" == response ? $("#OTPGenerationErrorMessage").css("display", "block") : ($("#codMessage").css("display", "none"), 
+                $("#otpNUM, #otpSentMessage, #sendOTPNumber, #enterOTP, #paymentFormButton, #submitPaymentFormCODButton, .make_payment, #sendOTPButton, #resendOTPMessage, .cod_payment_button_top").css("display", "block")), 
+                $("#sendOTPButton .loaderDiv").remove(), $("#no-click,.loaderDiv").remove();
+            },
+            error: function(resp) {
+                $("#sendOTPButton .loaderDiv").remove(), $("#no-click,.loaderDiv").remove(), alert("OTP cannot be generated at this time due to technical errors. Please select another payment mode and proceed");
+            }
+        });
+    }
+}
+
+function resetConvChargeElsewhere() {
+    $.ajax({
+        url: ACC.config.encodedContextPath + "/checkout/multi/payment-method/resetConvChargeElsewhere",
+        type: "GET",
+        cache: !1,
+        success: function(response) {
+            var values = response.split("|"), totalPrice = values[0], convCharge = values[1];
+            $("#convChargeFieldId, #convChargeField").css("display", "none"), document.getElementById("convChargeField").innerHTML = convCharge, 
+            document.getElementById("totalWithConvField").innerHTML = totalPrice, document.getElementById("outstanding-amount").innerHTML = totalPrice, 
+            document.getElementById("outstanding-amount-mobile").innerHTML = totalPrice, isCodSet = !1, 
+            null != paymentMode && applyPromotion(null, "none", "none");
+        },
+        error: function(resp) {}
+    });
+}
+
+function createJuspayOrderForSavedCard() {
+    var staticHost = $("#staticHost").val();
+    $(".pay button, #make_saved_cc_payment_up").prop("disabled", !0), $(".pay button, #make_saved_cc_payment_up").css("opacity", "0.5");
+    var staticHost = $("#staticHost").val();
+    $("body").append("<div id='no-click' style='opacity:0.5; background:#000; z-index: 100000; width:100%; height:100%; position: fixed; top: 0; left:0;'></div>"), 
+    $("body").append('<div class="loaderDiv" style="position: fixed; left: 45%;top:45%;z-index: 10000"><img src="' + staticHost + '/_ui/responsive/common/images/red_loader.gif" class="spinner"></div>'), 
+    sendTealiumData();
+    var firstName = lastName = addressLine1 = addressLine2 = addressLine3 = country = state = city = pincode = null, cardSaved = sameAsShipping = !1, netBankName = bankNameSelected, guid = $("#guid").val();
+    $.ajax({
+        url: ACC.config.encodedContextPath + "/checkout/multi/payment-method/createJuspayOrder",
+        data: {
+            firstName: firstName,
+            lastName: lastName,
+            netBankName: netBankName,
+            addressLine1: addressLine1,
+            addressLine2: addressLine2,
+            addressLine3: addressLine3,
+            country: country,
+            state: state,
+            city: city,
+            pincode: pincode,
+            cardSaved: cardSaved,
+            sameAsShipping: sameAsShipping,
+            guid: guid
+        },
+        type: "GET",
+        cache: !1,
+        async: !1,
+        success: function(response) {
+            "redirect" == response ? $(location).attr("href", ACC.config.encodedContextPath + "/cart") : "redirect_to_payment" == response ? $(location).attr("href", ACC.config.encodedContextPath + "/checkout/multi/payment-method/pay?value=" + guid) : "redirect_with_coupon" == response ? (document.getElementById("juspayErrorMsg").innerHTML = "Sorry! The coupon cannot be used for this purchase. You can either change your payment method/bank or <a href='javascript:explicit_coupon_release_function();'><b><u>save your coupon</u></b></a> for your next purchase.", 
+            $("#juspayconnErrorDiv").css("display", "block"), $("body,html").animate({
+                scrollTop: 0
+            }), $(".pay button, #make_saved_cc_payment_up").prop("disabled", !1), $(".pay button, #make_saved_cc_payment_up").css("opacity", "1"), 
+            $(".pay .spinner").remove(), $("#no-click,.loaderDiv").remove()) : "" == response || null == response || "JUSPAY_CONN_ERROR" == response ? (paymentErrorTrack("juspay_unavailable"), 
+            document.getElementById("juspayErrorMsg").innerHTML = "Sorry! The system is down, please try again", 
+            $("#juspayconnErrorDiv").css("display", "block"), $(".pay button, #make_saved_cc_payment_up").prop("disabled", !1), 
+            $(".pay button, #make_saved_cc_payment_up").css("opacity", "1"), $(".pay .loaderDiv").remove(), 
+            $("#no-click,.loaderDiv").remove()) : null != response && response.indexOf("NONBusinessException") > -1 ? (document.getElementById("juspayErrorMsg").innerHTML = response.substring(20), 
+            $("#juspayconnErrorDiv").css("display", "block"), $(".pay button, #make_saved_cc_payment_up").prop("disabled", !1), 
+            $(".pay button, #make_saved_cc_payment_up").css("opacity", "1"), $(".pay .loaderDiv").remove(), 
+            $(".pay .spinner").remove(), $("#no-click,.loaderDiv").remove(), $("#no-click,.spinner").remove()) : "redirect_with_details" == response ? $(location).attr("href", ACC.config.encodedContextPath + "/checkout/multi/payment-method/cardPayment/" + guid) : (window.sessionStorage.removeItem("header"), 
+            "false" == $(".redirect").val() && Juspay.startSecondFactor(), setTimeout(function() {
+                var values = response.split("|");
+                $("#order_id_saved").val(values[0]);
+                var baseUrl = window.location.origin, website = ACC.config.encodedContextPath, thank_you_page = baseUrl + website + "/checkout/multi/payment-method/cardPayment", error_page = baseUrl + website + "/checkout/multi/payment-method/cardPayment";
+                Juspay.Setup({
+                    payment_form: "#card_form",
+                    success_handler: function(status, statusObj) {
+                        var p = "order_id=" + statusObj.orderId;
+                        p = p + "&status=" + statusObj.status, p = p + "&status_id=" + statusObj.statusId, 
+                        window.location.href = thank_you_page + "/" + values[1];
+                    },
+                    error_handler: function(error_code, error_message, bank_error_code, bank_error_message, gateway_id) {
+                        window.location.href = error_page + "/" + values[1];
+                    },
+                    second_factor_window_closed_handler: function() {
+                        window.location.href = error_page + "/" + values[1];
+                    }
+                }), $("#card_form").submit();
+            }, 1e3));
+        },
+        error: function(resp) {
+            "false" == $(".redirect").val() && Juspay.stopSecondFactor(), $(".pay button, #make_saved_cc_payment_up").prop("disabled", !1), 
+            $(".pay button, #make_saved_cc_payment_up").css("opacity", "1"), $(".pay .loaderDiv").remove(), 
+            $("#no-click,.loaderDiv").remove();
+        }
+    });
+}
+
+function createJuspayOrderForSavedDebitCard() {
+    var staticHost = $("#staticHost").val();
+    $(".pay button, #make_saved_dc_payment_up").prop("disabled", !0), $(".pay button, #make_saved_dc_payment_up").css("opacity", "0.5");
+    var staticHost = $("#staticHost").val();
+    $("body").append("<div id='no-click' style='opacity:0.5; background:#000; z-index: 100000; width:100%; height:100%; position: fixed; top: 0; left:0;'></div>"), 
+    $("body").append('<div class="loaderDiv" style="position: fixed; left: 45%;top:45%;z-index: 10000"><img src="' + staticHost + '/_ui/responsive/common/images/red_loader.gif" class="spinner"></div>'), 
+    sendTealiumData();
+    var firstName = lastName = addressLine1 = addressLine2 = addressLine3 = country = state = city = pincode = null, cardSaved = sameAsShipping = !1, netBankName = bankNameSelected, guid = $("#guid").val();
+    $.ajax({
+        url: ACC.config.encodedContextPath + "/checkout/multi/payment-method/createJuspayOrder",
+        data: {
+            firstName: firstName,
+            lastName: lastName,
+            netBankName: netBankName,
+            addressLine1: addressLine1,
+            addressLine2: addressLine2,
+            addressLine3: addressLine3,
+            country: country,
+            state: state,
+            city: city,
+            pincode: pincode,
+            cardSaved: cardSaved,
+            sameAsShipping: sameAsShipping,
+            guid: guid
+        },
+        type: "GET",
+        cache: !1,
+        async: !1,
+        success: function(response) {
+            "redirect" == response ? $(location).attr("href", ACC.config.encodedContextPath + "/cart") : "redirect_to_payment" == response ? $(location).attr("href", ACC.config.encodedContextPath + "/checkout/multi/payment-method/pay?value=" + guid) : "redirect_with_details" == response ? $(location).attr("href", ACC.config.encodedContextPath + "/checkout/multi/payment-method/cardPayment/" + guid) : "redirect_with_coupon" == response ? (document.getElementById("juspayErrorMsg").innerHTML = "Sorry! The coupon cannot be used for this purchase. You can either change your payment method/bank or <a href='javascript:explicit_coupon_release_function();'><b><u>save your coupon</u></b></a> for your next purchase.", 
+            $("#juspayconnErrorDiv").css("display", "block"), $("body,html").animate({
+                scrollTop: 0
+            }), $(".pay button, #make_saved_dc_payment_up").prop("disabled", !1), $(".pay button, #make_saved_dc_payment_up").css("opacity", "1"), 
+            $(".pay .loaderDiv").remove(), $("#no-click,.spinner").remove()) : "" == response || null == response || "JUSPAY_CONN_ERROR" == response ? (paymentErrorTrack("juspay_unavailable"), 
+            document.getElementById("juspayErrorMsg").innerHTML = "Sorry! The system is down, please try again", 
+            $("#juspayconnErrorDiv").css("display", "block"), $(".pay button, #make_saved_dc_payment_up").prop("disabled", !1), 
+            $(".pay button, #make_saved_dc_payment_up").css("opacity", "1"), $(".pay .loaderDiv").remove(), 
+            $("#no-click,.loaderDiv").remove()) : null != response && response.indexOf("NONBusinessException") > -1 ? (document.getElementById("juspayErrorMsg").innerHTML = response.substring(20), 
+            $("#juspayconnErrorDiv").css("display", "block"), $(".pay button, #make_saved_cc_payment_up").prop("disabled", !1), 
+            $(".pay button, #make_saved_cc_payment_up").css("opacity", "1"), $(".pay .loaderDiv").remove(), 
+            $(".pay .spinner").remove(), $("#no-click,.loaderDiv").remove(), $("#no-click,.spinner").remove()) : ("false" == $(".redirect").val() && Juspay.startSecondFactor(), 
+            setTimeout(function() {
+                var values = response.split("|");
+                $("#order_id_saved_dc").val(values[0]);
+                var baseUrl = window.location.origin, website = ACC.config.encodedContextPath, thank_you_page = baseUrl + website + "/checkout/multi/payment-method/cardPayment", error_page = baseUrl + website + "/checkout/multi/payment-method/cardPayment";
+                Juspay.Setup({
+                    payment_form: "#card_form_saved_debit",
+                    success_handler: function(status, statusObj) {
+                        var p = "order_id=" + statusObj.orderId;
+                        p = p + "&status=" + statusObj.status, p = p + "&status_id=" + statusObj.statusId, 
+                        window.location.href = thank_you_page + "/" + values[1];
+                    },
+                    error_handler: function(error_code, error_message, bank_error_code, bank_error_message, gateway_id) {
+                        window.location.href = error_page + "/" + values[1];
+                    },
+                    second_factor_window_closed_handler: function() {
+                        window.location.href = error_page + "/" + values[1];
+                    }
+                }), $("#card_form_saved_debit").submit();
+            }, 1e3));
+        },
+        error: function(resp) {
+            "false" == $(".redirect").val() && Juspay.stopSecondFactor(), $(".pay button, #make_saved_cc_payment_up").prop("disabled", !1), 
+            $(".pay button, #make_saved_cc_payment_up").css("opacity", "1"), $(".pay .loaderDiv").remove(), 
+            $("#no-click,.loaderDiv").remove();
+        }
+    });
+}
+
+function createJuspayOrderForNewCard(isDebit) {
+    var staticHost = $("#staticHost").val();
+    isNewCard = !0, $(".pay button, #make_cc_payment_up").prop("disabled", !0), $(".pay button, #make_cc_payment_up").css("opacity", "0.5");
+    var staticHost = $("#staticHost").val();
+    $("body").append("<div id='no-click' style='opacity:0.5; background:#000; z-index: 100000; width:100%; height:100%; position: fixed; top: 0; left:0;'></div>"), 
+    $("body").append('<div class="loaderDiv" style="position: fixed; left: 45%;top:45%;z-index: 10000"><img src="' + staticHost + '/_ui/responsive/common/images/red_loader.gif" class="spinner"></div>'), 
+    sendTealiumData();
+    var firstName = $("#firstName").val(), lastName = $("#lastName").val(), addressLine1 = encodeURIComponent($("#address1").val()), addressLine2 = encodeURIComponent($("#address2").val()), addressLine3 = encodeURIComponent($("#address3").val()), country = $("#country").val(), state = $("#state").val(), city = $("#city").val(), pincode = $("#pincode").val();
+    if (isDebit && $("#save-card-dc").is(":checked")) var cardSaved = !0; else if ($("#save-card").is(":checked")) var cardSaved = !0; else var cardSaved = !1;
+    if ($("#sameAsShipping").is(":checked")) var sameAsShipping = !0; else var sameAsShipping = !1;
+    var guid = $("#guid").val();
+    $.ajax({
+        url: ACC.config.encodedContextPath + "/checkout/multi/payment-method/createJuspayOrder",
+        data: {
+            firstName: firstName,
+            lastName: lastName,
+            addressLine1: addressLine1,
+            addressLine2: addressLine2,
+            addressLine3: addressLine3,
+            country: country,
+            state: state,
+            city: city,
+            pincode: pincode,
+            cardSaved: cardSaved,
+            sameAsShipping: sameAsShipping,
+            guid: guid
+        },
+        type: "GET",
+        cache: !1,
+        async: !1,
+        success: function(response) {
+            "redirect" == response ? $(location).attr("href", ACC.config.encodedContextPath + "/cart") : "redirect_to_payment" == response ? $(location).attr("href", ACC.config.encodedContextPath + "/checkout/multi/payment-method/pay?value=" + guid) : "redirect_with_details" == response ? $(location).attr("href", ACC.config.encodedContextPath + "/checkout/multi/payment-method/cardPayment/" + guid) : "redirect_with_coupon" == response ? (document.getElementById("juspayErrorMsg").innerHTML = "Sorry! The coupon cannot be used for this purchase. You can either change your payment method/bank or <a href='javascript:explicit_coupon_release_function();'><b><u>save your coupon</u></b></a> for your next purchase.", 
+            $("#juspayconnErrorDiv").css("display", "block"), $("body,html").animate({
+                scrollTop: 0
+            }), $(".pay button, #make_cc_payment_up").prop("disabled", !1), $(".pay button, #make_cc_payment_up").css("opacity", "1"), 
+            $(".pay .loaderDiv").remove(), $("#no-click,.spinner").remove()) : "" == response || null == response || "JUSPAY_CONN_ERROR" == response ? (paymentErrorTrack("juspay_unavailable"), 
+            document.getElementById("juspayErrorMsg").innerHTML = "Sorry! The system is down, please try again", 
+            $("#juspayconnErrorDiv").css("display", "block"), $(".pay button, #make_cc_payment_up").prop("disabled", !1), 
+            $(".pay button, #make_cc_payment_up").css("opacity", "1"), $(".pay .loaderDiv").remove(), 
+            $("#no-click,.loaderDiv").remove()) : null != response && response.indexOf("NONBusinessException") > -1 ? (document.getElementById("juspayErrorMsg").innerHTML = response.substring(20), 
+            $("#juspayconnErrorDiv").css("display", "block"), $(".pay button, #make_saved_cc_payment_up").prop("disabled", !1), 
+            $(".pay button, #make_saved_cc_payment_up").css("opacity", "1"), $(".pay .loaderDiv").remove(), 
+            $(".pay .spinner").remove(), $("#no-click,.loaderDiv").remove(), $("#no-click,.spinner").remove()) : (window.sessionStorage.removeItem("header"), 
+            "false" == $(".redirect").val() && Juspay.startSecondFactor(), setTimeout(function() {
+                var values = response.split("|");
+                void 0 !== isDebit && isDebit ? ($("#order_id_new_dc").val(values[0]), submitDebitCardForm(values[1])) : ($("#order_id_new").val(values[0]), 
+                submitCardForm(values[1]));
+            }, 1e3)), $("#no-click,.loaderDiv").remove();
+        },
+        error: function(resp) {
+            "false" == $(".redirect").val() && Juspay.stopSecondFactor(), $(".pay button, #make_cc_payment_up").prop("disabled", !1), 
+            $(".pay button, #make_cc_payment_up").css("opacity", "1"), $(".pay .loaderDiv").remove(), 
+            $("#no-click,.loaderDiv").remove(), paymentErrorTrack("juspay_unavailable");
+        }
+    });
+}
+
+function explicit_coupon_release_function() {
+    var couponCode = $("#couponFieldId").val(), guid = $("#guid").val();
+    $.ajax({
+        url: ACC.config.encodedContextPath + "/checkout/multi/coupon/release",
+        type: "POST",
+        cache: !1,
+        data: {
+            couponCode: couponCode,
+            guid: guid
+        },
+        success: function(response) {
+            if (document.getElementById("totalWithConvField").innerHTML = response.totalPrice.formattedValue, 
+            $("#codAmount").text(response.totalPrice.formattedValue), 1 == response.couponReleased && (couponApplied = !0), 
+            1 == couponApplied) {
+                $("#couponApplied, #priceCouponError, #emptyCouponError, #appliedCouponError, #invalidCouponError, #expiredCouponError, #issueCouponError, #freebieCouponError, #userInvalidCouponError, #firstPurchaseOfferError").css("display", "none"), 
+                document.getElementById("couponValue").innerHTML = response.couponDiscount.formattedValue, 
+                $("#couponPaymentRestrictionMessage").hide(), $("#couponFieldId").attr("readonly", !1);
+                var selection = $("#voucherDisplaySelection").val();
+                $("#couponFieldId").val(selection), $("#couponMessage").html("Coupon <b>" + couponCode + "</b> has been removed"), 
+                $("#couponMessage").show(), $("#couponMessage").delay(2e3).fadeOut("slow"), setTimeout(function() {
+                    $("#couponMessage").html("");
+                }, 2500);
+            }
+            $("#couponSubmitButton").prop("disabled", !1), $("#couponSubmitButton").css("opacity", "1");
+        },
+        error: function(resp) {}
+    });
+}
+
+function createJuspayOrderForNewCardEmi() {
+    var staticHost = $("#staticHost").val();
+    isNewCard = !0, $(".pay button, #make_emi_payment_up").prop("disabled", !0), $(".pay button, #make_emi_payment_up").css("opacity", "0.5");
+    var staticHost = $("#staticHost").val();
+    $("body").append("<div id='no-click' style='opacity:0.5; background:#000; z-index: 100000; width:100%; height:100%; position: fixed; top: 0; left:0;'></div>"), 
+    $("body").append('<div class="loaderDiv" style="position: fixed; left: 45%;top:45%;z-index: 10000"><img src="' + staticHost + '/_ui/responsive/common/images/red_loader.gif" class="spinner"></div>'), 
+    sendTealiumData();
+    var firstName = $("#firstNameEmi").val(), lastName = $("#lastNameEmi").val(), addressLine1 = encodeURIComponent($("#address1Emi").val()), addressLine2 = encodeURIComponent($("#address2Emi").val()), addressLine3 = encodeURIComponent($("#address3Emi").val()), country = $("#countryEmi").val(), state = $("#stateEmi").val(), city = $("#cityEmi").val(), pincode = $("#pincodeEmi").val();
+    if ($("#save-card-emi").is(":checked")) var cardSaved = !0;
+    if ($("#sameAsShippingEmi").is(":checked")) var sameAsShipping = !0; else var sameAsShipping = !1;
+    var guid = $("#guid").val();
+    $.ajax({
+        url: ACC.config.encodedContextPath + "/checkout/multi/payment-method/createJuspayOrder",
+        data: {
+            firstName: firstName,
+            lastName: lastName,
+            addressLine1: addressLine1,
+            addressLine2: addressLine2,
+            addressLine3: addressLine3,
+            country: country,
+            state: state,
+            city: city,
+            pincode: pincode,
+            cardSaved: cardSaved,
+            sameAsShipping: sameAsShipping,
+            guid: guid
+        },
+        type: "GET",
+        cache: !1,
+        async: !1,
+        success: function(response) {
+            "redirect" == response ? $(location).attr("href", ACC.config.encodedContextPath + "/cart") : "redirect_to_payment" == response ? $(location).attr("href", ACC.config.encodedContextPath + "/checkout/multi/payment-method/pay?value=" + guid) : "redirect_with_details" == response ? $(location).attr("href", ACC.config.encodedContextPath + "/checkout/multi/payment-method/cardPayment/" + guid) : "redirect_with_coupon" == response ? (document.getElementById("juspayErrorMsg").innerHTML = "Sorry! The coupon cannot be used for this purchase. You can either change your payment method/bank or <a href='javascript:explicit_coupon_release_function();'><b><u>save your coupon</u></b></a> for your next purchase.", 
+            $("#juspayconnErrorDiv").css("display", "block"), $("body,html").animate({
+                scrollTop: 0
+            }), $(".pay button, #make_emi_payment_up").prop("disabled", !1), $(".pay button, #make_emi_payment_up").css("opacity", "1"), 
+            $(".pay .loaderDiv").remove(), $("#no-click,.spinner").remove()) : "" == response || null == response || "JUSPAY_CONN_ERROR" == response ? (paymentErrorTrack("juspay_unavailable"), 
+            document.getElementById("juspayErrorMsg").innerHTML = "Sorry! The system is down, please try again", 
+            $("#juspayconnErrorDiv").css("display", "block"), $(".pay button, #make_emi_payment_up").prop("disabled", !1), 
+            $(".pay button, #make_emi_payment_up").css("opacity", "1"), $(".pay .loaderDiv").remove(), 
+            $("#no-click,.loaderDiv").remove()) : null != response && response.indexOf("NONBusinessException") > -1 ? (document.getElementById("juspayErrorMsg").innerHTML = response.substring(20), 
+            $("#juspayconnErrorDiv").css("display", "block"), $(".pay button, #make_saved_cc_payment_up").prop("disabled", !1), 
+            $(".pay button, #make_saved_cc_payment_up").css("opacity", "1"), $(".pay .loaderDiv").remove(), 
+            $(".pay .spinner").remove(), $("#no-click,.loaderDiv").remove(), $("#no-click,.spinner").remove()) : ("false" == $(".redirect").val() && Juspay.startSecondFactor(), 
+            setTimeout(function() {
+                var values = response.split("|");
+                $("#order_id_new_emi").val(values[0]), submitEmiCardForm(values[1]);
+            }, 1e3));
+        },
+        error: function(resp) {
+            "false" == $(".redirect").val() && Juspay.stopSecondFactor(), $(".pay button, #make_cc_payment_up").prop("disabled", !1), 
+            $(".pay button, #make_cc_payment_up").css("opacity", "1"), $(".pay .loaderDiv").remove(), 
+            $("#no-click,.loaderDiv").remove(), paymentErrorTrack("juspay_unavailable");
+        }
+    });
+}
+
+function getCardBinstatus() {
+    return validateCardNo("formSubmit");
+}
+
+function getCardBinstatusDc() {
+    return validateDebitCardNo("formSubmit");
+}
+
+function getCardBinstatusEmiCc() {
+    return validateEmiCardNo("formSubmit");
+}
+
+function dopayment(bin_current_status) {
+    if ("Credit Card" == $("#paymentMode").val()) {
+        var name = validateName();
+        if (1 == bin_current_status) var cardNo = !0; else {
+            0 == document.getElementById("cardNoError").innerHTML.length && (document.getElementById("cardNoError").innerHTML = "Please enter a valid card number ");
+            var cardNo = !1;
+        }
+        var firstName = validateNameOnAddress($("#firstName").val(), document.getElementById("firstNameError"), "firstName"), lastName = validateNameOnAddress($("#lastName").val(), document.getElementById("lastNameError"), "lastName"), addressVal = "";
+        $("#address1").length > 0 ? addressVal = $("#address1").val() : $("#line1").length > 0 && (addressVal = $("#line1").val());
+        var addressLine1 = validateAddressLine1(addressVal, document.getElementById("address1Error")), pin = ($("#address2").val(), 
+        $("#address3").val(), validatePin()), city = validateCity(), state = validateState(), cardType = $("#cardType").val();
+        if ("MAESTRO" == cardType) {
+            if (!(name && cardNo && pin && firstName && lastName && addressLine1 && city && state)) return openShippingFrmOpen(), 
+            !1;
+            createJuspayOrderForNewCard(!1);
+        } else {
+            var cvv = validateCVV(), expMM = validateExpMM(), expYY = validateExpYY();
+            if (!(cvv && expYY && name && expMM && cardNo && pin && firstName && lastName && addressLine1 && city && state)) return openShippingFrmOpen(), 
+            !1;
+            createJuspayOrderForNewCard(!1);
+        }
+    } else if ("Debit Card" == $("#paymentMode").val()) {
+        var name = validateNameDc();
+        if (1 == bin_current_status) var cardNo = !0; else {
+            0 == document.getElementById("cardNoErrorDc").innerHTML.length && (document.getElementById("cardNoErrorDc").innerHTML = "Please enter a valid card number ");
+            var cardNo = !1;
+        }
+        var cardType = $("#cardTypeDc").val();
+        if ("MAESTRO" == cardType) {
+            if (!name || !cardNo) return !1;
+            createJuspayOrderForNewCard(!0);
+        } else {
+            var cvv = validateCVVDc(), expMM = validateExpMMDc(), expYY = validateExpYYDc();
+            if (!(cvv && expYY && name && expMM && cardNo)) return !1;
+            createJuspayOrderForNewCard(!0);
+        }
+    } else if ("EMI" == $("#paymentMode").val()) {
+        var name = validateNameEmi();
+        if (1 == bin_current_status) var cardNo = !0; else {
+            0 == document.getElementById("cardNoErrorEmi").innerHTML.length && (document.getElementById("cardNoErrorEmi").innerHTML = "Please enter a valid card number ");
+            var cardNo = !1;
+        }
+        var firstName = validateNameOnAddress($("#firstNameEmi").val(), document.getElementById("firstNameErrorEmi"), "firstNameEmi"), lastName = validateNameOnAddress($("#lastNameEmi").val(), document.getElementById("lastNameErrorEmi"), "lastNameEmi"), addressLine1 = validateAddressLine1($("#address1Emi").val(), document.getElementById("address1ErrorEmi")), pin = ($("#address2Emi").val(), 
+        $("#address3Emi").val(), validatePinEmi()), city = validateCityEmi(), state = validateStateEmi(), cardType = $("#cardTypeEmi").val();
+        if ("MAESTRO" == cardType) {
+            if (!(name && cardNo && pin && firstName && lastName && addressLine1 && city && state)) return openShippingFrmOpenEMI(), 
+            !1;
+            createJuspayOrderForNewCardEmi();
+        } else {
+            var cvv = validateCVVEmi(), expMM = validateExpMMEmi(), expYY = validateExpYYEmi();
+            if (!(cvv && expYY && name && expMM && cardNo && pin && firstName && lastName && addressLine1 && city && state)) return openShippingFrmOpenEMI(), 
+            !1;
+            createJuspayOrderForNewCardEmi();
+        }
+    }
+}
+
+function openShippingFrmOpen() {
+    $("#firstName, #lastName, #address1, #address2, #address3, #state, #city, #pincode").attr("readonly", !1), 
+    $("#country").attr("disabled", !1), $("input#sameAsShipping:checked + label + fieldset").css("display", "block"), 
+    $("#sameAsShipping").attr("checked", !1);
+}
+
+function openShippingFrmOpenEMI() {
+    $("#firstNameEmi, #lastNameEmi, #address1Emi, #address2Emi, #address3Emi, #stateEmi, #cityEmi, #pincodeEmi").attr("readonly", !1), 
+    $("#countryEmi").attr("disabled", !1), $("input#sameAsShippingEmi:checked + label + fieldset").css("display", "block"), 
+    $("#sameAsShippingEmi").attr("checked", !1);
+}
+
+function submitCardForm(value) {
+    var baseUrl = window.location.origin, website = ACC.config.encodedContextPath, thank_you_page = baseUrl + website + "/checkout/multi/payment-method/cardPayment", error_page = baseUrl + website + "/checkout/multi/payment-method/cardPayment";
+    return Juspay.Setup({
+        payment_form: "#payment_form",
+        success_handler: function(status, statusObj) {
+            var p = "order_id=" + statusObj.orderId;
+            p = p + "&status=" + statusObj.status, p = p + "&status_id=" + statusObj.statusId, 
+            window.location.href = thank_you_page + "/" + value;
+        },
+        error_handler: function(error_code, error_message, bank_error_code, bank_error_message, gateway_id) {
+            window.location.href = error_page + "/" + value;
+        },
+        second_factor_window_closed_handler: function() {
+            window.location.href = error_page + "/" + value;
+        }
+    }), $("#payment_form").submit(), !1;
+}
+
+function submitDebitCardForm(value) {
+    var baseUrl = window.location.origin, website = ACC.config.encodedContextPath, thank_you_page = baseUrl + website + "/checkout/multi/payment-method/cardPayment", error_page = baseUrl + website + "/checkout/multi/payment-method/cardPayment";
+    return Juspay.Setup({
+        payment_form: "#debit_payment_form",
+        success_handler: function(status, statusObj) {
+            var p = "order_id=" + statusObj.orderId;
+            p = p + "&status=" + statusObj.status, p = p + "&status_id=" + statusObj.statusId, 
+            window.location.href = thank_you_page + "/" + value;
+        },
+        error_handler: function(error_code, error_message, bank_error_code, bank_error_message, gateway_id) {
+            window.location.href = error_page + "/" + value;
+        },
+        second_factor_window_closed_handler: function() {
+            window.location.href = error_page + "/" + value;
+        }
+    }), $("#debit_payment_form").submit(), !1;
+}
+
+function submitEmiCardForm(value) {
+    var baseUrl = window.location.origin, website = ACC.config.encodedContextPath, thank_you_page = baseUrl + website + "/checkout/multi/payment-method/cardPayment", error_page = baseUrl + website + "/checkout/multi/payment-method/cardPayment";
+    return Juspay.Setup({
+        payment_form: "#emi_payment_form",
+        success_handler: function(status, statusObj) {
+            var p = "order_id=" + statusObj.orderId;
+            p = p + "&status=" + statusObj.status, p = p + "&status_id=" + statusObj.statusId, 
+            window.location.href = thank_you_page + "/" + value;
+        },
+        error_handler: function(error_code, error_message, bank_error_code, bank_error_message, gateway_id) {
+            window.location.href = error_page + "/" + value;
+        },
+        second_factor_window_closed_handler: function() {
+            window.location.href = error_page + "/" + value;
+        }
+    }), $("#emi_payment_form").submit(), !1;
+}
+
+function newCardForm() {
+    if ($(".newCard, #savedCard, .saved-card-button").css("display", "none"), $(".savedCard").css("display", "table-cell"), 
+    $(".newCardPayment, #newCard").css("display", "block"), $(".make_payment_top_savedCard").css("display", "none"), 
+    $(".make_payment_top_newCard").css("display", "block"), document.getElementById("card_form").reset(), 
+    document.getElementById("payment_form").reset(), $(".form-group span").text(""), 
+    $("input[name=debitCards]:radio.card_token,input[name=creditCards]:radio.card_token,input[name=emiCards]:radio.card_token").removeClass("card_token").addClass("card_token_hide"), 
+    $(".card_token_hide").parent().parent().parent().find(".cvv").find(".security_code").removeClass("security_code").addClass("security_code_hide"), 
+    $(".card_token_hide").parent().find(".card_bank").removeClass("card_bank").addClass("card_bank_hide"), 
+    $(".card_token_hide").parent().find(".card_brand").removeClass("card_brand").addClass("card_brand_hide"), 
+    $(".card_token_hide").parent().find(".card_is_domestic").removeClass("card_is_domestic").addClass("card_is_domestic_hide"), 
+    $(".card_token_hide").parent().find(".card_ebsErrorSavedCard").removeClass("card_ebsErrorSavedCard").addClass("card_ebsErrorSavedCard_hide"), 
+    $(".card_token_hide").parent().parent().parent().find(".cvv").find(".card_cvvErrorSavedCard").removeClass("card_cvvErrorSavedCard").addClass("card_cvvErrorSavedCard_hide"), 
+    "Credit Card" == $("#paymentMode").val()) populateBillingAddress(), $(".accepted-cards .maestro").parent().css("display", "none"), 
+    $(".accepted-cards .visa").parent().css("display", "inline-block"), $(".accepted-cards .master").parent().css("display", "inline-block"), 
+    $(".accepted-cards .amex").parent().css("display", "inline-block"), $("input[name=creditCards]:radio").first().removeClass("card_token_hide").addClass("card_token"), 
+    $(".card_token_hide").parent().parent().parent().find(".cvv").find(".security_code").removeClass("security_code").addClass("security_code_hide"), 
+    $(".card_token_hide").parent().find(".card_bank").removeClass("card_bank").addClass("card_bank_hide"), 
+    $(".card_token_hide").parent().find(".card_brand").removeClass("card_brand").addClass("card_brand_hide"), 
+    $(".card_token_hide").parent().find(".card_is_domestic").removeClass("card_is_domestic").addClass("card_is_domestic_hide"), 
+    $(".card_token_hide").parent().find(".card_ebsErrorSavedCard").removeClass("card_ebsErrorSavedCard").addClass("card_ebsErrorSavedCard_hide"), 
+    $(".card_token_hide").parent().parent().parent().find(".cvv").find(".card_cvvErrorSavedCard").removeClass("card_cvvErrorSavedCard").addClass("card_cvvErrorSavedCard_hide"), 
+    applyPromotion(null, "none", "none"); else if ("EMI" == $("#paymentMode").val()) {
+        var selectedBank = $("#bankNameForEMI").val();
+        $(".new-card").find("#is_emi").val("true"), $(".new-card").find("#emi_bank").val(selectedBank), 
+        $("#billingAddress, .newCardPayment, #make_cc_payment").css("display", "block"), 
+        populateBillingAddress(), $(".accepted-cards .maestro").parent().css("display", "none"), 
+        $(".accepted-cards .visa").parent().css("display", "inline-block"), $(".accepted-cards .master").parent().css("display", "inline-block"), 
+        $(".accepted-cards .amex").parent().css("display", "inline-block"), $("input[name=emiCards]:radio").first().removeClass("card_token_hide").addClass("card_token"), 
+        $(".card_token_hide").parent().parent().parent().find(".cvv").find(".security_code").removeClass("security_code").addClass("security_code_hide"), 
+        $(".card_token_hide").parent().find(".card_bank").removeClass("card_bank").addClass("card_bank_hide"), 
+        $(".card_token_hide").parent().find(".card_brand").removeClass("card_brand").addClass("card_brand_hide"), 
+        $(".card_token_hide").parent().find(".card_is_domestic").removeClass("card_is_domestic").addClass("card_is_domestic_hide"), 
+        $(".card_token_hide").parent().find(".card_ebsErrorSavedCard").removeClass("card_ebsErrorSavedCard").addClass("card_ebsErrorSavedCard_hide"), 
+        $(".card_token_hide").parent().parent().parent().find(".cvv").find(".card_cvvErrorSavedCard").removeClass("card_cvvErrorSavedCard").addClass("card_cvvErrorSavedCard_hide");
+    } else "Debit Card" == $("#paymentMode").val() && ($(".accepted-cards .maestro").parent().css("display", "inline-block"), 
+    $(".accepted-cards .visa").parent().css("display", "inline-block"), $(".accepted-cards .master").parent().css("display", "inline-block"), 
+    $(".accepted-cards .amex").parent().css("display", "none"), $("input[name=debitCards]:radio").first().removeClass("card_token_hide").addClass("card_token"), 
+    $(".card_token_hide").parent().parent().parent().find(".cvv").find(".security_code").removeClass("security_code").addClass("security_code_hide"), 
+    $(".card_token_hide").parent().find(".card_bank").removeClass("card_bank").addClass("card_bank_hide"), 
+    $(".card_token_hide").parent().find(".card_brand").removeClass("card_brand").addClass("card_brand_hide"), 
+    $(".card_token_hide").parent().find(".card_is_domestic").removeClass("card_is_domestic").addClass("card_is_domestic_hide"), 
+    $(".card_token_hide").parent().find(".card_ebsErrorSavedCard").removeClass("card_ebsErrorSavedCard").addClass("card_ebsErrorSavedCard_hide"), 
+    $(".card_token_hide").parent().parent().parent().find(".cvv").find(".card_cvvErrorSavedCard").removeClass("card_cvvErrorSavedCard").addClass("card_cvvErrorSavedCard_hide"), 
+    applyPromotion(null, "none", "none"));
+    $(".security_code_hide").prop("disabled", !0), $(".security_code").prop("disabled", !1);
+}
+
+function taCount(taObj, Cnt) {
+    return objCnt = createObject(Cnt), objVal = taObj.value, objVal.length > maxL && (objVal = objVal.substring(0, maxL)), 
+    objCnt && ("Netscape" == bName ? objCnt.textContent = maxL - objVal.length : objCnt.innerText = maxL - objVal.length), 
+    !0;
+}
+
+function createObject(objId) {
+    return document.getElementById ? document.getElementById(objId) : document.layers ? eval("document." + objId) : document.all ? eval("document.all." + objId) : eval("document." + objId);
+}
+
+function populateBillingAddress() {
+    $("#firstNameError, #lastNameError, #address1Error, #address2Error, #address3Error, #cityError, #stateError, #pinError").text("");
+    var guid = $("#guid").val(), dataString = "guid=" + guid;
+    $.ajax({
+        contentType: "application/json; charset=utf-8",
+        url: ACC.config.encodedContextPath + "/checkout/multi/payment-method/setShippingAddress",
+        data: dataString,
+        dataType: "json",
+        type: "GET",
+        cache: !1,
+        success: function(response) {
+            if ("" != response) {
+                var values = response.split("|");
+                $("#firstName").val(values[0]), $("#lastName").val(values[1]), $("#address1").val(values[2]), 
+                $("#address2").val(values[3]), $("#address3").val(values[4]), $("#country").val(values[5]), 
+                $("#state").val(values[6]), $("#city").val(values[7]), $("#pincode").val(values[8]), 
+                $("#firstName, #lastName, #address1, #address2, #address3, #state, #city, #pincode").attr("readonly", !0), 
+                $("#country").attr("disabled", !0);
+                $("#isLuxury").val() && $("#line1").val(values[2] + values[3] + values[4]);
+            } else $("#firstName, #lastName, #address1, #address2, #address3, #state, #city, #pincode").attr("readonly", !1), 
+            $("#country").attr("disabled", !1), $("#country").val("India");
+        },
+        error: function(resp) {}
+    });
+}
+
+function populateBillingAddressEmi() {
+    var guid = $("#guid").val(), dataString = "guid=" + guid;
+    $("#firstNameErrorEmi, #lastNameErrorEmi, #address1ErrorEmi, #address2ErrorEmi, #address3ErrorEmi, #cityErrorEmi, #stateErrorEmi, #pinErrorEmi").text(""), 
+    $.ajax({
+        contentType: "application/json; charset=utf-8",
+        url: ACC.config.encodedContextPath + "/checkout/multi/payment-method/setShippingAddress",
+        data: dataString,
+        dataType: "json",
+        type: "GET",
+        cache: !1,
+        success: function(response) {
+            if ("" != response) {
+                var values = response.split("|");
+                $("#firstNameEmi").val(values[0]), $("#lastNameEmi").val(values[1]), $("#address1Emi").val(values[2]), 
+                $("#address2Emi").val(values[3]), $("#address3Emi").val(values[4]), $("#countryEmi").val(values[5]), 
+                $("#stateEmi").val(values[6]), $("#cityEmi").val(values[7]), $("#pincodeEmi").val(values[8]), 
+                $("#firstNameEmi, #lastNameEmi, #address1Emi, #address2Emi, #address3Emi, #stateEmi, #cityEmi, #pincodeEmi").attr("readonly", !0), 
+                $("#countryEmi").attr("disabled", !0);
+                $("#isLuxury").val() && $("#line1").val(values[2] + values[3] + values[4]);
+            } else $("#firstNameEmi, #lastNameEmi, #address1Emi, #address2Emi, #address3Emi, #stateEmi, #cityEmi, #pincodeEmi").attr("readonly", !0), 
+            $("#countryEmi").attr("disabled", !1), $("#countryEmi").val("India");
+        },
+        error: function(resp) {}
+    });
+}
+
+function savedCardForm() {
+    if ($(".savedCard, .newCardPayment, #newCard").css("display", "none"), $(".newCard").css("display", "table-cell"), 
+    $("#savedCard, .saved-card-button").css("display", "block"), $(".make_payment_top_savedCard").css("display", "block"), 
+    $(".make_payment_top_newCard").css("display", "none"), document.getElementById("payment_form").reset(), 
+    document.getElementById("card_form").reset(), $(".form-group span").text(""), $("input[name=debitCards]:radio.card_token,input[name=creditCards]:radio.card_token,input[name=emiCards]:radio.card_token").removeClass("card_token").addClass("card_token_hide"), 
+    $(".card_token_hide").parent().parent().parent().find(".cvv").find(".security_code").removeClass("security_code").addClass("security_code_hide"), 
+    $(".card_token_hide").parent().find(".card_bank").removeClass("card_bank").addClass("card_bank_hide"), 
+    $(".card_token_hide").parent().find(".card_brand").removeClass("card_brand").addClass("card_brand_hide"), 
+    $(".card_token_hide").parent().find(".card_is_domestic").removeClass("card_is_domestic").addClass("card_is_domestic_hide"), 
+    $(".card_token_hide").parent().find(".card_ebsErrorSavedCard").removeClass("card_ebsErrorSavedCard").addClass("card_ebsErrorSavedCard_hide"), 
+    $(".card_token_hide").parent().parent().parent().find(".cvv").find(".card_cvvErrorSavedCard").removeClass("card_cvvErrorSavedCard").addClass("card_cvvErrorSavedCard_hide"), 
+    "Credit Card" == $("#paymentMode").val()) {
+        $("input[name=debitCards]:radio").first().prop("checked", !1), $("input[name=emiCards]:radio").first().prop("checked", !1), 
+        $("input[name=creditCards]:radio").first().prop("checked", !0), $("input[name=creditCards]:radio").first().removeClass("card_token_hide").addClass("card_token"), 
+        $(".card_token").parent().parent().parent().find(".cvv").find(".security_code_hide").removeClass("security_code_hide").addClass("security_code"), 
+        $(".card_token").parent().find(".card_bank_hide").removeClass("card_bank_hide").addClass("card_bank"), 
+        $(".card_token").parent().find(".card_brand_hide").removeClass("card_brand_hide").addClass("card_brand"), 
+        $(".card_token").parent().find(".card_is_domestic_hide").removeClass("card_is_domestic_hide").addClass("card_is_domestic"), 
+        $(".card_token").parent().find(".card_ebsErrorSavedCard_hide").removeClass("card_ebsErrorSavedCard_hide").addClass("card_ebsErrorSavedCard"), 
+        $(".card_token").parent().parent().parent().find(".cvv").find(".card_cvvErrorSavedCard_hide").removeClass("card_cvvErrorSavedCard_hide").addClass("card_cvvErrorSavedCard");
+        var bankName = $(".card_bank").val();
+        setBankForSavedCard(bankName);
+    } else if ("Debit Card" == $("#paymentMode").val()) {
+        $("input[name=debitCards]:radio").first().prop("checked", !0), $("input[name=creditCards]:radio").first().prop("checked", !1), 
+        $("input[name=emiCards]:radio").first().prop("checked", !1), $("input[name=debitCards]:radio").first().removeClass("card_token_hide").addClass("card_token"), 
+        $(".card_token").parent().parent().parent().find(".cvv").find(".security_code_hide").removeClass("security_code_hide").addClass("security_code"), 
+        $(".card_token").parent().find(".card_bank_hide").removeClass("card_bank_hide").addClass("card_bank"), 
+        $(".card_token").parent().find(".card_brand_hide").removeClass("card_brand_hide").addClass("card_brand"), 
+        $(".card_token").parent().find(".card_is_domestic_hide").removeClass("card_is_domestic_hide").addClass("card_is_domestic"), 
+        $(".card_token").parent().find(".card_ebsErrorSavedCard_hide").removeClass("card_ebsErrorSavedCard_hide").addClass("card_ebsErrorSavedCard"), 
+        $(".card_token").parent().parent().parent().find(".cvv").find(".card_cvvErrorSavedCard_hide").removeClass("card_cvvErrorSavedCard_hide").addClass("card_cvvErrorSavedCard"), 
+        "MAESTRO" == $(".card_brand").val() ? $("#maestroMessage").css("display", "block") : $("#maestroMessage").css("display", "none");
+        var bankName = $(".card_bank").val();
+        setBankForSavedCard(bankName);
+    } else "EMI" == $("#paymentMode").val() && ($("input[name=emiCards]:radio").first().prop("checked", !0), 
+    $("input[name=debitCards]:radio").first().prop("checked", !1), $("input[name=creditCards]:radio").first().prop("checked", !1), 
+    $("input[name=emiCards]:radio").first().removeClass("card_token_hide").addClass("card_token"), 
+    $(".card_token").parent().parent().parent().find(".cvv").find(".security_code_hide").removeClass("security_code_hide").addClass("security_code"), 
+    $(".card_token").parent().find(".card_bank_hide").removeClass("card_bank_hide").addClass("card_bank"), 
+    $(".card_token").parent().find(".card_brand_hide").removeClass("card_brand_hide").addClass("card_brand"), 
+    $(".card_token").parent().find(".card_is_domestic_hide").removeClass("card_is_domestic_hide").addClass("card_is_domestic"), 
+    $(".card_token").parent().find(".card_ebsErrorSavedCard_hide").removeClass("card_ebsErrorSavedCard_hide").addClass("card_ebsErrorSavedCard"), 
+    $(".card_token").parent().parent().parent().find(".cvv").find(".card_cvvErrorSavedCard_hide").removeClass("card_cvvErrorSavedCard_hide").addClass("card_cvvErrorSavedCard"));
+    $(".security_code_hide").prop("disabled", !0), $(".security_code").prop("disabled", !1);
+}
+
+function validateExpMM() {
+    var cardType = $("#cardType").val(), year = document.getElementsByName("expyy"), month = document.getElementsByName("expmm"), errorHandle = document.getElementById("expYYError");
+    if ("MAESTRO" != cardType) {
+        var yy = year[0].value, mm = month[0].value, date = new Date(), currentYear = date.getFullYear(), currentMonth = date.getMonth();
+        return currentMonth += 1, "month" == mm ? (errorHandle.innerHTML = "   Please select a date. ", 
+        !1) : yy == currentYear && mm < currentMonth ? (errorHandle.innerHTML = "   Please select a valid date. ", 
+        !1) : (errorHandle.innerHTML = "", !0);
+    }
+    return errorHandle.innerHTML = "", !0;
+}
+
+function validateExpMMDc() {
+    var cardType = $("#cardTypeDc").val(), year = document.getElementsByName("expyy"), month = document.getElementsByName("expmm"), errorHandle = document.getElementById("expYYErrorDc");
+    if ("MAESTRO" != cardType) {
+        var yy = year[1].value, mm = month[1].value, date = new Date(), currentYear = date.getFullYear(), currentMonth = date.getMonth();
+        return currentMonth += 1, "month" == mm ? (errorHandle.innerHTML = "   Please select a date. ", 
+        !1) : yy == currentYear && mm < currentMonth ? (errorHandle.innerHTML = "   Please select a valid date. ", 
+        !1) : (errorHandle.innerHTML = "", !0);
+    }
+    return errorHandle.innerHTML = "", !0;
+}
+
+function validateExpMMEmi() {
+    var cardType = $("#cardTypeEmi").val(), year = document.getElementsByName("expyy"), month = document.getElementsByName("expmm"), errorHandle = document.getElementById("expYYErrorEmi");
+    if ("MAESTRO" != cardType) {
+        var yy = year[2].value, mm = month[2].value, date = new Date(), currentYear = date.getFullYear(), currentMonth = date.getMonth();
+        return currentMonth += 1, "month" == mm ? (errorHandle.innerHTML = "   Please select a date. ", 
+        !1) : yy == currentYear && mm < currentMonth ? (errorHandle.innerHTML = "   Please select a valid date. ", 
+        !1) : (errorHandle.innerHTML = "", !0);
+    }
+    return errorHandle.innerHTML = "", !0;
+}
+
+function validateExpYY() {
+    var cardType = $("#cardType").val(), year = document.getElementsByName("expyy"), month = document.getElementsByName("expmm"), errorHandle = document.getElementById("expYYError");
+    if ("MAESTRO" != cardType) {
+        var yy = year[0].value, mm = month[0].value, date = new Date(), currentYear = date.getFullYear(), currentMonth = date.getMonth();
+        return currentMonth += 1, "year" == yy || "month" == mm ? (errorHandle.innerHTML = "   Please select a date. ", 
+        !1) : yy < currentYear ? (errorHandle.innerHTML = "   Please select a valid date. ", 
+        !1) : yy == currentYear && mm < currentMonth ? (errorHandle.innerHTML = "   Please select a valid date. ", 
+        !1) : (errorHandle.innerHTML = "", !0);
+    }
+    return errorHandle.innerHTML = "", !0;
+}
+
+function validateExpYYDc() {
+    var cardType = $("#cardTypeDc").val(), year = document.getElementsByName("expyy"), month = document.getElementsByName("expmm"), errorHandle = document.getElementById("expYYErrorDc");
+    if ("MAESTRO" != cardType) {
+        var yy = year[1].value, mm = month[1].value, date = new Date(), currentYear = date.getFullYear(), currentMonth = date.getMonth();
+        return currentMonth += 1, "year" == yy || "month" == mm ? (errorHandle.innerHTML = "   Please select a date. ", 
+        !1) : yy < currentYear ? (errorHandle.innerHTML = "   Please select a valid date. ", 
+        !1) : yy == currentYear && mm < currentMonth ? (errorHandle.innerHTML = "   Please select a valid date. ", 
+        !1) : (errorHandle.innerHTML = "", !0);
+    }
+    return errorHandle.innerHTML = "", !0;
+}
+
+function validateExpYYEmi() {
+    var cardType = $("#cardTypeEmi").val(), year = document.getElementsByName("expyy"), month = document.getElementsByName("expmm"), errorHandle = document.getElementById("expYYErrorDc");
+    if ("MAESTRO" != cardType) {
+        var yy = year[2].value, mm = month[2].value, date = new Date(), currentYear = date.getFullYear(), currentMonth = date.getMonth();
+        return currentMonth += 1, "year" == yy || "month" == mm ? (errorHandle.innerHTML = "   Please select a date. ", 
+        !1) : yy < currentYear ? (errorHandle.innerHTML = "   Please select a valid date. ", 
+        !1) : yy == currentYear && mm < currentMonth ? (errorHandle.innerHTML = "   Please select a valid date. ", 
+        !1) : (errorHandle.innerHTML = "", !0);
+    }
+    return errorHandle.innerHTML = "", !0;
+}
+
+function validateName() {
+    var errorHandle = document.getElementById("memberNameError"), memberName = document.getElementsByName("memberName"), name = memberName[0].value;
+    if ("" == name) return errorHandle.innerHTML = "  Please enter name. ", !1;
+    for (var count = 0, index = 0; index < name.length; index++) " " == name.charAt(index) && count++;
+    if (count == name.length) return errorHandle.innerHTML = "  Please enter a valid name. ", 
+    !1;
+    if (name.length < 3) return errorHandle.innerHTML = "   Please enter a valid name. ", 
+    !1;
+    for (var index = 0; index < name.length; index++) if ((name.toUpperCase().charAt(index) < "A" || name.toUpperCase().charAt(index) > "Z") && " " != name.charAt(index)) return errorHandle.innerHTML = "   Please enter a valid name. ", 
+    !1;
+    return errorHandle.innerHTML = "", !0;
+}
+
+function validateNameDc() {
+    var errorHandle = document.getElementById("memberNameErrorDc"), memberName = document.getElementsByName("memberName"), name = memberName[1].value;
+    if ("" == name) return errorHandle.innerHTML = "  Please enter name. ", !1;
+    for (var count = 0, index = 0; index < name.length; index++) " " == name.charAt(index) && count++;
+    if (count == name.length) return errorHandle.innerHTML = "  Please enter a valid name. ", 
+    !1;
+    if (name.length < 3) return errorHandle.innerHTML = "   Please enter a valid name. ", 
+    !1;
+    for (var index = 0; index < name.length; index++) if ((name.toUpperCase().charAt(index) < "A" || name.toUpperCase().charAt(index) > "Z") && " " != name.charAt(index)) return errorHandle.innerHTML = "   Please enter a valid name. ", 
+    !1;
+    return errorHandle.innerHTML = "", !0;
+}
+
+function validateNameEmi() {
+    var errorHandle = document.getElementById("memberNameErrorEmi"), memberName = document.getElementsByName("memberName"), name = memberName[2].value;
+    if ("" == name) return errorHandle.innerHTML = "  Please enter name. ", !1;
+    for (var count = 0, index = 0; index < name.length; index++) " " == name.charAt(index) && count++;
+    if (count == name.length) return errorHandle.innerHTML = "  Please enter a valid name. ", 
+    !1;
+    if (name.length < 3) return errorHandle.innerHTML = "   Please enter a valid name. ", 
+    !1;
+    for (var index = 0; index < name.length; index++) if ((name.toUpperCase().charAt(index) < "A" || name.toUpperCase().charAt(index) > "Z") && " " != name.charAt(index)) return errorHandle.innerHTML = "   Please enter a valid name. ", 
+    !1;
+    return errorHandle.innerHTML = "", !0;
+}
+
+function validateCVV() {
+    var cardType = $("#cardType").val(), handle = document.getElementsByName("cvv"), errorHandle = document.getElementById("cvvError");
+    if ("MAESTRO" != cardType) {
+        var number = handle[0].value;
+        if ("" == number) return errorHandle.innerHTML = "Please enter a valid CVV number.", 
+        !1;
+        for (var count = 0, index = 0; index < number.length; index++) " " == number.charAt(index) && count++;
+        if (count == number.length) return errorHandle.innerHTML = "Spaces are not allowed.", 
+        !1;
+        for (var index = 0; index < number.length; index++) if (number.charAt(index) < "0" || number.charAt(index) > "9" || number.length < 3) return errorHandle.innerHTML = "Please enter a valid CVV number.", 
+        !1;
+        return errorHandle.innerHTML = "", !0;
+    }
+    return errorHandle.innerHTML = "", !0;
+}
+
+function validateCVVDc() {
+    var cardType = $("#cardTypeDc").val(), handle = document.getElementsByName("cvv"), errorHandle = document.getElementById("cvvErrorDc");
+    if ("MAESTRO" != cardType) {
+        var number = handle[1].value;
+        if ("" == number) return errorHandle.innerHTML = "Please enter a valid CVV number.", 
+        !1;
+        for (var count = 0, index = 0; index < number.length; index++) " " == number.charAt(index) && count++;
+        if (count == number.length) return errorHandle.innerHTML = "Spaces are not allowed.", 
+        !1;
+        for (var index = 0; index < number.length; index++) if (number.charAt(index) < "0" || number.charAt(index) > "9" || number.length < 3) return errorHandle.innerHTML = "Please enter a valid CVV number.", 
+        !1;
+        return errorHandle.innerHTML = "", !0;
+    }
+    return errorHandle.innerHTML = "", !0;
+}
+
+function validateCVVEmi() {
+    var cardType = $("#cardTypeEmi").val(), handle = document.getElementsByName("cvv"), errorHandle = document.getElementById("cvvErrorEmi");
+    if ("MAESTRO" != cardType) {
+        var number = handle[2].value;
+        if ("" == number) return errorHandle.innerHTML = "Please enter a valid CVV number.", 
+        !1;
+        for (var count = 0, index = 0; index < number.length; index++) " " == number.charAt(index) && count++;
+        if (count == number.length) return errorHandle.innerHTML = "Spaces are not allowed.", 
+        !1;
+        for (var index = 0; index < number.length; index++) if (number.charAt(index) < "0" || number.charAt(index) > "9" || number.length < 3) return errorHandle.innerHTML = "Please enter a valid CVV number.", 
+        !1;
+        return errorHandle.innerHTML = "", !0;
+    }
+    return errorHandle.innerHTML = "", !0;
+}
+
+function validateCardNo(formSubmit) {
+    var value = $("#cardNo").val(), errorHandle = document.getElementById("cardNoError"), cardType = $("#cardType").val(), nCheck = 0, nDigit = 0, bEven = !1;
+    value = value.replace(/\D/g, "");
+    for (var n = value.length - 1; n >= 0; n--) {
+        var cDigit = value.charAt(n), nDigit = parseInt(cDigit, 10);
+        bEven && (nDigit *= 2) > 9 && (nDigit -= 9), nCheck += nDigit, bEven = !bEven;
+    }
+    var result = nCheck % 10 == 0;
+    if (/[^0-9-\s]+/.test(value)) return binStatus = !1, "formSubmit" == formSubmit && dopayment(binStatus), 
+    errorHandle.innerHTML = "Please enter a valid card number", !1;
+    if (value.length < 13 || value.length > 19) return binStatus = !1, "formSubmit" == formSubmit && dopayment(binStatus), 
+    errorHandle.innerHTML = "Please enter a valid card number", !1;
+    if ("MAESTRO" == cardType && 13 != value.length && 14 != value.length && 15 != value.length && 16 != value.length && 17 != value.length && 18 != value.length && 19 != value.length) return binStatus = !1, 
+    "formSubmit" == formSubmit && dopayment(binStatus), errorHandle.innerHTML = "Please enter a valid card number", 
+    !1;
+    if ("VISA" == cardType && 16 != value.length && 13 != value.length) return binStatus = !1, 
+    "formSubmit" == formSubmit && dopayment(binStatus), errorHandle.innerHTML = "Please enter a valid card number", 
+    !1;
+    if ("MASTERCARD" == cardType && 16 != value.length) return binStatus = !1, "formSubmit" == formSubmit && dopayment(binStatus), 
+    errorHandle.innerHTML = "Please enter a valid card number", !1;
+    if ("AMEX" == cardType && 15 != value.length) return binStatus = !1, "formSubmit" == formSubmit && dopayment(binStatus), 
+    errorHandle.innerHTML = "Please enter a valid card number", !1;
+    if ("AMEX" == cardType && 15 == value.length && "Debit Card" == $("#paymentMode").val()) return binStatus = !1, 
+    "formSubmit" == formSubmit && dopayment(binStatus), errorHandle.innerHTML = "Please enter a valid debit card", 
+    !1;
+    if (!("MAESTRO" != cardType || 16 != value.length && 18 != value.length && 19 != value.length || "EMI" != $("#paymentMode").val() && "Credit Card" != $("#paymentMode").val())) return binStatus = !1, 
+    "formSubmit" == formSubmit && dopayment(binStatus), errorHandle.innerHTML = "Please enter a valid credit card", 
+    !1;
+    if ("" == cardType) return binStatus = !1, "formSubmit" == formSubmit && dopayment(binStatus), 
+    errorHandle.innerHTML = "Sorry, the entered card type is not supported", !1;
+    if (0 == result) return binStatus = !1, "formSubmit" == formSubmit && dopayment(binStatus), 
+    errorHandle.innerHTML = "Please enter a valid card number", !1;
+    var bin = value.slice(0, 6);
+    return "Credit Card" == $("#paymentMode").val() && (cardType = "CREDIT"), $.ajax({
+        url: ACC.config.encodedContextPath + "/checkout/multi/payment-method/binCheck/" + bin,
+        data: "cardType=" + cardType,
+        type: "POST",
+        cache: !1,
+        success: function(response) {
+            return response.isValid ? (binStatus = !0, "EMI" != $("#paymentMode").val() ? applyPromotion(null, binStatus, formSubmit) : "formSubmit" == formSubmit && dopayment(binStatus), 
+            errorHandle.innerHTML = "", !0) : ("formSubmit" == formSubmit && dopayment(binStatus), 
+            errorHandle.innerHTML = "Cannot proceed. Please try with diff card", !1);
+        },
+        error: function(resp) {
+            return binStatus = !1, "formSubmit" == formSubmit && dopayment(binStatus), errorHandle.innerHTML = "   Please enter a valid card number ", 
+            $("#promotionApplied").css("display", "none"), !1;
+        }
+    }), errorHandle.innerHTML = "", !0;
+}
+
+function validateDebitCardNo(formSubmit) {
+    var value = $("#cardNoDc").val(), errorHandle = document.getElementById("cardNoErrorDc"), cardType = $("#cardTypeDc").val(), nCheck = 0, nDigit = 0, bEven = !1;
+    value = value.replace(/\D/g, "");
+    for (var n = value.length - 1; n >= 0; n--) {
+        var cDigit = value.charAt(n), nDigit = parseInt(cDigit, 10);
+        bEven && (nDigit *= 2) > 9 && (nDigit -= 9), nCheck += nDigit, bEven = !bEven;
+    }
+    var result = nCheck % 10 == 0;
+    if (/[^0-9-\s]+/.test(value)) return binStatus = !1, "formSubmit" == formSubmit && dopayment(binStatus), 
+    errorHandle.innerHTML = "Please enter a valid card number", !1;
+    if (value.length < 13 || value.length > 19) return binStatus = !1, "formSubmit" == formSubmit && dopayment(binStatus), 
+    errorHandle.innerHTML = "Please enter a valid card number", !1;
+    if ("MAESTRO" == cardType && 13 != value.length && 14 != value.length && 15 != value.length && 16 != value.length && 17 != value.length && 18 != value.length && 19 != value.length) return binStatus = !1, 
+    "formSubmit" == formSubmit && dopayment(binStatus), errorHandle.innerHTML = "Please enter a valid card number", 
+    !1;
+    if ("VISA" == cardType && 16 != value.length && 13 != value.length) return binStatus = !1, 
+    "formSubmit" == formSubmit && dopayment(binStatus), errorHandle.innerHTML = "Please enter a valid card number", 
+    !1;
+    if ("MASTERCARD" == cardType && 16 != value.length) return binStatus = !1, "formSubmit" == formSubmit && dopayment(binStatus), 
+    errorHandle.innerHTML = "Please enter a valid card number", !1;
+    if ("AMEX" == cardType && 15 != value.length) return binStatus = !1, "formSubmit" == formSubmit && dopayment(binStatus), 
+    errorHandle.innerHTML = "Please enter a valid card number", !1;
+    if ("AMEX" == cardType && 15 == value.length && "Debit Card" == $("#paymentMode").val()) return binStatus = !1, 
+    "formSubmit" == formSubmit && dopayment(binStatus), errorHandle.innerHTML = "Please enter a valid debit card", 
+    !1;
+    if (!("MAESTRO" != cardType || 16 != value.length && 18 != value.length && 19 != value.length || "EMI" != $("#paymentMode").val() && "Credit Card" != $("#paymentMode").val())) return binStatus = !1, 
+    "formSubmit" == formSubmit && dopayment(binStatus), errorHandle.innerHTML = "Please enter a valid credit card", 
+    !1;
+    if ("" == cardType) return binStatus = !1, "formSubmit" == formSubmit && dopayment(binStatus), 
+    errorHandle.innerHTML = "Sorry, the entered card type is not supported", !1;
+    if (0 == result) return binStatus = !1, "formSubmit" == formSubmit && dopayment(binStatus), 
+    errorHandle.innerHTML = "Please enter a valid card number", !1;
+    var bin = value.slice(0, 6);
+    return "Debit Card" == $("#paymentMode").val() && (cardType = "DEBIT"), $.ajax({
+        url: ACC.config.encodedContextPath + "/checkout/multi/payment-method/binCheck/" + bin,
+        data: "cardType=" + cardType,
+        type: "POST",
+        cache: !1,
+        success: function(response) {
+            return response.isValid ? (binStatus = !0, "EMI" != cardType ? applyPromotion(null, binStatus, formSubmit) : "formSubmit" == formSubmit && dopayment(binStatus), 
+            errorHandle.innerHTML = "", !0) : ("formSubmit" == formSubmit && dopayment(binStatus), 
+            errorHandle.innerHTML = "Cannot proceed. Please try with diff card", !1);
+        },
+        error: function(resp) {
+            return binStatus = !1, "formSubmit" == formSubmit && dopayment(binStatus), errorHandle.innerHTML = "   Please enter a valid card number ", 
+            $("#promotionApplied").css("display", "none"), resetConvCharge(), !1;
+        }
+    }), errorHandle.innerHTML = "", !0;
+}
+
+function validateEmiCardNo(formSubmit) {
+    var value = $("#cardNoEmi").val(), errorHandle = document.getElementById("cardNoErrorEmi"), cardType = $("#cardTypeEmi").val(), nCheck = 0, nDigit = 0, bEven = !1;
+    value = value.replace(/\D/g, "");
+    for (var n = value.length - 1; n >= 0; n--) {
+        var cDigit = value.charAt(n), nDigit = parseInt(cDigit, 10);
+        bEven && (nDigit *= 2) > 9 && (nDigit -= 9), nCheck += nDigit, bEven = !bEven;
+    }
+    var result = nCheck % 10 == 0;
+    if (/[^0-9-\s]+/.test(value)) return binStatus = !1, "formSubmit" == formSubmit && dopayment(binStatus), 
+    errorHandle.innerHTML = "Please enter a valid card number", !1;
+    if (value.length < 13 || value.length > 19) return binStatus = !1, "formSubmit" == formSubmit && dopayment(binStatus), 
+    errorHandle.innerHTML = "Please enter a valid card number", !1;
+    if ("MAESTRO" == cardType && 13 != value.length && 14 != value.length && 15 != value.length && 16 != value.length && 17 != value.length && 18 != value.length && 19 != value.length) return binStatus = !1, 
+    "formSubmit" == formSubmit && dopayment(binStatus), errorHandle.innerHTML = "Please enter a valid card number", 
+    !1;
+    if ("VISA" == cardType && 16 != value.length && 13 != value.length) return binStatus = !1, 
+    "formSubmit" == formSubmit && dopayment(binStatus), errorHandle.innerHTML = "Please enter a valid card number", 
+    !1;
+    if ("MASTERCARD" == cardType && 16 != value.length) return binStatus = !1, "formSubmit" == formSubmit && dopayment(binStatus), 
+    errorHandle.innerHTML = "Please enter a valid card number", !1;
+    if ("AMEX" == cardType && 15 != value.length) return binStatus = !1, "formSubmit" == formSubmit && dopayment(binStatus), 
+    errorHandle.innerHTML = "Please enter a valid card number", !1;
+    if ("AMEX" == cardType && 15 == value.length && "Debit Card" == $("#paymentMode").val()) return binStatus = !1, 
+    "formSubmit" == formSubmit && dopayment(binStatus), errorHandle.innerHTML = "Please enter a valid debit card", 
+    !1;
+    if (!("MAESTRO" != cardType || 16 != value.length && 18 != value.length && 19 != value.length || "EMI" != $("#paymentMode").val() && "Credit Card" != $("#paymentMode").val())) return binStatus = !1, 
+    "formSubmit" == formSubmit && dopayment(binStatus), errorHandle.innerHTML = "Please enter a valid credit card", 
+    !1;
+    if ("" == cardType) return binStatus = !1, "formSubmit" == formSubmit && dopayment(binStatus), 
+    errorHandle.innerHTML = "Sorry, the entered card type is not supported", !1;
+    if (0 == result) return binStatus = !1, "formSubmit" == formSubmit && dopayment(binStatus), 
+    errorHandle.innerHTML = "Please enter a valid card number", !1;
+    var bin = value.slice(0, 6);
+    return "Credit Card" == $("#paymentMode").val() && (cardType = "CREDIT"), $.ajax({
+        url: ACC.config.encodedContextPath + "/checkout/multi/payment-method/binCheck/" + bin,
+        data: "cardType=" + cardType,
+        type: "POST",
+        cache: !1,
+        success: function(response) {
+            return response.isValid ? (binStatus = !0, "formSubmit" == formSubmit && dopayment(binStatus), 
+            errorHandle.innerHTML = "", !0) : (errorHandle.innerHTML = "Cannot proceed. Please try with diff card", 
+            !1);
+        },
+        error: function(resp) {
+            return binStatus = !1, errorHandle.innerHTML = "   Please enter a valid card number ", 
+            $("#promotionApplied").css("display", "none"), resetConvCharge(), !1;
+        }
+    }), errorHandle.innerHTML = "", !0;
+}
+
+function creditCardTypeFromNumber(number) {
+    var re = {
+        maestro: /^(50|56|57|58|59|60|61|62|63|64|65|66|67)/,
+        visa: /^4/,
+        mastercard: /^5[1-5]/,
+        amex: /^3[47]/
+    };
+    re.maestro.test(number) ? (document.getElementById("cardType").value = "MAESTRO", 
+    $("#cardNo").attr("maxlength", "19"), $(".security_code").attr("maxlength", "3"), 
+    $("ul.accepted-cards li").removeClass("active-card"), $("ul.accepted-cards li span.maestro").parent("li").addClass("active-card"), 
+    "Debit Card" == $("#paymentMode").val() ? $("#newMaestroMessage").css("display", "block") : $("#newMaestroMessage").css("display", "none")) : re.visa.test(number) ? (document.getElementById("cardType").value = "VISA", 
+    $("#cardNo").attr("maxlength", "16"), $(".security_code").attr("maxlength", "3"), 
+    $("ul.accepted-cards li").removeClass("active-card"), $("ul.accepted-cards li span.visa").parent("li").addClass("active-card"), 
+    $("#newMaestroMessage").css("display", "none")) : re.mastercard.test(number) ? (document.getElementById("cardType").value = "MASTERCARD", 
+    $("#cardNo").attr("maxlength", "16"), $(".security_code").attr("maxlength", "3"), 
+    $("ul.accepted-cards li").removeClass("active-card"), $("ul.accepted-cards li span.master").parent("li").addClass("active-card"), 
+    $("#newMaestroMessage").css("display", "none")) : re.amex.test(number) ? (document.getElementById("cardType").value = "AMEX", 
+    $("#cardNo").attr("maxlength", "15"), $(".security_code").attr("maxlength", "4"), 
+    $("ul.accepted-cards li").removeClass("active-card"), $("ul.accepted-cards li span.amex").parent("li").addClass("active-card"), 
+    $("#newMaestroMessage").css("display", "none")) : (document.getElementById("cardType").value = "", 
+    $("ul.accepted-cards li").removeClass("active-card"), $("#newMaestroMessage").css("display", "none"));
+}
+
+function debitCardTypeFromNumber(number) {
+    var re = {
+        maestro: /^(50|56|57|58|59|60|61|62|63|64|65|66|67)/,
+        visa: /^4/,
+        mastercard: /^5[1-5]/,
+        amex: /^3[47]/
+    };
+    re.maestro.test(number) ? ($("#cardTypeDc").val("MAESTRO"), $("#cardNoDc").attr("maxlength", "19"), 
+    $(".security_code").attr("maxlength", "3"), $("ul.accepted-cards li").removeClass("active-card"), 
+    $("ul.accepted-cards li span.maestro").parent("li").addClass("active-card"), "Debit Card" == $("#paymentMode").val() ? $("#newMaestroMessage").css("display", "block") : $("#newMaestroMessage").css("display", "none")) : re.visa.test(number) ? ($("#cardTypeDc").val("VISA"), 
+    $("#cardNoDc").attr("maxlength", "16"), $(".security_code").attr("maxlength", "3"), 
+    $("ul.accepted-cards li").removeClass("active-card"), $("ul.accepted-cards li span.visa").parent("li").addClass("active-card"), 
+    $("#newMaestroMessage").css("display", "none")) : re.mastercard.test(number) ? ($("#cardTypeDc").val("MASTERCARD"), 
+    $("#cardNoDc").attr("maxlength", "16"), $(".security_code").attr("maxlength", "3"), 
+    $("ul.accepted-cards li").removeClass("active-card"), $("ul.accepted-cards li span.master").parent("li").addClass("active-card"), 
+    $("#newMaestroMessage").css("display", "none")) : re.amex.test(number) ? ($("#cardTypeDc").val("AMEX"), 
+    $("#cardNoDc").attr("maxlength", "15"), $(".security_code").attr("maxlength", "4"), 
+    $("ul.accepted-cards li").removeClass("active-card"), $("ul.accepted-cards li span.amex").parent("li").addClass("active-card"), 
+    $("#newMaestroMessage").css("display", "none")) : ($("#cardTypeDc").val(""), $("ul.accepted-cards li").removeClass("active-card"), 
+    $("#newMaestroMessage").css("display", "none"));
+}
+
+function emiCardTypeFromNumber(number) {
+    var re = {
+        maestro: /^(50|56|57|58|59|60|61|62|63|64|65|66|67)/,
+        visa: /^4/,
+        mastercard: /^5[1-5]/,
+        amex: /^3[47]/
+    };
+    re.maestro.test(number) ? ($("#cardTypeEmi").val("MAESTRO"), $("#cardNoEmi").attr("maxlength", "19"), 
+    $(".security_code").attr("maxlength", "3"), $("ul.accepted-cards li").removeClass("active-card"), 
+    $("ul.accepted-cards li span.maestro").parent("li").addClass("active-card"), "Debit Card" == $("#paymentMode").val() ? $("#newMaestroMessage").css("display", "block") : $("#newMaestroMessage").css("display", "none")) : re.visa.test(number) ? ($("#cardTypeEmi").val("VISA"), 
+    $("#cardNoEmi").attr("maxlength", "16"), $(".security_code").attr("maxlength", "3"), 
+    $("ul.accepted-cards li").removeClass("active-card"), $("ul.accepted-cards li span.visa").parent("li").addClass("active-card"), 
+    $("#newMaestroMessage").css("display", "none")) : re.mastercard.test(number) ? ($("#cardTypeEmi").val("MASTERCARD"), 
+    $("#cardNoEmi").attr("maxlength", "16"), $(".security_code").attr("maxlength", "3"), 
+    $("ul.accepted-cards li").removeClass("active-card"), $("ul.accepted-cards li span.master").parent("li").addClass("active-card"), 
+    $("#newMaestroMessage").css("display", "none")) : re.amex.test(number) ? ($("#cardTypeEmi").val("AMEX"), 
+    $("#cardNoEmi").attr("maxlength", "15"), $(".security_code").attr("maxlength", "4"), 
+    $("ul.accepted-cards li").removeClass("active-card"), $("ul.accepted-cards li span.amex").parent("li").addClass("active-card"), 
+    $("#newMaestroMessage").css("display", "none")) : ($("#cardTypeEmi").val(""), $("ul.accepted-cards li").removeClass("active-card"), 
+    $("#newMaestroMessage").css("display", "none"));
+}
+
+function isNumber(evt) {
+    evt = evt || window.event;
+    var charCode = evt.which ? evt.which : evt.keyCode;
+    return !(charCode > 31 && (charCode < 48 || charCode > 57));
+}
+
+function populateAddress() {
+    1 == document.getElementById("sameAsShipping").checked ? populateBillingAddress() : ($("#firstName").val(""), 
+    $("#lastName").val(""), $("#address1").val(""), $("#address2").val(""), $("#address3").val(""), 
+    $("#country").val("India"), $("#state").val(""), $("#city").val(""), $("#pincode").val(""), 
+    $("#firstName, #lastName, #address1, #address2, #address3, #state, #city, #pincode").attr("readonly", !1), 
+    $("#country").attr("disabled", !1), "" == $("#address1").val() && $("#myCounter").html(120));
+}
+
+function populateAddressEmi() {
+    1 == document.getElementById("sameAsShippingEmi").checked ? populateBillingAddressEmi() : ($("#firstNameEmi").val(""), 
+    $("#lastNameEmi").val(""), $("#address1Emi").val(""), $("#address2Emi").val(""), 
+    $("#address3Emi").val(""), $("#countryEmi").val("India"), $("#stateEmi").val(""), 
+    $("#cityEmi").val(""), $("#pincodeEmi").val(""), $("#firstNameEmi, #lastNameEmi, #address1Emi, #address2Emi, #address3Emi, #stateEmi, #cityEmi, #pincodeEmi").attr("readonly", !1), 
+    $("#countryEmi").attr("disabled", !1));
+}
+
+function validatePin() {
+    var number = $("#pincode").val(), errorHandle = document.getElementById("pinError"), regex = new RegExp("^[a-zA-Z0-9]+$");
+    return "" == number ? (errorHandle.innerHTML = "Please enter a Pincode.", !1) : regex.test(number) ? (errorHandle.innerHTML = "", 
+    !0) : (errorHandle.innerHTML = "Please enter a valid Pincode.", !1);
+}
+
+function validatePinEmi() {
+    var number = $("#pincodeEmi").val(), errorHandle = document.getElementById("pinErrorEmi"), regex = new RegExp("^[a-zA-Z0-9]+$");
+    return "" == number ? (errorHandle.innerHTML = "Please enter a Pincode.", !1) : regex.test(number) ? (errorHandle.innerHTML = "", 
+    !0) : (errorHandle.innerHTML = "Please enter a valid Pincode.", !1);
+}
+
+function setBankForSavedCard(bankName) {
+    bankNameSelected = bankName, applyPromotion(bankName, "none", "none");
+}
+
+function applyPromotion(bankName, binValue, formSubmit) {
+    $("#staticHost").val();
+    $(".make_payment, #make_saved_cc_payment_up, #make_cc_payment_up, #make_nb_payment_up, #paymentButtonId_up").attr("disabled", "true");
+    var paymentMode = $("#paymentMode").val();
+    $("#promotionApplied,#promotionMessage").css("display", "none");
+    var selectedBank = $("select[id='bankNameForEMI']").find("option:selected").text(), guid = $("#guid").val();
+    $.ajax({
+        url: ACC.config.encodedContextPath + "/checkout/multi/payment-method/applyPromotions",
+        data: {
+            paymentMode: paymentMode,
+            bankName: bankName,
+            guid: guid
+        },
+        type: "GET",
+        cache: !1,
+        dataType: "json",
+        success: function(response) {
+            if (null != response.promoExpiryMsg && "redirect" == response.promoExpiryMsg) $(location).attr("href", ACC.config.encodedContextPath + "/cart"); else {
+                $("#promotionMessage").empty();
+                response.totalPrice.formattedValue;
+                if (document.getElementById("totalWithConvField").innerHTML = response.totalPrice.formattedValue, 
+                document.getElementById("outstanding-amount").innerHTML = response.totalPrice.formattedValue, 
+                document.getElementById("outstanding-amount-mobile").innerHTML = response.totalPrice.formattedValue, 
+                $("#cartPromotionApplied").css("display", "none"), $("#codAmount").text(response.totalPrice.formattedValue), 
+                null != response.deliveryCost && void 0 != response.deliveryCost && void 0 != response.deliveryCost.value && null != response.deliveryCost.value && parseFloat(response.deliveryCost.value) > 0 ? $("#deliveryCostSpanId > span.priceFormat").html(response.deliveryCost.formattedValue) : $("#deliveryCostSpanId > span.priceFormat").html("Free"), 
+                null != response.voucherDiscount && null != response.voucherDiscount.couponDiscount) if (response.voucherDiscount.couponDiscount.doubleValue <= 0) {
+                    $("#couponApplied, #priceCouponError, #emptyCouponError, #appliedCouponError, #invalidCouponError, #expiredCouponError, #issueCouponError, #freebieCouponError ,#invalidChannelError").css("display", "none"), 
+                    document.getElementById("couponValue").innerHTML = response.voucherDiscount.couponDiscount.formattedValue, 
+                    $("#couponFieldId").attr("readonly", !1);
+                    var selection = $("#voucherDisplaySelection").val();
+                    $("#couponFieldId").val(selection), $("#couponMessage").html("Oh no! This coupon code can't be used anymore. Please try another."), 
+                    $("#couponMessage").show(), $("#couponMessage").delay(5e3).fadeOut("slow"), setTimeout(function() {
+                        $("#couponMessage").html("");
+                    }, 1e4);
+                } else $("#couponApplied").css("display", "block"), document.getElementById("couponValue").innerHTML = response.voucherDiscount.couponDiscount.formattedValue, 
+                "" == $("#couponFieldId").val() && $("#couponFieldId").val(response.voucherDiscount.voucherCode), 
+                $("#couponFieldId").attr("readonly", !0), $("#couponMessage").html("Coupon application may be changed based on promotion application"), 
+                $("#couponMessage").show(), $("#couponMessage").delay(5e3).fadeOut("slow"), setTimeout(function() {
+                    $("#couponMessage").html("");
+                }, 1e4);
+                if (null == response.mplPromo || response.mplPromo == []) $("#promotionApplied,#promotionMessage").css("display", "none"); else {
+                    for (var x = 0; x < response.mplPromo.length; x++) if (null != response.mplPromo[x] && "null" != response.mplPromo[x] && "undefined" != response.mplPromo[x]) {
+                        var promoIdentifier = response.mplPromo[x].promoTypeIdentifier;
+                        if ("PotentialPromotion" == promoIdentifier) {
+                            var spanTag = document.createElement("p");
+                            spanTag.id = "p" + x, $("#promotionApplied").css("display", "none"), $("#promotionMessage").css("display", "block"), 
+                            spanTag.innerHTML = response.mplPromo[x].potentialPromotion.promoMessage, $("#promotionMessage").append(spanTag), 
+                            $("spanTag.id").append("</br>");
+                        }
+                    }
+                    0 != response.totalDiscntIncMrp.value && ($("#promotionApplied").css("display", "block"), 
+                    document.getElementById("promotion").innerHTML = response.totalDiscntIncMrp.formattedValue);
+                    var ussidPriceJson = JSON.parse(response.ussidPriceDetails);
+                    for (var key in ussidPriceJson) {
+                        var ussid = key, ussidPrice = ussidPriceJson[key];
+                        $("#" + ussid + "_productPriceId").html(ussidPrice);
+                    }
+                }
+                $("#no-click,.loaderDiv").remove(), $(".make_payment, #make_saved_cc_payment_up, #make_cc_payment_up, #make_nb_payment_up, #paymentButtonId_up").removeAttr("disabled"), 
+                "EMI" != paymentMode && "Credit Card" != paymentMode && "Debit card" != paymentMode && "Netbanking" != paymentMode || (isCodSet = !1);
+                var cartTotal = response.totalPrice.value;
+                cartTotal >= 2e4 && $("#mRupeeInfo").css("display", "block"), null != response.promoExpiryMsg && "redirect_to_payment" == response.promoExpiryMsg ? (document.getElementById("juspayErrorMsg").innerHTML = "Existing Promotion has expired", 
+                $("#juspayconnErrorDiv").css("display", "block"), $("#no-click,.loaderDiv").remove()) : "EMI" == paymentMode ? "formSubmit" == formSubmit ? dopayment(binValue) : "" == selectedBank ? $.ajax({
+                    url: ACC.config.encodedContextPath + "/checkout/multi/payment-method/getEMIBanks",
+                    data: {
+                        cartTotal: cartTotal
+                    },
+                    type: "GET",
+                    cache: !1,
+                    dataType: "json",
+                    success: function(response) {
+                        if (response.length > 0) {
+                            $("#bankNameForEMI option").remove(), $("#bankNameForEMI, #listOfEMiBank").css("display", "block"), 
+                            $("#emiRangeError").css("display", "none");
+                            var bankList = document.getElementById("bankNameForEMI"), fragment = document.createDocumentFragment(), opt = document.createElement("option");
+                            opt.innerHTML = "Select your bank", opt.value = "select", fragment.appendChild(opt), 
+                            bankList.appendChild(fragment);
+                            for (var i = 0; i < response.length; i++) {
+                                var opt = document.createElement("option");
+                                opt.innerHTML = response[i].bankName, opt.value = response[i].bankCode, fragment.appendChild(opt), 
+                                bankList.appendChild(fragment);
+                            }
+                            utag.link({
+                                link_obj: this,
+                                link_text: "emi_more_information",
+                                event_type: "emi_more_information"
+                            });
+                        } else $("#bankNameForEMI, #listOfEMiBank , .bank-label").css("display", "none"), 
+                        $("#emiRangeError").css("display", "block"), paymentErrorTrack("emi_unavailable");
+                    },
+                    error: function(resp) {
+                        paymentErrorTrack("emi_unavailable"), $("#bankNameForEMI, #listOfEMiBank").css("display", "none"), 
+                        $("#emiRangeError").css("display", "block");
+                    }
+                }) : "Select" != selectedBank && "" != selectedBank && ($("#is_emi").val("true"), 
+                $("#emi_bank").val(selectedBank), $("#card").css("display", "none"), $("#dcHeader").css("display", "none"), 
+                $("#ccHeader").css("display", "none"), null != response.errorMsgForEMI && ($("#emiPromoError").css("display", "block"), 
+                $("#emiPromoError").text(response.errorMsgForEMI), paymentErrorTrack("emi_unavailable")), 
+                $.ajax({
+                    url: ACC.config.encodedContextPath + "/checkout/multi/payment-method/getTerms",
+                    data: {
+                        selectedEMIBank: selectedBank,
+                        cartTotal: cartTotal
+                    },
+                    type: "GET",
+                    cache: !1,
+                    success: function(data) {
+                        $("#radioForEMI").css("display", "block"), $("#selectedTerm").val("select");
+                        for (var emiTable = document.getElementById("EMITermTable"), rowCount = emiTable.rows.length, i = rowCount - 1; i >= 0; i--) emiTable.deleteRow(i), 
+                        rowCount--;
+                        if (void 0 != data[0]) {
+                            $("#radioForEMI").css("display", "block");
+                            for (var index = 0; index < data.length; index++) {
+                                var rowCount = emiTable.rows.length, row = emiTable.insertRow(rowCount);
+                                row.insertCell(0).innerHTML = '<input type="radio" name="termRadio" id="termRadioId' + index + '" value="" style="display: inherit;" onclick="validateSelection()"><label for="termRadioId' + index + '">' + data[index].term + " Months </label>", 
+                                row.insertCell(1).innerHTML = data[index].interestRate + "%,", row.insertCell(2).innerHTML = data[index].monthlyInstallment + " p.m", 
+                                row.insertCell(3).innerHTML = data[index].interestPayable;
+                                var radioId = document.getElementsByName("termRadio")[index].id;
+                                document.getElementById(radioId).value = data[index].term;
+                            }
+                            $("#emi-notice").show(), emiBankSelectedTealium = "emi_option_" + selectedBank.replace(/ /g, "").replace(/[^a-z0-9\s]/gi, "").toLowerCase(), 
+                            utag.link({
+                                link_obj: this,
+                                link_text: emiBankSelectedTealium,
+                                event_type: "emi_option_selected"
+                            });
+                        } else $("#radioForEMI").css("display", "none"), $("#emiNoBankError").show(), paymentErrorTrack("emi_unavailable");
+                    },
+                    error: function(resp) {
+                        alert("Please select a Bank again"), paymentErrorTrack("emi_unavailable");
+                    }
+                })) : "Credit Card" != paymentMode && "Debit Card" != paymentMode || "formSubmit" == formSubmit && dopayment(binValue), 
+                $("#no-click").remove();
+            }
+        },
+        error: function(resp) {
+            $("#no-click,.loaderDiv").remove(), $(".make_payment").removeAttr("disabled"), $("#no-click1,.loaderDiv1").remove();
+        }
+    });
+}
+
+function submitNBForm() {
+    $("#netbankingIssueError").css("display", "none");
+    var staticHost = $("#staticHost").val(), selectedValue = $("input[class=NBBankCode]:checked").val(), selectedHiddenValue = $("input[class=NBBankCode]:checked").parent().find('input[type="hidden"]').val();
+    if (void 0 == selectedValue && (selectedValue = $('select[id="bankCodeSelection"]').val(), 
+    selectedHiddenValue = $("select[id=bankCodeSelection] option:selected").text()), 
+    "select" == selectedValue) $("#netbankingError").css("display", "block"); else {
+        $(".pay button, .make_payment_top_nb").prop("disabled", !0), $(".pay button, .make_payment_top_nb").css("opacity", "0.5"), 
+        $("body").append("<div id='no-click' style='opacity:0.5; background:#000; z-index: 100000; width:100%; height:100%; position: fixed; top: 0; left:0;'></div>"), 
+        $("body").append('<div class="loaderDiv" style="position: fixed; left: 45%;top:45%;z-index: 10000;"><img src="' + staticHost + '/_ui/responsive/common/images/red_loader.gif" class="spinner"></div>'), 
+        $("#netbankingError").css("display", "none");
+        var firstName = selectedValue, lastName = addressLine1 = addressLine2 = addressLine3 = country = state = city = pincode = null, netBankName = selectedHiddenValue, guid = $("#guid").val();
+        $.ajax({
+            url: ACC.config.encodedContextPath + "/checkout/multi/payment-method/createJuspayOrder",
+            data: {
+                firstName: firstName,
+                lastName: lastName,
+                netBankName: netBankName,
+                addressLine1: addressLine1,
+                addressLine2: addressLine2,
+                addressLine3: addressLine3,
+                country: country,
+                state: state,
+                city: city,
+                pincode: pincode,
+                cardSaved: !1,
+                guid: guid
+            },
+            type: "GET",
+            cache: !1,
+            success: function(response) {
+                if ("redirect" == response) $(location).attr("href", ACC.config.encodedContextPath + "/cart"); else if ("redirect_to_payment" == response) $(location).attr("href", ACC.config.encodedContextPath + "/checkout/multi/payment-method/pay?value=" + guid); else if ("redirect_with_details" == response) $(location).attr("href", ACC.config.encodedContextPath + "/checkout/multi/payment-method/cardPayment/" + guid); else if ("redirect_with_coupon" == response) document.getElementById("juspayErrorMsg").innerHTML = "Sorry! The coupon cannot be used for this purchase. You can either change your payment method/bank or <a href='javascript:explicit_coupon_release_function();'><b><u>save your coupon</u></b></a> for your next purchase.", 
+                $("#juspayconnErrorDiv").css("display", "block"), $("body,html").animate({
+                    scrollTop: 0
+                }), $(".pay button, .make_payment_top_nb").prop("disabled", !1), $(".pay button, .make_payment_top_nb").css("opacity", "1"), 
+                $(".pay .loaderDiv").remove(), $("#no-click,.spinner").remove(); else if ("" == response || null == response || "JUSPAY_CONN_ERROR" == response) document.getElementById("juspayErrorMsg").innerHTML = "Sorry! The system is down, please try again", 
+                $("#juspayconnErrorDiv").css("display", "block"), $(".pay button, .make_payment_top_nb").prop("disabled", !1), 
+                $(".pay button, .make_payment_top_nb").css("opacity", "1"), $(".pay .loaderDiv").remove(), 
+                $("#no-click,.loaderDiv").remove(); else if (null != response && response.indexOf("NONBusinessException") > -1) document.getElementById("juspayErrorMsg").innerHTML = response.substring(20), 
+                $("#juspayconnErrorDiv").css("display", "block"), $(".pay button, #make_saved_cc_payment_up").prop("disabled", !1), 
+                $(".pay button, #make_saved_cc_payment_up").css("opacity", "1"), $(".pay .loaderDiv").remove(), 
+                $(".pay .spinner").remove(), $("#no-click,.loaderDiv").remove(), $("#no-click,.spinner").remove(); else if ("redirect_with_details" == response) $(location).attr("href", ACC.config.encodedContextPath + "/checkout/multi/payment-method/cardPayment/" + guid); else {
+                    window.sessionStorage.removeItem("header"), sendTealiumData();
+                    var values = response.split("|");
+                    $("#juspayOrderId").val(values[0]);
+                    var juspayOrderId = $("#juspayOrderId").val();
+                    $.ajax({
+                        url: ACC.config.encodedContextPath + "/checkout/multi/payment-method/submitNBForm",
+                        data: {
+                            selectedNBBank: selectedValue,
+                            juspayOrderId: juspayOrderId
+                        },
+                        dataType: "json",
+                        contentType: "application/json; charset=utf-8",
+                        type: "GET",
+                        cache: !1,
+                        success: function(response) {
+                            if ("" == response || null == response || "JUSPAY_CONN_ERROR" == response) paymentErrorTrack("juspay_unavailable"), 
+                            document.getElementById("juspayErrorMsg").innerHTML = "Sorry! The system is down, please try again", 
+                            $("#juspayconnErrorDiv").css("display", "block"), $(".pay button, .make_payment_top_nb").prop("disabled", !1), 
+                            $(".pay button, .make_payment_top_nb").css("opacity", "1"), $(".pay .loaderDiv").remove(), 
+                            $("#no-click,.loaderDiv").remove(); else {
+                                var juspayResponse = JSON.parse(response), url = juspayResponse.payment.authentication.url, method = juspayResponse.payment.authentication.method;
+                                if ("POST" === method) {
+                                    var frm = document.createElement("form");
+                                    frm.style.display = "none", frm.setAttribute("method", method), frm.setAttribute("action", url);
+                                    var params = juspayResponse.payment.authentication.params;
+                                    for (var key in params) {
+                                        var value = params[key], field = document.createElement("input");
+                                        field.setAttribute("type", "hidden"), field.setAttribute("name", key), field.setAttribute("value", value), 
+                                        frm.appendChild(field);
+                                    }
+                                    document.body.appendChild(frm), frm.submit();
+                                }
+                                if ("GET" == method) return void (window.location.href = url);
+                            }
+                        },
+                        error: function(resp) {
+                            $("#netbankingIssueError").css("display", "block"), $(".pay button, .make_payment_top_nb").prop("disabled", !1), 
+                            $(".pay button, .make_payment_top_nb").css("opacity", "1"), $(".pay .loaderDiv").remove(), 
+                            $("#no-click,.loaderDiv").remove(), paymentErrorTrack("juspay_unavailable");
+                        }
+                    });
+                }
+            },
+            error: function(resp) {}
+        });
+    }
+}
+
+function calculateDeliveryCost(radioId, deliveryCode) {
+    if ("" == radioId || void 0 == radioId || "" == deliveryCode || void 0 == deliveryCode) {
+        var radioSelected = $("#deliveryradioul input:radio");
+        radioSelected.each(function() {
+            if (1 != this.checked) {
+                var radioButtonId = $(this).attr("id");
+                $("#" + radioButtonId).prop("checked", !0);
+                var checkedDeliveryCode = radioButtonId.split("_")[2], entryNumber = radioButtonId.split("_")[1];
+                $("#radio_" + entryNumber).val(checkedDeliveryCode);
+            }
+        });
+    }
+    "" != radioId && "undefined" != radioId && "" != deliveryCode && "undefined" != deliveryCode && $("#" + radioId).val(deliveryCode);
+    var radioSelected = $("#deliveryradioul input:radio"), totalDeliveryCharge = 0;
+    radioSelected.each(function() {
+        if (!0 === this.checked) {
+            var delCost = $(this).val();
+            totalDeliveryCharge += parseFloat(delCost);
+        }
+    }), $.ajax({
+        url: ACC.config.encodedContextPath + "/checkout/multi/delivery-method/calculateDeliveryCost/" + totalDeliveryCharge,
+        type: "POST",
+        cache: !1,
+        success: function(response) {
+            var values = response.split("|"), currency = values[0], deliveryCost = values[1], totalPrice = values[2];
+            $("#convChargeFieldId, #convChargeField").css("display", "none"), $("#cartPromotionApplied").css("display", "block"), 
+            parseFloat(deliveryCost) > 0 ? document.getElementById("deliveryCostSpanId").innerHTML = currency + deliveryCost : document.getElementById("deliveryCostSpanId").innerHTML = "Free", 
+            document.getElementById("totalWithConvField").innerHTML = currency + totalPrice, 
+            document.getElementById("outstanding-amount").innerHTML = currency + totalPrice, 
+            document.getElementById("outstanding-amount-mobile").innerHTML = currency + totalPrice, 
+            isCodSet = !1;
+        },
+        error: function(resp) {
+            var errorDetails = JSON.stringify(resp);
+            console.log("errorDetails 1>> " + errorDetails), handleExceptionOnServerSide(errorDetails);
+        }
+    });
+}
+
+function selectDefaultDeliveryMethod() {
+    $("#deliveryradioul .delivery ul").each(function() {
+        if ($(this).find("li").length >= "1") {
+            var radioSplit = $(this).find("li:first").children("input:radio").attr("id").split("_");
+            radioSplit[0], radioSplit[1], $("#" + $(this).find("li:first").children("input:radio").attr("id")).prop("checked", !0), 
+            "click-and-collect" == $(this).find("input[type='radio']:checked").attr("id").split("_")[2] && changeCTAButtonName($(this).find("input[type='radio']:checked").attr("id").split("_")[2]);
+        }
+    });
+}
+
+function changeCTAButtonName(deliveryCode) {
+    var isExpressCheckoutSelected = $("#isExpressCheckoutSelected").val(), isDeliveryOptionPage = $("#isDeliveryOptionPage").val();
+    "click-and-collect" == deliveryCode ? ($("#deliveryMethodSubmit").text("Proceed To Store"), 
+    $("#deliveryMethodSubmitUp").text("Proceed To Store")) : "DefaultName" == deliveryCode && ("true" == isExpressCheckoutSelected ? "yes" == isDeliveryOptionPage ? ($("#deliveryMethodSubmit").text("Proceed To Address"), 
+    $("#deliveryMethodSubmitUp").text("Proceed To Address")) : ($("#deliveryMethodSubmit").text("Proceed to Payment"), 
+    $("#deliveryMethodSubmitUp").text("Proceed to Payment")) : ($("#deliveryMethodSubmit").text("Proceed To Address"), 
+    $("#deliveryMethodSubmitUp").text("Proceed To Address")));
+}
+
+function showPromotionTag() {
+    $("#cartPromotionApplied").css("display", "block");
+}
+
+function checkServiceabilityRequired(buttonType, el) {
+    var sessionPin = $("#pinId").val(), selectedPin = $("#defaultPinCodeIds").val(), checkoutLinkURlId = $("#checkoutLinkURlId").val();
+    null != selectedPin && 0 !== selectedPin.length || $("#defaultPinCodeIdsBtm").val(""), 
+    sessionPin != selectedPin ? checkPincodeServiceability(buttonType, el) : redirectToCheckout(checkoutLinkURlId);
+}
+
+function checkPincodeServiceability(buttonType, el) {
+    var selectedPincode = $("#defaultPinCodeIds").val();
+    "pinCodeButtonIdsBtm" == $(el).attr("id") && (selectedPincode = $("#defaultPinCodeIdsBtm").val());
+    var regPostcode = /^([1-9])([0-9]){5}$/;
+    $(".deliveryUlClass").remove();
+    var utagCheckPincodeStatus = "";
+    if ("" === selectedPincode) return $("#error-Id").hide(), $("#error-IdBtm").hide(), 
+    $("#error-Id_tooltip").hide(), $("#error-Id_tooltip_btm").hide(), $("#emptyId").css({
+        color: "#ff1c47",
+        display: "block"
+    }), $("#emptyIdBtm").css({
+        color: "#ff1c47",
+        display: "block"
+    }), $("#emptyId_tooltip").show(), $("#emptyId_tooltip_btm").show(), $("#checkout-id #checkout-enabled").addClass("checkout-disabled"), 
+    $("#checkout-id-down #checkout-down-enabled").addClass("checkout-disabled"), $("#cartPinCodeAvailable").hide(), 
+    $("#cartPinCodeAvailableBtm").hide(), $("#pinCodeButtonIds").attr("class", "ChangePincode"), 
+    $("#pinCodeButtonIdsBtm").attr("class", "ChangePincode"), $("#unserviceablepincode").hide(), 
+    $("#unserviceablepincodeBtm").hide(), $("#unserviceablepincode_tooltip").hide(), 
+    $("#unserviceablepincode_tooltip_btm").hide(), $(".cartItemBlankPincode").show(), 
+    document.getElementById("pinCodeButtonIds").className = "CheckAvailability", $("#AvailableMessage").hide(), 
+    $("#AvailableMessageBtm").hide(), $(".pincodeServiceError").hide(), $(".delivery ul.success_msg").hide(), 
+    $("#pinCodeDispalyDiv .loaderDiv").remove(), $("#no-click,.loaderDiv").remove(), 
+    $("body,html").animate({
+        scrollTop: $("#emptyId").offset().top - 5e3
+    }), !1;
+    if (1 != regPostcode.test(selectedPincode)) return $("#defaultPinCodeIds").css("color", "red"), 
+    $("#error-Id").show(), $("#error-IdBtm").show(), $("#error-Id_tooltip").show(), 
+    $("#error-Id_tooltip_btm").show(), $("#cartPinCodeAvailable").hide(), $("#cartPinCodeAvailableBtm").hide(), 
+    $("#unserviceablepincode").hide(), $("#unserviceablepincodeBtm").hide(), $("#unserviceablepincode_tooltip").hide(), 
+    $("#unserviceablepincode_tooltip_btm").hide(), $("#AvailableMessage").hide(), $("#AvailableMessageBtm").hide(), 
+    $(".pincodeServiceError").hide(), $(".delivery ul.success_msg").hide(), document.getElementById("pinCodeButtonIds").className = "ChangePincode", 
+    $(".cartItemBlankPincode").show(), $("#emptyId").hide(), $("#emptyIdBtm").hide(), 
+    $("#emptyId_tooltip").hide(), $("#emptyId_tooltip_btm").hide(), $("#error-Id").css({
+        color: "red",
+        display: "block"
+    }), $("#error-IdBtm").css({
+        color: "red",
+        display: "block"
+    }), $("#error-Id_tooltip").show(), $("#error-Id_tooltip_btm").show(), $("#checkout-id #checkout-enabled").addClass("checkout-disabled"), 
+    $("#checkout-id-down #checkout-down-enabled").addClass("checkout-disabled"), $("#pinCodeDispalyDiv .loaderDiv").remove(), 
+    $("#no-click,.loaderDiv").remove(), !1;
+    if ("ChangePincode" == document.getElementById("pinCodeButtonIds").className && "pinCodeButtonIds" == $(el).attr("id") && 1 != regPostcode.test(selectedPincode)) return $("#unserviceablepincode").hide(), 
+    $("#unserviceablepincodeBtm").hide(), $("#unserviceablepincode_tooltip").hide(), 
+    $("#unserviceablepincode_tooltip_btm").hide(), $("#cartPinCodeAvailable").show(), 
+    $("#cartPinCodeAvailableBtm").show(), $(".pincodeServiceError").hide(), $("#AvailableMessage").hide(), 
+    $("#AvailableMessageBtm").hide(), $(".cartItemBlankPincode").show(), document.getElementById("pinCodeButtonIds").className = "CheckAvailability", 
+    $("#defaultPinCodeIds").focus(), $("#pinCodeDispalyDiv .loaderDiv").remove(), $("#emptyId").hide(), 
+    $("#emptyIdBtm").hide(), $("#emptyId_tooltip").hide(), $("#emptyId_tooltip_btm").hide(), 
+    $("#error-Id").hide(), $("#error-IdBtm").hide(), $("#error-Id_tooltip").hide(), 
+    $("#error-Id_tooltip_btm").hide(), $("#no-click,.loaderDiv").remove(), $(".delivery ul.success_msg").hide(), 
+    !1;
+    if ("ChangePincode" == document.getElementById("pinCodeButtonIdsBtm").className && "pinCodeButtonIdsBtm" == $(el).attr("id") && 1 != regPostcode.test(selectedPincode)) return $("#unserviceablepincode").hide(), 
+    $("#unserviceablepincodeBtm").hide(), $("#unserviceablepincode_tooltip").hide(), 
+    $("#unserviceablepincode_tooltip_btm").hide(), $("#cartPinCodeAvailable").show(), 
+    $("#cartPinCodeAvailableBtm").show(), $(".pincodeServiceError").hide(), $("#AvailableMessage").hide(), 
+    $("#AvailableMessageBtm").hide(), $(".cartItemBlankPincode").show(), document.getElementById("pinCodeButtonIdsBtm").className = "CheckAvailability", 
+    $("#defaultPinCodeIds").focus(), $("#defaultPinCodeIdsBtm").focus(), $("#pinCodeDispalyDiv .loaderDiv").remove(), 
+    $("#emptyId").hide(), $("#emptyIdBtm").hide(), $("#emptyId_tooltip").hide(), $("#emptyId_tooltip_btm").hide(), 
+    $("#error-Id").hide(), $("#error-IdBtm").hide(), $("#error-Id_tooltip").hide(), 
+    $("#error-Id_tooltip_btm").hide(), $("#no-click,.loaderDiv").remove(), $(".delivery ul.success_msg").hide(), 
+    !1;
+    if ("" !== selectedPincode && "true" == $("#isPincodeRestrictedPromoPresentId").val()) $(location).attr("href", ACC.config.encodedContextPath + "/cart?pincode=" + selectedPincode); else {
+        document.getElementById("pinCodeButtonIds").className = "CheckPincode", document.getElementById("pinCodeButtonIdsBtm").className = "CheckPincode", 
+        $("#defaultPinCodeIds").css("color", "black"), $("#error-Id").hide(), $("#defaultPinCodeIdsBtm").css("color", "black"), 
+        $("#error-IdBtm").hide(), $("#error-Id_tooltip").hide(), $("#error-Id_tooltip_btm").hide(), 
+        $("#emptyId").hide(), $("#emptyIdBtm").hide(), $("#emptyId_tooltip").hide();
+        var staticHost = $("#staticHost").val();
+        $("body").append("<div id='no-click' style='opacity:0.5; background:#000; z-index: 100000; width:100%; height:100%; position: fixed; top: 0; left:0;'></div>"), 
+        $("body").append('<div class="loaderDiv" style="position: fixed; left: 45%;top:45%;z-index: 10000"><img src="' + staticHost + '/_ui/responsive/common/images/red_loader.gif" class="spinner"></div>'), 
+        $("#emptyId_tooltip_btm").hide(), $.ajax({
+            url: ACC.config.encodedContextPath + "/cart/checkPincodeServiceability/" + selectedPincode,
+            type: "GET",
+            cache: !1,
+            success: function(response) {
+                $("#pincodeforcart").html("&nbsp;(" + selectedPincode + ")");
+                var responeStr = response.pincodeData.split("|");
+                (populateCartDetailsafterPincodeCheck(response), window.location.href.includes("pincode=")) && changeBrowserUrl(ACC.config.encodedContextPath + "/cart?pincode=" + selectedPincode);
+                "N" == responeStr[0] ? (utagCheckPincodeStatus = "cart_pincode_check_failure", $("#AvailableMessage").hide(), 
+                $("#cartPinCodeAvailable").hide(), $("#unserviceablepincode").show(), $("#AvailableMessageBtm").hide(), 
+                $("#cartPinCodeAvailableBtm").hide(), $("#unserviceablepincodeBtm").show(), $(".pincodeServiceError").show(), 
+                populatePincodeDeliveryMode(response, buttonType), $("#isPincodeServicableId").val("N"), 
+                $("#unserviceablepincode_tooltip").show(), $("#unserviceablepincode_tooltip_btm").show()) : (utagCheckPincodeStatus = "cart_pincode_check_success", 
+                $(".pincodeServiceError").hide(), $("#unserviceablepincode").hide(), $("#cartPinCodeAvailable").hide(), 
+                $("#unserviceablepincodeBtm").hide(), $("#cartPinCodeAvailableBtm").hide(), $("#AvailableMessage").html("Available delivery options for the pincode " + selectedPincode + " are"), 
+                $("#AvailableMessage").show(), $("#AvailableMessageBtm").show(), populatePincodeDeliveryMode(response, buttonType), 
+                $("#unserviceablepincode_tooltip").hide(), $("#unserviceablepincode_tooltip_btm").hide()), 
+                $("#defaultPinDiv").show(), $("#defaultPinCodeIdsq").val(selectedPincode), $("#pinCodeDispalyDiv .loaderDiv").remove(), 
+                $("#no-click,.loaderDiv").remove(), $("#defaultPinCodeIds").blur(), "" == $("#defaultPinCodeIds").val() ? ($("#cartPinCodeAvailable").show(), 
+                document.getElementById("pinCodeButtonIds").className = "CheckAvailability") : ($("#cartPinCodeAvailable").hide(), 
+                $("#cartPinCodeAvailableBtm").hide(), document.getElementById("pinCodeButtonIds").className = "ChangePincode", 
+                document.getElementById("pinCodeButtonIdsBtm").className = "ChangePincode");
+            },
+            error: function(resp) {
+                utagCheckPincodeStatus = "cart_pincode_check_failure", $("#isPincodeServicableId").val("N"), 
+                reloadpage(selectedPincode, buttonType), handleExceptionOnServerSide(JSON.stringify(resp)), 
+                $("#pinCodeDispalyDiv .loaderDiv").remove(), $("#no-click,.loaderDiv").remove();
+            },
+            complete: function(resp) {
+                "cart_pincode_check_failure" == utagCheckPincodeStatus ? "undefined" != typeof utag && utag.link({
+                    link_text: utagCheckPincodeStatus,
+                    event_type: utagCheckPincodeStatus,
+                    cart_pin_non_servicable: selectedPincode
+                }) : "undefined" != typeof utag && utag.link({
+                    link_text: "cart_pincode_check_success",
+                    event_type: "cart_pincode_check_success",
+                    cart_pin_servicable: selectedPincode
+                });
+            }
+        });
+    }
+}
+
+function getParameterByName(name) {
+    if (name = new RegExp("[?&]" + encodeURIComponent(name) + "=([^&]*)").exec(location.search)) return decodeURIComponent(name[1]);
+}
+
+function populateCartDetailsafterPincodeCheck(responseData) {
+    if (null != responseData.cartData || "" != responseData.cartData) {
+        var cartValue = responseData.cartData, cartData = responseData.cartEntries, cartTotalMrp = 0;
+        for (var cart in cartData) {
+            var entryNumber = parseInt(cartData[cart].entryNumber);
+            $("#off-cartLevelDiscAmt_" + entryNumber).html(""), $("#off-bag-cartLevelDisc_" + entryNumber).html(""), 
+            $("#off-bag-ItemLevelDisc_" + entryNumber).html(""), $("#off-bag-ItemLevelDiscAmt_" + entryNumber).html(""), 
+            $("#off-bag-itemDisc_" + entryNumber).html(""), $("#off-itemDiscAmt_" + entryNumber).html(""), 
+            $("#cartCentOfferDisplay_" + entryNumber).hide(), $("#cartAmtOfferDisplay_" + entryNumber).hide(), 
+            $("#itemCartCentDisplay_" + entryNumber).hide(), $("#itemCartAmtDisplay_" + entryNumber).hide(), 
+            $(".add-disc").hide();
+            var isOfferPresent = !1, basePrice = $("#basePrice_" + entryNumber).val();
+            "" != basePrice ? $("#totalPrice_" + entryNumber).html(basePrice) : $("#totalPrice_" + entryNumber).html(cartData[cart].totalPrice.formattedValue), 
+            null != cartData[cart].cartLevelDisc && (isOfferPresent = !0, $(".add-disc-pincode").show(), 
+            $("#CartofferDisplay_" + entryNumber).show(), $("#off-bag-cartLevelDisc_" + entryNumber).html(cartData[cart].cartLevelDisc.formattedValue).addClass("priceFormat")), 
+            null != cartData[cart].cartLevelPercentage && null != cartData[cart].cartLevelDisc && (isOfferPresent = !0, 
+            $("#CartofferDisplay_" + entryNumber).show(), $(".add-disc-pincode").show(), $("#off-bag-cartLevelDisc_" + entryNumber).html(cartData[cart].cartLevelDisc.formattedValue).addClass("priceFormat")), 
+            null != cartData[cart].productPerDiscDisplay && (null != cartData[cart].cartLevelDisc && cartData[cart].productLevelDisc ? ($(".add-disc-pincode").show(), 
+            $("#totalPrice_" + entryNumber).addClass("delAction"), isOfferPresent = !0, $("#ItemAmtofferDisplay_" + entryNumber).show(), 
+            $("#off-bag-ItemLevelDisc_" + entryNumber).html("(" + cartData[cart].productPerDiscDisplay.value.toFixed(1) + "%").addClass("priceFormat").append("<span>Off)</span>"), 
+            $("#off-bag-ItemLevelDiscAmt_" + entryNumber).html(cartData[cart].netSellingPrice.formattedValue).addClass("priceFormat")) : (isOfferPresent = !0, 
+            $("#totalPrice_" + entryNumber).addClass("delAction"), $("#ItemAmtofferDisplay_" + entryNumber).show(), 
+            $("#off-bag-ItemLevelDisc_" + entryNumber).html("(" + cartData[cart].productPerDiscDisplay.value.toFixed(1) + "%").addClass("priceFormat").append("<span>Off)</span>"), 
+            $("#off-bag-ItemLevelDiscAmt_" + entryNumber).html(cartValue.totalPrice.formattedValue).addClass("priceFormat")), 
+            null != cartData[cart].productPerDiscDisplay && cartData[cart].productLevelDisc ? (isOfferPresent = !0, 
+            $("#totalPrice_" + entryNumber).addClass("delAction"), $("#ItemAmtofferDisplay_" + entryNumber).show(), 
+            $("#off-bag-ItemLevelDisc_" + entryNumber).html("(" + cartData[cart].productPerDiscDisplay.value.toFixed(1) + "%").addClass("priceFormat").append("<span>Off)</span>"), 
+            $("#off-bag-ItemLevelDiscAmt_" + entryNumber).html(cartData[cart].netSellingPrice.formattedValue).addClass("priceFormat")) : (isOfferPresent = !0, 
+            $("#totalPrice_" + entryNumber).addClass("delAction"), $("#ItemAmtofferDisplay_" + entryNumber).show(), 
+            $("#off-bag-ItemLevelDisc_" + entryNumber).html("(" + cartData[cart].productPerDiscDisplay.value.toFixed(1) + "%").addClass("priceFormat").append("<span>Off)</span>"), 
+            $("#off-bag-ItemLevelDiscAmt_" + entryNumber).html(cartData[cart].totalPrice.formattedValue).addClass("priceFormat"))), 
+            0 == isOfferPresent && $("#totalPrice_" + entryNumber).removeClass("delAction"), 
+            null != cartData[cart].totalMrp && (cartTotalMrp += cartData[cart].totalMrp.doubleValue);
+        }
+        if (null != cartValue) {
+            if ($("#subtotalValue").html(cartValue.subTotal.formattedValue).addClass("priceFormat"), 
+            $("#discount").show(), $("discount .amt").html(""), null != cartValue.totalDiscounts && cartValue.totalDiscounts.value > 0 || null != cartValue.totalDiscounts && cartTotalMrp > cartValue.totalPrice.value) {
+                var discountIncMrp = cartTotalMrp - cartValue.totalPrice.doubleValue;
+                $("#discount").show(), $("#discount .amt").html(cartValue.currencySymbol + discountIncMrp.toFixed(2));
+            } else $("#discount").hide();
+            $("#total .amt").html(""), null != cartValue.totalPriceWithTax ? $("#total .amt").html(cartValue.totalPriceWithTax.formattedValue) : $("#total .amt").html(cartValue.totalPrice.formattedValue);
+        }
+    }
+}
+
+function reloadpage(selectedPincode, buttonType) {
+    null != selectedPincode && void 0 != selectedPincode && "" != selectedPincode && "typeCheckout" != buttonType && window.location.reload();
+}
+
+function populatePincodeDeliveryMode(response, buttonType) {
+    var checkoutLinkURlId = $("#checkoutLinkURlId").val(), values = response.pincodeData.split("|"), isServicable = values[0], selectedPincode = values[1], deliveryModeJsonMap = values[2];
+    if ($(".pincodeServiceError").hide(), "null" == deliveryModeJsonMap) {
+        $("#unsevisablePin").show(), $("#checkout-enabled").css("pointer-events", "none"), 
+        $("#checkout-enabled").css("opacity", "0.5"), $("#checkout-down-enabled").css("pointer-events", "none"), 
+        $("#checkout-down-enabled").css("opacity", "0.5"), $("#expressCheckoutButtonId").css("pointer-events", "none"), 
+        $("#expressCheckoutButtonId").css("cursor", "default"), $("#expressCheckoutButtonId").css("opacity", "0.5");
+        var pincodeEntered = $("#defaultPinCodeIds").val(), pincodeServiceError = "This item is not serviceable for pincode " + pincodeEntered + "!";
+        $(".desktop li:nth-child(3) ul").hide(), $(".pincodeServiceError").text(pincodeServiceError), 
+        $(".success_msg").hide(), $(".cartItemBlankPincode").hide(), $(".pincodeServiceError").show(), 
+        $(".deliveryUlClass").remove();
+    } else {
+        $("#unsevisablePin").hide(), $(".pincodeServiceError").hide(), $("#checkout-enabled").css("pointer-events", "all"), 
+        $("#checkout-enabled").css("cursor", "cursor"), $("#checkout-enabled").css("opacity", "1"), 
+        $("#checkout-enabled").css("cursor", "pointer"), $("#checkout-down-enabled").css("pointer-events", "all"), 
+        $("#checkout-down-enabled").css("cursor", "cursor"), $("#checkout-down-enabled").css("opacity", "1"), 
+        $("#expressCheckoutButtonId").css("pointer-events", "all"), $("#expressCheckoutButtonId").css("cursor", "cursor"), 
+        $("#expressCheckoutButtonId").css("opacity", "1");
+        var deliveryModeJsonObj = JSON.parse(deliveryModeJsonMap), isStockAvailable = (Object.keys(deliveryModeJsonObj).length, 
+        "Y");
+        "N" == deliveryModeJsonMap && console.log("This is NO");
+    }
+    for (var key in deliveryModeJsonObj) {
+        var ussId = deliveryModeJsonObj[key].ussid;
+        if ($("#" + ussId + "_qtyul").remove(), "N" === deliveryModeJsonObj[key].isServicable) {
+            $("#" + ussId).remove();
+            var newUi = document.createElement("ul");
+            newUi.setAttribute("id", ussId), newUi.setAttribute("class", "deliveryUlClass");
+            var newSpan = document.createElement("span"), text = document.createTextNode("This item is not serviceable for pincode " + selectedPincode + "!");
+            newSpan.appendChild(text), newUi.appendChild(newSpan), $("#" + ussId + "_li").append(newUi), 
+            $(".cartItemBlankPincode").hide(), $(".pincodeServiceError").hide();
+        } else {
+            $("#" + ussId).remove();
+            var newUi = document.createElement("ul");
+            newUi.setAttribute("id", ussId), newUi.setAttribute("class", "success_msg");
+            var jsonObj = deliveryModeJsonObj[key].validDeliveryModes, inventory = deliveryModeJsonObj[key].stockCount, quantityValue = $("#quantity_" + ussId).val(), stockAvailable = !1;
+            for (var count in jsonObj) inventory = jsonObj[count].inventory, parseFloat(quantityValue) <= parseFloat(inventory) && (stockAvailable = !0);
+            if (0 == stockAvailable) {
+                var newUl = document.createElement("ul");
+                newUl.setAttribute("id", ussId + "_qtyul"), newUl.setAttribute("class", "less-stock");
+                var newLi = document.createElement("li"), text = document.createTextNode("Oops! We only have " + inventory + " in stock! For pincode : " + selectedPincode);
+                newLi.appendChild(text), newUl.appendChild(newLi), $("#" + ussId + "_qty").append(newUl), 
+                isStockAvailable = "N";
+            }
+            var newLi = document.createElement("li");
+            newLi.setAttribute("class", "methodHome");
+            var text = document.createTextNode("Home Delivery");
+            newLi.appendChild(text);
+            var newLi1 = document.createElement("li");
+            newLi1.setAttribute("class", "methodExpress");
+            var text = document.createTextNode("Express Delivery");
+            newLi1.appendChild(text);
+            var newLi2 = document.createElement("li");
+            newLi2.setAttribute("class", "methodClick");
+            var text = document.createTextNode("Click and Collect");
+            newLi2.appendChild(text);
+            var isHd = !1, isEd = !1, isCnc = !1;
+            for (var count in jsonObj) {
+                var inventory = 0, deliveryType = jsonObj[count].type;
+                inventory = jsonObj[count].inventory, "HD" === deliveryType ? isHd = !0 : "ED" === deliveryType ? isEd = !0 : "CNC" === deliveryType && (isCnc = !0);
+            }
+            isHd ? newLi.setAttribute("class", "methodHome") : newLi.setAttribute("class", "methodHome lowOpacity"), 
+            isEd ? newLi1.setAttribute("class", "methodExpress") : newLi1.setAttribute("class", "methodExpress lowOpacity"), 
+            isCnc ? newLi2.setAttribute("class", "methodClick") : newLi2.setAttribute("class", "methodClick lowOpacity"), 
+            newUi.appendChild(newLi), newUi.appendChild(newLi1), newUi.appendChild(newLi2), 
+            $("#" + ussId + "_li").append(newUi), $(".cartItemBlankPincode").hide(), $(".pincodeServiceError").hide();
+        }
+    }
+    if ($("#defaultPinCodeIds").val(selectedPincode), "Y" === isServicable && "Y" === isStockAvailable) {
+        $("#isPincodeServicableId").val("Y"), $("#checkout-id #checkout-enabled").removeClass("checkout-disabled"), 
+        $("#checkout-id-down #checkout-down-enabled").removeClass("checkout-disabled"), 
+        $("#expresscheckoutid #expressCheckoutButtonId").removeClass("express-checkout-disabled");
+        if (-1 != document.referrer.indexOf("checkout") && 0 != $(".global-alerts").length) {
+            var errortext = $(".global-alerts,alert-danger, alert-dismissable").text();
+            null != errortext && "undefined" != errortext && "" != errortext && $(".global-alerts").remove();
+        }
+        if ("typeCheckout" == buttonType && redirectToCheckout(checkoutLinkURlId), "typeExpressCheckout" == buttonType) {
+            var expressCheckoutAddresId = $("#expressCheckoutAddressSelector").val();
+            $(location).attr("href", ACC.config.encodedContextPath + "/checkout/multi/express?expressCheckoutAddressSelector=" + expressCheckoutAddresId);
+        }
+    } else $("#isPincodeServicableId").val("N"), $("#checkout-id #checkout-enabled").addClass("checkout-disabled"), 
+    $("#checkout-id-down #checkout-down-enabled").addClass("checkout-disabled"), $("#expresscheckoutid #expressCheckoutButtonId").addClass("express-checkout-disabled");
+}
+
+function redirectToCheckout(checkoutUrl) {
+    if (!ACC.pickupinstore.validatePickupinStoreCartEntires()) {
+        var expressCheckoutObject = $(".express-checkout-checkbox");
+        if (expressCheckoutObject.is(":checked")) window.location = expressCheckoutObject.data("expressCheckoutUrl"); else {
+            var flow = $("#selectAltCheckoutFlow").attr("value");
+            if (void 0 == flow || "" == flow) window.location = checkoutUrl; else {
+                "multistep-pci" == flow && (flow = "multistep");
+                var pci = $("#selectPciOption").attr("value"), redirectUrl = checkoutUrl + "/select-flow?flow=" + flow + "&pci=" + pci;
+                window.location = redirectUrl;
+            }
+        }
+    }
+    return !1;
+}
+
+function checkIsServicable() {
+    var selectedPincode = $("#defaultPinCodeIds").val(), utagCheckPincodeStatus = "";
+    $("#pinCodeButtonIds").attr("class", "CheckAvailability"), $("#pinCodeButtonIdsBtm").attr("class", "CheckAvailability"), 
+    $("#unserviceablepincode").hide(), $("#unserviceablepincodeBtm").hide(), $("#unserviceablepincode_tooltip").hide(), 
+    $("#unserviceablepincode_tooltip_btm").hide(), null != selectedPincode && void 0 != selectedPincode && "" != selectedPincode ? $.ajax({
+        url: ACC.config.encodedContextPath + "/cart/checkPincodeServiceability/" + selectedPincode,
+        type: "GET",
+        cache: !1,
+        success: function(response) {
+            $("#pincodeforcart").html("&nbsp;(" + selectedPincode + ")"), "N" == response.pincodeData.split("|")[0] ? ($("#cartPinCodeAvailable").hide(), 
+            $("#AvailableMessage").hide(), $("#AvailableMessageBtm").hide(), $("#unserviceablepincode").show(), 
+            $("#unserviceablepincodeBtm").show(), $("#unserviceablepincode_tooltip").show(), 
+            $("#unserviceablepincode_tooltip_btm").show(), $(".pincodeServiceError").show(), 
+            $("#pinCodeButtonIds").attr("class", "ChangePincode"), $("#pinCodeButtonIdsBtm").attr("class", "ChangePincode"), 
+            utagCheckPincodeStatus = !1) : ($(".deliveryUlClass").remove(), $(".pincodeServiceError").hide(), 
+            $("#unserviceablepincode").hide(), $("#unserviceablepincodeBtm").hide(), $("#unserviceablepincode_tooltip").hide(), 
+            $("#unserviceablepincode_tooltip_btm").hide(), $("#cartPinCodeAvailable").hide(), 
+            $("#AvailableMessage").html("Available delivery options for the pincode " + selectedPincode + " are"), 
+            $("#AvailableMessage").show(), $("#pinCodeButtonIds").attr("class", "ChangePincode"), 
+            $("#pinCodeButtonIdsBtm").attr("class", "ChangePincode"), utagCheckPincodeStatus = !0), 
+            populatePincodeDeliveryMode(response, "pageOnLoad"), $("#defaultPinCodeIdsq").val(selectedPincode), 
+            $("#defaultPinDiv").show();
+        },
+        error: function(resp) {
+            var errorDetails = JSON.stringify(resp);
+            console.log("errorDetails 1>> " + errorDetails), handleExceptionOnServerSide(errorDetails), 
+            $("#isPincodeServicableId").val("N"), $("#defaultPinCodeIdsq").val(selectedPincode), 
+            $("#defaultPinDiv").show(), "undefined" != typeof utag && utag.link({
+                error_type: "pincode_check_error"
+            });
+        },
+        complete: function(resp) {
+            1 == utagCheckPincodeStatus ? pincodeServicabilitySuccess(selectedPincode) : pincodeServicabilityFailure(selectedPincode);
+        }
+    }) : null != selectedPincode && void 0 != selectedPincode && "" != selectedPincode || ($("#emptyId_tooltip").show(), 
+    $("#emptyId_tooltip_btm").show(), $("#checkout-id #checkout-enabled").addClass("checkout-disabled"), 
+    $("#checkout-id-down #checkout-down-enabled").addClass("checkout-disabled"));
+}
+
+function activateSignInTab() {
+    "Y" === $("#isSignInActive").val() && $("#sign_in_content").hasClass("active") ? ($("#signIn_link").addClass("active"), 
+    $("#sign_in_content").addClass("active"), $("#SignUp_link").removeClass("active"), 
+    $("#sign_up_content").removeClass("active")) : ($("#SignUp_link").addClass("active"), 
+    $("#sign_up_content").addClass("active"), $("#signIn_link").removeClass("active"), 
+    $("#sign_in_content").removeClass("active"));
+}
+
+function checkSignInValidation(path) {
+    if ("Checkout" == path) {
+        var emailId = $("#j_username").val(), password = $("#j_password").val(), encodedPWD = encodeURIComponent(password);
+        $("#j_password").val(encodedPWD);
+    } else {
+        var emailId = $("#j_username_login").val(), password = $("#j_password_login").val(), encodedPWD = encodeURIComponent(password);
+        $("#j_password_login").val(encodedPWD);
+    }
+    var emailPattern = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/, validationResult = !0;
+    return $("#signinPasswordDiv").hide(), $("#signinEmailIdDiv").hide(), null == emailId || "" == emailId ? ($("#signinEmailIdDiv").show(), 
+    $("#signinEmailIdDiv").html("Please fill in all mandatory fields."), validationResult = !1) : emailPattern.test(emailId) ? null == password || "" == password || 0 == password.length ? ($("#signinPasswordDiv").show(), 
+    $("#signinPasswordDiv").html("Please enter all mandatory fields"), validationResult = !1) : $("#signinPasswordDiv").hide() : ($("#signinEmailIdDiv").show(), 
+    $("#signinEmailIdDiv").html("Please enter a valid email ID"), validationResult = !1), 
+    validationResult;
+}
+
+function checkSignUpValidation(path) {
+    var validationResult = !0, regexCharSpace = /^[a-zA-Z]+$/, mob = /^[1-9]{1}[0-9]{9}$/;
+    "" == document.getElementById("profilefirstName").value && ($("#errfn").css({
+        display: "block",
+        "margin-top": "10px"
+    }), document.getElementById("errfn").innerHTML = "<font color='red' size='2'>Please enter first name.</font>", 
+    validationResult = !1), "" != document.getElementById("profilefirstName").value && (regexCharSpace.test(document.getElementById("profilefirstName").value) || ($("#errfn").css({
+        display: "block",
+        "margin-top": "10px"
+    }), document.getElementById("errfn").innerHTML = "<font color='red' size='2'>First name should not contain any special characters or space</font>", 
+    validationResult = !1)), "" == document.getElementById("profilelastName").value && ($("#errln").css({
+        display: "block",
+        "margin-top": "10px"
+    }), document.getElementById("errln").innerHTML = "<font color='red' size='2'>Please enter last name.</font>", 
+    validationResult = !1), "" != document.getElementById("profilelastName").value && (regexCharSpace.test(document.getElementById("profilelastName").value) || ($("#errln").css({
+        display: "block",
+        "margin-top": "10px"
+    }), document.getElementById("errln").innerHTML = "<font color='red' size='2'>Last name should not contain any special characters or space</font>", 
+    validationResult = !1)), "" == document.getElementById("profile.gender").value && ($("#errgen").css({
+        display: "block",
+        "margin-top": "10px"
+    }), document.getElementById("errgen").innerHTML = "<font color='red' size='2'>Please select Gender</font>", 
+    validationResult = !1), "" != document.getElementById("profile.gender").value && $("#errgen").hide();
+    var txtMobile = document.getElementById("mobileNumber").value;
+    void 0 == txtMobile || "" == txtMobile ? ($("#errmob").show(), $("#errmob").html("<p>Please enter mobile no.</p>"), 
+    validationResult = !1) : 0 == mob.test(txtMobile) ? ($("#errmob").show(), $("#errmob").html("<p> Please enter correct mobile no.</p>"), 
+    validationResult = !1) : $("#errmob").hide();
+    var password = "", rePassword = "";
+    if ("Checkout" == path) {
+        var emailId = document.getElementById("register.email").value;
+        password = $("#password").val(), rePassword = document.getElementById("register.checkPwd").value, 
+        $("#password_minchar").hide();
+    } else {
+        var emailId = document.getElementById("register.email_login").value;
+        password = $("#password_login").val(), rePassword = document.getElementById("register.checkPwd_login").value, 
+        $("#password_login_minchar").hide();
+    }
+    var emailPattern = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
+    if (null == emailId || 0 == emailId.length ? ($("#signupEmailIdDiv").show(), $("#signupEmailIdDiv").html("Email is blank"), 
+    validationResult = !1) : emailPattern.test(emailId) ? $("#signupEmailIdDiv").hide() : ($("#signupEmailIdDiv").show(), 
+    $("#signupEmailIdDiv").html("Please enter a valid email ID"), validationResult = !1), 
+    null == password || 0 == password.length ? ($("#signupPasswordDiv").show(), $("#signupPasswordDiv").html("Password is blank"), 
+    validationResult = !1) : password.length < 8 ? ($("#signupPasswordDiv").show(), 
+    $("#signupPasswordDiv").html("Your password should be minimum 8 characters"), validationResult = !1) : $("#signupPasswordDiv").hide(), 
+    null == rePassword || 0 == rePassword.length ? ($("#signupConfirmPasswordDiv").show(), 
+    $("#signupConfirmPasswordDiv").html("Confirm Password is blank"), validationResult = !1) : rePassword.length < 8 ? ($("#signupConfirmPasswordDiv").show(), 
+    $("#signupConfirmPasswordDiv").html("Your password should be minimum 8 characters"), 
+    validationResult = !1) : $("#signupConfirmPasswordDiv").hide(), validationResult && password != rePassword ? ($("#signupPasswordDiv").show(), 
+    $("#signupPasswordDiv").html("The passwords don’t match. Try again, please."), validationResult = !1) : validationResult && ($("#signupPasswordDiv").hide(), 
+    $("#signupConfirmPasswordDiv").hide()), validationResult) {
+        var encodedPWD = encodeURIComponent(password), encodedRePWD = encodeURIComponent(rePassword);
+        "Checkout" == path ? ($("#password").val(encodedPWD), document.getElementById("register.checkPwd").value = encodedRePWD) : ($("#password_login").val(encodedPWD), 
+        document.getElementById("register.checkPwd_login").value = encodedRePWD);
+    }
+    return validationResult;
+}
+
+function checkExpressCheckoutPincodeService(buttonType) {
+    var selectedAddressId = $("#popUpExpAddress input[type='radio']:checked").val();
+    selectedAddressId = $.trim(selectedAddressId), $("#expressCheckoutAddressSelector").val(selectedAddressId), 
+    selectedAddressId.length > 0 ? ($("#expresscheckoutErrorDiv").css("display", "none"), 
+    $.ajax({
+        url: ACC.config.encodedContextPath + "/cart/checkExCheckoutPincodeServiceability/" + selectedAddressId,
+        type: "GET",
+        cache: !1,
+        success: function(response) {
+            populatePincodeDeliveryMode(response, buttonType), $("body").append("<div id='no-click' style='opacity:0.5; background:#000; z-index: 100000; width:100%; height:100%; position: fixed; top: 0; left:0;'></div>"), 
+            $("body").append('<div class="loaderDiv" style="position: fixed; left: 45%;top:45%;z-index: 10000"><img src="' + staticHost + '/_ui/responsive/common/images/red_loader.gif" class="spinner"></div>'), 
+            $("#defaultPinCodeIdsq").val($("#defaultPinCodeIds").val()), $("#pinCodeDispalyDiv .loaderDiv").remove(), 
+            $("#no-click,.loaderDiv").remove();
+        },
+        error: function(resp) {
+            $("#isPincodeServicableId").val("N");
+            var errorDetails = JSON.stringify(resp);
+            console.log("errorDetails 1>> " + errorDetails), handleExceptionOnServerSide(errorDetails), 
+            $("body").append("<div id='no-click' style='opacity:0.5; background:#000; z-index: 100000; width:100%; height:100%; position: fixed; top: 0; left:0;'></div>"), 
+            $("body").append('<div class="loaderDiv" style="position: fixed; left: 45%;top:45%;z-index: 10000"><img src="' + staticHost + '/_ui/responsive/common/images/red_loader.gif" class="spinner"></div>'), 
+            $("#defaultPinCodeIdsq").val($("#defaultPinCodeIds").val()), $("#pinCodeDispalyDiv .loaderDiv").remove(), 
+            $("#no-click,.loaderDiv").remove();
+        }
+    })) : ($("#isPincodeServicableId").val("N"), $("#expresscheckoutErrorDiv").css("display", "block"));
+}
+
+function validateNameOnAddress(name, errorHandle, identifier) {
+    var regex = new RegExp(/^[a-zA-Z ]+$/), strname = name.trim();
+    return "" == name && "firstName" == identifier ? (errorHandle.innerHTML = "Please enter a First name.", 
+    !1) : "" == name && "lastName" == identifier ? (errorHandle.innerHTML = "Please enter a Last name.", 
+    !1) : "" == name && "firstNameEmi" == identifier ? (errorHandle.innerHTML = "Please enter a First name.", 
+    !1) : "" == name && "lastNameEmi" == identifier ? (errorHandle.innerHTML = "Please enter a Last name.", 
+    !1) : regex.test(name) || "firstName" != identifier ? "" == strname && "firstName" == identifier ? (errorHandle.innerHTML = "Please enter a valid first name.", 
+    !1) : regex.test(name) || "lastName" != identifier ? "" == strname && "lastName" == identifier ? (errorHandle.innerHTML = "Please enter a valid last name.", 
+    !1) : regex.test(name) || "firstNameEmi" != identifier ? "" == strname && "firstNameEmi" == identifier ? (errorHandle.innerHTML = "Please enter a valid first name.", 
+    !1) : regex.test(name) || "lastNameEmi" != identifier ? "" == strname && "lastNameEmi" == identifier ? (errorHandle.innerHTML = "Please enter a valid last name.", 
+    !1) : name.length < 1 && "firstName" == identifier ? (errorHandle.innerHTML = "Name should be longer.", 
+    !1) : name.length < 1 && "lastName" == identifier ? (errorHandle.innerHTML = "Name should be longer.", 
+    !1) : (errorHandle.innerHTML = "", !0) : (errorHandle.innerHTML = "Please enter a valid last name.", 
+    !1) : (errorHandle.innerHTML = "Please enter a valid first name.", !1) : (errorHandle.innerHTML = "Please enter a valid last name.", 
+    !1) : (errorHandle.innerHTML = "Please enter a valid first name.", !1);
+}
+
+function validateAddressLine1(addressLine, errorHandle) {
+    if (null == addressLine) return !1;
+    var str = addressLine.trim();
+    return "" == addressLine ? (errorHandle.innerHTML = "Please enter Address line.", 
+    !1) : "" == str ? (errorHandle.innerHTML = "Please enter a valid Address.", !1) : (errorHandle.innerHTML = "", 
+    !0);
+}
+
+function validateAddressLine2(addressLine, errorHandle) {
+    return "" == addressLine ? (errorHandle.innerHTML = "Please enter an Address line 2.", 
+    !1) : (errorHandle.innerHTML = "", !0);
+}
+
+function validateLandmark(addressLine, errorHandle) {
+    return "" == addressLine ? (errorHandle.innerHTML = "Please enter a address line 3.", 
+    !1) : (errorHandle.innerHTML = "", !0);
+}
+
+function validateCity() {
+    var name = $("#city").val(), strname = name.trim(), errorHandle = document.getElementById("cityError"), regex = new RegExp(/^[a-zA-Z ]+$/);
+    return "" == name ? (errorHandle.innerHTML = "Please enter a City.", !1) : regex.test(name) ? "" == strname ? (errorHandle.innerHTML = "Please enter a valid City.", 
+    !1) : (errorHandle.innerHTML = "", !0) : (errorHandle.innerHTML = "Please enter a valid City.", 
+    !1);
+}
+
+function validateCityEmi() {
+    var name = $("#cityEmi").val(), strname = name.trim(), errorHandle = document.getElementById("cityErrorEmi"), regex = new RegExp(/^[a-zA-Z ]+$/);
+    return "" == name ? (errorHandle.innerHTML = "Please enter a City.", !1) : regex.test(name) ? "" == strname ? (errorHandle.innerHTML = "Please enter a valid City.", 
+    !1) : (errorHandle.innerHTML = "", !0) : (errorHandle.innerHTML = "Please enter a valid City.", 
+    !1);
+}
+
+function validateState() {
+    var name = $("#state").val(), strname = name.trim(), errorHandle = document.getElementById("stateError"), regex = new RegExp(/^[a-zA-Z ]+$/);
+    return "" == name ? (errorHandle.innerHTML = "Please enter a State.", !1) : regex.test(name) ? "" == strname ? (errorHandle.innerHTML = "Please enter a valid State.", 
+    !1) : (errorHandle.innerHTML = "", !0) : (errorHandle.innerHTML = "Please enter a valid State.", 
+    !1);
+}
+
+function validateStateEmi() {
+    var name = $("#stateEmi").val(), strname = name.trim(), errorHandle = document.getElementById("stateErrorEmi"), regex = new RegExp(/^[a-zA-Z\ ]+$/);
+    return "" == name ? (errorHandle.innerHTML = "Please enter a State.", !1) : regex.test(name) ? "" == strname ? (errorHandle.innerHTML = "Please enter a valid State.", 
+    !1) : (errorHandle.innerHTML = "", !0) : (errorHandle.innerHTML = "Please enter a valid State.", 
+    !1);
+}
+
+function updateCart(formId) {
+    window.sessionStorage.setItem("qtyUpdate", "true");
+    var entryNumber = formId.split("_");
+    $("#updateCartForm" + entryNumber[1]).submit(), "undefined" != typeof utag && utag.link({
+        link_text: "quantity_updated",
+        event_type: "quantity_updated"
+    });
+}
+
+function expressbutton() {
+    "undefined" != typeof utag && utag.link({
+        link_text: "cart_express_checkout_button_submit",
+        event_type: "cart_express_checkout_button_submit"
+    });
+    var addressList = $("#popUpExpAddress input[type='radio']:checked").val(), selectedAddressId = $.trim(addressList);
+    if ($("#expressCheckoutAddressSelector").val(selectedAddressId), 0 == selectedAddressId.length) return $("#expresscheckoutErrorDiv").css("display", "block"), 
+    !1;
+    $("#expresscheckoutErrorDiv").css("display", "none"), $.ajax({
+        url: ACC.config.encodedContextPath + "/cart/checkExCheckoutPincodeServiceability/" + selectedAddressId,
+        type: "GET",
+        cache: !1,
+        success: function(response) {
+            populatePincodeDeliveryMode(response, "typeExpressCheckout"), $("#defaultPinCodeIdsq").val($("#defaultPinCodeIds").val());
+        },
+        error: function(resp) {
+            $("#isPincodeServicableId").val("N");
+            var errorDetails = JSON.stringify(resp);
+            console.log("errorDetails 1>> " + errorDetails), handleExceptionOnServerSide(errorDetails), 
+            $("#defaultPinCodeIdsq").val($("#defaultPinCodeIds").val());
+        }
+    });
+}
+
+function hideError() {
+    $("#savedCVVError").css("display", "none"), $(".card_ebsErrorSavedCard, .card_cvvErrorSavedCard").css("display", "none");
+}
+
+function clearDisable() {
+    $("#no-click,.loaderDiv").remove(), $(".make_payment").removeAttr("disabled");
+}
+
+function onSubmitAnalytics(msg) {
+    var couponCode = $("#couponFieldId").val().toLowerCase().replace(/  +/g, " ").replace(/ /g, "_").replace(/['"]/g, "");
+    utag.link({
+        link_text: "apply_coupon_" + msg,
+        event_type: "apply_coupon",
+        coupon_code: couponCode
+    });
+}
+
+function sendTealiumData() {
+    try {
+        var payment_method_map = {
+            viewPaymentEMI: "EMI",
+            viewPaymentCredit: "Credit Card",
+            viewPaymentNetbanking: "NetBanking",
+            viewPaymentCOD: "COD",
+            viewPaymentDebit: "Debit Card"
+        }, payment = jQuery("ul.checkout-paymentmethod.nav li.active span").attr("id"), payment_mode = payment_method_map[payment], payment_type = "", priority_banks = "";
+        "EMI" === payment_mode ? payment_type = jQuery("select#bankNameForEMI").val() : "Credit Card" === payment_mode || "Debit Card" === payment_mode ? payment_type = jQuery("li.active-card span").attr("class") || "Saved Card" : "NetBanking" === payment_mode ? (priority_banks = jQuery("#netbanking input[name='priority_banks']:checked"), 
+        payment_type = priority_banks.length > 0 ? priority_banks.val() : jQuery("#netbanking #bankCodeSelection").val()) : "COD" === payment_mode && (payment_type = "COD"), 
+        payment_type || (payment_type = "NA"), "" !== utag.data.product_id && void 0 !== utag.data.product_id && ("COD" === payment_mode ? utag.link({
+            link_text: "Final Checkout",
+            event_type: "PayNow",
+            payment_method: "" + payment_type,
+            product_id: utag.data.product_id
+        }) : utag.link({
+            link_text: "Final Checkout",
+            event_type: "PayNow",
+            payment_method: payment_mode + "|" + payment_type,
+            product_id: utag.data.product_id
+        }));
+    } catch (e) {}
+}
+
+function handleExceptionOnServerSide(errorDetails) {
+    setTimeout(function() {
+        $.ajax({
+            url: ACC.config.encodedContextPath + "/cart/networkError",
+            type: "GET",
+            cache: !1,
+            data: {
+                errorDetails: errorDetails
+            },
+            success: function(errorResponse) {
+                console.log(errorResponse);
+            },
+            error: function(errorResp) {
+                console.log(errorResp);
+            }
+        });
+    }, 1e3);
+}
+
+function openPopFromCart(entry, productCode, ussid) {
+    var requiredUrl = ACC.config.encodedContextPath + "/p-viewWishlistsInPDP", dataString = "productCode=" + productCode + "&ussid=" + ussid;
+    $("#entryNo").val(entry);
+    $.ajax({
+        contentType: "application/json; charset=utf-8",
+        url: requiredUrl,
+        data: dataString,
+        dataType: "json",
+        success: function(data) {
+            null == data ? ($("#wishListNonLoggedInId").show(), $("#wishListDetailsId").hide()) : "" == data || data == [] ? loadDefaultWishLstForCart(productCode, ussid) : LoadWishListsFromCart(data, productCode, ussid);
+        },
+        error: function(xhr, status, error) {
+            $("#wishListNonLoggedInId").show(), $("#wishListDetailsId").hide();
+        }
+    });
+}
+
+function loadDefaultWishLstForCart(productCode, ussid) {
+    var wishListContent = "", wishName = $("#defaultWishId").text();
+    $("#wishListNonLoggedInId").hide(), $("#wishListDetailsId").show(), wishListContent = wishListContent + "<tr><td><input type='text' id='defaultWishName' value='" + wishName + "'/></td></td></tr>", 
+    $("#wishlistTbodyId").html(wishListContent), $("#selectedProductCode").attr("value", productCode), 
+    $("#proUssid").attr("value", ussid);
+}
+
+function addToWishlistForCart(ussid, productCode, alreadyAddedWlName) {
+    var wishName = "";
+    if ("" == (wishName = "" == wishListList ? $("#defaultWishName").val() : wishListList[$("#hidWishlist").val()])) {
+        var msg = $("#wishlistnotblank").text();
+        return $("#addedMessage").show(), $("#addedMessage").html(msg), !1;
+    }
+    if (void 0 == wishName || null == wishName) return void 0 == alreadyAddedWlName && "" == alreadyAddedWlName || ("[]" == alreadyAddedWlName ? $("#wishlistErrorId").html("Please select a wishlist") : (alreadyAddedWlName = alreadyAddedWlName.replace("[", ""), 
+    alreadyAddedWlName = alreadyAddedWlName.replace("]", ""), $("#wishlistErrorId").html("Product already added in your wishlist " + alreadyAddedWlName)), 
+    $("#wishlistErrorId").css("display", "block")), !1;
+    $("#wishlistErrorId").css("display", "none");
+    var requiredUrl = ACC.config.encodedContextPath + "/p-addToWishListInPDP", dataString = "wish=" + wishName + "&product=" + productCode + "&ussid=" + ussid + "&sizeSelected=" + !0, entryNo = $("#entryNo").val(), productcodearray = [];
+    productcodearray.push(productCode), $.ajax({
+        contentType: "application/json; charset=utf-8",
+        url: requiredUrl,
+        data: dataString,
+        dataType: "json",
+        success: function(data) {
+            1 == data && ($("#radio_" + $("#hidWishlist").val()).prop("disabled", !0), "undefined" != typeof utag && utag.link({
+                link_obj: this,
+                link_text: "cart_add_to_wishlist",
+                event_type: "cart_add_to_wishlist",
+                product_sku_wishlist: productcodearray
+            }), localStorage.setItem("movedToWishlist_msgFromCart", "Y"), removefromCart(entryNo, wishName));
+        }
+    }), $("a.wishlist#wishlist").popover("hide");
+}
+
+function removefromCart(entryNo, wishName) {
+    $.ajax({
+        contentType: "application/json; charset=utf-8",
+        url: ACC.config.encodedContextPath + "/cart/removeFromMinicart?entryNumber=" + entryNo,
+        dataType: "json",
+        success: function(data) {
+            $("#moveEntry_" + entryNo).parents(".item").find(".desktop .product-name > a").text();
+            $("#moveEntry_" + entryNo).parents(".item").hide().empty(), setTimeout(function() {
+                $(".product-block > li.header > span").fadeOut(6e3).remove();
+            }, 6e3), location.reload();
+        },
+        complete: function() {
+            forceUpdateHeader();
+        },
+        error: function(data) {
+            alert("error");
+        }
+    });
+}
+
+function gotoLogin() {
+    window.open(ACC.config.encodedContextPath + "/login", "_self");
+}
+
+function LoadWishListsFromCart(data, productCode, ussid) {
+    var addedWlList_cart = [], wishListContent = "", wishName = "";
+    $this = this, $("#wishListNonLoggedInId").hide(), $("#wishListDetailsId").show();
+    for (var i in data) {
+        var index = -1, checkExistingUssidInWishList = !1, wishList = data[i];
+        wishName = wishList.particularWishlistName, wishListList[i] = wishName;
+        var entries = wishList.ussidEntries;
+        for (var j in entries) {
+            if (entries[j] == ussid) {
+                checkExistingUssidInWishList = !0;
+                break;
+            }
+        }
+        checkExistingUssidInWishList ? (index++, wishListContent = wishListContent + "<tr class='d0'><td ><input type='radio' name='wishlistradio' id='radio_" + i + "' style='display: none' onclick='selectWishlist(" + i + ")' disabled><label for='radio_" + i + "'>" + wishName + "</label></td></tr>", 
+        addedWlList_cart.push(wishName)) : (index++, wishListContent = wishListContent + "<tr><td><input type='radio' name='wishlistradio' id='radio_" + i + "' style='display: none' onclick='selectWishlist(" + i + ")'><label for='radio_" + i + "'>" + wishName + "</label></td></tr>"), 
+        $("#alreadyAddedWlName_cart").val(JSON.stringify(addedWlList_cart));
+    }
+    $("#wishlistTbodyId").html(wishListContent), $("#selectedProductCode").attr("value", productCode), 
+    $("#proUssid").attr("value", ussid);
+}
+
+function selectWishlist(i, productCode, ussid) {
+    $("#hidWishlist").val(i);
+}
+
+function addToWishlistFromCart() {
+    var productCode = $("#product").val(), ussid = $("#ussid").val();
+    alert("Into addToWishlistFromCart>>>" + ussid);
+    var wishName = wishListList[$("#hidWishlist").val()], requiredUrl = ACC.config.encodedContextPath + "/cart/addToWishListFromCart", dataString = "wish=" + wishName + "&product=" + productCode + "&ussid=" + ussid;
+    $.ajax({
+        contentType: "application/json; charset=utf-8",
+        url: requiredUrl,
+        data: dataString,
+        dataType: "json",
+        success: function(data) {
+            1 == data && (alert("Product Added into wishlist " + wishName), $("#radio_" + $("#hidWishlist").val()).prop("disabled", !0), 
+            window.location.reload());
+        }
+    });
+}
+
+function isSessionActive() {
+    var active = !1;
+    return $.ajax({
+        url: ACC.config.encodedContextPath + "/checkout/multi/payment-method/checkSessionActive",
+        type: "GET",
+        cache: !1,
+        async: !1,
+        success: function(response) {
+            response && (active = !0);
+        },
+        error: function(response) {
+            console.log("Error occured");
+        }
+    }), active;
+}
+
+function redirectToCheckoutLogin() {
+    window.location = ACC.config.encodedContextPath + "/checkout/multi/checkoutlogin/login";
+}
+
+function pinCodeDiv() {
+    $("#changePinDiv").show(), $("#defaultPinDiv").hide(), $("#defaultPinCodeIds").val("");
+}
+
+function teliumTrack() {
+    utag.link({
+        link_text: "pay_terms_conditions_click",
+        event_type: "terms_conditions_click"
+    });
+}
+
+function displayThrdPrtyWlt() {
+    $("#make_mrupee_payment_up").show(), $("li#MRUPEE").css("display", "block"), applyPromotion(null, "none", "none");
+}
+
+function submitWalletForm(values) {
+    var checkNull = !0;
+    if (void 0 != values) for (i = 0; i < values.length; i++) if (null == values[i] || void 0 == values[i] || "" == values[i]) {
+        checkNull = !1;
+        break;
+    }
+    if (checkNull) {
+        var staticHost = $("#staticHost").val();
+        $("body").append("<div id='no-click' style='opacity:0.5; background:#000; z-index: 100000; width:100%; height:100%; position: fixed; top: 0; left:0;'></div>"), 
+        $("body").append('<div class="loaderDiv" style="position: fixed; left: 45%;top:45%;z-index: 10000"><img src="' + staticHost + '/_ui/responsive/common/images/red_loader.gif" class="spinner"></div>'), 
+        $(".pay button, #make_mrupee_payment").prop("disabled", !0), $(".pay button, #make_mrupee_payment").css("opacity", "0.5"), 
+        $("#tpWallt_payment_form").submit();
+    } else window.location.reload();
+}
+
+function updateMobileNo() {
+    $("#otpMobileNUMField").val(""), $("#otpMobileNUMField").focus();
+}
+
+function adjustHtMargin() {
+    var htSpanAlert = $(".alert.alert-danger.alert-dismissable").height() + parseInt($(".alert.alert-danger.alert-dismissable").css("margin-bottom"));
+    alert_top = $("header").outerHeight() + $(".checkout-content.checkout-payment.cart.checkout.wrapper .top.checkout-top").outerHeight() + 10, 
+    $(window).width() <= 980 && $(window).width() > 750 && (alert_top = $("header").outerHeight() + $(".checkout-content.checkout-payment.cart.checkout.wrapper .top.checkout-top").outerHeight()), 
+    $(".alert-danger").css({});
+    var ht = $(".alert-danger>span").outerHeight();
+    $(".alert-danger").css("height", ht), $(".checkout-payment.cart.checkout.wrapper .step-body").css("margin-top", htSpanAlert), 
+    $(".alert.alert-danger.alert-dismissable").height() > 20 ? $(".global-alerts button.close,#juspayconnErrorDiv button.close").css("height", "100%") : $(".global-alerts button.close,#juspayconnErrorDiv button.close").css("height", ""), 
+    "none" === $(".alert.alert-danger.alert-dismissable").css("display") && $(".checkout-payment.cart.checkout.wrapper .step-body").css("margin-top", "");
+}
+
+function submitCODForm() {
+    if ("Netbanking" == $("#paymentMode").val()) {
+        bankCodeCheck() ? submitNBForm() : $("#netbankingIssueError").css("display", "block");
+    } else if ("COD" == $("#paymentMode").val()) {
+        $("#otpNUMField").val();
+        "undefined" != typeof utag && utag.link({
+            link_text: "pay_cod_validate_otp",
+            event_type: "payment_mode_cod"
+        }), $("#otpNUM, #sendOTPNumber, #paymentFormButton, #sendOTPButton, #otpSentMessage").css("display", "block"), 
+        $("#emptyOTPMessage").css("display", "none"), $("#paymentButtonId").prop("disabled", !0);
+        var guid = $("#guid").val();
+        $.ajax({
+            url: ACC.config.encodedContextPath + "/checkout/multi/payment-method/confirmCodOrder",
+            type: "POST",
+            data: {
+                guid: guid
+            },
+            cache: !1,
+            success: function(response) {
+                if ("redirect" == response) $(location).attr("href", ACC.config.encodedContextPath + "/cart"); else if ("redirect_to_payment" == response) $(location).attr("href", ACC.config.encodedContextPath + "/checkout/multi/payment-method/pay?value=" + guid); else if ("redirect_with_coupon" == response) document.getElementById("juspayErrorMsg").innerHTML = "Sorry! The coupon cannot be used for this purchase. You can either change your payment method/bank or <a href='javascript:explicit_coupon_release_function();'><b><u>save your coupon</u></b></a> for your next purchase.", 
+                $("#juspayconnErrorDiv").css("display", "block"), $("body,html").animate({
+                    scrollTop: 0
+                }), $(".pay .payment-button,.cod_payment_button_top").prop("disabled", !1), $(".pay .payment-button,.cod_payment_button_top").css("opacity", "1"); else if ($("#emptyOTPMessage").css("display", "none"), 
+                null != response) if ("INVALID" == response) utag.link({
+                    link_text: "pay_cod_otp_error",
+                    event_type: "payment_mode_cod"
+                }), $("#otpNUM, #sendOTPNumber, #enterOTP, #wrongOtpValidationMessage").css("display", "block"), 
+                $("#expiredOtpValidationMessage").css("display", "none"), $("#otpSentMessage").css("display", "none"), 
+                $("#paymentButtonId").prop("disabled", !1); else if ("EXPIRED" == response) "undefined" != typeof utag && utag.link({
+                    link_text: "pay_cod_otp_timeout",
+                    event_type: "payment_mode_cod"
+                }), $("#otpNUM, #sendOTPNumber, #enterOTP, #expiredOtpValidationMessage").css("display", "block"), 
+                $("#wrongOtpValidationMessage").css("display", "none"), $("#otpSentMessage").css("display", "none"), 
+                $("#paymentButtonId").prop("disabled", !1); else {
+                    "undefined" != typeof utag && utag.link({
+                        link_text: "pay_cod_otp_success",
+                        event_type: "payment_mode_cod"
+                    });
+                    var staticHost = $("#staticHost").val();
+                    sendTealiumData(), $("#form-actions, #otpNUM").css("display", "block"), $("#wrongOtpValidationMessage, #expiredOtpValidationMessage").css("display", "none"), 
+                    $("#otpSentMessage").css("display", "none"), $(".pay .payment-button,.cod_payment_button_top").prop("disabled", !0), 
+                    $(".pay .payment-button,.cod_payment_button_top").css("opacity", "0.5"), $("body").append("<div id='no-click' style='opacity:0.5; background:#000; z-index: 100000; width:100%; height:100%; position: fixed; top: 0; left:0;'></div>"), 
+                    $("body").append('<div class="loaderDiv" style="position: fixed; left: 45%;top:45%;z-index: 10000"><img src="' + staticHost + '/_ui/responsive/common/images/red_loader.gif" class="spinner"></div>'), 
+                    $("#silentOrderPostForm").submit();
+                } else "undefined" != typeof utag && utag.link({
+                    link_text: "pay_cod_otp_error",
+                    event_type: "payment_mode_cod"
+                }), alert("Error validating OTP. Please select another payment mode and proceed"), 
+                $(".pay button,.cod_payment_button_top").prop("disabled", !1), $(".pay button,.cod_payment_button_top").css("opacity", "1"), 
+                $(".pay .loaderDiv").remove(), $("#no-click,.loaderDiv").remove(), $("#paymentButtonId").prop("disabled", !1);
+            },
+            error: function(resp) {
+                "undefined" != typeof utag && utag.link({
+                    link_text: "pay_cod_otp_error",
+                    event_type: "payment_mode_cod"
+                }), alert("Error validating OTP. Please select another payment mode and proceed"), 
+                $(".pay button,.cod_payment_button_top").prop("disabled", !1), $(".pay button,.cod_payment_button_top").css("opacity", "1"), 
+                $(".pay .loaderDiv").remove(), $("#no-click,.loaderDiv").remove();
+            }
+        });
+    } else alert("Please make valid selection and proceed");
+}
+
+function paymentErrorTrack(msg) {
+    "undefined" != typeof utag && utag.link({
+        error_type: msg
+    });
+}
+
 if (function(a, b) {
     "object" == typeof module && "object" == typeof module.exports ? module.exports = a.document ? b(a, !0) : function(a) {
         if (!a.document) throw new Error("jQuery requires a window with a document");
@@ -15928,4 +18534,644 @@ $(document).ready(function() {
     }
 }), $(document).ready(function() {
     onSizeSelectPopulateDOM();
+});
+
+var isCodSet = !1, binStatus = !1, isNewCard = !1, couponApplied = !1, bankNameSelected = null;
+
+$("#viewPaymentCredit, #viewPaymentCreditMobile ").click(function() {
+    $("#staticHost").val();
+    isSessionActive() ? displayCreditCardForm() : redirectToCheckoutLogin(), $("*[data-id=savedCCard]").is(":checked") ? ($(".proceed-button").each(function() {
+        $(this).hide();
+    }), $("#make_saved_cc_payment_up").show()) : ($(".proceed-button").each(function() {
+        $(this).hide();
+    }), $("#make_cc_payment_up").show()), "undefined" != typeof utag && utag.link({
+        link_text: "pay_credit_card_selected",
+        event_type: "payment_mode_selection"
+    });
+}), $("#viewPaymentDebit, #viewPaymentDebitMobile").click(function() {
+    $("#staticHost").val();
+    isSessionActive() ? displayDebitCardForm() : redirectToCheckoutLogin(), $("*[data-id=savedDCard]").is(":checked") ? ($(".proceed-button").each(function() {
+        $(this).hide();
+    }), $("#make_saved_dc_payment_up").show()) : ($(".proceed-button").each(function() {
+        $(this).hide();
+    }), $("#make_dc_payment_up").show()), utag.link({
+        link_text: "pay_debit_card_selected",
+        event_type: "payment_mode_selection"
+    });
+}), $("#viewPaymentNetbanking, #viewPaymentNetbankingMobile").click(function() {
+    $("#staticHost").val();
+    isSessionActive() ? displayNetbankingForm() : redirectToCheckoutLogin(), "undefined" != typeof utag && utag.link({
+        link_text: "pay_net_banking_selected",
+        event_type: "payment_mode_selection"
+    });
+}), $("#viewPaymentCOD, #viewPaymentCODMobile").click(function() {
+    $("#paymentButtonId_up").is(":visible") ? $(".totals.outstanding-totalss").css("bottom", "40px") : $(".totals.outstanding-totalss").css("bottom", "0px");
+    $("#staticHost").val();
+    1 == isSessionActive() ? displayCODForm() : redirectToCheckoutLogin(), "undefined" != typeof utag &&utag.link({
+        link_text: "pay_cod_selected",
+        event_type: "payment_mode_selection"
+    });
+}), $("#viewPaymentEMI, #viewPaymentEMIMobile").click(function() {
+    $("#staticHost").val();
+    isSessionActive() ? displayEMIForm() : redirectToCheckoutLogin(),"undefined" != typeof utag && utag.link({
+        link_text: "pay_emi_selected",
+        event_type: "payment_mode_selection"
+    });
+}), $(".security_code").on("paste", function() {
+    return !1;
+}), $("#pincode").on("paste", function() {
+    return !1;
+}), $("#otpMobileNUMField").focus(function() {
+    $("#mobileNoError").css("display", "none");
+}), $("input[name=creditCards]:radio").each(function() {
+    $(this.form);
+}).on("change", function(e) {
+    var $this = $(this);
+    $this.parents("div.credit-card-group:first");
+    $(".card_cvvErrorSavedCard, card_cvvErrorSavedCard_hide, .card_ebsErrorSavedCard, .card_ebsErrorSavedCard_hide").css("display", "none"), 
+    $("input[name=creditCards]:radio.card_token").removeClass("card_token").addClass("card_token_hide"), 
+    $("input[name=debitCards]:radio.card_token").removeClass("card_token").addClass("card_token_hide"), 
+    $("input[name=emiCards]:radio.card_token").removeClass("card_token").addClass("card_token_hide"), 
+    $(".card_token_hide").parent().parent().parent().find(".cvv").find(".security_code").removeClass("security_code").addClass("security_code_hide"), 
+    $(e.currentTarget).removeClass("card_token_hide").addClass("card_token"), $(".card_bank").removeClass("card_bank").addClass("card_bank_hide"), 
+    $(".card_brand").removeClass("card_brand").addClass("card_brand_hide"), $(".card_is_domestic").removeClass("card_is_domestic").addClass("card_is_domestic_hide"), 
+    $(".card_ebsErrorSavedCard").removeClass("card_ebsErrorSavedCard").addClass("card_ebsErrorSavedCard_hide"), 
+    $(".card_cvvErrorSavedCard").removeClass("card_cvvErrorSavedCard").addClass("card_cvvErrorSavedCard_hide"), 
+    $(e.currentTarget).parent().find(".card_bank_hide").removeClass("card_bank_hide").addClass("card_bank"), 
+    $(e.currentTarget).parent().parent().parent().find(".cvv").find(".security_code_hide").removeClass("security_code_hide").addClass("security_code"), 
+    $(e.currentTarget).parent().find(".card_brand_hide").removeClass("card_brand_hide").addClass("card_brand"), 
+    $(e.currentTarget).parent().find(".card_is_domestic_hide").removeClass("card_is_domestic_hide").addClass("card_is_domestic"), 
+    $(e.currentTarget).parent().find(".card_ebsErrorSavedCard_hide").removeClass("card_ebsErrorSavedCard_hide").addClass("card_ebsErrorSavedCard"), 
+    $(e.currentTarget).parent().parent().parent().find(".cvv").find(".card_cvvErrorSavedCard_hide").removeClass("card_cvvErrorSavedCard_hide").addClass("card_cvvErrorSavedCard"), 
+    $(".security_code_hide").val(null), $(".security_code_hide").prop("disabled", !0), 
+    $(".security_code").prop("disabled", !1), "AMEX" == $(".card_bank").val() ? $(".security_code").attr("maxlength", "4") : $(".security_code").attr("maxlength", "3"), 
+    setBankForSavedCard($(".card_bank").val());
+}), $("input[name=debitCards]:radio").each(function() {
+    $(this.form);
+}).on("change", function(e) {
+    var $this = $(this);
+    $(".card_cvvErrorSavedCard, card_cvvErrorSavedCard_hide, .card_ebsErrorSavedCard, .card_ebsErrorSavedCard_hide").css("display", "none");
+    $this.parents("div.debit-card-group:first");
+    $("input[name=creditCards]:radio.card_token").removeClass("card_token").addClass("card_token_hide"), 
+    $("input[name=debitCards]:radio.card_token").removeClass("card_token").addClass("card_token_hide"), 
+    $("input[name=emiCards]:radio.card_token").removeClass("card_token").addClass("card_token_hide"), 
+    $(".card_token_hide").parent().parent().parent().find(".cvv").find(".security_code").removeClass("security_code").addClass("security_code_hide"), 
+    $(e.currentTarget).removeClass("card_token_hide").addClass("card_token"), $(".card_bank").removeClass("card_bank").addClass("card_bank_hide"), 
+    $(".card_brand").removeClass("card_brand").addClass("card_brand_hide"), $(".card_is_domestic").removeClass("card_is_domestic").addClass("card_is_domestic_hide"), 
+    $(".card_ebsErrorSavedCard").removeClass("card_ebsErrorSavedCard").addClass("card_ebsErrorSavedCard_hide"), 
+    $(".card_cvvErrorSavedCard").removeClass("card_cvvErrorSavedCard").addClass("card_cvvErrorSavedCard_hide"), 
+    $(e.currentTarget).parent().find(".card_bank_hide").removeClass("card_bank_hide").addClass("card_bank"), 
+    $(e.currentTarget).parent().parent().parent().find(".cvv").find(".security_code_hide").removeClass("security_code_hide").addClass("security_code"), 
+    $(e.currentTarget).parent().find(".card_brand_hide").removeClass("card_brand_hide").addClass("card_brand"), 
+    $(e.currentTarget).parent().find(".card_is_domestic_hide").removeClass("card_is_domestic_hide").addClass("card_is_domestic"), 
+    $(e.currentTarget).parent().find(".card_ebsErrorSavedCard_hide").removeClass("card_ebsErrorSavedCard_hide").addClass("card_ebsErrorSavedCard"), 
+    $(e.currentTarget).parent().parent().parent().find(".cvv").find(".card_cvvErrorSavedCard_hide").removeClass("card_cvvErrorSavedCard_hide").addClass("card_cvvErrorSavedCard"), 
+    $(".security_code_hide").val(null), $(".security_code_hide").prop("disabled", !0), 
+    $(".security_code").prop("disabled", !1), "AMEX" == $(".card_bank").val() ? $(".security_code").attr("maxlength", "4") : $(".security_code").attr("maxlength", "3"), 
+    setBankForSavedCard($(".card_bank").val()), "MAESTRO" == $(".card_brand").val() ? $("#maestroMessage").css("display", "block") : $("#maestroMessage").css("display", "none");
+}), $(document).on("change", "input[name=emiCards]:radio", function(e) {
+    var $this = $(this);
+    $this.parents("div.credit-card-group:first");
+    $(".card_cvvErrorSavedCard, card_cvvErrorSavedCard_hide, .card_ebsErrorSavedCard, .card_ebsErrorSavedCard_hide").css("display", "none"), 
+    $("input[name=creditCards]:radio.card_token").removeClass("card_token").addClass("card_token_hide"), 
+    $("input[name=debitCards]:radio.card_token").removeClass("card_token").addClass("card_token_hide"), 
+    $("input[name=emiCards]:radio.card_token").removeClass("card_token").addClass("card_token_hide"), 
+    $(".card_token_hide").parent().parent().parent().find(".cvv").find(".security_code").removeClass("security_code").addClass("security_code_hide"), 
+    $(e.currentTarget).removeClass("card_token_hide").addClass("card_token"), $(".card_bank").removeClass("card_bank").addClass("card_bank_hide"), 
+    $(".card_brand").removeClass("card_brand").addClass("card_brand_hide"), $(".card_is_domestic").removeClass("card_is_domestic").addClass("card_is_domestic_hide"), 
+    $(".card_ebsErrorSavedCard").removeClass("card_ebsErrorSavedCard").addClass("card_ebsErrorSavedCard_hide"), 
+    $(".card_cvvErrorSavedCard").removeClass("card_cvvErrorSavedCard").addClass("card_cvvErrorSavedCard_hide"), 
+    $(e.currentTarget).parent().find(".card_bank_hide").removeClass("card_bank_hide").addClass("card_bank"), 
+    $(e.currentTarget).parent().parent().parent().find(".cvv").find(".security_code_hide").removeClass("security_code_hide").addClass("security_code"), 
+    $(e.currentTarget).parent().find(".card_brand_hide").removeClass("card_brand_hide").addClass("card_brand"), 
+    $(e.currentTarget).parent().find(".card_is_domestic_hide").removeClass("card_is_domestic_hide").addClass("card_is_domestic"), 
+    $(e.currentTarget).parent().find(".card_ebsErrorSavedCard_hide").removeClass("card_ebsErrorSavedCard_hide").addClass("card_ebsErrorSavedCard"), 
+    $(e.currentTarget).parent().parent().parent().find(".cvv").find(".card_cvvErrorSavedCard_hide").removeClass("card_cvvErrorSavedCard_hide").addClass("card_cvvErrorSavedCard"), 
+    $(".security_code_hide").val(null), $(".security_code_hide").prop("disabled", !0), 
+    $(".security_code").prop("disabled", !1), "AMEX" == $(".card_bank").val() ? $(".security_code").attr("maxlength", "4") : $(".security_code").attr("maxlength", "3");
+}), $("#make_saved_cc_payment,#make_saved_cc_payment_up").click(function() {
+    $("#cvvError").css("display", "none");
+    var password = $(".card_token").parent().parent().parent().find(".cvv").find(".cvvValdiation").val(), ebsDownCheck = $("#ebsDownCheck").val(), isDomestic = $(".card_token").parent().parent().parent().find(".card").find(".radio").find(".card_is_domestic").val();
+    if (password.length < 3 && "MAESTRO" != $(".card_brand").val()) return $(".card_cvvErrorSavedCard").css("display", "block"), 
+    $(".card_cvvErrorSavedCard_popup").css("display", "block"), $(this).addClass("saved_card_disabled"), 
+    $(".card_token").parent().parent().parent().find(".cvv").find(".cvvValdiation").focus(), 
+    !1;
+    if ("MAESTRO" == $(".card_brand").val() && "" == password) createJuspayOrderForSavedCard(); else {
+        if ("Y" == ebsDownCheck && ("false" == isDomestic || "" == isDomestic)) return $(".card_ebsErrorSavedCard").css("display", "block"), 
+        !1;
+        createJuspayOrderForSavedCard();
+    }
+}), $("#make_saved_dc_payment,#make_saved_dc_payment_up").click(function() {
+    var password = $(".card_token").parent().parent().parent().find(".cvv").find(".cvvValdiation").val(), ebsDownCheck = $("#ebsDownCheck").val(), isDomestic = $(".card_token").parent().parent().parent().find(".card").find(".radio").find(".card_is_domestic").val();
+    if (password.length < 3 && "MAESTRO" != $(".card_brand").val()) return $(".card_cvvErrorSavedCard").css("display", "block"), 
+    $(".card_cvvErrorSavedCard_popup").css("display", "block"), $(".card_token").parent().parent().parent().find(".cvv").find(".cvvValdiation").focus(), 
+    $(this).addClass("saved_card_disabled"), !1;
+    if ("MAESTRO" == $(".card_brand").val() && "" == password) createJuspayOrderForSavedDebitCard(); else {
+        if ("Y" == ebsDownCheck && ("false" == isDomestic || "" == isDomestic)) return $(".card_ebsErrorSavedCard").css("display", "block"), 
+        !1;
+        createJuspayOrderForSavedDebitCard();
+    }
+}), $(".security_code").focus(function() {
+    $("#savedCVVError").css("display", "none"), $(".card_ebsErrorSavedCard").css("display", "none"), 
+    document.getElementById("cvvError").innerHTML = "";
+}), $("#make_cc_payment, #make_cc_payment_up").click(function() {
+    if (0 == isSessionActive()) redirectToCheckoutLogin(); else {
+        getCardBinstatus();
+    }
+}), $("#make_dc_payment,#make_dc_payment_up").click(function() {
+    if (0 == isSessionActive()) redirectToCheckoutLogin(); else {
+        getCardBinstatusDc();
+    }
+}), $(document).on("click", "#make_emi_payment,#make_emi_payment_up", function() {
+    if (0 == isSessionActive()) redirectToCheckoutLogin(); else {
+        getCardBinstatusEmiCc();
+    }
+}), maxL = 120;
+
+var bName = navigator.appName;
+
+$(window).on("load resize", function() {
+    $(window).width() < 768 ? $(".cvvHelp").popover({
+        html: "true",
+        placement: "right",
+        trigger: "click",
+        content: $("#cvvHelpContent").val()
+    }) : $(".cvvHelp").popover({
+        html: "true",
+        placement: "bottom",
+        trigger: "hover",
+        content: $("#cvvHelpContent").val()
+    }), $(".remove-coupon-button").popover({
+        html: "true",
+        placement: "left",
+        trigger: "hover",
+        content: $("#couponRelContent").val()
+    });
+}), $("#cardNo").keyup(function() {
+    $(this).val().length >= 1 ? cardType = creditCardTypeFromNumber($(this).val()) : $(this).val().length < 2 && (document.getElementById("cardType").value = "", 
+    $("ul.accepted-cards li").removeClass("active-card"));
+}), $("#cardNoDc").keyup(function() {
+    $(this).val().length >= 1 ? cardType = debitCardTypeFromNumber($(this).val()) : $(this).val().length < 2 && ($("#cardTypeDc").val(""), 
+    $("ul.accepted-cards li").removeClass("active-card"));
+}), $("#cardNoEmi").keyup(function() {
+    $(this).val().length >= 1 ? cardType = emiCardTypeFromNumber($(this).val()) : $(this).val().length < 2 && ($("#cardTypeEmi").val(""), 
+    $("ul.accepted-cards li").removeClass("active-card"));
+}), $("#newAddressButton,#newAddressButtonUp").click(function() {
+    var validate = !0, regPostcode = /^([1-9])([0-9]){5}$/, mob = /^[1-9]{1}[0-9]{9}$/, letters = /^[a-zA-Z]+$/, cityPattern = /^[a-zA-Z]+([\s]?[a-zA-Z]+)*$/, firstName = document.getElementById("address.firstName"), lastName = document.getElementById("address.surname"), address1 = document.getElementById("address.line1"), address2 = document.getElementById("address.line2"), address3 = document.getElementById("address.line3"), city = document.getElementById("address.townCity"), stateValue = document.getElementById("address.states"), zipcode = document.getElementsByName("postcode")[0].value, txtMobile = document.getElementsByName("MobileNo")[0].value, result = firstName.value;
+    return void 0 == result || "" == result ? ($("#firstnameError").show(), $("#firstnameError").html("<p>First Name cannot be Blank</p>"), 
+    validate = !1) : 0 == letters.test(result) ? ($("#firstnameError").show(), $("#firstnameError").html("<p>First name should not contain any special characters or space</p>"), 
+    validate = !1) : $("#firstnameError").hide(), result = lastName.value, void 0 == result || "" == result ? ($("#lastnameError").show(), 
+    $("#lastnameError").html("<p>Last Name cannot be Blank</p>"), validate = !1) : 0 == letters.test(result) ? ($("#lastnameError").show(), 
+    $("#lastnameError").html("<p>Last name should not contain any special characters or space</p>"), 
+    validate = !1) : $("#lastnameError").hide(), result = address1.value, void 0 == result || "" == result ? ($("#address1Error").show(), 
+    $("#address1Error").html("<p>Address Line 1 cannot be blank</p>"), validate = !1) : $("#address1Error").hide(), 
+    result = city.value, void 0 == result || "" == result ? ($("#cityError").show(), 
+    $("#cityError").html("<p>City cannot be blank</p>"), validate = !1) : 0 == cityPattern.test(result) ? ($("#cityError").show(), 
+    $("#cityError").html("<p>City must be alphabet only</p>"), validate = !1) : $("#cityError").hide(), 
+    result = stateValue.options[stateValue.selectedIndex].value, void 0 == result || "" == result ? ($("#stateError").show(), 
+    $("#stateError").html("<p>Please choose a state</p>"), validate = !1) : $("#stateError").hide(), 
+    void 0 == zipcode || "" == zipcode ? ($("#pincodeError").show(), $("#pincodeError").html("<p>Please enter a pincode</p>"), 
+    validate = !1) : 0 == regPostcode.test(zipcode) ? ($("#pincodeError").show(), $("#pincodeError").html("<p>Please enter a valid pincode</p>"), 
+    validate = !1) : $("#pincodeError").hide(), void 0 == txtMobile || "" == txtMobile ? ($("#mobileError").show(), 
+    $("#mobileError").html("<p>Please enter mobile no.</p>"), validate = !1) : 0 == mob.test(txtMobile) ? ($("#mobileError").show(), 
+    $("#mobileError").html("<p> Please enter correct mobile no.</p>"), validate = !1) : $("#mobileError").hide(), 
+    0 != validate && (-1 != address1.value.indexOf("#") && (address1.value = encodeURIComponent(address1.value)), 
+    -1 != address2.value.indexOf("#") && (address2.value = encodeURIComponent(address2.value)), 
+    -1 != address3.value.indexOf("#") && (address3.value = encodeURIComponent(address3.value)), 
+    $("#addressForm").submit(), !1);
+}), $("#address-form").click(function() {
+    $.ajax({
+        url: ACC.config.encodedContextPath + "/checkout/multi/delivery-method/new-address",
+        type: "GET",
+        cache: !1,
+        dataType: "html",
+        success: function(response) {
+            $(".addnewAddresPage").html(response);
+        },
+        error: function(resp) {}
+    });
+}), $(document).ready(function() {
+    $(".edit_address").click(function() {
+        var address_id = $(this).attr("id"), address_id_new = address_id.split("_");
+        return $.ajax({
+            url: ACC.config.encodedContextPath + $(this).attr("href"),
+            type: "GET",
+            cache: !1,
+            dataType: "html",
+            success: function(response) {
+                $(".editnewAddresPage, .formaddress").slideUp(), $(".editnewAddresPage, .formaddress").empty(), 
+                $(".add-address").slideDown(), $("#" + address_id_new[1]).html(response), $("#" + address_id_new[1] + " .checkout-shipping.formaddress").prepend("<div class='heading-form'><h3>Edit This Address</h3><input type='button' value='cancel' class='cancelBtnEdit' id='cancel-" + address_id_new[1] + "'></div>"), 
+                $("#" + address_id_new[1]).slideDown(), loadPincodeData("edit").done(function() {
+                    var value = $(".address_landmarkOtherDiv").attr("data-value");
+                    otherLandMarkTri(value, "defult");
+                });
+            },
+            error: function(resp) {}
+        }), !1;
+    });
+}), $(".regular-radio").click(function() {
+    var radio = $(this), radio_label = $(this).parent().find("label");
+    return $.ajax({
+        url: ACC.config.encodedContextPath + "/checkout/multi/delivery-method/set-default-address/" + $(this).attr("data-address-id"),
+        type: "GET",
+        cache: !1,
+        dataType: "text",
+        success: function(response) {
+            "true" == response ? ($(".address-list input[type='radio']+label").removeClass("radio-checked"), 
+            radio.attr("checked", "checked"), radio_label.addClass("radio-checked")) : alert("Unable to set default address");
+        },
+        error: function(response) {
+            alert("Inside eror" + response);
+        }
+    }), !1;
+}), $(".viewMore,.viewMoreSign").click(function(e) {
+    e.preventDefault(), $(".add-address").removeClass("add-addressShifts"), $(".addsign.viewMoreSign").removeClass("addsignContent"), 
+    $(".checkTab .address-list.hideItem").slideToggle(function() {
+        $(".addNew_wrapper").removeClass("moreEvens_address"), $(this).is(":visible") && $(".address-list").length % 2 != 0 ? $(".addNew_wrapper").addClass("moreEvens_address") : ($(".add-address").removeClass("add-addressShifts"), 
+        $(".add-address").removeClass("addressClear")), $(".checkTab .address-list.hideItem").is(":visible") ? ($(".addsign.viewMoreSign").addClass("addsignContent"), 
+        $(".viewMore").text("View Less Address")) : ($(".addsign.viewMoreSign").removeClass("addsignContent"), 
+        $(".viewMore").text("View More Address"), $(".viewMoreContainer").removeClass("addressClear"));
+        var len = 0;
+        $(".address-list").each(function() {
+            "none" != $(this).css("display") && len++;
+        }), len % 2 != 0 ? ($(".add-address").addClass("add-addressShifts"), $(".viewMoreContainer").removeClass("addressClear")) : $(".add-address").removeClass("add-addressShifts");
+    });
+}), $(".edit").eq(2).children("a").click(function(e) {
+    e.preventDefault(), $(".address-list").length % 2 != 0 && ($(".add-address").addClass("add-addressShifts"), 
+    $(".add-address").addClass("addressClear"));
+}), $(".edit").children("a").click(function(e) {
+    e.preventDefault(), $(".addsign").hasClass("addsignContent") || ($(".add-address").removeClass("add-addressShifts"), 
+    $(".add-address").removeClass("addressClear"));
+}), $(document).on("click", ".cancelBtnEdit", function() {
+    $(".address-list").length % 2 != 0 && ($(".add-address").removeClass("add-addressShifts"), 
+    $(".add-address").removeClass("addressClear"));
+}), $(document).on("click", ".cancelBtnEdit:last", function() {
+    $(".viewMoreSign").hasClass("addsignContent") && $(".address-list").length % 2 != 0 && ($(".add-address").addClass("add-addressShifts"), 
+    $(".add-address").addClass("addressClear"));
+}), $(".edit:last").children("a.edit_address").on("click", function() {
+    $(".viewMoreSign").hasClass("addsignContent") && $(".address-list").length % 2 != 0 && ($(".add-address").addClass("add-addressShifts"), 
+    $(".add-address").addClass("addressClear"));
+}), $("#selectDeliveryMethodForm #deliveryradioul .delivery_options .delivery ul li input:radio").click(function() {
+    var radioSplit = ($(this).find("li").length, $(this).attr("id").split("_")), mode = (radioSplit[0], 
+    radioSplit[1], radioSplit[2]), shippingType = "";
+    shippingType = "home-delivery" == mode ? "home" : "express-delivery" == mode ? "express" : "click_collect", 
+    utag.link({
+        link_text: "deliver_mode_" + shippingType,
+        event_type: shippingType + "_delivery_selected"
+    }), changeCTAButtonName("DefaultName"), $("#deliveryradioul .delivery ul").each(function() {
+        $(this).find("li").length >= "1" && "click-and-collect" == $(this).find("input[type='radio']:checked").attr("id").split("_")[2] && changeCTAButtonName($(this).find("input[type='radio']:checked").attr("id").split("_")[2]);
+    });
+}), $(document).ready(function() {
+    $("#ussid").addClass("ussid"), $(".desktop li:nth-child(4) ul").after("<span class='pincodeServiceError'></span>"), 
+    $("#defaultPinCodeIds").keyup(function(event) {
+        13 == event.keyCode ? $("#pinCodeButtonIds").click() : 8 != event.keyCode && 46 != event.keyCode || "" == $.trim(this.value) && ($("#checkout-enabled").addClass("checkout-disabled"), 
+        $("#checkout-down-enabled").addClass("checkout-disabled"), $("#emptyId_tooltip").show(), 
+        $("#emptyId_tooltip_btm").show(), $(".cartItemBlankPincode").show(), $(".delivery ul.success_msg").hide(), 
+        $(".pincodeServiceError").hide(), $("#unserviceablepincode").hide(), $("#unserviceablepincodeBtm").hide(), 
+        $("#unserviceablepincode_tooltip").hide(), $("#unserviceablepincode_tooltip_btm").hide(), 
+        $("#error-Id").hide(), $("#error-IdBtm").hide(), $("#error-Id_tooltip").hide(), 
+        $("#error-Id_tooltip_btm").hide(), $("#defaultPinCodeIdsBtm").val(""));
+    }), $("#defaultPinCodeIdsBtm").keyup(function(event) {
+        13 == event.keyCode ? $("#pinCodeButtonIdsBtm").click() : 8 != event.keyCode && 46 != event.keyCode || "" == $.trim(this.value) && ($("#checkout-enabled").addClass("checkout-disabled"), 
+        $("#checkout-down-enabled").addClass("checkout-disabled"), $("#emptyId_tooltip").show(), 
+        $("#emptyId_tooltip_btm").show(), $(".cartItemBlankPincode").show(), $(".delivery ul.success_msg").hide(), 
+        $(".pincodeServiceError").hide(), $("#unserviceablepincode").hide(), $("#unserviceablepincodeBtm").hide(), 
+        $("#unserviceablepincode_tooltip").hide(), $("#unserviceablepincode_tooltip_btm").hide(), 
+        $("#error-Id").hide(), $("#error-IdBtm").hide(), $("#error-Id_tooltip").hide(), 
+        $("#error-Id_tooltip_btm").hide(), $("#defaultPinCodeIds").val(""));
+    }), $("#popUpExpAddress input.address_radio[data-index='0']").attr("checked", "checked");
+}), $("#defaultPinCodeIds").click(function() {
+    $("#unserviceablepincode").hide(), $("#unserviceablepincodeBtm").hide(), $(".deliveryUlClass").remove(), 
+    $("#cartPinCodeAvailable").show(), $("#cartPinCodeAvailableBtm").show(), $("#error-Id").hide(), 
+    $("#error-IdBtm").hide(), $("#emptyId").hide(), $("#emptyIdBtm").hide(), "ChangePincode" == document.getElementById("pinCodeButtonIds").className && (document.getElementById("pinCodeButtonIds").className = "CheckAvailability", 
+    $("#AvailableMessage").hide(), $("#AvailableMessage").hide());
+}), $("#defaultPinCodeIdsBtm").click(function() {
+    $("#unserviceablepincode").hide(), $("#unserviceablepincodeBtm").hide(), $(".deliveryUlClass").remove(), 
+    $("#cartPinCodeAvailable").show(), $("#cartPinCodeAvailableBtm").show(), $("#error-Id").hide(), 
+    $("#error-IdBtm").hide(), $("#emptyId").hide(), $("#emptyIdBtm").hide(), "ChangePincode" == document.getElementById("pinCodeButtonIdsBtm").className && (document.getElementById("pinCodeButtonIdsBtm").className = "CheckAvailability", 
+    $("#AvailableMessage").hide(), $("#AvailableMessageBtm").hide());
+}), $(document).ready(function() {
+    "cart" == $("#pageType").val() && checkIsServicable();
+}), $("#cardNo").focus(function() {
+    document.getElementById("cardNoError").innerHTML = "";
+}), $("#cardNoDc").focus(function() {
+    document.getElementById("cardNoErrorDc").innerHTML = "";
+}), $("#cardNoEmi").focus(function() {
+    document.getElementById("cardNoErrorEmi").innerHTML = "";
+}), $(".name_on_card").focus(function() {
+    $("#memberNameError").html(""), $("#memberNameErrorDc").html(""), $("#memberNameErrorEmi").html("");
+}), $(".card_exp_month").focus(function() {
+    $("#expYYError").html(""), $("#expYYErrorDc").html(""), $("#expYYErrorEmi").html("");
+}), $(".card_exp_year").focus(function() {
+    $("#expYYError").html(""), $("#expYYErrorDc").html(""), $("#expYYErrorEmi").html("");
+}), $(".security_code").focus(function() {
+    $("#cvvError").html(""), $("#cvvErrorDc").html(""), $("#cvvErrorEmi").html("");
+}), $("#make_cc_payment").on("mousedown", function(event) {
+    $("#make_cc_payment").data("mouseDown", "clicked");
+}), $("#make_dc_payment").on("mousedown", function(event) {
+    $("#make_dc_payment").data("mouseDown", "clicked");
+}), $("#cardNo").keydown(function() {
+    $("#make_cc_payment").data("mouseDown", "notclicked");
+}), $("#cardNoDc").keydown(function() {
+    $("#make_dc_payment").data("mouseDown", "notclicked");
+}), $("#cardNo").blur(function() {
+    "" != $("#cardNo").val() && "clicked" != $("#make_cc_payment").data("mouseDown") && (isSessionActive() ? validateCardNo("none") : redirectToCheckoutLogin());
+}), $("#cardNoDc").blur(function() {
+    "" != $("#cardNoDc").val() ? "clicked" != $("#make_dc_payment").data("mouseDown") && (isSessionActive() ? validateDebitCardNo("none") : redirectToCheckoutLogin()) : document.getElementById("cardNoError").innerHTML = "Please enter a valid card number ";
+}), $(".name_on_card").blur(function() {
+    "" != $(".name_on_card").val() && validateName();
+}), $(".card_exp_month").blur(function() {
+    "month" != $(".card_exp_month").val() ? validateExpMM() : "month" == $(".card_exp_month").val() && "year" != $(".card_exp_year").val() && validateExpMM();
+}), $(".card_exp_year").blur(function() {
+    "year" != $(".card_exp_year").val() ? validateExpYY() : "month" != $(".card_exp_month").val() && "year" == $(".card_exp_year").val() && validateExpYY();
+}), $("#cardNo").keyup(function() {
+    this.value || (document.getElementById("cardNoError").innerHTML = "");
+}), $("#cardNoDc").keyup(function() {
+    this.value || (document.getElementById("cardNoError").innerHTML = "");
+}), $(".name_on_card").keyup(function() {
+    this.value || (document.getElementById("memberNameErrorDc").innerHTML = "", document.getElementById("memberNameError").innerHTML = "");
+}), $(".security_code").keyup(function() {
+    this.value || (document.getElementById("cvvErrorDc").innerHTML = "", document.getElementById("cvvError").innerHTML = "");
+}), $(".card_exp_month").keyup(function() {
+    "month" == this.value && "year" == $(".card_exp_year").val() && (document.getElementById("expYYErrorDc").innerHTML = "", 
+    document.getElementById("expYYError").innerHTML = "");
+}), $(".card_exp_year").keyup(function() {
+    "year" == this.value && "month" == $(".card_exp_month").val() && (document.getElementById("expYYErrorDc").innerHTML = "", 
+    document.getElementById("expYYError").innerHTML = "");
+}), $("#cardNo").keypress(function(evt) {
+    return isNumber(evt);
+}), $("#cardNoDc").keypress(function(evt) {
+    return isNumber(evt);
+}), $(".security_code").keypress(function(evt) {
+    return isNumber(evt);
+}), $("#sameAsShipping").change(function() {
+    populateAddress();
+}), $("#sameAsShippingEmi").change(function() {
+    populateAddressEmi();
+}), $("#firstName").keyup(function() {
+    this.value || (document.getElementById("firstNameError").innerHTML = "");
+}), $("#firstName").focus(function() {
+    document.getElementById("firstNameError").innerHTML = "";
+}), $("#lastName").keyup(function() {
+    this.value || (document.getElementById("lastNameError").innerHTML = "");
+}), $("#lastName").focus(function() {
+    document.getElementById("lastNameError").innerHTML = "";
+}), $("#address1").keyup(function() {
+    this.value || (document.getElementById("address1Error").innerHTML = "");
+}), $("#address1").focus(function() {
+    document.getElementById("address1Error").innerHTML = "";
+}), $("#address2").keyup(function() {
+    this.value || (document.getElementById("address2Error").innerHTML = "");
+}), $("#address2").focus(function() {
+    document.getElementById("address2Error").innerHTML = "";
+}), $("#address3").keyup(function() {
+    this.value || (document.getElementById("address3Error").innerHTML = "");
+}), $("#address3").focus(function() {
+    document.getElementById("address3Error").innerHTML = "";
+}), $("#pincode").keyup(function() {
+    this.value || (document.getElementById("pinError").innerHTML = "");
+}), $("#pincode").focus(function() {
+    document.getElementById("pinError").innerHTML = "";
+}), $("#city").keyup(function() {
+    this.value || (document.getElementById("cityError").innerHTML = "");
+}), $("#cityEmi").keyup(function() {
+    this.value || (document.getElementById("cityErrorEmi").innerHTML = "");
+}), $("#city").focus(function() {
+    document.getElementById("cityError").innerHTML = "";
+}), $("#cityEmi").focus(function() {
+    document.getElementById("cityErrorEmi").innerHTML = "";
+}), $("#state").keyup(function() {
+    this.value || (document.getElementById("stateError").innerHTML = "");
+}), $("#state").focus(function() {
+    document.getElementById("stateError").innerHTML = "";
+}), $("#stateEmi").keyup(function() {
+    this.value || (document.getElementById("stateErrorEmi").innerHTML = "");
+}), $("#stateEmi").focus(function() {
+    document.getElementById("stateErrorEmi").innerHTML = "";
+}), $("#otpNUMField").focus(function() {
+    $("#emptyOTPMessage, #wrongOtpValidationMessage, #expiredOtpValidationMessage").css("display", "none");
+}), $("#otpMobileNUMField").focus(function() {
+    $("#customerBlackListMessage").css("display", "none");
+}), $(".savedEMICard").find(".credit-card-group").find(".cvv").find(".security_code").focus(function() {
+    $("#savedCVVError").css("display", "none"), $(".card_ebsErrorSavedCard, .card_cvvErrorSavedCard").css("display", "none");
+}), $("#couponSubmitButton").click(function() {
+    if (isSessionActive()) if ($(this).prop("disabled", !0), $(this).css("opacity", "0.5"), 
+    $("#priceCouponError, #emptyCouponError, #appliedCouponError, #invalidCouponError, #expiredCouponError, #issueCouponError, #notApplicableCouponError, #notReservableCouponError, #freebieCouponError, #userInvalidCouponError, #firstPurchaseOfferError, #invalidChannelError").css("display", "none"), 
+    "" == $("#couponFieldId").val()) $("#emptyCouponError").css("display", "block"), 
+    $(this).prop("disabled", !1), $(this).css("opacity", "1"); else if ("" != $("#couponFieldId").val() && 1 == $("#couponFieldId").prop("readonly")) $("#appliedCouponError").css("display", "block"), 
+    $(this).prop("disabled", !1), $(this).css("opacity", "1"); else {
+        var couponCode = $("#couponFieldId").val(), paymentMode = $("#paymentMode").val(), guid = $("#guid").val();
+        "undefined" != typeof utag && utag.link({
+            coupon_code: couponCode
+        }), $("body").append("<div id='no-click' style='opacity:0.5; background:#000; z-index: 100000; width:100%; height:100%; position: fixed; top: 0; left:0;'></div>"), 
+        $("body").append('<div class="loaderDiv" style="position: fixed; left: 45%;top:45%;z-index: 10000"><img src="' + staticHost + '/_ui/responsive/common/images/red_loader.gif" class="spinner"></div>'), 
+        $.ajax({
+            url: ACC.config.encodedContextPath + "/checkout/multi/coupon/redeem",
+            type: "POST",
+            cache: !1,
+            data: {
+                couponCode: couponCode,
+                paymentMode: paymentMode,
+                bankNameSelected: bankNameSelected,
+                guid: guid
+            },
+            success: function(response) {
+                $("#no-click,.loaderDiv").remove(), document.getElementById("totalWithConvField").innerHTML = response.totalPrice.formattedValue, 
+                document.getElementById("outstanding-amount").innerHTML = response.totalPrice.formattedValue, 
+                document.getElementById("outstanding-amount-mobile").innerHTML = response.totalPrice.formattedValue, 
+                $("#codAmount").text(response.totalPrice.formattedValue), null != response.redeemErrorMsg ? ("Price_exceeded" == response.redeemErrorMsg ? $("#priceCouponError").css("display", "block") : "Invalid" == response.redeemErrorMsg ? $("#invalidCouponError").css("display", "block") : "Expired" == response.redeemErrorMsg ? $("#expiredCouponError").css("display", "block") : "Issue" == response.redeemErrorMsg ? $("#issueCouponError").css("display", "block") : "Not_Applicable" == response.redeemErrorMsg ? $("#notApplicableCouponError").css("display", "block") : "Not_Reservable" == response.redeemErrorMsg ? $("#notReservableCouponError").css("display", "block") : "Freebie" == response.redeemErrorMsg ? $("#freebieCouponError").css("display", "block") : "User_Invalid" == response.redeemErrorMsg ? $("#userInvalidCouponError").css("display", "block") : "First_Purchase_User_Invalid" == response.redeemErrorMsg ? $("#firstPurchaseOfferError").css("display", "block") : "Channel_Not_Applicable_Web" == response.redeemErrorMsg ? ($("#invalidChannelError").html("Oh snap! This coupon is valid only on our website"), 
+                $("#invalidChannelError").css("display", "block")) : "Channel_Not_Applicable_Mobile" == response.redeemErrorMsg ? ($("#invalidChannelError").html("Oh snap! This coupon is valid only on our app"), 
+                $("#invalidChannelError").css("display", "block")) : "Channel_Not_Applicable_CallCentre" == response.redeemErrorMsg && $("#notApplicableCouponError").css("display", "block"), 
+                onSubmitAnalytics("invalid_coupon"), "undefined" != typeof utag && utag.link({
+                    error_type: "offer_error"
+                })) : (1 == response.couponRedeemed && (couponApplied = !0), 1 == couponApplied && (response.couponDiscount.doubleValue > 0 ? (null != response.couponMessageInfo && ($("#couponPaymentRestrictionMessage").html("<b>" + response.couponMessageInfo + "<b>"), 
+                $("#couponPaymentRestrictionMessage").show()), $("#couponApplied").css("display", "block"), 
+                document.getElementById("couponValue").innerHTML = response.couponDiscount.formattedValue, 
+                $("#couponFieldId").attr("readonly", !0), $("#couponMessage").html("Coupon <b>" + couponCode + "</b> is applied successfully"), 
+                $("#couponMessage").show(), $("#couponMessage").delay(2e3).fadeOut("slow"), setTimeout(function() {
+                    $("#couponMessage").html("");
+                }, 2500), onSubmitAnalytics("success")) : $("#issueCouponError").css("display", "block"))), 
+                $("#couponSubmitButton").prop("disabled", !1), $("#couponSubmitButton").css("opacity", "1");
+            },
+            error: function(resp) {
+                $("#couponSubmitButton").prop("disabled", !1), $("#couponSubmitButton").css("opacity", "1"), 
+                $("#no-click,.loaderDiv").remove(), "undefined" != typeof utag && utag.link({
+                    error_type: "offer_error"
+                });
+            }
+        });
+    } else redirectToCheckoutLogin();
+}), $("#couponFieldId").focus(function() {
+    $("#priceCouponError, #emptyCouponError, #appliedCouponError, #invalidCouponError, #expiredCouponError, #issueCouponError, #notApplicableCouponError, #notReservableCouponError, #freebieCouponError, #userInvalidCouponError, #firstPurchaseOfferError, #invalidChannelError").css("display", "none");
+}), $(".remove-coupon-button").click(function() {
+    var couponCode = $("#couponFieldId").val(), guid = $("#guid").val();
+    $.ajax({
+        url: ACC.config.encodedContextPath + "/checkout/multi/coupon/release",
+        type: "POST",
+        cache: !1,
+        data: {
+            couponCode: couponCode,
+            guid: guid
+        },
+        success: function(response) {
+            if (document.getElementById("totalWithConvField").innerHTML = response.totalPrice.formattedValue, 
+            document.getElementById("outstanding-amount").innerHTML = response.totalPrice.formattedValue, 
+            document.getElementById("outstanding-amount-mobile").innerHTML = response.totalPrice.formattedValue, 
+            $("#codAmount").text(response.totalPrice.formattedValue), 1 == response.couponReleased && (couponApplied = !0), 
+            1 == couponApplied) {
+                $("#couponApplied, #priceCouponError, #emptyCouponError, #appliedCouponError, #invalidCouponError, #expiredCouponError, #issueCouponError, #freebieCouponError, #userInvalidCouponError, #firstPurchaseOfferError, #invalidChannelError").css("display", "none"), 
+                document.getElementById("couponValue").innerHTML = response.couponDiscount.formattedValue, 
+                $("#couponPaymentRestrictionMessage").hide(), $("#couponFieldId").attr("readonly", !1);
+                var selection = $("#voucherDisplaySelection").val();
+                $("#couponFieldId").val(selection), $("#couponMessage").html("Coupon <b>" + couponCode + "</b> has been removed"), 
+                $("#couponMessage").show(), $("#couponMessage").delay(2e3).fadeOut("slow"), setTimeout(function() {
+                    $("#couponMessage").html("");
+                }, 2500);
+            }
+            $("#couponSubmitButton").prop("disabled", !1), $("#couponSubmitButton").css("opacity", "1"), 
+            console.log("cupon2"), window.location.reload();
+        },
+        error: function(resp) {}
+    });
+}), $(document).ready(function() {
+    if ($("#off-bag").show(), 0 == $("#couponFieldId").prop("readonly")) {
+        var selection = $("#voucherDisplaySelection").val();
+        $("#couponFieldId").val(selection);
+    }
+    if ("Select Address" == $("#checkoutPageName").val() && ($(" body.page-multiStepCheckoutSummaryPage .right-block.shipping").css("visibility", "hidden"), 
+    $(" body.page-multiStepCheckoutSummaryPage .right-block.shipping .subtotals.top.block.summary-info").css("display", "none")), 
+    "Payment Options" == $("#checkoutPageName").val()) {
+        $(" body.page-multiStepCheckoutSummaryPage .progress-barcheck .step-done span").addClass("paymentStepDone");
+        var alert_top = $("header").outerHeight();
+        $(".alert-danger").css({
+            position: "fixed",
+            width: "100%",
+            margin: "0px",
+            top: alert_top
+        }), $(".alert-danger").css("z-index", "101");
+    }
+    $("li.price").each(function() {
+        "inline-block" === $(this).find(".off-bag").css("display") || "block" === $(this).find(".off-bag").css("display") ? $(this).find("span.delSeat.mop").length > 0 && $(this).find("span.delSeat:not(.mop)").addClass("delAction") : $(this).find("span.delSeat:not(.mop)").removeClass("delAction");
+    });
+}), $("#voucherDisplaySelection").change(function() {
+    if (0 == $("#couponFieldId").prop("readonly")) {
+        var selection = $(this).val();
+        $("#couponFieldId").val(selection);
+    }
+});
+
+var wishListList = [];
+
+$("#popUpExpAddress").on("hidden.bs.modal", function() {
+    checkExpressCheckoutPincodeService("typeExpressCheckoutDD");
+}), $(".juspayCloseButton").on("click", function() {
+    $("#juspayconnErrorDiv").hide();
+}), $(document).on("click", ".radio input[type='radio']", function() {
+    $(".radio input[type='radio']").removeAttr("checked"), $(this).prop("checked", "true");
+}), $("*[data-id=newCCard]").click(function() {
+    $(".proceed-button").each(function() {
+        $(this).hide();
+    }), $("#make_cc_payment_up").show(), $(".card_cvvErrorSavedCard").hide(), $("#card_form").find("input[type=password]").val("");
+}), $("*[data-id=savedCCard]").change(function() {
+    $(".proceed-button").each(function() {
+        $(this).hide();
+    }), $("#make_saved_cc_payment_up").show(), $("#cardNoError").empty(), $("#memberNameError").empty(), 
+    $("#expYYError").empty(), $("#cvvError").empty(), $(".card_cvvErrorSavedCard_popup").css("display", "none"), 
+    $("#make_saved_cc_payment").removeClass("saved_card_disabled");
+}), $("*[data-id=newDCard]").click(function() {
+    $(".proceed-button").each(function() {
+        $(this).hide();
+    }), $("#make_dc_payment_up").show(), $(".card_cvvErrorSavedCard").hide(), $("#card_form_saved_debit").find("input[type=password]").val("");
+}), $("*[data-id=savedDCard]").change(function() {
+    $(".proceed-button").each(function() {
+        $(this).hide();
+    }), $("#make_saved_dc_payment_up").show(), $("#cardNoErrorDc").empty(), $("#memberNameErrorDc").empty(), 
+    $("#expYYErrorDc").empty(), $("#cvvErrorDc").empty(), $(".card_cvvErrorSavedCard_popup").css("display", "none"), 
+    $("#make_saved_dc_payment").removeClass("saved_card_disabled");
+}), $("#payment_form").find("input[type=text]").click(function() {
+    $("*[data-id=newCCard]").prop("checked", "true"), $("*[data-id=newCCard]").trigger("click"), 
+    $("#cvvErrorSavedCard").hide(), $("#card_form").find("input[type=password]").val("");
+}), $("#payment_form").find("select").click(function() {
+    $("*[data-id=newCCard]").prop("checked", "true"), $("*[data-id=newCCard]").trigger("click"), 
+    $("#card_form").find("input[type=password]").val("");
+}), $("#debit_payment_form").find("input[type=text]").click(function() {
+    $("*[data-id=newDCard]").prop("checked", "true"), $("*[data-id=newDCard]").trigger("click"), 
+    $(".card_cvvErrorSavedCard").hide(), $("#card_form_saved_debit").find("input[type=password]").val("");
+}), $("#debit_payment_form").find("select").click(function() {
+    $("*[data-id=newDCard]").prop("checked", "true"), $("*[data-id=newDCard]").trigger("click"), 
+    $(".card_cvvErrorSavedCard").hide(), $("#card_form_saved_debit").find("input[type=password]").val("");
+}), $("#savedCreditCard").find("input[type=password]").click(function() {
+    $("#make_cc_payment_up").show(), $("#cardNoError").empty(), $("#memberNameError").empty(), 
+    $("#expYYError").empty(), $("#cvvError").empty(), $(".card_cvvErrorSavedCard_popup").css("display", "none"), 
+    $("#make_saved_cc_payment").removeClass("saved_card_disabled"), $(".proceed-button").each(function() {
+        $(this).hide();
+    }), $("#make_saved_cc_payment_up").show();
+}), $("#savedDebitCard").find("input[type=password]").click(function() {
+    $("#make_cc_payment_up").show(), $("#cardNoErrorDc").empty(), $("#memberNameErrorDc").empty(), 
+    $("#expYYErrorDc").empty(), $("#cvvErrorDc").empty(), $(".card_cvvErrorSavedCard_popup").css("display", "none"), 
+    $("#make_saved_dc_payment").removeClass("saved_card_disabled"), $(".proceed-button").each(function() {
+        $(this).hide();
+    }), $("#make_saved_dc_payment_up").show();
+}), $("#defaultPinCodeIds").click(function() {
+    $(this).css("color", "black"), $("#defaultPinCodeIdsBtm").css("color", "black"), 
+    $("#unserviceablepincode").hide(), $("#unserviceablepincodeBtm").hide(), $(".deliveryUlClass").remove(), 
+    $("#cartPinCodeAvailable").show(), $("#error-Id").hide(), $("#error-IdBtm").hide(), 
+    $("#emptyId").hide(), $("#emptyIdBtm").hide(), "ChangePincode" == document.getElementById("pinCodeButtonIds").className && (document.getElementById("pinCodeButtonIds").className = "CheckAvailability", 
+    $("#AvailableMessage").hide());
+}), $("#defaultPinCodeIdsBtm").click(function() {
+    $(this).css("color", "black"), $("#defaultPinCodeIds").css("color", "black"), $("#unserviceablepincode").hide(), 
+    $("#unserviceablepincodeBtm").hide(), $(".deliveryUlClass").remove(), $("#cartPinCodeAvailable").show(), 
+    $("#error-Id").hide(), $("#emptyId").hide(), "ChangePincode" == document.getElementById("pinCodeButtonIdsBtm").className && (document.getElementById("pinCodeButtonIdsBtm").className = "CheckAvailability", 
+    $("#AvailableMessageBtm").hide());
+}), $("#make_mrupee_payment , #make_mrupee_payment_up").click(function() {
+    if (0 == isSessionActive()) redirectToCheckoutLogin(); else {
+        var staticHost = $("#staticHost").val();
+        $("body").append("<div id='no-click' style='opacity:0.5; background:#000; z-index: 100000; width:100%; height:100%; position: fixed; top: 0; left:0;'></div>"), 
+        $("body").append('<div class="loaderDiv" style="position: fixed; left: 45%;top:45%;z-index: 10000"><img src="' + staticHost + '/_ui/responsive/common/images/red_loader.gif" class="spinner"></div>'), 
+        $(".pay button, #make_mrupee_payment").prop("disabled", !0), $(".pay button, #make_mrupee_payment").css("opacity", "0.5");
+        var guid = ($("#paymentMode").val(), $("#guid").val()), walletName = $("#radioButton_MRupee").val(), dataString = "walletName=" + walletName + "&cartGuid=" + guid;
+        $.ajax({
+            url: ACC.config.encodedContextPath + "/checkout/multi/payment-method/createWalletorder",
+            type: "GET",
+            cache: !1,
+            async: !1,
+            data: dataString,
+            success: function(response) {
+                "redirect" == response ? $(location).attr("href", ACC.config.encodedContextPath + "/cart") : "" == response || null == response ? console.log("Response for mRupee is null") : "redirect_with_coupon" == response ? (document.getElementById("juspayErrorMsg").innerHTML = "Sorry! The coupon cannot be used for this purchase. You can either change your payment method/bank or <a href='javascript:explicit_coupon_release_function();'><b><u>save your coupon</u></b></a> for your next purchase.", 
+                $("#juspayconnErrorDiv").css("display", "block"), $("body,html").animate({
+                    scrollTop: 0
+                }), $(".pay button, #make_mrupee_payment_up").prop("disabled", !1), $(".pay button, #make_mrupee_payment_up").css("opacity", "1"), 
+                $(".pay .loaderDiv").remove(), $("#no-click,.spinner").remove()) : (window.sessionStorage.removeItem("header"), 
+                setTimeout(function() {
+                    var values = response.split("|");
+                    $("#REFNO").val(values[0]), $("#CHECKSUM").val(values[1]), $("#AMT").val(values[3]), 
+                    $("#RETURL").val(values[4]), submitWalletForm(values);
+                }, 1e3)), $(".pay button, #make_mrupee_payment_up").prop("disabled", !1), $(".pay button, #make_mrupee_payment_up").css("opacity", "1"), 
+                $(".pay .loaderDiv").remove(), $("#no-click,.spinner").remove();
+            },
+            error: function(response) {
+                console.log("Error occured");
+            }
+        });
+    }
+}), $("#viewPaymentMRupee,#viewPaymentMRupeeMobile").click(function() {
+    refresh(), $("#radioButton_MRupee").is(":checked") && ($("#paymentMode").val("MRUPEE"), 
+    $("#paymentModeValue").val("MRUPEE"), displayThrdPrtyWlt());
+}), $(window).on("resize load", function() {
+    adjustHtMargin();
+}), $(document).ajaxComplete(function() {
+    adjustHtMargin();
+}), $(document).on("click", ".alert.alert-danger.alert-dismissable > button.close", function() {
+    $(".checkout-payment.cart.checkout.wrapper .step-body").css("margin-top", "");
+}), $("button[name='pinCodeButtonId']").click(function() {
+    pincode = $(this).parent().children("input[name='defaultPinCodeIds']").val(), $("input[name='defaultPinCodeIds']").val(pincode).css("color", "rgb(255, 28, 71)");
+}), $(".cartItemBlankPincode > a").click(function() {
+    $(".cartBottomCheck #changePinDiv").addClass("blankPincode");
+}), $(document).click(function(e) {
+    var container = $(".cartItemBlankPincode > a");
+    container.is(e.target) || 0 !== container.has(e.target).length || $(".cartBottomCheck #changePinDiv").removeClass("blankPincode");
+}), $(document).ajaxComplete(function() {
+    "none" === $("#unserviceablepincode").css("display") && $(".unservicePins").hide();
+}), $(".card_exp_month, .card_exp_year").on("change", function() {
+    $(this).css("color", "#000");
 });

@@ -1738,6 +1738,9 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 			.intern();
 	public static final String MOBILE_SOURCE = "&source=App".intern();
 
+	public static final String MOBILE_SOURCE2 = "?source=App";
+	public static final String Exchange_Slot = "ExchangeSlot";
+
 	public final static String PROXYENABLED = "proxy.enabled";
 	public final static String GENPROXY = "proxy.address";
 	public final static String GENPROXYPORT = "proxy.port";
