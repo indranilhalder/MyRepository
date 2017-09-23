@@ -30,7 +30,7 @@ public class ExchangeGuidePopulator<SOURCE extends ExchangeCouponValueModel, TAR
 
 	protected static final Logger LOG = Logger.getLogger(ExchangeGuidePopulator.class);
 	private static final String WORKING = "Working";
-	private static final String NON_WORKING = "Working";
+	private static final String NON_WORKING = "Non-Working";
 
 
 	/**

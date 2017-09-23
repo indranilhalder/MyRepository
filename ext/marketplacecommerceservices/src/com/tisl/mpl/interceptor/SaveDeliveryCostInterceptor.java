@@ -6,6 +6,8 @@ package com.tisl.mpl.interceptor;
 import de.hybris.platform.core.model.order.AbstractOrderEntryModel;
 import de.hybris.platform.core.model.order.AbstractOrderModel;
 import de.hybris.platform.core.model.product.PincodeModel;
+import de.hybris.platform.core.model.user.AddressModel;
+import de.hybris.platform.promotions.model.AbstractPromotionModel;
 import de.hybris.platform.promotions.model.PromotionResultModel;
 import de.hybris.platform.servicelayer.interceptor.InterceptorContext;
 import de.hybris.platform.servicelayer.interceptor.InterceptorException;
@@ -23,6 +25,8 @@ import com.tisl.mpl.marketplacecommerceservices.service.PincodeService;
 import com.tisl.mpl.model.BuyAGetPromotionOnShippingChargesModel;
 import com.tisl.mpl.model.BuyAandBGetPromotionOnShippingChargesModel;
 import com.tisl.mpl.model.BuyAboveXGetPromotionOnShippingChargesModel;
+import com.tisl.mpl.model.CityModel;
+import com.tisl.mpl.model.StateModel;
 
 
 
@@ -37,7 +41,7 @@ public class SaveDeliveryCostInterceptor implements ValidateInterceptor
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see de.hybris.platform.servicelayer.interceptor.ValidateInterceptor#onValidate(java.lang.Object,
 	 * de.hybris.platform.servicelayer.interceptor.InterceptorContext)
 	 */
@@ -83,17 +87,28 @@ public class SaveDeliveryCostInterceptor implements ValidateInterceptor
 				double couponDiscount = 0.0D;
 
 				Double totalPrice = Double.valueOf(0);
-				if (CollectionUtils.isNotEmpty(abstractOrder.getEntries()))
+
+				final List<AbstractOrderEntryModel> entries = abstractOrder.getEntries();
+
+				if (CollectionUtils.isNotEmpty(entries))
 				{
-					final List<AbstractOrderEntryModel> entries = abstractOrder.getEntries();
 					for (final AbstractOrderEntryModel oModel : entries)
 					{
-						deliveryOffChrg += (oModel.getCurrDelCharge().doubleValue() - oModel.getPrevDelCharge().doubleValue()) < 0 ? (-1)
-								* (oModel.getCurrDelCharge().doubleValue() - oModel.getPrevDelCharge().doubleValue())
-								: (oModel.getCurrDelCharge().doubleValue() - oModel.getPrevDelCharge().doubleValue());
-						couponDiscount += (null == oModel.getCouponValue() ? 0.0d : oModel.getCouponValue().doubleValue());
-						promoDiscount += (null == oModel.getTotalProductLevelDisc() ? 0.0d : oModel.getTotalProductLevelDisc()
-								.doubleValue()) + (null == oModel.getCartLevelDisc() ? 0.0d : oModel.getCartLevelDisc().doubleValue());
+						final Double currentDelCharge = oModel.getCurrDelCharge();
+						final Double prevDelCharge = oModel.getPrevDelCharge();
+						final Double couponValue = oModel.getCouponValue();
+						final Double totalproductLevelDisc = oModel.getTotalProductLevelDisc();
+						final Double totalcartLevelDisc = oModel.getCartLevelDisc();
+
+
+						deliveryOffChrg += (currentDelCharge.doubleValue() - prevDelCharge.doubleValue()) < 0
+								? (-1) * (currentDelCharge.doubleValue() - prevDelCharge.doubleValue())
+								: (currentDelCharge.doubleValue() - prevDelCharge.doubleValue());
+
+						couponDiscount += (null == couponValue ? 0.0d : couponValue.doubleValue());
+
+						promoDiscount += (null == totalproductLevelDisc ? 0.0d : totalproductLevelDisc.doubleValue())
+								+ (null == totalcartLevelDisc ? 0.0d : totalcartLevelDisc.doubleValue());
 					}
 
 					if (deliveryOffChrg > 0.0D)
@@ -110,19 +125,20 @@ public class SaveDeliveryCostInterceptor implements ValidateInterceptor
 			}
 
 
-			if (null != abstractOrder.getDeliveryAddress() && null != abstractOrder.getDeliveryAddress().getPostalcode())
+			final AddressModel deliveryAddress = abstractOrder.getDeliveryAddress();
+			if (null != deliveryAddress && null != deliveryAddress.getPostalcode())
 			{
 				LOG.debug("Setting data for Pincode related Information");
-				final PincodeModel pinCodeModelObj = pincodeService.getLatAndLongForPincode(abstractOrder.getDeliveryAddress()
-						.getPostalcode());
+				final PincodeModel pinCodeModelObj = pincodeService.getDetailsOfPincode(deliveryAddress.getPostalcode());
 				if (null != pinCodeModelObj)
 				{
-					abstractOrder.setStateForPincode(pinCodeModelObj.getState() == null ? "" : pinCodeModelObj.getState()
-							.getCountrykey());
-					abstractOrder.setCityForPincode(pinCodeModelObj.getCity() == null ? "" : pinCodeModelObj.getCity().getCityName());
-					abstractOrder.setPincodeNumber(abstractOrder.getDeliveryAddress().getPostalcode());
-				}
+					final StateModel state = pinCodeModelObj.getState();
+					final CityModel city = pinCodeModelObj.getCity();
 
+					abstractOrder.setStateForPincode(state == null ? "" : state.getCountrykey());
+					abstractOrder.setCityForPincode(city == null ? "" : city.getCityName());
+					abstractOrder.setPincodeNumber(deliveryAddress.getPostalcode());
+				}
 			}
 		}
 
@@ -165,9 +181,11 @@ public class SaveDeliveryCostInterceptor implements ValidateInterceptor
 			final List<PromotionResultModel> promotionList = new ArrayList<PromotionResultModel>(allPromotionResults);
 			for (final PromotionResultModel oModel : promotionList)
 			{
-				if ((oModel.getCertainty().floatValue() == 1.0F && null != oModel.getPromotion())
-						&& (oModel.getPromotion() instanceof BuyAboveXGetPromotionOnShippingChargesModel
-								|| oModel.getPromotion() instanceof BuyAGetPromotionOnShippingChargesModel || oModel.getPromotion() instanceof BuyAandBGetPromotionOnShippingChargesModel))
+				final AbstractPromotionModel promotion = oModel.getPromotion();
+				if ((oModel.getCertainty().floatValue() == 1.0F && null != promotion)
+						&& (promotion instanceof BuyAboveXGetPromotionOnShippingChargesModel
+								|| promotion instanceof BuyAGetPromotionOnShippingChargesModel
+								|| promotion instanceof BuyAandBGetPromotionOnShippingChargesModel))
 				{
 					flag = true;
 					break;

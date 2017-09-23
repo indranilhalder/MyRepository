@@ -49,10 +49,12 @@
 
 	<!-- TPR-3780 STARTS HERE -->
 	<c:if test="${product.rootCategory=='FineJewellery' }">
-		 <spring:eval expression="T(de.hybris.platform.util.Config).getParameter('cart.price.disclaimer')" var="disclaimer"/>										
-	    <p class="disclaimer-txt">
-	    		${disclaimer}
-	    </p>
+		<c:if test="${to_show_disclaimer=='yes'}">
+			<spring:eval expression="T(de.hybris.platform.util.Config).getParameter('cart.price.disclaimer')" var="disclaimer"/>										
+		    <p class="disclaimer-txt">
+		    		${disclaimer}
+		    </p>
+		</c:if>
 	</c:if>	
 	     
 		                					

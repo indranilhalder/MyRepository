@@ -68,10 +68,10 @@ public class PaymentTimeoutEventListener extends AbstractSiteEventListener<Payme
 	protected void onSiteEvent(final PaymentTimeoutEvent paymentTimeoutEvent)
 	{
 		//send Email
-		final OrderModel orderModel = paymentTimeoutEvent.getProcess().getOrder();
-		final OrderProcessModel orderProcessModel = (OrderProcessModel) getBusinessProcessService()
-				.createProcess("paymentTimeoutEmailProcess-" + orderModel.getCode() + "-" + System.currentTimeMillis(),
-						"paymentTimeoutEmailProcess");
+		final OrderModel orderModel = paymentTimeoutEvent.getOrder();
+		final OrderProcessModel orderProcessModel = (OrderProcessModel) getBusinessProcessService().createProcess(
+				"paymentTimeoutEmailProcess-" + orderModel.getCode() + "-" + System.currentTimeMillis(),
+				"paymentTimeoutEmailProcess");
 		orderProcessModel.setOrder(orderModel);
 		getModelService().save(orderProcessModel);
 		getBusinessProcessService().startProcess(orderProcessModel);
@@ -115,9 +115,8 @@ public class PaymentTimeoutEventListener extends AbstractSiteEventListener<Payme
 			}
 
 			final String orderReferenceNumber = orderDetails.getCode();
-			final String trackingUrl = configurationService.getConfiguration().getString(
-					MarketplacecommerceservicesConstants.SMS_ORDER_TRACK_URL)
-					+ orderReferenceNumber;
+			final String trackingUrl = configurationService.getConfiguration()
+					.getString(MarketplacecommerceservicesConstants.SMS_ORDER_TRACK_URL) + orderReferenceNumber;
 			final String content = MarketplacecommerceservicesConstants.SMS_MESSAGE_PAYMENT_TIMEOUT
 					.replace(MarketplacecommerceservicesConstants.SMS_VARIABLE_ZERO, firstName)
 					.replace(MarketplacecommerceservicesConstants.SMS_VARIABLE_ONE, orderReferenceNumber)
@@ -143,15 +142,14 @@ public class PaymentTimeoutEventListener extends AbstractSiteEventListener<Payme
 
 	/*
 	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * de.hybris.platform.commerceservices.event.AbstractSiteEventListener#shouldHandleEvent(de.hybris.platform.servicelayer
-	 * .event.events.AbstractEvent)
+	 *
+	 * @see de.hybris.platform.commerceservices.event.AbstractSiteEventListener#shouldHandleEvent(de.hybris.platform.
+	 * servicelayer .event.events.AbstractEvent)
 	 */
 	@Override
 	protected boolean shouldHandleEvent(final PaymentTimeoutEvent event)
 	{
-		final OrderModel order = event.getProcess().getOrder();
+		final OrderModel order = event.getOrder();
 		ServicesUtil.validateParameterNotNullStandardMessage("event.order", order);
 		final BaseSiteModel site = order.getSite();
 		ServicesUtil.validateParameterNotNullStandardMessage("event.order.site", site);
