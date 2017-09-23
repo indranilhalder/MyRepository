@@ -122,7 +122,6 @@
 		<extension name="luxuryinitialdata" />
 		<extension name="luxurystoreaddon" />		
 		<extension name="luxurycheckoutaddon" />
-		 <extension name="marketplaceatssync" /> 
 		
 		<extension name="ondemandcommon" />
 

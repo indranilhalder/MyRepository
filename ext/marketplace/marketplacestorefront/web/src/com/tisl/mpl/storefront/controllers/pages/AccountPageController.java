@@ -4693,17 +4693,48 @@ public class AccountPageController extends AbstractMplSearchPageController
 	@RequestMapping(value = RequestMappingUrlConstants.LINK_SET_DEFAUT_ADDRESS + ADDRESS_CODE_PATH_VARIABLE_PATTERN, method = RequestMethod.GET)
 	@RequireHardLogIn
 	public String setDefaultAddress(@PathVariable(ModelAttributetConstants.ADDRESS_CODE) final String addressCode,
-			final RedirectAttributes redirectModel, final Model model) throws CMSItemNotFoundException
+			final RedirectAttributes redirectModel, final Model model, final HttpServletRequest request,
+			final HttpServletResponse response) throws CMSItemNotFoundException
 	{
 		try
 		{
+			//TPR-6654
+			int pincodeCookieMaxAge;
+			final Cookie cookie = GenericUtilityMethods.getCookieByName(request, "pdpPincode");
+			final String cookieMaxAge = configurationService.getConfiguration().getString("pdpPincode.cookie.age");
+			pincodeCookieMaxAge = (Integer.valueOf(cookieMaxAge)).intValue();
+			final String domain = configurationService.getConfiguration().getString("shared.cookies.domain");
 			final AddressData addressData = new AddressData();
 			addressData.setDefaultAddress(true);
 			addressData.setVisibleInAddressBook(true);
 			addressData.setId(addressCode);
 			userFacade.setDefaultAddress(addressData);
+			//TPR-6654 Start
+			final AddressData addressData1 = userFacade.getAddressForCode(addressCode);
+			final String postalCode = addressData1.getPostalCode();
+			LOG.debug("PostalCode for new address :: " + postalCode);
 			GlobalMessages.addFlashMessage(redirectModel, GlobalMessages.CONF_MESSAGES_HOLDER,
 					MessageConstants.ACCOUNT_CONFIRMATION_DEFAULT_ADDRESS_CHANGED);
+			//TPR-6654
+			if (cookie != null && cookie.getValue() != null)
+			{
+				cookie.setValue(postalCode);
+				cookie.setMaxAge(pincodeCookieMaxAge);
+				cookie.setPath("/");
+
+				if (null != domain && !domain.equalsIgnoreCase("localhost"))
+				{
+					cookie.setSecure(true);
+				}
+				cookie.setDomain(domain);
+				response.addCookie(cookie);
+				sessionService.setAttribute(MarketplacecommerceservicesConstants.SESSION_PINCODE, postalCode);
+			}
+			else
+			{
+				pdpPincodeCookie.addCookie(response, postalCode);
+				sessionService.setAttribute(MarketplacecommerceservicesConstants.SESSION_PINCODE, postalCode);
+			}
 			return REDIRECT_TO_ADDRESS_BOOK_PAGE;
 		}
 		catch (final EtailBusinessExceptions e)

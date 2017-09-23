@@ -77173,14 +77173,7 @@ body .account .right-account form label.invite-text-lbl{
 	    }
 /* TISPRDT-2410 end */
 
-/* TISCSXII-2177 start */
-@media (min-width: 981px)
-{
-.sign-in.tab-view .tabs>li .left form a.js-password-forgotten{
-    text-transform: none;
-}
-}
-/* TISCSXII-2177 End */
+
 
 /*TPR-6907 start*/
 #codEli{

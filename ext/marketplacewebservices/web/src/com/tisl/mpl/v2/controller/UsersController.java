@@ -3499,104 +3499,59 @@ public class UsersController extends BaseCommerceController
 	{
 
 		boolean successFlag = false;
-		boolean userflag = false;
-		boolean wishlistflag = false;
-
+		final boolean wishlistflag = false;
 		final UserResultWsDto result = new UserResultWsDto();
-		final Wishlist2EntryModel requiredWlEntry = null;
-		//final boolean productFound = false;
-
-		//		final MplCustomerProfileData mplCustData = new MplCustomerProfileData();
-		//		mplCustData.setDisplayUid(userId);
+		Wishlist2EntryModel requiredWlEntry = null;
+		boolean productFound = false;
 		try
 		{
-			//final UserModel user = userexService.getUserForUID(mplCustData.getDisplayUid());
 			final UserModel user = userService.getCurrentUser();
-
 			if (null == user)
 			{
 				throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9025);
 			}
 
-			/*
-			 * final List<Wishlist2EntryModel> allWishlistEntry = wishlistFacade.getAllWishlistByUssid(USSID); if
-			 * (CollectionUtils.isNotEmpty(allWishlistEntry)) { for (final Wishlist2EntryModel wishentryModel :
-			 * allWishlistEntry) { if (null != wishentryModel.getWishlist() && StringUtils.isNotBlank(wishlistName) &&
-			 * wishlistName.equalsIgnoreCase(wishentryModel.getWishlist().getName())) { productFound = true;
-			 * requiredWlEntry = wishentryModel; break; } } } else
-			 *
-			 *
-			 * { throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9211);
-			 *
-			 * }
-			 */
-
-			//Fetching all wishList for the user
-			final List<Wishlist2Model> allWishlists = wishlistService.getWishlists(user);
-			userflag = true;
-			Wishlist2Model requiredWl = null;
-			String name = null;
-
-			//Checking wether wishlistname is empty or not
-			if (!wishlistName.isEmpty())
+			final List<Wishlist2EntryModel> allWishlistEntry = wishlistFacade.getAllWishlistByUssid(USSID);
+			if (CollectionUtils.isNotEmpty(allWishlistEntry))
 			{
-
-				name = wishlistName;
-			}
-
-			for (final Wishlist2Model wl : allWishlists)
-			{
-
-				if (name.equals(wl.getName()))
+				for (final Wishlist2EntryModel wishentryModel : allWishlistEntry)
 				{
-					requiredWl = wl;
-					wishlistflag = true;
-					break;
-				}
-			}
-
-
-			//Wishlist2EntryModel wishlist2EntryModel = null;
-			boolean ProductFound = false;
-			final List<Wishlist2EntryModel> entryModels = requiredWl.getEntries();
-			if (entryModels.size() >= 1)
-			{
-
-
-				for (final Wishlist2EntryModel entryModel : entryModels)
-				{
-					final Collection<SellerInformationModel> sellerList = entryModel.getProduct().getSellerInformationRelator();
-					for (final SellerInformationModel seller : sellerList)
+					if (null != wishentryModel.getWishlist() && StringUtils.isNotBlank(wishlistName)
+							&& wishlistName.equalsIgnoreCase(wishentryModel.getWishlist().getName()))
 					{
-						if (seller.getSellerArticleSKU().equals(USSID))
-						{
-							//	wishlist2EntryModel = entryModel;
-							ProductFound = true;
-						}
-
+						productFound = true;
+						requiredWlEntry = wishentryModel;
+						break;
 					}
-				}
-
-				if (ProductFound)
-				{
-					//wishlistService.removeWishlistEntry(requiredWl, wishlist2EntryModel);
-					successFlag = wishlistFacade.removeWishlistEntry(requiredWlEntry);
-					//Set Success Flag to true
-					//successFlag = true;
-				}
-				else
-				{
-					throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9210);
 				}
 			}
 			else
 			{
-
-
-
 				throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9211);
+			}
+
+			if (productFound)
+			{
+				successFlag = wishlistFacade.removeWishlistEntry(requiredWlEntry);
+				//Set Success Flag to true
+			}
+			else
+			{
+				throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9210);
+			}
+
+			if (successFlag)
+			{
+				//Set result status to success
+				result.setStatus(MarketplacecommerceservicesConstants.SUCCESS_FLAG);
 
 			}
+			else
+			{
+				//Set result status to error
+				result.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
+			}
+
 		}
 		catch (final EtailNonBusinessExceptions e)
 		{
@@ -3626,35 +3581,12 @@ public class UsersController extends BaseCommerceController
 		}
 		catch (final Exception e)
 		{
-			//Check if user was found
-			if (!userflag)
-			{
-				result.setError(MarketplacecommerceservicesConstants.USER_NOT_FOUND);
-			}
 			//Check if Wishlist was found for user
-
-			if (userflag)
+			if (!wishlistflag)
 			{
-				if (!wishlistflag)
-				{
-					result.setError(MarketplacecommerceservicesConstants.WISHLIST_NOT_FOUND);
-				}
-
+				result.setError(MarketplacecommerceservicesConstants.WISHLIST_NOT_FOUND);
 			}
-
 			//Set Success Flag to false
-			successFlag = false;
-		}
-
-		if (successFlag)
-		{
-			//Set result status to success
-			result.setStatus(MarketplacecommerceservicesConstants.SUCCESS_FLAG);
-
-		}
-		else
-		{
-			//Set result status to error
 			result.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
 		}
 
