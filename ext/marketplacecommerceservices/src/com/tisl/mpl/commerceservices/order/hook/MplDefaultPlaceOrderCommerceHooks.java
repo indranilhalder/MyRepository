@@ -17,6 +17,7 @@ import de.hybris.platform.core.model.order.payment.CreditCardPaymentInfoModel;
 import de.hybris.platform.core.model.order.payment.DebitCardPaymentInfoModel;
 import de.hybris.platform.core.model.order.payment.JusPayPaymentInfoModel;
 import de.hybris.platform.core.model.order.payment.NetbankingPaymentInfoModel;
+import de.hybris.platform.core.model.order.payment.QCWalletPaymentInfoModel;
 import de.hybris.platform.core.model.order.price.DiscountModel;
 import de.hybris.platform.core.model.product.ProductModel;
 import de.hybris.platform.core.model.user.AddressModel;
@@ -759,6 +760,7 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 					|| orderModel.getPaymentInfo() instanceof CreditCardPaymentInfoModel
 					|| orderModel.getPaymentInfo() instanceof DebitCardPaymentInfoModel
 					|| orderModel.getPaymentInfo() instanceof NetbankingPaymentInfoModel
+					|| orderModel.getPaymentInfo() instanceof QCWalletPaymentInfoModel
 					|| WalletEnum.MRUPEE.equals(orderModel.getIsWallet()))
 			{
 				getOrderStatusSpecifier().setOrderStatus(orderModel, OrderStatus.PAYMENT_SUCCESSFUL);
@@ -1089,46 +1091,47 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 						 * entryModelList.getSelectedUSSID());
 						 */
 						//EGV Order change
-						if(!sellerOrderList.getIsEGVCart().booleanValue()){
-
-						final MplZoneDeliveryModeValueModel valueModel = deliveryCostService.getDeliveryCost(
-								entryModelList.getMplDeliveryMode().getDeliveryMode().getCode(),
-								sellerOrderList.getCurrency().getIsocode(), ussid);
-
-						if (entryModelList.getGiveAway() != null && !entryModelList.getGiveAway().booleanValue()
-								&& !entryModelList.getIsBOGOapplied().booleanValue())//TISPRDT-1226
+						if (!sellerOrderList.getIsEGVCart().booleanValue())
 						{
-							if (StringUtils.equalsIgnoreCase(entryModelList.getFulfillmentMode(),
-									valueModel.getDeliveryFulfillModes().getCode()))
+
+							final MplZoneDeliveryModeValueModel valueModel = deliveryCostService.getDeliveryCost(
+									entryModelList.getMplDeliveryMode().getDeliveryMode().getCode(),
+									sellerOrderList.getCurrency().getIsocode(), ussid);
+
+							if (entryModelList.getGiveAway() != null && !entryModelList.getGiveAway().booleanValue()
+									&& !entryModelList.getIsBOGOapplied().booleanValue())//TISPRDT-1226
 							{
-								delCost = (valueModel.getValue().doubleValue() * entryModelList.getQuantity().intValue());
-								LOG.debug("Delivery Cost ( FulFillment Mode Match)>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>" + delCost);
-							}
+								if (StringUtils.equalsIgnoreCase(entryModelList.getFulfillmentMode(),
+										valueModel.getDeliveryFulfillModes().getCode()))
+								{
+									delCost = (valueModel.getValue().doubleValue() * entryModelList.getQuantity().intValue());
+									LOG.debug("Delivery Cost ( FulFillment Mode Match)>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>" + delCost);
+								}
 
-							totalDeliveryPrice += delCost; // TISPRDT-1649
-							entryModelList.setCurrDelCharge(Double.valueOf(delCost));
-						}
-						else if (entryModelList.getIsBOGOapplied() != null && entryModelList.getIsBOGOapplied().booleanValue())//TISPRDRT-1226
-						{
-							if (StringUtils.equalsIgnoreCase(entryModelList.getFulfillmentMode(),
-									valueModel.getDeliveryFulfillModes().getCode()))
+								totalDeliveryPrice += delCost; // TISPRDT-1649
+								entryModelList.setCurrDelCharge(Double.valueOf(delCost));
+							}
+							else if (entryModelList.getIsBOGOapplied() != null && entryModelList.getIsBOGOapplied().booleanValue())//TISPRDRT-1226
 							{
-								delCost = (valueModel.getValue().doubleValue()
-										* (entryModelList.getQuantity().doubleValue() - entryModelList.getFreeCount().doubleValue()));
-								LOG.debug("Delivery Cost ( FulFillment Mode Match)>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>" + delCost);
+								if (StringUtils.equalsIgnoreCase(entryModelList.getFulfillmentMode(),
+										valueModel.getDeliveryFulfillModes().getCode()))
+								{
+									delCost = (valueModel.getValue().doubleValue()
+											* (entryModelList.getQuantity().doubleValue() - entryModelList.getFreeCount().doubleValue()));
+									LOG.debug("Delivery Cost ( FulFillment Mode Match)>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>" + delCost);
+								}
+
+								totalDeliveryPrice += delCost; // TISPRDT-1649
+								entryModelList.setCurrDelCharge(Double.valueOf(delCost));
 							}
+							else
+							{
+								delCost = 0.0d;
+								entryModelList.setCurrDelCharge(Double.valueOf(delCost));
+								totalDeliveryPrice += delCost; //TISPRDT-1649
 
-							totalDeliveryPrice += delCost; // TISPRDT-1649
-							entryModelList.setCurrDelCharge(Double.valueOf(delCost));
-						}
-						else
-						{
-							delCost = 0.0d;
-							entryModelList.setCurrDelCharge(Double.valueOf(delCost));
-							totalDeliveryPrice += delCost; //TISPRDT-1649
-
-							LOG.warn("skipping deliveryCost for freebee [" + entryModelList.getSelectedUSSID() + "] due to freebee ");
-						}
+								LOG.warn("skipping deliveryCost for freebee [" + entryModelList.getSelectedUSSID() + "] due to freebee ");
+							}
 						}
 						modelService.save(entryModelList);
 						modelService.refresh(entryModelList);
@@ -2149,7 +2152,7 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 
 		getModelService().saveAll(paymentTransactionList);
 		clonedSubOrder.setPaymentTransactions(paymentTransactionList);
-		LOG.debug("Sub Order Saved in DB:- Suborder ID:- " + clonedSubOrder.getCode());
+		System.out.println("Sub Order Saved in DB:- Suborder ID:- " + clonedSubOrder.getCode());
 		if (CollectionUtils.isNotEmpty(clonedSubOrder.getEntries()))
 		{
 			getModelService().removeAll(clonedSubOrder.getEntries());
@@ -2477,10 +2480,10 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 
 
 		boolean splitPayment = false;
-		if (StringUtils.isNotEmpty(getSessionService().getAttribute("getCliqCashMode").toString()))
+		if (StringUtils.isNotEmpty(getSessionService().getAttribute("getCliqCashMode")))
 		{
 
-			splitPayment = Boolean.parseBoolean(getSessionService().getAttribute("getCliqCashMode").toString());
+			splitPayment = Boolean.parseBoolean(getSessionService().getAttribute("getCliqCashMode"));
 		}
 
 		/**
