@@ -909,7 +909,7 @@
     <!-- TPR-5667 : Samsung order response | end -->
     <bean class="com.tisl.mpl.data.RefundSmsData">
 		<property name="transactionId" type="String"/>
-		<property name="phoneNo" type="String"></property>
+		<property name="phoneNo" type="Long"></property>
 		<property name="name" type="String"></property>
 	</bean>
 </beans>

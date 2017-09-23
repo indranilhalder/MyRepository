@@ -14,7 +14,9 @@ import com.tisl.mpl.data.RefundSmsData;
  */
 public interface RefundSmsDao
 {
-	public List<RefundSmsData> searchResultsForRefund(final String dynamicQuery);
+	public List<RefundSmsData> searchResultsForRefund(final String dynamicQuery) throws Exception;
 
-	public String getAllTransactionsForSms();
+	public String getAllTransactionsForSms() throws Exception;
+
+	public Object triggerBulkSms(final List<RefundSmsData> refundEligibleList) throws Exception;
 }

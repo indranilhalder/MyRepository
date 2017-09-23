@@ -3,6 +3,7 @@
  */
 package com.tisl.mpl.refunds.dao;
 
+import de.hybris.platform.servicelayer.config.ConfigurationService;
 import de.hybris.platform.servicelayer.internal.dao.AbstractItemDao;
 import de.hybris.platform.servicelayer.search.FlexibleSearchQuery;
 import de.hybris.platform.servicelayer.search.SearchResult;
@@ -12,8 +13,10 @@ import java.util.Arrays;
 import java.util.List;
 
 import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import com.tisl.mpl.data.RefundSmsData;
+import com.tisl.mpl.pojo.BulkSmsDto;
 
 
 /**
@@ -25,9 +28,12 @@ public class RefundSmsDaoImpl extends AbstractItemDao implements RefundSmsDao
 {
 	private final static Logger LOG = Logger.getLogger(RefundSmsDaoImpl.class);
 
+	@Autowired
+	ConfigurationService ConfigurationService;
+
 
 	@Override
-	public List<RefundSmsData> searchResultsForRefund(final String dynamicQuery)
+	public List<RefundSmsData> searchResultsForRefund(final String dynamicQuery) throws Exception
 	{
 		final StringBuilder query = new StringBuilder();
 
@@ -58,7 +64,7 @@ public class RefundSmsDaoImpl extends AbstractItemDao implements RefundSmsDao
 	}
 
 	@Override
-	public String getAllTransactionsForSms()
+	public String getAllTransactionsForSms() throws Exception
 	{
 		String dynamicQuery = null;
 		final StringBuilder query = new StringBuilder();
@@ -80,4 +86,23 @@ public class RefundSmsDaoImpl extends AbstractItemDao implements RefundSmsDao
 		System.out.println("=========================================" + dynamicQuery.toString());
 		return dynamicQuery;
 	}
+
+	@Override
+	public Object triggerBulkSms(final List<RefundSmsData> refundEligibleList) throws Exception
+	{
+		//ConfigurationService.getConfiguration().getString("bulksms_batch_quantity");
+		final BulkSmsDto bulkSmsObj = new BulkSmsDto();
+		final List<BulkSmsDto> bulkSmsList = new ArrayList<BulkSmsDto>();
+		//BulkSmsListDto bulkSmsList = new BulkSmsListDto();
+		for (final RefundSmsData data : refundEligibleList)
+		{
+			bulkSmsObj.setMobileNumber(data.getPhoneNo());
+		}
+
+
+
+		return null;
+	}
+
+
 }
