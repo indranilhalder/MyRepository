@@ -142,6 +142,10 @@
 			elementtype="product" autocreate="true" generate="true" type="list" />
 		<collectiontype elementtype="BannerComponent"
 			code="bannerImageCollection" autocreate="true" generate="true" type="list" />	
+			
+			<collectiontype elementtype="WalletCardApportionDetail" code="qcWalletCardList"
+			autocreate="true" generate="true" type="list" />
+			
 			<!-- <collectiontype elementtype="ShowCaseCollectionComponent"
 			code="ShowCaseCollection" autocreate="true" generate="true" type="list" />	 -->
 	</collectiontypes>
@@ -632,6 +636,7 @@
 			<value code="JUSPAY_DECLINED" />
 			<value code="RETURN" />
 			<value code="COD_PAYMENT" />
+			<value code="QC_CAPTURE" />
 		</enumtype>
 		<enumtype code="CodCheckMessage" autocreate="true" dynamic="true"
 			generate="true">
@@ -6252,6 +6257,16 @@
 						<persistence type="property" />
 					</attribute>
 					
+					<!-- QC Changes -->
+  
+					   <attribute qualifier="walletApportionPaymentInfo" autocreate="true" type="WalletApportionPaymentInfo">
+						<description>QC Wallet Card Detail</description>
+						<modifiers read="true" write="true" removable="true"  />
+						<persistence type="property" />
+					   </attribute>
+
+					<!-- QC Changes End -->
+					
 				</attributes>
 				<indexes>
 					<index name="IDX_ENTRY_FETCH">
@@ -7748,6 +7763,18 @@
 						<persistence type="property" />
 					</attribute>
 					<!-- TPR-1083 End -->
+					
+					<!-- EGV CartFlag Start -->
+				   <attribute autocreate="true" qualifier="isEGVCart"
+						type="java.lang.Boolean">
+						<persistence type="property" qualifier="isEGVCart">
+						</persistence>
+						<modifiers read="true" write="true" search="true"
+							optional="true" />
+						<defaultvalue>false</defaultvalue>
+					</attribute>
+					<!-- EGV CartFlag End -->
+					
 				</attributes>
 				<!-- new indexes added for performace improvement -->
 				<indexes>
@@ -13181,6 +13208,382 @@
 		</typegroup>
 		
 		<!-- TPR-6665 : sysnonums update to slave servers end-->
+		
+		
+
+
+		<typegroup name="TULWallet">
+
+			<itemtype code="QCInitResponseDetail" autocreate="true"
+				generate="true">
+				<description>QC Response Detail Table</description>
+				<deployment table="QCInitResponseDetail" typecode="21102" />
+
+				<attributes>
+
+					<attribute qualifier="merchantOutletName" type="java.lang.String">
+						<modifiers read="true" write="true" search="true" />
+						<persistence type="property" />
+					</attribute>
+
+					<attribute qualifier="acquirerId" type="java.lang.String">
+						<modifiers read="true" write="true" search="true" />
+						<persistence type="property" />
+					</attribute>
+
+					<attribute qualifier="organizationName" type="java.lang.String">
+						<modifiers read="true" write="true" search="true" />
+						<persistence type="property" />
+					</attribute>
+
+					<attribute qualifier="pOSEntryMode" type="java.lang.Integer">
+						<modifiers read="true" write="true" search="true" />
+						<persistence type="property" />
+					</attribute>
+
+					<attribute qualifier="pOSTypeId" type="java.lang.Integer">
+						<modifiers read="true" write="true" search="true" />
+						<persistence type="property" />
+					</attribute>
+
+					<attribute qualifier="pOSName" type="java.lang.String">
+						<modifiers read="true" write="true" search="true" />
+						<persistence type="property" />
+					</attribute>
+
+					<attribute qualifier="termAppVersion" type="java.lang.String">
+						<modifiers read="true" write="true" search="true" />
+						<persistence type="property" />
+					</attribute>
+
+					<attribute qualifier="currentBatchNumber" type="java.lang.Long">
+						<modifiers read="true" write="true" search="true" />
+						<persistence type="property" />
+					</attribute>
+
+					<attribute qualifier="terminalId" type="java.lang.String">
+						<modifiers read="true" write="true" search="true" />
+						<persistence type="property" />
+					</attribute>
+
+					<attribute qualifier="userName" type="java.lang.String">
+						<modifiers read="true" write="true" search="true" />
+						<persistence type="property" />
+					</attribute>
+
+					<attribute qualifier="password" type="java.lang.String">
+						<modifiers read="true" write="true" search="true" />
+						<persistence type="property" />
+					</attribute>
+
+					<attribute qualifier="forwardingEntityId" type="java.lang.String">
+						<modifiers read="true" write="true" search="true" />
+						<persistence type="property" />
+					</attribute>
+
+					<attribute qualifier="forwardingEntityPassword" type="java.lang.String">
+						<modifiers read="true" write="true" search="true" />
+						<persistence type="property" />
+					</attribute>
+
+					<attribute qualifier="dateAtClient" type="java.util.Date">
+						<modifiers read="true" write="true" search="true" />
+						<persistence type="property" />
+					</attribute>
+
+					<attribute qualifier="merchantName" type="java.lang.String">
+						<modifiers read="true" write="true" search="true" />
+						<persistence type="property" />
+					</attribute>
+
+					<attribute qualifier="responseCode" type="java.lang.Integer">
+						<modifiers read="true" write="true" search="true" />
+						<persistence type="property" />
+					</attribute>
+
+					<attribute qualifier="responseMessage" type="java.lang.String">
+						<modifiers read="true" write="true" search="true" />
+						<persistence type="property" />
+					</attribute>
+
+				</attributes>
+			</itemtype>
+
+			<itemtype code="Customer" generate="false" autocreate="false">
+				<attributes>
+					<attribute qualifier="isWalletActivated" autocreate="true"
+						type="java.lang.boolean" generate="true">
+						<modifiers read="true" write="true" search="true"
+							optional="true" />
+						<defaultvalue>false</defaultvalue>
+						<persistence type="property" />
+					</attribute>
+
+					<attribute qualifier="customerWalletDetail" autocreate="true"
+						type="CustomerWalletDetail" generate="true">
+						<persistence type="property" />
+						<modifiers read="true" write="true" optional="true"
+							search="true" />
+					</attribute>
+
+				</attributes>
+			</itemtype>
+
+
+			<itemtype code="CustomerWalletDetail" generate="true"
+				autocreate="true">
+				<deployment table="CustomerWalletDetail" typecode="21103" />
+
+				<attributes>
+					<attribute qualifier="walletId" autocreate="true"
+						type="java.lang.String" generate="true">
+						<modifiers read="true" write="true" search="true"
+							optional="true" unique="true" />
+						<persistence type="property" />
+					</attribute>
+
+					<attribute qualifier="walletPin" autocreate="true"
+						type="java.lang.String" generate="true">
+						<modifiers read="true" write="true" search="true"
+							optional="true" />
+						<persistence type="property" />
+					</attribute>
+
+					<attribute qualifier="walletState" autocreate="true"
+						type="java.lang.String" generate="true">
+						<modifiers read="true" write="true" search="true" />
+						<persistence type="property" />
+					</attribute>
+
+					<attribute autocreate="true" qualifier="customer" type="Customer">
+						<persistence type="property" />
+						<modifiers read="true" write="true" optional="true"
+							search="true" />
+					</attribute>
+
+					<attribute autocreate="true" generate="true" qualifier="serviceProvider"
+						type="java.lang.String">
+						<persistence type="property" />
+						<modifiers read="true" write="true" optional="true"
+							search="true" />
+					</attribute>
+
+				</attributes>
+			</itemtype>
+
+			<itemtype code="CardBinNumberDetail" generate="true"
+				autocreate="true">
+				<deployment table="CardBinNumberDetail" typecode="21104" />
+
+				<attributes>
+					<attribute qualifier="binNumber" autocreate="true"
+						type="java.lang.String" generate="true">
+						<modifiers read="true" write="true" search="true"
+							optional="false" />
+						<persistence type="property" />
+					</attribute>
+
+					<attribute qualifier="sellerId" autocreate="true"
+						type="java.lang.String" generate="true">
+						<modifiers read="true" write="true" search="true"
+							optional="true" />
+						<persistence type="property" />
+					</attribute>
+
+					<attribute qualifier="brands" autocreate="true"
+						type="java.lang.String" generate="true">
+						<modifiers read="true" write="true" search="true" />
+						<persistence type="property" />
+					</attribute>
+
+					<attribute autocreate="true" generate="true" qualifier="terminalId"
+						type="java.lang.String">
+						<persistence type="property" />
+						<modifiers read="true" write="true" optional="false"
+							search="true" />
+					</attribute>
+
+					<attribute autocreate="true" generate="true" qualifier="projectCode"
+						type="java.lang.String">
+						<persistence type="property" />
+						<modifiers read="true" write="true" search="true" />
+					</attribute>
+
+					<attribute autocreate="true" generate="true" qualifier="serviceProvider"
+						type="java.lang.String">
+						<persistence type="property" />
+						<modifiers read="true" write="true" search="true" />
+					</attribute>
+
+				</attributes>
+			</itemtype>
+
+			<itemtype code="QCWalletPaymentInfo" extends="PaymentInfo"
+				autocreate="true" generate="false">
+				<attributes>
+					<attribute qualifier="type" autocreate="true" type="java.lang.String">
+						<modifiers read="true" write="true" search="true"
+							optional="true" />
+						<persistence type="property" />
+					</attribute>
+				</attributes>
+			</itemtype>
+			
+			<itemtype code="WalletApportionPaymentInfo" generate="true"
+				autocreate="true">
+				<deployment table="SplitPaymentInfo" typecode="21107" />
+
+				<attributes>
+					<attribute autocreate="true" generate="true" qualifier="orderId"
+						type="java.lang.String">
+						<persistence type="property" />
+						<modifiers read="true" write="true" search="true" />
+					</attribute>
+					
+					<attribute autocreate="true" generate="true" qualifier="transactionId"
+						type="java.lang.String">
+						<persistence type="property" />
+						<modifiers read="true" write="true" search="true" />
+					</attribute>
+
+					<attribute qualifier="transactionType" autocreate="true"
+						type="java.lang.String" generate="true">
+						<modifiers read="true" write="true" search="true" />
+						<persistence type="property" />
+					</attribute>
+					
+					<attribute autocreate="true" generate="true" qualifier="juspayApportionValue"
+						type="java.lang.String">
+						<persistence type="property" />
+						<modifiers read="true" write="true" search="true" />
+						<defaultvalue>"0"</defaultvalue>
+					</attribute>
+
+					<attribute autocreate="true" generate="true" qualifier="juspayShippingValue"
+						type="java.lang.String">
+						<persistence type="property" />
+						<modifiers read="true" write="true" search="true" />
+						<defaultvalue>"0"</defaultvalue>
+					</attribute>
+					
+					<attribute autocreate="true" generate="true" qualifier="juspaySchedulingValue"
+						type="java.lang.String">
+						<persistence type="property" />
+						<modifiers read="true" write="true" search="true" />
+						<defaultvalue>"0"</defaultvalue>
+					</attribute>
+					
+					<attribute autocreate="true" generate="true" qualifier="juspayDeliveryValue"
+						type="java.lang.String">
+						<persistence type="property" />
+						<modifiers read="true" write="true" search="true" />
+						<defaultvalue>"0"</defaultvalue>
+					</attribute>
+					
+					<attribute autocreate="true" generate="true" qualifier="qcApportionPartValue"
+						type="java.lang.String">
+						<persistence type="property" />
+						<modifiers read="true" write="true" search="true" />
+						<defaultvalue>"0"</defaultvalue>
+					</attribute>
+
+					<attribute autocreate="true" generate="true" qualifier="qcShippingPartValue"
+						type="java.lang.String">
+						<persistence type="property" />
+						<modifiers read="true" write="true" search="true" />
+						<defaultvalue>"0"</defaultvalue>
+					</attribute>
+					
+					<attribute autocreate="true" generate="true" qualifier="qcSchedulingPartValue"
+						type="java.lang.String">
+						<persistence type="property" />
+						<modifiers read="true" write="true" search="true" />
+						<defaultvalue>"0"</defaultvalue>
+					</attribute>
+					
+					<attribute autocreate="true" generate="true" qualifier="qcDeliveryPartValue"
+						type="java.lang.String">
+						<persistence type="property" />
+						<modifiers read="true" write="true" search="true" />
+						<defaultvalue>"0"</defaultvalue>
+					</attribute>
+					
+					<attribute qualifier="WalletCardList" autocreate="true"
+						type="qcWalletCardList" generate="true">
+						<modifiers read="true" write="true" search="true"
+							optional="true" />
+						<persistence type="property" />
+					</attribute>
+				</attributes>
+			</itemtype>
+					
+			<itemtype code="WalletCardApportionDetail" generate="true"
+				autocreate="true">
+				<deployment table="SplitWalletCardDetail" typecode="21108" />
+
+				<attributes>
+					<attribute autocreate="true" generate="true" qualifier="cardNumber"
+						type="java.lang.String">
+						<persistence type="property" />
+						<modifiers read="true" write="true" search="true" />
+					</attribute>
+					
+					<attribute autocreate="true" generate="true" qualifier="cardPinNumber"
+						type="java.lang.String">
+						<persistence type="property" />
+						<modifiers read="true" write="true" search="true" />
+					</attribute>
+					
+					<attribute autocreate="true" generate="true" qualifier="cardAmount"
+						type="java.lang.String">
+						<persistence type="property" />
+						<modifiers read="true" write="true" search="true" />
+					</attribute>
+
+					<attribute qualifier="bucketType" autocreate="true"
+						type="java.lang.String" generate="true">
+						<modifiers read="true" write="true" search="true"
+							optional="true" />
+						<persistence type="property" />
+					</attribute>
+					
+					<attribute autocreate="true" generate="true" qualifier="cardExpiry"
+						type="java.lang.String">
+						<persistence type="property" />
+						<modifiers read="true" write="true" search="true" />
+					</attribute>
+
+					<attribute autocreate="true" generate="true" qualifier="qcApportionValue"
+						type="java.lang.String">
+						<persistence type="property" />
+						<modifiers read="true" write="true" search="true" />
+						<defaultvalue>"0"</defaultvalue>
+					</attribute>
+
+					<attribute autocreate="true" generate="true" qualifier="qcShippingValue"
+						type="java.lang.String">
+						<persistence type="property" />
+						<modifiers read="true" write="true" search="true" />
+						<defaultvalue>"0"</defaultvalue>
+					</attribute>
+					
+					<attribute autocreate="true" generate="true" qualifier="qcSchedulingValue"
+						type="java.lang.String">
+						<persistence type="property" />
+						<modifiers read="true" write="true" search="true" />
+						<defaultvalue>"0"</defaultvalue>
+					</attribute>
+					
+					<attribute autocreate="true" generate="true" qualifier="qcDeliveryValue"
+						type="java.lang.String">
+						<persistence type="property" />
+						<modifiers read="true" write="true" search="true" />
+						<defaultvalue>"0"</defaultvalue>
+					</attribute>
+				</attributes>
+			</itemtype>
+
+		</typegroup>
 		
   </itemtypes>
 </items>
