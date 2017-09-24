@@ -145,10 +145,6 @@ public class AkamaiRefreshCronJob extends AbstractJobPerformable
 					else
 					{
 						LOG.error("ERROR: in getting URLs which are to be purged ::" + purgeUrl);
-						//						LOG.error("DEBUG: Going to try again after 4 Seconds....(total 5 tries) This is:: " + tryCount + " Try");
-						//						Thread.sleep(4000);
-						//						LOG.error("DEBUG: Trying now after 4 Seconds........This is::" + tryCount + " Try");
-						//						gotSomeError = true;
 					}
 				}
 				catch (final Exception ex)
@@ -172,7 +168,7 @@ public class AkamaiRefreshCronJob extends AbstractJobPerformable
 			/********************* Read the PURGE STATUS **********************/
 
 			//perse the returned JSON into Obj.
-			if (sb != null || sb.toString().trim().length() > 0)
+			if (sb != null && sb.toString().trim().length() > 0)
 			{
 				final JSONParser parser = new JSONParser();
 				final JSONObject jsonObject = (JSONObject) parser.parse(sb.toString());
@@ -437,7 +433,7 @@ public class AkamaiRefreshCronJob extends AbstractJobPerformable
 			final String authStringEnc = new String(Base64.getEncoder().encode(authString.getBytes()));
 			urlHTTPConn.setRequestProperty("Authorization", "Basic " + authStringEnc);
 
-			if (null != methodSent && methodSent.trim().length() != 0)
+			if (null != methodSent && methodSent.trim().length() > 0)
 			{
 				urlHTTPConn.setRequestMethod(methodSent);
 			}
