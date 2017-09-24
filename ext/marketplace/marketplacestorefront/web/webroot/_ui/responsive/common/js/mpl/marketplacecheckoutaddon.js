@@ -1930,10 +1930,6 @@ function savedDebitCardRadioChange(radioId){
 			cache: false,
 			async: false,
 			success : function(response) {
-				
-				if(response=='isEGVCart'){
-					$(location).attr('href',ACC.config.encodedContextPath+"/checkout/multi/payment-method/cardPayment/"+guid); //TPR-629
-				}
 				//TPR:3780:jewellery
 				if(response=='reload_for_inventory'){
 					$(location).attr('href',ACC.config.encodedContextPath+"/checkout/multi/payment-method/pay?dispMsg=true");
@@ -2106,9 +2102,6 @@ function savedDebitCardRadioChange(radioId){
 			cache: false,
 			async: false,
 			success : function(response) {
-				if(response=='isEGVCart'){
-					$(location).attr('href',ACC.config.encodedContextPath+"/checkout/multi/payment-method/cardPayment/"+guid); //TPR-629
-				}
 				//TPR:3780:jewellery
 				if(response=='reload_for_inventory'){
 					$(location).attr('href',ACC.config.encodedContextPath+"/checkout/multi/payment-method/pay?dispMsg=true");
@@ -2304,9 +2297,6 @@ function savedDebitCardRadioChange(radioId){
 			cache: false,
 			async: false,
 			success : function(response) {
-				if(response=='isEGVCart'){
-					$(location).attr('href',ACC.config.encodedContextPath+"/checkout/multi/payment-method/cardPayment/"+guid); //TPR-629
-				}
 				//TPR:3780:jewellery
 				if(response=='reload_for_inventory'){
 					$(location).attr('href',ACC.config.encodedContextPath+"/checkout/multi/payment-method/pay?dispMsg=true");
@@ -5231,9 +5221,6 @@ function submitNBForm(){
 			type: "GET",
 			cache: false,
 			success : function(response) {
-				if(response=='isEGVCart'){
-					$(location).attr('href',ACC.config.encodedContextPath+"/checkout/multi/payment-method/cardPayment/"+guid); //TPR-629
-				}
 				//TPR:3780:jewellery
 				if(response=='reload_for_inventory'){
 					$(location).attr('href',ACC.config.encodedContextPath+"/checkout/multi/payment-method/pay?dispMsg=true");

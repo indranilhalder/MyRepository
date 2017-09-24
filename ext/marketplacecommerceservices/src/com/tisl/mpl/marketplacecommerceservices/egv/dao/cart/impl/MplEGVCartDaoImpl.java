@@ -43,7 +43,7 @@ public class MplEGVCartDaoImpl implements MplEGVCartDao
 	 */
 	private static final String FACTING_CAR_MODEL_BASE_ON_GUID = "Facting Car Model Base On Guid ";
 
-	private static final String MPL_EGV_CART_MODEL =  "Select {c:pk} from {Cart as c},{User as u} where {u.customer}={u.pk} and {c.isEGVCart}=TRUE";
+	private static final String MPL_EGV_CART_MODEL =  "Select {s:pk} from {Cart as s},{User as c} where {s.user}={c.pk} and {c.uid}=?customerId and {s.isEGVCart}=?isEGV";
 
 	private static final Logger LOG = Logger.getLogger(MplEGVCartDaoImpl.class);
 	
@@ -64,22 +64,25 @@ public class MplEGVCartDaoImpl implements MplEGVCartDao
 	@Override
 	public void removeOldEGVCartCurrentCustomer()
 	{
-		try{
-			
-		 CustomerModel currentCustomer = (CustomerModel) userService.getCurrentUser();
-		if (LOG.isDebugEnabled())
+		try
 		{
-			LOG.debug(CART_MODEL_FACTING_FOR_BASE_CURRENT_SESSION2);
-		}
-		final FlexibleSearchQuery fQuery = new FlexibleSearchQuery(MPL_EGV_CART_MODEL);
-		fQuery.addQueryParameter("pk", currentCustomer.getCustomerID());
 
-		final List<CartModel> listOfData = flexibleSearchService.<CartModel> search(fQuery)
-				.getResult();
-		if(CollectionUtils.isNotEmpty(listOfData)){
-		modelService.removeAll(listOfData);
+			UserModel currentCustomer = userService.getCurrentUser();
+
+			if (LOG.isDebugEnabled())
+			{
+				LOG.debug(CART_MODEL_FACTING_FOR_BASE_CURRENT_SESSION2);
+			}
+			final FlexibleSearchQuery fQuery = new FlexibleSearchQuery(MPL_EGV_CART_MODEL);
+			fQuery.addQueryParameter("customerId", currentCustomer.getUid());
+			fQuery.addQueryParameter("isEGV", Boolean.TRUE);
+			final List<CartModel> listOfData = flexibleSearchService.<CartModel> search(fQuery).getResult();
+			if (CollectionUtils.isNotEmpty(listOfData))
+			{
+				modelService.removeAll(listOfData);
+			}
+
 		}
-	}
 	catch (final Exception e)
 	{
 		LOG.error(CART_MODEL_FACTING_FOR_BASE_CURRENT_SESSION );

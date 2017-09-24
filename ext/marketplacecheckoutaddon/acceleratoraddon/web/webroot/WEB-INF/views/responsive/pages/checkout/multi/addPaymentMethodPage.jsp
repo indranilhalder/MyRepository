@@ -1361,7 +1361,6 @@
 				</div>				
 				<%-- </jsp:body>
 		</multiCheckout:checkoutSteps> --%>	
-		${isEGVCart}
 		<%-- <form:hidden path="guid" id="guid" value="${guid}"/> --%>
 		<input type="hidden" id="isEGVOrder" value="${isEGVCart}">
 		<multiCheckout:checkoutOrderDetails cartData="${cartData}" showDeliveryAddress="true" showPaymentInfo="false" showTaxEstimate="false" showTax="true" isCart="${isCart}" orderData="${orderData}"/>
