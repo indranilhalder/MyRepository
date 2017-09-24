@@ -133,8 +133,8 @@
 	
 		<!-- 168108:TPR-6945:Near Real time Stock and Price changes in PLP and PDP -->
 		
-		<itemtype code="FlashSaleProductList" autocreate="true" generate="true">
-			<deployment table="FlashSaleProductList" typecode="24677" /> --> 
+<!-- 		<itemtype code="FlashSaleProductList" autocreate="true" generate="true">
+			<deployment table="FlashSaleProductList" typecode="24677" />
 			<attributes>
 					<attribute autocreate="true" qualifier="productListingId"
 						type="java.lang.String">
@@ -145,7 +145,7 @@
 					</attribute>
 			</attributes>
 		</itemtype>
-		
+ -->		
 		<itemtype code="AkamaiRefreshUrlList" autocreate="true" generate="true">
 			<deployment table="AkamaiRefreshUrlList" typecode="24678" /> --> 
 			<attributes>
