@@ -2469,7 +2469,7 @@ public class MiscsController extends BaseController
 		}
 		catch (final Exception e)
 		{
-			LOG.error(e.getStackTrace());
+			LOG.error(e);
 			codSelfShipData = null;
 			return codSelfShipData;
 		}
@@ -2486,18 +2486,21 @@ public class MiscsController extends BaseController
 			if (null != codSelfShipData)
 			{
 				final CODSelfShipResponseData codSelfShipResponseData = cancelReturnFacade.codPaymentInfoToFICO(codSelfShipData);
+				LOG.debug("============99999999999999999999999999999");
 				if (null == codSelfShipResponseData.getSuccess() || !codSelfShipResponseData.getSuccess().equalsIgnoreCase(SUCCESS))
 				{
+				LOG.debug("============8888888888888888888888888888");
 					cancelReturnFacade.saveCODReturnsBankDetails(codSelfShipData);
 					LOG.debug("Failed to post COD return paymnet details to FICO Order No:" + codSelfShipData.getOrderRefNo());
 
 				}
+				LOG.debug("============66666666666666666666666666666");
 				cancelReturnFacade.insertUpdateCustomerBankDetails(codSelfShipData);
 			}
 		}
 		catch (final Exception ex)
 		{
-			LOG.error(ex.getStackTrace());
+			LOG.error(ex);
 			return false;
 		}
 		LOG.info("Finished sending bank details to FICO");
