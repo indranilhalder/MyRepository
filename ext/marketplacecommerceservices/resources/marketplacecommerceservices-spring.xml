@@ -2303,7 +2303,7 @@
 	
     <!-- Override the Cart so that calls to get promotion results can be intercepted -->
    
-    <!-- <bean id="de.hybris.platform.jalo.order.Cart" class="de.hybris.platform.promotions.jalo.order.PromotionCart" scope="prototype" /> -->
+     <bean id="de.hybris.platform.jalo.order.Cart" class="de.hybris.platform.promotions.jalo.order.PromotionCart" scope="prototype" />
 
     <!-- CACHING FINISH -->
      <!-- CAR-285 Start Zipping XML Creation and Copying Job Sitemap Start -->
