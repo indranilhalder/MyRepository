@@ -6692,48 +6692,8 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 			throws InvalidCartException, CalculationException
 	{
 		OrderModel orderToBeUpdated = getMplPaymentFacade().getOrderByGuid(guid);
-
 		String orderStatusResponse = null;
-		try
-		{
-
-			orderStatusResponse = getMplPaymentFacade().getOrderStatusFromJuspay(guid, null, orderToBeUpdated, null);
-		}
-		catch (Exception exception)
-		{
-
-			return updateOrder(orderToBeUpdated, redirectAttributes);
-		}
-		updateOrder(orderToBeUpdated, redirectAttributes);
-		try
-		{
-			getMplCheckoutFacade().beforeSubmitOrder(orderToBeUpdated);
-		}
-		catch (Exception exception)
-		{
-
-			LOG.error("Error ouccer while gettingg xception ");
-		}
-
-		try
-		{
-			getMplCheckoutFacade().submitOrder(orderToBeUpdated);
-		}
-		catch (Exception exception)
-		{
-
-			LOG.error("Error ouccer while gettingg xception ");
-		}
-
-
-		final OrderData orderData = getMplCheckoutFacade().getOrderDetailsForCode(orderToBeUpdated);
-		if (orderData != null)
-		{
-			
-			return redirectToOrderConfirmationPage(orderData);
-		}
-
-
+	   orderStatusResponse = getMplPaymentFacade().getOrderStatusFromJuspay(guid, null, orderToBeUpdated, null);	
 		//Redirection when transaction is successful i.e. CHARGED
 		if (null != orderStatusResponse)
 		{

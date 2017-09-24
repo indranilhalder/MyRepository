@@ -4547,7 +4547,7 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 		cardModel.setDiscountsIncludePaymentCost(false);
 		cardModel.setIsExpressCheckoutSelected(Boolean.FALSE);
 		cardModel.setIsPendingNotSent(Boolean.FALSE);
-		cardModel.setIsSentToOMS(Boolean.FALSE);
+		cardModel.setIsSentToOMS(Boolean.TRUE);
 		cardModel.setMerged(Boolean.FALSE);
 		cardModel.setModeOfPayment("Creadi Card");
 		cardModel.setNet(Boolean.FALSE);
