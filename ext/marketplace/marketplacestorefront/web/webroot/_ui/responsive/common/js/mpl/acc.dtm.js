@@ -71,14 +71,28 @@ $(document).ready(function(){
 			}	
 		}
 	}
-	
-	if(user_login_type != '' && user_login_type != undefined && user_login_type != null && user_login_type != 'email' && user_login_type!= 'guest_user'){
-		
-		digitalData.account = {
+	//user login type for g+,fb
+	if(user_login_type != '' && user_login_type != undefined && user_login_type != null 
+		&& user_login_type != 'email' && user_login_type!= 'guest_user'){
+
+		if(typeof digitalData.account != "undefined"){
+			if(typeof digitalData.account.login != "undefined"){
+				digitalData.account.login.type = user_login_type;
+			}
+			else{
+				digitalData.account.login = {
+					type : user_login_type
+				}
+			}
+		}
+		else{
+			digitalData.account = {
 				login : {
 					type : user_login_type
-				}	
+				}
 			}
+		}
+		
 	}
 	
 	
@@ -1509,7 +1523,72 @@ $(document).on('mouseup','.samsung-chat-div',function(){
 		_satellite.track('samsung_chat');
 	}
 })
+//for g+,fb location track |TISPRDT-6012
+$(document).on('mouseup','#loginDivsiginflyout',function(){
+	 var loginLocation = "header_login_popup";
+	if(typeof digitalData.account != "undefined"){
+		if(typeof digitalData.account.login != "undefined"){
+			digitalData.account.login.location = loginLocation;
+		}
+		else{
+			digitalData.account.login = {
+				location : loginLocation
+			}
+		}
+	}
+	else{
+		digitalData.account = {
+			login : {
+				location : loginLocation
+			}
+		}
+	}
+		
+})
 
+$(document).on('mouseup','#loginDiv',function(){
+	 var loginLocation = "login_page";
+    if(typeof digitalData.account != "undefined"){
+		if(typeof digitalData.account.login != "undefined"){
+			digitalData.account.login.location = loginLocation;
+		}
+		else{
+			digitalData.account.login = {
+				location : loginLocation
+			}
+		}
+	}
+	else{
+		digitalData.account = {
+			login : {
+				location : loginLocation
+			}
+		}
+	}
+})
+
+$(document).on('mouseup','#loginDivCheckout',function(){
+	 var loginLocation = "checkout_login_page";
+    if(typeof digitalData.account != "undefined"){
+		if(typeof digitalData.account.login != "undefined"){
+			digitalData.account.login.location = loginLocation;
+		}
+		else{
+			digitalData.account.login = {
+				location : loginLocation
+			}
+		}
+	}
+	else{
+		digitalData.account = {
+			login : {
+				location : loginLocation
+			}
+		}
+	}
+})
+
+//TISPRDT-6012 ends
 /*product impressions start*/
 function dtmProductImpressionsSerp(){
 	var count = 10; 
