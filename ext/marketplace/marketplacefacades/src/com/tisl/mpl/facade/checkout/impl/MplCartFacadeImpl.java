@@ -3,6 +3,7 @@
  */
 package com.tisl.mpl.facade.checkout.impl;
 
+import de.hybris.platform.core.model.order.delivery.DeliveryModeModel;
 import de.hybris.platform.acceleratorservices.config.SiteConfigService;
 import de.hybris.platform.basecommerce.model.site.BaseSiteModel;
 import de.hybris.platform.catalog.model.CatalogVersionModel;
@@ -96,6 +97,7 @@ import com.tis.mpl.facade.changedelivery.MplDeliveryAddressFacade;
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.constants.MplGlobalCodeConstants;
 import com.tisl.mpl.constants.clientservice.MarketplacecclientservicesConstants;
+import com.tisl.mpl.core.enums.DeliveryFulfillModesEnum;
 import com.tisl.mpl.core.model.MplZoneDeliveryModeValueModel;
 import com.tisl.mpl.core.model.RichAttributeModel;
 import com.tisl.mpl.core.mplconfig.service.MplConfigService;
@@ -4623,11 +4625,25 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 		abstractOrderEntryModel.setIsSdbSendToFico(Boolean.FALSE);
 		abstractOrderEntryModel.setMaxCountReached(false);
 		abstractOrderEntryModel.setModifiedtime(new Date());
-		final Collection<MplZoneDeliveryModeValueModel> value6 = new ArrayList<MplZoneDeliveryModeValueModel>();
-		final MplZoneDeliveryModeValueModel mplZoneDeliveryModeValueModel = mplDeliveryCostDao.getDeliveryCost("home-delivery",
-				"INR", "123653098765485130011719");
-		value6.add(mplZoneDeliveryModeValueModel);
-		abstractOrderEntryModel.setMplZoneDeliveryModeValue(value6);
+		
+		try
+		{
+			final Collection<MplZoneDeliveryModeValueModel> value6 = new ArrayList<MplZoneDeliveryModeValueModel>();
+			final MplZoneDeliveryModeValueModel mplZoneDeliveryModeValueModel = mplDeliveryCostDao.getDeliveryCost("home-delivery",
+					"INR", "123653098765485130011719");
+
+			mplZoneDeliveryModeValueModel.setDeliveryFulfillModes(DeliveryFulfillModesEnum.TSHIP);
+			DeliveryModeModel deliaveryMode=mplDeliveryCostDao.getDelieveryMode("home-delivery");
+			mplZoneDeliveryModeValueModel.setDeliveryMode(deliaveryMode);
+			value6.add(mplZoneDeliveryModeValueModel);
+			modelService.saveAll(mplZoneDeliveryModeValueModel);
+			abstractOrderEntryModel.setMplZoneDeliveryModeValue(value6);
+			abstractOrderEntryModel.setDeliveryMode(deliaveryMode);
+		}
+		catch (Exception exception)
+		{
+			LOG.error("Error While Getting Data");
+		}
 		abstractOrderEntryModel.setMrp(Double.valueOf(egvDetailForm.getGiftRange()));
 		abstractOrderEntryModel.setNetAmountAfterAllDisc(Double.valueOf(egvDetailForm.getGiftRange()));
 		abstractOrderEntryModel.setNetSellingPrice(Double.valueOf(egvDetailForm.getGiftRange()));

@@ -146,4 +146,28 @@ public class MplDeliveryCostDaoImpl implements MplDeliveryCostDao
 		}
 		return mplDeliveryModelList;
 	}
+	
+	@Override
+	public DeliveryModeModel getDelieveryMode(String deliveryCode){
+		
+		SearchResult<DeliveryModeModel> searchRes=null;
+		try{
+		final StringBuilder deliveryCodeQuery = new StringBuilder(20);
+		deliveryCodeQuery.append("SELECT DISTINCT {del:").append(DeliveryModeModel.PK).append("} ");
+		deliveryCodeQuery.append(" FROM {").append(DeliveryModeModel._TYPECODE).append(" AS del ");
+		deliveryCodeQuery.append("} WHERE upper({del:").append(DeliveryModeModel.CODE).append("}) = ?deliveryCode");
+		final Map<String, Object> params1 = new HashMap<String, Object>(2);
+		params1.put("deliveryCode", deliveryCode.toUpperCase());
+
+		 searchRes = getFlexibleSearchService().search(deliveryCodeQuery.toString(),
+				params1);
+		}catch(Exception exception
+				){
+		LOG.error("Error Occured whilefacting data  from table");
+		}
+		return searchRes.getResult().get(0);
+		
+		
+	}
+	
 }

@@ -185,6 +185,8 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 		return bankNameUserPaymentMode;
 	}
 
+	@Autowired
+	MplEGVCartService mplEGVCartService;
 
 	/**
 	 * @param bankNameUserPaymentMode
@@ -285,9 +287,8 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 
 	@Resource(name = "mplWalletFacade")
 	private MplWalletFacade mplWalletFacade;
-	
-	@Autowired
-	private MplEGVCartService mplEGVCartService;
+
+
 
 
 	/**
@@ -2889,9 +2890,10 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 
 
 		//Egv Order changes 
-	    CartModel cart=mplEGVCartService.getEGVCartModel(guid);
-        if(cart!=null&& cart.getIsEGVCart().booleanValue() ){
-        	try
+		CartModel cart = mplEGVCartService.getEGVCartModel(guid);
+		if (cart != null && cart.getIsEGVCart().booleanValue())
+		{
+			try
 			{
 				return getEGVOrderStatus(model, redirectAttributes, guid);
 			}
@@ -2899,9 +2901,9 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 			{
 				// YTODO Auto-generated catch block
 				e.printStackTrace();
-			} 
-  
-        }
+			}
+
+		}
 
 		boolean splitPayment = false;
 		boolean jsPayMode = false;
@@ -3793,7 +3795,7 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 	public @ResponseBody String createJuspayOrder(final String firstName, final String lastName, final String netBankName,
 			final String addressLine1, final String addressLine2, final String addressLine3, final String country,
 			final String state, final String city, final String pincode, final String cardSaved, final String sameAsShipping,
-			final String guid, final Model model,boolean isEGVOrder) //Parameter guid added for TPR-629 //parameter netBankName added for TPR-4461
+			final String guid, final Model model, boolean isEGVOrder) //Parameter guid added for TPR-629 //parameter netBankName added for TPR-4461
 			throws EtailNonBusinessExceptions
 	{
 		//TPR-4461 parameter netBankName added starts here added only for getting bank name for netbanking/saved credit card/saved debit card
@@ -3860,9 +3862,29 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 				CartModel cart;
 				if (isEGVOrder)
 				{
-					orderId = createJuspayOrderFroEGV(firstName, lastName, country, state, city, pincode, cardSaved, sameAsShipping,
-							guid, orderId, returnUrlBuilder, paymentAddressLine1, paymentAddressLine2, paymentAddressLine3, uid);
-					return "isEGVCart";
+					try
+					{
+
+						orderId = createJuspayOrderFroEGV(firstName, lastName, country, state, city, pincode, cardSaved, sameAsShipping,
+								guid, orderId, returnUrlBuilder, paymentAddressLine1, paymentAddressLine2, paymentAddressLine3, uid);
+
+					}
+					catch (final ModelSavingException e)
+					{
+						LOG.error(MarketplacecheckoutaddonConstants.LOGERROR, e);
+					}
+					catch (final AdapterException e)
+					{
+						LOG.error(MarketplacecheckoutaddonConstants.LOGERROR, e);
+						orderId = "JUSPAY_CONN_ERROR";
+					}
+					catch (final EtailNonBusinessExceptions e)
+					{
+						ExceptionUtil.etailNonBusinessExceptionHandler(e);
+						orderId = "NONBusinessException" + e.getErrorMessage();
+						LOG.error(MarketplacecheckoutaddonConstants.LOGERROR, e);
+					}
+					return orderId;
 				}
 				else
 				{
@@ -5102,16 +5124,17 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 		final List<OrderEntryData> sellerList = cartData.getEntries();
 		for (final OrderEntryData seller : sellerList)
 		{
-			if(seller.getSelectedSellerInformation()!=null){
-			final String sellerID = seller.getSelectedSellerInformation().getSellerID();
-			if (cartLevelSellerID != null)
+			if (seller.getSelectedSellerInformation() != null)
 			{
-				cartLevelSellerID += "_" + sellerID;
-			}
-			else
-			{
-				cartLevelSellerID = sellerID;
-			}
+				final String sellerID = seller.getSelectedSellerInformation().getSellerID();
+				if (cartLevelSellerID != null)
+				{
+					cartLevelSellerID += "_" + sellerID;
+				}
+				else
+				{
+					cartLevelSellerID = sellerID;
+				}
 			}
 		}
 		return cartLevelSellerID;
@@ -6539,7 +6562,6 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 			final CartData giftCartData = mplCartFacade.getGiftCartModel(egvDetailsData);
 			Map<String, Boolean> paymentModeMap = null;
 			final OrderData orderData = null;
-
 			final String checkoutSellerID = populateCheckoutSellers(giftCartData);
 			model.addAttribute(MarketplacecheckoutaddonConstants.CHECKOUT_SELLER_IDS, checkoutSellerID);
 			//Getting Payment modes
@@ -6657,7 +6679,7 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 		egvDetailsData.setTotalEGV(egvDetailForm.getTotalEGV());
 		return egvDetailsData;
 	}
-	
+
 	/**
 	 * @param model
 	 * @param redirectAttributes
@@ -6670,41 +6692,48 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 			throws InvalidCartException, CalculationException
 	{
 		OrderModel orderToBeUpdated = getMplPaymentFacade().getOrderByGuid(guid);
-		
-		 String orderStatusResponse=null;
-		
-		try{
-		
-			orderStatusResponse= getMplPaymentFacade().getOrderStatusFromJuspay(guid, null, orderToBeUpdated,
-				null);
-		}catch(Exception exception){
-			
+
+		String orderStatusResponse = null;
+		try
+		{
+
+			orderStatusResponse = getMplPaymentFacade().getOrderStatusFromJuspay(guid, null, orderToBeUpdated, null);
+		}
+		catch (Exception exception)
+		{
+
 			return updateOrder(orderToBeUpdated, redirectAttributes);
 		}
-		
-		
 		updateOrder(orderToBeUpdated, redirectAttributes);
-		try{
-		getMplCheckoutFacade().beforeSubmitOrder(orderToBeUpdated);
-		}catch(Exception exception){
-			
+		try
+		{
+			getMplCheckoutFacade().beforeSubmitOrder(orderToBeUpdated);
+		}
+		catch (Exception exception)
+		{
+
 			LOG.error("Error ouccer while gettingg xception ");
 		}
-		
-		try{
+
+		try
+		{
 			getMplCheckoutFacade().submitOrder(orderToBeUpdated);
-			}catch(Exception exception){
-				
-				LOG.error("Error ouccer while gettingg xception ");
-			}
-		
-		
+		}
+		catch (Exception exception)
+		{
+
+			LOG.error("Error ouccer while gettingg xception ");
+		}
+
+
 		final OrderData orderData = getMplCheckoutFacade().getOrderDetailsForCode(orderToBeUpdated);
-		if(orderData!=null){
+		if (orderData != null)
+		{
+			
 			return redirectToOrderConfirmationPage(orderData);
 		}
 
-		 
+
 		//Redirection when transaction is successful i.e. CHARGED
 		if (null != orderStatusResponse)
 		{
@@ -6742,9 +6771,9 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 		{
 			return updateOrder(orderToBeUpdated, redirectAttributes);
 		}
-		 
+
 	}
-	
+
 	/**
 	 * @param firstName
 	 * @param lastName
@@ -6762,11 +6791,12 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 	 * @param paymentAddressLine3
 	 * @param uid
 	 * @return
+	 * @throws InvalidCartException
 	 */
 	private String createJuspayOrderFroEGV(final String firstName, final String lastName, final String country, final String state,
 			final String city, final String pincode, final String cardSaved, final String sameAsShipping, final String guid,
 			String orderId, final StringBuilder returnUrlBuilder, String paymentAddressLine1, String paymentAddressLine2,
-			String paymentAddressLine3, String uid)
+			String paymentAddressLine3, String uid) throws InvalidCartException
 	{
 		try
 		{
@@ -6777,11 +6807,33 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 					paymentAddressLine2, paymentAddressLine3, country, state, city, pincode,
 					cardSaved + MarketplacecheckoutaddonConstants.STRINGSEPARATOR + sameAsShipping, returnUrlBuilder.toString(), uid,
 					MarketplacecheckoutaddonConstants.CHANNEL_WEB);
-			getMplCheckoutFacade().placeEGVOrder(cart);
+			OrderModel orderModel = getMplCheckoutFacade().placeEGVOrder(cart);
+
+			if (null != orderModel.getPaymentInfo())
+			{
+				LOG.error("Order already has payment info >>>" + orderModel.getPaymentInfo().getCode());
+				return "redirect_with_details";
+			}
+			else
+			{
+				LOG.error("Order status is Payment_Pending for orderCode>>>" + orderModel.getCode());
+				return "redirect_with_details";
+			}
 		}
-		catch (Exception exc)
+		catch (final ModelSavingException e)
 		{
-			LOG.error("juspay Order Create  exception" + exc);
+			LOG.error(MarketplacecheckoutaddonConstants.LOGERROR, e);
+		}
+		catch (final AdapterException e)
+		{
+			LOG.error(MarketplacecheckoutaddonConstants.LOGERROR, e);
+			orderId = "JUSPAY_CONN_ERROR";
+		}
+		catch (final EtailNonBusinessExceptions e)
+		{
+			ExceptionUtil.etailNonBusinessExceptionHandler(e);
+			orderId = "NONBusinessException" + e.getErrorMessage();
+			LOG.error(MarketplacecheckoutaddonConstants.LOGERROR, e);
 		}
 		return orderId;
 	}

@@ -2091,5 +2091,14 @@ class="de.hybris.platform.commercefacades.product.impl.DefaultImageFormatMapping
         </bean>
 	
 	<!-- TPR-6665: Update synonyms in solr slave  end-->
+	
+<!--  EGV Order Email-->	
+
+ <bean id="eGVOrderRecipientContex"
+		class="com.tisl.mpl.facades.process.email.context.EGVOrderRecipientContext"
+		parent="abstractEmailContext" scope="prototype">
+	</bean>
+	
+	
 </beans>
 

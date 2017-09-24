@@ -14,6 +14,7 @@ import de.hybris.platform.core.model.order.AbstractOrderModel;
 import de.hybris.platform.core.model.order.CartModel;
 import de.hybris.platform.core.model.order.OrderModel;
 import de.hybris.platform.core.model.order.price.DiscountModel;
+import de.hybris.platform.core.model.user.AddressModel;
 import de.hybris.platform.core.model.user.CustomerModel;
 import de.hybris.platform.order.CalculationService;
 import de.hybris.platform.order.InvalidCartException;
@@ -181,6 +182,33 @@ public class MplCommercePlaceOrderStrategyImpl implements MplCommercePlaceOrderS
 				orderModel.setIsEGVCart(cartModel.getIsEGVCart());
 				orderModel.setRecipientId(cartModel.getRecipientId());
 				orderModel.setRecipientMessage(cartModel.getRecipientMessage());
+				
+			
+				
+				if(orderModel.getUser()!=null && CollectionUtils.isNotEmpty(orderModel.getUser().getAddresses())){
+					orderModel.setDeliveryAddress((AddressModel) orderModel.getUser().getAddresses().toArray()[0]);
+				}else{
+					try{
+					AddressModel addressModel=new AddressModel();
+					addressModel.setLine1("Mumbai");
+					addressModel.setLine2("data");
+					addressModel.setAddressLine3("sAddressLine3");	
+					addressModel.setFirstname("TUL");
+					addressModel.setLastname("Unistore");
+					addressModel.setPhone1("Pankaj");
+					addressModel.setState("Rajatsha");
+					addressModel.setCity("jaipur");
+					addressModel.setOwner(orderModel.getUser());
+					getModelService().save(addressModel);
+					orderModel.setDeliveryAddress(addressModel);
+					}catch(Exception excpetion){
+						LOG.error("Error Occure while address create for egv order");
+					}
+				}
+				
+
+				
+				
 				LOG.error("****** MplCommercePlaceOrderStrategyImpl : placeOrder :EGV Order !!");
 			}
 			

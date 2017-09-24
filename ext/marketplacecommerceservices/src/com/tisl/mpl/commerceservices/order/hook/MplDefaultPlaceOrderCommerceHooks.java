@@ -26,6 +26,7 @@ import de.hybris.platform.order.AbstractOrderEntryTypeService;
 import de.hybris.platform.order.InvalidCartException;
 import de.hybris.platform.order.OrderService;
 import de.hybris.platform.order.strategies.ordercloning.CloneAbstractOrderStrategy;
+import de.hybris.platform.orderprocessing.model.OrderProcessModel;
 import de.hybris.platform.payment.model.PaymentTransactionModel;
 import de.hybris.platform.promotions.model.AbstractPromotionModel;
 import de.hybris.platform.promotions.model.AbstractPromotionRestrictionModel;
@@ -79,6 +80,7 @@ import com.tisl.mpl.core.model.WalletApportionPaymentInfoModel;
 import com.tisl.mpl.core.model.WalletCardApportionDetailModel;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.marketplacecommerceservices.daos.MplOrderDao;
+import com.tisl.mpl.marketplacecommerceservices.event.OrderEGVRecipientEmailEvent;
 import com.tisl.mpl.marketplacecommerceservices.service.MplCommerceCartService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplDeliveryCostService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplJewelleryService;
@@ -778,8 +780,8 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 				
 				String response = getPurchaseEGVRequestPopulate(orderModel);
 				if(response.equalsIgnoreCase("success")){
-					
-					//Email
+					getOrderStatusSpecifier().setOrderStatus(orderModel, OrderStatus.CONFIRMED);
+					sendNotifiactionForEGVOrder(orderModel);
 				}else
 				{
 					getOrderStatusSpecifier().setOrderStatus(orderModel, OrderStatus.PAYMENT_TIMEOUT);
@@ -818,6 +820,17 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 		{
 			LOG.error("MplDefaultPlaceOrderCommerceHooks--beforeSubmitOrder--Without parent trying to create suborder");
 		}
+	}
+
+	/**
+	 * @param orderModel
+	 */
+	private void sendNotifiactionForEGVOrder(final OrderModel orderModel)
+	{
+		OrderProcessModel orderProcessModel=new OrderProcessModel();
+		orderProcessModel.setOrder(orderModel);
+		OrderEGVRecipientEmailEvent orderEGVRecipientEmailEvent = new OrderEGVRecipientEmailEvent(orderProcessModel);
+		eventService.publishEvent(orderEGVRecipientEmailEvent);
 	}
 
 	/**
