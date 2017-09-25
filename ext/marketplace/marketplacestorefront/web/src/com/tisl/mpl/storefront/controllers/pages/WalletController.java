@@ -148,7 +148,7 @@ public class WalletController extends AbstractPageController
 					balanceAmount = customerWalletDetailData.getWallet().getBalance();		
 				}
 				WalletTransacationsList walletTrasacationsListData = mplWalletFacade.getWalletTransactionList();	
-				if(null != walletTrasacationsListData && walletTrasacationsListData.getResponseCode() == 0){
+				if(null != walletTrasacationsListData && null != walletTrasacationsListData.getResponseCode() && walletTrasacationsListData.getResponseCode() == 0){
 					
 					walletTrasacationsListData1 = walletTrasacationsListData;
 				}
@@ -198,11 +198,6 @@ public class WalletController extends AbstractPageController
 				}
 
 			}
-			final ContentPageModel contentPage = getContentPageForLabelOrId("cliqcashPage");
-			storeCmsPageInModel(model, contentPage);
-			setUpMetaDataForContentPage(model, contentPage);
-			model.addAttribute("WalletBalance", balanceAmount);
-			model.addAttribute("walletTrasacationsListData", walletTrasacationsListData1.getWalletTransactions());
 			
 		}catch(Exception ex){
 			ex.printStackTrace();
@@ -210,8 +205,21 @@ public class WalletController extends AbstractPageController
 			if(ex.getMessage().contains("SocketTimeoutException")){
 			GlobalMessages.addErrorMessage(model, "text.cliqcash.timeout.massege");
 			}
+			
+			final ContentPageModel contentPage = getContentPageForLabelOrId("cliqcashPage");
+			storeCmsPageInModel(model, contentPage);
+			setUpMetaDataForContentPage(model, contentPage);
+			model.addAttribute("WalletBalance", balanceAmount);
+			model.addAttribute("walletTrasacationsListData", walletTrasacationsListData1.getWalletTransactions());
+			
 		return "addon:/marketplacecheckoutaddon/pages/checkout/single/cliqcash";
 	}
+		final ContentPageModel contentPage = getContentPageForLabelOrId("cliqcashPage");
+		storeCmsPageInModel(model, contentPage);
+		setUpMetaDataForContentPage(model, contentPage);
+		model.addAttribute("WalletBalance", balanceAmount);
+		model.addAttribute("walletTrasacationsListData", walletTrasacationsListData1.getWalletTransactions());
+		
 		return "addon:/marketplacecheckoutaddon/pages/checkout/single/cliqcash";
 	}
 }
