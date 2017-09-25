@@ -154,6 +154,13 @@ function setSizeforAkamai()
 }
 function isOOSQuick(){
 	var totalOptions = $("ul[label=sizes] li").length;
+	//PRDI-445 fix starts
+	var stock = $("#stock").val();
+	if (totalOptions==0 && stock<1)
+	{
+		return true;
+	}
+	//PRDI-445 fix ends
 	totalOptions = totalOptions -1;
 	var disabledOption = $("ul[label=sizes] li.strike").length;
 	if(totalOptions == disabledOption){
@@ -427,6 +434,9 @@ function quickViewUtag(productCode,sellerId,sellerName,priceMRP,priceMOP,discoun
 		product_stock_count : stock,
 		size_variant_count : sizeVariantCount
 	});
+	var category = $('#categoryType').val();
+	var brand  = $('.product-detail .company').text().trim();
+	dtmQVTrack(productCodeArray,category,brand);
 }
 
 function getRichAttributeQuickView(sellerName)
@@ -963,11 +973,14 @@ function openPopForBankEMI_quick() {
 			$("#bankNameForEMI").html(optionData);
 			/*TPR-641*/
 			utag.link({
-				link_obj: this,
 				link_text: 'emi_more_information' ,
 				event_type : 'emi_more_information'
 			});
-
+			//TPR-6029-EMI link click#43--start
+			   if(typeof(_satellite) != "undefined"){
+			    	_satellite.track('cpj_qw_emi');
+				}
+			//TPR-6029-EMI link click#43--end
 		},
 		error : function(xhr, status, error) {
 

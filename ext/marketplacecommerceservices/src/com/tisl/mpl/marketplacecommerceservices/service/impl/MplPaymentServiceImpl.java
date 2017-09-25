@@ -70,6 +70,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.UUID;
 
 import javax.annotation.Resource;
 
@@ -199,7 +200,7 @@ public class MplPaymentServiceImpl implements MplPaymentService
 	//@Autowired
 	//private ExtendedUserService extendedUserService;
 	private static final String ERROR_PAYMENT = "Payment_Timeout order status for orderCode>>>";
-	
+
 	//Sonar Fix
 	private static final String FAILURE_KEY = "FAILURE";
 
@@ -3284,11 +3285,11 @@ public class MplPaymentServiceImpl implements MplPaymentService
 
 	/*
 	 * @description : fetching bank model for a bank name TISPRO-179\
-	 * 
+	 *
 	 * @param : bankName
-	 * 
+	 *
 	 * @return : BankModel
-	 * 
+	 *
 	 * @throws EtailNonBusinessExceptions
 	 */
 	@Override
@@ -3300,9 +3301,9 @@ public class MplPaymentServiceImpl implements MplPaymentService
 
 	/*
 	 * @Description : Fetching bank name for net banking-- TISPT-169
-	 * 
+	 *
 	 * @return List<BankforNetbankingModel>
-	 * 
+	 *
 	 * @throws EtailNonBusinessExceptions
 	 */
 	@Override
@@ -3679,7 +3680,7 @@ public class MplPaymentServiceImpl implements MplPaymentService
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see * SprintPaymentFixes:- This method is setting paymentTransactionModel and the paymentTransactionEntryModel
 	 * against the cart for non-COD from OMS Submit Order Job de.hybris.platform.core.model.order.OrderModel)
 	 */
@@ -3829,7 +3830,7 @@ public class MplPaymentServiceImpl implements MplPaymentService
 
 	/*
 	 * @desc getPaymentModeFrompayInfo
-	 * 
+	 *
 	 * @see SprintPaymentFixes:- ModeOfpayment set same as in Payment Info
 	 */
 	@Override
@@ -3870,7 +3871,7 @@ public class MplPaymentServiceImpl implements MplPaymentService
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see SprintPaymentFixes:- This method is setting paymentTransactionModel and the paymentTransactionEntryModel
 	 * against the cart for pre paid from OMS Submit Order Job
 	 */
@@ -3934,7 +3935,7 @@ public class MplPaymentServiceImpl implements MplPaymentService
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @desc SprintPaymentFixes:- This method is setting paymentTransactionModel and the paymentTransactionEntryModel
 	 * against the cart for COD from OMS Submit Order Job
 	 */
@@ -5001,4 +5002,130 @@ public class MplPaymentServiceImpl implements MplPaymentService
 		return result;
 	}
 
+
+
+	//CheckedInvalid PaymentInfo missing handled call
+	@Override
+	public boolean createPaymentInfo(final OrderModel orderModel)
+	{
+		boolean returnFlag = false;
+		String modeOrderPayment = null;
+
+		modeOrderPayment = orderModel.getModeOfOrderPayment();
+		if (StringUtils.isNotEmpty(modeOrderPayment)
+				&& !modeOrderPayment.equalsIgnoreCase(MarketplacecommerceservicesConstants.COD))
+		{
+			try
+			{
+				createPaymentInfoforJuspay(orderModel);
+				returnFlag = true;
+			}
+			catch (final Exception e)
+			{
+				LOG.error("Creating Payment info  createPaymentInfoforJuspay :- ", e);
+				returnFlag = false;
+			}
+
+		}
+		else if (StringUtils.isNotEmpty(modeOrderPayment)
+				&& modeOrderPayment.equalsIgnoreCase(MarketplacecommerceservicesConstants.COD))
+		{
+			try
+			{
+				createPaymentInfoforCOD(orderModel);
+				returnFlag = true;
+			}
+			catch (final Exception e)
+			{
+				LOG.error("Creating Payment info  createPaymentInfoforCOD :- ", e);
+				returnFlag = false;
+			}
+
+		}
+		else
+		{
+			returnFlag = false;
+		}
+		return returnFlag;
+
+	}
+
+
+	/**
+	 * @param orderModel
+	 */
+	private void createPaymentInfoforJuspay(final OrderModel orderModel)
+	{
+
+		if (orderModel.getPaymentInfo() != null)
+		{
+			removeExistingPaymentInfo(orderModel);
+		}
+		final JusPayPaymentInfoModel jusPayPaymentInfoModel = getModelService().create(JusPayPaymentInfoModel.class);
+		jusPayPaymentInfoModel.setCode(UUID.randomUUID().toString());
+		jusPayPaymentInfoModel.setUser(orderModel.getUser());
+		jusPayPaymentInfoModel.setCashOwner(StringUtils.isNotEmpty(orderModel.getUser().getName()) ? orderModel.getUser().getName()
+				: ((CustomerModel) orderModel.getUser()).getOriginalUid());
+
+		/*
+		 * cart.setConvenienceCharges(Double .valueOf(null !=
+		 * baseStoreService.getCurrentBaseStore().getConvenienceChargeForCOD() ? baseStoreService
+		 * .getCurrentBaseStore().getConvenienceChargeForCOD().longValue() : 0.0));
+		 */
+		//setting the payment modes and the amount against it in session to be used later
+		/*
+		 * final Map<String, Double> paymentInfo = new HashMap<String, Double>();
+		 * paymentInfo.put(MarketplaceJuspayServicesConstants.JUSPAY_KEY, orderModel.getConvenienceCharges());
+		 * sessionService.setAttribute("paymentModes", paymentInfo);
+		 * sessionService.setAttribute("paymentModeForPromotion", MarketplaceJuspayServicesConstants.JUSPAY_KEY);
+		 */
+		getModelService().save(jusPayPaymentInfoModel);
+		orderModel.setPaymentInfo(jusPayPaymentInfoModel);
+		getModelService().save(orderModel);
+		getModelService().refresh(orderModel);
+
+
+	}
+
+	private void createPaymentInfoforCOD(final OrderModel orderModel)
+	{
+		final CODPaymentInfoModel codPaymentInfoModel = getModelService().create(CODPaymentInfoModel.class);
+		codPaymentInfoModel.setCode(UUID.randomUUID().toString());
+		codPaymentInfoModel.setUser(orderModel.getUser());
+		codPaymentInfoModel.setCashOwner(StringUtils.isNotEmpty(orderModel.getUser().getName()) ? orderModel.getUser().getName()
+				: ((CustomerModel) orderModel.getUser()).getOriginalUid());
+		orderModel.setPaymentInfo(codPaymentInfoModel);
+
+		if (null != baseStoreService.getCurrentBaseStore())
+		{
+			orderModel.setConvenienceCharges(Double.valueOf(null != baseStoreService.getCurrentBaseStore()
+					.getConvenienceChargeForCOD() ? baseStoreService.getCurrentBaseStore().getConvenienceChargeForCOD().longValue()
+					: 0.0));
+		}
+		else
+		{
+			orderModel.setConvenienceCharges(Double.valueOf(0.0));
+		}
+		//setting the payment modes and the amount against it in session to be used later
+		final Map<String, Double> paymentInfo = new HashMap<String, Double>();
+		paymentInfo.put("COD", orderModel.getConvenienceCharges());
+		sessionService.setAttribute("paymentModes", paymentInfo);
+		sessionService.setAttribute("paymentModeForPromotion", "COD");
+		getModelService().save(codPaymentInfoModel);
+		getModelService().save(orderModel);
+		getModelService().refresh(orderModel);
+	}
+
+	protected void removeExistingPaymentInfo(final OrderModel orderModel)
+	{
+		getModelService().remove(orderModel.getPaymentInfo());
+
+		orderModel.setPaymentInfo(null);
+		orderModel.setConvenienceCharges(null);
+		sessionService.removeAttribute("paymentModes");
+		sessionService.removeAttribute("paymentModeForPromotion");
+		getModelService().save(orderModel);
+		getModelService().refresh(orderModel);
+
+	}
 }

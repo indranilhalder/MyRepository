@@ -94,6 +94,7 @@ import java.util.Set;
 import java.util.TreeMap;
 
 import javax.annotation.Resource;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
@@ -166,9 +167,10 @@ import com.tisl.mpl.storefront.constants.ModelAttributetConstants;
 import com.tisl.mpl.storefront.constants.RequestMappingUrlConstants;
 import com.tisl.mpl.storefront.controllers.ControllerConstants;
 import com.tisl.mpl.storefront.controllers.helpers.FrontEndErrorHelper;
+import com.tisl.mpl.storefront.security.cookie.PDPPincodeCookieGenerator;
 import com.tisl.mpl.storefront.web.forms.SellerInformationDetailsForm;
 import com.tisl.mpl.util.ExceptionUtil;
-
+import com.tisl.mpl.util.GenericUtilityMethods;
 
 
 /**
@@ -206,7 +208,6 @@ public class ProductPageController extends MidPageController
 	 *
 	 */
 	private static final String PINCODE_CHECKED = "pincodeChecked";
-
 
 
 	/**
@@ -260,11 +261,10 @@ public class ProductPageController extends MidPageController
 
 	private static final String NEW_LINE = "\n";//Sonar Fix
 
-
-
+	//TPR-6405
+	private static final String SAMSUNG = "Samsung";
 	@SuppressWarnings("unused")
 	private static final Logger LOG = Logger.getLogger(ProductPageController.class);
-
 
 	@Resource(name = "frontEndErrorHelper")
 	private FrontEndErrorHelper frontEndErrorHelper;
@@ -294,8 +294,9 @@ public class ProductPageController extends MidPageController
 	@Resource(name = "reviewValidator")
 	private ReviewValidator reviewValidator;
 
-	@Autowired
+	@Resource
 	private ConfigurationService configurationService;
+
 	@Resource(name = ModelAttributetConstants.SESSION_SERVICE)
 	private SessionService sessionService;
 
@@ -309,9 +310,6 @@ public class ProductPageController extends MidPageController
 
 	@Resource(name = "sizeGuideFacade")
 	private SizeGuideFacade sizeGuideFacade;
-
-	//	@Autowired
-	//	private MplCheckoutFacade mplCheckoutFacade;
 
 	@Autowired
 	private SizeGuideHeaderComparator sizeGuideHeaderComparator;
@@ -328,6 +326,10 @@ public class ProductPageController extends MidPageController
 	@Resource(name = "prodOfferDetFacade")
 	private ProductOfferDetailFacade prodOfferDetFacade;
 
+	//TPR-6654
+	@Resource(name = "pdpPincodeCookieGenerator")
+	private PDPPincodeCookieGenerator pdpPincodeCookie;
+
 	//TPR-978
 	@Resource(name = "cmsPageService")
 	private MplCmsPageService mplCmsPageService;
@@ -335,19 +337,8 @@ public class ProductPageController extends MidPageController
 	@Autowired
 	private MplGigyaReviewCommentServiceImpl mplGigyaReviewService;
 
-
-	//TPR-4389
-	/*
-	 * @SuppressWarnings("unused") private BrowserType bType;
-	 */
-
-	//Sonar fix
-	//@Autowired
-	//private ConfigurationService configService;
 	@Resource(name = "customProductFacade")
 	private CustomProductFacadeImpl customProductFacade;
-
-
 
 	//Exchange Changes
 	@Resource(name = "exchangeGuideFacade")
@@ -515,10 +506,9 @@ public class ProductPageController extends MidPageController
 
 			else
 			{
-				if (null != sessionService.getAttribute(ModelAttributetConstants.PINCODE))
+				if (null != sessionService.getAttribute(MarketplacecommerceservicesConstants.SESSION_PINCODE))
 				{
 					model.addAttribute(ModelAttributetConstants.PINCODE, sessionService.getAttribute(ModelAttributetConstants.PINCODE));
-
 				}
 
 				populateProductDetailForDisplay(productModel, model, request);
@@ -617,11 +607,9 @@ public class ProductPageController extends MidPageController
 	@SuppressWarnings("unused")
 	private String crawlerDetect(final String productCode, final Model model, final HttpServletRequest request)
 	{
-
 		String ApluscontentResponse = null;
 		final StringBuilder content = new StringBuilder();
 		BufferedReader bufferedReader = null;
-
 		try
 		{
 			final String proxyPort = configService.getConfiguration().getString(
@@ -650,14 +638,13 @@ public class ProductPageController extends MidPageController
 		}
 		catch (final IOException e)
 		{
-			System.err.println("An IOException was caught :" + e.getMessage());
+			LOG.error("An IOException was caught :" + e.getMessage()); //PMD fix
 		}
 		finally
 		{
 
 			try
 			{
-
 				if (null != content.toString())
 				{
 					ApluscontentResponse = StringEscapeUtils.unescapeHtml(content.toString());
@@ -667,7 +654,7 @@ public class ProductPageController extends MidPageController
 			}
 			catch (final Exception ex)
 			{
-				ex.printStackTrace();
+				LOG.error("Exception occurred :" + ex.getMessage()); //PMD fix
 			}
 
 
@@ -1337,18 +1324,41 @@ public class ProductPageController extends MidPageController
 	@RequestMapping(value = PRODUCT_OLD_URL_PATTERN + ControllerConstants.Views.Fragments.Product.CHECK_PINCODE, method = RequestMethod.GET)
 	public List<PinCodeResponseData> getPincodeServicabilityDetails(@RequestParam(value = "pin") final String pin,
 			@RequestParam(value = ControllerConstants.Views.Fragments.Product.PRODUCT_CODE) final String productCode,
-			final Model model) throws CMSItemNotFoundException
+			final Model model, final HttpServletRequest request, final HttpServletResponse response) throws CMSItemNotFoundException
 	{
-		List<PinCodeResponseData> response = null;
-
+		List<PinCodeResponseData> pincodeResponse = null;
+		int pincodeCookieMaxAge;
+		final Cookie cookie = GenericUtilityMethods.getCookieByName(request, "pdpPincode");
+		final String cookieMaxAge = getConfigurationService().getConfiguration().getString("pdpPincode.cookie.age");
+		pincodeCookieMaxAge = (Integer.valueOf(cookieMaxAge)).intValue();
+		final String domain = getConfigurationService().getConfiguration().getString("shared.cookies.domain");
 		try
 		{
 			//TISSEC-11
 			final String regex = "\\d{6}";
-
 			if (pin.matches(regex))
 			{
 				LOG.debug("productCode:" + productCode + "pinCode:" + pin);
+				//TPR-6654
+				if (cookie != null && cookie.getValue() != null)
+				{
+					cookie.setValue(pin);
+					cookie.setMaxAge(pincodeCookieMaxAge);
+					cookie.setPath("/");
+
+					if (null != domain && !domain.equalsIgnoreCase("localhost"))
+					{
+						cookie.setSecure(true);
+					}
+					cookie.setDomain(domain);
+					response.addCookie(cookie);
+					sessionService.setAttribute(MarketplacecommerceservicesConstants.SESSION_PINCODE, pin);
+				}
+				else
+				{
+					pdpPincodeCookie.addCookie(response, pin);
+					sessionService.setAttribute(MarketplacecommerceservicesConstants.SESSION_PINCODE, pin);
+				}
 				final PincodeModel pinCodeModelObj = pincodeServiceFacade.getLatAndLongForPincode(pin);
 				final LocationDTO dto = new LocationDTO();
 				Location myLocation = null;
@@ -1362,11 +1372,10 @@ public class ProductPageController extends MidPageController
 						myLocation = new LocationDtoWrapper(dto);
 						LOG.debug("Selected Location for Latitude:" + myLocation.getGPS().getDecimalLatitude());
 						LOG.debug("Selected Location for Longitude:" + myLocation.getGPS().getDecimalLongitude());
-						sessionService.setAttribute(ModelAttributetConstants.PINCODE, pin);
-						response = pinCodeFacade.getResonseForPinCode(productCode, pin,
+						pincodeResponse = pinCodeFacade.getResonseForPinCode(productCode, pin,
 								pincodeServiceFacade.populatePinCodeServiceData(productCode, myLocation.getGPS()));
 
-						return response;
+						return pincodeResponse;
 					}
 					catch (final Exception e)
 					{
@@ -1383,7 +1392,7 @@ public class ProductPageController extends MidPageController
 		{
 			ExceptionUtil.etailNonBusinessExceptionHandler(e);
 		}
-		return response;
+		return pincodeResponse;
 
 	}
 
@@ -1459,6 +1468,22 @@ public class ProductPageController extends MidPageController
 			//CKD:TPR-250:Start
 			prepareBrandInfoData(model, productData);
 			//CKD:TPR-250:End
+
+			//UF-422 starts
+			int sizeCounter = 0;
+			if (null != productData.getVariantOptions())
+			{
+				for (int i = 0; i < productData.getVariantOptions().size(); i++)
+				{
+					if (productData.getVariantOptions().get(i).getColour().equalsIgnoreCase(productData.getColour()))
+					{
+						sizeCounter++;
+					}
+				}
+			}
+			model.addAttribute(ModelAttributetConstants.PDP_SIZE_COUNTER, sizeCounter);
+			//UF-422 ends
+
 			final List<String> deliveryInfoList = new ArrayList<String>();
 
 			deliveryInfoList.add(ModelAttributetConstants.EXPRESS_DELIVERY);
@@ -1504,9 +1529,12 @@ public class ProductPageController extends MidPageController
 			model.addAttribute(ModelAttributetConstants.SHARED_PATH, sharePath);
 			model.addAttribute(ControllerConstants.Views.Fragments.Product.PRODUCT_CODE, productData.getCode());
 			model.addAttribute(ModelAttributetConstants.SHARED_PATH, sharePath);
-			if (null != sessionService.getAttribute(ModelAttributetConstants.PINCODE))
+			//TPR-6654
+			final String pincode = (String) sessionService.getAttribute(MarketplacecommerceservicesConstants.SESSION_PINCODE);
+			if (StringUtils.isNotEmpty(pincode))
 			{
-				model.addAttribute(ModelAttributetConstants.PINCODE, sessionService.getAttribute(ModelAttributetConstants.PINCODE));
+				model.addAttribute(ModelAttributetConstants.PINCODE, pincode);
+				model.addAttribute(ControllerConstants.Views.Fragments.Product.STORE_AVAIL, mplProductFacade.storeLocatorPDP(pincode));
 			}
 			getRequestContextData(request).setProduct(productModel);
 			storeCmsPageInModel(model, getContentPageForLabelOrId(ControllerConstants.Views.Fragments.Product.VIEW_SELLERS));
@@ -1532,6 +1560,7 @@ public class ProductPageController extends MidPageController
 			{
 				final PcmProductVariantModel variantProductModel = (PcmProductVariantModel) productModel;
 				model.addAttribute("productSize", variantProductModel.getSize());
+				findColourVariants(productData, model);
 			}
 			//Fix  TISUATMS-831 from SAP
 			showSizeGuideForFA(productModel, model);
@@ -1644,6 +1673,20 @@ public class ProductPageController extends MidPageController
 		try
 		{
 			populateProductData(productData, model);
+			//UF-422 starts
+			int sizeCounter = 0;
+			if (null != productData.getVariantOptions())
+			{
+				for (int i = 0; i < productData.getVariantOptions().size(); i++)
+				{
+					if (productData.getVariantOptions().get(i).getColour().equalsIgnoreCase(productData.getColour()))
+					{
+						sizeCounter++;
+					}
+				}
+			}
+			model.addAttribute(ModelAttributetConstants.PDP_SIZE_COUNTER, sizeCounter);
+			//UF-422 ends
 			displayConfigurableAttribute(productData, model);
 			getRequestContextData(request).setProduct(productModel);
 			model.addAttribute(IMG_COUNT, Integer.valueOf(productDetailsHelper.getCountForGalleryImages()));
@@ -1693,6 +1736,7 @@ public class ProductPageController extends MidPageController
 			{
 				final PcmProductVariantModel variantProductModel = (PcmProductVariantModel) productModel;
 				model.addAttribute("productSizeQuick", variantProductModel.getSize());
+				findColourVariants(productData, model);
 			}
 			showSizeGuideForFA(productModel, model);
 			if (CollectionUtils.isNotEmpty(productData.getAllVariantsId()))
@@ -1913,6 +1957,7 @@ public class ProductPageController extends MidPageController
 	protected void populateProductDetailForDisplay(final ProductModel productModel, final Model model,
 			final HttpServletRequest request) throws CMSItemNotFoundException
 	{
+		LOG.debug("=========Inside populateProductDetailForDisplay method==================");
 		getRequestContextData(request).setProduct(productModel);
 		try
 		{
@@ -1920,6 +1965,24 @@ public class ProductPageController extends MidPageController
 			final ProductData productData = productFacade.getProductForOptions(productModel, Arrays.asList(ProductOption.BASIC,
 					ProductOption.SUMMARY, ProductOption.DESCRIPTION, ProductOption.GALLERY, ProductOption.CATEGORIES,
 					ProductOption.PROMOTIONS, ProductOption.CLASSIFICATION, ProductOption.VARIANT_FULL));
+			//UF-432
+			if (productModel instanceof PcmProductVariantModel)
+			{
+				findColourVariants(productData, model);
+			}
+			//TPR-6405
+			if (productData != null && productData.getBrand() != null && productData.getBrand().getBrandname() != null)
+			{
+				if (productData.getBrand().getBrandname().equalsIgnoreCase(SAMSUNG))
+				{
+					model.addAttribute(ModelAttributetConstants.IS_SAMSUNG_PAGE, Boolean.TRUE);
+				}
+				else
+				{
+					model.addAttribute(ModelAttributetConstants.IS_SAMSUNG_PAGE, Boolean.FALSE);
+				}
+			}
+			LOG.debug("===========After Samsung block=================");
 			//CKD:TPR-250:Start
 			prepareBrandInfoData(model, productData);
 			//CKD:TPR-250:End
@@ -1929,6 +1992,22 @@ public class ProductPageController extends MidPageController
 			//		sortVariantOptionData(productData);
 			storeCmsPageInModel(model, getPageForProduct(productModel));
 			populateProductData(productData, model);
+			LOG.debug("===========After populateProductData block=================");
+			//UF-422 starts
+			int sizeCounter = 0;
+			if (null != productData.getVariantOptions())
+			{
+				for (int i = 0; i < productData.getVariantOptions().size(); i++)
+				{
+					if (productData.getVariantOptions().get(i).getColour().equalsIgnoreCase(productData.getColour()))
+					{
+						sizeCounter++;
+					}
+				}
+			}
+			LOG.debug("===========After productData.getVariantOptions().size() block=================");
+			model.addAttribute(ModelAttributetConstants.PDP_SIZE_COUNTER, sizeCounter);
+			//UF-422 ends
 
 			final List<String> deliveryInfo = new ArrayList<String>();
 
@@ -1940,8 +2019,17 @@ public class ProductPageController extends MidPageController
 			/* final Map<String, String> deliveryModeATMap = productDetailsHelper.getDeliveryModeATMap(deliveryInfo); */
 			final Map<String, Map<String, Integer>> deliveryModeATMap = productDetailsHelper.getDeliveryModeATMap(deliveryInfo);
 			model.addAttribute(ControllerConstants.Views.Fragments.Product.DELIVERY_MODE_MAP, deliveryModeATMap);
+			//TPR-6654
+			final String pincode = (String) sessionService.getAttribute(MarketplacecommerceservicesConstants.SESSION_PINCODE);
+			//			sessionService.setAttribute(MarketplacecommerceservicesConstants.SESSION_PINCODE, pincode);
+			if (StringUtils.isNotEmpty(pincode))
+			{
+				model.addAttribute(ModelAttributetConstants.PINCODE, pincode);
+				model.addAttribute(ControllerConstants.Views.Fragments.Product.STORE_AVAIL, mplProductFacade.storeLocatorPDP(pincode));
+			}
 			displayConfigurableAttribute(productData, model);
 			//if (productModel.getProductCategoryType().equalsIgnoreCase(ELECTRONICS))
+
 			if (ELECTRONICS.equalsIgnoreCase(productModel.getProductCategoryType())
 					|| WATCHES.equalsIgnoreCase(productModel.getProductCategoryType())
 					|| TRAVELANDLUGGAGE.equalsIgnoreCase(productModel.getProductCategoryType()))
@@ -1949,11 +2037,13 @@ public class ProductPageController extends MidPageController
 			{
 				productDetailsHelper.groupGlassificationData(productData);
 			}
+			LOG.debug("===========After Electronics block=================");
 			if (FINEJEWELLERY.equalsIgnoreCase(productModel.getProductCategoryType())
 					|| FASHIONJEWELLERY.equalsIgnoreCase(productModel.getProductCategoryType()))
 			{
 				productDetailsHelper.groupGlassificationDataForJewelDetails(productData);
 			}
+			LOG.debug("===========After FASHIONJEWELLERY block=================");
 			final String validTabs = configurationService.getConfiguration().getString(
 					"mpl.categories." + productData.getRootCategory());
 
@@ -1971,6 +2061,8 @@ public class ProductPageController extends MidPageController
 					model.addAttribute(ModelAttributetConstants.RET_REF_TAB, "");
 				}
 			}
+
+			LOG.debug("===========After step1 block=================");
 			//for not showing the disclaimer in pdp for one weight variant for fine jewellery product
 			model.addAttribute(ModelAttributetConstants.TO_SHOW_DISCLAIMER, ModelAttributetConstants.YES_DISCLAIMER);
 			final List<BuyBoxModel> buyboxModelList = new ArrayList<BuyBoxModel>(buyBoxService.buyboxPrice(productData.getCode()));
@@ -2017,13 +2109,14 @@ public class ProductPageController extends MidPageController
 				gigyaAPIKey = configurationService.getConfiguration().getString("gigya.apikey");
 				gigyaRatingURL = configurationService.getConfiguration().getString("gigya.rating.url");
 			}
+			LOG.debug("===========After step2 block=================");
 			//end gigya
 			final String emiCuttOffAmount = configurationService.getConfiguration().getString("marketplace.emiCuttOffAmount");
 			final String cliqCareNumber = configurationService.getConfiguration().getString("cliq.care.number");
 			final String cliqCareMail = configurationService.getConfiguration().getString("cliq.care.mail");
 			final String googleClientid = configurationService.getConfiguration().getString("google.data-clientid");
 			final String facebookAppid = configurationService.getConfiguration().getString("facebook.app_id");
-
+			LOG.debug("===========After step3 block=================");
 			/* Configurable tabs to be displayed in the PDP page */
 			model.addAttribute(ModelAttributetConstants.VALID_TABS, validTabs);
 			model.addAttribute(ModelAttributetConstants.SHARED_PATH, sharePath);
@@ -2056,7 +2149,7 @@ public class ProductPageController extends MidPageController
 			final String metaKeyword = productData.getSeoMetaKeyword();
 			setUpMetaData(model, metaDescription, metaTitle, productCode, metaKeyword);
 			populateTealiumData(productData, model, breadcrumbs);
-
+			LOG.debug("===========After step3 block=================");
 			/**
 			 * Add Filter for FA START :::::
 			 */
@@ -2089,7 +2182,7 @@ public class ProductPageController extends MidPageController
 					}
 				}
 
-
+				LOG.debug("===========After step4 block=================");
 			}
 
 			if (ModelAttributetConstants.FINEJEWELLERY.equalsIgnoreCase(productModel.getProductCategoryType())
@@ -2108,27 +2201,23 @@ public class ProductPageController extends MidPageController
 
 				}
 			}
-
+			LOG.debug("===========After step5 block=================");
 			model.addAttribute("showSizeGuideForFA", showSizeGuideForFA);
 			/**
 			 * Add Filter for FA END :::::
 			 */
 			//TISPRM-56
-			if (CollectionUtils.isNotEmpty(productData.getAllVariantsId()))
+			if (CollectionUtils.isNotEmpty(productData.getAllVariantsId()) && productData.getAllVariantsId().size() > 1) //PMD fix
 			{
-				//get left over variants
-				if (productData.getAllVariantsId().size() > 1)
+				productData.getAllVariantsId().remove(productData.getCode());
+				for (final String variants : productData.getAllVariantsId())
 				{
-					productData.getAllVariantsId().remove(productData.getCode());
-					for (final String variants : productData.getAllVariantsId())
-					{
-						allVariants.append(variants).append(',');
-					}
-
-					final int length = allVariants.length();
-					final String allVariantsString = allVariants.substring(0, length - 1);
-					model.addAttribute(MarketplacecommerceservicesConstants.ALLVARIANTSSTRING, allVariantsString);
+					allVariants.append(variants).append(',');
 				}
+
+				final int length = allVariants.length();
+				final String allVariantsString = allVariants.substring(0, length - 1);
+				model.addAttribute(MarketplacecommerceservicesConstants.ALLVARIANTSSTRING, allVariantsString);
 			}
 
 			// TPR-743
@@ -2136,20 +2225,48 @@ public class ProductPageController extends MidPageController
 			{
 				findCanonicalProduct(productData, model);
 			}
-
+			LOG.debug("===========After step6 block=================");
 		}
 		//populateVariantSizes(productData);
 		catch (final EtailBusinessExceptions e)
 		{
-			throw e;
+			LOG.error("EtailBusinessExceptions occurred at populateProductDetailForDisplay method ::: " + e.getMessage()); //PMD fix
 		}
 		catch (final Exception e)
 		{
-			throw new EtailNonBusinessExceptions(e, ModelAttributetConstants.E0000);
+			LOG.error("Exception occurred at populateProductDetailForDisplay method ::: " + e.getMessage()); //PMD fix
 		}
 
 	}
 
+
+	/**
+	 * UF-432
+	 *
+	 * @param productData
+	 * @param model
+	 */
+	private void findColourVariants(final ProductData productData, final Model model)
+	{
+		if (CollectionUtils.isNotEmpty(productData.getVariantOptions()))
+		{
+			final List<String> colourList = new ArrayList<String>();
+			Boolean multiColor = Boolean.FALSE;
+			for (final VariantOptionData colour : productData.getVariantOptions())
+			{
+				if (!colourList.contains(colour.getColourCode()))
+				{
+					if (colourList.size() >= 1)
+					{
+						multiColor = Boolean.TRUE;
+						break;
+					}
+					colourList.add(colour.getColourCode());
+				}
+			}
+			model.addAttribute(ModelAttributetConstants.MULTI_COLOUR_FLAG, multiColor);
+		}
+	}
 
 	/**
 	 * @param productData
@@ -2229,8 +2346,6 @@ public class ProductPageController extends MidPageController
 							//for jwl certification
 							final String certificationValue = configurationService.getConfiguration().getString(
 									ModelAttributetConstants.CONFIGURABLE_ATTRIBUTE + productData.getRootCategory() + ".certification");
-
-
 							//apparel
 							final FeatureValueData featureValueData = featureValueList.get(0);
 							if ((ModelAttributetConstants.CLOTHING.equalsIgnoreCase(productData.getRootCategory()))
@@ -2940,14 +3055,14 @@ public class ProductPageController extends MidPageController
 
 	@Override
 	protected String checkRequestUrl(final HttpServletRequest request, final HttpServletResponse response,
-			final String resolvedUrlPath) throws UnsupportedEncodingException
+			final String resolvedUrlPath)
 	{
+		String newUrl = null;
 		try
 		{
 			final String resolvedUrl = response.encodeURL(request.getContextPath() + resolvedUrlPath);
 			final String requestURI = URIUtil.decode(request.getRequestURI(), "utf-8");
 			final String decoded = URIUtil.decode(resolvedUrl, "utf-8");
-			String newUrl = null;
 			if (StringUtils.isNotEmpty(requestURI) && requestURI.endsWith(decoded))
 			{
 				return null;
@@ -2966,15 +3081,13 @@ public class ProductPageController extends MidPageController
 				{
 					newUrl = resolvedUrlPath;
 				}
-				return newUrl;
-
-
 			}
 		}
 		catch (final URIException e)
 		{
-			throw new UnsupportedEncodingException();
+			LOG.error("Exception occurred at checkRequestUrl method ::: " + e.getMessage()); //PMD fix
 		}
+		return newUrl;
 	}
 
 	/**
@@ -3625,6 +3738,13 @@ public class ProductPageController extends MidPageController
 			//			final String msdRESTURL = configurationService.getConfiguration().getString("msd.rest.url");
 			//			mplAjaxProductData.setMsdRESTURL(msdRESTURL);
 			model.addAttribute(ModelAttributetConstants.PRODUCT, productData);
+			//TPR-6654
+			final String pincode = (String) sessionService.getAttribute(MarketplacecommerceservicesConstants.SESSION_PINCODE);
+			if (StringUtils.isNotEmpty(pincode))
+			{
+				model.addAttribute(ControllerConstants.Views.Fragments.Product.STORE_AVAIL, mplProductFacade.storeLocatorPDP(pincode));
+				mplAjaxProductData.setPincode(pincode);
+			}
 		}
 		catch (final EtailBusinessExceptions e)
 		{
@@ -3822,5 +3942,34 @@ public class ProductPageController extends MidPageController
 
 	}
 
+	/**
+	 * @desc Returns nearby store location based on pincode.
+	 *
+	 * @return Store details
+	 */
+	@RequestMapping(value = PRODUCT_OLD_URL_PATTERN + ControllerConstants.Views.Fragments.Product.STORE, method = RequestMethod.GET)
+	public String getAllStoreForPincode(
+			@PathVariable(value = ControllerConstants.Views.Fragments.Product.PINCODE) final String pincode, final Model model)
 
+	{
+		if (LOG.isDebugEnabled())
+		{
+			LOG.debug("from getAllStoreForPincode method");
+		}
+		try
+		{
+			if (StringUtils.isNotEmpty(pincode))
+			{
+				model.addAttribute(ModelAttributetConstants.PINCODE,
+						sessionService.getAttribute(MarketplacecommerceservicesConstants.SESSION_PINCODE));
+				model.addAttribute(ControllerConstants.Views.Fragments.Product.STORE_AVAIL, mplProductFacade.storeLocatorPDP(pincode));
+			}
+		}
+		catch (final Exception e)
+		{
+			LOG.error(e);
+		}
+
+		return ControllerConstants.Views.Fragments.Product.StoreLocatorPopup;
+	}
 }

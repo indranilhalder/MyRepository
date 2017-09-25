@@ -81,7 +81,7 @@ function loadVariant(x){
 				</c:if>
 				<c:choose>
 		   <c:when test="${not empty product.variantOptions}">
-		   <c:if test="${product.rootCategory ne 'FineJewellery' && product.rootCategory ne 'FashionJewellery'}">
+		   <c:if test="${(product.rootCategory ne 'FineJewellery' && product.rootCategory ne 'FashionJewellery') && (multiColorFlag eq 'true')}">	<!-- UF-432 -->
 				<p>
 					<spring:theme code="text.colour" />
 				</p>
@@ -102,24 +102,25 @@ function loadVariant(x){
 									</c:choose>
 									<!--CKD:TPR-250 End  -->
 								 <a href="${variantUrl}">								
-								 <c:forEach
-									items="${variantOption.colourCode}" var="color">
-								<c:choose>
-							    <c:when test="${fn:startsWith(color, 'multi') && empty variantOption.image}">
-						     	<img src="${commonResourcePath}/images/multi.jpg" height="74" width="50" title="${variantOption.colour}" />
-								</c:when>
-								<c:when test="${empty variantOption.image}">
-						     	<span style="background-color: ${color};border: 1px solid rgb(204, 211, 217); width:50px; height:73px" title="${variantOption.colour}"></span>
-								</c:when>							
-								<c:otherwise>
-								<c:set var="imageData" value="${variantOption.image}" />
-								<img src="${imageData.url}" title="${variantOption.colour}" alt="${styleValue}" style="display: inline-block;width: 50px;"/>								
-                               </c:otherwise>
-                               </c:choose>
-								<c:if test="${variantOption.code eq product.code}">
-										<c:set var="currentColor" value="${color}" />
-										<!--  set current selected color -->
-								</c:if>
+								 <c:forEach items="${variantOption.colourCode}" var="color">
+								 	<c:if test="${multiColorFlag eq 'true'}">	<!-- UF-432 -->
+										<c:choose>
+									    <c:when test="${fn:startsWith(color, 'multi') && empty variantOption.image}">
+								     	<img src="${commonResourcePath}/images/multi.jpg" height="74" width="50" title="${variantOption.colour}" />
+										</c:when>
+										<c:when test="${empty variantOption.image}">
+								     	<span style="background-color: ${color};border: 1px solid rgb(204, 211, 217); width:50px; height:73px" title="${variantOption.colour}"></span>
+										</c:when>							
+										<c:otherwise>
+										<c:set var="imageData" value="${variantOption.image}" />
+										<img src="${imageData.url}" title="${variantOption.colour}" alt="${styleValue}" style="display: inline-block;width: 50px;"/>								
+		                               </c:otherwise>
+		                               </c:choose>
+										<c:if test="${variantOption.code eq product.code}">
+												<c:set var="currentColor" value="${color}" />
+												<!--  set current selected color -->
+										</c:if>
+									</c:if>
 								</c:forEach>
 						</a></li>
 					</c:when>
@@ -348,6 +349,12 @@ function loadVariant(x){
 						</c:forEach>
 				</c:when>
 				<c:otherwise>
+				<!-- UF-422:Changes for PDP when product has only one size -->
+						<c:set var="selectedClass" value=""/>
+							<c:if test= "${fn:length(product.variantOptions) eq 1 || pdpSizeCounter eq 1}">
+								<c:set var ="selectedClass" value ="class='selected'"/></c:if>	
+								
+								
 				<c:forEach items="${product.variantOptions}" var="variantOption">
 				<c:url value="/p/${variantOption.code}/viewSellers" var="variantUrl" />
 				<c:forEach items="${variantOption.colourCode}" var="color">
@@ -364,7 +371,7 @@ function loadVariant(x){
 											<c:choose>
 												<c:when test="${selectedSize eq null}">
 												<!--CKD:TPR-250:  -->
-													<li><a href="${variantUrl}?selectedSize=true${msiteSellerForSize}">${entry.value}</a></li>
+													<li ${selectedClass}><a href="${variantUrl}?selectedSize=true${msiteSellerForSize}">${entry.value}</a></li>
 												</c:when>
 												<c:otherwise>
 												<!--CKD:TPR-250:  -->
@@ -375,7 +382,7 @@ function loadVariant(x){
 										<c:otherwise>
 											<%-- <c:url value="/p/${variantOption.code}/viewSellers"	var="variantUrl" /> --%>
 											<!--CKD:TPR-250:  -->
-											<li><a href="${variantUrl}?selectedSize=true${msiteSellerForSize}">${entry.value}</a></li>
+											<li ${selectedClass}><a href="${variantUrl}?selectedSize=true${msiteSellerForSize}">${entry.value}</a></li>
 										</c:otherwise>
 									</c:choose>
 								</c:forEach>
@@ -404,7 +411,7 @@ function loadVariant(x){
 												
 													<c:when test="${selectedSize eq null}">
 													<!--CKD:TPR-250:  -->
-														<li><a href="${variantUrl}?selectedSize=true${msiteSellerForSize}">${entry.value}</a></li>
+														<li ${selectedClass}><a href="${variantUrl}?selectedSize=true${msiteSellerForSize}">${entry.value}</a></li>
 													</c:when>
 													
 												<c:otherwise>
@@ -415,7 +422,7 @@ function loadVariant(x){
 											</c:when>	
 										<c:otherwise>
 										<!--CKD:TPR-250:  -->
-											<li data-vcode="${link}"><a href="${variantUrl}?selectedSize=true${msiteSellerForSize}">${entry.value}</a></li>
+											<li ${selectedClass} data-vcode="${link}"><a href="${variantUrl}?selectedSize=true${msiteSellerForSize}">${entry.value}</a></li>
 										</c:otherwise>												
 												</c:choose>
 											</c:forEach>

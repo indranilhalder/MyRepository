@@ -1,8 +1,9 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
 	pageEncoding="ISO-8859-1"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
-
+<%@ taglib prefix="product" tagdir="/WEB-INF/tags/responsive/product/"%>
 
     <span id="deliveryPretext" style="display:none;"><spring:theme code="mpl.pdp.delivery.pretext"/></span>
     <span id="deliveryPosttext" style="display:none;"><spring:theme code="mpl.pdp.delivery.posttext"/></span>
@@ -32,6 +33,8 @@
 			<button class="orange submit" id="pdpPincodeCheck"><spring:theme code="text.submit"/></button>
 			
 			<button class="gray submitDList" id="pdpPincodeCheckDList" style="display:none;"><spring:theme code="text.submit"/></button>
+			<!-- TPR-6654 -->
+			<div id="pdp_change_pincode"><a id="change_pincode" href="javascript:void(0)"><spring:theme code="change.pincode"/></a></div>
 		</div></li>
 		 
 		<%-- <span>
@@ -57,7 +60,6 @@
 		    </c:forEach>
 		  <span id="homeDate"></span>
 			<%-- <li><a  id="home" class="HomeDelivery  home deliveryDisabled" style="display: block"> <span><spring:theme code="text.home.delivery"/></span> <span><c:out value="${entry.value}" /></span> --%>
-			
 		</li>
 		  </c:if>
 		  <c:if test="${entry.key eq 'express-delivery'}">
@@ -78,24 +80,28 @@
 		<c:if test="${entry.key eq 'click-and-collect'}">
 		
 		<li id="collectli" class="do selected"><p><spring:theme code="text.clickandcollect.delivery"/></p>
-		<span style="display: block;"><spring:theme code="text.clickandcollect.tagline.desc"/></span><!-- UF-306 -->
-		 <c:forEach var="clickEntry" items="${entry.value}">
+			<span style="display: block;"><spring:theme code="text.clickandcollect.tagline.desc"/></span><!-- UF-306 -->
+		 	
+		 	<c:forEach var="clickEntry" items="${entry.value}">
 	
-			 <c:if test="${clickEntry.key eq 'startForClick'}">
-			 <input type="hidden" value="${clickEntry.value}" id="clickStartId"/>
-			 </c:if>
-			 
-			  <c:if test="${clickEntry.key eq 'endForClick'}">
-			  <input type="hidden" value="${clickEntry.value}" id="clickEndId"/>
-		     </c:if>
-		    </c:forEach>
-		    <span id="clickDate"><%-- <c:out value="${entry.value}" /> --%></span>
-		    </li>
+				 <c:if test="${clickEntry.key eq 'startForClick'}">
+				 <input type="hidden" value="${clickEntry.value}" id="clickStartId"/>
+				 </c:if>
+				 
+				  <c:if test="${clickEntry.key eq 'endForClick'}">
+				  <input type="hidden" value="${clickEntry.value}" id="clickEndId"/>
+			     </c:if>
+			 </c:forEach>
+				<span id="clickDate"><%-- <c:out value="${entry.value}" /> --%></span>
+				<!-- Include Store locator -->
+				<div id="CNCstores"></div>
+		</li>
 		</c:if> 
-	</c:forEach>
+		</c:forEach>
 	
 	<!-- <li><a href="#" class="collect"><span>Click and
 					Collect</span><span>Buy online, collect in-store</span></a></li> -->
+			
 	</ul>
 
 	

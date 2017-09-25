@@ -6,7 +6,7 @@
 <template:page pageTitle="${pageTitle}">
 
 <!-- For Infinite Analytics Start -->
-	<div  id="ia_products_hot lazy-reached-ia"></div>
+	<div  id="ia_products_hot"></div>
 <!-- For Infinite Analytics End -->
 
 </template:page>

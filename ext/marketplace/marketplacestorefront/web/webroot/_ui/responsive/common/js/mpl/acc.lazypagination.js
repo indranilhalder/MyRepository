@@ -522,11 +522,13 @@ function ajaxPLPLoad(ajaxUrl){
             innerLazyLoad();
             //TPR-4720 first 5 product display
 			if($('#pageType').val() == "productsearch"){
-				populateFirstFiveProductsSerp();	
+				populateFirstFiveProductsSerp();
+				dtmSearchTags();
 			}
 			
 			if($('#pageType').val() == "category" || $('#pageType').val() == "electronics"){
 				populateFirstFiveProductsPlp();
+				dtmSearchTags();
 			}
             //ACC.quickview.bindToUiCarouselLink();
         }

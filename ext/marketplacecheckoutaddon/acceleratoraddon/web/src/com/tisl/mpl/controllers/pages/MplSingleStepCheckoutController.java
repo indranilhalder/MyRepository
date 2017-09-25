@@ -90,6 +90,7 @@ import java.util.Map.Entry;
 import java.util.TreeMap;
 
 import javax.annotation.Resource;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
@@ -174,6 +175,7 @@ import com.tisl.mpl.sellerinfo.facades.MplSellerInformationFacade;
 import com.tisl.mpl.storefront.constants.ModelAttributetConstants;
 import com.tisl.mpl.storefront.constants.RequestMappingUrlConstants;
 import com.tisl.mpl.storefront.controllers.helpers.FrontEndErrorHelper;
+import com.tisl.mpl.storefront.security.cookie.PDPPincodeCookieGenerator;
 import com.tisl.mpl.storefront.util.CSRFTokenManager;
 import com.tisl.mpl.storefront.web.forms.AccountAddressForm;
 import com.tisl.mpl.storefront.web.forms.PaymentForm;
@@ -202,6 +204,26 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 
 	@Resource(name = "configurationService")
 	private ConfigurationService configurationService;
+
+	@Resource(name = "pdpPincodeCookieGenerator")
+	private PDPPincodeCookieGenerator pdpPincodeCookie;
+
+	/**
+	 * @return the configurationService
+	 */
+	public ConfigurationService getConfigurationService()
+	{
+		return configurationService;
+	}
+
+	/**
+	 * @param configurationService
+	 *           the configurationService to set
+	 */
+	public void setConfigurationService(final ConfigurationService configurationService)
+	{
+		this.configurationService = configurationService;
+	}
 
 	@Resource(name = "modelService")
 	private ModelService modelService;
@@ -804,6 +826,8 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 			final AccountAddressForm addressForm,
 			final BindingResult bindingResult,
 			final Model model,
+			final HttpServletRequest request,
+			final HttpServletResponse response,
 			@RequestParam(value = "contExchnageAddEdit", required = false) final String exchangeEnabled,
 			@RequestParam(value = "isPincodeRestrictedPromoPresent", required = false, defaultValue = "false") final boolean isPincodeRestrictedPromoPresent)
 			throws CMSItemNotFoundException, UnsupportedEncodingException
@@ -884,7 +908,7 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 			{
 				exchangeGuideFacade.removeExchangefromCart(cart);
 			}
-			saveAndSetDeliveryAddress(addressForm, true);
+			saveAndSetDeliveryAddress(addressForm, true, request, response);
 
 			//Recalculating Cart Model
 			LOG.debug(">> Delivery cost " + cartData.getDeliveryCost().getValue());
@@ -1076,11 +1100,17 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 	public String selectAddress(
 			@RequestParam("selectedAddressCode") final String selectedAddressCode,
 			@RequestParam(value = "contExchnage", required = false) final String exchangeEnabled,
-			@RequestParam(value = "isPincodeRestrictedPromoPresent", required = false, defaultValue = "false") final boolean isPincodeRestrictedPromoPresent)
-			throws UnsupportedEncodingException
+			@RequestParam(value = "isPincodeRestrictedPromoPresent", required = false, defaultValue = "false") final boolean isPincodeRestrictedPromoPresent,
+			final HttpServletRequest request, final HttpServletResponse response) throws UnsupportedEncodingException
 	{
 		try
 		{
+			//TPR-6654
+			int pincodeCookieMaxAge;
+			final Cookie cookie = GenericUtilityMethods.getCookieByName(request, "pdpPincode");
+			final String cookieMaxAge = configurationService.getConfiguration().getString("pdpPincode.cookie.age");
+			pincodeCookieMaxAge = (Integer.valueOf(cookieMaxAge)).intValue();
+			final String domain = configurationService.getConfiguration().getString("shared.cookies.domain");
 			if (getUserFacade().isAnonymousUser())
 			{
 				final String requestQueryParam = UriUtils.encodeQuery("?url=" + MarketplacecheckoutaddonConstants.CART
@@ -1142,6 +1172,30 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 					return FORWARD_PREFIX + "/checkout/single/message" + requestQueryParam;
 				}
 				final String redirectURL = mplCartFacade.singlePagecheckPincode(selectedPincode, sessionPincode);
+				if (!sessionPincode.equalsIgnoreCase((String) getSessionService().getAttribute(
+						MarketplacecommerceservicesConstants.SESSION_PINCODE)))
+				{
+					//TPR-6654
+					if (cookie != null && cookie.getValue() != null)
+					{
+						cookie.setValue(selectedPincode);
+						cookie.setMaxAge(pincodeCookieMaxAge);
+						cookie.setPath("/");
+
+						if (null != domain && !domain.equalsIgnoreCase("localhost"))
+						{
+							cookie.setSecure(true);
+						}
+						cookie.setDomain(domain);
+						response.addCookie(cookie);
+						//		getSessionService().setAttribute(MarketplacecommerceservicesConstants.SESSION_PINCODE, selectedPincode);
+					}
+					else
+					{
+						pdpPincodeCookie.addCookie(response, selectedPincode);
+						//	getSessionService().setAttribute(MarketplacecommerceservicesConstants.SESSION_PINCODE, selectedPincode);
+					}
+				}
 				if (redirectURL.trim().length() > 0)
 				{
 					final String requestQueryParam = UriUtils.encodeQuery("?msg="
@@ -1307,6 +1361,8 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 			final AccountAddressForm addressForm,
 			final BindingResult bindingResult,
 			final Model model,
+			final HttpServletRequest request,
+			final HttpServletResponse response,
 			@RequestParam(value = "contExchnageAddEdit", required = false) final String exchangeEnabled,
 			@RequestParam(value = "isPincodeRestrictedPromoPresent", required = false, defaultValue = "false") final boolean isPincodeRestrictedPromoPresent)
 			throws UnsupportedEncodingException
@@ -1375,7 +1431,7 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 					return FORWARD_PREFIX + "/checkout/single/message" + requestQueryParam;
 				}
 				//Recalculating Cart Model
-				saveAndSetDeliveryAddress(addressForm, false);
+				saveAndSetDeliveryAddress(addressForm, false, request, response);
 				LOG.debug(">> Delivery cost " + cartData.getDeliveryCost().getValue());
 				if (isPincodeRestrictedPromoPresent)
 				{
@@ -1415,9 +1471,9 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 	 * @throws JSONException
 	 */
 	@RequestMapping(value = MarketplacecheckoutaddonConstants.MPLRESPONSIVEDELIVERYNEWADDRESSURL, method = RequestMethod.POST)
-	public @ResponseBody JSONObject addAddressResponsive(final AccountAddressForm addressForm,
-			@RequestParam(required = false, defaultValue = "false") final boolean isEdit, final BindingResult bindingResult)
-			throws JSONException
+	public @ResponseBody JSONObject addAddressResponsive(final AccountAddressForm addressForm, final HttpServletRequest request,
+			final HttpServletResponse response, @RequestParam(required = false, defaultValue = "false") final boolean isEdit,
+			final BindingResult bindingResult) throws JSONException
 	{
 		final JSONObject jsonObj = new JSONObject();
 		try
@@ -1458,7 +1514,7 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 					jsonObj.put("type", "error");
 					return jsonObj;
 				}
-				saveAndSetDeliveryAddress(addressForm, isEdit);
+				saveAndSetDeliveryAddress(addressForm, isEdit, request, response);
 				jsonObj.put("isAddressSaved", "true");
 				jsonObj.put("isAddressSet", "true");
 				jsonObj.put("type", "response");
@@ -1642,9 +1698,15 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 	 * @param addressForm
 	 * @param isEditAddress
 	 */
-	public void saveAndSetDeliveryAddress(final AccountAddressForm addressForm, final boolean isEditAddress)
+	public void saveAndSetDeliveryAddress(final AccountAddressForm addressForm, final boolean isEditAddress,
+			final HttpServletRequest request, final HttpServletResponse response)
 	{
 		CartModel oModel = null;
+		int pincodeCookieMaxAge;
+		final Cookie cookie = GenericUtilityMethods.getCookieByName(request, "pdpPincode");
+		final String cookieMaxAge = getConfigurationService().getConfiguration().getString("pdpPincode.cookie.age");
+		pincodeCookieMaxAge = (Integer.valueOf(cookieMaxAge)).intValue();
+		final String domain = getConfigurationService().getConfiguration().getString("shared.cookies.domain");
 		if (!isEditAddress)//For add address
 		{
 			oModel = getCartService().getSessionCart();
@@ -1693,6 +1755,29 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 		newAddress.setState(addressForm.getState());
 		newAddress.setPhone(addressForm.getMobileNo());
 		newAddress.setLocality(addressForm.getLocality());
+		//TPR-6654
+		if (StringUtils.isNotEmpty(newAddress.getPostalCode()))
+		{
+			if (cookie != null && cookie.getValue() != null)
+			{
+				cookie.setValue(newAddress.getPostalCode());
+				cookie.setMaxAge(pincodeCookieMaxAge);
+				cookie.setPath("/");
+
+				if (null != domain && !domain.equalsIgnoreCase("localhost"))
+				{
+					cookie.setSecure(true);
+				}
+				cookie.setDomain(domain);
+				response.addCookie(cookie);
+				getSessionService().setAttribute(MarketplacecommerceservicesConstants.SESSION_PINCODE, newAddress.getPostalCode());
+			}
+			else
+			{
+				pdpPincodeCookie.addCookie(response, newAddress.getPostalCode());
+				getSessionService().setAttribute(MarketplacecommerceservicesConstants.SESSION_PINCODE, newAddress.getPostalCode());
+			}
+		}
 		// R2.3 changes
 		if (StringUtils.isNotBlank(addressForm.getLandmark())
 				&& !addressForm.getLandmark().equalsIgnoreCase(MarketplacecommerceservicesConstants.OTHER))

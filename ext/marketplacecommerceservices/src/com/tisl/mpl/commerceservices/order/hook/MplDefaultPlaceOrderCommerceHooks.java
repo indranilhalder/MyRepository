@@ -35,6 +35,8 @@ import de.hybris.platform.promotions.model.PromotionResultModel;
 import de.hybris.platform.servicelayer.config.ConfigurationService;
 import de.hybris.platform.servicelayer.exceptions.ModelSavingException;
 import de.hybris.platform.servicelayer.model.ModelService;
+import de.hybris.platform.store.BaseStoreModel;
+import de.hybris.platform.store.services.BaseStoreService;
 import de.hybris.platform.voucher.VoucherModelService;
 import de.hybris.platform.voucher.VoucherService;
 import de.hybris.platform.voucher.model.PromotionVoucherModel;
@@ -45,6 +47,7 @@ import java.text.DateFormat;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
@@ -167,6 +170,9 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 	@Resource(name = "mplJewelleryService")
 	private MplJewelleryService jewelleryService;
 
+	@Autowired
+	private BaseStoreService baseStoreService;
+	
 	//	@Autowired
 	//	private MplFraudModelService mplFraudModelService;
 
@@ -589,6 +595,24 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 		final double totalAmntFineJwlry = Integer.parseInt(getConfigurationService().getConfiguration().getString(
 				"order.amount.for.pancard.upload"));
 		//orderModel.setType("Parent");
+		//TPR-6949 FlashSale changes
+		BaseStoreModel baseStore = orderModel.getStore();
+		if (baseStore == null)
+		{
+			baseStore = baseStoreService.getCurrentBaseStore();
+		}
+		Boolean containsFlashSaleItem = Boolean.FALSE;
+		
+		List<String> flashSaleUSSIDList = new ArrayList<String>();
+		if (null != baseStore && null != baseStore.getFlashSaleEnabled() && baseStore.getFlashSaleEnabled().equals(Boolean.TRUE))
+		{
+			if (null != baseStore.getFlashSaleUSSIDList())
+			{
+				flashSaleUSSIDList = Arrays.asList(baseStore.getFlashSaleUSSIDList().trim().toUpperCase()
+						.split(MarketplacecommerceservicesConstants.COMMA));
+			}
+		}
+		
 		if (StringUtils.isNotEmpty(orderModel.getType()) && PARENT.equalsIgnoreCase(orderModel.getType()))
 		{
 			//Added for third party wallet in case 1st tym order is not placed and tried with a different mode of payment
@@ -639,6 +663,10 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 					}
 					entry.setHdDeliveryCharge(Double.valueOf(delCost));
 				}
+				if (!flashSaleUSSIDList.isEmpty() && flashSaleUSSIDList.contains(entry.getSelectedUSSID().toUpperCase()))
+				{
+					containsFlashSaleItem = Boolean.TRUE;
+				}
 			}
 			// Setting HD Delivery Charges End
 			if (MarketplacecommerceservicesConstants.MRUPEE.equalsIgnoreCase(orderModel.getModeOfOrderPayment()))
@@ -650,7 +678,8 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 			{
 				orderModel.setIsWallet(WalletEnum.NONWALLET);
 			}
-
+			
+			orderModel.setContainsFlashSaleItem(containsFlashSaleItem);
 			final List<OrderModel> orderList = getSubOrders(orderModel);
 
 			//TISPRO-249

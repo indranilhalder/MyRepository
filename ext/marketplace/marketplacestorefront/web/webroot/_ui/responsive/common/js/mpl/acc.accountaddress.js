@@ -312,6 +312,9 @@ $(document)
 														+ " option:selected")
 												.val();
 										var reasonCode = Rejectionselectedvalue;
+										//tpr-TPR-6288|dtm order cancel
+							    		var dtmPrdtCat=$("#dtmPrdtCat").val();
+							    		var dtmPrdtCode=$("#dtmPrdtCode").val();
 										// TPR-4752 | for order cancellation
 										// reason
 										var reasonCancel = $(
@@ -405,6 +408,8 @@ $(document)
 																				'cancel_order_reason' : reasonCancel
 																			});
 																}
+																//TPR-6288
+									         					dtmOrderCancelSuccess(dtmPrdtCode,dtmPrdtCat,reasonCancel);
 															} else {
 																$(
 																		".cancellation-request-block #resultTitle")
@@ -427,6 +432,8 @@ $(document)
 																				error_type : 'cancel_confirmation_error'
 																			});
 																}
+																//TPR-6288
+																dtmErrorTracking("Order cannot be cancelled","errorname");
 															}
 
 															// $("#cancelOrder"+orderCode).modal('hide');
@@ -455,6 +462,8 @@ $(document)
 																			error_type : 'cancel_confirmation_error'
 																		});
 															}
+															//TPR-6288
+															dtmErrorTracking("Order cannot be cancelled","errorname");
 															$(
 																	"body .spinner,body #no-click")
 																	.remove();

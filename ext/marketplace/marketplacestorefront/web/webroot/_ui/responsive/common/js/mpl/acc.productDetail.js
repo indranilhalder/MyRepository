@@ -723,13 +723,14 @@ function addToWishlist(alreadyAddedWlName_pdp) {
 					
 					/*TPR-656*/
 					utag.link({
-						link_obj: this, 
+
 						link_text: 'add_to_wishlist_pdp' , 
 						event_type : 'add_to_wishlist_pdp', 
 						product_sku_wishlist : productcodearray
 					});
 				/*TPR-656 Ends*/
-				
+
+					dtmAddToWishlist("pdp",productCodePost,rootCategoryMSD); 
 					
 					//openPop(ussidValue);
 				//	$('#myModal').modal('hide');
@@ -931,7 +932,7 @@ function setSeller(index) {
 /* refeshing seller data after getting response from pincode service */
 /* refeshing seller data after getting response from pincode service */
 function refreshSellers(dataArray, ussid) {
-	console.log("dataArray"+dataArray+"ussid"+ussid);
+	//console.log("dataArray"+dataArray+"ussid"+ussid);
 	var stockArray = [];
 
 	var nonservicableussids = [];
@@ -965,7 +966,7 @@ function refreshSellers(dataArray, ussid) {
 				usidList[i] = "'" + dataArray[i]['ussid'] + "'";
 				count = count + 1;
 				if (dataArray[i]['stockCount'] == 0) {
-					console.log("ussid"+dataArray[i]['ussid']);
+					//console.log("ussid"+dataArray[i]['ussid']);
 					ussidListWithNoStock[++n] = "'" + dataArray[i]['ussid']
 							+ "'";// setting all the skuIds without stock
 
@@ -1075,154 +1076,349 @@ function isNum(evt) {
 	    return true;
 }
 
+function pincodeServiceability(){
+	        var regExp = /^([1-9])([0-9]){5}$/;
+            //INC144314017
+			$(".submit").data('clicked', true);
+			$("#pdpPincodeCheck").data('clicked', true); //TPR-6654
+			pinCodeChecked = true;
+			
+			//$("#home").hide();
+			//$("#homeli").hide();
+			$("#homeli").css("opacity","0.5");
+			$("#homeli").removeClass("selected");
+			//$("#express").hide();
+			//$("#expressli").hide();
+			$("#expressli").css("opacity","0.5");
+			$("#expressli").removeClass("selected");
+			//$("#collect").hide();
+			//$("#collectli").hide();
+			$("#collectli").css("opacity","0.5");
+			$("#collectli").removeClass("selected");
+			//TPR-6654
+			$("#CNCstores").empty();
+			$("#codId").hide();
+			$('#wrongPin,#unableprocessPin,#unsevisablePin,#emptyPin').hide();
+			$('#addToCartButton-wrong').attr("disable", true);
+			$('#addToCartButton-wrong').hide();
+			$("#outOfStockId").hide();
 
-var pinCodeChecked = false;
-$(function() {
 
-	var regExp = /^([1-9])([0-9]){5}$/;
-	$("#codId").hide();
 
-	$(".submit")
-			.click(
+			// $('#addToCartButton').show();
+			var checkBuyBoxIdPresent = false;
+			var buyboxSeller = $("#ussid").val();
+			var pin = $("#pin").val();
+			
+			var requiredUrl = ACC.config.encodedContextPath + "/p"
+					+ "-checkPincode";
+			if (pin == "") {
+				$('#unsevisablePin,#unableprocessPin,#wrongPin,#serviceablePin')
+						.hide();
+				$("#emptyPin").show();
+				$("#pdpPinCodeAvailable").hide();
+				
+				$('#addToCartButton').show();
+				$('#buyNowButton').attr("disabled",false);
+				//TPR-6654
+				$("#CNCstores").empty(); 
+				//TPR-794
+				//$("#pdpPinCodeAvailable").html("Enter your pincode to see your available delivery options.");
+				//$("#pdpPinCodeAvailable").show();
+				return false;
+			} else if (!regExp.test(pin)) {
+				$('#unsevisablePin,#unableprocessPin,#emptyPin').hide();
+				$("#wrongPin").show();
+				$("#pdpPinCodeAvailable").hide();
+				$("#serviceablePin").hide();
+			//	$("#pdpPinCodeAvailable").hide();
 
-					function() {
-						//TPR900
-						//if($("#pdpPincodeCheck").text() == 'Check')
-						if(document.getElementById("pdpPincodeCheck").className == "Check")//UF-71
-						{
-							//INC144314017
-							$(this).data('clicked', true);
-							pinCodeChecked = true;
-							//$("#home").hide();
-							//$("#homeli").hide();
-							$("#homeli").css("opacity","0.5");
-							$("#homeli").removeClass("selected");
-							//$("#express").hide();
-							//$("#expressli").hide();
-							$("#expressli").css("opacity","0.5");
-							$("#expressli").removeClass("selected");
-							//$("#collect").hide();
-							//$("#collectli").hide();
-							$("#collectli").css("opacity","0.5");
-							$("#collectli").removeClass("selected");
-							$("#codId").hide();
-							$('#wrongPin,#unableprocessPin,#unsevisablePin,#emptyPin').hide();
-							$('#addToCartButton-wrong').attr("disable", true);
-							$('#addToCartButton-wrong').hide();
-							$("#outOfStockId").hide();
+				$('#addToCartButton').show();
+				$('#buyNowButton').attr("disabled",false);
+				//TPR-6654
+				$("#CNCstores").empty(); 
+				//TPR-794
+				//$("#pdpPinCodeAvailable").show();
+				//$("#pdpPinCodeAvailable").html("Enter your pincode to see your available delivery options.");
+				return false;
+			}
+			//TISPRDT-1606
+			var productCode = $('#product').val();
+			var dataString  = "pin=" + pin + "&productCode="+ productCode;
+			
+			jQuery
+					.ajax({
+						// type: 'POST',
+						contentType : "application/json; charset=utf-8",
+						url : requiredUrl,
+						data : dataString,
+						success : function(data) {
 
-							// $('#addToCartButton').show();
-							var checkBuyBoxIdPresent = false;
-							var buyboxSeller = $("#ussid").val();
-							var pin = $("#pin").val();
-							var requiredUrl = ACC.config.encodedContextPath + "/p"
-									+ "-checkPincode";
 
-							if (pin == "") {
-								$('#unsevisablePin,#unableprocessPin,#wrongPin,#serviceablePin')
-										.hide();
-								$('#unsevisablePinExc,#unableprocessPinExc,#wrongPinExc,#serviceablePinExc')
-								.hide();
-								$("#emptyPin").show();
-								$("#emptyPinExc").show();
+							if (data == "" || data == []
+									|| data == null) {
+								refreshSellers(data, buyboxSeller);
+								//$("#home").hide();
+								//$("#homeli").hide();
+								$("#homeli").css("opacity","0.5");
+								$("#homeli").removeClass("selected");
+								//$("#express").hide();
+								//$("#expressli").hide();
+								$("#expressli").css("opacity","0.5");
+								$("#expressli").removeClass("selected");
+								//$("#collect").hide();
+								//$("#collectli").hide();
+								$("#collectli").css("opacity","0.5");
+								$("#collectli").removeClass("selected");
+								//TPR-6654
+								$("#CNCstores").empty();
+								$('#wrongPin,#unableprocessPin,#emptyPin,#serviceablePin').hide();
+
+
+								$('#addToCartFormTitle').hide();
+
+
+								$('#addToCartButton-wrong').show();
+								$('#addToCartButton').hide();
+								$('#unsevisablePin').show();
 								$("#pdpPinCodeAvailable").hide();
+
+
+								$('#buyNowButton').attr("disabled",true); 
+								//TPR-794
+								$("#pdpPinCodeAvailable").html("Available delivery options for the pincode " +pin+ " are");
+
 								
-								$('#addToCartButton').show();
-								$('#buyNowButton').attr("disabled",false);
-								//TPR-794
-								//$("#pdpPinCodeAvailable").html("Enter your pincode to see your available delivery options.");
-								//$("#pdpPinCodeAvailable").show();
-								return false;
-							} else if (!regExp.test(pin)) {
-								$('#unsevisablePin,#unableprocessPin,#emptyPin').hide();
-								$('#unsevisablePinExc,#unableprocessPinExc,#emptyPinExc').hide();
-								$("#wrongPin").show();
-								$("#wrongPinExc").show();
-								$("#pdpPinCodeAvailable").hide();
-								$("#serviceablePin").hide();
-								$("#serviceablePinExc").hide();
-							//	$("#pdpPinCodeAvailable").hide();
-								$('#addToCartButton').show();
-								$('#buyNowButton').attr("disabled",false);
-								//TPR-794
-								//$("#pdpPinCodeAvailable").show();
-								//$("#pdpPinCodeAvailable").html("Enter your pincode to see your available delivery options.");
+								/*TPR-642 & 640*/
+								if(typeof(utag) != "undefined"){
+									utag.link({
+										link_text: 'pdp_pincode_check_failure' , 
+										event_type : 'pdp_pincode_check' , 
+										pdp_pin_sku : productCode, 
+										pdp_pin_status : 'not_servicable', 
+										pdp_pin_value : pin, 
+										pdp_pincode_non_serviceable : pin,
+										pdp_pin_delivery : 'error'
+										
+									});
+								/*TPR-642 & 640 ends*/
+								}
+								
+								//tpr-6029| DTM
+								 dtmPdpPincode("failure",productCode,pin);
 								return false;
 							}
-							//TISPRDT-1606
-							var productCode = $('#product').val();
-							var dataString  = "pin=" + pin + "&productCode="+ productCode;
-							
+							// check if oms service is down
+							else if (data[0]['isServicable'] == 'NA') {
+								$("#home").show();
+								$("#homeli").show();
+								$("#homeli").addClass("selected");
+							    $("#homeli").css("opacity","1");
+								$("#express").show();
+								$("#expressli").show();
+								$("#expressli").addClass("selected");
+							    $("#expressli").css("opacity","1");
+								$("#collect").show();
+								$("#collectli").show();
+								$("#collectli").addClass("selected");
+							    $("#collectli").css("opacity","1");
+								$("#codId").show();
+								//TPR-794
 
-							pinCodeCheckajax=$.ajax({
-										// type: 'POST',
-										contentType : "application/json; charset=utf-8",
-										url : requiredUrl,
-										data : dataString,
-										success : function(data) {
-
-											if (data == "" || data == []
-													|| data == null) {
-												refreshSellers(data, buyboxSeller);
-												//$("#home").hide();
-												//$("#homeli").hide();
-												$("#homeli").css("opacity","0.5");
-												$("#homeli").removeClass("selected");
-												//$("#express").hide();
-												//$("#expressli").hide();
-												$("#expressli").css("opacity","0.5");
-												$("#expressli").removeClass("selected");
-												//$("#collect").hide();
-												//$("#collectli").hide();
-												$("#collectli").css("opacity","0.5");
-												$("#collectli").removeClass("selected");
-
-												$('#wrongPin,#unableprocessPin,#emptyPin,#serviceablePin').hide();
-												$('#wrongPinExc,#unableprocessPinExc,#emptyPinExc,#serviceablePinExc').hide();
-												$('#addToCartFormTitle').hide();
-												$('#addToCartButton-wrong').show();
-												$('#addToCartButton').hide();
-												$('#unsevisablePin').show();
-												$('#unsevisablePinExc').show();
-												$("#pdpPinCodeAvailable").hide();
-												
-												$('#buyNowButton').attr("disabled",true);
-												//TPR-794
-												$("#pdpPinCodeAvailable").html("Available delivery options for the pincode " +pin+ " are");
-												
-												/*TPR-642 & 640*/
-												utag.link({
-													link_text: 'pdp_pincode_check_failure' , 
-													event_type : 'pdp_pincode_check' , 
-													pdp_pin_sku : productCode, 
-													pdp_pin_status : 'not_servicable', 
-													pdp_pin_value : pin, 
-													pdp_pincode_non_serviceable : pin,
-													pdp_pin_delivery : 'error'
-													
-												});
-											/*TPR-642 & 640 ends*/
-												return false;
+								$("#pdpPinCodeAvailable").html("Available delivery options for the pincode " +pin+ " are");
+								
+								/*TPR-642 & 640*/
+								if(typeof(utag) != "undefined"){
+									utag.link({
+										link_text: 'pdp_pincode_check_failure' , 
+										event_type : 'pdp_pincode_check' , 
+										pdp_pin_sku : productCode, 
+										pdp_pin_status : 'not_servicable', 
+										pdp_pin_value : pin, 
+										pdp_pincode_non_serviceable : pin,
+										pdp_pin_delivery : 'error'
+									});
+								/*TPR-642 & 640 ends*/	
+								}
+								//tpr-6029| DTM
+								 dtmPdpPincode("failure",productCode,pin);
+								return false;
+								
+							} else {
+								// TPR-1375
+								//populating  buybox details agian after checking pincode response
+								repopulateBuyBoxDetails(data,buyBoxList);
+								var buyboxSeller = $("#ussid").val();
+								//alert("buyboxseller"+buyboxSeller);
+								// refreshing seller list after
+								refreshSellers(data, buyboxSeller);
+								deliverModeTealium = new Array();
+								for ( var i in data) {
+									var pincodedata = data[i];
+									ussid = pincodedata['ussid'];
+									if (ussid == buyboxSeller) {
+										if (pincodedata['isServicable'] == 'Y') {
+											
+											 $('#serviceablePin').show();  //TISPRM-20::PDP show pincode serviceability msg  
+											checkBuyBoxIdPresent = true;
+											deliveryModes = pincodedata['validDeliveryModes'];
+											var home = false;
+											var exp = false;
+											var click = false;
+											/*
+											 * if (deliveryModes == "" ||
+											 * deliveryModes ==
+											 * null||pincodedata['stockCount']==0) {
+											 */
+											if (pincodedata['stockCount'] == 0) {
+												$("#addToCartButton").hide();
+												$("#outOfStockId").show();
+												$("#buyNowButton").hide();
+												$("#stock").val(0);
+											} else {
+												$("#addToCartButton").show();
+												$('#buyNowButton').attr("disabled",false);
+												$("#buyNowButton").show();
 											}
-											// check if oms service is down
-											else if (data[0]['isServicable'] == 'NA') {
+											if (pincodedata['cod'] == 'Y') {
+												$("#codId").show();
+											}
+											for ( var j in deliveryModes) {
+												var mode = deliveryModes[j];
+												deliveryModeName = mode['type'];
+												$("#stock")
+														.val(
+																pincodedata['stockCount']);
+												// checking
+												// home-delivery(HD)
+												// mode
+												if (deliveryModeName == 'HD') {
+													home = true;
+												}
+												// checking
+												// click&collect(CnC)
+												// mode
+
+
+												else if (deliveryModeName == 'CNC') {
+
+
+													click = true;
+													/*
+													 * $(".Click")
+													 * .show();
+													 */
+												}
+												// checking
+												// express(express)
+												// mode
+												else {
+													exp = true;
+												}
+											}
+
+
+											if (home == true) {
 												$("#home").show();
 												$("#homeli").show();
 												$("#homeli").addClass("selected");
 											    $("#homeli").css("opacity","1");
+
+												deliverModeTealium.push("home");
+											} else {
+												//$("#home").hide();
+												//$("#homeli").hide();
+												$("#homeli").css("opacity","0.5");
+												$("#homeli").removeClass("selected");
+											}
+
+											if (exp == true) {
 												$("#express").show();
 												$("#expressli").show();
 												$("#expressli").addClass("selected");
 											    $("#expressli").css("opacity","1");
+												deliverModeTealium.push("express");
+											} else {
+												//$("#express").hide();
+												//$("#expressli").hide();
+												$("#expressli").css("opacity","0.5");
+												$("#expressli").removeClass("selected");
+
+											}if (click == true) {
 												$("#collect").show();
 												$("#collectli").show();
 												$("#collectli").addClass("selected");
 											    $("#collectli").css("opacity","1");
-												$("#codId").show();
-												//TPR-794
-												$("#pdpPinCodeAvailable").html("Available delivery options for the pincode " +pin+ " are");
-												
-												/*TPR-642 & 640*/
+
+
+
+												deliverModeTealium.push("clickandcollect");
+												//TPR-6654
+												var requiredUrl = ACC.config.encodedContextPath + "/p-allStores/"+pin;
+												$.ajax({
+													url : requiredUrl,
+													type : "GET",
+													success : function(response) {
+														$("#CNCstores").html(response);
+													}
+												});		
+											} else {
+
+												//$("#collect").hide();
+												//$("#collectli").hide();
+												$("#collectli").css("opacity","0.5");
+												$("#collectli").removeClass("selected");
+												//TPR-6654
+												$("#CNCstores").empty();
+											}
+											// }
+											
+											/*TPR- 642 & 640*/
+											if(typeof utag !="undefined"){
+												utag.link({
+													link_text: 'pdp_pincode_check_success' , 
+													event_type : 'pdp_pincode_check' , 
+													pdp_pin_sku : productCode, 
+													pdp_pin_status : 'servicable', 
+													pdp_pin_value : pin, 
+													pdp_pincode_serviceable :pin,
+													pdp_pin_delivery : deliverModeTealium.join("_")
+												});
+											}
+											/*TPR-642 & 640 ends*/
+												//TPR-6029 |DTM IMPLEMENTATION
+												 dtmPdpPincode("success",productCode,pin);
+
+										} else {
+											//$("#home").hide();
+											//$("#homeli").hide();
+											$("#homeli").css("opacity","0.5");
+											$("#homeli").removeClass("selected");
+											$("#click").hide();
+											//$("#expressli").hide();
+											$("#expressli").css("opacity","0.5");
+											$("#expressli").removeClass("selected");
+											//$("#express").hide();
+											//$("#collectli").hide();
+											$("#collectli").css("opacity","0.5");
+											$("#collectli").removeClass("selected");
+											//TPR-6654
+											$("#CNCstores").empty(); 
+											$('#wrongPin,#unableprocessPin,#emptyPin,#serviceablePin')
+													.hide();
+											$('#addToCartFormTitle')
+													.hide();
+											if ($("#stock").val() > 0) {
+												$('#addToCartButton-wrong').show();
+												$('#buyNowButton').attr("disabled",true);
+											} else {
+												$("#outOfStockId").show();
+												$("#buyNowButton").hide();
+											}
+											$('#addToCartButton').hide();
+											$('#unsevisablePin').show();
+											/*TPR-642 & 640 */
+											if(typeof(utag) != "undefined"){
 												utag.link({
 													link_text: 'pdp_pincode_check_failure' , 
 													event_type : 'pdp_pincode_check' , 
@@ -1232,253 +1428,94 @@ $(function() {
 													pdp_pincode_non_serviceable : pin,
 													pdp_pin_delivery : 'error'
 												});
-											/*TPR-642 & 640 ends*/
-												return false;
-											} else {
-												// TPR-1375
-												//populating  buybox details agian after checking pincode response
-												repopulateBuyBoxDetails(data,buyBoxList);
-												var buyboxSeller = $("#ussid").val();
-												//alert("buyboxseller"+buyboxSeller);
-												// refreshing seller list after
-												refreshSellers(data, buyboxSeller);
-												deliverModeTealium = new Array();
-												for ( var i in data) {
-													var pincodedata = data[i];
-													ussid = pincodedata['ussid'];
-
-													if (ussid == buyboxSeller) {
-														if (pincodedata['isServicable'] == 'Y') {
-															
-															 $('#serviceablePin').show();  //TISPRM-20::PDP show pincode serviceability msg  
-															 $('#serviceablePinExc').hide();
-															 $('#wrongPinExc,#unsevisablePinExc,#unableprocessPinExc').hide();
-															 checkBuyBoxIdPresent = true;
-															deliveryModes = pincodedata['validDeliveryModes'];
-															var home = false;
-															var exp = false;
-															var click = false;
-															/*
-															 * if (deliveryModes == "" ||
-															 * deliveryModes ==
-															 * null||pincodedata['stockCount']==0) {
-															 */
-															if (pincodedata['stockCount'] == 0) {
-																$("#addToCartButton").hide();
-																$("#outOfStockId").show();
-																$("#buyNowButton").hide();
-																$("#stock").val(0);
-															} else {
-																$("#addToCartButton").show();
-																$('#buyNowButton').attr("disabled",false);
-																$("#buyNowButton").show();
-															}
-															if (pincodedata['cod'] == 'Y') {
-																$("#codId").show();
-															}
-
-															for ( var j in deliveryModes) {
-																var mode = deliveryModes[j];
-																deliveryModeName = mode['type'];
-																$("#stock")
-																		.val(
-																				pincodedata['stockCount']);
-																// checking
-																// home-delivery(HD)
-																// mode
-																if (deliveryModeName == 'HD') {
-																	home = true;
-
-																}
-																// checking
-																// click&collect(CnC)
-																// mode
-
-
-																else if (deliveryModeName == 'CNC') {
-
-
-																	click = true;
-																	/*
-																	 * $(".Click")
-																	 * .show();
-																	 */
-																}
-																// checking
-																// express(express)
-																// mode
-																else {
-																	exp = true;
-																}
-															}
-															if (home == true) {
-																$("#home").show();
-																$("#homeli").show();
-																$("#homeli").addClass("selected");
-															    $("#homeli").css("opacity","1");
-
-																deliverModeTealium.push("home");
-															} else {
-																//$("#home").hide();
-																//$("#homeli").hide();
-																$("#homeli").css("opacity","0.5");
-																$("#homeli").removeClass("selected");
-															}
-
-															if (exp == true) {
-																$("#express").show();
-																$("#expressli").show();
-																$("#expressli").addClass("selected");
-															    $("#expressli").css("opacity","1");
-																deliverModeTealium.push("express");
-															} else {
-																//$("#express").hide();
-																//$("#expressli").hide();
-																$("#expressli").css("opacity","0.5");
-																$("#expressli").removeClass("selected");
-
-															}if (click == true) {
-																$("#collect").show();
-																$("#collectli").show();
-																$("#collectli").addClass("selected");
-															    $("#collectli").css("opacity","1");
-																deliverModeTealium.push("clickandcollect");
-															} else {
-
-																//$("#collect").hide();
-																//$("#collectli").hide();
-																$("#collectli").css("opacity","0.5");
-																$("#collectli").removeClass("selected");
-															}
-															// }
-															
-															/*TPR- 642 & 640*/
-																utag.link({
-																	link_text: 'pdp_pincode_check_success' , 
-																	event_type : 'pdp_pincode_check' , 
-																	pdp_pin_sku : productCode, 
-																	pdp_pin_status : 'servicable', 
-																	pdp_pin_value : pin, 
-																	pdp_pincode_serviceable :pin,
-																	pdp_pin_delivery : deliverModeTealium.join("_")
-																});
-															/*TPR-642 & 640 ends*/
-
-														} else {
-															//$("#home").hide();
-															//$("#homeli").hide();
-															$("#homeli").css("opacity","0.5");
-															$("#homeli").removeClass("selected");
-															$("#click").hide();
-															//$("#expressli").hide();
-															$("#expressli").css("opacity","0.5");
-															$("#expressli").removeClass("selected");
-															//$("#express").hide();
-															//$("#collectli").hide();
-															$("#collectli").css("opacity","0.5");
-															$("#collectli").removeClass("selected");
-															$('#wrongPin,#unableprocessPin,#emptyPin,#serviceablePin')
-																	.hide();
-															$('#wrongPinExc,#unableprocessPinExc,#emptyPinExc,#serviceablePinExc')
-															.hide();
-															$('#addToCartFormTitle')
-																	.hide();
-															if ($("#stock").val() > 0) {
-																$('#addToCartButton-wrong').show();
-																$('#buyNowButton').attr("disabled",true);
-															} else {
-																$("#outOfStockId").show();
-																$("#buyNowButton").hide();
-															}
-															$('#addToCartButton').hide();
-															$('#unsevisablePin').show();
-															
-															/*TPR-642 & 640 */
-															utag.link({
-																link_text: 'pdp_pincode_check_failure' , 
-																event_type : 'pdp_pincode_check' , 
-																pdp_pin_sku : productCode, 
-																pdp_pin_status : 'not_servicable', 
-																pdp_pin_value : pin, 
-																pdp_pincode_non_serviceable : pin,
-																pdp_pin_delivery : 'error'
-															});
-														/*TPR-642 & 640 ends*/
-														}
-													}
-												}
-												if (!checkBuyBoxIdPresent) {
-													//$("#home").hide();
-													//$("#homeli").hide();
-													$("#homeli").css("opacity","0.5");
-													$("#homeli").removeClass("selected");
-													$("#click").hide();
-													//$("#express").hide();
-													//$("#expressli").hide();
-													$("#expressli").css("opacity","0.5");
-													$("#expressli").removeClass("selected");
-													$(
-															'#wrongPin,#unableprocessPin,#emptyPin')
-															.hide();
-													$('#wrongPinExc,#unableprocessPinExc,#emptyPinExc').hide();
-													$('#addToCartFormTitle').hide();
-													if ($("#stock").val() > 0) {
-														$('#addToCartButton-wrong').show();
-													} else {
-														$("#outOfStockId").show();
-														$("#buyNowButton").hide();
-
-													}
-													// $('#addToCartButton-wrong').show();
-													$('#addToCartButton').hide();
-													$('#unsevisablePin').show();
-													$('#unsevisablePinExc').show();
-													$('#pdpPinCodeAvailable').hide();
-												}
-												
+											/*TPR-642 & 640 ends*/	
 											}
-											$("#pinCodeChecked")
-													.val(pinCodeChecked);
-											//TPR-794
-											$("#pdpPinCodeAvailable").html("Available delivery options for the pincode " +pin+ " are");
-										},
-										error : function(xhr, status, error) {
-
-											$('#wrongPin,#unsevisablePin,#emptyPin')
-													.hide();
-											$('#wrongPinExc,#unsevisablePinExc,#emptyPinExc')
-											.hide();
-											$('#unableprocessPin').show();
-											$('#unableprocessPinExc').show();
-											
-											//TPR-794
-											$("#pdpPinCodeAvailable").html("Available delivery options for the pincode " +pin+ " are");
-											var error =$('#unableprocessPin').val();
-											if(typeof utag !="undefined"){
-											utag.link({error_type: error  });
-                                            }
+											//tpr-6029| DTM
+											 dtmPdpPincode("failure",productCode,pin);
 										}
-									});
+									}
 
-							//TPR-900
-							$('#pin').blur();
-							
-							if ( $('#pin').val() == "") {
-								//$("#pdpPincodeCheck").text("Check")				/*UF-42*/
-								document.getElementById("pdpPincodeCheck").className = "Check";//UF-71
-							} else {
-							
-								//$("#pdpPincodeCheck").text("Change Pincode")
-								$("#pdpPincodeCheck").text("Check"); //UF-71
+								}
+								if (!checkBuyBoxIdPresent) {
+									//$("#home").hide();
+									//$("#homeli").hide();
+									$("#homeli").css("opacity","0.5");
+									$("#homeli").removeClass("selected");
+									$("#click").hide();
+									//$("#express").hide();
+									//$("#expressli").hide();
+									$("#expressli").css("opacity","0.5");
+									$("#expressli").removeClass("selected");
+									$(
+											'#wrongPin,#unableprocessPin,#emptyPin')
+											.hide();
+									$('#addToCartFormTitle').hide();
+									if ($("#stock").val() > 0) {
+										$('#addToCartButton-wrong').show();
+									} else {
+										$("#outOfStockId").show();
+										$("#buyNowButton").hide();
+									}
+									// $('#addToCartButton-wrong').show();
+									$('#addToCartButton').hide();
+									$('#unsevisablePin').show();
+									$('#pdpPinCodeAvailable').hide();
+								}
+								
 							}
-							//TPR-900
-						}
-						else
-						{
-							 $('#pin').focus();
-							 $('#emptyPin').hide();
+							$("#pinCodeChecked")
+									.val(pinCodeChecked);
+							//TPR-794
+							$("#pdpPinCodeAvailable").html("Available delivery options for the pincode " +pin+ " are");
+						},
+						error : function(xhr, status, error) {
+							$('#wrongPin,#unsevisablePin,#emptyPin')
+									.hide();
+							$('#unableprocessPin').show();
+							
+							//TPR-794
+							$("#pdpPinCodeAvailable").html("Available delivery options for the pincode " +pin+ " are");
+							var error =$('#unableprocessPin').val();
+							if(typeof utag !="undefined"){
+							utag.link({error_type: error  });
+                            }
+							//TPR-6369 |Error tracking dtm
+			 				dtmErrorTracking("Pin Code Servicability Error",error);
 						}
 					});
+
+			//TPR-900
+			$('#pin').blur();
+			
+			if ( $('#pin').val() == "") {
+				//$("#pdpPincodeCheck").text("Check")				/*UF-42*/
+				document.getElementById("pdpPincodeCheck").className = "Check";//UF-71
+			} else {
+			
+				//$("#pdpPincodeCheck").text("Change Pincode")
+				$("#pdpPincodeCheck").text("Check"); //UF-71
+			}
+			//TPR-900
+}
+
+var pinCodeChecked = false;
+$(function() {
+	var regExp = /^([1-9])([0-9]){5}$/;
+	$("#codId").hide();
+	$(".submit").click(function(){
+		if($("#pdpPincodeCheck").hasClass("Check"))//UF-71
+			
+		{
+			pincodeServiceability();
+		}
+		else
+		{
+			 $('#pin').focus();
+			 $('#emptyPin').hide();
+
+
+		}
+	});
 
 });
 
@@ -1585,6 +1622,7 @@ $( document ).ready(function() {
 			},3000);
 		}
 	});
+	
 }); 
 
 
@@ -1608,7 +1646,7 @@ function displayDeliveryDetails(sellerName) {
 		dataType : "json",
 		success : function(data) {
 			if (data != null) {
-				console.log("success");
+				//console.log("success");
 				var pretext=$("#deliveryPretext").text();
 				var posttext=$("#deliveryPosttext").text();
 				var fulFillment = data['fulfillment'];
@@ -1661,7 +1699,8 @@ function displayDeliveryDetails(sellerName) {
 				/*TISPRDT-878 END*/
 
 				//INC144314017 start
-				if(!$('#pdpPincodeCheck').data('clicked')) {
+				 //TPR-6654
+				if(typeof $('#pdpPincodeCheck').data('clicked') != "undefined" && !$('#pdpPincodeCheck').data('clicked')) {
 					var start_hd=parseInt($("#homeStartId").val())+leadTime;
 					var end_hd=parseInt($("#homeEndId").val())+leadTime;
 				if (null != deliveryModes && deliveryModes.indexOf("HD") == -1) {
@@ -1692,8 +1731,8 @@ function displayDeliveryDetails(sellerName) {
 					$("#expressli").css("opacity","0.5");
 					$("#expressli").removeClass("selected");
 				} else {		
-					
-			    
+
+
 					$("#expressDate").html(pretext+start_ed+"-"+end_ed+posttext);
 					$("#express").show();
 					$("#expressli").show();
@@ -1736,7 +1775,9 @@ function displayDeliveryDetails(sellerName) {
 						//$("#collectli").hide();
 						$("#collectli").css("opacity","0.5");
 						$("#collectli").removeClass("selected");
-					} else {
+						//TPR-6654
+						$("#CNCstores").empty();
+					} else{
 						var start=$("#clickStartId").val();
 						var end=$("#clickEndId").val();
 						$("#clickDate").html(pretext+start+"-"+end+posttext);
@@ -1762,6 +1803,8 @@ function displayDeliveryDetails(sellerName) {
 					$("#clickDate").html(pretext+start_cnc+"-"+end_cnc+posttext);
 					$("#collectli").css("opacity","0.5");
 					$("#collectli").removeClass("selected");
+					//TPR-6654
+					$("#CNCstores").empty();
 				} else {
 				    //var start=$("#clickStartId").val();
 		        	//var end=$("#clickEndId").val();
@@ -1776,11 +1819,28 @@ function displayDeliveryDetails(sellerName) {
 
 				//INC144314017 end
 
+				//TPR-6907
+                var sellerIdCount = $("#pdpSellerIDs").val();
+                sellerIdCount = sellerIdCount.replace('[','');
+                sellerIdCount = sellerIdCount.replace(']','');
+                var sellerCountArray = sellerIdCount.split(',');
+                var sellerCount = sellerCountArray.length;
 				// enable COD flag if COD enabled
 				if (data['isCod'] == 'Y') {
 					$("#codId").show();
+					if(sellerCount > 1){
+					var codLink = "/p-" + productCode + "/viewSellers"; //TPR-6907
+					$("#codLink").attr("href",codLink);
+					$("#codLink").css("cursor","pointer");
+					}
+					else{
+					$("#codLink").removeAttr("href");
+					$("#codLink").css("cursor","default");
+					}
+					$("#codEli").show();
 				} else {
 					$("#codId").hide();
+					$("#codEli").hide(); //TPR-6907
 				}
 				if(null != data['returnWindow'])
 				{
@@ -2062,6 +2122,7 @@ function openPopForBankEMI() {
 				product_id : productIdArray
 			});
 
+			dtmEmiTrack();
 		},
 		error : function(xhr, status, error) {
 
@@ -2125,6 +2186,8 @@ function populateEMIDetailsForPDP(){
 					});
 					}
 					/*TPR-641 ends*/
+					//track pdp and qw emi bank details
+					dtmEmiBankTrack(emiBankSelected);
 				},
 				error : function(resp) {
 					$('#emiSelectBank').show();
@@ -3232,12 +3295,12 @@ function loadDefaultWishListName_SizeGuide() {
 				
 				/*TPR-646 Changes*/
 				utag.link({
-					"link_obj" : this,
 			        "link_text": 'remove_from_wishlist',
 			        "event_type": 'remove_from_wishlist',
 			        "product_sku_wishlist": "" + productCode
 			    });
 				
+				dtmRemoveFromWishlist("pdp",productCode,rootCategoryMSD);
 				//END MSD
 //				window.location.href = ACC.config.encodedContextPath + "/my-account/wishList";
 				//window.location.href = ACC.config.encodedContextPath + "/my-account/viewParticularWishlist?particularWishlist="+wishlistName;
@@ -3442,6 +3505,10 @@ function getProductContents() {
 					"event_type": "a_plus_product",
 					"a_plus_product_id":productId
 				});
+				//TPR-6029 | dtm for A+ products
+				if (typeof(_satellite) != "undefined") {
+					_satellite.track('cpj_pdp_a_plus');
+			    }
 			}
 				 
 		},
@@ -3687,9 +3754,11 @@ function onSizeSelectPopulateDOM()//First Method to be called in size select aja
 					//Populating productPromotionSection.tag
 					$('#productPromotionSection').html(data);
 					var jsonData= JSON.parse($('#sizeSelectAjaxData').text());
+					var pin = $("#pin").val();
 					$('#sizeSelectAjaxData').remove();
 					if(typeof(jsonData['error'])=='undefined')
 					{
+						
 						//UF-33 starts//   //TISSTRT-1587//
 						//Update Page Title
 						document.title = jsonData['mapConfigurableAttribute']['metaTitle'];
@@ -3716,7 +3785,7 @@ function onSizeSelectPopulateDOM()//First Method to be called in size select aja
 							var responsePotentialPromotions=[];
 						}
 						
-						
+
 						$('#selectedSize').val("true");
 						
 						$("input[name=productCodeMSD]").val(responseProductCode);
@@ -3726,7 +3795,8 @@ function onSizeSelectPopulateDOM()//First Method to be called in size select aja
 						$('a.size-guide').attr('href','/p-sizeGuide?productCode='+responseProductCode+'&sizeSelected=true');
 						$('a.size-guide').data("productcode",responseProductCode);
 						$('a.size-guide').data("sizeSelected",'true');
-						$('#pdpPincodeCheck').data('clicked', false);
+						//TPR-6654
+						//$('#pdpPincodeCheck').data('clicked', false);
 						$('#ia_product_code').val(responseProductCode);
 						$("#dListedErrorMsg").hide();//TISSTRT-1469
 						$(".reviews").show();
@@ -3765,7 +3835,14 @@ function onSizeSelectPopulateDOM()//First Method to be called in size select aja
 						
 						//Remove highlighted pincode error/success messages
 						$("#wrongPin,#unableprocessPin,#unsevisablePin,#emptyPin,#serviceablePin").hide();
+						//TPR-6654
+						if(typeof(jsonData['pincode'])!='undefined'){
+						$("#pdpPinCodeAvailable").html("Available delivery options for the pincode " +pin+ " are");
+						}
+						else
+						{
 						$("#pdpPinCodeAvailable").html("Enter your pincode to see your available delivery options  ");
+						}
 						$("#pdpPinCodeAvailable").show();
 						//Populating productStyleNotesTab.tag,productDescriptionTab.tag with articleDescription
 						if(responseProductArticleDescription !="" && typeof($('.tab-details span:eq(0)').text())!='undefined')
@@ -3873,7 +3950,7 @@ function onSizeSelectPopulateDOM()//First Method to be called in size select aja
 							//On buybox complete
 							xhrBuyBox.always(function(){
 								//showing/hiding buttons on page change
-								$('#pin').val("");
+								//$('#pin').val("");  //TPR-6654
 								//$("#addToCartButton").show(); // commented for TPR-250 :was overriding
 
 								$('#addToCartButton-wrong').hide();
@@ -3938,7 +4015,7 @@ function onSizeSelectPopulateDOM()//First Method to be called in size select aja
 //								}
 							});//End of buybox and tealium call
 						}
-						
+
 					}//End of server side error check if
 					else
 					{	
@@ -3989,7 +4066,7 @@ function getBuyBoxDataAjax(productCode,variantCodesJson)
 	$("#addToCartButton").show();
 	$("#addToCartButton").show();
 	$('#buyNowButton').show();
-
+    var buyboxStockAvail = null;
 	return $.ajax({
 		contentType : "application/json; charset=utf-8",
 		url : requiredUrl,
@@ -4011,7 +4088,8 @@ function getBuyBoxDataAjax(productCode,variantCodesJson)
 			//TISPRM-56
 			var stockInfo = data['availibility'];
 		
-
+			buyboxStockAvail = data['availablestock'];
+			
 
 			availibility = stockInfo;
 			$.each(stockInfo,function(key,value){
@@ -4377,6 +4455,7 @@ function getBuyBoxDataAjax(productCode,variantCodesJson)
 				 $("#pdpPincodeCheckDList").show();
 				 $("#buyNowButton").attr("disabled",true);
 				//INC144316346
+				 //alert($.isEmptyObject(data['availibility']));
 				 if($.isEmptyObject(data['availibility'])){
 					 $("#variant li a").removeAttr("href");
 					 $("#variant li a").removeAttr("title");
@@ -4390,6 +4469,14 @@ function getBuyBoxDataAjax(productCode,variantCodesJson)
 		//TPR-429
 		complete: function() {
 			differentiateSeller();
+			differentiateSellerDtm();
+			//TPR-6654
+			var pin = $('#pin').val();
+			if(pin != "" && parseInt(buyboxStockAvail) > 0){
+				pincodeServiceability();
+				$("#pdpPinCodeAvailable").html("Available delivery options for the pincode " +pin+ " are");
+				document.getElementById("pdpPincodeCheck").className = "Check";
+			}
 		}
 		
 	});
@@ -4604,6 +4691,12 @@ function getProductCodeFromPdpUrl(url)
 	return productCode;
 }
 
+function showStoreLocatorModal(){
+	$('body').on('hidden.bs.modal', '#storeLocatorModal', function () {
+		  $(this).removeData('bs.modal');
+		});
+	$("#storeLocatorModal").modal("show");
+}
 //End of UF-60 changes
 //Size Select For jewellery
 function populateClassificationForJewellery(jsonData)
@@ -4777,14 +4870,14 @@ $("#pdpPincodeCheckExchnage").on("click",function(){
 		productArray.push(productCode);
 	for (var i = 0; i < pincoeData.length; i++) {
 		
-		 //check pincodeData if it is servicable
+		//check pincodeData if it is servicable
 		if (pincoeData[i]['isServicable'] == 'Y') 
 				
 {
   //ajax call to check greendust
 	var dataString = 'pin=' + $("#pinExc").val();
     var reversecheck=false;
-   
+
 	
 var req1=$.ajax({
 		url : ACC.config.encodedContextPath + "/p-checkReversePincode",
@@ -4836,12 +4929,16 @@ $.when(req1).done(function(data1){
   
  // return false;
 				}
-		
-	
+
+
 				
 				}
 	
-	//Message for unsuccessful exchange Pincode check forward check
+
+
+
+
+//Message for unsuccessful exchange Pincode check forward check
 	if(typeof utag !="undefined"){
 		utag.link({
 			event_type : "exchange_pincode_false",
@@ -4849,7 +4946,6 @@ $.when(req1).done(function(data1){
 			product_id : productArray
 		});
 	}
-		
     
 });
 
@@ -4963,8 +5059,8 @@ function changePrice(value) {
 function onSubmitExc()
 {
 	var brand= $("#brandExchangeParam").val();
-	
-	
+
+
 	var l4select=$('#l4select').val();
 	var isError=false;
 	var isWorking=$('#activeselect').val();
@@ -5022,3 +5118,7 @@ function onSubmitExc()
 	
 }
 //TPR-1083 End
+//TPR-6654
+$("#change_pincode").click(function(){
+	$("#pin").focus();
+});

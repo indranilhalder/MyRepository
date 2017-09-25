@@ -110,7 +110,7 @@ var productSizeVar = '${productSize}';
 	<c:choose>
 		<c:when test="${not empty product.variantOptions}">
  <!-- Color heading will not come for FineJewellery -->
-		<c:if test="${product.rootCategory !='FineJewellery' && product.rootCategory !='FashionJewellery'}">
+		<c:if test="${(product.rootCategory !='FineJewellery' && product.rootCategory !='FashionJewellery') && (multiColorFlag eq 'true')}">	<!-- UF-432 -->
 			<p>
 				<spring:theme code="text.colour" />
 			</p>
@@ -131,24 +131,25 @@ var productSizeVar = '${productSize}';
 										  <a href="${variantUrl}">
 								<!--CKD:TPR-250:End  -->
 															
-								 <c:forEach
-									items="${variantOption.colourCode}" var="color">
-								<c:choose>
-							    <c:when test="${fn:startsWith(color, 'multi') && empty variantOption.image}">
-						     	<img src="${commonResourcePath}/images/multi.jpg" height="74" width="50" title="${variantOption.colour}" />
-								</c:when>
-								<c:when test="${empty variantOption.image}">
-						     	<span style="background-color: ${color};border: 1px solid rgb(204, 211, 217); width:50px; height:73px" title="${variantOption.colour}"></span>
-								</c:when>							
-								<c:otherwise>
-								<c:set var="imageData" value="${variantOption.image}" />
-								<img src="${imageData.url}" title="${variantOption.colour}" alt="${styleValue}" style="display: inline-block;width: 50px;"/>								
-                               </c:otherwise>
-                               </c:choose>
-								<c:if test="${variantOption.code eq product.code}">
-										<c:set var="currentColor" value="${color}" />
-										<!--  set current selected color -->
-								</c:if>
+								 <c:forEach	items="${variantOption.colourCode}" var="color">
+									<c:if test="${multiColorFlag eq 'true'}">	<!-- UF-432 -->
+										<c:choose>
+									    <c:when test="${fn:startsWith(color, 'multi') && empty variantOption.image}">
+								     	<img src="${commonResourcePath}/images/multi.jpg" height="74" width="50" title="${variantOption.colour}" />
+										</c:when>
+										<c:when test="${empty variantOption.image}">
+								     	<span style="background-color: ${color};border: 1px solid rgb(204, 211, 217); width:50px; height:73px" title="${variantOption.colour}"></span>
+										</c:when>							
+										<c:otherwise>
+										<c:set var="imageData" value="${variantOption.image}" />
+										<img src="${imageData.url}" title="${variantOption.colour}" alt="${styleValue}" style="display: inline-block;width: 50px;"/>								
+		                               </c:otherwise>
+		                               </c:choose>
+										<c:if test="${variantOption.code eq product.code}">
+												<c:set var="currentColor" value="${color}" />
+												<!--  set current selected color -->
+										</c:if>
+									</c:if>
 								</c:forEach>
 						</a></li>
 					</c:when>
@@ -352,14 +353,22 @@ share mobile -->
 					</c:forEach>
 			     </c:forEach>								
 			   </c:when>
-			   <c:otherwise>	
+			   <c:otherwise>
+			       <!-- UF-422:Changes for PDP when product has only one size -->
+				<c:set var="selectedClass" value=""/>
+				<c:if test= "${fn:length(product.variantOptions) eq 1 || pdpSizeCounter eq 1}">
+				<c:set var ="selectedClass" value ="class='selected'"/></c:if>	
+				
 			    <c:forEach items="${product.variantOptions}" var="variantOption">
 			      <c:forEach items="${variantOption.colourCode}" var="color">                  
 					<c:choose>
 						<c:when test="${not empty currentColor}">
 							<c:if test="${currentColor eq color}">
-								<c:set var="currentColor" value="${color}" />						
+								<c:set var="currentColor" value="${color}" />
+								
+								
 								<c:forEach var="entry" items="${variantOption.sizeLink}">
+								
 									<c:url value="${entry.key}" var="link" />
 									<%--  <a href="${link}?selectedSize=true${msiteSellerForSize}">${entry.value}</a> --%>
 									<c:choose>
@@ -367,7 +376,7 @@ share mobile -->
 											<c:choose>
 												<c:when test="${selectedSize eq null}">
 												<!--CKD:TPR-250  -->
-													<li><a href="${link}?selectedSize=true${msiteSellerForSize}" data-productCode="${variantOption.code}">${entry.value}</a></li>
+													<li ${selectedClass}><a href="${link}?selectedSize=true${msiteSellerForSize}" data-productCode="${variantOption.code}">${entry.value}</a></li>
 												</c:when>
 												<c:otherwise>
 													<!--CKD:TPR-250  -->
@@ -377,7 +386,7 @@ share mobile -->
 										 </c:when>
 										 <c:otherwise>
 											<!--CKD:TPR-250  -->
-										    <li data-vcode="${link}"><a href="${link}?selectedSize=true${msiteSellerForSize}"  data-productCode="${variantOption.code}">${entry.value}</a></li>
+										    <li ${selectedClass}><a href="${link}?selectedSize=true${msiteSellerForSize}"  data-productCode="${variantOption.code}">${entry.value}</a></li>
 										 </c:otherwise>
 									</c:choose>
 								  </c:forEach>
@@ -397,10 +406,11 @@ share mobile -->
 										<c:url value="${entry.key}" var="link" />
 										    <c:choose>
 											      <c:when test="${(variantOption.code eq product.code)}">
-														<c:choose>
+											  
+													<c:choose>
 															<c:when test="${selectedSize eq null}">
 														<!--CKD:TPR-250  -->
-																<li><a href="${link}?selectedSize=true${msiteSellerForSize}" data-productCode="${variantOption.code}">${entry.value}</a></li>
+																<li ${selectedClass}><a href="${link}?selectedSize=true${msiteSellerForSize}" data-productCode="${variantOption.code}">${entry.value}</a></li>
 															</c:when>
 															<c:otherwise>
 															<!--CKD:TPR-250  -->
@@ -410,7 +420,7 @@ share mobile -->
 												</c:when>	
 												<c:otherwise>
 													<!--CKD:TPR-250  -->
-													<li data-vcode="${link}"><a href="${link}?selectedSize=true${msiteSellerForSize}" data-productCode="${variantOption.code}">${entry.value}</a></li>
+													<li ${selectedClass} data-vcode="${link}"><a href="${link}?selectedSize=true${msiteSellerForSize}" data-productCode="${variantOption.code}">${entry.value}</a></li>
 												</c:otherwise>												
 											</c:choose>
 										</c:forEach>
