@@ -382,7 +382,8 @@ function callRecApi(params, requestURL) {
           requestURL = "normal";
         }
       }
-      if("category_id" in params){
+      //INC144319444
+      if("category_id" in params || site_page_type != 'homepage'){
     	  updatePage(response, requestURL);
       }else{
       $(window).on("scroll",function(){

@@ -1694,8 +1694,15 @@ $(document).on("click",'#applyCustomPriceFilter',function(){
 						
 						// generating postAjaxURL
 						var browserURL = window.location.href.split('?');
-						var pageURL = browserURL[0]+'?'+nonEmptyDataString.replace(/%/g,"%25").replace(/ - /g,"+-+").replace(/:/g,"%3A");
 						
+						//INC144319487 starts 
+						var pageURL=null;
+						if (browserURL[0].indexOf("c-")>0)
+							pageURL = browserURL[0]+'/page-1?'+nonEmptyDataString.replace(/%/g,"%25").replace(/ - /g,"+-+").replace(/:/g,"%3A");
+						else
+							pageURL = browserURL[0]+'page-1?'+nonEmptyDataString.replace(/%/g,"%25").replace(/ - /g,"+-+").replace(/:/g,"%3A");
+						 
+						//INC144319487 ends
 						
 						// generating request mapping URL
 						var requiredUrl="";
