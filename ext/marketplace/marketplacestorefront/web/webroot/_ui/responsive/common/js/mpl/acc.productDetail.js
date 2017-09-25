@@ -1146,8 +1146,7 @@ function pincodeServiceability(){
 			var productCode = $('#product').val();
 			var dataString  = "pin=" + pin + "&productCode="+ productCode;
 			
-			jQuery
-					.ajax({
+			   pinCodeCheckajax=$.ajax({
 						// type: 'POST',
 						contentType : "application/json; charset=utf-8",
 						url : requiredUrl,
@@ -1173,7 +1172,7 @@ function pincodeServiceability(){
 								//TPR-6654
 								$("#CNCstores").empty();
 								$('#wrongPin,#unableprocessPin,#emptyPin,#serviceablePin').hide();
-
+                                $('#wrongPinExc,#unableprocessPinExc,#emptyPinExc,#serviceablePinExc').hide();
 
 								$('#addToCartFormTitle').hide();
 
@@ -1182,7 +1181,7 @@ function pincodeServiceability(){
 								$('#addToCartButton').hide();
 								$('#unsevisablePin').show();
 								$("#pdpPinCodeAvailable").hide();
-
+                                $('#unsevisablePinExc').show();
 
 								$('#buyNowButton').attr("disabled",true); 
 								//TPR-794
@@ -1260,7 +1259,9 @@ function pincodeServiceability(){
 										if (pincodedata['isServicable'] == 'Y') {
 											
 											 $('#serviceablePin').show();  //TISPRM-20::PDP show pincode serviceability msg  
-											checkBuyBoxIdPresent = true;
+											 $('#serviceablePinExc').hide();
+											 $('#wrongPinExc,#unsevisablePinExc,#unableprocessPinExc').hide();
+											 checkBuyBoxIdPresent = true;
 											deliveryModes = pincodedata['validDeliveryModes'];
 											var home = false;
 											var exp = false;
@@ -1406,6 +1407,7 @@ function pincodeServiceability(){
 											$("#CNCstores").empty(); 
 											$('#wrongPin,#unableprocessPin,#emptyPin,#serviceablePin')
 													.hide();
+											$('#wrongPinExc,#unableprocessPinExc,#emptyPinExc,#serviceablePinExc').hide();
 											$('#addToCartFormTitle')
 													.hide();
 											if ($("#stock").val() > 0) {
@@ -1449,6 +1451,7 @@ function pincodeServiceability(){
 									$(
 											'#wrongPin,#unableprocessPin,#emptyPin')
 											.hide();
+									 $('#wrongPinExc,#unableprocessPinExc,#emptyPinExc').hide();
 									$('#addToCartFormTitle').hide();
 									if ($("#stock").val() > 0) {
 										$('#addToCartButton-wrong').show();
@@ -1459,6 +1462,7 @@ function pincodeServiceability(){
 									// $('#addToCartButton-wrong').show();
 									$('#addToCartButton').hide();
 									$('#unsevisablePin').show();
+									 $('#unsevisablePinExc').show();
 									$('#pdpPinCodeAvailable').hide();
 								}
 								
@@ -1471,6 +1475,7 @@ function pincodeServiceability(){
 						error : function(xhr, status, error) {
 							$('#wrongPin,#unsevisablePin,#emptyPin')
 									.hide();
+							 $('#wrongPinExc,#unsevisablePinExc,#emptyPinExc').hide();
 							$('#unableprocessPin').show();
 							
 							//TPR-794
