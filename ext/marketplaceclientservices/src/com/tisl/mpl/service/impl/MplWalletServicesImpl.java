@@ -131,6 +131,7 @@ public class MplWalletServicesImpl implements MplWalletServices
 		QCInitializationResponse qcInitializationResponse = new QCInitializationResponse();
 		//	final Client client = Client.create();
 		Client client = getProxyConnection();
+		LOG.debug("Successfully client .................."+client);
 		ClientResponse response = null;
 		WebResource webResource = null;
 		final DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
@@ -156,7 +157,7 @@ public class MplWalletServicesImpl implements MplWalletServices
 					.getString(MarketplaceclientservicesConstants.PASSWORD);
 			final String isForwardingEntryExists = getConfigurationService().getConfiguration()
 					.getString(MarketplaceclientservicesConstants.IS_FORWARDING_ENTIRY_EXISTS);
-
+			
 			response = webResource.type(MediaType.APPLICATION_JSON)
 					.header(MarketplaceclientservicesConstants.FORWARDING_ENTITY_ID, forwardEntityID)
 					.header(MarketplaceclientservicesConstants.FORWARDING_ENTITY_PASSWORD, forwardEntityPassword)
@@ -167,14 +168,15 @@ public class MplWalletServicesImpl implements MplWalletServices
 					.header(MarketplaceclientservicesConstants.DATE_AT_CLIENT, dateFormat.format(new Date()))
 					.header(MarketplaceclientservicesConstants.IS_FORWARDING_ENTIRY_EXISTS, isForwardingEntryExists)
 					.header(MarketplaceclientservicesConstants.CONTENT_TYPE, MediaType.APPLICATION_JSON).get(ClientResponse.class);
-
+			LOG.debug("*********response**************"+response);
 			if (null != response)
 			{
 				final String output = response.getEntity(String.class);
+				LOG.debug(" ************** output----" + output);
 				final ObjectMapper objectMapper = new ObjectMapper();
 
 				qcInitializationResponse = objectMapper.readValue(output, QCInitializationResponse.class);
-
+				LOG.debug("*********qcInitializationResponse**************"+qcInitializationResponse.toString());
 				return qcInitializationResponse;
 
 			}
@@ -182,11 +184,11 @@ public class MplWalletServicesImpl implements MplWalletServices
 		catch (final Exception ex)
 		{
 			LOG.error(ex.getMessage());
-			if (ex.getMessage().contains("SocketTimeoutException"))
+		/*	if (ex.getMessage().contains("SocketTimeoutException"))
 			{
 				qcInitializationResponse.setResponseMessage("Timeout Exception");
 				qcInitializationResponse.setResponseCode(Integer.valueOf(3001));
-			}
+			}*/
 			return qcInitializationResponse;
 		}
 
@@ -200,6 +202,7 @@ public class MplWalletServicesImpl implements MplWalletServices
 
 		//	final Client client = Client.create();
 		Client client = getProxyConnection();
+		LOG.debug("Successfully client .................."+client);
 		ClientResponse response = null;
 		WebResource webResource = null;
 		final DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
@@ -224,10 +227,11 @@ public class MplWalletServicesImpl implements MplWalletServices
 					.header("POSEntryMode", "2").header("POSTypeId", "1").header("POSName", "webpos-tul-qc-01")
 					.header("TermAppVersion", "null").header("CurrentBatchNumber", getQcInitDataBean().getCurrentBatchNumber())
 					.type(MediaType.APPLICATION_JSON).post(ClientResponse.class, requestBody);
-
+			LOG.debug(" ************** response----" + response);
 			if (null != response)
 			{
 				final String output = response.getEntity(String.class);
+				LOG.debug(" ************** output----" + output);
 				custResponse = objectMapper.readValue(output, QCCustomerRegisterResponse.class);
 				return custResponse;
 			}
@@ -235,11 +239,11 @@ public class MplWalletServicesImpl implements MplWalletServices
 		catch (final Exception ex)
 		{
 			LOG.error(ex.getMessage());
-			if (ex.getMessage().contains("SocketTimeoutException"))
+			/*if (ex.getMessage().contains("SocketTimeoutException"))
 			{
 				custResponse.setResponseMessage("Timeout Exception");
 				custResponse.setResponseCode(Integer.valueOf(3001));
-			}
+			}*/
 			return custResponse;
 		}
 		return custResponse;
@@ -252,6 +256,7 @@ public class MplWalletServicesImpl implements MplWalletServices
 
 		//	final Client client = Client.create();
 		Client client = getProxyConnection();
+		LOG.debug("Successfully client .................."+client);
 		ClientResponse response = null;
 		WebResource webResource = null;
 		final DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
@@ -282,6 +287,7 @@ public class MplWalletServicesImpl implements MplWalletServices
 			if (null != response)
 			{
 				final String output = response.getEntity(String.class);
+				LOG.debug(" ************** output----" + output);
 				purchaseEgvResponse = objectMapper.readValue(output, PurchaseEGVResponse.class);
 				return purchaseEgvResponse;
 			}
@@ -289,11 +295,11 @@ public class MplWalletServicesImpl implements MplWalletServices
 		catch (final Exception ex)
 		{
 			LOG.error(ex.getMessage());
-			if (ex.getMessage().contains("SocketTimeoutException"))
+			/*if (ex.getMessage().contains("SocketTimeoutException"))
 			{
 				purchaseEgvResponse.setResponseMessage("Timeout Exception");
 				purchaseEgvResponse.setResponseCode(Integer.valueOf(3001));
-			}
+			}*/
 			return purchaseEgvResponse;
 		}
 		return purchaseEgvResponse;
@@ -304,6 +310,7 @@ public class MplWalletServicesImpl implements MplWalletServices
 	{
 		//	final Client client = Client.create();
 		Client client = getProxyConnection();
+		LOG.debug("Successfully client .................."+client);
 		ClientResponse response = null;
 		WebResource webResource = null;
 		//final ReturnLogisticsResponse responsefromOMS = new ReturnLogisticsResponse();
@@ -344,10 +351,10 @@ public class MplWalletServicesImpl implements MplWalletServices
 		catch (final Exception ex)
 		{
 			LOG.error(ex.getMessage());
-			if (ex instanceof SocketTimeoutException)
+			/*if (ex instanceof SocketTimeoutException)
 			{
 				//
-			}
+			}*/
 		}
 	}
 
@@ -358,6 +365,7 @@ public class MplWalletServicesImpl implements MplWalletServices
 	{
 		//	final Client client = Client.create();
 		Client client = getProxyConnection();
+		LOG.debug("Successfully client .................."+client);
 		ClientResponse response = null;
 		WebResource webResource = null;
 		final DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
@@ -393,6 +401,7 @@ public class MplWalletServicesImpl implements MplWalletServices
 			if (null != response)
 			{
 				final String output = response.getEntity(String.class);
+				LOG.debug(" ************** output----" + output);
 				final ObjectMapper objectMapper = new ObjectMapper();
 				walletBalance = objectMapper.readValue(output, BalanceBucketWise.class);
 
@@ -402,11 +411,11 @@ public class MplWalletServicesImpl implements MplWalletServices
 		catch (final Exception ex)
 		{
 			LOG.error(ex.getMessage());
-			if (ex.getMessage().contains("SocketTimeoutException"))
+			/*if (ex.getMessage().contains("SocketTimeoutException"))
 			{
 				walletBalance.setResponseMessage("Timeout Exception");
 				walletBalance.setResponseCode(Integer.valueOf(3001));
-			}
+			}*/
 			return walletBalance;
 		}
 		return walletBalance;
@@ -448,6 +457,7 @@ public class MplWalletServicesImpl implements MplWalletServices
 			if (null != response)
 			{
 				final String output = response.getEntity(String.class);
+				LOG.debug(" ************** output----" + output);
 				qcRedeeptionResponse = objectMapper.readValue(output, QCRedeeptionResponse.class);
 				return qcRedeeptionResponse;
 			}
@@ -455,11 +465,11 @@ public class MplWalletServicesImpl implements MplWalletServices
 		catch (final Exception ex)
 		{
 			LOG.error(ex.getMessage());
-			if (ex.getMessage().contains("SocketTimeoutException"))
+		/*	if (ex.getMessage().contains("SocketTimeoutException"))
 			{
 				qcRedeeptionResponse.setResponseMessage("Timeout Exception");
 				qcRedeeptionResponse.setResponseCode(Integer.valueOf(3001));
-			}
+			}*/
 			return qcRedeeptionResponse;
 		}
 		return qcRedeeptionResponse;
@@ -471,6 +481,7 @@ public class MplWalletServicesImpl implements MplWalletServices
 	{
 		//	final Client client = Client.create();
 		Client client = getProxyConnection();
+		LOG.debug("Successfully client .................."+client);
 		ClientResponse response = null;
 		WebResource webResource = null;
 		final DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
@@ -503,6 +514,7 @@ public class MplWalletServicesImpl implements MplWalletServices
 			if (null != response)
 			{
 				final String output = response.getEntity(String.class);
+				LOG.debug(" ************** output----" + output);
 				LOG.debug(" ************** redeem Refund Wallet Balance----" + output); //need to create marshalling for response object
 
 			}
@@ -522,10 +534,11 @@ public class MplWalletServicesImpl implements MplWalletServices
 	@Override
 	public QCRedeeptionResponse addTULWalletCashBack(final String walletId, final QCCustomerPromotionRequest request)
 	{
-		System.out.println("***********************************in Mpl Wallet request..............." + request.toString());
+		LOG.debug("***********************************in Mpl Wallet request..............." + request.toString());
 
 		//	final Client client = Client.create();
 		Client client = getProxyConnection();
+		LOG.debug("Successfully client .................."+client);
 		ClientResponse response = null;
 		WebResource webResource = null;
 		String requestBody = null;
@@ -563,6 +576,7 @@ public class MplWalletServicesImpl implements MplWalletServices
 			if (null != response)
 			{
 				output = response.getEntity(String.class);
+				LOG.debug(" ************** output----" + output);
 				qcRedeeptionResponse = objectMapper.readValue(output, QCRedeeptionResponse.class);
 				if (null != qcRedeeptionResponse)
 				{
@@ -584,6 +598,7 @@ public class MplWalletServicesImpl implements MplWalletServices
 	{
 		//	final Client client = Client.create();
 		Client client = getProxyConnection();
+		LOG.debug("Successfully client .................."+client);
 		ClientResponse response = null;
 		WebResource webResource = null;
 		String requestBody = null;
@@ -627,6 +642,7 @@ public class MplWalletServicesImpl implements MplWalletServices
 			if (null != response)
 			{
 				output = response.getEntity(String.class);
+				LOG.debug(" ************** output----" + output);
 				qcRedeeptionResponse = objectMapper.readValue(output, QCRedeeptionResponse.class);
 				if (null != qcRedeeptionResponse)
 				{
@@ -650,6 +666,7 @@ public class MplWalletServicesImpl implements MplWalletServices
 
 	//	final Client client = Client.create();
 		Client client = getProxyConnection();
+		LOG.debug("Successfully client .................."+client);
 		ClientResponse response = null;
 		WebResource webResource = null;
 		final DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
@@ -681,6 +698,7 @@ public class MplWalletServicesImpl implements MplWalletServices
 			{
 
 				final String output = response.getEntity(String.class);
+				LOG.debug(" ************** output----" + output);
 				custWalletDetail = objectMapper.readValue(output, CustomerWalletDetailResponse.class);
 				return custWalletDetail;
 
@@ -689,11 +707,11 @@ public class MplWalletServicesImpl implements MplWalletServices
 		catch (final Exception ex)
 		{
 			LOG.error(ex.getMessage());
-			if (ex.getMessage().contains("SocketTimeoutException"))
+			/*if (ex.getMessage().contains("SocketTimeoutException"))
 			{
 				custWalletDetail.setResponseMessage("Timeout Exception");
 				custWalletDetail.setResponseCode(Integer.valueOf(3001));
-			}
+			}*/
 			return custWalletDetail;
 		}
 		return custWalletDetail;
@@ -712,6 +730,7 @@ public class MplWalletServicesImpl implements MplWalletServices
 		{
 			//	final Client client = Client.create();
 			Client client = getProxyConnection();
+			LOG.debug("Successfully client .................."+client);
 			ClientResponse response = null;
 			WebResource webResource = null;
 			String requestBody = null;
@@ -752,6 +771,7 @@ public class MplWalletServicesImpl implements MplWalletServices
 			if (null != response)
 			{
 				output = response.getEntity(String.class);
+				LOG.debug(" ************** output----" + output);
 				redimGiftCardResponse = objectMapper.readValue(output, RedimGiftCardResponse.class);
 				return redimGiftCardResponse;
 			}
@@ -759,11 +779,11 @@ public class MplWalletServicesImpl implements MplWalletServices
 		catch (final Exception ex)
 		{
 			LOG.error(ex.getMessage());
-			if (ex.getMessage().contains("SocketTimeoutException"))
+		/*	if (ex.getMessage().contains("SocketTimeoutException"))
 			{
 				redimGiftCardResponse.setResponseMessage("Timeout Exception");
 				redimGiftCardResponse.setResponseCode(Integer.valueOf(3001));
-			}
+			}*/
 			return redimGiftCardResponse;
 		}
 		return redimGiftCardResponse;
@@ -775,6 +795,7 @@ public class MplWalletServicesImpl implements MplWalletServices
 	{
 		//	final Client client = Client.create();
 		Client client = getProxyConnection();
+		LOG.debug("Successfully client .................."+client);
 		ClientResponse response = null;
 		WebResource webResource = null;
 		WalletBalanceResponse walletBalanceResponse = new WalletBalanceResponse();
@@ -808,10 +829,11 @@ public class MplWalletServicesImpl implements MplWalletServices
 					.header(MarketplaceclientservicesConstants.CURRENT_BATCH_NUMBER, getQcInitDataBean().getCurrentBatchNumber())
 					.header(MarketplaceclientservicesConstants.TRANSACTION_ID, transactionId).type(MediaType.APPLICATION_JSON)
 					.get(ClientResponse.class);
-
+		
 			if (null != response)
 			{
 				output = response.getEntity(String.class);
+				LOG.debug(" ************** output----" + output);
 				walletBalanceResponse = objectMapper.readValue(output, WalletBalanceResponse.class);
 				if (null != walletBalanceResponse && null != walletBalanceResponse.getWallet())
 				{
@@ -823,13 +845,15 @@ public class MplWalletServicesImpl implements MplWalletServices
 			}
 		}
 		catch (final Exception ex)
+		
 		{
 			LOG.error(ex.getMessage());
+			/*
 			if (ex.getMessage().contains("SocketTimeoutException"))
 			{
 				walletBalanceResponse.setResponseMessage("Timeout Exception");
 				walletBalanceResponse.setResponseCode(Integer.valueOf(3001));
-			}
+			}*/
 			return walletBalanceResponse;
 		}
 
@@ -842,6 +866,7 @@ public class MplWalletServicesImpl implements MplWalletServices
 
 		//	final Client client = Client.create();
 		Client client = getProxyConnection();
+		LOG.debug("Successfully client .................."+client);
 		WebResource webResource = null;
 		WalletTransacationsList walletTransacationsList = new WalletTransacationsList();
 
@@ -874,13 +899,17 @@ public class MplWalletServicesImpl implements MplWalletServices
 					.header(MarketplaceclientservicesConstants.CURRENT_BATCH_NUMBER, getQcInitDataBean().getCurrentBatchNumber())
 					.header(MarketplaceclientservicesConstants.TRANSACTION_ID, transactionId).type(MediaType.APPLICATION_JSON)
 					.get(ClientResponse.class);
-
+			
+			
 			if (null != response)
 			{
+				
 				final String output = response.getEntity(String.class);
 				walletTransacationsList = objectMapper.readValue(output, WalletTransacationsList.class);
+				LOG.debug("response output .................."+output);
 				if (null != walletTransacationsList && null != walletTransacationsList.getWalletTransactions())
 				{
+					LOG.debug("walletTransacationsList .................."+walletTransacationsList);
 					return walletTransacationsList;
 				}
 			}
@@ -888,11 +917,12 @@ public class MplWalletServicesImpl implements MplWalletServices
 		catch (final Exception ex)
 		{
 			LOG.error(ex.getMessage());
-			if (ex.getMessage().contains("SocketTimeoutException"))
+		
+			/*if (ex.getMessage().contains("SocketTimeoutException"))
 			{
 				walletTransacationsList.setResponseMessage("Timeout Exception");
 				walletTransacationsList.setResponseCode(Integer.valueOf(3001));
-			}
+			}*/
 			return walletTransacationsList;
 		}
 		return walletTransacationsList;
@@ -921,9 +951,10 @@ public class MplWalletServicesImpl implements MplWalletServices
 	public QCRedeeptionResponse createPromotion(final String walletId, final QCCustomerPromotionRequest request)
 	{
 		System.out.println("***********************************in Mpl Wallet request..............." + request.toString());
-
+		LOG.debug("Successfully request.toString()  .................."+request.toString());
 		//	final Client client = Client.create();
 		Client client = getProxyConnection();
+		LOG.debug("Successfully client .................."+client);
 		ClientResponse response = null;
 		WebResource webResource = null;
 		QCRedeeptionResponse qcRedeeptionResponse = new QCRedeeptionResponse();
@@ -955,20 +986,24 @@ public class MplWalletServicesImpl implements MplWalletServices
 					.header(MarketplaceclientservicesConstants.CURRENT_BATCH_NUMBER, getQcInitDataBean().getCurrentBatchNumber())
 					.header(MarketplaceclientservicesConstants.TRANSACTION_ID, request.getInvoiceNumber())
 					.type(MediaType.APPLICATION_JSON).post(ClientResponse.class, requestBody);
-
+		
+			LOG.debug("requestBody client .................."+requestBody);
+			LOG.debug("response client .................."+response);
 			if (null != response)
 			{
 				final String output = response.getEntity(String.class);
+				LOG.debug(" ************** output----" + output);
 				qcRedeeptionResponse = objectMapper.readValue(output, QCRedeeptionResponse.class);
 				if (null != qcRedeeptionResponse)
 				{
-					LOG.debug(" ************** GET CUSTOMER WALLET BALENCE----" + qcRedeeptionResponse); //need to create marshalling for response object
+					LOG.debug(" ************** GET CUSTOMER WALLET BALENCE----" + qcRedeeptionResponse.toString()); //need to create marshalling for response object
 				}
 			}
 		}
 		catch (final Exception ex)
 		{
 			ex.printStackTrace();
+			LOG.error("exception............ client .................."+ex);
 		}
 		return qcRedeeptionResponse;
 	}
