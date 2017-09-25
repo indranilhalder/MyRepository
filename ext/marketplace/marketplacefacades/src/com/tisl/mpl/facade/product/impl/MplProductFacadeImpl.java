@@ -117,6 +117,7 @@ public class MplProductFacadeImpl implements MplProductFacade
 			LOG.debug("from getAllStoresForPincode method");
 		}
 		List<PointOfServiceData> posData = new ArrayList<PointOfServiceData>();
+		final List<PointOfServiceData> filteredPosData = new ArrayList<PointOfServiceData>();
 		final LocationDTO dto = new LocationDTO();
 		try
 		{
@@ -138,9 +139,17 @@ public class MplProductFacadeImpl implements MplProductFacade
 				myLocation = new LocationDtoWrapper(dto);
 				final PincodeServiceFacade pincodeServiceFacade = pincodeServiceFacadeProvider.get();
 				posData = pincodeServiceFacade.getStoresForPincode(myLocation.getGPS(), radius);
+				for (final PointOfServiceData obj : posData)
+				{
+					if (obj.getClicknCollect().equalsIgnoreCase("Y"))
+					{
+						filteredPosData.add(obj);
+					}
+				}
 
-				posData = mplPincodeDistanceService.pincodeDistance(posData, pincodeModel.getLatitude(), pincodeModel.getLongitude(),
-						pincode);
+
+				posData = mplPincodeDistanceService.pincodeDistance(filteredPosData, pincodeModel.getLatitude(),
+						pincodeModel.getLongitude(), pincode);
 			}
 		}
 		catch (final Exception e)
