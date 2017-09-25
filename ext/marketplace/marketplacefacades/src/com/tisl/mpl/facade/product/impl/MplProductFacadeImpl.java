@@ -14,8 +14,6 @@ import de.hybris.platform.storelocator.location.impl.LocationDtoWrapper;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.inject.Provider;
-
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -23,7 +21,6 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import com.tisl.mpl.facade.config.MplConfigFacade;
 import com.tisl.mpl.facade.product.MplProductFacade;
 import com.tisl.mpl.facades.constants.MarketplaceFacadesConstants;
-import com.tisl.mpl.marketplacecommerceservices.service.MplPincodeDistanceService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplProductService;
 import com.tisl.mpl.marketplacecommerceservices.service.PincodeService;
 import com.tisl.mpl.pincode.facade.PincodeServiceFacade;
@@ -83,7 +80,7 @@ public class MplProductFacadeImpl implements MplProductFacade
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.tisl.mpl.facade.product.MplProductFacade#getProductFeatureModelByProductAndQualifier(de.hybris.platform.
 	 * commercefacades.product.data.ProductData, java.lang.String)
 	 */
@@ -117,6 +114,7 @@ public class MplProductFacadeImpl implements MplProductFacade
 			LOG.debug("from getAllStoresForPincode method");
 		}
 		List<PointOfServiceData> posData = new ArrayList<PointOfServiceData>();
+		final List<PointOfServiceData> filteredPosData = new ArrayList<PointOfServiceData>();
 		final LocationDTO dto = new LocationDTO();
 		try
 		{
@@ -138,9 +136,17 @@ public class MplProductFacadeImpl implements MplProductFacade
 				myLocation = new LocationDtoWrapper(dto);
 				final PincodeServiceFacade pincodeServiceFacade = pincodeServiceFacadeProvider.get();
 				posData = pincodeServiceFacade.getStoresForPincode(myLocation.getGPS(), radius);
+				for (final PointOfServiceData obj : posData)
+				{
+					if (obj.getClicknCollect().equalsIgnoreCase("Y"))
+					{
+						filteredPosData.add(obj);
+					}
+				}
 
-				posData = mplPincodeDistanceService.pincodeDistance(posData, pincodeModel.getLatitude(), pincodeModel.getLongitude(),
-						pincode);
+
+				posData = mplPincodeDistanceService.pincodeDistance(filteredPosData, pincodeModel.getLatitude(),
+						pincodeModel.getLongitude(), pincode);
 			}
 		}
 		catch (final Exception e)
