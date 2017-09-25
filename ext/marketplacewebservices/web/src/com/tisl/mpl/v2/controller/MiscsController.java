@@ -230,13 +230,13 @@ public class MiscsController extends BaseController
 	private CustomerFacade customerFacade;
 	/*
 	 * @Resource private ModelService modelService;
-	 *
+	 * 
 	 * @Autowired private ForgetPasswordFacade forgetPasswordFacade;
-	 *
+	 * 
 	 * @Autowired private ExtendedUserServiceImpl userexService;
-	 *
+	 * 
 	 * @Autowired private WishlistFacade wishlistFacade;
-	 *
+	 * 
 	 * @Autowired private MplSellerMasterService mplSellerInformationService;
 	 */
 	@Autowired
@@ -263,7 +263,7 @@ public class MiscsController extends BaseController
 	private FieldSetBuilder fieldSetBuilder;
 	/*
 	 * @Resource(name = "i18NFacade") private I18NFacade i18NFacade;
-	 *
+	 * 
 	 * @Autowired private MplCommerceCartServiceImpl mplCommerceCartService;
 	 */
 	@Autowired
@@ -715,9 +715,9 @@ public class MiscsController extends BaseController
 
 	/*
 	 * restriction set up interface to save the data comming from seller portal
-	 *
+	 * 
 	 * @param restrictionXML
-	 *
+	 * 
 	 * @return void
 	 */
 	@RequestMapping(value = "/{baseSiteId}/miscs/restrictionServer", method = RequestMethod.POST)
@@ -1442,7 +1442,7 @@ public class MiscsController extends BaseController
 	 * final MarketplaceDeliveryModeData deliveryModeData = new MarketplaceDeliveryModeData(); final
 	 * MplZoneDeliveryModeValueModel MplZoneDeliveryModeValueModel = mplCheckoutFacade
 	 * .populateDeliveryCostForUSSIDAndDeliveryMode(deliveryMode, MarketplaceFacadesConstants.INR, ussid);
-	 * 
+	 *
 	 * if (null != MplZoneDeliveryModeValueModel) { if (null != MplZoneDeliveryModeValueModel.getValue()) { final
 	 * PriceData priceData = formPriceData(MplZoneDeliveryModeValueModel.getValue()); if (null != priceData) {
 	 * deliveryModeData.setDeliveryCost(priceData); } } if (null != MplZoneDeliveryModeValueModel.getDeliveryMode() &&
@@ -1455,11 +1455,11 @@ public class MiscsController extends BaseController
 	 * MplZoneDeliveryModeValueModel.getDeliveryMode().getName()) {
 	 * deliveryModeData.setName(MplZoneDeliveryModeValueModel.getDeliveryMode().getName()); } if (null != ussid) {
 	 * deliveryModeData.setSellerArticleSKU(ussid); }
-	 * 
+	 *
 	 * } return deliveryModeData; }
-	 * 
+	 *
 	 * @param code
-	 * 
+	 *
 	 * @return
 	 */
 	@RequestMapping(value = "/{baseSiteId}/checkBrandOrCategory", method = RequestMethod.GET)
@@ -1852,9 +1852,9 @@ public class MiscsController extends BaseController
 
 	/*
 	 * to receive pancard status from SP for jewellery
-	 * 
+	 *
 	 * @param restrictionXML
-	 * 
+	 *
 	 * @return void
 	 */
 	@RequestMapping(value = "/{baseSiteId}/miscs/pancardStatus", method = RequestMethod.POST)
@@ -2289,11 +2289,14 @@ public class MiscsController extends BaseController
 											if (subOrderModel.getModeOfOrderPayment().equalsIgnoreCase(MarketplacewebservicesConstants.COD)
 													&& null != oneTouchCrmObj.getAccNum())
 											{
+												LOG.debug("Step 1");
 												codSelfShipData = null;
 												codSelfShipData = populateCODDataForFICO(subOrderModel, oneTouchCrmObj, orderData,
 														abstractOrderEntryModel);
+												LOG.debug("Step 2");
 												if (null != codSelfShipData)
 												{
+													LOG.debug("Sending bank details to FICO start.....");
 													FICO = sendBankDetailsToFICO(codSelfShipData);
 												}
 												if (FICO)
@@ -2303,6 +2306,7 @@ public class MiscsController extends BaseController
 												else
 												{
 													output.setRemarks("Failed to send Bank details to FICO");
+													LOG.debug("Failed to send Bank details to FICO");
 												}
 											}
 											//TPR-6389--END
@@ -2414,43 +2418,62 @@ public class MiscsController extends BaseController
 	private CODSelfShipData populateCODDataForFICO(final OrderModel subOrderModel,
 			final OneTouchCancelReturnCrmRequestDTO oneTouchdto, final OrderData orderData, final AbstractOrderEntryModel orderEntry)
 	{
+		LOG.debug("Inside populateCODDataForFICO method.....");
 		CODSelfShipData codSelfShipData = new CODSelfShipData();
 		try
 		{
 			final String title = getConfigurationService().getConfiguration()
 					.getString(oneTouchdto.getTitle().toString() + "_title");
+			LOG.debug("============1111::::::" + title);
 			if (null != subOrderModel.getUser().getUid())
 			{
 				codSelfShipData.setCustomerNumber(subOrderModel.getUser().getUid());
 			}
+			LOG.debug("============2222");
 			codSelfShipData.setTitle(title);
+			LOG.debug("============33333");
 			codSelfShipData.setOrderRefNo(oneTouchdto.getOrderRefNum());
+			LOG.debug("============4444");
 			codSelfShipData.setOrderNo(oneTouchdto.getSubOrderNum());
+			LOG.debug("============5555");
 			codSelfShipData.setBankName(oneTouchdto.getBankName());
+			LOG.debug("============66666");
 			codSelfShipData.setBankBranch(oneTouchdto.getBranch());
+			LOG.debug("============77777");
 			codSelfShipData.setName(oneTouchdto.getAccHolderName());
+			LOG.debug("============88888");
 			codSelfShipData.setBankKey(oneTouchdto.getIFSC());
+			LOG.debug("============99999");
 			codSelfShipData.setBankAccount(oneTouchdto.getAccNum());
+			LOG.debug("============1");
 			codSelfShipData.setTransactionID(orderEntry.getTransactionID());
+			LOG.debug("============2");
 			codSelfShipData.setTransactionType(subOrderModel.getModeOfOrderPayment());
+			LOG.debug("============3");
 			codSelfShipData.setOrderTag(MarketplacewebservicesConstants.ORDERTAG_TYPE_POSTPAID);
+			LOG.debug("============4");
 			codSelfShipData.setPaymentMode(oneTouchdto.getRefundType());
+			LOG.debug("============5");
 			codSelfShipData.setAmount(orderEntry.getNetAmountAfterAllDisc().toString());
+			LOG.debug("============6");
 			codSelfShipData.setTransactionType(RETURN_TYPE_COD);
+			LOG.debug("============7");
 			if (null != orderData.getCreated())
 			{
 				final SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy");
+				LOG.debug("============8");
 				codSelfShipData.setOrderDate(dateUtilHelper.convertDateWithFormat(formatter.format(orderData.getCreated())));
+				LOG.debug("============9");
 				codSelfShipData.setTransactionDate(dateUtilHelper.convertDateWithFormat(formatter.format(orderData.getCreated())));
 			}
 		}
 		catch (final Exception e)
 		{
-			LOG.error(e.getMessage());
+			LOG.error(e);
 			codSelfShipData = null;
 			return codSelfShipData;
 		}
-
+		LOG.debug("finished executing populateCODDataForFICO method.....");
 		return codSelfShipData;
 	}
 
@@ -2463,18 +2486,21 @@ public class MiscsController extends BaseController
 			if (null != codSelfShipData)
 			{
 				final CODSelfShipResponseData codSelfShipResponseData = cancelReturnFacade.codPaymentInfoToFICO(codSelfShipData);
+				LOG.debug("============99999999999999999999999999999");
 				if (null == codSelfShipResponseData.getSuccess() || !codSelfShipResponseData.getSuccess().equalsIgnoreCase(SUCCESS))
 				{
+				LOG.debug("============8888888888888888888888888888");
 					cancelReturnFacade.saveCODReturnsBankDetails(codSelfShipData);
 					LOG.debug("Failed to post COD return paymnet details to FICO Order No:" + codSelfShipData.getOrderRefNo());
 
 				}
+				LOG.debug("============66666666666666666666666666666");
 				cancelReturnFacade.insertUpdateCustomerBankDetails(codSelfShipData);
 			}
 		}
 		catch (final Exception ex)
 		{
-			LOG.error(ex.getMessage());
+			LOG.error(ex);
 			return false;
 		}
 		LOG.info("Finished sending bank details to FICO");

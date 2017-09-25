@@ -13,7 +13,7 @@ $(document).ready(function(){
 	var site_currency ='INR';
 	var domain_name = document.domain;
 	
-	var user_login_type = $('#userLoginType').val().trim();
+	//var user_login_type = $('#userLoginType').val().trim();
 	var pageType = $('#pageType').val();
 	var pageName= $('#pageName').val().toLowerCase();
 	var pageNameU = $('#pageName').val();
@@ -71,6 +71,30 @@ $(document).ready(function(){
 			}	
 		}
 	}
+	//user login type for g+,fb
+	if(user_login_type != '' && user_login_type != undefined && user_login_type != null 
+		&& user_login_type != 'email' && user_login_type!= 'guest_user'){
+
+		if(typeof digitalData.account != "undefined"){
+			if(typeof digitalData.account.login != "undefined"){
+				digitalData.account.login.type = user_login_type;
+			}
+			else{
+				digitalData.account.login = {
+					type : user_login_type
+				}
+			}
+		}
+		else{
+			digitalData.account = {
+				login : {
+					type : user_login_type
+				}
+			}
+		}
+		
+	}
+	
 	
 	/*DTM Implementation page wise for on load variables starts*/
 	
@@ -187,7 +211,7 @@ $(document).ready(function(){
 						}
 				}
 			}
-			if(Promo_Id != "" && Promo_Id !=""){
+			if(Promo_Id != ""){
 			   digitalData.cpj.promo = {
 					id : Promo_Id
 			   }
@@ -797,7 +821,12 @@ $(document).ready(function(){
   
 });
 function differentiateSellerDtm(){
-	var sellerList = $('#pdpSellerIDs').val().replace('_','|');
+	var sellerList = $('#pdpSellerIDs').val();
+	var sellerArray='';
+	if(sellerList != undefined &&  sellerList != '' && sellerList != null){
+		 sellerArray = $('#pdpSellerIDs').val().split(',').join('|');
+	}
+	
 	var buyboxSeller = $("#sellerSelId").val();
 	sellerList = sellerList.substr(1,(sellerList.length)-2);
 	sellerList = sellerList.split(',');
@@ -820,7 +849,7 @@ function differentiateSellerDtm(){
 	//TISCSXII-2186 | pdp fix
 	digitalData.product = {
 			seller : {
-				list : sellerList,
+				list : sellerArray,
 				id   : $("#pdpBuyboxWinnerSellerID").val(),
 				buyBoxWinner : $("#sellerNameId").html().toLowerCase()
 			}   
@@ -1494,7 +1523,72 @@ $(document).on('mouseup','.samsung-chat-div',function(){
 		_satellite.track('samsung_chat');
 	}
 })
+//for g+,fb location track |TISPRDT-6012
+$(document).on('mouseup','#loginDivsiginflyout',function(){
+	 var loginLocation = "header_login_popup";
+	if(typeof digitalData.account != "undefined"){
+		if(typeof digitalData.account.login != "undefined"){
+			digitalData.account.login.location = loginLocation;
+		}
+		else{
+			digitalData.account.login = {
+				location : loginLocation
+			}
+		}
+	}
+	else{
+		digitalData.account = {
+			login : {
+				location : loginLocation
+			}
+		}
+	}
+		
+})
 
+$(document).on('mouseup','#loginDiv',function(){
+	 var loginLocation = "login_page";
+    if(typeof digitalData.account != "undefined"){
+		if(typeof digitalData.account.login != "undefined"){
+			digitalData.account.login.location = loginLocation;
+		}
+		else{
+			digitalData.account.login = {
+				location : loginLocation
+			}
+		}
+	}
+	else{
+		digitalData.account = {
+			login : {
+				location : loginLocation
+			}
+		}
+	}
+})
+
+$(document).on('mouseup','#loginDivCheckout',function(){
+	 var loginLocation = "checkout_login_page";
+    if(typeof digitalData.account != "undefined"){
+		if(typeof digitalData.account.login != "undefined"){
+			digitalData.account.login.location = loginLocation;
+		}
+		else{
+			digitalData.account.login = {
+				location : loginLocation
+			}
+		}
+	}
+	else{
+		digitalData.account = {
+			login : {
+				location : loginLocation
+			}
+		}
+	}
+})
+
+//TISPRDT-6012 ends
 /*product impressions start*/
 function dtmProductImpressionsSerp(){
 	var count = 10; 

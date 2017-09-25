@@ -550,7 +550,13 @@ public class BuyBoxFacadeImpl implements BuyBoxFacade
 					buyboxData.setMrp(productDetailsHelper.formPriceData(new Double(buyBoxMod.getMrp().doubleValue())));
 				}
 				buyboxData.setMrpPriceValue(productDetailsHelper.formPriceData(new Double(buyBoxMod.getMrp().doubleValue())));
-
+				// changes for INC144318868:Offer prize is not coming for WCMS component
+				if (null != buyBoxMod.getSpecialPriceMobile() && buyBoxMod.getSpecialPriceMobile().doubleValue() > 0.0D)
+				{
+					buyboxData.setSpecialPriceMobile(productDetailsHelper.formPriceData(new Double(buyBoxMod.getSpecialPriceMobile()
+							.doubleValue())));
+				} 
+				
 				//other sellers count
 				final int oosSellersCount = getOosSellerCount(buyboxModelList);
 				int sellerSize = buyboxModelList.size() - 1 - oosSellersCount;

@@ -1102,11 +1102,17 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 	public String selectAddress(
 			@RequestParam("selectedAddressCode") final String selectedAddressCode,
 			@RequestParam(value = "contExchnage", required = false) final String exchangeEnabled,
-			@RequestParam(value = "isPincodeRestrictedPromoPresent", required = false, defaultValue = "false") final boolean isPincodeRestrictedPromoPresent)
-			throws UnsupportedEncodingException
+			@RequestParam(value = "isPincodeRestrictedPromoPresent", required = false, defaultValue = "false") final boolean isPincodeRestrictedPromoPresent,
+			final HttpServletRequest request, final HttpServletResponse response) throws UnsupportedEncodingException
 	{
 		try
 		{
+			//TPR-6654
+			int pincodeCookieMaxAge;
+			final Cookie cookie = GenericUtilityMethods.getCookieByName(request, "pdpPincode");
+			final String cookieMaxAge = configurationService.getConfiguration().getString("pdpPincode.cookie.age");
+			pincodeCookieMaxAge = (Integer.valueOf(cookieMaxAge)).intValue();
+			final String domain = configurationService.getConfiguration().getString("shared.cookies.domain");
 			if (getUserFacade().isAnonymousUser())
 			{
 				final String requestQueryParam = UriUtils.encodeQuery("?url=" + MarketplacecheckoutaddonConstants.CART
@@ -1168,6 +1174,30 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 					return FORWARD_PREFIX + "/checkout/single/message" + requestQueryParam;
 				}
 				final String redirectURL = mplCartFacade.singlePagecheckPincode(selectedPincode, sessionPincode);
+				if (!sessionPincode.equalsIgnoreCase((String) getSessionService().getAttribute(
+						MarketplacecommerceservicesConstants.SESSION_PINCODE)))
+				{
+					//TPR-6654
+					if (cookie != null && cookie.getValue() != null)
+					{
+						cookie.setValue(selectedPincode);
+						cookie.setMaxAge(pincodeCookieMaxAge);
+						cookie.setPath("/");
+
+						if (null != domain && !domain.equalsIgnoreCase("localhost"))
+						{
+							cookie.setSecure(true);
+						}
+						cookie.setDomain(domain);
+						response.addCookie(cookie);
+						//		getSessionService().setAttribute(MarketplacecommerceservicesConstants.SESSION_PINCODE, selectedPincode);
+					}
+					else
+					{
+						pdpPincodeCookie.addCookie(response, selectedPincode);
+						//	getSessionService().setAttribute(MarketplacecommerceservicesConstants.SESSION_PINCODE, selectedPincode);
+					}
+				}
 				if (redirectURL.trim().length() > 0)
 				{
 					final String requestQueryParam = UriUtils.encodeQuery("?msg="

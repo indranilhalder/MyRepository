@@ -201,11 +201,17 @@ public class CartPageController extends AbstractPageController
 			@RequestParam(value = "pincode", required = false) final String pinCode,
 			@RequestParam(value = "isLux", required = false) final boolean isLux,
 			@RequestParam(value = "cartGuid", required = false) final String cartGuid, final HttpServletRequest request,
-			final RedirectAttributes redirectModel)
+			final HttpServletResponse response, final RedirectAttributes redirectModel)
 			throws CMSItemNotFoundException, CommerceCartModificationException, CalculationException
 	{
 		LOG.debug("Entering into showCart" + "Class Nameshowcart :" + className + "pinCode " + pinCode);
 		String returnPage = ControllerConstants.Views.Pages.Cart.CartPage;
+		//TPR-6654
+		int pincodeCookieMaxAge;
+		final Cookie cookiePdp = GenericUtilityMethods.getCookieByName(request, "pdpPincode");
+		final String cookieMaxAge = getConfigurationService().getConfiguration().getString("pdpPincode.cookie.age");
+		pincodeCookieMaxAge = (Integer.valueOf(cookieMaxAge)).intValue();
+		final String domain = getConfigurationService().getConfiguration().getString("shared.cookies.domain");
 
 		try
 		{
@@ -346,7 +352,27 @@ public class CartPageController extends AbstractPageController
 				//CAR-246//UF-70
 				if (StringUtils.isNotEmpty(selectedPinCode))
 				{
-					getSessionService().setAttribute(MarketplacecommerceservicesConstants.SESSION_PINCODE, selectedPinCode);
+					//TPR-6654
+					if (cookiePdp != null && cookiePdp.getValue() != null)
+					{
+						cookiePdp.setValue(selectedPinCode);
+						cookiePdp.setMaxAge(pincodeCookieMaxAge);
+						cookiePdp.setPath("/");
+
+						if (null != domain && !domain.equalsIgnoreCase("localhost"))
+						{
+							cookiePdp.setSecure(true);
+						}
+						cookiePdp.setDomain(domain);
+						response.addCookie(cookiePdp);
+						getSessionService().setAttribute(MarketplacecommerceservicesConstants.SESSION_PINCODE, selectedPinCode);
+					}
+					else
+					{
+						pdpPincodeCookie.addCookie(response, selectedPinCode);
+						getSessionService().setAttribute(MarketplacecommerceservicesConstants.SESSION_PINCODE, selectedPinCode);
+					}
+					//getSessionService().setAttribute(MarketplacecommerceservicesConstants.SESSION_PINCODE, selectedPinCode);
 					mplCartFacade.populatePinCodeData(cartModel, selectedPinCode);
 				}
 
@@ -1997,8 +2023,8 @@ public class CartPageController extends AbstractPageController
 	@RequestMapping(value = MarketplacecheckoutaddonConstants.CHECKEXPRESSCHECKOUTPINOCDESERVICEABILITY, method = RequestMethod.GET)
 	//@RequireHardLogIn
 	public @ResponseBody JSONObject checkExpressCheckoutPincodeServiceability(
-			@PathVariable(MarketplacecheckoutaddonConstants.SELECTEDADDRESSID) final String selectedAddressId)
-			throws EtailNonBusinessExceptions, JSONException
+			@PathVariable(MarketplacecheckoutaddonConstants.SELECTEDADDRESSID) final String selectedAddressId,
+			final HttpServletRequest request, final HttpServletResponse response) throws EtailNonBusinessExceptions, JSONException
 	{
 		LOG.debug("selectedAddressId " + selectedAddressId);
 		final JSONObject jsonObject = new JSONObject();
@@ -2008,6 +2034,12 @@ public class CartPageController extends AbstractPageController
 		String jsonResponse = "";
 		AddressData finaladdressData = new AddressData();
 		String selectedPincode = "";
+		//TPR-6654
+		int pincodeCookieMaxAge;
+		final Cookie cookie = GenericUtilityMethods.getCookieByName(request, "pdpPincode");
+		final String cookieMaxAge = getConfigurationService().getConfiguration().getString("pdpPincode.cookie.age");
+		pincodeCookieMaxAge = (Integer.valueOf(cookieMaxAge)).intValue();
+		final String domain = getConfigurationService().getConfiguration().getString("shared.cookies.domain");
 		try
 		{
 			for (final AddressData addressData : accountAddressFacade.getAddressBook())
@@ -2023,7 +2055,27 @@ public class CartPageController extends AbstractPageController
 
 			if (!StringUtil.isEmpty(selectedPincode))
 			{
-				getSessionService().setAttribute(MarketplacecommerceservicesConstants.SESSION_PINCODE, selectedPincode);
+				//TPR-6654
+				if (cookie != null && cookie.getValue() != null)
+				{
+					cookie.setValue(selectedPincode);
+					cookie.setMaxAge(pincodeCookieMaxAge);
+					cookie.setPath("/");
+
+					if (null != domain && !domain.equalsIgnoreCase("localhost"))
+					{
+						cookie.setSecure(true);
+					}
+					cookie.setDomain(domain);
+					response.addCookie(cookie);
+					getSessionService().setAttribute(MarketplacecommerceservicesConstants.SESSION_PINCODE, selectedPincode);
+				}
+				else
+				{
+					pdpPincodeCookie.addCookie(response, selectedPincode);
+					getSessionService().setAttribute(MarketplacecommerceservicesConstants.SESSION_PINCODE, selectedPincode);
+				}
+				//getSessionService().setAttribute(MarketplacecommerceservicesConstants.SESSION_PINCODE, selectedPincode);
 			}
 
 			CartData cartData = getMplCartFacade().getSessionCartWithEntryOrdering(true);

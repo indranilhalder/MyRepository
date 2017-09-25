@@ -1831,9 +1831,11 @@ function displayDeliveryDetails(sellerName) {
 					if(sellerCount > 1){
 					var codLink = "/p-" + productCode + "/viewSellers"; //TPR-6907
 					$("#codLink").attr("href",codLink);
+					$("#codLink").css("cursor","pointer");
 					}
 					else{
 					$("#codLink").removeAttr("href");
+					$("#codLink").css("cursor","default");
 					}
 					$("#codEli").show();
 				} else {
@@ -4064,7 +4066,7 @@ function getBuyBoxDataAjax(productCode,variantCodesJson)
 	$("#addToCartButton").show();
 	$("#addToCartButton").show();
 	$('#buyNowButton').show();
-
+    var buyboxStockAvail = null;
 	return $.ajax({
 		contentType : "application/json; charset=utf-8",
 		url : requiredUrl,
@@ -4086,7 +4088,8 @@ function getBuyBoxDataAjax(productCode,variantCodesJson)
 			//TISPRM-56
 			var stockInfo = data['availibility'];
 		
-
+			buyboxStockAvail = data['availablestock'];
+			
 
 			availibility = stockInfo;
 			$.each(stockInfo,function(key,value){
@@ -4452,6 +4455,7 @@ function getBuyBoxDataAjax(productCode,variantCodesJson)
 				 $("#pdpPincodeCheckDList").show();
 				 $("#buyNowButton").attr("disabled",true);
 				//INC144316346
+				 //alert($.isEmptyObject(data['availibility']));
 				 if($.isEmptyObject(data['availibility'])){
 					 $("#variant li a").removeAttr("href");
 					 $("#variant li a").removeAttr("title");
@@ -4468,7 +4472,7 @@ function getBuyBoxDataAjax(productCode,variantCodesJson)
 			differentiateSellerDtm();
 			//TPR-6654
 			var pin = $('#pin').val();
-			if(pin != ""){
+			if(pin != "" && parseInt(buyboxStockAvail) > 0){
 				pincodeServiceability();
 				$("#pdpPinCodeAvailable").html("Available delivery options for the pincode " +pin+ " are");
 				document.getElementById("pdpPincodeCheck").className = "Check";

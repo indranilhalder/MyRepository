@@ -154,6 +154,13 @@ function setSizeforAkamai()
 }
 function isOOSQuick(){
 	var totalOptions = $("ul[label=sizes] li").length;
+	//PRDI-445 fix starts
+	var stock = $("#stock").val();
+	if (totalOptions==0 && stock<1)
+	{
+		return true;
+	}
+	//PRDI-445 fix ends
 	totalOptions = totalOptions -1;
 	var disabledOption = $("ul[label=sizes] li.strike").length;
 	if(totalOptions == disabledOption){
