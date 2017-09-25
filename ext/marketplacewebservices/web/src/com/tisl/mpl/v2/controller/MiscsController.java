@@ -2424,46 +2424,28 @@ public class MiscsController extends BaseController
 		{
 			final String title = getConfigurationService().getConfiguration()
 					.getString(oneTouchdto.getTitle().toString() + "_title");
-			LOG.debug("============1111::::::" + title);
 			if (null != subOrderModel.getUser().getUid())
 			{
 				codSelfShipData.setCustomerNumber(subOrderModel.getUser().getUid());
 			}
-			LOG.debug("============2222");
-			codSelfShipData.setTitle(title);
-			LOG.debug("============33333");
+			codSelfShipData.setTitle(title.toUpperCase());
 			codSelfShipData.setOrderRefNo(oneTouchdto.getOrderRefNum());
-			LOG.debug("============4444");
 			codSelfShipData.setOrderNo(oneTouchdto.getSubOrderNum());
-			LOG.debug("============5555");
 			codSelfShipData.setBankName(oneTouchdto.getBankName());
-			LOG.debug("============66666");
 			codSelfShipData.setBankBranch(oneTouchdto.getBranch());
-			LOG.debug("============77777");
 			codSelfShipData.setName(oneTouchdto.getAccHolderName());
-			LOG.debug("============88888");
 			codSelfShipData.setBankKey(oneTouchdto.getIFSC());
-			LOG.debug("============99999");
 			codSelfShipData.setBankAccount(oneTouchdto.getAccNum());
-			LOG.debug("============1");
 			codSelfShipData.setTransactionID(orderEntry.getTransactionID());
-			LOG.debug("============2");
 			codSelfShipData.setTransactionType(subOrderModel.getModeOfOrderPayment());
-			LOG.debug("============3");
 			codSelfShipData.setOrderTag(MarketplacewebservicesConstants.ORDERTAG_TYPE_POSTPAID);
-			LOG.debug("============4");
-			codSelfShipData.setPaymentMode(oneTouchdto.getRefundType());
-			LOG.debug("============5");
+			codSelfShipData.setPaymentMode("N");
 			codSelfShipData.setAmount(orderEntry.getNetAmountAfterAllDisc().toString());
-			LOG.debug("============6");
 			codSelfShipData.setTransactionType(RETURN_TYPE_COD);
-			LOG.debug("============7");
 			if (null != orderData.getCreated())
 			{
 				final SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy");
-				LOG.debug("============8");
 				codSelfShipData.setOrderDate(dateUtilHelper.convertDateWithFormat(formatter.format(orderData.getCreated())));
-				LOG.debug("============9");
 				codSelfShipData.setTransactionDate(dateUtilHelper.convertDateWithFormat(formatter.format(orderData.getCreated())));
 			}
 		}
@@ -2486,15 +2468,12 @@ public class MiscsController extends BaseController
 			if (null != codSelfShipData)
 			{
 				final CODSelfShipResponseData codSelfShipResponseData = cancelReturnFacade.codPaymentInfoToFICO(codSelfShipData);
-				LOG.debug("============99999999999999999999999999999");
 				if (null == codSelfShipResponseData.getSuccess() || !codSelfShipResponseData.getSuccess().equalsIgnoreCase(SUCCESS))
 				{
-				LOG.debug("============8888888888888888888888888888");
 					cancelReturnFacade.saveCODReturnsBankDetails(codSelfShipData);
 					LOG.debug("Failed to post COD return paymnet details to FICO Order No:" + codSelfShipData.getOrderRefNo());
 
 				}
-				LOG.debug("============66666666666666666666666666666");
 				cancelReturnFacade.insertUpdateCustomerBankDetails(codSelfShipData);
 			}
 		}
