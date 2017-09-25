@@ -123,9 +123,9 @@ public class WalletController extends AbstractPageController
 		}catch(Exception ex){
 			ex.printStackTrace();
 			GlobalMessages.addErrorMessage(model, "text.cliqcash.add.money.Fail");
-			if(ex.getMessage().contains("SocketTimeoutException")){
+		/*	if(ex.getMessage().contains("SocketTimeoutException")){
 			GlobalMessages.addErrorMessage(model, "text.cliqcash.timeout.massege");
-			}
+			}*/
 		}
 		return REDIRECT_PREFIX +"/wallet/getcliqcashPage";
 	}
@@ -202,10 +202,10 @@ public class WalletController extends AbstractPageController
 		}catch(Exception ex){
 			ex.printStackTrace();
 			GlobalMessages.addErrorMessage(model, "text.cliqcash.add.money.Fail");
-			if(ex.getMessage().contains("SocketTimeoutException")){
+			/*if(ex.getMessage().contains("SocketTimeoutException")){
 			GlobalMessages.addErrorMessage(model, "text.cliqcash.timeout.massege");
 			}
-			
+			*/
 			final ContentPageModel contentPage = getContentPageForLabelOrId("cliqcashPage");
 			storeCmsPageInModel(model, contentPage);
 			setUpMetaDataForContentPage(model, contentPage);

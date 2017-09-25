@@ -979,11 +979,11 @@ public class MplWalletServicesImpl implements MplWalletServices
 	private Client getProxyConnection()
 	{
 		ClientConfig config = new DefaultClientConfig();
-		System.out.println("***********Try to configure the Proxy");
+		LOG.debug("***********Try to configure the Proxy");
 		 final String proxyEnableStatus = getConfigurationService().getConfiguration().getString("proxy.enabled");
-		 System.out.println("********proxyEnableStatus*********:"+proxyEnableStatus);
+		 LOG.debug("********proxyEnableStatus*********:"+proxyEnableStatus);
 	    final String proxyAddress = getConfigurationService().getConfiguration().getString("proxy.address");
-	    System.out.println("********proxyAddress*********:"+proxyAddress);
+	    LOG.debug("********proxyAddress*********:"+proxyAddress);
 	    final String proxyPort = getConfigurationService().getConfiguration().getString("proxy.port");
 	    System.out.println("********proxyPort*********:"+proxyPort);
 		Client client = new Client(new URLConnectionClientHandler(
@@ -1006,7 +1006,7 @@ public class MplWalletServicesImpl implements MplWalletServices
 		    }
 			
 		}), config);
-		System.out.println("Successfully Configured Proxy ..................");
+		LOG.debug("Successfully Configured Proxy ..................");
 		return client;
 	}
 
