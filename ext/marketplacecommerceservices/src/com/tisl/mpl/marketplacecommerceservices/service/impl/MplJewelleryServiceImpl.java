@@ -118,5 +118,18 @@ public class MplJewelleryServiceImpl implements MplJewelleryService
 
 	}
 
+	/*
+	 * (non-Javadoc)
+	 *
+	 * @see
+	 * com.tisl.mpl.marketplacecommerceservices.service.MplJewelleryService#getAllWeightVariantByPussid(java.lang.String)
+	 */
+	@Override
+	public List<BuyBoxModel> getAllWeightVariantByPussid(final String pUssid)
+	{
+		// YTODO Auto-generated method stub
+		return mplJewelleryDao.getAllWeightVariantByPussid(pUssid);
+	}
+
 
 }
