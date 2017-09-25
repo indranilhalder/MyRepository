@@ -997,12 +997,18 @@
 		<property name="sns" type="boolean"/>
 		<!-- Added for Luxury -->
 		<!-- <property name="luxarySite" type="boolean"/> -->
+		<!-- PR-23 start -->
+		<property name="NextSearch" type="boolean"/>
+		<!-- PR-23 end -->
 	</bean>
 
 	<bean class="de.hybris.platform.commercefacades.search.data.SearchStateData">
 		<property name="sns" type="boolean"/>
 		<!-- Added for Luxury -->
 		<property name="luxurySiteFrom" type="String"/>
+		<!-- PR-23 start -->
+		<property name="NextSearch" type="boolean"/>
+		<!-- PR-23 end -->
 	</bean>
 
 	<!-- Return Item Address Data -->
