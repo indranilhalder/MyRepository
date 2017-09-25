@@ -441,6 +441,7 @@ public class OneTouchCancelReturnCrmRequestDTO
 	/**
 	 * @return the title
 	 */
+	@XmlElement(name = "Title")
 	public String getTitle()
 	{
 		return Title;

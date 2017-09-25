@@ -77224,13 +77224,16 @@ button#homepagePincodeCheck {
 	display:none;
 }
 li.enter-pincode a::before {
-    font-family: FontAwesome;
+ 	font-family: FontAwesome;
     content: "\f041";
     font-weight: lighter;
     margin-top: 3px;
-    font-size: 16px;
+    font-size: 18px;
     margin-right: 10px;
-    color: #f3f2f2;
+    color: rgba(255,255,255,0.7);
+    top: 2px;
+    line-height: 35px;
+    position: relative;
 }
 /*TPR-6654 end*/
 /* TISCSXII-2224 start */

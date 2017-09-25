@@ -2428,7 +2428,7 @@ public class MiscsController extends BaseController
 			{
 				codSelfShipData.setCustomerNumber(subOrderModel.getUser().getUid());
 			}
-			codSelfShipData.setTitle(title);
+			codSelfShipData.setTitle(title.toUpperCase());
 			codSelfShipData.setOrderRefNo(oneTouchdto.getOrderRefNum());
 			codSelfShipData.setOrderNo(oneTouchdto.getSubOrderNum());
 			codSelfShipData.setBankName(oneTouchdto.getBankName());
@@ -2439,7 +2439,7 @@ public class MiscsController extends BaseController
 			codSelfShipData.setTransactionID(orderEntry.getTransactionID());
 			codSelfShipData.setTransactionType(subOrderModel.getModeOfOrderPayment());
 			codSelfShipData.setOrderTag(MarketplacewebservicesConstants.ORDERTAG_TYPE_POSTPAID);
-			codSelfShipData.setPaymentMode(oneTouchdto.getRefundType());
+			codSelfShipData.setPaymentMode("N");
 			codSelfShipData.setAmount(orderEntry.getNetAmountAfterAllDisc().toString());
 			codSelfShipData.setTransactionType(RETURN_TYPE_COD);
 			if (null != orderData.getCreated())
@@ -2451,7 +2451,7 @@ public class MiscsController extends BaseController
 		}
 		catch (final Exception e)
 		{
-			LOG.error(e.getStackTrace());
+			LOG.error(e);
 			codSelfShipData = null;
 			return codSelfShipData;
 		}
@@ -2479,7 +2479,7 @@ public class MiscsController extends BaseController
 		}
 		catch (final Exception ex)
 		{
-			LOG.error(ex.getStackTrace());
+			LOG.error(ex);
 			return false;
 		}
 		LOG.info("Finished sending bank details to FICO");
