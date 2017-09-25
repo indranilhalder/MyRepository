@@ -1541,10 +1541,19 @@ public class MplCmsFacadeImpl implements MplCmsFacade
 								{
 									productComp.setPrice(buyboxdata.getMrp().getFormattedValue());
 								}
-								if (buyboxdata.getPrice() != null)
+								// changes for INC144318868 - Offer prize is not coming for WCMS component
+								/*if (buyboxdata.getPrice() != null)
 								{
 									productComp.setSlashedPrice(buyboxdata.getPrice().getFormattedValue());
+								}*/
+								if (null != buyboxdata.getSpecialPriceMobile())
+								{
+									productComp.setSlashedPrice(buyboxdata.getSpecialPriceMobile().getFormattedValue());
 								}
+								else if (null != buyboxdata.getPrice())
+								{
+									productComp.setSlashedPrice(buyboxdata.getPrice().getFormattedValue());
+								}  
 
 								if (productModel != null)
 								{
