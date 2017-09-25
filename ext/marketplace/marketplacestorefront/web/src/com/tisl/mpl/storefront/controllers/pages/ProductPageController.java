@@ -1471,13 +1471,17 @@ public class ProductPageController extends MidPageController
 
 			//UF-422 starts
 			int sizeCounter = 0;
-			if (null != productData.getVariantOptions())
+			if (null != productData && CollectionUtils.isNotEmpty(productData.getVariantOptions()))
 			{
 				for (int i = 0; i < productData.getVariantOptions().size(); i++)
 				{
-					if (productData.getVariantOptions().get(i).getColour().equalsIgnoreCase(productData.getColour()))
+					if (StringUtils.isNotEmpty(productData.getVariantOptions().get(i).getColour())
+							&& StringUtils.isNotEmpty(productData.getColour()))
 					{
-						sizeCounter++;
+						if (productData.getVariantOptions().get(i).getColour().equalsIgnoreCase(productData.getColour()))
+						{
+							sizeCounter++;
+						}
 					}
 				}
 			}
@@ -1675,13 +1679,17 @@ public class ProductPageController extends MidPageController
 			populateProductData(productData, model);
 			//UF-422 starts
 			int sizeCounter = 0;
-			if (null != productData.getVariantOptions())
+			if (null != productData && CollectionUtils.isNotEmpty(productData.getVariantOptions()))
 			{
 				for (int i = 0; i < productData.getVariantOptions().size(); i++)
 				{
-					if (productData.getVariantOptions().get(i).getColour().equalsIgnoreCase(productData.getColour()))
+					if (StringUtils.isNotEmpty(productData.getVariantOptions().get(i).getColour())
+							&& StringUtils.isNotEmpty(productData.getColour()))
 					{
-						sizeCounter++;
+						if (productData.getVariantOptions().get(i).getColour().equalsIgnoreCase(productData.getColour()))
+						{
+							sizeCounter++;
+						}
 					}
 				}
 			}
@@ -1995,13 +2003,17 @@ public class ProductPageController extends MidPageController
 			LOG.debug("===========After populateProductData block=================");
 			//UF-422 starts
 			int sizeCounter = 0;
-			if (null != productData.getVariantOptions())
+			if (null != productData && CollectionUtils.isNotEmpty(productData.getVariantOptions()))
 			{
 				for (int i = 0; i < productData.getVariantOptions().size(); i++)
 				{
-					if (productData.getVariantOptions().get(i).getColour().equalsIgnoreCase(productData.getColour()))
+					if (StringUtils.isNotEmpty(productData.getVariantOptions().get(i).getColour())
+							&& StringUtils.isNotEmpty(productData.getColour()))
 					{
-						sizeCounter++;
+						if (productData.getVariantOptions().get(i).getColour().equalsIgnoreCase(productData.getColour()))
+						{
+							sizeCounter++;
+						}
 					}
 				}
 			}
@@ -2238,7 +2250,6 @@ public class ProductPageController extends MidPageController
 		}
 
 	}
-
 
 	/**
 	 * UF-432
