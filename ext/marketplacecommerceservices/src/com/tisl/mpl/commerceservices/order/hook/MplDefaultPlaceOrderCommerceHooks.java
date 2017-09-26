@@ -183,7 +183,7 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 	private SessionService sessionService;
 
 	@Autowired
-   private MplWalletServices mplWalletServices;
+	private MplWalletServices mplWalletServices;
 
 	//	@Autowired
 	//	private MplFraudModelService mplFraudModelService;
@@ -774,20 +774,23 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 					|| WalletEnum.MRUPEE.equals(orderModel.getIsWallet()))
 			{
 				getOrderStatusSpecifier().setOrderStatus(orderModel, OrderStatus.PAYMENT_SUCCESSFUL);
-				//After Success Qc call 
-			
-				if(orderModel.getIsEGVCart().booleanValue()){
-				
-				String response = getPurchaseEGVRequestPopulate(orderModel);
-				if(response.equalsIgnoreCase("success")){
-					getOrderStatusSpecifier().setOrderStatus(orderModel, OrderStatus.CONFIRMED);
-					sendNotifiactionForEGVOrder(orderModel);
-				}else
+				//After Success Qc call
+
+				if (orderModel.getIsEGVCart().booleanValue())
 				{
-					getOrderStatusSpecifier().setOrderStatus(orderModel, OrderStatus.PAYMENT_TIMEOUT);
+
+					final String response = getPurchaseEGVRequestPopulate(orderModel);
+					if (response.equalsIgnoreCase("success"))
+					{
+						getOrderStatusSpecifier().setOrderStatus(orderModel, OrderStatus.CONFIRMED);
+						sendNotifiactionForEGVOrder(orderModel);
+					}
+					else
+					{
+						getOrderStatusSpecifier().setOrderStatus(orderModel, OrderStatus.PAYMENT_TIMEOUT);
+					}
 				}
-				}
-					
+
 			}
 			else
 			{
@@ -827,9 +830,9 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 	 */
 	private void sendNotifiactionForEGVOrder(final OrderModel orderModel)
 	{
-		OrderProcessModel orderProcessModel=new OrderProcessModel();
+		final OrderProcessModel orderProcessModel = new OrderProcessModel();
 		orderProcessModel.setOrder(orderModel);
-		OrderEGVRecipientEmailEvent orderEGVRecipientEmailEvent = new OrderEGVRecipientEmailEvent(orderProcessModel);
+		final OrderEGVRecipientEmailEvent orderEGVRecipientEmailEvent = new OrderEGVRecipientEmailEvent(orderProcessModel);
 		eventService.publishEvent(orderEGVRecipientEmailEvent);
 	}
 
@@ -838,72 +841,80 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 	 */
 	private String getPurchaseEGVRequestPopulate(final OrderModel orderModel)
 	{
-		
-		String status = "fail";
-		try{
-		if(orderModel.getIsEGVCart().booleanValue()){
-			Customer customer=new Customer();
-			PurchaseEGVRequest purchaseEGVRequest=new PurchaseEGVRequest();
-			purchaseEGVRequest.setAmount(orderModel.getTotalPrice());
-			purchaseEGVRequest.setCardProgramGroupName("TUL B2C eGift Card");
-			purchaseEGVRequest.setBillAmount(orderModel.getTotalPrice());
-			purchaseEGVRequest.setInvoiceNumber(orderModel.getCode());
-			customer.setEmail(orderModel.getUser().getUid());
-			customer.setFirstname("TATA");
-			customer.setAddressLine1("Adedd");
-			customer.setAddressLine2("Address");
-			customer.setAddressLine3("Address");
-			purchaseEGVRequest.setCustomer(customer);
-			purchaseEGVRequest.setIdempotencyKey(orderModel.getCode());
-			PurchaseEGVResponse data =mplWalletServices.purchaseEgv(purchaseEGVRequest, orderModel.getCode());
-			
-			AbstractOrderEntryModel orderEntry=	orderModel.getEntries().get(0);
-			
-			if(data.getResponseCode()!=null && data.getResponseCode().intValue()==0){
-				
-				WalletApportionPaymentInfoModel walletApportionPaymentInfo =	getModelService().create(WalletApportionPaymentInfoModel.class);
-				walletApportionPaymentInfo.setOrderId(orderModel.getCode());
-				walletApportionPaymentInfo.setTransactionId(orderModel.getCode());
-				
-			 List<WalletCardApportionDetailModel> cardQtyWiseList = new ArrayList<WalletCardApportionDetailModel>();
 
-				final WalletCardApportionDetailModel chlidCardApportionDetail = getModelService()
-								.create(WalletCardApportionDetailModel.class);
-				
-				chlidCardApportionDetail.setCardAmount(""+data.getAmount());
-				chlidCardApportionDetail.setCardNumber(data.getCardNumber());
-				chlidCardApportionDetail.setCardExpiry(data.getExpiry());
-				cardQtyWiseList.add(chlidCardApportionDetail);
-				
-				walletApportionPaymentInfo.setWalletCardList(cardQtyWiseList);
-				
-				orderEntry.setWalletApportionPaymentInfo(walletApportionPaymentInfo);
-				
-				AbstractOrderEntryModel AbstractOrderEntryChild= orderModel.getChildOrders().get(0).getEntries().get(0);
-				
-				AbstractOrderEntryChild.setWalletApportionPaymentInfo(walletApportionPaymentInfo);
-				
-				getModelService().save(AbstractOrderEntryChild);
-				
-				getModelService().save(orderEntry);
-				
-				getModelService().save(orderModel);
-				
-				status = "success";
-			
-			}else{
-				
-				status = "fail";
+		String status = "fail";
+		try
+		{
+			if (orderModel.getIsEGVCart().booleanValue())
+			{
+				final Customer customer = new Customer();
+				final PurchaseEGVRequest purchaseEGVRequest = new PurchaseEGVRequest();
+				purchaseEGVRequest.setAmount(orderModel.getTotalPrice());
+				purchaseEGVRequest.setCardProgramGroupName("TUL B2C eGift Card");
+				purchaseEGVRequest.setBillAmount(orderModel.getTotalPrice());
+				purchaseEGVRequest.setInvoiceNumber(orderModel.getCode());
+				customer.setEmail(orderModel.getUser().getUid());
+				customer.setFirstname("TATA");
+				customer.setAddressLine1("Adedd");
+				customer.setAddressLine2("Address");
+				customer.setAddressLine3("Address");
+				purchaseEGVRequest.setCustomer(customer);
+				purchaseEGVRequest.setIdempotencyKey(orderModel.getCode());
+				final PurchaseEGVResponse data = mplWalletServices.purchaseEgv(purchaseEGVRequest, orderModel.getCode());
+
+				final AbstractOrderEntryModel orderEntry = orderModel.getEntries().get(0);
+
+				if (data.getResponseCode() != null && data.getResponseCode().intValue() == 0)
+				{
+
+					final WalletApportionPaymentInfoModel walletApportionPaymentInfo = getModelService()
+							.create(WalletApportionPaymentInfoModel.class);
+					walletApportionPaymentInfo.setOrderId(orderModel.getCode());
+					walletApportionPaymentInfo.setTransactionId(orderModel.getCode());
+
+					final List<WalletCardApportionDetailModel> cardQtyWiseList = new ArrayList<WalletCardApportionDetailModel>();
+
+					final WalletCardApportionDetailModel chlidCardApportionDetail = getModelService()
+							.create(WalletCardApportionDetailModel.class);
+					chlidCardApportionDetail.setOrderId(orderModel.getCode());
+					chlidCardApportionDetail.setCardAmount("" + data.getAmount());
+					chlidCardApportionDetail.setCardNumber(data.getCardNumber());
+					chlidCardApportionDetail.setCardExpiry(data.getExpiry());
+					cardQtyWiseList.add(chlidCardApportionDetail);
+
+					walletApportionPaymentInfo.setWalletCardList(cardQtyWiseList);
+
+					orderEntry.setWalletApportionPaymentInfo(walletApportionPaymentInfo);
+
+					final AbstractOrderEntryModel AbstractOrderEntryChild = orderModel.getChildOrders().get(0).getEntries().get(0);
+
+					AbstractOrderEntryChild.setWalletApportionPaymentInfo(walletApportionPaymentInfo);
+
+					getModelService().save(AbstractOrderEntryChild);
+
+					getModelService().save(orderEntry);
+
+					getModelService().save(orderModel);
+
+					status = "success";
+
+				}
+				else
+				{
+
+					status = "fail";
+				}
+
+				return status;
+
 			}
-			
-			return status;
-			
 		}
-		}catch(Exception exceeption){
+		catch (final Exception exceeption)
+		{
 			LOG.error("TTTTTTTTTTTTTT");
-			}
+		}
 		return status;
-	
+
 	}
 
 	//}
@@ -2587,12 +2598,12 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 		 */
 
 
-		boolean splitPayment = false;
-		if (StringUtils.isNotEmpty(getSessionService().getAttribute("getCliqCashMode")))
-		{
-
-			splitPayment = Boolean.parseBoolean(getSessionService().getAttribute("getCliqCashMode"));
-		}
+		//		boolean splitPayment = false;
+		//		if (StringUtils.isNotEmpty(getSessionService().getAttribute("getCliqCashMode")))
+		//		{
+		//
+		//			splitPayment = Boolean.parseBoolean(getSessionService().getAttribute("getCliqCashMode"));
+		//		}
 
 		/**
 		 * WALLET CHANGES END
@@ -2613,9 +2624,10 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 			 */
 
 
-			if (splitPayment)
+			if (clonedSubOrder.getSplitModeInfo().equalsIgnoreCase("Split")
+					|| clonedSubOrder.getSplitModeInfo().equalsIgnoreCase("CliqCash"))
 			{
-				setPaymentModeApporsionValue(abstractOrderEntryModel, quantity, orderEntryModel);
+				setPaymentModeApporsionValue(abstractOrderEntryModel, quantity, orderEntryModel, clonedSubOrder);
 			}
 
 			/**
@@ -3456,7 +3468,7 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 	}
 
 	public void setPaymentModeApporsionValue(final AbstractOrderEntryModel abstractOrderEntryModel, final int quantity,
-			final OrderEntryModel orderEntryModel)
+			final OrderEntryModel orderEntryModel, final OrderModel clonedSubOrder)
 	{
 
 		final WalletApportionPaymentInfoModel walletApportionPaymentInfo = getModelService()
@@ -3536,6 +3548,7 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 				final WalletCardApportionDetailModel chlidCardApportionDetail = getModelService()
 						.create(WalletCardApportionDetailModel.class);
 
+				chlidCardApportionDetail.setOrderId(abstractOrderEntryModel.getWalletApportionPaymentInfo().getOrderId());
 				chlidCardApportionDetail.setCardNumber(cardList.getCardNumber());
 				chlidCardApportionDetail.setCardExpiry(cardList.getCardExpiry());
 				chlidCardApportionDetail.setBucketType(cardList.getBucketType());

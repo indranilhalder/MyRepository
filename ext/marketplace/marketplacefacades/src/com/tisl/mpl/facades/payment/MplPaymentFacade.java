@@ -34,6 +34,7 @@ import com.tisl.mpl.exception.EtailBusinessExceptions;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.juspay.response.ListCardsResponse;
 import com.tisl.mpl.model.BankModel;
+import com.tisl.mpl.pojo.response.QCRedeeptionResponse;
 
 
 /**
@@ -505,7 +506,7 @@ public interface MplPaymentFacade
 	 * @param orderToBeUpdated
 	 * @return
 	 */
-	public String createQCOrderRequest(String guid, AbstractOrderModel orderToBeUpdated, final String WalletId,
+	public QCRedeeptionResponse createQCOrderRequest(String guid, AbstractOrderModel orderToBeUpdated, final String WalletId,
 			String cliqCashPaymentMode, final String qcTransactionId);
 
 	/**

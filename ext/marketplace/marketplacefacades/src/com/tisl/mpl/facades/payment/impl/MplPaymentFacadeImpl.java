@@ -2463,15 +2463,15 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 				 */
 				if (!cart.getIsEGVCart().booleanValue())
 				{
-					boolean splitPayment = false;
+					//boolean splitPayment = false;
 					String cliqCashPaymentMode = StringUtils.EMPTY;
-					boolean jsPayMode = false;
+					//boolean jsPayMode = false;
 
-					if (null != (getSessionService().getAttribute("getCliqCashMode").toString()))
-					{
-
-						splitPayment = Boolean.parseBoolean(getSessionService().getAttribute("getCliqCashMode").toString());
-					}
+//					if (null != (getSessionService().getAttribute("getCliqCashMode").toString()))
+//					{
+//
+//						splitPayment = Boolean.parseBoolean(getSessionService().getAttribute("getCliqCashMode").toString());
+//					}
 
 					if (null != (getSessionService().getAttribute("cliqCashPaymentMode").toString()))
 					{
@@ -2479,15 +2479,15 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 						cliqCashPaymentMode = getSessionService().getAttribute("cliqCashPaymentMode").toString();
 					}
 
-					if (StringUtils.isNotEmpty(getSessionService().getAttribute("jsPayMode").toString()))
-					{
-
-						jsPayMode = Boolean.parseBoolean(getSessionService().getAttribute("jsPayMode").toString());
-					}
+//					if (StringUtils.isNotEmpty(getSessionService().getAttribute("jsPayMode").toString()))
+//					{
+//
+//						jsPayMode = Boolean.parseBoolean(getSessionService().getAttribute("jsPayMode").toString());
+//					}
 
 					LOG.info("cliqCashPaymentMode" + cliqCashPaymentMode);
 
-					if (splitPayment && jsPayMode)
+					if (cart.getSplitModeInfo().equalsIgnoreCase("Split"))
 					{
 
 						cart.setTotalPrice(Double.valueOf("" + getSessionService().getAttribute("juspayTotalAmt")));
@@ -2506,15 +2506,15 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 				/**
 				 * QC CHANGE
 				 */
-				boolean splitPayment = false;
+				//boolean splitPayment = false;
 				String cliqCashPaymentMode = StringUtils.EMPTY;
-				boolean jsPayMode = false;
+				//boolean jsPayMode = false;
 
-				if (null != (getSessionService().getAttribute("getCliqCashMode").toString()))
-				{
-
-					splitPayment = Boolean.parseBoolean(getSessionService().getAttribute("getCliqCashMode").toString());
-				}
+//				if (null != (getSessionService().getAttribute("getCliqCashMode").toString()))
+//				{
+//
+//					splitPayment = Boolean.parseBoolean(getSessionService().getAttribute("getCliqCashMode").toString());
+//				}
 
 				if (null != (getSessionService().getAttribute("cliqCashPaymentMode").toString()))
 				{
@@ -2522,15 +2522,15 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 					cliqCashPaymentMode = getSessionService().getAttribute("cliqCashPaymentMode").toString();
 				}
 
-				if (StringUtils.isNotEmpty(getSessionService().getAttribute("jsPayMode").toString()))
-				{
-
-					jsPayMode = Boolean.parseBoolean(getSessionService().getAttribute("jsPayMode").toString());
-				}
+//				if (StringUtils.isNotEmpty(getSessionService().getAttribute("jsPayMode").toString()))
+//				{
+//
+//					jsPayMode = Boolean.parseBoolean(getSessionService().getAttribute("jsPayMode").toString());
+//				}
 
 				LOG.info("cliqCashPaymentMode" + cliqCashPaymentMode);
 
-				if (splitPayment && jsPayMode)
+				if (order.getSplitModeInfo().equalsIgnoreCase("Split"))
 				{
 
 					order.setTotalPrice(Double.valueOf("" + getSessionService().getAttribute("juspayTotalAmt")));
@@ -3489,15 +3489,19 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 	 * @see com.tisl.mpl.facades.payment.MplPaymentFacade#createQCOrderRequest()
 	 */
 	@Override
-	public String createQCOrderRequest(final String guid, final AbstractOrderModel orderToBeUpdated, final String WalletId,
+	public QCRedeeptionResponse createQCOrderRequest(final String guid, final AbstractOrderModel orderToBeUpdated, final String WalletId,
 			final String cliqCashPaymentMode, final String qcOrderId)
 	{
+		
+		 QCRedeeptionResponse qcRedeeptionResponse = new QCRedeeptionResponse();
 		try
 		{
 			final double walletTotal = Double.parseDouble("" + getSessionService().getAttribute("WalletTotal"));
 
 			final ArrayList<String> rs = new ArrayList<String>();
 
+			getMplPaymentService().createQCEntryInAudit(qcOrderId, "WEB", guid, "" + walletTotal,"","");
+			
 			final QCRedeemRequest qcRedeemRequest = new QCRedeemRequest();
 
 			qcRedeemRequest.setAmount("" + walletTotal);
@@ -3505,7 +3509,7 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 			qcRedeemRequest.setNotes("Redeem Request Amount " + walletTotal);
 			qcRedeemRequest.setInvoiceNumber(qcOrderId);
 
-			final QCRedeeptionResponse qcRedeeptionResponse = mplWalletFacade.getWalletRedeem(WalletId, qcRedeemRequest);
+			qcRedeeptionResponse = mplWalletFacade.getWalletRedeem(WalletId, qcRedeemRequest);
 
 			if (null != qcRedeeptionResponse && Integer.parseInt(qcRedeeptionResponse.getResponseCode().toString()) == 0)
 			{
@@ -3528,12 +3532,11 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 
 				calculateSplitModeApportionValue(orderToBeUpdated, qcRedeeptionResponse, walletTotal);
 
-				return "SUCCESS";
+				return qcRedeeptionResponse;
 			}
 			else
 			{
-				orderToBeUpdated.setStatus(OrderStatus.RMS_VERIFICATION_FAILED);
-				return "FAIL";
+				return qcRedeeptionResponse;
 
 			}
 		}
@@ -3541,7 +3544,7 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 		{
 			ex.printStackTrace();
 		}
-		return "FAIL";
+		return qcRedeeptionResponse;
 	}
 
 	@Override
@@ -3645,6 +3648,7 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 				if (cardList.getBucketType().equalsIgnoreCase("CASHBACK") || cardList.getBucketType().equalsIgnoreCase("GOODWILL")
 						|| cardList.getBucketType().equalsIgnoreCase("PROMOTION"))
 				{
+					walletCardApportionObj.setOrderId(orderToBeUpdated.getCode());
 					walletCardApportionObj.setCardNumber(cardList.getCardNumber());
 					walletCardApportionObj.setCardExpiry(cardList.getExpiry());
 					walletCardApportionObj.setBucketType(cardList.getBucketType());
@@ -3673,6 +3677,7 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 				}
 				if (cardList.getBucketType().equalsIgnoreCase("CREDIT")) // refund
 				{
+					walletCardApportionObj.setOrderId(orderToBeUpdated.getCode());
 					walletCardApportionObj.setCardNumber(cardList.getCardNumber());
 					walletCardApportionObj.setCardExpiry(cardList.getExpiry());
 					walletCardApportionObj.setBucketType(cardList.getBucketType());
@@ -3700,6 +3705,7 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 				}
 				if (cardList.getBucketType().equalsIgnoreCase("CUSTOMER")) //EGV Added to card
 				{
+					walletCardApportionObj.setOrderId(orderToBeUpdated.getCode());
 					walletCardApportionObj.setCardNumber(cardList.getCardNumber());
 					walletCardApportionObj.setCardExpiry(cardList.getExpiry());
 					walletCardApportionObj.setBucketType(cardList.getBucketType());

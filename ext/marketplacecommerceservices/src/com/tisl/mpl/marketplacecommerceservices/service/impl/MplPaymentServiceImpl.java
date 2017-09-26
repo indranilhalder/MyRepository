@@ -5110,84 +5110,76 @@ public class MplPaymentServiceImpl implements MplPaymentService
 	public boolean createQCEntryInAudit(final String qcOrderID, final String channel, final String cartGuId, final String qcAmount,
 			final String qcResponseCode, final String transactionId) throws EtailNonBusinessExceptions
 	{
+		boolean flag = false;
 		try
 		{
 			Assert.notNull(qcOrderID, "Parameter QC cannot be null.");
-			//Make entry in Audit Table
-			boolean flag = false;
-			//			final MplPaymentAuditModel auditModel = getMplPaymentDao().getAuditEntries(qcOrderID);
-			//
-			//			if (null != auditModel)
-			//			{
-			//				System.out.println("************** Saving auditModel *************" + qcOrderID);
-			//				List<MplPaymentAuditEntryModel> collection = auditModel.getAuditEntries();
-			//				final List<MplPaymentAuditEntryModel> auditEntryList = new ArrayList<MplPaymentAuditEntryModel>();
-			//				if (null == collection || collection.isEmpty())
-			//				{
-			//					collection = new ArrayList<MplPaymentAuditEntryModel>();
-			//				}
-			//
-			//				auditEntryList.addAll(collection);
-			//
-			//				final MplPaymentAuditEntryModel auditEntry = getModelService().create(MplPaymentAuditEntryModel.class);
-			//				auditEntry.setAuditId(qcOrderID);
-			//
-			//				if (qcResponseCode.equalsIgnoreCase("0"))
-			//				{
-			//
-			//					auditEntry.setStatus(MplPaymentAuditStatusEnum.COMPLETED);
-			//
-			//				}
-			//				else
-			//				{
-			//					auditEntry.setStatus(MplPaymentAuditStatusEnum.DECLINED);
-			//				}
-			//				auditModel.setIsExpired(Boolean.TRUE);
-			//				getModelService().save(auditEntry);
-			//
-			//				auditEntryList.add(auditEntry);
-			//
-			//				auditModel.setAuditEntries(auditEntryList);
-			//				getModelService().save(auditModel);
-			//				flag = true;
-			//			}
-			//	else
-			//	{
-			System.out.println("************** Creating and  Saving auditModel *************" + qcOrderID);
-			//	final CartModel cartModel = getMplPaymentDao().getCart(cartGuId);
-			final List<MplPaymentAuditEntryModel> auditEntryList = new ArrayList<MplPaymentAuditEntryModel>();
-			final MplPaymentAuditEntryModel auditEntry = getModelService().create(MplPaymentAuditEntryModel.class);
-			auditEntry.setAuditId(qcOrderID);
-			if (qcResponseCode.equalsIgnoreCase("0"))
+			final MplPaymentAuditModel auditModel = getMplPaymentDao().getAuditEntries(qcOrderID);
+
+			if (null != auditModel)
 			{
-				auditEntry.setStatus(MplPaymentAuditStatusEnum.COMPLETED);
+				System.out.println("************** Saving auditModel *************" + qcOrderID);
+				List<MplPaymentAuditEntryModel> collection = auditModel.getAuditEntries();
+				final List<MplPaymentAuditEntryModel> auditEntryList = new ArrayList<MplPaymentAuditEntryModel>();
+				if (null == collection || collection.isEmpty())
+				{
+					collection = new ArrayList<MplPaymentAuditEntryModel>();
+				}
+
+				auditEntryList.addAll(collection);
+
+				final MplPaymentAuditEntryModel auditEntry = getModelService().create(MplPaymentAuditEntryModel.class);
+				auditEntry.setAuditId(qcOrderID);
+
+				if (qcResponseCode.equalsIgnoreCase("0"))
+				{
+
+					auditEntry.setStatus(MplPaymentAuditStatusEnum.CREATED);
+
+				}
+				else
+				{
+					auditEntry.setStatus(MplPaymentAuditStatusEnum.DECLINED);
+				}
+				auditModel.setChannel(GenericUtilityMethods.returnChannelData(channel));
+				auditModel.setAuditId(transactionId);
+				auditModel.setCartGUID(cartGuId);
+				auditModel.setRequestDate(new Date());
+				auditModel.setAuditEntries(auditEntryList);
+				auditModel.setPaymentAmount(Double.valueOf(qcAmount));
+				//getModelService().save(auditModel);
+				//getModelService().save(auditEntry);
+				auditEntryList.add(auditEntry);
+				auditModel.setAuditEntries(auditEntryList);
+				getModelService().save(auditModel);
+				flag = true;
 			}
 			else
 			{
-				auditEntry.setStatus(MplPaymentAuditStatusEnum.DECLINED);
+				System.out.println("************** Creating and  Saving auditModel *************" + qcOrderID);
+				//	final CartModel cartModel = getMplPaymentDao().getCart(cartGuId);
+				final List<MplPaymentAuditEntryModel> auditEntryList = new ArrayList<MplPaymentAuditEntryModel>();
+				final MplPaymentAuditEntryModel auditEntry = getModelService().create(MplPaymentAuditEntryModel.class);
+				auditEntry.setAuditId(qcOrderID);
+				auditEntry.setStatus(MplPaymentAuditStatusEnum.CREATED);
+
+				getModelService().save(auditEntry);
+				auditEntryList.add(auditEntry);
+
+				final MplPaymentAuditModel newAuditModel = getModelService().create(MplPaymentAuditModel.class);
+				newAuditModel.setChannel(GenericUtilityMethods.returnChannelData(channel));
+				newAuditModel.setAuditId("");
+				newAuditModel.setCartGUID(cartGuId);
+				newAuditModel.setRequestDate(new Date());
+				newAuditModel.setAuditEntries(auditEntryList);
+				newAuditModel.setPaymentAmount(Double.valueOf(qcAmount));
+				getModelService().save(newAuditModel);
+				flag = true;
+				System.out.println("************** Saved auditModel *************" + qcOrderID + ":::" + flag);
+				return flag;
 			}
-			getModelService().save(auditEntry);
-
-			auditEntryList.add(auditEntry);
-
-			final MplPaymentAuditModel newAuditModel = getModelService().create(MplPaymentAuditModel.class);
-			newAuditModel.setChannel(GenericUtilityMethods.returnChannelData(channel));
-			newAuditModel.setAuditId(transactionId);
-			newAuditModel.setCartGUID(cartGuId);
-			newAuditModel.setRequestDate(new Date());
-			newAuditModel.setAuditEntries(auditEntryList);
-
-			newAuditModel.setPaymentAmount(Double.valueOf(qcAmount));
-			getModelService().save(newAuditModel);
-			flag = true;
-			//}
-			System.out.println("************** Saved auditModel *************" + qcOrderID + ":::" + flag);
-			return flag;
-
 		}
-		catch (
-
-		final ModelSavingException e)
+		catch (final ModelSavingException e)
 		{
 			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0007);
 		}
@@ -5200,5 +5192,6 @@ public class MplPaymentServiceImpl implements MplPaymentService
 		{
 			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000);
 		}
+		return flag;
 	}
 }
