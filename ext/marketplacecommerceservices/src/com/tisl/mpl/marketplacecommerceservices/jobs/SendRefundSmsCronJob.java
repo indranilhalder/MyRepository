@@ -54,13 +54,12 @@ public class SendRefundSmsCronJob extends AbstractJobPerformable<CronJobModel>
 				remainder = rowCount - (dividedValue * batch);
 			}
 			final StringBuilder deleteDynamicQuery = new StringBuilder();
-			//====Abhijit
 			int a = 0;
 			int b = batch - 1;
 			List<BulkSmsPerBatch> result1 = null;
 			boolean response = false;
 
-			//papa loop
+			//parent loop
 			for (int j = 1; j <= dividedValue; j++)
 			{
 				result1 = null;
@@ -84,7 +83,7 @@ public class SendRefundSmsCronJob extends AbstractJobPerformable<CronJobModel>
 					}
 				}
 			}
-			//Remainder wala loop
+			//Remainder loop
 			if (remainder != 0)
 			{
 				for (int j = 1; j <= 1; j++)
@@ -111,8 +110,8 @@ public class SendRefundSmsCronJob extends AbstractJobPerformable<CronJobModel>
 				}
 			}
 			final String subQuery = deleteDynamicQuery.substring(0, deleteDynamicQuery.length() - 1);
-
-			//refundSmsDao.deleteRows(subQuery);
+			///delete rows
+			refundSmsDao.deleteRows(subQuery);
 			LOG.debug("Finished executing perform method of SendRefundSmsCronJob class...");
 			return new PerformResult(CronJobResult.SUCCESS, CronJobStatus.FINISHED);
 		}

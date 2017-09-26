@@ -18,5 +18,5 @@ public interface RefundSmsDao
 
 	public String getAllTransactionsForSms() throws Exception;
 
-	public void deleteRows(final StringBuilder str) throws Exception;
+	public void deleteRows(final String str) throws Exception;
 }
