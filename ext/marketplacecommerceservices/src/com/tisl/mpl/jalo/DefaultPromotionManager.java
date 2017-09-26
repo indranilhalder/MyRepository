@@ -1014,15 +1014,9 @@ public class DefaultPromotionManager extends PromotionsManager
 		if (null != currentBaseSite
 				&& StringUtils.isNotBlank(currentBaseSite.getUid())
 
-
 				&& currentBaseSite.getUid().equals(
 						configurationService.getConfiguration().getString(MarketplacecommerceservicesConstants.DEFAULTLUXURYSITEID)))
 		{
-
-
-
-
-
 
 
 
@@ -1033,7 +1027,6 @@ public class DefaultPromotionManager extends PromotionsManager
 		}
 		else
 		{
-
 
 			catalogId = configurationService.getConfiguration().getString(MarketplacecommerceservicesConstants.DEFAULTCATALOGID, "");
 		}
@@ -3637,7 +3630,6 @@ public class DefaultPromotionManager extends PromotionsManager
 	//PR-13 ends here
 
 
-
 	/**
 	 * @Description: Check for the products with fired promotions and put them in excluded product list
 	 * @param ctx
@@ -5871,6 +5863,9 @@ public class DefaultPromotionManager extends PromotionsManager
 
 	//PR-15 modification ends
 
+
+
+
 	/**
 	 * @param params
 	 * @param ctx
@@ -6160,7 +6155,6 @@ public class DefaultPromotionManager extends PromotionsManager
 		return (((allowed == null) || (allowed == Boolean.FALSE)) ? Boolean.FALSE : Boolean.TRUE);
 	}
 
-
 	/*-----PR-15 starts-------*/
 	/**
 	 * @param promoContext
@@ -6329,5 +6323,4 @@ public class DefaultPromotionManager extends PromotionsManager
 	}
 
 	/*-----PR-15 ends-------*/
-
 }
