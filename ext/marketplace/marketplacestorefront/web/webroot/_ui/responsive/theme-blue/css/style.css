@@ -77180,6 +77180,7 @@ body .account .right-account form label.invite-text-lbl{
 	display: inline-block;
 	margin-left: 10px;
 	margin-bottom: 10px; /*TISCSXII-2218*/
+	margin-right: 30px; /* TISPRDT-6065 */
 }
 #codEli #codLink{
 	color: #92002e;
