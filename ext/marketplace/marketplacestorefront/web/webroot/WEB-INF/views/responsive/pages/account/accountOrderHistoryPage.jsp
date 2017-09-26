@@ -28,7 +28,19 @@
 
 <spring:eval expression="T(de.hybris.platform.util.Config).getParameter('order.cancel.enabled')" var="cancelFlag"/> 
 <spring:eval expression="T(de.hybris.platform.util.Config).getParameter('order.return.enabled')" var="returnFlag"/> 
+<style>
+#resend_order_email {
+    height: 16px;
+    font-size: 12px;
+    line-height: 1.33;
+    letter-spacing: .6px;
+    text-align: center;
+    color: #a5173c;
+    text-transform: uppercase;
+}
 
+.product-block .header ul .viewDetails {width: 64% !important;}
+</style>
 
 <!-- LW-230 -->
 <input type="hidden" id="isLuxury" value="${isLuxury}"/>
@@ -192,15 +204,20 @@
 													${orderDataMap[orderHistoryDetail.code]}
 												</c:if></span>
 												</li>
-												
-
 												<li class="viewDetailsAnchor"><a
 
 													href="${orderDetailsUrl}?orderCode=${orderHistoryDetail.code}&pageAnchor=viewOrder"><spring:theme
 															code="text.orderHistory.view.orde" text="Order Details" /></a></li>
+												<li class="resendEmail">
+													<input type="hidden" id="order_id_for_resending" value="${orderHistoryDetail.code}" />
+													<span id="resend_order_email">RESEND EMAIL</span>
+												</li>
 															<!-- &pageAnchor=trackOrder -->
 												<li class="trackOrderAnchor"><a href="${orderDetailsUrl}?orderCode=${orderHistoryDetail.code}"><spring:theme
-															code="text.orderHistory.track.order" /></a></li>
+															code="text.orderHistory.track.order" /></a>
+															
+															
+												</li>
 											</ul>
 										</li>
 										
@@ -956,3 +973,17 @@
 		<div class="content"></div>
 	</div>
 </template:page>
+<script>
+$("#resend_order_email").click(function () {
+	var orderId = $("#order_id_for_resending").val();
+	alert(orderId);
+	$.ajax({	  
+		type: "POST",
+		url: ACC.config.encodedContextPath + "/my-account/sendNotificationEGVOrder",
+	    data: "orderId="+orderId,
+		success: function () {	
+			
+		}
+	});
+});
+</script>
