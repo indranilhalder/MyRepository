@@ -99,6 +99,7 @@ import com.tisl.mpl.model.BuyAPercentageDiscountModel;
 import com.tisl.mpl.model.BuyAandBGetPromotionOnShippingChargesModel;
 import com.tisl.mpl.model.BuyXItemsofproductAgetproductBforfreeModel;
 import com.tisl.mpl.model.EtailSellerSpecificRestrictionModel;
+import com.tisl.mpl.model.FixedPricePromotionModel;
 import com.tisl.mpl.model.SellerInformationModel;
 import com.tisl.mpl.promotion.helper.MplPromotionHelper;
 import com.tisl.mpl.promotion.service.SellerBasedPromotionService;
@@ -1010,9 +1011,16 @@ public class DefaultPromotionManager extends PromotionsManager
 		final BaseSiteModel currentBaseSite = baseSiteService.getCurrentBaseSite();
 		String catalogId = "";
 		if (null != currentBaseSite && StringUtils.isNotBlank(currentBaseSite.getUid())
+
 				&& currentBaseSite.getUid().equals(configurationService.getConfiguration().getString(MarketplacecommerceservicesConstants.DEFAULTLUXURYSITEID))){
+
+
+
+
+
 			catalogId = configurationService.getConfiguration().getString(MarketplacecommerceservicesConstants.DEFAULTLUXURYCATALOGID, "");
 		}else{
+
 			catalogId = configurationService.getConfiguration().getString(MarketplacecommerceservicesConstants.DEFAULTCATALOGID, "");
 		}
 		final String catalogVersionName = configurationService.getConfiguration().getString(
@@ -2689,6 +2697,12 @@ public class DefaultPromotionManager extends PromotionsManager
 				count = ((BuyAGetPrecentageDiscountCashbackModel) oModel).getQuantity().intValue();
 			}
 			//TISSQAUAT-476 fix ends here
+			//PR-13 starts here
+			else if (oModel instanceof FixedPricePromotionModel)
+			{
+				count = ((FixedPricePromotionModel) oModel).getQuantity().intValue();
+			}
+			//PR-13 ends here
 		}
 		catch (final Exception exception)
 		{
@@ -3586,6 +3600,27 @@ public class DefaultPromotionManager extends PromotionsManager
 		}
 		return totalvalidproductsPricevalue;
 	}
+
+    //PR-13 starts here
+	/**
+	 * @Description : This calculates the total valid product price
+	 * @param : validProductUssidMap, validProductList
+	 * @return :double
+	 */
+	public double getTotalValidProdFixedPrice(final Map<String, AbstractOrderEntry> validProductUssidMap,
+			final Map<String, Integer> validProductList, final double fixedUnitPrice)
+	{
+		double totalValidProdFixedPrice = 0.0D;
+		for (final Map.Entry<String, AbstractOrderEntry> mapEntry : validProductUssidMap.entrySet())
+		{
+			final String validUssid = mapEntry.getKey();
+			totalValidProdFixedPrice += (fixedUnitPrice * validProductList.get(validUssid).intValue());
+		}
+		return totalValidProdFixedPrice;
+	}
+
+	//PR-13 ends here
+	
 
 	/**
 	 * @Description: Check for the products with fired promotions and put them in excluded product list

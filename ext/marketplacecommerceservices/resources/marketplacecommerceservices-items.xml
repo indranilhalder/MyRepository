@@ -3127,6 +3127,74 @@
 		
 		<!-- TPR-3893 ends here -->
 		
+		<!-- PR-13 Fixed Price Promotion starts here -->		
+		<itemtype code="FixedPricePromotion" extends="ProductPromotion"
+			jaloclass="com.tisl.mpl.jalo.FixedPricePromotion" autocreate="true"
+			generate="true">
+			<attributes>
+				<attribute
+					qualifier="productFixedUnitPrice"
+					autocreate="true"
+					type="PromotionPriceRowCollectionType">
+					<description>Fixed price to sell the product at in specific currencies.</description>
+					<persistence type="property" />
+					<modifiers read="true" write="true" search="false" initial="false" optional="true" partof="true"/>
+				</attribute>
+				<attribute qualifier="quantity" autocreate="true"
+					type="java.lang.Long">
+					<description>The quantity.</description>
+					<defaultvalue>Long.valueOf(1)</defaultvalue>
+					<persistence type="property" />
+				</attribute>				
+				<attribute qualifier="messageFired" type="localized:java.lang.String">
+					<description>The message to show when the promotion has fired.
+					</description>
+					<modifiers read="true" write="true" optional="true" />
+					<persistence type="property">
+						<columntype database="oracle">
+							<value>varchar2(4000)</value>
+						</columntype>
+						<columntype database="mysql">
+							<value>text</value>
+						</columntype>
+						<columntype database="sqlserver">
+							<value>nvarchar(max)</value>
+						</columntype>
+						<columntype database="hsqldb">
+							<value>LONGVARCHAR</value>
+						</columntype>
+						<columntype>
+							<value>varchar</value>
+						</columntype>
+					</persistence>
+				</attribute>				
+				<attribute qualifier="messageCouldHaveFired" type="localized:java.lang.String">
+					<description>The message to show when the promotion could have
+						potentially fire.</description>
+					<modifiers read="true" write="true" optional="true" />
+					<persistence type="property">
+						<columntype database="oracle">
+							<value>varchar2(4000)</value>
+						</columntype>
+						<columntype database="mysql">
+							<value>text</value>
+						</columntype>
+						<columntype database="sqlserver">
+							<value>nvarchar(max)</value>
+						</columntype>
+						<columntype database="hsqldb">
+							<value>LONGVARCHAR</value>
+						</columntype>
+						<columntype>
+							<value>varchar</value>
+						</columntype>
+					</persistence>
+				</attribute>
+   		    </attributes>
+        </itemtype>
+		
+		<!-- PR-13 Fixed Price Promotion ends here -->
+		
 		
 		
 			
