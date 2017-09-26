@@ -7,6 +7,7 @@ import de.hybris.platform.jalo.SessionContext;
 import de.hybris.platform.jalo.c2l.Currency;
 import de.hybris.platform.jalo.enumeration.EnumerationValue;
 import de.hybris.platform.jalo.order.AbstractOrder;
+import de.hybris.platform.jalo.order.AbstractOrderEntry;
 import de.hybris.platform.jalo.product.Product;
 import de.hybris.platform.jalo.type.ComposedType;
 import de.hybris.platform.order.CartService;
@@ -21,12 +22,16 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
+import org.apache.commons.collections.MapUtils;
+import org.apache.commons.lang.BooleanUtils;
 import org.apache.log4j.Logger;
 
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.exception.EtailBusinessExceptions;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
+import com.tisl.mpl.promotion.helper.MplPromotionHelper;
 import com.tisl.mpl.util.ExceptionUtil;
 
 
@@ -36,6 +41,11 @@ import com.tisl.mpl.util.ExceptionUtil;
  */
 public class CustomOrderThresholdFreeGiftPromotion extends GeneratedCustomOrderThresholdFreeGiftPromotion
 {
+
+	//PR-15 starts here
+	private double subTotalValue = 0.0D;
+	//PR-15 ends here
+
 	@SuppressWarnings("unused")
 	private final static Logger LOG = Logger.getLogger(CustomOrderThresholdFreeGiftPromotion.class.getName());
 
@@ -64,11 +74,17 @@ public class CustomOrderThresholdFreeGiftPromotion extends GeneratedCustomOrderT
 	 * @param : SessionContext ctx ,PromotionEvaluationContext promoContext
 	 * @return : List<PromotionResult> promotionResults
 	 */
+	@SuppressWarnings("deprecation")
 	@Override
 	public List<PromotionResult> evaluate(final SessionContext ctx, final PromotionEvaluationContext promoContext)
 	{
 		boolean flagForDeliveryModeRestrEval = false;
 		boolean flagForPaymentModeRestrEval = false;
+
+		/* PR-15 starts here */
+		Map<String, AbstractOrderEntry> validProductUssidMap = new ConcurrentHashMap<String, AbstractOrderEntry>();
+		/* PR-15 starts here */
+
 		final List promotionResults = new ArrayList();
 		boolean checkChannelFlag = false;
 		try
@@ -89,14 +105,32 @@ public class CustomOrderThresholdFreeGiftPromotion extends GeneratedCustomOrderT
 				final boolean flagForPincodeRestriction = getDefaultPromotionsManager().checkPincodeSpecificRestriction(
 						restrictionList, order);
 
-				if (checkRestrictions(ctx, promoContext) && checkChannelFlag && flagForDeliveryModeRestrEval
-						&& flagForPaymentModeRestrEval && flagForPincodeRestriction)
+				//PR-15 starts here
+				final PromotionsManager.RestrictionSetResult rsr = getDefaultPromotionsManager()
+						.findEligibleProductsInBasketForCartPromo(ctx, promoContext, this);
+				//PR-15 ends here
+
+				if (rsr.isAllowedToContinue() && !rsr.getAllowedProducts().isEmpty() && checkRestrictions(ctx, promoContext)
+						&& checkChannelFlag && flagForDeliveryModeRestrEval && flagForPaymentModeRestrEval && flagForPincodeRestriction)//check added for PR-15
 				{
+
+					//PR-15 starts here
+					double orderSubtotalAfterDiscounts = 0.0D;
+					final List<Product> allowedProductList = new ArrayList<Product>(rsr.getAllowedProducts());
+					//PR-15 ends here
 					final Double threshold = getPriceForOrder(ctx, getThresholdTotals(ctx), promoContext.getOrder(),
 							MarketplacecommerceservicesConstants.THRESHOLD_TOTALS);
 					if (threshold != null)
 					{
-						final double orderSubtotalAfterDiscounts = getOrderSubtotalAfterDiscounts(ctx, order);
+						/* PR-15 starts here */
+						validProductUssidMap = getMplPromotionHelper().getCartSellerEligibleProducts(ctx, order, null,
+								allowedProductList);
+						orderSubtotalAfterDiscounts = getAllowedProductSubtotal(ctx, validProductUssidMap);
+						setSubTotalValue(orderSubtotalAfterDiscounts);
+						//orderSubtotalAfterDiscounts = getSubtotalAfterDiscount(ctx, order);
+						//final double orderSubtotalAfterDiscounts = getOrderSubtotalAfterDiscounts(ctx, order);
+						/* PR-15 ends here */
+
 						if (orderSubtotalAfterDiscounts >= threshold.doubleValue())
 						{
 							if (LOG.isDebugEnabled())
@@ -203,7 +237,10 @@ public class CustomOrderThresholdFreeGiftPromotion extends GeneratedCustomOrderT
 					}
 					if (result.getCouldFire(ctx))
 					{
-						final double amountRequired = threshold.doubleValue() - order.getTotalPrice().doubleValue();
+						//PR-15 starts here
+						//final double amountRequired = threshold.doubleValue() - order.getTotalPrice().doubleValue();
+						final double amountRequired = threshold.doubleValue() - getSubTotalValue();
+						//PR-15 ends here
 
 						final Object[] args =
 						{ threshold, Helper.formatCurrencyAmount(ctx, locale, orderCurrency, threshold.doubleValue()),
@@ -228,6 +265,51 @@ public class CustomOrderThresholdFreeGiftPromotion extends GeneratedCustomOrderT
 		return "";
 	}
 
+	//PR-15 starts here
+	private double getAllowedProductSubtotal(final SessionContext arg0, final Map<String, AbstractOrderEntry> validProductUssidMap)
+	{
+		double orderSubtotalAfterDiscounts = 0.0D;
+		try
+		{
+			if (MapUtils.isNotEmpty(validProductUssidMap))
+			{
+				double bogoFreePrice = 0.0D;
+				double totalPrice = 0.0D;
+
+				for (final Map.Entry<String, AbstractOrderEntry> mapentry : validProductUssidMap.entrySet())
+				{
+					if (null != mapentry && null != mapentry.getValue() && null != mapentry.getValue().getTotalPrice())
+					{
+						totalPrice = totalPrice + (mapentry.getValue().getTotalPrice().doubleValue());
+					}
+
+					if ((null != mapentry.getValue().getAttribute(arg0, MarketplacecommerceservicesConstants.IS_BOGO_APPLIED)
+							&& BooleanUtils.toBoolean(mapentry.getValue()
+									.getAttribute(arg0, MarketplacecommerceservicesConstants.IS_BOGO_APPLIED).toString()) && null != mapentry
+							.getValue().getAttribute(arg0, MarketplacecommerceservicesConstants.BOGO_ITEM_COUNT)))
+					{
+						final double freecount = Double.parseDouble(mapentry.getValue()
+								.getAttribute(arg0, MarketplacecommerceservicesConstants.BOGO_ITEM_COUNT).toString());
+						bogoFreePrice = bogoFreePrice + (freecount * 0.01);
+					}
+				}
+
+				if (totalPrice != 0.0D)
+				{
+					orderSubtotalAfterDiscounts = totalPrice - bogoFreePrice;
+				}
+			}
+		}
+		catch (final Exception exception)
+		{
+			LOG.error(exception.getMessage());
+		}
+
+		return orderSubtotalAfterDiscounts;
+	}
+
+	//PR-15 ends here
+
 
 	protected CartService getCartService()
 	{
@@ -238,5 +320,30 @@ public class CustomOrderThresholdFreeGiftPromotion extends GeneratedCustomOrderT
 	{
 		return Registry.getApplicationContext().getBean("defaultPromotionManager", DefaultPromotionManager.class);
 	}
+
+	//PR-15 starts here
+
+	protected MplPromotionHelper getMplPromotionHelper()
+	{
+		return Registry.getApplicationContext().getBean("mplPromotionHelper", MplPromotionHelper.class);
+	}
+
+	/**
+	 * @return the subTotalValue
+	 */
+	public double getSubTotalValue()
+	{
+		return subTotalValue;
+	}
+
+	/**
+	 * @param subTotalValue
+	 *           the subTotalValue to set
+	 */
+	public void setSubTotalValue(final double subTotalValue)
+	{
+		this.subTotalValue = subTotalValue;
+	}
+	//PR-15 ends here
 
 }

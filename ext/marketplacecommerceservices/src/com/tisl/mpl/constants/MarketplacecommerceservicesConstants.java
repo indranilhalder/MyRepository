@@ -2258,4 +2258,8 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String SCHEDULE_PICKUP = "schedulePickup";
 	public static final String QUICK_DROP = "quickDrop";
 	public static final String ISCHECKOUT_PINCODE_SERVICEABLE = "isCheckoutPincodeServiceable";
+
+	//PR-15 (Rainbow)
+	public static final String CATEGORYRESTRICTION = "CategoryRestriction";
+
 }
