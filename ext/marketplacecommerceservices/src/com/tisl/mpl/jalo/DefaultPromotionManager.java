@@ -10,7 +10,6 @@ import de.hybris.platform.catalog.model.CatalogVersionModel;
 import de.hybris.platform.category.CategoryService;
 import de.hybris.platform.category.jalo.Category;
 import de.hybris.platform.category.model.CategoryModel;
-import de.hybris.platform.cms2.jalo.restrictions.CategoryRestriction;
 import de.hybris.platform.core.Registry;
 import de.hybris.platform.core.model.JewelleryInformationModel;
 import de.hybris.platform.core.model.order.AbstractOrderEntryModel;
