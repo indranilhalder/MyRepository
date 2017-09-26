@@ -846,15 +846,15 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 			}
 			//TISST-13012
 			final CartModel cart = getCartService().getSessionCart();
-			final boolean cartItemDelistedStatus = mplCartFacade.isCartEntryDelisted(cart);
-			if (cartItemDelistedStatus)
-			{
-				getSessionService().setAttribute(MarketplacecommerceservicesConstants.CART_DELISTED_SESSION_ID,
-						MarketplacecommerceservicesConstants.TRUE_UPPER);
-				final String requestQueryParam = UriUtils.encodeQuery("?url=" + MarketplacecheckoutaddonConstants.CART
-						+ "&type=redirect", UTF);
-				return FORWARD_PREFIX + "/checkout/single/message" + requestQueryParam;
-			}
+			//	final boolean cartItemDelistedStatus = mplCartFacade.isCartEntryDelisted(cart);
+			//			if (cartItemDelistedStatus)
+			//			{
+			//				getSessionService().setAttribute(MarketplacecommerceservicesConstants.CART_DELISTED_SESSION_ID,
+			//						MarketplacecommerceservicesConstants.TRUE_UPPER);
+			//				final String requestQueryParam = UriUtils.encodeQuery("?url=" + MarketplacecheckoutaddonConstants.CART
+			//						+ "&type=redirect", UTF);
+			//				return FORWARD_PREFIX + "/checkout/single/message" + requestQueryParam;
+			//			}
 
 			final List<StateData> stateDataList = accountAddressFacade.getStates();
 			final String errorMsg = mplAddressValidator.validate(addressForm);
@@ -1128,18 +1128,18 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 			}
 			//TISST-13012
 			final CartModel cart = getCartService().getSessionCart();
-			final boolean cartItemDelistedStatus = mplCartFacade.isCartEntryDelisted(cart);
-			if (cartItemDelistedStatus)
-			{
-				getSessionService().setAttribute(MarketplacecommerceservicesConstants.CART_DELISTED_SESSION_ID,
-						MarketplacecommerceservicesConstants.TRUE_UPPER);
-				final String requestQueryParam = UriUtils.encodeQuery("?url=" + MarketplacecheckoutaddonConstants.CART
-						+ "&type=redirect", UTF);
-				return FORWARD_PREFIX + "/checkout/single/message" + requestQueryParam;
-			}
+			//			final boolean cartItemDelistedStatus = mplCartFacade.isCartEntryDelisted(cart);  //CAR-323
+			//			if (cartItemDelistedStatus)
+			//			{
+			//				getSessionService().setAttribute(MarketplacecommerceservicesConstants.CART_DELISTED_SESSION_ID,
+			//						MarketplacecommerceservicesConstants.TRUE_UPPER);
+			//				final String requestQueryParam = UriUtils.encodeQuery("?url=" + MarketplacecheckoutaddonConstants.CART
+			//						+ "&type=redirect", UTF);
+			//				return FORWARD_PREFIX + "/checkout/single/message" + requestQueryParam;
+			//			}
 
 			boolean exchangeAppliedCart = false;
-			if ((StringUtils.isEmpty(exchangeEnabled) && !cartItemDelistedStatus) && (null != (cart.getExchangeAppliedCart())))
+			if ((StringUtils.isEmpty(exchangeEnabled)) && (null != (cart.getExchangeAppliedCart())))
 			{
 				exchangeAppliedCart = (null != cart.getExchangeAppliedCart()) ? cart.getExchangeAppliedCart().booleanValue() : false;
 				LOG.debug("exchangeAppliedCart=" + exchangeAppliedCart);
@@ -1217,8 +1217,7 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 					getMplCheckoutFacade().reCalculateCart(cartData);
 				}
 			}
-			if (exchangeAppliedCart && selectedPincode.matches(regex) && StringUtils.isEmpty(exchangeEnabled)
-					&& !cartItemDelistedStatus)
+			if (exchangeAppliedCart && selectedPincode.matches(regex) && StringUtils.isEmpty(exchangeEnabled))
 			{
 				if (!exchangeGuideFacade.isBackwardServiceble(selectedPincode))
 				{
@@ -1987,16 +1986,16 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 			//setExpressCheckout(serviceCart);
 
 			//TISST-13012
-			final boolean cartItemDelistedStatus = mplCartFacade.isCartEntryDelisted(serviceCart); //TISPT-104
-			if (cartItemDelistedStatus)
-			{
-				LOG.debug("enterDeliveryModeStep:Cart Item is delisted, Hence redirecting to cart.");
-				getSessionService().setAttribute(MarketplacecommerceservicesConstants.CART_DELISTED_SESSION_ID,
-						MarketplacecommerceservicesConstants.TRUE_UPPER);
-				final String requestQueryParam = UriUtils.encodeQuery("?url=" + MarketplacecheckoutaddonConstants.CART
-						+ "&type=redirect", UTF);
-				return FORWARD_PREFIX + "/checkout/single/message" + requestQueryParam;
-			}
+			//			final boolean cartItemDelistedStatus = mplCartFacade.isCartEntryDelisted(serviceCart); //TISPT-104
+			//			if (cartItemDelistedStatus)
+			//			{
+			//				LOG.debug("enterDeliveryModeStep:Cart Item is delisted, Hence redirecting to cart.");
+			//				getSessionService().setAttribute(MarketplacecommerceservicesConstants.CART_DELISTED_SESSION_ID,
+			//						MarketplacecommerceservicesConstants.TRUE_UPPER);
+			//				final String requestQueryParam = UriUtils.encodeQuery("?url=" + MarketplacecheckoutaddonConstants.CART
+			//						+ "&type=redirect", UTF);
+			//				return FORWARD_PREFIX + "/checkout/single/message" + requestQueryParam;
+			//			}
 
 			if (isCallAfterRemoveCartItem)
 			{
