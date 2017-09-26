@@ -122,9 +122,11 @@ $("#viewPaymentCOD, #viewPaymentCODMobile").click(function(){
 		redirectToCheckoutLogin();
 	}
 	//TPR-665
-	utag.link({
-		"link_text": "pay_cod_selected" , "event_type" : "payment_mode_selection"
-	});
+	if("undefined" != typeof utag){
+		utag.link({
+			"link_text": "pay_cod_selected" , "event_type" : "payment_mode_selection"
+		});
+	}
 });
 
 $("#viewPaymentEMI, #viewPaymentEMIMobile").click(function(){

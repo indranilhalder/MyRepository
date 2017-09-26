@@ -3,9 +3,14 @@
  */
 package com.tisl.mpl.marketplacecommerceservices.service.impl;
 
+import de.hybris.platform.catalog.CatalogVersionService;
+import de.hybris.platform.core.Registry;
 import de.hybris.platform.core.enums.OrderStatus;
+import de.hybris.platform.core.model.order.AbstractOrderEntryModel;
 import de.hybris.platform.core.model.order.OrderModel;
 import de.hybris.platform.orderprocessing.model.OrderProcessModel;
+import de.hybris.platform.payment.enums.PaymentTransactionType;
+import de.hybris.platform.payment.model.PaymentTransactionModel;
 import de.hybris.platform.processengine.BusinessProcessService;
 import de.hybris.platform.processengine.enums.ProcessState;
 import de.hybris.platform.servicelayer.config.ConfigurationService;
@@ -20,20 +25,25 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
+import com.tisl.mpl.core.enums.JuspayRefundType;
 import com.tisl.mpl.core.enums.MplPaymentAuditStatusEnum;
 import com.tisl.mpl.core.model.JuspayEBSResponseDataModel;
 import com.tisl.mpl.core.model.MplPaymentAuditEntryModel;
 import com.tisl.mpl.core.model.MplPaymentAuditModel;
+import com.tisl.mpl.core.model.RefundTransactionMappingModel;
 import com.tisl.mpl.juspay.PaymentService;
 import com.tisl.mpl.juspay.request.GetOrderStatusRequest;
 import com.tisl.mpl.juspay.response.GetOrderStatusResponse;
 import com.tisl.mpl.marketplacecommerceservices.daos.JuspayWebHookDao;
 import com.tisl.mpl.marketplacecommerceservices.service.JuspayEBSService;
+import com.tisl.mpl.marketplacecommerceservices.service.MplCommerceCartService;
+import com.tisl.mpl.marketplacecommerceservices.service.MplJusPayRefundService;
 import com.tisl.mpl.marketplacecommerceservices.service.RMSVerificationNotificationService;
 import com.tisl.mpl.util.OrderStatusSpecifier;
 
@@ -44,6 +54,7 @@ import com.tisl.mpl.util.OrderStatusSpecifier;
  */
 public class DefaultJuspayEBSServiceImpl implements JuspayEBSService
 {
+
 	@SuppressWarnings("unused")
 	private final static Logger LOG = Logger.getLogger(DefaultJuspayEBSServiceImpl.class.getName());
 
@@ -63,6 +74,17 @@ public class DefaultJuspayEBSServiceImpl implements JuspayEBSService
 
 	@Autowired
 	private BaseStoreService baseStoreService;
+	@Autowired
+	private MplJusPayRefundService mplJusPayRefundService;
+	@Autowired
+	private MplCancelOrderTicketImpl mplCancelOrderTicketImpl;
+	@Autowired
+	private MplCommerceCartService mplCommerceCartService;
+
+	protected CatalogVersionService getCatalogVersionService()
+	{
+		return Registry.getApplicationContext().getBean("catalogVersionService", CatalogVersionService.class);
+	}
 
 	/**
 	 * @Description: Fetch Audit Based on EBS Status
@@ -322,13 +344,25 @@ public class DefaultJuspayEBSServiceImpl implements JuspayEBSService
 				final BaseStoreModel store = getJuspayWebHookDao().getSubmitOrderProcessName();
 				final String processDefinitionName = store.getSubmitOrderProcessCode();
 				LOG.debug(" order state ====> " + op.getState() + "=====and process name=====>" + processDefinitionName);
+
+				//Direct call of Refund for RMS failed... INC144318239
+				if (null != op.getOrder().getStatus()
+						&& op.getOrder().getStatus().toString()
+								.equalsIgnoreCase(MarketplacecommerceservicesConstants.RMS_VERIFICATION_FAILED))
+				{
+					callRMSVerficationFailed(oModel);
+				}
+				//Direct call of Refund for RMS failed... INC144318239--ends
+
 				if (StringUtils.isNotEmpty(op.getProcessDefinitionName())
 						&& op.getProcessDefinitionName().equalsIgnoreCase(processDefinitionName)
-						&& (ProcessState.WAITING.equals(op.getState()) || ProcessState.ERROR.equals(op.getState())) && null != op.getOrder()
-						&& StringUtils.isNotEmpty(op.getOrder().getCode()))
+						&& (ProcessState.WAITING.equals(op.getState()) || ProcessState.ERROR.equals(op.getState()))
+						&& null != op.getOrder() && StringUtils.isNotEmpty(op.getOrder().getCode()))
 				{
 					LOG.debug(" inside if .. triffering review decision event " + op.getOrder().getCode());
+
 					businessProcessService.triggerEvent(op.getOrder().getCode() + "_ReviewDecision");
+
 					errorFlag = false;
 					break;
 				}
@@ -340,6 +374,129 @@ public class DefaultJuspayEBSServiceImpl implements JuspayEBSService
 			LOG.error(exception.getMessage());
 		}
 		return errorFlag;
+	}
+
+	/**
+	 *
+	 */
+	private void callRMSVerficationFailed(final OrderModel orderModel)
+	{
+
+		String defaultPinCode = "".intern();
+		if (null != orderModel.getDeliveryAddress() && StringUtils.isNotEmpty(orderModel.getDeliveryAddress().getPostalcode()))
+		{
+			defaultPinCode = orderModel.getDeliveryAddress().getPostalcode();
+		}
+		else
+		{
+			defaultPinCode = MarketplacecommerceservicesConstants.PINCODE;
+		}
+		if (StringUtils.isNotEmpty(defaultPinCode))
+		{
+			//Initiating refund
+			final PaymentTransactionModel paymentTransactionModel = initiateRefund(orderModel);
+			//Creating cancel order ticket
+			final boolean ticketstatus = mplCancelOrderTicketImpl.createCancelTicket(orderModel);
+			if (ticketstatus)
+			{
+				orderStatusSpecifier.setOrderStatus(orderModel, OrderStatus.CANCELLATION_INITIATED);
+			}
+			//Refund model mapping for initiated refund
+			//Refund code executed first to avoid refund failure during oms inventory call
+			if (null != paymentTransactionModel && StringUtils.isNotEmpty(paymentTransactionModel.getCode()))
+			{
+				final String status = paymentTransactionModel.getStatus();
+				if (StringUtils.isNotEmpty(status) && status.equalsIgnoreCase("SUCCESS"))
+				{
+					orderStatusSpecifier.setOrderStatus(orderModel, OrderStatus.ORDER_CANCELLED);
+				}
+				else if (StringUtils.isNotEmpty(status) && status.equalsIgnoreCase("FAILURE"))
+				{
+					orderStatusSpecifier.setOrderStatus(orderModel, OrderStatus.REFUND_IN_PROGRESS);
+				}
+				else if (StringUtils.isNotEmpty(status) && status.equalsIgnoreCase("PENDING"))
+				{
+					orderStatusSpecifier.setOrderStatus(orderModel, OrderStatus.REFUND_INITIATED);
+					mplCancelOrderTicketImpl.refundMapping(paymentTransactionModel.getCode(), orderModel);
+				}
+			}
+			else
+			{
+				orderStatusSpecifier.setOrderStatus(orderModel, OrderStatus.REFUND_INITIATED);
+			}
+
+		}
+
+	}
+
+	/**
+	 * @param orderModel
+	 * @return
+	 */
+	private PaymentTransactionModel initiateRefund(final OrderModel order)
+	{
+		PaymentTransactionModel paymentTransactionModel = null;
+		final String uniqueRequestId = mplJusPayRefundService.getRefundUniqueRequestId();
+		try
+		{
+			paymentTransactionModel = mplJusPayRefundService.doRefund(order, order.getTotalPriceWithConv().doubleValue(),
+					PaymentTransactionType.CANCEL, uniqueRequestId);
+			if (null != paymentTransactionModel)
+			{
+				mplJusPayRefundService.attachPaymentTransactionModel(order, paymentTransactionModel);
+			}
+			else
+			{
+				LOG.error("Failed to Refund");
+			}
+		}
+		catch (final Exception e)
+		{
+			LOG.error(e.getMessage(), e);
+			paymentTransactionModel = mplJusPayRefundService.createPaymentTransactionModel(order, "FAILURE",
+					order.getTotalPriceWithConv(), PaymentTransactionType.CANCEL, "FAILURE", uniqueRequestId);
+			mplJusPayRefundService.attachPaymentTransactionModel(order, paymentTransactionModel);
+
+			// TISSIT-1784 Code addition started
+			if (CollectionUtils.isNotEmpty(order.getChildOrders()))
+			{
+				for (final OrderModel subOrderModel : order.getChildOrders())
+				{
+					if (subOrderModel != null && CollectionUtils.isNotEmpty(subOrderModel.getEntries()))
+					{
+						for (final AbstractOrderEntryModel subOrderEntryModel : subOrderModel.getEntries())
+						{
+							if (subOrderEntryModel != null)
+							{
+								//TISPRO-216 Starts
+								double refundAmount = 0D;
+								double deliveryCost = 0D;
+								if (subOrderEntryModel.getCurrDelCharge() != null)
+								{
+									deliveryCost = subOrderEntryModel.getCurrDelCharge().doubleValue();
+								}
+
+								refundAmount = subOrderEntryModel.getNetAmountAfterAllDisc().doubleValue() + deliveryCost;
+								refundAmount = mplJusPayRefundService.validateRefundAmount(refundAmount, subOrderModel);
+								//TISPRO-216 Ends
+
+								// Making RTM entry to be picked up by webhook job
+								final RefundTransactionMappingModel refundTransactionMappingModel = getModelService().create(
+										RefundTransactionMappingModel.class);
+								refundTransactionMappingModel.setRefundedOrderEntry(subOrderEntryModel);
+								refundTransactionMappingModel.setJuspayRefundId(uniqueRequestId);
+								refundTransactionMappingModel.setCreationtime(new Date());
+								refundTransactionMappingModel.setRefundType(JuspayRefundType.CANCELLED_FOR_RISK);
+								refundTransactionMappingModel.setRefundAmount(new Double(refundAmount));//TISPRO-216 : Refund amount Set in RTM
+								getModelService().save(refundTransactionMappingModel);
+							}
+						}
+					}
+				}
+			}
+			// TISSIT-1784 Code addition ended
+		}
+		return paymentTransactionModel;
 	}
 
 	/**

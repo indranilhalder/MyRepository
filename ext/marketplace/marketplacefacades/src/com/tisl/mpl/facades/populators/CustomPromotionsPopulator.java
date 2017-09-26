@@ -28,6 +28,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Required;
 import org.springframework.util.Assert;
 
+import com.tisl.mpl.model.BundlingPromotionWithPercentageSlabModel;
 import com.tisl.mpl.model.BuyABFreePrecentageDiscountModel;
 import com.tisl.mpl.model.BuyAandBgetCModel;
 import com.tisl.mpl.model.BuyXItemsofproductAgetproductBforfreeModel;
@@ -120,6 +121,13 @@ public class CustomPromotionsPopulator implements Populator<AbstractPromotionMod
 			target.setPromourl(((MplProductSteppedMultiBuyPromotionModel) source).getPromourl());
 			target.setBundlepromolinktext(((MplProductSteppedMultiBuyPromotionModel) source).getBundlepromolinktext());
 		}
+		//TPR-3893 starts here
+		else if (source instanceof BundlingPromotionWithPercentageSlabModel)
+		{
+			target.setPromourl(((BundlingPromotionWithPercentageSlabModel) source).getPromourl());
+			target.setBundlepromolinktext(((BundlingPromotionWithPercentageSlabModel) source).getBundlepromolinktext());
+		}
+		//TPR-3893 ends here
 		final List<String> channelList = new ArrayList<String>();
 		for (final SalesApplication channel : source.getChannel())
 		{

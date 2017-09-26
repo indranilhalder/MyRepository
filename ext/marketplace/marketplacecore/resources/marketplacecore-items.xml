@@ -2831,6 +2831,18 @@
 						<modifiers read="true" write="true" initial="true" />
 						<persistence type="property" />
 					</attribute>
+					<!-- TPR-6949 FlashSale changes -->
+					<attribute qualifier="flashSaleEnabled" type="java.lang.Boolean">
+						<description>Flag to indicate if FlashSale has been Enabled</description>
+						<modifiers read="true" write="true" optional="true"/>
+						<defaultvalue>Boolean.FALSE</defaultvalue>
+						<persistence type="property" />
+					</attribute>
+					<attribute qualifier="flashSaleUSSIDList" type="java.lang.String">
+						<persistence type="property" />
+						<description>USSID list for flashsale items</description>					
+						<modifiers read="true" write="true"	optional="true" />
+					</attribute>
 				</attributes>
 			</itemtype>
 
@@ -6430,8 +6442,16 @@
 						<modifiers read="true" write="true" search="true"
 							optional="true" />
 					</attribute>
-					<!-- TPR-5667 | End : Attribute added to store samsung reuqest and response 
-						json for audit purpose -->
+
+					<!-- TPR-5667 | End : Attribute added to store samsung reuqest and response json for audit purpose -->
+					<!-- TPR-6949 FlashSale changes -->
+					<attribute qualifier="containsFlashSaleItem" type="java.lang.Boolean">
+						<description>Flag to indicate if order contains FlashSale item</description>
+						<modifiers read="true" write="true" optional="true"/>
+						<defaultvalue>Boolean.FALSE</defaultvalue>
+						<persistence type="property" />
+					</attribute>
+
 				</attributes>
 				<!-- CAR-274 -->
 				<indexes>

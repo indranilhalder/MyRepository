@@ -25,7 +25,7 @@ import com.tisl.mpl.marketplacecommerceservices.service.MplPaymentService;
 
 public class DefaultCheckOrderService implements CheckOrderService
 {
-	
+
 
 	@Autowired
 	private MplPaymentService mplPaymentService;
@@ -48,7 +48,16 @@ public class DefaultCheckOrderService implements CheckOrderService
 		{
 			// Order must have some payment info to use in the process
 			//return false;
-			status = false;
+			//CheckedInvalid PaymentInfo missing handled call--starts
+			if (checkMissintPaymentInfo(order))
+			{
+				status = true;
+			}
+			//CheckedInvalid PaymentInfo missing handled call--ends
+			else
+			{
+				status = false;
+			}
 		}
 		//TISPRO-497
 		else if (order.getTotalPrice().doubleValue() <= 0.0 || order.getTotalPriceWithConv().doubleValue() <= 0.0)
@@ -115,7 +124,7 @@ public class DefaultCheckOrderService implements CheckOrderService
 	}
 
 	/*
-	 *
+	 * 
 	 * //SprintPaymentFixes:- To handle missing paymentTransaction ,Create the Transaction
 	 */
 	@Override
@@ -130,7 +139,29 @@ public class DefaultCheckOrderService implements CheckOrderService
 		return status;
 	}
 
+	//CheckedInvalid PaymentInfo missing handled call
+	public boolean checkMissintPaymentInfo(final OrderModel order)
+	{
+		boolean status = true;
+		if (null == (order.getPaymentInfo()))
+		{
+			//				modelService.remove(order.getChildOrders().get(0));
+			//				order.setChildOrders(null);
+			//				modelService.save(order);
+			//				modelService.refresh(order);
 
+			if (CollectionUtils.isEmpty(order.getChildOrders()))
+			{
+				status = false;
+			}
+			else
+			{
+				status = mplPaymentService.createPaymentInfo(order);
+			}
+		}
+		return status;
+
+	}
 
 
 }

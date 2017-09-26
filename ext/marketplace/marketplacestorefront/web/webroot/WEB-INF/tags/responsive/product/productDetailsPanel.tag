@@ -261,6 +261,9 @@ tr.d0 td {
 				<!-- EMI section -->
 			
 			<product:emiDetail product="${product}" />
+			<!-- TPR-6907 -->
+			<div id= "codEli"><a id="codLink" href=""><spring:theme code="cod.available"/></a></div>
+			<!-- TPR-6907 -->
 			<!-- TPR-1083 Exchange Start -->
 			<input id="l3category" type="hidden" value="${product.level3CategoryCode}"/>
  			<!-- Exchange section -->

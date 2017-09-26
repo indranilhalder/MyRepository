@@ -44896,7 +44896,7 @@ bottom:35px;
 #new_exclusive.owl-theme .owl-controls,
 .home-product-you-care-carousel .owl-theme .owl-controls,
 .home-best-pick-carousel.owl-theme .owl-controls,
-#ia_products_hot_list.owl-theme .owl-controls {top: 38%;margin: 0;}
+#ia_products_hot_list.owl-theme .owl-controls {top: 38%;margin: 0;display: block;}
 
 
 /*Upgraded Owl carousel CSS ends*/
@@ -59846,6 +59846,17 @@ body.template-pages-account-accountOrderDetailPage .product-block.order-details 
 	.SpecWrap .Padd .tab-details li span + span{ font-size:12px;font-weight:normal;}
 	.SpecWrap .Padd .tabs-block .nav.pdp{ padding:0;}
 	}
+	
+	@media(min-width: 1201px){
+	.SpecWrap .Padd .tabs-block .nav{
+		white-space: normal;
+	}
+	.SpecWrap .Padd .tabs-block .nav>li {
+		padding-left: 2px;
+		padding-right: 2px;
+	}
+}
+
  /* Start of TPR-860 */
  .OtherSellers .Padd .InfoWrap .Content > div.Buying .btn-buy-now.oosOtherSeller{
     opacity: .5;
@@ -62176,6 +62187,7 @@ body.page-cartPage .cart.wrapper .product-block li.item .productItemInfo h2.prod
 }
 body.page-cartPage .cart.wrapper .product-block li.item .productItemInfo p.size{
 	color:#000;
+	font-style: normal;
 }
 body.page-cartPage .cart.wrapper .product-block li.item>ul.desktop>li.qty,
 body.page-cartPage .cart.wrapper .product-block li.header ul li.quantity{
@@ -67688,7 +67700,7 @@ body.page-multiStepCheckoutSummaryPage header, body.page-checkout-login header {
       font-size: 16px;
     color: #666;
     position: absolute;
-    left: 20px;
+    left: 25px; /*TISCSXII-2235*/
     top: 0px;
     }
 .new-address-form-mobile .product-block.addresses.new-form li.item input[type="radio"] + label.commercial:after {
@@ -76905,9 +76917,332 @@ body .account .right-account form label.invite-text-lbl{
 
 /* TISSPTEN-120 END */
 
+/*TPR-6399 start*/
+#login-modal .content{
+	min-width: 320px;
+}
+#login-modal .sign-in.wrapper{
+	padding: 0;
+    max-width: 100%;
+}
+#login-modal .sign-in.tab-view .tabs > li .left{
+	    width: 100%;}
+#login-modal .sign-in.tab-view .tabs{
+    margin-bottom: 0;
+}
+#login-modal .sign-in.tab-view .tabs > li{
+	padding: 35px 12px 0;
+    width: 100%;
+    margin-top: 0;
+}
+
+#login-modal .sign-in.tab-view .tabs{
+	border: 1px solid #cccccc;
+}
+#login-modal .sign-in.tab-view .nav li {
+	width: 50%;
+	padding: 18px 15px;
+	text-align: center;
+	font-size: 12px;
+	text-transform: uppercase;
+	background-color: #b2b2b2;
+	color: #fff;
+	letter-spacing: 1px;
+	border: 1px solid #cccccc;
+	margin-right: 0;
+	float: left;
+	}
+#login-modal .sign-in.tab-view .tabs > li .left form {
+    width: 52%;
+    float: left;
+    padding: 0 38px 0px 10px;
+}
+#login-modal .sign-in.tab-view .tabs > li .left form .forgotten-password{
+    border-bottom: 0 none;
+    padding-bottom: 30px;
+}
+
+#login-modal .else-sec {
+	display:block;
+    width: 5%;
+    float: left;
+    position: absolute;
+    top: 30px;
+    left: 50%;
+}
+#login-modal .else-brdrbtm,#login-modal .else-brdrtp {
+    height: 95px;
+    width: 1px;
+    background: #eaeaeb;
+    float: left;
+    margin: 0 20px;
+}
+#login-modal .else-brdrtp {
+    margin-bottom: 10px;
+}
+ #login-modal .else-brdrbtm {
+    margin-top: 10px;
+}
+#login-modal .else {
+    float: left;
+    border: 1px solid #e4e4e4;
+    padding: 7px 9px 10px;
+    color: #7f7f7f;
+    font-size: 14px;
+    border-radius: 24px;
+    margin-left: 3px;
+    text-align: center;
+}
+#login-modal  .accept-cond {
+    margin-bottom: 22px;
+    text-align: left;
+}
+#login-modal .sign-in.tab-view .tabs > li .left form#extRegisterForm {
+    padding-top: 0;
+    padding-left: 0px;
+}
+#login-modal .sign-in.tab-view .tabs > li .left form button {
+    margin-bottom: 17px;
+}
+#login-modal  .sign-in.tab-view .tabs > li .left form#extRegisterForm button {
+   margin-bottom: 10px;
+}
+#login-modal .sign-in.tab-view .tabs > li#sign_in_content .social-connect{
+	padding-top:0px;
+}
+#login-modal .sign-in.tab-view .tabs > li .left form div#checkBox{
+	overflow:hidden;
+	text-align: left;
+}
+#login-modal .sign-in.tab-view .tabs > li .left form div#checkBox label:before {
+    margin-left: 2px;
+    margin-top: 2px;
+}
+#login-modal .sign-in.tab-view .tabs > li#sign_up_content .social-connect{
+	display:block;
+	padding-top:30px;
+}
+#login-modal .sign-in.tab-view {
+    margin: 0;
+    padding: 10px;
+}
+#login-modal .sign-in.tab-view .tabs>li .left form div#checkBox label {
+    width: 86%;
+}
+#login-modal .sign-in.tab-view .nav li.active {
+    background: #fff;
+    color: #a9143c;
+    -webkit-transition: background .3s;
+    -moz-transition: background .3s;
+    transition: background .3s;
+    position: relative;
+}
+#login-modal .sign-in.tab-view .nav {
+    width: 100%;
+    float: left;
+    display: block;
+    text-align: left;
+}
+#login-modal .sign-in.tab-view .tabs>li{
+	display: none;
+}
+#login-modal .sign-in.tab-view .tabs>li.active {
+    display: inline-block;
+}
+#login-modal .sign-in.tab-view .tabs>li#sign_in_content .social-connect {
+    position: static;
+    width: 40%;
+    float: right;
+}
+#login-modal .sign-in.tab-view .tabs > li .left form  .button_fwd_wrapper{
+	text-align: left;
+}
+#login-modal .sign-in.tab-view .tabs>li .left form .forgotten-password_register {
+    display: block;
+}
+#login-modal .sign-in.tab-view .tabs>li .left p, #login-modal .sign-in.tab-view .form-actions.clearfix,
+#login-modal .sign-in.tab-view .tabs > li .left form a.js-password-forgotten{
+	text-align: left;
+}
+/*TPR-6399 end*/
+
+/*TPR-6405 start*/
+.samsung-chat-div{
+	position: fixed;
+    bottom: 40px;
+    right: 10px;
+    background: transparent;
+	cursor: pointer;
+	z-index: 10;
+}
+@media (max-width: 790px){
+	.samsung-chat-div{
+		display: none;
+	}
+}
+/*TPR-6405 end*/
+
+/* TPR-6399 start */
+#login-modal .content .close {
+    float: right;
+    border-radius: 50%;
+    width: 30px;
+    height: 30px;
+    border: 1px solid #ccc ! important;
+    margin-top: -8px!important;
+    margin-right: -8px!important;
+}
+@media (min-width: 768px)
+{
+.sign-in.wrapper {
+    margin-top: 26px !important;
+}
+}
+/* TPR-6399 end */
+/*TPR-6654 start*/
+#CNCstores{
+	margin-top: 15px;
+	line-height: 1.33;
+}
+#CNCstores .store-locator-block > span > b{
+	color: #000;
+	margin-bottom: 5px;
+	display: inline-block;
+}
+#CNCstores .store-locator-block  a[data-target="#storeLocatorModal"]{
+	margin-top: 5px;
+	color: blue;
+	text-decoration: underline;
+	display: inline-block;
+	cursor: pointer;
+}
+#CNCstores .store-locator-block .store-address{
+	padding-left: 15px;
+	position: relative;
+}
+#CNCstores .store-locator-block .store-address span{
+	color: #fff;
+    position: absolute;
+    left: -2px;
+    font-size: 11px;
+    font-weight: bold;
+    top: 2px;
+}
+#CNCstores .store-locator-block .store-address:before{
+	content: "";
+	position: absolute;
+	left: -10px;
+	width: 20px;
+    height: 20px;
+    border-radius: 50% 50% 50% 0;
+    background: red;
+    transform: rotate(-45deg);
+	
+}
+/*modal*/
+#storeLocatorModal .content{
+	text-align: left;
+	padding: 0;
+	max-width: 600px;
+}
+#storeLocatorModal  .nearby-stores{
+	font-size: 14px;
+	color: #000;
+	text-transform: none;
+	margin-bottom: 25px;
+	padding: 10px;
+    background: #f2f2f2;
+    width: 100%;
+}
+#storeLocatorModal  .store-address-block{
+	width: 49%;
+	display: inline-block;
+	vertical-align: top;
+	padding-left: 30px;
+	padding-bottom: 40px;
+	color: #000;
+	line-height: 1.7;
+}
+#storeLocatorModal .content > div {
+    white-space: normal;
+}
+/*TPR-6654 end*/
 /* TISPRDT-2410 start */
 #singlePageAddressPopup .product-block.addresses.new-form .half .dupDisplay label{
 	    margin-bottom: 5px;
 	    }
 /* TISPRDT-2410 end */
 
+
+
+/*TPR-6907 start*/
+#codEli{
+	display: inline-block;
+	margin-left: 10px;
+	margin-bottom: 10px; /*TISCSXII-2218*/
+}
+#codEli #codLink{
+	color: #92002e;
+	font-size: 14px;
+	text-decoration: underline;
+}
+@media( max-width: 1024px){
+#codEli{
+	margin-left: 0;
+}
+}
+/*TPR-6907 end*/
+/*TPR-6654 start*/
+.pincode-modal .content {
+    width: 130px;
+    border: 0px solid transparent;
+}
+button#homepagePincodeCheck {
+   font-size: 12px;
+    background: #a9143c;
+    color: #fff;
+    float: right;
+    line-height: 0;
+    padding: 0px 15px;
+    height: 39px;
+}
+.pincode-modal button.close {
+    top: 14px;
+}
+.pincode-modal .modal .overlay{
+	background: rgba(0, 0, 0, 0.5);
+}
+.product-info .product-content .delivery-block li .inline-form div#pdp_change_pincode #change_pincode{
+	margin-top: 10px;
+    display: block;
+    font-size: 14px;
+    font-weight: bold;
+    margin-left: 5px;
+	}
+
+.enter-pincode{
+	display:none;
+}
+li.enter-pincode a::before {
+ 	font-family: FontAwesome;
+    content: "\f041";
+    font-weight: lighter;
+    margin-top: 3px;
+    font-size: 18px;
+    margin-right: 10px;
+    color: rgba(255,255,255,0.7);
+    top: 2px;
+    line-height: 35px;
+    position: relative;
+}
+/*TPR-6654 end*/
+/* TISCSXII-2224 start */
+body.template-pages-LoginPageTemplate .sign-in.tab-view .form-group #password_login_bar .progress-bar{
+	margin-bottom: 10px;
+	} 
+/* TISCSXII-2224 end */
+/* TISCSXII-2240 Start */
+.cartPromotions .promotionDesc {
+    padding-bottom: 24px;
+} 
+/* TISCSXII-2240 END */

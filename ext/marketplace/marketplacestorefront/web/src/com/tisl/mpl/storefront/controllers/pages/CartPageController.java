@@ -37,6 +37,7 @@ import de.hybris.platform.commercefacades.product.data.PinCodeResponseData;
 import de.hybris.platform.commercefacades.product.data.PriceData;
 import de.hybris.platform.commercefacades.product.data.PriceDataType;
 import de.hybris.platform.commercefacades.product.data.ProductData;
+import de.hybris.platform.commercefacades.product.data.PromotionResultData;
 import de.hybris.platform.commercefacades.user.UserFacade;
 import de.hybris.platform.commercefacades.user.data.AddressData;
 import de.hybris.platform.commerceservices.enums.SalesApplication;
@@ -109,6 +110,7 @@ import com.tisl.mpl.storefront.constants.MessageConstants;
 import com.tisl.mpl.storefront.constants.ModelAttributetConstants;
 import com.tisl.mpl.storefront.controllers.ControllerConstants;
 import com.tisl.mpl.storefront.controllers.helpers.FrontEndErrorHelper;
+import com.tisl.mpl.storefront.security.cookie.PDPPincodeCookieGenerator;
 import com.tisl.mpl.util.ExceptionUtil;
 import com.tisl.mpl.util.GenericUtilityMethods;
 import com.tisl.mpl.wsdto.MaxLimitData;
@@ -143,6 +145,10 @@ public class CartPageController extends AbstractPageController
 
 	@Resource(name = "siteConfigService")
 	private SiteConfigService siteConfigService;
+
+	//TPR-6654
+	@Resource(name = "pdpPincodeCookieGenerator")
+	private PDPPincodeCookieGenerator pdpPincodeCookie;
 
 	@Autowired
 	private WishlistFacade wishlistFacade;
@@ -195,11 +201,17 @@ public class CartPageController extends AbstractPageController
 			@RequestParam(value = "pincode", required = false) final String pinCode,
 			@RequestParam(value = "isLux", required = false) final boolean isLux,
 			@RequestParam(value = "cartGuid", required = false) final String cartGuid, final HttpServletRequest request,
-			final RedirectAttributes redirectModel)
+			final HttpServletResponse response, final RedirectAttributes redirectModel)
 			throws CMSItemNotFoundException, CommerceCartModificationException, CalculationException
 	{
 		LOG.debug("Entering into showCart" + "Class Nameshowcart :" + className + "pinCode " + pinCode);
 		String returnPage = ControllerConstants.Views.Pages.Cart.CartPage;
+		//TPR-6654
+		int pincodeCookieMaxAge;
+		final Cookie cookiePdp = GenericUtilityMethods.getCookieByName(request, "pdpPincode");
+		final String cookieMaxAge = getConfigurationService().getConfiguration().getString("pdpPincode.cookie.age");
+		pincodeCookieMaxAge = (Integer.valueOf(cookieMaxAge)).intValue();
+		final String domain = getConfigurationService().getConfiguration().getString("shared.cookies.domain");
 
 		try
 		{
@@ -340,7 +352,27 @@ public class CartPageController extends AbstractPageController
 				//CAR-246//UF-70
 				if (StringUtils.isNotEmpty(selectedPinCode))
 				{
-					getSessionService().setAttribute(MarketplacecommerceservicesConstants.SESSION_PINCODE, selectedPinCode);
+					//TPR-6654
+					if (cookiePdp != null && cookiePdp.getValue() != null)
+					{
+						cookiePdp.setValue(selectedPinCode);
+						cookiePdp.setMaxAge(pincodeCookieMaxAge);
+						cookiePdp.setPath("/");
+
+						if (null != domain && !domain.equalsIgnoreCase("localhost"))
+						{
+							cookiePdp.setSecure(true);
+						}
+						cookiePdp.setDomain(domain);
+						response.addCookie(cookiePdp);
+						getSessionService().setAttribute(MarketplacecommerceservicesConstants.SESSION_PINCODE, selectedPinCode);
+					}
+					else
+					{
+						pdpPincodeCookie.addCookie(response, selectedPinCode);
+						getSessionService().setAttribute(MarketplacecommerceservicesConstants.SESSION_PINCODE, selectedPinCode);
+					}
+					//getSessionService().setAttribute(MarketplacecommerceservicesConstants.SESSION_PINCODE, selectedPinCode);
 					mplCartFacade.populatePinCodeData(cartModel, selectedPinCode);
 				}
 
@@ -452,9 +484,48 @@ public class CartPageController extends AbstractPageController
 				cartDataOnLoad = cartData;
 				prepareDataForPage(model, cartDataOnLoad);
 
+				//TPR-6371| DTM Track promotions start
+				List<PromotionResultData> productPromoList = new ArrayList<PromotionResultData>();
+				List<PromotionResultData> orderPromoList = new ArrayList<PromotionResultData>();
+				String promoTitle = "";
+				String promoCode = "";
+				String promo_id_product = "";
+				String promo_id_cart = "";
+				final List<String> promolist = new ArrayList<String>();
+				productPromoList = cartData.getAppliedOrderPromotions();
+				orderPromoList = cartData.getAppliedProductPromotions();
+
+				if (CollectionUtils.isNotEmpty(productPromoList))
+				{
+					if (productPromoList.get(0).getPromotionData() != null)
+					{
+						promoTitle = productPromoList.get(0).getPromotionData().getTitle();
+						promoCode = productPromoList.get(0).getPromotionData().getCode();
+						promo_id_product = promoTitle + ":" + promoCode;
+						promolist.add(promo_id_product);
+					}
+
+				}
+				if (CollectionUtils.isNotEmpty(orderPromoList))
+				{
+					if (orderPromoList.get(0).getPromotionData() != null)
+					{
+						promoTitle = orderPromoList.get(0).getPromotionData().getTitle();
+						promoCode = orderPromoList.get(0).getPromotionData().getCode();
+						promo_id_cart = promoTitle + ":" + promoCode;
+						promolist.add(promo_id_cart);
+					}
+
+				}
+				model.addAttribute("promolist", promolist);
+				//TPR-6371| DTM Track promotions end
+
+
+
 
 				model.addAttribute("isPincodeRestrictedPromoPresent",
 						mplCartFacade.checkPincodeRestrictedPromoOnCartProduct(cartModel));
+
 			}
 			else if (isLux)
 			{
@@ -1552,7 +1623,8 @@ public class CartPageController extends AbstractPageController
 	@RequestMapping(value = MarketplacecheckoutaddonConstants.CHECKPINCODESERVICEABILITY, method = RequestMethod.GET)
 	//@RequireHardLogIn
 	public @ResponseBody JSONObject checkPincodeServiceability(
-			@PathVariable(MarketplacecheckoutaddonConstants.PINCODE) final String selectedPincode)
+			@PathVariable(MarketplacecheckoutaddonConstants.PINCODE) final String selectedPincode, final HttpServletRequest request,
+			final HttpServletResponse response)
 	{
 		String returnStatement = null;
 		final JSONObject jsonObject = new JSONObject();
@@ -1560,6 +1632,11 @@ public class CartPageController extends AbstractPageController
 		final String regex = "\\d{6}";
 		//final CartModel cart = getCartService().getSessionCart();
 		CartData cartData = null;
+		int pincodeCookieMaxAge;
+		final Cookie cookie = GenericUtilityMethods.getCookieByName(request, "pdpPincode");
+		final String cookieMaxAge = getConfigurationService().getConfiguration().getString("pdpPincode.cookie.age");
+		pincodeCookieMaxAge = (Integer.valueOf(cookieMaxAge)).intValue();
+		final String domain = getConfigurationService().getConfiguration().getString("shared.cookies.domain");
 		try
 		{
 			String isServicable = MarketplacecommerceservicesConstants.Y;
@@ -1574,7 +1651,26 @@ public class CartPageController extends AbstractPageController
 
 				if (StringUtil.isNotEmpty(selectedPincode))
 				{
-					getSessionService().setAttribute(MarketplacecommerceservicesConstants.SESSION_PINCODE, selectedPincode);
+					//TPR-6654
+					if (cookie != null && cookie.getValue() != null)
+					{
+						cookie.setValue(selectedPincode);
+						cookie.setMaxAge(pincodeCookieMaxAge);
+						cookie.setPath("/");
+
+						if (null != domain && !domain.equalsIgnoreCase("localhost"))
+						{
+							cookie.setSecure(true);
+						}
+						cookie.setDomain(domain);
+						response.addCookie(cookie);
+						getSessionService().setAttribute(MarketplacecommerceservicesConstants.SESSION_PINCODE, selectedPincode);
+					}
+					else
+					{
+						pdpPincodeCookie.addCookie(response, selectedPincode);
+						getSessionService().setAttribute(MarketplacecommerceservicesConstants.SESSION_PINCODE, selectedPincode);
+					}
 				}
 				try
 				{
@@ -1648,6 +1744,25 @@ public class CartPageController extends AbstractPageController
 							}
 							//TPR-970 changes
 
+							final String var_prev = getSessionService().getAttribute("lastpercentage").toString();
+
+							LOG.debug(">> var_prev :" + var_prev);
+
+							//To calculate discount percentage amount for display purpose
+							// TPR-774-- Total MRP calculation and the Product percentage calculation
+							getMplCartFacade().totalMrpCal(cart);
+
+							final String var_next = getSessionService().getAttribute("lastpercentage").toString();
+
+							LOG.debug(">> var_next :" + var_next);
+
+							if (!var_prev.equalsIgnoreCase(var_next))
+							{
+								LOG.debug("var_prev not equal to var_next :");
+								jsonObject.put("isPincodeRestrictedPromotionPresent", true);
+							}
+
+							cartData = getMplCartFacade().getSessionCartWithEntryOrdering(true);
 							jsonObject.put("cartData", cartData);
 							jsonObject.put("cartEntries", cartData.getEntries());
 
@@ -1908,8 +2023,8 @@ public class CartPageController extends AbstractPageController
 	@RequestMapping(value = MarketplacecheckoutaddonConstants.CHECKEXPRESSCHECKOUTPINOCDESERVICEABILITY, method = RequestMethod.GET)
 	//@RequireHardLogIn
 	public @ResponseBody JSONObject checkExpressCheckoutPincodeServiceability(
-			@PathVariable(MarketplacecheckoutaddonConstants.SELECTEDADDRESSID) final String selectedAddressId)
-			throws EtailNonBusinessExceptions, JSONException
+			@PathVariable(MarketplacecheckoutaddonConstants.SELECTEDADDRESSID) final String selectedAddressId,
+			final HttpServletRequest request, final HttpServletResponse response) throws EtailNonBusinessExceptions, JSONException
 	{
 		LOG.debug("selectedAddressId " + selectedAddressId);
 		final JSONObject jsonObject = new JSONObject();
@@ -1919,6 +2034,12 @@ public class CartPageController extends AbstractPageController
 		String jsonResponse = "";
 		AddressData finaladdressData = new AddressData();
 		String selectedPincode = "";
+		//TPR-6654
+		int pincodeCookieMaxAge;
+		final Cookie cookie = GenericUtilityMethods.getCookieByName(request, "pdpPincode");
+		final String cookieMaxAge = getConfigurationService().getConfiguration().getString("pdpPincode.cookie.age");
+		pincodeCookieMaxAge = (Integer.valueOf(cookieMaxAge)).intValue();
+		final String domain = getConfigurationService().getConfiguration().getString("shared.cookies.domain");
 		try
 		{
 			for (final AddressData addressData : accountAddressFacade.getAddressBook())
@@ -1934,7 +2055,27 @@ public class CartPageController extends AbstractPageController
 
 			if (!StringUtil.isEmpty(selectedPincode))
 			{
-				getSessionService().setAttribute(MarketplacecommerceservicesConstants.SESSION_PINCODE, selectedPincode);
+				//TPR-6654
+				if (cookie != null && cookie.getValue() != null)
+				{
+					cookie.setValue(selectedPincode);
+					cookie.setMaxAge(pincodeCookieMaxAge);
+					cookie.setPath("/");
+
+					if (null != domain && !domain.equalsIgnoreCase("localhost"))
+					{
+						cookie.setSecure(true);
+					}
+					cookie.setDomain(domain);
+					response.addCookie(cookie);
+					getSessionService().setAttribute(MarketplacecommerceservicesConstants.SESSION_PINCODE, selectedPincode);
+				}
+				else
+				{
+					pdpPincodeCookie.addCookie(response, selectedPincode);
+					getSessionService().setAttribute(MarketplacecommerceservicesConstants.SESSION_PINCODE, selectedPincode);
+				}
+				//getSessionService().setAttribute(MarketplacecommerceservicesConstants.SESSION_PINCODE, selectedPincode);
 			}
 
 			CartData cartData = getMplCartFacade().getSessionCartWithEntryOrdering(true);

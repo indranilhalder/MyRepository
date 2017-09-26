@@ -95,7 +95,7 @@ public class SiteMapController extends AbstractPageController
 
 	private final static String SITEMAPURLPATTERN = "/{sitemapName:.+sitemap+.*}.xml";
 
-	private static final String REGEX = "[^\\w\\s]";
+	private static final String REGEX = "[^\\w-\\s]";
 
 	private static final String hyphen_key = "-";
 	private static final String pipe_key = "||";
@@ -190,8 +190,9 @@ public class SiteMapController extends AbstractPageController
 										if (department.getName() != null)
 										{
 											//PRDI-462 Check if any special characters are present and remove them
-											l1CatName = department.getName().replaceAll(REGEX, "").replaceAll(" ", "-").replace("--", "-")
-													.toLowerCase();
+											l1CatName = department.getName().toLowerCase().replaceAll("'", "").replaceAll(" and ", "-")
+													.replaceAll(REGEX, "-").replaceAll(" ", "-").replace("--+", "-");
+
 										}
 										//code changes for INC_10885
 										if (department.getName() != null && CollectionUtils.isNotEmpty(department.getLinkComponents())
@@ -226,8 +227,10 @@ public class SiteMapController extends AbstractPageController
 												// level category
 												String l2CatName = "";
 												//Check if any special characters are present and remove them
-												l2CatName = secondLevelCategory.getName().replaceAll(REGEX, "").replaceAll(" ", "-")
-														.replace("--", "-").toLowerCase();
+												l2CatName = secondLevelCategory.getName().toLowerCase().replaceAll("'", "")
+														.replaceAll(" and ", "-").replaceAll(REGEX, "-").replaceAll(" ", "-")
+														.replace("--+", "-");
+
 												final Collection<CategoryModel> thirdLevelCategory = secondLevelCategory.getCategories();
 
 												if (CollectionUtils.isNotEmpty(thirdLevelCategory))
@@ -243,8 +246,10 @@ public class SiteMapController extends AbstractPageController
 															final StringBuilder l3Url = new StringBuilder();
 															String l3CatName = "";
 															//Check if any special characters are present and remove them
-															l3CatName = thirdLevelCategories.getName().replaceAll(REGEX, "")
-																	.replaceAll(" ", "-").replace("--", "-").toLowerCase();
+															l3CatName = thirdLevelCategories.getName().toLowerCase().replaceAll("'", "")
+																	.replaceAll(" and ", "-").replaceAll(REGEX, "-").replaceAll(" ", "-")
+																	.replace("--+", "-");
+
 															l3Url.append(l1CatName).append(hyphen_key).append(l2CatName).append(hyphen_key)//Sonar Fix
 																	.append(l3CatName);
 															l3Url.toString().replaceAll(" ", "-").replace("--", "-");

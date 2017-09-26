@@ -115,7 +115,7 @@ public interface MplPaymentService
 
 	/**
 	 * juspay payment specific changes from cscockpit
-	 * 
+	 *
 	 * @param custName
 	 * @param cartValue
 	 * @param totalCharge
@@ -273,20 +273,20 @@ public interface MplPaymentService
 
 	/*
 	 * @description : fetching bank model for a bank name TISPRO-179\
-	 * 
+	 *
 	 * @param : bankName
-	 * 
+	 *
 	 * @return : BankModel
-	 * 
+	 *
 	 * @throws EtailNonBusinessExceptions
 	 */
 	BankModel getBankDetailsForBank(final String bankName) throws EtailNonBusinessExceptions;
 
 	/*
 	 * @Description : Fetching bank name for net banking-- TISPT-169
-	 * 
+	 *
 	 * @return List<BankforNetbankingModel>
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	List<BankforNetbankingModel> getNetBankingBanks() throws EtailNonBusinessExceptions;
@@ -416,6 +416,9 @@ public interface MplPaymentService
 	 *
 	 */
 	public String doRefundPayment(List<OrderEntryModel> orderEntryModel);
+
+	//CheckedInvalid PaymentInfo missing handled call
+	boolean createPaymentInfo(OrderModel order);
 
 
 }

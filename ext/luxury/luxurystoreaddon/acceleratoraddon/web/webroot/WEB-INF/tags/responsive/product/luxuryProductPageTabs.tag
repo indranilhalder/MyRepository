@@ -34,6 +34,21 @@
 <section class="pdp-accordion accordion mt-40">
 	<div class="nav-wrapper">
 		<!-- <ul class="nav pdp"> -->
+		
+		<c:if test="${fn:contains(validTabs, 'description')}">
+			<div class="accordion-title active">
+				<h4>
+					<spring:theme code="product.product.features" />
+				</h4><i class="accordion-icon"></i>
+			</div>
+		</c:if>
+		<c:if test="${fn:contains(validTabs, 'description')}">
+			<div class="accordion-content">
+				<div id="details">
+					<product:productDescriptionTab product="${product}" />
+				</div>
+			</div>
+		</c:if>
 
 		<c:if test="${fn:contains(validTabs, 'details')}">
 			<div class="accordion-title active">
@@ -44,7 +59,6 @@
 		</c:if>
 		<c:if test="${fn:contains(validTabs, 'details')}">
 			<div class="accordion-content">
-					${product.articleDescription}
 				<div id="details">
 					<product:productDetailsTab product="${product}" />
 				</div>
@@ -58,18 +72,18 @@
 			<div id='commentsDiv'></div>
 		</div>
 
-		<c:if test="${fn:contains(validTabs, 'stylenote')}">
+		
 			<div class="accordion-title">
 				<h4>
 					<spring:theme code="product.product.styleNotes" />
 				</h4><i class="accordion-icon"></i>
 			</div>
-		</c:if>
-		<c:if test="${fn:contains(validTabs, 'stylenote')}">
+		
+		
 			<div class="accordion-content">
 				<product:productStyleNotesTab product="${product}" />
 			</div>
-		</c:if>
+		
 
 
 		<c:if test="${fn:contains(validTabs, 'warranty')}">

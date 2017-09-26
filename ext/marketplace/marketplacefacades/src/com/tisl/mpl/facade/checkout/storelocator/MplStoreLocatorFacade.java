@@ -61,7 +61,7 @@ public interface MplStoreLocatorFacade
 
 	/**
 	 * Find CartEntryModel for a Ussid.
-	 * 
+	 *
 	 * @param ussId
 	 * @return abstractOrderEntryModel
 	 */

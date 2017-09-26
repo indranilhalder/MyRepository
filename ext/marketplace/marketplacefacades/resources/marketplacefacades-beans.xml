@@ -997,12 +997,18 @@
 		<property name="sns" type="boolean"/>
 		<!-- Added for Luxury -->
 		<!-- <property name="luxarySite" type="boolean"/> -->
+		<!-- PR-23 start -->
+		<property name="NextSearch" type="boolean"/>
+		<!-- PR-23 end -->
 	</bean>
 
 	<bean class="de.hybris.platform.commercefacades.search.data.SearchStateData">
 		<property name="sns" type="boolean"/>
 		<!-- Added for Luxury -->
 		<property name="luxurySiteFrom" type="String"/>
+		<!-- PR-23 start -->
+		<property name="NextSearch" type="boolean"/>
+		<!-- PR-23 end -->
 	</bean>
 
 	<!-- Return Item Address Data -->
@@ -1162,6 +1168,7 @@
 		<property name="mapConfigurableAttribute" type="java.util.Map&lt;String,String>"></property>
 		<property name="Warranty" type="java.util.List&lt;String>"></property>
 		<property name="error" type="String"></property>
+		<property name="pincode" type="String"></property>
 	</bean>
 
 	<!-- TPR-258 -->
