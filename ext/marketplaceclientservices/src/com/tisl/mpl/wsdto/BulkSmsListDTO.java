@@ -1,7 +1,9 @@
 /**
  *
  */
-package com.tisl.mpl.pojo;
+package com.tisl.mpl.wsdto;
+
+import java.util.List;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
@@ -10,16 +12,19 @@ import javax.xml.bind.annotation.XmlRootElement;
 
 
 /**
- * @author 985717
+ * @author TCS
  *
  */
 @XmlRootElement(name = "bulkSms")
 @XmlAccessorType(XmlAccessType.FIELD)
-public class BulkSmsListDto
+public class BulkSmsListDTO
 {
-	public String senderId;
+
+	@XmlElement(name = "senderId")
+	private String senderId;
+
 	@XmlElement(name = "customerMsg")
-	public BulkSmsDto bulkSmsDto;
+	private List<BulkSmsDTO> bulkSmsDTO;
 
 	/**
 	 * @return the senderId
@@ -39,19 +44,20 @@ public class BulkSmsListDto
 	}
 
 	/**
-	 * @return the bulkSmsDto
+	 * @return the bulkSmsDTO
 	 */
-	public BulkSmsDto getBulkSmsDto()
+	public List<BulkSmsDTO> getBulkSmsDTO()
 	{
-		return bulkSmsDto;
+		return bulkSmsDTO;
 	}
 
 	/**
-	 * @param bulkSmsDto
-	 *           the bulkSmsDto to set
+	 * @param bulkSmsDTO
+	 *           the bulkSmsDTO to set
 	 */
-	public void setBulkSmsDto(final BulkSmsDto bulkSmsDto)
+	public void setBulkSmsDTO(final List<BulkSmsDTO> bulkSmsDTO)
 	{
-		this.bulkSmsDto = bulkSmsDto;
+		this.bulkSmsDTO = bulkSmsDTO;
 	}
+
 }

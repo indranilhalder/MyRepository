@@ -5,7 +5,7 @@ package com.tisl.mpl.refunds.dao;
 
 import java.util.List;
 
-import com.tisl.mpl.data.RefundSmsData;
+import com.tisl.mpl.wsdto.BulkSmsPerBatch;
 
 
 /**
@@ -14,9 +14,9 @@ import com.tisl.mpl.data.RefundSmsData;
  */
 public interface RefundSmsDao
 {
-	public List<RefundSmsData> searchResultsForRefund(final String dynamicQuery) throws Exception;
+	public List<BulkSmsPerBatch> searchResultsForRefund(final String dynamicQuery) throws Exception;
 
 	public String getAllTransactionsForSms() throws Exception;
 
-	public Object triggerBulkSms(final List<RefundSmsData> refundEligibleList) throws Exception;
+	public void deleteRows(final StringBuilder str) throws Exception;
 }

@@ -3202,14 +3202,6 @@
 							optional="true" removable="false" initial="true" private="false"
 							partof="false" />
 					</attribute>
-					<attribute qualifier="smsSentFlag" autocreate="true"
-						type="java.lang.String">
-						<persistence type="property" />
-						<modifiers read="true" write="true" search="true"
-							optional="true" removable="false" initial="true" private="false"
-							partof="false" />
-					</attribute>
-
 				</attributes>
 			</itemtype>
 			<!-- New table for PR-4 :: START-->

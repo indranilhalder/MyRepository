@@ -5,7 +5,10 @@ package com.tisl.mpl.sms;
 
 import de.hybris.platform.servicelayer.config.ConfigurationService;
 
+import java.io.StringWriter;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.annotation.Resource;
@@ -30,6 +33,9 @@ import com.sun.jersey.api.json.JSONMarshaller;
 import com.tisl.mpl.constants.clientservice.MarketplacecclientservicesConstants;
 import com.tisl.mpl.core.model.OrderUpdateSmsProcessModel;
 import com.tisl.mpl.data.SendSMSRequestData;
+import com.tisl.mpl.wsdto.BulkSmsDTO;
+import com.tisl.mpl.wsdto.BulkSmsListDTO;
+import com.tisl.mpl.wsdto.BulkSmsPerBatch;
 import com.tisl.mpl.wsdto.SmsECommReqWsDTO;
 
 
@@ -173,4 +179,81 @@ public class MplSendSMSService implements SendSmsService
 		this.sendSMS(smsRequestData);
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.tisl.mpl.sms.SendSmsService#sendBulkSms(java.util.List)
+	 */
+	@Override
+	public boolean sendBulkSms(final List<BulkSmsPerBatch> refundEligibleList) throws JAXBException
+	{
+		final String senderId = configurationService.getConfiguration().getString("marketplace.sms.sender.name");
+		final BulkSmsListDTO bulkSmsListDTO = new BulkSmsListDTO();
+		BulkSmsDTO bulkSmsDTO = null;
+		final List<BulkSmsDTO> bulkSmsDTOs = new ArrayList<BulkSmsDTO>();
+		for (final BulkSmsPerBatch obj : refundEligibleList)
+		{
+			bulkSmsDTO = new BulkSmsDTO();
+			bulkSmsDTO.setMessage(obj.getMsg());
+			bulkSmsDTO.setMobileNumber(Long.parseLong(obj.getMobileNo()));
+			bulkSmsDTOs.add(bulkSmsDTO);
+		}
+		bulkSmsListDTO.setBulkSmsDTO(bulkSmsDTOs);
+		bulkSmsListDTO.setSenderId(senderId);
+		JAXBContext context;
+		try
+		{
+			context = JAXBContext.newInstance(BulkSmsListDTO.class);
+
+			final Marshaller m = context.createMarshaller();
+
+			m.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE); // To format XML
+
+			final StringWriter sw = new StringWriter();
+			m.marshal(bulkSmsListDTO, sw);
+			System.out.println(sw.toString());
+			LOG.debug(sw.toString());
+		}
+		catch (final JAXBException e)
+		{
+			// YTODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+
+
+
+
+		/*
+		 * final JAXBContext jaxbContext = JAXBContext.newInstance(BulkSmsListDTO.class); final Marshaller jaxbMarshaller
+		 * = jaxbContext.createMarshaller();
+		 * 
+		 * // output pretty printed jaxbMarshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
+		 * jaxbMarshaller.marshal(refundEligibleList, System.out);
+		 * 
+		 * 
+		 * // Checking if SMS Service is enabled if (Boolean.valueOf(
+		 * configurationService.getConfiguration().getString(MarketplacecclientservicesConstants
+		 * .BULK_SMS_SERVICE_ENABLED)) .equals(Boolean.TRUE)) { // Setting the username & password for connecting the SMS
+		 * Server final Client client = Client.create(); final String username =
+		 * configurationService.getConfiguration().getString( MarketplacecclientservicesConstants.SMS_SERVICE_USERNAME);
+		 * final String password = configurationService.getConfiguration().getString(
+		 * MarketplacecclientservicesConstants.SMS_SERVICE_PASSWORD);
+		 * 
+		 * final HTTPBasicAuthFilter authFilter = new HTTPBasicAuthFilter(username, password);
+		 * client.addFilter(authFilter); client.addFilter(new LoggingFilter());
+		 * 
+		 * 
+		 * final WebResource webResource = client.resource(UriBuilder.fromUri(
+		 * configurationService.getConfiguration().getString(MarketplacecclientservicesConstants.BULK_SMS_SERVICE_URL))
+		 * .build());
+		 * 
+		 * final ClientResponse response = webResource.type(MediaType.APPLICATION_XML).accept(MediaType.APPLICATION_XML)
+		 * .entity(refundEligibleList).post(ClientResponse.class);
+		 */
+
+
+		//}
+		return true;
+	}
 }
