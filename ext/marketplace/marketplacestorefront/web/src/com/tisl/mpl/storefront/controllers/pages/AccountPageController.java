@@ -8243,4 +8243,19 @@ public class AccountPageController extends AbstractMplSearchPageController
 		}
 
 	}
+	
+	
+	@RequestMapping(value = RequestMappingUrlConstants.SEND_NOTIFICATION_EGV_ORDER, method = RequestMethod.POST)
+	@ResponseBody
+	@Post
+	public void sendNotificationRecipient(@RequestParam(value = "orderId") final String orderId)
+	{
+		if (orderId != null)
+		{
+			LOG.info("SendNotificationRecipient  ");
+			mplOrderFacade.sendNotificationEGVOrder(orderId);
+		}
+	}
+	
+	
 }
