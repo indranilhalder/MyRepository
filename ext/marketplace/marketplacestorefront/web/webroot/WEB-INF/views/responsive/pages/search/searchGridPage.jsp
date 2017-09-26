@@ -113,11 +113,11 @@
 	
 	
 	<storepickup:pickupStorePopup />
-<script>
+<!-- <script>
 $(document).ready(function(){
 	$("img.lazy").lazyload();	
 });
-</script>
+</script> -->
 </template:page>
 </c:otherwise>
 </c:choose>
