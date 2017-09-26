@@ -7,6 +7,7 @@ import de.hybris.platform.commerceservices.order.CommerceCartModification;
 import de.hybris.platform.commerceservices.order.CommerceCartModificationException;
 import de.hybris.platform.commerceservices.order.impl.DefaultCommerceAddToCartStrategy;
 import de.hybris.platform.commerceservices.service.data.CommerceCartParameter;
+import de.hybris.platform.core.model.JewelleryInformationModel;
 import de.hybris.platform.core.model.order.AbstractOrderEntryModel;
 import de.hybris.platform.core.model.order.CartEntryModel;
 import de.hybris.platform.core.model.order.CartModel;
@@ -23,6 +24,8 @@ import java.util.Map;
 
 import javax.annotation.Resource;
 
+import net.sourceforge.pmd.util.StringUtil;
+
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
@@ -33,10 +36,9 @@ import com.tisl.mpl.core.model.MplZoneDeliveryModeValueModel;
 import com.tisl.mpl.marketplacecommerceservices.daos.MplStockDao;
 import com.tisl.mpl.marketplacecommerceservices.service.ExchangeGuideService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplDeliveryCostService;
+import com.tisl.mpl.marketplacecommerceservices.service.MplJewelleryService;
 import com.tisl.mpl.marketplacecommerceservices.strategy.MplCommerceAddToCartStrategy;
 import com.tisl.mpl.model.SellerInformationModel;
-
-import net.sourceforge.pmd.util.StringUtil;
 
 
 
@@ -45,8 +47,8 @@ import net.sourceforge.pmd.util.StringUtil;
  * @author TCS
  *
  */
-public class MplDefaultCommerceAddToCartStrategyImpl extends DefaultCommerceAddToCartStrategy
-		implements MplCommerceAddToCartStrategy
+public class MplDefaultCommerceAddToCartStrategyImpl extends DefaultCommerceAddToCartStrategy implements
+		MplCommerceAddToCartStrategy
 {
 
 	private final String maxOrderQuantityConstant = "mpl.cart.maximumConfiguredQuantity.lineItem";
@@ -60,7 +62,8 @@ public class MplDefaultCommerceAddToCartStrategyImpl extends DefaultCommerceAddT
 	@Autowired
 	private MplStockDao mplStockDao;
 
-
+	@Resource(name = "mplJewelleryService")
+	private MplJewelleryService jewelleryService;
 
 	/*
 	 * @Desc Adding product to cart
@@ -179,7 +182,8 @@ public class MplDefaultCommerceAddToCartStrategyImpl extends DefaultCommerceAddT
 
 				//getModelService().save(cartEntryModel);
 				//setSellerInformationinCartEntry(cartEntryModel, productModel);
-				setSellerInformationinCartEntry(cartEntryModel, productModel.getSellerInformationRelator());
+				setSellerInformationinCartEntry(cartEntryModel, productModel.getSellerInformationRelator(),
+						productModel.getProductCategoryType());
 
 				//TPR-1083
 				//Set Temporary Exchange ID
@@ -386,7 +390,8 @@ public class MplDefaultCommerceAddToCartStrategyImpl extends DefaultCommerceAddT
 
 			//getModelService().save(cartEntryModel);
 			//setSellerInformationinCartEntry(cartEntryModel, productModel);
-			setSellerInformationinCartEntry(cartEntryModel, productModel.getSellerInformationRelator());
+			setSellerInformationinCartEntry(cartEntryModel, productModel.getSellerInformationRelator(),
+					productModel.getProductCategoryType());
 
 			//TPR-1083
 			//Set Temporary Exchange ID
@@ -482,11 +487,17 @@ public class MplDefaultCommerceAddToCartStrategyImpl extends DefaultCommerceAddT
 	 * @return cartEntryModel
 	 */
 	private AbstractOrderEntryModel setSellerInformationinCartEntry(final CartEntryModel cartEntryModel,
-			final Collection<SellerInformationModel> sellerCollection)
+			final Collection<SellerInformationModel> sellerCollection, final String categoryType)
 	{
 		//if (CollectionUtils.isNotEmpty(collection.getSellerInformationRelator()))
 
 		final String cartEnrtyUssid = cartEntryModel.getSelectedUSSID();
+		List<JewelleryInformationModel> jewelleryInfo = null;
+
+		if ("FineJewellery".equalsIgnoreCase(categoryType))
+		{
+			jewelleryInfo = jewelleryService.getJewelleryInfoByUssid(cartEnrtyUssid);
+		}
 
 		if (CollectionUtils.isNotEmpty(sellerCollection))
 		{
@@ -494,6 +505,18 @@ public class MplDefaultCommerceAddToCartStrategyImpl extends DefaultCommerceAddT
 			{
 				final String sellerInfoUssid = sellerModel.getSellerArticleSKU();
 				final String sellerName = sellerModel.getSellerName();
+
+				if (CollectionUtils.isNotEmpty(jewelleryInfo))
+				{
+					if (StringUtils.isNotEmpty(jewelleryInfo.get(0).getPCMUSSID()) && StringUtils.isNotEmpty(sellerInfoUssid)
+							&& StringUtils.equalsIgnoreCase(jewelleryInfo.get(0).getPCMUSSID(), sellerInfoUssid)
+							&& StringUtils.isNotEmpty(sellerName))
+					{
+						cartEntryModel.setSellerInfo(sellerName);
+						getModelService().save(cartEntryModel);
+						break;
+					}
+				}
 
 				if (StringUtils.isNotEmpty(cartEnrtyUssid) && StringUtils.isNotEmpty(sellerInfoUssid)
 						&& StringUtils.equalsIgnoreCase(cartEnrtyUssid, sellerInfoUssid) && StringUtils.isNotEmpty(sellerName))
