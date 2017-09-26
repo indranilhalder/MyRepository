@@ -250,8 +250,8 @@ $(document).ready(function() {
     //lazy image load initialization
     //TISPRDT-2225
     //if($('#pageType').val() == "productsearch" || $('#pageType').val() == "product" || $('#pageType').val() == "category" || $('input[name=customSku]').length){
-    if ($('#pageType').val() != "homepage") {
-	    $("img.lazy").lazyload();	
+    if ($('#pageType').val() != "homepage" && $("input[name=newBrandLandingPage]").length == 0 && $('#pageType').val() != "product" ) {
+	    //UF-458 $("img.lazy").lazyload();	
 	}
     //set the total no of pages 
     totalNoOfPages = $('input[name=noOfPages]').val();
@@ -428,11 +428,11 @@ $(document).ready(function() {
         });
 });
 //UF-409 -> added for ajax complete events to auto lazy load
-$( document ).ajaxComplete(function( event, xhr, settings ) {
+/*$( document ).ajaxComplete(function( event, xhr, settings ) {
 	if($('#pageType').val() == "productsearch" || $('#pageType').val() == "product" || $('#pageType').val() == "category" || $('input[name=customSku]').length){
 		$("img.lazy").lazyload();
 	}
-});
+});*/
 function findGetParameter(parameterName) {
     var result = null,
         tmp = [];
