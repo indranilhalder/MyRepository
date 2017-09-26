@@ -916,4 +916,5 @@ public final class ModelAttributetConstants
 	/* TPR-5733 */
 	public static final String FOOTER_LINK_LIST = "footerLinkList";
 	public static final String BUYBOX_AVAILABLE = "buybox_available";
+	public static final String FINEJWLRY_SELFCOURIER_ERROR = "fineJewSelfCourierError";
 }

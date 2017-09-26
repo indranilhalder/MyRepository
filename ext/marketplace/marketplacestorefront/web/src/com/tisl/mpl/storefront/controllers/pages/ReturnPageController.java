@@ -22,6 +22,8 @@ import de.hybris.platform.core.model.order.AbstractOrderEntryModel;
 import de.hybris.platform.core.model.order.OrderModel;
 import de.hybris.platform.core.model.product.ProductModel;
 import de.hybris.platform.ordersplitting.model.ConsignmentEntryModel;
+import de.hybris.platform.returns.model.ReturnEntryModel;
+import de.hybris.platform.returns.model.ReturnRequestModel;
 import de.hybris.platform.servicelayer.config.ConfigurationService;
 import de.hybris.platform.servicelayer.model.ModelService;
 import de.hybris.platform.servicelayer.session.SessionService;
@@ -188,6 +190,9 @@ public class ReturnPageController extends AbstractMplSearchPageController
 		String productRichAttrOfQuickDrop = null;
 		String sellerRichAttrOfQuickDrop = null;
 		String ussid = "";
+		boolean isFineJew = false;
+		String sellerName = "";
+		final String revSealSellerList = configurationService.getConfiguration().getString("finejewellery.reverseseal.sellername");
 
 		try
 		{
@@ -231,6 +236,7 @@ public class ReturnPageController extends AbstractMplSearchPageController
 					if (productModel.getProductCategoryType().equalsIgnoreCase(MarketplacecommerceservicesConstants.FINEJEWELLERY))
 
 					{ //SellerInformationModel sellerInfoModel = null;
+						isFineJew = true;
 						final List<JewelleryInformationModel> jewelleryInfo = jewelleryService.getJewelleryInfoByUssid(entry
 								.getSelectedUssid());
 						ussid = (CollectionUtils.isNotEmpty(jewelleryInfo)) ? jewelleryInfo.get(0).getPCMUSSID() : "";
@@ -261,6 +267,7 @@ public class ReturnPageController extends AbstractMplSearchPageController
 									sellerRichAttrOfQuickDrop = sellerRichAttributeModel.get(0).getReturnAtStoreEligible().toString();
 								}
 							}
+							sellerName = sellerInformationModel.getSellerName();
 						}
 					}
 					model.addAttribute(ModelAttributetConstants.QUCK_DROP_PROD_LEVEL, productRichAttrOfQuickDrop);
@@ -363,6 +370,15 @@ public class ReturnPageController extends AbstractMplSearchPageController
 
 
 			model.addAttribute(ModelAttributetConstants.RETURNABLE_SLAVES, returnableStores);
+			if (isFineJew && StringUtils.isNotEmpty(revSealSellerList))
+			{
+				final List<String> sellerList = Arrays.asList(revSealSellerList.split(","));
+				//Checking if seller contains the values
+				if (sellerList.contains(sellerName))
+				{
+					model.addAttribute(ModelAttributetConstants.SHOW_REVERSESEAL_JWLRY, "true");
+				}
+			}
 
 			//for schedule pickup
 			if (StringUtils.isNotBlank(returnForm.getReturnMethod())
@@ -518,6 +534,32 @@ public class ReturnPageController extends AbstractMplSearchPageController
 					GlobalMessages.addFlashMessage(redirectAttributes, GlobalMessages.ERROR_MESSAGES_HOLDER,
 							ModelAttributetConstants.RETURN_ERRORMSG);
 					return REDIRECT_MY_ACCOUNT + RequestMappingUrlConstants.LINK_ORDERS;
+				}
+				//TISPRDT-2546
+				if (isFineJew)
+				{
+					final List<ReturnRequestModel> returnRequestModelList = cancelReturnFacade.getListOfReturnRequest(orderCode);
+					if (null != returnRequestModelList && returnRequestModelList.size() > 0)
+					{
+						for (final ReturnRequestModel mm : returnRequestModelList)
+						{
+							for (final ReturnEntryModel mmmodel : mm.getReturnEntries())
+							{
+								if (subOrderEntry.getTransactionId().equalsIgnoreCase(mmmodel.getOrderEntry().getTransactionID()))
+								{
+									if (null != mm.getTypeofreturn() && null != mm.getTypeofreturn().getCode())
+									{
+										if (mm.getTypeofreturn().getCode()
+												.equalsIgnoreCase(MarketplacecommerceservicesConstants.SELF_COURIER))
+										{
+											model.addAttribute(ModelAttributetConstants.FINEJWLRY_SELFCOURIER_ERROR, true);
+										}
+									}
+								}
+							}
+
+						}
+					}
 				}
 			}
 

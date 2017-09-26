@@ -76911,3 +76911,9 @@ body .account .right-account form label.invite-text-lbl{
 	    }
 /* TISPRDT-2410 end */
 
+/* TPR-6947 start */
+body.template-pages-my-account-returnSuccess .mainContent-wrapper .container .body-Content .account .page-header span a{
+	text-decoration: underline;
+    color: #a9143c;
+ 	}
+/* TPR-6947 end */
