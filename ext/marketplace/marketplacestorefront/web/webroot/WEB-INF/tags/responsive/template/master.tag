@@ -439,8 +439,17 @@
  		var commonResource='${commonResourcePath}';
  		var buildNumber='${buildNumber}'; 
  		
- 		$(window).on('load',function(){
+ 		/*$(window).on('load',function(){
  			if($("#pageType").val() != "homepage"){
+ 			callGigya();
+ 			}
+ 		});*/
+ 		<!-- BLP PDP Change -->
+ 		$(window).on('load',function(){
+ 			if($("#pageType").val() != "homepage" && $("#pageType").val() != "product" 
+ 					&& $("input[name=newBrandLandingPage]").length == 0 
+ 					&& $("#pageType").val() != "productsearch" 
+ 					&& $("input[name=productGrid]").length == 0){
  			callGigya();
  			}
  		});

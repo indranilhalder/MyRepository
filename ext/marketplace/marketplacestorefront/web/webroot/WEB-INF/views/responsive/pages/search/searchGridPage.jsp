@@ -113,6 +113,7 @@
 	
 	
 	<storepickup:pickupStorePopup />
+<!-- PDP change -->
 <!-- <script>
 $(document).ready(function(){
 	$("img.lazy").lazyload();	
