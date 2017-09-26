@@ -5599,17 +5599,17 @@ $(".edit_address").click(function(){
     			}
 				
 				if(data.disableJsMode){
-					alert("disable");
+					//alert("disable");
 				      $(".topPlaceOrderBtn").show();
 					
 				}else{
 					
-					  alert("Enable JP");	
+					  //alert("Enable JP");	
 				}
 			},	
 		   
 			fail : function(data){
-			alert("FAIL");
+			//alert("FAIL");
 		}
 			
 		});

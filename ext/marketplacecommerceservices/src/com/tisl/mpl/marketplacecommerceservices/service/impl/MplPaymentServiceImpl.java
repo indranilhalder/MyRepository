@@ -5041,7 +5041,7 @@ public class MplPaymentServiceImpl implements MplPaymentService
 
 			final List<PaymentTransactionModel> listPay = new ArrayList<PaymentTransactionModel>();
 
-			final PaymentTypeModel paymenttype = getMplPaymentDao().getPaymentMode(cliqCashPaymentMode, order.getStore());
+			final PaymentTypeModel paymenttype = getMplPaymentDao().getPaymentMode("Cliq Cash", order.getStore());
 
 			final PaymentTransactionEntryModel paymentTransactionEntry = getModelService()
 					.create(PaymentTransactionEntryModel.class);

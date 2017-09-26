@@ -2278,8 +2278,6 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 						throw new EtailBusinessExceptions();
 					}
 
-
-
 					//Logic when transaction is successful i.e. CHARGED
 					if (MarketplacecommerceservicesConstants.CHARGED.equalsIgnoreCase(orderStatusResponse.getStatus()))
 					{
@@ -3523,7 +3521,7 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 
 
 				final Map<String, Double> paymentMode = new HashMap<String, Double>();
-				paymentMode.put("Cliq Cash", Double.valueOf("2"));
+				paymentMode.put(cliqCashPaymentMode, Double.valueOf("2"));
 
 
 				getMplPaymentService().setQCPaymentTransaction(rs, paymentMode, orderToBeUpdated, cliqCashPaymentMode,

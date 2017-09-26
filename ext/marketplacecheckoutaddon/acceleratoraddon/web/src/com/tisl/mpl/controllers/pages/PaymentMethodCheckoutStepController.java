@@ -2908,7 +2908,7 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 
 		//		boolean splitPayment = false;
 		//		boolean jsPayMode = false;
-		String cliqCashPaymentMode = StringUtils.EMPTY;
+		//String cliqCashPaymentMode = StringUtils.EMPTY;
 
 		//		if (StringUtils.isNotEmpty(getSessionService().getAttribute("getCliqCashMode").toString()))
 		//		{
@@ -2916,11 +2916,11 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 		//			splitPayment = Boolean.parseBoolean(getSessionService().getAttribute("getCliqCashMode").toString());
 		//		}
 
-		if (StringUtils.isNotEmpty(getSessionService().getAttribute("cliqCashPaymentMode").toString()))
-		{
-
-			cliqCashPaymentMode = getSessionService().getAttribute("cliqCashPaymentMode").toString();
-		}
+		//		if (StringUtils.isNotEmpty(getSessionService().getAttribute("cliqCashPaymentMode").toString()))
+		//		{
+		//
+		//			cliqCashPaymentMode = getSessionService().getAttribute("cliqCashPaymentMode").toString();
+		//		}
 
 		//		if (StringUtils.isNotEmpty(getSessionService().getAttribute("jsPayMode").toString()))
 		//		{
@@ -2967,7 +2967,7 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 									final String qcUniqueCode = getMplPaymentFacade().generateQCCode();
 									final CustomerModel currentCustomer = (CustomerModel) getUserService().getCurrentUser();
 									qcResponse = getMplPaymentFacade().createQCOrderRequest(orderToBeUpdated.getGuid(), orderToBeUpdated,
-											currentCustomer.getCustomerWalletDetail().getWalletId(), cliqCashPaymentMode, qcUniqueCode);
+											currentCustomer.getCustomerWalletDetail().getWalletId(), "Cliq Cash", qcUniqueCode);
 
 									if (null != qcResponse && null != qcResponse.getResponseCode()
 											&& qcResponse.getResponseCode().intValue() == 0)
@@ -6415,7 +6415,7 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 
 			//			boolean splitPayment = false;
 			//			boolean jsPayMode = false;
-			String cliqCashPaymentMode = StringUtils.EMPTY;
+			//final String cliqCashPaymentMode = StringUtils.EMPTY;
 
 			//			if (StringUtils.isNotEmpty(getSessionService().getAttribute("getCliqCashMode").toString()))
 			//			{
@@ -6423,11 +6423,11 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 			//				splitPayment = Boolean.parseBoolean(getSessionService().getAttribute("getCliqCashMode").toString());
 			//			}
 
-			if (StringUtils.isNotEmpty(getSessionService().getAttribute("cliqCashPaymentMode").toString()))
-			{
-
-				cliqCashPaymentMode = getSessionService().getAttribute("cliqCashPaymentMode").toString();
-			}
+			//			if (StringUtils.isNotEmpty(getSessionService().getAttribute("cliqCashPaymentMode").toString()))
+			//			{
+			//
+			//				cliqCashPaymentMode = getSessionService().getAttribute("cliqCashPaymentMode").toString();
+			//			}
 			//
 			//			if (StringUtils.isNotEmpty(getSessionService().getAttribute("jsPayMode").toString()))
 			//			{
@@ -6435,7 +6435,7 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 			//				jsPayMode = Boolean.parseBoolean(getSessionService().getAttribute("jsPayMode").toString());
 			//			}
 
-			LOG.info("cliqCashPaymentMode" + cliqCashPaymentMode);
+			//	LOG.info("cliqCashPaymentMode" + cliqCashPaymentMode);
 
 
 			if (cart.getSplitModeInfo().equalsIgnoreCase("CliqCash"))
@@ -6463,7 +6463,7 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 					final String qcUniqueCode = getMplPaymentFacade().generateQCCode();
 					final CustomerModel currentCustomer = (CustomerModel) getUserService().getCurrentUser();
 					qcResponse = getMplPaymentFacade().createQCOrderRequest(orderToBeUpdated.getGuid(), orderToBeUpdated,
-							currentCustomer.getCustomerWalletDetail().getWalletId(), cliqCashPaymentMode, qcUniqueCode);
+							currentCustomer.getCustomerWalletDetail().getWalletId(), "Cliq Cash", qcUniqueCode);
 
 					if (null != qcResponse && null != qcResponse.getResponseCode() && qcResponse.getResponseCode().intValue() == 0)
 					{
@@ -6475,7 +6475,7 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 
 						orderToBeUpdated.setStatus(OrderStatus.PAYMENT_FAILED); /// return QC fail and Update Audit Entry Try With Juspay
 						getModelService().save(orderToBeUpdated);
-						getSessionService().setAttribute("cliqCashPaymentMode", "false");
+						//getSessionService().setAttribute("cliqCashPaymentMode", "false");
 						GlobalMessages.addFlashMessage(redirectAttributes, GlobalMessages.ERROR_MESSAGES_HOLDER,
 								MarketplacecheckoutaddonConstants.PAYMENTTRANERRORMSG);
 						return MarketplacecheckoutaddonConstants.MPLPAYMENTURL + MarketplacecheckoutaddonConstants.PAYVALUE
@@ -6487,7 +6487,7 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 
 						orderToBeUpdated.setStatus(OrderStatus.PAYMENT_FAILED); /// NO Exception No qcResponse Try With Juspay
 						getModelService().save(orderToBeUpdated);
-						getSessionService().setAttribute("cliqCashPaymentMode", "false");
+						//getSessionService().setAttribute("cliqCashPaymentMode", "false");
 						GlobalMessages.addFlashMessage(redirectAttributes, GlobalMessages.ERROR_MESSAGES_HOLDER,
 								MarketplacecheckoutaddonConstants.PAYMENTTRANERRORMSG);
 						return MarketplacecheckoutaddonConstants.MPLPAYMENTURL + MarketplacecheckoutaddonConstants.PAYVALUE
@@ -6503,7 +6503,7 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 						orderToBeUpdated.setStatus(OrderStatus.RMS_VERIFICATION_FAILED);
 						getModelService().save(orderToBeUpdated);
 						System.out.println("SomE Error in QC Service");
-						getSessionService().setAttribute("cliqCashPaymentMode", "false");
+						//getSessionService().setAttribute("cliqCashPaymentMode", "false");
 						return "QC PAYMENT SUCCESS EXCEPTION"; /// Return In JS Ajax Call  And Execute Refund
 					}
 
@@ -6810,18 +6810,14 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 					paymentAddressLine2, paymentAddressLine3, country, state, city, pincode,
 					cardSaved + MarketplacecheckoutaddonConstants.STRINGSEPARATOR + sameAsShipping, returnUrlBuilder.toString(), uid,
 					MarketplacecheckoutaddonConstants.CHANNEL_WEB);
-			      getMplCheckoutFacade().placeEGVOrder(cart);
+			getMplCheckoutFacade().placeEGVOrder(cart);
 
-			/*if (null != orderModel.getPaymentInfo())
-			{
-				LOG.error("Order already has payment info >>>" + orderModel.getPaymentInfo().getCode());
-				return "redirect_with_details";
-			}
-			else
-			{
-				LOG.error("Order status is Payment_Pending for orderCode>>>" + orderModel.getCode());
-				return "redirect_with_details";
-			}*/
+			/*
+			 * if (null != orderModel.getPaymentInfo()) { LOG.error("Order already has payment info >>>" +
+			 * orderModel.getPaymentInfo().getCode()); return "redirect_with_details"; } else {
+			 * LOG.error("Order status is Payment_Pending for orderCode>>>" + orderModel.getCode()); return
+			 * "redirect_with_details"; }
+			 */
 		}
 		catch (final ModelSavingException e)
 		{
