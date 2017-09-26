@@ -330,6 +330,7 @@
 			<value code="PARTIALLY_RETURNINITIATED_BY_RTO" />
 			<value code="PAYMENT_PENDING" />	<!-- TPR-629 -->
 			<value code="PAYMENT_TIMEOUT" />	<!-- TPR-629 -->
+			<value code="REDEEMED"/>
 		</enumtype>
 
 		<!-- pcm changes! -->

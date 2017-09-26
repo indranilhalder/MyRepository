@@ -3,8 +3,12 @@
  */
 package com.tisl.mpl.service.impl;
 
+import de.hybris.platform.core.enums.OrderStatus;
+import de.hybris.platform.core.model.order.OrderModel;
 import de.hybris.platform.servicelayer.config.ConfigurationService;
 import de.hybris.platform.servicelayer.model.ModelService;
+import de.hybris.platform.servicelayer.search.FlexibleSearchQuery;
+import de.hybris.platform.servicelayer.search.FlexibleSearchService;
 
 import java.io.IOException;
 import java.net.HttpURLConnection;
@@ -21,6 +25,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.UriBuilder;
 
 import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sun.jersey.api.client.Client;
@@ -68,7 +73,11 @@ public class MplWalletServicesImpl implements MplWalletServices
 
 	@Resource(name = "qcInitDataBean")
 	public QCInitDataBean qcInitDataBean;
+	
+	@Autowired
+	private FlexibleSearchService flexibleSearchService;
 
+	
 	/**
 	 * @return the qcInitDataBean
 	 */
@@ -773,6 +782,16 @@ public class MplWalletServicesImpl implements MplWalletServices
 				output = response.getEntity(String.class);
 				LOG.debug(" ************** output----" + output);
 				redimGiftCardResponse = objectMapper.readValue(output, RedimGiftCardResponse.class);
+				if(null != redimGiftCardResponse && redimGiftCardResponse.getResponseCode() == Integer.valueOf(0)){
+					LOG.debug(" ************** SuccessFullly  Redimed for card Number ----" + cardNumber);
+					 OrderModel orderModel = getOrderFromWalletCardNumber(cardNumber);
+					 if(null != orderModel && null != orderModel.getCode()){
+						 orderModel.setStatus(OrderStatus.REDEEMED);
+						 modelService.save(orderModel);
+						 LOG.debug(" ************** Order Status updated Success Fully to  ----:"+OrderStatus.REDEEMED +"Card Number :"+cardNumber);
+					 }
+					
+				}
 				return redimGiftCardResponse;
 			}
 		}
@@ -1043,6 +1062,14 @@ public class MplWalletServicesImpl implements MplWalletServices
 		}), config);
 		LOG.debug("Successfully Configured Proxy ..................");
 		return client;
+	}
+	
+	public OrderModel getOrderFromWalletCardNumber(String cardNumber)
+	{
+		final String queryString = "select {pk} from {WalletCardApportionDetail} where {cardNumber} =?cardNuber";
+				final FlexibleSearchQuery query = new FlexibleSearchQuery(queryString);
+				query.addQueryParameter("cardNumber".intern(), cardNumber);
+		return flexibleSearchService.<OrderModel> searchUnique(query);
 	}
 
 }
