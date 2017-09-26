@@ -13,7 +13,7 @@
 			<c:if test="${loop.first}">
 			<div class="store-address">
 			<span>1</span>
-			<c:if test="${not empty store.name}"><div class="store-name"><b>${store.name}</b></div></c:if>
+			<c:if test="${not empty store.displayName}"><div class="store-name"><b>${store.displayName}</b></div></c:if>
 			<c:if test="${not empty store.address.line1}"><div class="addressLine1">${store.address.line1}</div></c:if>
 			<c:if test="${not empty store.address.line2}"><div class="addressLine2">${store.address.line2}</div></c:if>
 			<c:if test="${not empty store.address.postalCode}"><div class="pin_code">${store.address.postalCode}</div></c:if>
@@ -44,7 +44,7 @@
 					  <c:forEach items="${storesAvailable}" var="store" varStatus="storeLoop">
 						 <c:if test="${not storeLoop.first}">
 						 <div class="store-address-block">
-						     <c:if test="${not empty store.name}"><div class="store-name"><b>${store.name}</b></div></c:if>
+						     <c:if test="${not empty store.displayName}"><div class="store-name"><b>${store.displayName}</b></div></c:if>
 					         <c:if test="${not empty store.address.line1}"><div class="addressLine1">${store.address.line1}</div></c:if>
 			                 <c:if test="${not empty store.address.line2}"><div class="addressLine2">${store.address.line2}</div></c:if>
 			                 <c:if test="${not empty store.address.city && not empty store.address.postalCode}"><div class="city">${store.address.city} - ${store.address.postalCode}</div></c:if>
