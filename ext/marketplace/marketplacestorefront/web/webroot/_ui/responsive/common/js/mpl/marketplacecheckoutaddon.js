@@ -5562,17 +5562,14 @@ $(".edit_address").click(function(){
 			$("#qcGiftCardId").html(data.totalEgvBalance);
 			$("#JuspayAmtId").html(data.juspayAmt);
 			
-			
 			if(data.disableWallet){
-				
-				 $('#useGiftBtnText').attr('disabled','disabled');
+				 $('.useGiftCardBtn').attr('disabled','disabled');
+				 $(".cliqCashApplyAlert").text('Please add money in Cliq Cash');
 			}
 		},	
-	   
 		fail : function(data){
 		 $('#useGiftBtnText').attr('disabled','disabled');
-	}
-		
+	}	
 	});
 	
 	$(document).on("click","#useGiftCardCheckbox",function() {
@@ -5633,7 +5630,7 @@ $(".edit_address").click(function(){
 			cache : false,
 			contentType : "html/text",
 			success : function(response) {
-				alert(response);
+				//alert(response);
 				$(location).attr('href',response);
 				console.log("Response for QC "+response);
 			},	

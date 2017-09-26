@@ -3598,9 +3598,9 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 		/// Check for EGV IN CART IS YES DISABLE COD AND WALLET PAY   ************************************ write logice for ordermodel also
 
 		getSessionService().setAttribute("disableCODandWAllet", "false");
-		getSessionService().setAttribute("getCliqCashMode", "false");
-		getSessionService().setAttribute("jsPayMode", "false");
-		getSessionService().setAttribute("cliqCashPaymentMode", StringUtils.EMPTY);
+		//getSessionService().setAttribute("getCliqCashMode", "false");
+		//getSessionService().setAttribute("jsPayMode", "false");
+		//getSessionService().setAttribute("cliqCashPaymentMode", StringUtils.EMPTY);
 
 		//		for (final OrderEntryData entryData : cartData.getEntries())
 		//		{

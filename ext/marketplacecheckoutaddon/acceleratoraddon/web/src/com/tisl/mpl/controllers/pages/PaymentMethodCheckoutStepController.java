@@ -6467,7 +6467,7 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 
 					if (null != qcResponse && null != qcResponse.getResponseCode() && qcResponse.getResponseCode().intValue() == 0)
 					{
-						return updateOrder(orderToBeUpdated, redirectAttributes);
+						return updateQCOrder(orderToBeUpdated, redirectAttributes);
 					}
 					else if (null != qcResponse && null != qcResponse.getResponseCode()
 							&& qcResponse.getResponseCode().intValue() != 0)
