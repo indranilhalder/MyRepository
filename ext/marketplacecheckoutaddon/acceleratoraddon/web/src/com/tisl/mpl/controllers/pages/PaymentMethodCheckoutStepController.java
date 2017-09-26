@@ -6810,9 +6810,9 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 					paymentAddressLine2, paymentAddressLine3, country, state, city, pincode,
 					cardSaved + MarketplacecheckoutaddonConstants.STRINGSEPARATOR + sameAsShipping, returnUrlBuilder.toString(), uid,
 					MarketplacecheckoutaddonConstants.CHANNEL_WEB);
-			final OrderModel orderModel = getMplCheckoutFacade().placeEGVOrder(cart);
+			      getMplCheckoutFacade().placeEGVOrder(cart);
 
-			if (null != orderModel.getPaymentInfo())
+			/*if (null != orderModel.getPaymentInfo())
 			{
 				LOG.error("Order already has payment info >>>" + orderModel.getPaymentInfo().getCode());
 				return "redirect_with_details";
@@ -6821,7 +6821,7 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 			{
 				LOG.error("Order status is Payment_Pending for orderCode>>>" + orderModel.getCode());
 				return "redirect_with_details";
-			}
+			}*/
 		}
 		catch (final ModelSavingException e)
 		{
@@ -6838,7 +6838,7 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 			orderId = "NONBusinessException" + e.getErrorMessage();
 			LOG.error(MarketplacecheckoutaddonConstants.LOGERROR, e);
 		}
-		return orderId;
+		return orderId + "|" + guid;
 	}
 
 

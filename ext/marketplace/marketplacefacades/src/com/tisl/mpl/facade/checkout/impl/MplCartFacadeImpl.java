@@ -4580,6 +4580,8 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 	private CartEntryModel getEGVCartEntry(final EgvDetailsData egvDetailForm, final CartModel cardModel)
 	{
 		//remove old EGA Cart
+		String productSellerGiftCardUssId = null;
+		String productSellerName = null;
 		mplEGVCartService.removeOldEGVCartCurrentCustomer();
 		final CartEntryModel abstractOrderEntryModel = getModelService().create(CartEntryModel.class);
 		final ProductModel productModel = productService.getProductForCode(egvDetailForm.getProductCode());
@@ -4595,14 +4597,14 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 		abstractOrderEntryModel.setFulfillmentTypeP2(richAttributeModel.getDeliveryFulfillModeByP1().getCode());
 		if (richAttributeModel.getSellerInfo() != null && StringUtil.isNotEmpty(richAttributeModel.getSellerInfo().getUSSID()))
 		{
-			abstractOrderEntryModel.setSelectedUSSID(richAttributeModel.getSellerInfo().getUSSID());
-			abstractOrderEntryModel.setSellerInfo(richAttributeModel.getSellerInfo().getSellerName());
+			productSellerGiftCardUssId=richAttributeModel.getSellerInfo().getUSSID();
+			productSellerName =richAttributeModel.getSellerInfo().getSellerName();	
+		}else{
+			productSellerGiftCardUssId=configurationService.getConfiguration().getProperties("mpl.giftcard.product.sellerid").toString();
+			productSellerName = configurationService.getConfiguration().getProperties("mpl.giftcard.sellername").toString();
 		}
-		else
-		{
-			abstractOrderEntryModel.setSelectedUSSID("123653098765485130011719");
-			abstractOrderEntryModel.setSellerInfo("PALTALOONS");
-		}
+		abstractOrderEntryModel.setSelectedUSSID(productSellerGiftCardUssId);
+		abstractOrderEntryModel.setSellerInfo(productSellerName);
 		abstractOrderEntryModel.setCalculated(Boolean.valueOf(true));
 		abstractOrderEntryModel.setActualDeliveryDate(new Date());
 		abstractOrderEntryModel.setCartAdditionalDiscPerc(Double.valueOf(0.0));
@@ -4630,7 +4632,7 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 		{
 			final Collection<MplZoneDeliveryModeValueModel> value6 = new ArrayList<MplZoneDeliveryModeValueModel>();
 			final MplZoneDeliveryModeValueModel mplZoneDeliveryModeValueModel = mplDeliveryCostDao.getDeliveryCost("home-delivery",
-					"INR", "123653098765485130011719");
+					"INR", productSellerGiftCardUssId);
 
 			mplZoneDeliveryModeValueModel.setDeliveryFulfillModes(DeliveryFulfillModesEnum.TSHIP);
 			DeliveryModeModel deliaveryMode=mplDeliveryCostDao.getDelieveryMode("home-delivery");

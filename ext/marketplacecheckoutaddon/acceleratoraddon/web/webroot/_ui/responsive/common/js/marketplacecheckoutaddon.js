@@ -1544,7 +1544,8 @@ $("#otpMobileNUMField").focus(function(){
 			type: "GET",
 			cache: false,
 			async: false,
-			success : function(response) {	
+			success : function(response) {
+
 				if(response=='redirect'){
 //					if($(".redirect").val()=="false"){
 //						Juspay.stopSecondFactor();
@@ -2915,6 +2916,7 @@ function submitNBForm(){
 			type: "GET",
 			cache: false,
 			success : function(response) {
+				
 				if(response=='redirect'){
 					$(location).attr('href',ACC.config.encodedContextPath+"/cart"); //TIS 404
 				}
