@@ -3084,7 +3084,14 @@
 				        <defaultvalue>Boolean.FALSE</defaultvalue>
 				        <modifiers optional="true" read="true" write="true"/>
 				        <persistence type="property"/>
-			    	</attribute> 
+			    	</attribute>
+			    	
+			    		<attribute qualifier="splitModeInfo" type="java.lang.String">
+							<modifiers optional="true" read="true" write="true" />
+							<defaultvalue>"Juspay"</defaultvalue>
+							<persistence type="property" />
+					    </attribute>
+			    	 
 				</attributes>
 				<indexes>
 					<index name="IDX_CART_SEARCH_ONLOAD">
@@ -13296,7 +13303,7 @@
 					</attribute>
 
 					<attribute qualifier="currentBatchNumber" type="java.lang.Long">
-						<modifiers read="true" write="true" search="true" />
+						<modifiers read="true" write="true" search="true" unique="true"/>
 						<persistence type="property" />
 					</attribute>
 
@@ -13574,6 +13581,12 @@
 					</attribute>
 					
 					<attribute autocreate="true" generate="true" qualifier="cardAmount"
+						type="java.lang.String">
+						<persistence type="property" />
+						<modifiers read="true" write="true" search="true" />
+					</attribute>
+					
+					<attribute autocreate="true" generate="true" qualifier="orderId"
 						type="java.lang.String">
 						<persistence type="property" />
 						<modifiers read="true" write="true" search="true" />
