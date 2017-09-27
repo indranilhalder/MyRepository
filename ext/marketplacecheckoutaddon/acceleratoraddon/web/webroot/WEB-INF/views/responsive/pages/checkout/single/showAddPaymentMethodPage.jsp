@@ -203,6 +203,9 @@
 
 
 <!-- Added for Cliq Cash -->
+
+
+
 <style>
 	.giftCheckoutContainer {
 		border: solid 1px #dddddd;
@@ -237,6 +240,7 @@
 	.giftWalletImg {vertical-align: middle;}
 	.giftCheckoutInnerCols1, .giftCheckoutInnerCols2, .giftCheckoutInnerCols3 {padding: 4%;}
 	.giftInfoBottom {border-top: 1px solid #dddddd; padding: 0; margin-top: 1%; padding-top: 1%;}
+	.topPlaceOrderBtn {margin: 12px 0 0 !important;}
 	
 	@media(min-width: 651px){
 		.useGiftCardBtn, .useGiftCardBtn:hover {float: right; line-height: normal; padding-top: 5px;}
@@ -255,10 +259,9 @@
 	.useGiftCardBtn {height: 25px !important; line-height: normal !important; padding: 5px 6px !important;}
     .cliqCashApplyAlert {border-radius: 4px; margin: 3%;}
 	}
-	
-</style>
 
-			
+</style>
+	
 <div class="giftCheckoutContainer">
 	<div class="giftCheckoutContainerTable">
 		<div class="clearfix">
@@ -303,9 +306,9 @@
 </div>
 <div class="col-sm-12 alert alert-success cliqCashApplyAlert"></div>
 <br />&nbsp; <br />
-<div class="col-xs-12">
-	<button type="button" class="button pull-right topPlaceOrderBtn" id="paymentTypeCC"><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.paymentButton"/></button>
-</div>
+<!-- <div class="col-xs-12">
+	
+</div> -->
 			
 
 
@@ -1050,6 +1053,7 @@
 			            		<div class="pay newCardPaymentCC">
 									
 									<button type="submit" class="make_payment button btn-block payment-button" id="make_cc_payment"><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.paymentButton"/></button>
+									<button type="button" class="button topPlaceOrderBtn" id="paymentTypeCC"><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.paymentButton"/></button>
 									<!-- <p class="payment-redirect">You will be re-directed to secure payment gateway</p> -->
 									<%-- <p onclick="teliumTrack()"><spring:theme code="checkout.multi.paymentMethod.selectMode.tnc.pretext" /><a href="<c:url value="${tncLink}"/>" target="_blank"><spring:theme code="checkout.multi.paymentMethod.selectMode.tnc" /></a></p> --%>
 								</div>

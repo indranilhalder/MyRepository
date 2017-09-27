@@ -5539,9 +5539,15 @@ $(".edit_address").click(function(){
 /**
  * Wallet Changes
  */
+ 
+ $(document).ready(function(){
 	$(".cliqCashApplyAlert").hide();
 	$("#unUseGiftBtnText").hide();
 	$(".topPlaceOrderBtn").hide();
+	
+	$("#useGiftCardCheckbox").prop('disabled',true);
+	 $(".useGiftCardBtn").css('cursor','not-allowed');
+	 $(".useGiftCardBtn").css('opacity','0.5');
 	
 	if($(window).width()>650){
 		$(".giftCheckoutSectionSize").removeClass("col-xs-4");
@@ -5563,8 +5569,18 @@ $(".edit_address").click(function(){
 			$("#JuspayAmtId").html(data.juspayAmt);
 			
 			if(data.disableWallet){
-				 $('.useGiftCardBtn').attr('disabled','disabled');
-				 $(".cliqCashApplyAlert").text('Please add money in Cliq Cash');
+				 $("#useGiftCardCheckbox").prop('disabled',true);
+				 $(".useGiftCardBtn").css('cursor','not-allowed');
+				 $(".useGiftCardBtn").css('opacity','0.5');
+					
+				 var text= "Please add money in Cliq Cash";
+				 $(".cliqCashApplyAlert").innerHTML = "Please add money in Cliq Cash";
+				 $(".cliqCashApplyAlert").show();
+				 
+			} else {
+				$("#useGiftCardCheckbox").prop('disabled',false);
+				 $(".useGiftCardBtn").css('cursor','pointer');
+				 $(".useGiftCardBtn").css('opacity','1');
 			}
 		},	
 		fail : function(data){
@@ -5576,7 +5592,14 @@ $(".edit_address").click(function(){
 		
 		$(".cliqCashApplyAlert").hide();
 		$(".topPlaceOrderBtn").hide();
+		$("#make_cc_payment").show();
 		var value = document.getElementById('useGiftCardCheckbox');	
+		
+		var staticHost = $('#staticHost').val();
+		$("body").append("<div id='no-click' style='opacity:0.5; background:#000; z-index: 100000; width:100%; height:100%; position: fixed; top: 0; left:0;'></div>");
+		$("body").append('<div class="loaderDiv" style="position: fixed; left: 45%;top:45%;z-index: 10000"><img src="'+staticHost+'/_ui/responsive/common/images/red_loader.gif" class="spinner"></div>');
+
+		
 		$.ajax({
 			url : ACC.config.encodedContextPath + "/checkout/multi/payment-method/useWalletForPayment",
 			data : {"walletMode":value.checked},
@@ -5584,6 +5607,7 @@ $(".edit_address").click(function(){
 			cache : false,
 			success : function(data) {
 				
+				$("#no-click,.loaderDiv").remove();
 				if(value.checked){
     				$("#useGiftBtnText").hide();
     				$("#unUseGiftBtnText").show();
@@ -5593,20 +5617,29 @@ $(".edit_address").click(function(){
     				$("#unUseGiftBtnText").hide();
     				$("#useGiftBtnText").show();
     				$(".cliqCashApplyAlert").hide();
+    				
+    				$(".topPlaceOrderBtn").hide();
+    				$("#make_cc_payment").show();
+    				$(".choose-payment").find('*').prop('disabled',false);
+					$(".checkout-paymentmethod li span").css('pointer-events', 'all');
     			}
 				
 				if(data.disableJsMode){
-					//alert("disable");
+					  $("#make_cc_payment").hide();
 				      $(".topPlaceOrderBtn").show();
+				      $(".choose-payment").find('*').prop('disabled',true);
+				      $(".checkout-paymentmethod li span").css('pointer-events', 'none');
+				      $(".topPlaceOrderBtn").prop('disabled',false);
 					
 				}else{
-					
-					  //alert("Enable JP");	
+					$("#make_cc_payment").show();
+					$(".choose-payment").find('*').prop('disabled',false);
+					$(".checkout-paymentmethod li span").css('pointer-events', 'all');
 				}
 			},	
 		   
 			fail : function(data){
-			//alert("FAIL");
+				$("#no-click,.loaderDiv").remove();
 		}
 			
 		});
@@ -5621,28 +5654,29 @@ $(".edit_address").click(function(){
 				var staticHost = $('#staticHost').val();
 				$("body").append("<div id='no-click' style='opacity:0.5; background:#000; z-index: 100000; width:100%; height:100%; position: fixed; top: 0; left:0;'></div>");
 				$("body").append('<div class="loaderDiv" style="position: fixed; left: 45%;top:45%;z-index: 10000"><img src="'+staticHost+'/_ui/responsive/common/images/red_loader.gif" class="spinner"></div>');
-				$(".pay button, #make_mrupee_payment").prop("disabled",true);
-				$(".pay button, #make_mrupee_payment").css("opacity","0.5");
-				
 	 $.ajax({
 			url : ACC.config.encodedContextPath + "/checkout/multi/payment-method/createWalletOrder",
 			type : "GET",
 			cache : false,
 			contentType : "html/text",
 			success : function(response) {
-				//alert(response);
+				$("#no-click,.loaderDiv").remove();
 				$(location).attr('href',response);
 				console.log("Response for QC "+response);
 			},	
 			fail : function(data){
+				$("#no-click,.loaderDiv").remove();
 				$(location).attr('href',ACC.config.encodedContextPath+"/cart");
 			}	
 		});
 	} 
 });
+	
+ });
 	/**
 	 * Wallet Changes END
 	 */
+
 
 });
 

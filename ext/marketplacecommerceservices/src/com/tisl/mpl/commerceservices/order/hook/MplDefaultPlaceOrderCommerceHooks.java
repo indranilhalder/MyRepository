@@ -80,6 +80,7 @@ import com.tisl.mpl.core.model.WalletApportionPaymentInfoModel;
 import com.tisl.mpl.core.model.WalletCardApportionDetailModel;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.marketplacecommerceservices.daos.MplOrderDao;
+import com.tisl.mpl.marketplacecommerceservices.egv.service.cart.MplEGVCartService;
 import com.tisl.mpl.marketplacecommerceservices.event.OrderEGVRecipientEmailEvent;
 import com.tisl.mpl.marketplacecommerceservices.service.MplCommerceCartService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplDeliveryCostService;
@@ -184,6 +185,9 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 
 	@Autowired
 	private MplWalletServices mplWalletServices;
+
+	@Autowired
+	MplEGVCartService mplEGVCartService;
 
 	//	@Autowired
 	//	private MplFraudModelService mplFraudModelService;
@@ -779,10 +783,14 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 				if (orderModel.getIsEGVCart().booleanValue())
 				{
 
+					mplEGVCartService.removeOldEGVCartCurrentCustomer();
+
 					final String response = getPurchaseEGVRequestPopulate(orderModel);
 					if (response.equalsIgnoreCase("success"))
 					{
 						getOrderStatusSpecifier().setOrderStatus(orderModel, OrderStatus.CONFIRMED);
+
+
 						sendNotifiactionForEGVOrder(orderModel);
 					}
 					else
@@ -3529,7 +3537,6 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 					"" + (Double.parseDouble(abstractOrderEntryModel.getWalletApportionPaymentInfo().getJuspayShippingValue())
 							/ quantity));
 		}
-
 		if (Double.parseDouble(abstractOrderEntryModel.getWalletApportionPaymentInfo().getJuspaySchedulingValue()) > 0)
 		{
 			walletApportionPaymentInfo.setJuspaySchedulingValue(

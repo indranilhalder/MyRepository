@@ -3865,6 +3865,10 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 				uid = customer.getUid();
 			}
 
+			if (!isEGVOrder)
+			{
+				mplEGVCartService.removeOldEGVCartCurrentCustomer();
+			}
 
 			//Payment Soln changes	TPR-629
 			OrderModel orderModel = null;
