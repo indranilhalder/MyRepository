@@ -1723,11 +1723,16 @@ $(document).on("click",'#applyCustomPriceFilter',function(){
 						
 						//INC144319487 starts 
 						var pageURL=null;
-						if (browserURL[0].indexOf("c-")>0)
-							pageURL = browserURL[0]+'/page-1?'+nonEmptyDataString.replace(/%/g,"%25").replace(/ - /g,"+-+").replace(/:/g,"%3A");
-						else
-							pageURL = browserURL[0]+'page-1?'+nonEmptyDataString.replace(/%/g,"%25").replace(/ - /g,"+-+").replace(/:/g,"%3A");
+						
+						//SDI-1006 fix starts
+						//if (browserURL[0].indexOf("c-")>0)
+						//	pageURL = browserURL[0]+'/page-1?'+nonEmptyDataString.replace(/%/g,"%25").replace(/ - /g,"+-+").replace(/:/g,"%3A");
+						//else
+						//	pageURL = browserURL[0]+'page-1?'+nonEmptyDataString.replace(/%/g,"%25").replace(/ - /g,"+-+").replace(/:/g,"%3A");
 						 
+						pageURL = browserURL[0].replace(/page-[0-9]+/, 'page-1')+'?'+nonEmptyDataString.replace(/%/g,"%25").replace(/ - /g,"+-+").replace(/:/g,"%3A");
+						
+						//SDI-1006 fix ends
 						//INC144319487 ends
 						
 						// generating request mapping URL
