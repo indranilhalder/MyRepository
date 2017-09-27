@@ -36,10 +36,21 @@
     letter-spacing: .6px;
     text-align: center;
     color: #a5173c;
+    cursor: pointer;
     text-transform: uppercase;
 }
 
-.product-block .header ul .viewDetails {width: 64% !important;}
+.product-block .header ul .viewDetails {width: 50% !important;} 
+.product-block .header ul li {width: 16% !important;}
+.product-block .header ul .resendEmail {text-align: right;}
+
+@media(max-width: 480px) {
+	.product-block .header ul .viewDetails {width: 100% !important;}
+	.product-block li.header > ul > li {width: 33% !important;}
+	.product-block .header ul .resendEmail {text-align: center;}
+	.product-block .header ul .viewDetailsAnchor {text-align: left; position: static !important;}
+	.product-block .header ul .trackOrderAnchor {position: static !important;}
+}
 </style>
 
 <!-- LW-230 -->
@@ -219,6 +230,9 @@
 															
 												</li>
 											</ul>
+											<!-- <div id="resend_email_limit" class="col-sm-12">
+												
+											</div> -->
 										</li>
 										
 										<c:forEach items="${orderHistoryDetail.sellerOrderList}"
@@ -974,16 +988,24 @@
 	</div>
 </template:page>
 <script>
+var count = 0;
+/* $('#resend_email_limit').hide(); */
 $("#resend_order_email").click(function () {
+	count++;
+	/* $('#resend_email_limit').hide(); */
 	var orderId = $("#order_id_for_resending").val();
-	alert(orderId);
-	$.ajax({	  
-		type: "POST",
-		url: ACC.config.encodedContextPath + "/my-account/sendNotificationEGVOrder",
-	    data: "orderId="+orderId,
-		success: function () {	
-			
-		}
-	});
+	if(count < 4){
+		$.ajax({	  
+			type: "POST",
+			url: ACC.config.encodedContextPath + "/my-account/sendNotificationEGVOrder",
+		    data: "orderId="+orderId,
+			success: function () {	
+				
+			}
+		});
+	} else {
+	/* 	$(this).parents().find('.header').childrens().find('#resend_email_limit').text('Maximum attempts reached.');
+		$(this).parents().find('.header').childrens().find('#resend_email_limit').show(); */
+	}
 });
 </script>
