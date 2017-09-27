@@ -778,9 +778,11 @@ public class AccountPageController extends AbstractMplSearchPageController
 								+ orderHistoryData.getCode());
 						//setting cancel product for BOGO
 
+						 if(null!= orderEntryData.getOrderLineId()){
 						cancelProduct = cancelReturnFacade.associatedEntriesData(orderModelService.getOrder(subOrder.getCode()),
 								orderEntryData.getOrderLineId());
 						currentProductMap.put(subOrder.getCode() + orderEntryData.getOrderLineId(), cancelProduct);
+                        }
 
 						//TPR-6013
 						final OrderModel subOrderModel = orderModelService.getOrder(subOrder.getCode());
