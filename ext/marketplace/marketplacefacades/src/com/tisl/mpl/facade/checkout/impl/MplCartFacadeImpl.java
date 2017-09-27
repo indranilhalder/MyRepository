@@ -4600,8 +4600,8 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 			productSellerGiftCardUssId=richAttributeModel.getSellerInfo().getUSSID();
 			productSellerName =richAttributeModel.getSellerInfo().getSellerName();	
 		}else{
-			productSellerGiftCardUssId=configurationService.getConfiguration().getProperties("mpl.giftcard.product.sellerid").toString();
-			productSellerName = configurationService.getConfiguration().getProperties("mpl.giftcard.sellername").toString();
+			productSellerGiftCardUssId=configurationService.getConfiguration().getString("mpl.giftcard.product.sellerid");
+			productSellerName = configurationService.getConfiguration().getString("mpl.giftcard.sellername");
 		}
 		abstractOrderEntryModel.setSelectedUSSID(productSellerGiftCardUssId);
 		abstractOrderEntryModel.setSellerInfo(productSellerName);
