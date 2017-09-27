@@ -197,9 +197,9 @@
 		<property name="targetClass" value="com.tisl.mpl.service.QCInitDataBean" />
 	</bean>
 
-	 <bean id="mplQCInitService" class="com.tisl.mpl.service.MplQCInitServiceImpl">
-	 <property name="mplWalletInitConvertor" ref="mplWalletInitConvertor" />
-	 </bean> 
+<!-- 	 <bean id="mplQCInitService" class="com.tisl.mpl.service.MplQCInitServiceImpl"> -->
+<!-- 	 <property name="mplWalletInitConvertor" ref="mplWalletInitConvertor" /> -->
+<!-- 	 </bean>  -->
 
 </beans>
 

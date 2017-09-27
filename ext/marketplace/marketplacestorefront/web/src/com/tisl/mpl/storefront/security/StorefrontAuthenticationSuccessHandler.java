@@ -52,7 +52,6 @@ import org.springframework.security.web.savedrequest.SavedRequest;
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.helper.ProductDetailsHelper;
 import com.tisl.mpl.marketplacecommerceservices.service.ExtendedUserService;
-import com.tisl.mpl.service.MplQCInitServiceImpl;
 import com.tisl.mpl.storefront.constants.MessageConstants;
 import com.tisl.mpl.storefront.constants.ModelAttributetConstants;
 import com.tisl.mpl.storefront.constants.RequestMappingUrlConstants;
@@ -130,27 +129,6 @@ public class StorefrontAuthenticationSuccessHandler extends SavedRequestAwareAut
 	@Resource(name = "productDetailsHelper")
 	private ProductDetailsHelper productDetailsHelper;
 
-	@Resource(name = "mplQCInitService")
-	private MplQCInitServiceImpl mplQCInitService;
-	
-
-
-	/**
-	 * @return the mplQCInitService
-	 */
-	public MplQCInitServiceImpl getMplQCInitService()
-	{
-		return mplQCInitService;
-	}
-
-	/**
-	 * @param mplQCInitService the mplQCInitService to set
-	 */
-	public void setMplQCInitService(MplQCInitServiceImpl mplQCInitService)
-	{
-		this.mplQCInitService = mplQCInitService;
-	}
-
 	/**
 	 * @return the productDetailsHelper
 	 */
@@ -184,9 +162,7 @@ public class StorefrontAuthenticationSuccessHandler extends SavedRequestAwareAut
 	{
 
 		getCustomerFacade().loginSuccess();
-		
-		getMplQCInitService().init();
-		
+
 		//Microsite POC
 		//This is present in the filter but in case the login request comes from a microsite,the redirect url will be the microsite url and hence not pass through the filter.
 		//Hence updating the cookie here.
@@ -262,8 +238,7 @@ public class StorefrontAuthenticationSuccessHandler extends SavedRequestAwareAut
 			getSessionService().setAttribute(WebConstants.CART_RESTORATION_SHOW_MESSAGE, Boolean.TRUE);
 			try
 			{
-				getSessionService().setAttribute(
-						WebConstants.CART_RESTORATION,
+				getSessionService().setAttribute(WebConstants.CART_RESTORATION,
 						getCartFacade().restoreCartAndMerge(getMostRecentSavedCart(getCartFacade().getSessionCart()).getGuid(),
 								getCartFacade().getSessionCart().getGuid()));
 				request.setAttribute(CART_MERGED, Boolean.TRUE);
@@ -355,7 +330,7 @@ public class StorefrontAuthenticationSuccessHandler extends SavedRequestAwareAut
 		{
 			super.onAuthenticationSuccess(request, response, authentication);
 		}
-		
+
 		/** Added for UF-93 for Remember Me functionality **/
 		String rememberMe = "false";
 		if (null != request.getParameter("j_RememberMe"))
@@ -368,9 +343,7 @@ public class StorefrontAuthenticationSuccessHandler extends SavedRequestAwareAut
 		{
 			request.getSession().setAttribute("rememberMe", rememberMe);
 			LOG.error("StorefrontAuthenticationSuccessHandler.onAuthenticationSuccess() - After setting in Session 'j_RememberMe' ::"
-					+ request.getSession().getAttribute("rememberMe")
-					+ " SessionId: "
-					+ request.getSession().getId()
+					+ request.getSession().getAttribute("rememberMe") + " SessionId: " + request.getSession().getId()
 					+ " SessionTimeout: " + request.getSession().getMaxInactiveInterval());
 		}
 		/** Added for UF-93 Ends **/
