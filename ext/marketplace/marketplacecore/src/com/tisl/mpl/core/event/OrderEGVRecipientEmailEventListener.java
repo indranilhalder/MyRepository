@@ -33,6 +33,7 @@ public class OrderEGVRecipientEmailEventListener extends AbstractSiteEventListen
 		final OrderProcessModel egvOrdreProcessModel = (OrderProcessModel) getBusinessProcessService().createProcess(
 				"orderEGVRecipientEmailProcess-" + orderModel.getCode() + "-" + System.currentTimeMillis(),
 				"orderEGVRecipientEmailProcess");
+		egvOrdreProcessModel.setOrder(orderModel);
 		getModelService().save(egvOrdreProcessModel);
 		getBusinessProcessService().startProcess(egvOrdreProcessModel);
 	}

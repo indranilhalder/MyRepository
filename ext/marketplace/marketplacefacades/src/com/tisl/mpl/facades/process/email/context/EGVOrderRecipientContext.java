@@ -11,7 +11,10 @@ import de.hybris.platform.core.model.user.CustomerModel;
 import de.hybris.platform.orderprocessing.model.OrderProcessModel;
 import de.hybris.platform.servicelayer.config.ConfigurationService;
 
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+
+import com.tisl.mpl.marketplacecommerceservices.daos.changedeliveryaddress.impl.MplDeliveryAddressDaoImpl;
 
 /**
  * @author PankajS
@@ -25,15 +28,31 @@ public class EGVOrderRecipientContext extends AbstractEmailContext<OrderProcessM
 
 	@Autowired
 	private ConfigurationService configurationService;
+	private static final Logger LOG = Logger.getLogger(MplDeliveryAddressDaoImpl.class);
+
 
 
 	@Override
 	public void init(final OrderProcessModel orderProcessModel, final EmailPageModel emailPageModel)
 	{
+		
+		LOG.info("Prepare Email template before ");
 	   super.init(orderProcessModel, emailPageModel);
-			
-		put(EMAIL, orderProcessModel.getOrder().getRecipientId());
-
+		LOG.info("Prepare Email template before ");
+	   String email =null;
+	   if(orderProcessModel.getOrder().getRecipientId()!=null){
+	   	email=orderProcessModel.getOrder().getRecipientId();
+	   }
+	   else{
+	   	if((orderProcessModel.getOrder() !=null && orderProcessModel.getOrder().getUser()!=null)){
+	   		email=orderProcessModel.getOrder().getUser().getUid();
+	   	}
+	   }
+	  if(orderProcessModel.getOrder()!=null && orderProcessModel.getOrder().getEntries()!=null){
+		  put("abstractOrderEntryList",orderProcessModel.getOrder().getEntries());
+	  }
+	   
+		put(EMAIL,email);
 		final String customerCareNumber = configurationService.getConfiguration().getString("marketplace.sms.service.contactno",
 				"1800-208-8282");
 		put(CUSTOMER_CARE_NUMBER, customerCareNumber);
