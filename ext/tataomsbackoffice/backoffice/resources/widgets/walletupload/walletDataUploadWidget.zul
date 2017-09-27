@@ -8,11 +8,12 @@
 	.uploadContainer .z-div button{margin:0px 30px 0 5px;}
 	.heading {font-weight:bold;display:block;font-size:16px;margin-bottom:15px;text-align:left;}
 	.error_class{ color:red;}
+	span.z-upload > form {display: none !important;}
 	</style>
 	<div class="uploadContainer">
 	   <hlayout>
 		 <vlayout>
-		 <label sclass="heading" value="Bulk Upload Wallet For CashBack"></label>
+		 <label sclass="heading" value=" Bulk Upload Wallet For CashBack"></label>
 	    <div>
 	    	<textbox id="textbox"  disabled="true"/>
 	         <button sclass="uploadTxtbox" label="Load Amount" upload="true,maxsize=302400,accept=.csv" id="upload_button"></button> 
@@ -23,12 +24,14 @@
 	    <label id="emptyFileError" sclass="error_class" value="Invalid ShipmentStatus upload format file " > </label>
 		
 		 <hbox pack="center">
+		 <label sclass="uploadheading" value="Upload Wallet File download:"></label>
 				<button id="savecsv" sclass="cng-action-icon"
 					style="margin-left:2px;padding:0px 3px 0px 0px;font-size:12px"
 					image="${wr}/images/csv_text.png" label="Bulk Wallet Upload File Download " />
 			</hbox>
 			
 		 <hbox pack="center">
+		  <label sclass="cancelheading" value="Cancel Wallet File download:"></label>
 				<button id="cancelcsv" sclass="cng-action-icon"
 					style="margin-left:2px;padding:0px 3px 0px 0px;font-size:12px"
 					image="${wr}/images/csv_text.png" label="Bulk  Wallet Cancle File Download " />

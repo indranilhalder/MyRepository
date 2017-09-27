@@ -93,6 +93,12 @@
 		<security:intercept-url pattern="/login" requires-channel="http" />
 		<security:intercept-url pattern="/login/checkout" requires-channel="http" />
 		<security:intercept-url pattern="/login/pw/change" requires-channel="http" />
+		
+		<security:intercept-url pattern="/evgPDP*" access="hasRole('ROLE_CUSTOMERGROUP')" requires-channel="http" />
+        <security:intercept-url pattern="/evgPDP/**" access="hasRole('ROLE_CUSTOMERGROUP')" requires-channel="http" />
+        <security:intercept-url pattern="/wallet*" access="hasRole('ROLE_CUSTOMERGROUP')" requires-channel="http" />
+        <security:intercept-url pattern="/wallet/**" access="hasRole('ROLE_CUSTOMERGROUP')" requires-channel="http" />
+		
 		<security:form-login
 				login-page="/login"
 				authentication-failure-handler-ref="loginAuthenticationFailureHandler"
