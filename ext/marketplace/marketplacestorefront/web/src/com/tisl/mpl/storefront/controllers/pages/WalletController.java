@@ -18,6 +18,9 @@ import de.hybris.platform.servicelayer.session.SessionService;
 import de.hybris.platform.servicelayer.user.UserService;
 import de.hybris.platform.store.services.BaseStoreService;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+
 import javax.annotation.Resource;
 
 import org.apache.log4j.Logger;
@@ -44,11 +47,12 @@ import com.tisl.mpl.pojo.response.WalletTransacationsList;
 import com.tisl.mpl.storefront.constants.ModelAttributetConstants;
 import com.tisl.mpl.storefront.constants.RequestMappingUrlConstants;
 import com.tisl.mpl.storefront.web.forms.AddToCardWalletForm;
+
+
 /**
  * @author TUL
  *
  */
-
 
 @Controller
 @Scope(RequestMappingUrlConstants.TENANT)
@@ -85,6 +89,7 @@ public class WalletController extends AbstractPageController
 
 	private static final Logger LOG = Logger.getLogger(WalletController.class);
 	protected static final String REDIM_WALLET_CODE_PATTERN = "/redimWallet";
+	final DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
 
 
 	@SuppressWarnings("boxing")
@@ -106,54 +111,78 @@ public class WalletController extends AbstractPageController
 
 
 	/**
-	 * @param model  
+	 * @param model
 	 */
 	@RequestMapping(value = REDIM_WALLET_CODE_PATTERN, method = RequestMethod.POST)
-	public String getRedimWalletView(@ModelAttribute("addToCardWalletForm")  AddToCardWalletForm addToCardWalletForm,  Model model, final RedirectAttributes redirectAttributes) throws CMSItemNotFoundException{
+	public String getRedimWalletView(@ModelAttribute("addToCardWalletForm") final AddToCardWalletForm addToCardWalletForm,
+			final Model model, final RedirectAttributes redirectAttributes) throws CMSItemNotFoundException, Exception
+	{
 
-		try{
-			RedimGiftCardResponse response = mplWalletFacade.getAddEGVToWallet(addToCardWalletForm.getCardNumber(),addToCardWalletForm.getCardPin());
+		try
+		{
+			final RedimGiftCardResponse response = mplWalletFacade.getAddEGVToWallet(addToCardWalletForm.getCardNumber(),
+					addToCardWalletForm.getCardPin());
 
-			if(null != response && response.getResponseCode() == Integer.valueOf(0)){
-				
+			if (null != response && null != response.getResponseCode() && null == Integer.valueOf(0))
+			{
 				GlobalMessages.addFlashMessage(redirectAttributes, GlobalMessages.INFO_MESSAGES_HOLDER,
 						"text.cliqcash.add.money.success", null);
-				return REDIRECT_PREFIX +"/wallet/getcliqcashPage";
+				LOG.info("card Added Sucesss " + response.getResponseMessage());
+				return REDIRECT_PREFIX + "/wallet/getcliqcashPage";
 			}
-		}catch(Exception ex){
-			ex.printStackTrace();
-			GlobalMessages.addErrorMessage(model, "text.cliqcash.add.money.Fail");
-		/*	if(ex.getMessage().contains("SocketTimeoutException")){
-			GlobalMessages.addErrorMessage(model, "text.cliqcash.timeout.massege");
-			}*/
+			else if (null != response && null != response.getResponseCode() && response.getResponseCode() != Integer.valueOf(0))
+			{
+				GlobalMessages.addFlashMessage(redirectAttributes, GlobalMessages.ERROR_MESSAGES_HOLDER,
+						"text.cliqcash.add.money.Fail", null);
+				LOG.error("card Add Error " + response.getResponseMessage());
+				return REDIRECT_PREFIX + "/wallet/getcliqcashPage";
+			}
 		}
-		return REDIRECT_PREFIX +"/wallet/getcliqcashPage";
+		catch (final Exception ex)
+		{
+			GlobalMessages.addMessage(redirectAttributes, GlobalMessages.ERROR_MESSAGES_HOLDER, "text.cliqcash.add.money.Fail",
+					null);
+			ex.printStackTrace();
+			/*
+			 * if(ex.getMessage().contains("SocketTimeoutException")){ GlobalMessages.addErrorMessage(model,
+			 * "text.cliqcash.timeout.massege"); }
+			 */
+		}
+		return REDIRECT_PREFIX + "/wallet/getcliqcashPage";
 	}
 
 	@SuppressWarnings("boxing")
 	@RequestMapping(value = "/getcliqcashPage", method = RequestMethod.GET)
 	@RequireHardLogIn
-	public String getCliqCash(final Model model) throws CMSItemNotFoundException, QCServiceCallException{
-
+	public String getCliqCash(final Model model, @SuppressWarnings("unused") final RedirectAttributes redirectAttributes)
+			throws CMSItemNotFoundException, QCServiceCallException
+	{
 		double balanceAmount = 0;
 		CustomerWalletDetailResponse customerWalletDetailData = new CustomerWalletDetailResponse();
 		WalletTransacationsList walletTrasacationsListData1 = new WalletTransacationsList();
 		final CustomerModel currentCustomer = (CustomerModel) userService.getCurrentUser();
 
-		try{
-			if (null != currentCustomer.getIsWalletActivated() && currentCustomer.getIsWalletActivated()){
+		try
+		{
+			if (null != currentCustomer && null != currentCustomer.getIsWalletActivated() && currentCustomer.getIsWalletActivated())
+			{
 
 				customerWalletDetailData = mplWalletFacade.getCustomerWallet(currentCustomer.getCustomerWalletDetail().getWalletId());
-				if(null != customerWalletDetailData.getWallet() && customerWalletDetailData.getWallet().getBalance() >0){
-					balanceAmount = customerWalletDetailData.getWallet().getBalance();		
+				if (null != customerWalletDetailData.getWallet() && customerWalletDetailData.getWallet().getBalance() > 0)
+				{
+					balanceAmount = customerWalletDetailData.getWallet().getBalance();
 				}
-				WalletTransacationsList walletTrasacationsListData = mplWalletFacade.getWalletTransactionList();	
-				if(null != walletTrasacationsListData && null != walletTrasacationsListData.getResponseCode() && walletTrasacationsListData.getResponseCode() == 0){
-					
+				final WalletTransacationsList walletTrasacationsListData = mplWalletFacade.getWalletTransactionList();
+				if (null != walletTrasacationsListData && null != walletTrasacationsListData.getResponseCode()
+						&& walletTrasacationsListData.getResponseCode() == 0)
+				{
 					walletTrasacationsListData1 = walletTrasacationsListData;
+
 				}
 
-			}else{
+			}
+			else
+			{
 
 				final QCCustomerRegisterRequest customerRegisterReq = new QCCustomerRegisterRequest();
 				final Customer custInfo = new Customer();
@@ -161,16 +190,20 @@ public class WalletController extends AbstractPageController
 				custInfo.setEmployeeID(currentCustomer.getUid());
 				custInfo.setCorporateName("Tata Unistore Ltd");
 
-				if (null != currentCustomer.getFirstName()){
+				if (null != currentCustomer.getFirstName())
+				{
 					custInfo.setFirstname(currentCustomer.getFirstName());
-				}if (null != currentCustomer.getLastName()){
+				}
+				if (null != currentCustomer.getLastName())
+				{
 					custInfo.setLastName(currentCustomer.getLastName());
 				}
 
 				customerRegisterReq.setExternalwalletid(currentCustomer.getOriginalUid());
 				customerRegisterReq.setCustomer(custInfo);
 				customerRegisterReq.setNotes("Activating Customer " + currentCustomer.getOriginalUid());
-				final QCCustomerRegisterResponse customerRegisterResponse = mplWalletFacade.createWalletContainer(customerRegisterReq);
+				final QCCustomerRegisterResponse customerRegisterResponse = mplWalletFacade
+						.createWalletContainer(customerRegisterReq);
 				if (customerRegisterResponse.getResponseCode() == 0)
 				{
 					final CustomerWalletDetailModel custWalletDetail = modelService.create(CustomerWalletDetailModel.class);
@@ -185,41 +218,47 @@ public class WalletController extends AbstractPageController
 					currentCustomer.setIsWalletActivated(true);
 					modelService.save(currentCustomer);
 
-					customerWalletDetailData= mplWalletFacade.getCustomerWallet(currentCustomer.getCustomerWalletDetail().getWalletId());
-					if(null != customerWalletDetailData.getWallet() && customerWalletDetailData.getWallet().getBalance() >0){
+					customerWalletDetailData = mplWalletFacade
+							.getCustomerWallet(currentCustomer.getCustomerWalletDetail().getWalletId());
+					if (null != customerWalletDetailData.getWallet() && customerWalletDetailData.getWallet().getBalance() > 0)
+					{
 						balanceAmount = customerWalletDetailData.getWallet().getBalance();
 					}
-					WalletTransacationsList	walletTrasacationsListData = mplWalletFacade.getWalletTransactionList();
-					
-					if(null != walletTrasacationsListData && walletTrasacationsListData.getResponseCode() == 0){
-						
+					final WalletTransacationsList walletTrasacationsListData = mplWalletFacade.getWalletTransactionList();
+
+					if (null != walletTrasacationsListData && walletTrasacationsListData.getResponseCode() == 0)
+					{
+
 						walletTrasacationsListData1 = walletTrasacationsListData;
 					}
 				}
+			}
 
-			}
-			
-		}catch(Exception ex){
+		}
+		catch (final Exception ex)
+		{
 			ex.printStackTrace();
-			GlobalMessages.addErrorMessage(model, "text.cliqcash.add.money.Fail");
-			/*if(ex.getMessage().contains("SocketTimeoutException")){
-			GlobalMessages.addErrorMessage(model, "text.cliqcash.timeout.massege");
-			}
-			*/
+			//			GlobalMessages.addErrorMessage(model, "text.cliqcash.add.money.Fail");
+			/*
+			 * if(ex.getMessage().contains("SocketTimeoutException")){ GlobalMessages.addErrorMessage(model,
+			 * "text.cliqcash.timeout.massege"); }
+			 */
 			final ContentPageModel contentPage = getContentPageForLabelOrId("cliqcashPage");
 			storeCmsPageInModel(model, contentPage);
 			setUpMetaDataForContentPage(model, contentPage);
 			model.addAttribute("WalletBalance", balanceAmount);
 			model.addAttribute("walletTrasacationsListData", walletTrasacationsListData1.getWalletTransactions());
-			
-		return "addon:/marketplacecheckoutaddon/pages/checkout/single/cliqcash";
-	}
+
+			return "addon:/marketplacecheckoutaddon/pages/checkout/single/cliqcash";
+		}
 		final ContentPageModel contentPage = getContentPageForLabelOrId("cliqcashPage");
 		storeCmsPageInModel(model, contentPage);
 		setUpMetaDataForContentPage(model, contentPage);
 		model.addAttribute("WalletBalance", balanceAmount);
 		model.addAttribute("walletTrasacationsListData", walletTrasacationsListData1.getWalletTransactions());
-		
+		//		model.addAttribute("WalletBalance", dateFormat);
+
+
 		return "addon:/marketplacecheckoutaddon/pages/checkout/single/cliqcash";
 	}
 }

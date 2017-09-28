@@ -346,6 +346,23 @@
 									<c:forEach var="map" items="${paymentModes}">
 									<c:if test="${map.value eq true}">
 										<c:choose>
+			    							<c:when test="${map.key eq 'Paytm Wallet'}">
+			    								<input type="hidden" id="paytm" value="${map.value}" />
+												<li>
+				       								<span id="paytmId" onclick="#">
+				       								<img alt="Paytm" id="paytm_logo_img" src="\_ui\responsive\common\images\paytmLogo.png">
+<%-- 				       							     <spring:theme code="" /> --%>
+				       								</span>
+			       								</li>
+												
+													</c:when>
+											</c:choose>
+										</c:if>
+									</c:forEach>
+									
+									<c:forEach var="map" items="${paymentModes}">
+									<c:if test="${map.value eq true}">
+										<c:choose>
 			    							<c:when test="${map.key eq 'TW'}">
 			    								<input type="hidden" id="TW" value="${map.value}" />
 												<li>

@@ -2,16 +2,21 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="template" tagdir="/WEB-INF/tags/responsive/template"%>
 <%@ taglib prefix="cms" uri="http://hybris.com/tld/cmstags"%>
-<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn"%>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
+<%@ taglib prefix="theme" tagdir="/WEB-INF/tags/shared/theme"%>
+<%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
+<%@ taglib prefix="format" tagdir="/WEB-INF/tags/shared/format"%>
+<%@ taglib prefix="product" tagdir="/WEB-INF/tags/responsive/product"%>
+<%@ taglib prefix="component" tagdir="/WEB-INF/tags/shared/component"%>
+<%@ taglib prefix="ycommerce" uri="http://hybris.com/tld/ycommercetags"%>
 <%@ taglib prefix="common" tagdir="/WEB-INF/tags/desktop/common"%>
 
-<template:page pageTitle="${pageTitle}">
 
-	
+<template:page pageTitle="${pageTitle}">
 	<div id="globalMessages">
 		<common:globalMessages />
 	</div>
+
 
 	<div class="cliqCashContainer">
 		<div class="cliqCashContainerHead">
@@ -39,8 +44,7 @@
 								</p>
 								<p class="cliqCashInnerBottom">
 									CliQ Cash balance as of
-									<fmt:formatDate type="both" dateStyle="short" timeStyle="short"
-										value="${currentDate}" />
+<%-- 									<fmt:formatDate type="both" dateStyle="short" timeStyle="short" value="${currentDate}" /> --%>
 								</p></td>
 						</tr>
 					</table>
@@ -62,8 +66,6 @@
 					onclick="selectSection(event, 'cashback')">CASHBACK</button>
 				<button class="cliqCashTablinks"
 					onclick="selectSection(event, 'refund')">REFUNDS</button>
-				<!-- 		  <button class="cliqCashTablinks" onclick="selectSection(event, 'goodwill')">GOODWILL</button> -->
-				<!-- 		  <button class="cliqCashTablinks" onclick="selectSection(event, 'promotions')">PROMOTIONS</button> -->
 				<button class="cliqCashTablinks"
 					onclick="selectSection(event, 'help')">HELP</button>
 			</div>
@@ -74,11 +76,9 @@
 						<tr>
 							<td>DATE</td>
 							<td>Wallet NUMBER</td>
-							<!-- 					<td>WITHDRAWL</td> -->
 							<td>AMOUNT</td>
 							<td>STATUS</td>
 							<td>INVOICE NO.</td>
-							<!-- 					<td>COMMENT</td> -->
 						</tr>
 					</thead>
 					<tbody>
@@ -90,9 +90,7 @@
 								<tr>
 									<td>${walletTrasacationsListData.transactionPostDate}</td>
 									<td>${walletTrasacationsListData.walletNumber}</td>
-									<!-- 					<td>&nbsp;</td> -->
 									<td>&#8377; ${walletTrasacationsListData.amount}</td>
-									
 									<c:choose>
 									<c:when test="${fn:containsIgnoreCase(walletTrasacationsListData.notes, 'Redeem')}">
 									<td>REDEEM</td>
@@ -102,7 +100,6 @@
 									</c:otherwise>
 									</c:choose>
 									<td>${walletTrasacationsListData.transactionId}</td>
-									<%-- 					<td>${statementwallet.notes}</td> --%>
 								</tr>
 
 							</c:forEach>
@@ -117,11 +114,9 @@
 						<tr>
 							<td>DATE</td>
 							<td>Wallet NUMBER</td>
-							<!-- 					<td>WITHDRAWL</td> -->
 							<td>AMOUNT</td>
 							<td>STATUS</td>
 							<td>INVOICE NO.</td>
-							<!-- 					<td>COMMENT</td> -->
 						</tr>
 					</thead>
 					<tbody>
@@ -136,11 +131,9 @@
 									<tr>
 										<td>${walletTrasacationsListData.transactionPostDate}</td>
 										<td>${walletTrasacationsListData.walletNumber}</td>
-										<!-- 					<td>&nbsp;</td> -->
 										<td>&#8377; ${walletTrasacationsListData.amount}</td>
 										<td>${walletTrasacationsListData.transactionStatus}</td>
 										<td>${walletTrasacationsListData.transactionId}</td>
-										<%-- 					<td>${statementwallet.notes}</td> --%>
 									</tr>
 								</c:if>
 							</c:forEach>
@@ -155,11 +148,9 @@
 						<tr>
 							<td>DATE</td>
 							<td>Wallet NUMBER</td>
-							<!-- 					<td>WITHDRAWL</td> -->
 							<td>AMOUNT</td>
 							<td>STATUS</td>
 							<td>INVOICE NO.</td>
-							<!-- 					<td>COMMENT</td> -->
 						</tr>
 					</thead>
 					<tbody>
@@ -172,11 +163,9 @@
 									<tr>
 										<td>${walletTrasacationsListData.transactionPostDate}</td>
 										<td>${walletTrasacationsListData.walletNumber}</td>
-										<!-- 					<td>&nbsp;</td> -->
 										<td>&#8377; ${walletTrasacationsListData.amount}</td>
 										<td>${walletTrasacationsListData.transactionStatus}</td>
 										<td>${walletTrasacationsListData.transactionId}</td>
-										<%-- 					<td>${statementwallet.notes}</td> --%>
 									</tr>
 								</c:if>
 							</c:forEach>
@@ -184,75 +173,6 @@
 					</tbody>
 				</table>
 			</div>
-
-			<!-- 		<div id="goodwill" class="cliqCashContainerTwoContent"> -->
-			<!-- 		 <table class="cliqStatementTable"> -->
-			<!-- 			<thead> -->
-			<!-- 				<tr> -->
-			<!-- 					<td>DATE</td> -->
-			<!-- 					<td>Wallet NUMBER</td> -->
-			<!-- <!-- 					<td>WITHDRAWL</td> -->
-			<!-- 					<td>AMOUNT</td> -->
-			<!-- 					<td>STATUS</td> -->
-			<!-- 					<td>INVOICE NO.</td> -->
-			<!-- <!-- 					<td>COMMENT</td> -->
-			<!-- 				</tr> -->
-			<!-- 			</thead> -->
-			<!-- 			<tbody> -->
-			<%-- 		 	<c:if test = "${fn:length(walletTrasacationsListData) > 0}">     --%>
-
-			<%-- 			<c:forEach items="${walletTrasacationsListData}" var="walletTrasacationsListData">  --%>
-			<%-- 			 <c:if test = "${fn:containsIgnoreCase(goodwillBaskwallet.notes, 'GOODWILL')}"> --%>
-
-			<!-- 				<tr> -->
-			<%-- 					<td>${walletTrasacationsListData.transactionPostDate}</td> --%>
-			<%-- 					<td>${walletTrasacationsListData.walletNumber}</td> --%>
-			<!-- <!-- 					<td>&nbsp;</td> -->
-			<%-- 					<td>&#8377; ${walletTrasacationsListData.amount}</td> --%>
-			<%-- 					<td>${walletTrasacationsListData.transactionStatus}</td> --%>
-			<%-- 					<td>${walletTrasacationsListData.transactionId}</td> --%>
-			<%-- <%-- 					<td>${statementwallet.notes}</td> --%>
-			<!-- 				</tr> -->
-			<%-- 				</c:if> --%>
-			<%-- 				</c:forEach> --%>
-			<%-- 				</c:if> --%>
-			<!-- 			</tbody> -->
-			<!-- 		  </table> -->
-			<!-- 		</div> -->
-
-			<!-- 		<div id="promotions" class="cliqCashContainerTwoContent"> -->
-			<!-- 		  <table class="cliqStatementTable"> -->
-			<!-- 			<thead> -->
-			<!-- 				<tr> -->
-			<!-- 					<td>DATE</td> -->
-			<!-- 					<td>Wallet NUMBER</td> -->
-			<!-- <!-- 					<td>WITHDRAWL</td> -->
-			<!-- 					<td>AMOUNT</td> -->
-			<!-- 					<td>STATUS</td> -->
-			<!-- 					<td>INVOICE NO.</td> -->
-			<!-- <!-- 					<td>COMMENT</td> -->
-			<!-- 				</tr> -->
-			<!-- 			</thead> -->
-			<!-- 			<tbody> -->
-			<%-- 					<c:if test = "${fn:length(walletTrasacationsListData) > 0}">     --%>
-
-			<%-- 			<c:forEach items="${walletTrasacationsListData}" var="walletTrasacationsListData">  --%>
-			<%-- 			 <c:if test = "${fn:containsIgnoreCase(promotionBaskwallet.notes, 'PROMOTION')}"> --%>
-			<!-- 				<tr> -->
-			<%-- 					<td>${walletTrasacationsListData.transactionPostDate}</td> --%>
-			<%-- 					<td>${walletTrasacationsListData.walletNumber}</td> --%>
-			<!-- <!-- 					<td>&nbsp;</td> -->
-			<%-- 					<td>&#8377; ${walletTrasacationsListData.amount}</td> --%>
-			<%-- 					<td>${walletTrasacationsListData.transactionStatus}</td> --%>
-			<%-- 					<td>${walletTrasacationsListData.transactionId}</td> --%>
-			<%-- <%-- 					<td>${statementwallet.notes}</td> --%>
-			<!-- 				</tr> -->
-			<%-- 				</c:if> --%>
-			<%-- 				</c:forEach> --%>
-			<%-- 				</c:if>	 --%>
-			<!-- 			</tbody> -->
-			<!-- 		  </table> -->
-			<!-- 		</div> -->
 
 			<div id="help" class="cliqCashContainerTwoContent">
 				<h3>Please Contact Tata Cliq Customer Care</h3>

@@ -182,6 +182,10 @@ import atg.taglib.json.util.JSONException;
 //@RequestMapping(value = "/**/p")
 public class ProductPageController extends MidPageController
 {
+	/**
+	 * 
+	 */
+	private static final String PAGES_LAYOUT_EGV_PDP_RESPONSIVE = "pages/layout/egvPDPResponsive";
 	private static final String PRODUCT_SIZE_TYPE = "productSizeType";
 	/**
 	 *
@@ -3846,7 +3850,7 @@ public class ProductPageController extends MidPageController
 		final ContentPageModel contentPage = getContentPageForLabelOrId("egvPDPPage");
 		storeCmsPageInModel(model, contentPage);
 		setUpMetaDataForContentPage(model, contentPage);
-		return "pages/layout/egvPDPResponsive";
+		return PAGES_LAYOUT_EGV_PDP_RESPONSIVE;
 	}
 
 

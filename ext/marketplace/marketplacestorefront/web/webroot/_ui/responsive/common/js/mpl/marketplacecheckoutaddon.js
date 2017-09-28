@@ -5567,8 +5567,6 @@ $(".edit_address").click(function(){
 			$(".cliqTotalBalanceLabel").html(data.totalWalletAmt);
 			$("#qcCashId").html(data.totalCash);
 			$("#qcGiftCardId").html(data.totalEgvBalance);
-			$("#JuspayAmtId").html(data.juspayAmt);
-			
 			
 			if(data.disableWallet){
 				 $("#useGiftCardCheckbox").prop('disabled',true);
@@ -5576,6 +5574,7 @@ $(".edit_address").click(function(){
 				 $(".useGiftCardBtn").css('opacity','0.5');
 				 $("#juspayAmountId").hide();
 				 $("#addCliqCashId").show();
+				
 				 
 			} else {
 				$("#useGiftCardCheckbox").prop('disabled',false);
@@ -5583,6 +5582,7 @@ $(".edit_address").click(function(){
 				 $(".useGiftCardBtn").css('opacity','1');
 				 $("#juspayAmountId").show();
 				 $("#addCliqCashId").hide();
+				 $("#JuspayAmtId").html(data.juspayAmt);
 			}
 		},	
 		fail : function(data){
@@ -5596,6 +5596,8 @@ $(".edit_address").click(function(){
 		$(".topPlaceOrderBtn").hide();
 		$("#make_cc_payment").show();
 		var value = document.getElementById('useGiftCardCheckbox');	
+		 $("#viewPaymentCOD").show();
+		 $("#paytmId").show();
 		
 		var staticHost = $('#staticHost').val();
 		$("body").append("<div id='no-click' style='opacity:0.5; background:#000; z-index: 100000; width:100%; height:100%; position: fixed; top: 0; left:0;'></div>");
@@ -5615,6 +5617,8 @@ $(".edit_address").click(function(){
     				$("#unUseGiftBtnText").show();
     				$(".cliqCashApplyAlert").text('CliQ Cash applied successfully.');
 				    $(".cliqCashApplyAlert").show();
+				    $("#viewPaymentCOD").hide();
+				    $("#paytmId").hide();
     			} else {
     				$("#unUseGiftBtnText").hide();
     				$("#useGiftBtnText").show();
