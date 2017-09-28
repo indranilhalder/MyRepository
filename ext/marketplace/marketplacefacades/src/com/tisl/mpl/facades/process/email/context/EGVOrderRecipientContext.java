@@ -14,8 +14,6 @@ import de.hybris.platform.servicelayer.config.ConfigurationService;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import com.tisl.mpl.marketplacecommerceservices.daos.changedeliveryaddress.impl.MplDeliveryAddressDaoImpl;
-
 /**
  * @author PankajS
  *
@@ -28,7 +26,7 @@ public class EGVOrderRecipientContext extends AbstractEmailContext<OrderProcessM
 
 	@Autowired
 	private ConfigurationService configurationService;
-	private static final Logger LOG = Logger.getLogger(MplDeliveryAddressDaoImpl.class);
+	private static final Logger LOG = Logger.getLogger(EGVOrderRecipientContext.class);
 
 
 
