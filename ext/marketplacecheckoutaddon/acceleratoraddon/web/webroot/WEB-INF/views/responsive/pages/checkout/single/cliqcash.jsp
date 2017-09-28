@@ -19,7 +19,7 @@
 				<strong>Add CLiQ Cash</strong>
 			</p>
 			<br />
-			<p>When you Gift Card, the amount will be instantly added to your CLiQ Cash balance.</p>
+			<p>When you add Gift Card, the amount will be instantly added to your CLiQ Cash balance.</p>
 			<br />&nbsp;
 		</div>
 		<div class="cliqCashContainerOne">
