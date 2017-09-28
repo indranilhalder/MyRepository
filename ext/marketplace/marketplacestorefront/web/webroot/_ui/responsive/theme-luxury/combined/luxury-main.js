@@ -17524,8 +17524,9 @@ TATA.CommonFunctions = {
                 },
                 success: function(x) {
                     var filtered = $.parseHTML(x);
-                    $(filtered).has(".product-grid") && $(".product-grid-wrapper").append($(filtered).find(".product-grid-wrapper")), 
-                    $("#pageQuery").val(ajaxUrl);
+                    $(filtered).has(".product-grid") && $(".product-grid", filtered).each(function() {
+                        $(".product-grid-wrapper").append($(this));
+                    }), $("#pageQuery").val(ajaxUrl);
                 },
                 complete: function() {
                     $("body").removeClass("loader");
@@ -18560,20 +18561,20 @@ $("#viewPaymentCredit, #viewPaymentCreditMobile ").click(function() {
     });
 }), $("#viewPaymentNetbanking, #viewPaymentNetbankingMobile").click(function() {
     $("#staticHost").val();
-    isSessionActive() ? displayNetbankingForm() : redirectToCheckoutLogin(), "undefined" != typeof utag && utag.link({
+    isSessionActive() ? displayNetbankingForm() : redirectToCheckoutLogin(), utag.link({
         link_text: "pay_net_banking_selected",
         event_type: "payment_mode_selection"
     });
 }), $("#viewPaymentCOD, #viewPaymentCODMobile").click(function() {
     $("#paymentButtonId_up").is(":visible") ? $(".totals.outstanding-totalss").css("bottom", "40px") : $(".totals.outstanding-totalss").css("bottom", "0px");
     $("#staticHost").val();
-    1 == isSessionActive() ? displayCODForm() : redirectToCheckoutLogin(), "undefined" != typeof utag &&utag.link({
+    1 == isSessionActive() ? displayCODForm() : redirectToCheckoutLogin(), "undefined" != typeof utag && utag.link({
         link_text: "pay_cod_selected",
         event_type: "payment_mode_selection"
     });
 }), $("#viewPaymentEMI, #viewPaymentEMIMobile").click(function() {
     $("#staticHost").val();
-    isSessionActive() ? displayEMIForm() : redirectToCheckoutLogin(),"undefined" != typeof utag && utag.link({
+    isSessionActive() ? displayEMIForm() : redirectToCheckoutLogin(), void 0 != utag && utag.link({
         link_text: "pay_emi_selected",
         event_type: "payment_mode_selection"
     });
