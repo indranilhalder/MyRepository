@@ -77252,3 +77252,8 @@ body.template-pages-LoginPageTemplate .sign-in.tab-view .form-group #password_lo
     padding-bottom: 24px;
 } 
 /* TISCSXII-2240 END */
+/* SDI-994 Start */
+.store-locator-block{
+	display: none;	
+}
+/* SDI-994 END */
