@@ -344,7 +344,7 @@ header{
 				.item{
 					padding: 0px 100px 44.5px 106px;
 				    position: relative;
-				    height: 110px;
+				    height: 125px;
 				    border-bottom: solid 1px #eee;
 				    
 				    ul{
@@ -366,7 +366,7 @@ header{
 						    line-height: normal;
 						}
 						.item-edit-details {
-						    position: absolute;
+						    /*position: absolute;*/
 						    bottom: 15px;
 						    left: 106px;
 						    line-height: 1.5;
@@ -611,7 +611,11 @@ footer{
     }
     .close{       
         font-size:24px;
-        top:5px;       
+        top:5px;
+        
+        @include media-breakpoint-down(sm) {
+            line-height: 18px;
+        }
     }
 }
 .alert-info {
