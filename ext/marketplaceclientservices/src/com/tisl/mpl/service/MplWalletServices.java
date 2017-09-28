@@ -7,6 +7,7 @@ import com.tisl.mpl.pojo.request.PurchaseEGVRequest;
 import com.tisl.mpl.pojo.request.QCCustomerPromotionRequest;
 import com.tisl.mpl.pojo.request.QCCustomerRegisterRequest;
 import com.tisl.mpl.pojo.request.QCRedeemRequest;
+import com.tisl.mpl.pojo.request.QCRefundRequest;
 import com.tisl.mpl.pojo.response.BalanceBucketWise;
 import com.tisl.mpl.pojo.response.CustomerWalletDetailResponse;
 import com.tisl.mpl.pojo.response.PurchaseEGVResponse;
@@ -38,7 +39,7 @@ public interface MplWalletServices
 
 	public QCRedeeptionResponse getWalletRedeem(String customerWalletId, String transactionId, QCRedeemRequest qcRedeemRequest);
 
-	public void getWalletRefundRedeem();
+	public QCRedeeptionResponse getWalletRefundRedeem(String walletId, QCRefundRequest qcRefundRequest);
 
 	public QCRedeeptionResponse addTULWalletCashBack(String walletId, QCCustomerPromotionRequest request);
 

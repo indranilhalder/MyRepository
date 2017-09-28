@@ -484,7 +484,7 @@ public class MplWalletServicesImpl implements MplWalletServices
 
 
 	@Override
-	public void getWalletRefundRedeem()
+	public QCRedeeptionResponse getWalletRefundRedeem(String walletId, QCRefundRequest qcRefundRequest)
 	{
 		//	final Client client = Client.create();
 		 Client client = getProxyConnection();
@@ -492,29 +492,40 @@ public class MplWalletServicesImpl implements MplWalletServices
 		ClientResponse response = null;
 		WebResource webResource = null;
 		final DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
-
-
+		QCRedeeptionResponse qcRedeeptionResponse =null;
 		try
 		{
 			client.setConnectTimeout(Integer.valueOf(getConfigurationService().getConfiguration().getString("qcTimeout")));
 			client.setReadTimeout(Integer.valueOf(getConfigurationService().getConfiguration().getString("qcTimeout")));
 			webResource = client
 					.resource(UriBuilder.fromUri("http://" + getConfigurationService().getConfiguration().getString("qcUrl")
-							+ "/QwikCilver/eGMS.RestAPI/api/wallet/4000162010020032/Cancelredeem").build());
+							+ "/QwikCilver/eGMS.RestAPI/api/wallet/"+walletId+"/Cancelredeem").build());
 
 			//need to create marshalling for request body
 			//Transaction ID will be same as Wallet redeem
-			final String requestBody = "{\"OriginalTransactionId\":\"20\",\"OriginalBatchNumber\":\"10207477\"}";
+			final ObjectMapper objectMapper = new ObjectMapper();
+			final String requestBody = objectMapper.writeValueAsString(qcRefundRequest);
+			
+			//final String requestBody = "{\"OriginalTransactionId\":\"20\",\"OriginalBatchNumber\":\"10207477\"}";
 
-			response = webResource.type(MediaType.APPLICATION_JSON).header("ForwardingEntityId", "tatacliq.com")
-					.header("ForwardingEntityPassword", "tatacliq.com").header("TerminalId", "webpos-tul-dev10")
-					.header("Username", "tulwebuser").header("Password", "webusertul").header("TransactionId", "33")
-					.header("DateAtClient", dateFormat.format(new Date())).header("IsForwardingEntityExists", "true")
-					.header("Content-Type", "application/json").header("MerchantOutletName", "TUL-Online")
-					.header("AcquirerId", "Tata Unistore Ltd").header("OrganizationName", "Tata Unistore Ltd")
-					.header("POSEntryMode", "2").header("POSTypeId", "1").header("POSName", "webpos-tul-qc-01")
-					.header("TermAppVersion", "null")
-					.header("CurrentBatchNumber", getConfigurationService().getConfiguration().getString("qc.batch.number"))
+			response = webResource.type(MediaType.APPLICATION_JSON)
+					.header(MarketplaceclientservicesConstants.FORWARDING_ENTITY_ID, "tatacliq.com")
+					.header(MarketplaceclientservicesConstants.FORWARDING_ENTITY_PASSWORD, "tatacliq.com")
+					.header(MarketplaceclientservicesConstants.TERMINAL_ID, "webpos-tul-dev10")
+					.header(MarketplaceclientservicesConstants.USERNAME, "tulwebuser")
+					.header(MarketplaceclientservicesConstants.PASSWORD, "webusertul")
+					.header(MarketplaceclientservicesConstants.DATE_AT_CLIENT, dateFormat.format(new Date()))
+					.header(MarketplaceclientservicesConstants.IS_FORWARDING_ENTIRY_EXISTS, "true")
+					.header(MarketplaceclientservicesConstants.CONTENT_TYPE, "application/json")
+					.header(MarketplaceclientservicesConstants.MERCHANT_OUTLET_NAME, "TUL-Online")
+					.header(MarketplaceclientservicesConstants.ACQUIRERID, "Tata Unistore Ltd")
+					.header(MarketplaceclientservicesConstants.ORGANIZATION_NAME, "Tata Unistore Ltd")
+					.header(MarketplaceclientservicesConstants.POS_ENTRY_MODE, "2")
+					.header(MarketplaceclientservicesConstants.POS_TYPE_ID, "1")
+					.header(MarketplaceclientservicesConstants.POS_NAME, "webpos-tul-qc-01")
+					.header(MarketplaceclientservicesConstants.TERM_APP_VERSION, "null")
+					.header(MarketplaceclientservicesConstants.CURRENT_BATCH_NUMBER, getQcInitDataBean().getCurrentBatchNumber())
+					.header(MarketplaceclientservicesConstants.TRANSACTION_ID, qcRefundRequest.getOriginalTransactionId())
 					.type(MediaType.APPLICATION_JSON).post(ClientResponse.class, requestBody);
 
 
@@ -522,6 +533,7 @@ public class MplWalletServicesImpl implements MplWalletServices
 			if (null != response)
 			{
 				final String output = response.getEntity(String.class);
+				qcRedeeptionResponse = objectMapper.readValue(output, QCRedeeptionResponse.class);
 				LOG.debug(" ************** output----" + output);
 				LOG.debug(" ************** redeem Refund Wallet Balance----" + output); //need to create marshalling for response object
 
@@ -535,7 +547,7 @@ public class MplWalletServicesImpl implements MplWalletServices
 				//
 			}
 		}
-
+    return qcRedeeptionResponse;
 	}
 
 

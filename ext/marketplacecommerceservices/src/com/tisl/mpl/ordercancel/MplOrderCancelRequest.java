@@ -25,6 +25,8 @@ public class MplOrderCancelRequest extends OrderCancelRequest
 	}
 
 	private Double amountToRefund;
+	
+	private Double amountTORefundForQc;
 
 	/**
 	 * @return the amountToRefund
@@ -41,6 +43,22 @@ public class MplOrderCancelRequest extends OrderCancelRequest
 	public void setAmountToRefund(final Double amountToRefund)
 	{
 		this.amountToRefund = amountToRefund;
+	}
+
+	/**
+	 * @return the amountTORefundForQc
+	 */
+	public Double getAmountTORefundForQc()
+	{
+		return amountTORefundForQc;
+	}
+
+	/**
+	 * @param amountTORefundForQc the amountTORefundForQc to set
+	 */
+	public void setAmountTORefundForQc(Double amountTORefundForQc)
+	{
+		this.amountTORefundForQc = amountTORefundForQc;
 	}
 
 
