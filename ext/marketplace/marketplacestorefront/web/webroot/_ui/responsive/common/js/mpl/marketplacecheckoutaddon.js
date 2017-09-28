@@ -5537,14 +5537,14 @@ $(".edit_address").click(function(){
 
 
 /**
- * Wallet Changes
+ * Wallet Changes Start
  */
- 
- $(document).ready(function(){
+
 	$(".cliqCashApplyAlert").hide();
 	$("#unUseGiftBtnText").hide();
 	$(".topPlaceOrderBtn").hide();
 	$("#addCliqCashId").hide();
+	$("#juspayAmountId").hide();
 	
 	$("#useGiftCardCheckbox").prop('disabled',true);
 	 $(".useGiftCardBtn").css('cursor','not-allowed');
@@ -5582,6 +5582,7 @@ $(".edit_address").click(function(){
 				 $(".useGiftCardBtn").css('cursor','pointer');
 				 $(".useGiftCardBtn").css('opacity','1');
 				 $("#juspayAmountId").show();
+				 $("#addCliqCashId").hide();
 			}
 		},	
 		fail : function(data){
@@ -5661,8 +5662,8 @@ $(".edit_address").click(function(){
 			cache : false,
 			contentType : "html/text",
 			success : function(response) {
-				$("#no-click,.loaderDiv").remove();
 				$(location).attr('href',response);
+				$("#no-click,.loaderDiv").remove();
 				console.log("Response for QC "+response);
 			},	
 			fail : function(data){
@@ -5672,13 +5673,10 @@ $(".edit_address").click(function(){
 		});
 	} 
 });
-	
- });
+
 	/**
 	 * Wallet Changes END
 	 */
-
-
 });
 
 //TPR-1215
