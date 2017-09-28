@@ -6463,6 +6463,13 @@
 						<persistence type="property" />
 					</attribute>
 					
+					<attribute type="java.lang.String" qualifier="giftFromId"
+						autocreate="true" generate="true">
+						<modifiers read="true" write="true" search="true" optional="true" />
+						<description></description>
+						<persistence type="property" />
+					</attribute>
+					
 				<!-- End EGV Order purpose Added Attibute -->	
 				</attributes>
 				<!-- CAR-274 -->
@@ -7815,6 +7822,13 @@
 					</attribute>
 					
 					<attribute type="java.lang.String" qualifier="recipientMessage"
+						autocreate="true" generate="true">
+						<modifiers read="true" write="true" search="true" optional="true" />
+						<description></description>
+						<persistence type="property" />
+					</attribute>
+					
+					<attribute type="java.lang.String" qualifier="giftFromId"
 						autocreate="true" generate="true">
 						<modifiers read="true" write="true" search="true" optional="true" />
 						<description></description>

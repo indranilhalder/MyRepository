@@ -4559,6 +4559,7 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 		cardModel.setIsEGVCart(Boolean.TRUE);
 		cardModel.setRecipientId(egvDetailForm.getToEmailAddress());
 		cardModel.setRecipientMessage(egvDetailForm.getMessageBox());
+		cardModel.setGiftFromId(egvDetailForm.getFromEmailAddress());
 
 		try
 		{

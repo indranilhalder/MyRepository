@@ -182,7 +182,7 @@ public class MplCommercePlaceOrderStrategyImpl implements MplCommercePlaceOrderS
 				orderModel.setIsEGVCart(cartModel.getIsEGVCart());
 				orderModel.setRecipientId(cartModel.getRecipientId());
 				orderModel.setRecipientMessage(cartModel.getRecipientMessage());
-				
+				orderModel.setRecipientMessage(cartModel.getGiftFromId());
 			
 				
 				if(orderModel.getUser()!=null && CollectionUtils.isNotEmpty(orderModel.getUser().getAddresses())){

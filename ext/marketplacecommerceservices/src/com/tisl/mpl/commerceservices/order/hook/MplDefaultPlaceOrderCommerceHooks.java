@@ -888,6 +888,7 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 					chlidCardApportionDetail.setCardAmount("" + data.getAmount());
 					chlidCardApportionDetail.setCardNumber(data.getCardNumber());
 					chlidCardApportionDetail.setCardExpiry(data.getExpiry());
+					chlidCardApportionDetail.setCardPinNumber(data.getCardPIN());
 					cardQtyWiseList.add(chlidCardApportionDetail);
 
 					walletApportionPaymentInfo.setWalletCardList(cardQtyWiseList);

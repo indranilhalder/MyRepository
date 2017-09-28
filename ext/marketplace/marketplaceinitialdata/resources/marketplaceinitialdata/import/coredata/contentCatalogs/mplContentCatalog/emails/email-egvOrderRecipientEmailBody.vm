@@ -18,7 +18,7 @@
 		<div class="tempTopSection">
 			<div class="tempTopLeft">
 				<div class="tempGiftCardId">
-					Gift card id: xxxxxx xxxxxxx xxxxxx xxxxxxx
+					Gift card id: ${ctx.cardNumber}
 				</div>
 				<div>
 					
@@ -26,10 +26,10 @@
 			</div>
 			<div class="tempTopRight">
 				<div class="tempGiftValue">
-					&#8377;499.0
+					&#8377;${ctx.cardAmount}
 				</div>
 				<div class="tempGiftCardId">
-					Expiry Date: 31<sup>st</sup> March 2018
+					Expiry Date: ${ctx.cardExp}
 				</div>
 			</div>
 		</div>
@@ -83,8 +83,8 @@
 				</li>
 			</ol>
 			<div>
-				<span class="tempBottomLeft">Gift card id:xxxxxxxxxxxxxxxxxxx</span>
-				<span class="tempBottomRight">Order No: xxxxxxxxxxxxxxxxxxxxxxxx</span>
+				<span class="tempBottomLeft">Gift card id:${ctx.cardNumber}</span>
+				<span class="tempBottomRight">Order No: ${ctx.orderNumber}</span>
 			</div>
 		</div>
 	</div>

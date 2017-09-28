@@ -47,10 +47,19 @@ public class EGVOrderRecipientContext extends AbstractEmailContext<OrderProcessM
 	   	}
 	   }
 	  if(orderProcessModel.getOrder()!=null && orderProcessModel.getOrder().getEntries()!=null){
-		  put("abstractOrderEntryList",orderProcessModel.getOrder().getEntries());
+		  put("abstractOrderEntryList",orderProcessModel.getOrder().getEntries());  
+		  put("cardAmount",orderProcessModel.getOrder().getEntries().get(0).getWalletApportionPaymentInfo().getWalletCardList().get(0).getCardAmount());
+		  put("cardNumber", orderProcessModel.getOrder().getEntries().get(0).getWalletApportionPaymentInfo().getWalletCardList().get(0).getCardNumber());
+		  put("cardExp",orderProcessModel.getOrder().getEntries().get(0).getWalletApportionPaymentInfo().getWalletCardList().get(0).getCardExpiry());  
+		  put("cardPin",orderProcessModel.getOrder().getEntries().get(0).getWalletApportionPaymentInfo().getWalletCardList().get(0).getCardPinNumber());
+        
+		 
+		  
 	  }
-	   
+	   put("senderMSG",orderProcessModel.getOrder().getRecipientMessage());
+	   put("senderName",orderProcessModel.getOrder().getGiftFromId());
 		put(EMAIL,email);
+		put("orderNumber",orderProcessModel.getOrder().getCode());
 		final String customerCareNumber = configurationService.getConfiguration().getString("marketplace.sms.service.contactno",
 				"1800-208-8282");
 		put(CUSTOMER_CARE_NUMBER, customerCareNumber);
