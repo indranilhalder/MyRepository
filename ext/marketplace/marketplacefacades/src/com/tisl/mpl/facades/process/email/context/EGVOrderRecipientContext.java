@@ -34,7 +34,8 @@ public class EGVOrderRecipientContext extends AbstractEmailContext<OrderProcessM
 	public void init(final OrderProcessModel orderProcessModel, final EmailPageModel emailPageModel)
 	{
 		
-		LOG.info("Prepare Email template before ");
+		LOG.info("Prepare Email template befor..... ");
+		
 	   super.init(orderProcessModel, emailPageModel);
 		LOG.info("Prepare Email template before ");
 	   String email =null;

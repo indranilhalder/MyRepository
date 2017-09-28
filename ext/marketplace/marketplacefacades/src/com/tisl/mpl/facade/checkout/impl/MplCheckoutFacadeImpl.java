@@ -790,6 +790,17 @@ public class MplCheckoutFacadeImpl extends DefaultCheckoutFacade implements MplC
 					sellerOrderList.add(sellerOrderData);
 				}
 				orderData.setSellerOrderList(sellerOrderList);
+				
+				//EGV Changes 28-39-2017 start 
+				if(orderModel.getIsEGVCart().booleanValue()){
+					orderData.setIsEGVOrder(orderModel.getIsEGVCart().booleanValue());
+					if(CollectionUtils.isNotEmpty(orderModel.getEntries()) &&
+							orderModel.getEntries().get(0).getWalletApportionPaymentInfo()!=null &&
+							CollectionUtils.isNotEmpty(orderModel.getEntries().get(0).getWalletApportionPaymentInfo().getWalletCardList())){
+						orderData.setEgvCardNumber(orderModel.getEntries().get(0).getWalletApportionPaymentInfo().getWalletCardList().get(0).getCardNumber());
+						orderData.setEgvCardExpDate(orderModel.getEntries().get(0).getWalletApportionPaymentInfo().getWalletCardList().get(0).getCardExpiry());
+					}
+				}
 			}
 			return orderData;
 		}
