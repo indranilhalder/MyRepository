@@ -5544,6 +5544,7 @@ $(".edit_address").click(function(){
 	$(".cliqCashApplyAlert").hide();
 	$("#unUseGiftBtnText").hide();
 	$(".topPlaceOrderBtn").hide();
+	$("#addCliqCashId").hide();
 	
 	$("#useGiftCardCheckbox").prop('disabled',true);
 	 $(".useGiftCardBtn").css('cursor','not-allowed');
@@ -5568,19 +5569,19 @@ $(".edit_address").click(function(){
 			$("#qcGiftCardId").html(data.totalEgvBalance);
 			$("#JuspayAmtId").html(data.juspayAmt);
 			
+			
 			if(data.disableWallet){
 				 $("#useGiftCardCheckbox").prop('disabled',true);
 				 $(".useGiftCardBtn").css('cursor','not-allowed');
 				 $(".useGiftCardBtn").css('opacity','0.5');
-					
-				 var text= "Please add money in Cliq Cash";
-				 $(".cliqCashApplyAlert").innerHTML = "Please add money in Cliq Cash";
-				 $(".cliqCashApplyAlert").show();
+				 $("#juspayAmountId").hide();
+				 $("#addCliqCashId").show();
 				 
 			} else {
 				$("#useGiftCardCheckbox").prop('disabled',false);
 				 $(".useGiftCardBtn").css('cursor','pointer');
 				 $(".useGiftCardBtn").css('opacity','1');
+				 $("#juspayAmountId").show();
 			}
 		},	
 		fail : function(data){

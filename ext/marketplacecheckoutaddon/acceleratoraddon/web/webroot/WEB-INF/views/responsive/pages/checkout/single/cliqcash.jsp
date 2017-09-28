@@ -6,145 +6,6 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn"%>
 <%@ taglib prefix="common" tagdir="/WEB-INF/tags/desktop/common"%>
 
-<style>
-.closeCashSuccess {
-	float: right;
-	font-size: initial;
-	cursor: pointer;
-}
-
-.cliqCashContainer {
-	margin: 2%;
-}
-
-.cliqCashContainerOne {
-	border: solid 1px #dddddd;
-	padding: 2%;
-}
-
-.cliqCashContainerLeft {
-	float: left;
-	line-height: 22px;
-}
-
-.cliqCashContainerRight {
-	float: right;
-	width: 50%;
-	text-align: right;
-}
-
-.cliqCashInnerTop {
-	font-size: 26px;
-}
-
-.cliqCashWalletImg {
-	vertical-align: middle;
-}
-
-.cliqCashBtns, .cliqCashBtns:hover {
-	display: inline;
-	border: solid 1px #a5173c;
-	color: white;
-	background-color: #a5173c;
-	font-size: 14px;
-	padding: 5px 20px;
-	font-weight: normal;
-	margin-top: 2%;
-	letter-spacing: normal;
-	height: 25px;
-	margin-left: 4%;
-}
-/* .cliqCashBtns:hover {color:white; background-color: #a5173c;} */
-.cliqCashContainerLeft p {
-	padding-left: 3%;
-}
-
-.cliqCashContainerTwo {
-	overflow: hidden;
-	border: 1px solid #ccc;
-	background-color: #f1f1f1;
-	border-top-left-radius: 4px;
-	border-top-right-radius: 4px;
-}
-
-/* Style the buttons inside the tab */
-.cliqCashContainerTwo button {
-	background-color: inherit;
-	float: left;
-	border: none;
-	outline: none;
-	cursor: pointer;
-	font-size: 14px !important;
-	padding: 1% 2%;
-	transition: 0.3s;
-	font-size: 17px;
-}
-
-/* Change background color of buttons on hover */
-.cliqCashContainerTwo button:hover {
-	color: #a5173c;
-}
-
-/* Create an active/current tablink class */
-.cliqCashContainerTwo button.active {
-	color: #a5173c;
-	border-bottom: 3px solid #a5173c;
-}
-
-/* Style the tab content */
-.cliqCashContainerTwoContent {
-	display: none;
-	border: 1px solid #ccc;
-	border-top: none;
-}
-
-.cliqStatementTable {
-	width: 100%;
-}
-
-.cliqStatementTable thead td {
-	font-weight: bold;
-}
-
-.cliqStatementTable thead {
-	background-color: #ddd
-}
-
-.cliqStatementTable td {
-	padding: 2%;
-}
-
-.cliqStatementTable tbody tr:nth-child(even) {
-	background-color: #f2f2f2;
-}
-
-@media ( max-width : 650px) {
-	.cliqCashContainer {
-		margin: 3%;
-	}
-	.cliqCashContainerOne {
-		border-radius: 4px;
-	}
-	.cliqCashInnerTop {
-		font-size: 18px;
-	}
-	.cliqCashContainerLeft {
-		border-bottom: 1px solid #ddd;
-		width: 100%;
-	}
-	.cliqCashBtns {
-		height: 30px !important;
-	}
-	.cliqCashContainerTwoContent {
-		overflow-x: auto;
-	}
-	.cliqCashSuccessAlert {
-		border-radius: 4px;
-	}
-}
-</style>
-
-
 <template:page pageTitle="${pageTitle}">
 
 	
@@ -153,21 +14,12 @@
 	</div>
 
 	<div class="cliqCashContainer">
-		<%-- <c:if test="${ WalletBalance gt 0 }"> --%>
-		<!-- 	<div class=""> -->
-		<!-- 		<div class="alert alert-success cliqCashSuccessAlert"> -->
-		<!-- 			<span class="closeCashSuccess" data-dismiss="alert">&times;</span> -->
-		<!-- 			Voucher has redeemed successfully and updated to your Cliq Cash balance. -->
-		<!-- 		</div> -->
-		<!-- 	</div> -->
-		<%-- 	</c:if> --%>
 		<div class="cliqCashContainerHead">
 			<p class="cliqCashInnerTop">
 				<strong>Add CLiQ Cash</strong>
 			</p>
 			<br />
-			<p>When you Add Money or Gift Card, the amount will be instantly
-				added to your CLiQ cash balance.</p>
+			<p>When you Gift Card, the amount will be instantly added to your CLiQ Cash balance.</p>
 			<br />&nbsp;
 		</div>
 		<div class="cliqCashContainerOne">
@@ -179,7 +31,7 @@
 						<tr>
 							<%--  <c:if test="${not empty WalletBalance }"> --%>
 							<td><img
-								src="https://cdn.zeplin.io/58987458375db68f0b01107e/assets/2E3534B4-7ACC-45DF-A140-E91174789999.png" /></td>
+								src="\_ui\responsive\common\images\walletImg.png" /></td>
 							<td><p class="cliqCashInnerTop">
 									<c:if test="${not empty WalletBalance }">
 										<strong>&#8377; ${WalletBalance} </strong>
@@ -190,13 +42,10 @@
 									<fmt:formatDate type="both" dateStyle="short" timeStyle="short"
 										value="${currentDate}" />
 								</p></td>
-							<%-- </c:if> --%>
 						</tr>
 					</table>
 				</div>
 				<div class="cliqCashContainerRight">
-					<!-- <button class="cliqCashBtns">ADD GIFT CARD</button> -->
-					<!-- <button class="cliqCashBtns">ADD GIFT CARD</button> -->
 					<a class="cliqCashBtns" href="<c:url value="/wallet"/>">ADD
 						GIFT CARD</a>
 				</div>
@@ -243,7 +92,15 @@
 									<td>${walletTrasacationsListData.walletNumber}</td>
 									<!-- 					<td>&nbsp;</td> -->
 									<td>&#8377; ${walletTrasacationsListData.amount}</td>
+									
+									<c:choose>
+									<c:when test="${fn:containsIgnoreCase(walletTrasacationsListData.notes, 'Redeem')}">
+									<td>REDEEM</td>
+									</c:when>
+									<c:otherwise>
 									<td>${walletTrasacationsListData.transactionStatus}</td>
+									</c:otherwise>
+									</c:choose>
 									<td>${walletTrasacationsListData.transactionId}</td>
 									<%-- 					<td>${statementwallet.notes}</td> --%>
 								</tr>
@@ -273,7 +130,8 @@
 							<c:forEach items="${walletTrasacationsListData}"
 								var="walletTrasacationsListData">
 								<c:if
-									test="${fn:containsIgnoreCase(walletTrasacationsListData.notes, 'CASHBACK')}">
+									test="${fn:containsIgnoreCase(walletTrasacationsListData.notes, 'CASHBACK') or fn:containsIgnoreCase(walletTrasacationsListData.notes, 'GOODWILL')
+									 or fn:containsIgnoreCase(walletTrasacationsListData.notes, 'CREDIT') or fn:containsIgnoreCase(walletTrasacationsListData.notes, 'PROMOTION')}">
 
 									<tr>
 										<td>${walletTrasacationsListData.transactionPostDate}</td>
@@ -310,7 +168,7 @@
 							<c:forEach items="${walletTrasacationsListData}"
 								var="walletTrasacationsListData">
 								<c:if
-									test=" ${fn:containsIgnoreCase(refundBaskwallet.notes, 'REFUND')}">
+									test=" ${fn:containsIgnoreCase(refundBaskwallet.notes, 'CANCEL REDEEM')}">
 									<tr>
 										<td>${walletTrasacationsListData.transactionPostDate}</td>
 										<td>${walletTrasacationsListData.walletNumber}</td>

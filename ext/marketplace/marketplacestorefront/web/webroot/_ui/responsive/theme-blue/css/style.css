@@ -76911,3 +76911,201 @@ body .account .right-account form label.invite-text-lbl{
 	    }
 /* TISPRDT-2410 end */
 
+
+/* Wallet css*/
+
+.giftCheckoutContainer {
+		border: solid 1px #dddddd;
+		padding: 10px;
+		padding-top: 6px;
+	}
+	
+	.cliqTotalBalance {padding-left: 5%; vertical-align: middle;}
+	.cliqTotalBalance p {padding: 2px;}
+	.cliqTotalBalanceLabel {font-size: 10px;}
+	.giftCheckoutContainer input[type="checkbox"] {display: block;}
+	
+	.giftCheckoutInnerCols3 input[type="checkbox"]+label:before {display: none;}
+	.useGiftCardBtn input[type="checkbox"] {display: none;}
+	.useGiftCardBtn, .useGiftCardBtn:hover {
+	    border: solid 1px #a5173c;
+	    color: #a5173c;
+	    background-color: white;
+	    font-size: 12px;
+	    padding: 0px 20px;
+	    letter-spacing: normal;
+	    height: 25px !important;
+	    cursor: pointer;
+	}
+	
+	.addNewGiftCard .viewCardTerms {float: right;}
+	.addNewGiftCard .viewCardTerms a {color: #a5173c; font-weight: bold;}
+	.addNewGiftCard .addNewCard a {color: #a5173c; font-weight: bold;}
+	.payRemainingDesc {color: #666666; font-size: 12px;}
+	
+	.giftInfoLeft {border-right: 1px solid #dddddd; border-bottom: none; padding: 4%; padding-left: 0;}
+	.giftWalletImg {vertical-align: middle;}
+	.giftCheckoutInnerCols1, .giftCheckoutInnerCols2, .giftCheckoutInnerCols3 {padding: 4%;}
+	.giftInfoBottom {border-top: 1px solid #dddddd; padding: 0; margin-top: 1%; padding-top: 1%;}
+	.topPlaceOrderBtn {margin: 12px 0 0 !important;}
+	
+	@media(min-width: 651px){
+		.useGiftCardBtn, .useGiftCardBtn:hover {float: right; line-height: normal; padding-top: 5px;}
+		.giftCheckoutInnerCols1 {text-align: center;}
+		.giftCheckoutInnerCols2 {text-align: center;}
+	}
+	
+	@media(max-width: 650px){
+	.giftInfoLeft {border-bottom: 1px solid #dddddd; border-right: none; padding: 4%; padding-left: 0;}
+	.giftCheckoutInnerCols1 {padding: 20% 0%; text-align: left;}
+	.giftCheckoutInnerCols2 {padding: 20% 0%; text-align: left;}
+	.giftCheckoutInnerCols3 {padding: 20% 0%; text-align: right;}
+	.giftCheckoutContainer button {height: 18px !important;}
+	.giftCheckoutContainer {margin: 3%; border-radius: 8px; font-size: 10px;}
+	.giftInfoBottom {border-top: 1px solid #dddddd; padding: 4% 0; margin-top: 0;}
+	.useGiftCardBtn {height: 25px !important; line-height: normal !important; padding: 5px 6px !important;}
+    .cliqCashApplyAlert {border-radius: 4px; margin: 3%;}
+	}
+	
+/* wallet css end */	
+
+
+/* Cliq Cash Page */
+
+.closeCashSuccess {
+	float: right;
+	font-size: initial;
+	cursor: pointer;
+}
+
+.cliqCashContainer {
+	margin: 2%;
+}
+
+.cliqCashContainerOne {
+	border: solid 1px #dddddd;
+	padding: 2%;
+}
+
+.cliqCashContainerLeft {
+	float: left;
+	line-height: 22px;
+}
+
+.cliqCashContainerRight {
+	float: right;
+	width: 50%;
+	text-align: right;
+}
+
+.cliqCashInnerTop {
+	font-size: 26px;
+}
+
+.cliqCashWalletImg {
+	vertical-align: middle;
+}
+
+.cliqCashBtns, .cliqCashBtns:hover {
+	display: inline;
+	border: solid 1px #a5173c;
+	color: white;
+	background-color: #a5173c;
+	font-size: 14px;
+	padding: 5px 20px;
+	font-weight: normal;
+	margin-top: 2%;
+	letter-spacing: normal;
+	height: 25px;
+	margin-left: 4%;
+}
+/* .cliqCashBtns:hover {color:white; background-color: #a5173c;} */
+.cliqCashContainerLeft p {
+	padding-left: 3%;
+}
+
+.cliqCashContainerTwo {
+	overflow: hidden;
+	border: 1px solid #ccc;
+	background-color: #f1f1f1;
+	border-top-left-radius: 4px;
+	border-top-right-radius: 4px;
+}
+
+/* Style the buttons inside the tab */
+.cliqCashContainerTwo button {
+	background-color: inherit;
+	float: left;
+	border: none;
+	outline: none;
+	cursor: pointer;
+	font-size: 14px !important;
+	padding: 1% 2%;
+	transition: 0.3s;
+	font-size: 17px;
+}
+
+/* Change background color of buttons on hover */
+.cliqCashContainerTwo button:hover {
+	color: #a5173c;
+}
+
+/* Create an active/current tablink class */
+.cliqCashContainerTwo button.active {
+	color: #a5173c;
+	border-bottom: 3px solid #a5173c;
+}
+
+/* Style the tab content */
+.cliqCashContainerTwoContent {
+	display: none;
+	border: 1px solid #ccc;
+	border-top: none;
+}
+
+.cliqStatementTable {
+	width: 100%;
+}
+
+.cliqStatementTable thead td {
+	font-weight: bold;
+}
+
+.cliqStatementTable thead {
+	background-color: #ddd
+}
+
+.cliqStatementTable td {
+	padding: 2%;
+}
+
+.cliqStatementTable tbody tr:nth-child(even) {
+	background-color: #f2f2f2;
+}
+
+@media ( max-width : 650px) {
+	.cliqCashContainer {
+		margin: 3%;
+	}
+	.cliqCashContainerOne {
+		border-radius: 4px;
+	}
+	.cliqCashInnerTop {
+		font-size: 18px;
+	}
+	.cliqCashContainerLeft {
+		border-bottom: 1px solid #ddd;
+		width: 100%;
+	}
+	.cliqCashBtns {
+		height: 30px !important;
+	}
+	.cliqCashContainerTwoContent {
+		overflow-x: auto;
+	}
+	.cliqCashSuccessAlert {
+		border-radius: 4px;
+	}
+}
+
+/* Cliq Cash End */

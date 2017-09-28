@@ -202,66 +202,8 @@
 					<button type="button" class="button btn-block payment-button make_payment_top_savedCard proceed-button" id="make_mrupee_payment_up"><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.paymentButton"/></button>
 
 
-<!-- Added for Cliq Cash -->
+<!-- Added for Wallet -->
 
-
-
-<style>
-	.giftCheckoutContainer {
-		border: solid 1px #dddddd;
-		padding: 10px;
-		padding-top: 6px;
-	}
-	
-	.cliqTotalBalance {padding-left: 5%; vertical-align: middle;}
-	.cliqTotalBalance p {padding: 2px;}
-	.cliqTotalBalanceLabel {font-size: 10px;}
-	.giftCheckoutContainer input[type="checkbox"] {display: block;}
-	
-	.giftCheckoutInnerCols3 input[type="checkbox"]+label:before {display: none;}
-	.useGiftCardBtn input[type="checkbox"] {display: none;}
-	.useGiftCardBtn, .useGiftCardBtn:hover {
-	    border: solid 1px #a5173c;
-	    color: #a5173c;
-	    background-color: white;
-	    font-size: 12px;
-	    padding: 0px 20px;
-	    letter-spacing: normal;
-	    height: 25px !important;
-	    cursor: pointer;
-	}
-	
-	.addNewGiftCard .viewCardTerms {float: right;}
-	.addNewGiftCard .viewCardTerms a {color: #a5173c; font-weight: bold;}
-	.addNewGiftCard .addNewCard a {color: #a5173c; font-weight: bold;}
-	.payRemainingDesc {color: #666666; font-size: 12px;}
-	
-	.giftInfoLeft {border-right: 1px solid #dddddd; border-bottom: none; padding: 4%; padding-left: 0;}
-	.giftWalletImg {vertical-align: middle;}
-	.giftCheckoutInnerCols1, .giftCheckoutInnerCols2, .giftCheckoutInnerCols3 {padding: 4%;}
-	.giftInfoBottom {border-top: 1px solid #dddddd; padding: 0; margin-top: 1%; padding-top: 1%;}
-	.topPlaceOrderBtn {margin: 12px 0 0 !important;}
-	
-	@media(min-width: 651px){
-		.useGiftCardBtn, .useGiftCardBtn:hover {float: right; line-height: normal; padding-top: 5px;}
-		.giftCheckoutInnerCols1 {text-align: center;}
-		.giftCheckoutInnerCols2 {text-align: center;}
-	}
-	
-	@media(max-width: 650px){
-	.giftInfoLeft {border-bottom: 1px solid #dddddd; border-right: none; padding: 4%; padding-left: 0;}
-	.giftCheckoutInnerCols1 {padding: 20% 0%; text-align: left;}
-	.giftCheckoutInnerCols2 {padding: 20% 0%; text-align: left;}
-	.giftCheckoutInnerCols3 {padding: 20% 0%; text-align: right;}
-	.giftCheckoutContainer button {height: 18px !important;}
-	.giftCheckoutContainer {margin: 3%; border-radius: 8px; font-size: 10px;}
-	.giftInfoBottom {border-top: 1px solid #dddddd; padding: 4% 0; margin-top: 0;}
-	.useGiftCardBtn {height: 25px !important; line-height: normal !important; padding: 5px 6px !important;}
-    .cliqCashApplyAlert {border-radius: 4px; margin: 3%;}
-	}
-
-</style>
-	
 <div class="giftCheckoutContainer">
 	<div class="giftCheckoutContainerTable">
 		<div class="clearfix">
@@ -269,7 +211,7 @@
 				<div class="giftInfoLeft">
 					<table>
 						<tr>
-							<td class="giftWalletImg"><img src="https://cdn.zeplin.io/58987458375db68f0b01107e/assets/2E3534B4-7ACC-45DF-A140-E91174789999.png" alt="wallet" /></td>
+							<td class="giftWalletImg"><img src="\_ui\responsive\common\images\walletImg.png" alt="wallet" /></td>
 							<td class="cliqTotalBalance"><p><strong>CliQ Cash</strong></p><p class="cliqTotalBalanceLabel">Total Balance <strong>&#8377;</strong></p></td>
 						</tr>
 					</table>
@@ -297,7 +239,8 @@
 					</div>
 					<br />
 					<div class="payRemainingDesc">
-						<i>You can pay the remaining amount <strong id="JuspayAmtId">&#8377;</strong> from the below payment options.</i>
+						<i id="juspayAmountId">You can pay the remaining amount <strong id="JuspayAmtId">&#8377; 0</strong> from the below payment options.</i>
+						<i id="addCliqCashId">Please add card to use Cliq Cash</i>
 					</div>
 				</div>
 			</div>
@@ -306,13 +249,6 @@
 </div>
 <div class="col-sm-12 alert alert-success cliqCashApplyAlert"></div>
 <br />&nbsp; <br />
-<!-- <div class="col-xs-12">
-	
-</div> -->
-			
-
-
-
 
 
 <!-- End for Wallet -->
