@@ -10,6 +10,7 @@ import de.hybris.platform.commercefacades.order.data.OrderData;
 import de.hybris.platform.commercefacades.order.data.OrderEntryData;
 import de.hybris.platform.commercefacades.product.data.PromotionResultData;
 import de.hybris.platform.commercefacades.voucher.exceptions.VoucherOperationException;
+import de.hybris.platform.core.enums.OrderStatus;
 import de.hybris.platform.core.model.order.AbstractOrderEntryModel;
 import de.hybris.platform.core.model.order.AbstractOrderModel;
 import de.hybris.platform.core.model.order.CartModel;
@@ -198,12 +199,12 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 						}
 					}
 				}
-				//EGV Changes 
-				if(cartData.isIsEGVCart()){
-					flag = true;
 			}
-			}
-
+			 //EGV Changes 
+		    if(null != cartData && cartData.isIsEGVCart()){
+		     flag = true;
+		    }
+			
 			if (CollectionUtils.isNotEmpty(paymentTypes))
 			{
 				//looping through the mode to get payment Types
@@ -2468,11 +2469,11 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 					String cliqCashPaymentMode = StringUtils.EMPTY;
 					//boolean jsPayMode = false;
 
-					//					if (null != (getSessionService().getAttribute("getCliqCashMode").toString()))
-					//					{
-					//
-					//						splitPayment = Boolean.parseBoolean(getSessionService().getAttribute("getCliqCashMode").toString());
-					//					}
+//					if (null != (getSessionService().getAttribute("getCliqCashMode").toString()))
+//					{
+//
+//						splitPayment = Boolean.parseBoolean(getSessionService().getAttribute("getCliqCashMode").toString());
+//					}
 
 					if (null != (getSessionService().getAttribute("cliqCashPaymentMode").toString()))
 					{
@@ -2480,11 +2481,11 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 						cliqCashPaymentMode = getSessionService().getAttribute("cliqCashPaymentMode").toString();
 					}
 
-					//					if (StringUtils.isNotEmpty(getSessionService().getAttribute("jsPayMode").toString()))
-					//					{
-					//
-					//						jsPayMode = Boolean.parseBoolean(getSessionService().getAttribute("jsPayMode").toString());
-					//					}
+//					if (StringUtils.isNotEmpty(getSessionService().getAttribute("jsPayMode").toString()))
+//					{
+//
+//						jsPayMode = Boolean.parseBoolean(getSessionService().getAttribute("jsPayMode").toString());
+//					}
 
 					LOG.info("cliqCashPaymentMode" + cliqCashPaymentMode);
 
@@ -2511,11 +2512,11 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 				String cliqCashPaymentMode = StringUtils.EMPTY;
 				//boolean jsPayMode = false;
 
-				//				if (null != (getSessionService().getAttribute("getCliqCashMode").toString()))
-				//				{
-				//
-				//					splitPayment = Boolean.parseBoolean(getSessionService().getAttribute("getCliqCashMode").toString());
-				//				}
+//				if (null != (getSessionService().getAttribute("getCliqCashMode").toString()))
+//				{
+//
+//					splitPayment = Boolean.parseBoolean(getSessionService().getAttribute("getCliqCashMode").toString());
+//				}
 
 				if (null != (getSessionService().getAttribute("cliqCashPaymentMode").toString()))
 				{
@@ -2523,19 +2524,19 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 					cliqCashPaymentMode = getSessionService().getAttribute("cliqCashPaymentMode").toString();
 				}
 
-				//				if (StringUtils.isNotEmpty(getSessionService().getAttribute("jsPayMode").toString()))
-				//				{
-				//
-				//					jsPayMode = Boolean.parseBoolean(getSessionService().getAttribute("jsPayMode").toString());
-				//				}
+//				if (StringUtils.isNotEmpty(getSessionService().getAttribute("jsPayMode").toString()))
+//				{
+//
+//					jsPayMode = Boolean.parseBoolean(getSessionService().getAttribute("jsPayMode").toString());
+//				}
 
 				LOG.info("cliqCashPaymentMode" + cliqCashPaymentMode);
 
-//				if (order.getSplitModeInfo().equalsIgnoreCase("Split"))
-//				{
-//
-//					order.setTotalPrice(Double.valueOf("" + getSessionService().getAttribute("juspayTotalAmt")));
-//				}
+				if (order.getSplitModeInfo().equalsIgnoreCase("Split"))
+				{
+
+					order.setTotalPrice(Double.valueOf("" + getSessionService().getAttribute("juspayTotalAmt")));
+				}
 
 				/**
 				 * QC CHANGE end
@@ -3494,8 +3495,8 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 			final String WalletId, final String cliqCashPaymentMode, final String qcOrderId, final String channel,
 			 double walletTotal,double juspayAmount)
 	{
-
-		QCRedeeptionResponse qcRedeeptionResponse = new QCRedeeptionResponse();
+		
+		 QCRedeeptionResponse qcRedeeptionResponse = new QCRedeeptionResponse();
 		try
 		{
 			if(null != channel && !channel.equalsIgnoreCase(MarketplaceFacadesConstants.CHANNEL_MOBILE)) {
@@ -3507,7 +3508,7 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 			final ArrayList<String> rs = new ArrayList<String>();
 
 			getMplPaymentService().createQCEntryInAudit(qcOrderId, "WEB", guid, "" + walletTotal,"","");
-
+			
 			final QCRedeemRequest qcRedeemRequest = new QCRedeemRequest();
 
 			qcRedeemRequest.setAmount("" + walletTotal);
@@ -3570,6 +3571,9 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 
 		for (final AbstractOrderEntryModel abstractOrderEntryModel : orderToBeUpdated.getEntries())
 		{
+			System.out.println("Free Count ------- if bogo "+abstractOrderEntryModel.getFreeCount());
+//			if(null != abstractOrderEntryModel.getIsBOGOapplied() && abstractOrderEntryModel.getIsBOGOapplied().booleanValue())
+//			{
 			final WalletApportionPaymentInfoModel walletApportionPayment = getModelService()
 					.create(WalletApportionPaymentInfoModel.class);
 
@@ -3742,6 +3746,7 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 			abstractOrderEntryModel.setWalletApportionPaymentInfo(walletApportionPayment);
 			getModelService().save(abstractOrderEntryModel);
 		}
+		//}
 
 		getModelService().save(orderToBeUpdated);
 		getModelService().refresh(orderToBeUpdated);
