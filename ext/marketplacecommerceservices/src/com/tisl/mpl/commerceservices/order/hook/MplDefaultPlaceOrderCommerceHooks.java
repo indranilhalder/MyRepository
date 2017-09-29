@@ -2607,11 +2607,27 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 		 */
 
 
-		//		boolean splitPayment = false;
-		//		if (StringUtils.isNotEmpty(getSessionService().getAttribute("getCliqCashMode")))
+		//		int splitQty = 0;
+		//		if (clonedSubOrder.getSplitModeInfo().equalsIgnoreCase("Split")
+		//				|| clonedSubOrder.getSplitModeInfo().equalsIgnoreCase("CliqCash"))
 		//		{
+		//			splitQty = quantity;
 		//
-		//			splitPayment = Boolean.parseBoolean(getSessionService().getAttribute("getCliqCashMode"));
+		//			for (int qty = 0; qty < quantity; qty++)
+		//			{
+		//				if (quantity > 0 && abstractOrderEntryModel.getIsBOGOapplied().booleanValue())
+		//				{
+		//					splitQty -= 1;
+		//				}
+		//
+		//				if (quantity > 0 && (abstractOrderEntryModel.getFreeCount().intValue() > 0))
+		//				{
+		//					splitQty -= abstractOrderEntryModel.getFreeCount().intValue();
+		//				}
+		//			}
+		//
+		//			System.out.println("*********** Hook Apportion Logic ---- Qty " + quantity + " & Spliit Qty" + splitQty);
+		//
 		//		}
 
 		/**
@@ -2636,6 +2652,7 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 			if (clonedSubOrder.getSplitModeInfo().equalsIgnoreCase("Split")
 					|| clonedSubOrder.getSplitModeInfo().equalsIgnoreCase("CliqCash"))
 			{
+				//setPaymentModeApporsionValue(abstractOrderEntryModel, splitQty, orderEntryModel, clonedSubOrder);
 				setPaymentModeApporsionValue(abstractOrderEntryModel, quantity, orderEntryModel, clonedSubOrder);
 			}
 
@@ -3482,6 +3499,12 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 
 		final WalletApportionPaymentInfoModel walletApportionPaymentInfo = getModelService()
 				.create(WalletApportionPaymentInfoModel.class);
+
+		if (null != orderEntryModel.getIsBOGOapplied() && orderEntryModel.getIsBOGOapplied().booleanValue())
+		{
+
+			System.out.println(" **************** Hook BOGO PRODUCT FOUND");
+		}
 
 		walletApportionPaymentInfo.setOrderId(abstractOrderEntryModel.getWalletApportionPaymentInfo().getOrderId());
 

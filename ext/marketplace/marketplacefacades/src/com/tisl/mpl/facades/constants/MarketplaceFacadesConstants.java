@@ -169,6 +169,9 @@ public class MarketplaceFacadesConstants extends GeneratedMarketplaceFacadesCons
 	//Adding code for Luxury Facades
 	public static final String LuxuryPrefix = "lux";
 	public static final String PRODUCT_TYPE = "FineJewellery";
+	
+	public static final String CHANNEL_WEB = "WEB";
+	public static final String CHANNEL_MOBILE = "MOBILE";
 
 
 	private MarketplaceFacadesConstants()

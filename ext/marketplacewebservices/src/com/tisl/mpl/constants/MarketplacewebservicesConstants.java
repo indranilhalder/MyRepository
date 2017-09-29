@@ -305,6 +305,7 @@ public class MarketplacewebservicesConstants
 	public static final String CREATEENTRYINAUDITURL = "/createEntryInAudit";
 	public static final String SAVEDCARDS = "/savedCards";
 	public static final String REMOVESAVEDCARDS = "/removeSavedCards";
+	public static final String CREATEJUSPAYEGVORDER = "/{userId}/createJuspayEgvOrder";
 	public static final String CREATEJUSPAYORDER = "/{userId}/createJuspayOrder";
 	public static final String GETPAYMENTMODE = "/getPaymentModes";
 	public static final String APPORJSON = "application/json";
@@ -541,6 +542,8 @@ public class MarketplacewebservicesConstants
 
 	public static final String THIRDPARTYWALLETORDER = "/{userId}/createThirdPartyWalletOrder";
 	public static final String WALLETPAYMENT = "/{userId}/walletPayment";
+	public static final String APPLY_CLIQCASH = "/{userId}/applyCliqCash";
+	public static final String REMOVE_CLIQCASH = "/{userId}/removeCliqCash";
 	public static final String MRUPEE = "MRUPEE".intern();
 
 	public final static String MRUPEE_NARRATION_VALUE = "payment.mRupee.narration".intern();
@@ -591,7 +594,10 @@ public class MarketplacewebservicesConstants
 	public static final String EXCHANGENOTAPPLIED = "Exchange Is Not Applicable For Pincode";
 	public static final String SPECIAL_MOBILE_FLAG = "special.mobile.flag".intern();
 	public static final String PRICE_DISCLAIMER_JEWELLERY = "*Price and Weight are subject to change basis availability.";
-
+	public static final String CHANNEL_WEB = "WEB";
 	//INC144317480: Order Threshold Discount Promotion: Netbanking Payment Mode Restriction doesn't work
 	//public static final String BANKNAMEFORNETBANKING = "bankNameforNetbanking";
+	public static final String PAYMENT_MODE_CLIQ_CASH = "Cliq Cash";
+	public static final String PAYMENT_MODE_SPLIT = "split";
+	public static final String PAYMENT__MODE_JUSPAY = "Juspay";
 }

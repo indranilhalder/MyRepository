@@ -26,6 +26,7 @@ import de.hybris.platform.voucher.model.PromotionVoucherModel;
 import de.hybris.platform.voucher.model.RestrictionModel;
 import de.hybris.platform.voucher.model.VoucherModel;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -40,6 +41,7 @@ import javax.servlet.http.HttpServletRequest;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -60,15 +62,19 @@ import com.tisl.mpl.facade.checkout.MplCheckoutFacade;
 import com.tisl.mpl.facade.checkout.MplCustomAddressFacade;
 import com.tisl.mpl.facades.MplPaymentWebFacade;
 import com.tisl.mpl.facades.payment.MplPaymentFacade;
+import com.tisl.mpl.facades.wallet.MplWalletFacade;
 import com.tisl.mpl.marketplacecommerceservices.service.ExtendedUserService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplPaymentService;
 import com.tisl.mpl.model.PaymentModeRestrictionModel;
 import com.tisl.mpl.model.PaymentTypeModel;
+import com.tisl.mpl.pojo.response.CustomerWalletDetailResponse;
 import com.tisl.mpl.util.DiscountUtility;
 import com.tisl.mpl.util.ExceptionUtil;
+import com.tisl.mpl.wsdto.CliqCashWsDto;
 import com.tisl.mpl.wsdto.MplSavedCardDTO;
 import com.tisl.mpl.wsdto.PaymentServiceWsDTO;
 import com.tisl.mpl.wsdto.PaymentServiceWsData;
+import com.tisl.mpl.wsdto.TotalCliqCashBalanceWsDto;
 
 
 /**
@@ -127,6 +133,9 @@ public class PaymentServicesController extends BaseController
 
 	@Resource(name = "voucherService")
 	private VoucherService voucherService;
+	
+	@Autowired 
+	private MplWalletFacade mplWalletFacade;
 
 	/**
 	 * @return the voucherService
@@ -1280,6 +1289,60 @@ public class PaymentServicesController extends BaseController
 				paymentModesData = getMplPaymentWebFacade().potentialPromotionOnPaymentMode(orderModel);
 				paymentModesData.setPaymentModes(paymentMode);
 			}
+
+			/* Added for cliq Cash Functionality start */
+			final CustomerModel customer = (CustomerModel) userService.getCurrentUser();
+          try {
+         	 LOG.debug("Getting saved Card Details");
+         	 final MplSavedCardDTO savedCards = new MplSavedCardDTO();
+
+    			Map<Date, SavedCardData> savedCardsMap = new TreeMap<Date, SavedCardData>();
+    			Map<Date, SavedCardData> savedDebitCards = new TreeMap<Date, SavedCardData>();
+    			savedCardsMap = getMplPaymentFacade().listStoredCreditCards(customer);
+    			LOG.debug("savedCardsMap "+savedCardsMap );
+    			savedDebitCards = getMplPaymentFacade().listStoredDebitCards(customer);
+    			// Add everything in savedCardsMap from savedDebitCards
+    			savedCardsMap.putAll(savedDebitCards);
+    			//Adding details into DTO
+    			savedCards.setSavedCardDetailsMap(savedCardsMap);
+              
+    			paymentModesData.setSavedCardResponse(savedCards);
+          }catch (Exception e) {
+				LOG.error("Exception occurred while getting the saved credit card details "+e.getMessage());
+			}
+			
+			try {
+				
+				 LOG.debug("Getting saved Clish Cash Details");
+				CliqCashWsDto cliqCash = new CliqCashWsDto();
+				TotalCliqCashBalanceWsDto totalCliqCashBalanceWsDto = new TotalCliqCashBalanceWsDto();
+				if(null != customer && null != customer.getIsWalletActivated() && customer.getIsWalletActivated().booleanValue() && 
+						null != customer.getCustomerWalletDetail() && null != customer.getCustomerWalletDetail().getWalletId()){
+					
+					CustomerWalletDetailResponse responce =	mplWalletFacade.getCustomerWallet(customer.getCustomerWalletDetail().getWalletId());
+					if(null != responce &&  responce.getResponseCode() == Integer.valueOf(0) && null != responce.getWallet()) {
+						
+						if(null != responce.getApiWebProperties() && null != responce.getApiWebProperties().getDateAtClient()) {
+							cliqCash.setBalanceClearedAsOf(responce.getApiWebProperties().getDateAtClient());
+						}
+						
+						totalCliqCashBalanceWsDto.setCurrencyIso("INR");
+						if(null !=responce.getWallet().getBalance() ) {
+							totalCliqCashBalanceWsDto.setDoubleValue(responce.getWallet().getBalance());
+							totalCliqCashBalanceWsDto.setFormattedValue(responce.getWallet().getBalance().toString());
+							totalCliqCashBalanceWsDto.setPriceType("BUY");
+							totalCliqCashBalanceWsDto.setFormattedValueNoDecimal(BigDecimal.valueOf(responce.getWallet().getBalance().doubleValue()));
+							totalCliqCashBalanceWsDto.setValue(responce.getWallet().getBalance().toString());
+						}
+					}
+				}
+			}catch (Exception e) {
+				LOG.debug("Exception occurred while getting customer QC wallet Amount"+e.getMessage());
+			}
+		
+			/* Added for cliq Cash Functionality end */
+
+
 		}
 		catch (final EtailNonBusinessExceptions ex)
 		{

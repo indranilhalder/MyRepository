@@ -1084,6 +1084,8 @@
 		<property name="juspayReturnUrl" type="String"></property>
 		<property name="juspayOrderId" type="String"></property>
 		<property name="orderId" type="String"></property>
+		<property name="cliqcashSelected" type="boolean"></property>
+		<property name="cliqcashAmount" type="Double"></property>
 		<property name="cartGuid" type="String"></property>
 		<property name="status" type="String"></property>
 		<property name="errorMessage" type="String"></property>
@@ -1153,6 +1155,38 @@
 
 	<!-- Bin Number Details -->
 
+
+	<bean class="com.tisl.mpl.wsdto.TotalCliqCashBalanceWsDto">
+		<property name="currencyIso" type="String" />
+		<property name="doubleValue" type="Double" />
+		<property name="formattedValue" type="String" />
+		<property name="formattedValueNoDecimal" type="java.math.BigDecimal"/>
+		<property name="priceType" type="String" />	
+		<property name="value" type="String" />	
+		<property name="status" type="String" />
+		<property name="error" type="String" />
+		<property name="errorCode" type="String" />	
+	</bean>
+     <bean class="com.tisl.mpl.wsdto.CliqCashWsDto">
+		<property name="balanceClearedAsOf" type="String" />
+		<property name="totalCliqCashBalance" type="com.tisl.mpl.wsdto.TotalCliqCashBalanceWsDto" />
+		<property name="status" type="String" />
+		<property name="error" type="String" />
+		<property name="errorCode" type="String" />
+	</bean>
+
+      <bean class="com.tisl.mpl.wsdto.PayCliqCashWsDto">
+		<property name="totalAmount" type="String" />
+		<property name="discount" type="Double" />
+		<property name="cliqCashApplied" type="Double" />
+		<property name="paybleAmount" type="Double" />
+		<property name="isRemainingAmount" type="boolean" />	
+		<property name="status" type="String" />
+		<property name="error" type="String" />
+		<property name="errorCode" type="String" />
+	</bean>
+	
+	
 	<!-- COD Details -->
 	<bean class="com.tisl.mpl.wsdto.PaymentServiceWsData">
 		<property name="bankName" type="String"></property>
@@ -1169,6 +1203,14 @@
 		<property name="status" type="String" />
 		<property name="error" type="String" />
 		<property name="errorCode" type="String" />
+		<!-- Added For CLiq Cash Functionality  Start -->
+		
+		<property name="savedCardResponse"
+			type="com.tisl.mpl.wsdto.MplSavedCardDTO"/>
+		<property name="cliqCash"
+			type="com.tisl.mpl.wsdto.CliqCashWsDto"/>	
+	   <!-- Added For CLiq Cash Functionality  End -->		
+		
 	</bean>
 
 	<bean class="com.tisl.mpl.wsdto.PotentialRestrictionData">
@@ -1455,6 +1497,8 @@
 		<property name="couponDiscount" type="String" />
 		<property name="pickupPersonName" type="String" />
 		<property name="pickupPersonMobile" type="String" />
+		<property name="cliqCashApplied" type="boolean" />
+		<property name="cliqCashAmountDeducted" type="java.lang.Double" />
 		<!-- TPR-1083 Start-->
 	<property name="exchangeId" type="String"/>
 	</bean>

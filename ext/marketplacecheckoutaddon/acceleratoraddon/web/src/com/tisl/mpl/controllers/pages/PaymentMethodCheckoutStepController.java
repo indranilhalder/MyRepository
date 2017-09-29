@@ -2967,7 +2967,8 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 									final String qcUniqueCode = getMplPaymentFacade().generateQCCode();
 									final CustomerModel currentCustomer = (CustomerModel) getUserService().getCurrentUser();
 									qcResponse = getMplPaymentFacade().createQCOrderRequest(orderToBeUpdated.getGuid(), orderToBeUpdated,
-											currentCustomer.getCustomerWalletDetail().getWalletId(), "Cliq Cash", qcUniqueCode);
+											currentCustomer.getCustomerWalletDetail().getWalletId(), "Cliq Cash", qcUniqueCode, "WEB", 0.0D,
+											0.0D);
 
 									if (null != qcResponse && null != qcResponse.getResponseCode()
 											&& qcResponse.getResponseCode().intValue() == 0)
@@ -4180,7 +4181,7 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 					orderId = getMplPaymentFacade().createJuspayOrder(cart, null, firstName, lastName, paymentAddressLine1,
 							paymentAddressLine2, paymentAddressLine3, country, state, city, pincode,
 							cardSaved + MarketplacecheckoutaddonConstants.STRINGSEPARATOR + sameAsShipping, returnUrlBuilder.toString(),
-							uid, MarketplacecheckoutaddonConstants.CHANNEL_WEB);
+							uid, MarketplacecheckoutaddonConstants.CHANNEL_WEB, 0.0D);
 
 					//orderId = "987654321";
 
@@ -4335,7 +4336,7 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 						orderId = getMplPaymentFacade().createJuspayOrder(null, orderModel, firstName, lastName, paymentAddressLine1,
 								paymentAddressLine2, paymentAddressLine3, country, state, city, pincode,
 								cardSaved + MarketplacecheckoutaddonConstants.STRINGSEPARATOR + sameAsShipping,
-								returnUrlBuilder.toString(), uid, MarketplacecheckoutaddonConstants.CHANNEL_WEB);
+								returnUrlBuilder.toString(), uid, MarketplacecheckoutaddonConstants.CHANNEL_WEB, 0.0D);
 					}
 				}
 				else if (null != orderModel.getPaymentInfo())
@@ -6085,6 +6086,7 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 		final JSONObject jsonObject = new JSONObject();
 		jsonObject.put("disableJsMode", false);
 		final CartModel cart = getCartService().getSessionCart();
+		final DecimalFormat df = new DecimalFormat("#.##");
 		try
 		{
 
@@ -6105,8 +6107,12 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 						if (balBucketwise.getResponseCode() == Integer.valueOf(0) && null != balBucketwise.getWallet().getBalance())
 						{
 
-							final Double WalletAmt = balBucketwise.getWallet().getBalance();
-							final Double totalAmt = cart.getTotalPrice();
+
+
+							final Double WalletAmt = Double.valueOf((df.format(balBucketwise.getWallet().getBalance().doubleValue())));
+							final Double totalAmt = cart.getTotalPriceWithConv();
+
+							System.out.println("totalAmt ----------^^^^^^^  " + totalAmt);
 
 							if (Double.parseDouble("" + WalletAmt) >= Double.parseDouble("" + totalAmt))
 							{
@@ -6123,7 +6129,8 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 							else
 							{
 
-								final double juspayTotalAmt = Double.parseDouble("" + totalAmt) - Double.parseDouble("" + WalletAmt);
+								double juspayTotalAmt = Double.parseDouble("" + totalAmt) - Double.parseDouble("" + WalletAmt);
+								juspayTotalAmt = Double.parseDouble(df.format(juspayTotalAmt));
 
 								getSessionService().setAttribute("WalletTotal", "" + WalletAmt);
 								getSessionService().setAttribute("juspayTotalAmt", "" + juspayTotalAmt);
@@ -6172,7 +6179,10 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 		final JSONObject jsonObject = new JSONObject();
 		BalanceBucketWise balBucketwise = new BalanceBucketWise();
 		final CartModel cart = getCartService().getSessionCart();
-		final Double totalCartAmt = cart.getTotalPrice();
+		final Double totalCartAmt = cart.getTotalPriceWithConv();
+		final DecimalFormat df = new DecimalFormat("#.##");
+
+		System.out.println("getTotalPriceWithConv ------------------- " + totalCartAmt);
 
 		double cashBalance = 0;
 		double egvBalance = 0;
@@ -6193,22 +6203,26 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 					{
 						egvBalance += Double.parseDouble(bucketType.getAmount().toString().isEmpty() ? "0"
 								: "" + Double.parseDouble(bucketType.getAmount().toString()));
+						egvBalance = Double.parseDouble(df.format(egvBalance));
 					}
 					else
 					{
 
 						cashBalance += Double.parseDouble(bucketType.getAmount().toString().isEmpty() ? "0"
 								: "" + Double.parseDouble(bucketType.getAmount().toString()));
+						cashBalance = Double.parseDouble(df.format(cashBalance));
 					}
 
 				}
 
 				totalWalletAmt = Double.parseDouble(balBucketwise.getWallet().getBalance().toString().isEmpty() ? "0"
 						: "" + Double.parseDouble(balBucketwise.getWallet().getBalance().toString()));
+				totalWalletAmt = Double.parseDouble(df.format(totalWalletAmt));
 
 				if (Double.parseDouble("" + totalWalletAmt) < Double.parseDouble("" + totalCartAmt))
 				{
 					juspayAmt = Double.parseDouble("" + totalCartAmt) - Double.parseDouble("" + totalWalletAmt);
+					juspayAmt = Double.parseDouble(df.format(juspayAmt));
 
 				}
 
@@ -6250,8 +6264,6 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 
 		return jsonObject;
 	}
-
-
 
 	/**
 	 * @param model
@@ -6467,7 +6479,7 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 					final String qcUniqueCode = getMplPaymentFacade().generateQCCode();
 					final CustomerModel currentCustomer = (CustomerModel) getUserService().getCurrentUser();
 					qcResponse = getMplPaymentFacade().createQCOrderRequest(orderToBeUpdated.getGuid(), orderToBeUpdated,
-							currentCustomer.getCustomerWalletDetail().getWalletId(), "Cliq Cash", qcUniqueCode);
+							currentCustomer.getCustomerWalletDetail().getWalletId(), "Cliq Cash", qcUniqueCode, "WEB", 0.0D, 0.0D);
 
 					if (null != qcResponse && null != qcResponse.getResponseCode() && qcResponse.getResponseCode().intValue() == 0)
 					{
@@ -6814,7 +6826,7 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 			orderId = getMplPaymentFacade().createJuspayOrder(cart, null, firstName, lastName, paymentAddressLine1,
 					paymentAddressLine2, paymentAddressLine3, country, state, city, pincode,
 					cardSaved + MarketplacecheckoutaddonConstants.STRINGSEPARATOR + sameAsShipping, returnUrlBuilder.toString(), uid,
-					MarketplacecheckoutaddonConstants.CHANNEL_WEB);
+					MarketplacecheckoutaddonConstants.CHANNEL_WEB, 0.0D);
 			getMplCheckoutFacade().placeEGVOrder(cart);
 
 			/*
