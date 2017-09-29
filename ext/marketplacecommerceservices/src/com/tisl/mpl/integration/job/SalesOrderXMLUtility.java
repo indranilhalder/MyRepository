@@ -61,6 +61,10 @@ import com.tisl.mpl.util.ExceptionUtil;
 public class SalesOrderXMLUtility
 {
 
+	/**
+	 * 
+	 */
+	private static final String CLIQ_CASH = "Cliq Cash";
 	private static final String PAYMENT_JUSPAY_MERCHANT_TYPE = "payment.juspay.merchantType";
 	private static final String PAYMENT_QC_MERCHANT_TYPE = "payment.qc.merchantType";
 	private static final String PAYMENT_QC_MERCHANT_ID = "payment.qc.merchantID";
@@ -512,7 +516,7 @@ public class SalesOrderXMLUtility
 						WalletApportionPaymentInfoModel paymentInfoModel = entry.getWalletApportionPaymentInfo();
 						if (!CollectionUtils.isEmpty(paymentInfoModel.getWalletCardList()))
 						{
-							LOG.debug("DeliveryMode entry.paymentInfoModel.getWalletCardList()()"+paymentInfoModel.getWalletCardList());
+							LOG.debug("DeliveryMode entry.paymentInfoModel.getWalletCardList()"+paymentInfoModel.getWalletCardList());
 							for (WalletCardApportionDetailModel apporationWalllet : paymentInfoModel.getWalletCardList())
 							{
 
@@ -572,8 +576,8 @@ public class SalesOrderXMLUtility
 							}
 
 
-							if (Integer.parseInt(paymentInfoModel.getJuspayApportionValue()) > 0)
-							{
+							 if (StringUtils.isNotEmpty(paymentInfoModel.getJuspayApportionValue())
+							         && Double.parseDouble((paymentInfoModel.getJuspayApportionValue())) > 0){
 								MerchantInfoXMlData merchantInfoXMlData = new MerchantInfoXMlData();
 								merchantInfoXMlData.setMerchantType(
 										getConfigurationService().getConfiguration().getString(PAYMENT_JUSPAY_MERCHANT_TYPE));
@@ -596,7 +600,7 @@ public class SalesOrderXMLUtility
 									for (final PaymentTransactionModel oModel : list)
 									{
 										LOG.debug("DeliveryMode oModel"+oModel);
-										if (null != oModel.getStatus() && null != oModel.getPaymentProvider()
+										if (null != oModel.getStatus() && null != oModel.getPaymentProvider() && !oModel.getPaymentProvider().equalsIgnoreCase(CLIQ_CASH)
 												&& oModel.getStatus().equalsIgnoreCase(MarketplacecommerceservicesConstants.SUCCESS))
 										{
 											
@@ -731,7 +735,7 @@ public class SalesOrderXMLUtility
 			for (final PaymentTransactionModel oModel : list)
 			{
 
-				if (null != oModel.getStatus() && null != oModel.getPaymentProvider()
+				if (null != oModel.getStatus() && null != oModel.getPaymentProvider() &&  !oModel.getPaymentProvider().equalsIgnoreCase(CLIQ_CASH)
 						&& oModel.getStatus().equalsIgnoreCase(MarketplacecommerceservicesConstants.SUCCESS))
 				{
 					LOG.debug("Inside Parent order: Pyment Transaction model");
