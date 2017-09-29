@@ -1060,7 +1060,7 @@ public class MarketplaceCheckoutControllerImpl extends
 		orderId = getMplPaymentFacade().createJuspayOrder(cart, null, firstName, lastName, paymentAddressLine1,
 				paymentAddressLine2, paymentAddressLine3, country, state, city, pincode,
 				cardSaved + "|" + sameAsShipping, returnUrlBuilder.toString(),
-				uid, "WEB");
+				uid, "WEB",0.0D);
 		LOG.info("order id ::: "+orderId);
 	}
 	

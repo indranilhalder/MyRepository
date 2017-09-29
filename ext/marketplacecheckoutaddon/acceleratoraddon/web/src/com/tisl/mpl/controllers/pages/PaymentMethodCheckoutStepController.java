@@ -2967,7 +2967,7 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 									final String qcUniqueCode = getMplPaymentFacade().generateQCCode();
 									final CustomerModel currentCustomer = (CustomerModel) getUserService().getCurrentUser();
 									qcResponse = getMplPaymentFacade().createQCOrderRequest(orderToBeUpdated.getGuid(), orderToBeUpdated,
-											currentCustomer.getCustomerWalletDetail().getWalletId(), "Cliq Cash", qcUniqueCode);
+											currentCustomer.getCustomerWalletDetail().getWalletId(), "Cliq Cash", qcUniqueCode, "WEB",0.0D, 0.0D);
 
 									if (null != qcResponse && null != qcResponse.getResponseCode()
 											&& qcResponse.getResponseCode().intValue() == 0)
@@ -4180,7 +4180,7 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 					orderId = getMplPaymentFacade().createJuspayOrder(cart, null, firstName, lastName, paymentAddressLine1,
 							paymentAddressLine2, paymentAddressLine3, country, state, city, pincode,
 							cardSaved + MarketplacecheckoutaddonConstants.STRINGSEPARATOR + sameAsShipping, returnUrlBuilder.toString(),
-							uid, MarketplacecheckoutaddonConstants.CHANNEL_WEB);
+							uid, MarketplacecheckoutaddonConstants.CHANNEL_WEB,0.0D);
 
 					//orderId = "987654321";
 
@@ -4335,7 +4335,7 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 						orderId = getMplPaymentFacade().createJuspayOrder(null, orderModel, firstName, lastName, paymentAddressLine1,
 								paymentAddressLine2, paymentAddressLine3, country, state, city, pincode,
 								cardSaved + MarketplacecheckoutaddonConstants.STRINGSEPARATOR + sameAsShipping,
-								returnUrlBuilder.toString(), uid, MarketplacecheckoutaddonConstants.CHANNEL_WEB);
+								returnUrlBuilder.toString(), uid, MarketplacecheckoutaddonConstants.CHANNEL_WEB,0.0D);
 					}
 				}
 				else if (null != orderModel.getPaymentInfo())
@@ -6467,7 +6467,7 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 					final String qcUniqueCode = getMplPaymentFacade().generateQCCode();
 					final CustomerModel currentCustomer = (CustomerModel) getUserService().getCurrentUser();
 					qcResponse = getMplPaymentFacade().createQCOrderRequest(orderToBeUpdated.getGuid(), orderToBeUpdated,
-							currentCustomer.getCustomerWalletDetail().getWalletId(), "Cliq Cash", qcUniqueCode);
+							currentCustomer.getCustomerWalletDetail().getWalletId(), "Cliq Cash", qcUniqueCode,"WEB",0.0D,0.0D);
 
 					if (null != qcResponse && null != qcResponse.getResponseCode() && qcResponse.getResponseCode().intValue() == 0)
 					{
@@ -6814,7 +6814,7 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 			orderId = getMplPaymentFacade().createJuspayOrder(cart, null, firstName, lastName, paymentAddressLine1,
 					paymentAddressLine2, paymentAddressLine3, country, state, city, pincode,
 					cardSaved + MarketplacecheckoutaddonConstants.STRINGSEPARATOR + sameAsShipping, returnUrlBuilder.toString(), uid,
-					MarketplacecheckoutaddonConstants.CHANNEL_WEB);
+					MarketplacecheckoutaddonConstants.CHANNEL_WEB,0.0D);
 			getMplCheckoutFacade().placeEGVOrder(cart);
 
 			/*

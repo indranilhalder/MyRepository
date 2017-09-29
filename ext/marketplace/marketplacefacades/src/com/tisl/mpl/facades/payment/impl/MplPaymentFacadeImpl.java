@@ -168,7 +168,6 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 		final Map<String, Boolean> data = new HashMap<String, Boolean>();
 		try
 		{
-			
 			//Get payment modes
 			final List<PaymentTypeModel> paymentTypes = getMplPaymentService().getPaymentModes(store);
 			boolean flag = false;
@@ -202,7 +201,7 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 				//EGV Changes 
 				if(cartData.isIsEGVCart()){
 					flag = true;
-				}
+			}
 			}
 
 			if (CollectionUtils.isNotEmpty(paymentTypes))
@@ -2367,7 +2366,7 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 	public String createJuspayOrder(final CartModel cart, final OrderModel order, final String firstName, final String lastName,
 			final String addressLine1, final String addressLine2, final String addressLine3, final String country,
 			final String state, final String city, final String pincode, final String checkValues, final String returnUrl,
-			final String uid, final String channel) throws EtailNonBusinessExceptions, AdapterException
+			final String uid, final String channel,double amount) throws EtailNonBusinessExceptions, AdapterException
 	{
 		try
 		{
@@ -2469,11 +2468,11 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 					String cliqCashPaymentMode = StringUtils.EMPTY;
 					//boolean jsPayMode = false;
 
-//					if (null != (getSessionService().getAttribute("getCliqCashMode").toString()))
-//					{
-//
-//						splitPayment = Boolean.parseBoolean(getSessionService().getAttribute("getCliqCashMode").toString());
-//					}
+					//					if (null != (getSessionService().getAttribute("getCliqCashMode").toString()))
+					//					{
+					//
+					//						splitPayment = Boolean.parseBoolean(getSessionService().getAttribute("getCliqCashMode").toString());
+					//					}
 
 					if (null != (getSessionService().getAttribute("cliqCashPaymentMode").toString()))
 					{
@@ -2481,11 +2480,11 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 						cliqCashPaymentMode = getSessionService().getAttribute("cliqCashPaymentMode").toString();
 					}
 
-//					if (StringUtils.isNotEmpty(getSessionService().getAttribute("jsPayMode").toString()))
-//					{
-//
-//						jsPayMode = Boolean.parseBoolean(getSessionService().getAttribute("jsPayMode").toString());
-//					}
+					//					if (StringUtils.isNotEmpty(getSessionService().getAttribute("jsPayMode").toString()))
+					//					{
+					//
+					//						jsPayMode = Boolean.parseBoolean(getSessionService().getAttribute("jsPayMode").toString());
+					//					}
 
 					LOG.info("cliqCashPaymentMode" + cliqCashPaymentMode);
 
@@ -2512,11 +2511,11 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 				String cliqCashPaymentMode = StringUtils.EMPTY;
 				//boolean jsPayMode = false;
 
-//				if (null != (getSessionService().getAttribute("getCliqCashMode").toString()))
-//				{
-//
-//					splitPayment = Boolean.parseBoolean(getSessionService().getAttribute("getCliqCashMode").toString());
-//				}
+				//				if (null != (getSessionService().getAttribute("getCliqCashMode").toString()))
+				//				{
+				//
+				//					splitPayment = Boolean.parseBoolean(getSessionService().getAttribute("getCliqCashMode").toString());
+				//				}
 
 				if (null != (getSessionService().getAttribute("cliqCashPaymentMode").toString()))
 				{
@@ -2524,19 +2523,19 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 					cliqCashPaymentMode = getSessionService().getAttribute("cliqCashPaymentMode").toString();
 				}
 
-//				if (StringUtils.isNotEmpty(getSessionService().getAttribute("jsPayMode").toString()))
-//				{
-//
-//					jsPayMode = Boolean.parseBoolean(getSessionService().getAttribute("jsPayMode").toString());
-//				}
+				//				if (StringUtils.isNotEmpty(getSessionService().getAttribute("jsPayMode").toString()))
+				//				{
+				//
+				//					jsPayMode = Boolean.parseBoolean(getSessionService().getAttribute("jsPayMode").toString());
+				//				}
 
 				LOG.info("cliqCashPaymentMode" + cliqCashPaymentMode);
 
-				if (order.getSplitModeInfo().equalsIgnoreCase("Split"))
-				{
-
-					order.setTotalPrice(Double.valueOf("" + getSessionService().getAttribute("juspayTotalAmt")));
-				}
+//				if (order.getSplitModeInfo().equalsIgnoreCase("Split"))
+//				{
+//
+//					order.setTotalPrice(Double.valueOf("" + getSessionService().getAttribute("juspayTotalAmt")));
+//				}
 
 				/**
 				 * QC CHANGE end
@@ -2588,14 +2587,14 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 					//TISCR-421:Without sessionTD for MOBILE or other orders
 					if (null != cart)
 					{
-						request = new InitOrderRequest().withOrderId(juspayOrderId).withAmount(cart.getTotalPrice()).withCustomerId(uid)
+						request = new InitOrderRequest().withOrderId(juspayOrderId).withAmount(Double.valueOf(amount)).withCustomerId(uid)
 								.withEmail(customerEmail).withCustomerPhone(customerPhone).withUdf1(firstName).withUdf2(lastName)
 								.withUdf3(addressLine1).withUdf4(addressLine2).withUdf5(addressLine3).withUdf6(country).withUdf7(state)
 								.withUdf8(city).withUdf9(pincode).withUdf10(checkValues).withReturnUrl(returnUrl);
 					}
 					else if (null != order)
 					{
-						request = new InitOrderRequest().withOrderId(juspayOrderId).withAmount(order.getTotalPrice())
+						request = new InitOrderRequest().withOrderId(juspayOrderId).withAmount(Double.valueOf(amount))
 								.withCustomerId(uid).withEmail(customerEmail).withCustomerPhone(customerPhone).withUdf1(firstName)
 								.withUdf2(lastName).withUdf3(addressLine1).withUdf4(addressLine2).withUdf5(addressLine3).withUdf6(country)
 								.withUdf7(state).withUdf8(city).withUdf9(pincode).withUdf10(checkValues).withReturnUrl(returnUrl);
@@ -3491,19 +3490,24 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 	 * @see com.tisl.mpl.facades.payment.MplPaymentFacade#createQCOrderRequest()
 	 */
 	@Override
-	public QCRedeeptionResponse createQCOrderRequest(final String guid, final AbstractOrderModel orderToBeUpdated, final String WalletId,
-			final String cliqCashPaymentMode, final String qcOrderId)
+	public QCRedeeptionResponse createQCOrderRequest(final String guid, final AbstractOrderModel orderToBeUpdated,
+			final String WalletId, final String cliqCashPaymentMode, final String qcOrderId, final String channel,
+			 double walletTotal,double juspayAmount)
 	{
-		
-		 QCRedeeptionResponse qcRedeeptionResponse = new QCRedeeptionResponse();
+
+		QCRedeeptionResponse qcRedeeptionResponse = new QCRedeeptionResponse();
 		try
 		{
-			final double walletTotal = Double.parseDouble("" + getSessionService().getAttribute("WalletTotal"));
+			if(null != channel && !channel.equalsIgnoreCase(MarketplaceFacadesConstants.CHANNEL_MOBILE)) {
+				walletTotal = Double.parseDouble("" + getSessionService().getAttribute("WalletTotal"));
+				juspayAmount = Double.parseDouble("" + getSessionService().getAttribute("juspayTotalAmt"));
+			}
+			
 
 			final ArrayList<String> rs = new ArrayList<String>();
 
 			getMplPaymentService().createQCEntryInAudit(qcOrderId, "WEB", guid, "" + walletTotal,"","");
-			
+
 			final QCRedeemRequest qcRedeemRequest = new QCRedeemRequest();
 
 			qcRedeemRequest.setAmount("" + walletTotal);
@@ -3521,7 +3525,7 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 				rs.add("" + qcRedeeptionResponse.getTransactionId());
 
 				getMplPaymentService().createQCEntryInAudit(qcOrderId, "WEB", guid, "" + walletTotal,
-						qcRedeeptionResponse.getResponseCode().toString(), qcRedeeptionResponse.getTransactionId().toString());
+								qcRedeeptionResponse.getResponseCode().toString(), qcRedeeptionResponse.getTransactionId().toString());
 
 
 				final Map<String, Double> paymentMode = new HashMap<String, Double>();
@@ -3532,7 +3536,7 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 						"" + walletTotal);
 
 
-				calculateSplitModeApportionValue(orderToBeUpdated, qcRedeeptionResponse, walletTotal);
+				calculateSplitModeApportionValue(orderToBeUpdated, qcRedeeptionResponse, walletTotal,juspayAmount);
 
 				return qcRedeeptionResponse;
 			}
@@ -3557,14 +3561,9 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 
 
 	public void calculateSplitModeApportionValue(final AbstractOrderModel orderToBeUpdated,
-			final QCRedeeptionResponse qcRedeeptionResponse, final double walletTotal)
+			final QCRedeeptionResponse qcRedeeptionResponse, final double walletTotal,double juspayTotalValue)
 	{
-		double juspayTotalValue = 0;
-
-		if (null != getSessionService().getAttribute("juspayTotalAmt"))
-		{
-			juspayTotalValue = Double.parseDouble("" + getSessionService().getAttribute("juspayTotalAmt"));
-		}
+		//double juspayTotalValue = 0;
 
 		final double totalBillingAmount = walletTotal + juspayTotalValue;
 

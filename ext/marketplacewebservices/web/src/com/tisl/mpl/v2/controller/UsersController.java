@@ -191,6 +191,7 @@ import com.tisl.mpl.facades.product.data.MplCustomerProfileData;
 import com.tisl.mpl.facades.product.data.ReturnReasonData;
 import com.tisl.mpl.facades.product.data.ReturnReasonDetails;
 import com.tisl.mpl.facades.product.data.StateData;
+import com.tisl.mpl.facades.wallet.MplWalletFacade;
 import com.tisl.mpl.helper.MplEnumerationHelper;
 import com.tisl.mpl.helper.MplUserHelper;
 import com.tisl.mpl.helper.ProductDetailsHelper;
@@ -210,6 +211,8 @@ import com.tisl.mpl.model.PaymentTypeModel;
 import com.tisl.mpl.model.SellerInformationModel;
 import com.tisl.mpl.order.data.OrderEntryDataList;
 import com.tisl.mpl.pincode.facade.PincodeServiceFacade;
+import com.tisl.mpl.pojo.response.BalanceBucketWise;
+import com.tisl.mpl.pojo.response.QCRedeeptionResponse;
 import com.tisl.mpl.populator.HttpRequestCustomerDataPopulator;
 import com.tisl.mpl.populator.options.PaymentInfoOption;
 import com.tisl.mpl.search.feedback.facades.UpdateFeedbackFacade;
@@ -243,6 +246,7 @@ import com.tisl.mpl.wsdto.NetBankingListWsDTO;
 import com.tisl.mpl.wsdto.NetBankingWsDTO;
 import com.tisl.mpl.wsdto.OrderCreateInJusPayWsDto;
 import com.tisl.mpl.wsdto.OrderProductWsDTO;
+import com.tisl.mpl.wsdto.PayCliqCashWsDto;
 import com.tisl.mpl.wsdto.QuickDropStoresList;
 import com.tisl.mpl.wsdto.ReturnDetailsWsDTO;
 import com.tisl.mpl.wsdto.ReturnLogisticsResponseDTO;
@@ -450,6 +454,8 @@ public class UsersController extends BaseCommerceController
 	@Resource(name = "voucherService")
 	private VoucherService voucherService;
 
+	@Autowired
+	private MplWalletFacade mplWalletFacade;
 	//Sonar Fix
 	private static final String NO_JUSPAY_URL = "No juspayReturnUrl is defined in local properties";
 
@@ -6789,7 +6795,7 @@ public class UsersController extends BaseCommerceController
 			@RequestParam(required = false) final String platform, @RequestParam(required = false) final String bankName,
 			@RequestBody(required = false) final InventoryReservListRequestWsDTO item) throws EtailNonBusinessExceptions
 	{
-		final OrderCreateInJusPayWsDto orderCreateInJusPayWsDto = new OrderCreateInJusPayWsDto();
+		 OrderCreateInJusPayWsDto orderCreateInJusPayWsDto = new OrderCreateInJusPayWsDto();
 		String uid = "";
 		String failErrorCode = "";
 		boolean failFlag = false;
@@ -6802,17 +6808,44 @@ public class UsersController extends BaseCommerceController
 		String juspayReturnUrl = "";
 		final StringBuilder returnUrlBuilder = new StringBuilder();
 		String orderCode = null;
+		double payableWalletAmount = 0.0D;
+		double payableJuspayAmount = 0.0D;
+		double totalWalletAmount = 0.0D;
+		BalanceBucketWise balBucketwise = null;
 		if (LOG.isDebugEnabled())
 		{
 			LOG.debug("********* Creating juspay Order mobile web service" + userId);
 		}
+
+
 		try
 		{
+
+			// QC Wallet Changes Start  
+			
+			// paying full Amount From Wallet in Case Of CLIQ CASH MODE
+			orderModel = getMplPaymentFacade().getOrderByGuid(cartGuid);
+			if(null != orderModel) {
+				if(null != orderModel.getSplitModeInfo() &&  
+						orderModel.getSplitModeInfo().equalsIgnoreCase(MarketplacewebservicesConstants.PAYMENT_MODE_CLIQ_CASH)) {
+					orderCreateInJusPayWsDto =patAmountUsingQC(userId, cartGuid, pincode, item);
+					return orderCreateInJusPayWsDto;
+				}
+			}else {
+				cart = mplPaymentWebFacade.findCartAnonymousValues(cartGuid);
+				if(null != cart && null != cart.getSplitModeInfo() &&  
+						cart.getSplitModeInfo().equalsIgnoreCase(MarketplacewebservicesConstants.PAYMENT_MODE_CLIQ_CASH)) {
+					orderCreateInJusPayWsDto = patAmountUsingQC(userId, cartGuid, pincode, item);
+					return orderCreateInJusPayWsDto;
+				}
+			}
+			// QC Wallet Changes END
+			
 			final String paymentAddressLine1 = java.net.URLDecoder.decode(addressLine1, UTF);
 			final String paymentAddressLine2 = java.net.URLDecoder.decode(addressLine2, UTF);
 			final String paymentAddressLine3 = java.net.URLDecoder.decode(addressLine3, UTF);
 
-			customer = extendedUserService.getUserForOriginalUid(userId);
+		customer = extendedUserService.getUserForOriginalUid(userId);
 			if (null != customer)
 			{
 				uid = customer.getUid();
@@ -6853,7 +6886,7 @@ public class UsersController extends BaseCommerceController
 				returnUrlBuilder.append("?value=").append(cartGuid);
 			}
 			//Payment Soln changes
-			orderModel = getMplPaymentFacade().getOrderByGuid(cartGuid);
+			//orderModel = getMplPaymentFacade().getOrderByGuid(cartGuid);
 			//If cart is present
 			if (orderModel == null)
 			{
@@ -7009,11 +7042,30 @@ public class UsersController extends BaseCommerceController
 											: NO_JUSPAY_URL;
 						}
 
+						if(cart.getSplitModeInfo().equalsIgnoreCase(MarketplacewebservicesConstants.PAYMENT_MODE_SPLIT)) {
+							final CustomerModel currentCustomer = (CustomerModel) getUserService().getCurrentUser();
+							
+							if (null != currentCustomer && null != currentCustomer.getCustomerWalletDetail()
+									&& null != currentCustomer.getCustomerWalletDetail().getWalletId())
+							{
+								balBucketwise = mplWalletFacade.getQCBucketBalance(currentCustomer.getCustomerWalletDetail().getWalletId());
+							}
+							if(null != balBucketwise && null != balBucketwise.getWallet() && null != balBucketwise.getWallet().getBalance()) {
+								totalWalletAmount = balBucketwise.getWallet().getBalance().doubleValue();
+							}
+							if(totalWalletAmount > 0.0D) {
+								payableJuspayAmount = totalWalletAmount - cart.getTotalPrice().doubleValue();
+							}
+							payableWalletAmount = totalWalletAmount;
+							orderCreateInJusPayWsDto.setCliqcashAmount(Double.valueOf(payableWalletAmount));
+							orderCreateInJusPayWsDto.setCliqcashSelected(true);
+						}else {
+							payableJuspayAmount = cart.getTotalPrice().doubleValue();
+						}
 						juspayOrderId = mplPaymentFacade.createJuspayOrder(cart, null, firstName, lastName, addressLine1, addressLine2,
 								addressLine3, country, state, city, pincode,
 								cardSaved + MarketplacewebservicesConstants.STRINGSEPARATOR + sameAsShipping, juspayReturnUrl,
-
-								customerModel.getUid(), MarketplacewebservicesConstants.CHANNEL_MOBILE);
+								customerModel.getUid(), MarketplacewebservicesConstants.CHANNEL_MOBILE,payableJuspayAmount);
 
 
 						LOG.debug("********* Created juspay Order mobile web service *************" + juspayOrderId);
@@ -7044,10 +7096,31 @@ public class UsersController extends BaseCommerceController
 				}
 				else
 				{
+					
+					if(cart.getSplitModeInfo().equalsIgnoreCase(MarketplacewebservicesConstants.PAYMENT_MODE_SPLIT)) {
+						final CustomerModel currentCustomer = (CustomerModel) getUserService().getCurrentUser();
+						
+						if (null != currentCustomer && null != currentCustomer.getCustomerWalletDetail()
+								&& null != currentCustomer.getCustomerWalletDetail().getWalletId())
+						{
+							balBucketwise = mplWalletFacade.getQCBucketBalance(currentCustomer.getCustomerWalletDetail().getWalletId());
+						}
+						if(null != balBucketwise && null != balBucketwise.getWallet() && null != balBucketwise.getWallet().getBalance()) {
+							totalWalletAmount = balBucketwise.getWallet().getBalance().doubleValue();
+						}
+						if(totalWalletAmount > 0.0D) {
+							payableJuspayAmount = totalWalletAmount - cart.getTotalPrice().doubleValue();
+						}
+						payableWalletAmount = totalWalletAmount;
+						orderCreateInJusPayWsDto.setCliqcashAmount(Double.valueOf(payableWalletAmount));
+						orderCreateInJusPayWsDto.setCliqcashSelected(true);
+					}else {
+						payableJuspayAmount = cart.getTotalPrice().doubleValue();
+					}
 					juspayOrderId = getMplPaymentFacade().createJuspayOrder(cart, null, firstName, lastName, paymentAddressLine1,
 							paymentAddressLine2, paymentAddressLine3, country, state, city, pincode,
 							cardSaved + MarketplacecommerceservicesConstants.STRINGSEPARATOR + sameAsShipping,
-							returnUrlBuilder.toString(), uid, MarketplacecommerceservicesConstants.CHANNEL_MOBILE);
+							returnUrlBuilder.toString(), uid, MarketplacecommerceservicesConstants.CHANNEL_MOBILE,payableJuspayAmount);
 					//create order here
 					//Mandatory checks agains cart
 					final boolean isValidCart = getMplPaymentFacade().checkCart(cart);
@@ -7187,10 +7260,30 @@ public class UsersController extends BaseCommerceController
 				}
 				else
 				{
+					if(cart.getSplitModeInfo().equalsIgnoreCase(MarketplacewebservicesConstants.PAYMENT_MODE_SPLIT)) {
+						final CustomerModel currentCustomer = (CustomerModel) getUserService().getCurrentUser();
+						
+						if (null != currentCustomer && null != currentCustomer.getCustomerWalletDetail()
+								&& null != currentCustomer.getCustomerWalletDetail().getWalletId())
+						{
+							balBucketwise = mplWalletFacade.getQCBucketBalance(currentCustomer.getCustomerWalletDetail().getWalletId());
+						}
+						if(null != balBucketwise && null != balBucketwise.getWallet() && null != balBucketwise.getWallet().getBalance()) {
+							totalWalletAmount = balBucketwise.getWallet().getBalance().doubleValue();
+						}
+						if(totalWalletAmount > 0.0D) {
+							payableJuspayAmount = totalWalletAmount - cart.getTotalPrice().doubleValue();
+						}
+						payableWalletAmount = totalWalletAmount;
+						orderCreateInJusPayWsDto.setCliqcashAmount(Double.valueOf(payableWalletAmount));
+						orderCreateInJusPayWsDto.setCliqcashSelected(true);
+					}else {
+						payableJuspayAmount = cart.getTotalPrice().doubleValue();
+					}
 					juspayOrderId = getMplPaymentFacade().createJuspayOrder(null, orderModel, firstName, lastName, paymentAddressLine1,
 							paymentAddressLine2, paymentAddressLine3, country, state, city, pincode,
 							cardSaved + MarketplacecommerceservicesConstants.STRINGSEPARATOR + sameAsShipping,
-							returnUrlBuilder.toString(), uid, MarketplacecommerceservicesConstants.CHANNEL_MOBILE);
+							returnUrlBuilder.toString(), uid, MarketplacecommerceservicesConstants.CHANNEL_MOBILE,payableJuspayAmount);
 					//CAR-110
 					//orderData = mplCheckoutFacade.getOrderDetailsForCode(orderModel);
 				}
@@ -7300,7 +7393,11 @@ public class UsersController extends BaseCommerceController
 		}
 		return profileUpdateUrl;
 	}
+	
 
+	
+
+	
 	/**
 	 * @Description : For getting the details of all the Coupons available for the User
 	 * @param emailId
@@ -8705,6 +8802,597 @@ public class UsersController extends BaseCommerceController
 		return walletPaymentWsDTO;
 	}
 
+
+	@Secured(
+	{ CUSTOMER, "ROLE_TRUSTED_CLIENT", CUSTOMERMANAGER })
+	@RequestMapping(value = MarketplacewebservicesConstants.APPLY_CLIQCASH, method = RequestMethod.POST, produces = APPLICATION_TYPE)
+	@ResponseBody
+	public PayCliqCashWsDto applyCliqCash(@RequestParam final String cartGuid)
+			throws EtailNonBusinessExceptions, EtailBusinessExceptions, CalculationException
+	{
+		LOG.info("Applying  cliq Cash ");
+		PayCliqCashWsDto payCliqCashWsDto = new PayCliqCashWsDto();
+		OrderModel orderModel = getMplPaymentFacade().getOrderByGuid(cartGuid);
+		CartModel cart = null;
+
+		try
+		{
+			if (null == orderModel)
+			{
+				cart = mplPaymentWebFacade.findCartAnonymousValues(cartGuid);
+				final CustomerModel currentCustomer = (CustomerModel) getUserService().getCurrentUser();
+
+				BalanceBucketWise balBucketwise = null;
+				if (null != currentCustomer && null != currentCustomer.getCustomerWalletDetail()
+						&& null != currentCustomer.getCustomerWalletDetail().getWalletId())
+				{
+					balBucketwise = mplWalletFacade.getQCBucketBalance(currentCustomer.getCustomerWalletDetail().getWalletId());
+				}
+				payCliqCashWsDto.setDiscount(Double.valueOf(0));
+				payCliqCashWsDto.setTotalAmount(cart.getTotalPrice().toString());
+				if (null != balBucketwise && balBucketwise.getResponseCode() == Integer.valueOf(0)
+						&& null != balBucketwise.getWallet() && null != balBucketwise.getWallet().getBalance())
+				{
+
+					final Double WalletAmt = balBucketwise.getWallet().getBalance();
+					LOG.debug("Bucket Balance ="+WalletAmt);
+					final Double totalAmt = cart.getTotalPrice();
+
+					if (null != WalletAmt && null != totalAmt && WalletAmt.doubleValue() >= totalAmt.doubleValue())
+					{
+						cart.setSplitModeInfo(MarketplacewebservicesConstants.PAYMENT_MODE_CLIQ_CASH);
+						getModelService().save(cart);
+						getModelService().refresh(cart);
+						payCliqCashWsDto.setDiscount(cart.getTotalDiscounts());
+						payCliqCashWsDto.setIsRemainingAmount(false);
+						payCliqCashWsDto.setCliqCashApplied(totalAmt);
+						payCliqCashWsDto.setPaybleAmount(Double.valueOf(0));
+						payCliqCashWsDto.setTotalAmount(cart.getTotalPrice().toString());
+						payCliqCashWsDto.setStatus(MarketplacecommerceservicesConstants.SUCCESS_FLAG);
+					}
+					else
+					{
+						double juspayTotalAmt = 0.0D;
+						if (null != totalAmt && totalAmt.doubleValue() > 0.0D && null != WalletAmt && WalletAmt.doubleValue() > 0.0D)
+						{
+							juspayTotalAmt = totalAmt.doubleValue() - WalletAmt.doubleValue();
+						}
+						else if (null != cart.getTotalPrice() && cart.getTotalPrice().doubleValue() > 0.0D)
+						{
+							juspayTotalAmt = cart.getTotalPrice().doubleValue();
+						}
+						payCliqCashWsDto.setIsRemainingAmount(true);
+						if (null != WalletAmt && WalletAmt.doubleValue() > 0.0D)
+						{
+							payCliqCashWsDto.setCliqCashApplied(WalletAmt);
+						}
+						payCliqCashWsDto.setIsRemainingAmount(true);
+						payCliqCashWsDto.setDiscount(cart.getTotalDiscounts());
+						payCliqCashWsDto.setPaybleAmount(Double.valueOf(juspayTotalAmt));
+						payCliqCashWsDto.setTotalAmount(cart.getTotalPrice().toString());
+						cart.setSplitModeInfo(MarketplacewebservicesConstants.PAYMENT_MODE_SPLIT);
+						getModelService().save(cart);
+						getModelService().refresh(cart);
+						payCliqCashWsDto.setStatus(MarketplacecommerceservicesConstants.SUCCESS_FLAG);
+					}
+
+				}
+			}
+			else
+			{
+
+				final CustomerModel currentCustomer = (CustomerModel) getUserService().getCurrentUser();
+
+				BalanceBucketWise balBucketwise = null;
+				if (null != currentCustomer && null != currentCustomer.getCustomerWalletDetail()
+						&& null != currentCustomer.getCustomerWalletDetail().getWalletId())
+				{
+					balBucketwise = mplWalletFacade.getQCBucketBalance(currentCustomer.getCustomerWalletDetail().getWalletId());
+				}
+				payCliqCashWsDto.setDiscount(Double.valueOf(0));
+				payCliqCashWsDto.setTotalAmount(orderModel.getTotalPrice().toString());
+				if (null != balBucketwise && balBucketwise.getResponseCode() == Integer.valueOf(0)
+						&& null != balBucketwise.getWallet() && null != balBucketwise.getWallet().getBalance())
+				{
+
+					final Double WalletAmt = balBucketwise.getWallet().getBalance();
+					final Double totalAmt = orderModel.getTotalPrice();
+
+					if (null != WalletAmt && null != totalAmt && WalletAmt.doubleValue() >= totalAmt.doubleValue())
+					{
+						orderModel.setSplitModeInfo(MarketplacewebservicesConstants.PAYMENT_MODE_CLIQ_CASH);
+						getModelService().save(orderModel);
+						getModelService().refresh(orderModel);
+						payCliqCashWsDto.setDiscount(orderModel.getTotalDiscounts());
+						payCliqCashWsDto.setIsRemainingAmount(false);
+						payCliqCashWsDto.setCliqCashApplied(totalAmt);
+						payCliqCashWsDto.setPaybleAmount(Double.valueOf(0));
+						payCliqCashWsDto.setTotalAmount(orderModel.getTotalPrice().toString());
+						payCliqCashWsDto.setStatus(MarketplacecommerceservicesConstants.SUCCESS_FLAG);
+					}
+					else
+					{
+						double juspayTotalAmt = 0.0D;
+						if (null != totalAmt && totalAmt.doubleValue() > 0.0D && null != WalletAmt && WalletAmt.doubleValue() > 0.0D)
+						{
+							juspayTotalAmt = totalAmt.doubleValue() - WalletAmt.doubleValue();
+						}
+						else if (null != orderModel.getTotalPrice() && orderModel.getTotalPrice().doubleValue() > 0.0D)
+						{
+							juspayTotalAmt = orderModel.getTotalPrice().doubleValue();
+						}
+						payCliqCashWsDto.setIsRemainingAmount(true);
+						if (null != WalletAmt && WalletAmt.doubleValue() > 0.0D)
+						{
+							payCliqCashWsDto.setCliqCashApplied(WalletAmt);
+						}
+
+						payCliqCashWsDto.setDiscount(orderModel.getTotalDiscounts());
+						payCliqCashWsDto.setPaybleAmount(Double.valueOf(juspayTotalAmt));
+						payCliqCashWsDto.setTotalAmount(orderModel.getTotalPrice().toString());
+						orderModel.setSplitModeInfo(MarketplacewebservicesConstants.PAYMENT_MODE_SPLIT);
+						getModelService().save(orderModel);
+						getModelService().refresh(orderModel);
+						payCliqCashWsDto.setStatus(MarketplacecommerceservicesConstants.SUCCESS_FLAG);
+					}
+
+				}
+
+			}
+		}
+		catch (final EtailNonBusinessExceptions ex)
+		{
+			payCliqCashWsDto.setError(MarketplacecommerceservicesConstants.FAILURE_FLAG);
+			payCliqCashWsDto.setErrorCode(ex.getErrorCode());
+			payCliqCashWsDto.setError(ex.getErrorMessage());
+			LOG.error("Exception occrred while applying Cliq cash" + ex.getMessage());
+		}
+		catch (final Exception ex)
+		{
+			payCliqCashWsDto.setError(MarketplacecommerceservicesConstants.FAILURE_FLAG);
+			payCliqCashWsDto.setError(ex.getMessage());
+			LOG.error("Exception occrred while applying Cliq cash" + ex.getMessage());
+		}
+		return null;
+
+	}
+
+
+
+	@Secured(
+	{ CUSTOMER, "ROLE_TRUSTED_CLIENT", CUSTOMERMANAGER })
+	@RequestMapping(value = MarketplacewebservicesConstants.REMOVE_CLIQCASH, method = RequestMethod.POST, produces = APPLICATION_TYPE)
+	@ResponseBody
+	public PayCliqCashWsDto removeCliqCash(@RequestParam final String cartGuid)
+			throws EtailNonBusinessExceptions, EtailBusinessExceptions, CalculationException
+	{
+		LOG.info("Removing cliq Cash ");
+		PayCliqCashWsDto payCliqCashWsDto = new PayCliqCashWsDto();
+		OrderModel orderModel = getMplPaymentFacade().getOrderByGuid(cartGuid);
+		CartModel cart = null;
+		try
+		{
+			if (null != orderModel)
+			{
+				payCliqCashWsDto.setDiscount(orderModel.getTotalDiscounts());
+				if (null != orderModel.getTotalPrice())
+				{
+					payCliqCashWsDto.setTotalAmount(orderModel.getTotalPrice().toString());
+				}
+				payCliqCashWsDto.setPaybleAmount(orderModel.getTotalPrice());
+				orderModel.setSplitModeInfo(MarketplacewebservicesConstants.PAYMENT__MODE_JUSPAY);
+				getModelService().save(orderModel);
+				getModelService().refresh(orderModel);
+				payCliqCashWsDto.setError(MarketplacecommerceservicesConstants.SUCCESS_FLAG);
+			}
+			else
+			{
+				cart = mplPaymentWebFacade.findCartAnonymousValues(cartGuid);
+				payCliqCashWsDto.setDiscount(cart.getTotalDiscounts());
+				if (null != cart.getTotalPrice())
+				{
+					payCliqCashWsDto.setPaybleAmount(cart.getTotalPrice());
+				}
+				cart.setSplitModeInfo(MarketplacewebservicesConstants.PAYMENT__MODE_JUSPAY);
+				getModelService().save(cart);
+				getModelService().refresh(cart);
+				payCliqCashWsDto.setError(MarketplacecommerceservicesConstants.SUCCESS_FLAG);
+			}
+
+		}
+		catch (final EtailNonBusinessExceptions ex)
+		{
+			payCliqCashWsDto.setError(MarketplacecommerceservicesConstants.FAILURE_FLAG);
+			payCliqCashWsDto.setErrorCode(ex.getErrorCode());
+			payCliqCashWsDto.setError(ex.getErrorMessage());
+			LOG.error("Exception occrred while Removing Cliq cash" + ex.getMessage());
+		}
+		catch (final Exception ex)
+		{
+			payCliqCashWsDto.setError(MarketplacecommerceservicesConstants.FAILURE_FLAG);
+			payCliqCashWsDto.setError(ex.getMessage());
+			LOG.error("Exception occrred while Removing Cliq cash" + ex.getMessage());
+		}
+		return null;
+
+	}
+
+	
+	
+	
+	/**
+	 * @param item 
+	 * @param pincode 
+	 * 
+	 */
+	private OrderCreateInJusPayWsDto patAmountUsingQC(String userId,String cartGuid, String pincode, InventoryReservListRequestWsDTO item)
+	{
+		LOG.info("Paying  Full amount through QC for GUID"+cartGuid);
+		final OrderCreateInJusPayWsDto orderCreateInJusPayWsDto = new OrderCreateInJusPayWsDto();
+		String uid = "";
+		String failErrorCode = "";
+		boolean failFlag = false;
+		OrderModel orderModel = null;
+		CustomerModel customer = null;
+		CartModel cart = null;
+		String orderCode = null;
+		
+//		double payableWalletAmount = 0.0D;
+//		double payableJuspayAmount = 0.0D;
+//		double totalWalletAmount = 0.0D;
+
+		QCRedeeptionResponse qcResponse = new QCRedeeptionResponse();
+		
+		BalanceBucketWise balBucketwise = null;
+		if (LOG.isDebugEnabled())
+		{
+			LOG.debug("********* Creating QC  Order mobile web service");
+		}
+		try
+		{			
+			customer = extendedUserService.getUserForOriginalUid(userId);
+			if (null != customer)
+			{
+				uid = customer.getUid();
+			}
+			else
+			{
+				throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B0006);
+			}
+			// For Mobile
+
+			//Payment Soln changes
+			orderModel = getMplPaymentFacade().getOrderByGuid(cartGuid);
+			//If cart is present
+			if (orderModel == null)
+			{
+				cart = mplPaymentWebFacade.findCartAnonymousValues(cartGuid);
+				if (null != cart)
+				{
+					//TPR-4461 STARTS HERE WHEN ORDER MODEL IS NULL
+					final ArrayList<DiscountModel> voucherList = new ArrayList<DiscountModel>(
+							getVoucherService().getAppliedVouchers(cart));
+
+					if (CollectionUtils.isNotEmpty(voucherList))
+					{
+						VoucherModel appliedVoucher = null;
+
+						final DiscountModel discount = voucherList.get(0);
+
+						if (discount instanceof PromotionVoucherModel)
+						{
+							final PromotionVoucherModel promotionVoucherModel = (PromotionVoucherModel) discount;
+							appliedVoucher = promotionVoucherModel;
+
+							final Set<RestrictionModel> restrictions = appliedVoucher.getRestrictions();
+							for (final RestrictionModel restriction : restrictions)
+							{
+								if (restriction instanceof PaymentModeRestrictionModel)
+								{
+									boolean willApply = false;
+
+
+									final String paymentModeCard = cart.getModeOfPayment();//Customer's selected Payment Mode
+
+
+									final List<PaymentTypeModel> paymentTypeList = ((PaymentModeRestrictionModel) restriction)
+											.getPaymentTypeData(); //Voucher Payment mode
+
+
+									if (CollectionUtils.isNotEmpty(paymentTypeList))
+									{
+										if (StringUtils.isNotEmpty(paymentModeCard))
+										{
+											for (final PaymentTypeModel paymentType : paymentTypeList)
+											{
+												if (StringUtils.equalsIgnoreCase(paymentType.getMode(), paymentModeCard))
+												{
+													willApply = true;
+													break;
+												}
+
+											}
+										}
+										else
+										{
+											willApply = true;
+										}
+									}
+
+								}
+
+							}
+						}
+					}
+
+					//TPR-4461 ENDS HERE WHEN ORDER MODEL IS NULL
+					if (!failFlag && !mplCheckoutFacade.isPromotionValid(cart))
+					{
+						failFlag = true;
+						failErrorCode = MarketplacecommerceservicesConstants.B9075;
+					}
+				}
+				if (!failFlag && mplCartFacade.isCartEntryDelistedMobile(cart))
+				{
+					failFlag = true;
+					failErrorCode = MarketplacecommerceservicesConstants.B9325;
+				}
+				//TISUTO-12 , TISUTO-11
+				//TODO Soft reservation calls already made
+
+
+				if (!failFlag && !mplCartFacade.isInventoryReservedMobile(
+						MarketplacecommerceservicesConstants.OMS_INVENTORY_RESV_TYPE_PAYMENTPENDING, cart, pincode, item,
+						SalesApplication.MOBILE))
+				{
+					//getSessionService().setAttribute(MarketplacecclientservicesConstants.OMS_INVENTORY_RESV_SESSION_ID,"TRUE");
+					//getMplCartFacade().recalculate(cart);
+					failFlag = true;
+					failErrorCode = MarketplacecommerceservicesConstants.B9047;
+				}
+
+				if (!failFlag)
+				{
+					final Double cartTotal = cart.getTotalPrice();
+					final Double cartTotalWithConvCharge = cart.getTotalPriceWithConv();
+					if (cartTotal.doubleValue() <= 0.0 || cartTotalWithConvCharge.doubleValue() <= 0.0)
+					{
+							final CustomerModel currentCustomer = (CustomerModel) getUserService().getCurrentUser();
+							final String qcUniqueCode = mplPaymentFacade.generateQCCode();
+							qcResponse = mplPaymentFacade.createQCOrderRequest(cart.getGuid(), cart,
+									currentCustomer.getCustomerWalletDetail().getWalletId(), MarketplacewebservicesConstants.PAYMENT_MODE_CLIQ_CASH,
+									qcUniqueCode, MarketplacewebservicesConstants.CHANNEL_MOBILE,cart.getTotalPrice().doubleValue(),0.0D);
+							boolean egvStatus;
+							if (null != qcResponse && null != qcResponse.getResponseCode() && qcResponse.getResponseCode().intValue() != 0)
+							{
+								cart.setStatus(OrderStatus.PAYMENT_FAILED); /// return QC fail and Update Audit Entry Try With Juspay
+								modelService.save(cart);
+								egvStatus = false;
+							}
+
+							else if (null == qcResponse || null == qcResponse.getResponseCode())
+							{
+								cart.setStatus(OrderStatus.PAYMENT_FAILED); /// NO Exception No qcResponse Try With Juspay
+								modelService.save(cart);
+								egvStatus = false;
+							}
+							orderCreateInJusPayWsDto.setCliqcashAmount(cart.getTotalPrice());
+							orderCreateInJusPayWsDto.setCliqcashSelected(true);
+					
+						failFlag = true;
+						failErrorCode = MarketplacecommerceservicesConstants.B9509;
+						//}
+					}
+				}
+				//TISPRO-578
+				if (!failFlag && !mplPaymentFacade.isValidCart(cart))
+				{
+					//getSessionService().setAttribute(MarketplacecheckoutaddonConstants.CART_DELIVERYMODE_ADDRESS_INVALID, "TRUE");
+					failFlag = true;
+					failErrorCode = MarketplacecommerceservicesConstants.B9064;
+				}
+
+				if (failFlag)
+				{
+					throw new EtailBusinessExceptions(failErrorCode);
+				}
+				else
+				{
+					final CustomerModel currentCustomer = (CustomerModel) getUserService().getCurrentUser();
+					final String qcUniqueCode = mplPaymentFacade.generateQCCode();
+					qcResponse = mplPaymentFacade.createQCOrderRequest(cart.getGuid(), cart,
+							currentCustomer.getCustomerWalletDetail().getWalletId(), MarketplacewebservicesConstants.PAYMENT_MODE_CLIQ_CASH,
+							qcUniqueCode, MarketplacewebservicesConstants.CHANNEL_MOBILE,cart.getTotalPrice().doubleValue(),0.0D);
+					boolean egvStatus;
+					if (null != qcResponse && null != qcResponse.getResponseCode() && qcResponse.getResponseCode().intValue() != 0)
+					{
+						cart.setStatus(OrderStatus.PAYMENT_FAILED); /// return QC fail and Update Audit Entry Try With Juspay
+						modelService.save(cart);
+						egvStatus = false;
+					}
+
+					else if (null == qcResponse || null == qcResponse.getResponseCode())
+					{
+						cart.setStatus(OrderStatus.PAYMENT_FAILED); /// NO Exception No qcResponse Try With Juspay
+						modelService.save(cart);
+						egvStatus = false;
+					}
+					orderCreateInJusPayWsDto.setCliqcashAmount(cart.getTotalPrice());
+					orderCreateInJusPayWsDto.setCliqcashSelected(true);
+					//create order here
+					//Mandatory checks agains cart
+					final boolean isValidCart = getMplPaymentFacade().checkCart(cart);
+
+					if (isValidCart)
+					{
+						//CAR-110
+						orderCode = mplCheckoutFacade.placeOrderMobile(cart);
+						if (orderCode == null)
+						{
+							throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9321);
+						}
+
+					}
+					else
+					{
+						throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9050);
+					}
+				}
+			}
+			else
+			{
+				//TPR-4461 STARTS HERE WHEN ORDER MODEL IS NOT NULL
+				final ArrayList<DiscountModel> voucherList = new ArrayList<DiscountModel>(
+						getVoucherService().getAppliedVouchers(orderModel));
+
+				if (CollectionUtils.isNotEmpty(voucherList))
+				{
+					VoucherModel appliedVoucher = null;
+
+					final DiscountModel discount = voucherList.get(0);
+
+					if (discount instanceof PromotionVoucherModel)
+					{
+						final PromotionVoucherModel promotionVoucherModel = (PromotionVoucherModel) discount;
+						appliedVoucher = promotionVoucherModel;
+						final Set<RestrictionModel> restrictions = appliedVoucher.getRestrictions();
+						for (final RestrictionModel restriction : restrictions)
+						{
+							if (restriction instanceof PaymentModeRestrictionModel)
+							{
+								boolean willApply = false;
+								final String paymentModeCard = orderModel.getModeOfOrderPayment();//Customer's selected Payment Mode
+								final List<PaymentTypeModel> paymentTypeList = ((PaymentModeRestrictionModel) restriction)
+										.getPaymentTypeData(); //Voucher Payment mode
+								if (CollectionUtils.isNotEmpty(paymentTypeList))
+								{
+									if (StringUtils.isNotEmpty(paymentModeCard))
+									{
+										for (final PaymentTypeModel paymentType : paymentTypeList)
+										{
+											if (StringUtils.equalsIgnoreCase(paymentType.getMode(), paymentModeCard))
+											{
+												willApply = true;
+												break;
+											}
+
+										}
+									}
+									else
+									{
+										willApply = true;
+									}
+								}
+							}
+						}
+					}
+				}
+				if (!getMplCheckoutFacade().isPromotionValid(orderModel))
+				{
+					mplCartFacade.recalculateOrder(orderModel);
+					failFlag = true;
+					failErrorCode = MarketplacecommerceservicesConstants.B9075;
+				}
+
+				if (!failFlag && !mplCartFacade.isInventoryReservedMobile(
+						MarketplacecommerceservicesConstants.OMS_INVENTORY_RESV_TYPE_PAYMENTPENDING, orderModel, pincode, item,
+						SalesApplication.MOBILE))
+				{
+					//getSessionService().setAttribute(MarketplacecclientservicesConstants.OMS_INVENTORY_RESV_SESSION_ID,"TRUE");
+					getMplCartFacade().recalculateOrder(orderModel);
+					failFlag = true;
+					failErrorCode = MarketplacecommerceservicesConstants.B9047;
+					//notify EMAil SMS TPR-815
+					mplCartFacade.notifyEmailAndSmsOnInventoryFail(orderModel);
+				}
+
+				if (failFlag)
+				{
+					throw new EtailBusinessExceptions(failErrorCode);
+				}
+				else
+				{
+					final CustomerModel currentCustomer = (CustomerModel) getUserService().getCurrentUser();
+					final String qcUniqueCode = mplPaymentFacade.generateQCCode();
+					qcResponse = mplPaymentFacade.createQCOrderRequest(orderModel.getGuid(), orderModel,
+							currentCustomer.getCustomerWalletDetail().getWalletId(), MarketplacewebservicesConstants.PAYMENT_MODE_CLIQ_CASH,
+							qcUniqueCode, MarketplacewebservicesConstants.CHANNEL_MOBILE,orderModel.getTotalPrice().doubleValue(),0.0D);
+					boolean egvStatus;
+					if (null != qcResponse && null != qcResponse.getResponseCode() && qcResponse.getResponseCode().intValue() != 0)
+					{
+						orderModel.setStatus(OrderStatus.PAYMENT_FAILED); /// return QC fail and Update Audit Entry Try With Juspay
+						modelService.save(orderModel);
+						egvStatus = false;
+					}
+					else if (null == qcResponse || null == qcResponse.getResponseCode())
+					{
+						orderModel.setStatus(OrderStatus.PAYMENT_FAILED); /// NO Exception No qcResponse Try With Juspay
+						modelService.save(orderModel);
+						egvStatus = false;
+					}
+					orderCreateInJusPayWsDto.setCliqcashAmount(orderModel.getTotalPrice());
+					orderCreateInJusPayWsDto.setCliqcashSelected(true);
+				}
+			}
+			if (StringUtils.isNotEmpty(cartGuid))
+			{
+				orderCreateInJusPayWsDto.setCartGuid(cartGuid);
+			}
+			if (StringUtils.isNotEmpty(orderCode))
+			{
+				orderCreateInJusPayWsDto.setOrderId(orderCode);
+			}
+
+			orderCreateInJusPayWsDto.setStatus(MarketplacecommerceservicesConstants.SUCCESS_FLAG);
+
+		}
+		catch (final AdapterException e)
+		{
+			ExceptionUtil.getCustomizedExceptionTrace(e);
+			if (null != e.getMessage())
+			{
+				orderCreateInJusPayWsDto.setError(Localization.getLocalizedString(MarketplacecommerceservicesConstants.B9327));
+				orderCreateInJusPayWsDto.setErrorCode(MarketplacecommerceservicesConstants.B9327);
+			}
+			orderCreateInJusPayWsDto.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
+		}
+		catch (final EtailBusinessExceptions e)
+		{
+			orderCreateInJusPayWsDto.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
+			ExceptionUtil.getCustomizedExceptionTrace(e);
+			if (null != e.getErrorMessage())
+			{
+				orderCreateInJusPayWsDto.setError(e.getErrorMessage());
+				orderCreateInJusPayWsDto.setErrorCode(e.getErrorCode());
+			}
+		}
+		catch (final EtailNonBusinessExceptions e)
+		{
+			orderCreateInJusPayWsDto.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
+			// Error message for All Exceptions
+			ExceptionUtil.etailNonBusinessExceptionHandler(e);
+			if (null != e.getErrorMessage())
+			{
+				orderCreateInJusPayWsDto.setError(e.getErrorMessage());
+				orderCreateInJusPayWsDto.setErrorCode(e.getErrorCode());
+			}
+
+		}
+		catch (final Exception e)
+		{
+			ExceptionUtil.getCustomizedExceptionTrace(e);
+			// Error message for All Exceptions
+			if (null != e.getMessage())
+			{
+				orderCreateInJusPayWsDto.setError(Localization.getLocalizedString(MarketplacecommerceservicesConstants.B9004));
+				orderCreateInJusPayWsDto.setErrorCode(MarketplacecommerceservicesConstants.B9004);
+			}
+			orderCreateInJusPayWsDto.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
+		}
+
+		return orderCreateInJusPayWsDto;	
+	}
+	
 	/**
 	 * @return the mplProductWebService
 	 */

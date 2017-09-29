@@ -426,7 +426,7 @@ public interface MplPaymentFacade
 	 */
 	String createJuspayOrder(CartModel cart, OrderModel order, String firstName, String lastName, String addressLine1,
 			String addressLine2, String addressLine3, String country, String state, String city, String pincode, String checkValues,
-			String returnUrl, String uid, String channel) throws EtailNonBusinessExceptions, AdapterException;
+			String returnUrl, String uid, String channel,double amount) throws EtailNonBusinessExceptions, AdapterException;
 
 
 	/**
@@ -507,7 +507,7 @@ public interface MplPaymentFacade
 	 * @return
 	 */
 	public QCRedeeptionResponse createQCOrderRequest(String guid, AbstractOrderModel orderToBeUpdated, final String WalletId,
-			String cliqCashPaymentMode, final String qcTransactionId);
+			String cliqCashPaymentMode, final String qcTransactionId, String channel, double walletTotal,double juspayAmount);
 
 	/**
 	 * @return
