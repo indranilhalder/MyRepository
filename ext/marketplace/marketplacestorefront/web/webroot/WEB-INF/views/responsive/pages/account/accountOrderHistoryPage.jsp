@@ -595,15 +595,16 @@
 																</c:forEach>
 
 																<%-- 	<c:set var="bogoCheck" value="${entry.associatedItems ne null ? 'true': 'false'}"></c:set> --%>
-
+                                                       <c:if test="${orderHistoryDetail.isEGVOrder ne  true}">
 																<a href="" data-toggle="modal"
 																	data-target="#cancelOrder${subOrder.code}${entry.mplDeliveryMode.sellerArticleSKU}${entryStatus.index}"
 																	data-mylist="<spring:theme code="text.help" />"
 																	data-dismiss="modal"
 																	onClick="refreshModal('${bogoCheck}',${entry.transactionId})"><spring:theme
-																		text="Cancel Order" /></a>
+																		text="Cancel Order" />
+														</a>
 															</c:if>
-
+                                                         </c:if>
 														</c:if>
 
 														<!--Chairman Demo Changes: New Static Content Sheet: Checkout> Order Cancellation -->

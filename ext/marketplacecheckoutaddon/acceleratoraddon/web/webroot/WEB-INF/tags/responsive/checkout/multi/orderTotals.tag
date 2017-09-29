@@ -25,7 +25,7 @@
 			</ycommerce:testId>
 		</span>
 	</li>
-	
+	<c:if test="${isEGVCart ne true}">
 	
 	<c:if test="${cartData.totalDiscounts.value > 0}">
 	<li id="cartPromotionApplied">
@@ -39,7 +39,7 @@
 		<span id="promotion" style="float: right"><format:price priceData="${cartData.totalDiscounts}"/> 	</span>
 
 	</li> 
-	
+	</c:if>
 	<c:if test="${not empty cartData.deliveryCost}">
 		<li class="shipping">
 			<span class="shippingSpan"><spring:theme code="basket.page.totals.delivery"/></span>
@@ -93,7 +93,21 @@
 	<li class="total" id="total">
 		<div id="totalPriceConvChargeId">
 			<spring:theme code="basket.page.totals.total"/> 
-			<span id="totalWithConvField" style="float: right"><format:price priceData="${cartData.totalPrice}"/></span>
+			<c:choose>
+			  <c:when test="${isEGVCart ne false}">
+			  <span style="float: right">
+			  <format:price priceData="${cartTotalMrp}"/></span>
+			  <span id="totalWithConvField" style="float: right;display: none;">
+				<format:price priceData="${cartData.totalPrice}"/>
+				</span>
+			 
+			  </c:when>
+			  <c:otherwise>
+			  <span id="totalWithConvField" style="float: right">
+				<format:price priceData="${cartData.totalPrice}"/>
+				</span>
+			  </c:otherwise>
+			</c:choose>
 		</div>
 	</li>
 	

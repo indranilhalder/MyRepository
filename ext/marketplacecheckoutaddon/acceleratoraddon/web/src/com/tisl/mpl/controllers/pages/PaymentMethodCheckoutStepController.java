@@ -562,7 +562,8 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 				GlobalMessages.addErrorMessage(model, MarketplacecheckoutaddonConstants.PROMOTIONEXPIRED);
 			}
 
-
+			//Egv Changes 
+			model.addAttribute("isEGVCart", Boolean.FALSE);
 		}
 		//Nullpointer exception commented TPR-629
 		//		catch (final NullPointerException e)

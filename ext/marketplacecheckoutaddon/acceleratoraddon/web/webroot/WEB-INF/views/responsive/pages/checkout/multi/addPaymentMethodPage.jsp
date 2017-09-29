@@ -200,9 +200,12 @@
 						           <p class="disclaimer-txt">
 										<spring:theme code="pay.price.change.notification"></spring:theme>
 									</p>
-					           </c:if>               
+					           </c:if>  
+				   <c:if test="${isEGVCart ne true }">             
 						<p class="cart-items">You have an outstanding amount of &nbsp;&nbsp;<span class="prices"  id="outstanding-amount">
-					<ycommerce:testId code="cart_totalPrice_label"><format:price priceData="${cartData.totalPrice}"/> <!-- TISPRDT-693 -->
+					    <ycommerce:testId code="cart_totalPrice_label"><format:price priceData="${cartData.totalPrice}"/> 
+					</c:if>  
+					<!-- TISPRDT-693 -->
 				<!-- Unwanted code commented -->
                <%--  <c:choose>
                     <c:when test="${showTax}">

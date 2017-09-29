@@ -596,7 +596,6 @@ public class SalesOrderXMLUtility
 								if (null != list && !list.isEmpty())
 								{
 									LOG.debug("DeliveryMode list"+list);
-
 									for (final PaymentTransactionModel oModel : list)
 									{
 										LOG.debug("DeliveryMode oModel"+oModel);
