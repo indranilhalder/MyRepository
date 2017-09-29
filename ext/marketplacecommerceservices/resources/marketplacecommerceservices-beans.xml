@@ -15,6 +15,7 @@
 	ATTENTION: This is just an example file. You have to edit it according to your needs.
 -->
 
+
 <beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="beans.xsd">
 
 
@@ -210,6 +211,7 @@
 		<property name="gotMerged" type="boolean"/>
 		<property name="deliverySlotCharge" type="de.hybris.platform.commercefacades.product.data.PriceData"/>
 		<property name="exchangeAppliedCart" type="Boolean" />
+		<property name="isEGVCart" type="boolean"/>
 	</bean>
 	<bean class="de.hybris.platform.commercefacades.order.data.OrderData">
 		<property name="convenienceChargeForCOD" type="de.hybris.platform.commercefacades.product.data.PriceData"/>

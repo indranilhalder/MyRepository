@@ -6607,6 +6607,7 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 		{
 			final EgvDetailsData egvDetailsData = populateEGVFormToData(egvDetailForm);
 			final CartData giftCartData = mplCartFacade.getGiftCartModel(egvDetailsData);
+			giftCartData.setIsEGVCart(true);
 			Map<String, Boolean> paymentModeMap = null;
 			final OrderData orderData = null;
 			final String checkoutSellerID = populateCheckoutSellers(giftCartData);

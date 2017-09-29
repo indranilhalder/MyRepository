@@ -10,7 +10,6 @@ import de.hybris.platform.commercefacades.order.data.OrderData;
 import de.hybris.platform.commercefacades.order.data.OrderEntryData;
 import de.hybris.platform.commercefacades.product.data.PromotionResultData;
 import de.hybris.platform.commercefacades.voucher.exceptions.VoucherOperationException;
-import de.hybris.platform.core.enums.OrderStatus;
 import de.hybris.platform.core.model.order.AbstractOrderEntryModel;
 import de.hybris.platform.core.model.order.AbstractOrderModel;
 import de.hybris.platform.core.model.order.CartModel;
@@ -169,6 +168,7 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 		final Map<String, Boolean> data = new HashMap<String, Boolean>();
 		try
 		{
+			
 			//Get payment modes
 			final List<PaymentTypeModel> paymentTypes = getMplPaymentService().getPaymentModes(store);
 			boolean flag = false;
@@ -198,6 +198,10 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 							break;
 						}
 					}
+				}
+				//EGV Changes 
+				if(cartData.isIsEGVCart()){
+					flag = true;
 				}
 			}
 
