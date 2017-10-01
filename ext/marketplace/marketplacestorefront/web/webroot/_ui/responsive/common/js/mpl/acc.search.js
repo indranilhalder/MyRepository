@@ -772,6 +772,8 @@ $(document).on("click",".plp-wishlist",function(e){
 								$(".wishAlreadyAddedPlp").removeClass("active")
 							},3000)
 						}
+						//TPR-6364
+						dtmRemoveFromWishlist($('#pageType').val(),productCode,$('#categoryType').val());
 						
 					},
 					error : function(xhr, status, error){
@@ -850,7 +852,8 @@ $(document).on("click",".plp-wishlist",function(e){
 								utag.link({link_text: "add_to_wishlist_plp" , event_type : "add_to_wishlist_plp" ,product_sku_wishlist : productarray});
 								}
 						}
-						
+						//TPR-6364
+						dtmAddToWishlist($('#pageType').val(),productCode,$('#categoryType').val());
 						
 					},
 					error : function(xhr, status, error){

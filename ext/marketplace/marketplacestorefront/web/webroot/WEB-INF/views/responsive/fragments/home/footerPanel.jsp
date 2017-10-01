@@ -110,10 +110,15 @@
 		"link_obj": this, "link_text": "newsletter_subscription" , "event_type" : "newsletter_subscription" 
 	}); */
 		//TISSTRT-1527
-		utag.link({
-		 "link_text": "newsletter_subscription" , "event_type" : "newsletter_subscription" 
-	}); 
+       if(typeof(utag) != "undefined"){
+	       	utag.link({
+		      "link_text": "newsletter_subscription" , "event_type" : "newsletter_subscription" 
+	        }); 
+     }
 		
+		if(typeof _satellite !="undefined"){
+			   _satellite.track('news_letter_sign_up');
+			 }
 		<!-- TPR - 667 ends --->
 		var mail = $("#mailtext").val();
 

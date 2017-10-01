@@ -86,9 +86,9 @@ BEGIN
 									c2.p_code L2,
 									c1.p_code L3,
 									b1.p_code BrandCode, 
-									REPLACE(REPLACE(REPLACE(LOWER(cname2.p_name||'-'||cname1.p_name||'-'||cname.p_name||'-'||bname.p_name||'/c-'||c1.p_code||'/b-'||b1.p_code),' ', '-'),'''',''),'&','&amp;') "URL3", 
-									REPLACE(REPLACE(REPLACE(LOWER(cname2.p_name||'-'||cname1.p_name||'-'||bname.p_name||'/c-'||c2.p_code||'/b-'||b1.p_code),' ','-'),'''',''),'&','&amp;')"URL2"
-									--REPLACE(REPLACE(REPLACE(LOWER(cname2.p_name||'-'||bname.p_name||'/c-'||c3.p_code||'/b-'||b1.p_code),' ','-'),'''',''),'&',';') "URL1"
+									REPLACE(LOWER(cname2.p_name||'-'||cname1.p_name||'-'||cname.p_name||'<brand>'||bname.p_name||'/c-'||c1.p_code||'/b-'||b1.p_code),' ','-') "URL3", 
+									REPLACE(LOWER(cname2.p_name||'-'||cname1.p_name||'<brand>'||bname.p_name||'/c-'||c2.p_code||'/b-'||b1.p_code),' ','-') "URL2"
+									--LOWER(cname2.p_name||'-'||bname.p_name||'/c-'||c3.p_code||'/b-'||b1.p_code) "URL1"
                   --'0',
                   --'0'
                   --'0'
@@ -102,10 +102,10 @@ BEGIN
 									categories b1,
 									products p1,
 									mplbuybox bb,
-									categorieslp cname,
-									categorieslp cname1,
-									categorieslp cname2,
-									categorieslp bname
+									categorieslp cname,--L3name
+									categorieslp cname1,--L2name
+									categorieslp cname2,--L1name
+									categorieslp bname--brandname
 							WHERE
 									p1.p_catalogversion=v_catalogversion_productOnline
 								AND c2p1.targetpk=p1.pk

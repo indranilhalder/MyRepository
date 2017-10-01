@@ -26,4 +26,15 @@ public interface TicketCreationCRMservice
 	public int createTicketInCRM(final String requestXml) throws JAXBException;
 
 	public String createCRMRequestXml(final TicketMasterXMLData ticketMasterXml) throws JAXBException;
+
+	/**
+	 * The existing ticket population method has been overloaded to incorporate the changes need for ticket structure for
+	 * return and cancel scenarios || TPR-6778
+	 *
+	 * @param sendTicketRequestData
+	 * @param overloadParam
+	 * @throws JAXBException
+	 */
+	public void ticketCreationModeltoWsDTO(final SendTicketRequestData sendTicketRequestData, Boolean overloadParam)
+			throws JAXBException;
 }

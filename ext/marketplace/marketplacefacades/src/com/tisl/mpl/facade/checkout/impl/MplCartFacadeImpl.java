@@ -2948,6 +2948,7 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 	@Override
 	public void totalMrpCal(final CartModel cartModel) throws EtailNonBusinessExceptions
 	{
+		double lastpercentage = 0.0D;
 		try
 
 		{
@@ -3021,6 +3022,8 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 							}
 							//UF-260 ends here
 						}
+						lastpercentage += prodDisCalPer;
+						sessionService.setAttribute("lastpercentage", String.valueOf(lastpercentage));
 					}
 				}
 				modelService.saveAll(cartModel.getEntries());
@@ -4222,6 +4225,7 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 					{
 						try
 						{
+
 							final CartModificationData cartModification = updateCartEntry(entry.getEntryNumber().intValue(),
 									maxQuantity.intValue());
 
@@ -4318,6 +4322,7 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 
 							else
 							{
+
 								productMap.put(product.getCode(),
 										Long.valueOf(productMap.get(product.getCode()).longValue() + quantity.longValue()));
 							}

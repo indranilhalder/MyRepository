@@ -727,6 +727,9 @@
 							<!-- TPR-3809-->							
 							<attribute name="forwardSealNum" />
 							<attribute name="reverseSealNum" /> 
+
+
+
 						</listlayout>
 					</section>
 				</tab>
@@ -4005,8 +4008,133 @@
  
  
  
+ <!-- TPR-3893 : Item HMC structure Declaration BundlingPromotionWithPercentageSlab starts here-->
  
+	<type name="BundlingPromotionWithPercentageSlab" mode="append">
+		<organizer>
+			<editor mode="append">
+				<tab name="tab.promotion.properties" mode="append">
+					<section name="section.promotion.products">
+						<listlayout>
+							<text name="text.productpromotion.qualifyingproductscategories" />
+							<attribute name="products" labelwidth="100">
+								<referencecollectioneditor
+									autoperform="true" resortable="true" add="true" remove="true"
+									create="false">
+									<itemlayout>
+										<attribute name="code" width="274" />
+										<attribute name="name" width="274" />
+									</itemlayout>
+								</referencecollectioneditor>
+							</attribute>
+							<attribute name="categories" labelwidth="100">
+								<referencecollectioneditor
+									autoperform="true" resortable="true" add="true" remove="true"
+									create="false">
+									<itemlayout>
+										<attribute name="code" width="274" />
+										<attribute name="name" width="274" />
+									</itemlayout>
+								</referencecollectioneditor>
+							</attribute>
+							</listlayout>
+							<listlayout>
+							<text name="text.promotion.excludedProducts" ></text>
+							<attribute name="excludedProducts" labelwidth="100">
+								<referencecollectioneditor
+									autoperform="true" resortable="true" add="true" remove="true"
+									create="false">
+									<itemlayout>
+										<attribute name="code" width="274" />
+										<attribute name="name" width="274" />
+									</itemlayout>
+								</referencecollectioneditor>
+							</attribute>
+							<text name="text.promotion.excludedproductcodeslist" />
+							<attribute name="excludedProductCodeList" />
+							<attribute name="promourl" />
+							<attribute name="bundlepromolinktext" />
+							</listlayout>
+							<listlayout>
+							<text name="text.productpromotion.qualifyingSteps" />
+							<attribute name="qualifyingCountsAndBundlePrices" labelwidth="100">
+								<referencecollectioneditor editable="true"
+									externalcreate="false" resortable="false" remove="true" create="true">
+									<itemlayout>
+										<attribute name="quantity" width="140" />
+										<attribute name="percentageDiscount" width="140" /> 
+									</itemlayout>
+								</referencecollectioneditor>
+							</attribute>							
+						</listlayout>
+					</section>
+				</tab>
+				<tab name="tab.promotion.restrictions" position="1">
+					<section name="section.promotion.restrictions">
+						<listlayout>
+							<text name="text.promotion.daterange" />
+							<attribute name="startDate" labelwidth="100" width="224" />
+							<attribute name="endDate" labelwidth="100" width="224" />
+							<text name="text.promotion.restrictions" />
+							<attribute name="restrictions" labelwidth="100" width="224">
+								<referencecollectioneditor
+									presetattribute="promotion" create="true" add="true" remove="true"
+									autosave="true">
+									<itemlayout>
+										<attribute name="restrictionType" width="150" />
+										<attribute name="renderedDescription" width="250" />
+									</itemlayout>
+								</referencecollectioneditor>
+							</attribute>
+						</listlayout>
+					</section>
+				</tab>
+				<tab name="tab.promotion.media" mode="append">
+					<section name="section.promotion.media" mode="append">
+						<columnlayout>
+							<row>
+								<attribute name="productBanner" labelwidth="100">
+									<mediaeditor />
+								</attribute>
+								<text name="text.productpromotion.productbanner" />
+							</row>
+						</columnlayout>
+					</section>
+				</tab>
+				<tab name="tab.promotion.messages" mode="append">
+					<section name="section.promotion.messages" mode="append">
+						<columnlayout leftwidth="500">
+							<row>
+								<text name="text.promotion.messages.overview" />
+							</row>
+							<row>
+								<text name="text.orderthresholddiscountpromotion.messagefired" />
+							</row>
+							<row>
+								<attribute name="messageFired" labelwidth="100" width="400">
+									<textareaeditor expanded="true" rows="5" />
+								</attribute>
+							</row>
+							<!-- <row> <text name="text.orderthresholddiscountpromotion.messagecouldhavefired" 
+								/> </row> -->
+							<row>
+								<attribute name="messageCouldHaveFired" labelwidth="100"
+									width="400">
+									<textareaeditor expanded="true" rows="5" />
+								</attribute>
+							</row>
+						</columnlayout>
+					</section>
+				</tab>
+			</editor>
+		</organizer>
+	</type>
  
+ <!-- TPR-3893 : Item HMC structure Declaration BundlingPromotionWithPercentageSlab ends here-->
+ 
+
+
+
   
 <!-- TPR-965 Limited stock Promotion started-->
 
@@ -4572,6 +4700,8 @@
 		</editor>
 	</organizer>
 </type>	
+
+
 <!-- START TPR-5733 -->
 <type name="MplFooterLink" mode="append">
 		<organizer>

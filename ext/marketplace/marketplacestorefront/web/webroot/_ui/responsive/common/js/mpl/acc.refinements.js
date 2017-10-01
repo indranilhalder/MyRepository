@@ -1080,11 +1080,13 @@ function filterDataAjax(requiredUrl,dataString,pageURL){
 			// TPR-158 and TPR-413 ends here
 			//TPR-4720 first 5 product display
 			if($('#pageType').val() == "productsearch"){
-				populateFirstFiveProductsSerp();	
+				populateFirstFiveProductsSerp();
+				dtmSearchTags();
 			}
 			
 			if($('#pageType').val() == "category" || $('#pageType').val() == "electronics"){
 				populateFirstFiveProductsPlp();
+				dtmSearchTags();
 			}
 		},
 		error : function(xhr, status, error) {
@@ -1197,6 +1199,31 @@ function createSearchQuery(filterMobileQuery){
 function onFilterAddAnalytics(filterName,filterValue){
 	var filter_type = (filterName).toLowerCase().replace(/  +/g, ' ').replace(/ /g,"_").replace(/['"]/g,"");
 	var filter_value = (filterValue).toLowerCase().replace(/  +/g, ' ').replace(/ /g,"_").replace(/['"]/g,"");
+	// TPR-6287 | filter tacking
+	if (typeof _satellite != "undefined") {
+		_satellite.track('filter_temp');
+    }
+	if(typeof digitalData.filter != "undefined"){
+		if(typeof digitalData.filter.temp != "undefined"){
+			digitalData.filter.temp.type = filter_type;
+			digitalData.filter.temp.value = filter_value;
+		}
+		else{
+			digitalData.filter.temp = {
+				type : filter_type,
+				value : filter_value
+			}
+		}
+	}
+	else{
+		digitalData.filter = {
+			temp :  {
+				type : filter_type,
+				value : filter_value
+			}
+     	}
+	}
+	
 	
 	utag.link({
 		link_text: 'search_filter_applied' ,

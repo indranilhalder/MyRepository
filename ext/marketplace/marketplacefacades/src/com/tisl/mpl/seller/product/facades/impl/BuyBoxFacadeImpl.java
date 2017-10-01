@@ -908,7 +908,7 @@ public class BuyBoxFacadeImpl implements BuyBoxFacade
 		{
 			sellerArticleSku = mplJewelleryService.getJewelleryInfoByUssid(buyboxid).get(0).getPCMUSSID();
 		}
-
+		boolean codEligible = false;
 		final RichAttributeData richData = new RichAttributeData();
 		final StringBuilder deliveryModes = new StringBuilder();
 		boolean onlineExclusive = false;
@@ -937,7 +937,6 @@ public class BuyBoxFacadeImpl implements BuyBoxFacade
 						if (null != rich.getPaymentModes()
 								&& (PaymentModesEnum.COD.toString().equalsIgnoreCase(rich.getPaymentModes().getCode()) || (PaymentModesEnum.BOTH
 										.toString().equalsIgnoreCase(rich.getPaymentModes().getCode()))))
-
 
 						{
 							richData.setIsCod(MarketplaceFacadesConstants.Y);
@@ -987,6 +986,23 @@ public class BuyBoxFacadeImpl implements BuyBoxFacade
 						//productDetailsHelper.getDeliveryModeATMap(deliveryInfoList)
 					}
 
+				}
+				//TPR-6907
+				if (!sellerArticleSku.equals(seller.getSellerArticleSKU()) && null != seller.getRichAttribute()
+						&& codEligible != true)
+				{
+					for (final RichAttributeModel rich : seller.getRichAttribute())
+					{
+						if (null != rich.getPaymentModes()
+								&& (PaymentModesEnum.COD.toString().equalsIgnoreCase(rich.getPaymentModes().getCode()) || (PaymentModesEnum.BOTH
+										.toString().equalsIgnoreCase(rich.getPaymentModes().getCode()))))
+
+						{
+							richData.setIsCod(MarketplaceFacadesConstants.Y);
+							codEligible = true;
+							break;
+						}
+					}
 				}
 				if (null != allowNew && allowNew.equalsIgnoreCase(Y))
 				{
@@ -1094,10 +1110,10 @@ public class BuyBoxFacadeImpl implements BuyBoxFacade
 
 	/*
 	 * This method is used to get the price of a product by giving the ussid
-	 * 
-	 * 
-	 * 
-	 * 
+	 *
+	 *
+	 *
+	 *
 	 * @see com.tisl.mpl.seller.product.facades.BuyBoxFacade#getpriceForUssid(java.lang.String)
 	 */
 
@@ -1320,7 +1336,7 @@ public class BuyBoxFacadeImpl implements BuyBoxFacade
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.tisl.mpl.seller.product.facades.BuyBoxFacade#getBuyBoxDataForUssids(java.util.List, java.lang.String)
 	 */
 	//TPR-3736

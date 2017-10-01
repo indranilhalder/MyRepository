@@ -100,7 +100,9 @@
 	</c:when>
 </c:choose> 
 <c:if test="${colorPresent==true}">
-<p><spring:theme code="variant.color"/></p>
+	<c:if test="${multiColorFlag eq 'true'}">	<!-- UF-432 -->
+		<p><spring:theme code="variant.color"/></p>
+	</c:if>
 </c:if>	
 <ul class="color-swatch" style="margin-bottom: 0px;">
     <c:choose>
@@ -135,22 +137,24 @@
 				</c:forEach> --%>
 				<!-- TISPRO-467 -->
 				<c:forEach items="${variantOption.colourCode}" var="color">
-				<c:choose>
-							    <c:when test="${fn:startsWith(color, 'multi') && empty variantOption.image}">
-						     	<img src="${commonResourcePath}/images/multi.jpg" height="36" width="36" title="${variantOption.colour}" />
-								</c:when>
-								<c:when test="${empty variantOption.image}">
-						     	<span style="background-color: ${color};border: 1px solid rgb(204, 211, 217); width:50px; height:73px" title="${variantOption.colour}"></span>
-								</c:when>							
-								<c:otherwise>
-								<c:set var="imageData" value="${variantOption.image}" />
-								<img src="${imageData.url}" title="${variantOption.colour}" alt="${styleValue}" style="display: inline-block;width: 50px;"/>								
-                               </c:otherwise>
-                </c:choose>
+					<c:if test="${multiColorFlag eq 'true'}">	<!-- UF-432 -->
+						<c:choose>
+						    <c:when test="${fn:startsWith(color, 'multi') && empty variantOption.image}">
+					     	<img src="${commonResourcePath}/images/multi.jpg" height="36" width="36" title="${variantOption.colour}" />
+							</c:when>
+							<c:when test="${empty variantOption.image}">
+					     	<span style="background-color: ${color};border: 1px solid rgb(204, 211, 217); width:50px; height:73px" title="${variantOption.colour}"></span>
+							</c:when>							
+							<c:otherwise>
+							<c:set var="imageData" value="${variantOption.image}" />
+							<img src="${imageData.url}" title="${variantOption.colour}" alt="${styleValue}" style="display: inline-block;width: 50px;"/>								
+                              </c:otherwise>
+                		</c:choose>
 					
-					<c:if test="${variantOption.code eq product.code}">
-						<c:set var="currentColor" value="${color}" />
-						<!--  set current selected color -->
+						<c:if test="${variantOption.code eq product.code}">
+							<c:set var="currentColor" value="${color}" />
+							<!--  set current selected color -->
+						</c:if>
 					</c:if>
 				</c:forEach>
 				
@@ -220,7 +224,7 @@
 <c:if test="${showSizeGuideForFA eq true}">
 <c:choose>
 
-<c:when test="${selectedSize==null}"> 
+<c:when test="${selectedSize==null && pdpSizeCounter != 1}"> 
 <input type="hidden" name="sizeSelected" id="sizeSelected"	value="no"/>
 </c:when> 
 <c:otherwise>
@@ -276,6 +280,7 @@
 			   <c:when test="${product.rootCategory=='FineJewellery' || product.rootCategory=='FashionJewellery'}">		     
 		 			<c:forEach items="${product.variantOptions}" var="variantOption">
 					<c:forEach var="entry" items="${variantOption.sizeLink}">
+				
 					<c:url value="${entry.key}/quickView" var="link" />							
 					<c:choose>
 						<c:when test="${(variantOption.code eq product.code)}">
@@ -298,7 +303,10 @@
 				<c:otherwise>
 				 <%-- <li><spring:theme
 							code="text.select.size" /></li> --%>
-							
+					<!-- UF-422:Changes for PDP when product has only one size -->
+								<c:set var="selectedClass" value=""/>
+									<c:if test= "${fn:length(product.variantOptions) eq 1 || pdpSizeCounter eq 1}">
+										<c:set var ="selectedClass" value ="class='selected'"/></c:if>		
 					<c:forEach items="${product.variantOptions}" var="variantOption">
 					<c:url	value="${variantOption.url}/quickView"	var="variantUrl" />
 					<c:forEach items="${variantOption.colourCode}" var="color">
@@ -314,7 +322,7 @@
 											<c:choose>
 												<c:when test="${selectedSize eq null}">
 												<!--CKD:TPR-250:  -->
-													<li><a href="${variantUrl}?selectedSize=true${msiteSellerForSize}" class="js-reference-item cboxElement">${entry.value}</a></li>
+													<li ${selectedClass}><a href="${variantUrl}?selectedSize=true${msiteSellerForSize}" class="js-reference-item cboxElement">${entry.value}</a></li>
 												</c:when>
 												<c:otherwise>
 												<!--CKD:TPR-250:  -->
@@ -324,13 +332,13 @@
 										</c:when>
 										<c:otherwise>
 										<!--CKD:TPR-250:  -->
-											<li data-vcode="${link}"><a href="${variantUrl}?selectedSize=true${msiteSellerForSize}" class="js-reference-item cboxElement">${entry.value}</a></li>
+											<li ${selectedClass} data-vcode="${link}"><a href="${variantUrl}?selectedSize=true${msiteSellerForSize}" class="js-reference-item cboxElement">${entry.value}</a></li>
 										</c:otherwise>
 									</c:choose>
 								</c:forEach>
 							  </c:if>
 						 </c:when>	
-						 <c:otherwise>									
+						 <c:otherwise>	
 							<c:forEach var="entry" items="${variantOption.sizeLink}">
 								<c:url value="${entry.key}" var="link" />
 								<c:if test="${entry.key eq product.url}">
@@ -349,7 +357,7 @@
 													<c:choose>
 														<c:when test="${selectedSize eq null}">
 														<!--CKD:TPR-250:  -->
-															<li><a href="${variantUrl}?selectedSize=true${msiteSellerForSize}" class="js-reference-item cboxElement">${entry.value}</a></li>
+															<li ${selectedClass}><a href="${variantUrl}?selectedSize=true${msiteSellerForSize}" class="js-reference-item cboxElement">${entry.value}</a></li>
 														</c:when>
 													<c:otherwise>
 													<!--CKD:TPR-250:  -->
@@ -359,7 +367,7 @@
 											  	</c:when>	
 												<c:otherwise>
 													<!--CKD:TPR-250:  -->
-													<li data-vcode="${link}"><a href="${variantUrl}?selectedSize=true${msiteSellerForSize}" class="js-reference-item cboxElement">${entry.value}</a></li>
+													<li ${selectedClass}><a href="${variantUrl}?selectedSize=true${msiteSellerForSize}" class="js-reference-item cboxElement">${entry.value}</a></li>
 												</c:otherwise>												
 											</c:choose>
 											</c:forEach>

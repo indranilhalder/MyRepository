@@ -31,6 +31,25 @@ ACC.cartitem = {
 				utag.link({ "event_type" : 'cart_remove_product' , remove_cart_product_id : productArray });
 			  }
 			  /*TPR-4776 ends*/
+			  // TPR-6029 - product removal from cart
+			  var categoryRemoved = $(this).closest("li.item").prev().find("input[name='rootCategoryMSD']").val();
+			  if(typeof (digitalData.cpj.product) != undefined){
+				  digitalData.cpj.product.id = productRemoved;
+				  digitalData.cpj.product.category = categoryRemoved;
+				  }
+			  //digitalData.cpj.product.category = categoryRemoved;
+			  //var location = $(this).closest("li.item").attr('id');
+			  if(typeof(digitalData.cpj.cart) != "undefined"){
+				  digitalData.cpj.cart.removeLocation = "my bag";
+			  }
+			  else{
+				     digitalData.cpj.cart = {
+						removeLocation : "my bag"
+				        }
+			    }
+			  if(typeof(_satellite) !="undefined"){
+			      _satellite.track('cpj_cart_removal');
+			  }
 					// for MSD	
 					var x = $(this).closest("li.item").prev();
 		//	        console.log(x);

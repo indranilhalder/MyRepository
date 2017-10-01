@@ -160,6 +160,7 @@ ACC.product = {
 					$("#addToCartFormQuickTitle").html("<font color='#ff1c47'>" + $('#selectSizeId').text() + "</font>");
 					$("#addToCartFormQuickTitle").show().fadeOut(6000);
 					errorAddToBag("size_not_selected");
+					dtmErrorTracking("size_not_selected","errorname");
 				}
 				event.preventDefault();
 				return false;
@@ -572,6 +573,7 @@ sendAddToBag : function(formId, isBuyNow) {
 											+ "</font>");
 							$("#" + formId + "Title").show().fadeOut(5000);
 							errorAddToBag("bag_is_full");
+							dtmErrorTracking("bag_is_full","errorname");
 							utagError=true;
 						} else if (data == "outofinventory") {
 							$("#" + formId + "noInventory")
@@ -584,6 +586,7 @@ sendAddToBag : function(formId, isBuyNow) {
 							$("#" + formId + "noInventory").show().fadeOut(
 									6000);
 							errorAddToBag("out_of_stock");
+							dtmErrorTracking("out_of_stock","errorname");
 							utagError=true;
 							return false;
 						} else if (data == "willexceedeinventory") {
@@ -667,9 +670,13 @@ sendAddToBag : function(formId, isBuyNow) {
 						if(!utagError){
 							if(isBuyNow){
 								utagAddProductToBag("buy_now",productCodeMSD);
+								//TPR-6029
+								dtmAddProductToBag("buy_now");
 							}
 							else{
 								utagAddProductToBag("add_to_bag",productCodeMSD);
+								//TPR-6029
+								dtmAddProductToBag("add_to_bag");
 							}
 						}
 						
@@ -701,6 +708,7 @@ sendAddToBagQuick:function(formId){
 	 var ussid=$('#ussid_quick').val();
 	var productCode = $("#productCode").val();
 	var utagError=false;
+	var digitalDataError=false;
 		
 	 /*if(parseInt(stock)<parseInt(quantity)){
 		    $("#"+formId+"noInventory").html("<font color='#ff1c47'>" + $('#inventory').text() + "</font>");
@@ -749,13 +757,17 @@ sendAddToBagQuick:function(formId){
 				$("#"+formId+"Title").html("<font color='#ff1c47'>"+$('#bagfull').text()+"</font>");
 				$("#"+formId+"Title").show().fadeOut(5000);
 				errorAddToBag("bag_is_full");
+				dtmErrorTracking("bag_is_full","errorname");
 				utagError=true;
+				digitalDataError=true;
 			}
 			else if(data=="outofinventory"){
 				 //$("#"+formId+"noInventory").html("<font color='#ff1c47'>" + $('#addToCartFormnoInventory').text() + "</font>");
 				$("#addToCartFormnoInventory").show().fadeOut(6000);
 				errorAddToBag("out_of_stock");
+				dtmErrorTracking("bag_is_full","errorname");
 				utagError=true;
+				digitalDataError=true;
 		   	     return false;
 			}
 			else if(data=="willexceedeinventory"){
@@ -813,7 +825,6 @@ sendAddToBagQuick:function(formId){
 				var productCodeArray=[];
 				productCodeArray.push(productCode);	// Product code passed as an array for Web Analytics
 				utag.link({
-					link_obj: this, 
 					link_text: 'quick_view_addtobag' , 
 					event_type : 'quick_view_addtobag', 
 					product_sku_quick_view : productCodeArray
@@ -821,6 +832,13 @@ sendAddToBagQuick:function(formId){
 			}
 			/*TPR-681 Ends*/
 			//End MSD
+			//TPR-6029 | add to bag on quickview #42--start
+			if(!digitalDataError){
+				if(typeof(_satellite)!= "undefined"){
+					_satellite.track('cpj_qw_add_to_bag');
+				}
+			}
+			//TPR-6029 | add to bag on quickview #42--end
 			
 		},
 		complete: function(){
@@ -844,6 +862,7 @@ sendAddToBagQuick:function(formId){
 		 var stock = $("#"+formId+" :input[name='" +  stock_id +"']").val(); 
 		 var ussid=$('#ussid_quick').val();
 		 var utagError=false;
+		 var digitalDataError=false;
 		 /*if(parseInt(stock)<parseInt(quantity)){
 			    $("#"+formId+"noInventory").html("<font color='#ff1c47'>" + $('#inventory').text() + "</font>");
 			    $("#"+formId+"noInventory").show().fadeOut(6000);
@@ -893,13 +912,17 @@ sendAddToBagQuick:function(formId){
 					$("#"+formId+"Title").html("<font color='#ff1c47'>"+$('#bagfull').text()+"</font>");
 					$("#"+formId+"Title").show().fadeOut(5000);
 					errorAddToBag("bag_is_full");
+					dtmErrorTracking("bag_is_full","errorname");
 					utagError=true;
+					digitalDataError=true;
 				}
 				else if(data=="outofinventory"){
 					 //$("#"+formId+"noInventory").html("<font color='#ff1c47'>" + $('#addToCartFormnoInventory').text() + "</font>");
 					$("#addToCartFormnoInventory").show().fadeOut(6000);
 					errorAddToBag("out_of_stock");
+					dtmErrorTracking("out_of_stock","errorname");
 					utagError=true;
+					digitalDataError=true;
 			   	     return false;
 				}
 				else if(data=="willexceedeinventory"){
@@ -952,16 +975,19 @@ sendAddToBagQuick:function(formId){
 					}	
 				}
 				//if(isSuccess){
-				if(!utagError){
+				if(!utagError && !digitalDataError){
 					//TISQAEE-64 Buy Now Quick View
 					if(typeof utag !="undefined"){
 						utag.link({
-							link_obj: this,
 							link_text: 'quickview_buynow' ,
 							event_type : 'quickview_buynow',
 							product_sku : productCodeArray
 						});
 					}
+					//TPR-6029 | buy now on quickview #41
+					if(typeof(_satellite) != "undefined"){
+						 _satellite.track('cpj_qw_buy_now');
+					 }
 					location.href=ACC.config.encodedContextPath + '/cart';
 				}
 				//End MSD
@@ -1697,11 +1723,16 @@ $(document).on("click",'#applyCustomPriceFilter',function(){
 						
 						//INC144319487 starts 
 						var pageURL=null;
-						if (browserURL[0].indexOf("c-")>0)
-							pageURL = browserURL[0]+'/page-1?'+nonEmptyDataString.replace(/%/g,"%25").replace(/ - /g,"+-+").replace(/:/g,"%3A");
-						else
-							pageURL = browserURL[0]+'page-1?'+nonEmptyDataString.replace(/%/g,"%25").replace(/ - /g,"+-+").replace(/:/g,"%3A");
+						
+						//SDI-1006 fix starts
+						//if (browserURL[0].indexOf("c-")>0)
+						//	pageURL = browserURL[0]+'/page-1?'+nonEmptyDataString.replace(/%/g,"%25").replace(/ - /g,"+-+").replace(/:/g,"%3A");
+						//else
+						//	pageURL = browserURL[0]+'page-1?'+nonEmptyDataString.replace(/%/g,"%25").replace(/ - /g,"+-+").replace(/:/g,"%3A");
 						 
+						pageURL = browserURL[0].replace(/page-[0-9]+/, 'page-1')+'?'+nonEmptyDataString.replace(/%/g,"%25").replace(/ - /g,"+-+").replace(/:/g,"%3A");
+						
+						//SDI-1006 fix ends
 						//INC144319487 ends
 						
 						// generating request mapping URL

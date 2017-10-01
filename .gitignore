@@ -52,5 +52,13 @@ ext/marketplacewebservices/web/webroot/_ui/addons/marketplaceomsservices/mobile/
 ext/marketplacewebservices/web/webroot/_ui/addons/marketplaceomsservices/mobile/common/images/AddImagesHere.txt
 ext/marketplacewebservices/web/webroot/_ui/addons/marketplaceomsservices/mobile/common/js/marketplaceomsservices.js
 ext/tataomsbackoffice/resources/backoffice/tataomsbackoffice_bof.jar
+ext/luxury/luxurycheckoutaddon/resources/luxurycheckoutaddon/web/spring/luxurycheckoutaddon-web-spring.xml
+ext/luxury/luxurystoreaddon/acceleratoraddon/web/webroot/WEB-INF/tags/responsive/product/luxuryProductDetailsPanel.tag
+ext/luxury/luxurystoreaddon/acceleratoraddon/web/webroot/WEB-INF/views/responsive/cms/weeklyspecialbanner.jsp
+ext/luxury/luxurystoreaddon/src/com/tisl/lux/device/impl/LuxuryDeviceDetectionFacade.java
+ext/marketplace/marketplacestorefront/web/webroot/_ui/responsive/theme-luxury/Gruntfile.js
+ext/marketplace/marketplacestorefront/web/webroot/_ui/responsive/theme-luxury/combined/luxury-main.js
+ext/marketplace/marketplacestorefront/web/webroot/_ui/responsive/theme-luxury/js/main.js
+ext/marketplaceWalletServices/gensrc/com/tisl/mpl/wallet/jalo/GeneratedMarketplaceWalletServicesManager.java
 /.project
 /.gitignore
