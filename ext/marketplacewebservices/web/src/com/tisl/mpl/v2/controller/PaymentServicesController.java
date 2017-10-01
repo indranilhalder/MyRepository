@@ -5,6 +5,9 @@ package com.tisl.mpl.v2.controller;
 
 import de.hybris.platform.commercefacades.customer.CustomerFacade;
 import de.hybris.platform.commercefacades.order.data.CartData;
+import de.hybris.platform.commercefacades.product.data.PriceData;
+import de.hybris.platform.commercefacades.product.data.PriceDataType;
+import de.hybris.platform.commercefacades.product.impl.DefaultPriceDataFactory;
 import de.hybris.platform.commercefacades.user.data.CustomerData;
 import de.hybris.platform.core.enums.OrderStatus;
 import de.hybris.platform.core.model.order.CartModel;
@@ -136,6 +139,9 @@ public class PaymentServicesController extends BaseController
 	
 	@Autowired 
 	private MplWalletFacade mplWalletFacade;
+
+	@Resource(name = "mplDefaultPriceDataFactory")
+	private DefaultPriceDataFactory PriceDataFactory;
 
 	/**
 	 * @return the voucherService
@@ -1284,62 +1290,81 @@ public class PaymentServicesController extends BaseController
 				//CAR-111
 				//orderData = mplCheckoutFacade.getOrderDetailsForCode(orderModel);
 				//Getting Payment modes
-				final Map<String, Boolean> paymentMode = getMplPaymentFacade().getPaymentModes(
-						MarketplacewebservicesConstants.MPLSTORE, orderModel);
+				final Map<String, Boolean> paymentMode = getMplPaymentFacade()
+						.getPaymentModes(MarketplacewebservicesConstants.MPLSTORE, orderModel);
 				paymentModesData = getMplPaymentWebFacade().potentialPromotionOnPaymentMode(orderModel);
 				paymentModesData.setPaymentModes(paymentMode);
 			}
 
 			/* Added for cliq Cash Functionality start */
 			final CustomerModel customer = (CustomerModel) userService.getCurrentUser();
-          try {
-         	 LOG.debug("Getting saved Card Details");
-         	 final MplSavedCardDTO savedCards = new MplSavedCardDTO();
+			try
+			{
+				LOG.debug("Getting saved Card Details");
+				final MplSavedCardDTO savedCards = new MplSavedCardDTO();
 
-    			Map<Date, SavedCardData> savedCardsMap = new TreeMap<Date, SavedCardData>();
-    			Map<Date, SavedCardData> savedDebitCards = new TreeMap<Date, SavedCardData>();
-    			savedCardsMap = getMplPaymentFacade().listStoredCreditCards(customer);
-    			LOG.debug("savedCardsMap "+savedCardsMap );
-    			savedDebitCards = getMplPaymentFacade().listStoredDebitCards(customer);
-    			// Add everything in savedCardsMap from savedDebitCards
-    			savedCardsMap.putAll(savedDebitCards);
-    			//Adding details into DTO
-    			savedCards.setSavedCardDetailsMap(savedCardsMap);
-              
-    			paymentModesData.setSavedCardResponse(savedCards);
-          }catch (Exception e) {
-				LOG.error("Exception occurred while getting the saved credit card details "+e.getMessage());
+				Map<Date, SavedCardData> savedCardsMap = new TreeMap<Date, SavedCardData>();
+				Map<Date, SavedCardData> savedDebitCards = new TreeMap<Date, SavedCardData>();
+				savedCardsMap = getMplPaymentFacade().listStoredCreditCards(customer);
+				LOG.debug("savedCardsMap " + savedCardsMap);
+				savedDebitCards = getMplPaymentFacade().listStoredDebitCards(customer);
+				// Add everything in savedCardsMap from savedDebitCards
+				savedCardsMap.putAll(savedDebitCards);
+				//Adding details into DTO
+				savedCards.setSavedCardDetailsMap(savedCardsMap);
+
+				paymentModesData.setSavedCardResponse(savedCards);
 			}
-			
-			try {
-				
-				 LOG.debug("Getting saved Clish Cash Details");
+			catch (Exception e)
+			{
+				LOG.error("Exception occurred while getting the saved credit card details " + e.getMessage());
+			}
+
+			try
+			{
+
+				LOG.debug("Getting saved Clish Cash Details");
 				CliqCashWsDto cliqCash = new CliqCashWsDto();
 				TotalCliqCashBalanceWsDto totalCliqCashBalanceWsDto = new TotalCliqCashBalanceWsDto();
-				if(null != customer && null != customer.getIsWalletActivated() && customer.getIsWalletActivated().booleanValue() && 
-						null != customer.getCustomerWalletDetail() && null != customer.getCustomerWalletDetail().getWalletId()){
-					
-					CustomerWalletDetailResponse responce =	mplWalletFacade.getCustomerWallet(customer.getCustomerWalletDetail().getWalletId());
-					if(null != responce &&  responce.getResponseCode() == Integer.valueOf(0) && null != responce.getWallet()) {
-						
-						if(null != responce.getApiWebProperties() && null != responce.getApiWebProperties().getDateAtClient()) {
+				if (null != customer && null != customer.getIsWalletActivated() && customer.getIsWalletActivated().booleanValue()
+						&& null != customer.getCustomerWalletDetail() && null != customer.getCustomerWalletDetail().getWalletId())
+				{
+
+					CustomerWalletDetailResponse responce = mplWalletFacade
+							.getCustomerWallet(customer.getCustomerWalletDetail().getWalletId());
+					if (null != responce && responce.getResponseCode() == Integer.valueOf(0) && null != responce.getWallet())
+					{
+
+						if (null != responce.getApiWebProperties() && null != responce.getApiWebProperties().getDateAtClient())
+						{
 							cliqCash.setBalanceClearedAsOf(responce.getApiWebProperties().getDateAtClient());
 						}
-						
-						totalCliqCashBalanceWsDto.setCurrencyIso("INR");
-						if(null !=responce.getWallet().getBalance() ) {
-							totalCliqCashBalanceWsDto.setDoubleValue(responce.getWallet().getBalance());
-							totalCliqCashBalanceWsDto.setFormattedValue(responce.getWallet().getBalance().toString());
-							totalCliqCashBalanceWsDto.setPriceType("BUY");
-							totalCliqCashBalanceWsDto.setFormattedValueNoDecimal(BigDecimal.valueOf(responce.getWallet().getBalance().doubleValue()));
-							totalCliqCashBalanceWsDto.setValue(responce.getWallet().getBalance().toString());
+
+						final BigDecimal walletAmount = new BigDecimal(responce.getWallet().getBalance().doubleValue());
+						final PriceData priceData = PriceDataFactory.create(PriceDataType.BUY, walletAmount,
+								MarketplacecommerceservicesConstants.INR);
+
+						if (null != priceData)
+						{
+							totalCliqCashBalanceWsDto.setCurrencyIso(priceData.getCurrencyIso());
+							totalCliqCashBalanceWsDto.setDoubleValue(priceData.getDoubleValue());
+							totalCliqCashBalanceWsDto.setFormattedValue(priceData.getFormattedValue());
+							totalCliqCashBalanceWsDto.setPriceType(priceData.getPriceType());
+							totalCliqCashBalanceWsDto.setFormattedValueNoDecimal(priceData.getFormattedValueNoDecimal());
+							totalCliqCashBalanceWsDto.setValue(priceData.getValue());
+							paymentModesData.setStatus(MarketplacecommerceservicesConstants.SUCCESS_FLAG);
 						}
+
+						cliqCash.setTotalCliqCashBalance(totalCliqCashBalanceWsDto);
+						paymentModesData.setCliqCash(cliqCash);
 					}
 				}
-			}catch (Exception e) {
-				LOG.debug("Exception occurred while getting customer QC wallet Amount"+e.getMessage());
 			}
-		
+			catch (Exception e)
+			{
+				LOG.debug("Exception occurred while getting customer QC wallet Amount" + e.getMessage());
+			}
+
 			/* Added for cliq Cash Functionality end */
 
 

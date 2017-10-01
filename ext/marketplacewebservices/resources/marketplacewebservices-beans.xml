@@ -1156,39 +1156,30 @@
 	<!-- Bin Number Details -->
 
 
-	<bean class="com.tisl.mpl.wsdto.TotalCliqCashBalanceWsDto">
+	<bean class="com.tisl.mpl.wsdto.TotalCliqCashBalanceWsDto" extends="com.tisl.mpl.wsdto.ErrorDTO">
 		<property name="currencyIso" type="String" />
 		<property name="doubleValue" type="Double" />
 		<property name="formattedValue" type="String" />
-		<property name="formattedValueNoDecimal" type="java.math.BigDecimal"/>
-		<property name="priceType" type="String" />	
-		<property name="value" type="String" />	
-		<property name="status" type="String" />
-		<property name="error" type="String" />
-		<property name="errorCode" type="String" />	
+		<property name="formattedValueNoDecimal" type="String"/>
+		<property name="priceType" type="de.hybris.platform.commercefacades.product.data.PriceDataType" />	
+		<property name="value" type="java.math.BigDecimal" />	
 	</bean>
-     <bean class="com.tisl.mpl.wsdto.CliqCashWsDto">
+     <bean class="com.tisl.mpl.wsdto.CliqCashWsDto" extends="com.tisl.mpl.wsdto.ErrorDTO">
 		<property name="balanceClearedAsOf" type="String" />
 		<property name="totalCliqCashBalance" type="com.tisl.mpl.wsdto.TotalCliqCashBalanceWsDto" />
-		<property name="status" type="String" />
-		<property name="error" type="String" />
-		<property name="errorCode" type="String" />
 	</bean>
 
-      <bean class="com.tisl.mpl.wsdto.PayCliqCashWsDto">
+      <bean class="com.tisl.mpl.wsdto.PayCliqCashWsDto" extends="com.tisl.mpl.wsdto.ErrorDTO">
 		<property name="totalAmount" type="String" />
 		<property name="discount" type="Double" />
 		<property name="cliqCashApplied" type="Double" />
 		<property name="paybleAmount" type="Double" />
 		<property name="isRemainingAmount" type="boolean" />	
-		<property name="status" type="String" />
-		<property name="error" type="String" />
-		<property name="errorCode" type="String" />
 	</bean>
 	
 	
 	<!-- COD Details -->
-	<bean class="com.tisl.mpl.wsdto.PaymentServiceWsData">
+	<bean class="com.tisl.mpl.wsdto.PaymentServiceWsData" extends="com.tisl.mpl.wsdto.ErrorDTO">
 		<property name="bankName" type="String"></property>
 		<property name="bankCode" type="String"></property>
 		<property name="basestore" type="String"></property>
@@ -1200,9 +1191,6 @@
 		<property name="paymentModes" type="java.util.Map&lt;String,Boolean>" />
 		<property name="listofPotentialRestriction"
 			type="java.util.List&lt;com.tisl.mpl.wsdto.PotentialRestrictionData>" />
-		<property name="status" type="String" />
-		<property name="error" type="String" />
-		<property name="errorCode" type="String" />
 		<!-- Added For CLiq Cash Functionality  Start -->
 		
 		<property name="savedCardResponse"
@@ -3295,6 +3283,57 @@
     	<property name="secondCol" type="java.util.List&lt;com.tisl.mpl.wsdto.LuxMediaContainerWsDTO>"/>
     </bean>
     
+   <!--  Added for EGV  cart start --> 
+   
+   
+   
+   <!--  <bean class="com.tisl.mpl.wsdto.TotalCliqCashBalanceWsDTO">
+    	<property name="currencyIso" type="String" />
+    	<property name="doubleValue" type="java.lang.Double"/>
+    	<property name="formattedValue" type="String"/>
+    	<property name="formattedValueNoDecimal" type="String" />
+    	<property name="value" type="String" />
+    	
+    </bean>
+     -->
+   <!--  <bean class="com.tisl.mpl.wsdto.BucketEntryWsDTO">
+    	<property name="expiryTimestamp" type="String" />
+    	<property name="transactionTimestamp" type="java.lang.Double"/>
+    	<property name="transactionType" type="String"/>
+    	<property name="status" type="String" />
+    	<property name="invoiceNo" type="String" />
+    	<property name="comment" type="String"/>
+    	<property name="paymentMode" type="String" />
+    	<property name="transactionId" type="String" />
+    	<property name="amount" type="com.tisl.mpl.wsdto.BucketAmountWsDTO>"/>
+    </bean> -->
+   
+   <!-- <bean class="com.tisl.mpl.wsdto.BucketsWsDTO">
+    	<property name="bucketDisplayName" type="String" />
+    	<property name="bucketId" type="String"/>
+    	<property name="totalEntryCount" type="String"/>
+    	<property name="discalimer" type="String" />
+    	<property name="bucketMaxLimit" type="com.tisl.mpl.wsdto.BucketMaxLimitWsDto>" />
+    	<property name="bucketTotal" type="com.tisl.mpl.wsdto.BucketTotalWsDTO>"/>
+    	<property name="entries" type="java.util.List&lt;com.tisl.mpl.wsdto.BucketEntryWsDTO>"/>
+    	
+    </bean>
+    
+    
+    
+    <bean class="com.tisl.mpl.wsdto.UserCliqCashDetailsWsDTO">
+    	<property name="status" type="String" />
+    	<property name="cliqCashDisclaimer" type="String"/>
+    	<property name="offers" type="com.tisl.mpl.wsdto.CliqCashOffersWsDto>" />
+    	<property name="cliqCash" type="com.tisl.mpl.wsdto.CliqCashWsDTO"/>
+    	
+    </bean>
+     -->
+    
+    
+   
+    <!--  Added for EGV  cart End --> 
+    
     
 	<bean class="com.tisl.mpl.wsdto.LuxShowCaseComponentListWsDTO">
     	<property name="title" type="String" />
@@ -3336,5 +3375,34 @@
     	<property name="Luxurysocialfeedcomponent" type="com.tisl.mpl.wsdto.LuxSocialFeedComponentWsDTO"/>
 
 	</bean>
+	
+	<bean class="com.tisl.mpl.wsdto.RedeemCliqVoucherWsDTO" extends="com.tisl.mpl.wsdto.ErrorDTO">
+		<property name="voucherValue" type="String" />
+		<property name="acknowledgement" type="String" />
+		<property name="isWalletLimitReached" type="boolean" />
+		<property name="totalCliqCashBalance" type="com.tisl.mpl.wsdto.TotalCliqCashBalanceWsDto"/>
+	</bean>	
+	
+	
+	
+	<bean class="com.tisl.mpl.wsdto.BuyingEgvRequestWsDTO">
+		<property name="productID" type="String" />
+		<property name="priceSelectedByUserPerQuantity" type="String" />
+		<property name="quantity" type="int" />
+		<property name="receiverName" type="String" />
+		<property name="receiverEmailID" type="String" />
+		<property name="messageOnCard" type="boolean" />
+		<property name="from" type="boolean" />
+	</bean>	
+	
+	<bean class="com.tisl.mpl.wsdto.BuyingEgvResponceWsDTO" extends="com.tisl.mpl.wsdto.ErrorDTO">
+		<property name="totalPrice" type="String" />
+		<property name="discounts" type="String" />
+		<property name="paybleAmount" type="int" />
+		<property name="otherAvailablePromotions" type="String" />
+	</bean>	
+	
+	
+	   
 
 </beans>

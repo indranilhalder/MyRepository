@@ -20,8 +20,10 @@ import de.hybris.platform.commercefacades.product.ProductFacade;
 import de.hybris.platform.commercefacades.product.ProductOption;
 import de.hybris.platform.commercefacades.product.data.ImageData;
 import de.hybris.platform.commercefacades.product.data.PriceData;
+import de.hybris.platform.commercefacades.product.data.PriceDataType;
 import de.hybris.platform.commercefacades.product.data.ProductData;
 import de.hybris.platform.commercefacades.product.data.SellerInformationData;
+import de.hybris.platform.commercefacades.product.impl.DefaultPriceDataFactory;
 import de.hybris.platform.commercefacades.storelocator.data.PointOfServiceData;
 import de.hybris.platform.commercefacades.user.UserFacade;
 import de.hybris.platform.commercefacades.user.data.AddressData;
@@ -56,6 +58,7 @@ import de.hybris.platform.converters.Populator;
 import de.hybris.platform.core.PK.PKException;
 import de.hybris.platform.core.enums.OrderStatus;
 import de.hybris.platform.core.model.JewelleryInformationModel;
+import de.hybris.platform.core.model.c2l.CurrencyModel;
 import de.hybris.platform.core.model.enumeration.EnumerationValueModel;
 import de.hybris.platform.core.model.order.AbstractOrderEntryModel;
 import de.hybris.platform.core.model.order.CartModel;
@@ -73,6 +76,7 @@ import de.hybris.platform.servicelayer.config.ConfigurationService;
 import de.hybris.platform.servicelayer.dto.converter.Converter;
 import de.hybris.platform.servicelayer.exceptions.ModelSavingException;
 import de.hybris.platform.servicelayer.exceptions.UnknownIdentifierException;
+import de.hybris.platform.servicelayer.i18n.CommonI18NService;
 import de.hybris.platform.servicelayer.model.ModelService;
 import de.hybris.platform.servicelayer.user.UserService;
 import de.hybris.platform.site.BaseSiteService;
@@ -85,6 +89,7 @@ import de.hybris.platform.wishlist2.Wishlist2Service;
 import de.hybris.platform.wishlist2.model.Wishlist2EntryModel;
 import de.hybris.platform.wishlist2.model.Wishlist2Model;
 
+import java.math.BigDecimal;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.charset.Charset;
@@ -213,6 +218,7 @@ import com.tisl.mpl.order.data.OrderEntryDataList;
 import com.tisl.mpl.pincode.facade.PincodeServiceFacade;
 import com.tisl.mpl.pojo.response.BalanceBucketWise;
 import com.tisl.mpl.pojo.response.QCRedeeptionResponse;
+import com.tisl.mpl.pojo.response.RedimGiftCardResponse;
 import com.tisl.mpl.populator.HttpRequestCustomerDataPopulator;
 import com.tisl.mpl.populator.options.PaymentInfoOption;
 import com.tisl.mpl.search.feedback.facades.UpdateFeedbackFacade;
@@ -248,6 +254,7 @@ import com.tisl.mpl.wsdto.OrderCreateInJusPayWsDto;
 import com.tisl.mpl.wsdto.OrderProductWsDTO;
 import com.tisl.mpl.wsdto.PayCliqCashWsDto;
 import com.tisl.mpl.wsdto.QuickDropStoresList;
+import com.tisl.mpl.wsdto.RedeemCliqVoucherWsDTO;
 import com.tisl.mpl.wsdto.ReturnDetailsWsDTO;
 import com.tisl.mpl.wsdto.ReturnLogisticsResponseDTO;
 import com.tisl.mpl.wsdto.ReturnLogisticsResponseDetailsWsDTO;
@@ -258,6 +265,7 @@ import com.tisl.mpl.wsdto.ReturnReasonDetailsWsDTO;
 import com.tisl.mpl.wsdto.ReturnRequestDTO;
 import com.tisl.mpl.wsdto.RevSealJwlryDataWsDTO;
 import com.tisl.mpl.wsdto.ThirdPartyWalletWsDTO;
+import com.tisl.mpl.wsdto.TotalCliqCashBalanceWsDto;
 import com.tisl.mpl.wsdto.UpdateCustomerDetailDto;
 import com.tisl.mpl.wsdto.UserResultWsDto;
 import com.tisl.mpl.wsdto.ValidateOtpWsDto;
@@ -456,6 +464,14 @@ public class UsersController extends BaseCommerceController
 
 	@Autowired
 	private MplWalletFacade mplWalletFacade;
+	
+	@Resource(name = "mplDefaultPriceDataFactory")
+	private DefaultPriceDataFactory priceDataFactory;
+	
+	@Autowired
+	private CommonI18NService commonI18NService;
+	
+	
 	//Sonar Fix
 	private static final String NO_JUSPAY_URL = "No juspayReturnUrl is defined in local properties";
 
@@ -8942,14 +8958,15 @@ public class UsersController extends BaseCommerceController
 		}
 		catch (final EtailNonBusinessExceptions ex)
 		{
-			payCliqCashWsDto.setError(MarketplacecommerceservicesConstants.FAILURE_FLAG);
+			payCliqCashWsDto.setStatus(MarketplacecommerceservicesConstants.FAILURE_FLAG);
+			payCliqCashWsDto.setError(ex.getErrorCode());
 			payCliqCashWsDto.setErrorCode(ex.getErrorCode());
 			payCliqCashWsDto.setError(ex.getErrorMessage());
 			LOG.error("Exception occrred while applying Cliq cash" + ex.getMessage());
 		}
 		catch (final Exception ex)
 		{
-			payCliqCashWsDto.setError(MarketplacecommerceservicesConstants.FAILURE_FLAG);
+			payCliqCashWsDto.setStatus(MarketplacecommerceservicesConstants.FAILURE_FLAG);
 			payCliqCashWsDto.setError(ex.getMessage());
 			LOG.error("Exception occrred while applying Cliq cash" + ex.getMessage());
 		}
@@ -8983,7 +9000,7 @@ public class UsersController extends BaseCommerceController
 				orderModel.setSplitModeInfo(MarketplacewebservicesConstants.PAYMENT__MODE_JUSPAY);
 				getModelService().save(orderModel);
 				getModelService().refresh(orderModel);
-				payCliqCashWsDto.setError(MarketplacecommerceservicesConstants.SUCCESS_FLAG);
+				payCliqCashWsDto.setStatus(MarketplacecommerceservicesConstants.SUCCESS_FLAG);
 			}
 			else
 			{
@@ -8996,20 +9013,20 @@ public class UsersController extends BaseCommerceController
 				cart.setSplitModeInfo(MarketplacewebservicesConstants.PAYMENT__MODE_JUSPAY);
 				getModelService().save(cart);
 				getModelService().refresh(cart);
-				payCliqCashWsDto.setError(MarketplacecommerceservicesConstants.SUCCESS_FLAG);
+				payCliqCashWsDto.setStatus(MarketplacecommerceservicesConstants.SUCCESS_FLAG);
 			}
 
 		}
 		catch (final EtailNonBusinessExceptions ex)
 		{
-			payCliqCashWsDto.setError(MarketplacecommerceservicesConstants.FAILURE_FLAG);
+			payCliqCashWsDto.setStatus(MarketplacecommerceservicesConstants.FAILURE_FLAG);
 			payCliqCashWsDto.setErrorCode(ex.getErrorCode());
 			payCliqCashWsDto.setError(ex.getErrorMessage());
 			LOG.error("Exception occrred while Removing Cliq cash" + ex.getMessage());
 		}
 		catch (final Exception ex)
 		{
-			payCliqCashWsDto.setError(MarketplacecommerceservicesConstants.FAILURE_FLAG);
+			payCliqCashWsDto.setStatus(MarketplacecommerceservicesConstants.FAILURE_FLAG);
 			payCliqCashWsDto.setError(ex.getMessage());
 			LOG.error("Exception occrred while Removing Cliq cash" + ex.getMessage());
 		}
@@ -9018,6 +9035,77 @@ public class UsersController extends BaseCommerceController
 	}
 
 	
+	
+	
+	
+	
+	
+	
+	@Secured(
+			{ CUSTOMER, "ROLE_TRUSTED_CLIENT", CUSTOMERMANAGER })
+			@RequestMapping(value = MarketplacewebservicesConstants.REDEEM_CLIQ_VOUCHER, method = RequestMethod.POST, produces = APPLICATION_TYPE)
+			@ResponseBody
+			public RedeemCliqVoucherWsDTO redeemCliqVoucher(@RequestParam final String couponCode,@RequestParam final String passKey)
+					throws EtailNonBusinessExceptions, EtailBusinessExceptions, CalculationException
+	
+	{
+		LOG.info("Redeeming CLiq Cash Voucher");
+		RedeemCliqVoucherWsDTO redeemCliqVoucherWsDTO = new RedeemCliqVoucherWsDTO();
+		try
+		{
+			final RedimGiftCardResponse response = mplWalletFacade.getAddEGVToWallet(couponCode, passKey);
+			if (null != response && null != response.getResponseCode() && null == Integer.valueOf(0))
+			{
+				TotalCliqCashBalanceWsDto totalCliqCashBalance = new TotalCliqCashBalanceWsDto();
+				if (null != response.getWallet() && null != response.getWallet().getBalance())
+				{
+					BigDecimal walletAmount = new BigDecimal(response.getWallet().getBalance().doubleValue());
+					final CurrencyModel currency = commonI18NService.getCurrency(MarketplacecommerceservicesConstants.INR);
+					final long valueLong = walletAmount.setScale(0, BigDecimal.ROUND_FLOOR).longValue();
+					final String totalPriceNoDecimalPntFormatted = Long.toString(valueLong);
+					StringBuilder stbND = new StringBuilder(20);
+					if (null != currency && null != currency.getSymbol())
+					{
+						stbND = stbND.append(currency.getSymbol()).append(totalPriceNoDecimalPntFormatted);
+					}
+					redeemCliqVoucherWsDTO.setVoucherValue(stbND.toString());
+					final PriceData priceData = priceDataFactory.create(PriceDataType.BUY, walletAmount,
+							MarketplacecommerceservicesConstants.INR);
+					if (null != priceData)
+					{
+						totalCliqCashBalance.setCurrencyIso(priceData.getCurrencyIso());
+						totalCliqCashBalance.setDoubleValue(priceData.getDoubleValue());
+						totalCliqCashBalance.setFormattedValue(priceData.getFormattedValue());
+						totalCliqCashBalance.setPriceType(priceData.getPriceType());
+						totalCliqCashBalance.setFormattedValueNoDecimal(priceData.getFormattedValueNoDecimal());
+						totalCliqCashBalance.setValue(priceData.getValue());
+						redeemCliqVoucherWsDTO.setStatus(MarketplacecommerceservicesConstants.SUCCESS_FLAG);
+						redeemCliqVoucherWsDTO.setTotalCliqCashBalance(totalCliqCashBalance);
+						redeemCliqVoucherWsDTO.setIsWalletLimitReached(false);
+					}
+				}
+
+			}
+			else
+			{
+				redeemCliqVoucherWsDTO.setStatus(MarketplacecommerceservicesConstants.FAILURE_FLAG);
+			}
+		}catch (final EtailNonBusinessExceptions ex)
+		{
+			redeemCliqVoucherWsDTO.setStatus(MarketplacecommerceservicesConstants.FAILURE_FLAG);
+			redeemCliqVoucherWsDTO.setErrorCode(ex.getErrorCode());
+			redeemCliqVoucherWsDTO.setError(ex.getErrorMessage());
+			LOG.error("Exception occrred while Removing Cliq cash" + ex.getMessage());
+		}catch (final Exception ex)
+		{
+			redeemCliqVoucherWsDTO.setStatus(MarketplacecommerceservicesConstants.FAILURE_FLAG);
+			redeemCliqVoucherWsDTO.setError(ex.getMessage());
+			LOG.error("Exception occrred while Removing Cliq cash" + ex.getMessage());
+		}
+		return redeemCliqVoucherWsDTO;
+	}
+
+			
 	
 	
 	/**
