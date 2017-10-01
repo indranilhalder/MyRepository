@@ -242,6 +242,58 @@ public class MplCustomAddressFacadeImpl extends DefaultCheckoutFacade implements
 		return cartData;
 	}
 
+	/**
+	 * @description: It is responsible for fetching Cart Data//CAR-323
+	 * @return CartData
+	 */
+	@Override
+	public CartData getCheckoutCart(final CartModel cart)
+	{
+		final CartModel cartModel = cart;
+		CartData cartData = null;
+		if (null != cartModel)
+		{
+			cartData = getMplExtendedCartConverter().convert(cartModel);
+
+			if (cartData != null)
+			{
+				cartData.setDeliveryAddress(getDeliveryAddress(cartModel));
+				cartData.setPaymentInfo(getPaymentDetails(cartModel));
+
+			}
+			if (null != cartModel.getConvenienceCharges())
+			{
+				cartData.setConvenienceChargeForCOD(createPrice(cartModel, cartModel.getConvenienceCharges()));
+			}
+			if (null != cartModel.getTotalPriceWithConv())
+			{
+				cartData.setTotalPriceWithConvCharge(createPrice(cartModel, cartModel.getTotalPriceWithConv()));
+			}
+		}
+		else
+		{
+			LOG.error(">>>> getCheckoutCart() CartModel is null ");
+		}
+		return cartData;
+	}
+
+
+	//CAR-323
+	protected CCPaymentInfoData getPaymentDetails(final CartModel cartModel)
+	{
+		final CartModel cart = cartModel;
+		if (cart != null)
+		{
+			final PaymentInfoModel paymentInfo = cart.getPaymentInfo();
+			if (paymentInfo instanceof CreditCardPaymentInfoModel)
+			{
+				return getCreditCardPaymentInfoConverter().convert((CreditCardPaymentInfoModel) paymentInfo);
+			}
+		}
+
+		return null;
+	}
+
 
 	/**
 	 * @description: It is creating price data for a price value
@@ -278,6 +330,31 @@ public class MplCustomAddressFacadeImpl extends DefaultCheckoutFacade implements
 	public AddressData getDeliveryAddress()
 	{
 		final CartModel cart = getCart();
+		if (cart != null)
+		{
+			final AddressModel deliveryAddress = cart.getDeliveryAddress();
+			if (deliveryAddress != null)
+			{
+				// Ensure that the delivery address is in the set of supported addresses
+				final AddressModel supportedAddress = getDeliveryAddressModelForCode(deliveryAddress.getPk().toString());
+				if (supportedAddress != null)
+				{
+					return getCustomAddressConverter().convert(supportedAddress);
+				}
+			}
+		}
+
+		return null;
+	}
+
+	/**
+	 * @description: It is responsible for fetching cart delivery address
+	 * @return AddressData
+	 */
+	@Override
+	public AddressData getDeliveryAddress(final CartModel cartModel)
+	{
+		final CartModel cart = cartModel;
 		if (cart != null)
 		{
 			final AddressModel deliveryAddress = cart.getDeliveryAddress();

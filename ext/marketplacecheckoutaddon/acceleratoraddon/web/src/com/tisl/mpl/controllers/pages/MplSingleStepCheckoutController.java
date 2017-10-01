@@ -443,7 +443,7 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 
 			storeCmsPageInModel(model, getContentPageForLabelOrId(MULTI_CHECKOUT_SUMMARY_CMS_PAGE_LABEL));
 			setUpMetaDataForContentPage(model, getContentPageForLabelOrId(MULTI_CHECKOUT_SUMMARY_CMS_PAGE_LABEL));
-			final CartData cartUssidData = getMplCustomAddressFacade().getCheckoutCart();
+			final CartData cartUssidData = getMplCustomAddressFacade().getCheckoutCart(cartModel); //CAR-323
 			List<AddressData> deliveryAddress = null;
 			if (cartUssidData != null)
 			{
@@ -591,7 +591,7 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 				LOG.debug("exchangeAppliedCart=" + exchangeAppliedCart);
 			}
 
-			final CartData cartData = getMplCustomAddressFacade().getCheckoutCart();
+			final CartData cartData = getMplCustomAddressFacade().getCheckoutCart(cart);//CAR-323
 
 			//TISSEC-11
 			final String regex = "\\d{6}";
@@ -703,8 +703,8 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 						+ "&type=redirect", UTF);
 				return FORWARD_PREFIX + "/checkout/single/message" + requestQueryParam;
 			}
-			final CartData cartData = getMplCustomAddressFacade().getCheckoutCart();
-			model.addAttribute(MarketplacecheckoutaddonConstants.CARTDATA, cartData);
+			//final CartData cartData = getMplCustomAddressFacade().getCheckoutCart();//Commenting for CAR-323
+			//model.addAttribute(MarketplacecheckoutaddonConstants.CARTDATA, cartData);//Commenting for CAR-323
 			model.addAttribute(MarketplacecheckoutaddonConstants.ADDRESSTYPE, getMplCheckoutFacade().getAddressType());
 			model.addAttribute(ModelAttributetConstants.COUNTRY_DATA, checkoutFacade.getDeliveryCountries());
 			model.addAttribute(ModelAttributetConstants.TITLE_DATA, userFacade.getTitles());
@@ -846,19 +846,19 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 			}
 			//TISST-13012
 			final CartModel cart = getCartService().getSessionCart();
-			final boolean cartItemDelistedStatus = mplCartFacade.isCartEntryDelisted(cart);
-			if (cartItemDelistedStatus)
-			{
-				getSessionService().setAttribute(MarketplacecommerceservicesConstants.CART_DELISTED_SESSION_ID,
-						MarketplacecommerceservicesConstants.TRUE_UPPER);
-				final String requestQueryParam = UriUtils.encodeQuery("?url=" + MarketplacecheckoutaddonConstants.CART
-						+ "&type=redirect", UTF);
-				return FORWARD_PREFIX + "/checkout/single/message" + requestQueryParam;
-			}
+			//	final boolean cartItemDelistedStatus = mplCartFacade.isCartEntryDelisted(cart);
+			//			if (cartItemDelistedStatus)
+			//			{
+			//				getSessionService().setAttribute(MarketplacecommerceservicesConstants.CART_DELISTED_SESSION_ID,
+			//						MarketplacecommerceservicesConstants.TRUE_UPPER);
+			//				final String requestQueryParam = UriUtils.encodeQuery("?url=" + MarketplacecheckoutaddonConstants.CART
+			//						+ "&type=redirect", UTF);
+			//				return FORWARD_PREFIX + "/checkout/single/message" + requestQueryParam;
+			//			}
 
 			final List<StateData> stateDataList = accountAddressFacade.getStates();
 			final String errorMsg = mplAddressValidator.validate(addressForm);
-			final CartData cartData = getMplCustomAddressFacade().getCheckoutCart();
+			//final CartData cartData = getMplCustomAddressFacade().getCheckoutCart(cart);//CAR-323
 
 			if ((!StringUtils.isEmpty(errorMsg) && !errorMsg.equalsIgnoreCase(ModelAttributetConstants.SUCCESS))
 					|| bindingResult.hasErrors())
@@ -908,12 +908,13 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 			{
 				exchangeGuideFacade.removeExchangefromCart(cart);
 			}
-			saveAndSetDeliveryAddress(addressForm, true, request, response);
+			saveAndSetDeliveryAddress(addressForm, true, cart, request, response);
 
-			//Recalculating Cart Model
-			LOG.debug(">> Delivery cost " + cartData.getDeliveryCost().getValue());
 			if (isPincodeRestrictedPromoPresent)
 			{
+				//Recalculating Cart Model
+				final CartData cartData = getMplCustomAddressFacade().getCheckoutCart(cart);//CAR-323
+				LOG.debug(">> Delivery cost " + cartData.getDeliveryCost().getValue());
 				getMplCheckoutFacade().reCalculateCart(cartData);
 			}
 
@@ -1032,16 +1033,17 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 						+ "&type=redirect", UTF);
 				return FORWARD_PREFIX + "/checkout/single/message" + requestQueryParam;
 			}
-			final CartData cartData = getMplCustomAddressFacade().getCheckoutCart();
+			//final CartData cartData = getMplCustomAddressFacade().getCheckoutCart();//CAR-323
 			final CartModel cartModel = getCartService().getSessionCart();
 			final AccountAddressForm addressForm = new AccountAddressForm();
 			addressForm.setCountryIso(MarketplacecheckoutaddonConstants.COUNTRYISO);
 			addressForm.setAddressType("Home");
 			final List<StateData> stateDataList = accountAddressFacade.getStates();
-
-			if (null != cartData)
+			final AddressData addressData = getMplCustomAddressFacade().getDeliveryAddress(cartModel);
+			if (null != addressData)
 			{
-				deliveryAddress = getMplCustomAddressFacade().getDeliveryAddresses(cartData.getDeliveryAddress(), cartModel); //CAR-194
+
+				deliveryAddress = getMplCustomAddressFacade().getDeliveryAddresses(addressData, cartModel); //CAR-194//CAR-323
 			}
 
 
@@ -1062,7 +1064,7 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 
 			model.addAttribute(MarketplacecheckoutaddonConstants.ADDRESSFLAG, addressFlag);
 			model.addAttribute(MarketplacecheckoutaddonConstants.DELIVERYADDRESSES, deliveryAddress);
-			model.addAttribute(MarketplacecheckoutaddonConstants.CARTDATA, cartData);
+			//model.addAttribute(MarketplacecheckoutaddonConstants.CARTDATA, cartData);//CAR-323
 			model.addAttribute(ModelAttributetConstants.STATE_DATA_LIST, stateDataList);
 			model.addAttribute(MarketplacecheckoutaddonConstants.ADDRESSFORM, addressForm);
 			model.addAttribute(MarketplacecheckoutaddonConstants.SHOWSAVEDTOADDRESSBOOK, Boolean.TRUE);
@@ -1126,24 +1128,24 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 			}
 			//TISST-13012
 			final CartModel cart = getCartService().getSessionCart();
-			final boolean cartItemDelistedStatus = mplCartFacade.isCartEntryDelisted(cart);
-			if (cartItemDelistedStatus)
-			{
-				getSessionService().setAttribute(MarketplacecommerceservicesConstants.CART_DELISTED_SESSION_ID,
-						MarketplacecommerceservicesConstants.TRUE_UPPER);
-				final String requestQueryParam = UriUtils.encodeQuery("?url=" + MarketplacecheckoutaddonConstants.CART
-						+ "&type=redirect", UTF);
-				return FORWARD_PREFIX + "/checkout/single/message" + requestQueryParam;
-			}
+			//			final boolean cartItemDelistedStatus = mplCartFacade.isCartEntryDelisted(cart);  //CAR-323
+			//			if (cartItemDelistedStatus)
+			//			{
+			//				getSessionService().setAttribute(MarketplacecommerceservicesConstants.CART_DELISTED_SESSION_ID,
+			//						MarketplacecommerceservicesConstants.TRUE_UPPER);
+			//				final String requestQueryParam = UriUtils.encodeQuery("?url=" + MarketplacecheckoutaddonConstants.CART
+			//						+ "&type=redirect", UTF);
+			//				return FORWARD_PREFIX + "/checkout/single/message" + requestQueryParam;
+			//			}
 
 			boolean exchangeAppliedCart = false;
-			if ((StringUtils.isEmpty(exchangeEnabled) && !cartItemDelistedStatus) && (null != (cart.getExchangeAppliedCart())))
+			if ((StringUtils.isEmpty(exchangeEnabled)) && (null != (cart.getExchangeAppliedCart())))
 			{
 				exchangeAppliedCart = (null != cart.getExchangeAppliedCart()) ? cart.getExchangeAppliedCart().booleanValue() : false;
 				LOG.debug("exchangeAppliedCart=" + exchangeAppliedCart);
 			}
 
-			final CartData cartData = getMplCustomAddressFacade().getCheckoutCart();
+			//final CartData cartData = getMplCustomAddressFacade().getCheckoutCart(cart);//CAR-323
 			AddressData finaladdressData = new AddressData();
 			for (final AddressData addressData : accountAddressFacade.getAddressBook())
 			{
@@ -1206,15 +1208,16 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 				getMplCustomAddressFacade().setDeliveryAddress(finaladdressData);
 				userFacade.setDefaultAddress(finaladdressData);
 
-				// Recalculating Cart Model check location restricted promotion
-				LOG.debug(">> Delivery cost " + cartData.getDeliveryCost().getValue());
+
 				if (isPincodeRestrictedPromoPresent)
 				{
+					final CartData cartData = getMplCustomAddressFacade().getCheckoutCart(cart);//CAR-323
+					// Recalculating Cart Model check location restricted promotion
+					LOG.debug(">> Delivery cost " + cartData.getDeliveryCost().getValue());
 					getMplCheckoutFacade().reCalculateCart(cartData);
 				}
 			}
-			if (exchangeAppliedCart && selectedPincode.matches(regex) && StringUtils.isEmpty(exchangeEnabled)
-					&& !cartItemDelistedStatus)
+			if (exchangeAppliedCart && selectedPincode.matches(regex) && StringUtils.isEmpty(exchangeEnabled))
 			{
 				if (!exchangeGuideFacade.isBackwardServiceble(selectedPincode))
 				{
@@ -1377,7 +1380,7 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 			}
 			final String errorMsg = mplAddressValidator.validate(addressForm);
 			//final List<StateData> stateDataList = accountAddressFacade.getStates();
-			final CartData cartData = getMplCustomAddressFacade().getCheckoutCart();
+			//final CartData cartData = getMplCustomAddressFacade().getCheckoutCart();
 			if ((!StringUtils.isEmpty(errorMsg) && !errorMsg.equalsIgnoreCase(ModelAttributetConstants.SUCCESS))
 					|| bindingResult.hasErrors())
 			{
@@ -1430,11 +1433,14 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 							+ MarketplacecclientservicesConstants.OMS_PINCODE_SERVICEABILTY_FAILURE_MESSAGE + "&type=error", UTF);
 					return FORWARD_PREFIX + "/checkout/single/message" + requestQueryParam;
 				}
-				//Recalculating Cart Model
-				saveAndSetDeliveryAddress(addressForm, false, request, response);
-				LOG.debug(">> Delivery cost " + cartData.getDeliveryCost().getValue());
+
+				saveAndSetDeliveryAddress(addressForm, false, cart, request, response);
+
 				if (isPincodeRestrictedPromoPresent)
 				{
+					//Recalculating Cart Model
+					final CartData cartData = getMplCustomAddressFacade().getCheckoutCart(cart);
+					LOG.debug(">> Delivery cost " + cartData.getDeliveryCost().getValue());
 					getMplCheckoutFacade().reCalculateCart(cartData);
 				}
 			}
@@ -1514,7 +1520,7 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 					jsonObj.put("type", "error");
 					return jsonObj;
 				}
-				saveAndSetDeliveryAddress(addressForm, isEdit, request, response);
+				saveAndSetDeliveryAddress(addressForm, isEdit, getCartService().getSessionCart(), request, response);
 				jsonObj.put("isAddressSaved", "true");
 				jsonObj.put("isAddressSet", "true");
 				jsonObj.put("type", "response");
@@ -1699,9 +1705,9 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 	 * @param isEditAddress
 	 */
 	public void saveAndSetDeliveryAddress(final AccountAddressForm addressForm, final boolean isEditAddress,
-			final HttpServletRequest request, final HttpServletResponse response)
+			final CartModel cartModel, final HttpServletRequest request, final HttpServletResponse response)
 	{
-		CartModel oModel = null;
+		CartModel oModel = cartModel;
 		int pincodeCookieMaxAge;
 		final Cookie cookie = GenericUtilityMethods.getCookieByName(request, "pdpPincode");
 		final String cookieMaxAge = getConfigurationService().getConfiguration().getString("pdpPincode.cookie.age");
@@ -1980,16 +1986,16 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 			//setExpressCheckout(serviceCart);
 
 			//TISST-13012
-			final boolean cartItemDelistedStatus = mplCartFacade.isCartEntryDelisted(serviceCart); //TISPT-104
-			if (cartItemDelistedStatus)
-			{
-				LOG.debug("enterDeliveryModeStep:Cart Item is delisted, Hence redirecting to cart.");
-				getSessionService().setAttribute(MarketplacecommerceservicesConstants.CART_DELISTED_SESSION_ID,
-						MarketplacecommerceservicesConstants.TRUE_UPPER);
-				final String requestQueryParam = UriUtils.encodeQuery("?url=" + MarketplacecheckoutaddonConstants.CART
-						+ "&type=redirect", UTF);
-				return FORWARD_PREFIX + "/checkout/single/message" + requestQueryParam;
-			}
+			//			final boolean cartItemDelistedStatus = mplCartFacade.isCartEntryDelisted(serviceCart); //TISPT-104
+			//			if (cartItemDelistedStatus)
+			//			{
+			//				LOG.debug("enterDeliveryModeStep:Cart Item is delisted, Hence redirecting to cart.");
+			//				getSessionService().setAttribute(MarketplacecommerceservicesConstants.CART_DELISTED_SESSION_ID,
+			//						MarketplacecommerceservicesConstants.TRUE_UPPER);
+			//				final String requestQueryParam = UriUtils.encodeQuery("?url=" + MarketplacecheckoutaddonConstants.CART
+			//						+ "&type=redirect", UTF);
+			//				return FORWARD_PREFIX + "/checkout/single/message" + requestQueryParam;
+			//			}
 
 			if (isCallAfterRemoveCartItem)
 			{
@@ -2383,9 +2389,7 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 	 */
 	@RequestMapping(value = MarketplacecheckoutaddonConstants.GETCNCSTRORES, method = RequestMethod.GET)
 	public String doFindCncStores(final String entryNumber, final String sellerArticleSKU, final String deliveryCode,
-			final Model model, final RedirectAttributes redirectAttributes, final HttpServletRequest request,
-			final HttpServletResponse response1, final HttpSession session) throws CMSItemNotFoundException,
-			UnsupportedEncodingException
+			final Model model, final HttpServletRequest request) throws CMSItemNotFoundException, UnsupportedEncodingException
 	{
 		if (LOG.isDebugEnabled())
 		{
@@ -2403,41 +2407,42 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 		{
 			final CartModel cartModel = getCartService().getSessionCart();
 
-			try
-			{
-				final boolean cartItemDelistedStatus = mplCartFacade.isCartEntryDelisted(cartModel);
-				if (cartItemDelistedStatus)
-				{
-					getSessionService().setAttribute(MarketplacecommerceservicesConstants.CART_DELISTED_SESSION_ID,
-							MarketplacecommerceservicesConstants.TRUE_UPPER);
-					final String requestQueryParam = UriUtils.encodeQuery("?url=" + MarketplacecheckoutaddonConstants.CART
-							+ "&type=redirect", UTF);
-					return FORWARD_PREFIX + "/checkout/single/message" + requestQueryParam;
-					//return MarketplacecheckoutaddonConstants.REDIRECT + MarketplacecheckoutaddonConstants.CART;
-				}
-			}
-			catch (final EtailBusinessExceptions e)
-			{
-				ExceptionUtil.etailBusinessExceptionHandler(e, null);
-				getSessionService().setAttribute(MarketplacecclientservicesConstants.DELIVERY_MODE_ENTER_STEP_ERROR_ID, "TRUE");
-				final String requestQueryParam = UriUtils.encodeQuery("?url=/cart&type=redirect", UTF);
-				return FORWARD_PREFIX + "/checkout/single/message" + requestQueryParam;
-			}
-			catch (final Exception e)
-			{
-				ExceptionUtil.etailNonBusinessExceptionHandler(new EtailNonBusinessExceptions(e,
-						MarketplacecommerceservicesConstants.E0000));
-				LOG.error("Stack trace:", e);
-				getSessionService().setAttribute(MarketplacecclientservicesConstants.DELIVERY_MODE_ENTER_STEP_ERROR_ID, "TRUE");
-				final String requestQueryParam = UriUtils.encodeQuery("?url=/cart&type=redirect", UTF);
-				return FORWARD_PREFIX + "/checkout/single/message" + requestQueryParam;
-			}
+			//Commeting below as a part of CAR-323
+			//			try
+			//			{
+			//				final boolean cartItemDelistedStatus = mplCartFacade.isCartEntryDelisted(cartModel);
+			//				if (cartItemDelistedStatus)
+			//				{
+			//					getSessionService().setAttribute(MarketplacecommerceservicesConstants.CART_DELISTED_SESSION_ID,
+			//							MarketplacecommerceservicesConstants.TRUE_UPPER);
+			//					final String requestQueryParam = UriUtils.encodeQuery("?url=" + MarketplacecheckoutaddonConstants.CART
+			//							+ "&type=redirect", UTF);
+			//					return FORWARD_PREFIX + "/checkout/single/message" + requestQueryParam;
+			//					//return MarketplacecheckoutaddonConstants.REDIRECT + MarketplacecheckoutaddonConstants.CART;
+			//				}
+			//			}
+			//			catch (final EtailBusinessExceptions e)
+			//			{
+			//				ExceptionUtil.etailBusinessExceptionHandler(e, null);
+			//				getSessionService().setAttribute(MarketplacecclientservicesConstants.DELIVERY_MODE_ENTER_STEP_ERROR_ID, "TRUE");
+			//				final String requestQueryParam = UriUtils.encodeQuery("?url=/cart&type=redirect", UTF);
+			//				return FORWARD_PREFIX + "/checkout/single/message" + requestQueryParam;
+			//			}
+			//			catch (final Exception e)
+			//			{
+			//				ExceptionUtil.etailNonBusinessExceptionHandler(new EtailNonBusinessExceptions(e,
+			//						MarketplacecommerceservicesConstants.E0000));
+			//				LOG.error("Stack trace:", e);
+			//				getSessionService().setAttribute(MarketplacecclientservicesConstants.DELIVERY_MODE_ENTER_STEP_ERROR_ID, "TRUE");
+			//				final String requestQueryParam = UriUtils.encodeQuery("?url=/cart&type=redirect", UTF);
+			//				return FORWARD_PREFIX + "/checkout/single/message" + requestQueryParam;
+			//			}
 
 
 			List<StoreLocationResponseData> response = null;
 
 			// CAR-197  start
-			final CartData cartData = getMplCustomAddressFacade().getCheckoutCart(); //CAR-197
+			final CartData cartData = getMplCustomAddressFacade().getCheckoutCart(cartModel); //CAR-197, CAR-323
 
 			model.addAttribute(MarketplacecheckoutaddonConstants.CARTDATA, cartData);
 
@@ -3710,7 +3715,7 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 				return jsonObj;
 			}
 			final CartModel cartModel = getCartService().getSessionCart();
-			final CartData cartData = getMplCustomAddressFacade().getCheckoutCart();
+			final CartData cartData = getMplCustomAddressFacade().getCheckoutCart(cartModel);
 			ValidationResults validationResult = null;
 
 			//Below code is not required as this section is suuposed to execute only for payment failure scenario,Where as on payment failure this method is never called.
