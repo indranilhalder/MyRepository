@@ -5559,8 +5559,6 @@ $(".edit_address").click(function(){
 	}		
 	
 	
-	WalletDetailAjax();
-	
 	$(document).on("click","#useGiftCardCheckbox",function() {
 		
 		useWalletForPaymentAjax();
@@ -8198,8 +8196,8 @@ $("#couponSubmitButton").click(function(){
 			 				setTimeout(function(){ $("#couponMessage").html(""); }, 2500);
 			 				//TPR-658
 			 				onSubmitAnalytics("success");
-			 				//WalletDetailAjax();
-			 				//useWalletForPaymentAjax();
+			 				WalletDetailAjax();
+			 				useWalletForPaymentAjax();
 			 			}
 		 				else
 		 				{
@@ -8290,7 +8288,8 @@ function removeAppliedVoucher(){
 // 				$("#couponSubmitButton").css("opacity","1");
  				
  				resetAppliedCouponFormOnRemoval();
- 				
+ 				WalletDetailAjax();
+ 				useWalletForPaymentAjax();
  				console.log("cupon2");
  				//window.location.reload();
  		},

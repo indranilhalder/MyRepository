@@ -562,7 +562,7 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 				GlobalMessages.addErrorMessage(model, MarketplacecheckoutaddonConstants.PROMOTIONEXPIRED);
 			}
 
-			//Egv Changes 
+			//Egv Changes
 			model.addAttribute("isEGVCart", Boolean.FALSE);
 		}
 		//Nullpointer exception commented TPR-629
@@ -4146,13 +4146,13 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 					 * Wallet Changes
 					 */
 
-					getSessionService().setAttribute("qcCardValue", "NA");
-					getSessionService().setAttribute("qcCashValue", "NA");
-					getSessionService().setAttribute("qcRefundValue", "NA");
+					//getSessionService().setAttribute("qcCardValue", "NA");
+					////getSessionService().setAttribute("qcCashValue", "NA");
+					//getSessionService().setAttribute("qcRefundValue", "NA");
 					final Double totalCartVal = cart.getTotalPrice();
 					//					boolean splitPayment = false;
 					//					boolean jsPayMode = false;
-					String cliqCashPaymentMode = StringUtils.EMPTY;
+					//String cliqCashPaymentMode = StringUtils.EMPTY;
 
 					//					if (StringUtils.isNotEmpty(getSessionService().getAttribute("getCliqCashMode").toString()))
 					//					{
@@ -4160,11 +4160,11 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 					//						splitPayment = Boolean.parseBoolean(getSessionService().getAttribute("getCliqCashMode").toString());
 					//					}
 
-					if (StringUtils.isNotEmpty(getSessionService().getAttribute("cliqCashPaymentMode").toString()))
-					{
-
-						cliqCashPaymentMode = getSessionService().getAttribute("cliqCashPaymentMode").toString();
-					}
+					//					if (StringUtils.isNotEmpty(getSessionService().getAttribute("cliqCashPaymentMode").toString()))
+					//					{
+					//
+					//						cliqCashPaymentMode = getSessionService().getAttribute("cliqCashPaymentMode").toString();
+					//					}
 
 					//					if (StringUtils.isNotEmpty(getSessionService().getAttribute("jsPayMode").toString()))
 					//					{
@@ -4172,7 +4172,7 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 					//						jsPayMode = Boolean.parseBoolean(getSessionService().getAttribute("jsPayMode").toString());
 					//					}
 
-					LOG.info("cliqCashPaymentMode" + cliqCashPaymentMode);
+					//LOG.info("cliqCashPaymentMode" + cliqCashPaymentMode);
 
 					/**
 					 * Wallet Changes END

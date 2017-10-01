@@ -1824,6 +1824,7 @@ ACC.singlePageCheckout = {
 		var data = "";			
 		var xhrResponse=ACC.singlePageCheckout.ajaxRequest(url,"GET",data,false);
 		return xhrResponse;
+		
 	},
 	//Function called from onPaymentModeSelection() function for responsive
 	proceedWithPaymentForResponsive:function(paymentMode,savedOrNew,radioId,callFromCvv){
@@ -1970,6 +1971,7 @@ ACC.singlePageCheckout = {
 	    	        //Calling the below methods to populate the latest shipping address(These methods are in marketplacecheckoutaddon.js)
 //	    	        populateAddress();
 //	    	        populateAddressEmi();
+    	        	WalletDetailAjax();
     			}
         		else
     			{

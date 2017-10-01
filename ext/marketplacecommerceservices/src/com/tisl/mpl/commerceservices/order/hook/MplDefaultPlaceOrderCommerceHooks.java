@@ -778,8 +778,10 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 					|| WalletEnum.MRUPEE.equals(orderModel.getIsWallet()))
 			{
 				getOrderStatusSpecifier().setOrderStatus(orderModel, OrderStatus.PAYMENT_SUCCESSFUL);
-				//After Success Qc call
 
+				/**
+				 * EGV CARD PURCHASE
+				 */
 				if (orderModel.getIsEGVCart().booleanValue())
 				{
 
@@ -798,6 +800,9 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 						getOrderStatusSpecifier().setOrderStatus(orderModel, OrderStatus.PAYMENT_TIMEOUT);
 					}
 				}
+				/**
+				 * EGV CARD PURCHASE END
+				 */
 
 			}
 			else
@@ -2607,28 +2612,36 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 		 */
 
 
-		//		int splitQty = 0;
-		//		if (clonedSubOrder.getSplitModeInfo().equalsIgnoreCase("Split")
-		//				|| clonedSubOrder.getSplitModeInfo().equalsIgnoreCase("CliqCash"))
-		//		{
-		//			splitQty = quantity;
-		//
-		//			for (int qty = 0; qty < quantity; qty++)
-		//			{
-		//				if (quantity > 0 && abstractOrderEntryModel.getIsBOGOapplied().booleanValue())
-		//				{
-		//					splitQty -= 1;
-		//				}
-		//
-		//				if (quantity > 0 && (abstractOrderEntryModel.getFreeCount().intValue() > 0))
-		//				{
-		//					splitQty -= abstractOrderEntryModel.getFreeCount().intValue();
-		//				}
-		//			}
-		//
-		//			System.out.println("*********** Hook Apportion Logic ---- Qty " + quantity + " & Spliit Qty" + splitQty);
-		//
-		//		}
+		int splitQty = 0;
+		if (clonedSubOrder.getSplitModeInfo().equalsIgnoreCase("Split")
+				|| clonedSubOrder.getSplitModeInfo().equalsIgnoreCase("CliqCash"))
+		{
+			splitQty = abstractOrderEntryModel.getQuantity().intValue();
+
+			System.out.println(abstractOrderEntryModel.getQuantity().intValue() + " -&&&&&&& Product Code- "
+					+ abstractOrderEntryModel.getProduct().getCode());
+
+			//			for (int qty = 1; qty <= splitQty; qty++)
+			//			{
+			//				if (splitQty > 1 && abstractOrderEntryModel.getIsBOGOapplied().booleanValue())
+			//				{
+			//					splitQty -= 1;
+			//				}
+			//
+			//				if (splitQty > 1 && (abstractOrderEntryModel.getFreeCount().intValue() > 0))
+			//				{
+			//					splitQty -= abstractOrderEntryModel.getFreeCount().intValue();
+			//				}
+			//			}
+			//quantity = splitQty;
+
+			if (null != abstractOrderEntryModel.getFreeCount() && abstractOrderEntryModel.getFreeCount().intValue() > 0)
+			{
+				splitQty -= abstractOrderEntryModel.getFreeCount().intValue();
+			}
+			System.out.println("*********** Hook Apportion Logic ---- Qty " + quantity + " & Spliit Qty" + splitQty);
+
+		}
 
 		/**
 		 * WALLET CHANGES END
@@ -2643,22 +2656,6 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 					abstractOrderEntryModel.getUnit(), -1, false);
 
 			orderEntryModel.setBasePrice(abstractOrderEntryModel.getBasePrice());
-
-			/**
-			 * WALLET CHANGES
-			 */
-
-
-			if (clonedSubOrder.getSplitModeInfo().equalsIgnoreCase("Split")
-					|| clonedSubOrder.getSplitModeInfo().equalsIgnoreCase("CliqCash"))
-			{
-				//setPaymentModeApporsionValue(abstractOrderEntryModel, splitQty, orderEntryModel, clonedSubOrder);
-				setPaymentModeApporsionValue(abstractOrderEntryModel, quantity, orderEntryModel, clonedSubOrder);
-			}
-
-			/**
-			 * WALLET CHANGES END
-			 */
 
 			final SellerInformationModel sellerDetails = cachedSellerInfoMap.get(abstractOrderEntryModel.getSelectedUSSID());
 			final String sellerID = sellerDetails.getSellerID();
@@ -2887,6 +2884,22 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 
 			// End Order line  Code for OrderLine
 			orderEntryModel = setAdditionalDetails(orderEntryModel);
+
+			/**
+			 * WALLET CHANGES
+			 */
+
+
+			if (clonedSubOrder.getSplitModeInfo().equalsIgnoreCase("Split")
+					|| clonedSubOrder.getSplitModeInfo().equalsIgnoreCase("CliqCash"))
+			{
+				setPaymentModeApporsionValue(abstractOrderEntryModel, splitQty, orderEntryModel, clonedSubOrder);
+				//setPaymentModeApporsionValue(abstractOrderEntryModel, quantity, orderEntryModel, clonedSubOrder);
+			}
+
+			/**
+			 * WALLET CHANGES END
+			 */
 
 		}
 	}
@@ -3500,116 +3513,146 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 		final WalletApportionPaymentInfoModel walletApportionPaymentInfo = getModelService()
 				.create(WalletApportionPaymentInfoModel.class);
 
-		if (null != orderEntryModel.getIsBOGOapplied() && orderEntryModel.getIsBOGOapplied().booleanValue())
+		if (null != orderEntryModel.getIsBOGOapplied() && orderEntryModel.getIsBOGOapplied().booleanValue()
+				|| null != orderEntryModel.getGiveAway() && orderEntryModel.getGiveAway().booleanValue())
 		{
 
-			System.out.println(" **************** Hook BOGO PRODUCT FOUND");
+			System.out.println(" **************** Hook BOGO PRODUCT FOUND " + orderEntryModel.getIsBOGOapplied().booleanValue()
+					+ " free bi product -" + (null != orderEntryModel.getFreeCount() ? orderEntryModel.getFreeCount().intValue() : 0));
+
+			walletApportionPaymentInfo.setOrderId(abstractOrderEntryModel.getWalletApportionPaymentInfo().getOrderId());
+
+			walletApportionPaymentInfo.setTransactionId(abstractOrderEntryModel.getWalletApportionPaymentInfo().getTransactionId());
+
+			walletApportionPaymentInfo.setQcApportionPartValue("0");
+			walletApportionPaymentInfo.setQcDeliveryPartValue("0");
+			walletApportionPaymentInfo.setQcShippingPartValue("0");
+			walletApportionPaymentInfo.setQcSchedulingPartValue("0");
+			walletApportionPaymentInfo.setJuspayApportionValue("0");
+			walletApportionPaymentInfo.setJuspayDeliveryValue("0");
+			walletApportionPaymentInfo.setJuspayShippingValue("0");
+			walletApportionPaymentInfo.setJuspaySchedulingValue("0");
+
+			final List<WalletCardApportionDetailModel> cardQtyWiseList = new ArrayList<WalletCardApportionDetailModel>();
+			final WalletCardApportionDetailModel chlidCardApportionDetail = getModelService()
+					.create(WalletCardApportionDetailModel.class);
+			chlidCardApportionDetail.setOrderId(abstractOrderEntryModel.getWalletApportionPaymentInfo().getOrderId());
+			cardQtyWiseList.add(chlidCardApportionDetail);
+			walletApportionPaymentInfo.setWalletCardList(cardQtyWiseList);
+			orderEntryModel.setWalletApportionPaymentInfo(walletApportionPaymentInfo);
+
 		}
-
-		walletApportionPaymentInfo.setOrderId(abstractOrderEntryModel.getWalletApportionPaymentInfo().getOrderId());
-
-		walletApportionPaymentInfo.setTransactionId(abstractOrderEntryModel.getWalletApportionPaymentInfo().getTransactionId());
-
-		if (Double.parseDouble(abstractOrderEntryModel.getWalletApportionPaymentInfo().getQcApportionPartValue()) > 0)
-		{
-			walletApportionPaymentInfo.setQcApportionPartValue(
-					"" + (Double.parseDouble(abstractOrderEntryModel.getWalletApportionPaymentInfo().getQcApportionPartValue())
-							/ quantity));
-		}
-
-		if (Double.parseDouble(abstractOrderEntryModel.getWalletApportionPaymentInfo().getQcDeliveryPartValue()) > 0)
-		{
-			walletApportionPaymentInfo.setQcDeliveryPartValue(
-					"" + (Double.parseDouble(abstractOrderEntryModel.getWalletApportionPaymentInfo().getQcDeliveryPartValue())
-							/ quantity));
-		}
-
-
-		if (Double.parseDouble(abstractOrderEntryModel.getWalletApportionPaymentInfo().getQcShippingPartValue()) > 0)
-		{
-			walletApportionPaymentInfo.setQcShippingPartValue(
-					"" + (Double.parseDouble(abstractOrderEntryModel.getWalletApportionPaymentInfo().getQcShippingPartValue())
-							/ quantity));
-		}
-
-
-		if (Double.parseDouble(abstractOrderEntryModel.getWalletApportionPaymentInfo().getQcSchedulingPartValue()) > 0)
-		{
-			walletApportionPaymentInfo.setQcSchedulingPartValue(
-					"" + (Double.parseDouble(abstractOrderEntryModel.getWalletApportionPaymentInfo().getQcSchedulingPartValue())
-							/ quantity));
-		}
-
-
-		if (Double.parseDouble(abstractOrderEntryModel.getWalletApportionPaymentInfo().getJuspayApportionValue()) > 0)
-		{
-			walletApportionPaymentInfo.setJuspayApportionValue(
-					"" + (Double.parseDouble(abstractOrderEntryModel.getWalletApportionPaymentInfo().getJuspayApportionValue())
-							/ quantity));
-		}
-
-		if (Double.parseDouble(abstractOrderEntryModel.getWalletApportionPaymentInfo().getJuspayDeliveryValue()) > 0)
-		{
-			walletApportionPaymentInfo.setJuspayDeliveryValue(
-					"" + (Double.parseDouble(abstractOrderEntryModel.getWalletApportionPaymentInfo().getJuspayDeliveryValue())
-							/ quantity));
-		}
-
-		if (Double.parseDouble(abstractOrderEntryModel.getWalletApportionPaymentInfo().getJuspayShippingValue()) > 0)
-		{
-			walletApportionPaymentInfo.setJuspayShippingValue(
-					"" + (Double.parseDouble(abstractOrderEntryModel.getWalletApportionPaymentInfo().getJuspayShippingValue())
-							/ quantity));
-		}
-		if (Double.parseDouble(abstractOrderEntryModel.getWalletApportionPaymentInfo().getJuspaySchedulingValue()) > 0)
-		{
-			walletApportionPaymentInfo.setJuspaySchedulingValue(
-					"" + (Double.parseDouble(abstractOrderEntryModel.getWalletApportionPaymentInfo().getJuspaySchedulingValue())
-							/ quantity));
-		}
-
-		final List<WalletCardApportionDetailModel> cardQtyWiseList = new ArrayList<WalletCardApportionDetailModel>();
-
-		if (abstractOrderEntryModel.getWalletApportionPaymentInfo().getWalletCardList().size() > 0)
+		else
 		{
 
-			for (final WalletCardApportionDetailModel cardList : abstractOrderEntryModel.getWalletApportionPaymentInfo()
-					.getWalletCardList())
+			walletApportionPaymentInfo.setOrderId(abstractOrderEntryModel.getWalletApportionPaymentInfo().getOrderId());
+
+			walletApportionPaymentInfo.setTransactionId(abstractOrderEntryModel.getWalletApportionPaymentInfo().getTransactionId());
+
+			if (Double.parseDouble(abstractOrderEntryModel.getWalletApportionPaymentInfo().getQcApportionPartValue()) > 0)
 			{
-				final WalletCardApportionDetailModel chlidCardApportionDetail = getModelService()
-						.create(WalletCardApportionDetailModel.class);
-
-				chlidCardApportionDetail.setOrderId(abstractOrderEntryModel.getWalletApportionPaymentInfo().getOrderId());
-				chlidCardApportionDetail.setCardNumber(cardList.getCardNumber());
-				chlidCardApportionDetail.setCardExpiry(cardList.getCardExpiry());
-				chlidCardApportionDetail.setBucketType(cardList.getBucketType());
-
-				if (Double.parseDouble(cardList.getCardAmount()) > Double.parseDouble("0"))
-				{
-					chlidCardApportionDetail.setCardAmount("" + (Double.parseDouble(cardList.getCardAmount()) / quantity));
-				}
-				if (Double.parseDouble(cardList.getQcApportionValue()) > Double.parseDouble("0"))
-				{
-					chlidCardApportionDetail.setQcApportionValue("" + (Double.parseDouble(cardList.getQcApportionValue()) / quantity));
-				}
-				if (Double.parseDouble(cardList.getQcDeliveryValue()) > Double.parseDouble("0"))
-				{
-					chlidCardApportionDetail.setQcDeliveryValue("" + (Double.parseDouble(cardList.getQcDeliveryValue()) / quantity));
-				}
-				if (Double.parseDouble(cardList.getQcShippingValue()) > Double.parseDouble("0"))
-				{
-					chlidCardApportionDetail.setQcShippingValue("" + (Double.parseDouble(cardList.getQcShippingValue()) / quantity));
-				}
-				if (Double.parseDouble(cardList.getQcSchedulingValue()) > Double.parseDouble("0"))
-				{
-					chlidCardApportionDetail
-							.setQcSchedulingValue("" + (Double.parseDouble(cardList.getQcSchedulingValue()) / quantity));
-				}
-				cardQtyWiseList.add(chlidCardApportionDetail);
+				walletApportionPaymentInfo.setQcApportionPartValue(
+						"" + (Double.parseDouble(abstractOrderEntryModel.getWalletApportionPaymentInfo().getQcApportionPartValue())
+								/ quantity));
 			}
+
+			if (Double.parseDouble(abstractOrderEntryModel.getWalletApportionPaymentInfo().getQcDeliveryPartValue()) > 0)
+			{
+				walletApportionPaymentInfo.setQcDeliveryPartValue(
+						"" + (Double.parseDouble(abstractOrderEntryModel.getWalletApportionPaymentInfo().getQcDeliveryPartValue())
+								/ quantity));
+			}
+
+
+			if (Double.parseDouble(abstractOrderEntryModel.getWalletApportionPaymentInfo().getQcShippingPartValue()) > 0)
+			{
+				walletApportionPaymentInfo.setQcShippingPartValue(
+						"" + (Double.parseDouble(abstractOrderEntryModel.getWalletApportionPaymentInfo().getQcShippingPartValue())
+								/ quantity));
+			}
+
+
+			if (Double.parseDouble(abstractOrderEntryModel.getWalletApportionPaymentInfo().getQcSchedulingPartValue()) > 0)
+			{
+				walletApportionPaymentInfo.setQcSchedulingPartValue(
+						"" + (Double.parseDouble(abstractOrderEntryModel.getWalletApportionPaymentInfo().getQcSchedulingPartValue())
+								/ quantity));
+			}
+
+
+			if (Double.parseDouble(abstractOrderEntryModel.getWalletApportionPaymentInfo().getJuspayApportionValue()) > 0)
+			{
+				walletApportionPaymentInfo.setJuspayApportionValue(
+						"" + (Double.parseDouble(abstractOrderEntryModel.getWalletApportionPaymentInfo().getJuspayApportionValue())
+								/ quantity));
+			}
+
+			if (Double.parseDouble(abstractOrderEntryModel.getWalletApportionPaymentInfo().getJuspayDeliveryValue()) > 0)
+			{
+				walletApportionPaymentInfo.setJuspayDeliveryValue(
+						"" + (Double.parseDouble(abstractOrderEntryModel.getWalletApportionPaymentInfo().getJuspayDeliveryValue())
+								/ quantity));
+			}
+
+			if (Double.parseDouble(abstractOrderEntryModel.getWalletApportionPaymentInfo().getJuspayShippingValue()) > 0)
+			{
+				walletApportionPaymentInfo.setJuspayShippingValue(
+						"" + (Double.parseDouble(abstractOrderEntryModel.getWalletApportionPaymentInfo().getJuspayShippingValue())
+								/ quantity));
+			}
+			if (Double.parseDouble(abstractOrderEntryModel.getWalletApportionPaymentInfo().getJuspaySchedulingValue()) > 0)
+			{
+				walletApportionPaymentInfo.setJuspaySchedulingValue(
+						"" + (Double.parseDouble(abstractOrderEntryModel.getWalletApportionPaymentInfo().getJuspaySchedulingValue())
+								/ quantity));
+			}
+
+			final List<WalletCardApportionDetailModel> cardQtyWiseList = new ArrayList<WalletCardApportionDetailModel>();
+
+			if (abstractOrderEntryModel.getWalletApportionPaymentInfo().getWalletCardList().size() > 0)
+			{
+
+				for (final WalletCardApportionDetailModel cardList : abstractOrderEntryModel.getWalletApportionPaymentInfo()
+						.getWalletCardList())
+				{
+					final WalletCardApportionDetailModel chlidCardApportionDetail = getModelService()
+							.create(WalletCardApportionDetailModel.class);
+
+					chlidCardApportionDetail.setOrderId(abstractOrderEntryModel.getWalletApportionPaymentInfo().getOrderId());
+					chlidCardApportionDetail.setCardNumber(cardList.getCardNumber());
+					chlidCardApportionDetail.setCardExpiry(cardList.getCardExpiry());
+					chlidCardApportionDetail.setBucketType(cardList.getBucketType());
+
+					if (Double.parseDouble(cardList.getCardAmount()) > Double.parseDouble("0"))
+					{
+						chlidCardApportionDetail.setCardAmount("" + (Double.parseDouble(cardList.getCardAmount()) / quantity));
+					}
+					if (Double.parseDouble(cardList.getQcApportionValue()) > Double.parseDouble("0"))
+					{
+						chlidCardApportionDetail
+								.setQcApportionValue("" + (Double.parseDouble(cardList.getQcApportionValue()) / quantity));
+					}
+					if (Double.parseDouble(cardList.getQcDeliveryValue()) > Double.parseDouble("0"))
+					{
+						chlidCardApportionDetail
+								.setQcDeliveryValue("" + (Double.parseDouble(cardList.getQcDeliveryValue()) / quantity));
+					}
+					if (Double.parseDouble(cardList.getQcShippingValue()) > Double.parseDouble("0"))
+					{
+						chlidCardApportionDetail
+								.setQcShippingValue("" + (Double.parseDouble(cardList.getQcShippingValue()) / quantity));
+					}
+					if (Double.parseDouble(cardList.getQcSchedulingValue()) > Double.parseDouble("0"))
+					{
+						chlidCardApportionDetail
+								.setQcSchedulingValue("" + (Double.parseDouble(cardList.getQcSchedulingValue()) / quantity));
+					}
+					cardQtyWiseList.add(chlidCardApportionDetail);
+				}
+			}
+			walletApportionPaymentInfo.setWalletCardList(cardQtyWiseList);
+			orderEntryModel.setWalletApportionPaymentInfo(walletApportionPaymentInfo);
 		}
-		walletApportionPaymentInfo.setWalletCardList(cardQtyWiseList);
-		orderEntryModel.setWalletApportionPaymentInfo(walletApportionPaymentInfo);
 	}
 
 
