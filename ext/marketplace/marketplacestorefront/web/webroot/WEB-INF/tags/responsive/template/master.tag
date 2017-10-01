@@ -539,8 +539,9 @@
 	</c:if>
 
 	<%-- Load JavaScript required by the site --%>
+	<!-- SDI-1103 -->
 	<template:javaScript/>
-	<script type="text/javascript">_satellite.pageBottom();</script>
+	<script type="text/javascript">if(typeof _satellite !="undefined"){_satellite.pageBottom();}</script>
 	<%-- Inject any additional JavaScript required by the page --%>
 	<jsp:invoke fragment="pageScripts"/>	
 	<%-- TPR-6399 --%>
@@ -555,7 +556,7 @@
 		<div class="overlay"></div>
 		<div class="content">
 		<div class="modal-body">
-		<button class="close" data-dismiss="modal"><span aria-hidden="true">×</span></button>
+		<button class="close" data-dismiss="modal"><span aria-hidden="true">Ã—</span></button>
 		<!-- <button class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span></button> -->
 		<h4>Enter Pincode</h4>
 		<input id="home_pin" type="text" placeholder="Pincode" maxlength="6" onkeypress="return isNum(event)"/>
