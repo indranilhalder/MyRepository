@@ -1328,10 +1328,8 @@ public class ProductPageController extends MidPageController
 			final Model model, final HttpServletRequest request, final HttpServletResponse response) throws CMSItemNotFoundException
 	{
 		List<PinCodeResponseData> pincodeResponse = null;
-		int pincodeCookieMaxAge;
 		final Cookie cookie = GenericUtilityMethods.getCookieByName(request, "pdpPincode");
-		final String cookieMaxAge = getConfigurationService().getConfiguration().getString("pdpPincode.cookie.age");
-		pincodeCookieMaxAge = (Integer.valueOf(cookieMaxAge)).intValue();
+		final int pincodeCookieMaxAge = getConfigurationService().getConfiguration().getInt("pdpPincode.cookie.age", 36000);
 		final String domain = getConfigurationService().getConfiguration().getString("shared.cookies.domain");
 		try
 		{
@@ -1539,7 +1537,12 @@ public class ProductPageController extends MidPageController
 			if (StringUtils.isNotEmpty(pincode))
 			{
 				model.addAttribute(ModelAttributetConstants.PINCODE, pincode);
-				model.addAttribute(ControllerConstants.Views.Fragments.Product.STORE_AVAIL, mplProductFacade.storeLocatorPDP(pincode));
+				/*
+				 * if (StringUtils.isNotEmpty(pincode) && StringUtils.isNotEmpty(ussId)) { posData =
+				 * mplProductFacade.storeLocatorFilterdPDP(pincode, ussId); //posData =
+				 * mplProductFacade.storeLocatorPDP(pincode); }
+				 * model.addAttribute(ControllerConstants.Views.Fragments.Product.STORE_AVAIL, posData);
+				 */
 			}
 			getRequestContextData(request).setProduct(productModel);
 			storeCmsPageInModel(model, getContentPageForLabelOrId(ControllerConstants.Views.Fragments.Product.VIEW_SELLERS));
@@ -2038,7 +2041,7 @@ public class ProductPageController extends MidPageController
 			if (StringUtils.isNotEmpty(pincode))
 			{
 				model.addAttribute(ModelAttributetConstants.PINCODE, pincode);
-				model.addAttribute(ControllerConstants.Views.Fragments.Product.STORE_AVAIL, mplProductFacade.storeLocatorPDP(pincode));
+				//model.addAttribute(ControllerConstants.Views.Fragments.Product.STORE_AVAIL, mplProductFacade.storeLocatorPDP(pincode));
 			}
 			displayConfigurableAttribute(productData, model);
 			//if (productModel.getProductCategoryType().equalsIgnoreCase(ELECTRONICS))
