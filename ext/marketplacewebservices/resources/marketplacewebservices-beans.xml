@@ -1164,9 +1164,32 @@
 		<property name="priceType" type="de.hybris.platform.commercefacades.product.data.PriceDataType" />	
 		<property name="value" type="java.math.BigDecimal" />	
 	</bean>
+	
+	 <bean class="com.tisl.mpl.wsdto.BucketEntryWsDto" extends="com.tisl.mpl.wsdto.ErrorDTO">
+		<property name="expiryTimestamp" type="String" />
+		<property name="transactionTimestamp" type="String" />
+		<property name="transactionType" type="int" />
+		<property name="invoiceNo" type="String" />
+		<property name="comment" type="String" />
+		<property name="paymentMode" type="String" />
+		<property name="transactionId" type="int" />
+		<property name="amount" type="com.tisl.mpl.wsdto.TotalCliqCashBalanceWsDto" />
+	</bean>
+	
+	 <bean class="com.tisl.mpl.wsdto.BucketsWsDto" extends="com.tisl.mpl.wsdto.ErrorDTO">
+		<property name="bucketDisplayName" type="String" />
+		<property name="bucketId" type="String" />
+		<property name="totalEntryCount" type="int" />
+		<property name="discalimer" type="String" />
+		<property name="bucketMaxLimit" type="com.tisl.mpl.wsdto.TotalCliqCashBalanceWsDto" />
+		<property name="bucketTotal" type="com.tisl.mpl.wsdto.TotalCliqCashBalanceWsDto" />
+		<property name="entries" type="com.tisl.mpl.wsdto.BucketEntryWsDto" />	
+	</bean>
+	
      <bean class="com.tisl.mpl.wsdto.CliqCashWsDto" extends="com.tisl.mpl.wsdto.ErrorDTO">
 		<property name="balanceClearedAsOf" type="String" />
 		<property name="totalCliqCashBalance" type="com.tisl.mpl.wsdto.TotalCliqCashBalanceWsDto" />
+		<property name="buckets" type="com.tisl.mpl.wsdto.TotalCliqCashBalanceWsDto" />
 	</bean>
 
       <bean class="com.tisl.mpl.wsdto.PayCliqCashWsDto" extends="com.tisl.mpl.wsdto.ErrorDTO">
@@ -3287,16 +3310,16 @@
    
    
    
-   <!--  <bean class="com.tisl.mpl.wsdto.TotalCliqCashBalanceWsDTO">
+    <!--  <bean class="com.tisl.mpl.wsdto.TotalCliqCashBalanceWsDTO">
     	<property name="currencyIso" type="String" />
     	<property name="doubleValue" type="java.lang.Double"/>
     	<property name="formattedValue" type="String"/>
     	<property name="formattedValueNoDecimal" type="String" />
     	<property name="value" type="String" />
     	
-    </bean>
-     -->
-   <!--  <bean class="com.tisl.mpl.wsdto.BucketEntryWsDTO">
+    </bean> -->
+    
+  <!--  <bean class="com.tisl.mpl.wsdto.BucketEntryWsDTO">
     	<property name="expiryTimestamp" type="String" />
     	<property name="transactionTimestamp" type="java.lang.Double"/>
     	<property name="transactionType" type="String"/>
@@ -3306,9 +3329,9 @@
     	<property name="paymentMode" type="String" />
     	<property name="transactionId" type="String" />
     	<property name="amount" type="com.tisl.mpl.wsdto.BucketAmountWsDTO>"/>
-    </bean> -->
+    </bean> 
    
-   <!-- <bean class="com.tisl.mpl.wsdto.BucketsWsDTO">
+   <bean class="com.tisl.mpl.wsdto.BucketsWsDTO">
     	<property name="bucketDisplayName" type="String" />
     	<property name="bucketId" type="String"/>
     	<property name="totalEntryCount" type="String"/>
@@ -3321,14 +3344,14 @@
     
     
     
-    <bean class="com.tisl.mpl.wsdto.UserCliqCashDetailsWsDTO">
+    <bean class="com.tisl.mpl.wsdto.UserCliqCashDetailsWsDTO" extends="com.tisl.mpl.wsdto.ErrorDTO">
     	<property name="status" type="String" />
     	<property name="cliqCashDisclaimer" type="String"/>
-    	<property name="offers" type="com.tisl.mpl.wsdto.CliqCashOffersWsDto>" />
+    	<property name="offers" type="java.util.List&lt;String> "/>
     	<property name="cliqCash" type="com.tisl.mpl.wsdto.CliqCashWsDTO"/>
     	
-    </bean>
-     -->
+    </bean> -->
+    
     
     
    
@@ -3394,6 +3417,11 @@
 		<property name="messageOnCard" type="String" />
 		<property name="from" type="String" />
 	</bean>	
+	
+	<bean class="com.tisl.mpl.wsdto.BuyingEgvRequestListWsDTO">
+		<property name="item"
+			type="java.util.List&lt;com.tisl.mpl.wsdto.BuyingEgvRequestWsDTO>" />
+	</bean>
 	
 	<bean class="com.tisl.mpl.wsdto.BuyingEgvResponceWsDTO" extends="com.tisl.mpl.wsdto.ErrorDTO">
 		<property name="totalPrice" type="Double" />

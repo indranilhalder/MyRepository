@@ -235,6 +235,7 @@ import com.tisl.mpl.util.ExceptionUtil;
 import com.tisl.mpl.util.MplTimeconverUtility;
 import com.tisl.mpl.validation.data.AddressValidationData;
 import com.tisl.mpl.webservice.businessvalidator.DefaultCommonAsciiValidator;
+import com.tisl.mpl.wsdto.BuyingEgvRequestListWsDTO;
 import com.tisl.mpl.wsdto.BuyingEgvRequestWsDTO;
 import com.tisl.mpl.wsdto.BuyingEgvResponceWsDTO;
 import com.tisl.mpl.wsdto.CommonCouponsDTO;
@@ -6950,8 +6951,8 @@ public class UsersController extends BaseCommerceController
 						return orderCreateInJusPayWsDto;
 
 					}
-					
-					 // Buying Of EGV  Changes End 
+
+					// Buying Of EGV  Changes End
 
 					final ArrayList<DiscountModel> voucherList = new ArrayList<DiscountModel>(
 							getVoucherService().getAppliedVouchers(cart));
@@ -7439,37 +7440,41 @@ public class UsersController extends BaseCommerceController
 		return orderCreateInJusPayWsDto;
 	}
 
-	private OrderCreateInJusPayWsDto createJuspayOrderForEGV(final String firstName, final String lastName, final String country, final String state,
-			final String city, final String pincode, final String cardSaved, final String sameAsShipping, final String guid, final StringBuilder returnUrlBuilder, final String paymentAddressLine1, final String paymentAddressLine2,
-			final String paymentAddressLine3, final String uid) throws InvalidCartException
+	private OrderCreateInJusPayWsDto createJuspayOrderForEGV(final String firstName, final String lastName, final String country,
+			final String state, final String city, final String pincode, final String cardSaved, final String sameAsShipping,
+			final String guid, final StringBuilder returnUrlBuilder, final String paymentAddressLine1,
+			final String paymentAddressLine2, final String paymentAddressLine3, final String uid) throws InvalidCartException
 	{
-		
-		OrderCreateInJusPayWsDto juspayOrderWsDto = new OrderCreateInJusPayWsDto();
+
+		final OrderCreateInJusPayWsDto juspayOrderWsDto = new OrderCreateInJusPayWsDto();
 		try
 		{
-			
+
 			final CartModel cart = mplEGVCartService.getEGVCartModel(guid);
 			LOG.info("::Going to Create Juspay OrderId::");
-			String juspayOrderId = getMplPaymentFacade().createJuspayOrder(cart, null, firstName, lastName, paymentAddressLine1,
-					paymentAddressLine2, paymentAddressLine3, country, state, city, pincode,
+			final String juspayOrderId = getMplPaymentFacade().createJuspayOrder(cart, null, firstName, lastName,
+					paymentAddressLine1, paymentAddressLine2, paymentAddressLine3, country, state, city, pincode,
 					cardSaved + MarketplacewebservicesConstants.STRINGSEPARATOR + sameAsShipping, returnUrlBuilder.toString(), uid,
-					MarketplacewebservicesConstants.CHANNEL_MOBILE, 0.0D);
-			OrderModel order =getMplCheckoutFacade().placeEGVOrder(cart);
-			if(null != order && null != order.getCode()) {
+					MarketplacewebservicesConstants.CHANNEL_MOBILE, cart.getTotalPrice().doubleValue());
+			final OrderModel order = getMplCheckoutFacade().placeEGVOrder(cart);
+			if (null != order && null != order.getCode())
+			{
 				juspayOrderWsDto.setOrderId(order.getCode());
 			}
-			if(null !=juspayOrderId) {
+			if (null != juspayOrderId)
+			{
 				juspayOrderWsDto.setJuspayOrderId(juspayOrderId);
 			}
 		}
 		catch (final EtailNonBusinessExceptions e)
 		{
-			LOG.error("Exception Occurred while createJuspayOrderForEGV "+e.getMessage());
-		}catch (final Exception e)
-		{
-			LOG.error("Exception Occurred while createJuspayOrderForEGV "+e.getMessage());
+			LOG.error("Exception Occurred while createJuspayOrderForEGV " + e.getMessage());
 		}
-		
+		catch (final Exception e)
+		{
+			LOG.error("Exception Occurred while createJuspayOrderForEGV " + e.getMessage());
+		}
+
 		return juspayOrderWsDto;
 	}
 
@@ -9202,7 +9207,7 @@ public class UsersController extends BaseCommerceController
 		return redeemCliqVoucherWsDTO;
 	}
 
-	
+
 	@Secured(
 	{ CUSTOMER, "ROLE_TRUSTED_CLIENT", CUSTOMERMANAGER })
 	@RequestMapping(value = MarketplacewebservicesConstants.CREATE_ELECTRONICS_GIFTCARD_AMOUNT, method = RequestMethod.POST, produces = APPLICATION_TYPE)
@@ -9212,11 +9217,11 @@ public class UsersController extends BaseCommerceController
 
 	{
 		LOG.info("Calculating Electronics Gift Card Amount");
-		BuyingEgvResponceWsDTO buyingEgvResponce = new BuyingEgvResponceWsDTO();
-		CartModel cart = mplPaymentWebFacade.findCartAnonymousValues(cartGuid);
+		final BuyingEgvResponceWsDTO buyingEgvResponce = new BuyingEgvResponceWsDTO();
+		final CartModel cart = mplPaymentWebFacade.findCartAnonymousValues(cartGuid);
 		try
 		{
-		if (null != cart)
+			if (null != cart)
 			{
 				if (null != cart.getTotalPrice())
 				{
@@ -9252,22 +9257,23 @@ public class UsersController extends BaseCommerceController
 		return buyingEgvResponce;
 	}
 
-
-
 	@Secured(
 	{ CUSTOMER, "ROLE_TRUSTED_CLIENT", CUSTOMERMANAGER })
 	@RequestMapping(value = MarketplacewebservicesConstants.CREATE_ELECTRONICS_GIFTCARD_GUID, method = RequestMethod.POST, produces = APPLICATION_TYPE)
 	@ResponseBody
-	public BuyingEgvResponceWsDTO createGiftCardGuid(@RequestParam final BuyingEgvRequestWsDTO request)
+	public BuyingEgvResponceWsDTO createGiftCardGuid(@RequestBody final BuyingEgvRequestListWsDTO buyingEgvRequest)
 			throws EtailNonBusinessExceptions, EtailBusinessExceptions, CalculationException
 
 	{
 		LOG.info("Creating  Electronics Gift Card Guid");
-		BuyingEgvResponceWsDTO buyingEgvResponce = new BuyingEgvResponceWsDTO();
+		final BuyingEgvResponceWsDTO buyingEgvResponce = new BuyingEgvResponceWsDTO();
 		CartData giftCartData = null;
 		try
 		{
-			final EgvDetailsData egvDetailsData = populateEGVFormToData(request);
+			 EgvDetailsData egvDetailsData=null;
+			if(null != buyingEgvRequest && null != buyingEgvRequest.getItem() && !buyingEgvRequest.getItem().isEmpty()){
+				egvDetailsData = populateEGVFormToData(buyingEgvRequest.getItem().get(0));
+			}
 			if (null != egvDetailsData)
 			{
 				giftCartData = mplCartFacade.getGiftCartModel(egvDetailsData);
@@ -9311,7 +9317,7 @@ public class UsersController extends BaseCommerceController
 		return buyingEgvResponce;
 	}
 
-	
+
 	/**
 	 * @param s
 	 * @return
@@ -9319,31 +9325,43 @@ public class UsersController extends BaseCommerceController
 	private EgvDetailsData populateEGVFormToData(final BuyingEgvRequestWsDTO requestData)
 	{
 		final EgvDetailsData egvDetailsData = new EgvDetailsData();
-		if(null != requestData) {
+		if (null != requestData)
+		{
 			final CustomerModel currentCustomer = (CustomerModel) getUserService().getCurrentUser();
 			egvDetailsData.setProductCode(requestData.getProductID());
-			if(null != requestData.getPriceSelectedByUserPerQuantity()  && requestData.getPriceSelectedByUserPerQuantity().doubleValue() > 0.0D) {
+			if (null != requestData.getPriceSelectedByUserPerQuantity()
+					&& requestData.getPriceSelectedByUserPerQuantity().doubleValue() > 0.0D)
+			{
 				egvDetailsData.setGiftRange(requestData.getPriceSelectedByUserPerQuantity().doubleValue());
 			}
-			if(null != requestData.getPriceSelectedByUserPerQuantity() && requestData.getPriceSelectedByUserPerQuantity().doubleValue() > 0.0D) {
+			if (null != requestData.getPriceSelectedByUserPerQuantity()
+					&& requestData.getPriceSelectedByUserPerQuantity().doubleValue() > 0.0D)
+			{
 				egvDetailsData.setOpenTextAmount(requestData.getPriceSelectedByUserPerQuantity().doubleValue());
 			}
-			if(null != requestData.getReceiverEmailID()) {
+			if (null != requestData.getReceiverEmailID())
+			{
 				egvDetailsData.setToEmailAddress(requestData.getReceiverEmailID());
 			}
-			if(null != currentCustomer && null != currentCustomer.getOriginalUid() ) {
+			if (null != currentCustomer && null != currentCustomer.getOriginalUid())
+			{
 				egvDetailsData.setFromEmailAddress(currentCustomer.getOriginalUid());
 			}
-			
-//			if(null != requestData.getMessageOnCard()) {
-//				egvDetailsData.setMessageBox(egvDetailForm.getMessageBox());
-//			}
-			
+			if (null != requestData.getPriceSelectedByUserPerQuantity())
+			{
+				egvDetailsData.setGiftRange(requestData.getPriceSelectedByUserPerQuantity().doubleValue());
+			}
+
+			//			if(null != requestData.getMessageOnCard()) {
+			//				egvDetailsData.setMessageBox(egvDetailForm.getMessageBox());
+			//			}
+
 			egvDetailsData.setTotalEGV(requestData.getQuantity());
 		}
-		
+
 		return egvDetailsData;
 	}
+
 	/**
 	 * @param item
 	 * @param pincode
