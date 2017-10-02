@@ -201,6 +201,18 @@
 		<property name="typeCode" value="ProductPromotion" />
 	</bean>
 	
+	<!-- PR-15 starts here -->
+	<!-- For Bulk Product Upload on HMC Configuration Screen -->
+	<bean id="orderPromotionInterceptor" class="com.tisl.mpl.interceptor.OrderPromotionInterceptor">
+	</bean>
+
+	<bean id="orderPromotionInterceptorMapping"
+		class="de.hybris.platform.servicelayer.interceptor.impl.InterceptorMapping">
+		<property name="interceptor" ref="orderPromotionInterceptor" />
+		<property name="typeCode" value="OrderPromotion" />
+	</bean>
+	<!-- PR-15 ends here -->
+	
 	<!-- PriceRowPromotionInterceptor ends -->
 	<!-- DeliveryModeInterceptor Start -->
 	<!-- <bean id="deliveryModeCreateInterceptor" class="com.tisl.mpl.interceptor.DeliveryModeCreateInterceptor"> 
@@ -2352,5 +2364,4 @@
 	<!--  End TPR-6945 -->
     
 </beans>
-
 

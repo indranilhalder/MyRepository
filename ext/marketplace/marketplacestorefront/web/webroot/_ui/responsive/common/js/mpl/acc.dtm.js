@@ -613,10 +613,12 @@ $(document).ready(function(){
     	
 /*  Direct call rule starts here*/
 	
-    // For icid
-	var url_string = window.location.href;
-	var url = new URL(url_string);
-	var icid2Param = url.searchParams.get("icid2");
+    // For icid 
+        //SDI-1103
+	//var url_string = window.location.href;
+	//var url = new URL(url_string);
+	//var icid2Param = url.searchParams.get("icid2");
+	var icid2Param = getIcid2FromUrl();
 	if(typeof icid2Param != "undefined" && icid2Param != null){
 		_satellite.track('internal_campaign');
 		digitalData.internal = {
@@ -858,6 +860,20 @@ $(document).ready(function(){
 
   
 });
+//SDI-1103
+function getIcid2FromUrl()
+{
+    var vars = [], hash;
+    var hashes = window.location.href.slice(window.location.href.indexOf('?') + 1).split('&');
+    for(var i = 0; i < hashes.length; i++)
+    {
+        hash = hashes[i].split('=');
+        vars.push(hash[0]);
+        vars[hash[0]] = hash[1];
+    }
+    return vars["icid2"];
+   
+}
 function differentiateSellerDtm(){
 	var sellerList = $('#pdpSellerIDs').val();
 	var sellerArray='';

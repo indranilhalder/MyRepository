@@ -37,6 +37,7 @@ import de.hybris.platform.product.ProductService;
 import de.hybris.platform.promotions.constants.GeneratedPromotionsConstants;
 import de.hybris.platform.promotions.jalo.AbstractPromotion;
 import de.hybris.platform.promotions.jalo.AbstractPromotionRestriction;
+import de.hybris.platform.promotions.jalo.OrderPromotion;
 import de.hybris.platform.promotions.jalo.ProductPromotion;
 import de.hybris.platform.promotions.jalo.PromotionOrderEntryConsumed;
 import de.hybris.platform.promotions.jalo.PromotionResult;
@@ -99,6 +100,7 @@ import com.tisl.mpl.model.BuyAPercentageDiscountModel;
 import com.tisl.mpl.model.BuyAandBGetPromotionOnShippingChargesModel;
 import com.tisl.mpl.model.BuyXItemsofproductAgetproductBforfreeModel;
 import com.tisl.mpl.model.EtailSellerSpecificRestrictionModel;
+import com.tisl.mpl.model.FixedPricePromotionModel;
 import com.tisl.mpl.model.SellerInformationModel;
 import com.tisl.mpl.promotion.helper.MplPromotionHelper;
 import com.tisl.mpl.promotion.service.SellerBasedPromotionService;
@@ -1009,10 +1011,23 @@ public class DefaultPromotionManager extends PromotionsManager
 	{
 		final BaseSiteModel currentBaseSite = baseSiteService.getCurrentBaseSite();
 		String catalogId = "";
-		if (null != currentBaseSite && StringUtils.isNotBlank(currentBaseSite.getUid())
-				&& currentBaseSite.getUid().equals(configurationService.getConfiguration().getString(MarketplacecommerceservicesConstants.DEFAULTLUXURYSITEID))){
-			catalogId = configurationService.getConfiguration().getString(MarketplacecommerceservicesConstants.DEFAULTLUXURYCATALOGID, "");
-		}else{
+		if (null != currentBaseSite
+				&& StringUtils.isNotBlank(currentBaseSite.getUid())
+
+				&& currentBaseSite.getUid().equals(
+						configurationService.getConfiguration().getString(MarketplacecommerceservicesConstants.DEFAULTLUXURYSITEID)))
+		{
+
+
+
+
+
+			catalogId = configurationService.getConfiguration().getString(
+					MarketplacecommerceservicesConstants.DEFAULTLUXURYCATALOGID, "");
+		}
+		else
+		{
+
 			catalogId = configurationService.getConfiguration().getString(MarketplacecommerceservicesConstants.DEFAULTCATALOGID, "");
 		}
 		final String catalogVersionName = configurationService.getConfiguration().getString(
@@ -2689,6 +2704,12 @@ public class DefaultPromotionManager extends PromotionsManager
 				count = ((BuyAGetPrecentageDiscountCashbackModel) oModel).getQuantity().intValue();
 			}
 			//TISSQAUAT-476 fix ends here
+			//PR-13 starts here
+			else if (oModel instanceof FixedPricePromotionModel)
+			{
+				count = ((FixedPricePromotionModel) oModel).getQuantity().intValue();
+			}
+			//PR-13 ends here
 		}
 		catch (final Exception exception)
 		{
@@ -3586,6 +3607,28 @@ public class DefaultPromotionManager extends PromotionsManager
 		}
 		return totalvalidproductsPricevalue;
 	}
+
+
+	//PR-13 starts here
+	/**
+	 * @Description : This calculates the total valid product price
+	 * @param : validProductUssidMap, validProductList
+	 * @return :double
+	 */
+	public double getTotalValidProdFixedPrice(final Map<String, AbstractOrderEntry> validProductUssidMap,
+			final Map<String, Integer> validProductList, final double fixedUnitPrice)
+	{
+		double totalValidProdFixedPrice = 0.0D;
+		for (final Map.Entry<String, AbstractOrderEntry> mapEntry : validProductUssidMap.entrySet())
+		{
+			final String validUssid = mapEntry.getKey();
+			totalValidProdFixedPrice += (fixedUnitPrice * validProductList.get(validUssid).intValue());
+		}
+		return totalValidProdFixedPrice;
+	}
+
+	//PR-13 ends here
+
 
 	/**
 	 * @Description: Check for the products with fired promotions and put them in excluded product list
@@ -5781,6 +5824,8 @@ public class DefaultPromotionManager extends PromotionsManager
 		return products;
 	}
 
+
+	//PR-15 modification starts
 	/**
 	 * @param params
 	 * @param ctx
@@ -5791,8 +5836,20 @@ public class DefaultPromotionManager extends PromotionsManager
 		/* * SONAR FIX */
 		final StringBuilder promQuery = new StringBuilder(160);
 		promQuery.append("SELECT {promotion.excludedProducts} as excludedProducts ");
-		promQuery.append(MarketplacecommerceservicesConstants.QUERYFROM).append(MarketplacecommerceservicesConstants.PRODUCT_PROMO)
-				.append(" AS promotion} ");
+		promQuery.append(MarketplacecommerceservicesConstants.QUERYFROM);
+		//		promQuery.append(MarketplacecommerceservicesConstants.QUERYFROM).append(MarketplacecommerceservicesConstants.PRODUCT_PROMO)
+		//				.append(" AS promotion} ");
+		final AbstractPromotion promotion = (AbstractPromotion) params.get(MarketplacecommerceservicesConstants.PROMO);
+		if (promotion instanceof ProductPromotion)
+		{
+			promQuery.append(MarketplacecommerceservicesConstants.PRODUCT_PROMO);
+		}
+		else if (promotion instanceof OrderPromotion)
+		{
+			promQuery.append(MarketplacecommerceservicesConstants.CART_PROMO);
+		}
+
+		promQuery.append(" AS promotion} ");
 		promQuery.append("WHERE {promotion.excludedProducts} IS NOT NULL AND {promotion:pk} = ?promo ");
 
 		final List<String> excludedProductStr = getSession().getFlexibleSearch()
@@ -5803,6 +5860,11 @@ public class DefaultPromotionManager extends PromotionsManager
 		return Arrays.asList(excludedProducts.split(","));
 
 	}
+
+	//PR-15 modification ends
+
+
+
 
 	/**
 	 * @param params
@@ -6092,4 +6154,173 @@ public class DefaultPromotionManager extends PromotionsManager
 		final Boolean allowed = (Boolean) ctx.getAttribute("de.hybris.platform.promotions.jalo.cachingAllowed");
 		return (((allowed == null) || (allowed == Boolean.FALSE)) ? Boolean.FALSE : Boolean.TRUE);
 	}
+
+	/*-----PR-15 starts-------*/
+	/**
+	 * @param promoContext
+	 * @param ctx
+	 * @param promotion
+	 * @param categories
+	 * @param secondCategories
+	 * @param primaryProductList
+	 * @param secondaryProductList
+	 * @return RestrictionSetResult
+	 */
+	protected PromotionsManager.RestrictionSetResult findEligibleProductsInBasketForCartPromo(final SessionContext ctx,
+			final PromotionEvaluationContext promoContext, final AbstractPromotion promotion)
+	{
+		final Flat3Map params = new Flat3Map();
+		params.put(MarketplacecommerceservicesConstants.PROMO, promotion);
+
+		final Collection products = getBaseProductsInBasket(ctx, promoContext.getOrder(), params);
+		params.put(MarketplacecommerceservicesConstants.PRODUCT_IMAGE, products);
+
+		final StringBuilder categoryRestrQuery = evaluateCategoryRestriction(params, promotion, ctx);
+
+		final StringBuilder brandQuery = evaluateBrandRestriction(params, promotion, ctx);
+
+		final StringBuilder promQuery = new StringBuilder("SELECT DISTINCT pprom.pk FROM (");
+
+		if (categoryRestrQuery == null && brandQuery == null)
+		{
+			return new PromotionsManager.RestrictionSetResult(new ArrayList(products));
+		}
+		else if (categoryRestrQuery != null && brandQuery != null)
+		{
+			promQuery.append(categoryRestrQuery);
+			promQuery.append(brandQuery);
+		}
+		else if (categoryRestrQuery != null && brandQuery == null)
+		{
+			promQuery.append(categoryRestrQuery);
+		}
+		else if (categoryRestrQuery == null && brandQuery != null)
+		{
+			brandQuery.delete(0, 11);//to avoid INTERSECT in the query
+			promQuery.append(brandQuery);
+
+		}
+
+		if (!(Config.isOracleUsed()))
+		{
+			promQuery.append(" ) AS pprom");
+		}
+		else
+		{
+			promQuery.append(" ) pprom");
+		}
+
+		final List cartProducts = getSession().getFlexibleSearch().search(ctx, promQuery.toString(), params, Product.class)
+				.getResult();
+
+		if (promoContext.getObserveRestrictions())
+		{
+			return PromotionsManager.getInstance().evaluateRestrictions(ctx, cartProducts, promoContext.getOrder(), promotion,
+					promoContext.getDate());
+		}
+
+		return new PromotionsManager.RestrictionSetResult(cartProducts);
+
+	}
+
+
+	/**
+	 * @param params
+	 * @param promotion
+	 * @param ctx
+	 * @return StringBuilder query
+	 */
+	private StringBuilder evaluateCategoryRestriction(final Flat3Map params, final AbstractPromotion promotion,
+			final SessionContext ctx)
+	{
+		StringBuilder stringBuilder = null;
+		//String PromotionType = null;
+		Collection<String> categoryList = null;
+		boolean isIncluded = false;
+
+		for (final AbstractPromotionRestriction restriction : promotion.getRestrictions())
+		{
+			if (restriction instanceof CategoryRestriction)
+			{
+				//				if (((CategoryRestriction) restriction).isIncludedAsPrimitive(ctx))
+				//				{
+				//PromotionType = MarketplacecommerceservicesConstants.CATEGORYRESTRICTION;
+				isIncluded = ((CategoryRestriction) restriction).isIncludedAsPrimitive(ctx);
+				categoryList = fetchCategoriesForPromotion(params, ctx, MarketplacecommerceservicesConstants.CATEGORYRESTRICTION);
+				break;
+				//}
+			}
+			//else if (restriction instanceof ExcludeManufacturesRestriction)
+			//{
+			//	PromotionType = MarketplacecommerceservicesConstants.EXCLUDECATEGORYRESTRICTION;
+			//	categoryList = fetchCategoriesForPromotion(params, ctx, PromotionType);
+			//	break;
+			//}
+		}
+
+		if (CollectionUtils.isNotEmpty(categoryList))
+		{
+			params.put(MarketplacecommerceservicesConstants.PROMO_CATEGORIES, categoryList);
+			stringBuilder = constructCategoryQuery(params, isIncluded);
+		}
+		return stringBuilder;
+
+	}
+
+	/**
+	 * @param params
+	 * @param ctx
+	 * @param promotionType
+	 * @return Collection<String>
+	 */
+	private Collection<String> fetchCategoriesForPromotion(final Flat3Map params, final SessionContext ctx,
+			final String PromotionType)
+	{
+		/* * SONAR FIX */
+		final StringBuilder promQuery = new StringBuilder(150);
+		promQuery.append("SELECT {category.categories} as categories ");
+		promQuery.append(MarketplacecommerceservicesConstants.QUERYFROM).append(PromotionType).append(" AS category} ");
+		promQuery.append("WHERE {category.categories} IS NOT NULL AND {category.promotion} = ?promo ");
+
+		final List<String> categoryStr = getSession().getFlexibleSearch().search(ctx, promQuery.toString(), params, String.class)
+				.getResult();
+
+		final String categories = CollectionUtils.isNotEmpty(categoryStr) ? categoryStr.get(0) : "";
+
+		return Arrays.asList(categories.substring(4).split(","));
+	}
+
+	/**
+	 * @param brandList
+	 * @param PromotionType
+	 * @return StringBuilder query
+	 */
+	private StringBuilder constructCategoryQuery(final Flat3Map params, final boolean isIncluded)
+	{
+		final StringBuilder promQuery = new StringBuilder();
+
+		if (isIncluded)
+		{
+			promQuery.append("{{ SELECT {cat2prod:target} as pk  ");
+			promQuery.append(MarketplacecommerceservicesConstants.QUERYFROM)
+					.append(GeneratedCatalogConstants.Relations.CATEGORYPRODUCTRELATION).append(" AS cat2prod } ");
+			promQuery.append("WHERE {cat2prod:target} in (?product) AND {cat2prod:source} in (?categories) }} ");
+		}
+		else
+		{
+			promQuery.append("{{ SELECT {cat2prod:target} as pk  ");
+			promQuery.append(MarketplacecommerceservicesConstants.QUERYFROM).append(
+					GeneratedCatalogConstants.Relations.CATEGORYPRODUCTRELATION);
+			promQuery.append(" AS cat2prod JOIN ").append(MarketplacecommerceservicesConstants.TYPE_CATEGORY)
+					.append(" AS category on {cat2prod:source} = {category.pk}} ");
+			promQuery
+					.append(
+							"WHERE {cat2prod:target} in (?product) AND {cat2prod:source} not in (?categories) AND {category.code} like '%")
+					.append(MarketplacecommerceservicesConstants.SELLER_NAME_PREFIX).append("%' }} ");
+		}
+
+		return promQuery;
+	}
+
+	/*-----PR-15 ends-------*/
 }

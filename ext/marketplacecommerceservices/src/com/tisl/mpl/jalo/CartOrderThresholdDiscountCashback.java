@@ -7,6 +7,8 @@ import de.hybris.platform.jalo.SessionContext;
 import de.hybris.platform.jalo.c2l.Currency;
 import de.hybris.platform.jalo.enumeration.EnumerationValue;
 import de.hybris.platform.jalo.order.AbstractOrder;
+import de.hybris.platform.jalo.order.AbstractOrderEntry;
+import de.hybris.platform.jalo.product.Product;
 import de.hybris.platform.jalo.type.ComposedType;
 import de.hybris.platform.order.CartService;
 import de.hybris.platform.promotions.jalo.AbstractPromotionRestriction;
@@ -19,12 +21,17 @@ import de.hybris.platform.util.localization.Localization;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
+import org.apache.commons.collections.MapUtils;
+import org.apache.commons.lang.BooleanUtils;
 import org.apache.log4j.Logger;
 
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.exception.EtailBusinessExceptions;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
+import com.tisl.mpl.promotion.helper.MplPromotionHelper;
 import com.tisl.mpl.util.ExceptionUtil;
 
 
@@ -36,7 +43,9 @@ public class CartOrderThresholdDiscountCashback extends GeneratedCartOrderThresh
 {
 
 	private double adjustedDiscounts = 0.0d;
-
+	//PR-15 starts here
+	private double subTotalValue = 0.0D;
+	//PR-15 ends here
 	@SuppressWarnings("unused")
 	private final static Logger LOG = Logger.getLogger(CartOrderThresholdDiscountCashback.class.getName());
 
@@ -67,12 +76,17 @@ public class CartOrderThresholdDiscountCashback extends GeneratedCartOrderThresh
 	 * @param : SessionContext paramSessionContext ,PromotionEvaluationContext paramPromotionEvaluationContext
 	 * @return : List<PromotionResult> promotionResults
 	 */
+	@SuppressWarnings("deprecation")
 	@Override
 	public List<PromotionResult> evaluate(final SessionContext paramSessionContext,
 			final PromotionEvaluationContext evaluationContext)
 	{
 		boolean flagForDeliveryModeRestrEval = false;
 		boolean flagForPaymentModeRestrEval = false;
+
+		/* PR-15 starts here */
+		Map<String, AbstractOrderEntry> validProductUssidMap = new ConcurrentHashMap<String, AbstractOrderEntry>();
+		/* PR-15 starts here */
 
 		final List<PromotionResult> promotionResults = new ArrayList<PromotionResult>();
 		try
@@ -92,17 +106,40 @@ public class CartOrderThresholdDiscountCashback extends GeneratedCartOrderThresh
 				flagForPaymentModeRestrEval = getDefaultPromotionsManager().getPaymentModeRestrEval(restrictionList,
 						paramSessionContext);
 
-				if (checkRestrictions(paramSessionContext, evaluationContext) && checkChannelFlag && flagForDeliveryModeRestrEval
-						&& flagForPaymentModeRestrEval)
+				//PR-15 starts here
+				final PromotionsManager.RestrictionSetResult rsr = getDefaultPromotionsManager()
+						.findEligibleProductsInBasketForCartPromo(paramSessionContext, evaluationContext, this);
+				//PR-15 ends here
+
+				if (rsr.isAllowedToContinue() && !rsr.getAllowedProducts().isEmpty()
+						&& checkRestrictions(paramSessionContext, evaluationContext) && checkChannelFlag
+						&& flagForDeliveryModeRestrEval && flagForPaymentModeRestrEval)//Check added for PR-15
 				{
+					//PR-15 starts here
+					double orderSubtotalAfterDiscounts = 0.0D;
+					//PR-15 ends here
 					final double percentageDiscount = getPercentageDiscount() == null ? 0.0D : getPercentageDiscount().doubleValue();
 					//final double orderAdjustment = 0.0D;
 					final Double threshold = getPriceForOrder(paramSessionContext, getThresholdTotals(paramSessionContext), //Get the Threshold Limit set in Promotions
 							evaluationContext.getOrder(), MarketplacecommerceservicesConstants.THRESHOLD_TOTALS);
+
+					//PR-15 starts here
+					final List<Product> allowedProductList = new ArrayList<Product>(rsr.getAllowedProducts());
+					//PR-15 ends here
+
 					if (threshold != null)
 					{
 						//Calculating the Subtotal Post Discount
-						final double orderSubtotalAfterDiscounts = getOrderSubtotalAfterDiscounts(paramSessionContext, cart);
+
+						/* PR-15 starts here */
+						validProductUssidMap = getMplPromotionHelper().getCartSellerEligibleProducts(paramSessionContext, cart, null,
+								allowedProductList);
+						orderSubtotalAfterDiscounts = getAllowedProductSubtotal(paramSessionContext, validProductUssidMap);
+						setSubTotalValue(orderSubtotalAfterDiscounts);
+						//orderSubtotalAfterDiscounts = getSubtotalAfterDiscount(ctx, order);
+						//final double orderSubtotalAfterDiscounts = getOrderSubtotalAfterDiscounts(paramSessionContext, cart);
+						/* PR-15 ends here */
+
 						adjustedDiscounts = (percentageDiscount * orderSubtotalAfterDiscounts) / 100;
 
 						if (orderSubtotalAfterDiscounts >= threshold.doubleValue()) // Checking if the value is greater than or equal to Promotion set Threshold
@@ -235,7 +272,10 @@ public class CartOrderThresholdDiscountCashback extends GeneratedCartOrderThresh
 				}
 				else if (result.getCouldFire(ctx))
 				{
-					final double orderSubtotal = getOrderSubtotalAfterDiscounts(ctx, order);
+					//PR-15 starts here
+					//final double orderSubtotal = getOrderSubtotalAfterDiscounts(ctx, order);
+					final double orderSubtotal = getSubTotalValue();
+					//PR-15 ends here
 					final double amountRequired = threshold.doubleValue() - orderSubtotal;
 
 					final Object[] args =
@@ -249,6 +289,52 @@ public class CartOrderThresholdDiscountCashback extends GeneratedCartOrderThresh
 		return MarketplacecommerceservicesConstants.EMPTY;
 	}
 
+	/* PR-15 starts here */
+	private double getAllowedProductSubtotal(final SessionContext arg0, final Map<String, AbstractOrderEntry> validProductUssidMap)
+	{
+		double orderSubtotalAfterDiscounts = 0.0D;
+		try
+		{
+			if (MapUtils.isNotEmpty(validProductUssidMap))
+			{
+				double bogoFreePrice = 0.0D;
+				double totalPrice = 0.0D;
+
+				for (final Map.Entry<String, AbstractOrderEntry> mapentry : validProductUssidMap.entrySet())
+				{
+					if (null != mapentry && null != mapentry.getValue() && null != mapentry.getValue().getTotalPrice())
+					{
+						totalPrice = totalPrice + (mapentry.getValue().getTotalPrice().doubleValue());
+					}
+
+					if ((null != mapentry.getValue().getAttribute(arg0, MarketplacecommerceservicesConstants.IS_BOGO_APPLIED)
+							&& BooleanUtils.toBoolean(mapentry.getValue()
+									.getAttribute(arg0, MarketplacecommerceservicesConstants.IS_BOGO_APPLIED).toString()) && null != mapentry
+							.getValue().getAttribute(arg0, MarketplacecommerceservicesConstants.BOGO_ITEM_COUNT)))
+					{
+						final double freecount = Double.parseDouble(mapentry.getValue()
+								.getAttribute(arg0, MarketplacecommerceservicesConstants.BOGO_ITEM_COUNT).toString());
+						bogoFreePrice = bogoFreePrice + (freecount * 0.01);
+					}
+				}
+
+				if (totalPrice != 0.0D)
+				{
+					orderSubtotalAfterDiscounts = totalPrice - bogoFreePrice;
+				}
+			}
+		}
+		catch (final Exception exception)
+		{
+			LOG.error(exception.getMessage());
+		}
+
+		return orderSubtotalAfterDiscounts;
+	}
+
+	/* PR-15 ends here */
+
+
 	protected CartService getCartService()
 	{
 		return Registry.getApplicationContext().getBean("cartService", CartService.class);
@@ -258,4 +344,34 @@ public class CartOrderThresholdDiscountCashback extends GeneratedCartOrderThresh
 	{
 		return Registry.getApplicationContext().getBean("defaultPromotionManager", DefaultPromotionManager.class);
 	}
+
+	/* PR-15 starts here */
+	protected MplPromotionHelper getMplPromotionHelper()
+	{
+		return Registry.getApplicationContext().getBean("mplPromotionHelper", MplPromotionHelper.class);
+	}
+
+	/**
+	 * @param subTotalValue
+	 *           the sellersubTotalValue to set
+	 */
+	public void setSubTotalValue(final double subTotalValue)
+	{
+		this.subTotalValue = subTotalValue;
+	}
+
+	/**
+	 * @return the subTotalValue
+	 */
+	public double getSubTotalValue()
+	{
+		return subTotalValue;
+	}
+
+	/* PR-15 starts here */
+
+
+
+
+
 }

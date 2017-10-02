@@ -6,7 +6,12 @@
 </c:if>
 
 	<c:choose>
-		<c:when test="${!fn:contains(themeResourcePath,'theme-luxury') && fn:contains(pageBodyCssClasses, 'homepage')}">
+		<c:when test="${!fn:contains(themeResourcePath,'theme-luxury') && (fn:contains(pageBodyCssClasses, 'homepage') 
+		    or fn:contains(pageBodyCssClasses, 'newBrandLandingPageTemplate')
+	        or fn:contains(pageBodyCssClasses, 'productDetails') 
+	        or fn:contains(pageBodyCssClasses, 'productGridPage') 
+	        or fn:contains(pageBodyCssClasses, 'searchGridPage')
+	        or fn:contains(pageBodyCssClasses, 'apparelCategoryLandingPage'))}">
 		<%-- <noscript id="deferred-styles">
 			  <link rel="stylesheet" type="text/css" media="all" href="${themeResourcePath}/css/tmpmain.min.css?v=${buildNumber}" />
 		</noscript> --%>

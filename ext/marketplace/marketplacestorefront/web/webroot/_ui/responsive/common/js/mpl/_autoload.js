@@ -47,7 +47,11 @@ function _autoload(){
 }
 //UF-439
 $(document).ready(function(){
-	if($("#pageType").val() == 'homepage'){
+	if($("#pageType").val() == 'homepage' || 
+	   $("input[name=newBrandLandingPage]").length || 
+	   $('#pageType').val() == "product" || 
+	   $("input[name=productGrid]").length ||
+	   $("input[name=searchPanel]").length){
 		
 		$(window).on("load",function(){
 			$(function(){
