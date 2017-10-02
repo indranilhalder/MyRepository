@@ -212,35 +212,35 @@
 					<table>
 						<tr>
 							<td class="giftWalletImg"><img src="\_ui\responsive\common\images\walletImg.png" alt="wallet" /></td>
-							<td class="cliqTotalBalance"><p><strong>CliQ Cash</strong></p><p class="cliqTotalBalanceLabel">Total Balance <strong>&#8377;</strong></p></td>
+							<td class="cliqTotalBalance"><p><strong><spring:theme code="text.cliq.cash.payment.cliqcash.label" /></strong></p><p class="cliqTotalBalanceLabel"><spring:theme code="text.cliq.cash.payment.total.label" /><strong>&#8377;</strong></p></td>
 						</tr>
 					</table>
 				</div>
 			</div>
 			<div class="giftCheckoutSectionSize">
-				<div class="giftCheckoutInnerCols1"><label for="cashOtherThanGiftCard"><p>Cash</p><p id="qcCashId"><strong>&#8377;0</strong></p></label></div>
+				<div class="giftCheckoutInnerCols1"><label for="cashOtherThanGiftCard"><p><spring:theme code="text.cliq.cash.payment.cash.label"/></p><p id="qcCashId"><strong>&#8377;0</strong></p></label></div>
 			</div>
 			<div class="giftCheckoutSectionSize">
-				<div class="giftCheckoutInnerCols2"><label for="giftCardAmt"><p>Gift Card</p><p id="qcGiftCardId"><strong>&#8377;0</strong></p></label></div>
+				<div class="giftCheckoutInnerCols2"><label for="giftCardAmt"><p><spring:theme code="text.cliq.cash.payment.card.label"/></p><p id="qcGiftCardId"><strong>&#8377;0</strong></p></label></div>
 			</div>
 			<div class="giftCheckoutSectionSize">
 				<div class="giftCheckoutInnerCols3">
 					<label class="useGiftCardBtn"><input id="useGiftCardCheckbox" type="checkbox" />
-						<span id="useGiftBtnText">USE</span>
-						<span id="unUseGiftBtnText">REMOVE</span>
+						<span id="useGiftBtnText"><spring:theme code="text.cliq.cash.payment.use.label"/></span>
+						<span id="unUseGiftBtnText"><spring:theme code="text.cliq.cash.payment.remove.label" /></span>
 					</label>
 				</div>
 			</div>
 			<div class="col-xs-12">
 				<div class="giftInfoBottom">
 					<div class="addNewGiftCard">
-						<span class="addNewCard"><a href="/wallet">Add new Gift Card</a></span>
-						<span class="viewCardTerms"><a href="#">View</a> Terms & Conditions</span>
+						<span class="addNewCard"><a href="/wallet"><spring:theme code="text.cliq.cash.payment.addcard.label" /> </a></span>
+						<span class="viewCardTerms"><a href="#"><spring:theme code="text.cliq.cash.payment.term.label" /> </a></span>
 					</div>
 					<br />
 					<div class="payRemainingDesc">
-						<i id="juspayAmountId">You can pay the remaining amount <strong id="JuspayAmtId">&#8377; 0</strong> from the below payment options.</i>
-						<i id="addCliqCashId">Please add card to use Cliq Cash</i>
+						<i id="juspayAmountId"><spring:theme code="text.cliq.cash.payment.juspyamt.label"/> <strong id="JuspayAmtId">&#8377; 0</strong> <spring:theme code="text.cliq.cash.payment.juspyamt1.label" /></i>
+						<i id="addCliqCashId"><spring:theme code="text.cliq.cash.payment.addcash.label" /> </i>
 					</div>
 				</div>
 			</div>
