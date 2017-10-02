@@ -77094,6 +77094,7 @@ body .account .right-account form label.invite-text-lbl{
 	}
 	.cliqCashInnerTop {
 		font-size: 18px;
+		text-align: center;
 	}
 	.cliqCashContainerLeft {
 		border-bottom: 1px solid #ddd;
@@ -77101,12 +77102,17 @@ body .account .right-account form label.invite-text-lbl{
 	}
 	.cliqCashBtns {
 		height: 30px !important;
+		margin-top: 10px !important;
+		float: right !important;
 	}
 	.cliqCashContainerTwoContent {
 		overflow-x: auto;
 	}
 	.cliqCashSuccessAlert {
 		border-radius: 4px;
+	}
+	.cliqCashContainerTwo button {
+		font-size: 12px !important;
 	}
 }
 
@@ -77166,12 +77172,14 @@ body .account .right-account form label.invite-text-lbl{
 	}
 	
 	@media(max-width: 650px){
+		.addGiftVoucherSection {padding: 0 !important;}
 		.addGiftContainer {margin: 3%; border-radius: 8px; padding-top: 8px;}
 		.addVoucherBtn {font-size: 12px !important;}
 		.addGiftBlock {padding-top: 2%;}
 		.addMoreGiftVouchers {margin-top: 5%;}
 		.addMoreBtn, .addMoreBtn:hover, .addMoreBtn:active {font-size: 8px; height: 20px; margin-top: -5px; right: 5%;}
 		.redeemVoucherAlert {border-radius: 4px !important;}
+		.giftCardPinNo {margin-top: 15px !important;}
 	}
 
 /* Add EGV To Wallet End */	

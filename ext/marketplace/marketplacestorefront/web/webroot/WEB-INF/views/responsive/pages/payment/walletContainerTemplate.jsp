@@ -7,32 +7,26 @@
 <spring:url value="/my-account/profile" var="profileUrl" />
 <%@ taglib prefix="common" tagdir="/WEB-INF/tags/desktop/common" %>
 
-	
+
+<template:page pageTitle="${pageTitle}">
+
+<!--     <div id="globalMessages"> -->
+<%--         <common:globalMessages/> --%>
+<!--     </div> -->
+ 	
 <spring:theme code="text.addEgv.page.error.message" var="egvError" text="Please enter voucher and pin number"/>
 <spring:theme code="text.addEgv.voucher.error.message" var="egvVoucherError" text="Please enter voucher number"/>
 <spring:theme code="text.addEgv.pin.error.message" var="egvPinError" text="Please enter pin number"/>
-<spring:theme code="text.addEGV.button.label" var="addEgvButton" text="ADD TO WALLET"/>
-
-<script type="text/javascript">
-var egvError =${egvError};
-var egvVoucherError =${egvVoucherError};
-var egvPinError =${egvPinError};
-</script>
-	
-<template:page pageTitle="${pageTitle}">
-
-    <div id="globalMessages">
-        <common:globalMessages/>
-    </div>
-    
+<spring:theme code="text.addEGV.button.label" var="addEgvButton" text="ADD TO WALLET"/>   
 <c:url value="${request.contextPath}/wallet/redimWallet" var="addEgvToWalletURL" />
+
 <form:form id="addToCardWalletForm" action="${addEgvToWalletURL}" method="post" modelAttribute="addToCardWalletForm">
 	<div>
-	<br />
+	<br/>
 	<div class="clearfix addGiftContainer">
 		<div class="giftVoucherContainer">
 			<div class="addGiftBlock">
-				<div class="col-sm-12 addGiftVoucherSection">
+				<div id="addGiftCardId" class="col-sm-12 addGiftVoucherSection" data-egvError="${egvError}" data-egvVoucherError="${egvVoucherError}" data-egvPinError="${egvPinError}">
 <!-- 					<span class="addMoreGiftVouchersBtn"><input type="button" class="addMoreBtn" value="+ ADD MORE" /></span> -->
 					<div class="col-sm-6 addGiftVoucherSub">
 						<div class="voucherHeadingTexts"><spring:theme code="text.addEGV.card.label" text="Card Number"/><br />&nbsp;</div>
@@ -40,12 +34,11 @@ var egvPinError =${egvPinError};
 						<form:input path="cardNumber" type="text" placeholder="Enter Voucher Number"  onkeypress="return isNumberKey(event)"  class="giftVoucherNo" />
 					</div>
 					<div class="col-sm-6 addGiftVoucherSub">
-						<div class="voucherHeadingTexts"><spring:theme code="text.addEGV.pin.label" text="Card Pin"/><br />&nbsp;</div>
+						<div class="voucherHeadingTexts giftCardPinNo"><spring:theme code="text.addEGV.pin.label" text="Card Pin"/><br />&nbsp;</div>
 					    <div class=""><!-- <input class="giftVoucherPin" type="text" placeholder="Enter Voucher Pin" /><br />&nbsp; --></div>
 					    <form:input path="cardPin" class="giftVoucherPin" type="text" onkeypress="return isNumberKey(event)" placeholder="Enter Voucher Pin" />
 					</div>
-				</div>
-				<br />&nbsp;
+				</div>&nbsp;
 				<hr class="dividerVS" />
 			</div>
 		</div>

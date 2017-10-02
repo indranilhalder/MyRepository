@@ -10,21 +10,26 @@
 <%@ taglib prefix="component" tagdir="/WEB-INF/tags/shared/component"%>
 <%@ taglib prefix="ycommerce" uri="http://hybris.com/tld/ycommercetags"%>
 <%@ taglib prefix="common" tagdir="/WEB-INF/tags/desktop/common"%>
-
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
+<c:set var="dateStyle" value="dd/MM/yyyy	" />
 
 <template:page pageTitle="${pageTitle}">
 	<div id="globalMessages">
 		<common:globalMessages />
 	</div>
 
-
 	<div class="cliqCashContainer">
 		<div class="cliqCashContainerHead">
 			<p class="cliqCashInnerTop">
-				<strong>Add CLiQ Cash</strong>
+			<img alt="Cliq Cash" width="200" id="cliqCash_logo_img" src="\_ui\responsive\common\images\CliqCash.png">
+			<img src="">
+<%-- 				<strong><spring:theme code="text.add.cliq.Cash.label" --%>
+<%-- 						text="Add CLiQ Cash" /></strong> --%>
 			</p>
 			<br />
-			<p>When you add Gift Card, the amount will be instantly added to your CLiQ Cash balance.</p>
+			<p>
+				<spring:theme code="text.add.cliq.cash.info" text="When you add Gift Card, the amount will be instantly added to your CLiQ Cash balance." />
+			</p>
 			<br />&nbsp;
 		</div>
 		<div class="cliqCashContainerOne">
@@ -32,26 +37,27 @@
 				<div class="cliqCashContainerLeft">
 
 					<table>
-						<c:set var="currentDate" value="<%=new java.util.Date()%>" />
+
 						<tr>
 							<%--  <c:if test="${not empty WalletBalance }"> --%>
-							<td><img
-								src="\_ui\responsive\common\images\walletImg.png" /></td>
+							<td><img src="\_ui\responsive\common\images\walletImg.png" /></td>
 							<td><p class="cliqCashInnerTop">
 									<c:if test="${not empty WalletBalance }">
 										<strong>&#8377; ${WalletBalance} </strong>
 									</c:if>
 								</p>
 								<p class="cliqCashInnerBottom">
-									CliQ Cash balance as of
-<%-- 									<fmt:formatDate type="both" dateStyle="short" timeStyle="short" value="${currentDate}" /> --%>
+									<c:set var="currentDate" value="<%=new java.util.Date()%>" />
+									<spring:theme code="text.add.cliq.cash.balance.info"
+										text="CliQ Cash balance as of ${currentDate}" />
 								</p></td>
 						</tr>
 					</table>
 				</div>
 				<div class="cliqCashContainerRight">
-					<a class="cliqCashBtns" href="<c:url value="/wallet"/>">ADD
-						GIFT CARD</a>
+					<a class="cliqCashBtns" href="<c:url value="/wallet"/>"><spring:theme
+							text="ADD GIFT CARD" code="text.add.cliq.cash.addgiftcard.label" />
+					</a>
 				</div>
 			</div>
 		</div>
@@ -61,24 +67,41 @@
 			<div class="cliqCashContainerTwo">
 				<button class="cliqCashTablinks"
 					onclick="selectSection(event, 'statement')"
-					id="defaultCliqCashCategory">STATEMENT</button>
+					id="defaultCliqCashCategory">
+					<spring:theme code="text.add.cliq.cash.tab.statement"
+						text="STATEMENT" />
+				</button>
 				<button class="cliqCashTablinks"
-					onclick="selectSection(event, 'cashback')">CASHBACK</button>
+					onclick="selectSection(event, 'cashback')">
+					<spring:theme code="text.add.cliq.cash.tab.cashback"
+						text="CASHBACK" />
+				</button>
 				<button class="cliqCashTablinks"
-					onclick="selectSection(event, 'refund')">REFUNDS</button>
+					onclick="selectSection(event, 'refund')">
+					<spring:theme code="text.add.cliq.cash.tab.refund" text="REFUND" />
+				</button>
 				<button class="cliqCashTablinks"
-					onclick="selectSection(event, 'help')">HELP</button>
+					onclick="selectSection(event, 'help')">
+					<spring:theme code="text.add.cliq.cash.tab.help" text="HELP" />
+				</button>
 			</div>
 
 			<div id="statement" class="cliqCashContainerTwoContent">
 				<table class="cliqStatementTable">
 					<thead>
 						<tr>
-							<td>DATE</td>
-							<td>Wallet NUMBER</td>
-							<td>AMOUNT</td>
-							<td>STATUS</td>
-							<td>INVOICE NO.</td>
+							<td><spring:theme
+									code="text.add.cliq.cash.table.coloum.date" text="DATE" /></td>
+							<td><spring:theme
+									code="text.add.cliq.cash.table.coloum.wallet"
+									text="WALLET NUMBER" /></td>
+							<td><spring:theme
+									code="text.add.cliq.cash.table.coloum.amount" text="AMOUNT" /></td>
+							<td><spring:theme
+									code="text.add.cliq.cash.table.coloum.status" text="STATUS" /></td>
+							<td><spring:theme
+									code="text.add.cliq.cash.table.coloum.invoice"
+									text="INVOICE NO" /></td>
 						</tr>
 					</thead>
 					<tbody>
@@ -88,16 +111,23 @@
 								var="walletTrasacationsListData">
 
 								<tr>
-									<td>${walletTrasacationsListData.transactionPostDate}</td>
+									<td><c:set var="string1"
+											value="${fn:split(walletTrasacationsListData.transactionPostDate, 'T')}" />
+										<c:set var="string2" value="${fn:join(string1, ' ')}" /> 
+<%-- 										<fmt:parseDate --%>
+<%-- 											pattern="${dateStyle}" value="${string2}" var="formatedDate" /> --%>
+<%-- 										${formatedDate} --%>
+										${string2}</td>
 									<td>${walletTrasacationsListData.walletNumber}</td>
 									<td>&#8377; ${walletTrasacationsListData.amount}</td>
 									<c:choose>
-									<c:when test="${fn:containsIgnoreCase(walletTrasacationsListData.notes, 'Redeem')}">
-									<td>REDEEM</td>
-									</c:when>
-									<c:otherwise>
-									<td>${walletTrasacationsListData.transactionStatus}</td>
-									</c:otherwise>
+										<c:when
+											test="${fn:containsIgnoreCase(walletTrasacationsListData.notes, 'Redeem')}">
+											<td>REDEEM</td>
+										</c:when>
+										<c:otherwise>
+											<td>${walletTrasacationsListData.transactionStatus}</td>
+										</c:otherwise>
 									</c:choose>
 									<td>${walletTrasacationsListData.transactionId}</td>
 								</tr>
@@ -112,11 +142,18 @@
 				<table class="cliqStatementTable">
 					<thead>
 						<tr>
-							<td>DATE</td>
-							<td>Wallet NUMBER</td>
-							<td>AMOUNT</td>
-							<td>STATUS</td>
-							<td>INVOICE NO.</td>
+							<td><spring:theme
+									code="text.add.cliq.cash.table.coloum.date" text="DATE" /></td>
+							<td><spring:theme
+									code="text.add.cliq.cash.table.coloum.wallet"
+									text="WALLET NUMBER" /></td>
+							<td><spring:theme
+									code="text.add.cliq.cash.table.coloum.amount" text="AMOUNT" /></td>
+							<td><spring:theme
+									code="text.add.cliq.cash.table.coloum.status" text="STATUS" /></td>
+							<td><spring:theme
+									code="text.add.cliq.cash.table.coloum.invoice"
+									text="INVOICE NO" /></td>
 						</tr>
 					</thead>
 					<tbody>
@@ -129,7 +166,13 @@
 									 or fn:containsIgnoreCase(walletTrasacationsListData.notes, 'CREDIT') or fn:containsIgnoreCase(walletTrasacationsListData.notes, 'PROMOTION')}">
 
 									<tr>
-										<td>${walletTrasacationsListData.transactionPostDate}</td>
+										<td><c:set var="string1"
+												value="${fn:split(walletTrasacationsListData.transactionPostDate, 'T')}" />
+											<c:set var="string2" value="${fn:join(string1, ' ')}" /> 
+<%-- 											<fmt:parseDate --%>
+<%-- 												pattern="${dateStyle}" value="${string2}" var="formatedDate" /> --%>
+<%-- 											${formatedDate} --%>
+											${string2}</td>
 										<td>${walletTrasacationsListData.walletNumber}</td>
 										<td>&#8377; ${walletTrasacationsListData.amount}</td>
 										<td>${walletTrasacationsListData.transactionStatus}</td>
@@ -146,11 +189,18 @@
 				<table class="cliqStatementTable">
 					<thead>
 						<tr>
-							<td>DATE</td>
-							<td>Wallet NUMBER</td>
-							<td>AMOUNT</td>
-							<td>STATUS</td>
-							<td>INVOICE NO.</td>
+							<td><spring:theme
+									code="text.add.cliq.cash.table.coloum.date" text="DATE" /></td>
+							<td><spring:theme
+									code="text.add.cliq.cash.table.coloum.wallet"
+									text="WALLET NUMBER" /></td>
+							<td><spring:theme
+									code="text.add.cliq.cash.table.coloum.amount" text="AMOUNT" /></td>
+							<td><spring:theme
+									code="text.add.cliq.cash.table.coloum.status" text="STATUS" /></td>
+							<td><spring:theme
+									code="text.add.cliq.cash.table.coloum.invoice"
+									text="INVOICE NO" /></td>
 						</tr>
 					</thead>
 					<tbody>
@@ -161,7 +211,13 @@
 								<c:if
 									test=" ${fn:containsIgnoreCase(refundBaskwallet.notes, 'CANCEL REDEEM')}">
 									<tr>
-										<td>${walletTrasacationsListData.transactionPostDate}</td>
+										<td><c:set var="string1"
+												value="${fn:split(walletTrasacationsListData.transactionPostDate, 'T')}" />
+											<c:set var="string2" value="${fn:join(string1, ' ')}" />
+<%-- 											 <fmt:parseDate --%>
+<%-- 												pattern="${dateStyle}" value="${string2}" var="formatedDate" /> --%>
+<%-- 											${formatedDate} --%>
+											${string2}</td>
 										<td>${walletTrasacationsListData.walletNumber}</td>
 										<td>&#8377; ${walletTrasacationsListData.amount}</td>
 										<td>${walletTrasacationsListData.transactionStatus}</td>
@@ -175,7 +231,10 @@
 			</div>
 
 			<div id="help" class="cliqCashContainerTwoContent">
-				<h3>Please Contact Tata Cliq Customer Care</h3>
+				<h3>
+					<spring:theme code=" text.add.cliq.cash.help"
+						text=" Please Contact Tata Cliq Customer Care" />
+				</h3>
 			</div>
 		</div>
 

@@ -110,15 +110,15 @@ function isNumberKey(evt){
 			//var redeemGiftValidation = $("#redeemVoucherError").html();
 			if ($(".giftVoucherNo").val() == '' && $(".giftVoucherPin").val() == '') {
 				$(".redeemVoucherAlert").show();
-				document.getElementById('redeemVoucherError').innerHTML = egvError;
+				document.getElementById('redeemVoucherError').innerHTML = $("#addGiftCardId").attr("data-egvError");
 				return false;
 			} else if ($(".giftVoucherNo").val() == '') {
 				$(".redeemVoucherAlert").show();
-				document.getElementById('redeemVoucherError').innerHTML = egvVoucherError;
+				document.getElementById('redeemVoucherError').innerHTML = $("#addGiftCardId").attr("data-egvVoucherError");
 				return false;
 			} else if ($(".giftVoucherPin").val() == ''){
 				$(".redeemVoucherAlert").show();
-				document.getElementById('redeemVoucherError').innerHTML = egvPinError;
+				document.getElementById('redeemVoucherError').innerHTML = $("#addGiftCardId").attr("data-egvPinError");
 				return false;
 			} else {
 				$(".redeemVoucherAlert").hide();
