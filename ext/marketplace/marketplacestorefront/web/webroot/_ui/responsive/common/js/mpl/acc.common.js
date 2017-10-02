@@ -78,6 +78,53 @@ $(document).ready(function() {
 		$(this).prev().toggle();
 		return false;
 	});
+	
+	addEgvToWalletMultipal();
+	addEgvToWallet();
 });
 
 /** TPR-3780 ENDS HERE */  
+
+/* Add EGV TO Wallet Start */
+
+function isNumberKey(evt){
+    var charCode = (evt.which) ? evt.which : event.keyCode
+    if (charCode > 31 && (charCode < 48 || charCode > 57))
+        return false;
+    return true;
+}
+
+	function addEgvToWalletMultipal(){
+		var giftVoucherTemplate = $(".addGiftBlock").html();
+		$(".redeemVoucherAlert").hide();
+		
+		$(".giftVoucherContainer .addMoreBtn").on("click", function(){
+			$(".giftVoucherContainer").append(giftVoucherTemplate);
+			$(".addMoreGiftVouchersBtn").eq(1).remove();
+		});
+		//Validations
+	}
+	function addEgvToWallet(){
+		$(".addVoucherBtn").on("click", function(){
+			//redeemVoucherError
+			//var redeemGiftValidation = $("#redeemVoucherError").html();
+			if ($(".giftVoucherNo").val() == '' && $(".giftVoucherPin").val() == '') {
+				$(".redeemVoucherAlert").show();
+				document.getElementById('redeemVoucherError').innerHTML = egvError;
+				return false;
+			} else if ($(".giftVoucherNo").val() == '') {
+				$(".redeemVoucherAlert").show();
+				document.getElementById('redeemVoucherError').innerHTML = egvVoucherError;
+				return false;
+			} else if ($(".giftVoucherPin").val() == ''){
+				$(".redeemVoucherAlert").show();
+				document.getElementById('redeemVoucherError').innerHTML = egvPinError;
+				return false;
+			} else {
+				$(".redeemVoucherAlert").hide();
+
+			}
+		});
+	}
+	
+/* Add EGV to Wallet End*/	

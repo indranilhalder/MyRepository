@@ -77111,3 +77111,68 @@ body .account .right-account form label.invite-text-lbl{
 }
 
 /* Cliq Cash End */
+
+/* Add EGV TO Wallet */
+
+.addGiftContainer {border: 1px solid #ddd;}
+	/* .addGiftVoucherSection {padding: 0 !important;}
+	.addGiftVoucherSub {padding: 0;} */
+	.giftVoucherNo, .giftVoucherPin {
+	  width: 100%;
+	  height: 37px !important;
+	  border-radius: 4px;
+	  border: none !important;
+	  background-color: #ededed;
+	}
+	.addVoucherBtn, .addVoucherBtn:hover  {
+	  max-width: 230px;
+	  height: 30px;
+	  border: none;
+	  line-height: 12px;
+	  background-color: #a9143c;
+	  color: white;
+	  font-size: 12px;
+	  font-weight: 400;
+	  padding: 0 15px;
+	}
+	
+	.addMoreBtn, .addMoreBtn:hover, .addMoreBtn:active {
+	  font-size: 10px;
+	  border: 1px solid #a9143c;
+	  padding: 0 5px;
+	  height: 25px;
+	  line-height: normal;
+	  margin-top: 5px;
+	  color: #a9143c;
+	  position: absolute;
+      right: 2%;
+      cursor: pointer;
+      z-index: 1;
+	}
+	
+	.addMoreGiftVouchers {margin-top: 2%;}
+	
+	.addMoreGiftVouchersBtn {float: right;}
+	
+	.voucherHeadingTexts {padding-left: 0 !important;}
+	.dividerVS {margin: 2%; border-bottom: none; border-top: 1px solid #ddd;}
+	
+	@media(min-width: 651px){
+		.addGiftContainer{margin-left: 10% ;margin-right: 10%;}
+		.voucherHeadingTexts {padding-top: 4%;}
+		.dividerVS { margin-bottom: 0;}
+		.redeemToWalletBtn {float: right;}
+		.redeemVoucherAlert {padding: 10px !important; margin: 0 !important;}
+	}
+	
+	@media(max-width: 650px){
+		.addGiftContainer {margin: 3%; border-radius: 8px; padding-top: 8px;}
+		.addVoucherBtn {font-size: 12px !important;}
+		.addGiftBlock {padding-top: 2%;}
+		.addMoreGiftVouchers {margin-top: 5%;}
+		.addMoreBtn, .addMoreBtn:hover, .addMoreBtn:active {font-size: 8px; height: 20px; margin-top: -5px; right: 5%;}
+		.redeemVoucherAlert {border-radius: 4px !important;}
+	}
+
+/* Add EGV To Wallet End */	
+	

@@ -256,7 +256,7 @@ public class WalletController extends AbstractPageController
 		setUpMetaDataForContentPage(model, contentPage);
 		model.addAttribute("WalletBalance", balanceAmount);
 		model.addAttribute("walletTrasacationsListData", walletTrasacationsListData1.getWalletTransactions());
-		//		model.addAttribute("WalletBalance", dateFormat);
+		model.addAttribute("dateFormat", dateFormat);
 
 
 		return "addon:/marketplacecheckoutaddon/pages/checkout/single/cliqcash";
