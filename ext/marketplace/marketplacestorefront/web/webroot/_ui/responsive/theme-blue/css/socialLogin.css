@@ -1,0 +1,77 @@
+.fb-sign-btn {
+	background: transparent
+		url(/_ui/responsive/common/images/socialLogo.png) no-repeat right top;
+	width: 213px;
+	height: 32px;
+	background-position: 0px 0px;
+	margin-bottom: 8px;
+	display: inline-block;
+	clear: both;
+	margin-left: -100px;
+}
+
+.google-sign-btn {
+	background: transparent
+		url(/_ui/responsive/common/images/socialLogo.png) no-repeat right top;
+	width: 213px;
+	height: 32px;
+	background-position: -212px 0px;
+	display: inline-block;
+	clear: both;
+	margin-left: -100px;
+}
+
+.social-login-btn-container {
+	padding: 4px;
+	text-align: center;
+}
+
+
+.fb-sign-btn-dropdown {
+	background: transparent
+		url(/_ui/responsive/common/images/socialLogo.png) no-repeat right top;
+	width: 213px;
+	height: 32px;
+	background-position: 0px 0px;
+	margin-bottom: 8px;
+	display: inline-block;
+	clear: both;
+	position: absolute;
+	bottom: 100px;
+	left: calc(50% - 100px);
+}
+
+.google-sign-btn-dropdown {
+	background: transparent
+		url(/_ui/responsive/common/images/socialLogo.png) no-repeat right top;
+	width: 213px;
+	height: 32px;
+	background-position: -212px 0px;
+	display: inline-block;
+	clear: both;
+	position: absolute;
+	bottom: 70px;
+	left: calc(50% - 100px);
+}
+
+.social-login-btn-container-dropdown {
+	padding: 60px;
+	text-align: center;
+}
+.social_login_content {
+	display: block !important;
+	clear: both;
+}
+
+@media (max-width: 767px) {
+	.sign-in.tab-view .tabs > li {
+	    padding: 0px 12px;
+	}
+	.fb-sign-btn, .google-sign-btn {
+		margin-left: 0px;
+	}
+}
+
+@media (min-width: 767px) {
+	
+}

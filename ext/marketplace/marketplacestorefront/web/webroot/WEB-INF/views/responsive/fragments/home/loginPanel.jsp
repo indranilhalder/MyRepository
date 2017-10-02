@@ -76,13 +76,15 @@
 									</div>
 							 <div class='or'><spring:theme code="text.or" /></div>
 									</form:form>								
-<!-- For  Gigya and API Social Login -->					
-								<c:choose> 
- 								<c:when test="${isGigyaEnabled=='Y'}">	
-								
-   <!--  <h4>Please sign in using one of the following providers:</h4><br /><br /> -->
-  <div id="loginDivsiginflyout"></div>
-  <script type="text/javascript">
+<!-- For  Gigya and API Social Login -->	
+
+<!--New Changes for Social Login  -->			
+<c:choose>
+	<c:when test="${isGigyaEnabled=='Y'}">
+
+		<!--  <h4>Please sign in using one of the following providers:</h4><br /><br /> -->
+		<div id="loginDivsiginflyout"></div>
+		<script type="text/javascript">
         if(typeof(gigya) != 'undefined'){
     	gigya.socialize.showLoginUI({
             height: 100
@@ -97,16 +99,32 @@
             });
     }
     </script>
-								</c:when>
-								<c:otherwise>
-								<ul class="signin-flyout social-connect" id="gSignInWrapper">
-									<li><a href="#nogo" class="fb" id="fbLoginButton">
-									<spring:theme code="login.connect.fb"/>
-									</a></li>
-									<li class="customGPlusSignIn"><a class="go" id="googleLoginButton" href="#nogo"><spring:theme code="login.connect.google"/></a></li>
-								</ul>
-								</c:otherwise>
-								</c:choose> 
+    
+    <ul class="social-login-btn-container-dropdown">
+			<li>
+				<button onclick="ACC.socialLogin.facebookSocialLogin();" class="fb-sign-btn-dropdown"></button>
+			</li>
+			<li>
+					<button id="customBtn" class="google-sign-btn-dropdown"></button>
+			</li>
+
+		</ul>s
+    
+	</c:when>
+	<c:otherwise>
+
+		<ul class="social-login-btn-container-dropdown">
+			<li>
+				<button onclick="ACC.socialLogin.facebookSocialLogin();" class="fb-sign-btn-dropdown"></button>
+			</li>
+			<li>
+					<button id="customBtn" class="google-sign-btn-dropdown"></button>
+			</li>
+
+		</ul>
+	</c:otherwise>
+</c:choose>
+<!--New Changes for Social Login -->
 	<!-- End  Gigya and API Social Login -->
 								
 								<li><div class="foot">
