@@ -4543,7 +4543,29 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 		storeLocationRequestData.setUssId(sellerUssId);
 		//populate newly added fields
 		//get SellerInfo based on sellerUssid
-		final SellerInformationModel sellerInfoModel = mplSellerInformationFacade.getSellerDetail(sellerUssId);
+		SellerInformationModel sellerInfoModel = null;
+		final AbstractOrderEntryModel parentCartEntry = mplStoreLocatorFacade.getCartEntry(sellerUssId);
+		//JEWELLERY CHANGES
+		if (MarketplacecommerceservicesConstants.FINEJEWELLERY.equalsIgnoreCase(parentCartEntry.getProduct()
+				.getProductCategoryType()))
+		{
+			final List<JewelleryInformationModel> jewelleryInfo = mplJewelleryService.getJewelleryInfoByUssid(sellerUssId);
+			if (CollectionUtils.isNotEmpty(jewelleryInfo))
+			{
+				if (StringUtils.isNotEmpty(jewelleryInfo.get(0).getPCMUSSID()))
+				{
+					//get seller information for a ussid
+					sellerInfoModel = mplSellerInformationFacade.getSellerDetail(jewelleryInfo.get(0).getPCMUSSID());
+				}
+			}
+		}
+		else
+		{
+			//get seller information for a ussid
+			sellerInfoModel = mplSellerInformationFacade.getSellerDetail(sellerUssId);
+		}
+		//ENDS
+		//final SellerInformationModel sellerInfoModel = mplSellerInformationFacade.getSellerDetail(sellerUssId);
 		ProductModel productModel = null;
 		ProductData productData = null;
 		if (null != sellerInfoModel)

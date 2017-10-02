@@ -62,4 +62,6 @@ public interface MplJewelleryDao
 	 */
 	List<JwlryRevSealInfoModel> getSealInfo(String sellerId);
 
+	List<BuyBoxModel> getAllWeightVariantByPussid(String pUssid);
+
 }

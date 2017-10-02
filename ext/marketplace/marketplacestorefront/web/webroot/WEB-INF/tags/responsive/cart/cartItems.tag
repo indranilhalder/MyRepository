@@ -151,7 +151,6 @@ tr.d0 td {
 								</c:forEach>
 							</p>
 							<!-- TPR-3780 STARTS HERE -->
-							<spring:eval expression="T(de.hybris.platform.util.Config).getParameter('cart.price.disclaimer')" var="disclaimer"/>	
 							<c:if test="${not empty entry.product.size}">
 								<c:choose>
 									<c:when test="${not empty entry.product.rootCategory && entry.product.rootCategory=='FineJewellery'}">
@@ -172,11 +171,9 @@ tr.d0 td {
 														<c:choose>
 															<c:when test="${true eq lengthSize}">
 															  <spring:theme code="product.variant.length"/>:&nbsp;${entry.product.size}&nbsp;
-															  ${disclaimer}
 															</c:when>
 															<c:otherwise>
 															  <spring:theme code="product.variant.size" />:&nbsp;${entry.product.size}&nbsp;
-															  ${disclaimer}
 															</c:otherwise>
 														</c:choose>
 													</ycommerce:testId>
@@ -185,7 +182,6 @@ tr.d0 td {
 											<c:otherwise>
 													<p class="size disclaimer-txt more-cart">
 														<ycommerce:testId code="cart_product_size">
-															${disclaimer}
 														</ycommerce:testId>
 													</p>
 											</c:otherwise>

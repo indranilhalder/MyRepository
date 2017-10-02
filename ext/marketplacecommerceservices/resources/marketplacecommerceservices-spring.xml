@@ -2300,7 +2300,7 @@
 	 
 	 <!-- Changes for CAR-267 -->
    
-   <bean id="promotions.manager" class="de.hybris.platform.promotions.jalo.CachingPromotionsManager" init-method="init" destroy-method="destroy" scope="tenant" >
+   <!-- <bean id="promotions.manager" class="de.hybris.platform.promotions.jalo.CachingPromotionsManager" init-method="init" destroy-method="destroy" scope="tenant" >
     	  <property name="cache" ref="promotionsCachingStrategy"/>
 	</bean>
 	
@@ -2310,12 +2310,12 @@
 	 <alias alias="promotionsCachingStrategy" name="defaultPromotionsCachingStrategy"/>
 		<bean id="defaultPromotionsCachingStrategy" class="com.tisl.mpl.cache.strategy.MplDefaultCachingStrategy" scope="tenant"> 
 		<property name="memCacheEnabled" value="${promotion.memcache.enabled}"/>
-	</bean> 
+	</bean>  -->
 
 	
     <!-- Override the Cart so that calls to get promotion results can be intercepted -->
    
-     <bean id="de.hybris.platform.jalo.order.Cart" class="de.hybris.platform.promotions.jalo.order.PromotionCart" scope="prototype" />
+    <!-- <bean id="de.hybris.platform.jalo.order.Cart" class="de.hybris.platform.promotions.jalo.order.PromotionCart" scope="prototype" /> -->
 
     <!-- CACHING FINISH -->
      <!-- CAR-285 Start Zipping XML Creation and Copying Job Sitemap Start -->

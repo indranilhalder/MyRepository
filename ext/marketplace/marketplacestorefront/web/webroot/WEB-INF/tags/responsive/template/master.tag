@@ -502,7 +502,7 @@
 			}
 		}
 		//TPR-6654
-		if(pageTypeVal == "homepage" && anonymousUser == "Y" && pincodeAvailable == "N"){
+		if(pageTypeVal == "homepage" && anonymousUser == "Y"){
 			$(".enter-pincode").show();
 			
 	}

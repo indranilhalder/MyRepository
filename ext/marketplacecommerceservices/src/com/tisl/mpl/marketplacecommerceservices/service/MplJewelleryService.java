@@ -56,4 +56,6 @@ public interface MplJewelleryService
 	 */
 	public JwlryRevSealInfoModel getSealInfo(String sellerId);
 
+	List<BuyBoxModel> getAllWeightVariantByPussid(String pUssid);
+
 }
