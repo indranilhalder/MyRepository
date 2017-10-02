@@ -3387,19 +3387,21 @@
 	
 	<bean class="com.tisl.mpl.wsdto.BuyingEgvRequestWsDTO">
 		<property name="productID" type="String" />
-		<property name="priceSelectedByUserPerQuantity" type="String" />
+		<property name="priceSelectedByUserPerQuantity" type="Double" />
 		<property name="quantity" type="int" />
 		<property name="receiverName" type="String" />
 		<property name="receiverEmailID" type="String" />
-		<property name="messageOnCard" type="boolean" />
-		<property name="from" type="boolean" />
+		<property name="messageOnCard" type="String" />
+		<property name="from" type="String" />
 	</bean>	
 	
 	<bean class="com.tisl.mpl.wsdto.BuyingEgvResponceWsDTO" extends="com.tisl.mpl.wsdto.ErrorDTO">
-		<property name="totalPrice" type="String" />
-		<property name="discounts" type="String" />
-		<property name="paybleAmount" type="int" />
+		<property name="totalPrice" type="Double" />
+		<property name="discounts" type="Double" />
+		<property name="paybleAmount" type="Double" />
 		<property name="otherAvailablePromotions" type="String" />
+		<property name="egvCartGuid" type="String" />
+		
 	</bean>	
 	
 	

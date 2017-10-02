@@ -36,6 +36,7 @@ import de.hybris.platform.core.model.order.AbstractOrderModel;
 import de.hybris.platform.core.model.order.CartEntryModel;
 import de.hybris.platform.core.model.order.CartModel;
 import de.hybris.platform.core.model.order.OrderModel;
+import de.hybris.platform.core.model.order.delivery.DeliveryModeModel;
 import de.hybris.platform.core.model.product.PincodeModel;
 import de.hybris.platform.core.model.product.ProductModel;
 import de.hybris.platform.core.model.user.UserModel;
@@ -4549,7 +4550,7 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 		cardModel.setIsPendingNotSent(Boolean.FALSE);
 		cardModel.setIsSentToOMS(Boolean.TRUE);
 		cardModel.setMerged(Boolean.FALSE);
-		cardModel.setModeOfPayment("Creadi Card");
+		cardModel.setModeOfPayment("Credit Card");
 		cardModel.setNet(Boolean.FALSE);
 		cardModel.setSite(cmsSiteService.getCurrentSite());
 		cardModel.setSubtotal(Double.valueOf(egvDetailForm.getGiftRange()));
@@ -4628,7 +4629,7 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 		abstractOrderEntryModel.setIsSdbSendToFico(Boolean.FALSE);
 		abstractOrderEntryModel.setMaxCountReached(false);
 		abstractOrderEntryModel.setModifiedtime(new Date());
-		
+
 		try
 		{
 			final Collection<MplZoneDeliveryModeValueModel> value6 = new ArrayList<MplZoneDeliveryModeValueModel>();

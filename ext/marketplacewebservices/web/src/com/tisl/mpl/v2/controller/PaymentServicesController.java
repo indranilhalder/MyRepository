@@ -5,6 +5,7 @@ package com.tisl.mpl.v2.controller;
 
 import de.hybris.platform.commercefacades.customer.CustomerFacade;
 import de.hybris.platform.commercefacades.order.data.CartData;
+import de.hybris.platform.commercefacades.order.data.OrderData;
 import de.hybris.platform.commercefacades.product.data.PriceData;
 import de.hybris.platform.commercefacades.product.data.PriceDataType;
 import de.hybris.platform.commercefacades.product.impl.DefaultPriceDataFactory;
@@ -15,6 +16,8 @@ import de.hybris.platform.core.model.order.OrderModel;
 import de.hybris.platform.core.model.order.price.DiscountModel;
 import de.hybris.platform.core.model.user.CustomerModel;
 import de.hybris.platform.order.CartService;
+import de.hybris.platform.order.InvalidCartException;
+import de.hybris.platform.order.exceptions.CalculationException;
 import de.hybris.platform.payment.model.PaymentTransactionModel;
 import de.hybris.platform.servicelayer.config.ConfigurationService;
 import de.hybris.platform.servicelayer.dto.converter.Converter;
@@ -52,6 +55,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.tisl.mpl.bin.service.BinService;
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
@@ -64,8 +68,10 @@ import com.tisl.mpl.facade.checkout.MplCartFacade;
 import com.tisl.mpl.facade.checkout.MplCheckoutFacade;
 import com.tisl.mpl.facade.checkout.MplCustomAddressFacade;
 import com.tisl.mpl.facades.MplPaymentWebFacade;
+import com.tisl.mpl.facades.account.register.NotificationFacade;
 import com.tisl.mpl.facades.payment.MplPaymentFacade;
 import com.tisl.mpl.facades.wallet.MplWalletFacade;
+import com.tisl.mpl.marketplacecommerceservices.egv.service.cart.MplEGVCartService;
 import com.tisl.mpl.marketplacecommerceservices.service.ExtendedUserService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplPaymentService;
 import com.tisl.mpl.model.PaymentModeRestrictionModel;
@@ -142,6 +148,12 @@ public class PaymentServicesController extends BaseController
 
 	@Resource(name = "mplDefaultPriceDataFactory")
 	private DefaultPriceDataFactory PriceDataFactory;
+	
+	@Autowired
+	private MplEGVCartService mplEGVCartService;
+	
+	@Autowired
+	private NotificationFacade notificationFacade;
 
 	/**
 	 * @return the voucherService
@@ -1100,6 +1112,40 @@ public class PaymentServicesController extends BaseController
 		OrderModel orderToBeUpdated = null;
 		String statusResponse = "";
 		boolean alreadyProcessed = false;
+		
+		// Buying Of EGV Changes Start 
+		final CartModel cart = mplEGVCartService.getEGVCartModel(cartGuid);
+		if (cart != null && cart.getIsEGVCart().booleanValue())
+		{
+			OrderData orderData = null;
+
+			try
+			{
+				orderData = getEGVOrderStatus(cartGuid);
+				if(null != orderData) {
+					updateTransactionDetail.setStatus(MarketplacewebservicesConstants.UPDATE_SUCCESS);
+					updateTransactionDetail.setOrderId(orderData.getCode());
+				}else {
+					updateTransactionDetail.setStatus(MarketplacewebservicesConstants.UPDATE_FAILURE);
+				}
+				return updateTransactionDetail;
+			}
+			catch (InvalidCartException e)
+			{
+				LOG.error("Exception occurred while updateTransactionDetailsforCard " + e.getMessage());
+				updateTransactionDetail.setStatus(MarketplacewebservicesConstants.UPDATE_FAILURE);
+				updateTransactionDetail.setError(e.getMessage());
+			}
+			catch (CalculationException e)
+			{
+				LOG.error("Exception occurred while updateTransactionDetailsforCard " + e.getMessage());
+				updateTransactionDetail.setStatus(MarketplacewebservicesConstants.UPDATE_FAILURE);
+			}
+			return updateTransactionDetail;
+		}
+		
+	 // Buying Of EGV Changes End 
+		
 		try
 		{
 			//final String orderGuid = decryptKey(guid);
@@ -1245,6 +1291,93 @@ public class PaymentServicesController extends BaseController
 	}
 
 
+	// Buying Of EGV  Changes START 
+	private OrderData getEGVOrderStatus(final String guid)
+			throws InvalidCartException, CalculationException
+	{
+		 OrderData orderData = new OrderData();
+		final OrderModel orderToBeUpdated = getMplPaymentFacade().getOrderByGuid(guid);
+		String orderStatusResponse = null;
+		orderStatusResponse = getMplPaymentFacade().getOrderStatusFromJuspay(guid, null, orderToBeUpdated, null);
+		//Redirection when transaction is successful i.e. CHARGED
+		if (null != orderStatusResponse)
+		{
+			if (MarketplacewebservicesConstants.CHARGED.equalsIgnoreCase(orderStatusResponse))
+			{
+				orderData= updateOrder(orderToBeUpdated);
+			}
+			else
+			{
+				throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9322);
+			}
+		}
+		else
+		{
+			return updateOrder(orderToBeUpdated);
+		}
+		return orderData;
+	}
+	
+	
+	
+	/**
+	 * This method updates already created order as per new Payment Soln - Order before Payment TPR-629
+	 *
+	 * @param orderToBeUpdated
+	 * @return String
+	 * @throws InvalidCartException
+	 * @throws CalculationException
+	 * @throws EtailNonBusinessExceptions
+	 *
+	 */
+	private OrderData updateOrder(final OrderModel orderToBeUpdated)
+			throws InvalidCartException, CalculationException, EtailNonBusinessExceptions
+	{
+		LOG.debug("========================Inside Update Order============================");
+		 OrderData orderData=null;
+		try
+		{
+			if (null != orderToBeUpdated && null != orderToBeUpdated.getPaymentInfo()
+					&& CollectionUtils.isEmpty(orderToBeUpdated.getChildOrders()))
+			{
+				getMplCheckoutFacade().beforeSubmitOrder(orderToBeUpdated);
+				getMplCheckoutFacade().submitOrder(orderToBeUpdated);
+
+				//order confirmation email and sms
+				notificationFacade.sendOrderConfirmationNotification(orderToBeUpdated);
+
+				 orderData = getMplCheckoutFacade().getOrderDetailsForCode(orderToBeUpdated);
+
+			}
+			else if (null != orderToBeUpdated && null != orderToBeUpdated.getPaymentInfo()
+					&& CollectionUtils.isNotEmpty(orderToBeUpdated.getChildOrders()))
+			{
+				 orderData = getMplCheckoutFacade().getOrderDetailsForCode(orderToBeUpdated);
+			}
+			else if (null != orderToBeUpdated && null == orderToBeUpdated.getPaymentInfo()
+					&& OrderStatus.PAYMENT_TIMEOUT.equals(orderToBeUpdated.getStatus()))
+			{
+				LOG.error("Issue with update order...redirecting to payment page only");
+			}
+			else
+			{
+				LOG.error("Issue with update order...redirecting to payment page only");
+			}
+		}
+		catch (final ModelSavingException e)
+		{
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0007);
+		}
+		catch (final Exception e)
+		{
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000);
+		}
+		return orderData;
+	}
+
+
+	// Buying Of EGV  Changes END 
+	
 	/**
 	 * @desc This method fetches delete the saved cards --TPR-629
 	 *
