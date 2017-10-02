@@ -474,7 +474,7 @@
 		var anonymousUser = "${anonymous_user}";
 		var pincodeAvailable = "${pincode_available}";
 		//var forceLoginUser = "${forced_login_user}";
-		var forceLoginUser = ($.cookie("mpl-user") == "anonymous") && window.location.search.indexOf("boxed-login") >= 1 ? "Y" : "N";
+		var forceLoginUser = (/*$.cookie("mpl-user") == "anonymous") &&*/ window.location.search.indexOf("boxed-login") >= 1 ? "Y" : "N";
 		var pageTypeVal = $("#pageType").val();
 		//var isMobile = "${is_mobile}";
 		var isMobile = screen.width < 460 ? "true" : "false" ;
