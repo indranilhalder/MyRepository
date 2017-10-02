@@ -77260,6 +77260,6 @@ body.template-pages-LoginPageTemplate .sign-in.tab-view .form-group #password_lo
 /* TISCSXII-2240 END */
 /* SDI-994 Start */
 .store-locator-block{
-	display: none;	
+	display: block;	
 }
 /* SDI-994 END */

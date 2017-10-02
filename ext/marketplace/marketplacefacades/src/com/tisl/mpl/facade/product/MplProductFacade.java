@@ -19,4 +19,6 @@ public interface MplProductFacade
 	public ProductFeatureModel getProductFeatureModelByProductAndQualifier(ProductData product, String qualifier);
 
 	public List<PointOfServiceData> storeLocatorPDP(final String pincode);
+
+	public List<PointOfServiceData> storeLocatorFilterdPDP(final String pincode, final String sellerUssId);
 }

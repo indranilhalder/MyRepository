@@ -83,7 +83,7 @@ public class MplProductFacadeImpl implements MplProductFacade
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.tisl.mpl.facade.product.MplProductFacade#getProductFeatureModelByProductAndQualifier(de.hybris.platform.
 	 * commercefacades.product.data.ProductData, java.lang.String)
 	 */
@@ -157,5 +157,21 @@ public class MplProductFacadeImpl implements MplProductFacade
 			LOG.error("Something went wrong in calling getAllStoresForPincode");
 		}
 		return posData;
+	}
+
+	@Override
+	public List<PointOfServiceData> storeLocatorFilterdPDP(final String pincode, final String sellerUssId)
+	{
+		List<PointOfServiceData> storeLocationList = new ArrayList<>();
+		try
+		{
+			final PincodeServiceFacade pincodeServiceFacade = pincodeServiceFacadeProvider.get();
+			storeLocationList = pincodeServiceFacade.getStoresSortedByDistance(pincode, sellerUssId);
+		}
+		catch (final Exception e)
+		{
+			LOG.error("Something went wrong in calling getAllStoresForPincode");
+		}
+		return storeLocationList;
 	}
 }
