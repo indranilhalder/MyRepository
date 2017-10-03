@@ -383,6 +383,10 @@ public class SalesOrderXMLUtility
 							xmlData.setDeliveryMode(MarketplacecommerceservicesConstants.ED);
 						}
 						LOG.info("DeliveryMode For FICO  >>>>>>>> " + entry.getMplDeliveryMode().getDeliveryMode().getCode());
+					} else if(xmlToFico && chaildModel.getIsEGVCart().booleanValue()){
+						
+						LOG.info("DeliveryMode For FICO For  Egv orderrrrrrrr >>>>>>>> ");
+						xmlData.setDeliveryMode(MarketplacecommerceservicesConstants.HD);
 					}
 					else
 					{
