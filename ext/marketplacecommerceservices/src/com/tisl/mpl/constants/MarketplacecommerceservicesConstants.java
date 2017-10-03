@@ -2258,8 +2258,16 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String SCHEDULE_PICKUP = "schedulePickup";
 	public static final String QUICK_DROP = "quickDrop";
 	public static final String ISCHECKOUT_PINCODE_SERVICEABLE = "isCheckoutPincodeServiceable";
+
 	//PR-4
 	public static final String BULK_SMS_1 = "select {sms: amount}, {sms: utrNumber} ,{sms: arnNumber} ,{a:orderlineid},{add:firstname},{add:phone1} from {orderentry as a join order as b on {a:order}={b:pk} join address as add on {b:deliveryAddress}={add:pk} join RefundTransactionEntry as sms on {a:orderlineid}={sms:transactionId}}  where p_orderlineid in ("
 			.intern();
 	public static final String BULK_SMS_2 = ") and {b:type}='SubOrder' and {b:VersionID} is null".intern();
+
+	public static final String FINEJEW_SELFCOURIER_ERRORMSG = "Schedule pick up is not available at this pincode. Please <a href='/contact'>*contact us*</a> for returns.";
+	public static final String FINEJEW_ORDER_RETURN = "Order return has been initiated";
+	//PR-15 (Rainbow)
+	public static final String CATEGORYRESTRICTION = "CategoryRestriction";
+
 }
+

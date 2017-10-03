@@ -130,22 +130,32 @@ $(document).ready(function(){
 			  					pageName  : $('#page_name').val().toLowerCase(),
 			  					domain    : domain_name,
 			  					subDomain : subDomain
-			  				},
+			  				  },
 			  				category : {
 			  					primaryCategory : pageType
-			  				}
-			  			}
-			  		}
-			              digitalData.cpj = {
-				                 product : {
-					                    id : product_id,
-					              category : product_category,
-					              discount : product_discount
-				           },
-				                brand : {
-					                 name : product_brand
-				           }
-		               }
+			  				 }
+			  			   },
+			  			cpj : {
+			                 product : {
+				                    id : product_id,
+				                    category : product_category,
+				                    discount : product_discount
+			                 },
+			                brand : {
+				                 name : product_brand
+			                }
+			  		    }
+			  	    }
+					              /*digitalData.cpj = {
+					                 product : {
+						                    id : product_id,
+						                    category : product_category,
+						                    discount : product_discount
+					                 },
+					                brand : {
+						                 name : product_brand
+					                }
+				               }*/
 			
 			       if(prevPageUrl != "" && prevPageUrl != 'undefined'){
 				           if(prevPageUrl.indexOf('/c-msh') > -1){
@@ -195,11 +205,20 @@ $(document).ready(function(){
 			          
 			           
 		             if(findingMethod != ''){
-			            digitalData.cpj = {
+			           /* digitalData.cpj = {
 					            pdp : {
 				               findingMethod  : findingMethod
 					          }
-			              }
+			              }*/
+		            	 
+		            	 if(typeof digitalData.cpj.pdp != "undefined"){
+		    		         digitalData.cpj.pdp.findingMethod = findingMethod;
+		    	           }		
+		                 else{
+		    		         digitalData.cpj.pdp = {
+		    			        findingMethod : findingMethod
+		    		        }
+		    	          }	
 		           }  
 		     //TPR-6300 | Track pdp ends
 		             
@@ -212,9 +231,18 @@ $(document).ready(function(){
 				}
 			}
 			if(Promo_Id != ""){
-			   digitalData.cpj.promo = {
+			   /*digitalData.cpj.promo = {
 					id : Promo_Id
-			   }
+			   }*/
+				
+				 if(typeof(digitalData.cpj.promo) != "undefined"){
+    		         digitalData.cpj.promo.id = Promo_Id;
+    	           }		
+                 else{
+    		              digitalData.cpj.promo = {
+    			                  id : Promo_Id
+    		              }
+    	            }	
 			}
 			
 		      if($("#out_of_stock").val() == "true"){
@@ -224,12 +252,22 @@ $(document).ready(function(){
 				//  TISCSXII-2243 |out of stock fix
 				  dtmErrorTracking("out_of_stock","errorname");
 				  
-				    digitalData.cpj = {
+				 /*   digitalData.cpj = {
 						product : {
 							id     :  product_id ,
 					      category :  product_category
 					 }
-				  }
+				  }*/
+				     if(typeof(digitalData.cpj.product) != "undefined"){
+	    		         digitalData.cpj.product.id = product_id;
+						 digitalData.cpj.product.category = product_category;
+	    	           }		
+	                 else{
+	    		         digitalData.cpj.product = {
+	    			              id : product_id,
+							category : product_category
+	    		        }
+	    	          }
 				  
 			}
 			
@@ -575,10 +613,12 @@ $(document).ready(function(){
     	
 /*  Direct call rule starts here*/
 	
-    // For icid
-	var url_string = window.location.href;
-	var url = new URL(url_string);
-	var icid2Param = url.searchParams.get("icid2");
+    // For icid 
+        //SDI-1103
+	//var url_string = window.location.href;
+	//var url = new URL(url_string);
+	//var icid2Param = url.searchParams.get("icid2");
+	var icid2Param = getIcid2FromUrl();
 	if(typeof icid2Param != "undefined" && icid2Param != null){
 		_satellite.track('internal_campaign');
 		digitalData.internal = {
@@ -820,6 +860,20 @@ $(document).ready(function(){
 
   
 });
+//SDI-1103
+function getIcid2FromUrl()
+{
+    var vars = [], hash;
+    var hashes = window.location.href.slice(window.location.href.indexOf('?') + 1).split('&');
+    for(var i = 0; i < hashes.length; i++)
+    {
+        hash = hashes[i].split('=');
+        vars.push(hash[0]);
+        vars[hash[0]] = hash[1];
+    }
+    return vars["icid2"];
+   
+}
 function differentiateSellerDtm(){
 	var sellerList = $('#pdpSellerIDs').val();
 	var sellerArray='';

@@ -77173,6 +77173,12 @@ body .account .right-account form label.invite-text-lbl{
 	    }
 /* TISPRDT-2410 end */
 
+/* TPR-6947 start */
+body.template-pages-my-account-returnSuccess .mainContent-wrapper .container .body-Content .account .page-header span a{
+	text-decoration: underline;
+    color: #a9143c;
+ 	}
+/* TPR-6947 end */
 
 
 /*TPR-6907 start*/
@@ -77180,6 +77186,7 @@ body .account .right-account form label.invite-text-lbl{
 	display: inline-block;
 	margin-left: 10px;
 	margin-bottom: 10px; /*TISCSXII-2218*/
+	margin-right: 30px; /* TISPRDT-6065 */
 }
 #codEli #codLink{
 	color: #92002e;
@@ -77235,6 +77242,11 @@ li.enter-pincode a::before {
     line-height: 35px;
     position: relative;
 }
+@media (min-width: 791px){
+li.download-app a:before, span.material-icons, header .content .right>ul>li.wishlist>a:before {
+    color: rgba(255,255,255,0.7);
+}
+}
 /*TPR-6654 end*/
 /* TISCSXII-2224 start */
 body.template-pages-LoginPageTemplate .sign-in.tab-view .form-group #password_login_bar .progress-bar{
@@ -77246,3 +77258,8 @@ body.template-pages-LoginPageTemplate .sign-in.tab-view .form-group #password_lo
     padding-bottom: 24px;
 } 
 /* TISCSXII-2240 END */
+/* SDI-994 Start */
+.store-locator-block{
+	display: block;	
+}
+/* SDI-994 END */

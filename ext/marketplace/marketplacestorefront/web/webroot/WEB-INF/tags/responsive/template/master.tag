@@ -439,8 +439,17 @@
  		var commonResource='${commonResourcePath}';
  		var buildNumber='${buildNumber}'; 
  		
- 		$(window).on('load',function(){
+ 		/*$(window).on('load',function(){
  			if($("#pageType").val() != "homepage"){
+ 			callGigya();
+ 			}
+ 		});*/
+ 		<!-- BLP PDP Change -->
+ 		$(window).on('load',function(){
+ 			if($("#pageType").val() != "homepage" && $("#pageType").val() != "product" 
+ 					&& $("input[name=newBrandLandingPage]").length == 0 
+ 					&& $("#pageType").val() != "productsearch" 
+ 					&& $("input[name=productGrid]").length == 0){
  			callGigya();
  			}
  		});
@@ -464,9 +473,11 @@
 	$(document).ready(function(){
 		var anonymousUser = "${anonymous_user}";
 		var pincodeAvailable = "${pincode_available}";
-		var forceLoginUser = "${forced_login_user}";
+		//var forceLoginUser = "${forced_login_user}";
+		var forceLoginUser = (/*$.cookie("mpl-user") == "anonymous") &&*/ window.location.search.indexOf("boxed-login") >= 1 ? "Y" : "N";
 		var pageTypeVal = $("#pageType").val();
-		var isMobile = "${is_mobile}";
+		//var isMobile = "${is_mobile}";
+		var isMobile = screen.width < 460 ? "true" : "false" ;
 		if(forceLoginUser == "Y"){
 			if(isMobile == "true"){
 				setTimeout(function(){
@@ -493,7 +504,7 @@
 			}
 		}
 		//TPR-6654
-		if(pageTypeVal == "homepage" && anonymousUser == "Y" && pincodeAvailable == "N"){
+		if(pageTypeVal == "homepage" && anonymousUser == "Y"){
 			$(".enter-pincode").show();
 			
 	}
@@ -530,8 +541,9 @@
 	</c:if>
 
 	<%-- Load JavaScript required by the site --%>
+	<!-- SDI-1103 -->
 	<template:javaScript/>
-	<script type="text/javascript">_satellite.pageBottom();</script>
+	<script type="text/javascript">if(typeof _satellite !="undefined"){_satellite.pageBottom();}</script>
 	<%-- Inject any additional JavaScript required by the page --%>
 	<jsp:invoke fragment="pageScripts"/>	
 	<%-- TPR-6399 --%>
@@ -546,7 +558,7 @@
 		<div class="overlay"></div>
 		<div class="content">
 		<div class="modal-body">
-		<button class="close" data-dismiss="modal"><span aria-hidden="true">×</span></button>
+		<button class="close" data-dismiss="modal"><span aria-hidden="true">Ã—</span></button>
 		<!-- <button class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span></button> -->
 		<h4>Enter Pincode</h4>
 		<input id="home_pin" type="text" placeholder="Pincode" maxlength="6" onkeypress="return isNum(event)"/>

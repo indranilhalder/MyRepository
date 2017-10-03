@@ -18,7 +18,7 @@ ACC.cart = {
 
 $(function() {
 
-	//if ($("ul#giftYourselfProducts").length) {
+	if ($("ul#giftYourselfProducts").length) {
 		
 		$.ajax({
 			url: ACC.config.encodedContextPath + "/cart/giftlist",
@@ -36,10 +36,9 @@ $(function() {
 			},
 			 error : function(resp) { 
 
-
 			 } 
 		});
-
+	}
 });
 
 

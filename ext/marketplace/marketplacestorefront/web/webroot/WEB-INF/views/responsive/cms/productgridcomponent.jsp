@@ -69,3 +69,4 @@
 		
 	});
 </script>
+<input type="hidden" name="productGrid" value="1"/>

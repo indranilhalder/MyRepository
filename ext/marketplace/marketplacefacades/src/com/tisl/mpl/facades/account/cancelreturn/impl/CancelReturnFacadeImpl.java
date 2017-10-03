@@ -3813,6 +3813,7 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 			//returningTransactionId = sessionService.getAttribute("transactionId"); // Commented for Bulk Return Initiation
 			returningTransactionId = transId;
 			String transactionId = "";
+			String ussidJwlry = "";
 			for (final OrderEntryData orderEntry : entries)
 			{
 				final ReturnLogistics returnLogistics = new ReturnLogistics();
@@ -3844,7 +3845,23 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 
 				for (final SellerInformationModel sellerInfo : productModel.getSellerInformationRelator())
 				{
-					if (orderEntry.getSelectedUssid().equalsIgnoreCase(sellerInfo.getUSSID()))
+					if (productModel.getProductCategoryType().equalsIgnoreCase(MarketplacecommerceservicesConstants.FINEJEWELLERY))
+
+					{
+						final List<JewelleryInformationModel> jewelleryInfo = jewelleryService.getJewelleryInfoByUssid(orderEntry
+								.getSelectedUssid());
+						ussidJwlry = (CollectionUtils.isNotEmpty(jewelleryInfo)) ? jewelleryInfo.get(0).getUSSID() : "";
+
+						LOG.debug("PCMUSSID FOR JEWELLERY :::::::::: " + "for " + orderEntry.getSelectedUssid() + " is "
+								+ jewelleryInfo.get(0).getPCMUSSID());
+					}
+					else
+					{
+						ussidJwlry = sellerInfo.getUSSID();
+					}
+
+					/* if (orderEntry.getSelectedUssid().equalsIgnoreCase(sellerInfo.getUSSID())) */
+					if (orderEntry.getSelectedUssid().equalsIgnoreCase(ussidJwlry))
 					{
 						if (CollectionUtils.isNotEmpty(sellerInfo.getRichAttribute()))
 						{
