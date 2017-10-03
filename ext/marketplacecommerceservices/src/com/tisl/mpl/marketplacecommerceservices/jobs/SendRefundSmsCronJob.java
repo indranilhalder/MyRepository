@@ -49,7 +49,17 @@ public class SendRefundSmsCronJob extends AbstractJobPerformable<CronJobModel>
 			final int batch = configurationService.getConfiguration().getInt("bulksms.perbatch.sms");
 			int dividedValue = 0;
 			dividedValue = rowCount / batch;
+			int remStart = 0;
+			int remEnd = 0;
 			int remainder = 0;
+			//For removing remainder loop
+			if (dividedValue == 0 && rowCount != 0)
+			{
+				remainder = rowCount;
+				remStart = 0;
+				remEnd = rowCount - 1;
+			}
+
 			if (dividedValue * batch < rowCount)
 			{
 				remainder = rowCount - (dividedValue * batch);
@@ -69,12 +79,6 @@ public class SendRefundSmsCronJob extends AbstractJobPerformable<CronJobModel>
 				//{
 				result1 = result.subList(a, b);
 				response = sendSmsService.sendBulkSms(result1);
-				a += batch;
-				b += batch;
-				if (b > rowCount)
-				{
-					break;
-				}
 				//}
 				///delete dynamic query
 				if (response)
@@ -86,6 +90,14 @@ public class SendRefundSmsCronJob extends AbstractJobPerformable<CronJobModel>
 						deleteDynamicQuery.append("'");
 						deleteDynamicQuery.append(",");
 					}
+				}
+				a += batch;
+				b += batch;
+				if (b > rowCount)
+				{
+					remStart = rowCount - a;
+					remEnd = rowCount - 1;
+					break;
 				}
 			}
 			LOG.debug("========STEP:2==============");
@@ -99,7 +111,7 @@ public class SendRefundSmsCronJob extends AbstractJobPerformable<CronJobModel>
 
 					//for (int i = rowCount - remainder; i <= rowCount; i++)
 					//{
-					result1 = result.subList(rowCount - remainder, rowCount - 1);
+					result1 = result.subList(remStart, remEnd);
 					response = sendSmsService.sendBulkSms(result1);
 					//}
 					///delete dynamic query
