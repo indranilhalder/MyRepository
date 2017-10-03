@@ -77289,4 +77289,9 @@ body.template-pages-LoginPageTemplate .sign-in.tab-view .form-group #password_lo
     transform: rotate(-225deg);
     -webkit-transform: rotate(-225deg);
 }
+
+/*HomePage Changes - Vamshi*/
+@media(max-width: 650px){ .simpleSearchToggle {padding-right: 20px; } #search_form {display: none;}
+.simpleSearchToggle {content: ""; width: 40px; height: 40px; display: inline-block; position: absolute; right: 8%; top: 38%;
+background: url(../images/search_image.png) no-repeat;}}
 /*UF-466 end*/
