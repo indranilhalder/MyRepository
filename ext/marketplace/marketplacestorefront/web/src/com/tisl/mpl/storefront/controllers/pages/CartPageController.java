@@ -286,12 +286,14 @@ public class CartPageController extends AbstractPageController
 				cartModel = getCartService().getSessionCart();
 				CartData cartDataOnLoad = mplCartFacade.getSessionCartWithEntryOrdering(true);
 
-				final List<AbstractOrderEntryModel> entryJewl = new ArrayList<>(cartModel.getEntries());
+				//TPR-6980:Change in the logic of display of price disclaimer in the cart for Fine Jewellery
+				//	final List<AbstractOrderEntryModel> entryJewl = new ArrayList<>(cartModel.getEntries());
 				final List<String> discSellerNameList = new ArrayList<String>();
 
-				for (final AbstractOrderEntryModel orderEntry : entryJewl)
+				for (final AbstractOrderEntryModel orderEntry : cartModel.getEntries())
 				{
-					if ("FineJewellery".equalsIgnoreCase(orderEntry.getProduct().getProductCategoryType()))
+					if (MarketplacecommerceservicesConstants.FINEJEWELLERY.equalsIgnoreCase(orderEntry.getProduct()
+							.getProductCategoryType()))
 					{
 						final String sellerId = orderEntry.getSellerInfo();
 						final String sellers = getConfigurationService().getConfiguration().getString(

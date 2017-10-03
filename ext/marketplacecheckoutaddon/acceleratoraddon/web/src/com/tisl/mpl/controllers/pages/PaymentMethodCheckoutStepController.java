@@ -4556,6 +4556,7 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 				{
 					SellerInformationModel sellerInfoModel = null;
 
+					//TPR-6959:Change in COD eligibility logic for fine jewellery category
 					if (StringUtils.equalsIgnoreCase(MarketplacecommerceservicesConstants.FINEJEWELLERY, entry.getProduct()
 							.getProductCategoryType()))
 					{
@@ -4911,7 +4912,7 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.controllers.pages.CheckoutStepController#enterStep(org.springframework.ui.Model,
 	 * org.springframework.web.servlet.mvc.support.RedirectAttributes)
 	 */
