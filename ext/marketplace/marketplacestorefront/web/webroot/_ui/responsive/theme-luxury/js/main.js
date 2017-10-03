@@ -407,6 +407,31 @@ TATA.CommonFunctions = {
                 dots: true
             });
         }
+    },    
+    
+    TrendingCatagorySlider: function() { 
+        
+        $('.trending-products-catagory').slick({
+            slidesToScroll: 4,
+            slidesToShow: 4,
+            variableWidth: false,
+            infinite: false,
+            arrows: false,
+            swipe: false,
+            dots: false,
+            responsive: [
+                {
+                breakpoint: 768,
+                    settings: {
+                    slidesToScroll: 1,
+                    slidesToShow: 1,
+                    infinite: true,
+                    swipe: true,
+                    variableWidth: true                      
+                    }
+                }
+            ]
+        });
     },
 
     fillHeartForItemsInWishlist: function(){
@@ -480,9 +505,26 @@ TATA.CommonFunctions = {
             success: function(data) {
                 window.sessionStorage.setItem("header" , JSON.stringify(data));
                 luxuryHeaderLoggedinStatus = data.loggedInStatus;
+                setHeader(data);
             }
         });
     },
+    
+    setHeader: function(data){
+		 
+        if(data.cartcount!='NaN')
+    	{        	
+        	if(data.cartcount==0){
+        		$("span.js-mini-cart-count,span.js-mini-cart-count-hover,span.responsive-bag-count").hide();
+        	}
+    	}
+        else
+        {
+        	
+        	$("span.js-mini-cart-count,span.js-mini-cart-count-hover,span.responsive-bag-count").hide();
+        }
+     
+	},
 
     urlToProductCode : function(productURL){
         var n = productURL.lastIndexOf("-");
@@ -635,7 +677,7 @@ TATA.CommonFunctions = {
         var $window = $(window),
             leftbarElelTop = $('.plp-banner').outerHeight()+$('header').outerHeight();
         if(winWidth >= 768 && $('.leftbar').length){
-            if($(window).scrollTop() >= $('.product-grid:last-child').offset().top - 100){
+            if($(window).scrollTop() >= $('.product-grid:last-child').offset().top - 150){
                 $('.leftbar').removeClass('sticky-leftbar');
             }else{
                 $('.leftbar').toggleClass('sticky-leftbar', $window.scrollTop() > leftbarElelTop);
@@ -861,6 +903,7 @@ TATA.CommonFunctions = {
         _self.BrandSlider();
         _self.Accordion();
         _self.ShopByCatagorySlider();
+        _self.TrendingCatagorySlider();
         _self.wishlistInit();
         _self.deleteWishlist();
         _self.leftBarAccordian();
@@ -971,9 +1014,7 @@ TATA.Pages = {
                 success: function(x) {
                     var filtered = $.parseHTML(x);
                     if($(filtered).has('.product-grid')){
-                        $(".product-grid",filtered).each(function(){
-                            $(".product-grid-wrapper").append($(this));
-                        });
+                        $('.product-grid-wrapper').append($(filtered).find(".product-grid-wrapper"));
                     }
                     $("#pageQuery").val(ajaxUrl);
                 },
@@ -1006,8 +1047,8 @@ TATA.Pages = {
                 var resetUrl = $(this).data("resetqueryurl") + TATA.Pages.PLP.addSortParameter();
                 TATA.Pages.PLP.performAjax(resetUrl);
             }), $(document).on("click", ".remove-filter", function() {
-                var relevantCheckbox = $(this).attr("data-facetCode");
-                $("#" + relevantCheckbox).click();
+            	var removeFacetUrl = $(this).attr("data-removeUrl");
+            	TATA.Pages.PLP.performAjax(removeFacetUrl, "");
             }), $(document).on("change", ".facet-form input:checkbox", function() {
                 var requestUrl = $(this).closest("form").attr("action") + "?" + $(this).closest("form").serialize();
                 /* TCL-843  $(".plp-wrapper h4.categor-name").hide();*/
@@ -1305,10 +1346,18 @@ TATA.Pages = {
                 dataType : "json",
                 success : function(data) {
                     $(".add-to-wl-pdp").addClass("added");
-                    $(".wishAddSucess").addClass("active");
-                    setTimeout(function(){
-                        $(".wishAddSucess").removeClass("active")
-                    },3000);
+                    if (data == true) {
+                        $(".wishAddSucessPlp").addClass("active");
+                        setTimeout(function(){
+                            $(".wishAddSucessPlp").removeClass("active")
+                        },3000);
+                    }
+                    else{
+                        $(".wishAlreadyAddedPlp").addClass("active");
+                        setTimeout(function(){
+                            $(".wishAlreadyAddedPlp").removeClass("active")
+                        },3000);
+                    }
                 }
             });
         },
@@ -1324,10 +1373,18 @@ TATA.Pages = {
                 contentType : "application/json; charset=utf-8",
                 success : function(data) {
                     $(".add-to-wl-pdp").removeClass("added");
-                    $(".wishRemoveSucess").addClass("active");
-                    setTimeout(function(){
-                        $(".wishRemoveSucess").removeClass("active")
-                    },3000);
+                    if (data == true) {
+                        $(".wishRemoveSucessPlp").addClass("active");
+                        setTimeout(function(){
+                            $(".wishRemoveSucessPlp").removeClass("active")
+                        },3000);
+                    }
+                    else{
+                        $(".wishAlreadyAddedPlp").addClass("active");
+                        setTimeout(function(){
+                            $(".wishAlreadyAddedPlp").removeClass("active")
+                        },3000);
+                    }
                 }
             });
         },
@@ -2708,7 +2765,7 @@ $(document).ready(function () {
         }
     });  
     
-    var luxuryluxuryHeaderLoggedinStatus = false;
+    luxuryHeaderLoggedinStatus = false;
     isDuringCheckout = false;
     TATA.CommonFunctions.init();
     TATA.Pages.init();
@@ -2741,3 +2798,14 @@ $(document).ready(function (){
         $(".plp-leftbar-close a").trigger("click");
     });
 });
+
+/*POPULAR SEARCHES COLLAPSE START*/
+    $(document).ready(function () {
+        $(".footer-popular-accordian-title").click(function () {
+            $(".mega-menu").slideToggle('400', function() {
+                $(window).scrollTop($(document).height());
+            });
+            $("#footer-popular-accordian-icon").toggleClass('glyphicon-minus','glyphicon-plus');
+        });
+    });
+/*POPULAR SEARCHES COLLAPSE END*/

@@ -44,7 +44,7 @@
                 </ul>
             </c:when>
             <c:otherwise>
-                <ul class="list-unstyled trending-products-catagory text-center circle-pager">
+                <ul class="list-unstyled trending-products-catagory text-center circle-pager shop-by-catagory-slider">
                     <c:forEach items="${productData}" var="product">
 
                         <c:url value="${product.url}" var="productUrl"/>
