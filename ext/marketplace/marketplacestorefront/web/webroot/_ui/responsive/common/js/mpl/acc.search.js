@@ -1,5 +1,6 @@
 function constructDepartmentHierarchy(inputArray) {		
-		var output = [];
+	var inputArray = unescape(inputArray);	
+	var output = [];
 		
 		if(inputArray!=""){
 		for (var i = 0; i < inputArray.length; i++) {				
