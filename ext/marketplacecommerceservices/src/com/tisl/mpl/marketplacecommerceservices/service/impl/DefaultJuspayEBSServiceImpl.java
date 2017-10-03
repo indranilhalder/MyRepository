@@ -267,7 +267,12 @@ public class DefaultJuspayEBSServiceImpl implements JuspayEBSService
 			final OrderModel oModel = fetchOrderDetails(audit);
 			if (null != oModel)
 			{
-				getOrderStatusSpecifier().setOrderStatus(oModel, OrderStatus.RMS_VERIFICATION_FAILED);
+				boolean rmsEligibleFlag = false;
+				rmsEligibleFlag = checkRMSFailedEligible(oModel);
+				if (rmsEligibleFlag)
+				{
+					getOrderStatusSpecifier().setOrderStatus(oModel, OrderStatus.RMS_VERIFICATION_FAILED);
+				}
 				try
 				{
 					//send Notification
@@ -624,5 +629,29 @@ public class DefaultJuspayEBSServiceImpl implements JuspayEBSService
 	public void setBaseStoreService(final BaseStoreService baseStoreService)
 	{
 		this.baseStoreService = baseStoreService;
+	}
+
+
+	private boolean checkRMSFailedEligible(final OrderModel orderModel)
+	{
+
+		boolean flag = false;
+		final List<OrderModel> subOrderList = orderModel.getChildOrders();
+		if (CollectionUtils.isNotEmpty(subOrderList))
+		{
+			for (final OrderModel subOrder : subOrderList)
+			{
+				if (null != subOrder.getStatus()
+						&& (OrderStatus.PAYMENT_PENDING.equals(subOrder.getStatus())
+								|| OrderStatus.PAYMENT_SUCCESSFUL.equals(subOrder.getStatus()) || OrderStatus.RMS_VERIFICATION_PENDING
+									.equals(subOrder.getStatus())))
+				{
+					flag = true;
+				}
+			}
+			LOG.debug("Flag for RMS Failure" + flag);
+		}
+		return flag;
+
 	}
 }
