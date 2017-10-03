@@ -477,10 +477,33 @@
 		if(pageTypeVal == "homepage" && anonymousUser == "Y"){
 			$(".enter-pincode").show();
 	}
+		
+		/*Search Icon Changes - Responsive Vamshi*/
+		if($(window).width()<651){ 
+				$('#search_form').hide();
+				$(".simpleSearchToggle").show();
+				$(document).on("click", function(e){
+					if($(e.target).is(".simpleSearchToggle") || $(e.target).is(".js-site-search-input") || $(e.target).is("#searchButton")){
+						if($(e.target).is(".simpleSearchToggle")) {
+							$('#search_form').toggle(function () {});
+							$(".js-site-search-input").focus();
+						} else {
+							$("#search_form").show();
+						}
+					}else{
+						$("#search_form").hide(function () {});
+					}
+				});
+			} else {
+				$(".simpleSearchToggle").hide();
+			}
 	});
+	
 	$(document).on("click","#close-login",function(){
 		window.location.href="/";
 	});
+	
+	
 
 </script>
 
