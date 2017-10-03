@@ -285,7 +285,7 @@ public class MarketplacecclientservicesConstants
 	public static final String NA = "NA".intern();
 	public static final String PANCARD = "PANCARD";
 	public static final String PANCARD_UPLOAD_URL = "pancard.upload.pi.url";
-	
+
 	public static final String LUXURY_RATING_APIKEY = "luxury.gigya.apikey".intern();
 
 	//TPR-5667
@@ -300,9 +300,14 @@ public class MarketplacecclientservicesConstants
 	public static final String S0002_EXCEP = "S0002";
 	public static final String S0003_EXCEP = "S0003";
 	public static final String SAMSUNG_LOGGER_HEAD = "######## CreateSamsungOrder :: ";
-	
+
 	//INC144319511
 	public static final String EMAIL = "email";
 	public static final String IDENTITIES = "identities";
 	public static final String METHOD_GET_USERINFO = "gigya.getuserinfo.method".intern();
+
+	//PR-4
+	public static final String BULK_SMS_SERVICE_ENABLED = "marketplace.BulkSms.service.enabled";
+	public static final String BULK_SMS_SERVICE_URL = "marketplace.bulksms.service.url";
+
 }

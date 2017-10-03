@@ -17,9 +17,9 @@ import de.hybris.platform.storelocator.model.PointOfServiceModel;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
-import java.util.SortedMap;
-import java.util.TreeMap;
+import java.util.Map;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.log4j.Logger;
@@ -222,9 +222,9 @@ public class PincodeServiceImpl implements PincodeService
 	 * storelocator.GPS, double)
 	 */
 	@Override
-	public SortedMap<PointOfServiceModel, Double> getSortedStoresNearby(final GPS gps, final double distance, final String sellerId)
+	public Map<PointOfServiceModel, Double> getSortedStoresNearby(final GPS gps, final double distance, final String sellerId)
 	{
-		final SortedMap<PointOfServiceModel, Double> result = new TreeMap<>();
+		final Map<PointOfServiceModel, Double> result = new HashMap<PointOfServiceModel, Double>();
 		try
 		{
 			final Collection<PointOfServiceModel> posModels = pincodeDao.getAllGeocodedPOS(gps, distance, sellerId);

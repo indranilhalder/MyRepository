@@ -47,7 +47,8 @@ public class SendRefundSmsCronJob extends AbstractJobPerformable<CronJobModel>
 			final List<BulkSmsPerBatch> result = refundSmsDao.searchResultsForRefund(query);
 			final int rowCount = result.size();
 			final int batch = configurationService.getConfiguration().getInt("bulksms.perbatch.sms");
-			final int dividedValue = rowCount / batch;
+			int dividedValue = 0;
+			dividedValue = rowCount / batch;
 			int remainder = 0;
 			if (dividedValue * batch < rowCount)
 			{
@@ -58,7 +59,7 @@ public class SendRefundSmsCronJob extends AbstractJobPerformable<CronJobModel>
 			int b = batch - 1;
 			List<BulkSmsPerBatch> result1 = null;
 			boolean response = false;
-
+			LOG.debug("========STEP:1==============");
 			//parent loop
 			for (int j = 1; j <= dividedValue; j++)
 			{
@@ -83,6 +84,7 @@ public class SendRefundSmsCronJob extends AbstractJobPerformable<CronJobModel>
 					}
 				}
 			}
+			LOG.debug("========STEP:2==============");
 			//Remainder loop
 			if (remainder != 0)
 			{
@@ -111,12 +113,14 @@ public class SendRefundSmsCronJob extends AbstractJobPerformable<CronJobModel>
 			}
 			final String subQuery = deleteDynamicQuery.substring(0, deleteDynamicQuery.length() - 1);
 			///delete rows
+			LOG.debug("======== Delete query==========" + subQuery);
 			refundSmsDao.deleteRows(subQuery);
 			LOG.debug("Finished executing perform method of SendRefundSmsCronJob class...");
 			return new PerformResult(CronJobResult.SUCCESS, CronJobStatus.FINISHED);
 		}
 		catch (final Exception ex)
 		{
+			LOG.error(ex);
 			return new PerformResult(CronJobResult.ERROR, CronJobStatus.ABORTED);
 		}
 	}
