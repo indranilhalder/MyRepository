@@ -631,7 +631,6 @@ public class DefaultJuspayEBSServiceImpl implements JuspayEBSService
 		this.baseStoreService = baseStoreService;
 	}
 
-
 	private boolean checkRMSFailedEligible(final OrderModel orderModel)
 	{
 
