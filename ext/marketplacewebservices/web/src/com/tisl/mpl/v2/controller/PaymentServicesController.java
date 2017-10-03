@@ -76,7 +76,9 @@ import com.tisl.mpl.marketplacecommerceservices.service.ExtendedUserService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplPaymentService;
 import com.tisl.mpl.model.PaymentModeRestrictionModel;
 import com.tisl.mpl.model.PaymentTypeModel;
+import com.tisl.mpl.pojo.response.BalanceBucketWise;
 import com.tisl.mpl.pojo.response.CustomerWalletDetailResponse;
+import com.tisl.mpl.pojo.response.QCRedeeptionResponse;
 import com.tisl.mpl.util.DiscountUtility;
 import com.tisl.mpl.util.ExceptionUtil;
 import com.tisl.mpl.wsdto.CliqCashWsDto;
@@ -378,6 +380,20 @@ public class PaymentServicesController extends BaseController
 						else
 						{
 							throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9075);
+						}
+						
+						if (cart.getSplitModeInfo().equalsIgnoreCase(MarketplacewebservicesConstants.PAYMENT_MODE_SPLIT))
+						{
+							
+							if (null != cart.getPayableWalletAmount())
+							{
+								promoPriceData.setPaybleAmount(Double.valueOf(cart.getTotalPrice().doubleValue()-cart.getPayableWalletAmount().doubleValue()));
+							}
+						}
+						else
+						{
+							promoPriceData.setPaybleAmount(cart.getTotalPrice());
+							promoPriceData.setCliqCashApplied(false);
 						}
 					}
 					else
@@ -1184,6 +1200,22 @@ public class PaymentServicesController extends BaseController
 							if (MarketplacewebservicesConstants.CHARGED.equalsIgnoreCase(statusResponse))
 							{
 								//return placeOrder(model, redirectAttributes);
+								
+							// Paying The remaining amount through Wallet 
+								try {
+									LOG.debug(" Paying Amount From QC ");
+									if(null != orderToBeUpdated.getSplitModeInfo() && 
+											orderToBeUpdated.getSplitModeInfo().equalsIgnoreCase(MarketplacewebservicesConstants.PAYMENT_MODE_SPLIT) ){
+									double amountDeducted = payAmountThroughWallet(orderToBeUpdated);
+									if( amountDeducted>0.0D) {
+									  updateTransactionDetail.setCliqCashAmountDeducted(Double.valueOf(amountDeducted));
+										updateTransactionDetail.setCliqCashApplied(true);
+									}
+									}
+								}catch (Exception e) {
+									LOG.error("Exception occurred whil paying from QC"+e.getMessage());
+								}
+								
 								if (mplPaymentWebFacade.updateOrder(orderToBeUpdated))
 								{
 									updateTransactionDetail.setStatus(MarketplacewebservicesConstants.UPDATE_SUCCESS);
@@ -1291,6 +1323,54 @@ public class PaymentServicesController extends BaseController
 	}
 
 
+	
+	
+	public double payAmountThroughWallet(OrderModel order)
+	{
+   
+		LOG.info("paying amount from EGV Wallet");
+		double amountDeducted = 0.0D;
+		//final OrderData orderData;
+		//final OrderModel orderToBeUpdated = getMplPaymentFacade().getOrderByGuid(cart.getGuid());
+		QCRedeeptionResponse qcResponse = new QCRedeeptionResponse();
+		try
+		{
+			final String qcUniqueCode = mplPaymentFacade.generateQCCode();
+			final CustomerModel currentCustomer = (CustomerModel) userService.getCurrentUser();
+			
+			final double WalletAmt = order.getPayableWalletAmount().doubleValue();
+			final double totalAmt = order.getTotalPrice().doubleValue();
+			final double juspayAmount = totalAmt - WalletAmt;
+			amountDeducted = WalletAmt;
+
+			qcResponse = mplPaymentFacade.createQCOrderRequest(order.getGuid(), order,
+					currentCustomer.getCustomerWalletDetail().getWalletId(), MarketplacewebservicesConstants.PAYMENT_MODE_CLIQ_CASH,
+					qcUniqueCode, MarketplacewebservicesConstants.CHANNEL_MOBILE, WalletAmt, juspayAmount);
+			if (null != qcResponse && null != qcResponse.getResponseCode() && qcResponse.getResponseCode().intValue() != 0)
+			{
+				order.setStatus(OrderStatus.PAYMENT_FAILED); /// return QC fail and Update Audit Entry Try With Juspay
+				modelService.save(order);
+			}
+
+			else if (null == qcResponse || null == qcResponse.getResponseCode())
+			{
+
+				order.setStatus(OrderStatus.PAYMENT_FAILED); /// NO Exception No qcResponse Try With Juspay
+				modelService.save(order);
+			}
+
+		}
+		catch (final Exception ex)
+		{
+
+			if (null != qcResponse && null != qcResponse.getResponseCode() && qcResponse.getResponseCode().intValue() == 0)
+			{
+				order.setStatus(OrderStatus.RMS_VERIFICATION_FAILED);
+				modelService.save(order);
+			}
+		}
+		return amountDeducted;
+	}
 	// Buying Of EGV  Changes START 
 	private OrderData getEGVOrderStatus(final String guid)
 			throws InvalidCartException, CalculationException
@@ -1392,6 +1472,7 @@ public class PaymentServicesController extends BaseController
 		PaymentServiceWsData paymentModesData = new PaymentServiceWsData();
 		CartModel cart = null;
 		OrderModel orderModel = null;
+		boolean isEgvOrder = false;
 		//CAR-111
 		//final CartData cartData = null;
 		//OrderData orderData = null;
@@ -1404,6 +1485,9 @@ public class PaymentServicesController extends BaseController
 			if (null == orderModel)
 			{
 				cart = mplPaymentWebFacade.findCartAnonymousValues(cartGuid);
+				if(null != cart && null != cart.getIsEGVCart() && cart.getIsEGVCart().booleanValue()) {
+					isEgvOrder = true;
+				}
 				if (cart != null)
 				{
 					//CAR-111
@@ -1412,6 +1496,7 @@ public class PaymentServicesController extends BaseController
 							MarketplacewebservicesConstants.MPLSTORE, cart);
 					paymentModesData = getMplPaymentWebFacade().potentialPromotionOnPaymentMode(cart);
 					paymentModesData.setPaymentModes(paymentMode);
+					paymentModesData.setStatus(MarketplacecommerceservicesConstants.SUCCESS);
 				}
 				else
 				{
@@ -1423,10 +1508,14 @@ public class PaymentServicesController extends BaseController
 				//CAR-111
 				//orderData = mplCheckoutFacade.getOrderDetailsForCode(orderModel);
 				//Getting Payment modes
+				if(null != orderModel.getIsEGVCart() && orderModel.getIsEGVCart().booleanValue()) {
+					isEgvOrder = true;
+				}
 				final Map<String, Boolean> paymentMode = getMplPaymentFacade()
 						.getPaymentModes(MarketplacewebservicesConstants.MPLSTORE, orderModel);
 				paymentModesData = getMplPaymentWebFacade().potentialPromotionOnPaymentMode(orderModel);
 				paymentModesData.setPaymentModes(paymentMode);
+				paymentModesData.setStatus(MarketplacecommerceservicesConstants.SUCCESS);
 			}
 
 			/* Added for cliq Cash Functionality start */
@@ -1447,60 +1536,59 @@ public class PaymentServicesController extends BaseController
 				savedCards.setSavedCardDetailsMap(savedCardsMap);
 
 				paymentModesData.setSavedCardResponse(savedCards);
+				paymentModesData.setStatus(MarketplacecommerceservicesConstants.SUCCESS);
 			}
 			catch (Exception e)
 			{
 				LOG.error("Exception occurred while getting the saved credit card details " + e.getMessage());
 			}
 
-			try
-			{
-
-				LOG.debug("Getting saved Clish Cash Details");
-				CliqCashWsDto cliqCash = new CliqCashWsDto();
-				TotalCliqCashBalanceWsDto totalCliqCashBalanceWsDto = new TotalCliqCashBalanceWsDto();
-				if (null != customer && null != customer.getIsWalletActivated() && customer.getIsWalletActivated().booleanValue()
-						&& null != customer.getCustomerWalletDetail() && null != customer.getCustomerWalletDetail().getWalletId())
+			if(!isEgvOrder) {
+				try
 				{
-
-					CustomerWalletDetailResponse responce = mplWalletFacade
-							.getCustomerWallet(customer.getCustomerWalletDetail().getWalletId());
-					if (null != responce && responce.getResponseCode() == Integer.valueOf(0) && null != responce.getWallet())
+					LOG.debug("Getting saved Clish Cash Details");
+					CliqCashWsDto cliqCash = new CliqCashWsDto();
+					TotalCliqCashBalanceWsDto totalCliqCashBalanceWsDto = new TotalCliqCashBalanceWsDto();
+					if (null != customer && null != customer.getIsWalletActivated() && customer.getIsWalletActivated().booleanValue()
+							&& null != customer.getCustomerWalletDetail() && null != customer.getCustomerWalletDetail().getWalletId())
 					{
 
-						if (null != responce.getApiWebProperties() && null != responce.getApiWebProperties().getDateAtClient())
+						CustomerWalletDetailResponse responce = mplWalletFacade
+								.getCustomerWallet(customer.getCustomerWalletDetail().getWalletId());
+						if (null != responce && responce.getResponseCode() == Integer.valueOf(0) && null != responce.getWallet())
 						{
-							cliqCash.setBalanceClearedAsOf(responce.getApiWebProperties().getDateAtClient());
+
+							if (null != responce.getApiWebProperties() && null != responce.getApiWebProperties().getDateAtClient())
+							{
+								cliqCash.setBalanceClearedAsOf(responce.getApiWebProperties().getDateAtClient());
+							}
+
+							final BigDecimal walletAmount = new BigDecimal(responce.getWallet().getBalance().doubleValue());
+							final PriceData priceData = PriceDataFactory.create(PriceDataType.BUY, walletAmount,
+									MarketplacecommerceservicesConstants.INR);
+
+							if (null != priceData)
+							{
+								totalCliqCashBalanceWsDto.setCurrencyIso(priceData.getCurrencyIso());
+								totalCliqCashBalanceWsDto.setDoubleValue(priceData.getDoubleValue());
+								totalCliqCashBalanceWsDto.setFormattedValue(priceData.getFormattedValue());
+								totalCliqCashBalanceWsDto.setPriceType(priceData.getPriceType());
+								totalCliqCashBalanceWsDto.setFormattedValueNoDecimal(priceData.getFormattedValueNoDecimal());
+								totalCliqCashBalanceWsDto.setValue(priceData.getValue());
+								paymentModesData.setStatus(MarketplacecommerceservicesConstants.SUCCESS_FLAG);
+							}
+							cliqCash.setTotalCliqCashBalance(totalCliqCashBalanceWsDto);
+							paymentModesData.setCliqCash(cliqCash);
 						}
-
-						final BigDecimal walletAmount = new BigDecimal(responce.getWallet().getBalance().doubleValue());
-						final PriceData priceData = PriceDataFactory.create(PriceDataType.BUY, walletAmount,
-								MarketplacecommerceservicesConstants.INR);
-
-						if (null != priceData)
-						{
-							totalCliqCashBalanceWsDto.setCurrencyIso(priceData.getCurrencyIso());
-							totalCliqCashBalanceWsDto.setDoubleValue(priceData.getDoubleValue());
-							totalCliqCashBalanceWsDto.setFormattedValue(priceData.getFormattedValue());
-							totalCliqCashBalanceWsDto.setPriceType(priceData.getPriceType());
-							totalCliqCashBalanceWsDto.setFormattedValueNoDecimal(priceData.getFormattedValueNoDecimal());
-							totalCliqCashBalanceWsDto.setValue(priceData.getValue());
-							paymentModesData.setStatus(MarketplacecommerceservicesConstants.SUCCESS_FLAG);
-						}
-
-						cliqCash.setTotalCliqCashBalance(totalCliqCashBalanceWsDto);
-						paymentModesData.setCliqCash(cliqCash);
 					}
 				}
+				catch (Exception e)
+				{
+					paymentModesData.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
+					LOG.debug("Exception occurred while getting customer QC wallet Amount" + e.getMessage());
+				}
 			}
-			catch (Exception e)
-			{
-				LOG.debug("Exception occurred while getting customer QC wallet Amount" + e.getMessage());
-			}
-
 			/* Added for cliq Cash Functionality end */
-
-
 		}
 		catch (final EtailNonBusinessExceptions ex)
 		{

@@ -4561,6 +4561,7 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 		cardModel.setRecipientId(egvDetailForm.getToEmailAddress());
 		cardModel.setRecipientMessage(egvDetailForm.getMessageBox());
 		cardModel.setGiftFromId(egvDetailForm.getFromEmailAddress());
+		cardModel.setPayableWalletAmount(Double.valueOf(0.0D));
 
 		try
 		{

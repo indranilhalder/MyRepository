@@ -605,18 +605,16 @@ public class OrdersController extends BaseCommerceController
 			//removeProductFromWL(orderCode);
 			orderModel = mplOrderFacade.getOrder(orderCode); //TISPT-175 --- order model changes : reduce same call from two places
 			
-			// Paying The remaining amount through Wallet 
-			if(null != orderModel && null != orderModel.getSplitModeInfo() && 
-					orderModel.getSplitModeInfo().equalsIgnoreCase(MarketplacewebservicesConstants.PAYMENT_MODE_SPLIT) ){
-			double amountDeducted = payAmountThroughWallet(orderModel);
-			response.setCliqCashAmountDeducted(Double.valueOf(amountDeducted));
-			response.setCliqCashApplied(true);
-			}
+			
 			
 			orderDetail = mplCheckoutFacade.getOrderDetailsForCode(orderModel); //TISPT-175 --- order details : reduce same call from two places
 			wishlistFacade.remProdFromWLForConf(orderDetail, orderModel.getUser()); //TISPT-175 --- removing products from wishlist : passing order data as it was fetching order data based on code again inside the method
 			SessionOverrideCheckoutFlowFacade.resetSessionOverrides();
 			response = processOrderCode(orderCode, orderModel, orderDetail, request);
+			if(null != response && null !=orderModel.getPayableWalletAmount() && orderModel.getPayableWalletAmount().doubleValue() > 0.0D ) {
+				response.setCliqCashApplied(true);
+				response.setCliqCashAmountDeducted(orderModel.getPayableWalletAmount());
+			}
 		}
 
 		catch (final EtailNonBusinessExceptions e)
@@ -650,76 +648,7 @@ public class OrdersController extends BaseCommerceController
 
 	
 	
-	public double payAmountThroughWallet(OrderModel order)
-	{
-   
-		LOG.info("paying amount from EGV Wallet");
-		double amountDeducted = 0.0D;
-		//final OrderData orderData;
-		//final OrderModel orderToBeUpdated = getMplPaymentFacade().getOrderByGuid(cart.getGuid());
-		QCRedeeptionResponse qcResponse = new QCRedeeptionResponse();
-		try
-		{
-			final String qcUniqueCode = mplPaymentFacade.generateQCCode();
-			final CustomerModel currentCustomer = (CustomerModel) userService.getCurrentUser();
-			
-			final String orderStatusResponse = mplPaymentFacade.getOrderStatusFromJuspay(order.getGuid(), null, order,
-					null);
-			
-			if (null != orderStatusResponse)
-			{
 
-				/**
-				 * Wallet Changes
-				 */
-
-				if (order.getSplitModeInfo().equalsIgnoreCase(MarketplacewebservicesConstants.PAYMENT_MODE_SPLIT))
-				{
-					if (MarketplacewebservicesConstants.CHARGED.equalsIgnoreCase(orderStatusResponse))
-					{
-						BalanceBucketWise balBucketwise = null;
-		    			if (null != currentCustomer && null != currentCustomer.getCustomerWalletDetail()
-		    					&& null != currentCustomer.getCustomerWalletDetail().getWalletId())
-		    			{
-		    				balBucketwise = mplWalletFacade.getQCBucketBalance(currentCustomer.getCustomerWalletDetail().getWalletId());
-		    			}
-		    			final double WalletAmt = balBucketwise.getWallet().getBalance().doubleValue();
-	   				final double totalAmt = order.getTotalPrice().doubleValue();
-	   				final double juspayAmount = totalAmt - WalletAmt;
-	   				amountDeducted = WalletAmt;
-	   				
-						qcResponse = mplPaymentFacade.createQCOrderRequest(order.getGuid(), order,
-								currentCustomer.getCustomerWalletDetail().getWalletId(), MarketplacewebservicesConstants.PAYMENT_MODE_CLIQ_CASH,
-								qcUniqueCode, MarketplacewebservicesConstants.CHANNEL_MOBILE,WalletAmt,juspayAmount);
-						if (null != qcResponse && null != qcResponse.getResponseCode() && qcResponse.getResponseCode().intValue() != 0)
-						{
-							order.setStatus(OrderStatus.PAYMENT_FAILED); /// return QC fail and Update Audit Entry Try With Juspay
-							modelService.save(order);
-						}
-
-						else if (null == qcResponse || null == qcResponse.getResponseCode())
-						{
-
-							order.setStatus(OrderStatus.PAYMENT_FAILED); /// NO Exception No qcResponse Try With Juspay
-							modelService.save(order);
-						}
-						
-					}
-				}
-
-			}
-		}
-		catch (final Exception ex)
-		{
-
-			if (null != qcResponse && null != qcResponse.getResponseCode() && qcResponse.getResponseCode().intValue() == 0)
-			{
-				order.setStatus(OrderStatus.RMS_VERIFICATION_FAILED);
-				modelService.save(order);
-			}
-		}
-		return amountDeducted;
-	}
 
 	//TODO It was added in respect of CheckoutController.java
 	/*

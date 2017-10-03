@@ -1679,6 +1679,13 @@ public class DefaultGetOrderDetailsFacadeImpl implements GetOrderDetailsFacade
 			}
 			else
 			{
+				
+				if (null != orderDetail.getEgvCardExpDate())
+				{
+					orderTrackingWsDTO.setCarEexpiryDate(orderDetail.getEgvCardExpDate());
+				}
+				orderTrackingWsDTO.setResendAvailable(true);
+				//orderTrackingWsDTO.setRecipientname(recipientname);
 				if (null != orderDetail.getDeliveryAddress())
 				{
 					orderTrackingWsDTO.setDeliveryAddress(GenericUtilityMethods.setAddress(orderDetail, 2));

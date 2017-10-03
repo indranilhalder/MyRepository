@@ -546,6 +546,8 @@ public class MarketplacewebservicesConstants
 	public static final String REMOVE_CLIQCASH = "/{userId}/removeCliqCash";
 	public static final String REDEEM_CLIQ_VOUCHER = "/{userId}/cliqcash/redeemCliqVoucher";
 	public static final String CREATE_ELECTRONICS_GIFTCARD_GUID = "/{userId}/createElectronicsGiftCardCartGuid";
+	public static final String RESEND_NOTIFICATION_EGV = "/{userId}/resendEGV";
+	public static final String CREATE_ELECTRONICS_GIFTCARD_GUID_ID = "/{userId}/createElectronicsGiftCardCartGuidId";
 	public static final String CREATE_ELECTRONICS_GIFTCARD_AMOUNT = "/{userId}/calculateElectronicsGiftCardAmount";
 	
 	public static final String MRUPEE = "MRUPEE".intern();

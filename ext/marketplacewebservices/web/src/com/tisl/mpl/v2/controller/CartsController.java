@@ -3429,6 +3429,27 @@ public class CartsController extends BaseCommerceController
 					cartModel.setChannel(SalesApplication.MOBILE);
 					getModelService().save(cartModel);
 					applycouponDto = mplCouponWebFacade.applyVoucher(couponCode, cartModel, null, paymentMode);
+					if(null != cartModel.getSplitModeInfo() && cartModel.getSplitModeInfo().equalsIgnoreCase(MarketplacewebservicesConstants.PAYMENT_MODE_SPLIT)
+							)
+					{
+						double walletpayableAmount = cartModel.getPayableWalletAmount().doubleValue();
+						if(walletpayableAmount>0.0D) {
+							applycouponDto.setCliqCashApplied(true);
+							applycouponDto.setPaybleAmount(Double.valueOf(cartModel.getTotalPriceWithConv().doubleValue() - walletpayableAmount));
+						}else {
+							applycouponDto.setCliqCashApplied(false);
+							applycouponDto.setPaybleAmount(cartModel.getTotalPriceWithConv());
+						}
+					}
+					else if(null != cartModel.getSplitModeInfo() && cartModel.getSplitModeInfo().equalsIgnoreCase(MarketplacewebservicesConstants.PAYMENT__MODE_JUSPAY))
+					{
+							applycouponDto.setCliqCashApplied(false);
+							applycouponDto.setPaybleAmount(cartModel.getTotalPriceWithConv());
+					}else {
+						applycouponDto.setCliqCashApplied(true);
+						applycouponDto.setPaybleAmount(Double.valueOf(0.0D));
+					}
+					
 					applycouponDto
 							.setTotal(String.valueOf(getMplCheckoutFacade().createPrice(cartModel, cartModel.getTotalPriceWithConv())
 									.getValue().setScale(2, BigDecimal.ROUND_HALF_UP)));
