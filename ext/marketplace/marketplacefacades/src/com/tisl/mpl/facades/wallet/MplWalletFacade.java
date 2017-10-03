@@ -3,6 +3,7 @@
  */
 package com.tisl.mpl.facades.wallet;
 
+import com.tisl.mpl.pojo.request.QCCreditRequest;
 import com.tisl.mpl.pojo.request.QCCustomerPromotionRequest;
 import com.tisl.mpl.pojo.request.QCCustomerRegisterRequest;
 import com.tisl.mpl.pojo.request.QCRedeemRequest;
@@ -47,4 +48,6 @@ public interface MplWalletFacade
 	public WalletTransacationsList getWalletTransactionList();
 
 	public QCRedeeptionResponse createPromotion(String walletId, QCCustomerPromotionRequest request);
+	
+	public QCRedeeptionResponse qcCredit(final String walletId, final QCCreditRequest request);
 }

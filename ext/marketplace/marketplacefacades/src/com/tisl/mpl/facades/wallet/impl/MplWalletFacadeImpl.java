@@ -13,6 +13,7 @@ import org.apache.commons.collections.CollectionUtils;
 
 import com.tisl.mpl.facades.wallet.MplWalletFacade;
 import com.tisl.mpl.marketplacecommerceservices.service.MplPaymentService;
+import com.tisl.mpl.pojo.request.QCCreditRequest;
 import com.tisl.mpl.pojo.request.QCCustomerPromotionRequest;
 import com.tisl.mpl.pojo.request.QCCustomerRegisterRequest;
 import com.tisl.mpl.pojo.request.QCRedeemRequest;
@@ -292,4 +293,10 @@ public class MplWalletFacadeImpl implements MplWalletFacade
 		return getMplWalletServices().createPromotion(walletId, request);
 	}
 
+	
+	@Override
+	public QCRedeeptionResponse qcCredit(final String walletId, final QCCreditRequest request)
+	{
+		return getMplWalletServices().qcCredit(walletId, request);
+	}
 }
