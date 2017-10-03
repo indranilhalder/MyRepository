@@ -5,7 +5,10 @@ package com.tisl.mpl.sms;
 
 import de.hybris.platform.servicelayer.config.ConfigurationService;
 
+import java.io.StringWriter;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.annotation.Resource;
@@ -30,6 +33,9 @@ import com.sun.jersey.api.json.JSONMarshaller;
 import com.tisl.mpl.constants.clientservice.MarketplacecclientservicesConstants;
 import com.tisl.mpl.core.model.OrderUpdateSmsProcessModel;
 import com.tisl.mpl.data.SendSMSRequestData;
+import com.tisl.mpl.wsdto.BulkSmsDTO;
+import com.tisl.mpl.wsdto.BulkSmsListDTO;
+import com.tisl.mpl.wsdto.BulkSmsPerBatch;
 import com.tisl.mpl.wsdto.SmsECommReqWsDTO;
 
 
@@ -173,4 +179,101 @@ public class MplSendSMSService implements SendSmsService
 		this.sendSMS(smsRequestData);
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.tisl.mpl.sms.SendSmsService#sendBulkSms(java.util.List)
+	 */
+	@Override
+	public boolean sendBulkSms(final List<BulkSmsPerBatch> refundEligibleList) throws JAXBException
+	{
+		final String senderId = configurationService.getConfiguration().getString("marketplace.sms.sender.name");
+		final String globalResponse = configurationService.getConfiguration().getString("global.client.reponse");
+		final BulkSmsListDTO bulkSmsListDTO = new BulkSmsListDTO();
+		BulkSmsDTO bulkSmsDTO = null;
+		final List<BulkSmsDTO> bulkSmsDTOs = new ArrayList<BulkSmsDTO>();
+
+		try
+		{
+			for (final BulkSmsPerBatch obj : refundEligibleList)
+			{
+				bulkSmsDTO = new BulkSmsDTO();
+				bulkSmsDTO.setMessage(obj.getMsg());
+				bulkSmsDTO.setMobileNumber(Long.parseLong(obj.getMobileNo()));
+				bulkSmsDTOs.add(bulkSmsDTO);
+			}
+			bulkSmsListDTO.setBulkSmsDTO(bulkSmsDTOs);
+			bulkSmsListDTO.setSenderId(senderId);
+			JAXBContext testcontext;
+			final StringWriter sw = new StringWriter();
+			try
+			{
+				testcontext = JAXBContext.newInstance(BulkSmsListDTO.class);
+
+				final Marshaller m = testcontext.createMarshaller();
+
+				m.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE); // To format XML
+
+
+				m.marshal(bulkSmsListDTO, sw);
+				System.out.println(sw.toString());
+				LOG.debug(sw.toString());
+			}
+			catch (final JAXBException e)
+			{
+				// YTODO Auto-generated catch block
+				e.printStackTrace();
+			}
+
+
+			// Setting  the username & password for connecting the SMS Server
+			final Client client = Client.create();
+			final String username = configurationService.getConfiguration().getString(
+					MarketplacecclientservicesConstants.SMS_SERVICE_USERNAME);
+			final String password = configurationService.getConfiguration().getString(
+					MarketplacecclientservicesConstants.SMS_SERVICE_PASSWORD);
+
+			LOG.debug("========== Step:1==========");
+
+			final HTTPBasicAuthFilter authFilter = new HTTPBasicAuthFilter(username, password);
+			client.addFilter(authFilter);
+			client.addFilter(new LoggingFilter());
+
+
+			final WebResource webResource = client.resource(UriBuilder.fromUri(
+					configurationService.getConfiguration().getString(MarketplacecclientservicesConstants.BULK_SMS_SERVICE_URL))
+					.build());
+			LOG.debug("========== Step:2==========");
+			//final JAXBContext context = JAXBContext.newInstance(BulkSmsListDTO.class);
+			//final Marshaller marshaller = context.createMarshaller();
+
+			//final JSONMarshaller marshallers = JSONJAXBContext.getJSONMarshaller(marshaller, context);
+			//marshallers.setProperty(MarshallerProperties.JSON_INCLUDE_ROOT, Boolean.TRUE);
+			//marshallers.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
+			final ClientResponse response = webResource.type(MediaType.APPLICATION_XML).accept(MediaType.APPLICATION_XML)
+					.entity(sw.toString()).post(ClientResponse.class);
+			LOG.debug("========== Step:3==========");
+			LOG.debug("========== response status ::" + response.getStatus());
+			if (checkResponseStatus(null != response ? (String.valueOf(response.getStatus())) : " ", globalResponse))
+			{
+				return true;
+			}
+			else
+			{
+				return false;
+			}
+		}
+		catch (final Exception ex)
+		{
+			LOG.error(ex);
+			return false;
+		}
+	}
+
+	private boolean checkResponseStatus(final String receivedResponse, final String globalResponse)
+	{
+		String status = "";
+		status = configurationService.getConfiguration().getString(globalResponse);
+		return (status.indexOf(receivedResponse) == -1) ? false : true;
+	}
 }

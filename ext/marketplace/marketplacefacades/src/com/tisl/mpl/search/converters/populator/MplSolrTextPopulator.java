@@ -52,7 +52,7 @@ public class MplSolrTextPopulator<FACET_SEARCH_CONFIG_TYPE, INDEXED_TYPE_TYPE, I
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see de.hybris.platform.converters.Populator#populate(java.lang.Object, java.lang.Object)
 	 */
 
@@ -164,15 +164,24 @@ public class MplSolrTextPopulator<FACET_SEARCH_CONFIG_TYPE, INDEXED_TYPE_TYPE, I
 		//PR-23 start
 		if (TwoTokenNextSearch)
 		{
-			searchQuery.addSolrParams("mm", "50%");
+			final String[] elements = cleanSearchText.trim().split("\\s+");
+			if (elements.length == 3)
+			{
+				searchQuery.addSolrParams("mm", "75% ");
+			}
+			else
+			{
+				searchQuery.addSolrParams("mm", "50% ");
+			}
+		}
+		else if (cleanSearchText.matches("^(?=.*[0-9])(?=.*[a-zA-Z])([a-zA-Z0-9 ]+)$"))
+		{
+			searchQuery.addSolrParams("mm", "100% ");
 		}
 		else
 		{
-			searchQuery.addSolrParams("mm", "2<75% 3<50%");
+			searchQuery.addSolrParams("mm", " 3<75%");
 		}
-		//PR-23 end
-		// Tie param added for better search score
-		searchQuery.addSolrParams("tie", "0.1");
 
 	}
 

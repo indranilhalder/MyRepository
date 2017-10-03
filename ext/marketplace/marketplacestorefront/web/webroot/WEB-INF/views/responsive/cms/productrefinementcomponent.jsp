@@ -4,12 +4,12 @@
 <%@ page import="com.tisl.mpl.data.MplDepartmentHierarchyData"%>
 
 <script>
-$(function() {
+/* $(function() {
 	var inputArray = ${departmentHierarchyData.hierarchyList};
 	if(inputArray!=""||inputArray!=[]){
 	constructDepartmentHierarchy(inputArray);
 	}
-	});
+	}); */
 	
 	
 $(document).ready(function(){

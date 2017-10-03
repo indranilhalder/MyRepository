@@ -582,7 +582,7 @@ implements MarketPlaceBasketController {
 									cartdatalist.add(cartSoftReservationRequestData);
 									if(MarketplacecommerceservicesConstants.FINEJEWELLERY.equalsIgnoreCase(cartEntry.getProduct().getProductCategoryType()))
 									{
-										populataJewelleryWeightCockpit(MarketplaceCockpitsConstants.delOmsCodeMap.get(cartEntry.getMplDeliveryMode().getDeliveryMode().getCode()),cartdatalist,fulfillmentType,cartEntry.getSelectedUSSID(),cartEntry.getProduct().getCode());
+										mplCommerceCartService.populataJewelleryWeight(MarketplaceCockpitsConstants.delOmsCodeMap.get(cartEntry.getMplDeliveryMode().getDeliveryMode().getCode()),cartdatalist,fulfillmentType,cartEntry.getSelectedUSSID(),cartEntry.getProduct().getCode());
 									}
 								}
 							}
@@ -681,44 +681,44 @@ implements MarketPlaceBasketController {
 	 *           This method will set all variants with same serviceable slaves since on failure of IR will redirect to
 	 *           cart user will have to choose a new product to continue a checkout journey
 	 */
-	private void populataJewelleryWeightCockpit(String delMode,
-			List<CartSoftReservationData> cartSoftReservationRequestData,
-			String fulfillmentType, String selectedUSSID, String code) {
-		// TODO Auto-generated method stub
-		final List<BuyBoxModel> jewelleryUssid = getMplJewelleryService().getAllWeightVariant(selectedUSSID);
-		if (CollectionUtils.isNotEmpty(jewelleryUssid))
-		{
-			final List<BuyBoxModel> jewelleryUssidModifieableList = new ArrayList(jewelleryUssid);
-			jewelleryUssidModifieableList.sort(Comparator.comparing(BuyBoxModel::getPrice).reversed());
-			for (final BuyBoxModel jewelInfoUssid : jewelleryUssidModifieableList)
-			{
-				if (null != selectedUSSID && !jewelInfoUssid.getSellerArticleSKU().equals(selectedUSSID))
-				{
-					final CartSoftReservationData jewellery = new CartSoftReservationData();
-					jewellery.setDeliveryMode(delMode);
-					jewellery.setFulfillmentType(fulfillmentType.toUpperCase());
-					jewellery.setJewellery(true);
-					jewellery.setListingId(code);
-					jewellery.setUSSID(jewelInfoUssid.getSellerArticleSKU());
-					jewellery.setQuantity(Integer.valueOf(1));
-					// Added to populate servicable slaves for other variants
-					for (final CartSoftReservationData jwlDataObj : cartSoftReservationRequestData)
-					{
-						if (jwlDataObj.getUSSID().equalsIgnoreCase(selectedUSSID))
-						{
-							jewellery.setTransportMode(jwlDataObj.getTransportMode());
-							jewellery.setServiceableSlaves(jwlDataObj.getServiceableSlaves());
-							jewellery.setStoreId(jwlDataObj.getStoreId());
-							jewellery.setCncServiceableSlaves(jwlDataObj.getCncServiceableSlaves());
-							break;
-						}
-					}
-					cartSoftReservationRequestData.add(jewellery);
-				}
-			}
-		}
-
-	}
+//	private void populataJewelleryWeightCockpit(String delMode,
+//			List<CartSoftReservationData> cartSoftReservationRequestData,
+//			String fulfillmentType, String selectedUSSID, String code) {
+//		// TODO Auto-generated method stub
+//		final List<BuyBoxModel> jewelleryUssid = getMplJewelleryService().getAllWeightVariant(selectedUSSID);
+//		if (CollectionUtils.isNotEmpty(jewelleryUssid))
+//		{
+//			final List<BuyBoxModel> jewelleryUssidModifieableList = new ArrayList(jewelleryUssid);
+//			jewelleryUssidModifieableList.sort(Comparator.comparing(BuyBoxModel::getPrice).reversed());
+//			for (final BuyBoxModel jewelInfoUssid : jewelleryUssidModifieableList)
+//			{
+//				if (null != selectedUSSID && !jewelInfoUssid.getSellerArticleSKU().equals(selectedUSSID))
+//				{
+//					final CartSoftReservationData jewellery = new CartSoftReservationData();
+//					jewellery.setDeliveryMode(delMode);
+//					jewellery.setFulfillmentType(fulfillmentType.toUpperCase());
+//					jewellery.setJewellery(true);
+//					jewellery.setListingId(code);
+//					jewellery.setUSSID(jewelInfoUssid.getSellerArticleSKU());
+//					jewellery.setQuantity(Integer.valueOf(1));
+//					// Added to populate servicable slaves for other variants
+//					for (final CartSoftReservationData jwlDataObj : cartSoftReservationRequestData)
+//					{
+//						if (jwlDataObj.getUSSID().equalsIgnoreCase(selectedUSSID))
+//						{
+//							jewellery.setTransportMode(jwlDataObj.getTransportMode());
+//							jewellery.setServiceableSlaves(jwlDataObj.getServiceableSlaves());
+//							jewellery.setStoreId(jwlDataObj.getStoreId());
+//							jewellery.setCncServiceableSlaves(jwlDataObj.getCncServiceableSlaves());
+//							break;
+//						}
+//					}
+//					cartSoftReservationRequestData.add(jewellery);
+//				}
+//			}
+//		}
+//
+//	}
 
 	/**
 	 * Gets the cart data.
