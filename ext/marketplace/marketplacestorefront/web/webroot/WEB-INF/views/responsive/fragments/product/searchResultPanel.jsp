@@ -10,7 +10,7 @@
 
 	<div class="left-block">
 
-		<script>
+		<!-- <script>
 		
 		$(function() {
 			var inputArray = ${departmentHierarchyData.hierarchyList};
@@ -21,7 +21,7 @@
 		});
 			
 			
-		</script>
+		</script> -->
 		
 			<input type="hidden" name="isConceirge" id="isConceirge" value="${isConceirge}" />
 			<input type="hidden" name="isCategoryPage" id="isCategoryPage" value="${isCategoryPage}" />
