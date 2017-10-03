@@ -2315,7 +2315,11 @@
 	
     <!-- Override the Cart so that calls to get promotion results can be intercepted -->
    
+
+       <!--<bean id="de.hybris.platform.jalo.order.Cart" class="de.hybris.platform.promotions.jalo.order.PromotionCart" scope="prototype" />-->
+
     <!-- <bean id="de.hybris.platform.jalo.order.Cart" class="de.hybris.platform.promotions.jalo.order.PromotionCart" scope="prototype" /> -->
+
 
     <!-- CACHING FINISH -->
      <!-- CAR-285 Start Zipping XML Creation and Copying Job Sitemap Start -->
@@ -2340,6 +2344,13 @@
  	<!-- //Added for 3782 -->
     <bean id="catalogUtils" class="com.tisl.mpl.util.CatalogUtils" />
     
+
+    <!-- added for PR-4 -->
+    <bean id="SendRefundSmsCronJob"
+		class="com.tisl.mpl.marketplacecommerceservices.jobs.SendRefundSmsCronJob"
+		autowire="byName">
+	</bean>
+<!-- added for PR-4 -->
     <bean id="mplPincodeDistanceService" class="com.tisl.mpl.marketplacecommerceservices.service.impl.MplPincodeDistanceServiceImpl" ></bean>
     <bean id="mplDistanceMatrixUtility" class="com.tisl.mpl.util.DistanceMatrixUtility" />
     
@@ -2362,6 +2373,7 @@
 	</bean>
 	
 	<!--  End TPR-6945 -->
+
     
 </beans>
 
