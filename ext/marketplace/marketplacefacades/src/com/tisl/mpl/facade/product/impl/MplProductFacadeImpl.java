@@ -83,7 +83,7 @@ public class MplProductFacadeImpl implements MplProductFacade
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.tisl.mpl.facade.product.MplProductFacade#getProductFeatureModelByProductAndQualifier(de.hybris.platform.
 	 * commercefacades.product.data.ProductData, java.lang.String)
 	 */
@@ -117,6 +117,7 @@ public class MplProductFacadeImpl implements MplProductFacade
 			LOG.debug("from getAllStoresForPincode method");
 		}
 		List<PointOfServiceData> posData = new ArrayList<PointOfServiceData>();
+		final List<PointOfServiceData> filteredPosData = new ArrayList<PointOfServiceData>();
 		final LocationDTO dto = new LocationDTO();
 		try
 		{
@@ -138,9 +139,17 @@ public class MplProductFacadeImpl implements MplProductFacade
 				myLocation = new LocationDtoWrapper(dto);
 				final PincodeServiceFacade pincodeServiceFacade = pincodeServiceFacadeProvider.get();
 				posData = pincodeServiceFacade.getStoresForPincode(myLocation.getGPS(), radius);
+				for (final PointOfServiceData obj : posData)
+				{
+					if (obj.getClicknCollect().equalsIgnoreCase("Y"))
+					{
+						filteredPosData.add(obj);
+					}
+				}
 
-				posData = mplPincodeDistanceService.pincodeDistance(posData, pincodeModel.getLatitude(), pincodeModel.getLongitude(),
-						pincode);
+
+				posData = mplPincodeDistanceService.pincodeDistance(filteredPosData, pincodeModel.getLatitude(),
+						pincodeModel.getLongitude(), pincode);
 			}
 		}
 		catch (final Exception e)
@@ -148,5 +157,21 @@ public class MplProductFacadeImpl implements MplProductFacade
 			LOG.error("Something went wrong in calling getAllStoresForPincode");
 		}
 		return posData;
+	}
+
+	@Override
+	public List<PointOfServiceData> storeLocatorFilterdPDP(final String pincode, final String sellerUssId)
+	{
+		List<PointOfServiceData> storeLocationList = new ArrayList<>();
+		try
+		{
+			final PincodeServiceFacade pincodeServiceFacade = pincodeServiceFacadeProvider.get();
+			storeLocationList = pincodeServiceFacade.getStoresSortedByDistance(pincode, sellerUssId);
+		}
+		catch (final Exception e)
+		{
+			LOG.error("Something went wrong in calling getAllStoresForPincode");
+		}
+		return storeLocationList;
 	}
 }

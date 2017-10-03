@@ -3,10 +3,13 @@
  */
 package com.tisl.mpl.sms;
 
+import java.util.List;
+
 import javax.xml.bind.JAXBException;
 
 import com.tisl.mpl.core.model.OrderUpdateSmsProcessModel;
 import com.tisl.mpl.data.SendSMSRequestData;
+import com.tisl.mpl.wsdto.BulkSmsPerBatch;
 
 
 
@@ -29,5 +32,7 @@ public interface SendSmsService
 	 * @throws JAXBException
 	 */
 	public void sendSMSForOrderStatus(final OrderUpdateSmsProcessModel orderUpdateSmsProcessModel) throws JAXBException;
+
+	public boolean sendBulkSms(final List<BulkSmsPerBatch> refundEligibleList) throws JAXBException;
 
 }

@@ -287,6 +287,41 @@ public class MplJewelleryDaoImpl implements MplJewelleryDao
 		}
 	}
 
+	/*
+	 * (non-Javadoc)
+	 *
+	 * @see com.tisl.mpl.marketplacecommerceservices.daos.MplJewelleryDao#getAllWeightVariantByPussid(java.lang.String)
+	 */
+	@Override
+	public List<BuyBoxModel> getAllWeightVariantByPussid(final String pUssid)
+	{
+		// YTODO Auto-generated method stub
+		try
+		{
+			final String classAttrquery = "select {pk} from {Buybox as bb} where {bb.PUSSID} = ?pUssid";
+			final FlexibleSearchQuery weightVariantQuery = new FlexibleSearchQuery(classAttrquery);
+			//	final List resultClassList = new ArrayList();
+			//	resultClassList.add(String.class);
+			//		weightVariantQuery.setResultClassList(resultClassList);
+			weightVariantQuery.addQueryParameter("pUssid", pUssid);
 
-
+			return flexibleSearchService.<BuyBoxModel> search(weightVariantQuery).getResult();
+		}
+		catch (final FlexibleSearchException e)
+		{
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0002);
+		}
+		catch (final UnknownIdentifierException e)
+		{
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0006);
+		}
+		catch (final EtailNonBusinessExceptions e)
+		{
+			throw e;
+		}
+		catch (final Exception e)
+		{
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000);
+		}
+	}
 }
