@@ -14,7 +14,7 @@
 	</div>
 	</div>
 	<cms:pageSlot position="Section1" var="feature">
-		<cms:component component="${feature}" element="div" class="" />
+		<cms:component component="${feature}" element="div" class="blp-carousel homepage-banner" />
 	</cms:pageSlot>
 	<div class="men_women_sec">
 	<cms:pageSlot position="ForHimForHerSlot" var="feature">
