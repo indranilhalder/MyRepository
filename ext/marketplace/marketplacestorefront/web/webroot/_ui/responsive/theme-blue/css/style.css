@@ -77002,6 +77002,7 @@ body .account .right-account form label.invite-text-lbl{
 
 .cliqCashInnerTop {
 	font-size: 26px;
+	margin-bottom: 10px;
 }
 
 .cliqCashWalletImg {
@@ -77094,8 +77095,8 @@ body .account .right-account form label.invite-text-lbl{
 	}
 	.cliqCashInnerTop {
 		font-size: 18px;
-		text-align: center;
 	}
+	.cliqCashContainerHead > .cliqCashInnerTop {text-align: center;}
 	.cliqCashContainerLeft {
 		border-bottom: 1px solid #ddd;
 		width: 100%;
