@@ -112,6 +112,7 @@ import com.tisl.mpl.storefront.constants.MessageConstants;
 import com.tisl.mpl.storefront.constants.ModelAttributetConstants;
 import com.tisl.mpl.storefront.controllers.ControllerConstants;
 import com.tisl.mpl.storefront.controllers.helpers.FrontEndErrorHelper;
+import com.tisl.mpl.storefront.security.cookie.PDPPincodeCookieGenerator;
 import com.tisl.mpl.util.ExceptionUtil;
 import com.tisl.mpl.util.GenericUtilityMethods;
 import com.tisl.mpl.wsdto.MaxLimitData;
@@ -314,12 +315,27 @@ public class CartPageController extends AbstractPageController
 				if (CollectionUtils.isNotEmpty(discSellerNameList))
 				{
 					model.addAttribute("discSellerNameList", discSellerNameList);
-					String displayMsg = getConfigurationService().getConfiguration().getString("cart.price.disclaimer");
+					//String displayMsg = getConfigurationService().getConfiguration().getString("cart.price.disclaimer");
+					String displayMsg = "";
 					for (final String sellerName : discSellerNameList)
 					{
-						displayMsg = displayMsg + sellerName;
+						if (StringUtils.isEmpty(displayMsg))
+						{
+							displayMsg = sellerName;
+						}
+						else
+						{
+							displayMsg = displayMsg + sellerName;
+						}
 					}
-					GlobalMessages.addConfMessage(model, displayMsg.substring(0, displayMsg.length() - 1));
+					final String displayMsgFinal = getConfigurationService().getConfiguration().getString(
+							"cart.price.disclaimer.first")
+							+ MarketplacecommerceservicesConstants.SPACE
+							+ displayMsg.substring(0, displayMsg.length() - 1)
+							+ MarketplacecommerceservicesConstants.SPACE
+							+ getConfigurationService().getConfiguration().getString("cart.price.disclaimer.second");
+					//GlobalMessages.addConfMessage(model, displayMsg.substring(0, displayMsg.length() - 1));
+					GlobalMessages.addConfMessage(model, displayMsgFinal);
 				}
 				//TPR-5346 STARTS
 
@@ -645,7 +661,7 @@ public class CartPageController extends AbstractPageController
 	 * private void setExpressCheckout(final CartModel serviceCart) {
 	 * serviceCart.setIsExpressCheckoutSelected(Boolean.FALSE); if (serviceCart.getDeliveryAddress() != null) {
 	 * serviceCart.setDeliveryAddress(null); modelService.save(serviceCart); }
-	 *
+	 * 
 	 * }
 	 */
 
@@ -927,7 +943,7 @@ public class CartPageController extends AbstractPageController
 	/*
 	 * @description This controller method is used to allow the site to force the visitor through a specified checkout
 	 * flow. If you only have a static configured checkout flow then you can remove this method.
-	 *
+	 * 
 	 * @param model ,redirectModel
 	 */
 
@@ -1881,7 +1897,7 @@ public class CartPageController extends AbstractPageController
 
 	/*
 	 * @Description adding wishlist popup in cart page
-	 *
+	 * 
 	 * @param String productCode,String wishName, model
 	 */
 
@@ -1938,7 +1954,7 @@ public class CartPageController extends AbstractPageController
 
 	/*
 	 * @Description showing wishlist popup in cart page
-	 *
+	 * 
 	 * @param String productCode, model
 	 */
 	@ResponseBody
