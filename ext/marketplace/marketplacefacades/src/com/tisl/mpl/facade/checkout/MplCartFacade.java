@@ -695,4 +695,6 @@ public interface MplCartFacade extends CartFacade
 	boolean validatePincodeRestrictedPromoOnCartProduct(CartModel cart);
 
 	public CartData getGiftCartModel(final EgvDetailsData egvDetailForm);
+	
+	public CartData getGiftCartData(String guid);
 }

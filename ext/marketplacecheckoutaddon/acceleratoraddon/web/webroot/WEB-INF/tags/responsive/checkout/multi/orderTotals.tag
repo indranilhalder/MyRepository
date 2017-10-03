@@ -25,7 +25,8 @@
 			</ycommerce:testId>
 		</span>
 	</li>
-	<c:if test="${isEGVCart}">
+
+	<c:if test="${!isEGVCart}">
 	
 	<c:if test="${cartData.totalDiscounts.value > 0}">
 	<li id="cartPromotionApplied">
