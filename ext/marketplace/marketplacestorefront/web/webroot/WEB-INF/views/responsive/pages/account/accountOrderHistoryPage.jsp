@@ -1040,5 +1040,5 @@ $(".resend_order_email").click(function () {
 		msgSection.addClass('alert-danger');
 		msgSection.show().delay(3000).fadeOut();
 	}
-});
+}); 
 </script>
