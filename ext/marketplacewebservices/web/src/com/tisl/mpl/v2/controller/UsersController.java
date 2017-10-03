@@ -235,7 +235,6 @@ import com.tisl.mpl.util.ExceptionUtil;
 import com.tisl.mpl.util.MplTimeconverUtility;
 import com.tisl.mpl.validation.data.AddressValidationData;
 import com.tisl.mpl.webservice.businessvalidator.DefaultCommonAsciiValidator;
-import com.tisl.mpl.wsdto.BuyingEgvRequestListWsDTO;
 import com.tisl.mpl.wsdto.BuyingEgvRequestWsDTO;
 import com.tisl.mpl.wsdto.BuyingEgvResponceWsDTO;
 import com.tisl.mpl.wsdto.CommonCouponsDTO;
@@ -9209,37 +9208,51 @@ public class UsersController extends BaseCommerceController
 
 
 	@Secured(
-	{ CUSTOMER, "ROLE_TRUSTED_CLIENT", CUSTOMERMANAGER })
-	@RequestMapping(value = MarketplacewebservicesConstants.CREATE_ELECTRONICS_GIFTCARD_AMOUNT, method = RequestMethod.POST, produces = APPLICATION_TYPE)
-	@ResponseBody
-	public BuyingEgvResponceWsDTO calculateGiftCardAmount(@RequestParam final String cartGuid)
-			throws EtailNonBusinessExceptions, EtailBusinessExceptions, CalculationException
+			{ CUSTOMER, "ROLE_TRUSTED_CLIENT", CUSTOMERMANAGER })
+			@RequestMapping(value = MarketplacewebservicesConstants.CREATE_ELECTRONICS_GIFTCARD_AMOUNT, method = RequestMethod.POST, produces = APPLICATION_TYPE)
+			@ResponseBody
+			public BuyingEgvResponceWsDTO calculateGiftCardAmount(@RequestBody final BuyingEgvRequestWsDTO buyingEgvRequest)
+					throws EtailNonBusinessExceptions, EtailBusinessExceptions, CalculationException
 
-	{
-		LOG.info("Calculating Electronics Gift Card Amount");
-		final BuyingEgvResponceWsDTO buyingEgvResponce = new BuyingEgvResponceWsDTO();
-		final CartModel cart = mplPaymentWebFacade.findCartAnonymousValues(cartGuid);
-		try
-		{
-			if (null != cart)
 			{
-				if (null != cart.getTotalPrice())
+				LOG.info("Calculating Electronics Gift Cart Amount");
+				final BuyingEgvResponceWsDTO buyingEgvResponce = new BuyingEgvResponceWsDTO();
+				int quantity =1;
+				double amountUserSelectedPerQty = 0.0D;
+				double paybleAmount = 0.0D;
+				try
 				{
-					buyingEgvResponce.setTotalPrice(cart.getTotalPrice());
-					buyingEgvResponce.setPaybleAmount(cart.getTotalPrice());
+					if (null != buyingEgvRequest)
+					{
+						if (buyingEgvRequest.getQuantity() > 0)
+						{
+							quantity = buyingEgvRequest.getQuantity();
+						}
+						if (null != buyingEgvRequest.getPriceSelectedByUserPerQuantity() &&
+								buyingEgvRequest.getPriceSelectedByUserPerQuantity().doubleValue() >0.0D)
+						{
+							amountUserSelectedPerQty = buyingEgvRequest.getPriceSelectedByUserPerQuantity().doubleValue();
+							LOG.debug("amountUserSelectedPerQty  :"+amountUserSelectedPerQty);
+						}
+						if (quantity > 0 && amountUserSelectedPerQty > 0.0D)
+						{
+							paybleAmount = quantity*amountUserSelectedPerQty;
+						}
+						if(paybleAmount > 0.0D) {
+							LOG.debug("Toatal Payable Amount :"+paybleAmount);
+							buyingEgvResponce.setStatus(MarketplacecommerceservicesConstants.SUCCESS_FLAG);
+							buyingEgvResponce.setPaybleAmount(Double.valueOf(paybleAmount));
+							buyingEgvResponce.setTotalPrice(Double.valueOf(paybleAmount));
+							buyingEgvResponce.setDiscounts(Double.valueOf(0.0D));
+						}else {
+							buyingEgvResponce.setStatus(MarketplacecommerceservicesConstants.FAILURE_FLAG);
+						}
+					}
+					else
+					{
+						buyingEgvResponce.setStatus(MarketplacecommerceservicesConstants.FAILURE_FLAG);
+					}
 				}
-				if (null != cart.getTotalDiscounts())
-				{
-					buyingEgvResponce.setDiscounts(cart.getTotalDiscounts());
-				}
-				buyingEgvResponce.setStatus(MarketplacecommerceservicesConstants.SUCCESS_FLAG);
-			}
-			else
-			{
-				buyingEgvResponce.setStatus(MarketplacecommerceservicesConstants.FAILURE_FLAG);
-			}
-
-		}
 		catch (final EtailNonBusinessExceptions ex)
 		{
 			buyingEgvResponce.setStatus(MarketplacecommerceservicesConstants.FAILURE_FLAG);
@@ -9261,7 +9274,7 @@ public class UsersController extends BaseCommerceController
 	{ CUSTOMER, "ROLE_TRUSTED_CLIENT", CUSTOMERMANAGER })
 	@RequestMapping(value = MarketplacewebservicesConstants.CREATE_ELECTRONICS_GIFTCARD_GUID, method = RequestMethod.POST, produces = APPLICATION_TYPE)
 	@ResponseBody
-	public BuyingEgvResponceWsDTO createGiftCardGuid(@RequestBody final BuyingEgvRequestListWsDTO buyingEgvRequest)
+	public BuyingEgvResponceWsDTO createGiftCardGuid(@RequestBody final BuyingEgvRequestWsDTO buyingEgvRequest)
 			throws EtailNonBusinessExceptions, EtailBusinessExceptions, CalculationException
 
 	{
@@ -9271,8 +9284,8 @@ public class UsersController extends BaseCommerceController
 		try
 		{
 			 EgvDetailsData egvDetailsData=null;
-			if(null != buyingEgvRequest && null != buyingEgvRequest.getItem() && !buyingEgvRequest.getItem().isEmpty()){
-				egvDetailsData = populateEGVFormToData(buyingEgvRequest.getItem().get(0));
+			if(null != buyingEgvRequest){
+				egvDetailsData = populateEGVFormToData(buyingEgvRequest);
 			}
 			if (null != egvDetailsData)
 			{
