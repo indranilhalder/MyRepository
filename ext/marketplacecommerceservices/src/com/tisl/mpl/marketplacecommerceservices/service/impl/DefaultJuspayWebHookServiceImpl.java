@@ -148,11 +148,11 @@ public class DefaultJuspayWebHookServiceImpl implements JuspayWebHookService
 			/*
 			 * if (flag) {//check only if call is coming from method fetchWebHookData for (final JuspayWebhookModel oModel
 			 * : webHookDetailList) { if (null != oModel.getOrderStatus() && oModel.getIsExpired().booleanValue()) {
-			 * 
+			 *
 			 * final OrderModel ordrMdl = getMplPaymentService().fetchOrderOnGUID(oModel.getOrderStatus().getOrderId()); if
 			 * ((null != ordrMdl.getIsWallet() && WalletEnum.NONWALLET.toString().equals(ordrMdl.getIsWallet().getCode()))
 			 * || ordrMdl.getIsWallet() == null) {
-			 * 
+			 *
 			 * //getting all the webhook data where isExpired is Y and adding into a list uniqueList.add(oModel); //} } } }
 			 */
 
@@ -1821,7 +1821,6 @@ public class DefaultJuspayWebHookServiceImpl implements JuspayWebHookService
 
 
 
-
 	/**
 	 * To check whether there is a parent order created against which Payment took place
 	 *
@@ -1832,7 +1831,7 @@ public class DefaultJuspayWebHookServiceImpl implements JuspayWebHookService
 	/*
 	 * private OrderModel getParentOrder(final String orderGuid) throws EtailNonBusinessExceptions { return
 	 * getJuspayWebHookDao().fetchOrderOnGUID(orderGuid);
-	 *
+	 * 
 	 * }
 	 */
 	/**
