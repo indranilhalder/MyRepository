@@ -10,7 +10,7 @@ import de.hybris.platform.storelocator.model.PointOfServiceModel;
 
 import java.util.Collection;
 import java.util.List;
-import java.util.SortedMap;
+import java.util.Map;
 
 
 /**
@@ -60,5 +60,5 @@ public interface PincodeService
 	 * @param sellerId
 	 * @return SortedMap<PointOfServiceModel, Double>
 	 * */
-	public SortedMap<PointOfServiceModel, Double> getSortedStoresNearby(final GPS gps, final double distance, final String sellerId);
+	public Map<PointOfServiceModel, Double> getSortedStoresNearby(final GPS gps, final double distance, final String sellerId);
 }
