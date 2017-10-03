@@ -29,12 +29,18 @@ import de.hybris.platform.storelocator.model.PointOfServiceModel;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.SortedMap;
+import java.util.TreeMap;
 
 import javax.annotation.Resource;
 import javax.inject.Provider;
 
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.collections.MapUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -835,7 +841,49 @@ public class PincodeServiceFacadeImpl implements PincodeServiceFacade
 		return pincodeData;
 	}
 
+	@Override
+	public List<PointOfServiceData> getStoresSortedByDistance(final String pincode, final String sellerUssId)
+	{
+		Map<PointOfServiceModel, Double> posModels = new HashMap<PointOfServiceModel, Double>();
+		final List<PointOfServiceData> posDatas = new ArrayList<PointOfServiceData>();
+		try
+		{
+			final PincodeModel pinCodeModelObj = pincodeService.getLatAndLongForPincode(pincode);
+			if (null != pinCodeModelObj)
+			{
+				final LocationDTO dto = new LocationDTO();
+				dto.setLongitude(pinCodeModelObj.getLongitude().toString());
+				dto.setLatitude(pinCodeModelObj.getLatitude().toString());
+				final Location myLocation = new LocationDtoWrapper(dto);
 
+				LOG.debug("sellerUssId:" + sellerUssId);
+				final String pincodeSellerId = sellerUssId.substring(0, 6);
+				final String configRadius = mplConfigService.getConfigValueById(MarketplaceFacadesConstants.CONFIGURABLE_RADIUS);
+				final double configurableRadius = Double.parseDouble(configRadius);
+				LOG.debug("**********configrableRadius:" + configurableRadius);
+				posModels = pincodeService.getSortedStoresNearby(myLocation.getGPS(), configurableRadius, pincodeSellerId);
+				if (MapUtils.isNotEmpty(posModels))
+				{
+					for (final Map.Entry<PointOfServiceModel, Double> entry : posModels.entrySet())
+					{
+						final PointOfServiceData posData = pointOfServiceConverter.convert(entry.getKey());
+						posData.setDistanceKm(entry.getValue());
+
+						posDatas.add(posData);
+					}
+				}
+				//sorting posdata
+				Collections.sort(posDatas, (a, b) -> a.getDistanceKm().compareTo(b.getDistanceKm()));
+			}
+
+		}
+		catch (final Exception e)
+		{
+			throw e;
+		}
+
+		return posDatas;
+	}
 
 	/**
 	 * @return the mplPincodeConverter

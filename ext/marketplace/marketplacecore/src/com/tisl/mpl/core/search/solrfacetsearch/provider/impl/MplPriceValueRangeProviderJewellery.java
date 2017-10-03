@@ -4,7 +4,6 @@
 package com.tisl.mpl.core.search.solrfacetsearch.provider.impl;
 
 
-import de.hybris.platform.core.model.JewelleryInformationModel;
 import de.hybris.platform.core.model.c2l.CurrencyModel;
 import de.hybris.platform.core.model.product.ProductModel;
 import de.hybris.platform.solrfacetsearch.config.IndexConfig;
@@ -14,11 +13,13 @@ import de.hybris.platform.solrfacetsearch.provider.FieldNameProvider;
 import de.hybris.platform.solrfacetsearch.provider.FieldValue;
 import de.hybris.platform.solrfacetsearch.provider.FieldValueProvider;
 import de.hybris.platform.solrfacetsearch.provider.impl.AbstractPropertyFieldValueProvider;
+import de.hybris.platform.variants.model.VariantProductModel;
 
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import javax.annotation.Resource;
@@ -26,7 +27,9 @@ import javax.annotation.Resource;
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Required;
 
+import com.tisl.mpl.core.model.BuyBoxModel;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
+import com.tisl.mpl.marketplacecommerceservices.service.BuyBoxService;
 import com.tisl.mpl.util.MplBuyBoxUtility;
 import com.tisl.mpl.util.MplJewelleryUtility;
 
@@ -35,8 +38,8 @@ import com.tisl.mpl.util.MplJewelleryUtility;
  * @author TCS
  *
  */
-public class MplPriceValueRangeProviderJewellery extends AbstractPropertyFieldValueProvider implements FieldValueProvider,
-		Serializable
+public class MplPriceValueRangeProviderJewellery extends AbstractPropertyFieldValueProvider
+		implements FieldValueProvider, Serializable
 {
 
 	private static final String FINE_JEWELLERY = "FineJewellery";
@@ -44,6 +47,8 @@ public class MplPriceValueRangeProviderJewellery extends AbstractPropertyFieldVa
 	private FieldNameProvider fieldNameProvider;
 	private MplBuyBoxUtility mplBuyBoxUtility;
 	private MplJewelleryUtility mplJewelleryUtility;
+	@Resource(name = "buyBoxService")
+	private BuyBoxService buyBoxService;
 
 	/**
 	 * @return the mplJewelleryUtility
@@ -148,20 +153,46 @@ public class MplPriceValueRangeProviderJewellery extends AbstractPropertyFieldVa
 
 	public String getBuyBoxPrice(final ProductModel productModel, final String currencySymbol)
 	{
-		final List<String> SellerArticleSKUList = new ArrayList();
+		//final List<String> SellerArticleSKUList = new ArrayList();
 		String priceRange = null;
+		ProductModel baseProduct = null;
+		final List<BuyBoxModel> highestVariantList = new ArrayList<BuyBoxModel>();
+		final List<BuyBoxModel> lowestVariantList = new ArrayList<BuyBoxModel>();
 
-		final List<JewelleryInformationModel> jewelleryInformationList = mplJewelleryUtility
-				.getJewelleryInformationList(productModel.getCode());
-
-		for (final JewelleryInformationModel sellerInfoList : jewelleryInformationList)
+		if (productModel instanceof VariantProductModel)
 		{
-			SellerArticleSKUList.add(sellerInfoList.getUSSID());
+			baseProduct = ((VariantProductModel) productModel).getBaseProduct();
 		}
-		if (CollectionUtils.isNotEmpty(SellerArticleSKUList))
+		for (final VariantProductModel vp : baseProduct.getVariants())
 		{
-			priceRange = mplBuyBoxUtility.getBuyBoxSellingVariantsPrice(SellerArticleSKUList, currencySymbol);
+			final List<BuyBoxModel> buyBox = buyBoxService.buyboxPrice(vp.getCode());
+			if (CollectionUtils.isNotEmpty(buyBox))
+			{
+				highestVariantList.add(buyBox.get(buyBox.size() - 1));
+				lowestVariantList.add(buyBox.get(buyBox.size() - 1));
+			}
 		}
+		if (CollectionUtils.isNotEmpty(highestVariantList))
+		{
+			//final List<BuyBoxModel> lowestVariantList = new ArrayList<BuyBoxModel>(highestVariantList);
+			//final List<BuyBoxModel> modifiableFinallist = new ArrayList<BuyBoxModel>(highestVariantList);
+			highestVariantList.sort(Comparator.comparing(BuyBoxModel::getPrice).reversed());
+			//final List<BuyBoxModel> modifiableFinallowestlist = new ArrayList<BuyBoxModel>(lowestVariantList);
+			//lowestVariantList = highestVariantList;
+			lowestVariantList.sort(Comparator.comparing(BuyBoxModel::getPrice));
+			//		final List<JewelleryInformationModel> jewelleryInformationList = mplJewelleryUtility
+			//				.getJewelleryInformationList(productModel.getCode());
+			//
+			//		for (final JewelleryInformationModel sellerInfoList : jewelleryInformationList)
+			//		{
+			//			SellerArticleSKUList.add(sellerInfoList.getUSSID());
+			//		}
+			//		if (CollectionUtils.isNotEmpty(SellerArticleSKUList))
+			//		{
+			//priceRange = mplBuyBoxUtility.getBuyBoxSellingVariantsPrice(SellerArticleSKUList, currencySymbol);
+			priceRange = mplBuyBoxUtility.getBuyBoxSellingVariantsPrice(highestVariantList, lowestVariantList, currencySymbol);
+		}
+		//		}
 		return priceRange;
 
 	}

@@ -22,6 +22,19 @@
 												</p>
 												</c:if>
     <!-- TPR3780 ENDS HERE -->
+    
+   <%--  <c:if test="${discSellerNameList!=null}">
+    <spring:eval expression="T(de.hybris.platform.util.Config).getParameter('cart.price.disclaimer')" var="disclaimer"/>
+    <p class="notification-txt">
+    <c:set var="seller" value=""></c:set>
+    <c:forEach items="${discSellerNameList}" var="sellerName" varStatus="stat">
+    	 <c:set var="seller" value="${seller} ${sellerName}" />
+    </c:forEach>
+ 	<c:set var="length" value="${fn:length(seller)}"></c:set>
+   	${disclaimer}&nbsp;${fn:substring(seller,0,length-1)}
+    </p>
+    </c:if> --%>
+    
     <div class="MyBag-buttons">
 	<%-- <h1 class="MyBagHeadingDesktop" ><spring:theme code="mpl.myBag" /><span id="mybagcnt"></span></h1> --%>		<!-- commented for UF-62 -->
 	<p class="desk-view">${welcome_message}</p>

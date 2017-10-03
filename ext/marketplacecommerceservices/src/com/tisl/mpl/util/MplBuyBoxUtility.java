@@ -601,21 +601,29 @@ public class MplBuyBoxUtility
 	 * @return priceRange
 	 */
 
-	public String getBuyBoxSellingVariantsPrice(final List<String> sellerArticleSKUList, final String currency)
-			throws EtailNonBusinessExceptions
+	//	public String getBuyBoxSellingVariantsPrice(final List<String> sellerArticleSKUList, final String currency)
+	//			throws EtailNonBusinessExceptions
+	public String getBuyBoxSellingVariantsPrice(final List<BuyBoxModel> modifiableFinallist,
+			final List<BuyBoxModel> modifiableFinallowestlist, final String currency) throws EtailNonBusinessExceptions
 	{
 		Double min = Double.valueOf(0);
 		Double max = Double.valueOf(0);
 
-		final List<BuyBoxModel> listBuyBox = buyBoxService.getBuyboxSellerPricesForSearch(sellerArticleSKUList);
-		if (CollectionUtils.isNotEmpty(listBuyBox))
+		if (CollectionUtils.isNotEmpty(modifiableFinallist))
 		{
-			if (listBuyBox.get(0).getPLPMinPrice() != null && listBuyBox.get(0).getPLPMaxPrice() != null)
-			{
-				min = listBuyBox.get(0).getPLPMinPrice();
-				max = listBuyBox.get(0).getPLPMaxPrice();
-			}
+			min = modifiableFinallowestlist.get(0).getPrice();
+			max = modifiableFinallist.get(0).getPrice();
 		}
+
+		//final List<BuyBoxModel> listBuyBox = buyBoxService.getBuyboxSellerPricesForSearch(sellerArticleSKUList);
+		//		if (CollectionUtils.isNotEmpty(listBuyBox))
+		//		{
+		//			if (listBuyBox.get(0).getPLPMinPrice() != null && listBuyBox.get(0).getPLPMaxPrice() != null)
+		//			{
+		//				min = listBuyBox.get(0).getPLPMinPrice();
+		//				max = listBuyBox.get(0).getPLPMaxPrice();
+		//			}
+		//		}
 		String priceRange = null;
 		if (min.doubleValue() > 0 && max.doubleValue() > 0)
 		{
@@ -632,5 +640,4 @@ public class MplBuyBoxUtility
 		}
 		return priceRange;
 	}
-
 }

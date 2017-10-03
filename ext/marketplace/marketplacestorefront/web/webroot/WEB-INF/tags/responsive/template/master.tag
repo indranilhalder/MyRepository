@@ -471,40 +471,11 @@
 	</c:if>
 	<script>
 	$(document).ready(function(){
-		var anonymousUser = "${anonymous_user}";
-		var pincodeAvailable = "${pincode_available}";
-		var forceLoginUser = "${forced_login_user}";
-		var pageTypeVal = $("#pageType").val();
-		var isMobile = "${is_mobile}";
-		if(forceLoginUser == "Y"){
-			if(isMobile == "true"){
-				setTimeout(function(){
-					window.location.href="/login";
-				},10000);
-			}else{
-				$.ajax({
-					url: "/login?frame=true&box-login",
-					type: "GET",
-					responseType: "text/html",
-					success: function(response){
-						$("#login-modal").find(".content").html('<button id="close-login" type="button" class="close"></button>'+response);
-					},
-					fail: function(response){
-						alert(response);
-					}
-				});
-				setTimeout(function(){
-					$("#login-modal").modal({
-						 backdrop: 'static',
-						 keyboard: false
-					 });
-				},2000);
-			}
-		}
 		//TPR-6654
-		if(pageTypeVal == "homepage" && anonymousUser == "Y" && pincodeAvailable == "N"){
+		var anonymousUser = "${anonymous_user}";
+		var pageTypeVal = $("#pageType").val();
+		if(pageTypeVal == "homepage" && anonymousUser == "Y"){
 			$(".enter-pincode").show();
-			
 	}
 	});
 	$(document).on("click","#close-login",function(){
@@ -539,8 +510,9 @@
 	</c:if>
 
 	<%-- Load JavaScript required by the site --%>
+	<!-- SDI-1103 -->
 	<template:javaScript/>
-	<script type="text/javascript">_satellite.pageBottom();</script>
+	<script type="text/javascript">if(typeof _satellite !="undefined"){_satellite.pageBottom();}</script>
 	<%-- Inject any additional JavaScript required by the page --%>
 	<jsp:invoke fragment="pageScripts"/>	
 	<%-- TPR-6399 --%>
@@ -555,7 +527,7 @@
 		<div class="overlay"></div>
 		<div class="content">
 		<div class="modal-body">
-		<button class="close" data-dismiss="modal"><span aria-hidden="true">×</span></button>
+		<button class="close" data-dismiss="modal"><span aria-hidden="true">Ã—</span></button>
 		<!-- <button class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span></button> -->
 		<h4>Enter Pincode</h4>
 		<input id="home_pin" type="text" placeholder="Pincode" maxlength="6" onkeypress="return isNum(event)"/>
