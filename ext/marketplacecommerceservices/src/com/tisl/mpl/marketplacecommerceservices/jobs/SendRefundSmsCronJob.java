@@ -65,13 +65,17 @@ public class SendRefundSmsCronJob extends AbstractJobPerformable<CronJobModel>
 			{
 				result1 = null;
 				response = false;
-				for (int i = a; i <= b; i++)
+				//for (int i = 1; i <= b; i++)
+				//{
+				result1 = result.subList(a, b);
+				response = sendSmsService.sendBulkSms(result1);
+				a += batch;
+				b += batch;
+				if (b > rowCount)
 				{
-					result1 = result.subList(a, b);
-					response = sendSmsService.sendBulkSms(result1);
-					a += 10;
-					b += 10;
+					break;
 				}
+				//}
 				///delete dynamic query
 				if (response)
 				{
@@ -93,11 +97,11 @@ public class SendRefundSmsCronJob extends AbstractJobPerformable<CronJobModel>
 					result1 = null;
 					response = false;
 
-					for (int i = rowCount - remainder; i <= rowCount; i++)
-					{
-						result1 = result.subList(i + 1, rowCount);
-						response = sendSmsService.sendBulkSms(result1);
-					}
+					//for (int i = rowCount - remainder; i <= rowCount; i++)
+					//{
+					result1 = result.subList(rowCount - remainder, rowCount - 1);
+					response = sendSmsService.sendBulkSms(result1);
+					//}
 					///delete dynamic query
 					if (response)
 					{
