@@ -3501,7 +3501,13 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 		{
 			if(null != channel && !channel.equalsIgnoreCase(MarketplaceFacadesConstants.CHANNEL_MOBILE)) {
 				walletTotal = Double.parseDouble("" + getSessionService().getAttribute("WalletTotal"));
+				
+				if(null != getSessionService().getAttribute("juspayTotalAmt")){
 				juspayAmount = Double.parseDouble("" + getSessionService().getAttribute("juspayTotalAmt"));
+				}else{
+					
+					juspayAmount= 0;
+				}
 			}
 			
 

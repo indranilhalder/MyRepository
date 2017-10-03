@@ -25,7 +25,7 @@
 			</ycommerce:testId>
 		</span>
 	</li>
-	<c:if test="${isEGVCart ne true}">
+	<c:if test="${isEGVCart}">
 	
 	<c:if test="${cartData.totalDiscounts.value > 0}">
 	<li id="cartPromotionApplied">
@@ -94,7 +94,7 @@
 		<div id="totalPriceConvChargeId">
 			<spring:theme code="basket.page.totals.total"/> 
 			<c:choose>
-			  <c:when test="${isEGVCart ne false}">
+			  <c:when test="${isEGVCart}">
 			  <span style="float: right">
 			  <format:price priceData="${cartTotalMrp}"/></span>
 			  <span id="totalWithConvField" style="float: right;display: none;">

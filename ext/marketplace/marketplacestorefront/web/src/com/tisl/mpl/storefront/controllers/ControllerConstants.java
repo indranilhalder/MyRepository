@@ -392,7 +392,7 @@ public interface ControllerConstants
 				public static final String ALL_OF_STOCK = "allOOStock";
 				public static final String BUYBOZFORSIZEGUIDEAJAX = "-buyboxDataForSizeGuide";
 
-				public static final String PRODUCT_CODE_GIFT_CART = "/**/evgPDP-{productCode:.*}";
+				public static final String PRODUCT_CODE_GIFT_CART = "/**/giftCard-{productCode:.*}";
 
 
 				//for price breakup(TPR-3752)
