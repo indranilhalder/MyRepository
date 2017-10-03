@@ -119,6 +119,11 @@ import com.tisl.mpl.wsdto.PushNotificationData;
 public class MplCheckoutFacadeImpl extends DefaultCheckoutFacade implements MplCheckoutFacade
 {
 
+	/**
+	 * 
+	 */
+	private static final String GETTING_EXCEPTION_FOR_EGV_DATA_POPULATE = "Getting Exception for EGV Data Populate ";
+
 	@Autowired
 	private MplDeliveryCostService deliveryCostService;
 
@@ -202,6 +207,7 @@ public class MplCheckoutFacadeImpl extends DefaultCheckoutFacade implements MplC
 	@Autowired
 	private ShortUrlService googleShortUrlService;
 
+	private static final String ERROR_GETTING_EXCEPTION_WHILE_CHANING_DATE_FORMAT = "Error Getting Exception while  Chaning date Format";
 	/*
 	 * @Resource(name = "stockPromoCheckService") private ExtStockLevelPromotionCheckService stockPromoCheckService;
 	 */
@@ -794,12 +800,7 @@ public class MplCheckoutFacadeImpl extends DefaultCheckoutFacade implements MplC
 				//EGV Changes 28-39-2017 start 
 				if(orderModel.getIsEGVCart().booleanValue()){
 					orderData.setIsEGVOrder(orderModel.getIsEGVCart().booleanValue());
-					if(CollectionUtils.isNotEmpty(orderModel.getEntries()) &&
-							orderModel.getEntries().get(0).getWalletApportionPaymentInfo()!=null &&
-							CollectionUtils.isNotEmpty(orderModel.getEntries().get(0).getWalletApportionPaymentInfo().getWalletCardList())){
-						orderData.setEgvCardNumber(orderModel.getEntries().get(0).getWalletApportionPaymentInfo().getWalletCardList().get(0).getCardNumber());
-						orderData.setEgvCardExpDate(orderModel.getEntries().get(0).getWalletApportionPaymentInfo().getWalletCardList().get(0).getCardExpiry());
-					}
+					getEGVData(orderData, orderModel);
 				}
 			}
 			return orderData;
@@ -821,6 +822,31 @@ public class MplCheckoutFacadeImpl extends DefaultCheckoutFacade implements MplC
 		catch (final Exception ex)
 		{
 			throw new EtailNonBusinessExceptions(ex, MarketplacecommerceservicesConstants.E0000);
+		}
+	}
+
+
+
+	/**
+	 * @param orderData
+	 * @param orderModel
+	 */
+	private void getEGVData(OrderData orderData, final OrderModel orderModel)
+	{
+		try
+		{
+			if(CollectionUtils.isNotEmpty(orderModel.getEntries()) &&
+					orderModel.getEntries().get(0).getWalletApportionPaymentInfo()!=null &&
+					CollectionUtils.isNotEmpty(orderModel.getEntries().get(0).getWalletApportionPaymentInfo().getWalletCardList())){
+				orderData.setEgvCardNumber(orderModel.getEntries().get(0).getWalletApportionPaymentInfo().getWalletCardList().get(0).getCardNumber());
+				
+				String date=orderModel.getEntries().get(0).getWalletApportionPaymentInfo().getWalletCardList().get(0).getCardExpiry();
+				orderData.setEgvCardExpDate(getCardExpDate(date));
+			}
+		}
+		catch (Exception e)
+		{
+			LOG.info(GETTING_EXCEPTION_FOR_EGV_DATA_POPULATE);
 		}
 	}
 
@@ -2387,6 +2413,24 @@ public class MplCheckoutFacadeImpl extends DefaultCheckoutFacade implements MplC
 		{
 			modelService.saveAll(cartEntryList);
 		}
+	}
+	
+	@SuppressWarnings("javadoc")
+	private String getCardExpDate(String cardExpDate) 
+	{
+		SimpleDateFormat format1 = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
+		SimpleDateFormat format2 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		if(StringUtils.isNotEmpty(cardExpDate)){
+		Date date = null;
+		try {
+			date = format1.parse(cardExpDate);
+			LOG.info("Card Exp converting");
+			return format2.format(date);
+		} catch (ParseException e) {
+			LOG.error(ERROR_GETTING_EXCEPTION_WHILE_CHANING_DATE_FORMAT);
+		}
+		}
+		return null;
 	}
 
 }

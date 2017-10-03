@@ -15,10 +15,12 @@ import de.hybris.platform.servicelayer.config.ConfigurationService;
 
 import java.io.StringReader;
 import java.io.StringWriter;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Date;
 import java.util.List;
 
 import javax.xml.bind.JAXBContext;
@@ -61,6 +63,10 @@ import com.tisl.mpl.util.ExceptionUtil;
 public class SalesOrderXMLUtility
 {
 
+	/**
+	 * 
+	 */
+	private static final String ERROR_GETTING_EXCEPTION_WHILE_CHANING_DATE_FORMAT = "Error Getting Exception while  Chaning date Format";
 	/**
 	 * 
 	 */
@@ -570,8 +576,9 @@ public class SalesOrderXMLUtility
 									merchantInfoXMlData.setPaymentRefID(chaildModel.getParentReference().getCode());
 								}
 								
-								LOG.debug("DeliveryMode getParentReference"+chaildModel.getParentReference());
-								merchantInfoXMlData.setCardExpiryDate(apporationWalllet.getCardNumber());
+								LOG.debug("DeliveryMode getParentReference"+chaildModel.getParentReference());	
+								String cardExpDate = getCardExpDate(apporationWalllet);
+								merchantInfoXMlData.setCardExpiryDate(cardExpDate);
 								merchantInfoList.add(merchantInfoXMlData);
 							}
 
@@ -713,6 +720,30 @@ public class SalesOrderXMLUtility
 		}
 		return childOrderDataList;
 
+	}
+
+	/**
+	 * @param apporationWalllet
+	 * @return
+	 * @throws ParseException
+	 */
+	@SuppressWarnings("javadoc")
+	private String getCardExpDate(WalletCardApportionDetailModel apporationWalllet) 
+	{
+		String cardExpDate = apporationWalllet.getCardExpiry();
+		SimpleDateFormat format1 = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
+		SimpleDateFormat format2 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		if(StringUtils.isNotEmpty(cardExpDate)){
+		Date date = null;
+		try {
+			date = format1.parse(cardExpDate);
+			LOG.info("Card Exp converting");
+			return format2.format(date);
+		} catch (ParseException e) {
+			LOG.error(ERROR_GETTING_EXCEPTION_WHILE_CHANING_DATE_FORMAT);
+		}
+		}
+		return null;
 	}
 
 	/**

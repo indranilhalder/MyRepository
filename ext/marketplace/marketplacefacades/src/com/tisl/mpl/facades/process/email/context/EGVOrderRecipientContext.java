@@ -11,8 +11,15 @@ import de.hybris.platform.core.model.user.CustomerModel;
 import de.hybris.platform.orderprocessing.model.OrderProcessModel;
 import de.hybris.platform.servicelayer.config.ConfigurationService;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+
+import com.tisl.mpl.core.model.WalletCardApportionDetailModel;
 
 /**
  * @author PankajS
@@ -23,6 +30,7 @@ public class EGVOrderRecipientContext extends AbstractEmailContext<OrderProcessM
 
 	private static final String CUSTOMER_CARE_NUMBER = "customerCareNumber";
 	private static final String CUSTOMER_CARE_EMAIL = "customerCareEmail";
+	private static final String ERROR_GETTING_EXCEPTION_WHILE_CHANING_DATE_FORMAT = "Error Getting Exception while  Chaning date Format";
 
 	@Autowired
 	private ConfigurationService configurationService;
@@ -51,10 +59,9 @@ public class EGVOrderRecipientContext extends AbstractEmailContext<OrderProcessM
 		  put("abstractOrderEntryList",orderProcessModel.getOrder().getEntries());  
 		  put("cardAmount",orderProcessModel.getOrder().getEntries().get(0).getWalletApportionPaymentInfo().getWalletCardList().get(0).getCardAmount());
 		  put("cardNumber", orderProcessModel.getOrder().getEntries().get(0).getWalletApportionPaymentInfo().getWalletCardList().get(0).getCardNumber());
-		  put("cardExp",orderProcessModel.getOrder().getEntries().get(0).getWalletApportionPaymentInfo().getWalletCardList().get(0).getCardExpiry());  
+		  String date= orderProcessModel.getOrder().getEntries().get(0).getWalletApportionPaymentInfo().getWalletCardList().get(0).getCardExpiry();
+		  put("cardExp",getCardExpDate(date));  
 		  put("cardPin",orderProcessModel.getOrder().getEntries().get(0).getWalletApportionPaymentInfo().getWalletCardList().get(0).getCardPinNumber());
-        
-		 
 		  
 	  }
 	   put("senderMSG",orderProcessModel.getOrder().getRecipientMessage());
@@ -64,13 +71,31 @@ public class EGVOrderRecipientContext extends AbstractEmailContext<OrderProcessM
 		final String customerCareNumber = configurationService.getConfiguration().getString("marketplace.sms.service.contactno",
 				"1800-208-8282");
 		put(CUSTOMER_CARE_NUMBER, customerCareNumber);
-
-
 		final String customerCareEmail = configurationService.getConfiguration().getString("cliq.care.mail", "hello@tatacliq.com");
 		put(CUSTOMER_CARE_EMAIL, customerCareEmail);
 
 
 	}
+	
+	
+	@SuppressWarnings("javadoc")
+	private String getCardExpDate(String cardExpDate) 
+	{
+		SimpleDateFormat format1 = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
+		SimpleDateFormat format2 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		if(StringUtils.isNotEmpty(cardExpDate)){
+		Date date = null;
+		try {
+			date = format1.parse(cardExpDate);
+			LOG.info("Card Exp converting");
+			return format2.format(date);
+		} catch (ParseException e) {
+			LOG.error(ERROR_GETTING_EXCEPTION_WHILE_CHANING_DATE_FORMAT);
+		}
+		}
+		return null;
+	}
+
 
 	@Override
 	protected BaseSiteModel getSite(final OrderProcessModel orderProcessModel)
