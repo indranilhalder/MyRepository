@@ -4,6 +4,7 @@
 package com.tisl.mpl.service;
 
 import com.tisl.mpl.pojo.request.PurchaseEGVRequest;
+import com.tisl.mpl.pojo.request.QCCreditRequest;
 import com.tisl.mpl.pojo.request.QCCustomerPromotionRequest;
 import com.tisl.mpl.pojo.request.QCCustomerRegisterRequest;
 import com.tisl.mpl.pojo.request.QCRedeemRequest;
@@ -56,5 +57,7 @@ public interface MplWalletServices
 			String transactionId);
 
 	public QCRedeeptionResponse createPromotion(String walletId, QCCustomerPromotionRequest request);
+
+	public QCRedeeptionResponse qcCredit(String walletId, QCCreditRequest request);
 
 }

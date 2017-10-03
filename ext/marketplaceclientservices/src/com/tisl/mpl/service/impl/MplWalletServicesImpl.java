@@ -38,6 +38,7 @@ import com.sun.jersey.client.urlconnection.URLConnectionClientHandler;
 import com.tisl.mpl.constants.MarketplaceclientservicesConstants;
 import com.tisl.mpl.pojo.request.AddToCardWallet;
 import com.tisl.mpl.pojo.request.PurchaseEGVRequest;
+import com.tisl.mpl.pojo.request.QCCreditRequest;
 import com.tisl.mpl.pojo.request.QCCustomerPromotionRequest;
 import com.tisl.mpl.pojo.request.QCCustomerRegisterRequest;
 import com.tisl.mpl.pojo.request.QCRedeemRequest;
@@ -1004,6 +1005,69 @@ public class MplWalletServicesImpl implements MplWalletServices
 			final String requestBody = objectMapper.writeValueAsString(request);
 			webResource = client.resource(UriBuilder
 					.fromUri(MarketplaceclientservicesConstants.GET_BALANCE_FOR_WALLET + walletId + "/load/PROMOTION").build());
+
+			response = webResource.type(MediaType.APPLICATION_JSON)
+					.header(MarketplaceclientservicesConstants.FORWARDING_ENTITY_ID, "tatacliq.com")
+					.header(MarketplaceclientservicesConstants.FORWARDING_ENTITY_PASSWORD, "tatacliq.com")
+					.header(MarketplaceclientservicesConstants.TERMINAL_ID, "webpos-tul-dev10")
+					.header(MarketplaceclientservicesConstants.USERNAME, "tulwebuser")
+					.header(MarketplaceclientservicesConstants.PASSWORD, "webusertul")
+					.header(MarketplaceclientservicesConstants.DATE_AT_CLIENT, dateFormat.format(new Date()))
+					.header(MarketplaceclientservicesConstants.IS_FORWARDING_ENTIRY_EXISTS, "true")
+					.header(MarketplaceclientservicesConstants.CONTENT_TYPE, "application/json")
+					.header(MarketplaceclientservicesConstants.MERCHANT_OUTLET_NAME, "TUL-Online")
+					.header(MarketplaceclientservicesConstants.ACQUIRERID, "Tata Unistore Ltd")
+					.header(MarketplaceclientservicesConstants.ORGANIZATION_NAME, "Tata Unistore Ltd")
+					.header(MarketplaceclientservicesConstants.POS_ENTRY_MODE, "2")
+					.header(MarketplaceclientservicesConstants.POS_TYPE_ID, "1")
+					.header(MarketplaceclientservicesConstants.POS_NAME, "webpos-tul-qc-01")
+					.header(MarketplaceclientservicesConstants.TERM_APP_VERSION, "null")
+					.header(MarketplaceclientservicesConstants.CURRENT_BATCH_NUMBER,
+							getConfigurationService().getConfiguration().getString("qc.batch.number"))
+					.header(MarketplaceclientservicesConstants.TRANSACTION_ID, request.getInvoiceNumber())
+					.type(MediaType.APPLICATION_JSON).post(ClientResponse.class, requestBody);
+
+			LOG.debug("requestBody client .................." + requestBody);
+			LOG.debug("response client .................." + response);
+			if (null != response)
+			{
+				final String output = response.getEntity(String.class);
+				LOG.debug(" ************** output----" + output);
+				qcRedeeptionResponse = objectMapper.readValue(output, QCRedeeptionResponse.class);
+				if (null != qcRedeeptionResponse)
+				{
+					LOG.debug(" ************** GET CUSTOMER WALLET BALENCE----" + qcRedeeptionResponse.toString()); //need to create marshalling for response object
+				}
+			}
+		}
+		catch (final Exception ex)
+		{
+			ex.printStackTrace();
+			LOG.error("exception............ client .................." + ex);
+		}
+		return qcRedeeptionResponse;
+	}
+	
+	
+	@Override
+	public QCRedeeptionResponse qcCredit(final String walletId, final QCCreditRequest request)
+	{
+		System.out.println("***********************************in QCCreditRequest request..............." + request.toString());
+		LOG.debug("Successfully request.toString()  .................." + request.toString());
+		//	final Client client = Client.create();
+		final Client client = getProxyConnection();
+		LOG.debug("Successfully client .................." + client);
+		ClientResponse response = null;
+		WebResource webResource = null;
+		QCRedeeptionResponse qcRedeeptionResponse = new QCRedeeptionResponse();
+		//final ReturnLogisticsResponse responsefromOMS = new ReturnLogisticsResponse();
+		final DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
+		final ObjectMapper objectMapper = new ObjectMapper();
+		try
+		{
+			final String requestBody = objectMapper.writeValueAsString(request);
+			webResource = client.resource(UriBuilder
+					.fromUri(MarketplaceclientservicesConstants.GET_BALANCE_FOR_WALLET + walletId + "/load/CREDIT").build());
 
 			response = webResource.type(MediaType.APPLICATION_JSON)
 					.header(MarketplaceclientservicesConstants.FORWARDING_ENTITY_ID, "tatacliq.com")
