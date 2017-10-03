@@ -59,16 +59,8 @@
 					}
 					}
 					//TPR-6654
-		    		if($.cookie("mpl-user") == "anonymous")
-					{
-						var anonymousUser = "Y";
-					}
-					else
-					{
-						var anonymousUser = "N";
-					}
 					var pageTypeVal = $("#pageType").val();
-					if(pageTypeVal == "homepage" && anonymousUser == "Y"){
+					if(pageTypeVal == "homepage" && ($.cookie("mpl-user") == "anonymous")){
 						$(".enter-pincode").show();
 				}
 				}
