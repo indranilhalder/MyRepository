@@ -3178,7 +3178,7 @@ ul.jqtree-tree .jqtree-moving>.jqtree-element .jqtree-title {
 }
 .facet-list.filter-opt {
     text-align: left;
-    padding-left: calc(19.83% - -20px);
+    /* padding-left: calc(19.83% - -20px); */ /* TISPRDT-6115 */
 }
 .mob-filter-wrapper {
     display: block !important;

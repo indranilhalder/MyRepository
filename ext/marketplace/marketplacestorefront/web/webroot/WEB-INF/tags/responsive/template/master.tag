@@ -471,42 +471,11 @@
 	</c:if>
 	<script>
 	$(document).ready(function(){
-		var anonymousUser = "${anonymous_user}";
-		var pincodeAvailable = "${pincode_available}";
-		//var forceLoginUser = "${forced_login_user}";
-		var forceLoginUser = (/*$.cookie("mpl-user") == "anonymous") &&*/ window.location.search.indexOf("boxed-login") >= 1 ? "Y" : "N";
-		var pageTypeVal = $("#pageType").val();
-		//var isMobile = "${is_mobile}";
-		var isMobile = screen.width < 460 ? "true" : "false" ;
-		if(forceLoginUser == "Y"){
-			if(isMobile == "true"){
-				setTimeout(function(){
-					window.location.href="/login";
-				},10000);
-			}else{
-				$.ajax({
-					url: "/login?frame=true&box-login",
-					type: "GET",
-					responseType: "text/html",
-					success: function(response){
-						$("#login-modal").find(".content").html('<button id="close-login" type="button" class="close"></button>'+response);
-					},
-					fail: function(response){
-						alert(response);
-					}
-				});
-				setTimeout(function(){
-					$("#login-modal").modal({
-						 backdrop: 'static',
-						 keyboard: false
-					 });
-				},2000);
-			}
-		}
 		//TPR-6654
+		var anonymousUser = "${anonymous_user}";
+		var pageTypeVal = $("#pageType").val();
 		if(pageTypeVal == "homepage" && anonymousUser == "Y"){
 			$(".enter-pincode").show();
-			
 	}
 	});
 	$(document).on("click","#close-login",function(){

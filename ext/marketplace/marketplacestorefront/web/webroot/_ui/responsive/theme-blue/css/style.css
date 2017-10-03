@@ -77263,3 +77263,30 @@ body.template-pages-LoginPageTemplate .sign-in.tab-view .form-group #password_lo
 	display: block;	
 }
 /* SDI-994 END */
+
+/*UF-466 start*/
+.template-pages-layout-newBrandLandingPageTemplate .blp-carousel.homepage-banner #rotatingImageTimeout, .template-pages-layout-newBrandLandingPageTemplate .blp-carousel.homepage-banner #rotatingImage{
+	padding: 0;
+}
+.template-pages-layout-newBrandLandingPageTemplate .blp-carousel.homepage-banner #rotatingImageTimeout .item, .template-pages-layout-newBrandLandingPageTemplate .blp-carousel.homepage-banner #rotatingImage .item {
+    margin: 0;
+}
+.blp-carousel.homepage-banner .owl-theme .owl-controls .owl-nav div {
+    background-color: rgba(0,0,0,0.2) !important;
+}
+.blp-carousel.homepage-banner .owl-next::after, .blp-carousel.homepage-banner .owl-prev::after {
+    content: "";
+    border: solid #444;
+    border-width: 0 1px 1px 0;
+    display: inline-block;
+    padding: 7px;
+}
+.blp-carousel.homepage-banner .owl-next::after {
+    transform: rotate(-45deg);
+    -webkit-transform: rotate(-45deg);
+}
+.blp-carousel.homepage-banner .owl-prev::after {
+    transform: rotate(-225deg);
+    -webkit-transform: rotate(-225deg);
+}
+/*UF-466 end*/
