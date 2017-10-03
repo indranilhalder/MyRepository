@@ -51,6 +51,20 @@
     }
 }
 
+.footer-popular-accordian-title {
+    cursor: pointer;
+    padding: 10px;
+    border-top: 2px solid #ddd;
+    border-bottom: 2px solid #ddd
+}
+#footer-popular-accordian-icon {
+    margin: 0 !important
+}
+footer .mega-menu {
+    padding: 0 10px !important;
+    display: none
+}
+
 .footer-top{
         margin-bottom: 30px;
 		h1{
@@ -171,7 +185,7 @@ footer{
 	}
 
 	.footer-inner-wrapper{
-		padding:45px 0;
+		padding:45px;
 		h3{
 			color:$gray-dark;
 			font-size:$font-size-h5;

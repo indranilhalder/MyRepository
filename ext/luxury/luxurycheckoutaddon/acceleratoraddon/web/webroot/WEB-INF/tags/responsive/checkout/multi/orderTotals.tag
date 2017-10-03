@@ -19,7 +19,7 @@
 					<span class="subTotalSpan"><spring:theme code="basket.page.totals.subtotal"/> </span>
 					<span class="amt">
 					<ycommerce:testId code="Order_Totals_Subtotal">
-						<format:price priceData="${cartData.subTotal}"/>
+						<format:luxPrice priceData="${cartData.subTotal}"/>
 					</ycommerce:testId>
 					</span>
 				</li>
@@ -29,7 +29,7 @@
 					<li id="cartPromotionApplied">
 						<span class="cartpromotionSpan"><spring:theme code="basket.page.totals.savings"/></span>
 						<span id="cartPromotion" style="float: right">
-						<format:price priceData="${cartData.totalDiscounts}"/>
+						<format:luxPrice priceData="${cartData.totalDiscounts}"/>
 						</span>
 
 					</li>
@@ -38,7 +38,7 @@
 					<span><spring:theme code="basket.page.totals.savings"/></span>
 					<span id="promotion" style="float: right">
 					</span>
-					<format:price priceData="${cartData.totalDiscounts}"/>
+					<format:luxPrice priceData="${cartData.totalDiscounts}"/>
 				</li>
 
 				<c:if test="${not empty cartData.deliveryCost}">
@@ -46,7 +46,7 @@
 						<span class="shippingSpan"><spring:theme code="basket.page.totals.delivery"/></span>
 						<span id="deliveryCostSpanId" class="text-right">
 				<ycommerce:testId code="Order_Totals_Delivery">
-					<format:price priceData="${cartData.deliveryCost}" displayFreeForZero="TRUE"/>
+					<format:luxPrice priceData="${cartData.deliveryCost}" displayFreeForZero="TRUE"/>
 				</ycommerce:testId>
 			 </span>
 					</li>
@@ -80,7 +80,7 @@
 					<span id="couponValue" class="text-right"> </span>
 					<input type="hidden" id="couponRelContent" value="<spring:theme code="coupon.release.content"/>">
 				</li>
-						<span id="edtotalWithConvField" style="float: right" class="hide"><format:price priceData="${cartData.deliverySlotCharge}"/></span>
+						<span id="edtotalWithConvField" style="float: right" class="hide"><format:luxPrice priceData="${cartData.deliverySlotCharge}"/></span>
 						
 					<%--  <c:if test="${not empty cartData.deliverySlotCharge}">
                      <li class="total" id="edtotal">
@@ -105,7 +105,7 @@
 					<li class="tax">
 						<span><spring:theme code="basket.page.totals.netTax"/></span>
 						<span>
-				<format:price priceData="${cartData.totalTax}"/>
+				<format:luxPrice priceData="${cartData.totalTax}"/>
 			</span>
 					</li>
 				</c:if>
@@ -128,7 +128,7 @@
     </span>
 				<span class="orderValue" id="outstanding-amount-mobile">
 	    <ycommerce:testId code="cart_totalPrice_label">
-			<format:price priceData="${cartData.totalPrice}"/>
+			<format:luxPrice priceData="${cartData.totalPrice}"/>
 		</ycommerce:testId></span></li>
 		</ul>
 	</c:when>
@@ -140,7 +140,7 @@
 					<span class="subTotalSpan"><spring:theme code="basket.page.totals.subtotal"/> </span>
 					<span class="amt">
 			<ycommerce:testId code="Order_Totals_Subtotal">
-				<format:price priceData="${orderData.subTotal}"/>
+				<format:luxPrice priceData="${orderData.subTotal}"/>
 			</ycommerce:testId>
 		</span>
 				</li>
@@ -149,14 +149,14 @@
 				<c:if test="${orderData.totalDiscounts.value > 0}">
 					<li id="cartPromotionApplied">
 						<span class="cartpromotionSpan"><spring:theme code="basket.page.totals.savings"/></span>
-						<span id="cartPromotion" style="float: right"> - <format:price priceData="${orderData.totalDiscounts}"/> 	</span>
+						<span id="cartPromotion" style="float: right"> - <format:luxPrice priceData="${orderData.totalDiscounts}"/> 	</span>
 
 					</li>
 				</c:if>
 				<!-- Tag used for Payment Page promotion display-->
 				<li id="promotionApplied" >
 					<span><spring:theme code="basket.page.totals.savings"/></span>
-					<span id="promotion" style="float: right"> - <format:price priceData="${orderData.totalDiscounts}"/> 	</span>
+					<span id="promotion" style="float: right"> - <format:luxPrice priceData="${orderData.totalDiscounts}"/> 	</span>
 
 				</li>
 				<c:if test="${not empty orderData.deliveryCost}">
@@ -164,7 +164,7 @@
 						<span class="shippingSpan"><spring:theme code="basket.page.totals.delivery"/></span>
 						<span id="deliveryCostSpanId">
 				<ycommerce:testId code="Order_Totals_Delivery">
-					<format:price priceData="${orderData.deliveryCost}" displayFreeForZero="TRUE"/>
+					<format:luxPrice priceData="${orderData.deliveryCost}" displayFreeForZero="TRUE"/>
 				</ycommerce:testId>
 			</span>
 					</li>
@@ -186,7 +186,7 @@
 				<li class="total" id="total">
 					<div id="totalPriceConvChargeId">
 						<spring:theme code="basket.page.totals.total"/>
-						<span id="totalWithConvField" style="float: right"><format:price priceData="${orderData.totalPrice}"/></span>
+						<span id="totalWithConvField" style="float: right"><format:luxPrice priceData="${orderData.totalPrice}"/></span>
 					</div>
 				</li>
 
@@ -194,7 +194,7 @@
 					<li class="tax">
 						<span><spring:theme code="basket.page.totals.netTax"/></span>
 						<span>
-				<format:price priceData="${orderData.totalTax}"/>
+				<format:luxPrice priceData="${orderData.totalTax}"/>
 			</span>
 					</li>
 				</c:if>
@@ -205,7 +205,7 @@
 		</div>
 		<ul class="totals outstanding-totalss">
 			<li id="totals" class="outstanding-amounts"><spring:theme code="basket.page.totals.outstanding.amount"/><span class="amt" id="outstanding-amount-mobile"><ycommerce:testId code="cart_totalPrice_label">
-				<format:price priceData="${orderData.totalPrice}"/>
+				<format:luxPrice priceData="${orderData.totalPrice}"/>
 			</ycommerce:testId></span></li>
 		</ul>
 	</c:otherwise>

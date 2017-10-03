@@ -144,6 +144,8 @@
         
         h5{
             display: inherit;
+            /*font-size: 12px;
+            line-height: 1.5;*/
         }
     }
 	.merchant-info {
@@ -362,9 +364,9 @@
 		background: $Sprite -421px -66px no-repeat;
 		position: absolute;
 		width: 25px;
-		height: 27px;
-		left: 0px;
-		top:15px;
+		height: 27px;		
+		top:15px; 
+        left: 0px;
 	}
 }
 .pdp-accordion {
@@ -513,12 +515,16 @@
                 display: inline-block;
             }
             
-            ul{
-            	padding:10px;
-            	list-style-type:none;
+            ul{  
+                padding: 0px;
+                list-style-type: none;
+                margin: 0;
+                    
             	li{
             		position:relative;
             		cursor:pointer;
+                    padding: 5px;
+                        
                     @media (max-width: 767px) { 
                         li.active::after{
                             padding: 10px 10px;
@@ -527,12 +533,16 @@
                     }
             	}
                 li.active{
+                    
+                    background-color: black;
+                    color: white;
+                    
                     &:after{
-                        content:'>';
-                        width:30px;
-                        height:30px;
+                        content:'>';                       
                         position:absolute;
                         right:10px;
+                        font-weight: bolder;
+                        
                         @media (max-width: 767px) { 
                             content : ""; 
                         }
@@ -731,6 +741,13 @@
 		left: -5px;
         top:35px;
 	}
+}
+.product-list-wrapper{
+    .offer-icon{
+        .exclusive, .newseason, .trending, .editors, .newarrival, .onsale{
+            left: -6px;
+        }
+    }
 }
 
 /*PDP Section End*/
@@ -1112,7 +1129,7 @@
 				float:right;
 				width:60%;
 				table{
-					width:95%;
+					width:100%;
 					float:right;
 				}
 				ul{
