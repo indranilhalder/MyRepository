@@ -925,12 +925,12 @@
 				                  		<!-- <p>NEW CARD</p> -->
 										<div class="card-group row">
 											<div class="form-group">						                    	
-						                        	<div class="full account-only col-md-12 mb-20">
-					 									<%-- <label><spring:theme code="text.cardtype"/> *</label> --%>
+						                        	<%-- <div class="full account-only col-md-12 mb-20">
+					 									<label><spring:theme code="text.cardtype"/> *</label>
 					 										<select class="form-control">
 					  											<option><spring:theme code="text.select"/></option>
 					  										</select>
-													</div>
+													</div> --%>
 						                            <div class="controls full  col-md-6">
 						                            	<%-- <label class="control-label"><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.cardNo"/></label> --%>
 						                            	<input type="text" class="card_number form-control" id="cardNoEmi" maxlength="16" autocomplete="off" placeholder="Enter your card number"> 

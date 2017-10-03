@@ -1860,6 +1860,10 @@ h2.panel-defaultHeading {
                             &:nth-child(odd){
                                 background: #fff;
                             }
+
+                            label {                            
+                                margin-bottom: 0px;
+                            }
                         }
                     }
                     td{
@@ -1944,6 +1948,9 @@ h2.panel-defaultHeading {
             }           
             fieldset{
                 padding: 0px;
+            }
+            #billingAddressEmi{
+                clear: both;
             }
         }
         
