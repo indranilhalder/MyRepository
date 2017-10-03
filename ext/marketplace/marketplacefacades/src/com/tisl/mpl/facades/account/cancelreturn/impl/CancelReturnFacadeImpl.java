@@ -52,6 +52,7 @@ import de.hybris.platform.store.services.BaseStoreService;
 import de.hybris.platform.storelocator.model.PointOfServiceModel;
 
 import java.text.DateFormat;
+import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -2217,6 +2218,7 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 			//initiateRefund(subOrderModel, orderRequestRecord);
 			//QCRefundRequest qcRefundRequest =null;
 			String walletId =null;
+			DecimalFormat daecimalFormat =new DecimalFormat("#.00");
       	CustomerModel customerModel= (CustomerModel)subOrderModel.getUser();
       	if(null!=customerModel && null!= customerModel.getCustomerWalletDetail()){
       		walletId=customerModel.getCustomerWalletDetail().getWalletId();
@@ -2227,26 +2229,24 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 				 
 		      }else if(subOrderModel.getSplitModeInfo().equalsIgnoreCase("CliqCash")){
 		      	QCCreditRequest qcCreditRequest =new QCCreditRequest();
-		      	qcCreditRequest.setAmount(orderRequestRecord.getRefundableAmountForQc().toString());
-		      	qcCreditRequest.setInvoiceNumber(subOrderDetails.getCode());
-		      	qcCreditRequest.setNotes("load for "+ orderRequestRecord.getRefundableAmountForQc().toString() +" for CANCEL REDEEM");    	
+		      	qcCreditRequest.setAmount(daecimalFormat.format(orderCancelRequest.getAmountTORefundForQc()));
+		      	qcCreditRequest.setInvoiceNumber(subOrderModel.getParentReference().getCode());
+		      	qcCreditRequest.setNotes("load for "+ daecimalFormat.format(orderCancelRequest.getAmountTORefundForQc()) +" for CANCEL REDEEM");    	
 		      	QCRedeeptionResponse response = mplWalletFacade.qcCredit(walletId , qcCreditRequest);
 		      	LOG.debug("*****************************"+response.getResponseCode());
 		      	constructQuickCilverOrderEntry(subOrderModel,orderRequestRecord ,response);
 			         		
 		      }else if(subOrderModel.getSplitModeInfo().equalsIgnoreCase("Split")) {
-		      	
-		      	
 		      	QCCreditRequest qcCreditRequest =new QCCreditRequest();
-		      	qcCreditRequest.setAmount(orderRequestRecord.getRefundableAmountForQc().toString());
-		      	qcCreditRequest.setInvoiceNumber(subOrderDetails.getCode());
-		      	qcCreditRequest.setNotes("load for "+ orderRequestRecord.getRefundableAmountForQc().toString() +" for CANCEL REDEEM");    	
+		      	qcCreditRequest.setAmount(daecimalFormat.format(orderCancelRequest.getAmountTORefundForQc()));
+		      	qcCreditRequest.setInvoiceNumber(subOrderModel.getParentReference().getCode());
+		      	qcCreditRequest.setNotes("load for "+ daecimalFormat.format(orderCancelRequest.getAmountTORefundForQc()) +" for CANCEL REDEEM");    	
 		      	QCRedeeptionResponse response = mplWalletFacade.qcCredit(walletId , qcCreditRequest);
 		      	constructQuickCilverOrderEntry(subOrderModel,orderRequestRecord ,response);
 		      	if(response.getResponseCode().intValue() == 0){
 		      		initiateRefund(subOrderModel, orderRequestRecord);
 		      	}else{
-		      		LOG.debug("Quck Cilver giving response code "+response.getResponseCode()+" Order Id :"+subOrderModel.getCode());
+		      		LOG.debug("Quck Cilver giving response code "+response.getResponseCode()+" Order Id :"+subOrderModel.getParentReference().getCode());
 		      	}
 		      	
 		      }
@@ -2340,9 +2340,9 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 						refundTransactionMappingModel.setCreationtime(new Date());
 						refundTransactionMappingModel.setRefundType(JuspayRefundType.valueOf(""));
 						refundTransactionMappingModel.setRefundAmount(new Double(orderRequestRecord.getRefundableAmountForQc().doubleValue()));//TISPRO-216 : Refund amount Set in RTM
-						refundTransactionMappingModel.setQwikCilverRefId(subOrderModel.getCode());
+						refundTransactionMappingModel.setQwikCilverRefId(subOrderModel.getParentReference().getCode());
 						refundTransactionMappingModel.setWalletCardList(walletCardApportionDetailModelList);
-						refundTransactionMappingModel.setQwikCilverStatus(JuspayRefundType.CANCELLED.toString());
+						refundTransactionMappingModel.setQwikCilverStatus("CANCELLED");
 						modelService.save(refundTransactionMappingModel);
 					}
 					else
