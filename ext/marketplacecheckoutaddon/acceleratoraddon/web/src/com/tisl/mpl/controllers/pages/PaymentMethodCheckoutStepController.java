@@ -168,6 +168,13 @@ import reactor.function.support.UriUtils;
 @RequestMapping(value = MarketplacecheckoutaddonConstants.MPLPAYMENTURL)
 public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepController
 {
+	/**
+	 * 
+	 */
+	private static final String EGVGUID = "EGVGUID";
+
+
+
 	private static final Logger LOG = Logger.getLogger(PaymentMethodCheckoutStepController.class);
 
 
@@ -6611,15 +6618,25 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 
 	//GiFT CART Payment Start 13-09-2017
 	@RequireHardLogIn
-	@RequestMapping(value = GIFT_CART_PAYMENT, method = RequestMethod.POST)
+	@RequestMapping(value = GIFT_CART_PAYMENT, method =
+		{ RequestMethod.POST, RequestMethod.GET })
 	public String getGiftPayment(@ModelAttribute("egvDetailsform") final EgvDetailForm egvDetailForm,
 			final BindingResult bindingResult, final Model model, final HttpServletRequest request)
 			throws UnsupportedEncodingException
 	{
 		try
 		{
-			final EgvDetailsData egvDetailsData = populateEGVFormToData(egvDetailForm);
-			final CartData giftCartData = mplCartFacade.getGiftCartModel(egvDetailsData);
+	       CartData giftCartData=null;
+
+			if(egvDetailForm.getProductCode()==null){
+				String guid=getSessionService().getAttribute(EGVGUID);
+				giftCartData=mplCartFacade.getGiftCartData(guid);
+			}
+			else{
+				 EgvDetailsData egvDetailsData = populateEGVFormToData(egvDetailForm);
+				  giftCartData = mplCartFacade.getGiftCartModel(egvDetailsData);
+				  giftCartData.setEgvTotelAmount(egvDetailsData.getGiftRange());
+			}
 			giftCartData.setIsEGVCart(true);
 			Map<String, Boolean> paymentModeMap = null;
 			final OrderData orderData = null;
@@ -6629,17 +6646,16 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 			paymentModeMap = getMplPaymentFacade().getPaymentModes(MarketplacecheckoutaddonConstants.MPLSTORE, false, giftCartData);
 			//Cart guid added to propagate to further methods via jsp
 			model.addAttribute(MarketplacecheckoutaddonConstants.GUID, giftCartData.getGuid());
+			getSessionService().setAttribute(EGVGUID, giftCartData.getGuid());
 			model.addAttribute(MarketplacecheckoutaddonConstants.CARTTOORDERCONVERT, Boolean.FALSE); //INC144315475
 			GenericUtilityMethods.populateTealiumDataForCartCheckout(model, giftCartData);
 			final PriceDataFactory priceDataFactory = Registry.getApplicationContext().getBean("priceDataFactory",
 					PriceDataFactory.class);
 			Long cartTotalMrp = Long.valueOf(0);
 
-
-
 			try
 			{
-				final long cost = (long) egvDetailsData.getGiftRange();
+				final long cost = (long) giftCartData.getEgvTotelAmount();
 				cartTotalMrp = Long.valueOf(cost);
 			}
 			catch (final Exception exception)

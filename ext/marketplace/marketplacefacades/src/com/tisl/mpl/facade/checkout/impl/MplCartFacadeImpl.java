@@ -4510,7 +4510,6 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 		try
 		{
 			final CartModel cardModel = getCartModelForEGVProduct(egvDetailForm);
-			sessionService.setAttribute(GIFT_CART_MODEL, cardModel);
 			try
 			{
 				cartData = getCartConverter().convert(cardModel);
@@ -4683,6 +4682,24 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 			LOG.error("Preparing CartEntry Data " + exception);
 		}
 		return abstractOrderEntryModel;
+	}
+	
+	@Override
+	public CartData getGiftCartData(String guid){
+		
+		CartModel cartModel= mplEGVCartService.getEGVCartModel(guid);
+		CartData cartData=null;
+		try
+		{
+			cartData = getCartConverter().convert(cartModel);
+			cartData.setEgvTotelAmount(cartModel.getTotalPrice().doubleValue());
+		}
+		catch (final Exception exception)
+		{
+		LOG.error(ERROR_OCCER_WHILE_CREATING_CART_MODEL_FOR_GIFT + exception);
+			return null;
+		}
+	return cartData;
 	}
 
 }

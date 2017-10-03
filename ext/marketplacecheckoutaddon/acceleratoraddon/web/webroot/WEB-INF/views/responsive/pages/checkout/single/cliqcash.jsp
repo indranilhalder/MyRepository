@@ -21,7 +21,7 @@
 	<div class="cliqCashContainer">
 		<div class="cliqCashContainerHead">
 			<p class="cliqCashInnerTop">
-			<img alt="Cliq Cash" width="200" id="cliqCash_logo_img" src="\_ui\responsive\common\images\CliqCash.png">
+			<img alt="Cliq Cash" width="160" id="cliqCash_logo_img" src="\_ui\responsive\common\images\CliqCash.png">
 			<img src="">
 <%-- 				<strong><spring:theme code="text.add.cliq.Cash.label" --%>
 <%-- 						text="Add CLiQ Cash" /></strong> --%>

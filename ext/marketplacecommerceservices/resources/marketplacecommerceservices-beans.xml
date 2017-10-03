@@ -212,6 +212,7 @@
 		<property name="deliverySlotCharge" type="de.hybris.platform.commercefacades.product.data.PriceData"/>
 		<property name="exchangeAppliedCart" type="Boolean" />
 		<property name="isEGVCart" type="boolean"/>
+		<property name="egvTotelAmount" type="double"/>
 	</bean>
 	<bean class="de.hybris.platform.commercefacades.order.data.OrderData">
 		<property name="convenienceChargeForCOD" type="de.hybris.platform.commercefacades.product.data.PriceData"/>

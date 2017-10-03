@@ -11,7 +11,7 @@
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
  
 	 <c:choose>
-  		<c:when test="${not empty order.mplPaymentInfo.paymentOption && fn:toLowerCase(order.mplPaymentInfo.paymentOption) eq 'mrupee'}">	
+  		<c:when test="${(not empty order.mplPaymentInfo.paymentOption && fn:toLowerCase(order.mplPaymentInfo.paymentOption) eq 'mrupee') || (not empty qc_paymentMode && fn:toLowerCase(qc_paymentMode) eq 'cliq cash') }">	
   			<p class="title">  <spring:theme code="checkout.multi.paymentMethod.selectMode.ThrdPrtWllt" /> Information:</p>
   		</c:when>
   		<c:otherwise>
@@ -55,9 +55,10 @@
     
     <!-- Added for third party wallet -->
     <c:if test="${not empty order.mplPaymentInfo.paymentOption && fn:toLowerCase(order.mplPaymentInfo.paymentOption) eq 'mrupee'}">
-   ${order.mplPaymentInfo.paymentOption}<br>
-   ${order.mplPaymentInfo.cardAccountHolderName}<br>
+	   ${order.mplPaymentInfo.paymentOption}<br>
+	   ${order.mplPaymentInfo.cardAccountHolderName}<br>
    </c:if>
-    
+    <c:if test="${not empty qc_paymentMode && fn:toLowerCase(qc_paymentMode) eq 'cliq cash'}">
+        ${qc_paymentMode}<br>
+   </c:if>
    </address>   
-   
