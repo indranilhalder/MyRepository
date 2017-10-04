@@ -31,12 +31,12 @@
 					<div class="col-sm-6 addGiftVoucherSub">
 						<div class="voucherHeadingTexts"><spring:theme code="text.addEGV.card.label" text="Card Number"/><br />&nbsp;</div>
 						<div class=""><!-- <input class="giftVoucherNo" type="text" placeholder="Enter Voucher Number" /><br />&nbsp; --></div>
-						<form:input path="cardNumber" type="text" placeholder="Enter Voucher Number"  onkeypress="return isNumberKey(event)"  class="giftVoucherNo" />
+						<form:input path="cardNumber" type="text" placeholder="16 digit card no."  onkeypress="return isNumberKey(event)"  class="giftVoucherNo" />
 					</div>
 					<div class="col-sm-6 addGiftVoucherSub">
 						<div class="voucherHeadingTexts giftCardPinNo"><spring:theme code="text.addEGV.pin.label" text="Card Pin"/><br />&nbsp;</div>
 					    <div class=""><!-- <input class="giftVoucherPin" type="text" placeholder="Enter Voucher Pin" /><br />&nbsp; --></div>
-					    <form:input path="cardPin" class="giftVoucherPin" type="text" onkeypress="return isNumberKey(event)" placeholder="Enter Voucher Pin" />
+					    <form:input path="cardPin" class="giftVoucherPin" type="text" onkeypress="return isNumberKey(event)" placeholder="6 digit pin no." />
 					</div>
 				</div>&nbsp;
 				<hr class="dividerVS" />

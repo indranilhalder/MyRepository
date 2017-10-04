@@ -10,7 +10,6 @@ import de.hybris.platform.commercefacades.order.data.OrderData;
 import de.hybris.platform.commercefacades.order.data.OrderEntryData;
 import de.hybris.platform.commercefacades.product.data.PromotionResultData;
 import de.hybris.platform.commercefacades.voucher.exceptions.VoucherOperationException;
-import de.hybris.platform.core.enums.OrderStatus;
 import de.hybris.platform.core.model.order.AbstractOrderEntryModel;
 import de.hybris.platform.core.model.order.AbstractOrderModel;
 import de.hybris.platform.core.model.order.CartModel;
@@ -109,6 +108,14 @@ import com.tisl.mpl.wallet.service.DefaultMplMrupeePaymentService;
 @Qualifier(MarketplacecommerceservicesConstants.MPLPAYMENTFACADE)
 public class MplPaymentFacadeImpl implements MplPaymentFacade
 {
+	/**
+	 *
+	 */
+	private static final String EMI = "EMI";
+	/**
+	 *
+	 */
+	private static final String M_RUPEE = "MRupee";
 	private MplPaymentService mplPaymentService;
 	@Resource
 	private OTPGenericService otpGenericService;
@@ -200,18 +207,20 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 					}
 				}
 			}
-			 //EGV Changes 
-		    if(null != cartData && cartData.isIsEGVCart()){
-		     flag = true;
-		    }
-			
+			//EGV Changes
+			if (null != cartData && cartData.isIsEGVCart())
+			{
+				flag = true;
+			}
+
 			if (CollectionUtils.isNotEmpty(paymentTypes))
 			{
 				//looping through the mode to get payment Types
 				for (final PaymentTypeModel mode : paymentTypes)
 				{
 					//retrieving the data
-					if (flag && mode.getMode().equalsIgnoreCase(MarketplaceFacadesConstants.PAYMENT_METHOS_COD))
+					if ((flag && mode.getMode().equalsIgnoreCase(MarketplaceFacadesConstants.PAYMENT_METHOS_COD))
+							|| (flag && mode.getMode().equalsIgnoreCase(EMI)) || (flag && mode.getMode().equalsIgnoreCase(M_RUPEE)))
 					{
 						LOG.debug("Ignoring to add COD payment for CNC Product ");
 					}

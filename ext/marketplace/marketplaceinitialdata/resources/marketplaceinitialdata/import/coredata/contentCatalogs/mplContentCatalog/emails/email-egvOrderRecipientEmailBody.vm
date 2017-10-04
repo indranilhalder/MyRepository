@@ -19,6 +19,8 @@
 			<div class="tempTopLeft">
 				<div class="tempGiftCardId">
 					Gift card id: ${ctx.cardNumber}
+					
+					Gift Card Pin:${ctx.cardPin}
 				</div>
 				<div>
 					
@@ -37,7 +39,7 @@
 		<br />
 		<div>
 			<p>Congratulations!!</p>
-			<p>You have been gifted a Tata CLiQ voucher by <span class="configText">ABC</span></p>
+			<p>You have been gifted a Tata CLiQ voucher by <span class="configText">${ctx.senderName}</span></p>
 			<p>You can use the gift card across the Tata CLiQ site (www.tatacliq.com & luxury.tatacliq.com) and the Tata CLiQ app.</p>
 			<p>How to use:</p>
 			<p>If you are a customer:</p>

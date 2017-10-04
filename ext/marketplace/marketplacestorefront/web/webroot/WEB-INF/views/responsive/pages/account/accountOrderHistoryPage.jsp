@@ -230,7 +230,7 @@
 															
 															
 												<li class="resendEmail">
-												<c:if test="${orderHistoryDetail.isEGVOrder eq  true}">
+												<c:if test="${not empty orderHistoryDetail.egvCardNumber and orderHistoryDetail.isEGVOrder eq  true}">
 													<input type="hidden" class="order_id_for_resending" value="${orderHistoryDetail.code}" />
 													<input type="hidden" class="resend_email_index" value="" />
 													<span class="resend_order_email">RESEND EMAIL</span>

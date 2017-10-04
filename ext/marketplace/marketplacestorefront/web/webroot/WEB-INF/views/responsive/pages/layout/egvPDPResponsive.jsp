@@ -259,6 +259,7 @@
 	}
 </style>
 <template:page pageTitle="${pageTitle}">
+<br />
 <div class="clearfix">
 	<div class="col-sm-6 giftContSub giftContSub1">
 		<div class="col-sm-12">
@@ -281,8 +282,8 @@
 		
 		<div class="clearfix">
 			<div class="col-sm-12">
-				<span class="Tanishq">Tanishq</span><br />
-				<span class="Diwali-GIft-Card">Diwali Gift Card</span><br />&nbsp;
+				<span class="Tanishq">Tata CliQ</span><br />
+				<span class="Diwali-GIft-Card">Gift Card</span><br />&nbsp;
 			</div>
 		</div>
 		<div class="clearfix">
@@ -318,7 +319,7 @@
 		<br />&nbsp;
 		<div class="clearfix">
 			<div class="col-sm-12">
-				<span id="showMoreGiftDesignTemplates" class="moreGiftTemplates">See More Designs</span><br />&nbsp;
+				<!-- <span id="showMoreGiftDesignTemplates" class="moreGiftTemplates">See More Designs</span><br />&nbsp; -->
 				<div id="moreGiftDesignTemplates" class="giftDesignModel">
 					  Modal content
 					  <div class="giftDesignModelContent">

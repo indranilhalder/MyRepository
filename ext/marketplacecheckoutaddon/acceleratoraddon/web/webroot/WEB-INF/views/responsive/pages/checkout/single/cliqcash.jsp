@@ -65,14 +65,15 @@
 
 		<div>
 			<div class="cliqCashContainerTwo">
-				<button class="cliqCashTablinks"
+				<%-- <button class="cliqCashTablinks"
 					onclick="selectSection(event, 'statement')"
 					id="defaultCliqCashCategory">
 					<spring:theme code="text.add.cliq.cash.tab.statement"
 						text="STATEMENT" />
-				</button>
+				</button> --%>
 				<button class="cliqCashTablinks"
-					onclick="selectSection(event, 'cashback')">
+					onclick="selectSection(event, 'cashback')"
+					id="defaultCliqCashCategory">
 					<spring:theme code="text.add.cliq.cash.tab.cashback"
 						text="CASHBACK" />
 				</button>
@@ -80,10 +81,10 @@
 					onclick="selectSection(event, 'refund')">
 					<spring:theme code="text.add.cliq.cash.tab.refund" text="REFUND" />
 				</button>
-				<button class="cliqCashTablinks"
+				<%-- <button class="cliqCashTablinks"
 					onclick="selectSection(event, 'help')">
 					<spring:theme code="text.add.cliq.cash.tab.help" text="HELP" />
-				</button>
+				</button> --%>
 			</div>
 
 			<div id="statement" class="cliqCashContainerTwoContent">
