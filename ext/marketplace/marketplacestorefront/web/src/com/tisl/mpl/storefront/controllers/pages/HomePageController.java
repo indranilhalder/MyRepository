@@ -654,6 +654,7 @@ public class HomePageController extends AbstractPageController
 		{
 
 			String brandLogoUrl = EMPTY_STRING;
+			String bannerImageUrl = EMPTY_STRING;
 			String brandLogoAltText = EMPTY_STRING;
 			for (final MplShowcaseItemComponentModel showcaseItem : showCaseComponent.getShowcaseItems())
 			{
@@ -677,6 +678,33 @@ public class HomePageController extends AbstractPageController
 								brandLogoAltText = showcaseItem.getLogo().getAltText();
 							}
 							showCaseItemJson.put("brandLogoAltText", brandLogoAltText);
+						}
+
+						if (null != showcaseItem.getBannerImage())
+						{
+							if (StringUtils.isNotEmpty(showcaseItem.getBannerImage().getURL()))
+							{
+								bannerImageUrl = showcaseItem.getBannerImage().getURL();
+							}
+							showCaseItemJson.put("bannerImageUrl", bannerImageUrl);
+						}
+						if (null != showcaseItem.getText())
+						{
+							if (StringUtils.isNotEmpty(showcaseItem.getText()))
+							{
+								showCaseItemJson.put("text", showcaseItem.getText());
+							}
+						}
+						if (null != showcaseItem.getBannerText())
+						{
+							if (StringUtils.isNotEmpty(showcaseItem.getBannerText()))
+							{
+								showCaseItemJson.put("bannerText", showcaseItem.getBannerText());
+							}
+						}
+						if (null != showcaseItem.getBannerUrl() && StringUtils.isNotEmpty(showcaseItem.getBannerUrl()))
+						{
+							showCaseItemJson.put("bannerUrl", showcaseItem.getBannerUrl());
 						}
 					}
 					else

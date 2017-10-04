@@ -379,5 +379,166 @@
 				window.attachEvent("onload", downloadJSAtOnload);
 			else
 				window.onload = downloadJSAtOnload;
-
+			// hierarchical data
+			function constructDepartmentHierarchy(inputArray) {		
+				var inputArray = unescape(inputArray);	
+				var output = [];
+					
+					if(inputArray!=""){
+					for (var i = 0; i < inputArray.length; i++) {				
+						var categoryArray = inputArray[i].split("|");			
+						var currentNode = output;
+						//Construct 'All' tree node initially for search page
+						if(i==0 && $('#isCategoryPage').val() == '') {
+							output[0] = {label: "All", children: [], categoryCode: "", categoryType: "All", categoryName: ""};
+						}
+						//Other tree nodes are constructed here
+						for (var j = 0; j < categoryArray.length; j++) {				
+							if(categoryArray[j] != null && categoryArray[j].length > 0){
+								var categoryDetails = categoryArray[j].split(":");
+								var categoryCode = categoryDetails[0];
+								var categoryName = categoryDetails[1];
+								var facetCount = 0;
+								
+								if(categoryDetails[2] == "L3" || categoryDetails[2] == "L4")
+								{
+									//categoryName += "  (" +categoryDetails[5] + ")";
+									facetCount = "  (" +categoryDetails[5] + ")";
+															
+								}
+								
+								var categoryType = "category";
+								if(categoryDetails[3] == 'true') {
+									categoryType = "department"
+								}
+								var lastNode = currentNode;
+								for (var k = 0; k < currentNode.length; k++) {
+									if (currentNode[k].categoryName == categoryName) {							
+										currentNode = currentNode[k].children;								
+										break;
+									}						
+								}
+								if (lastNode == currentNode) {
+									var newNode = currentNode[k] = {label: categoryName, children: [], categoryCode: categoryCode, categoryType: categoryType, categoryName: categoryName, facetCount: facetCount};
+									currentNode = newNode.children;						
+								}
+							}
+						}
+					}
+					}
+				var expandTree = false;
+				
+				//TISCF-4 Start
+				//The Department Hierarchy Tree should always remain Closed for Both PLP and SERP
+//				if(output.length == 2) {
+//					expandTree = true;
+//				}
+				//TISCF-4 End
+				
+				//TISPT-304 starts
+				
+				$( ".serpProduct" ).each(function( index ) {
+					var product=$(this).closest('span').find('#productCode').val();
+					 // console.log("prod"+product);
+					  var categoryTypeValue=$(this).closest('span').find('#categoryType').val()
+					 //  console.log("categoryTypeValue"+categoryTypeValue);
+					  var productUrl=$(this).closest('span').find('#productUrl').val();
+					 //console.log("productUrl"+productUrl);
+					  var productPrice=$(this).closest('span').find('#productPrice').val();
+					//  console.log("productPrice"+productPrice);
+					  var list=$(this).closest('span').find('#list').val();
+					//  console.log("list"+list);
+					  var mrpPriceValue=$(this).closest('span').find('#mrpPriceValue').val();
+					//  console.log("mrpPriceValue"+mrpPriceValue);
+					  var sizeStockLevel=$(this).closest('span').find('#sizeStockLevel').val();
+					 // console.log("sizeStockLevel"+sizeStockLevel);
+					  var productPromotion=$(this).closest('span').find('#productPromotion').val();
+					 // console.log("productPromotion"+productPromotion);
+					  populateFacet();
+					  if(typeof(serpSizeList)!= "undefined"){
+						modifySERPDetailsByFilters(serpSizeList,product,categoryTypeValue,list,productUrl,productPrice,mrpPriceValue,sizeStockLevel,productPromotion);
+					 } 
+					});
+				
+				//TISPT-304 ends
+				
+				
+				if($('#isCategoryPage').val() == 'true'){	
+					// Assign tree object to category page
+					$("#categoryPageDeptHierTree").tree({
+						data: output,
+						 openedIcon:'',
+						 openedIcon: '',
+						//TISCF-4 Start
+						//autoOpen: true
+						//The Department Hierarchy Tree should always remain Closed for Both PLP and SERP
+						autoOpen: true
+						//TISCF-4 End
+				
+					});
+				}else {
+					// Assign tree object to search page
+					$("#searchPageDeptHierTree").tree({
+						data: output,
+						 closedIcon:'',
+						 openedIcon:'',
+						autoOpen: true
+				
+					});
+					
+					// persist search text in search text box
+					 var isConceirge = $('#isConceirge').val();
+						if(isConceirge!='true') {
+						ACC.autocomplete.bindSearchText($('#text').val());
+						}
+				}
+				
+				$('#categoryPageDeptHierTree').bind(
+						'tree.click',
+						function(event) {
+							var node = event.node;
+							if(node.categoryType != 'All') {
+								var actionText = ACC.config.contextPath;
+								actionText = (actionText + '/Categories/' + node.name + '/c-' + node.categoryCode);
+								$('#categoryPageDeptHierTreeForm').attr('action',actionText);
+								
+								$('#categoryPageDeptHierTreeForm').submit();
+							}
+						}
+				);
+				
+				$('#searchPageDeptHierTree').bind(
+						'tree.click',
+						function(event) {
+							var node = event.node;
+							var searchQuery = document.getElementById("q").value;				
+							if(node.categoryType == 'All') {
+								$('#q').val($('#text').val() + ":relevance");
+								$('#searchCategoryTree').val("all");
+							}
+							else{
+								//Changes Added for TOR-488
+								//$('#q').val($('#text').val() + ":relevance:category:" + node.categoryCode);
+								//$('#searchCategoryTree').val(node.categoryCode);
+								// alert($('#q').val());
+								 //TISQAEE-14
+								 if($('#q').val().indexOf(node.categoryCode)==-1){
+									//INC_11754 start
+									 if(node.categoryCode.indexOf($('#searchCategory').val())==-1){
+										 $('#q').val(searchQuery +":category:" + node.categoryCode);
+									 }else{			
+									 	 $('#q').val($('#text').val() + ":relevance:category:" + node.categoryCode);
+									 }
+									 //INC_11754 end
+								 }
+								 $('#searchCategoryTree').val(node.categoryCode);
+								
+							} 
+							
+							$('#searchPageDeptHierTreeForm').submit();
+							
+						}
+				);
+					
+				}
 		</script>
