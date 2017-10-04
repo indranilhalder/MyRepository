@@ -618,6 +618,7 @@ function validateForm() {
 		$("#giftCardMessageText").keyup(function(){
 	       var giftCardMessage = document.getElementById('updatedGiftCardMessageText');
 	       giftCardMessage.style.fontStyle = 'normal';
+	       giftCardMessage.style.wordWrap = 'break-word';
 	       giftCardMessage.innerHTML = '&nbsp; &nbsp; &nbsp; &nbsp; '+$(this).val();
 	    });
 		
