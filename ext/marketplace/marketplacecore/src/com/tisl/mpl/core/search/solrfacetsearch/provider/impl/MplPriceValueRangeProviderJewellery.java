@@ -155,44 +155,17 @@ public class MplPriceValueRangeProviderJewellery extends AbstractPropertyFieldVa
 	{
 		//final List<String> SellerArticleSKUList = new ArrayList();
 		String priceRange = null;
-		ProductModel baseProduct = null;
-		final List<BuyBoxModel> highestVariantList = new ArrayList<BuyBoxModel>();
-		final List<BuyBoxModel> lowestVariantList = new ArrayList<BuyBoxModel>();
 
 		if (productModel instanceof VariantProductModel)
 		{
-			baseProduct = ((VariantProductModel) productModel).getBaseProduct();
-		}
-		for (final VariantProductModel vp : baseProduct.getVariants())
-		{
-			final List<BuyBoxModel> buyBox = buyBoxService.buyboxPrice(vp.getCode());
-			if (CollectionUtils.isNotEmpty(buyBox))
+			final List<BuyBoxModel> buyModList = mplBuyBoxUtility.getVariantListForPriceRange(productModel.getCode());
+			if (CollectionUtils.isNotEmpty(buyModList))
 			{
-				highestVariantList.add(buyBox.get(buyBox.size() - 1));
-				lowestVariantList.add(buyBox.get(buyBox.size() - 1));
+				final List<BuyBoxModel> modifiableBuyBox = new ArrayList<BuyBoxModel>(buyModList);
+				modifiableBuyBox.sort(Comparator.comparing(BuyBoxModel::getPrice).reversed());
+				priceRange = mplBuyBoxUtility.getBuyBoxSellingVariantsPrice(modifiableBuyBox, currencySymbol);
 			}
 		}
-		if (CollectionUtils.isNotEmpty(highestVariantList))
-		{
-			//final List<BuyBoxModel> lowestVariantList = new ArrayList<BuyBoxModel>(highestVariantList);
-			//final List<BuyBoxModel> modifiableFinallist = new ArrayList<BuyBoxModel>(highestVariantList);
-			highestVariantList.sort(Comparator.comparing(BuyBoxModel::getPrice).reversed());
-			//final List<BuyBoxModel> modifiableFinallowestlist = new ArrayList<BuyBoxModel>(lowestVariantList);
-			//lowestVariantList = highestVariantList;
-			lowestVariantList.sort(Comparator.comparing(BuyBoxModel::getPrice));
-			//		final List<JewelleryInformationModel> jewelleryInformationList = mplJewelleryUtility
-			//				.getJewelleryInformationList(productModel.getCode());
-			//
-			//		for (final JewelleryInformationModel sellerInfoList : jewelleryInformationList)
-			//		{
-			//			SellerArticleSKUList.add(sellerInfoList.getUSSID());
-			//		}
-			//		if (CollectionUtils.isNotEmpty(SellerArticleSKUList))
-			//		{
-			//priceRange = mplBuyBoxUtility.getBuyBoxSellingVariantsPrice(SellerArticleSKUList, currencySymbol);
-			priceRange = mplBuyBoxUtility.getBuyBoxSellingVariantsPrice(highestVariantList, lowestVariantList, currencySymbol);
-		}
-		//		}
 		return priceRange;
 
 	}

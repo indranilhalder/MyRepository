@@ -23,7 +23,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
-import org.apache.commons.collections.MapUtils;
 import org.apache.commons.lang.BooleanUtils;
 import org.apache.solr.client.solrj.response.FacetField;
 import org.apache.solr.client.solrj.response.FacetField.Count;
@@ -162,8 +161,8 @@ public class MplDefaultFacetSearchService extends DefaultFacetSearchService
 			return new SolrSearchResult(numberOfResults, facets, indexedType, identifiers, queryResponse, pageSize, offset,
 					breadcrumbs, query, null);
 		}
-		return new SolrSearchResult(numberOfResults, facets, indexedType, identifiers, queryResponse, pageSize, offset,
-				breadcrumbs, query, null, this.searchResultConverters.getConverterMapping(indexedType.getCode()));
+		return new SolrSearchResult(numberOfResults, facets, indexedType, identifiers, queryResponse, pageSize, offset, breadcrumbs,
+				query, null, this.searchResultConverters.getConverterMapping(indexedType.getCode()));
 	}
 
 	private String getFacetFieldName(final IndexedType indexedType, final FacetField facetField)
@@ -190,32 +189,32 @@ public class MplDefaultFacetSearchService extends DefaultFacetSearchService
 		// Customized mpl price range will be taken
 		if (property.getName().equalsIgnoreCase("price"))
 		{
-			if (MapUtils.isNotEmpty(property.getValueRangeSets()))
-			{
-				for (final Map.Entry<String, ValueRangeSet> entry : property.getValueRangeSets().entrySet())
-				{
-					valueRangesList.addAll(entry.getValue().getValueRanges());
-				}
-			}
+			//			if (MapUtils.isNotEmpty(property.getValueRangeSets()))
+			//			{
+			//				for (final Map.Entry<String, ValueRangeSet> entry : property.getValueRangeSets().entrySet())
+			//				{
+			//					valueRangesList.addAll(entry.getValue().getValueRanges());
+			//				}
+			//			}
 			//commented for SDI-575/576
-			//			valueRangeSet = property.getValueRangeSets().get("INR-APPAREL");
-			//			if (valueRangeSet != null)
-			//			{
-			//				valueRangesList.addAll(valueRangeSet.getValueRanges());
-			//			}
-			//			// TPR-1886 | For jewellery price range
-			//			valueRangeSet = property.getValueRangeSets().get("INR-FINEJEWELLERY");
-			//			if (valueRangeSet != null)
-			//			{
-			//				valueRangesList.addAll(valueRangeSet.getValueRanges());
-			//			}
-			//
-			//			// JEWELLERY CHANGES START
-			//			valueRangeSet = property.getValueRangeSets().get("INR-FASHIONJEWELLERY");
-			//			if (valueRangeSet != null)
-			//			{
-			//				valueRangesList.addAll(valueRangeSet.getValueRanges());
-			//			}
+			valueRangeSet = property.getValueRangeSets().get("INR-APPAREL");
+			if (valueRangeSet != null)
+			{
+				valueRangesList.addAll(valueRangeSet.getValueRanges());
+			}
+
+			valueRangeSet = property.getValueRangeSets().get("INR-ELECTRONICS");
+			if (valueRangeSet != null)
+			{
+				valueRangesList = valueRangeSet.getValueRanges();
+			}
+
+			// JEWELLERY CHANGES START
+			valueRangeSet = property.getValueRangeSets().get("INR-FASHIONJEWELLERY");
+			if (valueRangeSet != null)
+			{
+				valueRangesList.addAll(valueRangeSet.getValueRanges());
+			}
 			// JEWELLERY CHANGES END
 
 			return valueRangesList;

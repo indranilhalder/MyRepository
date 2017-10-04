@@ -58,6 +58,11 @@
 					},2000);
 					}
 					}
+					//TPR-6654
+					var pageTypeVal = $("#pageType").val();
+					if(pageTypeVal == "homepage" && ($.cookie("mpl-user") == "anonymous")){
+						$(".enter-pincode").show();
+				}
 				}
 				
 				ia.onload = function(){
