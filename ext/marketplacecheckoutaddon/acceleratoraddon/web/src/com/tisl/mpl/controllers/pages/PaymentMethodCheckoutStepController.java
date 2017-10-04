@@ -6114,9 +6114,6 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 
 						if (balBucketwise.getResponseCode() == Integer.valueOf(0) && null != balBucketwise.getWallet().getBalance())
 						{
-
-
-
 							final Double WalletAmt = Double.valueOf((df.format(balBucketwise.getWallet().getBalance().doubleValue())));
 							final Double totalAmt = cart.getTotalPriceWithConv();
 
@@ -6127,8 +6124,6 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 
 								getSessionService().setAttribute("WalletTotal", "" + totalAmt);
 								getSessionService().setAttribute("getCliqCashMode", value);
-								//								getSessionService().setAttribute("cliqCashPaymentMode", "Cliq Cash");
-								//								getSessionService().setAttribute("jsPayMode", "false");
 								jsonObject.put("disableJsMode", true);
 								cart.setSplitModeInfo("CliqCash");
 								//jsonObject.put("juspayAmt", 0);
@@ -6137,16 +6132,11 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 							}
 							else
 							{
-
 								double juspayTotalAmt = Double.parseDouble("" + totalAmt) - Double.parseDouble("" + WalletAmt);
 								juspayTotalAmt = Double.parseDouble(df.format(juspayTotalAmt));
-
 								getSessionService().setAttribute("WalletTotal", "" + WalletAmt);
 								getSessionService().setAttribute("juspayTotalAmt", "" + juspayTotalAmt);
-
-								//								getSessionService().setAttribute("getCliqCashMode", value);
 								getSessionService().setAttribute("cliqCashPaymentMode", "Cliq Cash");
-								//								getSessionService().setAttribute("jsPayMode", "true");
 								jsonObject.put("disableJsMode", false);
 								jsonObject.put("juspayAmt", juspayTotalAmt);
 								cart.setSplitModeInfo("Split");
@@ -6154,12 +6144,9 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 								getModelService().refresh(cart);
 							}
 						}
-
 					}
 					else
 					{
-						//						getSessionService().setAttribute("getCliqCashMode", "false");
-						//						getSessionService().setAttribute("cliqCashPaymentMode", StringUtils.EMPTY);
 						jsonObject.put("disableJsMode", false);
 						cart.setSplitModeInfo("Juspay");
 						getModelService().save(cart);

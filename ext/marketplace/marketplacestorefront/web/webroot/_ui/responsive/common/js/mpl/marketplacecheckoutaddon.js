@@ -5582,7 +5582,7 @@ $(".edit_address").click(function(){
 	});
 	
 	
-	$(document).on("click","#paymentTypeCC",function(){
+	$(document).on("click",".topPlaceOrderBtn",function(){
 		 if(isSessionActive()==false){
 			 redirectToCheckoutLogin();
 			}
@@ -5638,6 +5638,7 @@ function useWalletForPaymentAjax(){
 		success : function(data) {
 			
 			$("#no-click,.loaderDiv").remove();
+			 
 			if(value.checked){
 				$("#useGiftBtnText").hide();
 				$("#unUseGiftBtnText").show();
@@ -5645,7 +5646,9 @@ function useWalletForPaymentAjax(){
 			    $(".cliqCashApplyAlert").show();
 			    $("#viewPaymentCOD").hide();
 			    $("#paytmId").hide();
-			} else {
+			    $("#juspayAmountId").hide();
+				//$("#JuspayAmtId").html(data.juspayAmt);
+			    }else{
 				$("#unUseGiftBtnText").hide();
 				$("#useGiftBtnText").show();
 				$(".cliqCashApplyAlert").hide();				
@@ -5653,28 +5656,29 @@ function useWalletForPaymentAjax(){
 				$("#make_cc_payment").show();
 				$(".choose-payment").find('*').prop('disabled',false);
 				$(".checkout-paymentmethod li span").css('pointer-events', 'all');
-				 $("#juspayAmountId").hide();
+				$("#juspayAmountId").hide();
 				$("#useCliqCashId").show(); 
 			}
 			
-			if(data.disableJsMode){
-				  $("#make_cc_payment").hide();
+		    if(data.disableJsMode){
+		    	//alert(data.disableJsMode);
+				  $("#make_cc_payment, #make_saved_dc_payment, #make_nb_payment, #paymentButtonId").hide();
 			      $(".topPlaceOrderBtn").show();
 			      $(".choose-payment").find('*').prop('disabled',true);
 			      $(".checkout-paymentmethod li span").css('pointer-events', 'none');
 			      $(".topPlaceOrderBtn").prop('disabled',false);
 			      $("#juspayAmountId").hide();
-				  $("#addCliqCashId").show();
 				  $("#useCliqCashId").hide(); 
 				
 			}else{
-				$("#make_cc_payment").show();
-				$(".choose-payment").find('*').prop('disabled',false);
-				$(".checkout-paymentmethod li span").css('pointer-events', 'all');
-				 $("#juspayAmountId").show();
+				//alert(data.disableJsMode);
+				 $("#make_cc_payment, #make_saved_dc_payment, #make_nb_payment, #paymentButtonId").show();
+				 $(".choose-payment").find('*').prop('disabled',false);
+				 $(".checkout-paymentmethod li span").css('pointer-events', 'all');
 				 $("#addCliqCashId").hide();
+				 $("#useCliqCashId").hide();
+				 $("#juspayAmountId").show();
 				 $("#JuspayAmtId").html(data.juspayAmt);
-				 $("#useCliqCashId").hide(); 
 			}
 		},	
 	   
@@ -5704,7 +5708,7 @@ function WalletDetailAjax(){
 				 $(".useGiftCardBtn").css('cursor','not-allowed');
 				 $(".useGiftCardBtn").css('opacity','0.5');
 				 $("#addCliqCashId").show();
-				 $("#useCliqCashId").hide(); 
+				 $("#useCliqCashId").hide();
 			} else {
 				$("#useGiftCardCheckbox").prop('disabled',false);
 				 $(".useGiftCardBtn").css('cursor','pointer');
