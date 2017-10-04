@@ -1,12 +1,12 @@
 ACC.socialLogin = {
+		
 
 		authToken: null,
 
 		facebookSocialLogin: function ()
 		{
-
 			FB.init({
-				appId      : '356547408124378',
+				appId      : fbid,
 				cookie     : true,
 				xfbml      : true,
 				version    : 'v2.10'
@@ -19,9 +19,6 @@ ACC.socialLogin = {
 					ACC.socialLogin.authToken=response.authResponse.accessToken;
 					FB.api('/me',{fields:'email,id,cover,name,first_name,last_name,gender,locale,updated_time'}, function(response){
 						//alert(response.email+response.name+response.first_name+response.updated_time);
-						alert('call on');
-						alert(response.email);
-						alert(response.first_name);
 						ACC.socialLogin.fbLoginAjaxRequest(response);
 					});
 				}
@@ -31,12 +28,7 @@ ACC.socialLogin = {
 
 		fbLoginAjaxRequest : function(response) {
 
-			var encodedUID = encodeURIComponent(response.id);
-			var encodedTimestamp=encodeURIComponent(response.updated_time);
-			var  encodedSignature=encodeURIComponent("");
 			var accessToken= encodeURIComponent(ACC.socialLogin.authToken);
-			alert('before ajax');
-			alert(response.email);
 			$.ajax({
 				url : ACC.config.encodedContextPath + "/oauth2callback/socialLoginAjax/",
 				data : {
@@ -44,9 +36,6 @@ ACC.socialLogin = {
 					'emailId' : response.email,
 					'fName':  response.first_name,
 					'lName' : 	response.last_name,
-					'uid'		: encodedUID,
-					'timestamp'	 :encodedTimestamp,
-					'signature' :encodedSignature,
 					'token' :  accessToken,
 					'provider' :"facebook"
 				},
@@ -56,29 +45,11 @@ ACC.socialLogin = {
 					// alert("success login page :- "+data);
 					if(!data)							
 					{
-
+						console.log("Error Occured Login Page" + resp);	
 					}
 					else
 					{
-//						if(data.indexOf(ACC.config.encodedContextPath) > -1)
-//						{
-//						window.open(data,"_self");
-//						}
-//						else
-//						{
-//						var hostName=window.location.host;
-//						if(hostName.indexOf(':') >=0)
-//						{
-//						window.open(ACC.config.encodedContextPath +data,"_self");
-//						}	
-//						else
-//						{
-//						window.open("https://"+hostName+ACC.config.encodedContextPath +data,"_self");
-//						}
-//						}
-alert('sucessful login');
-						window.open(ACC.config.encodedContextPath +"/login");
-
+						window.open(data,"_self");
 
 					}	
 				},
@@ -96,7 +67,7 @@ alert('sucessful login');
 			gapi.load('auth2', function(){
 				// Retrieve the singleton for the GoogleAuth library and set up the client.
 				auth2 = gapi.auth2.init({
-					client_id: '314207164186-jpen3umnhsgbm8aepvohjgpebijvu7em.apps.googleusercontent.com',
+					client_id: gid,
 					cookiepolicy: 'single_host_origin',
 					// Request scopes in addition to 'profile' and 'email'
 					scope: 'profile'
@@ -129,9 +100,6 @@ alert('sucessful login');
 
 			var googletoken = googleUser.getAuthResponse().id_token;
 			var userInfo = googleUser.getBasicProfile();
-			var encodedUID = encodeURIComponent(userInfo.getId());
-			var encodedTimestamp=encodeURIComponent("");
-			var  encodedSignature=encodeURIComponent("");
 			var accessToken= encodeURIComponent(googletoken);
 
 			$.ajax({
@@ -139,11 +107,8 @@ alert('sucessful login');
 				data : {
 					'referer' : window.location.href,
 					'emailId' : userInfo.getEmail(),
-					'fName':    userInfo.getName(),
-					'lName' : 	'',
-					'uid'		: encodedUID,
-					'timestamp'	 :encodedTimestamp,
-					'signature' :encodedSignature,
+					'fName':    userInfo.getGivenName(),
+					'lName' : 	userInfo.getFamilyName(),
 					'token' :  accessToken,
 					'provider' :"googleplus"
 				},
@@ -157,24 +122,7 @@ alert('sucessful login');
 					}
 					else
 					{
-//						if(data.indexOf(ACC.config.encodedContextPath) > -1)
-//						{
-//						window.open(data,"_self");
-//						}
-//						else
-//						{
-//						var hostName=window.location.host;
-//						if(hostName.indexOf(':') >=0)
-//						{
-//						window.open(ACC.config.encodedContextPath +data,"_self");
-//						}	
-//						else
-//						{
-//						window.open("https://"+hostName+ACC.config.encodedContextPath +data,"_self");
-//						}
-//						}
-
-						window.open(ACC.config.encodedContextPath +"/login");
+						window.open(data,"_self");
 
 					}	
 				},

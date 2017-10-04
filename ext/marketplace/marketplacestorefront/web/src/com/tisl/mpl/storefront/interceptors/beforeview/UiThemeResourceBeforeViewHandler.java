@@ -114,10 +114,9 @@ public class UiThemeResourceBeforeViewHandler implements BeforeViewHandler
 		final String siteName = currentSite.getUid();
 		final String themeName = getThemeNameForSite(currentSite);
 		final String uiExperienceCode = uiExperienceService.getUiExperienceLevel().getCode();
-		final String uiExperienceCodeLower = uiExperienceViewResolver.getUiExperienceViewPrefix().isEmpty()
-				? uiExperienceCode.toLowerCase()
-				: StringUtils.remove(
-						uiExperienceViewResolver.getUiExperienceViewPrefix().get(uiExperienceService.getUiExperienceLevel()), "/");
+		final String uiExperienceCodeLower = uiExperienceViewResolver.getUiExperienceViewPrefix().isEmpty() ? uiExperienceCode
+				.toLowerCase() : StringUtils.remove(
+				uiExperienceViewResolver.getUiExperienceViewPrefix().get(uiExperienceService.getUiExperienceLevel()), "/");
 		final Object urlEncodingAttributes = request.getAttribute(WebConstants.URL_ENCODING_ATTRIBUTES);
 		final String contextPath = StringUtils.remove(request.getContextPath(),
 				(urlEncodingAttributes != null) ? urlEncodingAttributes.toString() : "");
@@ -149,10 +148,16 @@ public class UiThemeResourceBeforeViewHandler implements BeforeViewHandler
 		final String gigyaSocialLoginURL = configurationService.getConfiguration().getString("gigya.sociallogin.url");
 		final String isGigyaEnabled = configurationService.getConfiguration().getString(MessageConstants.USE_GIGYA);
 
+		//for New Social Login Start
+		final String useSocialLoginNative = configurationService.getConfiguration().getString("mpl.use.NativeSocialLogin", "N");
+		final String facebookAppId = configurationService.getConfiguration().getString("mpl.fb.appid", "NA");
+		final String googleAppId = configurationService.getConfiguration().getString("mpl.google.appid", "NA");
+
+		//for New Social Login Stop
 		//For Luxury Gigya
 		final String luxuryGigyaAPIKey = configurationService.getConfiguration().getString(MessageConstants.LUXURY_GIGYA_APIKEY);
-		final String luxuryGigyaSocialLoginURL = configurationService.getConfiguration()
-				.getString(MessageConstants.LUXURY_GIGYA_SOCIALLOGIN_URL);
+		final String luxuryGigyaSocialLoginURL = configurationService.getConfiguration().getString(
+				MessageConstants.LUXURY_GIGYA_SOCIALLOGIN_URL);
 		final String isLuxuryGigyaEnabled = configurationService.getConfiguration().getString(MessageConstants.USE_LUXURY_GIGYA);
 		//FOR Feedback survey
 		final String feedbackSurveyUrl = configurationService.getConfiguration().getString(MessageConstants.FEEDBACK_SURVEY_URL);
@@ -197,8 +202,8 @@ public class UiThemeResourceBeforeViewHandler implements BeforeViewHandler
 		final DeviceData currentDetectedDevice = deviceDetectionFacade.getCurrentDetectedDevice();
 		modelAndView.addObject("detectedDevice", currentDetectedDevice);
 
-		final List<String> dependantAddOns = requiredAddOnsNameProvider
-				.getAddOns(request.getSession().getServletContext().getServletContextName());
+		final List<String> dependantAddOns = requiredAddOnsNameProvider.getAddOns(request.getSession().getServletContext()
+				.getServletContextName());
 
 		modelAndView.addObject("addOnCommonCssPaths",
 				getAddOnCommonCSSPaths(addOnContextPath, uiExperienceCodeLower, dependantAddOns));
@@ -206,6 +211,13 @@ public class UiThemeResourceBeforeViewHandler implements BeforeViewHandler
 				getAddOnThemeCSSPaths(addOnContextPath, themeName, uiExperienceCodeLower, dependantAddOns));
 		modelAndView.addObject("addOnJavaScriptPaths",
 				getAddOnJSPaths(addOnContextPath, siteName, uiExperienceCodeLower, dependantAddOns));
+
+		//for New Social Login Start
+		modelAndView.addObject(ModelAttributetConstants.USE_NATIVE_API_SOCIAL, useSocialLoginNative);
+		modelAndView.addObject(ModelAttributetConstants.FB_API_KEY, facebookAppId);
+		modelAndView.addObject(ModelAttributetConstants.GOOGLE_API_KEY, googleAppId);
+		//for New Social Login Stop
+
 		modelAndView.addObject(ModelAttributetConstants.GIGYA_API_KEY, gigyaAPIKey);
 		modelAndView.addObject(ModelAttributetConstants.GIGYA_SOCIAL_LOGIN_URL, gigyaSocialLoginURL);
 		modelAndView.addObject(ModelAttributetConstants.IS_GIGYA_ENABLED, isGigyaEnabled);

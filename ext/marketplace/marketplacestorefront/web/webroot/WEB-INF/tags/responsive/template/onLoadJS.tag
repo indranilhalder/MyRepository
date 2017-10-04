@@ -29,7 +29,8 @@
 			             }
 			         }
 					 <!-- Gigya called there after -->
-					 callGigya();
+					 //Gigya Call Closed due to new Social Login
+// 					 callGigya();
 					 //UF-6399
 					var forceLoginUser = ($.cookie("mpl-user") == "anonymous") && window.location.search.indexOf("boxed-login") >= 1 ? "Y" : "N";
 					var isMobile = screen.width < 460 ? "true" : "false" ;

@@ -39,7 +39,7 @@
 			<li class="social_login_content" style="clear:both;">
 
 				<div class="social-login-btn-container">
-			    	<button class="fb-sign-btn" onclick="ACC.socialLogin.facebookSocialLogin();"></button>
+			    	<button class="fb-sign-btn" onclick="ACC.socialLogin.facebookSocialLogin()"></button>
 			    </div>
 			    <div class="social-login-btn-container">
 					<button id="customBtn" class="google-sign-btn"></button>
@@ -100,4 +100,6 @@
 	function removeErrorDiv(){
   		$('#errorDiv').css('display','none');
     }
+	
+	
 </script>

@@ -487,7 +487,7 @@ public class Oauth2callbackPageController extends AbstractLoginPageController
 				data.setSocialMediaType(ModelAttributetConstants.GOOGLE);
 			}
 
-			data.setUid(getGigyaUID());
+			//data.setUid(getGigyaUID());//to-do
 			final boolean isMobile = false;
 
 			LOG.debug("Method processRegisterUserRequestForOAuth2, isMobile " + isMobile);
@@ -608,67 +608,70 @@ public class Oauth2callbackPageController extends AbstractLoginPageController
 
 	@ResponseBody
 	@RequestMapping(value = "/socialLoginAjax", method = RequestMethod.GET)
-	public String facebokLoginCheck(@RequestParam(ModelAttributetConstants.REFERER) final String referer,
+	public String socialLoginNew(@RequestParam(ModelAttributetConstants.REFERER) final String referer,
 			@RequestParam(ModelAttributetConstants.EMAIL_ID) final String emailId,
 			@RequestParam(ModelAttributetConstants.F_NAME) final String fName,
-			@RequestParam(ModelAttributetConstants.L_NAME) final String lName,
-			@RequestParam(ModelAttributetConstants.UID) final String uid,
-			@RequestParam(ModelAttributetConstants.TIMESTAMP) final String timestamp,
-			@RequestParam(ModelAttributetConstants.SIGNATURE) final String signature, @RequestParam("token") final String token,
+			@RequestParam(ModelAttributetConstants.L_NAME) final String lName, @RequestParam("token") final String token,
 			@RequestParam(ModelAttributetConstants.PROVIDER) final String provider, final ExtRegisterForm form,
 			final BindingResult bindingResult, final Model model, final HttpServletRequest request,
-			final HttpServletResponse response, final RedirectAttributes redirectModel) throws CMSItemNotFoundException, IOException
+			final HttpServletResponse response) throws CMSItemNotFoundException, IOException
 
 	{
+
+		/*
+		 * Closed as it was needed for Gigya Authentication
+		 *
+		 * @RequestParam(ModelAttributetConstants.UID) final String uid,
+		 *
+		 * @RequestParam(ModelAttributetConstants.TIMESTAMP) final String timestamp,
+		 *
+		 * @RequestParam(ModelAttributetConstants.SIGNATURE) final String signature
+		 */
 		try
 		{
 			LOG.debug("Method socialLogin, REFERER " + referer);
 			LOG.debug("Method socialLogin, EMAIL ID " + emailId);
 			LOG.debug("Method socialLogin, FIRST NAME " + fName);
 			LOG.debug("Method socialLogin,LAST NAME " + lName);
-			LOG.debug("Method socialLogin, UID " + uid);
-			LOG.debug("Method socialLogin, TIMESTAMP " + timestamp);
-			LOG.debug("Method socialLogin, SIGNATURE " + signature);
 			LOG.debug("Method socialLogin, TOKEN " + token);
 			LOG.debug("Method socialLogin,PROVIDER " + provider);
 
 
-			final String fbEmail = emailId;
-
-			if (fbEmail != null && !fbEmail.isEmpty())
+			if (StringUtils.isNotEmpty(emailId))
 			{
-				model.addAttribute(ModelAttributetConstants.ID, fbEmail);
-				form.setEmail(fbEmail);
+				model.addAttribute(ModelAttributetConstants.ID, emailId);
+				form.setEmail(emailId);
 			}
 			if (StringUtils.isNotEmpty(fName))
 			{
 				form.setFirstName(fName);
 			}
+			else
+			{
+				form.setFirstName(MarketplacecommerceservicesConstants.SINGLE_SPACE);
+			}
 			if (StringUtils.isNotEmpty(lName))
 			{
 				form.setLastName(lName);
 			}
-
-			if (StringUtils.isNotEmpty(uid))
+			else
 			{
-				final String decodedUid = java.net.URLDecoder.decode(uid, UTF_8);
-				setGigyaUID(decodedUid);
+				form.setLastName(MarketplacecommerceservicesConstants.SINGLE_SPACE);
 			}
-			if (StringUtils.isNotEmpty(signature))
-			{
-
-				final String decodedSignature = java.net.URLDecoder.decode(signature, UTF_8);
-
-
-				setSignature(decodedSignature);
-			}
-			if (StringUtils.isNotEmpty(timestamp))
-			{
-
-				final String decodedTimestamp = java.net.URLDecoder.decode(timestamp, UTF_8);
-
-				setTimestamp(decodedTimestamp);
-			}
+			//Closed as it was needed for Gigya Authentication
+			/*
+			 * if (StringUtils.isNotEmpty(uid)) { final String decodedUid = java.net.URLDecoder.decode(uid, UTF_8);
+			 * setGigyaUID(decodedUid); } if (StringUtils.isNotEmpty(signature)) {
+			 * 
+			 * final String decodedSignature = java.net.URLDecoder.decode(signature, UTF_8);
+			 * 
+			 * 
+			 * setSignature(decodedSignature); } if (StringUtils.isNotEmpty(timestamp)) {
+			 * 
+			 * final String decodedTimestamp = java.net.URLDecoder.decode(timestamp, UTF_8);
+			 * 
+			 * setTimestamp(decodedTimestamp); }
+			 */
 
 
 			String socialLogin = "";
@@ -688,7 +691,7 @@ public class Oauth2callbackPageController extends AbstractLoginPageController
 			{
 				storeReferer(referer, request, response);
 			}
-
+			//Closed as it was needed for Gigya Authentication
 			//if (gigyaservice.validateSignature(getGigyaUID(), getTimestamp(), getSignature()))
 			//	{
 			return processRegisterUserRequestForOAuth2(form, bindingResult, model, request, response, socialLogin);
