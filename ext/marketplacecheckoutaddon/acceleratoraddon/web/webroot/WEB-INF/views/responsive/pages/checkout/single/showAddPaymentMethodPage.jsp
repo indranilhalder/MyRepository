@@ -202,8 +202,9 @@
 					<button type="button" class="button btn-block payment-button make_payment_top_savedCard proceed-button" id="make_mrupee_payment_up"><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.paymentButton"/></button>
 
 
+<spring:eval expression="T(de.hybris.platform.util.Config).getParameter('marketplace.header.wallet')" var="walletEnable"/>
 <!-- Added for Wallet -->
-
+<c:if test="${walletEnable}">
 <div class="giftCheckoutContainer">
 	<div class="giftCheckoutContainerTable">
 		<div class="clearfix">
@@ -249,8 +250,7 @@
 </div>
 <div class="col-sm-12 alert alert-success cliqCashApplyAlert"></div>
 <br />&nbsp; <br />
-
-
+</c:if>
 <!-- End for Wallet -->
 
 

@@ -123,7 +123,7 @@
 	.giftTermsDesc {
 		font-size: 12px;
 		color: darkgrey;
-		text-align: right;
+		/* text-align: right; */
 	}
 		
 	
@@ -138,7 +138,7 @@
 	
 	@media(min-width: 651px){
 		.headingTexts {text-align: right; padding-top: 2%;}
-		.giftContSub1 {float: right;}
+		.giftContSub1 {float: right !important;}
 		.giftContSub1, .giftContSub3 {padding-left: 10%;}
 		/* .stepTexts {text-align: center;} */
 	}
@@ -465,7 +465,7 @@
 					
 				</div>
 				</div>
-						<input  class="giftCard_input" id="customGiftValue" type="text" placeholder="Enter Custom Amount" onkeypress="return isNumber(event)" /><br />&nbsp;
+						<input  class="giftCard_input" id="customGiftValue" type="text" maxlength="5" placeholder="Enter Custom Amount" onkeypress="return isNumber(event)" /><br />&nbsp;
 						<form:input path="giftRange" type="hidden" id="customAmount" />
 						<form:input path="productCode" type="hidden" value="${product.code}" id="productCode" />
 			</div>
@@ -494,7 +494,7 @@
 			</div>
 			<div class="col-sm-10">
 				<input type="hidden" id="customAmount" />
-				<form:textarea path="messageBox" id="giftCardMessageText" class="giftCard_textarea" placeholder="Write a message"></form:textarea><br />&nbsp;
+				<form:textarea path="messageBox" id="giftCardMessageText" class="giftCard_textarea" maxlength="150" placeholder="Write a message"></form:textarea><br />&nbsp;
 			</div>
 		</div>
 		<div class="clearfix">
@@ -512,9 +512,10 @@
 	
 	<div class="col-sm-6 giftContSub giftContSub3">
 		<div class="col-sm-12">
-			<br /> &nbsp; <br /> &nbsp; <br /> &nbsp;
+			<br /> &nbsp;
 			<div class="giftTermsDesc">
-				<span> Sold by <strong>QwikCilver Solutions Pvt. Ltd.</strong> and delivered by Tata CliQ. Credit and Debit Cards issued outside India cannot be used to purchase Tata CliQ Gift Cards. Tata CliQ Gift Cards are subjected to Terms and Conditions. Have a Tata CliQ Gift Card? <a href="#">Redeem</a> your gift card</span>
+				<span> Sold by <strong>QwikCilver Solutions Pvt. Ltd.</strong><!--  and delivered by Tata CliQ. Credit and Debit Cards issued outside India cannot be used to purchase Tata CliQ Gift Cards. Tata CliQ Gift Cards are subjected to Terms and Conditions. Have a Tata CliQ Gift Card? <a href="#">Redeem</a> your gift card -->
+				</span>
 			</div>
 		</div>
 	</div>
@@ -543,11 +544,11 @@ function validateForm() {
 	var letters = new RegExp(/^[A-z]*$/);
 	var emailValidExpression = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 	
-	if(document.getElementById('customAmount').value >= 15 && document.getElementById('customAmount').value < 15000) {
+	if(document.getElementById('customAmount').value >= 15 && document.getElementById('customAmount').value < 15001) {
 		$("#customAmountError").hide();
 	} else {
 		$("#customAmountError").show();
-		$("#customAmountError").text('Please enter amount between 15 to 15000');
+		$("#customAmountError").text('Please enter amount from 15 to 15000');
 		formValid = false;
 	}
 	
