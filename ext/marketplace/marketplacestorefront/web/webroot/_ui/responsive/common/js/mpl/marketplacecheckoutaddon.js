@@ -4873,6 +4873,18 @@ function setBankForSavedCard(bankName){
 //TPR-629---changes in parameter
 function applyPromotion(bankName,binValue,formSubmit)
 {
+	var isEGVOrder=$("#isEGVOrder").val();
+	if(isEGVOrder == ''){
+		isEGVOrder=false;
+	}else if(isEGVOrder == "undefined"){
+		isEGVOrder=false;
+	}
+	var staticHost=$('#staticHost').val();
+	//Commenting the below two lines for UF-97
+	//$("body").append("<div id='no-click' style='opacity:0.5; background:#000; z-index: 100000; width:100%; height:100%; position: fixed; top: 0; left:0;'></div>");
+	//$("body").append('<img src="'+staticHost+'/_ui/responsive/common/images/spinner.gif" class="spinner" style="position: fixed; left: 50%;top:50%; height: 30px; z-index: 99999;">'); 
+if(!isEGVOrder)
+	{
 	var staticHost=$('#staticHost').val();
 	//Commenting the below two lines for UF-97
 	//$("body").append("<div id='no-click' style='opacity:0.5; background:#000; z-index: 100000; width:100%; height:100%; position: fixed; top: 0; left:0;'></div>");
@@ -5162,6 +5174,8 @@ function applyPromotion(bankName,binValue,formSubmit)
 			$("#no-click1,.loaderDiv1").remove();
 		}
 	});
+	
+}
 }
 
 
@@ -5640,6 +5654,7 @@ function useWalletForPaymentAjax(){
 				$("#make_cc_payment").show();
 				$(".choose-payment").find('*').prop('disabled',false);
 				$(".checkout-paymentmethod li span").css('pointer-events', 'all');
+				 $("#juspayAmountId").hide();
 				$("#useCliqCashId").show(); 
 			}
 			

@@ -2621,20 +2621,6 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 			System.out.println(abstractOrderEntryModel.getQuantity().intValue() + " -&&&&&&& Product Code- "
 					+ abstractOrderEntryModel.getProduct().getCode());
 
-			//			for (int qty = 1; qty <= splitQty; qty++)
-			//			{
-			//				if (splitQty > 1 && abstractOrderEntryModel.getIsBOGOapplied().booleanValue())
-			//				{
-			//					splitQty -= 1;
-			//				}
-			//
-			//				if (splitQty > 1 && (abstractOrderEntryModel.getFreeCount().intValue() > 0))
-			//				{
-			//					splitQty -= abstractOrderEntryModel.getFreeCount().intValue();
-			//				}
-			//			}
-			//quantity = splitQty;
-
 			if (null != abstractOrderEntryModel.getFreeCount() && abstractOrderEntryModel.getFreeCount().intValue() > 0)
 			{
 				splitQty -= abstractOrderEntryModel.getFreeCount().intValue();
