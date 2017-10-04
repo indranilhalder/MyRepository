@@ -169,7 +169,7 @@ import reactor.function.support.UriUtils;
 public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepController
 {
 	/**
-	 * 
+	 *
 	 */
 	private static final String EGVGUID = "EGVGUID";
 
@@ -6131,6 +6131,7 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 								//								getSessionService().setAttribute("jsPayMode", "false");
 								jsonObject.put("disableJsMode", true);
 								cart.setSplitModeInfo("CliqCash");
+								//jsonObject.put("juspayAmt", 0);
 								getModelService().save(cart);
 								getModelService().refresh(cart);
 							}
@@ -6147,6 +6148,7 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 								getSessionService().setAttribute("cliqCashPaymentMode", "Cliq Cash");
 								//								getSessionService().setAttribute("jsPayMode", "true");
 								jsonObject.put("disableJsMode", false);
+								jsonObject.put("juspayAmt", juspayTotalAmt);
 								cart.setSplitModeInfo("Split");
 								getModelService().save(cart);
 								getModelService().refresh(cart);
@@ -6162,6 +6164,7 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 						cart.setSplitModeInfo("Juspay");
 						getModelService().save(cart);
 						getModelService().refresh(cart);
+						jsonObject.put("juspayAmt", 0);
 					}
 				}
 			}
@@ -6187,7 +6190,11 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 		final JSONObject jsonObject = new JSONObject();
 		BalanceBucketWise balBucketwise = new BalanceBucketWise();
 		final CartModel cart = getCartService().getSessionCart();
-		final Double totalCartAmt = cart.getTotalPriceWithConv();
+		//final Double totalCartAmt = cart.getTotalPriceWithConv();
+		double totalCartAmt = cart.getTotalPrice().doubleValue();
+
+		totalCartAmt += (null != cart.getScheduleDelCharge() ? cart.getScheduleDelCharge().doubleValue() : 0)
+				+ (null != cart.getDeliveryCost() ? cart.getDeliveryCost().doubleValue() : 0);
 		final DecimalFormat df = new DecimalFormat("#.##");
 
 		System.out.println("getTotalPriceWithConv ------------------- " + totalCartAmt);
@@ -6244,7 +6251,7 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 				jsonObject.put("totalCash", "" + "0");
 				jsonObject.put("totalEgvBalance", "" + "0");
 				jsonObject.put("disableWallet", true);
-				jsonObject.put("juspayAmt", "0");
+				//jsonObject.put("juspayAmt", "0");
 
 			}
 			else
@@ -6254,7 +6261,7 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 				jsonObject.put("totalCash", "" + cashBalance);
 				jsonObject.put("totalEgvBalance", "" + egvBalance);
 				jsonObject.put("disableWallet", false);
-				jsonObject.put("juspayAmt", juspayAmt);
+				//jsonObject.put("juspayAmt", juspayAmt);
 			}
 		}
 		catch (final Exception e)
@@ -6619,23 +6626,25 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 	//GiFT CART Payment Start 13-09-2017
 	@RequireHardLogIn
 	@RequestMapping(value = GIFT_CART_PAYMENT, method =
-		{ RequestMethod.POST, RequestMethod.GET })
+	{ RequestMethod.POST, RequestMethod.GET })
 	public String getGiftPayment(@ModelAttribute("egvDetailsform") final EgvDetailForm egvDetailForm,
 			final BindingResult bindingResult, final Model model, final HttpServletRequest request)
 			throws UnsupportedEncodingException
 	{
 		try
 		{
-	       CartData giftCartData=null;
+			CartData giftCartData = null;
 
-			if(egvDetailForm.getProductCode()==null){
-				String guid=getSessionService().getAttribute(EGVGUID);
-				giftCartData=mplCartFacade.getGiftCartData(guid);
+			if (egvDetailForm.getProductCode() == null)
+			{
+				final String guid = getSessionService().getAttribute(EGVGUID);
+				giftCartData = mplCartFacade.getGiftCartData(guid);
 			}
-			else{
-				 EgvDetailsData egvDetailsData = populateEGVFormToData(egvDetailForm);
-				  giftCartData = mplCartFacade.getGiftCartModel(egvDetailsData);
-				  giftCartData.setEgvTotelAmount(egvDetailsData.getGiftRange());
+			else
+			{
+				final EgvDetailsData egvDetailsData = populateEGVFormToData(egvDetailForm);
+				giftCartData = mplCartFacade.getGiftCartModel(egvDetailsData);
+				giftCartData.setEgvTotelAmount(egvDetailsData.getGiftRange());
 			}
 			giftCartData.setIsEGVCart(true);
 			Map<String, Boolean> paymentModeMap = null;

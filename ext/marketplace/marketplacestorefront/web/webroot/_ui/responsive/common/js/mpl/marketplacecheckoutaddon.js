@@ -5545,6 +5545,7 @@ $(".edit_address").click(function(){
 	$(".topPlaceOrderBtn").hide();
 	$("#addCliqCashId").hide();
 	$("#juspayAmountId").hide();
+	 $("#useCliqCashId").hide(); 
 	
 	$("#useGiftCardCheckbox").prop('disabled',true);
 	 $(".useGiftCardBtn").css('cursor','not-allowed');
@@ -5610,7 +5611,7 @@ function useWalletForPaymentAjax(){
 	var value = document.getElementById('useGiftCardCheckbox');	
 	 $("#viewPaymentCOD").show();
 	 $("#paytmId").show();
-	
+
 	var staticHost = $('#staticHost').val();
 	$("body").append("<div id='no-click' style='opacity:0.5; background:#000; z-index: 100000; width:100%; height:100%; position: fixed; top: 0; left:0;'></div>");
 	$("body").append('<div class="loaderDiv" style="position: fixed; left: 45%;top:45%;z-index: 10000"><img src="'+staticHost+'/_ui/responsive/common/images/red_loader.gif" class="spinner"></div>');
@@ -5639,6 +5640,7 @@ function useWalletForPaymentAjax(){
 				$("#make_cc_payment").show();
 				$(".choose-payment").find('*').prop('disabled',false);
 				$(".checkout-paymentmethod li span").css('pointer-events', 'all');
+				$("#useCliqCashId").show(); 
 			}
 			
 			if(data.disableJsMode){
@@ -5647,11 +5649,18 @@ function useWalletForPaymentAjax(){
 			      $(".choose-payment").find('*').prop('disabled',true);
 			      $(".checkout-paymentmethod li span").css('pointer-events', 'none');
 			      $(".topPlaceOrderBtn").prop('disabled',false);
+			      $("#juspayAmountId").hide();
+				  $("#addCliqCashId").show();
+				  $("#useCliqCashId").hide(); 
 				
 			}else{
 				$("#make_cc_payment").show();
 				$(".choose-payment").find('*').prop('disabled',false);
 				$(".checkout-paymentmethod li span").css('pointer-events', 'all');
+				 $("#juspayAmountId").show();
+				 $("#addCliqCashId").hide();
+				 $("#JuspayAmtId").html(data.juspayAmt);
+				 $("#useCliqCashId").hide(); 
 			}
 		},	
 	   
@@ -5661,6 +5670,7 @@ function useWalletForPaymentAjax(){
 		
 	});
 	}
+
 
 function WalletDetailAjax(){
 	//alert("Hi..");
@@ -5678,17 +5688,15 @@ function WalletDetailAjax(){
 				 $("#useGiftCardCheckbox").prop('disabled',true);
 				 $(".useGiftCardBtn").css('cursor','not-allowed');
 				 $(".useGiftCardBtn").css('opacity','0.5');
-				 $("#juspayAmountId").hide();
 				 $("#addCliqCashId").show();
-				
+				 $("#useCliqCashId").hide(); 
 				 
 			} else {
 				$("#useGiftCardCheckbox").prop('disabled',false);
 				 $(".useGiftCardBtn").css('cursor','pointer');
 				 $(".useGiftCardBtn").css('opacity','1');
-				 $("#juspayAmountId").show();
-				 $("#addCliqCashId").hide();
-				 $("#JuspayAmtId").html(data.juspayAmt);
+				 $("#useCliqCashId").show(); 
+				
 			}
 		},	
 		fail : function(data){
@@ -8365,7 +8373,8 @@ function sendTealiumData(){
 		            "viewPaymentCredit": "Credit Card",
 		            "viewPaymentNetbanking": "NetBanking",
 		            "viewPaymentCOD": "COD",
-		            "viewPaymentDebit": "Debit Card"
+		            "viewPaymentDebit": "Debit Card",
+		           // "viewPaymentPaytm": "Paytm Wallet"
 		        };
 		        var payment = jQuery("ul.checkout-paymentmethod.nav li.active span").attr("id");
 		        var payment_mode = payment_method_map[payment];
@@ -8381,7 +8390,13 @@ function sendTealiumData(){
 
 				payment_type = jQuery("li.active-card span").attr("class") || "Saved Card";
 	
-		        } else if (payment_mode === "NetBanking") {
+		        }
+//		        else if(payment_mode === "Paytm Wallet"){
+//		        	
+//		        	
+//		        }
+		        
+		        else if (payment_mode === "NetBanking") {
 	
 		            priority_banks = jQuery("#netbanking input[name='priority_banks']:checked");
 		            if (priority_banks.length > 0) {
