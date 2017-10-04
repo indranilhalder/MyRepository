@@ -1,4 +1,3 @@
-
 <script type="text/javascript">
 			var plugins = document.createElement("script");
 			plugins.src = "${commonResourcePath}/js/minified/plugins.min.js?v=${buildNumber}";
@@ -361,11 +360,6 @@
 						
 					 	$("img.lazy").lazyload();
 					 	
-					 	//SERP display hierarchy 
-						var inputArray = escape(["|MSH10:Women's Clothing:L1:true:0:1|MSH1010:What's New!:L2:false:0:1|MSH1010100:Apparel:L3:false:0:1","|MSH10:Women's Clothing:L1:true:0:1|MSH1011:Apparel:L2:false:0:1|MSH1011101:Tops and T-shirts:L3:false:0:1","|MSH10:Women's Clothing:L1:true:0:1|MSH1011:Apparel:L2:false:0:1|MSH1011102:Shirts:L3:false:0:1","|MSH10:Women's Clothing:L1:true:0:2|MSH1015:Shop by Look:L2:false:0:2|MSH1015102:Work Wear:L3:false:0:2","|MSH10:Women's Clothing:L1:true:0:1|MSH1015:Shop by Look:L2:false:0:1|MSH1015103:Casual Day Out:L3:false:0:1","|MSH10:Women's Clothing:L1:true:0:2|MSH1016:Casual Wear:L2:false:0:2|MSH1016103:Shirts:L3:false:0:2","|MSH10:Women's Clothing:L1:true:0:1|MSH1016:Casual Wear:L2:false:0:1|MSH1016110:Sweaters:L3:false:0:1","|MSH10:Women's Clothing:L1:true:0:2|MSH1016:Casual Wear:L2:false:0:2|MSH1016111:Work wear:L3:false:0:2","|MSH11:Men's Clothing:L1:true:0:55|MSH1110:What's New!:L2:false:0:55|MSH1110100:Apparel:L3:false:0:55","|MSH11:Men's Clothing:L1:true:0:5|MSH1111:Apparel:L2:false:0:5|MSH1111101:Casual and Evening Wear Shirts:L3:false:0:5","|MSH11:Men's Clothing:L1:true:0:1|MSH1112:Ethnic Wear:L2:false:0:1|MSH1112107:Accessories:L3:false:0:1","|MSH11:Men's Clothing:L1:true:0:23|MSH1115:Shop by Look:L2:false:0:23|MSH1115102:Work Wear:L3:false:0:23","|MSH11:Men's Clothing:L1:true:0:11|MSH1115:Shop by Look:L2:false:0:11|MSH1115103:Casual Day Out:L3:false:0:11","|MSH11:Men's Clothing:L1:true:0:20|MSH1115:Shop by Look:L2:false:0:20|MSH1115104:College Look:L3:false:0:20","|MSH11:Men's Clothing:L1:true:0:20|MSH1116:Casual Wear:L2:false:0:20|MSH1116100:T-shirts & Polos:L3:false:0:20","|MSH11:Men's Clothing:L1:true:0:10|MSH1116:Casual Wear:L2:false:0:10|MSH1116101:Shirts:L3:false:0:10","|MSH11:Men's Clothing:L1:true:0:23|MSH1117:Formal Wear:L2:false:0:23|MSH1117100:Shirts:L3:false:0:23","|MSH12:Electronics:L1:true:0:1|MSH1210:Mobile Phones:L2:false:0:1|MSH1210100:Smartphones:L3:false:0:1","|MSH12:Electronics:L1:true:0:1|MSH1210:Mobile Phones:L2:false:0:1|MSH1210101:Smartphone accessories:L3:false:0:1","|MSH12:Electronics:L1:true:0:1|MSH1215:Small and Kitchen Applicances:L2:false:0:1|MSH1215104:Kettles\/ Coffee Makers:L3:false:0:1","|MSH12:Electronics:L1:true:0:1|MSH1220:Camera:L2:false:0:1|MSH1220101:Camera accessories:L3:false:0:1","|MSH21:Kids:L1:true:0:33|MSH2112:Infants:L2:false:0:33|MSH2112100:Tops & T-shirts:L3:false:0:33","|MSH21:Kids:L1:true:0:11|MSH2112:Infants:L2:false:0:11|MSH2112100:Tops & T-shirts:L3:false:0:11|MSH2112100100:T-Shirts:L4:false:0:11","|MSH21:Kids:L1:true:0:22|MSH2112:Infants:L2:false:0:22|MSH2112100:Tops & T-shirts:L3:false:0:22|MSH2112100101:Tops:L4:false:0:22","|MSH21:Kids:L1:true:0:6|MSH2112:Infants:L2:false:0:6|MSH2112106:Shirts:L3:false:0:6"]);
-						if(inputArray != "" || inputArray != []){
-						constructDepartmentHierarchy(inputArray);
-						}
 						//TISSPTEN-134
 						_autoload();
 						//UF-409 -> added for ajax complete events to auto lazy load
@@ -384,5 +378,166 @@
 				window.attachEvent("onload", downloadJSAtOnload);
 			else
 				window.onload = downloadJSAtOnload;
-
+			
+			
+			// SERP PLP HIERARCHICAL data
+			function constructDepartmentHierarchy(inputArray) {		
+				var output = [];
+					if(inputArray!=""){
+					for (var i = 0; i < inputArray.length; i++) {				
+						var categoryArray = inputArray[i].split("|");			
+						var currentNode = output;
+						//Construct 'All' tree node initially for search page
+						if(i==0 && $('#isCategoryPage').val() == '') {
+							output[0] = {label: "All", children: [], categoryCode: "", categoryType: "All", categoryName: ""};
+						}
+						//Other tree nodes are constructed here
+						for (var j = 0; j < categoryArray.length; j++) {				
+							if(categoryArray[j] != null && categoryArray[j].length > 0){
+								var categoryDetails = categoryArray[j].split(":");
+								var categoryCode = categoryDetails[0];
+								var categoryName = categoryDetails[1];
+								var facetCount = 0;
+								
+								if(categoryDetails[2] == "L3" || categoryDetails[2] == "L4")
+								{
+									//categoryName += "  (" +categoryDetails[5] + ")";
+									facetCount = "  (" +categoryDetails[5] + ")";
+															
+								}
+								
+								var categoryType = "category";
+								if(categoryDetails[3] == 'true') {
+									categoryType = "department"
+								}
+								var lastNode = currentNode;
+								for (var k = 0; k < currentNode.length; k++) {
+									if (currentNode[k].categoryName == categoryName) {							
+										currentNode = currentNode[k].children;								
+										break;
+									}						
+								}
+								if (lastNode == currentNode) {
+									var newNode = currentNode[k] = {label: categoryName, children: [], categoryCode: categoryCode, categoryType: categoryType, categoryName: categoryName, facetCount: facetCount};
+									currentNode = newNode.children;						
+								}
+							}
+						}
+					}
+					}
+				var expandTree = false;
+				
+				//TISCF-4 Start
+				//The Department Hierarchy Tree should always remain Closed for Both PLP and SERP
+//				if(output.length == 2) {
+//					expandTree = true;
+//				}
+				//TISCF-4 End
+				
+				//TISPT-304 starts
+				
+				$( ".serpProduct" ).each(function( index ) {
+					var product=$(this).closest('span').find('#productCode').val();
+					 // console.log("prod"+product);
+					  var categoryTypeValue=$(this).closest('span').find('#categoryType').val()
+					 //  console.log("categoryTypeValue"+categoryTypeValue);
+					  var productUrl=$(this).closest('span').find('#productUrl').val();
+					 //console.log("productUrl"+productUrl);
+					  var productPrice=$(this).closest('span').find('#productPrice').val();
+					//  console.log("productPrice"+productPrice);
+					  var list=$(this).closest('span').find('#list').val();
+					//  console.log("list"+list);
+					  var mrpPriceValue=$(this).closest('span').find('#mrpPriceValue').val();
+					//  console.log("mrpPriceValue"+mrpPriceValue);
+					  var sizeStockLevel=$(this).closest('span').find('#sizeStockLevel').val();
+					 // console.log("sizeStockLevel"+sizeStockLevel);
+					  var productPromotion=$(this).closest('span').find('#productPromotion').val();
+					 // console.log("productPromotion"+productPromotion);
+					  populateFacet();
+					  if(typeof(serpSizeList)!= "undefined"){
+						modifySERPDetailsByFilters(serpSizeList,product,categoryTypeValue,list,productUrl,productPrice,mrpPriceValue,sizeStockLevel,productPromotion);
+					 } 
+					});
+				
+				//TISPT-304 ends
+				
+				
+				if($('#isCategoryPage').val() == 'true'){	
+					// Assign tree object to category page
+					$("#categoryPageDeptHierTree").tree({
+						data: output,
+						 openedIcon:'',
+						 openedIcon: '',
+						//TISCF-4 Start
+						//autoOpen: true
+						//The Department Hierarchy Tree should always remain Closed for Both PLP and SERP
+						autoOpen: true
+						//TISCF-4 End
+				
+					});
+				}else {
+					// Assign tree object to search page
+					$("#searchPageDeptHierTree").tree({
+						data: output,
+						 closedIcon:'',
+						 openedIcon:'',
+						autoOpen: true
+				
+					});
+					
+					// persist search text in search text box
+					 var isConceirge = $('#isConceirge').val();
+						if(isConceirge!='true') {
+						ACC.autocomplete.bindSearchText($('#text').val());
+						}
+				}
+				
+				$('#categoryPageDeptHierTree').bind(
+						'tree.click',
+						function(event) {
+							var node = event.node;
+							if(node.categoryType != 'All') {
+								var actionText = ACC.config.contextPath;
+								actionText = (actionText + '/Categories/' + node.name + '/c-' + node.categoryCode);
+								$('#categoryPageDeptHierTreeForm').attr('action',actionText);
+								
+								$('#categoryPageDeptHierTreeForm').submit();
+							}
+						}
+				);
+				
+				$('#searchPageDeptHierTree').bind(
+						'tree.click',
+						function(event) {
+							var node = event.node;
+							var searchQuery = document.getElementById("q").value;				
+							if(node.categoryType == 'All') {
+								$('#q').val($('#text').val() + ":relevance");
+								$('#searchCategoryTree').val("all");
+							}
+							else{
+								//Changes Added for TOR-488
+								//$('#q').val($('#text').val() + ":relevance:category:" + node.categoryCode);
+								//$('#searchCategoryTree').val(node.categoryCode);
+								// alert($('#q').val());
+								 //TISQAEE-14
+								 if($('#q').val().indexOf(node.categoryCode)==-1){
+									//INC_11754 start
+									 if(node.categoryCode.indexOf($('#searchCategory').val())==-1){
+										 $('#q').val(searchQuery +":category:" + node.categoryCode);
+									 }else{			
+									 	 $('#q').val($('#text').val() + ":relevance:category:" + node.categoryCode);
+									 }
+									 //INC_11754 end
+								 }
+								 $('#searchCategoryTree').val(node.categoryCode);
+								
+							} 
+							
+							$('#searchPageDeptHierTreeForm').submit();
+							
+						}
+				);
+					
+				}
 		</script>
