@@ -2488,12 +2488,15 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 //					}
 
 				//	LOG.info("cliqCashPaymentMode" + cliqCashPaymentMode);
-
-					if (cart.getSplitModeInfo().equalsIgnoreCase("Split"))
+					if (MarketplacecommerceservicesConstants.CHANNEL_WEB.equalsIgnoreCase(channel))
 					{
+						if (cart.getSplitModeInfo().equalsIgnoreCase("Split"))
+						{
 
-						cart.setTotalPrice(Double.valueOf("" + getSessionService().getAttribute("juspayTotalAmt")));
+							cart.setTotalPrice(Double.valueOf("" + getSessionService().getAttribute("juspayTotalAmt")));
+						}
 					}
+					
 
 					/**
 					 * QC CHANGE end
@@ -2531,12 +2534,15 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 //				}
 
 				//LOG.info("cliqCashPaymentMode" + cliqCashPaymentMode);
-
-				if (order.getSplitModeInfo().equalsIgnoreCase("Split"))
+				if (MarketplacecommerceservicesConstants.CHANNEL_WEB.equalsIgnoreCase(channel))
 				{
+					if (order.getSplitModeInfo().equalsIgnoreCase("Split"))
+					{
 
-					order.setTotalPrice(Double.valueOf("" + getSessionService().getAttribute("juspayTotalAmt")));
+						order.setTotalPrice(Double.valueOf("" + getSessionService().getAttribute("juspayTotalAmt")));
+					}
 				}
+				
 
 				/**
 				 * QC CHANGE end

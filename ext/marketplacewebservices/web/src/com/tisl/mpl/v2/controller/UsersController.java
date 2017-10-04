@@ -6923,7 +6923,7 @@ public class UsersController extends BaseCommerceController
 				returnUrlBuilder.append("?value=").append(cartGuid);
 			}
 			//Payment Soln changes
-			//orderModel = getMplPaymentFacade().getOrderByGuid(cartGuid);
+			orderModel = getMplPaymentFacade().getOrderByGuid(cartGuid);
 			//If cart is present
 			if (orderModel == null)
 			{
@@ -7104,7 +7104,7 @@ public class UsersController extends BaseCommerceController
 											: NO_JUSPAY_URL;
 						}
 
-						if (cart.getSplitModeInfo().equalsIgnoreCase(MarketplacewebservicesConstants.PAYMENT_MODE_SPLIT))
+						if (null != cart.getSplitModeInfo() && cart.getSplitModeInfo().equalsIgnoreCase(MarketplacewebservicesConstants.PAYMENT_MODE_SPLIT))
 						{
 							
 							if (null != cart.getPayableWalletAmount())
@@ -7115,8 +7115,10 @@ public class UsersController extends BaseCommerceController
 							if (totalWalletAmount > 0.0D)
 							{
 								payableJuspayAmount = cart.getTotalPrice().doubleValue()-totalWalletAmount;
+							}else {
+								payableJuspayAmount = cart.getTotalPrice().doubleValue();
 							}
-							orderCreateInJusPayWsDto.setCliqcashAmount(Double.valueOf(payableWalletAmount));
+							orderCreateInJusPayWsDto.setCliqcashAmount(Double.valueOf(totalWalletAmount));
 							orderCreateInJusPayWsDto.setCliqcashSelected(true);
 						}
 						else
@@ -7158,7 +7160,7 @@ public class UsersController extends BaseCommerceController
 				else
 				{
 
-					if (cart.getSplitModeInfo().equalsIgnoreCase(MarketplacewebservicesConstants.PAYMENT_MODE_SPLIT))
+					if (null != cart.getSplitModeInfo() && cart.getSplitModeInfo().equalsIgnoreCase(MarketplacewebservicesConstants.PAYMENT_MODE_SPLIT))
 					{
 						if (null != cart.getPayableWalletAmount())
 						{
@@ -7168,6 +7170,8 @@ public class UsersController extends BaseCommerceController
 						if (totalWalletAmount > 0.0D)
 						{
 							payableJuspayAmount = cart.getTotalPrice().doubleValue()-totalWalletAmount;
+						}else {
+							payableJuspayAmount = cart.getTotalPrice().doubleValue();
 						}
 						orderCreateInJusPayWsDto.setCliqcashAmount(Double.valueOf(payableWalletAmount));
 						orderCreateInJusPayWsDto.setCliqcashSelected(true);
@@ -7319,7 +7323,7 @@ public class UsersController extends BaseCommerceController
 				}
 				else
 				{
-					if (orderModel.getSplitModeInfo().equalsIgnoreCase(MarketplacewebservicesConstants.PAYMENT_MODE_SPLIT))
+					if (null != orderModel.getSplitModeInfo() && orderModel.getSplitModeInfo().equalsIgnoreCase(MarketplacewebservicesConstants.PAYMENT_MODE_SPLIT))
 					{
 						if (null != orderModel.getPayableWalletAmount())
 						{
@@ -7329,6 +7333,8 @@ public class UsersController extends BaseCommerceController
 						if (totalWalletAmount > 0.0D)
 						{
 							payableJuspayAmount = orderModel.getTotalPrice().doubleValue()-totalWalletAmount;
+						}else {
+							payableJuspayAmount = orderModel.getTotalPrice().doubleValue();
 						}
 						orderCreateInJusPayWsDto.setCliqcashAmount(Double.valueOf(payableWalletAmount));
 						orderCreateInJusPayWsDto.setCliqcashSelected(true);
