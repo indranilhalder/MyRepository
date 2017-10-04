@@ -1357,7 +1357,7 @@ function pincodeServiceability(){
 
 												deliverModeTealium.push("clickandcollect");
 												//TPR-6654
-												var requiredUrl = ACC.config.encodedContextPath + "/p-allStores/"+pin+"/"+ussid;;
+												var requiredUrl = ACC.config.encodedContextPath + "/p-allStores/"+pin+"/"+ussid+"/"+productCode;
 												$.ajax({
 													url : requiredUrl,
 													type : "GET",
