@@ -8373,7 +8373,7 @@ function sendTealiumData(){
 		            "viewPaymentCredit": "Credit Card",
 		            "viewPaymentNetbanking": "NetBanking",
 		            "viewPaymentCOD": "COD",
-		            "viewPaymentDebit": "Debit Card",
+		            "viewPaymentDebit": "Debit Card"
 		           // "viewPaymentPaytm": "Paytm Wallet"
 		        };
 		        var payment = jQuery("ul.checkout-paymentmethod.nav li.active span").attr("id");
