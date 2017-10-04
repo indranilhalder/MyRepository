@@ -5625,7 +5625,6 @@ function useWalletForPaymentAjax(){
 	var value = document.getElementById('useGiftCardCheckbox');	
 	 $("#viewPaymentCOD").show();
 	 $("#paytmId").show();
-
 	var staticHost = $('#staticHost').val();
 	$("body").append("<div id='no-click' style='opacity:0.5; background:#000; z-index: 100000; width:100%; height:100%; position: fixed; top: 0; left:0;'></div>");
 	$("body").append('<div class="loaderDiv" style="position: fixed; left: 45%;top:45%;z-index: 10000"><img src="'+staticHost+'/_ui/responsive/common/images/red_loader.gif" class="spinner"></div>');
