@@ -470,7 +470,7 @@
 		</c:choose>
 	</c:if>
 	
-	<c:if test="${!fn:contains(themeResourcePath,'theme-luxury') && (!fn:contains(pageBodyCssClasses, 'homepage') 
+	<c:if test="${!fn:contains(themeResourcePath,'theme-luxury') && !(fn:contains(pageBodyCssClasses, 'homepage') 
 	    or fn:contains(pageBodyCssClasses, 'newBrandLandingPageTemplate')
         or fn:contains(pageBodyCssClasses, 'productDetails') 
         or fn:contains(pageBodyCssClasses, 'productGridPage') 
@@ -505,7 +505,7 @@
     		 });
     		},2000);
     		}
-    		}	
+    		}
         });
         </script>
         </c:if>

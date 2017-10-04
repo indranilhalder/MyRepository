@@ -9,19 +9,14 @@
 <c:if test="${searchPageData.pagination.totalNumberOfResults ne 0}">
 
 	<div class="left-block">
-
-		<!-- <script>
-		
+       <script>
 		$(function() {
 			var inputArray = ${departmentHierarchyData.hierarchyList};
-			
 			if(inputArray!=""||inputArray!=[]){
 			constructDepartmentHierarchy(inputArray);
 			}
 		});
-			
-			
-		</script> -->
+		</script>
 		
 			<input type="hidden" name="isConceirge" id="isConceirge" value="${isConceirge}" />
 			<input type="hidden" name="isCategoryPage" id="isCategoryPage" value="${isCategoryPage}" />
