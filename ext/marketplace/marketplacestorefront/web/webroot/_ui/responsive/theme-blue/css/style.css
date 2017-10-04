@@ -77188,7 +77188,7 @@ body.template-pages-my-account-returnSuccess .mainContent-wrapper .container .bo
 
 /*TPR-6907 start*/
 #codEli{
-	display: inline-block;
+	display: none;
 	margin-left: 10px;
 	margin-bottom: 10px; /*TISCSXII-2218*/
 	margin-right: 30px; /* TISPRDT-6065 */
