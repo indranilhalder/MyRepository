@@ -6934,11 +6934,12 @@ public class UsersController extends BaseCommerceController
 					//TPR-4461 STARTS HERE WHEN ORDER MODEL IS NULL
 					
 					 // Buying Of EGV  Changes Start 
-					if (null != cart.getIsEGVCart() && cart.getIsEGVCart().booleanValue())
+					CartModel egvCart = mplEGVCartService.getEGVCartModel(cartGuid);
+					if (null != egvCart && null != egvCart.getIsEGVCart() && egvCart.getIsEGVCart().booleanValue())
 					{
 
 						orderCreateInJusPayWsDto = createJuspayOrderForEGV(firstName, lastName, country, state, city, pincode,
-								cardSaved, sameAsShipping, cart.getGuid(), returnUrlBuilder, paymentAddressLine1, paymentAddressLine2,
+								cardSaved, sameAsShipping, egvCart.getGuid(), returnUrlBuilder, paymentAddressLine1, paymentAddressLine2,
 								paymentAddressLine3, uid);
 						if (null != orderCreateInJusPayWsDto && null != orderCreateInJusPayWsDto.getJuspayOrderId())
 						{
@@ -9189,6 +9190,9 @@ public class UsersController extends BaseCommerceController
 					currentCustomer.setIsWalletActivated(Boolean.TRUE);
 					modelService.save(currentCustomer);
 					customerRegisteredwithQc = true;
+					redeemCliqVoucherWsDTO.setStatus(MarketplacecommerceservicesConstants.SUCCESS_FLAG);
+				}else {
+					redeemCliqVoucherWsDTO.setStatus(MarketplacecommerceservicesConstants.FAILURE_FLAG);
 				}
 			}else {
 				customerRegisteredwithQc = true;

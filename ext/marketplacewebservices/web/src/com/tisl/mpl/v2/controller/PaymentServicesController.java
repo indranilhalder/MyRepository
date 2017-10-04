@@ -1487,7 +1487,8 @@ public class PaymentServicesController extends BaseController
 			if (null == orderModel)
 			{
 				cart = mplPaymentWebFacade.findCartAnonymousValues(cartGuid);
-				if(null != cart && null != cart.getIsEGVCart() && cart.getIsEGVCart().booleanValue()) {
+				final CartModel egvCart = mplEGVCartService.getEGVCartModel(cartGuid);
+				if(null != egvCart && null != egvCart.getIsEGVCart() && egvCart.getIsEGVCart().booleanValue()) {
 					isEgvOrder = true;
 				}
 				if (cart != null)
