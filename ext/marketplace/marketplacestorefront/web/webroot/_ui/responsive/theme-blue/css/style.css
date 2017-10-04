@@ -53650,7 +53650,7 @@ word-wrap: break-word;
 	}
 	.stw-list .Menu>ul{
 		display: inline-block !important;
-		width: initial;
+		width: auto;
 	}
 }
 @media(max-width:480px){
@@ -77295,12 +77295,38 @@ body.template-pages-LoginPageTemplate .sign-in.tab-view .form-group #password_lo
     -webkit-transform: rotate(-225deg);
 }
 
+/*Rainbow Sale Homepage Changes - Vamshi*/
+@media (max-width: 767px) {
+ 	.rainbow_men_women_sec > div {
+ 		width: 100% !important;
+ 		padding-bottom: 10px !important;
+ 	}
+ 	
+ 	.rainbow_men_women_sec {
+ 		margin-top: 0 !important;
+ 	}
+ 	
+ 	.rainbow_top_categories_blp .top_categories_wrapper_blp .top_categories_section_blp:nth-child(3) {
+ 		width: 48.5% !important;
+ 	}
+ 	
+ 	.rainbow_top_categories_blp .top_categories_wrapper_blp .top_categories_section_blp:nth-child(4) {
+ 		display: block !important; margin-left: 10px; margin-top: 10px;
+ 	}
+ 	
+ 	.rainbow_top_deal_blp .owl-carousel .owl-item {width: 128px !important;}
+ }
+ 
+ .rainbow_blp_top_brands {background-color: #fff !important;}
+ 
 /*HomePage Changes - Vamshi*/
 
 /*Search Toggle CSS*/
-@media(max-width: 650px){ .simpleSearchToggle {padding-right: 20px; } #search_form {display: none;}
-.simpleSearchToggle {content: ""; width: 40px; height: 40px; display: inline-block; position: absolute; right: 8%; top: 38%;
-background: url(../images/search_image.png) no-repeat;}}
+@media(max-width: 650px){ 
+	.simpleSearchToggle {padding-right: 20px; } #search_form {display: none;}
+	.simpleSearchToggle {content: ""; width: 40px; height: 40px; display: inline-block; position: absolute; right: 12%; top: 38%;
+background: url(../images/search_image.png) no-repeat;}
+}
 
 /*HomePage CSS*/
 .homeViewAllBtn a, .homeViewAllBtn a:hover {float: right; font-size: 18px; color: #4990e2; text-decoration: none; display: none;}
