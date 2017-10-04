@@ -1459,7 +1459,7 @@
 							<text name="text.orderthresholddiscountpromotion.detaileddescription" />
 						</listlayout>
 					</section>
-					<section name="section.promotion.products">
+					<!-- <section name="section.promotion.products">
                         <listlayout>
 							<text name="text.promotion.excludedProducts" ></text>
 							<attribute name="excludedProducts" labelwidth="100">
@@ -1475,7 +1475,7 @@
 							<text name="text.promotion.excludedproductcodeslist" />
 							<attribute name="excludedProductCodeList" />
 						</listlayout>
-					</section>
+					</section> -->
 					<section name="section.promotion.prices">
 						<columnlayout leftwidth="370">
 							<row>
@@ -1695,7 +1695,7 @@
 							<text name="text.orderthresholddiscountpromotion.detaileddescription" />
 						</listlayout>
 					</section>
-					<section name="section.promotion.products">
+					<!-- <section name="section.promotion.products">
                         <listlayout>
 							<text name="text.promotion.excludedProducts" ></text>
 							<attribute name="excludedProducts" labelwidth="100">
@@ -1711,7 +1711,7 @@
 							<text name="text.promotion.excludedproductcodeslist" />
 							<attribute name="excludedProductCodeList" />
 						</listlayout>
-					</section>
+					</section> -->
 					<section name="section.promotion.prices">
 						<columnlayout leftwidth="370">
 							<row>
@@ -1841,7 +1841,7 @@
 							<text name="text.orderthresholddiscountpromotion.detaileddescription" />
 						</listlayout>
 					</section>
-					<section name="section.promotion.products">
+					<!-- <section name="section.promotion.products">
                         <listlayout>
 							<text name="text.promotion.excludedProducts" ></text>
 							<attribute name="excludedProducts" labelwidth="100">
@@ -1857,7 +1857,7 @@
 							<text name="text.promotion.excludedproductcodeslist" />
 							<attribute name="excludedProductCodeList" />
 						</listlayout>
-					</section>
+					</section> -->
 					<section name="section.promotion.prices">
 						<columnlayout leftwidth="370">
 							<row>
@@ -3039,7 +3039,7 @@
 							<text name="text.orderthresholddiscountpromotion.detaileddescription" />
 						</listlayout>
 					</section>
-					<section name="section.promotion.products">
+					<!-- <section name="section.promotion.products">
                         <listlayout>
 							<text name="text.promotion.excludedProducts" ></text>
 							<attribute name="excludedProducts" labelwidth="100">
@@ -3055,7 +3055,7 @@
 							<text name="text.promotion.excludedproductcodeslist" />
 							<attribute name="excludedProductCodeList" />
 						</listlayout>
-					</section>
+					</section> -->
 					<section name="section.promotion.prices">
 						<listlayout>
 						    <text name="text.productpromotion.deliverymodes" />

@@ -201,8 +201,8 @@ public class CartPageController extends AbstractPageController
 			@RequestParam(value = "pincode", required = false) final String pinCode,
 			@RequestParam(value = "isLux", required = false) final boolean isLux,
 			@RequestParam(value = "cartGuid", required = false) final String cartGuid, final HttpServletRequest request,
-			final HttpServletResponse response, final RedirectAttributes redirectModel)
-			throws CMSItemNotFoundException, CommerceCartModificationException, CalculationException
+			final HttpServletResponse response, final RedirectAttributes redirectModel) throws CMSItemNotFoundException,
+			CommerceCartModificationException, CalculationException
 	{
 		LOG.debug("Entering into showCart" + "Class Nameshowcart :" + className + "pinCode " + pinCode);
 		String returnPage = ControllerConstants.Views.Pages.Cart.CartPage;
@@ -286,12 +286,14 @@ public class CartPageController extends AbstractPageController
 				cartModel = getCartService().getSessionCart();
 				CartData cartDataOnLoad = mplCartFacade.getSessionCartWithEntryOrdering(true);
 
-				final List<AbstractOrderEntryModel> entryJewl = new ArrayList<>(cartModel.getEntries());
+				//TPR-6980:Change in the logic of display of price disclaimer in the cart for Fine Jewellery
+				//	final List<AbstractOrderEntryModel> entryJewl = new ArrayList<>(cartModel.getEntries());
 				final List<String> discSellerNameList = new ArrayList<String>();
 
-				for (final AbstractOrderEntryModel orderEntry : entryJewl)
+				for (final AbstractOrderEntryModel orderEntry : cartModel.getEntries())
 				{
-					if ("FineJewellery".equalsIgnoreCase(orderEntry.getProduct().getProductCategoryType()))
+					if (MarketplacecommerceservicesConstants.FINEJEWELLERY.equalsIgnoreCase(orderEntry.getProduct()
+							.getProductCategoryType()))
 					{
 						final String sellerId = orderEntry.getSellerInfo();
 						final String sellers = getConfigurationService().getConfiguration().getString(
@@ -312,13 +314,31 @@ public class CartPageController extends AbstractPageController
 						}
 					}
 				}
-				model.addAttribute("discSellerNameList", discSellerNameList);
-				String displayMsg = getConfigurationService().getConfiguration().getString("cart.price.disclaimer");
-				for (final String sellerName : discSellerNameList)
+				if (CollectionUtils.isNotEmpty(discSellerNameList))
 				{
-					displayMsg = displayMsg + sellerName;
+					model.addAttribute("discSellerNameList", discSellerNameList);
+					//String displayMsg = getConfigurationService().getConfiguration().getString("cart.price.disclaimer");
+					String displayMsg = "";
+					for (final String sellerName : discSellerNameList)
+					{
+						if (StringUtils.isEmpty(displayMsg))
+						{
+							displayMsg = sellerName;
+						}
+						else
+						{
+							displayMsg = displayMsg + sellerName;
+						}
+					}
+					final String displayMsgFinal = getConfigurationService().getConfiguration().getString(
+							"cart.price.disclaimer.first")
+							+ MarketplacecommerceservicesConstants.SPACE
+							+ displayMsg.substring(0, displayMsg.length() - 1)
+							+ MarketplacecommerceservicesConstants.SPACE
+							+ getConfigurationService().getConfiguration().getString("cart.price.disclaimer.second");
+					//GlobalMessages.addConfMessage(model, displayMsg.substring(0, displayMsg.length() - 1));
+					GlobalMessages.addConfMessage(model, displayMsgFinal);
 				}
-				GlobalMessages.addConfMessage(model, displayMsg.substring(0, displayMsg.length() - 1));
 				//TPR-5346 STARTS
 
 				//This method will update the cart  with respect to the max quantity configured for the product
