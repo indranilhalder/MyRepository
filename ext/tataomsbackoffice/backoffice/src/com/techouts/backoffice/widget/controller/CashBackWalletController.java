@@ -42,7 +42,7 @@ import com.tisl.mpl.pojo.request.QCCustomerPromotionRequest;
 import com.tisl.mpl.pojo.request.QCCustomerRegisterRequest;
 import com.tisl.mpl.pojo.response.QCCustomerRegisterResponse;
 import com.tisl.mpl.pojo.response.QCRedeeptionResponse;
-import com.tisl.mpl.service.MplQCInitServiceImpl;
+
 
 
 
@@ -110,14 +110,14 @@ public class CashBackWalletController extends DefaultWidgetController
 		emptyFileError.setVisible(false);
 		media = uploadEvent.getMedia();
 		final String fileName = media.getName();
-		String commentMsg = "";
-		QCRedeeptionResponse response = null;
+		
 		boolean messageFlag=false;
 		if (fileName.endsWith(CSV) || fileName.endsWith(".xlsx"))
 		{
 			System.out.println("**********************File Name :"+fileName);
 			List<CilqCashWalletPojo> cilqCashWalletPojoList = new ArrayList<CilqCashWalletPojo>();
 			  Scanner scanner = new Scanner(media.getStreamData());
+			  try{
 	        while (scanner.hasNext()) {
 	      	  CilqCashWalletPojo pojo = new CilqCashWalletPojo();
 	            List<String> line = parseLine(scanner.nextLine());
@@ -134,13 +134,13 @@ public class CashBackWalletController extends DefaultWidgetController
 	            	messageFlag=true;
 	            }
 	        }
-	        LOG.debug("cilqCashWalletPojoList :"+cilqCashWalletPojoList);
-	        LOG.debug("cilqCashWalletPojoList size:"+cilqCashWalletPojoList.size());
-	        scanner.close();
-	        boolean  headerCheck = false ;
-	        boolean  responseCheck = false ;
+			  }catch(Exception eObj){
+				  eObj.printStackTrace();
+			  }finally{
+				  scanner.close();
+			  }
 	        PrintWriter pw = null;
-	        StringBuilder  builder = new StringBuilder();
+	      
 	        String fileUploadLocation =null;
 	        String fileUploadName =null;
 	        if (null != configurationService)
@@ -150,145 +150,152 @@ public class CashBackWalletController extends DefaultWidgetController
 				   if(null != fileUploadLocation && !fileUploadLocation.isEmpty() && null!=fileUploadName ){
 				   	  try {
 			      	      pw = new PrintWriter(new File(fileUploadLocation+fileUploadName));
+			      	      StringBuilder  builder=uploadWallettCashFile(cilqCashWalletPojoList,pw);
+			    	         pw.write(builder.toString());
+			          	   pw.close();
 			      	  } catch (FileNotFoundException e) {
 			      	      e.printStackTrace();
+			      	  }finally{
+			      		  pw.close();
 			      	  }
 				   }
 				}
-      	
-	        for(CilqCashWalletPojo walletObj:cilqCashWalletPojoList){
-	      	  CustomerModel currentCustomer =  extendedUserService.getUserForOriginalUid(walletObj.getCustomerEmailId());
-	      	  
-	      	  LOG.debug("model Name :"+currentCustomer);
-	      	 
-	      	  if(null!= currentCustomer  ){
-	      		  LOG.debug("First Name :"+currentCustomer.getDisplayName());
-   	      	  if (null != currentCustomer.getIsWalletActivated() && currentCustomer.getIsWalletActivated().booleanValue()){
-   	      		  QCCustomerPromotionRequest request = new QCCustomerPromotionRequest();
-   	      		  request.setAmount(Double.valueOf(walletObj.getAmount()));
-   	      		  if(walletObj.getBucketName().equalsIgnoreCase("PROMOTION")){
-   	      		  request.setNotes("Sample load for "+ walletObj.getAmount() +"  PROMOTION");
-   	      		  response =  mplWalletFacade.createPromotion(currentCustomer.getCustomerWalletDetail().getWalletId() ,request);
-   	      		  }else if (walletObj.getBucketName().equalsIgnoreCase("CASHBACK")){
-   	      			  request.setNotes("Sample load for "+ walletObj.getAmount() +"  CASHBACK");
-   	      			  response =  mplWalletFacade.addTULWalletCashBack(currentCustomer.getCustomerWalletDetail().getWalletId() ,request);
-   	      		  }
-   	      		  if(response.getResponseCode()== 0){
-   	      			  commentMsg ="Success";
-   	      		  }else{
-    	     				 commentMsg ="Failure";
-    	     				}
-   	      	  }else{
-   	      		  try{
-   	     				final QCCustomerRegisterRequest customerRegisterReq = new QCCustomerRegisterRequest();
-   	     				final Customer custInfo = new Customer();
-   	     				custInfo.setEmail(currentCustomer.getOriginalUid());
-   	     				custInfo.setEmployeeID(currentCustomer.getUid());
-   	     				custInfo.setCorporateName("Tata Unistore Ltd");
-   	     				
-   	     				if (null != currentCustomer.getFirstName()){
-   	     					custInfo.setFirstname(currentCustomer.getFirstName());
-   	     				}if (null != currentCustomer.getLastName()){
-   	     					custInfo.setLastName(currentCustomer.getLastName());
-   	     				}
-
-   	     				customerRegisterReq.setExternalwalletid(currentCustomer.getOriginalUid());
-   	     				customerRegisterReq.setCustomer(custInfo);
-   	     				customerRegisterReq.setNotes("Activating Customer " + currentCustomer.getOriginalUid());
-   	     				final QCCustomerRegisterResponse customerRegisterResponse = mplWalletFacade.createWalletContainer(customerRegisterReq);
-   	     				if (customerRegisterResponse.getResponseCode() == 0)
-   	     				{
-   	     					final CustomerWalletDetailModel custWalletDetail = modelService.create(CustomerWalletDetailModel.class);
-   	     					custWalletDetail.setWalletId(customerRegisterResponse.getWallet().getWalletNumber());
-   	     					custWalletDetail.setWalletState(customerRegisterResponse.getWallet().getStatus());
-   	     					custWalletDetail.setCustomer(currentCustomer);
-   	     					custWalletDetail.setServiceProvider("Tata Unistore Ltd");
-
-   	     					modelService.save(custWalletDetail);
-
-   	     					currentCustomer.setCustomerWalletDetail(custWalletDetail);
-   	     					currentCustomer.setIsWalletActivated(true);
-   	     					modelService.save(currentCustomer);
-   	     					
-   	     					QCCustomerPromotionRequest request = new QCCustomerPromotionRequest();
-   	   	      		  request.setAmount(Double.valueOf(walletObj.getAmount()));
-   	   	      		  if(walletObj.getBucketName().equalsIgnoreCase("PROMOTION")){
-   	   	      		  request.setNotes("Sample load for "+ walletObj.getAmount() +"  PROMOTION");
-   	   	      		  response =  mplWalletFacade.createPromotion(currentCustomer.getCustomerWalletDetail().getWalletId() ,request);
-   	   	      		  }else if (walletObj.getBucketName().equalsIgnoreCase("CASHBACK")){
-   	   	      			  request.setNotes("Sample load for "+ walletObj.getAmount() +"  CASHBACK");
-   	   	      			  response =  mplWalletFacade.addTULWalletCashBack(currentCustomer.getCustomerWalletDetail().getWalletId() ,request);
-   	   	      		  } 
-   	   	      		  commentMsg ="Success";
-   	     				}else{
-   	     				 commentMsg ="Failure";
-   	     				}
-   	     			}catch (final Exception ex){
-   	     				ex.printStackTrace();
-   	     			}
-   	      	  }
-   	      	 
-   	      	  
-	      	  }else{
-	      		  commentMsg= "user does not exist";
-	      		  responseCheck=true;
-	      		  
-	      	  }
-	      	  CilqCashWalletPojo pojo= new CilqCashWalletPojo();
-	      	
-	      	  
-	      	  if(!responseCheck){
-	      	  pojo.setWalletId(response.getWalletNumber());
-	      	  pojo.setTransactionId(String.valueOf(response.getTransactionId()));
-	      	  pojo.setBatchNumber(String.valueOf(response.getBatchNumber()));
-   	      	  if(null != response.getCards() && response.getCards().size()>0){
-   	      		  pojo.setCardExpiry(response.getCards().get(0).getExpiry());
-   	      		  pojo.setCardNumber(response.getCards().get(0).getExpiry());
-   	      	  }
-	      	  }else{
-	      		  pojo.setWalletId("");
-	      		  pojo.setTransactionId(String.valueOf(""));
-		      	  pojo.setBatchNumber(String.valueOf(""));
-		      	  pojo.setCardExpiry("");
-		      	  pojo.setCardNumber("");
-	      	  }
-	      	  pojo.setAmount(walletObj.getAmount());
-	      	  pojo.setBucketName(walletObj.getBucketName());
-	      	 
-	      	  pojo.setCustomerEmailId(walletObj.getCustomerEmailId());
-	      	  pojo.setCustomerName(walletObj.getCustomerName());
-	      	  pojo.setComments(commentMsg);
-
-	      	 
-	      	  String columnNamesList =null;
-	      	  if(!headerCheck){
-	      		  columnNamesList = "Customer Name,Email ID,Amount,Bucket name,Transaction ID,Wallet ID,Card Number,Card Expiry,Batch Number,Comments";
-	      		  builder.append(columnNamesList +"\n");
-	      		  headerCheck=true;
-	      	  }
-	      	 
-	      	  builder.append(pojo.getCustomerName()+",");
-	      	  builder.append(pojo.getCustomerEmailId()+",");
-	      	  builder.append(pojo.getAmount()+",");
-	      	  builder.append(pojo.getBucketName()+",");
-	      	  builder.append(pojo.getTransactionId()+",");
-	      	  builder.append(pojo.getWalletId()+",");
-	      	  builder.append(pojo.getCardNumber()+",");
-	      	  builder.append(pojo.getCardExpiry()+",");
-	      	  builder.append(pojo.getBatchNumber()+",");
-	      	  builder.append(pojo.getComments());
-	      	  builder.append('\n');
-	          	 
-	        }
-	        pw.write(builder.toString());
-      	  pw.close();
       	  System.out.println("successfully created File..........");
       	  if(!messageFlag){
       	  Messagebox.show("SuccessFully Uploaded wallet", "Success Message", Messagebox.OK, Messagebox.INFORMATION);
       	  }
 		}
 	}
+private StringBuilder uploadWallettCashFile(List<CilqCashWalletPojo> cilqCashWalletPojoList, PrintWriter pw){
+	StringBuilder  builder = new StringBuilder();
+	  boolean  headerCheck = false ;
+     boolean  responseCheck = false ;
+     String commentMsg = "";
+		QCRedeeptionResponse response = null;
+		
+	 for(CilqCashWalletPojo walletObj:cilqCashWalletPojoList){
+  	  CustomerModel currentCustomer =  extendedUserService.getUserForOriginalUid(walletObj.getCustomerEmailId());
+  	  if(null!= currentCustomer  ){
+  		  LOG.debug("First Name :"+currentCustomer.getDisplayName());
+     	  if (null != currentCustomer.getIsWalletActivated() && currentCustomer.getIsWalletActivated().booleanValue()){
+     		  QCCustomerPromotionRequest request = new QCCustomerPromotionRequest();
+     		  request.setAmount(Double.valueOf(walletObj.getAmount()));
+     		  if(walletObj.getBucketName().equalsIgnoreCase("PROMOTION")){
+     		  request.setNotes("Sample load for "+ walletObj.getAmount() +"  PROMOTION");
+     		  response =  mplWalletFacade.createPromotion(currentCustomer.getCustomerWalletDetail().getWalletId() ,request);
+     		  }else if (walletObj.getBucketName().equalsIgnoreCase("CASHBACK")){
+     			  request.setNotes("Sample load for "+ walletObj.getAmount() +"  CASHBACK");
+     			  response =  mplWalletFacade.addTULWalletCashBack(currentCustomer.getCustomerWalletDetail().getWalletId() ,request);
+     		  }
+     		  if(response.getResponseCode()== 0){
+     			  commentMsg ="Success";
+     		  }else{
+     				 commentMsg ="Failure";
+     				}
+     	  }else{
+     		  try{
+    				final QCCustomerRegisterRequest customerRegisterReq = new QCCustomerRegisterRequest();
+    				final Customer custInfo = new Customer();
+    				custInfo.setEmail(currentCustomer.getOriginalUid());
+    				custInfo.setEmployeeID(currentCustomer.getUid());
+    				custInfo.setCorporateName("Tata Unistore Ltd");
+    				
+    				if (null != currentCustomer.getFirstName()){
+    					custInfo.setFirstname(currentCustomer.getFirstName());
+    				}if (null != currentCustomer.getLastName()){
+    					custInfo.setLastName(currentCustomer.getLastName());
+    				}
 
+    				customerRegisterReq.setExternalwalletid(currentCustomer.getOriginalUid());
+    				customerRegisterReq.setCustomer(custInfo);
+    				customerRegisterReq.setNotes("Activating Customer " + currentCustomer.getOriginalUid());
+    				final QCCustomerRegisterResponse customerRegisterResponse = mplWalletFacade.createWalletContainer(customerRegisterReq);
+    				if (customerRegisterResponse.getResponseCode() == 0)
+    				{
+    					final CustomerWalletDetailModel custWalletDetail = modelService.create(CustomerWalletDetailModel.class);
+    					custWalletDetail.setWalletId(customerRegisterResponse.getWallet().getWalletNumber());
+    					custWalletDetail.setWalletState(customerRegisterResponse.getWallet().getStatus());
+    					custWalletDetail.setCustomer(currentCustomer);
+    					custWalletDetail.setServiceProvider("Tata Unistore Ltd");
+
+    					modelService.save(custWalletDetail);
+
+    					currentCustomer.setCustomerWalletDetail(custWalletDetail);
+    					currentCustomer.setIsWalletActivated(true);
+    					modelService.save(currentCustomer);
+    					
+    					QCCustomerPromotionRequest request = new QCCustomerPromotionRequest();
+  	      		  request.setAmount(Double.valueOf(walletObj.getAmount()));
+  	      		  if(walletObj.getBucketName().equalsIgnoreCase("PROMOTION")){
+  	      		  request.setNotes("Sample load for "+ walletObj.getAmount() +"  PROMOTION");
+  	      		  response =  mplWalletFacade.createPromotion(currentCustomer.getCustomerWalletDetail().getWalletId() ,request);
+  	      		  }else if (walletObj.getBucketName().equalsIgnoreCase("CASHBACK")){
+  	      			  request.setNotes("Sample load for "+ walletObj.getAmount() +"  CASHBACK");
+  	      			  response =  mplWalletFacade.addTULWalletCashBack(currentCustomer.getCustomerWalletDetail().getWalletId() ,request);
+  	      		  } 
+  	      		  commentMsg ="Success";
+    				}else{
+    				 commentMsg ="Failure";
+    				}
+    			}catch (final Exception ex){
+    				ex.printStackTrace();
+    			}
+     	  }
+     	 
+     	  
+  	  }else{
+  		  commentMsg= "user does not exist";
+  		  responseCheck=true;
+  		  
+  	  }
+  	  CilqCashWalletPojo pojo= new CilqCashWalletPojo();
+  	
+  	  
+  	  if(!responseCheck){
+  	  pojo.setWalletId(response.getWalletNumber());
+  	  pojo.setTransactionId(String.valueOf(response.getTransactionId()));
+  	  pojo.setBatchNumber(String.valueOf(response.getBatchNumber()));
+     	  if(null != response.getCards() && response.getCards().size()>0){
+     		  pojo.setCardExpiry(response.getCards().get(0).getExpiry());
+     		  pojo.setCardNumber(response.getCards().get(0).getCardNumber());
+     	  }
+  	  }else{
+  		  pojo.setWalletId("");
+  		  pojo.setTransactionId(String.valueOf(""));
+     	  pojo.setBatchNumber(String.valueOf(""));
+     	  pojo.setCardExpiry("");
+     	  pojo.setCardNumber("");
+  	  }
+  	  pojo.setAmount(walletObj.getAmount());
+  	  pojo.setBucketName(walletObj.getBucketName());
+  	 
+  	  pojo.setCustomerEmailId(walletObj.getCustomerEmailId());
+  	  pojo.setCustomerName(walletObj.getCustomerName());
+  	  pojo.setComments(commentMsg);
+
+  	 
+  	  String columnNamesList =null;
+  	  if(!headerCheck){
+  		  columnNamesList = "Customer Name,Email ID,Amount,Bucket name,Transaction ID,Wallet ID,Card Number,Card Expiry,Batch Number,Comments";
+  		  builder.append(columnNamesList +"\n");
+  		  headerCheck=true;
+  	  }
+  	 
+  	  builder.append(pojo.getCustomerName()+",");
+  	  builder.append(pojo.getCustomerEmailId()+",");
+  	  builder.append(pojo.getAmount()+",");
+  	  builder.append(pojo.getBucketName()+",");
+  	  builder.append(pojo.getTransactionId()+",");
+  	  builder.append(pojo.getWalletId()+",");
+  	  builder.append(pojo.getCardNumber()+",");
+  	  builder.append(pojo.getCardExpiry()+",");
+  	  builder.append(pojo.getBatchNumber()+",");
+  	  builder.append(pojo.getComments());
+  	  builder.append('\n');
+      	 
+    }
+	 return builder;
+}
 	
 	@ViewEvent(componentID = "cancle_upload_button", eventName = Events.ON_UPLOAD)
 	public void cancelUploadWallet(final UploadEvent uploadEvent) throws FileNotFoundException
@@ -446,7 +453,8 @@ public class CashBackWalletController extends DefaultWidgetController
        return parseLine(cvsLine, DEFAULT_SEPARATOR, DEFAULT_QUOTE);
    }
    
-   public  List<String> parseLine(String cvsLine, char separators, char customQuote) {
+   @SuppressWarnings("null")
+	public  List<String> parseLine(String cvsLine, char separators, char customQuote) {
 
       List<String> result = new ArrayList<>();
       if (cvsLine == null && cvsLine.isEmpty()) {
