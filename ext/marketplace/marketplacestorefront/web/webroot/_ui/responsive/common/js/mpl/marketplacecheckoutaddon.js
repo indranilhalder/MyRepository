@@ -5559,7 +5559,8 @@ $(".edit_address").click(function(){
 	$(".topPlaceOrderBtn").hide();
 	$("#addCliqCashId").hide();
 	$("#juspayAmountId").hide();
-	 $("#useCliqCashId").hide(); 
+	$("#useCliqCashId").hide();
+	$("#loadingCliqCashId").hide();
 	
 	$("#useGiftCardCheckbox").prop('disabled',true);
 	 $(".useGiftCardBtn").css('cursor','not-allowed');
@@ -5647,8 +5648,7 @@ function useWalletForPaymentAjax(){
 			} else {
 				$("#unUseGiftBtnText").hide();
 				$("#useGiftBtnText").show();
-				$(".cliqCashApplyAlert").hide();
-				
+				$(".cliqCashApplyAlert").hide();				
 				$(".topPlaceOrderBtn").hide();
 				$("#make_cc_payment").show();
 				$(".choose-payment").find('*').prop('disabled',false);
@@ -5687,13 +5687,14 @@ function useWalletForPaymentAjax(){
 
 
 function WalletDetailAjax(){
-	//alert("Hi..");
+	$("#loadingCliqCashId").show();
 	$.ajax({
 		url : ACC.config.encodedContextPath + "/checkout/multi/payment-method/useWalletDetail",
 		type : "GET",
 		cache : false,
 		success : function(data) {
 			
+			$("#loadingCliqCashId").hide();
 			$(".cliqTotalBalanceLabel").html(data.totalWalletAmt);
 			$("#qcCashId").html(data.totalCash);
 			$("#qcGiftCardId").html(data.totalEgvBalance);
@@ -5704,7 +5705,6 @@ function WalletDetailAjax(){
 				 $(".useGiftCardBtn").css('opacity','0.5');
 				 $("#addCliqCashId").show();
 				 $("#useCliqCashId").hide(); 
-				 
 			} else {
 				$("#useGiftCardCheckbox").prop('disabled',false);
 				 $(".useGiftCardBtn").css('cursor','pointer');

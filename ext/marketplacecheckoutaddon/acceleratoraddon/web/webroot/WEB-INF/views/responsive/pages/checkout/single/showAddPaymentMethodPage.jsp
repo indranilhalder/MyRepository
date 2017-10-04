@@ -242,7 +242,8 @@
 					<div class="payRemainingDesc">
 						<i id="juspayAmountId"><spring:theme code="text.cliq.cash.payment.juspyamt.label"/> <strong id="JuspayAmtId">&#8377; 0</strong> <spring:theme code="text.cliq.cash.payment.juspyamt1.label" /></i>
 						<i id="addCliqCashId"><spring:theme code="text.cliq.cash.payment.addcash.label" /> </i>
-						<i id="useCliqCashId"><spring:theme code="text.cliq.cash.payment.usecash.label"  /> </i>
+						<i id="useCliqCashId"><spring:theme code="text.cliq.cash.usecash.label"  /> </i>
+						<i id="loadingCliqCashId"><spring:theme code="text.cliq.cash.loadingcash.label"  /> </i>
 					</div>
 				</div>
 			</div>
