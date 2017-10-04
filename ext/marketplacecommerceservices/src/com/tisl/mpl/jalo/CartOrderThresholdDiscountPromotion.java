@@ -3,12 +3,14 @@ package com.tisl.mpl.jalo;
 import de.hybris.platform.core.Registry;
 import de.hybris.platform.jalo.Item;
 import de.hybris.platform.jalo.JaloBusinessException;
+import de.hybris.platform.jalo.JaloInvalidParameterException;
 import de.hybris.platform.jalo.SessionContext;
 import de.hybris.platform.jalo.c2l.Currency;
 import de.hybris.platform.jalo.enumeration.EnumerationValue;
 import de.hybris.platform.jalo.order.AbstractOrder;
 import de.hybris.platform.jalo.order.AbstractOrderEntry;
 import de.hybris.platform.jalo.product.Product;
+import de.hybris.platform.jalo.security.JaloSecurityException;
 import de.hybris.platform.jalo.type.ComposedType;
 import de.hybris.platform.order.CartService;
 import de.hybris.platform.promotions.jalo.AbstractPromotionRestriction;
@@ -481,11 +483,37 @@ public class CartOrderThresholdDiscountPromotion extends GeneratedCartOrderThres
 			//PR-15 ends here
 
 
-			if (getDefaultPromotionsManager().isSellerRestrExists(restrictionList)
-					|| getDefaultPromotionsManager().isExSellerRestrExists(restrictionList))
+			try
 			{
-				validProductUssidMap = getMplPromotionHelper().getCartSellerEligibleProducts(ctx, order, restrictionList,
-						allowedProductList2);//PR-15 allowedProductList2 parameter added
+				if (getDefaultPromotionsManager().isSellerRestrExists(restrictionList)
+						|| getDefaultPromotionsManager().isExSellerRestrExists(restrictionList))
+				{
+					validProductUssidMap = getMplPromotionHelper().getCartSellerEligibleProducts(ctx, order, restrictionList,
+							allowedProductList2);//PR-15 allowedProductList2 parameter added
+				}
+				else
+				{
+					validProductUssidMap = getMplPromotionHelper()
+							.getCartSellerEligibleProducts(ctx, order, null, allowedProductList2);//PR-15 allowedProductList2 parameter added
+				}
+			}
+			catch (final JaloInvalidParameterException e)
+			{
+				LOG.error(e.getMessage());
+				ExceptionUtil.etailNonBusinessExceptionHandler(new EtailNonBusinessExceptions(e,
+						MarketplacecommerceservicesConstants.E0000));
+			}
+			catch (final JaloSecurityException e)
+			{
+				LOG.error(e.getMessage());
+				ExceptionUtil.etailNonBusinessExceptionHandler(new EtailNonBusinessExceptions(e,
+						MarketplacecommerceservicesConstants.E0000));
+			}
+			catch (final Exception e)
+			{
+				LOG.error(e.getMessage());
+				ExceptionUtil.etailNonBusinessExceptionHandler(new EtailNonBusinessExceptions(e,
+						MarketplacecommerceservicesConstants.E0000));
 			}
 
 

@@ -217,7 +217,14 @@ public class CategoryPageController extends AbstractCategoryPageController
 	private static final String LAZY_INTERFACE_KEY = "lazyInterface";
 
 	//UF-265
-	private static final String PRODUCT_GRID_COMPONENT_POSITION = "Section4B";
+	//private static final String PRODUCT_GRID_COMPONENT_POSITION = "Section4B";
+	//For most of the templates PLP slot is Section4B
+	//For BrandPageTemplate PLP slot is Section3
+	//For FootwearCategoryLandingPageTemplate PLP slot is Section7B
+	//For FootwearBrandLandingPageTemplate PLP slot is Section4
+	//SDI-1078
+	private static final String[] PRODUCT_GRID_COMPONENT_POSITION_LIST =
+	{ "Section4B", "Section3", "Section7B", "Section4" };
 	private static final String CUSTOM_SKU_COMPONENT_POSITION = "Section4A";
 
 	/**
@@ -359,8 +366,7 @@ public class CategoryPageController extends AbstractCategoryPageController
 
 				if (CollectionUtils.isNotEmpty(normalProductDatas))
 				{
-					model.addAttribute(ModelAttributetConstants.DEPARTMENT_HIERARCHY_DATA,
-							searchPageData.getDepartmentHierarchyData());
+					model.addAttribute(ModelAttributetConstants.DEPARTMENT_HIERARCHY_DATA, searchPageData.getDepartmentHierarchyData());
 					model.addAttribute(ModelAttributetConstants.DEPARTMENTS, searchPageData.getDepartments());
 					model.addAttribute(ModelAttributetConstants.CURRENT_QUERY, searchPageData.getCurrentQuery().getQuery().getValue());
 				}
@@ -452,8 +458,8 @@ public class CategoryPageController extends AbstractCategoryPageController
 
 		catch (final Exception exception)
 		{
-			ExceptionUtil.etailNonBusinessExceptionHandler(
-					new EtailNonBusinessExceptions(exception, MarketplacecommerceservicesConstants.E0000));
+			ExceptionUtil.etailNonBusinessExceptionHandler(new EtailNonBusinessExceptions(exception,
+					MarketplacecommerceservicesConstants.E0000));
 			try
 			{
 				return frontEndErrorHelper.callNonBusinessError(model, exception.getMessage());
@@ -589,8 +595,7 @@ public class CategoryPageController extends AbstractCategoryPageController
 
 				if (CollectionUtils.isNotEmpty(normalProductDatas))
 				{
-					model.addAttribute(ModelAttributetConstants.DEPARTMENT_HIERARCHY_DATA,
-							searchPageData.getDepartmentHierarchyData());
+					model.addAttribute(ModelAttributetConstants.DEPARTMENT_HIERARCHY_DATA, searchPageData.getDepartmentHierarchyData());
 					model.addAttribute(ModelAttributetConstants.DEPARTMENTS, searchPageData.getDepartments());
 					model.addAttribute(ModelAttributetConstants.CURRENT_QUERY, searchPageData.getCurrentQuery().getQuery().getValue());
 				}
@@ -681,8 +686,8 @@ public class CategoryPageController extends AbstractCategoryPageController
 
 		catch (final Exception exception)
 		{
-			ExceptionUtil.etailNonBusinessExceptionHandler(
-					new EtailNonBusinessExceptions(exception, MarketplacecommerceservicesConstants.E0000));
+			ExceptionUtil.etailNonBusinessExceptionHandler(new EtailNonBusinessExceptions(exception,
+					MarketplacecommerceservicesConstants.E0000));
 			try
 			{
 				return frontEndErrorHelper.callNonBusinessError(model, exception.getMessage());
@@ -834,8 +839,7 @@ public class CategoryPageController extends AbstractCategoryPageController
 
 				if (CollectionUtils.isNotEmpty(normalProductDatas))
 				{
-					model.addAttribute(ModelAttributetConstants.DEPARTMENT_HIERARCHY_DATA,
-							searchPageData.getDepartmentHierarchyData());
+					model.addAttribute(ModelAttributetConstants.DEPARTMENT_HIERARCHY_DATA, searchPageData.getDepartmentHierarchyData());
 					model.addAttribute(ModelAttributetConstants.DEPARTMENTS, searchPageData.getDepartments());
 					model.addAttribute(ModelAttributetConstants.CURRENT_QUERY, searchPageData.getCurrentQuery().getQuery().getValue());
 				}
@@ -860,8 +864,8 @@ public class CategoryPageController extends AbstractCategoryPageController
 		//TISPRD-5986  MSH category 404 error handling
 		catch (final UnknownIdentifierException ex)
 		{
-			ExceptionUtil
-					.etailNonBusinessExceptionHandler(new EtailNonBusinessExceptions(ex, MarketplacecommerceservicesConstants.E0023));
+			ExceptionUtil.etailNonBusinessExceptionHandler(new EtailNonBusinessExceptions(ex,
+					MarketplacecommerceservicesConstants.E0023));
 			//LOG.error(EXCEPTION_OCCURED + ex + "  Category code: " + categoryCode + " not found!");
 			try
 			{
@@ -876,8 +880,8 @@ public class CategoryPageController extends AbstractCategoryPageController
 
 		catch (final Exception exception)
 		{
-			ExceptionUtil.etailNonBusinessExceptionHandler(
-					new EtailNonBusinessExceptions(exception, MarketplacecommerceservicesConstants.E0000));
+			ExceptionUtil.etailNonBusinessExceptionHandler(new EtailNonBusinessExceptions(exception,
+					MarketplacecommerceservicesConstants.E0000));
 			try
 			{
 				return frontEndErrorHelper.callNonBusinessError(model, exception.getMessage());
@@ -1050,24 +1054,34 @@ public class CategoryPageController extends AbstractCategoryPageController
 					final ContentPageModel categoryLandingPage = getLandingPageForCategory(category); // CAR-237 moved here for called only Once rather  line # 409 , 469 & 1053 available Code review pt#4
 					//PRDI-802 : check for availability of ProductGridComponent in the page
 					ContentSlotData contentSlotData = null;
-					if (categoryLandingPage != null)
+					//SDI-1078 : checking in all slots for PLP accross the templates
+					for (final String slotPosition : PRODUCT_GRID_COMPONENT_POSITION_LIST)
 					{
-						contentSlotData = mplCmsPageService.getContentSlotForPage(categoryLandingPage, PRODUCT_GRID_COMPONENT_POSITION);
-					}
-					if (contentSlotData != null && CollectionUtils.isNotEmpty(contentSlotData.getCMSComponents()))
-					{
-						for (final AbstractCMSComponentModel component : contentSlotData.getCMSComponents())
+						//To break out from outer loop
+						if (isPlpPresentInLanding)
 						{
-							if (component instanceof ProductGridComponentModel)
+							break;
+						}
+						if (categoryLandingPage != null)
+						{
+							contentSlotData = mplCmsPageService.getContentSlotForPage(categoryLandingPage, slotPosition);
+							if (contentSlotData != null && CollectionUtils.isNotEmpty(contentSlotData.getCMSComponents()))
 							{
-								isPlpPresentInLanding = true;
-								break;
-							}
-							else
-							{
-								LOG.debug("#### It is not a ProductGridComponent");
+								for (final AbstractCMSComponentModel component : contentSlotData.getCMSComponents())
+								{
+									if (component instanceof ProductGridComponentModel)
+									{
+										isPlpPresentInLanding = true;
+										break;
+									}
+									else
+									{
+										LOG.debug("#### It is not a ProductGridComponent in position " + slotPosition);
+									}
+								}
 							}
 						}
+
 					}
 
 					/* CAR-242 Moved here for calling once */
@@ -1201,8 +1215,8 @@ public class CategoryPageController extends AbstractCategoryPageController
 						//TPR-243
 						//setUpMetaDataForContentPage(model, categoryLandingPage);
 
-						model.addAttribute(ModelAttributetConstants.PRODUCT_CATEGORY,
-								categoryName.replaceAll(SPECIAL_CHARACTERS, "").replaceAll(" ", "_").toLowerCase());
+						model.addAttribute(ModelAttributetConstants.PRODUCT_CATEGORY, categoryName.replaceAll(SPECIAL_CHARACTERS, "")
+								.replaceAll(" ", "_").toLowerCase());
 						model.addAttribute(WebConstants.BREADCRUMBS_KEY,
 								getSearchBreadcrumbBuilder().getBreadcrumbs(categoryCode, categoryName, false));
 						model.addAttribute(ModelAttributetConstants.SHOW_CATEGORIES_ONLY, Boolean.FALSE);
@@ -1248,8 +1262,8 @@ public class CategoryPageController extends AbstractCategoryPageController
 					}
 					catch (final Exception exception)
 					{
-						ExceptionUtil.etailNonBusinessExceptionHandler(
-								new EtailNonBusinessExceptions(exception, MarketplacecommerceservicesConstants.E0000));
+						ExceptionUtil.etailNonBusinessExceptionHandler(new EtailNonBusinessExceptions(exception,
+								MarketplacecommerceservicesConstants.E0000));
 						try
 						{
 							return frontEndErrorHelper.callNonBusinessError(model, exp.getMessage());
@@ -1264,8 +1278,8 @@ public class CategoryPageController extends AbstractCategoryPageController
 				//TISPRD-5986  MSH category 404 error handling
 				catch (final UnknownIdentifierException ex)
 				{
-					ExceptionUtil.etailNonBusinessExceptionHandler(
-							new EtailNonBusinessExceptions(ex, MarketplacecommerceservicesConstants.E0023));
+					ExceptionUtil.etailNonBusinessExceptionHandler(new EtailNonBusinessExceptions(ex,
+							MarketplacecommerceservicesConstants.E0023));
 					//LOG.error(EXCEPTION_OCCURED + ex + "  Category code: " + categoryCode + " not found!");
 					try
 					{
@@ -1278,8 +1292,8 @@ public class CategoryPageController extends AbstractCategoryPageController
 				}
 				catch (final Exception exception)
 				{
-					ExceptionUtil.etailNonBusinessExceptionHandler(
-							new EtailNonBusinessExceptions(exception, MarketplacecommerceservicesConstants.E0000));
+					ExceptionUtil.etailNonBusinessExceptionHandler(new EtailNonBusinessExceptions(exception,
+							MarketplacecommerceservicesConstants.E0000));
 					try
 					{
 						return frontEndErrorHelper.callNonBusinessError(model, exception.getMessage());
@@ -1480,16 +1494,16 @@ public class CategoryPageController extends AbstractCategoryPageController
 							model.addAttribute(ModelAttributetConstants.DEPARTMENT_HIERARCHY_DATA,
 									searchPageData.getDepartmentHierarchyData());
 							model.addAttribute(ModelAttributetConstants.DEPARTMENTS, searchPageData.getDepartments());
-							model.addAttribute(ModelAttributetConstants.CURRENT_QUERY,
-									searchPageData.getCurrentQuery().getQuery().getValue());
+							model.addAttribute(ModelAttributetConstants.CURRENT_QUERY, searchPageData.getCurrentQuery().getQuery()
+									.getValue());
 						}
 
 						final String categoryName = category.getName();
 						//TPR-243
 						//setUpMetaDataForContentPage(model, categoryLandingPage);
 
-						model.addAttribute(ModelAttributetConstants.PRODUCT_CATEGORY,
-								categoryName.replaceAll(SPECIAL_CHARACTERS, "").replaceAll(" ", "_").toLowerCase());
+						model.addAttribute(ModelAttributetConstants.PRODUCT_CATEGORY, categoryName.replaceAll(SPECIAL_CHARACTERS, "")
+								.replaceAll(" ", "_").toLowerCase());
 						model.addAttribute(WebConstants.BREADCRUMBS_KEY,
 								getSearchBreadcrumbBuilder().getBreadcrumbs(categoryCode, categoryName, false));
 						populateModel(model, searchPageData, ShowMode.Page);
@@ -1535,8 +1549,8 @@ public class CategoryPageController extends AbstractCategoryPageController
 
 					catch (final Exception exception)
 					{
-						ExceptionUtil.etailNonBusinessExceptionHandler(
-								new EtailNonBusinessExceptions(exception, MarketplacecommerceservicesConstants.E0000));
+						ExceptionUtil.etailNonBusinessExceptionHandler(new EtailNonBusinessExceptions(exception,
+								MarketplacecommerceservicesConstants.E0000));
 						try
 						{
 							return frontEndErrorHelper.callNonBusinessError(model, exp.getMessage());
@@ -1551,8 +1565,8 @@ public class CategoryPageController extends AbstractCategoryPageController
 				//TISPRD-5986  MSH category 404 error handling
 				catch (final UnknownIdentifierException ex)
 				{
-					ExceptionUtil.etailNonBusinessExceptionHandler(
-							new EtailNonBusinessExceptions(ex, MarketplacecommerceservicesConstants.E0023));
+					ExceptionUtil.etailNonBusinessExceptionHandler(new EtailNonBusinessExceptions(ex,
+							MarketplacecommerceservicesConstants.E0023));
 					//LOG.error(EXCEPTION_OCCURED + ex + "  Category code: " + categoryCode + " not found!");
 					try
 					{
@@ -1565,8 +1579,8 @@ public class CategoryPageController extends AbstractCategoryPageController
 				}
 				catch (final Exception exception)
 				{
-					ExceptionUtil.etailNonBusinessExceptionHandler(
-							new EtailNonBusinessExceptions(exception, MarketplacecommerceservicesConstants.E0000));
+					ExceptionUtil.etailNonBusinessExceptionHandler(new EtailNonBusinessExceptions(exception,
+							MarketplacecommerceservicesConstants.E0000));
 					try
 					{
 						return frontEndErrorHelper.callNonBusinessError(model, exception.getMessage());
@@ -1767,8 +1781,7 @@ public class CategoryPageController extends AbstractCategoryPageController
 	 * @throws UnsupportedEncodingException
 	 */
 	@ResponseBody
-	@RequestMapping(value = CATEGORY_URL_OLD_PATTERN + CATEGORY_CODE_PATH_VARIABLE_PATTERN
-			+ "/results", method = RequestMethod.GET)
+	@RequestMapping(value = CATEGORY_URL_OLD_PATTERN + CATEGORY_CODE_PATH_VARIABLE_PATTERN + "/results", method = RequestMethod.GET)
 	public SearchResultsData<ProductData> getResults(@PathVariable(CATERGORYCODE) String categoryCode,
 			@RequestParam(value = "q", required = false) final String searchQuery,
 			@RequestParam(value = PAGE, defaultValue = "0") final int pgNum,
@@ -1947,8 +1960,8 @@ public class CategoryPageController extends AbstractCategoryPageController
 
 
 	private ProductCategorySearchPageData<SearchStateData, ProductData, CategoryData> updatePageData(
-			final ProductCategorySearchPageData<SearchStateData, ProductData, CategoryData> searchPageData, final String whichSearch,
-			final String searchQuery)
+			final ProductCategorySearchPageData<SearchStateData, ProductData, CategoryData> searchPageData,
+			final String whichSearch, final String searchQuery)
 	{
 		// YTODO Auto-generated method stub
 		if (null != whichSearch)
@@ -2234,8 +2247,8 @@ public class CategoryPageController extends AbstractCategoryPageController
 		private ProductCategorySearchPageData<SearchStateData, ProductData, CategoryData> searchPageData;
 		private final String pageFacets;
 
-		public CategorySearchEvaluator(final String categoryCode, final String searchQuery, final int page, final ShowMode showMode,
-				final String sortCode, final CategoryPageModel categoryPage, final String pageFacets)
+		public CategorySearchEvaluator(final String categoryCode, final String searchQuery, final int page,
+				final ShowMode showMode, final String sortCode, final CategoryPageModel categoryPage, final String pageFacets)
 		{
 			this.categoryCode = categoryCode;
 			this.searchQueryData.setValue(searchQuery);
