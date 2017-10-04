@@ -2231,7 +2231,7 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 		      	QCCreditRequest qcCreditRequest =new QCCreditRequest();
 		      	qcCreditRequest.setAmount(daecimalFormat.format(orderCancelRequest.getAmountTORefundForQc()));
 		      	qcCreditRequest.setInvoiceNumber(subOrderModel.getParentReference().getCode());
-		      	qcCreditRequest.setNotes("load for "+ daecimalFormat.format(orderCancelRequest.getAmountTORefundForQc()) +" for CANCEL REDEEM");    	
+		      	qcCreditRequest.setNotes("Cancel for "+ daecimalFormat.format(orderCancelRequest.getAmountTORefundForQc()));    	
 		      	QCRedeeptionResponse response = mplWalletFacade.qcCredit(walletId , qcCreditRequest);
 		      	LOG.debug("*****************************"+response.getResponseCode());
 		      	constructQuickCilverOrderEntry(subOrderModel,orderRequestRecord ,response);
@@ -2240,7 +2240,7 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 		      	QCCreditRequest qcCreditRequest =new QCCreditRequest();
 		      	qcCreditRequest.setAmount(daecimalFormat.format(orderCancelRequest.getAmountTORefundForQc()));
 		      	qcCreditRequest.setInvoiceNumber(subOrderModel.getParentReference().getCode());
-		      	qcCreditRequest.setNotes("load for "+ daecimalFormat.format(orderCancelRequest.getAmountTORefundForQc()) +" for CANCEL REDEEM");    	
+		      	qcCreditRequest.setNotes("Cancel for "+ daecimalFormat.format(orderCancelRequest.getAmountTORefundForQc()));    	
 		      	QCRedeeptionResponse response = mplWalletFacade.qcCredit(walletId , qcCreditRequest);
 		      	constructQuickCilverOrderEntry(subOrderModel,orderRequestRecord ,response);
 		      	if(response.getResponseCode().intValue() == 0){
