@@ -1,0 +1,241 @@
+body .account .right-account.rewards>div.your-activity {
+    clear: both;
+}
+body .account .right-account.rewards>div {
+    margin-bottom: 10px;
+    border: 0;
+}
+body .account .right-account.rewards>div h2 {
+    font-size: 28px;
+    line-height: 1.29;
+    height: auto;
+    margin-bottom: 0;
+}
+body .account .right-account.rewards>div>p {
+    padding-top: 0;
+    font-size: 12px;
+    font-weight: 500;
+}
+body .account .right-account.rewards>div.your-activity>p {
+    margin-bottom: 0;
+    font-size: 12px;
+    border-bottom: solid 1px #eee;
+    padding-bottom: 19px;
+    line-height: 1.33;
+    letter-spacing: .6px;
+    color: #666;
+}
+body .account .right-account.rewards>div.your-activity>p.mobile {
+    display: none;
+}
+body .account .right-account.rewards>div.your-activity>ul.coupon-container {
+    width: 100%;
+}
+body .account .right-account.rewards>div.your-activity>ul>li {
+    width: 100%;
+    position: relative;
+    font-size: 10px;
+}
+body .account .right-account.rewards>div.your-activity>ul.coupon-container .coupon-box {
+    display: inline-block;
+    vertical-align: top;
+    background-color: #fff;
+    border-bottom: solid 1px #eee;
+    margin-top: 30px;
+    padding-bottom: 29px;
+}
+body .account .right-account.rewards>div.your-activity>ul.coupon-container::after {
+    clear: both;
+    content: "";
+    display: table;
+}
+body .account .right-account.rewards>div.your-activity>ul.coupon-container .coupon-box .left {
+    font-size: 16px;
+    line-height: 1;
+    letter-spacing: .8px;
+    color: #000;
+    font-weight: normal;
+}
+body .account .right-account.rewards>div.your-activity>ul.coupon-container .coupon-box .left>p {
+    display: inline;
+}
+body .account .right-account.rewards>div.your-activity>ul.coupon-container .coupon-box .left a.copy-code, body .account .right-account.rewards>div.your-activity>ul.coupon-container .coupon-box a.copy-code-mobile {
+    float: right;
+    font-size: 12px;
+    line-height: 1.33;
+    letter-spacing: .6px;
+    color: #a5173c;
+    cursor: pointer;
+}
+body .account .right-account.rewards>div.your-activity>ul.coupon-container .coupon-box a.copy-code-mobile {
+    display: none;
+    float: none;
+}
+body .account .right-account.rewards>div.your-activity>ul>li::after {
+    clear: both;
+    content: "";
+    display: table;
+}
+body .account .right-account.rewards>div.your-activity>ul>li div.right p {
+    font-size: 12px;
+    line-height: 1.33;
+    letter-spacing: .6px;
+    font-weight: normal;
+    color: #666;
+    margin-top: 6px;
+}
+body .account .right-account.rewards>div.your-activity>ul.coupon-container .coupon-box .right p:last-child {
+    padding: 0;
+}
+body .account .right-account.rewards>div {
+    margin-bottom: 10px;
+    border: 0;
+}
+.no-results, div.get-in-touch, .rewards div.customer-service, .contact-us-header {
+    text-align: center;
+}
+body .account .right-account.rewards>div.customer-service h2 {
+    font-family: "Montserrat";
+}
+body .account .right-account.rewards>div.customer-service h2, body .account .right-account.rewards>div.customer-service p {
+    text-align: left;
+}
+body .account .right-account>div>h2 {
+    margin-bottom: 10px;
+    font-weight: 500;
+    letter-spacing: .5px;
+    font-size: 28px;
+    line-height: 1.29;
+}
+body .account .right-account>div>h2 {
+    margin-bottom: 0;
+}
+body .account .right-account.rewards>div h2 {
+    font-size: 28px;
+    line-height: 1.29;
+    height: auto;
+}
+body .account .right-account.rewards>div.customer-service ul {
+    margin-bottom: 20px;
+    display: block;
+    margin-top: 15px;
+}
+.rewards div.customer-service ul li {
+    display: inline-block;
+    padding: 10px 30px 5px 100px;
+    text-align: left;
+    font-size: 10px;
+    position: relative;
+}
+body .account .right-account.rewards>div.customer-service.steps ul .step {
+    padding: 0;
+    padding-left: 10px;
+    border: 0;
+    width: 100%;
+    display: block;
+}
+body .account .right-account.rewards>div.customer-service.steps ul .step span {
+    margin: 20px 0;
+    display: inline;
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: .6px;
+}
+.rewards div.customer-service ul li span {
+    display: block;
+    text-transform: uppercase;
+    font-weight: 600;
+    padding-bottom: 10px;
+    letter-spacing: 1.5px;
+}
+body .account .right-account.rewards>div.customer-service.steps ul .step span:before {
+    content: "";
+    display: block;
+    width: 24px;
+    height: 24px;
+    background-color: #eee;
+    border: solid 1px #bbb;
+    position: absolute;
+    z-index: -1;
+    border-radius: 100%;
+    top: -6px;
+    left: 1px;
+}
+body .account .right-account.rewards>div.customer-service.steps ul .step p {
+    text-align: left;
+    font-size: 12px;
+    line-height: 20px;
+    padding: 0;
+    padding-left: 20px;
+    display: inline-block;
+    line-height: 1.33;
+    letter-spacing: .6px;
+    color: #666;
+    vertical-align: top;
+    margin-top: -2px;
+    margin-bottom: 25px;
+    width: calc(100% - 24px);
+}
+body .account .right-account.rewards>div.your-activity>p {
+    margin-bottom: 0;
+    font-size: 12px;
+    border-bottom: solid 1px #eee;
+    padding-bottom: 19px;
+    line-height: 1.33;
+    letter-spacing: .6px;
+    color: #666;
+}
+
+
+
+@media (max-width: 650px){
+body .account .right-account.rewards>div h2 {
+    margin-top: 10px;
+}
+body .account .right-account.rewards>div.customer-service ul {
+    display: block;
+    margin: 0;
+    width: 100%;
+}
+}
+@media (max-width: 790px){
+.account .wrapper {
+    padding: 0 12px;
+}
+body.page-coupons .account .wrapper {
+    padding-right: 10px;
+}
+body .account .right-account.rewards>div.your-activity>ul.coupon-container .coupon-box a.copy-code-mobile {
+    display: block;
+    margin-top: 29px;
+    margin-bottom: 19px;
+}
+body .account .right-account.rewards>div.your-activity>ul.coupon-container .coupon-box .left a.copy-code {
+    display: none;
+}
+body .account .right-account.rewards>div.your-activity>p.mobile {
+    display: block;
+    font-size: 12px;
+}
+body .account .right-account.rewards>div.your-activity>p {
+    line-height: 20px;
+    display: none;
+}
+body .account .right-account.rewards>div.customer-service.steps ul {
+    margin-top: 20px;
+}
+}
+
+@media (min-width: 791px){
+.customer-service {
+    padding-top: 50px;
+}
+.customer-service {
+    padding-top: 50px;
+}
+body .account .right-account::after {
+    clear: both;
+    content: "";
+    display: table;
+}
+}
