@@ -131,6 +131,9 @@ tr.d0 td {
 										<c:set var="isImgAdded" value="true"/>
 									<div><img src="${container.luxuryProduct.url}" data-zoom-image="${container.luxurySuperZoom.url}" class="zoomer"></div>
 								</c:if>
+								<c:if test="${container.thumbnail.mediaType.code eq 'Video'}">
+									<c:set var="isImgAdded" value="true"/>
+								</c:if>
 								<c:if test="${empty container.luxuryProduct && isImgAdded ne 'true'}">
 									<theme:luxuryImage imgClass="${imgClass}" code="img.missingProductImage.product" alt="${fn:escapeXml(product.name)}" title="${fn:escapeXml(product.name)}"/>
 								</c:if>
