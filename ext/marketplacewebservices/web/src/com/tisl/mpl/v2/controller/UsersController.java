@@ -55,6 +55,7 @@ import de.hybris.platform.commercewebservicescommons.oauth2.token.OAuthTokenServ
 import de.hybris.platform.converters.Populator;
 import de.hybris.platform.core.PK.PKException;
 import de.hybris.platform.core.enums.OrderStatus;
+import de.hybris.platform.core.model.JewelleryInformationModel;
 import de.hybris.platform.core.model.enumeration.EnumerationValueModel;
 import de.hybris.platform.core.model.order.AbstractOrderEntryModel;
 import de.hybris.platform.core.model.order.CartModel;
@@ -83,7 +84,6 @@ import de.hybris.platform.voucher.model.VoucherModel;
 import de.hybris.platform.wishlist2.Wishlist2Service;
 import de.hybris.platform.wishlist2.model.Wishlist2EntryModel;
 import de.hybris.platform.wishlist2.model.Wishlist2Model;
-
 
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -168,6 +168,7 @@ import com.tisl.mpl.facade.checkout.impl.MplCheckoutFacadeImpl;
 import com.tisl.mpl.facade.config.MplConfigFacade;
 import com.tisl.mpl.facade.myfavbrandcategory.MplMyFavBrandCategoryFacade;
 import com.tisl.mpl.facade.netbank.MplNetBankingFacade;
+import com.tisl.mpl.facade.product.ExchangeGuideFacade;
 import com.tisl.mpl.facade.wishlist.WishlistFacade;
 import com.tisl.mpl.facades.MplCouponWebFacade;
 import com.tisl.mpl.facades.MplPaymentWebFacade;
@@ -197,6 +198,7 @@ import com.tisl.mpl.marketplacecommerceservices.daos.OrderModelDao;
 import com.tisl.mpl.marketplacecommerceservices.service.ExtendedUserService;
 import com.tisl.mpl.marketplacecommerceservices.service.FriendsInviteService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplCustomerProfileService;
+import com.tisl.mpl.marketplacecommerceservices.service.MplJewelleryService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplOrderService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplPaymentService;
 import com.tisl.mpl.marketplacecommerceservices.service.OrderModelService;
@@ -245,10 +247,12 @@ import com.tisl.mpl.wsdto.QuickDropStoresList;
 import com.tisl.mpl.wsdto.ReturnDetailsWsDTO;
 import com.tisl.mpl.wsdto.ReturnLogisticsResponseDTO;
 import com.tisl.mpl.wsdto.ReturnLogisticsResponseDetailsWsDTO;
+import com.tisl.mpl.wsdto.ReturnModesWsDTO;
 import com.tisl.mpl.wsdto.ReturnPincodeDTO;
 import com.tisl.mpl.wsdto.ReturnReasonDTO;
 import com.tisl.mpl.wsdto.ReturnReasonDetailsWsDTO;
 import com.tisl.mpl.wsdto.ReturnRequestDTO;
+import com.tisl.mpl.wsdto.RevSealJwlryDataWsDTO;
 import com.tisl.mpl.wsdto.ThirdPartyWalletWsDTO;
 import com.tisl.mpl.wsdto.UpdateCustomerDetailDto;
 import com.tisl.mpl.wsdto.UserResultWsDto;
@@ -328,6 +332,10 @@ public class UsersController extends BaseCommerceController
 
 	@Resource(name = "orderModelService")
 	private OrderModelService orderModelService;
+
+	//Exchange Changes
+	@Resource(name = "exchangeGuideFacade")
+	private ExchangeGuideFacade exchangeFacade;
 
 	protected MessageSourceAccessor messages = SpringSecurityMessageSource.getAccessor();
 	//
@@ -436,14 +444,16 @@ public class UsersController extends BaseCommerceController
 	@Autowired
 	private CommonUtils commonUtils;
 
+	@Resource(name = "mplJewelleryService")
+	private MplJewelleryService jewelleryService;
 
 	@Resource(name = "voucherService")
 	private VoucherService voucherService;
-	
+
 	//Sonar Fix
-	private static final String NO_JUSPAY_URL= "No juspayReturnUrl is defined in local properties";
-	  
-	private static final String NO_JUSPAY_MERCHANTKEY= "No juspayMerchantKey is defined in local properties";
+	private static final String NO_JUSPAY_URL = "No juspayReturnUrl is defined in local properties";
+
+	private static final String NO_JUSPAY_MERCHANTKEY = "No juspayMerchantKey is defined in local properties";
 
 	//@Autowired
 	//private MplPaymentFacadeImpl mplPaymentFacadeImpl;
@@ -3198,10 +3208,8 @@ public class UsersController extends BaseCommerceController
 						for (final Wishlist2EntryModel entryModel : entryModels)
 						{
 							LOG.debug("Step4-************************Wishlist");
-							if (entryModel.getIsDeleted() == null || (entryModel.getIsDeleted() != null && !entryModel.getIsDeleted().booleanValue()))//TPR-5787 check added
-
-
-
+							if (entryModel.getIsDeleted() == null
+									|| (entryModel.getIsDeleted() != null && !entryModel.getIsDeleted().booleanValue()))//TPR-5787 check added
 							{
 								LOG.debug("Step5-************************Wishlist");
 								wldpDTO = new GetWishListProductWsDTO();
@@ -3246,55 +3254,11 @@ public class UsersController extends BaseCommerceController
 
 								//							}
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 								final String prodCategory = mplProductWebService.getCategoryCodeOfProduct(productData1);
 								LOG.debug("Step7-************************Wishlist");
 								if (null != productData1 && StringUtils.isNotEmpty(prodCategory))
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 								{
 									wldpDTO.setProductCategoryId(prodCategory);
-
-
-
-
-
-
-
-
-
-
-
 
 								}
 								if (null != productData1 && null != productData1.getBrand()
@@ -3302,90 +3266,29 @@ public class UsersController extends BaseCommerceController
 								{
 									wldpDTO.setProductBrand(productData1.getBrand().getBrandname());
 								}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 								if (null != productData1 && null != productData1.getImages())
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 								{
 									//Set product image(thumbnail) url
 									for (final ImageData img : productData1.getImages())
-
-
-
 									{
-
-
-
-
-
-
-
-
-
 										/*
 										 * if (null != img && StringUtils.isNotEmpty(img.getFormat()) //&&
 										 * img.getFormat().toLowerCase().equals(MarketplacecommerceservicesConstants.THUMBNAIL)
 										 * Sonar fix &&
 										 * img.getFormat().equalsIgnoreCase(MarketplacecommerceservicesConstants.THUMBNAIL))
-
 										 */
 										if (null != img && StringUtils.isNotEmpty(img.getFormat())
 										//&& img.getFormat().toLowerCase().equals(MarketplacecommerceservicesConstants.SEARCHPAGE) Sonar fix
 												&& img.getFormat().equalsIgnoreCase(MarketplacecommerceservicesConstants.SEARCHPAGE))
-
 										{
 											wldpDTO.setImageURL(img.getUrl());
+										}
+										else if (null != img && StringUtils.isNotEmpty(img.getFormat())
+												&& img.getFormat().equalsIgnoreCase(MarketplacecommerceservicesConstants.LUXURYSEARCHPAGE))
+										{
 
-										}else if(null != img && StringUtils.isNotEmpty(img.getFormat()) 
-												&& img.getFormat().equalsIgnoreCase(MarketplacecommerceservicesConstants.LUXURYSEARCHPAGE)){
-										
 											wldpDTO.setImageURL(img.getUrl());
 										}
-										
-
-
-
-
-
 
 									}
 								}
@@ -3435,9 +3338,6 @@ public class UsersController extends BaseCommerceController
 										if (null != sellerData && StringUtils.isNotEmpty(sellerData.getUssid())
 												&& StringUtils.isNotEmpty(entryModel.getUssid())
 												&& sellerData.getUssid().equals(entryModel.getUssid()))
-
-
-
 										{
 											if (StringUtils.isNotEmpty(sellerData.getSellerID()))
 											{
@@ -3464,7 +3364,6 @@ public class UsersController extends BaseCommerceController
 											//final double price = 0.0;
 											LOG.debug("Step8-************************Wishlist");
 											if (null != buyboxmodel)
-
 											{
 
 												if (null != buyboxmodel.getSpecialPrice()
@@ -3485,12 +3384,6 @@ public class UsersController extends BaseCommerceController
 
 
 
-
-
-
-
-
-
 													wldpDTO.setMop(priceDataMop);
 
 												}
@@ -3503,52 +3396,31 @@ public class UsersController extends BaseCommerceController
 
 
 
-
-
-
-
-
-
 													wldpDTO.setMrp(priceDataMrp);
 
 
 												}
 												break;
-
 											}
-
 										}
 									}
 
 								}
 								else
-
-
 								{//Set product price when product has no seller
 									if (null != productData1 && null != productData1.getProductMRP())
-
-
-
-
 
 									{
 										wldpDTO.setMrp(productData1.getProductMRP());
 
-
 									}
 								}
-
 
 								//	final ProductModel productModel = getMplOrderFacade().getProductForCode(entryModel.getProduct().getCode());
 								LOG.debug("Step9-************************Wishlist");
 								final ProductModel productModel = productService.getProductForCode(entryModel.getProduct().getCode());
 								LOG.debug("Step10-************************Wishlist");
 								if (null != productModel.getSellerInformationRelator())
-
-
-
-
-
 								{
 									final List<SellerInformationModel> sellerInfo = (List<SellerInformationModel>) productModel
 											.getSellerInformationRelator();
@@ -3571,24 +3443,11 @@ public class UsersController extends BaseCommerceController
 										delistMessage = Localization
 												.getLocalizedString(MarketplacewebservicesConstants.DELISTED_MESSAGE_WISHLIST);
 										wlDTO.setDelistedMessage(delistMessage);
-
 									}
 									//wldDTO.setCount(Integer.valueOf(entryModels.size()));
 									entryModelSize += 1;//TPR-5787 modified
 
-
-
-
-
 								}
-
-
-
-
-
-
-
-
 							}
 						}
 						LOG.debug("Step11: The size of entries in wishlist is" + entryModelSize);//for TPR-5787
@@ -3596,13 +3455,10 @@ public class UsersController extends BaseCommerceController
 						wldDTO.setProducts(wldpDTOList);
 						wldDTOList.add(wldDTO);
 					}
-
-
 				}
 				wlDTO.setWishList(wldDTOList);
 			}
 			wlDTO.setStatus(MarketplacecommerceservicesConstants.SUCCESSS_RESP);
-
 		}
 		catch (final EtailNonBusinessExceptions e)
 		{
@@ -3631,7 +3487,6 @@ public class UsersController extends BaseCommerceController
 			wlDTO.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
 		}
 
-
 		return wlDTO;
 
 	}//End of Get all Wish List data.
@@ -3653,104 +3508,59 @@ public class UsersController extends BaseCommerceController
 	{
 
 		boolean successFlag = false;
-		boolean userflag = false;
-		boolean wishlistflag = false;
-
+		final boolean wishlistflag = false;
 		final UserResultWsDto result = new UserResultWsDto();
-		final Wishlist2EntryModel requiredWlEntry = null;
-		//final boolean productFound = false;
-
-		//		final MplCustomerProfileData mplCustData = new MplCustomerProfileData();
-		//		mplCustData.setDisplayUid(userId);
+		Wishlist2EntryModel requiredWlEntry = null;
+		boolean productFound = false;
 		try
 		{
-			//final UserModel user = userexService.getUserForUID(mplCustData.getDisplayUid());
 			final UserModel user = userService.getCurrentUser();
-
 			if (null == user)
 			{
 				throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9025);
 			}
 
-			/*
-			 * final List<Wishlist2EntryModel> allWishlistEntry = wishlistFacade.getAllWishlistByUssid(USSID); if
-			 * (CollectionUtils.isNotEmpty(allWishlistEntry)) { for (final Wishlist2EntryModel wishentryModel :
-			 * allWishlistEntry) { if (null != wishentryModel.getWishlist() && StringUtils.isNotBlank(wishlistName) &&
-			 * wishlistName.equalsIgnoreCase(wishentryModel.getWishlist().getName())) { productFound = true;
-			 * requiredWlEntry = wishentryModel; break; } } } else
-			 * 
-			 * 
-			 * { throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9211);
-			 * 
-			 * }
-			 */
-
-			//Fetching all wishList for the user
-			final List<Wishlist2Model> allWishlists = wishlistService.getWishlists(user);
-			userflag = true;
-			Wishlist2Model requiredWl = null;
-			String name = null;
-
-			//Checking wether wishlistname is empty or not
-			if (!wishlistName.isEmpty())
+			final List<Wishlist2EntryModel> allWishlistEntry = wishlistFacade.getAllWishlistByUssid(USSID);
+			if (CollectionUtils.isNotEmpty(allWishlistEntry))
 			{
-
-				name = wishlistName;
-			}
-
-			for (final Wishlist2Model wl : allWishlists)
-			{
-
-				if (name.equals(wl.getName()))
+				for (final Wishlist2EntryModel wishentryModel : allWishlistEntry)
 				{
-					requiredWl = wl;
-					wishlistflag = true;
-					break;
-				}
-			}
-
-
-			//Wishlist2EntryModel wishlist2EntryModel = null;
-			boolean ProductFound = false;
-			final List<Wishlist2EntryModel> entryModels = requiredWl.getEntries();
-			if (entryModels.size() >= 1)
-			{
-
-
-				for (final Wishlist2EntryModel entryModel : entryModels)
-				{
-					final Collection<SellerInformationModel> sellerList = entryModel.getProduct().getSellerInformationRelator();
-					for (final SellerInformationModel seller : sellerList)
+					if (null != wishentryModel.getWishlist() && StringUtils.isNotBlank(wishlistName)
+							&& wishlistName.equalsIgnoreCase(wishentryModel.getWishlist().getName()))
 					{
-						if (seller.getSellerArticleSKU().equals(USSID))
-						{
-							//	wishlist2EntryModel = entryModel;
-							ProductFound = true;
-						}
-
+						productFound = true;
+						requiredWlEntry = wishentryModel;
+						break;
 					}
-				}
-
-				if (ProductFound)
-				{
-					//wishlistService.removeWishlistEntry(requiredWl, wishlist2EntryModel);
-					successFlag = wishlistFacade.removeWishlistEntry(requiredWlEntry);
-					//Set Success Flag to true
-					//successFlag = true;
-				}
-				else
-				{
-					throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9210);
 				}
 			}
 			else
 			{
-
-
-
 				throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9211);
+			}
+
+			if (productFound)
+			{
+				successFlag = wishlistFacade.removeWishlistEntry(requiredWlEntry);
+				//Set Success Flag to true
+			}
+			else
+			{
+				throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9210);
+			}
+
+			if (successFlag)
+			{
+				//Set result status to success
+				result.setStatus(MarketplacecommerceservicesConstants.SUCCESS_FLAG);
 
 			}
+			else
+			{
+				//Set result status to error
+				result.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
+			}
+
 		}
 		catch (final EtailNonBusinessExceptions e)
 		{
@@ -3780,35 +3590,12 @@ public class UsersController extends BaseCommerceController
 		}
 		catch (final Exception e)
 		{
-			//Check if user was found
-			if (!userflag)
-			{
-				result.setError(MarketplacecommerceservicesConstants.USER_NOT_FOUND);
-			}
 			//Check if Wishlist was found for user
-
-			if (userflag)
+			if (!wishlistflag)
 			{
-				if (!wishlistflag)
-				{
-					result.setError(MarketplacecommerceservicesConstants.WISHLIST_NOT_FOUND);
-				}
-
+				result.setError(MarketplacecommerceservicesConstants.WISHLIST_NOT_FOUND);
 			}
-
 			//Set Success Flag to false
-			successFlag = false;
-		}
-
-		if (successFlag)
-		{
-			//Set result status to success
-			result.setStatus(MarketplacecommerceservicesConstants.SUCCESS_FLAG);
-
-		}
-		else
-		{
-			//Set result status to error
 			result.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
 		}
 
@@ -3836,7 +3623,7 @@ public class UsersController extends BaseCommerceController
 			//currentUser = mplPaymentWebFacade.getCustomer(userId);
 			final String userIdLwCase = userId.toLowerCase(); //INC144318796
 			currentUser = mplPaymentWebFacade.getCustomer(userIdLwCase);
-			
+
 			final String authorization = httpRequest.getHeader("Authorization");
 			String username = null;
 			if (authorization != null && authorization.startsWith("Basic"))
@@ -4005,7 +3792,7 @@ public class UsersController extends BaseCommerceController
 		}
 		else
 		{
-            final String userIdLwCase = userId.toLowerCase(); //INC144318796
+			final String userIdLwCase = userId.toLowerCase(); //INC144318796
 			final MplCustomerProfileData customerToSave = mplCustomerProfileService.getCustomerProfileDetail(userIdLwCase);
 			//final MplCustomerProfileData customerToSave = mplCustomerProfileService.getCustomerProfileDetail(userId);
 			// Get the data before editing
@@ -4454,7 +4241,7 @@ public class UsersController extends BaseCommerceController
 		{
 			try
 			{
-                final String emailIdLwCase = emailid.toLowerCase(); //INC144318796
+				final String emailIdLwCase = emailid.toLowerCase(); //INC144318796
 				customerData = mplCustomerProfileService.getCustomerProfileDetail(emailIdLwCase);
 
 				//customerData = mplCustomerProfileService.getCustomerProfileDetail(emailid);
@@ -4556,7 +4343,7 @@ public class UsersController extends BaseCommerceController
 		MplUserResultWsDto validated = new MplUserResultWsDto();
 		try
 		{
-            final String userIdLwCase = userId.toLowerCase(); //INC144318796
+			final String userIdLwCase = userId.toLowerCase(); //INC144318796
 			validated = mplUserHelper.validateRegistrationData(userIdLwCase, newPassword);
 			if (null != validated.getStatus()
 					&& validated.getStatus().equalsIgnoreCase(MarketplacecommerceservicesConstants.ERROR_FLAG))
@@ -6113,7 +5900,8 @@ public class UsersController extends BaseCommerceController
 			@RequestParam(required = false) final String MobileNo, @RequestParam(required = false) final String addressLane1,
 			@RequestParam(required = false) final String addressLane2, @RequestParam(required = false) final String countryIso,
 			@RequestParam(required = false) final String city, @RequestParam(required = false) final String state,
-			@RequestParam(required = false) final String landmark, @RequestParam(required = false) final String pincode)
+			@RequestParam(required = false) final String landmark, @RequestParam(required = false) final String pincode,
+			@RequestParam(required = false) final String revSealJwlry)
 	{
 		final MplUserResultWsDto output = new MplUserResultWsDto();
 		boolean resultFlag = false;
@@ -6157,7 +5945,7 @@ public class UsersController extends BaseCommerceController
 			else if (ticketTypeCode.equalsIgnoreCase("R") && returnFlag)
 			{
 				resultFlag = cancelReturnFacade.implementReturnItem(orderDetails, orderEntry, reasonCode, ussid, ticketTypeCode,
-						customerData, refundType, true, SalesApplication.MOBILE, returnItemAddressData);
+						customerData, refundType, true, SalesApplication.MOBILE, returnItemAddressData, revSealJwlry);
 			}
 
 			if (resultFlag)
@@ -6622,7 +6410,8 @@ public class UsersController extends BaseCommerceController
 			@RequestParam(required = false) final String town, @RequestParam(required = false) final String state,
 			@RequestParam(required = false) final String countryIso, @RequestParam(required = false) final String postalCode,
 			@RequestParam(required = false) final String phone, @RequestParam(required = false) final String addressType,
-			@RequestParam(required = false) final boolean defaultFlag, @RequestParam(required = false) final boolean saveFlag)
+			@RequestParam(required = false) final boolean defaultFlag, @RequestParam(required = false) final boolean saveFlag,
+			@RequestParam(required = false, defaultValue = "false") final boolean removeExchangeFromCart)
 			throws RequestParameterException
 	{
 		String errorMsg = null;
@@ -6756,6 +6545,37 @@ public class UsersController extends BaseCommerceController
 						cartIdentifier = cartModel.getCode();
 						LOG.debug("addAddressToOrder: Loged in User" + cartIdentifier + "  cartId: " + cartId);
 					}
+					if (addressmodel != null && !removeExchangeFromCart)
+					{
+						for (final AbstractOrderEntryModel entry : cartModel.getEntries())
+						{
+							if (StringUtils.isNotEmpty(entry.getExchangeId()))
+							{
+								if (!exchangeFacade.isBackwardServiceble(addressmodel.getPostalcode()))
+								{
+									result.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
+									result.setError(MarketplacecommerceservicesConstants.REVERSE_PINCODE_NOT_SERVICABLE);
+
+									throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9306);
+								}
+
+							}
+						}
+
+					}
+					else if (removeExchangeFromCart)
+					{
+						for (final AbstractOrderEntryModel entry : cartModel.getEntries())
+						{
+							if (StringUtils.isNotEmpty(entry.getExchangeId()))
+							{
+								exchangeFacade.removeExchangefromCart(cartModel);
+
+							}
+						}
+					}
+
+					//true only in case of cance
 					if (cartIdentifier.equals(cartId))
 					{
 						cartModel.setDeliveryAddress(addressmodel);
@@ -6944,10 +6764,7 @@ public class UsersController extends BaseCommerceController
 			// For Mobile
 			juspayMerchantId = !getConfigurationService().getConfiguration()
 					.getString(MarketplacecommerceservicesConstants.MARCHANTID).isEmpty() ? getConfigurationService()
-					.getConfiguration().getString(MarketplacecommerceservicesConstants.MARCHANTID)
-					: NO_JUSPAY_MERCHANTKEY;
-
-
+					.getConfiguration().getString(MarketplacecommerceservicesConstants.MARCHANTID) : NO_JUSPAY_MERCHANTKEY;
 
 			if (commonUtils.isLuxurySite())
 			{
@@ -6955,20 +6772,15 @@ public class UsersController extends BaseCommerceController
 						.getString(MarketplacecommerceservicesConstants.RETURNURLLUX).isEmpty() ? getConfigurationService()
 
 
-				.getConfiguration().getString(MarketplacecommerceservicesConstants.RETURNURLLUX)
-						: NO_JUSPAY_URL;
-
+				.getConfiguration().getString(MarketplacecommerceservicesConstants.RETURNURLLUX) : NO_JUSPAY_URL;
 
 			}
 			else
 			{
 				juspayReturnUrl = !getConfigurationService().getConfiguration()
 						.getString(MarketplacecommerceservicesConstants.RETURNURL).isEmpty() ? getConfigurationService()
-						.getConfiguration().getString(MarketplacecommerceservicesConstants.RETURNURL)
-						: NO_JUSPAY_URL;
+						.getConfiguration().getString(MarketplacecommerceservicesConstants.RETURNURL) : NO_JUSPAY_URL;
 			}
-
-
 
 			returnUrlBuilder.append(juspayReturnUrl);
 			//To avoid backward- incompatibility,
@@ -7112,27 +6924,20 @@ public class UsersController extends BaseCommerceController
 
 						juspayMerchantId = !getConfigurationService().getConfiguration()
 								.getString(MarketplacecommerceservicesConstants.MARCHANTID).isEmpty() ? getConfigurationService()
-								.getConfiguration().getString(MarketplacecommerceservicesConstants.MARCHANTID)
-								: NO_JUSPAY_MERCHANTKEY;
-
-
+								.getConfiguration().getString(MarketplacecommerceservicesConstants.MARCHANTID) : NO_JUSPAY_MERCHANTKEY;
 
 						if (commonUtils.isLuxurySite())
 						{
 							juspayReturnUrl = !getConfigurationService().getConfiguration()
 									.getString(MarketplacecommerceservicesConstants.RETURNURLLUX).isEmpty() ? getConfigurationService()
-									.getConfiguration().getString(MarketplacecommerceservicesConstants.RETURNURLLUX)
-									: NO_JUSPAY_URL;
-
+									.getConfiguration().getString(MarketplacecommerceservicesConstants.RETURNURLLUX) : NO_JUSPAY_URL;
 
 						}
 						else
 						{
 							juspayReturnUrl = !getConfigurationService().getConfiguration()
 									.getString(MarketplacecommerceservicesConstants.RETURNURL).isEmpty() ? getConfigurationService()
-									.getConfiguration().getString(MarketplacecommerceservicesConstants.RETURNURL)
-									: NO_JUSPAY_URL;
-
+									.getConfiguration().getString(MarketplacecommerceservicesConstants.RETURNURL) : NO_JUSPAY_URL;
 						}
 
 						juspayOrderId = mplPaymentFacade.createJuspayOrder(cart, null, firstName, lastName, addressLine1, addressLine2,
@@ -7632,6 +7437,12 @@ public class UsersController extends BaseCommerceController
 		ReturnReasonDetails returnReasonData = null;
 		ReturnReasonDTO reasonDto = new ReturnReasonDTO();
 		final List<ReturnReasonDTO> returnReasondtolist = new ArrayList<ReturnReasonDTO>();
+		final String revSealSellerList = getConfigurationService().getConfiguration().getString(
+				"finejewellery.reverseseal.sellername");
+		boolean isFineJew = false;
+		boolean showRevSeal = false;
+		final RevSealJwlryDataWsDTO revSealFrJwlry = new RevSealJwlryDataWsDTO();
+		final ReturnModesWsDTO returnModes = new ReturnModesWsDTO();
 		try
 		{
 			final List<OrderProductWsDTO> orderproductWsDto = getOrderDetailsFacade.getOrderdetailsForApp(orderCode, transactionId,
@@ -7641,11 +7452,58 @@ public class UsersController extends BaseCommerceController
 
 				returnRequestDTO.setOrderProductWsDTO(orderproductWsDto);
 				returnReasonData = mplOrderFacade.getReturnReasonForOrderItem(returnCancelFlag);
+
+				//TPR-4134 starts
+				returnModes.setSelfCourier(true);
+				returnModes.setSchedulePickup(true);
+				returnModes.setQuickDrop(true);
+				returnRequestDTO.setShowReverseSealFrJwlry(MarketplacecommerceservicesConstants.NO);
+
+				if (StringUtils.isNotEmpty(revSealSellerList))
+				{
+					final List<String> sellerList = Arrays.asList(revSealSellerList.split(","));
+					for (final OrderProductWsDTO orderEntry : orderproductWsDto)
+					{
+						if (sellerList.contains(orderEntry.getSellerName()))
+						{
+							showRevSeal = true;
+							revSealFrJwlry.setMessage(MarketplacecommerceservicesConstants.REV_SEAL_JWLRY);
+							revSealFrJwlry.setYes("Y");
+							revSealFrJwlry.setNo("N");
+							LOG.debug("Reverse seal section will be shown");
+							break;
+						}
+					}
+				}
+				for (final OrderProductWsDTO orderEntryDto : orderproductWsDto)
+				{
+					final ProductModel productModel = getMplOrderFacade().getProductForCode(orderEntryDto.getProductcode());
+					if (null != productModel
+							&& MarketplacecommerceservicesConstants.FINEJEWELLERY
+									.equalsIgnoreCase(productModel.getProductCategoryType()))
+					{
+						isFineJew = true;
+						if (showRevSeal)
+						{
+							returnRequestDTO.setShowReverseSealFrJwlry(MarketplacecommerceservicesConstants.YES);
+						}
+						returnModes.setSelfCourier(false);
+						returnRequestDTO.setReverseSealFrJwlry(revSealFrJwlry);
+						break;
+					}
+				}
+				returnRequestDTO.setReturnModes(returnModes);
+				//TPR-4134 ends
 			}
 			if (null != returnReasonData && CollectionUtils.isNotEmpty(returnReasonData.getReturnReasonDetailsList()))
 			{
 				for (final ReturnReasonData entry : returnReasonData.getReturnReasonDetailsList())
 				{
+					if (!isFineJew
+							&& MarketplacecommerceservicesConstants.RETURN_FINEJEWELLERY.equalsIgnoreCase(entry.getReasonDescription()))
+					{
+						continue;
+					}
 					reasonDto = dataMapper.map(entry, ReturnReasonDTO.class);
 					returnReasondtolist.add(reasonDto);
 
@@ -7697,6 +7555,8 @@ public class UsersController extends BaseCommerceController
 		final ReturnDetailsWsDTO returnDeatails = new ReturnDetailsWsDTO();
 		List<ReturnReasonData> reasonList = new ArrayList<ReturnReasonData>();
 		List<PointOfServiceData> returnableStores = new ArrayList<PointOfServiceData>();
+		String ussid = "";
+		boolean isFineJew = false;
 		try
 		{
 			final OrderModel subOrderModel = orderModelService.getOrder(orderCode);
@@ -7725,12 +7585,28 @@ public class UsersController extends BaseCommerceController
 						}
 					}
 
+					if (productModel.getProductCategoryType().equalsIgnoreCase(MarketplacecommerceservicesConstants.FINEJEWELLERY))
+					{
+						isFineJew = true;
+						final List<JewelleryInformationModel> jewelleryInfo = jewelleryService.getJewelleryInfoByUssid(orderEntry
+								.getSelectedUssid());
+						ussid = (CollectionUtils.isNotEmpty(jewelleryInfo)) ? jewelleryInfo.get(0).getPCMUSSID() : "";
+
+						LOG.debug("PCMUSSID FOR JEWELLERY :::::::::: " + "for " + orderEntry.getSelectedUssid() + " is "
+								+ jewelleryInfo.get(0).getPCMUSSID());
+					}
+					else
+					{
+						ussid = orderEntry.getSelectedUssid();
+					}
+
 					final List<SellerInformationModel> sellerInfo = (List<SellerInformationModel>) productModel
 							.getSellerInformationRelator();
 
 					for (final SellerInformationModel sellerInformationModel : sellerInfo)
 					{
-						if (sellerInformationModel.getSellerArticleSKU().equals(orderEntry.getSelectedUssid()))
+						/* if (sellerInformationModel.getSellerArticleSKU().equals(orderEntry.getSelectedUssid())) */
+						if (sellerInformationModel.getSellerArticleSKU().equals(ussid))
 						{
 							List<RichAttributeModel> sellerRichAttributeModel = null;
 							if (sellerInformationModel.getRichAttribute() != null)
@@ -7753,6 +7629,19 @@ public class UsersController extends BaseCommerceController
 
 			}
 			reasonList = mplOrderService.getReturnReasonForOrderItem();
+
+			if (!isFineJew)
+			{
+				for (final Iterator<ReturnReasonData> iterator = reasonList.iterator(); iterator.hasNext();)
+				{
+					final ReturnReasonData returnData = iterator.next();
+					if (MarketplacecommerceservicesConstants.RETURN_FINEJEWELLERY.equalsIgnoreCase(returnData.getReasonDescription()))
+					{
+						iterator.remove();
+					}
+				}
+			}
+
 			final List<String> timeSlots = mplConfigFacade.getDeliveryTimeSlots("RD");
 			final List<String> returnableDates = cancelReturnFacade.getReturnableDates(orderEntry);
 			returnDeatails.setReturnTimeSlots(timeSlots);
@@ -7970,6 +7859,12 @@ public class UsersController extends BaseCommerceController
 				returnAddrData.setMobileNo(returnData.getPhoneNumber());
 				returnAddrData.setState(getStateCode(returnData.getState()));
 				returnAddrData.setPincode(returnData.getPincode());
+				//TPR-4134
+				if (null != returnData.getReverseSealAvailable())
+				{
+					returnInfoData.setReverseSealLostflag(returnData.getReverseSealAvailable());
+				}
+
 				if (returnData.getRefundType().equalsIgnoreCase(MarketplacecommerceservicesConstants.RETURN_TYPE))
 				{
 					cancellationStatus = cancelReturnFacade.implementReturnItem(subOrderDetails, subOrderEntry, returnInfoData,

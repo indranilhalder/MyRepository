@@ -61,8 +61,9 @@ var buyboxskuId='';
 					<ycommerce:testId code="productStyleNotes_content_label">
 						<ul>
 				  			<c:forEach var="classification" items="${mapConfigurableAttribute}">
-								<li>${classification.value}</li>
+								<li>${classification.key} - ${classification.value}</li>
 							</c:forEach>
+							<li><spring:theme code="product.listing.id"></spring:theme>${product.code}</li>
 				  		</ul>
 					</ycommerce:testId>
 				</div>

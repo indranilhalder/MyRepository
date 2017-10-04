@@ -404,7 +404,7 @@ TATA.CommonFunctions = {
                 infinite: false,
                 arrows: false,
                 swipe: false,
-                dots: true
+                dots: false
             });
         }
     },    
@@ -412,13 +412,15 @@ TATA.CommonFunctions = {
     TrendingCatagorySlider: function() { 
         
         $('.trending-products-catagory').slick({
-            slidesToScroll: 4,
-            slidesToShow: 4,
+            slidesToScroll: 5,
+            slidesToShow: 5,
             variableWidth: false,
             infinite: false,
-            arrows: false,
+            arrows: true,
             swipe: false,
             dots: false,
+            infinite:true,
+            
             responsive: [
                 {
                 breakpoint: 768,
@@ -427,6 +429,7 @@ TATA.CommonFunctions = {
                     slidesToShow: 1,
                     infinite: true,
                     swipe: true,
+                    arrows: false,
                     variableWidth: true                      
                     }
                 }
@@ -2783,6 +2786,16 @@ $(document).ready(function () {
             window.history.pushState({}, null, '/');
         }
     }
+    /*POPULAR SEARCHES COLLAPSE START*/
+    
+    $(".footer-popular-accordian-title").click(function () {      
+        $(".footer-popular-search .mega-menu").slideToggle('400', function() {
+            $(window).scrollTop($(document).height());
+        });
+        $("#footer-popular-accordian-icon").toggleClass('glyphicon-minus','glyphicon-plus');
+    });
+    
+    /*POPULAR SEARCHES COLLAPSE END*/
 });
 
 $(window).scroll(function () {
