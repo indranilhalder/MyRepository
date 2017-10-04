@@ -205,29 +205,25 @@ public class MplSendSMSService implements SendSmsService
 			bulkSmsListDTO.setBulkSmsDTO(bulkSmsDTOs);
 			bulkSmsListDTO.setSenderId(senderId);
 			JAXBContext testcontext;
-
-			if (LOG.isDebugEnabled())
+			final StringWriter sw = new StringWriter();
+			try
 			{
-				try
-				{
-					testcontext = JAXBContext.newInstance(BulkSmsListDTO.class);
+				testcontext = JAXBContext.newInstance(BulkSmsListDTO.class);
 
-					final Marshaller m = testcontext.createMarshaller();
+				final Marshaller m = testcontext.createMarshaller();
 
-					m.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE); // To format XML
+				m.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE); // To format XML
 
-					final StringWriter sw = new StringWriter();
-					m.marshal(bulkSmsListDTO, sw);
-					System.out.println(sw.toString());
-					LOG.debug(sw.toString());
-				}
-				catch (final JAXBException e)
-				{
-					// YTODO Auto-generated catch block
-					e.printStackTrace();
-				}
+
+				m.marshal(bulkSmsListDTO, sw);
+				System.out.println(sw.toString());
+				LOG.debug(sw.toString());
 			}
-
+			catch (final JAXBException e)
+			{
+				// YTODO Auto-generated catch block
+				e.printStackTrace();
+			}
 			// Setting  the username & password for connecting the SMS Server
 			final Client client = Client.create();
 			final String username = configurationService.getConfiguration().getString(
@@ -246,17 +242,19 @@ public class MplSendSMSService implements SendSmsService
 					configurationService.getConfiguration().getString(MarketplacecclientservicesConstants.BULK_SMS_SERVICE_URL))
 					.build());
 			LOG.debug("========== Step:2==========");
-			final JAXBContext context = JAXBContext.newInstance(BulkSmsListDTO.class);
-			final Marshaller marshaller = context.createMarshaller();
+			//final JAXBContext context = JAXBContext.newInstance(BulkSmsListDTO.class);
+			//final Marshaller marshaller = context.createMarshaller();
 
-			final JSONMarshaller marshallers = JSONJAXBContext.getJSONMarshaller(marshaller, context);
-			marshallers.setProperty(MarshallerProperties.JSON_INCLUDE_ROOT, Boolean.TRUE);
-			marshallers.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
+			//final JSONMarshaller marshallers = JSONJAXBContext.getJSONMarshaller(marshaller, context);
+			//marshallers.setProperty(MarshallerProperties.JSON_INCLUDE_ROOT, Boolean.TRUE);
+			//marshallers.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
+
+
 			final ClientResponse response = webResource.type(MediaType.APPLICATION_XML).accept(MediaType.APPLICATION_XML)
-					.entity(BulkSmsListDTO.class).post(ClientResponse.class);
+					.entity(sw.toString()).post(ClientResponse.class);
 			LOG.debug("========== Step:3==========");
 			LOG.debug("========== response status ::" + response.getStatus());
-			if (checkResponseStatus(null != response ? (String.valueOf(response.getStatus())) : " ", globalResponse))
+			if (checkResponseStatus(String.valueOf(response.getStatus()), globalResponse))
 			{
 				return true;
 			}
@@ -274,8 +272,6 @@ public class MplSendSMSService implements SendSmsService
 
 	private boolean checkResponseStatus(final String receivedResponse, final String globalResponse)
 	{
-		String status = "";
-		status = configurationService.getConfiguration().getString(globalResponse);
-		return (status.indexOf(receivedResponse) == -1) ? false : true;
+		return (globalResponse.indexOf(receivedResponse) == -1) ? false : true;
 	}
 }

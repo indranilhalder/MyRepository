@@ -61,8 +61,8 @@ public class DefaultMplOrderDao implements MplOrderDao
 		try
 		{
 			final String queryString = //
-					"SELECT {" + ReturnReasonModel.PK + "}" //
-							+ "FROM {" + ReturnReasonModel._TYPECODE + "} ORDER BY {" + ReturnReasonModel.REASONCODE + "} ASC";
+			"SELECT {" + ReturnReasonModel.PK + "}" //
+					+ "FROM {" + ReturnReasonModel._TYPECODE + "} ORDER BY {" + ReturnReasonModel.REASONCODE + "} ASC";
 
 			final FlexibleSearchQuery query = new FlexibleSearchQuery(queryString);
 
@@ -96,19 +96,27 @@ public class DefaultMplOrderDao implements MplOrderDao
 			{
 				queryParams.put("statusList", Arrays.asList(status));
 
-				sortQueries = Arrays.asList(new SortQueryData[]
-				{ createSortQueryData(MarketplacecommerceservicesConstants.BY_DATE,
-						"SELECT {pk}, {creationtime}, {code} FROM {Order} WHERE {user} = ?customer AND {versionID} IS NULL AND {store} = ?store AND {status} IN (?statusList) AND {type} = ?type ORDER BY {creationtime} DESC, {pk}"),
-						createSortQueryData(MarketplacecommerceservicesConstants.BY_ORDER_NO,
-								"SELECT {pk}, {creationtime}, {code} FROM {Order} WHERE {user} = ?customer AND {versionID} IS NULL AND {store} = ?store AND {status} IN (?statusList) AND {type} = ?type ORDER BY {code},{creationtime} DESC, {pk}") });
+				sortQueries = Arrays
+						.asList(new SortQueryData[]
+						{
+								createSortQueryData(
+										MarketplacecommerceservicesConstants.BY_DATE,
+										"SELECT {pk}, {creationtime}, {code} FROM {Order} WHERE {user} = ?customer AND {versionID} IS NULL AND {store} = ?store AND {status} IN (?statusList) AND {type} = ?type ORDER BY {creationtime} DESC, {pk}"),
+								createSortQueryData(
+										MarketplacecommerceservicesConstants.BY_ORDER_NO,
+										"SELECT {pk}, {creationtime}, {code} FROM {Order} WHERE {user} = ?customer AND {versionID} IS NULL AND {store} = ?store AND {status} IN (?statusList) AND {type} = ?type ORDER BY {code},{creationtime} DESC, {pk}") });
 			}
 			else
 			{
-				sortQueries = Arrays.asList(new SortQueryData[]
-				{ createSortQueryData(MarketplacecommerceservicesConstants.BY_DATE,
-						"SELECT {pk}, {creationtime}, {code} FROM {Order} WHERE {user} = ?customer AND {versionID} IS NULL AND {store} = ?store AND {type} = ?type ORDER BY {creationtime} DESC, {pk}"),
-						createSortQueryData(MarketplacecommerceservicesConstants.BY_ORDER_NO,
-								"SELECT {pk}, {creationtime}, {code} FROM {Order} WHERE {user} = ?customer AND {versionID} IS NULL AND {store} = ?store AND {type} = ?type ORDER BY {code},{creationtime} DESC, {pk}") });
+				sortQueries = Arrays
+						.asList(new SortQueryData[]
+						{
+								createSortQueryData(
+										MarketplacecommerceservicesConstants.BY_DATE,
+										"SELECT {pk}, {creationtime}, {code} FROM {Order} WHERE {user} = ?customer AND {versionID} IS NULL AND {store} = ?store AND {type} = ?type ORDER BY {creationtime} DESC, {pk}"),
+								createSortQueryData(
+										MarketplacecommerceservicesConstants.BY_ORDER_NO,
+										"SELECT {pk}, {creationtime}, {code} FROM {Order} WHERE {user} = ?customer AND {versionID} IS NULL AND {store} = ?store AND {type} = ?type ORDER BY {code},{creationtime} DESC, {pk}") });
 			}
 
 			return pagedFlexibleSearchService.search(sortQueries, MarketplacecommerceservicesConstants.BY_DATE, queryParams,
@@ -142,19 +150,27 @@ public class DefaultMplOrderDao implements MplOrderDao
 			{
 				queryParams.put("statusList", Arrays.asList(status));
 
-				sortQueries = Arrays.asList(new SortQueryData[]
-				{ createSortQueryData(MarketplacecommerceservicesConstants.BY_DATE,
-						"SELECT {pk}, {creationtime}, {code} FROM {Order} WHERE {user} = ?customer AND {versionID} IS NULL AND {store} = ?store AND {status} IN (?statusList) AND {type} = ?type ORDER BY {creationtime} DESC, {pk}"),
-						createSortQueryData(MarketplacecommerceservicesConstants.BY_ORDER_NO,
-								"SELECT {pk}, {creationtime}, {code} FROM {Order} WHERE {user} = ?customer AND {versionID} IS NULL AND {store} = ?store AND {status} IN (?statusList) AND {type} = ?type ORDER BY {code},{creationtime} DESC, {pk}") });
+				sortQueries = Arrays
+						.asList(new SortQueryData[]
+						{
+								createSortQueryData(
+										MarketplacecommerceservicesConstants.BY_DATE,
+										"SELECT {pk}, {creationtime}, {code} FROM {Order} WHERE {user} = ?customer AND {versionID} IS NULL AND {store} = ?store AND {status} IN (?statusList) AND {type} = ?type ORDER BY {creationtime} DESC, {pk}"),
+								createSortQueryData(
+										MarketplacecommerceservicesConstants.BY_ORDER_NO,
+										"SELECT {pk}, {creationtime}, {code} FROM {Order} WHERE {user} = ?customer AND {versionID} IS NULL AND {store} = ?store AND {status} IN (?statusList) AND {type} = ?type ORDER BY {code},{creationtime} DESC, {pk}") });
 			}
 			else
 			{
-				sortQueries = Arrays.asList(new SortQueryData[]
-				{ createSortQueryData(MarketplacecommerceservicesConstants.BY_DATE,
-						"SELECT {pk}, {creationtime}, {code} FROM {Order} WHERE {user} = ?customer AND {versionID} IS NULL AND {store} = ?store AND {type} = ?type ORDER BY {creationtime} DESC, {pk}"),
-						createSortQueryData(MarketplacecommerceservicesConstants.BY_ORDER_NO,
-								"SELECT {pk}, {creationtime}, {code} FROM {Order} WHERE {user} = ?customer AND {versionID} IS NULL AND {store} = ?store AND {type} = ?type ORDER BY {code},{creationtime} DESC, {pk}") });
+				sortQueries = Arrays
+						.asList(new SortQueryData[]
+						{
+								createSortQueryData(
+										MarketplacecommerceservicesConstants.BY_DATE,
+										"SELECT {pk}, {creationtime}, {code} FROM {Order} WHERE {user} = ?customer AND {versionID} IS NULL AND {store} = ?store AND {type} = ?type ORDER BY {creationtime} DESC, {pk}"),
+								createSortQueryData(
+										MarketplacecommerceservicesConstants.BY_ORDER_NO,
+										"SELECT {pk}, {creationtime}, {code} FROM {Order} WHERE {user} = ?customer AND {versionID} IS NULL AND {store} = ?store AND {type} = ?type ORDER BY {code},{creationtime} DESC, {pk}") });
 			}
 
 			return pagedFlexibleSearchService.search(sortQueries, MarketplacecommerceservicesConstants.BY_DATE, queryParams,
@@ -187,11 +203,15 @@ public class DefaultMplOrderDao implements MplOrderDao
 			queryParams.put(MarketplacecommerceservicesConstants.TYPE, PARENT_KEY);
 			queryParams.put("creationtime", fromDate);
 
-			final List sortQueries = Arrays.asList(new SortQueryData[]
-			{ createSortQueryData(MarketplacecommerceservicesConstants.BY_DATE,
-					"SELECT {pk}, {creationtime}, {code} FROM {Order} WHERE {user} = ?customer AND {versionID} IS NULL AND {store} = ?store AND {type} = ?type AND {creationtime} >= ?creationtime ORDER BY {creationtime} DESC, {pk}"),
-					createSortQueryData(MarketplacecommerceservicesConstants.BY_ORDER_NO,
-							"SELECT {pk}, {creationtime}, {code} FROM {Order} WHERE {user} = ?customer AND {versionID} IS NULL AND {store} = ?store AND {type} = ?type AND {creationtime} >= ?creationtime ORDER BY {code},{creationtime} DESC, {pk}") });
+			final List sortQueries = Arrays
+					.asList(new SortQueryData[]
+					{
+							createSortQueryData(
+									MarketplacecommerceservicesConstants.BY_DATE,
+									"SELECT {pk}, {creationtime}, {code} FROM {Order} WHERE {user} = ?customer AND {versionID} IS NULL AND {store} = ?store AND {type} = ?type AND {creationtime} >= ?creationtime ORDER BY {creationtime} DESC, {pk}"),
+							createSortQueryData(
+									MarketplacecommerceservicesConstants.BY_ORDER_NO,
+									"SELECT {pk}, {creationtime}, {code} FROM {Order} WHERE {user} = ?customer AND {versionID} IS NULL AND {store} = ?store AND {type} = ?type AND {creationtime} >= ?creationtime ORDER BY {code},{creationtime} DESC, {pk}") });
 
 
 			return pagedFlexibleSearchService.search(sortQueries, MarketplacecommerceservicesConstants.BY_DATE, queryParams,
@@ -265,8 +285,8 @@ public class DefaultMplOrderDao implements MplOrderDao
 			final FlexibleSearchQuery cancellationReasonQuery = new FlexibleSearchQuery(queryString);
 
 			//fetching cancellation reasons from DB using flexible search query
-			final List<CancellationReasonModel> cancellationReasonList = flexibleSearchService
-					.<CancellationReasonModel> search(cancellationReasonQuery).getResult();
+			final List<CancellationReasonModel> cancellationReasonList = flexibleSearchService.<CancellationReasonModel> search(
+					cancellationReasonQuery).getResult();
 			if (null != cancellationReasonList && !cancellationReasonList.isEmpty())
 			{
 				return cancellationReasonList;
@@ -302,8 +322,8 @@ public class DefaultMplOrderDao implements MplOrderDao
 			auditWithGUIDQuery.addQueryParameter(MarketplacecommerceservicesConstants.CARTGUID, cartGUID);
 
 			//fetching list of Audit Entries from DB using flexible search query
-			final List<MplPaymentAuditModel> mplPaymentAuditList = flexibleSearchService
-					.<MplPaymentAuditModel> search(auditWithGUIDQuery).getResult();
+			final List<MplPaymentAuditModel> mplPaymentAuditList = flexibleSearchService.<MplPaymentAuditModel> search(
+					auditWithGUIDQuery).getResult();
 			if (null != mplPaymentAuditList && !mplPaymentAuditList.isEmpty())
 			{
 				mplPaymentAudit = mplPaymentAuditList.get(0);
@@ -410,16 +430,19 @@ public class DefaultMplOrderDao implements MplOrderDao
 
 	//TPR-5225
 	@Override
-	public List<OrderModel> getOrderByMobile(final String mobileNo, final int queryCount)
+	public List<OrderModel> getOrderByMobile(final String mobileNo, final int queryCount, final int transactionLimit)
 	{
 		try
 		{
 			LOG.debug("QueryCount**" + queryCount);
+			//SDI-1193
+			LOG.debug("transactionlimit**" + transactionLimit);
 			final String query = MarketplacecommerceservicesConstants.MOBILE_QUERY;
 			final FlexibleSearchQuery flexiQuery = new FlexibleSearchQuery(query);
 			flexiQuery.addQueryParameter("mobileNo", mobileNo);
 			flexiQuery.addQueryParameter("type", PARENT_KEY);
 			flexiQuery.addQueryParameter("queryCount", String.valueOf(queryCount));
+			flexiQuery.addQueryParameter("queryCount", String.valueOf(transactionLimit));
 			final List<OrderModel> listOfData = flexibleSearchService.<OrderModel> search(flexiQuery).getResult();
 			return !listOfData.isEmpty() ? listOfData : null;
 		}

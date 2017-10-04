@@ -44,7 +44,7 @@ public class PincodeServiceImpl implements PincodeService
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.marketplacecommerceservices.service.PincodeService#getSortedLocationsNearby(de.hybris.platform.
 	 * storelocator.GPS, double)
 	 */
@@ -158,7 +158,7 @@ public class PincodeServiceImpl implements PincodeService
 		}
 	}
 
-	protected double calculateDistance(final GPS referenceGps, final PointOfServiceModel posModel) throws GeoLocatorException,
+	public double calculateDistance(final GPS referenceGps, final PointOfServiceModel posModel) throws GeoLocatorException,
 			LocationServiceException
 	{
 		if ((posModel.getLatitude() != null) && (posModel.getLongitude() != null))
@@ -217,7 +217,7 @@ public class PincodeServiceImpl implements PincodeService
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.tisl.mpl.marketplacecommerceservices.service.PincodeService#getSortedLocationsNearby(de.hybris.platform.
 	 * storelocator.GPS, double)
 	 */

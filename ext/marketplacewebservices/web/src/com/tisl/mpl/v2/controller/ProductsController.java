@@ -985,8 +985,8 @@ public class ProductsController extends BaseController
 
 								final String[] elements = searchText.trim().split("\\s+");
 
-								//if (elements.length == 2 )
-								if (elements.length == 2 || elements.length == 3)
+								//if (elements.length == 2 || elements.length == 3)
+								if (elements.length >= 2)
 								{
 									//	final SearchStateData searchStateAll = new SearchStateData();
 									//	final SearchQueryData searchQueryDataAll = new SearchQueryData();
@@ -1014,8 +1014,8 @@ public class ProductsController extends BaseController
 
 								final String[] elements = searchText.trim().split("\\s+");
 
-								//if (elements.length == 2 )
-								if (elements.length == 2 || elements.length == 3)
+								//if (elements.length == 2 || elements.length == 3)
+								if (elements.length >= 2)
 								{
 
 									searchState.setNextSearch(true);
@@ -1066,8 +1066,8 @@ public class ProductsController extends BaseController
 
 								final String[] elements = searchText.trim().split("\\s+");
 
-								//if (elements.length == 2 )
-								if (elements.length == 2 || elements.length == 3)
+								//if (elements.length == 2 || elements.length == 3)
+								if (elements.length >= 2)
 								{
 
 									searchState.setNextSearch(true);
@@ -1098,8 +1098,8 @@ public class ProductsController extends BaseController
 
 								final String[] elements = searchText.trim().split("\\s+");
 
-								//if (elements.length == 2 )
-								if (elements.length == 2 || elements.length == 3)
+								//if (elements.length == 2 || elements.length == 3)
+								if (elements.length >= 2)
 								{
 
 									searchState.setNextSearch(true);

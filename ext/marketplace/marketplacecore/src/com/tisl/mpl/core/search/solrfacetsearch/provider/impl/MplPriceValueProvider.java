@@ -20,9 +20,8 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
-import org.apache.log4j.Logger;
 import org.apache.commons.collections.CollectionUtils;
-
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Required;
 
 import com.tisl.mpl.core.enums.LuxIndicatorEnum;
@@ -83,8 +82,8 @@ public class MplPriceValueProvider extends AbstractPropertyFieldValueProvider im
 					{
 						final String rangeKey = getPriceRangeKey(product, productCurrency);
 						rangeNameList = getRangeNameList(indexedProperty, value, rangeKey);
-						final Collection<String> fieldNames = this.fieldNameProvider.getFieldNames(indexedProperty, productCurrency
-								.getIsocode().toLowerCase());
+						final Collection<String> fieldNames = this.fieldNameProvider.getFieldNames(indexedProperty,
+								productCurrency.getIsocode().toLowerCase());
 						for (final String fieldName : fieldNames)
 						{
 							if (rangeNameList.isEmpty())
@@ -131,8 +130,8 @@ public class MplPriceValueProvider extends AbstractPropertyFieldValueProvider im
 								{
 									currencyValue = currency.getIsocode();
 								}
-								final Collection<String> fieldNames = this.fieldNameProvider
-										.getFieldNames(indexedProperty, currencyValue);
+								final Collection<String> fieldNames = this.fieldNameProvider.getFieldNames(indexedProperty,
+										currencyValue);
 								for (final String fieldName : fieldNames)
 								{
 									if (!CollectionUtils.isEmpty(rangeNameList)) /* Altered as a part of CAR-81 */
@@ -171,8 +170,8 @@ public class MplPriceValueProvider extends AbstractPropertyFieldValueProvider im
 		}
 		catch (final Exception e)
 		{
-			throw new FieldValueProviderException("Cannot evaluate " + indexedProperty.getName() + " using "
-					+ super.getClass().getName() + "exception" + e, e);
+			throw new FieldValueProviderException(
+					"Cannot evaluate " + indexedProperty.getName() + " using " + super.getClass().getName() + "exception" + e, e);
 		}
 		return fieldValues;
 	}
@@ -211,26 +210,20 @@ public class MplPriceValueProvider extends AbstractPropertyFieldValueProvider im
 				&& product.getLuxIndicator().getCode().equalsIgnoreCase(LuxIndicatorEnum.LUXURY.getCode()))
 		{
 			rangeKey = rangeKey + "-LUXURY";
-			if (productCategoryType.equalsIgnoreCase("Clothing"))
-			{
-				rangeKey = rangeKey + "-APPAREL";
-			}
-			// TPR-1886 | For jewellery price range
-			else if (productCategoryType.equalsIgnoreCase("FineJewellery"))
-			{
-				rangeKey = rangeKey + "-FINEJEWELLERY";
-			}
-
-			// JEWELLERY CHANGES START
-			else if (productCategoryType.equalsIgnoreCase("FashionJewellery"))
-			{
-				rangeKey = rangeKey + "-FASHIONJEWELLERY";
-			}
-			// JEWELLERY CHANGES END
-			else
-			{
-				rangeKey = rangeKey + "-ELECTRONICS";
-			}
+			//			if (productCategoryType.equalsIgnoreCase("Clothing"))
+			//			{
+			//				rangeKey = rangeKey + "-APPAREL";
+			//			}
+			//			// JEWELLERY CHANGES START
+			//			else if (productCategoryType.equalsIgnoreCase("FashionJewellery"))
+			//			{
+			//				rangeKey = rangeKey + "-FASHIONJEWELLERY";
+			//			}
+			//			// JEWELLERY CHANGES END
+			//			else
+			//			{
+			//				rangeKey = rangeKey + "-ELECTRONICS";
+			//			}
 		}
 		else
 		{
@@ -240,6 +233,12 @@ public class MplPriceValueProvider extends AbstractPropertyFieldValueProvider im
 				{
 					rangeKey = rangeKey + "-APPAREL";
 				}
+				// JEWELLERY CHANGES START
+				else if (productCategoryType.equalsIgnoreCase("FashionJewellery"))
+				{
+					rangeKey = rangeKey + "-FASHIONJEWELLERY";
+				}
+				// JEWELLERY CHANGES END
 				else
 				{
 					rangeKey = rangeKey + "-ELECTRONICS";

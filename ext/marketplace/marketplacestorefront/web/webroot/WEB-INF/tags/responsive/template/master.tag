@@ -469,19 +469,79 @@
 		</c:otherwise>
 		</c:choose>
 	</c:if>
+	
+	<c:if test="${!fn:contains(themeResourcePath,'theme-luxury') && !(fn:contains(pageBodyCssClasses, 'homepage') 
+	    or fn:contains(pageBodyCssClasses, 'newBrandLandingPageTemplate')
+        or fn:contains(pageBodyCssClasses, 'productDetails') 
+        or fn:contains(pageBodyCssClasses, 'productGridPage') 
+        or fn:contains(pageBodyCssClasses, 'searchGridPage')
+        or fn:contains(pageBodyCssClasses, 'apparelCategoryLandingPage')
+        or fn:contains(pageBodyCssClasses, 'BrandPageTemplate')
+        or fn:contains(pageBodyCssClasses, 'apparelCategoryLandingPageV1')
+	    or fn:contains(pageBodyCssClasses, 'FootwearBrandLandingPageTemplate')
+	    or fn:contains(pageBodyCssClasses, 'FootwearCategoryLandingPageTemplate')
+        )}">
+        
+        <script>
+        $(document).ready(function(){
+         	var forceLoginUser = ($.cookie("mpl-user") == "anonymous") && window.location.search.indexOf("boxed-login") >= 1 ? "Y" : "N";
+    		var isMobile = screen.width < 460 ? "true" : "false" ;
+    		if(forceLoginUser == "Y"){
+    		if(isMobile == "true"){
+    		setTimeout(function(){
+    		window.location.href="/login";
+    		},10000);
+    		}else{
+    		$.ajax({
+    		url: "/login?frame=true&box-login",
+    		type: "GET",
+    		responseType: "text/html",
+    		success: function(response){
+    			$("#login-modal").find(".content").html('<button id="close-login" type="button" class="close"></button>'+response);
+    		},
+    		fail: function(response){
+    			alert(response);
+    		}
+    		});
+    		setTimeout(function(){
+    		$("#login-modal").modal({
+    			 backdrop: 'static',
+    			 keyboard: false
+    		 });
+    		},2000);
+    		}
+    		}
+        });
+        </script>
+        </c:if>
+        
 	<script>
 	$(document).ready(function(){
-		//TPR-6654
-		var anonymousUser = "${anonymous_user}";
-		var pageTypeVal = $("#pageType").val();
-		if(pageTypeVal == "homepage" && anonymousUser == "Y"){
-			$(".enter-pincode").show();
-	}
+		
+		/*Search Icon Changes - Responsive Vamshi*/
+		if($(window).width()<651){ 
+				$('#search_form').hide();
+				$(".simpleSearchToggle").show();
+				$(document).on("click", function(e){
+					if($(e.target).is(".simpleSearchToggle") || $(e.target).is(".js-site-search-input") || $(e.target).is("#searchButton")){
+						if($(e.target).is(".simpleSearchToggle")) {
+							$('#search_form').toggle(function () {});
+							$(".js-site-search-input").focus();
+						} else {
+							$("#search_form").show();
+						}
+					}else{
+						$("#search_form").hide(function () {});
+					}
+				});
+			} else {
+				$(".simpleSearchToggle").hide();
+			}
 	});
+	
 	$(document).on("click","#close-login",function(){
 		window.location.href="/";
 	});
-
 </script>
 
 	<tealium:sync/> 
@@ -527,7 +587,7 @@
 		<div class="overlay"></div>
 		<div class="content">
 		<div class="modal-body">
-		<button class="close" data-dismiss="modal"><span aria-hidden="true">Ã—</span></button>
+		<button class="close" data-dismiss="modal"><span aria-hidden="true">×</span></button>
 		<!-- <button class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span></button> -->
 		<h4>Enter Pincode</h4>
 		<input id="home_pin" type="text" placeholder="Pincode" maxlength="6" onkeypress="return isNum(event)"/>

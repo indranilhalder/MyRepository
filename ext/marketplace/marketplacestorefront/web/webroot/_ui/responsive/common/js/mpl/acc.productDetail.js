@@ -1284,6 +1284,8 @@ function pincodeServiceability(){
 											if (pincodedata['cod'] == 'Y') {
 												$("#codId").show();
 											}
+											//SDI-1023
+											$("#winning_product_stock").val(pincodedata['stockCount']); 
 											for ( var j in deliveryModes) {
 												var mode = deliveryModes[j];
 												deliveryModeName = mode['type'];
@@ -1355,7 +1357,7 @@ function pincodeServiceability(){
 
 												deliverModeTealium.push("clickandcollect");
 												//TPR-6654
-												var requiredUrl = ACC.config.encodedContextPath + "/p-allStores/"+pin+"/"+ussid;;
+												var requiredUrl = ACC.config.encodedContextPath + "/p-allStores/"+pin+"/"+ussid+"/"+productCode;
 												$.ajax({
 													url : requiredUrl,
 													type : "GET",
@@ -1488,7 +1490,8 @@ function pincodeServiceability(){
 			 				dtmErrorTracking("Pin Code Servicability Error",error);
 						}
 					});
-
+			 //SDI-1023
+			   setTimeout(function(){ $("#addToCartForm #stock").val($("#winning_product_stock").val()); }, 1000); 
 			//TPR-900
 			$('#pin').blur();
 			
@@ -1842,7 +1845,7 @@ function displayDeliveryDetails(sellerName) {
 					$("#codLink").removeAttr("href");
 					$("#codLink").css("cursor","default");
 					}
-					$("#codEli").show();
+					$("#codEli").css("display","inline-block");
 				} else {
 					$("#codId").hide();
 					$("#codEli").hide(); //TPR-6907

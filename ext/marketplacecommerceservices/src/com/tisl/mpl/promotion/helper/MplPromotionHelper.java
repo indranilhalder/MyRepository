@@ -647,10 +647,13 @@ public class MplPromotionHelper
 	 * @param order
 	 * @param restrictionList
 	 * @return validProductUssidMap
+	 * @throws JaloSecurityException
+	 * @throws JaloInvalidParameterException
 	 */
 	@SuppressWarnings("deprecation")
 	public Map<String, AbstractOrderEntry> getCartSellerEligibleProducts(final SessionContext arg0, final AbstractOrder order,
 			final List<AbstractPromotionRestriction> restrictionList, final List<Product> allowedProductList)
+			throws JaloInvalidParameterException, JaloSecurityException
 	{
 
 		final Map<String, AbstractOrderEntry> validProductUssidMap = new ConcurrentHashMap<String, AbstractOrderEntry>();
@@ -670,20 +673,15 @@ public class MplPromotionHelper
 			if (!isFreebie)
 			{
 				if (CollectionUtils.isNotEmpty(allowedProductList) && allowedProductList.contains(entry.getProduct()))
-
-
 				{
 					if (CollectionUtils.isEmpty(restrictionList))
-
 					{
+						selectedUSSID = entry.getAttribute(arg0, MarketplacecommerceservicesConstants.SELECTEDUSSID).toString();
 						validProductUssidMap.put(selectedUSSID, entry);
-
 					}
 					else
-
 					{
 						isofValidSeller = getDefaultPromotionsManager().checkSellerData(arg0, restrictionList, entry);
-
 						if (isofValidSeller)
 						{
 							try
