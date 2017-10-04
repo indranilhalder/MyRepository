@@ -1785,6 +1785,15 @@ $(document).on('mouseup','#loginDivCheckout',function(){
 })
 
 //TISPRDT-6012 ends
+//UF-342|Responsive search icon starts
+$(document).on('mouseup','.simpleSearchToggle',function(){
+	if(typeof (_satellite)!= "undefined") {  
+		_satellite.track('searchToggle');
+	}
+}) 
+
+//UF-342|Responsive search icon starts
+
 /*product impressions start*/
 function dtmProductImpressionsSerp(){
 	var count = 10; 

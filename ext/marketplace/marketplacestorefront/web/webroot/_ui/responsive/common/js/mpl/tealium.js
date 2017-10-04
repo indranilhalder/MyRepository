@@ -2227,3 +2227,13 @@ $(document).on('click','#selectedDeliveryOptionsDivId span:last-child',function(
 	});
 //UF-398 ends
 
+//UF-342|Responsive search icon starts
+$(document).on('mouseup','.simpleSearchToggle',function(){
+	if(typeof utag !="undefined"){
+		utag.link({
+			link_text: "searchToggle_clicked",
+			event_type : "searchToggle_clicked"
+		});
+	   }
+});
+//UF-342|Responsive search icon ends
