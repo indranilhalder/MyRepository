@@ -70,8 +70,7 @@
 	<bean id="batchManualEdRefundAttributeConverter"
 		class="de.hybris.platform.acceleratorservices.dataimport.batch.converter.impl.DefaultImpexConverter">
 		<property name="header">
-			<value>insert_update
-				PaymentTransaction;code[unique=true];order(Order.code,Order.versionID[default=]);transactionId;
+			<value>insert_update PaymentTransaction;code[unique=true];order(Order.code,Order.versionID[default=]);transactionId;
 			</value>
 		</property>
 		<property name="impexRow">
@@ -82,8 +81,7 @@
 	<bean id="batchManualEdRefundAttributeConverterFollowOn"
 		class="de.hybris.platform.acceleratorservices.dataimport.batch.converter.impl.DefaultImpexConverter">
 		<property name="header">
-			<value>insert_update
-				PaymentTransactionEntry;code[unique=true];paymentTransaction(code);time[dateformat=dd.MM.yyyy];currency(isocode)[default='INR'];type(code[default='ED_MANUAL_REFUND']);paymentMode(mode);requestId;amount;transactionStatus[default='success'];transactionStatusDetails;
+			<value>insert_update PaymentTransactionEntry;code[unique=true];paymentTransaction(code);time[dateformat=dd.MM.yyyy];currency(isocode)[default='INR'];type(code[default='ED_MANUAL_REFUND']);paymentMode(mode);requestId;amount;transactionStatus[default='success'];transactionStatusDetails;
 			</value>
 		</property>
 		<property name="impexRow">
@@ -108,8 +106,7 @@
 	<bean id="batchManualSddRefundAttributeConverter"
 		class="de.hybris.platform.acceleratorservices.dataimport.batch.converter.impl.DefaultImpexConverter">
 		<property name="header">
-			<value>insert_update
-				PaymentTransaction;code[unique=true];order(Order.code,Order.versionID[default=]);transactionId;
+			<value>insert_update PaymentTransaction;code[unique=true];order(Order.code,Order.versionID[default=]);transactionId;
 			</value>
 		</property>
 		<property name="impexRow">
@@ -120,8 +117,7 @@
 	<bean id="batchManualSdRefundAttributeConverterFollowOn"
 		class="de.hybris.platform.acceleratorservices.dataimport.batch.converter.impl.DefaultImpexConverter">
 		<property name="header">
-			<value>insert_update
-				PaymentTransactionEntry;code[unique=true];paymentTransaction(code);time[dateformat=dd.MM.yyyy];currency(isocode)[default='INR'];type(code[default='SD_MANUAL_REFUND']);paymentMode(mode);requestId;amount;transactionStatus[default='success'];transactionStatusDetails;
+			<value>insert_update PaymentTransactionEntry;code[unique=true];paymentTransaction(code);time[dateformat=dd.MM.yyyy];currency(isocode)[default='INR'];type(code[default='SD_MANUAL_REFUND']);paymentMode(mode);requestId;amount;transactionStatus[default='success'];transactionStatusDetails;
 			</value>
 		</property>
 		<property name="impexRow">
@@ -136,8 +132,7 @@
 	<bean id="batchManualRefundAttributeConverter"
 		class="de.hybris.platform.acceleratorservices.dataimport.batch.converter.impl.DefaultImpexConverter">
 		<property name="header">
-			<value>insert_update
-				PaymentTransaction;code[unique=true];order(Order.code,Order.versionID[default=]);transactionId;
+			<value>insert_update PaymentTransaction;code[unique=true];order(Order.code,Order.versionID[default=]);transactionId;
 			</value>
 		</property>
 		<property name="impexRow">
@@ -148,8 +143,7 @@
 	<bean id="batchManualRefundAttributeConverterFollowOn"
 		class="de.hybris.platform.acceleratorservices.dataimport.batch.converter.impl.DefaultImpexConverter">
 		<property name="header">
-			<value>insert_update
-				PaymentTransactionEntry;code[unique=true];paymentTransaction(code);time[dateformat=dd.MM.yyyy];currency(isocode)[default='INR'];type(code[default='MANUAL_REFUND']);paymentMode(mode);requestId;amount;transactionStatus[default='RETURN_COMPLETED'];transactionStatusDetails;
+			<value>insert_update PaymentTransactionEntry;code[unique=true];paymentTransaction(code);time[dateformat=dd.MM.yyyy];currency(isocode)[default='INR'];type(code[default='MANUAL_REFUND']);paymentMode(mode);requestId;amount;transactionStatus[default='RETURN_COMPLETED'];transactionStatusDetails;
 			</value>
 		</property>
 		<property name="impexRow">
@@ -160,8 +154,7 @@
 	<bean id="batchManualRefundOrderAttributeConverterFollowOn"
 		class="de.hybris.platform.acceleratorservices.dataimport.batch.converter.impl.DefaultImpexConverter">
 		<property name="header">
-			<value>Update
-				Consignment;code[unique=true];status(code)[default='RETURN_COMPLETED'];
+			<value>Update Consignment;code[unique=true];status(code)[default='RETURN_COMPLETED'];
 			</value>
 		</property>
 		<property name="impexRow">
@@ -172,8 +165,7 @@
 	<bean id="batchRefundSmsMapping"
 		class="de.hybris.platform.acceleratorservices.dataimport.batch.converter.impl.DefaultImpexConverter">
 		<property name="header">
-			<value>insert_update
-				RefundTransactionEntry;transactionId[unique=true];utrNumber;amount;
+			<value>insert_update RefundTransactionEntry;transactionId[unique=true];utrNumber;amount;
 			</value>
 		</property>
 		<property name="impexRow">

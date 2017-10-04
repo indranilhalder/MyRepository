@@ -33,8 +33,6 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.SortedMap;
-import java.util.TreeMap;
 
 import javax.annotation.Resource;
 import javax.inject.Provider;
@@ -844,7 +842,7 @@ public class PincodeServiceFacadeImpl implements PincodeServiceFacade
 	@Override
 	public List<PointOfServiceData> getStoresSortedByDistance(final String pincode, final String sellerUssId)
 	{
-		Map<PointOfServiceModel, Double> posModels = new HashMap<PointOfServiceModel, Double>();
+		Map<PointOfServiceModel, Double> posModels = new HashMap<>();
 		final List<PointOfServiceData> posDatas = new ArrayList<PointOfServiceData>();
 		try
 		{

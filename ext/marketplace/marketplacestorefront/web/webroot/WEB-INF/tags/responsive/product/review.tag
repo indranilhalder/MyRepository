@@ -21,7 +21,7 @@
 					src="//${staticHost}/_ui/responsive/common/images/transparent.png"><span>New</span>
 					</div>  </c:if> <a
 					class="thumb" href="${productUrl}" title="${product.productTitle}"> <product:productPrimaryImage
-						product="${product}" format="searchPage" /> <%-- 	<product:productSearchPrimaryImage product="${product}" format="searchPage" index="1"/> --%>
+						product="${product}" format="searchPage" lazyLoad="false" /> <%-- 	<product:productSearchPrimaryImage product="${product}" format="searchPage" index="1"/> --%>
 
 				</a>
 				</div>

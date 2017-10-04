@@ -217,6 +217,12 @@ public class MplDefaultFacetSearchService extends DefaultFacetSearchService
 			}
 			// JEWELLERY CHANGES END
 
+			valueRangeSet = property.getValueRangeSets().get("INR-LUXURY");
+			if (valueRangeSet != null)
+			{
+				valueRangesList.addAll(valueRangeSet.getValueRanges());
+			}
+
 			return valueRangesList;
 		}
 		else if (property.getName().equalsIgnoreCase("discountFlag"))

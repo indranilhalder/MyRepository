@@ -5,6 +5,8 @@ package com.tisl.mpl.marketplacecommerceservices.service;
 
 import de.hybris.platform.core.model.product.PincodeModel;
 import de.hybris.platform.storelocator.GPS;
+import de.hybris.platform.storelocator.exception.GeoLocatorException;
+import de.hybris.platform.storelocator.exception.LocationServiceException;
 import de.hybris.platform.storelocator.location.Location;
 import de.hybris.platform.storelocator.model.PointOfServiceModel;
 
@@ -61,4 +63,7 @@ public interface PincodeService
 	 * @return SortedMap<PointOfServiceModel, Double>
 	 * */
 	public Map<PointOfServiceModel, Double> getSortedStoresNearby(final GPS gps, final double distance, final String sellerId);
+
+	public double calculateDistance(final GPS referenceGps, final PointOfServiceModel posModel) throws GeoLocatorException,
+			LocationServiceException;
 }
