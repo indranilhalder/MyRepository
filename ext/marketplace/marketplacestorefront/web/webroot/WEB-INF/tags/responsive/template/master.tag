@@ -475,7 +475,12 @@
         or fn:contains(pageBodyCssClasses, 'productDetails') 
         or fn:contains(pageBodyCssClasses, 'productGridPage') 
         or fn:contains(pageBodyCssClasses, 'searchGridPage')
-        or fn:contains(pageBodyCssClasses, 'apparelCategoryLandingPage'))}">
+        or fn:contains(pageBodyCssClasses, 'apparelCategoryLandingPage')
+        or fn:contains(pageBodyCssClasses, 'BrandPageTemplate')
+        or fn:contains(pageBodyCssClasses, 'apparelCategoryLandingPageV1')
+	    or fn:contains(pageBodyCssClasses, 'FootwearBrandLandingPageTemplate')
+	    or fn:contains(pageBodyCssClasses, 'FootwearCategoryLandingPageTemplate')
+        )}">
         
         <script>
         $(document).ready(function(){
@@ -582,7 +587,7 @@
 		<div class="overlay"></div>
 		<div class="content">
 		<div class="modal-body">
-		<button class="close" data-dismiss="modal"><span aria-hidden="true">Ã—</span></button>
+		<button class="close" data-dismiss="modal"><span aria-hidden="true">×</span></button>
 		<!-- <button class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span></button> -->
 		<h4>Enter Pincode</h4>
 		<input id="home_pin" type="text" placeholder="Pincode" maxlength="6" onkeypress="return isNum(event)"/>

@@ -146,16 +146,6 @@ $(document).ready(function(){
 			                }
 			  		    }
 			  	    }
-					              /*digitalData.cpj = {
-					                 product : {
-						                    id : product_id,
-						                    category : product_category,
-						                    discount : product_discount
-					                 },
-					                brand : {
-						                 name : product_brand
-					                }
-				               }*/
 			
 			       if(prevPageUrl != "" && prevPageUrl != 'undefined'){
 				           if(prevPageUrl.indexOf('/c-msh') > -1){
@@ -639,11 +629,19 @@ $(document).ready(function(){
 		breadcrum.push(leaf);
 	}
 	if(breadcrum.length > 0){
-		digitalData.page.display = {
+		/*digitalData.page.display = {
 			//hierarchy : JSON.stringify( breadcrum )
 				hierarchy :  breadcrum,
 				
-		}
+		}*/
+		   if(typeof(digitalData.page.display) != "undefined"){
+			     digitalData.page.display.hierarchy = breadcrum;
+	           }		
+           else {
+        	     digitalData.page.display = {
+  				      hierarchy :  breadcrum
+  		           }
+	           }
 	}
 	
 	// Assignment of digial data object
@@ -938,12 +936,23 @@ function dtmPdpPincode(msg,productCode,pin){
 	                    value : pin
                       }
      
-                digitalData.cpj = {
+                /*digitalData.cpj = {
         		            product : {
 		                       id      :  productCode,
 		                       category : $('#product_category').val().toLowerCase()
     	                  } 
-                      }
+                      }*/
+                if(typeof(digitalData.cpj.product) != "undefined"){
+             	    digitalData.cpj.product.id =productCode;
+             	    digitalData.cpj.product.category = $('#product_category').val().toLowerCase();
+               }		
+             else {
+                    digitalData.cpj.product = {
+                    		 id      :  productCode,
+                            category : $('#product_category').val().toLowerCase()
+    	              }
+                }
+                
  }
 
 function dtmCartPincodeCheck(selectedPincode,msg){
@@ -955,16 +964,30 @@ function dtmCartPincodeCheck(selectedPincode,msg){
            _satellite.track('pin_failed');
           }	
        } 
-         digitalData.page.pin = {
+         /*digitalData.page.pin = {
                  value : selectedPincode
-        }
+        }*/
+        
          
-         digitalData.cpj = {
-		            product : {
-                    id      :  $('#product_id').val().toLowerCase(),
-                    category : $('#product_category').val().toLowerCase()
-               } 
-           }
+         if(typeof(digitalData.page.pin) != "undefined"){
+         	 digitalData.page.pin.value = selectedPincode;
+          }		
+         else {
+                digitalData.page.pin = {
+                		 value : selectedPincode
+	              }
+            }
+         
+         if(typeof(digitalData.cpj.product) != "undefined"){
+         	    digitalData.cpj.product.id = $('#product_id').val().toLowerCase();
+         	    digitalData.cpj.product.category = $('#product_category').val().toLowerCase();
+           }		
+         else {
+                digitalData.cpj.product = {
+                		 id      :  $('#product_id').val().toLowerCase(),
+                        category : $('#product_category').val().toLowerCase()
+	              }
+            }
 }
 
 
@@ -1310,34 +1333,52 @@ function dtmSearchTags(){
 		if(typeof _satellite != "undefined") {
 			_satellite.track('add_to_wishlist');
 	    }
-		   digitalData.cpj = {
-			   product : {
-				      id  :  productId,
-				 category :  category
-			}
-		}
-		     digitalData.page = {
-		    		wishList : {
-		    		    location : pagetype 
-		    		}
-		    }
+		 
+		   if(typeof(digitalData.cpj.product) != "undefined"){
+			     digitalData.cpj.product.id = productId;
+			     digitalData.cpj.product.category = category;
+            }		
+             else {
+	                digitalData.cpj.product = {
+	                		      id  : productId,
+	        				 category : category
+		              }
+                }
+		   
+		     if(typeof(digitalData.page.wishList) != "undefined"){
+	    	     digitalData.page.wishList.location = pagetype;
+              }		
+              else {
+	                digitalData.page.wishList = {
+	                		 location : pagetype 
+		            }
+             }
 	}
 	
 	 function dtmRemoveFromWishlist(pagetype,productId,category){
 		if (typeof _satellite != "undefined") {
 			_satellite.track('remove_from_wishlist');
 	    }
-		   digitalData.cpj = {
-			   product : {
-				      id  : productId,
-				 category : category
-			}
-		}
-		     digitalData.page = {
-		    		  wishList : {
-		    		  location : pagetype 
-		    		}
-		    }
+		   
+		   if(typeof(digitalData.cpj.product) != "undefined"){
+			     digitalData.cpj.product.id = productId;
+			     digitalData.cpj.product.category = category;
+            }		
+              else {
+	                    digitalData.cpj.product = {
+	                		      id  : productId,
+	        				 category : category
+		                 }
+                    }
+		   
+		     if(typeof(digitalData.page.wishList) != "undefined"){
+		    	     digitalData.page.wishList.location = pagetype;
+	            }		
+	          else {
+		                digitalData.page.wishList = {
+		                		 location : pagetype 
+			           }
+	             }
 	}
 	
 	 //TPR-6290 |Product Comparison Tracking
@@ -1347,12 +1388,21 @@ function dtmSearchTags(){
     		 pipeProducts = productList.join("|");
     	}
     	
-    	 digitalData.product = {
+    	/* digitalData.product = {
     		 comparison : {
     			 array   : pipeProducts
     		 }
-    	 }
-	 }
+    	 }*/
+    	 
+    	   if(typeof(digitalData.product.comparison) != "undefined"){
+    		     digitalData.product.comparison.array = pipeProducts;
+           }		
+            else {
+	                digitalData.product.comparison = {
+	            		  array   : pipeProducts
+		           }
+               }
+	    }
     
     function dtmAddToCompare(productId,category){
     	
@@ -1364,12 +1414,24 @@ function dtmSearchTags(){
     	if(category !=undefined &&  category !=null){
     		categoryL = category.toLowerCase(); 
     	}
-    	digitalData.cpj = {
+    	
+    	/*digitalData.cpj = {
     		product : {
     				id  :  productL,
     		 category   :  categoryL	
     	 }
-    	}
+    	}*/
+    	
+    	   if(typeof(digitalData.cpj.product) != "undefined"){
+    		     digitalData.cpj.product.id = productL;
+    		     digitalData.cpj.product.category = categoryL;
+             }		
+            else {
+ 	              digitalData.cpj.product = {
+ 	            		 id  :  productL,
+ 	           		 category   :  categoryL
+		           }
+             }
     }
     
   //TPR-6305 |track emi options starts
@@ -1380,12 +1442,21 @@ function dtmSearchTags(){
     }
     
     function dtmEmiBankTrack(emiBankSelected){
-    	digitalData.cpj = {
+    	/*digitalData.cpj = {
     		    	emi :  {
     			    bank : emiBankSelected
     			}
-    	}
-    }
+    	}*/
+    	
+    	   if(typeof(digitalData.cpj.emi) != "undefined"){
+    		   digitalData.cpj.emi.bank = emiBankSelected;
+           }		
+          else {
+ 	              digitalData.cpj.emi = {
+ 	            		 bank : emiBankSelected
+		           }
+             }
+      }
     //track emi options ends
     
   //TPR-6367  | for  search
@@ -1401,12 +1472,22 @@ function dtmSearchTags(){
 		if (typeof (_satellite)!= "undefined") {
 			_satellite.track('error_tracking');
 	    }
-		digitalData.page = {
+		/*digitalData.page = {
 			error : {
 				type  : errorType,
 				name  : errorName
 			}
-		}
+		}*/
+		   if(typeof(digitalData.page.error) != "undefined"){
+		         digitalData.page.error.type = errorType;
+		         digitalData.page.error.name = errorName; 
+             }		
+          else {
+   	              digitalData.page.error = {
+				          type :  errorType,
+				          name  : errorName
+		           }
+               }
 		//order failure track
 		if(errorType == "Order not placed: Unsuccesful error"){
 			if (typeof(_satellite)!= "undefined") {
@@ -1420,13 +1501,26 @@ function dtmSearchTags(){
 			if($("#product_category").val()!= ''){
 				productCategory =  $("#product_category").val().toLowerCase().split(",");	
 			}	
-			digitalData.cpj = {
+			/*digitalData.cpj = {
 		    		    product : {
 		    			 	         id  :  product,
 		    		            category :  productCategory,	
 		    		              price  :  $('#product_unit_price').val()
 		    	               } 
-		                 }
+		                 }*/
+			
+			 if(typeof(digitalData.cpj.product) != "undefined"){
+		           digitalData.cpj.product.id = product;
+		           digitalData.cpj.product.category = productCategory;
+		           digitalData.cpj.product.price = $('#product_unit_price').val();
+	            }		
+	          else {
+	                  digitalData.cpj.product = {
+	                		        id  :  product,
+	         	    		 category   :  productCategory,
+	         	    		     price  :  $('#product_unit_price').val()
+		                }
+	               }
 			if(typeof (digitalData.cpj.payment)!= "undefined"){
 				digitalData.cpj.payment.quantity =$('#product_quantity').val();
 			}
@@ -1443,12 +1537,23 @@ function dtmSearchTags(){
 			_satellite.track('order_cancellation');
 			
 	    }
-		digitalData.cpj = {
+		/*digitalData.cpj = {
 	    		product : {
 	    				id  :  productId,
 	    		 category   :  category	
 	    	 }
-	    	}
+	    	}*/
+		
+		 if(typeof(digitalData.cpj.product) != "undefined"){
+	           digitalData.cpj.product.id = productId;
+	           digitalData.cpj.product.category = category;
+            }		
+          else {
+                  digitalData.cpj.product = {
+                		        id  :  productId,
+         	    		 category   :  category	
+	                }
+               }
 		
 		digitalData.order = {
 				cancellation : {
@@ -1462,17 +1567,30 @@ function dtmSearchTags(){
 			_satellite.track('order_returns');
 			
 	    }
-		digitalData.cpj = {
+		/*digitalData.cpj = {
 	    		product : {
 	    				id  :  dtmReturnProduct,
 	    		 category   :  dtmReturnProductCat	
 	    	 }
-	    	}
-		digitalData.order = {
+	    	}*/
+		
+		 if(typeof(digitalData.cpj.product) != "undefined"){
+	         digitalData.cpj.product.id = dtmReturnProduct;
+	         digitalData.cpj.product.category = dtmReturnProductCat;
+            }		
+          else {
+                  digitalData.cpj.product = {
+                		        id  :  dtmReturnProduct,
+         	    		 category   :  dtmReturnProductCat	
+	                }
+               }
+		 
+		digitalData.order = { 
 				return : {
 				reason : dtmReturnReason
 				}
 		}
+		
 	}
 	
 	//TPR-6029|DTM CHECKOUT Changes
@@ -1523,11 +1641,20 @@ function dtmSearchTags(){
 			_satellite.track('cpj_checkout_store_selection');
 		 }
 		
-		digitalData.cpj = {
+		/*digitalData.cpj = {
 				  checkout: {
 					 storeName : storeName
 				}
-		}
+		}*/
+		
+		 if(typeof(digitalData.cpj.checkout) != "undefined"){
+	         digitalData.cpj.checkout.storeName = storeName;
+            }		
+          else {
+                  digitalData.cpj.checkout = {
+            		 storeName : storeName
+	           }
+          }
 	}
 	
      //TPR-6372 | Track widgets powered by recommendation
@@ -1539,15 +1666,20 @@ function dtmSearchTags(){
 		
 		if(typeof _satellite != "undefined") {
 			_satellite.track('widget_tracking');
-			
 	    }
-		
-		digitalData.page = {
+		/*digitalData.page = {
 				widget : {
 					name : widgetName
 				}
-		}
-		
+		}*/
+		    if(typeof(digitalData.page.widget) != "undefined"){
+		         digitalData.page.widget.name = widgetName;
+             }		
+           else {
+	              digitalData.page.widget = {
+	            		  name :  widgetName
+		           }
+               }
 	})
 	
 	//TPR-6308 | Product Recommendation
@@ -1643,6 +1775,15 @@ $(document).on('mouseup','#loginDivCheckout',function(){
 })
 
 //TISPRDT-6012 ends
+//UF-472|Responsive search icon starts
+$(document).on('mouseup','.simpleSearchToggle',function(){
+	if(typeof (_satellite)!= "undefined") {  
+		_satellite.track('searchToggle');
+	}
+}) 
+
+//UF-472|Responsive search icon starts
+
 /*product impressions start*/
 function dtmProductImpressionsSerp(){
 	var count = 10; 
