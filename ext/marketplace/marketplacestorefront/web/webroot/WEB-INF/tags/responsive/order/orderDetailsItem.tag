@@ -174,6 +174,9 @@
 				   		<c:when test="${entry.mplDeliveryMode.code eq 'express-delivery'}">
 				   			<li class="deliver-type"><spring:theme code="text.express.shipping"/></li>
 				   		</c:when>
+				   		<c:when test="${empty entry.mplDeliveryMode.code}">
+				   		 <li class="deliver-type"><spring:theme code="text.home.delivery"/></li>
+				   		</c:when>
 				   		<c:otherwise>
 				   			<li class="deliver-type"><spring:theme code="text.clickandcollect.delivery"/></li>
 				   		</c:otherwise>
