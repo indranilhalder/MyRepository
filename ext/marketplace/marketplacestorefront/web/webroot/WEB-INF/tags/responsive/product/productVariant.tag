@@ -329,6 +329,13 @@ function loadVariant(x){
 				<!-- JWLSPCUAT-99:After click on other seller link in PDP Size in not loading and color attribute is showing -->
 				<c:choose>
 				<c:when test="${ product.rootCategory =='FineJewellery' || product.rootCategory =='FashionJewellery'}">
+				
+						<!-- UF-422:Changes for PDP when product has only one size -->
+						<c:set var="selectedClass" value=""/>
+							<c:if test= "${fn:length(product.variantOptions) eq 1 || pdpSizeCounter eq 1}">
+								<c:set var ="selectedClass" value ="class='selected'"/></c:if>	
+								
+								
 						<c:forEach items="${product.variantOptions}" var="variantOption">
 							<c:forEach var="entry" items="${variantOption.sizeLink}">
 									<c:url value="/p/${variantOption.code}/viewSellers" var="variantUrl" />
@@ -337,7 +344,7 @@ function loadVariant(x){
 											<c:url value="/p/${variantOption.code}/viewSellers"	var="variantUrl" />
 											<c:choose>
 												<c:when test="${selectedSize eq null}">
-													<li><a href="${variantUrl}?selectedSize=true${msiteSellerForSize}">${entry.value}</a></li>
+													<li ${selectedClass}><a href="${variantUrl}?selectedSize=true${msiteSellerForSize}">${entry.value}</a></li>
 												</c:when>
 												<c:otherwise>
 													<li class="selected"><a href="${variantUrl}?selectedSize=true${msiteSellerForSize}">${entry.value}</a></li>
