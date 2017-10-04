@@ -3,14 +3,14 @@
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <%-- <%@ page import="com.tisl.mpl.data.MplDepartmentHierarchyData"%> --%>
 
-<!-- <script>
-$(function() {
-	var inputArray = ${departmentHierarchyData.hierarchyList};
-	if(inputArray!=""||inputArray!=[]){
-	constructDepartmentHierarchy(inputArray);
-	}
-	});
-</script> -->
+	<script>
+	$(function() {
+		var inputArray = ${departmentHierarchyData.hierarchyList};
+		if(inputArray!=""||inputArray!=[]){
+		constructDepartmentHierarchy(inputArray);
+		}
+		});
+	</script>
 
 	<input type="hidden" name="isConceirge" id="isConceirge" value="${isConceirge}" />
 	<input type="hidden" name="isCategoryPage" id="isCategoryPage" value="${isCategoryPage}" />

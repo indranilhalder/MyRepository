@@ -225,7 +225,9 @@ public class CustomPromotionOrderAdjustTotalAction extends GeneratedCustomPromot
 
 				if ((!validateSellerData && !isSellerPresent)
 						|| (validateSellerData && isSellerPresent && validProductUssidMap.containsKey(selectedUSSID) && !entry
-								.isGiveAway().booleanValue()))
+								.isGiveAway().booleanValue())
+						|| (validateSellerData && !isSellerPresent && validProductUssidMap.containsKey(selectedUSSID) && !entry
+								.isGiveAway().booleanValue()))//Condition modified for PR-15
 				{
 					double amtTobeDeductedAtlineItemLevel = 0.00D;
 					final AbstractOrderEntry cartEntry = entry;

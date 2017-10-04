@@ -224,8 +224,6 @@ public class MplSendSMSService implements SendSmsService
 				// YTODO Auto-generated catch block
 				e.printStackTrace();
 			}
-
-
 			// Setting  the username & password for connecting the SMS Server
 			final Client client = Client.create();
 			final String username = configurationService.getConfiguration().getString(
@@ -250,11 +248,13 @@ public class MplSendSMSService implements SendSmsService
 			//final JSONMarshaller marshallers = JSONJAXBContext.getJSONMarshaller(marshaller, context);
 			//marshallers.setProperty(MarshallerProperties.JSON_INCLUDE_ROOT, Boolean.TRUE);
 			//marshallers.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
+
+
 			final ClientResponse response = webResource.type(MediaType.APPLICATION_XML).accept(MediaType.APPLICATION_XML)
 					.entity(sw.toString()).post(ClientResponse.class);
 			LOG.debug("========== Step:3==========");
 			LOG.debug("========== response status ::" + response.getStatus());
-			if (checkResponseStatus(null != response ? (String.valueOf(response.getStatus())) : " ", globalResponse))
+			if (checkResponseStatus(String.valueOf(response.getStatus()), globalResponse))
 			{
 				return true;
 			}
@@ -272,8 +272,6 @@ public class MplSendSMSService implements SendSmsService
 
 	private boolean checkResponseStatus(final String receivedResponse, final String globalResponse)
 	{
-		String status = "";
-		status = configurationService.getConfiguration().getString(globalResponse);
-		return (status.indexOf(receivedResponse) == -1) ? false : true;
+		return (globalResponse.indexOf(receivedResponse) == -1) ? false : true;
 	}
 }

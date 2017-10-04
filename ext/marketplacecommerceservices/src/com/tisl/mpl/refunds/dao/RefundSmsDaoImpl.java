@@ -60,11 +60,11 @@ public class RefundSmsDaoImpl extends AbstractItemDao implements RefundSmsDao
 				bulkSmsPerBatch = new BulkSmsPerBatch();
 				msg.append("Hey ");
 				msg.append((String) (row.get(4)));
-				msg.append("We have successfully refunded Rs ");
+				msg.append(", We have successfully refunded Rs ");
 				msg.append((String) row.get(0));
-				msg.append("to your bank account against Tata CLiQ order no ");
+				msg.append(" to your bank account against Tata CLiQ order no ");
 				msg.append((String) row.get(3));
-				msg.append("For delay over 5 days please contact your bank with ref number ");
+				msg.append(" For delay over 5 days please contact your bank with ref number ");
 				if (null != row.get(1))
 				{
 					msg.append(row.get(1));
@@ -73,7 +73,7 @@ public class RefundSmsDaoImpl extends AbstractItemDao implements RefundSmsDao
 				{
 					msg.append(row.get(2));
 				}
-				msg.append(".For few banks It may take up to 10-15 days to reflect in your account.");
+				msg.append(".For few banks, It may take up to 10-15 days to reflect in your account.");
 				bulkSmsPerBatch.setMobileNo((String) row.get(5));
 				bulkSmsPerBatch.setMsg(msg.toString());
 				bulkSmsPerBatch.setTxnId((String) row.get(3));

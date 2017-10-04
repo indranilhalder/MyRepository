@@ -35480,6 +35480,7 @@ text-indent: 2.5px;
 }
 .listing.wrapper .product-listing .product-item .product-tile p.savings span {
     margin-top: 0 !important;
+    font-size: 12px;
 }
 .sort-refine-bar.mobile:after {
     content: "";
@@ -35881,7 +35882,7 @@ span.jqtree-facetCount.jqtree_common{
 .product-item .product-tile p.savings {
     margin-left: -3px;
     float: none;	/* TISQAEE-1 */
-    clear: both;
+    /* clear: both; */ /* Removed to align all prices in one line */
     display: block;
 }
 .short-info .company .old, .short-info .price .old {
@@ -35896,7 +35897,8 @@ span.jqtree-facetCount.jqtree_common{
 @media (max-width: 767px){
 .product-listing.product-grid li.product-item, .listing.wrapper .right-block .product-list > li{
     width: 50%;
-    min-height: 430px;
+    /* min-height: 430px; */ /* Spacing between products */
+    padding-bottom: 15px;
     padding: 0;
     margin-left: -2px !important;
 }
@@ -35955,10 +35957,12 @@ left:0;
 }
 .product-tile .short-info .price .sale {
     float: right;
+    padding-top:2px; /* Added to align all prices in one line */
 }
 .product-tile .short-info .price .old {
     float: left;
     margin-right:10px;
+    padding-top:2px; /* Added to align all prices in one line */
 }
 .listing.wrapper .product-item .product-tile p.savings span {
     margin-top: 0 !important;
@@ -44591,7 +44595,7 @@ p.savings {
 p.savings.pdp-savings,
 p.savings.cart-savings {
     display: inline-block;
-    padding: 0 5px;
+    padding: 0 10px;
     color: #ee5f73;
     margin-top: 5px;
     margin-bottom: 5px;
@@ -53646,7 +53650,7 @@ word-wrap: break-word;
 	}
 	.stw-list .Menu>ul{
 		display: inline-block !important;
-		width: initial;
+		width: auto;
 	}
 }
 @media(max-width:480px){
@@ -61466,6 +61470,7 @@ p.savings.pdp-savings {
 .product-info .product-detail .price .old {
     color: #999;
     font-size: 14px;
+    padding-right: 10px;
 }
 .page-productDetails .trending h2 span {
    /*  font-weight: 500; */
@@ -77183,7 +77188,7 @@ body.template-pages-my-account-returnSuccess .mainContent-wrapper .container .bo
 
 /*TPR-6907 start*/
 #codEli{
-	display: inline-block;
+	display: none;
 	margin-left: 10px;
 	margin-bottom: 10px; /*TISCSXII-2218*/
 	margin-right: 30px; /* TISPRDT-6065 */
@@ -77290,8 +77295,119 @@ body.template-pages-LoginPageTemplate .sign-in.tab-view .form-group #password_lo
     -webkit-transform: rotate(-225deg);
 }
 
+/*Rainbow Sale Homepage Changes - Vamshi*/
+@media (max-width: 767px) {
+ 	.rainbow_men_women_sec > div {
+ 		width: 100% !important;
+ 		padding-bottom: 10px !important;
+ 	}
+ 	
+ 	.rainbow_men_women_sec {
+ 		margin-top: 0 !important;
+ 	}
+ 	
+ 	.rainbow_top_categories_blp .top_categories_wrapper_blp .top_categories_section_blp:nth-child(3) {
+ 		width: 48.5% !important;
+ 	}
+ 	
+ 	.rainbow_top_categories_blp .top_categories_wrapper_blp .top_categories_section_blp:nth-child(4) {
+ 		display: block !important; margin-left: 10px; margin-top: 10px;
+ 	}
+ 	
+ 	.rainbow_top_deal_blp .owl-carousel .owl-item {width: 128px !important;}
+ }
+ 
+ .rainbow_blp_top_brands {background-color: #fff !important;}
+ 
 /*HomePage Changes - Vamshi*/
-@media(max-width: 650px){ .simpleSearchToggle {padding-right: 20px; } #search_form {display: none;}
-.simpleSearchToggle {content: ""; width: 40px; height: 40px; display: inline-block; position: absolute; right: 8%; top: 38%;
-background: url(../images/search_image.png) no-repeat;}}
+
+/*Search Toggle CSS*/
+@media(max-width: 650px){ 
+	.simpleSearchToggle {padding-right: 20px; } #search_form {display: none;}
+	.simpleSearchToggle {content: ""; width: 40px; height: 40px; display: inline-block; position: absolute; right: 12%; top: 38%;
+background: url(../images/search_image.png) no-repeat;}
+}
+
+/*HomePage CSS*/
+.homeViewAllBtn a, .homeViewAllBtn a:hover {float: right; font-size: 18px; color: #4990e2; text-decoration: none; display: none;}
+#brandsYouLoveMobileComp {display: none;}
+.footer-text-mobile {display: none;}
+.home-best-pick-carousel .owl-stage-outer {overflow: initial !important;}
+
+@media(max-width: 768px) {
+	.footer-text-mobile {display: block;}
+	.footer-text-mobile p {line-height: normal !important;}
+	footer>div>ul>li.active>ul>li {height: auto !important;}
+	footer > div > ul > li:last-child {margin-bottom: 15px;}
+	.footer-text {display: none;}
+}
+@media(max-width: 480px) {
+	.homeViewAllBtn a, .homeViewAllBtn a:hover {display: block; font-size: 14px; padding-top: 1%;}
+	.homeViewHeading {text-align: left !important; font-size: 18px !important;}
+	.view-cliq-offers, .new_exclusive_viewAll, .hotShowHide {display: none !important;}
+	
+	.home-brands-you-love-main-image {display: block;}
+	
+	.home-best-pick-carousel .owl-item, .home-product-you-care-carousel .owl-item {width: 128px !important;}
+	
+	/*Stay Qued && Show Case*/
+	#stayQued {background-color: #f2f2f2;}
+	#stayQued .qued-padding .qued-right {float: right;}
+	#stayQued .qued-padding .qued-right h3 {padding-top: 0px;}
+	#stayQued .qued-padding .qued-right a.button.maroon {height: 25px !important; min-height: 25px !important; padding: 5% 0px !important; margin: 0 !important;
+		line-height: unset !important; width: auto !important; font-size: 10px !important; position: static !important; max-width: 100px;}
+	
+	#stayQued .qued-padding {padding: 5% !important; width: 100%;}
+	#stayQued .qued-content h5, #stayQued .qued-content h2, #stayQued .qued-content h3,  #stayQued .qued-content h1,  #stayQued .qued-content h6,
+	#stayQued .qued-content h4, #showcaseMobile .showcase-section-right h1, #showcaseMobile .showcase-section-right h2, #showcaseMobile .showcase-section-right h3
+	#showcaseMobile .showcase-section-right h4, #showcaseMobile .showcase-section-right h5, #showcaseMobile .showcase-section-right h6 {text-align: left !important; font-size: 13px !important;}
+	
+	#stayQued .qued-content p, #showcaseMobile .showcase-section-right p {color: #666666;}
+	#showcaseMobile .owl-controls {display: none !important;}
+
+	.showcase-section a.btn-red, .showcase-section a.trending-button, #showcaseMobile a.button.trending-button, #showcaseMobile a.button.maroon {
+		height: 25px !important; min-height: 25px !important; padding: 5% 0px !important; margin-left: 0 !important;
+		line-height: unset !important; width: auto !important; font-size: 10px !important; position: static !important; max-width: 100px;}
+	.showcase-section .showcase-section-right {padding: 0;}
+	.showcase-section .showcase-section-left {padding: 0;}
+	.showcase-section .desc-section h1 {font-size: 14px !important; padding-top: 0 !important; text-align: left !important;}
+	.showcase-section .desc-section .showcase-para {font-size: 12px !important; text-align: left;}
+	.showcase-section .desc-section img {max-width: 100%; padding-right: 15px;}
+	.showcase-carousel .owl-item {padding: 2px !important;}
+	
+	/*Hot Now Changes*/
+	.homeViewHotNowHeading {text-align: left; padding-left: 3%; padding-right: 2%; margin-top: 0;}
+	.homeViewHotNowHeading > span {font-size: 18px !important; padding-top: 3%;}
+	.homeViewHotNowHeading .select-list {border: none;}
+	.homeViewHotNowHeading .select-list > span {text-align: right;}
+	.homeViewHotNowHeading .select-view {float: right; width: auto;}
+	.home-best-pick-carousel .owl-stage-outer {overflow: hidden !important;}
+	
+	
+	.home-best-pick-carousel .owl-item .short-info {display: none;}
+	.home-best-pick-carousel {margin-bottom: 30px !important;}
+	.home-best-pick-carousel .owl-item {width: 128px !important;}
+	
+	/*New IN*/
+	#new_exclusive.owl-carousel .owl-item {width: 140px !important;}
+	#newAndExclusive .owl-item .New_Exclusive_title, #newAndExclusive .owl-item .New_Exclusive_price {opacity: 1 !important;}
+	
+	/*Brand Studio Mobile Component*/
+	#brandsYouLove {display: none !important;}
+	#brandsYouLoveMobileComp {display: block; background-color: #f2f2f2;padding: 30px 0px;}
+	.brandsCarouselItem {width: 260px; height: 320px; margin: 18px; border-radius: 4px; background-color: white; box-shadow: 0 2px 3px 0 rgba(0, 0, 0, 0.1);}
+	.brandStudioImg {height: 180px;}
+	.brandStudioImg img {width: 100%; height: 100%; border-top-left-radius: 4px; border-top-right-radius: 4px;}
+	.brandStudioDescHeading, .brandStudioDescInfo, .brandStudioVisitStore {padding: 14px 8px 0px; text-align: left; line-height: 1.33;}
+	.brandStudioDescHeading {font-size: 13px;}
+	.brandStudioDescInfo {font-size: 12px; color: #666666;}
+	.brandStudioVisitStore, .brandStudioVisitStore:hover {font-size: 13px; color: #0066c0; padding-top: 20px;}
+	
+	.brandsCarouselItem .home-brands-you-love-main-image-heading {padding: 13px 7px; text-overflow: ellipsis !important; overflow: hidden; white-space: nowrap;}
+	.brandsCarouselItem .home-brands-you-love-main-image-desc {padding: 0px 7px; color: #666666; height: 65px;}
+	.brandsCarouselItem .visit-store-wrapper {padding: 13px 7px; text-align: left;}
+	.brandsCarouselItem .visit-store-wrapper a {color: #0066c0;}
+	
+	#brandsYouLoveMobileComp .owl-controls .owl-page {display: none;}
+}
 /*UF-466 end*/

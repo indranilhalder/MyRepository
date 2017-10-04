@@ -1842,7 +1842,7 @@ function displayDeliveryDetails(sellerName) {
 					$("#codLink").removeAttr("href");
 					$("#codLink").css("cursor","default");
 					}
-					$("#codEli").show();
+					$("#codEli").css("display","inline-block");
 				} else {
 					$("#codId").hide();
 					$("#codEli").hide(); //TPR-6907

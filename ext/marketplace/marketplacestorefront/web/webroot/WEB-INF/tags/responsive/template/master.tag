@@ -470,7 +470,7 @@
 		</c:choose>
 	</c:if>
 	
-	<c:if test="${!fn:contains(themeResourcePath,'theme-luxury') && (!fn:contains(pageBodyCssClasses, 'homepage') 
+	<c:if test="${!fn:contains(themeResourcePath,'theme-luxury') && !(fn:contains(pageBodyCssClasses, 'homepage') 
 	    or fn:contains(pageBodyCssClasses, 'newBrandLandingPageTemplate')
         or fn:contains(pageBodyCssClasses, 'productDetails') 
         or fn:contains(pageBodyCssClasses, 'productGridPage') 
@@ -505,7 +505,7 @@
     		 });
     		},2000);
     		}
-    		}	
+    		}
         });
         </script>
         </c:if>
@@ -582,7 +582,7 @@
 		<div class="overlay"></div>
 		<div class="content">
 		<div class="modal-body">
-		<button class="close" data-dismiss="modal"><span aria-hidden="true">Ã—</span></button>
+		<button class="close" data-dismiss="modal"><span aria-hidden="true">×</span></button>
 		<!-- <button class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span></button> -->
 		<h4>Enter Pincode</h4>
 		<input id="home_pin" type="text" placeholder="Pincode" maxlength="6" onkeypress="return isNum(event)"/>
