@@ -94,8 +94,8 @@
 	
 	.giftFinalTemp {
 		border-radius: 8px;
-		border: 1px solid #ccc;
-		box-shadow: 0px 0px 10px #888888;
+		/* border: 1px solid #ccc; */
+		box-shadow: 0 2px 3px 0 rgba(0, 0, 0, 0.1);
 	}
 	
 	.giftFinalTempTop {
