@@ -181,7 +181,7 @@ public class MplSendSMSService implements SendSmsService
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.sms.SendSmsService#sendBulkSms(java.util.List)
 	 */
 	@Override
@@ -272,8 +272,6 @@ public class MplSendSMSService implements SendSmsService
 
 	private boolean checkResponseStatus(final String receivedResponse, final String globalResponse)
 	{
-		String status = "";
-		status = configurationService.getConfiguration().getString(globalResponse);
-		return (status.indexOf(receivedResponse) == -1) ? false : true;
+		return (globalResponse.indexOf(receivedResponse) == -1) ? false : true;
 	}
 }
