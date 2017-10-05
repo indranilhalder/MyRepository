@@ -5673,6 +5673,8 @@ function useWalletForPaymentAjax(){
 			}else{
 				//alert(data.disableJsMode);
 				 $("#make_cc_payment, #make_saved_dc_payment, #make_nb_payment, #paymentButtonId").show();
+				 $(".topPlaceOrderBtn").hide();
+				 $(".topPlaceOrderBtn").prop('disabled',true);
 				 $(".choose-payment").find('*').prop('disabled',false);
 				 $(".checkout-paymentmethod li span").css('pointer-events', 'all');
 				 $("#addCliqCashId").hide();
