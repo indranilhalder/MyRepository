@@ -3775,7 +3775,7 @@ public class ProductPageController extends MidPageController
 			final String pincode = (String) sessionService.getAttribute(MarketplacecommerceservicesConstants.SESSION_PINCODE);
 			if (StringUtils.isNotEmpty(pincode))
 			{
-				model.addAttribute(ControllerConstants.Views.Fragments.Product.STORE_AVAIL, mplProductFacade.storeLocatorPDP(pincode));
+				//model.addAttribute(ControllerConstants.Views.Fragments.Product.STORE_AVAIL, mplProductFacade.storeLocatorPDP(pincode));
 				mplAjaxProductData.setPincode(pincode);
 			}
 		}
@@ -4072,10 +4072,14 @@ public class ProductPageController extends MidPageController
 				for (final ATSResponseData atsResponseData : storeLocationResponseData.getAts())
 				{
 					PointOfServiceModel posModel = null;
-					posModel = mplSlaveMasterFacade.findPOSBySellerAndSlave(pincodeSellerId, atsResponseData.getStoreId());
-					if (null != posModel)
+					final int availableQty = atsResponseData.getQuantity();
+					if (availableQty >= 1)
 					{
-						posModelList.add(posModel);
+						posModel = mplSlaveMasterFacade.findPOSBySellerAndSlave(pincodeSellerId, atsResponseData.getStoreId());
+						if (null != posModel)
+						{
+							posModelList.add(posModel);
+						}
 					}
 				}
 			}
