@@ -1214,18 +1214,42 @@ public class DefaultJuspayWebHookServiceImpl implements JuspayWebHookService
 							if (orderStatusResponse.getStatus().equalsIgnoreCase(MarketplacecommerceservicesConstants.CHARGED)
 									&& CollectionUtils.isEmpty(orderStatusResponse.getRefunds()))
 							{
-								//Calling refund for Payment_Timeout order
-								getMplJusPayRefundService().doRefund(orderId, oModel.getOrderStatus().getCardResponse().getCardType());
+								//Calling refund for Payment_Timeout payment_failed order
+								try
+								{
+									//TISPRO-130
+									if (null != oModel.getOrderStatus().getPaymentMethodType()
+											&& oModel.getOrderStatus().getPaymentMethodType()
+													.equalsIgnoreCase(MarketplacecommerceservicesConstants.PAYMENT_METHOD_NB))
+									{
+										//calling refund service where there will be cart only for NB
+										getMplJusPayRefundService().doRefund(auditDataModel.getAuditId(),
+												oModel.getOrderStatus().getPaymentMethodType());
+									}
+									//TISPRO-675
+									else if (StringUtils.isNotEmpty(oModel.getOrderStatus().getEmiBank())
+											&& StringUtils.isNotEmpty(oModel.getOrderStatus().getEmiTenure()))
+									{
+										//calling refund service where there will be cart only for EMI
+										getMplJusPayRefundService().doRefund(auditDataModel.getAuditId(),
+												MarketplacecommerceservicesConstants.EMI);
+									}
+									else
+									{
+										//calling refund service where there will be cart only for CARD
+										getMplJusPayRefundService().doRefund(auditDataModel.getAuditId(),
+												oModel.getOrderStatus().getCardResponse().getCardType());
+									}
+								}
+								catch (final Exception e)
+								{
+									LOG.error(e.getMessage(), e);
+								}
 							}
 
 							updateWebHookExpired(oModel);
 
 						}
-						//Blocked for TPR-629
-						//						else
-						//						{
-						//							updateWebHookExpired(oModel);
-						//						}
 					}
 				}
 			}

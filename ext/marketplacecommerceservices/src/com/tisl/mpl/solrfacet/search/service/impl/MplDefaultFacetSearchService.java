@@ -161,8 +161,8 @@ public class MplDefaultFacetSearchService extends DefaultFacetSearchService
 			return new SolrSearchResult(numberOfResults, facets, indexedType, identifiers, queryResponse, pageSize, offset,
 					breadcrumbs, query, null);
 		}
-		return new SolrSearchResult(numberOfResults, facets, indexedType, identifiers, queryResponse, pageSize, offset, breadcrumbs,
-				query, null, this.searchResultConverters.getConverterMapping(indexedType.getCode()));
+		return new SolrSearchResult(numberOfResults, facets, indexedType, identifiers, queryResponse, pageSize, offset,
+				breadcrumbs, query, null, this.searchResultConverters.getConverterMapping(indexedType.getCode()));
 	}
 
 	private String getFacetFieldName(final IndexedType indexedType, final FacetField facetField)
@@ -200,13 +200,13 @@ public class MplDefaultFacetSearchService extends DefaultFacetSearchService
 			valueRangeSet = property.getValueRangeSets().get("INR-APPAREL");
 			if (valueRangeSet != null)
 			{
-				valueRangesList.addAll(valueRangeSet.getValueRanges());
+				valueRangesList = valueRangeSet.getValueRanges();
 			}
 
 			valueRangeSet = property.getValueRangeSets().get("INR-ELECTRONICS");
 			if (valueRangeSet != null)
 			{
-				valueRangesList = valueRangeSet.getValueRanges();
+				valueRangesList.addAll(valueRangeSet.getValueRanges());
 			}
 
 			// JEWELLERY CHANGES START
@@ -216,6 +216,12 @@ public class MplDefaultFacetSearchService extends DefaultFacetSearchService
 				valueRangesList.addAll(valueRangeSet.getValueRanges());
 			}
 			// JEWELLERY CHANGES END
+
+			valueRangeSet = property.getValueRangeSets().get("INR-LUXURY");
+			if (valueRangeSet != null)
+			{
+				valueRangesList.addAll(valueRangeSet.getValueRanges());
+			}
 
 			return valueRangesList;
 		}

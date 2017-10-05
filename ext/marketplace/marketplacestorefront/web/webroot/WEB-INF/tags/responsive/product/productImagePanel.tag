@@ -117,7 +117,7 @@
 			data-href="${productZoomImagesUrl}" target="_blank"
 			data-toggle="modal"
 			title="<spring:theme code="text.add.to.wishlist"/>">
-			<product:productPrimaryImage product="${product}" format="zoom"/>
+			<product:productPrimaryImage product="${product}" lazyLoad="false" format="zoom"/>
 		</div>
 	</div>
 	<!-- 	<iframe name="videoFrame" id="videoFrame" width="400" height="560" frameborder="0"  style="display:none"  allowfullscreen ></iframe>

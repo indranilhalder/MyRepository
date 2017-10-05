@@ -1284,6 +1284,8 @@ function pincodeServiceability(){
 											if (pincodedata['cod'] == 'Y') {
 												$("#codId").show();
 											}
+											//SDI-1023
+											$("#winning_product_stock").val(pincodedata['stockCount']); 
 											for ( var j in deliveryModes) {
 												var mode = deliveryModes[j];
 												deliveryModeName = mode['type'];
@@ -1355,7 +1357,7 @@ function pincodeServiceability(){
 
 												deliverModeTealium.push("clickandcollect");
 												//TPR-6654
-												var requiredUrl = ACC.config.encodedContextPath + "/p-allStores/"+pin+"/"+ussid;;
+												var requiredUrl = ACC.config.encodedContextPath + "/p-allStores/"+pin+"/"+ussid+"/"+productCode;
 												$.ajax({
 													url : requiredUrl,
 													type : "GET",
@@ -1488,7 +1490,8 @@ function pincodeServiceability(){
 			 				dtmErrorTracking("Pin Code Servicability Error",error);
 						}
 					});
-
+			 //SDI-1023
+			   setTimeout(function(){ $("#addToCartForm #stock").val($("#winning_product_stock").val()); }, 1000); 
 			//TPR-900
 			$('#pin').blur();
 			
@@ -3763,7 +3766,11 @@ function onSizeSelectPopulateDOM()//First Method to be called in size select aja
 					$('#sizeSelectAjaxData').remove();
 					if(typeof(jsonData['error'])=='undefined')
 					{
-						
+						//TISPRDT-6168 starts
+						$('#pin').attr("disabled",false); 
+						$('#pdpPincodeCheckDList').hide(); 
+						$('#pdpPincodeCheck').show();
+						//TISPRDT-6168 ends
 						//UF-33 starts//   //TISSTRT-1587//
 						//Update Page Title
 						document.title = jsonData['mapConfigurableAttribute']['metaTitle'];

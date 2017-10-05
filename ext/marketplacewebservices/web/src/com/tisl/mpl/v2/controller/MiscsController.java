@@ -53,6 +53,7 @@ import de.hybris.platform.commercewebservicescommons.errors.exceptions.RequestPa
 import de.hybris.platform.commercewebservicescommons.mapping.DataMapper;
 import de.hybris.platform.commercewebservicescommons.mapping.FieldSetBuilder;
 import de.hybris.platform.commercewebservicescommons.mapping.impl.FieldSetBuilderContext;
+import de.hybris.platform.core.GenericSearchConstants.LOG;
 import de.hybris.platform.core.model.c2l.CurrencyModel;
 import de.hybris.platform.core.model.order.AbstractOrderEntryModel;
 import de.hybris.platform.core.model.order.OrderModel;
@@ -1957,7 +1958,12 @@ public class MiscsController extends BaseController
 		final int countLimit = Integer.parseInt(getConfigurationService().getConfiguration().getString(
 				MarketplacecommerceservicesConstants.TRANSACTION_NO_KEY));
 
+		//SDI-1193
+		final int transactionLimit = Integer.parseInt(getConfigurationService().getConfiguration().getString(
+				MarketplacecommerceservicesConstants.TRANSACTION_LIMIT_BY_DATE));
+
 		LOG.debug("**Transaction count Limit**" + countLimit);
+		LOG.debug("**Transaction Limit by date**" + transactionLimit);
 		OrderInfoWsDTO orderInformationWsDTO = new OrderInfoWsDTO();
 		List<OrderModel> orderModels = new ArrayList<OrderModel>();
 		try
@@ -1966,7 +1972,7 @@ public class MiscsController extends BaseController
 			if (StringUtils.isNotEmpty(mobileNo))
 			{
 				//Fetching parent order models by mobile no
-				orderModels = mplOrderFacade.getOrderWithMobileNo(mobileNo, countLimit);
+				orderModels = mplOrderFacade.getOrderWithMobileNo(mobileNo, countLimit, transactionLimit);
 				orderInformationWsDTO = mplOrderFacade.storeOrderInfoByMobileNo(orderModels, countLimit);
 			}
 

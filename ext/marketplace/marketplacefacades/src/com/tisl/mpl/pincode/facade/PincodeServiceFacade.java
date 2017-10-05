@@ -30,6 +30,15 @@ public interface PincodeServiceFacade
 			final String productCode, final CartModel cartModel);
 
 	/**
+	 * @param pincode
+	 * @param sellerUssId
+	 * @param productCode
+	 * @return
+	 */
+	public List<StoreLocationResponseData> getListofStoreLocationsforPincode(final String pincode, final String sellerUssId,
+			final String productCode);
+
+	/**
 	 *
 	 * @param pincode
 	 * @param productCode
@@ -101,7 +110,8 @@ public interface PincodeServiceFacade
 	 * Get all available Stores for Seller to return products at store
 	 *
 	 * @param pincode
-	 * @param sellerUssId
+	 * @param ussId
+	 * @param productCode
 	 * @return List<PointOfServiceData>
 	 */
 	public List<PointOfServiceData> getStoresSortedByDistance(final String pincode, final String sellerUssId);
