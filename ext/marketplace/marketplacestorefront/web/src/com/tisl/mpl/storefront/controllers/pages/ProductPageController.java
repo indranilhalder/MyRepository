@@ -1391,7 +1391,7 @@ public class ProductPageController extends MidPageController
 						LOG.debug("Selected Location for Longitude:" + myLocation.getGPS().getDecimalLongitude());
 						pincodeResponse = pinCodeFacade.getResonseForPinCode(productCode, pin,
 								pincodeServiceFacade.populatePinCodeServiceData(productCode, myLocation.getGPS()));
-
+						sessionService.setAttribute(MarketplacecommerceservicesConstants.PINCODE_RESPONSE_DATA_PDP, pincodeResponse);
 						return pincodeResponse;
 					}
 					catch (final Exception e)
@@ -4004,7 +4004,7 @@ public class ProductPageController extends MidPageController
 			//call service to get list of ATS and ussid
 			try
 			{
-				omsResponse = pincodeServiceFacade.getListofStoreLocationsforPincode(pincode, ussId, productCode, null);
+				omsResponse = pincodeServiceFacade.getListofStoreLocationsforPincode(pincode, ussId, productCode);
 				if (omsResponse.size() > 0)
 				{
 					posDatas = getProductWdPos(omsResponse, pincode);
@@ -4057,11 +4057,11 @@ public class ProductPageController extends MidPageController
 		final List<PointOfServiceData> posDataList = new ArrayList<PointOfServiceData>();
 		//iterate over oms response
 		Double distance = 0d;
+		final List<PointOfServiceModel> posModelList = new ArrayList<PointOfServiceModel>();
 		try
 		{
 			for (final StoreLocationResponseData storeLocationResponseData : response)
 			{
-				final List<PointOfServiceModel> posModelList = new ArrayList<PointOfServiceModel>();
 				final String ussId = storeLocationResponseData.getUssId();
 				final String pincodeSellerId = ussId.substring(0, 6);
 				//get stores from commerce
@@ -4078,27 +4078,40 @@ public class ProductPageController extends MidPageController
 						posModelList.add(posModel);
 					}
 				}
-				//get stores from commerce from ats response
-				if (CollectionUtils.isNotEmpty(posModelList))
+			}
+			//get stores from commerce from ats response
+			if (CollectionUtils.isNotEmpty(posModelList))
+			{
+				final PincodeModel pinCodeModelObj = pincodeServiceFacade.getLatAndLongForPincode(pincode);
+				final LocationDTO dto = new LocationDTO();
+				Location myLocation = null;
+				if (null != pinCodeModelObj)
 				{
-					final PincodeModel pinCodeModelObj = pincodeService.getDetailsOfPincode(pincode);
-					final LocationDTO dto = new LocationDTO();
-					dto.setLongitude(pinCodeModelObj.getLongitude().toString());
-					dto.setLatitude(pinCodeModelObj.getLatitude().toString());
-					final Location myLocation = new LocationDtoWrapper(dto);
-					//populate model to data
-					for (final PointOfServiceModel pointOfServiceModel : posModelList)
+					try
 					{
-						PointOfServiceData posData = new PointOfServiceData();
-						if (null != pointOfServiceModel)
+						dto.setLongitude(pinCodeModelObj.getLongitude().toString());
+						dto.setLatitude(pinCodeModelObj.getLatitude().toString());
+						myLocation = new LocationDtoWrapper(dto);
+						LOG.debug("Selected Location for Latitude:" + myLocation.getGPS().getDecimalLatitude());
+						LOG.debug("Selected Location for Longitude:" + myLocation.getGPS().getDecimalLongitude());
+						//populate model to data
+						for (final PointOfServiceModel pointOfServiceModel : posModelList)
 						{
-							posData = pointOfServiceConverter.convert(pointOfServiceModel);
-							distance = pincodeService.calculateDistance(myLocation.getGPS(), pointOfServiceModel);
-							posData
-									.setDistanceKm(new BigDecimal(distance.doubleValue()).setScale(2, RoundingMode.HALF_UP).doubleValue());
-
-							posDataList.add(posData);
+							PointOfServiceData posData = new PointOfServiceData();
+							if (null != pointOfServiceModel)
+							{
+								posData = pointOfServiceConverter.convert(pointOfServiceModel);
+								distance = pincodeService.calculateDistance(myLocation.getGPS(), pointOfServiceModel);
+								posData.setDistanceKm(new BigDecimal(distance.doubleValue()).setScale(2, RoundingMode.HALF_UP)
+										.doubleValue());
+								posData.setStatus(MarketplacecommerceservicesConstants.KM);
+								posDataList.add(posData);
+							}
 						}
+					}
+					catch (final Exception e)
+					{
+						LOG.error(e);
 					}
 				}
 
@@ -4143,26 +4156,44 @@ public class ProductPageController extends MidPageController
 						posModelList.add(posModel);
 					}
 				}
-
-				for (final PointOfServiceModel pointOfServiceModel : posModelList)
+			}
+			//get stores from commerce from ats response
+			if (CollectionUtils.isNotEmpty(posModelList))
+			{
+				final PincodeModel pinCodeModelObj = pincodeServiceFacade.getLatAndLongForPincode(pincode);
+				final LocationDTO dto = new LocationDTO();
+				Location myLocation = null;
+				if (null != pinCodeModelObj)
 				{
-					final PincodeModel pinCodeModelObj = pincodeService.getDetailsOfPincode(pincode);
-					final LocationDTO dto = new LocationDTO();
-					dto.setLongitude(pinCodeModelObj.getLongitude().toString());
-					dto.setLatitude(pinCodeModelObj.getLatitude().toString());
-					final Location myLocation = new LocationDtoWrapper(dto);
-					//prepare pos data objects
-					PointOfServiceData posData = new PointOfServiceData();
-					if (null != pointOfServiceModel)
+					try
 					{
-						posData = pointOfServiceConverter.convert(pointOfServiceModel);
-						distance = pincodeService.calculateDistance(myLocation.getGPS(), pointOfServiceModel);
-						posData.setDistanceKm(new BigDecimal(distance.doubleValue()).setScale(2, RoundingMode.HALF_UP).doubleValue());
-						posDataList.add(posData);
+						dto.setLongitude(pinCodeModelObj.getLongitude().toString());
+						dto.setLatitude(pinCodeModelObj.getLatitude().toString());
+						myLocation = new LocationDtoWrapper(dto);
+						LOG.debug("Selected Location for Latitude:" + myLocation.getGPS().getDecimalLatitude());
+						LOG.debug("Selected Location for Longitude:" + myLocation.getGPS().getDecimalLongitude());
+						for (final PointOfServiceModel pointOfServiceModel : posModelList)
+						{
+							//prepare pos data objects
+							PointOfServiceData posData = new PointOfServiceData();
+							if (null != pointOfServiceModel)
+							{
+								posData = pointOfServiceConverter.convert(pointOfServiceModel);
+								distance = pincodeService.calculateDistance(myLocation.getGPS(), pointOfServiceModel);
+								posData.setDistanceKm(new BigDecimal(distance.doubleValue()).setScale(2, RoundingMode.HALF_UP)
+										.doubleValue());
+								posData.setStatus(MarketplacecommerceservicesConstants.KM);
+								posDataList.add(posData);
+							}
+						}
+					}
+					catch (final Exception e)
+					{
+						LOG.error(e);
 					}
 				}
-
 			}
+
 		}
 		catch (final Exception e)
 		{

@@ -166,8 +166,8 @@ public interface MplCartFacade extends CartFacade
 	 * @return CartModel
 	 * @throws CommerceCartModificationException
 	 */
-	CartModel createCart(final String emailId, final String baseSiteId)
-			throws InvalidCartException, CommerceCartModificationException;
+	CartModel createCart(final String emailId, final String baseSiteId) throws InvalidCartException,
+			CommerceCartModificationException;
 
 	/**
 	 * Method for adding item to cart for Mobile service
@@ -447,8 +447,8 @@ public interface MplCartFacade extends CartFacade
 	 * @return boolean
 	 * @throws EtailNonBusinessExceptions
 	 */
-	boolean isCartEntryDelistedMobile(final CartModel cartModel)
-			throws CommerceCartModificationException, EtailNonBusinessExceptions;
+	boolean isCartEntryDelistedMobile(final CartModel cartModel) throws CommerceCartModificationException,
+			EtailNonBusinessExceptions;
 
 
 	CartModel getCalculatedCart(CartModel cart) throws CommerceCartModificationException, EtailNonBusinessExceptions;
@@ -561,8 +561,8 @@ public interface MplCartFacade extends CartFacade
 	 * @throws EtailNonBusinessExceptions
 	 * @throws CMSItemNotFoundException
 	 */
-	String singlePagecheckPincode(String selectedPincode, String sessionPincode)
-			throws EtailNonBusinessExceptions, CMSItemNotFoundException;
+	String singlePagecheckPincode(String selectedPincode, String sessionPincode) throws EtailNonBusinessExceptions,
+			CMSItemNotFoundException;
 
 
 	/*
@@ -692,4 +692,11 @@ public interface MplCartFacade extends CartFacade
 	 * @return boolean
 	 */
 	boolean validatePincodeRestrictedPromoOnCartProduct(CartModel cart);
+
+	/**
+	 * @param storeLocationRequestDataList
+	 * @return
+	 */
+	public List<StoreLocationResponseData> getStoreLocationsforCnC(
+			final List<StoreLocationRequestData> storeLocationRequestDataList);
 }

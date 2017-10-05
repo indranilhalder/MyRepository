@@ -3239,11 +3239,11 @@ ul.jqtree-tree .jqtree-moving>.jqtree-element .jqtree-title {
 .list_title_sort:after {
     content: "";
     position: absolute;
-    background-image: url(../images/Sprite-combined.png);
+    background-image: url(${siteRootUrl}/theme-blue/images/Sprite-combined.png);
     background-repeat: no-repeat;
     background-position: -46px 0;
-    zoom: .7;
-    -moz-transform: scale(0.7);
+    /* zoom: .7;
+    -moz-transform: scale(0.7); */
     -moz-transform-origin: 0 0;
     right: 42px;
     top: 17px;
@@ -3270,11 +3270,11 @@ ul.jqtree-tree .jqtree-moving>.jqtree-element .jqtree-title {
 .toggle-filterSerp:after {
     content: "";
     position: absolute;
-    background-image: url(../images/Sprite-combined.png);
+    background-image: url(${siteRootUrl}/theme-blue/images/Sprite-combined.png);
     background-repeat: no-repeat;
     background-position: -2px 0;
-    zoom: 0.7;
-    -moz-transform: scale(0.7);
+    /* zoom: 0.7;
+    -moz-transform: scale(0.7); */
     -moz-transform-origin: 0 0;
     right: 15px;
     top: 17px;
@@ -3348,7 +3348,7 @@ ul.jqtree-tree .jqtree-moving>.jqtree-element .jqtree-title {
 .list_title_sort:after {
     content: "";
     position: absolute;
-    background-image: url(../images/Sprite-combined.png);
+    background-image: url(${siteRootUrl}/theme-blue/images/Sprite-combined.png);
     background-repeat: no-repeat;
     right: 15px;
     top: 14px;
@@ -3383,8 +3383,52 @@ ul.jqtree-tree .jqtree-moving>.jqtree-element .jqtree-title {
     float: right;
 }
 }
+/* TISPRDT-6113 Start */
+@media(max-width:408px){
+	.list_title_sort select{
+	float: left !important;
+    left: -15px;
+    margin-top: -7px;
+	}
+}
+@media (max-width: 424px) and (min-width: 408px){
+	.list_title_sort select{
+		left: -76px;
+		margin-top: 14px;
+	}
+}
+/* TISPRDT-6113 End */
+/* TISPRDT-6114 Start */
+@media (max-width: 790px){
+.listing-leftmenu>div.facet_desktop, .facet-name.js-facet-name.facet_desktop {
+    display: none !important;
+}
+.listing-leftmenu>div.facet_mobile, .facet-name.js-facet-name.facet_mobile, .filter-name.facet_mobile {
+    display: block !important;
+}
+.listing.wrapper .facet-name.js-facet-name h3 {
+    padding: 0 20px 0 35px;
+	font-weight: bold;
+}
+}
 
-
+@media (max-width: 767px){
+.listing.wrapper .facet-name.js-facet-name h3 {
+    padding: 0 20px 0 15px;
+}
+.listing.wrapper .left-block .mob-filter-wrapper {
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    min-height: 90%;
+}
+.listing.wrapper .right-block {
+    padding: 15px 18px 20px;
+    margin-left: 2px;
+}
+} 
+/* TISPRDT-6114 END */
 /*Breadcrumb start*/
 .breadcrumbs{margin:20px 0 10px;padding-left:30px;font-size:12px;font-weight:normal;clear:both;width:100%;}
 .breadcrumbs::after{clear:both;content:"";display:table;}

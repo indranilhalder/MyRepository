@@ -57,7 +57,7 @@ public class SendRefundSmsCronJob extends AbstractJobPerformable<CronJobModel>
 			{
 				remainder = rowCount;
 				remStart = 0;
-				remEnd = rowCount - 1;
+				remEnd = rowCount;
 			}
 
 			if (dividedValue * batch < rowCount)
@@ -66,7 +66,7 @@ public class SendRefundSmsCronJob extends AbstractJobPerformable<CronJobModel>
 			}
 			final StringBuilder deleteDynamicQuery = new StringBuilder();
 			int a = 0;
-			int b = batch - 1;
+			int b = batch;
 			List<BulkSmsPerBatch> result1 = null;
 			boolean response = false;
 			LOG.debug("========STEP:1==============");
@@ -96,7 +96,7 @@ public class SendRefundSmsCronJob extends AbstractJobPerformable<CronJobModel>
 				if (b > rowCount)
 				{
 					remStart = rowCount - a;
-					remEnd = rowCount - 1;
+					remEnd = rowCount;
 					break;
 				}
 			}
