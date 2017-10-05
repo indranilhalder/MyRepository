@@ -5662,7 +5662,8 @@ function useWalletForPaymentAjax(){
 			
 		    if(data.disableJsMode){
 		    	//alert(data.disableJsMode);
-				  $("#make_cc_payment, #make_saved_dc_payment, #make_nb_payment, #paymentButtonId").hide();
+				  $("#make_saved_cc_payment, #make_saved_dc_payment, #make_cc_payment, #make_dc_payment, #make_nb_payment, #paymentButtonId, #make_emi_payment, #make_mrupee_payment").hide();
+				  $("#make_saved_cc_payment_up, #make_saved_dc_payment_up, #make_cc_payment_up, #make_dc_payment_up, #make_nb_payment_up, #make_emi_payment_up, #paymentButtonId_up, #make_mrupee_payment_up").hide();
 			      $(".topPlaceOrderBtn").show();
 			      $(".choose-payment").find('*').prop('disabled',true);
 			      $(".checkout-paymentmethod li span").css('pointer-events', 'none');
@@ -5672,7 +5673,8 @@ function useWalletForPaymentAjax(){
 				
 			}else{
 				//alert(data.disableJsMode);
-				 $("#make_cc_payment, #make_saved_dc_payment, #make_nb_payment, #paymentButtonId").show();
+				 $("#make_saved_cc_payment, #make_saved_dc_payment, #make_cc_payment, #make_dc_payment, #make_nb_payment, #paymentButtonId, #make_emi_payment, #make_mrupee_payment").show();
+				 $("#make_saved_cc_payment_up, #make_saved_dc_payment_up, #make_cc_payment_up, #make_dc_payment_up, #make_nb_payment_up, #make_emi_payment_up, #paymentButtonId_up, #make_mrupee_payment_up").show();
 				 $(".topPlaceOrderBtn").hide();
 				 $(".topPlaceOrderBtn").prop('disabled',true);
 				 $(".choose-payment").find('*').prop('disabled',false);
@@ -5724,6 +5726,11 @@ function WalletDetailAjax(){
 	}	
 	});
   }
+
+if ($(window).width() < 768) {
+	alert("Making Wallet Ajax");
+	WalletDetailAjax();
+}
 
 /**
  * Wallet Changes End

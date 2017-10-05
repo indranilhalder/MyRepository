@@ -200,7 +200,7 @@
 					<%-- <button type="button" class="positive right cod-otp-button_top" onclick="mobileBlacklist()" ><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.sendOTP" text="Verify Number" /></button> --%>
 					<button type="button" class="button positive right cod_payment_button_top proceed-button" onclick="submitForm()" id="paymentButtonId_up"><spring:theme code="checkout.multi.paymentMethod.codContinue" /></button>
 					<button type="button" class="button btn-block payment-button make_payment_top_savedCard proceed-button" id="make_mrupee_payment_up"><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.paymentButton"/></button>
-
+					<button type="button" class="button topPlaceOrderBtn cliqCashPlaceOrderBtnMobile"><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.paymentButton"/></button>
 
 <spring:eval expression="T(de.hybris.platform.util.Config).getParameter('marketplace.header.wallet')" var="walletEnable"/>
 <!-- Added for Wallet -->
@@ -512,6 +512,7 @@
 												<spring:theme
 													code="checkout.multi.paymentMethod.addPaymentDetails.paymentButton" />
 											</button>
+											<button type="button" class="button topPlaceOrderBtn"><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.paymentButton"/></button>
 		
 		
 		
@@ -667,6 +668,7 @@
 												<spring:theme
 													code="checkout.multi.paymentMethod.addPaymentDetails.paymentButton" />
 											</button>
+											<button type="button" class="button topPlaceOrderBtn"><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.paymentButton"/></button>
 											<!-- <p class="payment-redirect">You will be re-directed to secure payment gateway</p> -->
 											<%-- <p onclick="teliumTrack()"><spring:theme code="checkout.multi.paymentMethod.selectMode.tnc.pretext" /><a href="<c:url value="${tncLink}"/>" target="_blank"><spring:theme code="checkout.multi.paymentMethod.selectMode.tnc" /></a><p> --%>
 										</div>
@@ -1259,6 +1261,7 @@
 			            		<div class="pay newCardPayment">
 									
 									<button type="submit" class="make_payment button btn-block payment-button" id="make_dc_payment"><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.paymentButton"/></button>
+									<button type="button" class="button topPlaceOrderBtn"><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.paymentButton"/></button>
 									<!-- <p class="payment-redirect">You will be re-directed to secure payment gateway</p> -->
 									<%-- <p onclick="teliumTrack()"><spring:theme code="checkout.multi.paymentMethod.selectMode.tnc.pretext" /><a href="<c:url value="${tncLink}"/>" target="_blank"><spring:theme code="checkout.multi.paymentMethod.selectMode.tnc" /></a></p> --%>
 								</div>
@@ -1357,6 +1360,7 @@
 											<c:choose>
 											<c:when test="${map.key eq 'Credit Card'}">
 										<input type="hidden" id="CreditCard" value="${map.value}" />
+										<button type="button" class="button topPlaceOrderBtn"><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.paymentButton"/></button>
 											<!-- EMI CREDIT CARD -->
 													<div id="cardEmi" style="display: none;">
 														<!-- <ul class="product-block blocks"> -->
@@ -1738,6 +1742,7 @@
 										
 											    <div class="pay newCardPaymentMR">
 												     <button type="button" class="make_payment button btn-block payment-button" id="make_mrupee_payment"><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.paymentButton"/></button>
+											    	<button type="button" class="button topPlaceOrderBtn"><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.paymentButton"/></button>
 											    </div>
 									    </ycommerce:testId>
 									</form>

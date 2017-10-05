@@ -65378,6 +65378,7 @@ div#savedEMICard .credit-card-group .right-align-form input.cvvValdiation.securi
     line-height: 1 !important;
     font-size: 12px !important;
 }
+.cliqCashPlaceOrderBtnMobile {display: block;bottom: 7.2px;left: auto;right: 8px !important;width: 50%;height: 33.5px !important;font-weight: normal;background-color: #a5173c;line-height: 1 !important;font-size: 12px !important;position: fixed;z-index: 99; color: white;}
 .cart.wrapper.checkout-payment .left-block .payments.tab-view{
 	border:none;
 	border-top: solid 1px #e8e8e8;
