@@ -4072,10 +4072,14 @@ public class ProductPageController extends MidPageController
 				for (final ATSResponseData atsResponseData : storeLocationResponseData.getAts())
 				{
 					PointOfServiceModel posModel = null;
-					posModel = mplSlaveMasterFacade.findPOSBySellerAndSlave(pincodeSellerId, atsResponseData.getStoreId());
-					if (null != posModel)
+					final int availableQty = atsResponseData.getQuantity();
+					if (availableQty >= 1)
 					{
-						posModelList.add(posModel);
+						posModel = mplSlaveMasterFacade.findPOSBySellerAndSlave(pincodeSellerId, atsResponseData.getStoreId());
+						if (null != posModel)
+						{
+							posModelList.add(posModel);
+						}
 					}
 				}
 			}
