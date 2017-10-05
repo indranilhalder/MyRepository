@@ -20,8 +20,7 @@
     <c:when test="${not empty productData}">
         <h3 class="section-title">${title}</h3>
 
-        <c:choose>
-            <c:when test="${component.popup}">
+
                 <ul class="list-unstyled trending-products-catagory text-center circle-pager">
                     <div id="quickViewTitle" class="quickView-header" style="display:none">
                         <div class="headline">
@@ -42,8 +41,7 @@
                         </li>
                     </c:forEach>
                 </ul>
-            </c:when>
-            <c:otherwise>
+
                 <ul class="list-unstyled trending-products-catagory text-center circle-pager">
                     <c:forEach items="${productData}" var="product">
 
@@ -130,10 +128,7 @@
                         </li>
                     </c:forEach>
                 </ul>
-            </c:otherwise>
 
-        </c:choose>
-    </c:when>
 
     <c:otherwise>
         <component:emptyComponent/>

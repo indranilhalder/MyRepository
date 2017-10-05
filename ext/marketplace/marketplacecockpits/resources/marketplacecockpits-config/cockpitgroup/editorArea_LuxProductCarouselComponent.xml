@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <editor xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="editor.xsd">
-	<group qualifier="General" visible="true" initially-opened="true">
+	<group qualifier="General" visible="true" initially-opened="false">
 		<label key="cockpit.config.label.General" />
 		<property qualifier="CMSItem.name"/>
 		<property qualifier="CMSItem.catalogVersion" editor="shortListEditor"/>
@@ -9,12 +9,12 @@
 
 	<group qualifier="editorial" visible="true" initially-opened="true">
 		<label key="config.general.editorial" />
-		<property qualifier="RotatingImagesComponent.banners">
-			<parameter>
-				<name>predefinedValuesStrategy</name>
-				<value>cmsItemPredefinedValuesStrategy</value>
-			</parameter>
-		</property>
+		<property qualifier="LuxProductCarouselComponent.BrandImage" editor="simpleMediaReferenceSelector"/>
+		<property qualifier="LuxProductCarouselComponent.BrandTitle"/>
+		<property qualifier="LuxProductCarouselComponent.shopNowLink"/>
+		<property qualifier="LuxProductCarouselComponent.shopNowName"/>
+		<property qualifier="LuxProductCarouselComponent.products"/>
+		<property qualifier="ProductCarouselComponent.popup"/>
 	</group>
 
 	<group qualifier="visibility" visible="true" initially-opened="false">
@@ -27,6 +27,7 @@
 		</property>
 		<property qualifier="AbstractCMSComponent.onlyOneRestrictionMustApply"/>
 	</group>
+
 
 	<group qualifier="admin" visible="true" initially-opened="false">
 		<label key="config.general.administration" />
@@ -41,6 +42,7 @@
 	<group qualifier="mobileApp" visible="true" initially-opened="false">
 		<property  qualifier="AbstractCMSComponent.appPosition" />
 	</group>
+
 
 	<custom-group 
 		class="de.hybris.platform.cockpit.services.config.impl.UnassignedEditorSectionConfiguration" 

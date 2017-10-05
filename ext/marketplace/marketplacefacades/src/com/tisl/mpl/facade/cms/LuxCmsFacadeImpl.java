@@ -96,7 +96,7 @@ public class LuxCmsFacadeImpl implements LuxCmsFacade
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.tisl.mpl.facade.cms.LuxCmsFacade#getLuxuryHomePage()
 	 */
 	@Override
@@ -128,8 +128,8 @@ public class LuxCmsFacadeImpl implements LuxCmsFacade
 			final LuxuryComponentsListWsDTO luxuryComponentsListWsDTO) throws CMSItemNotFoundException
 	{
 
-		final List<AbstractCMSComponentModel> abstractCMSComponentModelList = cmsRestrictionService.evaluateCMSComponents(
-				contentSlot.getCmsComponents(), null);
+		final List<AbstractCMSComponentModel> abstractCMSComponentModelList = cmsRestrictionService
+				.evaluateCMSComponents(contentSlot.getCmsComponents(), null);
 		LuxuryComponentsListWsDTO luxuryComponentsList = luxuryComponentsListWsDTO;
 
 		if (null != abstractCMSComponentModelList)
@@ -201,6 +201,14 @@ public class LuxCmsFacadeImpl implements LuxCmsFacade
 		{
 			luxuryComponent.setLuxuryCMSImageComponent(luxuryCMSImageComponent);
 		}
+		if (StringUtils.isNotEmpty(CMSImageComponent.getAppPosition()))
+		{
+			luxuryMediaListWsDTO.setComponentPosition(CMSImageComponent.getAppPosition());
+		}
+		else
+		{
+			luxuryMediaListWsDTO.setComponentPosition(" ");
+		}
 		luxuryComponent.getLuxuryCMSImageComponent().add(luxuryMediaListWsDTO);
 		return luxuryComponent;
 	}
@@ -213,6 +221,15 @@ public class LuxCmsFacadeImpl implements LuxCmsFacade
 		final List<LuxBannerComponentWsDTO> LuxBannerComponentWsDTOList = new ArrayList<LuxBannerComponentWsDTO>();
 		final LuxRotatingImagesComponentWsDTO luxRotatingImagesDTO = new LuxRotatingImagesComponentWsDTO();
 
+
+		if (StringUtils.isNotEmpty(RotatingImagesComponentModel.getAppPosition()))
+		{
+			luxRotatingImagesDTO.setComponentPosition(RotatingImagesComponentModel.getAppPosition());
+		}
+		else
+		{
+			luxRotatingImagesDTO.setComponentPosition(" ");
+		}
 
 		for (final BannerComponentModel bannerComp : RotatingImagesComponentModel.getBanners())
 		{
@@ -260,6 +277,14 @@ public class LuxCmsFacadeImpl implements LuxCmsFacade
 		if (StringUtils.isNotEmpty(luxShowCaseComponent.getTitle()))
 		{
 			luxShowCaseComponentListObj.setTitle(luxShowCaseComponent.getTitle());
+		}
+		if (StringUtils.isNotEmpty(luxShowCaseComponent.getAppPosition()))
+		{
+			luxShowCaseComponentListObj.setComponentPosition(luxShowCaseComponent.getAppPosition());
+		}
+		else
+		{
+			luxShowCaseComponentListObj.setComponentPosition(" ");
 		}
 		for (final LuxShowCaseCollectionComponentModel showCaseComponent : luxShowCaseComponent.getShowCase())
 		{
@@ -328,6 +353,15 @@ public class LuxCmsFacadeImpl implements LuxCmsFacade
 		setValue(luxVideocomponentWsDTO::setVideoSectionHeading, luxuryVideoComponent.getVideoSectionHeading());
 		setValue(luxVideocomponentWsDTO::setPreviewUrl, luxuryVideoComponent.getPreviewImageUrl());
 
+		if (StringUtils.isNotEmpty(luxuryVideoComponent.getAppPosition()))
+		{
+			luxVideocomponentWsDTO.setComponentPosition(luxuryVideoComponent.getAppPosition());
+		}
+		else
+		{
+			luxVideocomponentWsDTO.setComponentPosition(" ");
+		}
+
 		luxVideocomponentList.add(luxVideocomponentWsDTO);
 
 		luxuryComponent.setLuxuryvideocomponent(luxVideocomponentList);
@@ -347,6 +381,14 @@ public class LuxCmsFacadeImpl implements LuxCmsFacade
 		if (StringUtils.isNotEmpty(weeklySpecialComponent.getTitle()))
 		{
 			weeklySpecialBannerListObj.setSeeklySpecialTitle(weeklySpecialComponent.getTitle());
+		}
+		if (StringUtils.isNotEmpty(weeklySpecialComponent.getAppPosition()))
+		{
+			weeklySpecialBannerListObj.setComponentPosition(weeklySpecialComponent.getAppPosition());
+		}
+		else
+		{
+			weeklySpecialBannerListObj.setComponentPosition(" ");
 		}
 
 		for (final WeeklySpecialBannerModel banner : weeklySpecialComponent.getWeeklySpecialBanners())
@@ -383,6 +425,14 @@ public class LuxCmsFacadeImpl implements LuxCmsFacade
 		final ShopOnLuxuryElementListWsDTO shopOnLuxuryElementListObj = new ShopOnLuxuryElementListWsDTO();
 
 		setValue(shopOnLuxuryElementListObj::setShopOnLuxuryTitle, luxuryShopOnLuxuryComponent.getShopOnLuxuryTitle());
+		if (StringUtils.isNotEmpty(luxuryShopOnLuxuryComponent.getAppPosition()))
+		{
+			shopOnLuxuryElementListObj.setComponentPosition(luxuryShopOnLuxuryComponent.getAppPosition());
+		}
+		else
+		{
+			shopOnLuxuryElementListObj.setComponentPosition(" ");
+		}
 
 		for (final ShopOnLuxuryElementModel element : luxuryShopOnLuxuryComponent.getShopOnLuxuryElements())
 		{
@@ -415,6 +465,16 @@ public class LuxCmsFacadeImpl implements LuxCmsFacade
 		final List<LuxBannerComponentWsDTO> relatedImageList = new ArrayList<LuxBannerComponentWsDTO>();
 
 		setValue(luxShopByCategoryWsDTO::setTitle, luxShopByCategoryComponent.getTitle());
+		setValue(luxShopByCategoryWsDTO::setComponentPosition, luxShopByCategoryComponent.getAppPosition());
+
+		if (StringUtils.isNotEmpty(luxShopByCategoryComponent.getAppPosition()))
+		{
+			luxShopByCategoryWsDTO.setComponentPosition(luxShopByCategoryComponent.getAppPosition());
+		}
+		else
+		{
+			luxShopByCategoryWsDTO.setComponentPosition(" ");
+		}
 
 		for (final BannerComponentModel bannerComponent : luxShopByCategoryComponent.getRelatedImage())
 		{
@@ -451,6 +511,14 @@ public class LuxCmsFacadeImpl implements LuxCmsFacade
 				&& StringUtils.isNotEmpty(LuxCMSMediaParagraphComponent.getMedia().getURL()))
 		{
 			LuxCMSMediaParagraphComponentListObj.setMedia(LuxCMSMediaParagraphComponent.getMedia().getURL());
+		}
+		if (StringUtils.isNotEmpty(LuxCMSMediaParagraphComponent.getAppPosition()))
+		{
+			LuxCMSMediaParagraphComponentListObj.setComponentPosition(LuxCMSMediaParagraphComponent.getAppPosition());
+		}
+		else
+		{
+			LuxCMSMediaParagraphComponentListObj.setComponentPosition(" ");
 		}
 
 		setValue(LuxCMSMediaParagraphComponentListObj::setContent, LuxCMSMediaParagraphComponent.getContent());
@@ -499,6 +567,14 @@ public class LuxCmsFacadeImpl implements LuxCmsFacade
 		if (null != luxuryLookBookComponent.getTextArea())
 		{
 			luxuryLookBookComponentListObj.setTextArea(luxuryLookBookComponent.getTextArea().getContent());
+		}
+		if (StringUtils.isNotEmpty(luxuryLookBookComponent.getAppPosition()))
+		{
+			luxuryLookBookComponentListObj.setComponentPosition(luxuryLookBookComponent.getAppPosition());
+		}
+		else
+		{
+			luxuryLookBookComponentListObj.setComponentPosition(" ");
 		}
 
 		if (null == luxuryComponent.getLuxuryLookBookComponent())
@@ -561,7 +637,7 @@ public class LuxCmsFacadeImpl implements LuxCmsFacade
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.tisl.mpl.facade.cms.LuxCmsFacade#getBrandById(java.lang.String)
 	 */
 	@Override
@@ -596,7 +672,7 @@ public class LuxCmsFacadeImpl implements LuxCmsFacade
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.tisl.mpl.facade.cms.LuxCmsFacade#getContentPagesBylable(java.lang.String)
 	 */
 	@Override
@@ -628,7 +704,7 @@ public class LuxCmsFacadeImpl implements LuxCmsFacade
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.tisl.mpl.facade.cms.LuxCmsFacade#getLuxHomepage()
 	 */
 	@Override
