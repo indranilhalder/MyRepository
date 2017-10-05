@@ -251,7 +251,7 @@ $(document).ready(function() {
     //TISPRDT-2225
     //if($('#pageType').val() == "productsearch" || $('#pageType').val() == "product" || $('#pageType').val() == "category" || $('input[name=customSku]').length){
     if ($('#pageType').val() != "homepage" && $("input[name=newBrandLandingPage]").length == 0 && $('#pageType').val() != "product" ) {
-//	    $("img.lazy").lazyload();	
+    	//UF-458$("img.lazy").lazyload();	
 	}
     //set the total no of pages 
     totalNoOfPages = $('input[name=noOfPages]').val();
