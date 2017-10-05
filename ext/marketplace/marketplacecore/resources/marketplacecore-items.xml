@@ -6278,6 +6278,12 @@
 						<modifiers read="true" write="true" removable="true"  />
 						<persistence type="property" />
 					   </attribute>
+					   
+					    <attribute qualifier="walletApportionReturnInfo" autocreate="true" type="WalletApportionPaymentInfo">
+						<description>QC Wallet Card Detail</description>
+						<modifiers read="true" write="true" removable="true"  />
+						<persistence type="property" />
+					   </attribute>
 
 					<!-- QC Changes End -->
 					
@@ -7998,6 +8004,13 @@
 							optional="true" initial="true" unique="false" />
 						<persistence type="property" />
 					</attribute>
+					
+					<attribute qualifier="amountForQc" type="java.lang.Double">
+						<description>pickUp Time To  Value</description>
+						<modifiers read="true" write="true" optional="true" />
+						<persistence type="property" />
+					</attribute>
+					
 				</attributes>
 			</itemtype>
 		</typegroup>
@@ -13597,6 +13610,20 @@
 					</attribute>
 					
 					<attribute autocreate="true" generate="true" qualifier="qcDeliveryPartValue"
+						type="java.lang.String">
+						<persistence type="property" />
+						<modifiers read="true" write="true" search="true" />
+						<defaultvalue>"0"</defaultvalue>
+					</attribute>
+					
+					<attribute autocreate="true" generate="true" qualifier="type"
+						type="java.lang.String">
+						<persistence type="property" />
+						<modifiers read="true" write="true" search="true" />
+						<defaultvalue>"0"</defaultvalue>
+					</attribute>
+					
+					<attribute autocreate="true" generate="true" qualifier="status"
 						type="java.lang.String">
 						<persistence type="property" />
 						<modifiers read="true" write="true" search="true" />

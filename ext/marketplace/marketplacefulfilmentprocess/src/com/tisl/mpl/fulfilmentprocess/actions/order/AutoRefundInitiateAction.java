@@ -6,8 +6,10 @@ package com.tisl.mpl.fulfilmentprocess.actions.order;
 import de.hybris.platform.basecommerce.enums.ConsignmentStatus;
 import de.hybris.platform.basecommerce.enums.RefundReason;
 import de.hybris.platform.basecommerce.enums.ReturnStatus;
+import de.hybris.platform.core.model.order.AbstractOrderEntryModel;
 import de.hybris.platform.core.model.order.OrderEntryModel;
 import de.hybris.platform.core.model.order.OrderModel;
+import de.hybris.platform.core.model.user.CustomerModel;
 import de.hybris.platform.orderhistory.model.OrderHistoryEntryModel;
 import de.hybris.platform.orderprocessing.model.OrderProcessModel;
 import de.hybris.platform.ordersplitting.model.ConsignmentModel;
@@ -19,6 +21,7 @@ import de.hybris.platform.returns.model.ReturnEntryModel;
 import de.hybris.platform.returns.model.ReturnRequestModel;
 import de.hybris.platform.servicelayer.model.ModelService;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
@@ -26,11 +29,19 @@ import java.util.List;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.ArrayUtils;
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import com.tisl.mpl.core.model.WalletApportionPaymentInfoModel;
+import com.tisl.mpl.core.model.WalletCardApportionDetailModel;
 import com.tisl.mpl.marketplacecommerceservices.service.MplNotificationService;
+import com.tisl.mpl.marketplacecommerceservices.service.MplOrderService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplPaymentService;
+import com.tisl.mpl.pojo.request.QCCreditRequest;
+import com.tisl.mpl.pojo.response.QCCard;
+import com.tisl.mpl.pojo.response.QCRedeeptionResponse;
+import com.tisl.mpl.service.MplWalletServices;
 
 
 /**
@@ -54,6 +65,12 @@ public class AutoRefundInitiateAction extends AbstractProceduralAction<OrderProc
 
 	@Autowired
 	private MplNotificationService mplNotificationSaveService;
+	
+	@Autowired
+	private MplWalletServices mplWalletServices;
+	
+	@Autowired
+	private MplOrderService mplOrderService;
 
 
 	@Override
@@ -135,16 +152,40 @@ public class AutoRefundInitiateAction extends AbstractProceduralAction<OrderProc
 															+ orderModel.getCode());
 												}
 											}
-											LOG.error("AutoRefundInitiateAction: Going to call mplPaymentService.doRefundPayment(refundList); for Order #"
-													+ orderModel.getCode());
-											final String result = mplPaymentService.doRefundPayment(refundList);
-											LOG.error("AutoRefundInitiateAction: After call mplPaymentService.doRefundPayment(refundList); for Order #"
-													+ orderModel.getCode());
+											
+											//Start code for Split mode 
+											 String result =null;
+											 boolean qcstatus = false ;
+											 if(orderModel.getSplitModeInfo().equalsIgnoreCase("Juspay")){
+												 LOG.error("AutoRefundInitiateAction: Going to call mplPaymentService.doRefundPayment(refundList); for Order #"
+															+ orderModel.getCode());
+													 result = mplPaymentService.doRefundPayment(refundList);
+													LOG.error("AutoRefundInitiateAction: After call mplPaymentService.doRefundPayment(refundList); for Order #"
+															+ orderModel.getCode());
+											 }else if (orderModel.getSplitModeInfo().equalsIgnoreCase("CliqCash")){
+												 
+												//Start Added the code for QC
+												 QCRedeeptionResponse  response =qcCallforReturnRefund( orderModel ,(RefundEntryModel) returnEntry);
+												 qcstatus = constructQuickCilverOrderEntry(response,returnEntry.getOrderEntry().getTransactionID());
+													//End Added the code for QC
+												 
+											 }else if(orderModel.getSplitModeInfo().equalsIgnoreCase("Split")){
+													//Start Added the code for QC
+												 QCRedeeptionResponse  response =qcCallforReturnRefund( orderModel ,(RefundEntryModel) returnEntry);
+												 qcstatus = constructQuickCilverOrderEntry(response,returnEntry.getOrderEntry().getTransactionID());
+													//End Added the code for QC
+												 LOG.error("AutoRefundInitiateAction: Going to call mplPaymentService.doRefundPayment(refundList); for Order #"
+															+ orderModel.getCode());
+													 result = mplPaymentService.doRefundPayment(refundList);
+													LOG.error("AutoRefundInitiateAction: After call mplPaymentService.doRefundPayment(refundList); for Order #"
+															+ orderModel.getCode());
+											 }
+											
 											final String[] resultArray = result.split(",");
 
 											if (ArrayUtils.isNotEmpty(resultArray))
 											{
-												if (!resultArray[0].equalsIgnoreCase("FAILURE"))
+												if (!resultArray[0].equalsIgnoreCase("FAILURE") && qcstatus)
 												{
 													for (final ReturnEntryModel returnEntryTmp : returnList)
 													{
@@ -208,7 +249,64 @@ public class AutoRefundInitiateAction extends AbstractProceduralAction<OrderProc
 			}
 		}
 	}
-
+	private boolean constructQuickCilverOrderEntry(final QCRedeeptionResponse response,String transactionId){
+	
+		boolean qcStatus= false;
+		final AbstractOrderEntryModel abstractOrderEntryModel = mplOrderService.getEntryModel(transactionId);
+		final WalletApportionPaymentInfoModel walletApportionModel =new WalletApportionPaymentInfoModel();
+		  List<WalletCardApportionDetailModel> walletCardApportionDetailModelList = new ArrayList<WalletCardApportionDetailModel>();
+			for(QCCard qcCard:response.getCards()){
+				WalletCardApportionDetailModel model =new WalletCardApportionDetailModel();
+				model.setCardNumber(qcCard.getCardNumber());
+				model.setCardExpiry(qcCard.getExpiry());
+				model.setCardAmount(qcCard.getAmount().toString());
+				model.setBucketType(qcCard.getBucketType());
+				walletCardApportionDetailModelList.add(model);
+			}
+			walletApportionModel.setWalletCardList(walletCardApportionDetailModelList);
+			if(null !=abstractOrderEntryModel.getWalletApportionPaymentInfo() && null!= abstractOrderEntryModel.getWalletApportionPaymentInfo().getQcApportionPartValue()){
+				walletApportionModel.setQcApportionPartValue(abstractOrderEntryModel.getWalletApportionPaymentInfo().getQcApportionPartValue());
+			}
+			if(null !=abstractOrderEntryModel.getWalletApportionPaymentInfo() && null!= abstractOrderEntryModel.getWalletApportionPaymentInfo().getQcDeliveryPartValue()){
+				walletApportionModel.setQcDeliveryPartValue(abstractOrderEntryModel.getWalletApportionPaymentInfo().getQcDeliveryPartValue());
+			}
+			if(null !=abstractOrderEntryModel.getWalletApportionPaymentInfo() && null!= abstractOrderEntryModel.getWalletApportionPaymentInfo().getQcSchedulingPartValue()){
+				walletApportionModel.setQcSchedulingPartValue(abstractOrderEntryModel.getWalletApportionPaymentInfo().getQcSchedulingPartValue());
+			}
+			if(null !=abstractOrderEntryModel.getWalletApportionPaymentInfo() && null!= abstractOrderEntryModel.getWalletApportionPaymentInfo().getQcShippingPartValue()){
+				walletApportionModel.setQcShippingPartValue(abstractOrderEntryModel.getWalletApportionPaymentInfo().getQcShippingPartValue());
+			}	
+			walletApportionModel.setType("RETURN");
+			if(StringUtils.equalsIgnoreCase(response.getResponseCode().toString(),"0")){
+				walletApportionModel.setStatus("SUCCESS");
+				qcStatus=true;
+			}else{
+				walletApportionModel.setStatus("FAIL");
+			}
+			abstractOrderEntryModel.setWalletApportionReturnInfo(walletApportionModel);
+		modelService.save(abstractOrderEntryModel);
+		return qcStatus;
+	}
+	private  QCRedeeptionResponse  qcCallforReturnRefund(OrderModel orderModel ,RefundEntryModel returnEntry){
+		LOG.error("AutoRefundInitiateAction: Going to call QC  mplWalletServices.qcCredit(walletInfo); for Order #"
+				+ orderModel.getCode());
+		String walletId =null;
+		DecimalFormat daecimalFormat =new DecimalFormat("#.00");
+		CustomerModel customerModel= (CustomerModel)orderModel.getUser();
+   	if(null!=customerModel && null!= customerModel.getCustomerWalletDetail()){
+   		walletId=customerModel.getCustomerWalletDetail().getWalletId();
+   	}
+   	QCCreditRequest qcCreditRequest =new QCCreditRequest();
+   	qcCreditRequest.setAmount(daecimalFormat.format(returnEntry.getAmountForQc()));
+   	qcCreditRequest.setInvoiceNumber(orderModel.getParentReference().getCode());
+   	qcCreditRequest.setNotes("Cancel for "+ daecimalFormat.format(returnEntry.getAmountForQc())); 
+   	final QCRedeeptionResponse  qcRedeeptionResponse= mplWalletServices.qcCredit(walletId, qcCreditRequest);
+		
+		LOG.error("AutoRefundInitiateAction: After call mplWalletServices.qcCredit(walletInfo); for Order #"
+				+ orderModel.getCode());
+		return qcRedeeptionResponse;
+	}
+	
 	private boolean isOrderCOD(final OrderModel order)
 	{
 		final List<PaymentTransactionModel> tranactions = new ArrayList<PaymentTransactionModel>(order.getPaymentTransactions());
