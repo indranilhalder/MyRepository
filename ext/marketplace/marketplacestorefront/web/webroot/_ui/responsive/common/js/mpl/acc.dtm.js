@@ -1442,14 +1442,14 @@ function dtmSearchTags(){
         		categoryL = category.toLowerCase(); 
         	}
         	
-        	/*digitalData.cpj = {
+        	digitalData.cpj = {
         		product : {
         				id  :  productL,
         		 category   :  categoryL	
         	 }
-        	}*/
+        	}
         	
-        	   if(typeof(digitalData.cpj.product) != "undefined"){
+        	   /*if(typeof(digitalData.cpj.product) != "undefined"){
         		     digitalData.cpj.product.id = productL;
         		     digitalData.cpj.product.category = categoryL;
                  }		
@@ -1458,7 +1458,7 @@ function dtmSearchTags(){
      	            		 id  :  productL,
      	           		 category   :  categoryL
     		           }
-                 }
+                 }*/
     	}
     	catch(e){
             console.log("error fn:dtmAddToCompare"+e.message);
