@@ -287,58 +287,12 @@ public class CartPageController extends AbstractPageController
 				CartData cartDataOnLoad = mplCartFacade.getSessionCartWithEntryOrdering(true);
 
 				//TPR-6980:Change in the logic of display of price disclaimer in the cart for Fine Jewellery
-				//	final List<AbstractOrderEntryModel> entryJewl = new ArrayList<>(cartModel.getEntries());
-				final List<String> discSellerNameList = new ArrayList<String>();
-
-				for (final AbstractOrderEntryModel orderEntry : cartModel.getEntries())
+				final String displayMsgFinal = mplCartFacade.populatePriceDisclaimerCart(cartModel);
+				if (StringUtils.isNotEmpty(displayMsgFinal))
 				{
-					if (MarketplacecommerceservicesConstants.FINEJEWELLERY.equalsIgnoreCase(orderEntry.getProduct()
-							.getProductCategoryType()))
-					{
-						final String sellerId = orderEntry.getSellerInfo();
-						final String sellers = getConfigurationService().getConfiguration().getString(
-								"cart.jewellery.disclaimer.sellerName");
-						if (StringUtils.isNotEmpty(sellers))
-						{
-							final String sellersArray[] = sellers.split(",");
-							if (StringUtils.isNotEmpty(sellerId))
-							{
-								for (final String s : sellersArray)
-								{
-									if (StringUtils.equalsIgnoreCase(sellerId, s))
-									{
-										discSellerNameList.add(s + ",");
-									}
-								}
-							}
-						}
-					}
-				}
-				if (CollectionUtils.isNotEmpty(discSellerNameList))
-				{
-					model.addAttribute("discSellerNameList", discSellerNameList);
-					//String displayMsg = getConfigurationService().getConfiguration().getString("cart.price.disclaimer");
-					String displayMsg = "";
-					for (final String sellerName : discSellerNameList)
-					{
-						if (StringUtils.isEmpty(displayMsg))
-						{
-							displayMsg = sellerName;
-						}
-						else
-						{
-							displayMsg = displayMsg + sellerName;
-						}
-					}
-					final String displayMsgFinal = getConfigurationService().getConfiguration().getString(
-							"cart.price.disclaimer.first")
-							+ MarketplacecommerceservicesConstants.SPACE
-							+ displayMsg.substring(0, displayMsg.length() - 1)
-							+ MarketplacecommerceservicesConstants.SPACE
-							+ getConfigurationService().getConfiguration().getString("cart.price.disclaimer.second");
-					//GlobalMessages.addConfMessage(model, displayMsg.substring(0, displayMsg.length() - 1));
 					GlobalMessages.addConfMessage(model, displayMsgFinal);
 				}
+
 				//TPR-5346 STARTS
 
 				//This method will update the cart  with respect to the max quantity configured for the product

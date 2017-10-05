@@ -716,7 +716,7 @@
 	<property name="exchangeMessage" type="String"/>
 		<!-- TPR-6117 -->
 			<property name="maxQuantityAllowed" type="String" />
-			<property name="priceDisclaimerTextJwlry" type="String" />
+			<!-- <property name="priceDisclaimerTextJwlry" type="String" /> -->
 	</bean>
 	<!-- -->
 	<bean class="com.tisl.mpl.wsdto.MobdeliveryModeWsDTO">
@@ -849,7 +849,9 @@
 		<property name="reachedMaxLimitforproduct" type="java.util.List&lt;com.tisl.mpl.wsdto.MaxLimitWsDto>" />
                 <!-- TPR-3893 starts here -->
 		<property name="firedMessage" type="String" />
-		<!-- TPR-3893 ends here -->	 
+		<!-- TPR-3893 ends here -->	
+		<!-- TPR-6980 -->
+		<property name="priceDisclaimerTextJwlry" type="String" />
 	</bean>
 	<bean class="com.tisl.mpl.wsdto.CartProductsDeliveryDetailsWsDTO">
 		<property name="data" type="String" />
