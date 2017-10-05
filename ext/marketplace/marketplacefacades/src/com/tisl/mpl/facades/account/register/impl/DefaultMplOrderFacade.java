@@ -81,12 +81,8 @@ import com.tisl.mpl.service.MplAwbStatusService;
 import com.tisl.mpl.service.TicketCreationCRMservice;
 import com.tisl.mpl.util.GenericUtilityMethods;
 import com.tisl.mpl.wsdto.CustomerOrderInfoWsDTO;
-import com.tisl.mpl.wsdto.DeliveryTrackingInfoWsDTO;
 import com.tisl.mpl.wsdto.OrderInfoWsDTO;
 import com.tisl.mpl.wsdto.TicketMasterXMLData;
-import com.tisl.mpl.xml.pojo.AWBStatusResponse;
-import com.tisl.mpl.xml.pojo.AWBStatusResponse.AWBResponseInfo;
-import com.tisl.mpl.xml.pojo.AWBStatusResponse.AWBResponseInfo.StatusRecords;
 
 
 /**
@@ -1186,9 +1182,9 @@ public class DefaultMplOrderFacade implements MplOrderFacade
 	 * @return OrderModel
 	 */
 	@Override
-	public List<OrderModel> getOrderWithMobileNo(final String mobileNo, final int queryCount)
+	public List<OrderModel> getOrderWithMobileNo(final String mobileNo, final int queryCount, final int transactionLimit)
 	{
-		final List<OrderModel> orderModel = mplOrderService.fetchOrderByMobile(mobileNo, queryCount);
+		final List<OrderModel> orderModel = mplOrderService.fetchOrderByMobile(mobileNo, queryCount, transactionLimit);
 		return orderModel;
 	}
 
@@ -1321,11 +1317,11 @@ public class DefaultMplOrderFacade implements MplOrderFacade
 	{
 		final OrderInfoWsDTO orderInfoWsDTO = new OrderInfoWsDTO();
 		final List<CustomerOrderInfoWsDTO> custdto = new ArrayList<CustomerOrderInfoWsDTO>();
-		final DeliveryTrackingInfoWsDTO deliveryTrackingInfoAllWsDTO = new DeliveryTrackingInfoWsDTO();
-		final List<DeliveryTrackingInfoWsDTO> deliveryTrackingListInfoWsDTO = new ArrayList<DeliveryTrackingInfoWsDTO>();
+		//final DeliveryTrackingInfoWsDTO deliveryTrackingInfoAllWsDTO = new DeliveryTrackingInfoWsDTO();
+		//final List<DeliveryTrackingInfoWsDTO> deliveryTrackingListInfoWsDTO = new ArrayList<DeliveryTrackingInfoWsDTO>();
 		final SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
 		boolean flag = false;
-		boolean consignmentFlag = false;
+		//final boolean consignmentFlag = false;
 		boolean errorFlag = true;
 		try
 		{
@@ -1447,158 +1443,172 @@ public class DefaultMplOrderFacade implements MplOrderFacade
 							}
 							customerOrderInfoWsDTO.setPaymentMode(null != orderModel.getModeOfOrderPayment() ? orderModel
 									.getModeOfOrderPayment() : MarketplacecommerceservicesConstants.NULL_VALUE);
+							//SDI-1193 starts
 							if (CollectionUtils.isNotEmpty(orderModel.getConsignments()))
 							{
 								for (final ConsignmentModel cng : orderModel.getConsignments())
 								{
-									if (!consignmentFlag)
+									//									if (!consignmentFlag)
+									//									{
+									//										LOG.debug("**********inside false consignment flag*************");
+									if (cng.getCode().equalsIgnoreCase(transactionId))
 									{
-										LOG.debug("**********inside false consignment flag*************");
-										if (cng.getCode().equalsIgnoreCase(transactionId))
+										//											//Delivery tracking Details
+										//											if (StringUtils.isNotEmpty(cng.getTrackingID()))
+										//											{
+										//												LOG.debug("**********tracking id*********" + cng.getTrackingID());
+										//												LOG.debug("**********carrier*********" + cng.getCarrier());
+										//												final AWBStatusResponse aWBStatusResponse = mplAwbStatusService.prepAwbNumbertoOMS(
+										//														cng.getTrackingID(), cng.getCarrier());
+										//												if (null != aWBStatusResponse
+										//														&& CollectionUtils.isNotEmpty(aWBStatusResponse.getAWBResponseInfo()))
+										//												{
+										//													LOG.debug("**********AWB STATUS RESPONSE*********" + aWBStatusResponse);
+										//													LOG.debug("**********AWB RESPONSE INFO*********" + aWBStatusResponse.getAWBResponseInfo());
+										//													for (final AWBResponseInfo awbResponseInfo : aWBStatusResponse.getAWBResponseInfo())
+										//													{
+										//														if (CollectionUtils.isNotEmpty(awbResponseInfo.getStatusRecords()))
+										//														{
+										//															deliveryTrackingListInfoWsDTO.clear();//Removing pre stored values
+										//															LOG.debug("********Removing pre stored values in delivery tracking list dto****");
+										//															for (final StatusRecords statusRecords : awbResponseInfo.getStatusRecords())
+										//															{
+										//																final DeliveryTrackingInfoWsDTO deliveryTrackingInfoWsDTO = new DeliveryTrackingInfoWsDTO();
+										//																LOG.debug("********delivery tracking date" + statusRecords.getDate());
+										//																LOG.debug("********delivery tracking location" + statusRecords.getLocation());
+										//																LOG.debug("********delivery tracking description"
+										//																		+ statusRecords.getStatusDescription());
+										//																deliveryTrackingInfoWsDTO
+										//																		.setDeliveryTrackingDate(null != statusRecords.getDate() ? statusRecords
+										//																				.getDate() : MarketplacecommerceservicesConstants.NULL_VALUE);
+										//																deliveryTrackingInfoWsDTO.setDeliveryTrackingLocation(null != statusRecords
+										//																		.getLocation() ? statusRecords.getLocation()
+										//																		: MarketplacecommerceservicesConstants.NULL_VALUE);
+										//																deliveryTrackingInfoWsDTO.setDeliveryTrackingDescription(null != statusRecords
+										//																		.getStatusDescription() ? statusRecords.getStatusDescription()
+										//																		: MarketplacecommerceservicesConstants.NULL_VALUE);
+										//																LOG.debug("+++++++delivery Tracking details+++++++++" + deliveryTrackingInfoWsDTO);
+										//																deliveryTrackingListInfoWsDTO.add(deliveryTrackingInfoWsDTO);
+										//																customerOrderInfoWsDTO.setDeliverytrackingDetails(deliveryTrackingListInfoWsDTO);
+										//																LOG.debug("-----delivery Tracking details in response inside for loop------"
+										//																		+ customerOrderInfoWsDTO.getDeliverytrackingDetails());
+										//															}
+										//														}
+										//														else
+										//														{
+										//															deliveryTrackingListInfoWsDTO.clear();//Removing pre stored values
+										//															//final DeliveryTrackingInfoWsDTO deliveryTrackingInfoWsDTO = new DeliveryTrackingInfoWsDTO();
+										//															LOG.debug("**********Inside else part of status records*********");
+										//															deliveryTrackingInfoAllWsDTO
+										//																	.setDeliveryTrackingDate(MarketplacecommerceservicesConstants.NULL_VALUE);
+										//															deliveryTrackingInfoAllWsDTO
+										//																	.setDeliveryTrackingLocation(MarketplacecommerceservicesConstants.NULL_VALUE);
+										//															deliveryTrackingInfoAllWsDTO
+										//																	.setDeliveryTrackingDescription(MarketplacecommerceservicesConstants.NULL_VALUE);
+										//															deliveryTrackingListInfoWsDTO.add(deliveryTrackingInfoAllWsDTO);
+										//															customerOrderInfoWsDTO.setDeliverytrackingDetails(deliveryTrackingListInfoWsDTO);
+										//														}
+										//													}
+										//												}
+										//												else
+										//												{
+										//													deliveryTrackingListInfoWsDTO.clear();//Removing pre stored values
+										//													LOG.debug("**********Inside else part of awb response*********");
+										//													//final DeliveryTrackingInfoWsDTO deliveryTrackingInfoWsDTO = new DeliveryTrackingInfoWsDTO();
+										//													deliveryTrackingInfoAllWsDTO
+										//															.setDeliveryTrackingDate(MarketplacecommerceservicesConstants.NULL_VALUE);
+										//													deliveryTrackingInfoAllWsDTO
+										//															.setDeliveryTrackingLocation(MarketplacecommerceservicesConstants.NULL_VALUE);
+										//													deliveryTrackingInfoAllWsDTO
+										//															.setDeliveryTrackingDescription(MarketplacecommerceservicesConstants.NULL_VALUE);
+										//													deliveryTrackingListInfoWsDTO.add(deliveryTrackingInfoAllWsDTO);
+										//													customerOrderInfoWsDTO.setDeliverytrackingDetails(deliveryTrackingListInfoWsDTO);
+										//												}
+										//											}
+										//											else
+										//											{
+										//												deliveryTrackingListInfoWsDTO.clear();//Removing pre stored values
+										//												LOG.debug("**********Inside else part of null tracking id*********");
+										//												//final DeliveryTrackingInfoWsDTO deliveryTrackingInfoWsDTO = new DeliveryTrackingInfoWsDTO();
+										//												deliveryTrackingInfoAllWsDTO
+										//														.setDeliveryTrackingDate(MarketplacecommerceservicesConstants.NULL_VALUE);
+										//												deliveryTrackingInfoAllWsDTO
+										//														.setDeliveryTrackingLocation(MarketplacecommerceservicesConstants.NULL_VALUE);
+										//												deliveryTrackingInfoAllWsDTO
+										//														.setDeliveryTrackingDescription(MarketplacecommerceservicesConstants.NULL_VALUE);
+										//												deliveryTrackingListInfoWsDTO.add(deliveryTrackingInfoAllWsDTO);
+										//												customerOrderInfoWsDTO.setDeliverytrackingDetails(deliveryTrackingListInfoWsDTO);
+										//											}
+										customerOrderInfoWsDTO.setAwbNumber(null != cng.getTrackingID() ? cng.getTrackingID()
+												: MarketplacecommerceservicesConstants.NULL_VALUE);//AWB number
+										customerOrderInfoWsDTO.setReturnCarrier(null != cng.getReturnCarrier() ? cng.getReturnCarrier()
+												: MarketplacecommerceservicesConstants.NULL_VALUE);//Return carrier
+										customerOrderInfoWsDTO.setReturnAwbNumber(null != cng.getReturnAWBNum() ? cng.getReturnAWBNum()
+												: MarketplacecommerceservicesConstants.NULL_VALUE);//Return AWB number
+										customerOrderInfoWsDTO.setShippingStatus((null != cng.getShipmentStatus() ? cng.getShipmentStatus()
+												: MarketplacecommerceservicesConstants.NULL_VALUE));//Shipping status
+										if (cng.getShippingDate() != null)
 										{
-											//Delivery tracking Details
-											if (StringUtils.isNotEmpty(cng.getTrackingID()))
-											{
-												LOG.debug("**********tracking id*********" + cng.getTrackingID());
-												LOG.debug("**********carrier*********" + cng.getCarrier());
-												final AWBStatusResponse aWBStatusResponse = mplAwbStatusService.prepAwbNumbertoOMS(
-														cng.getTrackingID(), cng.getCarrier());
-												if (null != aWBStatusResponse
-														&& CollectionUtils.isNotEmpty(aWBStatusResponse.getAWBResponseInfo()))
-												{
-													LOG.debug("**********AWB STATUS RESPONSE*********" + aWBStatusResponse);
-													LOG.debug("**********AWB RESPONSE INFO*********" + aWBStatusResponse.getAWBResponseInfo());
-													for (final AWBResponseInfo awbResponseInfo : aWBStatusResponse.getAWBResponseInfo())
-													{
-														if (CollectionUtils.isNotEmpty(awbResponseInfo.getStatusRecords()))
-														{
-															deliveryTrackingListInfoWsDTO.clear();//Removing pre stored values
-															LOG.debug("********Removing pre stored values in delivery tracking list dto****");
-															for (final StatusRecords statusRecords : awbResponseInfo.getStatusRecords())
-															{
-																final DeliveryTrackingInfoWsDTO deliveryTrackingInfoWsDTO = new DeliveryTrackingInfoWsDTO();
-																LOG.debug("********delivery tracking date" + statusRecords.getDate());
-																LOG.debug("********delivery tracking location" + statusRecords.getLocation());
-																LOG.debug("********delivery tracking description"
-																		+ statusRecords.getStatusDescription());
-																deliveryTrackingInfoWsDTO
-																		.setDeliveryTrackingDate(null != statusRecords.getDate() ? statusRecords
-																				.getDate() : MarketplacecommerceservicesConstants.NULL_VALUE);
-																deliveryTrackingInfoWsDTO.setDeliveryTrackingLocation(null != statusRecords
-																		.getLocation() ? statusRecords.getLocation()
-																		: MarketplacecommerceservicesConstants.NULL_VALUE);
-																deliveryTrackingInfoWsDTO.setDeliveryTrackingDescription(null != statusRecords
-																		.getStatusDescription() ? statusRecords.getStatusDescription()
-																		: MarketplacecommerceservicesConstants.NULL_VALUE);
-																LOG.debug("+++++++delivery Tracking details+++++++++" + deliveryTrackingInfoWsDTO);
-																deliveryTrackingListInfoWsDTO.add(deliveryTrackingInfoWsDTO);
-																customerOrderInfoWsDTO.setDeliverytrackingDetails(deliveryTrackingListInfoWsDTO);
-																LOG.debug("-----delivery Tracking details in response inside for loop------"
-																		+ customerOrderInfoWsDTO.getDeliverytrackingDetails());
-															}
-														}
-														else
-														{
-															deliveryTrackingListInfoWsDTO.clear();//Removing pre stored values
-															//final DeliveryTrackingInfoWsDTO deliveryTrackingInfoWsDTO = new DeliveryTrackingInfoWsDTO();
-															LOG.debug("**********Inside else part of status records*********");
-															deliveryTrackingInfoAllWsDTO
-																	.setDeliveryTrackingDate(MarketplacecommerceservicesConstants.NULL_VALUE);
-															deliveryTrackingInfoAllWsDTO
-																	.setDeliveryTrackingLocation(MarketplacecommerceservicesConstants.NULL_VALUE);
-															deliveryTrackingInfoAllWsDTO
-																	.setDeliveryTrackingDescription(MarketplacecommerceservicesConstants.NULL_VALUE);
-															deliveryTrackingListInfoWsDTO.add(deliveryTrackingInfoAllWsDTO);
-															customerOrderInfoWsDTO.setDeliverytrackingDetails(deliveryTrackingListInfoWsDTO);
-														}
-													}
-												}
-												else
-												{
-													deliveryTrackingListInfoWsDTO.clear();//Removing pre stored values
-													LOG.debug("**********Inside else part of awb response*********");
-													//final DeliveryTrackingInfoWsDTO deliveryTrackingInfoWsDTO = new DeliveryTrackingInfoWsDTO();
-													deliveryTrackingInfoAllWsDTO
-															.setDeliveryTrackingDate(MarketplacecommerceservicesConstants.NULL_VALUE);
-													deliveryTrackingInfoAllWsDTO
-															.setDeliveryTrackingLocation(MarketplacecommerceservicesConstants.NULL_VALUE);
-													deliveryTrackingInfoAllWsDTO
-															.setDeliveryTrackingDescription(MarketplacecommerceservicesConstants.NULL_VALUE);
-													deliveryTrackingListInfoWsDTO.add(deliveryTrackingInfoAllWsDTO);
-													customerOrderInfoWsDTO.setDeliverytrackingDetails(deliveryTrackingListInfoWsDTO);
-												}
-											}
-											else
-											{
-												deliveryTrackingListInfoWsDTO.clear();//Removing pre stored values
-												LOG.debug("**********Inside else part of null tracking id*********");
-												//final DeliveryTrackingInfoWsDTO deliveryTrackingInfoWsDTO = new DeliveryTrackingInfoWsDTO();
-												deliveryTrackingInfoAllWsDTO
-														.setDeliveryTrackingDate(MarketplacecommerceservicesConstants.NULL_VALUE);
-												deliveryTrackingInfoAllWsDTO
-														.setDeliveryTrackingLocation(MarketplacecommerceservicesConstants.NULL_VALUE);
-												deliveryTrackingInfoAllWsDTO
-														.setDeliveryTrackingDescription(MarketplacecommerceservicesConstants.NULL_VALUE);
-												deliveryTrackingListInfoWsDTO.add(deliveryTrackingInfoAllWsDTO);
-												customerOrderInfoWsDTO.setDeliverytrackingDetails(deliveryTrackingListInfoWsDTO);
-											}
-											customerOrderInfoWsDTO.setAwbNumber(null != cng.getTrackingID() ? cng.getTrackingID()
-													: MarketplacecommerceservicesConstants.NULL_VALUE);//AWB number
-											customerOrderInfoWsDTO.setReturnCarrier(null != cng.getReturnCarrier() ? cng.getReturnCarrier()
-													: MarketplacecommerceservicesConstants.NULL_VALUE);//Return carrier
-											customerOrderInfoWsDTO.setReturnAwbNumber(null != cng.getReturnAWBNum() ? cng.getReturnAWBNum()
-													: MarketplacecommerceservicesConstants.NULL_VALUE);//Return AWB number
-											customerOrderInfoWsDTO.setShippingStatus((null != cng.getShipmentStatus() ? cng
-													.getShipmentStatus() : MarketplacecommerceservicesConstants.NULL_VALUE));//Shipping status
-											if (cng.getShippingDate() != null)
-											{
-												customerOrderInfoWsDTO.setShippingTimestamp(formatter.format(cng.getShippingDate()));
-											}
-											else
-											{
-												customerOrderInfoWsDTO.setShippingTimestamp(MarketplacecommerceservicesConstants.NULL_VALUE);
-											}
-											//break;
-											consignmentFlag = true;
-											LOG.debug("**********consignment flag set to true*************");
+											customerOrderInfoWsDTO.setShippingTimestamp(formatter.format(cng.getShippingDate()));
 										}
 										else
 										{
-											deliveryTrackingListInfoWsDTO.clear();//Removing pre stored values
-											LOG.debug("**********Inside else part consignment not matching transaction id*********");
-											//final DeliveryTrackingInfoWsDTO deliveryTrackingInfoWsDTO = new DeliveryTrackingInfoWsDTO();
-											deliveryTrackingInfoAllWsDTO
-													.setDeliveryTrackingDate(MarketplacecommerceservicesConstants.NULL_VALUE);
-											deliveryTrackingInfoAllWsDTO
-													.setDeliveryTrackingLocation(MarketplacecommerceservicesConstants.NULL_VALUE);
-											deliveryTrackingInfoAllWsDTO
-													.setDeliveryTrackingDescription(MarketplacecommerceservicesConstants.NULL_VALUE);
-											deliveryTrackingListInfoWsDTO.add(deliveryTrackingInfoAllWsDTO);
-											customerOrderInfoWsDTO.setDeliverytrackingDetails(deliveryTrackingListInfoWsDTO);
-											customerOrderInfoWsDTO.setAwbNumber(MarketplacecommerceservicesConstants.NULL_VALUE);
-											customerOrderInfoWsDTO.setReturnCarrier(MarketplacecommerceservicesConstants.NULL_VALUE);
-											customerOrderInfoWsDTO.setReturnAwbNumber(MarketplacecommerceservicesConstants.NULL_VALUE);
-											customerOrderInfoWsDTO.setShippingStatus(MarketplacecommerceservicesConstants.NULL_VALUE);
 											customerOrderInfoWsDTO.setShippingTimestamp(MarketplacecommerceservicesConstants.NULL_VALUE);
 										}
+										break;
+									}
+									else
+									{
+										customerOrderInfoWsDTO.setAwbNumber(MarketplacecommerceservicesConstants.NULL_VALUE);
+										customerOrderInfoWsDTO.setReturnCarrier(MarketplacecommerceservicesConstants.NULL_VALUE);
+										customerOrderInfoWsDTO.setReturnAwbNumber(MarketplacecommerceservicesConstants.NULL_VALUE);
+										customerOrderInfoWsDTO.setShippingStatus(MarketplacecommerceservicesConstants.NULL_VALUE);
+										customerOrderInfoWsDTO.setShippingTimestamp(MarketplacecommerceservicesConstants.NULL_VALUE);
 									}
 								}
 							}
+							//											//break;
+							//											consignmentFlag = true;
+							//											LOG.debug("**********consignment flag set to true*************");
+							//										}
 							else
 							{
-								LOG.debug("**********Inside else part consignment*********");
-								final DeliveryTrackingInfoWsDTO deliveryTrackingInfoWsDTO = new DeliveryTrackingInfoWsDTO();
-								deliveryTrackingInfoWsDTO.setDeliveryTrackingDate(MarketplacecommerceservicesConstants.NULL_VALUE);
-								deliveryTrackingInfoWsDTO.setDeliveryTrackingLocation(MarketplacecommerceservicesConstants.NULL_VALUE);
-								deliveryTrackingInfoWsDTO.setDeliveryTrackingDescription(MarketplacecommerceservicesConstants.NULL_VALUE);
-								deliveryTrackingListInfoWsDTO.add(deliveryTrackingInfoWsDTO);
-								customerOrderInfoWsDTO.setDeliverytrackingDetails(deliveryTrackingListInfoWsDTO);
+								//											deliveryTrackingListInfoWsDTO.clear();//Removing pre stored values
+								//											LOG.debug("**********Inside else part consignment not matching transaction id*********");
+								//											//final DeliveryTrackingInfoWsDTO deliveryTrackingInfoWsDTO = new DeliveryTrackingInfoWsDTO();
+								//											deliveryTrackingInfoAllWsDTO
+								//													.setDeliveryTrackingDate(MarketplacecommerceservicesConstants.NULL_VALUE);
+								//											deliveryTrackingInfoAllWsDTO
+								//													.setDeliveryTrackingLocation(MarketplacecommerceservicesConstants.NULL_VALUE);
+								//											deliveryTrackingInfoAllWsDTO
+								//													.setDeliveryTrackingDescription(MarketplacecommerceservicesConstants.NULL_VALUE);
+								//											deliveryTrackingListInfoWsDTO.add(deliveryTrackingInfoAllWsDTO);
+								//											customerOrderInfoWsDTO.setDeliverytrackingDetails(deliveryTrackingListInfoWsDTO);
 								customerOrderInfoWsDTO.setAwbNumber(MarketplacecommerceservicesConstants.NULL_VALUE);
 								customerOrderInfoWsDTO.setReturnCarrier(MarketplacecommerceservicesConstants.NULL_VALUE);
 								customerOrderInfoWsDTO.setReturnAwbNumber(MarketplacecommerceservicesConstants.NULL_VALUE);
 								customerOrderInfoWsDTO.setShippingStatus(MarketplacecommerceservicesConstants.NULL_VALUE);
 								customerOrderInfoWsDTO.setShippingTimestamp(MarketplacecommerceservicesConstants.NULL_VALUE);
 							}
+							//									}
+							//								}
+							//							}
+							//							else
+							//							{
+							//								LOG.debug("**********Inside else part consignment*********");
+							//								final DeliveryTrackingInfoWsDTO deliveryTrackingInfoWsDTO = new DeliveryTrackingInfoWsDTO();
+							//								deliveryTrackingInfoWsDTO.setDeliveryTrackingDate(MarketplacecommerceservicesConstants.NULL_VALUE);
+							//								deliveryTrackingInfoWsDTO.setDeliveryTrackingLocation(MarketplacecommerceservicesConstants.NULL_VALUE);
+							//								deliveryTrackingInfoWsDTO.setDeliveryTrackingDescription(MarketplacecommerceservicesConstants.NULL_VALUE);
+							//								deliveryTrackingListInfoWsDTO.add(deliveryTrackingInfoWsDTO);
+							//								customerOrderInfoWsDTO.setDeliverytrackingDetails(deliveryTrackingListInfoWsDTO);
+							//								customerOrderInfoWsDTO.setAwbNumber(MarketplacecommerceservicesConstants.NULL_VALUE);
+							//								customerOrderInfoWsDTO.setReturnCarrier(MarketplacecommerceservicesConstants.NULL_VALUE);
+							//								customerOrderInfoWsDTO.setReturnAwbNumber(MarketplacecommerceservicesConstants.NULL_VALUE);
+							//								customerOrderInfoWsDTO.setShippingStatus(MarketplacecommerceservicesConstants.NULL_VALUE);
+							//								customerOrderInfoWsDTO.setShippingTimestamp(MarketplacecommerceservicesConstants.NULL_VALUE);
+							//							}
+							//SDI-1193 ends
 							if (StringUtils.isNotEmpty(orderModel.getModeOfOrderPayment()))
 							{
 								if (orderModel.getModeOfOrderPayment().equalsIgnoreCase(MarketplacecommerceservicesConstants.COD_PAYMENT))
