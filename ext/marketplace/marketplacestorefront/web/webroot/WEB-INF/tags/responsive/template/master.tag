@@ -480,6 +480,7 @@
         or fn:contains(pageBodyCssClasses, 'apparelCategoryLandingPageV1')
 	    or fn:contains(pageBodyCssClasses, 'FootwearBrandLandingPageTemplate')
 	    or fn:contains(pageBodyCssClasses, 'FootwearCategoryLandingPageTemplate')
+	    or fn:contains(pageBodyCssClasses, 'electronicsCategoryLandingPage')
         )}">
         
         <script>
