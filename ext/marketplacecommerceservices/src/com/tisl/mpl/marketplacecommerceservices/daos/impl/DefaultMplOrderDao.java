@@ -442,7 +442,7 @@ public class DefaultMplOrderDao implements MplOrderDao
 			flexiQuery.addQueryParameter("mobileNo", mobileNo);
 			flexiQuery.addQueryParameter("type", PARENT_KEY);
 			flexiQuery.addQueryParameter("queryCount", String.valueOf(queryCount));
-			flexiQuery.addQueryParameter("queryCount", String.valueOf(transactionLimit));
+			flexiQuery.addQueryParameter("transactionLimit", String.valueOf(transactionLimit));
 			final List<OrderModel> listOfData = flexibleSearchService.<OrderModel> search(flexiQuery).getResult();
 			return !listOfData.isEmpty() ? listOfData : null;
 		}
