@@ -85,7 +85,7 @@
 						var loop = $(".homepage-banner #rotatingImageTimeout img").length > 1 ? true :false;
 						var dots = $(".homepage-banner #rotatingImageTimeout img").length > 1 ? true :false; 
 						//$(".home-rotatingImage").owlCarousel({
-						$("#rotatingImageTimeout").owlCarousel({
+						$(".homepage-banner #rotatingImageTimeout").owlCarousel({
 							items:1,
 							nav:false,
 							dots:dots,
@@ -96,7 +96,7 @@
 					    });
 						//UF-291 starts here ---- UF-365 starts here 
 						if ($(window).width() > 773) {
-							$("#rotatingImageTimeout img").each(function() {
+							$(".homepage-banner #rotatingImageTimeout img").each(function() {
 							    if ($(this).attr("data-src")) {
 									$(this).attr("src",$(this).attr("data-src"));
 									$(this).removeAttr("data-src");
@@ -114,7 +114,7 @@
 							var loop = $(".homepage-banner #rotatingImageTimeoutMobile img").length > 1 ? true :false;
 							var dots = $(".homepage-banner #rotatingImageTimeoutMobile img").length > 1 ? true :false;
 							
-							$("#rotatingImageTimeoutMobile").owlCarousel({
+							$(".homepage-banner #rotatingImageTimeoutMobile").owlCarousel({
 								
 								items:1,
 								nav:false,
@@ -126,7 +126,7 @@
 						    });
 							//UF-291 starts here ---- UF-365 starts here
 							if ($(window).width() <= 773) {	
-								$("#rotatingImageTimeoutMobile img").each(function() {
+								$(".homepage-banner #rotatingImageTimeoutMobile img").each(function() {
 								    if ($(this).attr("data-src")) {
 										$(this).attr("src",$(this).attr("data-src"));
 										$(this).removeAttr("data-src");
