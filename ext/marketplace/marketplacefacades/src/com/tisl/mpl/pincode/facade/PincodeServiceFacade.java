@@ -30,6 +30,15 @@ public interface PincodeServiceFacade
 			final String productCode, final CartModel cartModel);
 
 	/**
+	 * @param pincode
+	 * @param sellerUssId
+	 * @param productCode
+	 * @return
+	 */
+	public List<StoreLocationResponseData> getListofStoreLocationsforPincode(final String pincode, final String sellerUssId,
+			final String productCode);
+
+	/**
 	 *
 	 * @param pincode
 	 * @param productCode

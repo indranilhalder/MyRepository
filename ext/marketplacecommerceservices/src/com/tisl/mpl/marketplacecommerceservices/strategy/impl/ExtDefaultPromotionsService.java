@@ -47,8 +47,8 @@ public class ExtDefaultPromotionsService extends DefaultPromotionsService
 	public PromotionOrderResults updatePromotions(final Collection<PromotionGroupModel> promotionGroups,
 			final AbstractOrderModel order)
 	{
-		final PromotionOrderResults result = getPromotionsManager().updatePromotions(
-				getModelService().getAllSources(promotionGroups, new ArrayList()), getOrder(order));
+		final PromotionOrderResults result = getPromotionsManager()
+				.updatePromotions(getModelService().getAllSources(promotionGroups, new ArrayList()), getOrder(order));
 		//CAR-324
 		if ("Y".equalsIgnoreCase(configurationService.getConfiguration().getString("new.refreshOrder.flag")))
 		{
@@ -137,7 +137,8 @@ public class ExtDefaultPromotionsService extends DefaultPromotionsService
 					for (final PromotionResult promotionResult : promotionResultList)
 					{
 						promotionResModel = getModelService().get(promotionResult);
-						if (promotionResModel != null && (promotionResModel.getCertainty() == 1))
+						if (promotionResModel != null && null != promotionResModel.getCertainty()
+								&& (promotionResModel.getCertainty().floatValue() == 1F))
 						{
 							abstPromotionModel = promotionResModel.getPromotion();
 
@@ -178,7 +179,7 @@ public class ExtDefaultPromotionsService extends DefaultPromotionsService
 	private void refreshOrderNew(final AbstractOrderModel order, final PromotionOrderResults result)
 	{
 		final List<String> isOrdAndEntryLevelPromotionList = isOrderAndEntryLevelPromotion(result);
-		List toRefresh = new ArrayList(1);
+		List toRefresh = new ArrayList();
 
 		if ("Y".equalsIgnoreCase(isOrdAndEntryLevelPromotionList.get(1)))
 		{

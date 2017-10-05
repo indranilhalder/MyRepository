@@ -2272,4 +2272,6 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	//PR-15 (Rainbow)
 	public static final String CATEGORYRESTRICTION = "CategoryRestriction";
 
+	public final static String PINCODE_RESPONSE_DATA_PDP = "PincodeResponseDataForPDP";
+	public static final String KM = "km";
 }
