@@ -882,6 +882,7 @@ public class SalesOrderReverseXMLUtility
 							splitMerchantInfoXMlDataQC
 							.setMerchantCode(getConfigurationService().getConfiguration().getString(PAYMENT_QC_MERCHANT_ID));
 							splitMerchantInfoXMlDataQC.setPaymentRefID("");
+							
 							merchantInfoList.add(splitMerchantInfoXMlDataQC);
 							LOG.info("Juspay MerchantInfoXMlData");
 							MerchantInfoXMlData splitMerchantInfoXMlDataJuspay=new MerchantInfoXMlData();
@@ -916,7 +917,6 @@ public class SalesOrderReverseXMLUtility
 
 									}
 									splitMerchantInfoXMlDataJuspay.setPaymentRefID(payemntrefid);
-									splitMerchantInfoXMlDataJuspay.setBucketId("");
 							      merchantInfoList.add(splitMerchantInfoXMlDataJuspay);
 							
 						}else if(StringUtils.isNotEmpty(chaildModel.getSplitModeInfo()) && CLIQ_CASH.equalsIgnoreCase(chaildModel.getSplitModeInfo()))
@@ -962,7 +962,6 @@ public class SalesOrderReverseXMLUtility
 
 								}
 								merchantInfoXMlDataJuspay.setPaymentRefID(payemntrefid);
-								merchantInfoXMlDataJuspay.setBucketId("");
 								
 								//need to be set value ... Business clarification requirement
 								/*merchantInfoXMlDataJuspay.setProductAmount();*/

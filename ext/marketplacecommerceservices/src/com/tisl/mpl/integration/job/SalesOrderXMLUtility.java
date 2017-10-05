@@ -595,7 +595,6 @@ public class SalesOrderXMLUtility
 								
 								LOG.debug("DeliveryMode PAYMENT_JUSPAY_MERCHANT_TYPE"+
 										getConfigurationService().getConfiguration().getString(PAYMENT_JUSPAY_MERCHANT_TYPE));
-								merchantInfoXMlData.setBucketId("");
 								merchantInfoXMlData.setProductAmount((Double.parseDouble(paymentInfoModel.getJuspayApportionValue())));
 								LOG.debug("DeliveryMode paymentInfoModel.getJuspayApportionValue()"+paymentInfoModel.getJuspayApportionValue());
 								merchantInfoXMlData.setExpressDelCharge(Double.parseDouble(paymentInfoModel.getJuspayDeliveryValue()));
@@ -650,7 +649,6 @@ public class SalesOrderXMLUtility
 								.setMerchantType(getConfigurationService().getConfiguration().getString(PAYMENT_JUSPAY_MERCHANT_TYPE));
 						LOG.debug(">>>>>>> before getConfigurationService().getConfiguration().getString(PAYMENT_JUSPAY_MERCHANT_TYPE"+
 								 getConfigurationService().getConfiguration().getString(PAYMENT_JUSPAY_MERCHANT_TYPE));
-						merchantInfoXMlData.setBucketId("");
 						merchantInfoList.add(merchantInfoXMlData);
 					}
 
