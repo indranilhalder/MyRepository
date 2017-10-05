@@ -159,9 +159,10 @@ public class AutoRefundInitiateAction extends AbstractProceduralAction<OrderProc
 											 if(orderModel.getSplitModeInfo().equalsIgnoreCase("Juspay")){
 												 LOG.error("AutoRefundInitiateAction: Going to call mplPaymentService.doRefundPayment(refundList); for Order #"
 															+ orderModel.getCode());
-													 result = mplPaymentService.doRefundPayment(refundList);
+													 result = mplPaymentService.doRefundPayment(refundList ,null);
 													LOG.error("AutoRefundInitiateAction: After call mplPaymentService.doRefundPayment(refundList); for Order #"
 															+ orderModel.getCode());
+													
 											 }else if (orderModel.getSplitModeInfo().equalsIgnoreCase("CliqCash")){
 												 
 												//Start Added the code for QC
@@ -176,7 +177,7 @@ public class AutoRefundInitiateAction extends AbstractProceduralAction<OrderProc
 													//End Added the code for QC
 												 LOG.error("AutoRefundInitiateAction: Going to call mplPaymentService.doRefundPayment(refundList); for Order #"
 															+ orderModel.getCode());
-													 result = mplPaymentService.doRefundPayment(refundList);
+													 result = mplPaymentService.doRefundPayment(refundList,((RefundEntryModel) returnEntry).getAmount());
 													LOG.error("AutoRefundInitiateAction: After call mplPaymentService.doRefundPayment(refundList); for Order #"
 															+ orderModel.getCode());
 											 }

@@ -16,6 +16,7 @@ import de.hybris.platform.jalo.security.JaloSecurityException;
 import de.hybris.platform.order.exceptions.CalculationException;
 import de.hybris.platform.servicelayer.exceptions.ModelSavingException;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -136,8 +137,7 @@ public interface MplPaymentService
 	 * @param cart
 	 *
 	 */
-	void setPaymentTransaction(GetOrderStatusResponse orderStatusResponse, Map<String, Double> paymentMode,
-			AbstractOrderModel cart);
+	void setPaymentTransaction(GetOrderStatusResponse orderStatusResponse, Map<String, Double> paymentMode, AbstractOrderModel cart);
 
 
 	/**
@@ -193,9 +193,9 @@ public interface MplPaymentService
 	 * @throws EtailNonBusinessExceptions
 	 */
 	MplPromoPriceData applyPromotions(final CartData cartData, final OrderData orderData, final CartModel cartModel,
-			final OrderModel orderModel, final MplPromoPriceData promoPriceData)
-			throws ModelSavingException, NumberFormatException, JaloInvalidParameterException, VoucherOperationException,
-			CalculationException, JaloSecurityException, JaloPriceFactoryException, EtailNonBusinessExceptions;
+			final OrderModel orderModel, final MplPromoPriceData promoPriceData) throws ModelSavingException, NumberFormatException,
+			JaloInvalidParameterException, VoucherOperationException, CalculationException, JaloSecurityException,
+			JaloPriceFactoryException, EtailNonBusinessExceptions;
 
 
 	/**
@@ -275,20 +275,20 @@ public interface MplPaymentService
 
 	/*
 	 * @description : fetching bank model for a bank name TISPRO-179\
-	 *
+	 * 
 	 * @param : bankName
-	 *
+	 * 
 	 * @return : BankModel
-	 *
+	 * 
 	 * @throws EtailNonBusinessExceptions
 	 */
 	BankModel getBankDetailsForBank(final String bankName) throws EtailNonBusinessExceptions;
 
 	/*
 	 * @Description : Fetching bank name for net banking-- TISPT-169
-	 *
+	 * 
 	 * @return List<BankforNetbankingModel>
-	 *
+	 * 
 	 * @throws Exception
 	 */
 	List<BankforNetbankingModel> getNetBankingBanks() throws EtailNonBusinessExceptions;
@@ -387,8 +387,7 @@ public interface MplPaymentService
 	 * @param order
 	 *
 	 */
-	void setPaymentTransactionFromJob(GetOrderStatusResponse orderStatusResponse, Map<String, Double> paymentMode,
-			OrderModel order);
+	void setPaymentTransactionFromJob(GetOrderStatusResponse orderStatusResponse, Map<String, Double> paymentMode, OrderModel order);
 
 	/**
 	 * SprintPaymentFixes:- ModeOfpayment set same as in Payment Info
@@ -416,9 +415,10 @@ public interface MplPaymentService
 	 * added for TPR-1348 for AutofundInitiation SprintPaymentFixes:-
 	 *
 	 * @param orderEntryModel
+	 * @param bigDecimal
 	 *
 	 */
-	public String doRefundPayment(List<OrderEntryModel> orderEntryModel);
+	public String doRefundPayment(List<OrderEntryModel> orderEntryModel, BigDecimal amountToRefund);
 
 	/**
 	 * @param rs
