@@ -3617,6 +3617,17 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 
 				productprice -= abstractOrderEntryModel.getCouponValue().doubleValue();
 			}
+			if (null != abstractOrderEntryModel.getCartLevelDisc() && abstractOrderEntryModel.getCartLevelDisc().doubleValue() > 0)
+			{
+
+				productprice -= abstractOrderEntryModel.getCartLevelDisc().doubleValue();
+			}
+			if (null != abstractOrderEntryModel.getCartLevelPercentageDisc()
+					&& abstractOrderEntryModel.getCartLevelPercentageDisc().doubleValue() > 0)
+			{
+
+				productprice -= abstractOrderEntryModel.getCartLevelPercentageDisc().doubleValue();
+			}
 
 			final double cliqCashPartVal = (productprice / totalBillingAmount) * walletTotal;
 
