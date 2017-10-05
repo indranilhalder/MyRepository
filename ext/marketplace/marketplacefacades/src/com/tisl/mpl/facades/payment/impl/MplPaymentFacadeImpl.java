@@ -220,7 +220,8 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 				{
 					//retrieving the data
 					if ((flag && mode.getMode().equalsIgnoreCase(MarketplaceFacadesConstants.PAYMENT_METHOS_COD))
-							|| (flag && mode.getMode().equalsIgnoreCase(EMI)) || (flag && mode.getMode().equalsIgnoreCase(M_RUPEE)))
+							|| (cartData.isIsEGVCart() && mode.getMode().equalsIgnoreCase(EMI))
+							|| (cartData.isIsEGVCart() && mode.getMode().equalsIgnoreCase(M_RUPEE)))
 					{
 						LOG.debug("Ignoring to add COD payment for CNC Product ");
 					}
@@ -2376,7 +2377,7 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 	public String createJuspayOrder(final CartModel cart, final OrderModel order, final String firstName, final String lastName,
 			final String addressLine1, final String addressLine2, final String addressLine3, final String country,
 			final String state, final String city, final String pincode, final String checkValues, final String returnUrl,
-			final String uid, final String channel,double amount) throws EtailNonBusinessExceptions, AdapterException
+			final String uid, final String channel, final double amount) throws EtailNonBusinessExceptions, AdapterException
 	{
 		try
 		{
@@ -2478,25 +2479,25 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 					//String cliqCashPaymentMode = StringUtils.EMPTY;
 					//boolean jsPayMode = false;
 
-//					if (null != (getSessionService().getAttribute("getCliqCashMode").toString()))
-//					{
-//
-//						splitPayment = Boolean.parseBoolean(getSessionService().getAttribute("getCliqCashMode").toString());
-//					}
+					//					if (null != (getSessionService().getAttribute("getCliqCashMode").toString()))
+					//					{
+					//
+					//						splitPayment = Boolean.parseBoolean(getSessionService().getAttribute("getCliqCashMode").toString());
+					//					}
 
-//					if (null != (getSessionService().getAttribute("cliqCashPaymentMode").toString()))
-//					{
-//
-//						cliqCashPaymentMode = getSessionService().getAttribute("cliqCashPaymentMode").toString();
-//					}
+					//					if (null != (getSessionService().getAttribute("cliqCashPaymentMode").toString()))
+					//					{
+					//
+					//						cliqCashPaymentMode = getSessionService().getAttribute("cliqCashPaymentMode").toString();
+					//					}
 
-//					if (StringUtils.isNotEmpty(getSessionService().getAttribute("jsPayMode").toString()))
-//					{
-//
-//						jsPayMode = Boolean.parseBoolean(getSessionService().getAttribute("jsPayMode").toString());
-//					}
+					//					if (StringUtils.isNotEmpty(getSessionService().getAttribute("jsPayMode").toString()))
+					//					{
+					//
+					//						jsPayMode = Boolean.parseBoolean(getSessionService().getAttribute("jsPayMode").toString());
+					//					}
 
-				//	LOG.info("cliqCashPaymentMode" + cliqCashPaymentMode);
+					//	LOG.info("cliqCashPaymentMode" + cliqCashPaymentMode);
 					if (MarketplacecommerceservicesConstants.CHANNEL_WEB.equalsIgnoreCase(channel))
 					{
 						if (cart.getSplitModeInfo().equalsIgnoreCase("Split"))
@@ -2505,7 +2506,7 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 							cart.setTotalPrice(Double.valueOf("" + getSessionService().getAttribute("juspayTotalAmt")));
 						}
 					}
-					
+
 
 					/**
 					 * QC CHANGE end
@@ -2524,23 +2525,23 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 				//String cliqCashPaymentMode = StringUtils.EMPTY;
 				//boolean jsPayMode = false;
 
-//				if (null != (getSessionService().getAttribute("getCliqCashMode").toString()))
-//				{
-//
-//					splitPayment = Boolean.parseBoolean(getSessionService().getAttribute("getCliqCashMode").toString());
-//				}
-//
-//				if (null != (getSessionService().getAttribute("cliqCashPaymentMode").toString()))
-//				{
-//
-//					cliqCashPaymentMode = getSessionService().getAttribute("cliqCashPaymentMode").toString();
-//				}
+				//				if (null != (getSessionService().getAttribute("getCliqCashMode").toString()))
+				//				{
+				//
+				//					splitPayment = Boolean.parseBoolean(getSessionService().getAttribute("getCliqCashMode").toString());
+				//				}
+				//
+				//				if (null != (getSessionService().getAttribute("cliqCashPaymentMode").toString()))
+				//				{
+				//
+				//					cliqCashPaymentMode = getSessionService().getAttribute("cliqCashPaymentMode").toString();
+				//				}
 
-//				if (StringUtils.isNotEmpty(getSessionService().getAttribute("jsPayMode").toString()))
-//				{
-//
-//					jsPayMode = Boolean.parseBoolean(getSessionService().getAttribute("jsPayMode").toString());
-//				}
+				//				if (StringUtils.isNotEmpty(getSessionService().getAttribute("jsPayMode").toString()))
+				//				{
+				//
+				//					jsPayMode = Boolean.parseBoolean(getSessionService().getAttribute("jsPayMode").toString());
+				//				}
 
 				//LOG.info("cliqCashPaymentMode" + cliqCashPaymentMode);
 				if (MarketplacecommerceservicesConstants.CHANNEL_WEB.equalsIgnoreCase(channel))
@@ -2551,7 +2552,7 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 						order.setTotalPrice(Double.valueOf("" + getSessionService().getAttribute("juspayTotalAmt")));
 					}
 				}
-				
+
 
 				/**
 				 * QC CHANGE end
@@ -2603,10 +2604,10 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 					//TISCR-421:Without sessionTD for MOBILE or other orders
 					if (null != cart)
 					{
-						request = new InitOrderRequest().withOrderId(juspayOrderId).withAmount(Double.valueOf(amount)).withCustomerId(uid)
-								.withEmail(customerEmail).withCustomerPhone(customerPhone).withUdf1(firstName).withUdf2(lastName)
-								.withUdf3(addressLine1).withUdf4(addressLine2).withUdf5(addressLine3).withUdf6(country).withUdf7(state)
-								.withUdf8(city).withUdf9(pincode).withUdf10(checkValues).withReturnUrl(returnUrl);
+						request = new InitOrderRequest().withOrderId(juspayOrderId).withAmount(Double.valueOf(amount))
+								.withCustomerId(uid).withEmail(customerEmail).withCustomerPhone(customerPhone).withUdf1(firstName)
+								.withUdf2(lastName).withUdf3(addressLine1).withUdf4(addressLine2).withUdf5(addressLine3).withUdf6(country)
+								.withUdf7(state).withUdf8(city).withUdf9(pincode).withUdf10(checkValues).withReturnUrl(returnUrl);
 					}
 					else if (null != order)
 					{
@@ -3508,28 +3509,32 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 	@Override
 	public QCRedeeptionResponse createQCOrderRequest(final String guid, final AbstractOrderModel orderToBeUpdated,
 			final String WalletId, final String cliqCashPaymentMode, final String qcOrderId, final String channel,
-			 double walletTotal,double juspayAmount)
+			double walletTotal, double juspayAmount)
 	{
-		
-		 QCRedeeptionResponse qcRedeeptionResponse = new QCRedeeptionResponse();
+
+		QCRedeeptionResponse qcRedeeptionResponse = new QCRedeeptionResponse();
 		try
 		{
-			if(null != channel && !channel.equalsIgnoreCase(MarketplaceFacadesConstants.CHANNEL_MOBILE)) {
+			if (null != channel && !channel.equalsIgnoreCase(MarketplaceFacadesConstants.CHANNEL_MOBILE))
+			{
 				walletTotal = Double.parseDouble("" + getSessionService().getAttribute("WalletTotal"));
-				
-				if(null != getSessionService().getAttribute("juspayTotalAmt")){
-				juspayAmount = Double.parseDouble("" + getSessionService().getAttribute("juspayTotalAmt"));
-				}else{
-					
-					juspayAmount= 0;
+
+				if (null != getSessionService().getAttribute("juspayTotalAmt"))
+				{
+					juspayAmount = Double.parseDouble("" + getSessionService().getAttribute("juspayTotalAmt"));
+				}
+				else
+				{
+
+					juspayAmount = 0;
 				}
 			}
-			
+
 
 			final ArrayList<String> rs = new ArrayList<String>();
 
-			getMplPaymentService().createQCEntryInAudit(qcOrderId, "WEB", guid, "" + walletTotal,"","");
-			
+			getMplPaymentService().createQCEntryInAudit(qcOrderId, "WEB", guid, "" + walletTotal, "", "");
+
 			final QCRedeemRequest qcRedeemRequest = new QCRedeemRequest();
 
 			qcRedeemRequest.setAmount("" + walletTotal);
@@ -3547,7 +3552,7 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 				rs.add("" + qcRedeeptionResponse.getTransactionId());
 
 				getMplPaymentService().createQCEntryInAudit(qcOrderId, "WEB", guid, "" + walletTotal,
-								qcRedeeptionResponse.getResponseCode().toString(), qcRedeeptionResponse.getTransactionId().toString());
+						qcRedeeptionResponse.getResponseCode().toString(), qcRedeeptionResponse.getTransactionId().toString());
 
 
 				final Map<String, Double> paymentMode = new HashMap<String, Double>();
@@ -3558,7 +3563,7 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 						"" + walletTotal);
 
 
-				calculateSplitModeApportionValue(orderToBeUpdated, qcRedeeptionResponse, walletTotal,juspayAmount);
+				calculateSplitModeApportionValue(orderToBeUpdated, qcRedeeptionResponse, walletTotal, juspayAmount);
 
 				return qcRedeeptionResponse;
 			}
@@ -3583,15 +3588,15 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 
 
 	public void calculateSplitModeApportionValue(final AbstractOrderModel orderToBeUpdated,
-			final QCRedeeptionResponse qcRedeeptionResponse, final double walletTotal,double juspayTotalValue)
+			final QCRedeeptionResponse qcRedeeptionResponse, final double walletTotal, final double juspayTotalValue)
 	{
 		final double totalBillingAmount = walletTotal + juspayTotalValue;
 
 		for (final AbstractOrderEntryModel abstractOrderEntryModel : orderToBeUpdated.getEntries())
 		{
-			System.out.println("Free Count ------- if bogo "+abstractOrderEntryModel.getFreeCount());
-//			if(null != abstractOrderEntryModel.getIsBOGOapplied() && abstractOrderEntryModel.getIsBOGOapplied().booleanValue())
-//			{
+			System.out.println("Free Count ------- if bogo " + abstractOrderEntryModel.getFreeCount());
+			//			if(null != abstractOrderEntryModel.getIsBOGOapplied() && abstractOrderEntryModel.getIsBOGOapplied().booleanValue())
+			//			{
 			final WalletApportionPaymentInfoModel walletApportionPayment = getModelService()
 					.create(WalletApportionPaymentInfoModel.class);
 
@@ -3604,13 +3609,14 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 			Double hdDeliveryCharge = Double.valueOf(0.0);
 			Double scheduleDeliveryCharge = Double.valueOf(0.0);
 			//final double productprice = 	abstractOrderEntryModel.getNetAmountAfterAllDisc().doubleValue();
-			
-			 double productprice = abstractOrderEntryModel.getTotalPrice().doubleValue();
-			 
-				if(null != abstractOrderEntryModel.getCouponValue() &&  abstractOrderEntryModel.getCouponValue().doubleValue() > 0){
-					
-					productprice -= abstractOrderEntryModel.getCouponValue().doubleValue();
-				}
+
+			double productprice = abstractOrderEntryModel.getTotalPrice().doubleValue();
+
+			if (null != abstractOrderEntryModel.getCouponValue() && abstractOrderEntryModel.getCouponValue().doubleValue() > 0)
+			{
+
+				productprice -= abstractOrderEntryModel.getCouponValue().doubleValue();
+			}
 
 			final double cliqCashPartVal = (productprice / totalBillingAmount) * walletTotal;
 
@@ -3629,7 +3635,8 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 				walletApportionPayment.setQcDeliveryPartValue("" + qcDeliveryCharge);
 			}
 
-			if (null != abstractOrderEntryModel.getHdDeliveryCharge() && abstractOrderEntryModel.getHdDeliveryCharge().doubleValue() > 0)
+			if (null != abstractOrderEntryModel.getHdDeliveryCharge()
+					&& abstractOrderEntryModel.getHdDeliveryCharge().doubleValue() > 0)
 			{
 				hdDeliveryCharge = abstractOrderEntryModel.getHdDeliveryCharge();
 				qcHdDeliveryCharge = (hdDeliveryCharge.doubleValue() / totalBillingAmount) * walletTotal;
@@ -3637,7 +3644,8 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 
 			}
 
-			if (null != abstractOrderEntryModel.getScheduledDeliveryCharge() && abstractOrderEntryModel.getScheduledDeliveryCharge().doubleValue() > 0)
+			if (null != abstractOrderEntryModel.getScheduledDeliveryCharge()
+					&& abstractOrderEntryModel.getScheduledDeliveryCharge().doubleValue() > 0)
 			{
 				scheduleDeliveryCharge = abstractOrderEntryModel.getScheduledDeliveryCharge();
 				qcScheduleDeliveryCharge = (scheduleDeliveryCharge.doubleValue() / totalBillingAmount) * walletTotal;
