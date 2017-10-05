@@ -13,10 +13,10 @@ import de.hybris.platform.orderhistory.model.OrderHistoryEntryModel;
 import de.hybris.platform.payment.enums.PaymentTransactionType;
 import de.hybris.platform.payment.model.PaymentTransactionEntryModel;
 import de.hybris.platform.payment.model.PaymentTransactionModel;
+import de.hybris.platform.servicelayer.config.ConfigurationService;
 import de.hybris.platform.returns.model.RefundEntryModel;
 import de.hybris.platform.returns.model.ReturnEntryModel;
 import de.hybris.platform.returns.model.ReturnRequestModel;
-import de.hybris.platform.servicelayer.config.ConfigurationService;
 import de.hybris.platform.servicelayer.model.ModelService;
 
 import java.io.StringReader;
@@ -47,8 +47,6 @@ import org.xml.sax.InputSource;
 
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.core.model.MplZoneDeliveryModeValueModel;
-import com.tisl.mpl.core.model.WalletApportionPaymentInfoModel;
-import com.tisl.mpl.core.model.WalletCardApportionDetailModel;
 import com.tisl.mpl.exception.EtailBusinessExceptions;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.jalo.DefaultPromotionManager;
@@ -70,8 +68,19 @@ import com.tisl.mpl.util.ExceptionUtil;
 public class SalesOrderReverseXMLUtility
 {
 	/**
+	 * 
+	 */
+	private static final String CLIQ_CASH = "CliqCash";
+	/**
+	 * 
+	 */
+	private static final String SPLIT = "Split";
+	/**
 	 *
 	 */
+	private static final String PAYMENT_JUSPAY_MERCHANT_TYPE = "payment.juspay.merchantType";
+	private static final String PAYMENT_QC_MERCHANT_TYPE = "payment.qc.merchantType";
+	private static final String PAYMENT_QC_MERCHANT_ID = "payment.qc.merchantID";
 	private static final String LOG_MSG_AND_GET_REFUNDED_SCHEDULE_DELIVERY_CHARGE_AMT = " and getRefundedScheduleDeliveryChargeAmt";
 	@SuppressWarnings("unused")
 	private final static Logger LOG = Logger.getLogger(SalesOrderReverseXMLUtility.class.getName());
@@ -82,10 +91,8 @@ public class SalesOrderReverseXMLUtility
 	/*
 	 * @Autowired private MplSellerInformationService mplSellerInformationService;
 	 */
-	private static final String CLIQ_CASH = "Cliq Cash";
-	private static final String PAYMENT_JUSPAY_MERCHANT_TYPE = "payment.juspay.merchantType";
-	private static final String PAYMENT_QC_MERCHANT_TYPE = "payment.qc.merchantType";
-	private static final String PAYMENT_QC_MERCHANT_ID = "payment.qc.merchantID";
+
+
 	private String payemntrefid = null;
 	private boolean xmlToFico = true;
 	private final String RET = MarketplacecommerceservicesConstants.RETURN_FLAG;
@@ -345,7 +352,7 @@ public class SalesOrderReverseXMLUtility
 						if (null != order.getParentReference() && null != order.getParentReference().getPaymentTransactions()
 								&& xmlToFico)
 						{
-							/*final List<PaymentTransactionModel> list = order.getParentReference().getPaymentTransactions();
+							final List<PaymentTransactionModel> list = order.getParentReference().getPaymentTransactions();
 							if (null != list && !list.isEmpty())
 							{
 
@@ -358,13 +365,13 @@ public class SalesOrderReverseXMLUtility
 										//salesXMLData.setMerchantCode(oModel.getPaymentProvider());
 										//TISSQAEE-227
 										if (MarketplacecommerceservicesConstants.MRUPEE_CODE.equalsIgnoreCase(oModel.getPaymentProvider()))
-										{
-											salesXMLData.setMerchantCode(getConfigurationService().getConfiguration().getString(
-													MarketplacecommerceservicesConstants.MRUPEE_MERCHANT_CODE));
+										{//New Changes  
+											/*salesXMLData.setMerchantCode(getConfigurationService().getConfiguration().getString(
+													MarketplacecommerceservicesConstants.MRUPEE_MERCHANT_CODE));*/
 										}
 										else
 										{
-											salesXMLData.setMerchantCode(oModel.getPaymentProvider());
+											//salesXMLData.setMerchantCode(oModel.getPaymentProvider());//New Changes  
 										}
 
 										if (null != oModel.getCode())
@@ -375,7 +382,7 @@ public class SalesOrderReverseXMLUtility
 									}
 								}
 							}
-*/
+
 						}
 						else
 						{
@@ -405,12 +412,8 @@ public class SalesOrderReverseXMLUtility
 						//TISSIT-1780
 						if (salesXMLData != null && xmlToFico)
 						{
-							if (salesXMLData.getSubOrderList() != null && !(salesXMLData.getSubOrderList().isEmpty()))//SDI-85 Fix
-							{
-								bulkSalesDataList.add(salesXMLData);
-								LOG.debug("xml order:" + salesXMLData.getOrderId());
-							}
-
+							bulkSalesDataList.add(salesXMLData);
+							LOG.debug("xml order:" + salesXMLData.getOrderId());
 						}
 						LOG.debug("bulkSalesDataList Size" + bulkSalesDataList.size());
 					}
@@ -465,7 +468,7 @@ public class SalesOrderReverseXMLUtility
 				 * ptModel.getType().equals(PaymentTransactionType.MANUAL_REFUND) ||
 				 * ptModel.getType().equals(PaymentTransactionType.RETURN)) { reversepayemntrefid = payTransModel.getCode();
 				 * LOG.info(reversepayemntrefid); LOG.debug(ptModel.getType()); break; } }
-				 * 
+				 *
 				 * } } } }
 				 */
 				final SubOrderXMLData xmlData = new SubOrderXMLData();
@@ -482,7 +485,7 @@ public class SalesOrderReverseXMLUtility
 				if (null != childOrders.getEntries() && !childOrders.getEntries().isEmpty())
 				{
 
-					childOrderDataList = getChildOrderDataForXML(childOrders.getEntries(), checkReturnCancelMap ,childOrders);
+					childOrderDataList = getChildOrderDataForXML(childOrders.getEntries(), checkReturnCancelMap,childOrders);
 
 				}
 
@@ -531,10 +534,9 @@ public class SalesOrderReverseXMLUtility
 				{
 					LOG.debug("Checking EDToHd for transaction ID " + entry.getTransactionID());
 					LOG.debug("Is EdToHd" + entry.getIsEDtoHD() + "IsSdbSendToFico" + entry.getIsEdToHdSendToFico()
-							+ LOG_MSG_AND_GET_REFUNDED_SCHEDULE_DELIVERY_CHARGE_AMT + entry.getRefundedEdChargeAmt());
+							+ LOG_MSG_AND_GET_REFUNDED_SCHEDULE_DELIVERY_CHARGE_AMT + entry.getRefundedDeliveryChargeAmt());
 				}
-				final boolean edAmountRefunded = getAmountRefunded(entry,
-						PaymentTransactionType.REFUND_EXPRESS_DELIVERY_CHARGES.getCode());
+				final boolean edAmountRefunded = getAmountRefunded(entry, PaymentTransactionType.REFUND_DELIVERY_CHARGES.getCode());
 				if (edAmountRefunded && null != entry.getIsEDtoHD() && entry.getIsEDtoHD().booleanValue())
 				{
 					edToHdFlag = true;
@@ -572,7 +574,7 @@ public class SalesOrderReverseXMLUtility
 	 * @param entry
 	 */
 	private List<ChildOrderXMlData> getChildOrderDataForXML(final List<AbstractOrderEntryModel> entries,
-			final Map checkReturnCancelMap,OrderModel chaildModel)
+			final Map checkReturnCancelMap, OrderModel chaildModel)
 	{
 		final List<ChildOrderXMlData> childOrderDataList = new ArrayList<ChildOrderXMlData>();
 		List<String> categoryList = new ArrayList<String>();
@@ -582,6 +584,7 @@ public class SalesOrderReverseXMLUtility
 			{
 				for (final AbstractOrderEntryModel entry : entries)
 				{
+					List<MerchantInfoXMlData> merchantInfoList = new ArrayList<MerchantInfoXMlData>();
 
 					boolean canOrRetflag = false; //flag for checking if order line is cancelled or returned. If flag is false the order line will not be set in the XML
 					boolean returnFlag = false;
@@ -606,14 +609,14 @@ public class SalesOrderReverseXMLUtility
 							xmlToFico = false;
 						}
 
-					/*	if (null != payemntrefid && xmlToFico)
+						if (null != payemntrefid && xmlToFico)
 						{
-							xmlData.setPaymentRefID(payemntrefid);
+							//xmlData.setPaymentRefID(payemntrefid);
 						}
 						else
 						{
 							xmlToFico = false;
-						}*/
+						}
 
 						//Newly Added Code For DeliveryMode
 						if (null != entry.getMplDeliveryMode() && xmlToFico)
@@ -635,6 +638,9 @@ public class SalesOrderReverseXMLUtility
 								xmlData.setDeliveryMode(MarketplacecommerceservicesConstants.ED);
 							}
 							LOG.info("DeliveryMode For FICO   " + entry.getMplDeliveryMode().getDeliveryMode().getCode());
+						}else if(chaildModel.getIsEGVCart()!=null && chaildModel.getIsEGVCart().booleanValue()){
+							    LOG.info("DeliveryMode Fico for Egv Order Inforamtion ");
+							    xmlData.setDeliveryMode(MarketplacecommerceservicesConstants.HD);
 						}
 						else
 						{
@@ -697,7 +703,7 @@ public class SalesOrderReverseXMLUtility
 
 						/*
 						 * final String ussId = entry.getSelectedUSSID();
-						 * 
+						 *
 						 * final SellerInformationModel sellerInfoModel = mplSellerInformationService.getSellerDetail(ussId);
 						 * if (sellerInfoModel != null && sellerInfoModel.getRichAttribute() != null &&
 						 * ((List<RichAttributeModel>) sellerInfoModel.getRichAttribute()).get(0) != null &&
@@ -748,19 +754,6 @@ public class SalesOrderReverseXMLUtility
 						//								}
 						//							}
 						//						}
-						
-						
-						
-						
-						
-						
-						
-						/*New Xml Change*/
-						
-						
-		
-						
-					
 						LOG.info(">>>>>>> before prodcatlist");
 						final List<CategoryModel> productCategoryList = getDefaultPromotionsManager().getPrimarycategoryData(product);
 
@@ -850,44 +843,209 @@ public class SalesOrderReverseXMLUtility
 
 							canOrRetflag = true;
 						}
-						/*if (StringUtils.isNotEmpty(entry.getJuspayRequestId()))
+						if (StringUtils.isNotEmpty(entry.getJuspayRequestId()))
 						{
-							xmlData.setReversePaymentRefId(entry.getJuspayRequestId());
-						}*/
+							//xmlData.setReversePaymentRefId(entry.getJuspayRequestId());
+							//New Changes 
+						}
 						/*
 						 * if (xmlData.getOrderTag().equals("NOR")) { xmlData.setReversePaymentRefId(" "); }
 						 */
-					/*	if (returnFlag)
+						if (returnFlag)
 						{
 							// For Return - refund delivery cost will be 0
-							xmlData.setShipmentCharge(0.0);
-							xmlData.setExpressdeliveryCharge(0.0);
-						}*/
-						
-						
-						if(returnFlag){
-					           List<MerchantInfoXMlData> merchantInfoLists = getReturnMerchantInfo(chaildModel, entry);
-						        xmlData.setMerchantInfoList(merchantInfoLists);	
-				              }
+							/*xmlData.setShipmentCharge(0.0);
+							xmlData.setExpressdeliveryCharge(0.0);*///new chnages
+						}
 						if (cancelFlag)
 						{
-							/*LOG.info("Adding schedule delivery charges for orderLineId " + entry.getOrderLineId());
+							LOG.info("Adding schedule delivery charges for orderLineId " + entry.getOrderLineId());
 							if (null != entry.getScheduledDeliveryCharge() && entry.getScheduledDeliveryCharge().doubleValue() > 0.0D)
 							{
-								xmlData.setScheduleDelCharge(entry.getScheduledDeliveryCharge().doubleValue());
+								//xmlData.setScheduleDelCharge(entry.getScheduledDeliveryCharge().doubleValue());
 							}
 							else if (null != entry.getRefundedScheduleDeliveryChargeAmt()
 									&& entry.getRefundedScheduleDeliveryChargeAmt().doubleValue() > 0.0D)
 							{
-								xmlData.setScheduleDelCharge(entry.getRefundedScheduleDeliveryChargeAmt().doubleValue());
-							}*/
-							
-							
-							List<MerchantInfoXMlData> merchantInfoList = getCancelMerchantInfo(chaildModel, entry);	
-							xmlData.setMerchantInfoList(merchantInfoList);
+								//xmlData.setScheduleDelCharge(entry.getRefundedScheduleDeliveryChargeAmt().doubleValue());
+							}
 						}
+						
+						 List<PaymentTransactionModel> list = chaildModel.getPaymentTransactions();
+						if(StringUtils.isNotEmpty(chaildModel.getSplitModeInfo()) && SPLIT.equalsIgnoreCase(chaildModel.getSplitModeInfo())){
+							LOG.info("Split merchantInfoXMlData");
+							LOG.info("QC merchantInfoXMlData");
+							//panding code
+							MerchantInfoXMlData splitMerchantInfoXMlDataQC=new MerchantInfoXMlData();
+							splitMerchantInfoXMlDataQC
+							.setMerchantType(getConfigurationService().getConfiguration().getString(PAYMENT_QC_MERCHANT_TYPE));
+							splitMerchantInfoXMlDataQC
+							.setMerchantCode(getConfigurationService().getConfiguration().getString(PAYMENT_QC_MERCHANT_ID));
+							splitMerchantInfoXMlDataQC.setPaymentRefID("");
+							merchantInfoList.add(splitMerchantInfoXMlDataQC);
+							LOG.info("Juspay MerchantInfoXMlData");
+							MerchantInfoXMlData splitMerchantInfoXMlDataJuspay=new MerchantInfoXMlData();
+							splitMerchantInfoXMlDataJuspay.setMerchantType(getConfigurationService().getConfiguration().getString(PAYMENT_JUSPAY_MERCHANT_TYPE));
+							
+								if (null != list && !list.isEmpty())
+								{
+									for (final PaymentTransactionModel oModel : list)
+									{
+										LOG.debug("DeliveryMode oModel"+oModel);
+										if (null != oModel.getStatus() && null != oModel.getPaymentProvider() && !oModel.getPaymentProvider().equalsIgnoreCase(CLIQ_CASH)
+												&& oModel.getStatus().equalsIgnoreCase(MarketplacecommerceservicesConstants.SUCCESS))
+										{
+											
+											LOG.debug("Inside Parent order: Pyment Transaction model");
+											if (MarketplacecommerceservicesConstants.MRUPEE_CODE
+													.equalsIgnoreCase(oModel.getPaymentProvider()))
+											{
+												splitMerchantInfoXMlDataJuspay.setMerchantCode(getConfigurationService().getConfiguration()
+														.getString(MarketplacecommerceservicesConstants.MRUPEE_MERCHANT_CODE));
+											}
+											else
+											{
+												splitMerchantInfoXMlDataJuspay.setMerchantCode(oModel.getPaymentProvider());
+											}
+											if (null != oModel.getCode())
+											{
+												payemntrefid = oModel.getCode();
+												LOG.debug("Inside Parent order: Pyment Transaction model" + payemntrefid);
+											}
+										}
 
-						/*if (null != entry.getMplDeliveryMode() && xmlToFico && cancelFlag)
+									}
+									splitMerchantInfoXMlDataJuspay.setPaymentRefID(payemntrefid);
+									splitMerchantInfoXMlDataJuspay.setBucketId("");
+							      merchantInfoList.add(splitMerchantInfoXMlDataJuspay);
+							
+						}else if(StringUtils.isNotEmpty(chaildModel.getSplitModeInfo()) && CLIQ_CASH.equalsIgnoreCase(chaildModel.getSplitModeInfo()))
+						{
+							LOG.info("QC merchantInfoXMlData");
+							MerchantInfoXMlData merchantInfoXMlDataQC=new MerchantInfoXMlData();
+							merchantInfoXMlDataQC
+							.setMerchantType(getConfigurationService().getConfiguration().getString(PAYMENT_QC_MERCHANT_TYPE));
+							merchantInfoXMlDataQC
+							.setMerchantCode(getConfigurationService().getConfiguration().getString(PAYMENT_QC_MERCHANT_ID));
+							merchantInfoList.add(merchantInfoXMlDataQC);
+						}
+						else{
+							LOG.info("Juspay merchantInfoXMlData");
+							MerchantInfoXMlData merchantInfoXMlDataJuspay=new MerchantInfoXMlData();
+							merchantInfoXMlDataJuspay.setMerchantType(getConfigurationService().getConfiguration().getString(PAYMENT_JUSPAY_MERCHANT_TYPE));
+							if (null != list && !list.isEmpty())
+							{
+								for (final PaymentTransactionModel oModel : list)
+								{
+									LOG.debug("DeliveryMode oModel"+oModel);
+									if (null != oModel.getStatus() && null != oModel.getPaymentProvider() && !oModel.getPaymentProvider().equalsIgnoreCase(CLIQ_CASH)
+											&& oModel.getStatus().equalsIgnoreCase(MarketplacecommerceservicesConstants.SUCCESS))
+									{
+										
+										LOG.debug("Inside Parent order: Pyment Transaction model");
+										if (MarketplacecommerceservicesConstants.MRUPEE_CODE
+												.equalsIgnoreCase(oModel.getPaymentProvider()))
+										{
+											merchantInfoXMlDataJuspay.setMerchantCode(getConfigurationService().getConfiguration()
+													.getString(MarketplacecommerceservicesConstants.MRUPEE_MERCHANT_CODE));
+										}
+										else
+										{
+											merchantInfoXMlDataJuspay.setMerchantCode(oModel.getPaymentProvider());
+										}
+										if (null != oModel.getCode())
+										{
+											payemntrefid = oModel.getCode();
+											LOG.debug("Inside Parent order: Pyment Transaction model" + payemntrefid);
+										}
+									}
+
+								}
+								merchantInfoXMlDataJuspay.setPaymentRefID(payemntrefid);
+								merchantInfoXMlDataJuspay.setBucketId("");
+								
+								//need to be set value ... Business clarification requirement
+								/*merchantInfoXMlDataJuspay.setProductAmount();*/
+								if (returnFlag)
+								{
+									merchantInfoXMlDataJuspay.setShipmentCharge(0.0);
+									merchantInfoXMlDataJuspay.setExpressDelCharge(0.0);
+								}
+								
+								if (cancelFlag)
+								{
+									LOG.info("Adding schedule delivery charges for orderLineId " + entry.getOrderLineId());
+									if (null != entry.getScheduledDeliveryCharge() && entry.getScheduledDeliveryCharge().doubleValue() > 0.0D)
+									{
+										merchantInfoXMlDataJuspay.setScheduleDelCharge(entry.getScheduledDeliveryCharge().doubleValue());
+									}
+									else if (null != entry.getRefundedScheduleDeliveryChargeAmt()
+											&& entry.getRefundedScheduleDeliveryChargeAmt().doubleValue() > 0.0D)
+									{
+										merchantInfoXMlDataJuspay.setScheduleDelCharge(entry.getRefundedScheduleDeliveryChargeAmt().doubleValue());
+									}
+								}
+								
+								
+								if (StringUtils.isNotEmpty(entry.getJuspayRequestId()))
+								{
+									merchantInfoXMlDataJuspay.setReversePaymentRefId(entry.getJuspayRequestId());
+								}
+								
+								if (null != entry.getMplDeliveryMode() && xmlToFico && cancelFlag)
+								{
+								LOG.info("inside del mode" + entry.getMplDeliveryMode());
+								final MplZoneDeliveryModeValueModel zoneDelivery = entry.getMplDeliveryMode();
+								if (null != zoneDelivery
+										&& null != zoneDelivery.getDeliveryMode()
+										&& entry.getCurrDelCharge() != null
+										&& entry.getRefundedDeliveryChargeAmt() != null
+										&& null != zoneDelivery.getDeliveryMode().getCode()
+										&& zoneDelivery.getDeliveryMode().getCode()
+												.equalsIgnoreCase(MarketplacecommerceservicesConstants.EXPRESS_DELIVERY))
+								{
+									if (entry.getCurrDelCharge().doubleValue() > 0)
+									{
+										merchantInfoXMlDataJuspay.setExpressDelCharge(entry.getCurrDelCharge().doubleValue());
+									}
+									else if (null != entry.getRefundedDeliveryChargeAmt()
+											&& entry.getRefundedDeliveryChargeAmt().doubleValue() > 0.0D)
+									{
+										merchantInfoXMlDataJuspay.setExpressDelCharge(entry.getRefundedDeliveryChargeAmt().doubleValue());
+									}
+									LOG.info("set express del charge from curr del charge" + entry.getCurrDelCharge().doubleValue());// zoneDelivery.getValue().doubleValue()
+								}
+								else if (null != zoneDelivery
+										&& null != zoneDelivery.getDeliveryMode()
+										&& entry.getCurrDelCharge() != null
+										&& entry.getRefundedDeliveryChargeAmt() != null
+										&& null != zoneDelivery.getDeliveryMode().getCode()
+										&& zoneDelivery.getDeliveryMode().getCode()
+												.equalsIgnoreCase(MarketplacecommerceservicesConstants.HOME_DELIVERY))
+								{
+									if (entry.getCurrDelCharge().doubleValue() > 0)
+									{
+										merchantInfoXMlDataJuspay.setShipmentCharge(entry.getCurrDelCharge().doubleValue());
+									}
+									else if (null != entry.getRefundedDeliveryChargeAmt()
+											&& entry.getRefundedDeliveryChargeAmt().doubleValue() > 0.0D)
+									{
+										merchantInfoXMlDataJuspay.setShipmentCharge(entry.getRefundedDeliveryChargeAmt().doubleValue());
+									}
+									LOG.info("set del charge");
+								}
+								}
+
+							}
+							merchantInfoList.add(merchantInfoXMlDataJuspay);
+						 }
+						}
+						
+						
+						
+						
+
+						if (null != entry.getMplDeliveryMode() && xmlToFico && cancelFlag)
 						{
 							LOG.info("inside del mode" + entry.getMplDeliveryMode());
 							final MplZoneDeliveryModeValueModel zoneDelivery = entry.getMplDeliveryMode();
@@ -901,12 +1059,12 @@ public class SalesOrderReverseXMLUtility
 							{
 								if (entry.getCurrDelCharge().doubleValue() > 0)
 								{
-									xmlData.setExpressdeliveryCharge(entry.getCurrDelCharge().doubleValue());
+									//xmlData.setExpressdeliveryCharge(entry.getCurrDelCharge().doubleValue());
 								}
 								else if (null != entry.getRefundedDeliveryChargeAmt()
 										&& entry.getRefundedDeliveryChargeAmt().doubleValue() > 0.0D)
 								{
-									xmlData.setExpressdeliveryCharge(entry.getRefundedDeliveryChargeAmt().doubleValue());
+									//xmlData.setExpressdeliveryCharge(entry.getRefundedDeliveryChargeAmt().doubleValue());
 								}
 								LOG.info("set express del charge from curr del charge" + entry.getCurrDelCharge().doubleValue());// zoneDelivery.getValue().doubleValue()
 							}
@@ -920,16 +1078,16 @@ public class SalesOrderReverseXMLUtility
 							{
 								if (entry.getCurrDelCharge().doubleValue() > 0)
 								{
-									xmlData.setShipmentCharge(entry.getCurrDelCharge().doubleValue());
+									//xmlData.setShipmentCharge(entry.getCurrDelCharge().doubleValue());
 								}
 								else if (null != entry.getRefundedDeliveryChargeAmt()
 										&& entry.getRefundedDeliveryChargeAmt().doubleValue() > 0.0D)
 								{
-									xmlData.setShipmentCharge(entry.getRefundedDeliveryChargeAmt().doubleValue());
+									//xmlData.setShipmentCharge(entry.getRefundedDeliveryChargeAmt().doubleValue());
 								}
 								LOG.info("set del charge");
 							}
-						}*/
+						}
 
 						/* Added in R2.3 for sending EDTOHD / SDB charges to FICO START */
 						try
@@ -941,14 +1099,14 @@ public class SalesOrderReverseXMLUtility
 								sdbXmlData.setDeliveryMode(xmlData.getDeliveryMode());
 								sdbXmlData.setFulfillmentType(xmlData.getFulfillmentType());
 								sdbXmlData.setItemNumber(xmlData.getItemNumber());
-								/*sdbXmlData.setPaymentRefID(xmlData.getPaymentRefID());*/
+								//sdbXmlData.setPaymentRefID(xmlData.getPaymentRefID());
 								sdbXmlData.setPrimaryCategory(xmlData.getPrimaryCategory());
 								sdbXmlData.setSecondaryCategory(xmlData.getSecondaryCategory());
 								sdbXmlData.setSellerCode(xmlData.getSellerCode());
 								sdbXmlData.setUSSID(xmlData.getUSSID());
 								sdbXmlData.setTransactionId(xmlData.getTransactionId());
-//								sdbXmlData.setScheduleDelCharge(0.0D);
-//								sdbXmlData.setExpressdeliveryCharge(0.0D);
+								//sdbXmlData.setScheduleDelCharge(0.0D);
+								//sdbXmlData.setExpressdeliveryCharge(0.0D);
 								sdbXmlData.setOrderTag(SDB);
 								if (null != entry.getRefundedScheduleDeliveryChargeAmt())
 								{
@@ -965,14 +1123,28 @@ public class SalesOrderReverseXMLUtility
 
 								if (null != entry.getScheduleChargesJuspayRequestId())
 								{
-									/*sdbXmlData.setReversePaymentRefId(entry.getScheduleChargesJuspayRequestId());*/
+									//sdbXmlData.setReversePaymentRefId(entry.getScheduleChargesJuspayRequestId());
 								}
 								LOG.info("Adding SDB data for transaction Id " + entry.getTransactionID());
-				
-								//New Changes 
-								List<MerchantInfoXMlData> merchantInfoLists = getSDBMerchantInfo(chaildModel, entry);
-								sdbXmlData.setMerchantInfoList(merchantInfoLists);
 								
+								if(CollectionUtils.isNotEmpty(merchantInfoList)){
+									List<MerchantInfoXMlData> sdbMerchantInfoList = new ArrayList<MerchantInfoXMlData>();
+									for(MerchantInfoXMlData merchantData:merchantInfoList){									
+										MerchantInfoXMlData sdbMerchantInfoXMlDatasdbXmlData =new MerchantInfoXMlData();
+										sdbMerchantInfoXMlDatasdbXmlData.setMerchantCode(merchantData.getMerchantCode());
+										sdbMerchantInfoXMlDatasdbXmlData.setMerchantType(merchantData.getMerchantType());
+										sdbMerchantInfoXMlDatasdbXmlData.setPaymentRefID(merchantData.getPaymentRefID());
+										sdbMerchantInfoXMlDatasdbXmlData.setReversePaymentRefId(entry.getScheduleChargesJuspayRequestId());
+										sdbMerchantInfoXMlDatasdbXmlData.setExpressDelCharge(0.0D);
+										sdbMerchantInfoXMlDatasdbXmlData.setScheduleDelCharge(0.0D);
+										sdbMerchantInfoXMlDatasdbXmlData.setCardExpiryDate(merchantData.getCardExpiryDate());
+										sdbMerchantInfoXMlDatasdbXmlData.setCardNumber(merchantData.getCardNumber());
+										sdbMerchantInfoXMlDatasdbXmlData.setBucketId(merchantData.getBucketId());
+										sdbMerchantInfoXMlDatasdbXmlData.setProductAmount(merchantData.getProductAmount());
+										sdbMerchantInfoList.add(sdbMerchantInfoXMlDatasdbXmlData);
+									}
+									sdbXmlData.setMerchantInfoList(sdbMerchantInfoList);
+								}
 								childOrderDataList.add(sdbXmlData);
 								entry.setIsSdbSendToFico(Boolean.TRUE);
 								modelService.save(entry);
@@ -984,34 +1156,55 @@ public class SalesOrderReverseXMLUtility
 								edToHdXmlData.setDeliveryMode(xmlData.getDeliveryMode());
 								edToHdXmlData.setFulfillmentType(xmlData.getFulfillmentType());
 								edToHdXmlData.setItemNumber(xmlData.getItemNumber());
-								/*edToHdXmlData.setPaymentRefID(xmlData.getPaymentRefID());*/
+								//edToHdXmlData.setPaymentRefID(xmlData.getPaymentRefID());
 								edToHdXmlData.setPrimaryCategory(xmlData.getPrimaryCategory());
 								edToHdXmlData.setSecondaryCategory(xmlData.getSecondaryCategory());
 								edToHdXmlData.setSellerCode(xmlData.getSellerCode());
 								edToHdXmlData.setUSSID(xmlData.getUSSID());
 								edToHdXmlData.setTransactionId(xmlData.getTransactionId());
-								/*edToHdXmlData.setScheduleDelCharge(0.0D);
-								edToHdXmlData.setExpressdeliveryCharge(0.0D);*/
+								//edToHdXmlData.setScheduleDelCharge(0.0D);
+								//edToHdXmlData.setExpressdeliveryCharge(0.0D);
 								edToHdXmlData.setOrderTag(EDTOHD);
-								if (null != entry.getRefundedEdChargeAmt())
+								if (null != entry.getRefundedDeliveryChargeAmt())
 								{
-									edToHdXmlData.setAmount(entry.getRefundedEdChargeAmt().doubleValue());
+									edToHdXmlData.setAmount(entry.getRefundedDeliveryChargeAmt().doubleValue());
+								}
+								else if (null != entry.getCurrDelCharge())
+								{
+									edToHdXmlData.setAmount(entry.getCurrDelCharge().doubleValue());
 								}
 								else
 								{
 									edToHdXmlData.setAmount(0.0D);
 								}
 
-								if (null != entry.getEdChargesJuspayRequestId())
+								if (null != entry.getDelChargesJuspayRequestId())
 								{
-									/*edToHdXmlData.setReversePaymentRefId(entry.getEdChargesJuspayRequestId());*/
+									//edToHdXmlData.setReversePaymentRefId(entry.getDelChargesJuspayRequestId());
 								}
-								//
-								//new changes 
-								List<MerchantInfoXMlData> merchantInfoLists = getEDToHDMerchnatInforXmlData(chaildModel, entry);
-								edToHdXmlData.setMerchantInfoList(merchantInfoLists);
-								
 								LOG.info("Adding EdToHd data for transaction Id " + entry.getTransactionID());
+								
+								
+								//EdToHdXmlData
+								  if(CollectionUtils.isNotEmpty(merchantInfoList)){
+									List<MerchantInfoXMlData> edToHdMerchantInfoList = new ArrayList<MerchantInfoXMlData>();
+									for(MerchantInfoXMlData merchantData:merchantInfoList){									
+										MerchantInfoXMlData edToHMerchantInfoXMlDatasdbXmlData =new MerchantInfoXMlData();
+										edToHMerchantInfoXMlDatasdbXmlData.setMerchantCode(merchantData.getMerchantCode());
+										edToHMerchantInfoXMlDatasdbXmlData.setMerchantType(merchantData.getMerchantType());
+										edToHMerchantInfoXMlDatasdbXmlData.setPaymentRefID(merchantData.getPaymentRefID());
+										edToHMerchantInfoXMlDatasdbXmlData.setCardExpiryDate(merchantData.getCardExpiryDate());
+										edToHMerchantInfoXMlDatasdbXmlData.setCardNumber(merchantData.getCardNumber());
+										edToHMerchantInfoXMlDatasdbXmlData.setBucketId(merchantData.getBucketId());
+										edToHMerchantInfoXMlDatasdbXmlData.setReversePaymentRefId(entry.getDelChargesJuspayRequestId());
+										edToHMerchantInfoXMlDatasdbXmlData.setProductAmount(merchantData.getProductAmount());
+										edToHMerchantInfoXMlDatasdbXmlData.setExpressDelCharge(0.0D);
+										edToHMerchantInfoXMlDatasdbXmlData.setScheduleDelCharge(0.0D);
+										edToHdMerchantInfoList.add(edToHMerchantInfoXMlDatasdbXmlData);
+									}
+									edToHdXmlData.setMerchantInfoList(edToHdMerchantInfoList);
+								}
+								
 								childOrderDataList.add(edToHdXmlData);
 								entry.setIsEdToHdSendToFico(Boolean.TRUE);
 								modelService.save(entry);
@@ -1051,451 +1244,6 @@ public class SalesOrderReverseXMLUtility
 	}
 
 	/**
-	 * @param chaildModel
-	 * @param entry
-	 * @return
-	 */
-	private List<MerchantInfoXMlData> getCancelMerchantInfo(OrderModel chaildModel, final AbstractOrderEntryModel entry)
-	{
-		List<MerchantInfoXMlData> merchantInfoList = new ArrayList<MerchantInfoXMlData>();
-		if (entry.getWalletApportionPaymentInfo() != null)
-		{
-			LOG.debug("DeliveryMode entry.getWalletApportionPaymentInfo()"+entry.getWalletApportionPaymentInfo());
-
-			WalletApportionPaymentInfoModel paymentInfoModel = entry.getWalletApportionPaymentInfo();
-			if (!CollectionUtils.isEmpty(paymentInfoModel.getWalletCardList()))
-			{
-				LOG.debug("DeliveryMode entry.paymentInfoModel.getWalletCardList()"+paymentInfoModel.getWalletCardList());
-				for (WalletCardApportionDetailModel apporationWalllet : paymentInfoModel.getWalletCardList())
-				{
-
-					LOG.debug("DeliveryMode apporationWalllet"+apporationWalllet);
-					MerchantInfoXMlData merchantInfoXMlData = new MerchantInfoXMlData();
-					merchantInfoXMlData
-							.setMerchantType(getConfigurationService().getConfiguration().getString(PAYMENT_QC_MERCHANT_TYPE));
-					merchantInfoXMlData
-							.setMerchantCode(getConfigurationService().getConfiguration().getString(PAYMENT_QC_MERCHANT_ID));
-					LOG.debug("DeliveryMode PAYMENT_QC_MERCHANT_TYPE"+PAYMENT_QC_MERCHANT_TYPE);
-					double qcDelivery = 0;
-					if (apporationWalllet.getQcDeliveryValue() != null)
-					{
-						qcDelivery = Double.parseDouble(apporationWalllet.getQcDeliveryValue());
-					}
-					LOG.debug("DeliveryMode qcDelivery"+qcDelivery);
-					merchantInfoXMlData.setShipmentCharge(qcDelivery);
-					double scheduleDelCharge = 0;
-					if (apporationWalllet.getQcSchedulingValue() != null)
-					{
-						scheduleDelCharge = Double.parseDouble(apporationWalllet.getQcSchedulingValue());
-					}
-					LOG.debug("DeliveryMode scheduleDelCharge"+scheduleDelCharge);
-					merchantInfoXMlData.setScheduleDelCharge(scheduleDelCharge);
-					double shippingValue = 0;
-					if (apporationWalllet.getQcShippingValue() != null)
-					{
-						shippingValue = Double.parseDouble(apporationWalllet.getQcShippingValue());
-					}
-					LOG.debug("DeliveryMode shippingValue"+shippingValue);
-					merchantInfoXMlData.setExpressDelCharge(shippingValue);
-
-					//merchantInfoXMlData.setReversePaymentRefId(payemntrefid); 
-
-
-					double total = 0;
-					if (apporationWalllet.getCardAmount() != null)
-					{
-						total = Double.parseDouble(apporationWalllet.getCardAmount());
-					}
-					
-					LOG.debug("DeliveryMode apporationWalllet.getCardAmount()"+apporationWalllet.getCardAmount());
-					merchantInfoXMlData.setBucketId(apporationWalllet.getBucketType());
-					merchantInfoXMlData.setProductAmount(total);
-					LOG.debug("DeliveryMode total"+total);
-
-					merchantInfoXMlData.setCardNumber(apporationWalllet.getCardNumber());
-					LOG.debug("DeliveryMode setCardNumber"+apporationWalllet.getCardNumber());
-					if (chaildModel.getParentReference() != null)
-					{
-						merchantInfoXMlData.setPaymentRefID(chaildModel.getParentReference().getCode());
-					}
-					
-					LOG.debug("DeliveryMode getParentReference"+chaildModel.getParentReference());
-					merchantInfoXMlData.setCardExpiryDate(apporationWalllet.getCardNumber());
-					merchantInfoList.add(merchantInfoXMlData);
-				}
-
-
-				 if (StringUtils.isNotEmpty(paymentInfoModel.getJuspayApportionValue())
-				         && Double.parseDouble((paymentInfoModel.getJuspayApportionValue())) > 0){
-					MerchantInfoXMlData merchantInfoXMlData = new MerchantInfoXMlData();
-					merchantInfoXMlData.setMerchantType(
-							getConfigurationService().getConfiguration().getString(PAYMENT_JUSPAY_MERCHANT_TYPE));
-					
-					LOG.debug("DeliveryMode PAYMENT_JUSPAY_MERCHANT_TYPE"+
-							getConfigurationService().getConfiguration().getString(PAYMENT_JUSPAY_MERCHANT_TYPE));
-					merchantInfoXMlData.setBucketId("");
-					merchantInfoXMlData.setProductAmount((Double.parseDouble(paymentInfoModel.getJuspayApportionValue())));
-					LOG.debug("DeliveryMode paymentInfoModel.getJuspayApportionValue()"+paymentInfoModel.getJuspayApportionValue());
-					merchantInfoXMlData.setExpressDelCharge(Double.parseDouble(paymentInfoModel.getJuspayDeliveryValue()));
-					merchantInfoXMlData.setScheduleDelCharge(Double.parseDouble(paymentInfoModel.getJuspaySchedulingValue()));
-					merchantInfoXMlData.setShipmentCharge(Double.parseDouble(paymentInfoModel.getJuspayShippingValue()));
-					LOG.debug("DeliveryMode paymentInfoModel.paymentInfoModel.getJuspayShippingValue()()"+paymentInfoModel.getJuspayShippingValue());
-
-					final List<PaymentTransactionModel> list = chaildModel.getPaymentTransactions();
-					if (null != list && !list.isEmpty())
-					{
-						LOG.debug("DeliveryMode list"+list);
-						for (final PaymentTransactionModel oModel : list)
-						{
-							LOG.debug("DeliveryMode oModel"+oModel);
-							if (null != oModel.getStatus() && null != oModel.getPaymentProvider() && !oModel.getPaymentProvider().equalsIgnoreCase(CLIQ_CASH)
-									&& oModel.getStatus().equalsIgnoreCase(MarketplacecommerceservicesConstants.SUCCESS))
-							{
-								
-								LOG.debug("Inside Parent order: Pyment Transaction model");
-								if (MarketplacecommerceservicesConstants.MRUPEE_CODE
-										.equalsIgnoreCase(oModel.getPaymentProvider()))
-								{
-									merchantInfoXMlData.setMerchantCode(getConfigurationService().getConfiguration()
-											.getString(MarketplacecommerceservicesConstants.MRUPEE_MERCHANT_CODE));
-								}
-								else
-								{
-									merchantInfoXMlData.setMerchantCode(oModel.getPaymentProvider());
-								}
-								if (null != oModel.getCode())
-								{
-									payemntrefid = oModel.getCode();
-									LOG.debug("Inside Parent order: Pyment Transaction model" + payemntrefid);
-								}
-							}
-
-						}
-
-						merchantInfoXMlData.setPaymentRefID(payemntrefid);
-						LOG.debug("Inside Parent order: payemntrefid" + payemntrefid);
-					}
-					merchantInfoList.add(merchantInfoXMlData);
-
-				}
-			}
-		}
-		else
-		{
-			MerchantInfoXMlData merchantInfoXMlData = getMarchantInfo(chaildModel, entry);
-			merchantInfoXMlData
-					.setMerchantType(getConfigurationService().getConfiguration().getString(PAYMENT_JUSPAY_MERCHANT_TYPE));
-			LOG.debug(">>>>>>> before getConfigurationService().getConfiguration().getString(PAYMENT_JUSPAY_MERCHANT_TYPE"+
-					 getConfigurationService().getConfiguration().getString(PAYMENT_JUSPAY_MERCHANT_TYPE));
-			merchantInfoXMlData.setBucketId("");
-			merchantInfoList.add(merchantInfoXMlData);
-		}
-		return merchantInfoList;
-	}
-
-	/**
-	 * @param chaildModel
-	 * @param entry
-	 * @param merchantInfoList
-	 * @return
-	 */
-	private List<MerchantInfoXMlData> getReturnMerchantInfo(OrderModel chaildModel, final AbstractOrderEntryModel entry)
-	{
-		List<MerchantInfoXMlData> merchantInfoLists = new ArrayList<MerchantInfoXMlData>();
-			if (entry.getWalletApportionPaymentInfo() != null)
-			{
-				LOG.debug("DeliveryMode entry.getWalletApportionPaymentInfo()"+entry.getWalletApportionPaymentInfo());
-
-				WalletApportionPaymentInfoModel paymentInfoModel = entry.getWalletApportionPaymentInfo();
-				if (!CollectionUtils.isEmpty(paymentInfoModel.getWalletCardList()))
-				{
-					LOG.debug("DeliveryMode entry.paymentInfoModel.getWalletCardList()"+paymentInfoModel.getWalletCardList());
-					for (WalletCardApportionDetailModel apporationWalllet : paymentInfoModel.getWalletCardList())
-					{
-
-						LOG.debug("DeliveryMode apporationWalllet"+apporationWalllet);
-						MerchantInfoXMlData merchantInfoXMlData = new MerchantInfoXMlData();
-						merchantInfoXMlData
-								.setMerchantType(getConfigurationService().getConfiguration().getString(PAYMENT_QC_MERCHANT_TYPE));
-						merchantInfoXMlData
-								.setMerchantCode(getConfigurationService().getConfiguration().getString(PAYMENT_QC_MERCHANT_ID));
-						LOG.debug("DeliveryMode PAYMENT_QC_MERCHANT_TYPE"+PAYMENT_QC_MERCHANT_TYPE);
-						double qcDelivery = 0;
-						if (apporationWalllet.getQcDeliveryValue() != null)
-						{
-							qcDelivery = Double.parseDouble(apporationWalllet.getQcDeliveryValue());
-						}
-						LOG.debug("DeliveryMode qcDelivery"+qcDelivery);
-						merchantInfoXMlData.setShipmentCharge(qcDelivery);
-						double scheduleDelCharge = 0;
-						if (apporationWalllet.getQcSchedulingValue() != null)
-						{
-							scheduleDelCharge = Double.parseDouble(apporationWalllet.getQcSchedulingValue());
-						}
-						LOG.debug("DeliveryMode scheduleDelCharge"+scheduleDelCharge);
-						merchantInfoXMlData.setScheduleDelCharge(scheduleDelCharge);
-						double shippingValue = 0;
-						if (apporationWalllet.getQcShippingValue() != null)
-						{
-							shippingValue = Double.parseDouble(apporationWalllet.getQcShippingValue());
-						}
-						LOG.debug("DeliveryMode shippingValue"+shippingValue);
-						merchantInfoXMlData.setExpressDelCharge(shippingValue);
-						merchantInfoXMlData.setReversePaymentRefId("");
-
-
-						double total = 0;
-						if (apporationWalllet.getCardAmount() != null)
-						{
-							total = Double.parseDouble(apporationWalllet.getCardAmount());
-						}
-						
-						LOG.debug("DeliveryMode apporationWalllet.getCardAmount()"+apporationWalllet.getCardAmount());
-						merchantInfoXMlData.setBucketId(apporationWalllet.getBucketType());
-						merchantInfoXMlData.setProductAmount(total);
-						LOG.debug("DeliveryMode total"+total);
-
-						merchantInfoXMlData.setCardNumber(apporationWalllet.getCardNumber());
-						LOG.debug("DeliveryMode setCardNumber"+apporationWalllet.getCardNumber());
-						if (chaildModel.getParentReference() != null)
-						{
-							merchantInfoXMlData.setPaymentRefID(chaildModel.getParentReference().getCode());
-						}
-						
-						LOG.debug("DeliveryMode getParentReference"+chaildModel.getParentReference());
-						merchantInfoXMlData.setCardExpiryDate(apporationWalllet.getCardNumber());
-						merchantInfoLists.add(merchantInfoXMlData);
-					}
-
-
-					 if (StringUtils.isNotEmpty(paymentInfoModel.getJuspayApportionValue())
-					         && Double.parseDouble((paymentInfoModel.getJuspayApportionValue())) > 0){
-						MerchantInfoXMlData merchantInfoXMlData = new MerchantInfoXMlData();
-						merchantInfoXMlData.setMerchantType(
-								getConfigurationService().getConfiguration().getString(PAYMENT_JUSPAY_MERCHANT_TYPE));
-						
-						LOG.debug("DeliveryMode PAYMENT_JUSPAY_MERCHANT_TYPE"+
-								getConfigurationService().getConfiguration().getString(PAYMENT_JUSPAY_MERCHANT_TYPE));
-						merchantInfoXMlData.setBucketId("");
-						merchantInfoXMlData.setProductAmount((Double.parseDouble(paymentInfoModel.getJuspayApportionValue())));
-						LOG.debug("DeliveryMode paymentInfoModel.getJuspayApportionValue()"+paymentInfoModel.getJuspayApportionValue());
-						merchantInfoXMlData.setExpressDelCharge(Double.parseDouble(paymentInfoModel.getJuspayDeliveryValue()));
-						merchantInfoXMlData.setScheduleDelCharge(Double.parseDouble(paymentInfoModel.getJuspaySchedulingValue()));
-						merchantInfoXMlData.setShipmentCharge(Double.parseDouble(paymentInfoModel.getJuspayShippingValue()));
-						LOG.debug("DeliveryMode paymentInfoModel.paymentInfoModel.getJuspayShippingValue()()"+paymentInfoModel.getJuspayShippingValue());
-
-						final List<PaymentTransactionModel> list = chaildModel.getPaymentTransactions();
-						if (null != list && !list.isEmpty())
-						{
-							LOG.debug("DeliveryMode list"+list);
-							for (final PaymentTransactionModel oModel : list)
-							{
-								LOG.debug("DeliveryMode oModel"+oModel);
-								if (null != oModel.getStatus() && null != oModel.getPaymentProvider() && !oModel.getPaymentProvider().equalsIgnoreCase(CLIQ_CASH)
-										&& oModel.getStatus().equalsIgnoreCase(MarketplacecommerceservicesConstants.SUCCESS))
-								{
-									
-									LOG.debug("Inside Parent order: Pyment Transaction model");
-									if (MarketplacecommerceservicesConstants.MRUPEE_CODE
-											.equalsIgnoreCase(oModel.getPaymentProvider()))
-									{
-										merchantInfoXMlData.setMerchantCode(getConfigurationService().getConfiguration()
-												.getString(MarketplacecommerceservicesConstants.MRUPEE_MERCHANT_CODE));
-									}
-									else
-									{
-										merchantInfoXMlData.setMerchantCode(oModel.getPaymentProvider());
-									}
-									if (null != oModel.getCode())
-									{
-										payemntrefid = oModel.getCode();
-										LOG.debug("Inside Parent order: Pyment Transaction model" + payemntrefid);
-									}
-								}
-
-							}
-							merchantInfoXMlData.setReversePaymentRefId("");
-							merchantInfoXMlData.setPaymentRefID(payemntrefid);
-							LOG.debug("Inside Parent order: payemntrefid" + payemntrefid);
-						}
-						merchantInfoLists.add(merchantInfoXMlData);
-
-					}
-				}
-			}
-			else
-			{
-				MerchantInfoXMlData merchantInfoXMlData = getMarchantInfo(chaildModel, entry);
-				merchantInfoXMlData
-						.setMerchantType(getConfigurationService().getConfiguration().getString(PAYMENT_JUSPAY_MERCHANT_TYPE));
-				LOG.debug(">>>>>>> before getConfigurationService().getConfiguration().getString(PAYMENT_JUSPAY_MERCHANT_TYPE"+
-						 getConfigurationService().getConfiguration().getString(PAYMENT_JUSPAY_MERCHANT_TYPE));
-				merchantInfoXMlData.setBucketId("");
-				merchantInfoXMlData.setReversePaymentRefId("");
-				merchantInfoLists.add(merchantInfoXMlData);
-			}
-		return merchantInfoLists;
-	}
-
-	/**
-	 * @param chaildModel
-	 * @param entry
-	 * @param merchantInfoList
-	 * @return
-	 */
-	private List<MerchantInfoXMlData> getSDBMerchantInfo(OrderModel chaildModel, final AbstractOrderEntryModel entry)
-	{
-		List<MerchantInfoXMlData> merchantInfoLists = getReturnMerchantInfo(chaildModel, entry);
-		return merchantInfoLists;
-	}
-
-	/**
-	 * @param chaildModel
-	 * @param entry
-	 * @param merchantInfoList
-	 * @return
-	 */
-	private List<MerchantInfoXMlData> getEDToHDMerchnatInforXmlData(OrderModel chaildModel, final AbstractOrderEntryModel entry)
-	{
-		//New Changes 
-		List<MerchantInfoXMlData> merchantInfoLists = new ArrayList<MerchantInfoXMlData>();
-		if (entry.getWalletApportionPaymentInfo() != null)
-		{
-			LOG.debug("DeliveryMode entry.getWalletApportionPaymentInfo()"+entry.getWalletApportionPaymentInfo());
-
-			WalletApportionPaymentInfoModel paymentInfoModel = entry.getWalletApportionPaymentInfo();
-			if (!CollectionUtils.isEmpty(paymentInfoModel.getWalletCardList()))
-			{
-				LOG.debug("DeliveryMode entry.paymentInfoModel.getWalletCardList()"+paymentInfoModel.getWalletCardList());
-				for (WalletCardApportionDetailModel apporationWalllet : paymentInfoModel.getWalletCardList())
-				{
-
-					LOG.debug("DeliveryMode apporationWalllet"+apporationWalllet);
-					MerchantInfoXMlData merchantInfoXMlData = new MerchantInfoXMlData();
-					merchantInfoXMlData
-							.setMerchantType(getConfigurationService().getConfiguration().getString(PAYMENT_QC_MERCHANT_TYPE));
-					merchantInfoXMlData
-							.setMerchantCode(getConfigurationService().getConfiguration().getString(PAYMENT_QC_MERCHANT_ID));
-					LOG.debug("DeliveryMode PAYMENT_QC_MERCHANT_TYPE"+PAYMENT_QC_MERCHANT_TYPE);
-					double qcDelivery = 0;
-					if (apporationWalllet.getQcDeliveryValue() != null)
-					{
-						qcDelivery = Double.parseDouble(apporationWalllet.getQcDeliveryValue());
-					}
-					LOG.debug("DeliveryMode qcDelivery"+qcDelivery);
-					merchantInfoXMlData.setShipmentCharge(qcDelivery);
-					double scheduleDelCharge = 0;
-					if (apporationWalllet.getQcSchedulingValue() != null)
-					{
-						scheduleDelCharge = Double.parseDouble(apporationWalllet.getQcSchedulingValue());
-					}
-					LOG.debug("DeliveryMode scheduleDelCharge"+scheduleDelCharge);
-					merchantInfoXMlData.setScheduleDelCharge(scheduleDelCharge);
-					double shippingValue = 0;
-					if (apporationWalllet.getQcShippingValue() != null)
-					{
-						shippingValue = Double.parseDouble(apporationWalllet.getQcShippingValue());
-					}
-					LOG.debug("DeliveryMode shippingValue"+shippingValue);
-					merchantInfoXMlData.setExpressDelCharge(shippingValue);
-
-					merchantInfoXMlData.setReversePaymentRefId(entry.getEdChargesJuspayRequestId());
-
-
-					double total = 0;
-					if (apporationWalllet.getCardAmount() != null)
-					{
-						total = Double.parseDouble(apporationWalllet.getCardAmount());
-					}
-					
-					LOG.debug("DeliveryMode apporationWalllet.getCardAmount()"+apporationWalllet.getCardAmount());
-					merchantInfoXMlData.setBucketId(apporationWalllet.getBucketType());
-					merchantInfoXMlData.setProductAmount(total);
-					LOG.debug("DeliveryMode total"+total);
-
-					merchantInfoXMlData.setCardNumber(apporationWalllet.getCardNumber());
-					LOG.debug("DeliveryMode setCardNumber"+apporationWalllet.getCardNumber());
-					if (chaildModel.getParentReference() != null)
-					{
-						merchantInfoXMlData.setPaymentRefID(chaildModel.getParentReference().getCode());
-					}
-					
-					LOG.debug("DeliveryMode getParentReference"+chaildModel.getParentReference());
-					merchantInfoXMlData.setCardExpiryDate(apporationWalllet.getCardNumber());
-					merchantInfoLists.add(merchantInfoXMlData);
-				}
-
-
-				 if (StringUtils.isNotEmpty(paymentInfoModel.getJuspayApportionValue())
-				         && Double.parseDouble((paymentInfoModel.getJuspayApportionValue())) > 0){
-					MerchantInfoXMlData merchantInfoXMlData = new MerchantInfoXMlData();
-					merchantInfoXMlData.setMerchantType(
-							getConfigurationService().getConfiguration().getString(PAYMENT_JUSPAY_MERCHANT_TYPE));
-					
-					LOG.debug("DeliveryMode PAYMENT_JUSPAY_MERCHANT_TYPE"+
-							getConfigurationService().getConfiguration().getString(PAYMENT_JUSPAY_MERCHANT_TYPE));
-					merchantInfoXMlData.setBucketId("");
-					merchantInfoXMlData.setProductAmount((Double.parseDouble(paymentInfoModel.getJuspayApportionValue())));
-					LOG.debug("DeliveryMode paymentInfoModel.getJuspayApportionValue()"+paymentInfoModel.getJuspayApportionValue());
-					merchantInfoXMlData.setExpressDelCharge(Double.parseDouble(paymentInfoModel.getJuspayDeliveryValue()));
-					merchantInfoXMlData.setScheduleDelCharge(Double.parseDouble(paymentInfoModel.getJuspaySchedulingValue()));
-					merchantInfoXMlData.setShipmentCharge(Double.parseDouble(paymentInfoModel.getJuspayShippingValue()));
-					LOG.debug("DeliveryMode paymentInfoModel.paymentInfoModel.getJuspayShippingValue()()"+paymentInfoModel.getJuspayShippingValue());
-
-					final List<PaymentTransactionModel> list = chaildModel.getPaymentTransactions();
-					if (null != list && !list.isEmpty())
-					{
-						LOG.debug("DeliveryMode list"+list);
-						for (final PaymentTransactionModel oModel : list)
-						{
-							LOG.debug("DeliveryMode oModel"+oModel);
-							if (null != oModel.getStatus() && null != oModel.getPaymentProvider() && !oModel.getPaymentProvider().equalsIgnoreCase(CLIQ_CASH)
-									&& oModel.getStatus().equalsIgnoreCase(MarketplacecommerceservicesConstants.SUCCESS))
-							{
-								
-								LOG.debug("Inside Parent order: Pyment Transaction model");
-								if (MarketplacecommerceservicesConstants.MRUPEE_CODE
-										.equalsIgnoreCase(oModel.getPaymentProvider()))
-								{
-									merchantInfoXMlData.setMerchantCode(getConfigurationService().getConfiguration()
-											.getString(MarketplacecommerceservicesConstants.MRUPEE_MERCHANT_CODE));
-								}
-								else
-								{
-									merchantInfoXMlData.setMerchantCode(oModel.getPaymentProvider());
-								}
-								if (null != oModel.getCode())
-								{
-									payemntrefid = oModel.getCode();
-									LOG.debug("Inside Parent order: Pyment Transaction model" + payemntrefid);
-								}
-							}
-
-						}
-						merchantInfoXMlData.setReversePaymentRefId(entry.getEdChargesJuspayRequestId());
-						merchantInfoXMlData.setPaymentRefID(payemntrefid);
-						LOG.debug("Inside Parent order: payemntrefid" + payemntrefid);
-					}
-					merchantInfoLists.add(merchantInfoXMlData);
-
-				}
-			}
-		}
-		else
-		{
-			MerchantInfoXMlData merchantInfoXMlData = getMarchantInfo(chaildModel, entry);
-			merchantInfoXMlData
-					.setMerchantType(getConfigurationService().getConfiguration().getString(PAYMENT_JUSPAY_MERCHANT_TYPE));
-			merchantInfoXMlData.setReversePaymentRefId(entry.getEdChargesJuspayRequestId());
-			LOG.debug(">>>>>>> before getConfigurationService().getConfiguration().getString(PAYMENT_JUSPAY_MERCHANT_TYPE"+
-					 getConfigurationService().getConfiguration().getString(PAYMENT_JUSPAY_MERCHANT_TYPE));
-			merchantInfoXMlData.setBucketId("");
-			merchantInfoLists.add(merchantInfoXMlData);
-		}
-		return merchantInfoLists;
-	}
-
-	/**
 	 * @param entry
 	 * @return
 	 */
@@ -1508,13 +1256,12 @@ public class SalesOrderReverseXMLUtility
 			{
 				LOG.debug("Checking SDB for transaction ID " + entry.getTransactionID());
 				LOG.debug("IsEdToHdSendToFico" + entry.getIsEdToHdSendToFico()
-						+ LOG_MSG_AND_GET_REFUNDED_SCHEDULE_DELIVERY_CHARGE_AMT + entry.getRefundedEdChargeAmt());
+						+ LOG_MSG_AND_GET_REFUNDED_SCHEDULE_DELIVERY_CHARGE_AMT + entry.getRefundedDeliveryChargeAmt());
 			}
-			final boolean isAmountRefunded = getAmountRefunded(entry,
-					PaymentTransactionType.REFUND_EXPRESS_DELIVERY_CHARGES.getCode());
+			final boolean isAmountRefunded = getAmountRefunded(entry, PaymentTransactionType.REFUND_DELIVERY_CHARGES.getCode());
 			if (isAmountRefunded && (null != entry && null != entry.getIsEDtoHD() && entry.getIsEDtoHD().booleanValue())
 					&& (null == entry.getIsEdToHdSendToFico() || !entry.getIsEdToHdSendToFico().booleanValue())
-					&& (null != entry.getRefundedEdChargeAmt() && entry.getRefundedEdChargeAmt().doubleValue() != 0.0D))
+					&& (null != entry.getRefundedDeliveryChargeAmt() && entry.getRefundedDeliveryChargeAmt().doubleValue() != 0.0D))
 			{
 
 				isEdToHd = true;
@@ -1594,14 +1341,14 @@ public class SalesOrderReverseXMLUtility
 				{
 					for (final PaymentTransactionEntryModel paymentObj : oModel.getEntries())
 					{
-						if (type.equalsIgnoreCase(PaymentTransactionType.REFUND_EXPRESS_DELIVERY_CHARGES.getCode()))
+						if (type.equalsIgnoreCase(PaymentTransactionType.REFUND_DELIVERY_CHARGES.getCode()))
 						{
 							if (null != paymentObj.getType() && null != paymentObj.getType().getCode()
 									&& paymentObj.getType().getCode().equalsIgnoreCase(type))
 							{
-								if (null != paymentObj.getRequestId() && null != entry.getEdChargesJuspayRequestId())
+								if (null != paymentObj.getRequestId() && null != entry.getDelChargesJuspayRequestId())
 								{
-									if (paymentObj.getRequestId().equalsIgnoreCase(entry.getEdChargesJuspayRequestId()))
+									if (paymentObj.getRequestId().equalsIgnoreCase(entry.getDelChargesJuspayRequestId()))
 									{
 										if (null != paymentObj.getTransactionStatus()
 												&& paymentObj.getTransactionStatus().equalsIgnoreCase("SUCCESS"))
@@ -1637,124 +1384,6 @@ public class SalesOrderReverseXMLUtility
 			}
 		}
 		return isAmountRefunded;
-	}
-	
-	private MerchantInfoXMlData getMarchantInfo(OrderModel chaildModel, final AbstractOrderEntryModel entry)
-	{
-		MerchantInfoXMlData merchantInfoXMlData = new MerchantInfoXMlData();
-		merchantInfoXMlData.setShipmentCharge(entry.getCurrDelCharge().doubleValue());
-		  final List<PaymentTransactionModel> list = chaildModel.getPaymentTransactions();
-			if (null != list && !list.isEmpty())
-			{
-				for (final PaymentTransactionModel oModel : list)
-				{
-
-					if (null != oModel.getStatus() && null != oModel.getPaymentProvider()
-							&& oModel.getStatus().equalsIgnoreCase(MarketplacecommerceservicesConstants.SUCCESS))
-					{
-						LOG.debug("Inside Parent order: Pyment Transaction model");
-						if (MarketplacecommerceservicesConstants.MRUPEE_CODE.equalsIgnoreCase(oModel.getPaymentProvider()))
-						{
-							merchantInfoXMlData.setMerchantCode(getConfigurationService().getConfiguration().getString(
-									MarketplacecommerceservicesConstants.MRUPEE_MERCHANT_CODE));
-						}
-						else
-						{
-							merchantInfoXMlData.setMerchantCode(oModel.getPaymentProvider());
-						}
-						if (null != oModel.getCode())
-						{
-							payemntrefid = oModel.getCode();
-							LOG.debug("Inside Parent order: Pyment Transaction model" + payemntrefid);
-						}
-					}
-
-				}
-				merchantInfoXMlData.setReversePaymentRefId(entry.getScheduleChargesJuspayRequestId());
-				merchantInfoXMlData.setPaymentRefID(payemntrefid);
-			}
-				
-			if (null != entry.getMplDeliveryMode() && xmlToFico)
-			{
-				LOG.debug("inside del mode" + entry.getMplDeliveryMode());
-				final MplZoneDeliveryModeValueModel zoneDelivery = entry.getMplDeliveryMode();
-				if (null != zoneDelivery && null != zoneDelivery.getDeliveryMode() && entry.getCurrDelCharge() != null
-						&& entry.getRefundedDeliveryChargeAmt() != null && null != zoneDelivery.getDeliveryMode().getCode()
-						&& zoneDelivery.getDeliveryMode().getCode().equalsIgnoreCase("express-delivery"))
-				{
-					LOG.debug("inside express del");
-					// TISPRDT-1186 START
-					if (entry.getCurrDelCharge().doubleValue() > 0)
-					{
-						LOG.debug("setting current delivery charge...");
-						//	xmlData.setExpressdeliveryCharge(entry.getCurrDelCharge().doubleValue());
-						merchantInfoXMlData.setShipmentCharge(entry.getCurrDelCharge().doubleValue());
-					}
-					else
-					{
-						
-						merchantInfoXMlData.setShipmentCharge(entry.getRefundedDeliveryChargeAmt().doubleValue());
-					}
-					merchantInfoXMlData.setExpressDelCharge(0.00);
-					//	TISPRDT-1186 END
-					LOG.debug("set express del charge from curr del charge" + entry.getCurrDelCharge().doubleValue());// zoneDelivery.getValue().doubleValue()
-
-					if (null != entry.getScheduledDeliveryCharge() && entry.getScheduledDeliveryCharge().doubleValue() > 0)
-					{
-						LOG.debug("setting schedule delivery charge..." + entry.getScheduledDeliveryCharge());
-						merchantInfoXMlData.setScheduleDelCharge(entry.getScheduledDeliveryCharge().doubleValue());
-					}
-					else if (null != entry.getRefundedScheduleDeliveryChargeAmt()
-							&& entry.getRefundedScheduleDeliveryChargeAmt().doubleValue() > 0)// INC144316465 STARTS
-					{
-						
-						merchantInfoXMlData.setScheduleDelCharge(entry.getRefundedScheduleDeliveryChargeAmt().doubleValue());
-					}
-					else
-					{
-						merchantInfoXMlData.setScheduleDelCharge(0.00);
-					}
-					// INC144316465 end
-				}
-				else if (null != zoneDelivery && null != zoneDelivery.getDeliveryMode() && entry.getCurrDelCharge() != null
-						&& entry.getRefundedDeliveryChargeAmt() != null && null != zoneDelivery.getDeliveryMode().getCode()
-						&& zoneDelivery.getDeliveryMode().getCode().equalsIgnoreCase("home-delivery"))
-				{
-
-					LOG.debug("inside home del");
-					if (entry.getCurrDelCharge().doubleValue() > 0)
-					{
-						LOG.debug("setting current delivery charge...");
-						merchantInfoXMlData.setShipmentCharge(entry.getCurrDelCharge().doubleValue());
-					}
-					else
-					{
-						
-						merchantInfoXMlData.setShipmentCharge(entry.getRefundedDeliveryChargeAmt().doubleValue());
-					}
-					// TISPRDT-1186 START
-					merchantInfoXMlData.setExpressDelCharge(0.00);
-					// TISPRDT-1186 END
-					if (null != entry.getScheduledDeliveryCharge() && entry.getScheduledDeliveryCharge().doubleValue() > 0)
-					{
-						LOG.debug("setting schedule delivery charge..." + entry.getScheduledDeliveryCharge());
-						merchantInfoXMlData.setScheduleDelCharge(entry.getScheduledDeliveryCharge().doubleValue());
-					}
-					// INC144316465 STARTS
-					else if (null != entry.getRefundedScheduleDeliveryChargeAmt()
-							&& entry.getRefundedScheduleDeliveryChargeAmt().doubleValue() > 0)
-					{
-						merchantInfoXMlData.setScheduleDelCharge(entry.getRefundedScheduleDeliveryChargeAmt().doubleValue());
-					}
-					else
-					{
-						merchantInfoXMlData.setScheduleDelCharge(0.00);
-					}
-					// INC144316465 end
-					LOG.debug("set del charge");
-				}
-			}
-		return merchantInfoXMlData;
 	}
 
 	protected DefaultPromotionManager getDefaultPromotionsManager()
