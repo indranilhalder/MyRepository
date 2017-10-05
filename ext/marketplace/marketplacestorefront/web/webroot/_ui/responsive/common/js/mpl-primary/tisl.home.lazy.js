@@ -1,7 +1,13 @@
 /**
  * All home page XHR that are lazy loaded are written here. mplminjs.tag is the file where the scroll event for binding is added UF-439
  */
-
+//CAROUSEL AUTOWIDTH ATTRIBUTE
+var carouselAutoWidthAttr = false;
+if($(window).width()<481){
+	carouselAutoWidthAttr = true;
+} else {
+	carouselAutoWidthAttr = false;
+}
 // AJAX CALL BEST PICKS START
 
 // 1st 
@@ -103,6 +109,7 @@ function getBestPicksAjaxCall() {
                     navText: [],
                     lazyLoad: false,
                     autoplay: autoPlay,
+                    autoWidth: carouselAutoWidthAttr,
                     autoHeight: false,
                     autoplayTimeout: autoplayTimeout,
                     slideBy: slideBy,
@@ -613,6 +620,7 @@ function getProductsYouCareAjaxCall() {
                     navText: [],
                     lazyLoad: false,
                     autoplay: autoPlay,
+                    autoWidth: carouselAutoWidthAttr,
                     autoHeight: false,
                     autoplayTimeout: autoplayTimeout,
                     slideBy: slideBy,
@@ -802,6 +810,7 @@ function getNewAndExclusiveAjaxCall() {
                     navText: [],
                     lazyLoad: false,
                     autoplay: autoPlay,
+                    autoWidth: carouselAutoWidthAttr,
                     autoHeight: false,
                     autoplayTimeout: autoplayTimeout,
                     slideBy: slideBy,

@@ -77332,7 +77332,7 @@ background: url(../images/search_image.png) no-repeat;}
 .homeViewAllBtn a, .homeViewAllBtn a:hover {float: right; font-size: 18px; color: #4990e2; text-decoration: none; display: none;}
 #brandsYouLoveMobileComp {display: none;}
 .footer-text-mobile {display: none;}
-.home-best-pick-carousel .owl-stage-outer {overflow: initial !important;}
+.home-best-pick-carousel .owl-stage-outer, #new_exclusive .owl-stage-outer {width: inherit !important;}
 
 @media(max-width: 768px) {
 	.footer-text-mobile {display: block;}
@@ -77352,7 +77352,8 @@ background: url(../images/search_image.png) no-repeat;}
 	
 	/*Stay Qued && Show Case*/
 	#stayQued {background-color: #f2f2f2;}
-	#stayQued .qued-padding .qued-right {float: right;}
+	#stayQued .qued-padding .qued-left {padding: 0 !important;}
+#stayQued .qued-padding .qued-right {float: right; padding-right: 0px !important;}
 	#stayQued .qued-padding .qued-right h3 {padding-top: 0px;}
 	#stayQued .qued-padding .qued-right a.button.maroon {height: 25px !important; min-height: 25px !important; padding: 5% 0px !important; margin: 0 !important;
 		line-height: unset !important; width: auto !important; font-size: 10px !important; position: static !important; max-width: 100px;}
