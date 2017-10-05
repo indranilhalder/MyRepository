@@ -53262,6 +53262,15 @@ word-wrap: break-word;
  		.template-pages-layout-newBrandLandingPageTemplate #rotatingImageMobile {
  		display: none;
  	}
+ 	.template-pages-layout-apparelCategoryLandingPageV1 .blp-carousel.homepage-banner #rotatingImageTimeoutMobile,
+ 		.template-pages-layout-apparelCategoryLandingPageV1 .blp-carousel.homepage-banner #rotatingImageMobile ,
+ 	.template-pages-layout-newBrandLandingPageTemplate .blp-carousel.homepage-banner #rotatingImageTimeoutMobile,
+ 		.template-pages-layout-newBrandLandingPageTemplate .blp-carousel.homepage-banner #rotatingImageMobile {
+ 		display: block;
+ 	}
+ 	.template-pages-layout-newBrandLandingPageTemplate .blp-carousel.homepage-banner #rotatingImageTimeout, .template-pages-layout-newBrandLandingPageTemplate .blp-carousel.homepage-banner #rotatingImage {
+ 		display: none;
+ 	}
 	.style_edit .style_edit_left>div>div:first-child >span:first-child {
 		font-size: 24px;
 		margin: 40px 0;
