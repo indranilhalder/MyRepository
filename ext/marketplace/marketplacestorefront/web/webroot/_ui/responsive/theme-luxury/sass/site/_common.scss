@@ -386,6 +386,10 @@ header{
 				    h3{
 				    	font-size:14px;
 				    	margin:0px;
+                        height: 17px;                        
+                        overflow: hidden;
+                        text-overflow: ellipsis;
+                        white-space: nowrap;
 				    }
 				}
 				li:last-child{

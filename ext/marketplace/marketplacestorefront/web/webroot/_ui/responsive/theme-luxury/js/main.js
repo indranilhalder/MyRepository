@@ -501,6 +501,7 @@ TATA.CommonFunctions = {
     },
 
     luxuryForceUpdateHeader: function(){
+        
         $.ajax({
             url: ACC.config.encodedContextPath + "/setheader?timestamp="+Date.now(),
             type: 'GET',
@@ -513,14 +514,10 @@ TATA.CommonFunctions = {
         });
     },
     
-    setHeader: function(data){
-		 
-        if(data.cartcount!='NaN')
-    	{        	
-        	if(data.cartcount==0){
-        		$("span.js-mini-cart-count,span.js-mini-cart-count-hover,span.responsive-bag-count").hide();
-        	}
-    	}
+    setHeader: function(data){		
+        if(data.cartcount==0){
+            $("span.js-mini-cart-count,span.js-mini-cart-count-hover, span.responsive-bag-count").hide();
+        }
         else
         {
         	
@@ -2811,14 +2808,3 @@ $(document).ready(function (){
         $(".plp-leftbar-close a").trigger("click");
     });
 });
-
-/*POPULAR SEARCHES COLLAPSE START*/
-    $(document).ready(function () {
-        $(".footer-popular-accordian-title").click(function () {
-            $(".mega-menu").slideToggle('400', function() {
-                $(window).scrollTop($(document).height());
-            });
-            $("#footer-popular-accordian-icon").toggleClass('glyphicon-minus','glyphicon-plus');
-        });
-    });
-/*POPULAR SEARCHES COLLAPSE END*/

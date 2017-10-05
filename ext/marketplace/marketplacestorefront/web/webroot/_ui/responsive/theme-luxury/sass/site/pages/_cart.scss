@@ -830,16 +830,20 @@
     }
     #popUpModal .modal-content .sizes .tables {
         float: right;
-        width: 60%;
+        width: 70%;
     }
     #popUpModal .modal-content .sizes .tables table {
-        width: 90%;
+        width: 100%;
     }    
 }
 @media (max-width:767px) {
     #popUpModal .sizes .img {
         display: none
     }
+    #popUpModal .modal-content .sizes .tables {
+        float: right;
+        width: 95%;
+    }		    
     .cartSection .right-block .orderSummaryBlock .orderTotal,
     .cartSection #checkout-id a {
         position: fixed;

@@ -6,6 +6,16 @@
 	}
     .luxury-mobile-myaccount{
         margin-top: 25px;
+        
+        .menu-select{
+            width: 100%;
+            @include media-breakpoint-down(sm) {
+                option{
+                    font-size: 12px;
+                }
+            }
+            
+        }
     }
 	.wrapper{
 		display:inline-block;
@@ -58,12 +68,12 @@
 			.halfwidth{
 				width:50%;
 				float:left;
-				min-height:63px;
+				/*min-height:63px;*/
 			}
 			.fullwidth{
 				width:100%;
 				display:inline-block;
-				min-height:65px;
+				/*min-height:65px;*/
 			}
 			a.button, button{
 				background: #2d2d2d;
@@ -171,6 +181,11 @@
                 width: 50%;
                 float: left;  
             }
+            .pagination-order-history{
+                ul.pagination{
+                    padding: 0px;
+                }
+            }
             .pagination{
                 float:right;
                 list-style: none;
@@ -243,10 +258,15 @@
                                     display: inline-block;
                                     border-right: 1px solid #e4e8f0;
                                     padding: 5px;
-                                    width: 24%;
+                                    width: 23%;
                                     vertical-align: top;
                                     word-break: break-all;
                                     display: table-cell;
+                                    
+                                    &:first-child{
+                                        width: 30%;
+                                    }
+                                    
                                     @include media-breakpoint-down(sm) {
                                         display: block;
                                     }
@@ -293,6 +313,10 @@
                             top:25%;
                             width: 330px;
                             margin: auto;
+                            
+                            @include media-breakpoint-down(sm) {
+                                top:10%;
+                            }
                             
                             .content{                                
                                 margin: auto;
@@ -1150,6 +1174,27 @@
             }
         }
     }    
+}
+.saved-cards{
+    .mpl-addressPopup.delete-address-Popup.modal.cancellation-request{
+        .addressItem{
+            
+            padding: 0px;
+            
+            .number{
+                .acc-savecard-left{
+                    display: inline-block;
+                    vertical-align: top;
+                    width: 19%;
+                }
+                .acc-savecard-right{
+                    display: inline-block;
+                    width: 78%;
+                    vertical-align: top;
+                }
+            }
+        }
+    }  
 }
 #mplCustomerProfileForm{
 	#errfn,#errln,#errEmail,#errMob{

@@ -17284,7 +17284,7 @@ TATA.CommonFunctions = {
         });
     },
     setHeader: function(data) {
-        "NaN" != data.cartcount ? 0 == data.cartcount && $("span.js-mini-cart-count,span.js-mini-cart-count-hover,span.responsive-bag-count").hide() : $("span.js-mini-cart-count,span.js-mini-cart-count-hover,span.responsive-bag-count").hide();
+        0 == data.cartcount ? $("span.js-mini-cart-count,span.js-mini-cart-count-hover, span.responsive-bag-count").hide() : $("span.js-mini-cart-count,span.js-mini-cart-count-hover,span.responsive-bag-count").hide();
     },
     urlToProductCode: function(productURL) {
         var n = productURL.lastIndexOf("-");
@@ -17552,9 +17552,8 @@ TATA.CommonFunctions = {
                 },
                 success: function(x) {
                     var filtered = $.parseHTML(x);
-                    $(filtered).has(".product-grid") && $(".product-grid", filtered).each(function() {
-                        $(".product-grid-wrapper").append($(this));
-                    }), $("#pageQuery").val(ajaxUrl);
+                    $(filtered).has(".product-grid") && $(".product-grid-wrapper").append($(filtered).find(".product-grid-wrapper")), 
+                    $("#pageQuery").val(ajaxUrl);
                 },
                 complete: function() {
                     $("body").removeClass("loader");
@@ -18612,7 +18611,7 @@ $("#viewPaymentCredit, #viewPaymentCreditMobile ").click(function() {
     });
 }), $("#viewPaymentEMI, #viewPaymentEMIMobile").click(function() {
     $("#staticHost").val();
-    isSessionActive() ? displayEMIForm() : redirectToCheckoutLogin(), void 0 != utag && utag.link({
+    isSessionActive() ? displayEMIForm() : redirectToCheckoutLogin(), utag.link({
         link_text: "pay_emi_selected",
         event_type: "payment_mode_selection"
     });

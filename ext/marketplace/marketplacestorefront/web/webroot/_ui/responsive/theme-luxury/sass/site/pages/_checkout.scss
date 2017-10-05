@@ -389,6 +389,18 @@
                 padding-left: 10px;
             }
     }
+    
+    .deliveryaddress{
+        .checkout-shipping{
+            .addresslist-right{
+                .address{
+                    span{
+                        display: block;
+                    }
+                }
+            }
+        }        
+    }
 }
 .right-block .coupon-code{
     border: 1px solid #ccc;  
