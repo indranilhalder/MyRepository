@@ -55,6 +55,7 @@ import de.hybris.platform.product.ProductService;
 import de.hybris.platform.promotions.model.OrderPromotionModel;
 import de.hybris.platform.promotions.model.ProductPromotionModel;
 import de.hybris.platform.promotions.model.PromotionResultModel;
+import de.hybris.platform.servicelayer.config.ConfigurationService;
 import de.hybris.platform.servicelayer.dto.converter.ConversionException;
 import de.hybris.platform.servicelayer.dto.converter.Converter;
 import de.hybris.platform.servicelayer.model.ModelService;
@@ -211,6 +212,9 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 
 	@Resource(name = "mplJewelleryService")
 	private MplJewelleryService mplJewelleryService;
+
+	@Autowired
+	private ConfigurationService configurationService;
 
 	/**
 	 * Service to create cart
@@ -1138,8 +1142,9 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 
 				if ((MarketplacecommerceservicesConstants.FINEJEWELLERY).equalsIgnoreCase(productData.getRootCategory()))
 				{
-					gwlp.setPriceDisclaimerTextJwlry(MarketplacewebservicesConstants.PRICE_DISCLAIMER_JEWELLERY);
+					//
 				}
+
 
 				final String catId = mplProductWebService.getCategoryCodeOfProduct(productData);
 				if (null != catId && !catId.isEmpty())
@@ -2094,7 +2099,6 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 		//CAR-57
 		List<PinCodeResponseData> pinCodeRes = null;
 
-
 		try
 		{
 			if (cartModel != null)
@@ -2237,6 +2241,13 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 				cartDataDetails.setOfferDetails(cartOfferList);
 			}
 
+			//TPR-6980:Change in the logic of display of price disclaimer in the cart for Fine Jewellery
+			final String displayMsgFinal = mplCommerceCartService.populatePriceDisclaimerCart(cartModel);
+
+			if (StringUtils.isNotEmpty(displayMsgFinal))
+			{
+				cartDataDetails.setPriceDisclaimerTextJwlry(displayMsgFinal);
+			}
 
 		}
 		catch (final Exception e)
@@ -3154,8 +3165,8 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 
 	/*
 	 * (non-Javadoc)
-	 * 
-	 * 
+	 *
+	 *
 	 * @see com.tisl.mpl.service.MplCartWebService#addProductToCartwithExchange(java.lang.String, java.lang.String,
 	 * java.lang.String, java.lang.String, boolean, java.lang.String, java.lang.String)
 	 */
@@ -3397,7 +3408,22 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 	}
 
 
+	/**
+	 * @return the configurationService
+	 */
+	public ConfigurationService getConfigurationService()
+	{
+		return configurationService;
+	}
 
+	/**
+	 * @param configurationService
+	 *           the configurationService to set
+	 */
+	public void setConfigurationService(final ConfigurationService configurationService)
+	{
+		this.configurationService = configurationService;
+	}
 
 
 

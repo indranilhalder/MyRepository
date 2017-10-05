@@ -2736,7 +2736,7 @@ public class CartsController extends BaseCommerceController
 			 * bin = null; if (StringUtils.isNotEmpty(binNo)) { bin = getBinService().checkBin(binNo); } if (null != bin &&
 			 * StringUtils.isNotEmpty(bin.getBankName())) {
 			 * getSessionService().setAttribute(MarketplacewebservicesConstants.BANKFROMBIN, bin.getBankName());
-			 * 
+			 *
 			 * LOG.debug("************ Logged-in cart mobile soft reservation BANKFROMBIN **************" +
 			 * bin.getBankName()); } }
 			 */
@@ -3948,12 +3948,13 @@ public class CartsController extends BaseCommerceController
 			{
 				LOG.debug("Cart Entries have only CNC mode and del address is not empty");
 			}
-			//TPR-6971
-			if (removeExchangefromCNCcart)
-			{
-				exchangeFacade.removeExchangefromCart(cartModel);
-			}
+
 			cartModel.setDeliveryAddress(null);
+		}
+		//TPR-6971
+		if (cncDelModeCount > 0 && otherDelModeCount == 0 && removeExchangefromCNCcart)
+		{
+			exchangeFacade.removeExchangefromCart(cartModel);
 		}
 		modelService.save(cartModel);
 	}
