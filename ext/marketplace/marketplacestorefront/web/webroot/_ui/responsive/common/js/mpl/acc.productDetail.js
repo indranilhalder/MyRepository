@@ -1357,7 +1357,7 @@ function pincodeServiceability(){
 
 												deliverModeTealium.push("clickandcollect");
 												//TPR-6654
-												var requiredUrl = ACC.config.encodedContextPath + "/p-allStores/"+pin+"/"+ussid;;
+												var requiredUrl = ACC.config.encodedContextPath + "/p-allStores/"+pin+"/"+ussid+"/"+productCode;
 												$.ajax({
 													url : requiredUrl,
 													type : "GET",
@@ -3766,7 +3766,11 @@ function onSizeSelectPopulateDOM()//First Method to be called in size select aja
 					$('#sizeSelectAjaxData').remove();
 					if(typeof(jsonData['error'])=='undefined')
 					{
-						
+						//TISPRDT-6168 starts
+						$('#pin').attr("disabled",false); 
+						$('#pdpPincodeCheckDList').hide(); 
+						$('#pdpPincodeCheck').show();
+						//TISPRDT-6168 ends
 						//UF-33 starts//   //TISSTRT-1587//
 						//Update Page Title
 						document.title = jsonData['mapConfigurableAttribute']['metaTitle'];
