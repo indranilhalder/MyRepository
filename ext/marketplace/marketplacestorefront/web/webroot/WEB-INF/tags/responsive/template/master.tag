@@ -475,7 +475,12 @@
         or fn:contains(pageBodyCssClasses, 'productDetails') 
         or fn:contains(pageBodyCssClasses, 'productGridPage') 
         or fn:contains(pageBodyCssClasses, 'searchGridPage')
-        or fn:contains(pageBodyCssClasses, 'apparelCategoryLandingPage'))}">
+        or fn:contains(pageBodyCssClasses, 'apparelCategoryLandingPage')
+        or fn:contains(pageBodyCssClasses, 'BrandPageTemplate')
+        or fn:contains(pageBodyCssClasses, 'apparelCategoryLandingPageV1')
+	    or fn:contains(pageBodyCssClasses, 'FootwearBrandLandingPageTemplate')
+	    or fn:contains(pageBodyCssClasses, 'FootwearCategoryLandingPageTemplate')
+        )}">
         
         <script>
         $(document).ready(function(){

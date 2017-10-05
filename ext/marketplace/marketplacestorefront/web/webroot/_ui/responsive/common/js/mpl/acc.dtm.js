@@ -146,16 +146,6 @@ $(document).ready(function(){
 			                }
 			  		    }
 			  	    }
-					              /*digitalData.cpj = {
-					                 product : {
-						                    id : product_id,
-						                    category : product_category,
-						                    discount : product_discount
-					                 },
-					                brand : {
-						                 name : product_brand
-					                }
-				               }*/
 			
 			       if(prevPageUrl != "" && prevPageUrl != 'undefined'){
 				           if(prevPageUrl.indexOf('/c-msh') > -1){
@@ -1785,6 +1775,15 @@ $(document).on('mouseup','#loginDivCheckout',function(){
 })
 
 //TISPRDT-6012 ends
+//UF-472|Responsive search icon starts
+$(document).on('mouseup','.simpleSearchToggle',function(){
+	if(typeof (_satellite)!= "undefined") {  
+		_satellite.track('searchToggle');
+	}
+}) 
+
+//UF-472|Responsive search icon starts
+
 /*product impressions start*/
 function dtmProductImpressionsSerp(){
 	var count = 10; 

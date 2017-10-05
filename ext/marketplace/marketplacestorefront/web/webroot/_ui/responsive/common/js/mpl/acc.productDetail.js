@@ -1284,6 +1284,8 @@ function pincodeServiceability(){
 											if (pincodedata['cod'] == 'Y') {
 												$("#codId").show();
 											}
+											//SDI-1023
+											$("#winning_product_stock").val(pincodedata['stockCount']); 
 											for ( var j in deliveryModes) {
 												var mode = deliveryModes[j];
 												deliveryModeName = mode['type'];
@@ -1488,7 +1490,8 @@ function pincodeServiceability(){
 			 				dtmErrorTracking("Pin Code Servicability Error",error);
 						}
 					});
-
+			 //SDI-1023
+			   setTimeout(function(){ $("#addToCartForm #stock").val($("#winning_product_stock").val()); }, 1000); 
 			//TPR-900
 			$('#pin').blur();
 			
