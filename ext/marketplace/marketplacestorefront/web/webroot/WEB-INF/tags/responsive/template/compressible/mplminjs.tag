@@ -34,7 +34,7 @@
 	        or fn:contains(pageBodyCssClasses, 'apparelCategoryLandingPageV1')
 	        or fn:contains(pageBodyCssClasses, 'FootwearBrandLandingPageTemplate')
 	        or fn:contains(pageBodyCssClasses, 'FootwearCategoryLandingPageTemplate')
-	        or or fn:contains(pageBodyCssClasses, 'electronicsCategoryLandingPage')}">
+	        or fn:contains(pageBodyCssClasses, 'electronicsCategoryLandingPage')}">
 			<template:onLoadJS/>
 		</c:when>
 		<c:otherwise>
