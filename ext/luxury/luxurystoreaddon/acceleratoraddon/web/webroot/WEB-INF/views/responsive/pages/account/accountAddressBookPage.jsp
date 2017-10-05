@@ -187,7 +187,7 @@
 																		<ycommerce:testId code="addressBook_isDefault_button">
 																			<a href="set-default-address/${address.id}"
 																				class="make-default"> <spring:theme
-																					code="text.makeDefaultAddress" text="Make default address" />
+																					code="text.makeDefaultAddress" text="MAKE DEFAULT ADDRESS" />
 																			</a>
 																		</ycommerce:testId>
 																	</c:if>

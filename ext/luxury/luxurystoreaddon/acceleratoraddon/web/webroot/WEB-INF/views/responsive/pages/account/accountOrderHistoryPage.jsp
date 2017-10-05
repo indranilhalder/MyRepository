@@ -163,7 +163,7 @@
 										<li class="header">
 											<ul>
 												<li class="date"><span><spring:theme
-															code="text.orderHistory.order.placed" /></span> <%-- <fmt:formatDate
+															code="luxury.text.orderHistory.order.placed" /></span> <%-- <fmt:formatDate
 														value="${orderHistoryDetail.created}"
 														pattern="MMMMM dd, yyyy" /> ${formatedDate} --%> <c:if
 														test="${orderDataMap[orderHistoryDetail.code] ne null}">
@@ -283,12 +283,12 @@
 																		displayFreeForZero="true" />
 																</ycommerce:testId>
 															</p>
-															<p>
+															<%-- <span>
 																<spring:theme text="Schedule Delivery and Shipping Charges:" />
 																&nbsp;
 															<c:choose>
 																<c:when test="${entry.currDelCharge.value=='0.0'}">
-																	<%-- <spring:theme code="order.free"  /> --%>
+																	<spring:theme code="order.free"  />
 																	
 															      <c:choose>
 																	<c:when test="${not empty entry.scheduledDeliveryCharge}">
@@ -307,7 +307,7 @@
 																	<format:price priceData="${entry.currDelCharge}" />
 																</c:otherwise>
 															</c:choose>
-															</p>
+															</span> --%>
 														</div>
 														<c:if
 															test="${not empty entry.imeiDetails.serialNum &&  fn:length(entry.imeiDetails.serialNum) > 0}">
@@ -341,10 +341,14 @@
 															</c:choose>
 														</c:forEach> --%>
 
-														<p>
+														<%-- <p>
 															<spring:theme
 																code="text.orderHistory.seller.order.number" />&nbsp;
 															${subOrder.code}
+														</p> --%>
+														<p>
+															<spring:theme
+																code="text.orderHistory.shpping" />
 														</p>
 														<p>
 															<c:forEach items="${entry.product.baseOptions}"
