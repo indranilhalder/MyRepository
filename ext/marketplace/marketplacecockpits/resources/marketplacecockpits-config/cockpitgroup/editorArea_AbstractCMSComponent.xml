@@ -24,6 +24,7 @@
 		<property qualifier="AbstractCMSComponent.slots"/>
 		<property qualifier="AbstractCMSComponent.actions"/>
 		<property qualifier="AbstractCMSComponent.container"/>
+		<property qualifier="AbstractCMSComponent.appPosition" />
 		<property qualifier="Item.pk" />
 		<property qualifier="Item.creationTime" />
 		<property qualifier="Item.modifiedtime" />

@@ -18,7 +18,7 @@
 				<div class="row signup-email-wrapper">
 					<div class="col-sm-6 send-awesome-email">
 						<p class="email-tit">Sign up to our newsletters</p>
-						<p>Be the first to know about new products, exclusive collections,latest trends,stories and more.</p>
+						<p>Be the first to know about new products, exclusive collections, latest trends, stories and more.</p>
 					</div>
 					<div class="col-sm-6 signup-email nopadding">
 						<div class="col-sm-6 nopadding">

@@ -17212,7 +17212,30 @@ TATA.CommonFunctions = {
             infinite: !1,
             arrows: !1,
             swipe: !1,
-            dots: !0
+            dots: !1
+        });
+    },
+    TrendingCatagorySlider: function() {
+        $(".trending-products-catagory").slick({
+            slidesToScroll: 5,
+            slidesToShow: 5,
+            variableWidth: !1,
+            infinite: !1,
+            arrows: !0,
+            swipe: !1,
+            dots: !1,
+            infinite: !0,
+            responsive: [ {
+                breakpoint: 768,
+                settings: {
+                    slidesToScroll: 1,
+                    slidesToShow: 1,
+                    infinite: !0,
+                    swipe: !0,
+                    arrows: !1,
+                    variableWidth: !0
+                }
+            } ]
         });
     },
     fillHeartForItemsInWishlist: function() {
@@ -17255,9 +17278,13 @@ TATA.CommonFunctions = {
             type: "GET",
             cache: !1,
             success: function(data) {
-                window.sessionStorage.setItem("header", JSON.stringify(data)), luxuryHeaderLoggedinStatus = data.loggedInStatus;
+                window.sessionStorage.setItem("header", JSON.stringify(data)), luxuryHeaderLoggedinStatus = data.loggedInStatus, 
+                setHeader(data);
             }
         });
+    },
+    setHeader: function(data) {
+        "NaN" != data.cartcount ? 0 == data.cartcount && $("span.js-mini-cart-count,span.js-mini-cart-count-hover,span.responsive-bag-count").hide() : $("span.js-mini-cart-count,span.js-mini-cart-count-hover,span.responsive-bag-count").hide();
     },
     urlToProductCode: function(productURL) {
         var n = productURL.lastIndexOf("-");
@@ -17338,7 +17365,7 @@ TATA.CommonFunctions = {
         var winWidth = $(window).width();
         $(window).scrollTop() > 1 ? $("body").addClass("sticky-nav") : $("body").removeClass("sticky-nav");
         var $window = $(window), leftbarElelTop = $(".plp-banner").outerHeight() + $("header").outerHeight();
-        winWidth >= 768 && $(".leftbar").length && ($(window).scrollTop() >= $(".product-grid:last-child").offset().top - 100 ? $(".leftbar").removeClass("sticky-leftbar") : $(".leftbar").toggleClass("sticky-leftbar", $window.scrollTop() > leftbarElelTop));
+        winWidth >= 768 && $(".leftbar").length && ($(window).scrollTop() >= $(".product-grid:last-child").offset().top - 150 ? $(".leftbar").removeClass("sticky-leftbar") : $(".leftbar").toggleClass("sticky-leftbar", $window.scrollTop() > leftbarElelTop));
     },
     Header: {
         MobileMenu: function() {
@@ -17463,8 +17490,9 @@ TATA.CommonFunctions = {
         var _self = TATA.CommonFunctions;
         _self.Header.init(), _self.Footer(), _self.Toggle(), _self.DocumentClick(), _self.WindowScroll(), 
         _self.MainBanner(), _self.LookBookSlider(), _self.BrandSlider(), _self.Accordion(), 
-        _self.ShopByCatagorySlider(), _self.wishlistInit(), _self.deleteWishlist(), _self.leftBarAccordian(), 
-        _self.deliveryaddressform(), _self.swipeLookBook(), _self.removeProdouct(), _self.displayRemoveCoupon();
+        _self.ShopByCatagorySlider(), _self.TrendingCatagorySlider(), _self.wishlistInit(), 
+        _self.deleteWishlist(), _self.leftBarAccordian(), _self.deliveryaddressform(), _self.swipeLookBook(), 
+        _self.removeProdouct(), _self.displayRemoveCoupon();
     }
 }, TATA.Pages = {
     PLP: {
@@ -17524,8 +17552,9 @@ TATA.CommonFunctions = {
                 },
                 success: function(x) {
                     var filtered = $.parseHTML(x);
-                    $(filtered).has(".product-grid") && $(".product-grid-wrapper").append($(filtered).find(".product-grid-wrapper")), 
-                    $("#pageQuery").val(ajaxUrl);
+                    $(filtered).has(".product-grid") && $(".product-grid", filtered).each(function() {
+                        $(".product-grid-wrapper").append($(this));
+                    }), $("#pageQuery").val(ajaxUrl);
                 },
                 complete: function() {
                     $("body").removeClass("loader");
@@ -17545,8 +17574,8 @@ TATA.CommonFunctions = {
                 var resetUrl = $(this).data("resetqueryurl") + TATA.Pages.PLP.addSortParameter();
                 TATA.Pages.PLP.performAjax(resetUrl);
             }), $(document).on("click", ".remove-filter", function() {
-                var relevantCheckbox = $(this).attr("data-facetCode");
-                $("#" + relevantCheckbox).click();
+                var removeFacetUrl = $(this).attr("data-removeUrl");
+                TATA.Pages.PLP.performAjax(removeFacetUrl, "");
             }), $(document).on("change", ".facet-form input:checkbox", function() {
                 var requestUrl = $(this).closest("form").attr("action") + "?" + $(this).closest("form").serialize();
                 TATA.Pages.PLP.performAjax(requestUrl, $(this).closest(".facet").children(".facetHead").attr("id"));
@@ -17724,9 +17753,12 @@ TATA.CommonFunctions = {
                 data: dataString,
                 dataType: "json",
                 success: function(data) {
-                    $(".add-to-wl-pdp").addClass("added"), $(".wishAddSucess").addClass("active"), setTimeout(function() {
-                        $(".wishAddSucess").removeClass("active");
-                    }, 3e3);
+                    $(".add-to-wl-pdp").addClass("added"), 1 == data ? ($(".wishAddSucessPlp").addClass("active"), 
+                    setTimeout(function() {
+                        $(".wishAddSucessPlp").removeClass("active");
+                    }, 3e3)) : ($(".wishAlreadyAddedPlp").addClass("active"), setTimeout(function() {
+                        $(".wishAlreadyAddedPlp").removeClass("active");
+                    }, 3e3));
                 }
             });
         },
@@ -17740,10 +17772,12 @@ TATA.CommonFunctions = {
                 cache: !1,
                 contentType: "application/json; charset=utf-8",
                 success: function(data) {
-                    $(".add-to-wl-pdp").removeClass("added"), $(".wishRemoveSucess").addClass("active"), 
+                    $(".add-to-wl-pdp").removeClass("added"), 1 == data ? ($(".wishRemoveSucessPlp").addClass("active"), 
                     setTimeout(function() {
-                        $(".wishRemoveSucess").removeClass("active");
-                    }, 3e3);
+                        $(".wishRemoveSucessPlp").removeClass("active");
+                    }, 3e3)) : ($(".wishAlreadyAddedPlp").addClass("active"), setTimeout(function() {
+                        $(".wishAlreadyAddedPlp").removeClass("active");
+                    }, 3e3));
                 }
             });
         },
@@ -17962,13 +17996,18 @@ $(document).ready(function() {
         $(window).scrollTop(0);
     }), $("body.page-cartPage .cart.wrapper .checkout-types div#checkout-id").on("mouseover", function() {
         $(this).find("a#checkout-enabled.checkout-disabled").length > 0 ? $(this).css("cursor", "not-allowed") : $(this).css("cursor", "default");
-    });
-    isDuringCheckout = !1, TATA.CommonFunctions.init(), TATA.Pages.init(), $("#gender, .select-bar select, #stateListBox, .responsiveSort").selectBoxIt(), 
+    }), luxuryHeaderLoggedinStatus = !1, isDuringCheckout = !1, TATA.CommonFunctions.init(), 
+    TATA.Pages.init(), $("#gender, .select-bar select, #stateListBox, .responsiveSort").selectBoxIt(), 
     $(".header-login-target-link").on("click", function() {
         var targetID = $(this).data("target-id");
         $("#header-account").removeClass("active-sign-in active-sign-up active-forget-password").addClass("active-" + targetID);
     }), "true" === TATA.CommonFunctions.getUrlParameterByName("showPopup") && ($(".luxury-login").trigger("click"), 
-    window.location.href.indexOf("/cart") > 0 ? (isDuringCheckout = !0, window.history.pushState({}, null, "/cart")) : window.history.pushState({}, null, "/"));
+    window.location.href.indexOf("/cart") > 0 ? (isDuringCheckout = !0, window.history.pushState({}, null, "/cart")) : window.history.pushState({}, null, "/")), 
+    $(".footer-popular-accordian-title").click(function() {
+        $(".footer-popular-search .mega-menu").slideToggle("400", function() {
+            $(window).scrollTop($(document).height());
+        }), $("#footer-popular-accordian-icon").toggleClass("glyphicon-minus", "glyphicon-plus");
+    });
 }), $(window).scroll(function() {
     TATA.CommonFunctions.WindowScroll();
 }), $(document).ready(function() {
@@ -18037,12 +18076,12 @@ $(document).ready(function() {
                 $(".cancellation-request-block #resultDesc").text("You've managed to cancel your order sucessfully. More power to you."), 
                 $(".reason").css("display", "block"), $(".reason #reasonTitle").text("Reason for Cancellation:"), 
                 $(".reason #reasonDesc").text(reasonDesc), $("body .spinner,body #no-click").remove(), 
-                "undefined" != typeof utag && utag.link({
+                $("body").addClass("modal-open"), "undefined" != typeof utag && utag.link({
                     event_type: "cancel_confirmation_clicked",
                     cancel_order_reason: reasonCancel
                 })) : ($(".cancellation-request-block #resultTitle").text("Failure!"), $(".cancellation-request-block #resultDesc").text(bogoreason), 
                 $(".reason").css("display", "none"), $("body .spinner,body #no-click").remove(), 
-                "undefined" != typeof utag && utag.link({
+                $("body").addClass("modal-open"), "undefined" != typeof utag && utag.link({
                     error_type: "cancel_confirmation_error"
                 })), $("#cancelOrder" + orderCode).hide(), $("#cancelSuccess" + orderCode + ussid).show();
             },
@@ -18560,20 +18599,20 @@ $("#viewPaymentCredit, #viewPaymentCreditMobile ").click(function() {
     });
 }), $("#viewPaymentNetbanking, #viewPaymentNetbankingMobile").click(function() {
     $("#staticHost").val();
-    isSessionActive() ? displayNetbankingForm() : redirectToCheckoutLogin(), "undefined" != typeof utag && utag.link({
+    isSessionActive() ? displayNetbankingForm() : redirectToCheckoutLogin(), utag.link({
         link_text: "pay_net_banking_selected",
         event_type: "payment_mode_selection"
     });
 }), $("#viewPaymentCOD, #viewPaymentCODMobile").click(function() {
     $("#paymentButtonId_up").is(":visible") ? $(".totals.outstanding-totalss").css("bottom", "40px") : $(".totals.outstanding-totalss").css("bottom", "0px");
     $("#staticHost").val();
-    1 == isSessionActive() ? displayCODForm() : redirectToCheckoutLogin(), "undefined" != typeof utag &&utag.link({
+    1 == isSessionActive() ? displayCODForm() : redirectToCheckoutLogin(), "undefined" != typeof utag && utag.link({
         link_text: "pay_cod_selected",
         event_type: "payment_mode_selection"
     });
 }), $("#viewPaymentEMI, #viewPaymentEMIMobile").click(function() {
     $("#staticHost").val();
-    isSessionActive() ? displayEMIForm() : redirectToCheckoutLogin(),"undefined" != typeof utag && utag.link({
+    isSessionActive() ? displayEMIForm() : redirectToCheckoutLogin(), void 0 != utag && utag.link({
         link_text: "pay_emi_selected",
         event_type: "payment_mode_selection"
     });

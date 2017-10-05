@@ -125,7 +125,17 @@ $(document).ready(function(){
 	<span id="noinventory" style="display: none"><p class="noinventory">
 			<font color="#ff1c47">You are about to exceede maximum inventory</font>
 		</p></span> --%>
-	
+	<span id="addToCartButtonId">
+		<span id="addToCartFormTitleSuccess"></span>
+		<button id="addToCartButton" type="button" class="btn-block js-add-to-cart btn btn-default btn-lg btn-block">
+			<spring:theme code="basket.add.to.basket" />
+		</button>
+		<button
+				id="addToCartButton-wrong" type="button"
+				class="btn-block">
+			<spring:theme code="basket.add.to.basket" />
+		</button>
+	</span>
     <span id="addToCartFormnoInventory" style="display: none" class="no_inventory"><p class="inventory">
 			<font color="#ff1c47"><spring:theme code="Product.outofinventory" /></font>
 		</p></span>
@@ -143,17 +153,6 @@ $(document).ready(function(){
 		<div id="OutOfStockAddToWishList" class="btn-block btn btn-default btn-lg btn-block">
 			<spring:theme code="text.add.to.wishlist"/></div>
 	</span>
-	<span id="selectSizeId" style="display: none;color:#ff1c47"><spring:theme code="variant.pleaseselectsize"/></span>
-	<span id="addToCartButtonId">
-		<span id="addToCartFormTitleSuccess"></span>
-		<button id="addToCartButton" type="button" class="btn-block js-add-to-cart btn btn-default btn-lg btn-block">
-			<spring:theme code="basket.add.to.basket" />
-		</button>
-		<button
-				id="addToCartButton-wrong" type="button"
-				class="btn-block">
-			<spring:theme code="basket.add.to.basket" />
-		</button>
-	</span>
+	<span id="selectSizeId" style="display: none;color:#ff1c47"><spring:theme code="variant.pleaseselectsize"/></span>	
 </form:form>
 
