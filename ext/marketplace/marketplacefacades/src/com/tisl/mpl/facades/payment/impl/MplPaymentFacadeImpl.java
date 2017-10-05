@@ -220,8 +220,8 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 				{
 					//retrieving the data
 					if ((flag && mode.getMode().equalsIgnoreCase(MarketplaceFacadesConstants.PAYMENT_METHOS_COD))
-							|| (cartData.isIsEGVCart() && mode.getMode().equalsIgnoreCase(EMI))
-							|| (cartData.isIsEGVCart() && mode.getMode().equalsIgnoreCase(M_RUPEE)))
+							|| (null != cartData && cartData.isIsEGVCart() && mode.getMode().equalsIgnoreCase(EMI))
+							|| (null != cartData && cartData.isIsEGVCart() && mode.getMode().equalsIgnoreCase(M_RUPEE)))
 					{
 						LOG.debug("Ignoring to add COD payment for CNC Product ");
 					}
