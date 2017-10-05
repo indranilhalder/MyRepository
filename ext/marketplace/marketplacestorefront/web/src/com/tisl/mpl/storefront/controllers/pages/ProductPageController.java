@@ -3775,7 +3775,7 @@ public class ProductPageController extends MidPageController
 			final String pincode = (String) sessionService.getAttribute(MarketplacecommerceservicesConstants.SESSION_PINCODE);
 			if (StringUtils.isNotEmpty(pincode))
 			{
-				model.addAttribute(ControllerConstants.Views.Fragments.Product.STORE_AVAIL, mplProductFacade.storeLocatorPDP(pincode));
+				//model.addAttribute(ControllerConstants.Views.Fragments.Product.STORE_AVAIL, mplProductFacade.storeLocatorPDP(pincode));
 				mplAjaxProductData.setPincode(pincode);
 			}
 		}
