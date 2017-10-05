@@ -3242,8 +3242,8 @@ ul.jqtree-tree .jqtree-moving>.jqtree-element .jqtree-title {
     background-image: url(${siteRootUrl}/theme-blue/images/Sprite-combined.png);
     background-repeat: no-repeat;
     background-position: -46px 0;
-    zoom: .7;
-    -moz-transform: scale(0.7);
+    /* zoom: .7;
+    -moz-transform: scale(0.7); */
     -moz-transform-origin: 0 0;
     right: 42px;
     top: 17px;
@@ -3273,8 +3273,8 @@ ul.jqtree-tree .jqtree-moving>.jqtree-element .jqtree-title {
     background-image: url(${siteRootUrl}/theme-blue/images/Sprite-combined.png);
     background-repeat: no-repeat;
     background-position: -2px 0;
-    zoom: 0.7;
-    -moz-transform: scale(0.7);
+    /* zoom: 0.7;
+    -moz-transform: scale(0.7); */
     -moz-transform-origin: 0 0;
     right: 15px;
     top: 17px;
@@ -3383,6 +3383,21 @@ ul.jqtree-tree .jqtree-moving>.jqtree-element .jqtree-title {
     float: right;
 }
 }
+/* TISPRDT-6113 Start */
+@media(max-width:408px){
+	.list_title_sort select{
+	float: left !important;
+    left: -15px;
+    margin-top: -7px;
+	}
+}
+@media (max-width: 424px) and (min-width: 408px){
+	.list_title_sort select{
+		left: -76px;
+		margin-top: 14px;
+	}
+}
+/* TISPRDT-6113 End */
 /* TISPRDT-6114 Start */
 @media (max-width: 790px){
 .listing-leftmenu>div.facet_desktop, .facet-name.js-facet-name.facet_desktop {
