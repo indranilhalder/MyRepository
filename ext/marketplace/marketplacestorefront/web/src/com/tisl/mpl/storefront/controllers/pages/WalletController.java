@@ -5,7 +5,6 @@ package com.tisl.mpl.storefront.controllers.pages;
 
 import de.hybris.platform.acceleratorstorefrontcommons.annotations.RequireHardLogIn;
 import de.hybris.platform.acceleratorstorefrontcommons.breadcrumb.ResourceBreadcrumbBuilder;
-import de.hybris.platform.acceleratorstorefrontcommons.constants.WebConstants;
 import de.hybris.platform.acceleratorstorefrontcommons.controllers.pages.AbstractPageController;
 import de.hybris.platform.acceleratorstorefrontcommons.controllers.util.GlobalMessages;
 import de.hybris.platform.cms2.exceptions.CMSItemNotFoundException;
@@ -32,7 +31,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import com.tisl.mpl.constants.MarketplacecheckoutaddonConstants;
 import com.tisl.mpl.core.model.CustomerWalletDetailModel;
 import com.tisl.mpl.exception.QCServiceCallException;
 import com.tisl.mpl.facade.checkout.MplCheckoutFacade;
@@ -101,8 +99,6 @@ public class WalletController extends AbstractPageController
 	{
 		storeCmsPageInModel(model, getContentPageForLabelOrId("TULWalletPage"));
 		setUpMetaDataForContentPage(model, getContentPageForLabelOrId("TULWalletPage"));
-		model.addAttribute(WebConstants.BREADCRUMBS_KEY,
-				resourceBreadcrumbBuilder.getBreadcrumbs(MarketplacecheckoutaddonConstants.PAYMENTBREADCRUMB));
 		model.addAttribute(ModelAttributetConstants.METAROBOTS, ModelAttributetConstants.NOINDEX_NOFOLLOW);
 		model.addAttribute("addToCardWalletForm", new AddToCardWalletForm());
 		return getViewForPage(model);
