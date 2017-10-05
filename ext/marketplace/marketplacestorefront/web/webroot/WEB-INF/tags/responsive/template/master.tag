@@ -16,7 +16,7 @@
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <%-- <%@ taglib prefix="regex" uri="/WEB-INF/common/tld/regex.tld" %> --%>
 <%@ taglib uri="http://htmlcompressor.googlecode.com/taglib/compressor" prefix="compress" %>
-<compress:html removeIntertagSpaces="true">
+<compress:html removeIntertagSpaces="true" enabled="${minificationHTML}">
 <!DOCTYPE html>
 <html lang="${currentLanguage.isocode}">
 <head>
