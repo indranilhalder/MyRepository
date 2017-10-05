@@ -3383,6 +3383,21 @@ ul.jqtree-tree .jqtree-moving>.jqtree-element .jqtree-title {
     float: right;
 }
 }
+/* TISPRDT-6113 Start */
+@media(max-width:408px){
+	.list_title_sort select{
+	float: left !important;
+    left: -15px;
+    margin-top: -7px;
+	}
+}
+@media (max-width: 424px) and (min-width: 408px){
+	.list_title_sort select{
+		left: -76px;
+		margin-top: 14px;
+	}
+}
+/* TISPRDT-6113 End */
 /* TISPRDT-6114 Start */
 @media (max-width: 790px){
 .listing-leftmenu>div.facet_desktop, .facet-name.js-facet-name.facet_desktop {
