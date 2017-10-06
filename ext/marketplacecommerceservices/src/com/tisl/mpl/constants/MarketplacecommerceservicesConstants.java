@@ -2175,8 +2175,7 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String MOBILE_NO_NOT_PRESENT = "Mobile number is not present in Commerce System".intern();
 	public static final String TRANSACTION_ID_NOT_PRESENT = "TransactionId is not present in Commerce System".intern();
 	public static final String ORDER_ID_NOT_PRESENT = "Order Reference Number is not present in Commerce System".intern();
-	//SDI-1193
-	public static final String MOBILE_QUERY = "SELECT UNIQUE {a:pk} FROM {order as a},{address as b} WHERE {a:user}={b:owner} AND {b.cellphone}=?mobileNo AND {a.type}=?type AND ({a.creationtime} > sysdate -?transactionLimit) order by {a.creationtime} desc fetch first ?queryCount rows only"
+	public static final String MOBILE_QUERY = "SELECT UNIQUE {a:pk} FROM {order as a},{address as b} WHERE {a:user}={b:owner} AND {b.cellphone}=?mobileNo AND {a.type}=?type AND ({a.creationtime} > sysdate -180) order by {a.creationtime} desc fetch first ?queryCount rows only"
 			.intern();
 	//SDI-1193
 	public static final String TRANSACTION_LIMIT_BY_DATE = "transaction.limit";
@@ -2274,4 +2273,6 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 
 	public final static String PINCODE_RESPONSE_DATA_PDP = "PincodeResponseDataForPDP";
 	public static final String KM = "km";
+	public static final String ENABLED_SPILT_PAYMENT_FORMOBILE = "egv.mobile.payment.splitModelEnabled";
+
 }
