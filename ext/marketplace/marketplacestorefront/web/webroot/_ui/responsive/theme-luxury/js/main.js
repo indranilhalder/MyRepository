@@ -509,7 +509,7 @@ TATA.CommonFunctions = {
             success: function(data) {
                 window.sessionStorage.setItem("header" , JSON.stringify(data));
                 luxuryHeaderLoggedinStatus = data.loggedInStatus;
-                setHeader(data);
+                TATA.CommonFunctions.setHeader(data);
             }
         });
     },
@@ -521,7 +521,7 @@ TATA.CommonFunctions = {
         else
         {
         	
-        	$("span.js-mini-cart-count,span.js-mini-cart-count-hover,span.responsive-bag-count").hide();
+        	$("span.js-mini-cart-count,span.js-mini-cart-count-hover,span.responsive-bag-count").show();
         }
      
 	},
@@ -2783,6 +2783,28 @@ $(document).ready(function () {
             window.history.pushState({}, null, '/');
         }
     }
+    
+    /* CHECKOUT PAGE*/
+    
+    if($(".progress-barcheck").hasClass("choosePage")){
+		$(".step-1").addClass("active");
+		$(".progress-barg span.step").addClass("step1");
+		$(".step-2,.step-3").addClass("in-active");		
+		
+	}
+	else if ($(".progress-barcheck").hasClass("selectPage")){
+		$(".step-2").addClass("active");
+		$(".step-1").addClass("step-done");
+		$(".progress-barg span.step").addClass("step2");
+		$(".step-3").addClass("in-active");		
+	}
+	else if  ($(".progress-barcheck").hasClass("paymentPage")){
+		$(".step-3").addClass("active");
+		$(".step-1,.step-2").addClass("step-done");
+		$(".progress-barg span.step").addClass("step3");
+	}
+    
+    
     /*POPULAR SEARCHES COLLAPSE START*/
     
     $(".footer-popular-accordian-title").click(function () {      

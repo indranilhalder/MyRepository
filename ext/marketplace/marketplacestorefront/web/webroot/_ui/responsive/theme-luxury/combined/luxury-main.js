@@ -17279,12 +17279,12 @@ TATA.CommonFunctions = {
             cache: !1,
             success: function(data) {
                 window.sessionStorage.setItem("header", JSON.stringify(data)), luxuryHeaderLoggedinStatus = data.loggedInStatus, 
-                setHeader(data);
+                TATA.CommonFunctions.setHeader(data);
             }
         });
     },
     setHeader: function(data) {
-        0 == data.cartcount ? $("span.js-mini-cart-count,span.js-mini-cart-count-hover, span.responsive-bag-count").hide() : $("span.js-mini-cart-count,span.js-mini-cart-count-hover,span.responsive-bag-count").hide();
+        0 == data.cartcount ? $("span.js-mini-cart-count,span.js-mini-cart-count-hover, span.responsive-bag-count").hide() : $("span.js-mini-cart-count,span.js-mini-cart-count-hover,span.responsive-bag-count").show();
     },
     urlToProductCode: function(productURL) {
         var n = productURL.lastIndexOf("-");
@@ -18002,6 +18002,11 @@ $(document).ready(function() {
         $("#header-account").removeClass("active-sign-in active-sign-up active-forget-password").addClass("active-" + targetID);
     }), "true" === TATA.CommonFunctions.getUrlParameterByName("showPopup") && ($(".luxury-login").trigger("click"), 
     window.location.href.indexOf("/cart") > 0 ? (isDuringCheckout = !0, window.history.pushState({}, null, "/cart")) : window.history.pushState({}, null, "/")), 
+    $(".progress-barcheck").hasClass("choosePage") ? ($(".step-1").addClass("active"), 
+    $(".progress-barg span.step").addClass("step1"), $(".step-2,.step-3").addClass("in-active")) : $(".progress-barcheck").hasClass("selectPage") ? ($(".step-2").addClass("active"), 
+    $(".step-1").addClass("step-done"), $(".progress-barg span.step").addClass("step2"), 
+    $(".step-3").addClass("in-active")) : $(".progress-barcheck").hasClass("paymentPage") && ($(".step-3").addClass("active"), 
+    $(".step-1,.step-2").addClass("step-done"), $(".progress-barg span.step").addClass("step3")), 
     $(".footer-popular-accordian-title").click(function() {
         $(".footer-popular-search .mega-menu").slideToggle("400", function() {
             $(window).scrollTop($(document).height());
@@ -18070,12 +18075,10 @@ $(document).ready(function() {
             cache: !1,
             success: function(response) {
                 splitData = response.split("|");
-                var result = splitData[0], bogoreason = splitData[1], reasonDesc = splitData[2];
-                "success" == result ? ($(".cancellation-request-block #resultTitle").text("Say goodbye!"), 
-                $(".cancellation-request-block #resultDesc").text("You've managed to cancel your order sucessfully. More power to you."), 
-                $(".reason").css("display", "block"), $(".reason #reasonTitle").text("Reason for Cancellation:"), 
-                $(".reason #reasonDesc").text(reasonDesc), $("body .spinner,body #no-click").remove(), 
-                $("body").addClass("modal-open"), "undefined" != typeof utag && utag.link({
+                var result = splitData[0], bogoreason = splitData[1];
+                splitData[2];
+                "success" == result ? ($(".cancellation-request-block #resultDesc").text("We have received your request for cancellation. You will get an email confirmation for the cancellation shortly."), 
+                $("body .spinner,body #no-click").remove(), $("body").addClass("modal-open"), "undefined" != typeof utag && utag.link({
                     event_type: "cancel_confirmation_clicked",
                     cancel_order_reason: reasonCancel
                 })) : ($(".cancellation-request-block #resultTitle").text("Failure!"), $(".cancellation-request-block #resultDesc").text(bogoreason), 
