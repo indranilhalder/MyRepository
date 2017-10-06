@@ -183,6 +183,8 @@ import com.tisl.mpl.storefront.web.forms.validator.MplAddressValidator;
 import com.tisl.mpl.util.ExceptionUtil;
 import com.tisl.mpl.util.GenericUtilityMethods;
 
+import reactor.function.support.UriUtils;
+
 
 /**
  * SingleStepCheckoutController
@@ -3692,6 +3694,31 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 		//Getting Payment modes
 		paymentModeMap = getMplPaymentFacade().getPaymentModes(MarketplacecheckoutaddonConstants.MPLSTORE, false, cartData);
 		prepareDataForPage(model);
+
+
+		/// Check for EGV IN CART IS YES DISABLE COD AND WALLET PAY   ************************************ write logice for ordermodel also
+
+		getSessionService().setAttribute("disableCODandWAllet", "false");
+		//getSessionService().setAttribute("getCliqCashMode", "false");
+		//getSessionService().setAttribute("jsPayMode", "false");
+		//getSessionService().setAttribute("cliqCashPaymentMode", StringUtils.EMPTY);
+
+		//		for (final OrderEntryData entryData : cartData.getEntries())
+		//		{
+		//
+		//			if (entryData.getProduct().getCode().equalsIgnoreCase("98765440"))
+		//			{
+		//
+		//				getSessionService().setAttribute("disableCODandWAllet", "true");
+		//
+		//				paymentModeMap.remove(PaymentModesEnum.COD);
+		//				paymentModeMap.remove("Cliq Cash");
+		//
+		//			}
+		//			break;
+		//
+		//		}
+
 		model.addAttribute(MarketplacecheckoutaddonConstants.PAYMENTMODES, paymentModeMap);
 		model.addAttribute(MarketplacecheckoutaddonConstants.TRANERRORMSG, "");
 		//timeOutSet(model);
