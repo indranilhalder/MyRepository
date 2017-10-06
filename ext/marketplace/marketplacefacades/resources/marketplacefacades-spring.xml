@@ -2086,6 +2086,16 @@ class="de.hybris.platform.commercefacades.product.impl.DefaultImageFormatMapping
 	<alias name="defaultEndpointSlaveUrlPopulator" alias="endpointSlaveUrlPopulator" />
 	<bean id="defaultEndpointSlaveUrlPopulator" class="com.tisl.mpl.facade.search.populator.DefaultEndpointSlaveUrlPopulator" />
 	
+	<!-- mplWalletFacade EGV -->
+		<bean id="mplWalletFacade" class="com.tisl.mpl.facades.wallet.impl.MplWalletFacadeImpl" >
+<!--      	<property name="mplWalletServices" ref="mplWalletServices" /> -->
+       </bean>
+
+   <bean id="eGVOrderRecipientContex"
+		class="com.tisl.mpl.facades.process.email.context.EGVOrderRecipientContext"
+		parent="abstractEmailContext" scope="prototype">
+	</bean>
+	<!--  EGV Order Email-->	
 	<!-- TPR-6665: Update synonyms in solr slave  end-->
 </beans>
 

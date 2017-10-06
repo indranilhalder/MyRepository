@@ -33,6 +33,7 @@ import java.util.Map;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.facades.data.StoreLocationRequestData;
 import com.tisl.mpl.facades.data.StoreLocationResponseData;
+import com.tisl.mpl.facades.egv.data.EgvDetailsData;
 import com.tisl.mpl.facades.product.data.MarketplaceDeliveryModeData;
 import com.tisl.mpl.mplcommerceservices.service.data.InvReserForDeliverySlotsItemEDDInfoData;
 import com.tisl.mpl.mplcommerceservices.service.data.InvReserForDeliverySlotsRequestData;
@@ -701,4 +702,9 @@ public interface MplCartFacade extends CartFacade
 			final List<StoreLocationRequestData> storeLocationRequestDataList);
 
 	public String populatePriceDisclaimerCart(final CartModel cartModel);
+	
+	/*EGV Changes Start*/
+	public CartData getGiftCartModel(final EgvDetailsData egvDetailForm);
+	
+	public CartData getGiftCartData(String guid);
 }

@@ -575,7 +575,12 @@ http://www.springframework.org/schema/aop/spring-aop.xsd">
 		<property name="modelService" ref="modelService" />
 		<property name="businessProcessService" ref="businessProcessService" />
 	</bean>
-
+<!-- Added EGV -->
+	<bean id="orderEGVRecipientEmailEventListener" class="com.tisl.mpl.core.event.OrderEGVRecipientEmailEventListener"
+		parent="abstractSiteEventListener">
+		<property name="modelService" ref="modelService" />
+		<property name="businessProcessService" ref="businessProcessService" />
+	</bean>
 
 
 	<!-- Added For Order Collected From Store Conformation Mail -->
@@ -643,6 +648,13 @@ http://www.springframework.org/schema/aop/spring-aop.xsd">
 			value="classpath:/marketplacecore/processes/orderConfirmationEmailProcess.xml" />
 	</bean>
 
+<!-- Added For EGV-->
+	<bean id="egvOrderEmailProcessDefinitionResource"
+		class="de.hybris.platform.processengine.definition.ProcessDefinitionResource">
+		<property name="resource"
+			value="classpath:/marketplacecore/processes/orderEgvRecipientEmailProcess.xml" />
+	</bean>
+	
 
 
 	<!-- pan card reject -->
@@ -868,7 +880,11 @@ http://www.springframework.org/schema/aop/spring-aop.xsd">
 	</bean>
 	<!-- pan card reject end -->
 
-
+<!-- Added For Order EGV -->
+	<bean id="generateEGVRecipientOrderEmail" parent="abstractGenerateEmailAction">
+		<property name="frontendTemplateName" value="EGVOrderRecipientEmailTemplate" />
+	</bean>
+	
 	<!-- TPR-815 -->
 	<bean id="generatePaymentPendingEmail" parent="abstractGenerateEmailAction">
 		<property name="frontendTemplateName" value="PaymentPendingEmailTemplate" />
