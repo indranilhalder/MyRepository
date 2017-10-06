@@ -245,9 +245,10 @@
             
             
             a{
-                width: 50px;
-                height: 50px;
-                border-radius: 50%;
+                /*width: 50px;
+                height: 50px;*/
+                border-radius: 5px;
+                padding: 10px;
                 text-align: center;
                 border: 1px solid #e2e6ee;
                 line-height:normal;
@@ -255,8 +256,7 @@
                 cursor: pointer;  
                 display: block;
                 overflow: hidden;
-                font-size: 13px;
-                display: table-cell;
+                font-size: 13px;                
                 vertical-align: middle;
                 
                 &:hover, &.active {
@@ -1124,7 +1124,7 @@
 				padding:15px;
 				text-align:center;
 				li{				  
-				    border-radius: 50%;
+				    border-radius: 5px;
 				    text-align: center;
 				    border: 1px solid #e2e6ee;				    
 				    text-transform: uppercase;
@@ -1136,13 +1136,12 @@
                     overflow: hidden;
                     vertical-align: top;
                     
-                    span{
-                        width: 50px;
-                        height: 50px;
+                    span{                        
                         font-size: 13px;
                         display: table-cell;
                         vertical-align: middle;
                         line-height:normal;
+                        padding: 10px;
                     }                    
                     
                     &.strike{
