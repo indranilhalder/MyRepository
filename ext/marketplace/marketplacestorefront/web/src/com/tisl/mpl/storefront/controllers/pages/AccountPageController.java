@@ -784,9 +784,11 @@ public class AccountPageController extends AbstractMplSearchPageController
 								+ orderHistoryData.getCode());
 						//setting cancel product for BOGO
 
+						 if(null!= orderEntryData.getOrderLineId()){
 						cancelProduct = cancelReturnFacade.associatedEntriesData(orderModelService.getOrder(subOrder.getCode()),
 								orderEntryData.getOrderLineId());
 						currentProductMap.put(subOrder.getCode() + orderEntryData.getOrderLineId(), cancelProduct);
+                        }
 
 						//TPR-6013
 						final OrderModel subOrderModel = orderModelService.getOrder(subOrder.getCode());
@@ -8372,5 +8374,17 @@ public class AccountPageController extends AbstractMplSearchPageController
 			LOG.error("Excception ouucer while changing index postion");
 		}
 
+	}
+	  /*EGV changes for email*/
+	@RequestMapping(value = RequestMappingUrlConstants.SEND_NOTIFICATION_EGV_ORDER, method = RequestMethod.POST)
+	@ResponseBody
+	@Post
+	public void sendNotificationRecipient(@RequestParam(value = "orderId") final String orderId)
+	{
+		if (orderId != null)
+		{
+			LOG.info("SendNotificationRecipient  ");
+			mplOrderFacade.sendNotificationEGVOrder(orderId);
+		}
 	}
 }

@@ -194,6 +194,10 @@ import com.tisl.mpl.util.GenericUtilityMethods;
 //@RequestMapping(value = "/**/p")
 public class ProductPageController extends MidPageController
 {
+	/**
+	 * 
+	 */
+	private static final String PAGES_LAYOUT_EGV_PDP_RESPONSIVE = "pages/layout/egvPDPResponsive";
 	private static final String PRODUCT_SIZE_TYPE = "productSizeType";
 	/**
 	 *
@@ -4204,5 +4208,60 @@ public class ProductPageController extends MidPageController
 			LOG.error(e);
 		}
 		return posDataList;
+	}
+	
+	@RequestMapping(value = ControllerConstants.Views.Fragments.Product.PRODUCT_CODE_GIFT_CART, method = RequestMethod.GET)
+	public String getGitProductDetails(@PathVariable(ControllerConstants.Views.Fragments.Product.PRODUCT_CODE) String productCode,
+			final Model model, final HttpServletRequest request)
+	{
+		try
+		{
+
+			if (null != productCode)
+			{
+				productCode = productCode.toUpperCase();
+			}
+			final ProductModel productModel = productService.getProductForCode(productCode);
+			populateProductDetailForDisplay(productModel, model, request);
+
+			final String msdjsURL = configurationService.getConfiguration().getString("msd.js.url");
+			final Boolean isMSDEnabled = Boolean.valueOf(configurationService.getConfiguration().getString("msd.enabled"));
+			final String msdRESTURL = configurationService.getConfiguration().getString("msd.rest.url");
+			model.addAttribute(new ReviewForm());
+			model.addAttribute(ModelAttributetConstants.PAGE_TYPE, PageType.PRODUCT.name());
+			model.addAttribute(ModelAttributetConstants.PRODUCT_CATEGORY_TYPE, productModel.getProductCategoryType());
+			model.addAttribute(ModelAttributetConstants.MSD_JS_URL, msdjsURL);
+			model.addAttribute(ModelAttributetConstants.IS_MSD_ENABLED, isMSDEnabled);
+			model.addAttribute(ModelAttributetConstants.MSD_REST_URL, msdRESTURL);
+
+			if (productModel instanceof PcmProductVariantModel)
+			{
+				final PcmProductVariantModel variantProductModel = (PcmProductVariantModel) productModel;
+				model.addAttribute(ModelAttributetConstants.PRODUCT_SIZE, variantProductModel.getSize());
+			}
+			getViewForPage(model);
+
+		}
+		catch (final EtailBusinessExceptions e)
+		{
+			ExceptionUtil.etailBusinessExceptionHandler(e, null);
+
+		}
+		catch (final EtailNonBusinessExceptions e)
+		{
+			ExceptionUtil.etailNonBusinessExceptionHandler(e);
+		}
+		catch (final Exception e)
+		{
+			ExceptionUtil.etailNonBusinessExceptionHandler(new EtailNonBusinessExceptions(e,
+					MarketplacecommerceservicesConstants.E0000));
+		}
+		final EgvDetailForm egvDetailsform = new EgvDetailForm();
+		model.addAttribute("egvDetailsform", egvDetailsform);
+
+		final ContentPageModel contentPage = getContentPageForLabelOrId("egvPDPPage");
+		storeCmsPageInModel(model, contentPage);
+		setUpMetaDataForContentPage(model, contentPage);
+		return PAGES_LAYOUT_EGV_PDP_RESPONSIVE;
 	}
 }
