@@ -80,7 +80,7 @@
 		</c:if>
 	</c:forEach>
 	<li class="footer-text-mobile">
-		<h3 class="toggle">About TATA CLIQ</h3>
+		<h3 class="toggle">Know More</h3>
 		<ul>
 			<li>
 				<c:choose>

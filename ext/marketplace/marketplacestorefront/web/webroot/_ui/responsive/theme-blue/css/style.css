@@ -53262,6 +53262,15 @@ word-wrap: break-word;
  		.template-pages-layout-newBrandLandingPageTemplate #rotatingImageMobile {
  		display: none;
  	}
+ 	.template-pages-layout-apparelCategoryLandingPageV1 .blp-carousel.homepage-banner #rotatingImageTimeoutMobile,
+ 		.template-pages-layout-apparelCategoryLandingPageV1 .blp-carousel.homepage-banner #rotatingImageMobile ,
+ 	.template-pages-layout-newBrandLandingPageTemplate .blp-carousel.homepage-banner #rotatingImageTimeoutMobile,
+ 		.template-pages-layout-newBrandLandingPageTemplate .blp-carousel.homepage-banner #rotatingImageMobile {
+ 		display: block;
+ 	}
+ 	.template-pages-layout-newBrandLandingPageTemplate .blp-carousel.homepage-banner #rotatingImageTimeout, .template-pages-layout-newBrandLandingPageTemplate .blp-carousel.homepage-banner #rotatingImage {
+ 		display: none;
+ 	}
 	.style_edit .style_edit_left>div>div:first-child >span:first-child {
 		font-size: 24px;
 		margin: 40px 0;
@@ -77324,7 +77333,7 @@ body.template-pages-LoginPageTemplate .sign-in.tab-view .form-group #password_lo
 /*Search Toggle CSS*/
 @media(max-width: 650px){ 
 	.simpleSearchToggle {padding-right: 20px; } #search_form {display: none;}
-	.simpleSearchToggle {content: ""; width: 40px; height: 40px; display: inline-block; position: absolute; right: 12%; top: 38%;
+	.simpleSearchToggle {content: ""; cursor: pointer; width: 40px; height: 40px; display: inline-block; position: absolute; right: 12%; top: 38%;
 background: url(../images/search_image.png) no-repeat;}
 }
 
@@ -77332,7 +77341,7 @@ background: url(../images/search_image.png) no-repeat;}
 .homeViewAllBtn a, .homeViewAllBtn a:hover {float: right; font-size: 18px; color: #4990e2; text-decoration: none; display: none;}
 #brandsYouLoveMobileComp {display: none;}
 .footer-text-mobile {display: none;}
-.home-best-pick-carousel .owl-stage-outer {overflow: initial !important;}
+.home-best-pick-carousel .owl-stage-outer, #new_exclusive .owl-stage-outer {width: inherit !important;}
 
 @media(max-width: 768px) {
 	.footer-text-mobile {display: block;}
@@ -77352,7 +77361,8 @@ background: url(../images/search_image.png) no-repeat;}
 	
 	/*Stay Qued && Show Case*/
 	#stayQued {background-color: #f2f2f2;}
-	#stayQued .qued-padding .qued-right {float: right;}
+	#stayQued .qued-padding .qued-left {padding: 0 !important;}
+#stayQued .qued-padding .qued-right {float: right; padding-right: 0px !important;}
 	#stayQued .qued-padding .qued-right h3 {padding-top: 0px;}
 	#stayQued .qued-padding .qued-right a.button.maroon {height: 25px !important; min-height: 25px !important; padding: 5% 0px !important; margin: 0 !important;
 		line-height: unset !important; width: auto !important; font-size: 10px !important; position: static !important; max-width: 100px;}

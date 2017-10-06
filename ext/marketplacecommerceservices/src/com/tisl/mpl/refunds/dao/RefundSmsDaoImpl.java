@@ -131,7 +131,7 @@ public class RefundSmsDaoImpl extends AbstractItemDao implements RefundSmsDao
 			final FlexibleSearchQuery fQuery = new FlexibleSearchQuery(query.toString());
 			final List<RefundTransactionEntryModel> refundSmsPkList = flexibleSearchService.<RefundTransactionEntryModel> search(
 					fQuery).getResult();
-			modelService.remove(refundSmsPkList);
+			modelService.removeAll(refundSmsPkList);
 		}
 		catch (final Exception ex)
 		{
