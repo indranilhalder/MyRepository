@@ -43,11 +43,11 @@
 
 				<c:if test="${not empty cartData.deliveryCost}">
 					<li class="shipping">
-						<span class="shippingSpan"><spring:theme code="basket.page.totals.delivery"/></span>
-						<span id="deliveryCostSpanId" class="text-right">
+						<span class="shippingSpan"><spring:theme code="lux.basket.page.totals.delivery"/></span>
+						<%-- <span id="deliveryCostSpanId" class="text-right">
 				<ycommerce:testId code="Order_Totals_Delivery">
 					<format:luxPrice priceData="${cartData.deliveryCost}" displayFreeForZero="TRUE"/>
-				</ycommerce:testId>
+				</ycommerce:testId> --%>
 			 </span>
 					</li>
 				</c:if>
