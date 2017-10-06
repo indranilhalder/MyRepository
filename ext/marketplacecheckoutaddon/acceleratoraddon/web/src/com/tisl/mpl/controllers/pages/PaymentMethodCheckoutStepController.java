@@ -3822,7 +3822,7 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 	public @ResponseBody String createJuspayOrder(final String firstName, final String lastName, final String netBankName,
 			final String addressLine1, final String addressLine2, final String addressLine3, final String country,
 			final String state, final String city, final String pincode, final String cardSaved, final String sameAsShipping,
-			final String guid, final Model model) //Parameter guid added for TPR-629 //parameter netBankName added for TPR-4461
+			final String guid, final Model model, final boolean isEGVOrder) //Parameter guid added for TPR-629 //parameter netBankName added for TPR-4461
 			throws EtailNonBusinessExceptions
 	{
 		//TPR-4461 parameter netBankName added starts here added only for getting bank name for netbanking/saved credit card/saved debit card
