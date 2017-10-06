@@ -20,6 +20,7 @@ import de.hybris.platform.core.model.order.AbstractOrderEntryModel;
 import de.hybris.platform.core.model.order.OrderModel;
 import de.hybris.platform.core.model.product.ProductModel;
 import de.hybris.platform.core.model.user.CustomerModel;
+import de.hybris.platform.orderprocessing.model.OrderProcessModel;
 import de.hybris.platform.ordersplitting.model.ConsignmentEntryModel;
 import de.hybris.platform.ordersplitting.model.ConsignmentModel;
 import de.hybris.platform.payment.model.PaymentTransactionEntryModel;
@@ -28,6 +29,7 @@ import de.hybris.platform.returns.model.ReturnEntryModel;
 import de.hybris.platform.returns.model.ReturnRequestModel;
 import de.hybris.platform.servicelayer.config.ConfigurationService;
 import de.hybris.platform.servicelayer.dto.converter.Converter;
+import de.hybris.platform.servicelayer.event.EventService;
 import de.hybris.platform.servicelayer.exceptions.UnknownIdentifierException;
 import de.hybris.platform.servicelayer.model.ModelService;
 import de.hybris.platform.servicelayer.user.UserService;
@@ -71,6 +73,7 @@ import com.tisl.mpl.facades.product.data.ReturnReasonData;
 import com.tisl.mpl.facades.product.data.ReturnReasonDetails;
 import com.tisl.mpl.integration.oms.order.service.impl.CustomOmsOrderService;
 import com.tisl.mpl.marketplacecommerceservices.daos.OrderModelDao;
+import com.tisl.mpl.marketplacecommerceservices.event.OrderEGVRecipientEmailEvent;
 import com.tisl.mpl.marketplacecommerceservices.service.MplJewelleryService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplOrderService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplSellerInformationService;
@@ -138,6 +141,9 @@ public class DefaultMplOrderFacade implements MplOrderFacade
 
 	/* sonar fix */
 	/* private final int queryCount = 0; */
+
+	@Autowired
+	EventService eventService;
 
 	protected static final Logger LOG = Logger.getLogger(DefaultMplOrderFacade.class);
 
@@ -887,6 +893,26 @@ public class DefaultMplOrderFacade implements MplOrderFacade
 		}
 	}
 
+
+             /*EGV Email Code Added  */
+	@Override
+	public void sendNotificationEGVOrder(final String orderId)
+	{
+		OrderModel orderModel = null;
+		try
+		{
+			orderModel = orderModelDao.getOrderModel(orderId);
+			OrderProcessModel orderProcessModel=new OrderProcessModel();
+			orderProcessModel.setOrder(orderModel);
+			OrderEGVRecipientEmailEvent orderEGVRecipientEmailEvent = new OrderEGVRecipientEmailEvent(orderProcessModel);
+			eventService.publishEvent(orderEGVRecipientEmailEvent);
+
+		}
+		catch (Exception exception)
+		{
+			LOG.error(" >> Exception occured while send notification", exception);
+		}
+	}
 
 
 

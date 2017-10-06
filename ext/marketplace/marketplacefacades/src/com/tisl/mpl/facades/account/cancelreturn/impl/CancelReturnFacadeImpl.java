@@ -53,6 +53,7 @@ import de.hybris.platform.store.services.BaseStoreService;
 import de.hybris.platform.storelocator.model.PointOfServiceModel;
 
 import java.text.DateFormat;
+import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -91,6 +92,8 @@ import com.tisl.mpl.core.model.MplReturnPickUpAddressInfoModel;
 import com.tisl.mpl.core.model.RefundTransactionMappingModel;
 import com.tisl.mpl.core.model.ReturnQuickDropProcessModel;
 import com.tisl.mpl.core.model.RichAttributeModel;
+import com.tisl.mpl.core.model.WalletApportionPaymentInfoModel;
+import com.tisl.mpl.core.model.WalletCardApportionDetailModel;
 import com.tisl.mpl.core.util.DateUtilHelper;
 import com.tisl.mpl.data.CODSelfShipData;
 import com.tisl.mpl.data.CODSelfShipResponseData;
@@ -115,6 +118,7 @@ import com.tisl.mpl.facades.constants.MarketplaceFacadesConstants;
 import com.tisl.mpl.facades.data.ReturnItemAddressData;
 import com.tisl.mpl.facades.product.data.ReturnReasonData;
 import com.tisl.mpl.facades.product.data.StateData;
+import com.tisl.mpl.facades.wallet.MplWalletFacade;
 import com.tisl.mpl.marketplacecommerceservices.daos.OrderModelDao;
 import com.tisl.mpl.marketplacecommerceservices.service.MPLRefundService;
 import com.tisl.mpl.marketplacecommerceservices.service.MPLReturnService;
@@ -128,6 +132,10 @@ import com.tisl.mpl.model.CRMTicketDetailModel;
 import com.tisl.mpl.model.SellerInformationModel;
 import com.tisl.mpl.ordercancel.MplOrderCancelEntry;
 import com.tisl.mpl.ordercancel.MplOrderCancelRequest;
+import com.tisl.mpl.pojo.request.QCCreditRequest;
+import com.tisl.mpl.pojo.request.QCRefundRequest;
+import com.tisl.mpl.pojo.response.QCCard;
+import com.tisl.mpl.pojo.response.QCRedeeptionResponse;
 import com.tisl.mpl.service.MplOrderCancelClientService;
 import com.tisl.mpl.service.ReturnLogisticsService;
 import com.tisl.mpl.service.TicketCreationCRMservice;
@@ -281,6 +289,9 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 
 	@Resource(name = "mplJewelleryService")
 	private MplJewelleryService jewelleryService;
+
+	@Resource(name = "mplWalletFacade")
+	private MplWalletFacade mplWalletFacade;
 
 
 	@Override
@@ -1912,6 +1923,7 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 		orderCancelRequest.setCancelReason(reason);
 		orderCancelRequest.setNotes(reasonDescription);
 		double refundAmount = 0D;
+		double refundAmountForQc = 0D;
 		for (final OrderCancelEntry orderCancelEntry : orderCancelRequest.getEntriesToCancel())
 		{
 			final AbstractOrderEntryModel orderEntry = orderCancelEntry.getOrderEntry();
@@ -1961,13 +1973,28 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 				scheduleDeliveryCost = orderEntry.getScheduledDeliveryCharge().doubleValue();
 			}
 
+	      if(subOrderModel.getSplitModeInfo().equalsIgnoreCase("Juspay")){
 
 			refundAmount = refundAmount + orderEntry.getNetAmountAfterAllDisc().doubleValue() + deliveryCost + scheduleDeliveryCost;
 			refundAmount = mplJusPayRefundService.validateRefundAmount(refundAmount, subOrderModel);
 
+	      }else if(subOrderModel.getSplitModeInfo().equalsIgnoreCase("CliqCash")){
+	      	
+	      	//call for QuckCilver
+	      	refundAmountForQc = calculateSplitQcRefundAmount(orderEntry);
+				
+	      }else if(subOrderModel.getSplitModeInfo().equalsIgnoreCase("Split")) {
+	      	//call for Juspay
+	      	refundAmount = calculateSplitJuspayRefundAmount(orderEntry);
+				
+				//call for QuckCilver
+	      	refundAmountForQc = calculateSplitQcRefundAmount(orderEntry);
+	      	
+	      }
 		}
 		//Setting Refund Amount
 		orderCancelRequest.setAmountToRefund(new Double(refundAmount));
+	   orderCancelRequest.setAmountTORefundForQc(new Double(refundAmountForQc));
 		return orderCancelRequest;
 	}
 
@@ -2038,7 +2065,7 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 	 *
 	 */
 	private void requestOrderCancel(final OrderData subOrderDetails, final OrderModel subOrderModel,
-			final MplOrderCancelRequest orderCancelRequest) throws OrderCancelException
+			final MplOrderCancelRequest orderCancelRequest ,String transactionId) throws OrderCancelException
 	{
 
 		//CODE COMMENTED AFTER R2.3 FOR ONE TOUCH CANCELLATION/RETURN FEATURE----START
@@ -2088,7 +2115,37 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 		else
 		{
 			// Done for INC144317893
-			initiateRefund(subOrderModel, orderRequestRecord);
+			//initiateRefund(subOrderModel, orderRequestRecord);
+			//QCRefundRequest qcRefundRequest =null;
+			String walletId =null;
+			DecimalFormat daecimalFormat =new DecimalFormat("#.00");
+      	CustomerModel customerModel= (CustomerModel)subOrderModel.getUser();
+      	if(null!=customerModel && null!= customerModel.getCustomerWalletDetail()){
+      		walletId=customerModel.getCustomerWalletDetail().getWalletId();
+      	}
+			   if(subOrderModel.getSplitModeInfo().equalsIgnoreCase("Juspay")){
+				 
+				  initiateRefund(subOrderModel, orderRequestRecord,transactionId);
+				 
+		      }else if(subOrderModel.getSplitModeInfo().equalsIgnoreCase("CliqCash")){
+		      	QCCreditRequest qcCreditRequest =new QCCreditRequest();
+		      	qcCreditRequest.setAmount(daecimalFormat.format(orderCancelRequest.getAmountTORefundForQc()));
+		      	qcCreditRequest.setInvoiceNumber(subOrderModel.getParentReference().getCode());
+		      	qcCreditRequest.setNotes("Cancel for "+ daecimalFormat.format(orderCancelRequest.getAmountTORefundForQc()));    	
+		      	QCRedeeptionResponse response = mplWalletFacade.qcCredit(walletId , qcCreditRequest);
+		      	LOG.debug("*****************************"+response.getResponseCode());
+		      	constructQuickCilverOrderEntry(response,transactionId);
+
+		      }else if(subOrderModel.getSplitModeInfo().equalsIgnoreCase("Split")) {
+		      	QCCreditRequest qcCreditRequest =new QCCreditRequest();
+		      	qcCreditRequest.setAmount(daecimalFormat.format(orderCancelRequest.getAmountTORefundForQc()));
+		      	qcCreditRequest.setInvoiceNumber(subOrderModel.getParentReference().getCode());
+		      	qcCreditRequest.setNotes("Cancel for "+ daecimalFormat.format(orderCancelRequest.getAmountTORefundForQc()));    	
+		      	QCRedeeptionResponse response = mplWalletFacade.qcCredit(walletId , qcCreditRequest);
+		      	constructQuickCilverOrderEntry(response,transactionId);
+		      	LOG.debug("Quck Cilver giving response code "+response.getResponseCode()+" Order Id :"+subOrderModel.getParentReference().getCode());
+		      	initiateRefund(subOrderModel, orderRequestRecord,transactionId);
+		      }
 
 			//			if (null != subOrderModel && subOrderModel.getIsWallet().equals(WalletEnum.MRUPEE))
 			//			{
@@ -2104,11 +2161,49 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 		}
 	}
 
+	private void constructQuickCilverOrderEntry(final QCRedeeptionResponse response,String transactionId){
+	
+		
+		final AbstractOrderEntryModel abstractOrderEntryModel = mplOrderService.getEntryModel(transactionId);
+		final WalletApportionPaymentInfoModel walletApportionModel =new WalletApportionPaymentInfoModel();
+		  List<WalletCardApportionDetailModel> walletCardApportionDetailModelList = new ArrayList<WalletCardApportionDetailModel>();
+			for(QCCard qcCard:response.getCards()){
+				WalletCardApportionDetailModel model =new WalletCardApportionDetailModel();
+				model.setCardNumber(qcCard.getCardNumber());
+				model.setCardExpiry(qcCard.getExpiry());
+				model.setCardAmount(qcCard.getAmount().toString());
+				model.setBucketType(qcCard.getBucketType());
+				walletCardApportionDetailModelList.add(model);
+			}
+			walletApportionModel.setWalletCardList(walletCardApportionDetailModelList);
+			if(null !=abstractOrderEntryModel.getWalletApportionPaymentInfo() && null!= abstractOrderEntryModel.getWalletApportionPaymentInfo().getQcApportionPartValue()){
+				walletApportionModel.setQcApportionPartValue(abstractOrderEntryModel.getWalletApportionPaymentInfo().getQcApportionPartValue());
+			}
+			if(null !=abstractOrderEntryModel.getWalletApportionPaymentInfo() && null!= abstractOrderEntryModel.getWalletApportionPaymentInfo().getQcDeliveryPartValue()){
+				walletApportionModel.setQcDeliveryPartValue(abstractOrderEntryModel.getWalletApportionPaymentInfo().getQcDeliveryPartValue());
+			}
+			if(null !=abstractOrderEntryModel.getWalletApportionPaymentInfo() && null!= abstractOrderEntryModel.getWalletApportionPaymentInfo().getQcSchedulingPartValue()){
+				walletApportionModel.setQcSchedulingPartValue(abstractOrderEntryModel.getWalletApportionPaymentInfo().getQcSchedulingPartValue());
+			}
+			if(null !=abstractOrderEntryModel.getWalletApportionPaymentInfo() && null!= abstractOrderEntryModel.getWalletApportionPaymentInfo().getQcShippingPartValue()){
+				walletApportionModel.setQcShippingPartValue(abstractOrderEntryModel.getWalletApportionPaymentInfo().getQcShippingPartValue());
+			}	
+			if(StringUtils.equalsIgnoreCase(response.getResponseCode().toString(),"0")){
+				walletApportionModel.setType("CANCEL");
+				walletApportionModel.setStatus("SUCCESS");
+			}else{
+				walletApportionModel.setType("CANCEL");
+				walletApportionModel.setStatus("FAIL");
+			}
+			abstractOrderEntryModel.setWalletApportionReturnInfo(walletApportionModel);
+		modelService.save(abstractOrderEntryModel);
+	}
+	
 	/**
 	 * @param subOrderModel
 	 * @param orderRequestRecord
 	 */
-	private void initiateRefund(final OrderModel subOrderModel, final OrderCancelRecordEntryModel orderRequestRecord)
+	private void initiateRefund(final OrderModel subOrderModel, final OrderCancelRecordEntryModel orderRequestRecord,String transactionId)
 	{
 
 		PaymentTransactionModel paymentTransactionModel = null;
@@ -2166,6 +2261,24 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 										MarketplacecommerceservicesConstants.SUCCESS))
 								{
 									newStatus = ConsignmentStatus.ORDER_CANCELLED;
+									WalletApportionPaymentInfoModel walletApportionModel =new WalletApportionPaymentInfoModel();
+									final AbstractOrderEntryModel abstractOrderEntryModel = mplOrderService.getEntryModel(transactionId);
+								
+									if(null !=orderEntry.getWalletApportionPaymentInfo() && null!= orderEntry.getWalletApportionPaymentInfo().getJuspayApportionValue()){
+										walletApportionModel.setJuspayApportionValue(orderEntry.getWalletApportionPaymentInfo().getJuspayApportionValue());
+									}
+									if(null !=orderEntry.getWalletApportionPaymentInfo() && null!= orderEntry.getWalletApportionPaymentInfo().getJuspayDeliveryValue()){
+										walletApportionModel.setJuspayDeliveryValue(orderEntry.getWalletApportionPaymentInfo().getJuspayDeliveryValue());
+									}
+									if(null !=orderEntry.getWalletApportionPaymentInfo() && null!= orderEntry.getWalletApportionPaymentInfo().getJuspaySchedulingValue()){
+										walletApportionModel.setJuspaySchedulingValue(orderEntry.getWalletApportionPaymentInfo().getJuspaySchedulingValue());
+								}
+									if(null !=orderEntry.getWalletApportionPaymentInfo() && null!= orderEntry.getWalletApportionPaymentInfo().getJuspayShippingValue()){
+										walletApportionModel.setJuspayShippingValue(orderEntry.getWalletApportionPaymentInfo().getJuspayShippingValue());
+									}	
+									abstractOrderEntryModel.setWalletApportionReturnInfo(walletApportionModel);
+									modelService.save(abstractOrderEntryModel);
+									
 								}
 								else if (StringUtils.equalsIgnoreCase(paymentTransactionModel.getStatus(), "PENDING"))
 								{
@@ -3776,6 +3889,46 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 									.getScheduledDeliveryCharge().doubleValue() : 0D);
 
 					refundEntryModel.setAmount(NumberUtils.createBigDecimal(Double.toString(amount)));
+
+				   }else if(subOrderModel.getSplitModeInfo().equalsIgnoreCase("CliqCash")){
+				   	double refundAmountForQc =0.0D;
+				   	if(null != abstractOrderEntryModel.getWalletApportionPaymentInfo() && null != abstractOrderEntryModel.getWalletApportionPaymentInfo().getQcApportionPartValue()){
+				   		refundAmountForQc += Double.valueOf(abstractOrderEntryModel.getWalletApportionPaymentInfo().getQcApportionPartValue()).doubleValue();
+				   	}
+				   	if(null != abstractOrderEntryModel.getWalletApportionPaymentInfo() && null != abstractOrderEntryModel.getWalletApportionPaymentInfo().getQcDeliveryPartValue()){
+				   		refundAmountForQc += Double.valueOf(abstractOrderEntryModel.getWalletApportionPaymentInfo().getQcDeliveryPartValue()).doubleValue();
+				   	}
+				   	if(null != abstractOrderEntryModel.getWalletApportionPaymentInfo() && null != abstractOrderEntryModel.getWalletApportionPaymentInfo().getQcSchedulingPartValue()){
+				   		refundAmountForQc += Double.valueOf(abstractOrderEntryModel.getWalletApportionPaymentInfo().getQcSchedulingPartValue()).doubleValue();
+				   	}
+				   	refundEntryModel.setAmountForQc(NumberUtils.createDouble(Double.toString(refundAmountForQc)));
+				   }else if(subOrderModel.getSplitModeInfo().equalsIgnoreCase("Split")){
+				   	
+				   	double refundAmountForQc =0.0D;
+				   	double refundAmountForJuspay =0.0D;
+				   	//for QC
+				   	if(null != abstractOrderEntryModel.getWalletApportionPaymentInfo() && null != abstractOrderEntryModel.getWalletApportionPaymentInfo().getQcApportionPartValue()){
+				   		refundAmountForQc += Double.valueOf(abstractOrderEntryModel.getWalletApportionPaymentInfo().getQcApportionPartValue()).doubleValue();
+				   	}
+				   	if(null != abstractOrderEntryModel.getWalletApportionPaymentInfo() && null != abstractOrderEntryModel.getWalletApportionPaymentInfo().getQcDeliveryPartValue()){
+				   		refundAmountForQc += Double.valueOf(abstractOrderEntryModel.getWalletApportionPaymentInfo().getQcDeliveryPartValue()).doubleValue();
+				   	}
+				   	if(null != abstractOrderEntryModel.getWalletApportionPaymentInfo() && null != abstractOrderEntryModel.getWalletApportionPaymentInfo().getQcSchedulingPartValue()){
+				   		refundAmountForQc += Double.valueOf(abstractOrderEntryModel.getWalletApportionPaymentInfo().getQcSchedulingPartValue()).doubleValue();
+				   	}
+				   	//for Juspay
+				   	if(null != abstractOrderEntryModel.getWalletApportionPaymentInfo() && null != abstractOrderEntryModel.getWalletApportionPaymentInfo().getJuspayApportionValue()){
+				   		refundAmountForJuspay += Double.valueOf(abstractOrderEntryModel.getWalletApportionPaymentInfo().getJuspayApportionValue()).doubleValue();
+				   	}
+				   	if(null != abstractOrderEntryModel.getWalletApportionPaymentInfo() && null != abstractOrderEntryModel.getWalletApportionPaymentInfo().getJuspayDeliveryValue()){
+				   		refundAmountForJuspay += Double.valueOf(abstractOrderEntryModel.getWalletApportionPaymentInfo().getJuspayDeliveryValue()).doubleValue();
+				   	}
+				   	if(null != abstractOrderEntryModel.getWalletApportionPaymentInfo() && null != abstractOrderEntryModel.getWalletApportionPaymentInfo().getJuspaySchedulingValue()){
+				   		refundAmountForJuspay += Double.valueOf(abstractOrderEntryModel.getWalletApportionPaymentInfo().getJuspaySchedulingValue()).doubleValue();
+				   	}
+				   	refundEntryModel.setAmount(NumberUtils.createBigDecimal(Double.toString(refundAmountForJuspay)));
+				   	refundEntryModel.setAmountForQc(NumberUtils.createDouble(Double.toString(refundAmountForQc)));
+				   }
 				}
 			}
 			modelService.save(refundEntryModel);

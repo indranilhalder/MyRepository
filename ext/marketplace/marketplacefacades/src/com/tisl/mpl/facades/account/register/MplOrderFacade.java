@@ -203,5 +203,5 @@ public interface MplOrderFacade
 	 */
 	OrderModel getOrderForAnonymousUser(String orderNumber);
 
-
+	public void sendNotificationEGVOrder(String orderNumber);
 }
