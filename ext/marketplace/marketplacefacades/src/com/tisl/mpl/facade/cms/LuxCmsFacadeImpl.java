@@ -15,13 +15,24 @@ import de.hybris.platform.cms2.model.relations.ContentSlotForTemplateModel;
 import de.hybris.platform.cms2.servicelayer.services.CMSRestrictionService;
 import de.hybris.platform.cms2lib.model.components.BannerComponentModel;
 import de.hybris.platform.cms2lib.model.components.RotatingImagesComponentModel;
+import de.hybris.platform.commercefacades.product.PriceDataFactory;
+import de.hybris.platform.commercefacades.product.ProductFacade;
+import de.hybris.platform.commercefacades.product.ProductOption;
+import de.hybris.platform.commercefacades.product.data.ImageData;
+import de.hybris.platform.commercefacades.product.data.PriceData;
+import de.hybris.platform.commercefacades.product.data.PriceDataType;
+import de.hybris.platform.commercefacades.product.data.ProductData;
 import de.hybris.platform.commerceservices.enums.UiExperienceLevel;
 import de.hybris.platform.core.model.media.MediaContainerModel;
 import de.hybris.platform.core.model.media.MediaModel;
+import de.hybris.platform.core.model.product.ProductModel;
+import de.hybris.platform.servicelayer.i18n.CommonI18NService;
 import de.hybris.platform.servicelayer.session.SessionExecutionBody;
 import de.hybris.platform.servicelayer.session.SessionService;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 import java.util.function.Consumer;
@@ -30,6 +41,7 @@ import javax.annotation.Resource;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import com.tisl.lux.model.LuxuryMediaModel;
 import com.tisl.lux.model.LuxuryVideoComponentModel;
@@ -40,12 +52,18 @@ import com.tisl.lux.model.cms.components.ShopOnLuxuryElementModel;
 import com.tisl.lux.model.cms.components.ShopOnLuxuryModel;
 import com.tisl.lux.model.cms.components.WeeklySpecialBannerModel;
 import com.tisl.lux.model.cms.components.WeeklySpecialModel;
+import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
+import com.tisl.mpl.core.model.LuxProductCarouselComponentModel;
+import com.tisl.mpl.facades.product.data.BuyBoxData;
 import com.tisl.mpl.marketplacecommerceservices.service.impl.MplCMSPageServiceImpl;
 import com.tisl.mpl.model.cms.components.LuxCMSMediaParagraphComponentModel;
 import com.tisl.mpl.model.cms.components.ShopByCategoryModel;
+import com.tisl.mpl.seller.product.facades.BuyBoxFacade;
 import com.tisl.mpl.wsdto.LuxBannerComponentWsDTO;
 import com.tisl.mpl.wsdto.LuxCMSMediaParagraphComponentListWsDTO;
 import com.tisl.mpl.wsdto.LuxMediaContainerWsDTO;
+import com.tisl.mpl.wsdto.LuxProductCarouselComponentWsDTO;
+import com.tisl.mpl.wsdto.LuxProductCarouselProductWsDTO;
 import com.tisl.mpl.wsdto.LuxRotatingImagesComponentWsDTO;
 import com.tisl.mpl.wsdto.LuxShopByCategoryWsDTO;
 import com.tisl.mpl.wsdto.LuxShowCaseCollectionComponentListWsDTO;
@@ -71,6 +89,18 @@ public class LuxCmsFacadeImpl implements LuxCmsFacade
 
 	@Resource(name = "sessionService")
 	private SessionService sessionService;
+
+	@Resource(name = "accProductFacade")
+	private ProductFacade productFacade;
+
+	@Autowired
+	private BuyBoxFacade buyBoxFacade;
+
+	@Resource(name = "priceDataFactory")
+	private PriceDataFactory priceDataFactory;
+
+	@Resource(name = "commonI18NService")
+	private CommonI18NService commonI18NService;
 
 	private MplCMSPageServiceImpl mplCMSPageService;
 
@@ -177,6 +207,11 @@ public class LuxCmsFacadeImpl implements LuxCmsFacade
 						final CMSImageComponentModel CMSImageComponent = (CMSImageComponentModel) abstractCMSComponentModel;
 						luxuryComponentsList = getLuxCMSImagesComponentWsDTO(CMSImageComponent, luxuryComponentsListWsDTO);
 						break;
+					case "LuxProductCarouselComponent":
+						final LuxProductCarouselComponentModel luxProductCarouselComponent = (LuxProductCarouselComponentModel) abstractCMSComponentModel;
+						luxuryComponentsList = getLuxProductCarouselComponentWsDTO(luxProductCarouselComponent,
+								luxuryComponentsListWsDTO);
+						break;
 					default:
 						break;
 				}
@@ -185,6 +220,97 @@ public class LuxCmsFacadeImpl implements LuxCmsFacade
 		}
 		return luxuryComponentsList;
 	}
+
+	private LuxuryComponentsListWsDTO getLuxProductCarouselComponentWsDTO(
+			final LuxProductCarouselComponentModel luxProductCarouselComponent, final LuxuryComponentsListWsDTO luxuryComponent)
+	{
+		final List<LuxProductCarouselComponentWsDTO> luxProductCarouselComponentWsDTOList = new ArrayList<LuxProductCarouselComponentWsDTO>();
+		final LuxProductCarouselComponentWsDTO luxProductCarouselComponentWsDTO = new LuxProductCarouselComponentWsDTO();
+		final List<LuxProductCarouselProductWsDTO> luxProductCarouselProductWsDTOList = new ArrayList<LuxProductCarouselProductWsDTO>();
+
+		setValue(luxProductCarouselComponentWsDTO::setTitle, luxProductCarouselComponent.getTitle());
+		setValue(luxProductCarouselComponentWsDTO::setBrandTitle, luxProductCarouselComponent.getBrandTitle());
+		if (null != luxProductCarouselComponent.getBrandImage())
+		{
+			setValue(luxProductCarouselComponentWsDTO::setBrandImage, luxProductCarouselComponent.getBrandImage().getURL());
+		}
+		setValue(luxProductCarouselComponentWsDTO::setShopNowName, luxProductCarouselComponent.getShopNowName());
+		setValue(luxProductCarouselComponentWsDTO::setShopNowLink, luxProductCarouselComponent.getShopNowLink());
+
+		if (StringUtils.isNotEmpty(luxProductCarouselComponent.getAppPosition()))
+		{
+			luxProductCarouselComponentWsDTO.setComponentPosition(luxProductCarouselComponent.getAppPosition());
+		}
+		else
+		{
+			luxProductCarouselComponentWsDTO.setComponentPosition(" ");
+		}
+
+		if (luxProductCarouselComponent.getProducts() != null)
+		{
+			for (final ProductModel product : luxProductCarouselComponent.getProducts())
+			{
+				final LuxProductCarouselProductWsDTO luxProductCarouselProductWsDTO = new LuxProductCarouselProductWsDTO();
+				ProductData productData = null;
+				productData = productFacade.getProductForOptions(product,
+						Arrays.asList(ProductOption.BASIC, ProductOption.GALLERY, ProductOption.SELLER));
+
+				setValue(luxProductCarouselProductWsDTO::setPrdCode, productData.getCode());
+				setValue(luxProductCarouselProductWsDTO::setPrdName, productData.getName());
+				setValue(luxProductCarouselProductWsDTO::setPrdBrandName, productData.getBrand().getBrandname());
+				setValue(luxProductCarouselProductWsDTO::setPrdURL, productData.getUrl());
+
+				if (null != productData && null != productData.getImages())
+				{
+					for (final ImageData img : productData.getImages())
+					{
+						if (null != img && StringUtils.isNotEmpty(img.getFormat())
+								&& img.getFormat().equalsIgnoreCase(MarketplacecommerceservicesConstants.CARTPAGE))
+						{
+							setValue(luxProductCarouselProductWsDTO::setPrdImage, img.getUrl());
+						}
+						else if (null != img && StringUtils.isNotEmpty(img.getFormat())
+								&& img.getFormat().equalsIgnoreCase(MarketplacecommerceservicesConstants.LUXURYCARTPAGE))
+						{
+							setValue(luxProductCarouselProductWsDTO::setPrdImage, img.getUrl());
+						}
+
+					}
+				}
+				final BuyBoxData buyboxdata = buyBoxFacade.buyboxPrice(productData.getCode());
+				if (buyboxdata != null)
+				{
+					final PriceData priceValue = buyboxdata.getPrice();
+					final PriceData mrpPriceValue = buyboxdata.getMrpPriceValue();
+					setValue(luxProductCarouselProductWsDTO::setPrdPrice, priceValue.getFormattedValue());
+					setValue(luxProductCarouselProductWsDTO::setPrdMrpPrice, mrpPriceValue.getFormattedValue());
+					if (null != mrpPriceValue && null != priceValue)
+					{
+						final double savingsAmt = mrpPriceValue.getDoubleValue().doubleValue()
+								- priceValue.getDoubleValue().doubleValue();
+						final double calculatedPerSavings = (savingsAmt / mrpPriceValue.getDoubleValue().doubleValue()) * 100;
+						//final double roundedOffValuebefore = Math.round(calculatedPerSavings * 100.0) / 100.0;
+						final double floorValue = Math.floor((calculatedPerSavings * 100.0) / 100.0);
+						luxProductCarouselProductWsDTO.setPrdSavings(floorValue);
+
+					}
+				}
+
+
+				luxProductCarouselProductWsDTOList.add(luxProductCarouselProductWsDTO);
+			}
+		}
+		luxProductCarouselComponentWsDTO.setCarouselProducts(luxProductCarouselProductWsDTOList);
+		if (null == luxuryComponent.getLuxuryProductCarouselComponent())
+		{
+			luxuryComponent.setLuxuryProductCarouselComponent(luxProductCarouselComponentWsDTOList);
+		}
+		luxuryComponent.getLuxuryProductCarouselComponent().add(luxProductCarouselComponentWsDTO);
+
+
+		return luxuryComponent;
+	}
+
 
 	private LuxuryComponentsListWsDTO getLuxCMSImagesComponentWsDTO(final CMSImageComponentModel CMSImageComponent,
 			final LuxuryComponentsListWsDTO luxuryComponent)
