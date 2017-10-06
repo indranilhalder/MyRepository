@@ -2009,6 +2009,7 @@ ACC.singlePageCheckout = {
 	    	        //Calling the below methods to populate the latest shipping address(These methods are in marketplacecheckoutaddon.js)
 //	    	        populateAddress();
 //	    	        populateAddressEmi();
+    	        	WalletDetailAjax();
     			}
         		else
     			{
