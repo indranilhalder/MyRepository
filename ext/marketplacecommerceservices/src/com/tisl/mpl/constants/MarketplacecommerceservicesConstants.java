@@ -2261,6 +2261,7 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String SCHEDULE_PICKUP = "schedulePickup";
 	public static final String QUICK_DROP = "quickDrop";
 	public static final String ISCHECKOUT_PINCODE_SERVICEABLE = "isCheckoutPincodeServiceable";
+	public static final String ENABLED_SPILT_PAYMENT_FORMOBILE = "egv.mobile.payment.splitModelEnabled";
 
 	//PR-4
 	public static final String BULK_SMS_1 = "select {sms: amount}, {sms: utrNumber} ,{sms: arnNumber} ,{a:orderlineid},{add:firstname},{add:phone1} from {orderentry as a join order as b on {a:order}={b:pk} join address as add on {b:deliveryAddress}={add:pk} join RefundTransactionEntry as sms on {a:orderlineid}={sms:transactionId}}  where p_orderlineid in ("

@@ -26,6 +26,7 @@ import de.hybris.platform.core.model.order.payment.EMIPaymentInfoModel;
 import de.hybris.platform.core.model.order.payment.JusPayPaymentInfoModel;
 import de.hybris.platform.core.model.order.payment.NetbankingPaymentInfoModel;
 import de.hybris.platform.core.model.order.payment.PaymentInfoModel;
+import de.hybris.platform.core.model.order.payment.QCWalletPaymentInfoModel;
 import de.hybris.platform.core.model.order.payment.ThirdPartyWalletInfoModel;
 import de.hybris.platform.core.model.order.price.DiscountModel;
 import de.hybris.platform.core.model.user.AddressModel;
@@ -2510,6 +2511,16 @@ public class MplPaymentServiceImpl implements MplPaymentService
 		return getJuspayOrderIdGenerator().generate().toString();
 	}
 
+	/**
+	 *
+	 * @return String
+	 */
+	@Override
+	public String createQCPaymentId()
+	{
+		return getJuspayOrderIdGenerator().generate().toString();
+	}
+
 
 
 	/**
@@ -4808,13 +4819,20 @@ public class MplPaymentServiceImpl implements MplPaymentService
 
 	//Added for TPR-1348
 	@Override
-	public String doRefundPayment(final List<OrderEntryModel> orderEntryModel)
+	public String doRefundPayment(final List<OrderEntryModel> orderEntryModel, final BigDecimal amountToRefund)
 	{
 		Double totalRefundAmount = 0d;
 		PaymentTransactionModel paymentTransactionModel = null;
-		for (final OrderEntryModel orderEntry : orderEntryModel)
+		if (null != amountToRefund && amountToRefund.doubleValue() > 0)
 		{
-			totalRefundAmount += orderEntry.getNetAmountAfterAllDisc();
+			totalRefundAmount = amountToRefund.doubleValue();
+		}
+		else
+		{
+			for (final OrderEntryModel orderEntry : orderEntryModel)
+			{
+				totalRefundAmount += orderEntry.getNetAmountAfterAllDisc();
+			}
 		}
 		//		Mrupee implementation
 		final OrderModel order = orderEntryModel.get(0).getOrder();
@@ -5127,5 +5145,187 @@ public class MplPaymentServiceImpl implements MplPaymentService
 		getModelService().save(orderModel);
 		getModelService().refresh(orderModel);
 
+	}
+
+   @Override
+	public void setQCPaymentTransaction(final ArrayList<String> rs, final Map<String, Double> paymentMode,
+			final AbstractOrderModel order, final String cliqCashPaymentMode, final String WalletTotal)
+			throws EtailNonBusinessExceptions //Changed to abstractOrderModel for TPR-629
+	{
+
+		try
+		{
+			System.out.println("---- ::::: IN SIDE TRANSACTION CREATION ::::-----");
+
+			final List<PaymentTransactionEntryModel> paymentTransactionEntryList = new ArrayList<PaymentTransactionEntryModel>();
+			Collection<PaymentTransactionModel> collection = order.getPaymentTransactions();
+			final List<PaymentTransactionModel> paymentTransactionList = new ArrayList<PaymentTransactionModel>();
+			//final PaymentTransactionModel payTranModel = null;
+
+			if (null == collection || collection.isEmpty())
+			{
+				collection = new ArrayList<PaymentTransactionModel>();
+			}
+
+			paymentTransactionList.addAll(collection);
+
+			final double walletAmt = Double.parseDouble(WalletTotal);
+
+			final Date date = new Date();
+
+			final List<PaymentTransactionModel> listPay = new ArrayList<PaymentTransactionModel>();
+
+			final PaymentTypeModel paymenttype = getMplPaymentDao().getPaymentMode("Cliq Cash", order.getStore());
+
+			final PaymentTransactionEntryModel paymentTransactionEntry = getModelService()
+					.create(PaymentTransactionEntryModel.class);
+			//TODO:Change required when Order Ref No. is ready
+			if (StringUtils.isNotEmpty(rs.get(0)))
+			{
+				paymentTransactionEntry.setCode(rs.get(0) + "-" + rs.get(2));
+			}
+			paymentTransactionEntry.setAmount(BigDecimal.valueOf(walletAmt));
+			paymentTransactionEntry.setTime(date);
+			paymentTransactionEntry.setRequestToken(rs.get(2));
+			paymentTransactionEntry.setRequestId(rs.get(1));
+			paymentTransactionEntry.setCurrency(order.getCurrency());
+			paymentTransactionEntry.setType(PaymentTransactionType.QC_CAPTURE);
+			paymentTransactionEntry.setTransactionStatus(MarketplacecommerceservicesConstants.SUCCESS);
+			paymentTransactionEntry.setPaymentMode(paymenttype);
+
+
+
+			getModelService().save(paymentTransactionEntry);
+			paymentTransactionEntryList.add(paymentTransactionEntry);
+
+			final PaymentTransactionModel paymentTransactionModel = getModelService().create(PaymentTransactionModel.class);
+
+			paymentTransactionModel.setEntries(paymentTransactionEntryList);
+			paymentTransactionModel.setPaymentProvider(paymenttype.getMode());
+			paymentTransactionModel.setCreationtime(date);
+			paymentTransactionModel.setRequestId(rs.get(1));
+			paymentTransactionModel.setRequestToken("0");
+			paymentTransactionModel.setCode(rs.get(0) + "-" + System.currentTimeMillis());
+			paymentTransactionModel.setStatus(MarketplacecommerceservicesConstants.SUCCESS);
+			paymentTransactionModel.setOrder(order);
+
+			paymentTransactionModel.setPlannedAmount(BigDecimal.valueOf(walletAmt));
+
+			getModelService().save(paymentTransactionModel);
+			listPay.add(paymentTransactionModel);
+
+			if (null == order.getPaymentInfo())
+			{
+				final QCWalletPaymentInfoModel qcPaymentInfo = getModelService().create(QCWalletPaymentInfoModel.class);
+
+				qcPaymentInfo.setCode(rs.get(2));
+				qcPaymentInfo.setType(paymenttype.getMode());
+				qcPaymentInfo.setOwner(order.getOwner());
+				//qcPaymentInfo.setCashOwner("NA");
+				qcPaymentInfo.setUser(order.getUser());
+
+				order.setPaymentInfo(qcPaymentInfo);
+			}
+
+			paymentTransactionList.addAll(listPay);
+
+			order.setPaymentTransactions(paymentTransactionList);
+
+			getModelService().save(order);
+		}
+		catch (final ModelSavingException e)
+		{
+			LOG.error(MarketplacecommerceservicesConstants.PAYMENT_TRAN_EXC_LOG + e);
+			throw new ModelSavingException(e + ": Exception while saving payment transaction entry with");
+		}
+	}
+
+	@Override
+	public boolean createQCEntryInAudit(final String qcOrderID, final String channel, final String cartGuId,
+			final String qcAmount, final String qcResponseCode, final String transactionId) throws EtailNonBusinessExceptions
+	{
+		boolean flag = false;
+		try
+		{
+			Assert.notNull(qcOrderID, "Parameter QC cannot be null.");
+			final MplPaymentAuditModel auditModel = getMplPaymentDao().getAuditEntries(qcOrderID);
+
+			if (null != auditModel)
+			{
+				System.out.println("************** Saving auditModel *************" + qcOrderID);
+				List<MplPaymentAuditEntryModel> collection = auditModel.getAuditEntries();
+				final List<MplPaymentAuditEntryModel> auditEntryList = new ArrayList<MplPaymentAuditEntryModel>();
+				if (null == collection || collection.isEmpty())
+				{
+					collection = new ArrayList<MplPaymentAuditEntryModel>();
+				}
+
+				auditEntryList.addAll(collection);
+
+				final MplPaymentAuditEntryModel auditEntry = getModelService().create(MplPaymentAuditEntryModel.class);
+				auditEntry.setAuditId(qcOrderID);
+
+				if (qcResponseCode.equalsIgnoreCase("0"))
+				{
+
+					auditEntry.setStatus(MplPaymentAuditStatusEnum.CREATED);
+
+				}
+				else
+				{
+					auditEntry.setStatus(MplPaymentAuditStatusEnum.DECLINED);
+				}
+				auditModel.setChannel(GenericUtilityMethods.returnChannelData(channel));
+				auditModel.setAuditId(transactionId);
+				auditModel.setCartGUID(cartGuId);
+				auditModel.setRequestDate(new Date());
+				auditModel.setAuditEntries(auditEntryList);
+				auditModel.setPaymentAmount(Double.valueOf(qcAmount));
+				//getModelService().save(auditModel);
+				//getModelService().save(auditEntry);
+				auditEntryList.add(auditEntry);
+				auditModel.setAuditEntries(auditEntryList);
+				getModelService().save(auditModel);
+				flag = true;
+			}
+			else
+			{
+				System.out.println("************** Creating and  Saving auditModel *************" + qcOrderID);
+				//	final CartModel cartModel = getMplPaymentDao().getCart(cartGuId);
+				final List<MplPaymentAuditEntryModel> auditEntryList = new ArrayList<MplPaymentAuditEntryModel>();
+				final MplPaymentAuditEntryModel auditEntry = getModelService().create(MplPaymentAuditEntryModel.class);
+				auditEntry.setAuditId(qcOrderID);
+				auditEntry.setStatus(MplPaymentAuditStatusEnum.CREATED);
+
+				getModelService().save(auditEntry);
+				auditEntryList.add(auditEntry);
+
+				final MplPaymentAuditModel newAuditModel = getModelService().create(MplPaymentAuditModel.class);
+				newAuditModel.setChannel(GenericUtilityMethods.returnChannelData(channel));
+				newAuditModel.setAuditId("");
+				newAuditModel.setCartGUID(cartGuId);
+				newAuditModel.setRequestDate(new Date());
+				newAuditModel.setAuditEntries(auditEntryList);
+				newAuditModel.setPaymentAmount(Double.valueOf(qcAmount));
+				getModelService().save(newAuditModel);
+				flag = true;
+				System.out.println("************** Saved auditModel *************" + qcOrderID + ":::" + flag);
+				return flag;
+			}
+		}
+		catch (final ModelSavingException e)
+		{
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0007);
+		}
+		//		catch (final EtailNonBusinessExceptions e)
+		//		{
+		//			throw e;
+		//		}
+		//Catch added for IQA TPR-629
+		catch (final Exception e)
+		{
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000);
+		}
+		return flag;
 	}
 }

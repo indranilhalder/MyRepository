@@ -2373,7 +2373,15 @@
 	</bean>
 	
 	<!--  End TPR-6945 -->
-
+     <!--  Added EGV Beans 22-09-2017 --> 
+   <bean id="MplEGVCartServiceImpl" class="com.tisl.mpl.marketplacecommerceservices.egv.service.cart.impl.MplEGVCartServiceImpl">
+   </bean>
+   <bean id="MplEGVCartDaoImpl" class="com.tisl.mpl.marketplacecommerceservices.egv.dao.cart.impl.MplEGVCartDaoImpl">
+   </bean>
+   
+   <!--  END EGV Beans 22-09-2017 -->
+   
+</beans>
     
 </beans>
 
