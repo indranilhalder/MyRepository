@@ -39,6 +39,7 @@
 	</group>
 
 	<group qualifier="mobileApp" visible="true" initially-opened="false">
+		<label key="marketplacecockpits.AbstractCMSComponent.appPosition" />
 		<property  qualifier="AbstractCMSComponent.appPosition" />
 	</group>
 

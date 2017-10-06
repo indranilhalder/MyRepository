@@ -5,17 +5,21 @@
 		<property qualifier="CMSItem.name"/>
 		<property qualifier="CMSItem.catalogVersion" editor="shortListEditor"/>
 		<property qualifier="AbstractCMSComponent.visible"/>
-	</group>
-
-	<group qualifier="editorial" visible="true" initially-opened="true">
-		<label key="config.general.editorial" />
 		<property qualifier="LuxProductCarouselComponent.BrandImage" editor="simpleMediaReferenceSelector"/>
 		<property qualifier="LuxProductCarouselComponent.BrandTitle"/>
 		<property qualifier="LuxProductCarouselComponent.shopNowLink"/>
 		<property qualifier="LuxProductCarouselComponent.shopNowName"/>
 		<property qualifier="LuxProductCarouselComponent.products"/>
 		<property qualifier="ProductCarouselComponent.popup"/>
+
 	</group>
+
+	<group qualifier="editorial" visible="true" initially-opened="true">
+		<label key="config.general.editorial" />
+<!--
+		<property qualifier="LuxProductCarouselComponent.BrandImage" editor="simpleMediaReferenceSelector"/>
+-->
+		</group>
 
 	<group qualifier="visibility" visible="true" initially-opened="false">
 		<label key="config.general.contextvisibility" />
@@ -40,6 +44,7 @@
 	</group>
 
 	<group qualifier="mobileApp" visible="true" initially-opened="false">
+		<label key="marketplacecockpits.AbstractCMSComponent.appPosition" />
 		<property  qualifier="AbstractCMSComponent.appPosition" />
 	</group>
 
