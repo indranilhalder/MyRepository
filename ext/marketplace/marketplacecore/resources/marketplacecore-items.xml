@@ -145,6 +145,8 @@
 			autocreate="true" generate="true" type="list" />
 		<!-- <collectiontype elementtype="ShowCaseCollectionComponent" code="ShowCaseCollection" 
 			autocreate="true" generate="true" type="list" /> -->
+			<collectiontype elementtype="WalletCardApportionDetail" code="qcWalletCardList"
+			autocreate="true" generate="true" type="list" />
 	</collectiontypes>
 
 	<enumtypes>
@@ -7891,7 +7893,7 @@
 					</attribute>
 					<!-- EGV CartFlag End -->
 					
-				</attributes>
+				
 					<!-- TPR-1083 End -->
 				</attributes>
 				<!-- new indexes added for performace improvement -->
