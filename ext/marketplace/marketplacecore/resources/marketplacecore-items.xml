@@ -8050,6 +8050,12 @@
 							optional="true" initial="true" unique="false" />
 						<persistence type="property" />
 					</attribute>
+						
+					<attribute qualifier="amountForQc" type="java.lang.Double">
+						<description>pickUp Time To  Value</description>
+						<modifiers read="true" write="true" optional="true" />
+						<persistence type="property" />
+					</attribute>
 				</attributes>
 			</itemtype>
 		</typegroup>
