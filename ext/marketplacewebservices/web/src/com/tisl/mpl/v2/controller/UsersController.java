@@ -11,7 +11,6 @@ import de.hybris.platform.commercefacades.i18n.I18NFacade;
 import de.hybris.platform.commercefacades.order.OrderFacade;
 import de.hybris.platform.commercefacades.order.data.CCPaymentInfoData;
 import de.hybris.platform.commercefacades.order.data.CCPaymentInfoDatas;
-import de.hybris.platform.commercefacades.order.data.CartData;
 import de.hybris.platform.commercefacades.order.data.ConsignmentData;
 import de.hybris.platform.commercefacades.order.data.OrderData;
 import de.hybris.platform.commercefacades.order.data.OrderEntryData;
@@ -21,10 +20,8 @@ import de.hybris.platform.commercefacades.product.ProductFacade;
 import de.hybris.platform.commercefacades.product.ProductOption;
 import de.hybris.platform.commercefacades.product.data.ImageData;
 import de.hybris.platform.commercefacades.product.data.PriceData;
-import de.hybris.platform.commercefacades.product.data.PriceDataType;
 import de.hybris.platform.commercefacades.product.data.ProductData;
 import de.hybris.platform.commercefacades.product.data.SellerInformationData;
-import de.hybris.platform.commercefacades.product.impl.DefaultPriceDataFactory;
 import de.hybris.platform.commercefacades.storelocator.data.PointOfServiceData;
 import de.hybris.platform.commercefacades.user.UserFacade;
 import de.hybris.platform.commercefacades.user.data.AddressData;
@@ -59,7 +56,6 @@ import de.hybris.platform.converters.Populator;
 import de.hybris.platform.core.PK.PKException;
 import de.hybris.platform.core.enums.OrderStatus;
 import de.hybris.platform.core.model.JewelleryInformationModel;
-import de.hybris.platform.core.model.c2l.CurrencyModel;
 import de.hybris.platform.core.model.enumeration.EnumerationValueModel;
 import de.hybris.platform.core.model.order.AbstractOrderEntryModel;
 import de.hybris.platform.core.model.order.CartModel;
@@ -70,15 +66,15 @@ import de.hybris.platform.core.model.user.AddressModel;
 import de.hybris.platform.core.model.user.CustomerModel;
 import de.hybris.platform.core.model.user.UserModel;
 import de.hybris.platform.order.CartService;
-import de.hybris.platform.order.InvalidCartException;
 import de.hybris.platform.order.exceptions.CalculationException;
 import de.hybris.platform.payment.AdapterException;
 import de.hybris.platform.product.ProductService;
+import de.hybris.platform.returns.model.ReturnEntryModel;
+import de.hybris.platform.returns.model.ReturnRequestModel;
 import de.hybris.platform.servicelayer.config.ConfigurationService;
 import de.hybris.platform.servicelayer.dto.converter.Converter;
 import de.hybris.platform.servicelayer.exceptions.ModelSavingException;
 import de.hybris.platform.servicelayer.exceptions.UnknownIdentifierException;
-import de.hybris.platform.servicelayer.i18n.CommonI18NService;
 import de.hybris.platform.servicelayer.model.ModelService;
 import de.hybris.platform.servicelayer.user.UserService;
 import de.hybris.platform.site.BaseSiteService;
@@ -91,7 +87,6 @@ import de.hybris.platform.wishlist2.Wishlist2Service;
 import de.hybris.platform.wishlist2.model.Wishlist2EntryModel;
 import de.hybris.platform.wishlist2.model.Wishlist2Model;
 
-import java.math.BigDecimal;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.charset.Charset;
@@ -155,7 +150,6 @@ import com.tisl.mpl.core.enums.FeedbackArea;
 import com.tisl.mpl.core.enums.Frequency;
 import com.tisl.mpl.core.model.BankforNetbankingModel;
 import com.tisl.mpl.core.model.BuyBoxModel;
-import com.tisl.mpl.core.model.CustomerWalletDetailModel;
 import com.tisl.mpl.core.model.RichAttributeModel;
 import com.tisl.mpl.core.util.DateUtilHelper;
 import com.tisl.mpl.data.CODSelfShipData;
@@ -192,7 +186,6 @@ import com.tisl.mpl.facades.data.MplFavBrandCategoryData;
 import com.tisl.mpl.facades.data.MplFavBrandCategoryWsDTO;
 import com.tisl.mpl.facades.data.MplPreferenceData;
 import com.tisl.mpl.facades.data.ReturnItemAddressData;
-import com.tisl.mpl.facades.egv.data.EgvDetailsData;
 import com.tisl.mpl.facades.order.impl.DefaultGetOrderDetailsFacadeImpl;
 import com.tisl.mpl.facades.payment.MplPaymentFacade;
 import com.tisl.mpl.facades.populators.CustomAddressReversePopulator;
@@ -200,12 +193,10 @@ import com.tisl.mpl.facades.product.data.MplCustomerProfileData;
 import com.tisl.mpl.facades.product.data.ReturnReasonData;
 import com.tisl.mpl.facades.product.data.ReturnReasonDetails;
 import com.tisl.mpl.facades.product.data.StateData;
-import com.tisl.mpl.facades.wallet.MplWalletFacade;
 import com.tisl.mpl.helper.MplEnumerationHelper;
 import com.tisl.mpl.helper.MplUserHelper;
 import com.tisl.mpl.helper.ProductDetailsHelper;
 import com.tisl.mpl.marketplacecommerceservices.daos.OrderModelDao;
-import com.tisl.mpl.marketplacecommerceservices.egv.service.cart.MplEGVCartService;
 import com.tisl.mpl.marketplacecommerceservices.service.ExtendedUserService;
 import com.tisl.mpl.marketplacecommerceservices.service.FriendsInviteService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplCustomerProfileService;
@@ -221,13 +212,6 @@ import com.tisl.mpl.model.PaymentTypeModel;
 import com.tisl.mpl.model.SellerInformationModel;
 import com.tisl.mpl.order.data.OrderEntryDataList;
 import com.tisl.mpl.pincode.facade.PincodeServiceFacade;
-import com.tisl.mpl.pojo.request.Customer;
-import com.tisl.mpl.pojo.request.QCCustomerRegisterRequest;
-import com.tisl.mpl.pojo.response.BalanceBucketWise;
-import com.tisl.mpl.pojo.response.CustomerWalletDetailResponse;
-import com.tisl.mpl.pojo.response.QCCustomerRegisterResponse;
-import com.tisl.mpl.pojo.response.QCRedeeptionResponse;
-import com.tisl.mpl.pojo.response.RedimGiftCardResponse;
 import com.tisl.mpl.populator.HttpRequestCustomerDataPopulator;
 import com.tisl.mpl.populator.options.PaymentInfoOption;
 import com.tisl.mpl.search.feedback.facades.UpdateFeedbackFacade;
@@ -240,8 +224,6 @@ import com.tisl.mpl.util.ExceptionUtil;
 import com.tisl.mpl.util.MplTimeconverUtility;
 import com.tisl.mpl.validation.data.AddressValidationData;
 import com.tisl.mpl.webservice.businessvalidator.DefaultCommonAsciiValidator;
-import com.tisl.mpl.wsdto.BuyingEgvRequestWsDTO;
-import com.tisl.mpl.wsdto.BuyingEgvResponceWsDTO;
 import com.tisl.mpl.wsdto.CommonCouponsDTO;
 import com.tisl.mpl.wsdto.EMIBankListWsDTO;
 import com.tisl.mpl.wsdto.EMITermRateDataForMobile;
@@ -263,10 +245,7 @@ import com.tisl.mpl.wsdto.NetBankingListWsDTO;
 import com.tisl.mpl.wsdto.NetBankingWsDTO;
 import com.tisl.mpl.wsdto.OrderCreateInJusPayWsDto;
 import com.tisl.mpl.wsdto.OrderProductWsDTO;
-import com.tisl.mpl.wsdto.PayCliqCashWsDto;
 import com.tisl.mpl.wsdto.QuickDropStoresList;
-import com.tisl.mpl.wsdto.RedeemCliqVoucherWsDTO;
-import com.tisl.mpl.wsdto.ResendEGVNotificationWsDTO;
 import com.tisl.mpl.wsdto.ReturnDetailsWsDTO;
 import com.tisl.mpl.wsdto.ReturnLogisticsResponseDTO;
 import com.tisl.mpl.wsdto.ReturnLogisticsResponseDetailsWsDTO;
@@ -277,7 +256,6 @@ import com.tisl.mpl.wsdto.ReturnReasonDetailsWsDTO;
 import com.tisl.mpl.wsdto.ReturnRequestDTO;
 import com.tisl.mpl.wsdto.RevSealJwlryDataWsDTO;
 import com.tisl.mpl.wsdto.ThirdPartyWalletWsDTO;
-import com.tisl.mpl.wsdto.TotalCliqCashBalanceWsDto;
 import com.tisl.mpl.wsdto.UpdateCustomerDetailDto;
 import com.tisl.mpl.wsdto.UserResultWsDto;
 import com.tisl.mpl.wsdto.ValidateOtpWsDto;
@@ -474,19 +452,6 @@ public class UsersController extends BaseCommerceController
 	@Resource(name = "voucherService")
 	private VoucherService voucherService;
 
-	@Autowired
-	private MplWalletFacade mplWalletFacade;
-	
-	@Resource(name = "mplDefaultPriceDataFactory")
-	private DefaultPriceDataFactory priceDataFactory;
-	
-	@Autowired
-	private CommonI18NService commonI18NService;
-	
-	@Autowired
-	private MplEGVCartService mplEGVCartService;
-
-
 	//Sonar Fix
 	private static final String NO_JUSPAY_URL = "No juspayReturnUrl is defined in local properties";
 
@@ -575,8 +540,8 @@ public class UsersController extends BaseCommerceController
 	@ResponseBody
 	public MplUserResultWsDto registerUser(@RequestParam final String emailId, @RequestParam final String password,
 			@RequestParam(required = false) final boolean tataTreatsEnable,
-			@RequestParam(required = false) final String platformNumber)
-			throws RequestParameterException, WebserviceValidationException, MalformedURLException
+			@RequestParam(required = false) final String platformNumber) throws RequestParameterException,
+			WebserviceValidationException, MalformedURLException
 
 	{
 		LOG.debug("****************** User Registration mobile web service ***********" + emailId);
@@ -659,7 +624,7 @@ public class UsersController extends BaseCommerceController
 	public MplUserResultWsDto loginUser(@PathVariable final String emailId, @RequestParam final String newCustomer,
 			@RequestParam final String password) throws RequestParameterException, WebserviceValidationException,
 
-			MalformedURLException
+	MalformedURLException
 
 	{
 		MplUserResultWsDto result = new MplUserResultWsDto();
@@ -733,8 +698,8 @@ public class UsersController extends BaseCommerceController
 	@RequestMapping(value = "/socialMediaRegistration", method = RequestMethod.POST, produces = APPLICATION_TYPE)
 	@ResponseBody
 	public MplUserResultWsDto socialMediaRegistration(@RequestParam final String emailId, @RequestParam final String socialMedia,
-			@RequestParam(required = false) final boolean tataTreatsEnable)
-			throws RequestParameterException, WebserviceValidationException, MalformedURLException
+			@RequestParam(required = false) final boolean tataTreatsEnable) throws RequestParameterException,
+			WebserviceValidationException, MalformedURLException
 	{
 		MplUserResultWsDto result = new MplUserResultWsDto();
 		try
@@ -742,8 +707,8 @@ public class UsersController extends BaseCommerceController
 			/* TPR-1140 Case-sensitive nature resulting in duplicate customer e-mails IDs */
 			final String emailIdLwCase = emailId.toLowerCase();
 			LOG.debug("****************** Social Media User Registration mobile web service ***********" + emailId);
-			if (!(StringUtils.equalsIgnoreCase(socialMedia.toLowerCase(), MarketplacewebservicesConstants.FACEBOOK)
-					|| (StringUtils.equalsIgnoreCase(socialMedia.toLowerCase(), MarketplacewebservicesConstants.GOOGLEPLUS))))
+			if (!(StringUtils.equalsIgnoreCase(socialMedia.toLowerCase(), MarketplacewebservicesConstants.FACEBOOK) || (StringUtils
+					.equalsIgnoreCase(socialMedia.toLowerCase(), MarketplacewebservicesConstants.GOOGLEPLUS))))
 			{
 				throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9020);
 			}
@@ -811,8 +776,8 @@ public class UsersController extends BaseCommerceController
 			LOG.debug("****************** Social Media User Login mobile web service ***********" + emailId);
 
 			//Social Media should not be anything other than FB or Google +
-			if (!(StringUtils.equalsIgnoreCase(socialMedia.toLowerCase(), MarketplacewebservicesConstants.FACEBOOK)
-					|| (StringUtils.equalsIgnoreCase(socialMedia.toLowerCase(), MarketplacewebservicesConstants.GOOGLEPLUS))))
+			if (!(StringUtils.equalsIgnoreCase(socialMedia.toLowerCase(), MarketplacewebservicesConstants.FACEBOOK) || (StringUtils
+					.equalsIgnoreCase(socialMedia.toLowerCase(), MarketplacewebservicesConstants.GOOGLEPLUS))))
 			{
 				throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9020);
 			}
@@ -1277,8 +1242,8 @@ public class UsersController extends BaseCommerceController
 		final AddressData addressData = userFacade.getAddressForCode(addressId);
 		if (addressData == null)
 		{
-			throw new RequestParameterException(ADDRESS_ID + sanitize(addressId) + MESSAGE_STRING, RequestParameterException.INVALID,
-					ADDRESS);
+			throw new RequestParameterException(ADDRESS_ID + sanitize(addressId) + MESSAGE_STRING,
+					RequestParameterException.INVALID, ADDRESS);
 		}
 
 		final AddressWsDTO dto = dataMapper.map(addressData, AddressWsDTO.class, fields);
@@ -1317,8 +1282,8 @@ public class UsersController extends BaseCommerceController
 		final AddressData addressData = userFacade.getAddressForCode(addressId);
 		if (addressData == null)
 		{
-			throw new RequestParameterException(ADDRESS_ID + sanitize(addressId) + MESSAGE_STRING, RequestParameterException.INVALID,
-					ADDRESS);
+			throw new RequestParameterException(ADDRESS_ID + sanitize(addressId) + MESSAGE_STRING,
+					RequestParameterException.INVALID, ADDRESS);
 		}
 		final boolean isAlreadyDefaultAddress = addressData.isDefaultAddress();
 		addressData.setFirstName(null);
@@ -1371,8 +1336,8 @@ public class UsersController extends BaseCommerceController
 		final AddressData addressData = userFacade.getAddressForCode(addressId);
 		if (addressData == null)
 		{
-			throw new RequestParameterException(ADDRESS_ID + sanitize(addressId) + MESSAGE_STRING, RequestParameterException.INVALID,
-					ADDRESS);
+			throw new RequestParameterException(ADDRESS_ID + sanitize(addressId) + MESSAGE_STRING,
+					RequestParameterException.INVALID, ADDRESS);
 		}
 		final boolean isAlreadyDefaultAddress = addressData.isDefaultAddress();
 		addressData.setFormattedAddress(null);
@@ -1419,8 +1384,8 @@ public class UsersController extends BaseCommerceController
 		final AddressData addressData = userFacade.getAddressForCode(addressId);
 		if (addressData == null)
 		{
-			throw new RequestParameterException(ADDRESS_ID + sanitize(addressId) + MESSAGE_STRING, RequestParameterException.INVALID,
-					ADDRESS);
+			throw new RequestParameterException(ADDRESS_ID + sanitize(addressId) + MESSAGE_STRING,
+					RequestParameterException.INVALID, ADDRESS);
 		}
 		final boolean isAlreadyDefaultAddress = addressData.isDefaultAddress();
 		addressData.setFormattedAddress(null);
@@ -1466,8 +1431,8 @@ public class UsersController extends BaseCommerceController
 		final AddressData addressData = userFacade.getAddressForCode(addressId);
 		if (addressData == null)
 		{
-			throw new RequestParameterException(ADDRESS_ID + sanitize(addressId) + MESSAGE_STRING, RequestParameterException.INVALID,
-					ADDRESS);
+			throw new RequestParameterException(ADDRESS_ID + sanitize(addressId) + MESSAGE_STRING,
+					RequestParameterException.INVALID, ADDRESS);
 		}
 		final boolean isAlreadyDefaultAddress = addressData.isDefaultAddress();
 		addressData.setFormattedAddress(null);
@@ -1505,8 +1470,8 @@ public class UsersController extends BaseCommerceController
 		final AddressData address = userFacade.getAddressForCode(addressId);
 		if (address == null)
 		{
-			throw new RequestParameterException(ADDRESS_ID + sanitize(addressId) + MESSAGE_STRING, RequestParameterException.INVALID,
-					ADDRESS);
+			throw new RequestParameterException(ADDRESS_ID + sanitize(addressId) + MESSAGE_STRING,
+					RequestParameterException.INVALID, ADDRESS);
 		}
 		userFacade.removeAddress(address);
 	}
@@ -1818,11 +1783,13 @@ public class UsersController extends BaseCommerceController
 
 
 
-		dataMapper.map(paymentDetails, paymentInfoData,
+		dataMapper
+				.map(paymentDetails,
+						paymentInfoData,
 
 
-				"accountHolderName,cardNumber,cardType,issueNumber,startMonth,expiryMonth,startYear,expiryYear,subscriptionId,defaultPaymentInfo,saved,billingAddress(firstName,lastName,titleCode,line1,line2,town,postalCode,region(isocode),country(isocode),defaultAddress)",
-				false);
+						"accountHolderName,cardNumber,cardType,issueNumber,startMonth,expiryMonth,startYear,expiryYear,subscriptionId,defaultPaymentInfo,saved,billingAddress(firstName,lastName,titleCode,line1,line2,town,postalCode,region(isocode),country(isocode),defaultAddress)",
+						false);
 		validate(paymentInfoData, PAYMENT_DETAILS, ccPaymentInfoValidator);
 
 		userFacade.updateCCPaymentInfo(paymentInfoData);
@@ -1947,11 +1914,13 @@ public class UsersController extends BaseCommerceController
 		validate(paymentDetails, PAYMENT_DETAILS, paymentDetailsDTOValidator);
 
 
-		dataMapper.map(paymentDetails, paymentInfoData,
+		dataMapper
+				.map(paymentDetails,
+						paymentInfoData,
 
 
-				"accountHolderName,cardNumber,cardType,issueNumber,startMonth,expiryMonth,startYear,expiryYear,subscriptionId,defaultPaymentInfo,saved,billingAddress(firstName,lastName,titleCode,line1,line2,town,postalCode,region(isocode),country(isocode),defaultAddress)",
-				true);
+						"accountHolderName,cardNumber,cardType,issueNumber,startMonth,expiryMonth,startYear,expiryYear,subscriptionId,defaultPaymentInfo,saved,billingAddress(firstName,lastName,titleCode,line1,line2,town,postalCode,region(isocode),country(isocode),defaultAddress)",
+						true);
 
 		userFacade.updateCCPaymentInfo(paymentInfoData);
 		if (paymentInfoData.isSaved() && !isAlreadyDefaultPaymentInfo && paymentInfoData.isDefaultPaymentInfo())
@@ -1993,8 +1962,8 @@ public class UsersController extends BaseCommerceController
 	@RequestMapping(value = "/{emailId}/inviteFriend", method = RequestMethod.POST, produces = APPLICATION_TYPE)
 	@ResponseBody
 	public UserResultWsDto inviteFriend(@RequestParam final String custEmailId, @RequestParam String textMessage,
-			@RequestParam final List friendEmailIdList, final HttpServletRequest request)
-			throws RequestParameterException, CMSItemNotFoundException, MalformedURLException
+			@RequestParam final List friendEmailIdList, final HttpServletRequest request) throws RequestParameterException,
+			CMSItemNotFoundException, MalformedURLException
 	{
 		final UserResultWsDto result = new UserResultWsDto();
 		final MplCustomerProfileData mplCustData = mplCustomerProfileService.getCustomerProfileDetail(custEmailId);
@@ -2026,8 +1995,8 @@ public class UsersController extends BaseCommerceController
 						{
 							if (StringUtils.isEmpty(textMessage))
 							{
-								textMessage = configurationService.getConfiguration()
-										.getString(MarketplacecommerceservicesConstants.INVITE_FRIENDS_MESSAGE_KEY, "NA");
+								textMessage = configurationService.getConfiguration().getString(
+										MarketplacecommerceservicesConstants.INVITE_FRIENDS_MESSAGE_KEY, "NA");
 
 							}
 							friendsInviteFacade.sendInvite(friendsData, textMessage);
@@ -2136,8 +2105,8 @@ public class UsersController extends BaseCommerceController
 		boolean successFlag = false;
 		try
 		{
-			final String messageText = configurationService.getConfiguration()
-					.getString(MarketplacecommerceservicesConstants.INVITE_FRIENDS_MESSAGE_KEY);
+			final String messageText = configurationService.getConfiguration().getString(
+					MarketplacecommerceservicesConstants.INVITE_FRIENDS_MESSAGE_KEY);
 			if (!StringUtils.isEmpty(messageText))
 			{
 				result.setFriendsInviteMessageText(messageText);
@@ -2586,7 +2555,7 @@ public class UsersController extends BaseCommerceController
 			@RequestParam final boolean defaultFlag)
 
 
-			throws RequestParameterException
+	throws RequestParameterException
 	{
 
 		String errorMsg = null;
@@ -3034,11 +3003,10 @@ public class UsersController extends BaseCommerceController
 	{
 		FIRSTNAME("firstName", "address.firstName.invalid"), LASTNAME("lastName", "address.lastName.invalid"), LINE1("line1",
 				"address.line1.invalid"), LINE2("line2", "address.line2.invalid"), LINE3("line3", "address.line3.invalid"), LANDMARK(
-						"landmark", "address.landmark.invalid"), TOWN("townCity", "address.townCity.invalid"), POSTCODE("postcode",
-								"address.postcode.invalid"), REGION("regionIso", "address.regionIso.invalid"), COUNTRY("countryIso",
-										"address.country.invalid"), ADDRESSTYPE("addressType",
-												"address.addressType.invalid"), STATE("state", "address.selectState"), LOCALITY("locality",
-														"address.locality.invalid"), MOBILE("mobileNo", "address.mobile.invalid");
+				"landmark", "address.landmark.invalid"), TOWN("townCity", "address.townCity.invalid"), POSTCODE("postcode",
+				"address.postcode.invalid"), REGION("regionIso", "address.regionIso.invalid"), COUNTRY("countryIso",
+				"address.country.invalid"), ADDRESSTYPE("addressType", "address.addressType.invalid"), STATE("state",
+				"address.selectState"), LOCALITY("locality", "address.locality.invalid"), MOBILE("mobileNo", "address.mobile.invalid");
 
 
 		private final String fieldKey;
@@ -3198,8 +3166,8 @@ public class UsersController extends BaseCommerceController
 	{ CUSTOMER, TRUSTED_CLIENT, CUSTOMERMANAGER })
 	@RequestMapping(value = "/{userId}/getAllWishlist", method = RequestMethod.POST, produces = APPLICATION_TYPE)
 	@ResponseBody
-	public GetWishListWsDTO getAllWishlistAndProduct(final HttpServletRequest request)
-			throws RequestParameterException, MalformedURLException
+	public GetWishListWsDTO getAllWishlistAndProduct(final HttpServletRequest request) throws RequestParameterException,
+			MalformedURLException
 
 
 	{
@@ -3254,9 +3222,9 @@ public class UsersController extends BaseCommerceController
 									//										ProductOption.BASIC, ProductOption.PRICE, ProductOption.SUMMARY, ProductOption.DESCRIPTION,
 									//										ProductOption.CATEGORIES, ProductOption.PROMOTIONS, ProductOption.STOCK, ProductOption.REVIEW,
 									//										ProductOption.DELIVERY_MODE_AVAILABILITY, ProductOption.SELLER));
-									productData1 = productFacade.getProductForOptions(entryModel.getProduct(),
-											Arrays.asList(ProductOption.BASIC, ProductOption.SUMMARY, ProductOption.DESCRIPTION,
-													ProductOption.CATEGORIES, ProductOption.STOCK, ProductOption.SELLER));
+									productData1 = productFacade.getProductForOptions(entryModel.getProduct(), Arrays.asList(
+											ProductOption.BASIC, ProductOption.SUMMARY, ProductOption.DESCRIPTION, ProductOption.CATEGORIES,
+											ProductOption.STOCK, ProductOption.SELLER));
 
 
 								}
@@ -3397,16 +3365,16 @@ public class UsersController extends BaseCommerceController
 												if (null != buyboxmodel.getSpecialPrice()
 														&& buyboxmodel.getSpecialPrice().doubleValue() > 0.0)
 												{
-													final PriceData priceDataSP = productDetailsHelper
-															.formPriceData(new Double(buyboxmodel.getSpecialPrice().doubleValue()));
+													final PriceData priceDataSP = productDetailsHelper.formPriceData(new Double(buyboxmodel
+															.getSpecialPrice().doubleValue()));
 													wldpDTO.setSpecialPrice(priceDataSP);
 
 												}
 												if (null != buyboxmodel.getPrice() && buyboxmodel.getPrice().doubleValue() > 0.0)
 
 												{
-													final PriceData priceDataMop = productDetailsHelper
-															.formPriceData(new Double(buyboxmodel.getPrice().doubleValue()));
+													final PriceData priceDataMop = productDetailsHelper.formPriceData(new Double(buyboxmodel
+															.getPrice().doubleValue()));
 
 
 
@@ -3418,8 +3386,8 @@ public class UsersController extends BaseCommerceController
 												if (null != buyboxmodel.getMrp() && buyboxmodel.getMrp().doubleValue() > 0.0)
 
 												{
-													final PriceData priceDataMrp = productDetailsHelper
-															.formPriceData(new Double(buyboxmodel.getMrp().doubleValue()));
+													final PriceData priceDataMrp = productDetailsHelper.formPriceData(new Double(buyboxmodel
+															.getMrp().doubleValue()));
 
 
 
@@ -3536,104 +3504,59 @@ public class UsersController extends BaseCommerceController
 	{
 
 		boolean successFlag = false;
-		boolean userflag = false;
-		boolean wishlistflag = false;
-
+		final boolean wishlistflag = false;
 		final UserResultWsDto result = new UserResultWsDto();
-		final Wishlist2EntryModel requiredWlEntry = null;
-		//final boolean productFound = false;
-
-		//		final MplCustomerProfileData mplCustData = new MplCustomerProfileData();
-		//		mplCustData.setDisplayUid(userId);
+		Wishlist2EntryModel requiredWlEntry = null;
+		boolean productFound = false;
 		try
 		{
-			//final UserModel user = userexService.getUserForUID(mplCustData.getDisplayUid());
 			final UserModel user = userService.getCurrentUser();
-
 			if (null == user)
 			{
 				throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9025);
 			}
 
-			/*
-			 * final List<Wishlist2EntryModel> allWishlistEntry = wishlistFacade.getAllWishlistByUssid(USSID); if
-			 * (CollectionUtils.isNotEmpty(allWishlistEntry)) { for (final Wishlist2EntryModel wishentryModel :
-			 * allWishlistEntry) { if (null != wishentryModel.getWishlist() && StringUtils.isNotBlank(wishlistName) &&
-			 * wishlistName.equalsIgnoreCase(wishentryModel.getWishlist().getName())) { productFound = true;
-			 * requiredWlEntry = wishentryModel; break; } } } else
-			 *
-			 *
-			 * { throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9211);
-			 *
-			 * }
-			 */
-
-			//Fetching all wishList for the user
-			final List<Wishlist2Model> allWishlists = wishlistService.getWishlists(user);
-			userflag = true;
-			Wishlist2Model requiredWl = null;
-			String name = null;
-
-			//Checking wether wishlistname is empty or not
-			if (!wishlistName.isEmpty())
+			final List<Wishlist2EntryModel> allWishlistEntry = wishlistFacade.getAllWishlistByUssid(USSID);
+			if (CollectionUtils.isNotEmpty(allWishlistEntry))
 			{
-
-				name = wishlistName;
-			}
-
-			for (final Wishlist2Model wl : allWishlists)
-			{
-
-				if (name.equals(wl.getName()))
+				for (final Wishlist2EntryModel wishentryModel : allWishlistEntry)
 				{
-					requiredWl = wl;
-					wishlistflag = true;
-					break;
-				}
-			}
-
-
-			//Wishlist2EntryModel wishlist2EntryModel = null;
-			boolean ProductFound = false;
-			final List<Wishlist2EntryModel> entryModels = requiredWl.getEntries();
-			if (entryModels.size() >= 1)
-			{
-
-
-				for (final Wishlist2EntryModel entryModel : entryModels)
-				{
-					final Collection<SellerInformationModel> sellerList = entryModel.getProduct().getSellerInformationRelator();
-					for (final SellerInformationModel seller : sellerList)
+					if (null != wishentryModel.getWishlist() && StringUtils.isNotBlank(wishlistName)
+							&& wishlistName.equalsIgnoreCase(wishentryModel.getWishlist().getName()))
 					{
-						if (seller.getSellerArticleSKU().equals(USSID))
-						{
-							//	wishlist2EntryModel = entryModel;
-							ProductFound = true;
-						}
-
+						productFound = true;
+						requiredWlEntry = wishentryModel;
+						break;
 					}
-				}
-
-				if (ProductFound)
-				{
-					//wishlistService.removeWishlistEntry(requiredWl, wishlist2EntryModel);
-					successFlag = wishlistFacade.removeWishlistEntry(requiredWlEntry);
-					//Set Success Flag to true
-					//successFlag = true;
-				}
-				else
-				{
-					throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9210);
 				}
 			}
 			else
 			{
-
-
-
 				throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9211);
+			}
+
+			if (productFound)
+			{
+				successFlag = wishlistFacade.removeWishlistEntry(requiredWlEntry);
+				//Set Success Flag to true
+			}
+			else
+			{
+				throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9210);
+			}
+
+			if (successFlag)
+			{
+				//Set result status to success
+				result.setStatus(MarketplacecommerceservicesConstants.SUCCESS_FLAG);
 
 			}
+			else
+			{
+				//Set result status to error
+				result.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
+			}
+
 		}
 		catch (final EtailNonBusinessExceptions e)
 		{
@@ -3663,35 +3586,12 @@ public class UsersController extends BaseCommerceController
 		}
 		catch (final Exception e)
 		{
-			//Check if user was found
-			if (!userflag)
-			{
-				result.setError(MarketplacecommerceservicesConstants.USER_NOT_FOUND);
-			}
 			//Check if Wishlist was found for user
-
-			if (userflag)
+			if (!wishlistflag)
 			{
-				if (!wishlistflag)
-				{
-					result.setError(MarketplacecommerceservicesConstants.WISHLIST_NOT_FOUND);
-				}
-
+				result.setError(MarketplacecommerceservicesConstants.WISHLIST_NOT_FOUND);
 			}
-
 			//Set Success Flag to false
-			successFlag = false;
-		}
-
-		if (successFlag)
-		{
-			//Set result status to success
-			result.setStatus(MarketplacecommerceservicesConstants.SUCCESS_FLAG);
-
-		}
-		else
-		{
-			//Set result status to error
 			result.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
 		}
 
@@ -3801,8 +3701,8 @@ public class UsersController extends BaseCommerceController
 		final UserResultWsDto userResultWsDto = new UserResultWsDto();
 		final CustomerData customerData = customerFacade.getCurrentCustomer();
 
-		final String messageText = configurationService.getConfiguration()
-				.getString(MarketplacecommerceservicesConstants.INVITE_FRIENDS_MESSAGE_KEY);
+		final String messageText = configurationService.getConfiguration().getString(
+				MarketplacecommerceservicesConstants.INVITE_FRIENDS_MESSAGE_KEY);
 
 		final String affiliateId = customerData.getUid();
 		final String specificUrl = MarketplacecommerceservicesConstants.LINK_LOGIN + MarketplacecommerceservicesConstants.QS
@@ -3893,7 +3793,8 @@ public class UsersController extends BaseCommerceController
 			//final MplCustomerProfileData customerToSave = mplCustomerProfileService.getCustomerProfileDetail(userId);
 			// Get the data before editing
 			final String channel = MarketplacecommerceservicesConstants.UPDATE_CHANNEL_MOBILE;
-			final Map<String, String> preSavedDetailMap = mplCustomerProfileFacade.setPreviousDataToMap(customerData.getDisplayUid(),
+			final Map<String, String> preSavedDetailMap = mplCustomerProfileFacade.setPreviousDataToMap(
+					customerData.getDisplayUid(),
 
 
 
@@ -4092,12 +3993,12 @@ public class UsersController extends BaseCommerceController
 						updateCustomerDetailDto.setDateOfBirth(customerToSave.getDateOfBirth());
 					}
 					// NOTIFY GIGYA OF THE USER PROFILE CHANGES
-					final String gigyaServiceSwitch = configurationService.getConfiguration()
-							.getString(MarketplacewebservicesConstants.USE_GIGYA);
+					final String gigyaServiceSwitch = configurationService.getConfiguration().getString(
+							MarketplacewebservicesConstants.USE_GIGYA);
 					if (gigyaServiceSwitch != null && !gigyaServiceSwitch.equalsIgnoreCase(MarketplacewebservicesConstants.NO))
 					{
-						final String gigyaMethod = configurationService.getConfiguration()
-								.getString(MarketplacewebservicesConstants.GIGYA_METHOD_UPDATE_USERINFO);
+						final String gigyaMethod = configurationService.getConfiguration().getString(
+								MarketplacewebservicesConstants.GIGYA_METHOD_UPDATE_USERINFO);
 						String fnameGigya = null;
 						String lnameGigya = null;
 
@@ -4127,7 +4028,7 @@ public class UsersController extends BaseCommerceController
 				{
 					ExceptionUtil.etailNonBusinessExceptionHandler(
 
-							new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.B0001));
+					new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.B0001));
 				}
 				catch (final EtailNonBusinessExceptions e)
 				{
@@ -4260,8 +4161,8 @@ public class UsersController extends BaseCommerceController
 				if (null != validationMsg)
 				{
 
-					LOG.debug(
-							"************** Mobile web service Validate OTP for COD  RESPONSE SUCCESSSSS ******************" + emailid);
+					LOG.debug("************** Mobile web service Validate OTP for COD  RESPONSE SUCCESSSSS ******************"
+							+ emailid);
 
 
 
@@ -4419,8 +4320,7 @@ public class UsersController extends BaseCommerceController
 	 * reset password
 	 *
 	 * @param old
-	 * @param new
-	 *           password
+	 * @param new password
 	 *
 	 * @returnUserResultWsDto
 	 */
@@ -4431,8 +4331,8 @@ public class UsersController extends BaseCommerceController
 	@RequestMapping(value = "/{userId}/resetpassword", method = RequestMethod.POST, produces = APPLICATION_TYPE)
 	@ResponseBody
 	public UserResultWsDto resetPassword(@PathVariable final String userId, @RequestParam final String old,
-			@RequestParam final String newPassword, final HttpServletRequest request)
-			throws RequestParameterException, de.hybris.platform.commerceservices.customer.PasswordMismatchException
+			@RequestParam final String newPassword, final HttpServletRequest request) throws RequestParameterException,
+			de.hybris.platform.commerceservices.customer.PasswordMismatchException
 	{
 		final UserResultWsDto result = new UserResultWsDto();
 		final Authentication auth = SecurityContextHolder.getContext().getAuthentication();
@@ -5285,8 +5185,8 @@ public class UsersController extends BaseCommerceController
 
 							if (TimeUnit.DAYS.convert(diff, TimeUnit.MILLISECONDS) != 1)
 							{
-								orderNotificationDto
-										.setOrderNotificationPassDate(TimeUnit.DAYS.convert(diff, TimeUnit.MILLISECONDS) + " Days");
+								orderNotificationDto.setOrderNotificationPassDate(TimeUnit.DAYS.convert(diff, TimeUnit.MILLISECONDS)
+										+ " Days");
 
 
 
@@ -5294,8 +5194,8 @@ public class UsersController extends BaseCommerceController
 							}
 							else
 							{
-								orderNotificationDto
-										.setOrderNotificationPassDate(TimeUnit.DAYS.convert(diff, TimeUnit.MILLISECONDS) + " Day");
+								orderNotificationDto.setOrderNotificationPassDate(TimeUnit.DAYS.convert(diff, TimeUnit.MILLISECONDS)
+										+ " Day");
 
 
 
@@ -5307,8 +5207,8 @@ public class UsersController extends BaseCommerceController
 
 							if (TimeUnit.DAYS.convert(diff, TimeUnit.MILLISECONDS) != 1)
 							{
-								orderNotificationDto
-										.setCouponNotificationPassDate(TimeUnit.DAYS.convert(diff, TimeUnit.MILLISECONDS) + " Days");
+								orderNotificationDto.setCouponNotificationPassDate(TimeUnit.DAYS.convert(diff, TimeUnit.MILLISECONDS)
+										+ " Days");
 
 
 
@@ -5316,8 +5216,8 @@ public class UsersController extends BaseCommerceController
 							}
 							else
 							{
-								orderNotificationDto
-										.setCouponNotificationPassDate(TimeUnit.DAYS.convert(diff, TimeUnit.MILLISECONDS) + " Day");
+								orderNotificationDto.setCouponNotificationPassDate(TimeUnit.DAYS.convert(diff, TimeUnit.MILLISECONDS)
+										+ " Day");
 
 
 
@@ -5388,7 +5288,7 @@ public class UsersController extends BaseCommerceController
 			notificationFacade.markNotificationReadForOriginalUid(emailId, orderID, consignmentId, orderDetailStatus);
 			final List<NotificationData> notificationMessagelist = notificationFacade.getNotificationDetailForEmailID(emailId,
 
-					false);
+			false);
 			if (null != emailId)
 			{
 				if (null != notificationMessagelist && !notificationMessagelist.isEmpty())
@@ -6028,10 +5928,10 @@ public class UsersController extends BaseCommerceController
 					break;
 				}
 			}
-			final boolean cancelFlag = getConfigurationService().getConfiguration()
-					.getBoolean(MarketplacecommerceservicesConstants.CANCEL_ENABLE);
-			final boolean returnFlag = getConfigurationService().getConfiguration()
-					.getBoolean(MarketplacecommerceservicesConstants.RETURN_ENABLE);
+			final boolean cancelFlag = getConfigurationService().getConfiguration().getBoolean(
+					MarketplacecommerceservicesConstants.CANCEL_ENABLE);
+			final boolean returnFlag = getConfigurationService().getConfiguration().getBoolean(
+					MarketplacecommerceservicesConstants.RETURN_ENABLE);
 
 			if (ticketTypeCode.equalsIgnoreCase("C") && cancelFlag)
 			{
@@ -6169,8 +6069,8 @@ public class UsersController extends BaseCommerceController
 	@RequestMapping(value = "{emailId}/getFavCategoriesBrands", method = RequestMethod.POST, produces = APPLICATION_TYPE)
 	@ResponseBody
 	public MplAllFavouritePreferenceWsDTO getFavCategoriesBrands(@PathVariable final String emailId, final String fields,
-			@RequestParam(required = false) final String deviceId)
-			throws RequestParameterException, WebserviceValidationException, MalformedURLException
+			@RequestParam(required = false) final String deviceId) throws RequestParameterException, WebserviceValidationException,
+			MalformedURLException
 
 
 	{
@@ -6755,8 +6655,8 @@ public class UsersController extends BaseCommerceController
 	{ CUSTOMER, TRUSTED_CLIENT, CUSTOMERMANAGER })
 	@RequestMapping(value = "/{emailId}/getMerchant", method = RequestMethod.GET, produces = APPLICATION_TYPE)
 	@ResponseBody
-	public GetmerchantWsDTO getMerchant(@PathVariable final String emailId)
-			throws RequestParameterException, WebserviceValidationException, MalformedURLException
+	public GetmerchantWsDTO getMerchant(@PathVariable final String emailId) throws RequestParameterException,
+			WebserviceValidationException, MalformedURLException
 	{
 
 		final GetmerchantWsDTO getmerchantWsDTO = new GetmerchantWsDTO();
@@ -6771,15 +6671,14 @@ public class UsersController extends BaseCommerceController
 			{
 
 				final String juspayMerchantKey = !getConfigurationService().getConfiguration()
-						.getString(MarketplacecommerceservicesConstants.JUSPAYMERCHANTTESTKEY).isEmpty()
-								? getConfigurationService().getConfiguration()
-										.getString(MarketplacecommerceservicesConstants.JUSPAYMERCHANTTESTKEY)
-								: MarketplacecommerceservicesConstants.JUSPAYMERCHANTKEYNOTFOUND;
+						.getString(MarketplacecommerceservicesConstants.JUSPAYMERCHANTTESTKEY).isEmpty() ? getConfigurationService()
+						.getConfiguration().getString(MarketplacecommerceservicesConstants.JUSPAYMERCHANTTESTKEY)
+						: MarketplacecommerceservicesConstants.JUSPAYMERCHANTKEYNOTFOUND;
 
 				final String juspayMerchantId = !getConfigurationService().getConfiguration()
-						.getString(MarketplacecommerceservicesConstants.MARCHANTID).isEmpty()
-								? getConfigurationService().getConfiguration().getString(MarketplacecommerceservicesConstants.MARCHANTID)
-								: MarketplacecommerceservicesConstants.JUSPAYMERCHANTIDNOTFOUND;
+						.getString(MarketplacecommerceservicesConstants.MARCHANTID).isEmpty() ? getConfigurationService()
+						.getConfiguration().getString(MarketplacecommerceservicesConstants.MARCHANTID)
+						: MarketplacecommerceservicesConstants.JUSPAYMERCHANTIDNOTFOUND;
 
 				getmerchantWsDTO.setMerchantID(juspayMerchantId);
 				getmerchantWsDTO.setMerchantKey(juspayMerchantKey);
@@ -6826,7 +6725,7 @@ public class UsersController extends BaseCommerceController
 			@RequestParam(required = false) final String platform, @RequestParam(required = false) final String bankName,
 			@RequestBody(required = false) final InventoryReservListRequestWsDTO item) throws EtailNonBusinessExceptions
 	{
-		OrderCreateInJusPayWsDto orderCreateInJusPayWsDto = new OrderCreateInJusPayWsDto();
+		final OrderCreateInJusPayWsDto orderCreateInJusPayWsDto = new OrderCreateInJusPayWsDto();
 		String uid = "";
 		String failErrorCode = "";
 		boolean failFlag = false;
@@ -6839,45 +6738,12 @@ public class UsersController extends BaseCommerceController
 		String juspayReturnUrl = "";
 		final StringBuilder returnUrlBuilder = new StringBuilder();
 		String orderCode = null;
-		double payableWalletAmount = 0.0D;
-		double payableJuspayAmount = 0.0D;
-		double totalWalletAmount = 0.0D;
 		if (LOG.isDebugEnabled())
 		{
 			LOG.debug("********* Creating juspay Order mobile web service" + userId);
 		}
-
-
 		try
 		{
-
-			// QC Wallet Changes Start
-
-			// paying full Amount From Wallet in Case Of CLIQ CASH MODE
-			orderModel = getMplPaymentFacade().getOrderByGuid(cartGuid);
-			if (null != orderModel)
-			{
-				
-				
-				if (null != orderModel.getSplitModeInfo()
-						&& orderModel.getSplitModeInfo().equalsIgnoreCase(MarketplacewebservicesConstants.PAYMENT_MODE_CLIQ_CASH))
-				{
-					orderCreateInJusPayWsDto = patAmountUsingQC(userId, cartGuid, pincode, item);
-					return orderCreateInJusPayWsDto;
-				}
-			}
-			else
-			{
-				cart = mplPaymentWebFacade.findCartAnonymousValues(cartGuid);
-				if (null != cart && null != cart.getSplitModeInfo()
-						&& cart.getSplitModeInfo().equalsIgnoreCase(MarketplacewebservicesConstants.PAYMENT_MODE_CLIQ_CASH))
-				{
-					orderCreateInJusPayWsDto = patAmountUsingQC(userId, cartGuid, pincode, item);
-					return orderCreateInJusPayWsDto;
-				}
-			}
-			// QC Wallet Changes END
-
 			final String paymentAddressLine1 = java.net.URLDecoder.decode(addressLine1, UTF);
 			final String paymentAddressLine2 = java.net.URLDecoder.decode(addressLine2, UTF);
 			final String paymentAddressLine3 = java.net.URLDecoder.decode(addressLine3, UTF);
@@ -6893,27 +6759,23 @@ public class UsersController extends BaseCommerceController
 			}
 			// For Mobile
 			juspayMerchantId = !getConfigurationService().getConfiguration()
-					.getString(MarketplacecommerceservicesConstants.MARCHANTID).isEmpty()
-							? getConfigurationService().getConfiguration().getString(MarketplacecommerceservicesConstants.MARCHANTID)
-							: NO_JUSPAY_MERCHANTKEY;
+					.getString(MarketplacecommerceservicesConstants.MARCHANTID).isEmpty() ? getConfigurationService()
+					.getConfiguration().getString(MarketplacecommerceservicesConstants.MARCHANTID) : NO_JUSPAY_MERCHANTKEY;
 
 			if (commonUtils.isLuxurySite())
 			{
 				juspayReturnUrl = !getConfigurationService().getConfiguration()
-						.getString(MarketplacecommerceservicesConstants.RETURNURLLUX).isEmpty()
-								? getConfigurationService()
+						.getString(MarketplacecommerceservicesConstants.RETURNURLLUX).isEmpty() ? getConfigurationService()
 
 
-										.getConfiguration().getString(MarketplacecommerceservicesConstants.RETURNURLLUX)
-								: NO_JUSPAY_URL;
+				.getConfiguration().getString(MarketplacecommerceservicesConstants.RETURNURLLUX) : NO_JUSPAY_URL;
 
 			}
 			else
 			{
 				juspayReturnUrl = !getConfigurationService().getConfiguration()
-						.getString(MarketplacecommerceservicesConstants.RETURNURL).isEmpty()
-								? getConfigurationService().getConfiguration().getString(MarketplacecommerceservicesConstants.RETURNURL)
-								: NO_JUSPAY_URL;
+						.getString(MarketplacecommerceservicesConstants.RETURNURL).isEmpty() ? getConfigurationService()
+						.getConfiguration().getString(MarketplacecommerceservicesConstants.RETURNURL) : NO_JUSPAY_URL;
 			}
 
 			returnUrlBuilder.append(juspayReturnUrl);
@@ -6932,35 +6794,9 @@ public class UsersController extends BaseCommerceController
 				if (null != cart)
 				{
 					//TPR-4461 STARTS HERE WHEN ORDER MODEL IS NULL
-					
-					 // Buying Of EGV  Changes Start 
-					CartModel egvCart = mplEGVCartService.getEGVCartModel(cartGuid);
-					if (null != egvCart && null != egvCart.getIsEGVCart() && egvCart.getIsEGVCart().booleanValue())
-					{
 
-						orderCreateInJusPayWsDto = createJuspayOrderForEGV(firstName, lastName, country, state, city, pincode,
-								cardSaved, sameAsShipping, egvCart.getGuid(), returnUrlBuilder, paymentAddressLine1, paymentAddressLine2,
-								paymentAddressLine3, uid);
-						if (null != orderCreateInJusPayWsDto && null != orderCreateInJusPayWsDto.getJuspayOrderId())
-						{
-							orderCreateInJusPayWsDto.setJuspayMerchantId(juspayMerchantId);
-							orderCreateInJusPayWsDto.setJuspayReturnUrl(juspayReturnUrl);
-							orderCreateInJusPayWsDto.setJuspayOrderId(juspayOrderId);
-							orderCreateInJusPayWsDto.setStatus(MarketplacecommerceservicesConstants.SUCCESS_FLAG);
-						}
-						else
-						{
-							orderCreateInJusPayWsDto.setStatus(MarketplacecommerceservicesConstants.FAILURE_FLAG);
-
-						}
-						return orderCreateInJusPayWsDto;
-
-					}
-
-					// Buying Of EGV  Changes End
-
-					final ArrayList<DiscountModel> voucherList = new ArrayList<DiscountModel>(
-							getVoucherService().getAppliedVouchers(cart));
+					final ArrayList<DiscountModel> voucherList = new ArrayList<DiscountModel>(getVoucherService().getAppliedVouchers(
+							cart));
 
 					if (CollectionUtils.isNotEmpty(voucherList))
 					{
@@ -7062,9 +6898,10 @@ public class UsersController extends BaseCommerceController
 				//TODO Soft reservation calls already made
 
 
-				if (!failFlag && !mplCartFacade.isInventoryReservedMobile(
-						MarketplacecommerceservicesConstants.OMS_INVENTORY_RESV_TYPE_PAYMENTPENDING, cart, pincode, item,
-						SalesApplication.MOBILE))
+				if (!failFlag
+						&& !mplCartFacade.isInventoryReservedMobile(
+								MarketplacecommerceservicesConstants.OMS_INVENTORY_RESV_TYPE_PAYMENTPENDING, cart, pincode, item,
+								SalesApplication.MOBILE))
 				{
 					//getSessionService().setAttribute(MarketplacecclientservicesConstants.OMS_INVENTORY_RESV_SESSION_ID,"TRUE");
 					//getMplCartFacade().recalculate(cart);
@@ -7082,54 +6919,28 @@ public class UsersController extends BaseCommerceController
 						final CustomerModel customerModel = mplPaymentWebFacade.getCustomer(userId);
 
 						juspayMerchantId = !getConfigurationService().getConfiguration()
-								.getString(MarketplacecommerceservicesConstants.MARCHANTID).isEmpty()
-										? getConfigurationService().getConfiguration()
-												.getString(MarketplacecommerceservicesConstants.MARCHANTID)
-										: NO_JUSPAY_MERCHANTKEY;
+								.getString(MarketplacecommerceservicesConstants.MARCHANTID).isEmpty() ? getConfigurationService()
+								.getConfiguration().getString(MarketplacecommerceservicesConstants.MARCHANTID) : NO_JUSPAY_MERCHANTKEY;
 
 						if (commonUtils.isLuxurySite())
 						{
 							juspayReturnUrl = !getConfigurationService().getConfiguration()
-									.getString(MarketplacecommerceservicesConstants.RETURNURLLUX).isEmpty()
-											? getConfigurationService().getConfiguration()
-													.getString(MarketplacecommerceservicesConstants.RETURNURLLUX)
-											: NO_JUSPAY_URL;
+									.getString(MarketplacecommerceservicesConstants.RETURNURLLUX).isEmpty() ? getConfigurationService()
+									.getConfiguration().getString(MarketplacecommerceservicesConstants.RETURNURLLUX) : NO_JUSPAY_URL;
 
 						}
 						else
 						{
 							juspayReturnUrl = !getConfigurationService().getConfiguration()
-									.getString(MarketplacecommerceservicesConstants.RETURNURL).isEmpty()
-											? getConfigurationService().getConfiguration()
-													.getString(MarketplacecommerceservicesConstants.RETURNURL)
-											: NO_JUSPAY_URL;
+									.getString(MarketplacecommerceservicesConstants.RETURNURL).isEmpty() ? getConfigurationService()
+									.getConfiguration().getString(MarketplacecommerceservicesConstants.RETURNURL) : NO_JUSPAY_URL;
 						}
 
-						if (null != cart.getSplitModeInfo() && cart.getSplitModeInfo().equalsIgnoreCase(MarketplacewebservicesConstants.PAYMENT_MODE_SPLIT))
-						{
-							
-							if (null != cart.getPayableWalletAmount())
-							{
-								totalWalletAmount = cart.getPayableWalletAmount().doubleValue();
-							}
-							
-							if (totalWalletAmount > 0.0D)
-							{
-								payableJuspayAmount = cart.getTotalPrice().doubleValue()-totalWalletAmount;
-							}else {
-								payableJuspayAmount = cart.getTotalPrice().doubleValue();
-							}
-							orderCreateInJusPayWsDto.setCliqcashAmount(Double.valueOf(totalWalletAmount));
-							orderCreateInJusPayWsDto.setCliqcashSelected(true);
-						}
-						else
-						{
-							payableJuspayAmount = cart.getTotalPrice().doubleValue();
-						}
 						juspayOrderId = mplPaymentFacade.createJuspayOrder(cart, null, firstName, lastName, addressLine1, addressLine2,
-								addressLine3, country, state, city, pincode,
-								cardSaved + MarketplacewebservicesConstants.STRINGSEPARATOR + sameAsShipping, juspayReturnUrl,
-								customerModel.getUid(), MarketplacewebservicesConstants.CHANNEL_MOBILE, payableJuspayAmount);
+								addressLine3, country, state, city, pincode, cardSaved + MarketplacewebservicesConstants.STRINGSEPARATOR
+										+ sameAsShipping, juspayReturnUrl,
+
+								customerModel.getUid(), MarketplacewebservicesConstants.CHANNEL_MOBILE);
 
 
 						LOG.debug("********* Created juspay Order mobile web service *************" + juspayOrderId);
@@ -7160,31 +6971,10 @@ public class UsersController extends BaseCommerceController
 				}
 				else
 				{
-
-					if (null != cart.getSplitModeInfo() && cart.getSplitModeInfo().equalsIgnoreCase(MarketplacewebservicesConstants.PAYMENT_MODE_SPLIT))
-					{
-						if (null != cart.getPayableWalletAmount())
-						{
-							totalWalletAmount = cart.getPayableWalletAmount().doubleValue();
-						}
-						
-						if (totalWalletAmount > 0.0D)
-						{
-							payableJuspayAmount = cart.getTotalPrice().doubleValue()-totalWalletAmount;
-						}else {
-							payableJuspayAmount = cart.getTotalPrice().doubleValue();
-						}
-						orderCreateInJusPayWsDto.setCliqcashAmount(Double.valueOf(payableWalletAmount));
-						orderCreateInJusPayWsDto.setCliqcashSelected(true);
-					}
-					else
-					{
-						payableJuspayAmount = cart.getTotalPrice().doubleValue();
-					}
 					juspayOrderId = getMplPaymentFacade().createJuspayOrder(cart, null, firstName, lastName, paymentAddressLine1,
 							paymentAddressLine2, paymentAddressLine3, country, state, city, pincode,
 							cardSaved + MarketplacecommerceservicesConstants.STRINGSEPARATOR + sameAsShipping,
-							returnUrlBuilder.toString(), uid, MarketplacecommerceservicesConstants.CHANNEL_MOBILE, payableJuspayAmount);
+							returnUrlBuilder.toString(), uid, MarketplacecommerceservicesConstants.CHANNEL_MOBILE);
 					//create order here
 					//Mandatory checks agains cart
 					final boolean isValidCart = getMplPaymentFacade().checkCart(cart);
@@ -7213,8 +7003,8 @@ public class UsersController extends BaseCommerceController
 			else
 			{
 				//TPR-4461 STARTS HERE WHEN ORDER MODEL IS NOT NULL
-				final ArrayList<DiscountModel> voucherList = new ArrayList<DiscountModel>(
-						getVoucherService().getAppliedVouchers(orderModel));
+				final ArrayList<DiscountModel> voucherList = new ArrayList<DiscountModel>(getVoucherService().getAppliedVouchers(
+						orderModel));
 
 				if (CollectionUtils.isNotEmpty(voucherList))
 				{
@@ -7306,9 +7096,10 @@ public class UsersController extends BaseCommerceController
 
 
 
-				if (!failFlag && !mplCartFacade.isInventoryReservedMobile(
-						MarketplacecommerceservicesConstants.OMS_INVENTORY_RESV_TYPE_PAYMENTPENDING, orderModel, pincode, item,
-						SalesApplication.MOBILE))
+				if (!failFlag
+						&& !mplCartFacade.isInventoryReservedMobile(
+								MarketplacecommerceservicesConstants.OMS_INVENTORY_RESV_TYPE_PAYMENTPENDING, orderModel, pincode, item,
+								SalesApplication.MOBILE))
 				{
 					//getSessionService().setAttribute(MarketplacecclientservicesConstants.OMS_INVENTORY_RESV_SESSION_ID,"TRUE");
 					getMplCartFacade().recalculateOrder(orderModel);
@@ -7324,30 +7115,10 @@ public class UsersController extends BaseCommerceController
 				}
 				else
 				{
-					if (null != orderModel.getSplitModeInfo() && orderModel.getSplitModeInfo().equalsIgnoreCase(MarketplacewebservicesConstants.PAYMENT_MODE_SPLIT))
-					{
-						if (null != orderModel.getPayableWalletAmount())
-						{
-							totalWalletAmount = orderModel.getPayableWalletAmount().doubleValue();
-						}
-						
-						if (totalWalletAmount > 0.0D)
-						{
-							payableJuspayAmount = orderModel.getTotalPrice().doubleValue()-totalWalletAmount;
-						}else {
-							payableJuspayAmount = orderModel.getTotalPrice().doubleValue();
-						}
-						orderCreateInJusPayWsDto.setCliqcashAmount(Double.valueOf(payableWalletAmount));
-						orderCreateInJusPayWsDto.setCliqcashSelected(true);
-					}
-					else
-					{
-						payableJuspayAmount = orderModel.getTotalPrice().doubleValue();
-					}
-					juspayOrderId = getMplPaymentFacade().createJuspayOrder(null, orderModel, firstName, lastName, paymentAddressLine1,
-							paymentAddressLine2, paymentAddressLine3, country, state, city, pincode,
+					juspayOrderId = getMplPaymentFacade().createJuspayOrder(null, orderModel, firstName, lastName,
+							paymentAddressLine1, paymentAddressLine2, paymentAddressLine3, country, state, city, pincode,
 							cardSaved + MarketplacecommerceservicesConstants.STRINGSEPARATOR + sameAsShipping,
-							returnUrlBuilder.toString(), uid, MarketplacecommerceservicesConstants.CHANNEL_MOBILE, payableJuspayAmount);
+							returnUrlBuilder.toString(), uid, MarketplacecommerceservicesConstants.CHANNEL_MOBILE);
 					//CAR-110
 					//orderData = mplCheckoutFacade.getOrderDetailsForCode(orderModel);
 				}
@@ -7427,45 +7198,6 @@ public class UsersController extends BaseCommerceController
 		return orderCreateInJusPayWsDto;
 	}
 
-	private OrderCreateInJusPayWsDto createJuspayOrderForEGV(final String firstName, final String lastName, final String country,
-			final String state, final String city, final String pincode, final String cardSaved, final String sameAsShipping,
-			final String guid, final StringBuilder returnUrlBuilder, final String paymentAddressLine1,
-			final String paymentAddressLine2, final String paymentAddressLine3, final String uid) throws InvalidCartException
-	{
-
-		final OrderCreateInJusPayWsDto juspayOrderWsDto = new OrderCreateInJusPayWsDto();
-		try
-		{
-
-			final CartModel cart = mplEGVCartService.getEGVCartModel(guid);
-			LOG.info("::Going to Create Juspay OrderId::");
-			final String juspayOrderId = getMplPaymentFacade().createJuspayOrder(cart, null, firstName, lastName,
-					paymentAddressLine1, paymentAddressLine2, paymentAddressLine3, country, state, city, pincode,
-					cardSaved + MarketplacewebservicesConstants.STRINGSEPARATOR + sameAsShipping, returnUrlBuilder.toString(), uid,
-					MarketplacewebservicesConstants.CHANNEL_MOBILE, cart.getTotalPrice().doubleValue());
-			final OrderModel order = getMplCheckoutFacade().placeEGVOrder(cart);
-			if (null != order && null != order.getCode())
-			{
-				juspayOrderWsDto.setOrderId(order.getCode());
-			}
-			if (null != juspayOrderId)
-			{
-				juspayOrderWsDto.setJuspayOrderId(juspayOrderId);
-			}
-		}
-		catch (final EtailNonBusinessExceptions e)
-		{
-			LOG.error("Exception Occurred while createJuspayOrderForEGV " + e.getMessage());
-		}
-		catch (final Exception e)
-		{
-			LOG.error("Exception Occurred while createJuspayOrderForEGV " + e.getMessage());
-		}
-
-		return juspayOrderWsDto;
-	}
-
-
 	/**
 	 * @description method is called to generate update profileURL
 	 * @param request
@@ -7486,8 +7218,8 @@ public class UsersController extends BaseCommerceController
 		}
 		catch (final MalformedURLException e)
 		{
-			ExceptionUtil
-					.etailNonBusinessExceptionHandler(new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0016));
+			ExceptionUtil.etailNonBusinessExceptionHandler(new EtailNonBusinessExceptions(e,
+					MarketplacecommerceservicesConstants.E0016));
 
 
 
@@ -7496,10 +7228,6 @@ public class UsersController extends BaseCommerceController
 		}
 		return profileUpdateUrl;
 	}
-
-
-
-
 
 	/**
 	 * @Description : For getting the details of all the Coupons available for the User
@@ -7519,7 +7247,7 @@ public class UsersController extends BaseCommerceController
 	@RequestMapping(value = "/{emailId}/getCoupons", method = RequestMethod.GET, produces = APPLICATION_TYPE)
 	@ResponseBody
 	public CommonCouponsDTO getCoupons(@PathVariable final String emailId, @RequestParam final int currentPage,
-			/* @RequestParam final int pageSize, */@RequestParam final String usedCoupon,
+	/* @RequestParam final int pageSize, */@RequestParam final String usedCoupon,
 			@RequestParam(value = MarketplacewebservicesConstants.SORT, required = false) final String sortCode)
 			throws RequestParameterException, WebserviceValidationException, MalformedURLException
 	{
@@ -7580,8 +7308,8 @@ public class UsersController extends BaseCommerceController
 		}
 		catch (final MalformedURLException e)
 		{
-			ExceptionUtil
-					.etailNonBusinessExceptionHandler(new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0016));
+			ExceptionUtil.etailNonBusinessExceptionHandler(new EtailNonBusinessExceptions(e,
+					MarketplacecommerceservicesConstants.E0016));
 
 
 
@@ -7705,8 +7433,8 @@ public class UsersController extends BaseCommerceController
 		ReturnReasonDetails returnReasonData = null;
 		ReturnReasonDTO reasonDto = new ReturnReasonDTO();
 		final List<ReturnReasonDTO> returnReasondtolist = new ArrayList<ReturnReasonDTO>();
-		final String revSealSellerList = getConfigurationService().getConfiguration()
-				.getString("finejewellery.reverseseal.sellername");
+		final String revSealSellerList = getConfigurationService().getConfiguration().getString(
+				"finejewellery.reverseseal.sellername");
 		boolean isFineJew = false;
 		boolean showRevSeal = false;
 		final RevSealJwlryDataWsDTO revSealFrJwlry = new RevSealJwlryDataWsDTO();
@@ -7746,8 +7474,9 @@ public class UsersController extends BaseCommerceController
 				for (final OrderProductWsDTO orderEntryDto : orderproductWsDto)
 				{
 					final ProductModel productModel = getMplOrderFacade().getProductForCode(orderEntryDto.getProductcode());
-					if (null != productModel && MarketplacecommerceservicesConstants.FINEJEWELLERY
-							.equalsIgnoreCase(productModel.getProductCategoryType()))
+					if (null != productModel
+							&& MarketplacecommerceservicesConstants.FINEJEWELLERY
+									.equalsIgnoreCase(productModel.getProductCategoryType()))
 					{
 						isFineJew = true;
 						if (showRevSeal)
@@ -7855,8 +7584,8 @@ public class UsersController extends BaseCommerceController
 					if (productModel.getProductCategoryType().equalsIgnoreCase(MarketplacecommerceservicesConstants.FINEJEWELLERY))
 					{
 						isFineJew = true;
-						final List<JewelleryInformationModel> jewelleryInfo = jewelleryService
-								.getJewelleryInfoByUssid(orderEntry.getSelectedUssid());
+						final List<JewelleryInformationModel> jewelleryInfo = jewelleryService.getJewelleryInfoByUssid(orderEntry
+								.getSelectedUssid());
 						ussid = (CollectionUtils.isNotEmpty(jewelleryInfo)) ? jewelleryInfo.get(0).getPCMUSSID() : "";
 
 						LOG.debug("PCMUSSID FOR JEWELLERY :::::::::: " + "for " + orderEntry.getSelectedUssid() + " is "
@@ -7916,9 +7645,8 @@ public class UsersController extends BaseCommerceController
 			returnDeatails.setReturnReasonDetailsList(reasonList);
 			if (orderEntry.getDeliveryPointOfService() != null)
 			{
-				returnableStores = pincodeServiceFacade.getAllReturnableStores(
-						orderEntry.getDeliveryPointOfService().getAddress().getPostalCode(),
-						StringUtils.substring(orderEntry.getSelectedUssid(), 0, 6));
+				returnableStores = pincodeServiceFacade.getAllReturnableStores(orderEntry.getDeliveryPointOfService().getAddress()
+						.getPostalCode(), StringUtils.substring(orderEntry.getSelectedUssid(), 0, 6));
 			}
 			else
 			{
@@ -7968,20 +7696,20 @@ public class UsersController extends BaseCommerceController
 			}
 			catch (final EtailNonBusinessExceptions e)
 			{
-				LOG.error(
-						"Exception occured for fecting CUstomer Bank details for customer ID :" + userId + " Actual Stack trace " + e);
+				LOG.error("Exception occured for fecting CUstomer Bank details for customer ID :" + userId + " Actual Stack trace "
+						+ e);
 
 
 			}
 			catch (final Exception e)
 			{
-				LOG.error(
-						"Exception occured for fecting CUstomer Bank details for customer ID :" + userId + " Actual Stack trace " + e);
+				LOG.error("Exception occured for fecting CUstomer Bank details for customer ID :" + userId + " Actual Stack trace "
+						+ e);
 
 
 			}
-			final List<AddressData> addressList = mplCheckoutFacadeImpl
-					.rePopulateDeliveryAddress(getAccountAddressFacade().getAddressBook());
+			final List<AddressData> addressList = mplCheckoutFacadeImpl.rePopulateDeliveryAddress(getAccountAddressFacade()
+					.getAddressBook());
 
 
 			if (codSelfShipData != null)
@@ -8028,6 +7756,7 @@ public class UsersController extends BaseCommerceController
 		final ReturnInfoData returnInfoData = new ReturnInfoData();
 		final MplUserResultWsDto output = new MplUserResultWsDto();
 		final ReturnItemAddressData returnAddrData = new ReturnItemAddressData();
+		boolean isFineJwlry = false;
 		try
 		{
 			final CustomerData customerData = customerFacade.getCurrentCustomer();
@@ -8042,6 +7771,12 @@ public class UsersController extends BaseCommerceController
 					subOrderEntry = entry;
 					break;
 				}
+			}
+			if (null != subOrderEntry.getProduct()
+					&& MarketplacecommerceservicesConstants.FINEJEWELLERY.equalsIgnoreCase(subOrderEntry.getProduct()
+							.getRootCategory()))
+			{
+				isFineJwlry = true;
 			}
 
 			//for schedule pickup
@@ -8077,7 +7812,7 @@ public class UsersController extends BaseCommerceController
 				String returnFulfillmentType = null;
 				final List<ReturnLogisticsResponseData> returnLogisticsRespList = cancelReturnFacade
 
-						.checkReturnLogistics(subOrderDetails, pinCode, transactionId);
+				.checkReturnLogistics(subOrderDetails, pinCode, transactionId);
 				for (final ReturnLogisticsResponseData response : returnLogisticsRespList)
 				{
 					if (response.getTransactionId().equalsIgnoreCase(returnData.getTransactionId()))
@@ -8137,6 +7872,35 @@ public class UsersController extends BaseCommerceController
 				{
 					cancellationStatus = cancelReturnFacade.implementReturnItem(subOrderDetails, subOrderEntry, returnInfoData,
 							customerData, SalesApplication.MOBILE, returnAddrData);
+				}
+				//TISPRDT-2546
+				if (isFineJwlry)
+				{
+					final List<ReturnRequestModel> returnRequestModelList = cancelReturnFacade.getListOfReturnRequest(orderCode);
+					if (null != returnRequestModelList && returnRequestModelList.size() > 0)
+					{
+						for (final ReturnRequestModel mm : returnRequestModelList)
+						{
+							for (final ReturnEntryModel mmmodel : mm.getReturnEntries())
+							{
+								if (subOrderEntry.getTransactionId().equalsIgnoreCase(mmmodel.getOrderEntry().getTransactionID()))
+								{
+									if (null != mm.getTypeofreturn() && null != mm.getTypeofreturn().getCode())
+									{
+										if (mm.getTypeofreturn().getCode()
+												.equalsIgnoreCase(MarketplacecommerceservicesConstants.SELF_COURIER))
+										{
+											//To check if we need to send the error code
+											output.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
+											//output.setErrorCode(MarketplacecommerceservicesConstants.B9307);
+											return output;
+										}
+									}
+								}
+							}
+
+						}
+					}
 				}
 				if (!cancellationStatus)
 				{
@@ -8418,8 +8182,8 @@ public class UsersController extends BaseCommerceController
 			{
 				cart = mplPaymentWebFacade.findCartValues(cartId);
 				//TPR-4461 COUPON FOR MRUPEE WHEN ORDER MODEL IS NULL STARTS HERE
-				final ArrayList<DiscountModel> voucherList = new ArrayList<DiscountModel>(
-						getVoucherService().getAppliedVouchers(cart));
+				final ArrayList<DiscountModel> voucherList = new ArrayList<DiscountModel>(getVoucherService()
+						.getAppliedVouchers(cart));
 
 				if (CollectionUtils.isNotEmpty(voucherList))
 				{
@@ -8506,9 +8270,10 @@ public class UsersController extends BaseCommerceController
 
 				//R2.3 Techout changes
 
-				if (!failFlag && !mplCartFacade.isInventoryReservedMobile(
-						MarketplacecommerceservicesConstants.OMS_INVENTORY_RESV_TYPE_PAYMENTPENDING, cart, cart.getPincodeNumber(),
-						item, SalesApplication.MOBILE))
+				if (!failFlag
+						&& !mplCartFacade.isInventoryReservedMobile(
+								MarketplacecommerceservicesConstants.OMS_INVENTORY_RESV_TYPE_PAYMENTPENDING, cart,
+								cart.getPincodeNumber(), item, SalesApplication.MOBILE))
 
 				{
 					failFlag = true;
@@ -8543,8 +8308,8 @@ public class UsersController extends BaseCommerceController
 				{
 					//Create mRupee order
 					LOG.info("::Going to Create Wallet OrderId::");
-					orderId = getMplPaymentFacade().createWalletorder(cart, walletName,
-							MarketplacewebservicesConstants.CHANNEL_MOBILE);
+					orderId = getMplPaymentFacade()
+							.createWalletorder(cart, walletName, MarketplacewebservicesConstants.CHANNEL_MOBILE);
 
 					LOG.info("::Created Wallet OrderId::" + orderId);
 					if (CollectionUtils.isNotEmpty(orderId))
@@ -8576,11 +8341,11 @@ public class UsersController extends BaseCommerceController
 						thirdPartyWalletWsDTO.setAmount(cartTotal.toString());
 						thirdPartyWalletWsDTO.setTxnType("P");
 						//getting redirect url mRupee
-						thirdPartyWalletWsDTO.setMCode(getConfigurationService().getConfiguration()
-								.getString(MarketplacewebservicesConstants.MRUPEE_MERCHANT_CODE));
+						thirdPartyWalletWsDTO.setMCode(getConfigurationService().getConfiguration().getString(
+								MarketplacewebservicesConstants.MRUPEE_MERCHANT_CODE));
 
-						thirdPartyWalletWsDTO.setNarration(getConfigurationService().getConfiguration()
-								.getString(MarketplacewebservicesConstants.MRUPEE_NARRATION_VALUE));
+						thirdPartyWalletWsDTO.setNarration(getConfigurationService().getConfiguration().getString(
+								MarketplacewebservicesConstants.MRUPEE_NARRATION_VALUE));
 						//	thirdPartyWalletWsDTO.setNarration("uat");
 						thirdPartyWalletWsDTO.setChecksum(orderId.get(1));
 						thirdPartyWalletWsDTO.setStatus(MarketplacewebservicesConstants.UPDATE_SUCCESS);
@@ -8599,8 +8364,8 @@ public class UsersController extends BaseCommerceController
 			else
 			{
 				//TPR-4461 COUPON FOR MRUPEE WHEN ORDER MODEL IS NOT NULL STARTS HERE
-				final ArrayList<DiscountModel> voucherList = new ArrayList<DiscountModel>(
-						getVoucherService().getAppliedVouchers(orderModel));
+				final ArrayList<DiscountModel> voucherList = new ArrayList<DiscountModel>(getVoucherService().getAppliedVouchers(
+						orderModel));
 
 				if (CollectionUtils.isNotEmpty(voucherList))
 				{
@@ -8682,9 +8447,10 @@ public class UsersController extends BaseCommerceController
 
 					//R2.3 techout changes
 
-					if (!failFlag && !mplCartFacade.isInventoryReservedMobile(
-							MarketplacecommerceservicesConstants.OMS_INVENTORY_RESV_TYPE_PAYMENTPENDING, orderModel,
-							orderModel.getPincodeNumber(), item, SalesApplication.MOBILE))
+					if (!failFlag
+							&& !mplCartFacade.isInventoryReservedMobile(
+									MarketplacecommerceservicesConstants.OMS_INVENTORY_RESV_TYPE_PAYMENTPENDING, orderModel,
+									orderModel.getPincodeNumber(), item, SalesApplication.MOBILE))
 					{
 						getMplCartFacade().recalculateOrder(orderModel);
 						failFlag = true;
@@ -8721,11 +8487,11 @@ public class UsersController extends BaseCommerceController
 							thirdPartyWalletWsDTO.setAmount(orderModel.getTotalPrice().toString());
 							thirdPartyWalletWsDTO.setTxnType("P");
 							//thirdPartyWalletWsDTO.setNarration("uat");
-							thirdPartyWalletWsDTO.setMCode(getConfigurationService().getConfiguration()
-									.getString(MarketplacewebservicesConstants.MRUPEE_MERCHANT_CODE));
+							thirdPartyWalletWsDTO.setMCode(getConfigurationService().getConfiguration().getString(
+									MarketplacewebservicesConstants.MRUPEE_MERCHANT_CODE));
 
-							thirdPartyWalletWsDTO.setNarration(getConfigurationService().getConfiguration()
-									.getString(MarketplacewebservicesConstants.MRUPEE_NARRATION_VALUE));
+							thirdPartyWalletWsDTO.setNarration(getConfigurationService().getConfiguration().getString(
+									MarketplacewebservicesConstants.MRUPEE_NARRATION_VALUE));
 							thirdPartyWalletWsDTO.setChecksum(orderId.get(1));
 							thirdPartyWalletWsDTO.setStatus(MarketplacewebservicesConstants.UPDATE_SUCCESS);
 							thirdPartyWalletWsDTO.setRetUrl(returnUrlBuilder.toString());
@@ -8903,936 +8669,6 @@ public class UsersController extends BaseCommerceController
 			walletPaymentWsDTO.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
 		}
 		return walletPaymentWsDTO;
-	}
-
-
-	@Secured(
-	{ CUSTOMER, "ROLE_TRUSTED_CLIENT", CUSTOMERMANAGER })
-	@RequestMapping(value = MarketplacewebservicesConstants.APPLY_CLIQCASH, method = RequestMethod.POST, produces = APPLICATION_TYPE)
-	@ResponseBody
-	public PayCliqCashWsDto applyCliqCash(@RequestParam final String cartGuid)
-			throws EtailNonBusinessExceptions, EtailBusinessExceptions, CalculationException
-	{
-		LOG.info("Applying  cliq Cash ");
-		final PayCliqCashWsDto payCliqCashWsDto = new PayCliqCashWsDto();
-		final OrderModel orderModel = getMplPaymentFacade().getOrderByGuid(cartGuid);
-		CartModel cart = null;
-
-		try
-		{
-			if (null == orderModel)
-			{
-				cart = mplPaymentWebFacade.findCartAnonymousValues(cartGuid);
-				final CustomerModel currentCustomer = (CustomerModel) getUserService().getCurrentUser();
-				CustomerWalletDetailResponse responce=null;
-				if (null != currentCustomer && null != currentCustomer.getCustomerWalletDetail()
-						&& null != currentCustomer.getCustomerWalletDetail().getWalletId())
-				{
-					 responce = mplWalletFacade
-							.getCustomerWallet(currentCustomer.getCustomerWalletDetail().getWalletId().trim());
-				}
-				payCliqCashWsDto.setDiscount(Double.valueOf(0));
-				payCliqCashWsDto.setTotalAmount(cart.getTotalPrice().toString());
-				if (null != responce && responce.getResponseCode() == Integer.valueOf(0)
-						&& null != responce.getWallet() && null != responce.getWallet().getBalance())
-				{
-
-					final Double WalletAmt = responce.getWallet().getBalance();
-					LOG.debug("Bucket Balance =" + WalletAmt);
-					final Double totalAmt = cart.getTotalPrice();
-
-					if (null != WalletAmt && null != totalAmt && WalletAmt.doubleValue() >= totalAmt.doubleValue())
-					{
-						cart.setSplitModeInfo(MarketplacewebservicesConstants.PAYMENT_MODE_CLIQ_CASH);
-						cart.setPayableWalletAmount(totalAmt);
-						getModelService().save(cart);
-						getModelService().refresh(cart);
-						payCliqCashWsDto.setDiscount(cart.getTotalDiscounts());
-						payCliqCashWsDto.setIsRemainingAmount(false);
-						payCliqCashWsDto.setCliqCashApplied(totalAmt);
-						payCliqCashWsDto.setPaybleAmount(Double.valueOf(0));
-						payCliqCashWsDto.setTotalAmount(cart.getTotalPrice().toString());
-						payCliqCashWsDto.setStatus(MarketplacecommerceservicesConstants.SUCCESS_FLAG);
-						
-					}
-					else
-					{
-						double juspayTotalAmt = 0.0D;
-						if (null != totalAmt && totalAmt.doubleValue() > 0.0D && null != WalletAmt && WalletAmt.doubleValue() > 0.0D)
-						{
-							juspayTotalAmt = totalAmt.doubleValue() - WalletAmt.doubleValue();
-						}
-						else if (null != cart.getTotalPrice() && cart.getTotalPrice().doubleValue() > 0.0D)
-						{
-							juspayTotalAmt = cart.getTotalPrice().doubleValue();
-						}
-						payCliqCashWsDto.setIsRemainingAmount(true);
-						if (null != WalletAmt && WalletAmt.doubleValue() > 0.0D)
-						{
-							payCliqCashWsDto.setCliqCashApplied(WalletAmt);
-						}
-						payCliqCashWsDto.setIsRemainingAmount(true);
-						payCliqCashWsDto.setDiscount(cart.getTotalDiscounts());
-						payCliqCashWsDto.setPaybleAmount(Double.valueOf(juspayTotalAmt));
-						payCliqCashWsDto.setTotalAmount(cart.getTotalPrice().toString());
-						cart.setSplitModeInfo(MarketplacewebservicesConstants.PAYMENT_MODE_SPLIT);
-						cart.setPayableWalletAmount(WalletAmt);
-						getModelService().save(cart);
-						getModelService().refresh(cart);
-						payCliqCashWsDto.setStatus(MarketplacecommerceservicesConstants.SUCCESS_FLAG);
-					}
-
-				}else {
-					payCliqCashWsDto.setStatus(MarketplacecommerceservicesConstants.FAILURE_FLAG);
-				}
-			}
-			else
-			{
-
-				final CustomerModel currentCustomer = (CustomerModel) getUserService().getCurrentUser();
-
-				CustomerWalletDetailResponse responce=null;
-				if (null != currentCustomer && null != currentCustomer.getCustomerWalletDetail()
-						&& null != currentCustomer.getCustomerWalletDetail().getWalletId())
-				{
-					 responce = mplWalletFacade
-							.getCustomerWallet(currentCustomer.getCustomerWalletDetail().getWalletId().trim());
-				}
-				payCliqCashWsDto.setDiscount(Double.valueOf(0));
-				payCliqCashWsDto.setTotalAmount(orderModel.getTotalPrice().toString());
-				if (null != responce && responce.getResponseCode() == Integer.valueOf(0)
-						&& null != responce.getWallet() && null != responce.getWallet().getBalance())
-				{
-
-					final Double WalletAmt = responce.getWallet().getBalance();
-					final Double totalAmt = orderModel.getTotalPrice();
-
-					if (null != WalletAmt && null != totalAmt && WalletAmt.doubleValue() >= totalAmt.doubleValue())
-					{
-						orderModel.setSplitModeInfo(MarketplacewebservicesConstants.PAYMENT_MODE_CLIQ_CASH);
-						orderModel.setPayableWalletAmount(totalAmt);
-						getModelService().save(orderModel);
-						getModelService().refresh(orderModel);
-						payCliqCashWsDto.setDiscount(orderModel.getTotalDiscounts());
-						payCliqCashWsDto.setIsRemainingAmount(false);
-						payCliqCashWsDto.setCliqCashApplied(totalAmt);
-						payCliqCashWsDto.setPaybleAmount(Double.valueOf(0));
-						payCliqCashWsDto.setTotalAmount(orderModel.getTotalPrice().toString());
-						payCliqCashWsDto.setStatus(MarketplacecommerceservicesConstants.SUCCESS_FLAG);
-					}
-					else
-					{
-						double juspayTotalAmt = 0.0D;
-						if (null != totalAmt && totalAmt.doubleValue() > 0.0D && null != WalletAmt && WalletAmt.doubleValue() > 0.0D)
-						{
-							juspayTotalAmt = totalAmt.doubleValue() - WalletAmt.doubleValue();
-						}
-						else if (null != orderModel.getTotalPrice() && orderModel.getTotalPrice().doubleValue() > 0.0D)
-						{
-							juspayTotalAmt = orderModel.getTotalPrice().doubleValue();
-						}
-						payCliqCashWsDto.setIsRemainingAmount(true);
-						if (null != WalletAmt && WalletAmt.doubleValue() > 0.0D)
-						{
-							payCliqCashWsDto.setCliqCashApplied(WalletAmt);
-						}
-
-						payCliqCashWsDto.setDiscount(orderModel.getTotalDiscounts());
-						payCliqCashWsDto.setPaybleAmount(Double.valueOf(juspayTotalAmt));
-						payCliqCashWsDto.setTotalAmount(orderModel.getTotalPrice().toString());
-						orderModel.setSplitModeInfo(MarketplacewebservicesConstants.PAYMENT_MODE_SPLIT);
-						orderModel.setPayableWalletAmount(WalletAmt);
-						getModelService().save(orderModel);
-						getModelService().refresh(orderModel);
-						payCliqCashWsDto.setStatus(MarketplacecommerceservicesConstants.SUCCESS_FLAG);
-					}
-
-				}else {
-					payCliqCashWsDto.setStatus(MarketplacecommerceservicesConstants.FAILURE_FLAG);
-				}
-			}
-		}
-		catch (final EtailNonBusinessExceptions ex)
-		{
-			payCliqCashWsDto.setStatus(MarketplacecommerceservicesConstants.FAILURE_FLAG);
-			payCliqCashWsDto.setError(ex.getErrorCode());
-			payCliqCashWsDto.setErrorCode(ex.getErrorCode());
-			payCliqCashWsDto.setError(ex.getErrorMessage());
-			LOG.error("Exception occrred while applying Cliq cash" + ex.getMessage());
-		}
-		catch (final Exception ex)
-		{
-			payCliqCashWsDto.setStatus(MarketplacecommerceservicesConstants.FAILURE_FLAG);
-			payCliqCashWsDto.setError(ex.getMessage());
-			LOG.error("Exception occrred while applying Cliq cash" + ex.getMessage());
-		}
-		return payCliqCashWsDto;
-
-	}
-
-
-
-	@Secured(
-	{ CUSTOMER, "ROLE_TRUSTED_CLIENT", CUSTOMERMANAGER })
-	@RequestMapping(value = MarketplacewebservicesConstants.REMOVE_CLIQCASH, method = RequestMethod.POST, produces = APPLICATION_TYPE)
-	@ResponseBody
-	public PayCliqCashWsDto removeCliqCash(@RequestParam final String cartGuid)
-			throws EtailNonBusinessExceptions, EtailBusinessExceptions, CalculationException
-	{
-		LOG.info("Removing cliq Cash ");
-		final PayCliqCashWsDto payCliqCashWsDto = new PayCliqCashWsDto();
-		final OrderModel orderModel = getMplPaymentFacade().getOrderByGuid(cartGuid);
-		CartModel cart = null;
-		try
-		{
-			if (null != orderModel)
-			{
-				payCliqCashWsDto.setDiscount(orderModel.getTotalDiscounts());
-				if (null != orderModel.getTotalPrice())
-				{
-					payCliqCashWsDto.setTotalAmount(orderModel.getTotalPrice().toString());
-				}
-				payCliqCashWsDto.setPaybleAmount(orderModel.getTotalPrice());
-				orderModel.setSplitModeInfo(MarketplacewebservicesConstants.PAYMENT__MODE_JUSPAY);
-				orderModel.setPayableWalletAmount(Double.valueOf(0.0D));
-				getModelService().save(orderModel);
-				getModelService().refresh(orderModel);
-				payCliqCashWsDto.setStatus(MarketplacecommerceservicesConstants.SUCCESS_FLAG);
-			}
-			else
-			{
-				cart = mplPaymentWebFacade.findCartAnonymousValues(cartGuid);
-				payCliqCashWsDto.setDiscount(cart.getTotalDiscounts());
-				if (null != cart.getTotalPrice())
-				{
-					payCliqCashWsDto.setPaybleAmount(cart.getTotalPrice());
-				}
-				cart.setSplitModeInfo(MarketplacewebservicesConstants.PAYMENT__MODE_JUSPAY);
-				cart.setPayableWalletAmount(Double.valueOf(0.0D));
-				getModelService().save(cart);
-				getModelService().refresh(cart);
-				payCliqCashWsDto.setStatus(MarketplacecommerceservicesConstants.SUCCESS_FLAG);
-			}
-
-		}
-		catch (final EtailNonBusinessExceptions ex)
-		{
-			payCliqCashWsDto.setStatus(MarketplacecommerceservicesConstants.FAILURE_FLAG);
-			payCliqCashWsDto.setErrorCode(ex.getErrorCode());
-			payCliqCashWsDto.setError(ex.getErrorMessage());
-			LOG.error("Exception occrred while Removing Cliq cash" + ex.getMessage());
-		}
-		catch (final Exception ex)
-		{
-			payCliqCashWsDto.setStatus(MarketplacecommerceservicesConstants.FAILURE_FLAG);
-			payCliqCashWsDto.setError(ex.getMessage());
-			LOG.error("Exception occrred while Removing Cliq cash" + ex.getMessage());
-		}
-		return payCliqCashWsDto;
-
-	}
-
-
-
-
-
-
-
-
-	@Secured(
-	{ CUSTOMER, "ROLE_TRUSTED_CLIENT", CUSTOMERMANAGER })
-	@RequestMapping(value = MarketplacewebservicesConstants.REDEEM_CLIQ_VOUCHER, method = RequestMethod.POST, produces = APPLICATION_TYPE)
-	@ResponseBody
-	public RedeemCliqVoucherWsDTO redeemCliqVoucher(@RequestParam final String couponCode, @RequestParam final String passKey)
-			throws EtailNonBusinessExceptions, EtailBusinessExceptions, CalculationException
-
-	{
-		LOG.info("Redeeming CLiq Cash Voucher");
-		boolean customerRegisteredwithQc = false;
-		final RedeemCliqVoucherWsDTO redeemCliqVoucherWsDTO = new RedeemCliqVoucherWsDTO();
-		try
-		{
-			final CustomerModel currentCustomer = (CustomerModel) userService.getCurrentUser();
-			if (null != currentCustomer
-					&& (null == currentCustomer.getIsWalletActivated() || !currentCustomer.getIsWalletActivated().booleanValue()))
-			{
-				LOG.debug("Customer Is not Regitered with QC .. Registering with email " + currentCustomer.getOriginalUid());
-				final QCCustomerRegisterRequest customerRegisterReq = new QCCustomerRegisterRequest();
-				final Customer custInfo = new Customer();
-				custInfo.setEmail(currentCustomer.getOriginalUid());
-				custInfo.setEmployeeID(currentCustomer.getUid());
-				custInfo.setCorporateName("Tata Unistore Ltd");
-
-				if (null != currentCustomer.getFirstName())
-				{
-					custInfo.setFirstname(currentCustomer.getFirstName());
-				}
-				if (null != currentCustomer.getLastName())
-				{
-					custInfo.setLastName(currentCustomer.getLastName());
-				}
-
-				customerRegisterReq.setExternalwalletid(currentCustomer.getOriginalUid());
-				customerRegisterReq.setCustomer(custInfo);
-				customerRegisterReq.setNotes("Activating Customer " + currentCustomer.getOriginalUid());
-				final QCCustomerRegisterResponse customerRegisterResponse = mplWalletFacade
-						.createWalletContainer(customerRegisterReq);
-				if (null != customerRegisterResponse && null != customerRegisterResponse.getResponseCode()
-						&& customerRegisterResponse.getResponseCode().intValue() == 0)
-				{
-					final CustomerWalletDetailModel custWalletDetail = modelService.create(CustomerWalletDetailModel.class);
-					custWalletDetail.setWalletId(customerRegisterResponse.getWallet().getWalletNumber());
-					custWalletDetail.setWalletState(customerRegisterResponse.getWallet().getStatus());
-					custWalletDetail.setCustomer(currentCustomer);
-					custWalletDetail.setServiceProvider("Tata Unistore Ltd");
-					modelService.save(custWalletDetail);
-					currentCustomer.setCustomerWalletDetail(custWalletDetail);
-					currentCustomer.setIsWalletActivated(Boolean.TRUE);
-					modelService.save(currentCustomer);
-					customerRegisteredwithQc = true;
-					redeemCliqVoucherWsDTO.setStatus(MarketplacecommerceservicesConstants.SUCCESS_FLAG);
-				}else {
-					redeemCliqVoucherWsDTO.setStatus(MarketplacecommerceservicesConstants.FAILURE_FLAG);
-				}
-			}else {
-				customerRegisteredwithQc = true;
-			}
-			if (customerRegisteredwithQc)
-			{
-				final RedimGiftCardResponse response = mplWalletFacade.getAddEGVToWallet(couponCode, passKey);
-				if (null != response && null != response.getResponseCode() && null == Integer.valueOf(0))
-				{
-					final TotalCliqCashBalanceWsDto totalCliqCashBalance = new TotalCliqCashBalanceWsDto();
-					if (null != response.getWallet() && null != response.getWallet().getBalance())
-					{
-						final BigDecimal walletAmount = new BigDecimal(response.getWallet().getBalance().doubleValue());
-						final CurrencyModel currency = commonI18NService.getCurrency(MarketplacecommerceservicesConstants.INR);
-						final long valueLong = walletAmount.setScale(0, BigDecimal.ROUND_FLOOR).longValue();
-						final String totalPriceNoDecimalPntFormatted = Long.toString(valueLong);
-						StringBuilder stbND = new StringBuilder(20);
-						if (null != currency && null != currency.getSymbol())
-						{
-							stbND = stbND.append(currency.getSymbol()).append(totalPriceNoDecimalPntFormatted);
-						}
-						redeemCliqVoucherWsDTO.setVoucherValue(stbND.toString());
-						final PriceData priceData = priceDataFactory.create(PriceDataType.BUY, walletAmount,
-								MarketplacecommerceservicesConstants.INR);
-						if (null != priceData)
-						{
-							totalCliqCashBalance.setCurrencyIso(priceData.getCurrencyIso());
-							totalCliqCashBalance.setDoubleValue(priceData.getDoubleValue());
-							totalCliqCashBalance.setFormattedValue(priceData.getFormattedValue());
-							totalCliqCashBalance.setPriceType(priceData.getPriceType());
-							totalCliqCashBalance.setFormattedValueNoDecimal(priceData.getFormattedValueNoDecimal());
-							totalCliqCashBalance.setValue(priceData.getValue());
-							redeemCliqVoucherWsDTO.setTotalCliqCashBalance(totalCliqCashBalance);
-							redeemCliqVoucherWsDTO.setIsWalletLimitReached(false);
-							redeemCliqVoucherWsDTO.setStatus(MarketplacecommerceservicesConstants.SUCCESS_FLAG);
-						}
-						else
-						{
-							redeemCliqVoucherWsDTO.setStatus(MarketplacecommerceservicesConstants.FAILURE_FLAG);
-						}
-					}
-					else
-					{
-						redeemCliqVoucherWsDTO.setStatus(MarketplacecommerceservicesConstants.FAILURE_FLAG);
-					}
-				}
-			}
-			else
-			{
-				redeemCliqVoucherWsDTO.setStatus(MarketplacecommerceservicesConstants.FAILURE_FLAG);
-			}
-		}
-		catch (final EtailNonBusinessExceptions ex)
-		{
-			redeemCliqVoucherWsDTO.setStatus(MarketplacecommerceservicesConstants.FAILURE_FLAG);
-			redeemCliqVoucherWsDTO.setErrorCode(ex.getErrorCode());
-			redeemCliqVoucherWsDTO.setError(ex.getErrorMessage());
-			LOG.error("Exception occrred while Removing Cliq cash" + ex.getMessage());
-		}
-		catch (final Exception ex)
-		{
-			redeemCliqVoucherWsDTO.setStatus(MarketplacecommerceservicesConstants.FAILURE_FLAG);
-			redeemCliqVoucherWsDTO.setError(ex.getMessage());
-			LOG.error("Exception occrred while Removing Cliq cash" + ex.getMessage());
-		}
-		return redeemCliqVoucherWsDTO;
-	}
-
-
-	@Secured(
-			{ CUSTOMER, "ROLE_TRUSTED_CLIENT", CUSTOMERMANAGER })
-			@RequestMapping(value = MarketplacewebservicesConstants.CREATE_ELECTRONICS_GIFTCARD_AMOUNT, method = RequestMethod.POST, produces = APPLICATION_TYPE)
-			@ResponseBody
-			public BuyingEgvResponceWsDTO calculateGiftCardAmount(@RequestBody final BuyingEgvRequestWsDTO buyingEgvRequest)
-					throws EtailNonBusinessExceptions, EtailBusinessExceptions, CalculationException
-
-			{
-				LOG.info("Calculating Electronics Gift Cart Amount");
-				final BuyingEgvResponceWsDTO buyingEgvResponce = new BuyingEgvResponceWsDTO();
-				int quantity =1;
-				double amountUserSelectedPerQty = 0.0D;
-				double paybleAmount = 0.0D;
-				try
-				{
-					if (null != buyingEgvRequest)
-					{
-						if (buyingEgvRequest.getQuantity() > 0)
-						{
-							quantity = buyingEgvRequest.getQuantity();
-						}
-						if (null != buyingEgvRequest.getPriceSelectedByUserPerQuantity() &&
-								buyingEgvRequest.getPriceSelectedByUserPerQuantity().doubleValue() >0.0D)
-						{
-							amountUserSelectedPerQty = buyingEgvRequest.getPriceSelectedByUserPerQuantity().doubleValue();
-							LOG.debug("amountUserSelectedPerQty  :"+amountUserSelectedPerQty);
-						}
-						if (quantity > 0 && amountUserSelectedPerQty > 0.0D)
-						{
-							paybleAmount = quantity*amountUserSelectedPerQty;
-						}
-						if(paybleAmount > 0.0D) {
-							LOG.debug("Toatal Payable Amount :"+paybleAmount);
-							buyingEgvResponce.setStatus(MarketplacecommerceservicesConstants.SUCCESS_FLAG);
-							buyingEgvResponce.setPaybleAmount(Double.valueOf(paybleAmount));
-							buyingEgvResponce.setTotalPrice(Double.valueOf(paybleAmount));
-							buyingEgvResponce.setDiscounts(Double.valueOf(0.0D));
-						}else {
-							buyingEgvResponce.setStatus(MarketplacecommerceservicesConstants.FAILURE_FLAG);
-						}
-					}
-					else
-					{
-						buyingEgvResponce.setStatus(MarketplacecommerceservicesConstants.FAILURE_FLAG);
-					}
-				}
-		catch (final EtailNonBusinessExceptions ex)
-		{
-			buyingEgvResponce.setStatus(MarketplacecommerceservicesConstants.FAILURE_FLAG);
-			buyingEgvResponce.setErrorCode(ex.getErrorCode());
-			buyingEgvResponce.setError(ex.getErrorMessage());
-			LOG.error("Exception occrred while Calculating Electronics Gift Card Amount " + ex.getMessage());
-		}
-		catch (final Exception ex)
-		{
-			buyingEgvResponce.setStatus(MarketplacecommerceservicesConstants.FAILURE_FLAG);
-			buyingEgvResponce.setError(ex.getMessage());
-			LOG.error("Exception occrred Calculating Electronics Gift Card Amount " + ex.getMessage());
-		}
-
-		return buyingEgvResponce;
-	}
-
-	@Secured(
-	{ CUSTOMER, "ROLE_TRUSTED_CLIENT", CUSTOMERMANAGER })
-	@RequestMapping(value = MarketplacewebservicesConstants.CREATE_ELECTRONICS_GIFTCARD_GUID, method = RequestMethod.POST, produces = APPLICATION_TYPE)
-	@ResponseBody
-	public BuyingEgvResponceWsDTO createGiftCardGuid(@RequestBody final BuyingEgvRequestWsDTO buyingEgvRequest)
-			throws EtailNonBusinessExceptions, EtailBusinessExceptions, CalculationException
-
-	{
-		LOG.info("Creating  Electronics Gift Card Guid");
-		final BuyingEgvResponceWsDTO buyingEgvResponce = new BuyingEgvResponceWsDTO();
-		CartData giftCartData = null;
-		try
-		{
-			 EgvDetailsData egvDetailsData=null;
-			if(null != buyingEgvRequest){
-				egvDetailsData = populateEGVFormToData(buyingEgvRequest);
-			}
-			if (null != egvDetailsData)
-			{
-				giftCartData = mplCartFacade.getGiftCartModel(egvDetailsData);
-			}
-			if (null != giftCartData)
-			{
-				if (null != giftCartData.getTotalPrice())
-				{
-					buyingEgvResponce.setTotalPrice(giftCartData.getTotalPrice().getDoubleValue());
-					buyingEgvResponce.setPaybleAmount(giftCartData.getTotalPrice().getDoubleValue());
-				}
-				if (null != giftCartData.getTotalDiscounts())
-				{
-					buyingEgvResponce.setDiscounts(giftCartData.getTotalDiscounts().getDoubleValue());
-				}
-				if (null != giftCartData.getGuid())
-				{
-					buyingEgvResponce.setEgvCartGuid(giftCartData.getGuid());
-				}
-				buyingEgvResponce.setStatus(MarketplacecommerceservicesConstants.SUCCESS_FLAG);
-			}
-			else
-			{
-				buyingEgvResponce.setStatus(MarketplacecommerceservicesConstants.FAILURE_FLAG);
-			}
-		}
-		catch (final EtailNonBusinessExceptions ex)
-		{
-			buyingEgvResponce.setStatus(MarketplacecommerceservicesConstants.FAILURE_FLAG);
-			buyingEgvResponce.setErrorCode(ex.getErrorCode());
-			buyingEgvResponce.setError(ex.getErrorMessage());
-			LOG.error("Exception occrred Creating  Electronics Gift Card Guid" + ex.getMessage());
-		}
-		catch (final Exception ex)
-		{
-			buyingEgvResponce.setStatus(MarketplacecommerceservicesConstants.FAILURE_FLAG);
-			buyingEgvResponce.setError(ex.getMessage());
-			LOG.error("Exception occrred Creating  Electronics Gift Card Guid" + ex.getMessage());
-		}
-
-		return buyingEgvResponce;
-	}
-
-
-	
-	@Secured(
-			{ CUSTOMER, "ROLE_TRUSTED_CLIENT", CUSTOMERMANAGER })
-			@RequestMapping(value = MarketplacewebservicesConstants.RESEND_NOTIFICATION_EGV, method = RequestMethod.POST, produces = APPLICATION_TYPE)
-			@ResponseBody
-			public ResendEGVNotificationWsDTO resendNotificationEgv(@RequestParam final String orderId)
-					throws EtailNonBusinessExceptions, EtailBusinessExceptions, CalculationException
-
-	{
-		ResendEGVNotificationWsDTO responce = new ResendEGVNotificationWsDTO();
-		try
-		{
-
-			if (orderId != null)
-			{
-				LOG.info("SendNotificationRecipient  ");
-				mplOrderFacade.sendNotificationEGVOrder(orderId);
-				responce.setStatus(MarketplacecommerceservicesConstants.SUCCESS);
-			}
-		}
-		catch (final Exception ex)
-		{
-			responce.setStatus(MarketplacecommerceservicesConstants.FAILURE_FLAG);
-			responce.setError(ex.getMessage());
-			LOG.error("Exception occrred Creating  Electronics Gift Card Guid" + ex.getMessage());
-		}
-		return responce;
-	}
-	/**
-	 * @param s
-	 * @return
-	 */
-	private EgvDetailsData populateEGVFormToData(final BuyingEgvRequestWsDTO requestData)
-	{
-		final EgvDetailsData egvDetailsData = new EgvDetailsData();
-		if (null != requestData)
-		{
-			final CustomerModel currentCustomer = (CustomerModel) getUserService().getCurrentUser();
-			egvDetailsData.setProductCode(requestData.getProductID());
-			if (null != requestData.getPriceSelectedByUserPerQuantity()
-					&& requestData.getPriceSelectedByUserPerQuantity().doubleValue() > 0.0D)
-			{
-				egvDetailsData.setGiftRange(requestData.getPriceSelectedByUserPerQuantity().doubleValue());
-			}
-			if (null != requestData.getPriceSelectedByUserPerQuantity()
-					&& requestData.getPriceSelectedByUserPerQuantity().doubleValue() > 0.0D)
-			{
-				egvDetailsData.setOpenTextAmount(requestData.getPriceSelectedByUserPerQuantity().doubleValue());
-			}
-			if (null != requestData.getReceiverEmailID())
-			{
-				egvDetailsData.setToEmailAddress(requestData.getReceiverEmailID());
-			}
-			if (null != currentCustomer && null != currentCustomer.getOriginalUid())
-			{
-				egvDetailsData.setFromEmailAddress(currentCustomer.getOriginalUid());
-			}
-			if (null != requestData.getPriceSelectedByUserPerQuantity())
-			{
-				egvDetailsData.setGiftRange(requestData.getPriceSelectedByUserPerQuantity().doubleValue());
-			}
-
-			//			if(null != requestData.getMessageOnCard()) {
-			//				egvDetailsData.setMessageBox(egvDetailForm.getMessageBox());
-			//			}
-
-			egvDetailsData.setTotalEGV(requestData.getQuantity());
-		}
-
-		return egvDetailsData;
-	}
-
-	/**
-	 * @param item
-	 * @param pincode
-	 *
-	 */
-	private OrderCreateInJusPayWsDto patAmountUsingQC(final String userId, final String cartGuid, final String pincode,
-			final InventoryReservListRequestWsDTO item)
-	{
-		LOG.info("Paying  Full amount through QC for GUID" + cartGuid);
-		final OrderCreateInJusPayWsDto orderCreateInJusPayWsDto = new OrderCreateInJusPayWsDto();
-		String uid = "";
-		String failErrorCode = "";
-		boolean failFlag = false;
-		OrderModel orderModel = null;
-		CustomerModel customer = null;
-		CartModel cart = null;
-		String orderCode = null;
-
-		//		double payableWalletAmount = 0.0D;
-		//		double payableJuspayAmount = 0.0D;
-		//		double totalWalletAmount = 0.0D;
-
-		QCRedeeptionResponse qcResponse = new QCRedeeptionResponse();
-
-		final BalanceBucketWise balBucketwise = null;
-		if (LOG.isDebugEnabled())
-		{
-			LOG.debug("********* Creating QC  Order mobile web service");
-		}
-		try
-		{
-			customer = extendedUserService.getUserForOriginalUid(userId);
-			if (null != customer)
-			{
-				uid = customer.getUid();
-			}
-			else
-			{
-				throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B0006);
-			}
-			// For Mobile
-
-			//Payment Soln changes
-			orderModel = getMplPaymentFacade().getOrderByGuid(cartGuid);
-			//If cart is present
-			if (orderModel == null)
-			{
-				cart = mplPaymentWebFacade.findCartAnonymousValues(cartGuid);
-				if (null != cart)
-				{
-					//TPR-4461 STARTS HERE WHEN ORDER MODEL IS NULL
-					final ArrayList<DiscountModel> voucherList = new ArrayList<DiscountModel>(
-							getVoucherService().getAppliedVouchers(cart));
-
-					if (CollectionUtils.isNotEmpty(voucherList))
-					{
-						VoucherModel appliedVoucher = null;
-
-						final DiscountModel discount = voucherList.get(0);
-
-						if (discount instanceof PromotionVoucherModel)
-						{
-							final PromotionVoucherModel promotionVoucherModel = (PromotionVoucherModel) discount;
-							appliedVoucher = promotionVoucherModel;
-
-							final Set<RestrictionModel> restrictions = appliedVoucher.getRestrictions();
-							for (final RestrictionModel restriction : restrictions)
-							{
-								if (restriction instanceof PaymentModeRestrictionModel)
-								{
-									boolean willApply = false;
-
-
-									final String paymentModeCard = cart.getModeOfPayment();//Customer's selected Payment Mode
-
-
-									final List<PaymentTypeModel> paymentTypeList = ((PaymentModeRestrictionModel) restriction)
-											.getPaymentTypeData(); //Voucher Payment mode
-
-
-									if (CollectionUtils.isNotEmpty(paymentTypeList))
-									{
-										if (StringUtils.isNotEmpty(paymentModeCard))
-										{
-											for (final PaymentTypeModel paymentType : paymentTypeList)
-											{
-												if (StringUtils.equalsIgnoreCase(paymentType.getMode(), paymentModeCard))
-												{
-													willApply = true;
-													break;
-												}
-
-											}
-										}
-										else
-										{
-											willApply = true;
-										}
-									}
-
-								}
-
-							}
-						}
-					}
-
-					//TPR-4461 ENDS HERE WHEN ORDER MODEL IS NULL
-					if (!failFlag && !mplCheckoutFacade.isPromotionValid(cart))
-					{
-						failFlag = true;
-						failErrorCode = MarketplacecommerceservicesConstants.B9075;
-					}
-				}
-				if (!failFlag && mplCartFacade.isCartEntryDelistedMobile(cart))
-				{
-					failFlag = true;
-					failErrorCode = MarketplacecommerceservicesConstants.B9325;
-				}
-				//TISUTO-12 , TISUTO-11
-				//TODO Soft reservation calls already made
-
-
-				if (!failFlag && !mplCartFacade.isInventoryReservedMobile(
-						MarketplacecommerceservicesConstants.OMS_INVENTORY_RESV_TYPE_PAYMENTPENDING, cart, pincode, item,
-						SalesApplication.MOBILE))
-				{
-					//getSessionService().setAttribute(MarketplacecclientservicesConstants.OMS_INVENTORY_RESV_SESSION_ID,"TRUE");
-					//getMplCartFacade().recalculate(cart);
-					failFlag = true;
-					failErrorCode = MarketplacecommerceservicesConstants.B9047;
-				}
-
-				if (!failFlag)
-				{
-					final Double cartTotal = cart.getTotalPrice();
-					final Double cartTotalWithConvCharge = cart.getTotalPriceWithConv();
-					if (cartTotal.doubleValue() <= 0.0 || cartTotalWithConvCharge.doubleValue() <= 0.0)
-					{
-						final CustomerModel currentCustomer = (CustomerModel) getUserService().getCurrentUser();
-						final String qcUniqueCode = mplPaymentFacade.generateQCCode();
-						qcResponse = mplPaymentFacade.createQCOrderRequest(cart.getGuid(), cart,
-								currentCustomer.getCustomerWalletDetail().getWalletId(),
-								MarketplacewebservicesConstants.PAYMENT_MODE_CLIQ_CASH, qcUniqueCode,
-								MarketplacewebservicesConstants.CHANNEL_MOBILE, cart.getTotalPrice().doubleValue(), 0.0D);
-						boolean egvStatus;
-						if (null != qcResponse && null != qcResponse.getResponseCode() && qcResponse.getResponseCode().intValue() != 0)
-						{
-							cart.setStatus(OrderStatus.PAYMENT_FAILED); /// return QC fail and Update Audit Entry Try With Juspay
-							modelService.save(cart);
-							egvStatus = false;
-						}
-
-						else if (null == qcResponse || null == qcResponse.getResponseCode())
-						{
-							cart.setStatus(OrderStatus.PAYMENT_FAILED); /// NO Exception No qcResponse Try With Juspay
-							modelService.save(cart);
-							egvStatus = false;
-						}
-						orderCreateInJusPayWsDto.setCliqcashAmount(cart.getTotalPrice());
-						orderCreateInJusPayWsDto.setCliqcashSelected(true);
-
-						failFlag = true;
-						failErrorCode = MarketplacecommerceservicesConstants.B9509;
-						//}
-					}
-				}
-				//TISPRO-578
-				if (!failFlag && !mplPaymentFacade.isValidCart(cart))
-				{
-					//getSessionService().setAttribute(MarketplacecheckoutaddonConstants.CART_DELIVERYMODE_ADDRESS_INVALID, "TRUE");
-					failFlag = true;
-					failErrorCode = MarketplacecommerceservicesConstants.B9064;
-				}
-
-				if (failFlag)
-				{
-					throw new EtailBusinessExceptions(failErrorCode);
-				}
-				else
-				{
-					final CustomerModel currentCustomer = (CustomerModel) getUserService().getCurrentUser();
-					final String qcUniqueCode = mplPaymentFacade.generateQCCode();
-					qcResponse = mplPaymentFacade.createQCOrderRequest(cart.getGuid(), cart,
-							currentCustomer.getCustomerWalletDetail().getWalletId(),
-							MarketplacewebservicesConstants.PAYMENT_MODE_CLIQ_CASH, qcUniqueCode,
-							MarketplacewebservicesConstants.CHANNEL_MOBILE, cart.getTotalPrice().doubleValue(), 0.0D);
-					boolean egvStatus;
-					if (null != qcResponse && null != qcResponse.getResponseCode() && qcResponse.getResponseCode().intValue() != 0)
-					{
-						cart.setStatus(OrderStatus.PAYMENT_FAILED); /// return QC fail and Update Audit Entry Try With Juspay
-						modelService.save(cart);
-						egvStatus = false;
-					}
-
-					else if (null == qcResponse || null == qcResponse.getResponseCode())
-					{
-						cart.setStatus(OrderStatus.PAYMENT_FAILED); /// NO Exception No qcResponse Try With Juspay
-						modelService.save(cart);
-						egvStatus = false;
-					}
-					orderCreateInJusPayWsDto.setCliqcashAmount(cart.getTotalPrice());
-					orderCreateInJusPayWsDto.setCliqcashSelected(true);
-					//create order here
-					//Mandatory checks agains cart
-					final boolean isValidCart = getMplPaymentFacade().checkCart(cart);
-
-					if (isValidCart)
-					{
-						//CAR-110
-						orderCode = mplCheckoutFacade.placeOrderMobile(cart);
-						if (orderCode == null)
-						{
-							throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9321);
-						}
-
-					}
-					else
-					{
-						throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9050);
-					}
-				}
-			}
-			else
-			{
-				//TPR-4461 STARTS HERE WHEN ORDER MODEL IS NOT NULL
-				final ArrayList<DiscountModel> voucherList = new ArrayList<DiscountModel>(
-						getVoucherService().getAppliedVouchers(orderModel));
-
-				if (CollectionUtils.isNotEmpty(voucherList))
-				{
-					VoucherModel appliedVoucher = null;
-
-					final DiscountModel discount = voucherList.get(0);
-
-					if (discount instanceof PromotionVoucherModel)
-					{
-						final PromotionVoucherModel promotionVoucherModel = (PromotionVoucherModel) discount;
-						appliedVoucher = promotionVoucherModel;
-						final Set<RestrictionModel> restrictions = appliedVoucher.getRestrictions();
-						for (final RestrictionModel restriction : restrictions)
-						{
-							if (restriction instanceof PaymentModeRestrictionModel)
-							{
-								boolean willApply = false;
-								final String paymentModeCard = orderModel.getModeOfOrderPayment();//Customer's selected Payment Mode
-								final List<PaymentTypeModel> paymentTypeList = ((PaymentModeRestrictionModel) restriction)
-										.getPaymentTypeData(); //Voucher Payment mode
-								if (CollectionUtils.isNotEmpty(paymentTypeList))
-								{
-									if (StringUtils.isNotEmpty(paymentModeCard))
-									{
-										for (final PaymentTypeModel paymentType : paymentTypeList)
-										{
-											if (StringUtils.equalsIgnoreCase(paymentType.getMode(), paymentModeCard))
-											{
-												willApply = true;
-												break;
-											}
-
-										}
-									}
-									else
-									{
-										willApply = true;
-									}
-								}
-							}
-						}
-					}
-				}
-				if (!getMplCheckoutFacade().isPromotionValid(orderModel))
-				{
-					mplCartFacade.recalculateOrder(orderModel);
-					failFlag = true;
-					failErrorCode = MarketplacecommerceservicesConstants.B9075;
-				}
-
-				if (!failFlag && !mplCartFacade.isInventoryReservedMobile(
-						MarketplacecommerceservicesConstants.OMS_INVENTORY_RESV_TYPE_PAYMENTPENDING, orderModel, pincode, item,
-						SalesApplication.MOBILE))
-				{
-					//getSessionService().setAttribute(MarketplacecclientservicesConstants.OMS_INVENTORY_RESV_SESSION_ID,"TRUE");
-					getMplCartFacade().recalculateOrder(orderModel);
-					failFlag = true;
-					failErrorCode = MarketplacecommerceservicesConstants.B9047;
-					//notify EMAil SMS TPR-815
-					mplCartFacade.notifyEmailAndSmsOnInventoryFail(orderModel);
-				}
-
-				if (failFlag)
-				{
-					throw new EtailBusinessExceptions(failErrorCode);
-				}
-				else
-				{
-					final CustomerModel currentCustomer = (CustomerModel) getUserService().getCurrentUser();
-					final String qcUniqueCode = mplPaymentFacade.generateQCCode();
-					qcResponse = mplPaymentFacade.createQCOrderRequest(orderModel.getGuid(), orderModel,
-							currentCustomer.getCustomerWalletDetail().getWalletId(),
-							MarketplacewebservicesConstants.PAYMENT_MODE_CLIQ_CASH, qcUniqueCode,
-							MarketplacewebservicesConstants.CHANNEL_MOBILE, orderModel.getTotalPrice().doubleValue(), 0.0D);
-					boolean egvStatus;
-					if (null != qcResponse && null != qcResponse.getResponseCode() && qcResponse.getResponseCode().intValue() != 0)
-					{
-						orderModel.setStatus(OrderStatus.PAYMENT_FAILED); /// return QC fail and Update Audit Entry Try With Juspay
-						modelService.save(orderModel);
-						egvStatus = false;
-					}
-					else if (null == qcResponse || null == qcResponse.getResponseCode())
-					{
-						orderModel.setStatus(OrderStatus.PAYMENT_FAILED); /// NO Exception No qcResponse Try With Juspay
-						modelService.save(orderModel);
-						egvStatus = false;
-					}
-					orderCreateInJusPayWsDto.setCliqcashAmount(orderModel.getTotalPrice());
-					orderCreateInJusPayWsDto.setCliqcashSelected(true);
-				}
-			}
-			if (StringUtils.isNotEmpty(cartGuid))
-			{
-				orderCreateInJusPayWsDto.setCartGuid(cartGuid);
-			}
-			if (StringUtils.isNotEmpty(orderCode))
-			{
-				orderCreateInJusPayWsDto.setOrderId(orderCode);
-			}
-
-			orderCreateInJusPayWsDto.setStatus(MarketplacecommerceservicesConstants.SUCCESS_FLAG);
-
-		}
-		catch (final AdapterException e)
-		{
-			ExceptionUtil.getCustomizedExceptionTrace(e);
-			if (null != e.getMessage())
-			{
-				orderCreateInJusPayWsDto.setError(Localization.getLocalizedString(MarketplacecommerceservicesConstants.B9327));
-				orderCreateInJusPayWsDto.setErrorCode(MarketplacecommerceservicesConstants.B9327);
-			}
-			orderCreateInJusPayWsDto.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
-		}
-		catch (final EtailBusinessExceptions e)
-		{
-			orderCreateInJusPayWsDto.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
-			ExceptionUtil.getCustomizedExceptionTrace(e);
-			if (null != e.getErrorMessage())
-			{
-				orderCreateInJusPayWsDto.setError(e.getErrorMessage());
-				orderCreateInJusPayWsDto.setErrorCode(e.getErrorCode());
-			}
-		}
-		catch (final EtailNonBusinessExceptions e)
-		{
-			orderCreateInJusPayWsDto.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
-			// Error message for All Exceptions
-			ExceptionUtil.etailNonBusinessExceptionHandler(e);
-			if (null != e.getErrorMessage())
-			{
-				orderCreateInJusPayWsDto.setError(e.getErrorMessage());
-				orderCreateInJusPayWsDto.setErrorCode(e.getErrorCode());
-			}
-
-		}
-		catch (final Exception e)
-		{
-			ExceptionUtil.getCustomizedExceptionTrace(e);
-			// Error message for All Exceptions
-			if (null != e.getMessage())
-			{
-				orderCreateInJusPayWsDto.setError(Localization.getLocalizedString(MarketplacecommerceservicesConstants.B9004));
-				orderCreateInJusPayWsDto.setErrorCode(MarketplacecommerceservicesConstants.B9004);
-			}
-			orderCreateInJusPayWsDto.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
-		}
-
-		return orderCreateInJusPayWsDto;
 	}
 
 	/**
@@ -10111,8 +8947,7 @@ public class UsersController extends BaseCommerceController
 	 * @param httpRequestAddressDataPopulator
 	 *           the httpRequestAddressDataPopulator to set
 	 */
-	public void setHttpRequestAddressDataPopulator(
-			final Populator<HttpServletRequest, AddressData> httpRequestAddressDataPopulator)
+	public void setHttpRequestAddressDataPopulator(final Populator<HttpServletRequest, AddressData> httpRequestAddressDataPopulator)
 
 	{
 		this.httpRequestAddressDataPopulator = httpRequestAddressDataPopulator;

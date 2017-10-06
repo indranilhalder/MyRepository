@@ -16,6 +16,7 @@
 <spring:url value="/checkout/multi/debitTermsAndConditions" var="getDebitTermsAndConditionsUrl"/>
 
 <template:page pageTitle="${pageTitle}" hideHeaderLinks="true" showOnlySiteLogo="true">
+<input type="hidden"  id ="tealiumOrderFlag" value ="${cartToOrderConvert}"  />
 <cart:tealiumCartParameters/>
 <br/><br/><br/><br/><br/><br/><br/><br/><br/>
 				<div class="alert alert-danger alert-dismissable" id="juspayconnErrorDiv">	<!-- TPR-629 changes for error -->
@@ -200,12 +201,9 @@
 						           <p class="disclaimer-txt">
 										<spring:theme code="pay.price.change.notification"></spring:theme>
 									</p>
-					           </c:if>  
-				   <c:if test="${isEGVCart ne true }">             
+					           </c:if>               
 						<p class="cart-items">You have an outstanding amount of &nbsp;&nbsp;<span class="prices"  id="outstanding-amount">
-					    <ycommerce:testId code="cart_totalPrice_label"><format:price priceData="${cartData.totalPrice}"/> 
-					</c:if>  
-					<!-- TISPRDT-693 -->
+					<ycommerce:testId code="cart_totalPrice_label"><format:price priceData="${cartData.totalPrice}"/> <!-- TISPRDT-693 -->
 				<!-- Unwanted code commented -->
                <%--  <c:choose>
                     <c:when test="${showTax}">
@@ -1364,8 +1362,6 @@
 				</div>				
 				<%-- </jsp:body>
 		</multiCheckout:checkoutSteps> --%>	
-		<%-- <form:hidden path="guid" id="guid" value="${guid}"/> --%>
-		<input type="hidden" id="isEGVOrder" value="${isEGVCart}">
 		<multiCheckout:checkoutOrderDetails cartData="${cartData}" showDeliveryAddress="true" showPaymentInfo="false" showTaxEstimate="false" showTax="true" isCart="${isCart}" orderData="${orderData}"/>
 	</div>		
 </template:page>

@@ -26,7 +26,6 @@ import de.hybris.platform.core.model.order.payment.EMIPaymentInfoModel;
 import de.hybris.platform.core.model.order.payment.JusPayPaymentInfoModel;
 import de.hybris.platform.core.model.order.payment.NetbankingPaymentInfoModel;
 import de.hybris.platform.core.model.order.payment.PaymentInfoModel;
-import de.hybris.platform.core.model.order.payment.QCWalletPaymentInfoModel;
 import de.hybris.platform.core.model.order.payment.ThirdPartyWalletInfoModel;
 import de.hybris.platform.core.model.order.price.DiscountModel;
 import de.hybris.platform.core.model.user.AddressModel;
@@ -71,6 +70,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.UUID;
 
 import javax.annotation.Resource;
 
@@ -2510,16 +2510,6 @@ public class MplPaymentServiceImpl implements MplPaymentService
 		return getJuspayOrderIdGenerator().generate().toString();
 	}
 
-	/**
-	 *
-	 * @return String
-	 */
-	@Override
-	public String createQCPaymentId()
-	{
-		return getJuspayOrderIdGenerator().generate().toString();
-	}
-
 
 
 	/**
@@ -3295,11 +3285,11 @@ public class MplPaymentServiceImpl implements MplPaymentService
 
 	/*
 	 * @description : fetching bank model for a bank name TISPRO-179\
-	 * 
+	 *
 	 * @param : bankName
-	 * 
+	 *
 	 * @return : BankModel
-	 * 
+	 *
 	 * @throws EtailNonBusinessExceptions
 	 */
 	@Override
@@ -3311,9 +3301,9 @@ public class MplPaymentServiceImpl implements MplPaymentService
 
 	/*
 	 * @Description : Fetching bank name for net banking-- TISPT-169
-	 * 
+	 *
 	 * @return List<BankforNetbankingModel>
-	 * 
+	 *
 	 * @throws EtailNonBusinessExceptions
 	 */
 	@Override
@@ -3409,7 +3399,6 @@ public class MplPaymentServiceImpl implements MplPaymentService
 					{
 						LOG.debug("orderStatusResponse status ------> " + orderStatusResponse.getStatus());
 						//Condition when PG Response status is available and charged
-
 						if (StringUtils.isNotEmpty(orderStatusResponse.getStatus())
 								&& orderStatusResponse.getStatus().equalsIgnoreCase(MarketplacecommerceservicesConstants.CHARGED))
 						{
@@ -3841,7 +3830,7 @@ public class MplPaymentServiceImpl implements MplPaymentService
 
 	/*
 	 * @desc getPaymentModeFrompayInfo
-	 * 
+	 *
 	 * @see SprintPaymentFixes:- ModeOfpayment set same as in Payment Info
 	 */
 	@Override
@@ -3882,7 +3871,7 @@ public class MplPaymentServiceImpl implements MplPaymentService
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see SprintPaymentFixes:- This method is setting paymentTransactionModel and the paymentTransactionEntryModel
 	 * against the cart for pre paid from OMS Submit Order Job
 	 */
@@ -3946,7 +3935,7 @@ public class MplPaymentServiceImpl implements MplPaymentService
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @desc SprintPaymentFixes:- This method is setting paymentTransactionModel and the paymentTransactionEntryModel
 	 * against the cart for COD from OMS Submit Order Job
 	 */
@@ -4819,20 +4808,13 @@ public class MplPaymentServiceImpl implements MplPaymentService
 
 	//Added for TPR-1348
 	@Override
-	public String doRefundPayment(final List<OrderEntryModel> orderEntryModel, final BigDecimal amountToRefund)
+	public String doRefundPayment(final List<OrderEntryModel> orderEntryModel)
 	{
 		Double totalRefundAmount = 0d;
 		PaymentTransactionModel paymentTransactionModel = null;
-		if (null != amountToRefund && amountToRefund.doubleValue() > 0)
+		for (final OrderEntryModel orderEntry : orderEntryModel)
 		{
-			totalRefundAmount = amountToRefund.doubleValue();
-		}
-		else
-		{
-			for (final OrderEntryModel orderEntry : orderEntryModel)
-			{
-				totalRefundAmount += orderEntry.getNetAmountAfterAllDisc();
-			}
+			totalRefundAmount += orderEntry.getNetAmountAfterAllDisc();
 		}
 		//		Mrupee implementation
 		final OrderModel order = orderEntryModel.get(0).getOrder();
@@ -5020,185 +5002,130 @@ public class MplPaymentServiceImpl implements MplPaymentService
 		return result;
 	}
 
+
+
+	//CheckedInvalid PaymentInfo missing handled call
 	@Override
-	public void setQCPaymentTransaction(final ArrayList<String> rs, final Map<String, Double> paymentMode,
-			final AbstractOrderModel order, final String cliqCashPaymentMode, final String WalletTotal)
-			throws EtailNonBusinessExceptions //Changed to abstractOrderModel for TPR-629
+	public boolean createPaymentInfo(final OrderModel orderModel)
 	{
+		boolean returnFlag = false;
+		String modeOrderPayment = null;
 
-		try
+		modeOrderPayment = orderModel.getModeOfOrderPayment();
+		if (StringUtils.isNotEmpty(modeOrderPayment)
+				&& !modeOrderPayment.equalsIgnoreCase(MarketplacecommerceservicesConstants.COD))
 		{
-			System.out.println("---- ::::: IN SIDE TRANSACTION CREATION ::::-----");
-
-			final List<PaymentTransactionEntryModel> paymentTransactionEntryList = new ArrayList<PaymentTransactionEntryModel>();
-			Collection<PaymentTransactionModel> collection = order.getPaymentTransactions();
-			final List<PaymentTransactionModel> paymentTransactionList = new ArrayList<PaymentTransactionModel>();
-			//final PaymentTransactionModel payTranModel = null;
-
-			if (null == collection || collection.isEmpty())
+			try
 			{
-				collection = new ArrayList<PaymentTransactionModel>();
+				createPaymentInfoforJuspay(orderModel);
+				returnFlag = true;
+			}
+			catch (final Exception e)
+			{
+				LOG.error("Creating Payment info  createPaymentInfoforJuspay :- ", e);
+				returnFlag = false;
 			}
 
-			paymentTransactionList.addAll(collection);
-
-			final double walletAmt = Double.parseDouble(WalletTotal);
-
-			final Date date = new Date();
-
-			final List<PaymentTransactionModel> listPay = new ArrayList<PaymentTransactionModel>();
-
-			final PaymentTypeModel paymenttype = getMplPaymentDao().getPaymentMode("Cliq Cash", order.getStore());
-
-			final PaymentTransactionEntryModel paymentTransactionEntry = getModelService()
-					.create(PaymentTransactionEntryModel.class);
-			//TODO:Change required when Order Ref No. is ready
-			if (StringUtils.isNotEmpty(rs.get(0)))
-			{
-				paymentTransactionEntry.setCode(rs.get(0) + "-" + rs.get(2));
-			}
-			paymentTransactionEntry.setAmount(BigDecimal.valueOf(walletAmt));
-			paymentTransactionEntry.setTime(date);
-			paymentTransactionEntry.setRequestToken(rs.get(2));
-			paymentTransactionEntry.setRequestId(rs.get(1));
-			paymentTransactionEntry.setCurrency(order.getCurrency());
-			paymentTransactionEntry.setType(PaymentTransactionType.QC_CAPTURE);
-			paymentTransactionEntry.setTransactionStatus(MarketplacecommerceservicesConstants.SUCCESS);
-			paymentTransactionEntry.setPaymentMode(paymenttype);
-
-
-
-			getModelService().save(paymentTransactionEntry);
-			paymentTransactionEntryList.add(paymentTransactionEntry);
-
-			final PaymentTransactionModel paymentTransactionModel = getModelService().create(PaymentTransactionModel.class);
-
-			paymentTransactionModel.setEntries(paymentTransactionEntryList);
-			paymentTransactionModel.setPaymentProvider(paymenttype.getMode());
-			paymentTransactionModel.setCreationtime(date);
-			paymentTransactionModel.setRequestId(rs.get(1));
-			paymentTransactionModel.setRequestToken("0");
-			paymentTransactionModel.setCode(rs.get(0) + "-" + System.currentTimeMillis());
-			paymentTransactionModel.setStatus(MarketplacecommerceservicesConstants.SUCCESS);
-			paymentTransactionModel.setOrder(order);
-
-			paymentTransactionModel.setPlannedAmount(BigDecimal.valueOf(walletAmt));
-
-			getModelService().save(paymentTransactionModel);
-			listPay.add(paymentTransactionModel);
-
-			if (null == order.getPaymentInfo())
-			{
-				final QCWalletPaymentInfoModel qcPaymentInfo = getModelService().create(QCWalletPaymentInfoModel.class);
-
-				qcPaymentInfo.setCode(rs.get(2));
-				qcPaymentInfo.setType(paymenttype.getMode());
-				qcPaymentInfo.setOwner(order.getOwner());
-				//qcPaymentInfo.setCashOwner("NA");
-				qcPaymentInfo.setUser(order.getUser());
-
-				order.setPaymentInfo(qcPaymentInfo);
-			}
-
-			paymentTransactionList.addAll(listPay);
-
-			order.setPaymentTransactions(paymentTransactionList);
-
-			getModelService().save(order);
 		}
-		catch (final ModelSavingException e)
+		else if (StringUtils.isNotEmpty(modeOrderPayment)
+				&& modeOrderPayment.equalsIgnoreCase(MarketplacecommerceservicesConstants.COD))
 		{
-			LOG.error(MarketplacecommerceservicesConstants.PAYMENT_TRAN_EXC_LOG + e);
-			throw new ModelSavingException(e + ": Exception while saving payment transaction entry with");
+			try
+			{
+				createPaymentInfoforCOD(orderModel);
+				returnFlag = true;
+			}
+			catch (final Exception e)
+			{
+				LOG.error("Creating Payment info  createPaymentInfoforCOD :- ", e);
+				returnFlag = false;
+			}
+
 		}
+		else
+		{
+			returnFlag = false;
+		}
+		return returnFlag;
+
 	}
 
-	@Override
-	public boolean createQCEntryInAudit(final String qcOrderID, final String channel, final String cartGuId,
-			final String qcAmount, final String qcResponseCode, final String transactionId) throws EtailNonBusinessExceptions
+
+	/**
+	 * @param orderModel
+	 */
+	private void createPaymentInfoforJuspay(final OrderModel orderModel)
 	{
-		boolean flag = false;
-		try
+
+		if (orderModel.getPaymentInfo() != null)
 		{
-			Assert.notNull(qcOrderID, "Parameter QC cannot be null.");
-			final MplPaymentAuditModel auditModel = getMplPaymentDao().getAuditEntries(qcOrderID);
-
-			if (null != auditModel)
-			{
-				System.out.println("************** Saving auditModel *************" + qcOrderID);
-				List<MplPaymentAuditEntryModel> collection = auditModel.getAuditEntries();
-				final List<MplPaymentAuditEntryModel> auditEntryList = new ArrayList<MplPaymentAuditEntryModel>();
-				if (null == collection || collection.isEmpty())
-				{
-					collection = new ArrayList<MplPaymentAuditEntryModel>();
-				}
-
-				auditEntryList.addAll(collection);
-
-				final MplPaymentAuditEntryModel auditEntry = getModelService().create(MplPaymentAuditEntryModel.class);
-				auditEntry.setAuditId(qcOrderID);
-
-				if (qcResponseCode.equalsIgnoreCase("0"))
-				{
-
-					auditEntry.setStatus(MplPaymentAuditStatusEnum.CREATED);
-
-				}
-				else
-				{
-					auditEntry.setStatus(MplPaymentAuditStatusEnum.DECLINED);
-				}
-				auditModel.setChannel(GenericUtilityMethods.returnChannelData(channel));
-				auditModel.setAuditId(transactionId);
-				auditModel.setCartGUID(cartGuId);
-				auditModel.setRequestDate(new Date());
-				auditModel.setAuditEntries(auditEntryList);
-				auditModel.setPaymentAmount(Double.valueOf(qcAmount));
-				//getModelService().save(auditModel);
-				//getModelService().save(auditEntry);
-				auditEntryList.add(auditEntry);
-				auditModel.setAuditEntries(auditEntryList);
-				getModelService().save(auditModel);
-				flag = true;
-			}
-			else
-			{
-				System.out.println("************** Creating and  Saving auditModel *************" + qcOrderID);
-				//	final CartModel cartModel = getMplPaymentDao().getCart(cartGuId);
-				final List<MplPaymentAuditEntryModel> auditEntryList = new ArrayList<MplPaymentAuditEntryModel>();
-				final MplPaymentAuditEntryModel auditEntry = getModelService().create(MplPaymentAuditEntryModel.class);
-				auditEntry.setAuditId(qcOrderID);
-				auditEntry.setStatus(MplPaymentAuditStatusEnum.CREATED);
-
-				getModelService().save(auditEntry);
-				auditEntryList.add(auditEntry);
-
-				final MplPaymentAuditModel newAuditModel = getModelService().create(MplPaymentAuditModel.class);
-				newAuditModel.setChannel(GenericUtilityMethods.returnChannelData(channel));
-				newAuditModel.setAuditId("");
-				newAuditModel.setCartGUID(cartGuId);
-				newAuditModel.setRequestDate(new Date());
-				newAuditModel.setAuditEntries(auditEntryList);
-				newAuditModel.setPaymentAmount(Double.valueOf(qcAmount));
-				getModelService().save(newAuditModel);
-				flag = true;
-				System.out.println("************** Saved auditModel *************" + qcOrderID + ":::" + flag);
-				return flag;
-			}
+			removeExistingPaymentInfo(orderModel);
 		}
-		catch (final ModelSavingException e)
+		final JusPayPaymentInfoModel jusPayPaymentInfoModel = getModelService().create(JusPayPaymentInfoModel.class);
+		jusPayPaymentInfoModel.setCode(UUID.randomUUID().toString());
+		jusPayPaymentInfoModel.setUser(orderModel.getUser());
+		jusPayPaymentInfoModel.setCashOwner(StringUtils.isNotEmpty(orderModel.getUser().getName()) ? orderModel.getUser().getName()
+				: ((CustomerModel) orderModel.getUser()).getOriginalUid());
+
+		/*
+		 * cart.setConvenienceCharges(Double .valueOf(null !=
+		 * baseStoreService.getCurrentBaseStore().getConvenienceChargeForCOD() ? baseStoreService
+		 * .getCurrentBaseStore().getConvenienceChargeForCOD().longValue() : 0.0));
+		 */
+		//setting the payment modes and the amount against it in session to be used later
+		/*
+		 * final Map<String, Double> paymentInfo = new HashMap<String, Double>();
+		 * paymentInfo.put(MarketplaceJuspayServicesConstants.JUSPAY_KEY, orderModel.getConvenienceCharges());
+		 * sessionService.setAttribute("paymentModes", paymentInfo);
+		 * sessionService.setAttribute("paymentModeForPromotion", MarketplaceJuspayServicesConstants.JUSPAY_KEY);
+		 */
+		getModelService().save(jusPayPaymentInfoModel);
+		orderModel.setPaymentInfo(jusPayPaymentInfoModel);
+		getModelService().save(orderModel);
+		getModelService().refresh(orderModel);
+
+
+	}
+
+	private void createPaymentInfoforCOD(final OrderModel orderModel)
+	{
+		final CODPaymentInfoModel codPaymentInfoModel = getModelService().create(CODPaymentInfoModel.class);
+		codPaymentInfoModel.setCode(UUID.randomUUID().toString());
+		codPaymentInfoModel.setUser(orderModel.getUser());
+		codPaymentInfoModel.setCashOwner(StringUtils.isNotEmpty(orderModel.getUser().getName()) ? orderModel.getUser().getName()
+				: ((CustomerModel) orderModel.getUser()).getOriginalUid());
+		orderModel.setPaymentInfo(codPaymentInfoModel);
+
+		if (null != baseStoreService.getCurrentBaseStore())
 		{
-			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0007);
+			orderModel.setConvenienceCharges(Double.valueOf(null != baseStoreService.getCurrentBaseStore()
+					.getConvenienceChargeForCOD() ? baseStoreService.getCurrentBaseStore().getConvenienceChargeForCOD().longValue()
+					: 0.0));
 		}
-		//		catch (final EtailNonBusinessExceptions e)
-		//		{
-		//			throw e;
-		//		}
-		//Catch added for IQA TPR-629
-		catch (final Exception e)
+		else
 		{
-			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000);
+			orderModel.setConvenienceCharges(Double.valueOf(0.0));
 		}
-		return flag;
+		//setting the payment modes and the amount against it in session to be used later
+		final Map<String, Double> paymentInfo = new HashMap<String, Double>();
+		paymentInfo.put("COD", orderModel.getConvenienceCharges());
+		sessionService.setAttribute("paymentModes", paymentInfo);
+		sessionService.setAttribute("paymentModeForPromotion", "COD");
+		getModelService().save(codPaymentInfoModel);
+		getModelService().save(orderModel);
+		getModelService().refresh(orderModel);
+	}
+
+	protected void removeExistingPaymentInfo(final OrderModel orderModel)
+	{
+		getModelService().remove(orderModel.getPaymentInfo());
+
+		orderModel.setPaymentInfo(null);
+		orderModel.setConvenienceCharges(null);
+		sessionService.removeAttribute("paymentModes");
+		sessionService.removeAttribute("paymentModeForPromotion");
+		getModelService().save(orderModel);
+		getModelService().refresh(orderModel);
+
 	}
 }

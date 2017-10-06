@@ -3,12 +3,10 @@
  */
 package com.tisl.mpl.facade.checkout.impl;
 
-import de.hybris.platform.core.model.order.delivery.DeliveryModeModel;
 import de.hybris.platform.acceleratorservices.config.SiteConfigService;
 import de.hybris.platform.basecommerce.model.site.BaseSiteModel;
 import de.hybris.platform.catalog.model.CatalogVersionModel;
 import de.hybris.platform.cms2.exceptions.CMSItemNotFoundException;
-import de.hybris.platform.cms2.servicelayer.services.CMSSiteService;
 import de.hybris.platform.commercefacades.order.data.AbstractOrderData;
 import de.hybris.platform.commercefacades.order.data.CartData;
 import de.hybris.platform.commercefacades.order.data.CartModificationData;
@@ -33,17 +31,13 @@ import de.hybris.platform.converters.Converters;
 import de.hybris.platform.core.model.JewelleryInformationModel;
 import de.hybris.platform.core.model.order.AbstractOrderEntryModel;
 import de.hybris.platform.core.model.order.AbstractOrderModel;
-import de.hybris.platform.core.model.order.CartEntryModel;
 import de.hybris.platform.core.model.order.CartModel;
 import de.hybris.platform.core.model.order.OrderModel;
-import de.hybris.platform.core.model.order.delivery.DeliveryModeModel;
 import de.hybris.platform.core.model.product.PincodeModel;
 import de.hybris.platform.core.model.product.ProductModel;
 import de.hybris.platform.core.model.user.UserModel;
-import de.hybris.platform.order.CartFactory;
 import de.hybris.platform.order.CartService;
 import de.hybris.platform.order.InvalidCartException;
-import de.hybris.platform.ordersplitting.model.ConsignmentEntryModel;
 import de.hybris.platform.product.ProductService;
 import de.hybris.platform.promotions.PromotionsService;
 import de.hybris.platform.promotions.model.AbstractPromotionModel;
@@ -76,7 +70,6 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -84,6 +77,8 @@ import java.util.Set;
 
 import javax.annotation.Resource;
 import javax.xml.bind.JAXBException;
+
+import net.sourceforge.pmd.util.StringUtil;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.MapUtils;
@@ -98,8 +93,6 @@ import com.tis.mpl.facade.changedelivery.MplDeliveryAddressFacade;
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.constants.MplGlobalCodeConstants;
 import com.tisl.mpl.constants.clientservice.MarketplacecclientservicesConstants;
-import com.tisl.mpl.core.enums.DeliveryFulfillModesEnum;
-import com.tisl.mpl.core.model.MplZoneDeliveryModeValueModel;
 import com.tisl.mpl.core.model.RichAttributeModel;
 import com.tisl.mpl.core.mplconfig.service.MplConfigService;
 import com.tisl.mpl.exception.ClientEtailNonBusinessExceptions;
@@ -111,10 +104,7 @@ import com.tisl.mpl.facade.product.ExchangeGuideFacade;
 import com.tisl.mpl.facades.constants.MarketplaceFacadesConstants;
 import com.tisl.mpl.facades.data.StoreLocationRequestData;
 import com.tisl.mpl.facades.data.StoreLocationResponseData;
-import com.tisl.mpl.facades.egv.data.EgvDetailsData;
 import com.tisl.mpl.facades.product.data.MarketplaceDeliveryModeData;
-import com.tisl.mpl.marketplacecommerceservices.daos.MplDeliveryCostDao;
-import com.tisl.mpl.marketplacecommerceservices.egv.service.cart.MplEGVCartService;
 import com.tisl.mpl.marketplacecommerceservices.order.MplCommerceCartCalculationStrategy;
 import com.tisl.mpl.marketplacecommerceservices.service.MplCommerceCartService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplDelistingService;
@@ -147,8 +137,6 @@ import com.tisl.mpl.wsdto.MplEDDInfoForUssIDWsDTO;
 import com.tisl.mpl.wsdto.MplEDDInfoWsDTO;
 import com.tisl.mpl.wsdto.MplEstimateDeliveryDateWsDTO;
 import com.tisl.mpl.wsdto.MplSelectedEDDForUssID;
-
-import net.sourceforge.pmd.util.StringUtil;
 
 
 /**
@@ -186,12 +174,6 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 	@Autowired
 	private MplDelistingService mplDelistingService;
 
-	@Autowired
-	MplEGVCartService mplEGVCartService;
-
-	@Autowired
-	MplDeliveryCostDao mplDeliveryCostDao;
-
 	//sonar fix
 	/*
 	 * @Autowired private CatalogService catalogService;
@@ -201,11 +183,7 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 
 	private PromotionsService promotionsService;
 
-	@Autowired
-	private CMSSiteService cmsSiteService;
 
-	@Autowired
-	private CartFactory cartFactory;
 
 	//Exchange Changes
 	@Resource(name = "exchangeGuideFacade")
@@ -241,8 +219,6 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 	@Autowired
 	private MplSellerInformationService mplSellerInformationService;
 
-	private static final String ERROR_OCCER_WHILE_CREATING_CART_MODEL_FOR_GIFT = "Error occer while Creating CartModel for Gift";
-	private static final String GIFT_CART_MODEL = "giftCartModel";
 
 	//TPR-5346
 	@Resource(name = "mplStockService")
@@ -401,8 +377,7 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 										if (infoModel.getPCMUSSID().equalsIgnoreCase(sellerInformationData.getUssid()))
 										{
 											LOG.debug("got seller information data for cart line Jewellery item :"
-													+ orderEntryData.getEntryNumber() + "seller name "
-													+ sellerInformationData.getSellername());
+													+ orderEntryData.getEntryNumber() + "seller name " + sellerInformationData.getSellername());
 											orderEntryData.setSelectedSellerInformation(sellerInformationData);
 										}
 									}
@@ -779,8 +754,8 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 	 * @throws CommerceCartModificationException
 	 */
 	@Override
-	public CartModel createCart(final String emailId, final String baseSiteId)
-			throws InvalidCartException, CommerceCartModificationException
+	public CartModel createCart(final String emailId, final String baseSiteId) throws InvalidCartException,
+			CommerceCartModificationException
 	{
 		return mplCommerceCartService.createCart(emailId, baseSiteId);
 	}
@@ -1042,7 +1017,7 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 						final String globalCodeFulfilmentTypeByp1 = MplGlobalCodeConstants.GLOBALCONSTANTSMAP.get(sellerData
 
 
-								.getDeliveryFulfillModebyP1().toUpperCase());
+						.getDeliveryFulfillModebyP1().toUpperCase());
 						if (StringUtils.isNotEmpty(globalCodeFulfilmentTypeByp1))
 						{
 							pincodeServiceData.setDeliveryFulfillModeByP1(globalCodeFulfilmentTypeByp1.toUpperCase());
@@ -1067,7 +1042,7 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 					{
 						final String globalCodeFulfilmentType = MplGlobalCodeConstants.GLOBALCONSTANTSMAP.get(sellerData
 
-								.getFullfillment().toUpperCase());
+						.getFullfillment().toUpperCase());
 						if (StringUtils.isNotEmpty(globalCodeFulfilmentType))
 						{
 							pincodeServiceData.setFullFillmentType(globalCodeFulfilmentType.toUpperCase());
@@ -1086,7 +1061,7 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 					{
 						final String globalCodeShippingMode = MplGlobalCodeConstants.GLOBALCONSTANTSMAP.get(sellerData
 
-								.getShippingMode().toUpperCase());
+						.getShippingMode().toUpperCase());
 						if (StringUtils.isNotEmpty(globalCodeShippingMode))
 						{
 							pincodeServiceData.setTransportMode(globalCodeShippingMode.toUpperCase());
@@ -1212,7 +1187,7 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 				final SellerInformationModel sellerInfoModel = mplSellerInformationService.getSellerDetail(entryData
 
 
-						.getSelectedUssid());
+				.getSelectedUssid());
 
 				List<RichAttributeModel> sellerRichAttributeModel = null;
 				int sellerHandlingTime = 0;
@@ -1531,11 +1506,11 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 			final int maxOrderQuantityExchange = 1;
 			final int maximum_configured_quantiy = siteConfigService.getInt(
 
-					MarketplacecommerceservicesConstants.MAXIMUM_CONFIGURED_QUANTIY, 0);
+			MarketplacecommerceservicesConstants.MAXIMUM_CONFIGURED_QUANTIY, 0);
 
 			//TISJEWST-10
-			final int maximum_configured_quantiy_jewellery = siteConfigService
-					.getInt(MarketplacecommerceservicesConstants.MAXIMUM_CONFIGURED_QUANTIY_JEWELLERY, 0);
+			final int maximum_configured_quantiy_jewellery = siteConfigService.getInt(
+					MarketplacecommerceservicesConstants.MAXIMUM_CONFIGURED_QUANTIY_JEWELLERY, 0);
 
 			if (cartData != null && cartData.getEntries() != null && !cartData.getEntries().isEmpty())
 			{
@@ -1553,8 +1528,7 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 							&& MarketplacecommerceservicesConstants.FINEJEWELLERY.equalsIgnoreCase(productData.getRootCategory())
 							&& productCode.equals(productData.getCode()) && !ussid.equals(entry.getSelectedUssid()))
 					{
-						LOG.debug(
-								"Product already present in the cart so now we will check the qunatity present in the cart already for fine jewellery different weight variant.");
+						LOG.debug("Product already present in the cart so now we will check the qunatity present in the cart already for fine jewellery different weight variant.");
 						if (qty + entry.getQuantity().longValue() >= maximum_configured_quantiy_jewellery)
 						{
 							addToCartFlag = MarketplacecommerceservicesConstants.MAX_QUANTITY_ADDED_FOR_FINEJEWELLERY;
@@ -1657,8 +1631,8 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 			throws CommerceCartModificationException
 	{
 		final CartModel cartModel = getCartService().getSessionCart();
-		final PointOfServiceModel pointOfServiceModel = StringUtil.isEmpty(storeId) ? null
-				: getPointOfServiceService().getPointOfServiceForName(storeId);
+		final PointOfServiceModel pointOfServiceModel = StringUtil.isEmpty(storeId) ? null : getPointOfServiceService()
+				.getPointOfServiceForName(storeId);
 		if (pointOfServiceModel == null)
 		{
 			final CommerceCartParameter parameter = new CommerceCartParameter();
@@ -1695,8 +1669,8 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 			throws CommerceCartModificationException
 	{
 		// Changes for Duplicate Cart fix
-		final PointOfServiceModel pointOfServiceModel = StringUtil.isEmpty(storeId) ? null
-				: getPointOfServiceService().getPointOfServiceForName(storeId);
+		final PointOfServiceModel pointOfServiceModel = StringUtil.isEmpty(storeId) ? null : getPointOfServiceService()
+				.getPointOfServiceForName(storeId);
 		if (pointOfServiceModel == null)
 		{
 			final CommerceCartParameter parameter = new CommerceCartParameter();
@@ -1798,8 +1772,30 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 								entry.setFulfillmentType(item.getFulfillmentType());
 								try
 								{
-									final SellerInformationModel sellerInfoModel = getMplCommerceCartService()
-											.getSellerDetailsData(entry.getSelectedUSSID());
+									/*
+									 * final SellerInformationModel sellerInfoModel = getMplCommerceCartService()
+									 * .getSellerDetailsData(entry.getSelectedUSSID());
+									 */
+									SellerInformationModel sellerInfoModel = null;
+									if (entry.getProduct().getProductCategoryType().equalsIgnoreCase(FINEJEWELLERY))
+
+									{
+										final List<JewelleryInformationModel> jewelleryInfo = jewelleryService
+												.getJewelleryInfoByUssid(entry.getSelectedUSSID());
+										if (CollectionUtils.isNotEmpty(jewelleryInfo))
+										{
+											sellerInfoModel = getMplCommerceCartService().getSellerDetailsData(
+													jewelleryInfo.get(0).getPCMUSSID());
+										}
+										else
+										{
+											LOG.error("No entry in JewelleryInformationModel for ussid " + entry.getSelectedUSSID());
+										}
+									}
+									else
+									{
+										sellerInfoModel = getMplCommerceCartService().getSellerDetailsData(entry.getSelectedUSSID());
+									}
 									List<RichAttributeModel> richAttributeModel = null;
 									if (sellerInfoModel != null)
 									{
@@ -2107,8 +2103,8 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 	 * @throws EtailNonBusinessExceptions
 	 */
 	@Override
-	public String checkPincodeAndInventory(final String selectedPincode)
-			throws EtailNonBusinessExceptions, CMSItemNotFoundException
+	public String checkPincodeAndInventory(final String selectedPincode) throws EtailNonBusinessExceptions,
+			CMSItemNotFoundException
 
 	{
 		final String sessionPincode = sessionService.getAttribute(MarketplacecommerceservicesConstants.SESSION_PINCODE);
@@ -2163,17 +2159,15 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 								// Checking if selected delivery mode is present in response
 								for (final DeliveryDetailsData deliveryDetailsData : pinCodeEntry.getValidDeliveryModes())
 								{
-									if (((selectedDeliveryMode.equalsIgnoreCase(MarketplacecommerceservicesConstants.HOME_DELIVERY)
-											&& deliveryDetailsData.getType().equalsIgnoreCase(MarketplacecommerceservicesConstants.HD))
-											|| (selectedDeliveryMode.equalsIgnoreCase(MarketplacecommerceservicesConstants.EXPRESS_DELIVERY)
-													&& deliveryDetailsData
+									if (((selectedDeliveryMode.equalsIgnoreCase(MarketplacecommerceservicesConstants.HOME_DELIVERY) && deliveryDetailsData
+											.getType().equalsIgnoreCase(MarketplacecommerceservicesConstants.HD)) || (selectedDeliveryMode
+											.equalsIgnoreCase(MarketplacecommerceservicesConstants.EXPRESS_DELIVERY) && deliveryDetailsData
 
 
 
-															.getType().equalsIgnoreCase(MarketplacecommerceservicesConstants.ED)))
-											|| ((selectedDeliveryMode.equalsIgnoreCase(MarketplacecommerceservicesConstants.CLICK_COLLECT)
-													&& deliveryDetailsData.getType()
-															.equalsIgnoreCase(MarketplacecommerceservicesConstants.CnC))))
+									.getType().equalsIgnoreCase(MarketplacecommerceservicesConstants.ED)))
+											|| ((selectedDeliveryMode.equalsIgnoreCase(MarketplacecommerceservicesConstants.CLICK_COLLECT) && deliveryDetailsData
+													.getType().equalsIgnoreCase(MarketplacecommerceservicesConstants.CnC))))
 									{
 										deliveryModeAvaiableInResponse = true;
 									}
@@ -2185,22 +2179,20 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 									{
 										// Checking for selected delivery mode inventory is available
 
-										if (((selectedDeliveryMode.equalsIgnoreCase(MarketplacecommerceservicesConstants.HOME_DELIVERY)
-												&& deliveryDetailsData.getType().equalsIgnoreCase(MarketplacecommerceservicesConstants.HD))
+										if (((selectedDeliveryMode.equalsIgnoreCase(MarketplacecommerceservicesConstants.HOME_DELIVERY) && deliveryDetailsData
+												.getType().equalsIgnoreCase(MarketplacecommerceservicesConstants.HD))
 
 												|| (selectedDeliveryMode
-														.equalsIgnoreCase(MarketplacecommerceservicesConstants.EXPRESS_DELIVERY)
-														&& deliveryDetailsData
+														.equalsIgnoreCase(MarketplacecommerceservicesConstants.EXPRESS_DELIVERY) && deliveryDetailsData
 
 
 
 
 
 
-																.getType().equalsIgnoreCase(MarketplacecommerceservicesConstants.ED))
-												|| ((selectedDeliveryMode.equalsIgnoreCase(MarketplacecommerceservicesConstants.CLICK_COLLECT)
-														&& deliveryDetailsData.getType()
-																.equalsIgnoreCase(MarketplacecommerceservicesConstants.CnC))))
+												.getType().equalsIgnoreCase(MarketplacecommerceservicesConstants.ED)) || ((selectedDeliveryMode
+												.equalsIgnoreCase(MarketplacecommerceservicesConstants.CLICK_COLLECT) && deliveryDetailsData
+												.getType().equalsIgnoreCase(MarketplacecommerceservicesConstants.CnC))))
 												&& StringUtils.isNotEmpty(deliveryDetailsData.getInventory())
 												&& cartEntry.getQuantity().longValue() > Long.parseLong(deliveryDetailsData.getInventory()))
 										{
@@ -2272,8 +2264,8 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 	 * @throws EtailNonBusinessExceptions
 	 */
 	@Override
-	public boolean isCartEntryDelisted(final CartModel cartModel)
-			throws CommerceCartModificationException, EtailNonBusinessExceptions
+	public boolean isCartEntryDelisted(final CartModel cartModel) throws CommerceCartModificationException,
+			EtailNonBusinessExceptions
 
 	{
 		boolean delistedStatus = false;
@@ -2307,17 +2299,17 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 						final Date sysDate = new Date();
 						final String ussid = cartEntryModel.getSelectedUSSID();
 						//TISEE-5143
-						final List<SellerInformationModel> sellerInformationModelList = getMplDelistingService().getModelforUSSID(ussid,
-								onlineCatalog);
-						if (CollectionUtils.isNotEmpty(sellerInformationModelList) && sellerInformationModelList.get(0) != null
-								&& ((sellerInformationModelList.get(0).getSellerAssociationStatus() != null
-										&& sellerInformationModelList.get(0).getSellerAssociationStatus().getCode()
-												.equalsIgnoreCase(MarketplacecommerceservicesConstants.NO))
-										|| (sellerInformationModelList.get(0)
+						final List<SellerInformationModel> sellerInformationModelList = getMplDelistingService().getModelforUSSID(
+								ussid, onlineCatalog);
+						if (CollectionUtils.isNotEmpty(sellerInformationModelList)
+								&& sellerInformationModelList.get(0) != null
+								&& ((sellerInformationModelList.get(0).getSellerAssociationStatus() != null && sellerInformationModelList
+										.get(0).getSellerAssociationStatus().getCode()
+										.equalsIgnoreCase(MarketplacecommerceservicesConstants.NO)) || (sellerInformationModelList.get(0)
 
 
 
-												.getEndDate() != null && sysDate.after(sellerInformationModelList.get(0).getEndDate()))))
+								.getEndDate() != null && sysDate.after(sellerInformationModelList.get(0).getEndDate()))))
 
 
 
@@ -2334,8 +2326,7 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 
 						{
 							LOG.debug(">> Removing Cart entry for delisted ussid for " + cartEntryModel.getSelectedUSSID());
-							final CartModificationData cartModification = updateCartEntry(cartEntryModel.getEntryNumber().longValue(),
-									0);
+							final CartModificationData cartModification = updateCartEntry(cartEntryModel.getEntryNumber().longValue(), 0);
 
 
 
@@ -2377,8 +2368,8 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 	 */
 	@Override
 	@SuppressWarnings("deprecation")
-	public boolean isCartEntryDelistedMobile(final CartModel cartModel)
-			throws CommerceCartModificationException, EtailNonBusinessExceptions
+	public boolean isCartEntryDelistedMobile(final CartModel cartModel) throws CommerceCartModificationException,
+			EtailNonBusinessExceptions
 
 	{
 		boolean delistedStatus = false;
@@ -2399,8 +2390,8 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 
 				if (cartEntryModel != null && cartEntryModel.getProduct() == null)
 				{
-					final CartModificationData cartModification = updateCartEntryMobile(cartEntryModel.getEntryNumber().longValue(), 0,
-							cartModel);
+					final CartModificationData cartModification = updateCartEntryMobile(cartEntryModel.getEntryNumber().longValue(),
+							0, cartModel);
 
 					if (cartModification.getQuantity() == 0)
 					{
@@ -2418,8 +2409,8 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 					if (cartEntryModel.getProduct().getProductCategoryType().equalsIgnoreCase(FINEJEWELLERY))
 
 					{
-						final List<JewelleryInformationModel> jewelleryInfo = jewelleryService
-								.getJewelleryInfoByUssid(cartEntryModel.getSelectedUSSID());
+						final List<JewelleryInformationModel> jewelleryInfo = jewelleryService.getJewelleryInfoByUssid(cartEntryModel
+								.getSelectedUSSID());
 						if (CollectionUtils.isNotEmpty(jewelleryInfo))
 						{
 							ussid = jewelleryInfo.get(0).getPCMUSSID();
@@ -2444,11 +2435,11 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 							cartEntryModel.getProduct().getCatalogVersion());
 
 
-					if (CollectionUtils.isNotEmpty(sellerInformationModelList) && sellerInformationModelList.get(0) != null
-							&& ((sellerInformationModelList.get(0).getSellerAssociationStatus() != null
-									&& sellerInformationModelList.get(0).getSellerAssociationStatus().getCode()
-											.equalsIgnoreCase(MarketplacecommerceservicesConstants.NO))
-									|| (sellerInformationModelList.get(0)
+					if (CollectionUtils.isNotEmpty(sellerInformationModelList)
+							&& sellerInformationModelList.get(0) != null
+							&& ((sellerInformationModelList.get(0).getSellerAssociationStatus() != null && sellerInformationModelList
+									.get(0).getSellerAssociationStatus().getCode()
+									.equalsIgnoreCase(MarketplacecommerceservicesConstants.NO)) || (sellerInformationModelList.get(0)
 
 
 
@@ -2458,11 +2449,11 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 
 
 
-											.getEndDate() != null && sysDate.after(sellerInformationModelList.get(0).getEndDate()))))
+							.getEndDate() != null && sysDate.after(sellerInformationModelList.get(0).getEndDate()))))
 					{
 						LOG.debug(">> Removing Cart entry for delisted ussid for " + cartEntryModel.getSelectedUSSID());
-						final CartModificationData cartModification = updateCartEntryMobile(cartEntryModel.getEntryNumber().longValue(),
-								0, cartModel);
+						final CartModificationData cartModification = updateCartEntryMobile(
+								cartEntryModel.getEntryNumber().longValue(), 0, cartModel);
 
 
 
@@ -2479,8 +2470,8 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 						{
 
 
-							LOG.debug(
-									">> Delisted item Could not removed item from cart for " + ussid + " trying for hard reset ...... ");
+							LOG.debug(">> Delisted item Could not removed item from cart for " + ussid
+									+ " trying for hard reset ...... ");
 
 						}
 						cartEntryModelList.add(cartEntryModel);
@@ -2560,10 +2551,10 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 	@Override
 	public ArrayList<Integer> getQuantityConfiguratioListforJewellery() throws EtailNonBusinessExceptions
 	{
-		final int minJwlQuantity = getSiteConfigService()
-				.getInt(MarketplacecommerceservicesConstants.MINIMUM_CONFIGURED_QUANTIY_JEWELLERY, 0);
-		final int maxJwlQuantity = getSiteConfigService()
-				.getInt(MarketplacecommerceservicesConstants.MAXIMUM_CONFIGURED_QUANTIY_JEWELLERY, 0);
+		final int minJwlQuantity = getSiteConfigService().getInt(
+				MarketplacecommerceservicesConstants.MINIMUM_CONFIGURED_QUANTIY_JEWELLERY, 0);
+		final int maxJwlQuantity = getSiteConfigService().getInt(
+				MarketplacecommerceservicesConstants.MAXIMUM_CONFIGURED_QUANTIY_JEWELLERY, 0);
 
 		final ArrayList<Integer> quantityConfigurationJwlList = new ArrayList<Integer>();
 
@@ -2786,8 +2777,8 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 		{
 			if (wishModel.getUssid() != null)
 			{
-				final SellerInformationModel sellerInfoForWishlist = getMplCommerceCartService()
-						.getSellerDetailsData(wishModel.getUssid());
+				final SellerInformationModel sellerInfoForWishlist = getMplCommerceCartService().getSellerDetailsData(
+						wishModel.getUssid());
 				if (null != sellerInfoForWishlist)
 				{
 					giftYourselfDeliveryModeDataMap = populategiftYourselfData(wishModel, sellerInfoForWishlist);
@@ -2957,6 +2948,7 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 	@Override
 	public void totalMrpCal(final CartModel cartModel) throws EtailNonBusinessExceptions
 	{
+		double lastpercentage = 0.0D;
 		try
 
 		{
@@ -2983,14 +2975,15 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 						totMrp = BigDecimal.valueOf((null != cartEntryModel.getMrp() ? Double.valueOf((cartEntryModel.getMrp()
 
 
-								.doubleValue() * cartEntryModel.getQuantity().doubleValue())) : totMrp).doubleValue());
+						.doubleValue() * cartEntryModel.getQuantity().doubleValue())) : totMrp).doubleValue());
 
 
 
 						cartEntryModel.setTotalMrp(Double.valueOf(totMrp.doubleValue()));
 
 
-						if (null != cartEntryModel.getNetSellingPrice() && cartEntryModel.getNetSellingPrice().doubleValue() > 0.0
+						if (null != cartEntryModel.getNetSellingPrice()
+								&& cartEntryModel.getNetSellingPrice().doubleValue() > 0.0
 								&& cartEntryModel.getNetSellingPrice().doubleValue() != totMrp.doubleValue()
 								&& (cartEntryModel.getNetSellingPrice().doubleValue() < cartEntryModel.getBasePrice().doubleValue()
 										* cartEntryModel.getQuantity().doubleValue()))
@@ -3004,9 +2997,8 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 							if (cartEntryModel.getCartLevelDisc() != null)
 							{
 
-								cartLevelPercentageDiscount = Double
-										.parseDouble((df.format((cartEntryModel.getCartLevelDisc().doubleValue()
-												/ cartEntryModel.getNetSellingPrice().doubleValue()) * 100)));
+								cartLevelPercentageDiscount = Double.parseDouble((df.format((cartEntryModel.getCartLevelDisc()
+										.doubleValue() / cartEntryModel.getNetSellingPrice().doubleValue()) * 100)));
 								cartEntryModel.setCartAdditionalDiscPerc(Double.valueOf(cartLevelPercentageDiscount));
 								LOG.debug("The cart level percentage is" + cartLevelPercentageDiscount);
 							}
@@ -3023,14 +3015,15 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 							//UF-260 starts here
 							if (cartEntryModel.getCartLevelDisc() != null)
 							{
-								cartLevelPercentageDiscount = Double.parseDouble((df.format(
-										(cartEntryModel.getCartLevelDisc().doubleValue() / cartEntryModel.getBasePrice().doubleValue())
-												* 100)));
+								cartLevelPercentageDiscount = Double.parseDouble((df.format((cartEntryModel.getCartLevelDisc()
+										.doubleValue() / cartEntryModel.getBasePrice().doubleValue()) * 100)));
 								cartEntryModel.setCartAdditionalDiscPerc(Double.valueOf(cartLevelPercentageDiscount));
 								LOG.debug("The cart level percentage is" + cartLevelPercentageDiscount);
 							}
 							//UF-260 ends here
 						}
+						lastpercentage += prodDisCalPer;
+						sessionService.setAttribute("lastpercentage", String.valueOf(lastpercentage));
 					}
 				}
 				modelService.saveAll(cartModel.getEntries());
@@ -3062,6 +3055,22 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 
 		LOG.debug("from getStoreLocationforCnC");
 		return mplCommerceCartService.getStoreLocationsforCnC(storeLocationRequestDataList, cartModel);
+	}
+
+	/**
+	 * this method calls service to get inventories for stores.
+	 *
+	 *
+	 * @param storeLocationRequestDataList
+	 * @return returns Stores with inventories.
+	 */
+	@Override
+	public List<StoreLocationResponseData> getStoreLocationsforCnC(
+			final List<StoreLocationRequestData> storeLocationRequestDataList)
+	{
+
+		LOG.debug("from getStoreLocationforCnC PDP");
+		return mplCommerceCartService.getStoreLocationsforCnC(storeLocationRequestDataList);
 	}
 
 	@Override
@@ -3102,8 +3111,8 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 	}
 
 	@Override
-	public InvReserForDeliverySlotsResponseData convertDeliverySlotsDatatoWsdto(final InvReserForDeliverySlotsRequestData cartdata,
-			final CartModel cart)
+	public InvReserForDeliverySlotsResponseData convertDeliverySlotsDatatoWsdto(
+			final InvReserForDeliverySlotsRequestData cartdata, final CartModel cart)
 
 
 
@@ -3318,8 +3327,9 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 	{
 		boolean flag = false;
 		//Email and sms for Payment_Timeout
-		final String trackOrderUrl = configurationService.getConfiguration()
-				.getString(MarketplacecommerceservicesConstants.SMS_ORDER_TRACK_URL) + orderModel.getCode();
+		final String trackOrderUrl = configurationService.getConfiguration().getString(
+				MarketplacecommerceservicesConstants.SMS_ORDER_TRACK_URL)
+				+ orderModel.getCode();
 
 		try
 		{
@@ -3485,12 +3495,13 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 					for (final PromotionResultModel productPromotion : promotions)
 
 					{
-						if (productPromotion != null && null != productPromotion.getPromotion()
+						if (productPromotion != null
+								&& null != productPromotion.getPromotion()
 								&& productPromotion.getPromotion().getEnabled() == Boolean.TRUE
 								&& (productPromotion.getPromotion() instanceof BuyXItemsofproductAgetproductBforfreeModel
 										|| (productPromotion.getPromotion() instanceof BuyAandBgetCModel)
-										|| (productPromotion.getPromotion() instanceof BuyABFreePrecentageDiscountModel)
-										|| (productPromotion.getPromotion() instanceof CustomProductBOGOFPromotionModel))) //CustomOrderThresholdFreeGiftPromotionModel
+										|| (productPromotion.getPromotion() instanceof BuyABFreePrecentageDiscountModel) || (productPromotion
+											.getPromotion() instanceof CustomProductBOGOFPromotionModel))) //CustomOrderThresholdFreeGiftPromotionModel
 						{
 
 							for (final AbstractPromotionRestrictionModel restriction : productPromotion.getPromotion().getRestrictions())
@@ -3568,11 +3579,9 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 						}
 					}
 				}
-				if ((null != promoModel && promoModel.getEnabled() == Boolean.TRUE
-						&& promotionResult.getCertainty().floatValue() < 1.0F)
+				if ((null != promoModel && promoModel.getEnabled() == Boolean.TRUE && promotionResult.getCertainty().floatValue() < 1.0F)
 						&& (promoModel instanceof BuyAboveXGetPromotionOnShippingChargesModel
-								|| promoModel instanceof BuyAGetPromotionOnShippingChargesModel
-								|| promoModel instanceof BuyAandBGetPromotionOnShippingChargesModel))
+								|| promoModel instanceof BuyAGetPromotionOnShippingChargesModel || promoModel instanceof BuyAandBGetPromotionOnShippingChargesModel))
 				{
 					//Checking shipping charges promotion are present, In that case isDelModeRestrictedPromotionPresent will be true
 					restrictionMap.put("isDelModeRestrictedPromoPresent", Boolean.TRUE);
@@ -3695,15 +3704,17 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 		{
 			if (ussID.equalsIgnoreCase(entry.getSelectedUSSID()))
 			{
-				if (entry.getMplDeliveryMode() != null && entry.getMplDeliveryMode().getDeliveryMode() != null
-						&& MarketplacecommerceservicesConstants.EXPRESS_DELIVERY
-								.equalsIgnoreCase(entry.getMplDeliveryMode().getDeliveryMode().getCode()))
+				if (entry.getMplDeliveryMode() != null
+						&& entry.getMplDeliveryMode().getDeliveryMode() != null
+						&& MarketplacecommerceservicesConstants.EXPRESS_DELIVERY.equalsIgnoreCase(entry.getMplDeliveryMode()
+								.getDeliveryMode().getCode()))
 				{
 					return MarketplacecommerceservicesConstants.DELIVERY_MODE_ED;
 				}
-				else if (entry.getMplDeliveryMode() != null && entry.getMplDeliveryMode().getDeliveryMode() != null
-						&& MarketplacecommerceservicesConstants.HOME_DELIVERY
-								.equalsIgnoreCase(entry.getMplDeliveryMode().getDeliveryMode().getCode()))
+				else if (entry.getMplDeliveryMode() != null
+						&& entry.getMplDeliveryMode().getDeliveryMode() != null
+						&& MarketplacecommerceservicesConstants.HOME_DELIVERY.equalsIgnoreCase(entry.getMplDeliveryMode()
+								.getDeliveryMode().getCode()))
 				{
 					return MarketplacecommerceservicesConstants.DELIVERY_MODE_SD;
 				}
@@ -4097,8 +4108,7 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 						else
 						{
 
-							LOG.debug(
-									"Product already present in the cart so now we will check the qunatity present in the cart already");
+							LOG.debug("Product already present in the cart so now we will check the qunatity present in the cart already");
 
 							if (entry.getQuantity().longValue() >= stock)
 							{
@@ -4207,8 +4217,8 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 		//		final Map<String, String> hMap = new HashMap<String, String>();
 		MaxLimitData maxLimitData = null;
 		final Map<String, MaxLimitData> hMap = new HashMap<String, MaxLimitData>();
-		final int maximum_configured_quantiy = siteConfigService
-				.getInt(MarketplacecommerceservicesConstants.MAXIMUM_CONFIGURED_QUANTIY, 0);
+		final int maximum_configured_quantiy = siteConfigService.getInt(
+				MarketplacecommerceservicesConstants.MAXIMUM_CONFIGURED_QUANTIY, 0);
 
 		int remainingcount;
 		int updateEntryCount;
@@ -4231,6 +4241,7 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 					{
 						try
 						{
+
 							final CartModificationData cartModification = updateCartEntry(entry.getEntryNumber().intValue(),
 									maxQuantity.intValue());
 
@@ -4327,6 +4338,7 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 
 							else
 							{
+
 								productMap.put(product.getCode(),
 										Long.valueOf(productMap.get(product.getCode()).longValue() + quantity.longValue()));
 							}
@@ -4458,8 +4470,8 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 	 */
 	@Override
 	public boolean addItemToCartwithExchange(final String cartId, final CartModel cartModel, final ProductModel productModel,
-			final long quantity, final String ussid, final String exchangeParam)
-			throws InvalidCartException, CommerceCartModificationException
+			final long quantity, final String ussid, final String exchangeParam) throws InvalidCartException,
+			CommerceCartModificationException
 	{
 		return mplCommerceCartService.addItemToCartWithExchange(cartId, cartModel, productModel, quantity, ussid, exchangeParam);
 	}
@@ -4479,8 +4491,8 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 			{
 				for (final PromotionResultModel productPromotion : promotions)
 				{
-					final AbstractPromotionModel promotion = productPromotion.getPromotion() != null
-							? (productPromotion.getPromotion()) : (null);
+					final AbstractPromotionModel promotion = productPromotion.getPromotion() != null ? (productPromotion
+							.getPromotion()) : (null);
 					if (null != promotion && CollectionUtils.isNotEmpty(promotion.getRestrictions())) //CustomOrderThresholdFreeGiftPromotionModel
 					{
 						for (final AbstractPromotionRestrictionModel restriction : promotion.getRestrictions())
@@ -4500,206 +4512,18 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 		return isPincodeRestrictedPromotionPresent;
 	}
 
-	/**
-	 * @param egvDetailForm
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.tisl.mpl.facade.checkout.MplCartFacade#populatePriceDisclaimerCart(de.hybris.platform.core.model.order.CartModel
+	 * )
 	 */
 	@Override
-	public CartData getGiftCartModel(final EgvDetailsData egvDetailForm)
+	public String populatePriceDisclaimerCart(final CartModel cartModel)
 	{
-		CartData cartData = null;
-		try
-		{
-			final CartModel cardModel = getCartModelForEGVProduct(egvDetailForm);
-			try
-			{
-				cartData = getCartConverter().convert(cardModel);
-			}
-			catch (final Exception exception)
-			{
-				LOG.error(ERROR_OCCER_WHILE_CREATING_CART_MODEL_FOR_GIFT + exception);
-				return null;
-			}
-		}
-		catch (final Exception exception)
-		{
-			LOG.error(ERROR_OCCER_WHILE_CREATING_CART_MODEL_FOR_GIFT + exception);
-			return null;
-		}
-		return cartData;
+		// YTODO Auto-generated method stub
+		return mplCommerceCartService.populatePriceDisclaimerCart(cartModel);
 	}
-
-
-	/**
-	 * @param egvDetailForm
-	 * @return
-	 */
-	private CartModel getCartModelForEGVProduct(final EgvDetailsData egvDetailForm)
-	{
-
-		final CartModel cardModel = cartFactory.createCart();
-		cardModel.setPincodeNumber("542621");
-		final List<AbstractOrderEntryModel> orderModelList = new ArrayList<AbstractOrderEntryModel>();
-		final CartEntryModel abstractOrderEntryModel = getEGVCartEntry(egvDetailForm, cardModel);
-		orderModelList.add(abstractOrderEntryModel);
-		cardModel.setEntries(orderModelList);
-		cardModel.setCityForPincode("Hyderabad");
-		cardModel.setIsCODEligible(Boolean.FALSE);
-		cardModel.setDiscountsIncludePaymentCost(false);
-		cardModel.setIsExpressCheckoutSelected(Boolean.FALSE);
-		cardModel.setIsPendingNotSent(Boolean.FALSE);
-		cardModel.setIsSentToOMS(Boolean.TRUE);
-		cardModel.setMerged(Boolean.FALSE);
-		cardModel.setModeOfPayment("Credit Card");
-		cardModel.setNet(Boolean.FALSE);
-		cardModel.setSite(cmsSiteService.getCurrentSite());
-		cardModel.setSubtotal(Double.valueOf(egvDetailForm.getGiftRange()));
-		cardModel.setSubtotal(Double.valueOf(egvDetailForm.getGiftRange()));
-		cardModel.setTotalPrice(Double.valueOf(egvDetailForm.getGiftRange()));
-		cardModel.setTotalPriceWithConv(Double.valueOf(egvDetailForm.getGiftRange()));
-		cardModel.setIsEGVCart(Boolean.TRUE);
-		cardModel.setRecipientId(egvDetailForm.getToEmailAddress());
-		cardModel.setRecipientMessage(egvDetailForm.getMessageBox());
-		cardModel.setGiftFromId(egvDetailForm.getFromEmailAddress());
-		cardModel.setPayableWalletAmount(Double.valueOf(0.0D));
-
-		try
-		{
-			getModelService().saveAll(cardModel);
-		}
-		catch (final Exception exception)
-		{
-			LOG.error("Error occureing  While Saving CartModel " + exception);
-		}
-		return cardModel;
-	}
-
-
-	/**
-	 * @param egvDetailForm
-	 * @param cardModel
-	 * @return
-	 */
-	private CartEntryModel getEGVCartEntry(final EgvDetailsData egvDetailForm, final CartModel cardModel)
-	{
-		//remove old EGA Cart
-		String productSellerGiftCardUssId = null;
-		String productSellerName = null;
-		mplEGVCartService.removeOldEGVCartCurrentCustomer();
-		final CartEntryModel abstractOrderEntryModel = getModelService().create(CartEntryModel.class);
-		final ProductModel productModel = productService.getProductForCode(egvDetailForm.getProductCode());
-		abstractOrderEntryModel.setQualifyingCount(Integer.valueOf(1));
-		abstractOrderEntryModel.setQuantity(Long.valueOf(1));
-		abstractOrderEntryModel.setProduct(productModel);
-		abstractOrderEntryModel.setBasePrice(Double.valueOf(egvDetailForm.getGiftRange()));
-		abstractOrderEntryModel.setUnit(productModel.getUnit());
-		final RichAttributeModel richAttributeModel = (RichAttributeModel) productModel.getRichAttribute().toArray()[0];
-		abstractOrderEntryModel.setFulfillmentMode(richAttributeModel.getDeliveryFulfillModes().getCode());
-		abstractOrderEntryModel.setFulfillmentType(richAttributeModel.getDeliveryFulfillModes().getCode());
-		abstractOrderEntryModel.setFulfillmentTypeP1(richAttributeModel.getDeliveryFulfillModeByP1().getCode());
-		abstractOrderEntryModel.setFulfillmentTypeP2(richAttributeModel.getDeliveryFulfillModeByP1().getCode());
-		if (richAttributeModel.getSellerInfo() != null && StringUtil.isNotEmpty(richAttributeModel.getSellerInfo().getUSSID()))
-		{
-			productSellerGiftCardUssId=richAttributeModel.getSellerInfo().getUSSID();
-			productSellerName =richAttributeModel.getSellerInfo().getSellerName();	
-		}else{
-			productSellerGiftCardUssId=configurationService.getConfiguration().getString("mpl.giftcard.product.sellerid");
-			productSellerName = configurationService.getConfiguration().getString("mpl.giftcard.sellername");
-		}
-		abstractOrderEntryModel.setSelectedUSSID(productSellerGiftCardUssId);
-		abstractOrderEntryModel.setSellerInfo(productSellerName);
-		abstractOrderEntryModel.setCalculated(Boolean.valueOf(true));
-		abstractOrderEntryModel.setActualDeliveryDate(new Date());
-		abstractOrderEntryModel.setCartAdditionalDiscPerc(Double.valueOf(0.0));
-		abstractOrderEntryModel.setCartLevelDisc(Double.valueOf(0.0));
-		abstractOrderEntryModel.setCartLevelPercentageDisc(Double.valueOf(0.0));
-		abstractOrderEntryModel.setCartPromoCode("");
-		abstractOrderEntryModel.setCollectionDays(Integer.valueOf(0));
-		abstractOrderEntryModel.setConvenienceChargeApportion(Double.valueOf(0));
-		abstractOrderEntryModel.setCouponValue(Double.valueOf(0));
-		abstractOrderEntryModel.setCreationtime(new Date());
-		abstractOrderEntryModel.setDiscountValuesInternal("[]");
-		abstractOrderEntryModel.setEntryNumber(Integer.valueOf(0));
-		abstractOrderEntryModel.setFreeCount(Integer.valueOf(0));
-		abstractOrderEntryModel.setHdDeliveryCharge(Double.valueOf(0.0));
-		abstractOrderEntryModel.setInfo(productModel.getName());
-		abstractOrderEntryModel.setIsBOGOapplied(Boolean.valueOf(false));
-		abstractOrderEntryModel.setIsEdToHdSendToFico(Boolean.FALSE);
-		abstractOrderEntryModel.setIsPercentageDisc(Boolean.FALSE);
-		abstractOrderEntryModel.setIsRefundable(false);
-		abstractOrderEntryModel.setIsSdbSendToFico(Boolean.FALSE);
-		abstractOrderEntryModel.setMaxCountReached(false);
-		abstractOrderEntryModel.setModifiedtime(new Date());
-
-		try
-		{
-			final Collection<MplZoneDeliveryModeValueModel> value6 = new ArrayList<MplZoneDeliveryModeValueModel>();
-			final MplZoneDeliveryModeValueModel mplZoneDeliveryModeValueModel = mplDeliveryCostDao.getDeliveryCost("home-delivery",
-					"INR", productSellerGiftCardUssId);
-
-			mplZoneDeliveryModeValueModel.setDeliveryFulfillModes(DeliveryFulfillModesEnum.TSHIP);
-			DeliveryModeModel deliaveryMode=mplDeliveryCostDao.getDelieveryMode("home-delivery");
-			mplZoneDeliveryModeValueModel.setDeliveryMode(deliaveryMode);
-			value6.add(mplZoneDeliveryModeValueModel);
-			modelService.saveAll(mplZoneDeliveryModeValueModel);
-			abstractOrderEntryModel.setMplZoneDeliveryModeValue(value6);
-			abstractOrderEntryModel.setDeliveryMode(deliaveryMode);
-		}
-		catch (Exception exception)
-		{
-			LOG.error("Error While Getting Data");
-		}
-		abstractOrderEntryModel.setMrp(Double.valueOf(egvDetailForm.getGiftRange()));
-		abstractOrderEntryModel.setNetAmountAfterAllDisc(Double.valueOf(egvDetailForm.getGiftRange()));
-		abstractOrderEntryModel.setNetSellingPrice(Double.valueOf(egvDetailForm.getGiftRange()));
-		abstractOrderEntryModel.setOrder(cardModel);
-		abstractOrderEntryModel.setCurrDelCharge(Double.valueOf(0));
-		abstractOrderEntryModel.setPrevDelCharge(Double.valueOf(0));
-		abstractOrderEntryModel.setProductPerDiscDisplay(Double.valueOf(0));
-		abstractOrderEntryModel.setRefundedDeliveryChargeAmt(Double.valueOf(0));
-		abstractOrderEntryModel.setRefundedEdChargeAmt(Double.valueOf(0));
-		abstractOrderEntryModel.setProdLevelPercentageDisc(Double.valueOf(0));
-		abstractOrderEntryModel.setRejected(Boolean.FALSE);
-		abstractOrderEntryModel.setGiveAway(Boolean.FALSE);
-		abstractOrderEntryModel.setScheduledDeliveryCharge(Double.valueOf(0));
-		abstractOrderEntryModel.setTotalSalePrice(Double.valueOf(egvDetailForm.getGiftRange()));
-		abstractOrderEntryModel.setTotalMrp(Double.valueOf(egvDetailForm.getGiftRange()));
-		abstractOrderEntryModel.setTotalPrice(Double.valueOf(egvDetailForm.getGiftRange()));
-		abstractOrderEntryModel.setTaxValuesInternal("[<TV<jp-vat-full#5.0#false#42.86#INR>VT>]");
-		final Set<ConsignmentEntryModel> value3 = new HashSet<ConsignmentEntryModel>();
-		abstractOrderEntryModel.setConsignmentEntries(value3);
-		final List<String> value2 = new ArrayList<String>();
-		abstractOrderEntryModel.setAssociatedItems(value2);
-		abstractOrderEntryModel.setTotalPrice(Double.valueOf(egvDetailForm.getGiftRange()));
-		abstractOrderEntryModel.setTotalMrp(Double.valueOf(egvDetailForm.getGiftRange()));
-		try
-		{
-			getModelService().saveAll(abstractOrderEntryModel);
-
-		}
-		catch (final Exception exception)
-		{
-
-			LOG.error("Preparing CartEntry Data " + exception);
-		}
-		return abstractOrderEntryModel;
-	}
-	
-	@Override
-	public CartData getGiftCartData(String guid){
-		
-		CartModel cartModel= mplEGVCartService.getEGVCartModel(guid);
-		CartData cartData=null;
-		try
-		{
-			cartData = getCartConverter().convert(cartModel);
-			cartData.setEgvTotelAmount(cartModel.getTotalPrice().doubleValue());
-		}
-		catch (final Exception exception)
-		{
-		LOG.error(ERROR_OCCER_WHILE_CREATING_CART_MODEL_FOR_GIFT + exception);
-			return null;
-		}
-	return cartData;
-	}
-
 }

@@ -28,32 +28,7 @@
 
 <spring:eval expression="T(de.hybris.platform.util.Config).getParameter('order.cancel.enabled')" var="cancelFlag"/> 
 <spring:eval expression="T(de.hybris.platform.util.Config).getParameter('order.return.enabled')" var="returnFlag"/> 
-<style>
-.resend_order_email {
-    height: 16px;
-    font-size: 12px;
-    line-height: 1.33;
-    letter-spacing: .6px;
-    text-align: center;
-    color: #a5173c;
-    cursor: pointer;
-    text-transform: uppercase;
-}
 
-.resend_email_limit {margin-bottom: 0 !important; display: none;}
-
-.product-block .header ul .viewDetails {width: 50% !important;} 
-.product-block .header ul li {width: 16% !important;}
-.product-block .header ul .resendEmail {text-align: right;}
-
-@media(max-width: 480px) {
-	.product-block .header ul .viewDetails {width: 100% !important;}
-	.product-block li.header > ul > li {width: 33% !important;}
-	.product-block .header ul .resendEmail {text-align: center;}
-	.product-block .header ul .viewDetailsAnchor {text-align: left; position: static !important;}
-	.product-block .header ul .trackOrderAnchor {position: static !important;}
-}
-</style>
 
 <!-- LW-230 -->
 <input type="hidden" id="isLuxury" value="${isLuxury}"/>
@@ -208,7 +183,7 @@
 											</ul>
 										</li> --%>
 										
-										<!-- TPR-6013 wrong UI --> <li class="header clearfix">
+										<!-- TPR-6013 wrong UI --> <li class="header">
 											<ul>
 												<li class="viewDetails">
 												<span class="orderNumber"><spring:theme code="text.orderHistory.order.place" text="Order"/>#${orderHistoryDetail.code}</span> 
@@ -217,42 +192,16 @@
 													${orderDataMap[orderHistoryDetail.code]}
 												</c:if></span>
 												</li>
-												<li class="viewDetailsAnchor">
-												<c:if test="${orderHistoryDetail.isEGVOrder ne  true}">
-												   <a
+												
+
+												<li class="viewDetailsAnchor"><a
+
 													href="${orderDetailsUrl}?orderCode=${orderHistoryDetail.code}&pageAnchor=viewOrder"><spring:theme
-															code="text.orderHistory.view.orde" text="Order Details" /></a>
-												 </c:if>
-												 <c:if test="${not empty orderHistoryDetail.egvCardNumber}">
-												          Card No: ${orderHistoryDetail.egvCardNumber}
-												 </c:if>
-											  </li>
-															
-															
-												<li class="resendEmail">
-												<c:if test="${not empty orderHistoryDetail.egvCardNumber and orderHistoryDetail.isEGVOrder eq  true}">
-													<input type="hidden" class="order_id_for_resending" value="${orderHistoryDetail.code}" />
-													<input type="hidden" class="resend_email_index" value="" />
-													<span class="resend_order_email">RESEND EMAIL</span>
-													
-													</c:if>
-												</li>
-												
+															code="text.orderHistory.view.orde" text="Order Details" /></a></li>
 															<!-- &pageAnchor=trackOrder -->
-												<li class="trackOrderAnchor">
-												<c:if test="${orderHistoryDetail.isEGVOrder ne  true}">
-												<a href="${orderDetailsUrl}?orderCode=${orderHistoryDetail.code}"><spring:theme
-															code="text.orderHistory.track.order" /></a>
-											   </c:if>
-														<c:if test="${not empty orderHistoryDetail.egvCardExpDate}">
-												          Exp. Date: ${orderHistoryDetail.egvCardExpDate}
-												        </c:if>	
-															
-												</li>
+												<li class="trackOrderAnchor"><a href="${orderDetailsUrl}?orderCode=${orderHistoryDetail.code}"><spring:theme
+															code="text.orderHistory.track.order" /></a></li>
 											</ul>
-											<div class="col-sm-12 alert alert-success resend_email_limit">
-												
-											</div>
 										</li>
 										
 										<c:forEach items="${orderHistoryDetail.sellerOrderList}"
@@ -595,16 +544,15 @@
 																</c:forEach>
 
 																<%-- 	<c:set var="bogoCheck" value="${entry.associatedItems ne null ? 'true': 'false'}"></c:set> --%>
-                                                       <c:if test="${orderHistoryDetail.isEGVOrder ne  true}">
+
 																<a href="" data-toggle="modal"
 																	data-target="#cancelOrder${subOrder.code}${entry.mplDeliveryMode.sellerArticleSKU}${entryStatus.index}"
 																	data-mylist="<spring:theme code="text.help" />"
 																	data-dismiss="modal"
 																	onClick="refreshModal('${bogoCheck}',${entry.transactionId})"><spring:theme
-																		text="Cancel Order" />
-														</a>
+																		text="Cancel Order" /></a>
 															</c:if>
-                                                         </c:if>
+
 														</c:if>
 
 														<!--Chairman Demo Changes: New Static Content Sheet: Checkout> Order Cancellation -->
@@ -725,7 +673,9 @@
 																				<h2 class="product-name">
 																					<a href="${productUrl}">${entryCancel.product.name}</a>
 																				</h2>
-																				
+																				<!-- 	TPR-6288:Order cancel changes -->
+                                                                               <input type="hidden" id ="dtmPrdtCat" value ="${entryCancel.product.rootCategory}"/>
+                                                                               <input type="hidden" id ="dtmPrdtCode" value ="${entryCancel.product.code}"/>
 																				<p class="item-info">
 																					<span><b><c:if test="${entryCancel.quantity > 1}"><spring:theme code="text.orderHistory.quantity"/>
 																					&nbsp;${entryCancel.quantity}
@@ -1008,37 +958,3 @@
 		<div class="content"></div>
 	</div>
 </template:page>
-<script>
-$('.resend_email_index').val(1);
-$(".resend_order_email").click(function () {
-	$('.resend_email_limit').hide();
-	/* $('.resend_email_limit').hide(); */
-	var orderId = $(this).parents('.resendEmail').find(".order_id_for_resending").val();
-	var resendCount = $(this).parents('.resendEmail').find(".resend_email_index").val();
-	var msgSection = $(this).parents('.header').find('.resend_email_limit');
-	var resendVariable = $(this).parents('.resendEmail').find(".resend_email_index");
-	if(resendCount < 4){
-		$.ajax({	  
-			type: "POST",
-			url: ACC.config.encodedContextPath + "/my-account/sendNotificationEGVOrder",
-		    data: "orderId="+orderId,
-			success: function () {	
-			
-				
-				msgSection.text("Email sent successfully.");
-				msgSection.removeClass('alert-danger');
-				msgSection.addClass('alert-success');
-				msgSection.show().delay(3000).fadeOut();
-				resendCount++;
-				resendVariable.val(resendCount);
-				
-			}
-		});
-	} else {
-		msgSection.text("Maximum attempts reached.");
-		msgSection.removeClass('alert-success');
-		msgSection.addClass('alert-danger');
-		msgSection.show().delay(3000).fadeOut();
-	}
-}); 
-</script>

@@ -53,6 +53,7 @@ import de.hybris.platform.commercefacades.product.data.PromotionData;
 import de.hybris.platform.commercefacades.product.data.ReviewData;
 import de.hybris.platform.commercefacades.product.data.SellerInformationData;
 import de.hybris.platform.commercefacades.product.data.VariantOptionData;
+import de.hybris.platform.commercefacades.storelocator.data.PointOfServiceData;
 import de.hybris.platform.commerceservices.url.UrlResolver;
 import de.hybris.platform.core.model.JewelleryInformationModel;
 import de.hybris.platform.core.model.product.PincodeModel;
@@ -60,6 +61,7 @@ import de.hybris.platform.core.model.product.ProductModel;
 import de.hybris.platform.core.model.user.UserModel;
 import de.hybris.platform.product.ProductService;
 import de.hybris.platform.servicelayer.config.ConfigurationService;
+import de.hybris.platform.servicelayer.dto.converter.Converter;
 import de.hybris.platform.servicelayer.exceptions.UnknownIdentifierException;
 import de.hybris.platform.servicelayer.search.exceptions.FlexibleSearchException;
 import de.hybris.platform.servicelayer.session.SessionService;
@@ -68,12 +70,14 @@ import de.hybris.platform.site.BaseSiteService;
 import de.hybris.platform.storelocator.location.Location;
 import de.hybris.platform.storelocator.location.impl.LocationDTO;
 import de.hybris.platform.storelocator.location.impl.LocationDtoWrapper;
+import de.hybris.platform.storelocator.model.PointOfServiceModel;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.net.HttpURLConnection;
 import java.net.InetSocketAddress;
 import java.net.Proxy;
@@ -94,6 +98,7 @@ import java.util.Set;
 import java.util.TreeMap;
 
 import javax.annotation.Resource;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
@@ -119,6 +124,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import atg.taglib.json.util.JSONException;
+
 import com.google.gson.Gson;
 import com.granule.json.JSON;
 import com.granule.json.JSONArray;
@@ -133,8 +140,10 @@ import com.tisl.mpl.core.model.VideoComponentModel;
 import com.tisl.mpl.data.EMITermRateData;
 import com.tisl.mpl.data.PriceBreakupData;
 import com.tisl.mpl.data.WishlistData;
+import com.tisl.mpl.exception.ClientEtailNonBusinessExceptions;
 import com.tisl.mpl.exception.EtailBusinessExceptions;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
+import com.tisl.mpl.facade.checkout.storelocator.MplStoreLocatorFacade;
 import com.tisl.mpl.facade.comparator.SizeGuideHeaderComparator;
 import com.tisl.mpl.facade.product.ExchangeGuideFacade;
 import com.tisl.mpl.facade.product.MplJewelleryFacade;
@@ -142,8 +151,12 @@ import com.tisl.mpl.facade.product.MplProductFacade;
 import com.tisl.mpl.facade.product.PriceBreakupFacade;
 import com.tisl.mpl.facade.product.SizeGuideFacade;
 import com.tisl.mpl.facade.product.impl.CustomProductFacadeImpl;
+import com.tisl.mpl.facades.MplSlaveMasterFacade;
 import com.tisl.mpl.facades.constants.MarketplaceFacadesConstants;
+import com.tisl.mpl.facades.data.ATSResponseData;
 import com.tisl.mpl.facades.data.MplAjaxProductData;
+import com.tisl.mpl.facades.data.StoreLocationRequestData;
+import com.tisl.mpl.facades.data.StoreLocationResponseData;
 import com.tisl.mpl.facades.payment.MplPaymentFacade;
 import com.tisl.mpl.facades.product.RichAttributeData;
 import com.tisl.mpl.facades.product.data.BuyBoxData;
@@ -154,6 +167,7 @@ import com.tisl.mpl.helper.ProductDetailsHelper;
 import com.tisl.mpl.marketplacecommerceservices.service.BuyBoxService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplCmsPageService;
 import com.tisl.mpl.marketplacecommerceservices.service.PDPEmailNotificationService;
+import com.tisl.mpl.marketplacecommerceservices.service.PincodeService;
 import com.tisl.mpl.pincode.facade.PinCodeServiceAvilabilityFacade;
 import com.tisl.mpl.pincode.facade.PincodeServiceFacade;
 import com.tisl.mpl.seller.product.facades.BuyBoxFacade;
@@ -164,12 +178,10 @@ import com.tisl.mpl.storefront.constants.ModelAttributetConstants;
 import com.tisl.mpl.storefront.constants.RequestMappingUrlConstants;
 import com.tisl.mpl.storefront.controllers.ControllerConstants;
 import com.tisl.mpl.storefront.controllers.helpers.FrontEndErrorHelper;
-import com.tisl.mpl.storefront.web.forms.EgvDetailForm;
+import com.tisl.mpl.storefront.security.cookie.PDPPincodeCookieGenerator;
 import com.tisl.mpl.storefront.web.forms.SellerInformationDetailsForm;
 import com.tisl.mpl.util.ExceptionUtil;
-
-import atg.taglib.json.util.JSONException;
-
+import com.tisl.mpl.util.GenericUtilityMethods;
 
 
 /**
@@ -182,10 +194,6 @@ import atg.taglib.json.util.JSONException;
 //@RequestMapping(value = "/**/p")
 public class ProductPageController extends MidPageController
 {
-	/**
-	 * 
-	 */
-	private static final String PAGES_LAYOUT_EGV_PDP_RESPONSIVE = "pages/layout/egvPDPResponsive";
 	private static final String PRODUCT_SIZE_TYPE = "productSizeType";
 	/**
 	 *
@@ -211,7 +219,6 @@ public class ProductPageController extends MidPageController
 	 *
 	 */
 	private static final String PINCODE_CHECKED = "pincodeChecked";
-
 
 
 	/**
@@ -265,11 +272,10 @@ public class ProductPageController extends MidPageController
 
 	private static final String NEW_LINE = "\n";//Sonar Fix
 
-
-
+	//TPR-6405
+	private static final String SAMSUNG = "Samsung";
 	@SuppressWarnings("unused")
 	private static final Logger LOG = Logger.getLogger(ProductPageController.class);
-
 
 	@Resource(name = "frontEndErrorHelper")
 	private FrontEndErrorHelper frontEndErrorHelper;
@@ -299,8 +305,9 @@ public class ProductPageController extends MidPageController
 	@Resource(name = "reviewValidator")
 	private ReviewValidator reviewValidator;
 
-	@Autowired
+	@Resource
 	private ConfigurationService configurationService;
+
 	@Resource(name = ModelAttributetConstants.SESSION_SERVICE)
 	private SessionService sessionService;
 
@@ -308,15 +315,14 @@ public class ProductPageController extends MidPageController
 	private BuyBoxFacade buyBoxFacade;
 	@Resource(name = "pinCodeFacade")
 	private PinCodeServiceAvilabilityFacade pinCodeFacade;
+	@Resource(name = "pincodeService")
+	private PincodeService pincodeService;
 
 	@Resource(name = "baseSiteService")
 	private BaseSiteService baseSiteService;
 
 	@Resource(name = "sizeGuideFacade")
 	private SizeGuideFacade sizeGuideFacade;
-
-	//	@Autowired
-	//	private MplCheckoutFacade mplCheckoutFacade;
 
 	@Autowired
 	private SizeGuideHeaderComparator sizeGuideHeaderComparator;
@@ -333,6 +339,10 @@ public class ProductPageController extends MidPageController
 	@Resource(name = "prodOfferDetFacade")
 	private ProductOfferDetailFacade prodOfferDetFacade;
 
+	//TPR-6654
+	@Resource(name = "pdpPincodeCookieGenerator")
+	private PDPPincodeCookieGenerator pdpPincodeCookie;
+
 	//TPR-978
 	@Resource(name = "cmsPageService")
 	private MplCmsPageService mplCmsPageService;
@@ -340,19 +350,8 @@ public class ProductPageController extends MidPageController
 	@Autowired
 	private MplGigyaReviewCommentServiceImpl mplGigyaReviewService;
 
-
-	//TPR-4389
-	/*
-	 * @SuppressWarnings("unused") private BrowserType bType;
-	 */
-
-	//Sonar fix
-	//@Autowired
-	//private ConfigurationService configService;
 	@Resource(name = "customProductFacade")
 	private CustomProductFacadeImpl customProductFacade;
-
-
 
 	//Exchange Changes
 	@Resource(name = "exchangeGuideFacade")
@@ -368,6 +367,12 @@ public class ProductPageController extends MidPageController
 
 	@Resource(name = "buyBoxService")
 	private BuyBoxService buyBoxService;
+	@Resource(name = "mplSlaveMasterFacade")
+	private MplSlaveMasterFacade mplSlaveMasterFacade;
+	@Resource(name = "mplStoreLocatorFacade")
+	private MplStoreLocatorFacade mplStoreLocatorFacade;
+	@Resource(name = "pointOfServiceConverter")
+	private Converter<PointOfServiceModel, PointOfServiceData> pointOfServiceConverter;
 
 	//SONAR FIX JEWELLERY
 	//	@Resource(name = "jewelleryDescMapping")
@@ -520,10 +525,9 @@ public class ProductPageController extends MidPageController
 
 			else
 			{
-				if (null != sessionService.getAttribute(ModelAttributetConstants.PINCODE))
+				if (null != sessionService.getAttribute(MarketplacecommerceservicesConstants.SESSION_PINCODE))
 				{
 					model.addAttribute(ModelAttributetConstants.PINCODE, sessionService.getAttribute(ModelAttributetConstants.PINCODE));
-
 				}
 
 				populateProductDetailForDisplay(productModel, model, request);
@@ -580,7 +584,7 @@ public class ProductPageController extends MidPageController
 				 * final String metaTitle = productData.getSeoMetaTitle(); final String pdCode = productData.getCode();
 				 * final String metaDescription = productData.getSeoMetaDescription(); //TISPRD-4977 final String
 				 * metaKeyword = productData.getSeoMetaKeyword(); //final String metaKeywords = productData.gets
-				 *
+				 * 
 				 * setUpMetaData(model, metaDescription, metaTitle, pdCode, metaKeyword);
 				 */
 				//AKAMAI fix
@@ -622,11 +626,9 @@ public class ProductPageController extends MidPageController
 	@SuppressWarnings("unused")
 	private String crawlerDetect(final String productCode, final Model model, final HttpServletRequest request)
 	{
-
 		String ApluscontentResponse = null;
 		final StringBuilder content = new StringBuilder();
 		BufferedReader bufferedReader = null;
-
 		try
 		{
 			final String proxyPort = configService.getConfiguration().getString(
@@ -655,14 +657,13 @@ public class ProductPageController extends MidPageController
 		}
 		catch (final IOException e)
 		{
-			System.err.println("An IOException was caught :" + e.getMessage());
+			LOG.error("An IOException was caught :" + e.getMessage()); //PMD fix
 		}
 		finally
 		{
 
 			try
 			{
-
 				if (null != content.toString())
 				{
 					ApluscontentResponse = StringEscapeUtils.unescapeHtml(content.toString());
@@ -672,7 +673,7 @@ public class ProductPageController extends MidPageController
 			}
 			catch (final Exception ex)
 			{
-				ex.printStackTrace();
+				LOG.error("Exception occurred :" + ex.getMessage()); //PMD fix
 			}
 
 
@@ -1342,18 +1343,39 @@ public class ProductPageController extends MidPageController
 	@RequestMapping(value = PRODUCT_OLD_URL_PATTERN + ControllerConstants.Views.Fragments.Product.CHECK_PINCODE, method = RequestMethod.GET)
 	public List<PinCodeResponseData> getPincodeServicabilityDetails(@RequestParam(value = "pin") final String pin,
 			@RequestParam(value = ControllerConstants.Views.Fragments.Product.PRODUCT_CODE) final String productCode,
-			final Model model) throws CMSItemNotFoundException
+			final Model model, final HttpServletRequest request, final HttpServletResponse response) throws CMSItemNotFoundException
 	{
-		List<PinCodeResponseData> response = null;
-
+		List<PinCodeResponseData> pincodeResponse = null;
+		final Cookie cookie = GenericUtilityMethods.getCookieByName(request, "pdpPincode");
+		final int pincodeCookieMaxAge = getConfigurationService().getConfiguration().getInt("pdpPincode.cookie.age", 36000);
+		final String domain = getConfigurationService().getConfiguration().getString("shared.cookies.domain");
 		try
 		{
 			//TISSEC-11
 			final String regex = "\\d{6}";
-
 			if (pin.matches(regex))
 			{
 				LOG.debug("productCode:" + productCode + "pinCode:" + pin);
+				//TPR-6654
+				if (cookie != null && cookie.getValue() != null)
+				{
+					cookie.setValue(pin);
+					cookie.setMaxAge(pincodeCookieMaxAge);
+					cookie.setPath("/");
+
+					if (null != domain && !domain.equalsIgnoreCase("localhost"))
+					{
+						cookie.setSecure(true);
+					}
+					cookie.setDomain(domain);
+					response.addCookie(cookie);
+					sessionService.setAttribute(MarketplacecommerceservicesConstants.SESSION_PINCODE, pin);
+				}
+				else
+				{
+					pdpPincodeCookie.addCookie(response, pin);
+					sessionService.setAttribute(MarketplacecommerceservicesConstants.SESSION_PINCODE, pin);
+				}
 				final PincodeModel pinCodeModelObj = pincodeServiceFacade.getLatAndLongForPincode(pin);
 				final LocationDTO dto = new LocationDTO();
 				Location myLocation = null;
@@ -1367,11 +1389,10 @@ public class ProductPageController extends MidPageController
 						myLocation = new LocationDtoWrapper(dto);
 						LOG.debug("Selected Location for Latitude:" + myLocation.getGPS().getDecimalLatitude());
 						LOG.debug("Selected Location for Longitude:" + myLocation.getGPS().getDecimalLongitude());
-						sessionService.setAttribute(ModelAttributetConstants.PINCODE, pin);
-						response = pinCodeFacade.getResonseForPinCode(productCode, pin,
+						pincodeResponse = pinCodeFacade.getResonseForPinCode(productCode, pin,
 								pincodeServiceFacade.populatePinCodeServiceData(productCode, myLocation.getGPS()));
-
-						return response;
+						sessionService.setAttribute(MarketplacecommerceservicesConstants.PINCODE_RESPONSE_DATA_PDP, pincodeResponse);
+						return pincodeResponse;
 					}
 					catch (final Exception e)
 					{
@@ -1388,7 +1409,7 @@ public class ProductPageController extends MidPageController
 		{
 			ExceptionUtil.etailNonBusinessExceptionHandler(e);
 		}
-		return response;
+		return pincodeResponse;
 
 	}
 
@@ -1464,6 +1485,26 @@ public class ProductPageController extends MidPageController
 			//CKD:TPR-250:Start
 			prepareBrandInfoData(model, productData);
 			//CKD:TPR-250:End
+
+			//UF-422 starts
+			int sizeCounter = 0;
+			if (null != productData && CollectionUtils.isNotEmpty(productData.getVariantOptions()))
+			{
+				for (int i = 0; i < productData.getVariantOptions().size(); i++)
+				{
+					if (StringUtils.isNotEmpty(productData.getVariantOptions().get(i).getColour())
+							&& StringUtils.isNotEmpty(productData.getColour()))
+					{
+						if (productData.getVariantOptions().get(i).getColour().equalsIgnoreCase(productData.getColour()))
+						{
+							sizeCounter++;
+						}
+					}
+				}
+			}
+			model.addAttribute(ModelAttributetConstants.PDP_SIZE_COUNTER, sizeCounter);
+			//UF-422 ends
+
 			final List<String> deliveryInfoList = new ArrayList<String>();
 
 			deliveryInfoList.add(ModelAttributetConstants.EXPRESS_DELIVERY);
@@ -1509,9 +1550,17 @@ public class ProductPageController extends MidPageController
 			model.addAttribute(ModelAttributetConstants.SHARED_PATH, sharePath);
 			model.addAttribute(ControllerConstants.Views.Fragments.Product.PRODUCT_CODE, productData.getCode());
 			model.addAttribute(ModelAttributetConstants.SHARED_PATH, sharePath);
-			if (null != sessionService.getAttribute(ModelAttributetConstants.PINCODE))
+			//TPR-6654
+			final String pincode = (String) sessionService.getAttribute(MarketplacecommerceservicesConstants.SESSION_PINCODE);
+			if (StringUtils.isNotEmpty(pincode))
 			{
-				model.addAttribute(ModelAttributetConstants.PINCODE, sessionService.getAttribute(ModelAttributetConstants.PINCODE));
+				model.addAttribute(ModelAttributetConstants.PINCODE, pincode);
+				/*
+				 * if (StringUtils.isNotEmpty(pincode) && StringUtils.isNotEmpty(ussId)) { posData =
+				 * mplProductFacade.storeLocatorFilterdPDP(pincode, ussId); //posData =
+				 * mplProductFacade.storeLocatorPDP(pincode); }
+				 * model.addAttribute(ControllerConstants.Views.Fragments.Product.STORE_AVAIL, posData);
+				 */
 			}
 			getRequestContextData(request).setProduct(productModel);
 			storeCmsPageInModel(model, getContentPageForLabelOrId(ControllerConstants.Views.Fragments.Product.VIEW_SELLERS));
@@ -1537,6 +1586,7 @@ public class ProductPageController extends MidPageController
 			{
 				final PcmProductVariantModel variantProductModel = (PcmProductVariantModel) productModel;
 				model.addAttribute("productSize", variantProductModel.getSize());
+				findColourVariants(productData, model);
 			}
 			//Fix  TISUATMS-831 from SAP
 			showSizeGuideForFA(productModel, model);
@@ -1649,6 +1699,24 @@ public class ProductPageController extends MidPageController
 		try
 		{
 			populateProductData(productData, model);
+			//UF-422 starts
+			int sizeCounter = 0;
+			if (null != productData && CollectionUtils.isNotEmpty(productData.getVariantOptions()))
+			{
+				for (int i = 0; i < productData.getVariantOptions().size(); i++)
+				{
+					if (StringUtils.isNotEmpty(productData.getVariantOptions().get(i).getColour())
+							&& StringUtils.isNotEmpty(productData.getColour()))
+					{
+						if (productData.getVariantOptions().get(i).getColour().equalsIgnoreCase(productData.getColour()))
+						{
+							sizeCounter++;
+						}
+					}
+				}
+			}
+			model.addAttribute(ModelAttributetConstants.PDP_SIZE_COUNTER, sizeCounter);
+			//UF-422 ends
 			displayConfigurableAttribute(productData, model);
 			getRequestContextData(request).setProduct(productModel);
 			model.addAttribute(IMG_COUNT, Integer.valueOf(productDetailsHelper.getCountForGalleryImages()));
@@ -1698,6 +1766,7 @@ public class ProductPageController extends MidPageController
 			{
 				final PcmProductVariantModel variantProductModel = (PcmProductVariantModel) productModel;
 				model.addAttribute("productSizeQuick", variantProductModel.getSize());
+				findColourVariants(productData, model);
 			}
 			showSizeGuideForFA(productModel, model);
 			if (CollectionUtils.isNotEmpty(productData.getAllVariantsId()))
@@ -1918,6 +1987,7 @@ public class ProductPageController extends MidPageController
 	protected void populateProductDetailForDisplay(final ProductModel productModel, final Model model,
 			final HttpServletRequest request) throws CMSItemNotFoundException
 	{
+		LOG.debug("=========Inside populateProductDetailForDisplay method==================");
 		getRequestContextData(request).setProduct(productModel);
 		try
 		{
@@ -1925,6 +1995,24 @@ public class ProductPageController extends MidPageController
 			final ProductData productData = productFacade.getProductForOptions(productModel, Arrays.asList(ProductOption.BASIC,
 					ProductOption.SUMMARY, ProductOption.DESCRIPTION, ProductOption.GALLERY, ProductOption.CATEGORIES,
 					ProductOption.PROMOTIONS, ProductOption.CLASSIFICATION, ProductOption.VARIANT_FULL));
+			//UF-432
+			if (productModel instanceof PcmProductVariantModel)
+			{
+				findColourVariants(productData, model);
+			}
+			//TPR-6405
+			if (productData != null && productData.getBrand() != null && productData.getBrand().getBrandname() != null)
+			{
+				if (productData.getBrand().getBrandname().equalsIgnoreCase(SAMSUNG))
+				{
+					model.addAttribute(ModelAttributetConstants.IS_SAMSUNG_PAGE, Boolean.TRUE);
+				}
+				else
+				{
+					model.addAttribute(ModelAttributetConstants.IS_SAMSUNG_PAGE, Boolean.FALSE);
+				}
+			}
+			LOG.debug("===========After Samsung block=================");
 			//CKD:TPR-250:Start
 			prepareBrandInfoData(model, productData);
 			//CKD:TPR-250:End
@@ -1934,6 +2022,26 @@ public class ProductPageController extends MidPageController
 			//		sortVariantOptionData(productData);
 			storeCmsPageInModel(model, getPageForProduct(productModel));
 			populateProductData(productData, model);
+			LOG.debug("===========After populateProductData block=================");
+			//UF-422 starts
+			int sizeCounter = 0;
+			if (null != productData && CollectionUtils.isNotEmpty(productData.getVariantOptions()))
+			{
+				for (int i = 0; i < productData.getVariantOptions().size(); i++)
+				{
+					if (StringUtils.isNotEmpty(productData.getVariantOptions().get(i).getColour())
+							&& StringUtils.isNotEmpty(productData.getColour()))
+					{
+						if (productData.getVariantOptions().get(i).getColour().equalsIgnoreCase(productData.getColour()))
+						{
+							sizeCounter++;
+						}
+					}
+				}
+			}
+			LOG.debug("===========After productData.getVariantOptions().size() block=================");
+			model.addAttribute(ModelAttributetConstants.PDP_SIZE_COUNTER, sizeCounter);
+			//UF-422 ends
 
 			final List<String> deliveryInfo = new ArrayList<String>();
 
@@ -1945,8 +2053,17 @@ public class ProductPageController extends MidPageController
 			/* final Map<String, String> deliveryModeATMap = productDetailsHelper.getDeliveryModeATMap(deliveryInfo); */
 			final Map<String, Map<String, Integer>> deliveryModeATMap = productDetailsHelper.getDeliveryModeATMap(deliveryInfo);
 			model.addAttribute(ControllerConstants.Views.Fragments.Product.DELIVERY_MODE_MAP, deliveryModeATMap);
+			//TPR-6654
+			final String pincode = (String) sessionService.getAttribute(MarketplacecommerceservicesConstants.SESSION_PINCODE);
+			//			sessionService.setAttribute(MarketplacecommerceservicesConstants.SESSION_PINCODE, pincode);
+			if (StringUtils.isNotEmpty(pincode))
+			{
+				model.addAttribute(ModelAttributetConstants.PINCODE, pincode);
+				//model.addAttribute(ControllerConstants.Views.Fragments.Product.STORE_AVAIL, mplProductFacade.storeLocatorPDP(pincode));
+			}
 			displayConfigurableAttribute(productData, model);
 			//if (productModel.getProductCategoryType().equalsIgnoreCase(ELECTRONICS))
+
 			if (ELECTRONICS.equalsIgnoreCase(productModel.getProductCategoryType())
 					|| WATCHES.equalsIgnoreCase(productModel.getProductCategoryType())
 					|| TRAVELANDLUGGAGE.equalsIgnoreCase(productModel.getProductCategoryType()))
@@ -1954,11 +2071,13 @@ public class ProductPageController extends MidPageController
 			{
 				productDetailsHelper.groupGlassificationData(productData);
 			}
+			LOG.debug("===========After Electronics block=================");
 			if (FINEJEWELLERY.equalsIgnoreCase(productModel.getProductCategoryType())
 					|| FASHIONJEWELLERY.equalsIgnoreCase(productModel.getProductCategoryType()))
 			{
 				productDetailsHelper.groupGlassificationDataForJewelDetails(productData);
 			}
+			LOG.debug("===========After FASHIONJEWELLERY block=================");
 			final String validTabs = configurationService.getConfiguration().getString(
 					"mpl.categories." + productData.getRootCategory());
 
@@ -1976,6 +2095,8 @@ public class ProductPageController extends MidPageController
 					model.addAttribute(ModelAttributetConstants.RET_REF_TAB, "");
 				}
 			}
+
+			LOG.debug("===========After step1 block=================");
 			//for not showing the disclaimer in pdp for one weight variant for fine jewellery product
 			model.addAttribute(ModelAttributetConstants.TO_SHOW_DISCLAIMER, ModelAttributetConstants.YES_DISCLAIMER);
 			final List<BuyBoxModel> buyboxModelList = new ArrayList<BuyBoxModel>(buyBoxService.buyboxPrice(productData.getCode()));
@@ -2022,13 +2143,14 @@ public class ProductPageController extends MidPageController
 				gigyaAPIKey = configurationService.getConfiguration().getString("gigya.apikey");
 				gigyaRatingURL = configurationService.getConfiguration().getString("gigya.rating.url");
 			}
+			LOG.debug("===========After step2 block=================");
 			//end gigya
 			final String emiCuttOffAmount = configurationService.getConfiguration().getString("marketplace.emiCuttOffAmount");
 			final String cliqCareNumber = configurationService.getConfiguration().getString("cliq.care.number");
 			final String cliqCareMail = configurationService.getConfiguration().getString("cliq.care.mail");
 			final String googleClientid = configurationService.getConfiguration().getString("google.data-clientid");
 			final String facebookAppid = configurationService.getConfiguration().getString("facebook.app_id");
-
+			LOG.debug("===========After step3 block=================");
 			/* Configurable tabs to be displayed in the PDP page */
 			model.addAttribute(ModelAttributetConstants.VALID_TABS, validTabs);
 			model.addAttribute(ModelAttributetConstants.SHARED_PATH, sharePath);
@@ -2061,7 +2183,7 @@ public class ProductPageController extends MidPageController
 			final String metaKeyword = productData.getSeoMetaKeyword();
 			setUpMetaData(model, metaDescription, metaTitle, productCode, metaKeyword);
 			populateTealiumData(productData, model, breadcrumbs);
-
+			LOG.debug("===========After step3 block=================");
 			/**
 			 * Add Filter for FA START :::::
 			 */
@@ -2094,7 +2216,7 @@ public class ProductPageController extends MidPageController
 					}
 				}
 
-
+				LOG.debug("===========After step4 block=================");
 			}
 
 			if (ModelAttributetConstants.FINEJEWELLERY.equalsIgnoreCase(productModel.getProductCategoryType())
@@ -2113,27 +2235,23 @@ public class ProductPageController extends MidPageController
 
 				}
 			}
-
+			LOG.debug("===========After step5 block=================");
 			model.addAttribute("showSizeGuideForFA", showSizeGuideForFA);
 			/**
 			 * Add Filter for FA END :::::
 			 */
 			//TISPRM-56
-			if (CollectionUtils.isNotEmpty(productData.getAllVariantsId()))
+			if (CollectionUtils.isNotEmpty(productData.getAllVariantsId()) && productData.getAllVariantsId().size() > 1) //PMD fix
 			{
-				//get left over variants
-				if (productData.getAllVariantsId().size() > 1)
+				productData.getAllVariantsId().remove(productData.getCode());
+				for (final String variants : productData.getAllVariantsId())
 				{
-					productData.getAllVariantsId().remove(productData.getCode());
-					for (final String variants : productData.getAllVariantsId())
-					{
-						allVariants.append(variants).append(',');
-					}
-
-					final int length = allVariants.length();
-					final String allVariantsString = allVariants.substring(0, length - 1);
-					model.addAttribute(MarketplacecommerceservicesConstants.ALLVARIANTSSTRING, allVariantsString);
+					allVariants.append(variants).append(',');
 				}
+
+				final int length = allVariants.length();
+				final String allVariantsString = allVariants.substring(0, length - 1);
+				model.addAttribute(MarketplacecommerceservicesConstants.ALLVARIANTSSTRING, allVariantsString);
 			}
 
 			// TPR-743
@@ -2141,20 +2259,47 @@ public class ProductPageController extends MidPageController
 			{
 				findCanonicalProduct(productData, model);
 			}
-
+			LOG.debug("===========After step6 block=================");
 		}
 		//populateVariantSizes(productData);
 		catch (final EtailBusinessExceptions e)
 		{
-			throw e;
+			LOG.error("EtailBusinessExceptions occurred at populateProductDetailForDisplay method ::: " + e.getMessage()); //PMD fix
 		}
 		catch (final Exception e)
 		{
-			throw new EtailNonBusinessExceptions(e, ModelAttributetConstants.E0000);
+			LOG.error("Exception occurred at populateProductDetailForDisplay method ::: " + e.getMessage()); //PMD fix
 		}
 
 	}
 
+	/**
+	 * UF-432
+	 *
+	 * @param productData
+	 * @param model
+	 */
+	private void findColourVariants(final ProductData productData, final Model model)
+	{
+		if (CollectionUtils.isNotEmpty(productData.getVariantOptions()))
+		{
+			final List<String> colourList = new ArrayList<String>();
+			Boolean multiColor = Boolean.FALSE;
+			for (final VariantOptionData colour : productData.getVariantOptions())
+			{
+				if (!colourList.contains(colour.getColourCode()))
+				{
+					if (colourList.size() >= 1)
+					{
+						multiColor = Boolean.TRUE;
+						break;
+					}
+					colourList.add(colour.getColourCode());
+				}
+			}
+			model.addAttribute(ModelAttributetConstants.MULTI_COLOUR_FLAG, multiColor);
+		}
+	}
 
 	/**
 	 * @param productData
@@ -2234,8 +2379,6 @@ public class ProductPageController extends MidPageController
 							//for jwl certification
 							final String certificationValue = configurationService.getConfiguration().getString(
 									ModelAttributetConstants.CONFIGURABLE_ATTRIBUTE + productData.getRootCategory() + ".certification");
-
-
 							//apparel
 							final FeatureValueData featureValueData = featureValueList.get(0);
 							if ((ModelAttributetConstants.CLOTHING.equalsIgnoreCase(productData.getRootCategory()))
@@ -2765,11 +2908,11 @@ public class ProductPageController extends MidPageController
 	 */
 	/*
 	 * private MarketplaceDeliveryModeData fetchDeliveryModeDataForUSSID(final String deliveryMode, final String ussid) {
-	 *
+	 * 
 	 * final MarketplaceDeliveryModeData deliveryModeData = new MarketplaceDeliveryModeData(); final
 	 * MplZoneDeliveryModeValueModel mplZoneDeliveryModeValueModel = mplCheckoutFacade
 	 * .populateDeliveryCostForUSSIDAndDeliveryMode(deliveryMode, MarketplaceFacadesConstants.INR, ussid);
-	 *
+	 * 
 	 * final PriceData priceData = productDetailsHelper.formPriceData(mplZoneDeliveryModeValueModel.getValue());
 	 * deliveryModeData.setCode(mplZoneDeliveryModeValueModel.getDeliveryMode().getCode());
 	 * deliveryModeData.setDescription(mplZoneDeliveryModeValueModel.getDeliveryMode().getDescription());
@@ -2789,76 +2932,76 @@ public class ProductPageController extends MidPageController
 	 */
 	/*
 	 * private List<PincodeServiceData> populatePinCodeServiceData(final String productCode) {
-	 *
-	 *
-	 *
+	 * 
+	 * 
+	 * 
 	 * final List<PincodeServiceData> requestData = new ArrayList<>(); PincodeServiceData data = null;
-	 *
+	 * 
 	 * MarketplaceDeliveryModeData deliveryModeData = null; try { final ProductModel productModel =
-	 *
-	 *
+	 * 
+	 * 
 	 * productService.getProductForCode(productCode); final ProductData productData =
-	 *
+	 * 
 	 * productFacade.getProductForOptions(productModel, Arrays.asList(ProductOption.BASIC, ProductOption.SELLER,
 	 * ProductOption.PRICE));
-	 *
-	 *
+	 * 
+	 * 
 	 * for (final SellerInformationData seller : productData.getSeller()) { final List<MarketplaceDeliveryModeData>
-	 *
+	 * 
 	 * deliveryModeList = new ArrayList<MarketplaceDeliveryModeData>(); data = new PincodeServiceData(); if ((null !=
-	 *
+	 * 
 	 * seller.getDeliveryModes()) && !(seller.getDeliveryModes().isEmpty())) { for (final MarketplaceDeliveryModeData
-	 *
+	 * 
 	 * deliveryMode : seller.getDeliveryModes()) { deliveryModeData =
-	 *
+	 * 
 	 * fetchDeliveryModeDataForUSSID(deliveryMode.getCode(), seller.getUssid()); deliveryModeList.add(deliveryModeData);
-	 *
-	 *
+	 * 
+	 * 
 	 * } data.setDeliveryModes(deliveryModeList); } if (null != seller.getFullfillment() &&
-	 *
+	 * 
 	 * StringUtils.isNotEmpty(seller.getFullfillment())) {
-	 *
+	 * 
 	 * data.setFullFillmentType(MplGlobalCodeConstants.GLOBALCONSTANTSMAP.get(seller.getFullfillment().toUpperCase())); }
-	 *
+	 * 
 	 * if (null != seller.getShippingMode() && (StringUtils.isNotEmpty(seller.getShippingMode()))) {
-	 *
+	 * 
 	 * data.setTransportMode(MplGlobalCodeConstants.GLOBALCONSTANTSMAP.get(seller.getShippingMode().toUpperCase())); } if
-	 *
+	 * 
 	 * (null != seller.getSpPrice() && !(seller.getSpPrice().equals(ModelAttributetConstants.EMPTY))) { data.setPrice(new
-	 *
+	 * 
 	 * Double(seller.getSpPrice().getValue().doubleValue())); } else if (null != seller.getMopPrice() &&
-	 *
+	 * 
 	 * !(seller.getMopPrice().equals(ModelAttributetConstants.EMPTY))) { data.setPrice(new
-	 *
+	 * 
 	 * Double(seller.getMopPrice().getValue().doubleValue())); } else if (null != seller.getMrpPrice() &&
-	 *
+	 * 
 	 * !(seller.getMrpPrice().equals(ModelAttributetConstants.EMPTY))) { data.setPrice(new
-	 *
+	 * 
 	 * Double(seller.getMrpPrice().getValue().doubleValue())); } else {
-	 *
-	 *
-	 *
+	 * 
+	 * 
+	 * 
 	 * LOG.info("*************** No price avaiable for seller :" + seller.getSellerID()); continue; } if (null !=
-	 *
-	 *
+	 * 
+	 * 
 	 * seller.getIsCod() && StringUtils.isNotEmpty(seller.getIsCod())) { data.setIsCOD(seller.getIsCod()); }
-	 *
-	 *
-	 *
+	 * 
+	 * 
+	 * 
 	 * data.setSellerId(seller.getSellerID()); data.setUssid(seller.getUssid());
-	 *
+	 * 
 	 * data.setIsDeliveryDateRequired(ControllerConstants.Views.Fragments.Product.N); requestData.add(data); } } catch
-	 *
-	 *
-	 *
-	 *
-	 *
+	 * 
+	 * 
+	 * 
+	 * 
+	 * 
 	 * (final EtailBusinessExceptions e) { ExceptionUtil.etailBusinessExceptionHandler(e, null); }
-	 *
-	 *
-	 *
+	 * 
+	 * 
+	 * 
 	 * catch (final Exception e) {
-	 *
+	 * 
 	 * throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000); } return requestData; }
 	 */
 
@@ -2945,14 +3088,14 @@ public class ProductPageController extends MidPageController
 
 	@Override
 	protected String checkRequestUrl(final HttpServletRequest request, final HttpServletResponse response,
-			final String resolvedUrlPath) throws UnsupportedEncodingException
+			final String resolvedUrlPath)
 	{
+		String newUrl = null;
 		try
 		{
 			final String resolvedUrl = response.encodeURL(request.getContextPath() + resolvedUrlPath);
 			final String requestURI = URIUtil.decode(request.getRequestURI(), "utf-8");
 			final String decoded = URIUtil.decode(resolvedUrl, "utf-8");
-			String newUrl = null;
 			if (StringUtils.isNotEmpty(requestURI) && requestURI.endsWith(decoded))
 			{
 				return null;
@@ -2971,15 +3114,13 @@ public class ProductPageController extends MidPageController
 				{
 					newUrl = resolvedUrlPath;
 				}
-				return newUrl;
-
-
 			}
 		}
 		catch (final URIException e)
 		{
-			throw new UnsupportedEncodingException();
+			LOG.error("Exception occurred at checkRequestUrl method ::: " + e.getMessage()); //PMD fix
 		}
+		return newUrl;
 	}
 
 	/**
@@ -3630,6 +3771,13 @@ public class ProductPageController extends MidPageController
 			//			final String msdRESTURL = configurationService.getConfiguration().getString("msd.rest.url");
 			//			mplAjaxProductData.setMsdRESTURL(msdRESTURL);
 			model.addAttribute(ModelAttributetConstants.PRODUCT, productData);
+			//TPR-6654
+			final String pincode = (String) sessionService.getAttribute(MarketplacecommerceservicesConstants.SESSION_PINCODE);
+			if (StringUtils.isNotEmpty(pincode))
+			{
+				//model.addAttribute(ControllerConstants.Views.Fragments.Product.STORE_AVAIL, mplProductFacade.storeLocatorPDP(pincode));
+				mplAjaxProductData.setPincode(pincode);
+			}
 		}
 		catch (final EtailBusinessExceptions e)
 		{
@@ -3798,60 +3946,6 @@ public class ProductPageController extends MidPageController
 	}
 
 
-	@RequestMapping(value = ControllerConstants.Views.Fragments.Product.PRODUCT_CODE_GIFT_CART, method = RequestMethod.GET)
-	public String getGitProductDetails(@PathVariable(ControllerConstants.Views.Fragments.Product.PRODUCT_CODE) String productCode,
-			final Model model, final HttpServletRequest request)
-	{
-		try
-		{
-
-			if (null != productCode)
-			{
-				productCode = productCode.toUpperCase();
-			}
-			final ProductModel productModel = productService.getProductForCode(productCode);
-			populateProductDetailForDisplay(productModel, model, request);
-
-			final String msdjsURL = configurationService.getConfiguration().getString("msd.js.url");
-			final Boolean isMSDEnabled = Boolean.valueOf(configurationService.getConfiguration().getString("msd.enabled"));
-			final String msdRESTURL = configurationService.getConfiguration().getString("msd.rest.url");
-			model.addAttribute(new ReviewForm());
-			model.addAttribute(ModelAttributetConstants.PAGE_TYPE, PageType.PRODUCT.name());
-			model.addAttribute(ModelAttributetConstants.PRODUCT_CATEGORY_TYPE, productModel.getProductCategoryType());
-			model.addAttribute(ModelAttributetConstants.MSD_JS_URL, msdjsURL);
-			model.addAttribute(ModelAttributetConstants.IS_MSD_ENABLED, isMSDEnabled);
-			model.addAttribute(ModelAttributetConstants.MSD_REST_URL, msdRESTURL);
-
-			if (productModel instanceof PcmProductVariantModel)
-			{
-				final PcmProductVariantModel variantProductModel = (PcmProductVariantModel) productModel;
-				model.addAttribute(ModelAttributetConstants.PRODUCT_SIZE, variantProductModel.getSize());
-			}
-			getViewForPage(model);
-
-		}
-		catch (final EtailBusinessExceptions e)
-		{
-			ExceptionUtil.etailBusinessExceptionHandler(e, null);
-
-		}
-		catch (final EtailNonBusinessExceptions e)
-		{
-			ExceptionUtil.etailNonBusinessExceptionHandler(e);
-		}
-		catch (final Exception e)
-		{
-			ExceptionUtil.etailNonBusinessExceptionHandler(new EtailNonBusinessExceptions(e,
-					MarketplacecommerceservicesConstants.E0000));
-		}
-		final EgvDetailForm egvDetailsform = new EgvDetailForm();
-		model.addAttribute("egvDetailsform", egvDetailsform);
-
-		final ContentPageModel contentPage = getContentPageForLabelOrId("egvPDPPage");
-		storeCmsPageInModel(model, contentPage);
-		setUpMetaDataForContentPage(model, contentPage);
-		return PAGES_LAYOUT_EGV_PDP_RESPONSIVE;
-	}
 
 
 	/**
@@ -3881,5 +3975,234 @@ public class ProductPageController extends MidPageController
 
 	}
 
+	/**
+	 * @desc Returns nearby store location based on pincode.
+	 *
+	 * @return Store details
+	 */
+	@RequestMapping(value = PRODUCT_OLD_URL_PATTERN + ControllerConstants.Views.Fragments.Product.STORE, method = RequestMethod.GET)
+	public String getAllStoreForPincode(
+			@PathVariable(value = ControllerConstants.Views.Fragments.Product.PINCODE) final String pincode,
+			@PathVariable(value = ControllerConstants.Views.Fragments.Product.USSID) final String ussId,
+			@PathVariable(value = ControllerConstants.Views.Fragments.Product.PRODUCT_CODE) final String productCode
 
+			, final Model model)
+
+	{
+		if (LOG.isDebugEnabled())
+		{
+			LOG.debug("New Pincode is::::::::" + pincode);
+			LOG.debug("Ussid is::::::::" + ussId);
+		}
+
+		model.addAttribute(ModelAttributetConstants.PINCODE, pincode);
+		List<PointOfServiceData> posDatas = new ArrayList<>();
+		List<StoreLocationResponseData> omsResponse = new ArrayList<StoreLocationResponseData>();
+		List<StoreLocationRequestData> storeLocationRequestDataList = new ArrayList<StoreLocationRequestData>();
+		try
+		{
+			//call service to get list of ATS and ussid
+			try
+			{
+				omsResponse = pincodeServiceFacade.getListofStoreLocationsforPincode(pincode, ussId, productCode);
+				if (omsResponse.size() > 0)
+				{
+					posDatas = getProductWdPos(omsResponse, pincode);
+					//mplProductFacade.storeLocatorFilterdPDP(pincode, ussId);
+				}
+			}
+			catch (final ClientEtailNonBusinessExceptions e)
+			{
+				LOG.error("::::::Exception in calling OMS Pincode service:::::::::" + e.getErrorCode());
+				if (null != e.getErrorCode()
+						&& ("O0001".equalsIgnoreCase(e.getErrorCode()) || "O0002".equalsIgnoreCase(e.getErrorCode()) || "O0007"
+								.equalsIgnoreCase(e.getErrorCode())))
+				{
+					storeLocationRequestDataList = pincodeServiceFacade.getStoresFromCommerce(pincode, ussId);
+					if (storeLocationRequestDataList.size() > 0)
+					{
+						//populates oms response to data object
+						posDatas = getProductWdPosCommerce(storeLocationRequestDataList, pincode);
+					}
+				}
+			}
+			//sorting posdata
+			Collections.sort(posDatas, (a, b) -> a.getDistanceKm().compareTo(b.getDistanceKm()));
+			model.addAttribute(ControllerConstants.Views.Fragments.Product.STORE_AVAIL, posDatas);
+		}
+		catch (final EtailBusinessExceptions e)
+		{
+			LOG.error(e);
+		}
+		catch (final Exception e)
+		{
+			LOG.error(e);
+		}
+
+		return ControllerConstants.Views.Fragments.Product.StoreLocatorPopup;
+	}
+
+	/**
+	 * @author TCS This method populates List of Ats and ussid to the data object.
+	 * @param response
+	 * @return list of pos with product.
+	 */
+	@SuppressWarnings("boxing")
+	private List<PointOfServiceData> getProductWdPos(final List<StoreLocationResponseData> response, final String pincode)
+	{
+		if (LOG.isDebugEnabled())
+		{
+			LOG.debug("from getProductWdPos method which gets product with pos");
+		}
+		final List<PointOfServiceData> posDataList = new ArrayList<PointOfServiceData>();
+		//iterate over oms response
+		Double distance = 0d;
+		final List<PointOfServiceModel> posModelList = new ArrayList<PointOfServiceModel>();
+		try
+		{
+			for (final StoreLocationResponseData storeLocationResponseData : response)
+			{
+				final String ussId = storeLocationResponseData.getUssId();
+				final String pincodeSellerId = ussId.substring(0, 6);
+				//get stores from commerce
+				if (LOG.isDebugEnabled())
+				{
+					LOG.debug("Get stores from commerce");
+				}
+				for (final ATSResponseData atsResponseData : storeLocationResponseData.getAts())
+				{
+					PointOfServiceModel posModel = null;
+					final int availableQty = atsResponseData.getQuantity();
+					if (availableQty >= 1)
+					{
+						posModel = mplSlaveMasterFacade.findPOSBySellerAndSlave(pincodeSellerId, atsResponseData.getStoreId());
+						if (null != posModel)
+						{
+							posModelList.add(posModel);
+						}
+					}
+				}
+			}
+			//get stores from commerce from ats response
+			if (CollectionUtils.isNotEmpty(posModelList))
+			{
+				final PincodeModel pinCodeModelObj = pincodeServiceFacade.getLatAndLongForPincode(pincode);
+				final LocationDTO dto = new LocationDTO();
+				Location myLocation = null;
+				if (null != pinCodeModelObj)
+				{
+					try
+					{
+						dto.setLongitude(pinCodeModelObj.getLongitude().toString());
+						dto.setLatitude(pinCodeModelObj.getLatitude().toString());
+						myLocation = new LocationDtoWrapper(dto);
+						LOG.debug("Selected Location for Latitude:" + myLocation.getGPS().getDecimalLatitude());
+						LOG.debug("Selected Location for Longitude:" + myLocation.getGPS().getDecimalLongitude());
+						//populate model to data
+						for (final PointOfServiceModel pointOfServiceModel : posModelList)
+						{
+							PointOfServiceData posData = new PointOfServiceData();
+							if (null != pointOfServiceModel)
+							{
+								posData = pointOfServiceConverter.convert(pointOfServiceModel);
+								distance = pincodeService.calculateDistance(myLocation.getGPS(), pointOfServiceModel);
+								posData.setDistanceKm(new BigDecimal(distance.doubleValue()).setScale(2, RoundingMode.HALF_UP)
+										.doubleValue());
+								posData.setStatus(MarketplacecommerceservicesConstants.KM);
+								posDataList.add(posData);
+							}
+						}
+					}
+					catch (final Exception e)
+					{
+						LOG.error(e);
+					}
+				}
+
+			}
+		}
+		catch (final Exception e)
+		{
+			LOG.error(e);
+		}
+		return posDataList;
+	}
+
+	/**
+	 * @author TECH This method populates List of stores and product to the data object if oms is down.
+	 * @param storeLocationRequestDataList
+	 * @return list of product with stores
+	 */
+	@SuppressWarnings("boxing")
+	private List<PointOfServiceData> getProductWdPosCommerce(final List<StoreLocationRequestData> storeLocationRequestDataList,
+			final String pincode)
+	{
+		if (LOG.isDebugEnabled())
+		{
+			LOG.debug("from getProductWdPos method if oms is down which gets product with pos");
+		}
+		final List<PointOfServiceModel> posModelList = new ArrayList<PointOfServiceModel>();
+		final List<PointOfServiceData> posDataList = new ArrayList<PointOfServiceData>();
+		Double distance = 0d;
+		try
+		{
+			for (final StoreLocationRequestData storeLocationRequestData : storeLocationRequestDataList)
+			{
+
+				final String ussId = storeLocationRequestData.getUssId();
+				final String pincodeSellerId = ussId.substring(0, 6);
+				if (null != storeLocationRequestData.getStoreId())
+				{
+					for (int i = 0; i < storeLocationRequestData.getStoreId().size(); i++)
+					{
+						final PointOfServiceModel posModel = mplSlaveMasterFacade.findPOSBySellerAndSlave(pincodeSellerId,
+								storeLocationRequestData.getStoreId().get(i));
+						posModelList.add(posModel);
+					}
+				}
+			}
+			//get stores from commerce from ats response
+			if (CollectionUtils.isNotEmpty(posModelList))
+			{
+				final PincodeModel pinCodeModelObj = pincodeServiceFacade.getLatAndLongForPincode(pincode);
+				final LocationDTO dto = new LocationDTO();
+				Location myLocation = null;
+				if (null != pinCodeModelObj)
+				{
+					try
+					{
+						dto.setLongitude(pinCodeModelObj.getLongitude().toString());
+						dto.setLatitude(pinCodeModelObj.getLatitude().toString());
+						myLocation = new LocationDtoWrapper(dto);
+						LOG.debug("Selected Location for Latitude:" + myLocation.getGPS().getDecimalLatitude());
+						LOG.debug("Selected Location for Longitude:" + myLocation.getGPS().getDecimalLongitude());
+						for (final PointOfServiceModel pointOfServiceModel : posModelList)
+						{
+							//prepare pos data objects
+							PointOfServiceData posData = new PointOfServiceData();
+							if (null != pointOfServiceModel)
+							{
+								posData = pointOfServiceConverter.convert(pointOfServiceModel);
+								distance = pincodeService.calculateDistance(myLocation.getGPS(), pointOfServiceModel);
+								posData.setDistanceKm(new BigDecimal(distance.doubleValue()).setScale(2, RoundingMode.HALF_UP)
+										.doubleValue());
+								posData.setStatus(MarketplacecommerceservicesConstants.KM);
+								posDataList.add(posData);
+							}
+						}
+					}
+					catch (final Exception e)
+					{
+						LOG.error(e);
+					}
+				}
+			}
+
+		}
+		catch (final Exception e)
+		{
+			LOG.error(e);
+		}
+		return posDataList;
+	}
 }

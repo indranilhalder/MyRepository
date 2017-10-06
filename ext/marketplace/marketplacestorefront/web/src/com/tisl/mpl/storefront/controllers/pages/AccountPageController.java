@@ -102,11 +102,14 @@ import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 import java.util.TreeMap;
 
 import javax.annotation.Resource;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.apache.commons.collections.CollectionUtils;
@@ -218,6 +221,7 @@ import com.tisl.mpl.storefront.constants.ModelAttributetConstants;
 import com.tisl.mpl.storefront.constants.RequestMappingUrlConstants;
 import com.tisl.mpl.storefront.controllers.ControllerConstants;
 import com.tisl.mpl.storefront.controllers.helpers.FrontEndErrorHelper;
+import com.tisl.mpl.storefront.security.cookie.PDPPincodeCookieGenerator;
 import com.tisl.mpl.storefront.util.AllProductsInWishlistByDate;
 import com.tisl.mpl.storefront.util.AllWishListCompareByDate;
 import com.tisl.mpl.storefront.web.forms.AccountAddressForm;
@@ -359,6 +363,8 @@ public class AccountPageController extends AbstractMplSearchPageController
 	private FrontEndErrorHelper frontEndErrorHelper;
 	@Resource(name = "orderModelService")
 	private OrderModelService orderModelService;
+	@Resource(name = "pdpPincodeCookieGenerator")
+	private PDPPincodeCookieGenerator pdpPincodeCookie;
 
 	//Return Form Validation
 	@Resource(name = "returnItemFormValidator")
@@ -778,11 +784,9 @@ public class AccountPageController extends AbstractMplSearchPageController
 								+ orderHistoryData.getCode());
 						//setting cancel product for BOGO
 
-						 if(null!= orderEntryData.getOrderLineId()){
 						cancelProduct = cancelReturnFacade.associatedEntriesData(orderModelService.getOrder(subOrder.getCode()),
 								orderEntryData.getOrderLineId());
 						currentProductMap.put(subOrder.getCode() + orderEntryData.getOrderLineId(), cancelProduct);
-                        }
 
 						//TPR-6013
 						final OrderModel subOrderModel = orderModelService.getOrder(subOrder.getCode());
@@ -1058,6 +1062,7 @@ public class AccountPageController extends AbstractMplSearchPageController
 		boolean addressChangeEligible = false;
 
 		String ussid = null;
+		boolean isFineJwlry = false;
 
 		try
 		{
@@ -1164,6 +1169,7 @@ public class AccountPageController extends AbstractMplSearchPageController
 							if (productModl.getProductCategoryType().equalsIgnoreCase(FINEJEWELLERY))
 
 							{ //SellerInformationModel sellerInfoModel = null;
+								isFineJwlry = true;
 								final List<JewelleryInformationModel> jewelleryInfo = jewelleryService.getJewelleryInfoByUssid(orderEntry
 										.getSelectedUssid());
 								ussid = jewelleryInfo.get(0).getPCMUSSID();
@@ -1391,6 +1397,40 @@ public class AccountPageController extends AbstractMplSearchPageController
 										}
 									}
 
+								}
+							}
+
+							//TISPRDT-2546
+							//If FineJewellery return is of type SELF_COURIER,changing the return_initiated message
+							if (isFineJwlry
+									&& (MarketplacecommerceservicesConstants.SELF_COURIER).equalsIgnoreCase(orderEntry
+											.getReturnMethodType()))
+							{
+								for (final Entry<String, Map<String, List<AWBResponseData>>> entry : trackStatusMap.entrySet())
+								{
+									if (entry.getKey().equalsIgnoreCase(orderEntry.getOrderLineId()))
+									{
+										final Map<String, List<AWBResponseData>> innerEntry = entry.getValue();
+										for (final Entry<String, List<AWBResponseData>> innerValue : innerEntry.entrySet())
+										{
+											if ("RETURN".equalsIgnoreCase(innerValue.getKey()))
+											{
+												final List<AWBResponseData> awbList = innerValue.getValue();
+												for (final AWBResponseData awbRes : awbList)
+												{
+													if (("RETURN_INITIATED").equalsIgnoreCase(awbRes.getResponseCode()))
+													{
+														final List<StatusRecordData> statsList = new ArrayList<StatusRecordData>();
+														final StatusRecordData stats = new StatusRecordData();
+														stats.setStatusDescription(MarketplacecommerceservicesConstants.FINEJEW_SELFCOURIER_ERRORMSG);
+														statsList.add(stats);
+														awbRes.setStatusRecords(statsList);
+														awbRes.setShipmentStatus("");
+													}
+												}
+											}
+										}
+									}
 								}
 							}
 
@@ -4044,8 +4084,14 @@ public class AccountPageController extends AbstractMplSearchPageController
 	@RequestMapping(value = RequestMappingUrlConstants.LINK_ADD_NEW_ADDRESS, method = RequestMethod.POST)
 	@RequireHardLogIn
 	public String addAddress(final AccountAddressForm addressForm, final BindingResult bindingResult, final Model model,
-			final HttpServletRequest request) throws CMSItemNotFoundException, UnsupportedEncodingException
+			final HttpServletRequest request, final HttpServletResponse response) throws CMSItemNotFoundException,
+			UnsupportedEncodingException
 	{
+		int pincodeCookieMaxAge;
+		final Cookie cookie = GenericUtilityMethods.getCookieByName(request, "pdpPincode");
+		final String cookieMaxAge = configurationService.getConfiguration().getString("pdpPincode.cookie.age");
+		pincodeCookieMaxAge = (Integer.valueOf(cookieMaxAge)).intValue();
+		final String domain = configurationService.getConfiguration().getString("shared.cookies.domain");
 		try
 		{
 			if (null != request.getParameter(ModelAttributetConstants.ADDRESS_RADIO_TYPE))
@@ -4127,6 +4173,29 @@ public class AccountPageController extends AbstractMplSearchPageController
 			newAddress.setCountry(getI18NFacade().getCountryForIsocode(ModelAttributetConstants.INDIA_ISO_CODE));
 			//newAddress.setLine3(addressForm.getLine3());
 			newAddress.setLocality(addressForm.getLocality());
+			//TPR-6654
+			if (StringUtils.isNotEmpty(newAddress.getPostalCode()))
+			{
+				if (cookie != null && cookie.getValue() != null)
+				{
+					cookie.setValue(newAddress.getPostalCode());
+					cookie.setMaxAge(pincodeCookieMaxAge);
+					cookie.setPath("/");
+
+					if (null != domain && !domain.equalsIgnoreCase("localhost"))
+					{
+						cookie.setSecure(true);
+					}
+					cookie.setDomain(domain);
+					response.addCookie(cookie);
+					getSessionService().setAttribute(MarketplacecommerceservicesConstants.SESSION_PINCODE, newAddress.getPostalCode());
+				}
+				else
+				{
+					pdpPincodeCookie.addCookie(response, addressForm.getPostcode());
+					getSessionService().setAttribute(MarketplacecommerceservicesConstants.SESSION_PINCODE, newAddress.getPostalCode());
+				}
+			}
 			if (StringUtils.isNotBlank(addressForm.getLandmark())
 					&& !addressForm.getLandmark().equalsIgnoreCase(MarketplacecommerceservicesConstants.OTHER))
 			{
@@ -4191,10 +4260,15 @@ public class AccountPageController extends AbstractMplSearchPageController
 	@RequestMapping(value = RequestMappingUrlConstants.LINK_EDIT_ADDRESS_NEW, method = RequestMethod.POST)
 	@RequireHardLogIn
 	public String editAddress(final AccountAddressForm addressForm, final BindingResult bindingResult, final Model model,
-			final RedirectAttributes redirectModel, final HttpServletRequest request) throws CMSItemNotFoundException,
-			UnsupportedEncodingException
+			final RedirectAttributes redirectModel, final HttpServletRequest request, final HttpServletResponse response)
+			throws CMSItemNotFoundException, UnsupportedEncodingException
 
 	{
+		int pincodeCookieMaxAge;
+		final Cookie cookie = GenericUtilityMethods.getCookieByName(request, "pdpPincode");
+		final String cookieMaxAge = configurationService.getConfiguration().getString("pdpPincode.cookie.age");
+		pincodeCookieMaxAge = (Integer.valueOf(cookieMaxAge)).intValue();
+		final String domain = configurationService.getConfiguration().getString("shared.cookies.domain");
 		try
 		{
 			if (null != request.getParameter(ModelAttributetConstants.ADDRESS_RADIO_TYPE))
@@ -4282,6 +4356,29 @@ public class AccountPageController extends AbstractMplSearchPageController
 			newAddress.setState(addressForm.getState());
 			//newAddress.setLine3(addressForm.getLine3());
 			newAddress.setLocality(addressForm.getLocality());
+			//TPR-6654
+			if (StringUtils.isNotEmpty(newAddress.getPostalCode()))
+			{
+				if (cookie != null && cookie.getValue() != null)
+				{
+					cookie.setValue(newAddress.getPostalCode());
+					cookie.setMaxAge(pincodeCookieMaxAge);
+					cookie.setPath("/");
+
+					if (null != domain && !domain.equalsIgnoreCase("localhost"))
+					{
+						cookie.setSecure(true);
+					}
+					cookie.setDomain(domain);
+					response.addCookie(cookie);
+					getSessionService().setAttribute(MarketplacecommerceservicesConstants.SESSION_PINCODE, newAddress.getPostalCode());
+				}
+				else
+				{
+					pdpPincodeCookie.addCookie(response, addressForm.getPostcode());
+					getSessionService().setAttribute(MarketplacecommerceservicesConstants.SESSION_PINCODE, newAddress.getPostalCode());
+				}
+			}
 			if (StringUtils.isNotBlank(addressForm.getLandmark())
 					&& !addressForm.getLandmark().equalsIgnoreCase(MarketplacecommerceservicesConstants.OTHER))
 			{
@@ -4633,17 +4730,48 @@ public class AccountPageController extends AbstractMplSearchPageController
 	@RequestMapping(value = RequestMappingUrlConstants.LINK_SET_DEFAUT_ADDRESS + ADDRESS_CODE_PATH_VARIABLE_PATTERN, method = RequestMethod.GET)
 	@RequireHardLogIn
 	public String setDefaultAddress(@PathVariable(ModelAttributetConstants.ADDRESS_CODE) final String addressCode,
-			final RedirectAttributes redirectModel, final Model model) throws CMSItemNotFoundException
+			final RedirectAttributes redirectModel, final Model model, final HttpServletRequest request,
+			final HttpServletResponse response) throws CMSItemNotFoundException
 	{
 		try
 		{
+			//TPR-6654
+			int pincodeCookieMaxAge;
+			final Cookie cookie = GenericUtilityMethods.getCookieByName(request, "pdpPincode");
+			final String cookieMaxAge = configurationService.getConfiguration().getString("pdpPincode.cookie.age");
+			pincodeCookieMaxAge = (Integer.valueOf(cookieMaxAge)).intValue();
+			final String domain = configurationService.getConfiguration().getString("shared.cookies.domain");
 			final AddressData addressData = new AddressData();
 			addressData.setDefaultAddress(true);
 			addressData.setVisibleInAddressBook(true);
 			addressData.setId(addressCode);
 			userFacade.setDefaultAddress(addressData);
+			//TPR-6654 Start
+			final AddressData addressData1 = userFacade.getAddressForCode(addressCode);
+			final String postalCode = addressData1.getPostalCode();
+			LOG.debug("PostalCode for new address :: " + postalCode);
 			GlobalMessages.addFlashMessage(redirectModel, GlobalMessages.CONF_MESSAGES_HOLDER,
 					MessageConstants.ACCOUNT_CONFIRMATION_DEFAULT_ADDRESS_CHANGED);
+			//TPR-6654
+			if (cookie != null && cookie.getValue() != null)
+			{
+				cookie.setValue(postalCode);
+				cookie.setMaxAge(pincodeCookieMaxAge);
+				cookie.setPath("/");
+
+				if (null != domain && !domain.equalsIgnoreCase("localhost"))
+				{
+					cookie.setSecure(true);
+				}
+				cookie.setDomain(domain);
+				response.addCookie(cookie);
+				sessionService.setAttribute(MarketplacecommerceservicesConstants.SESSION_PINCODE, postalCode);
+			}
+			else
+			{
+				pdpPincodeCookie.addCookie(response, postalCode);
+				sessionService.setAttribute(MarketplacecommerceservicesConstants.SESSION_PINCODE, postalCode);
+			}
 			return REDIRECT_TO_ADDRESS_BOOK_PAGE;
 		}
 		catch (final EtailBusinessExceptions e)
@@ -8245,19 +8373,4 @@ public class AccountPageController extends AbstractMplSearchPageController
 		}
 
 	}
-	
-	
-	@RequestMapping(value = RequestMappingUrlConstants.SEND_NOTIFICATION_EGV_ORDER, method = RequestMethod.POST)
-	@ResponseBody
-	@Post
-	public void sendNotificationRecipient(@RequestParam(value = "orderId") final String orderId)
-	{
-		if (orderId != null)
-		{
-			LOG.info("SendNotificationRecipient  ");
-			mplOrderFacade.sendNotificationEGVOrder(orderId);
-		}
-	}
-	
-	
 }

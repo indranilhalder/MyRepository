@@ -173,7 +173,8 @@ public interface MplOrderFacade
 	 * @param orderCode
 	 * @return OrderModel
 	 */
-	public List<OrderModel> getOrderWithMobileNo(final String mobileNo, int queryCount);
+	//SDI-1193
+	public List<OrderModel> getOrderWithMobileNo(final String mobileNo, int queryCount, int transactionLimit);
 
 	public String getL4CategoryNameForProduct(final String productCode);
 
@@ -202,5 +203,5 @@ public interface MplOrderFacade
 	 */
 	OrderModel getOrderForAnonymousUser(String orderNumber);
 
-	public void sendNotificationEGVOrder(String orderNumber);
+
 }

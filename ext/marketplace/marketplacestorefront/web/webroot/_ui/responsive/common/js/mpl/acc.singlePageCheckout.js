@@ -198,7 +198,7 @@ ACC.singlePageCheckout = {
 		        	$("#selectedAddressMessage").hide();
 		        	ACC.singlePageCheckout.attachDeliveryModeChangeEvent();
 		        	//TISPRDT-2353
-		        	if(typeof utag != "undefined"){
+		        	if(typeof utag !="undefined"){
 						utag.link({ link_text : 'edit_address_saved' ,event_type : 'edit_address_saved'});
 					}
 		        	//calling tealium 
@@ -206,7 +206,15 @@ ACC.singlePageCheckout = {
 		            if(typeof utag_data !="undefined"){
 		            	var checkoutDeliveryPage = "Multi Checkout Summary Page:Choose Your Delivery Options";
 		            	utag_data.page_name = checkoutDeliveryPage;
+		            	$("#pageName").val(checkoutDeliveryPage);
 		            }
+		        	//TPR-6362 |track checkout activity
+		        	if(typeof (_satellite)!= "undefined") {  
+		        		_satellite.track('cpj_checkout_save_address');
+		        	}
+		        	  if(typeof (digitalData.page.pageInfo)!= 'undefined'){
+		          		digitalData.page.pageInfo.pageName = $('#pageName').val().toLowerCase() ;
+		          	}
 	            }
 	        });
 	        
@@ -299,6 +307,10 @@ ACC.singlePageCheckout = {
 		        	if(typeof utag !="undefined"){
 						utag.link({ link_text : 'add_new_address_saved' ,event_type : 'add_new_address_saved'});
 					}
+		        	//TPR-6362 |track checkout activity
+		        	if(typeof (_satellite)!= "undefined") {  
+		        		_satellite.track('cpj_checkout_save_address');
+		        	}
 	            }
 			});
 	        
@@ -326,7 +338,7 @@ ACC.singlePageCheckout = {
     	var entryNumbers=entryNumbersId.split("#");
 		for(var i=0;i<entryNumbers.length-1;i++)
 		{
-		    if(isCncPresent && $('input:radio[name='+entryNumbers[i]+']:checked').attr("id").includes("click-and-collect"))
+		    if(isCncPresent && $("input[name='"+entryNumbers[i]+"']").length>0 && $('input:radio[name='+entryNumbers[i]+']:checked').attr("id").includes("click-and-collect"))
 		    {
 			    var ussid=$('input[name="deliveryMethodEntry['+entryNumbers[i]+'].sellerArticleSKU"]').val();
 			    ACC.singlePageCheckout.fetchStores(entryNumbers[i],ussid,'click-and-collect','','');
@@ -676,13 +688,20 @@ ACC.singlePageCheckout = {
 			console.log("ERROR:"+textStatus + ': ' + errorThrown);
 		});
         //calling tealium
-        //$("#checkoutPageName").val("Choose Your Delivery Options");
+        $("#checkoutPageName").val("Choose Your Delivery Options");
         if(typeof utag_data !="undefined"){
         	var checkoutDeliveryPage = "Multi Checkout Summary Page:Choose Your Delivery Options";
         	utag_data.page_name = checkoutDeliveryPage;
-        	//$("#pageName").val(checkoutDeliveryPage);
-        	 
+        	$("#pageName").val(checkoutDeliveryPage);
         }
+        //tpr-TPR-6362 | track checkout activity
+        if(typeof _satellite != "undefined") {  
+    		_satellite.track('cpj_checkout_delivery_option');
+    	}
+        //TISCSXII-2176 fix 
+        if(typeof (digitalData.page.pageInfo)!= 'undefined'){
+    		digitalData.page.pageInfo.pageName = $('#pageName').val().toLowerCase() ;
+    	}
         //disableHideAjaxLoader will make sure that loader is not removed until CNC stores are fetched.
         var disableHideAjaxLoader=false;
         xhrResponse.done(function(data, textStatus, jqXHR) {
@@ -1153,6 +1172,8 @@ ACC.singlePageCheckout = {
 				event_type : storeName+'_store_selected'
 			});
 		}
+		//TPR-6029 | DTM For checkout
+		dtmStoreSelection(storeName);
 		
 	},
 	//Function to validate and submit pick up person form
@@ -1433,14 +1454,21 @@ ACC.singlePageCheckout = {
         		$("#selectedReviewOrderHighlight").html(countItemsText+" Item(s), "+$("#reviewOrder #totPriceWithoutRupeeSymbol").text());
         	}
         	//added for tealium
-  		  //$("#checkoutPageName").val("Review Order");
-        	if(typeof utag_data !="undefined"){
+  		  $("#checkoutPageName").val("Review Order");
+        	if(typeof utag_data != "undefined"){
             	var checkoutDeliveryPage = "Multi Checkout Summary Page:Review Order";
             	utag_data.page_name = checkoutDeliveryPage;
             	$("#pageName").val(checkoutDeliveryPage);
             	 
             }
-  	      // tealiumCallOnPageLoad();
+        	 //tpr-TPR-6362 | track checkout activity
+        	if(typeof (_satellite)!= "undefined") {  
+        		_satellite.track('cpj_checkout_proceed_to_review');
+        	}	
+        	 if(typeof (digitalData.page.pageInfo)!= 'undefined'){
+         		digitalData.page.pageInfo.pageName =  $('#pageName').val().toLowerCase();
+         	}
+        	
         	//START:Code to show strike off price
         	ACC.singlePageCheckout.addReviewOrderPriceStrikeThrough();
     		//END:Code to show strike off price
@@ -1472,11 +1500,15 @@ ACC.singlePageCheckout = {
 			//$(showElementId).closest(".checkout-accordion").addClass("accordion-open");
 			$(showElementId).html("<span class='alert alert-danger alert-dismissable' style='padding:10px;'>"+jsonResponse.displaymessage+"</span>");
 			$(showElementId).show();
+			// TPR-6369 |Error tracking for  dtm
+	 			dtmErrorTracking("pincode_servicability_error","Issue in PincodeServiceability");
 		}
 		if(jsonResponse.type=="errorCode")
 		{
 			$(showElementId).html("<span class='alert alert-danger alert-dismissable' style='padding:10px;'>"+ACC.singlePageCheckout.ajaxErrorMessages(jsonResponse.displaymessage)+"</span>");
 			$(showElementId).show();
+			// TPR-6369 |Error tracking for  dtm
+	 			dtmErrorTracking("pincode_servicability_error","Issue in PincodeServiceability");
 		}
 		if(jsonResponse.type=="redirect")
 		{
@@ -1824,7 +1856,6 @@ ACC.singlePageCheckout = {
 		var data = "";			
 		var xhrResponse=ACC.singlePageCheckout.ajaxRequest(url,"GET",data,false);
 		return xhrResponse;
-		
 	},
 	//Function called from onPaymentModeSelection() function for responsive
 	proceedWithPaymentForResponsive:function(paymentMode,savedOrNew,radioId,callFromCvv){
@@ -1922,14 +1953,21 @@ ACC.singlePageCheckout = {
 			console.log("ERROR:"+textStatus + ': ' + errorThrown);
 		});
 		//tealium page name addition
-		//$("#checkoutPageName").val("Payment Options");
+		$("#checkoutPageName").val("Payment Options");
 		if(typeof utag_data !="undefined"){
         	var checkoutDeliveryPage = "Multi Checkout Summary Page:Payment Options";
         	utag_data.page_name = checkoutDeliveryPage;
         	$("#pageName").val(checkoutDeliveryPage);
         	 
         }
-		  //tealiumCallOnPageLoad();
+		
+		//tpr-TPR-6362 | track checkout activity
+		if(typeof _satellite != "undefined") {  
+    		_satellite.track('cpj_checkout_proceed_to_payment');
+    	}
+		 if(typeof (digitalData.page.pageInfo)!= 'undefined'){
+	    		digitalData.page.pageInfo.pageName =  $('#pageName').val().toLowerCase();
+	    }
 		xhrValidateResponse.done(function(data, textStatus, jqXHR) {
         	if (jqXHR.responseJSON) {
         		if(data.type!="response")
@@ -1971,7 +2009,6 @@ ACC.singlePageCheckout = {
 	    	        //Calling the below methods to populate the latest shipping address(These methods are in marketplacecheckoutaddon.js)
 //	    	        populateAddress();
 //	    	        populateAddressEmi();
-    	        	WalletDetailAjax();
     			}
         		else
     			{
@@ -2602,7 +2639,7 @@ ACC.singlePageCheckout = {
     	var entryNumbers=entryNumbersId.split("#");
 		for(var i=0;i<entryNumbers.length-1;i++)
 		{
-		    if(isCncPresent && $('input:radio[name='+entryNumbers[i]+']:checked').attr("id").includes("click-and-collect"))
+		    if(isCncPresent && $("input[name='"+entryNumbers[i]+"']").length>0 && $('input:radio[name='+entryNumbers[i]+']:checked').attr("id").includes("click-and-collect"))
 		    {
 		    	cncSelected="true";
 			    var ussid=$('input[name="deliveryMethodEntry['+entryNumbers[i]+'].sellerArticleSKU"]').val();
@@ -3121,8 +3158,6 @@ ACC.singlePageCheckout = {
 			}
 		}
 	}
-	
-	
 /****************MOBILE ENDS HERE************************/
 }
 //Calls to be made on dom ready.
@@ -3198,5 +3233,4 @@ $(document).ready(function(){
 //	        $( this ).attr( 'autocomplete', 'false' );
 //	    });
 	}
-	
 });

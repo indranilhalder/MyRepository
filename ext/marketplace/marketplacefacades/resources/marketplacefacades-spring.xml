@@ -1576,7 +1576,7 @@ class="de.hybris.platform.commercefacades.product.impl.DefaultImageFormatMapping
 		<property name="pinCodeFacade" ref="pinCodeFacade" />
 		<property name="productService" ref="productService" />
 		<property name="pincodeService" ref="pincodeService" />
-		<property name="productFacade" ref="accProductFacade" />
+		<!-- <property name="productFacade" ref="accProductFacade" />  -->
 		<property name="mplCheckoutFacade" ref="mplCheckoutFacade" />
 		<property name="productDetailsHelper" ref="productDetailsHelper" />
 		<property name="mplCartFacade" ref="mplCartFacade" />
@@ -2086,19 +2086,6 @@ class="de.hybris.platform.commercefacades.product.impl.DefaultImageFormatMapping
 	<alias name="defaultEndpointSlaveUrlPopulator" alias="endpointSlaveUrlPopulator" />
 	<bean id="defaultEndpointSlaveUrlPopulator" class="com.tisl.mpl.facade.search.populator.DefaultEndpointSlaveUrlPopulator" />
 	
-	<bean id="mplWalletFacade" class="com.tisl.mpl.facades.wallet.impl.MplWalletFacadeImpl" >
-<!--      	<property name="mplWalletServices" ref="mplWalletServices" /> -->
-        </bean>
-	
 	<!-- TPR-6665: Update synonyms in solr slave  end-->
-	
-<!--  EGV Order Email-->	
-
- <bean id="eGVOrderRecipientContex"
-		class="com.tisl.mpl.facades.process.email.context.EGVOrderRecipientContext"
-		parent="abstractEmailContext" scope="prototype">
-	</bean>
-	
-	
 </beans>
 
