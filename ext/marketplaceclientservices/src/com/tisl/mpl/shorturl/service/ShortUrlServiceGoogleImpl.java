@@ -65,10 +65,7 @@ public class ShortUrlServiceGoogleImpl implements ShortUrlService
 	@Resource(name = "baseSiteService")
 	private BaseSiteService baseSiteService;
 
-	private final int connectionTimeout = configurationService.getConfiguration()
-			.getInt(MarketplaceclientservicesConstants.SHORTURL_CONNECTION_TIMEOUT, 50000);
-	private final int readTimeout = configurationService.getConfiguration()
-			.getInt(MarketplaceclientservicesConstants.SHORTURL_READ_TIMEOUT, 5000);
+
 
 	/**
 	 * @param url
@@ -167,6 +164,12 @@ public class ShortUrlServiceGoogleImpl implements ShortUrlService
 
 	private String getShortUrl(final String endPoint, final String encodedParams)
 	{
+
+		final int connectionTimeout = configurationService.getConfiguration()
+				.getInt(MarketplaceclientservicesConstants.SHORTURL_CONNECTION_TIMEOUT, 50000);
+		final int readTimeout = configurationService.getConfiguration()
+				.getInt(MarketplaceclientservicesConstants.SHORTURL_READ_TIMEOUT, 5000);
+
 		final String proxyEnableStatus = getConfigurationService().getConfiguration()
 				.getString(MarketplaceclientservicesConstants.PROXYENABLED);
 		final String proxyAddress = getConfigurationService().getConfiguration()
@@ -395,7 +398,7 @@ public class ShortUrlServiceGoogleImpl implements ShortUrlService
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.tisl.mpl.shorturl.service.ShortUrlService#getShortUrlReportModels(java.util.Date, java.util.Date)
 	 */
 	@Override
