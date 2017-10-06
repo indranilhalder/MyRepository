@@ -915,5 +915,14 @@ public final class ModelAttributetConstants
 
 	/* TPR-5733 */
 	public static final String FOOTER_LINK_LIST = "footerLinkList";
+	//TPR-6654
+	public static final String POINT_OF_SERVICES = "pointOfServices";
+	/* UF-432 */
+	public static final String MULTI_COLOUR_FLAG = "multiColorFlag";
 	public static final String BUYBOX_AVAILABLE = "buybox_available";
+	public static final String FINEJWLRY_SELFCOURIER_ERROR = "fineJewSelfCourierError";
+	//TPR-6405
+	public static final String IS_SAMSUNG_PAGE = "isSamsungPage";
+	//UF-422
+	public static final String PDP_SIZE_COUNTER = "pdpSizeCounter";
 }

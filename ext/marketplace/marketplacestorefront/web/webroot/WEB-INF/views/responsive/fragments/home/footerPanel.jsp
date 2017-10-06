@@ -67,7 +67,7 @@
 						        <h3 class="toggle"><img src="${node.media.url}" alt="${node.media.altText}" /></h3>
 						    </c:otherwise>
 						</c:choose>
-						<!-- <h3 class="toggle">${node.title}</h3> -->
+						<!-- V <h3 class="toggle">${node.title}</h3> -->
 					</c:if>
 					<ul class="">
 						<c:forEach items="${node.links}" var="childlink"
@@ -79,6 +79,23 @@
 				</c:forEach></li>
 		</c:if>
 	</c:forEach>
+	<li class="footer-text-mobile">
+		<h3 class="toggle">Know More</h3>
+		<ul>
+			<li>
+				<c:choose>
+					<c:when test="${not empty categoryFooterTxt}">
+						${categoryFooterTxt}
+					</c:when>
+					<c:otherwise>
+					<c:if test="${!fn:containsIgnoreCase(cmsPage.name, 'Cart Page')}">
+						${footerText}
+						</c:if>
+					</c:otherwise>
+				</c:choose>
+			</li>
+		</ul>
+	</li>
 </ul>
 <c:if test="${fn:length(footerLinkList) gt 0}">
 	<div id="footerLink">
@@ -110,10 +127,15 @@
 		"link_obj": this, "link_text": "newsletter_subscription" , "event_type" : "newsletter_subscription" 
 	}); */
 		//TISSTRT-1527
-		utag.link({
-		 "link_text": "newsletter_subscription" , "event_type" : "newsletter_subscription" 
-	}); 
+       if(typeof(utag) != "undefined"){
+	       	utag.link({
+		      "link_text": "newsletter_subscription" , "event_type" : "newsletter_subscription" 
+	        }); 
+     }
 		
+		if(typeof _satellite !="undefined"){
+			   _satellite.track('news_letter_sign_up');
+			 }
 		<!-- TPR - 667 ends --->
 		var mail = $("#mailtext").val();
 

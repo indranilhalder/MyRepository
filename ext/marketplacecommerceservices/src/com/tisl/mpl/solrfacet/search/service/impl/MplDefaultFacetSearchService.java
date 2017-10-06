@@ -23,7 +23,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
-import org.apache.commons.collections.MapUtils;
 import org.apache.commons.lang.BooleanUtils;
 import org.apache.solr.client.solrj.response.FacetField;
 import org.apache.solr.client.solrj.response.FacetField.Count;
@@ -190,20 +189,21 @@ public class MplDefaultFacetSearchService extends DefaultFacetSearchService
 		// Customized mpl price range will be taken
 		if (property.getName().equalsIgnoreCase("price"))
 		{
-			if (MapUtils.isNotEmpty(property.getValueRangeSets()))
-			{
-				for (final Map.Entry<String, ValueRangeSet> entry : property.getValueRangeSets().entrySet())
-				{
-					valueRangesList.addAll(entry.getValue().getValueRanges());
-				}
-			}
+			//			if (MapUtils.isNotEmpty(property.getValueRangeSets()))
+			//			{
+			//				for (final Map.Entry<String, ValueRangeSet> entry : property.getValueRangeSets().entrySet())
+			//				{
+			//					valueRangesList.addAll(entry.getValue().getValueRanges());
+			//				}
+			//			}
+			//commented for SDI-575/576
 			valueRangeSet = property.getValueRangeSets().get("INR-APPAREL");
 			if (valueRangeSet != null)
 			{
-				valueRangesList.addAll(valueRangeSet.getValueRanges());
+				valueRangesList = valueRangeSet.getValueRanges();
 			}
-			// TPR-1886 | For jewellery price range
-			valueRangeSet = property.getValueRangeSets().get("INR-FINEJEWELLERY");
+
+			valueRangeSet = property.getValueRangeSets().get("INR-ELECTRONICS");
 			if (valueRangeSet != null)
 			{
 				valueRangesList.addAll(valueRangeSet.getValueRanges());
@@ -216,6 +216,12 @@ public class MplDefaultFacetSearchService extends DefaultFacetSearchService
 				valueRangesList.addAll(valueRangeSet.getValueRanges());
 			}
 			// JEWELLERY CHANGES END
+
+			valueRangeSet = property.getValueRangeSets().get("INR-LUXURY");
+			if (valueRangeSet != null)
+			{
+				valueRangesList.addAll(valueRangeSet.getValueRanges());
+			}
 
 			return valueRangesList;
 		}

@@ -1133,7 +1133,7 @@ function tealiumCallOnPageLoad()
 			pdp_video_product_id=$('#product_id').val();
 		}
 	})
-	
+	var isImageHoverTriggered = false;
 	// Added for tealium
 	if (pageType == "homepage") {
 		
@@ -1951,7 +1951,7 @@ $(document).on('click','.list_title .UlContainer .sort',function(){
 /*TPR-4719, TPR-4704 | Search Filter in SERP|PLP*/
 var restrictionFlag='false';
 
-function setupSessionValues(){
+function setupSessionValuesUtag(){
 	if($('.bottom-pagination .facet-list.filter-opt').children().length > 0){
 		var filterTypeList=[];
 		var filterTypeFinalList=[];
@@ -2187,11 +2187,12 @@ $(document).on("mouseover",".zoomContainer",function(e) {
 		else {
 			page = "quickview";
 		}
-		if(typeof utag !="undefined"){
+		if(typeof(utag)!="undefined" && (!isImageHoverTriggered)){
 			utag.link({
 				link_text: page+"_image_hover",
 				event_type : page+"_image_hover"
 			});
+			isImageHoverTriggered = true;
 		}
 	}
 });	
@@ -2201,7 +2202,7 @@ $(window).unload(function(event) {
 	var pageType = $('#pageType').val();
 	if(pageType == 'category' || pageType == 'productsearch'){
 		if(restrictionFlag != 'true'){
-			setupSessionValues();
+			setupSessionValuesUtag();
 		}
 	}
 });
@@ -2226,3 +2227,13 @@ $(document).on('click','#selectedDeliveryOptionsDivId span:last-child',function(
 	});
 //UF-398 ends
 
+//UF-472|Responsive search icon starts
+$(document).on('mouseup','.simpleSearchToggle',function(){
+	if(typeof(utag) !="undefined"){
+		utag.link({
+			link_text: "searchToggle_clicked",
+			event_type : "searchToggle_clicked"
+		});
+	   }
+});
+//UF-472|Responsive search icon ends

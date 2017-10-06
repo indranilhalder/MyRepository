@@ -136,6 +136,7 @@ import com.tisl.mpl.facade.checkout.MplCartFacade;
 import com.tisl.mpl.facade.checkout.MplCheckoutFacade;
 import com.tisl.mpl.facade.checkout.MplCustomAddressFacade;
 import com.tisl.mpl.facade.checkout.storelocator.MplStoreLocatorFacade;
+import com.tisl.mpl.facade.product.ExchangeGuideFacade;
 import com.tisl.mpl.facade.wishlist.WishlistFacade;
 import com.tisl.mpl.facades.MplCouponWebFacade;
 import com.tisl.mpl.facades.MplPaymentWebFacade;
@@ -271,6 +272,10 @@ public class CartsController extends BaseCommerceController
 
 	@Resource(name = "sessionService")
 	private SessionService sessionService;
+
+	//TPR-6971
+	@Resource(name = "exchangeGuideFacade")
+	private ExchangeGuideFacade exchangeFacade;
 
 	/**
 	 * @return the mplCouponFacade
@@ -2639,6 +2644,11 @@ public class CartsController extends BaseCommerceController
 				//commented for CAR:127
 				//reservationList = mplCommerceCartService.getReservation(cart, pincode, type);
 				reservationList = mplCommerceCartService.getReservation(caData, pincode, type, cart, item, SalesApplication.MOBILE);
+				//INC144317815
+				if (reservationList == null || CollectionUtils.isEmpty(reservationList.getReservationItem()))//INC144317815
+				{
+					throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9201);
+				}
 				LOG.debug("******************* Soft reservation Mobile web service response received from OMS ******************"
 						+ cartId);
 
@@ -2726,7 +2736,7 @@ public class CartsController extends BaseCommerceController
 			 * bin = null; if (StringUtils.isNotEmpty(binNo)) { bin = getBinService().checkBin(binNo); } if (null != bin &&
 			 * StringUtils.isNotEmpty(bin.getBankName())) {
 			 * getSessionService().setAttribute(MarketplacewebservicesConstants.BANKFROMBIN, bin.getBankName());
-			 * 
+			 *
 			 * LOG.debug("************ Logged-in cart mobile soft reservation BANKFROMBIN **************" +
 			 * bin.getBankName()); } }
 			 */
@@ -2951,7 +2961,8 @@ public class CartsController extends BaseCommerceController
 	@RequestMapping(value = "/{cartId}/selectDeliveryMode", method = RequestMethod.POST)
 	@ResponseBody
 	public WebSerResponseWsDTO selectDeliveryMode(@PathVariable final String cartId,
-			@RequestParam(required = true, value = "deliverymodeussId") final String deliverymodeussId)
+			@RequestParam(required = true, value = "deliverymodeussId") final String deliverymodeussId,
+			@RequestParam(required = false, defaultValue = "false", value = "removeExchange") final boolean removeExchangefromCNCcart)
 	{
 		final WebSerResponseWsDTO response = new WebSerResponseWsDTO();
 		CartModel cart = null;
@@ -2975,7 +2986,7 @@ public class CartsController extends BaseCommerceController
 				}
 			}
 			//if cart doesn't contain cnc products clean up pickup person details
-			cleanupPickUpDetails(cart);
+			cleanupPickUpDetails(cart, removeExchangefromCNCcart);
 
 			if (setFreebieDeliverMode(cart))
 			{
@@ -4045,7 +4056,7 @@ public class CartsController extends BaseCommerceController
 	 * @param cartId
 	 * @return void
 	 */
-	protected void cleanupPickUpDetails(final CartModel cartModel)
+	protected void cleanupPickUpDetails(final CartModel cartModel, final boolean removeExchangefromCNCcart)
 	{
 		//final CartModel cartModel = mplPaymentWebFacade.findCartValues(cartId);
 		int cncDelModeCount = 0;
@@ -4084,7 +4095,13 @@ public class CartsController extends BaseCommerceController
 			{
 				LOG.debug("Cart Entries have only CNC mode and del address is not empty");
 			}
+
 			cartModel.setDeliveryAddress(null);
+		}
+		//TPR-6971
+		if (cncDelModeCount > 0 && otherDelModeCount == 0 && removeExchangefromCNCcart)
+		{
+			exchangeFacade.removeExchangefromCart(cartModel);
 		}
 		modelService.save(cartModel);
 	}

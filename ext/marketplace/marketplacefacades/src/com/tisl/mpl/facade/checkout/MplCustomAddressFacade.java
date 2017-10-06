@@ -131,4 +131,16 @@ public interface MplCustomAddressFacade
 	 *
 	 */
 	public AddressData getDeliveryAddress();
+
+	/**
+	 * @param cartModel
+	 * @return
+	 */
+	public AddressData getDeliveryAddress(CartModel cartModel);
+
+	/**
+	 * @param cart
+	 * @return
+	 */
+	public CartData getCheckoutCart(CartModel cart);
 }

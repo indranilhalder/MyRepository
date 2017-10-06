@@ -287,7 +287,7 @@ public class DefaultMplProductSearchFacade<ITEM extends ProductData> extends Def
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see
 	 * com.tisl.mpl.solrfacet.search.MplProductSearchFacade#mplProductSearch(de.hybris.platform.commercefacades.search.
 	 * data.SearchStateData, de.hybris.platform.commerceservices.search.pagedata.PageableData, java.lang.String)
@@ -1114,7 +1114,7 @@ public class DefaultMplProductSearchFacade<ITEM extends ProductData> extends Def
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see
 	 * com.tisl.mpl.solrfacet.search.MplProductSearchFacade#populateSearchState(de.hybris.platform.commercefacades.search
 	 * .data.SearchStateData)
@@ -1124,7 +1124,12 @@ public class DefaultMplProductSearchFacade<ITEM extends ProductData> extends Def
 	{
 
 		final SolrSearchQueryTermData solrSearchQueryTermData = new SolrSearchQueryTermData();
-
+		//PR-23 start
+		if (null != searchState && searchState.isNextSearch())
+		{
+			searchQueryData.setNextSearch(searchState.isNextSearch());
+		}
+		//PR-23 end
 		if (null == searchState.getLuxurySiteFrom())//For Marketplace Web
 		{
 			solrSearchQueryTermData.setKey("isLuxuryProduct");

@@ -110,6 +110,12 @@
 	<bean id="mplClientAccountAddressService" class="com.tisl.mpl.service.MplClientAccountAddressServiceImpl" />
 	<!-- Ticket Create -->
 	<bean id="ticketCreate" class="com.tisl.mpl.service.TicketCreationCRMserviceImpl" />
+	
+	
+	<bean id="refundsms" class="com.tisl.mpl.refunds.dao.RefundSmsDaoImpl" autowire="byName"/>
+	
+	
+	
 	<!-- Refund Info -->
 	<bean id="mplRefundStatusService" class="com.tisl.mpl.service.MplRefundStatusServiceImpl" />
 	<bean id="mplOrderCancelClientService" class="com.tisl.mpl.service.MplOrderCancelClientServiceImpl" />

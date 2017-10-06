@@ -244,27 +244,44 @@ $(".checkout-accordion-wrapper .checkout-accordion .checkout-accordion-heading")
 	var checkoutDeliveryPage = "Multi Checkout Summary Page:Select Address";
 	if(selector.indexOf("Delivery Address") > -1){
     	checkoutDeliveryPage = "Multi Checkout Summary Page:Select Address";
-    	 if(typeof(utag_data) != "undefined"){
-    	    utag_data.page_name = checkoutDeliveryPage;	
-    	 }
+    	    if(typeof(utag_data) != "undefined"){
+    	       utag_data.page_name = checkoutDeliveryPage;	
+    	     }
+    	$("#pageName").val(checkoutDeliveryPage);
+ 	    //TISCSXII-2176 | page name update for dtm
+ 	       if(typeof (digitalData.page.pageInfo)!= 'undefined'){
+    		   digitalData.page.pageInfo.pageName = $('#pageName').val().toLowerCase() ;
+    	   }
     }
     else if(selector.indexOf("Delivery Method") > -1){
     	 checkoutDeliveryPage = "Multi Checkout Summary Page:Choose Your Delivery Options";
-    	  if(typeof(utag_data) != "undefined"){
-     	     utag_data.page_name = checkoutDeliveryPage;
-    	  }
+    	     if(typeof(utag_data) != "undefined"){
+     	        utag_data.page_name = checkoutDeliveryPage;
+    	       }
+    	 $("#pageName").val(checkoutDeliveryPage);
+	         if(typeof (digitalData.page.pageInfo)!= 'undefined'){
+     	     	digitalData.page.pageInfo.pageName = $('#pageName').val().toLowerCase() ;
+     	      }
     }
     else if(selector.indexOf("Review Order") > -1){
     	checkoutDeliveryPage = "Multi Checkout Summary Page:Review Order";
-    	  if(typeof(utag_data) != "undefined"){
-    	    utag_data.page_name = checkoutDeliveryPage;
-    	  }
+    	    if(typeof(utag_data) != "undefined"){
+    	      utag_data.page_name = checkoutDeliveryPage;
+    	    }
+    	 $("#pageName").val(checkoutDeliveryPage);
+	        if(typeof (digitalData.page.pageInfo)!= 'undefined'){
+     		   digitalData.page.pageInfo.pageName = $('#pageName').val().toLowerCase() ;
+     	     }
     }
     else if(selector.indexOf("Payment") > -1){
     	checkoutDeliveryPage = "Multi Checkout Summary Page:Payment Options";
-    	  if(typeof(utag_data) != "undefined"){
-    	       utag_data.page_name = checkoutDeliveryPage;
-    	  }
+    	      if(typeof(utag_data) != "undefined"){
+    	         utag_data.page_name = checkoutDeliveryPage;
+    	       }
+    	 $("#pageName").val(checkoutDeliveryPage);
+ 	          if(typeof (digitalData.page.pageInfo)!= 'undefined'){
+      		      digitalData.page.pageInfo.pageName = $('#pageName').val().toLowerCase() ;
+      	      }
     } 
 });
 </script>

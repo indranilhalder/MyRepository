@@ -107,6 +107,9 @@
 															</p>
 														</div>
 												<span class="otherAttributes"><spring:message code="seller.order.code"> </spring:message>&nbsp;${subOrder.code} </span>
+											<!-- 	TPR-6288 | My account Order Return -->
+												<input type="hidden" id ="dtmPrdtReturnCat" value =" ${entryReturn.product.rootCategory}"/>
+												<input type="hidden" id ="dtmPrdtReturnCode" value ="${entryReturn.product.code}"/>
 								</div>
 								<p style="clear:both"></p>
 								</c:forEach>

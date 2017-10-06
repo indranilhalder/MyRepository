@@ -40,6 +40,7 @@
 		<cms:component component="${feature}" />
 	</cms:pageSlot>
 	<div id="bestPicks" class="feature-collections lazy-reached-bestPics"></div> 
+	<div id="brandsYouLoveMobileComp" class=""></div>
 	<div id="brandsYouLove" class="home-brands-you-love-wrapper feature-collections lazy-reached-brandsYouLove"></div>
 	<div id="bestOffers" class="best-offers feature-collections lazy-reached-bestOffers"></div>
 	<div id="promobannerhomepage" class="buy-banner lazy-reached-promobannerhomepage"></div>

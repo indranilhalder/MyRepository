@@ -101,6 +101,8 @@ public final class MarketplaceCoreConstants extends GeneratedMarketplaceCoreCons
 	public static final String COLORFAMILYFOOTWEARBLANK = "";
 	public static final String DIALCOLORELECTRONICS = "dialcolor"; // for INC_12606
 	public static final String DIALCOLORELECTRONICSBLANK = ""; // for INC_12606
+	public static final String COLORELECTRONICS = "colorelectronics"; //INC144316508
+	public static final String COLORELECTRONICSBLANK = ""; //INC144316508
 	public static final String DYNAMICATTRIBUTE = "classification.attirbutes.dynamic.";
 	public static final String LSH1 = "LSH1";
 	public static final String INR = "INR";
@@ -109,6 +111,13 @@ public final class MarketplaceCoreConstants extends GeneratedMarketplaceCoreCons
 	public static final String releaseImpex = "marketplacecore.projectdata.release";
 	public static final String ALL = "all";
 	//PRDI-423
-	public static final String DOUBLE_HYPHEN = "--".intern();
+	public static final String HYPHEN_REGEX = "--+".intern();
 	public static final String SINGLE_HYPHEN = "-".intern();
+	public static final String BRAND_TAG = "<brand>".intern();
+	public static final String REGEX = "[^a-zA-Z0-9+-]".intern();
+	public static final int ZERO_INT = 0;
+	public static final String APOSTROPHE = "'".intern();
+	//public static final String AND = "and".intern();
+	public static final String WHOLE_WORD_REGEX = "\\band\\b".intern();
+	public static final String AMPERSAND = "&".intern();
 }

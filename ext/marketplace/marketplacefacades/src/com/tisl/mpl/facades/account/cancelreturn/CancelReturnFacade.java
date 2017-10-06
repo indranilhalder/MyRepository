@@ -297,6 +297,8 @@ public interface CancelReturnFacade
 
 	public List<AbstractOrderEntryModel> associatedEntries(final OrderModel subOrderDetails, final String transactionId)
 			throws Exception;
+
+	public boolean appliedPromotionCheckOnetouch(final OrderModel subOrderModel);
 	//TPR-1345:One touch cancel return--END
 
 }
