@@ -151,6 +151,21 @@
 								</c:if> 
 					         </c:if>
 								<!-- R2.3 for track order END -->
+								<!--  EGV Changes -->
+									<spring:eval expression="T(de.hybris.platform.util.Config).getParameter('marketplace.header.egvProductCode')" var="productCode"/>
+							        <spring:eval expression="T(de.hybris.platform.util.Config).getParameter('marketplace.header.egvurl')" var="egvUrlEnable"/>
+								
+								<c:if test="${egvUrlEnable}">
+								    <li class="track_order_header"><a href="/wallet/getcliqcashPage" >
+										<spring:theme code="trackorder.header.cliqcash" text="CliQ Cash"/></a>		
+							       </li>
+							       <c:set var="myVar" value="/giftCard-" />
+							       <c:set var ="egvProduct"  value="${myVar}${productCode}"/> 
+							       <li class="track_order_header"><a href="<c:url value="${egvProduct}"/>">
+							          <spring:theme code="trackorder.header.giftCard" text="Gift Card"/></a>
+							       </li>
+							    </c:if>
+							       
 								<%-- <li class="store-locator-header"><a href="${request.contextPath}/store-finder">Our Stores</a></li> //commented for UF-353--%>
 								<li class="download-app"><a href="${request.contextPath}/apps">Download App</a></li>
 								<li class="enter-pincode"><a data-toggle="modal" data-target="#pincode-modal">Enter Your Pincode</a></li>
