@@ -5749,7 +5749,6 @@ function WalletDetailAjax(){
   }
 
 if ($(window).width() < 768) {
-	alert("Making Wallet Ajax");
 	WalletDetailAjax();
 }
 

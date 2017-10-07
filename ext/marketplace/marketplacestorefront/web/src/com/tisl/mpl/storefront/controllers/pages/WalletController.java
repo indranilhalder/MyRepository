@@ -19,6 +19,7 @@ import de.hybris.platform.store.services.BaseStoreService;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import javax.annotation.Resource;
 
@@ -82,12 +83,15 @@ public class WalletController extends AbstractPageController
 	private MplWalletFacade mplWalletFacade;
 
 
-	//	@Resource(name = "mplQCInitService")
-	//	private MplQCInitServiceImpl mplQCInitService;
+	@ModelAttribute("getCurrentDate")
+	public String checkDisplayOffer()
+	{
+		return dateFormat.format(new Date());
+	}
 
 	private static final Logger LOG = Logger.getLogger(WalletController.class);
 	protected static final String REDIM_WALLET_CODE_PATTERN = "/redimWallet";
-	final DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+	final DateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy hh:mm:ss");
 
 
 	@SuppressWarnings("boxing")
@@ -200,7 +204,7 @@ public class WalletController extends AbstractPageController
 				customerRegisterReq.setNotes("Activating Customer " + currentCustomer.getOriginalUid());
 				final QCCustomerRegisterResponse customerRegisterResponse = mplWalletFacade
 						.createWalletContainer(customerRegisterReq);
-				if (customerRegisterResponse.getResponseCode() == 0)
+				if (null != customerRegisterResponse.getResponseCode() && customerRegisterResponse.getResponseCode() == 0)
 				{
 					final CustomerWalletDetailModel custWalletDetail = modelService.create(CustomerWalletDetailModel.class);
 					custWalletDetail.setWalletId(customerRegisterResponse.getWallet().getWalletNumber());
@@ -213,6 +217,9 @@ public class WalletController extends AbstractPageController
 					currentCustomer.setCustomerWalletDetail(custWalletDetail);
 					currentCustomer.setIsWalletActivated(true);
 					modelService.save(currentCustomer);
+
+					GlobalMessages.addMessage(redirectAttributes, GlobalMessages.INFO_MESSAGES_HOLDER,
+							"text.cliqcash.use.wallet.active", null);
 
 					customerWalletDetailData = mplWalletFacade
 							.getCustomerWallet(currentCustomer.getCustomerWalletDetail().getWalletId());
@@ -227,6 +234,16 @@ public class WalletController extends AbstractPageController
 
 						walletTrasacationsListData1 = walletTrasacationsListData;
 					}
+
+				}
+				else
+				{
+					//					GlobalMessages.addFlashMessage(redirectAttributes, GlobalMessages.INFO_MESSAGES_HOLDER,
+					//							"text.cliqcash.use.wallet.fail", null);
+					System.out.println("Fail To active user wallet" + (null != customerRegisterResponse.getResponseMessage()
+							? customerRegisterResponse.getResponseMessage() : "QC Not Responding"));
+					LOG.error("Fail To active user wallet" + (null != customerRegisterResponse.getResponseMessage()
+							? customerRegisterResponse.getResponseMessage() : "QC Not Responding"));
 				}
 			}
 

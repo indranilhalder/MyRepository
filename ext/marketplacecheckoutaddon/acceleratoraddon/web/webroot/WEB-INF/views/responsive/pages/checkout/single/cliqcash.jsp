@@ -47,9 +47,8 @@
 									</c:if>
 								</p>
 								<p class="cliqCashInnerBottom">
-									<c:set var="currentDate" value="<%=new java.util.Date()%>" />
 									<spring:theme code="text.add.cliq.cash.balance.info"
-										text="CliQ Cash balance as of ${currentDate}" />
+										text="CliQ Cash balance as of  "/> &nbsp;${getCurrentDate}
 								</p></td>
 						</tr>
 					</table>
@@ -63,7 +62,7 @@
 		</div>
 		<br />&nbsp;<br />&nbsp;<br />
 
-		<div>
+		<div style="display: none;">
 			<div class="cliqCashContainerTwo">
 				<%-- <button class="cliqCashTablinks"
 					onclick="selectSection(event, 'statement')"
