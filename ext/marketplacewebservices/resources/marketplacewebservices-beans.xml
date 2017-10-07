@@ -2390,8 +2390,11 @@
 		<property name="discount" type="String" />
 		<property name="total" type="String" />
 		<property name="couponMessage" type="String" />
+		<property name="totalWithoutCoupon" type="java.lang.Double" />
+		<property name="amountTobePaidUsingCliqCash" type="java.lang.Double" />
+		<property name="totalCliqCash" type="java.lang.Double" />
 		<property name="cliqCashApplied" type="boolean" />
-		<property name="paybleAmount" type="java.lang.Double" />
+		<property name="remaingPaybleAmount" type="java.lang.Double" />
 	</bean>
 	<bean class="com.tisl.mpl.wsdto.GigyaWsDTO" extends="com.tisl.mpl.wsdto.ErrorDTO">
 		<property name="sessionToken" type="String" />
@@ -2552,10 +2555,11 @@
 	<bean class="com.tisl.mpl.wsdto.ReleaseCouponsDTO" extends="com.tisl.mpl.wsdto.ErrorDTO">
 
 		<!-- <bean class="com.tisl.mpl.wsdto.ReleaseCouponsDTO"> -->
-		<property name="status" type="String" />
-		<property name="error" type="String" />
-		<property name="errorCode" type="String" />
-
+		<property name="totalWithoutCoupon" type="java.lang.Double" />
+		<property name="amountTobePaidUsingCliqCash" type="java.lang.Double" />
+		<property name="totalCliqCash" type="java.lang.Double" />
+		<property name="cliqCashApplied" type="boolean" />
+		<property name="remaingPaybleAmount" type="java.lang.Double" />
 		<property name="total" type="String" />
 	</bean>
 
