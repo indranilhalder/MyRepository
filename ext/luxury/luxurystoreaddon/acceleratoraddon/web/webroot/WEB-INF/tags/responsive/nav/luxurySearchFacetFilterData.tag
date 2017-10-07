@@ -44,7 +44,7 @@
 					<select class="responsiveSort">
 						<option  value="relevance">Popularity</option>
 						<option  value="new">New Arrivals</option>
-						<option  value="discount">Discount : High to Low</option>
+						<option  value="discount">Discounts</option>
 						<option  value="low">Price : Low to High</option>
 						<option  value="high">Price : High to Low</option>						
 					</select>
