@@ -450,7 +450,8 @@
  					&& $("input[name=newBrandLandingPage]").length == 0 
  					&& $("#pageType").val() != "productsearch" 
  					&& $("input[name=productGrid]").length == 0)
- 					&& $("input[name=apparelCategoryLandingPage]").length == 0){
+ 					&& $("input[name=apparelCategoryLandingPage]").length == 0)
+					&& $("input[name=BrandLayoutPage]").length == 0){
  			callGigya();
  			}
  		});
@@ -477,7 +478,7 @@
         or fn:contains(pageBodyCssClasses, 'productGridPage') 
         or fn:contains(pageBodyCssClasses, 'searchGridPage')
         or fn:contains(pageBodyCssClasses, 'apparelCategoryLandingPage')
-        or fn:contains(pageBodyCssClasses, 'BrandPageTemplate')
+        or fn:contains(pageBodyCssClasses, 'BrandLayoutPage')
         or fn:contains(pageBodyCssClasses, 'apparelCategoryLandingPageV1')
 	    or fn:contains(pageBodyCssClasses, 'FootwearBrandLandingPageTemplate')
 	    or fn:contains(pageBodyCssClasses, 'FootwearCategoryLandingPageTemplate')
