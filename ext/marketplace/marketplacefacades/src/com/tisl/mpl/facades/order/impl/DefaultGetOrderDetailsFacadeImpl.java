@@ -166,6 +166,23 @@ public class DefaultGetOrderDetailsFacadeImpl implements GetOrderDetailsFacade
 				orderTrackingWsDTO.setBillingAddress(GenericUtilityMethods.setAddress(orderDetails, 1));
 				orderTrackingWsDTO.setDeliveryAddress(GenericUtilityMethods.setAddress(orderDetails, 2));
 				//add pickup person details
+				
+				/*Added For EGV Functionality Start*/ 
+				if (StringUtils.isNotEmpty(orderDetails.getEgvCardNumber()))
+				{
+					orderTrackingWsDTO.setEgvCartNumber(orderDetails.getEgvCardNumber());
+				}
+				if (StringUtils.isNotEmpty(orderDetails.getEgvCardExpDate()))
+				{
+					orderTrackingWsDTO.setCartEexpiryDate(orderDetails.getEgvCardExpDate());
+				}
+				if (orderDetails.isResendEgvMailAvailable())
+				{
+					orderTrackingWsDTO.setResendAvailable(true);
+				}else {
+					orderTrackingWsDTO.setResendAvailable(false);
+				}
+				/*Added For EGV Functionality End*/ 
 				if (StringUtils.isNotEmpty(orderDetails.getPickupName()))
 				{
 					orderTrackingWsDTO.setPickupPersonName(orderDetails.getPickupName());
@@ -1701,11 +1718,20 @@ public class DefaultGetOrderDetailsFacadeImpl implements GetOrderDetailsFacade
 			else
 			{
 				
+				/*Added For EGV Functionality Start */
 				if (null != orderDetail.getEgvCardExpDate())
 				{
-					orderTrackingWsDTO.setCarEexpiryDate(orderDetail.getEgvCardExpDate());
+					orderTrackingWsDTO.setCartEexpiryDate(orderDetail.getEgvCardExpDate());
 				}
-				orderTrackingWsDTO.setResendAvailable(true);
+				if(orderDetail.isResendEgvMailAvailable()) {
+					orderTrackingWsDTO.setResendAvailable(true);
+				}else {
+					orderTrackingWsDTO.setResendAvailable(false);
+				}
+				if(null != orderDetail.getEgvCardNumber()){
+					orderTrackingWsDTO.setEgvCartNumber(orderDetail.getEgvCardNumber());
+				}
+				/*Added For EGV Functionality End */
 				//orderTrackingWsDTO.setRecipientname(recipientname);
 				if (null != orderDetail.getDeliveryAddress())
 				{

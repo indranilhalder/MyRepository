@@ -172,6 +172,7 @@ public class MarketplaceFacadesConstants extends GeneratedMarketplaceFacadesCons
 	
 	public static final String CHANNEL_WEB = "WEB";
 	public static final String CHANNEL_MOBILE = "MOBILE";
+	public static final String EGV_RESEND_EMAILAVAILABLE = "mpl.egv.resendEmailEnabled";
 
 
 	private MarketplaceFacadesConstants()

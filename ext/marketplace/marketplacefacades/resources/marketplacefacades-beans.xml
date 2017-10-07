@@ -477,6 +477,7 @@
 			type="java.util.List&lt;de.hybris.platform.commercefacades.order.data.OrderData>" />
 			<property name="pickupName" type="String"/>
 			<property name="pickupPhoneNumber" type="String"/>
+			<property name="resendEgvMailAvailable" type="boolean"/>
 			<property name="deliveryAddressList"
 			type="java.util.List&lt;de.hybris.platform.commercefacades.user.data.AddressData>" />
 	</bean>

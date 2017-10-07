@@ -842,6 +842,22 @@ public class MplCheckoutFacadeImpl extends DefaultCheckoutFacade implements MplC
 				
 				String date=orderModel.getEntries().get(0).getWalletApportionPaymentInfo().getWalletCardList().get(0).getCardExpiry();
 				orderData.setEgvCardExpDate(getCardExpDate(date));
+				
+			
+				String resendEmailValue = getConfigurationServiceDetails().getConfiguration().getString(
+						MarketplaceFacadesConstants.EGV_RESEND_EMAILAVAILABLE);
+				if(null != resendEmailValue ) {
+					boolean resendEmailAvalilble = Boolean.valueOf(resendEmailValue).booleanValue();
+					if(resendEmailAvalilble) {
+						orderData.setResendEgvMailAvailable(true);
+					}else{
+						orderData.setResendEgvMailAvailable(false);
+					}
+				}else {
+					orderData.setResendEgvMailAvailable(false);
+				}
+				
+			//	orderData.setre
 			}
 		}
 		catch (Exception e)
