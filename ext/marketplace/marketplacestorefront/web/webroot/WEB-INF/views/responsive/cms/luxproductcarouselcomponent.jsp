@@ -19,29 +19,6 @@
 <c:choose>
     <c:when test="${not empty productData}">
         <h3 class="section-title">${title}</h3>
-
-
-                <ul class="list-unstyled trending-products-catagory text-center circle-pager">
-                    <div id="quickViewTitle" class="quickView-header" style="display:none">
-                        <div class="headline">
-                            <span class="headline-text"><spring:theme code="popup.quick.view.select"/></span>
-                        </div>
-                    </div>
-                    <c:forEach items="${productData}" var="product">
-
-                        <c:url value="${product.url}" var="productQuickViewUrl"/>
-                        <li class="item">
-                            <a href="${productQuickViewUrl}" class="js-reference-item">
-                                <div class="thumb">
-                                    <product:productPrimaryReferenceImage product="${product}" format="luxuryCartPage"/>
-                                </div>
-                                <div class="item-name">${product.name}</div>
-                                <div class="item-price"><format:fromPrice priceData="${product.price}"/></div>
-                            </a>
-                        </li>
-                    </c:forEach>
-                </ul>
-
                 <ul class="list-unstyled trending-products-catagory text-center circle-pager">
                     <c:forEach items="${productData}" var="product">
 
@@ -129,7 +106,7 @@
                     </c:forEach>
                 </ul>
 
-
+</c:when>
     <c:otherwise>
         <component:emptyComponent/>
     </c:otherwise>
