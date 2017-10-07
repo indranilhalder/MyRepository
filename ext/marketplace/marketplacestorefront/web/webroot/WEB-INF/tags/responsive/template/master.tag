@@ -450,6 +450,7 @@
  					&& $("input[name=newBrandLandingPage]").length == 0 
  					&& $("#pageType").val() != "productsearch" 
  					&& $("input[name=productGrid]").length == 0){
+ 					&& $("input[name=apparelCategoryLandingPage]").length == 0){
  			callGigya();
  			}
  		});
