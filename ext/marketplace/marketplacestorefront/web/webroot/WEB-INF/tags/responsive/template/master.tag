@@ -449,8 +449,8 @@
  			if($("#pageType").val() != "homepage" && $("#pageType").val() != "product" 
  					&& $("input[name=newBrandLandingPage]").length == 0 
  					&& $("#pageType").val() != "productsearch" 
- 					&& $("input[name=productGrid]").length == 0)
- 					&& $("input[name=apparelCategoryLandingPage]").length == 0)
+ 					&& $("input[name=productGrid]").length == 0
+ 					&& $("input[name=apparelCategoryLandingPage]").length == 0
 					&& $("input[name=BrandLayoutPage]").length == 0){
  			callGigya();
  			}
