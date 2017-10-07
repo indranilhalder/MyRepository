@@ -34,6 +34,7 @@ import com.tisl.mpl.core.model.ConfigureImagesCountComponentModel;
 import com.tisl.mpl.core.model.ConfigureProductsCountComponentModel;
 import com.tisl.mpl.core.model.CustomSkuComponentModel;
 import com.tisl.mpl.core.model.DepartmentCollectionComponentModel;
+import com.tisl.mpl.core.model.LuxProductCarouselComponentModel;
 import com.tisl.mpl.core.model.MicrositeSelectBrandCollectionComponentModel;
 import com.tisl.mpl.core.model.MplBigFourPromoBannerComponentModel;
 import com.tisl.mpl.core.model.MplBigPromoBannerComponentModel;
@@ -81,6 +82,7 @@ public interface ControllerConstants
 			String CartSuggestionComponent = _Prefix + CartSuggestionComponentModel._TYPECODE + _Suffix;
 			String ProductReferencesComponent = _Prefix + ProductReferencesComponentModel._TYPECODE + _Suffix;
 			String ProductCarouselComponent = _Prefix + ProductCarouselComponentModel._TYPECODE + _Suffix;
+			String LuxProductCarouselComponent = _Prefix + LuxProductCarouselComponentModel._TYPECODE + _Suffix;
 			String MiniCartComponent = _Prefix + MiniCartComponentModel._TYPECODE + _Suffix;
 			String ProductFeatureComponent = _Prefix + ProductFeatureComponentModel._TYPECODE + _Suffix;
 			String CategoryFeatureComponent = _Prefix + CategoryFeatureComponentModel._TYPECODE + _Suffix;

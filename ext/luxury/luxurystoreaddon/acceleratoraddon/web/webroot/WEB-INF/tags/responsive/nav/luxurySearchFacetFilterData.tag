@@ -42,11 +42,11 @@
 				</div>	 --%>
 				<div class="sort-by-fature pull-right">
 					<select class="responsiveSort">
-						<option  value="relevance">Relevance</option>
-						<option  value="new">New</option>
-						<option  value="discount">Discount</option>
-						<option  value="low">Low to High</option>
-						<option  value="high">High to Low</option>						
+						<option  value="relevance">Popularity</option>
+						<option  value="new">New Arrivals</option>
+						<option  value="discount">Discount : High to Low</option>
+						<option  value="low">Price : Low to High</option>
+						<option  value="high">Price : High to Low</option>						
 					</select>
 				</div>
 				<div class="sort-wrapper pull-right">

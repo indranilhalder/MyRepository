@@ -3285,6 +3285,12 @@ public class UsersController extends BaseCommerceController
 										{
 											wldpDTO.setImageURL(img.getUrl());
 										}
+										else if (null != img && StringUtils.isNotEmpty(img.getFormat())
+												&& img.getFormat().equalsIgnoreCase(MarketplacecommerceservicesConstants.LUXURYSEARCHPAGE))
+										{
+
+											wldpDTO.setImageURL(img.getUrl());
+										}
 
 									}
 								}
