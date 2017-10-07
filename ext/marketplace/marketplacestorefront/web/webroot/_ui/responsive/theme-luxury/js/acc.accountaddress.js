@@ -284,12 +284,13 @@ function editAddress(addressId) {
         				var reasonDesc = splitData[2];
         				if(result == "success"){
         					
-        					$(".cancellation-request-block #resultTitle").text("Say goodbye!");
-        					$(".cancellation-request-block #resultDesc").text("You've managed to cancel your order sucessfully. More power to you.");
-        					$(".reason").css("display","block");
-        					$(".reason #reasonTitle").text("Reason for Cancellation:");
-        					$(".reason #reasonDesc").text(reasonDesc);
+        					//$(".cancellation-request-block #resultTitle").text("Say goodbye!");
+        					$(".cancellation-request-block #resultDesc").text("We have received your request for cancellation. You will get an email confirmation for the cancellation shortly.");
+        					//$(".reason").css("display","block");
+        					//$(".reason #reasonTitle").text("Reason for Cancellation:");
+        					//$(".reason #reasonDesc").text(reasonDesc);
         					$("body .spinner,body #no-click").remove();
+                            $("body").addClass("modal-open");
         					//TPR-4752 | for order cancellation reason
          					if(typeof utag !="undefined"){
    			 				   utag.link({
@@ -303,6 +304,7 @@ function editAddress(addressId) {
         					$(".cancellation-request-block #resultDesc").text(bogoreason);
         					$(".reason").css("display","none");
         					$("body .spinner,body #no-click").remove();
+                            $("body").addClass("modal-open");
         					if(typeof utag !="undefined"){
         					   utag.link({error_type : 'cancel_confirmation_error'});
         					}
@@ -1035,7 +1037,7 @@ function editAddress(addressId) {
    		 $(this).val($(this).val().trim());    		     		
    	});  
     	$("#line1").val($("#line1").val().trim());
-       $("#line2").val($("#line2").val().trim());
+        $("#line2").val($("#line2").val().trim());
         $("#line3").val($("#line3").val().trim());
         
         var selectedValueState = document.getElementById('stateListBox').selectedIndex;
