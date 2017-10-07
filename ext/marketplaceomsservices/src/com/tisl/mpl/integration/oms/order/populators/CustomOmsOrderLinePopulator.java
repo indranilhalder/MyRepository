@@ -175,7 +175,8 @@ public class CustomOmsOrderLinePopulator implements Populator<OrderEntryModel, O
 				{
 					for (final SellerInformationModel seller : sellerList)
 					{
-						if (null != seller.getRichAttribute())
+						//SDI-1182 isEmpty check added
+						if (null != seller.getRichAttribute() && !seller.getRichAttribute().isEmpty())
 						{
 							final ArrayList<RichAttributeModel> richattributeList = new ArrayList<RichAttributeModel>(
 									seller.getRichAttribute());
@@ -187,7 +188,9 @@ public class CustomOmsOrderLinePopulator implements Populator<OrderEntryModel, O
 				 * final List<RichAttributeModel> productRichAttribute = (List<RichAttributeModel>) source.getProduct()
 				 * .getRichAttribute();
 				 */
-				if (null != sellerRichAttributeList.get(0) && null != sellerRichAttributeList.get(0).getReturnAtStoreEligible())
+				//SDI-1182 isEmpty check added
+				if (!sellerRichAttributeList.isEmpty() && null != sellerRichAttributeList.get(0)
+						&& null != sellerRichAttributeList.get(0).getReturnAtStoreEligible())
 				{
 					productReturnToStoreEligibility = sellerRichAttributeList.get(0).getReturnAtStoreEligible().getCode();
 				}
@@ -406,14 +409,14 @@ public class CustomOmsOrderLinePopulator implements Populator<OrderEntryModel, O
 			/*
 			 * if (richAttributeModel.get(0).getDeliveryFulfillModeByP1() != null &&
 			 * richAttributeModel.get(0).getDeliveryFulfillModeByP1().getCode() != null)
-			 *
+			 * 
 			 * { final String fulfilmentType =
 			 * richAttributeModel.get(0).getDeliveryFulfillModeByP1().getCode().toUpperCase();
 			 * target.setFulfillmentTypeP1(fulfilmentType); }
-			 *
+			 * 
 			 * if (richAttributeModel.get(0).getDeliveryFulfillModes() != null &&
 			 * richAttributeModel.get(0).getDeliveryFulfillModes().getCode() != null)
-			 *
+			 * 
 			 * { final String fulfilmentType = richAttributeModel.get(0).getDeliveryFulfillModes().getCode().toUpperCase();
 			 * if(fulfilmentType.equalsIgnoreCase(MarketplaceomsservicesConstants.BOTH)){
 			 * if(richAttributeModel.get(0).getDeliveryFulfillModeByP1
@@ -617,7 +620,7 @@ public class CustomOmsOrderLinePopulator implements Populator<OrderEntryModel, O
 	 * (!category.getSupercategories().isEmpty()) { for (final CategoryModel superCategory :
 	 * category.getSupercategories()) { getCategoryName(superCategory); } } } catch (final Exception e) { throw new
 	 * EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000); }
-	 * 
+	 *
 	 * }
 	 */
 

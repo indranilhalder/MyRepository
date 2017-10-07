@@ -439,7 +439,7 @@ public interface ControllerConstants
 				public static final String USSID = "ussId";
 				public static final String ID_ED_SELLER_HANDLING_TIME = "isEDSeller";
 				//TPR-6654
-				public static final String STORE = "-allStores/{pincode}";
+				public static final String STORE = "-allStores/{pincode}/{ussId}/{productCode}";
 				String StoreLocatorPopup = "fragments/product/storeLocatorPopup";
 				public static final String STORE_AVAIL = "storesAvailable";
 			}

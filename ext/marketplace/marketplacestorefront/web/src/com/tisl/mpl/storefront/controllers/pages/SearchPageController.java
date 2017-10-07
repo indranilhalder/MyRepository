@@ -355,6 +355,13 @@ public class SearchPageController extends AbstractSearchPageController
 						searchStateAll.setQuery(searchQueryDataAll);
 						searchPageData = (ProductCategorySearchPageData<SearchStateData, ProductData, CategoryData>) searchFacade
 								.textSearch(searchStateAll, pageableData);
+						//pr-23 start
+						if (searchPageData.getKeywordRedirectUrl() != null)
+						{
+							// if the search engine returns a redirect, just
+							return "redirect:" + searchPageData.getKeywordRedirectUrl();
+						}
+						//pr-23 end
 						// Code changes done for TPR-432
 						if (null != searchPageData.getSpellingSuggestion()
 
@@ -390,7 +397,30 @@ public class SearchPageController extends AbstractSearchPageController
 
 
 			}
+			//PR-23 start
+			if (searchPageData.getPagination().getTotalNumberOfResults() == 0)
+			{
+				if (StringUtils.isNotEmpty(searchPageData.getFreeTextSearch()))
+				{
 
+					final String[] elements = searchPageData.getFreeTextSearch().trim().split("\\s+");
+
+					//if (elements.length == 2 || elements.length == 3)
+					if (elements.length >= 2)
+					{
+						final SearchStateData searchStateAll = new SearchStateData();
+						final SearchQueryData searchQueryDataAll = new SearchQueryData();
+						searchQueryDataAll.setValue(searchText);
+						searchStateAll.setNextSearch(true);
+						searchStateAll.setQuery(searchQueryDataAll);
+						searchPageData = (ProductCategorySearchPageData<SearchStateData, ProductData, CategoryData>) searchFacade
+								.textSearch(searchStateAll, pageableData);
+
+						//searchPageData.getCurrentQuery().setTwoTokenNextSearch(true);
+					}
+				}
+			}
+			//PR-23 end
 			searchPageData = updatePageData(searchPageData, whichSearch, searchText);
 
 			if (searchPageData == null)
@@ -825,9 +855,32 @@ public class SearchPageController extends AbstractSearchPageController
 		{
 			sellerId = searchQuery.substring(searchQuery.indexOf("sellerId:") + 9, searchQuery.indexOf("sellerId:") + 15);
 		}
-		return updatePageData(
-				(ProductCategorySearchPageData<SearchStateData, ProductData, CategoryData>) productSearchFacade.textSearch(
-						searchState, pageableData), sellerId, searchQuery);
+		ProductCategorySearchPageData<SearchStateData, ProductData, CategoryData> searchPageData = (ProductCategorySearchPageData<SearchStateData, ProductData, CategoryData>) productSearchFacade
+				.textSearch(searchState, pageableData);
+
+		//PR-23 start
+		if (searchPageData.getPagination().getTotalNumberOfResults() == 0)
+		{
+			if (StringUtils.isNotEmpty(searchPageData.getFreeTextSearch()))
+			{
+
+				final String[] elements = searchPageData.getFreeTextSearch().trim().split("\\s+");
+
+				//if (elements.length == 2 || elements.length == 3)
+				if (elements.length >= 2)
+				{
+
+					searchState.setNextSearch(true);
+					searchPageData = (ProductCategorySearchPageData<SearchStateData, ProductData, CategoryData>) searchFacade
+							.textSearch(searchState, pageableData);
+
+					//searchPageData.getCurrentQuery().setTwoTokenNextSearch(true);
+				}
+			}
+		}
+		//PR-23 end
+
+		return updatePageData(searchPageData, sellerId, searchQuery);
 	}
 
 	/**
@@ -1377,9 +1430,9 @@ public class SearchPageController extends AbstractSearchPageController
 	/*
 	 * protected <E> List<E> subList(final List<E> list, final int maxElements) { if (CollectionUtils.isEmpty(list)) {
 	 * return Collections.emptyList(); }
-	 * 
+	 *
 	 * if (list.size() > maxElements) { return list.subList(0, maxElements); }
-	 * 
+	 *
 	 * return list; }
 	 */
 

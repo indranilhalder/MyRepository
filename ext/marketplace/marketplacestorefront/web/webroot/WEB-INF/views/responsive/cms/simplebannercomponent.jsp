@@ -3,7 +3,6 @@
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
 
 <c:url value="${urlLink}" var="encodedUrl" />
-
 <div class="simple-banner-component">
 <c:if test="${not empty component.title}">
 <h3>${component.title}</h3>
@@ -28,7 +27,8 @@
 			<c:if test="${not empty media}">
 			<img class="image  call-to-action-banner" alt="${media.altText}" src="${media.url}" /> 
 			</c:if>
-			</a>
+			</a><!-- <small class="glyphicon glyphicon-search pull-right simpleSearchToggle"></small> -->
+			<small class="pull-right simpleSearchToggle"></small>
 			</c:otherwise>
 		</c:choose>
 		</c:otherwise>

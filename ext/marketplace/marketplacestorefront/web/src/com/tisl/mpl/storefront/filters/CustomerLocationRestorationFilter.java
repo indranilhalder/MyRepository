@@ -16,11 +16,9 @@ package com.tisl.mpl.storefront.filters;
 import de.hybris.platform.acceleratorfacades.customerlocation.CustomerLocationFacade;
 import de.hybris.platform.acceleratorservices.store.data.UserLocationData;
 import de.hybris.platform.commerceservices.store.data.GeoPoint;
-import de.hybris.platform.servicelayer.session.SessionService;
 
 import java.io.IOException;
 
-import javax.annotation.Resource;
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
 import javax.servlet.http.Cookie;
@@ -31,10 +29,7 @@ import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Required;
 import org.springframework.web.filter.OncePerRequestFilter;
 
-import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
-import com.tisl.mpl.storefront.constants.ModelAttributetConstants;
 import com.tisl.mpl.storefront.security.cookie.CustomerLocationCookieGenerator;
-import com.tisl.mpl.util.GenericUtilityMethods;
 
 
 public class CustomerLocationRestorationFilter extends OncePerRequestFilter
@@ -42,11 +37,6 @@ public class CustomerLocationRestorationFilter extends OncePerRequestFilter
 
 	private CustomerLocationFacade customerLocationFacade;
 	private CustomerLocationCookieGenerator customerLocationCookieGenerator;
-
-
-	@Resource(name = ModelAttributetConstants.SESSION_SERVICE)
-	private SessionService sessionService;
-
 
 	@Override
 	public void doFilterInternal(final HttpServletRequest request, final HttpServletResponse response,
@@ -69,13 +59,6 @@ public class CustomerLocationRestorationFilter extends OncePerRequestFilter
 					}
 				}
 			}
-		}
-		//TPR-6654
-		final Cookie cookie = GenericUtilityMethods.getCookieByName(request, "pdpPincode");
-
-		if (cookie != null && cookie.getValue() != null)
-		{
-			sessionService.setAttribute(MarketplacecommerceservicesConstants.SESSION_PINCODE, cookie.getValue());
 		}
 		filterChain.doFilter(request, response);
 	}

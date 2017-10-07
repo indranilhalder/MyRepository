@@ -17,7 +17,8 @@
 
 <c:forEach items="${pageData.breadcrumbs}" var="breadcrumb">
    <c:if test="${breadcrumb.facetName == 'Price'}">    
-		<c:set var="removeQueryUrlForPriceValue" value="${breadcrumb.removeQuery.url}&searchCategory=${searchCategory}" scope="page" />
+		<%--SDI-1034 --%>
+		<c:set var="removeQueryUrlForPriceValue" value="${breadcrumb.removeQuery.url}" scope="page" />
    </c:if>
 </c:forEach>
 

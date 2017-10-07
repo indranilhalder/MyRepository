@@ -920,6 +920,7 @@ public final class ModelAttributetConstants
 	/* UF-432 */
 	public static final String MULTI_COLOUR_FLAG = "multiColorFlag";
 	public static final String BUYBOX_AVAILABLE = "buybox_available";
+	public static final String FINEJWLRY_SELFCOURIER_ERROR = "fineJewSelfCourierError";
 	//TPR-6405
 	public static final String IS_SAMSUNG_PAGE = "isSamsungPage";
 	//UF-422
