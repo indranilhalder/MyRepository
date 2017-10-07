@@ -1276,6 +1276,12 @@ function pincodeServiceability(){
 												$("#outOfStockId").show();
 												$("#buyNowButton").hide();
 												$("#stock").val(0);
+												//SDI-1023
+												if($("#pageType").val() == "/sellersdetailpage")
+												{ 
+												//console.log("works o");
+												$("#winning_product_stock").val(0);
+												}
 											} else {
 												$("#addToCartButton").show();
 												$('#buyNowButton').attr("disabled",false);
@@ -1412,7 +1418,14 @@ function pincodeServiceability(){
 											$('#wrongPinExc,#unableprocessPinExc,#emptyPinExc,#serviceablePinExc').hide();
 											$('#addToCartFormTitle')
 													.hide();
-											if ($("#stock").val() > 0) {
+											//SDI-1023		
+											var stockProduct = $("#stock").val();
+											if($("#pageType").val() == "/sellersdetailpage") {
+												stockProduct = $("#winning_product_stock").val();
+											} else  {
+												stockProduct = $("#stock").val();
+											}
+											if (stockProduct > 0) {
 												$('#addToCartButton-wrong').show();
 												$('#buyNowButton').attr("disabled",true);
 											} else {
@@ -1455,7 +1468,14 @@ function pincodeServiceability(){
 											.hide();
 									 $('#wrongPinExc,#unableprocessPinExc,#emptyPinExc').hide();
 									$('#addToCartFormTitle').hide();
-									if ($("#stock").val() > 0) {
+									//SDI-1023
+									var stockProduct = $("#stock").val();
+									if($("#pageType").val() == "/sellersdetailpage") {
+										stockProduct = $("#winning_product_stock").val();
+									} else  {
+										stockProduct = $("#stock").val();
+									}
+									if (stockProduct > 0) {
 										$('#addToCartButton-wrong').show();
 									} else {
 										$("#outOfStockId").show();
@@ -1491,7 +1511,7 @@ function pincodeServiceability(){
 						}
 					});
 			 //SDI-1023
-			   setTimeout(function(){ $("#addToCartForm #stock").val($("#winning_product_stock").val()); }, 1000); 
+			   //setTimeout(function(){ $("#addToCartForm #stock").val($("#winning_product_stock").val()); }, 1000); 
 			//TPR-900
 			$('#pin').blur();
 			
@@ -4428,6 +4448,12 @@ function getBuyBoxDataAjax(productCode,variantCodesJson)
 					var mop = data['price'];
 					var savingsOnProduct= data['savingsOnProduct'];
 					$("#stock").val(data['availablestock']);
+					//SDI-1023
+					if($("#pageType").val() == "/sellersdetailpage")
+					{ 
+					//console.log("works");
+					$("#winning_product_stock").val(data['availablestock']);
+					}
 					$(".selectQty").change(function() {
 						$("#qty").val($(".selectQty :selected").val());
 					});
