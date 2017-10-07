@@ -80,7 +80,7 @@
 
 <!--New Changes for Social Login  -->			
 <c:choose>
-	<c:when test="${isGigyaEnabled=='Y'}">
+<%-- 	<c:when test="${isGigyaEnabled=='Y'}">
 
 		<!--  <h4>Please sign in using one of the following providers:</h4><br /><br /> -->
 		<div id="loginDivsiginflyout"></div>
@@ -108,9 +108,9 @@
 					<button id="customBtn" class="google-sign-btn-dropdown"></button>
 			</li>
 
-		</ul>s
+		</ul>
     
-	</c:when>
+	</c:when> --%>
 	<c:otherwise>
 
 		<ul class="social-login-btn-container-dropdown">
@@ -118,8 +118,14 @@
 				<button onclick="ACC.socialLogin.facebookSocialLogin();" class="fb-sign-btn-dropdown"></button>
 			</li>
 			<li>
-					<button id="customBtn" class="google-sign-btn-dropdown"></button>
+			
+			
+					<button id="customBtndrop" class="google-sign-btn-dropdown"></button>
+					<script type="text/javascript">
+			ACC.socialLogin.attachSignin( document.getElementById('customBtndrop'));
+			</script>
 			</li>
+			
 
 		</ul>
 	</c:otherwise>

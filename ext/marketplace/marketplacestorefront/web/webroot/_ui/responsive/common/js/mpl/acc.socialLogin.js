@@ -61,9 +61,9 @@ ACC.socialLogin = {
 		},
 
 		googleSocialLogin : function() {
-
+				
 			var googleUser = {};
-
+			
 			gapi.load('auth2', function(){
 				// Retrieve the singleton for the GoogleAuth library and set up the client.
 				auth2 = gapi.auth2.init({
@@ -77,6 +77,7 @@ ACC.socialLogin = {
 				var id = jqObj.attr('id');
 				var element = document.getElementById(id);
 				ACC.socialLogin.attachSignin(element);
+								
 			});
 		},
 
@@ -84,7 +85,7 @@ ACC.socialLogin = {
 			
 			auth2.attachClickHandler(element, {},
 					function(googleUser) {
-
+				
 				if(auth2.isSignedIn.get()){
 
 					ACC.socialLogin.ajaxGoogleCheck(googleUser);
@@ -97,8 +98,7 @@ ACC.socialLogin = {
 
 
 		ajaxGoogleCheck : function(googleUser){
-
-			var googletoken = googleUser.getAuthResponse().id_token;
+						var googletoken = googleUser.getAuthResponse().id_token;
 			var userInfo = googleUser.getBasicProfile();
 			var accessToken= encodeURIComponent(googletoken);
 
