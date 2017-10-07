@@ -449,7 +449,7 @@
  			if($("#pageType").val() != "homepage" && $("#pageType").val() != "product" 
  					&& $("input[name=newBrandLandingPage]").length == 0 
  					&& $("#pageType").val() != "productsearch" 
- 					&& $("input[name=productGrid]").length == 0){
+ 					&& $("input[name=productGrid]").length == 0)
  					&& $("input[name=apparelCategoryLandingPage]").length == 0){
  			callGigya();
  			}
@@ -589,7 +589,7 @@
 		<div class="overlay"></div>
 		<div class="content">
 		<div class="modal-body">
-		<button class="close" data-dismiss="modal"><span aria-hidden="true">×</span></button>
+		<button class="close" data-dismiss="modal"><span aria-hidden="true">Ã—</span></button>
 		<!-- <button class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span></button> -->
 		<h4>Enter Pincode</h4>
 		<input id="home_pin" type="text" placeholder="Pincode" maxlength="6" onkeypress="return isNum(event)"/>
