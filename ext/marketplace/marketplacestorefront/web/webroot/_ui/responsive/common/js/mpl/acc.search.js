@@ -1,5 +1,5 @@
 function constructDepartmentHierarchy(inputArray) {		
-		var output = [];
+	var output = [];
 		
 		if(inputArray!=""){
 		for (var i = 0; i < inputArray.length; i++) {				

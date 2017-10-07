@@ -22,6 +22,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+import javax.annotation.Resource;
+
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
@@ -32,6 +34,7 @@ import com.tisl.mpl.constants.MplConstants;
 import com.tisl.mpl.core.model.BuyBoxModel;
 import com.tisl.mpl.core.model.PcmProductVariantModel;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
+import com.tisl.mpl.marketplacecommerceservices.daos.BuyBoxDao;
 import com.tisl.mpl.marketplacecommerceservices.service.BuyBoxService;
 
 
@@ -66,6 +69,9 @@ public class MplBuyBoxUtility
 	private MplVariantComparator variantComparator;
 
 	private Converter<VariantProductModel, VariantOptionData> variantOptionDataConverter;
+
+	@Resource(name = "buyBoxDao")
+	private BuyBoxDao buyBoxDao;
 
 	public Double getBuyBoxSellingPrice(final ProductModel productModel) throws EtailNonBusinessExceptions
 	{
@@ -601,21 +607,29 @@ public class MplBuyBoxUtility
 	 * @return priceRange
 	 */
 
-	public String getBuyBoxSellingVariantsPrice(final List<String> sellerArticleSKUList, final String currency)
+	//	public String getBuyBoxSellingVariantsPrice(final List<String> sellerArticleSKUList, final String currency)
+	//			throws EtailNonBusinessExceptions
+	public String getBuyBoxSellingVariantsPrice(final List<BuyBoxModel> modifiableBuyBox, final String currency)
 			throws EtailNonBusinessExceptions
 	{
 		Double min = Double.valueOf(0);
 		Double max = Double.valueOf(0);
 
-		final List<BuyBoxModel> listBuyBox = buyBoxService.getBuyboxSellerPricesForSearch(sellerArticleSKUList);
-		if (CollectionUtils.isNotEmpty(listBuyBox))
+		if (CollectionUtils.isNotEmpty(modifiableBuyBox))
 		{
-			if (listBuyBox.get(0).getPLPMinPrice() != null && listBuyBox.get(0).getPLPMaxPrice() != null)
-			{
-				min = listBuyBox.get(0).getPLPMinPrice();
-				max = listBuyBox.get(0).getPLPMaxPrice();
-			}
+			min = modifiableBuyBox.get(modifiableBuyBox.size() - 1).getPrice();
+			max = modifiableBuyBox.get(0).getPrice();
 		}
+
+		//final List<BuyBoxModel> listBuyBox = buyBoxService.getBuyboxSellerPricesForSearch(sellerArticleSKUList);
+		//		if (CollectionUtils.isNotEmpty(listBuyBox))
+		//		{
+		//			if (listBuyBox.get(0).getPLPMinPrice() != null && listBuyBox.get(0).getPLPMaxPrice() != null)
+		//			{
+		//				min = listBuyBox.get(0).getPLPMinPrice();
+		//				max = listBuyBox.get(0).getPLPMaxPrice();
+		//			}
+		//		}
 		String priceRange = null;
 		if (min.doubleValue() > 0 && max.doubleValue() > 0)
 		{
@@ -633,4 +647,8 @@ public class MplBuyBoxUtility
 		return priceRange;
 	}
 
+	public List<BuyBoxModel> getVariantListForPriceRange(final String code)
+	{
+		return buyBoxDao.getVariantListForPriceRange(code);
+	}
 }

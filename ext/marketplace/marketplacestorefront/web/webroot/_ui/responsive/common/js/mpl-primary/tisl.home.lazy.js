@@ -1,7 +1,13 @@
 /**
  * All home page XHR that are lazy loaded are written here. mplminjs.tag is the file where the scroll event for binding is added UF-439
  */
-
+//CAROUSEL AUTOWIDTH ATTRIBUTE
+var carouselAutoWidthAttr = false;
+if($(window).width()<481){
+	carouselAutoWidthAttr = true;
+} else {
+	carouselAutoWidthAttr = false;
+}
 // AJAX CALL BEST PICKS START
 
 // 1st 
@@ -29,7 +35,22 @@ function getBestPicksAjaxCall() {
 
             //TPR-559 Show/Hide Components and Sub-components
             if (response.hasOwnProperty("title") && response.hasOwnProperty("subItems")) {
-                renderHtml = "<h2>" + response.title + "</h2>" +
+            	renderHtml = "<div class='col-sm-12'><h2 class='homeViewHeading'>" + response.title + "<small class='homeViewAllBtn'>" +
+                		"<a href='";
+                if (typeof response.buttonLink !== "undefined") {
+                    renderHtml += response.buttonLink + "'";
+                } else {
+                    renderHtml += ACC.config.encodedContextPath + "/offersPage'";
+                }
+                
+                renderHtml += "class=''>";
+                if (typeof response.buttonText !== "undefined") {
+                    renderHtml += response.buttonText;
+                } else {
+                    renderHtml += " View All ";
+                }
+                		
+                renderHtml += "</a></small></h2></div>" +
                     "<div class='home-best-pick-carousel'>";
                 $.each(response.subItems, function(k, v) {
                     if (v.url) {
@@ -88,6 +109,7 @@ function getBestPicksAjaxCall() {
                     navText: [],
                     lazyLoad: false,
                     autoplay: autoPlay,
+                    autoWidth: carouselAutoWidthAttr,
                     autoHeight: false,
                     autoplayTimeout: autoplayTimeout,
                     slideBy: slideBy,
@@ -133,6 +155,7 @@ function getBestPicksAjaxCall() {
 function getBrandsYouLoveAjaxCall() {
     var env = $("#previewVersion").val();
     var count = 0;
+    var mobileCount = 0;
     var autoplayTimeout = 5000;
     var slideBy = 1;
     var autoPlay = true;
@@ -156,6 +179,70 @@ function getBrandsYouLoveAjaxCall() {
             //TPR-559 Show/Hide Components and Sub-components
             if (response.hasOwnProperty("title") && response.hasOwnProperty("subComponents") && response.subComponents.length) {
                 //console.log(response.subComponents);
+            	
+            	//For Mobile - BEGIN
+            	defaultMobileComponentId = "";
+            	renderMobileHtml = "<div class='col-sm-12'><h2 class='homeViewHeading'>"+ response.title +
+            		"</h2></div><div><div id='brandsYouLoveMobileCompCarousel'>";
+            	$.each(response.subComponents, function(k, v) {
+            		if (!v.showByDefault) {
+            			renderMobileHtml += "<div class='brandsCarouselItem' data-count="+mobileCount + " id='" +
+            			v.compId + "'>";
+            			console.log(mobileCount + " AND "+ JSON.stringify(v));
+            			
+            			renderMobileHtml += "<div class='brandStudioImg'>";
+            			if (typeof v.bannerImageUrl !== "undefined") {
+            				if (typeof v.bannerUrl !== "undefined") {
+        	            		renderMobileHtml += "<a href='" + v.bannerUrl + "'><img src='" + v.bannerImageUrl +
+                                	"'></img></a></div>";
+        	            	} else {
+        	            		renderMobileHtml += "<img src='" + v.bannerImageUrl +
+                                "'></img></div>";
+        	            	}
+        	            	
+        	            	if (typeof v.text !== "undefined") {
+        	            		renderMobileHtml += v.text;
+                            }
+        	            	
+        	            	if (typeof v.bannerText !== "undefined") {
+        	            		renderMobileHtml +=
+    	                            "<div class='visit-store-wrapper'>" +
+    	                            v.bannerText + "</div>";
+    	                    }
+            			}
+            			
+            	        renderMobileHtml += '</div>';
+            		} else {
+            			renderMobileHtml += "<div class='brandsCarouselItem' data-count="+mobileCount + " id='" +
+            			v.compId + "'>";
+            			
+            			renderMobileHtml += "<div class='brandStudioImg'>";
+            			if (typeof v.bannerImageUrl !== "undefined") {
+            				if (typeof v.bannerUrl !== "undefined") {
+        	            		renderMobileHtml += "<a href='" + v.bannerUrl + "'><img src='" + v.bannerImageUrl +
+                                	"'></img></a></div>";
+        	            	} else {
+        	            		renderMobileHtml += "<img src='" + v.bannerImageUrl +
+                                "'></img></div>";
+        	            	}
+        	            	
+        	            	if (typeof v.text !== "undefined") {
+        	            		renderMobileHtml += v.text;
+                            }
+        	            	
+        	            	if (typeof v.bannerText !== "undefined") {
+        	            		renderMobileHtml +=
+    	                            "<div class='visit-store-wrapper'>" +
+    	                            v.bannerText + "</div>";
+    	                    }
+            			}
+            			
+            			renderMobileHtml += '</div>';
+            		}
+            		mobileCount++;
+            	});
+            	//For Mobile - END           
+            	
                 defaultComponentId = "";
                 renderHtml = "<h2>" + response.title + "</h2>" +
                     "<div class='home-brands-you-love-carousel'>";
@@ -179,7 +266,9 @@ function getBrandsYouLoveAjaxCall() {
                     count++;
                 });
                 renderHtml += "</div>";
+                renderMobileHtml += "</div></div>";
                 $('#brandsYouLove').html(renderHtml);
+                $('#brandsYouLoveMobileComp').html(renderMobileHtml);
                 getBrandsYouLoveContentAjaxCall(defaultComponentId);
             }
         },
@@ -224,6 +313,16 @@ function getBrandsYouLoveAjaxCall() {
                         }
                     }
                 });
+                
+                $("#brandsYouLoveMobileCompCarousel").owlCarousel({
+                	autoPlay: 3000,
+                	dots: true,
+                	items: 1,
+                	autoWidth: true,
+                	itemsDesktop: [1199, 3],
+                	itemsDesktopSmall: [979, 3]
+                });
+                
                 var bulId = $(".home-brands-you-love-carousel .owl-item.active.center").find(".home-brands-you-love-carousel-brands").attr("id");
                 getBrandsYouLoveContentAjaxCall(bulId);
                 /*	$(document).on('click', '.home-brands-you-love-carousel .owl-item.active', function () {
@@ -461,7 +560,7 @@ function getProductsYouCareAjaxCall() {
 
             //TPR-559 Show/Hide Components and Sub-components
             if (response.hasOwnProperty("title") && response.hasOwnProperty("categories") && response.title && response.categories.length) {
-                renderHtml = "<h2>" + response.title + "</h2>";
+                renderHtml = "<div class='col-xs-12'><h2 class='homeViewHeading'>" + response.title + "</h2></div>";
                 renderHtml +=
                     "<div class='home-product-you-care-carousel'>";
                 $.each(response.categories, function(k, v) {
@@ -521,6 +620,7 @@ function getProductsYouCareAjaxCall() {
                     navText: [],
                     lazyLoad: false,
                     autoplay: autoPlay,
+                    autoWidth: carouselAutoWidthAttr,
                     autoHeight: false,
                     autoplayTimeout: autoplayTimeout,
                     slideBy: slideBy,
@@ -620,12 +720,18 @@ function showStayQued(response) {
         linkText = promoText2;
     }
     renderHtml =
-        '<h2><span class="h1-qued">Stay Qued</span></h2><div class="qued-padding"><div class="qued-content">' + /* UF-249 */
+        '<div class="col-sm-12"><h2 class="homeViewHeading"><span class="h1-qued">Stay Qued</span></h2></div><div class="qued-padding"><div class="qued-right"><div class="qued-content">' + /* UF-249 */
         promoText1 + '<a href="' + bannerUrlLink +
         '" class="button maroon">' + linkText +
-        '</a></div><div class="qued-image"><img class="lazy" src="' +
+        '</a></div></div><div class="qued-image qued-left"><img class="lazy" src="' +
         bannerImage + '" class="img-responsive"></div></div>';
+    
     $('#stayQued').html(renderHtml);
+    if($(window).width()<481){
+ 		$("#stayQued .qued-right, #stayQued .qued-left").addClass("col-xs-6");
+ 	} else {
+ 		$("#stayQued .qued-right, #stayQued .qued-left").removeClass("col-xs-6");
+ 	}
 }
 //7th call 
 function getNewAndExclusiveAjaxCall() {
@@ -655,8 +761,9 @@ function getNewAndExclusiveAjaxCall() {
             if (response.hasOwnProperty("title") && response.hasOwnProperty("newAndExclusiveProducts") && response.newAndExclusiveProducts.length) {
                 var staticHost = $('#staticHost').val();
                 var defaultHtml = "";
-                renderHtml = "<h2>" + response.title + "</h2>" +
-                    "<div class='js-owl-carousel js-owl-lazy-reference js-owl-carousel-reference' id='new_exclusive'>";
+                renderHtml = "<div class='col-sm-12'><h2 class='homeViewHeading'>" + response.title + "<small class='homeViewAllBtn'><a href='"
+                + ACC.config.encodedContextPath + "/search/viewOnlineProducts' class=''>View All</a></small></h2></div>"
+                + "<div class='js-owl-carousel js-owl-lazy-reference js-owl-carousel-reference' id='new_exclusive'>";
                 $.each(response.newAndExclusiveProducts, function(
                     key, value) {
                     if (value.isNew == 'Y') {
@@ -703,6 +810,7 @@ function getNewAndExclusiveAjaxCall() {
                     navText: [],
                     lazyLoad: false,
                     autoplay: autoPlay,
+                    autoWidth: carouselAutoWidthAttr,
                     autoHeight: false,
                     autoplayTimeout: autoplayTimeout,
                     slideBy: slideBy,
@@ -765,7 +873,6 @@ function getNewAndExclusiveAjaxCall() {
                     }, 80);
                 });
             }
-
         }
     });
 }
@@ -797,14 +904,15 @@ function showMobileShowCase() {
             data: dataString,
             success: function(response) {
                 try {
-                    var showCaseMobile = '<h2>' + response.title + '</h2>';
+                    var showCaseMobile = '<div class="col-sm-12"><h2 class="homeViewHeading">' + response.title + '</h2></div>';
                     showCaseMobile += '<div class="owl-carousel showcase-carousel">';
                     $.each(response.subComponents, function(k, v) {
                         //UF-420 starts
                         //showCaseMobile+= getShowcaseMobileContentAjaxCall(v.compId);
                         showCaseMobile += '<div class="item showcase-section">';
-                        showCaseMobile += '<div class="desc-section">' + v.details.text;
-                        showCaseMobile += '<img class="lazy" src="' + v.details.bannerImageUrl + '">'
+                        showCaseMobile += '<div class="desc-section"><div class="showcase-section-left"><img class="lazy" src="' + v.details.bannerImageUrl + 
+                        '"></div><div class="showcase-section-right">' + v.details.text;
+                        showCaseMobile += '</div>'
                         showCaseMobile += '</div>'
                         showCaseMobile += '</div>';
                         //UF-420 ends
@@ -812,6 +920,13 @@ function showMobileShowCase() {
                     showCaseMobile += '</div>';
                     $('#showcaseMobile').html(showCaseMobile);
                     window.localStorage.setItem("showcaseContentMobile", encodeURI(showCaseMobile));
+                    if($(window).width()<481){
+                 		$("#showcaseMobile .showcase-section-right").addClass("col-xs-5");
+                 		$("#showcaseMobile .showcase-section-left").addClass("col-xs-7");
+                 	} else {
+                 		$("#showcaseMobile .showcase-section-right").removeClass("col-xs-5");
+                 		$("#showcaseMobile .showcase-section-left").removeClass("col-xs-7");
+                 	}
                 } catch (e) {
                     console.log(e);
                 }

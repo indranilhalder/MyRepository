@@ -845,7 +845,7 @@
 
 											</div>
 											<div class="col-md-5">
-												<c:if test="${fn:containsIgnoreCase(entry.returnMethodType , 'SELF_COURIER')}">
+												<c:if test="${fn:containsIgnoreCase(entry.returnMethodType , 'SELF_COURIER') && entry.product.rootCategory != 'FineJewellery'}">
 												<c:if test="${entry.isRefundable eq false }">
 												<c:if test="${entry.consignment.status.code eq 'RETURN_INITIATED'}">
 													<div class="awsInnerClass">
@@ -2156,7 +2156,7 @@
 											</c:if>
 											</div>
 											<div class="col-md-6 col-sm-6 pull-right">
-											<c:if test="${fn:containsIgnoreCase(entry.returnMethodType , 'SELF_COURIER')}">
+											<c:if test="${fn:containsIgnoreCase(entry.returnMethodType , 'SELF_COURIER') && entry.product.rootCategory != 'FineJewellery'}">
 												<c:if test="${entry.isRefundable eq false }">
 												<c:if test="${entry.consignment.status.code eq 'RETURN_INITIATED'}">
 													<div class="awsInnerClass">

@@ -19,10 +19,17 @@
 <spring:url value="/my-account/payment-details" var="paymentDetailsUrl" />
 <spring:url value="/my-account/orders" var="ordersUrl" />
 <spring:url value="/my-account/default/wishList" var="wishlistUrl" />
+<spring:eval expression="T(de.hybris.platform.util.Config).getParameter('marketplace.contactus.link')" var="contactUrl"/>
 
 	<template:page pageTitle="${pageTitle}">
 	<div class="account">
 		<div class="page-header">
+		<c:choose>
+ 			<c:when test="${not empty fineJewSelfCourierError && fineJewSelfCourierError eq true}">
+ 			<span><spring:theme code="return.fineJwlry.selfCourier.errorMessage"
+ 					arguments="${contactUrl}" /></span>
+ 			</c:when>
+ 		<c:otherwise>
 			<c:choose>
 			<c:when test="${quickdrop eq 'true'}">
 			<h2><spring:message code="return.success"></spring:message></h2>
@@ -40,6 +47,8 @@
 				<p>${returnLogisticsMessage}</p>
 			<%-- </c:otherwise> 
 			</c:choose>--%>
+			</c:otherwise>
+			</c:choose>
 		</div>
 		<div class="wrapper">
 			<a class="return-order-history" href="/my-account/orders">Back to

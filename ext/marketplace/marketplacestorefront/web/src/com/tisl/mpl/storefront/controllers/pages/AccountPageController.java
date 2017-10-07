@@ -102,6 +102,7 @@ import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 import java.util.TreeMap;
 
@@ -1061,6 +1062,7 @@ public class AccountPageController extends AbstractMplSearchPageController
 		boolean addressChangeEligible = false;
 
 		String ussid = null;
+		boolean isFineJwlry = false;
 
 		try
 		{
@@ -1167,6 +1169,7 @@ public class AccountPageController extends AbstractMplSearchPageController
 							if (productModl.getProductCategoryType().equalsIgnoreCase(FINEJEWELLERY))
 
 							{ //SellerInformationModel sellerInfoModel = null;
+								isFineJwlry = true;
 								final List<JewelleryInformationModel> jewelleryInfo = jewelleryService.getJewelleryInfoByUssid(orderEntry
 										.getSelectedUssid());
 								ussid = jewelleryInfo.get(0).getPCMUSSID();
@@ -1394,6 +1397,40 @@ public class AccountPageController extends AbstractMplSearchPageController
 										}
 									}
 
+								}
+							}
+
+							//TISPRDT-2546
+							//If FineJewellery return is of type SELF_COURIER,changing the return_initiated message
+							if (isFineJwlry
+									&& (MarketplacecommerceservicesConstants.SELF_COURIER).equalsIgnoreCase(orderEntry
+											.getReturnMethodType()))
+							{
+								for (final Entry<String, Map<String, List<AWBResponseData>>> entry : trackStatusMap.entrySet())
+								{
+									if (entry.getKey().equalsIgnoreCase(orderEntry.getOrderLineId()))
+									{
+										final Map<String, List<AWBResponseData>> innerEntry = entry.getValue();
+										for (final Entry<String, List<AWBResponseData>> innerValue : innerEntry.entrySet())
+										{
+											if ("RETURN".equalsIgnoreCase(innerValue.getKey()))
+											{
+												final List<AWBResponseData> awbList = innerValue.getValue();
+												for (final AWBResponseData awbRes : awbList)
+												{
+													if (("RETURN_INITIATED").equalsIgnoreCase(awbRes.getResponseCode()))
+													{
+														final List<StatusRecordData> statsList = new ArrayList<StatusRecordData>();
+														final StatusRecordData stats = new StatusRecordData();
+														stats.setStatusDescription(MarketplacecommerceservicesConstants.FINEJEW_SELFCOURIER_ERRORMSG);
+														statsList.add(stats);
+														awbRes.setStatusRecords(statsList);
+														awbRes.setShipmentStatus("");
+													}
+												}
+											}
+										}
+									}
 								}
 							}
 

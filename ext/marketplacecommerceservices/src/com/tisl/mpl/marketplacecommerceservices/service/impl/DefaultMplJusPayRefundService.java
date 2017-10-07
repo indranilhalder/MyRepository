@@ -127,7 +127,7 @@ public class DefaultMplJusPayRefundService implements MplJusPayRefundService
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.marketplacecommerceservices.service.MplJusPayRefundService#doRefund(java.lang.String,
 	 * java.lang.String)
 	 */
@@ -338,6 +338,8 @@ public class DefaultMplJusPayRefundService implements MplJusPayRefundService
 
 			if (null != mplPaymentAuditModel && StringUtils.isNotEmpty(mplPaymentAuditModel.getAuditId()))
 			{
+				final OrderModel parentOrder = juspayWebHookDao.fetchParentOrder(mplPaymentAuditModel.getCartGUID());
+
 				MplPaymentAuditEntryModel mplPaymentAuditEntryModel = modelService.create(MplPaymentAuditEntryModel.class);
 				mplPaymentAuditEntryModel.setAuditId(mplPaymentAuditModel.getAuditId());
 				mplPaymentAuditEntryModel.setStatus(MplPaymentAuditStatusEnum.REFUND_INITIATED);
@@ -411,8 +413,7 @@ public class DefaultMplJusPayRefundService implements MplJusPayRefundService
 									//paymentTransactionEntryModel.setCurrency(orderModel.getPaymentTransactions().get(0).getEntries().get(0).getCurrency());
 									paymentTransactionEntryModel.setTransactionStatus(MarketplacecommerceservicesConstants.SUCCESS_VAL);
 
-									final PaymentTypeModel paymentTypeModel = getPaymentModeDetails(paymentType,
-											baseStoreService.getCurrentBaseStore());
+									final PaymentTypeModel paymentTypeModel = getPaymentModeDetails(paymentType, parentOrder.getStore());
 
 									//Setting Payment Mode in Payment Transaction Entry
 									setPaymentModeInTransaction(paymentTypeModel, paymentTransactionEntryModel);
@@ -448,8 +449,7 @@ public class DefaultMplJusPayRefundService implements MplJusPayRefundService
 									//paymentTransactionEntryModel.setCurrency(orderModel.getPaymentTransactions().get(0).getEntries().get(0).getCurrency());
 
 									//Note : Get Payment Details
-									final PaymentTypeModel paymentModel = getPaymentModeDetails(paymentType,
-											baseStoreService.getCurrentBaseStore());
+									final PaymentTypeModel paymentModel = getPaymentModeDetails(paymentType, parentOrder.getStore());
 
 									//Setting Payment Mode in Payment Transaction Entry
 									setPaymentModeInTransaction(paymentModel, paymentTransactionEntryModel);
@@ -598,7 +598,7 @@ public class DefaultMplJusPayRefundService implements MplJusPayRefundService
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see
 	 * com.tisl.mpl.marketplacecommerceservices.service.MplJusPayRefundService#attachPaymentTransactionModel(de.hybris
 	 * .platform.core.model.order.OrderModel, de.hybris.platform.payment.model.PaymentTransactionModel)
@@ -654,7 +654,7 @@ public class DefaultMplJusPayRefundService implements MplJusPayRefundService
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see
 	 * com.tisl.mpl.marketplacecommerceservices.service.MplJusPayRefundService#createPaymentTransactionModel(de.hybris
 	 * .platform.core.model.order.OrderModel, java.lang.String, java.math.BigDecimal,
@@ -698,7 +698,7 @@ public class DefaultMplJusPayRefundService implements MplJusPayRefundService
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see
 	 * com.tisl.mpl.marketplacecommerceservices.service.MplJusPayRefundService#makeRefundOMSCall(de.hybris.platform.core
 	 * .model.order.OrderEntryModel, java.lang.Double)
@@ -785,7 +785,7 @@ public class DefaultMplJusPayRefundService implements MplJusPayRefundService
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see
 	 * com.tisl.mpl.marketplacecommerceservices.service.MplJusPayRefundService#makeOMSStatusUpdate(de.hybris.platform
 	 * .core.model.order.AbstractOrderEntryModel)
@@ -817,7 +817,7 @@ public class DefaultMplJusPayRefundService implements MplJusPayRefundService
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.marketplacecommerceservices.service.MplJusPayRefundService#validateRefundAmount(double,
 	 * de.hybris.platform.core.model.order.OrderModel)
 	 */
@@ -885,15 +885,15 @@ public class DefaultMplJusPayRefundService implements MplJusPayRefundService
 
 	/*
 	 * @Desc used in web and cscockpit for handling network exception while cancellation TISSIT-1801 TISPRO-94
-	 *
+	 * 
 	 * @param orderRequestRecord
-	 *
+	 * 
 	 * @param paymentTransactionType
-	 *
+	 * 
 	 * @param juspayRefundType
-	 *
+	 * 
 	 * @param uniqueRequestId
-	 *
+	 * 
 	 * @return void
 	 */
 
@@ -910,10 +910,14 @@ public class DefaultMplJusPayRefundService implements MplJusPayRefundService
 			if (orderEntry != null)
 			{
 				Double currDelCharges = Double.valueOf(0.0D);
-				if(orderEntry.getIsEDtoHD() != null && orderEntry.getIsEDtoHD().booleanValue() && null != orderEntry.getRefundedEdChargeAmt() && orderEntry.getRefundedEdChargeAmt().doubleValue() != 0D) {
-						currDelCharges = orderEntry.getHdDeliveryCharge() != null ?orderEntry
-								.getHdDeliveryCharge() : NumberUtils.DOUBLE_ZERO;
-				}else {
+				if (orderEntry.getIsEDtoHD() != null && orderEntry.getIsEDtoHD().booleanValue()
+						&& null != orderEntry.getRefundedEdChargeAmt() && orderEntry.getRefundedEdChargeAmt().doubleValue() != 0D)
+				{
+					currDelCharges = orderEntry.getHdDeliveryCharge() != null ? orderEntry.getHdDeliveryCharge()
+							: NumberUtils.DOUBLE_ZERO;
+				}
+				else
+				{
 					currDelCharges = orderEntry.getCurrDelCharge();
 				}
 				final double deliveryCost = orderEntry.getCurrDelCharge() != null ? orderEntry.getCurrDelCharge().doubleValue()
@@ -927,12 +931,15 @@ public class DefaultMplJusPayRefundService implements MplJusPayRefundService
 						+ scheduleDeliveryCost;
 
 				orderEntry.setRefundedDeliveryChargeAmt(Double.valueOf(deliveryCost));
-				if(null != orderEntry.getIsEDtoHD() && orderEntry.getIsEDtoHD().booleanValue() && null != orderEntry.getRefundedEdChargeAmt() && orderEntry.getRefundedEdChargeAmt().doubleValue() == 0D){
-					double hdDeliveryCharges=0.0D;
-					if(null !=orderEntry.getHdDeliveryCharge()) {
+				if (null != orderEntry.getIsEDtoHD() && orderEntry.getIsEDtoHD().booleanValue()
+						&& null != orderEntry.getRefundedEdChargeAmt() && orderEntry.getRefundedEdChargeAmt().doubleValue() == 0D)
+				{
+					double hdDeliveryCharges = 0.0D;
+					if (null != orderEntry.getHdDeliveryCharge())
+					{
 						hdDeliveryCharges = orderEntry.getHdDeliveryCharge().doubleValue();
 					}
-					orderEntry.setRefundedEdChargeAmt(Double.valueOf(deliveryCost-hdDeliveryCharges));
+					orderEntry.setRefundedEdChargeAmt(Double.valueOf(deliveryCost - hdDeliveryCharges));
 				}
 				orderEntry.setRefundedEdChargeAmt(orderEntry.getHdDeliveryCharge());
 				orderEntry.setCurrDelCharge(NumberUtils.DOUBLE_ZERO);
@@ -964,15 +971,15 @@ public class DefaultMplJusPayRefundService implements MplJusPayRefundService
 	/*
 	 * @Desc used in web and cscockpit for in case no response received from juspay while cancellation refund TISSIT-1801
 	 * TISPRO-94
-	 *
+	 * 
 	 * @param orderRequestRecord
-	 *
+	 * 
 	 * @param paymentTransactionType
-	 *
+	 * 
 	 * @param juspayRefundType
-	 *
+	 * 
 	 * @param uniqueRequestId
-	 *
+	 * 
 	 * @return void
 	 */
 
@@ -988,14 +995,18 @@ public class DefaultMplJusPayRefundService implements MplJusPayRefundService
 			if (orderEntry != null)
 			{
 				Double currDelCharges = Double.valueOf(0.0D);
-				if(orderEntry.getIsEDtoHD() != null && orderEntry.getIsEDtoHD().booleanValue() && null != orderEntry.getRefundedEdChargeAmt() && orderEntry.getRefundedEdChargeAmt().doubleValue() != 0D) {
-						currDelCharges = orderEntry.getHdDeliveryCharge() != null ?orderEntry
-								.getHdDeliveryCharge() : NumberUtils.DOUBLE_ZERO;
-				}else {
+				if (orderEntry.getIsEDtoHD() != null && orderEntry.getIsEDtoHD().booleanValue()
+						&& null != orderEntry.getRefundedEdChargeAmt() && orderEntry.getRefundedEdChargeAmt().doubleValue() != 0D)
+				{
+					currDelCharges = orderEntry.getHdDeliveryCharge() != null ? orderEntry.getHdDeliveryCharge()
+							: NumberUtils.DOUBLE_ZERO;
+				}
+				else
+				{
 					currDelCharges = orderEntry.getCurrDelCharge();
 				}
-				final double refundedAmount = orderEntry.getNetAmountAfterAllDisc().doubleValue()
-						+ currDelCharges.doubleValue() + orderEntry.getScheduledDeliveryCharge().doubleValue();
+				final double refundedAmount = orderEntry.getNetAmountAfterAllDisc().doubleValue() + currDelCharges.doubleValue()
+						+ orderEntry.getScheduledDeliveryCharge().doubleValue();
 
 
 				final double deliveryCost = orderEntry.getCurrDelCharge() != null ? orderEntry.getCurrDelCharge().doubleValue()
@@ -1005,12 +1016,15 @@ public class DefaultMplJusPayRefundService implements MplJusPayRefundService
 
 				orderEntry.setRefundedDeliveryChargeAmt(Double.valueOf(deliveryCost));
 				orderEntry.setCurrDelCharge(NumberUtils.DOUBLE_ZERO);
-				if(null != orderEntry.getIsEDtoHD() && orderEntry.getIsEDtoHD().booleanValue() && null != orderEntry.getRefundedEdChargeAmt() && orderEntry.getRefundedEdChargeAmt().doubleValue() == 0D){
-					double hdDeliveryCharges=0.0D;
-					if(null !=orderEntry.getHdDeliveryCharge()) {
+				if (null != orderEntry.getIsEDtoHD() && orderEntry.getIsEDtoHD().booleanValue()
+						&& null != orderEntry.getRefundedEdChargeAmt() && orderEntry.getRefundedEdChargeAmt().doubleValue() == 0D)
+				{
+					double hdDeliveryCharges = 0.0D;
+					if (null != orderEntry.getHdDeliveryCharge())
+					{
 						hdDeliveryCharges = orderEntry.getHdDeliveryCharge().doubleValue();
 					}
-					orderEntry.setRefundedEdChargeAmt(Double.valueOf(deliveryCost-hdDeliveryCharges));
+					orderEntry.setRefundedEdChargeAmt(Double.valueOf(deliveryCost - hdDeliveryCharges));
 				}
 				// Added in R2.3 START
 				orderEntry.setRefundedScheduleDeliveryChargeAmt(Double.valueOf(scheduleDeliveryCost));

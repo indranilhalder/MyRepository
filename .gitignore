@@ -5,7 +5,6 @@
 /config/licence/installedSaplicenses.properties
 
 /ext/**/web/commonwebsrc
-/ext/**/src/**/jalo/*
 /ext/**/hmc/bin
 /ext/**/hmc.xsd
 /ext/**/eclipsebin
