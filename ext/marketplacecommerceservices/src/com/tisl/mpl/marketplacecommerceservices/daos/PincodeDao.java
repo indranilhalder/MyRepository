@@ -41,12 +41,12 @@ public interface PincodeDao
 
 	/**
 	 * Get the Available Details of the give pincode
-	 * 
+	 *
 	 * @param pincode
 	 * @return PincodeModel
 	 */
 	public List<PincodeModel> getAllDetailsOfPincode(final String pincode);
-	
+
 	/**
 	 *
 	 * @param center
@@ -56,4 +56,6 @@ public interface PincodeDao
 	 */
 	public Collection<PointOfServiceModel> getAllReturnablePOSforSeller(final GPS center, final double radius,
 			final String sellerId);
+
+	public List<PointOfServiceModel> findPOSForSellerAndSlave(final List<String> slaveIds);
 }
