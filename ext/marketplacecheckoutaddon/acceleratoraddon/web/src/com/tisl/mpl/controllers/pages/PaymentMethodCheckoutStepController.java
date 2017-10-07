@@ -5181,6 +5181,8 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 		final List<OrderEntryData> sellerList = cartData.getEntries();
 		for (final OrderEntryData seller : sellerList)
 		{
+			if (seller.getSelectedSellerInformation() != null)
+			{
 			final String sellerID = seller.getSelectedSellerInformation().getSellerID();
 			if (cartLevelSellerID != null)
 			{
@@ -5189,6 +5191,7 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 			else
 			{
 				cartLevelSellerID = sellerID;
+			}
 			}
 		}
 		return cartLevelSellerID;

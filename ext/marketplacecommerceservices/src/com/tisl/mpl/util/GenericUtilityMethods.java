@@ -1261,6 +1261,8 @@ public class GenericUtilityMethods
 				final List<OrderEntryData> sellerList = cartData.getEntries();
 				for (final OrderEntryData seller : sellerList)
 				{
+					
+					if(seller.getSelectedSellerInformation()!=null){
 					final String sellerID = seller.getSelectedSellerInformation().getSellerID();
 					if (cartLevelSellerID != null)
 					{
@@ -1269,6 +1271,7 @@ public class GenericUtilityMethods
 					else
 					{
 						cartLevelSellerID = sellerID;
+					}
 					}
 				}
 
