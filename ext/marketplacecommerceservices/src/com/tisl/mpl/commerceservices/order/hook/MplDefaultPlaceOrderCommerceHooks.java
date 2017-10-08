@@ -918,9 +918,14 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 					final WalletCardApportionDetailModel chlidCardApportionDetail = getModelService()
 							.create(WalletCardApportionDetailModel.class);
 					chlidCardApportionDetail.setOrderId(orderModel.getCode());
-					chlidCardApportionDetail.setCardAmount("" + data.getAmount());
+
+					if (data.getAmount() != null)
+					{
+
+						chlidCardApportionDetail.setCardAmount(data.getAmount().toString());
+					}
 					chlidCardApportionDetail.setCardNumber(data.getCardNumber());
-					chlidCardApportionDetail.setCardExpiry(data.getExpiry());
+					chlidCardApportionDetail.setCardExpiry(data.getCardExpiry());
 					chlidCardApportionDetail.setCardPinNumber(data.getCardPIN());
 					cardQtyWiseList.add(chlidCardApportionDetail);
 

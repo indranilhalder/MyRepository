@@ -60,8 +60,12 @@
 				</div>
 			</div>
 		</div>
-		<br />&nbsp;<br />&nbsp;<br />
-
+		<br />
+		<div class="cliqCashBannerSection">
+		   <div class="cliqCashBannerSectionInfo">
+		   Don't forget to redeem your <br /><span class="cliqCashBannerSectionInfoC1">CliQ Cash during checkout</span>
+		   </div>
+		</div>
 		<div style="display: none;">
 			<div class="cliqCashContainerTwo">
 				<%-- <button class="cliqCashTablinks"

@@ -208,7 +208,7 @@
 <div class="giftCheckoutContainer">
 	<div class="giftCheckoutContainerTable">
 		<div class="clearfix">
-			<div class="col-sm-3">
+			<div class="col-md-3">
 				<div class="giftInfoLeft">
 					<table>
 						<tr>
@@ -692,7 +692,7 @@
 					</ul>
 					</c:if>
 					<input type="hidden" id="paymentMode" name="paymentMode"/>
-					<ul class="tabs">
+					<ul class="tabs" id="paymentOptionsMobiles">
 					<c:if test="${is_responsive}">
 					<c:forEach var="map" items="${paymentModes}">
 									<c:if test="${map.value eq true}">
@@ -1360,7 +1360,7 @@
 											<c:choose>
 											<c:when test="${map.key eq 'Credit Card'}">
 										<input type="hidden" id="CreditCard" value="${map.value}" />
-										<button type="button" class="button topPlaceOrderBtn"><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.paymentButton"/></button>
+										<button class="topPlaceOrderBtn emiTopOrderPlaceButton"><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.paymentButton"/></button>
 											<!-- EMI CREDIT CARD -->
 													<div id="cardEmi" style="display: none;">
 														<!-- <ul class="product-block blocks"> -->

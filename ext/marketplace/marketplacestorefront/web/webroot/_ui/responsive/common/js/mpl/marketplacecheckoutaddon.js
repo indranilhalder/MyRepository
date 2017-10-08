@@ -5676,6 +5676,7 @@ function useWalletForPaymentAjax(){
 				$(".topPlaceOrderBtn").hide();
 				$("#make_cc_payment").show();
 				$(".choose-payment").find('*').prop('disabled',false);
+				$("#paymentOptionsMobiles li span").css('pointer-events', 'all');
 				$(".checkout-paymentmethod li span").css('pointer-events', 'all');
 				$("#juspayAmountId").hide();
 				$("#useCliqCashId").show(); 
@@ -5687,6 +5688,7 @@ function useWalletForPaymentAjax(){
 				  $("#make_saved_cc_payment_up, #make_saved_dc_payment_up, #make_cc_payment_up, #make_dc_payment_up, #make_nb_payment_up, #make_emi_payment_up, #paymentButtonId_up, #make_mrupee_payment_up").hide();
 			      $(".topPlaceOrderBtn").show();
 			      $(".choose-payment").find('*').prop('disabled',true);
+			      $("#paymentOptionsMobiles li span").css('pointer-events', 'none');
 			      $(".checkout-paymentmethod li span").css('pointer-events', 'none');
 			      $(".topPlaceOrderBtn").prop('disabled',false);
 			      $("#juspayAmountId").hide();
@@ -5699,6 +5701,7 @@ function useWalletForPaymentAjax(){
 				 $(".topPlaceOrderBtn").hide();
 				 $(".topPlaceOrderBtn").prop('disabled',true);
 				 $(".choose-payment").find('*').prop('disabled',false);
+				 $("#paymentOptionsMobiles li span").css('pointer-events', 'all');
 				 $(".checkout-paymentmethod li span").css('pointer-events', 'all');
 				 $("#addCliqCashId").hide();
 				 $("#useCliqCashId").hide();

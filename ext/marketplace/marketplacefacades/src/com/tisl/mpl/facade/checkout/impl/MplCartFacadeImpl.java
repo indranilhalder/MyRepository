@@ -157,6 +157,16 @@ import net.sourceforge.pmd.util.StringUtil;
  */
 public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacade
 {
+
+	private static final String _400083 = "400083";
+	private static final String MUMBAI = "Mumbai";
+	private static final String CREDIT_CARD = "Credit Card";
+	private static final String ERROR_OCCUREING_WHILE_SAVING_CART_MODEL = "Error occureing  While Saving CartModel ";
+	private static final String MPL_GIFTCARD_PRODUCT_SELLERID = "mpl.giftcard.product.sellerid";
+	private static final String MPL_GIFTCARD_SELLERNAME = "mpl.giftcard.sellername";
+	private static final String VALUE = "[]";
+	private static final String INR = "INR";
+	private static final String HOME_DELIVERY = "home-delivery";
 	private static final Logger LOG = Logger.getLogger(MplCartFacadeImpl.class);
 	private static final String FINEJEWELLERY = "FineJewellery";
 	private ProductService productService;
@@ -4588,19 +4598,19 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 	{
 
 		final CartModel cardModel = cartFactory.createCart();
-		cardModel.setPincodeNumber("542621");
+		cardModel.setPincodeNumber(_400083);
 		final List<AbstractOrderEntryModel> orderModelList = new ArrayList<AbstractOrderEntryModel>();
 		final CartEntryModel abstractOrderEntryModel = getEGVCartEntry(egvDetailForm, cardModel);
 		orderModelList.add(abstractOrderEntryModel);
 		cardModel.setEntries(orderModelList);
-		cardModel.setCityForPincode("Hyderabad");
+		cardModel.setCityForPincode(MUMBAI);
 		cardModel.setIsCODEligible(Boolean.FALSE);
 		cardModel.setDiscountsIncludePaymentCost(false);
 		cardModel.setIsExpressCheckoutSelected(Boolean.FALSE);
 		cardModel.setIsPendingNotSent(Boolean.FALSE);
 		cardModel.setIsSentToOMS(Boolean.TRUE);
 		cardModel.setMerged(Boolean.FALSE);
-		cardModel.setModeOfPayment("Credit Card");
+		cardModel.setModeOfPayment(CREDIT_CARD);
 		cardModel.setNet(Boolean.FALSE);
 		cardModel.setSite(cmsSiteService.getCurrentSite());
 		cardModel.setSubtotal(Double.valueOf(egvDetailForm.getGiftRange()));
@@ -4619,7 +4629,7 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 		}
 		catch (final Exception exception)
 		{
-			LOG.error("Error occureing  While Saving CartModel " + exception);
+			LOG.error(ERROR_OCCUREING_WHILE_SAVING_CART_MODEL + exception);
 		}
 		return cardModel;
 	}
@@ -4653,8 +4663,8 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 			productSellerGiftCardUssId=richAttributeModel.getSellerInfo().getUSSID();
 			productSellerName =richAttributeModel.getSellerInfo().getSellerName();	
 		}else{
-			productSellerGiftCardUssId=configurationService.getConfiguration().getString("mpl.giftcard.product.sellerid");
-			productSellerName = configurationService.getConfiguration().getString("mpl.giftcard.sellername");
+			productSellerGiftCardUssId=configurationService.getConfiguration().getString(MPL_GIFTCARD_PRODUCT_SELLERID);
+			productSellerName = configurationService.getConfiguration().getString(MPL_GIFTCARD_SELLERNAME);
 		}
 		abstractOrderEntryModel.setSelectedUSSID(productSellerGiftCardUssId);
 		abstractOrderEntryModel.setSellerInfo(productSellerName);
@@ -4668,7 +4678,7 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 		abstractOrderEntryModel.setConvenienceChargeApportion(Double.valueOf(0));
 		abstractOrderEntryModel.setCouponValue(Double.valueOf(0));
 		abstractOrderEntryModel.setCreationtime(new Date());
-		abstractOrderEntryModel.setDiscountValuesInternal("[]");
+		abstractOrderEntryModel.setDiscountValuesInternal(VALUE);
 		abstractOrderEntryModel.setEntryNumber(Integer.valueOf(0));
 		abstractOrderEntryModel.setFreeCount(Integer.valueOf(0));
 		abstractOrderEntryModel.setHdDeliveryCharge(Double.valueOf(0.0));
@@ -4684,11 +4694,11 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 		try
 		{
 			final Collection<MplZoneDeliveryModeValueModel> value6 = new ArrayList<MplZoneDeliveryModeValueModel>();
-			final MplZoneDeliveryModeValueModel mplZoneDeliveryModeValueModel = mplDeliveryCostDao.getDeliveryCost("home-delivery",
-					"INR", productSellerGiftCardUssId);
+			final MplZoneDeliveryModeValueModel mplZoneDeliveryModeValueModel = mplDeliveryCostDao.getDeliveryCost(HOME_DELIVERY,
+					INR, productSellerGiftCardUssId);
 
 			mplZoneDeliveryModeValueModel.setDeliveryFulfillModes(DeliveryFulfillModesEnum.TSHIP);
-			DeliveryModeModel deliaveryMode=mplDeliveryCostDao.getDelieveryMode("home-delivery");
+			DeliveryModeModel deliaveryMode=mplDeliveryCostDao.getDelieveryMode(HOME_DELIVERY);
 			mplZoneDeliveryModeValueModel.setDeliveryMode(deliaveryMode);
 			value6.add(mplZoneDeliveryModeValueModel);
 			modelService.saveAll(mplZoneDeliveryModeValueModel);

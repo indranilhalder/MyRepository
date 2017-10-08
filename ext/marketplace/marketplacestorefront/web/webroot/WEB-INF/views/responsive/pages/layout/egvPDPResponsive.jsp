@@ -15,7 +15,6 @@
 <%@ taglib prefix="order" tagdir="/WEB-INF/tags/responsive/order"%>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
 
-
 <style>
 	.Tanishq {
 	  font-family: Montserrat;
@@ -102,8 +101,7 @@
 		height: 250px;
 		background-color: yellowgreen;
 		border-top-left-radius: 10px; border-top-right-radius: 10px; 
-		/* background-image: url("https://cdn.zeplin.io/58987458375db68f0b01107e/assets/93E01EE1-736A-4931-861C-368B8536DA9E.png");
-		background-repeat: no-repeat; */
+		/* background: url(../_ui/responsive/common/images/egv_template.png) no-repeat center; */
 	}
 	
 	.giftFinalTempMiddle {
@@ -281,12 +279,16 @@
 	<div class="col-sm-6 giftContSub giftContSub2">
 		
 		<div class="clearfix">
-			<div class="col-sm-12">
-				<span class="Tanishq">Tata CliQ</span><br />
-				<span class="Diwali-GIft-Card">Gift Card</span><br />&nbsp;
+			<div class="">
+				<div class="col-sm-2">
+				<!-- <span class="Tanishq">Tata CliQ</span> -->
+				</div>
+				<div class="col-sm-10">
+				<span class="Diwali-GIft-Card">Gift Card</span>
+				</div>
 			</div>
 		</div>
-		<div class="clearfix">
+		<!-- <div class="clearfix">
 			<div class="col-sm-2 stepTexts">
 				STEP &nbsp;<span class="Oval">1</span><br />&nbsp; 
 			</div>
@@ -316,7 +318,7 @@
 				</label>
 			</div>
 		</div>
-		<br />&nbsp;
+		<br />&nbsp; -->
 		<div class="clearfix">
 			<div class="col-sm-12">
 				<!-- <span id="showMoreGiftDesignTemplates" class="moreGiftTemplates">See More Designs</span><br />&nbsp; -->
@@ -430,7 +432,7 @@
 		</div>
 		<div class="clearfix">
 			<div class="col-sm-2 stepTexts">
-				STEP &nbsp;<span class="Oval">2</span><br />&nbsp;
+				<!-- STEP &nbsp;<span class="Oval">1</span> --><br />&nbsp;
 			</div>
 			<div class="col-sm-10">
 				<span>ENTER DETAILS FOR YOUR GIFT CARD</span><br />&nbsp;
@@ -461,7 +463,7 @@
 						<input type="radio" name="giftRange" value="2500">&#8377; 2500
 					</span>
 				</div>
-				<div>or<br />&nbsp;
+				<div><br />or<br />&nbsp;
 				<div class="alert alert-warning" id="customAmountError">
 					
 				</div>
@@ -601,6 +603,8 @@ function validateForm() {
 		
 		//Update Gift Template
 		//Updating Card
+		//$(".giftFinalTempTop").css('background','url(\_ui\responsive\common\images\egv_template.png) no-repeat center');
+		
 		$(".giftLabel").click(function (){
 			var giftImg = $(this).find('img').attr('src');
 			$(".giftFinalTempTop").css('background-color','transparent');
