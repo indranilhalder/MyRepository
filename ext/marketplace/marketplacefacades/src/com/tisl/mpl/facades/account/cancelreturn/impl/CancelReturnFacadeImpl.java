@@ -2018,14 +2018,16 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 	
 	private double calculateSplitQcRefundAmount(AbstractOrderEntryModel orderEntry){
 		double refundAmountForQc =0.0D;
-		/*if(null !=orderEntry &&  null != orderEntry.getWalletApportionReturnInfo() && null!= orderEntry.getWalletApportionReturnInfo().getWalletCardList()){
-			for(WalletCardApportionDetailModel cardApportionDetail : orderEntry.getWalletApportionReturnInfo().getWalletCardList()){
+		double cashBackAmt=0;
+		if(null !=orderEntry &&  null != orderEntry.getWalletApportionPaymentInfo() && null!= orderEntry.getWalletApportionPaymentInfo().getWalletCardList()){
+			for(WalletCardApportionDetailModel cardApportionDetail : orderEntry.getWalletApportionPaymentInfo().getWalletCardList()){
 				if(cardApportionDetail.getBucketType().equalsIgnoreCase("CASHBACK")){
-					
+					cashBackAmt += Double.parseDouble(cardApportionDetail.getQcApportionValue()) +  Double.parseDouble( null != cardApportionDetail.getQcDeliveryValue() ? cardApportionDetail.getQcDeliveryValue() : ""+0 )
+							+Double.parseDouble( null != cardApportionDetail.getQcSchedulingValue() ? cardApportionDetail.getQcSchedulingValue() : ""+0 )+
+							Double.parseDouble( null != cardApportionDetail.getQcShippingValue() ? cardApportionDetail.getQcShippingValue() : ""+0 );
 				}
 			}
-			
-		}*/
+		}
 		if(null != orderEntry.getWalletApportionPaymentInfo() && null != orderEntry.getWalletApportionPaymentInfo().getQcApportionPartValue()){
    		refundAmountForQc += Double.valueOf(orderEntry.getWalletApportionPaymentInfo().getQcApportionPartValue()).doubleValue();
    	}
@@ -2038,6 +2040,13 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
    	if(null != orderEntry.getWalletApportionPaymentInfo() && null != orderEntry.getWalletApportionPaymentInfo().getQcShippingPartValue()){
    		refundAmountForQc += Double.valueOf(orderEntry.getWalletApportionPaymentInfo().getQcShippingPartValue()).doubleValue();
    	}
+   	
+   	
+   	if(cashBackAmt > 0){
+   		
+   		refundAmountForQc -= cashBackAmt;
+   	}
+   	
 		return refundAmountForQc;
 	}
 	
@@ -3994,8 +4003,13 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 					   	
 					   	double refundAmountForQc =0.0D;
 					   	double refundAmountForJuspay =0.0D;
+					   	//call for Juspay
+					   	refundAmountForJuspay = calculateSplitJuspayRefundAmount(abstractOrderEntryModel);
+							
+							//call for QuckCilver
+				      	refundAmountForQc = calculateSplitQcRefundAmount(abstractOrderEntryModel);
 					   	//for QC
-					   	if(null != abstractOrderEntryModel.getWalletApportionPaymentInfo() && null != abstractOrderEntryModel.getWalletApportionPaymentInfo().getQcApportionPartValue()){
+					   /*	if(null != abstractOrderEntryModel.getWalletApportionPaymentInfo() && null != abstractOrderEntryModel.getWalletApportionPaymentInfo().getQcApportionPartValue()){
 					   		refundAmountForQc += Double.valueOf(abstractOrderEntryModel.getWalletApportionPaymentInfo().getQcApportionPartValue()).doubleValue();
 					   	}
 					   	if(null != abstractOrderEntryModel.getWalletApportionPaymentInfo() && null != abstractOrderEntryModel.getWalletApportionPaymentInfo().getQcDeliveryPartValue()){
@@ -4013,12 +4027,14 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 					   	}
 					   	if(null != abstractOrderEntryModel.getWalletApportionPaymentInfo() && null != abstractOrderEntryModel.getWalletApportionPaymentInfo().getJuspaySchedulingValue()){
 					   		refundAmountForJuspay += Double.valueOf(abstractOrderEntryModel.getWalletApportionPaymentInfo().getJuspaySchedulingValue()).doubleValue();
-					   	}
+					   	}*/
 					   	refundEntryModel.setAmount(NumberUtils.createBigDecimal(Double.toString(refundAmountForJuspay)));
 					   	refundEntryModel.setAmountForQc(NumberUtils.createDouble(Double.toString(refundAmountForQc)));
 					}else if( null != subOrderModel.getSplitModeInfo() && subOrderModel.getSplitModeInfo().equalsIgnoreCase("CliqCash")){
 					   	double refundAmountForQc =0.0D;
-					   	if(null != abstractOrderEntryModel.getWalletApportionPaymentInfo() && null != abstractOrderEntryModel.getWalletApportionPaymentInfo().getQcApportionPartValue()){
+					   	//call for QuckCilver
+				      	refundAmountForQc = calculateSplitQcRefundAmount(abstractOrderEntryModel);
+					   	/*if(null != abstractOrderEntryModel.getWalletApportionPaymentInfo() && null != abstractOrderEntryModel.getWalletApportionPaymentInfo().getQcApportionPartValue()){
 					   		refundAmountForQc += Double.valueOf(abstractOrderEntryModel.getWalletApportionPaymentInfo().getQcApportionPartValue()).doubleValue();
 					   	}
 					   	if(null != abstractOrderEntryModel.getWalletApportionPaymentInfo() && null != abstractOrderEntryModel.getWalletApportionPaymentInfo().getQcDeliveryPartValue()){
@@ -4026,7 +4042,7 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 					   	}
 					   	if(null != abstractOrderEntryModel.getWalletApportionPaymentInfo() && null != abstractOrderEntryModel.getWalletApportionPaymentInfo().getQcSchedulingPartValue()){
 					   		refundAmountForQc += Double.valueOf(abstractOrderEntryModel.getWalletApportionPaymentInfo().getQcSchedulingPartValue()).doubleValue();
-					   	}
+					   	}*/
 					   	refundEntryModel.setAmountForQc(NumberUtils.createDouble(Double.toString(refundAmountForQc)));
 					}else {
          					final double amount = (abstractOrderEntryModel.getNetAmountAfterAllDisc() != null ? abstractOrderEntryModel
