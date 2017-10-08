@@ -3101,6 +3101,11 @@
 							<defaultvalue>Double.valueOf(0.0d)</defaultvalue>
 							<persistence type="property" />
 					    </attribute>
+					    <attribute qualifier="totalWalletAmount" type="java.lang.Double">
+							<modifiers optional="true" read="true" write="true" />
+							<defaultvalue>Double.valueOf(0.0d)</defaultvalue>
+							<persistence type="property" />
+					    </attribute>
 				</attributes>
 				<indexes>
 					<index name="IDX_CART_SEARCH_ONLOAD">

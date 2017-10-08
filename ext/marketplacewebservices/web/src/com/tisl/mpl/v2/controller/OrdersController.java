@@ -41,6 +41,7 @@ import de.hybris.platform.core.model.order.OrderModel;
 import de.hybris.platform.core.model.product.ProductModel;
 import de.hybris.platform.core.model.user.CustomerModel;
 import de.hybris.platform.order.InvalidCartException;
+import de.hybris.platform.order.exceptions.CalculationException;
 import de.hybris.platform.ordersplitting.model.ConsignmentEntryModel;
 import de.hybris.platform.ordersplitting.model.ConsignmentModel;
 import de.hybris.platform.product.ProductService;
@@ -604,9 +605,32 @@ public class OrdersController extends BaseCommerceController
 		{
 			//removeProductFromWL(orderCode);
 			orderModel = mplOrderFacade.getOrder(orderCode); //TISPT-175 --- order model changes : reduce same call from two places
+			QCRedeeptionResponse qcResponse = new QCRedeeptionResponse();
+			final CustomerModel currentCustomer = (CustomerModel) userService.getCurrentUser();
+			final String qcUniqueCode = mplPaymentFacade.generateQCCode();
+			qcResponse = mplPaymentFacade.createQCOrderRequest(orderModel.getGuid(), orderModel,
+					currentCustomer.getCustomerWalletDetail().getWalletId(),
+					MarketplacewebservicesConstants.PAYMENT_MODE_CLIQ_CASH, qcUniqueCode,
+					MarketplacewebservicesConstants.CHANNEL_MOBILE, orderModel.getTotalPrice().doubleValue(), 0.0D);
+			boolean egvStatus;
+			if (null != qcResponse && null != qcResponse.getResponseCode() && qcResponse.getResponseCode().intValue() != 0)
+			{
+				orderModel.setStatus(OrderStatus.PAYMENT_FAILED); /// return QC fail and Update Audit Entry Try With Juspay
+				modelService.save(orderModel);
+				egvStatus = false;
+			}
+
+			else if (null == qcResponse || null == qcResponse.getResponseCode())
+			{
+				orderModel.setStatus(OrderStatus.PAYMENT_FAILED); /// NO Exception No qcResponse Try With Juspay
+				modelService.save(orderModel);
+				egvStatus = false;
+			}
 			
-			
-			
+			if (mplPaymentWebFacade.updateOrder(orderModel))
+			{
+				response.setStatus(MarketplacewebservicesConstants.UPDATE_SUCCESS);
+			}
 			orderDetail = mplCheckoutFacade.getOrderDetailsForCode(orderModel); //TISPT-175 --- order details : reduce same call from two places
 			wishlistFacade.remProdFromWLForConf(orderDetail, orderModel.getUser()); //TISPT-175 --- removing products from wishlist : passing order data as it was fetching order data based on code again inside the method
 			SessionOverrideCheckoutFlowFacade.resetSessionOverrides();
@@ -642,6 +666,16 @@ public class OrdersController extends BaseCommerceController
 				response.setErrorCode(e.getErrorCode());
 			}
 			response.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
+		}catch (InvalidCartException e)
+		{
+			LOG.error("Exception occurred while updateTransactionDetailsforCard " + e.getMessage());
+			response.setStatus(MarketplacewebservicesConstants.UPDATE_FAILURE);
+			response.setError(e.getMessage());
+		}
+		catch (CalculationException e)
+		{
+			LOG.error("Exception occurred while updateTransactionDetailsforCard " + e.getMessage());
+			response.setStatus(MarketplacewebservicesConstants.UPDATE_FAILURE);
 		}
 		return response;
 	}

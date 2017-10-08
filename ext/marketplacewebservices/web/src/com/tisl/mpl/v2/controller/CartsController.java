@@ -3618,6 +3618,8 @@ public class CartsController extends BaseCommerceController
 		ReleaseCouponsDTO releaseCouponDto = new ReleaseCouponsDTO();
 		CartModel cartModel = null;
 		OrderModel orderModel = null;
+		double walletAmount = 0.0D;
+		double discountAmount=0.0D;
 		try
 		{
 
@@ -3625,6 +3627,8 @@ public class CartsController extends BaseCommerceController
 			{
 				orderModel = mplPaymentFacade.getOrderByGuid(cartGuid);
 			}
+			
+			
 			//Release coupon for cartModel
 			if (null == orderModel)
 			{
@@ -3638,23 +3642,35 @@ public class CartsController extends BaseCommerceController
 				}
 				else
 				{
-					final Double totalWithoutCoupon = cartModel.getTotalPrice();
+					//final Double totalWithoutCoupon = cartModel.getTotalPrice();
+					if(null != cartModel.getTotalDiscounts()&& cartModel.getTotalDiscounts().doubleValue() > 0.0D) {
+						discountAmount = cartModel.getTotalDiscounts().doubleValue();
+					}
+					final Double totalWithoutCoupon = Double.valueOf(cartModel.getTotalPrice().doubleValue()+Double.valueOf(discountAmount).doubleValue());
 					if (null != totalWithoutCoupon)
 					{
 						releaseCouponDto.setTotalWithoutCoupon(totalWithoutCoupon);
 					}
+					
 					cartModel.setChannel(SalesApplication.MOBILE);
 					getModelService().save(cartModel);
+					if(null != cartModel.getTotalWalletAmount() && cartModel.getTotalWalletAmount().doubleValue() > 0.0D) {
+						walletAmount = cartModel.getTotalWalletAmount().doubleValue();
+					}
+					if(null != cartModel.getTotalDiscounts()&& cartModel.getTotalDiscounts().doubleValue() > 0.0D) {
+						discountAmount = cartModel.getTotalDiscounts().doubleValue();
+					}
+					
 					releaseCouponDto = mplCouponWebFacade.releaseVoucher(couponCode, cartModel, null, paymentMode);
 					try
 					{
 						final double totalAmount = cartModel.getTotalPrice().doubleValue();
-						double payableWalletAmount = 0.0D;
-						if (null != cartModel.getPayableWalletAmount() && cartModel.getPayableWalletAmount().doubleValue() > 0.0D)
-						{
-							payableWalletAmount = cartModel.getPayableWalletAmount().doubleValue();
-						}
-						if (totalAmount <= payableWalletAmount)
+					//	double payableWalletAmount = 0.0D;
+//						if (walletAmount > 0.0D)
+//						{
+//							payableWalletAmountIncludingDiscount = cartModel.getPayableWalletAmount().doubleValue()+discountAmount;
+//						}
+						if (totalAmount <= walletAmount)
 						{
 							cartModel.setSplitModeInfo(MarketplacewebservicesConstants.PAYMENT_MODE_CLIQ_CASH);
 							cartModel.setPayableWalletAmount(Double.valueOf(totalAmount));
@@ -3666,14 +3682,14 @@ public class CartsController extends BaseCommerceController
 						}
 						else
 						{
-							if (payableWalletAmount > 0.0D)
+							if (walletAmount > 0.0D)
 							{
 								cartModel.setSplitModeInfo(MarketplacewebservicesConstants.PAYMENT_MODE_SPLIT);
-								cartModel.setPayableWalletAmount(Double.valueOf(payableWalletAmount));
+								cartModel.setPayableWalletAmount(Double.valueOf(walletAmount));
 								releaseCouponDto.setCliqCashApplied(true);
-								releaseCouponDto.setAmountTobePaidUsingCliqCash(Double.valueOf(payableWalletAmount));
+								releaseCouponDto.setAmountTobePaidUsingCliqCash(Double.valueOf(walletAmount));
 								releaseCouponDto.setRemaingPaybleAmount(
-										Double.valueOf(cartModel.getTotalPrice().doubleValue() - payableWalletAmount));
+										Double.valueOf(cartModel.getTotalPrice().doubleValue() - walletAmount));
 							}
 							else
 							{
@@ -3698,8 +3714,14 @@ public class CartsController extends BaseCommerceController
 			}
 			else
 			{
+				if(null != orderModel.getTotalWalletAmount() && orderModel.getTotalWalletAmount().doubleValue() > 0.0D) {
+					walletAmount = orderModel.getTotalWalletAmount().doubleValue();
+				}
+				if(null != orderModel.getTotalDiscounts()&& orderModel.getTotalDiscounts().doubleValue() > 0.0D) {
+					discountAmount = orderModel.getTotalDiscounts().doubleValue();
+				}
 				releaseCouponDto = mplCouponWebFacade.releaseVoucher(couponCode, null, orderModel, paymentMode);
-				final Double totalWithoutCoupon = orderModel.getTotalPrice();
+				final Double totalWithoutCoupon = Double.valueOf(orderModel.getTotalPrice().doubleValue()+Double.valueOf(discountAmount).doubleValue());
 				if (null != totalWithoutCoupon)
 				{
 					releaseCouponDto.setTotalWithoutCoupon(totalWithoutCoupon);
@@ -3707,12 +3729,12 @@ public class CartsController extends BaseCommerceController
 				try
 				{
 					final double totalAmount = orderModel.getTotalPrice().doubleValue();
-					double payableWalletAmount = 0.0D;
-					if (null != orderModel.getPayableWalletAmount() && orderModel.getPayableWalletAmount().doubleValue() > 0.0D)
-					{
-						payableWalletAmount = orderModel.getPayableWalletAmount().doubleValue();
-					}
-					if (totalAmount <= payableWalletAmount)
+				//	double payableWalletAmount = 0.0D;
+//					if (null != orderModel.getPayableWalletAmount() && orderModel.getPayableWalletAmount().doubleValue() > 0.0D)
+//					{
+//						payableWalletAmount = orderModel.getPayableWalletAmount().doubleValue();
+//					}
+					if (totalAmount <= walletAmount)
 					{
 						orderModel.setSplitModeInfo(MarketplacewebservicesConstants.PAYMENT_MODE_CLIQ_CASH);
 						orderModel.setPayableWalletAmount(Double.valueOf(totalAmount));
@@ -3724,14 +3746,14 @@ public class CartsController extends BaseCommerceController
 					}
 					else
 					{
-						if (payableWalletAmount > 0.0D)
+						if (walletAmount > 0.0D)
 						{
 							orderModel.setSplitModeInfo(MarketplacewebservicesConstants.PAYMENT_MODE_SPLIT);
-							orderModel.setPayableWalletAmount(Double.valueOf(payableWalletAmount));
+							orderModel.setPayableWalletAmount(Double.valueOf(walletAmount));
 							releaseCouponDto.setCliqCashApplied(true);
-							releaseCouponDto.setAmountTobePaidUsingCliqCash(Double.valueOf(payableWalletAmount));
+							releaseCouponDto.setAmountTobePaidUsingCliqCash(Double.valueOf(walletAmount));
 							releaseCouponDto.setRemaingPaybleAmount(
-									Double.valueOf(orderModel.getTotalPrice().doubleValue() - payableWalletAmount));
+									Double.valueOf(orderModel.getTotalPrice().doubleValue() - walletAmount));
 						}
 						else
 						{

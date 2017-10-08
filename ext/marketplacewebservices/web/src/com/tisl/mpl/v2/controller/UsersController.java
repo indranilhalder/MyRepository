@@ -8906,6 +8906,7 @@ public class UsersController extends BaseCommerceController
 					{
 						cart.setSplitModeInfo(MarketplacewebservicesConstants.PAYMENT_MODE_CLIQ_CASH);
 						cart.setPayableWalletAmount(totalAmt);
+						cart.setTotalWalletAmount(WalletAmt);
 						getModelService().save(cart);
 						getModelService().refresh(cart);
 						payCliqCashWsDto.setDiscount(cart.getTotalDiscounts());
@@ -8938,6 +8939,7 @@ public class UsersController extends BaseCommerceController
 						payCliqCashWsDto.setTotalAmount(cart.getTotalPrice().toString());
 						cart.setSplitModeInfo(MarketplacewebservicesConstants.PAYMENT_MODE_SPLIT);
 						cart.setPayableWalletAmount(WalletAmt);
+						cart.setTotalWalletAmount(WalletAmt);
 						getModelService().save(cart);
 						getModelService().refresh(cart);
 						payCliqCashWsDto.setStatus(MarketplacecommerceservicesConstants.SUCCESS_FLAG);
@@ -8972,6 +8974,7 @@ public class UsersController extends BaseCommerceController
 					{
 						orderModel.setSplitModeInfo(MarketplacewebservicesConstants.PAYMENT_MODE_CLIQ_CASH);
 						orderModel.setPayableWalletAmount(totalAmt);
+						orderModel.setTotalWalletAmount(WalletAmt);
 						getModelService().save(orderModel);
 						getModelService().refresh(orderModel);
 						payCliqCashWsDto.setDiscount(orderModel.getTotalDiscounts());
@@ -9003,6 +9006,7 @@ public class UsersController extends BaseCommerceController
 						payCliqCashWsDto.setTotalAmount(orderModel.getTotalPrice().toString());
 						orderModel.setSplitModeInfo(MarketplacewebservicesConstants.PAYMENT_MODE_SPLIT);
 						orderModel.setPayableWalletAmount(WalletAmt);
+						orderModel.setTotalWalletAmount(WalletAmt);
 						getModelService().save(orderModel);
 						getModelService().refresh(orderModel);
 						payCliqCashWsDto.setStatus(MarketplacecommerceservicesConstants.SUCCESS_FLAG);
@@ -9551,40 +9555,6 @@ public class UsersController extends BaseCommerceController
 					failErrorCode = MarketplacecommerceservicesConstants.B9047;
 				}
 
-				if (!failFlag)
-				{
-					final Double cartTotal = cart.getTotalPrice();
-					final Double cartTotalWithConvCharge = cart.getTotalPriceWithConv();
-					if (cartTotal.doubleValue() <= 0.0 || cartTotalWithConvCharge.doubleValue() <= 0.0)
-					{
-						final CustomerModel currentCustomer = (CustomerModel) getUserService().getCurrentUser();
-						final String qcUniqueCode = mplPaymentFacade.generateQCCode();
-						qcResponse = mplPaymentFacade.createQCOrderRequest(cart.getGuid(), cart,
-								currentCustomer.getCustomerWalletDetail().getWalletId(),
-								MarketplacewebservicesConstants.PAYMENT_MODE_CLIQ_CASH, qcUniqueCode,
-								MarketplacewebservicesConstants.CHANNEL_MOBILE, cart.getTotalPrice().doubleValue(), 0.0D);
-						boolean egvStatus;
-						if (null != qcResponse && null != qcResponse.getResponseCode() && qcResponse.getResponseCode().intValue() != 0)
-						{
-							cart.setStatus(OrderStatus.PAYMENT_FAILED); /// return QC fail and Update Audit Entry Try With Juspay
-							modelService.save(cart);
-							egvStatus = false;
-						}
-
-						else if (null == qcResponse || null == qcResponse.getResponseCode())
-						{
-							cart.setStatus(OrderStatus.PAYMENT_FAILED); /// NO Exception No qcResponse Try With Juspay
-							modelService.save(cart);
-							egvStatus = false;
-						}
-						orderCreateInJusPayWsDto.setCliqcashAmount(cart.getTotalPrice());
-						orderCreateInJusPayWsDto.setCliqcashSelected(true);
-
-						failFlag = true;
-						failErrorCode = MarketplacecommerceservicesConstants.B9509;
-						//}
-					}
-				}
 				//TISPRO-578
 				if (!failFlag && !mplPaymentFacade.isValidCart(cart))
 				{
@@ -9599,26 +9569,6 @@ public class UsersController extends BaseCommerceController
 				}
 				else
 				{
-					final CustomerModel currentCustomer = (CustomerModel) getUserService().getCurrentUser();
-					final String qcUniqueCode = mplPaymentFacade.generateQCCode();
-					qcResponse = mplPaymentFacade.createQCOrderRequest(cart.getGuid(), cart,
-							currentCustomer.getCustomerWalletDetail().getWalletId(),
-							MarketplacewebservicesConstants.PAYMENT_MODE_CLIQ_CASH, qcUniqueCode,
-							MarketplacewebservicesConstants.CHANNEL_MOBILE, cart.getTotalPrice().doubleValue(), 0.0D);
-					boolean egvStatus;
-					if (null != qcResponse && null != qcResponse.getResponseCode() && qcResponse.getResponseCode().intValue() != 0)
-					{
-						cart.setStatus(OrderStatus.PAYMENT_FAILED); /// return QC fail and Update Audit Entry Try With Juspay
-						modelService.save(cart);
-						egvStatus = false;
-					}
-
-					else if (null == qcResponse || null == qcResponse.getResponseCode())
-					{
-						cart.setStatus(OrderStatus.PAYMENT_FAILED); /// NO Exception No qcResponse Try With Juspay
-						modelService.save(cart);
-						egvStatus = false;
-					}
 					orderCreateInJusPayWsDto.setCliqcashAmount(cart.getTotalPrice());
 					orderCreateInJusPayWsDto.setCliqcashSelected(true);
 					//create order here
@@ -9714,25 +9664,6 @@ public class UsersController extends BaseCommerceController
 				}
 				else
 				{
-					final CustomerModel currentCustomer = (CustomerModel) getUserService().getCurrentUser();
-					final String qcUniqueCode = mplPaymentFacade.generateQCCode();
-					qcResponse = mplPaymentFacade.createQCOrderRequest(orderModel.getGuid(), orderModel,
-							currentCustomer.getCustomerWalletDetail().getWalletId(),
-							MarketplacewebservicesConstants.PAYMENT_MODE_CLIQ_CASH, qcUniqueCode,
-							MarketplacewebservicesConstants.CHANNEL_MOBILE, orderModel.getTotalPrice().doubleValue(), 0.0D);
-					boolean egvStatus;
-					if (null != qcResponse && null != qcResponse.getResponseCode() && qcResponse.getResponseCode().intValue() != 0)
-					{
-						orderModel.setStatus(OrderStatus.PAYMENT_FAILED); /// return QC fail and Update Audit Entry Try With Juspay
-						modelService.save(orderModel);
-						egvStatus = false;
-					}
-					else if (null == qcResponse || null == qcResponse.getResponseCode())
-					{
-						orderModel.setStatus(OrderStatus.PAYMENT_FAILED); /// NO Exception No qcResponse Try With Juspay
-						modelService.save(orderModel);
-						egvStatus = false;
-					}
 					orderCreateInJusPayWsDto.setCliqcashAmount(orderModel.getTotalPrice());
 					orderCreateInJusPayWsDto.setCliqcashSelected(true);
 					orderCreateInJusPayWsDto.setOrderId(orderModel.getCode());
