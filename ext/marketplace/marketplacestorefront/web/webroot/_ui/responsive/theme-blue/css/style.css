@@ -77444,3 +77444,8 @@ background: url(../images/search_image.png) no-repeat;}
     display: none !important;
 }
 }
+/* SDI-1393 start */
+.page-viewAllTrending.pageType-ContentPage #ia_products_hot .right-block .select-view .select-list {
+    z-index: 2;
+}
+/* SDI-1393 End */
