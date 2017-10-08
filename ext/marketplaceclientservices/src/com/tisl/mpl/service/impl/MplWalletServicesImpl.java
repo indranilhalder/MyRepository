@@ -78,6 +78,8 @@ public class MplWalletServicesImpl implements MplWalletServices
 	@Autowired
 	private FlexibleSearchService flexibleSearchService;
 
+	final DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
+	final String queryString = "select {pk} from {WalletCardApportionDetail} where {cardNumber} =?cardNuber";
 
 	/**
 	 * @return the qcInitDataBean
@@ -140,11 +142,10 @@ public class MplWalletServicesImpl implements MplWalletServices
 	{
 		QCInitializationResponse qcInitializationResponse = new QCInitializationResponse();
 		//	final Client client = Client.create();
-		 Client client = getProxyConnection();
+		final Client client = getProxyConnection();
 		LOG.debug("Successfully client .................." + client);
 		ClientResponse response = null;
 		WebResource webResource = null;
-		final DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
 
 		try
 		{
@@ -211,11 +212,10 @@ public class MplWalletServicesImpl implements MplWalletServices
 	{
 
 		//	final Client client = Client.create();
-		 Client client = getProxyConnection();
+		final Client client = getProxyConnection();
 		LOG.debug("Successfully client .................." + client);
 		ClientResponse response = null;
 		WebResource webResource = null;
-		final DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
 		QCCustomerRegisterResponse custResponse = new QCCustomerRegisterResponse();
 		try
 		{
@@ -265,11 +265,10 @@ public class MplWalletServicesImpl implements MplWalletServices
 	{
 
 		//	final Client client = Client.create();
-		 Client client = getProxyConnection();
+		final Client client = getProxyConnection();
 		LOG.debug("Successfully client .................." + client);
 		ClientResponse response = null;
 		WebResource webResource = null;
-		final DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
 		PurchaseEGVResponse purchaseEgvResponse = new PurchaseEGVResponse();
 
 		try
@@ -320,14 +319,10 @@ public class MplWalletServicesImpl implements MplWalletServices
 	public void addEgvToWallet()
 	{
 		//	final Client client = Client.create();
-		 Client client = getProxyConnection();
+		final Client client = getProxyConnection();
 		LOG.debug("Successfully client .................." + client);
 		ClientResponse response = null;
 		WebResource webResource = null;
-		//final ReturnLogisticsResponse responsefromOMS = new ReturnLogisticsResponse();
-		final DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
-
-
 		try
 		{
 			client.setConnectTimeout(Integer.valueOf(getConfigurationService().getConfiguration().getString("qcTimeout")));
@@ -370,12 +365,10 @@ public class MplWalletServicesImpl implements MplWalletServices
 	public BalanceBucketWise getQCBucketBalance(final String customerWalletId, final String transactionId)
 	{
 		//	final Client client = Client.create();
-		Client client = getProxyConnection();
+		final Client client = getProxyConnection();
 		LOG.debug("Successfully client .................." + client);
 		ClientResponse response = null;
 		WebResource webResource = null;
-		final DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
-
 		BalanceBucketWise walletBalance = new BalanceBucketWise();
 
 		try
@@ -434,10 +427,9 @@ public class MplWalletServicesImpl implements MplWalletServices
 			final QCRedeemRequest qcRedeemRequest)
 	{
 		//	final Client client = Client.create();
-		 Client client = getProxyConnection();
+		final Client client = getProxyConnection();
 		ClientResponse response = null;
 		WebResource webResource = null;
-		final DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
 		QCRedeeptionResponse qcRedeeptionResponse = new QCRedeeptionResponse();
 
 		try
@@ -485,28 +477,26 @@ public class MplWalletServicesImpl implements MplWalletServices
 
 
 	@Override
-	public QCRedeeptionResponse getWalletRefundRedeem(String walletId, QCRefundRequest qcRefundRequest)
+	public QCRedeeptionResponse getWalletRefundRedeem(final String walletId, final QCRefundRequest qcRefundRequest)
 	{
-		//	final Client client = Client.create();
-		 Client client = getProxyConnection();
+		final Client client = getProxyConnection();
 		LOG.debug("Successfully client .................." + client);
 		ClientResponse response = null;
 		WebResource webResource = null;
-		final DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
-		QCRedeeptionResponse qcRedeeptionResponse =null;
+		QCRedeeptionResponse qcRedeeptionResponse = null;
 		try
 		{
 			client.setConnectTimeout(Integer.valueOf(getConfigurationService().getConfiguration().getString("qcTimeout")));
 			client.setReadTimeout(Integer.valueOf(getConfigurationService().getConfiguration().getString("qcTimeout")));
 			webResource = client
 					.resource(UriBuilder.fromUri("http://" + getConfigurationService().getConfiguration().getString("qcUrl")
-							+ "/QwikCilver/eGMS.RestAPI/api/wallet/"+walletId+"/Cancelredeem").build());
+							+ "/QwikCilver/eGMS.RestAPI/api/wallet/" + walletId + "/Cancelredeem").build());
 
 			//need to create marshalling for request body
 			//Transaction ID will be same as Wallet redeem
 			final ObjectMapper objectMapper = new ObjectMapper();
 			final String requestBody = objectMapper.writeValueAsString(qcRefundRequest);
-			
+
 			//final String requestBody = "{\"OriginalTransactionId\":\"20\",\"OriginalBatchNumber\":\"10207477\"}";
 
 			response = webResource.type(MediaType.APPLICATION_JSON)
@@ -548,7 +538,7 @@ public class MplWalletServicesImpl implements MplWalletServices
 				//
 			}
 		}
-    return qcRedeeptionResponse;
+		return qcRedeeptionResponse;
 	}
 
 
@@ -558,7 +548,7 @@ public class MplWalletServicesImpl implements MplWalletServices
 		LOG.debug("***********************************in Mpl Wallet request..............." + request.toString());
 
 		//	final Client client = Client.create();
-		 Client client = getProxyConnection();
+		final Client client = getProxyConnection();
 		LOG.debug("Successfully client .................." + client);
 		ClientResponse response = null;
 		WebResource webResource = null;
@@ -566,7 +556,6 @@ public class MplWalletServicesImpl implements MplWalletServices
 		QCRedeeptionResponse qcRedeeptionResponse = null;
 		String output = null;
 		//final ReturnLogisticsResponse responsefromOMS = new ReturnLogisticsResponse();
-		final DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
 		final ObjectMapper objectMapper = new ObjectMapper();
 		try
 		{
@@ -619,7 +608,7 @@ public class MplWalletServicesImpl implements MplWalletServices
 	public QCRedeeptionResponse refundTULPromotionalCash(final String walletId, final String transactionId)
 	{
 		//	final Client client = Client.create();
-		 Client client = getProxyConnection();
+		final Client client = getProxyConnection();
 		LOG.debug("Successfully client .................." + client);
 		ClientResponse response = null;
 		WebResource webResource = null;
@@ -627,7 +616,6 @@ public class MplWalletServicesImpl implements MplWalletServices
 		String output = null;
 		QCRedeeptionResponse qcRedeeptionResponse = null;
 		//final ReturnLogisticsResponse responsefromOMS = new ReturnLogisticsResponse();
-		final DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
 		final QCRefundRequest request = new QCRefundRequest();
 		request.setOriginalTransactionId(transactionId);
 		request.setOriginalBatchNumber(getConfigurationService().getConfiguration().getString("qc.batch.number"));
@@ -688,18 +676,15 @@ public class MplWalletServicesImpl implements MplWalletServices
 	{
 
 		//	final Client client = Client.create();
-		 Client client = getProxyConnection();
+		final Client client = getProxyConnection();
 		LOG.debug("Successfully client .................." + client);
 		ClientResponse response = null;
 		WebResource webResource = null;
-		final DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
 		CustomerWalletDetailResponse custWalletDetail = new CustomerWalletDetailResponse();
 		final ObjectMapper objectMapper = new ObjectMapper();
 
 		try
 		{
-
-
 			client.setConnectTimeout(Integer.valueOf(getConfigurationService().getConfiguration().getString("qcTimeout")));
 			client.setReadTimeout(Integer.valueOf(getConfigurationService().getConfiguration().getString("qcTimeout")));
 			webResource = client
@@ -753,7 +738,7 @@ public class MplWalletServicesImpl implements MplWalletServices
 		try
 		{
 			//	final Client client = Client.create();
-			 Client client = getProxyConnection();
+			final Client client = getProxyConnection();
 			LOG.debug("Successfully client .................." + client);
 			ClientResponse response = null;
 			WebResource webResource = null;
@@ -763,7 +748,6 @@ public class MplWalletServicesImpl implements MplWalletServices
 			client.setConnectTimeout(Integer.valueOf(getConfigurationService().getConfiguration().getString("qcTimeout")));
 			client.setReadTimeout(Integer.valueOf(getConfigurationService().getConfiguration().getString("qcTimeout")));
 
-			final DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
 			final AddToCardWallet addToCardWallet = buildAddtoCardWallet(cardNumber, cardPin);
 			final ObjectMapper objectMapper = new ObjectMapper();
 
@@ -832,13 +816,12 @@ public class MplWalletServicesImpl implements MplWalletServices
 	public WalletBalanceResponse getBalenceForWallet(final String cardNumber, final String transactionId)
 	{
 		//	final Client client = Client.create();
-		 Client client = getProxyConnection();
+		final Client client = getProxyConnection();
 		LOG.debug("Successfully client .................." + client);
 		ClientResponse response = null;
 		WebResource webResource = null;
 		WalletBalanceResponse walletBalanceResponse = new WalletBalanceResponse();
 		String output = null;
-		final DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
 		final ObjectMapper objectMapper = new ObjectMapper();
 		try
 		{
@@ -903,12 +886,11 @@ public class MplWalletServicesImpl implements MplWalletServices
 	{
 
 		//	final Client client = Client.create();
-		 Client client = getProxyConnection();
+		final Client client = getProxyConnection();
 		LOG.debug("Successfully client .................." + client);
 		WebResource webResource = null;
 		WalletTransacationsList walletTransacationsList = new WalletTransacationsList();
 
-		final DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
 		final ObjectMapper objectMapper = new ObjectMapper();
 		try
 		{
@@ -998,7 +980,6 @@ public class MplWalletServicesImpl implements MplWalletServices
 		WebResource webResource = null;
 		QCRedeeptionResponse qcRedeeptionResponse = new QCRedeeptionResponse();
 		//final ReturnLogisticsResponse responsefromOMS = new ReturnLogisticsResponse();
-		final DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
 		final ObjectMapper objectMapper = new ObjectMapper();
 		try
 		{
@@ -1047,8 +1028,8 @@ public class MplWalletServicesImpl implements MplWalletServices
 		}
 		return qcRedeeptionResponse;
 	}
-	
-	
+
+
 	@Override
 	public QCRedeeptionResponse qcCredit(final String walletId, final QCCreditRequest request)
 	{
@@ -1061,13 +1042,12 @@ public class MplWalletServicesImpl implements MplWalletServices
 		WebResource webResource = null;
 		QCRedeeptionResponse qcRedeeptionResponse = new QCRedeeptionResponse();
 		//final ReturnLogisticsResponse responsefromOMS = new ReturnLogisticsResponse();
-		final DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
 		final ObjectMapper objectMapper = new ObjectMapper();
 		try
 		{
 			final String requestBody = objectMapper.writeValueAsString(request);
-			webResource = client.resource(UriBuilder
-					.fromUri(MarketplaceclientservicesConstants.GET_BALANCE_FOR_WALLET + walletId + "/load/CREDIT").build());
+			webResource = client.resource(
+					UriBuilder.fromUri(MarketplaceclientservicesConstants.GET_BALANCE_FOR_WALLET + walletId + "/load/CREDIT").build());
 
 			response = webResource.type(MediaType.APPLICATION_JSON)
 					.header(MarketplaceclientservicesConstants.FORWARDING_ENTITY_ID, "tatacliq.com")
@@ -1116,7 +1096,7 @@ public class MplWalletServicesImpl implements MplWalletServices
 	 */
 	private Client getProxyConnection()
 	{
-		 ClientConfig config = new DefaultClientConfig();
+		final ClientConfig config = new DefaultClientConfig();
 		LOG.debug("***********Try to configure the Proxy");
 		final String proxyEnableStatus = getConfigurationService().getConfiguration().getString("proxy.enabled");
 		LOG.debug("********proxyEnableStatus*********:" + proxyEnableStatus);
@@ -1152,7 +1132,6 @@ public class MplWalletServicesImpl implements MplWalletServices
 
 	public OrderModel getOrderFromWalletCardNumber(final String cardNumber)
 	{
-		final String queryString = "select {pk} from {WalletCardApportionDetail} where {cardNumber} =?cardNuber";
 		final FlexibleSearchQuery query = new FlexibleSearchQuery(queryString);
 		query.addQueryParameter("cardNumber".intern(), cardNumber);
 		return flexibleSearchService.<OrderModel> searchUnique(query);

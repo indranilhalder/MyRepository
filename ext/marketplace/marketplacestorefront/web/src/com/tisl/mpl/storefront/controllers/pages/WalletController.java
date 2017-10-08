@@ -83,15 +83,15 @@ public class WalletController extends AbstractPageController
 	private MplWalletFacade mplWalletFacade;
 
 
+	private static final Logger LOG = Logger.getLogger(WalletController.class);
+	protected static final String REDIM_WALLET_CODE_PATTERN = "/redimWallet";
+	final DateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy hh:mm:ss");
+
 	@ModelAttribute("getCurrentDate")
 	public String checkDisplayOffer()
 	{
 		return dateFormat.format(new Date());
 	}
-
-	private static final Logger LOG = Logger.getLogger(WalletController.class);
-	protected static final String REDIM_WALLET_CODE_PATTERN = "/redimWallet";
-	final DateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy hh:mm:ss");
 
 
 	@SuppressWarnings("boxing")
