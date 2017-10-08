@@ -6776,7 +6776,6 @@ public class UsersController extends BaseCommerceController
 		String juspayReturnUrl = "";
 		final StringBuilder returnUrlBuilder = new StringBuilder();
 		String orderCode = null;
-		double payableWalletAmount = 0.0D;
 		double payableJuspayAmount = 0.0D;
 		double totalWalletAmount = 0.0D;
 		if (LOG.isDebugEnabled())
@@ -7100,7 +7099,7 @@ public class UsersController extends BaseCommerceController
 						}else {
 							payableJuspayAmount = cart.getTotalPrice().doubleValue();
 						}
-						orderCreateInJusPayWsDto.setCliqcashAmount(Double.valueOf(payableWalletAmount));
+						orderCreateInJusPayWsDto.setCliqcashAmount(Double.valueOf(totalWalletAmount));
 						orderCreateInJusPayWsDto.setCliqcashSelected(true);
 					}
 					else
@@ -7264,7 +7263,7 @@ public class UsersController extends BaseCommerceController
 						}else {
 							payableJuspayAmount = orderModel.getTotalPrice().doubleValue();
 						}
-						orderCreateInJusPayWsDto.setCliqcashAmount(Double.valueOf(payableWalletAmount));
+						orderCreateInJusPayWsDto.setCliqcashAmount(Double.valueOf(totalWalletAmount));
 						orderCreateInJusPayWsDto.setCliqcashSelected(true);
 					}
 					else
