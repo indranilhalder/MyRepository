@@ -4210,7 +4210,7 @@ public class ProductPageController extends MidPageController
 		}
 		return posDataList;
 	}
-	
+	@RequireHardLogIn
 	@RequestMapping(value = ControllerConstants.Views.Fragments.Product.PRODUCT_CODE_GIFT_CART, method = RequestMethod.GET)
 	public String getGitProductDetails(@PathVariable(ControllerConstants.Views.Fragments.Product.PRODUCT_CODE) String productCode,
 			final Model model, final HttpServletRequest request)
