@@ -521,7 +521,7 @@ TATA.CommonFunctions = {
         else
         {
         	
-        	$("span.js-mini-cart-count,span.js-mini-cart-count-hover,span.responsive-bag-count").show();
+        	$("span.js-mini-cart-count,span.js-mini-cart-count-hover,span.responsive-bag-count").html(data.cartcount);
         }
      
 	},
@@ -1014,7 +1014,9 @@ TATA.Pages = {
                 success: function(x) {
                     var filtered = $.parseHTML(x);
                     if($(filtered).has('.product-grid')){
-                        $('.product-grid-wrapper').append($(filtered).find(".product-grid-wrapper"));
+                        $(".product-grid",filtered).each(function(){
+                            $(".product-grid-wrapper").append($(this));
+                        });
                     }
                     $("#pageQuery").val(ajaxUrl);
                 },

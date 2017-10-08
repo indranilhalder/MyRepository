@@ -17283,9 +17283,16 @@ TATA.CommonFunctions = {
             }
         });
     },
-    setHeader: function(data) {
-        0 == data.cartcount ? $("span.js-mini-cart-count,span.js-mini-cart-count-hover, span.responsive-bag-count").hide() : $("span.js-mini-cart-count,span.js-mini-cart-count-hover,span.responsive-bag-count").show();
-    },
+    setHeader: function(data){		
+        if(data.cartcount==0){
+            $("span.js-mini-cart-count,span.js-mini-cart-count-hover, span.responsive-bag-count").hide();
+        }
+        else
+        {
+        	$("span.js-mini-cart-count,span.js-mini-cart-count-hover,span.responsive-bag-count").html(data.cartcount);
+        }
+	},
+
     urlToProductCode: function(productURL) {
         var n = productURL.lastIndexOf("-");
         return productURL.substring(n + 1, productURL.length).toUpperCase();
@@ -17552,8 +17559,9 @@ TATA.CommonFunctions = {
                 },
                 success: function(x) {
                     var filtered = $.parseHTML(x);
-                    $(filtered).has(".product-grid") && $(".product-grid-wrapper").append($(filtered).find(".product-grid-wrapper")), 
-                    $("#pageQuery").val(ajaxUrl);
+                    $(filtered).has(".product-grid") && $(".product-grid", filtered).each(function() {
+                        $(".product-grid-wrapper").append($(this));
+                    }), $("#pageQuery").val(ajaxUrl);
                 },
                 complete: function() {
                     $("body").removeClass("loader");
