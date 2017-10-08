@@ -102,6 +102,7 @@ import com.tisl.mpl.core.model.MplPaymentAuditModel;
 import com.tisl.mpl.core.model.PaymentModeApportionModel;
 import com.tisl.mpl.core.model.RefundTransactionMappingModel;
 import com.tisl.mpl.core.model.SavedCardModel;
+import com.tisl.mpl.core.model.WalletApportionReturnInfoModel;
 import com.tisl.mpl.data.EMITermRateData;
 import com.tisl.mpl.data.MplPromoPriceData;
 import com.tisl.mpl.data.MplPromotionData;
@@ -122,6 +123,7 @@ import com.tisl.mpl.marketplacecommerceservices.service.MplMWalletRefundService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplPaymentService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplPaymentTransactionService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplVoucherService;
+import com.tisl.mpl.marketplacecommerceservices.service.OrderModelService;
 import com.tisl.mpl.model.BankModel;
 import com.tisl.mpl.model.PaymentModeSpecificPromotionRestrictionModel;
 import com.tisl.mpl.model.PaymentTypeModel;
@@ -207,6 +209,8 @@ public class MplPaymentServiceImpl implements MplPaymentService
 
 	@Autowired
 	private MplJusPayRefundService mplJusPayRefundService; //Added for TPR-1348
+	@Autowired
+	private OrderModelService orderModelService;
 
 	/**
 	 * @return the mplJusPayRefundService
@@ -4849,6 +4853,52 @@ public class MplPaymentServiceImpl implements MplPaymentService
 					mplJusPayRefundService.attachPaymentTransactionModel(orderEntryModel.get(0).getOrder(), paymentTransactionModel);
 					for (final OrderEntryModel orderEntry : orderEntryModel)
 					{
+						
+						//Start Juspay split code
+						
+						WalletApportionReturnInfoModel walletApportionModel = null;
+						final OrderModel subOrderModel = orderModelService.getOrder(orderEntry.getOrder().getCode());			
+						if(null != subOrderModel.getSplitModeInfo() && subOrderModel.getSplitModeInfo().equalsIgnoreCase("Split")){
+							if( null != orderEntry.getWalletApportionReturnInfo()){
+								walletApportionModel = orderEntry.getWalletApportionReturnInfo();
+							}else{
+								walletApportionModel = getModelService().create(WalletApportionReturnInfoModel.class);
+							}
+							
+							if(null !=orderEntry.getWalletApportionPaymentInfo() && null!= orderEntry.getWalletApportionPaymentInfo().getJuspayApportionValue()){
+								walletApportionModel.setJuspayApportionValue(orderEntry.getWalletApportionPaymentInfo().getJuspayApportionValue());
+							}
+							if(null !=orderEntry.getWalletApportionPaymentInfo() && null!= orderEntry.getWalletApportionPaymentInfo().getJuspayDeliveryValue()){
+								walletApportionModel.setJuspayDeliveryValue(orderEntry.getWalletApportionPaymentInfo().getJuspayDeliveryValue());
+							}
+							if(null !=orderEntry.getWalletApportionPaymentInfo() && null!= orderEntry.getWalletApportionPaymentInfo().getJuspaySchedulingValue()){
+								walletApportionModel.setJuspaySchedulingValue(orderEntry.getWalletApportionPaymentInfo().getJuspaySchedulingValue());
+							}
+							if(null !=orderEntry.getWalletApportionPaymentInfo() && null!= orderEntry.getWalletApportionPaymentInfo().getJuspayShippingValue()){
+								walletApportionModel.setJuspayShippingValue(orderEntry.getWalletApportionPaymentInfo().getJuspayShippingValue());
+							}	
+							walletApportionModel.setType("RETURN");
+							if (StringUtils.equalsIgnoreCase(paymentTransactionModel.getStatus(), MarketplacecommerceservicesConstants.SUCCESS)){
+								walletApportionModel.setStatus("SUCCESS");
+							}else if (StringUtils.equalsIgnoreCase(paymentTransactionModel.getStatus(), "PENDING")){
+								walletApportionModel.setStatus("FAIL");
+							}
+							System.out.println("Before Saving Juspay Response is :"+walletApportionModel.getJuspayApportionValue());
+							modelService.save(walletApportionModel);
+							System.out.println("After Saving Juspay Response is :"+walletApportionModel.getJuspayApportionValue());
+							modelService.refresh(walletApportionModel);
+							
+							orderEntry.setWalletApportionReturnInfo(walletApportionModel);
+							System.out.println("Before setting  Order Entry Response is :"+walletApportionModel.getJuspayApportionValue());
+							modelService.save(orderEntry);
+							System.out.println("After setting  Order Entry Response is :"+walletApportionModel.getJuspayApportionValue());
+							modelService.refresh(orderEntry);
+                     LOG.debug("abstractOrderEntryModel Saved Successfully..............");
+						}
+						
+						//Start Juspay split code
+						
+						
 
 						// If CosignmentEnteries are present then update OMS with
 						// the state.

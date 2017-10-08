@@ -34,6 +34,7 @@ import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.tisl.mpl.core.model.WalletApportionPaymentInfoModel;
+import com.tisl.mpl.core.model.WalletApportionReturnInfoModel;
 import com.tisl.mpl.core.model.WalletCardApportionDetailModel;
 import com.tisl.mpl.marketplacecommerceservices.service.MplNotificationService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplOrderService;
@@ -255,7 +256,7 @@ public class AutoRefundInitiateAction extends AbstractProceduralAction<OrderProc
 	
 		boolean qcStatus= false;
 		AbstractOrderEntryModel abstractOrderEntryModel = mplOrderService.getEntryModel(transactionId);
-		final WalletApportionPaymentInfoModel walletApportionModel = getModelService().create(WalletApportionPaymentInfoModel.class);
+		final WalletApportionReturnInfoModel walletApportionModel = getModelService().create(WalletApportionReturnInfoModel.class);
 	  List<WalletCardApportionDetailModel> walletCardApportionDetailModelList = new ArrayList<WalletCardApportionDetailModel>();
 	 if(null != response && null != response.getCards()){
 	  for(QCCard qcCard:response.getCards()){

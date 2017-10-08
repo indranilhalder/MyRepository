@@ -93,6 +93,7 @@ import com.tisl.mpl.core.model.RefundTransactionMappingModel;
 import com.tisl.mpl.core.model.ReturnQuickDropProcessModel;
 import com.tisl.mpl.core.model.RichAttributeModel;
 import com.tisl.mpl.core.model.WalletApportionPaymentInfoModel;
+import com.tisl.mpl.core.model.WalletApportionReturnInfoModel;
 import com.tisl.mpl.core.model.WalletCardApportionDetailModel;
 import com.tisl.mpl.core.util.DateUtilHelper;
 import com.tisl.mpl.data.CODSelfShipData;
@@ -363,6 +364,7 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 				if (CollectionUtils.isNotEmpty(orderLineRequest.getOrderLine()))
 				{
 					cancelOrRetrnanable = cancelOrderInOMS(orderLineRequest, cancelOrRetrnanable, isReturn);
+					
 				}
 			}
 			if (ticketTypeCode.equalsIgnoreCase("R") && bogoOrFreeBie) //TISEE-933
@@ -2197,7 +2199,7 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 	
 		
 		 AbstractOrderEntryModel abstractOrderEntryModel = mplOrderService.getEntryModel(transactionId);
-			final WalletApportionPaymentInfoModel walletApportionModel = getModelService().create(WalletApportionPaymentInfoModel.class);
+			final WalletApportionReturnInfoModel walletApportionModel = getModelService().create(WalletApportionReturnInfoModel.class);
 		  List<WalletCardApportionDetailModel> walletCardApportionDetailModelList = new ArrayList<WalletCardApportionDetailModel>();
 		 if(null != response && null != response.getCards()){
 		  for(QCCard qcCard:response.getCards()){
@@ -2294,9 +2296,17 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 										+ scheduleDeliveryCost.doubleValue();
 								refundAmount = mplJusPayRefundService.validateRefundAmount(refundAmount, subOrderModel);
 								//TISPRO-216 Ends
-								WalletApportionPaymentInfoModel walletApportionModel =new WalletApportionPaymentInfoModel();
-								final AbstractOrderEntryModel abstractOrderEntryModel = mplOrderService.getEntryModel(transactionId);
+								
+								//WalletApportionReturnInfoModel walletApportionModel =new WalletApportionReturnInfoModel();
+							//	final AbstractOrderEntryModel abstractOrderEntryModel = mplOrderService.getEntryModel(transactionId);
+								WalletApportionReturnInfoModel walletApportionModel = null;
+										
 								if(null != subOrderModel.getSplitModeInfo() && subOrderModel.getSplitModeInfo().equalsIgnoreCase("Split")){
+									if( null != orderEntry.getWalletApportionReturnInfo()){
+										walletApportionModel = orderEntry.getWalletApportionReturnInfo();
+									}else{
+										walletApportionModel = getModelService().create(WalletApportionReturnInfoModel.class);
+									}
 									
 									if(null !=orderEntry.getWalletApportionPaymentInfo() && null!= orderEntry.getWalletApportionPaymentInfo().getJuspayApportionValue()){
 										walletApportionModel.setJuspayApportionValue(orderEntry.getWalletApportionPaymentInfo().getJuspayApportionValue());
@@ -2312,13 +2322,20 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 									}	
 									walletApportionModel.setType("CANCEL");
 									if (StringUtils.equalsIgnoreCase(paymentTransactionModel.getStatus(), MarketplacecommerceservicesConstants.SUCCESS)){
-									//	walletApportionModel.setStatus("SUCCESS");
+										walletApportionModel.setStatus("SUCCESS");
 									}else if (StringUtils.equalsIgnoreCase(paymentTransactionModel.getStatus(), "PENDING")){
-										//walletApportionModel.setStatus("FAIL");
+										walletApportionModel.setStatus("FAIL");
 									}
-									abstractOrderEntryModel.setWalletApportionReturnInfo(walletApportionModel);
-   								modelService.save(abstractOrderEntryModel);
-   								modelService.refresh(abstractOrderEntryModel);
+									System.out.println("Before Saving Juspay Response is :"+walletApportionModel.getJuspayApportionValue());
+									modelService.save(walletApportionModel);
+									System.out.println("After Saving Juspay Response is :"+walletApportionModel.getJuspayApportionValue());
+									modelService.refresh(walletApportionModel);
+									
+									orderEntry.setWalletApportionReturnInfo(walletApportionModel);
+									System.out.println("Before setting  Order Entry Response is :"+walletApportionModel.getJuspayApportionValue());
+   								modelService.save(orderEntry);
+   								System.out.println("After setting  Order Entry Response is :"+walletApportionModel.getJuspayApportionValue());
+   								modelService.refresh(orderEntry);
                            LOG.debug("abstractOrderEntryModel Saved Successfully..............");
 								}
 
