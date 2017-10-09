@@ -1605,11 +1605,27 @@ public class PaymentServicesController extends BaseController
 								cliqCash.setTotalCliqCashBalance(totalCliqCashBalanceWsDto);
 								paymentModesData.setCliqCash(cliqCash);
 							}
+						}else {
+							final BigDecimal walletAmount = new BigDecimal(0.0D);
+							final PriceData priceData = PriceDataFactory.create(PriceDataType.BUY, walletAmount,
+									MarketplacecommerceservicesConstants.INR);
+
+							if (null != priceData)
+							{
+								totalCliqCashBalanceWsDto.setCurrencyIso(priceData.getCurrencyIso());
+								totalCliqCashBalanceWsDto.setDoubleValue(priceData.getDoubleValue());
+								totalCliqCashBalanceWsDto.setFormattedValue(priceData.getFormattedValue());
+								totalCliqCashBalanceWsDto.setPriceType(priceData.getPriceType());
+								totalCliqCashBalanceWsDto.setFormattedValueNoDecimal(priceData.getFormattedValueNoDecimal());
+								totalCliqCashBalanceWsDto.setValue(priceData.getValue());
+								paymentModesData.setStatus(MarketplacecommerceservicesConstants.SUCCESS_FLAG);
+							}
+							cliqCash.setTotalCliqCashBalance(totalCliqCashBalanceWsDto);
+							paymentModesData.setCliqCash(cliqCash);
 						}
 					}
 					catch (Exception e)
 					{
-						paymentModesData.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
 						LOG.debug("Exception occurred while getting customer QC wallet Amount" + e.getMessage());
 					}
 				}else {

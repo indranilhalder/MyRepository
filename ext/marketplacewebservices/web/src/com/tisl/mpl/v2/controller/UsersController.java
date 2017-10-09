@@ -8866,6 +8866,17 @@ public class UsersController extends BaseCommerceController
 	}
 
 
+	
+	/**
+	 * This API is used to USe Cliq Cash While Placing Order 
+	 * 
+	 * 
+	 * @param cartGuid
+	 * @return
+	 * @throws EtailNonBusinessExceptions
+	 * @throws EtailBusinessExceptions
+	 * @throws CalculationException
+	 */
 	@Secured(
 	{ CUSTOMER, "ROLE_TRUSTED_CLIENT", CUSTOMERMANAGER })
 	@RequestMapping(value = MarketplacewebservicesConstants.APPLY_CLIQCASH, method = RequestMethod.POST, produces = APPLICATION_TYPE)
@@ -8873,7 +8884,7 @@ public class UsersController extends BaseCommerceController
 	public PayCliqCashWsDto applyCliqCash(@RequestParam final String cartGuid)
 			throws EtailNonBusinessExceptions, EtailBusinessExceptions, CalculationException
 	{
-		LOG.info("Applying  cliq Cash ");
+		LOG.info("Applying  cliq Cash For Card Guid "+cartGuid);
 		final PayCliqCashWsDto payCliqCashWsDto = new PayCliqCashWsDto();
 		final OrderModel orderModel = getMplPaymentFacade().getOrderByGuid(cartGuid);
 		CartModel cart = null;
@@ -8885,9 +8896,12 @@ public class UsersController extends BaseCommerceController
 				cart = mplPaymentWebFacade.findCartAnonymousValues(cartGuid);
 				final CustomerModel currentCustomer = (CustomerModel) getUserService().getCurrentUser();
 				CustomerWalletDetailResponse responce=null;
+				
+				// We can get The Wallet Balance From QC .. If only Customer registered with QC 
 				if (null != currentCustomer && null != currentCustomer.getCustomerWalletDetail()
 						&& null != currentCustomer.getCustomerWalletDetail().getWalletId())
 				{
+				// Getting The Customer Cliq Cash Balance From QC
 					 responce = mplWalletFacade
 							.getCustomerWallet(currentCustomer.getCustomerWalletDetail().getWalletId().trim());
 				}
@@ -8901,6 +8915,10 @@ public class UsersController extends BaseCommerceController
 					LOG.debug("Bucket Balance =" + WalletAmt);
 					final Double totalAmt = cart.getTotalPrice();
 
+					 // If  Customer is Having Enough money in Cliq Cash Then  pay Using Cliq Cash   
+					 // Otherwise He needs to Pay the Remaining Amount using Other Payment Methods( Net Banking ,Debit Cart ... ) 
+					
+					//	 if Customer Is having Enough Money In Cliq Cash , Then Saving SplitModeInfo as CLIQ_CASH 
 					if (null != WalletAmt && null != totalAmt && WalletAmt.doubleValue() >= totalAmt.doubleValue())
 					{
 						cart.setSplitModeInfo(MarketplacewebservicesConstants.PAYMENT_MODE_CLIQ_CASH);
@@ -8916,6 +8934,8 @@ public class UsersController extends BaseCommerceController
 						payCliqCashWsDto.setStatus(MarketplacecommerceservicesConstants.SUCCESS_FLAG);
 						
 					}
+					
+					//  else if Customer Is Not having Enough Money In Cliq Cash , Then Saving SplitModeInfo as SPLIT_MODE 
 					else
 					{
 						double juspayTotalAmt = 0.0D;
@@ -8946,6 +8966,8 @@ public class UsersController extends BaseCommerceController
 
 				}else {
 					payCliqCashWsDto.setStatus(MarketplacecommerceservicesConstants.FAILURE_FLAG);
+					payCliqCashWsDto.setError(Localization.getLocalizedString(MarketplacecommerceservicesConstants.B5001));
+					payCliqCashWsDto.setErrorCode(MarketplacecommerceservicesConstants.B5001);
 				}
 			}
 			else
@@ -8967,6 +8989,7 @@ public class UsersController extends BaseCommerceController
 				{
 
 					final Double WalletAmt = responce.getWallet().getBalance();
+					LOG.debug("Bucket Balance =" + WalletAmt);
 					final Double totalAmt = orderModel.getTotalPrice();
 
 					if (null != WalletAmt && null != totalAmt && WalletAmt.doubleValue() >= totalAmt.doubleValue())
@@ -9034,7 +9057,15 @@ public class UsersController extends BaseCommerceController
 
 	}
 
-
+	
+/**
+ * This API is used to Remove the Cliq Cash From Cart
+ * @param cartGuid
+ * @return
+ * @throws EtailNonBusinessExceptions
+ * @throws EtailBusinessExceptions
+ * @throws CalculationException
+ */
 
 	@Secured(
 	{ CUSTOMER, "ROLE_TRUSTED_CLIENT", CUSTOMERMANAGER })
@@ -9049,6 +9080,8 @@ public class UsersController extends BaseCommerceController
 		CartModel cart = null;
 		try
 		{
+			
+			//  Removing the cliqCash balacne from Order and Setting SplitModeInfo To JUSPAY
 			if (null != orderModel)
 			{
 				payCliqCashWsDto.setDiscount(orderModel.getTotalDiscounts());
@@ -9101,7 +9134,15 @@ public class UsersController extends BaseCommerceController
 
 
 
-
+/**
+ * This API Is used to Redeem Cliq Cash using Cart Number and Pin 
+ * @param couponCode
+ * @param passKey
+ * @return
+ * @throws EtailNonBusinessExceptions
+ * @throws EtailBusinessExceptions
+ * @throws CalculationException
+ */
 
 	@Secured(
 	{ CUSTOMER, "ROLE_TRUSTED_CLIENT", CUSTOMERMANAGER })
@@ -9202,6 +9243,8 @@ public class UsersController extends BaseCommerceController
 					{
 						redeemCliqVoucherWsDTO.setStatus(MarketplacecommerceservicesConstants.FAILURE_FLAG);
 					}
+				}else {
+					redeemCliqVoucherWsDTO.setStatus(MarketplacecommerceservicesConstants.FAILURE_FLAG);
 				}
 			}
 			else

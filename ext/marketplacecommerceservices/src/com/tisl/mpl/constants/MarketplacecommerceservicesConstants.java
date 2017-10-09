@@ -1044,6 +1044,11 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String B2001 = "B2001";
 	public static final String B2002 = "B2002";
 
+
+	// Codes For EGV Functionaity START
+	public static final String B5001 = "B5001";
+	// Codes For EGV Functionaity END
+
 	//For Sales Report
 	public static final String DATE_FORMAT_REPORT = "ddMMyyyyHHmmss";
 	public static final String ORDER_ERROR = "B8000";
