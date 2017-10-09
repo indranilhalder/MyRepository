@@ -721,3 +721,6 @@ footer{
 .new-brand-slider-wrapper a {		
     cursor: pointer		
 }
+.breadcrumbs.wrapper li::after{
+    top: 6px!important;
+}

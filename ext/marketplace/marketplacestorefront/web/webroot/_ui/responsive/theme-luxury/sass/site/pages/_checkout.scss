@@ -1824,6 +1824,15 @@ h2.panel-defaultHeading {
                 border: 0px!important;
                 margin: 0px;
                 border-radius: initial;
+                
+                @include media-breakpoint-down(sm) {
+                    .card-group.row{
+                        margin-right: -10px;                        
+                    }
+                    .card_exp_month{
+                        width: 50%;                            
+                    }
+                }
             }
         }
         .bank-select{            

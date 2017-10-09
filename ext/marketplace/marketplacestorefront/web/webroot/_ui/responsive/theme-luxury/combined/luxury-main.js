@@ -17355,9 +17355,9 @@ TATA.CommonFunctions = {
         }, 3e3), !1);
     },
     leftBarAccordian: function() {
-        $(window).width() >= 768 ? ($(".facet").addClass("open"), $(document).on("click", ".facetHead", function(e) {
+        $(window).width() >= 768 ? $(document).on("click", ".facetHead", function(e) {
             e.stopPropagation(), $(this).closest(".facet").toggleClass("open", function() {});
-        })) : $(document).on("click", ".facetHead", function(e) {
+        }) : $(document).on("click", ".facetHead", function(e) {
             e.stopPropagation(), $(this).closest(".facet").addClass("open").find(".allFacetValues").show(), 
             $(this).closest(".facet").siblings().removeClass("open").find(".allFacetValues").hide();
         });

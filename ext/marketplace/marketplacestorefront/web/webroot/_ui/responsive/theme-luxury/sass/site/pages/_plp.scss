@@ -833,15 +833,15 @@
 								}
 								.le-checkbox{
 									label{
-										width:100%;
+										width:90%;
                                         @include media-breakpoint-down(sm) {
-                                            padding-left: 51px;    
+                                            padding-left: 40px;    
                                             
                                         }
 									}
 									input[type=checkbox]~label::before{
 										border-radius:50%;
-										left: 85%;
+										left: 95%;
 									}
 								}
 							}
@@ -931,3 +931,10 @@
     vertical-align: middle;
     display: table-cell;
 } 
+.leftbar{
+    .filterblocks{
+        .facetList{
+            margin-bottom: 50px;
+        }
+    } 
+}
