@@ -520,7 +520,7 @@ TATA.CommonFunctions = {
         }
         else
         {
-        	
+        	$("span.js-mini-cart-count,span.js-mini-cart-count-hover,span.responsive-bag-count").show();
         	$("span.js-mini-cart-count,span.js-mini-cart-count-hover,span.responsive-bag-count").html(data.cartcount);
         }
      
