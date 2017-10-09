@@ -148,7 +148,6 @@ public class BinFacadeImpl implements BinFacade
 	}
 
 
-
 	/**
 	 * @return the binService
 	 */
