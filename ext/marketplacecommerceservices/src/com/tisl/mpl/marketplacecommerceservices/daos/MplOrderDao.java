@@ -116,5 +116,7 @@ public interface MplOrderDao
 	//TPR-4841
 	public OrderModel fetchOrderByTransaction(final String transactionId);
 
+	public List<MplPaymentAuditModel> getAuditLists(final String cartGUID);
+
 
 }

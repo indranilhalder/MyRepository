@@ -206,7 +206,7 @@
 <!-- Added for Wallet -->
 <c:if test="${walletEnable}">
 <div class="giftCheckoutContainer">
-	<div class="giftCheckoutContainerTable">
+  <div id="walletContainerId" class="giftCheckoutContainerTable">
 		<div class="clearfix">
 			<div class="col-md-3">
 				<div class="giftInfoLeft">

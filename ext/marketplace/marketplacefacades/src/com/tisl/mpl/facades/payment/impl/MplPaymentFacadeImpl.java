@@ -3512,6 +3512,7 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 			double walletTotal, double juspayAmount)
 	{
 
+		boolean auditResponse = false;
 		QCRedeeptionResponse qcRedeeptionResponse = new QCRedeeptionResponse();
 		try
 		{
@@ -3533,43 +3534,49 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 
 			final ArrayList<String> rs = new ArrayList<String>();
 
-			getMplPaymentService().createQCEntryInAudit(qcOrderId, "WEB", guid, "" + walletTotal, "", "");
+			auditResponse = getMplPaymentService().createQCEntryInAudit(qcOrderId, "WEB", guid, "" + walletTotal, "", "");
 
-			final QCRedeemRequest qcRedeemRequest = new QCRedeemRequest();
-
-			qcRedeemRequest.setAmount("" + walletTotal);
-			qcRedeemRequest.setBillAmount(orderToBeUpdated.getTotalPrice().toString());
-			qcRedeemRequest.setNotes("Redeem Request Amount " + walletTotal);
-			qcRedeemRequest.setInvoiceNumber(qcOrderId);
-
-			qcRedeeptionResponse = mplWalletFacade.getWalletRedeem(WalletId, qcRedeemRequest);
-
-			if (null != qcRedeeptionResponse && Integer.parseInt(qcRedeeptionResponse.getResponseCode().toString()) == 0)
+			if (auditResponse)
 			{
+				final QCRedeemRequest qcRedeemRequest = new QCRedeemRequest();
 
-				rs.add(orderToBeUpdated.getCode());
-				rs.add(qcOrderId);
-				rs.add("" + qcRedeeptionResponse.getTransactionId());
+				qcRedeemRequest.setAmount("" + walletTotal);
+				qcRedeemRequest.setBillAmount(orderToBeUpdated.getTotalPrice().toString());
+				qcRedeemRequest.setNotes("Redeem Wallet Amount " + walletTotal);
+				qcRedeemRequest.setInvoiceNumber(qcOrderId);
 
-				getMplPaymentService().createQCEntryInAudit(qcOrderId, "WEB", guid, "" + walletTotal,
-						qcRedeeptionResponse.getResponseCode().toString(), qcRedeeptionResponse.getTransactionId().toString());
+				qcRedeeptionResponse = mplWalletFacade.getWalletRedeem(WalletId, qcRedeemRequest);
+
+				if (null != qcRedeeptionResponse && null != qcRedeeptionResponse.getResponseCode()
+						&& qcRedeeptionResponse.getResponseCode().intValue() == 0)
+				{
+
+					rs.add(orderToBeUpdated.getCode());
+					rs.add(qcOrderId);
+					rs.add("" + qcRedeeptionResponse.getTransactionId());
+
+					getMplPaymentService().createQCEntryInAudit(qcOrderId, "WEB", guid, "" + walletTotal,
+							qcRedeeptionResponse.getResponseCode().toString(), qcRedeeptionResponse.getTransactionId().toString());
 
 
-				final Map<String, Double> paymentMode = new HashMap<String, Double>();
-				paymentMode.put(cliqCashPaymentMode, Double.valueOf("2"));
+					final Map<String, Double> paymentMode = new HashMap<String, Double>();
+					paymentMode.put(cliqCashPaymentMode, Double.valueOf("99"));
 
 
-				getMplPaymentService().setQCPaymentTransaction(rs, paymentMode, orderToBeUpdated, cliqCashPaymentMode,
-						"" + walletTotal);
+					getMplPaymentService().setQCPaymentTransaction(rs, paymentMode, orderToBeUpdated, cliqCashPaymentMode,
+							"" + walletTotal);
 
 
-				calculateSplitModeApportionValue(orderToBeUpdated, qcRedeeptionResponse, walletTotal, juspayAmount);
+					calculateSplitModeApportionValue(orderToBeUpdated, qcRedeeptionResponse, walletTotal, juspayAmount);
 
-				return qcRedeeptionResponse;
-			}
-			else
-			{
-				return qcRedeeptionResponse;
+					return qcRedeeptionResponse;
+				}
+
+				else
+				{
+					return qcRedeeptionResponse;
+
+				}
 
 			}
 		}
@@ -3592,9 +3599,10 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 	{
 		final double totalBillingAmount = walletTotal + juspayTotalValue;
 
+
 		for (final AbstractOrderEntryModel abstractOrderEntryModel : orderToBeUpdated.getEntries())
 		{
-			System.out.println("Free Count ------- if bogo " + abstractOrderEntryModel.getFreeCount());
+			//System.out.println("Free Count ------- if bogo " + abstractOrderEntryModel.getFreeCount());
 			//			if(null != abstractOrderEntryModel.getIsBOGOapplied() && abstractOrderEntryModel.getIsBOGOapplied().booleanValue())
 			//			{
 			final WalletApportionPaymentInfoModel walletApportionPayment = getModelService()
@@ -3789,7 +3797,6 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 			abstractOrderEntryModel.setWalletApportionPaymentInfo(walletApportionPayment);
 			getModelService().save(abstractOrderEntryModel);
 		}
-		//}
 
 		getModelService().save(orderToBeUpdated);
 		getModelService().refresh(orderToBeUpdated);

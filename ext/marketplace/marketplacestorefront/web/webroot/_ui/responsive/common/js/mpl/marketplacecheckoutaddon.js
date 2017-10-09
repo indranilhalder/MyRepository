@@ -5751,7 +5751,7 @@ function WalletDetailAjax(){
 	});
   }
 
-if ($(window).width() < 768) {
+if ($(window).width() < 768 && $("#walletContainerId").hasClass("giftCheckoutContainerTable")) {
 	WalletDetailAjax();
 }
 
