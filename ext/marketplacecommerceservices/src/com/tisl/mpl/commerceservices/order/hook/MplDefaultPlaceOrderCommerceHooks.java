@@ -120,6 +120,11 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 {
 
 
+	private static final String SUCCESS = "success";
+	private static final String CLIQ_CASH_DOWN = "Cliq Cash Down...";
+	private static final String FAIL = "fail";
+	private static final String SOME_ERROR_WHILE_SENDING_REQUEST_QC = "Some Error While sending Request QC.......";
+	private static final String CLIQ_CASH_SERVICE_ERROR_RESPONSE_CODE_0 = "Cliq Cash Service Error response code != 0";
 	private static final Logger LOG = Logger.getLogger(MplDefaultPlaceOrderCommerceHooks.class);
 	private CloneAbstractOrderStrategy cloneAbstractOrderStrategy;
 
@@ -816,16 +821,15 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 					mplEGVCartService.removeOldEGVCartCurrentCustomer();
 
 					final String response = getPurchaseEGVRequestPopulate(orderModel);
-					if (response.equalsIgnoreCase("success"))
+					if (response.equalsIgnoreCase(SUCCESS))
 					{
 						getOrderStatusSpecifier().setOrderStatus(orderModel, OrderStatus.CONFIRMED);
-
-
 						sendNotifiactionForEGVOrder(orderModel);
 					}
 					else
 					{
-						getOrderStatusSpecifier().setOrderStatus(orderModel, OrderStatus.PAYMENT_TIMEOUT);
+						getOrderStatusSpecifier().setOrderStatus(orderModel, OrderStatus.RMS_VERIFICATION_FAILED);
+						LOG.error(CLIQ_CASH_DOWN);
 					}
 				}
 				/**
@@ -883,7 +887,7 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 	private String getPurchaseEGVRequestPopulate(final OrderModel orderModel)
 	{
 
-		String status = "fail";
+		String status = FAIL;
 		try
 		{
 			if (orderModel.getIsEGVCart().booleanValue())
@@ -895,17 +899,18 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 				purchaseEGVRequest.setBillAmount(orderModel.getTotalPrice());
 				purchaseEGVRequest.setInvoiceNumber(orderModel.getCode());
 				customer.setEmail(orderModel.getUser().getUid());
-				customer.setFirstname("TATA");
-				customer.setAddressLine1("Adedd");
-				customer.setAddressLine2("Address");
-				customer.setAddressLine3("Address");
+				customer.setFirstname(orderModel.getGiftFromId());
+				customer.setLastName(orderModel.getGiftFromId());
+				customer.setAddressLine1("Address1");
+				customer.setAddressLine2("Address2");
+				customer.setAddressLine3("Address3");
 				purchaseEGVRequest.setCustomer(customer);
 				purchaseEGVRequest.setIdempotencyKey(orderModel.getCode());
 				final PurchaseEGVResponse data = mplWalletServices.purchaseEgv(purchaseEGVRequest, orderModel.getCode());
 
 				final AbstractOrderEntryModel orderEntry = orderModel.getEntries().get(0);
 
-				if (data.getResponseCode() != null && data.getResponseCode().intValue() == 0)
+				if (null != data && data.getResponseCode() != null && data.getResponseCode().intValue() == 0)
 				{
 
 					final WalletApportionPaymentInfoModel walletApportionPaymentInfo = getModelService()
@@ -943,13 +948,14 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 
 					getModelService().save(orderModel);
 
-					status = "success";
+					status = SUCCESS;
 
 				}
 				else
 				{
 
-					status = "fail";
+					status = FAIL;
+					LOG.error(CLIQ_CASH_SERVICE_ERROR_RESPONSE_CODE_0);
 				}
 
 				return status;
@@ -958,7 +964,7 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 		}
 		catch (final Exception exceeption)
 		{
-			LOG.error("TTTTTTTTTTTTTT");
+			LOG.error(SOME_ERROR_WHILE_SENDING_REQUEST_QC);
 		}
 		return status;
 
