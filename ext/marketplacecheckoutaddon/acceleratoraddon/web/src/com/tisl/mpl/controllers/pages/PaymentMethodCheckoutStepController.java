@@ -3033,7 +3033,7 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 										}
 									}
 								}
-							}
+							} /// not charged case to be handel****************************************************
 						}
 
 						if (MarketplacecheckoutaddonConstants.CHARGED.equalsIgnoreCase(orderStatusResponse))
@@ -6098,65 +6098,67 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 		try
 		{
 
-			if (null != getSessionService().getAttribute("disableCODandWAllet"))
+			//			if (null != getSessionService().getAttribute("disableCODandWAllet"))
+			//			{
+			//				final String disableCODandWAllet =
+			//
+			//				if (null != disableCODandWAllet && disableCODandWAllet.equalsIgnoreCase("false"))
+			//				{
+			if (StringUtils.isNotEmpty(value) && value.equalsIgnoreCase("true"))
 			{
-				final String disableCODandWAllet = getSessionService().getAttribute("disableCODandWAllet");
 
-				if (null != disableCODandWAllet && disableCODandWAllet.equalsIgnoreCase("false"))
+				final CustomerModel currentCustomer = (CustomerModel) getUserService().getCurrentUser();
+
+				final BalanceBucketWise balBucketwise = mplWalletFacade
+						.getQCBucketBalance(currentCustomer.getCustomerWalletDetail().getWalletId());
+
+				if (balBucketwise.getResponseCode() == Integer.valueOf(0) && null != balBucketwise.getWallet().getBalance())
 				{
-					if (StringUtils.isNotEmpty(value) && value.equalsIgnoreCase("true"))
+					final Double WalletAmt = Double.valueOf((df.format(balBucketwise.getWallet().getBalance().doubleValue())));
+					final Double totalAmt = cart.getTotalPriceWithConv();
+
+					System.out.println("totalAmt ----------^^^^^^^  " + totalAmt);
+
+					if (Double.parseDouble("" + WalletAmt) >= Double.parseDouble("" + totalAmt))
 					{
 
-						final CustomerModel currentCustomer = (CustomerModel) getUserService().getCurrentUser();
-
-						final BalanceBucketWise balBucketwise = mplWalletFacade
-								.getQCBucketBalance(currentCustomer.getCustomerWalletDetail().getWalletId());
-
-						if (balBucketwise.getResponseCode() == Integer.valueOf(0) && null != balBucketwise.getWallet().getBalance())
-						{
-							final Double WalletAmt = Double.valueOf((df.format(balBucketwise.getWallet().getBalance().doubleValue())));
-							final Double totalAmt = cart.getTotalPriceWithConv();
-
-							System.out.println("totalAmt ----------^^^^^^^  " + totalAmt);
-
-							if (Double.parseDouble("" + WalletAmt) >= Double.parseDouble("" + totalAmt))
-							{
-
-								getSessionService().setAttribute("WalletTotal", "" + totalAmt);
-								getSessionService().setAttribute("getCliqCashMode", value);
-								jsonObject.put("disableJsMode", true);
-								cart.setSplitModeInfo("CliqCash");
-								//jsonObject.put("juspayAmt", 0);
-								getModelService().save(cart);
-								getModelService().refresh(cart);
-							}
-							else
-							{
-								double juspayTotalAmt = Double.parseDouble("" + totalAmt) - Double.parseDouble("" + WalletAmt);
-								juspayTotalAmt = Double.parseDouble(df.format(juspayTotalAmt));
-								getSessionService().setAttribute("WalletTotal", "" + WalletAmt);
-								getSessionService().setAttribute("juspayTotalAmt", "" + juspayTotalAmt);
-								getSessionService().setAttribute("cliqCashPaymentMode", "Cliq Cash");
-								jsonObject.put("disableJsMode", false);
-								jsonObject.put("juspayAmt", juspayTotalAmt);
-								cart.setSplitModeInfo("Split");
-								getModelService().save(cart);
-								getModelService().refresh(cart);
-							}
-						}
+						getSessionService().setAttribute("WalletTotal", "" + totalAmt);
+						getSessionService().setAttribute("getCliqCashMode", value);
+						jsonObject.put("disableJsMode", true);
+						cart.setSplitModeInfo("CliqCash");
+						//jsonObject.put("juspayAmt", 0);
+						getModelService().save(cart);
+						getModelService().refresh(cart);
 					}
 					else
 					{
+						double juspayTotalAmt = Double.parseDouble("" + totalAmt) - Double.parseDouble("" + WalletAmt);
+						juspayTotalAmt = Double.parseDouble(df.format(juspayTotalAmt));
+						getSessionService().setAttribute("WalletTotal", "" + WalletAmt);
+						getSessionService().setAttribute("juspayTotalAmt", "" + juspayTotalAmt);
+						getSessionService().setAttribute("cliqCashPaymentMode", "Cliq Cash");
 						jsonObject.put("disableJsMode", false);
-						cart.setSplitModeInfo("Juspay");
+						jsonObject.put("juspayAmt", juspayTotalAmt);
+						cart.setSplitModeInfo("Split");
 						getModelService().save(cart);
 						getModelService().refresh(cart);
-						jsonObject.put("juspayAmt", 0);
 					}
 				}
 			}
+			else
+			{
+				jsonObject.put("disableJsMode", false);
+				cart.setSplitModeInfo("Juspay");
+				getModelService().save(cart);
+				getModelService().refresh(cart);
+				jsonObject.put("juspayAmt", 0);
+			}
+			//}
+			//}
 		}
-		catch (final Exception ex)
+		catch (
+
+		final Exception ex)
 		{
 			ex.printStackTrace();
 			jsonObject.put("disableJsMode", false);
@@ -6183,8 +6185,6 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 		totalCartAmt += (null != cart.getScheduleDelCharge() ? cart.getScheduleDelCharge().doubleValue() : 0)
 				+ (null != cart.getDeliveryCost() ? cart.getDeliveryCost().doubleValue() : 0);
 		final DecimalFormat df = new DecimalFormat("#.##");
-
-		System.out.println("getTotalPriceWithConv ------------------- " + totalCartAmt);
 
 		double cashBalance = 0;
 		double egvBalance = 0;
