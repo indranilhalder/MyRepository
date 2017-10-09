@@ -13779,3 +13779,157 @@ div.other-sellers .other-sellers-table tbody tr td .price {
  	    margin-bottom: 5px;
  	    }
  /* TISPRDT-2410 start */
+ 
+ /*TPR-6654 start*/
+#CNCstores{
+	margin-top: 15px;
+	line-height: 1.33;
+}
+#CNCstores .store-locator-block > span > b{
+	color: #000;
+	margin-bottom: 5px;
+	display: inline-block;
+}
+#CNCstores .store-locator-block  a[data-target="#storeLocatorModal"]{
+	margin-top: 5px;
+	color: blue;
+	text-decoration: underline;
+	display: inline-block;
+	cursor: pointer;
+}
+#CNCstores .store-locator-block .store-address{
+	padding-left: 15px;
+	position: relative;
+}
+#CNCstores .store-locator-block .store-address span{
+	color: #fff;
+    position: absolute;
+    left: -2px;
+    font-size: 11px;
+    font-weight: bold;
+    top: 2px;
+}
+#CNCstores .store-locator-block .store-address:before{
+	content: "";
+	position: absolute;
+	left: -10px;
+	width: 20px;
+    height: 20px;
+    border-radius: 50% 50% 50% 0;
+    background: red;
+    transform: rotate(-45deg);
+	
+}
+/*modal*/
+#storeLocatorModal .content{
+	text-align: left;
+	padding: 0;
+	max-width: 600px;
+}
+#storeLocatorModal  .nearby-stores{
+	font-size: 14px;
+	color: #000;
+	text-transform: none;
+	margin-bottom: 25px;
+	padding: 10px;
+    background: #f2f2f2;
+    width: 100%;
+}
+#storeLocatorModal  .store-address-block{
+	width: 49%;
+	display: inline-block;
+	vertical-align: top;
+	padding-left: 30px;
+	padding-bottom: 40px;
+	color: #000;
+	line-height: 1.7;
+}
+#storeLocatorModal .content > div {
+    white-space: normal;
+}
+/*TPR-6654 end*/
+/*TPR-6907 start*/
+#codEli{
+	display: inline-block;
+	margin-left: 10px;
+	margin-bottom: 10px; /*TISCSXII-2218*/
+	margin-right: 30px; /* TISPRDT-6065 */
+}
+#codEli #codLink{
+	color: #92002e;
+	font-size: 14px;
+	text-decoration: underline;
+}
+@media( max-width: 1024px){
+#codEli{
+	margin-left: 0;
+}
+}
+/*TPR-6907 end*/
+/* SDI-994 Start */
+.store-locator-block{
+	display: none;	
+}
+/* SDI-994 END */
+
+/*TPR-6654 start*/
+.pincode-modal .content {
+    width: 130px;
+    border: 0px solid transparent;
+}
+button#homepagePincodeCheck {
+   font-size: 12px;
+    background: #a9143c;
+    color: #fff;
+    float: right;
+    line-height: 0;
+    padding: 0px 15px;
+    height: 39px;
+}
+.pincode-modal button.close {
+    top: 14px;
+}
+.close {
+    border-radius: 50%;
+    border: 1px solid #ccc !important;
+    width: 30px;
+    height: 30px;
+    margin-top: -10px !important;
+    margin-right: -14px !important;
+    position: absolute;
+    right: 17px;
+    top: -6px;
+}
+.pincode-modal .modal .overlay{
+	background: rgba(0, 0, 0, 0.5);
+}
+.product-info .product-content .delivery-block li .inline-form div#pdp_change_pincode #change_pincode{
+	margin-top: 10px;
+    display: block;
+    font-size: 14px;
+    font-weight: bold;
+    margin-left: 5px;
+	}
+
+.enter-pincode{
+	display:none;
+}
+li.enter-pincode a::before {
+ 	font-family: FontAwesome;
+    content: "\f041";
+    font-weight: lighter;
+    margin-top: 3px;
+    font-size: 18px;
+    margin-right: 10px;
+    color: rgba(255,255,255,0.7);
+    top: 2px;
+    line-height: 35px;
+    position: relative;
+}
+@media (min-width: 791px){
+li.download-app a:before, span.material-icons, header .content .right>ul>li.wishlist>a:before {
+    color: rgba(255,255,255,0.7);
+}
+}
+/*TPR-6654 end*/
+ 
