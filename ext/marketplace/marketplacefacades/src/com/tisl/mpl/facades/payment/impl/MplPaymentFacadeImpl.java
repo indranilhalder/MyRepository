@@ -3468,7 +3468,6 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 			double walletTotal, double juspayAmount)
 	{
 
-		final boolean auditResponse = false;
 		QCRedeeptionResponse qcRedeeptionResponse = new QCRedeeptionResponse();
 		try
 		{
