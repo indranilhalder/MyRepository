@@ -3468,7 +3468,7 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 			double walletTotal, double juspayAmount)
 	{
 
-		boolean auditResponse = false;
+		final boolean auditResponse = false;
 		QCRedeeptionResponse qcRedeeptionResponse = new QCRedeeptionResponse();
 		try
 		{
@@ -3490,49 +3490,46 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 
 			final ArrayList<String> rs = new ArrayList<String>();
 
-			auditResponse = getMplPaymentService().createQCEntryInAudit(qcOrderId, "WEB", guid, "" + walletTotal, "", "");
+			final QCRedeemRequest qcRedeemRequest = new QCRedeemRequest();
 
-			if (auditResponse)
+			qcRedeemRequest.setAmount("" + walletTotal);
+			qcRedeemRequest.setBillAmount(orderToBeUpdated.getTotalPrice().toString());
+			qcRedeemRequest.setNotes("Redeem Wallet Amount " + walletTotal);
+			qcRedeemRequest.setInvoiceNumber(qcOrderId);
+
+			qcRedeeptionResponse = mplWalletFacade.getWalletRedeem(WalletId, qcRedeemRequest);
+
+			if (null != qcRedeeptionResponse && null != qcRedeeptionResponse.getResponseCode()
+					&& qcRedeeptionResponse.getResponseCode().intValue() == 0)
 			{
-				final QCRedeemRequest qcRedeemRequest = new QCRedeemRequest();
 
-				qcRedeemRequest.setAmount("" + walletTotal);
-				qcRedeemRequest.setBillAmount(orderToBeUpdated.getTotalPrice().toString());
-				qcRedeemRequest.setNotes("Redeem Wallet Amount " + walletTotal);
-				qcRedeemRequest.setInvoiceNumber(qcOrderId);
+				rs.add(orderToBeUpdated.getCode());
+				rs.add(qcOrderId);
+				rs.add("" + qcRedeeptionResponse.getTransactionId());
 
-				qcRedeeptionResponse = mplWalletFacade.getWalletRedeem(WalletId, qcRedeemRequest);
-
-				if (null != qcRedeeptionResponse && null != qcRedeeptionResponse.getResponseCode()
-						&& qcRedeeptionResponse.getResponseCode().intValue() == 0)
-				{
-
-					rs.add(orderToBeUpdated.getCode());
-					rs.add(qcOrderId);
-					rs.add("" + qcRedeeptionResponse.getTransactionId());
-
-					getMplPaymentService().createQCEntryInAudit(qcOrderId, "WEB", guid, "" + walletTotal,
-							qcRedeeptionResponse.getResponseCode().toString(), qcRedeeptionResponse.getTransactionId().toString());
+				getMplPaymentService().createQCEntryInAudit(qcOrderId, "WEB", guid, "" + walletTotal,
+						qcRedeeptionResponse.getResponseCode().toString(), qcRedeeptionResponse.getTransactionId().toString());
 
 
-					final Map<String, Double> paymentMode = new HashMap<String, Double>();
-					paymentMode.put(cliqCashPaymentMode, Double.valueOf("99"));
+				final Map<String, Double> paymentMode = new HashMap<String, Double>();
+				paymentMode.put(cliqCashPaymentMode, Double.valueOf("99"));
 
 
-					getMplPaymentService().setQCPaymentTransaction(rs, paymentMode, orderToBeUpdated, cliqCashPaymentMode,
-							"" + walletTotal);
+				getMplPaymentService().setQCPaymentTransaction(rs, paymentMode, orderToBeUpdated, cliqCashPaymentMode,
+						"" + walletTotal);
 
 
-					calculateSplitModeApportionValue(orderToBeUpdated, qcRedeeptionResponse, walletTotal, juspayAmount);
+				calculateSplitModeApportionValue(orderToBeUpdated, qcRedeeptionResponse, walletTotal, juspayAmount);
 
-					return qcRedeeptionResponse;
-				}
+				return qcRedeeptionResponse;
+			}
 
-				else
-				{
-					return qcRedeeptionResponse;
+			else
+			{
+				getMplPaymentService().createQCEntryInAudit(qcOrderId, "WEB", guid, "" + walletTotal,
+						qcRedeeptionResponse.getResponseCode().toString(), qcRedeeptionResponse.getTransactionId().toString());
 
-				}
+				return qcRedeeptionResponse;
 
 			}
 		}
