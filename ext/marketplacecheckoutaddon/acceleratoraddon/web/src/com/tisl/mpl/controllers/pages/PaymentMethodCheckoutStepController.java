@@ -2945,103 +2945,138 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 						 * Wallet Changes
 						 */
 
-						if (orderToBeUpdated.getSplitModeInfo().equalsIgnoreCase("Split"))
+						try
 						{
-							if (MarketplacecheckoutaddonConstants.CHARGED.equalsIgnoreCase(orderStatusResponse))
+							boolean qcFlag = false;
+							if (orderToBeUpdated.getSplitModeInfo().equalsIgnoreCase("Split"))
 							{
-								final List<MplPaymentAuditModel> mplAudit = mplOrderDao.getAuditLists(orderToBeUpdated.getGuid());
-								if (null != mplAudit)
+								if (MarketplacecheckoutaddonConstants.CHARGED.equalsIgnoreCase(orderStatusResponse))
 								{
-									for (final MplPaymentAuditModel mplPaymentAuditModel : mplAudit)
+									final List<MplPaymentAuditModel> mplAudit = mplOrderDao.getAuditLists(orderToBeUpdated.getGuid());
+									if (null != mplAudit)
 									{
-										if (null != mplPaymentAuditModel && null != mplPaymentAuditModel.getAuditEntries())
+										for (final MplPaymentAuditModel mplPaymentAuditModel : mplAudit)
 										{
-											for (final MplPaymentAuditEntryModel mplPaymentAuditEntry : mplPaymentAuditModel
-													.getAuditEntries())
+											if (null != mplPaymentAuditModel && null != mplPaymentAuditModel.getAuditEntries())
 											{
-												if (null != mplPaymentAuditEntry.getStatus()
-														&& !mplPaymentAuditEntry.getStatus().toString().equalsIgnoreCase("DECLINED")) // case for EBS....
+												for (final MplPaymentAuditEntryModel mplPaymentAuditEntry : mplPaymentAuditModel
+														.getAuditEntries())
 												{
-													model.addAttribute(MarketplacecheckoutaddonConstants.PAYMENTID, null);
-													setCheckoutStepLinksForModel(model, getCheckoutStep());
-													QCRedeeptionResponse qcResponse = new QCRedeeptionResponse();
-													try
+													if (null != mplPaymentAuditEntry.getStatus()
+															&& !mplPaymentAuditEntry.getStatus().toString().equalsIgnoreCase("DECLINED")) // case for EBS....
 													{
-
-														final String qcUniqueCode = getMplPaymentFacade().generateQCCode();
-														final CustomerModel currentCustomer = (CustomerModel) getUserService().getCurrentUser();
-														qcResponse = getMplPaymentFacade().createQCOrderRequest(orderToBeUpdated.getGuid(),
-																orderToBeUpdated, currentCustomer.getCustomerWalletDetail().getWalletId(),
-																"Cliq Cash", qcUniqueCode, "WEB", 0.0D, 0.0D);
-
-														if (null != qcResponse && null != qcResponse.getResponseCode()
-																&& qcResponse.getResponseCode().intValue() == 0)
-														{
-															return updateOrder(orderToBeUpdated, redirectAttributes);
-														}
-														else if (null != qcResponse && null != qcResponse.getResponseCode()
-																&& qcResponse.getResponseCode().intValue() != 0)
-														{
-
-															orderToBeUpdated.setStatus(OrderStatus.RMS_VERIFICATION_FAILED); /// retuen for Juspay becsause qc fail
-															getModelService().save(orderToBeUpdated);
-															LOG.error("For GUID:- " + guid + " order failed Can not be placed Qlick Cash Error");
-															GlobalMessages.addFlashMessage(redirectAttributes,
-																	GlobalMessages.ERROR_MESSAGES_HOLDER,
-																	MarketplacecheckoutaddonConstants.PAYMENTTRANERRORMSG);
-															return MarketplacecheckoutaddonConstants.REDIRECT
-																	+ MarketplacecheckoutaddonConstants.CART;
-														}
-														else if (null == qcResponse || null == qcResponse.getResponseCode())
-														{
-															orderToBeUpdated.setStatus(OrderStatus.RMS_VERIFICATION_FAILED); /// NO Exception No qcResponse Try With Juspay
-															getModelService().save(orderToBeUpdated);
-
-															/// return in JS Ajax Call for redirect logic
-														}
-
+														qcFlag = true;
+														break;
 													}
-													catch (final Exception ex)
-													{
-														ex.printStackTrace();
-														GlobalMessages.addFlashMessage(redirectAttributes, GlobalMessages.ERROR_MESSAGES_HOLDER,
-																MarketplacecheckoutaddonConstants.TRANERRORMSG);
-														if (null != qcResponse && null != qcResponse.getResponseCode()
-																&& qcResponse.getResponseCode().intValue() == 0)
-														{
-															orderToBeUpdated.setStatus(OrderStatus.RMS_VERIFICATION_FAILED); // return for Juspay and Qc Retuen Trigger exception acccured
-															getModelService().save(orderToBeUpdated);
-															//return updateOrder(orderToBeUpdated, redirectAttributes);  please try Again
-														}
-														else if (null != qcResponse && null != qcResponse.getResponseCode()
-																&& qcResponse.getResponseCode().intValue() != 0)
-														{
-
-															orderToBeUpdated.setStatus(OrderStatus.RMS_VERIFICATION_FAILED);// return for Juspay only no dudection from QC
-															getModelService().save(orderToBeUpdated); /////////////////////////////// need to update Aduit entries for Juspay and QC on condiction basices
-															//return updateOrder(orderToBeUpdated, redirectAttributes);  please try Again
-														}
-													}
-												}
-												else
-												{
-													System.out.println("PARTIAL OREDER JUSPAY FAIL *****************************");
-													orderToBeUpdated.setStatus(OrderStatus.RMS_VERIFICATION_FAILED); //// need to discuess this case when ebs is DECLINED and juspay is chared what status to put
 												}
 											}
-											/**
-											 * Wallet Changes End
-											 */
 										}
+
+										if (qcFlag)
+										{
+											model.addAttribute(MarketplacecheckoutaddonConstants.PAYMENTID, null);
+											setCheckoutStepLinksForModel(model, getCheckoutStep());
+											QCRedeeptionResponse qcResponse = new QCRedeeptionResponse();
+											try
+											{
+
+												final String qcUniqueCode = getMplPaymentFacade().generateQCCode();
+												final CustomerModel currentCustomer = (CustomerModel) getUserService().getCurrentUser();
+												qcResponse = getMplPaymentFacade().createQCOrderRequest(orderToBeUpdated.getGuid(),
+														orderToBeUpdated, currentCustomer.getCustomerWalletDetail().getWalletId(), "Cliq Cash",
+														qcUniqueCode, "WEB", 0.0D, 0.0D);
+
+												if (null != qcResponse && null != qcResponse.getResponseCode()
+														&& qcResponse.getResponseCode().intValue() == 0)
+												{
+													return updateOrder(orderToBeUpdated, redirectAttributes);
+												}
+												else if (null != qcResponse && null != qcResponse.getResponseCode()
+														&& qcResponse.getResponseCode().intValue() != 0)
+												{
+
+													orderToBeUpdated.setStatus(OrderStatus.RMS_VERIFICATION_FAILED); /// retuen for Juspay becsause qc fail
+													getModelService().save(orderToBeUpdated);
+													LOG.error("For GUID:- " + guid + " order failed Can not be placed Qlick Cash Error");
+													GlobalMessages.addFlashMessage(redirectAttributes, GlobalMessages.ERROR_MESSAGES_HOLDER,
+															MarketplacecheckoutaddonConstants.PAYMENTTRANERRORMSG);
+													return MarketplacecheckoutaddonConstants.REDIRECT + MarketplacecheckoutaddonConstants.CART;
+												}
+												else if (null == qcResponse || null == qcResponse.getResponseCode())
+												{
+													orderToBeUpdated.setStatus(OrderStatus.RMS_VERIFICATION_FAILED); /// NO Exception No qcResponse Try With Juspay
+													getModelService().save(orderToBeUpdated);
+
+													/// return in JS Ajax Call for redirect logic
+												}
+
+											}
+											catch (final Exception ex)
+											{
+												ex.printStackTrace();
+												GlobalMessages.addFlashMessage(redirectAttributes, GlobalMessages.ERROR_MESSAGES_HOLDER,
+														MarketplacecheckoutaddonConstants.TRANERRORMSG);
+												if (null != qcResponse && null != qcResponse.getResponseCode()
+														&& qcResponse.getResponseCode().intValue() == 0)
+												{
+													orderToBeUpdated.setStatus(OrderStatus.RMS_VERIFICATION_FAILED); // return for Juspay and Qc Retuen Trigger exception acccured
+													getModelService().save(orderToBeUpdated);
+													//return updateOrder(orderToBeUpdated, redirectAttributes);  please try Again
+												}
+												else if (null != qcResponse && null != qcResponse.getResponseCode()
+														&& qcResponse.getResponseCode().intValue() != 0)
+												{
+
+													orderToBeUpdated.setStatus(OrderStatus.RMS_VERIFICATION_FAILED);// return for Juspay only no dudection from QC
+													getModelService().save(orderToBeUpdated); /////////////////////////////// need to update Aduit entries for Juspay and QC on condiction basices
+													//return updateOrder(orderToBeUpdated, redirectAttributes);  please try Again
+												}
+											}
+										}
+										else
+										{
+											System.out.println("PARTIAL OREDER JUSPAY FAIL *****************************");
+											orderToBeUpdated.setStatus(OrderStatus.RMS_VERIFICATION_FAILED); //// need to discuess this case when ebs is DECLINED and juspay is chared what status to put
+											LOG.error("For GUID:- " + guid + " order already been processed");
+											GlobalMessages.addFlashMessage(redirectAttributes, GlobalMessages.ERROR_MESSAGES_HOLDER,
+													MarketplacecheckoutaddonConstants.PAYMENTTRANERRORMSG);
+											return MarketplacecheckoutaddonConstants.REDIRECT + MarketplacecheckoutaddonConstants.CART;
+										}
+
 									}
+									else
+									{
+										System.out.println("PARTIAL OREDER JUSPAY FAIL *****************************");
+										orderToBeUpdated.setStatus(OrderStatus.RMS_VERIFICATION_FAILED); //// need to discuess this case when ebs is DECLINED and juspay is chared what status to put
+
+										LOG.error("For GUID:- " + guid + " order already been processed");
+										GlobalMessages.addFlashMessage(redirectAttributes, GlobalMessages.ERROR_MESSAGES_HOLDER,
+												MarketplacecheckoutaddonConstants.PAYMENTTRANERRORMSG);
+										return MarketplacecheckoutaddonConstants.REDIRECT + MarketplacecheckoutaddonConstants.CART;
+									}
+
+								} /// not charged case to be handel****************************************************
+								else
+								{
+									System.out.println("PARTIAL OREDER JUSPAY FAIL *****************************");
+									orderToBeUpdated.setStatus(OrderStatus.PAYMENT_PENDING); //// need to discuess this case when ebs is false and juspay is chared handel in cron job *******
+									LOG.error("For GUID:- " + guid + " order already been processed");
+									GlobalMessages.addFlashMessage(redirectAttributes, GlobalMessages.ERROR_MESSAGES_HOLDER,
+											MarketplacecheckoutaddonConstants.PAYMENTTRANERRORMSG);
+									return MarketplacecheckoutaddonConstants.REDIRECT + MarketplacecheckoutaddonConstants.CART;
 								}
-							} /// not charged case to be handel****************************************************
-							else
-							{
-								System.out.println("PARTIAL OREDER JUSPAY FAIL *****************************");
-								orderToBeUpdated.setStatus(OrderStatus.RMS_VERIFICATION_FAILED); //// need to discuess this case when ebs is false and juspay is chared what status to put
 							}
 						}
+						catch (final Exception ex)
+						{
+
+							ex.printStackTrace();
+						}
+
+						/**
+						 * Wallet Changes End
+						 */
+
 
 						if (MarketplacecheckoutaddonConstants.CHARGED.equalsIgnoreCase(orderStatusResponse))
 						{
@@ -3083,6 +3118,7 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 					}
 					//Redirection when transaction is failed
 					else
+
 					{
 						GlobalMessages.addFlashMessage(redirectAttributes, GlobalMessages.ERROR_MESSAGES_HOLDER,
 								MarketplacecheckoutaddonConstants.PAYMENTTRANERRORMSG);
@@ -3091,15 +3127,19 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 					}
 				}
 				else
+
 				{
 					final String juspayOrderId = getSessionService()
 							.getAttribute(MarketplacecommerceservicesConstants.JUSPAY_ORDER_ID);
 					LOG.error("Payment Info already created for Order ID:- " + orderToBeUpdated.getCode());
 					LOG.error("Juspay Order ID:- " + null != juspayOrderId ? juspayOrderId : "No ID avilable in session");
-					return updateOrder(orderToBeUpdated, redirectAttributes);
+					return
+
+					updateOrder(orderToBeUpdated, redirectAttributes);
 				}
 			}
 			else
+
 			{
 				LOG.error("For GUID:- " + guid + " order already been processed");
 				GlobalMessages.addFlashMessage(redirectAttributes, GlobalMessages.ERROR_MESSAGES_HOLDER,
@@ -3109,7 +3149,9 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 				return MarketplacecheckoutaddonConstants.REDIRECT + MarketplacecheckoutaddonConstants.CART;
 			}
 		}
-		catch (final EtailBusinessExceptions e)
+		catch (
+
+		final EtailBusinessExceptions e)
 		{
 			ExceptionUtil.etailBusinessExceptionHandler(e, null);
 			LOG.error("Exception in cardPayment", e);
@@ -6468,6 +6510,7 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 
 					if (null != qcResponse && null != qcResponse.getResponseCode() && qcResponse.getResponseCode().intValue() == 0)
 					{
+
 						return updateQCOrder(orderToBeUpdated, redirectAttributes);
 					}
 					else if (null != qcResponse && null != qcResponse.getResponseCode()
