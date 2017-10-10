@@ -3,6 +3,9 @@
  */
 package com.tisl.mpl.service;
 
+import de.hybris.platform.core.model.order.OrderModel;
+
+import com.tisl.mpl.core.model.WalletCardApportionDetailModel;
 import com.tisl.mpl.pojo.request.PurchaseEGVRequest;
 import com.tisl.mpl.pojo.request.QCCreditRequest;
 import com.tisl.mpl.pojo.request.QCCustomerPromotionRequest;
@@ -59,5 +62,7 @@ public interface MplWalletServices
 	public QCRedeeptionResponse createPromotion(String walletId, QCCustomerPromotionRequest request);
 
 	public QCRedeeptionResponse qcCredit(String walletId, QCCreditRequest request);
+	
+   public WalletCardApportionDetailModel getOrderFromWalletCardNumber(final String cardNumber);
 
 }

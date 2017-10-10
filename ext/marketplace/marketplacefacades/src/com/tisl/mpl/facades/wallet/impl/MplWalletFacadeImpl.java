@@ -3,6 +3,8 @@
  */
 package com.tisl.mpl.facades.wallet.impl;
 
+import de.hybris.platform.core.enums.OrderStatus;
+import de.hybris.platform.core.model.order.OrderModel;
 import de.hybris.platform.core.model.user.CustomerModel;
 import de.hybris.platform.servicelayer.model.ModelService;
 import de.hybris.platform.servicelayer.user.UserService;
@@ -11,8 +13,10 @@ import javax.annotation.Resource;
 
 import org.apache.commons.collections.CollectionUtils;
 
+import com.tisl.mpl.core.model.WalletCardApportionDetailModel;
 import com.tisl.mpl.facades.wallet.MplWalletFacade;
 import com.tisl.mpl.marketplacecommerceservices.service.MplPaymentService;
+import com.tisl.mpl.marketplacecommerceservices.service.OrderModelService;
 import com.tisl.mpl.pojo.request.QCCreditRequest;
 import com.tisl.mpl.pojo.request.QCCustomerPromotionRequest;
 import com.tisl.mpl.pojo.request.QCCustomerRegisterRequest;
@@ -46,6 +50,9 @@ public class MplWalletFacadeImpl implements MplWalletFacade
 
 	@Resource(name = "modelService")
 	private ModelService modelService;
+	
+	@Resource(name = "orderModelService")
+	private OrderModelService orderModelService;
 
 	/**
 	 * @return the mplPaymentService
@@ -219,8 +226,22 @@ public class MplWalletFacadeImpl implements MplWalletFacade
 		final CustomerModel currentCustomer = (CustomerModel) userService.getCurrentUser();
 		if (null != currentCustomer.getIsWalletActivated())
 		{
+			final WalletCardApportionDetailModel walletCardApportionDetailModel  =getMplWalletServices().getOrderFromWalletCardNumber(cardNumber);
+			OrderModel orderModel = null;
+			if(null != walletCardApportionDetailModel && null!= walletCardApportionDetailModel.getOrderId()){
+				orderModel =orderModelService.getParentOrder(walletCardApportionDetailModel.getOrderId());
+			}
 			balance = getMplWalletServices().getAddEGVToWallet(cardNumber, cardPin, transactionId,
 					currentCustomer.getCustomerWalletDetail().getWalletId());
+			if(null != orderModel && null != balance && balance.getResponseCode().intValue() == 0){
+				if ( null != orderModel.getCode())
+				{
+					orderModel.setStatus(OrderStatus.REDEEMED);
+					modelService.save(orderModel);
+					System.out.println(" ************** Order Status updated Success Fully to  ----:" + OrderStatus.REDEEMED
+							+ "Card Number :" + cardNumber);
+				}
+			}
 			if (null != balance)
 			{
 				return balance;

@@ -140,6 +140,7 @@ import com.granule.json.JSONObject;
 import com.hybris.oms.domain.changedeliveryaddress.TransactionSDDto;
 import com.tis.mpl.facade.address.validator.MplDeliveryAddressComparator;
 import com.tis.mpl.facade.changedelivery.MplDeliveryAddressFacade;
+import com.tisl.mpl.constants.GeneratedMarketplacecommerceservicesConstants.Enumerations.OrderStatus;
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.constants.clientservice.MarketplacecclientservicesConstants;
 import com.tisl.mpl.core.enums.AddressType;
@@ -680,6 +681,7 @@ public class AccountPageController extends AbstractMplSearchPageController
 		List<OrderHistoryData> orderHistoryList = null;
 		final List<OrderData> subOrderDetailsList = new ArrayList<OrderData>();
 		final Map<String, String> orderFormattedDateMap = new HashMap<String, String>();
+		final Map<String, String> orderForEGVMap = new HashMap<String, String>();
 		final Map<String, List<OrderEntryData>> currentProductMap = new HashMap<>();
 		List<OrderEntryData> cancelProduct = new ArrayList<OrderEntryData>();
 		final Map<String, Map<String, AWBResponseData>> orderWithStatus = new HashMap<String, Map<String, AWBResponseData>>();
@@ -869,6 +871,11 @@ public class AccountPageController extends AbstractMplSearchPageController
 				formattedOrderDate = getFormattedDate(orderDetails.getCreated());
 				orderFormattedDateMap.put(orderDetails.getCode(), formattedOrderDate);
 				orderDataList.add(orderDetails);
+				if( null !=  orderDetails.getStatus()){
+				if(orderDetails.getStatus().equals(de.hybris.platform.core.enums.OrderStatus.REDEEMED)){
+					orderForEGVMap.put(orderDetails.getCode(), "REDEEMED");
+				}
+				}
 			}
 			LOG.debug("Step16-************************Order History: Finished:");
 
@@ -899,7 +906,7 @@ public class AccountPageController extends AbstractMplSearchPageController
 			//TPR-6013
 			model.addAttribute(ModelAttributetConstants.RETURN_POPOVER, returnMessagePopOver);
 			model.addAttribute(ModelAttributetConstants.CANCEL_POPOVER, cancelMessagePopOver);
-
+			model.addAttribute("egvStatusMap", orderForEGVMap);
 			// LW-225,230
 			if (CollectionUtils.isEmpty(orderHistoryList))
 			{

@@ -3,8 +3,6 @@
  */
 package com.tisl.mpl.service.impl;
 
-import de.hybris.platform.core.enums.OrderStatus;
-import de.hybris.platform.core.model.order.OrderModel;
 import de.hybris.platform.servicelayer.config.ConfigurationService;
 import de.hybris.platform.servicelayer.model.ModelService;
 import de.hybris.platform.servicelayer.search.FlexibleSearchQuery;
@@ -36,6 +34,7 @@ import com.sun.jersey.api.client.config.DefaultClientConfig;
 import com.sun.jersey.client.urlconnection.HttpURLConnectionFactory;
 import com.sun.jersey.client.urlconnection.URLConnectionClientHandler;
 import com.tisl.mpl.constants.MarketplaceclientservicesConstants;
+import com.tisl.mpl.core.model.WalletCardApportionDetailModel;
 import com.tisl.mpl.pojo.request.AddToCardWallet;
 import com.tisl.mpl.pojo.request.PurchaseEGVRequest;
 import com.tisl.mpl.pojo.request.QCCreditRequest;
@@ -79,7 +78,9 @@ public class MplWalletServicesImpl implements MplWalletServices
 	private FlexibleSearchService flexibleSearchService;
 
 	final DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
-	final String queryString = "select {pk} from {WalletCardApportionDetail} where {cardNumber} =?cardNuber";
+	private final String SELECT_CLASS = "select {";
+	private final String FROM_CLASS = "} from {";
+	private final String WHERE_CLASS = "} where {";
 
 	/**
 	 * @return the qcInitDataBean
@@ -782,19 +783,6 @@ public class MplWalletServicesImpl implements MplWalletServices
 				output = response.getEntity(String.class);
 				LOG.debug(" ************** output----" + output);
 				redimGiftCardResponse = objectMapper.readValue(output, RedimGiftCardResponse.class);
-				if (null != redimGiftCardResponse && redimGiftCardResponse.getResponseCode() == Integer.valueOf(0))
-				{
-					LOG.debug(" ************** SuccessFullly  Redimed for card Number ----" + cardNumber);
-					final OrderModel orderModel = getOrderFromWalletCardNumber(cardNumber);
-					if (null != orderModel && null != orderModel.getCode())
-					{
-						orderModel.setStatus(OrderStatus.REDEEMED);
-						modelService.save(orderModel);
-						LOG.debug(" ************** Order Status updated Success Fully to  ----:" + OrderStatus.REDEEMED
-								+ "Card Number :" + cardNumber);
-					}
-
-				}
 				return redimGiftCardResponse;
 			}
 		}
@@ -1130,11 +1118,14 @@ public class MplWalletServicesImpl implements MplWalletServices
 		return client;
 	}
 
-	public OrderModel getOrderFromWalletCardNumber(final String cardNumber)
-	{
-		final FlexibleSearchQuery query = new FlexibleSearchQuery(queryString);
-		query.addQueryParameter("cardNumber".intern(), cardNumber);
-		return flexibleSearchService.<OrderModel> searchUnique(query);
+	@Override
+	public WalletCardApportionDetailModel getOrderFromWalletCardNumber(final String cardNumber)
+	{ 
+		final String query = SELECT_CLASS + WalletCardApportionDetailModel.PK + FROM_CLASS + WalletCardApportionDetailModel._TYPECODE + WHERE_CLASS
+				+ WalletCardApportionDetailModel.CARDNUMBER + "} =?cardNumber";
+		final FlexibleSearchQuery flexQuery = new FlexibleSearchQuery(query);
+		flexQuery.addQueryParameter("cardNumber", cardNumber);
+		return flexibleSearchService.<WalletCardApportionDetailModel> searchUnique(flexQuery);
 	}
 
 }

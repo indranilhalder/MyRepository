@@ -549,15 +549,31 @@
 														<c:choose>
 															<c:when test="${not empty approvedFlag and approvedFlag ne null}">
 														<div class="orderUpdatesBlock">
-														<div class="status statusConfirmed">
-															<span><spring:theme code="text.orderHistory.seller.order.numbe" text="Confirmed" /></span>
-														</div>
-														<div class="statusDate">
-															<span><spring:theme code="text.orderHistory.seller.order.numbe" text="Confirmed:" /></span>&nbsp;
-															<c:forEach items="${approvedFlag.statusRecords}" var="recordDate">
-															<span>${recordDate.date}</span>
+														
+															<c:forEach items="${egvStatusMap}" var="entry">
+																<c:choose>
+																	<c:when test="${entry.key eq orderHistoryDetail.code}">
+																	<div class="statusDate">
+																              <span><spring:theme code="text.orderHistory.seller.order.numbe" text="Redeemed:" /></span>&nbsp;
+																              <c:forEach items="${approvedFlag.statusRecords}" var="recordDate">
+																			<span>${recordDate.date}</span>
+																			</c:forEach>
+																	</div>
+																	</c:when>
+																	<c:otherwise>
+																	<div class="status statusConfirmed">
+																		<span><spring:theme code="text.orderHistory.seller.order.numbe" text="Confirmed" /></span>
+																	</div>
+																		<div class="statusDate">
+																			<span><spring:theme code="text.orderHistory.seller.order.numbe" text="Confirmed:" /></span>&nbsp;
+																			<c:forEach items="${approvedFlag.statusRecords}" var="recordDate">
+																			<span>${recordDate.date}</span>
+																			</c:forEach>
+																		</div>
+																	</c:otherwise>
+																</c:choose>											    
+																													   
 															</c:forEach>
-														</div>
 														</div>
 														</c:when>
 														</c:choose>
