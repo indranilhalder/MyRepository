@@ -17605,6 +17605,13 @@ TATA.CommonFunctions = {
                     }), void 0 !== facetHeadId && null !== facetHeadId && "" !== facetHeadId && $("#" + facetHeadId).click();
                 }
             });
+            
+            //Update URL without Refresh
+            console.log("replace the current URL with parameters");
+            var currentURL=window.location.href.split('?')[0];
+            console.log(requestUrl.split('?')[1]);
+            console.log("current URL is "+currentURL);
+            history.pushState(null, null, currentURL+"?"+requestUrl.split('?')[1]);
         },
         Filtershow: function() {
             $(".plp-mob-filter").on("click", function() {
@@ -19102,12 +19109,56 @@ $(window).on("load resize", function() {
     $("li.price").each(function() {
         "inline-block" === $(this).find(".off-bag").css("display") || "block" === $(this).find(".off-bag").css("display") ? $(this).find("span.delSeat.mop").length > 0 && $(this).find("span.delSeat:not(.mop)").addClass("delAction") : $(this).find("span.delSeat:not(.mop)").removeClass("delAction");
     });
+    checkforPriceFilter();
 }), $("#voucherDisplaySelection").change(function() {
     if (0 == $("#couponFieldId").prop("readonly")) {
         var selection = $(this).val();
         $("#couponFieldId").val(selection);
     }
 });
+
+checkforPriceFilter=function(){
+	console.log("check for sort Parameter");
+	var sortValue=$.urlParam("sort");
+	if(null !=sortValue){
+		console.log($.urlParam("sort"));
+		var sorting="relevance";
+		if(sortValue ==="isProductNew"){
+			console.log("Is PRoduct New");
+			var sorting="new";
+		}
+		else if (sortValue ==="isDiscountedPrice"){
+			console.log("Is Discounted Price");
+			var sorting="discount";
+		}
+		else if (sortValue ==="price-asc"){
+			console.log("price Ascending");
+			var sorting="low";
+		}	
+		else if (sortValue ==="price-desc"){
+			console.log("price Decending");
+			var sorting="high";
+		}	
+		else{
+			console.log("Releavance-Default");
+		}
+		console.log($('.responsiveSort option[value='+sorting).text());
+		$('span .selectboxit-text').html($('.responsiveSort option[value='+sorting).text());
+		$('.responsiveSort option[value='+sorting).attr('selected','selected');
+
+	}
+	else{
+		console.log("no sort parameters in the URL");
+	}
+}
+
+$.urlParam = function(name){
+	var results = new RegExp('[\?&]' + name + '=([^&#]*)').exec(window.location.href);
+	if(null != results){
+		return results[1] || 0;
+	}
+	return null;
+}
 
 var wishListList = [];
 
