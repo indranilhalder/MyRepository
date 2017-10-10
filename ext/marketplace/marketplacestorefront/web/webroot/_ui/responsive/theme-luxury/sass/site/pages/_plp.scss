@@ -210,6 +210,13 @@
 				float:left;
 				width:33.3%;
 				padding:0 20px;
+                
+                .product-list-det.outofstock{
+                    .product-image{
+                        opacity: 0.5;
+                    }
+                }
+                
 				.add-to-wishlist{
 					background: $Sprite_icon no-repeat;
 					position:absolute;
@@ -302,21 +309,21 @@
                 position: absolute;
                 padding: 1px 1px 3px 17px;
                 border: 1px solid #e4e4e4;
-                background-color: #fff;
-                color: #ff1c47;
+                background-color: #e4e4e4;
+                color: #000;
                 display: block;
                 max-width: 105px;
                 width: 100%;
                 text-decoration: none;
             }
 		}
+        
 		.twocolumngrid{
 			.product-grid{
 				width:50%;
 			}
 		}
-	}
-	
+	}	
 	.leftbar{
 		.facetItem{
 			.filterblocks{

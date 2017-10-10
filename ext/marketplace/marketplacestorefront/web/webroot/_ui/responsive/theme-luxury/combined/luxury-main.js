@@ -18013,6 +18013,10 @@ $(document).ready(function() {
         $(".footer-popular-search .mega-menu").slideToggle("400", function() {
             $(window).scrollTop($(document).height());
         }), $("#footer-popular-accordian-icon").toggleClass("glyphicon-minus", "glyphicon-plus");
+    }), $(window).width() >= 768 && $(".cartItemBlankPincode > a").on("click", function(e) {
+        e.preventDefault(), $("html, body").animate({
+            scrollTop: $(".cartBottomCheck").position().top
+        }, 800);
     });
 }), $(window).scroll(function() {
     TATA.CommonFunctions.WindowScroll();
