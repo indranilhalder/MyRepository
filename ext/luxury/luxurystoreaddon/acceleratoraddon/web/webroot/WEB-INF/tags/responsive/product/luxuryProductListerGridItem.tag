@@ -150,6 +150,32 @@
 					</ycommerce:testId>
 				</p>
 			</div>
+			
+				<c:choose>
+				 <c:when test="${product.stockValue eq false}">
+				  <input type="hidden" id="stockStatusId" value="true"/>
+					<a id="stockIdDefault_${product.name}" class="stockLevelStatus"
+						href="${productUrl}" title="${product.name}"> <spring:theme
+							code="pickup.out.of.stock" text="Not Available" />
+					</a>
+					<a class="stockLevelStatus" href="${productUrl}"
+						title="${product.name}"> <span
+						id="stockIdFiltered_${product.name}"><spring:theme
+
+								code="pickup.out.of.stock" text="Not Available" /></span>
+					</a>
+				  </c:when>
+				  <c:otherwise>				        
+				  		<%-- <div style="display:none" class="stockLevelStatusinStock"  id="stockIdFilteredVariant_${product.code}"></div> --%>
+						    <a style="display:none" id="stockIdDefault_${product.code}" class="stockLevelStatusinStock"
+								href="${productUrl}" title="${product.name}"> 
+							</a>
+							<a  style="display:none" class="stockLevelStatusinStock" href="${productUrl}"
+								title="${product.name}"><span id="stockIdFiltered_${product.code}"></span>
+						    </a>
+						
+				 </c:otherwise>
+				</c:choose>
 		</div>
 	</div>
 </div>
