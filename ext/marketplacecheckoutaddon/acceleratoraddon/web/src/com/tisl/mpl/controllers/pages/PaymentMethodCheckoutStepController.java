@@ -2960,8 +2960,6 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 													.getAuditEntries())
 											{
 												if (null != mplPaymentAuditEntry.getStatus()
-														&& (mplPaymentAuditEntry.getStatus().toString().equalsIgnoreCase("COMPLETED")
-																|| mplPaymentAuditEntry.getStatus().toString().equalsIgnoreCase("PENDING"))
 														&& !mplPaymentAuditEntry.getStatus().toString().equalsIgnoreCase("DECLINED")) // case for EBS....
 												{
 													model.addAttribute(MarketplacecheckoutaddonConstants.PAYMENTID, null);
@@ -2987,11 +2985,15 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 
 															orderToBeUpdated.setStatus(OrderStatus.RMS_VERIFICATION_FAILED); /// retuen for Juspay becsause qc fail
 															getModelService().save(orderToBeUpdated);
-															//return updateOrder(orderToBeUpdated, redirectAttributes);  please try Again
+															LOG.error("For GUID:- " + guid + " order failed Can not be placed Qlick Cash Error");
+															GlobalMessages.addFlashMessage(redirectAttributes,
+																	GlobalMessages.ERROR_MESSAGES_HOLDER,
+																	MarketplacecheckoutaddonConstants.PAYMENTTRANERRORMSG);
+															return MarketplacecheckoutaddonConstants.REDIRECT
+																	+ MarketplacecheckoutaddonConstants.CART;
 														}
 														else if (null == qcResponse || null == qcResponse.getResponseCode())
 														{
-
 															orderToBeUpdated.setStatus(OrderStatus.RMS_VERIFICATION_FAILED); /// NO Exception No qcResponse Try With Juspay
 															getModelService().save(orderToBeUpdated);
 
@@ -3024,7 +3026,7 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 												else
 												{
 													System.out.println("PARTIAL OREDER JUSPAY FAIL *****************************");
-													orderToBeUpdated.setStatus(OrderStatus.RMS_VERIFICATION_FAILED); //// need to discuess this case when ebs is false and juspay is chared what status to put
+													orderToBeUpdated.setStatus(OrderStatus.RMS_VERIFICATION_FAILED); //// need to discuess this case when ebs is DECLINED and juspay is chared what status to put
 												}
 											}
 											/**
@@ -3034,6 +3036,11 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 									}
 								}
 							} /// not charged case to be handel****************************************************
+							else
+							{
+								System.out.println("PARTIAL OREDER JUSPAY FAIL *****************************");
+								orderToBeUpdated.setStatus(OrderStatus.RMS_VERIFICATION_FAILED); //// need to discuess this case when ebs is false and juspay is chared what status to put
+							}
 						}
 
 						if (MarketplacecheckoutaddonConstants.CHARGED.equalsIgnoreCase(orderStatusResponse))
@@ -6431,30 +6438,6 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 				return MarketplacecheckoutaddonConstants.REDIRECTSTRING; //IQA for TPR-629
 			}
 
-			//			boolean splitPayment = false;
-			//			boolean jsPayMode = false;
-			//final String cliqCashPaymentMode = StringUtils.EMPTY;
-
-			//			if (StringUtils.isNotEmpty(getSessionService().getAttribute("getCliqCashMode").toString()))
-			//			{
-			//
-			//				splitPayment = Boolean.parseBoolean(getSessionService().getAttribute("getCliqCashMode").toString());
-			//			}
-
-			//			if (StringUtils.isNotEmpty(getSessionService().getAttribute("cliqCashPaymentMode").toString()))
-			//			{
-			//
-			//				cliqCashPaymentMode = getSessionService().getAttribute("cliqCashPaymentMode").toString();
-			//			}
-			//
-			//			if (StringUtils.isNotEmpty(getSessionService().getAttribute("jsPayMode").toString()))
-			//			{
-			//
-			//				jsPayMode = Boolean.parseBoolean(getSessionService().getAttribute("jsPayMode").toString());
-			//			}
-
-			//	LOG.info("cliqCashPaymentMode" + cliqCashPaymentMode);
-
 
 			if (cart.getSplitModeInfo().equalsIgnoreCase("CliqCash"))
 			{
@@ -6505,7 +6488,7 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 
 						orderToBeUpdated.setStatus(OrderStatus.PAYMENT_FAILED); /// NO Exception No qcResponse Try With Juspay
 						getModelService().save(orderToBeUpdated);
-						//getSessionService().setAttribute("cliqCashPaymentMode", "false");
+						cart.setSplitModeInfo("juspay");
 						GlobalMessages.addFlashMessage(redirectAttributes, GlobalMessages.ERROR_MESSAGES_HOLDER,
 								MarketplacecheckoutaddonConstants.PAYMENTTRANERRORMSG);
 						return MarketplacecheckoutaddonConstants.MPLPAYMENTURL + MarketplacecheckoutaddonConstants.PAYVALUE
@@ -6518,14 +6501,15 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 
 					if (null != qcResponse && null != qcResponse.getResponseCode() && qcResponse.getResponseCode().intValue() == 0)
 					{
-						orderToBeUpdated.setStatus(OrderStatus.RMS_VERIFICATION_FAILED);
+						orderToBeUpdated.setStatus(OrderStatus.QC_FAILED);
 						getModelService().save(orderToBeUpdated);
-						System.out.println("SomE Error in QC Service");
-						//getSessionService().setAttribute("cliqCashPaymentMode", "false");
-						return "QC PAYMENT SUCCESS EXCEPTION"; /// Return In JS Ajax Call  And Execute Refund
-					}
 
-					getSessionService().setAttribute("cliqCashPaymentMode", "false");
+						System.out.println("SomE Error in QC Service");
+						return "QC PAYMENT SUCCESS EXCEPTION";
+
+
+						/// Return In JS Ajax Call  And Execute Refund call refund...........
+					}
 
 					GlobalMessages.addFlashMessage(redirectAttributes, GlobalMessages.ERROR_MESSAGES_HOLDER,
 							MarketplacecheckoutaddonConstants.PAYMENTTRANERRORMSG);

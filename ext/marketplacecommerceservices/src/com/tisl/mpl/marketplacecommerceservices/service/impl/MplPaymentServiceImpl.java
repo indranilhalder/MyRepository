@@ -5350,74 +5350,47 @@ public class MplPaymentServiceImpl implements MplPaymentService
 		try
 		{
 			Assert.notNull(qcOrderID, "Parameter QC cannot be null.");
-			final MplPaymentAuditModel auditModel = getMplPaymentDao().getAuditEntries(qcOrderID);
 
-			if (null != auditModel)
+			final List<MplPaymentAuditEntryModel> auditEntryList = new ArrayList<MplPaymentAuditEntryModel>();
+			final MplPaymentAuditModel auditModel = getModelService().create(MplPaymentAuditModel.class);
+			final MplPaymentAuditEntryModel auditEntry = getModelService().create(MplPaymentAuditEntryModel.class);
+			auditEntry.setAuditId(qcOrderID);
+
+			if (null != qcResponseCode && qcResponseCode.equalsIgnoreCase("0"))
 			{
-				List<MplPaymentAuditEntryModel> collection = auditModel.getAuditEntries();
-				final List<MplPaymentAuditEntryModel> auditEntryList = new ArrayList<MplPaymentAuditEntryModel>();
-				if (null == collection || collection.isEmpty())
-				{
-					collection = new ArrayList<MplPaymentAuditEntryModel>();
-				}
-
-				auditEntryList.addAll(collection);
-
-				final MplPaymentAuditEntryModel auditEntry = getModelService().create(MplPaymentAuditEntryModel.class);
-				auditEntry.setAuditId(qcOrderID);
-
-				if (null != qcResponseCode && qcResponseCode.equalsIgnoreCase("0"))
-				{
-					auditModel.setChannel(GenericUtilityMethods.returnChannelData(channel));
-					auditModel.setAuditId(transactionId);
-					auditModel.setCartGUID(cartGuId);
-					auditModel.setRequestDate(new Date());
-					auditModel.setAuditEntries(auditEntryList);
-					auditModel.setPaymentAmount(Double.valueOf(qcAmount));
-					auditEntry.setStatus(MplPaymentAuditStatusEnum.COMPLETED);
-					auditEntryList.add(auditEntry);
-					auditModel.setAuditEntries(auditEntryList);
-					getModelService().save(auditModel);
-					flag = true;
-				}
-				else
-				{
-					auditEntry.setStatus(MplPaymentAuditStatusEnum.DECLINED);
-					auditModel.setChannel(GenericUtilityMethods.returnChannelData(channel));
-					auditModel.setAuditId(transactionId);
-					auditModel.setCartGUID(cartGuId);
-					auditModel.setRequestDate(new Date());
-					auditModel.setAuditEntries(auditEntryList);
-					auditModel.setPaymentAmount(Double.valueOf(qcAmount));
-					auditEntryList.add(auditEntry);
-					auditModel.setAuditEntries(auditEntryList);
-					getModelService().save(auditModel);
-					flag = false;
-				}
-
+				auditModel.setChannel(GenericUtilityMethods.returnChannelData(channel));
+				auditModel.setAuditId(transactionId);
+				auditModel.setCartGUID(cartGuId);
+				auditModel.setRequestDate(new Date());
+				auditModel.setPaymentAmount(Double.valueOf(qcAmount));
+				auditEntry.setStatus(MplPaymentAuditStatusEnum.COMPLETED);
+				auditEntry.setAuditId(transactionId);
+				auditEntry.setCreationtime(new Date());
+				auditEntryList.add(auditEntry);
+				auditModel.setAuditEntries(auditEntryList);
+				getModelService().save(auditModel);
+				flag = true;
 			}
 			else
 			{
-				final List<MplPaymentAuditEntryModel> auditEntryList = new ArrayList<MplPaymentAuditEntryModel>();
-				final MplPaymentAuditEntryModel auditEntry = getModelService().create(MplPaymentAuditEntryModel.class);
-				auditEntry.setAuditId(qcOrderID);
-				auditEntry.setStatus(MplPaymentAuditStatusEnum.CREATED);
-				getModelService().save(auditEntry);
+				auditEntry.setStatus(MplPaymentAuditStatusEnum.DECLINED);
+				auditModel.setChannel(GenericUtilityMethods.returnChannelData(channel));
+				auditModel.setAuditId(transactionId);
+				auditModel.setCartGUID(cartGuId);
+				auditModel.setRequestDate(new Date());
+				auditEntry.setAuditId(transactionId);
+				auditEntry.setCreationtime(new Date());
+				auditModel.setPaymentAmount(Double.valueOf(qcAmount));
 				auditEntryList.add(auditEntry);
-
-				final MplPaymentAuditModel newAuditModel = getModelService().create(MplPaymentAuditModel.class);
-				newAuditModel.setChannel(GenericUtilityMethods.returnChannelData(channel));
-				newAuditModel.setAuditId("");
-				newAuditModel.setCartGUID(cartGuId);
-				newAuditModel.setRequestDate(new Date());
-				newAuditModel.setAuditEntries(auditEntryList);
-				newAuditModel.setPaymentAmount(Double.valueOf(qcAmount));
-				getModelService().save(newAuditModel);
-				flag = true;
-				return flag;
+				auditModel.setAuditEntries(auditEntryList);
+				getModelService().save(auditModel);
+				flag = false;
 			}
+
 		}
-		catch (final ModelSavingException e)
+		catch (
+
+		final ModelSavingException e)
 		{
 			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0007);
 		}
