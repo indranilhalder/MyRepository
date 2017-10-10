@@ -54,11 +54,16 @@
 									value="${type.value}" />
                                 </c:if>
                    </c:forEach>
-                    
+                  
+<c:set var="stockClass" value=""/>
+
+<c:if test="${product.stockValue eq false}">
+	<c:set var="stockClass" value="outofstock"/>
+</c:if>
 
 
 <div class="product-grid">
-	<div class="product-list-det">
+	<div class="product-list-det ${stockClass}">
 		<div class="product-item text-left">
 			<a href="${product.url}" title="${product.name}">
 				<div class="product-image">
