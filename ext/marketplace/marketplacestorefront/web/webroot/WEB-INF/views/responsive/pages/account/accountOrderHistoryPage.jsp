@@ -234,12 +234,15 @@
 													<input type="hidden" class="order_id_for_resending" value="${orderHistoryDetail.code}" />
 													<input type="hidden" class="resend_email_index" value="" />
 													<!-- <span class="resend_order_email">RESEND EMAIL</span> -->
-													    <c:forEach items="${egvStatusMap}" var="entry">
-																<c:if test="${entry.key ne orderHistoryDetail.code}">
-																	<span class="resend_order_email">RESEND EMAIL</span>
+													<c:set var="evgflag" value="false"/>
+													    <c:forEach items="${egvStatusMap}" var="entryforEgv">
+																<c:if test="${entryforEgv.key eq orderHistoryDetail.code and entryforEgv.value eq 'REDEEMED'}">
+																     <c:set var="evgflag" value="true"/>	
 																</c:if>										   
 														</c:forEach>
-													
+													<c:if test="${evgflag eq  'false'}">
+													     <span class="resend_order_email">RESEND EMAIL</span>
+													</c:if>
 													</c:if>
 												</li>
 												
@@ -554,31 +557,33 @@
 														<c:choose>
 															<c:when test="${not empty approvedFlag and approvedFlag ne null}">
 														<div class="orderUpdatesBlock">
-														
-															<c:forEach items="${egvStatusMap}" var="entry">
-																<c:choose>
-																	<c:when test="${entry.key eq orderHistoryDetail.code}">
+									                      <c:set value="false" var="egvredemStatusFlag"/>
+															<c:forEach items="${egvStatusMap}" var="entryforEgv">
+																
+																	<c:if test="${entryforEgv.key eq orderHistoryDetail.code and entryforEgv.value eq 'REDEEMED'}">
+																	
 																	<div class="statusDate">
 																              <span><spring:theme code="text.orderHistory.seller.order.numbe" text="Redeemed:" /></span>&nbsp;
 																              <c:forEach items="${approvedFlag.statusRecords}" var="recordDate">
 																			<span>${recordDate.date}</span>
 																			</c:forEach>
 																	</div>
-																	</c:when>
-																	<c:otherwise>
-																	<div class="status statusConfirmed">
-																		<span><spring:theme code="text.orderHistory.seller.order.numbe" text="Confirmed" /></span>
-																	</div>
-																		<div class="statusDate">
-																			<span><spring:theme code="text.orderHistory.seller.order.numbe" text="Confirmed:" /></span>&nbsp;
-																			<c:forEach items="${approvedFlag.statusRecords}" var="recordDate">
-																			<span>${recordDate.date}</span>
-																			</c:forEach>
-																		</div>
-																	</c:otherwise>
-																</c:choose>											    
-																													   
+																	<c:set value="ture" var="egvredemStatusFlag"/>
+																	</c:if>									   
 															</c:forEach>
+															<c:if test="${egvredemStatusFlag eq  'false'}">
+															<div class="status statusConfirmed">
+																<span><spring:theme code="text.orderHistory.seller.order.numbe" text="Confirmed" /></span>
+															</div>
+															
+																<div class="statusDate">
+																	<span><spring:theme code="text.orderHistory.seller.order.numbe" text="Confirmed:" /></span>&nbsp;
+																	<c:forEach items="${approvedFlag.statusRecords}" var="recordDate">
+																	<span>${recordDate.date}</span>
+																	</c:forEach>
+																</div>
+															</c:if>
+															
 														</div>
 														</c:when>
 														</c:choose>
