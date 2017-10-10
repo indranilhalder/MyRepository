@@ -17546,7 +17546,7 @@ TATA.CommonFunctions = {
         },
         performLoadMore: function(ajaxUrl) {
             $("body").addClass("loader"), $.ajax({
-                url: ajaxUrl,
+                url: ajaxUrl + "&icid=",
                 data: {
                     pageSize: 24,
                     lazyInterface: "Y"

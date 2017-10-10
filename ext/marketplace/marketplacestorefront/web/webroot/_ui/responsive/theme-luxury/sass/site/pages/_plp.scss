@@ -941,7 +941,20 @@
 .leftbar{
     .filterblocks{
         .facetList{
-            margin-bottom: 50px;
+            margin-bottom: 50px;           
         }
-    } 
+        @include media-breakpoint-down(sm) {
+            .facetList{                
+                padding-top: 50px;
+            }
+            .plp-leftbar-close.visible-xs{                
+                width: 100%;
+                position: fixed;
+                z-index: 999;
+                top:0;
+                background: #fff;
+            }
+        }        
+    }
+    
 }

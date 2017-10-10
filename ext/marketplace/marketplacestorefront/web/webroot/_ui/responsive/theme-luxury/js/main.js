@@ -1025,7 +1025,7 @@ TATA.Pages = {
                     $('body').removeClass('loader');
                 }
             });
-        },
+        },        
         showSelectedRefinements: function() {
             if($(".facetValues .facet-form input:checked").length == 0){
                 // $(".plp-wrapper h4.categor-name").show();
