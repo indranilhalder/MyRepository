@@ -1,0 +1,204 @@
+body .account.preferences .right-account div.brands, body .account.preferences .right-account div.categories, body .account.preferences .right-account div.stores, body .account.preferences .right-account div.email-pref {
+    border: 1px solid #DFD1D5;
+    background: #fff;
+    position: relative;
+    margin-bottom: 10px;
+    padding: 20px;
+}
+body .account.preferences .right-account>div:first-of-type, body .account.preferences .right-account div.email-pref {
+    padding: 0;
+    border: none;
+}
+body .account.preferences .right-account div.email-pref {
+    padding-top: 30px;
+    border-top: 1px solid #eeeeee;
+}
+body .account.preferences .right-account div.brands h2, body .account.preferences .right-account div.categories h2, body .account.preferences .right-account div.stores h2 {
+    font-size: 18px;
+    margin-bottom: 10px;
+}
+body .account.preferences .right-account div.email-pref h2 {
+    height: auto;
+    line-height: 1;
+    font-size: 16px;
+    margin-bottom: 6px;
+}
+body.page-marketplacePreference .account.preferences .right-account div.email-pref form .emails label span, body.page-marketplacePreference .account.preferences .right-account div.email-pref form fieldset .freq label span, body.page-marketplacePreference .account.preferences .right-account div.email-pref form fieldset.feedback label span, body.page-marketplacePreference .account.preferences .right-account div.email-pref>p {
+    font-size: 12px;
+    color: #666666;
+    margin-bottom: 0;
+    line-height: 1.4;
+}
+
+body .account.preferences .right-account div.brands>p::after, body .account.preferences .right-account div.categories>p::after, body .account.preferences .right-account div.stores>p::after, body .account.preferences .right-account div.email-pref>p::after {
+    clear: both;
+    content: "";
+    display: table;
+}
+body .account.preferences .right-account div.email-pref form {
+    text-align: left;
+}
+/* radio buttons */
+body .account .right-account form input, body .account .right-account form select {
+    letter-spacing: 0.6px;
+}
+body .account .right-account form input {
+    font-size: 12px;
+}
+body .account .right-account form input {
+    border-color: #DFD1D5;
+    height: 32px;
+    line-height: 26px;
+    width: 100%;
+    font-size: 14px;
+}
+body .account.preferences .right-account div.email-pref form div label {
+    opacity: 1;
+}
+body .account.preferences .right-account div.email-pref form div label, body .account.preferences .right-account div.email-pref form fieldset .freq label {
+    width: 100%;
+    margin-bottom: 17px;
+}
+body .account.preferences .right-account div.email-pref form div label {
+    display: inline-block;
+    float: left;
+}
+body .account.preferences input[type="checkbox"] + label, input[type="radio"] + label {
+    padding-left: 0px;
+}
+body .account.preferences .right-account div.email-pref form label:before {
+    width: 15px;
+    height: 15px;
+    box-shadow: 0 0 0 1px #979797;
+}
+body .account.preferences .right-account div.email-pref form label:before {
+    top: -2px;
+}
+body .account.preferences .right-account div.email-pref form label:before {
+    top: 0;
+    margin-right: 16px;
+}
+input[type="radio"] + label:before, input[type="checkbox"] + label:before {
+    border: 2px solid #fff;
+}
+.checkout.wrapper .product-block input[type="checkbox"]+label:before, input[type="radio"]+label:before {
+    height: 12px;
+    width: 12px;
+}
+input[type="radio"] + label:before {
+    border-radius: 100%;
+}
+/* radio buttons end */
+
+body.page-marketplacePreference .account.preferences .right-account div.email-pref form .emails label span, body.page-marketplacePreference .account.preferences .right-account div.email-pref form fieldset .freq label span, body.page-marketplacePreference .account.preferences .right-account div.email-pref form fieldset.feedback label span, body.page-marketplacePreference .account.preferences .right-account div.email-pref>p {
+    font-size: 12px;
+    color: #666666;
+    margin-bottom: 0;
+    line-height: 1.4;
+}
+body.page-marketplacePreference .account.preferences .right-account div.email-pref>p {
+    margin-bottom: 24px;
+}
+body .account.preferences .right-account form fieldset.frequent, body .account.preferences .right-account form fieldset.feedback {
+    margin-top: 55px;
+}
+body .account.preferences .right-account form fieldset {
+    clear: both;
+}
+body .account.preferences .right-account div.email-pref form fieldset p {
+    font-size: 16px;
+    letter-spacing: 0.8;
+    margin-bottom: 6px;
+}
+body .account.preferences .right-account div.email-pref form p::after {
+    clear: both;
+    content: "";
+    display: table;
+}
+body .account.preferences .right-account div.email-pref form div label:last-child {
+    margin-bottom: 0;
+}
+body .account.preferences .right-account div.email-pref form fieldset p.frequentDesc, body .account.preferences .right-account div.email-pref form fieldset.feedback>p, body .account.preferences .right-account div.email-pref form fieldset div {
+    font-size: 12px;
+    line-height: 1.4;
+    letter-spacing: 0.6px;
+    text-align: left;
+    color: #666666;
+}
+body .account .right-account h2 {
+    /* font-size: 24px; */
+    font-weight: 500;
+    letter-spacing: .5px;
+    font-size: 28px;
+    height: 36px;
+    margin-bottom: 0;
+    line-height: 1.29;
+}
+body .account.preferences .right-account div.email-pref form fieldset .freq {
+    margin-top: 24px;
+    margin-bottom: 0;
+}
+body .account.preferences .right-account div.email-pref form fieldset div {
+    margin-bottom: 24px;
+}
+body .account.preferences .right-account div.email-pref form fieldset.feedback label {
+    margin-top: 0;
+    margin-bottom: 16px;
+    opacity: 1;
+}
+.button-set {
+    margin-top: 82px;
+}
+body .account.preferences .right-account div.email-pref form::after {
+    clear: both;
+    content: "";
+    display: table;
+}
+body .account.preferences .right-account div.email-pref form .button-set>a {
+    display: block;
+    text-transform: uppercase;
+    text-decoration: underline;
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 1.2px;
+    margin: 0 20px;
+    line-height: 40px;
+    vertical-align: middle;
+}
+body .account.preferences .right-account div.email-pref form .button-set a {
+    text-decoration: none;
+    color: #666666;
+    height: auto;
+    font-size: 12px;
+    line-height: 1.4;
+    margin: 14px 0;
+    margin-left: 48px;
+    text-transform: none;
+}
+body .account.preferences .right-account div.email-pref form .button-set button {
+    min-width: 179px;
+    height: 42px;
+}
+body .account.preferences .right-account div.email-pref form input:checked + label:before {
+    border: 3px solid #ffffff;
+}
+body .account.preferences .right-account div.email-pref form fieldset.feedback>p {
+    margin-bottom: 0;
+}
+body .account.preferences .right-account div.email-pref form fieldset.feedback label:last-child {
+    margin-bottom: 0;
+}
+
+@media (min-width: 651px){}
+body .account.preferences .right-account div.email-pref form .button-set button, body .account.preferences .right-account div.email-pref form .button-set a {
+    float: left;
+}
+}
+
+@media (min-width: 791px){
+body .account .right-account::after {
+    clear: both;
+    content: "";
+    display: table;
+}
+}
