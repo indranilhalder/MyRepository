@@ -2966,6 +2966,11 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 															&& !mplPaymentAuditEntry.getStatus().toString().equalsIgnoreCase("DECLINED")) // case for EBS....
 													{
 														qcFlag = true;
+
+													}
+													else
+													{
+														qcFlag = false;
 														break;
 													}
 												}
