@@ -17549,7 +17549,8 @@ TATA.CommonFunctions = {
                 url: ajaxUrl + "&icid=",
                 data: {
                     pageSize: 24,
-                    lazyInterface: "Y"
+                    lazyInterface: "Y",
+                    icid:""
                 },
                 success: function(x) {
                     var filtered = $.parseHTML(x);
@@ -17586,7 +17587,8 @@ TATA.CommonFunctions = {
             $("body").addClass("loader"), $.ajax({
                 url: requestUrl,
                 data: {
-                    lazyInterface: "Y"
+                    lazyInterface: "Y",
+                    icid:""
                 },
                 success: function(x) {
                     var filtered = $.parseHTML(x);

@@ -1007,10 +1007,11 @@ TATA.Pages = {
             $('body').addClass('loader');
 
             $.ajax({
-            	url: ajaxUrl+"&icid=",
+                url: ajaxUrl,
                 data: {
                     pageSize: 24,
-                    lazyInterface:'Y'
+                    lazyInterface:'Y',
+                    icid:''
                 },
                 success: function(x) {
                     var filtered = $.parseHTML(x);
@@ -1065,7 +1066,8 @@ TATA.Pages = {
             $.ajax({
                 url: requestUrl,
                 data: {
-                    lazyInterface: "Y"
+                    lazyInterface: "Y",
+                    icid:''
                 },
                 success: function(x) {
                     var filtered = $.parseHTML(x);
