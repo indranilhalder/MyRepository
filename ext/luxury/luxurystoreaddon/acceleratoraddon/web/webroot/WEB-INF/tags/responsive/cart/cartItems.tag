@@ -251,6 +251,8 @@
 														</div>
 														</c:when>
 														<c:otherwise>
+															
+       														<div id ="totalPrice_${entry.entryNumber}" class="totalPrice"><format:price priceData="${entry.totalMrp}"/></div>
 														</c:otherwise>
 													</c:choose>
 													<%-- TISPRO-215 ends --%>
