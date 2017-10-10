@@ -233,7 +233,12 @@
 												<c:if test="${not empty orderHistoryDetail.egvCardNumber and orderHistoryDetail.isEGVOrder eq  true}">
 													<input type="hidden" class="order_id_for_resending" value="${orderHistoryDetail.code}" />
 													<input type="hidden" class="resend_email_index" value="" />
-													<span class="resend_order_email">RESEND EMAIL</span>
+													<!-- <span class="resend_order_email">RESEND EMAIL</span> -->
+													    <c:forEach items="${egvStatusMap}" var="entry">
+																<c:if test="${entry.key ne orderHistoryDetail.code}">
+																	<span class="resend_order_email">RESEND EMAIL</span>
+																</c:if>										   
+														</c:forEach>
 													
 													</c:if>
 												</li>
