@@ -4,7 +4,7 @@
 <%@ taglib prefix="template" tagdir="/WEB-INF/tags/addons/luxurystoreaddon/responsive/template"%>
 <%@ taglib prefix="common" tagdir="/WEB-INF/tags/addons/luxurystoreaddon/responsive/common" %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
-<%@ taglib prefix="product" tagdir="/WEB-INF/tags/responsive/product"%>
+<%@ taglib prefix="product" tagdir="/WEB-INF/tags/addons/luxurycheckoutaddon/responsive/product"%>
 <%@ taglib prefix="cart" tagdir="/WEB-INF/tags/desktop/cart"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
@@ -247,7 +247,7 @@
 														</c:if>
 										<c:if test="${fn:toLowerCase(product.luxIndicator)=='luxury' and not empty product.luxIndicator}">
 										<a href="${productUrl}"> <product:productPrimaryImage
-														product="${product}" format="luxuryCartPage" /></a>
+														product="${product}" format="luxuryThumbnail" /></a>
 														</c:if>
 										
 										<div>
