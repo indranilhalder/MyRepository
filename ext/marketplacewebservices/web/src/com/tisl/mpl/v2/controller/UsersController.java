@@ -7265,6 +7265,7 @@ public class UsersController extends BaseCommerceController
 						}
 						orderCreateInJusPayWsDto.setCliqcashAmount(Double.valueOf(totalWalletAmount));
 						orderCreateInJusPayWsDto.setCliqcashSelected(true);
+						orderCreateInJusPayWsDto.setOrderId(orderModel.getCode());
 					}
 					else
 					{
@@ -9152,7 +9153,7 @@ public class UsersController extends BaseCommerceController
 			throws EtailNonBusinessExceptions, EtailBusinessExceptions, CalculationException
 
 	{
-		LOG.info("Redeeming CLiq Cash Voucher");
+		LOG.info("Redeeming CLiq Cash Voucher Card Number "+couponCode);
 		boolean customerRegisteredwithQc = false;
 		final RedeemCliqVoucherWsDTO redeemCliqVoucherWsDTO = new RedeemCliqVoucherWsDTO();
 		try
@@ -9204,6 +9205,7 @@ public class UsersController extends BaseCommerceController
 			}
 			if (customerRegisteredwithQc)
 			{
+				LOG.debug("Calling To QC For Adding money to Wallet");
 				final RedimGiftCardResponse response = mplWalletFacade.getAddEGVToWallet(couponCode, passKey);
 				if (null != response && null != response.getResponseCode() && null == Integer.valueOf(0))
 				{
@@ -9231,6 +9233,7 @@ public class UsersController extends BaseCommerceController
 							totalCliqCashBalance.setFormattedValueNoDecimal(priceData.getFormattedValueNoDecimal());
 							totalCliqCashBalance.setValue(priceData.getValue());
 							redeemCliqVoucherWsDTO.setTotalCliqCashBalance(totalCliqCashBalance);
+							redeemCliqVoucherWsDTO.setAcknowledgement("Congrats!  Money has been added to your Cliq Cash balance");
 							redeemCliqVoucherWsDTO.setIsWalletLimitReached(false);
 							redeemCliqVoucherWsDTO.setStatus(MarketplacecommerceservicesConstants.SUCCESS_FLAG);
 						}
@@ -9257,13 +9260,13 @@ public class UsersController extends BaseCommerceController
 			redeemCliqVoucherWsDTO.setStatus(MarketplacecommerceservicesConstants.FAILURE_FLAG);
 			redeemCliqVoucherWsDTO.setErrorCode(ex.getErrorCode());
 			redeemCliqVoucherWsDTO.setError(ex.getErrorMessage());
-			LOG.error("Exception occrred while Removing Cliq cash" + ex.getMessage());
+			LOG.error("Exception occrred while Redeeming Cliq cash" + ex.getMessage());
 		}
 		catch (final Exception ex)
 		{
 			redeemCliqVoucherWsDTO.setStatus(MarketplacecommerceservicesConstants.FAILURE_FLAG);
 			redeemCliqVoucherWsDTO.setError(ex.getMessage());
-			LOG.error("Exception occrred while Removing Cliq cash" + ex.getMessage());
+			LOG.error("Exception occrred while Redeeming Cliq cash" + ex.getMessage());
 		}
 		return redeemCliqVoucherWsDTO;
 	}

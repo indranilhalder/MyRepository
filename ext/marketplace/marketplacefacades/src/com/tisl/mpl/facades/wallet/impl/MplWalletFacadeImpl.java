@@ -29,6 +29,7 @@ import com.tisl.mpl.pojo.response.QCRedeeptionResponse;
 import com.tisl.mpl.pojo.response.RedimGiftCardResponse;
 import com.tisl.mpl.pojo.response.WalletTransacationsList;
 import com.tisl.mpl.service.MplWalletServices;
+import org.apache.log4j.Logger;
 
 
 /**
@@ -38,7 +39,7 @@ import com.tisl.mpl.service.MplWalletServices;
 public class MplWalletFacadeImpl implements MplWalletFacade
 {
 
-
+	private static final Logger LOG = Logger.getLogger(MplWalletFacadeImpl.class);
 	@Resource(name = "mplWalletServices")
 	private MplWalletServices mplWalletServices;
 
@@ -226,27 +227,37 @@ public class MplWalletFacadeImpl implements MplWalletFacade
 		final CustomerModel currentCustomer = (CustomerModel) userService.getCurrentUser();
 		if (null != currentCustomer.getIsWalletActivated())
 		{
-			final WalletCardApportionDetailModel walletCardApportionDetailModel  =getMplWalletServices().getOrderFromWalletCardNumber(cardNumber);
-			OrderModel orderModel = null;
-			if(null != walletCardApportionDetailModel && null!= walletCardApportionDetailModel.getOrderId()){
-				orderModel =orderModelService.getParentOrder(walletCardApportionDetailModel.getOrderId());
+			try {
+				LOG.debug("Calling to QC For Adding Amount to Wallet ");
+				balance = getMplWalletServices().getAddEGVToWallet(cardNumber, cardPin, transactionId,
+						currentCustomer.getCustomerWalletDetail().getWalletId());
+			}catch (Exception e) {
+				LOG.error("Exception occurred in QC CAll While Adding Money To Wallet"+e.getMessage());
 			}
-			balance = getMplWalletServices().getAddEGVToWallet(cardNumber, cardPin, transactionId,
-					currentCustomer.getCustomerWalletDetail().getWalletId());
-			if(null != orderModel && null != balance && balance.getResponseCode().intValue() == 0){
-				if ( null != orderModel.getCode())
-				{
-					orderModel.setStatus(OrderStatus.REDEEMED);
-					modelService.save(orderModel);
-					System.out.println(" ************** Order Status updated Success Fully to  ----:" + OrderStatus.REDEEMED
-							+ "Card Number :" + cardNumber);
+			try {
+				final WalletCardApportionDetailModel walletCardApportionDetailModel  =getMplWalletServices().getOrderFromWalletCardNumber(cardNumber);
+				OrderModel orderModel = null;
+				if(null != walletCardApportionDetailModel && null!= walletCardApportionDetailModel.getOrderId()){
+					orderModel =orderModelService.getParentOrder(walletCardApportionDetailModel.getOrderId());
 				}
+				if(null != orderModel && null != balance && balance.getResponseCode().intValue() == 0){
+					if ( null != orderModel.getCode())
+					{
+						LOG.debug("Update Order Status to Redeemed order ID "+orderModel.getCode());
+						orderModel.setStatus(OrderStatus.REDEEMED);
+						modelService.save(orderModel);
+						System.out.println(" ************** Order Status updated Success Fully to  ----:" + OrderStatus.REDEEMED
+								+ "Card Number :" + cardNumber);
+					}
+				}
+			}catch (Exception e) {
+				LOG.error("Exception occurred in While Changing Status to Redeemed"+e.getMessage());
 			}
+			
 			if (null != balance)
 			{
 				return balance;
 			}
-
 		}
 		balance.setResponseMessage("error");
 		return balance;

@@ -1121,11 +1121,18 @@ public class MplWalletServicesImpl implements MplWalletServices
 	@Override
 	public WalletCardApportionDetailModel getOrderFromWalletCardNumber(final String cardNumber)
 	{ 
-		final String query = SELECT_CLASS + WalletCardApportionDetailModel.PK + FROM_CLASS + WalletCardApportionDetailModel._TYPECODE + WHERE_CLASS
-				+ WalletCardApportionDetailModel.CARDNUMBER + "} =?cardNumber";
-		final FlexibleSearchQuery flexQuery = new FlexibleSearchQuery(query);
-		flexQuery.addQueryParameter("cardNumber", cardNumber);
-		return flexibleSearchService.<WalletCardApportionDetailModel> searchUnique(flexQuery);
+		LOG.debug("Adding  CLiq Cash Voucher To Wallet");
+		try{
+			final String query = SELECT_CLASS + WalletCardApportionDetailModel.PK + FROM_CLASS + WalletCardApportionDetailModel._TYPECODE + WHERE_CLASS
+					+ WalletCardApportionDetailModel.CARDNUMBER + "} =?cardNumber";
+			final FlexibleSearchQuery flexQuery = new FlexibleSearchQuery(query);
+			flexQuery.addQueryParameter("cardNumber", cardNumber);
+			return flexibleSearchService.<WalletCardApportionDetailModel> searchUnique(flexQuery);
+		}catch (Exception e) {
+			LOG.error("Exception occurred while getting  WalletCardApportionDetailModel "+e.getMessage());
+		}
+		return null;
+		
 	}
 
 }
