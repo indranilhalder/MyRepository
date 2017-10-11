@@ -9207,7 +9207,7 @@ public class UsersController extends BaseCommerceController
 			{
 				LOG.debug("Calling To QC For Adding money to Wallet");
 				final RedimGiftCardResponse response = mplWalletFacade.getAddEGVToWallet(couponCode, passKey);
-				if (null != response && null != response.getResponseCode() && null == Integer.valueOf(0))
+				if (null != response && null != response.getResponseCode() && response.getResponseCode() == Integer.valueOf(0))
 				{
 					final TotalCliqCashBalanceWsDto totalCliqCashBalance = new TotalCliqCashBalanceWsDto();
 					if (null != response.getWallet() && null != response.getWallet().getBalance())
