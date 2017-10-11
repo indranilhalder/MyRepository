@@ -2828,14 +2828,13 @@ $(document).ready(function () {
     
     /*POPULAR SEARCHES COLLAPSE END*/
     
-    /*PINCODE CHANGES IN CARTPAGE*/
-     if($(window).width() >=768){
-        $('.cartItemBlankPincode > a').on('click', function(e){
-            e.preventDefault();    
-            $('html, body').animate({scrollTop : $(".cartBottomCheck").position().top},800);
-        }); 
-     }    
-    
+    /*PINCODE CHANGES IN CARTPAGE*/    
+        $('.cartItemBlankPincode .defaultPinCode').on('click', function(e){
+            e.stopImmediatePropagation(); 
+            if($(window).width() >=768){
+                $("html, body").animate({ scrollTop: $(".cartBottomCheck").position().top}, 800);                
+            }
+        });   
     /*PINCODE CHANGES IN CARTPAGE*/
 });
 

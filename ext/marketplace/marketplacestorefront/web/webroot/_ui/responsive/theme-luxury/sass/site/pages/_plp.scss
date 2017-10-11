@@ -473,7 +473,8 @@
                                             font: normal normal normal 14px/1 FontAwesome; 
                                             position: absolute;
                                             top: 3px;
-                                            padding-left: 15px;
+                                            padding-left: 20px;
+                                            left: 100px;
                                         }  
                                     }
                                    
@@ -800,7 +801,16 @@
 			}
 			.facetItem{
 				.filterblocks{
+                    overflow-x: hidden;
+                    
 					.facetList{
+                        width: 150px;                        
+                        overflow: auto;
+                        padding: 0px;
+                        height: -webkit-calc(100% - 0px);
+                        padding-top: 50px;
+                        overflow-x: hidden;
+                        
 						.half-width{
 							 .allFacetValues{
 								.facet_block{
@@ -812,26 +822,42 @@
 						}
 						.facet{
 							padding:0 20px;
+                            overflow-x: hidden;
+                            
 							.facetHead{
+                                
 								h4{
 									padding:20px 0;
 									margin:0px;
+                                    font-size: 12px;
+                                    
 									a{
 										text-transform:uppercase;
+                                        word-wrap: break-word;
 									}
+                                    
+                                   span{
+                                        &:after{
+                                            display: none;
+                                        }
+                                    }
 								}
 							}
 							.facetValues{
-								position: fixed;
+                                overflow-x: hidden;
+								position: absolute;
 								right: -100%;
 								top: 44px;
 								background: #fff;
-								width: 65%;
+								width: calc(100% - 150px);
 								height:100%;
 								z-index: 991;
 								transition:all 500ms ease;
 								-webkit-transition:all 500ms ease;
 								background:#fff url('../images/filter-mobile-bg.png') repeat-y;
+                                overflow:auto;
+                                font-size: 12px;
+                                
 								.allFacetValues{
 									display:block;
 								}
@@ -842,7 +868,7 @@
 									label{
 										width:90%;
                                         @include media-breakpoint-down(sm) {
-                                            padding-left: 40px;    
+                                            padding-left: 35px;    
                                             
                                         }
 									}
@@ -957,4 +983,11 @@
         }        
     }
     
+}
+.product-sort-wrapper{
+    .plp-sort-inner{
+        .sort-wrapper.pull-right{
+                display: none;
+        }
+    }
 }

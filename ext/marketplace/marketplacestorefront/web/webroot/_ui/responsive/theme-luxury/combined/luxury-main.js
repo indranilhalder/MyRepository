@@ -17546,11 +17546,11 @@ TATA.CommonFunctions = {
         },
         performLoadMore: function(ajaxUrl) {
             $("body").addClass("loader"), $.ajax({
-                url: ajaxUrl + "&icid=",
+                url: ajaxUrl,
                 data: {
                     pageSize: 24,
                     lazyInterface: "Y",
-                    icid:""
+                    icid: ""
                 },
                 success: function(x) {
                     var filtered = $.parseHTML(x);
@@ -17588,7 +17588,7 @@ TATA.CommonFunctions = {
                 url: requestUrl,
                 data: {
                     lazyInterface: "Y",
-                    icid:""
+                    icid: ""
                 },
                 success: function(x) {
                     var filtered = $.parseHTML(x);
@@ -17604,14 +17604,10 @@ TATA.CommonFunctions = {
                         $(".leftbar").removeClass("active"), $(".facet").removeClass("open");
                     }), void 0 !== facetHeadId && null !== facetHeadId && "" !== facetHeadId && $("#" + facetHeadId).click();
                 }
-            });
-            
-            //Update URL without Refresh
-            console.log("replace the current URL with parameters");
-            var currentURL=window.location.href.split('?')[0];
-            console.log(requestUrl.split('?')[1]);
-            console.log("current URL is "+currentURL);
-            history.pushState(null, null, currentURL+"?"+requestUrl.split('?')[1]);
+            }), console.log("replace the current URL with parameters");
+            var currentURL = window.location.href.split("?")[0];
+            console.log(requestUrl.split("?")[1]), console.log("current URL is " + currentURL), 
+            history.pushState(null, null, currentURL + "?" + requestUrl.split("?")[1]);
         },
         Filtershow: function() {
             $(".plp-mob-filter").on("click", function() {
@@ -18022,19 +18018,44 @@ $(document).ready(function() {
         $(".footer-popular-search .mega-menu").slideToggle("400", function() {
             $(window).scrollTop($(document).height());
         }), $("#footer-popular-accordian-icon").toggleClass("glyphicon-minus", "glyphicon-plus");
-    }), $(window).width() >= 768 && $(".cartItemBlankPincode > a").on("click", function(e) {
-        e.preventDefault(), $("html, body").animate({
+    }), $(".cartItemBlankPincode .defaultPinCode").on("click", function(e) {
+        e.stopImmediatePropagation(), $(window).width() >= 768 && $("html, body").animate({
             scrollTop: $(".cartBottomCheck").position().top
         }, 800);
     });
 }), $(window).scroll(function() {
     TATA.CommonFunctions.WindowScroll();
-}), $(document).ready(function() {
+}), checkforPriceFilter = function() {
+    console.log("check for sort Parameter");
+    var sortValue = $.urlParam("sort");
+    if (null != sortValue) {
+        console.log($.urlParam("sort"));
+        var sorting = "relevance";
+        if ("isProductNew" === sortValue) {
+            console.log("Is PRoduct New");
+            var sorting = "new";
+        } else if ("isDiscountedPrice" === sortValue) {
+            console.log("Is Discounted Price");
+            var sorting = "discount";
+        } else if ("price-asc" === sortValue) {
+            console.log("price Ascending");
+            var sorting = "low";
+        } else if ("price-desc" === sortValue) {
+            console.log("price Decending");
+            var sorting = "high";
+        } else console.log("Releavance-Default");
+        console.log($(".responsiveSort option[value=" + sorting).text()), $("span .selectboxit-text").html($(".responsiveSort option[value=" + sorting).text()), 
+        $(".responsiveSort option[value=" + sorting).attr("selected", "selected");
+    } else console.log("no sort parameters in the URL");
+}, $.urlParam = function(name) {
+    var results = new RegExp("[?&]" + name + "=([^&#]*)").exec(window.location.href);
+    return null != results ? results[1] || 0 : null;
+}, $(document).ready(function() {
     $("#clear_filter").click(function() {
         $(".reset-filters").trigger("click");
     }), $("#apply_filter").click(function() {
         $(".plp-leftbar-close a").trigger("click");
-    });
+    }), checkforPriceFilter();
 }), $(document).ready(function() {
     null != document.getElementById("check_MyRewards") && void 0 != document.getElementById("check_MyRewards") && (document.getElementById("check_MyRewards").checked = !0);
 }), $(document).ready(function() {
@@ -19109,56 +19130,12 @@ $(window).on("load resize", function() {
     $("li.price").each(function() {
         "inline-block" === $(this).find(".off-bag").css("display") || "block" === $(this).find(".off-bag").css("display") ? $(this).find("span.delSeat.mop").length > 0 && $(this).find("span.delSeat:not(.mop)").addClass("delAction") : $(this).find("span.delSeat:not(.mop)").removeClass("delAction");
     });
-    checkforPriceFilter();
 }), $("#voucherDisplaySelection").change(function() {
     if (0 == $("#couponFieldId").prop("readonly")) {
         var selection = $(this).val();
         $("#couponFieldId").val(selection);
     }
 });
-
-checkforPriceFilter=function(){
-	console.log("check for sort Parameter");
-	var sortValue=$.urlParam("sort");
-	if(null !=sortValue){
-		console.log($.urlParam("sort"));
-		var sorting="relevance";
-		if(sortValue ==="isProductNew"){
-			console.log("Is PRoduct New");
-			var sorting="new";
-		}
-		else if (sortValue ==="isDiscountedPrice"){
-			console.log("Is Discounted Price");
-			var sorting="discount";
-		}
-		else if (sortValue ==="price-asc"){
-			console.log("price Ascending");
-			var sorting="low";
-		}	
-		else if (sortValue ==="price-desc"){
-			console.log("price Decending");
-			var sorting="high";
-		}	
-		else{
-			console.log("Releavance-Default");
-		}
-		console.log($('.responsiveSort option[value='+sorting).text());
-		$('span .selectboxit-text').html($('.responsiveSort option[value='+sorting).text());
-		$('.responsiveSort option[value='+sorting).attr('selected','selected');
-
-	}
-	else{
-		console.log("no sort parameters in the URL");
-	}
-}
-
-$.urlParam = function(name){
-	var results = new RegExp('[\?&]' + name + '=([^&#]*)').exec(window.location.href);
-	if(null != results){
-		return results[1] || 0;
-	}
-	return null;
-}
 
 var wishListList = [];
 
