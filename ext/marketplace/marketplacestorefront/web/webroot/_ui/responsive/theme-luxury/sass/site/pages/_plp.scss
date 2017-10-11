@@ -324,8 +324,9 @@
 			}
 		}
 	}	
-	.leftbar{
-		.facetItem{
+	.leftbar{        
+		.facetItem{            
+           
 			.filterblocks{
 				.filter-box{
 					padding-bottom: 0;
@@ -800,6 +801,14 @@
 				}
 			}
 			.facetItem{
+                .row.facet-desktop{
+                    margin-left: -20px;
+                    margin-right:0px;
+
+                    .col-xs-12{
+                        padding-right: 0px;
+                    }
+                }
 				.filterblocks{
                     overflow-x: hidden;
                     
@@ -967,7 +976,10 @@
 .leftbar{
     .filterblocks{
         .facetList{
-            margin-bottom: 50px;           
+            margin-bottom: 50px; 
+            @include media-breakpoint-down(sm) {
+                margin-bottom: 0px; 
+            }
         }
         @include media-breakpoint-down(sm) {
             .facetList{                
@@ -990,4 +1002,9 @@
                 display: none;
         }
     }
+}
+
+span.priceFormat.full {
+    width: 100%;
+    text-align: center;
 }
