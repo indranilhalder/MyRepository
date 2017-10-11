@@ -150,12 +150,10 @@
 								<formElement:formPasswordBox idKey="profile.checkNewPassword" labelKey="profile.checkNewPassword" path="checkNewPassword" inputCSS="form-control password" mandatory="true"/>
 							</div>  --%>
 							<div  class="row">
-							<div class="col-md-6 mt-10">
+							<div class="col-md-12 mt-10 btn-section">
 								<button type=button class="blue" onClick="return validatePassword();"><spring:theme code="cart.modal.save.changes" text="Save Changes"/></button>
-								</div>
-								<div class="col-md-6  mt-10">
 								<button type="button" class="btn-block red" onclick="window.location='${updateProfileUrl}'">Cancel</button>
-							</div>
+								</div>								
 							</div>
 							
 							

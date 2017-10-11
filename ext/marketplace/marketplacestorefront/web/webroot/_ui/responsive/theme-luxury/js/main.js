@@ -520,8 +520,8 @@ TATA.CommonFunctions = {
         }
         else
         {
-        	
         	$("span.js-mini-cart-count,span.js-mini-cart-count-hover,span.responsive-bag-count").show();
+        	$("span.js-mini-cart-count,span.js-mini-cart-count-hover,span.responsive-bag-count").html(data.cartcount);
         }
      
 	},
@@ -652,7 +652,8 @@ TATA.CommonFunctions = {
     leftBarAccordian: function(){
         if($(window).width() >=768){
 			/*$('.facet:first').find('.allFacetValues').show();*/
-        	 $(".facet").addClass("open");
+        	 /*$(".facet").addClass("open");*/
+            
             $(document).on('click', '.facetHead', function(e){
                 e.stopPropagation();
                 $(this).closest('.facet').toggleClass('open', function(){
@@ -1009,12 +1010,15 @@ TATA.Pages = {
                 url: ajaxUrl,
                 data: {
                     pageSize: 24,
-                    lazyInterface:'Y'
+                    lazyInterface:'Y',
+                    icid:''
                 },
                 success: function(x) {
                     var filtered = $.parseHTML(x);
                     if($(filtered).has('.product-grid')){
-                        $('.product-grid-wrapper').append($(filtered).find(".product-grid-wrapper"));
+                        $(".product-grid",filtered).each(function(){
+                            $(".product-grid-wrapper").append($(this));
+                        });
                     }
                     $("#pageQuery").val(ajaxUrl);
                 },
@@ -1022,7 +1026,7 @@ TATA.Pages = {
                     $('body').removeClass('loader');
                 }
             });
-        },
+        },        
         showSelectedRefinements: function() {
             if($(".facetValues .facet-form input:checked").length == 0){
                 // $(".plp-wrapper h4.categor-name").show();
@@ -1062,7 +1066,8 @@ TATA.Pages = {
             $.ajax({
                 url: requestUrl,
                 data: {
-                    lazyInterface: "Y"
+                    lazyInterface: "Y",
+                    icid:''
                 },
                 success: function(x) {
                     var filtered = $.parseHTML(x);
@@ -1093,6 +1098,13 @@ TATA.Pages = {
                     }
                 }
             });
+            
+            //Update URL without Refresh
+            console.log("replace the current URL with parameters");
+            var currentURL=window.location.href.split('?')[0];
+            console.log(requestUrl.split('?')[1]);
+            console.log("current URL is "+currentURL);
+            history.pushState(null, null, currentURL+"?"+requestUrl.split('?')[1]);
         },
 
         Filtershow: function() {
@@ -2815,11 +2827,64 @@ $(document).ready(function () {
     });
     
     /*POPULAR SEARCHES COLLAPSE END*/
+    
+    /*PINCODE CHANGES IN CARTPAGE*/    
+        $('.cartItemBlankPincode .defaultPinCode').on('click', function(e){
+            e.stopImmediatePropagation(); 
+            if($(window).width() >=768){
+                $("html, body").animate({ scrollTop: $(".cartBottomCheck").position().top}, 800);                
+            }
+        });   
+    /*PINCODE CHANGES IN CARTPAGE*/
 });
 
 $(window).scroll(function () {
     TATA.CommonFunctions.WindowScroll();
 });
+
+checkforPriceFilter=function(){
+	console.log("check for sort Parameter");
+	var sortValue=$.urlParam("sort");
+	if(null !=sortValue){
+		console.log($.urlParam("sort"));
+		var sorting="relevance";
+		if(sortValue ==="isProductNew"){
+			console.log("Is PRoduct New");
+			var sorting="new";
+		}
+		else if (sortValue ==="isDiscountedPrice"){
+			console.log("Is Discounted Price");
+			var sorting="discount";
+		}
+		else if (sortValue ==="price-asc"){
+			console.log("price Ascending");
+			var sorting="low";
+		}	
+		else if (sortValue ==="price-desc"){
+			console.log("price Decending");
+			var sorting="high";
+		}	
+		else{
+			console.log("Releavance-Default");
+		}
+		console.log($('.responsiveSort option[value='+sorting).text());
+		$('span .selectboxit-text').html($('.responsiveSort option[value='+sorting).text());
+		$('.responsiveSort option[value='+sorting).attr('selected','selected');
+
+	}
+	else{
+		console.log("no sort parameters in the URL");
+	}
+}
+
+$.urlParam = function(name){
+	var results = new RegExp('[\?&]' + name + '=([^&#]*)').exec(window.location.href);
+	if(null != results){
+		return results[1] || 0;
+	}
+	return null;
+}
+
 
 
 $(document).ready(function (){
@@ -2829,4 +2894,5 @@ $(document).ready(function (){
     $("#apply_filter").click(function() {
         $(".plp-leftbar-close a").trigger("click");
     });
+    checkforPriceFilter();
 });

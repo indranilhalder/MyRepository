@@ -11,7 +11,7 @@
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
 <%@ taglib prefix="ycommerce" uri="http://hybris.com/tld/ycommercetags"%>
 <%@ taglib prefix="format" tagdir="/WEB-INF/tags/shared/format"%>
-<%@ taglib prefix="product" tagdir="/WEB-INF/tags/responsive/product"%>
+<%@ taglib prefix="product" tagdir="/WEB-INF/tags/addons/luxurycheckoutaddon/responsive/product"%>
 <%@ taglib prefix="order" tagdir="/WEB-INF/tags/addons/luxurystoreaddon/responsive/order"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
@@ -67,6 +67,7 @@
               </optgroup> --%>
       </select>
     </div>
+    <div><h2 style="text-align: center;"><spring:theme code="text.heading.myaccount" /></h2></div>
 		<div class="wrapper">
 
 
@@ -95,21 +96,17 @@
 					</a>
 				</p> --%>
 				
-				<div class="order-history order-details">
-					<!-- Heading for saved Cards -->
-					<div class="navigation">
-						<h2>
-							<spring:theme text="Order Details" />
+				<h2>
+							<spring:theme text="Track Order" />
 						</h2>
-
-
-					</div>
+				<div class="order-history order-details">
+					
 					<ul class="product-block order-details ${collectorder}">
 						<li class="track-order-list">
 
 							<ul class="list-top-title">
-								<li><span><spring:theme
-											code="text.orderHistory.order.placed" /></span> <c:if
+								<li><span><spring:theme  
+											code="luxury.text.orderHistory.order.placed" /></span> <c:if
 										test="${not empty orderDate}">${orderDate}</c:if> <%-- <fmt:formatDate
 										value="${subOrder.created}" pattern="MMMMM dd, yyyy" /> --%></li>
 								<li><span>Order Number: </span> ${subOrder.code}</li>
@@ -595,7 +592,7 @@
 											<c:choose>
 												<c:when test="${fn:toLowerCase(entry.product.luxIndicator)=='luxury'}">
 														<a href="${productUrl}"> <product:productPrimaryImage
-															product="${entry.product}" format="luxuryCartIcon" />
+															product="${entry.product}" format="luxuryThumbnail" />
 													</a>
 							
 												</c:when>
@@ -748,7 +745,7 @@
 																						<c:when test="${fn:toLowerCase(entryCancel.product.luxIndicator)=='luxury'}">
 																								<a href="${productUrl}"> <product:productPrimaryImage
 																																			product="${entryCancel.product}"
-																																			format="luxuryCartIcon" />
+																																			format="luxuryThumbnail" />
 																																	</a>
 																	
 																						</c:when>
@@ -886,7 +883,7 @@
 																						<c:when test="${fn:toLowerCase(entryCancel.product.luxIndicator)=='luxury'}">
 																								<a href="${productUrl}"> <product:productPrimaryImage
 																																			product="${entryCancel.product}"
-																																			format="luxuryCartIcon" />
+																																			format="luxuryThumbnail" />
 																																	</a>
 																	
 																						</c:when>
@@ -1763,7 +1760,7 @@
 										<c:choose>
 												<c:when test="${fn:toLowerCase(entry.product.luxIndicator)=='luxury'}">
 														<a href="${productUrl}"> <product:productPrimaryImage
-															product="${entry.product}" format="luxuryCartIcon" />
+															product="${entry.product}" format="luxuryThumbnail" />
 													</a>
 							
 												</c:when>
@@ -1879,11 +1876,22 @@
 																		<ul class="product-info">
 																			<li>
 																				<div class="product-img">
-																					<a href="${productUrl}"> <product:productPrimaryImage
-																							product="${entryCancel.product}"
-																							format="thumbnail" />
-																					</a>
+																					<c:choose>
+																						<c:when test="${fn:toLowerCase(entry.product.luxIndicator)=='luxury'}">
+																								<a href="${productUrl}"> <product:productPrimaryImage
+																									product="${entry.product}" format="luxuryThumbnail" />
+																							</a>
+																	
+																						</c:when>
+																						<c:otherwise>
+																								<a href="${productUrl}"> <product:productPrimaryImage
+																									product="${entry.product}" format="thumbnail" />
+																							</a>
+																								
+																						</c:otherwise>
+																					</c:choose>
 																				</div>
+																				
 																				<div class="product">
 																					<!-- <p class="company">Nike</p> -->
 																					<h2 class="product-name">
@@ -2005,10 +2013,20 @@
 																		<ul class="product-info">
 																			<li>
 																				<div class="product-img">
-																					<a href="${productUrl}"> <product:productPrimaryImage
-																							product="${entryCancel.product}"
-																							format="thumbnail" />
-																					</a>
+																					<c:choose>
+																						<c:when test="${fn:toLowerCase(entry.product.luxIndicator)=='luxury'}">
+																								<a href="${productUrl}"> <product:productPrimaryImage
+																									product="${entry.product}" format="luxuryThumbnail" />
+																							</a>
+																	
+																						</c:when>
+																						<c:otherwise>
+																								<a href="${productUrl}"> <product:productPrimaryImage
+																									product="${entry.product}" format="thumbnail" />
+																							</a>
+																								
+																						</c:otherwise>
+																					</c:choose>
 																				</div>
 																				<div class="product">
 																					<!-- <p class="company">Nike</p> -->

@@ -251,6 +251,8 @@
 														</div>
 														</c:when>
 														<c:otherwise>
+															
+       														<div id ="totalPrice_${entry.entryNumber}" class="totalPrice"><format:price priceData="${entry.totalMrp}"/></div>
 														</c:otherwise>
 													</c:choose>
 													<%-- TISPRO-215 ends --%>
@@ -499,7 +501,7 @@
 						<!-- TPR-1458-->
 						<span class='pincodeServiceError'></span>
 						<!-- 1341 -->
-						<p class="cartItemBlankPincode"><a href="#defaultPinCodeIds"><spring:theme code="cart.pincode.blanklink"/>&nbsp;</a><spring:theme code="cart.pincode.blank"/></p>
+						<p class="cartItemBlankPincode"><a href="#defaultPinCodeIds" class="defaultPinCode"><spring:theme code="cart.pincode.blanklink"/>&nbsp;</a><spring:theme code="cart.pincode.blank"/></p>
 						<ul id="${entry.selectedSellerInformation.ussid}">
 							</c:otherwise>
 							</c:choose>
