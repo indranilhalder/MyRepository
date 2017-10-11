@@ -250,8 +250,8 @@ $(document).ready(function() {
     //lazy image load initialization
     //TISPRDT-2225
     //if($('#pageType').val() == "productsearch" || $('#pageType').val() == "product" || $('#pageType').val() == "category" || $('input[name=customSku]').length){
-    if ($('#pageType').val() != "homepage") {
-	    $("img.lazy").lazyload();	
+    if ($('#pageType').val() != "homepage" && $("input[name=newBrandLandingPage]").length == 0 && $('#pageType').val() != "product" ) {
+    	//UF-458$("img.lazy").lazyload();	
 	}
     //set the total no of pages 
     totalNoOfPages = $('input[name=noOfPages]').val();
@@ -428,11 +428,11 @@ $(document).ready(function() {
         });
 });
 //UF-409 -> added for ajax complete events to auto lazy load
-$( document ).ajaxComplete(function( event, xhr, settings ) {
+/*$( document ).ajaxComplete(function( event, xhr, settings ) {
 	if($('#pageType').val() == "productsearch" || $('#pageType').val() == "product" || $('#pageType').val() == "category" || $('input[name=customSku]').length){
 		$("img.lazy").lazyload();
 	}
-});
+});*/
 function findGetParameter(parameterName) {
     var result = null,
         tmp = [];
@@ -569,7 +569,17 @@ function sort(this_data,drop_down){
 		if(pageType == 'productsearch'){
 			var url = $('#searchPageDeptHierTreeForm').serialize();
 			url = url+'&sort=relevance';
-		}else{
+		}
+		//SDI-810
+		else if(pageType == 'product'){
+			var url = $('#categoryPageDeptHierTreeForm').serialize();
+			if(url.indexOf('&') > -1){
+				url = url+'&sort=relevance';
+			} else {
+				url = url+'sort=relevance';
+			}
+		}
+		else{
 			var url = $('#categoryPageDeptHierTreeForm').serialize();
 			url = url+'&sort=relevance';
 		}
@@ -581,7 +591,17 @@ function sort(this_data,drop_down){
 		if(pageType == 'productsearch'){
 			var url = $('#searchPageDeptHierTreeForm').serialize();
 			url = url+'&sort=isProductNew';
-		}else{
+		}
+		//SDI-810
+		else if(pageType == 'product'){
+			var url = $('#categoryPageDeptHierTreeForm').serialize();
+			if(url.indexOf('&') > -1){
+				url = url+'&sort=isProductNew';
+			} else {
+				url = url+'sort=isProductNew';
+			}
+		}
+		else{
 			var url = $('#categoryPageDeptHierTreeForm').serialize();
 			url = url+'&sort=isProductNew';
 		}
@@ -593,7 +613,17 @@ function sort(this_data,drop_down){
 		if(pageType == 'productsearch'){
 			var url = $('#searchPageDeptHierTreeForm').serialize();
 			url = url+'&sort=isDiscountedPrice';
-		}else{
+		}
+		//SDI-810
+		else if(pageType == 'product'){
+			var url = $('#categoryPageDeptHierTreeForm').serialize();
+			if(url.indexOf('&') > -1){
+				url = url+'&sort=isDiscountedPrice';
+			} else {
+				url = url+'sort=isDiscountedPrice';
+			}
+		}
+		else{
 			var url = $('#categoryPageDeptHierTreeForm').serialize();
 			url = url+'&sort=isDiscountedPrice';
 		}
@@ -605,7 +635,17 @@ function sort(this_data,drop_down){
 		if(pageType == 'productsearch'){
 			var url = $('#searchPageDeptHierTreeForm').serialize();
 			url = url+'&sort=price-asc';
-		}else{
+		}
+		//SDI-810
+		else if(pageType == 'product'){
+			var url = $('#categoryPageDeptHierTreeForm').serialize();
+			if(url.indexOf('&') > -1){
+				url = url+'&sort=price-asc';
+			} else {
+				url = url+'sort=price-asc';
+			}
+		}
+		else{
 			var url = $('#categoryPageDeptHierTreeForm').serialize();
 			url = url+'&sort=price-asc';
 		}
@@ -617,7 +657,17 @@ function sort(this_data,drop_down){
 		if(pageType == 'productsearch'){
 			var url = $('#searchPageDeptHierTreeForm').serialize();
 			url = url+'&sort=price-desc';
-		}else{
+		}
+		//SDI-810
+		else if(pageType == 'product'){
+			var url = $('#categoryPageDeptHierTreeForm').serialize();
+			if(url.indexOf('&') > -1){
+				url = url+'&sort=price-desc';
+			} else {
+				url = url+'sort=price-desc';
+			}
+		}
+		else{
 			var url = $('#categoryPageDeptHierTreeForm').serialize();
 			url = url+'&sort=price-desc';
 		}

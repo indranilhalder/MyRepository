@@ -140,7 +140,7 @@ public class DefaultJuspayWebHookServiceImpl implements JuspayWebHookService
 	private void validateWebHookData(final List<JuspayWebhookModel> webHookDetailList, final boolean flag)
 			throws EtailNonBusinessExceptions
 	{
-	
+
 		if (CollectionUtils.isNotEmpty(webHookDetailList))
 		{
 			final List<JuspayWebhookModel> uniqueList = new ArrayList<JuspayWebhookModel>();
@@ -346,13 +346,14 @@ public class DefaultJuspayWebHookServiceImpl implements JuspayWebHookService
 												LOG.error("Exception occurred while creating paymentTransactionModel for ScheduleDelCharges for order id "
 														+ subOrder.getCode());
 											}
-										}else if (null != subOrder && null != rtmModel.getRefundType()
+										}
+										else if (null != subOrder && null != rtmModel.getRefundType()
 												&& rtmModel.getRefundType().equals(JuspayRefundType.REFUND_EXPRESS_DELIVERY_CHARGE))
 										{
 											try
 											{
-												createPaymentTransactionModelForEdCharges(rtmModel, refund, subOrder, hook
-														.getOrderStatus().getOrderId());
+												createPaymentTransactionModelForEdCharges(rtmModel, refund, subOrder, hook.getOrderStatus()
+														.getOrderId());
 											}
 											catch (final Exception e)
 											{
@@ -858,7 +859,7 @@ public class DefaultJuspayWebHookServiceImpl implements JuspayWebHookService
 		}
 	}
 
-	
+
 	/**
 	 * @param rtmModel
 	 * @param refund
@@ -884,8 +885,8 @@ public class DefaultJuspayWebHookServiceImpl implements JuspayWebHookService
 				if (refund.getStatus().equalsIgnoreCase(MarketplacecommerceservicesConstants.SUCCESS))
 				{
 					paymentTransactionModel = getMplJusPayRefundService().createPaymentTransactionModel(order,
-							MarketplacecommerceservicesConstants.SUCCESS, refundAmount, PaymentTransactionType.REFUND_EXPRESS_DELIVERY_CHARGES,
-							REFUND, uniqueRequestId);
+							MarketplacecommerceservicesConstants.SUCCESS, refundAmount,
+							PaymentTransactionType.REFUND_EXPRESS_DELIVERY_CHARGES, REFUND, uniqueRequestId);
 					if (null != rtmModel.getRefundedOrderEntry() && null != rtmModel.getRefundedOrderEntry().getConsignmentEntries())
 					{
 						newStatus = rtmModel.getRefundedOrderEntry().getConsignmentEntries().iterator().next().getConsignment()
@@ -895,8 +896,8 @@ public class DefaultJuspayWebHookServiceImpl implements JuspayWebHookService
 				else if (refund.getStatus().equalsIgnoreCase(MarketplacecommerceservicesConstants.FAILURE))
 				{
 					paymentTransactionModel = getMplJusPayRefundService().createPaymentTransactionModel(order,
-							MarketplacecommerceservicesConstants.FAILURE, refundAmount, PaymentTransactionType.REFUND_EXPRESS_DELIVERY_CHARGES,
-							REFUND_FAIL, uniqueRequestId);
+							MarketplacecommerceservicesConstants.FAILURE, refundAmount,
+							PaymentTransactionType.REFUND_EXPRESS_DELIVERY_CHARGES, REFUND_FAIL, uniqueRequestId);
 
 					if (null != rtmModel.getRefundedOrderEntry() && null != rtmModel.getRefundedOrderEntry().getConsignmentEntries())
 					{
@@ -1213,18 +1214,42 @@ public class DefaultJuspayWebHookServiceImpl implements JuspayWebHookService
 							if (orderStatusResponse.getStatus().equalsIgnoreCase(MarketplacecommerceservicesConstants.CHARGED)
 									&& CollectionUtils.isEmpty(orderStatusResponse.getRefunds()))
 							{
-								//Calling refund for Payment_Timeout order
-								getMplJusPayRefundService().doRefund(orderId, oModel.getOrderStatus().getCardResponse().getCardType());
+								//Calling refund for Payment_Timeout payment_failed order
+								try
+								{
+									//TISPRO-130
+									if (null != oModel.getOrderStatus().getPaymentMethodType()
+											&& oModel.getOrderStatus().getPaymentMethodType()
+													.equalsIgnoreCase(MarketplacecommerceservicesConstants.PAYMENT_METHOD_NB))
+									{
+										//calling refund service where there will be cart only for NB
+										getMplJusPayRefundService().doRefund(auditDataModel.getAuditId(),
+												oModel.getOrderStatus().getPaymentMethodType());
+									}
+									//TISPRO-675
+									else if (StringUtils.isNotEmpty(oModel.getOrderStatus().getEmiBank())
+											&& StringUtils.isNotEmpty(oModel.getOrderStatus().getEmiTenure()))
+									{
+										//calling refund service where there will be cart only for EMI
+										getMplJusPayRefundService().doRefund(auditDataModel.getAuditId(),
+												MarketplacecommerceservicesConstants.EMI);
+									}
+									else
+									{
+										//calling refund service where there will be cart only for CARD
+										getMplJusPayRefundService().doRefund(auditDataModel.getAuditId(),
+												oModel.getOrderStatus().getCardResponse().getCardType());
+									}
+								}
+								catch (final Exception e)
+								{
+									LOG.error(e.getMessage(), e);
+								}
 							}
 
 							updateWebHookExpired(oModel);
 
 						}
-						//Blocked for TPR-629
-						//						else
-						//						{
-						//							updateWebHookExpired(oModel);
-						//						}
 					}
 				}
 			}
@@ -1543,7 +1568,12 @@ public class DefaultJuspayWebHookServiceImpl implements JuspayWebHookService
 		else if (orderStatusResponse.getRiskResponse().getEbsPaymentStatus()
 				.equalsIgnoreCase(MarketplacecommerceservicesConstants.REJECTED))
 		{
-			getOrderStatusSpecifier().setOrderStatus(orderModel, OrderStatus.RMS_VERIFICATION_FAILED);
+			boolean rmsEligibleFlag = false;
+			rmsEligibleFlag = checkRMSFailedEligible(orderModel);
+			if (rmsEligibleFlag)
+			{
+				getOrderStatusSpecifier().setOrderStatus(orderModel, OrderStatus.RMS_VERIFICATION_FAILED);
+			}
 		}
 
 
@@ -1730,7 +1760,12 @@ public class DefaultJuspayWebHookServiceImpl implements JuspayWebHookService
 					if (orderStatusResponse.getRiskResponse().getEbsRiskLevel()
 							.equalsIgnoreCase(MarketplacecommerceservicesConstants.RED))
 					{
-						getOrderStatusSpecifier().setOrderStatus(orderModel, OrderStatus.RMS_VERIFICATION_FAILED);
+						boolean rmsEligibleFlag = false;
+						rmsEligibleFlag = checkRMSFailedEligible(orderModel);
+						if (rmsEligibleFlag)
+						{
+							getOrderStatusSpecifier().setOrderStatus(orderModel, OrderStatus.RMS_VERIFICATION_FAILED);
+						}
 					}
 				}
 			}
@@ -1806,7 +1841,6 @@ public class DefaultJuspayWebHookServiceImpl implements JuspayWebHookService
 
 		return auditEntry;
 	}
-
 
 
 
@@ -1975,6 +2009,27 @@ public class DefaultJuspayWebHookServiceImpl implements JuspayWebHookService
 		this.configurationService = configurationService;
 	}
 
+	private boolean checkRMSFailedEligible(final OrderModel orderModel)
+	{
 
+		boolean flag = false;
+		final List<OrderModel> subOrderList = orderModel.getChildOrders();
+		if (CollectionUtils.isNotEmpty(subOrderList))
+		{
+			for (final OrderModel subOrder : subOrderList)
+			{
+				if (null != subOrder.getStatus()
+						&& (OrderStatus.PAYMENT_PENDING.equals(subOrder.getStatus())
+								|| OrderStatus.PAYMENT_SUCCESSFUL.equals(subOrder.getStatus()) || OrderStatus.RMS_VERIFICATION_PENDING
+									.equals(subOrder.getStatus())))
+				{
+					flag = true;
+				}
+			}
+			LOG.debug("Flag for RMS Failure" + flag);
+		}
+		return flag;
+
+	}
 
 }

@@ -393,10 +393,11 @@ public class DefaultMplOrderService implements MplOrderService
 	}
 
 	//TPR-5225
+	//SDI-1193
 	@Override
-	public List<OrderModel> fetchOrderByMobile(final String mobileNo, final int queryCount)
+	public List<OrderModel> fetchOrderByMobile(final String mobileNo, final int queryCount, final int transactionLimit)
 	{
-		return mplOrderDao.getOrderByMobile(mobileNo, queryCount);
+		return mplOrderDao.getOrderByMobile(mobileNo, queryCount, transactionLimit);
 	}
 
 	//TPR-5225

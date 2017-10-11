@@ -5,28 +5,23 @@ package com.tisl.mpl.facade.product.impl;
 
 import de.hybris.platform.catalog.model.ProductFeatureModel;
 import de.hybris.platform.commercefacades.product.data.ProductData;
-import de.hybris.platform.commercefacades.storelocator.data.PointOfServiceData;
-import de.hybris.platform.core.model.product.PincodeModel;
-import de.hybris.platform.storelocator.location.Location;
-import de.hybris.platform.storelocator.location.impl.LocationDTO;
-import de.hybris.platform.storelocator.location.impl.LocationDtoWrapper;
+import de.hybris.platform.servicelayer.session.SessionService;
 
-import java.util.ArrayList;
 import java.util.List;
 
-import javax.inject.Provider;
+import javax.annotation.Resource;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 
+import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.facade.config.MplConfigFacade;
 import com.tisl.mpl.facade.product.MplProductFacade;
 import com.tisl.mpl.facades.constants.MarketplaceFacadesConstants;
 import com.tisl.mpl.marketplacecommerceservices.service.MplPincodeDistanceService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplProductService;
 import com.tisl.mpl.marketplacecommerceservices.service.PincodeService;
-import com.tisl.mpl.pincode.facade.PincodeServiceFacade;
 
 
 /**
@@ -38,11 +33,6 @@ public class MplProductFacadeImpl implements MplProductFacade
 
 	private MplProductService mplProductService;
 
-
-	//private PincodeServiceFacade pincodeServiceFacade;
-
-	@Autowired
-	private Provider<PincodeServiceFacade> pincodeServiceFacadeProvider;
 
 	@Autowired
 	@Qualifier("pincodeService")
@@ -58,7 +48,8 @@ public class MplProductFacadeImpl implements MplProductFacade
 
 	@SuppressWarnings("unused")
 	private static final Logger LOG = Logger.getLogger(MplProductFacadeImpl.class);
-
+	@Resource(name = MarketplaceFacadesConstants.SESSION_SERVICE)
+	private SessionService sessionService;
 
 	/**
 	 * @return the mplProductService
@@ -104,58 +95,31 @@ public class MplProductFacadeImpl implements MplProductFacade
 		return null;
 	}
 
-	/**
-	 * @param pincode
-	 * @return
+
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.tisl.mpl.facade.product.MplProductFacade#getPDPPincodeSession()
 	 */
 	@Override
-	public List<PointOfServiceData> storeLocatorPDP(final String pincode)
+	public String getPDPPincodeSession()
 	{
-
-		if (LOG.isDebugEnabled())
-		{
-			LOG.debug("from getAllStoresForPincode method");
-		}
-		List<PointOfServiceData> posData = new ArrayList<PointOfServiceData>();
-		final List<PointOfServiceData> filteredPosData = new ArrayList<PointOfServiceData>();
-		final LocationDTO dto = new LocationDTO();
-		try
-		{
-
-			String radius = mplConfigFacade.getCongigValue(MarketplaceFacadesConstants.CONFIGURABLE_RADIUS);
-			LOG.debug("configurableRadius is:" + radius);
-			if (null == radius)
-			{
-				radius = "0";
-			}
-			Location myLocation = null;
-			//fetch latitude and longitude for a pincode from comm
-			final PincodeModel pincodeModel = pincodeService.getLatAndLongForPincode(pincode);
-
-			if (null != pincodeModel)
-			{
-				dto.setLatitude(pincodeModel.getLatitude().toString());
-				dto.setLongitude(pincodeModel.getLongitude().toString());
-				myLocation = new LocationDtoWrapper(dto);
-				final PincodeServiceFacade pincodeServiceFacade = pincodeServiceFacadeProvider.get();
-				posData = pincodeServiceFacade.getStoresForPincode(myLocation.getGPS(), radius);
-				for (final PointOfServiceData obj : posData)
-				{
-					if (obj.getClicknCollect().equalsIgnoreCase("Y"))
-					{
-						filteredPosData.add(obj);
-					}
-				}
-
-
-				posData = mplPincodeDistanceService.pincodeDistance(filteredPosData, pincodeModel.getLatitude(),
-						pincodeModel.getLongitude(), pincode);
-			}
-		}
-		catch (final Exception e)
-		{
-			LOG.error("Something went wrong in calling getAllStoresForPincode");
-		}
-		return posData;
+		return (String) sessionService.getAttribute(MarketplacecommerceservicesConstants.SESSION_PINCODE);
 	}
+
+
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.tisl.mpl.facade.product.MplProductFacade#setPDPPincodeSession(java.lang.String)
+	 */
+	@Override
+	public void setPDPPincodeSession(final String pincode)
+	{
+		sessionService.setAttribute(MarketplacecommerceservicesConstants.SESSION_PINCODE, pincode);
+	}
+
+
 }

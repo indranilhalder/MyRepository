@@ -4,7 +4,7 @@
 
 <div class="video-wrapper">
     <div class="video-container">
-        <video width="100%" height="100%" controls autoplay poster="${previewImageUrl}">
+        <video width="100%" height="100%" controls autoplay poster="${previewImageUrl}" muted>
             <source src="${videoUrl}" type="video/mp4">
         </video>
     </div>

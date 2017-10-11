@@ -14,14 +14,14 @@
 	</div>
 	</div>
 	<cms:pageSlot position="Section1" var="feature">
-		<cms:component component="${feature}" element="div" class="" />
+		<cms:component component="${feature}" element="div" class="blp-carousel homepage-banner" />
 	</cms:pageSlot>
-	<div class="men_women_sec">
+	<div class="men_women_sec rainbow_men_women_sec">
 	<cms:pageSlot position="ForHimForHerSlot" var="feature">
 		<cms:component component="${feature}" element="div" class="" />
 	</cms:pageSlot>
 	</div>
-	<div class="top_categories_blp">
+	<div class="top_categories_blp rainbow_top_categories_blp">
 	<cms:pageSlot position="TopCategoryHeadingSlot" var="feature">
 		<cms:component component="${feature}" element="div" class="top_categories_section_blp"/>
 	</cms:pageSlot>
@@ -53,7 +53,7 @@
 					<cms:component component="${feature}" element="div" class="featured_collection_section"/>
 				</cms:pageSlot>
 				</div>
-	<div class="blp_top_brands">
+	<div class="blp_top_brands rainbow_blp_top_brands">
 	<cms:pageSlot position="TopBrandSlot" var="feature">
 		<cms:component component="${feature}" element="div" class="blp_top_brands_section"/>
 	</cms:pageSlot>
@@ -109,7 +109,7 @@
 				</cms:pageSlot>
 				</div>
 	
-	<div class="top_deal_blp">
+	<div class="top_deal_blp rainbow_top_deal_blp">
 			<cms:pageSlot position="TopDealsSlot" var="feature">
 				<cms:component component="${feature}"  class="top_deal_carousel_blp" />
 			</cms:pageSlot>
@@ -172,4 +172,5 @@
 	<!-- For Infinite Analytics Start -->
 	<div class="trending" id="ia_products_new"></div>
 	<!-- For Infinite Analytics End -->
+	<input type="hidden" name="newBrandLandingPage" value="1"/>
 </template:page>

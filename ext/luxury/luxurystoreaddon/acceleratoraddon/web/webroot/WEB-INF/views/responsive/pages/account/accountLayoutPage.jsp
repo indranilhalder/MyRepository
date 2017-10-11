@@ -56,7 +56,7 @@
               </optgroup> --%>
     </select>
     </div>
-     <div><h2 style="text-align: center;"><spring:theme code="MyAccount" /></h2></div>
+     <div><h2 style="text-align: center;"><spring:theme code="text.heading.myaccount" /></h2></div>
 		<div class="wrapper">
 		
 			<!----- Left Navigation Starts --------->
@@ -64,7 +64,7 @@
 			<!----- Left Navigation ENDS --------->
 			<!----- RIGHT Navigation Starts --------->
 			<div class="right-account">
-				<h2>Overview</h2>
+				<h2>My Account</h2>
 				
 				<ul class="menu">
 				<cms:pageSlot position="BodyContent" var="feature">

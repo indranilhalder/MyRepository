@@ -35,7 +35,8 @@
 
 	</div>
 
-</div>  	
+</div>
+<input type="hidden"  name="BrandLayoutPage" value="1"/> 
 </template:page>
 
 

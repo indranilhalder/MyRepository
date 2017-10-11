@@ -213,6 +213,57 @@ public class PincodeServiceFacadeImpl implements PincodeServiceFacade
 	}
 
 	/**
+	 * This method is used to prepare Storelocator response data for PDP
+	 *
+	 * @param pincode
+	 * @param sellerUssId
+	 * @param productCode
+	 * @return StoreLocationResponseData
+	 */
+	@Override
+	public List<StoreLocationResponseData> getListofStoreLocationsforPincode(final String pincode, final String sellerUssId,
+			final String productCode)
+	{
+		List<StoreLocationResponseData> storeLocationResponseDataList = null;
+		try
+		{
+			final List<StoreLocationRequestData> storeLocationRequestDataList = new ArrayList<StoreLocationRequestData>();
+			final PincodeModel pinCodeModelObj = pincodeService.getLatAndLongForPincode(pincode);
+			if (null != pinCodeModelObj)
+			{
+
+				final LocationDTO dto = new LocationDTO();
+				dto.setLongitude(pinCodeModelObj.getLongitude().toString());
+				dto.setLatitude(pinCodeModelObj.getLatitude().toString());
+				final Location myLocation = new LocationDtoWrapper(dto);
+
+				final StoreLocationRequestData storeLocationRequestData = papulateClicknCollectRequestData(sellerUssId,
+						myLocation.getGPS());
+				if (null != storeLocationRequestData)
+				{
+					storeLocationRequestDataList.add(storeLocationRequestData);
+					//call to OMS get the storelocations for given pincode
+					storeLocationResponseDataList = mplCartFacade.getStoreLocationsforCnC(storeLocationRequestDataList);
+					return storeLocationResponseDataList;
+				}
+				else
+				{
+					return storeLocationResponseDataList;
+				}
+			}
+			else
+			{
+				LOG.error(" pincode model not found for given pincode " + pincode);
+				throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9516);
+			}
+		}
+		catch (final Exception e)
+		{
+			throw e;
+		}
+	}
+
+	/**
 	 * This methd prepares request data to send to oms for cnc.
 	 *
 	 * @param sellerUssId
@@ -834,8 +885,6 @@ public class PincodeServiceFacadeImpl implements PincodeServiceFacade
 		}
 		return pincodeData;
 	}
-
-
 
 	/**
 	 * @return the mplPincodeConverter

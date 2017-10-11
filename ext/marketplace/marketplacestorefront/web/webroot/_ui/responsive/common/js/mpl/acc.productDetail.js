@@ -1276,6 +1276,12 @@ function pincodeServiceability(){
 												$("#outOfStockId").show();
 												$("#buyNowButton").hide();
 												$("#stock").val(0);
+												//SDI-1023
+												if($("#pageType").val() == "/sellersdetailpage")
+												{ 
+												//console.log("works o");
+												$("#winning_product_stock").val(0);
+												}
 											} else {
 												$("#addToCartButton").show();
 												$('#buyNowButton').attr("disabled",false);
@@ -1284,6 +1290,8 @@ function pincodeServiceability(){
 											if (pincodedata['cod'] == 'Y') {
 												$("#codId").show();
 											}
+											//SDI-1023
+											$("#winning_product_stock").val(pincodedata['stockCount']); 
 											for ( var j in deliveryModes) {
 												var mode = deliveryModes[j];
 												deliveryModeName = mode['type'];
@@ -1355,7 +1363,7 @@ function pincodeServiceability(){
 
 												deliverModeTealium.push("clickandcollect");
 												//TPR-6654
-												var requiredUrl = ACC.config.encodedContextPath + "/p-allStores/"+pin;
+												var requiredUrl = ACC.config.encodedContextPath + "/p-allStores/"+pin+"/"+ussid+"/"+productCode;
 												$.ajax({
 													url : requiredUrl,
 													type : "GET",
@@ -1410,7 +1418,14 @@ function pincodeServiceability(){
 											$('#wrongPinExc,#unableprocessPinExc,#emptyPinExc,#serviceablePinExc').hide();
 											$('#addToCartFormTitle')
 													.hide();
-											if ($("#stock").val() > 0) {
+											//SDI-1023		
+											var stockProduct = $("#stock").val();
+											if($("#pageType").val() == "/sellersdetailpage") {
+												stockProduct = $("#winning_product_stock").val();
+											} else  {
+												stockProduct = $("#stock").val();
+											}
+											if (stockProduct > 0) {
 												$('#addToCartButton-wrong').show();
 												$('#buyNowButton').attr("disabled",true);
 											} else {
@@ -1453,7 +1468,14 @@ function pincodeServiceability(){
 											.hide();
 									 $('#wrongPinExc,#unableprocessPinExc,#emptyPinExc').hide();
 									$('#addToCartFormTitle').hide();
-									if ($("#stock").val() > 0) {
+									//SDI-1023
+									var stockProduct = $("#stock").val();
+									if($("#pageType").val() == "/sellersdetailpage") {
+										stockProduct = $("#winning_product_stock").val();
+									} else  {
+										stockProduct = $("#stock").val();
+									}
+									if (stockProduct > 0) {
 										$('#addToCartButton-wrong').show();
 									} else {
 										$("#outOfStockId").show();
@@ -1488,7 +1510,8 @@ function pincodeServiceability(){
 			 				dtmErrorTracking("Pin Code Servicability Error",error);
 						}
 					});
-
+			 //SDI-1023
+			   //setTimeout(function(){ $("#addToCartForm #stock").val($("#winning_product_stock").val()); }, 1000); 
 			//TPR-900
 			$('#pin').blur();
 			
@@ -1842,7 +1865,7 @@ function displayDeliveryDetails(sellerName) {
 					$("#codLink").removeAttr("href");
 					$("#codLink").css("cursor","default");
 					}
-					$("#codEli").show();
+					$("#codEli").css("display","inline-block");
 				} else {
 					$("#codId").hide();
 					$("#codEli").hide(); //TPR-6907
@@ -3763,7 +3786,11 @@ function onSizeSelectPopulateDOM()//First Method to be called in size select aja
 					$('#sizeSelectAjaxData').remove();
 					if(typeof(jsonData['error'])=='undefined')
 					{
-						
+						//TISPRDT-6168 starts
+						$('#pin').attr("disabled",false); 
+						$('#pdpPincodeCheckDList').hide(); 
+						$('#pdpPincodeCheck').show();
+						//TISPRDT-6168 ends
 						//UF-33 starts//   //TISSTRT-1587//
 						//Update Page Title
 						document.title = jsonData['mapConfigurableAttribute']['metaTitle'];
@@ -4421,6 +4448,12 @@ function getBuyBoxDataAjax(productCode,variantCodesJson)
 					var mop = data['price'];
 					var savingsOnProduct= data['savingsOnProduct'];
 					$("#stock").val(data['availablestock']);
+					//SDI-1023
+					if($("#pageType").val() == "/sellersdetailpage")
+					{ 
+					//console.log("works");
+					$("#winning_product_stock").val(data['availablestock']);
+					}
 					$(".selectQty").change(function() {
 						$("#qty").val($(".selectQty :selected").val());
 					});

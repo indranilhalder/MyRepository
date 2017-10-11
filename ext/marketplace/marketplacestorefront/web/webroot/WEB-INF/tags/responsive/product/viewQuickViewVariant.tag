@@ -277,7 +277,15 @@
 		<ul label="sizes" id="quickViewVariant">
 		 <li style="display:none;"><a href="#" class="js-reference-item cboxElement">select size</a></li>
 	         <c:choose>
-			   <c:when test="${product.rootCategory=='FineJewellery' || product.rootCategory=='FashionJewellery'}">		     
+			   <c:when test="${product.rootCategory=='FineJewellery' || product.rootCategory=='FashionJewellery'}">	
+			   
+			      
+			     <!-- UF-422:Changes for PDP when product has only one size -->
+				 <c:set var="selectedClass" value=""/>
+					<c:if test= "${fn:length(product.variantOptions) eq 1 || pdpSizeCounter eq 1}">
+						<c:set var ="selectedClass" value ="class='selected'"/></c:if>	
+				
+					     
 		 			<c:forEach items="${product.variantOptions}" var="variantOption">
 					<c:forEach var="entry" items="${variantOption.sizeLink}">
 				
@@ -286,7 +294,7 @@
 						<c:when test="${(variantOption.code eq product.code)}">
 							<c:choose>
 								<c:when test="${selectedSize eq null}">										
-									<li><a href="${link}?selectedSize=true${msiteSellerForSize}" class="js-reference-item cboxElement">${entry.value}</a></li>
+									<li ${selectedClass}><a href="${link}?selectedSize=true${msiteSellerForSize}" class="js-reference-item cboxElement">${entry.value}</a></li>
 								</c:when>
 								<c:otherwise>											
 									<li class="selected"><a href="${link}?selectedSize=true${msiteSellerForSize}" class="js-reference-item cboxElement">${entry.value}</a></li>
@@ -294,7 +302,7 @@
 							</c:choose>
 						</c:when>
 						<c:otherwise>								
-							<li data-vcode="${link}"><a href="${link}?selectedSize=true${msiteSellerForSize}"  class="js-reference-item cboxElement">${entry.value}</a></li>
+							<li ${selectedClass} data-vcode="${link}"><a href="${link}?selectedSize=true${msiteSellerForSize}"  class="js-reference-item cboxElement">${entry.value}</a></li>
 						</c:otherwise>
 					</c:choose>
 					</c:forEach>

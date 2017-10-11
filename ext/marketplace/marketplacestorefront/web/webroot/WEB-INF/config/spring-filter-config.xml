@@ -60,8 +60,8 @@
 				<entry key="/sociallogin" value-ref="withoutCartRestorationFilterChain"/>
 				<entry key="/headerWishlist" value-ref="withoutCartRestorationFilterChain"/>
 				
-		 <!-- TISPT-348 Custom filter chain for the following methods End-->		
-								
+		 		<!-- TISPT-348 Custom filter chain for the following methods End-->		
+				<entry key="/p" value-ref="onlyPDPRestorationFilterChain"/>					
 			</map>
 		</property>
 	</bean>
@@ -317,5 +317,30 @@
 	</bean>
 	
 	<!-- TISPT-348 Custom filter chain for search,PDP,category and MicroSite ends -->
+	<!-- PT Fix TPR-6654-->
+	<bean id="pdpPincodeRestorationFilter" class="com.tisl.mpl.storefront.filters.PDPPincodeRestorationFilter" >
+		<property name="pdpPincodeCookieGenerator" ref="pdpPincodeCookieGenerator"/>
+		<property name="mplProductFacade" ref="mplProductFacade"/>
+	</bean>
+	<alias name="defaultOnlyPDPRestorationFilterChainList" alias="onlyPDPRestorationFilterChainList" />
+	<util:list id="defaultOnlyPDPRestorationFilterChainList">
+		<ref bean="log4jFilter"/>
+		<ref bean="storefrontSessionFilter"/>
+		<ref bean="requestLoggerFilter"/>	
+		<ref bean="cmsSiteFilter"/>
+		<ref bean="storefrontFilter"/>
+		<ref bean="urlEncoderFilter"/>
+		<ref bean="springSecurityFilterChain"/>
+		<ref bean="anonymousCheckoutFilter"/>
+		<ref bean="customerLocationRestorationFilter"/>
+		<!-- needs to be added for making calls to IA on search page,brand page -->
+		<ref bean="userDetailsRestorationFilter"/>
+		<ref bean="pdpPincodeRestorationFilter"/>
+	</util:list>
 	
+	<bean id="onlyPDPRestorationFilterChain" class="de.hybris.platform.servicelayer.web.PlatformFilterChain">
+	   <constructor-arg>
+	   		<ref bean="onlyPDPRestorationFilterChainList"/>
+	   </constructor-arg>
+	</bean>
 </beans>

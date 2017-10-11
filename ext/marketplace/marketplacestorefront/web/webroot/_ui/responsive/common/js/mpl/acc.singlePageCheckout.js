@@ -338,7 +338,7 @@ ACC.singlePageCheckout = {
     	var entryNumbers=entryNumbersId.split("#");
 		for(var i=0;i<entryNumbers.length-1;i++)
 		{
-		    if(isCncPresent && $('input:radio[name='+entryNumbers[i]+']:checked').attr("id").includes("click-and-collect"))
+		    if(isCncPresent && $("input[name='"+entryNumbers[i]+"']").length>0 && $('input:radio[name='+entryNumbers[i]+']:checked').attr("id").includes("click-and-collect"))
 		    {
 			    var ussid=$('input[name="deliveryMethodEntry['+entryNumbers[i]+'].sellerArticleSKU"]').val();
 			    ACC.singlePageCheckout.fetchStores(entryNumbers[i],ussid,'click-and-collect','','');
@@ -1764,7 +1764,11 @@ ACC.singlePageCheckout = {
         		
         		ACC.singlePageCheckout.getSelectedDeliveryModes(callFrom);
         	}
-        	
+        	if(callFrom=="removeCartItem")
+        	{
+        		ACC.singlePageCheckout.attachDeliveryModeChangeEvent();
+        		ACC.singlePageCheckout.showHideCodTab();
+        	} 
         	//Resetting voucher on removal of cart item, we are doing it twice once in proceedOnAddressSelection,getDeliverOptionsPage
     		var couponCode=$("#couponFieldId").val();
     		if(couponCode!="")
@@ -2639,7 +2643,7 @@ ACC.singlePageCheckout = {
     	var entryNumbers=entryNumbersId.split("#");
 		for(var i=0;i<entryNumbers.length-1;i++)
 		{
-		    if(isCncPresent && $('input:radio[name='+entryNumbers[i]+']:checked').attr("id").includes("click-and-collect"))
+		    if(isCncPresent && $("input[name='"+entryNumbers[i]+"']").length>0 && $('input:radio[name='+entryNumbers[i]+']:checked').attr("id").includes("click-and-collect"))
 		    {
 		    	cncSelected="true";
 			    var ussid=$('input[name="deliveryMethodEntry['+entryNumbers[i]+'].sellerArticleSKU"]').val();

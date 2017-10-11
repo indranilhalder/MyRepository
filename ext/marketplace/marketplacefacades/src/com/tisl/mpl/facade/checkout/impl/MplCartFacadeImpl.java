@@ -1528,8 +1528,7 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 							&& MarketplacecommerceservicesConstants.FINEJEWELLERY.equalsIgnoreCase(productData.getRootCategory())
 							&& productCode.equals(productData.getCode()) && !ussid.equals(entry.getSelectedUssid()))
 					{
-						LOG.debug(
-								"Product already present in the cart so now we will check the qunatity present in the cart already for fine jewellery different weight variant.");
+						LOG.debug("Product already present in the cart so now we will check the qunatity present in the cart already for fine jewellery different weight variant.");
 						if (qty + entry.getQuantity().longValue() >= maximum_configured_quantiy_jewellery)
 						{
 							addToCartFlag = MarketplacecommerceservicesConstants.MAX_QUANTITY_ADDED_FOR_FINEJEWELLERY;
@@ -1773,8 +1772,30 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 								entry.setFulfillmentType(item.getFulfillmentType());
 								try
 								{
-									final SellerInformationModel sellerInfoModel = getMplCommerceCartService().getSellerDetailsData(
-											entry.getSelectedUSSID());
+									/*
+									 * final SellerInformationModel sellerInfoModel = getMplCommerceCartService()
+									 * .getSellerDetailsData(entry.getSelectedUSSID());
+									 */
+									SellerInformationModel sellerInfoModel = null;
+									if (entry.getProduct().getProductCategoryType().equalsIgnoreCase(FINEJEWELLERY))
+
+									{
+										final List<JewelleryInformationModel> jewelleryInfo = jewelleryService
+												.getJewelleryInfoByUssid(entry.getSelectedUSSID());
+										if (CollectionUtils.isNotEmpty(jewelleryInfo))
+										{
+											sellerInfoModel = getMplCommerceCartService().getSellerDetailsData(
+													jewelleryInfo.get(0).getPCMUSSID());
+										}
+										else
+										{
+											LOG.error("No entry in JewelleryInformationModel for ussid " + entry.getSelectedUSSID());
+										}
+									}
+									else
+									{
+										sellerInfoModel = getMplCommerceCartService().getSellerDetailsData(entry.getSelectedUSSID());
+									}
 									List<RichAttributeModel> richAttributeModel = null;
 									if (sellerInfoModel != null)
 									{
@@ -3036,6 +3057,22 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 		return mplCommerceCartService.getStoreLocationsforCnC(storeLocationRequestDataList, cartModel);
 	}
 
+	/**
+	 * this method calls service to get inventories for stores.
+	 *
+	 *
+	 * @param storeLocationRequestDataList
+	 * @return returns Stores with inventories.
+	 */
+	@Override
+	public List<StoreLocationResponseData> getStoreLocationsforCnC(
+			final List<StoreLocationRequestData> storeLocationRequestDataList)
+	{
+
+		LOG.debug("from getStoreLocationforCnC PDP");
+		return mplCommerceCartService.getStoreLocationsforCnC(storeLocationRequestDataList);
+	}
+
 	@Override
 	public OrderEntryData getCartEntryByUssid(final String ussid, final CartData cart)
 
@@ -3542,11 +3579,9 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 						}
 					}
 				}
-				if ((null != promoModel && promoModel.getEnabled() == Boolean.TRUE
-						&& promotionResult.getCertainty().floatValue() < 1.0F)
+				if ((null != promoModel && promoModel.getEnabled() == Boolean.TRUE && promotionResult.getCertainty().floatValue() < 1.0F)
 						&& (promoModel instanceof BuyAboveXGetPromotionOnShippingChargesModel
-								|| promoModel instanceof BuyAGetPromotionOnShippingChargesModel
-								|| promoModel instanceof BuyAandBGetPromotionOnShippingChargesModel))
+								|| promoModel instanceof BuyAGetPromotionOnShippingChargesModel || promoModel instanceof BuyAandBGetPromotionOnShippingChargesModel))
 				{
 					//Checking shipping charges promotion are present, In that case isDelModeRestrictedPromotionPresent will be true
 					restrictionMap.put("isDelModeRestrictedPromoPresent", Boolean.TRUE);
@@ -4456,8 +4491,8 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 			{
 				for (final PromotionResultModel productPromotion : promotions)
 				{
-					final AbstractPromotionModel promotion = productPromotion.getPromotion() != null
-							? (productPromotion.getPromotion()) : (null);
+					final AbstractPromotionModel promotion = productPromotion.getPromotion() != null ? (productPromotion
+							.getPromotion()) : (null);
 					if (null != promotion && CollectionUtils.isNotEmpty(promotion.getRestrictions())) //CustomOrderThresholdFreeGiftPromotionModel
 					{
 						for (final AbstractPromotionRestrictionModel restriction : promotion.getRestrictions())
@@ -4475,5 +4510,20 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 
 		}
 		return isPincodeRestrictedPromotionPresent;
+	}
+
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.tisl.mpl.facade.checkout.MplCartFacade#populatePriceDisclaimerCart(de.hybris.platform.core.model.order.CartModel
+	 * )
+	 */
+	@Override
+	public String populatePriceDisclaimerCart(final CartModel cartModel)
+	{
+		// YTODO Auto-generated method stub
+		return mplCommerceCartService.populatePriceDisclaimerCart(cartModel);
 	}
 }
