@@ -3576,6 +3576,13 @@ function validateCVVEmi() {
 }
 
 function validateCardNo(formSubmit) {
+	var isEGVOrder=$("#isEGVOrder").val();
+	 if(isEGVOrder == ''){
+	  isEGVOrder=false;
+	 }else if(isEGVOrder == "undefined"){
+	  isEGVOrder=false;
+	 }
+	 
 	var value=$("#cardNo").val();
 	var errorHandle = document.getElementById("cardNoError"); 
 	var cardType= $("#cardType").val();
@@ -3761,7 +3768,11 @@ function validateCardNo(formSubmit) {
 //				{
 					binStatus=true;
 					if($("#paymentMode").val()!='EMI'){
-						applyPromotion(null,binStatus,formSubmit);
+						if(isEGVOrder){
+					       dopayment(binStatus);
+					      } else {
+					       applyPromotion(null,binStatus,formSubmit);
+					      }
 					}
 					else
 					{
