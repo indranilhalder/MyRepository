@@ -3022,14 +3022,16 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 												GlobalMessages.addFlashMessage(redirectAttributes, GlobalMessages.ERROR_MESSAGES_HOLDER,
 														MarketplacecheckoutaddonConstants.TRANERRORMSG);
 												if (null != qcResponse && null != qcResponse.getResponseCode()
-														&& qcResponse.getResponseCode().intValue() == 0)
+														&& qcResponse.getResponseCode().intValue() == 0
+														&& MarketplacecheckoutaddonConstants.CHARGED.equalsIgnoreCase(orderStatusResponse))
 												{
 													orderToBeUpdated.setStatus(OrderStatus.RMS_VERIFICATION_FAILED); // return for Juspay and Qc Retuen Trigger exception acccured
 													getModelService().save(orderToBeUpdated);
 													//return updateOrder(orderToBeUpdated, redirectAttributes);  please try Again
 												}
 												else if (null != qcResponse && null != qcResponse.getResponseCode()
-														&& qcResponse.getResponseCode().intValue() != 0)
+														&& qcResponse.getResponseCode().intValue() != 0
+														&& MarketplacecheckoutaddonConstants.CHARGED.equalsIgnoreCase(orderStatusResponse))
 												{
 
 													orderToBeUpdated.setStatus(OrderStatus.RMS_VERIFICATION_FAILED);// return for Juspay only no dudection from QC
@@ -6525,6 +6527,7 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 						orderToBeUpdated.setStatus(OrderStatus.PAYMENT_FAILED); /// return QC fail and Update Audit Entry Try With Juspay
 						getModelService().save(orderToBeUpdated);
 						//getSessionService().setAttribute("cliqCashPaymentMode", "false");
+						cart.setSplitModeInfo("juspay");
 						GlobalMessages.addFlashMessage(redirectAttributes, GlobalMessages.ERROR_MESSAGES_HOLDER,
 								MarketplacecheckoutaddonConstants.PAYMENTTRANERRORMSG);
 						return MarketplacecheckoutaddonConstants.MPLPAYMENTURL + MarketplacecheckoutaddonConstants.PAYVALUE
@@ -6551,8 +6554,8 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 					{
 						orderToBeUpdated.setStatus(OrderStatus.QC_FAILED);
 						getModelService().save(orderToBeUpdated);
-
-						System.out.println("SomE Error in QC Service");
+						LOG.error("Some Error in QC Service");
+						System.out.println("Some Error in QC Service");
 						return "QC PAYMENT SUCCESS EXCEPTION";
 
 

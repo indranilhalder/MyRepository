@@ -3526,7 +3526,8 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 			else
 			{
 				getMplPaymentService().createQCEntryInAudit(qcOrderId, "WEB", guid, "" + walletTotal,
-						qcRedeeptionResponse.getResponseCode().toString(), qcRedeeptionResponse.getTransactionId().toString());
+						(null != qcRedeeptionResponse.getResponseCode() ? "" + qcRedeeptionResponse.getResponseCode() : "01"),
+						(null != qcRedeeptionResponse.getTransactionId() ? "" + qcRedeeptionResponse.getTransactionId() : "01"));
 
 				return qcRedeeptionResponse;
 
