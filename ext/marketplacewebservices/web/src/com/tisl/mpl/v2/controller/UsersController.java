@@ -9240,6 +9240,7 @@ public class UsersController extends BaseCommerceController
 						else
 						{
 							redeemCliqVoucherWsDTO.setStatus(MarketplacecommerceservicesConstants.FAILURE_FLAG);
+							redeemCliqVoucherWsDTO.setError(response.getResponseMessage());
 						}
 					}
 					else
