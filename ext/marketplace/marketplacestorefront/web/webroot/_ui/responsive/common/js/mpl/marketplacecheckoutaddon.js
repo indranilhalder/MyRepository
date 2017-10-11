@@ -3867,6 +3867,12 @@ function validateCardNo(formSubmit) {
 
 function validateDebitCardNo(formSubmit) {
 	
+	var isEGVOrder=$("#isEGVOrder").val();
+	 if(isEGVOrder == ''){
+	  isEGVOrder=false;
+	 }else if(isEGVOrder == "undefined"){
+	  isEGVOrder=false;
+	 }
 	  var value=$("#cardNoDc").val();
 	  var errorHandle = document.getElementById("cardNoErrorDc"); 
 		var cardType= $("#cardTypeDc").val();
@@ -4052,7 +4058,11 @@ function validateDebitCardNo(formSubmit) {
 //					{
 						binStatus=true;
 						if(cardType!='EMI'){
-							applyPromotion(null,binStatus,formSubmit);
+							if(isEGVOrder){
+						       dopayment(binStatus);
+						      } else {
+						       applyPromotion(null,binStatus,formSubmit);
+						      }
 						}
 						//TPR-629
 						else
