@@ -5100,6 +5100,9 @@ public class MplPaymentServiceImpl implements MplPaymentService
 			walletApportionModel.setTransactionId(orderEntry.getTransactionID());
 			walletApportionModel.setOrderId(orderEntry.getOrder().getCode());
 			walletApportionModel.setType("RETURN");
+			if(null != orderEntry.getWalletApportionReturnInfo() && null != orderEntry.getWalletApportionReturnInfo().getStatusForQc()){
+				walletApportionModel.setStatusForQc(orderEntry.getWalletApportionReturnInfo().getStatusForQc());
+			}
 			if (StringUtils.equalsIgnoreCase(paymentTransactionModel.getStatus(), MarketplacecommerceservicesConstants.SUCCESS))
 			{
 				walletApportionModel.setStatus("SUCCESS");

@@ -13869,6 +13869,13 @@
 						<defaultvalue>"0"</defaultvalue>
 					</attribute>
 					
+					<attribute autocreate="true" generate="true" qualifier="statusForQc"
+						type="java.lang.String">
+						<persistence type="property" />
+						<modifiers read="true" write="true" search="true" />
+						<defaultvalue>"0"</defaultvalue>
+					</attribute>
+					
 					<attribute qualifier="WalletCardList" autocreate="true"
 						type="qcWalletCardList" generate="true">
 						<modifiers read="true" write="true" search="true"

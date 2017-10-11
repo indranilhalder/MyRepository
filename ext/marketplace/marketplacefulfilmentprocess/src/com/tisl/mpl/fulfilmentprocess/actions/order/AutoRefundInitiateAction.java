@@ -281,13 +281,12 @@ public class AutoRefundInitiateAction extends AbstractProceduralAction<OrderProc
 		if(null !=abstractOrderEntryModel.getWalletApportionPaymentInfo() && null!= abstractOrderEntryModel.getWalletApportionPaymentInfo().getQcShippingPartValue()){
 			walletApportionModel.setQcShippingPartValue(abstractOrderEntryModel.getWalletApportionPaymentInfo().getQcShippingPartValue());
 		}	
+		walletApportionModel.setType("RETURN");
 		if(StringUtils.equalsIgnoreCase(response.getResponseCode().toString(),"0")){
-			walletApportionModel.setType("RETURN");
-			//walletApportionModel.setStatus("SUCCESS");
+			walletApportionModel.setStatusForQc("SUCCESS");
 			qcStatus=true;
 		}else{
-			walletApportionModel.setType("RETURN");
-			//walletApportionModel.setStatus("FAIL");
+			walletApportionModel.setStatusForQc("FAIL");
 		}
 		modelService.save(walletApportionModel);
 		abstractOrderEntryModel.setWalletApportionReturnInfo(walletApportionModel);
