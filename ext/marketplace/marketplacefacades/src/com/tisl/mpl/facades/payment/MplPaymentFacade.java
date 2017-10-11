@@ -514,7 +514,4 @@ public interface MplPaymentFacade
 	 */
 	public String generateQCCode();
 
-	public void cliqCashFailReturns(final String returnAmount, final String orderNumber);
-
-
 }

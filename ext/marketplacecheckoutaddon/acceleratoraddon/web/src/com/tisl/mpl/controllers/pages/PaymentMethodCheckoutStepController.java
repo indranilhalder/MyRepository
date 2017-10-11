@@ -3012,7 +3012,10 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 													orderToBeUpdated.setStatus(OrderStatus.RMS_VERIFICATION_FAILED); /// NO Exception No qcResponse Try With Juspay
 													getModelService().save(orderToBeUpdated);
 
-													/// return in JS Ajax Call for redirect logic
+													LOG.error("For GUID:- " + guid + " order already been processed");
+													GlobalMessages.addFlashMessage(redirectAttributes, GlobalMessages.ERROR_MESSAGES_HOLDER,
+															MarketplacecheckoutaddonConstants.PAYMENTTRANERRORMSG);
+													return MarketplacecheckoutaddonConstants.REDIRECT + MarketplacecheckoutaddonConstants.CART;
 												}
 
 											}
@@ -3027,7 +3030,11 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 												{
 													orderToBeUpdated.setStatus(OrderStatus.RMS_VERIFICATION_FAILED); // return for Juspay and Qc Retuen Trigger exception acccured
 													getModelService().save(orderToBeUpdated);
-													//return updateOrder(orderToBeUpdated, redirectAttributes);  please try Again
+
+													LOG.error("For GUID:- " + guid + " order already been processed");
+													GlobalMessages.addFlashMessage(redirectAttributes, GlobalMessages.ERROR_MESSAGES_HOLDER,
+															MarketplacecheckoutaddonConstants.PAYMENTTRANERRORMSG);
+													return MarketplacecheckoutaddonConstants.REDIRECT + MarketplacecheckoutaddonConstants.CART;
 												}
 												else if (null != qcResponse && null != qcResponse.getResponseCode()
 														&& qcResponse.getResponseCode().intValue() != 0
@@ -3036,7 +3043,10 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 
 													orderToBeUpdated.setStatus(OrderStatus.RMS_VERIFICATION_FAILED);// return for Juspay only no dudection from QC
 													getModelService().save(orderToBeUpdated); /////////////////////////////// need to update Aduit entries for Juspay and QC on condiction basices
-													//return updateOrder(orderToBeUpdated, redirectAttributes);  please try Again
+													LOG.error("For GUID:- " + guid + " order already been processed");
+													GlobalMessages.addFlashMessage(redirectAttributes, GlobalMessages.ERROR_MESSAGES_HOLDER,
+															MarketplacecheckoutaddonConstants.PAYMENTTRANERRORMSG);
+													return MarketplacecheckoutaddonConstants.REDIRECT + MarketplacecheckoutaddonConstants.CART;
 												}
 											}
 										}
@@ -3062,15 +3072,6 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 										return MarketplacecheckoutaddonConstants.REDIRECT + MarketplacecheckoutaddonConstants.CART;
 									}
 
-								} /// not charged case to be handel****************************************************
-								else
-								{
-									System.out.println("PARTIAL OREDER JUSPAY FAIL *****************************");
-									orderToBeUpdated.setStatus(OrderStatus.PAYMENT_PENDING); //// need to discuess this case when ebs is false and juspay is chared handel in cron job *******
-									LOG.error("For GUID:- " + guid + " order already been processed");
-									GlobalMessages.addFlashMessage(redirectAttributes, GlobalMessages.ERROR_MESSAGES_HOLDER,
-											MarketplacecheckoutaddonConstants.PAYMENTTRANERRORMSG);
-									return MarketplacecheckoutaddonConstants.REDIRECT + MarketplacecheckoutaddonConstants.CART;
 								}
 							}
 						}
@@ -6552,13 +6553,11 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 
 					if (null != qcResponse && null != qcResponse.getResponseCode() && qcResponse.getResponseCode().intValue() == 0)
 					{
-						orderToBeUpdated.setStatus(OrderStatus.QC_FAILED);
+						orderToBeUpdated.setStatus(OrderStatus.RMS_VERIFICATION_FAILED);
 						getModelService().save(orderToBeUpdated);
 						LOG.error("Some Error in QC Service");
 						System.out.println("Some Error in QC Service");
 						return "QC PAYMENT SUCCESS EXCEPTION";
-
-
 						/// Return In JS Ajax Call  And Execute Refund call refund...........
 					}
 
