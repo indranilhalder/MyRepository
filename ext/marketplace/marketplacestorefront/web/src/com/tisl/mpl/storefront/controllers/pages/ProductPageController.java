@@ -195,19 +195,17 @@ import atg.taglib.json.util.JSONException;
 //@RequestMapping(value = "/**/p")
 public class ProductPageController extends MidPageController
 {
-	/**
-	 * 
-	 */
+	
+	private static final String PLEASE_PROVIDE_CORRECT_INFORMATION = "Please provide correct information ";
+
+	private static final String ERRO_MSG = "erroMsg";
+
 	private static final String PAGES_LAYOUT_EGV_PDP_RESPONSIVE = "pages/layout/egvPDPResponsive";
 	private static final String PRODUCT_SIZE_TYPE = "productSizeType";
-	/**
-	 *
-	 */
+
 	private static final String FOOTWEAR = "Footwear";
 
-	/**
-	 *
-	 */
+	
 	//SONAR FIX JEWELLERY
 	//private static final String CLOTHING = "Clothing";
 
@@ -4213,7 +4211,7 @@ public class ProductPageController extends MidPageController
 	@RequireHardLogIn
 	@RequestMapping(value = ControllerConstants.Views.Fragments.Product.PRODUCT_CODE_GIFT_CART, method = RequestMethod.GET)
 	public String getGitProductDetails(@PathVariable(ControllerConstants.Views.Fragments.Product.PRODUCT_CODE) String productCode,
-			final Model model, final HttpServletRequest request)
+			final Model model, final HttpServletRequest request,@RequestParam(value = "isInvalidForm", required = false, defaultValue = "false") final boolean isInvalidForm)
 	{
 		try
 		{
@@ -4259,7 +4257,10 @@ public class ProductPageController extends MidPageController
 		}
 		final EgvDetailForm egvDetailsform = new EgvDetailForm();
 		model.addAttribute("egvDetailsform", egvDetailsform);
-
+		if (isInvalidForm)
+		{
+			model.addAttribute(ERRO_MSG,PLEASE_PROVIDE_CORRECT_INFORMATION);
+		}
 		final ContentPageModel contentPage = getContentPageForLabelOrId("egvPDPPage");
 		storeCmsPageInModel(model, contentPage);
 		setUpMetaDataForContentPage(model, contentPage);

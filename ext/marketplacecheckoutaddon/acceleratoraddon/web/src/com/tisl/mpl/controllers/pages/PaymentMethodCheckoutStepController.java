@@ -158,6 +158,7 @@ import com.tisl.mpl.storefront.constants.ModelAttributetConstants;
 import com.tisl.mpl.storefront.controllers.helpers.FrontEndErrorHelper;
 import com.tisl.mpl.storefront.web.forms.EgvDetailForm;
 import com.tisl.mpl.storefront.web.forms.PaymentForm;
+import com.tisl.mpl.storefront.web.forms.validator.MplEgvFormValidator;
 import com.tisl.mpl.util.ExceptionUtil;
 import com.tisl.mpl.util.GenericUtilityMethods;
 
@@ -173,10 +174,12 @@ import reactor.function.support.UriUtils;
 @RequestMapping(value = MarketplacecheckoutaddonConstants.MPLPAYMENTURL)
 public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepController
 {
-	/**
-	 *
-	 */
+	
+	
+	private static final String GIFT_CARD = "/giftCard-";
 	private static final String EGVGUID = "EGVGUID";
+	private static final String MARKETPLACE_HEADER_EGV_PRODUCT_CODE = "marketplace.header.egvProductCode";
+
 
 
 
@@ -305,6 +308,8 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 	private MplJewelleryService jewelleryService;
 	@Resource(name = "mplWalletFacade")
 	private MplWalletFacade mplWalletFacade;
+	@Autowired
+	MplEgvFormValidator mplEgvFormValidator;
 
 	/**
 	 * @return the mplWalletFacade
@@ -6663,9 +6668,14 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 			}
 			else
 			{
-				final EgvDetailsData egvDetailsData = populateEGVFormToData(egvDetailForm);
-				giftCartData = mplCartFacade.getGiftCartModel(egvDetailsData);
-				giftCartData.setEgvTotelAmount(egvDetailsData.getGiftRange());
+				if(mplEgvFormValidator.validate(egvDetailForm)){
+					final EgvDetailsData egvDetailsData = populateEGVFormToData(egvDetailForm);
+					giftCartData = mplCartFacade.getGiftCartModel(egvDetailsData);
+					giftCartData.setEgvTotelAmount(egvDetailsData.getGiftRange());
+					}else{
+					
+						return  MarketplacecheckoutaddonConstants.REDIRECT+GIFT_CARD+getConfigurationService().getConfiguration().getString(MARKETPLACE_HEADER_EGV_PRODUCT_CODE)+"/?isInvalidForm="+Boolean.TRUE;
+					}
 			}
 			giftCartData.setIsEGVCart(true);
 			Map<String, Boolean> paymentModeMap = null;

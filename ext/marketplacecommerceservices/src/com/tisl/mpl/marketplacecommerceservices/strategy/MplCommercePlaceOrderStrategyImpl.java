@@ -190,14 +190,15 @@ public class MplCommercePlaceOrderStrategyImpl implements MplCommercePlaceOrderS
 				}else{
 					try{
 					AddressModel addressModel=new AddressModel();
-					addressModel.setLine1("Mumbai");
-					addressModel.setLine2("data");
-					addressModel.setAddressLine3("sAddressLine3");	
-					addressModel.setFirstname("TUL");
-					addressModel.setLastname("Unistore");
-					addressModel.setPhone1("Pankaj");
-					addressModel.setState("Rajatsha");
-					addressModel.setCity("jaipur");
+					addressModel.setLine1("1stFloor");
+					addressModel.setLine2("EmpirePlaza2");
+					addressModel.setAddressLine3("LalBahadurShastriMarg");
+					addressModel.setFirstname("Tata");
+					addressModel.setLastname("UnistoreLtd");
+					addressModel.setPhone1("");
+					addressModel.setState("Maharashtra");
+					addressModel.setCity("Mumbai");
+					addressModel.setPostalcode("400083");
 					addressModel.setOwner(orderModel.getUser());
 					getModelService().save(addressModel);
 					orderModel.setDeliveryAddress(addressModel);

@@ -97,9 +97,12 @@
 		box-shadow: 0 2px 3px 0 rgba(0, 0, 0, 0.1);
 	}
 	
-	.giftFinalTempTop {
-		height: 250px;
-		background-color: yellowgreen;
+	.giftFinalTempContainer {
+		padding: 2%;
+	}
+	
+	.giftFinalTempTop img {
+		width:100%;
 		border-top-left-radius: 10px; border-top-right-radius: 10px; 
 		/* background: url(../_ui/responsive/common/images/egv_template.png) no-repeat center; */
 	}
@@ -108,7 +111,8 @@
 		padding: 15px;
 		color: darkgrey;
 		min-height: 100px;
-		line-height: middle;
+		text-align: justify;
+		line-height: normal;
 		border-top: 1px solid #ccc;
 	}
 	
@@ -260,11 +264,11 @@
 <br />
 <div class="clearfix">
 	<div class="col-sm-6 giftContSub giftContSub1">
-		<div class="col-sm-12">
+		<div class="giftFinalTempContainer">
 			<br />
 			<div class="giftFinalTemp">
 				<div class="giftFinalTempTop">
-					
+					<img src="../_ui/responsive/theme-blue/images/GiftCard.jpg" />
 				</div>
 				<div class="giftFinalTempMiddle">
 					<span><i id="updatedGiftCardMessageText">Your message here</i></span>
@@ -436,6 +440,15 @@
 			</div>
 			<div class="col-sm-10">
 				<span>ENTER DETAILS FOR YOUR GIFT CARD</span><br />&nbsp;
+				
+					<c:if test="${not empty erroMsg}">
+					<div id="backend_validation_section" class="backend_validation_fail">
+					<span style="color: red;">
+					    ${erroMsg}
+					    </span><br />&nbsp;
+					    </div>
+					</c:if>
+					
 			</div>
 		</div>
 		<form:form method="POST" id="egvDetailsform" onsubmit="return validateForm();" 
@@ -586,8 +599,13 @@ function validateForm() {
 }
 
 
-
   $(document).ready(function (){
+	  if($("#backend_validation_section").hasClass("backend_validation_fail")){
+			setTimeout(function() {
+				$("#backend_validation_section").hide();
+			}, 5000);
+		}
+	  
 		//Gift Cards Code
 	     $(".giftLabel").click(function() {
 	     	//alert("Click");
@@ -603,7 +621,7 @@ function validateForm() {
 		
 		//Update Gift Template
 		//Updating Card
-		//$(".giftFinalTempTop").css('background','url(\_ui\responsive\common\images\egv_template.png) no-repeat center');
+		//$(".giftFinalTempTop").css('background','url(\_ui\responsive\theme-blue\images\GiftCard.jpg) no-repeat center');
 		
 		$(".giftLabel").click(function (){
 			var giftImg = $(this).find('img').attr('src');
