@@ -1387,22 +1387,48 @@
 
 	</relations>
 	<itemtypes>
-		<itemtype code="LuxProductCarouselComponent" autocreate="true"
-			generate="true" extends="ProductCarouselComponent"
-			jaloclass="com.tisl.mpl.core.jalo.LuxProductCarouselComponent">
-		</itemtype>
-
-
-
-		<itemtype code="ShopByCategory" autocreate="true" generate="true"
-			extends="SimpleCMSComponent" jaloclass="com.tisl.mpl.jalo.cms.components.ShopByCategory">
+	
+	<itemtype code="LuxProductCarouselComponent"
+				  autocreate="true" generate="true" extends="ProductCarouselComponent"
+				  jaloclass="com.tisl.mpl.core.jalo.LuxProductCarouselComponent">
 			<attributes>
-				<attribute type="bannerImageCollection" qualifier="relatedImage"
-					autocreate="true" generate="true">
-					<description>Related Images</description>
-					<modifiers read="true" write="true" search="true"
-						optional="false" />
-					<persistence type='property' />
+				<attribute type="media" qualifier="BrandImage" autocreate="true"
+						   generate="true">
+					<persistence type="property"></persistence>
+					<modifiers optional="true"/>
+				</attribute>
+				<attribute type="java.lang.String" qualifier="BrandTitle" generate="true">
+					<description>Title</description>
+					<modifiers read="true" write="true" search="true"/>
+					<persistence type='property'/>
+				</attribute>
+				<attribute type="java.lang.String" qualifier="shopNowLink"
+						   autocreate="true" generate="true">
+					<description>shop now button link</description>
+					<modifiers read="true" write="true" search="true"/>
+					<persistence type='property'/>
+				</attribute>
+				<attribute type="java.lang.String" qualifier="shopNowName"
+						   autocreate="true" generate="true">
+					<description>shop now button name</description>
+					<modifiers read="true" write="true" search="true"/>
+					<persistence type='property'/>
+				</attribute>
+			</attributes>
+		</itemtype>
+			
+			
+			
+	<itemtype code="ShopByCategory" autocreate="true"
+				generate="true" extends="SimpleCMSComponent"
+				jaloclass="com.tisl.mpl.jalo.cms.components.ShopByCategory">
+		<attributes>
+			<attribute type="bannerImageCollection" qualifier="relatedImage"
+						autocreate="true" generate="true">
+						<description>Related Images</description>
+						<modifiers read="true" write="true" search="true"
+							optional="false" />
+						<persistence type='property' />
 				</attribute>
 				<attribute type="java.lang.String" qualifier="title"
 					autocreate="true" generate="true">

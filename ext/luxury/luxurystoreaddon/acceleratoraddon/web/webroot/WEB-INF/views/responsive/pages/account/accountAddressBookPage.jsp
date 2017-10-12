@@ -357,7 +357,7 @@
 				<!-- Add address Fields -->
 				<!-- <div><a name="editaddress">&emsp;</a></div> -->
 				<div class="new-address" id="editaddress">
-					<h2 class="account-only" id="headerAdd"><spring:theme code="text.addressBook.newaddress" text="Add New Address" /></h2>
+					<h2 class="account-only" id="headerAdd"><spring:theme code="text.addressBook.newaddress" text="Add 'a' New Shipping Address" /></h2>
 					<h2 class="account-only" id="headerEdit"><spring:theme code="text.addressBook.editaddress" text="Edit Address" /></h2>
 					<ul class="product-block addresses new-form">
 						<li class="item"><form:form action="addNewAddress"
@@ -408,7 +408,7 @@
 									<div class="half no-display last-name">
 									<%-- <label><spring:theme code="text.addressBook.lastName" text="Last name *" /></label> --%>
 										<form:input path="lastName" id="lastName"
-											onkeyup="kpressaddressln()" maxlength="40" placeholder="last Name"/>
+											onkeyup="kpressaddressln()" maxlength="40" placeholder="last Name*"/>
 										<div class="errorMessage"><div id="erraddressln"></div></div>
 									</div>
 									
@@ -416,9 +416,11 @@
 
 	                               <div class="half" style="clear:both;">
 									<%-- <label><spring:theme code="text.addressBook.addressline1" text="Address Line 1 *" /></label> --%>
-									<form:textarea rows="2" cols="60" path="line1" id="line1"  onKeyUp="kpressaddressln1()"  maxlength="120" placeholder="Full Address" />
+									<form:textarea rows="2" cols="60" path="line1" id="line1"  onKeyUp="kpressaddressln1()"  maxlength="120" placeholder="Full Address*" />
 								<!-- 		<br><br>Remaining characters :<span id='myCounter'>120</span> -->
 											<div class="errorMessage"><div id="erraddressline1"></div></div>
+											<input type="hidden" id="line2" name="line2" value="hiddenValue">
+											<input type="hidden" id="line3" name="line3" value="hiddenValue">
 									</div>									
 
 																
@@ -445,7 +447,7 @@
 												<div class="errorMessage errland2"></div>
 										</div>
 									<!-- </div> -->
-									
+									<div style="clear:both">
 									<!-- TISUAT-4696  /TPR-215-->
 									<div class="half halfwidth cityselect">
 									<%-- <label><spring:theme code="text.addressBook.City" text="City *" /></label> --%>
@@ -464,7 +466,14 @@
 												class="address_states" onChange="onAddressSelectValidate()">
 												<c:forEach items="${stateDataList}" var="state"
 													varStatus="stateStatus">
-													<option value="${state.name}">${state.name}</option>
+													<c:choose>
+														<c:when test="${state.name eq 'Select'}">
+															<option value="${state.name}">${state.name}*</option>
+														</c:when>
+														<c:otherwise>
+															<option value="${state.name}">${state.name}</option>
+														</c:otherwise>
+													</c:choose>
 												</c:forEach>
 											</form:select>
 											<div class="errorMessage">
@@ -480,6 +489,7 @@
 												style="display: none;" placeholder="State*"></div>
 												</div>
 
+									</div>
 									</div>
 									
 									<%-- <div class="half halfwidth">

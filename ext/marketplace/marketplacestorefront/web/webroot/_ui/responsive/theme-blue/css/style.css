@@ -77323,6 +77323,8 @@ body.template-pages-LoginPageTemplate .sign-in.tab-view .form-group #password_lo
  		display: block !important; margin-left: 10px; margin-top: 10px;
  	}
  	
+ 	.rainbow_top_categories_blp .simple-banner-component img {float: left !important;}
+ 	
  	.rainbow_top_deal_blp .owl-carousel .owl-item {width: 128px !important;}
  }
  
@@ -77331,6 +77333,7 @@ body.template-pages-LoginPageTemplate .sign-in.tab-view .form-group #password_lo
 /*HomePage Changes - Vamshi*/
 
 /*Search Toggle CSS*/
+.marketplace-checkout .tab-logo .simple-banner-component .simpleSearchToggle {display: none !important;}
 @media(max-width: 650px){ 
 	.simpleSearchToggle {padding-right: 20px; } #search_form {display: none;}
 	.simpleSearchToggle {content: ""; cursor: pointer; width: 40px; height: 40px; display: inline-block; position: absolute; right: 12%; top: 38%;
@@ -77341,7 +77344,7 @@ background: url(../images/search_image.png) no-repeat;}
 .homeViewAllBtn a, .homeViewAllBtn a:hover {float: right; font-size: 18px; color: #4990e2; text-decoration: none; display: none;}
 #brandsYouLoveMobileComp {display: none;}
 .footer-text-mobile {display: none;}
-.home-best-pick-carousel .owl-stage-outer, #new_exclusive .owl-stage-outer {width: inherit !important;}
+.home-best-pick-carousel .owl-stage-outer, #new_exclusive .owl-stage-outer, #productYouCare .owl-stage-outer {width: inherit !important;}
 
 @media(max-width: 768px) {
 	.footer-text-mobile {display: block;}
@@ -77421,7 +77424,6 @@ background: url(../images/search_image.png) no-repeat;}
 	#brandsYouLoveMobileComp .owl-controls .owl-page {display: none;}
 }
 /*UF-466 end*/
-
 @media (max-width: 767px){
 .listing.wrapper .left-block .mob-filter-wrapper {
     width: 100%;
@@ -77442,3 +77444,8 @@ background: url(../images/search_image.png) no-repeat;}
     display: none !important;
 }
 }
+/* SDI-1393 start */
+.page-viewAllTrending.pageType-ContentPage #ia_products_hot .right-block .select-view .select-list {
+    z-index: 2;
+}
+/* SDI-1393 End */

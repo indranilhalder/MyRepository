@@ -51,7 +51,9 @@ $(document).ready(function(){
 	   $("input[name=newBrandLandingPage]").length || 
 	   $('#pageType').val() == "product" || 
 	   $("input[name=productGrid]").length ||
-	   $("input[name=searchPanel]").length){
+	   $("input[name=searchPanel]").length ||
+	   $("input[name=apparelCategoryLandingPage]").length ||
+	   $("input[name=BrandLayoutPage]").length){
 		
 		$(window).on("load",function(){
 			$(function(){
