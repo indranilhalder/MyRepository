@@ -296,22 +296,30 @@ public class AutoRefundInitiateAction extends AbstractProceduralAction<OrderProc
 		return qcStatus;
 	}
 	private  QCRedeeptionResponse  qcCallforReturnRefund(OrderModel orderModel ,RefundEntryModel returnEntry){
-		LOG.error("AutoRefundInitiateAction: Going to call QC  mplWalletServices.qcCredit(walletInfo); for Order #"
+		LOG.debug("AutoRefundInitiateAction: Going to call QC  mplWalletServices.qcCredit(walletInfo); for Order #"
 				+ orderModel.getCode());
 		String walletId =null;
-		DecimalFormat daecimalFormat =new DecimalFormat("#.00");
+		QCRedeeptionResponse  qcRedeeptionResponse= null;
 		CustomerModel customerModel= (CustomerModel)orderModel.getUser();
-   	if(null!=customerModel && null!= customerModel.getCustomerWalletDetail()){
-   		walletId=customerModel.getCustomerWalletDetail().getWalletId();
-   	}
-   	QCCreditRequest qcCreditRequest =new QCCreditRequest();
-   	qcCreditRequest.setAmount(daecimalFormat.format(returnEntry.getAmountForQc()));
-   	qcCreditRequest.setInvoiceNumber(orderModel.getParentReference().getCode());
-   	qcCreditRequest.setNotes("Cancel for "+ daecimalFormat.format(returnEntry.getAmountForQc())); 
-   	final QCRedeeptionResponse  qcRedeeptionResponse= mplWalletServices.qcCredit(walletId, qcCreditRequest);
+   	
+   	try{
+   		
+   		if(null!=customerModel && null!= customerModel.getCustomerWalletDetail()){
+      		walletId=customerModel.getCustomerWalletDetail().getWalletId();
+      	}
+         	QCCreditRequest qcCreditRequest =new QCCreditRequest();
+         	qcCreditRequest.setInvoiceNumber(orderModel.getParentReference().getCode());
+         	if(null != returnEntry.getAmountForQc()){
+         	qcCreditRequest.setAmount(returnEntry.getAmountForQc().toString());
+         	qcCreditRequest.setNotes("Cancel for "+ returnEntry.getAmountForQc().toString()); 
+         	}
+         	qcRedeeptionResponse= mplWalletServices.qcCredit(walletId, qcCreditRequest);
+      		
 		
-		LOG.error("AutoRefundInitiateAction: After call mplWalletServices.qcCredit(walletInfo); for Order #"
-				+ orderModel.getCode());
+		}catch(Exception e){
+			LOG.error("AutoRefundInitiateAction: After call mplWalletServices.qcCredit(walletInfo); for Order #"
+					+ orderModel.getCode());	
+		}
 		return qcRedeeptionResponse;
 	}
 	
