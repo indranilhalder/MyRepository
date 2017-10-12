@@ -5224,7 +5224,7 @@ function submitPaytmForm(){
 					var juspayOrderId=$("#juspayOrderId").val();
 					$.ajax({
 						url: ACC.config.encodedContextPath + "/checkout/multi/payment-method/submitPaytmForm",
-						data: {'juspayOrderId' : juspayOrderId },
+						data: {'juspayOrderId' : values[0] },
 						dataType: "json",
 						contentType : "application/json; charset=utf-8",
 						type: "GET",
