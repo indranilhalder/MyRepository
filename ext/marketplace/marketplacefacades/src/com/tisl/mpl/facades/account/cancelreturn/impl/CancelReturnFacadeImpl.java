@@ -965,36 +965,7 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 				   	refundEntryModel.setAmountForQc(NumberUtils.createDouble(Double.toString(refundAmountForQc)));
 				   	refundEntryModel.setAmount(NumberUtils.createBigDecimal("0"));
 				}else {
-					/*	final double amount = (abstractOrderEntryModel.getNetAmountAfterAllDisc() != null ? abstractOrderEntryModel
-					.getNetAmountAfterAllDisc().doubleValue() : 0D)
-					+ (abstractOrderEntryModel.getCurrDelCharge() != null ? abstractOrderEntryModel.getCurrDelCharge()
-							.doubleValue() : 0D)
-					+ (abstractOrderEntryModel.getScheduledDeliveryCharge() != null ? abstractOrderEntryModel
-							.getScheduledDeliveryCharge().doubleValue() : 0D);
-
-			refundEntryModel.setAmount(NumberUtils.createBigDecimal(Double.toString(amount)));*/
-			
-			
-			  if(null != subOrderModel.getSplitModeInfo() && subOrderModel.getSplitModeInfo().equalsIgnoreCase("Split")){
-			   	
-			   	double refundAmountForQc =0.0D;
-			   	double refundAmountForJuspay =0.0D;
-			   	//call for Juspay
-			   	refundAmountForJuspay = calculateSplitJuspayRefundAmount(abstractOrderEntryModel);
 					
-					//call for QuckCilver
-		      	refundAmountForQc = calculateSplitQcRefundAmount(abstractOrderEntryModel);
-		      	
-			   	refundEntryModel.setAmount(NumberUtils.createBigDecimal(Double.toString(refundAmountForJuspay)));
-			   	refundEntryModel.setAmountForQc(NumberUtils.createDouble(Double.toString(refundAmountForQc)));
-			}else if( null != subOrderModel.getSplitModeInfo() && subOrderModel.getSplitModeInfo().equalsIgnoreCase("CliqCash")){
-			   	double refundAmountForQc =0.0D;
-			   	//call for QuckCilver
-		      	refundAmountForQc = calculateSplitQcRefundAmount(abstractOrderEntryModel);
-			   	
-			   	refundEntryModel.setAmountForQc(NumberUtils.createDouble(Double.toString(refundAmountForQc)));
-			   	refundEntryModel.setAmount(NumberUtils.createBigDecimal("0"));
-			}else {
    					final double amount = (abstractOrderEntryModel.getNetAmountAfterAllDisc() != null ? abstractOrderEntryModel
    									.getNetAmountAfterAllDisc().doubleValue() : 0D)
    									+ (abstractOrderEntryModel.getCurrDelCharge() != null ? abstractOrderEntryModel.getCurrDelCharge()
@@ -1004,8 +975,6 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
    
    							refundEntryModel.setAmount(NumberUtils.createBigDecimal(Double.toString(amount)));
    							refundEntryModel.setAmountForQc(NumberUtils.createDouble("0"));
-			
-			}
 				
 				     }
 					}
