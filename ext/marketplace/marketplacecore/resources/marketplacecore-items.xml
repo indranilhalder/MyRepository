@@ -13280,6 +13280,20 @@
 		</typegroup>
 
 		<!-- TPR-6665 : sysnonums update to slave servers end -->
-
+	<!-- extends="LocalizableItem" -->	
+   <typegroup name="Sole_score">
+     <itemtype code="Product" autocreate="false" generate="true"
+				extends="LocalizableItem" jaloclass="de.hybris.platform.jalo.product.Product">
+                <attributes>
+                    <attribute autocreate="true" qualifier="customscore" type="int"
+                        generate="true">
+                        <persistence type="property" />
+                        <modifiers read="true" write="true" search="true"
+                            initial="true" optional="true" unique="false" />
+							<defaultvalue>Integer.valueOf(0)</defaultvalue>
+                    </attribute>
+                </attributes>
+            </itemtype>
+            </typegroup>
 	</itemtypes>
 </items>
