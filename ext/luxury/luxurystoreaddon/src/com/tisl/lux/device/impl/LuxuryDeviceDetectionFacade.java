@@ -25,11 +25,13 @@ public class LuxuryDeviceDetectionFacade extends DefaultDeviceDetectionFacade
 
 	private SessionService sessionService;
 
+	@Override
 	protected SessionService getSessionService()
 	{
 		return sessionService;
 	}
 
+	@Override
 	@Required
 	public void setSessionService(final SessionService sessionService)
 	{
@@ -57,7 +59,7 @@ public class LuxuryDeviceDetectionFacade extends DefaultDeviceDetectionFacade
 		if (uiExperienceData != null && uiExperienceData.getLevel() != null)
 		{
 			sessionService.setAttribute("detectedUI", uiExperienceData.getLevel());
-			LOG.error("Detected UI - " + uiExperienceData.getLevel());
+			LOG.debug("Detected UI - " + uiExperienceData.getLevel());
 		}
 		//}
 

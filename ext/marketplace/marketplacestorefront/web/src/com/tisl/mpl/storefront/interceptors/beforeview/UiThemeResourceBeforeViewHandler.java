@@ -225,7 +225,8 @@ public class UiThemeResourceBeforeViewHandler implements BeforeViewHandler
 		modelAndView.addObject(ModelAttributetConstants.LUXURY_GIGYA_API_KEY, luxuryGigyaAPIKey);
 		modelAndView.addObject(ModelAttributetConstants.LUXURY_GIGYA_SOCIAL_LOGIN_URL, luxuryGigyaSocialLoginURL);
 		modelAndView.addObject(ModelAttributetConstants.IS_LUXURY_GIGYA_ENABLED, isLuxuryGigyaEnabled);
-
+		//HTML minification toggle
+		modelAndView.addObject("minificationHTML", configurationService.getConfiguration().getString("minification.html"));
 		modelAndView.addObject(ModelAttributetConstants.FEED_BACK_SURVEY_URL, feedbackSurveyUrl);
 		//Logic added for Name in header
 		if (!userFacade.isAnonymousUser())

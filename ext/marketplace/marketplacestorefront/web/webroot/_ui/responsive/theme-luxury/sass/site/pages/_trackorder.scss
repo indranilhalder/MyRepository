@@ -14,11 +14,15 @@
 	display: inline-block;
     border-right: 1px solid #e4e8f0;
     padding: 5px;
-    width: 24%;
+    width: 23%;
 	padding-left: 11px;
     vertical-align: top;
     word-break: break-all;
     display: table-cell;
+     
+     &:first-child{
+         width: 30%;
+     }
  }
  
  .product-block.order-details .list-top-title li:last-child{
@@ -374,7 +378,7 @@ body .account .right-account .order-history.order-details .status>ul>li.delivery
     padding-bottom: 0 !important;
 }
 
- #newCardCC,.newCardPaymentCC,.payment-billing-form,.payment-section #netbanking{
+ #newCardCC,.newCardPaymentCC,.payment-billing-form,.payment-section #netbanking, .payment-section #emi{
  	display:none;
  }
  

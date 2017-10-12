@@ -6,6 +6,62 @@
         }
     }
 }
+.sizes{
+    .tables{
+       width: 70%;
+    }
+    .footwear-size-table{
+       /* border: 1px solid #ccc;*/
+        text-align: center;       
+        margin: 10px 10px 10px 0px;
+        >ul{
+            >li{
+                >ul{
+                    li{
+                        width: 25%;
+                        /*display: inline-block;*/
+                        list-style: none;
+                        text-transform: uppercase;
+                        font-weight: 600;  
+                        text-align: center;
+                        border-right: 1px solid #fff;
+                        float: left;
+                        border-bottom: 1px solid #ccc; 
+                        overflow: hidden;
+                        padding: 5px 0px;
+                    }
+                }
+            }
+        }
+        .item.footwear{
+            list-style: none;
+            border: 1px solid #fff;            
+            
+            ul{
+                li{
+                    width: 25%;
+                    /*display: inline-block;*/
+                    float: left;
+                    outline-style: none;
+                    border-bottom: 1px solid #ccc;                    
+                    float: left;
+                    padding: 5px 0px;
+                }
+            }
+        }
+    }
+    .footwearNote{
+        font-size: 12px;
+        line-height:normal;
+        margin-bottom: 10px;
+    }
+     div.img{
+            width: 34%;
+            img{
+                max-width:100%!important;
+            }
+        }
+} 
 .pdp-view {
 	max-width: 1150px;
 	margin: 20px auto 0;
@@ -144,6 +200,8 @@
         
         h5{
             display: inherit;
+            /*font-size: 12px;
+            line-height: 1.5;*/
         }
     }
 	.merchant-info {
@@ -177,8 +235,9 @@
 		}
 		
 		li {
-			display: inline-block;
+			display: inline-table;
             margin: 4px;
+            vertical-align: top;
 			
 			/*& + li {
 				margin-left: 10px;
@@ -186,16 +245,19 @@
             
             
             a{
-                width: 44px;
-                height: 44px;
-                border-radius: 50%;
+                /*width: 50px;
+                height: 50px;*/
+                border-radius: 5px;
+                padding: 10px;
                 text-align: center;
                 border: 1px solid #e2e6ee;
-                line-height: 44px;
+                line-height:normal;
                 text-transform: uppercase;
                 cursor: pointer;  
                 display: block;
                 overflow: hidden;
+                font-size: 13px;                
+                vertical-align: middle;
                 
                 &:hover, &.active {
                     background-color: $gray-darker;
@@ -362,9 +424,9 @@
 		background: $Sprite -421px -66px no-repeat;
 		position: absolute;
 		width: 25px;
-		height: 27px;
-		left: 0px;
-		top:15px;
+		height: 27px;		
+		top:15px; 
+        left: 0px;
 	}
 }
 .pdp-accordion {
@@ -513,12 +575,16 @@
                 display: inline-block;
             }
             
-            ul{
-            	padding:10px;
-            	list-style-type:none;
+            ul{  
+                padding: 0px;
+                list-style-type: none;
+                margin: 0;
+                    
             	li{
             		position:relative;
             		cursor:pointer;
+                    padding: 5px;
+                        
                     @media (max-width: 767px) { 
                         li.active::after{
                             padding: 10px 10px;
@@ -527,12 +593,16 @@
                     }
             	}
                 li.active{
+                    
+                    background-color: black;
+                    color: white;
+                    
                     &:after{
-                        content:'>';
-                        width:30px;
-                        height:30px;
+                        content:'>';                       
                         position:absolute;
                         right:10px;
+                        font-weight: bolder;
+                        
                         @media (max-width: 767px) { 
                             content : ""; 
                         }
@@ -731,6 +801,13 @@
 		left: -5px;
         top:35px;
 	}
+}
+.product-list-wrapper{
+    .offer-icon{
+        .exclusive, .newseason, .trending, .editors, .newarrival, .onsale{
+            left: -6px;
+        }
+    }
 }
 
 /*PDP Section End*/
@@ -1046,23 +1123,26 @@
 			ul{
 				padding:15px;
 				text-align:center;
-				li{
-				    display: inline-block;
-				    width: 44px;
-				    height: 44px;
-				    border-radius: 50%;
+				li{				  
+				    border-radius: 5px;
 				    text-align: center;
-				    border: 1px solid #e2e6ee;
-				    line-height: 44px;
+				    border: 1px solid #e2e6ee;				    
 				    text-transform: uppercase;
 				    cursor: pointer;
-				    margin-left: 10px;
+				    margin: 2px;
                     text-transform: uppercase;
                     cursor: pointer;
-                    display:inline-block;
+                    display: inline-table;
                     overflow: hidden;
-
+                    vertical-align: top;
                     
+                    span{                        
+                        font-size: 13px;
+                        display: table-cell;
+                        vertical-align: middle;
+                        line-height:normal;
+                        padding: 10px;
+                    }                    
                     
                     &.strike{
                         background-color: $light-gray;
@@ -1094,7 +1174,7 @@
 		.sizes{
 			background:#fff;
 			border-radius:5px;
-			margin-top:15px;
+			/*margin-top:15px;*/
 			display:inline-block;
 			width:100%;
             
@@ -1110,9 +1190,9 @@
 			}
 			.tables{
 				float:right;
-				width:60%;
+				width:70%;
 				table{
-					width:95%;
+					width:100%;
 					float:right;
 				}
 				ul{
@@ -1123,7 +1203,7 @@
 					text-align:center;
 					ul{
 						li{
-							margin-bottom:5px;
+							/*margin-bottom:5px;*/
 							padding:5px 10px;
 							border-bottom: 1px solid #ddd;
                             
@@ -1141,7 +1221,7 @@
 			}
 			.img{
 				float:left;
-				width:40%;
+				width:30%;
                 @include media-breakpoint-down(sm) {
                     width:100%;
                 }

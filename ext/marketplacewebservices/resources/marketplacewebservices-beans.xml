@@ -716,7 +716,7 @@
 	<property name="exchangeMessage" type="String"/>
 		<!-- TPR-6117 -->
 			<property name="maxQuantityAllowed" type="String" />
-			<property name="priceDisclaimerTextJwlry" type="String" />
+			<!-- <property name="priceDisclaimerTextJwlry" type="String" /> -->
 	</bean>
 	<!-- -->
 	<bean class="com.tisl.mpl.wsdto.MobdeliveryModeWsDTO">
@@ -849,7 +849,9 @@
 		<property name="reachedMaxLimitforproduct" type="java.util.List&lt;com.tisl.mpl.wsdto.MaxLimitWsDto>" />
                 <!-- TPR-3893 starts here -->
 		<property name="firedMessage" type="String" />
-		<!-- TPR-3893 ends here -->	 
+		<!-- TPR-3893 ends here -->	
+		<!-- TPR-6980 -->
+		<property name="priceDisclaimerTextJwlry" type="String" />
 	</bean>
 	<bean class="com.tisl.mpl.wsdto.CartProductsDeliveryDetailsWsDTO">
 		<property name="data" type="String" />
@@ -2590,6 +2592,7 @@
     	<property name="brandId" type="String"/>
     </bean>
      <bean class="com.tisl.mpl.wsdto.LuxVideocomponentWsDTO">
+    	<property name="componentPosition" type="String" />
     	<property name="videoUrl" type="String"/>
     	<property name="videoDescription" type="String" />
     	<property name="previewUrl" type="String"/>
@@ -3181,10 +3184,12 @@
 	
 	<bean class="com.tisl.mpl.wsdto.LuxShopByCategoryWsDTO">
      <property name="title" type="String" />
+     <property name="componentPosition" type="String" />
      <property name="relatedImage" type="java.util.List&lt;com.tisl.mpl.wsdto.LuxBannerComponentWsDTO>"/>
     </bean>	
 		
 	 <bean class="com.tisl.mpl.wsdto.WeeklySpecialBannerListWsDTO">
+	 	<property name="componentPosition" type="String" />
     	<property name="seeklySpecialTitle" type="String" />
     	<property name="weeklySpecialBannerList" type="java.util.List&lt;com.tisl.mpl.wsdto.WeeklySpecialBannerWsDTO>"/>
     </bean>
@@ -3196,12 +3201,14 @@
     </bean>
     
     <bean class="com.tisl.mpl.wsdto.ShopOnLuxuryElementListWsDTO">
+    	<property name="componentPosition" type="String" />
     	<property name="shopOnLuxuryTitle" type="String" />
     	<property name="shopOnLuxuryElements" type="java.util.List&lt;com.tisl.mpl.wsdto.ShopOnLuxuryElementWsDTO>"/>
     </bean>
 
 
    <bean class="com.tisl.mpl.wsdto.LuxRotatingImagesComponentWsDTO">
+        <property name="componentPosition" type="String" />
         <property name="timeout" type="java.lang.Integer"/>
     	<property name="effect" type="String" />
     	<property name="banners" type="java.util.List&lt;com.tisl.mpl.wsdto.LuxBannerComponentWsDTO>"/>
@@ -3225,10 +3232,12 @@
     	<property name="media" type="String" />
     	<property name="url" type="String"/>
     	<property name="content" type="String"/>
+    	<property name="componentPosition" type="String" />
     	<property name="medias" type="java.util.List&lt;com.tisl.mpl.wsdto.LuxBannerComponentWsDTO>"/>
     </bean>
 
 	<bean class="com.tisl.mpl.wsdto.LuxuryMediaListWsDTO">
+    	<property name="componentPosition" type="String" />
     	<property name="URL" type="String" />
     	<property name="urlLink" type="String"/>
     	<property name="mdeiaFormat" type="String"/>
@@ -3243,6 +3252,7 @@
 
 
 	<bean class="com.tisl.mpl.wsdto.LuxuryLookBookComponentListWsDTO">
+		<property name="componentPosition" type="String" />
     	<property name="layoutCode" type="String" />
     	<property name="title" type="String"/>
     	<property name="description" type="String"/>
@@ -3256,6 +3266,7 @@
     
 	<bean class="com.tisl.mpl.wsdto.LuxShowCaseComponentListWsDTO">
     	<property name="title" type="String" />
+    	<property name="componentPosition" type="String" />
     	<property name="ShowCase" type="java.util.List&lt;com.tisl.mpl.wsdto.LuxShowCaseCollectionComponentListWsDTO>"/>
     </bean>
     <bean class="com.tisl.mpl.wsdto.LuxShowCaseCollectionComponentListWsDTO">
@@ -3266,6 +3277,26 @@
     	<property name="BannerImagePosition" type="String"/>
     	<property name="bannerImage" type="java.util.List&lt;com.tisl.mpl.wsdto.LuxBannerComponentWsDTO>"/>
     	<property name="productImages" type="java.util.List&lt;com.tisl.mpl.wsdto.LuxBannerComponentWsDTO>"/>
+    </bean>
+    <bean class="com.tisl.mpl.wsdto.LuxProductCarouselProductWsDTO">
+    	<property name="prdName" type="String" />
+    	<property name="prdCode" type="String"/>
+    	<property name="prdURL" type="String"/>
+    	<property name="prdImage" type="String"/>
+    	<property name="prdBrandName" type="String"/>
+    	<property name="prdPrice" type="String"/>
+    	<property name="prdMrpPrice" type="String"/>
+    	<property name="prdSavings" type="java.lang.Double"/>
+    	
+    </bean>
+    <bean class="com.tisl.mpl.wsdto.LuxProductCarouselComponentWsDTO">
+    	<property name="title" type="String" />
+    	<property name="componentPosition" type="String" />
+    	<property name="brandImage" type="String"/>
+    	<property name="brandTitle" type="String"/>
+    	<property name="shopNowLink" type="String"/>
+    	<property name="shopNowName" type="String"/>
+    	<property name="carouselProducts" type="java.util.List&lt;com.tisl.mpl.wsdto.LuxProductCarouselProductWsDTO>"/>
     </bean>
 
 	<bean class="com.tisl.mpl.wsdto.LuxuryComponentsListWsDTO">
@@ -3282,6 +3313,7 @@
 		<property name="LuxuryCMSImageComponent" type="java.util.List&lt;com.tisl.mpl.wsdto.LuxuryMediaListWsDTO>" />
 		<property name="LuxuryRotatingImagesComponentWsDTO" type="java.util.List&lt;com.tisl.mpl.wsdto.LuxRotatingImagesComponentWsDTO>"/>
 		<property name="LuxuryLookBookComponent" type="java.util.List&lt;com.tisl.mpl.wsdto.LuxuryLookBookComponentListWsDTO>" />
+		<property name="LuxuryProductCarouselComponent" type="java.util.List&lt;com.tisl.mpl.wsdto.LuxProductCarouselComponentWsDTO>" />
 		<property name="LuxuryMedia" type="com.tisl.mpl.wsdto.LuxuryMediaListWsDTO" />
 		<property name="Luxurybannerlist" type="java.util.List&lt;com.tisl.mpl.wsdto.LuxHeroBannerWsDTO>"/>
     	<property name="Luxurysubsections" type="java.util.List&lt;com.tisl.mpl.wsdto.LuxSignatureWsDTO>"/>

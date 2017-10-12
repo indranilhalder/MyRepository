@@ -432,6 +432,8 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String WISHLIST_NO = "Wishlist";
 	public static final String THUMBNAIL = "thumbnail";
 	public static final String SEARCHPAGE = "searchPage";
+	public static final String CARTPAGE = "cartPage";
+	public static final String LUXURYSEARCHPAGE = "luxurySearchPage";
 	public static final String WISHLIST_EXISTS_MSG = "Wishlist name already exists.";
 
 	//Mobile home page
@@ -1919,6 +1921,7 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String MEGANAVNODE = "luxury.root.navigation.node.id";
 
 	public static final String LUXURY_CARTICON = "luxuryCartIcon";
+	public static final String LUXURYCARTPAGE = "luxuryCartPage";
 
 	//TPR-1285
 	//public static final String L4CATEGORYQUERY =

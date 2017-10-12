@@ -2374,7 +2374,8 @@ public class ProductPageController extends MidPageController
 						{
 							final String properitsValue = configurationService.getConfiguration().getString(
 									ModelAttributetConstants.CONFIGURABLE_ATTRIBUTE + productData.getRootCategory());
-							final String descValues = configurationService.getConfiguration().getString(
+
+							final String descValues = getSiteConfigService().getProperty(
 									ModelAttributetConstants.DESC_PDP_PROPERTIES + productData.getRootCategory());
 							//for jwl certification
 							final String certificationValue = configurationService.getConfiguration().getString(
@@ -2445,9 +2446,9 @@ public class ProductPageController extends MidPageController
 										/*
 										 * else if (value.equalsIgnoreCase(featureData.getCode().substring(
 										 * featureData.getCode().lastIndexOf(".") + 1))) {
-										 * 
+										 *
 										 * if (productFeatureMap.size() > 0) { productFeatureMap.clear(); }
-										 * 
+										 *
 										 * productFeatureMap.put(featureValueData.getValue(), jewelleryDescMapping.get(value));
 										 * mapConfigurableAttributes.put(featureData.getName(), productFeatureMap); }
 										 */

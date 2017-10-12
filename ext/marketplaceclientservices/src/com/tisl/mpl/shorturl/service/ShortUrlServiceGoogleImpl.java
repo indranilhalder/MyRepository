@@ -52,8 +52,8 @@ public class ShortUrlServiceGoogleImpl implements ShortUrlService
 	private static boolean FORCE_DEBUG_LOG = true; //Added temporarily for debugging. Can be removed later.
 	//No harm in leaving it here. Just change the value to false for PROD, and other higher envs.
 
-	private static int connectionTimeout = 5 * 10000;
-	private static int readTimeout = 5 * 1000;
+	//	private static int connectionTimeout = 5 * 10000;
+	//	private static int readTimeout = 5 * 1000;
 
 	@Resource(name = "configurationService")
 	private ConfigurationService configurationService;
@@ -64,6 +64,8 @@ public class ShortUrlServiceGoogleImpl implements ShortUrlService
 
 	@Resource(name = "baseSiteService")
 	private BaseSiteService baseSiteService;
+
+
 
 	/**
 	 * @param url
@@ -78,11 +80,13 @@ public class ShortUrlServiceGoogleImpl implements ShortUrlService
 		{
 			//PROD fix - 2017-06-22. If Short URL has already been generated for an order and is available in DB.
 			//then fetch that URL and return the same. Do not generate again, if short URL already exist.
-			OrderShortUrlInfoModel shortUrlInfoModel = getShortUrlReportModelByOrderId(orderCode);
-            if(null != shortUrlInfoModel && null != shortUrlInfoModel.getShortURL() && !shortUrlInfoModel.getShortURL().isEmpty()) {
+			final OrderShortUrlInfoModel shortUrlInfoModel = getShortUrlReportModelByOrderId(orderCode);
+			if (null != shortUrlInfoModel && null != shortUrlInfoModel.getShortURL() && !shortUrlInfoModel.getShortURL().isEmpty())
+			{
 				shortUrl = shortUrlInfoModel.getShortURL();
-				if(LOG.isDebugEnabled()) {
-					LOG.debug("Short URL  for Order id "+orderCode+ " is "+shortUrl);
+				if (LOG.isDebugEnabled())
+				{
+					LOG.debug("Short URL  for Order id " + orderCode + " is " + shortUrl);
 				}
 				return shortUrl;
 			}
@@ -160,6 +164,12 @@ public class ShortUrlServiceGoogleImpl implements ShortUrlService
 
 	private String getShortUrl(final String endPoint, final String encodedParams)
 	{
+
+		final int connectionTimeout = configurationService.getConfiguration()
+				.getInt(MarketplaceclientservicesConstants.SHORTURL_CONNECTION_TIMEOUT, 50000);
+		final int readTimeout = configurationService.getConfiguration()
+				.getInt(MarketplaceclientservicesConstants.SHORTURL_READ_TIMEOUT, 5000);
+
 		final String proxyEnableStatus = getConfigurationService().getConfiguration()
 				.getString(MarketplaceclientservicesConstants.PROXYENABLED);
 		final String proxyAddress = getConfigurationService().getConfiguration()
@@ -388,6 +398,7 @@ public class ShortUrlServiceGoogleImpl implements ShortUrlService
 
 	/*
 	 * (non-Javadoc)
+	 *
 	 * @see com.tisl.mpl.shorturl.service.ShortUrlService#getShortUrlReportModels(java.util.Date, java.util.Date)
 	 */
 	@Override
