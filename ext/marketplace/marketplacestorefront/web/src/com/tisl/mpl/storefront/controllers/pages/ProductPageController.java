@@ -130,6 +130,7 @@ import com.google.gson.Gson;
 import com.granule.json.JSON;
 import com.granule.json.JSONArray;
 import com.granule.json.JSONObject;
+import com.tisl.lux.facade.CommonUtils;
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.constants.MplConstants;
 import com.tisl.mpl.constants.MplConstants.USER;
@@ -373,6 +374,10 @@ public class ProductPageController extends MidPageController
 	private MplStoreLocatorFacade mplStoreLocatorFacade;
 	@Resource(name = "pointOfServiceConverter")
 	private Converter<PointOfServiceModel, PointOfServiceData> pointOfServiceConverter;
+
+	@Autowired
+	private CommonUtils commonUtils;
+
 
 	//SONAR FIX JEWELLERY
 	//	@Resource(name = "jewelleryDescMapping")
@@ -1576,10 +1581,22 @@ public class ProductPageController extends MidPageController
 			model.addAttribute(ModelAttributetConstants.PRODUCT_CATEGORY_TYPE, productModel.getProductCategoryType());
 			model.addAttribute(PRODUCT_SIZE_TYPE, productDetailsHelper.getSizeType(productModel));
 			setUpMetaData(model, metaDescription, metaTitle, pdCode, metaKeyword);
-			final String googleClientid = configurationService.getConfiguration().getString("google.data-clientid");
-			final String facebookAppid = configurationService.getConfiguration().getString("facebook.app_id");
-			model.addAttribute(ModelAttributetConstants.GOOGLECLIENTID, googleClientid);
-			model.addAttribute(ModelAttributetConstants.FACEBOOKAPPID, facebookAppid);
+
+
+			if (commonUtils.isLuxurySite())
+			{
+				final String googleClientid = configurationService.getConfiguration().getString("lux.google.data-clientid");
+				final String facebookAppid = configurationService.getConfiguration().getString("lux.facebook.app_id");
+				model.addAttribute(ModelAttributetConstants.GOOGLECLIENTID, googleClientid);
+				model.addAttribute(ModelAttributetConstants.FACEBOOKAPPID, facebookAppid);
+			}
+			else
+			{
+				final String googleClientid = configurationService.getConfiguration().getString("google.data-clientid");
+				final String facebookAppid = configurationService.getConfiguration().getString("facebook.app_id");
+				model.addAttribute(ModelAttributetConstants.GOOGLECLIENTID, googleClientid);
+				model.addAttribute(ModelAttributetConstants.FACEBOOKAPPID, facebookAppid);
+			}
 			populateTealiumData(productData, model, breadcrumbList);
 			//AKAMAI fix
 			if (productModel instanceof PcmProductVariantModel)
@@ -1755,11 +1772,21 @@ public class ProductPageController extends MidPageController
 			final String sharePath = configurationService.getConfiguration().getString("social.share.path");
 			model.addAttribute(ModelAttributetConstants.EMI_CUTTOFFAMOUNT, emiCuttOffAmount);
 			model.addAttribute(ModelAttributetConstants.SHARED_PATH, sharePath);
-			final String googleClientid = configurationService.getConfiguration().getString("google.data-clientid");
-			final String facebookAppid = configurationService.getConfiguration().getString("facebook.app_id");
+			if (commonUtils.isLuxurySite())
+			{
+				final String googleClientid = configurationService.getConfiguration().getString("lux.google.data-clientid");
+				final String facebookAppid = configurationService.getConfiguration().getString("lux.facebook.app_id");
+				model.addAttribute(ModelAttributetConstants.GOOGLECLIENTID, googleClientid);
+				model.addAttribute(ModelAttributetConstants.FACEBOOKAPPID, facebookAppid);
+			}
+			else
+			{
+				final String googleClientid = configurationService.getConfiguration().getString("google.data-clientid");
+				final String facebookAppid = configurationService.getConfiguration().getString("facebook.app_id");
+				model.addAttribute(ModelAttributetConstants.GOOGLECLIENTID, googleClientid);
+				model.addAttribute(ModelAttributetConstants.FACEBOOKAPPID, facebookAppid);
+			}
 			model.addAttribute(PRODUCT_SIZE_TYPE, productDetailsHelper.getSizeType(productModel));
-			model.addAttribute(ModelAttributetConstants.GOOGLECLIENTID, googleClientid);
-			model.addAttribute(ModelAttributetConstants.FACEBOOKAPPID, facebookAppid);
 
 			//AKAMAI fix
 			if (productModel instanceof PcmProductVariantModel)
@@ -2148,8 +2175,20 @@ public class ProductPageController extends MidPageController
 			final String emiCuttOffAmount = configurationService.getConfiguration().getString("marketplace.emiCuttOffAmount");
 			final String cliqCareNumber = configurationService.getConfiguration().getString("cliq.care.number");
 			final String cliqCareMail = configurationService.getConfiguration().getString("cliq.care.mail");
-			final String googleClientid = configurationService.getConfiguration().getString("google.data-clientid");
-			final String facebookAppid = configurationService.getConfiguration().getString("facebook.app_id");
+			if (commonUtils.isLuxurySite())
+			{
+				final String googleClientid = configurationService.getConfiguration().getString("lux.google.data-clientid");
+				final String facebookAppid = configurationService.getConfiguration().getString("lux.facebook.app_id");
+				model.addAttribute(ModelAttributetConstants.GOOGLECLIENTID, googleClientid);
+				model.addAttribute(ModelAttributetConstants.FACEBOOKAPPID, facebookAppid);
+			}
+			else
+			{
+				final String googleClientid = configurationService.getConfiguration().getString("google.data-clientid");
+				final String facebookAppid = configurationService.getConfiguration().getString("facebook.app_id");
+				model.addAttribute(ModelAttributetConstants.GOOGLECLIENTID, googleClientid);
+				model.addAttribute(ModelAttributetConstants.FACEBOOKAPPID, facebookAppid);
+			}
 			LOG.debug("===========After step3 block=================");
 			/* Configurable tabs to be displayed in the PDP page */
 			model.addAttribute(ModelAttributetConstants.VALID_TABS, validTabs);
@@ -2174,8 +2213,8 @@ public class ProductPageController extends MidPageController
 					((cliqCareNumber == null || cliqCareNumber.isEmpty()) ? CUSTOMER_CARE_NUMBER : cliqCareNumber));
 			model.addAttribute(ModelAttributetConstants.CLIQCAREMAIL,
 					((cliqCareMail == null || cliqCareMail.isEmpty()) ? CUSTOMER_CARE_EMAIL : cliqCareMail));
-			model.addAttribute(ModelAttributetConstants.GOOGLECLIENTID, googleClientid);
-			model.addAttribute(ModelAttributetConstants.FACEBOOKAPPID, facebookAppid);
+
+
 			model.addAttribute(PRODUCT_SIZE_TYPE, productDetailsHelper.getSizeType(productModel));
 			final String metaDescription = productData.getSeoMetaDescription();
 			final String metaTitle = productData.getSeoMetaTitle();
