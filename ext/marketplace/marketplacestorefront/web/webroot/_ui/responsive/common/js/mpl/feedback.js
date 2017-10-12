@@ -2659,7 +2659,9 @@ function sizeSwatch() {
 /*colour and size swatch 3 lines TISPRM-123*/
 
 /*added for gigya   TISPT-203 */
-function callGigya(){
+/*
+ * Call for Gigya Closed With New 
+ * function callGigya(){
 	//Start
 	
 	$.ajax({
@@ -2703,7 +2705,7 @@ function callGigyaWhenNotMinified(){
 	    });
 	//End 
 }
-
+*/
 /* Changes for TISPT-203 ends  */
 
 /*TPR-198 : Page reload on SortBy and ViewBy*/

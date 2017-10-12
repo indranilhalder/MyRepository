@@ -35,6 +35,17 @@
 					<cms:component component="${feature}" />
 				</cms:pageSlot>
 			</li>
+			<!-- Added for Social Login New -->
+			<li class="social_login_content" style="clear:both;">
+
+				<div class="social-login-btn-container">
+			    	<button class="fb-sign-btn" onclick="ACC.socialLogin.facebookSocialLogin()"></button>
+			    </div>
+			    <div class="social-login-btn-container">
+					<button id="customBtn" class="google-sign-btn"></button>
+				</div>
+			</li>
+			<!-- End New Social Login Integration -->
 		</ul>
 	</div>
 <%-- 	<div class="benefits">
@@ -89,4 +100,6 @@
 	function removeErrorDiv(){
   		$('#errorDiv').css('display','none');
     }
+	
+	
 </script>

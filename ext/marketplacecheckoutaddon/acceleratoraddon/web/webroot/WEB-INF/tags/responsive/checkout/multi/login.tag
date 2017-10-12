@@ -148,8 +148,15 @@
 </c:when>
 <c:otherwise>
 <ul class="social-connect" id="gSignInWrapper">
-  <li><a class="fb" href="${urlVisitForFacebook}"><spring:theme code="register.new.facebook" text="Connect with Facebook" /></a></li>
-  <li class="customGPlusSignIn"><a class="go" href="${urlVisit}"><spring:theme code="register.new.google" text="Connect with Google" /></a></li>
+  	<li class="social_login_content" style="clear:both;">
+
+				<div class="social-login-btn-container">
+			    	<button class="fb-sign-btn" onclick="ACC.socialLogin.facebookSocialLogin()"></button>
+			    </div>
+			    <div class="social-login-btn-container">
+					<button id="customBtn" class="google-sign-btn"></button>
+				</div>
+			</li>
 </ul>
 </c:otherwise>
 </c:choose>

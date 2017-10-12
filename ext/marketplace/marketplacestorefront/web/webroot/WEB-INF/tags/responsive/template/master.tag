@@ -361,7 +361,12 @@
 <c:set var="buildNumber" value= "100000"/>
 </c:if>
 <body class="${pageBodyCssClasses} ${cmsPageRequestContextData.liveEdit ? ' yCmsLiveEdit' : ''} language-${currentLanguage.isocode}">
-
+<c:if test="${useNativeSocial=='Y'}">
+	<script type="text/javascript">
+	var fbid='${mplfbid}';
+	var gid='${mplgoogleid}';
+</script>
+</c:if>
 	<c:if test="${isGigyaEnabled=='Y'}">
 		<c:choose>
 			<c:when test="${fn:contains(requestScope['javax.servlet.forward.request_uri'],'/delivery-method/') or 
