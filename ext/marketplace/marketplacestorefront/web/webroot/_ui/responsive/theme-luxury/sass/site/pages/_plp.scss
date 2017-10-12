@@ -875,7 +875,9 @@
 								}
 								.le-checkbox{
 									label{
-										width:90%;
+										width:87%;
+                                        word-wrap: break-word;
+                                        
                                         @include media-breakpoint-down(sm) {
                                             padding-left: 35px;    
                                             
@@ -883,7 +885,7 @@
 									}
 									input[type=checkbox]~label::before{
 										border-radius:50%;
-										left: 95%;
+										left: 100%;
 									}
 								}
 							}
