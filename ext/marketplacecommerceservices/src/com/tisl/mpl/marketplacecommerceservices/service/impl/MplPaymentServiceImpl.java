@@ -457,8 +457,15 @@ public class MplPaymentServiceImpl implements MplPaymentService
 					getModelService().save(setValueInNetbankingPaymentInfo(cart, orderStatusResponse));
 					//						break;
 				}
-				//				else if (null != orderStatusResponse.getCardResponse() && StringUtils.isNotEmpty(cart.getModeOfPayment())
-				//						&& MarketplacecommerceservicesConstants.EMI.equalsIgnoreCase(cart.getModeOfPayment()))
+
+				//Added for paytm integration
+				else if (StringUtils.isNotEmpty(orderStatusResponse.getPaymentMethodType())
+						&& orderStatusResponse.getPaymentMethodType().equalsIgnoreCase("WALLET"))
+				{
+					//saving the cartmodel for paytm
+					getModelService().save(setValueInPaytmPaymentInfo(cart, orderStatusResponse));
+					//						break;
+				}
 				else if (null != orderStatusResponse.getCardResponse() && StringUtils.isNotEmpty(orderStatusResponse.getBankEmi()))
 				{
 					//saving the cartmodel for EMI
@@ -5127,5 +5134,74 @@ public class MplPaymentServiceImpl implements MplPaymentService
 		getModelService().save(orderModel);
 		getModelService().refresh(orderModel);
 
+	}
+
+	/**
+	 * Added for paytm integration
+	 *
+	 * @param cart
+	 * @param response
+	 * @return CartModel
+	 */
+	private AbstractOrderModel setValueInPaytmPaymentInfo(final AbstractOrderModel cart, final GetOrderStatusResponse response)
+	{
+		try
+		{
+			//creating NetbankingPaymentInfoModel
+			final ThirdPartyWalletInfoModel nbPaymentInfoModel = getModelService().create(ThirdPartyWalletInfoModel.class);
+
+			if (StringUtils.isNotEmpty(cart.getGuid()))
+			{
+				nbPaymentInfoModel.setCode("PAYTM_" + cart.getGuid());//TODO::Setting like this until it is finalized
+			}
+			else
+			{
+				//nbPaymentInfoModel.setCode("DUMMY_NB_" + cart.getGuid());		//Erroneous code fixed
+				nbPaymentInfoModel.setCode("DUMMY_PAYTM_" + System.currentTimeMillis());
+			}
+			final UserModel user = cart.getUser();
+			if (null != user)
+			{
+				nbPaymentInfoModel.setUser(user);
+				if (StringUtils.isNotEmpty(user.getName()))
+				{
+					nbPaymentInfoModel.setWalletOwner(user.getName());
+				}
+				else
+				{
+					nbPaymentInfoModel.setWalletOwner(MarketplacecommerceservicesConstants.DUMMYCCOWNER);
+				}
+			}
+			nbPaymentInfoModel.setProviderName("PAYTM");
+			if (null == cart.getPaymentInfo() && !OrderStatus.PAYMENT_TIMEOUT.equals(cart.getStatus()))
+			{
+				//saving the nbPaymentInfoModel
+				getModelService().save(nbPaymentInfoModel);
+
+				//setting paymentinfo in cart
+				cart.setPaymentInfo(nbPaymentInfoModel);
+				cart.setPaymentAddress(cart.getDeliveryAddress());
+			}
+			else if (null != cart.getPaymentInfo())
+			{
+				LOG.error("Order already has payment info -- not saving nbPaymentInfoModel>>>" + cart.getPaymentInfo().getCode());
+			}
+			else
+			{
+				LOG.error(ERROR_PAYMENT + cart.getCode());
+			}
+
+		}
+		catch (final ModelSavingException e)
+		{
+			LOG.error("Exception while saving netbanking payment info with " + e);
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0007);
+		}
+		catch (final Exception e)
+		{
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000);
+		}
+		//returning the cart
+		return cart;
 	}
 }

@@ -13,7 +13,6 @@ import de.hybris.platform.servicelayer.exceptions.ModelSavingException;
 import de.hybris.platform.servicelayer.model.ModelService;
 import de.hybris.platform.store.BaseStoreModel;
 
-
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
@@ -45,8 +44,8 @@ public class MplPaymentTransactionServiceImpl implements MplPaymentTransactionSe
 	@Autowired
 	private MplPaymentDao mplPaymentDao;
 
-//	@Autowired
-//	private BaseStoreService baseStoreService;//Sonar Fix
+	//	@Autowired
+	//	private BaseStoreService baseStoreService;//Sonar Fix
 
 
 	/**
@@ -130,6 +129,15 @@ public class MplPaymentTransactionServiceImpl implements MplPaymentTransactionSe
 				final PaymentTypeModel paymenttype = getMplPaymentDao().getPaymentMode("Netbanking", baseStore);
 				paymentTransactionEntry.setPaymentMode(paymenttype);
 			}
+			// Newly added for paytm integration
+			if (StringUtils.isNotEmpty(getOrderStatusResponse.getPaymentMethodType())
+					&& getOrderStatusResponse.getPaymentMethodType().equalsIgnoreCase("WALLET"))
+			{
+				final PaymentTypeModel paymenttype = getMplPaymentDao().getPaymentMode("PayTM", baseStore);
+				paymentTransactionEntry.setPaymentMode(paymenttype);
+			}
+
+
 			else if (StringUtils.isNotEmpty(getOrderStatusResponse.getPaymentMethodType())
 					&& getOrderStatusResponse.getPaymentMethodType().equalsIgnoreCase("CARD"))
 			{

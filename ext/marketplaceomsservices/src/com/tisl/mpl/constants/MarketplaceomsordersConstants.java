@@ -39,13 +39,14 @@ public final class MarketplaceomsordersConstants extends GeneratedMarketplaceoms
 	//Added for third party Wallet
 
 	public static final String PAYMENTMETHOD_MRUPEE = "MRUPEE";
+	public static final String PAYMENTMETHOD_PAYTM = "MRUPEE"; //PAYTM changes
 
 
-	public static final String REFUND_TYPE_CODE="S";
-	public static final String TICKET_TYPE_CODE="C";
-	public static final String REASON_CODE="01";
-	public static final String TICKET_SUB_TYPE_CODE="UCP";
-	public static final String TICKET_SUB_TYPE_CODE_SSB="SSB";
+	public static final String REFUND_TYPE_CODE = "S";
+	public static final String TICKET_TYPE_CODE = "C";
+	public static final String REASON_CODE = "01";
+	public static final String TICKET_SUB_TYPE_CODE = "UCP";
+	public static final String TICKET_SUB_TYPE_CODE_SSB = "SSB";
 	public static final String CRM_SSB_REASON_CODE = "04".intern();
 
 	public static final String EMPTY = "".intern();

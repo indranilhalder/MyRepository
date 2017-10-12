@@ -150,6 +150,8 @@ public final class MarketplacecheckoutaddonConstants extends GeneratedMarketplac
 	public static final String MOBILEBLACKLIST = "/mobileBlacklist";
 	public static final String RESETCONVCHARGEELSEWHEREURL = "/resetConvChargeElsewhere";
 	public static final String SUBMITNBFORM = "/submitNBForm";
+	public static final String SUBMIT_PAYTM_FORM = "/submitPaytmForm"; //paytm changes
+
 	public static final String CREATEJUSPAYORDER = "/createJuspayOrder";
 	public static final String SETBANK = "/setBankForSavedCard";
 	public final static String COUNTRY = "country".intern();
