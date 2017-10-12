@@ -111,7 +111,7 @@
 		</ul>
     
 	</c:when> --%>
-	<c:otherwise>
+	<c:when test="${useNativeSocial=='Y'}">
 
 		<ul class="social-login-btn-container-dropdown">
 			<li>
@@ -122,13 +122,13 @@
 			
 					<button id="customBtndrop" class="google-sign-btn-dropdown"></button>
 					<script type="text/javascript">
-			ACC.socialLogin.attachSignin( document.getElementById('customBtndrop'));
-			</script>
+							ACC.socialLogin.attachSignin( document.getElementById('customBtndrop'));
+						</script>
 			</li>
 			
 
 		</ul>
-	</c:otherwise>
+	</c:when>
 </c:choose>
 <!--New Changes for Social Login -->
 	<!-- End  Gigya and API Social Login -->
