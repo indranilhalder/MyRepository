@@ -5,9 +5,6 @@ body .body-Content .account .account-header {
 body .account .account-header select.menu-select {
     display: none;
 }
-footer {
-    display: none;
-}
 .errorMessage {
     clear: both;
 }
@@ -36,11 +33,12 @@ body.page-coupons .account .wrapper {
    display:none
 } */
 
-
-
-
-
-
+@media (max-width: 790px){
+body .account .right-account .info.responsiveProfile h2 {
+    margin-bottom: 0;
+    margin-top: 16px;
+}
+}
 
 /* Breadcrumbs start*/
 .breadcrumbs {
