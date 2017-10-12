@@ -2280,4 +2280,20 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String KM = "km";
 	public static final String ENABLED_SPILT_PAYMENT_FORMOBILE = "egv.mobile.payment.splitModelEnabled";
 
+	// EGV  changes Start
+
+	public static final String BUCKET_NAME_PROMOTON = "PROMOTION";
+	public static final String QC_REFUND_TYPE_CANCEL = "CANCEL";
+	public static final String QC_REFUND_TYPE_RETURN = "RETURN";
+	public static final String QC_REFUND_TYPE_REFUND = "REFUND";
+	
+	
+	public static final String QC_PAYMENT_FAIL_HEADER = "Customer Name,Customer Email,AMount,Bucket Name".intern();
+	public static final String QC_PAYMENT_FAIL_FILE_LOCATION = "mpl.egv.QcPaymentFailLocation".intern();
+	public static final String QC_PAYMENT_FAIL_PATH = "${HYBRIS_DATA_DIR}/feed/report".intern();
+	public static final String QC_PAYMENT_FAIL_NAME = "qcPaymentFail".intern();
+	// EGV Changes End
+
+
+
 }
