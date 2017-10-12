@@ -5,15 +5,17 @@
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <%@ taglib prefix="ycommerce" uri="http://hybris.com/tld/ycommercetags" %>
 
-<c:url value="/search/getFacetData?searchCategory=${searchCategory}&text=${searchPageData.freeTextSearch}&q=${searchPageData.freeTextSearch}%3A" var="resetQueryUrl"/>
+<c:url value="/search/getFacetData?searchCategory=${searchCategory}&text=${searchPageData.freeTextSearch}&" var="queryUrl"/>
+<c:url value="${queryUrl}q=${searchPageData.freeTextSearch}" var="resetQueryUrl"/>
 <div class="filter-box">
 	<div class="filter-choosed">
 		<h5 class="mb-20">Filtered by <span>${searchPageData.pagination.totalNumberOfResults} items found</span></h5>
 	</div>
 	<ul class="">
 		<c:forEach items="${searchPageData.breadcrumbs}" var="breadcrumb">
-			<li class="remove-filter" data-facetCode="${breadcrumb.facetValueCode}">
-				<span class="filter-heading">${breadcrumb.facetName}</span>
+			<c:set var="patternToReplace" value="/search/page-{pageNo}?"/>
+			<li class="remove-filter" data-facetCode="${breadcrumb.facetValueCode}" data-removeUrl="${fn:replace(breadcrumb.removeQuery.url,patternToReplace,queryUrl)}">
+				<span class="filter-heading">${breadcrumb.facetName} : </span>
 				<span class="filter-name">${breadcrumb.facetValueName}</span>
 			</li>
 		</c:forEach>
