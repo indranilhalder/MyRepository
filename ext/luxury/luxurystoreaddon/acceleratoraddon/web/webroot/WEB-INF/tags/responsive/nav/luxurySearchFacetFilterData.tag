@@ -33,13 +33,13 @@
 	<div class="row">
 		 <div class="product-sort-wrapper mb-30 col-sm-12">
 		 	<div class="plp-sort-inner">
-				<%-- <div class="breadcrumb pull-left">
+				<div class="breadcrumb pull-left">
 					<c:if test="${fn:length(breadcrumbs) > 0}">
 						<ul class="breadcrumbs wrapper">
 							<breadcrumb:luxuryBreadcrumb breadcrumbs="${breadcrumbs}" />
 						</ul>
 					</c:if>
-				</div>	 --%>
+				</div>
 				<div class="sort-by-fature pull-right">
 					<select class="responsiveSort">
 						<option  value="relevance">Popularity</option>
