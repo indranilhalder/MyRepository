@@ -12804,4 +12804,24 @@ li.download-app a:before, span.material-icons, header .content .right>ul>li.wish
 }
 }
 /*TPR-6654 end*/
- 
+ /* SDI-1393 start */
+.page-viewAllTrending.pageType-ContentPage #ia_products_hot .right-block .select-view .select-list {
+    z-index: 2;
+}
+/* SDI-1393 End */
+
+/*TPR-6405 start*/
+.samsung-chat-div{
+	position: fixed;
+    bottom: 40px;
+    right: 10px;
+    background: transparent;
+	cursor: pointer;
+	z-index: 10;
+}
+@media (max-width: 790px){
+	.samsung-chat-div{
+		display: none;
+	}
+}
+/*TPR-6405 end*/

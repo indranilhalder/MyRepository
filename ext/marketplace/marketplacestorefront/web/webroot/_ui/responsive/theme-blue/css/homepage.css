@@ -2815,6 +2815,9 @@ header>.content .top ul a[href="/helpservices"] {
 	#showcaseMobile {
 		display: none;
 	}
+	.home-product-you-care-carousel {
+    padding: 0 20px 77px;
+}
 }
 
 @media ( min-width : 791px) {
@@ -4329,6 +4332,9 @@ header>.content .top ul a[href="/helpservices"] {
 	body.page-homepage #productYouCare h2 {
 		margin: 80px 4% 0;
 	}
+	.qued-image.qued-left.col-xs-6{
+		width: 50%;
+	}
 }
 @media ( min-width : 480px) {
 	.home-brands-you-love-side-image.left, .home-brands-you-love-side-image.right {
@@ -4599,3 +4605,7 @@ background: url(../images/search_image.png) no-repeat;}
 	#brandsYouLoveMobileComp .owl-controls .owl-page {display: none;}
 }
 /*Rainbow Sale Homepage Changes End - Vamshi*/
+
+.owl-carousel.home-product-you-care-carousel {
+    padding: 0 20px 77px;
+}

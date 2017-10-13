@@ -5786,3 +5786,8 @@ li.item>ul li:last-child {
 		right: -51px; /*Changed for TISPRD-7419*/
 	}
 }
+/* TISCSXII-2240 Start */
+.cartPromotions .promotionDesc {
+    padding-bottom: 24px;
+} 
+/* TISCSXII-2240 END */
