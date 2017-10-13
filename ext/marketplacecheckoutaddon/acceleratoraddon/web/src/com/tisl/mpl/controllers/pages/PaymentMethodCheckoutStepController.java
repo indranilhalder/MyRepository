@@ -3286,6 +3286,8 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 					paymentInfo.put(paymentMode, Double.valueOf(cart.getTotalPriceWithConv().doubleValue() - walletAmount));
 					getSessionService().setAttribute(MarketplacecheckoutaddonConstants.PAYMENTMODE, paymentInfo);
 
+					System.out.println("**paymentmode In appliedPromotion::" + paymentMode);
+
 					//TISPRO-540 - Setting Payment mode in Cart
 					if (StringUtils.isNotEmpty(paymentMode)
 							&& paymentMode.equalsIgnoreCase(MarketplacecheckoutaddonConstants.CREDITCARDMODE))
@@ -3322,6 +3324,11 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 							&& paymentMode.equalsIgnoreCase(MarketplacecommerceservicesConstants.MRUPEE))
 					{
 						cart.setModeOfPayment(MarketplacecommerceservicesConstants.MRUPEE);
+						getModelService().save(cart);
+					}
+					else if (StringUtils.isNotEmpty(paymentMode) && paymentMode.equalsIgnoreCase("paytm"))
+					{
+						cart.setModeOfPayment("PAYTM");
 						getModelService().save(cart);
 					}
 
