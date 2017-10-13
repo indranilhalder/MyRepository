@@ -133,7 +133,7 @@ public class MplPaymentTransactionServiceImpl implements MplPaymentTransactionSe
 			if (StringUtils.isNotEmpty(getOrderStatusResponse.getPaymentMethodType())
 					&& getOrderStatusResponse.getPaymentMethodType().equalsIgnoreCase("WALLET"))
 			{
-				final PaymentTypeModel paymenttype = getMplPaymentDao().getPaymentMode("PayTM", baseStore);
+				final PaymentTypeModel paymenttype = getMplPaymentDao().getPaymentMode("PAYTM", baseStore);
 				paymentTransactionEntry.setPaymentMode(paymenttype);
 			}
 
@@ -434,9 +434,9 @@ public class MplPaymentTransactionServiceImpl implements MplPaymentTransactionSe
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see
-	 *
+	 * 
 	 * @desc SprintPaymentFixes:-:- To handle missing paymentTransaction for specific order
 	 */
 	@Override
@@ -526,9 +526,9 @@ public class MplPaymentTransactionServiceImpl implements MplPaymentTransactionSe
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see
-	 *
+	 * 
 	 * @desc SprintPaymentFixes:-:- To handle missing paymentTransaction for specific order
 	 */
 	@Override
