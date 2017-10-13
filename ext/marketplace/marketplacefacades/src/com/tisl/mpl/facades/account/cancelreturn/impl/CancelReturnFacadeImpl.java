@@ -2242,25 +2242,40 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
       		walletId=customerModel.getCustomerWalletDetail().getWalletId();
       	}
       	if(null != subOrderModel.getSplitModeInfo() && subOrderModel.getSplitModeInfo().equalsIgnoreCase("Split")) {
+      		QCRedeeptionResponse response =null;
+      		try{
 	      	QCCreditRequest qcCreditRequest =new QCCreditRequest();
 	      	qcCreditRequest.setAmount(daecimalFormat.format(orderCancelRequest.getAmountTORefundForQc()));
 	      	qcCreditRequest.setInvoiceNumber(subOrderModel.getParentReference().getCode());
 	      	qcCreditRequest.setNotes("Cancel for "+ daecimalFormat.format(orderCancelRequest.getAmountTORefundForQc()));    	
-	      	QCRedeeptionResponse response = mplWalletFacade.qcCredit(walletId , qcCreditRequest);
+	      	response = mplWalletFacade.qcCredit(walletId , qcCreditRequest);
 	      	constructQuickCilverOrderEntry(response,transactionId);
 	      	LOG.debug("Quck Cilver giving response code "+response.getResponseCode()+" Order Id :"+subOrderModel.getParentReference().getCode());
-	      	initiateRefund(subOrderModel, orderRequestRecord);
-	      	
+      		}catch(Exception e){
+      			e.getMessage();
+      			LOG.error("Quck Cilver giving response code "+response.getResponseCode()+" Order Id :"+subOrderModel.getParentReference().getCode());
+      		}
+      		try{
+      		initiateRefund(subOrderModel, orderRequestRecord);
+      		}catch(Exception e){
+      			e.getMessage();
+      			LOG.error("Juspay giving Exception for  Order Id :"+subOrderModel.getParentReference().getCode());
+      		}
 	       }else if(null != subOrderModel.getSplitModeInfo() && subOrderModel.getSplitModeInfo().equalsIgnoreCase("CliqCash")){
 	      	 
-	      	QCCreditRequest qcCreditRequest =new QCCreditRequest();
-	      	qcCreditRequest.setAmount(daecimalFormat.format(orderCancelRequest.getAmountTORefundForQc()));
-	      	qcCreditRequest.setInvoiceNumber(subOrderModel.getParentReference().getCode());
-	      	qcCreditRequest.setNotes("Cancel for "+ daecimalFormat.format(orderCancelRequest.getAmountTORefundForQc()));    	
-	      	QCRedeeptionResponse response = mplWalletFacade.qcCredit(walletId , qcCreditRequest);
-	      	LOG.debug("*****************************"+response.getResponseCode());
-	      	constructQuickCilverOrderEntry(response,transactionId);
-		         		
+	      	 QCRedeeptionResponse response =null;
+	      	 try{
+   	      	QCCreditRequest qcCreditRequest =new QCCreditRequest();
+   	      	qcCreditRequest.setAmount(daecimalFormat.format(orderCancelRequest.getAmountTORefundForQc()));
+   	      	qcCreditRequest.setInvoiceNumber(subOrderModel.getParentReference().getCode());
+   	      	qcCreditRequest.setNotes("Cancel for "+ daecimalFormat.format(orderCancelRequest.getAmountTORefundForQc()));    	
+   	      	response = mplWalletFacade.qcCredit(walletId , qcCreditRequest);
+   	      	LOG.debug("*****************************"+response.getResponseCode());
+   	      	constructQuickCilverOrderEntry(response,transactionId);
+	      	 }catch(Exception e){
+	      			e.getMessage();
+	      			LOG.error("Quck Cilver giving response code "+response.getResponseCode()+" Order Id :"+subOrderModel.getParentReference().getCode());
+	      		}  		
 	      }else{
 		      initiateRefund(subOrderModel, orderRequestRecord);
 		   }
@@ -2312,7 +2327,7 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 			if(StringUtils.equalsIgnoreCase(response.getResponseCode().toString(),"0")){
 				walletApportionModel.setStatusForQc("SUCCESS");
 			}else{
-				walletApportionModel.setStatusForQc("FAIL");
+				walletApportionModel.setStatusForQc("PENDING");
 			}
 			modelService.save(walletApportionModel);
 			abstractOrderEntryModel.setWalletApportionReturnInfo(walletApportionModel);

@@ -232,6 +232,11 @@ public class MarketPlaceDefaultOrderController extends DefaultOrderController
 							refundTransactionMappingModel
 									.setRefundAmount(orderEntry.
 											getNetAmountAfterAllDisc());//TISPRO-216 : Refund amount Set in RTM
+							
+							refundTransactionMappingModel.setQwikCilverRefId("");
+							refundTransactionMappingModel.setQwikCilverStatus("");
+							refundTransactionMappingModel.setWalletCardList(null);
+							
 							getModelService().save(
 									refundTransactionMappingModel);
 						} else {
@@ -279,6 +284,9 @@ public class MarketPlaceDefaultOrderController extends DefaultOrderController
 				refundTransactionMappingModel.setCreationtime(new Date());
 				refundTransactionMappingModel.setRefundType(JuspayRefundType.RETURN);
 				refundTransactionMappingModel.setRefundAmount(orderEntry.getNetAmountAfterAllDisc());//TISPRO-216 : Refund amount Set in RTM
+				refundTransactionMappingModel.setQwikCilverRefId("");
+				refundTransactionMappingModel.setQwikCilverStatus("");
+				refundTransactionMappingModel.setWalletCardList(null);
 				getModelService().save(refundTransactionMappingModel);
 			}
 			// TISSIT-1784 Code addition ended
@@ -429,6 +437,7 @@ public class MarketPlaceDefaultOrderController extends DefaultOrderController
 //								.setRefundType(JuspayRefundType.REFUND_SCHEDULE_DELIVERY_CHARGE);
 //						refundTransactionMappingModel
 //								.setRefundAmount(totalRefundScheduleDeliveryCharges);//TISPRO-216 : Refund amount Set in RTM
+					
 //						getModelService().save(refundTransactionMappingModel);
 //					}
 					
@@ -464,6 +473,10 @@ public class MarketPlaceDefaultOrderController extends DefaultOrderController
 										.setRefundType(JuspayRefundType.REFUND_SCHEDULE_DELIVERY_CHARGE);
 								refundTransactionMappingModel
 										.setRefundAmount(refundedScheduleDeliveryCharges);//TISPRO-216 : Refund amount Set in RTM
+								refundTransactionMappingModel.setQwikCilverRefId("");
+								refundTransactionMappingModel.setQwikCilverStatus("");
+								refundTransactionMappingModel.setWalletCardList(null);
+								
 								getModelService().save(refundTransactionMappingModel);
 							}
 
@@ -574,6 +587,9 @@ public class MarketPlaceDefaultOrderController extends DefaultOrderController
 					refundTransactionMappingModel.setCreationtime(new Date());
 					refundTransactionMappingModel.setRefundType(JuspayRefundType.REFUND_SCHEDULE_DELIVERY_CHARGE);
 					refundTransactionMappingModel.setRefundAmount(entry.getRefundedScheduleDeliveryChargeAmt());//TISPRO-216 : Refund amount Set in RTM
+					refundTransactionMappingModel.setQwikCilverRefId("");
+					refundTransactionMappingModel.setQwikCilverStatus("");
+					refundTransactionMappingModel.setWalletCardList(null);
 					getModelService().save(refundTransactionMappingModel);
 				}
 				// Done for INC144317893
@@ -713,6 +729,10 @@ public class MarketPlaceDefaultOrderController extends DefaultOrderController
 										.setRefundType(juspayRefundType);
 								refundTransactionMappingModel
 										.setRefundAmount(refundedDeliveryCharges);//TISPRO-216 : Refund amount Set in RTM
+								refundTransactionMappingModel.setQwikCilverRefId("");
+								refundTransactionMappingModel.setQwikCilverStatus("");
+								refundTransactionMappingModel.setWalletCardList(null);
+								
 								getModelService().save(refundTransactionMappingModel);
 							}
 						 
@@ -848,6 +868,9 @@ public class MarketPlaceDefaultOrderController extends DefaultOrderController
 					refundTransactionMappingModel.setCreationtime(new Date());
 					refundTransactionMappingModel.setRefundType(juspayRefundType);
 					refundTransactionMappingModel.setRefundAmount(refundedDeliveryCharges);//TISPRO-216 : Refund amount Set in RTM
+					refundTransactionMappingModel.setQwikCilverRefId("");
+					refundTransactionMappingModel.setQwikCilverStatus("");
+					refundTransactionMappingModel.setWalletCardList(null);
 					getModelService().save(refundTransactionMappingModel);
 				}
 				// Done for INC144317893

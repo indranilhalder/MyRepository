@@ -159,22 +159,39 @@ public class AutoRefundInitiateAction extends AbstractProceduralAction<OrderProc
 											 boolean qcstatus = false ;
 											 if(null != orderModel.getSplitModeInfo() && orderModel.getSplitModeInfo().equalsIgnoreCase("Split")){
 													//Start Added the code for QC
+												 try{
 												 QCRedeeptionResponse  response =qcCallforReturnRefund( orderModel ,(RefundEntryModel) returnEntry);
 												 qcstatus = constructQuickCilverOrderEntry(response,returnEntry.getOrderEntry().getTransactionID());
-													//End Added the code for QC
+												//End Added the code for QC
+												 }catch(Exception e){
+													 //End Added the code for QC
+													 e.getMessage();
+													 LOG.error("AutoRefundInitiateAction: Exception is getting while QC responce for Order #"
+																+ orderModel.getCode());
+												 }
+												 try{
 												 LOG.error("AutoRefundInitiateAction: Going to call mplPaymentService.doRefundPayment(refundList); for Order #"
 															+ orderModel.getCode());
 													 result = mplPaymentService.doRefundPayment(refundList,((RefundEntryModel) returnEntry).getAmount());
-													LOG.error("AutoRefundInitiateAction: After call mplPaymentService.doRefundPayment(refundList); for Order #"
-															+ orderModel.getCode());
+												 }catch(Exception e){
+													 e.getMessage();
+													 LOG.error("AutoRefundInitiateAction: After call mplPaymentService.doRefundPayment(refundList); for Order #"
+																+ orderModel.getCode());
+												 }
+													
 											} else if (null != orderModel.getSplitModeInfo()  && orderModel.getSplitModeInfo().equalsIgnoreCase("CliqCash")){
 											
+												 try{
 											//Start Added the code for QC
 												 QCRedeeptionResponse  response =qcCallforReturnRefund( orderModel ,(RefundEntryModel) returnEntry);
 												 qcstatus = constructQuickCilverOrderEntry(response,returnEntry.getOrderEntry().getTransactionID());
 													//End Added the code for QC
-											
-											
+												 }catch(Exception e){
+													 //End Added the code for QC
+													 e.getMessage();
+													 LOG.error("AutoRefundInitiateAction: Exception is getting while QC responce for Order #"
+																+ orderModel.getCode());
+												 }
 											}else {
 											LOG.error("AutoRefundInitiateAction: Going to call mplPaymentService.doRefundPayment(refundList); for Order #"
 															+ orderModel.getCode());
@@ -286,7 +303,7 @@ public class AutoRefundInitiateAction extends AbstractProceduralAction<OrderProc
 			walletApportionModel.setStatusForQc("SUCCESS");
 			qcStatus=true;
 		}else{
-			walletApportionModel.setStatusForQc("FAIL");
+			walletApportionModel.setStatusForQc("PENDING");
 		}
 		modelService.save(walletApportionModel);
 		abstractOrderEntryModel.setWalletApportionReturnInfo(walletApportionModel);

@@ -282,6 +282,11 @@ public class MarketPlaceDefaultCancellationController extends
 										refundTransactionMappingModel
 												.setRefundAmount(orderEntry.getNetAmountAfterAllDisc()
 														+deliveryCost+scheduleDeliveryCost);//TISPRO-216 : Refund amount Set in RTM
+										
+										refundTransactionMappingModel.setQwikCilverRefId("");
+										refundTransactionMappingModel.setQwikCilverStatus("");
+										refundTransactionMappingModel.setWalletCardList(null);
+										
 										getModelService().save(
 												refundTransactionMappingModel);
 									} else {
