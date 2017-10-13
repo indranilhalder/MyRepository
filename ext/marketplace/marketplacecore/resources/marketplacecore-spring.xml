@@ -2062,6 +2062,11 @@ http://www.springframework.org/schema/aop/spring-aop.xsd">
 		parent="defaultStandaloneSolrService">
 		<property name="solrCoreNameResolver" ref="solrCoreNameResolver" />
 	</bean>
-	<!-- TPR-6665: solr server : synonyms injection end -->
+		<!-- TPR-6665: solr server : synonyms injection end -->
+	<bean id="QcPaymentFailCronJob" class="com.tisl.mpl.core.payment.cronjob.QcPaymentFailCronJob">
+	<property name="modelService" ref="modelService" />
+	<property name="flexibleSearchService" ref="flexibleSearchService" />
+	<property name="sessionService" ref="sessionService" />
+</bean>
 
 </beans>

@@ -3,6 +3,8 @@
  */
 package com.tisl.mpl.marketplacecommerceservices.service;
 
+import com.tisl.mpl.exception.EtailNonBusinessExceptions;
+
 /**
  * @author Techouts
  *
@@ -16,4 +18,6 @@ public interface MplQcPaymentFailService
 	 *
 	 */
 	void generateData();
+	
+	void processQcPaymentFailedOrders() throws EtailNonBusinessExceptions;
 }

@@ -19,4 +19,10 @@ public interface MplQcPaymentFailDao
 	List<WalletApportionReturnInfoModel> getPendingQcPayments();
 
 	OrderModel getOrder(String orderCode);
+
+	/**
+	 * @param string
+	 * @return
+	 */
+	List<OrderModel> getRmsVerificationFailedOrders(String string);
 }

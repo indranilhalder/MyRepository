@@ -2359,6 +2359,13 @@
    </bean>
    
    <!--  END EGV Beans 22-09-2017 -->
+   
+   <bean id="MplQcPaymentFailService" class="com.tisl.mpl.marketplacecommerceservices.service.impl.MplQcPaymentFailServiceImpl">
+   </bean>
+   
+   <bean id="MplQcPaymentFailDao" class="com.tisl.mpl.promotion.dao.impl.MplQcPaymentFailDaoImpl">
+   </bean>
+   
 </beans>
 
 

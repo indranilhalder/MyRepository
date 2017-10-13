@@ -21,6 +21,9 @@ import com.tisl.mpl.util.ExceptionUtil;
 /**
  * @author Techouts
  *
+ *         This Cron Job Is used To Refund Money Of Both QC and Juspay , If the payment is not successfull from QC
+ *
+ *
  */
 
 public class QcPaymentFailCronJob extends AbstractJobPerformable<CronJobModel>
@@ -36,7 +39,27 @@ public class QcPaymentFailCronJob extends AbstractJobPerformable<CronJobModel>
 		try
 		{
 			LOG.debug("Inside QcPaymentFailCron job");
-			generateFileData();
+
+			// Fetch the Orders Which Are in RMS_VERIFICATION_FAILED
+			try
+			{
+				mplQcPaymentFailService.generateData();
+			}
+			catch (final Exception e)
+			{
+				LOG.error("Exception occurred while Refunding" + e.getMessage());
+			}
+
+			try
+			{
+				generateFileData();
+			}
+			catch (final Exception e)
+			{
+				LOG.error("Exception occurred while Generating File" + e.getMessage());
+			}
+
+			
 		}
 		catch (final EtailBusinessExceptions exception)
 		{

@@ -2290,10 +2290,19 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	
 	public static final String QC_PAYMENT_FAIL_HEADER = "Customer Name,Customer Email,AMount,Bucket Name".intern();
 	public static final String QC_PAYMENT_FAIL_FILE_LOCATION = "mpl.egv.QcPaymentFailLocation".intern();
-	public static final String QC_PAYMENT_FAIL_PATH = "${HYBRIS_DATA_DIR}/feed/report".intern();
+	public static final String QC_PAYMENT_FAIL_PATH = "${HYBRIS_DATA_DIR}/feed/report/qcPaymentFail".intern();
 	public static final String QC_PAYMENT_FAIL_NAME = "qcPaymentFail".intern();
 	// EGV Changes End
+	public static final String RMSVERIFICATIONFAILEDSTATUS = "status".trim();
+	
+	public static final String WALLETAPPORTIONINFOSTATUS = "status".trim();
+	
+	public static final String WALLETAPPORTIONINFOTYPE = "type".trim();
+	
+	public static final String RMSVERIFICATIONFAILEDQUERY = "select {o.pk} from {Order as o},{OrderStatus as os} where {o.status}={os.pk} and {os.code}=?status";
 
+	public static final String PAYMENT_MODE_SPLIT = "split".trim();
+	public static final String PAYMENT_MODE_LIQ_CASH = "cliq cash".trim();
 
 
 }
