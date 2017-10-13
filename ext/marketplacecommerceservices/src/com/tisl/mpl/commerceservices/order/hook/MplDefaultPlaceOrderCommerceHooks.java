@@ -819,11 +819,9 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 				{
 
 					mplEGVCartService.removeOldEGVCartCurrentCustomer();
-
 					final String response = getPurchaseEGVRequestPopulate(orderModel);
 					if (response.equalsIgnoreCase(SUCCESS))
 					{
-						getOrderStatusSpecifier().setOrderStatus(orderModel, OrderStatus.CONFIRMED);
 						sendNotifiactionForEGVOrder(orderModel);
 					}
 					else

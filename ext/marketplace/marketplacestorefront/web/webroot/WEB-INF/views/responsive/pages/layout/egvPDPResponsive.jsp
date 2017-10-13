@@ -56,7 +56,8 @@
 	  width: 100%;
 	  max-width: 510px;
 	  padding: 10px;
-	  min-height: 153px;
+	  min-height: 100px;
+	  max-height: 153px;
 	  border-radius: 4px;
 	  border: none !important;
 	  background-color: #ededed;
@@ -92,7 +93,7 @@
 	.giftImgRight {width: 500px;}
 	
 	.giftFinalTemp {
-		border-radius: 8px;
+		border-radius: 4px;
 		/* border: 1px solid #ccc; */
 		box-shadow: 0 2px 3px 0 rgba(0, 0, 0, 0.1);
 	}
@@ -103,7 +104,7 @@
 	
 	.giftFinalTempTop img {
 		width:100%;
-		border-top-left-radius: 10px; border-top-right-radius: 10px; 
+		border-top-left-radius: 4px; border-top-right-radius: 4px; 
 		/* background: url(../_ui/responsive/common/images/egv_template.png) no-repeat center; */
 	}
 	
@@ -117,6 +118,7 @@
 	}
 	
 	.giftFinalTempBottom {
+		color: #444;
 		padding: 15px;
 		font-size: 30px;
 		border-top: 1px solid #ccc;
@@ -136,6 +138,12 @@
 		.giftTermsDesc {text-align: left;}
 		.giftCategoryTab button {padding: 5px !important; font-size: 8px !important; overflow: hidden;}
 		.giftBuyBtn {max-width: 100%; bottom: 0; left: 0; right: 0; position: fixed; z-index: 12;}
+	}
+	
+	@media(min-width: 1024px){
+		.giftContSub2 {padding-left: 8% !important;}
+		.giftFinalTempContainer {margin-left: 3%; padding-left: 0% !important; width: 75%; float: left;}
+		.giftTermsDesc {margin-left: 1%;}
 	}
 	
 	@media(min-width: 651px){
@@ -259,279 +267,311 @@
 	.extGiftTemplateImg img {
 		width: 100%;
 	}
+	
+	#customAmountError, #giftCardFromNameError, #giftCardFromFirstNameError, #giftCardFromLastNameError, #giftCardEmailError, #giftCardPhoneNoError {display: none;}
 </style>
 <template:page pageTitle="${pageTitle}">
-<br />
-<div class="clearfix">
-	<div class="col-sm-6 giftContSub giftContSub1">
-		<div class="giftFinalTempContainer">
-			<br />
-			<div class="giftFinalTemp">
-				<div class="giftFinalTempTop">
-					<img src="../_ui/responsive/theme-blue/images/GiftCard.jpg" />
-				</div>
-				<div class="giftFinalTempMiddle">
-					<span><i id="updatedGiftCardMessageText">Your message here</i></span>
-				</div>
-				<div class="giftFinalTempBottom">
-					<span>&#8377;<span id="updatedCustomGiftValue"></span></span>
+<div>
+	<br />
+	<div class="clearfix">
+		<div class="col-sm-6 giftContSub giftContSub1">
+			<div class="giftFinalTempContainer">
+				<br />
+				<div class="giftFinalTemp">
+					<div class="giftFinalTempTop">
+						<img src="../_ui/responsive/theme-blue/images/GiftCard.jpg" />
+					</div>
+					<div class="giftFinalTempMiddle">
+						<span><i id="updatedGiftCardMessageText">Your message here</i></span>
+					</div>
+					<div class="giftFinalTempBottom">
+						<span>&#8377;<span id="updatedCustomGiftValue"></span></span>
+					</div>
 				</div>
 			</div>
 		</div>
-	</div>
-	
-	<div class="col-sm-6 giftContSub giftContSub2">
 		
-		<div class="clearfix">
-			<div class="">
-				<div class="col-sm-2">
-				<!-- <span class="Tanishq">Tata CliQ</span> -->
+		<div class="col-sm-6 giftContSub giftContSub2">
+			
+			<div class="clearfix">
+				<div class="">
+					<div class="col-sm-2">
+					<!-- <span class="Tanishq">Tata CliQ</span> -->
+					</div>
+					<div class="col-sm-10">
+					<span class="Diwali-GIft-Card">Gift Card</span>
+					<br />&nbsp;
+					</div>
+				</div>
+			</div>
+			<!-- <div class="clearfix">
+				<div class="col-sm-2 stepTexts">
+					STEP &nbsp;<span class="Oval">1</span><br />&nbsp; 
 				</div>
 				<div class="col-sm-10">
-				<span class="Diwali-GIft-Card">Gift Card</span>
+					<span>SELECT A DESIGN FOR YOUR GIFT CARD</span><br />&nbsp;
 				</div>
 			</div>
-		</div>
-		<!-- <div class="clearfix">
-			<div class="col-sm-2 stepTexts">
-				STEP &nbsp;<span class="Oval">1</span><br />&nbsp; 
+			<div class="clearfix">
+				<div class="col-xs-3">
+					<label class="giftLabel" for="giftTemplate1">
+					  <img src="https://cdn.zeplin.io/58987458375db68f0b01107e/assets/93E01EE1-736A-4931-861C-368B8536DA9E.png" class="img-rounded giftImg" alt="Gift Template" />
+					</label>
+				</div>
+				<div class="col-xs-3">
+					<label class="giftLabel" for="giftTemplate2">
+					  <img src="https://cdn.zeplin.io/58987458375db68f0b01107e/assets/743A55D2-5FEB-4F1D-ADD8-5DC670C2C4A6.png" class="img-rounded giftImg" alt="Gift Template" />
+					</label>
+				</div>
+				<div class="col-xs-3">
+					<label class="giftLabel" for="giftTemplate3">
+					  <img src="https://cdn.zeplin.io/58987458375db68f0b01107e/assets/79F15840-93C9-42C2-BD1A-D552CC00DB83.png" class="img-rounded giftImg" alt="Gift Template" />
+					</label>
+				</div>
+				<div class="col-xs-3">
+					<label class="giftLabel" for="giftTemplate4">
+					  <img src="https://cdn.zeplin.io/58987458375db68f0b01107e/assets/93E01EE1-736A-4931-861C-368B8536DA9E.png" class="img-rounded giftImg" alt="Gift Template" />
+					</label>
+				</div>
 			</div>
-			<div class="col-sm-10">
-				<span>SELECT A DESIGN FOR YOUR GIFT CARD</span><br />&nbsp;
-			</div>
-		</div>
-		<div class="clearfix">
-			<div class="col-xs-3">
-				<label class="giftLabel" for="giftTemplate1">
-				  <img src="https://cdn.zeplin.io/58987458375db68f0b01107e/assets/93E01EE1-736A-4931-861C-368B8536DA9E.png" class="img-rounded giftImg" alt="Gift Template" />
-				</label>
-			</div>
-			<div class="col-xs-3">
-				<label class="giftLabel" for="giftTemplate2">
-				  <img src="https://cdn.zeplin.io/58987458375db68f0b01107e/assets/743A55D2-5FEB-4F1D-ADD8-5DC670C2C4A6.png" class="img-rounded giftImg" alt="Gift Template" />
-				</label>
-			</div>
-			<div class="col-xs-3">
-				<label class="giftLabel" for="giftTemplate3">
-				  <img src="https://cdn.zeplin.io/58987458375db68f0b01107e/assets/79F15840-93C9-42C2-BD1A-D552CC00DB83.png" class="img-rounded giftImg" alt="Gift Template" />
-				</label>
-			</div>
-			<div class="col-xs-3">
-				<label class="giftLabel" for="giftTemplate4">
-				  <img src="https://cdn.zeplin.io/58987458375db68f0b01107e/assets/93E01EE1-736A-4931-861C-368B8536DA9E.png" class="img-rounded giftImg" alt="Gift Template" />
-				</label>
-			</div>
-		</div>
-		<br />&nbsp; -->
-		<div class="clearfix">
-			<div class="col-sm-12">
-				<!-- <span id="showMoreGiftDesignTemplates" class="moreGiftTemplates">See More Designs</span><br />&nbsp; -->
-				<div id="moreGiftDesignTemplates" class="giftDesignModel">
-					  Modal content
-					  <div class="giftDesignModelContent">
-						<span class="giftDesignModelClose">&times;</span>
-						<div class="giftModalContainer clearfix">
-							<div class="giftCategoryTab">
-							  <button class="tablinks" onclick="selectCategory(event, 'giftBirthdays')" id="defaultGiftCategory">Birthdays</button>
-							  <button class="tablinks" onclick="selectCategory(event, 'giftAnniversary')">Anniversary</button>
-							  <button class="tablinks" onclick="selectCategory(event, 'giftFestivals')">Festivals</button>
-							  <button class="tablinks" onclick="selectCategory(event, 'giftGraduations')">Graduations</button>
-							  <button class="tablinks" onclick="selectCategory(event, 'giftBrands')">Brands</button>
+			<br />&nbsp; -->
+			<div class="clearfix">
+				<div class="col-sm-12">
+					<!-- <span id="showMoreGiftDesignTemplates" class="moreGiftTemplates">See More Designs</span><br />&nbsp; -->
+					<div id="moreGiftDesignTemplates" class="giftDesignModel">
+						  Modal content
+						  <div class="giftDesignModelContent">
+							<span class="giftDesignModelClose">&times;</span>
+							<div class="giftModalContainer clearfix">
+								<div class="giftCategoryTab">
+								  <button class="tablinks" onclick="selectCategory(event, 'giftBirthdays')" id="defaultGiftCategory">Birthdays</button>
+								  <button class="tablinks" onclick="selectCategory(event, 'giftAnniversary')">Anniversary</button>
+								  <button class="tablinks" onclick="selectCategory(event, 'giftFestivals')">Festivals</button>
+								  <button class="tablinks" onclick="selectCategory(event, 'giftGraduations')">Graduations</button>
+								  <button class="tablinks" onclick="selectCategory(event, 'giftBrands')">Brands</button>
+								</div>
+								
+								<div id="giftBirthdays" class="giftCategoryTabcontent">
+									  <div class="extGiftTempItem col-sm-3">
+										<div class="extGiftTemplateImg"><img src="https://cdn.zeplin.io/58987458375db68f0b01107e/assets/93E01EE1-736A-4931-861C-368B8536DA9E.png" /></div>
+										<div>
+											<p><strong>Tanishq</strong></p><p class="extGiftDesc">Special Birthday Gift Cards with additional benifits...</p>
+											<br /><p><strong>&#8377; 500</strong></p>
+										</div>
+									  </div>
+									  
+									  <div class="extGiftTempItem col-sm-3">
+										<div class="extGiftTemplateImg"><img src="https://cdn.zeplin.io/58987458375db68f0b01107e/assets/93E01EE1-736A-4931-861C-368B8536DA9E.png" /></div>
+										<div>
+											<p><strong>Tanishq</strong></p><p class="extGiftDesc">Special Birthday Gift Cards with additional benifits...</p>
+											<br /><p><strong>&#8377; 500</strong></p>
+										</div>
+									  </div>
+									  
+									  <div class="extGiftTempItem col-sm-3">
+										<div class="extGiftTemplateImg"><img src="https://cdn.zeplin.io/58987458375db68f0b01107e/assets/93E01EE1-736A-4931-861C-368B8536DA9E.png" /></div>
+										<div>
+											<p><strong>Tanishq</strong></p><p class="extGiftDesc">Special Birthday Gift Cards with additional benifits...</p>
+											<br /><p><strong>&#8377; 500</strong></p>
+										</div>
+									  </div>
+									  
+									  <div class="extGiftTempItem col-sm-3">
+										<div class="extGiftTemplateImg"><img src="https://cdn.zeplin.io/58987458375db68f0b01107e/assets/93E01EE1-736A-4931-861C-368B8536DA9E.png" /></div>
+										<div>
+											<p><strong>Tanishq</strong></p><p class="extGiftDesc">Special Birthday Gift Cards with additional benifits...</p>
+											<br /><p><strong>&#8377; 500</strong></p>
+										</div>
+									  </div>
+									  
+									  <div class="extGiftTempItem col-sm-3">
+										<div class="extGiftTemplateImg"><img src="https://cdn.zeplin.io/58987458375db68f0b01107e/assets/93E01EE1-736A-4931-861C-368B8536DA9E.png" /></div>
+										<div>
+											<p><strong>Tanishq</strong></p><p class="extGiftDesc">Special Birthday Gift Cards with additional benifits...</p>
+											<br /><p><strong>&#8377; 500</strong></p>
+										</div>
+									  </div>
+									  
+									  <div class="extGiftTempItem col-sm-3">
+										<div class="extGiftTemplateImg"><img src="https://cdn.zeplin.io/58987458375db68f0b01107e/assets/93E01EE1-736A-4931-861C-368B8536DA9E.png" /></div>
+										<div>
+											<p><strong>Tanishq</strong></p><p class="extGiftDesc">Special Birthday Gift Cards with additional benifits...</p>
+											<br /><p><strong>&#8377; 500</strong></p>
+										</div>
+									  </div>
+									  
+									  <div class="extGiftTempItem col-sm-3">
+										<div class="extGiftTemplateImg"><img src="https://cdn.zeplin.io/58987458375db68f0b01107e/assets/93E01EE1-736A-4931-861C-368B8536DA9E.png" /></div>
+										<div>
+											<p><strong>Tanishq</strong></p><p class="extGiftDesc">Special Birthday Gift Cards with additional benifits...</p>
+											<br /><p><strong>&#8377; 500</strong></p>
+										</div>
+									  </div>
+									  
+									  <div class="extGiftTempItem col-sm-3">
+										<div class="extGiftTemplateImg"><img src="https://cdn.zeplin.io/58987458375db68f0b01107e/assets/93E01EE1-736A-4931-861C-368B8536DA9E.png" /></div>
+										<div>
+											<p><strong>Tanishq</strong></p><p class="extGiftDesc">Special Birthday Gift Cards with additional benifits...</p>
+											<br /><p><strong>&#8377; 500</strong></p>
+										</div>
+									  </div>
+									  
+									  <div class="extGiftTempItem col-sm-3">
+										<div class="extGiftTemplateImg"><img src="https://cdn.zeplin.io/58987458375db68f0b01107e/assets/93E01EE1-736A-4931-861C-368B8536DA9E.png" /></div>
+										<div>
+											<p><strong>Tanishq</strong></p><p class="extGiftDesc">Special Birthday Gift Cards with additional benifits...</p>
+											<br /><p><strong>&#8377; 500</strong></p>
+										</div>
+									  </div>
+								</div>
+								
+								<div id="giftAnniversary" class="giftCategoryTabcontent">
+								  <h3>Anniversary</h3>
+								</div>
+								
+								<div id="giftFestivals" class="giftCategoryTabcontent">
+								  <h3>Festivals</h3>
+								</div>
+								
+								<div id="giftGraduations" class="giftCategoryTabcontent">
+								  <h3>Graduations</h3>
+								</div>
+								
+								<div id="giftBrands" class="giftCategoryTabcontent">
+								  <h3>Brands</h3>
+								</div>
 							</div>
-							
-							<div id="giftBirthdays" class="giftCategoryTabcontent">
-								  <div class="extGiftTempItem col-sm-3">
-									<div class="extGiftTemplateImg"><img src="https://cdn.zeplin.io/58987458375db68f0b01107e/assets/93E01EE1-736A-4931-861C-368B8536DA9E.png" /></div>
-									<div>
-										<p><strong>Tanishq</strong></p><p class="extGiftDesc">Special Birthday Gift Cards with additional benifits...</p>
-										<br /><p><strong>&#8377; 500</strong></p>
-									</div>
-								  </div>
-								  
-								  <div class="extGiftTempItem col-sm-3">
-									<div class="extGiftTemplateImg"><img src="https://cdn.zeplin.io/58987458375db68f0b01107e/assets/93E01EE1-736A-4931-861C-368B8536DA9E.png" /></div>
-									<div>
-										<p><strong>Tanishq</strong></p><p class="extGiftDesc">Special Birthday Gift Cards with additional benifits...</p>
-										<br /><p><strong>&#8377; 500</strong></p>
-									</div>
-								  </div>
-								  
-								  <div class="extGiftTempItem col-sm-3">
-									<div class="extGiftTemplateImg"><img src="https://cdn.zeplin.io/58987458375db68f0b01107e/assets/93E01EE1-736A-4931-861C-368B8536DA9E.png" /></div>
-									<div>
-										<p><strong>Tanishq</strong></p><p class="extGiftDesc">Special Birthday Gift Cards with additional benifits...</p>
-										<br /><p><strong>&#8377; 500</strong></p>
-									</div>
-								  </div>
-								  
-								  <div class="extGiftTempItem col-sm-3">
-									<div class="extGiftTemplateImg"><img src="https://cdn.zeplin.io/58987458375db68f0b01107e/assets/93E01EE1-736A-4931-861C-368B8536DA9E.png" /></div>
-									<div>
-										<p><strong>Tanishq</strong></p><p class="extGiftDesc">Special Birthday Gift Cards with additional benifits...</p>
-										<br /><p><strong>&#8377; 500</strong></p>
-									</div>
-								  </div>
-								  
-								  <div class="extGiftTempItem col-sm-3">
-									<div class="extGiftTemplateImg"><img src="https://cdn.zeplin.io/58987458375db68f0b01107e/assets/93E01EE1-736A-4931-861C-368B8536DA9E.png" /></div>
-									<div>
-										<p><strong>Tanishq</strong></p><p class="extGiftDesc">Special Birthday Gift Cards with additional benifits...</p>
-										<br /><p><strong>&#8377; 500</strong></p>
-									</div>
-								  </div>
-								  
-								  <div class="extGiftTempItem col-sm-3">
-									<div class="extGiftTemplateImg"><img src="https://cdn.zeplin.io/58987458375db68f0b01107e/assets/93E01EE1-736A-4931-861C-368B8536DA9E.png" /></div>
-									<div>
-										<p><strong>Tanishq</strong></p><p class="extGiftDesc">Special Birthday Gift Cards with additional benifits...</p>
-										<br /><p><strong>&#8377; 500</strong></p>
-									</div>
-								  </div>
-								  
-								  <div class="extGiftTempItem col-sm-3">
-									<div class="extGiftTemplateImg"><img src="https://cdn.zeplin.io/58987458375db68f0b01107e/assets/93E01EE1-736A-4931-861C-368B8536DA9E.png" /></div>
-									<div>
-										<p><strong>Tanishq</strong></p><p class="extGiftDesc">Special Birthday Gift Cards with additional benifits...</p>
-										<br /><p><strong>&#8377; 500</strong></p>
-									</div>
-								  </div>
-								  
-								  <div class="extGiftTempItem col-sm-3">
-									<div class="extGiftTemplateImg"><img src="https://cdn.zeplin.io/58987458375db68f0b01107e/assets/93E01EE1-736A-4931-861C-368B8536DA9E.png" /></div>
-									<div>
-										<p><strong>Tanishq</strong></p><p class="extGiftDesc">Special Birthday Gift Cards with additional benifits...</p>
-										<br /><p><strong>&#8377; 500</strong></p>
-									</div>
-								  </div>
-								  
-								  <div class="extGiftTempItem col-sm-3">
-									<div class="extGiftTemplateImg"><img src="https://cdn.zeplin.io/58987458375db68f0b01107e/assets/93E01EE1-736A-4931-861C-368B8536DA9E.png" /></div>
-									<div>
-										<p><strong>Tanishq</strong></p><p class="extGiftDesc">Special Birthday Gift Cards with additional benifits...</p>
-										<br /><p><strong>&#8377; 500</strong></p>
-									</div>
-								  </div>
-							</div>
-							
-							<div id="giftAnniversary" class="giftCategoryTabcontent">
-							  <h3>Anniversary</h3>
-							</div>
-							
-							<div id="giftFestivals" class="giftCategoryTabcontent">
-							  <h3>Festivals</h3>
-							</div>
-							
-							<div id="giftGraduations" class="giftCategoryTabcontent">
-							  <h3>Graduations</h3>
-							</div>
-							
-							<div id="giftBrands" class="giftCategoryTabcontent">
-							  <h3>Brands</h3>
-							</div>
+						  </div>
+						
 						</div>
-					  </div>
+				</div>
+			</div>
+			<div class="clearfix">
+				<div class="col-sm-2 stepTexts">
+					<!-- STEP &nbsp;<span class="Oval">1</span> --><br />&nbsp;
+				</div>
+				<div class="col-sm-10">
+					<span>ENTER DETAILS FOR YOUR GIFT CARD</span><br />&nbsp;
 					
+						<c:if test="${not empty erroMsg}">
+						<div id="backend_validation_section" class="backend_validation_fail">
+						<span style="color: red;">
+						    ${erroMsg}
+						    </span>
+						    </div>
+						</c:if>
+						<br />&nbsp;
+				</div>
+			</div>
+			<form:form method="POST" id="egvDetailsform" onsubmit="return validateForm();" 
+							action="${request.contextPath}/checkout/multi/payment-method/giftCartPayment"
+							commandName="egvDetailsform">
+			<div class="clearfix">
+				<div class="col-sm-2 headingTexts">
+					Amount<br />&nbsp;
+				</div>
+				<div class="col-sm-10">
+					<div class="btn-group" data-toggle="buttons">
+						<span class="btn giftAmountBtns">
+							<input type="radio" name="giftRange" value="500">&#8377; 500
+						</span>
+						<span class="btn giftAmountBtns">
+							<input type="radio" name="giftRange" value="1000">&#8377; 1000
+						</span>
+						<span class="btn giftAmountBtns">
+							<input type="radio" name="giftRange" value="1500">&#8377; 1500
+						</span>
+						<span class="btn giftAmountBtns">
+							<input type="radio" name="giftRange" value="2000">&#8377; 2000
+						</span>
+						<span class="btn giftAmountBtns">
+							<input type="radio" name="giftRange" value="2500">&#8377; 2500
+						</span>
 					</div>
+					<div><br />or<br />&nbsp;
+					<div class="alert alert-warning" id="customAmountError">
+						
+					</div>
+					</div>
+							<input  class="giftCard_input" id="customGiftValue" type="text" maxlength="5" placeholder="Enter Custom Amount" onkeypress="return isNumber(event)" /><br />&nbsp;
+							<form:input path="giftRange" type="hidden" id="customAmount" />
+							<form:input path="productCode" type="hidden" value="${product.code}" id="productCode" />
+				</div>
 			</div>
+			<div class="clearfix">
+				<div class="col-sm-2 headingTexts">
+					To<br />&nbsp;
+				</div>
+				<div class="col-sm-10">
+					<form:input path="toEmailAddress"  class="giftCard_input giftCard_toEmail" type="email" placeholder="Enter Recipient e-mail Address" /><br />&nbsp;
+					<div class="alert alert-warning" id="giftCardEmailError"></div>
+				</div>
+			</div>
+			<div class="clearfix">
+				<div class="col-sm-2 headingTexts">
+					First Name<br />&nbsp;
+				</div>
+				<div class="col-sm-10">
+					<form:input path="fromFirstName" class="giftCard_input giftCard_fromFirstName" id="giftCard_fromFirstName" type="text" placeholder="First Name" /><br />&nbsp;
+					<div class="alert alert-warning" id="giftCardFromFirstNameError"></div>
+				</div>
+			</div>
+			<div class="clearfix">
+				<div class="col-sm-2 headingTexts">
+					Last Name<br />&nbsp;
+				</div>
+				<div class="col-sm-10">
+					<form:input path="fromLastName" class="giftCard_input giftCard_fromLastName" id="giftCard_fromLastName" type="text" placeholder="Last Name" /><br />&nbsp;
+					<div class="alert alert-warning" id="giftCardFromLastNameError"></div>
+				</div>
+			</div>
+		 	<div class="clearfix">
+				<div class="col-sm-2 headingTexts">
+					From<br />&nbsp;
+				</div>
+				<div class="col-sm-10">
+					<form:input path="fromEmailAddress" class="giftCard_input giftCard_fromName" id="giftCard_fromName" type="text" placeholder="From Name" /><br />&nbsp;
+					<div class="alert alert-warning" id="giftCardFromNameError"></div>
+				</div>
+			</div>
+			<div class="clearfix">
+				<div class="col-sm-2 headingTexts">
+					Phone<br />&nbsp;
+				</div>
+				<div class="col-sm-10">
+					<form:input path="fromPhoneNo" class="giftCard_input giftCard_phoneNo" type="text" maxlength="10" placeholder="Mobile Number" onkeypress="return isNumber(event)" /><br />&nbsp;
+					<div class="alert alert-warning" id="giftCardPhoneNoError"></div>
+				</div>
+			</div>
+			<div class="clearfix">
+				<div class="col-sm-2 headingTexts">
+					Message<br />&nbsp;
+				</div>
+				<div class="col-sm-10">
+					<input type="hidden" id="customAmount" />
+					<form:textarea path="messageBox" id="giftCardMessageText" class="giftCard_textarea" maxlength="150" placeholder="Write a message"></form:textarea><br />&nbsp;
+				</div>
+			</div>
+			<div class="clearfix">
+				<div class="col-sm-2">
+					&nbsp;
+				</div>
+				<div class="col-sm-10">
+					Qty &nbsp; <input  type="text" class="qtyField" disabled value="1" />
+					<button  type="submit" class="giftBuyBtn pull-right">BUY NOW</button>
+				</div>
+			</div> 
+			</form:form>
+		
 		</div>
-		<div class="clearfix">
-			<div class="col-sm-2 stepTexts">
-				<!-- STEP &nbsp;<span class="Oval">1</span> --><br />&nbsp;
-			</div>
-			<div class="col-sm-10">
-				<span>ENTER DETAILS FOR YOUR GIFT CARD</span><br />&nbsp;
-				
-					<c:if test="${not empty erroMsg}">
-					<div id="backend_validation_section" class="backend_validation_fail">
-					<span style="color: red;">
-					    ${erroMsg}
-					    </span><br />&nbsp;
-					    </div>
-					</c:if>
-					
-			</div>
-		</div>
-		<form:form method="POST" id="egvDetailsform" onsubmit="return validateForm();" 
-						action="${request.contextPath}/checkout/multi/payment-method/giftCartPayment"
-						commandName="egvDetailsform">
-		<div class="clearfix">
-			<div class="col-sm-2 headingTexts">
-				Amount<br />&nbsp;
-			</div>
-			<div class="col-sm-10">
-				<div class="btn-group" data-toggle="buttons">
-					<span class="btn giftAmountBtns">
-						<input type="radio" name="giftRange" value="500">&#8377; 500
-					</span>
-					<span class="btn giftAmountBtns">
-						<input type="radio" name="giftRange" value="1000">&#8377; 1000
-					</span>
-					<span class="btn giftAmountBtns">
-						<input type="radio" name="giftRange" value="1500">&#8377; 1500
-					</span>
-					<span class="btn giftAmountBtns">
-						<input type="radio" name="giftRange" value="2000">&#8377; 2000
-					</span>
-					<span class="btn giftAmountBtns">
-						<input type="radio" name="giftRange" value="2500">&#8377; 2500
+		
+		<div class="col-sm-6 giftContSub giftContSub3">
+			<div class="col-sm-12">
+				<br /> &nbsp;
+				<div class="giftTermsDesc">
+					<span> Sold by <strong>QwikCilver Solutions Pvt. Ltd.</strong><!--  and delivered by Tata CliQ. Credit and Debit Cards issued outside India cannot be used to purchase Tata CliQ Gift Cards. Tata CliQ Gift Cards are subjected to Terms and Conditions. Have a Tata CliQ Gift Card? <a href="#">Redeem</a> your gift card -->
 					</span>
 				</div>
-				<div><br />or<br />&nbsp;
-				<div class="alert alert-warning" id="customAmountError">
-					
-				</div>
-				</div>
-						<input  class="giftCard_input" id="customGiftValue" type="text" maxlength="5" placeholder="Enter Custom Amount" onkeypress="return isNumber(event)" /><br />&nbsp;
-						<form:input path="giftRange" type="hidden" id="customAmount" />
-						<form:input path="productCode" type="hidden" value="${product.code}" id="productCode" />
-			</div>
-		</div>
-		<div class="clearfix">
-			<div class="col-sm-2 headingTexts">
-				To<br />&nbsp;
-			</div>
-			<div class="col-sm-10">
-				<form:input path="toEmailAddress"  class="giftCard_input giftCard_toEmail" type="email" placeholder="Enter Recipient e-mail Address" /><br />&nbsp;
-				<div class="alert alert-warning" id="giftCardEmailError"></div>
-			</div>
-		</div>
-	 	<div class="clearfix">
-			<div class="col-sm-2 headingTexts">
-				From<br />&nbsp;
-			</div>
-			<div class="col-sm-10">
-				<form:input path="fromEmailAddress" class="giftCard_input giftCard_fromName" type="text" placeholder="Your Name" /><br />&nbsp;
-				<div class="alert alert-warning" id="giftCardFromNameError"></div>
-			</div>
-		</div>
-		<div class="clearfix">
-			<div class="col-sm-2 headingTexts">
-				Message<br />&nbsp;
-			</div>
-			<div class="col-sm-10">
-				<input type="hidden" id="customAmount" />
-				<form:textarea path="messageBox" id="giftCardMessageText" class="giftCard_textarea" maxlength="150" placeholder="Write a message"></form:textarea><br />&nbsp;
-			</div>
-		</div>
-		<div class="clearfix">
-			<div class="col-sm-2">
-				&nbsp;
-			</div>
-			<div class="col-sm-10">
-				Qty &nbsp; <input  type="text" class="qtyField" disabled value="1" />
-				<button  type="submit" class="giftBuyBtn pull-right">BUY NOW</button>
-			</div>
-		</div> 
-		</form:form>
-	
-	</div>
-	
-	<div class="col-sm-6 giftContSub giftContSub3">
-		<div class="col-sm-12">
-			<br /> &nbsp;
-			<div class="giftTermsDesc">
-				<span> Sold by <strong>QwikCilver Solutions Pvt. Ltd.</strong><!--  and delivered by Tata CliQ. Credit and Debit Cards issued outside India cannot be used to purchase Tata CliQ Gift Cards. Tata CliQ Gift Cards are subjected to Terms and Conditions. Have a Tata CliQ Gift Card? <a href="#">Redeem</a> your gift card -->
-				</span>
 			</div>
 		</div>
 	</div>
@@ -551,11 +591,17 @@ function isNumberKey(evt){
 //Form Validation for Gift Amount
 $("#customAmountError").hide();
 $("#giftCardFromNameError").hide();
+$("#giftCardFromFirstNameError").hide();
+$("#giftCardFromLastNameError").hide();
 $("#giftCardEmailError").hide();
+$("#giftCardPhoneNoError").hide();
 var formValid = true;
 function validateForm() {
 	formValid = true;
 	var fname = $(".giftCard_fromName").val();
+	var firstName = $(".giftCard_fromFirstName").val();
+	var lastName = $(".giftCard_fromLastName").val();
+	var fMobile = $(".giftCard_phoneNo").val();
 	var toEmail = $(".giftCard_toEmail").val();
 	var letters = new RegExp(/^[A-z]*$/);
 	var emailValidExpression = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
@@ -564,21 +610,60 @@ function validateForm() {
 		$("#customAmountError").hide();
 	} else {
 		$("#customAmountError").show();
-		$("#customAmountError").text('Please enter amount from 15 to 15000');
+		$("#customAmountError").text('Please enter amount from 15 to 15000.');
 		formValid = false;
 	}
 	
   //Name Validation
 	 if(fname == null || fname.trim() == '' ){
 			$("#giftCardFromNameError").show();
-			$("#giftCardFromNameError").text("Name cannot be Blank");
+			$("#giftCardFromNameError").text("From name cannot be blank.");
 			formValid = false;
-	}else if(letters.test(fname) == false){
+	}/* else if(letters.test(fname) == false){
 		$("#giftCardFromNameError").show();
-		$("#giftCardFromNameError").text("Name should contain only alphabets");
+		$("#giftCardFromNameError").text("From name should contain only alphabets.");
+			formValid = false;
+	} */else {
+		$("#giftCardFromNameError").hide();
+	}
+  
+	//First Name Validation
+	 if(firstName == null || firstName.trim() == '' ){
+			$("#giftCardFromFirstNameError").show();
+			$("#giftCardFromFirstNameError").text("First name cannot be blank.");
+			formValid = false;
+	}else if(letters.test(firstName) == false){
+		$("#giftCardFromFirstNameError").show();
+		$("#giftCardFromFirstNameError").text("First name should contain only alphabets.");
 			formValid = false;
 	}else {
-		$("#giftCardFromNameError").hide();
+		$("#giftCardFromFirstNameError").hide();
+	}
+	
+	//Last Name Validation
+	 if(lastName == null || lastName.trim() == '' ){
+			$("#giftCardFromLastNameError").show();
+			$("#giftCardFromLastNameError").text("Last name cannot be blank.");
+			formValid = false;
+	}else if(letters.test(lastName) == false){
+		$("#giftCardFromLastNameError").show();
+		$("#giftCardFromNameError").text("Last name should contain only alphabets.");
+			formValid = false;
+	}else {
+		$("#giftCardFromLastNameError").hide();
+	}
+  
+  //Mobile No Validation
+	if(fMobile == null || fMobile.trim() == '' ){
+			$("#giftCardPhoneNoError").show();
+			$("#giftCardPhoneNoError").text("Phone number cannnot be blank.");
+			formValid = false;
+	}else if(isNaN(fMobile)){
+		$("#giftCardPhoneNoError").show();
+		$("#giftCardPhoneNoError").text("Phone number is invalid.");
+			formValid = false;
+	}else {
+		$("#giftCardPhoneNoError").hide();
 	}
   
 	//Email Validation
@@ -644,6 +729,13 @@ function validateForm() {
 	       giftCardMessage.style.wordWrap = 'break-word';
 	       giftCardMessage.innerHTML = '&nbsp; &nbsp; &nbsp; &nbsp; '+$(this).val();
 	    });
+		
+		//Auto Update Name from First and Last names
+		$(".giftCard_fromFirstName, .giftCard_fromLastName").keyup(function(){
+			var firstName = document.getElementById('giftCard_fromFirstName').value;
+			var lastName = document.getElementById('giftCard_fromLastName').value;
+			document.getElementById('giftCard_fromName').value = firstName+" "+lastName;
+		    });
 		
 		//Updating Amount
 		$("input[name=giftRange]").on('change', function (){

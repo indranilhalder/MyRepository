@@ -1452,3 +1452,14 @@
 		$("#make_saved_dc_payment").removeClass("saved_card_disabled");
 	});
 	</script>
+	
+<script>
+ $('.cart.wrapper .left-block .payments.tab-view ul.tabs li').click(function (){
+  $('.cart.wrapper .left-block .payments.tab-view ul.tabs li').removeClass('active');
+  $(this).addClass('active');
+ });
+ 
+ $('.cart.wrapper .left-block .payments.tab-view ul.tabs li input.cvvValdiation').click(function() {
+  $(this).parents('.card-sec').find('label').click();
+ });
+ </script>

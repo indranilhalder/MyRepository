@@ -29,8 +29,17 @@ public class EgvDetailForm
 	private String toEmailAddress;
 
 	@NotEmpty
+	private String fromFirstName;
+
+	@NotEmpty
+	private String fromLastName;
+
+	@NotEmpty
 	@Email
 	private String fromEmailAddress;
+
+	@NotEmpty
+	private String fromPhoneNo;
 
 	@NotEmpty
 	private String messageBox;
@@ -144,6 +153,23 @@ public class EgvDetailForm
 	}
 
 	/**
+	 * @return the fromPhoneNo
+	 */
+	public String getFromPhoneNo()
+	{
+		return fromPhoneNo;
+	}
+
+	/**
+	 * @param fromPhoneNo
+	 *           the fromEmailAddress to set
+	 */
+	public void setFromPhoneNo(final String fromPhoneNo)
+	{
+		this.fromPhoneNo = fromPhoneNo;
+	}
+
+	/**
 	 * @return the messageBox
 	 */
 	public String getMessageBox()
@@ -158,6 +184,40 @@ public class EgvDetailForm
 	public void setMessageBox(final String messageBox)
 	{
 		this.messageBox = messageBox;
+	}
+
+	/**
+	 * @return the fromFirstName
+	 */
+	public String getFromFirstName()
+	{
+		return fromFirstName;
+	}
+
+	/**
+	 * @param fromFirstName
+	 *           the fromFirstName to set
+	 */
+	public void setFromFirstName(final String fromFirstName)
+	{
+		this.fromFirstName = fromFirstName;
+	}
+
+	/**
+	 * @return the fromLastName
+	 */
+	public String getFromLastName()
+	{
+		return fromLastName;
+	}
+
+	/**
+	 * @param fromLastName
+	 *           the fromLastName to set
+	 */
+	public void setFromLastName(final String fromLastName)
+	{
+		this.fromLastName = fromLastName;
 	}
 
 
