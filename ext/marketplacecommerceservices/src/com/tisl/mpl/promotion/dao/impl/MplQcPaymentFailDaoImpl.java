@@ -28,11 +28,10 @@ public class MplQcPaymentFailDaoImpl implements MplQcPaymentFailDao
 {
 
 	private static final Logger LOG = Logger.getLogger(MplBinErrorDaoImpl.class);
-	public static final String QC_PAYMENT_QUERY = "select {pk} from {WalletApportionReturnInfo as w} where {w.status}=?status and  {w.type}=?cancel";
-	public static final String QC_PAYMENT_QUERY1 = "select {pk} from {WalletApportionReturnInfo as w} where {w.status}=?status and  {w.type}=?cancel or {w.type}=?return";
+	public static final String QC_PAYMENT_QUERY = "select {pk} from {WalletApportionReturnInfo as w} where {w.status}=?status and  {w.type}=?cancel or {w.type}=?return";
 
 	//public static final String QC_PAYMENT_QUERY = "select {pk} from {WalletApportionReturnInfo as w} where {w.status}=?status and  {w.type}=?cancel or {w.type}=?return";
-	public static final String QC_ORDER_QUERY = "select {pk} from {Order as o} where {w.code}=?code";
+	public static final String QC_ORDER_QUERY = "select {pk} from {Order as o} where {0.code}=?code";
 
 	@Autowired
 	private FlexibleSearchService flexibleSearchService;
@@ -46,22 +45,9 @@ public class MplQcPaymentFailDaoImpl implements MplQcPaymentFailDao
 		final FlexibleSearchQuery query = new FlexibleSearchQuery(queryString);
 		query.addQueryParameter(MarketplacecommerceservicesConstants.WALLETAPPORTIONINFOSTATUS, "PENDING");
 		query.addQueryParameter("cancel", "CANCEl");
-		//query.addQueryParameter("return", "CANCEl");
+		query.addQueryParameter("return", "RETURN");
 		try {
-		return flexibleSearchService.<WalletApportionReturnInfoModel> search(query).getResult();
-		}catch (Exception e) {
-			e.printStackTrace();
-		}
-		try {
-			LOG.debug("Fetching Bin Error Details");
-			final String queryString1 = QC_PAYMENT_QUERY1;
-
-			final FlexibleSearchQuery queryy= new FlexibleSearchQuery(queryString1);
-			queryy.addQueryParameter(MarketplacecommerceservicesConstants.WALLETAPPORTIONINFOSTATUS, "PENDING");
-			queryy.addQueryParameter("cancel", "CANCEl");
-			queryy.addQueryParameter("return", "RETURN");
-			//query.addQueryParameter("return", "CANCEl");
-			return flexibleSearchService.<WalletApportionReturnInfoModel> search(queryy).getResult();
+		 flexibleSearchService.<WalletApportionReturnInfoModel> search(query).getResult();
 		}catch (Exception e) {
 			e.printStackTrace();
 		}
