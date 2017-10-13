@@ -1339,7 +1339,7 @@
 						 <c:forEach var="map" items="${paymentModes}">
 									<c:if test="${map.value eq true}">
 										<c:choose>
-											<c:when test="${map.key eq 'PayTM'}">
+											<c:when test="${map.key eq 'PAYTM'}">
 												<input type="hidden" id="PAYTM" value="${map.value}" />
 												
 												<div class="radio">
@@ -1352,7 +1352,7 @@
 	
 												<li>
 													<span id="viewPaymentPaytm"  onclick="viewPaymentPaytm();">
-														<spring:theme code="checkout.multi.paymentMethod.selectMode.ThrdPrtWllt" />
+														<%-- <spring:theme code="checkout.multi.paymentMethod.selectMode.ThrdPrtWllt" /> --%>
 													</span>
 												</li>
 												</c:when>

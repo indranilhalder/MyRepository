@@ -1658,20 +1658,20 @@
 						 <c:forEach var="map" items="${paymentModes}">
 									<c:if test="${map.value eq true}">
 										<c:choose>
-											<c:when test="${map.key eq 'PayTM'}">
+											<c:when test="${map.key eq 'PAYTM'}">
 												<input type="hidden" id="PAYTM" value="${map.value}" />
 												
 												<div class="radio">
 													 <input type="radio" name="priority_paytm" id="radioButton_Paytm" value="paytm" checked/>
 													 <label for="priority_paytm" class="numbers creditLabel"> <span><img src="${commonResourcePath}/images/paytm.png" alt=""></span></label>
-									   			<span id="paytmInfo" style="display:none">
+									   			<%-- <span id="paytmInfo" style="display:none">
 														<spring:theme code="checkout.multi.paymentMethod.eWallet.Info" />
-													</span>
+													</span> --%>
 									   			</div>
 	
 												<li>
 													<span id="viewPaymentPaytm"  onclick="viewPaymentPaytm();">
-														<spring:theme code="checkout.multi.paymentMethod.selectMode.ThrdPrtWllt" />
+														<%-- <spring:theme code="checkout.multi.paymentMethod.selectMode.ThrdPrtWllt" /> --%>
 													</span>
 												</li>
 												</c:when>
