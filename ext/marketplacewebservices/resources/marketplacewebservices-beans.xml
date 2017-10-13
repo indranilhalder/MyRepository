@@ -1591,6 +1591,7 @@
 		<property name="pickupPersonMobile" type="String" />
 		<!-- TPR-1083 Start-->
 	<property name="exchangeId" type="String"/>
+	<property name="paytmTransactionId" type="String" />
 	</bean>
 
 	<bean class="com.tisl.mpl.wsdto.PaymentMethodListWsDTO">
