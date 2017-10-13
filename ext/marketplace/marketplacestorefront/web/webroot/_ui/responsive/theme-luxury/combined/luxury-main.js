@@ -2761,7 +2761,7 @@ function populateBillingAddress() {
                 $("#country").attr("disabled", !0);
                 $("#isLuxury").val() && $("#line1").val(values[2] + values[3] + values[4]);
             } else $("#firstName, #lastName, #address1, #address2, #address3, #state, #city, #pincode").attr("readonly", !1), 
-            $("#country").attr("disabled", !1), $("#country").val("India");
+            $("#country").attr("disabled", !1), $("#country").val("India"), $(".payment-billing-form").show();
         },
         error: function(resp) {}
     });

@@ -220,26 +220,26 @@ public class MplDefaultFacetSearchService extends DefaultFacetSearchService
    				}
    			}
 			}else{
-			//commented for SDI-575/576
-						valueRangeSet = property.getValueRangeSets().get("INR-APPAREL");
-						if (valueRangeSet != null)
-						{
-							valueRangesList.addAll(valueRangeSet.getValueRanges());
-						}
-						// TPR-1886 | For jewellery price range
-						valueRangeSet = property.getValueRangeSets().get("INR-FINEJEWELLERY");
-						if (valueRangeSet != null)
-						{
-							valueRangesList.addAll(valueRangeSet.getValueRanges());
-						}
-			
-						// JEWELLERY CHANGES START
-						valueRangeSet = property.getValueRangeSets().get("INR-FASHIONJEWELLERY");
-						if (valueRangeSet != null)
-						{
-							valueRangesList.addAll(valueRangeSet.getValueRanges());
-						}
-			 //JEWELLERY CHANGES END
+				//commented for SDI-575/576
+				valueRangeSet = property.getValueRangeSets().get("INR-APPAREL");
+				if (valueRangeSet != null)
+				{
+					valueRangesList = valueRangeSet.getValueRanges();
+				}
+
+				valueRangeSet = property.getValueRangeSets().get("INR-ELECTRONICS");
+				if (valueRangeSet != null)
+				{
+					valueRangesList.addAll(valueRangeSet.getValueRanges());
+				}
+
+				// JEWELLERY CHANGES START
+				valueRangeSet = property.getValueRangeSets().get("INR-FASHIONJEWELLERY");
+				if (valueRangeSet != null)
+				{
+					valueRangesList.addAll(valueRangeSet.getValueRanges());
+				}
+				// JEWELLERY CHANGES END
 			}
 			valueRangeSet = property.getValueRangeSets().get("INR-LUXURY");
 			if (valueRangeSet != null)
