@@ -43,7 +43,7 @@ public class QcPaymentFailCronJob extends AbstractJobPerformable<CronJobModel>
 			// Fetch the Orders Which Are in RMS_VERIFICATION_FAILED
 			try
 			{
-				mplQcPaymentFailService.generateData();
+				mplQcPaymentFailService.processQcPaymentFailedOrders();
 			}
 			catch (final Exception e)
 			{

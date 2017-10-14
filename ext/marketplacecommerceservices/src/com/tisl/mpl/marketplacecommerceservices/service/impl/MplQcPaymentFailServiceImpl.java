@@ -366,10 +366,25 @@ public class MplQcPaymentFailServiceImpl implements MplQcPaymentFailService
 					{
 
 						// Refunding Amount Paid Through Juspay 
-						processJuspayRefund(orderModel);
+						try {
+							processJuspayRefund(orderModel);
+						}catch (Exception e) {
+							LOG.error("Exception occurred while while Refunding Juspay AMount"+e.getMessage());
+						}
 
 						// Refunding Amount Paid Through QC 
+						try {
 						processQcRefund(orderModel);
+						}catch (Exception e) {
+							LOG.error("Exception occurred while while Refunding Qc AMount"+e.getMessage());
+						}
+					}else if(paymentSplitMode.trim().equalsIgnoreCase(MarketplacecommerceservicesConstants.PAYMENT_MODE_LIQ_CASH.trim())){
+						
+						try {
+						processQcRefund(orderModel);
+						}catch (Exception e) {
+							LOG.error("Exception occurred while while Refunding Qc  AMount"+e.getMessage());
+						}
 					}
 				}
 			}
@@ -401,7 +416,7 @@ public class MplQcPaymentFailServiceImpl implements MplQcPaymentFailService
 		QCCreditRequest qcCreditRequest = new QCCreditRequest();
 		qcCreditRequest.setAmount(daecimalFormat.format(amount));
 		qcCreditRequest.setInvoiceNumber(orderModel.getCode());
-		qcCreditRequest.setNotes("Cancel for " + daecimalFormat.format(daecimalFormat.format(amount)));
+		qcCreditRequest.setNotes("Cancel for " + daecimalFormat.format(amount));
 		QCRedeeptionResponse response = mplWalletService.qcCredit(walletId, qcCreditRequest);
 		if(null != response ) {
 			LOG.debug("*****************************" + response.getResponseCode());
@@ -425,7 +440,7 @@ public class MplQcPaymentFailServiceImpl implements MplQcPaymentFailService
 		{
 			for (WalletCardApportionDetailModel cardApportionDetail : orderEntry.getWalletApportionPaymentInfo().getWalletCardList())
 			{
-				if (cardApportionDetail.getBucketType().equalsIgnoreCase("CASHBACK"))
+				if (null != cardApportionDetail.getBucketType() && cardApportionDetail.getBucketType().equalsIgnoreCase("CASHBACK"))
 				{
 					cashBackAmt += Double.parseDouble(cardApportionDetail.getQcApportionValue())
 							+ Double.parseDouble(
@@ -476,7 +491,7 @@ public class MplQcPaymentFailServiceImpl implements MplQcPaymentFailService
 
 		final WalletApportionReturnInfoModel walletApportionModel = modelService.create(WalletApportionReturnInfoModel.class);
 		List<WalletCardApportionDetailModel> walletCardApportionDetailModelList = new ArrayList<WalletCardApportionDetailModel>();
-		if (null != response && null != response.getCards())
+		if (null != response /*&& null != response.getCards()*/)
 		{
 			for (QCCard qcCard : response.getCards())
 			{
@@ -520,7 +535,41 @@ public class MplQcPaymentFailServiceImpl implements MplQcPaymentFailService
 			}
 			else
 			{
-				walletApportionModel.setStatusForQc("FAIL");
+				walletApportionModel.setStatusForQc("PENDING");
+			}
+			
+			if (null != abstractOrderEntryModel.getWalletApportionPaymentInfo()
+					&& null != abstractOrderEntryModel.getWalletApportionPaymentInfo().getJuspayApportionValue())
+			{
+				walletApportionModel
+						.setJuspayApportionValue(abstractOrderEntryModel.getWalletApportionPaymentInfo().getJuspayApportionValue());
+			}
+			if (null != abstractOrderEntryModel.getWalletApportionPaymentInfo()
+					&& null != abstractOrderEntryModel.getWalletApportionPaymentInfo().getJuspayDeliveryValue())
+			{
+				walletApportionModel
+						.setJuspayDeliveryValue(abstractOrderEntryModel.getWalletApportionPaymentInfo().getJuspayDeliveryValue());
+			}
+			if (null != abstractOrderEntryModel.getWalletApportionPaymentInfo()
+					&& null != abstractOrderEntryModel.getWalletApportionPaymentInfo().getJuspaySchedulingValue())
+			{
+				walletApportionModel
+						.setJuspaySchedulingValue(abstractOrderEntryModel.getWalletApportionPaymentInfo().getJuspaySchedulingValue());
+			}
+			if (null != abstractOrderEntryModel.getWalletApportionPaymentInfo()
+					&& null != abstractOrderEntryModel.getWalletApportionPaymentInfo().getJuspayShippingValue())
+			{
+				walletApportionModel
+						.setJuspayShippingValue(abstractOrderEntryModel.getWalletApportionPaymentInfo().getJuspayShippingValue());
+			}
+			walletApportionModel.setType("CANCEL");
+			if (StringUtils.equalsIgnoreCase(response.getResponseCode().toString(), "0"))
+			{
+				walletApportionModel.setStatus("SUCCESS");
+			}
+			else
+			{
+				walletApportionModel.setStatus("PENDING");
 			}
 			modelService.save(walletApportionModel);
 			abstractOrderEntryModel.setWalletApportionReturnInfo(walletApportionModel);
@@ -604,7 +653,7 @@ public class MplQcPaymentFailServiceImpl implements MplQcPaymentFailService
 						LOG.error(e.getMessage(), e);
 					}
 					LOG.debug(MarketplacecommerceservicesConstants.WEBHOOKUPDATEMSG);
-					updateWebHookExpired(webHookModel); //Commented for TPR-629 --- forward flow handled in processOrderJob
+				//	updateWebHookExpired(webHookModel); //Commented for TPR-629 --- forward flow handled in processOrderJob
 
 				}
 			}
