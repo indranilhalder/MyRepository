@@ -4943,9 +4943,6 @@ public class MplPaymentServiceImpl implements MplPaymentService
 					refundTransactionMappingModel.setCreationtime(new Date());
 					refundTransactionMappingModel.setRefundType(JuspayRefundType.RETURN);
 					refundTransactionMappingModel.setRefundAmount(orderEntry.getNetAmountAfterAllDisc());//TISPRO-216 : Refund amount Set in RTM
-					refundTransactionMappingModel.setQwikCilverRefId("");
-					refundTransactionMappingModel.setQwikCilverStatus("");
-					refundTransactionMappingModel.setWalletCardList(null);
 					getModelService().save(refundTransactionMappingModel);
 				}
 				// TISSIT-1784 Code addition ended
