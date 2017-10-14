@@ -8394,4 +8394,17 @@ public class AccountPageController extends AbstractMplSearchPageController
 			mplOrderFacade.sendNotificationEGVOrder(orderId);
 		}
 	}
+	
+	
+	@RequestMapping(value = RequestMappingUrlConstants.GET_ORDER_STATEMENT, method = RequestMethod.GET)
+	public String getOrderStatement(@RequestParam(value = "orderId") final String orderId,Model model)
+	{
+		
+		System.out.println("Get Statement for order"+orderId);
+		
+		OrderModel orderModel = orderModelService.getOrderModel(orderId); 
+		OrderData orderDetail = mplCheckoutFacade.getOrderDetailsForCode(orderModel);
+		model.addAttribute("orderDetail",orderDetail);
+		return ControllerConstants.Views.Pages.Account.GET_Statement_Page;
+	}
 }

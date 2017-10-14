@@ -6794,6 +6794,9 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 		egvDetailsData.setToEmailAddress(egvDetailForm.getToEmailAddress());
 		egvDetailsData.setMessageBox(egvDetailForm.getMessageBox());
 		egvDetailsData.setTotalEGV(egvDetailForm.getTotalEGV());
+		egvDetailsData.setFromFirstName(egvDetailForm.getFromFirstName());
+		egvDetailsData.setFromLastName(egvDetailForm.getFromLastName());
+		egvDetailsData.setFromPhoneNo(egvDetailForm.getFromPhoneNo());
 		return egvDetailsData;
 	}
 

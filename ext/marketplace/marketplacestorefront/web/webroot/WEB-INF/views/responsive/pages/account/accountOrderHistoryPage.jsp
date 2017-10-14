@@ -29,6 +29,29 @@
 <spring:eval expression="T(de.hybris.platform.util.Config).getParameter('order.cancel.enabled')" var="cancelFlag"/> 
 <spring:eval expression="T(de.hybris.platform.util.Config).getParameter('order.return.enabled')" var="returnFlag"/> 
 <style>
+
+.showStatementModel {
+ display: none;
+ position: fixed;
+ z-index: 1;
+ padding-top: 100px;
+ left: 0;
+ top: 0;
+ width: 100%;
+ height: 100%;
+ overflow: auto;
+ background-color: rgb(0, 0, 0);
+ background-color: rgba(0, 0, 0, 0.4);
+}
+
+.showStatementModel-content {
+ background-color: #fefefe;
+ margin: auto;
+ padding: 20px;
+ border: 1px solid #888;
+ width: 80%;
+}
+
 .resend_order_email {
     height: 16px;
     font-size: 12px;
@@ -244,6 +267,12 @@
 													     <span class="resend_order_email">RESEND EMAIL</span>
 													</c:if>
 													</c:if>
+													
+											<c:if test="${orderHistoryDetail.isEGVOrder ne  true}">
+												<input type="hidden" class="order_id_for_statement" value="${orderHistoryDetail.code}" />
+												<span class="get_order_statement">SHOW STATEMENT</span>
+											 </c:if>
+													
 												</li>
 												
 															<!-- &pageAnchor=trackOrder -->
@@ -1035,6 +1064,14 @@
 		<div class="overlay" data-dismiss="modal"></div>
 		<div class="content"></div>
 	</div>
+	
+	<div class="showStatementModel" id="showStatementPopup">
+	    <div class="showStatementModel-content">
+		     <div id="showStatementData">
+		      </div>
+	    </div>
+   </div>
+   
 </template:page>
 <script>
 $('.resend_email_index').val(1);
@@ -1069,4 +1106,36 @@ $(".resend_order_email").click(function () {
 		msgSection.show().delay(3000).fadeOut();
 	}
 }); 
+</script>
+
+<script type="text/javascript">
+var showStatementModel = document.getElementById('showStatementPopup');
+var showStatementData = document.getElementById('showStatementData');
+var showStatementPopup = document.getElementById('showStatementPopup');
+
+
+$(".get_order_statement").click(function() {
+	var orderCode = $(this).parents('.resendEmail').find(".order_id_for_statement").val();
+	$.ajax({
+		  type : "GET",
+		  url: ACC.config.encodedContextPath + "/my-account/getStatement",
+		  data: "orderId="+orderCode,
+		  contentType : "html/text",
+		  success : function(response){
+		   showStatementData.innerHTML=response;
+		   showStatementModel.style.display = "block";      
+		      }, 
+		    failure : function(data) {
+		    }
+		   });
+});
+
+window.onclick = function(event) {
+    if (event.target == showStatementModel) {
+     showStatementModel.style.display = "none";
+    }
+}
+showStatementPopup.onclick = function() {
+showStatementModel.style.display = "none";
+}
 </script>

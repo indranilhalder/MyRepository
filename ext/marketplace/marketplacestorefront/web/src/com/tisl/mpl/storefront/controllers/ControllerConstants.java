@@ -197,6 +197,8 @@ public interface ControllerConstants
 				String AccountOrderReturnPincodeServiceCheck = "pages/account/returnPincodeAvailabilityCheck";
 				String ScheduledDeliveryDate = "pages/account/scheduledDeliveryDate";
 				String OTPPopup = "pages/account/otpPopup";
+				//New  Changes For Egv 
+				String GET_Statement_Page = "pages/account/accountStatement";
 			}
 
 

@@ -6533,6 +6533,25 @@
 						<persistence type="property" />
 					</attribute>
 					
+					<attribute type="java.lang.String" qualifier="fromFirstName"
+						autocreate="true" generate="true">
+						<modifiers read="true" write="true" search="true" optional="true" />
+						<description></description>
+						<persistence type="property" />
+					</attribute>
+					<attribute type="java.lang.String" qualifier="fromLastName"
+						autocreate="true" generate="true">
+						<modifiers read="true" write="true" search="true" optional="true" />
+						<description></description>
+						<persistence type="property" />
+					</attribute>
+					<attribute type="java.lang.String" qualifier="fromPhoneNo"
+						autocreate="true" generate="true">
+						<modifiers read="true" write="true" search="true" optional="true" />
+						<description></description>
+						<persistence type="property" />
+					</attribute>
+					
 				<!-- End EGV Order purpose Added Attibute -->
 
 				</attributes>
@@ -7891,6 +7910,26 @@
 					</attribute>
 					
 					<attribute type="java.lang.String" qualifier="giftFromId"
+						autocreate="true" generate="true">
+						<modifiers read="true" write="true" search="true" optional="true" />
+						<description></description>
+						<persistence type="property" />
+					</attribute>
+					
+						
+					<attribute type="java.lang.String" qualifier="fromFirstName"
+						autocreate="true" generate="true">
+						<modifiers read="true" write="true" search="true" optional="true" />
+						<description></description>
+						<persistence type="property" />
+					</attribute>
+					<attribute type="java.lang.String" qualifier="fromLastName"
+						autocreate="true" generate="true">
+						<modifiers read="true" write="true" search="true" optional="true" />
+						<description></description>
+						<persistence type="property" />
+					</attribute>
+					<attribute type="java.lang.String" qualifier="fromPhoneNo"
 						autocreate="true" generate="true">
 						<modifiers read="true" write="true" search="true" optional="true" />
 						<description></description>
@@ -9480,27 +9519,6 @@
 							optional="false" />
 						<persistence type="property" />
 					</attribute>
-                      					
-					<!--Start Added for qick cilver entry  -->
-					<attribute type="java.lang.String" qualifier="qwikCilverRefId">
-						<modifiers read="true" write="true" initial="true"
-							optional="false" />
-						<persistence type="property" />
-					</attribute>
-					
-					<attribute type="java.lang.String" qualifier="qwikCilverStatus">
-						<modifiers read="true" write="true" initial="true"
-							optional="false" />
-						<persistence type="property" />
-					</attribute>
-					
-					<attribute qualifier="WalletCardList" autocreate="true"
-						type="qcWalletCardList" generate="true">
-						<modifiers read="true" write="true" search="true"
-							optional="true" />
-						<persistence type="property" />
-					</attribute>
-						<!--Start Added for qick cilver entry  -->
 					<attribute type="AbstractOrderEntry" qualifier="refundedOrderEntry">
 						<modifiers read="true" write="true" optional="false" />
 						<persistence type="property" />

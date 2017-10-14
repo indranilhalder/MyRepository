@@ -502,6 +502,12 @@
 		<!-- TPR-1083 Exchange End -->
 		<!-- TPR-5346 -->
 		<property name="maxCountReached" type="boolean"/>
+		
+		<!-- EGV Changes Start -->
+		<property name="walletApportionPaymentData" type="com.tisl.mpl.facades.egv.data.WalletApportionPaymentData"/>
+		<property name="walletApportionforReverseData" type="com.tisl.mpl.facades.egv.data.WalletApportionPaymentData"/>
+		
+		<!-- EGV Changes END -->
 	</bean>
 	<!-- Attribute to handle the order cancel status for My Account ends -->
 	
@@ -520,6 +526,7 @@
 		<property name="storeCreditNo" type="String"/>
 		<property name="isReturnEligible" type="String"/>
 		<property name="isReturnInitiated" type="String"/>
+		
 	</bean>
 	
 	<bean class="com.tisl.mpl.data.HelpmeShopData">
@@ -913,4 +920,39 @@
     	<property name="Order" type="java.util.List&lt;com.tisl.mpl.samsung.wsdto.OrderListWsDTO>"/>
     </bean>
     <!-- TPR-5667 : Samsung order response | end -->
+    
+    
+    
+    <!-- EGV Changes Start -->
+     <bean class="com.tisl.mpl.facades.egv.data.WalletCardApportionDeta">
+        <property name="cardNumber" type="String"/>
+        <property name="cardAmount" type="String"/>
+        <property name="orderId" type="String"/>
+        <property name="bucketType" type="String"/>
+        <property name="cardExpiry" type="String"/>
+        <property name="qcApportionValue" type="String"/>
+        <property name="qcShippingValue" type="String"/>
+        <property name="qcDeliveryValue" type="String"/>
+        <property name="qcSchedulingValue" type="String"/> 
+     </bean>
+     
+      <bean class="com.tisl.mpl.facades.egv.data.WalletApportionPaymentData">
+        <property name="orderid" type="String"/>
+        <property name="transactionId" type="String"/>
+        <property name="transactionType" type="String"/>
+        <property name="juspayApportionValue" type="String"/>
+        <property name="juspayShippingValue" type="String"/>
+        <property name="juspaySchedulingValue" type="String"/>
+        <property name="juspayDeliveryValue" type="String"/>
+        <property name="qcApportionPartValue" type="String"/> 
+        <property name="qcShippingPartValue" type="String"/>
+        <property name="qcSchedulingPartValue" type="String"/>
+        <property name="qcDeliveryPartValue" type="String"/>
+        <property name="type" type="String"/> 
+        <property name="status" type="String"/>
+    	<property name="walletCardApportionDataList" type="java.util.List&lt;com.tisl.mpl.facades.egv.data.WalletCardApportionDeta>"/>        
+     </bean>
+     
+    <!-- Egv Changes Ends  -->
+    
 </beans>

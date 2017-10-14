@@ -21,7 +21,10 @@ import de.hybris.platform.servicelayer.dto.converter.Converter;
 import de.hybris.platform.storelocator.model.PointOfServiceModel;
 
 import java.math.BigDecimal;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import javax.annotation.Resource;
@@ -34,6 +37,9 @@ import org.springframework.util.Assert;
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.core.model.BrandModel;
 import com.tisl.mpl.core.model.MplZoneDeliveryModeValueModel;
+import com.tisl.mpl.core.model.WalletCardApportionDetailModel;
+import com.tisl.mpl.facades.egv.data.WalletApportionPaymentData;
+import com.tisl.mpl.facades.egv.data.WalletCardApportionDeta;
 import com.tisl.mpl.facades.product.data.MarketplaceDeliveryModeData;
 import com.tisl.mpl.marketplacecommerceservices.service.MplJewelleryService;
 
@@ -148,11 +154,14 @@ public class MplOrderEntryPopulator extends OrderEntryPopulator
 			//TPR-1083 Start
 			addExchange(source, target);
 			//TPR-1083 End
-
+			
+			addApportionDeta(source, target);
+			addApportionDetaforReverse(source, target);
 
 		}
 		target.setIsRefundable(source.isIsRefundable());
 	}
+
 
 
 	/**
@@ -612,4 +621,132 @@ public class MplOrderEntryPopulator extends OrderEntryPopulator
 	{
 		this.mplDeliveryModeConverter = mplDeliveryModeConverter;
 	}
+	
+	
+	
+	
+	/**
+	 * 
+	 *  Converting ApportionData Payment information 
+	 */
+	private void addApportionDeta(AbstractOrderEntryModel source, OrderEntryData target)
+	{
+		try{
+		if(source.getWalletApportionPaymentInfo()!=null){
+			WalletApportionPaymentData walletApportionPaymentData=new WalletApportionPaymentData();
+			if(CollectionUtils.isNotEmpty(source.getWalletApportionPaymentInfo().getWalletCardList())){
+				List<WalletCardApportionDeta> walletCardApportionDetaList=new ArrayList<WalletCardApportionDeta>();
+				WalletCardApportionDeta apportionDetaValue=null;
+				for(WalletCardApportionDetailModel  apportionDeta:source.getWalletApportionPaymentInfo().getWalletCardList()){
+					apportionDetaValue=new WalletCardApportionDeta();
+					apportionDetaValue.setBucketType(apportionDeta.getBucketType());
+					apportionDetaValue.setCardAmount(apportionDeta.getCardAmount()); 
+					apportionDetaValue.setCardExpiry(getCardExpDate(apportionDeta.getCardExpiry()));
+					apportionDetaValue.setOrderId(apportionDeta.getOrderId());
+					apportionDetaValue.setCardNumber(apportionDeta.getCardNumber());
+					apportionDetaValue.setQcApportionValue(apportionDeta.getQcApportionValue());
+					apportionDetaValue.setQcDeliveryValue(apportionDeta.getQcDeliveryValue());
+					apportionDetaValue.setQcShippingValue(apportionDeta.getQcShippingValue());
+					apportionDetaValue.setQcSchedulingValue(apportionDeta.getQcSchedulingValue());
+					walletCardApportionDetaList.add(apportionDetaValue);
+				}
+				walletApportionPaymentData.setWalletCardApportionDataList(walletCardApportionDetaList);
+				walletApportionPaymentData.setJuspayApportionValue(source.getWalletApportionPaymentInfo().getJuspayApportionValue());
+				walletApportionPaymentData.setJuspayDeliveryValue(source.getWalletApportionPaymentInfo().getJuspayDeliveryValue());
+				walletApportionPaymentData.setJuspaySchedulingValue(source.getWalletApportionPaymentInfo().getJuspaySchedulingValue());
+				walletApportionPaymentData.setJuspayShippingValue(source.getWalletApportionPaymentInfo().getJuspayShippingValue());
+				walletApportionPaymentData.setQcApportionPartValue(source.getWalletApportionPaymentInfo().getQcApportionPartValue());
+				walletApportionPaymentData.setQcSchedulingPartValue(source.getWalletApportionPaymentInfo().getQcSchedulingPartValue());
+				walletApportionPaymentData.setQcDeliveryPartValue(source.getWalletApportionPaymentInfo().getQcDeliveryPartValue());
+				walletApportionPaymentData.setQcShippingPartValue(source.getWalletApportionPaymentInfo().getOrderId());
+				walletApportionPaymentData.setOrderid(source.getWalletApportionPaymentInfo().getOrderId());
+				walletApportionPaymentData.setStatus(source.getWalletApportionPaymentInfo().getStatus());
+				walletApportionPaymentData.setType(source.getWalletApportionPaymentInfo().getType());
+				walletApportionPaymentData.setTransactionId(source.getWalletApportionPaymentInfo().getTransactionId());
+				walletApportionPaymentData.setTransactionType(source.getWalletApportionPaymentInfo().getTransactionType());
+			}
+			target.setWalletApportionPaymentData(walletApportionPaymentData);
+		}
+		}catch(Exception e){
+			e.printStackTrace();
+		}
+		
+		
+	}
+	
+	
+	
+	
+	/**
+	 * 
+	 *  Converting ApportionData for Reverse
+	 */
+	private void addApportionDetaforReverse(AbstractOrderEntryModel source, OrderEntryData target)
+	{
+		try{
+		if(source.getWalletApportionReturnInfo()!=null){
+			WalletApportionPaymentData walletApportionPaymentData=new WalletApportionPaymentData();
+			if(CollectionUtils.isNotEmpty(source.getWalletApportionReturnInfo().getWalletCardList())){
+				List<WalletCardApportionDeta> walletCardApportionDetaList=new ArrayList<WalletCardApportionDeta>();
+				WalletCardApportionDeta apportionDetaValue=null;
+				for(WalletCardApportionDetailModel  apportionDeta:source.getWalletApportionReturnInfo().getWalletCardList()){
+					apportionDetaValue=new WalletCardApportionDeta();
+					apportionDetaValue.setBucketType(apportionDeta.getBucketType());
+					apportionDetaValue.setCardAmount(apportionDeta.getCardAmount()); 
+					apportionDetaValue.setCardExpiry(getCardExpDate(apportionDeta.getCardExpiry()));
+					apportionDetaValue.setOrderId(apportionDeta.getOrderId());
+					apportionDetaValue.setCardNumber(apportionDeta.getCardNumber());
+					apportionDetaValue.setQcApportionValue(apportionDeta.getQcApportionValue());
+					apportionDetaValue.setQcDeliveryValue(apportionDeta.getQcDeliveryValue());
+					apportionDetaValue.setQcShippingValue(apportionDeta.getQcShippingValue());
+					apportionDetaValue.setQcSchedulingValue(apportionDeta.getQcSchedulingValue());
+					walletCardApportionDetaList.add(apportionDetaValue);
+				}
+				walletApportionPaymentData.setWalletCardApportionDataList(walletCardApportionDetaList);
+			}
+			
+			walletApportionPaymentData.setJuspayApportionValue(source.getWalletApportionPaymentInfo().getJuspayApportionValue());
+			walletApportionPaymentData.setJuspayDeliveryValue(source.getWalletApportionPaymentInfo().getJuspayDeliveryValue());
+			walletApportionPaymentData.setJuspaySchedulingValue(source.getWalletApportionPaymentInfo().getJuspaySchedulingValue());
+			walletApportionPaymentData.setJuspayShippingValue(source.getWalletApportionPaymentInfo().getJuspayShippingValue());
+			walletApportionPaymentData.setQcApportionPartValue(source.getWalletApportionPaymentInfo().getQcApportionPartValue());
+			walletApportionPaymentData.setQcSchedulingPartValue(source.getWalletApportionPaymentInfo().getQcSchedulingPartValue());
+			walletApportionPaymentData.setQcDeliveryPartValue(source.getWalletApportionPaymentInfo().getQcDeliveryPartValue());
+			walletApportionPaymentData.setQcShippingPartValue(source.getWalletApportionPaymentInfo().getOrderId());
+			walletApportionPaymentData.setOrderid(source.getWalletApportionPaymentInfo().getOrderId());
+			walletApportionPaymentData.setStatus(source.getWalletApportionPaymentInfo().getStatus());
+			walletApportionPaymentData.setType(source.getWalletApportionPaymentInfo().getType());
+			walletApportionPaymentData.setTransactionId(source.getWalletApportionPaymentInfo().getTransactionId());
+			walletApportionPaymentData.setTransactionType(source.getWalletApportionPaymentInfo().getTransactionType());
+			target.setWalletApportionforReverseData(walletApportionPaymentData);
+		}
+		}catch(Exception e){
+			e.printStackTrace();
+		}
+	}
+	
+	
+	@SuppressWarnings("javadoc")
+	private String getCardExpDate(String cardExpDate) 
+	{
+		SimpleDateFormat format1 = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
+		SimpleDateFormat format2 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		if(StringUtils.isNotEmpty(cardExpDate)){
+		Date date = null;
+		
+			try
+			{
+				date = format1.parse(cardExpDate);
+			}
+			catch (ParseException e)
+			{
+				e.printStackTrace();
+			}
+			
+			return format2.format(date);
+		
+		}
+		return null;
+	}
+	
 }

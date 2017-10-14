@@ -897,8 +897,9 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 				purchaseEGVRequest.setBillAmount(orderModel.getTotalPrice());
 				purchaseEGVRequest.setInvoiceNumber(orderModel.getCode());
 				customer.setEmail(orderModel.getUser().getUid());
-				customer.setFirstname(orderModel.getGiftFromId());
-				customer.setLastName(orderModel.getGiftFromId());
+				customer.setFirstname(orderModel.getFromFirstName());
+				customer.setLastName(orderModel.getFromLastName());
+				customer.setPhoneNumber(orderModel.getFromPhoneNo());
 				customer.setAddressLine1("Address1");
 				customer.setAddressLine2("Address2");
 				customer.setAddressLine3("Address3");

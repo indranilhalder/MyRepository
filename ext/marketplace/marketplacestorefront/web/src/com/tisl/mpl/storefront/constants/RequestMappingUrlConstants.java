@@ -39,6 +39,7 @@ public final class RequestMappingUrlConstants
 	public static final String RESCHEDULEDDELIVERYDATE = "/{orderCode}/reScheduledDeliveryDate";
 
 	public static final String SEND_NOTIFICATION_EGV_ORDER = "/sendNotificationEGVOrder";
+	public static final String GET_ORDER_STATEMENT = "/getStatement";
 
 
 	public static final String LINK_UPDATE_EMAIL = "/update-email";

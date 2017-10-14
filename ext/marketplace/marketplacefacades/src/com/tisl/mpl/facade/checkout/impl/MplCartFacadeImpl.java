@@ -4618,6 +4618,9 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 		cardModel.setTotalPrice(Double.valueOf(egvDetailForm.getGiftRange()));
 		cardModel.setTotalPriceWithConv(Double.valueOf(egvDetailForm.getGiftRange()));
 		cardModel.setIsEGVCart(Boolean.TRUE);
+		cardModel.setFromFirstName(egvDetailForm.getFromEmailAddress());
+		cardModel.setFromLastName(egvDetailForm.getFromLastName());
+		cardModel.setFromPhoneNo(egvDetailForm.getFromPhoneNo());
 		cardModel.setRecipientId(egvDetailForm.getToEmailAddress());
 		cardModel.setRecipientMessage(egvDetailForm.getMessageBox());
 		cardModel.setGiftFromId(egvDetailForm.getFromEmailAddress());
