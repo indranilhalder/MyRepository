@@ -85,6 +85,7 @@
 						<a id="socialLogin" class="headeruserdetails" href="<c:url value="/login"/>" role="button"
 							aria-expanded="false"><%-- <spring:theme
 								code="header.link.flylogin" /> --%></a>
+						<span id="mobile-menu-toggle"></span>	<!-- add for PRDI-409 & PRDI-438 -->
 					</ycommerce:testId>
 
 							<ul class="sign-in-info signin-dropdown-body ajaxflyout" id="signIn">

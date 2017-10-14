@@ -700,6 +700,7 @@ $(document).ready(function()
                
                $("a.tracklinkcls").attr('href','/login');
                $("a.tracklinkcls").html('<span class="bell-icon"></span>&nbsp;Notifications');
+               $(".dropdown.sign-in-dropdown.sign-in.ajaxloginhi span#mobile-menu-toggle").remove();	/*add for PRDI-409 & PRDI-438*/
            } else {
                var firstName = data.userFirstName;
                if (firstName == null || firstName.trim() ==
