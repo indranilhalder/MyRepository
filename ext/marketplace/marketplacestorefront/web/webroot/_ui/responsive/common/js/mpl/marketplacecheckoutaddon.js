@@ -1059,6 +1059,7 @@ function getSelectedEMIBank(){
 	if(selectedBank!="Select"){
 		// Code to reset the values
 		setBankForSavedCard(selectedBank);
+		$("#emiNoBankError").hide();	/*add for INC144318889*/
 	}
 	else{
 		hideTable();
