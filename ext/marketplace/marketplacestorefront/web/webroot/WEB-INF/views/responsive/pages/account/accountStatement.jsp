@@ -10,12 +10,11 @@
 
 	<c:forEach items="${orderDetail.sellerOrderList}" var="sellerOrder"
 		varStatus="status">
-		<span>Seller Order Id ${sellerOrder.code}</span>
-		<br />
+		<br><span>Seller Order Id ${sellerOrder.code}</span><br>
 		<c:forEach items="${sellerOrder.entries}" var="entry"
-			varStatus="entryStatus">
-			<span>TransactionId: ${entry.transactionId}</span>
-			<br />
+			varStatus="entryStatus"><br><br>
+			<span>TransactionId: ${entry.transactionId}</span><br>
+			
 			<!--  -->
 			
 			<c:if test="${not empty entry.walletApportionPaymentData}">
@@ -23,39 +22,57 @@
               <span>Payment information</span> <br>
 				<c:if
 					test="${not empty entry.walletApportionPaymentData.juspayApportionValue}">
-					JuspayApportion ${entry.walletApportionPaymentData.juspayApportionValue}
+					JuspayApportion ${entry.walletApportionPaymentData.juspayApportionValue}<br>
 
 				</c:if>
 				
 				<c:if
 					test="${not empty entry.walletApportionPaymentData.juspayDeliveryValue}">
-					JuspayDelivery  ${entry.walletApportionPaymentData.juspayDeliveryValue}
+					JuspayDelivery  ${entry.walletApportionPaymentData.juspayDeliveryValue}<br>
 
 				</c:if>
 				
 				<c:if
 					test="${not empty entry.walletApportionPaymentData.juspayShippingValue}">
-					juspayShippingValue  ${entry.walletApportionPaymentData.juspayShippingValue}
+					juspayShippingValue  ${entry.walletApportionPaymentData.juspayShippingValue}<br>
 
 				</c:if>
 				
 				<c:if
 					test="${not empty entry.walletApportionPaymentData.juspaySchedulingValue}">
-					JuspayScheduling :${entry.walletApportionPaymentData.juspaySchedulingValue} 
+					JuspayScheduling :${entry.walletApportionPaymentData.juspaySchedulingValue} <br>
 
 				</c:if>
 				
 				<c:if
-					test="${not empty entry.walletApportionPaymentData.juspayDeliveryValue}">
-					JuspayDelivery  
+					test="${not empty entry.walletApportionPaymentData.qcApportionPartValue}">
+					QcApportionPart  :${entry.walletApportionPaymentData.qcApportionPartValue}
+<br>
+				</c:if>
+				
+				<c:if
+					test="${not empty entry.walletApportionPaymentData.qcDeliveryPartValue}">
+					qcDeliveryPartValue  ${entry.walletApportionPaymentData.qcDeliveryPartValue}
+<br>
+
+				</c:if>
+				
+				
+				
+				<c:if
+					test="${not empty entry.walletApportionPaymentData.qcDeliveryPartValue}">
+					qcDeliveryPartValue  ${entry.walletApportionPaymentData.qcDeliveryPartValue}
+<br>
 
 				</c:if>
 				
 				<c:if
-					test="${not empty entry.walletApportionPaymentData.juspayDeliveryValue}">
-					JuspayDelivery  
+					test="${not empty entry.walletApportionPaymentData.qcDeliveryPartValue}">
+					qcDeliveryPartValue  ${entry.walletApportionPaymentData.qcDeliveryPartValue}
+<br>
 
 				</c:if>
+				
 				
 			</c:if>
 
