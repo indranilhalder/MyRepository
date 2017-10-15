@@ -13902,6 +13902,19 @@
 					</attribute>
 				</attributes>
 			</itemtype>
+			
+			<itemtype code="QcPaymentFailCronJob"
+					  jaloclass="de.hybris.platform.integration.oms.order.cronjob.jalo.OmsOrderSyncCronJob"
+					  extends="CronJob" autocreate="true" generate="true">
+				<attributes>
+					<attribute qualifier="lastRemoteUpdateTime" type="java.util.Date">
+						<description>The time of the last sync with the remote system (remote system time).
+						</description>
+						<modifiers read="true" write="true" initial="false" optional="true"/>
+						<persistence type="property"/>
+					</attribute>
+				</attributes>
+			</itemtype>
 
 		</typegroup>
 
