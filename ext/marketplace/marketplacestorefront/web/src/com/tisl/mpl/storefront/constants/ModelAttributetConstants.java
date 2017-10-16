@@ -27,6 +27,7 @@ public final class ModelAttributetConstants
 	public static final String QS = "?";
 	public static final String EQUALS = "=";
 	public static final String AMPARSAND = "&";
+	public static final String COLON = ":";
 	public static final String SUFFIX_TH = "th";
 	public static final String SUFFIX_ST = "st";
 	public static final String SUFFIX_ND = "nd";
@@ -131,6 +132,8 @@ public final class ModelAttributetConstants
 
 	public static final String BREADCRUMBS = "breadcrumbs";
 	public static final String METAROBOTS = "metaRobots";
+	public static final String MEN_LANDING_URL = "menLandingurl";
+	public static final String WOMEN_LANDING_URL = "womenLandingUrl";
 	public static final String NOINDEX_NOFOLLOW = "noindex,nofollow";
 	public static final String INDEX_NOFOLLOW = "index,nofollow";
 
@@ -218,6 +221,22 @@ public final class ModelAttributetConstants
 	public static final String WATCHES = "Watches";
 	//Added by SAP for Watches & FashionAccessories  :::  END
 
+	//Added  for Travel and Luggage  :::  START
+
+	public static final String TRAVELANDLUGGAGE = "TravelAndLuggage";
+	//Added  for Travel and Luggage  :::  END
+
+	//Added  for Fine Jewellery  :::  START
+	public static final String FINEJEWELLERY = "FineJewellery";
+	public static final String NOSIZE = "NO SIZE";
+	public static final String CLASSNAME_19NA = "19na";
+	public static final String FEATURE_NAME = "pcmClassification/1/19na.pricebreakuponpdpfinejwlry";
+	//Added  for Fine Jewellery  :::  END
+
+	//Added  for Fashion Jewellery  :::  START
+	public static final String FASHIONJEWELLERY = "FashionJewellery";
+	//Added  for Fashion Jewellery  :::  END
+
 	public static final String INVITE_URL = "/store/mpl/en/login/?affiliateId=";
 	public static final String SELECT_DAY = "selectDay";
 	public static final String SELECT_MONTH = "selectmonth";
@@ -281,6 +300,13 @@ public final class ModelAttributetConstants
 	public static final String SHARED_PATH = "SHARED_PATH";
 
 	public static final String VALID_TABS = "VALID_TABS";
+
+	//for return refund tab fine jewellery
+	public static final String RET_REF_TAB = "RetRefTab";
+	//for not showing the disclaimer in pdp for one weight variant for fine jewellery product
+	public static final String TO_SHOW_DISCLAIMER = "to_show_disclaimer";
+	public static final String YES_DISCLAIMER = "yes";
+	public static final String NO_DISCLAIMER = "no";
 
 	public static final String FRIENDS_INVITE_FORM = "friendsInviteForm";
 	public static final String J_FRIENDSEMAIL = "j_friendsEmail";
@@ -367,6 +393,7 @@ public final class ModelAttributetConstants
 	public static final int SHOP_BY_LOOK_PAGE_SIZE = 1;
 	//comments and review changes
 	public static final String GIGYA_API_KEY = "gigyaAPIKey";
+	public static final String LUXURY_GIGYA_API_KEY = "luxuryGigyaAPIKey";
 	public static final String EMI_CUTTOFFAMOUNT = "emiCuttOffAmount";
 	public static final String SHOP_THE_LOOK_PAGE_EXPIRED = "pageExpired";
 	public static final String SHOP_THE_LOOK_TOTAL_PAGES = "totalPages";
@@ -444,6 +471,7 @@ public final class ModelAttributetConstants
 	public static final String FORGOTPASSWORD_EMAIL = "forgotPassword_email";
 	public static final String PRODUCTCODE_WL = "productCodeWl";
 	public static final String USSID_WL = "ussidWl";
+	public static final String IS_LUXURY_CUSTOMER = "isLuxCustomer";
 
 	public static final String CANCEL_ORDER_TICKET_TYPE_CODE = "C";
 	public static final String ORDER_RETURN_CATEGORY = "RSP";
@@ -680,6 +708,10 @@ public final class ModelAttributetConstants
 	public static final String ADDON = "addon:";
 	//for Gigya
 	public static final String IS_GIGYA_ENABLED = "isGigyaEnabled";
+	public static final String IS_LUXURY_GIGYA_ENABLED = "isLuxuryGigyaEnabled";
+
+	//for Izooto
+	public static final String IS_IZOOTO_ENABLED = "isIzootoEnabled";
 
 	//AccountPageController
 	public static final String UTF8 = "UTF-8";
@@ -694,6 +726,7 @@ public final class ModelAttributetConstants
 	public static final String SOCIAL_LOGIN_PROVIDER = "SocialLoginProvider";
 	public static final String RATING_REVIEW_URL = "ratingReviewUrl";
 	public static final String GIGYA_SOCIAL_LOGIN_URL = "gigyasocialloginurl";
+	public static final String LUXURY_GIGYA_SOCIAL_LOGIN_URL = "luxuryGigyasocialloginurl";
 
 	//Numeric
 	public static final String NUM_1 = "1";
@@ -826,7 +859,6 @@ public final class ModelAttributetConstants
 	public static final String ORDERDETAIL = "orderDetail";
 	public static final String TXNSCHEDULEDATA = "txnScheduleData";
 
-
 	public static final String SCHEDULE_TIMESLOTS = "timeSlots";
 	public static final String RETURNABLE_SLAVES = "returnableSlaves";
 	public static final String RETURN_FORM = "returnForm";
@@ -837,6 +869,7 @@ public final class ModelAttributetConstants
 	public static final String LPNOTAVAILABLE_ERRORMSG = " Sorry! Pick up is not available for your area. You can still return the item by dropping in store or by self shipping the product.";
 	public static final String MPL_RETURN_INFO_FORM = "mplReturnInfoForm";
 	public static final String RETURN_METHOD = "returnMethod";
+
 
 	public static final String QUCK_DROP_PROD_LEVEL = "productRichAttrOfQuickDrop";
 	public static final String QUCK_DROP_SELLER_LEVEL = "sellerRichAttrOfQuickDrop";
@@ -861,6 +894,8 @@ public final class ModelAttributetConstants
 
 	public static final String NO = "no";
 
+	//TPR-4134
+	public static final String SHOW_REVERSESEAL_JWLRY = "showReverseSeal";
 	//TPR-1283
 	public static final String DESCRIPTION_TEXT1 = " - Shop for ";
 	public static final String DESCRIPTION_TEXT2 = " Online at best price in India at Tata CLiQ. Choose from wide range of ";
@@ -869,12 +904,25 @@ public final class ModelAttributetConstants
 	public static final String TITLE_TEXT2 = " Online at Tata CLiQ ";
 	public static final String ICID = "icid";
 	public static final String SHARE = "share";
-	// TPR-3878 START
-	public static final String SPECIAL_FEATURES_LIST = "specialFeatures";
-	public static final String MOVEMENT = "Movement";
-	public static final String MOVEMENT_LIST = "movementList";
-	public static final String FUNCTIONALITY = "functionality";
-	public static final String SPECIAL_FEATURES = "special Features";
-	public static final String FEATURES = "Features";
-	// TPR-3878 END
+
+	public static final String MESSAGE = "message";
+
+	public static final String EMAILORPASSINVALID = "Email or Password invalid";
+	public static final String LUXURY_USER_FIRST_NAME = "fname";
+
+	//PRDI-422
+	public static final String METAPAGETITLE = "metaPageTitle";
+
+	/* TPR-5733 */
+	public static final String FOOTER_LINK_LIST = "footerLinkList";
+	//TPR-6654
+	public static final String POINT_OF_SERVICES = "pointOfServices";
+	/* UF-432 */
+	public static final String MULTI_COLOUR_FLAG = "multiColorFlag";
+	public static final String BUYBOX_AVAILABLE = "buybox_available";
+	public static final String FINEJWLRY_SELFCOURIER_ERROR = "fineJewSelfCourierError";
+	//TPR-6405
+	public static final String IS_SAMSUNG_PAGE = "isSamsungPage";
+	//UF-422
+	public static final String PDP_SIZE_COUNTER = "pdpSizeCounter";
 }
