@@ -996,8 +996,8 @@ button.close {
 	left: 18px;
 }
 
-#new_exclusive.owl-theme .owl-controls, .home-product-you-care-carousel .owl-theme .owl-controls, .home-best-pick-carousel.owl-theme .owl-controls, #ia_products_hot_list.owl-theme .owl-controls {
-	top: 38%;
+#new_exclusive.owl-theme .owl-controls, .home-product-you-care-carousel .owl-theme .owl-controls, .home-best-pick-carousel.owl-theme .owl-controls, #ia_products_hot_list.owl-theme .owl-controls, .home-product-you-care-carousel.owl-theme .owl-controls {
+	top: 50%;
 	margin: 0;
 }
 

@@ -4346,7 +4346,7 @@ span.material-icons{
     }
     li.store-locator-header a:before,
     li.download-app a:before,
-    span.material-icons {
+    span.material-icons, li.enter-pincode a::before {
         -webkit-filter: invert(100%);
         filter: invert(100%);
     }
