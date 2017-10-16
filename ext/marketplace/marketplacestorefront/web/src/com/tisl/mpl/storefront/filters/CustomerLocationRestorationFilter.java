@@ -16,7 +16,6 @@ package com.tisl.mpl.storefront.filters;
 import de.hybris.platform.acceleratorfacades.customerlocation.CustomerLocationFacade;
 import de.hybris.platform.acceleratorservices.store.data.UserLocationData;
 import de.hybris.platform.commerceservices.store.data.GeoPoint;
-import com.tisl.mpl.storefront.security.cookie.CustomerLocationCookieGenerator;
 
 import java.io.IOException;
 
@@ -30,13 +29,14 @@ import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Required;
 import org.springframework.web.filter.OncePerRequestFilter;
 
+import com.tisl.mpl.storefront.security.cookie.CustomerLocationCookieGenerator;
+
 
 public class CustomerLocationRestorationFilter extends OncePerRequestFilter
 {
 
 	private CustomerLocationFacade customerLocationFacade;
 	private CustomerLocationCookieGenerator customerLocationCookieGenerator;
-
 
 	@Override
 	public void doFilterInternal(final HttpServletRequest request, final HttpServletResponse response,
@@ -52,14 +52,14 @@ public class CustomerLocationRestorationFilter extends OncePerRequestFilter
 				{
 					if (getCustomerLocationCookieGenerator().getCookieName().equals(cookie.getName()))
 					{
-						final UserLocationData cookieUserLocationData = decipherUserLocationData(StringUtils.remove(cookie.getValue(),"\""));
+						final UserLocationData cookieUserLocationData = decipherUserLocationData(StringUtils.remove(cookie.getValue(),
+								"\""));
 						getCustomerLocationFacade().setUserLocationData(cookieUserLocationData);
 						break;
 					}
 				}
 			}
 		}
-
 		filterChain.doFilter(request, response);
 	}
 

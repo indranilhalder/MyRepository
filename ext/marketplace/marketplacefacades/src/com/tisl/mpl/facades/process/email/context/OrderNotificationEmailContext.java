@@ -28,6 +28,7 @@ import de.hybris.platform.ordersplitting.model.ConsignmentEntryModel;
 import de.hybris.platform.servicelayer.dto.converter.Converter;
 import de.hybris.platform.storelocator.model.PointOfServiceModel;
 
+//import de.hybris.platform.core.model.product.ProductModel;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -44,6 +45,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Required;
 
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
+import com.tisl.mpl.core.model.OrderShortUrlInfoModel;
 import com.tisl.mpl.facades.account.address.MplAccountAddressFacade;
 import com.tisl.mpl.facades.constants.MarketplaceFacadesConstants;
 import com.tisl.mpl.facades.product.data.StateData;
@@ -70,6 +72,11 @@ public class OrderNotificationEmailContext extends AbstractEmailContext<OrderPro
 	private static final String CNCSTOREADDRESS = "storeAddress";
 	private static final String CUSTOMER_NAME = "customerName";
 	private static final String COD_CHARGES = "codCharge";
+	private static final String SUBTOTALFORJEWELLERY = "subTotalForJewellery";
+	private static final String ISPANCARDREQUIRED = "isPancardRequired";
+
+
+
 	private static final String MOBILENUMBER = "mobilenumber";
 	private static final String NAMEOFPERSON = "nameofperson";
 	public static final String TRACK_ORDER_URL = "trackOrderUrl";
@@ -78,9 +85,10 @@ public class OrderNotificationEmailContext extends AbstractEmailContext<OrderPro
 	private static final String SPACE = " ";
 	private static final String NUMBERTOOL = "numberTool";
 	private static final String WEBSITE_URL = "websiteUrl";
-	private static final String PRODUCT_IMAGE_URL = "productImageUrl";
+	//private static final String PRODUCT_IMAGE_URL = "productImageUrl";//commented as part of TISSPTEN-7
 	private static final String ORDERPLACEDATE = "orderPlaceDate";
 	private static final String DELIVERYDATE = "deliveryDate";
+
 	@Autowired
 	private MplAccountAddressFacade accountAddressFacade;
 	private static final Logger LOG = Logger.getLogger(OrderNotificationEmailContext.class);
@@ -92,25 +100,27 @@ public class OrderNotificationEmailContext extends AbstractEmailContext<OrderPro
 	public void init(final OrderProcessModel orderProcessModel, final EmailPageModel emailPageModel)
 	{
 		super.init(orderProcessModel, emailPageModel);
+		//final OrderData orderData = getOrderConverter().convert(orderProcessModel.getOrder());
+		//		final double orderSubTotalPrice = orderProcessModel.getOrder().getSubtotal() == null ? 0D : orderProcessModel.getOrder()
+		//				.getSubtotal().doubleValue();
 
-
-		final double orderTotalPrice = orderProcessModel.getOrder().getTotalPrice() == null ? 0D : orderProcessModel.getOrder()
-				.getTotalPrice().doubleValue();
-		final double convenienceCharges = orderProcessModel.getOrder().getConvenienceCharges() == null ? 0D : orderProcessModel
-				.getOrder().getConvenienceCharges().doubleValue();
+		final double orderTotalPrice = orderProcessModel.getOrder().getTotalPrice() == null ? 0D
+				: orderProcessModel.getOrder().getTotalPrice().doubleValue();
+		final double convenienceCharges = orderProcessModel.getOrder().getConvenienceCharges() == null ? 0D
+				: orderProcessModel.getOrder().getConvenienceCharges().doubleValue();
 		//final List<AbstractOrderEntryModel> childEntries = orderProcessModel.getOrder().getEntries();
 		final Double totalPrice = Double.valueOf(orderTotalPrice + convenienceCharges);
 		final Double convenienceChargesVal = Double.valueOf(convenienceCharges);
 		double subTotal = 0.0d;
 		double shippingCharge = 0.0d;
-		//Changes for discount
-		//final Double subTotal = Double.valueOf(orderSubTotalPrice);
+		double totalFineJewelleryPrice = 0.0d;
+		double isPancardRequired = 0.0d;
+		//final String amount = getConfigurationService().getConfiguration().getString(MarketplacecommerceservicesConstants.ORDER_AMOUNT_FOR_PANCARD_UPLOAD);
 		final List<OrderModel> childOrders = orderProcessModel.getOrder().getChildOrders();
 		Date deliveryDate = null;
 
-
-
-
+		final double totalAmount = Integer
+				.parseInt(getConfigurationService().getConfiguration().getString("order.amount.for.pancard.upload"));
 
 		final OrderModel p_order = orderProcessModel.getOrder();
 
@@ -147,22 +157,72 @@ public class OrderNotificationEmailContext extends AbstractEmailContext<OrderPro
 						}
 
 					}
+
+					final ProductModel prod = childOrderEntries.getProduct();
+					//added for jewellery
+					if (prod != null && prod.getProductCategoryType().equalsIgnoreCase("FineJewellery"))
+					{
+						totalFineJewelleryPrice += childOrderEntries.getNetAmountAfterAllDisc().doubleValue();
+						isPancardRequired = (totalFineJewelleryPrice >= totalAmount) ? 1 : 0;
+
+					}
 				}
 
 			}
 		}
 
 
+		//final DecimalFormat myFormatter = new DecimalFormat("#,###");
+		//final String subTotalNew = myFormatter.format(subTotal);
+		//final String totalPriceNew = myFormatter.format(totalPrice);
+		//final String subTotalNew = NumberFormat.getIntegerInstance().format(subTotal);
+
+		LOG.info(" *********************- totalPrice:" + totalPrice + " orderTotalPrice:" + orderTotalPrice + " convenienceCharges:"
+				+ convenienceCharges);
+
+
+		//	final Double shippingCharge = orderProcessModel.getOrder().getDeliveryCost();
+
+
 		final String orderCode = orderProcessModel.getOrder().getCode();
 
 		//final List<OrderModel> childOrders = orderProcessModel.getOrder().getChildOrders();
 
-		final String trackOrderUrl = getConfigurationService().getConfiguration().getString(
-				MarketplacecommerceservicesConstants.MPL_TRACK_ORDER_LONG_URL_FORMAT)
-				+ orderCode;
+		final String trackOrderUrl = getConfigurationService().getConfiguration()
+				.getString(MarketplacecommerceservicesConstants.MPL_TRACK_ORDER_LONG_URL_FORMAT) + orderCode;
 		/* Added in R2.3 for shortUrl START */
-		final String shortUrl = shortUrlService.genearateShortURL(orderCode);
+		//final String shortUrl = shortUrlService.genearateShortURL(orderCode);
+		//final String shortUrl = orderProcessModel.getOrderTrackUrl();
+
+		final OrderShortUrlInfoModel orderShortUrlInfoModel = shortUrlService.getShortUrlReportModelByOrderId(orderCode);
+
+		LOG.debug("**OrderCode**" + orderCode + "--**orderShortUrlInfoModel--" + orderShortUrlInfoModel);
+
+		String shortUrl = null;
+
+		if (orderShortUrlInfoModel == null)
+		{
+
+			LOG.debug("Inside orderShortUrlInfoModel null for orderCode**" + orderCode);
+			shortUrl = shortUrlService.genearateShortURL(orderCode);
+		}
+		else
+		{
+			LOG.debug("Inside orderShortUrlInfoModel not null for orderCode**" + orderCode);
+			shortUrl = orderShortUrlInfoModel.getShortURL();
+		}
+		LOG.debug("Generated shortUrl**" + shortUrl);
+
 		put(TRACK_ORDER_URL, null != shortUrl ? shortUrl : trackOrderUrl);
+
+
+		//final paymentMode = transactionEntry.getEntries().get(0).getPaymentMode().getMode();
+
+		/*
+		 * final String trackOrderUrl = getConfigurationService().getConfiguration().getString(
+		 * MarketplacecommerceservicesConstants.SMS_ORDER_TRACK_URL) + orderProcessModel.getOrder().getCode();
+		 * put(TRACK_ORDER_URL, trackOrderUrl);
+		 */
 
 		put(ORDER_CODE, orderCode);
 		put(CHILDORDERS, childOrders);
@@ -171,6 +231,8 @@ public class OrderNotificationEmailContext extends AbstractEmailContext<OrderPro
 		put(DELIVERYDATE, deliveryDate);
 		//put(SUBTOTAL, subTotalNew);
 		put(TOTALPRICE, totalPrice);
+		put(SUBTOTALFORJEWELLERY, Double.valueOf(totalFineJewelleryPrice));
+		put(ISPANCARDREQUIRED, Double.valueOf(isPancardRequired));
 		//put(TOTALPRICE, totalPriceNew);
 		put(SHIPPINGCHARGE, Double.valueOf(shippingCharge));
 		put(CONVENIENCECHARGE, convenienceChargesVal);
@@ -188,20 +250,16 @@ public class OrderNotificationEmailContext extends AbstractEmailContext<OrderPro
 			LOG.debug("total sale price" + entryModel.getTotalSalePrice());
 			childEntries.add(entryModel);
 
-			final String productImageUrl;
-
-			final ProductModel productModel = entryModel.getProduct();
-			if (null != productModel.getPicture())
-			{
-				productImageUrl = productModel.getPicture().getURL();
-			}
-			else
-			{
-				productImageUrl = "";
-			}
-
-
-			put(PRODUCT_IMAGE_URL, productImageUrl);
+			//Commented as part of TISSPTEN-7
+			/*
+			 * final String productImageUrl;
+			 *
+			 * final ProductModel productModel = entryModel.getProduct(); if (null != productModel.getPicture()) {
+			 * productImageUrl = productModel.getPicture().getURL(); } else { productImageUrl = ""; }
+			 *
+			 *
+			 * put(PRODUCT_IMAGE_URL, productImageUrl);
+			 */
 
 
 			final String orderPlaceDate;
@@ -272,8 +330,8 @@ public class OrderNotificationEmailContext extends AbstractEmailContext<OrderPro
 			put(DELIVERYADDRESS, deliveryAddr);
 		}
 		String websiteUrl = null;
-		websiteUrl = getConfigurationService().getConfiguration().getString(
-				MarketplacecommerceservicesConstants.SMS_SERVICE_WEBSITE_URL);
+		websiteUrl = getConfigurationService().getConfiguration()
+				.getString(MarketplacecommerceservicesConstants.SMS_SERVICE_WEBSITE_URL);
 		if (null != websiteUrl)
 		{
 			put(WEBSITE_URL, websiteUrl);
@@ -340,3 +398,4 @@ public class OrderNotificationEmailContext extends AbstractEmailContext<OrderPro
 	}
 
 }
+

@@ -32,9 +32,9 @@ public class MarketplaceFacadesConstants extends GeneratedMarketplaceFacadesCons
 
 	public static final String TSHIPTHRESHOLDVALUE = "tship.item.threshold.value";
 	public static final String TSHIPCODE = "TSHIP";
-	// INC-144316545 START   
+	// INC-144316545 START
 	public static final String SSHIPCODE = "SSHIP";
-	// INC-144316545 END   
+	// INC-144316545 END
 	public static final String HOMEDELIVERYCODE = "home-delivery";
 
 	public static final String EXPRESS = "express-delivery";
@@ -154,18 +154,23 @@ public class MarketplaceFacadesConstants extends GeneratedMarketplaceFacadesCons
 
 	public static final String CA = "CA";
 	public static final String CU = "CU";
-	public static final String CDP="CDP";
+	public static final String CDP = "CDP";
 	public static final String SUCCESS = "success";
 	public static final String SERVER_EXCEPTION = "Internal Server Error, Please try again later";
-	public static final String PINCODE_NOT_SERVICEABLE="Pincode not Serviceable";
-	public static final String TATA_CLIQ="TATA-CLIQ";
-	public static final String REFUND_MODE_C="C";
+	public static final String PINCODE_NOT_SERVICEABLE = "Pincode not Serviceable";
+	public static final String TATA_CLIQ = "TATA-CLIQ";
+	public static final String REFUND_MODE_C = "C";
 	public static final String RETURN_SELF_COURIER_FILE_DOWNLOAD_URL = "/my-account/returns/returnFileDownload?orderCode=";
-	public static final String TRANSACTION_ID ="transactionId";
+	public static final String TRANSACTION_ID = "transactionId";
 	public static final String AMPERSAND = "&";
 	public static final String EQUALS_TO = "=";
 	public static final String COLON = ":";
 	public static final String FORWARD_SLASHES = "//";
+	//Adding code for Luxury Facades
+	public static final String LuxuryPrefix = "lux";
+	public static final String PRODUCT_TYPE = "FineJewellery";
+	public static final String SESSION_SERVICE = "sessionService";
+
 	private MarketplaceFacadesConstants()
 	{
 		//empty

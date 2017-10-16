@@ -3,11 +3,14 @@ package com.tisl.mpl.jalo;
 import de.hybris.platform.core.Registry;
 import de.hybris.platform.jalo.Item;
 import de.hybris.platform.jalo.JaloBusinessException;
+import de.hybris.platform.jalo.JaloInvalidParameterException;
 import de.hybris.platform.jalo.SessionContext;
 import de.hybris.platform.jalo.c2l.Currency;
 import de.hybris.platform.jalo.enumeration.EnumerationValue;
 import de.hybris.platform.jalo.order.AbstractOrder;
 import de.hybris.platform.jalo.order.AbstractOrderEntry;
+import de.hybris.platform.jalo.product.Product;
+import de.hybris.platform.jalo.security.JaloSecurityException;
 import de.hybris.platform.jalo.type.ComposedType;
 import de.hybris.platform.order.CartService;
 import de.hybris.platform.promotions.jalo.AbstractPromotionRestriction;
@@ -48,7 +51,15 @@ public class CartOrderThresholdDiscountPromotion extends GeneratedCartOrderThres
 	private double adjustedDiscounts = 0.0d;
 	private double sellersubTotalValue = 0.0D;
 
+	//PR-15 starts here
+	List<Product> allowedProductListDuplicate = null;
+
+	//PR-15 ends here
+
 	//private boolean flagForDeliveryModeRestrEval;
+
+
+
 
 	/**
 	 * @Description : This method is for creating item type
@@ -112,8 +123,13 @@ public class CartOrderThresholdDiscountPromotion extends GeneratedCartOrderThres
 						ctx);
 				final boolean flagForPincodeRestriction = getDefaultPromotionsManager().checkPincodeSpecificRestriction(
 						restrictionList, order);
-				if (checkRestrictions(ctx, evalCtx) && checkChannelFlag && flagForDeliveryModeRestrEval
-						&& flagForPaymentModeRestrEval && flagForPincodeRestriction)
+				//PR-15 starts here
+				final PromotionsManager.RestrictionSetResult rsr = getDefaultPromotionsManager()
+						.findEligibleProductsInBasketForCartPromo(ctx, evalCtx, this);
+				//PR-15 ends here
+
+				if (rsr.isAllowedToContinue() && !rsr.getAllowedProducts().isEmpty() && checkRestrictions(ctx, evalCtx)
+						&& checkChannelFlag && flagForDeliveryModeRestrEval && flagForPaymentModeRestrEval && flagForPincodeRestriction)//check added for PR-15
 				{
 					final boolean isPercentageDisc = false;
 					final double percentageDiscount = getPercentageDiscount() == null ? 0.0D : getPercentageDiscount().doubleValue();
@@ -151,17 +167,30 @@ public class CartOrderThresholdDiscountPromotion extends GeneratedCartOrderThres
 					//						setSellersubTotalValue(orderSubtotalAfterDiscounts);
 					//					}
 
+
+					//PR-15 starts here
+					final List<Product> allowedProductList = new ArrayList<Product>(rsr.getAllowedProducts());
+					allowedProductListDuplicate = allowedProductList;
+					//PR-15 ends here
+
 					if (getDefaultPromotionsManager().isSellerRestrExists(restrictionList)
 							|| getDefaultPromotionsManager().isExSellerRestrExists(restrictionList))
 					{
-						validProductUssidMap = getMplPromotionHelper().getCartSellerEligibleProducts(ctx, order, restrictionList);
+						validProductUssidMap = getMplPromotionHelper().getCartSellerEligibleProducts(ctx, order, restrictionList,
+								allowedProductList);//PR-15 allowedProductList parameter added
 						ctx.setAttribute(MarketplacecommerceservicesConstants.VALIDATE_SELLER, Boolean.TRUE);
 						orderSubtotalAfterDiscounts = getSellerSpecificSubtotal(ctx, validProductUssidMap);
 						setSellersubTotalValue(orderSubtotalAfterDiscounts);
 					}
 					else
 					{
-						orderSubtotalAfterDiscounts = getSubtotalAfterDiscount(ctx, order);
+						/* PR-15 starts here */
+						validProductUssidMap = getMplPromotionHelper().getCartSellerEligibleProducts(ctx, order, null,
+								allowedProductList);
+						orderSubtotalAfterDiscounts = getSellerSpecificSubtotal(ctx, validProductUssidMap);
+						setSellersubTotalValue(orderSubtotalAfterDiscounts);
+						//orderSubtotalAfterDiscounts = getSubtotalAfterDiscount(ctx, order);
+						/* PR-15 ends here */
 					}
 
 					ctx.setAttribute(MarketplacecommerceservicesConstants.CART_SELLER_PRODUCTS, validProductUssidMap);
@@ -448,10 +477,43 @@ public class CartOrderThresholdDiscountPromotion extends GeneratedCartOrderThres
 			//
 			//			}
 
-			if (getDefaultPromotionsManager().isSellerRestrExists(restrictionList)
-					|| getDefaultPromotionsManager().isExSellerRestrExists(restrictionList))
+
+			//PR-15 starts here
+			final List<Product> allowedProductList2 = getAllowedProductListDuplicate();
+			//PR-15 ends here
+
+
+			try
 			{
-				validProductUssidMap = getMplPromotionHelper().getCartSellerEligibleProducts(ctx, order, restrictionList);
+				if (getDefaultPromotionsManager().isSellerRestrExists(restrictionList)
+						|| getDefaultPromotionsManager().isExSellerRestrExists(restrictionList))
+				{
+					validProductUssidMap = getMplPromotionHelper().getCartSellerEligibleProducts(ctx, order, restrictionList,
+							allowedProductList2);//PR-15 allowedProductList2 parameter added
+				}
+				else
+				{
+					validProductUssidMap = getMplPromotionHelper()
+							.getCartSellerEligibleProducts(ctx, order, null, allowedProductList2);//PR-15 allowedProductList2 parameter added
+				}
+			}
+			catch (final JaloInvalidParameterException e)
+			{
+				LOG.error(e.getMessage());
+				ExceptionUtil.etailNonBusinessExceptionHandler(new EtailNonBusinessExceptions(e,
+						MarketplacecommerceservicesConstants.E0000));
+			}
+			catch (final JaloSecurityException e)
+			{
+				LOG.error(e.getMessage());
+				ExceptionUtil.etailNonBusinessExceptionHandler(new EtailNonBusinessExceptions(e,
+						MarketplacecommerceservicesConstants.E0000));
+			}
+			catch (final Exception e)
+			{
+				LOG.error(e.getMessage());
+				ExceptionUtil.etailNonBusinessExceptionHandler(new EtailNonBusinessExceptions(e,
+						MarketplacecommerceservicesConstants.E0000));
 			}
 
 
@@ -720,6 +782,7 @@ public class CartOrderThresholdDiscountPromotion extends GeneratedCartOrderThres
 	 * @param order
 	 * @return orderSubtotalAfterDiscounts
 	 */
+	@SuppressWarnings("unused")
 	private double getSubtotalAfterDiscount(final SessionContext arg0, final AbstractOrder order)
 	{
 		double orderSubtotalAfterDiscounts = 0.0D;
@@ -834,21 +897,17 @@ public class CartOrderThresholdDiscountPromotion extends GeneratedCartOrderThres
 	 */
 	private double getEligibleSubtotal(final AbstractOrder order)
 	{
-		final List<AbstractPromotionRestriction> restrictionList = new ArrayList<AbstractPromotionRestriction>(getRestrictions());
-		double subtotalVal = 0.0D;
-		if (getDefaultPromotionsManager().isSellerRestrExists(restrictionList))
-		{
-			subtotalVal = getSellersubTotalValue();
-		}
-		else if (getDefaultPromotionsManager().isExSellerRestrExists(restrictionList))
-		{
-			subtotalVal = getSellersubTotalValue();
-		}
-		else
-		{
-			subtotalVal = getMplPromotionHelper().getTotalPrice(order);
-		}
+		//PR-15 starts here
+		/*
+		 * final List<AbstractPromotionRestriction> restrictionList = new
+		 * ArrayList<AbstractPromotionRestriction>(getRestrictions()); double subtotalVal = 0.0D; if
+		 * (getDefaultPromotionsManager().isSellerRestrExists(restrictionList)) { subtotalVal = getSellersubTotalValue();
+		 * } else if (getDefaultPromotionsManager().isExSellerRestrExists(restrictionList)) { subtotalVal =
+		 * getSellersubTotalValue(); } else { subtotalVal = getMplPromotionHelper().getTotalPrice(order); }
+		 */
+		final double subtotalVal = getSellersubTotalValue();
 		return subtotalVal;
+		//PR-15 ends here
 	}
 
 	/**
@@ -867,4 +926,25 @@ public class CartOrderThresholdDiscountPromotion extends GeneratedCartOrderThres
 	{
 		this.sellersubTotalValue = sellersubTotalValue;
 	}
+
+	//PR-15 starts here
+	/**
+	 * @return the allowedProductListDuplicate
+	 */
+	public List<Product> getAllowedProductListDuplicate()
+	{
+		return allowedProductListDuplicate;
+	}
+
+	/**
+	 * @param allowedProductListDuplicate
+	 *           the allowedProductListDuplicate to set
+	 */
+	public void setAllowedProductListDuplicate(final List<Product> allowedProductListDuplicate)
+	{
+		this.allowedProductListDuplicate = allowedProductListDuplicate;
+	}
+
+	//PR-15 ends here
+
 }

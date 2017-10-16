@@ -19,6 +19,7 @@ import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.gigya.json.JSONObject;
+import com.gigya.socialize.GSArray;
 import com.gigya.socialize.GSKeyNotFoundException;
 import com.gigya.socialize.GSObject;
 import com.gigya.socialize.GSRequest;
@@ -763,5 +764,70 @@ public class GigyaServiceImpl implements GigyaService
 			LOG.debug(MarketplacecclientservicesConstants.NULL_RESPONSE + responseUIDCheck);
 		}
 		return errorCode;
+	}
+	
+	/*
+	 * (non-Javadoc)
+	 *
+	 * @see com.tisl.mpl.service.GigyaService#validateUser(java.lang.String, java.lang.String)
+	 */
+	@Override
+	public boolean validateUser(final String uid, final String emailId)
+	{
+		try
+		{
+			LOG.debug("Validating user email id: "+emailId+" uid: "+uid);
+			final String gigyaMethod = configurationService.getConfiguration().getString(
+					MarketplacecclientservicesConstants.METHOD_GET_USERINFO);
+			final String proxyEnabledStatus = configurationService.getConfiguration().getString(
+					MarketplacecclientservicesConstants.PROXYENABLED);
+			final GSRequest request = new GSRequest(getApikey(), getSecretkey(), gigyaMethod);
+			if (proxyEnabledStatus.equalsIgnoreCase(TRUE_STATUS))
+			{
+				setProxy();
+				request.setProxy(proxy);
+			}
+			if (getSecretkey() != null && getApikey() != null)
+			{
+				request.setParam(MarketplacecclientservicesConstants.UID, uid);
+				LOG.debug(MarketplacecclientservicesConstants.WAIT_RESPONSE);
+				final GSResponse response = request.send();
+				if (response != null)
+				{
+					if (response.getErrorCode() == 0)
+					{
+						LOG.debug(response.getResponseText());
+						final GSObject responsedata = response.getData();
+						if (null != responsedata)
+						{
+							final GSArray userDataList = responsedata.getArray(MarketplacecclientservicesConstants.IDENTITIES);
+							if (null != userDataList)
+							{
+								for (int i = 0; i < userDataList.length(); i++)
+								{
+									final GSObject userData = userDataList.getObject(i);
+									final String responseEmailId = userData.getString(MarketplacecclientservicesConstants.EMAIL);
+									if (responseEmailId.equalsIgnoreCase(emailId))
+									{
+										return true;
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+		catch (final GSKeyNotFoundException e)
+		{
+			LOG.error(MarketplacecclientservicesConstants.KEY_NOT_FOUND, e);
+		}
+		catch (final Exception ex)
+		{
+			LOG.error(EXCEPTION_LOG, ex);
+		}
+		LOG.error("Email ID validation for gigya user " + emailId + " has failed. GigyaUID: " + uid);
+
+		return false;
 	}
 }

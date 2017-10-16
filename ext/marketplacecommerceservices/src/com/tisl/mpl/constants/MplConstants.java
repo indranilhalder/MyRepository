@@ -58,6 +58,8 @@ public final class MplConstants
 	public static final char BRACKET_END = '}';
 	public static final char BRACKET_START = '{';
 	public static final Integer PRICE_COLUMN = Integer.valueOf(2);
+	//for jewellery
+	public static final Integer PRICE_COLUMN_JEWL = Integer.valueOf(3);
 	public static final String MESSAGE_ROW_SYNTAX_BRACKETS = "Invalid row syntax [brackets not closed]: ";
 	public static final String MESSAGE_ROW_SYNTAX_COLUMNS = "Invalid row syntax [invalid column number]: ";
 	public static final String MESSAGE_MISSING_VALUE = "Missing value for";
@@ -93,8 +95,10 @@ public final class MplConstants
 	public static final String DOUBLE = "\\D+";
 
 	public static final String PIPE = "|";
-
-
+	public static final String MALE = "MALE";
+	public static final String FEMALE = "FEMALE";
+	public static final String FBMALE = "m";
+	public static final String FBFEMALE = "f";
 
 	//	for wishlist
 	public static class USER
@@ -111,4 +115,5 @@ public final class MplConstants
 	public static final String BRAND_HIERARCHY_ROOT_CATEGORY_CODE = "MBH";
 	//Sonar_fix
 	public static final String COMPONENT_GUID_FOUND = "Found Component>>>>with id :::";
+	public static final String NOT_AVAILABLE = "N/A";
 }

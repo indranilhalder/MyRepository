@@ -17,6 +17,8 @@ import java.util.List;
 
 import javax.annotation.Resource;
 
+import org.apache.log4j.Logger;
+
 
 /**
  * This class is extended to add some more functionality to the product bread crumb builder
@@ -33,6 +35,9 @@ public class MplProductBreadcrumbBuilder extends ProductBreadcrumbBuilder
 	@Resource(name = "categoryService")
 	private CategoryService categoryService;
 
+
+	protected static final Logger LOG = Logger.getLogger(MplProductBreadcrumbBuilder.class);
+
 	/**
 	 * This method creates the Bread crumb for the given product
 	 *
@@ -44,35 +49,45 @@ public class MplProductBreadcrumbBuilder extends ProductBreadcrumbBuilder
 	public List<Breadcrumb> getBreadcrumbs(final ProductModel productModel) throws IllegalArgumentException
 	{
 
-
+		LOG.debug("====Inside breadcum methods==========");
 		final List<Breadcrumb> breadcrumbs = new ArrayList<>();
 
 		final Collection<CategoryModel> categoryModels = new ArrayList<>();
 		final Breadcrumb last;
-
+		LOG.debug("====Step 1==========");
 		final ProductModel baseProductModel = getBaseProduct(productModel);
+		LOG.debug("====Step 2==========");
 		last = getProductBreadcrumb(productModel);//Fetching the product name in Breadcrumb instead of base product name
-
+		LOG.debug("====Step 3==========" + last.getCategoryCode());
+		LOG.debug("====Step 3==========" + last.getName());
 		categoryModels.addAll(baseProductModel.getSupercategories());
+		LOG.debug("====Step 4==========" + categoryModels.size());
 		last.setLinkClass(LAST_LINK_CLASS);
+		LOG.debug("====Step 5==========" + last.getLinkClass());
 
 		breadcrumbs.add(last);
+		LOG.debug("====Step 6==========" + breadcrumbs.size());
 
 		while (!categoryModels.isEmpty())
 		{
+			LOG.debug("====Step 7==========");
 			CategoryModel toDisplay = null;
 			for (final CategoryModel categoryModel : categoryModels)
 			{
+				LOG.debug("====Step 8==========");
 				//if (!(categoryModel instanceof ClassificationClassModel))
 				if (categoryModel.getCode().startsWith(
 						configurationService.getConfiguration().getString("marketplace.mplcatalog.salescategory.code")))
 				{
+					LOG.debug("====Step 9==========");
 					if (toDisplay == null)
 					{
+						LOG.debug("====Step 10==========");
 						toDisplay = categoryModel;
 					}
 					if (getBrowseHistory().findEntryMatchUrlEndsWith(categoryModel.getCode()) != null)
 					{
+						LOG.debug("====Step 11==========");
 						break;
 					}
 				}
@@ -80,15 +95,19 @@ public class MplProductBreadcrumbBuilder extends ProductBreadcrumbBuilder
 			categoryModels.clear();
 			if (toDisplay != null)
 			{
+				LOG.debug("====Step 12==========");
 				//do not add the root category(Sales/Primary) to the bread crumb
 				if (!categoryService.isRoot(toDisplay))
 				{
+					LOG.debug("====Step 13==========");
 					breadcrumbs.add(getCategoryBreadcrumb(toDisplay));
 					categoryModels.addAll(toDisplay.getSupercategories());
 				}
 			}
 		}
+		LOG.debug("====Step 14==========");
 		Collections.reverse(breadcrumbs);
+		LOG.debug("====Step 15==========");
 		return breadcrumbs;
 	}
 

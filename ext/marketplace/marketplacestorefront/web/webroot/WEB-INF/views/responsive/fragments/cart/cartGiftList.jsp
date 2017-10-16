@@ -159,7 +159,7 @@ $( document ).ready(function() {
 
 
 									<c:if
-										test="${(not empty product.size && product.rootCategory eq 'Clothing')||(not empty product.size && product.rootCategory eq 'Footwear')}">
+										test="${(not empty product.size && product.rootCategory eq 'Clothing')||(not empty product.size && product.rootCategory eq 'Footwear')||(not empty product.size && product.size ne 'NO SIZE' && product.rootCategory eq 'FineJewellery')||(not empty product.size && product.size ne 'NO SIZE' && product.rootCategory eq 'FashionJewellery')}">
 										<ul class="">
 											<li><button id="addToCartButton" type="button"
 													class="addToBagButton treat-urself-button"
@@ -174,7 +174,9 @@ $( document ).ready(function() {
 									<c:if
 										test="${(empty product.size && product.rootCategory eq 'Electronics') 
 													|| (empty product.size && product.rootCategory eq 'Watches') 
-													|| (empty product.size && product.rootCategory eq 'Accessories')}">
+													|| (empty product.size && product.rootCategory eq 'Accessories')
+													|| (not empty product.size && product.size eq 'NO SIZE' && product.rootCategory eq 'FineJewellery')
+													|| (not empty product.size && product.size eq 'NO SIZE' && product.rootCategory eq 'FashionJewellery')}">
 									<!-- Changes for INC144313256 -->
 										<ul class="">
 											<li><button id="addToCartButton" type="button"

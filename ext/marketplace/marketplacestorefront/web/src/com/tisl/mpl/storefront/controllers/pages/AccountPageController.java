@@ -59,6 +59,7 @@ import de.hybris.platform.commerceservices.order.CommerceCartModificationExcepti
 import de.hybris.platform.commerceservices.search.pagedata.PageableData;
 import de.hybris.platform.commerceservices.search.pagedata.SearchPageData;
 import de.hybris.platform.constants.GeneratedCoreConstants.Enumerations.Gender;
+import de.hybris.platform.core.model.JewelleryInformationModel;
 import de.hybris.platform.core.model.enumeration.EnumerationValueModel;
 import de.hybris.platform.core.model.order.AbstractOrderEntryModel;
 import de.hybris.platform.core.model.order.OrderModel;
@@ -97,14 +98,18 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 import java.util.TreeMap;
 
 import javax.annotation.Resource;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.apache.commons.collections.CollectionUtils;
@@ -132,6 +137,7 @@ import com.granule.json.JSON;
 import com.granule.json.JSONArray;
 import com.granule.json.JSONException;
 import com.granule.json.JSONObject;
+import com.hybris.oms.domain.changedeliveryaddress.TransactionSDDto;
 import com.tis.mpl.facade.address.validator.MplDeliveryAddressComparator;
 import com.tis.mpl.facade.changedelivery.MplDeliveryAddressFacade;
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
@@ -189,14 +195,18 @@ import com.tisl.mpl.facades.data.ScheduledDeliveryData;
 import com.tisl.mpl.facades.data.StatusRecordData;
 import com.tisl.mpl.facades.payment.impl.MplPaymentFacadeImpl;
 import com.tisl.mpl.facades.product.data.CategoryData;
+import com.tisl.mpl.facades.product.data.DayData;
 import com.tisl.mpl.facades.product.data.GenderData;
+import com.tisl.mpl.facades.product.data.MonthData;
 import com.tisl.mpl.facades.product.data.MplCustomerProfileData;
 import com.tisl.mpl.facades.product.data.MyStyleProfileData;
 import com.tisl.mpl.facades.product.data.ReturnReasonData;
 import com.tisl.mpl.facades.product.data.SendInvoiceData;
 import com.tisl.mpl.facades.product.data.StateData;
+import com.tisl.mpl.facades.product.data.YearData;
 import com.tisl.mpl.helper.MplEnumerationHelper;
 import com.tisl.mpl.helper.ProductDetailsHelper;
+import com.tisl.mpl.marketplacecommerceservices.service.MplJewelleryService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplOrderService;
 import com.tisl.mpl.marketplacecommerceservices.service.OrderModelService;
 import com.tisl.mpl.model.SellerInformationModel;
@@ -211,6 +221,7 @@ import com.tisl.mpl.storefront.constants.ModelAttributetConstants;
 import com.tisl.mpl.storefront.constants.RequestMappingUrlConstants;
 import com.tisl.mpl.storefront.controllers.ControllerConstants;
 import com.tisl.mpl.storefront.controllers.helpers.FrontEndErrorHelper;
+import com.tisl.mpl.storefront.security.cookie.PDPPincodeCookieGenerator;
 import com.tisl.mpl.storefront.util.AllProductsInWishlistByDate;
 import com.tisl.mpl.storefront.util.AllWishListCompareByDate;
 import com.tisl.mpl.storefront.web.forms.AccountAddressForm;
@@ -228,10 +239,11 @@ import com.tisl.mpl.storefront.web.forms.validator.MplPasswordValidator;
 import com.tisl.mpl.storefront.web.forms.validator.MplUpdateEmailFormValidator;
 import com.tisl.mpl.storefront.web.forms.validator.ReturnItemFormValidator;
 import com.tisl.mpl.ticket.facades.MplSendTicketFacade;
+import com.tisl.mpl.util.CatalogUtils;
 import com.tisl.mpl.util.ExceptionUtil;
 import com.tisl.mpl.util.GenericUtilityMethods;
 import com.tisl.mpl.wsdto.GigyaProductReviewWsDTO;
-import com.hybris.oms.domain.changedeliveryaddress.TransactionSDDto;
+
 
 /**
  * Controller for home page
@@ -302,6 +314,11 @@ public class AccountPageController extends AbstractMplSearchPageController
 	public static final String RETURN_ADDRESS = "returnAddress";
 	public static final String RETURN_Logistics_Availability = "returnLogisticsAvailability";
 
+	private static final String FINEJEWELLERY = "FineJewellery";
+
+	@Resource(name = "mplJewelleryService")
+	private MplJewelleryService jewelleryService;
+
 	//	Variable declaration with @Resource annotation
 	@Resource(name = ModelAttributetConstants.ACCELERATOR_CHECKOUT_FACADE)
 	private CheckoutFacade checkoutFacade;
@@ -346,6 +363,8 @@ public class AccountPageController extends AbstractMplSearchPageController
 	private FrontEndErrorHelper frontEndErrorHelper;
 	@Resource(name = "orderModelService")
 	private OrderModelService orderModelService;
+	@Resource(name = "pdpPincodeCookieGenerator")
+	private PDPPincodeCookieGenerator pdpPincodeCookie;
 
 	//Return Form Validation
 	@Resource(name = "returnItemFormValidator")
@@ -430,6 +449,9 @@ public class AccountPageController extends AbstractMplSearchPageController
 
 	@Autowired
 	private MplConfigFacade mplConfigFacade;
+
+	@Autowired
+	private CatalogUtils catalogUtils;
 
 	//sonar issue fixed
 	/*
@@ -736,9 +758,9 @@ public class AccountPageController extends AbstractMplSearchPageController
 						//LW-225,230 start
 						if (null != orderEntryData.getProduct())
 						{
-							if (orderEntryData.getProduct().getLuxIndicator() != null
-									&& orderEntryData.getProduct().getLuxIndicator()
-											.equalsIgnoreCase(ControllerConstants.Views.Pages.Cart.LUX_INDICATOR))
+							if (orderEntryData.getProduct().getLuxIndicator() != null && orderEntryData.getProduct().getLuxIndicator()
+
+							.equalsIgnoreCase(ControllerConstants.Views.Pages.Cart.LUX_INDICATOR))
 							{
 								luxFlag = true; //Setting true if at least one luxury product found
 							}
@@ -751,7 +773,7 @@ public class AccountPageController extends AbstractMplSearchPageController
 							final String orderEntryStatus = orderEntryData.getConsignment().getStatus().getCode();
 							final String stage = cancelReturnFacade.getOrderStatusStage(orderEntryStatus);
 
-							if (StringUtils.isNotEmpty(stage) && stage.equalsIgnoreCase("SHIPPING"))
+							if (StringUtils.isNotEmpty(stage) && stage.equalsIgnoreCase(MarketplacecommerceservicesConstants.SHIPPING))
 							{
 								cancellationMsgFlag = true;
 							}
@@ -768,8 +790,9 @@ public class AccountPageController extends AbstractMplSearchPageController
 
 						//TPR-6013
 						final OrderModel subOrderModel = orderModelService.getOrder(subOrder.getCode());
-						final Map<String, List<AWBResponseData>> statusTrackMap = getOrderDetailsFacade.getOrderStatusTrack(
-								orderEntryData, subOrder, subOrderModel);
+						final Map<String, List<AWBResponseData>> statusTrackMap = getOrderDetailsFacade
+
+						.getOrderStatusTrack(orderEntryData, subOrder, subOrderModel);
 						List<AWBResponseData> response = null;
 						AWBResponseData approved = null, shipped = null, delivery = null, cancel = null, returns = null;
 						final Map<String, AWBResponseData> orderStatus = new HashMap<String, AWBResponseData>();
@@ -782,7 +805,7 @@ public class AccountPageController extends AbstractMplSearchPageController
 							approved = response.get(0);
 						}
 
-						response = statusTrackMap.get("SHIPPING");
+						response = statusTrackMap.get(MarketplacecommerceservicesConstants.SHIPPING);
 
 						if (CollectionUtils.isNotEmpty(response))
 						{
@@ -793,6 +816,7 @@ public class AccountPageController extends AbstractMplSearchPageController
 						{
 							consignmentStatus = orderEntryData.getConsignment().getStatus().getCode();
 							consignmentModel = mplOrderService.fetchConsignment(orderEntryData.getConsignment().getCode());
+
 
 							if (null != consignmentModel
 									&& null != consignmentModel.getInvoice()
@@ -831,7 +855,7 @@ public class AccountPageController extends AbstractMplSearchPageController
 							returns = response.get(0);
 						}
 						orderStatus.put("APPROVED", approved);
-						orderStatus.put("SHIPPING", shipped);
+						orderStatus.put(MarketplacecommerceservicesConstants.SHIPPING, shipped);
 						orderStatus.put("DELIVERY", delivery);
 						orderStatus.put("CANCEL", cancel);
 						orderStatus.put("RETURN", returns);
@@ -916,6 +940,11 @@ public class AccountPageController extends AbstractMplSearchPageController
 		model.addAttribute(ModelAttributetConstants.BREADCRUMBS,
 				accountBreadcrumbBuilder.getBreadcrumbs(MessageConstants.TEXT_ACCOUNT_ORDERHISTORY));
 		model.addAttribute(ModelAttributetConstants.METAROBOTS, ModelAttributetConstants.NOINDEX_NOFOLLOW);
+		model.addAttribute(ModelAttributetConstants.WOMEN_LANDING_URL,
+				configurationService.getConfiguration().getProperty("lux.women.landing"));
+		model.addAttribute(ModelAttributetConstants.MEN_LANDING_URL,
+				configurationService.getConfiguration().getProperty("lux.men.landing"));
+
 		return getViewForPage(model);
 	}
 
@@ -1031,6 +1060,10 @@ public class AccountPageController extends AbstractMplSearchPageController
 		OrderModel orderModel = null;
 		boolean luxFlag = false;
 		boolean addressChangeEligible = false;
+
+		String ussid = null;
+		boolean isFineJwlry = false;
+
 		try
 		{
 
@@ -1077,9 +1110,9 @@ public class AccountPageController extends AbstractMplSearchPageController
 						//LW-225,230 start
 						if (null != orderEntry.getProduct())
 						{
-							if (orderEntry.getProduct().getLuxIndicator() != null
-									&& orderEntry.getProduct().getLuxIndicator()
-											.equalsIgnoreCase(ControllerConstants.Views.Pages.Cart.LUX_INDICATOR))
+							if (orderEntry.getProduct().getLuxIndicator() != null && orderEntry.getProduct().getLuxIndicator()
+
+							.equalsIgnoreCase(ControllerConstants.Views.Pages.Cart.LUX_INDICATOR))
 							{
 								luxFlag = true; //Setting true if at least one luxury product found
 							}
@@ -1116,6 +1149,7 @@ public class AccountPageController extends AbstractMplSearchPageController
 								consignmentModel = mplOrderService.fetchConsignment(orderEntry.getConsignment().getCode());
 								//TISEE-1067
 								consignmentStatus = orderEntry.getConsignment().getStatus().getCode();
+
 								if (null != consignmentModel
 										&& null != consignmentModel.getInvoice()
 										&& null != consignmentModel.getInvoice().getInvoiceUrl()
@@ -1130,13 +1164,29 @@ public class AccountPageController extends AbstractMplSearchPageController
 									}
 								}
 							}
+							final ProductModel productModl = getMplOrderFacade().getProductForCode(orderEntry.getProduct().getCode());
+
+							if (productModl.getProductCategoryType().equalsIgnoreCase(FINEJEWELLERY))
+
+							{ //SellerInformationModel sellerInfoModel = null;
+								isFineJwlry = true;
+								final List<JewelleryInformationModel> jewelleryInfo = jewelleryService.getJewelleryInfoByUssid(orderEntry
+										.getSelectedUssid());
+								ussid = jewelleryInfo.get(0).getPCMUSSID();
+								//sellerInfoModel = getMplSellerInformationService().getSellerDetail(jewelleryInfo.get(0).getPCMUSSID());
+								//added for jewellery
+							}
+							else
+							{
+								ussid = orderEntry.getSelectedUssid();
+							}
 
 							final List<SellerInformationModel> sellerInfo = (List<SellerInformationModel>) productModel
 									.getSellerInformationRelator();
 
 							for (final SellerInformationModel sellerInformationModel : sellerInfo)
 							{
-								if (sellerInformationModel.getSellerArticleSKU().equals(orderEntry.getSelectedUssid()))
+								if (sellerInformationModel.getSellerArticleSKU().equals(ussid))
 								{
 									final List<RichAttributeModel> richAttributeModelForSeller = (List<RichAttributeModel>) sellerInformationModel
 											.getRichAttribute();
@@ -1173,6 +1223,7 @@ public class AccountPageController extends AbstractMplSearchPageController
 												{
 
 													LOG.debug(" order: Consignemnt is null or empty : Setting cancel status to true for  Order code :"
+
 															+ orderCode
 															+ MarketplacecommerceservicesConstants.CONSIGNMENT_STATUS
 															+ consignmentStatus);
@@ -1192,6 +1243,7 @@ public class AccountPageController extends AbstractMplSearchPageController
 											{
 												orderEntry.setItemCancellationStatus(true);
 												LOG.debug(" order :Inside Consignemnt is present : Setting cancel status to true for  Order code :"
+
 														+ orderCode
 														+ MarketplacecommerceservicesConstants.CONSIGNMENT_STATUS
 														+ consignmentStatus);
@@ -1221,6 +1273,7 @@ public class AccountPageController extends AbstractMplSearchPageController
 
 													final int actualReturnWindow = Integer.parseInt(richAttributeModelForSeller.get(0)
 															.getReturnWindow());
+
 
 													LOG.debug(" order : Setting Item Retrun status to true for  Order code :" + orderCode
 															+ MarketplacecommerceservicesConstants.CONSIGNMENT_STATUS + consignmentStatus);
@@ -1290,7 +1343,8 @@ public class AccountPageController extends AbstractMplSearchPageController
 										final String orderEntryStatus = consignmentModel.getStatus().getCode();
 										final String stage = cancelReturnFacade.getOrderStatusStage(orderEntryStatus);
 										boolean cancellationMsgFlag = false;
-										if (StringUtils.isNotEmpty(stage) && stage.equalsIgnoreCase("SHIPPING"))
+										if (StringUtils.isNotEmpty(stage)
+												&& stage.equalsIgnoreCase(MarketplacecommerceservicesConstants.SHIPPING))
 										{
 											cancellationMsgFlag = true;
 										}
@@ -1307,16 +1361,19 @@ public class AccountPageController extends AbstractMplSearchPageController
 							//LW-225,230 start
 							if (null != orderEntry.getProduct())
 							{
-								if (orderEntry.getProduct().getLuxIndicator() != null
-										&& orderEntry.getProduct().getLuxIndicator()
-												.equalsIgnoreCase(ControllerConstants.Views.Pages.Cart.LUX_INDICATOR))
+								if (orderEntry.getProduct().getLuxIndicator() != null && orderEntry.getProduct().getLuxIndicator()
+
+								.equalsIgnoreCase(ControllerConstants.Views.Pages.Cart.LUX_INDICATOR))
 								{
 									luxFlag = true; //Setting true if at least one luxury product found
 								}
 							}
 
+
 							final List<ReturnRequestModel> returnRequestModelList = cancelReturnFacade.getListOfReturnRequest(subOrder
 									.getCode());
+
+
 							if (null != returnRequestModelList && returnRequestModelList.size() > 0)
 							{
 								for (final ReturnRequestModel mm : returnRequestModelList)
@@ -1340,6 +1397,40 @@ public class AccountPageController extends AbstractMplSearchPageController
 										}
 									}
 
+								}
+							}
+
+							//TISPRDT-2546
+							//If FineJewellery return is of type SELF_COURIER,changing the return_initiated message
+							if (isFineJwlry
+									&& (MarketplacecommerceservicesConstants.SELF_COURIER).equalsIgnoreCase(orderEntry
+											.getReturnMethodType()))
+							{
+								for (final Entry<String, Map<String, List<AWBResponseData>>> entry : trackStatusMap.entrySet())
+								{
+									if (entry.getKey().equalsIgnoreCase(orderEntry.getOrderLineId()))
+									{
+										final Map<String, List<AWBResponseData>> innerEntry = entry.getValue();
+										for (final Entry<String, List<AWBResponseData>> innerValue : innerEntry.entrySet())
+										{
+											if ("RETURN".equalsIgnoreCase(innerValue.getKey()))
+											{
+												final List<AWBResponseData> awbList = innerValue.getValue();
+												for (final AWBResponseData awbRes : awbList)
+												{
+													if (("RETURN_INITIATED").equalsIgnoreCase(awbRes.getResponseCode()))
+													{
+														final List<StatusRecordData> statsList = new ArrayList<StatusRecordData>();
+														final StatusRecordData stats = new StatusRecordData();
+														stats.setStatusDescription(MarketplacecommerceservicesConstants.FINEJEW_SELFCOURIER_ERRORMSG);
+														statsList.add(stats);
+														awbRes.setStatusRecords(statsList);
+														awbRes.setShipmentStatus("");
+													}
+												}
+											}
+										}
+									}
 								}
 							}
 
@@ -1420,6 +1511,8 @@ public class AccountPageController extends AbstractMplSearchPageController
 
 			ExceptionUtil.etailNonBusinessExceptionHandler(new EtailNonBusinessExceptions(e,
 					MarketplacecommerceservicesConstants.E0000));
+
+
 			return frontEndErrorHelper.callNonBusinessError(model, MessageConstants.SYSTEM_ERROR_PAGE_NON_BUSINESS);
 		}
 		catch (final NoSuchMessageException e)
@@ -1427,6 +1520,8 @@ public class AccountPageController extends AbstractMplSearchPageController
 
 			ExceptionUtil.etailNonBusinessExceptionHandler(new EtailNonBusinessExceptions(e,
 					MarketplacecommerceservicesConstants.E0000));
+
+
 			return frontEndErrorHelper.callNonBusinessError(model, MessageConstants.SYSTEM_ERROR_PAGE_NON_BUSINESS);
 		}
 		catch (final UnknownIdentifierException e)
@@ -1434,6 +1529,8 @@ public class AccountPageController extends AbstractMplSearchPageController
 
 			ExceptionUtil.etailNonBusinessExceptionHandler(new EtailNonBusinessExceptions(e,
 					MarketplacecommerceservicesConstants.E0000));
+
+
 			return frontEndErrorHelper.callNonBusinessError(model, MessageConstants.SYSTEM_ERROR_PAGE_NON_BUSINESS);
 		}
 		catch (final EtailBusinessExceptions e)
@@ -1778,7 +1875,10 @@ public class AccountPageController extends AbstractMplSearchPageController
 		List<PointOfServiceData> returnableStores = new ArrayList<PointOfServiceData>();
 		String productRichAttrOfQuickDrop = null;
 		String sellerRichAttrOfQuickDrop = null;
-
+		String ussidForJwlry = null;
+		String sellerName = "";
+		boolean isFineJew = false;
+		final String revSealSellerList = configurationService.getConfiguration().getString("finejewellery.reverseseal.sellername");
 
 		try
 		{
@@ -1813,12 +1913,26 @@ public class AccountPageController extends AbstractMplSearchPageController
 						}
 					}
 
+					//This is added for jewellery
+					if (productModel.getProductCategoryType().equalsIgnoreCase(FINEJEWELLERY))
+					{
+						isFineJew = true;
+						final List<JewelleryInformationModel> jewelleryInfo = jewelleryService.getJewelleryInfoByUssid(orderEntry
+								.getSelectedUssid());
+						ussidForJwlry = jewelleryInfo.get(0).getPCMUSSID();
+					}
+					else
+					{
+						ussidForJwlry = orderEntry.getSelectedUssid();
+					}
+
 					final List<SellerInformationModel> sellerInfo = (List<SellerInformationModel>) productModel
 							.getSellerInformationRelator();
 
 					for (final SellerInformationModel sellerInformationModel : sellerInfo)
 					{
-						if (sellerInformationModel.getSellerArticleSKU().equals(orderEntry.getSelectedUssid()))
+						//if (sellerInformationModel.getSellerArticleSKU().equals(orderEntry.getSelectedUssid()))
+						if (sellerInformationModel.getSellerArticleSKU().equals(ussidForJwlry)) //Added for jewellery
 						{
 							List<RichAttributeModel> sellerRichAttributeModel = null;
 							if (sellerInformationModel.getRichAttribute() != null)
@@ -1830,8 +1944,24 @@ public class AccountPageController extends AbstractMplSearchPageController
 									sellerRichAttrOfQuickDrop = sellerRichAttributeModel.get(0).getReturnAtStoreEligible().toString();
 								}
 							}
+							sellerName = sellerInformationModel.getSellerName();
 						}
 					}
+
+					//TPR-4134 starts
+					if (StringUtils.isNotEmpty(revSealSellerList))
+					{
+						final List<String> sellerList = Arrays.asList(revSealSellerList.split(","));
+						if ((FINEJEWELLERY).equalsIgnoreCase(productModel.getProductCategoryType()))
+						{
+							//Checking if seller contains the values
+							if (sellerList.contains(sellerName))
+							{
+								model.addAttribute(ModelAttributetConstants.SHOW_REVERSESEAL_JWLRY, "true");
+							}
+						}
+					}
+					//TPR-4134 ends
 					model.addAttribute(ModelAttributetConstants.QUCK_DROP_PROD_LEVEL, productRichAttrOfQuickDrop);
 					model.addAttribute(ModelAttributetConstants.QUCK_DROP_SELLER_LEVEL, sellerRichAttrOfQuickDrop);
 
@@ -1880,6 +2010,17 @@ public class AccountPageController extends AbstractMplSearchPageController
 			}
 			model.addAttribute(ModelAttributetConstants.ADDRESS_DATA, addressDataList);
 			final List<ReturnReasonData> reasonDataList = getMplOrderFacade().getReturnReasonForOrderItem();
+			if (!isFineJew)
+			{
+				for (final Iterator<ReturnReasonData> iterator = reasonDataList.iterator(); iterator.hasNext();)
+				{
+					final ReturnReasonData returnData = iterator.next();
+					if (MarketplacecommerceservicesConstants.RETURN_FINEJEWELLERY.equalsIgnoreCase(returnData.getReasonDescription()))
+					{
+						iterator.remove();
+					}
+				}
+			}
 			model.addAttribute(ModelAttributetConstants.REASON_DATA_LIST, reasonDataList);
 			model.addAttribute(ModelAttributetConstants.RETURN_PRODUCT_MAP, returnProductMap);
 			model.addAttribute(ModelAttributetConstants.SUBORDER_ENTRY, orderEntry);
@@ -2189,8 +2330,9 @@ public class AccountPageController extends AbstractMplSearchPageController
 
 
 			breadcrumbs.add(new Breadcrumb(RequestMappingUrlConstants.LINK_MY_ACCOUNT + RequestMappingUrlConstants.LINK_ORDERS,
-					getMessageSource().getMessage(MessageConstants.TEXT_ACCOUNT_ORDERHISTORY, null,
-							getI18nService().getCurrentLocale()), null));
+					getMessageSource()
+
+					.getMessage(MessageConstants.TEXT_ACCOUNT_ORDERHISTORY, null, getI18nService().getCurrentLocale()), null));
 
 
 			breadcrumbs.add(new Breadcrumb(ModelAttributetConstants.HASH_VAL, getMessageSource().getMessage(
@@ -2222,6 +2364,8 @@ public class AccountPageController extends AbstractMplSearchPageController
 		{
 			ExceptionUtil.etailNonBusinessExceptionHandler(new EtailNonBusinessExceptions(e,
 					MarketplacecommerceservicesConstants.E0000));
+
+
 			return frontEndErrorHelper.callNonBusinessError(model, MessageConstants.SYSTEM_ERROR_PAGE_NON_BUSINESS);
 		}
 	}
@@ -2355,6 +2499,8 @@ public class AccountPageController extends AbstractMplSearchPageController
 		{
 			ExceptionUtil.etailNonBusinessExceptionHandler(new EtailNonBusinessExceptions(e,
 					MarketplacecommerceservicesConstants.E0000));
+
+
 			return frontEndErrorHelper.callNonBusinessError(model, MessageConstants.SYSTEM_ERROR_PAGE_NON_BUSINESS);
 		}
 	}
@@ -2426,7 +2572,7 @@ public class AccountPageController extends AbstractMplSearchPageController
 			if (ticketTypeCode.equalsIgnoreCase("R"))
 			{
 				cancellationStatus = cancelReturnFacade.implementReturnItem(subOrderDetails, subOrderEntry, reasonCode, ussid,
-						ticketTypeCode, customerData, refundType, true, SalesApplication.WEB, returnAddrData);
+						ticketTypeCode, customerData, refundType, true, SalesApplication.WEB, returnAddrData, "");
 			}
 			else
 			{
@@ -2457,8 +2603,9 @@ public class AccountPageController extends AbstractMplSearchPageController
 				}
 			}
 
-			final List<ReturnLogisticsResponseData> returnLogisticsRespList = cancelReturnFacade.checkReturnLogistics(
-					subOrderDetails, pinCode, transactionId);
+			final List<ReturnLogisticsResponseData> returnLogisticsRespList = cancelReturnFacade
+
+			.checkReturnLogistics(subOrderDetails, pinCode, transactionId);
 			for (final ReturnLogisticsResponseData response : returnLogisticsRespList)
 			{
 				model.addAttribute(ModelAttributetConstants.RETURNLOGMSG, response.getResponseMessage());
@@ -2496,6 +2643,8 @@ public class AccountPageController extends AbstractMplSearchPageController
 		{
 			ExceptionUtil.etailNonBusinessExceptionHandler(new EtailNonBusinessExceptions(e,
 					MarketplacecommerceservicesConstants.E0000));
+
+
 			return frontEndErrorHelper.callNonBusinessError(model, MessageConstants.SYSTEM_ERROR_PAGE_NON_BUSINESS);
 		}
 	}
@@ -2638,6 +2787,8 @@ public class AccountPageController extends AbstractMplSearchPageController
 
 			ExceptionUtil.etailNonBusinessExceptionHandler(new EtailNonBusinessExceptions(e,
 					MarketplacecommerceservicesConstants.E0000));
+
+
 			return frontEndErrorHelper.callNonBusinessError(model, MessageConstants.SYSTEM_ERROR_PAGE_NON_BUSINESS);
 		}
 		catch (final EtailBusinessExceptions e)
@@ -2752,6 +2903,8 @@ public class AccountPageController extends AbstractMplSearchPageController
 
 			ExceptionUtil.etailNonBusinessExceptionHandler(new EtailNonBusinessExceptions(e,
 					MarketplacecommerceservicesConstants.E0000));
+
+
 			return frontEndErrorHelper.callNonBusinessError(model, MessageConstants.SYSTEM_ERROR_PAGE_NON_BUSINESS);
 		}
 		catch (
@@ -2778,6 +2931,8 @@ public class AccountPageController extends AbstractMplSearchPageController
 
 			ExceptionUtil.etailNonBusinessExceptionHandler(new EtailNonBusinessExceptions(e,
 					MarketplacecommerceservicesConstants.E0000));
+
+
 			return frontEndErrorHelper.callNonBusinessError(model, MessageConstants.SYSTEM_ERROR_PAGE_NON_BUSINESS);
 		}
 
@@ -3035,19 +3190,21 @@ public class AccountPageController extends AbstractMplSearchPageController
 			final List<GenderData> genderList = mplCustomerProfileFacade.getGenders();
 			model.addAttribute(ModelAttributetConstants.GENDER_DATA, genderList);
 
-			//final List<DayData> dayList = mplCustomerProfileFacade.getDayList();
-			//final List<MonthData> monthList = mplCustomerProfileFacade.getMonthList();
-			//final List<YearData> yearList = mplCustomerProfileFacade.getYearList();
-			//final List<YearData> yearAnniversaryList = mplCustomerProfileFacade.getYearAnniversaryList();
+			final List<DayData> dayList = mplCustomerProfileFacade.getDayList();
+			final List<MonthData> monthList = mplCustomerProfileFacade.getMonthList();
+			final List<YearData> yearList = mplCustomerProfileFacade.getYearList();
+			final List<YearData> yearAnniversaryList = mplCustomerProfileFacade.getYearAnniversaryList();
 
-			//model.addAttribute(ModelAttributetConstants.DAYLIST, dayList);
-			//model.addAttribute(ModelAttributetConstants.MONTHLIST, monthList);
-			//model.addAttribute(ModelAttributetConstants.YEARLIST, yearList);
-			//model.addAttribute(ModelAttributetConstants.YEARANNIVERSARYLIST, yearAnniversaryList);
+			model.addAttribute(ModelAttributetConstants.DAYLIST, dayList);
+			model.addAttribute(ModelAttributetConstants.MONTHLIST, monthList);
+			model.addAttribute(ModelAttributetConstants.YEARLIST, yearList);
+			model.addAttribute(ModelAttributetConstants.YEARANNIVERSARYLIST, yearAnniversaryList);
 
 			final CustomerData customerData = customerFacade.getCurrentCustomer();
 			final MplCustomerProfileData customerProfileData = mplCustomerProfileFacade.getCustomerProfileDetail(customerData
 					.getDisplayUid());
+
+
 
 			final MplCustomerProfileForm mplCustomerProfileForm = new MplCustomerProfileForm();
 			if (null != customerProfileData && null != customerProfileData.getDateOfBirth()
@@ -3156,6 +3313,8 @@ public class AccountPageController extends AbstractMplSearchPageController
 
 			ExceptionUtil.etailNonBusinessExceptionHandler(new EtailNonBusinessExceptions(e,
 					MarketplacecommerceservicesConstants.E0016));
+
+
 			callNonBusinessError(model, MessageConstants.SYSTEM_ERROR_PAGE_BUSINESS);
 			return ModelAttributetConstants.FAILURE;
 		}
@@ -3464,6 +3623,7 @@ public class AccountPageController extends AbstractMplSearchPageController
 	public String updatePassword(final UpdatePasswordForm updatePasswordForm, final BindingResult bindingResult,
 			final Model model, final RedirectAttributes redirectAttributes, final HttpServletRequest request)
 			throws CMSItemNotFoundException
+
 	{
 		try
 		{
@@ -3831,8 +3991,9 @@ public class AccountPageController extends AbstractMplSearchPageController
 			final List<Breadcrumb> breadcrumbs = accountBreadcrumbBuilder.getBreadcrumbs(null);
 
 			breadcrumbs.add(new Breadcrumb(
-					RequestMappingUrlConstants.LINK_MY_ACCOUNT + RequestMappingUrlConstants.LINK_ADDRESS_BOOK, getMessageSource()
-							.getMessage(MessageConstants.TEXT_ACCOUNT_ADDRESSBOOK, null, getI18nService().getCurrentLocale()), null));
+
+			RequestMappingUrlConstants.LINK_MY_ACCOUNT + RequestMappingUrlConstants.LINK_ADDRESS_BOOK, getMessageSource()
+					.getMessage(MessageConstants.TEXT_ACCOUNT_ADDRESSBOOK, null, getI18nService().getCurrentLocale()), null));
 
 			breadcrumbs.add(new Breadcrumb(ModelAttributetConstants.HASH_VAL, getMessageSource().getMessage(
 					MessageConstants.TEXT_ACCOUNT_ADDRESSBOOK_ADDEDITADDRESS, null, getI18nService().getCurrentLocale()), null));
@@ -3923,8 +4084,14 @@ public class AccountPageController extends AbstractMplSearchPageController
 	@RequestMapping(value = RequestMappingUrlConstants.LINK_ADD_NEW_ADDRESS, method = RequestMethod.POST)
 	@RequireHardLogIn
 	public String addAddress(final AccountAddressForm addressForm, final BindingResult bindingResult, final Model model,
-			final HttpServletRequest request) throws CMSItemNotFoundException, UnsupportedEncodingException
+			final HttpServletRequest request, final HttpServletResponse response) throws CMSItemNotFoundException,
+			UnsupportedEncodingException
 	{
+		int pincodeCookieMaxAge;
+		final Cookie cookie = GenericUtilityMethods.getCookieByName(request, "pdpPincode");
+		final String cookieMaxAge = configurationService.getConfiguration().getString("pdpPincode.cookie.age");
+		pincodeCookieMaxAge = (Integer.valueOf(cookieMaxAge)).intValue();
+		final String domain = configurationService.getConfiguration().getString("shared.cookies.domain");
 		try
 		{
 			if (null != request.getParameter(ModelAttributetConstants.ADDRESS_RADIO_TYPE))
@@ -4006,6 +4173,29 @@ public class AccountPageController extends AbstractMplSearchPageController
 			newAddress.setCountry(getI18NFacade().getCountryForIsocode(ModelAttributetConstants.INDIA_ISO_CODE));
 			//newAddress.setLine3(addressForm.getLine3());
 			newAddress.setLocality(addressForm.getLocality());
+			//TPR-6654
+			if (StringUtils.isNotEmpty(newAddress.getPostalCode()))
+			{
+				if (cookie != null && cookie.getValue() != null)
+				{
+					cookie.setValue(newAddress.getPostalCode());
+					cookie.setMaxAge(pincodeCookieMaxAge);
+					cookie.setPath("/");
+
+					if (null != domain && !domain.equalsIgnoreCase("localhost"))
+					{
+						cookie.setSecure(true);
+					}
+					cookie.setDomain(domain);
+					response.addCookie(cookie);
+					getSessionService().setAttribute(MarketplacecommerceservicesConstants.SESSION_PINCODE, newAddress.getPostalCode());
+				}
+				else
+				{
+					pdpPincodeCookie.addCookie(response, addressForm.getPostcode());
+					getSessionService().setAttribute(MarketplacecommerceservicesConstants.SESSION_PINCODE, newAddress.getPostalCode());
+				}
+			}
 			if (StringUtils.isNotBlank(addressForm.getLandmark())
 					&& !addressForm.getLandmark().equalsIgnoreCase(MarketplacecommerceservicesConstants.OTHER))
 			{
@@ -4037,6 +4227,8 @@ public class AccountPageController extends AbstractMplSearchPageController
 
 				newAddress.setDefaultAddress(addressForm.getDefaultAddress() != null
 						&& addressForm.getDefaultAddress().booleanValue());
+
+
 			}
 			getAccountAddressFacade().addaddress(newAddress);
 
@@ -4068,9 +4260,15 @@ public class AccountPageController extends AbstractMplSearchPageController
 	@RequestMapping(value = RequestMappingUrlConstants.LINK_EDIT_ADDRESS_NEW, method = RequestMethod.POST)
 	@RequireHardLogIn
 	public String editAddress(final AccountAddressForm addressForm, final BindingResult bindingResult, final Model model,
-			final RedirectAttributes redirectModel, final HttpServletRequest request) throws CMSItemNotFoundException,
-			UnsupportedEncodingException
+			final RedirectAttributes redirectModel, final HttpServletRequest request, final HttpServletResponse response)
+			throws CMSItemNotFoundException, UnsupportedEncodingException
+
 	{
+		int pincodeCookieMaxAge;
+		final Cookie cookie = GenericUtilityMethods.getCookieByName(request, "pdpPincode");
+		final String cookieMaxAge = configurationService.getConfiguration().getString("pdpPincode.cookie.age");
+		pincodeCookieMaxAge = (Integer.valueOf(cookieMaxAge)).intValue();
+		final String domain = configurationService.getConfiguration().getString("shared.cookies.domain");
 		try
 		{
 			if (null != request.getParameter(ModelAttributetConstants.ADDRESS_RADIO_TYPE))
@@ -4158,6 +4356,29 @@ public class AccountPageController extends AbstractMplSearchPageController
 			newAddress.setState(addressForm.getState());
 			//newAddress.setLine3(addressForm.getLine3());
 			newAddress.setLocality(addressForm.getLocality());
+			//TPR-6654
+			if (StringUtils.isNotEmpty(newAddress.getPostalCode()))
+			{
+				if (cookie != null && cookie.getValue() != null)
+				{
+					cookie.setValue(newAddress.getPostalCode());
+					cookie.setMaxAge(pincodeCookieMaxAge);
+					cookie.setPath("/");
+
+					if (null != domain && !domain.equalsIgnoreCase("localhost"))
+					{
+						cookie.setSecure(true);
+					}
+					cookie.setDomain(domain);
+					response.addCookie(cookie);
+					getSessionService().setAttribute(MarketplacecommerceservicesConstants.SESSION_PINCODE, newAddress.getPostalCode());
+				}
+				else
+				{
+					pdpPincodeCookie.addCookie(response, addressForm.getPostcode());
+					getSessionService().setAttribute(MarketplacecommerceservicesConstants.SESSION_PINCODE, newAddress.getPostalCode());
+				}
+			}
 			if (StringUtils.isNotBlank(addressForm.getLandmark())
 					&& !addressForm.getLandmark().equalsIgnoreCase(MarketplacecommerceservicesConstants.OTHER))
 			{
@@ -4193,6 +4414,8 @@ public class AccountPageController extends AbstractMplSearchPageController
 
 				newAddress.setDefaultAddress(addressForm.getDefaultAddress() != null
 						&& addressForm.getDefaultAddress().booleanValue());
+
+
 			}
 
 			LOG.info("addrestype=" + newAddress.getAddressType());
@@ -4336,8 +4559,9 @@ public class AccountPageController extends AbstractMplSearchPageController
 			final List<Breadcrumb> breadcrumbs = accountBreadcrumbBuilder.getBreadcrumbs(null);
 
 			breadcrumbs.add(new Breadcrumb(
-					RequestMappingUrlConstants.LINK_MY_ACCOUNT + RequestMappingUrlConstants.LINK_ADDRESS_BOOK, getMessageSource()
-							.getMessage(MessageConstants.TEXT_ACCOUNT_ADDRESSBOOK, null, getI18nService().getCurrentLocale()), null));
+
+			RequestMappingUrlConstants.LINK_MY_ACCOUNT + RequestMappingUrlConstants.LINK_ADDRESS_BOOK, getMessageSource()
+					.getMessage(MessageConstants.TEXT_ACCOUNT_ADDRESSBOOK, null, getI18nService().getCurrentLocale()), null));
 
 			breadcrumbs.add(new Breadcrumb(ModelAttributetConstants.HASH_VAL, getMessageSource().getMessage(
 					MessageConstants.TEXT_ACCOUNT_ADDRESSBOOK_ADDEDITADDRESS, null, getI18nService().getCurrentLocale()), null));
@@ -4427,8 +4651,9 @@ public class AccountPageController extends AbstractMplSearchPageController
 			if (Boolean.TRUE.equals(addressForm.getEditAddress()))
 			{
 
-				selectedAddress.setDefaultAddress(Boolean.TRUE.equals(addressForm.getDefaultAddress())
-						|| getAccountAddressFacade().getAddressBook().size() <= 1);
+				selectedAddress.setDefaultAddress(
+
+				Boolean.TRUE.equals(addressForm.getDefaultAddress()) || getAccountAddressFacade().getAddressBook().size() <= 1);
 				getAccountAddressFacade().editAddress(selectedAddress);
 			}
 			else
@@ -4436,6 +4661,8 @@ public class AccountPageController extends AbstractMplSearchPageController
 
 				selectedAddress.setDefaultAddress(Boolean.TRUE.equals(addressForm.getDefaultAddress())
 						|| userFacade.isAddressBookEmpty());
+
+
 				userFacade.addAddress(selectedAddress);
 			}
 
@@ -4503,17 +4730,48 @@ public class AccountPageController extends AbstractMplSearchPageController
 	@RequestMapping(value = RequestMappingUrlConstants.LINK_SET_DEFAUT_ADDRESS + ADDRESS_CODE_PATH_VARIABLE_PATTERN, method = RequestMethod.GET)
 	@RequireHardLogIn
 	public String setDefaultAddress(@PathVariable(ModelAttributetConstants.ADDRESS_CODE) final String addressCode,
-			final RedirectAttributes redirectModel, final Model model) throws CMSItemNotFoundException
+			final RedirectAttributes redirectModel, final Model model, final HttpServletRequest request,
+			final HttpServletResponse response) throws CMSItemNotFoundException
 	{
 		try
 		{
+			//TPR-6654
+			int pincodeCookieMaxAge;
+			final Cookie cookie = GenericUtilityMethods.getCookieByName(request, "pdpPincode");
+			final String cookieMaxAge = configurationService.getConfiguration().getString("pdpPincode.cookie.age");
+			pincodeCookieMaxAge = (Integer.valueOf(cookieMaxAge)).intValue();
+			final String domain = configurationService.getConfiguration().getString("shared.cookies.domain");
 			final AddressData addressData = new AddressData();
 			addressData.setDefaultAddress(true);
 			addressData.setVisibleInAddressBook(true);
 			addressData.setId(addressCode);
 			userFacade.setDefaultAddress(addressData);
+			//TPR-6654 Start
+			final AddressData addressData1 = userFacade.getAddressForCode(addressCode);
+			final String postalCode = addressData1.getPostalCode();
+			LOG.debug("PostalCode for new address :: " + postalCode);
 			GlobalMessages.addFlashMessage(redirectModel, GlobalMessages.CONF_MESSAGES_HOLDER,
 					MessageConstants.ACCOUNT_CONFIRMATION_DEFAULT_ADDRESS_CHANGED);
+			//TPR-6654
+			if (cookie != null && cookie.getValue() != null)
+			{
+				cookie.setValue(postalCode);
+				cookie.setMaxAge(pincodeCookieMaxAge);
+				cookie.setPath("/");
+
+				if (null != domain && !domain.equalsIgnoreCase("localhost"))
+				{
+					cookie.setSecure(true);
+				}
+				cookie.setDomain(domain);
+				response.addCookie(cookie);
+				sessionService.setAttribute(MarketplacecommerceservicesConstants.SESSION_PINCODE, postalCode);
+			}
+			else
+			{
+				pdpPincodeCookie.addCookie(response, postalCode);
+				sessionService.setAttribute(MarketplacecommerceservicesConstants.SESSION_PINCODE, postalCode);
+			}
 			return REDIRECT_TO_ADDRESS_BOOK_PAGE;
 		}
 		catch (final EtailBusinessExceptions e)
@@ -5140,6 +5398,10 @@ public class AccountPageController extends AbstractMplSearchPageController
 			final List<WishlistProductData> wpDataList = new ArrayList<WishlistProductData>();
 			Boolean isDelisted = Boolean.FALSE;
 			boolean luxProduct = false;
+			final String catalogVersion = catalogUtils.getSessionCatalogVersionForProduct().getCatalog().getId().toString();
+
+			Integer available = 0;
+
 			if (null != particularWishlist && null != particularWishlist.getEntries() && !particularWishlist.getEntries().isEmpty())
 			{
 				final List<Wishlist2EntryModel> entryModels = particularWishlist.getEntries();
@@ -5148,40 +5410,77 @@ public class AccountPageController extends AbstractMplSearchPageController
 
 				for (final Wishlist2EntryModel entry : entryModels)
 				{
-					//TISEE-6376
-					if (entry.getProduct() != null && entry.getProduct().getCode() != null)
+					LOG.debug("Step0-************************Wishlist");
+					if (entry.getIsDeleted() == null || (entry.getIsDeleted() != null && !entry.getIsDeleted().booleanValue()))//TPR-5787
 					{
-						final ProductModel productModel = getMplOrderFacade().getProductForCode(entry.getProduct().getCode());
-						if (null != productModel.getSellerInformationRelator())
-						{
-							final List<SellerInformationModel> sellerInfo = (List<SellerInformationModel>) productModel
-									.getSellerInformationRelator();
-							for (final SellerInformationModel sellerInformationModel : sellerInfo)
-							{
-								if (sellerInformationModel.getSellerArticleSKU().equals(entry.getUssid())
-										&& null != sellerInformationModel.getSellerAssociationStatus()
-										&& sellerInformationModel.getSellerAssociationStatus().equals(SellerAssociationStatusEnum.NO))
-								{
-									modelService.remove(entry);
-									isDelisted = Boolean.TRUE;
-								}
-							}
-						}
-						// LW-225,230 start
-						if (productModel.getLuxIndicator() != null
-								&& productModel.getLuxIndicator().getCode()
-										.equalsIgnoreCase(ControllerConstants.Views.Pages.Cart.LUX_INDICATOR))
-						{
-							luxProduct = true; //Setting true if at least one luxury product found
-						}
-						// LW-225,230 end
-					}
+						LOG.debug("Step1-************************Wishlist");
+						//TISEE-6376
+						if (entry.getProduct() != null
+								&& entry.getProduct().getCode() != null
+								&& (entry.getProduct().getCatalogVersion().getCatalog().getId().toString()
+										.equalsIgnoreCase(catalogVersion)))
 
-					final boolean isWishlistEntryValid = mplCartFacade.isWishlistEntryValid(entry);
-					if (!isDelisted && !isWishlistEntryValid)
-					{
-						modelService.remove(entry);
-						isDelisted = Boolean.TRUE;
+						{
+							LOG.debug("Step2-************************Wishlist");
+							final ProductModel productModel = getMplOrderFacade().getProductForCode(entry.getProduct().getCode());
+							if (null != productModel.getSellerInformationRelator())
+
+
+							{
+								final List<SellerInformationModel> sellerInfo = (List<SellerInformationModel>) productModel
+										.getSellerInformationRelator();
+								for (final SellerInformationModel sellerInformationModel : sellerInfo)
+
+
+								{
+									if (sellerInformationModel.getSellerArticleSKU().equals(entry.getUssid())
+											&& null != sellerInformationModel.getSellerAssociationStatus()
+											&& sellerInformationModel.getSellerAssociationStatus().equals(SellerAssociationStatusEnum.NO))
+
+
+
+									{
+
+
+
+
+										modelService.remove(entry);
+										isDelisted = Boolean.TRUE;
+
+									}
+								}
+
+
+
+
+
+
+
+
+							}
+							// LW-225,230 start
+							if (productModel.getLuxIndicator() != null
+									&& productModel.getLuxIndicator().getCode()
+											.equalsIgnoreCase(ControllerConstants.Views.Pages.Cart.LUX_INDICATOR))
+
+
+
+							{
+								luxProduct = true; //Setting true if at least one luxury product found
+
+
+							}
+							// LW-225,230 end
+						}
+
+						LOG.debug("Step3-************************Wishlist");
+
+						final boolean isWishlistEntryValid = mplCartFacade.isWishlistEntryValid(entry);
+						if (!isDelisted && !isWishlistEntryValid)
+						{
+							modelService.remove(entry);
+							isDelisted = Boolean.TRUE;
+						}
 					}
 
 				}
@@ -5200,8 +5499,14 @@ public class AccountPageController extends AbstractMplSearchPageController
 					for (final Wishlist2EntryModel entryModel : allProductsModifiable)
 					{
 						final WishlistProductData wishlistProductData = new WishlistProductData();
+						LOG.debug("Step4-************************Wishlist");
 						//TISEE-6376
-						if (entryModel.getProduct() != null)
+						if (entryModel.getProduct() != null
+								&& ((entryModel.getProduct().getCatalogVersion().getCatalog().getId().toString())
+										.equalsIgnoreCase(catalogVersion))
+								&& (entryModel.getIsDeleted() == null || (entryModel.getIsDeleted() != null && !entryModel.getIsDeleted()
+										.booleanValue())))//TPR-5787 check added
+
 						{
 							/*
 							 * final ProductData productData1 = productFacade.getProductForOptions(entryModel.getProduct(),
@@ -5211,11 +5516,13 @@ public class AccountPageController extends AbstractMplSearchPageController
 							 * ProductOption.SELLER));
 							 */
 
+							LOG.debug("Step5-************************Wishlist");
 							final ProductData productData1 = productFacade.getProductForOptions(entryModel.getProduct(), Arrays.asList(
 									ProductOption.BASIC, ProductOption.SUMMARY, ProductOption.DESCRIPTION, ProductOption.CATEGORIES,
 									ProductOption.STOCK, ProductOption.SELLER));
 
 							final BuyBoxModel buyboxmodel = buyBoxFacade.getpriceForUssid(entryModel.getUssid());
+
 							double price = 0.0;
 							if (null != buyboxmodel)
 							{
@@ -5245,20 +5552,42 @@ public class AccountPageController extends AbstractMplSearchPageController
 								final List<SellerInformationData> sellerDatas = productData1.getSeller();
 								for (final SellerInformationData sellerData : sellerDatas)
 								{
-									if (sellerData.getUssid().equals(entryModel.getUssid()))
+									if (MarketplacecommerceservicesConstants.FINEJEWELLERY
+											.equalsIgnoreCase(productData1.getRootCategory()))
 									{
-										wishlistProductData.setSellerInfoData(sellerData);
-
-										if (sellerData.getAvailableStock() <= 0)
+										if (buyboxmodel.getPUSSID().equals(sellerData.getUssid()))
 										{
-											wishlistProductData.setIsOutOfStock(ModelAttributetConstants.Y_CAPS_VAL);
-										}
-										else
-										{
-											wishlistProductData.setIsOutOfStock(ModelAttributetConstants.N_CAPS_VAL);
-										}
+											wishlistProductData.setSellerInfoData(sellerData);
 
-										break;
+											if (buyboxmodel.getAvailable() <= 0)
+											{
+												wishlistProductData.setIsOutOfStock(ModelAttributetConstants.Y_CAPS_VAL);
+											}
+											else
+											{
+												wishlistProductData.setIsOutOfStock(ModelAttributetConstants.N_CAPS_VAL);
+											}
+											available = buyboxmodel.getAvailable();
+											break;
+										}
+									}
+									else
+									{
+										if (sellerData.getUssid().equals(entryModel.getUssid()))
+										{
+											wishlistProductData.setSellerInfoData(sellerData);
+
+											if (sellerData.getAvailableStock() <= 0)
+											{
+												wishlistProductData.setIsOutOfStock(ModelAttributetConstants.Y_CAPS_VAL);
+											}
+											else
+											{
+												wishlistProductData.setIsOutOfStock(ModelAttributetConstants.N_CAPS_VAL);
+											}
+
+											break;
+										}
 									}
 								}
 								wishlistProductData.setWishlistAddedDate(simpleDateFormat.format(entryModel.getAddedDate()));
@@ -5271,7 +5600,7 @@ public class AccountPageController extends AbstractMplSearchPageController
 							showSizeGuideForFA(entryModel.getProduct(), map, model);
 							wpDataList.add(wishlistProductData);
 						}
-
+						LOG.debug("Step6-************************Wishlist");
 					}
 				}
 
@@ -5285,6 +5614,8 @@ public class AccountPageController extends AbstractMplSearchPageController
 
 			}
 			sessionService.setAttribute(ModelAttributetConstants.MY_WISHLIST_FLAG, ModelAttributetConstants.Y_CAPS_VAL);
+
+			model.addAttribute(ModelAttributetConstants.BUYBOX_AVAILABLE, available);
 
 			model.addAttribute(ModelAttributetConstants.IS_DELISTED, isDelisted);
 			model.addAttribute(ModelAttributetConstants.WISHLIST_SIZE, pageSizeInWl);
@@ -5537,12 +5868,14 @@ public class AccountPageController extends AbstractMplSearchPageController
 						final String url = request.getContextPath() + RequestMappingUrlConstants.LINK_MY_ACCOUNT
 								+ RequestMappingUrlConstants.LINK_VIEW_PARTICULAR_WISHLIST + "?particularWishlist="
 								+ latestThreeWishList.get(i).getName();
+
 						wishlistJson
 								.put(ControllerConstants.Views.Fragments.Account.WishlistName, latestThreeWishList.get(i).getName());
 
 
 						wishlistJson.put(ControllerConstants.Views.Fragments.Account.WishlistSize, latestThreeWishList.get(i)
 								.getEntries().size());
+
 						wishlistJson.put(ControllerConstants.Views.Fragments.Account.WishlistUrl, url);
 						jsonArray.put(wishlistJson);
 					}
@@ -5556,12 +5889,14 @@ public class AccountPageController extends AbstractMplSearchPageController
 						final String url = request.getContextPath() + RequestMappingUrlConstants.LINK_MY_ACCOUNT
 								+ RequestMappingUrlConstants.LINK_VIEW_PARTICULAR_WISHLIST + "?particularWishlist="
 								+ latestThreeWishList.get(i).getName();
+
 						wishlistJson
 								.put(ControllerConstants.Views.Fragments.Account.WishlistName, latestThreeWishList.get(i).getName());
 
 
 						wishlistJson.put(ControllerConstants.Views.Fragments.Account.WishlistSize, latestThreeWishList.get(i)
 								.getEntries().size());
+
 						wishlistJson.put(ControllerConstants.Views.Fragments.Account.WishlistUrl, url);
 						jsonArray.put(wishlistJson);
 					}
@@ -5740,6 +6075,8 @@ public class AccountPageController extends AbstractMplSearchPageController
 
 			ExceptionUtil.etailNonBusinessExceptionHandler(new EtailNonBusinessExceptions(e,
 					MarketplacecommerceservicesConstants.E0000));
+
+
 			return frontEndErrorHelper.callNonBusinessError(model, MessageConstants.SYSTEM_ERROR_PAGE_NON_BUSINESS);
 		}
 	}
@@ -5766,6 +6103,7 @@ public class AccountPageController extends AbstractMplSearchPageController
 
 			final RedirectAttributes redirectAttributes) throws CMSItemNotFoundException, NullPointerException, JSONException,
 			MalformedURLException
+
 	{
 		try
 		{
@@ -6525,6 +6863,7 @@ public class AccountPageController extends AbstractMplSearchPageController
 													&& null != catModel.getMedias().get(i).getMediaFormat().getQualifier()
 													&& catModel.getMedias().get(i).getMediaFormat().getQualifier()
 															.equalsIgnoreCase(imageDimension))
+
 											{
 												oData.setImage(catModel.getMedias().get(i).getURL2());
 											}
@@ -6735,6 +7074,7 @@ public class AccountPageController extends AbstractMplSearchPageController
 													&& null != catModel.getMedias().get(i).getMediaFormat().getQualifier()
 													&& catModel.getMedias().get(i).getMediaFormat().getQualifier()
 															.equalsIgnoreCase(imageDimension))
+
 											{
 												oData.setImage(catModel.getMedias().get(i).getURL2());
 											}
@@ -6822,6 +7162,7 @@ public class AccountPageController extends AbstractMplSearchPageController
 									&& null != categoryLineItem.getMedias().get(i).getMediaFormat().getQualifier()
 									&& categoryLineItem.getMedias().get(i).getMediaFormat().getQualifier()
 											.equalsIgnoreCase(imageDimension))
+
 							{
 								selCategoryData.setImage(categoryLineItem.getMedias().get(i).getURL2());
 							}
@@ -6863,6 +7204,7 @@ public class AccountPageController extends AbstractMplSearchPageController
 									&& null != categoryLineItem.getMedias().get(i).getMediaFormat().getQualifier()
 									&& categoryLineItem.getMedias().get(i).getMediaFormat().getQualifier()
 											.equalsIgnoreCase(imageDimension))
+
 							{
 								selCategoryData.setImage(categoryLineItem.getMedias().get(i).getURL2());
 							}
@@ -7589,6 +7931,8 @@ public class AccountPageController extends AbstractMplSearchPageController
 
 			ExceptionUtil.etailNonBusinessExceptionHandler(new EtailNonBusinessExceptions(e,
 					MarketplacecommerceservicesConstants.E0000));
+
+
 			jsonMap.put(ERROR_OCCURED, ERROR_RESP);
 		}
 		return null;
@@ -7740,6 +8084,7 @@ public class AccountPageController extends AbstractMplSearchPageController
 	public String changeDeliveryAddress(@PathVariable final String orderCode,
 			@ModelAttribute("addressForm") final AccountAddressForm addressForm, final Model model) throws CMSItemNotFoundException,
 			UnsupportedEncodingException
+
 	{
 		final String errorMsg = mplAddressValidator.validate(addressForm);
 		//Validate the address
@@ -7949,8 +8294,9 @@ public class AccountPageController extends AbstractMplSearchPageController
 			ServicesUtil.validateParameterNotNull(orderCode, "orderCode must not be null");
 			if (StringUtils.isNotEmpty(entryData))
 			{
-				final RescheduleDataList rescheduleDataList = (RescheduleDataList) GenericUtilityMethods.jsonToObject(
-						RescheduleDataList.class, entryData);
+				final RescheduleDataList rescheduleDataList = (RescheduleDataList) GenericUtilityMethods
+
+				.jsonToObject(RescheduleDataList.class, entryData);
 				if (rescheduleDataList != null)
 				{
 					// if Exiting session in key related value is available we need to remove first
@@ -8027,6 +8373,4 @@ public class AccountPageController extends AbstractMplSearchPageController
 		}
 
 	}
-
-
 }

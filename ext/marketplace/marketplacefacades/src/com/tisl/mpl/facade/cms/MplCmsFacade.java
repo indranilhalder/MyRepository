@@ -8,10 +8,12 @@ import de.hybris.platform.cms2.model.pages.ContentPageModel;
 import de.hybris.platform.commerceservices.search.pagedata.PageableData;
 
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
 import com.tisl.mpl.facades.cms.data.CollectionPageData;
+import com.tisl.mpl.facades.cms.data.FooterLinkData;
 import com.tisl.mpl.facades.cms.data.HeroProductData;
 import com.tisl.mpl.facades.cms.data.MplPageData;
 import com.tisl.mpl.facades.cms.data.PageData;
@@ -96,4 +98,11 @@ public interface MplCmsFacade
 	 * @return
 	 */
 	FooterComponentData getContentSlotData(String slotId);
+
+	/**
+	 * TPR-5733
+	 *
+	 * @return List<List<FooterLinkData>>
+	 */
+	Map<Integer, Map<Integer, FooterLinkData>> getFooterLinkData();
 }

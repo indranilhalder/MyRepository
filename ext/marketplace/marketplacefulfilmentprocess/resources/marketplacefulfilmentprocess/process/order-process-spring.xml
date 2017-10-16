@@ -22,6 +22,14 @@
     <context:annotation-config/>
 
 	<!-- Order Process Actions -->
+	
+	<!-- TPR-1348 -->
+	<bean id="autoRefundInitiateAction" class="com.tisl.mpl.fulfilmentprocess.actions.order.AutoRefundInitiateAction"  parent="abstractAction">
+		<property name="modelService" ref="modelService" />
+		<property name="mplNotificationSaveService" ref="mplNotificationSaveService" />
+		<property name="mplPaymentService" ref="mplPaymentService" />
+	</bean>
+	<!-- TPR-1348 Ends -->
 
 	<bean id="abstractOrderAction" class="com.tisl.mpl.fulfilmentprocess.actions.order.AbstractOrderAction"  abstract="true" parent="abstractAction">
 		<property name="timeService" ref="timeService"/>

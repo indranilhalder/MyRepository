@@ -4,6 +4,7 @@
 package com.tisl.mpl.marketplacecommerceservices.daos;
 
 import de.hybris.platform.catalog.model.classification.ClassAttributeAssignmentModel;
+import de.hybris.platform.core.model.product.ProductModel;
 
 import java.util.Date;
 import java.util.List;
@@ -26,6 +27,9 @@ public interface BuyBoxDao
 
 	List<BuyBoxModel> buyBoxPrice(String ProductCode) throws EtailNonBusinessExceptions;
 
+	//added for jewellery
+	public List<BuyBoxModel> buyBoxPriceForJewellery(String pcmUssid) throws EtailNonBusinessExceptions;
+
 	List<BuyBoxModel> getBuyboxPricesForSearch(String ProductCode) throws EtailNonBusinessExceptions;
 
 	List<BuyBoxModel> invalidatePkofBuybox(Date currenttime) throws EtailNonBusinessExceptions;
@@ -42,7 +46,10 @@ public interface BuyBoxDao
 	RichAttributeModel getRichAttributeData(String ussid) throws EtailNonBusinessExceptions;
 
 	//get seller details
-	Set<Map<BuyBoxModel, RichAttributeModel>> getsellersDetails(String productCode) throws EtailNonBusinessExceptions;
+	//CKD: TPR-3809
+	//Set<Map<BuyBoxModel, RichAttributeModel>> getsellersDetails(String productCode) throws EtailNonBusinessExceptions;
+	Set<Map<BuyBoxModel, RichAttributeModel>> getsellersDetails(String productCode, String prodCatType)
+			throws EtailNonBusinessExceptions;
 
 	public List<BuyBoxModel> buyBoxStockForSeller(final String sellerID);
 
@@ -65,12 +72,19 @@ public interface BuyBoxDao
 	 */
 	public List<BuyBoxModel> buyboxPriceForMicrosite(String productCode, String pdpproduct) throws EtailNonBusinessExceptions;
 
+	/**
+	 * @param sellerArticleSKUList
+	 * @return
+	 */
+	public List<BuyBoxModel> getBuyboxSellerPricesForSearch(List<String> sellerArticleSKUList) throws EtailNonBusinessExceptions;
+
 	//INC144315542_INC144314878_INC_11113
 
 	public List<BuyBoxModel> getBuyboxPricesForSizeVariant(String productCode) throws EtailNonBusinessExceptions;
 
 	// TISPRD-8944
 	List<BuyBoxModel> buyBoxPriceMobile(String ProductCode) throws EtailNonBusinessExceptions;
+
 	/**
 	 * TPR-5712 dao to get price for all the sellers
 	 *
@@ -78,5 +92,22 @@ public interface BuyBoxDao
 	 * @return
 	 */
 	public List<BuyBoxModel> buyBoxPriceForAllSeller(final String productCode);
+
+	//for fine jewellery pdp
+	public ProductModel getProductDetailsByProductCode(final String productcode);
+
+	/**
+	 * @param ussID
+	 * @return
+	 */
+	public List<BuyBoxModel> buyboxPriceForJewelleryWithVariant(String ussID);
+
+	/**
+	 * @param selectedUSSID
+	 * @return
+	 */
+	String findPussid(String selectedUSSID);
+
+	public List<BuyBoxModel> getVariantListForPriceRange(final String code);
 
 }

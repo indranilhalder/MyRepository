@@ -28,14 +28,19 @@ import de.hybris.platform.cms2.model.pages.AbstractPageModel;
 import de.hybris.platform.cms2.model.pages.ContentPageModel;
 import de.hybris.platform.commercefacades.order.data.CartData;
 import de.hybris.platform.commerceservices.customer.DuplicateUidException;
+import de.hybris.platform.servicelayer.config.ConfigurationService;
 
+import java.util.Arrays;
 import java.util.Collections;
+import java.util.List;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.apache.commons.lang.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.stereotype.Controller;
@@ -46,6 +51,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.tisl.lux.facade.CommonUtils;
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.exception.EtailBusinessExceptions;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
@@ -72,6 +78,12 @@ public class CheckoutLoginController extends AbstractLoginPageController
 	private final String BZ_ERROR_CMS_PAGE = "businessErrorFound";
 	private final String NBZ_ERROR_CMS_PAGE = "nonBusinessErrorFound";
 
+
+	//TPR-6272 starts here
+	@Autowired
+	private ConfigurationService configurationService;
+	//TPR-6272 ends here
+
 	@Resource(name = "checkoutFlowFacade")
 	private CheckoutFlowFacade checkoutFlowFacade;
 
@@ -89,6 +101,9 @@ public class CheckoutLoginController extends AbstractLoginPageController
 
 	@Resource(name = "registerPageValidator")
 	private RegisterPageValidator registerPageValidator;
+
+	@Autowired
+	private CommonUtils commonUtils;
 
 	/**
 	 * @return the resourceBreadcrumbBuilder
@@ -233,7 +248,15 @@ public class CheckoutLoginController extends AbstractLoginPageController
 				GlobalMessages.addErrorMessage(model, "login.error.account.not.found.title");
 			}
 
-			return getView();
+			if (commonUtils.isLuxurySite())
+			{
+				return "redirect:/?showPopup=true";
+			}
+			else
+			{
+				return getView();
+			}
+
 		}
 		catch (final EtailBusinessExceptions e)
 		{
@@ -445,6 +468,7 @@ public class CheckoutLoginController extends AbstractLoginPageController
 			final BindingResult bindingResult, final Model model, final HttpServletRequest request,
 			final HttpServletResponse response, final RedirectAttributes redirectModel) throws CMSItemNotFoundException
 	{
+		boolean isExist = false; //TPR-6272
 		try
 		{
 			if (bindingResult.hasErrors())
@@ -462,7 +486,65 @@ public class CheckoutLoginController extends AbstractLoginPageController
 			data.setAffiliateId(form.getAffiliateId());
 			try
 			{
-				getRegisterCustomerFacade().register(data);
+				//TPR-6272 starts here
+				int platformNumber = MarketplacecommerceservicesConstants.PLATFORM_ZERO;
+				//added for IQA starts here
+				final String userAgentHeader = configurationService.getConfiguration().getString("useragent.responsive.header");
+				String userAgent = null;
+
+				if (StringUtils.isNotEmpty(userAgentHeader))
+				{
+					userAgent = request.getHeader(userAgentHeader);
+
+					if (StringUtils.isNotEmpty(userAgent))
+					{
+						userAgent = userAgent.toLowerCase();
+					}
+				}
+				//added for IQA ends here
+				if (StringUtils.isNotEmpty(userAgent))
+				{
+					String mobileDevices = configurationService.getConfiguration().getString("useragent.responsive.mobile");
+
+					//added for IQA starts here
+					if (StringUtils.isNotEmpty(mobileDevices))
+					{
+						mobileDevices = mobileDevices.toLowerCase();
+					}
+					//added for IQA ends here
+
+					if (StringUtils.isNotEmpty(mobileDevices))
+					{
+						final List<String> mobileDeviceArray = Arrays.asList(mobileDevices
+								.split(MarketplacecommerceservicesConstants.COMMACONSTANT));
+						if (null != mobileDeviceArray && mobileDeviceArray.size() > 0)//IQA added here
+						{
+							for (final String mobDevice : mobileDeviceArray)
+							{
+								if (userAgent.contains(mobDevice))
+								{
+									isExist = true;
+									break;
+								}
+							}
+						}
+					}
+					if (isExist)
+					{
+						platformNumber = MarketplacecommerceservicesConstants.PLATFORM_FIVE;//for mobile responsive
+					}
+					else
+					{
+						platformNumber = MarketplacecommerceservicesConstants.PLATFORM_ONE;//for mkt desktop web
+					}
+				}
+				else
+				{
+					platformNumber = MarketplacecommerceservicesConstants.PLATFORM_ONE;//for mkt desktop web
+				}
+				LOG.debug("The platform number is " + platformNumber);
+				//TPR-6272 ends here
+				getRegisterCustomerFacade().register(data, platformNumber);//TPR-6272 parameter platformNumber added
 				getAutoLoginStrategy().login(form.getEmail().toLowerCase(), form.getPwd(), request, response);
 
 				GlobalMessages.addFlashMessage(redirectModel, GlobalMessages.CONF_MESSAGES_HOLDER,

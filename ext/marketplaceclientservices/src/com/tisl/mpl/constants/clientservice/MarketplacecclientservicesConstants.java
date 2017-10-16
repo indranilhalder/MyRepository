@@ -136,7 +136,9 @@ public class MarketplacecclientservicesConstants
 	public static final String OMS_INVENTORY_RESV_REALTIMECALL = "oms.inventory.reservation.realtimecall";
 	public static final String OMS_INVENTORY_RESV_REALTIMECALL_MOCK_URLFIRSTPHASE = "oms.inventory.reservation.mock.urlfirstxmlphase";
 	public static final String OMS_INVENTORY_RESV_REALTIMECALL_MOCK_URLSECONDPHASE = "oms.inventory.reservation.mock.urlsecondxmlphase";
+	public static final String OMS_INVENTORY_RESV_REALTIMECALL_MOCK_URLJEWELPHASE = "oms.inventory.reservation.mock.urljewelxmlphase";
 	public static final String OMS_INVENTORY_RESV_REALTIMECALL_MOCK_URLTHIRDPHASE = "oms.inventory.reservation.mock.urlthirdxmlphase";
+	public static final String OMS_INVENTORY_RESV_REALTIMECALL_MOCK_JEWLUSSID = "oms.inventory.reservation.mock.urljewelxmlphaseUssid";
 	public static final String OMS_INVENTORY_RESV_SUCCESS = "SUCCESS";
 	public static final String Y = "Y";
 	public static final String N = "N";
@@ -176,6 +178,9 @@ public class MarketplacecclientservicesConstants
 	public static final String MEDIA = "mediaItems";
 	public static final String CLOTHING = "Clothing";
 	public static final String FOOTWEAR = "Footwear";
+	//Added for jewellery
+	public static final String FINEJEWELLERY = "FineJewellery";
+	public static final String FASHIONJEWELLERY = "FashionJewellery";
 	public static final String FIT = "Fit";
 	public static final String EASE_OF_USE = "Ease of use";
 	public static final String VALUE_FOR_MONEY = "Value for Money";
@@ -269,4 +274,40 @@ public class MarketplacecclientservicesConstants
 	public static final String NO = "NO".intern();
 
 	public static final String OMSTIMEOUT = "5000";
+	public static final String LUXURYPREFIX = "lux";
+	public static final String LUXURY_RATING_SECRETKEY = "luxury.gigya.secretkey".intern();
+
+	//For sending pancard details to SP through PI and save data into database for new pancard entry
+	public static final String PENDING_FOR_VERIFICATION = "PENDING_FOR_VERIFICATION";
+	public static final String APPROVED = "APPROVED".intern();
+	public static final String REJECTED = "REJECTED".intern();
+	public static final String PAN_REJECTED = "PAN_REJECTED".intern();
+	public static final String NA = "NA".intern();
+	public static final String PANCARD = "PANCARD";
+	public static final String PANCARD_UPLOAD_URL = "pancard.upload.pi.url";
+
+	public static final String LUXURY_RATING_APIKEY = "luxury.gigya.apikey".intern();
+
+	//TPR-5667
+	public static final String SAMSUNG_API_USERNAME = "samsung.api.username";
+	public static final String SAMSUNG_API_PASSWORD = "samsung.api.password";
+	public static final String SAMSUNG_API_URL = "samsung.api.url";
+	public static final String SAMSUNG_HTTP_ERROR_CODE = "samsung.http.error.code";
+	public static final String SAMSUNG_CONNECTION_TIMEOUT = "samsung.connection.timeout";
+	public static final String SAMSUNG_READ_TIMEOUT = "samsung.read.timeout";
+	public static final String S0000_EXCEP = "S0000";
+	public static final String S0001_EXCEP = "S0001";
+	public static final String S0002_EXCEP = "S0002";
+	public static final String S0003_EXCEP = "S0003";
+	public static final String SAMSUNG_LOGGER_HEAD = "######## CreateSamsungOrder :: ";
+
+	//INC144319511
+	public static final String EMAIL = "email";
+	public static final String IDENTITIES = "identities";
+	public static final String METHOD_GET_USERINFO = "gigya.getuserinfo.method".intern();
+
+	//PR-4
+	public static final String BULK_SMS_SERVICE_ENABLED = "marketplace.BulkSms.service.enabled";
+	public static final String BULK_SMS_SERVICE_URL = "marketplace.bulksms.service.url";
+
 }

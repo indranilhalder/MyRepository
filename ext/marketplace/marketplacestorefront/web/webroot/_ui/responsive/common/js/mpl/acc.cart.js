@@ -18,7 +18,7 @@ ACC.cart = {
 
 $(function() {
 
-	//if ($("ul#giftYourselfProducts").length) {
+	if ($("ul#giftYourselfProducts").length) {
 		
 		$.ajax({
 			url: ACC.config.encodedContextPath + "/cart/giftlist",
@@ -30,14 +30,15 @@ $(function() {
 					
 				    $("div#wishlistBanner").removeAttr("style");
 				    $("ul#giftYourselfProducts").html(data);
+				    //TISPRDT-2190
+				    $("img.lazy").lazyload();
 				}
 			},
 			 error : function(resp) { 
 
-
 			 } 
 		});
-
+	}
 });
 
 

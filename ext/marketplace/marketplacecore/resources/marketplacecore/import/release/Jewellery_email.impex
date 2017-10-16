@@ -1,0 +1,834 @@
+# Import the CMS content for the site emails
+#
+$storePrefix=mpl
+$contentCatalog=$storePrefixContentCatalog
+$contentCV=catalogVersion(CatalogVersion.catalog(Catalog.id[default=$contentCatalog]),CatalogVersion.version[default=Staged])[default=$contentCatalog:Staged]
+$emailResource=jar:com.tisl.mpl.initialdata.setup.InitialDataSystemSetup&/marketplaceinitialdata/import/coredata/contentCatalogs/$contentCatalog/emails
+
+# Language
+$lang=en   
+
+# CMS components and Email velocity templates
+UPDATE RendererTemplate;code[unique=true];description[lang=$lang];templateScript[lang=$lang,translator=de.hybris.platform.commerceservices.impex.impl.FileLoaderValueTranslator]
+
+
+
+
+# Email velocity templates
+INSERT_UPDATE RendererTemplate;code[unique=true];contextClass;rendererType(code)[default='velocity']
+;mpl_Email_Order_Confirmation_Body;$emailPackageName.OrderNotificationEmailContext
+;mpl_Email_Order_Confirmation_Subject;$emailPackageName.OrderNotificationEmailContext
+
+# Email velocity templates
+INSERT_UPDATE RendererTemplate;code[unique=true];contextClass;rendererType(code)[default='velocity']
+;mpl_Email_Order_Delivery_Body;$emailPackageName.OrderDeliveryEmailContext
+;mpl_Email_Order_Delivery_Subject;$emailPackageName.OrderDeliveryEmailContext
+
+# Email velocity templates
+INSERT_UPDATE RendererTemplate;code[unique=true];contextClass;rendererType(code)[default='velocity']
+;mpl_Email_ShippingConfirmation_Body;$emailPackageName.ShippingConfirmationEmailContext
+;mpl_Email_ShippingConfirmation_Subject;$emailPackageName.ShippingConfirmationEmailContext
+
+# Email velocity templates
+INSERT_UPDATE RendererTemplate;code[unique=true];contextClass;rendererType(code)[default='velocity']
+;mpl_Email_Pancard_Reject_Body;$emailPackageName.PancardRejectEmailContext
+;mpl_Email_Pancard_Reject_Subject;$emailPackageName.PancardRejectEmailContext
+
+
+
+
+# CMS components and Email velocity templates
+UPDATE RendererTemplate;code[unique=true];description[lang=$lang];templateScript[lang=$lang,translator=de.hybris.platform.commerceservices.impex.impl.FileLoaderValueTranslator]
+
+#########OrderConfirmationMail#############
+
+;mpl_Email_Order_Confirmation_Body;"Order Confirmation Email Body";$emailResource/email-orderConfirmationBody.vm
+;mpl_Email_Order_Confirmation_Subject;"Order Confirmation Email Subject";$emailResource/email-orderConfirmationSubject.vm
+
+##############OrderShippedMail##############
+
+;mpl_Email_ShippingConfirmation_Subject;"Shipping Confirmation Subject";$emailResource/email-shippingConfirmationSubject.vm
+;mpl_Email_ShippingConfirmation_Body;"Shipping Confirmation Body";$emailResource/email-shippingConfirmationBody.vm
+
+###############OrderDeliveredMail###############
+
+;mpl_Email_Order_Delivery_Subject;"Order Delivery subject";$emailResource/email-orderDeliveryEmailSubject.vm
+;mpl_Email_Order_Delivery_Body;"Order Delivery Body";$emailResource/email-orderDeliveryEmailBody.vm
+
+
+
+###############PancardRejectMail###############
+
+;mpl_Email_Pancard_Reject_Subject;"Pancard Reject subject";$emailResource/email-pancardRejectEmailSubject.vm
+;mpl_Email_Pancard_Reject_Body;"Pancard Reject Body";$emailResource/email-pancardRejectEmailBody.vm
+
+
+
+
+######################################################  email_content_en_sample_data  #############################################################################################################
+
+# 
+# ImpEx for Responsive Tata Marketplace Site CMS Content 
+# 
+$contentCatalog=mplContentCatalog 
+$contentCV=catalogVersion(CatalogVersion.catalog(Catalog.id[default=$contentCatalog]),CatalogVersion.version[default=Staged])[default=$contentCatalog:Staged] 
+$productCatalog=mplProductCatalog 
+$productCatalogName=MarketPlace Product Catalog
+$productCV=catalogVersion(catalog(id[default=$productCatalog]),version[default='Staged'])[unique=true,default=$productCatalog:Staged] 
+$picture=media(code, $contentCV);
+$siteResource=jar:com.tisl.mpl.initialdata.setup.InitialDataSystemSetup&/marketplaceinitialdata/import/sampledata/contentCatalogs/$contentCatalog
+$jarResourceCms=jar:com.tisl.mpl.initialdata.setup.InitialDataSystemSetup&/marketplaceinitialdata/import/sampledata/cockpits/cmscockpit
+$medias=medias(code, $contentCV);
+$lang=en
+$mediaContainer=media(qualifier, $contentCV)[lang=$lang];
+
+# Load the storefront context root config param
+$storefrontContextRoot=$config-storefrontContextRoot
+
+#################OrderConfirmationMail######################
+
+INSERT_UPDATE Media;$contentCV[unique=true];code[unique=true];realfilename;@media[translator=de.hybris.platform.impex.jalo.media.MediaDataTranslator];mime[default='image/jpeg'];folder(qualifier)[default='images']
+;;/images/theme/OrderConfirmationNewBanner1.png;OrderConfirmationNewBanner1.png;$siteResource/images/theme/OrderConfirmationNewBanner1.png;;
+;;/images/theme/placeh.gif;placeh.gif;$siteResource/images/theme/placeh.gif;;
+;;/images/theme/t_order_placed_active.png;t_order_placed_active.png;$siteResource/images/theme/t_order_placed_active.png;;
+;;/images/theme/Arrow.png;Arrow.png;$siteResource/images/theme/Arrow.png;;
+;;/images/theme/t_order_processed.png;t_order_processed.png;$siteResource/images/theme/t_order_processed.png;;
+;;/images/theme/t_order_delivered.png;t_order_delivered.png;$siteResource/images/theme/t_order_delivered.png;;
+;;/images/theme/t_trust.png;t_trust.png;$siteResource/images/theme/t_trust.png;;
+;;/images/theme/t_PIQ.png;t_PIQ.png;$siteResource/images/theme/t_PIQ.png;;
+;;/images/theme/t_easy_returns.png;t_easy_returns.png;$siteResource/images/theme/t_easy_returns.png;;
+;;/images/theme/t_authentic_brands.png;t_authentic_brands.png;$siteResource/images/theme/t_authentic_brands.png;;
+;;/images/theme/t_free_shipping.png;t_free_shipping.png;$siteResource/images/theme/t_free_shipping.png;;
+;;/images/theme/app_store.png;app_store.png;$siteResource/images/theme/app_store.png;;
+;;/images/theme/google_play.png;google_play.png;$siteResource/images/theme/google_play.png;;
+;;/images/theme/line-grey.png;line-grey.png;$siteResource/images/theme/line-grey.png;;
+;;/images/theme/facebookNew.png;facebookNew.png;$siteResource/images/theme/facebookNew.png;;
+;;/images/theme/twitterNew.png;twitterNew.png;$siteResource/images/theme/twitterNew.png;;
+;;/images/theme/instatramNew.png;instatramNew.png;$siteResource/images/theme/instatramNew.png;;
+;;/images/theme/google_plus.png;google_plus.png;$siteResource/images/theme/google_plus.png;;
+;;/images/theme/ytubeNewImage.png;ytubeNewImage.png;$siteResource/images/theme/ytubeNewImage.png;;
+
+
+# CMS Image Components
+INSERT_UPDATE CMSImageComponent;$contentCV[unique=true];uid[unique=true];$picture[lang=$lang]
+;;OrderConfirmationNewBanner1Image;/images/theme/OrderConfirmationNewBanner1.png;
+;;OrderPlacehImage;/images/theme/placeh.gif;
+;;EmailOrderPlacedImage;/images/theme/t_order_placed_active.png;
+;;EmailArrowImage;/images/theme/Arrow.png;
+;;EmailOrderProcessedImage;/images/theme/t_order_processed.png;
+;;EmailOrderDeliveredImage;/images/theme/t_order_delivered.png;
+;;EmailTataTrustImage;/images/theme/t_trust.png;
+;;EmailCliqNPicImage;/images/theme/t_PIQ.png;
+;;EmailEasyReturnImage;/images/theme/t_easy_returns.png;
+;;EmailAuthenticBrandsImage;/images/theme/t_authentic_brands.png;
+;;EmailFreeShippingImage;/images/theme/t_free_shipping.png;
+;;EmailAppStoreImage;/images/theme/app_store.png;
+;;EmailGooglePlayImage;/images/theme/google_play.png;
+;;EmailLineGreyImage;/images/theme/line-grey.png;
+;;EmailFacebookNewImage;/images/theme/facebookNew.png;
+;;EmailTwitterNewImage;/images/theme/twitterNew.png;
+;;EmailInstaNewImage;/images/theme/instatramNew.png;
+;;EmailGPlusImage;/images/theme/google_plus.png;
+;;EmailYouTubeNewImage;/images/theme/ytubeNewImage.png;
+
+# Content Slots
+INSERT_UPDATE ContentSlot;$contentCV[unique=true];uid[unique=true];cmsComponents(uid,$contentCV)
+;;EmailSiteLogoNewConfSlot;OrderConfirmationNewBanner1Image
+;;EmailPlacehSlot;OrderPlacehImage
+;;EmailOrderPlacedSlot;EmailOrderPlacedImage
+;;EmailArrowSlot;EmailArrowImage
+;;EmailOrderProcessedSlot;EmailOrderProcessedImage
+;;EmailOrderDeliveredSlot;EmailOrderDeliveredImage
+;;EmailTataTrustSlot;EmailTataTrustImage
+;;EmailCliqNPicSlot;EmailCliqNPicImage
+;;EmailEasyReturnSlot;EmailEasyReturnImage
+;;EmailAuthenticBrandsSlot;EmailAuthenticBrandsImage
+;;EmailFreeShippingSlot;EmailFreeShippingImage
+;;EmailAppStoreSlot;EmailAppStoreImage 
+;;EmailGooglePlaySlot;EmailGooglePlayImage
+;;EmailLineGreySlot;EmailLineGreyImage
+;;EmailFacebookNewSlot;EmailFacebookNewImage
+;;EmailTwitterNewSlot;EmailTwitterNewImage
+;;EmailInstaNewSlot;EmailInstaNewImage
+;;EmailGPlusSlot;EmailGPlusImage
+;;EmailYouTubeNewSlot;EmailYouTubeNewImage
+
+
+################OrderShippedMail#####################
+
+INSERT_UPDATE Media;$contentCV[unique=true];code[unique=true];realfilename;@media[translator=de.hybris.platform.impex.jalo.media.MediaDataTranslator];mime[default='image/jpeg'];folder(qualifier)[default='images']
+;;/images/theme/OrderConfirmationNewBanner1.png;OrderConfirmationNewBanner1.png;$siteResource/images/theme/OrderConfirmationNewBanner1.png;;
+;;/images/theme/placeh.gif;placeh.gif;$siteResource/images/theme/placeh.gif;;
+;;/images/theme/t_order_placed_active.png;t_order_placed_active.png;$siteResource/images/theme/t_order_placed_active.png;;
+;;/images/theme/Arrow.png;Arrow.png;$siteResource/images/theme/Arrow.png;;
+;;/images/theme/t_order_processed_active.png;t_order_processed.png;$siteResource/images/theme/t_order_processed_active.png;;
+;;/images/theme/t_order_delivered.png;t_order_delivered.png;$siteResource/images/theme/t_order_delivered.png;;
+;;/images/theme/t_trust.png;t_trust.png;$siteResource/images/theme/t_trust.png;;
+;;/images/theme/t_PIQ.png;t_PIQ.png;$siteResource/images/theme/t_PIQ.png;;
+;;/images/theme/t_easy_returns.png;t_easy_returns.png;$siteResource/images/theme/t_easy_returns.png;;
+;;/images/theme/t_authentic_brands.png;t_authentic_brands.png;$siteResource/images/theme/t_authentic_brands.png;;
+;;/images/theme/t_free_shipping.png;t_free_shipping.png;$siteResource/images/theme/t_free_shipping.png;;
+;;/images/theme/app_store.png;app_store.png;$siteResource/images/theme/app_store.png;;
+;;/images/theme/google_play.png;google_play.png;$siteResource/images/theme/google_play.png;;
+;;/images/theme/line-grey.png;line-grey.png;$siteResource/images/theme/line-grey.png;;
+;;/images/theme/facebookNew.png;facebookNew.png;$siteResource/images/theme/facebookNew.png;;
+;;/images/theme/twitterNew.png;twitterNew.png;$siteResource/images/theme/twitterNew.png;;
+;;/images/theme/instatramNew.png;instatramNew.png;$siteResource/images/theme/instatramNew.png;;
+;;/images/theme/google_plus.png;google_plus.png;$siteResource/images/theme/google_plus.png;;
+;;/images/theme/ytubeNewImage.png;ytubeNewImage.png;$siteResource/images/theme/ytubeNewImage.png;;
+
+;;/images/theme/jewelProduct_1.jpg;jewelProduct_1.jpg;$siteResource/images/theme/jewelProduct_1.jpg;;
+;;/images/theme/jewelProduct_2.jpg;jewelProduct_2.jpg;$siteResource/images/theme/jewelProduct_2.jpg;;
+
+
+# CMS Image Components
+INSERT_UPDATE CMSImageComponent;$contentCV[unique=true];uid[unique=true];$picture[lang=$lang]
+;;OrderConfirmationNewBanner1Imagesh;/images/theme/OrderConfirmationNewBanner1.png;
+;;OrderPlacehImagesh;/images/theme/placeh.gif;
+;;EmailOrderPlacedImagesh;/images/theme/t_order_placed_active.png;
+;;EmailArrowImagesh;/images/theme/Arrow.png;
+;;EmailOrderProcessedImagesh;/images/theme/t_order_processed_active.png;
+;;EmailOrderDeliveredImagesh;/images/theme/t_order_delivered.png;
+;;EmailTataTrustImagesh;/images/theme/t_trust.png;
+;;EmailCliqNPicImagesh;/images/theme/t_PIQ.png;
+;;EmailEasyReturnImagesh;/images/theme/t_easy_returns.png;
+;;EmailAuthenticBrandsImagesh;/images/theme/t_authentic_brands.png;
+;;EmailFreeShippingImagesh;/images/theme/t_free_shipping.png;
+;;EmailAppStoreImagesh;/images/theme/app_store.png;
+;;EmailGooglePlayImagesh;/images/theme/google_play.png;
+;;EmailLineGreyImagesh;/images/theme/line-grey.png;
+;;EmailFacebookNewImagesh;/images/theme/facebookNew.png;
+;;EmailTwitterNewImagesh;/images/theme/twitterNew.png;
+;;EmailInstaNewImagesh;/images/theme/instatramNew.png;
+;;EmailGPlusImagesh;/images/theme/google_plus.png;
+;;EmailYouTubeNewImagesh;/images/theme/ytubeNewImage.png;
+
+;;ForwardSealImage;/images/theme/jewelProduct_1.jpg
+;;ReverseSealImage;/images/theme/jewelProduct_2.jpg
+
+# Content Slots
+INSERT_UPDATE ContentSlot;$contentCV[unique=true];uid[unique=true];cmsComponents(uid,$contentCV)
+;;EmailSiteLogoConfSlotShipping;OrderConfirmationNewBanner1Imagesh
+;;EmailPlacehSlotShipping;OrderPlacehImagesh
+;;EmailOrderPlacedSlotShipping;EmailOrderPlacedImagesh
+;;EmailArrowSlotShipping;EmailArrowImagesh
+;;EmailOrderProcessedSlotShipping;EmailOrderProcessedImagesh
+;;EmailOrderDeliveredSlotShipping;EmailOrderDeliveredImagesh
+;;EmailTataTrustSlotShipping;EmailTataTrustImagesh
+;;EmailCliqNPicSlotShipping;EmailCliqNPicImagesh
+;;EmailEasyReturnSlotShipping;EmailEasyReturnImagesh
+;;EmailAuthenticBrandsSlotShipping;EmailAuthenticBrandsImagesh
+;;EmailFreeShippingSlotShipping;EmailFreeShippingImagesh
+;;EmailAppStoreSlotShiiping;EmailAppStoreImagesh
+;;EmailGooglePlaySlotShipping;EmailGooglePlayImagesh
+;;EmailLineGreySlotShipping;EmailLineGreyImagesh
+;;EmailFacebookSlotShipping;EmailFacebookNewImagesh
+;;EmailTwitterSlotShipping;EmailTwitterNewImagesh
+;;EmailInstaSlotShipping;EmailInstaNewImagesh
+;;EmailGPlusSlotShipping;EmailGPlusImagesh
+;;EmailYouTubeSlotShipping;EmailYouTubeNewImagesh
+
+;;EmailForwardSealSlotShipping;ForwardSealImage
+;;EmailReverseSealSlotShipping;ReverseSealImage
+
+############OrderDeliveredMail##################
+
+INSERT_UPDATE Media;$contentCV[unique=true];code[unique=true];realfilename;@media[translator=de.hybris.platform.impex.jalo.media.MediaDataTranslator];mime[default='image/jpeg'];folder(qualifier)[default='images']
+;;/images/theme/OrderConfirmationNewBanner1.png;OrderConfirmationNewBanner1.png;$siteResource/images/theme/OrderConfirmationNewBanner1.png;;
+;;/images/theme/placeh.gif;placeh.gif;$siteResource/images/theme/placeh.gif;;
+;;/images/theme/t_order_placed_active.png;t_order_placed_active.png;$siteResource/images/theme/t_order_placed_active.png;;
+;;/images/theme/Arrow.png;Arrow.png;$siteResource/images/theme/Arrow.png;;
+;;/images/theme/t_order_processed_active.png;t_order_processed_active.png;$siteResource/images/theme/t_order_processed_active.png;;
+;;/images/theme/t_order_delivered_active.png;t_order_delivered_active.png;$siteResource/images/theme/t_order_delivered_active.png;;
+;;/images/theme/t_trust.png;t_trust.png;$siteResource/images/theme/t_trust.png;;
+;;/images/theme/t_PIQ.png;t_PIQ.png;$siteResource/images/theme/t_PIQ.png;;
+;;/images/theme/t_easy_returns.png;t_easy_returns.png;$siteResource/images/theme/t_easy_returns.png;;
+;;/images/theme/t_authentic_brands.png;t_authentic_brands.png;$siteResource/images/theme/t_authentic_brands.png;;
+;;/images/theme/t_free_shipping.png;t_free_shipping.png;$siteResource/images/theme/t_free_shipping.png;;
+;;/images/theme/app_store.png;app_store.png;$siteResource/images/theme/app_store.png;;
+;;/images/theme/google_play.png;google_play.png;$siteResource/images/theme/google_play.png;;
+;;/images/theme/line-grey.png;line-grey.png;$siteResource/images/theme/line-grey.png;;
+;;/images/theme/facebookNew.png;facebookNew.png;$siteResource/images/theme/facebookNew.png;;
+;;/images/theme/twitterNew.png;twitterNew.png;$siteResource/images/theme/twitterNew.png;;
+;;/images/theme/instatramNew.png;instatramNew.png;$siteResource/images/theme/instatramNew.png;;
+;;/images/theme/google_plus.png;google_plus.png;$siteResource/images/theme/google_plus.png;;
+;;/images/theme/ytubeNewImage.png;ytubeNewImage.png;$siteResource/images/theme/ytubeNewImage.png;;
+
+;;/images/theme/jewelProduct_1.jpg;jewelProduct_1.jpg;$siteResource/images/theme/jewelProduct_1.jpg;;
+;;/images/theme/jewelProduct_2.jpg;jewelProduct_2.jpg;$siteResource/images/theme/jewelProduct_2.jpg;;
+
+# CMS Image Components
+INSERT_UPDATE CMSImageComponent;$contentCV[unique=true];uid[unique=true];$picture[lang=$lang]
+;;OrderConfirmationNewBanner1Imagedl;/images/theme/OrderConfirmationNewBanner1.png;
+;;OrderPlacehImagedl;/images/theme/placeh.gif;
+;;EmailOrderPlacedImagedl;/images/theme/t_order_placed_active.png;
+;;EmailArrowImagedl;/images/theme/Arrow.png;
+;;EmailOrderProcessedImagedl;/images/theme/t_order_processed_active.png;
+;;EmailOrderDeliveredImagedl;/images/theme/t_order_delivered_active.png;
+;;EmailTataTrustImagedl;/images/theme/t_trust.png;
+;;EmailCliqNPicImagedl;/images/theme/t_PIQ.png;
+;;EmailEasyReturnImagedl;/images/theme/t_easy_returns.png;
+;;EmailAuthenticBrandsImagedl;/images/theme/t_authentic_brands.png;
+;;EmailFreeShippingImagedl;/images/theme/t_free_shipping.png;
+;;EmailAppStoreImagedl;/images/theme/app_store.png;
+;;EmailGooglePlayImagedl;/images/theme/google_play.png;
+;;EmailLineGreyImagedl;/images/theme/line-grey.png;
+;;EmailFacebookNewImagedl;/images/theme/facebookNew.png;
+;;EmailTwitterNewImagedl;/images/theme/twitterNew.png;
+;;EmailInstaNewImagedl;/images/theme/instatramNew.png;
+;;EmailGPlusImagedl;/images/theme/google_plus.png;
+;;EmailYouTubeNewImagedl;/images/theme/ytubeNewImage.png;
+
+;;ForwardSealImageDelivered;/images/theme/jewelProduct_1.jpg
+;;ReverseSealImageDelivered;/images/theme/jewelProduct_2.jpg
+
+# Content Slots
+INSERT_UPDATE ContentSlot;$contentCV[unique=true];uid[unique=true];cmsComponents(uid,$contentCV)
+;;DeliveryEmailSiteLogoConfSlot;OrderConfirmationNewBanner1Imagedl
+;;DeliveryEmailPlacehSlot;OrderPlacehImagedl
+;;DeliveryEmailOrderPlacedSlot;EmailOrderPlacedImagedl
+;;DeliveryEmailArrowSlot;EmailArrowImagedl
+;;DeliveryEmailArrowSlot;EmailArrowImagedl
+;;DeliveryEmailOrderProcessedSlot;EmailOrderProcessedImagedl
+;;DeliveryEmailOrderDeliveredSlot;EmailOrderDeliveredImagedl
+;;DeliveryEmailTataTrustSlot;EmailTataTrustImagedl
+;;DeliveryEmailCliqNPicSlot;EmailCliqNPicImagedl
+;;DeliveryEmailEasyReturnSlot;EmailEasyReturnImagedl
+;;DeliveryEmailAuthenticBrandsSlot;EmailAuthenticBrandsImagedl
+;;DeliveryEmailFreeShippingSlot;EmailFreeShippingImagedl
+;;DeliveryEmailAppStoreSlot;EmailAppStoreImagedl
+;;DeliveryEmailGooglePlaySlot;EmailGooglePlayImagedl
+;;DeliveryEmailLineGreySlot;EmailLineGreyImagedl
+;;DeliveryEmailFacebookSlot;EmailFacebookNewImagedl
+;;DeliveryEmailTwitterSlot;EmailTwitterNewImagedl
+;;DeliveryEmailInstaSlot;EmailInstaNewImagedl
+;;DeliveryEmailGPlusSlot;EmailGPlusImagedl
+;;DeliveryEmailYouTubeSlot;EmailYouTubeNewImagedl
+
+;;DeliveryEmailForwardSealSlot;ForwardSealImageDelivered
+;;DeliveryEmailReverseSealSlot;ReverseSealImageDelivered
+
+
+
+
+
+
+
+#################PancardRejectMail######################
+
+INSERT_UPDATE Media;$contentCV[unique=true];code[unique=true];realfilename;@media[translator=de.hybris.platform.impex.jalo.media.MediaDataTranslator];mime[default='image/jpeg'];folder(qualifier)[default='images']
+;;/images/theme/OrderConfirmationNewBanner1.png;OrderConfirmationNewBanner1.png;$siteResource/images/theme/OrderConfirmationNewBanner1.png;;
+;;/images/theme/placeh.gif;placeh.gif;$siteResource/images/theme/placeh.gif;;
+;;/images/theme/t_order_placed_active.png;t_order_placed_active.png;$siteResource/images/theme/t_order_placed_active.png;;
+;;/images/theme/Arrow.png;Arrow.png;$siteResource/images/theme/Arrow.png;;
+;;/images/theme/t_order_processed.png;t_order_processed.png;$siteResource/images/theme/t_order_processed.png;;
+;;/images/theme/t_order_delivered.png;t_order_delivered.png;$siteResource/images/theme/t_order_delivered.png;;
+;;/images/theme/t_trust.png;t_trust.png;$siteResource/images/theme/t_trust.png;;
+;;/images/theme/t_PIQ.png;t_PIQ.png;$siteResource/images/theme/t_PIQ.png;;
+;;/images/theme/t_easy_returns.png;t_easy_returns.png;$siteResource/images/theme/t_easy_returns.png;;
+;;/images/theme/t_authentic_brands.png;t_authentic_brands.png;$siteResource/images/theme/t_authentic_brands.png;;
+;;/images/theme/t_free_shipping.png;t_free_shipping.png;$siteResource/images/theme/t_free_shipping.png;;
+;;/images/theme/app_store.png;app_store.png;$siteResource/images/theme/app_store.png;;
+;;/images/theme/google_play.png;google_play.png;$siteResource/images/theme/google_play.png;;
+;;/images/theme/line-grey.png;line-grey.png;$siteResource/images/theme/line-grey.png;;
+;;/images/theme/facebookNew.png;facebookNew.png;$siteResource/images/theme/facebookNew.png;;
+;;/images/theme/twitterNew.png;twitterNew.png;$siteResource/images/theme/twitterNew.png;;
+;;/images/theme/instatramNew.png;instatramNew.png;$siteResource/images/theme/instatramNew.png;;
+;;/images/theme/google_plus.png;google_plus.png;$siteResource/images/theme/google_plus.png;;
+;;/images/theme/ytubeNewImage.png;ytubeNewImage.png;$siteResource/images/theme/ytubeNewImage.png;;
+
+
+# CMS Image Components
+INSERT_UPDATE CMSImageComponent;$contentCV[unique=true];uid[unique=true];$picture[lang=$lang]
+;;OrderConfirmationNewBanner1ImagePancard;/images/theme/OrderConfirmationNewBanner1.png;
+;;OrderPlacehImagePancard;/images/theme/placeh.gif;
+;;EmailOrderPlacedImagePancard;/images/theme/t_order_placed_active.png;
+;;EmailArrowImagePancard;/images/theme/Arrow.png;
+;;EmailOrderProcessedImagePancard;/images/theme/t_order_processed.png;
+;;EmailOrderDeliveredImagePancard;/images/theme/t_order_delivered.png;
+;;EmailTataTrustImagePancard;/images/theme/t_trust.png;
+;;EmailCliqNPicImagePancard;/images/theme/t_PIQ.png;
+;;EmailEasyReturnImagePancard;/images/theme/t_easy_returns.png;
+;;EmailAuthenticBrandsImagePancard;/images/theme/t_authentic_brands.png;
+;;EmailFreeShippingImagePancard;/images/theme/t_free_shipping.png;
+;;EmailAppStoreImagePancard;/images/theme/app_store.png;
+;;EmailGooglePlayImagePancard;/images/theme/google_play.png;
+;;EmailLineGreyImagePancard;/images/theme/line-grey.png;
+;;EmailFacebookNewImagePancard;/images/theme/facebookNew.png;
+;;EmailTwitterNewImagePancard;/images/theme/twitterNew.png;
+;;EmailInstaNewImagePancard;/images/theme/instatramNew.png;
+;;EmailGPlusImagePancard;/images/theme/google_plus.png;
+;;EmailYouTubeNewImagePancard;/images/theme/ytubeNewImage.png;
+
+
+# Content Slots
+INSERT_UPDATE ContentSlot;$contentCV[unique=true];uid[unique=true];cmsComponents(uid,$contentCV)
+;;EmailSiteLogoNewConfSlotPancard;OrderConfirmationNewBanner1ImagePancard
+;;EmailPlacehSlotPancard;OrderPlacehImagePancard
+;;EmailOrderPlacedSlotPancard;EmailOrderPlacedImagePancard
+;;EmailArrowSlotPancard;EmailArrowImagePancard
+;;EmailOrderProcessedSlotPancard;EmailOrderProcessedImagePancard
+;;EmailOrderDeliveredSlotPancard;EmailOrderDeliveredImagePancard
+;;EmailTataTrustSlotPancard;EmailTataTrustImagePancard
+;;EmailCliqNPicSlotPancard;EmailCliqNPicImagePancard
+;;EmailEasyReturnSlotPancard;EmailEasyReturnImagePancard
+;;EmailAuthenticBrandsSlotPancard;EmailAuthenticBrandsImagePancard
+;;EmailFreeShippingSlotPancard;EmailFreeShippingImagePancard
+;;EmailAppStoreSlotPancard;EmailAppStoreImagePancard 
+;;EmailGooglePlaySlotPancard;EmailGooglePlayImagePancard
+;;EmailLineGreySlotPancard;EmailLineGreyImagePancard
+;;EmailFacebookNewSlotPancard;EmailFacebookNewImagePancard
+;;EmailTwitterNewSlotPancard;EmailTwitterNewImagePancard
+;;EmailInstaNewSlotPancard;EmailInstaNewImagePancard
+;;EmailGPlusSlotPancard;EmailGPlusImagePancard
+;;EmailYouTubeNewSlotPancard;EmailYouTubeNewImagePancard
+
+
+
+#########################################################  email_content_en_core_data  ###########################################################################################################
+
+#
+# Import the CMS content for the site emails
+#
+$storePrefix=mpl
+$contentCatalog=$storePrefixContentCatalog
+$contentCV=catalogVersion(CatalogVersion.catalog(Catalog.id[default=$contentCatalog]),CatalogVersion.version[default=Staged])[default=$contentCatalog:Staged]
+$wideContent=CMSImageComponent,BannerComponent
+
+# Import config properties into impex macros
+
+$jarResourceCms=jar:com.tisl.mpl.core.setup.CoreSystemSetup&/marketplacecore/import/cockpits/cmscockpit
+
+$emailPackageName=com.tisl.mpl.facades.process.email.context
+
+###########OrderConfirmationEmail##########
+
+INSERT_UPDATE EmailPageTemplate;$contentCV[unique=true];uid[unique=true];velocityTemplate[translator=de.hybris.platform.commerceservices.impex.impl.FileLoaderValueTranslator]
+;;OrderConfirmationEmailTemplate;$jarResourceCms/structure-view/structure_orderConfirmationEmailTemplate.vm
+
+
+# Email page Template
+INSERT_UPDATE EmailPageTemplate;$contentCV[unique=true];uid[unique=true];name;active;frontendTemplateName;subject(code);htmlTemplate(code);restrictedPageTypes(code)
+;;OrderConfirmationEmailTemplate;Order Confirmation Email Template;true;orderConfirmationEmail;mpl_Email_Order_Confirmation_Subject;mpl_Email_Order_Confirmation_Body;EmailPage
+
+
+# Email velocity templates
+INSERT_UPDATE RendererTemplate;code[unique=true];contextClass;rendererType(code)[default='velocity']
+;mpl_Email_Order_Confirmation_Body;$emailPackageName.OrderNotificationEmailContext
+;mpl_Email_Order_Confirmation_Subject;$emailPackageName.OrderNotificationEmailContext
+
+# Email Pages
+INSERT_UPDATE EmailPage;$contentCV[unique=true];uid[unique=true];name;masterTemplate(uid,$contentCV);defaultPage;approvalStatus(code)[default='approved']
+;;OrderConfirmationEmail;Order Confirmation Email;OrderConfirmationEmailTemplate;true; 
+
+
+INSERT_UPDATE ContentSlotName;name[unique=true];template(uid,$contentCV)[unique=true][default='OrderConfirmationEmailTemplate'];validComponentTypes(code)
+;SiteLogoNew;;;logo
+;placeh;;;$wideContent
+;orderplaced;;$wideContent;
+;arrow;;$wideContent;
+;orderprocessed;;$wideContent;
+;orderdelivered;;$wideContent;
+;tatatrust;;$wideContent;
+;cliqnpic;;$wideContent;
+;easyreturn;;$wideContent;
+;authenticbrands;;$wideContent;
+;freeshipping;;$wideContent;
+;appstore;;$wideContent;
+;googleplay;;$wideContent;
+;linegrey;;$wideContent;
+;fbNew;;$wideContent;
+;tweetNew;;$wideContent;
+;instaNew;;$wideContent;
+;gplus;;$wideContent;
+;youtubeNew;;$wideContent;
+
+
+INSERT_UPDATE ContentSlotForTemplate;$contentCV[unique=true];uid[unique=true];position[unique=true];pageTemplate(uid,$contentCV)[unique=true][default='OrderConfirmationEmailTemplate'];contentSlot(uid,$contentCV)[unique=true];allowOverwrite
+;;SiteLogoNew-OrderConfirmationEmail;SiteLogoNew;;EmailSiteLogoNewConfSlot;true
+;;placeh-OrderConfirmationEmail;placeh;;EmailPlacehSlot;true
+;;orderplaced-OrderConfirmationEmail;orderplaced;;EmailOrderPlacedSlot;true
+;;arrow-OrderConfirmationEmail;arrow;;EmailArrowSlot;true
+;;orderprocessed-OrderConfirmationEmail;orderprocessed;;EmailOrderProcessedSlot;true
+;;orderdelivered-OrderConfirmationEmail;orderdelivered;;EmailOrderDeliveredSlot;true
+;;tatatrust-OrderConfirmationEmail;tatatrust;;EmailTataTrustSlot;true
+;;cliqnpic-OrderConfirmationEmail;cliqnpic;;EmailCliqNPicSlot;true
+;;easyreturn-OrderConfirmationEmail;easyreturn;;EmailEasyReturnSlot;true
+;;authenticbrands-OrderConfirmationEmail;authenticbrands;;EmailAuthenticBrandsSlot;true
+;;freeshipping-OrderConfirmationEmail;freeshipping;;EmailFreeShippingSlot;true
+;;appstore-OrderConfirmationEmail;appstore;;EmailAppStoreSlot;true
+;;googleplay-OrderConfirmationEmail;googleplay;;EmailGooglePlaySlot;true
+;;linegrey-OrderConfirmationEmail;linegrey;;EmailLineGreySlot;true
+;;fbNew-OrderConfirmationEmail;fbNew;;EmailFacebookNewSlot;true
+;;twitterNew-OrderConfirmationEmail;twitterNew;;EmailTwitterNewSlot;true
+;;instaNew-OrderConfirmationEmail;instaNew;;EmailInstaNewSlot;true
+;;gplus-OrderConfirmationEmail;gplus;;EmailGPlusSlot;true
+;;youtubeNew-OrderConfirmationEmail;youtubeNew;;EmailYouTubeNewSlot;true
+
+
+############OrderShippedMail############
+
+INSERT_UPDATE EmailPageTemplate;$contentCV[unique=true];uid[unique=true];velocityTemplate[translator=de.hybris.platform.commerceservices.impex.impl.FileLoaderValueTranslator]
+#;;OrderConfirmationEmailTemplate;$jarResourceCms/structure-view/structure_orderConfirmationEmailTemplate.vm
+;;ShippingConfirmationEmailTemplate;$jarResourceCms/structure-view/structure_shippingConfirmationEmailTemplate.vm
+
+
+# Email page Template
+INSERT_UPDATE EmailPageTemplate;$contentCV[unique=true];uid[unique=true];name;active;frontendTemplateName;subject(code);htmlTemplate(code);restrictedPageTypes(code)
+#;;OrderConfirmationEmailTemplate;Order Confirmation Email Template;true;orderConfirmationEmail;mpl_Email_Order_Confirmation_Subject;mpl_Email_Order_Confirmation_Body;EmailPage
+;;ShippingConfirmationEmailTemplate;Shipping Confirmation Email Template;true;shippingConfirmationEmail;mpl_Email_ShippingConfirmation_Subject;mpl_Email_ShippingConfirmation_Body;EmailPage
+
+# Email velocity templates
+INSERT_UPDATE RendererTemplate;code[unique=true];contextClass;rendererType(code)[default='velocity']
+#;mpl_Email_Order_Confirmation_Body;$emailPackageName.OrderNotificationEmailContext
+#;mpl_Email_Order_Confirmation_Subject;$emailPackageName.OrderNotificationEmailContext
+#Shipping Confirmation Event
+;mpl_Email_ShippingConfirmation_Body;$emailPackageName.ShippingConfirmationEmailContext
+;mpl_Email_ShippingConfirmation_Subject;$emailPackageName.ShippingConfirmationEmailContext
+
+# Email Pages
+INSERT_UPDATE EmailPage;$contentCV[unique=true];uid[unique=true];name;masterTemplate(uid,$contentCV);defaultPage;approvalStatus(code)[default='approved']
+#;;OrderConfirmationEmail;Order Confirmation Email;OrderConfirmationEmailTemplate;true;
+#Shipping Confirmation Event
+;;ShippingConfirmationEmail;Shipping Confirmation Email;ShippingConfirmationEmailTemplate;true;
+
+
+INSERT_UPDATE ContentSlotName;name[unique=true];template(uid,$contentCV)[unique=true][default='ShippingConfirmationEmailTemplate'];validComponentTypes(code)
+;SiteLogoNew;;;logo
+;placeh;;;$wideContent
+;orderplaced;;$wideContent;
+;arrow;;$wideContent;
+;orderprocessed;;$wideContent;
+;orderdelivered;;$wideContent;
+;tatatrust;;$wideContent;
+;cliqnpic;;$wideContent;
+;easyreturn;;$wideContent;
+;authenticbrands;;$wideContent;
+;freeshipping;;$wideContent;
+;appstore;;$wideContent;
+;googleplay;;$wideContent;
+;linegrey;;$wideContent;
+;fbNew;;$wideContent;
+;tweetNew;;$wideContent;
+;instaNew;;$wideContent;
+;gplus;;$wideContent;
+;youtubeNew;;$wideContent;
+
+;ForwardSeal;;$wideContent;
+;ReverseSeal;;$wideContent;
+
+
+
+INSERT_UPDATE ContentSlotForTemplate;$contentCV[unique=true];uid[unique=true];position[unique=true];pageTemplate(uid,$contentCV)[unique=true][default='ShippingConfirmationEmailTemplate'];contentSlot(uid,$contentCV)[unique=true];allowOverwrite
+;;SiteLogoNew-ShippingConfirmationEmail;SiteLogoNew;;EmailSiteLogoConfSlotShipping;true
+;;placeh-ShippingConfirmationEmail;placeh;;EmailPlacehSlotShipping;true
+;;orderplaced-ShippingConfirmationEmail;orderplaced;;EmailOrderPlacedSlotShipping;true
+;;arrow-ShippingConfirmationEmail;arrow;;EmailArrowSlotShipping;true
+;;orderprocessed-ShippingConfirmationEmail;orderprocessed;;EmailOrderProcessedSlotShipping;true
+;;orderdelivered-ShippingConfirmationEmail;orderdelivered;;EmailOrderDeliveredSlotShipping;true
+;;tatatrust-ShippingConfirmationEmail;tatatrust;;EmailTataTrustSlotShipping;true
+;;cliqnpic-ShippingConfirmationEmail;cliqnpic;;EmailCliqNPicSlotShipping;true
+;;easyreturn-ShippingConfirmationEmail;easyreturn;;EmailEasyReturnSlotShipping;true
+;;authenticbrands-ShippingConfirmationEmail;authenticbrands;;EmailAuthenticBrandsSlotShipping;true
+;;freeshipping-ShippingConfirmationEmail;freeshipping;;EmailFreeShippingSlotShipping;true
+;;appstore-ShippingConfirmationEmail;appstore;;EmailAppStoreSlotShiiping;true
+;;googleplay-ShippingConfirmationEmail;googleplay;;EmailGooglePlaySlotShipping;true
+;;linegrey-ShippingConfirmationEmail;linegrey;;EmailLineGreySlotShipping;true
+;;facebook-ShippingConfirmationEmail;fbNew;;EmailFacebookSlotShipping;true
+;;twitter-ShippingConfirmationEmail;twitterNew;;EmailTwitterSlotShipping;true
+;;insta-ShippingConfirmationEmail;instaNew;;EmailInstaSlotShipping;true
+;;gplus-ShippingConfirmationEmail;gplus;;EmailGPlusSlotShipping;true
+;;youtube-ShippingConfirmationEmail;youtubeNew;;EmailYouTubeSlotShipping;true
+
+;;ForwardSeal-ShippingConfirmationEmail;ForwardSeal;;EmailForwardSealSlotShipping;true
+;;ReverseSeal-ShippingConfirmationEmail;ReverseSeal;;EmailReverseSealSlotShipping;true
+
+
+INSERT_UPDATE ContentSlot;$contentCV[unique=true];uid[unique=true];name;active
+;;EmailSiteLogoConfSlotShipping; Default Email Site logo Confirmation slot;true
+;;EmailPlacehSlotShipping;Default Email placeh Confirmation Slot;true
+;;EmailOrderPlacedSlotShipping;Default order placed Confirmation Slot;true
+;;EmailArrowSlotShipping; Default Email arrow Confirmation Slot;true
+;;EmailOrderProcessedSlotShipping; Default Email Order processed Confirmation Slot;true
+;;EmailOrderDeliveredSlotShipping;Default ordered delivered Confirmation Slot;true
+;;EmailTataTrustSlotShipping;Default tata trust Slot;true
+;;EmailCliqNPicSlotShipping;Default cliq and pic Confirmation Slot;true
+;;EmailEasyReturnSlotShipping;Default Email easy return  Confirmation Slot;true
+;;EmailAuthenticBrandsSlotShipping;Default Email Authentic Brands Confirmation Slot;true
+;;EmailFreeShippingSlotShipping;Default free shipping Slot;true
+;;EmailAppStoreSlotShiiping;Default Email app store Confirmation Slot;true
+;;EmailGooglePlaySlotShipping;Default Email google play Confirmation Slot;true
+;;EmailLineGreySlotShipping;Default Email grey Confirmation Slot;true
+;;EmailFacebookSlotShipping;Default Email facebook Confirmation slot;true
+;;EmailTwitterSlotShipping;Default Email twitter Confimation slot;true
+;;EmailInstaSlotShipping;Default Email insta Confirmation Slot;true
+;;EmailGPlusSlotShipping;Default Email gplus Confimation slot;true
+;;EmailYouTubeSlotShipping;Default Email You tube Confirmation Slot;true
+
+;;EmailForwardSealSlotShipping;Default Email ForwardSeal Confirmation slot;true
+;;EmailReverseSealSlotShipping;Default Email ReverseSeal Confirmation Slot;true
+
+
+
+
+
+
+#########OrderDeliveredMail################
+
+INSERT_UPDATE EmailPageTemplate;$contentCV[unique=true];uid[unique=true];velocityTemplate[translator=de.hybris.platform.commerceservices.impex.impl.FileLoaderValueTranslator]
+;;OrderDeliveryEmailTemplate;$jarResourceCms/structure-view/structure_orderDeliveryEmailTemplate.vm
+
+
+# Email velocity templates
+INSERT_UPDATE RendererTemplate;code[unique=true];contextClass;rendererType(code)[default='velocity']
+;mpl_Email_Order_Delivery_Body;$emailPackageName.OrderDeliveryEmailContext
+;mpl_Email_Order_Delivery_Subject;$emailPackageName.OrderDeliveryEmailContext
+
+
+# Email Pages
+INSERT_UPDATE EmailPage;$contentCV[unique=true];uid[unique=true];name;masterTemplate(uid,$contentCV);defaultPage;approvalStatus(code)[default='approved']
+;;OrderDeliveryEmail;Order Delivery Email;OrderDeliveryEmailTemplate;true;
+
+
+
+INSERT_UPDATE ContentSlotName;name[unique=true];template(uid,$contentCV)[unique=true][default='OrderDeliveryEmailTemplate'];validComponentTypes(code)
+;SiteLogoNew;;;logo
+;placeh;;;$wideContent
+;orderplaced;;$wideContent;
+;arrow;;$wideContent;
+;orderprocessed;;$wideContent;
+;orderdelivered;;$wideContent;
+;tatatrust;;$wideContent;
+;cliqnpic;;$wideContent;
+;easyreturn;;$wideContent;
+;authenticbrands;;$wideContent;
+;freeshipping;;$wideContent;
+;appstore;;$wideContent;
+;googleplay;;$wideContent;
+;linegrey;;$wideContent;
+;fbNew;;$wideContent;
+;tweetNew;;$wideContent;
+;instaNew;;$wideContent;
+;gplus;;$wideContent;
+;youtubeNew;;$wideContent;
+
+;ForwardSeal;;$wideContent;
+;ReverseSeal;;$wideContent;
+
+
+INSERT_UPDATE ContentSlotForTemplate;$contentCV[unique=true];uid[unique=true];position[unique=true];pageTemplate(uid,$contentCV)[unique=true][default='OrderDeliveryEmailTemplate'];contentSlot(uid,$contentCV)[unique=true];allowOverwrite
+;;SiteLogoNew-OrderDeliveryEmail;SiteLogoNew;;DeliveryEmailSiteLogoConfSlot;true
+;;placeh-OrderDeliveryEmail;placeh;;DeliveryEmailPlacehSlot;true
+;;orderplaced-OrderDeliveryEmail;orderplaced;;DeliveryEmailOrderPlacedSlot;true
+;;arrow-OrderDeliveryEmail;arrow;;DeliveryEmailArrowSlot;true
+;;orderprocessed-OrderDeliveryEmail;orderprocessed;;DeliveryEmailOrderProcessedSlot;true
+;;orderdelivered-OrderDeliveryEmail;orderdelivered;;DeliveryEmailOrderDeliveredSlot;true
+;;tatatrust-OrderDeliveryEmail;tatatrust;;DeliveryEmailTataTrustSlot;true
+;;cliqnpic-OrderDeliveryEmail;cliqnpic;;DeliveryEmailCliqNPicSlot;true
+;;easyreturn-OrderDeliveryEmail;easyreturn;;DeliveryEmailEasyReturnSlot;true
+;;authenticbrands-OrderDeliveryEmail;authenticbrands;;DeliveryEmailAuthenticBrandsSlot;true
+;;freeshipping-OrderDeliveryEmail;freeshipping;;DeliveryEmailFreeShippingSlot;true
+;;appstore-OrderDeliveryEmail;appstore;;DeliveryEmailAppStoreSlot;true
+;;googleplay-OrderDeliveryEmail;googleplay;;DeliveryEmailGooglePlaySlot;true
+;;linegrey-OrderDeliveryEmail;linegrey;;DeliveryEmailLineGreySlot;true
+;;facebook-OrderDeliveryEmail;fbNew;;DeliveryEmailFacebookSlot;true
+;;twitter-OrderDeliveryEmail;twitterNew;;DeliveryEmailTwitterSlot;true
+;;insta-OrderDeliveryEmail;instaNew;;DeliveryEmailInstaSlot;true
+;;gplus-OrderDeliveryEmail;gplus;;DeliveryEmailGPlusSlot;true
+;;youtube-OrderDeliveryEmail;youtubeNew;;DeliveryEmailYouTubeSlot;true
+
+;;ForwardSeal-OrderDeliveryEmail;ForwardSeal;;DeliveryEmailForwardSealSlot;true
+;;ReverseSeal-OrderDeliveryEmail;ReverseSeal;;DeliveryEmailReverseSealSlot;true
+
+
+INSERT_UPDATE ContentSlot;$contentCV[unique=true];uid[unique=true];name;active
+;;DeliveryEmailSiteLogoConfSlot; Default Email Site Confirmation slot;true
+;;DeliveryEmailPlacehSlot;Default Email Top Confirmation Slot;true
+;;DeliveryEmailOrderPlacedSlot;Default Email Bottom Confirmation Slot;true
+;;DeliveryEmailArrowSlot; Default Email Order Reference Number One Confirmation Slot;true
+;;DeliveryEmailOrderProcessedSlot; Default Email Order Reference Number Two Confirmation Slot;true
+;;DeliveryEmailOrderDeliveredSlot;Default Track Order One Confirmation Slot;true
+;;DeliveryEmailTataTrustSlot;Default Track Order Two  Confirmation Slot;true
+;;DeliveryEmailCliqNPicSlot;Default Delivery Person Confirmation Slot;true
+;;DeliveryEmailEasyReturnSlot;Default Email Tip Confirmation Slot;true
+;;DeliveryEmailAuthenticBrandsSlot;Default Email Description Confirmation Slot;true
+;;DeliveryEmailFreeShippingSlot;Default Order Confirmation Banner Two Slot;true
+;;DeliveryEmailAppStoreSlot;Default Email Smiley Confirmation Slot;true
+;;DeliveryEmailGooglePlaySlot;Default Email fb Confirmation Slot;true
+;;DeliveryEmailLineGreySlot;Default Email gplus Confirmation Slot;true
+;;DeliveryEmailFacebookSlot;Default Email twitter Confirmation slot;true
+;;DeliveryEmailTwitterSlot;Default Email youtube Confimation slot;true
+;;DeliveryEmailInstaSlot;Default Email App Confirmation Slot;true
+;;DeliveryEmailGPlusSlot;Default Email youtube Confimation slot;true
+;;DeliveryEmailYouTubeSlot;Default Email App Confirmation Slot;true
+
+;;DeliveryEmailForwardSealSlot;Default Email ForwardSeal Confirmation slot;true
+;;DeliveryEmailReverseSealSlot;Default Email ReverseSeal Confirmation Slot;true
+
+
+
+
+
+###########PancardRejectEmail##########
+
+INSERT_UPDATE EmailPageTemplate;$contentCV[unique=true];uid[unique=true];velocityTemplate[translator=de.hybris.platform.commerceservices.impex.impl.FileLoaderValueTranslator]
+;;PancardRejectEmailTemplate;$jarResourceCms/structure-view/structure_pancardRejectEmailTemplate.vm
+
+
+# Email page Template
+INSERT_UPDATE EmailPageTemplate;$contentCV[unique=true];uid[unique=true];name;active;frontendTemplateName;subject(code);htmlTemplate(code);restrictedPageTypes(code)
+;;PancardRejectEmailTemplate;Pancard Reject Email Template;true;pancardRejectEmail;mpl_Email_Pancard_Reject_Subject;mpl_Email_Pancard_Reject_Body;EmailPage
+
+
+# Email velocity templates
+INSERT_UPDATE RendererTemplate;code[unique=true];contextClass;rendererType(code)[default='velocity']
+;mpl_Email_Pancard_Reject_Body;$emailPackageName.PancardRejectEmailContext
+;mpl_Email_Pancard_Reject_Subject;$emailPackageName.PancardRejectEmailContext
+
+# Email Pages
+INSERT_UPDATE EmailPage;$contentCV[unique=true];uid[unique=true];name;masterTemplate(uid,$contentCV);defaultPage;approvalStatus(code)[default='approved']
+;;PancardRejectEmail;Pancard Reject Email;PancardRejectEmailTemplate;true; 
+
+
+INSERT_UPDATE ContentSlotName;name[unique=true];template(uid,$contentCV)[unique=true][default='PancardRejectEmailTemplate'];validComponentTypes(code)
+;SiteLogoNew;;;logo
+;placeh;;;$wideContent
+;orderplaced;;$wideContent;
+;arrow;;$wideContent;
+;orderprocessed;;$wideContent;
+;orderdelivered;;$wideContent;
+;tatatrust;;$wideContent;
+;cliqnpic;;$wideContent;
+;easyreturn;;$wideContent;
+;authenticbrands;;$wideContent;
+;freeshipping;;$wideContent;
+;appstore;;$wideContent;
+;googleplay;;$wideContent;
+;linegrey;;$wideContent;
+;fbNew;;$wideContent;
+;tweetNew;;$wideContent;
+;instaNew;;$wideContent;
+;gplus;;$wideContent;
+;youtubeNew;;$wideContent;
+
+
+INSERT_UPDATE ContentSlotForTemplate;$contentCV[unique=true];uid[unique=true];position[unique=true];pageTemplate(uid,$contentCV)[unique=true][default='PancardRejectEmailTemplate'];contentSlot(uid,$contentCV)[unique=true];allowOverwrite
+;;SiteLogoNew-pancardRejectEmail;SiteLogoNew;;EmailSiteLogoNewConfSlot;true
+;;placeh-pancardRejectEmail;placeh;;EmailPlacehSlot;true
+;;orderplaced-pancardRejectEmail;orderplaced;;EmailOrderPlacedSlot;true
+;;arrow-pancardRejectEmail;arrow;;EmailArrowSlot;true
+;;orderprocessed-pancardRejectEmail;orderprocessed;;EmailOrderProcessedSlot;true
+;;orderdelivered-pancardRejectEmail;orderdelivered;;EmailOrderDeliveredSlot;true
+;;tatatrust-pancardRejectEmail;tatatrust;;EmailTataTrustSlot;true
+;;cliqnpic-pancardRejectEmail;cliqnpic;;EmailCliqNPicSlot;true
+;;easyreturn-pancardRejectEmail;easyreturn;;EmailEasyReturnSlot;true
+;;authenticbrands-pancardRejectEmail;authenticbrands;;EmailAuthenticBrandsSlot;true
+;;freeshipping-pancardRejectEmail;freeshipping;;EmailFreeShippingSlot;true
+;;appstore-pancardRejectEmail;appstore;;EmailAppStoreSlot;true
+;;googleplay-pancardRejectEmail;googleplay;;EmailGooglePlaySlot;true
+;;linegrey-pancardRejectEmail;linegrey;;EmailLineGreySlot;true
+;;fbNew-pancardRejectEmail;fbNew;;EmailFacebookNewSlot;true
+;;twitterNew-pancardRejectEmail;twitterNew;;EmailTwitterNewSlot;true
+;;instaNew-pancardRejectEmail;instaNew;;EmailInstaNewSlot;true
+;;gplus-pancardRejectEmail;gplus;;EmailGPlusSlot;true
+;;youtubeNew-pancardRejectEmail;youtubeNew;;EmailYouTubeNewSlot;true
+
+
+UPDATE EmailPage;$contentCV[unique=true];uid[unique=true];fromEmail[lang=$lang];fromName[lang=$lang]
+;;PancardRejectEmail;"customercare@tatacliq.com";"TataCLiQ Care"
+
+
+###########################################################################################################################
+
+# ImpEx for Importing CMS Content
+
+# Macros / Replacement Parameter definitions
+$storePrefix=mpl
+$contentCatalog=$storePrefixContentCatalog
+$contentCatalogName=Marketplace Content Catalog
+$productCatalog=mplProductCatalog
+$productCatalogName=Marketplace Product Catalog
+
+$contentCV=catalogVersion(CatalogVersion.catalog(Catalog.id[default=$contentCatalog]),CatalogVersion.version[default=Staged])[default=$contentCatalog:Staged]
+$productCV=catalogVersion(catalog(id[default=$productCatalog]),version[default='Staged'])[unique=true,default=$productCatalog:Staged]
+$picture=media(code, $contentCV);
+$image=image(code, $contentCV);
+$media=media(code, $contentCV);
+$page=page(uid, $contentCV);
+$category=category(code, $productCV)
+$product=product(code, $productCV)
+$contentPage=contentPage(uid, $contentCV);
+$siteResource=jar:com.tisl.mpl.initialdata.setup.InitialDataSystemSetup&/marketplaceinitialdata/import/contentCatalogs/$contentCatalog
+$productResource=jar:com.tisl.mpl.initialdata.setup.InitialDataSystemSetup&/marketplaceinitialdata/import/productCatalogs/$productCatalog
+$jarResourceCms=jar:com.tisl.mpl.core.setup.CoreSystemSetup&/marketplacecore/import/cockpits/cmscockpit
+# Load the storefront context root config param
+$storefrontContextRoot=$config-storefrontContextRoot
+
+# Language
+$lang=en
+
+# Product Details Page Template
+# The CrossSelling and UpSelling slots are designed for related products, cross-sells and up-sells.
+INSERT_UPDATE ContentSlotName;name[unique=true];template(uid,$contentCV)[unique=true][default='ProductDetailsPageTemplate'];validComponentTypes(code);compTypeGroup(code)
+;ExchangeSlot;;CMSLinkComponent
+
+
+INSERT_UPDATE ContentSlotForTemplate;$contentCV[unique=true];uid[unique=true];position[unique=true];pageTemplate(uid,$contentCV)[unique=true][default='ProductDetailsPageTemplate'];contentSlot(uid,$contentCV)[unique=true];allowOverwrite
+;;ExchangeSlot-ProductDetails;ExchangeSlot;;ExchangeSlot;true
+
+
+# Add Velocity templates that are in the CMS Cockpit. These give a better layout for editing pages
+# The FileLoaderValueTranslator loads a File into a String property. The templates could also be inserted in-line in this file.
+UPDATE PageTemplate;$contentCV[unique=true];uid[unique=true];velocityTemplate[translator=de.hybris.platform.commerceservices.impex.impl.FileLoaderValueTranslator]
+;;ProductDetailsPageTemplate;$jarResourceCms/structure-view/structure_productDetails1PageTemplate.vm
+
+INSERT_UPDATE CMSLinkComponent;$contentCV[unique=true];uid[unique=true];name;linkname;url;category(code, $productCV);target(code)[default='sameWindow'];;
+;;TermsAndConditionsExchangeLink;Terms And Conditions;Terms And Conditions;/tncPayment;;;;
+;;HowExchangeWorksLink;How Exchange Works;How Exchange Works;/tncPayment;;;;
+
+# CMS Link Components
+UPDATE CMSLinkComponent;$contentCV[unique=true];uid[unique=true];linkName[lang=$lang]
+;;TermsAndConditionsPaymentLink;"Terms and Conditions"
+
+# ContentSlot 
+INSERT_UPDATE ContentSlot;$contentCV[unique=true];uid[unique=true];name;cmsComponents(uid,$contentCV)
+;;ExchangeSlot;Exchange slot for PDP;TermsAndConditionsExchangeLink,HowExchangeWorksLink
+
+########################################################################Jewellery BuyBox Changes ######################################################
+
+INSERT_UPDATE BBWeightage;weigtagetype[unique=true];weightagevalue
+;jpriceweightage;0.00000001
+
+##################################################################################
+
+INSERT_UPDATE DeliveryMode;code[unique=true];priority					
+;home-delivery;1					
+;express-delivery;0					
+;click-and-collect;2	
+###########################################################Forward Seal Mismatch Reason In Case of Jewellery###########################
+$lang='en'
+
+$jarResource=jar:com.tisl.mpl.cockpits.constants.MarketplaceCockpitsConstants&/marketplacecockpits/cscockpit
+
+$storePrefix=mpl
+$contentCatalog=$storePrefixContentCatalog
+$contentCV=catalogVersion(CatalogVersion.catalog(Catalog.id[default=$contentCatalog]),CatalogVersion.version[default=Staged])[default=$contentCatalog:Staged]
+$emailResource=jar:com.tisl.mpl.initialdata.setup.InitialDataSystemSetup&/marketplaceinitialdata/import/coredata/contentCatalogs/$contentCatalog/emails
+
+# Language
+$lang=en
+
+INSERT_UPDATE GLOBALCODEMASTER;enumCode[unique=true];globalCode[unique=true];description[optional=true]
+;revrseSealFineJew;09;Forward Seal Mismatch
+
+#
+# Import essential data for the Accelerator
+#
+
+# Language
+$lang=en
+
+# Return Reason
+INSERT_UPDATE ReturnReason;reasonCode[unique=true];reasonDescription
+;09;Forward Seal Mismatch				
+######################################################################################################################################

@@ -20,9 +20,8 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
-import org.apache.log4j.Logger;
 import org.apache.commons.collections.CollectionUtils;
-
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Required;
 
 import com.tisl.mpl.core.enums.LuxIndicatorEnum;
@@ -211,6 +210,20 @@ public class MplPriceValueProvider extends AbstractPropertyFieldValueProvider im
 				&& product.getLuxIndicator().getCode().equalsIgnoreCase(LuxIndicatorEnum.LUXURY.getCode()))
 		{
 			rangeKey = rangeKey + "-LUXURY";
+			if (productCategoryType.equalsIgnoreCase("Clothing"))
+			{
+				rangeKey = rangeKey + "-APPAREL";
+			}
+			//			// JEWELLERY CHANGES START
+			//			else if (productCategoryType.equalsIgnoreCase("FashionJewellery"))
+			//			{
+			//				rangeKey = rangeKey + "-FASHIONJEWELLERY";
+			//			}
+			//			// JEWELLERY CHANGES END
+			else
+			{
+				rangeKey = rangeKey + "-ELECTRONICS";
+			}
 		}
 		else
 		{
@@ -220,6 +233,12 @@ public class MplPriceValueProvider extends AbstractPropertyFieldValueProvider im
 				{
 					rangeKey = rangeKey + "-APPAREL";
 				}
+				// JEWELLERY CHANGES START
+				else if (productCategoryType.equalsIgnoreCase("FashionJewellery"))
+				{
+					rangeKey = rangeKey + "-FASHIONJEWELLERY";
+				}
+				// JEWELLERY CHANGES END
 				else
 				{
 					rangeKey = rangeKey + "-ELECTRONICS";

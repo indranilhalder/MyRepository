@@ -8,6 +8,7 @@
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn"%>
 <%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
+<%@ taglib prefix="theme" tagdir="/WEB-INF/tags/shared/theme" %>
 <style type="text/css">
 tr.d0 td {
   background-color:#E0E0E0 ;
@@ -116,7 +117,8 @@ tr.d0 td {
 
 <div itemscope itemtype="http://schema.org/Product" class="pdp">
 	<div class="product-info wrapper">
-		<div class="product-image-container" id="pdp_gallery">
+<%-- 		<div class="product-image-container ${product.rootCategory}"> --%>
+		<div class="product-image-container ${product.rootCategory}" id="pdp_gallery">
 			<cms:pageSlot position="ConfigureImagesCount" var="component">
 				<cms:component component="${component}" />
 			</cms:pageSlot>
@@ -132,26 +134,32 @@ tr.d0 td {
 			</span>
 		</div>
 		<!-- Added for carousel in mobile view -->
-		<div class="product-image-container device">
+		<div class="product-image-container ${product.rootCategory} device">
 		<a class="wishlist-icon" onclick="addToWishlist()"></a>
 		<c:set var="thumbNailImageLengthDevice" value="${fn:length(galleryImages)}" />
 			<div class="jcarousel-skin imageListCarousel" id="pdpProductCarousel"> 
-				<c:forEach items="${galleryImages}" var="container" varStatus="varStatus" begin="0" end="${thumbNailImageLengthDevice}">	
-	
-	
-					<div id="addiImageTab${varStatus.index}">
-						<span>
-						<c:if test="${container.thumbnail.mediaType.code eq 'Image'}">
-							<img src="${container.product.url}" data-type="image" data-zoomimagesrc="${container.superZoom.url}"  data-primaryimagesrc="${container.product.url}" data-galleryposition="${varStatus.index}" alt="${container.thumbnail.altText}" title="${container.thumbnail.altText}" />	
-						</c:if>
-						<c:if test="${container.thumbnail.mediaType.code eq 'Video'}">
-						<img src="${commonResourcePath}/images/video-play.png"  data-type="video" data-videosrc="${container.thumbnail.url}?rel=0&enablejsapi=1" />
-						<%-- <iframe src="${commonResourcePath}/images/video-play.png"  data-type="video" data-videosrc="${container.thumbnail.url}?rel=0&enablejsapi=1" id="player"></iframe> --%>
-						</c:if>
-	
-						</span>
-					</div>
-				</c:forEach>
+			<!-- TISJEWST-15 empty checking for galleryImages -->
+				<c:choose>
+					<c:when test="${not empty galleryImages}">
+					<c:forEach items="${galleryImages}" var="container"
+						varStatus="varStatus" begin="0" end="${thumbNailImageLengthDevice}">
+						<div id="addiImageTab${varStatus.index}">
+							<span> 
+								<c:if test="${container.thumbnail.mediaType.code eq 'Image'}">
+								<img src="${container.product.url}" data-type="image" data-zoomimagesrc="${container.superZoom.url}"  data-primaryimagesrc="${container.product.url}" data-galleryposition="${varStatus.index}" alt="${container.thumbnail.altText}" title="${container.thumbnail.altText}" />	
+							</c:if>
+							<c:if test="${container.thumbnail.mediaType.code eq 'Video'}">
+							<img src="${commonResourcePath}/images/video-play.png"  data-type="video" data-videosrc="${container.thumbnail.url}?rel=0&enablejsapi=1" />
+							<%-- <iframe src="${commonResourcePath}/images/video-play.png"  data-type="video" data-videosrc="${container.thumbnail.url}?rel=0&enablejsapi=1" id="player"></iframe> --%>
+							</c:if>
+							</span>
+						</div>
+					</c:forEach>
+					</c:when>
+					<c:otherwise>
+						<theme:image code="img.missingProductImage.product" alt="${fn:escapeXml(product.name)}" title="${fn:escapeXml(product.name)}"/>
+					</c:otherwise>
+				</c:choose>
 			</div>
 			<!-- start change for INC144314454 -->
 			<div class="modal fade" id="videoModal1" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
@@ -191,8 +199,8 @@ tr.d0 td {
 		<div class="wishAlreadyAdded">
 			<span><spring:theme code="mpl.pdp.wishlistAlreadyAdded"></spring:theme></span>
 		</div>
-		
-		<div class="product-detail">
+
+		<div class="product-detail ${product.rootCategory}">
 			<c:set var="req" value="${pageContext.request}" />
   			<c:set var="baseURL" value="${fn:replace(req.requestURL, req.requestURI, '')}" />
   			<c:set var="params" value="${requestScope['javax.servlet.forward.query_string']}"/>
@@ -225,6 +233,23 @@ tr.d0 td {
 				<h1 itemprop="name" class="product-name">${product.productTitle}</h1>
 				<meta itemprop="sku" content="${product_sku}"/>
 				<!-- </a> -->
+				<!-- //TPR-3752 Jewel Feature Attribute Added -->
+				<c:choose>
+					<c:when test="${product.rootCategory=='FineJewellery' || product.rootCategory=='FashionJewellery' }">
+						<div class="product-desc">
+							<span class="key-label">
+							 <c:forEach var="classification" items="${mapConfigurableAttributes}">
+							 <c:if test="${not empty classification.value }">
+   						 		<c:forEach var="classValue" items="${classification.value }">
+   						 			<p id="jwlryTitle">${classValue.key} ${classValue.value}</p>
+   						 			 </c:forEach>
+   						 			 <span class="more-link">More</span>
+							  </c:if> 
+								</c:forEach>
+							</span> 
+						</div>
+					</c:when>
+				</c:choose>
 			</ycommerce:testId>
 
 			<ycommerce:testId
@@ -236,7 +261,15 @@ tr.d0 td {
 				<!-- EMI section -->
 			
 			<product:emiDetail product="${product}" />
-			
+			<!-- TPR-6907 -->
+			<div id= "codEli"><a id="codLink" href=""><spring:theme code="cod.available"/></a></div>
+			<!-- TPR-6907 -->
+			<!-- TPR-1083 Exchange Start -->
+			<input id="l3category" type="hidden" value="${product.level3CategoryCode}"/>
+ 			<!-- Exchange section -->
+ 		
+ 			<product:exchangeDetails product="${product}" />
+			<!-- TPR-1083 Exchange Ends -->
 			<!-- TISPRM-97 starts -->
 				<!-- TPR-772 starts -->
 			<div class="pdp-promo-block promo-block" style="display:none">
@@ -337,11 +370,109 @@ tr.d0 td {
 			<product:sellerInfoDetailsSection/>
 			</div> --%>
 
-			
+
+			<!-- seller information section  -->
+			<%-- <div class="seller-details">
+			<product:sellerInfoDetailsSection/>
+			</div> --%>
+
+            <!-- BLOCK ADDED FOR JEWELLERY CERTIFICATION STARTS HERE-->
+            <c:if test="${product.rootCategory =='FineJewellery' && not empty certificationfeatureValueDataList}">
+             <div class="certified-by"> 
+              <h2>Certified by:</h2>
+              <ul>
+               <!-- <li><img src="images/certified-by.jpg" alt="certified by"></li>
+               <li>30 day returns</li>
+               <li>tata guarantee</li> -->
+            <c:forEach var="certification" items="${certificationfeatureValueDataList}">
+              <c:if test="${certification.value=='AGL'}">
+                 <%-- <li class="jwlryCerti"><img src="${commonResourcePath}/images/Visa.png" alt="certified by"></li> --%>
+                 <li class="jwlryCertiAGL"></li>
+             </c:if>
+             <c:if test="${certification.value=='AGS'}">
+                <%--  <img src="${commonResourcePath}/images/American_Express.png" alt="certified by"> --%>
+                <li class="jwlryCertiAGS"></li>
+            </c:if>
+             <c:if test="${certification.value=='AGTA'}">
+                 <%-- <img src="${commonResourcePath}/images/Maestro.png" alt="certified by"> --%>
+                 <li class="jwlryCertiAGTA"></li>         
+            </c:if>
+             <c:if test="${certification.value=='HRD'}">  
+                <%--  <img src="${commonResourcePath}/images/Discover.png" alt="certified by">  --%>
+                <li class="jwlryCertiHRD"></li>  
+            </c:if>
+            <c:if test="${certification.value=='EGL'}">  
+                <%--  <img src="${commonResourcePath}/images/Discover.png" alt="certified by">  --%>
+                <li class="jwlryCertiEGL"></li>  
+            </c:if>
+            <c:if test="${certification.value=='GII'}">  
+                <%--  <img src="${commonResourcePath}/images/Discover.png" alt="certified by">  --%>
+                <li class="jwlryCertiGII"></li>  
+            </c:if>
+            <c:if test="${certification.value=='Gubelin'}">  
+                <%--  <img src="${commonResourcePath}/images/Discover.png" alt="certified by">  --%>
+                <li class="jwlryCertiGubelin"></li>  
+            </c:if>
+            <c:if test="${certification.value=='IDL'}">  
+                <%--  <img src="${commonResourcePath}/images/Discover.png" alt="certified by">  --%>
+                <li class="jwlryCertiIDL"></li>  
+            </c:if>
+            <c:if test="${certification.value=='Tanishq'}">  
+                <%--  <img src="${commonResourcePath}/images/Master_Card.png" alt="certified by">   --%>
+                <li class="jwlryCertiTanishq"></li>
+             </c:if>
+             <c:if test="${certification.value=='IGI'}">  
+                <%--  <img src="${commonResourcePath}/images/Discover.png" alt="certified by">  --%>
+                <li class="jwlryCertiIGI"></li>  
+            </c:if>
+             <c:if test="${certification.value=='BIS'}">  
+                <%--  <img src="${commonResourcePath}/images/Discover.png" alt="certified by">  --%>
+                <li class="jwlryCertiBIS"></li>  
+            </c:if>
+            <c:if test="${certification.value=='SGL'}">  
+                <%--  <img src="${commonResourcePath}/images/Discover.png" alt="certified by">  --%>
+                <li class="jwlryCertiSGL"></li>  
+            </c:if>
+             <c:if test="${certification.value=='GIA'}">  
+                <%--  <img src="${commonResourcePath}/images/Discover.png" alt="certified by">  --%>
+                <li class="jwlryCertiGIA"></li>  
+            </c:if>
+            <c:if test="${certification.value=='PGI'}">  
+                <%--  <img src="${commonResourcePath}/images/Discover.png" alt="certified by">  --%>
+                <li class="jwlryCertiPGI"></li>  
+            </c:if>
+            <c:if test="${certification.value=='GSL'}">  
+                <%--  <img src="${commonResourcePath}/images/Discover.png" alt="certified by">  --%>
+                <li class="jwlryCertiGSL"></li>  
+            </c:if>
+            <c:if test="${certification.value=='GSI'}">  
+                <%--  <img src="${commonResourcePath}/images/Discover.png" alt="certified by">  --%>
+                <li class="jwlryCertiGSI"></li>  
+            </c:if>
+            <c:if test="${certification.value=='IGL'}">  
+                <%--  <img src="${commonResourcePath}/images/Discover.png" alt="certified by">  --%>
+                <li class="jwlryCertiIGL"></li>  
+            </c:if>
+            <c:if test="${certification.value=='DGLA'}">  
+                <%--  <img src="${commonResourcePath}/images/Discover.png" alt="certified by">  --%>
+                <li class="jwlryCertiDGLA"></li>  
+            </c:if>
+           </c:forEach>
+         </ul>
+      </div>
+          <!-- <div class="certified-by">
+           <ul>
+            <li>30 day returns</li>
+            <li>tata guarantee</li>
+           
+           </ul>
+          </div> -->
+      </c:if>
+            <!-- BLOCK ADDED FOR JEWELLERY CERTIFICATION ENDS HERE-->
 
 		</div>
 
-		<div class="product-content">
+		<div class="product-content ${product.rootCategory}">
 			<div class="swatch">
 				<%-- <cms:pageSlot position="VariantSelector" var="component">
 					<cms:component component="${component}" />
@@ -398,11 +529,72 @@ tr.d0 td {
 					
 				</li>
 			</ul>
+			
+           <%-- <!-- BLOCK ADDED FOR JEWELLERY CERTIFICATION STARTS HERE-->
+            <c:if test="${product.rootCategory =='FineJewellery'}">
+             <div class="certified-by"> 
+              <h2>certified by</h2>
+              <ul>
+               <!-- <li><img src="images/certified-by.jpg" alt="certified by"></li>
+               <li>30 day returns</li>
+               <li>tata guarantee</li> -->
+            <c:forEach var="certification" items="${certificationfeatureValueDataList}">
+            <li>
+              <c:if test="${certification.value=='AGL'}">
+                 <img src="${commonResourcePath}/images/Visa.png" alt="certified by">
+             </c:if>
+             <c:if test="${certification.value=='Tanishq'}">  
+                 <img src="${commonResourcePath}/images/Master_Card.png" alt="certified by">  
+            </c:if>
+             <c:if test="${certification.value=='AGS'}">
+                 <img src="${commonResourcePath}/images/American_Express.png" alt="certified by">
+            </c:if>
+             <c:if test="${certification.value=='AGTA'}">
+                 <img src="${commonResourcePath}/images/Maestro.png" alt="certified by">         
+            </c:if>
+             <c:if test="${certification.value=='HRD'}">  
+                 <img src="${commonResourcePath}/images/Discover.png" alt="certified by">    
+            </c:if>
+            </li>     
+           </c:forEach>
+         </ul>
+      </div>
+          <div class="certified-by">
+           <ul>
+            <li>30 day returns</li>
+            <li>tata guarantee</li>
+           
+           </ul>
+          </div>
+      </c:if>
+            <!-- BLOCK ADDED FOR JEWELLERY CERTIFICATION ENDS HERE--> --%>
+          
 		</div>
-
-<div class="tabs-block">
-				<product:productPageTabs />
+		<c:if test="${product.rootCategory=='FineJewellery'or product.rootCategory=='FashionJewellery' }">
+		 <div class="jewellery-wrapper">
+		 </c:if>
+		 <div class="tabs-block ${product.rootCategory}">
+				<product:productPageTabs product="${product}" />
 			</div>
+		<!-- CODE MOVED HERE FOR OTHER PRODUCTS APART FROM JEWELLERY TO DISPLAY DETAILS IN TAB STARTS HERE -->
+		<%-- <c:set var="finejewellery">
+			<spring:theme code='product.finejewellery' />
+		</c:set>
+		<c:choose>
+			<c:when test="${product.rootCategory ne finejewellery}">
+				<div class="tabs-block" id="tabsBlock">
+					<product:productPageTabs />
+				</div>
+			</c:when>
+		</c:choose> --%>
+		<!-- CODE MOVED HERE FOR OTHER PRODUCTS APART FROM JEWELLERY TO DISPLAY DETAILS IN TAB ENDS HERE -->
+    <!-- Fine Jewellery Details Tree Section  -->
+		<c:if test="${product.rootCategory=='FineJewellery'or product.rootCategory=='FashionJewellery' }">
+			<product:productDetailsClassifications product="${product}" />
+			</c:if>
+			<c:if test="${product.rootCategory=='FineJewellery'or product.rootCategory=='FashionJewellery' }">
+		 </div>
+		 </c:if>	
 	</div>
 	
 	
@@ -433,7 +625,7 @@ tr.d0 td {
 	<c:if test="${not empty aplusHTML}">${aplusHTML}</c:if>
 	</div>
 <c:choose>
-		<c:when test="${product.rootCategory==clothing || product.rootCategory== footwear || product.rootCategory==accessories}">  <!-- Added for TISPRO-271 -->
+		<c:when test="${product.rootCategory==clothing || product.rootCategory== footwear || product.rootCategory==accessories || product.rootCategory==finejewellery || product.rootCategory==fashionjewellery}">  <!-- Added for TISPRO-271 -->
 			<div class="trending"  id="ia_products_complements"></div>
 			<div class="trending"  id="ia_products"></div>
 		</c:when>
@@ -447,15 +639,16 @@ tr.d0 td {
 
 
 <!--- START: INSERTED for MSD --->
-<br/><br/>
-<c:choose>
-<c:when test="${product.rootCategory==clothing || product.rootCategory== footwear || product.rootCategory==accessories}">
-<div class="view-similar-items" id="view-similar-items"></div>
-</c:when>
-<c:otherwise>
-</c:otherwise> 
-</c:choose>	
-<!--- END:MSD ---> 
+	<br /> <br />
+	<c:choose>
+		<c:when
+			test="${product.rootCategory==clothing || product.rootCategory== footwear || product.rootCategory==accessories|| product.rootCategory==finejewellery || product.rootCategory==fashionjewellery}">
+			<div class="view-similar-items" id="view-similar-items"></div>
+		</c:when>
+		<c:otherwise>
+		</c:otherwise>
+	</c:choose>
+	<!--- END:MSD --->
 	
 <%-- <c:choose>
 <c:when test="${product.rootCategory==electronics  || product.rootCategory==watches}">
@@ -560,4 +753,10 @@ tr.d0 td {
 </div>
 </div>
 </div>
+
 </div>
+
+<script type="text/javascript">
+	var prop = '${mapConfigurableAttributes}';
+	prop =prop.replace(/[{}]/g, '');	
+</script>

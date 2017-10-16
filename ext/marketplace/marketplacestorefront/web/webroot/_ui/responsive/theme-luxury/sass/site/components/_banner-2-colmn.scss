@@ -1,0 +1,46 @@
+/*Two column layout banner start*/
+.banner-2-colmn {
+	max-width: 1288px;
+	margin-left: auto;
+	margin-right: auto;
+	.colmn {
+		position: relative;
+		@include media-breakpoint-up(md) {
+			width: 50%;
+			&:nth-child(1){
+				img{
+					border-radius: 5px 0px 0px 5px;
+				}
+			}
+			&:nth-child(2){
+				img{
+					border-radius: 0px 5px 5px 0px;
+				}
+			}
+		}
+	}
+	.banner-content {
+		color: $white;
+		top: 50%;
+		position: absolute;
+		left: 0;
+		right: 0;
+		z-index: 3;
+		padding: 10px;
+		-webkit-transform: translateY(-50%);
+		-moz-transform: translateY(-50%);
+		-o-transform: translateY(-50%);
+		-ms-transform: translateY(-50%);
+		transform: translateY(-50%);
+		h2 {
+			margin: 0;
+			font-size: 2.8em;
+			font-weight: 700;
+			color: $white;
+			@include media-breakpoint-down(sm) {
+				font-size: 24px;
+			}
+		}
+	}
+}
+/*Two column layout banner end*/

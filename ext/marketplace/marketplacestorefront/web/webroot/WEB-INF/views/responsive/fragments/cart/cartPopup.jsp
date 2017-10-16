@@ -16,38 +16,39 @@
 <c:url value="/cart" var="cartUrl"/>
 <c:url value="/cart/checkout" var="checkoutUrl"/>
 
-		            
-    
-					<ul class="my-bag-ul">
-						 <c:choose>
-						<c:when test="${not empty entries}">		
-         
-             <c:forEach items="${entries}" var="entry" end="${numberShowing - 1}">
-								<c:url value="${entry.product.url}" var="entryProductUrl"/>
-							<li class="item">
-								<ul>
-									<li>
-										<div class="product-img">
-										<c:choose>
+
+
+<ul class="my-bag-ul">
+	<c:choose>
+		<c:when test="${not empty entries}">
+
+            <c:forEach items="${entries}" var="entry" end="${numberShowing - 1}">
+				<c:url value="${entry.product.url}" var="entryProductUrl"/>
+				<li class="item">
+					<ul>
+						<li>
+							<div class="product-img">
+								<c:choose>
 											<c:when test="${fn:toLowerCase(entry.product.luxIndicator)=='luxury'}">
 													<a href="${entryProductUrl}">
-												<product:productPrimaryImage product="${entry.product}" format="luxuryCartIcon"/>
+												<product:productPrimaryImage product="${entry.product}" format="luxuryCartIcon" lazyLoad="false"/>
 											</a>
 											</c:when>
 											<c:otherwise>
 													<a href="${entryProductUrl}">
-												<product:productPrimaryImage product="${entry.product}" format="cartIcon"/>
+												<product:productPrimaryImage product="${entry.product}" format="cartIcon" lazyLoad="false"/>
 											</a>
 													
 											</c:otherwise>
 										</c:choose>
-										</div>
-										<div class="product">
-											<p class="company"></p>
-											<h3 class="product-brand-name"><a href="${entryProductUrl}">${entry.product.brand.brandname}</a></h3>
-											<%-- <h3 class="product-fullfilment"><spring:theme code="mpl.myBag.fulfillment"></spring:theme> --%>
-											<h3 class="product-name"><a href="${entryProductUrl}">${entry.product.productTitle}</a></h3>
-																		
+								</div>
+								<div class="product">
+									<p class="company"></p>
+									<h3 class="product-brand-name">
+										<a href="${entryProductUrl}">${entry.product.brand.brandname}</a></h3>
+									<%-- <h3 class="product-fullfilment"><spring:theme code="mpl.myBag.fulfillment"></spring:theme> --%>
+									<h3 class="product-name"><a href="${entryProductUrl}">${entry.product.productTitle}</a></h3>
+																
 							<%-- <c:choose>
 							
    							 <c:when test="${entry.product.deliveryFulfillMode eq 'TShip'}">
@@ -57,42 +58,64 @@
         					${entry.product.deliveryFulfillMode}
    							 </c:otherwise>
 							</c:choose> --%>
-							
-										</h3>											
-											<p class="item-info">
-												<%-- <span><spring:theme code="cart.popup.fulfilled" /></span> --%>
-											</p>
-										</div>
-										<ul class="item-edit-details">
-											<li><spring:theme code="cart.popup.quantity" /> ${entry.quantity}</li>
-											<c:if test="${not empty entry.product.size}">
-											<li><spring:theme code="cart.popup.size" />&nbsp;${entry.product.size}</li>
-											</c:if>
-											<c:if test="${entry.giveAway ne true}">
-											<li><a href="#nogo" class="removeFromCart" data-entry-no="${entry.entryNumber}" data-ussid="${entry.selectedUssid}"><spring:theme code="text.iconCartRemove" /></a></li>
-											</c:if>
-										</ul>
-									</li>
-									<c:if test="${entry.giveAway ne true}">
-									<%-- <li class="price"><format:price priceData="${entry.basePrice}"/></li> --%>									
-									<li class="price"><format:price priceData="${entry.totalPrice}"/></li>
-									
-									</c:if>
-									<c:if test="${entry.giveAway eq true}">
-									<li class="price">Free</li>
-									</c:if>
-								</ul>
-							</li>
-							</c:forEach>
-							 
-							<li><c:if test="${numberItemsInCart > numberShowing}">
-							
-							<div class="more-items">${numberItemsInCart -numberShowing} 
-							
-							<c:if test="${numberItemsInCart -numberShowing > 1}">&nbsp;<spring:theme code="cart.popup.more.items" /></c:if>
-							<c:if test="${numberItemsInCart -numberShowing == 1}">&nbsp;<spring:theme code="cart.popup.more.item" /></c:if>
+							</h3>
+								<p class="item-info">
+									<%-- <span><spring:theme code="cart.popup.fulfilled" /></span> --%>
+								</p>
 							</div>
-							</c:if>
+							<ul class="item-edit-details">
+								<li><spring:theme code="cart.popup.quantity" /> ${entry.quantity}</li>
+								<c:if test="${not empty entry.product.size}">
+								<c:choose>
+									<c:when test="${(not empty entry.product.rootCategory) && (entry.product.rootCategory == 'FineJewellery' || entry.product.rootCategory == 'FashionJewellery') }">
+										<spring:theme code="product.variant.size.noSize" var="noSize"/>
+										<c:if test="${entry.product.size ne noSize}">
+											<spring:eval expression="T(de.hybris.platform.util.Config).getParameter('mpl.jewellery.category')" var="lengthVariant"/>
+									     	<c:set var = "categoryListArray" value = "${fn:split(lengthVariant, ',')}" />
+											<c:forEach items="${entry.product.categories}" var="categories">
+									   			<c:forEach items = "${categoryListArray}" var="lengthVariantArray">
+									   				<c:if test="${categories.code eq lengthVariantArray}">
+									   				 	<c:set var="lengthSize" value="true"/>
+									   				</c:if> 
+									   			</c:forEach>
+									   		</c:forEach>	  
+									   		<c:choose>
+									   			<c:when test="${true eq lengthSize}">
+												  <li><spring:theme code="product.variant.length"/>&nbsp;${entry.product.size}</li>
+									   			</c:when>
+									   			<c:otherwise>
+												  <li><spring:theme code="cart.popup.size" />&nbsp;${entry.product.size}</li>
+									   			</c:otherwise>
+									   		</c:choose>
+										</c:if>
+									</c:when>
+									<c:otherwise>
+										<li><spring:theme code="cart.popup.size" />&nbsp;${entry.product.size}</li>
+									</c:otherwise>
+								</c:choose>
+								</c:if>
+								<c:if test="${entry.giveAway ne true}">
+								<li><a href="#nogo" class="removeFromCart" data-entry-no="${entry.entryNumber}" data-ussid="${entry.selectedUssid}"><spring:theme code="text.iconCartRemove" /></a></li>
+								</c:if>
+							</ul>
+						</li>
+						<c:if test="${entry.giveAway ne true}">
+							<%-- <li class="price"><format:price priceData="${entry.basePrice}"/></li> --%>
+							<li class="price"><format:price priceData="${entry.totalPrice}"/></li>
+						</c:if>
+						<c:if test="${entry.giveAway eq true}">
+							<li class="price">Free</li>
+						</c:if>
+					</ul>
+				</li>
+			</c:forEach>
+			<li><c:if test="${numberItemsInCart > numberShowing}">
+					<div class="more-items">${numberItemsInCart -numberShowing}
+
+						<c:if test="${numberItemsInCart -numberShowing > 1}">&nbsp;<spring:theme code="cart.popup.more.items" /></c:if>
+						<c:if test="${numberItemsInCart -numberShowing == 1}">&nbsp;<spring:theme code="cart.popup.more.item" /></c:if>
+					</div>
+				</c:if>
 
 							<%-- <div class="totalPayable">
 								<spring:theme code="cart.popup.totalPayable" />&nbsp;<span class="total-payable-amount">${cartData.totalPriceWithConvCharge.formattedValue}</span> 
@@ -102,33 +125,33 @@
 								<spring:theme code="cart.popup.totalPayable" /><span class="total-payable-amount">${cartData.totalPriceWithConvCharge.formattedValue}</span> 
 							</div> --%>
 							
-							<c:choose>	
-								<c:when test="${not empty cartData.deliveryCost.formattedValue &&  cartData.deliveryCost.formattedValue gt  '0.0'}">
-		   							 <c:set var="res" value="${(cartData.totalPriceWithConvCharge.value - cartData.deliveryCost.value)}"/>
-									<div class="totalPayable">
-									<spring:theme code="cart.popup.totalPayable" /><span class="total-payable-amount"> &#x20B9; <fmt:formatNumber type="number" minFractionDigits="2" maxFractionDigits="2" value="${res}" /></span>
-									</div>
-		        				</c:when>
-		    					<c:otherwise>
-		        					<div class="totalPayable">
-										<spring:theme code="cart.popup.totalPayable" />&nbsp;<span class="total-payable-amount">${cartData.totalPriceWithConvCharge.formattedValue}</span> 
-									</div>
-		   						</c:otherwise>
-							</c:choose> 
+						<c:choose>	
+							<c:when test="${not empty cartData.deliveryCost.formattedValue &&  cartData.deliveryCost.formattedValue gt  '0.0'}">
+	   							 <c:set var="res" value="${(cartData.totalPriceWithConvCharge.value - cartData.deliveryCost.value)}"/>
+								<div class="totalPayable">
+								<spring:theme code="cart.popup.totalPayable" /><span class="total-payable-amount"> &#x20B9; <fmt:formatNumber type="number" minFractionDigits="2" maxFractionDigits="2" value="${res}" /></span>
+								</div>
+	        				</c:when>
+	    					<c:otherwise>
+	        					<div class="totalPayable">
+									<spring:theme code="cart.popup.totalPayable"/>&nbsp;<span class="total-payable-amount">${cartData.totalPriceWithConvCharge.formattedValue}</span>
+								</div>
+	   						</c:otherwise>
+						</c:choose>
 
 							<a href="${cartUrl}" class="go-to-bag mini-cart-checkout-button">
 							<spring:theme code="mpl.minicart.myBag" /></a>
-							</li>       
+							</li>
         
-						</c:when>
-         <c:otherwise>
-        <div class="emptyMiniCart"><spring:message code="popup.cart.empty"/>  </div>     
-</c:otherwise>
-</c:choose>
-						
-						</ul>
-	
-		
+		</c:when>
+		<c:otherwise>
+			<div class="emptyMiniCart">
+				<spring:message code="popup.cart.empty"/>
+			</div>
+		</c:otherwise>
+	</c:choose>
+</ul>
+
 
 <!-- OLD MINI CART  -->
 
@@ -226,5 +249,3 @@
 		</div>
 	</ycommerce:testId>
 </div> --%>
-
-

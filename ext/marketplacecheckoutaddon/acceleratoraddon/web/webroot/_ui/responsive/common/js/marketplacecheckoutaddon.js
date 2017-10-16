@@ -41,6 +41,7 @@ $("#viewPaymentNetbanking").click(function(){
 });
 
 $("#viewPaymentCOD").click(function(){
+	console.log("sssj");
 	$("body").append("<div id='no-click' style='opacity:0.40; background:transparent; z-index: 100000; width:100%; height:100%; position: fixed; top: 0; left:0;'></div>");
 	//Display COD form only if the session is active
 	if(isSessionActive()==true){
@@ -310,11 +311,12 @@ function displayCODForm()
 		data: { 'cartValue' : cartValue , 'request' : httpRequest},
 		cache: false,
 		success : function(response) {
+			console.log(response);
 			$("#otpNUM").html(response);
 			var codEligible=$("#codEligible").val();
-			
+			console.log(codEligible);
 			$("#COD, #paymentDetails, #otpNUM, #sendOTPNumber, #sendOTPButton").css("display","block");
-			$("#enterOTP, #submitPaymentFormButton, #submitPaymentFormCODButton, .make_payment, #paymentFormButton, #otpSentMessage").css("display","none");/*modified for pprd testing -- changing back*/
+			//$("#enterOTP, #submitPaymentFormButton, #submitPaymentFormCODButton, .make_payment, #paymentFormButton, #otpSentMessage").css("display","none");/*modified for pprd testing -- changing back*/
 			if(codEligible=="BLACKLISTED")
 			{
 				$("#customerBlackListMessage").css("display","block");
@@ -512,6 +514,7 @@ function displayCreditCardForm(){
 
 
 function submitForm(){
+	console.log("triggering submit");
 	if($("#paymentMode").val()=="Netbanking")
 	{
 		var code=bankCodeCheck();
@@ -523,13 +526,17 @@ function submitForm(){
 		}
 	}
 	else if($("#paymentMode").val()=="COD"){
+		console.log("COD Payment:#526");
 		var otpNUMField= $('#otpNUMField').val();
+		console.log(otpNUMField);
 		if(otpNUMField=="")
 		{
+			console.log("COD Payment:#530");
 			$("#otpNUM, #sendOTPNumber, #emptyOTPMessage, #otpSentMessage").css("display","block");
 		}
 		else
 		{
+			console.log("COD Payment:#535");
 			$("#otpNUM, #sendOTPNumber, #paymentFormButton, #sendOTPButton, #otpSentMessage").css("display","block");
 			$("#emptyOTPMessage").css("display","none");
 			$('#paymentButtonId').prop('disabled', true); //TISPRD-958
@@ -538,6 +545,7 @@ function submitForm(){
 			type: "POST",
 			cache: false,		
 			success : function(response) {
+				console.log(response);
 				if(response=='redirect'){
 					$(location).attr('href',ACC.config.encodedContextPath+"/cart"); //TIS 404
 				}else{
@@ -3179,6 +3187,7 @@ function checkPincodeServiceability(buttonType)
  			else
  				{
  					populatePincodeDeliveryMode(response,buttonType);
+ 					populateIsExchangeApplied(response);
  					reloadpage(selectedPincode,buttonType);
  				}
  			
@@ -4554,3 +4563,15 @@ function redirectToCheckoutLogin(){
 	window.location=ACC.config.encodedContextPath + "/checkout/multi/checkoutlogin/login";
 }
 
+function populateIsExchangeApplied(response)
+{
+	var exchangeId = $('#exc_cart').val();
+	if(exchangeId !== null && exchangeId !== undefined && response)
+		{
+		var values=response.split("|");
+		var isServicable=values[0];
+		var selectedPincode=values[1];
+		var deliveryModeJsonMap=values[2];
+		
+		}
+}

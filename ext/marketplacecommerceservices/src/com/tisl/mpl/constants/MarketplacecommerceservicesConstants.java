@@ -36,12 +36,15 @@ import com.tisl.mpl.core.model.ProductFreebieDetailModel;
 public final class MarketplacecommerceservicesConstants extends GeneratedMarketplacecommerceservicesConstants
 {
 
-	//TPR-4461 starts here
-	//public static final String RESTRICTIONBANK = "restrictionbank".intern();
-	//public static final String RESTRICTIONPAYMENTMODE = "restrictionpaymentmode".intern();
-	//public final static String BANKFROMBINFORPROMOTION = "bankForPromotion".intern();
-	//public static final String PAYMENTMODECOUPON = "paymentmodecoupon".intern();
-	// TPR-4464 ends here
+	//TPR-6272 starts here IQA
+	public static final String COMMACONSTANT = ",";
+	public static final int PLATFORM_ZERO = 0;
+	public static final int PLATFORM_ONE = 1;
+	public static final int PLATFORM_TWO = 2;
+	public static final int PLATFORM_THREE = 3;
+	public static final int PLATFORM_FOUR = 4;
+	public static final int PLATFORM_FIVE = 5;
+	//TPR-6272 ends here
 	//TPR-4461 STARTS HERE
 	public static final String COUPONFAILUREMESSAGE = "Sorry,Voucher is not applicable for the PAYMENT MODE/BANK you have selected.In order to proceed with this payment mode, please release the coupon or select an alternative payment mode";
 
@@ -73,8 +76,11 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String CART_DELISTED_STATUS = "Cart Delisted Status :";
 	public static final String IS_BOGO_APPLIED = "isBOGOapplied";
 	public static final String BOGO_ITEM_COUNT = "bogoFreeItmCount";
+	public static final String FINEJEWELLERY = "FineJewellery";
+	public static final String FASHIONJEWELLERY = "FashionJewellery";
 
 	//SONAR FIX
+	public static final String SHIPPING = "SHIPPING";
 	public static final String CONSIGNMENT_STATUS = " Consignment status :";
 	public static final String BOXING = "boxing";
 	public static final String APPLICATION_JSON_VALUE = "application/json";
@@ -83,7 +89,6 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String PWD = "pwd";
 
 	public static final String ZeroDeliveryCost = "0.0";
-
 
 	public static final String LIST_EMPTY = "List is Empty";
 
@@ -110,6 +115,9 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String TRUE_UPPER = "TRUE";
 	public static final String ZERO = "0";
 	public static final String LINK_PASSWORD_CHANGE = "/login/pw/change";
+	//Sonar Fix Jewellery
+	public static final String STONE = "Stone";
+	public static final String SIZE = "size";
 
 	//For Promotion Intercepter
 
@@ -120,26 +128,19 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String PRODUCT_PRICE_COLUMN = "price".intern();
 	public static final String PRESENT_CATEGORY = "Present Category :".intern();
 
-
 	public static final String PROMO_ERROR_MESSAGE = "Cannot exceed 25 characters.".intern();
-	//public static final String PROMO_ERROR_MESSAGE = "Title cannot exceed 25 characters.".intern();
-
-
-
-
+	//public static final String PROMO_ERROR_MESSAGE =
+	//"Title cannot exceed 25 characters.".intern();
 
 	//For Bulk Orders Return Initiation
 	public static final String COMMA_DELIMITER = ",";
-	//	public static final String TICKETTYPECODE = "R";
-	//	public static final String REFUNDTYPE = "S";
-	//	public static final String REASONCODE = "03"; // Hard coded value -- I'm not happy with the product quality
-
-
-
+	//public static final String TICKETTYPECODE = "R";
+	//public static final String REFUNDTYPE = "S";
+	//public static final String REASONCODE = "03"; //Hard coded value -- I'm
+	//not happy with the product quality
 
 	//Bulk Cancellation
 	public static final String initiate_cancel_job_cancellation_count = "initiate.cancel.job.cancellation.count";
-
 
 	//For SuperCategoryDecorator
 	public static final String CONFIGURATION_SER = "configurationService";
@@ -149,20 +150,17 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 
 	public static final String FRONTSLASH = "/";
 
-
 	//For AddProductCategory Intercepter
 	public static final String COMMA = ",";
 	public static final String HYPHEN = "-";
 	public static final String KEY = "0";
 	public static final String VALUE = "1";
 
-
 	//For AddProductCategory Intercepter
 	public static final String APPAREL = "MPH11";
 	public static final String ELECTORNICS = "MPH12";
 	public static final String CATEGORY_APPAREL = "Clothing";
 	public static final String CATEGORY_ELECTORNICS = "Electronics";
-
 
 	//Return Item
 	public static final String REVERCE_LOGISTIC_PINCODE_SERVICEABLE_NOTAVAIL_MESSAGE = "SORRY! We cannot pickup from the address provided, Please provide other address or You can Self - ship and let us know!";
@@ -196,11 +194,13 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public final static Date EMPTYDATE = null;
 	//PAYMENT SERVICE
 	public static final String MPLPAYMENTSERVICE = "mplPaymentService";
-	//public static final String CALLINGPAYUSERVICE = "Calling PAYU service:::::::";
+	//public static final String CALLINGPAYUSERVICE =
+	//"Calling PAYU service:::::::";
 	//public static final String ORDERAMOUNT = "Amount of Order::::";
 	//public static final String BANKCODE = "Bank Code:::::";
 	//public static final String CUSTOMEREMAIL = "Email of Customer::::";
-	//public static final String CUSTOMERFIRSTNAME = "Customer's FirstName:::::";
+	//public static final String CUSTOMERFIRSTNAME =
+	//"Customer's FirstName:::::";
 	//public static final String CUSTOMERLASTNAME = "Customer's LastName:::::";
 	//public static final String CUSTOMERPHONENO = "Phone No:::::";
 	//public static final String PG = "PG";
@@ -250,6 +250,8 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String ON = "on".intern();
 	public static final String WAREHOUSE = "mpl_warehouse";
 
+	//Luxury Return URL
+	public static final String RETURNURLLUX = "payment.juspay.returnUrl.lux".intern();
 
 	//PAYMENT DAO
 	public static final String MPLPAYMENTDAO = "mplPaymentDao";
@@ -271,10 +273,9 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String EMIBANK_FOR_BANKNAMES_QUERY = "select {b:pk} from {emiBank As b} ,{bank as m} where {b.emiLowerLimit}<=?cartValue and {b.emiUpperLimit}>=?cartValue and {b.name}={m.pk}  and upper({m.bankname}) = ?bankName order by {m.bankname}"
 			.intern();
 
-
 	public static final String EMIBANTERMSSQUERY = "select {e:pk} from {emibank as e},{bank as b} where {e.name}={b.pk} and {b.bankName}=?bank"
 			.intern();
-	public static final String PAYMENTTYPEFORAPPORTIONQUERY = "select {p:pk} from {PaymentType As p} WHERE {p.mode}=?paymentMode"
+	public static final String PAYMENTTYPEFORAPPORTIONQUERY = "select {p:pk} from {PaymentType As p} WHERE {p.mode}=?paymentMode and {b.basestore}=?baseStore"
 			.intern();
 	public static final String BANKFORBINQUERY = "select {b:pk} from {Bin As b} WHERE {b.binno}=?bin".intern();
 	public static final String GETPAYMENTTRANSACTIONFROMCARTQUERY = "select {p:pk} from {PaymentTransaction as p},{Cart as c},{Customer as u} where {p.order}={c.pk} and {c.user}={u.pk} and {u.uid}=?customerId and {p.code}=?juspayOrderId and {p.status}='success' "
@@ -282,7 +283,8 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String MOBILEBLACKLIST = "select {b:pk} from {blacklist As b} where {b.phoneNumber} =?phoneNumber"
 			.intern();
 	public static final String MOBILENO = "phoneNumber".intern();
-	public static final String PAYMENTMODETYPE = "select {b:pk} from {PaymentType As b} where {b.mode}=?mode".intern();
+	public static final String PAYMENTMODETYPE = "select {b:pk} from {PaymentType As b} where {b.mode}=?mode and {b.basestore}=?baseStore"
+			.intern();
 	public static final String MODE = "mode".intern();
 	public static final String SAVEDCARDQUERY = "Select {s:pk} from {SavedCard as s},{Customer as c} where {s.customer}={c.pk} and {c.customerid}=?customerId and {s.cardReferenceNumber}=?cardRef"
 			.intern();
@@ -309,7 +311,6 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 			.intern();
 
 	//TISPRO-179
-
 
 	public static final String BANKMODELQUERY = "select {bnk.pk} from {bank as bnk} where upper({bnk.bankname}) =?bankname";
 
@@ -374,7 +375,6 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String PREVDELIVERYCHARGE = "prevDelCharge".intern();
 	public static final String CURRENTDELIVERYCHARGE = "currDelCharge".intern();
 
-
 	public static final String SUCCESS_FLAG = "Success";
 	public static final String ERROR_FLAG = "Failure";
 	public static final String BAD_CREDENTIALS = "Bad credentials";
@@ -390,12 +390,14 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String PRODUCT_NOT_ADDED = "Product already exists";
 	public static final String MANDATORY_PARAMETERS_CANNOT_BE_BLANK = "Mandatory Parameters cannot be left blank";
 
-	// No WishList Available
+	//No WishList Available
 	public static final String NOWISHLISTAVAILABLE = "No Wishlist Available for this user".intern();
 
 	//Mobile all cat
 	public static final String SALESCATEGORYTYPE = "marketplace.mplcatalog.salescategory.code";
 	public static final String DEFAULTCATALOGID = "cronjob.promotion.catelog";
+	public static final String DEFAULTLUXURYCATALOGID = "cronjob.luxury.promotion.catelog";
+	public static final String DEFAULTLUXURYSITEID = "luxury.site.id";
 	public static final String DEFAULTCATALOGVERISONID = "cronjob.promotion.catalogVersionName";
 	public static final String SALESROOTCATEGORY = "marketplace.mplcatalog.sales.rootcategory.code";
 	public static final String SHOPBYBRANDCOMPONENT = "marketplace.mplcatalog.shopbybrand.component.id";
@@ -404,7 +406,6 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String SALESMEN = "marketplace.mplcatalog.sales.men.id";
 	public static final String SALESWOMEN = "marketplace.mplcatalog.sales.women.id";
 	public static final String SALESELECTRONICS = "marketplace.mplcatalog.sales.electronics.id";
-
 
 	//Seller Master Constants
 	public static final String SELLER_MASTER_XSD_PATH = "xsd/Seller_Master.xsd";
@@ -431,8 +432,9 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String WISHLIST_NO = "Wishlist";
 	public static final String THUMBNAIL = "thumbnail";
 	public static final String SEARCHPAGE = "searchPage";
+	public static final String CARTPAGE = "cartPage";
+	public static final String LUXURYSEARCHPAGE = "luxurySearchPage";
 	public static final String WISHLIST_EXISTS_MSG = "Wishlist name already exists.";
-
 
 	//Mobile home page
 	public static final String HOMEPAGECOMPONENT = "marketplace.homepage.component.id";
@@ -473,7 +475,7 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	{ 0, 2, 4, 6, 8, 1, 3, 5, 7, 9 };
 
 	public static final int[] DIGITS_POWER
-	// 0 1 2 3 4 5 6 7 8
+	//0 1 2 3 4 5 6 7 8
 	=
 	{ 1, 10, 100, 1000, 10000, 100000, 1000000, 10000000, 100000000 };
 
@@ -546,9 +548,6 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String SMS_VARIABLE_THREE = "{3}";
 	public static final String SMS_VARIABLE_FOUR = "{4}";
 
-
-
-
 	public static final String SMS_SENDER_ID = "marketplace.sms.sender.name".intern();
 	public static final String SMS_MESSAGE_FORGOT_PWD = "Dear Customer, One Time Password for your request is {0}. Please enter the same to submit the request. Regards, Team Tata Unistore.";
 	/* 1.Anniversary Changes */
@@ -572,7 +571,6 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	/* 14. Anniversary Changes */
 	public static final String PUSH_MESSAGE_ORDER_CANCELLED = "Hi, a refund of INR {0} has been initiated on the cancellation of {2} product(s). Check your email for details.";
 
-
 	public static final String SMS_SERVICE_CONTACTNO = "marketplace.sms.service.contactno";
 	public static final String SMS_ORDER_TRACK_URL = "marketplace.sms.order.track.url";
 	public static final String SMS_ORDER_TRACK_LONG_URL = "marketplace.sms.track.longUrl";
@@ -582,8 +580,8 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String SMS_SERVICE_APP_DWLD_URL = "marketplace.sms.app.download.url";
 	public static final String SMS_SERVICE_WEBSITE_URL = "marketplace.sms.order.website.url";
 
-
-	//public static final String SMS_MESSAGE_HOTC = "Hey! we have shipped {0} item(s) of your order #{1} via {2}.Give it 2-3 working days to reach you. Can't control the excitement? Track your order here {3} .Thanks!";
+	//public static final String SMS_MESSAGE_HOTC =
+	//"Hey! we have shipped {0} item(s) of your order #{1} via {2}.Give it 2-3 working days to reach you. Can't control the excitement? Track your order here {3} .Thanks!";
 	/* 2.Anniversary Changes */
 	public static final String SMS_MESSAGE_HOTC = "Hi! Your order # {1} with {0} item(s) has been shipped via {2}. You can track your order at {3}. Next time, shop on the go, on our app!";
 	/* 5.Anniversary Changes */
@@ -595,11 +593,12 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 
 	public static final String SMS_MESSAGE_ORDER_RISK = "We're sorry! Your Tata CLiQ order no.{0} has been put on hold for some checks. You might get a call from Tata CLiQ Care.";
 	/* 8. Anniversary Changes */
-	public static final String SMS_MESSAGE_ORDER_RISK_CONFIRMED = "Hi, your order no. {0} is now confirmed. While we’ll keep you posted, track your order at {1}. Hope you enjoyed shopping with us.";
+	public static final String SMS_MESSAGE_ORDER_RISK_CONFIRMED = "Hi, your order no. {0} is now confirmed. While we'Â’ll keep you posted, track your order at {1}. Hope you enjoyed shopping with us.";
 	/* 9.Anniversary Changes */
 	public static final String SMS_MESSAGE_ORDER_RISK_REJECTED = "Hi, there's been a problem and your order no.{0} has been rejected. Log on to your account {1} or call us on {3} for more details.";
 	//R2.3 Added ShipmentSecondaryStatus NEW SMS
-	//	public static final String SMS_MESSAGE_ADDRESS_ISSUE = "Your order of {0}, in order no. {1} has been delayed due to issues involving your address. We deeply regret the inconvenience. We will call you within 48 hrs to confirm your address.";
+	//public static final String SMS_MESSAGE_ADDRESS_ISSUE =
+	//"Your order of {0}, in order no. {1} has been delayed due to issues involving your address. We deeply regret the inconvenience. We will call you within 48 hrs to confirm your address.";
 	public static final String SMS_MESSAGE_ADDRESS_ISSUE = "Your order of {0} item, in order no. {1} has been delayed due to issues involving your address. We deeply regret the inconvenience. We will call you within 48 hrs to confirm your address.";
 
 	public static final String SMS_MESSAGE_UNDELIVERED = "Your order of {0},  in order no. {1} is undelivered. We deeply regret the inconvenience. We will attempt to ship it to you within 48 hrs.";
@@ -608,7 +607,6 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String SMS_MESSAGE_DELIVERED = "Good news, everyone!  Your {0} {1}, was successfully delivered. We had tons of fun serving you. Hope you're happy with your CAMEL as well";
 	public static final String SMS_MESSAGE_RTO_INITIATED = "We are  initiated RTO for your shipment. If you want delivery then let us know within 24 hr";
 	public static final String SMS_MESSAGE_MIS_ROUTE = "Hi! Your order of {0}  in order no. {1} has been delay due to mis route. We deeply regret the inconvenience. ";
-
 
 	public static final int MAX_PAGE_LIMIT = 100;
 
@@ -627,7 +625,6 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 
 	public static final String SMS_MESSAGE_CD_OTP = "Peek-a-boo {0}! One-time password to Change delivery Address {1}. Please feel free to call us at {2} in case of any queries.";
 	public static final String SMS_MESSAGE_RETURN_TO_STORE = "Hey {0}. You can return Order {1} at {2},  by {3} at store location:{4} .";
-
 
 	//For Bulk Upload in Promotions
 	public final static char FIELD_SEPARATOR = ',';
@@ -677,7 +674,7 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String SALES_REPORT = "salesReport";
 	public static final String OTPGENERATEERROR = "Otp has not generated";
 	public static final String PREPAID_SPACE = "Prepaid";
-
+	//TISSPTEN-116 remove full stop
 	public static final String INTERESTED_IN_EMAIL = "I am interested in receiving e-mails";
 	public static final String NOT_INTERESTED_IN_EMAIL = "I am not interested in receiving e-mails";
 	public static final String BRAND_NAME_PREFIX = "MBH";
@@ -728,7 +725,6 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	//For Cancellation Reason Query
 	public static final String CANCELLATIONREASONQUERY = "select {c:pk} from {CancellationReason As c}".intern();
 
-
 	//Add to Cart
 	public static final String MAX_ORDER_QUANTITY_EXCEEDED = "maxOrderQuantityExceeded";
 	public static final String LOWSTOCK = "lowStock";
@@ -739,11 +735,23 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String QUANTITY_INVALID_BINDING_MESSAGE_KEY = "basket.error.quantity.invalid.binding";
 	public static final String MINIMUM_CONFIGURED_QUANTIY = "mpl.cart.minimumConfiguredQuantity.lineItem";
 	public static final String MAXIMUM_CONFIGURED_QUANTIY = "mpl.cart.maximumConfiguredQuantity.lineItem";
+
+
+	//added for jewellery
+
+	public static final String MINIMUM_CONFIGURED_QUANTIY_JEWELLERY = "mpl.cart.minimumConfiguredQuantityForJewellery.lineItem";
+	public static final String MAXIMUM_CONFIGURED_QUANTIY_JEWELLERY = "mpl.cart.maximumConfiguredQuantityForJewellery.lineItem";
+
+	//end
+
 	public static final String CROSSED_MAX_LIMIT = "crossedMaxLimit";
 	public static final String REACHED_MAX_LIMIT = "reachedMaxLimit";
 	public static final String WISHLIST_DISPLAY_QUANTITY = "mpl.cart.wishlist.display.quantity";
 	public static final String OUT_OF_INVENTORY = "outofinventory";
 	public static final String INVENTORY_WIIL_EXCEDE = "willexceedeinventory";
+	public static final String MAX_QUANTITY_ADDED_FOR_EXCHANGE = "maxqtyexchange";
+	//TISJEWST-10
+	public static final String MAX_QUANTITY_ADDED_FOR_FINEJEWELLERY = "maxqtyaddedforfinejewellery";
 
 	//For SellerPriority Report
 	public static final String CSVFILEHEADER_SELLERPRIORITY = "Modified Time, User ID, Seller ID, Seller Name, Category ID, Product ID, Start Date, End Date, Active?, Newly_Created?, Modified Swllwe ID, Modified Seller Name, Modified Start Date, Modified End Date, Modified Active Flag";
@@ -772,8 +780,6 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String E0021 = "E0021";
 	public static final String E0022 = "E0022";
 
-
-
 	//System/Non Business constants
 
 	//pdp error constants
@@ -784,7 +790,7 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String B3004 = "B3004";
 	//pdp error constants
 
-	// My Account Constants
+	//My Account Constants
 	public static final String B0001 = "B0001";
 	public static final String B0002 = "B0002";
 	public static final String B0003 = "B0003";
@@ -800,7 +806,7 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String B0013 = "B0013";
 	public static final String B0014 = "B0014";
 	public static final String B0015 = "B0015";
-	// My Account Constants ends
+	//My Account Constants ends
 
 	//Mobile web service error codes starts
 	public static final String B9000 = "B9000";
@@ -876,8 +882,8 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String B9074 = "B9074";
 	public static final String B9075 = "B9075";
 	public static final String B9076 = "B9076";
-	public static final String B9078 = "B9078"; // TPR-4461
-	public static final String B9079 = "B9079"; // TPR-4461
+	public static final String B9078 = "B9078"; //TPR-4461
+	public static final String B9079 = "B9079"; //TPR-4461
 
 	public static final String E9040 = "E9040";
 	public static final String E9041 = "E9041";
@@ -936,21 +942,21 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String B9325 = "B9325";
 	public static final String B9326 = "B9326";
 	public static final String B9327 = "B9327";
-	// Added for TPR-1290
+	//Added for TPR-1290
 	public static final String B9332 = "B9332";
 	public static final String B9328 = "B9328";
 	public static final String B9700 = "B9700";
 
 	public static final String B9710 = "B9710";
 	public static final String B9110 = "B9110";
-	// Added in R2.3 start
-	// Auto populating pincode details Error Codes   Start
+	//Added in R2.3 start
+	//Auto populating pincode details Error Codes Start
 	public static final String B9351 = "B9351";
 	public static final String B9352 = "B9352";
 	public static final String B9353 = "B9353";
 	public static final String B9354 = "B9354";
-	// Auto popuklating pincode details Error Codes End
-	// Added in R2.3 end
+	//Auto popuklating pincode details Error Codes End
+	//Added in R2.3 end
 	//Mobile web service error codes ends
 
 	//Payment Error Codes
@@ -1019,15 +1025,19 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 
 	public static final String B9161 = "B9161";
 
-
 	//Added for TPR-4460
 	public static final String B9302 = "B9302";
 	public static final String B9303 = "B9303";
 	public static final String B9304 = "B9304";
-	//TISPRD-5986  MSH category 404 error handling
+
+	//Added for TPR-1083
+	public static final String B9305 = "B9305";
+	public static final String B9306 = "B9306";
+	public static final String EXCHANGE_REMOVAL_REASON = "Exchange Removed from Cart/Delivery Page due to Pincode Servicability";
+
+	public static final String REVERSE_PINCODE_NOT_SERVICABLE = "Exchange is Not Servicable";
+	//TISPRD-5986 MSH category 404 error handling
 	public static final String E0023 = "E0023";
-
-
 
 	//Search error codes ends
 
@@ -1064,10 +1074,8 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 
 	public static final String LOADSTATUS = "loadstatus";
 
-
 	public static final String BULK_RETURN_DATA_QUERY_START = "SELECT {" + BulkReturnProcessModel.PK + "} FROM {"
 			+ BulkReturnProcessModel._TYPECODE + "} WHERE {" + BulkReturnProcessModel.LOADSTATUS + "}=?loadstatus";
-
 
 	public static final String NOEMIBANKLIST = "EMI Bank list is not available , Please Enter the correct data";
 	public static final String NOEMITERMKLIST = "EMI Term list is not available , Please Enter the correct data";
@@ -1078,7 +1086,6 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String RETURNQUERY = "SELECT {" + ReturnOrderModel.PK + "} FROM {" + ReturnOrderModel._TYPECODE
 			+ "} WHERE {" + ReturnOrderModel.CREATIONTIME + "} >= ?startDate AND {" + ReturnOrderModel.CREATIONTIME
 			+ "} <=?endDate ";
-
 
 	public static final String CART_NULL = "Cart model cannot be null";
 
@@ -1119,11 +1126,12 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 			+ OrderCancelRecordEntryModel._TYPECODE + "} WHERE {" + OrderCancelRecordEntryModel.CREATIONTIME
 			+ "} >= ?startDate AND {" + OrderCancelRecordEntryModel.CREATIONTIME + "} <=?endDate ";
 
-
 	public static final String REFUND_ERROR = "Refund not found in current BaseStore";
 	public static final String REFUND_CONVERSION_ERROR = "Refund convertForOrderRefund error";
 
 	public static final String ORDER_QUERY = "select {o:pk} from {Order As o} WHERE {o.type}=?type  AND {o.code}=?code";
+	//CAR-301
+	public static final String ORDER_QUERY_SUB = "select {o:pk} from {Order As o} WHERE {o.type}=?type  AND {o.code}=?code AND {o.versionid} is null ";
 
 	public static final String ORDER_STATUS_QUERY = "select {os:pk} from {OrderStatusCodeMaster As os} WHERE {os.statusCode} = ?code";
 
@@ -1132,7 +1140,6 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String INVALIDCATEGORYID = "Category id is not found , please enter valid category ID";
 	public static final String INVALIDSEARCHKEY = "Search key is not found , please enter valid Search Key";
 	public static final String SEARCHNOTFOUND = "No result found";
-
 
 	public static final String SUBMITTED = "SUBMITTED".intern();
 	public static final String COMPLETED = "COMPLETED".intern();
@@ -1166,7 +1173,6 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String JUSPAYMERCHANTIDNOTFOUND = "No juspay MerchantId is defined in local properties";
 	public static final String FACEBOOK = "Facebook";
 	public static final String GOOGLE = "Google";
-
 
 	//FOR TRACK ORDER NOTIFICATION
 	public static final String NOTIFICATION_COUNT = "notification.count";
@@ -1216,7 +1222,7 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String PAYMENTMETHODTYPE = "payment_method_type".intern();
 	public static final String PAYMENT_METHOD_NB = "NB".intern();
 
-	// Order Response
+	//Order Response
 
 	public static final String CARD = "card".intern();
 	public static final String PAYMENT_GATEWAY_RESPONSE = "payment_gateway_response".intern();
@@ -1297,7 +1303,7 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String FULL_ADDRESS_FROM_FORM = "Full Address from Form :";
 	public static final String FULL_ADDRESS_FROM_MODEL = "Full Address from Model :";
 
-	// Local properties file keys
+	//Local properties file keys
 	public static final String PROPERTY_KEY_OMS_AWB_ACTIVE = "oms.awb.active";
 
 	public static final String CANCEL_STATUS = "valid.order.statuses.CANCELLATION";
@@ -1339,7 +1345,7 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String LINK_UPDATE_PROFILE = "/update-profile";
 	public static final String MALFORMED_URL_EXCEPTION = "Malformed URL exception occurred";
 
-	//	Update profile email sending parameters
+	//Update profile email sending parameters
 
 	public static final String F_NAME = "fName";
 	public static final String L_NAME = "lName";
@@ -1365,7 +1371,6 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String LINK_LOGIN = "/login";
 	public static final String AFFILIATEID = "affiliateId";
 	public final static String LOGERROR = "Failed to build beginCreateSubscription request";
-
 
 	public static final String NO_CARTID_PROVIDED = "No Cart ID Provided";
 	public static final String NO_PINCODE_PROVIDED = "Please enter pincode";
@@ -1411,7 +1416,6 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String DEPARTMENT = "department";
 	public static final String SALES_DATA_REPORT_JOB_IP = "cronjob.salesreport.ipaddress";
 
-
 	public static final String ORDERCODE = "code".intern();
 	public static final String ORDERTYPE = "type".intern();
 
@@ -1441,7 +1445,7 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 
 	public static final String CASH_ON_DELIVERY = "COD";
 
-	// Added for delivery mode estimated description default time
+	//Added for delivery mode estimated description default time
 	public static final String DEFAULT_START_TIME = "1";
 	public static final String DEFAULT_END_TIME = "2";
 	public static final String DELIVERYMODE_DESC_PREFIX = "Delivered in ";
@@ -1456,6 +1460,7 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String PENDING_VAL = "PENDING";
 
 	public static final String CART_DELISTED_SESSION_ID = "cartItemDelisted";
+	public static final String IS_RESPONSIVE = "isResponsive";
 	public static final String CART_DELISTED_SESSION_MESSAGE = "Sorry! Some of items in your cart is no longer available";
 	public static final String ORDERHISTORY_CREATE_ERROR = "Error while creating orderhistoryentry at ";
 	public static final String BY_DATE = "byDate";
@@ -1486,16 +1491,16 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 
 	public static final String CART_HOME_DELIVERY = "Home Delivery".intern();
 	public static final String CART_EXPRESS_DELIVERY = "Express Delivery ".intern();
-	// Seler Priority Report Query
-	// Within date range
+	//Seler Priority Report Query
+	//Within date range
 	public static final String SELLERPRIORITYWITHINDATEQUERY = "Select {sv.pk} from {SavedValues as sv JOIN MplSellerPriority as msp ON {sv.modifieditem}={msp.pk} and {sv.creationtime} BETWEEN ?startDate and ?endDate JOIN SavedValueEntryType as sve ON {sv.modificationtype}={sve.pk}} order by {sv.Timestamp} desc";
-	//	public static final String SELLERPRIORITYWITHINDATEQUERY = "Select {s.pk} from {SavedValueEntry as se},{SavedValues as s}, {Bin as bk }, {SavedValueEntryType as st} where {s.modificationtype}={st.pk} and {st.code} = 'changed'and {s.modifieditem}={bk.pk} and {s.pk} = {se.Parent} and {s.creationtime} BETWEEN ?startDate and ?endDate ";
+	//public static final String SELLERPRIORITYWITHINDATEQUERY =
+	//"Select {s.pk} from {SavedValueEntry as se},{SavedValues as s}, {Bin as bk }, {SavedValueEntryType as st} where {s.modificationtype}={st.pk} and {st.code} = 'changed'and {s.modifieditem}={bk.pk} and {s.pk} = {se.Parent} and {s.creationtime} BETWEEN ?startDate and ?endDate ";
 
-	// full data
+	//full data
 	public static final String SELLERPRIORITYQUERY = "Select {sv.pk} from {SavedValues as sv JOIN MplSellerPriority as msp ON {sv.modifieditem}={msp.pk} JOIN SavedValueEntryType as sve ON {sv.modificationtype}={sve.pk}} order by {sv.Timestamp} desc";
 
 	public static final String SELLERPRIORITYDATAQUERY = "Select {sp.pk} from  {MplSellerPriority as sp }";
-
 
 	public static final String CARTQUERY = "select {c:pk} from {Cart As c} where {c.guid}=?guid".intern();
 	public static final String ISBUYAGETPROMO = "isBuyAGetPromo".intern();
@@ -1522,7 +1527,6 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String ZEROPOINTZEROONE = "0.01".intern();
 	public static final String HUNDRED = "100".intern();
 
-
 	public static final String CAMPAIGN_DISCOUNT = "DISCOUNT OFFER".intern();
 	public static final String CAMPAIGN_FREEBIE = "FREEBIE OFFER".intern();
 	public static final String CAMPAIGN_SHIPPING = "SHIPPING DISCOUNT OFFER".intern();
@@ -1543,7 +1547,6 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String CAMPAIGN_URL_OFFER_ID_URL = "?offer=".intern();
 	public static final String CAMPAIGN_FILE_PATH = "${HYBRIS_DATA_DIR}/feed/campaign".intern();
 
-
 	//For Special Price Updation
 	public static final String SPECIALPRICE_PROMOTIONS = "promotions".intern();
 	public static final String SPECIALPRICE_QUANTITY = "quantity".intern();
@@ -1554,9 +1557,6 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	//TISSQAUAT-673 starts
 	public static final String ONLINE = "Online".intern();
 	//TISSQAUAT-673 ends
-
-
-
 
 	public static final String BANNER_IMAGE = "bannerImage";
 	public static final String BANNER_ALTTEXT = "bannerAltText";
@@ -1580,7 +1580,7 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 
 	public static final String PARENT = "parent";
 
-	// Month list
+	//Month list
 	public static final String JANUARY = "January";
 	public static final String FEBRUARY = "February";
 	public static final String MARCH = "March";
@@ -1594,8 +1594,7 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String NOVEMBER = "November";
 	public static final String DECEMBER = "December";
 
-	// Month list
-
+	//Month list
 
 	public static final String COUPONREDEEMERROR = "Coupon cannot be redeemed".intern();
 	public static final String COUPONTOPCOUNT = "coupon.display.topCount";
@@ -1610,7 +1609,6 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String EXCNOTRESERVABLE = "Voucher is not reservable".intern();
 	public static final String EXCFREEBIE = "freebie".intern();
 	public static final String EXCUSERINVALID = "User not valid".intern();
-
 
 	public static final String USER = "user".intern();
 	public static final String DATE = "Date".intern();
@@ -1658,17 +1656,15 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 
 	public static final String BIN_DATA_UPLOAD_VERSION = "mpl.payment.bin.uploadversion".intern();
 
-
 	//TISCR-410
 	public static final String ORDERSTAGEQUERY = "select {o.pk} from {OrderStatusCodeMaster as o} where {o.statusCode}=?orderEntryStatus";
 	public static final String ORDERENTRYSTATUS = "orderEntryStatus".intern();
-	//	public static final String CAMPAIGN_HEADER_1 = "IDENTIFIER,TITLE,PROMOTIONGROUP,DESCRIPTION,ENABLED,PRIORITY,".intern();
+	//public static final String CAMPAIGN_HEADER_1 =
+	//"IDENTIFIER,TITLE,PROMOTIONGROUP,DESCRIPTION,ENABLED,PRIORITY,".intern();
 	//
-	//	public static final String CAMPAIGN_HEADER_2 = "PRODUCTS,CATEGORIES,EXCLUDED PRODUCTS,CATEGORY MIN AMOUNT,QUANTITY,MAX DISCOUNT,IS PERCENTAGE,PERCENTAGE,DISCOUNT PRICES,GIFT PRODUCTS,START DATE,END DATE,RESTRICTIONS,FIRED MESSAGE,COULD FIRE MESSAGE,SECOND PRODUCTS,SECOND CATEGORIES,THRESH TOTALS,TSHIP,SSHIP,DISCOUNT TYPE,DELIVERY MODE,FREE COUNT,URL"
-	//			.intern();
-
-
-
+	//public static final String CAMPAIGN_HEADER_2 =
+	//"PRODUCTS,CATEGORIES,EXCLUDED PRODUCTS,CATEGORY MIN AMOUNT,QUANTITY,MAX DISCOUNT,IS PERCENTAGE,PERCENTAGE,DISCOUNT PRICES,GIFT PRODUCTS,START DATE,END DATE,RESTRICTIONS,FIRED MESSAGE,COULD FIRE MESSAGE,SECOND PRODUCTS,SECOND CATEGORIES,THRESH TOTALS,TSHIP,SSHIP,DISCOUNT TYPE,DELIVERY MODE,FREE COUNT,URL"
+	//.intern();
 
 	public static final String TYPE = "type";
 
@@ -1713,14 +1709,15 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 
 	public static final String CATEGORY_PATH_EMPTY = "/{category-path}".intern();
 
-
 	//IA Feed For Luxury
 	public static final String IAFEED_QUERY_LUXURY = "mpl.ia.luxury.query.";
 	public static final String IA_CATEGORYEXPORT_LUXURYFOLDER = "ia.path.luxury.catexport";
 	public static final String IA_BRANDEXPORT_LUXURYFOLDER = "ia.path.luxury.brandexport";
 	public static final String IA_PRICE_INVENTORYEXPORT_LUXURYFOLDER = "ia.path.luxury.priceinventoryexport";
-	//	public static final String IA_SELLERPRICEDETAILSEXPORT_LUXURYFOLDER = "ia.path.luxury.sellerpricedetails";
-	//	public static final String IA_PRICEINVENTORYCONTROL_LUXURYFOLDER = "ia.path.luxury.priceinventorycontrol";
+	//public static final String IA_SELLERPRICEDETAILSEXPORT_LUXURYFOLDER =
+	//"ia.path.luxury.sellerpricedetails";
+	//public static final String IA_PRICEINVENTORYCONTROL_LUXURYFOLDER =
+	//"ia.path.luxury.priceinventorycontrol";
 
 	//TISCR-421
 	public static final String EBS_SESSION_ID_KEY = "payment.juspay.sessionId.length";
@@ -1735,7 +1732,6 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String NBBANKSQUERY = "select {b:pk} from {bankForNetbanking As b},{bank as m} where {b.isAvailable}='1' and {b.name}={m.pk} order by {m.bankname}"
 			.intern();
 
-
 	//TISPT-204
 	public static final String SAVEDCARDERROR = "Exception while fetching saved credit/debit cards::::";
 	public static final String DC = "DC";
@@ -1743,6 +1739,9 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String GETAUDITID = "select {a.pk} from {mplpaymentaudit as a} where {a.cartGUID}=?cartGUID ORDER BY {a.requestDate} DESC"
 			.intern();
 	public static final String MOBILE_SOURCE = "&source=App".intern();
+
+	public static final String MOBILE_SOURCE2 = "?source=App";
+	public static final String Exchange_Slot = "ExchangeSlot";
 
 	public final static String PROXYENABLED = "proxy.enabled";
 	public final static String GENPROXY = "proxy.address";
@@ -1817,21 +1816,22 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 			.intern();
 
 	//PAYMENTPENDINGQUERY Query change, 10 minute minus system time not working
-	//public static final String PAYMENTPENDINGQUERY = "SELECT {o.pk} FROM {order as o},{OrderStatus as os} WHERE {creationtime} > (to_date(sysdate,'YYYY/MM/DD HH24:MI:SS') - INTERVAL '10' MINUTE) and {o.status}={os.pk} and {os.code}=?status"
-	//		.intern();
+	//public static final String PAYMENTPENDINGQUERY =
+	//"SELECT {o.pk} FROM {order as o},{OrderStatus as os} WHERE {creationtime} > (to_date(sysdate,'YYYY/MM/DD HH24:MI:SS') - INTERVAL '10' MINUTE) and {o.status}={os.pk} and {os.code}=?status"
+	//.intern();
 
-	// SprintPaymentFixes:- New query added 			//PaymentFix2017:- queryTAT added
+	//SprintPaymentFixes:- New query added //PaymentFix2017:- queryTAT added
 	public static final String PAYMENTPENDINGQUERY = "select {o.pk} from {Order as o},{OrderStatus as os} where  {o.creationtime} <= ?queryTAT and {o.status}={os.pk} and {os.code}=?status"
 			.intern();
 
-	//	public static final String PAYMENTPENDINGQUERY = "select {o.pk} from {Order as o},{OrderStatus as os},{WalletEnum as w} where  {o.creationtime} <= ?queryTAT and {o.status}={os.pk} and {os.code}=?status"
-	//			+"and {w.code}!='mRupee' ".intern(); //Query to include mRupee
-
+	//public static final String PAYMENTPENDINGQUERY =
+	//"select {o.pk} from {Order as o},{OrderStatus as os},{WalletEnum as w} where  {o.creationtime} <= ?queryTAT and {o.status}={os.pk} and {os.code}=?status"
+	//+"and {w.code}!='mRupee' ".intern(); //Query to include mRupee
 
 	public static final String PAYMENTPENDINGSTATUS = "status".intern();
 	//PaymentFix2017:- queryTAT added
 	public static final String PAYMENTPENDINGSKIPTIME = "queryTAT".intern();
-	//PaymentFix2017:-  order by {jw.creationtime} desc added
+	//PaymentFix2017:- order by {jw.creationtime} desc added
 	public static final String PAYMENTPENDINGWEBHOOKUERY = "select {jw.pk} from {JuspayWebhook as jw}, {JuspayOrderStatus as js} where {jw.orderstatus}={js.pk} and {js.orderId}=?reqId order by {jw.creationtime} desc"
 			.intern();
 	public static final String WEBHOOKREQSTATUS = "reqId".intern();
@@ -1841,12 +1841,12 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String JSON = "json".intern();
 
 	//TPR-629
-	//public static final String VOUCHERINVALIDATIONQUERY = "select {v.pk} from {voucherinvalidation as v},{order as o},{customer as c},{voucher as vo} where {v.order}={o.pk} and {o.code}=?code and {v.user}={c.pk} and {c.originaluid}=?customerUid and {v.voucher}={vo.pk} and {vo.code}=?voucherIdentifier";
-	//public static final String VOUCHERINVALIDATIONQUERY = "select {v.pk} from {voucherinvalidation as v},{order as o},{customer as c},{voucher as vo} where {v.order}={o.pk} and {o.code}=?code and {v.user}={c.pk} and {c.originaluid}=?customerUid and {v.voucher}={vo.pk} ";
+	//public static final String VOUCHERINVALIDATIONQUERY =
+	//"select {v.pk} from {voucherinvalidation as v},{order as o},{customer as c},{voucher as vo} where {v.order}={o.pk} and {o.code}=?code and {v.user}={c.pk} and {c.originaluid}=?customerUid and {v.voucher}={vo.pk} and {vo.code}=?voucherIdentifier";
+	//public static final String VOUCHERINVALIDATIONQUERY =
+	//"select {v.pk} from {voucherinvalidation as v},{order as o},{customer as c},{voucher as vo} where {v.order}={o.pk} and {o.code}=?code and {v.user}={c.pk} and {c.originaluid}=?customerUid and {v.voucher}={vo.pk} ";
 	public static final String CUSTOMERUID = "customerUid";
 	public static final String OMS_INVENTORY_RESV_TYPE_PAYMENTPENDING = "paymentPending";
-
-
 
 	//luxury
 	public static final String IS_LUXURY = "0".intern();
@@ -1866,16 +1866,16 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 		//empty to avoid instantiating this constant class
 	}
 
-	// track order error codes
+	//track order error codes
 	public static final String B9104 = "B9104";
 	public static final String B9105 = "B9105";
 	public static final String B9106 = "B9106";
 	public static final String B9107 = "B9107";
 	public static final String B9108 = "B9108";
 
-	// implement here constants used by this extension
+	//implement here constants used by this extension
 
-	// Sonar Fix
+	//Sonar Fix
 	public static final String ALLVARIANTSSTRING = "allVariantsString";
 	public static final String CHANGE_DELIVERY_ADDRESS = "changeDeliveryAddressData";
 	public static final String RESCHEDULE_DATA_SESSION_KEY = "rescheduleDataList";
@@ -1884,15 +1884,16 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String S = "S";
 	public static final String SELF_COURIER = "SELF_COURIER";
 
-	//	public static final String PRODUCTOFFERDETMSGQUERY = "SELECT {prodOffrDet.sellerId},{offerDet.message},{offerDet.messageDet},{prodOffrDet.startDate},{prodOffrDet.endDate} FROM {OfferDetail as offerDet}, {ProductOfferDetail as  prodOffrDet} "
-	//			+ "WHERE {prodOffrDet.productId}= ?productId " + "AND {prodOffrDet.offer} = {offerDet.pk} "
-	//			+ "AND {prodOffrDet.startDate} <= ?sysdate AND {prodOffrDet.endDate} >= ?sysdate".intern();
+	//public static final String PRODUCTOFFERDETMSGQUERY =
+	//"SELECT {prodOffrDet.sellerId},{offerDet.message},{offerDet.messageDet},{prodOffrDet.startDate},{prodOffrDet.endDate} FROM {OfferDetail as offerDet}, {ProductOfferDetail as  prodOffrDet} "
+	//+ "WHERE {prodOffrDet.productId}= ?productId " +
+	//"AND {prodOffrDet.offer} = {offerDet.pk} "
+	//+
+	//"AND {prodOffrDet.startDate} <= ?sysdate AND {prodOffrDet.endDate} >= ?sysdate".intern();
 
 	//Added for displaying Non HMC configurable offer messages , TPR-589
 	public static final String PRODUCTOFFERDETMSGQUERY = "SELECT {prodOffrDet.sellerId},{offerDet.message},{offerDet.messageDet},{prodOffrDet.startDate},{prodOffrDet.endDate} FROM {OfferDetail as offerDet}, {ProductOfferDetail as  prodOffrDet} WHERE {prodOffrDet.productId}= ?productId AND {prodOffrDet.offer} = {offerDet.pk} AND {prodOffrDet.startDate} <= ?sysdate AND {prodOffrDet.endDate} >= ?sysdate"
 			.intern();
-
-
 
 	public static final String OFFERPRODUCTID = "productId".intern();
 
@@ -1920,14 +1921,17 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String MEGANAVNODE = "luxury.root.navigation.node.id";
 
 	public static final String LUXURY_CARTICON = "luxuryCartIcon";
-
+	public static final String LUXURYCARTPAGE = "luxuryCartPage";
 
 	//TPR-1285
-	//	public static final String L4CATEGORYQUERY = "SELECT distinct {cat.pk} FROM {Category AS cat},{CatalogVersion AS cv} WHERE NOT EXISTS ({{ SELECT * FROM {CategoryCategoryRelation} WHERE {source}={cat:pk} }} ) and {cat.code} like 'MPH%'"
-	//			.intern();
+	//public static final String L4CATEGORYQUERY =
+	//"SELECT distinct {cat.pk} FROM {Category AS cat},{CatalogVersion AS cv} WHERE NOT EXISTS ({{ SELECT * FROM {CategoryCategoryRelation} WHERE {source}={cat:pk} }} ) and {cat.code} like 'MPH%'"
+	//.intern();
 
 	public static final String L4CATEGORYQUERY = "SELECT distinct {cat.pk} FROM {Category AS cat},{CatalogVersion AS cv} WHERE  EXISTS ({{ SELECT * FROM {CategoryProductRelation} WHERE {source}={cat:pk} }} ) and {cat.code} like 'MSH%'"
 			.intern();
+
+	public static final String SITEMAP_FILE_LOCATION_BRAND = "mpl.sitemap.brandFileLocation".intern();
 	public static final String SITEMAP_FILE_LOCATION_CUSTOM = "mpl.sitemap.customFileLocation".intern();
 	public static final String SITEMAP_FILE_LOCATION_PRODUCT = "mpl.sitemap.productFileLocation".intern();
 	public static final String SITEMAP_CATEGORY_QUERY = "mpl.sitemap.categoryQuery".intern();
@@ -1942,8 +1946,9 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String SITEMAP_HIERARCHY = "mpl.sitemap.hierarchy".intern();
 	public static final String SITEMAP_HIERARCHY_DEFAULT = "MSH1";
 	//update the message for Freebie product TPR-1754
-	//	public static final String PRODUCTFREEBIEDETMSGQUERY = "SELECT {prodOffrDet.ussId},{offerDet.freebieMsg},{prodOffrDet.startDate},{prodOffrDet.endDate}  FROM {FreebieDetail as offerDet}, {ProductFreebieDetail as  prodOffrDet} WHERE {prodOffrDet.ussId}= ?ussId AND {prodOffrDet.offer} = {offerDet.pk} AND {prodOffrDet.startDate} <=sysdate AND {prodOffrDet.endDate} >=sysdate"
-	//			.intern();
+	//public static final String PRODUCTFREEBIEDETMSGQUERY =
+	//"SELECT {prodOffrDet.ussId},{offerDet.freebieMsg},{prodOffrDet.startDate},{prodOffrDet.endDate}  FROM {FreebieDetail as offerDet}, {ProductFreebieDetail as  prodOffrDet} WHERE {prodOffrDet.ussId}= ?ussId AND {prodOffrDet.offer} = {offerDet.pk} AND {prodOffrDet.startDate} <=sysdate AND {prodOffrDet.endDate} >=sysdate"
+	//.intern();
 	public static final String PRODUCTFREEBEEDETMSGQUERY = "select {prodOffrDet.pk},{offerDet.pk} from {"
 			+ ProductFreebieDetailModel._TYPECODE + " as prodOffrDet JOIN " + FreebieDetailModel._TYPECODE
 			+ " as offerDet ON {prodOffrDet.offer} = {offerDet.pk} }"
@@ -1992,13 +1997,14 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String BULK_CANCEL_LOG_STEP_13 = "Initiate Bulk Cancellation Job : Suborder level loop iteration count : ";
 	public static final String BULK_CANCEL_LOG_STEP_14 = "Initiate Bulk Cancellation Job : BulKCancellationProcessModel is EMPTY";
 	public static final String BULK_CANCEL_LOG_STEP_15 = "######################################### PROCESS ENDS ##############################################";
-	public static final String BULK_CANCEL_DATA_QUERY_START = "SELECT {" + BulkCancellationProcessModel.PK + "} FROM {"
-			+ BulkCancellationProcessModel._TYPECODE + "} WHERE {" + BulkCancellationProcessModel.LOADSTATUS + "}=?loadstatus";
+	/*
+	 * public static final String BULK_CANCEL_DATA_QUERY_START = "SELECT {" + BulkCancellationProcessModel.PK +
+	 * "} FROM {" + BulkCancellationProcessModel._TYPECODE + "} WHERE {" + BulkCancellationProcessModel.LOADSTATUS +
+	 * "}=?loadstatus";
+	 */
 
 	public static final String BULK_RETURN_SUCCESS_DESC = "Return Success";
 	public static final String BULK_RETURN_FAILURE_DESC = "Return Failure";
-
-
 
 	public final static String RETURN_ENABLE = "order.return.enabled".intern();
 	public final static String CANCEL_ENABLE = "order.cancel.enabled".intern();
@@ -2029,7 +2035,9 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public final static String MRUPEEHOSTNAME = "mRupee.hostname.disableSslVerification";
 	public static final String TICKETTYPECODE = "R";
 	public static final String REFUNDTYPE = "S";
-	public static final String REASONCODE = "03"; // Hard coded value -- I'm not happy with the product quality
+	public static final String REASONCODE = "03"; //Hard coded value -- I'm not
+	//happy with the product
+	//quality
 
 	//For Promotion Apportioning
 	public final static String NONFREE_CONSUMED_ENTRIES = "nonFreeConsumedEntries".intern();
@@ -2039,20 +2047,22 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 
 	public static final String COUNTRYCODE = "91".intern();
 	//Promotion Related
-	//public static final String BUYAANDBGETPROMOTIONONSHIPPINGCHARGES = "BuyAandBGetPromotionOnShippingCharges".intern();
-	//public static final String BUYAGETPERCENTAGEDISCOUNTONB = "BuyAGetPercentageDiscountOnB".intern();
+	//public static final String BUYAANDBGETPROMOTIONONSHIPPINGCHARGES =
+	//"BuyAandBGetPromotionOnShippingCharges".intern();
+	//public static final String BUYAGETPERCENTAGEDISCOUNTONB =
+	//"BuyAGetPercentageDiscountOnB".intern();
 	public static final String DATEFORMATMMDDYYYY = "MM/dd/yy".intern();
 
 	//FREEBIE FIX
-	//public static final String FREEBIEPRICETHRESHOLD = "freebiePriceThreshold";
+	//public static final String FREEBIEPRICETHRESHOLD =
+	//"freebiePriceThreshold";
 
 	public static final String BUYAANDBGETPROMOTIONONSHIPPINGCHARGES = "BuyAandBGetPromotionOnShippingCharges".intern();
 	public static final String BUYAGETPERCENTAGEDISCOUNTONB = "BuyAGetPercentageDiscountOnB".intern();
 	//FREEBIE FIX
 	public static final String FREEBIEPRICETHRESHOLD = "freebiePriceThreshold";
 
-
-	// OrderIssues:- multiple Payment Response from juspay restriction
+	//OrderIssues:- multiple Payment Response from juspay restriction
 	public static final String DUPLICATEJUSPAYRESONSE = "duplicatJuspayResponse";
 
 	//Query for fetching invalidation of a particular order-voucher-user
@@ -2104,7 +2114,6 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String USERPARAM = "user";
 	public static final String NOENTRYSUBORDERLOG = "No  Entries available for Suborder ID:- ";
 
-
 	public static final String SECONDPRODUCT = "secondProduct";
 
 	//TPR-5346
@@ -2116,18 +2125,17 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String LASTCOUNTMSG = "we have modified your shopping bag to reflect this.";
 	public static final String FOUNDCOMPONENT = "Found Component>>>>with id :::";
 
-
 	public static final String AGENT_ID = "agentId";
 
 	public static final String JUSPAY = "JUSPAY".intern();
 
-	// OIS store manager agent group
+	//OIS store manager agent group
 	public static final String CSCOCKPIT_USER_GROUP_STOREMANAGERAGENTGROUP = "storemanageragentgroup";
 
-	// Agent specific order search query
+	//Agent specific order search query
 	public static final String ORDER_BY_AGENT = "select {pk} from {Order} where {user}=?user and {agentId}=?agentId ";
 
-	// Agent who placed order from cscockpit
+	//Agent who placed order from cscockpit
 
 	//CAR-285
 	public static final String XML_SITEMAP_HEADER = "<?xml version=\"1.0\" encoding=\"UTF-8\"?> <sitemapindex xmlns=\"http://www.sitemaps.org/schemas/sitemap/0.9\"> \n";
@@ -2150,6 +2158,123 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String SITEMAP_FOLDER_DEFAULT = "sitemaps/";
 	public static final String ZIP_FORMAT = ".gz";
 
-	// PRDI - 151
+	//PRDI - 151
 	public static final String TYPE_OF_RETURN_FOR_RSS = "return.typeofreturn";
+
+	//Payment Type changes
+	public static final String BASESTORE = "baseStore".intern();
+
+	//TPR-5733
+	public static final String FOOTER_LINK_QUERY = "select pk from {MplFooterLink} order by {footerLinkRow},{footerLinkColumn} asc";
+
+	//TPR-4512
+	public static final String TRANSACTION_NO_KEY = "transaction.count";
+	public static final String NULL_VALUE = "NULL".intern();
+	public static final String COD_PAYMENT = "COD".intern();
+	public static final String POSTPAID = "POSTPAID".intern();
+	public static final String PREPAID = "PREPAID".intern();
+	public static final String EMPTY_SPACE = " ".intern();
+	public static final String REFUND_SUCCESSFUL_ = "REFUND_SUCCESSFUL".intern();
+	public static final String MOBILE_NO_NOT_PRESENT = "Mobile number is not present in Commerce System".intern();
+	public static final String TRANSACTION_ID_NOT_PRESENT = "TransactionId is not present in Commerce System".intern();
+	public static final String ORDER_ID_NOT_PRESENT = "Order Reference Number is not present in Commerce System".intern();
+	//SDI-1193
+	public static final String MOBILE_QUERY = "SELECT UNIQUE {a:pk} FROM {order as a},{address as b} WHERE {a:user}={b:owner} AND {b.cellphone}=?mobileNo AND {a.type}=?type AND ({a.creationtime} > sysdate -?transactionLimit) order by {a.creationtime} desc fetch first ?queryCount rows only"
+			.intern();
+	//SDI-1193
+	public static final String TRANSACTION_LIMIT_BY_DATE = "transaction.limit";
+	public static final String MOBILE_QUERY_FOR_L4CATEGORY = "select distinct {c.pk} from {product as p},{CategoryProductRelation as cp},{Category as c},{catalogversion as cv} where {cp.TARGET} = {p.pk} and {cp.SOURCE} = {c.pk} and {c.code} like 'MPH%' and {p.varianttype} is null and {p.catalogversion}={cv.pk} and {cv.version}='Online' and {p.code} = ?productCode"
+			.intern();
+	public static final String TRANSACTION_QUERY = "select {b:pk} from {orderentry as a},{order as b} where p_orderlineid=?transactionId and {a:order}={b:pk} and {b:type}=?type"
+			.intern();
+	public static final String PARENT_ORDER_QUERY = "select {o:pk} from {order as o} where {o:type}=?type and {o:code}=?orderRefNo"
+			.intern();
+
+
+	public static final String ERROR_MSG_TYPE_MISMATCHUSSID = "mismatchUssid";
+	public static final String TRANSACTIONID = "transactionid";
+
+	public static final String BULK_CANCEL_DATA_QUERY_START = "SELECT {" + BulkCancellationProcessModel.PK + "} FROM {"
+			+ BulkCancellationProcessModel._TYPECODE + "} WHERE {" + BulkCancellationProcessModel.TRANSACTIONID + "}=?transactionid";
+	public static final String SUBORDER_DATA_FOR_BULK_CANCELLATION = "select {oe.pk} from {orderentry as oe},{BulkCancellationProcess as bc} where {oe.transactionID}={bc.transactionID} and {bc.loadstatus}='0'";
+
+	public static final String initiate_cancel_job_thread_sleep = "initiate.cancel.job.thread.sleep";
+
+	//added for TPR-1348 AutomatedOrder refund process
+	public static final String CLICK_AND_COLLECT = "click-and-collect";
+
+	//INC144317480: Order Threshold Discount Promotion: Netbanking Payment Mode
+	//Restriction doesn't work
+	//public static final String BANKNAMEFORNETBANKING =
+	//"bankNameforNetbanking";
+	//TPR-5667 | Query to Find categoryCode for product
+	public static final String CATEGORY_CODE_FOR_PRODUCT = "select {c.code} from {CategoryProductRelation as cpr JOIN Category as c ON {cpr.source}={c.pk}} where {cpr.target} in ({{select {p.pk} from { product as p JOIN Catalogversion as cv ON {p.catalogversion}={cv.pk}} where {cv.version} = ?catalogVersion AND {p.code} = ?code }}) AND ({c.code} LIKE ?mplCategoryPrefix OR {c.code} LIKE ?luxuryCategoryprefix)";
+
+	//PRDI-423 Start
+	public static final String SITEMAP_BRANDFILTER_QUERY = "mpl.sitemap.brandFilterQuery".intern();
+	public static final String SITEMAP_BRANDFILTER_QUERY_DEFAULT = "select {mbf:pk} from {mplbrandfilter as mbf} where {mbf.l1}=?l1code and {mbf.l2}=?l2code"
+			.intern();
+	public static final String SITEMAP_BRANDFILTER = "mpl.sitemap.brandFilter.use".intern();
+	public static final String COMMA_CONSTANT = ",".intern();
+	public static final String FRONT_SLASH = "/".intern();
+	//PRDI-423 End
+	//UF-281
+	public static final String B1002 = "B1002";
+
+	public static final String HOME = "Home";
+	//For sending pancard details to SP through PI and save data into database for new pancard entry
+	public static final String PENDING_FOR_VERIFICATION = "PENDING_FOR_VERIFICATION";
+	public static final String PAN_REJECTED = "PAN_REJECTED";
+	public static final String PANCARDREDIRECTURL = "/pancard/pancarddetailsupload/";
+	public static final String PANCARDREDIRECTURLSUFFIX = "?status=";
+	//TPR-3782
+	public static final String GOLD = "GOLD";
+	public static final String SILVER = "SILVER";
+	public static final String PLATINUM = "PLATINUM";
+	public static final String SOLITAIRE = "SOLITAIRE";
+	public static final String TANISHQ = "Tanishq";
+	public static final String DIAMOND = "DIAMOND";
+	public static final String GEMSTONE = "GEMSTONE";
+	public static final String WASTAGETAX = "WASTAGE TAX";
+	public static final String MAKINGCHARGE = "MAKING CHARGE";
+	public static final String ATTHERATE = "@";
+	public static final String GM = "gm";
+	public static final String CT = "Ct";
+	public static final String KG = "kg";
+	public static final String METALWEIGHTFINEJEWELLERY = "metalweightfinejwlry";
+	public static final String DIAMONDWEIGHTFINEJEWELLERY1 = "diamondweightfinejwlry1";
+	public static final String DIAMONDWEIGHTFINEJEWELLERY2 = "diamondweightfinejwlry2";
+	public static final String DIAMONDWEIGHTFINEJEWELLERY3 = "diamondweightfinejwlry3";
+	public static final String DIAMONDWEIGHTFINEJEWELLERY4 = "diamondweightfinejwlry4";
+	public static final String DIAMONDWEIGHTFINEJEWELLERY5 = "diamondweightfinejwlry5";
+	public static final String DIAMONDWEIGHTFINEJEWELLERY6 = "diamondweightfinejwlry6";
+	public static final String DIAMONDWEIGHTFINEJEWELLERY7 = "diamondweightfinejwlry7";
+
+	//TPR-4134 web service
+	public static final String REV_SEAL_JWLRY = "Do you have Reverse Seal with you?";
+	public static final String REV_SEAL_RADIO_YES = "Yes,I have reverse seal";
+	public static final String REV_SEAL_RADIO_NO = "No,I do not have reverse seal";
+
+	//jewellery TPR-3765
+	public static final String RETURN_FINEJEWELLERY = "Forward Seal Mismatch";
+	public static final String INVENTORY_RESV_JWLRY_CART = "Price of the product(s) has changed as per current availability.";
+	//Sonar Fix
+	public static final String REPLACEDUSSID = "replacedUssid";
+	public static final String SELFCOURIER = "selfCourier";
+	public static final String SCHEDULE_PICKUP = "schedulePickup";
+	public static final String QUICK_DROP = "quickDrop";
+	public static final String ISCHECKOUT_PINCODE_SERVICEABLE = "isCheckoutPincodeServiceable";
+
+	//PR-4
+	public static final String BULK_SMS_1 = "select {sms: amount}, {sms: utrNumber} ,{sms: arnNumber} ,{a:orderlineid},{add:firstname},{add:phone1} from {orderentry as a join order as b on {a:order}={b:pk} join address as add on {b:deliveryAddress}={add:pk} join RefundTransactionEntry as sms on {a:orderlineid}={sms:transactionId}}  where p_orderlineid in ("
+			.intern();
+	public static final String BULK_SMS_2 = ") and {b:type}='SubOrder' and {b:VersionID} is null".intern();
+
+	public static final String FINEJEW_SELFCOURIER_ERRORMSG = "Schedule pick up is not available at this pincode. Please <a href='/contact'>*contact us*</a> for returns.";
+	public static final String FINEJEW_ORDER_RETURN = "Order return has been initiated";
+	//PR-15 (Rainbow)
+	public static final String CATEGORYRESTRICTION = "CategoryRestriction";
+
+	public final static String PINCODE_RESPONSE_DATA_PDP = "PincodeResponseDataForPDP";
+	public static final String KM = "km";
 }

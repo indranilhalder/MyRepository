@@ -25,7 +25,9 @@ import de.hybris.platform.servicelayer.config.ConfigurationService;
 import de.hybris.platform.servicelayer.session.SessionService;
 
 import java.io.PrintWriter;
+import java.util.Arrays;
 import java.util.Collections;
+import java.util.List;
 
 import javax.annotation.Resource;
 import javax.servlet.http.Cookie;
@@ -51,12 +53,16 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.tisl.lux.facade.CommonUtils;
+import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.data.FriendsInviteData;
 import com.tisl.mpl.exception.EtailBusinessExceptions;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.facades.account.register.FriendsInviteFacade;
+import com.tisl.mpl.facades.account.register.MplCustomerProfileFacade;
 import com.tisl.mpl.facades.account.register.RegisterCustomerFacade;
 import com.tisl.mpl.facades.product.data.ExtRegisterData;
+import com.tisl.mpl.facades.product.data.GenderData;
 import com.tisl.mpl.storefront.constants.MessageConstants;
 import com.tisl.mpl.storefront.constants.ModelAttributetConstants;
 import com.tisl.mpl.storefront.constants.RequestMappingUrlConstants;
@@ -95,10 +101,15 @@ public class LoginPageController extends AbstractLoginPageController
 	private static final Logger LOG = Logger.getLogger(LoginPageController.class);
 
 	private static final String LOGIN_SUCCESS = "loginSuccess";
+	@Autowired
+	private MplCustomerProfileFacade mplCustomerProfileFacade;
+
 
 	//Added for UF-93
 	@Autowired
 	private LastUserLoggedInCookieGenerator lastUserLoggedInCookieGenerator;
+	@Autowired
+	private CommonUtils commonUtils;
 
 	/**
 	 * @return the lastUserLoggedInCookieGenerator
@@ -208,9 +219,19 @@ public class LoginPageController extends AbstractLoginPageController
 				model.addAttribute(ModelAttributetConstants.LOGIN_ERROR, Boolean.valueOf(loginError));
 				model.addAttribute(ModelAttributetConstants.RESULT, ModelAttributetConstants.FAILURE);
 				model.addAttribute(ModelAttributetConstants.COUNT, sessionService.getAttribute(ModelAttributetConstants.COUNT));
+
 			}
 			storeContentPageTitleInModel(model, MessageConstants.LOGIN_PAGE_TITLE);
-			returnPage = getView();
+
+
+			if (commonUtils.isLuxurySite())
+			{
+				return "redirect:/?showPopup=true";
+			}
+			else
+			{
+				returnPage = getView();
+			}
 		}
 		catch (final EtailBusinessExceptions e)
 		{
@@ -234,6 +255,12 @@ public class LoginPageController extends AbstractLoginPageController
 	protected String getView()
 	{
 		return ControllerConstants.Views.Pages.Account.AccountLoginPage;
+	}
+
+
+	protected String getViewLoginDialog()
+	{
+		return ControllerConstants.Views.Pages.Account.AccountLoginPopPage;
 	}
 
 	@Override
@@ -280,6 +307,9 @@ public class LoginPageController extends AbstractLoginPageController
 		String returnPage = null;
 		try
 		{
+			final List<GenderData> genderList = mplCustomerProfileFacade.getGenders();
+			model.addAttribute(ModelAttributetConstants.GENDER_DATA, genderList);
+
 
 			if (!StringUtils.isBlank(affiliateId))
 			{
@@ -331,6 +361,8 @@ public class LoginPageController extends AbstractLoginPageController
 			//			}
 			/** End UF-93 **/
 
+
+
 			/** Added for UF-93 to show the last logged in user in log in field for the remembered Users **/
 			final Cookie cookie = GenericUtilityMethods.getCookieByName(request, "LastUserLogedIn");
 			if (null != cookie && null != cookie.getValue())
@@ -343,8 +375,17 @@ public class LoginPageController extends AbstractLoginPageController
 				//LOG.error("Last user set into model: " + model.asMap().get("lastLoggedInUser"));
 			}
 			/** End UF-93 **/
+			/** TPR-6399 -- Check if the boxed-login param is present as part of HTTP GET request **/
+			if (null != request.getParameter("box-login"))
+			{
+				getDefaultLoginPage(false, session, model);
+				returnPage = getViewLoginDialog();
+			}
+			else
+			{
+				returnPage = getDefaultLoginPage(false, session, model);
+			}
 
-			returnPage = getDefaultLoginPage(false, session, model);
 		}
 		catch (final EtailBusinessExceptions e)
 		{
@@ -444,6 +485,9 @@ public class LoginPageController extends AbstractLoginPageController
 			}
 			/** Ends for UF-93 **/
 			returnPage = processRegisterUserRequestNew(form, bindingResult, model, request, response, redirectModel);
+			final List<GenderData> genderList = mplCustomerProfileFacade.getGenders();
+			model.addAttribute("formErrorReg", bindingResult.getFieldErrors());
+			model.addAttribute(ModelAttributetConstants.GENDER_DATA, genderList);
 		}
 		catch (final EtailBusinessExceptions e)
 		{
@@ -486,6 +530,7 @@ public class LoginPageController extends AbstractLoginPageController
 			throws CMSItemNotFoundException
 	{
 		String returnPage = null;
+		boolean isExist = false; //TPR-6272
 		if (bindingResult.hasErrors())
 		{
 			model.addAttribute(form);
@@ -502,6 +547,10 @@ public class LoginPageController extends AbstractLoginPageController
 			data.setLogin(form.getEmail().toLowerCase());
 			data.setPassword(form.getPwd());
 			data.setAffiliateId(form.getAffiliateId());
+			data.setGender(form.getGender());
+			data.setFirstName(form.getFirstName());
+			data.setLastName(form.getLastName());
+			data.setMobilenumber(form.getMobileNumber());
 
 			//implementation for TISCR-278 :start
 
@@ -521,13 +570,85 @@ public class LoginPageController extends AbstractLoginPageController
 			{
 				if (getRegisterCustomerFacade().checkUniquenessOfEmail(data))
 				{
-					getRegisterCustomerFacade().register(data);
+
+					//TPR-6272 starts here
+					//final String luxDetector = form.getIsFromLuxury();//for luxury registration capture
+					/*
+					 * int platformNumber; if (luxDetector != null && StringUtils.isNotEmpty(luxDetector) &&
+					 * StringUtils.equalsIgnoreCase(luxDetector, "true")) { platformNumber = 5;//for luxury desktop web }
+					 * else { platformNumber = 1;//for mkt desktop web } //TPR-6272 ends here
+					 */
+					//TPR-6272 starts here
+					int platformNumber = MarketplacecommerceservicesConstants.PLATFORM_ZERO;
+					//added for IQA starts here
+					final String userAgentHeader = configurationService.getConfiguration().getString("useragent.responsive.header");
+					String userAgent = null;
+
+					if (StringUtils.isNotEmpty(userAgentHeader))
+					{
+						userAgent = request.getHeader(userAgentHeader);
+
+						if (StringUtils.isNotEmpty(userAgent))
+						{
+							userAgent = userAgent.toLowerCase();
+						}
+					}
+					//added for IQA ends here
+					if (StringUtils.isNotEmpty(userAgent))
+					{
+						String mobileDevices = configurationService.getConfiguration().getString("useragent.responsive.mobile");
+
+						//added for IQA starts here
+						if (StringUtils.isNotEmpty(mobileDevices))
+						{
+							mobileDevices = mobileDevices.toLowerCase();
+						}
+						//added for IQA ends here
+
+						if (StringUtils.isNotEmpty(mobileDevices))
+						{
+							final List<String> mobileDeviceArray = Arrays.asList(mobileDevices
+									.split(MarketplacecommerceservicesConstants.COMMACONSTANT));
+							if (null != mobileDeviceArray && mobileDeviceArray.size() > 0)//IQA added here
+							{
+								for (final String mobDevice : mobileDeviceArray)
+								{
+									if (userAgent.contains(mobDevice))
+									{
+										isExist = true;
+										break;
+									}
+								}
+							}
+						}
+						if (isExist)
+						{
+							platformNumber = MarketplacecommerceservicesConstants.PLATFORM_FIVE;//for mobile responsive
+						}
+						else
+						{
+							platformNumber = MarketplacecommerceservicesConstants.PLATFORM_ONE;//for mkt desktop web
+						}
+					}
+					else
+					{
+						platformNumber = MarketplacecommerceservicesConstants.PLATFORM_ONE;//for mkt desktop web
+					}
+					LOG.debug("The platform number is " + platformNumber);
+					//TPR-6272 ends here
+
+
+					getRegisterCustomerFacade().register(data, platformNumber);//TPR-6272 parameter platformNumber passed
 					// To avoid multiple time decoding of password containing '%' specially
 					final String password = java.net.URLEncoder.encode(form.getPwd(), "UTF-8");
 					form.setPwd(password);
 					getAutoLoginStrategy().login(form.getEmail().toLowerCase(), form.getPwd(), request, response);
 					final HttpSession session = request.getSession();
 					session.setAttribute(LOGIN_SUCCESS, Boolean.TRUE);
+					//For TPR-6334 : creating cookie object
+					final Cookie dtmRegistrationCookie = new Cookie(MessageConstants.DTM_SIGNIN_STATUS, "RegistrationSuccess");
+					dtmRegistrationCookie.setPath(ModelAttributetConstants.SLASH);
+					response.addCookie(dtmRegistrationCookie);
 					//	updating the isRegistered flag in friends model (in case of valid affiliated id)
 					if (null != form.getAffiliateId() && !StringUtils.isBlank(form.getAffiliateId()))
 					{

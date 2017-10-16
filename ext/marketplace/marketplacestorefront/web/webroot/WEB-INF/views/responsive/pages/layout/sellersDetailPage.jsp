@@ -36,7 +36,8 @@
 <input type="hidden" id="page_subcategory_name" value="${page_subcategory_name}" />
 <input type="hidden" id="product_brand" value="${product_brand}" />
 <input type="hidden" id="site_section_detail" value="${site_section_detail}" />
-<input type="hidden" id="product_category" value="${product_category}" />	
+<input type="hidden" id="product_category" value="${product_category}" />
+<input type="hidden" id="page_subcategory_name_l3" value="${page_subcategory_name_l3}" />
 <!-- TPR-429 START-->
 <input type="hidden" id="pdpSellerIDs" value='${pdpSellerIDs}'/>
 <input type="hidden" id="pdpBuyboxWinnerSellerID" value=''/>
@@ -301,10 +302,12 @@ display:none;
 			  <input type="hidden" value="${homeEntry.value}" id="homeEndId"/>
 		     </c:if>
 		 </c:forEach>
+		 <span id="standardShippingText" style="display:none"><spring:theme code="text.home.delivery.hiphenated" /></span><!-- UF-306 -->
 		 <script>
-		 var deliveryKey=firstToUpperCase('${delivery.key}');
+		 //var deliveryKey=firstToUpperCase('${delivery.key}');
 		// availableDeliveryATPForHD=deliveryKey.concat("-").concat(deliveryValue);
-		 availableDeliveryATPForHD=deliveryKey;
+		 //availableDeliveryATPForHD=deliveryKey;
+		 availableDeliveryATPForHD=$("#standardShippingText").text();//UF-306
 		 </script>
 	 </c:if>
   <c:if test="${delivery.key eq 'express-delivery'}">
@@ -316,8 +319,10 @@ display:none;
 			  <input type="hidden" value="${expressEntry.value}" id="expressEndId"/>
 		     </c:if>
 		    </c:forEach>
+		    <span id="expressShippingText" style="display:none"><spring:theme code="text.express.shipping.hiphenated" /></span><!-- UF-306 -->
 		     <script>
-		 var deliveryKey=firstToUpperCase('${delivery.key}');
+		 //var deliveryKey=firstToUpperCase('${delivery.key}');
+		 var deliveryKey=$("#expressShippingText").text();//UF-306
 		 var start=$("#expressStartId").val();
 		 var end=$("#expressEndId").val();
 		 var deliveryValue="Delivered in&nbsp;"+start+"-"+end+"&nbsp;business days";
@@ -335,8 +340,10 @@ display:none;
 			  <input type="hidden" value="${clickEntry.value}" id="clickEndId"/>
 		     </c:if>
 		    </c:forEach>
+		    <span id="clickandcollectShippingText" style="display:none"><spring:theme code="text.clickandcollect.delivery" /></span><!-- UF-306 -->
 		     <script>
-		 var deliveryKey=firstToUpperCase('${delivery.key}');
+		 //var deliveryKey=firstToUpperCase('${delivery.key}');
+		 var deliveryKey=$("#clickandcollectShippingText").text();//UF-306
 		 var start=$("#clickStartId").val();
 		 var end=$("#clickEndId").val();
 		 var deliveryValue="Delivered in&nbsp;"+start+"-"+end+"&nbsp;business days";

@@ -9,6 +9,7 @@ import de.hybris.platform.category.model.CategoryModel;
 import de.hybris.platform.commercefacades.product.data.CategoryData;
 import de.hybris.platform.commercefacades.product.data.ImageData;
 import de.hybris.platform.commercefacades.product.data.ImageDataType;
+import de.hybris.platform.commercefacades.product.data.PriceData;
 import de.hybris.platform.commercefacades.product.data.ProductData;
 import de.hybris.platform.commercefacades.product.data.SellerInformationData;
 import de.hybris.platform.commercefacades.search.data.SearchStateData;
@@ -19,6 +20,7 @@ import de.hybris.platform.servicelayer.config.ConfigurationService;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -36,8 +38,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.constants.MarketplacewebservicesConstants;
 import com.tisl.mpl.core.enums.LuxIndicatorEnum;
+import com.tisl.mpl.core.model.BuyBoxModel;
 import com.tisl.mpl.facades.product.data.ProductTagDto;
 import com.tisl.mpl.helper.ProductDetailsHelper;
+import com.tisl.mpl.marketplacecommerceservices.daos.BuyBoxDao;
 import com.tisl.mpl.service.MplProductWebService;
 import com.tisl.mpl.util.ExceptionUtil;
 import com.tisl.mpl.util.MplCompetingProductsUtility;
@@ -93,6 +97,9 @@ public class SearchSuggestUtilityMethods
 	//private DefaultMplProductSearchFacade searchFacade;
 	@Resource(name = "productDetailsHelper")
 	private ProductDetailsHelper productDetailsHelper;
+
+	@Resource(name = "buyBoxDao")
+	private BuyBoxDao buyBoxDao;
 
 	/**
 	 * @Description : Sets Category Data to a DTO
@@ -171,7 +178,7 @@ public class SearchSuggestUtilityMethods
 
 	/*
 	 * @param productData
-	 * 
+	 *
 	 * @retrun ProductSNSWsData
 	 */
 	private ProductSNSWsData getTopProductDetailsDto(final ProductData productData)
@@ -824,7 +831,30 @@ public class SearchSuggestUtilityMethods
 					sellingItemDetail.setSellingPrice(productData.getPrice());
 				}
 
+				//added for jewellery mobile web services:maxSellingPrice & minSellingPrice
+				if (null != productData.getProductCategoryType()
+						&& MarketplacewebservicesConstants.FINEJEWELLERY.equalsIgnoreCase(productData.getProductCategoryType()))
+				{
+					PriceData pDataMax = new PriceData();
+					PriceData pDataMin = new PriceData();
+					final List<BuyBoxModel> buyModList = buyBoxDao.getVariantListForPriceRange(productData.getCode());
+					if (CollectionUtils.isNotEmpty(buyModList))
+					{
+						final List<BuyBoxModel> modifiableBuyBox = new ArrayList<BuyBoxModel>(buyModList);
+						modifiableBuyBox.sort(Comparator.comparing(BuyBoxModel::getPrice).reversed());
 
+						if (CollectionUtils.isNotEmpty(modifiableBuyBox))
+						{
+							pDataMin = productDetailsHelper.formPriceData(modifiableBuyBox.get(modifiableBuyBox.size() - 1).getPrice());
+							pDataMax = productDetailsHelper.formPriceData(modifiableBuyBox.get(0).getPrice());
+						}
+					}
+					if (null != pDataMin && null != pDataMax)
+					{
+						sellingItemDetail.setMaxSellingPrice(pDataMax);
+						sellingItemDetail.setMinSellingPrice(pDataMin);
+					}
+				}
 
 				if (null != productData.getInStockFlag())
 				{

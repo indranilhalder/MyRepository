@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema attributeFormDefault="unqualified" elementFormDefault="qualified" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+	<xs:element name="RequestMaster">
+		<xs:complexType>
+			<xs:sequence> 
+				<xs:element name="RequestTickets" maxOccurs="unbounded" minOccurs="1">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element maxOccurs="1" minOccurs="1" type="xs:string" name="OrderRefNum" />
+							<xs:element maxOccurs="1" minOccurs="0" type="xs:string" name="subOrderNum" />
+							<xs:element maxOccurs="1" minOccurs="0" type="xs:string" name="USSID" />
+							<xs:element maxOccurs="1" minOccurs="1" type="xs:string" name="ticketType" />
+							<xs:element maxOccurs="1" minOccurs="0" type="xs:string" name="TicketSubType"/>
+							<xs:element maxOccurs="1" minOccurs="1" type="xs:string" name="TransactionId" />
+							<xs:element maxOccurs="1" minOccurs="0" type="xs:string" name="ReturnReasonCode" />
+							<xs:element maxOccurs="1" minOccurs="0" type="xs:string" name="CancelReasonCode" />
+							<xs:element maxOccurs="1" minOccurs="0" type="xs:string" name="refundType" />
+						
+				
+<!-- Address Details if Return Mode is Schedule Pick Up -->
+							<xs:element maxOccurs="1" minOccurs="0" type="xs:string" name="Address1" />
+							<xs:element maxOccurs="1" minOccurs="0" type="xs:string" name="Address2" />
+							<xs:element maxOccurs="1" minOccurs="0" type="xs:string" name="Address3" />
+							<xs:element maxOccurs="1" minOccurs="0" type="xs:string" name="Country" />
+							<xs:element maxOccurs="1" minOccurs="0" type="xs:string" name="City" />
+							<xs:element maxOccurs="1" minOccurs="0" type="xs:string" name="State" />
+							<xs:element maxOccurs="1" minOccurs="0" type="xs:string" name="Pincode" />
+							<xs:element maxOccurs="1" minOccurs="0" type="xs:string" name="Landmark" />
+							
+						
+				
+<!-- Bank Details for CoD Orders -->				
+							<xs:element maxOccurs="1" minOccurs="0" type="xs:string" name="Title"/>
+							<xs:element maxOccurs="1" minOccurs="0" type="xs:string" name="BankName"/>
+							<xs:element maxOccurs="1" minOccurs="0" type="xs:string" name="Branch"/>
+							<xs:element maxOccurs="1" minOccurs="0" type="xs:string" name="AccHolderName"/>	
+							<xs:element maxOccurs="1" minOccurs="0" type="xs:string" name="IFSC"/>
+							<xs:element maxOccurs="1" minOccurs="0" type="xs:string" name="AccNum"/>
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+</xs:schema>

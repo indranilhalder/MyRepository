@@ -16,3 +16,11 @@
 		</div>
 	</c:forEach>
 </c:if>
+<div class="global-alerts" id="exCartAlert" style="display:none">
+
+				<div class="alert alert-warning alert-dismissable">
+					<button class="close" aria-hidden="true" data-dismiss="alert" type="button">&times;</button>
+					<span style="margin-left: 23px;">Exchange is Not Serviceable for some of the Products in your Cart </span> <!-- TISUATSE-84 -->
+				</div>
+			
+		</div>

@@ -44,7 +44,9 @@
                       	 <p style="color: #6f6f6f;font-size:14px;margin:1em 0;">Size: ${ctx.productSize}</p>
                       	 #end
                       	 <p style="margin:1em 0;">Qty: 1</p>
+                      	 #if(${ctx.sellerName})
                       	 <p style="margin:1em 0;">Sold By: ${ctx.sellerName}</p>
+                      	 #end
                       	  <p style="color:#a5164c;font-size:18px;margin:1em 0;">
                       	    &#8377; ${ctx.totalPrice}/-<br/>
                       	    
@@ -80,12 +82,12 @@
 			                      	<td style="line-height:35px;border-bottom: 1px solid #cccccc;color:#212021; font-family:Arial, Helvetica, sans-serif;font-size:14px;padding: 0 5px;">Shipping charge</td>
 			                      	<td align="left" style="width:25%;border-bottom: 1px solid #cccccc;color:#212021; font-family:Arial, Helvetica, sans-serif;font-size:14px;padding: 0 5px;">&#8377; ${ctx.shippingCharge}</td>
 	                           </tr>
-	                            
+	                           #if(${ctx.couponDiscount}) 
 	                           <tr>
 			                      	<td style="line-height:35px;border-bottom: 1px solid #cccccc;color:#212021; font-family:Arial, Helvetica, sans-serif;font-size:14px;padding: 0 5px;">Coupon discount</td>
 			                      	<td align="left" style="width:25%;border-bottom: 1px solid #cccccc;color:#212021; font-family:Arial, Helvetica, sans-serif;font-size:14px;padding: 0 5px;">&#8377; ${ctx.couponDiscount}</td>
 	                           </tr>
-	                            
+	                           #end 
 	                           <tr>
 			                      	<td style="line-height:40px; color:#a5164c;font-size:18px;border-bottom: 2px solid #cccccc; font-family:Arial, Helvetica, sans-serif; padding: 0 5px;font-weight: bold;">TOTAL</td>
 			                      	<td align="left" style="width:25% line-height:40px; color:#a5164c;font-size:18px;border-bottom: 2px solid #cccccc;font-family:Arial, Helvetica, sans-serif; padding: 0 5px;font-weight: bold;">&#8377; ${ctx.totalPrice}</td>

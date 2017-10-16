@@ -80,9 +80,9 @@
 						<spring:theme code="text.account.MarketplacePreferences"
 							text="My Preferences" />		<!--  UF-249 text change -->
 					</h2>
-					<p>
+					<p class="commonAccountPara">
 						<spring:theme code="account.marketplacePreferences.text"
-							text="The pit stop to tell us all about your favourite brands, categories and likes" />
+							text="Set the newsletter and other similar preferences here." />
 					</p>
 				</div>
 
@@ -186,11 +186,15 @@
 								<spring:theme code="text.marketplacePreferences.mailfrequency"
 									text="How often would you like to hear from us?" />
 							</p>
+							<p class="frequentDesc">
+								<spring:theme code="text.marketplacePreferences.mailfrequency.description"
+									text="Set the newsletter frequency." />
+							</p>		<!-- TPR-6149 -->
 							<div class="freq">
 								<c:forEach items="${frequencyList}" var="frequency" varStatus="status">
 									<input type="radio" name="frequency"
-										id="radioFrequency${status.index}" value="${frequency}"
-										<c:if test="${not empty selectedFreq && frequency eq selectedFreq}">
+										id="radioFrequency${status.index}" value="${fn:replace(frequency,'-','_')}"
+										<c:if test="${not empty selectedFreq && fn:replace(frequency,'-','_') eq selectedFreq}">
 									checked="checked"
 									</c:if>>
 									<label for="radioFrequency${status.index}">
@@ -200,6 +204,9 @@
 							</div>
 						</fieldset>
 						<fieldset class="feedback">
+							<h2>
+								<spring:theme code="text.marketplacePreferences.mailfeedback" text="Feedback mode with which you'd like us to be in touch" />
+							</h2>
 							<p>
 								<cms:pageSlot position="Section1" var="feature">
 									<cms:component component="${feature}" />
@@ -240,7 +247,7 @@
 							</button>
 							<a href="#nogo" id="unsubcribe-link">
 								<spring:theme code="text.marketplacePreferences.unsubcribe.all"
-									text="Unsubscribe from All" />
+									text="Unsubscribe from all" />
 							</a>
 
 						</div>

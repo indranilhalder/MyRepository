@@ -20,6 +20,8 @@ public interface MarketplacecheckoutaddonControllerConstants
 	// implement here controller constants used by this extension
 	String ADDON_PREFIX = "addon:/marketplacecheckoutaddon/";
 
+	String LUXURY_ADDON_PREFIX = "addon:/luxurycheckoutaddon/";
+
 
 	interface Views
 	{
@@ -42,7 +44,13 @@ public interface MarketplacecheckoutaddonControllerConstants
 				String PAYMENTDETAILSPAGE = ADDON_PREFIX + "pages/checkout/multi/enterPaymentDetailsPage";
 				String ChooseAddNewAddressPage = ADDON_PREFIX + "pages/checkout/multi/addNewAddressPage";
 				String ChooseDeliveryMethodEditPage = ADDON_PREFIX + "pages/checkout/multi/editAddressDetailsPage";
-                String ChooseDeliverySlotPage = ADDON_PREFIX + "pages/checkout/multi/chooseDeliverySlotPage";
+				String ChooseDeliverySlotPage = ADDON_PREFIX + "pages/checkout/multi/chooseDeliverySlotPage";
+			}
+
+			interface SingleStepCheckout
+			{
+				String SinglePageCheckoutPage = ADDON_PREFIX + "pages/checkout/single/singlePageCheckout";
+				String AddPaymentMethodPage = ADDON_PREFIX + "pages/checkout/single/showAddPaymentMethodPage";
 			}
 		}
 
@@ -55,7 +63,21 @@ public interface MarketplacecheckoutaddonControllerConstants
 				String BillingAddressForm = ADDON_PREFIX + "fragments/checkout/billingAddressForm";
 				String NetbankingPanel = ADDON_PREFIX + "fragments/checkout/netbankingPanel"; //TISPT-235
 				String CODPanel = ADDON_PREFIX + "fragments/checkout/codPanel"; //TISPT-235
+
+				interface Single
+				{
+					String AddAddressForm = ADDON_PREFIX + "fragments/checkout/single/showAddAddressDetails";
+					String EditAddressForm = ADDON_PREFIX + "fragments/checkout/single/showEditAddressDetails";
+					String DeliveryAddressCarousel = ADDON_PREFIX + "fragments/checkout/single/showDeliveryAddressDetailsPage";
+					String DeliveyModesSelectionPanel = ADDON_PREFIX + "fragments/checkout/single/showDeliveryModesDetails"; //TISPT-235
+					String PickupLocationSelectionPanel = ADDON_PREFIX + "fragments/checkout/single/showPickupLocation";
+					String PickupLocationFragmentPanel = ADDON_PREFIX + "fragments/checkout/single/showPickupLocationFragments";
+					String PickupPersonForm = ADDON_PREFIX + "fragments/checkout/single/showPickupPersonDetails";
+					String ReviewOrder = ADDON_PREFIX + "fragments/checkout/single/showReviewOrder"; //TISPT-235
+					String OrderTotals = ADDON_PREFIX + "fragments/checkout/single/showOrderTotalDetailsPage";
+				}
 			}
+
 
 		}
 	}

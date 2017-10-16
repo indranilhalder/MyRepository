@@ -1,0 +1,56 @@
+#
+# Import the CMS content for the site
+#
+$storePrefix=lux
+$contentCatalog=$storePrefixContentCatalog
+$productCatalog=luxProductCatalog
+$contentCV=catalogVersion(CatalogVersion.catalog(Catalog.id[default=$contentCatalog]),CatalogVersion.version[default=Staged])[default=$contentCatalog:Staged]
+$productCV=catalogVersion(CatalogVersion.catalog(Catalog.id[default=$productCatalog]),CatalogVersion.version[default=Staged])[default=$productCatalog:Staged]
+$luxuryStoreAddonPrefix=addon:/luxurystoreaddon
+
+# Import modulegen config properties into impex macros
+UPDATE GenericItem[processor=de.hybris.platform.commerceservices.impex.impl.ConfigPropertyImportProcessor];pk[unique=true]
+$jarResourceCms=$config-jarResourceCmsValue
+
+# Create PageTemplates
+INSERT_UPDATE PageTemplate;$contentCV[unique=true];uid[unique=true];name;frontendTemplateName;restrictedPageTypes(code);active[default=true]
+;;ErrorPageTemplate;Error Page Template;$luxuryStoreAddonPrefix/pages/layout/errorPageTemplate;ContentPage;
+
+
+# Error Page Template
+INSERT_UPDATE ContentSlotName;name[unique=true];template(uid,$contentCV)[unique=true][default='ErrorPageTemplate'];validComponentTypes(code);compTypeGroup(code)
+;TopHeaderSlot;;;wide               
+;MiddleHeader;;;wide               
+;SiteLogo;;;logo               
+;HeaderLinks;;;headerlinks        
+;SearchBox;;;searchbox          
+;MiniCart;;;wide               
+;NavigationBar;;;navigation                   
+;Footer;;;footer
+;SideContent;;MplBigPromoBannerComponent;
+#;MiddleContent;;AccountNavigationCollectionComponent;
+;BottomContent;;;wide
+
+INSERT_UPDATE ContentSlotForTemplate;$contentCV[unique=true];uid[unique=true];position[unique=true];pageTemplate(uid,$contentCV)[unique=true][default='ErrorPageTemplate'];contentSlot(uid,$contentCV)[unique=true];allowOverwrite
+;;TopHeaderSlot-ErrorPage;TopHeaderSlot;;TopHeaderSlot;true          
+;;MiddleHeaderHelpLink-ErrorPage;MiddleHeader;;MiddleHeader;true          
+;;SiteLogo-ErrorPage;SiteLogo;;SiteLogoSlot;true          
+;;HeaderLinks-ErrorPage;HeaderLinks;;HeaderLinksSlot;true          
+;;SearchBox-ErrorPage;SearchBox;;SearchBoxSlot;true          
+;;MiniCart-ErrorPage;MiniCart;;MiniCartSlot;true       
+;;NavigationBar-ErrorPage;NavigationBar;;NavigationBarSlot;true                  
+;;Footer-ErrorPage;Footer;;FooterSlot;true
+;;SideContent-ErrorPage;SideContent;;SideContentSlot;true 
+#;;MiddleContent-ErrorPage;MiddleContent;;MiddleContentSlot;true
+
+
+# Functional Content Pages
+INSERT_UPDATE ContentPage;$contentCV[unique=true];uid[unique=true];name;masterTemplate(uid,$contentCV);label;defaultPage[default='true'];approvalStatus(code)[default='approved'];homepage[default='false'];previewImage(code, $contentCV)[default='ContentPageModel__function_preview']
+;;notFound;Not Found Page;ErrorPageTemplate;notFound
+;;nonBusinessErrorFound;Non Business Error Found Page;ErrorPageTemplate;nonBusinessErrorFound
+;;businessErrorFound;Business Error Found Page;ErrorPageTemplate;businessErrorFound
+
+
+
+UPDATE PageTemplate;$contentCV[unique=true];uid[unique=true];velocityTemplate[translator=de.hybris.platform.commerceservices.impex.impl.FileLoaderValueTranslator]
+;;ErrorPageTemplate			;$jarResourceCms/structure-view/structure_errorPageTemplate.vm

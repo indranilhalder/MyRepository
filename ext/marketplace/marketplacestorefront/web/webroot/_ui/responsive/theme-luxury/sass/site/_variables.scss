@@ -1,0 +1,68 @@
+//== Colors
+
+$white:					#ffffff;
+$gray-darker: 			#2d2d2d;
+$gold-dark: 			#B9966B;
+$state-danger-text: 	#d0021b;
+$light-gray:            #eaeaec;
+$slight-gray:           #cecece;
+$mlight-gray:           #b3b3b3;
+$red:					#DE2844;
+$gray:					#dddddd;
+$gray-lighter:			#B3B3B3;
+$yellow:				#FF9F00;
+$blue:					#0076FF;
+$border: 				#e3e3e3;                 
+$link-color:            inherit;
+$link-hover-color:      $link-color;
+$font-lato: 			Lato, sans-serif;
+$font-roboto: 			Roboto;
+$font-palyfair: 	    Playfair Display;
+$font-family-base:      $font-lato;
+
+// Large screen / wide desktop
+$container-large-desktop:      (1160px + $grid-gutter-width);
+//** For `$screen-lg-min` and up.
+$container-lg:                 $container-large-desktop;
+
+//** Padding between columns. Gets divided in half for the left and right.
+
+$grid-gutter-width:         40px;
+$lg-max-width : 1288px;
+
+// Grid breakpoints
+$grid-breakpoints: (
+  xs: 0,
+  sm: 576px,
+  md: 768px,
+  lg: 992px,
+  xl: 1200px
+) !default;
+
+
+$btn-default-color:              $gray-darker;
+$btn-default-bg:                 $white;
+$btn-default-border:             #eef0f5;
+
+$btn-primary-color:              $white;
+$btn-primary-bg:                 $gray-darker;
+$btn-primary-border:             $gray-darker;
+
+// Allows for customizing button radius independently from global border radius
+$btn-border-radius-base:         4px;
+$btn-border-radius-large:        4px;
+$btn-border-radius-small:        4px;
+
+$input-border-radius:            3px;
+$input-border-radius-large:      3px;
+$input-border-radius-small:      3px;
+
+//** Border color for inputs on focus
+$input-border: 					#cfcfcf;
+$input-border-focus:			$input-border;
+
+/*Sprite image path*/
+
+$Sprite: url(../images/sprite.png);
+$Sprite_icon: url(../images/luxuary_sprite.png);
+$Sprite_icon1: url(../images/sprite-07.png);

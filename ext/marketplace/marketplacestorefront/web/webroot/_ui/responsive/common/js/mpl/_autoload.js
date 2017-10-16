@@ -45,7 +45,25 @@ function _autoload(){
 		}
 	})
 }
-
-$(function(){
-	_autoload();
+//UF-439
+$(document).ready(function(){
+	if($("#pageType").val() == 'homepage' || 
+	   $("input[name=newBrandLandingPage]").length || 
+	   $('#pageType').val() == "product" || 
+	   $("input[name=productGrid]").length ||
+	   $("input[name=searchPanel]").length ||
+	   $("input[name=apparelCategoryLandingPage]").length ||
+	   $("input[name=BrandLayoutPage]").length){
+		
+		$(window).on("load",function(){
+			$(function(){
+				_autoload();
+			});
+		});
+	}else{
+		$(function(){
+			_autoload();
+		});
+	}
 });
+

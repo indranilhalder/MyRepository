@@ -4,6 +4,7 @@
 package com.tisl.mpl.facade.nps;
 
 import de.hybris.platform.core.model.user.CustomerModel;
+import de.hybris.platform.servicelayer.exceptions.ModelSavingException;
 import de.hybris.platform.servicelayer.model.ModelService;
 
 import java.text.SimpleDateFormat;
@@ -87,7 +88,16 @@ public class NPSFeedbackQuestionFacadeImpl implements NPSFeedbackQuestionFacade
 		CustomerModel customer = null;
 		try
 		{
-			npsFeedbackModel = modelService.create(NPSFeedbackModel.class);
+			final NPSFeedbackModel npsModel = npsFeedbackQuestionService.getFeedbackModel(feedbackForm.getTransactionId());
+			if (npsModel != null)
+			{
+				npsFeedbackModel = npsModel;
+			}
+			else
+			{
+				npsFeedbackModel = modelService.create(NPSFeedbackModel.class);
+				npsFeedbackModel.setNpsId(npsFeedbackQuestionService.getNPSId());
+			}
 			if (StringUtils.isNotEmpty(feedbackForm.getTransactionId()))
 			{
 				npsFeedbackModel.setTransactionId(feedbackForm.getTransactionId());
@@ -112,7 +122,7 @@ public class NPSFeedbackQuestionFacadeImpl implements NPSFeedbackQuestionFacade
 			//final Integer responseIdInt = new Integer(responseId);
 
 			final Integer responseIdInt = Integer.valueOf(responseId);
-			npsFeedbackModel.setNpsId(npsFeedbackQuestionService.getNPSId());
+
 			npsFeedbackModel.setResponseId(responseIdInt.toString());
 			final SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy hh:mm:ss a");
 			final SimpleDateFormat dateFormatParse = new SimpleDateFormat("dd/MM/yyyy hh:mm:ss a");
@@ -165,7 +175,6 @@ public class NPSFeedbackQuestionFacadeImpl implements NPSFeedbackQuestionFacade
 	 * java.lang.String)
 	 */
 	@Override
-	@Deprecated
 	public boolean saveFeedbackRating(final String originalUid, final String transactionId, final String rating)
 	{
 		NPSFeedbackModel npsFeedbackModel = null;
@@ -173,7 +182,7 @@ public class NPSFeedbackQuestionFacadeImpl implements NPSFeedbackQuestionFacade
 		try
 		{
 			npsFeedbackModel = modelService.create(NPSFeedbackModel.class);
-			customer = (CustomerModel) extendedUserService.getUserForEmailid(originalUid);
+			customer = extendedUserService.getUserForOriginalUid(originalUid);
 			if (null != customer)
 			{
 				npsFeedbackModel.setEmailId(customer.getOriginalUid());
@@ -185,13 +194,24 @@ public class NPSFeedbackQuestionFacadeImpl implements NPSFeedbackQuestionFacade
 			npsFeedbackModel.setTransactionId(transactionId);
 			npsFeedbackModel.setResponseTime(new Date());
 			//npsFeedbackModel.setOriginalSurveyDate();
+			//TISPRDT-2140 starts
+			final SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy hh:mm:ss a");
+			final SimpleDateFormat dateFormatParse = new SimpleDateFormat("dd/MM/yyyy hh:mm:ss a");
+			final Date date = new Date();
+			final String SurveyDate = dateFormat.format(date);
+			npsFeedbackModel.setOriginalSurveyDate(dateFormatParse.parse(SurveyDate));
+			//TISPRDT-2140 ends
 			modelService.save(npsFeedbackModel);
+		}
+		catch (final ModelSavingException e)
+		{
+			ExceptionUtil.getCustomizedExceptionTrace(e);
 		}
 		catch (final Exception e)
 		{
 			ExceptionUtil.getCustomizedExceptionTrace(e);
 		}
-		return false;
+		return true;
 	}
 
 	/*

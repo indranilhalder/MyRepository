@@ -13,7 +13,6 @@
  */
 package com.tisl.mpl.controllers.pages;
 
-import de.hybris.platform.acceleratorfacades.order.AcceleratorCheckoutFacade;
 import de.hybris.platform.acceleratorstorefrontcommons.annotations.PreValidateCheckoutStep;
 import de.hybris.platform.acceleratorstorefrontcommons.annotations.RequireHardLogIn;
 import de.hybris.platform.acceleratorstorefrontcommons.checkout.steps.CheckoutStep;
@@ -23,6 +22,8 @@ import de.hybris.platform.cms2.exceptions.CMSItemNotFoundException;
 import de.hybris.platform.cms2.model.pages.ContentPageModel;
 import de.hybris.platform.commercefacades.order.data.CartRestorationData;
 import de.hybris.platform.commerceservices.order.CommerceCartModificationException;
+
+import javax.annotation.Resource;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.log4j.Logger;
@@ -37,6 +38,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import com.tisl.mpl.controllers.MarketplacecheckoutaddonControllerConstants;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.facade.checkout.MplCheckoutFacade;
+import com.tisl.mpl.facade.checkout.MplCustomAddressFacade;
 
 
 /**
@@ -49,21 +51,25 @@ public class MultiStepCheckoutController extends AbstractCheckoutStepController
 	protected static final Logger LOG = Logger.getLogger(MultiStepCheckoutController.class);
 	private final static String MULTI = "multi";
 
-	@Autowired
-	private AcceleratorCheckoutFacade acceleratorCheckoutFacade;
+	//@Autowired
+	//private AcceleratorCheckoutFacade acceleratorCheckoutFacade;
 
 	@Autowired
 	private MplCheckoutFacade mplCheckoutFacade;
 
+	@Resource(name = "mplCustomAddressFacade")
+	private MplCustomAddressFacade mplCustomAddressFacade;
+
 	@Override
 	@RequestMapping(method = RequestMethod.GET)
 	@PreValidateCheckoutStep(checkoutStep = MULTI)
-	public String enterStep(final Model model, final RedirectAttributes redirectAttributes) throws CMSItemNotFoundException,
-			CommerceCartModificationException
+	public String enterStep(final Model model, final RedirectAttributes redirectAttributes)
+			throws CMSItemNotFoundException, CommerceCartModificationException
 	{
 		// In case of Normal checkout delivery address will be removed while moving to checkout page
 		//TIS-391
-		acceleratorCheckoutFacade.setDeliveryAddress(null);
+		//acceleratorCheckoutFacade.setDeliveryAddress(null);
+		getMplCustomAddressFacade().setDeliveryAddress(null);
 		return getCheckoutStep().nextStep();
 	}
 
@@ -76,6 +82,7 @@ public class MultiStepCheckoutController extends AbstractCheckoutStepController
 		storeCmsPageInModel(model, pageForRequest);
 		setUpMetaDataForContentPage(model, pageForRequest);
 		model.addAttribute(WebConstants.BREADCRUMBS_KEY, getContentPageBreadcrumbBuilder().getBreadcrumbs(pageForRequest));
+
 		return MarketplacecheckoutaddonControllerConstants.Views.Fragments.Checkout.TermsAndConditionsPopup;
 	}
 
@@ -161,6 +168,25 @@ public class MultiStepCheckoutController extends AbstractCheckoutStepController
 	protected CheckoutStep getCheckoutStep()
 	{
 		return getCheckoutStep(MULTI);
+	}
+
+
+	/**
+	 * @return the mplCustomAddressFacade
+	 */
+	public MplCustomAddressFacade getMplCustomAddressFacade()
+	{
+		return mplCustomAddressFacade;
+	}
+
+
+	/**
+	 * @param mplCustomAddressFacade
+	 *           the mplCustomAddressFacade to set
+	 */
+	public void setMplCustomAddressFacade(final MplCustomAddressFacade mplCustomAddressFacade)
+	{
+		this.mplCustomAddressFacade = mplCustomAddressFacade;
 	}
 
 }

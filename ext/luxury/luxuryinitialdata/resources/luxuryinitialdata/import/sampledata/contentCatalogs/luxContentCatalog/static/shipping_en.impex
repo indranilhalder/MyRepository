@@ -1,0 +1,74 @@
+
+# ImpEx for Importing CMS Content
+# English Localisation
+
+# Macros / Replacement Parameter definitions
+$storePrefix=lux
+$contentCatalog=$storePrefixContentCatalog
+
+$contentCV=catalogVersion(CatalogVersion.catalog(Catalog.id[default=$contentCatalog]),CatalogVersion.version[default=Online])[default=$contentCatalog:Online]
+$picture=media(code, $contentCV);
+$siteResource=jar:com.tisl.lux.setup.InitialDataSystemSetup&/luxuryinitialdata/import/contentCatalogs/$contentCatalog
+
+# Language
+$lang=en
+
+
+
+
+
+# CMS Paragraph Components
+UPDATE CMSParagraphComponent;$contentCV[unique=true];uid[unique=true];content[lang=$lang]
+
+;;TitleForShippingPageComponent;"Shipping"
+
+
+
+;;ShippingPageComponent;"
+
+
+<h2>Frequently Asked Questions:</h2>
+
+
+  <div id='collapsible-panels'> 
+
+
+
+<h5 class='questions'><a href='#'>1.What are the delivery modes available?</a></h5>
+<div><p>Answer to Question One goes here.</p></div>  
+<h5 class='questions'><a href='#'>2.How can I find out if Tata CliQ/Tata CliQ Luxury delivers to my address?</a></h5>
+<div><p>When you enter your PIN code while placing your order, we’ll instantly tell you if we can deliver to your location.</p></div>  
+<h5 class='questions'><a href='#'>3.How can I find out about the delivery charges?</a></h5>
+<div><p>Once you check out you will find out about the delivery charges.</p></div>  
+<h5 class='questions'><a href='#'>4.Will all sellers on Tata CLiQ ship to the area I live in?</a></h5>
+<div><p>Whether a seller can ship to your area or not depends on the seller’s capability to service your area through self- or partner networks, and legal restrictions, if any. Sellers may choose to not service certain areas based on their business policies or discretion.</p></div>  
+<h5 class='questions'><a href='#'>5.When will my order arrive?</a></h5>
+<div><p>We’ll send you the estimated delivery time of your order as part of the order acknowledgement email and SMS.
+You can also track your order using the tracking number provided to you. Click on the Track Order tab on the homepage. If you’re logged in to your account, just click on Track Order and select the product. We’ll show you the order status right away.
+Lost your tracking number? Not to worry, simply log in to your account and go to Order History or Track Order directly. We’ll show you the complete history and the order status for every order.</p></div>  
+<h5 class='questions'><a href='#'>6.Why does the delivery time vary from seller to seller?</a></h5>
+<div><p>The delivery time depends upon the availability of that product, and the handling time for the seller and courier partner. We’ll show you the estimated delivery time on the product page, right after you enter your PIN Code.</p></div>  
+<h5 class='questions'><a href='#'>7.My order is late. What do you have to say about this?</a></h5>
+<div><p>We keep our best team up to the task to make sure your order reaches you on time, or sooner. However, sometimes bad weather, flight delays, political disruption and other unprecedented issues can delay an order. You can keep tracking your order by logging in, going to Order History and selecting the particular order. We’ll keep you posted about any delays by SMS or email.</p></div>  
+<h5 class='questions'><a href='#'>8.Just realised I won’t be around to receive my package. How can I reschedule my delivery?</a></h5>
+<div><p>Sorry! But once the clock’s been set, you can’t reschedule a delivery.</p></div>  
+<h5 class='questions'><a href='#'>9.I missed my delivery. What happens now?</a></h5>
+<div><p>We’ll send you a notification if you aren’t around for the delivery, so that you can get in touch with us right away. Together we will sort out a delivery time that works for us both. If it doesn’t work out the first time, we’ll try delivering it up to three times to make sure your package is in your hands soon. We know just how important it is to you.</p></div>  
+<h5 class='questions'><a href='#'>10.Do you deliver internationally?</a></h5>
+<div><p>We don’t deliver internationally at the moment. Maybe in the future, though. Right now, you can place your orders from anywhere in the world as long as the shipping address is in India.</p></div>  
+<h5 class='questions'><a href='#'>11.The order status says Delivered but I haven’t received my order.</a></h5>
+<div><p>We only update the delivery status when an order has successfully been delivered. If you find any part of your order missing in the package, or if you haven’t received the delivery, please get in touch with us.</p></div>  
+<h5 class='questions'><a href='#'>12.Can I request different items from my cart to be delivered separately?</a></h5>
+<div><p>Unfortunately, at the moment we can’t ship different products in the same cart to separate addresses. Here’s hoping we can make this happen for you soon.</p></div>  
+<h5 class='questions'><a href='#'>13.My schedule is fully booked. Can I choose a specific date and time for delivery?</a></h5>
+<div><p>We always show you the estimated delivery date for all the items in your shopping cart. We advise you to place your order keeping in mind when it will be delivered, and if that works for you. Unfortunately, you can’t choose a specific date and time for delivery on Tata CliQ Luxury right now. But soon, maybe.</p></div>  
+<h5 class='questions'><a href='#'>14.When can I get my order if it says Out for Delivery?</a></h5>
+<div><p>When the order status says ‘Out-for-delivery’, it means that we’re trying to get it delivered to you on the same day. We’ll also keep you posted via SMS.</p></div>  
+<h5 class='questions'><a href='#'>15.Can I choose a specific time & date for collecting a Tata CLiQ parcel from the store?</a></h5>
+<div><p>The collection window for a CLiQ & PIQ order varies from seller to seller. This ranges from 2 to 7 days. Currently most of the sellers offer a 7-day window. The collection window starts from the day the order is in ready for collection status..</p></div>  
+
+
+
+</div>
+
+"

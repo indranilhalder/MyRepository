@@ -37,8 +37,29 @@
 	</p>
 	<p class="savings pdp-savings" id="savingsOnProductId" style="display:none">															
 		  <span></span>
-	</p>	
+	</p>
+	<%--for price breakup(TPR-3752) --%>
+
+	  <c:if test="${product.rootCategory=='FineJewellery' }">	
+	               <span class="price-breakup" id = "pricebreakupIdSpan" style="display:none">Price Breakup</span>
+	</c:if>
+	
+	<%--for price breakup(TPR-3752) --%>	
 	<br>
+
+	<!-- TPR-3780 STARTS HERE -->
+	<c:if test="${product.rootCategory=='FineJewellery' }">
+		<c:if test="${to_show_disclaimer=='yes'}">
+			<spring:eval expression="T(de.hybris.platform.util.Config).getParameter('cart.price.disclaimer')" var="disclaimer"/>										
+		    <p class="disclaimer-txt">
+		    		${disclaimer}
+		    </p>
+		</c:if>
+	</c:if>	
+	     
+		                					
+	<!-- TPR-3780 ENDS HERE -->	
+	
 	<!--- START: INSERTED for MSD --->
 	<input type="hidden" id="price-for-mad" value=""/>		
 	<input type="hidden" id="currency-for-mad" value="${product.productMRP.currencyIso}"/>

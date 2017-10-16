@@ -1,0 +1,57 @@
+.brand-slider-wrapper, .new-brand-slider-wrapper {
+	max-width: 1127px;
+	.slick-slide img {
+		display: inline-block;
+	}
+	a{
+		cursor: pointer;
+	}
+	.brand-img{
+		position: relative;
+		width: 93%;
+		margin: auto;
+        
+        @include media-breakpoint-down(sm) {
+            width: 50%;
+        }
+        @media only screen and (max-width: 420px) {
+            width: 95%;
+        }
+		
+		.brand-bg{
+			&:after{
+				content: '';
+				background: rgba(0,0,0,.5);
+				position: absolute;
+				top: 0px;
+				bottom: 0px;
+				left: 0px;
+				width: 100%;
+				border-radius: 10px;
+			}
+
+		}
+		
+		.brand-logo{
+			position: absolute;
+			top: 0;
+			left: 0;
+			right: auto;
+			
+
+		}
+		
+	}
+    &:not(:empty){
+        margin: 0 auto 70px;
+        
+        @include media-breakpoint-down(sm) {
+            margin: 0 auto 20px;
+        }
+    }
+    @include media-breakpoint-down(sm) {
+    	.slick-track{
+    		margin-left: -32%;
+    	}
+    }
+}

@@ -23,6 +23,8 @@ import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import com.tisl.lux.facade.CommonUtils;
+
 
 /**
  * This class populates data into product data from solr search results
@@ -34,9 +36,32 @@ public class MplSearchResultProductPopulator extends MplSearchResultVariantProdu
 {
 
 
+	private CommonUtils commonUtils;
 
 	@Autowired
 	private SizeAttributeComparator sizeAttributeComparator;
+
+
+
+
+	/**
+	 * @return the commonUtils
+	 */
+	public CommonUtils getCommonUtils()
+	{
+		return commonUtils;
+	}
+
+
+
+	/**
+	 * @param commonUtils
+	 *           the commonUtils to set
+	 */
+	public void setCommonUtils(final CommonUtils commonUtils)
+	{
+		this.commonUtils = commonUtils;
+	}
 
 	//private static final String DELIMETER = ":";
 	//private static final String STOCK = "STOCK";
@@ -60,10 +85,20 @@ public class MplSearchResultProductPopulator extends MplSearchResultVariantProdu
 			if (getValue(source, "displaySize") != null)
 			{
 				final List<String> displaySize = (List<String>) getValue(source, "displaySize");
-				Collections.sort(displaySize, sizeAttributeComparator);
-				target.setDisplaySize((List<String>) getValue(source, "displaySize"));
+				//to set the length instead of size for the length category product in serp/plp
+				final List<String> displaySizeFinal = displaySize;
+				if (displaySize.contains("Length"))
+				{
+					target.setDisplayLength("Length");
+					displaySizeFinal.remove("Length");
+				}
+				else
+				{
+					target.setDisplayLength("Size");
+				}
+				Collections.sort(displaySizeFinal, sizeAttributeComparator);
+				target.setDisplaySize(displaySizeFinal);
 			}
-
 			if (getValue(source, "mplAvgRating") != null)
 			{
 				target.setAverageRating(this.<Double> getValue(source, "mplAvgRating"));
@@ -154,6 +189,15 @@ public class MplSearchResultProductPopulator extends MplSearchResultVariantProdu
 				target.setDisplayPromotion(displayPromotion);
 			}
 
+			/* TPR-1886 | JEWELLERY START */
+			if (getValue(source, "priceRangeJewellery") != null)
+			{
+				final String priceRangeJewellery = (String) getValue(source, "priceRangeJewellery");
+				target.setPriceRangeJewellery(priceRangeJewellery);
+			}
+
+
+			/* JEWELLERY END */
 			if (getValue(source, "isOffersExisting") != null)
 			{
 
@@ -296,13 +340,17 @@ public class MplSearchResultProductPopulator extends MplSearchResultVariantProdu
 	{
 		final List<ImageData> result = new ArrayList<ImageData>();
 		//TPR-796
-		if (getValue(source, "isLuxuryProduct") != null && this.<Boolean> getValue(source, "isLuxuryProduct").booleanValue())
+		if (commonUtils.isLuxurySite() || getValue(source, "isLuxuryProduct") != null
+				&& this.<Boolean> getValue(source, "isLuxuryProduct").booleanValue())
 		{
 			addImageData(source, "luxurySearchPage", result);
+			addImageData(source, "luxuryModel", result);
+			addImageData(source, "luxurySecondary", result);
 		}
 		else
 		{
 			addImageData(source, "searchPage", result);
+
 		}
 		addImageData(source, "product", result);
 
@@ -375,7 +423,7 @@ public class MplSearchResultProductPopulator extends MplSearchResultVariantProdu
 				if (value.length > 3 && null != value[3] && StringUtils.isNotEmpty(value[3].trim()))
 				{
 					sellerStock = Integer.valueOf(value[3]);
-				}   
+				}
 				final PriceData mrpVal = getPriceDataFactory().create(PriceDataType.BUY, BigDecimal.valueOf(Double.parseDouble(mrp)),
 						getCommonI18NService().getCurrentCurrency());//SONAR FIX
 				final PriceData mopVal = getPriceDataFactory().create(PriceDataType.BUY,

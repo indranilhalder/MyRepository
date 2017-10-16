@@ -434,7 +434,18 @@ ACC.refinements = {
 				filterChecked = true;
 				//onFilterRemoveAnalytics(filterName,filterValue);
 			}
-			
+			//TISSPTEN-130 starts
+			if ($("input[name=customSku]").val()) {
+				pageURL =  window.location.href;
+				if (pageURL.indexOf("?") > -1) {
+					pageURL = pageURL.split("?")[0];
+					pageURL = pageURL.replace(/page-[0-9]+/, 'page-1');
+				}
+				if (action[1] != "") {
+					pageURL = pageURL + '?' + action[1]; 
+				}
+			}
+			//TISSPTEN-130 ends
 			// AJAX call
 			filterDataAjax(requiredUrl,dataString,pageURL);
 			
@@ -444,23 +455,24 @@ ACC.refinements = {
 		
 		/* TPR-198 : AJAX Call in SERP and PDP END */
 		
-		$(document).on("change","ul.facet-list.js-facet-top-values.active:first input[type=checkbox]",function(){
+		$(document).on("change",".facet_mobile ul.facet-list.js-facet-top-values.active.selectedMobile input[type=checkbox]",function(){
 			//$('ul.facet-list.js-facet-top-values.active').first().find('input[type=checkbox]').change(function(){
 				var brandNode = $(this).parent().find('span.facet-text').text().trim();
+				//alert(brandNode);
 				if($(this).is(':checked')){
-					$('ul.facet-list.js-facet-list.facet-list-hidden.js-facet-list-hidden').first().find("span.facet-text:contains('"+brandNode+"')").closest('label').find('input[type=checkbox]').prop('checked',true);	
+					$('.facet_mobile ul.facet-list.js-facet-list.facet-list-hidden.js-facet-list-hidden.selectedMobile').first().find("span.facet-text:contains('"+brandNode+"')").closest('label').find('input[type=checkbox]').prop('checked',true);	
 				}else{
-					$('ul.facet-list.js-facet-list.facet-list-hidden.js-facet-list-hidden').first().find("span.facet-text:contains('"+brandNode+"')").closest('label').find('input[type=checkbox]').prop('checked',false);
+					$('.facet_mobile ul.facet-list.js-facet-list.facet-list-hidden.js-facet-list-hidden.selectedMobile').first().find("span.facet-text:contains('"+brandNode+"')").closest('label').find('input[type=checkbox]').prop('checked',false);
 				}
 		});
 			
-		$(document).on("change","ul.facet-list.js-facet-list.facet-list-hidden.js-facet-list-hidden:first input[type=checkbox]",function(){
+		$(document).on("change",".facet_mobile ul.facet-list.js-facet-list.facet-list-hidden.js-facet-list-hidden.selectedMobile input[type=checkbox]",function(){
 			//$('ul.facet-list.js-facet-list.facet-list-hidden.js-facet-list-hidden').first().find('input[type=checkbox]').change(function(){
 				var brandNode = $(this).parent().find('span.facet-text').text().trim();
 				if($(this).is(':checked')){
-					$('ul.facet-list.js-facet-top-values.active').first().find("span.facet-text:contains('"+brandNode+"')").closest('label').find('input[type=checkbox]').prop('checked',true);	
+					$('.facet_mobile ul.facet-list.js-facet-top-values.active.selectedMobile').first().find("span.facet-text:contains('"+brandNode+"')").closest('label').find('input[type=checkbox]').prop('checked',true);	
 				}else{
-					$('ul.facet-list.js-facet-top-values.active').first().find("span.facet-text:contains('"+brandNode+"')").closest('label').find('input[type=checkbox]').prop('checked',false);
+					$('.facet_mobile ul.facet-list.js-facet-top-values.active.selectedMobile').first().find("span.facet-text:contains('"+brandNode+"')").closest('label').find('input[type=checkbox]').prop('checked',false);
 				}
 		});
 		
@@ -513,15 +525,26 @@ ACC.refinements = {
 				//INC144316162 fix ends
 				filterCount+=$(this).find(".facet-list.js-facet-list li").find("input[type=checkbox]:checked").length;
 				filterCount+=$(".facet_mobile .filter-colour.selected-colour").length;
+				//TISTNL-894 | Colourfamily mobile view
+				filterCount+=$(".facet_mobile .filter-colorfamilytrlg.selected-colour").length;
+				filterCount+=$(".facet_mobile .filter-colorfamilytrlg.selected-multi-colour").length;
+				//Dial Colour Watches mobile view
+				filterCount+=$(".facet_mobile .filter-dialColourWatches.selected-colour").length;
+				filterCount+=$(".facet_mobile .filter-dialColourWatches.selected-multi-colour").length;
+				
 				//TISQAUATS-12 starts 
 				filterCount+=$(".facet_mobile .filter-colour.selected-multi-colour").length;
+				
+				
 				//TISQAUATS-12 ends
 				filterCount+=$(".facet_mobile .filter-size.selected-size").length;
 			});
 			//TISQAUATS-27 starts
-			if ($('#customMinPriceMob').val() && $('#customMaxPriceMob').val()) {
+			//INC144318011
+			if ($('#customMinPriceMob').val() || $('#customMaxPriceMob').val()) {
 				filterCount++;
 			}
+			
 			//TISQAUATS-27 ends
 			if(filterCount<=0){
 				return false;
@@ -536,15 +559,21 @@ ACC.refinements = {
 				var nonEmptyDataString= null;
 				
 				//TISQAUATS-27 starts 
-				if ($('#customMinPriceMob').val() && $('#customMaxPriceMob').val()) {
+				//INC144318011
+				if ($('#customMinPriceMob').val() || $('#customMaxPriceMob').val()) {
 					//TISPRDT-1645 starts
 					if(countCustomPrice==0){
 						countCustomPrice=1;
 						$("#applyCustomPriceFilterMob").click();
 					}
 					//TISPRDT-1645 ends
-					var minPriceSearchTxt = $('#customMinPriceMob').val();
-					var maxPriceSearchTxt = $('#customMaxPriceMob').val();
+					//var minPriceSearchTxt = $('#customMinPriceMob').val();
+					//var maxPriceSearchTxt = $('#customMaxPriceMob').val();
+					
+					//INC144318011 start
+					var minPriceSearchTxt = ($('#customMinPriceMob').val() == null || $('#customMinPriceMob').val() == "") ? 0 : $('#customMinPriceMob').val() ;
+		            		var maxPriceSearchTxt = ($('#customMaxPriceMob').val() == null || $('#customMaxPriceMob').val() == "") ? 99999999 : $('#customMaxPriceMob').val() ;
+		            		//INC144318011 end
 					var price = "₹" + minPriceSearchTxt + "-" + "₹" + maxPriceSearchTxt;
 					//$('#facetValue').val(facetValue);
 					if (/:price:(.*)/.test(updatedsearchQuery)) {
@@ -686,10 +715,10 @@ ACC.refinements = {
 			//$(this).parents(".filter-colour").toggleClass("selected-colour");
 			var colour_name = $(this).parent().find("input[name=facetValue]").val().split("_", 1);
 			if(colour_name == "Multi"){
-				$(this).parents(".filter-colour").toggleClass("selected-multi-colour");
+				$(this).parents(".filter-colour, .filter-colorfamilytrlg").toggleClass("selected-multi-colour");
 			}
 			else{
-				$(this).parents(".filter-colour").toggleClass("selected-colour");
+				$(this).parents(".filter-colour, .filter-colorfamilytrlg").toggleClass("selected-colour");
 			}
 			//TISQAUATS-12 ends
 			//TISQAUATS-12 starts
@@ -699,10 +728,10 @@ ACC.refinements = {
 			if ($('.facet_mobile .facet.js-facet.Colour .facet-list.js-facet-top-values.active li').length) {
 				var colourName = $(this).parent().find("input[name=facetValue]").val();
 				if(colour_name == "Multi"){
-					$(this).closest('ul').next().find('li input[value="'+colourName+'"]').parents(".filter-colour").toggleClass("selected-multi-colour");
+					$(this).closest('ul').next().find('li input[value="'+colourName+'"]').parents(".filter-colour, .filter-colorfamilytrlg").toggleClass("selected-multi-colour");
 				}
 				else{
-					$(this).closest('ul').next().find('li input[value="'+colourName+'"]').parents(".filter-colour").toggleClass("selected-colour");
+					$(this).closest('ul').next().find('li input[value="'+colourName+'"]').parents(".filter-colour, .filter-colorfamilytrlg").toggleClass("selected-colour");
 				}
 				var spanCountMoreColor = $('.facet_mobile .facet.js-facet.Colour ul.facet-list.js-facet-list.facet-list-hidden.js-facet-list-hidden').find("li.selected-colour").length;
 				spanCountMoreColor = spanCountMoreColor + $('.facet_mobile .facet.js-facet.Colour ul.facet-list.js-facet-list.facet-list-hidden.js-facet-list-hidden').find("li.selected-multi-colour").length;
@@ -762,15 +791,17 @@ ACC.refinements = {
 					//var spanCount=$(this).find(".facet-list li").find("input[type=checkbox]:checked").length;
 					if(spanCountMore>0)
 					{
-						$('li.facet.js-facet.Brand').find('span.category-icons').removeClass("blank");
-						$('li.facet.js-facet.Brand').find('span.category-icons span').text(spanCountMore);
-						//$(this).find(".category-icons").removeClass("blank");
-						//$(this).find(".category-icons span").text(spanCount);
+						//TISJEW-3501
+						//$('li.facet.js-facet.Brand').find('span.category-icons').removeClass("blank");
+						//$('li.facet.js-facet.Brand').find('span.category-icons span').text(spanCountMore);
+						$(this).find("span.category-icons").removeClass("blank");
+						$(this).find("span.category-icons span").text(spanCountMore);
 					}
 					else
 					{
-						//$(this).find(".category-icons").addClass("blank");
-						$('li.facet.js-facet.Brand').find('span.category-icons').addClass("blank");
+						//TISJEW-3501
+						$(this).find("span.category-icons").addClass("blank");
+						//$('li.facet.js-facet.Brand').find('span.category-icons').addClass("blank");
 					}
 				}else{
 					var spanCount=$(this).find(".facet-list li").find("input[type=checkbox]:checked").length;
@@ -1009,7 +1040,26 @@ function filterDataAjax(requiredUrl,dataString,pageURL){
 				       window.localStorage.setItem('lastUrlpathName',encodeURI(pathName));
 					   window.localStorage.setItem('lastUrlquery',encodeURI(query));
 				 }
-			}		
+			}
+			//TISSPTEN-130 starts
+			else {
+				$("body,html").animate({scrollTop:$('#productGrid').offset().top - 200},500);
+				pageURL = window.location.pathname;
+				pageURL = pageURL.replace(/page-[0-9]+/, 'page-1');
+				if (facetAjaxUrl.indexOf("?") > -1) {
+					var queryArr = facetAjaxUrl.split("?");
+					if (queryArr[1] != "") {
+						pageURL = pageURL + '?' + queryArr[1];
+					}
+					if($( "span.sort[style*='color']" ).length == 1){
+				 		var sortData = $( "span.sort[style*='color']" ).attr('data-name');
+				 		pageURL = pageURL + getSortCode(sortData); 
+				  	}
+				}
+
+				window.history.replaceState(response,"",pageURL);
+			}
+			//TISSPTEN-130 ends
 			// TPR-158 and TPR-413 starts here
 			
 			$("#displayAll").show();
@@ -1030,11 +1080,13 @@ function filterDataAjax(requiredUrl,dataString,pageURL){
 			// TPR-158 and TPR-413 ends here
 			//TPR-4720 first 5 product display
 			if($('#pageType').val() == "productsearch"){
-				populateFirstFiveProductsSerp();	
+				populateFirstFiveProductsSerp();
+				dtmSearchTags();
 			}
 			
 			if($('#pageType').val() == "category" || $('#pageType').val() == "electronics"){
 				populateFirstFiveProductsPlp();
+				dtmSearchTags();
 			}
 		},
 		error : function(xhr, status, error) {
@@ -1096,7 +1148,14 @@ function getSortCode(item){
 	  		code = '&sort=relevance';
 	  		break;
 	  	case 'new':
-	  		code = '&sort=isProductNew';
+	  		//TISSPTEN-125 starts
+			if ($("input[name=customSku]").length) {
+				code = '&sort=new';
+			}
+			else {
+				code = '&sort=isProductNew';
+			}
+			//TISSPTEN-125 ends
 	  		break;
 	  	case 'discount':
 	  		code = '&sort=isDiscountedPrice';
@@ -1140,6 +1199,31 @@ function createSearchQuery(filterMobileQuery){
 function onFilterAddAnalytics(filterName,filterValue){
 	var filter_type = (filterName).toLowerCase().replace(/  +/g, ' ').replace(/ /g,"_").replace(/['"]/g,"");
 	var filter_value = (filterValue).toLowerCase().replace(/  +/g, ' ').replace(/ /g,"_").replace(/['"]/g,"");
+	// TPR-6287 | filter tacking
+	if (typeof _satellite != "undefined") {
+		_satellite.track('filter_temp');
+    }
+	if(typeof digitalData.filter != "undefined"){
+		if(typeof digitalData.filter.temp != "undefined"){
+			digitalData.filter.temp.type = filter_type;
+			digitalData.filter.temp.value = filter_value;
+		}
+		else{
+			digitalData.filter.temp = {
+				type : filter_type,
+				value : filter_value
+			}
+		}
+	}
+	else{
+		digitalData.filter = {
+			temp :  {
+				type : filter_type,
+				value : filter_value
+			}
+     	}
+	}
+	
 	
 	utag.link({
 		link_text: 'search_filter_applied' ,
@@ -1238,7 +1322,8 @@ function isCustomSku(requiredUrl){
 //UF-15
 function lazyPaginationFacet(response){
 	res = response;
-	var ulProduct = $(response).find('ul.product-listing.product-grid,ul.product-list');
+	// Added for UF-359
+	var ulProduct = $(response).find('ul.product-listing.product-grid,ul.product-list,ul.product-listing.product-grid.custom-sku');
 	//Add to bag and quick view ui fixes starts here
 	$(".product-tile .image .item.quickview").each(function(){
     	if($(this).find(".addtocart-component").length == 1){
@@ -1251,7 +1336,8 @@ function lazyPaginationFacet(response){
         productItemArray.push($(this));
     });
     console.log(""+productItemArray);
-	$("#productGrid").html($.strRemove("ul.product-listing.product-grid.lazy-grid,ul.product-listing.product-grid.lazy-grid-facet,ul.product-list", response));
+    // Added for UF-359
+    $("#productGrid").html($.strRemove("ul.product-listing.product-grid.lazy-grid,ul.product-listing.product-grid.lazy-grid-facet,ul.product-list,ul.product-listing.product-grid.custom-sku", response));
 	initPageLoad = true;
     innerLazyLoad({isSerp:true});
     

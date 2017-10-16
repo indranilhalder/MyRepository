@@ -57,11 +57,11 @@
 												<c:choose>
 													<c:when test="${fn:toLowerCase(entry.product.luxIndicator)=='luxury'}">
 															<a href="${productUrl}"><product:productPrimaryImage
-																	product="${entry.product}" format="luxuryCartIcon" /></a>
+																	product="${entry.product}" format="luxuryCartIcon" lazyLoad="false" /></a>
 													</c:when>
 													<c:otherwise>
 															<a href="${productUrl}"><product:productPrimaryImage
-																	product="${entry.product}" format="thumbnail" /></a>
+																	product="${entry.product}" format="thumbnail" lazyLoad="false" /></a>
 															
 													</c:otherwise>
 												</c:choose>
@@ -312,11 +312,24 @@
 																			<%-- PRDI-378 ENDS HERE --%>																			
 																			   <c:otherwise>
 																			<input type="radio"  name="${entry.entryNumber}" value="${delMode.deliveryCost.value}" id="radio_${entry.entryNumber}_${delMode.code}" onclick="return calculateDeliveryCost('radio_${entry.entryNumber}','${delMode.code}');"   checked="checked"/>
-																			<label class="deliveryModeLabel" for="radio_${entry.entryNumber}_${delMode.code }" >${delMode.name } -  <format:price priceData="${delMode.deliveryCost}" displayFreeForZero="TRUE"/></label>
+																			<!-- UF-306 starts -->
+																			<%-- <label class="deliveryModeLabel" for="radio_${entry.entryNumber}_${delMode.code }" >${delMode.name } -  <format:price priceData="${delMode.deliveryCost}" displayFreeForZero="TRUE"/></label> --%>
+																			<label class="deliveryModeLabel" for="radio_${entry.entryNumber}_${delMode.code }" ><spring:theme code="text.home.delivery"/> -  <format:price priceData="${delMode.deliveryCost}" displayFreeForZero="TRUE"/></label>
+																			<!-- UF-306 ends -->
 																			   </c:otherwise>																			
 																			</c:choose>
 																		<span>	${delMode.description }.</span></li>																					
 																	</c:when>																	
+																	<c:when test="${delMode.code eq 'express-delivery'}">
+																			<li class="${delMode.code }">
+																			<input type="radio"  name="${entry.entryNumber}" value="${delMode.deliveryCost.value}" id="radio_${entry.entryNumber}_${delMode.code}" onclick="return calculateDeliveryCost('radio_${entry.entryNumber}','${delMode.code}');"   checked="checked"/>
+																			<!-- UF-306 starts -->
+																			<%-- <label class="deliveryModeLabel" for="radio_${entry.entryNumber}_${delMode.code }" >${delMode.name } -  <format:price priceData="${delMode.deliveryCost}" displayFreeForZero="TRUE"/></label> --%>
+																			<label class="deliveryModeLabel" for="radio_${entry.entryNumber}_${delMode.code }" ><spring:theme code="text.express.shipping"/> -  <format:price priceData="${delMode.deliveryCost}" displayFreeForZero="TRUE"/></label>
+																			<!-- UF-306 ends -->
+																		<span>	${delMode.description }.</span></li>
+																					
+																	</c:when>
 																	<c:otherwise>
 																			<li class="${delMode.code }">
 																			<%-- PRDI-378 FIX STARTS HERE --%>
@@ -336,7 +349,10 @@
 																			    <%-- PRDI-378 ENDS HERE --%>
 																			   <c:otherwise>
 																			        <input type="radio"   name="${entry.entryNumber}"  value="${delMode.deliveryCost.value}" id="radio_${entry.entryNumber}_${delMode.code }" onclick="return calculateDeliveryCost('radio_${entry.entryNumber}','${delMode.code}');"  />
-																			        <label class="deliveryModeLabel" for="radio_${entry.entryNumber}_${delMode.code }" >${delMode.name } -  <format:price priceData="${delMode.deliveryCost}" displayFreeForZero="TRUE"/></label>
+																			        <!-- UF-306 starts -->
+																					<%-- <label class="deliveryModeLabel" for="radio_${entry.entryNumber}_${delMode.code }" >${delMode.name } -  <format:price priceData="${delMode.deliveryCost}" displayFreeForZero="TRUE"/></label> --%>
+																					<label class="deliveryModeLabel" for="radio_${entry.entryNumber}_${delMode.code }" ><spring:theme code="text.clickandcollect.shipping"/> -  <format:price priceData="${delMode.deliveryCost}" displayFreeForZero="TRUE"/></label>
+																					<!-- UF-306 ends -->
 																			   </c:otherwise>
 																			</c:choose>
 																		<span>${delMode.description }.</span> </li>

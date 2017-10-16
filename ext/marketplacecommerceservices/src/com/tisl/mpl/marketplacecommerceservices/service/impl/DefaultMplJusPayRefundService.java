@@ -17,6 +17,8 @@ import de.hybris.platform.servicelayer.config.ConfigurationService;
 import de.hybris.platform.servicelayer.exceptions.ModelSavingException;
 import de.hybris.platform.servicelayer.model.ModelService;
 import de.hybris.platform.servicelayer.search.FlexibleSearchService;
+import de.hybris.platform.store.BaseStoreModel;
+import de.hybris.platform.store.services.BaseStoreService;
 
 import java.math.BigDecimal;
 import java.math.MathContext;
@@ -86,6 +88,9 @@ public class DefaultMplJusPayRefundService implements MplJusPayRefundService
 
 	@Autowired
 	private JuspayWebHookDao juspayWebHookDao;
+
+	@Autowired
+	private BaseStoreService baseStoreService;
 
 
 	private final List<PaymentTransactionType> validPaymentType = Arrays.asList(PaymentTransactionType.CAPTURE,
@@ -333,6 +338,8 @@ public class DefaultMplJusPayRefundService implements MplJusPayRefundService
 
 			if (null != mplPaymentAuditModel && StringUtils.isNotEmpty(mplPaymentAuditModel.getAuditId()))
 			{
+				final OrderModel parentOrder = juspayWebHookDao.fetchParentOrder(mplPaymentAuditModel.getCartGUID());
+
 				MplPaymentAuditEntryModel mplPaymentAuditEntryModel = modelService.create(MplPaymentAuditEntryModel.class);
 				mplPaymentAuditEntryModel.setAuditId(mplPaymentAuditModel.getAuditId());
 				mplPaymentAuditEntryModel.setStatus(MplPaymentAuditStatusEnum.REFUND_INITIATED);
@@ -406,7 +413,7 @@ public class DefaultMplJusPayRefundService implements MplJusPayRefundService
 									//paymentTransactionEntryModel.setCurrency(orderModel.getPaymentTransactions().get(0).getEntries().get(0).getCurrency());
 									paymentTransactionEntryModel.setTransactionStatus(MarketplacecommerceservicesConstants.SUCCESS_VAL);
 
-									final PaymentTypeModel paymentTypeModel = getPaymentModeDetails(paymentType);
+									final PaymentTypeModel paymentTypeModel = getPaymentModeDetails(paymentType, parentOrder.getStore());
 
 									//Setting Payment Mode in Payment Transaction Entry
 									setPaymentModeInTransaction(paymentTypeModel, paymentTransactionEntryModel);
@@ -442,7 +449,7 @@ public class DefaultMplJusPayRefundService implements MplJusPayRefundService
 									//paymentTransactionEntryModel.setCurrency(orderModel.getPaymentTransactions().get(0).getEntries().get(0).getCurrency());
 
 									//Note : Get Payment Details
-									final PaymentTypeModel paymentModel = getPaymentModeDetails(paymentType);
+									final PaymentTypeModel paymentModel = getPaymentModeDetails(paymentType, parentOrder.getStore());
 
 									//Setting Payment Mode in Payment Transaction Entry
 									setPaymentModeInTransaction(paymentModel, paymentTransactionEntryModel);
@@ -512,7 +519,7 @@ public class DefaultMplJusPayRefundService implements MplJusPayRefundService
 	 *
 	 * @param paymentType
 	 */
-	private PaymentTypeModel getPaymentModeDetails(final String paymentType)
+	private PaymentTypeModel getPaymentModeDetails(final String paymentType, final BaseStoreModel baseStore)
 	{
 		PaymentTypeModel oModel = null;
 		String paymentMode = MarketplacecommerceservicesConstants.EMPTY;
@@ -521,23 +528,23 @@ public class DefaultMplJusPayRefundService implements MplJusPayRefundService
 			if (paymentType.equalsIgnoreCase("CREDIT"))
 			{
 				paymentMode = "Credit Card";
-				oModel = mplPaymentDao.getPaymentMode(paymentMode);
+				oModel = mplPaymentDao.getPaymentMode(paymentMode, baseStore);
 			}
 			else if (paymentType.equalsIgnoreCase("DEBIT"))
 			{
 				paymentMode = MarketplacecommerceservicesConstants.DEBIT;
-				oModel = mplPaymentDao.getPaymentMode(paymentMode);
+				oModel = mplPaymentDao.getPaymentMode(paymentMode, baseStore);
 			}
 			//TISPRO-675
 			else if (paymentType.equalsIgnoreCase("NB"))
 			{
 				paymentMode = MarketplacecommerceservicesConstants.NETBANKING;
-				oModel = mplPaymentDao.getPaymentMode(paymentMode);
+				oModel = mplPaymentDao.getPaymentMode(paymentMode, baseStore);
 			}
 			else if (paymentType.equalsIgnoreCase("EMI"))
 			{
 				paymentMode = MarketplacecommerceservicesConstants.EMI;
-				oModel = mplPaymentDao.getPaymentMode(paymentMode);
+				oModel = mplPaymentDao.getPaymentMode(paymentMode, baseStore);
 			}
 		}
 		return oModel;
@@ -678,6 +685,7 @@ public class DefaultMplJusPayRefundService implements MplJusPayRefundService
 			paymentTransactionEntryModel.setTransactionStatusDetails(statusDetails);
 			paymentTransactionEntryModel.setPaymentMode(getValidPaymentModeType(orderModel));
 			paymentTransactionEntryModel.setType(paymentTransactionType);
+			modelService.save(paymentTransactionEntryModel);
 			final List<PaymentTransactionEntryModel> entries = new ArrayList<>();
 			entries.add(paymentTransactionEntryModel);
 			paymentTransactionModel.setEntries(entries);
@@ -901,6 +909,17 @@ public class DefaultMplJusPayRefundService implements MplJusPayRefundService
 			final OrderEntryModel orderEntry = modificationEntry.getOrderEntry();
 			if (orderEntry != null)
 			{
+				Double currDelCharges = Double.valueOf(0.0D);
+				if (orderEntry.getIsEDtoHD() != null && orderEntry.getIsEDtoHD().booleanValue()
+						&& null != orderEntry.getRefundedEdChargeAmt() && orderEntry.getRefundedEdChargeAmt().doubleValue() != 0D)
+				{
+					currDelCharges = orderEntry.getHdDeliveryCharge() != null ? orderEntry.getHdDeliveryCharge()
+							: NumberUtils.DOUBLE_ZERO;
+				}
+				else
+				{
+					currDelCharges = orderEntry.getCurrDelCharge();
+				}
 				final double deliveryCost = orderEntry.getCurrDelCharge() != null ? orderEntry.getCurrDelCharge().doubleValue()
 						: NumberUtils.DOUBLE_ZERO.doubleValue();
 				// Added in R2.3 START
@@ -908,10 +927,21 @@ public class DefaultMplJusPayRefundService implements MplJusPayRefundService
 						.getScheduledDeliveryCharge().doubleValue() : NumberUtils.DOUBLE_ZERO.doubleValue();
 				// Added in R2.3 END
 
-				final double refundedAmount = orderEntry.getNetAmountAfterAllDisc().doubleValue() + deliveryCost
+				final double refundedAmount = orderEntry.getNetAmountAfterAllDisc().doubleValue() + currDelCharges.doubleValue()
 						+ scheduleDeliveryCost;
 
 				orderEntry.setRefundedDeliveryChargeAmt(Double.valueOf(deliveryCost));
+				if (null != orderEntry.getIsEDtoHD() && orderEntry.getIsEDtoHD().booleanValue()
+						&& null != orderEntry.getRefundedEdChargeAmt() && orderEntry.getRefundedEdChargeAmt().doubleValue() == 0D)
+				{
+					double hdDeliveryCharges = 0.0D;
+					if (null != orderEntry.getHdDeliveryCharge())
+					{
+						hdDeliveryCharges = orderEntry.getHdDeliveryCharge().doubleValue();
+					}
+					orderEntry.setRefundedEdChargeAmt(Double.valueOf(deliveryCost - hdDeliveryCharges));
+				}
+				orderEntry.setRefundedEdChargeAmt(orderEntry.getHdDeliveryCharge());
 				orderEntry.setCurrDelCharge(NumberUtils.DOUBLE_ZERO);
 				orderEntry.setRefundedScheduleDeliveryChargeAmt(Double.valueOf(scheduleDeliveryCost));
 				orderEntry.setScheduledDeliveryCharge(NumberUtils.DOUBLE_ZERO);
@@ -964,8 +994,19 @@ public class DefaultMplJusPayRefundService implements MplJusPayRefundService
 			final OrderEntryModel orderEntry = modificationEntry.getOrderEntry();
 			if (orderEntry != null)
 			{
-				final double refundedAmount = orderEntry.getNetAmountAfterAllDisc().doubleValue()
-						+ orderEntry.getCurrDelCharge().doubleValue() + orderEntry.getScheduledDeliveryCharge().doubleValue();
+				Double currDelCharges = Double.valueOf(0.0D);
+				if (orderEntry.getIsEDtoHD() != null && orderEntry.getIsEDtoHD().booleanValue()
+						&& null != orderEntry.getRefundedEdChargeAmt() && orderEntry.getRefundedEdChargeAmt().doubleValue() != 0D)
+				{
+					currDelCharges = orderEntry.getHdDeliveryCharge() != null ? orderEntry.getHdDeliveryCharge()
+							: NumberUtils.DOUBLE_ZERO;
+				}
+				else
+				{
+					currDelCharges = orderEntry.getCurrDelCharge();
+				}
+				final double refundedAmount = orderEntry.getNetAmountAfterAllDisc().doubleValue() + currDelCharges.doubleValue()
+						+ orderEntry.getScheduledDeliveryCharge().doubleValue();
 
 
 				final double deliveryCost = orderEntry.getCurrDelCharge() != null ? orderEntry.getCurrDelCharge().doubleValue()
@@ -975,6 +1016,16 @@ public class DefaultMplJusPayRefundService implements MplJusPayRefundService
 
 				orderEntry.setRefundedDeliveryChargeAmt(Double.valueOf(deliveryCost));
 				orderEntry.setCurrDelCharge(NumberUtils.DOUBLE_ZERO);
+				if (null != orderEntry.getIsEDtoHD() && orderEntry.getIsEDtoHD().booleanValue()
+						&& null != orderEntry.getRefundedEdChargeAmt() && orderEntry.getRefundedEdChargeAmt().doubleValue() == 0D)
+				{
+					double hdDeliveryCharges = 0.0D;
+					if (null != orderEntry.getHdDeliveryCharge())
+					{
+						hdDeliveryCharges = orderEntry.getHdDeliveryCharge().doubleValue();
+					}
+					orderEntry.setRefundedEdChargeAmt(Double.valueOf(deliveryCost - hdDeliveryCharges));
+				}
 				// Added in R2.3 START
 				orderEntry.setRefundedScheduleDeliveryChargeAmt(Double.valueOf(scheduleDeliveryCost));
 				orderEntry.setScheduledDeliveryCharge(NumberUtils.DOUBLE_ZERO);

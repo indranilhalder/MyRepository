@@ -6,6 +6,7 @@ import de.hybris.platform.commercefacades.voucher.exceptions.VoucherOperationExc
 import de.hybris.platform.core.model.order.AbstractOrderEntryModel;
 import de.hybris.platform.core.model.order.AbstractOrderModel;
 import de.hybris.platform.core.model.order.CartModel;
+import de.hybris.platform.core.model.order.OrderEntryModel;
 import de.hybris.platform.core.model.order.OrderModel;
 import de.hybris.platform.core.model.order.payment.PaymentInfoModel;
 import de.hybris.platform.core.model.user.CustomerModel;
@@ -114,7 +115,7 @@ public interface MplPaymentService
 
 	/**
 	 * juspay payment specific changes from cscockpit
-	 * 
+	 *
 	 * @param custName
 	 * @param cartValue
 	 * @param totalCharge
@@ -272,20 +273,20 @@ public interface MplPaymentService
 
 	/*
 	 * @description : fetching bank model for a bank name TISPRO-179\
-	 * 
+	 *
 	 * @param : bankName
-	 * 
+	 *
 	 * @return : BankModel
-	 * 
+	 *
 	 * @throws EtailNonBusinessExceptions
 	 */
 	BankModel getBankDetailsForBank(final String bankName) throws EtailNonBusinessExceptions;
 
 	/*
 	 * @Description : Fetching bank name for net banking-- TISPT-169
-	 * 
+	 *
 	 * @return List<BankforNetbankingModel>
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	List<BankforNetbankingModel> getNetBankingBanks() throws EtailNonBusinessExceptions;
@@ -407,6 +408,17 @@ public interface MplPaymentService
 	 */
 	void setPaymentTransactionForCODFromSubmitProcess(Map<String, Double> paymentMode, OrderModel orderModel)
 			throws EtailNonBusinessExceptions;
+
+	/**
+	 * added for TPR-1348 for AutofundInitiation SprintPaymentFixes:-
+	 *
+	 * @param orderEntryModel
+	 *
+	 */
+	public String doRefundPayment(List<OrderEntryModel> orderEntryModel);
+
+	//CheckedInvalid PaymentInfo missing handled call
+	boolean createPaymentInfo(OrderModel order);
 
 
 }

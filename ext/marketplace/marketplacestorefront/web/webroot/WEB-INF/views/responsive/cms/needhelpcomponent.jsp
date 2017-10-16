@@ -15,7 +15,7 @@
 
 </head>
 <body>
-	<div id="up" onclick="openNeedHelpSec()">
+	<div id="up" class="lazy-need-help" onclick="openNeedHelpSec()">
 		<spring:theme code="needhelp.needhelptext" />
 
 		<div id="h">
@@ -74,7 +74,13 @@
 					$(this).removeClass("used");
 				}
 			});
-
+			//UF-281 Starts
+			var pageType=$("#pageType").val();
+			if(pageType=="multistepcheckoutsummary")
+			{
+				ACC.singlePageCheckout.needHelpContactNumber="${contactNumber}";
+			}
+			//UF-281 Ends
 		});
 	</script>
 

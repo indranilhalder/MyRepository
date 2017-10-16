@@ -29,6 +29,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import javax.annotation.Resource;
@@ -36,6 +37,7 @@ import javax.annotation.Resource;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
+import org.zkoss.spring.SpringUtil;
 
 import com.tisl.mpl.cockpits.constants.MarketplaceCockpitsConstants;
 import com.tisl.mpl.cockpits.cscockpit.widgets.controllers.impl.MarketplaceSearchCommandControllerImpl;
@@ -56,6 +58,7 @@ import com.tisl.mpl.facades.product.data.MarketplaceDeliveryModeData;
 import com.tisl.mpl.helper.ProductDetailsHelper;
 import com.tisl.mpl.marketplacecommerceservices.service.BuyBoxService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplCommerceCartService;
+import com.tisl.mpl.marketplacecommerceservices.service.MplJewelleryService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplPincodeRestrictionService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplSellerInformationService;
 import com.tisl.mpl.marketplacecommerceservices.service.PincodeService;
@@ -109,10 +112,10 @@ public class MarketplaceServiceabilityCheckHelperImpl implements MarketplaceServ
 
 	@Resource(name = "pincodeService")
 	private PincodeService pincodeService;
-	
+
 	@Resource(name = "pinCodeFacade")
 	private PinCodeServiceAvilabilityFacade pinCodeFacade;
-	
+
 	@Resource(name = "pincodeServiceFacade")
 	private PincodeServiceFacade pincodeServiceFacade;
 
@@ -121,7 +124,7 @@ public class MarketplaceServiceabilityCheckHelperImpl implements MarketplaceServ
 
 	@Resource(name = "mplConfigService")
 	private MplConfigService mplConfigService;
-	
+
 	@Resource(name = "mplSellerInformationService")
 	private MplSellerInformationService mplSellerInformationService;
 	@Resource(name = "mplCheckoutFacade")
@@ -130,6 +133,11 @@ public class MarketplaceServiceabilityCheckHelperImpl implements MarketplaceServ
 	private ProductDetailsHelper productDetailsHelper;
 	@Resource(name = "productFacade")
 	private ProductFacade productFacade;
+
+	//fine Jewellery changes starts
+	private MplJewelleryService mplJewelleryService;
+	//fine Jewellery changes ends
+
 	/**
 	 * Gets the response for pin code.
 	 *
@@ -150,7 +158,7 @@ public class MarketplaceServiceabilityCheckHelperImpl implements MarketplaceServ
 	public List<PinCodeResponseData> getResponseForPinCode(final String cartId,final ProductModel product, final String pin,
 			final String isDeliveryDateRequired, final String ussid) throws EtailNonBusinessExceptions,
 			ClientEtailNonBusinessExceptions
-	{
+			{
 		List<PinCodeResponseData> response = null;
 		final LocationDTO dto = new LocationDTO();
 		Location myLocation = null;
@@ -160,43 +168,43 @@ public class MarketplaceServiceabilityCheckHelperImpl implements MarketplaceServ
 		final String regex = "\\d{6}";
 		try
 		{
-		if (pin.matches(regex))
-		{
-			LOG.debug("productCode:" + product.getCode()  + "pinCode:" + pin);
-			final PincodeModel pinCodeModelObj = pincodeServiceFacade.getLatAndLongForPincode(pin);
-			if (null == pinCodeModelObj)
+			if (pin.matches(regex))
 			{
-				sessionService.setAttribute("isPincodeServicable", false);
-			}
-			else
-			{
-				try
+				LOG.debug("productCode:" + product.getCode()  + "pinCode:" + pin);
+				final PincodeModel pinCodeModelObj = pincodeServiceFacade.getLatAndLongForPincode(pin);
+				if (null == pinCodeModelObj)
 				{
-					sessionService.setAttribute("isPincodeServicable", isPincodeServicable);
-					
-					dto.setLongitude(pinCodeModelObj.getLongitude().toString());
-					dto.setLatitude(pinCodeModelObj.getLatitude().toString());
-					myLocation = new LocationDtoWrapper(dto);
-					LOG.debug("Selected Location for Latitude:" + myLocation.getGPS().getDecimalLatitude());
-					LOG.debug("Selected Location for Longitude:" + myLocation.getGPS().getDecimalLongitude());
-					sessionService.setAttribute(MarketplaceCockpitsConstants.PIN_CODE, pin);
-					final String configRadius = mplConfigService.getConfigValueById(MarketplaceFacadesConstants.CONFIGURABLE_RADIUS);
-					final double configurableRadius = Double.parseDouble(configRadius);
-					LOG.debug("**********configrableRadius:" + configurableRadius);
-					response = getAllResponsesForPinCode(product.getCode() , pin,
-							populatePinCodeServiceData(cartId,product,
-									isDeliveryDateRequired, ussid, myLocation.getGPS(), configurableRadius));
-
-					return response;
+					sessionService.setAttribute("isPincodeServicable", false);
 				}
-				catch (final Exception e)
+				else
 				{
-					LOG.debug("configurableRadius values is empty please add radius property in properties file ");
-					ExceptionUtil.getCustomizedExceptionTrace(e);
-				}
-			}
+					try
+					{
+						sessionService.setAttribute("isPincodeServicable", isPincodeServicable);
 
-		}
+						dto.setLongitude(pinCodeModelObj.getLongitude().toString());
+						dto.setLatitude(pinCodeModelObj.getLatitude().toString());
+						myLocation = new LocationDtoWrapper(dto);
+						LOG.debug("Selected Location for Latitude:" + myLocation.getGPS().getDecimalLatitude());
+						LOG.debug("Selected Location for Longitude:" + myLocation.getGPS().getDecimalLongitude());
+						sessionService.setAttribute(MarketplaceCockpitsConstants.PIN_CODE, pin);
+						final String configRadius = mplConfigService.getConfigValueById(MarketplaceFacadesConstants.CONFIGURABLE_RADIUS);
+						final double configurableRadius = Double.parseDouble(configRadius);
+						LOG.debug("**********configrableRadius:" + configurableRadius);
+						response = getAllResponsesForPinCode(product.getCode() , pin,
+								populatePinCodeServiceData(cartId,product,
+										isDeliveryDateRequired, ussid, myLocation.getGPS(), configurableRadius));
+
+						return response;
+					}
+					catch (final Exception e)
+					{
+						LOG.debug("configurableRadius values is empty please add radius property in properties file ");
+						ExceptionUtil.getCustomizedExceptionTrace(e);
+					}
+				}
+
+			}
 
 		}
 		catch (final EtailNonBusinessExceptions e)
@@ -204,7 +212,7 @@ public class MarketplaceServiceabilityCheckHelperImpl implements MarketplaceServ
 			ExceptionUtil.etailNonBusinessExceptionHandler(e);
 		}
 		return response;
-	}
+			}
 
 	/**
 	 * Gets the product value.
@@ -247,10 +255,10 @@ public class MarketplaceServiceabilityCheckHelperImpl implements MarketplaceServ
 	 *            the client etail non business exceptions
 	 * @description this method gets all the responses about servicable pincodes from OMS
 	 */
-	
+
 	private List<PinCodeResponseData> getAllResponsesForPinCode(final String productCode, final String pin, final List<PincodeServiceData> requestData)
 			throws EtailNonBusinessExceptions, ClientEtailNonBusinessExceptions
-	{
+			{
 
 		List<PinCodeResponseData> responseList = new ArrayList<PinCodeResponseData>();
 		//fetching response   from oms  against the pincode
@@ -268,7 +276,7 @@ public class MarketplaceServiceabilityCheckHelperImpl implements MarketplaceServ
 			//checing if any restricted pincodes are present
 			final List<PincodeServiceData> validReqData = mplPincodeRestrictionService.getRestrictedPincode(ussidList, sellerIdList,
 					productCode, pin, requestData);
-			
+
 			if (CollectionUtils.isNotEmpty(validReqData))
 			{
 				try
@@ -281,7 +289,7 @@ public class MarketplaceServiceabilityCheckHelperImpl implements MarketplaceServ
 					if (null != e.getErrorCode()
 							&& (MarketplacecclientservicesConstants.O0001_EXCEP.equalsIgnoreCase(e.getErrorCode())
 									|| MarketplacecclientservicesConstants.O0002_EXCEP.equalsIgnoreCase(e.getErrorCode()) || MarketplacecclientservicesConstants.O0007_EXCEP
-										.equalsIgnoreCase(e.getErrorCode())))
+									.equalsIgnoreCase(e.getErrorCode())))
 					{
 						response = getMplCommerceCartService().callPincodeServiceabilityCommerce(pin, requestData);
 					}
@@ -371,8 +379,8 @@ public class MarketplaceServiceabilityCheckHelperImpl implements MarketplaceServ
 									}else{
 										data.setIsCODLimitFailed(Boolean.FALSE); 
 									}
-									
-									
+
+
 									deliveryDataList.add(data);
 									//	}
 									responseData.setValidDeliveryModes(deliveryDataList);
@@ -423,7 +431,7 @@ public class MarketplaceServiceabilityCheckHelperImpl implements MarketplaceServ
 			responseList = null;
 		}
 		return responseList;
-	}
+			}
 
 
 
@@ -441,10 +449,12 @@ public class MarketplaceServiceabilityCheckHelperImpl implements MarketplaceServ
 	 */
 	private List<PincodeServiceData> populatePinCodeServiceData(final ProductModel productModel,
 			final String isDeliveryDateRequired, final String ussid)
-	{
+			{
 		final List<PincodeServiceData> requestData = new WeakArrayList<>();
 		PincodeServiceData data = null;
-		final List<SellerInformationData> sellers = buyBoxFacade.getsellersDetails(productModel.getCode());
+		//CKD: TPR-3809
+		//final List<SellerInformationData> sellers = buyBoxFacade.getsellersDetails(productModel.getCode());
+		final List<SellerInformationData> sellers = buyBoxFacade.getsellersDetails(productModel.getCode(),productModel.getProductCategoryType());
 		try
 		{
 			final List<BuyBoxModel> lst = buyBoxService.getBuyboxPricesForSearch(productModel.getCode());
@@ -509,7 +519,7 @@ public class MarketplaceServiceabilityCheckHelperImpl implements MarketplaceServ
 		}
 
 		return requestData;
-	}
+			}
 
 
 	/**
@@ -548,7 +558,7 @@ public class MarketplaceServiceabilityCheckHelperImpl implements MarketplaceServ
 
 	private List<PincodeServiceData> populatePinCodeServiceData(final String cartId,final ProductModel productModel,
 			final String isDeliveryDateRequired, final String ussid, final GPS gps, final Double configurableRadius)
-	{
+			{
 		final List<PincodeServiceData> requestData = new WeakArrayList<>();
 		PincodeServiceData data = null;
 		MarketplaceDeliveryModeData deliveryModeData = null;
@@ -565,7 +575,14 @@ public class MarketplaceServiceabilityCheckHelperImpl implements MarketplaceServ
 				{
 					for (final MarketplaceDeliveryModeData deliveryMode : seller.getDeliveryModes())
 					{
+						//CKD:TPR-3809//TISPRDT-2671
+						//						if (productModel.getProductCategoryType().equalsIgnoreCase(MarketplacecommerceservicesConstants.FINEJEWELLERY)){
+						//							deliveryModeData = fetchDeliveryModeDataForUSSID(deliveryMode.getCode(), ussid);
+						//						}
+						//						else{
 						deliveryModeData = fetchDeliveryModeDataForUSSID(deliveryMode.getCode(), seller.getUssid());
+						//}
+						//deliveryModeData = fetchDeliveryModeDataForUSSID(deliveryMode.getCode(), seller.getUssid());
 						deliveryModeList.add(deliveryModeData);
 					}
 					data.setDeliveryModes(deliveryModeList);
@@ -652,11 +669,46 @@ public class MarketplaceServiceabilityCheckHelperImpl implements MarketplaceServ
 				}
 
 				data.setSellerId(seller.getSellerID());
-				data.setUssid(seller.getUssid());
+				//CKD:TPR-3809
+				if (productModel.getProductCategoryType().equalsIgnoreCase(MarketplacecommerceservicesConstants.FINEJEWELLERY)){
+					List<BuyBoxModel> jewelleryUssid = getMplJewelleryService().getAllWeightVariant(ussid);
+					if(CollectionUtils.isNotEmpty(jewelleryUssid))
+					{
+						if(StringUtils.isNotEmpty(jewelleryUssid.get(0).getPUSSID()) && jewelleryUssid.get(0).getPUSSID().equals(seller.getUssid()))
+						{
+							data.setUssid(ussid);
+						}
+						else
+						{
+							List<BuyBoxModel> allWeightVariantList = getMplJewelleryService().getAllWeightVariantByPussid(seller.getUssid());
+							if(CollectionUtils.isNotEmpty(allWeightVariantList))
+							{
+								List<BuyBoxModel> modifiableList = new ArrayList<BuyBoxModel>(allWeightVariantList);
+								modifiableList.sort(Comparator.comparing(BuyBoxModel::getPrice).reversed());
+								if(StringUtils.isNotEmpty(modifiableList.get(0).getSellerArticleSKU()))
+								{
+									data.setUssid(modifiableList.get(0).getSellerArticleSKU());
+								}
+								else
+								{
+									LOG.error("empty SellerArticleSKU for seller ussId : "+ seller.getUssid());
+								}
+							}
+							else
+							{
+								LOG.error("empty buybox for seller ussId : "+ seller.getUssid());
+							}
+						}
+					}
+				}
+				else{
+					data.setUssid(seller.getUssid());
+				}
+				//data.setUssid(seller.getUssid());
 				data.setIsDeliveryDateRequired("N");
 				if(null != cartId) {
-                	data.setCartId(cartId);
-                }
+					data.setCartId(cartId);
+				}
 				requestData.add(data);
 			}
 		}
@@ -671,12 +723,14 @@ public class MarketplaceServiceabilityCheckHelperImpl implements MarketplaceServ
 			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000);
 		}
 		return requestData;
-	}
+			}
 
 	@Override
 	public List<SellerInformationData> getSellerInformation(final ProductModel productModel)
 	{
-		final List<SellerInformationData> sellers = buyBoxFacade.getsellersDetails(productModel.getCode());
+		//CKD: TPR-3809
+		//final List<SellerInformationData> sellers = buyBoxFacade.getsellersDetails(productModel.getCode());
+		final List<SellerInformationData> sellers = buyBoxFacade.getsellersDetails(productModel.getCode(),productModel.getProductCategoryType());
 		return sellers;
 
 	}
@@ -702,7 +756,7 @@ public class MarketplaceServiceabilityCheckHelperImpl implements MarketplaceServ
 		return pData;
 	}
 
-	
+
 	private List<ServiceableSlavesData> populatePincodeServiceableData(final List<ServiceableSlavesDTO> serviceableSlavesDTOList)
 	{
 
@@ -719,7 +773,7 @@ public class MarketplaceServiceabilityCheckHelperImpl implements MarketplaceServ
 		}
 		return serviceableSlavesDataList;
 	}
-	
+
 	/**
 	 * @return the mplCommerceCartService
 	 */
@@ -737,5 +791,15 @@ public class MarketplaceServiceabilityCheckHelperImpl implements MarketplaceServ
 		this.mplCommerceCartService = mplCommerceCartService;
 	}
 
+	//fine Jewellery changes starts
+	protected MplJewelleryService getMplJewelleryService() {
 
+		if(mplJewelleryService ==null){
+			mplJewelleryService = ((MplJewelleryService) SpringUtil
+					.getBean("mplJewelleryService"));
+		}
+		return mplJewelleryService;
+
+	}
+	//fine Jewellery changes ends
 }

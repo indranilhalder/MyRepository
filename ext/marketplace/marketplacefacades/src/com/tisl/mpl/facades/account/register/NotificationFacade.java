@@ -25,8 +25,8 @@ public interface NotificationFacade
 	public boolean checkCustomerFacingEntry(final OrderStatusNotificationModel osnm);
 
 
-	public void markNotificationRead(String customerId, String orderNo, String consignmentNo, final String shopperStatus)
-			throws EtailNonBusinessExceptions;
+	public void markNotificationRead(String emailId, String customerId, String orderNo, String consignmentNo,
+			final String shopperStatus) throws EtailNonBusinessExceptions;
 
 	/**
 	 * @param customerId
@@ -34,17 +34,24 @@ public interface NotificationFacade
 	 * @param consignmentNo
 	 * @param shopperStatus
 	 */
-	void markNotificationReadForOriginalUid(String customerId, String orderNo, String consignmentNo, String shopperStatus)
+	void markNotificationReadForOriginalUid(String emailId, String orderNo, String consignmentNo, String shopperStatus)
 			throws EtailNonBusinessExceptions;
 
 	Integer getUnReadNotificationCount(List<NotificationData> notificationDatas);
 
 	/**
 	 * TPR-629
-	 * 
+	 *
 	 * @param orderModel
 	 */
 	void sendOrderConfirmationNotification(OrderModel orderModel);
+
+	/**
+	 * pan card
+	 *
+	 * @param orderModel
+	 */
+	//void sendPancardRejectNotification(OrderModel orderModel);
 
 
 }

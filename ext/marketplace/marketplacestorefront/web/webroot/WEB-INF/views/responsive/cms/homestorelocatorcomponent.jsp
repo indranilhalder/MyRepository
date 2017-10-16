@@ -4,7 +4,8 @@
 <!-- Fix for defect TISPT-202 -->
 <!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script> -->
  <!-- <script src="https://maps.googleapis.com/maps/api/js?v=3"></script> -->
-<script>
+ <!-- UF-405 -->
+<!-- <script>
 $(window).on('load',function(){
 	$.getScript('https://maps.googleapis.com/maps/api/js?v=3');
 });
@@ -239,7 +240,7 @@ function HomeLegendsControl(controlDiv, map) {
   
 }
 
-</script>
+</script> -->
 <style> 
   .container_store_finder_home {
 		margin: 0px 0px;

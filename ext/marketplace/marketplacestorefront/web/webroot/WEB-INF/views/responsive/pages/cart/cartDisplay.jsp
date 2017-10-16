@@ -15,6 +15,26 @@
     <c:set var="showTax" value="false"/>
     <c:set var="userName" value="${user.firstName}"/>
     <div class="MyBag-top-section">
+    <!-- TPR3780 STARTS HERE -->
+												<c:if test="${priceNotificationUpdateStatus!= null}">
+												<p class="disclaimer-txt">
+												<spring:theme code="cart.price.change.notification"></spring:theme>&nbsp;${cartData.totalPrice.formattedValue}
+												</p>
+												</c:if>
+    <!-- TPR3780 ENDS HERE -->
+    
+   <%--  <c:if test="${discSellerNameList!=null}">
+    <spring:eval expression="T(de.hybris.platform.util.Config).getParameter('cart.price.disclaimer')" var="disclaimer"/>
+    <p class="notification-txt">
+    <c:set var="seller" value=""></c:set>
+    <c:forEach items="${discSellerNameList}" var="sellerName" varStatus="stat">
+    	 <c:set var="seller" value="${seller} ${sellerName}" />
+    </c:forEach>
+ 	<c:set var="length" value="${fn:length(seller)}"></c:set>
+   	${disclaimer}&nbsp;${fn:substring(seller,0,length-1)}
+    </p>
+    </c:if> --%>
+    
     <div class="MyBag-buttons">
 	<%-- <h1 class="MyBagHeadingDesktop" ><spring:theme code="mpl.myBag" /><span id="mybagcnt"></span></h1> --%>		<!-- commented for UF-62 -->
 	<p class="desk-view">${welcome_message}</p>
@@ -32,9 +52,9 @@
 	<ul class="checkout-types">
 			
 			<!-- TISBOX-879 -->
-			<li id="checkout-id" class="checkout-button">
+			<li id="checkout-id" class="checkout-button" style="cursor: not-allowed;">
 				<!-- TISEE-6257 -->
-				<a  id="checkout-enabled" class="checkoutButton checkout button red"  onclick="return checkServiceabilityRequired('typeCheckout',this);"><spring:theme code="checkout.checkout" /></a>
+				<a  id="checkout-enabled" class="checkoutButton checkout button red checkout-disabled" style="pointer-events: none; cursor: not-allowed; opacity: 0.5;"  onclick="return checkServiceabilityRequired('typeCheckout',this);"><spring:theme code="checkout.checkout" /></a>
 				<input type="hidden" id="checkoutLinkURlId" value="${checkoutUrl}"> 
 				
 				<!-- error message position change as part of UF-61 -->

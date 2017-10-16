@@ -86,6 +86,95 @@ public class MplMobileUserServiceImpl implements MplMobileUserService
 	private String gigyaUID;
 
 	/**
+	 * Register new user for luxury
+	 *
+	 * @param login
+	 * @param password
+	 * @param mobileNumber
+	 * @param firstName
+	 * @param lastName
+	 * @param gender
+	 * @return MplUserResultWsDto
+	 * @throws RequestParameterException
+	 * @throws DuplicateUidException
+	 */
+	@SuppressWarnings("javadoc")
+	@Override
+	public MplUserResultWsDto registerNewLuxUser(final String login, final String password, final String mobileNumber,
+			final String firstName, final String lastName, final String gender, final boolean tataTreatsEnable)
+			throws EtailBusinessExceptions, EtailNonBusinessExceptions
+	{
+		MplUserResultWsDto result = new MplUserResultWsDto();
+		boolean successFlag = false;
+		try
+		{
+			result = mplUserHelper.validateRegistrationData(login, password);
+			LOG.debug("************** User details validated mobile web service ************" + login);
+			//Set login and password
+			final ExtRegisterData registration = new ExtRegisterData();
+			registration.setLogin(login);
+			registration.setPassword(password);
+			registration.setFirstName(firstName);
+			registration.setLastName(lastName);
+			registration.setGender(gender);
+			registration.setMobilenumber(mobileNumber);
+
+			//TPR-1372
+			if (tataTreatsEnable)
+			{
+				registration.setCheckTataRewards(true);
+			}
+			//Register the user, call facade
+			if (registerCustomerFacade.checkUniquenessOfEmail(registration))
+			{
+				registerCustomerFacade.register(registration, 0);
+				//Set success flag
+				successFlag = true;
+				LOG.debug("************** User registered via mobile web service *************" + login);
+			}
+			else
+			{
+				throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B0001);
+			}
+		}
+		catch (final EtailBusinessExceptions businessException)
+		{
+			//Throw exception when the input details are invalid
+			throw businessException;
+		}
+
+		catch (final DuplicateUidException e)
+		{
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.B0001);
+		}
+		catch (final ModelSavingException e)
+		{
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.B9013);
+		}
+		catch (final EtailNonBusinessExceptions e)
+		{
+			//Catch and throw exception as it is when obtained from commerce
+			throw e;
+		}
+		catch (final Exception e)
+		{
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000);
+		}
+
+		if (successFlag)
+		{
+			//Set success flag
+			result.setStatus(MarketplacecommerceservicesConstants.SUCCESS_FLAG);
+			if (null != login && null != getCustomerId(login))
+			{
+				LOG.debug("************ Fetching customer id mobile web service for **************" + login);
+				result.setCustomerId(getCustomerId(login));
+			}
+		}
+		return result;
+	}
+
+	/**
 	 * Register new user TPR-1372
 	 *
 	 * @param login
@@ -96,8 +185,8 @@ public class MplMobileUserServiceImpl implements MplMobileUserService
 	 */
 	@SuppressWarnings("javadoc")
 	@Override
-	public MplUserResultWsDto registerNewMplUser(final String login, final String password, final boolean tataTreatsEnable)
-			throws EtailBusinessExceptions, EtailNonBusinessExceptions
+	public MplUserResultWsDto registerNewMplUser(final String login, final String password, final boolean tataTreatsEnable,
+			final int platformNumber) throws EtailBusinessExceptions, EtailNonBusinessExceptions//TPR-6272 parameter platformNumber added
 	{
 		MplUserResultWsDto result = new MplUserResultWsDto();
 		boolean successFlag = false;
@@ -117,7 +206,7 @@ public class MplMobileUserServiceImpl implements MplMobileUserService
 			//Register the user, call facade
 			if (registerCustomerFacade.checkUniquenessOfEmail(registration))
 			{
-				registerCustomerFacade.register(registration);
+				registerCustomerFacade.register(registration, platformNumber);//TPR-6272 parameter platformNumber passed
 				//Set success flag
 				successFlag = true;
 				LOG.debug("************** User registered via mobile web service *************" + login);

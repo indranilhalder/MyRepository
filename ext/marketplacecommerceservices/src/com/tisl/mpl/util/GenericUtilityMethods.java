@@ -1082,6 +1082,7 @@ public class GenericUtilityMethods
 		String productCatL1 = null;
 		String productCatL2 = null;
 		String productCatL3 = null;
+		String cartLevelSellerID = null;
 		//for tealium
 		//For kidswear L4 needs to be populated
 		String productCatL4 = null;
@@ -1145,8 +1146,10 @@ public class GenericUtilityMethods
 						if (null != entry.getBrandName())
 						{
 
-							brand = appendQuote(entry.getBrandName());
-
+							//	brand = appendQuote(entry.getBrandName());
+							//PRDI-560 fix
+							brand = appendQuote(entry.getBrandName().replaceAll("[^\\w\\s]", "").replaceAll(" ", "_").replace("__", "_")
+									.toLowerCase());
 						}
 
 
@@ -1254,6 +1257,21 @@ public class GenericUtilityMethods
 					count++;
 				}
 
+				final List<OrderEntryData> sellerList = cartData.getEntries();
+				for (final OrderEntryData seller : sellerList)
+				{
+					final String sellerID = seller.getSelectedSellerInformation().getSellerID();
+					if (cartLevelSellerID != null)
+					{
+						cartLevelSellerID += "_" + sellerID;
+					}
+					else
+					{
+						cartLevelSellerID = sellerID;
+					}
+				}
+
+				model.addAttribute("cartLevelSellerID", cartLevelSellerID);
 				model.addAttribute("productBrandList", productBrandList);
 
 				model.addAttribute("productIdList", productIdList);
@@ -1699,6 +1717,7 @@ public class GenericUtilityMethods
 		if (null != responseData)
 		{
 			responseData.setTotalDiscntIncMrp(totalDiscountVal);
+
 			////TISSTRT-1605
 			if (totalDeliveryCharge > 0)
 			{
@@ -1707,6 +1726,100 @@ public class GenericUtilityMethods
 				responseData.setDeliveryCost(totalDeliveryChargeVal);
 			}
 		}
+	}
+
+	/**
+	 * @Description: Verifies Seller Data corresponding to the cart added Product
+	 * @param restrictionList
+	 * @param productSellerData
+	 * @return flag
+	 */
+	//	public static boolean checkSellerData(final List<AbstractPromotionRestriction> restrictionList,
+	//			final List<SellerInformationModel> productSellerData)
+	//	{
+	//		boolean checkFlag = false;
+	//		List<SellerMaster> sellerData = null;
+	//		try
+	//		{
+	//			if (null == restrictionList || restrictionList.isEmpty())
+	//			{
+	//				checkFlag = true;
+	//			}
+	//			else
+	//			{
+	//				if (null != productSellerData)
+	//				{
+	//					boolean isSellerIncluded = false;
+	//
+	//					for (final AbstractPromotionRestriction restriction : restrictionList)
+	//					{
+	//						if (restriction instanceof EtailSellerSpecificRestriction)
+	//						{
+	//							final EtailSellerSpecificRestriction etailSellerSpecificRestriction = (EtailSellerSpecificRestriction) restriction;
+	//							sellerData = etailSellerSpecificRestriction.getSellerMasterList();
+	//							isSellerIncluded = true;
+	//							break;
+	//						}
+	//						else if (restriction instanceof EtailExcludeSellerSpecificRestriction)
+	//						{
+	//							final EtailExcludeSellerSpecificRestriction excludeSellerRestriction = (EtailExcludeSellerSpecificRestriction) restriction;
+	//							sellerData = excludeSellerRestriction.getSellerMasterList();
+	//							break;
+	//						}
+	//					}
+	//
+	//					if (sellerData == null)
+	//					{
+	//						checkFlag = true;
+	//					}
+	//					else
+	//					{
+	//						final SellerInformationModel speficSeller = productSellerData.get(0);
+	//						final String sellerInformationId = speficSeller != null ? speficSeller.getSellerID() : "";
+	//
+	//						for (final SellerMaster seller : sellerData)
+	//						{
+	//							if ((seller.getId().equalsIgnoreCase(sellerInformationId) && isSellerIncluded)
+	//									|| (!seller.getId().equalsIgnoreCase(sellerInformationId) && !isSellerIncluded))
+	//							{
+	//								checkFlag = true;
+	//								break;
+	//							}
+	//						}
+	//
+	//					}
+	//
+	//				}
+	//			}
+	//		}
+	//		catch (final Exception e)
+	//		{
+	//			LOG.error(e.getMessage());
+	//		}
+	//		return checkFlag;
+	//	}
+
+	/**
+	 * For UF-93
+	 *
+	 * @doc This Generic method is written for retrieving cookie from request for a given Cookie Name
+	 * @param HttpServletRequest
+	 *           , String
+	 * @return Cookie
+	 */
+	public static Cookie getCookieByName(final HttpServletRequest request, final String cookieName)
+	{
+		if (request != null && request.getCookies() != null && cookieName != null)
+		{
+			for (final Cookie cookie : request.getCookies())
+			{
+				if (cookieName.equals(cookie.getName()))
+				{
+					return cookie;
+				}
+			}
+		}
+		return null;
 	}
 
 	/**
@@ -1757,15 +1870,21 @@ public class GenericUtilityMethods
 					{
 						final SellerInformationModel speficSeller = productSellerData.get(0);
 						final String sellerInformationId = speficSeller != null ? speficSeller.getSellerID() : "";
+						final List<String> sellerIdList = new ArrayList<String>();
 
 						for (final SellerMaster seller : sellerData)
 						{
-							if ((seller.getId().equalsIgnoreCase(sellerInformationId) && isSellerIncluded)
-									|| (!seller.getId().equalsIgnoreCase(sellerInformationId) && !isSellerIncluded))
+							if (null != seller.getId())
 							{
-								checkFlag = true;
-								break;
+								sellerIdList.add(seller.getId());
 							}
+						}
+						if (CollectionUtils.isNotEmpty(sellerIdList)
+								&& ((sellerIdList.contains(sellerInformationId) && isSellerIncluded) || (!sellerIdList
+										.contains(sellerInformationId) && !isSellerIncluded)))
+						{
+							checkFlag = true;
+
 						}
 
 					}
@@ -1778,29 +1897,6 @@ public class GenericUtilityMethods
 			LOG.error(e.getMessage());
 		}
 		return checkFlag;
-	}
-
-	/**
-	 * For UF-93
-	 *
-	 * @doc This Generic method is written for retrieving cookie from request for a given Cookie Name
-	 * @param HttpServletRequest
-	 *           , String
-	 * @return Cookie
-	 */
-	public static Cookie getCookieByName(final HttpServletRequest request, final String cookieName)
-	{
-		if (request != null && request.getCookies() != null && cookieName != null)
-		{
-			for (final Cookie cookie : request.getCookies())
-			{
-				if (cookieName.equals(cookie.getName()))
-				{
-					return cookie;
-				}
-			}
-		}
-		return null;
 	}
 
 }

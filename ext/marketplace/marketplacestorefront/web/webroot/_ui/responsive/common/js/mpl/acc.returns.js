@@ -1,11 +1,27 @@
 	function checkReturnSelected() {
 			$(".secondTataCliq .accContents .errorText").remove();
 			var checkStatus = $(".firstTataCliq select").val();
+			var ifShowReverseSeal = $("#ifShowReverseSeal").val();
+			var reverSeal = $("input[name='reverseSeal']:checked").val();
 			console.log(checkStatus);
+			$("#returnReason").find(":selected").text();
 			if(checkStatus == "NA" ) {
 				//alert("Please Select a reason for Why are you returning this product?");
-				if($(".firstTataCliq .accContents .errorText").length <= 0) {
+				if($(".firstTataCliq .accContents .errorText").length > 0) {
+					$(".firstTataCliq .accContents .errorText").remove();
 					$(".firstTataCliq .accContents").append("<div class='errorText'>Please Select a reason for Why are you returning this product?</div>");
+				}
+				else {
+					$(".firstTataCliq .accContents").append("<div class='errorText'>Please Select a reason for Why are you returning this product?</div>");
+				}
+			}
+			else if(ifShowReverseSeal == "true" && (!$("input[name='reverseSeal']:checked").val())){
+				if($(".firstTataCliq .accContents .errorText").length > 0) {
+					$(".firstTataCliq .accContents .errorText").remove();
+					$(".firstTataCliq .accContents").append("<div class='errorText'>You need a Reverse Seal to return Jewellery products to us. Please confirm if you have a Reverse Seal or not.</div>");
+				}
+				else {
+					$(".firstTataCliq .accContents").append("<div class='errorText'>You need a Reverse Seal to return Jewellery products to us. Please confirm if you have a Reverse Seal or not.</div>");
 				}
 			} else {
 				//alert("Not Null");
@@ -21,6 +37,11 @@
 				$(".secondTataCliq .reasonType .slectionReplace, .secondTataCliq .errorTextSelection").hide();
 				$(".secondTataCliq .reasonType .slectionRefund").show();
 			}
+			var dtmReturnReason = $("#returnReason").find(":selected").text();
+			var dtmReturnProduct = $("#dtmPrdtReturnCode").val();
+			var dtmReturnProductCat = $("#dtmPrdtReturnCat").val();
+			dtmOrderReturn(dtmReturnReason,dtmReturnProduct,dtmReturnProductCat);
+			
 			
 		}
 		
@@ -1001,5 +1022,46 @@
 		  }
 		});
 */
+		//TPR-4134
+$(document).ready(function(){
+	$(".revSeal").popover({
+	    html: 'true',
+	    placement: 'bottom',
+	    trigger: 'manual',
+	    content: $("#revSealHelpContent").html()
+	}).on("mouseenter", function () {
+	    var _this = this;
+	    $(this).popover("show");
+	    $(".popover").on("mouseleave", function () {
+	        $(_this).popover('hide');
+	    });
+	}).on("mouseleave", function () {
+	    var _this = this;
+	    setTimeout(function () {
+	        if (!$(".popover:hover").length) {
+	            $(_this).popover("hide");
+	        }
+	    }, 300);
+	});
 	
+	$(".accordtionTataCliq .accContents .reverseSealJwlry .radioButton").each(function(){
+		var idContainer = $(this).attr("id");
+		$(this).next("label").attr("for",idContainer);
+		});
+	
+	$(".ifscPopOver").popover({
+	    html: 'true',
+	    placement: 'bottom',
+	    trigger: 'hover',
+	    content: $("#ifscPopOverHelp").html()
+	});
+	
+	//TISJEW-3484
+	var catType = $("#productCategoryTypeReturn").val();
+	if("FineJewellery" == catType){
+		$(".accContents.returnMethod .selectReturnMethod.self").css("display","none");
+		$(".accContents.returnMethod .selfCourier").css("display","none");
+	}
+	
+});	
 		

@@ -54,8 +54,8 @@ public class BusinessContentImportServiceImpl implements BusinessContentImportSe
 	@Autowired
 	private MplCmsPageService cmsPageService;
 	//Sonar fix
-	StringBuilder sbError;
-	//StringBuilder sbError = new StringBuilder(1000);
+	//StringBuilder sbError;
+	StringBuilder sbError = new StringBuilder(1000);
 
 
 	/**
@@ -159,7 +159,7 @@ public class BusinessContentImportServiceImpl implements BusinessContentImportSe
 		int lineNo = 0;
 
 		//Sonar-fix
-		sbError = new StringBuilder();
+		//sbError = new StringBuilder();
 
 		while (reader.readNextLine())
 		{

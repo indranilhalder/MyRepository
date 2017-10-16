@@ -13,6 +13,7 @@ import de.hybris.platform.commercefacades.product.data.ProductData;
 import de.hybris.platform.commercefacades.product.data.SellerInformationData;
 import de.hybris.platform.commercefacades.storelocator.data.PointOfServiceData;
 import de.hybris.platform.commerceservices.converter.Converters;
+import de.hybris.platform.core.model.JewelleryInformationModel;
 import de.hybris.platform.core.model.order.CartModel;
 import de.hybris.platform.core.model.product.PincodeModel;
 import de.hybris.platform.core.model.product.ProductModel;
@@ -31,13 +32,17 @@ import java.util.Collection;
 import java.util.List;
 
 import javax.annotation.Resource;
+import javax.inject.Provider;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.constants.MplGlobalCodeConstants;
+import com.tisl.mpl.core.model.BuyBoxModel;
 import com.tisl.mpl.core.model.MplZoneDeliveryModeValueModel;
 import com.tisl.mpl.core.model.RichAttributeModel;
 import com.tisl.mpl.core.mplconfig.service.MplConfigService;
@@ -51,6 +56,8 @@ import com.tisl.mpl.facades.data.StoreLocationRequestData;
 import com.tisl.mpl.facades.data.StoreLocationResponseData;
 import com.tisl.mpl.facades.product.data.MarketplaceDeliveryModeData;
 import com.tisl.mpl.helper.ProductDetailsHelper;
+import com.tisl.mpl.marketplacecommerceservices.service.BuyBoxService;
+import com.tisl.mpl.marketplacecommerceservices.service.MplJewelleryService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplSellerInformationService;
 import com.tisl.mpl.marketplacecommerceservices.service.PincodeService;
 import com.tisl.mpl.model.SellerInformationModel;
@@ -70,13 +77,17 @@ public class PincodeServiceFacadeImpl implements PincodeServiceFacade
 
 	private PinCodeServiceAvilabilityFacade pinCodeFacade;
 	private ProductService productService;
-	private ProductFacade productFacade;
+	//private ProductFacade productFacade;
 	private MplCheckoutFacade mplCheckoutFacade;
 	private ProductDetailsHelper productDetailsHelper;
 	private MplCartFacade mplCartFacade;
 	private PincodeService pincodeService;
 
 	private Converters converters;
+
+	@Autowired
+	@Qualifier("accProductFacade")
+	private Provider<ProductFacade> productFacadeProvider;
 
 	@Resource(name = "pointOfServiceConverter")
 	private Converter<PointOfServiceModel, PointOfServiceData> pointOfServiceConverter;
@@ -89,6 +100,12 @@ public class PincodeServiceFacadeImpl implements PincodeServiceFacade
 
 	@Resource(name = "mplConfigService")
 	private MplConfigService mplConfigService;
+	//for Jewellery
+	@Resource
+	private BuyBoxService buyBoxService;
+
+	@Resource(name = "mplJewelleryService")
+	MplJewelleryService mplJewelleryService;
 
 	/**
 	 * This method is used to check pincode is serviceable are not
@@ -196,6 +213,57 @@ public class PincodeServiceFacadeImpl implements PincodeServiceFacade
 	}
 
 	/**
+	 * This method is used to prepare Storelocator response data for PDP
+	 *
+	 * @param pincode
+	 * @param sellerUssId
+	 * @param productCode
+	 * @return StoreLocationResponseData
+	 */
+	@Override
+	public List<StoreLocationResponseData> getListofStoreLocationsforPincode(final String pincode, final String sellerUssId,
+			final String productCode)
+	{
+		List<StoreLocationResponseData> storeLocationResponseDataList = null;
+		try
+		{
+			final List<StoreLocationRequestData> storeLocationRequestDataList = new ArrayList<StoreLocationRequestData>();
+			final PincodeModel pinCodeModelObj = pincodeService.getLatAndLongForPincode(pincode);
+			if (null != pinCodeModelObj)
+			{
+
+				final LocationDTO dto = new LocationDTO();
+				dto.setLongitude(pinCodeModelObj.getLongitude().toString());
+				dto.setLatitude(pinCodeModelObj.getLatitude().toString());
+				final Location myLocation = new LocationDtoWrapper(dto);
+
+				final StoreLocationRequestData storeLocationRequestData = papulateClicknCollectRequestData(sellerUssId,
+						myLocation.getGPS());
+				if (null != storeLocationRequestData)
+				{
+					storeLocationRequestDataList.add(storeLocationRequestData);
+					//call to OMS get the storelocations for given pincode
+					storeLocationResponseDataList = mplCartFacade.getStoreLocationsforCnC(storeLocationRequestDataList);
+					return storeLocationResponseDataList;
+				}
+				else
+				{
+					return storeLocationResponseDataList;
+				}
+			}
+			else
+			{
+				LOG.error(" pincode model not found for given pincode " + pincode);
+				throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9516);
+			}
+		}
+		catch (final Exception e)
+		{
+			throw e;
+		}
+	}
+
+	/**
 	 * This methd prepares request data to send to oms for cnc.
 	 *
 	 * @param sellerUssId
@@ -231,12 +299,27 @@ public class PincodeServiceFacadeImpl implements PincodeServiceFacade
 			}
 			//populate newly added fields
 			//get SellerInfo based on sellerUssid
-			final SellerInformationModel sellerInfoModel = mplSellerInformationService.getSellerDetail(sellerUssId);
+			SellerInformationModel sellerInfoModel = mplSellerInformationService.getSellerDetail(sellerUssId);
+			//JEWELLERY CHANGES
+			if (null == sellerInfoModel)
+			{
+				final List<JewelleryInformationModel> jewelleryInfo = mplJewelleryService.getJewelleryInfoByUssid(sellerUssId);
+				if (CollectionUtils.isNotEmpty(jewelleryInfo))
+				{
+					if (StringUtils.isNotEmpty(jewelleryInfo.get(0).getPCMUSSID()))
+					{
+						//get seller information for a ussid
+						sellerInfoModel = mplSellerInformationService.getSellerDetail(jewelleryInfo.get(0).getPCMUSSID());
+					}
+				}
+			}
+			//ENDS HERE
 			ProductModel productModel = null;
 			ProductData productData = null;
 			if (null != sellerInfoModel)
 			{
 				productModel = sellerInfoModel.getProductSource();
+				final ProductFacade productFacade = productFacadeProvider.get();
 				productData = productFacade.getProductForOptions(productModel,
 						Arrays.asList(ProductOption.BASIC, ProductOption.SELLER, ProductOption.PRICE));
 				storeLocationRequestData.setSellerId(sellerInfoModel.getSellerID());
@@ -318,6 +401,7 @@ public class PincodeServiceFacadeImpl implements PincodeServiceFacade
 		try
 		{
 			final ProductModel productModel = productService.getProductForCode(productCode);
+			final ProductFacade productFacade = productFacadeProvider.get();
 			final ProductData productData = productFacade.getProductForOptions(productModel,
 					Arrays.asList(ProductOption.BASIC, ProductOption.SELLER, ProductOption.PRICE));
 
@@ -329,7 +413,24 @@ public class PincodeServiceFacadeImpl implements PincodeServiceFacade
 				{
 					for (final MarketplaceDeliveryModeData deliveryMode : seller.getDeliveryModes())
 					{
+						//changes for Jewellery pincode service in pdp
+						//						if (productModel.getProductCategoryType().equalsIgnoreCase(MarketplaceFacadesConstants.PRODUCT_TYPE))
+						//						{
+						//							final List<BuyBoxModel> buyboxModelListAll = new ArrayList<BuyBoxModel>(
+						//									buyBoxService.buyboxPrice(productModel.getCode()));
+						//
+						//							//final String sellerArticleSKU = buyboxModelListAll.get(0).getSellerArticleSKU();
+						//
+						//							deliveryModeData = fetchDeliveryModeDataForUSSID(deliveryMode.getCode(),
+						//									buyboxModelListAll.get(0).getPUSSID());
+						//						}
+						//end
+
+						//else
+
 						deliveryModeData = fetchDeliveryModeDataForUSSID(deliveryMode.getCode(), seller.getUssid());
+
+						//deliveryModeData = fetchDeliveryModeDataForUSSID(deliveryMode.getCode(), seller.getUssid());
 						deliveryModeList.add(deliveryModeData);
 					}
 					data.setDeliveryModes(deliveryModeList);
@@ -420,7 +521,21 @@ public class PincodeServiceFacadeImpl implements PincodeServiceFacade
 				}
 
 				data.setSellerId(seller.getSellerID());
-				data.setUssid(seller.getUssid());
+
+				//added for jewellery
+				if (productModel.getProductCategoryType().equalsIgnoreCase(MarketplaceFacadesConstants.PRODUCT_TYPE))
+				{
+					final List<BuyBoxModel> buyboxModelListAll = new ArrayList<BuyBoxModel>(
+							buyBoxService.buyboxPriceForJewellery(sellerInfoModel.getSellerArticleSKU()));
+					final String sellerArticleSKU = buyboxModelListAll.get(0).getSellerArticleSKU();
+					data.setUssid(sellerArticleSKU);
+				}
+				//end
+				else
+				{
+					data.setUssid(seller.getUssid());
+				}
+				//data.setUssid(seller.getUssid());
 				data.setIsDeliveryDateRequired("N");
 				requestData.add(data);
 			}
@@ -628,19 +743,19 @@ public class PincodeServiceFacadeImpl implements PincodeServiceFacade
 	/**
 	 * @return the productFacade
 	 */
-	public ProductFacade getProductFacade()
-	{
-		return productFacade;
-	}
+	//	public ProductFacade getProductFacade()
+	//	{
+	//		final ProductFacade productFacade = ProductFacadeProvider.get();
+	//		return productFacade;
+	//	}
 
 	/**
 	 * @param productFacade
 	 *           the productFacade to set
 	 */
-	public void setProductFacade(final ProductFacade productFacade)
-	{
-		this.productFacade = productFacade;
-	}
+	/*
+	 * @Autowired public void setProductFacade(final ProductFacade productFacade) { this.productFacade = productFacade; }
+	 */
 
 	/**
 	 * @return the mplCheckoutFacade
@@ -770,8 +885,6 @@ public class PincodeServiceFacadeImpl implements PincodeServiceFacade
 		}
 		return pincodeData;
 	}
-
-
 
 	/**
 	 * @return the mplPincodeConverter

@@ -1,0 +1,778 @@
+# ImpEx for Importing Category Classifications
+
+# Macros / Replacement Parameter definitions
+$productCatalog=luxProductCatalog
+$productCatalogName=Luxury Product Catalog
+$classificationCatalog=pcmClassification
+$productCatalog=luxProductCatalog
+$catalogVersion=catalogversion(catalog(id[default=$productCatalog]),version[default='Staged'])[unique=true,default=$productCatalog:Staged]
+$classCatalogVersion=catalogversion(catalog(id[default='pcmClassification']),version[default='1'])[unique=true,default='pcmClassification:1']
+$classSystemVersion=systemVersion(catalog(id[default='pcmClassification']),version[default='1'])[unique=true]	
+$class=classificationClass(ClassificationClass.code,$classCatalogVersion)[unique=true]	
+$supercategories=source(code,$classCatalogVersion)[unique=true]	
+$categories=target(code,$catalogVersion)[unique=true]	
+$attribute=classificationAttribute(code,$classSystemVersion)[unique=true]	
+$unit=unit(code,$classSystemVersion)
+
+
+# Create Class Attr 
+INSERT_UPDATE classificationAttribute;code[unique=true];name[lang=en];systemVersion(catalog(id),version)[default=pcmClassification:1]
+;stylecodefashiona;Style Code
+;collectionnamefashiona;Collection Name
+#;stylenotefashiona;Style Note
+;seasonnamefashiona;Season Name
+;genderfashiona;Gender
+;occasionfashiona;Occasion
+;colorfamilyfashiona;Color Family
+;brandcolorfashiona;Brand Color
+;sizefashiona;Size
+;multipackfashiona;Multipack
+;multipackquantityfashiona;Multipack Quantity
+;multipackcontentsfashiona;Multipack Contents
+;materialtypefashiona;Material Type
+;innermaterial-bagsfashiona;Inner Material-Bags
+;leathertypefashiona;Leather Type
+;careinstructionfashiona;Care Instruction
+;feature1fashiona;Feature1
+;feature2fashiona;Feature2
+;feature3fashiona;Feature3
+;patternfashiona;Pattern
+;straptypefashiona;Strap Type
+;closuretypefashiona;Closure Type
+;noofslotsfashiona;No of Slots
+;noofcompartmentsfashiona;No of Compartments
+;noofpocketsfashiona;No of pockets
+;compatiblelaptopsizefashiona;Compatible Laptop Size
+;bagtypefashiona;Bag Type
+;bag-lengthfashiona;Bag-Length
+;bag-widthfashiona;Bag-Width
+;bag-heightfashiona;Bag-Height
+;bag-capacityfashiona;Bag-Capacity
+;hairaccessoriestypefashiona;Hair Accessories Type
+;embellishmentfashiona;Embellishment
+;typeofbeltfashiona;Type of Belt
+;widthofbeltfashiona;Width of Belt
+;lengthofbeltfashiona;Length of Belt
+;beltsizefashiona;Belt Size
+;typeofhatsandcapsfashiona;Type of Hats and Caps
+#;typeofscarvesandstolesfashiona;Type of Scarves and Stoles
+;writinginstrumenttypefashiona;Writing Instrument Type
+;sizeguidefashiona;Size Chart
+
+# Create Enum Values
+INSERT_UPDATE classificationAttributeValue;code[unique=true];name[lang=en];systemVersion(catalog(id),version)[default=pcmClassification:1]
+;ss13;SS13
+;aw13;AW13
+;ss14;SS14
+;aw14;AW14
+;ss15;SS15
+;aw15;AW15
+;ss16;SS16
+;aw16;AW16
+;ss17;SS17
+;aw17;AW17
+;ss18;SS18
+;aw18;AW18
+;ss19;SS19
+;aw19;AW19
+;ss20;SS20
+;aw20;AW20
+;men;Men
+;women;Women
+;boys;Boys
+;girls;Girls
+;unisex;Unisex
+;work;Work
+;wedding;Wedding
+;beach;Beach
+;novelty;Novelty
+;shopping;Shopping
+;festive;Festive
+;casual;Casual
+;formal;Formal
+;sport;Sport
+;others;Others
+;school;School
+;beige;Beige 
+;black;Black
+;blue;Blue 
+;brown;Brown
+;gold;Gold 
+;green;Green
+;grey;Grey 
+;khaki;Khaki
+;maroon;Maroon
+;multi;Multi
+;navy;Navy
+;orange;Orange
+;peach;Peach 
+;pink;Pink 
+;purple;Purple
+;red;Red 
+;silver;Silver 
+;tan;Tan
+;turquoise;Turquoise
+;white;White 
+;yellow;Yellow
+;pewter;Pewter
+;metallic;Metallic
+;coral;Coral
+;small;Small 
+;medium;Medium
+;large;Large
+;extralarge;Extra Large
+;yes;Yes
+;no;No
+;beaded;Beaded
+;canvas;Canvas
+;cotton;Cotton
+;crochet;Crochet
+;denim;Denim
+;fauxfur;Faux Fur
+;fauxshearling;Faux Shearling
+;felt;Felt
+;fur;Fur
+;goretotex;Gore-Tex
+;hemp;Hemp
+;jute;Jute
+;leather;Leather
+;linen;Linen
+;mesh;Mesh
+;nylon;Nylon
+;pu;PU
+;polyester;Polyester
+;rubber;Rubber
+;satin;Satin
+;shearling;Shearling
+;silk;Silk
+;straw;Straw
+;suede;Suede
+;synthetic;Synthetic
+;velvet;Velvet
+;vinyl;Vinyl
+;plastic;Plastic
+;wood;Wood
+;stainlesssteel;Stainless Steel
+;ceramic;Ceramic
+;silicon;Silicon
+;alloys;Alloys
+;titanium;Titanium
+;aluminium;Aluminium
+;resin;Resin
+;fabric;Fabric
+;metal;Metal
+;paper;Paper
+;wool;Wool
+;beltingleather;Belting Leather
+;correctedgrainleather;Corrected Grain Leather
+;fullgrainleather;Full Grain Leather
+;grainleather;Grain Leather
+;nubuck;Nubuck
+;patentleather;Patent Leather
+;slinkleather;Slink Leather
+;smoothleather;Smooth Leather
+;splitleather;Split Leather
+;vachettaleather;Vachetta Leather
+;animalprint;Animal Print
+;animated;Animated
+;argyle;Argyle
+;aztec;Aztec
+;bandhej;Bandhej
+;blockprint;Block print
+;celtic;Celtic
+;chambray;Chambray
+;checkered;Checkered
+;dobby;Dobby
+;floral;Floral
+;herringbone;Herringbone
+;kalamkari;Kalamkari
+;kaleidoscope;Kaleidoscope
+;leheriya;Leheriya
+;nordic;Nordic
+;oxford;Oxford
+;paisley;Paisley
+;phulkari;Phulkari
+;solid;Solid
+;polkadot;Polka Dot
+;starred;Starred
+;striped;Striped
+;tietodye;Tie-Dye
+;tribal;Tribal
+;plain;Plain
+;adjustable;Adjustable
+;chain;Chain
+;convertible;Convertible
+;crossbody;Crossbody
+;doublehandle;Double Handle
+;handle;Handle
+;padded;Padded
+;removable;Removable
+;single;Single
+;waist;Waist
+;buckle;Buckle
+;clasp;Clasp
+;drawstring;Drawstring
+;hookloop;Hook & Loop
+;snap;Snap
+;swivellatch;Swivel Latch
+;twistlock;Twist Lock
+;zip;Zip
+;bowlers;Bowlers
+;bucket;Bucket
+;frame;Frame
+;hobos;Hobos
+;saddle;Saddle
+;satchel;Satchel 
+;trapeze;Trapeze
+;baguette;Baguette
+;minaudiere;Minaudiere
+;envelope;Envelope
+;wristlet;Wristlet
+;slings;Slings
+;clutches;Clutches
+;wallets;Wallets
+;backpacks;Backpacks
+;totes;Totes
+;satchels;Satchels
+;potlis;Potlis
+;messengers;Messengers
+;crossbody;Cross Body
+;pouch;Pouch
+;case;Case
+;square;Square
+;kelly;Kelly
+;shoulder;Shoulder
+;foldover;Fold Over
+;flap;Flap
+;quilted;Quilted
+;bitofold;Bi-Fold
+;tritofold;Tri-Fold
+;checkbookwallet;Checkbook Wallet
+;coincardcase;Coin & Card Case
+;moneyclips;Money Clips
+;doctors;Doctors
+#;alicebands;Alice Bands
+#;hairgarlands;Hair Garlands
+;hairpins;Hair Pins
+;headchains;Head Chains
+#;hairbando;Hair Bando
+;hairbands;Hair Bands
+;hairclips;Hair Clips
+;hairponies;Hair Ponies
+;hairrubbers;Hair Rubbers
+;hairclutches;Hair Clutches
+;diamond;Diamond
+;gemstone;Gemstone
+;rhinestone;Rhinestone
+;cubiczirconium;Cubic Zirconium
+;crystals;Crystals
+;swarovski;Swarovski
+;glass;Glass
+;skinnybelt;Skinny Belt
+;waistbelt;Waist Belt
+;embellishedbelt;Embellished Belt
+;widebelts;Wide Belts
+;narrowbelts;Narrow Belts
+;24inch;24 inch
+;25inch;25 inch
+;26inch;26 inch
+;27inch;27 inch
+;28inch;28 inch
+;29inch;29 inch
+;30inch;30 inch
+;31inch;31 inch
+;32inch;32 inch
+;33inch;33 inch
+;34inch;34 inch
+;35inch;35 inch
+;36inch;36 inch
+;37inch;37 inch
+;38inch;38 inch
+;40inch;40 inch
+;42inch;42 inch
+;20inch;20 inch
+;21inch;21 inch
+;22inch;22 inch
+;44inch;44 inch
+;xs;XS
+;s;S 
+;m;M 
+;l;L 
+;x;X 
+;xl;XL
+;xxl;XXL
+;60cm;60cm
+;65cm;65cm
+;70cm;70cm
+;75cm;75cm
+;80cm;80cm
+;85cm;85cm
+;90cm;90cm
+;95cm;95cm
+;100cm;100cm
+;105cm;105cm
+;110cm;110cm
+;115cm;115cm
+;120cm;120cm
+;na;Na
+;freesize;Free Size
+;summer;Summer
+;winter;Winter
+;gentlemen;Gentlemen
+;brick;Brick
+;gambler;Gambler
+;pinchedfront;Pinched Front
+;derby;Derby
+;gus;Gus
+;amish;Amish
+;tommix;Tom Mix
+;opencrown;Open Crown
+;pie;Pie
+;fedora;Fedora
+;panama;Panama
+;boater;Boater
+;matine;Matine
+;floppy;Floppy
+;pillbox;Pillbox
+;bowler;Bowler
+;boina;Boina
+;cloche;Cloche
+;baseballcap;Baseball Cap
+;flatcap;Flat Cap
+;tophat;Top Hat
+;beanies;Beanies
+;bobblehat;Bobble Hat
+;sombrero;Sombrero
+;trilby;Trilby
+;beret;Beret
+;blanket;Blanket
+;heavyweight;Heavy Weight
+;lightwight;Light Wight
+;snoods;Snoods
+;infinity;Infinity
+;ballpointpen;Ballpoint Pen
+;fountainpen;Fountain Pen
+;rollerball;Roller Ball
+;pencil;Pencil
+;refills;Refills
+;ink;Ink
+;printed;Printed
+;textured;Textured
+;plaid;Plaid
+;party;Party
+;evening;Evening
+;50cm;50 cm
+;53cm;53 cm
+;56cm;56 cm
+;61cm;61 cm
+;65cm;65 cm
+;70cm;70 cm
+;75cm;75 cm
+;81cm;81 cm
+;85cm;85 cm
+;90cm;90 cm
+;95cm;95 cm
+;100cm;100 cm
+;105cm;105 cm
+;110cm;110 cm
+
+# Create Classification Class
+INSERT_UPDATE classificationclass;code[unique=true];name[lang=en];$classCatalogVersion
+;10001;accessory_group_001;pcmClassification:1
+;10002;accessory_group_002;pcmClassification:1
+;10003;accessory_group_003;pcmClassification:1
+;10004;accessory_group_004;pcmClassification:1
+;10005;accessory_group_005;pcmClassification:1
+;10006;accessory_group_006;pcmClassification:1
+;10007;accessory_group_007;pcmClassification:1
+;10008;accessory_group_008;pcmClassification:1
+;10009;accessory_group_009;pcmClassification:1
+;10010;accessory_group_010;pcmClassification:1
+;10011;accessory_group_011;pcmClassification:1
+;10012;accessory_group_012;pcmClassification:1
+;10013;accessory_group_013;pcmClassification:1
+;10014;accessory_group_014;pcmClassification:1
+;10015;accessory_group_015;pcmClassification:1
+;10016;accessory_group_016;pcmClassification:1
+
+
+
+# Create Class Attr Assignment 
+INSERT_UPDATE ClassAttributeAssignment;$attribute;$unit;attributeType(code[default=string]);$class;attributeValues(code);multiValued(code);mandatory(code)
+;stylecodefashiona;;string;10001;;false;true;20
+;collectionnamefashiona;;string;10001;;false;false;50
+#;stylenotefashiona;;string;10001;;false;true;300
+;seasonnamefashiona;;enum;10001;ss13,aw13,ss14,aw14,ss15,aw15,ss16,aw16,ss17,aw17,ss18,aw18,ss19,aw19,ss20,aw20;false;false;15
+;genderfashiona;;enum;10014;men,women,boys,girls,unisex;true;true;30
+;occasionfashiona;;enum;10002;formal,casual,sport,school,party,evening,wedding;true;true;30
+;colorfamilyfashiona;;enum;10001;beige,black,blue,brown,gold,green,grey,khaki,maroon,multi,navy,orange,peach,pink,purple,red,silver,tan,turquoise,white,yellow,pewter,metallic,coral;false;true;30
+;brandcolorfashiona;;string;10001;;false;false;30
+;sizefashiona;;enum;10003;small,medium,large,extralarge;false;true;20
+;multipackfashiona;;enum;10001;yes,no;false;true;5
+;multipackquantityfashiona;;number;10001;;false;false;5
+;multipackcontentsfashiona;;string;10001;;false;false;100
+;materialtypefashiona;;enum;10001;canvas,cotton,crochet,denim,fauxfur,fauxshearling,felt,fur,goretotex,hemp,jute,leather,linen,mesh,nylon,pu,polyester,rubber,satin,shearling,silk,straw,suede,synthetic,velvet,vinyl,plastic,wood,stainlesssteel,ceramic,silicon,alloys,titanium,aluminium,resin,fabric,metal,paper,wool;false;true;50
+;innermaterial-bagsfashiona;;enum;10003;beaded,canvas,cotton,crochet,denim,fauxfur,felt,fur,hemp,jute,leather,linen,mesh,nylon,pu,polyester,rubber,satin,shearling,silk,straw,suede,synthetic,velvet,vinyl,wool;false;false;50
+;leathertypefashiona;;enum;10004;beltingleather,correctedgrainleather,fullgrainleather,grainleather,nubuck,patentleather,slinkleather,smoothleather,splitleather,suede,vachettaleather;false;false;70
+;careinstructionfashiona;;string;10005;;false;false;300
+;feature1fashiona;;string;10001;;false;false;300
+;feature2fashiona;;string;10001;;false;false;200
+;feature3fashiona;;string;10001;;false;false;200
+;patternfashiona;;enum;10015;solid,printed,textured,plaid,striped;false;true;70
+;straptypefashiona;;enum;10003;adjustable,chain,convertible,crossbody,doublehandle,handle,padded,removable,single,waist;false;true;70
+;closuretypefashiona;;enum;10003;buckle,clasp,drawstring,hookloop,snap,swivellatch,twistlock,zip;false;false;70
+;noofslotsfashiona;;number;10006;;false;false;5
+;noofcompartmentsfashiona;;number;10007;;false;false;5
+;noofpocketsfashiona;;number;10007;;false;false;5
+;compatiblelaptopsizefashiona;101;number;10008;;false;false;5
+;bagtypefashiona;;enum;10003;bowlers,bucket,frame,hobos,saddle,satchel,trapeze,baguette,minaudiere,envelope,wristlet,slings,clutches,wallets,backpacks,totes,satchels,potlis,messengers,crossbody,pouch,case,square,kelly,shoulder,foldover,flap,quilted,bitofold,tritofold,checkbookwallet,coincardcase,moneyclips,doctors;true;true;30
+;bag-lengthfashiona;104;number;10003;;false;false;5
+;bag-widthfashiona;104;number;10003;;false;false;5
+;bag-heightfashiona;104;number;10003;;false;false;5
+;bag-capacityfashiona;201;number;10003;;false;false;5
+;hairaccessoriestypefashiona;;enum;10009;hairpins,headchains,hairbands,hairclips,hairponies,hairrubbers,hairclutches;false;true;50
+;embellishmentfashiona;;enum;10016;diamond,gemstone,rhinestone,cubiczirconium,crystals,swarovski,glass;false;false;50
+;typeofbeltfashiona;;enum;10010;skinnybelt,waistbelt,embellishedbelt,widebelts,narrowbelts;true;true;50
+;widthofbeltfashiona;104;number;10010;;false;false;5
+;lengthofbeltfashiona;104;number;10010;;false;false;5
+;beltsizefashiona;101;enum;10010;freesize,50cm,53cm,56cm,61cm,65cm,70cm,75cm,81cm,85cm,90cm,95cm,100cm,105cm,110cm;false;true;20
+;typeofhatsandcapsfashiona;;enum;10011;fauxfur,felt,summer,winter,gentlemen,brick,gambler,pinchedfront,derby,gus,amish,tommix,opencrown,pie,fedora,panama,boater,matine,floppy,pillbox,bowler,boina,cloche,baseballcap,flatcap,tophat,beanies,bobblehat,sombrero,trilby,beret;false;true;50
+#;typeofscarvesandstolesfashiona;;enum;10012;blanket,fauxfur,heavyweight,lightwight,snoods,infinity;false;false
+;writinginstrumenttypefashiona;;enum;10013;ballpointpen,fountainpen,rollerball,pencil,refills,ink;false;true;50
+;sizeguidefashiona;;string;10010;;false;true;255
+
+# Links ClassificationClasses to Categories
+# Macros / Replacement Parameter definitions
+$productCatalog=luxProductCatalog
+$catalogVersion=catalogversion(catalog(id[default=$productCatalog]),version[default='Staged'])[unique=true,default=$productCatalog:Staged]
+$classCatalogVersion=catalogversion(catalog(id[default='pcmClassification']),version[default='1'])[unique=true,default='pcmClassification:1']
+$class=classificationClass(ClassificationClass.code,$classCatalogVersion)[unique=true]
+$supercategories=source(code, $classCatalogVersion)[unique=true]
+$categories=target(code, $catalogVersion)[unique=true]
+
+INSERT_UPDATE CategoryCategoryRelation;$categories;$supercategories
+;MPH16;10001
+;MPH1600000001;10002
+;MPH1600000002;10002
+;MPH1600000004;10002
+;MPH1600000005;10002
+;MPH1600000006;10002
+;MPH1600000007;10002
+;MPH1601000000;10002
+;MPH1601000001;10002
+;MPH1601000003;10002
+;MPH1601000004;10002
+;MPH1601000005;10002
+;MPH1601000007;10002
+;MPH1601000008;10002
+;MPH1601000009;10002
+;MPH1601000010;10002
+;MPH1601000011;10002
+;MPH1601000012;10002
+;MPH1601000013;10002
+;MPH1601002000;10002
+;MPH1601002001;10002
+;MPH1601002002;10002
+;MPH1601002003;10002
+;MPH1602000000;10002
+;MPH1602000002;10002
+;MPH1602000003;10002
+;MPH1602000004;10002
+;MPH1602000005;10002
+;MPH1602000007;10002
+;MPH1602000006;10002
+;MPH1602002000;10002
+;MPH1602002001;10002
+;MPH1602002002;10002
+;MPH1600000;10003
+;MPH1601000;10003
+;MPH1602000;10003
+;MPH1600000;10004
+;MPH1601000;10004
+;MPH1602000;10004
+;MPH1600002;10004
+;MPH1601002;10004
+;MPH1602002;10004
+;MPH1600003;10004
+;MPH1601003;10004
+;MPH1602003;10004
+;MPH1600000;10005
+;MPH1601000;10005
+;MPH1602000;10005
+;MPH1600002;10005
+;MPH1601002;10005
+;MPH1602002;10005
+;MPH1600000000;10006
+;MPH1601000002;10006
+;MPH1601000012;10006
+;MPH1602000001;10006
+;MPH1602000006;10006
+;MPH1600000001;10007
+;MPH1600000002;10007
+;MPH1600000003;10007
+;MPH1600000004;10007
+;MPH1600000005;10007
+;MPH1600000006;10007
+;MPH1600000007;10007
+;MPH1601000000;10007
+;MPH1601000001;10007
+;MPH1601000003;10007
+;MPH1601000004;10007
+;MPH1601000005;10007
+;MPH1601000006;10007
+;MPH1601000007;10007
+;MPH1601000008;10007
+;MPH1601000009;10007
+;MPH1601000010;10007
+;MPH1601000011;10007
+;MPH1601000012;10007
+;MPH1601000013;10007
+;MPH1602000000;10007
+;MPH1602000002;10007
+;MPH1602000003;10007
+;MPH1602000004;10007
+;MPH1602000005;10007
+;MPH1602000007;10007
+;MPH1602000006;10007
+;MPH1600000001;10008
+;MPH1600000002;10008
+;MPH1600000003;10008
+;MPH1600000004;10008
+;MPH1600000005;10008
+;MPH1600000006;10008
+;MPH1600000007;10008
+;MPH1601000000;10008
+;MPH1601000003;10008
+;MPH1601000004;10008
+;MPH1601000005;10008
+;MPH1601000006;10008
+;MPH1601000007;10008
+;MPH1601000008;10008
+;MPH1601000010;10008
+;MPH1601000011;10008
+;MPH1601000012;10008
+;MPH1602000000;10008
+;MPH1602000004;10008
+;MPH1602000005;10008
+;MPH1602000007;10008
+;MPH1602000006;10008
+;MPH1600001;10009
+;MPH1601001;10009
+;MPH1602001;10009
+;MPH1600002;10010
+;MPH1601002;10010
+;MPH1602002;10010
+;MPH1600003006;10011
+;MPH1601003001;10011
+;MPH1602003001;10011
+;MPH1600003010;10012
+;MPH1600003007;10012
+;MPH1601003005;10012
+;MPH1601003002;10012
+;MPH1602003005;10012
+;MPH1602003002;10012
+;MPH1603000004;10013
+;MPH1600000000;10014
+;MPH1600000001;10014
+;MPH1600000002;10014
+;MPH1600000003;10014
+;MPH1600000004;10014
+;MPH1600000005;10014
+;MPH1600000006;10014
+;MPH1600000007;10014
+;MPH1600001000;10014
+;MPH1600001001;10014
+;MPH1600002000;10014
+;MPH1600002001;10014
+;MPH1600002002;10014
+;MPH1600002003;10014
+;MPH1600003000;10014
+;MPH1600003001;10014
+;MPH1600003002;10014
+;MPH1600003003;10014
+;MPH1600003004;10014
+;MPH1600003005;10014
+;MPH1600003006;10014
+;MPH1600003007;10014
+;MPH1600003008;10014
+;MPH1600003009;10014
+;MPH1600003010;10014
+;MPH1600003011;10014
+;MPH1600003012;10014
+;MPH1600003013;10014
+;MPH1600003014;10014
+;MPH1600003015;10014
+;MPH1601000000;10014
+;MPH1601000001;10014
+;MPH1601000002;10014
+;MPH1601000003;10014
+;MPH1601000004;10014
+;MPH1601000005;10014
+;MPH1601000006;10014
+;MPH1601000007;10014
+;MPH1601000008;10014
+;MPH1601000009;10014
+;MPH1601000010;10014
+;MPH1601000011;10014
+;MPH1601000012;10014
+;MPH1601000013;10014
+;MPH1601001000;10014
+;MPH1601001001;10014
+;MPH1601001002;10014
+;MPH1601001003;10014
+;MPH1601001004;10014
+;MPH1601001005;10014
+;MPH1601001006;10014
+;MPH1601001007;10014
+;MPH1601001008;10014
+;MPH1601002000;10014
+;MPH1601002001;10014
+;MPH1601002002;10014
+;MPH1601002003;10014
+;MPH1601003000;10014
+;MPH1601003001;10014
+;MPH1601003002;10014
+;MPH1601003003;10014
+;MPH1601003004;10014
+;MPH1601003005;10014
+;MPH1601003006;10014
+;MPH1601003007;10014
+;MPH1601003008;10014
+;MPH1601003009;10014
+;MPH1601003010;10014
+;MPH1602000000;10014
+;MPH1602000001;10014
+;MPH1602000002;10014
+;MPH1602000003;10014
+;MPH1602000004;10014
+;MPH1602000005;10014
+;MPH1602000006;10014
+;MPH1602000007;10014
+;MPH1602001000;10014
+;MPH1602001001;10014
+;MPH1602001002;10014
+;MPH1602001003;10014
+;MPH1602001004;10014
+;MPH1602001005;10014
+;MPH1602001006;10014
+;MPH1602001007;10014
+;MPH1602001008;10014
+;MPH1602002000;10014
+;MPH1602002001;10014
+;MPH1602002002;10014
+;MPH1602003000;10014
+;MPH1602003001;10014
+;MPH1602003002;10014
+;MPH1602003003;10014
+;MPH1602003004;10014
+;MPH1602003005;10014
+;MPH1602003006;10014
+;MPH1602003007;10014
+;MPH1602003008;10014
+;MPH1602003009;10014
+;MPH1602003010;10014
+;MPH1603001000;10014
+;MPH1603001005;10014
+;MPH1603001006;10014
+;MPH1600;10015
+;MPH1601;10015
+;MPH1602;10015
+;MPH1600000000;10016
+;MPH1600000001;10016
+;MPH1600000002;10016
+;MPH1600000003;10016
+;MPH1600000004;10016
+;MPH1600000005;10016
+;MPH1600000006;10016
+;MPH1600000007;10016
+;MPH1600001000;10016
+;MPH1600001001;10016
+;MPH1600002000;10016
+;MPH1600002001;10016
+;MPH1600002002;10016
+;MPH1600002003;10016
+;MPH1600003000;10016
+;MPH1600003001;10016
+;MPH1600003002;10016
+;MPH1600003003;10016
+;MPH1600003004;10016
+;MPH1600003005;10016
+;MPH1600003006;10016
+;MPH1600003007;10016
+;MPH1600003008;10016
+;MPH1600003009;10016
+;MPH1600003010;10016
+;MPH1600003011;10016
+;MPH1600003012;10016
+;MPH1600003013;10016
+;MPH1600003014;10016
+;MPH1600003015;10016
+;MPH1601000000;10016
+;MPH1601000001;10016
+;MPH1601000002;10016
+;MPH1601000003;10016
+;MPH1601000004;10016
+;MPH1601000005;10016
+;MPH1601000006;10016
+;MPH1601000007;10016
+;MPH1601000008;10016
+;MPH1601000009;10016
+;MPH1601000010;10016
+;MPH1601000011;10016
+;MPH1601000012;10016
+;MPH1601000013;10016
+;MPH1601001000;10016
+;MPH1601001001;10016
+;MPH1601001002;10016
+;MPH1601001003;10016
+;MPH1601001004;10016
+;MPH1601001005;10016
+;MPH1601001006;10016
+;MPH1601001007;10016
+;MPH1601001008;10016
+;MPH1601002000;10016
+;MPH1601002001;10016
+;MPH1601002002;10016
+;MPH1601002003;10016
+;MPH1601003000;10016
+;MPH1601003001;10016
+;MPH1601003002;10016
+;MPH1601003003;10016
+;MPH1601003004;10016
+;MPH1601003005;10016
+;MPH1601003006;10016
+;MPH1601003007;10016
+;MPH1601003008;10016
+;MPH1601003009;10016
+;MPH1601003010;10016
+;MPH1602000000;10016
+;MPH1602000001;10016
+;MPH1602000002;10016
+;MPH1602000003;10016
+;MPH1602000004;10016
+;MPH1602000005;10016
+;MPH1602000006;10016
+;MPH1602000007;10016
+;MPH1602001000;10016
+;MPH1602001001;10016
+;MPH1602001002;10016
+;MPH1602001003;10016
+;MPH1602001004;10016
+;MPH1602001005;10016
+;MPH1602001006;10016
+;MPH1602001007;10016
+;MPH1602001008;10016
+;MPH1602002000;10016
+;MPH1602002001;10016
+;MPH1602002002;10016
+;MPH1602003000;10016
+;MPH1602003001;10016
+;MPH1602003002;10016
+;MPH1602003003;10016
+;MPH1602003004;10016
+;MPH1602003005;10016
+;MPH1602003006;10016
+;MPH1602003007;10016
+;MPH1602003008;10016
+;MPH1602003010;10016
+;MPH1603000004;10016

@@ -17,8 +17,11 @@ import de.hybris.platform.storelocator.model.PointOfServiceModel;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.log4j.Logger;
 
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
@@ -41,7 +44,7 @@ public class PincodeServiceImpl implements PincodeService
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.marketplacecommerceservices.service.PincodeService#getSortedLocationsNearby(de.hybris.platform.
 	 * storelocator.GPS, double)
 	 */
@@ -96,7 +99,7 @@ public class PincodeServiceImpl implements PincodeService
 
 	/**
 	 * Fetch all the Stores for a Pincode and radius.
-	 * 
+	 *
 	 * @param gps
 	 * @param distance
 	 * @return Stores
@@ -126,7 +129,7 @@ public class PincodeServiceImpl implements PincodeService
 
 	/**
 	 * Fetch all the Stores for a Pincode and radius.
-	 * 
+	 *
 	 * @param gps
 	 * @param distance
 	 * @return Stores
@@ -155,7 +158,7 @@ public class PincodeServiceImpl implements PincodeService
 		}
 	}
 
-	protected double calculateDistance(final GPS referenceGps, final PointOfServiceModel posModel) throws GeoLocatorException,
+	public double calculateDistance(final GPS referenceGps, final PointOfServiceModel posModel) throws GeoLocatorException,
 			LocationServiceException
 	{
 		if ((posModel.getLatitude() != null) && (posModel.getLongitude() != null))
@@ -167,10 +170,10 @@ public class PincodeServiceImpl implements PincodeService
 		throw new LocationServiceException("Unable to calculate a distance for PointOfService(" + posModel
 				+ ") due to missing  latitude, longitude value");
 	}
-	
+
 	/**
 	 * fetching all details about the given Pincode
-	 * 
+	 *
 	 * @param pincode
 	 * @return PincodeModel
 	 */
@@ -210,6 +213,44 @@ public class PincodeServiceImpl implements PincodeService
 			throw exception;
 		}
 		return pincodeModel;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 *
+	 * @see com.tisl.mpl.marketplacecommerceservices.service.PincodeService#getSortedLocationsNearby(de.hybris.platform.
+	 * storelocator.GPS, double)
+	 */
+	@Override
+	public Map<PointOfServiceModel, Double> getSortedStoresNearby(final GPS gps, final double distance, final String sellerId)
+	{
+		final Map<PointOfServiceModel, Double> result = new HashMap<PointOfServiceModel, Double>();
+		try
+		{
+			final Collection<PointOfServiceModel> posModels = pincodeDao.getAllGeocodedPOS(gps, distance, sellerId);
+			if (CollectionUtils.isNotEmpty(posModels))
+			{
+				for (final PointOfServiceModel pos : posModels)
+				{
+					final double dist = calculateDistance(gps, pos);
+					//result.add(new DefaultLocation(posModel, Double.valueOf(dist)));
+					result.put(pos, Double.valueOf(dist));
+				}
+			}
+			return result;
+		}
+		catch (final PointOfServiceDaoException e)
+		{
+			throw new LocationServiceException(e.getMessage(), e);
+		}
+		catch (final LocationInstantiationException e)
+		{
+			throw new LocationServiceException(e.getMessage(), e);
+		}
+		catch (final GeoLocatorException e)
+		{
+			throw new LocationServiceException(e.getMessage(), e);
+		}
 	}
 
 	/**

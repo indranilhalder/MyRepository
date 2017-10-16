@@ -42,7 +42,6 @@ import de.hybris.platform.commerceservices.search.facetdata.FacetData;
 import de.hybris.platform.commerceservices.search.facetdata.FacetRefinement;
 import de.hybris.platform.commerceservices.search.facetdata.ProductCategorySearchPageData;
 import de.hybris.platform.commerceservices.search.facetdata.ProductSearchPageData;
-import de.hybris.platform.commerceservices.search.facetdata.SpellingSuggestionData;
 import de.hybris.platform.commerceservices.search.pagedata.PageableData;
 import de.hybris.platform.commerceservices.search.pagedata.SearchPageData;
 import de.hybris.platform.core.model.product.ProductModel;
@@ -85,6 +84,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.google.common.base.Splitter;
 import com.google.common.collect.Iterables;
 import com.granule.json.JSONException;
+import com.tisl.lux.facade.CommonUtils;
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.core.constants.MarketplaceCoreConstants;
 import com.tisl.mpl.exception.EtailBusinessExceptions;
@@ -94,6 +94,7 @@ import com.tisl.mpl.facade.checkout.MplCartFacade;
 import com.tisl.mpl.facade.helpmeshop.HelpMeShopFacade;
 import com.tisl.mpl.facade.wishlist.WishlistFacade;
 import com.tisl.mpl.helper.ProductDetailsHelper;
+import com.tisl.mpl.marketplacecommerceservices.service.BuyBoxService;
 import com.tisl.mpl.model.cms.components.NeedHelpComponentModel;
 import com.tisl.mpl.solrfacet.search.impl.DefaultMplProductSearchFacade;
 import com.tisl.mpl.storefront.breadcrumb.impl.MplSearchBreadcrumbBuilder;
@@ -118,6 +119,9 @@ public class SearchPageController extends AbstractSearchPageController
 	 */
 	private static final String ALL = "all";
 
+	@Autowired
+	private CommonUtils commonUtils;
+
 	/**
 	 *
 	 */
@@ -126,7 +130,8 @@ public class SearchPageController extends AbstractSearchPageController
 
 	private static final String COMPONENT_UID_PATH_VARIABLE_PATTERN = "{componentUid:.*}";
 
-	private static final String SEARCH_CMS_PAGE_ID = "search";
+	private static final String SEARCH_CMS_PAGE_ID = "search"; //mpl search page template
+	private static final String LUX_SEARCH_CMS_PAGE_ID = "luxurySearchResultsPage"; //lux search page template
 	private static final String NO_RESULTS_CMS_PAGE_ID = "searchEmpty";
 
 	private static final String DROPDOWN_BRAND = "MBH";
@@ -184,7 +189,9 @@ public class SearchPageController extends AbstractSearchPageController
 	@Resource(name = "productDetailsHelper")
 	private ProductDetailsHelper productDetailsHelper;
 
-
+	//TPR-5787
+	@Resource(name = "buyBoxService")
+	private BuyBoxService buyBoxService;
 
 	//@Resource(name = "cmsSiteService") Avoid unused private fields
 	//private CMSSiteService cmsSiteService;
@@ -255,8 +262,8 @@ public class SearchPageController extends AbstractSearchPageController
 		boolean allSearchFlag = false;
 		String searchCategory = ALL;
 		String micrositeDropDownText = "";
-		final String spellingSearchterm = searchText;
-		String spellingtermDYM = "";
+		//Added for INC144317053
+		//boolean spellSuggestionFlag = false;
 		//UF-15
 		//final PageableData pageableData = createPageableData(0, getSearchPageSize(), null, ShowMode.Page);
 		final PageableData pageableData = createPageableData(0, 24, null, ShowMode.Page);
@@ -348,22 +355,35 @@ public class SearchPageController extends AbstractSearchPageController
 						searchStateAll.setQuery(searchQueryDataAll);
 						searchPageData = (ProductCategorySearchPageData<SearchStateData, ProductData, CategoryData>) searchFacade
 								.textSearch(searchStateAll, pageableData);
-						// Code changes done for TPR-432
-						model.addAttribute("spellingSearchterm", spellingSearchterm);
-						if (CollectionUtils.isEmpty(searchPageData.getResults()) && searchPageData.getSpellingSuggestion() != null)
+						//pr-23 start
+						if (searchPageData.getKeywordRedirectUrl() != null)
 						{
-							searchQueryDataAll.setValue(XSSFilterUtil.filter(searchPageData.getSpellingSuggestion().getSuggestion()));
+							// if the search engine returns a redirect, just
+							return "redirect:" + searchPageData.getKeywordRedirectUrl();
+						}
+						//pr-23 end
+						// Code changes done for TPR-432
+						if (null != searchPageData.getSpellingSuggestion()
+
+						&& StringUtils.isNotEmpty(searchPageData.getSpellingSuggestion().getSuggestion()))
+
+						{
+
+
+
+							model.addAttribute("spellingSearchterm",
+									searchPageData.getSpellingSuggestion().getSuggestion().replaceAll("[^a-zA-Z&0-9\\s+]+", ""));//setting the terms for suggestion
+
+							searchQueryDataAll.setValue(XSSFilterUtil.filter(searchPageData.getSpellingSuggestion().getSuggestion()
+									.replaceAll("[()]+", "")));
 							searchStateAll.setQuery(searchQueryDataAll);
-							spellingtermDYM = searchPageData.getFreeTextSearch();
+
 							searchPageData = (ProductCategorySearchPageData<SearchStateData, ProductData, CategoryData>) searchFacade
 									.textSearch(searchStateAll, pageableData);
-							if (null == searchPageData.getSpellingSuggestion())
-							{
-								final SpellingSuggestionData spelling = new SpellingSuggestionData();
-								spelling.setSuggestion(spellingtermDYM);
-								searchPageData.setSpellingSuggestion(spelling);
-								model.addAttribute("spellingSearchterm", spellingSearchterm);
-							}
+							model.addAttribute("isSpellCheck", Boolean.valueOf(true));
+							model.addAttribute("spellSearchTerm", searchText); //setting the search term in instead for
+
+
 						}
 						searchCategory = ALL;
 					}
@@ -377,7 +397,30 @@ public class SearchPageController extends AbstractSearchPageController
 
 
 			}
+			//PR-23 start
+			if (searchPageData.getPagination().getTotalNumberOfResults() == 0)
+			{
+				if (StringUtils.isNotEmpty(searchPageData.getFreeTextSearch()))
+				{
 
+					final String[] elements = searchPageData.getFreeTextSearch().trim().split("\\s+");
+
+					//if (elements.length == 2 || elements.length == 3)
+					if (elements.length >= 2)
+					{
+						final SearchStateData searchStateAll = new SearchStateData();
+						final SearchQueryData searchQueryDataAll = new SearchQueryData();
+						searchQueryDataAll.setValue(searchText);
+						searchStateAll.setNextSearch(true);
+						searchStateAll.setQuery(searchQueryDataAll);
+						searchPageData = (ProductCategorySearchPageData<SearchStateData, ProductData, CategoryData>) searchFacade
+								.textSearch(searchStateAll, pageableData);
+
+						//searchPageData.getCurrentQuery().setTwoTokenNextSearch(true);
+					}
+				}
+			}
+			//PR-23 end
 			searchPageData = updatePageData(searchPageData, whichSearch, searchText);
 
 			if (searchPageData == null)
@@ -812,9 +855,32 @@ public class SearchPageController extends AbstractSearchPageController
 		{
 			sellerId = searchQuery.substring(searchQuery.indexOf("sellerId:") + 9, searchQuery.indexOf("sellerId:") + 15);
 		}
-		return updatePageData(
-				(ProductCategorySearchPageData<SearchStateData, ProductData, CategoryData>) productSearchFacade.textSearch(
-						searchState, pageableData), sellerId, searchQuery);
+		ProductCategorySearchPageData<SearchStateData, ProductData, CategoryData> searchPageData = (ProductCategorySearchPageData<SearchStateData, ProductData, CategoryData>) productSearchFacade
+				.textSearch(searchState, pageableData);
+
+		//PR-23 start
+		if (searchPageData.getPagination().getTotalNumberOfResults() == 0)
+		{
+			if (StringUtils.isNotEmpty(searchPageData.getFreeTextSearch()))
+			{
+
+				final String[] elements = searchPageData.getFreeTextSearch().trim().split("\\s+");
+
+				//if (elements.length == 2 || elements.length == 3)
+				if (elements.length >= 2)
+				{
+
+					searchState.setNextSearch(true);
+					searchPageData = (ProductCategorySearchPageData<SearchStateData, ProductData, CategoryData>) searchFacade
+							.textSearch(searchState, pageableData);
+
+					//searchPageData.getCurrentQuery().setTwoTokenNextSearch(true);
+				}
+			}
+		}
+		//PR-23 end
+
+		return updatePageData(searchPageData, sellerId, searchQuery);
 	}
 
 	/**
@@ -1364,9 +1430,9 @@ public class SearchPageController extends AbstractSearchPageController
 	/*
 	 * protected <E> List<E> subList(final List<E> list, final int maxElements) { if (CollectionUtils.isEmpty(list)) {
 	 * return Collections.emptyList(); }
-	 * 
+	 *
 	 * if (list.size() > maxElements) { return list.subList(0, maxElements); }
-	 * 
+	 *
 	 * return list; }
 	 */
 
@@ -1624,7 +1690,8 @@ public class SearchPageController extends AbstractSearchPageController
 			{
 				for (final Wishlist2EntryModel entry : lastCreatedWishlist.getEntries())
 				{
-					if (null != (entry) && null != entry.getProduct() && (entry.getProduct()).equals(pcode))
+					if (null != (entry) && null != entry.getProduct() && (entry.getProduct()).equals(pcode)
+							&& (entry.getIsDeleted() == null || (entry.getIsDeleted() != null && !entry.getIsDeleted().booleanValue())))//TPR-5787 check added
 					{
 						existPcode = true;
 						break;
@@ -1674,8 +1741,17 @@ public class SearchPageController extends AbstractSearchPageController
 		boolean add = false;
 		try
 		{
+			//TPR-5787
+			String ussidFinal = null;
+			if (getBuyBoxService().getBuyboxPricesForSearch(productCode) != null)
+			{
+				ussidFinal = getBuyBoxService().getBuyboxPricesForSearch(productCode).get(0).getSellerArticleSKU();
+				LOG.error("Search Page: addWishListsForPLP: productCode-" + productCode + "::USSID-" + ussidFinal);
+			}
+
 			//add = productDetailsHelper.addToWishListInPopup(productCode, ussid, wishName, Boolean.valueOf(sizeSelected));
-			add = productDetailsHelper.addSingleToWishListForPLP(productCode, ussid, Boolean.valueOf(sizeSelected));
+			//add = productDetailsHelper.addSingleToWishListForPLP(productCode, ussid, Boolean.valueOf(sizeSelected));
+			add = productDetailsHelper.addSingleToWishListForPLP(productCode, ussidFinal, Boolean.valueOf(sizeSelected));
 
 		}
 		catch (final EtailBusinessExceptions e)
@@ -1730,4 +1806,23 @@ public class SearchPageController extends AbstractSearchPageController
 		return remove;
 
 	}
+
+	//TPR-5787
+	/**
+	 * @return the buyBoxService
+	 */
+	public BuyBoxService getBuyBoxService()
+	{
+		return buyBoxService;
+	}
+
+	/**
+	 * @param buyBoxService
+	 *           the buyBoxService to set
+	 */
+	public void setBuyBoxService(final BuyBoxService buyBoxService)
+	{
+		this.buyBoxService = buyBoxService;
+	}
+
 }

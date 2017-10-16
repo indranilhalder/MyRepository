@@ -114,9 +114,15 @@
 		<extension name="marketplaceBinDb" />
 		<extension name="marketplaceclientservices" />
 		<extension name="marketplacecaptchaaddon" />
-		<!--extension name="marketplaceatssync" -->
 
 
+		<extension name="marketplaceatssync" />
+
+		<!--Luxury packages -->
+		<extension name="luxuryinitialdata" />
+		<extension name="luxurystoreaddon" />		
+		<extension name="luxurycheckoutaddon" />
+		
 		<extension name="ondemandcommon" />
 
 		<extension name="corepluscommons" />
@@ -163,3 +169,5 @@
 
 	</extensions>
 </hybrisconfig>
+
+

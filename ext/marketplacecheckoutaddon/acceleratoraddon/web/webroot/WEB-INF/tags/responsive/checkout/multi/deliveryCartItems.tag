@@ -132,20 +132,19 @@
 		<c:url value="${entry.product.url}" var="productUrl"/>
 		<li class="item">
 			<div class="product-img">
-				<c:choose>
+			<c:choose>
 						<c:when test="${fn:toLowerCase(entry.product.luxIndicator)=='luxury'}">
 												<a href="${productUrl}"> <product:productPrimaryImage
-														product="${entry.product}" format="luxuryCartIcon" />
+														product="${entry.product}" format="luxuryCartIcon" lazyLoad="false" />
 												</a>
 																	</c:when>
 																	<c:otherwise>
 																			<a href="${productUrl}"> <product:productPrimaryImage
-														product="${entry.product}" format="thumbnail" />
+														product="${entry.product}" format="thumbnail" lazyLoad="false" />
 												</a>
 												
 						</c:otherwise>
-					</c:choose>
-			</div>
+					</c:choose>			</div>
 			<div class="product">
                   <p class="company"></p>
                   <h3 class="product-brand-name"><a href="${entryProductUrl}">${entry.product.brand.brandname}</a></h3>
@@ -242,9 +241,22 @@
 				</li>
 				<li>
                     <div class="method item-mthd">
-                   <h3> <spring:theme code="checkout.multi.shipmentMethod"/></h3>
-                   <p class="delivery-method-description"><c:out value="${entry.mplDeliveryMode.name}"></c:out>&nbsp;-&nbsp;<c:if test="${entry.currDelCharge.value.unscaledValue() == 0}"><c:out value="FREE"></c:out></c:if><c:if test="${entry.currDelCharge.value.unscaledValue() != 0}"><c:out value="${entry.currDelCharge.formattedValue}"></c:out></c:if></p>
-                  <p class="delivery-method-description delivery-method-description-time">
+                   <h3 class="payement-failed-delivery-heading"> <spring:theme code="checkout.multi.shipmentMethod"/></h3>
+                   <!-- UF-306 starts -->
+                   <%-- <p class="delivery-method-description"><c:out value="${entry.mplDeliveryMode.name}"></c:out>&nbsp;-&nbsp;<c:if test="${entry.currDelCharge.value.unscaledValue() == 0}"><c:out value="FREE"></c:out></c:if><c:if test="${entry.currDelCharge.value.unscaledValue() != 0}"><c:out value="${entry.currDelCharge.formattedValue}"></c:out></c:if></p> --%>
+                   <c:choose>
+				   	<c:when test="${entry.mplDeliveryMode.code eq 'home-delivery'}">
+				   		<p class="delivery-method-description"><spring:theme code="text.home.delivery"/>&nbsp;-&nbsp;<c:if test="${entry.currDelCharge.value.unscaledValue() == 0}"><c:out value="FREE"></c:out></c:if><c:if test="${entry.currDelCharge.value.unscaledValue() != 0}"><c:out value="${entry.currDelCharge.formattedValue}"></c:out></c:if></p>
+				   	</c:when>
+				   	<c:when test="${entry.mplDeliveryMode.code eq 'express-delivery'}">
+				   		<p class="delivery-method-description"><spring:theme code="text.express.shipping"/>&nbsp;-&nbsp;<c:if test="${entry.currDelCharge.value.unscaledValue() == 0}"><c:out value="FREE"></c:out></c:if><c:if test="${entry.currDelCharge.value.unscaledValue() != 0}"><c:out value="${entry.currDelCharge.formattedValue}"></c:out></c:if></p>
+				   	</c:when>
+				   	<c:otherwise>
+				   		<p class="delivery-method-description"><spring:theme code="text.clickandcollect.delivery"/>&nbsp;-&nbsp;<c:if test="${entry.currDelCharge.value.unscaledValue() == 0}"><c:out value="FREE"></c:out></c:if><c:if test="${entry.currDelCharge.value.unscaledValue() != 0}"><c:out value="${entry.currDelCharge.formattedValue}"></c:out></c:if></p>
+				   	</c:otherwise>
+				   </c:choose>
+				   <!-- UF-306 ends -->	
+                  <p class="delivery-method-description delivery-method-description-time payement-failed-delivery-method">
                   
                  <%--  <c:out value="${entry.mplDeliveryMode.description}"></c:out> --%>
         
@@ -257,7 +269,7 @@
                         </p>
                        </c:when>
                        <c:otherwise>
-                       <p class="delivery-method-description delivery-method-description-time">
+                       <p class="delivery-method-description delivery-method-description-time payement-failed-delivery-method">
                          Your Order Will Be Delivered   ${entry.eddDateBetWeen} 
                         </p>
                        
@@ -458,7 +470,7 @@
 		<li class="item">
 			<div class="product-img">
 				<a href="${productUrl}">
-					<product:productPrimaryImage product="${entry.product}" format="thumbnail"/>
+					<product:productPrimaryImage lazyLoad="false" product="${entry.product}" format="thumbnail"/>
 				</a>
 			</div>
 			<div class="product">
@@ -533,9 +545,22 @@
 				</li>
 				<li>
                     <div class="method item-mthd">
-                   <h3> <spring:theme code="checkout.multi.shipmentMethod"/></h3>
-                   <p class="delivery-method-description"><c:out value="${entry.mplDeliveryMode.name}"></c:out>&nbsp;-&nbsp;<c:if test="${entry.currDelCharge.value.unscaledValue() == 0}"><c:out value="FREE"></c:out></c:if><c:if test="${entry.currDelCharge.value.unscaledValue() != 0}"><c:out value="${entry.currDelCharge.formattedValue}"></c:out></c:if></p>
-                  <p class="delivery-method-description delivery-method-description-time"><c:out value="${entry.mplDeliveryMode.description}"></c:out></p>
+                   <h3 class="payement-failed-delivery-heading"> <spring:theme code="checkout.multi.shipmentMethod"/></h3>
+                   <!-- UF-306 starts -->
+                   <%-- <p class="delivery-method-description"><c:out value="${entry.mplDeliveryMode.name}"></c:out>&nbsp;-&nbsp;<c:if test="${entry.currDelCharge.value.unscaledValue() == 0}"><c:out value="FREE"></c:out></c:if><c:if test="${entry.currDelCharge.value.unscaledValue() != 0}"><c:out value="${entry.currDelCharge.formattedValue}"></c:out></c:if></p> --%>
+                   <c:choose>
+				   	<c:when test="${entry.mplDeliveryMode.code eq 'home-delivery'}">
+				   		<p class="delivery-method-description"><spring:theme code="text.home.delivery"/>&nbsp;-&nbsp;<c:if test="${entry.currDelCharge.value.unscaledValue() == 0}"><c:out value="FREE"></c:out></c:if><c:if test="${entry.currDelCharge.value.unscaledValue() != 0}"><c:out value="${entry.currDelCharge.formattedValue}"></c:out></c:if></p>
+				   	</c:when>
+				   	<c:when test="${entry.mplDeliveryMode.code eq 'express-delivery'}">
+				   		<p class="delivery-method-description"><spring:theme code="text.express.shipping"/>&nbsp;-&nbsp;<c:if test="${entry.currDelCharge.value.unscaledValue() == 0}"><c:out value="FREE"></c:out></c:if><c:if test="${entry.currDelCharge.value.unscaledValue() != 0}"><c:out value="${entry.currDelCharge.formattedValue}"></c:out></c:if></p>
+				   	</c:when>
+				   	<c:otherwise>
+				   		<p class="delivery-method-description"><spring:theme code="text.clickandcollect.delivery"/>&nbsp;-&nbsp;<c:if test="${entry.currDelCharge.value.unscaledValue() == 0}"><c:out value="FREE"></c:out></c:if><c:if test="${entry.currDelCharge.value.unscaledValue() != 0}"><c:out value="${entry.currDelCharge.formattedValue}"></c:out></c:if></p>
+				   	</c:otherwise>	
+				   </c:choose>
+				   <!-- UF-306 ends -->	
+                  <p class="delivery-method-description delivery-method-description-time payement-failed-delivery-method"><c:out value="${entry.mplDeliveryMode.description}"></c:out></p>
                   </div>
                   <!-- <div class="method">
                     <h3>Shipping Method:</h3>

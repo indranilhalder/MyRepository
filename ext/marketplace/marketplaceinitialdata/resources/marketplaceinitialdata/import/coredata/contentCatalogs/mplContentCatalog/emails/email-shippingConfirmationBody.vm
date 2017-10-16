@@ -247,12 +247,13 @@
 				  	        		      	   	 	  <br>
 				  	        		      	   	 	  <span style="color:#333333">Size: $entry.product.size</span>
 				  	        		      	   	 	  #end
+				  	        		      	          #if($entry.SellerInfo)
 				  	        		      	   	 	  <br>
 				  	        		      	   	 	  <span style="color:#333333">Sold by: $entry.SellerInfo </span>
-				  	        		      	   	 	  	
+				  	        		      	   	 	  #end	
 				  	        		      	   	 	  </div>
 				  	        		      	   	 	 </td>
-				  	        		      	   	 	<td class="smFull iprice" width="110" align="right" style="vertical-align:top;font-size:12px;font-family:Arial, Helvetica, sans-serif;color: #000000;font-weight:bold;">
+				  	        		      	   	 	<td class="smFull iprice" width="110" align="right" style="vertical-align:top;font-size:12px;font-family:Arial, Helvetica, sans-serif;color: #000000;font-weight:bold;text-align: right;">
 				  	        		      	   	 	
 				  	        		      	   	 	&#x20b9; $ctx.numberTool.format("#0.00",$entry.netAmountAfterAllDisc)</td>
 				  	        		      	   	 	</tr>
@@ -279,17 +280,17 @@
 		  	        		    		<table width="100%" border="0" cellspacing="0" cellpadding="0">
 		  	        		    		  <tbody>
 		  	        		    		  	<tr>
-			  	        		    		    <td class="smFull dsnone" width="300">&nbsp;</td>
+			  	        		    		    <td class="smFull dsnone" width="100">&nbsp;</td>
 			  	        		    		    <td class="smFull">
 			  	        		    		    	<table width="100%" border="0" cellspacing="0" cellpadding="0" class="content">
 	  	        		    		 				 <tbody>
 	  	        		    		 				 	<tr>
 			 			  	        		    		    <td style="font-size:12px;font-family:Arial, Helvetica, sans-serif;color: #000000;">Subtotal</td>
-						  	        		    		    <td align="right" class="taleft" style="font-size:12px;font-family:Arial, Helvetica, sans-serif;color: #000000;">&#x20b9; $ctx.numberTool.format("#0.00",$ctx.subTotal)</td>
+						  	        		    		    <td align="right" class="taleft" style="font-size:12px;font-family:Arial, Helvetica, sans-serif;color: #000000;text-align: right;">&#x20b9; $ctx.numberTool.format("#0.00",$ctx.subTotal)</td>
 			 			  	        		    	   </tr>
 						  	        		    	   <tr>
 			 			  	        		    		    <td style="font-size:12px;font-family:Arial, Helvetica, sans-serif;color: #000000;">Shipping Charges</td>
-						  	        		    		    <td align="right" class="taleft" style="font-size:12px;font-family:Arial, Helvetica, sans-serif;color: #000000;">#if($ctx.shippingCharge == 0)
+						  	        		    		    <td align="right" class="taleft" style="font-size:12px;font-family:Arial, Helvetica, sans-serif;color: #000000;text-align: right;">#if($ctx.shippingCharge == 0)
 Free
 #else
 &#x20b9; $ctx.numberTool.format("#0.00",$ctx.shippingCharge)
@@ -297,7 +298,7 @@ Free
 			 			  	        		    	   </tr>
 						  	        		    	   <tr>
 			 			  	        		    		    <td style="font-size:12px;font-family:Arial, Helvetica, sans-serif;color: #000000;">Convenience Charges</td>
-						  	        		    		    <td align="right" class="taleft" style="font-size:12px;font-family:Arial, Helvetica, sans-serif;color: #000000;">#if($ctx.convenienceChargesVal == 0)
+						  	        		    		    <td align="right" class="taleft" style="font-size:12px;font-family:Arial, Helvetica, sans-serif;color: #000000;text-align: right;">#if($ctx.convenienceChargesVal == 0)
 Free
 #else
 &#x20b9; $ctx.numberTool.format("#0.00",$ctx.convenienceChargesVal)
@@ -312,7 +313,7 @@ Free
 								  	        		   </tr>
 						  	        		    	   <tr>
 			 			  	        		    		    <td class="borTotal" style="font-size:12px;font-weight:bold;font-family:Arial, Helvetica, sans-serif;color: #000000;">Total</td>
-						  	        		    		    <td class="borTotal taleft" align="right"  style="font-size:12px;font-weight:bold;font-family:Arial, Helvetica, sans-serif;color: #000000;">&#x20b9; $ctx.numberTool.format("#0.00",$ctx.totalPrice)</td>
+						  	        		    		    <td class="borTotal taleft" align="right"  style="font-size:12px;font-weight:bold;font-family:Arial, Helvetica, sans-serif;color: #000000;text-align: right;">&#x20b9; $ctx.numberTool.format("#0.00",$ctx.totalPrice)</td>
 			 			  	        		    	   </tr>
 	  	        		    		 				 </tbody>
 	  	        		    		 				</table> 
@@ -324,6 +325,104 @@ Free
  
 		  	        		    	</td>
 		  	        		    </tr>
+		  	        		    
+		  	        		    
+		  	        		    
+		  	        		  <tr>
+                              <td align="left" class="inPad content">
+                                 #if($ctx.count > 0)
+                                   <div style="font-size:12px;font-family:Arial, Helvetica, sans-serif;color: #333333;">
+                                    Your order has been shipped via ${ctx.carrier}. Here's your tracking number: ${ctx.trackingId}. We will notify you via SMS before the package reaches you.
+                                   </div>
+                                 #end 
+                              </td>
+                           </tr>
+                           <tr>
+                              <td>
+                              #if($ctx.count > 0 && ((${ctx.jwlryFrwrdSealDesc} || ${ctx.jwlryFrwrdSealImg}) || (${ctx.jwlryRevSealDesc} || ${ctx.jwlryRevSealImg})))
+                                 <table width="100%">
+                                    <tr>
+                                       <td align="left" valign="top">&nbsp;</td>
+                                       <td align="left" valign="top">
+                                          <table width="100%" border="0" cellspacing="0" cellpadding="0">
+                                             <tbody>
+                                                <tr>
+                                                   <td align="center" valign="top" width="270">
+												   #if(${ctx.jwlryFrwrdSealDesc} || ${ctx.jwlryFrwrdSealImg})
+                                                      <table border="0" cellspacing="0" cellpadding="0" style="border:1px solid #d7d7d7;">
+                                                         <tbody>
+														  #if(${ctx.jwlryFrwrdSealDesc})
+                                                            <tr>
+                                                               <td align="center" valign="middle" height="45" style="font-family:Arial, Helvetica, sans-serif; font-size:11px; font-weight:bold; color:#333333;">${ctx.jwlryFrwrdSealDesc}</td>
+                                                            </tr>
+															#end
+															#if(${ctx.jwlryFrwrdSealImg})
+                                                            <tr>
+                                                               <td align="center" valign="middle" height="25" style="font-family:Arial, Helvetica, sans-serif; font-size:11px; color:#333333;">Your Forward Seal will look like this:</td>
+                                                            </tr>
+                                                            <tr>
+                                                               <td>
+                                                              <!-- <span style="display:block; line-height:0;font-size:0;">${ctx.cmsSlotContents.ForwardSeal}</span> -->
+                                                              <span style="display:block; line-height:0;font-size:0;"><img src="http:${ctx.jwlryFrwrdSealImg}"></span>
+                                 
+                                                               </td>
+                                                               
+                                                            </tr>
+															#end
+                                                         </tbody>
+                                                      </table>
+													 #end
+                                                   </td>
+                                                   <td align="left" valign="top">&nbsp;</td>
+                                                   <td align="center" valign="top" width="270">
+												    #if(${ctx.jwlryRevSealDesc} || ${ctx.jwlryRevSealImg})
+                                                      <table border="0" cellspacing="0" cellpadding="0" style="border:1px solid #d7d7d7;">
+                                                         <tbody>
+														 #if(${ctx.jwlryRevSealDesc})
+                                                            <tr>
+                                                               <td align="center" valign="middle" height="45" style="font-family:Arial, Helvetica, sans-serif; font-size:11px; font-weight:bold; color:#333333;">${ctx.jwlryRevSealDesc}</td>
+                                                            </tr>
+														 #end
+														 #if(${ctx.jwlryRevSealImg})
+                                                            <tr>
+                                                               <td align="center" valign="middle" height="25" style="font-family:Arial, Helvetica, sans-serif; font-size:11px; color:#333333;">Your Reverse Seal will look like this:</td>
+                                                            </tr>
+                                                            <tr>
+                                                               <td>
+                                                              <!-- <span style="display:block; line-height:0;font-size:0;">${ctx.cmsSlotContents.ReverseSeal}</span> -->
+                                                              <span style="display:block; line-height:0;font-size:0;"><img src="http:${ctx.jwlryRevSealImg}"></span>
+                             
+                                                               </td>
+                                                               
+                                                            </tr>
+														 #end
+                                                         </tbody>
+                                                      </table>
+													 #end
+                                                   </td>
+                                                </tr>
+                                             </tbody>
+                                          </table>
+                                       </td>
+                                       <td align="left" valign="top">
+                                          <table width="100%" border="0" cellspacing="0" cellpadding="0">
+                                             <tbody>
+                                                <tr>
+                                                </tr>
+                                             </tbody>
+                                          </table>
+                                       </td>
+                                       <td align="left" valign="top">&nbsp;</td>
+                                    </tr>
+                                 </table>
+                                #end 
+                              </td>
+                           </tr>
+                           
+		  	        		    
+		  	        		    
+		  	        		    
+		  	        		    
 		  	        		    <tr>
 		  	        		      <td>
 		  	        		        <span style="display:block; height: 25px; line-height:0;font-size:0;"></span>

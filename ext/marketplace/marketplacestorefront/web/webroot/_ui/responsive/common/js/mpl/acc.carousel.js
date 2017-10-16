@@ -1,13 +1,13 @@
 ACC.carousel = {
 
 	_autoload: [
-
+	    // "myFun",
 	     "shopTheStyleCarousel",
 	     "shopTheStyleHomeCarousel",
 
 	     "StyleEditCarousel",
 
-	     "myFun",
+	     
 
 	     "shopTheLookCarousel",
 
@@ -30,6 +30,7 @@ ACC.carousel = {
 	     "myReviewCarousel",
 	     "advancedCategoryCarousel",
 	     "pdpProductCarousel",
+	     "AddressCarousel",
 	       
 		["bindCarousel", $(".js-owl-carousel").length >0]
 	],
@@ -150,8 +151,10 @@ ACC.carousel = {
 	 
 		//Desktop view
 		/*TISSQAEE-403 Start*/
+		alert("~~~~~~~"+homePageBannerTimeout);
 		if(typeof homePageBannerTimeout!== "undefined"){
 			var timeout = parseInt(homePageBannerTimeout) * 1000 ;
+			alert("-------------"+timeout);
 			var loop = $(".homepage-banner #rotatingImageTimeout img").length > 1 ? true :false;
 			var dots = $(".homepage-banner #rotatingImageTimeout img").length > 1 ? true :false; 
 			//$(".home-rotatingImage").owlCarousel({
@@ -286,7 +289,21 @@ ACC.carousel = {
 				autoHeight : true,
 				autoplayTimeout: timeout
 			});
-		
+		       //TISPRDT-2196 starts    
+ 		       if ( $(".style_edit_blp .home-rotatingImage").length || $(".style_edit .home-rotatingImage").length) {
+ 			    	 if ($("#rotatingImageTimeout img").length) { 
+ 		    	   		$("#rotatingImageTimeout img").each(function() {
+ 						    if ($(this).attr("data-src")) {
+ 								$(this).attr("src",$(this).attr("data-src"));
+ 								$(this).removeAttr("data-src");
+ 								$(this).load(function(){
+ 									$(this).css("display", "block");
+ 								});
+ 							}	
+ 						});
+ 			    	 }	
+ 		       }
+ 		     //TISPRDT-2196 ends		
 	},
 	
 	/*homePageBannerCarousel: function(count){
@@ -447,9 +464,12 @@ ACC.carousel = {
             }
 		});
 	},
+
 	/*sprint8(TPR-1672 CLP)*/
+
 	offersCarousel: function(){
 		$(".offersCarousel").owlCarousel({
+					/*autoWidth : true,*/	/*add for INC144315059*/	/*commented for TISPRDT-1936*/
 					items:5,
             		loop: true,
             		nav:true,
@@ -492,7 +512,7 @@ ACC.carousel = {
 		itemsMobile : [480,2],*/
 			});
 	},
-	
+
 	shopTheLookCarousel: function(){
 		$(".shop_the_look .shopByLookCarousel").owlCarousel({
 			/*items:2,
@@ -609,16 +629,27 @@ ACC.carousel = {
 	},*/
 	blpTopDealsCarousel: function(){
 		//changes for tpr-599(BLP and CLP changes)
-		var slideBy= $('#slideBy').val()?$('#slideBy').val():1;
-		var autoplayTimeout= $('#autoplayTimeout').val()?$('#autoplayTimeout').val():5000;
-		var autoPlay= $('#autoPlay').val()?$.parseJSON($('#autoPlay').val()):true;
+		//changes for TISPRDT-6243
+		var slideBy= $('.top_deal_blp #slideByOffer').val()?$('.top_deal_blp #slideByOffer').val():1;
+		var autoplayTimeout= $('.top_deal_blp #autoplayTimeoutOffer').val()?$('.top_deal_blp #autoplayTimeoutOffer').val():5000;
+		var autoPlay= $('.top_deal_blp #autoPlayOffer').val()?$.parseJSON($('.top_deal_blp #autoPlayOffer').val()):true;
+		
+		//CAROUSEL AUTOWIDTH ATTRIBUTE
+		var autoWidthAttr = false;
+		if($(window).width()<481){
+			autoWidthAttr = true;
+		} else {
+			autoWidthAttr = false;
+		}
 		$(".top_deal_blp .offersCarousel").owlCarousel({
+					/*autoWidth : true,*/	/*add for INC144315059*/	/*commented for TISPRDT-1936*/
 					items:5,
             		loop: true,
             		nav:false,
             		dots:false,
             		navText:[],
             		autoplay: autoPlay,
+            		autoWidth: autoWidthAttr,
                     autoHeight : false,
                     autoplayTimeout: autoplayTimeout,
                     slideBy: slideBy,
@@ -675,6 +706,7 @@ ACC.carousel = {
 		var autoplayTimeout= $('.top_deal #autoplayTimeoutOffer').val()?$('.top_deal #autoplayTimeoutOffer').val():5000;
 		
 		$(".top_deal .offersCarousel").owlCarousel({
+					autoWidth : true,	/*add for INC144315059*/	/*add for TISPRDT-1936*/
 					items:5,
             		loop: true,
             		nav:false,
@@ -727,6 +759,7 @@ ACC.carousel = {
 		itemsMobile : [480,2],*/
 			});
 	},
+
 	/*sprint8 TPR-1672*/
 	ClpBestOffersCarousel: function(){
 		
@@ -736,6 +769,7 @@ ACC.carousel = {
 		var autoplayTimeout= $('#autoplayTimeoutOffer').val()?$('#autoplayTimeoutOffer').val():5000;
 		
 		$(".best-offers .offersCarousel").owlCarousel({
+					/*autoWidth : true,*/	/*add for INC144315059*/	/*commented for TISPRDT-1936*/
 					items:5,
             		loop: true,
             		nav:false,
@@ -797,6 +831,7 @@ BlpBestOffersCarousel: function(){
 		var autoplayTimeout= $('#autoplayTimeoutOffer').val()?$('#autoplayTimeoutOffer').val():5000;
 		
 		$(".best-offers_blp .offersCarousel").owlCarousel({
+					/*autoWidth : true,*/	/*add for INC144315059*/	/*commented for TISPRDT-1936*/
 					items:5,
             		loop: true,
             		nav:false,
@@ -851,6 +886,7 @@ BlpBestOffersCarousel: function(){
 	},
 	
 	/*sprint8 TPR-1672*/
+
 
 	myStyleCarousel: function(){
 		$(".mystyle-carousel").owlCarousel({
@@ -1065,6 +1101,75 @@ BlpBestOffersCarousel: function(){
     		}	
 		});
 		$(".product-image-container.device .owl-stage-outer").prepend($(".product-image-container.device .wishlist-icon"))
+	},
+	AddressCarousel: function(){
+		if($(".checkTab .addressList_wrapper .address-list").length == 2){
+			$("#address_carousel").addClass("two_address");
+		}
+		if($(".checkTab .addressList_wrapper .address-list").length == 1){
+			$("#address_carousel").addClass("one_address");
+		}
+	      $("#address_carousel").on('initialize.owl.carousel initialized.owl.carousel ' +
+	                'initialize.owl.carousel initialize.owl.carousel ' +
+	                'to.owl.carousel changed.owl.carousel',
+	                function(event) {
+						var items     = event.item.count;     // Number of items
+						var item      = event.item.index;     // Position of the current item
+						
+						if($(window).width() > 1263){
+						var page_no = parseInt(items/3);
+						if(items%3 > 0){
+							page_no = parseInt(items/3) + 1;
+						}
+						var current_page = parseInt(item/3) + 1;
+						if(item%3 > 0){
+							current_page = parseInt(item/3) + 2;
+						}
+						}
+						else{
+							var page_no = parseInt(items/2);
+							if(items%2 > 0){
+								page_no = parseInt(items/2) + 1;
+							}
+							var current_page = parseInt(item/2) + 1;
+							if(item%2 > 0){
+								current_page = parseInt(item/2) + 2;
+							}
+						}
+						$(".page_count").html("<span>"+current_page + " / " + page_no+"</span>");
+	                });
+	              $("#address_carousel").owlCarousel({
+	                items:3,
+					loop: false,
+					nav: ($(".checkTab .addressList_wrapper .address-list").length <= 3)?false:true,
+					dots:false,
+					navText:[],
+					slideBy: 3,
+					margin: 82,
+					responsive : {
+            			// breakpoint from 0 up
+            			0 : {
+            				items:1,
+            				stagePadding: 36,
+            				slideBy: 1,
+            			},
+            			// breakpoint from 768 up
+            			768 : {
+            				items:2,
+            				slideBy: 2,
+            			},
+            			// breakpoint from 1280 up
+            			1280 : {
+            				items:3,
+            			}			
+            		},
+            		onRefresh: function () {
+            			$("#address_carousel").find('div.owl-item').height('');
+                    },
+                    onRefreshed: function () {
+                    	$("#address_carousel").find('div.owl-item').height($("#address_carousel").height());
+                    }
+	              });
 	},
 	
 	/*shopBannerCarousel: function(){

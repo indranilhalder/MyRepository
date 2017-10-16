@@ -1,0 +1,90 @@
+
+#
+# Import the CMS content for the site
+#
+$storePrefix=mpl
+$contentCatalog=$storePrefixContentCatalog
+$productCatalog=mplProductCatalog
+$contentCV=catalogVersion(CatalogVersion.catalog(Catalog.id[default=$contentCatalog]),CatalogVersion.version[default=Staged])[default=$contentCatalog:Staged]
+$productCV=catalogVersion(CatalogVersion.catalog(Catalog.id[default=$productCatalog]),CatalogVersion.version[default=Staged])[default=$productCatalog:Staged]
+$catalogVersion=catalogversion(catalog(id[default=$productCatalog]),version[default='Staged'])[unique=true,default=$productCatalog:Staged]
+UPDATE GenericItem[processor=de.hybris.platform.commerceservices.impex.impl.ConfigPropertyImportProcessor];pk[unique=true]
+$jarResourceCms=$config-jarResourceCmsValue
+$siteResource=jar:com.tisl.lux.setup.InitialDataSystemSetup&/luxuryinitialdata/import/sampledata/contentCatalogs/$contentCatalog
+$picture=media(code, $contentCV);
+
+# Create PageTemplates
+# These define the layout for pages
+# "FrontendTemplateName" is used to define the JSP that should be used to render the page for pages with multiple possible layouts.
+# "RestrictedPageTypes" is used to restrict templates to page types
+
+
+INSERT_UPDATE ContentPage;$contentCV[unique=true];uid[unique=true];name;masterTemplate(uid,$contentCV);label;channel(code);defaultPage[default='true'];approvalStatus(code)[default='approved'];homepage[default='false']
+;;MobileNewHomepageDiscover;MobileApp New Home Page Discover Page;MobileAppGenericPageTemplate;/newDiscover;Mobile
+
+
+
+#Sample data for new discover homepage
+INSERT_UPDATE Media;$contentCV[unique=true];code[unique=true];mime;realfilename;@media[translator=de.hybris.platform.impex.jalo.media.MediaDataTranslator][forceWrite=true];folder(qualifier)[default='images'];description
+;;bannerImage1;text/png;banner_image1.png;$siteResource/images/mobile/banner_image1.png;;Test message 1
+;;bannerImage2;text/png;banner_image2.png;$siteResource/images/mobile/banner_image2.png;;Test message 2
+;;bannerImage3;text/png;banner_image3.png;$siteResource/images/mobile/banner_image3.png;;Test message 3
+;;bannerImage4;text/png;banner_image4.png;$siteResource/images/mobile/banner_image4.png;;Test message 4
+;;bannerImage5;text/png;banner_image5.png;$siteResource/images/mobile/banner_image5.png;;Test message 5
+;;bannerImage6;text/png;banner_image6.png;$siteResource/images/mobile/banner_image6.png;;Test message 6
+
+
+INSERT_UPDATE SimpleBannerComponent;$contentCV[unique=true];uid[unique=true];name;&componentRef;$picture[lang=en];;;;deeplinkType;deeplinkTypeId;deeplinkTypeVal
+;;SampleBannerComponent1;Simple Banner Component;SampleBannerComponent1;bannerImage1;;;;brand;MH1010;Apple
+;;SampleBannerComponent2;Simple Banner Component;SampleBannerComponent2;bannerImage2;;;;category;MSH11;Ethnic Wear
+;;SampleBannerComponent3;Simple Banner Component;SampleBannerComponent3;bannerImage2;;;;category;MSH11;Ethnic Wear
+;;SampleBannerComponent4;Simple Banner Component;SampleBannerComponent4;bannerImage3;;;;category;MSH11;Ethnic Wear
+;;SampleBannerComponent5;Simple Banner Component;SampleBannerComponent5;bannerImage2;;;;category;MSH11;Ethnic Wear
+
+INSERT_UPDATE CMSMediaParagraphComponent ;$contentCV[unique=true];uid[unique=true];name;&componentRef;$picture[lang=en];;;;deeplinkType;deeplinkTypeId;deeplinkTypeVal
+;;CmsMediaParagraph1;Cms Media paragraph;CmsMediaParagraph1;bannerImage1;;;;category;MSH11;Ethnic Wear
+;;CmsMediaParagraph2;Cms Media paragraph;CmsMediaParagraph2;bannerImage2;;;;category;MSH11;Ethnic Wear
+;;CmsMediaParagraph3;Cms Media paragraph;CmsMediaParagraph3;bannerImage3;;;;category;MSH11;Ethnic Wear
+;;CmsMediaParagraph4;Cms Media paragraph;CmsMediaParagraph4;bannerImage4;;;;category;MSH11;Ethnic Wear
+;;CmsMediaParagraph5;Cms Media paragraph;CmsMediaParagraph5;bannerImage5;;;;category;MSH11;Ethnic Wear
+;;CmsMediaParagraph6;Cms Media paragraph;CmsMediaParagraph6;bannerImage6;;;;category;MSH11;Ethnic Wear
+
+INSERT_UPDATE ImageCarouselComponent;$contentCV[unique=true];uid[unique=true];name;collectionItems(uid,$contentCV);componentType(code)
+;;ImageCarouselComponent1;Image Carousel Component;CmsMediaParagraph1,CmsMediaParagraph2,CmsMediaParagraph3;BannerCarousel
+;;ImageCarouselComponent2;Image Carousel Component;CmsMediaParagraph4,CmsMediaParagraph5,CmsMediaParagraph6;Banners3CarouselType
+;;ImageCarouselComponent3;Image Carousel Component;CmsMediaParagraph1,CmsMediaParagraph2,CmsMediaParagraph3;GridCarousel2x2
+;;ImageCarouselComponent4;Image Carousel Component;CmsMediaParagraph4,CmsMediaParagraph5,CmsMediaParagraph6;SliderType
+;;ImageCarouselComponent5;Image Carousel Component;CmsMediaParagraph1,CmsMediaParagraph2,CmsMediaParagraph3;BannerCarousel
+;;ImageCarouselComponent6;Image Carousel Component;CmsMediaParagraph4,CmsMediaParagraph5,CmsMediaParagraph6;Col2BannerLarge
+;;ImageCarouselComponent7;Image Carousel Component;CmsMediaParagraph1,CmsMediaParagraph2,CmsMediaParagraph3;Banners3TypeReverse
+ 
+INSERT_UPDATE CMSParagraphComponent;$contentCV[unique=true];uid[unique=true];content[lang=en];deeplinkType;deeplinkTypeId;deeplinkTypeVal
+;;SampleParagraph;"Section message";category;MSH11;Ethnic Wear
+;;SampleMarketingParagraph;"Marketing message";category;MSH11;Ethnic Wear
+;;SampleParagraph1;"Section Message 8";;;
+;;SampleParagraph2;"Section message 9";;;
+
+INSERT_UPDATE MplProductCollectionComponent;$contentCV[unique=true];uid[unique=true];name;productCodes(code,$productCV);componentType(code)
+;;MplProductCollectionComponent1;Product Carousel Component;MP100000000005744,MP100000000005599;ProductSliderType
+;;MplProductCollectionComponent2;Product List Component;MP100000000005744,MP100000000005599;ProductListType
+
+INSERT_UPDATE ContentSlot;$contentCV[unique=true];uid[unique=true];name;active;cmsComponents(uid,$contentCV)
+;;HeroBannersSlot-MobileNewHomepageDiscover;HeroBanners Slot for MobileNewHomepageDiscover;true;SampleParagraph,ImageCarouselComponent1
+;;BrandStudioSlot-MobileNewHomepageDiscover;BrandStudio Slot for MobileNewHomepageDiscover;true;SampleParagraph,ImageCarouselComponent2
+;;StayQueuedSlot-MobileNewHomepageDiscover;StayQueued Slot for MobileNewHomepageDiscover;true;SampleParagraph,ImageCarouselComponent3
+;;TopDealsSlot-MobileNewHomepageDiscover;TopDeals Slot for MobileNewHomepageDiscover;true;SampleParagraph,ImageCarouselComponent4
+;;WhatToBuyNowSlot-MobileNewHomepageDiscover;WhatToBuyNow Slot for MobileNewHomepageDiscover;true;SampleParagraph,ImageCarouselComponent5
+;;TrendingNowSlot-MobileNewHomepageDiscover;TrendingNow Slot for MobileNewHomepageDiscover;true;SampleParagraph,ImageCarouselComponent6,ImageCarouselComponent7
+;;ProductSliderBannersSlot-MobileNewHomepageDiscover;Product slider Banner Slot for MobileNewHomepageDiscover;true;SampleParagraph1,MplProductCollectionComponent1
+;;ProductListBannersSlot-MobileNewHomepageDiscover;Product List Banner Slot for MobileNewHomepageDiscover;true;SampleParagraph2,MplProductCollectionComponent2
+
+
+INSERT_UPDATE ContentSlotForPage;$contentCV[unique=true];uid[unique=true];position[unique=true];page(uid,$contentCV)[unique=true];contentSlot(uid,$contentCV)[unique=true]
+;;HeroBanners-MobileNewHomepageDiscover;Section1;MobileNewHomepageDiscover;HeroBannersSlot-MobileNewHomepageDiscover
+;;BrandStudio-MobileNewHomepageDiscover;Section2;MobileNewHomepageDiscover;BrandStudioSlot-MobileNewHomepageDiscover
+;;StayQueued-MobileNewHomepageDiscover;Section3;MobileNewHomepageDiscover;StayQueuedSlot-MobileNewHomepageDiscover
+;;TopDeals-MobileNewHomepageDiscover;Section4;MobileNewHomepageDiscover;TopDealsSlot-MobileNewHomepageDiscover
+;;WhatToBuyNow-MobileNewHomepageDiscover;Section5;MobileNewHomepageDiscover;WhatToBuyNowSlot-MobileNewHomepageDiscover
+;;TrendingNow-MobileNewHomepageDiscover;Section6;MobileNewHomepageDiscover;TrendingNowSlot-MobileNewHomepageDiscover
+;;ProductSliderBannersSlot-MobileNewHomepageDiscover;Section9;MobileNewHomepageDiscover;ProductSliderBannersSlot-MobileNewHomepageDiscover
+;;ProductListBannersSlot-MobileNewHomepageDiscover;Section10;MobileNewHomepageDiscover;ProductListBannersSlot-MobileNewHomepageDiscover

@@ -382,7 +382,26 @@ function callRecApi(params, requestURL) {
           requestURL = "normal";
         }
       }
-      updatePage(response, requestURL);
+      //INC144319444
+      if("category_id" in params || site_page_type != 'homepage'){
+    	  updatePage(response, requestURL);
+      }else{
+      $(window).on("scroll",function(){
+    	  if($('.lazy-reached-ia').length){
+    		  var hT = $('.lazy-reached-ia').offset().top,
+  	    hH = $('.lazy-reached-ia').outerHeight(),
+  		wH = $(window).height(),
+  	    wS = $(this).scrollTop();
+  		
+  		if (!$('#ia_products_hot').attr('loaded') && wS > (hT + hH - wH)) {
+  			$('#ia_products_hot').attr('loaded', true);
+  			updatePage(response, requestURL);
+  			
+  		}
+    	  }
+  		
+      });
+      }	         
     }, error: function(jqXHR, textStatus, errorThrown) {
       eT = errorThrown;
 		  tS = textStatus; 

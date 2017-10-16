@@ -3,6 +3,7 @@
  */
 package com.tisl.mpl.marketplacecommerceservices.daos.impl;
 
+import de.hybris.platform.category.model.CategoryModel;
 import de.hybris.platform.commerceservices.search.flexiblesearch.PagedFlexibleSearchService;
 import de.hybris.platform.commerceservices.search.flexiblesearch.data.SortQueryData;
 import de.hybris.platform.commerceservices.search.pagedata.PageableData;
@@ -47,6 +48,11 @@ public class DefaultMplOrderDao implements MplOrderDao
 	private FlexibleSearchService flexibleSearchService;
 	@Autowired
 	private PagedFlexibleSearchService pagedFlexibleSearchService;
+
+	//Sonar fix
+	private static final String PARENT_KEY = "Parent";
+	private static final String SUB_ORDER_KEY = "SubOrder";
+	private static final String NULL_POINTER_OCCURER = "Null pointer Exception occured: ";
 
 
 	@Override
@@ -138,7 +144,7 @@ public class DefaultMplOrderDao implements MplOrderDao
 			final Map queryParams = new HashMap();
 			queryParams.put("customer", customerModel);
 			queryParams.put("store", store);
-			queryParams.put(MarketplacecommerceservicesConstants.TYPE, "Parent");
+			queryParams.put(MarketplacecommerceservicesConstants.TYPE, PARENT_KEY);
 			List sortQueries;
 			if ((status != null) && (status.length > 0))
 			{
@@ -194,7 +200,7 @@ public class DefaultMplOrderDao implements MplOrderDao
 			final Map queryParams = new HashMap();
 			queryParams.put("customer", customerModel);
 			queryParams.put("store", store);
-			queryParams.put(MarketplacecommerceservicesConstants.TYPE, "Parent");
+			queryParams.put(MarketplacecommerceservicesConstants.TYPE, PARENT_KEY);
 			queryParams.put("creationtime", fromDate);
 
 			final List sortQueries = Arrays
@@ -349,7 +355,7 @@ public class DefaultMplOrderDao implements MplOrderDao
 			final String query = "SELECT {om:pk} FROM {Order as om} WHERE {guid} = ?guid and ( {type} = ?type OR {type} IS NULL ) ";
 			final FlexibleSearchQuery flexiQuery = new FlexibleSearchQuery(query);
 			flexiQuery.addQueryParameter("guid", cartModel.getGuid());
-			flexiQuery.addQueryParameter(MarketplacecommerceservicesConstants.TYPE, "Parent");
+			flexiQuery.addQueryParameter(MarketplacecommerceservicesConstants.TYPE, PARENT_KEY);
 			final List<OrderModel> orderModelList = flexibleSearchService.<OrderModel> search(flexiQuery).getResult();
 			return (CollectionUtils.isNotEmpty(orderModelList)) ? orderModelList : null;
 		}
@@ -417,6 +423,115 @@ public class DefaultMplOrderDao implements MplOrderDao
 		catch (final Exception e)
 		{
 			LOG.error("Error while searching  AbstractOrderEntryModel model by transactionId  " + transactionId);
+		}
+		return null;
+
+	}
+
+	//TPR-5225
+	@Override
+	public List<OrderModel> getOrderByMobile(final String mobileNo, final int queryCount, final int transactionLimit)
+	{
+		try
+		{
+			LOG.debug("QueryCount**" + queryCount);
+			//SDI-1193
+			LOG.debug("transactionlimit**" + transactionLimit);
+			final String query = MarketplacecommerceservicesConstants.MOBILE_QUERY;
+			final FlexibleSearchQuery flexiQuery = new FlexibleSearchQuery(query);
+			flexiQuery.addQueryParameter("mobileNo", mobileNo);
+			flexiQuery.addQueryParameter("type", PARENT_KEY);
+			flexiQuery.addQueryParameter("queryCount", String.valueOf(queryCount));
+			flexiQuery.addQueryParameter("transactionLimit", String.valueOf(transactionLimit));
+			final List<OrderModel> listOfData = flexibleSearchService.<OrderModel> search(flexiQuery).getResult();
+			return !listOfData.isEmpty() ? listOfData : null;
+		}
+		catch (final NullPointerException e)
+		{
+			LOG.error(NULL_POINTER_OCCURER, e);
+		}
+		catch (final Exception e)
+		{
+			LOG.error("Error while fetching orderModel by mobileNo  ", e);
+		}
+		return null;
+	}
+
+	//TPR-5225
+	@Override
+	public String getL4CategoryName(final String productCode)
+	{
+		String l4CategoryId = null;
+		try
+		{
+			final String query = MarketplacecommerceservicesConstants.MOBILE_QUERY_FOR_L4CATEGORY;
+			final FlexibleSearchQuery flexiQuery = new FlexibleSearchQuery(query);
+			flexiQuery.addQueryParameter("productCode", productCode);
+			final List<CategoryModel> l4List = flexibleSearchService.<CategoryModel> search(flexiQuery).getResult();
+			if (null != l4List && l4List.size() > 0)
+			{
+				l4CategoryId = l4List.get(0).getName();
+			}
+			if (LOG.isDebugEnabled())
+			{
+				LOG.debug("l4 category id is " + l4CategoryId);
+			}
+		}
+		catch (final NullPointerException e)
+		{
+			LOG.error(NULL_POINTER_OCCURER, e);
+		}
+		catch (final Exception e)
+		{
+			LOG.error("Error while fetching l4 category", e);
+		}
+		return l4CategoryId;
+	}
+
+	//TPR-4841
+	@Override
+	public OrderModel fetchOrderByTransaction(final String transactionId)
+	{
+		try
+		{
+			final String query = MarketplacecommerceservicesConstants.TRANSACTION_QUERY;
+			final FlexibleSearchQuery flexiQuery = new FlexibleSearchQuery(query);
+			flexiQuery.addQueryParameter("transactionId", transactionId);
+			flexiQuery.addQueryParameter("type", SUB_ORDER_KEY);
+			final List<OrderModel> listOfData = flexibleSearchService.<OrderModel> search(flexiQuery).getResult();
+			return !listOfData.isEmpty() ? listOfData.get(0) : null;
+		}
+		catch (final NullPointerException e)
+		{
+			LOG.error(NULL_POINTER_OCCURER, e);
+		}
+		catch (final Exception e)
+		{
+			LOG.error("Error while fetching orderModel by transactionId  ", e);
+		}
+		return null;
+	}
+
+	//TPR-4840
+	@Override
+	public OrderModel getOrderByParentOrder(final String orderRefNo)
+	{
+		try
+		{
+			final String queryString = MarketplacecommerceservicesConstants.PARENT_ORDER_QUERY;
+			final FlexibleSearchQuery fQuery = new FlexibleSearchQuery(queryString);
+			fQuery.addQueryParameter("type", PARENT_KEY);
+			fQuery.addQueryParameter("orderRefNo", orderRefNo);
+			final List<OrderModel> listOfData = flexibleSearchService.<OrderModel> search(fQuery).getResult();
+			return !listOfData.isEmpty() ? listOfData.get(0) : null;
+		}
+		catch (final NullPointerException e)
+		{
+			LOG.error(NULL_POINTER_OCCURER, e);
+		}
+		catch (final Exception e)
+		{
+			LOG.error("Error while fetching orderModel by orderId  ", e);
 		}
 		return null;
 

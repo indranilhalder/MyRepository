@@ -35,19 +35,24 @@ if(loginStatus){
 	}  
 }
 </script>
-
 <%-- <script type="text/javascript"
 	src="${commonResourcePath}/js/plugins/jquery-ui-1.11.2.custom.min.js"></script> --%>
 <%-- bootstrap --%>
 <script type="text/javascript"
 	src="${commonResourcePath}/bootstrap/dist/js/bootstrap.min.js"></script>
+<%-- <script type="text/javascript" src="${themeResourcePath}/js/plpSearch.js"></script> --%>
+
+
+<%-- <script type="text/javascript" src="${themeResourcePath}/js/plpSearch.js"></script> --%>
 
 <c:if test="${fn:contains(requestScope['javax.servlet.forward.request_uri'],'/address-book') or
 		fn:contains(requestScope['javax.servlet.forward.request_uri'],'/new-address') or
 		fn:contains(requestScope['javax.servlet.forward.request_uri'],'/edit-address') or
 		fn:contains(requestScope['javax.servlet.forward.request_uri'],'/delivery-method') or
-		fn:contains(requestScope['javax.servlet.forward.request_uri'],'/my-account')}">
-	<script type="text/javascript" src="${commonResourcePath}/js/addresslandmark.js"></script>
+		fn:contains(requestScope['javax.servlet.forward.request_uri'],'/my-account')or
+		fn:contains(requestScope['javax.servlet.forward.request_uri'],'/single')}">
+	<script type="text/javascript" src="${commonResourcePath}/js/addresslandmark.js"></script><!-- R2.3: One line -->
+
 </c:if>
 <c:if test="${fn:contains(requestScope['javax.servlet.forward.request_uri'],'/my-account')}">
 	<script type="text/javascript" src="${commonResourcePath}/js/moment.min.js"></script>
@@ -72,10 +77,10 @@ if(loginStatus){
 	<script type="text/javascript" src="${headerWidgetJsSource}"></script>
 </c:if>  --%>
 
+
 <c:choose>
 	<c:when test="${isMinificationEnabled}">
 		<compressible:mplminjs/>
-
 	</c:when>
 	<c:otherwise>
 		<compressible:mpljs/>

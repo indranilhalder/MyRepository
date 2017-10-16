@@ -1,0 +1,65 @@
+<div>
+	<table
+		style="margin: 0; padding: 0; table-layout: fixed; border: 1px solid #1E4EBF;"
+		border="1" width="100%" cellspacing="0">
+		<tbody>
+			<tr>
+				<td style="width: 960px; height: 21px;" colspan="3"><cockpit
+						code="TopHeaderSlot" /></td>
+			</tr>
+			<tr>
+				<td style="width: 960px; height: 21px;"><cockpit
+						code="MiddleHeader" /></td>
+				<td style="width: 960px; height: 21px;"><cockpit
+						code="SiteLogo" /></td>
+				<td style="width: 960px; height: 21px;"><cockpit code="MiniCart" /><cockpit code="WishList"/><cockpit
+						code="SearchBox" /></td>
+			</tr>
+			<tr>
+				<td style="width: 960px; height: 21px;" colspan="3"><cockpit
+						code="NavigationBar" /></td>
+			</tr>
+			<tr>
+				<td style="width: 960px; height: 144px;" colspan="3">
+					<table>
+						<tbody>
+							<tr>
+								<td><cockpit code="TopBannerMen" /></td>
+								<td><cockpit code="TopBannerWomen" /></td>
+							</tr>
+						</tbody>
+					</table></td>
+			</tr>
+			<tr>
+				<td style="width: 671px; height: 148px;" colspan="3">
+					<table>
+						<tbody>
+							<tr>
+								<td><cockpit code="LeftContentSlot" /></td>
+								<td><cockpit code="RightContentSlot" /></td>
+							</tr>
+						</tbody>
+					</table>
+				</td>
+			</tr>
+			<tr>
+				<td style="width: 960px; height: 188px;" colspan="3"><cockpit
+						code="HomePageCurosel" /></td>
+			</tr>
+			<tr>
+				<td style="width: 960px; height: 64px;" colspan="3"><cockpit
+						code="WhyShopOnLuxury" /></td>
+			</tr>
+			<tr>
+				<td style="width: 960px; height: 174px;" colspan="3"><cockpit
+						code="EmailFooterHomePage" /></td>
+			</tr>
+			<tr>
+				<td style="width: 960px; height: 174px;" colspan="3"><cockpit
+						code="Footer" /></td>
+			</tr>
+		</tbody>
+	</table>
+	<div class="cmsContentEditor"
+		style="width: 100%; border-top: 2px solid #bbb;"></div>
+</div>

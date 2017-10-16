@@ -501,6 +501,12 @@
 		<property name="formatFactory" ref="formatFactory"/>
 	</bean>	
 	
+	<!--TPR-3809 : Changes for PAN CARD | overriding default order controller -->
+	<alias alias="csOrderController" name="mplDefaultCsOrderController"/>
+	<bean id="mplDefaultCsOrderController" scope="session" parent="defaultCsOrderController" class="com.tisl.mpl.cockpits.cscockpit.widgets.controllers.impl.MplDefaultOrderControllerImpl">
+	<property name="ticketStrategy" ref="csTicketStrategy"/>
+	</bean>
+	
 	<alias alias="csOrderConsignmentsWidgetRenderer" name="marketPlacedefaultCsOrderConsignmentsWidgetRenderer"/>
 	<bean id="marketPlacedefaultCsOrderConsignmentsWidgetRenderer" parent="defaultCsOrderConsignmentsWidgetRenderer" class="com.tisl.mpl.cockpits.cscockpit.widgets.renderers.impl.MarketPlaceConfigurableCsMasterDetailListboxWidgetRenderer">
 		<property name="listConfigurationCode" value="consignmentList"/>
@@ -599,7 +605,34 @@
 		<property name="sessionService" ref="sessionService" />
 	</bean>
 	
+	<!-- Refund    ExpressDelivery Charges  START --> 
+	<alias alias="csRefundExpressDeliveryChargeWidgetConfig" name="defaultCsRefundExpressDeliveryChargeWidgetConfig" />
+	<bean id="defaultCsRefundExpressDeliveryChargeWidgetConfig" parent="csBaseWidgetConfig">
+		<property name="widgetTitle" value="cscockpit.widget.refund.refundExpressDeliveryCharge.create" />
+		<property name="widgetRenderer" ref="csRefundExpressDeliveryChargeWidgetRenderer" />
+		<property name="widgetController" ref="csAssociatedOrderController" />
+		<property name="widgetClass"
+			value="de.hybris.platform.cockpit.widgets.impl.DefaultListboxWidget" />
+		<property name="widgetSclass" value="defaultWidgetFrame csInvoiceWidgetFrame" />
+		<property name="widgetModel">
+			<bean
+				class="de.hybris.platform.cockpit.widgets.models.impl.DefaultListWidgetModel" />
+		</property>
+	</bean>
 	
+	<alias alias="csRefundExpressDeliveryChargeWidgetRenderer" name="marketPlacedefaultCsRefundExpressDeliveryChargeWidgetRenderer" />
+	<bean id="marketPlacedefaultCsRefundExpressDeliveryChargeWidgetRenderer"
+		parent="abstractWidgetRenderer"
+		class="com.tisl.mpl.cockpits.cscockpit.widgets.renderers.impl.MarketPlaceRefundExpressDeliveryChargeWidgetRenderer"
+		scope="request">
+		<property name="listConfigurationCode" value="orderRefundDeliveryChargeListDetail" />
+		<property name="listConfigurationType" value="AbstractOrderEntry" />
+		<property name="commonI18NService" ref="commonI18NService" />
+		<property name="formatFactory" ref="formatFactory" />
+		<property name="sessionService" ref="sessionService" />
+	</bean>
+	
+	<!-- Refund  Express  Delivery Charges  END --> 
 	
 	<!-- Refund Schedule Delivery Charges  Start --> 
 	

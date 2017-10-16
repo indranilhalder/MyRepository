@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:int="http://www.springframework.org/schema/integration"
+	xmlns:file="http://www.springframework.org/schema/integration/file"
+	xmlns:p="http://www.springframework.org/schema/p"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://www.springframework.org/schema/integration
+       http://www.springframework.org/schema/integration/spring-integration.xsd
+       http://www.springframework.org/schema/integration/file
+       http://www.springframework.org/schema/integration/file/spring-integration-file.xsd ">
+
+	<bean id="baseDirectoryMarketplaceRefundSms" class="java.lang.String">
+		<constructor-arg
+			value="#{baseDirectory}/${tenantId}/marketplace-RefundSms" />
+	</bean>
+
+	<file:inbound-channel-adapter id="batchFilesMarketplaceRefundSms"
+		directory="#{baseDirectoryMarketplaceRefundSms}" filename-regex="^(.*)-(\d+)\.csv" comparator="fileOrderComparator">
+		<int:poller fixed-rate="1000" />
+	</file:inbound-channel-adapter>
+
+	<file:outbound-gateway id="batchFilesMarketplaceRefundSmsOutPut"
+		request-channel="batchFilesMarketplaceRefundSms" reply-channel="batchFilesMarketplaceRefundSmsProc"
+		directory="#{baseDirectoryMarketplaceRefundSms}/processing"
+		delete-source-files="true" filename-generator-expression="'internal_' + payload.name" />
+
+	<int:service-activator input-channel="batchFilesMarketplaceRefundSmsProc"
+		output-channel="batchFilesHeaderInit" ref="MarketplaceRefundSmsHeaderSetupTask"
+		method="execute" />
+
+	<bean id="MarketplaceRefundSmsHeaderSetupTask"
+		class="de.hybris.platform.acceleratorservices.dataimport.batch.task.HeaderSetupTask">
+		<property name="catalog" value="mplProductCatalog" />
+		<property name="net" value="false" />
+		<property name="storeBaseDirectory" ref="baseDirectoryMarketplaceRefundSms" />
+	</bean>
+
+ 	<bean id="batchRefundSmsConverterMapping"
+		class="de.hybris.platform.acceleratorservices.dataimport.batch.converter.mapping.impl.DefaultConverterMapping"
+		p:mapping="internal_refund_sms" p:converter-ref="batchRefundSmsAttributeConverter" />
+
+	<bean id="batchRefundSmsAttributeConverter"
+		class="de.hybris.platform.acceleratorservices.dataimport.batch.converter.impl.DefaultImpexConverter">
+		<property name="header">
+			<value>insert_update RefundTransactionEntry;transactionId[unique=true];arnNumber;amount;</value>
+		</property>
+		<property name="impexRow">
+			<value>;{+0};{+1};{+2}</value>
+		</property>
+	</bean>
+</beans>

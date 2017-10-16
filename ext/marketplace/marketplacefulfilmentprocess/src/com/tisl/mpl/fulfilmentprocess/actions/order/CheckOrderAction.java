@@ -18,10 +18,12 @@ import de.hybris.platform.core.model.order.OrderModel;
 import de.hybris.platform.orderprocessing.model.OrderProcessModel;
 import de.hybris.platform.processengine.action.AbstractSimpleDecisionAction;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Required;
 
 import com.tisl.mpl.fulfilmentprocess.CheckOrderService;
+
 
 
 /**
@@ -39,15 +41,15 @@ public class CheckOrderAction extends AbstractSimpleDecisionAction<OrderProcessM
 
 	/*
 	 * @Resource(name = "configurationService") private ConfigurationService configurationService;
-	 * 
+	 *
 	 * @Autowired private MplPaymentAuditDao mplPaymentAuditDao;
-	 * 
+	 *
 	 * /*@Autowired private GenericUtility mplUtility;
-	 * 
+	 *
 	 * @Autowired private EventService eventService;
-	 * 
+	 *
 	 * @Autowired private OrderFacade orderFacade;
-	 * 
+	 *
 	 * @Autowired private MplSendSMSService mplSendSMSService;
 	 */
 
@@ -79,8 +81,16 @@ public class CheckOrderAction extends AbstractSimpleDecisionAction<OrderProcessM
 			}
 			else
 			{
-				setOrderStatus(order, OrderStatus.CHECKED_INVALID);
-				return Transition.NOK;
+				if (order.getPaymentInfo() == null && CollectionUtils.isEmpty(order.getChildOrders()))
+				{
+					setOrderStatus(order, OrderStatus.PAYMENT_PENDING);
+					return Transition.NOK;
+				}
+				else
+				{
+					setOrderStatus(order, OrderStatus.CHECKED_INVALID);
+					return Transition.NOK;
+				}
 			}
 		}
 	}

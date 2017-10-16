@@ -226,13 +226,13 @@
 														<c:choose>
 															<c:when test="${fn:toLowerCase(entry.product.luxIndicator)=='luxury'}">
 																	<a href="${productUrl}"> <product:productPrimaryImage
-																					product="${entry.product}" format="luxuryCartIcon" />
+																					product="${entry.product}" format="luxuryCartIcon" lazyLoad="false" />
 																			</a>
 										
 															</c:when>
 															<c:otherwise>
 																	<a href="${productUrl}"> <product:productPrimaryImage
-																					product="${entry.product}" format="thumbnail" />
+																					product="${entry.product}" format="thumbnail" lazyLoad="false" />
 																			</a>
 																	
 															</c:otherwise>
@@ -243,7 +243,16 @@
 														<h2 class="product-name">
 															<a href="${productUrl}">${entry.product.name}</a>
 														</h2>
-														
+														<!-- TPR-1083 Start-->
+														  <c:if test="${not empty entry.exchangeApplied}">
+		              			<p class="cart_exchange">
+
+			              		<input type="hidden" id="exc_cart" value="${entry.exchangeApplied}">
+			              		<spring:theme code="marketplace.exchange.messageLabel"/>
+   										
+			              		</p>
+			              		<!-- TPR-1083 End-->
+			              		</c:if>														
 
 
 															<p>
@@ -254,8 +263,36 @@
 															</p>
 															<p>
 																<c:if test="${not empty entry.product.size}">
-																	<spring:theme code="text.orderHistory.size" />
-																	&nbsp;${entry.product.size}
+																	<c:choose>
+																		<c:when test="${(not empty entry.product.rootCategory) && (entry.product.rootCategory == 'FineJewellery' || entry.product.rootCategory == 'FashionJewellery') }">
+																			<spring:theme code="product.variant.size.noSize" var="noSize"/>
+																			<c:if test="${entry.product.size ne noSize }">
+																				<spring:eval expression="T(de.hybris.platform.util.Config).getParameter('mpl.jewellery.category')" var="lengthVariant"/>
+																				<c:set var = "categoryListArray" value = "${fn:split(lengthVariant, ',')}" />
+																				<c:forEach items="${entry.product.categories}" var="categories">
+																					<c:forEach items = "${categoryListArray}" var="lengthVariantArray">
+																						<c:if test="${categories.code eq lengthVariantArray}">
+																							<c:set var="lengthSize" value="true"/>
+																						</c:if> 
+																					</c:forEach>
+																				</c:forEach>	  
+																				<c:choose>
+																					<c:when test="${true eq lengthSize}">
+																					  <spring:theme code="product.variant.length.colon"/>
+																										&nbsp;${entry.product.size}
+																					</c:when>
+																					<c:otherwise>
+																					  <spring:theme code="text.orderHistory.size" />
+																										&nbsp;${entry.product.size}
+																					</c:otherwise>
+																				</c:choose>
+																			</c:if>
+																		</c:when>
+																		<c:otherwise>
+																			<spring:theme code="text.orderHistory.size" />
+																										&nbsp;${entry.product.size}
+																		</c:otherwise>
+																	</c:choose>
 																</c:if>
 															</p>
 															<p>
@@ -619,13 +656,13 @@
 																				<c:choose>
 																					<c:when test="${fn:toLowerCase(entryCancel.product.luxIndicator)=='luxury'}">
 																							<a href="${productUrl}"> <product:productPrimaryImage
-																																	product="${entryCancel.product}" format="luxuryCartIcon" />
+																																	product="${entryCancel.product}" format="luxuryCartIcon" lazyLoad="false" />
 																															</a>
 																
 																					</c:when>
 																					<c:otherwise>
 																							<a href="${productUrl}"> <product:productPrimaryImage
-																																	product="${entryCancel.product}" format="thumbnail" />
+																																	product="${entryCancel.product}" format="thumbnail" lazyLoad="false" />
 																															</a>
 																							
 																					</c:otherwise>
@@ -636,7 +673,9 @@
 																				<h2 class="product-name">
 																					<a href="${productUrl}">${entryCancel.product.name}</a>
 																				</h2>
-																				
+																				<!-- 	TPR-6288:Order cancel changes -->
+                                                                               <input type="hidden" id ="dtmPrdtCat" value ="${entryCancel.product.rootCategory}"/>
+                                                                               <input type="hidden" id ="dtmPrdtCode" value ="${entryCancel.product.code}"/>
 																				<p class="item-info">
 																					<span><b><c:if test="${entryCancel.quantity > 1}"><spring:theme code="text.orderHistory.quantity"/>
 																					&nbsp;${entryCancel.quantity}
@@ -644,7 +683,34 @@
 																					</span>
 																					
 																					<c:if test="${not empty entryCancel.product.size}">
-													 									<span><b>Size:</b> ${entryCancel.product.size}</span>
+													 									<%-- <span><b>Size:</b> ${entryCancel.product.size}</span> --%>
+													 									<c:choose>
+																							<c:when test="${(not empty entryCancel.product.rootCategory) && (entryCancel.product.rootCategory == 'FineJewellery' || entryCancel.product.rootCategory == 'FashionJewellery') }">
+																								<spring:theme code="product.variant.size.noSize" var="noSize"/>
+																								<c:if test="${entryCancel.product.size ne noSize}">
+																									<spring:eval expression="T(de.hybris.platform.util.Config).getParameter('mpl.jewellery.category')" var="lengthVariant"/>
+																									<c:set var = "categoryListArray" value = "${fn:split(lengthVariant, ',')}" />
+																									<c:forEach items="${entryCancel.product.categories}" var="categories">
+																										<c:forEach items = "${categoryListArray}" var="lengthVariantArray">
+																											<c:if test="${categories.code eq lengthVariantArray}">
+																												<c:set var="lengthSize" value="true"/>
+																											</c:if> 
+																										</c:forEach>
+																									</c:forEach>	  
+																									<c:choose>
+																										<c:when test="${true eq lengthSize}">
+																										  <span><b><spring:theme code="product.variant.length.colon"/></b> ${entryCancel.product.size}</span>
+																										</c:when>
+																										<c:otherwise>
+																										  <span><b>Size:</b> ${entryCancel.product.size}</span>
+																										</c:otherwise>
+																									</c:choose>
+																								</c:if>
+																							</c:when>
+																							<c:otherwise>
+																								<span><b>Size:</b> ${entryCancel.product.size}</span>
+																							</c:otherwise>
+																						</c:choose>
 																					</c:if>
 																					<c:if test="${not empty entryCancel.product.colour}">
 																						<span><b>Color:</b> ${entryCancel.product.colour}</span>
@@ -747,13 +813,13 @@
 																				<c:choose>
 																					<c:when test="${fn:toLowerCase(entryCancel.product.luxIndicator)=='luxury'}">
 																							<a href="${productUrl}"> <product:productPrimaryImage
-																																	product="${entryCancel.product}" format="luxuryCartIcon" />
+																																	product="${entryCancel.product}" format="luxuryCartIcon" lazyLoad="false" />
 																															</a>
 																
 																					</c:when>
 																					<c:otherwise>
 																							<a href="${productUrl}"> <product:productPrimaryImage
-																																	product="${entryCancel.product}" format="thumbnail" />
+																																	product="${entryCancel.product}" format="thumbnail" lazyLoad="false" />
 																															</a>
 																							
 																					</c:otherwise>
@@ -772,7 +838,34 @@
 																					</span>
 																					
 																					<c:if test="${not empty entryCancel.product.size}">
-													 									<span><b>Size:</b> ${entryCancel.product.size}</span>
+													 									<%-- <span><b>Size:</b> ${entryCancel.product.size}</span> --%>
+													 									<c:choose>
+																							<c:when test="${(not empty entryCancel.product.rootCategory) && (entryCancel.product.rootCategory == 'FineJewellery' || entryCancel.product.rootCategory == 'FashionJewellery') }">
+																								<spring:theme code="product.variant.size.noSize" var="noSize"/>
+																								<c:if test="${entryCancel.product.size ne noSize}">
+																									<spring:eval expression="T(de.hybris.platform.util.Config).getParameter('mpl.jewellery.category')" var="lengthVariant"/>
+																									<c:set var = "categoryListArray" value = "${fn:split(lengthVariant, ',')}" />
+																									<c:forEach items="${entryCancel.product.categories}" var="categories">
+																										<c:forEach items = "${categoryListArray}" var="lengthVariantArray">
+																											<c:if test="${categories.code eq lengthVariantArray}">
+																												<c:set var="lengthSize" value="true"/>
+																											</c:if> 
+																										</c:forEach>
+																									</c:forEach>	  
+																									<c:choose>
+																										<c:when test="${true eq lengthSize}">
+																										  <span><b><spring:theme code="product.variant.length.colon"/></b> ${entryCancel.product.size}</span>
+																										</c:when>
+																										<c:otherwise>
+																										  <span><b>Size:</b> ${entryCancel.product.size}</span>
+																										</c:otherwise>
+																									</c:choose>
+																								</c:if>
+																							</c:when>
+																							<c:otherwise>
+																								<span><b>Size:</b> ${entryCancel.product.size}</span>
+																							</c:otherwise>
+																						</c:choose>
 																					</c:if>
 																					<c:if test="${not empty entryCancel.product.colour}">
 																						<span><b>Color:</b> ${entryCancel.product.colour}</span>

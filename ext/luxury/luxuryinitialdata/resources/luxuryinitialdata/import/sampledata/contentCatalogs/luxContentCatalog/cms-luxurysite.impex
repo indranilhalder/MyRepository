@@ -1,0 +1,434 @@
+#
+# Import the CMS content for the site
+#
+$storePrefix=lux
+$contentCatalog=$storePrefixContentCatalog
+$productCatalog=luxProductCatalog
+$contentCV=catalogVersion(CatalogVersion.catalog(Catalog.id[default=$contentCatalog]),CatalogVersion.version[default=Staged])[default=$contentCatalog:Staged]
+$productCV=catalogVersion(CatalogVersion.catalog(Catalog.id[default=$productCatalog]),CatalogVersion.version[default=Staged])[default=$productCatalog:Staged]
+# Import modulegen config properties into impex macros
+UPDATE GenericItem[processor=de.hybris.platform.commerceservices.impex.impl.ConfigPropertyImportProcessor];pk[unique=true]
+$jarResourceCms=$config-jarResourceCmsValue
+
+
+# Necessary headers for Responsive Tata marketplace Site CMS Content 
+# 
+# 
+$productCatalogName=MarketPlace Product Catalog 
+$picture=media(code, $contentCV) ;
+$siteResource=jar:com.tisl.lux.setup.InitialDataSystemSetup&/luxuryinitialdata/import/sampledata/contentCatalogs/$contentCatalog
+
+
+# 
+# Necessary headers for Responsive_en Tata Marketplace Site CMS Content 
+# 
+$siteResource=jar:com.tisl.lux.setup.InitialDataSystemSetup&/luxuryinitialdata/import/sampledata/contentCatalogs/$contentCatalog
+$medias=medias(code, $contentCV);
+$lang=en
+$mediaContainer=media(qualifier, $contentCV)[lang=$lang];
+
+# Load the storefront context root config param
+$storefrontContextRoot=$config-storefrontContextRoot
+
+
+# Create PageTemplates
+# These define the layout for pages
+# "FrontendTemplateName" is used to define the JSP that should be used to render the page for pages with multiple possible layouts.
+# "RestrictedPageTypes" is used to restrict templates to page types
+INSERT_UPDATE PageTemplate;$contentCV[unique=true];uid[unique=true];name;frontendTemplateName;restrictedPageTypes(code);active[default=true]
+;;luxuryHomePageTemplate;Luxury HomePage Template;;ContentPage;
+
+
+# Add Velocity templates that are in the CMS Cockpit. These give a better layout for editing pages
+# The FileLoaderValueTranslator loads a File into a String property. The templates could also be inserted in-line in this file.
+INSERT_UPDATE PageTemplate;$contentCV[unique=true];uid[unique=true];velocityTemplate[translator=de.hybris.platform.commerceservices.impex.impl.FileLoaderValueTranslator]
+;;luxuryHomePageTemplate;$jarResourceCms/structure-view/structure_luxuryhomePageTemplate.vm
+
+
+# Create ContentSlotNames
+# Each PageTemplate has a number of ContentSlotNames, with a list of valid components for the slot.
+# There are a standard set of slots and a number of specific slots for each template.
+# Standard slots are SiteLogo, HeaderLinks, MiniCart and NavigationBar (that all appear in the Header), and the Footer. 
+
+# Luxury Page Template
+
+
+INSERT_UPDATE ContentSlotName;name[unique=true];template(uid,$contentCV)[unique=true][default='luxuryHomePageTemplate'];validComponentTypes(code);compTypeGroup(code)
+;SiteLogo;;;logo
+;HeaderLinks;;;headerlinks
+;SearchBox;;;searchbox
+;MiniCart;;CMSLinkComponent,TrackOrderHeaderComponent,MyWishListInHeaderComponent,SignInFlyOutComponent;
+;LuxuryNavigationBar;;NavigationBarCollectionComponent;
+
+;Section1;;RotatingImagesComponent;
+;Section2;;SignColComponent; 
+# MplLuxuryShowcaseComponent to be made extending MplShowcaseItemComponent
+;Section3;;MplAdvancedCategoryCarouselComponent;
+;Section4;;VideoComponent;                          
+;Section5;;MplBigPromoBannerComponent;
+;Section6;;ProductCarouselComponent;
+;Section7;;ImageCarouselComponent;
+;Section8;;ImageCarouselComponent;
+;Section9;;CMSParagraphComponent;
+;Footer;;;footer
+;TopHeaderSlot;;;wide
+;BottomHeaderSlot;;BreadcrumbComponent
+
+
+# Create Content Pages
+
+# Site-wide Luxury Homepage
+INSERT_UPDATE ContentPage;$contentCV[unique=true];uid[unique=true];name;masterTemplate(uid,$contentCV);label;defaultPage[default='true'];approvalStatus(code)[default='approved'];homepage[default='false']
+;;luxuryhomepage;Luxury Homepage;luxuryHomePageTemplate;luxuryhomepage
+
+
+
+#####################SAMPLE DATA##########################################
+############################### SECTION 1 START ####################################
+#Added the luxury homepage banner >> creating components
+ 
+INSERT_UPDATE MplBigPromoBannerComponent;$contentCV[unique=true];uid[unique=true];name;SequenceNumber;&componentRef;
+;;luxHompageBannerComponent1;Luxury Default Homepage Banner Component1;1;luxHompageBannerComponent1
+;;luxHompageBannerComponent2;Luxury Default Homepage Banner Component2;2;luxHompageBannerComponent2
+;;luxHompageBannerComponent3;Luxury Default Homepage Banner Component3;3;luxHompageBannerComponent3
+
+####New Homepage change
+INSERT_UPDATE RotatingImagesComponent;$contentCV[unique=true];uid[unique=true];name;banners(&componentRef);&componentRef;timeout
+;;luxuryHomepageCarouselBannerComponent;Luxury Homepage Carousel Banner Component;luxHompageBannerComponent1,luxHompageBannerComponent2,luxHompageBannerComponent3;luxuryHomepageCarouselBannerComponent;10
+
+####New Homepage change
+INSERT_UPDATE ContentSlot;$contentCV[unique=true];uid[unique=true];active;name;cmsComponents(&componentRef)
+;;Section1-HomepageHeroBannerComponent;true;luxury Homepage Banner Slot;luxuryHomepageCarouselBannerComponent
+
+
+# ContentSlotForPage 
+INSERT_UPDATE ContentSlotForPage;$contentCV[unique=true];uid[unique=true];position[unique=true];page(uid,$contentCV)[unique=true][default='luxuryhomepage'];contentSlot(uid,$contentCV)[unique=true];;;
+;;Section1-luxuryHomepage;Section1;;Section1-HomepageHeroBannerComponent;;; 
+
+############################### SECTION 1 END ####################################
+
+############################### SECTION 2 START ####################################
+
+INSERT_UPDATE SignColItemComponent;$contentCV[unique=true];uid[unique=true];name;&componentRef;showByDefault;;
+;;CoachSignatureCollectionItem;Coach Brand Signature Collection;CoachSignatureCollectionItem;false
+;;BurberrySignatureCollectionItem;Burberry Brand Signature Collection;BurberrySignatureCollectionItem;false
+;;MichaelKorsSignatureCollectionItem;MichaelKors Brand Signature Collection;MichaelKorsSignatureCollectionItem;true
+;;PaulSmithSignatureCollectionItem;PaulSmith Brand Signature Collection;PaulSmithSignatureCollectionItem;false
+;;GiorgioArmaniSignatureCollectionItem;GiorgioArmani Brand Signature Collection;GiorgioArmaniSignatureCollectionItem;false
+;;CromaSignatureCollectionItem;Croma Brand Signature Collection;CromaSignatureCollectionItem;false
+
+
+INSERT_UPDATE SignColComponent;$contentCV[unique=true];uid[unique=true];name;&componentRef;showcaseItems(&componentRef)
+;;SignatureCollectionComponent;Signature Collection Component;SignatureCollectionComponent;CoachSignatureCollectionItem,BurberrySignatureCollectionItem,MichaelKorsSignatureCollectionItem,PaulSmithSignatureCollectionItem,GiorgioArmaniSignatureCollectionItem,CromaSignatureCollectionItem
+
+
+
+INSERT_UPDATE ContentSlot;$contentCV[unique=true];uid[unique=true];active;name;cmsComponents(&componentRef)
+;;Section2-signatureCollection;true;luxury Homepage Signature collection Slot;SignatureCollectionComponent
+
+
+INSERT_UPDATE ContentSlotForPage;$contentCV[unique=true];uid[unique=true];position[unique=true];page(uid,$contentCV)[unique=true][default='luxuryhomepage'];contentSlot(uid,$contentCV)[unique=true];;;
+;;Section2-luxuryHomepage;Section2;;Section2-signatureCollection;;; 
+
+
+INSERT_UPDATE Media;mediaFormat(qualifier);code[unique=true];@media[translator=de.hybris.platform.impex.jalo.media.MediaDataTranslator][forceWrite=true];realfilename;altText;mime[default='image/jpeg'];$contentCV[unique=true];folder(qualifier)[default=images]
+;;Coachlogo.png;$siteResource/images/logo/ascot.png;ascot.png;"Coach Logo"
+;;cromalogo.png;$siteResource/images/logo/croma.png;croma.png;"Croma Logo";
+;;Burberrylogo.png;$siteResource/images/logo/nuon.png;nuon.png;"Burberry Logo";
+;;MichaelKorslogo.png;$siteResource/images/logo/landmark.png;landmark.png;"MichaelKors Logo"
+;;PaulSmithlogo.png;$siteResource/images/logo/zara.png;zara.png;"PaulSmith Logo";
+;;GiorgioArmanilogo.png;$siteResource/images/logo/nuon.png;nuon.png;"GiorgioArmani Logo";
+
+#Banners
+;;brandbanner1.png;$siteResource/images/banners/homepage/responsive/brandbanner1.png;brandbanner1.png;;
+;;brandbanner2.png;$siteResource/images/banners/homepage/responsive/brandbanner2.png;brandbanner2.png;;
+;;brandbanner3.png;$siteResource/images/banners/homepage/responsive/brandbanner3.png;brandbanner3.png;;
+;;brandbanner4.png;$siteResource/images/banners/homepage/responsive/brandbanner4.png;brandbanner4.png;;
+;;brandbanner5.png;$siteResource/images/banners/homepage/responsive/brandbanner5.png;brandbanner5.png;;
+;;brandbanner6.png;$siteResource/images/banners/homepage/responsive/brandbanner6.png;brandbanner6.png;;
+
+
+
+UPDATE SignColItemComponent;$contentCV[unique=true];uid[unique=true];logo(code, $contentCV);bannerImage(code, $contentCV)
+;;CoachSignatureCollectionItem;Coachlogo.png;brandbanner1.png
+;;BurberrySignatureCollectionItem;Burberrylogo.png;brandbanner2.png
+;;MichaelKorsSignatureCollectionItem;MichaelKorslogo.png;brandbanner3.png
+;;PaulSmithSignatureCollectionItem;PaulSmithlogo.png;brandbanner6.png
+;;GiorgioArmaniSignatureCollectionItem;GiorgioArmanilogo.png;brandbanner5.png
+;;CromaSignatureCollectionItem;cromalogo.png;brandbanner4.png
+
+
+UPDATE SignColItemComponent;$contentCV[unique=true];uid[unique=true];text;bannerText
+;;CoachSignatureCollectionItem;"<p class='home-brands-you-love-main-image-heading'>Coach Store is exclusive to Tata CLIQ</p><p class='home-brands-you-love-main-image-desc'>With a variety of designs and styles and exclusively designed merchandise </p>";"<p class='text'>Coach Collections SS16</p>:
+<a class='visit-store' href='/store/mpl/en/c/MBH11A00048'>shop now</a>"
+;;BurberrySignatureCollectionItem;"<p class='home-brands-you-love-main-image-heading'>Burberry Store is exclusive to Tata CLIQ</p><p class='home-brands-you-love-main-image-desc'>With a variety of designs and styles and exclusively designed merchandise </p>";"<p class='text'>Burberry Collections SS16</p>:
+<a class='visit-store' href='/store/mpl/en/c/MBH11A00048'>shop now</a>"
+;;MichaelKorsSignatureCollectionItem;"<p class='home-brands-you-love-main-image-heading'>MichaelKors Store is exclusive to Tata CLIQ</p><p class='home-brands-you-love-main-image-desc'>With a variety of designs and styles and exclusively designed merchandise </p>";"<p class='text'>MichaelKors Collections SS16</p>:
+<a class='visit-store' href='/store/mpl/en/c/MBH11A00048'>shop now</a>"
+;;PaulSmithSignatureCollectionItem;"<p class='home-brands-you-love-main-image-heading'>PaulSmith Store is exclusive to Tata CLIQ</p><p class='home-brands-you-love-main-image-desc'>With a variety of designs and styles and exclusively designed merchandise </p>";"<p class='text'>PaulSmith Collections SS16</p>:
+<a class='visit-store' href='/store/mpl/en/c/MBH11A00048'>shop now</a>"
+;;GiorgioArmaniSignatureCollectionItem;"<p class='home-brands-you-love-main-image-heading'>GiorgioArmani Store is exclusive to Tata CLIQ</p><p class='home-brands-you-love-main-image-desc'>With a variety of designs and styles and exclusively designed merchandise </p>";"<p class='text'>GiorgioArmani Collections SS16</p>:
+<a class='visit-store' href='/store/mpl/en/c/MBH11A00048'>shop now</a>"
+;;CromaSignatureCollectionItem;"<p class='home-brands-you-love-main-image-heading'>Croma Store is exclusive to Tata CLIQ</p><p class='home-brands-you-love-main-image-desc'>With a variety of designs and styles and exclusively designed merchandise </p>";"<p class='text'>Croma Collections SS16</p>:
+<a class='visit-store' href='/store/mpl/en/c/MBH11A00048'>shop now</a>"
+
+
+UPDATE SignColItemComponent;$contentCV[unique=true];uid[unique=true];product1(code,$productCV);product2(code,$productCV);product3(code,$productCV);product4(code,$productCV)
+;;CoachSignatureCollectionItem;987654321;987654321;987654321;987654321
+;;BurberrySignatureCollectionItem;987654321;987654321;987654321;987654321
+;;MichaelKorsSignatureCollectionItem;987654321;987654321;987654321;987654321
+;;PaulSmithSignatureCollectionItem;987654321;987654321;987654321;987654321
+;;GiorgioArmaniSignatureCollectionItem;987654321;987654321;987654321;987654321
+;;CromaSignatureCollectionItem;987654321;987654321;987654321;987654321
+
+############################### SECTION 2 END ####################################
+
+
+
+############################### SECTION 3 START ####################################
+#shop your favourite
+
+INSERT_UPDATE MplImageCategoryComponent;$contentCV[unique=true];uid[unique=true];name;category(code,$productCV);&componentRef;isImageFromPCM[default='true']
+;;DressesImageComponent1;Dresses Image Category Component;MSH1010100;DressesImageComponent1
+;;DressesImageComponent2;Tops and TShirts Image CategoryComponent;MSH1111100;DressesImageComponent2
+;;DressesImageComponent3;Skirts Image Category Component;MSH1011100;DressesImageComponent3
+;;DressesImageComponent4;Kurta Kurtis Image Category Component;MSH1012100;DressesImageComponent4
+;;DressesImageComponent5;Smartphones Image Category Component;MSH1210100;DressesImageComponent5
+;;DressesImageComponent6;Tablets Image Category Component;MSH1211;DressesImageComponent6
+
+INSERT_UPDATE MplAdvancedCategoryCarouselComponent;$contentCV[unique=true];uid[unique=true];name;categories(&componentRef);&componentRef;imageSize(code)
+;;LuxShopYourFavouriteComponent;Shop your favourite Carousel Component;DressesImageComponent1,DressesImageComponent2,DressesImageComponent3,DressesImageComponent4,DressesImageComponent5,DressesImageComponent6;LuxShopYourFavouriteComponent;thumbnail
+
+
+INSERT_UPDATE MplAdvancedCategoryCarouselComponent;$contentCV[unique=true];uid[unique=true];title
+;;LuxShopYourFavouriteComponent;Shop Your Favourite
+
+
+INSERT_UPDATE ContentSlot;$contentCV[unique=true];uid[unique=true];active;name;cmsComponents(&componentRef)
+;;Section3-shopCategory;true;luxury Homepage Shop Your Favourite;LuxShopYourFavouriteComponent
+
+
+# ContentSlotForPage 
+INSERT_UPDATE ContentSlotForPage;$contentCV[unique=true];uid[unique=true];position[unique=true];page(uid,$contentCV)[unique=true][default='luxuryhomepage'];contentSlot(uid,$contentCV)[unique=true];;;
+;;Section3-luxuryHomepage;Section3;;Section3-shopCategory;;; 
+
+############################### SECTION 3 END ####################################
+
+############################### SECTION 4 STARTS###################################
+
+ ####  VideoComponent section
+ 
+ 
+INSERT_UPDATE VideoComponent;$contentCV[unique=true];uid[unique=true];name;&componentRef;videoUrl;videoTitle;videoDescription;previewUrl;
+;;LuxuryHomepageVideoComponent;Luxury Homepage Video Component;LuxuryHomepageVideoComponent;"https://www.youtube.com/channel/UCUwkaWqIcl9dYQccKkM0VRA";"What if we could redefine your shopping experience?";"Lorem ipsum dolor sit amet, ex delenit qualisque gubergren vis, illud dicat per cu. Vel ullum ubique iracundia ei. Vim tritani deleniti interpretaris ut, clita democritum ex sit.";"//assetsia.tatacliq.com/medias/sys_master/images/9281187184670.png"
+
+#### create content slot
+
+INSERT_UPDATE ContentSlot;$contentCV[unique=true];uid[unique=true];active;name;cmsComponents(&componentRef)
+;;Section4-videoComponent;true;luxury Homepage Video Component;LuxuryHomepageVideoComponent
+
+# ContentSlotForPage 
+
+INSERT_UPDATE ContentSlotForPage;$contentCV[unique=true];uid[unique=true];position[unique=true];page(uid,$contentCV)[unique=true][default='luxuryhomepage'];contentSlot(uid,$contentCV)[unique=true];;;
+;;Section4-luxuryHomepage;Section4;;Section4-videoComponent;;; 
+
+
+############################### SECTION 4 END ####################################
+
+
+############################### SECTION 5 START ####################################
+
+#INSERT_UPDATE ResponsiveBannerComponent;$contentCV[unique=true];uid[unique=true];name;SequenceNumber;&componentRef;
+#;;luxResponsiveBannerComponent1;Luxury Default Homepage Banner Component1;1;luxResponsiveBannerComponent1
+#;;luxResponsiveBannerComponent2;Luxury Default Homepage Banner Component2;2;luxResponsiveBannerComponent2
+
+
+
+#### Engaggement section using  MplBigPromoBannerComponent
+
+INSERT_UPDATE MplBigPromoBannerComponent;$contentCV[unique=true];uid[unique=true];name;urlLink;SequenceNumber;&componentRef
+;;EngagementImageComponent1;Engagement  Image Component1;/;;EngagementImageComponent1
+;;EngagementImageComponent2;Engagement  Image Component 2;/;;EngagementImageComponent2
+
+
+#### create content slot
+INSERT_UPDATE ContentSlot;$contentCV[unique=true];uid[unique=true];active;name;cmsComponents(&componentRef)
+;;Section5-engagementSection;true;luxury Homepage engagement Banner Slot;EngagementImageComponent1,EngagementImageComponent2
+
+# ContentSlotForPage 
+INSERT_UPDATE ContentSlotForPage;$contentCV[unique=true];uid[unique=true];position[unique=true];page(uid,$contentCV)[unique=true][default='luxuryhomepage'];contentSlot(uid,$contentCV)[unique=true];;;
+;;section5-luxuryHomepage;Section5;;Section5-engagementSection;;; 
+
+############################### SECTION 5 ends ####################################
+
+############################### SECTION 6 START ####################################
+# Product Carousel for  Featured Product
+
+INSERT_UPDATE ProductCarouselComponent;$contentCV[unique=true];uid[unique=true];name;products(code,$productCV);scroll(code);popup;&componentRef
+;;LuxuryFeaturedProductCarouselComponent;Featured Products Component;987654321,987654322;allVisible;false;LuxuryFeaturedProductCarouselComponent
+
+INSERT_UPDATE ProductCarouselComponent;$contentCV[unique=true];uid[unique=true];title
+;;LuxuryFeaturedProductCarouselComponent;Featured Products
+
+INSERT_UPDATE ContentSlot;$contentCV[unique=true];uid[unique=true];active;name;cmsComponents(&componentRef)
+;;Section6-featuredProduct;true;luxury Homepage Featured Product;LuxuryFeaturedProductCarouselComponent
+
+# ContentSlotForPage 
+INSERT_UPDATE ContentSlotForPage;$contentCV[unique=true];uid[unique=true];position[unique=true];page(uid,$contentCV)[unique=true][default='luxuryhomepage'];contentSlot(uid,$contentCV)[unique=true];;;
+;;Section6-luxuryHomepage;Section6;;Section6-featuredProduct;;; 
+
+############################### SECTION 6 END ####################################
+
+############################### SECTION 7 START ####################################
+
+INSERT_UPDATE Media;mediaFormat(qualifier);code[unique=true];@media[translator=de.hybris.platform.impex.jalo.media.MediaDataTranslator][forceWrite=true];realfilename;altText;mime[default='image/png'];$contentCV[unique=true];folder(qualifier)[default=images];
+;;ascot.png;$siteResource/images/logo/ascot.png;ascot.png;"ascot";
+;;Burberrylogo.png;$siteResource/images/logo/Burberrylogo.png;Burberrylogo.png;"Burberrylogo";
+;;Coachlogo.png;$siteResource/images/logo/Coachlogo.png;Coachlogo.png;"Coachlogo";
+;;croma.png;$siteResource/images/logo/croma.png;croma.png;"croma";
+;;GiorgioArmanilogo.png;$siteResource/images/logo/GiorgioArmanilogo.png;GiorgioArmanilogo.png;"GiorgioArmanilogo";
+;;L.O.V.png;$siteResource/images/logo/L.O.V.png;L.O.V.png;"L.O.V";
+;;landmark.png;$siteResource/images/logo/landmark.png;landmark.png;"landmark";
+;;MichaelKorslogo.png;$siteResource/images/logo/MichaelKorslogo.png;MichaelKorslogo.png;"MichaelKorslogo";
+;;nuon.png;$siteResource/images/logo/nuon.png;nuon.png;"nuon";
+;;PaulSmithlogo.png;$siteResource/images/logo/PaulSmithlogo.png;PaulSmithlogo.png;"PaulSmithlogo";
+;;titan.png;$siteResource/images/logo/titan.png;titan.png;"titan";
+;;zara.png;$siteResource/images/logo/zara.png;zara.png;"zara";
+
+
+INSERT_UPDATE CMSMediaParagraphComponent;$contentCV[unique=true];uid[unique=true];name;&componentRef;content;$picture;url
+;;Brand1Component;Brand1 Component;Brand1Component;;ascot.png;"#";
+;;Brand2Component;Brand2 Component;Brand2Component;;Burberrylogo.png;"#";
+;;Brand3Component;Brand3 Component;Brand3Component;;Coachlogo.png;"#";
+;;Brand4Component;Brand4 Component;Brand4Component;;croma.png;"#";
+;;Brand5Component;Brand5 Component;Brand5Component;;GiorgioArmanilogo.png;"#";
+;;Brand6Component;Brand6 Component;Brand6Component;;L.O.V.png;"#";
+;;Brand7Component;Brand7 Component;Brand7Component;;landmark.png;"#";
+;;Brand8Component;Brand8 Component;Brand8Component;;MichaelKorslogo.png;"#";
+;;Brand9Component;Brand9 Component;Brand9Component;;nuon.png;"#";
+;;Brand10Component;Brand10 Component;Brand10Component;;PaulSmithlogo.png;"#";
+;;Brand11Component;Brand11 Component;Brand11Component;;titan.png;"#";
+;;Brand12Component;Brand12 Component;Brand12Component;;zara.png;"#";
+
+#BestPicksCarouselComponent
+INSERT_UPDATE ImageCarouselComponent;$contentCV[unique=true];uid[unique=true];name;title;&componentRef;collectionItems(&componentRef)
+;;LuxShopByCarouselComponent;Shop By Carousel Component;Best Picks;LuxShopByCarouselComponent;Brand1Component,Brand2Component,Brand3Component,Brand4Component,Brand5Component,Brand6Component,Brand7Component,Brand8Component,Brand9Component,Brand10Component,Brand11Component,Brand12Component
+
+
+INSERT_UPDATE ContentSlot;$contentCV[unique=true];uid[unique=true];active;name;cmsComponents(&componentRef)
+;;Section7-shopby;true;Shop By;LuxShopByCarouselComponent;LuxShopByCarouselComponent
+
+# ContentSlotForPage 
+INSERT_UPDATE ContentSlotForPage;$contentCV[unique=true];uid[unique=true];position[unique=true];page(uid,$contentCV)[unique=true][default='luxuryhomepage'];contentSlot(uid,$contentCV)[unique=true];;;
+;;Section7-luxuryHomepage;Section7;;Section7-shopby;;; 
+
+
+
+
+
+############################### SECTION 7 END ####################################
+
+
+############################### SECTION 8 Start ####################################
+INSERT_UPDATE Media;mediaFormat(qualifier);code[unique=true];@media[translator=de.hybris.platform.impex.jalo.media.MediaDataTranslator][forceWrite=true];realfilename;altText;mime[default='image/png'];$contentCV[unique=true];folder(qualifier)[default=images];
+;;ascot.png;$siteResource/images/logo/ascot.png;ascot.png;"ascot";
+;;Burberrylogo.png;$siteResource/images/logo/Burberrylogo.png;Burberrylogo.png;"Burberrylogo";
+;;Coachlogo.png;$siteResource/images/logo/Coachlogo.png;Coachlogo.png;"Coachlogo";
+;;croma.png;$siteResource/images/logo/croma.png;croma.png;"croma";
+
+
+
+INSERT_UPDATE CMSMediaParagraphComponent;$contentCV[unique=true];uid[unique=true];name;content;$picture;url;&componentRef
+;;facebookImage1;;;ascot.png;/;facebookImage1
+;;facebookImage2;;;Burberrylogo.png;/;facebookImage2
+;;facebookImage3;;;Coachlogo.png;/;facebookImage3
+;;facebookImage4;;;croma.png;/;facebookImage4
+
+INSERT_UPDATE CMSMediaParagraphComponent;$contentCV[unique=true];uid[unique=true];name;content;$picture;url;&componentRef
+;;twitterImage1;;;ascot.png;/;twitterImage1
+;;twitterImage2;;;Burberrylogo.png;/;twitterImage2
+;;twitterImage3;;;Coachlogo.png;/;twitterImage3
+;;twitterImage4;;;croma.png;/;twitterImage4
+
+
+INSERT_UPDATE CMSMediaParagraphComponent;$contentCV[unique=true];uid[unique=true];name;content;$picture;url;&componentRef
+;;googlePlusImage1;;;ascot.png;/;googlePlusImage1
+;;googlePlusImage2;;;Burberrylogo.png;/;googlePlusImage2
+;;googlePlusImage3;;;Coachlogo.png;/;googlePlusImage3
+;;googlePlusImage4;;;croma.png;/;googlePlusImage4
+
+
+INSERT_UPDATE CMSMediaParagraphComponent;$contentCV[unique=true];uid[unique=true];name;content;$picture;url;&componentRef
+;;instaImage1;;;ascot.png;/;instaImage1
+;;instaImage2;;;Burberrylogo.png;/;instaImage2
+;;instaImage3;;;Coachlogo.png;/;instaImage3
+;;instaImage4;;;croma.png;/;instaImage4
+
+
+#BestPicksCarouselComponent
+INSERT_UPDATE ImageCarouselComponent;$contentCV[unique=true];uid[unique=true];name;title;&componentRef;collectionItems(&componentRef)
+;;LuxSocialFeedFacebook;Social Feed Facebook;;LuxSocialFeedFacebook;facebookImage1,facebookImage2,facebookImage3,facebookImage4
+;;LuxSocialFeedTwitter;Social Feed Twitter;;LuxSocialFeedTwitter;twitterImage1,twitterImage1,twitterImage3,twitterImage4
+;;LuxSocialFeedGooglePlus;Social Feed Google+;;LuxSocialFeedGooglePlus;googlePlusImage1,googlePlusImage2,googlePlusImage3,googlePlusImage4
+;;LuxSocialFeedInstagram;Social Feed Instagram;;LuxSocialFeedInstagram;instaImage1,instaImage2,instaImage3,instaImage4
+
+
+INSERT_UPDATE ContentSlot;$contentCV[unique=true];uid[unique=true];active;name;cmsComponents(&componentRef)
+;;Section8-socialFeed;true;Social Feed ;LuxSocialFeedFacebook,LuxSocialFeedTwitter,LuxSocialFeedGooglePlus,LuxSocialFeedInstagram
+
+# ContentSlotForPage 
+INSERT_UPDATE ContentSlotForPage;$contentCV[unique=true];uid[unique=true];position[unique=true];page(uid,$contentCV)[unique=true][default='luxuryhomepage'];contentSlot(uid,$contentCV)[unique=true];;;
+;;Section8-luxuryHomepage;Section8;;Section8-socialFeed;;;
+
+############################### SECTION 8 END ####################################
+
+############################### SECTION 9 START ####################################
+
+INSERT_UPDATE  CMSParagraphComponent;$contentCV[unique=true];uid[unique=true];name;content[lang=$lang];&componentRef;;;;
+;;LuxuryParagraphComponent;Luxury social feed Header Component;"#TataCliQ Luxury Homepage";LuxuryParagraphComponent;;;;
+
+
+#### create content slot
+INSERT_UPDATE ContentSlot;$contentCV[unique=true];uid[unique=true];active;name;cmsComponents(&componentRef)
+;;Section9-socialFeedHeaderSection;true;Luxury social feed Header slot;LuxuryParagraphComponent
+
+# ContentSlotForPage 
+INSERT_UPDATE ContentSlotForPage;$contentCV[unique=true];uid[unique=true];position[unique=true];page(uid,$contentCV)[unique=true][default='luxuryhomepage'];contentSlot(uid,$contentCV)[unique=true];;;
+;;section9-luxuryHomepage;Section9;;Section9-socialFeedHeaderSection;;; 
+
+############################### SECTION 9 END ####################################
+
+############################### SEARCHBOX START ####################################
+INSERT_UPDATE MplEnhancedSearchBoxComponent;$contentCV[unique=true];uid[unique=true];name;&componentRef;maxProducts;maxSuggestions;minCharactersBeforeRequest;searchBoxCategories(code, $productCV)
+;;luxurySearchBox;Luxury Enhanced  Search Box Component;luxurySearchBox;2;3;3;
+
+INSERT_UPDATE ContentSlot;$contentCV[unique=true];uid[unique=true];name;cmsComponents(&componentRef)
+;;searchBoxSlot;Luxury Search Slot;luxurySearchBox
+
+# ContentSlotForPage 
+INSERT_UPDATE ContentSlotForPage;$contentCV[unique=true];uid[unique=true];position[unique=true];page(uid,$contentCV)[unique=true][default='luxuryhomepage'];contentSlot(uid,$contentCV)[unique=true];;;
+;;searchBox-luxuryHomepage;SearchBox;;searchBoxSlot;;; 
+
+
+############################### SEARCHBOX END ####################################
+
+############################### SITE LOGO COMPONENT  START####################################
+
+# Site Logo Component
+INSERT_UPDATE SimpleBannerComponent;$contentCV[unique=true];uid[unique=true];name;&componentRef;urlLink
+;;luxurySiteLogoComponent;Luxury Site Logo Component;luxurySiteLogoComponent;"/"
+
+INSERT_UPDATE ContentSlot;$contentCV[unique=true];uid[unique=true];name;cmsComponents(&componentRef)
+;;siteLogoSlot;Luxury Site Logo Slot;luxurySiteLogoComponent
+
+# ContentSlotForPage 
+INSERT_UPDATE ContentSlotForPage;$contentCV[unique=true];uid[unique=true];position[unique=true];page(uid,$contentCV)[unique=true][default='luxuryhomepage'];contentSlot(uid,$contentCV)[unique=true];;;
+;;siteLogo-luxuryHomepage;SiteLogo;;siteLogoSlot;;; 
+
+############### update media for site logo ##########################
+# Site Logo Component
+UPDATE SimpleBannerComponent;$contentCV[unique=true];uid[unique=true];$picture[lang=$lang]
+;;luxurySiteLogoComponent;sitelogo.png
+
+############################### SITE LOGO COMPONENT  END####################################
+

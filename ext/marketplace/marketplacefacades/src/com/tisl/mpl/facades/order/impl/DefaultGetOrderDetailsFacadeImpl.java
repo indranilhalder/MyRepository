@@ -13,6 +13,7 @@ import de.hybris.platform.commerceservices.customer.CustomerAccountService;
 import de.hybris.platform.commerceservices.strategies.CheckoutCustomerStrategy;
 import de.hybris.platform.commercewebservicescommons.dto.store.PointOfServiceWsDTO;
 import de.hybris.platform.commercewebservicescommons.mapping.DataMapper;
+import de.hybris.platform.core.model.JewelleryInformationModel;
 import de.hybris.platform.core.model.order.AbstractOrderEntryModel;
 import de.hybris.platform.core.model.order.OrderModel;
 import de.hybris.platform.core.model.product.ProductModel;
@@ -36,6 +37,7 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -60,6 +62,8 @@ import com.tisl.mpl.facades.account.register.impl.DefaultMplOrderFacade;
 import com.tisl.mpl.facades.constants.MarketplaceFacadesConstants;
 import com.tisl.mpl.facades.data.AWBResponseData;
 import com.tisl.mpl.facades.data.StatusRecordData;
+import com.tisl.mpl.facades.product.data.MarketplaceDeliveryModeData;
+import com.tisl.mpl.marketplacecommerceservices.service.MplJewelleryService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplOrderService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplSellerInformationService;
 import com.tisl.mpl.marketplacecommerceservices.service.OrderModelService;
@@ -72,6 +76,7 @@ import com.tisl.mpl.wsdto.OrderDataWsDTO;
 import com.tisl.mpl.wsdto.OrderProductWsDTO;
 import com.tisl.mpl.wsdto.OrderTrackingWsDTO;
 import com.tisl.mpl.wsdto.Ordershipmentdetailstdto;
+import com.tisl.mpl.wsdto.SelectedDeliveryModeWsDTO;
 import com.tisl.mpl.wsdto.StatusResponseDTO;
 import com.tisl.mpl.wsdto.StatusResponseListDTO;
 import com.tisl.mpl.wsdto.StatusResponseMessageDTO;
@@ -118,9 +123,20 @@ public class DefaultGetOrderDetailsFacadeImpl implements GetOrderDetailsFacade
 
 	@Autowired
 	private DefaultMplOrderFacade defaultmplOrderFacade;
-    @Autowired
+	@Autowired
 	private MplDeliveryAddressFacade mplDeliveryAddressFacade;
 
+	@Resource(name = "mplJewelleryService")
+	private MplJewelleryService jewelleryService;
+
+
+	
+	//TPR-5975 starts here
+	public static final String ZERODELCOST = "0.0".intern();//IQA
+
+	//TPR-5975 ends here
+
+	
 	/**
 	 * @description method is called to fetch the details of a particular orders for the user
 	 * @param orderDetails
@@ -207,6 +223,19 @@ public class DefaultGetOrderDetailsFacadeImpl implements GetOrderDetailsFacade
 				{
 					orderTrackingWsDTO.setTotalDiscounts(orderDetails.getTotalDiscounts().getValue().toString());
 				}
+
+				//TPR-6117 exchange field added
+				//				if (CollectionUtils.isNotEmpty(orderDetails.getEntries()))
+				//				{
+				//					for (final OrderEntryData entry : orderDetails.getEntries())
+				//					{
+				//						if (StringUtils.isNotEmpty(entry.getExchangeApplied()))
+				//						{
+				//							orderTrackingWsDTO.setExchangeId(entry.getExchangeApplied());
+				//						}
+				//					}
+				//				}
+
 				if (CollectionUtils.isNotEmpty(orderDetails.getSellerOrderList()))
 				{
 					for (final OrderData subOrder : orderDetails.getSellerOrderList())
@@ -298,6 +327,13 @@ public class DefaultGetOrderDetailsFacadeImpl implements GetOrderDetailsFacade
 									orderproductdto.setAssociatedProducts(entry.getAssociatedItems());
 								}
 
+								//TISJEW-3519 && TPR-1083 && TPR-6117
+								if (StringUtils.isNotEmpty(entry.getExchangeApplied()))
+								{
+									orderproductdto.setExchangeId(entry.getExchangeApplied());
+								}
+
+
 								//final ProductModel productModel = productService.getProductForCode(entry.getProduct().getCode());
 								final ProductModel productModel = mplOrderService.findProductsByCode(product.getCode());
 								if (productModel instanceof PcmProductVariantModel)
@@ -353,9 +389,31 @@ public class DefaultGetOrderDetailsFacadeImpl implements GetOrderDetailsFacade
 
 
 								SellerInformationModel sellerInfoModel = null;
+								String ussid = "";
 								if (StringUtils.isNotEmpty(entry.getSelectedUssid()))
 								{
-									sellerInfoModel = getMplSellerInformationService().getSellerDetail(entry.getSelectedUssid());
+									//sellerInfoModel = getMplSellerInformationService().getSellerDetail(entry.getSelectedUssid());
+									if (((MarketplacecommerceservicesConstants.FINEJEWELLERY)).equalsIgnoreCase(productModel
+											.getProductCategoryType()))
+									{
+										final List<JewelleryInformationModel> jewelleryInfo = jewelleryService
+												.getJewelleryInfoByUssid(entry.getSelectedUssid());
+										if (CollectionUtils.isNotEmpty(jewelleryInfo))
+										{
+											sellerInfoModel = getMplSellerInformationService().getSellerDetail(
+													jewelleryInfo.get(0).getPCMUSSID());
+											ussid = jewelleryInfo.get(0).getUSSID();
+										}
+										else
+										{
+											LOG.error("No entry in JewelleryInformationModel for ussid " + entry.getSelectedUssid());
+										}
+									}
+									else
+									{
+										sellerInfoModel = getMplSellerInformationService().getSellerDetail(entry.getSelectedUssid());
+										ussid = sellerInfoModel.getUSSID();
+									}
 								}
 								if (sellerInfoModel != null
 										&& sellerInfoModel.getRichAttribute() != null
@@ -369,8 +427,11 @@ public class DefaultGetOrderDetailsFacadeImpl implements GetOrderDetailsFacade
 										orderproductdto.setFulfillment(fulfillmentType);
 									}
 									//Seller info
-									if (sellerInfoModel.getUSSID() != null
-											&& sellerInfoModel.getUSSID().equalsIgnoreCase(entry.getSelectedUssid()))
+									/*
+									 * if (sellerInfoModel.getUSSID() != null &&
+									 * sellerInfoModel.getUSSID().equalsIgnoreCase(entry.getSelectedUssid()))
+									 */
+									if (sellerInfoModel.getUSSID() != null && entry.getSelectedUssid().equalsIgnoreCase(ussid))
 									{
 										if (null != sellerInfoModel.getSellerID())
 										{
@@ -460,6 +521,7 @@ public class DefaultGetOrderDetailsFacadeImpl implements GetOrderDetailsFacade
 											}
 											/*
 											 * if (null != sellerEntry.getReplacement()) {
+
 											 * orderproductdto.setReplacement(sellerEntry.getReplacement());
 											 *
 											 * }
@@ -527,6 +589,7 @@ public class DefaultGetOrderDetailsFacadeImpl implements GetOrderDetailsFacade
 							{
 								orderproductdto.setSerialno(MarketplacecommerceservicesConstants.EMPTY);
 							}
+
 							//Set the transaction id
 							if (entry.getTransactionId() != null)
 							{
@@ -759,6 +822,7 @@ public class DefaultGetOrderDetailsFacadeImpl implements GetOrderDetailsFacade
 							 * if (null != orderproductdto.getUSSID()) {
 							 *
 							 * orderproductdto.setSerialno(orderproductdto.getUSSID()); } else {
+
 							 * orderproductdto.setSerialno(MarketplacecommerceservicesConstants.NA); }
 							 *
 							 * }
@@ -872,6 +936,7 @@ public class DefaultGetOrderDetailsFacadeImpl implements GetOrderDetailsFacade
 										}
 										/*
 										 * if (null != sellerEntry.getReplacement()) {
+
 										 * orderproductdto.setReplacement(sellerEntry.getReplacement());
 										 *
 										 * }
@@ -1273,6 +1338,7 @@ public class DefaultGetOrderDetailsFacadeImpl implements GetOrderDetailsFacade
 	 * trackingData.setShipmentStatus(orderStatusCode.getResponseStatus());
 	 * trackingData.setResponseCode(orderStatusCode.getStatusCode());
 	 * trackingData.setIsEnabled(orderStatusCode.getEnable().booleanValue()); statusRecords = new ArrayList<>();
+
 	 * statusRecord = new StatusRecordData();
 	 *
 	 * if (null != consignment) { statusRecord.setDate(smdfDate.format(consignment.getStatusDate()));
@@ -1281,6 +1347,7 @@ public class DefaultGetOrderDetailsFacadeImpl implements GetOrderDetailsFacade
 	 * statusRecord.setTime(smdfTime.format(subOrder.getCreated())); }
 	 * statusRecord.setStatusDescription(orderStatusCode.getStatusMessage()); statusRecords.add(statusRecord);
 	 * trackingData.setStatusRecords(statusRecords); } catch (final Exception e) { throw new
+
 	 * EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000); }
 	 *
 	 * return trackingData; }
@@ -1596,7 +1663,7 @@ public class DefaultGetOrderDetailsFacadeImpl implements GetOrderDetailsFacade
 	}
 
 	@Override
-	public OrderTrackingWsDTO getOrderDetailsWithTracking(final HttpServletRequest request,final String orderCode)
+	public OrderTrackingWsDTO getOrderDetailsWithTracking(final HttpServletRequest request, final String orderCode)
 	{
 		final OrderTrackingWsDTO orderTrackingWsDTO = new OrderTrackingWsDTO();
 		final List<OrderProductWsDTO> orderproductdtos = new ArrayList<OrderProductWsDTO>();
@@ -1611,6 +1678,11 @@ public class DefaultGetOrderDetailsFacadeImpl implements GetOrderDetailsFacade
 		ConsignmentModel consignmentModel = null;
 		List<OrderData> subOrderList = null;
 		SellerInformationModel sellerInfoModel = null;
+        	/* TPR-5975 starts here */
+		MarketplaceDeliveryModeData mplDeliveryMode = null;
+		/* TPR-5975 ends here */
+		String ussid = "";
+		boolean isFineJwlry = false;
 		try
 		{
 			//TPR-815
@@ -1651,6 +1723,20 @@ public class DefaultGetOrderDetailsFacadeImpl implements GetOrderDetailsFacade
 				{
 					orderTrackingWsDTO.setOrderId(orderDetail.getCode());
 				}
+
+				//Removed due to TISJEW-3519
+				//TPR-6117 exchange field added
+				//				if (CollectionUtils.isNotEmpty(orderDetail.getEntries()))
+				//				{
+				//					for (final OrderEntryData entry : orderDetail.getEntries())
+				//					{
+				//						if (StringUtils.isNotEmpty(entry.getExchangeApplied()))
+				//						{
+				//							orderTrackingWsDTO.setExchangeId(entry.getExchangeApplied());
+				//						}
+				//					}
+				//				}
+
 				//not required
 				//orderTrackingWsDTO.setCancelflag(MarketplacecommerceservicesConstants.YES);
 				if (null != orderDetail.getDeliveryAddress()
@@ -1802,6 +1888,7 @@ public class DefaultGetOrderDetailsFacadeImpl implements GetOrderDetailsFacade
 								}
 								//Delivery date is the final delivery date
 								/*
+
 								 * if (null != entry.getMplDeliveryMode()) {
 								 *
 								 * if (null != entry.getMplDeliveryMode().getDescription() &&
@@ -1847,9 +1934,36 @@ public class DefaultGetOrderDetailsFacadeImpl implements GetOrderDetailsFacade
 								 */
 
 								//}
+								//TISJEW-3519 && TPR-1083 && TPR-6117
+								if (StringUtils.isNotEmpty(entry.getExchangeApplied()))
+								{
+									orderproductdto.setExchangeId(entry.getExchangeApplied());
+								}
 								if (StringUtils.isNotEmpty(entry.getSelectedUssid()))
 								{
-									sellerInfoModel = getMplSellerInformationService().getSellerDetail(entry.getSelectedUssid());
+									//sellerInfoModel = getMplSellerInformationService().getSellerDetail(entry.getSelectedUssid());
+									if (((MarketplacecommerceservicesConstants.FINEJEWELLERY)).equalsIgnoreCase(productModel
+											.getProductCategoryType()))
+									{
+										isFineJwlry = true;
+										final List<JewelleryInformationModel> jewelleryInfo = jewelleryService
+												.getJewelleryInfoByUssid(entry.getSelectedUssid());
+										if (CollectionUtils.isNotEmpty(jewelleryInfo))
+										{
+											sellerInfoModel = getMplSellerInformationService().getSellerDetail(
+													jewelleryInfo.get(0).getPCMUSSID());
+											ussid = jewelleryInfo.get(0).getUSSID();
+										}
+										else
+										{
+											LOG.error("No entry in JewelleryInformationModel for ussid " + entry.getSelectedUssid());
+										}
+									}
+									else
+									{
+										sellerInfoModel = getMplSellerInformationService().getSellerDetail(entry.getSelectedUssid());
+										ussid = sellerInfoModel.getUSSID();
+									}
 								}
 								if (sellerInfoModel != null
 										&& sellerInfoModel.getRichAttribute() != null
@@ -1863,8 +1977,11 @@ public class DefaultGetOrderDetailsFacadeImpl implements GetOrderDetailsFacade
 										orderproductdto.setFulfillment(fulfillmentType);
 									}
 									//Seller info
-									if (sellerInfoModel.getUSSID() != null
-											&& sellerInfoModel.getUSSID().equalsIgnoreCase(entry.getSelectedUssid()))
+									/*
+									 * if (sellerInfoModel.getUSSID() != null &&
+									 * sellerInfoModel.getUSSID().equalsIgnoreCase(entry.getSelectedUssid()))
+									 */
+									if (sellerInfoModel.getUSSID() != null && entry.getSelectedUssid().equalsIgnoreCase(ussid))
 									{
 										if (null != sellerInfoModel.getSellerID())
 										{
@@ -1913,6 +2030,7 @@ public class DefaultGetOrderDetailsFacadeImpl implements GetOrderDetailsFacade
 												 * actualCancelWindow && checkOrderStatus(subOrder.getStatus().getCode(),
 												 * MarketplacecommerceservicesConstants.CANCEL_ORDER_STATUS).booleanValue() &&
 												 * !entry.isGiveAway() && !entry.isIsBOGOapplied()) {
+
 												 * orderproductdto.setCancel(Boolean.TRUE);
 												 *
 												 * } else { orderproductdto.setCancel(Boolean.FALSE); } } else {
@@ -1971,6 +2089,7 @@ public class DefaultGetOrderDetailsFacadeImpl implements GetOrderDetailsFacade
 											}
 											/*
 											 * if (null != sellerEntry.getReplacement()) {
+
 											 * orderproductdto.setReplacement(sellerEntry.getReplacement());
 											 *
 											 * }
@@ -2062,6 +2181,7 @@ public class DefaultGetOrderDetailsFacadeImpl implements GetOrderDetailsFacade
 								 * consignmentModel.getCarrier()) {
 								 * orderproductdto.setLogisticName(consignmentModel.getCarrier()); } if (null !=
 								 * consignmentModel.getReturnCarrier()) {
+
 								 * orderproductdto.setReverseLogisticName(consignmentModel.getReturnCarrier()); }
 								 *
 								 * }
@@ -2105,6 +2225,40 @@ public class DefaultGetOrderDetailsFacadeImpl implements GetOrderDetailsFacade
 								{
 									orderproductdto.setSerialno(MarketplacecommerceservicesConstants.EMPTY);
 								}
+
+								/* TPR-5975 starts here */
+								if (entry.getMplDeliveryMode() != null)
+								{
+									mplDeliveryMode = entry.getMplDeliveryMode();
+									final SelectedDeliveryModeWsDTO selectedDeliveryModeWsDTO = new SelectedDeliveryModeWsDTO();
+									if (StringUtils.isNotEmpty(mplDeliveryMode.getCode()))
+									{
+										selectedDeliveryModeWsDTO.setCode(mplDeliveryMode.getCode());
+									}
+									String value = "";
+									if (!entry.isGiveAway() && entry.getCurrDelCharge() != null
+											&& StringUtils.isNotEmpty(value = entry.getCurrDelCharge().getValue().toString()))//IQA
+									{
+										LOG.debug("The Delivery Cost is not empty block1" + value);
+										//selectedDeliveryModeWsDTO.setDeliveryCost(mplDeliveryMode.getDeliveryCost().getValue().toString());
+										selectedDeliveryModeWsDTO.setDeliveryCost(value);
+									}
+									else
+									{
+										selectedDeliveryModeWsDTO.setDeliveryCost(ZERODELCOST);//IQA
+									}
+									if (StringUtils.isNotEmpty(mplDeliveryMode.getDescription()))
+									{
+										selectedDeliveryModeWsDTO.setDesc(mplDeliveryMode.getDescription());
+									}
+									if (StringUtils.isNotEmpty(mplDeliveryMode.getName()))
+									{
+										selectedDeliveryModeWsDTO.setName(mplDeliveryMode.getName());
+									}
+									orderproductdto.setSelectedDeliveryMode(selectedDeliveryModeWsDTO);
+								}
+								/* TPR-5975 ends here */
+
 								//Set the transaction id
 								if (entry.getTransactionId() != null)
 								{
@@ -2120,33 +2274,70 @@ public class DefaultGetOrderDetailsFacadeImpl implements GetOrderDetailsFacade
 									parentTransactionIds = Arrays.asList(entry.getParentTransactionID().split("\\s*,\\s*"));
 								}
 								orderproductdto.setParentTransactionId(parentTransactionIds);
-								
+
 								//ADDED R2.3 New attribute
-								if(entry.getSelectedDeliverySlotDate()!=null)
+								if (entry.getSelectedDeliverySlotDate() != null)
 								{
 									orderproductdto.setScheduleDeliveryDate(entry.getSelectedDeliverySlotDate());
-									if(StringUtils.isNotEmpty(entry.getTimeSlotFrom())){
-										if(StringUtils.isNotEmpty(entry.getTimeSlotTo()) && StringUtils.isNotEmpty(entry.getTimeSlotFrom())){
-											orderproductdto.setScheduleDeliveryTime(entry.getTimeSlotFrom().concat(" to ").concat(entry.getTimeSlotTo()));
+									if (StringUtils.isNotEmpty(entry.getTimeSlotFrom()))
+									{
+										if (StringUtils.isNotEmpty(entry.getTimeSlotTo())
+												&& StringUtils.isNotEmpty(entry.getTimeSlotFrom()))
+										{
+											orderproductdto.setScheduleDeliveryTime(entry.getTimeSlotFrom().concat(" to ")
+													.concat(entry.getTimeSlotTo()));
 										}
-										
+
 									}
 								}
-								
+
 								//R2.3 Changes-Start
 								orderproductdto
 										.setSelfCourierDocumentLink(getSelfCourierDocumentUrl(request,subOrder.getCode(), entry.getTransactionId()));
+
+
 								String returnType = getAwbPopupLink(entry, subOrder.getCode());
 								if (MarketplacecommerceservicesConstants.SELF_COURIER.equalsIgnoreCase(returnType)
 										&& !entry.isIsRefundable())
 								{
 									orderproductdto.setAwbPopupLink(MarketplacecommerceservicesConstants.Y);
-								}else
+								}
+								else
 								{
 									orderproductdto.setAwbPopupLink(MarketplacecommerceservicesConstants.N);
 								}
 								//R2.3 Changes-END
-								
+
+								if (isFineJwlry && (MarketplacecommerceservicesConstants.SELF_COURIER).equalsIgnoreCase(returnType))
+								{
+									orderproductdto.setAwbPopupLink(MarketplacecommerceservicesConstants.N);
+									for (final Entry<String, StatusResponseListDTO> statusEntry : orderproductdto.getStatusDisplayMsg()
+											.entrySet())
+									{
+										if (MarketplaceFacadesConstants.RETURN.equalsIgnoreCase(statusEntry.getKey()))
+										{
+											final StatusResponseListDTO innerEntry = statusEntry.getValue();
+											for (final StatusResponseDTO status : innerEntry.getStatusList())
+											{
+												if (("RETURN_INITIATED").equalsIgnoreCase(status.getResponseCode()))
+												{
+													for (final StatusResponseMessageDTO statRes : status.getStatusMessageList())
+													{
+														if ((MarketplacecommerceservicesConstants.FINEJEW_ORDER_RETURN)
+																.equalsIgnoreCase(statRes.getStatusDescription()))
+														{
+															statRes
+																	.setStatusDescription(MarketplacecommerceservicesConstants.FINEJEW_SELFCOURIER_ERRORMSG);
+														}
+													}
+
+												}
+											}
+										}
+									}
+								}
+								//TISPRDT-2546 ends
+
 								//Check if invoice is available
 								if (entry.getConsignment() != null)
 								{
@@ -2217,7 +2408,7 @@ public class DefaultGetOrderDetailsFacadeImpl implements GetOrderDetailsFacade
 					orderTrackingWsDTO.setIsPickupUpdatable(isPickUpButtonEditable(orderDetail));
 					orderTrackingWsDTO.setStatusDisplay(orderDetail.getStatusDisplay());
 					orderTrackingWsDTO.setStatus(MarketplacecommerceservicesConstants.SUCCESS_FLAG);
-					//R2.3 FLO1 new attribute Added 
+					//R2.3 FLO1 new attribute Added
 					orderTrackingWsDTO.setIsCDA(mplDeliveryAddressFacade.isDeliveryAddressChangable(orderCode));
 				}
 				else
@@ -2319,10 +2510,36 @@ public class DefaultGetOrderDetailsFacadeImpl implements GetOrderDetailsFacade
 									}
 								}
 							}
+							String ussidJwlry = "";
 
 							if (StringUtils.isNotEmpty(orderEntry.getSelectedUssid()))
 							{
-								sellerInfoModel = getMplSellerInformationService().getSellerDetail(orderEntry.getSelectedUssid());
+								/*
+								 * sellerInfoModel =
+								 * getMplSellerInformationService().getSellerDetail(orderEntry.getSelectedUssid());
+								 */
+								if (((MarketplacecommerceservicesConstants.FINEJEWELLERY)).equalsIgnoreCase(productModel
+										.getProductCategoryType()))
+								{
+									isFineJwlry = true;
+									final List<JewelleryInformationModel> jewelleryInfo = jewelleryService
+											.getJewelleryInfoByUssid(orderEntry.getSelectedUssid());
+									if (CollectionUtils.isNotEmpty(jewelleryInfo))
+									{
+										sellerInfoModel = getMplSellerInformationService().getSellerDetail(
+												jewelleryInfo.get(0).getPCMUSSID());
+										ussidJwlry = jewelleryInfo.get(0).getUSSID();
+									}
+									else
+									{
+										LOG.error("No entry in JewelleryInformationModel for ussid " + orderEntry.getSelectedUssid());
+									}
+								}
+								else
+								{
+									sellerInfoModel = getMplSellerInformationService().getSellerDetail(orderEntry.getSelectedUssid());
+									ussidJwlry = sellerInfoModel.getUSSID();
+								}
 							}
 							if (sellerInfoModel != null
 									&& sellerInfoModel.getRichAttribute() != null
@@ -2336,8 +2553,11 @@ public class DefaultGetOrderDetailsFacadeImpl implements GetOrderDetailsFacade
 									orderproductdto.setFulfillment(fulfillmentType);
 								}
 								//Seller info
-								if (sellerInfoModel.getUSSID() != null
-										&& sellerInfoModel.getUSSID().equalsIgnoreCase(orderEntry.getSelectedUssid()))
+								/*
+								 * if (sellerInfoModel.getUSSID() != null &&
+								 * sellerInfoModel.getUSSID().equalsIgnoreCase(orderEntry.getSelectedUssid()))
+								 */
+								if (orderEntry.getSelectedUssid() != null && orderEntry.getSelectedUssid().equalsIgnoreCase(ussidJwlry))
 								{
 									if (null != sellerInfoModel.getSellerID())
 									{
@@ -2367,6 +2587,7 @@ public class DefaultGetOrderDetailsFacadeImpl implements GetOrderDetailsFacade
 										orderproductdto.setUSSID(MarketplacecommerceservicesConstants.NA);
 										//orderproductdto.setSerialno(MarketplacecommerceservicesConstants.NA);
 									}
+
 									for (final RichAttributeModel rm : sellerInfoModel.getRichAttribute())
 									{
 										if (!mplOrderFacade.isChildCancelleable(orderDetail, orderEntry.getTransactionId()))
@@ -2434,6 +2655,41 @@ public class DefaultGetOrderDetailsFacadeImpl implements GetOrderDetailsFacade
 							}
 							//Check if invoice is available
 							orderproductdto.setIsInvoiceAvailable(Boolean.FALSE);
+
+							/* TPR-5975 starts here */
+							if (orderEntry.getMplDeliveryMode() != null)
+							{
+								mplDeliveryMode = orderEntry.getMplDeliveryMode();
+								final SelectedDeliveryModeWsDTO selectedDeliveryModeWsDTO = new SelectedDeliveryModeWsDTO();
+								if (StringUtils.isNotEmpty(mplDeliveryMode.getCode()))
+								{
+									selectedDeliveryModeWsDTO.setCode(mplDeliveryMode.getCode());
+								}
+								String value = "";
+								if (!orderEntry.isGiveAway() && orderEntry.getCurrDelCharge() != null
+										&& StringUtils.isNotEmpty(value = orderEntry.getCurrDelCharge().getValue().toString()))//IQA
+								{
+									LOG.debug("The Delivery Cost is not empty block2" + value);
+									//selectedDeliveryModeWsDTO.setDeliveryCost(mplDeliveryMode.getDeliveryCost().getValue().toString());
+									selectedDeliveryModeWsDTO.setDeliveryCost(value);
+								}
+								else
+								{
+									selectedDeliveryModeWsDTO.setDeliveryCost(ZERODELCOST);//IQA
+								}
+								if (StringUtils.isNotEmpty(mplDeliveryMode.getDescription()))
+								{
+									selectedDeliveryModeWsDTO.setDesc(mplDeliveryMode.getDescription());
+								}
+								if (StringUtils.isNotEmpty(mplDeliveryMode.getName()))
+								{
+									selectedDeliveryModeWsDTO.setName(mplDeliveryMode.getName());
+								}
+								orderproductdto.setSelectedDeliveryMode(selectedDeliveryModeWsDTO);
+							}
+							/* TPR-5975 ends here */
+
+
 							//Check if Shipment details is available
 							final Ordershipmentdetailstdto ordershipmentdetailstdto1 = new Ordershipmentdetailstdto();
 							ordershipmentdetailstdto1.setStatus(MarketplacecommerceservicesConstants.NA);
@@ -2445,16 +2701,49 @@ public class DefaultGetOrderDetailsFacadeImpl implements GetOrderDetailsFacade
 							//R2.3 Changes-Start
 							orderproductdto
 									.setSelfCourierDocumentLink(getSelfCourierDocumentUrl(request,orderDetail.getCode(), orderEntry.getTransactionId()));
+
+
 							String returnType = getAwbPopupLink(orderEntry, orderDetail.getCode());
 							if (MarketplacecommerceservicesConstants.SELF_COURIER.equalsIgnoreCase(returnType)
 									&& !orderEntry.isIsRefundable())
 							{
 								orderproductdto.setAwbPopupLink(MarketplacecommerceservicesConstants.Y);
-							}else
+							}
+							else
 							{
 								orderproductdto.setAwbPopupLink(MarketplacecommerceservicesConstants.N);
 							}
 							//R2.3 Changes-END
+							//TISPRDT-2546
+							if (isFineJwlry && (MarketplacecommerceservicesConstants.SELF_COURIER).equalsIgnoreCase(returnType))
+							{
+								orderproductdto.setAwbPopupLink(MarketplacecommerceservicesConstants.N);
+								for (final Entry<String, StatusResponseListDTO> statusEntry : orderproductdto.getStatusDisplayMsg()
+										.entrySet())
+								{
+									if (MarketplaceFacadesConstants.RETURN.equalsIgnoreCase(statusEntry.getKey()))
+									{
+										final StatusResponseListDTO innerEntry = statusEntry.getValue();
+										for (final StatusResponseDTO status : innerEntry.getStatusList())
+										{
+											if (("RETURN_INITIATED").equalsIgnoreCase(status.getResponseCode()))
+											{
+												for (final StatusResponseMessageDTO statRes : status.getStatusMessageList())
+												{
+													if ((MarketplacecommerceservicesConstants.FINEJEW_ORDER_RETURN).equalsIgnoreCase(statRes
+															.getStatusDescription()))
+													{
+														statRes
+																.setStatusDescription(MarketplacecommerceservicesConstants.FINEJEW_SELFCOURIER_ERRORMSG);
+													}
+												}
+
+											}
+										}
+									}
+								}
+							}
+							//TISPRDT-2546 ends
 						}
 					}
 					orderTrackingWsDTO.setProducts(orderproductdtos);
@@ -2487,11 +2776,11 @@ public class DefaultGetOrderDetailsFacadeImpl implements GetOrderDetailsFacade
 	 * @param entry
 	 * @param orderModel
 	 */
-	private String getAwbPopupLink(OrderEntryData entry, String subOrderCode)
+	private String getAwbPopupLink(final OrderEntryData entry, final String subOrderCode)
 	{
 		try
 		{
-			List<ReturnRequestModel> returnRequestModelList = cancelReturnFacade.getListOfReturnRequest(subOrderCode);
+			final List<ReturnRequestModel> returnRequestModelList = cancelReturnFacade.getListOfReturnRequest(subOrderCode);
 			if (null != returnRequestModelList && returnRequestModelList.size() > 0)
 			{
 				for (final ReturnRequestModel mm : returnRequestModelList)
@@ -2510,7 +2799,7 @@ public class DefaultGetOrderDetailsFacadeImpl implements GetOrderDetailsFacade
 				}
 			}
 		}
-		catch (Exception exception)
+		catch (final Exception exception)
 		{
 			LOG.error("Exception Oucer Get getAwbPopupLink DefaultGetOrderDetailsFacadeImpl");
 
@@ -2521,9 +2810,11 @@ public class DefaultGetOrderDetailsFacadeImpl implements GetOrderDetailsFacade
 	/**
 	 * @param orderModel
 	 */
-	private String getSelfCourierDocumentUrl(final HttpServletRequest request,String orderCode, String transactionID)
+	private String getSelfCourierDocumentUrl(final HttpServletRequest request, final String orderCode, final String transactionID)
 	{
 		try {
+
+
 			String scheme = request.getScheme();
 			String serverName = request.getServerName();
 			String portNumber = String.valueOf(request.getServerPort());
@@ -2531,7 +2822,8 @@ public class DefaultGetOrderDetailsFacadeImpl implements GetOrderDetailsFacade
 			sb.append(MarketplaceFacadesConstants.COLON);
 			sb.append(MarketplaceFacadesConstants.FORWARD_SLASHES);
 			sb.append(serverName);
-			if(null != portNumber) {
+			if (null != portNumber)
+			{
 				sb.append(MarketplaceFacadesConstants.COLON);
 				sb.append(portNumber);
 			}
@@ -2543,12 +2835,16 @@ public class DefaultGetOrderDetailsFacadeImpl implements GetOrderDetailsFacade
 			sb.append(transactionID);
 			String SelfCourierDocumentLink = String.valueOf(sb);
 			if(LOG.isDebugEnabled()) {
+
+
 				LOG.debug("Self Courier return file download location for transaction id "+transactionID+" with order code  "+orderCode+" is "+SelfCourierDocumentLink);
+
+
 			}
-			return  SelfCourierDocumentLink;
+			return SelfCourierDocumentLink;
 
 		}
-		catch (Exception expection)
+		catch (final Exception expection)
 		{
 			LOG.error("Exception Oucer Get fileDownloadLocation DefaultGetOrderDetailsFacadeImpl");
 		}
@@ -2630,8 +2926,8 @@ public class DefaultGetOrderDetailsFacadeImpl implements GetOrderDetailsFacade
 						if (null != trackModel && trackModel.getStage().equalsIgnoreCase(MarketplaceFacadesConstants.CANCEL)
 								&& !isStatusAlradyExists(awbCancelMap, trackModel) && trackModel.getDisplay().booleanValue())
 						{
-							if ((trackModel.getStatusCode().equalsIgnoreCase(ConsignmentStatus.REFUND_INITIATED.getCode())
-									|| trackModel.getStatusCode().equalsIgnoreCase(ConsignmentStatus.REFUND_IN_PROGRESS.getCode())))
+							if ((trackModel.getStatusCode().equalsIgnoreCase(ConsignmentStatus.REFUND_INITIATED.getCode()) || trackModel
+									.getStatusCode().equalsIgnoreCase(ConsignmentStatus.REFUND_IN_PROGRESS.getCode())))
 							{
 								if (awbCancelMap.size() >= 1)
 								{
@@ -2651,8 +2947,8 @@ public class DefaultGetOrderDetailsFacadeImpl implements GetOrderDetailsFacade
 						if (null != trackModel && trackModel.getStage().equalsIgnoreCase(MarketplaceFacadesConstants.RETURN)
 								&& !isStatusAlradyExists(awbReturnMap, trackModel) && trackModel.getDisplay().booleanValue())
 						{
-							if ((trackModel.getStatusCode().equalsIgnoreCase(ConsignmentStatus.REFUND_INITIATED.getCode())
-									|| trackModel.getStatusCode().equalsIgnoreCase(ConsignmentStatus.REFUND_IN_PROGRESS.getCode())))
+							if ((trackModel.getStatusCode().equalsIgnoreCase(ConsignmentStatus.REFUND_INITIATED.getCode()) || trackModel
+									.getStatusCode().equalsIgnoreCase(ConsignmentStatus.REFUND_IN_PROGRESS.getCode())))
 							{
 								if (awbReturnMap.size() >= 1)
 								{
@@ -2704,6 +3000,7 @@ public class DefaultGetOrderDetailsFacadeImpl implements GetOrderDetailsFacade
 		}
 		return returnMap;
 	}
+
 	/**
 	 * @param statusResponse
 	 * @param consignment
@@ -3170,7 +3467,7 @@ public class DefaultGetOrderDetailsFacadeImpl implements GetOrderDetailsFacade
 			//seller order no
 			orderproductdto.setSellerorderno(orderDetail.getCode());
 			final ProductData product = entry.getProduct();
-
+			String ussid = "";
 			if (null != product)
 			{
 				final List<ImageData> images = (List<ImageData>) product.getImages();
@@ -3235,14 +3532,34 @@ public class DefaultGetOrderDetailsFacadeImpl implements GetOrderDetailsFacade
 			SellerInformationModel sellerInfoModel = null;
 			if (StringUtils.isNotEmpty(entry.getSelectedUssid()))
 			{
-				sellerInfoModel = getMplSellerInformationService().getSellerDetail(entry.getSelectedUssid());
+				if ((MarketplacecommerceservicesConstants.FINEJEWELLERY).equalsIgnoreCase(product.getRootCategory()))
+				{
+					final List<JewelleryInformationModel> jewelleryInfo = jewelleryService.getJewelleryInfoByUssid(entry
+							.getSelectedUssid());
+					if (CollectionUtils.isNotEmpty(jewelleryInfo))
+					{
+						sellerInfoModel = getMplSellerInformationService().getSellerDetail(jewelleryInfo.get(0).getPCMUSSID());
+						ussid = jewelleryInfo.get(0).getUSSID();
+					}
+					else
+					{
+						LOG.error("No entry in JewelleryInformationModel for ussid " + entry.getSelectedUssid());
+					}
+				}
+				else
+				{
+					sellerInfoModel = getMplSellerInformationService().getSellerDetail(entry.getSelectedUssid());
+					ussid = sellerInfoModel.getUSSID();
+				}
+
 			}
 			if (sellerInfoModel != null && sellerInfoModel.getRichAttribute() != null
 					&& ((List<RichAttributeModel>) sellerInfoModel.getRichAttribute()).get(0).getDeliveryFulfillModes() != null)
 			{
 
 				//Seller info
-				if (sellerInfoModel.getUSSID() != null && sellerInfoModel.getUSSID().equalsIgnoreCase(entry.getSelectedUssid()))
+				//if (sellerInfoModel.getUSSID() != null && sellerInfoModel.getUSSID().equalsIgnoreCase(entry.getSelectedUssid()))
+				if (sellerInfoModel.getUSSID() != null && ussid.equalsIgnoreCase(entry.getSelectedUssid()))
 				{
 					if (null != sellerInfoModel.getSellerID())
 					{

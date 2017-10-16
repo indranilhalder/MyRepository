@@ -24,8 +24,9 @@ $catalog-id=mplProductCatalog
 $syncJobCode=sync $catalog-id:Staged->Online
 $sourceversion=sourceversion(catalog(id[default=$catalog-id]),version[default=Staged])[unique=true,default=$catalog-id:Staged]
 $targetversion=targetversion(catalog(id[default=$catalog-id]),version[default=Online])[unique=true,default=$catalog-id:Online]
-INSERT_UPDATE CatalogVersionSyncJob;code[unique=true];active;roottypes(code)[mode=append];sessionUser(uid);$sourceversion;$targetversion
-;sync mplProductCatalog:Staged->Online;true;SellerInformation,GlobalIdentifier,RichAttribute,Brand,SeoContent,SizeGuide;syncmanager
+#Commented against CAR-304
+#INSERT_UPDATE CatalogVersionSyncJob;code[unique=true];active;roottypes(code)[mode=append];sessionUser(uid);$sourceversion;$targetversion
+#;sync mplProductCatalog:Staged->Online;true;SellerInformation,GlobalIdentifier,RichAttribute,Brand,SeoContent,SizeGuide;syncmanager
 INSERT_UPDATE SearchRestriction;code[unique=true];name[lang=de];name[lang=en];query;restrictedType(code);principal(UID);active;generate
 ;SyncManagerRestriction;SyncManagerRestriction;SyncManagerRestriction;({approvalStatus}=  ({{select {appstatus:pk} from {ArticleApprovalStatus as appstatus} where {appstatus:code}='approved'}}));Product;syncmanager;true;true
 $inCurrency=INR
@@ -57,8 +58,9 @@ $catalog-id=mplProductCatalog
 $syncJobCode=sync $catalog-id:Staged->Online
 $sourceversion=sourceversion(catalog(id[default=$catalog-id]),version[default=Staged])[unique=true,default=$catalog-id:Staged]
 $targetversion=targetversion(catalog(id[default=$catalog-id]),version[default=Online])[unique=true,default=$catalog-id:Online]
-INSERT_UPDATE CatalogVersionSyncJob;code[unique=true];active;roottypes(code)[mode=append];sessionUser(uid);$sourceversion;$targetversion
-;sync mplProductCatalog:Staged->Online;true;SellerInformation,GlobalIdentifier,RichAttribute,Brand,SeoContent,SizeGuide;syncmanager
+#Commented against CAR-304
+#INSERT_UPDATE CatalogVersionSyncJob;code[unique=true];active;roottypes(code)[mode=append];sessionUser(uid);$sourceversion;$targetversion
+#;sync mplProductCatalog:Staged->Online;true;SellerInformation,GlobalIdentifier,RichAttribute,Brand,SeoContent,SizeGuide;syncmanager
 INSERT_UPDATE SearchRestriction;code[unique=true];name[lang=de];name[lang=en];query;restrictedType(code);principal(UID);active;generate
 ;SyncManagerRestriction;SyncManagerRestriction;SyncManagerRestriction;({approvalStatus}=  ({{select {appstatus:pk} from {ArticleApprovalStatus as appstatus} where {appstatus:code}='approved'}}));Product;syncmanager;true;true
 $inCurrency=INR
@@ -66,7 +68,8 @@ $inCurrency=INR
 INSERT_UPDATE Trigger;job(code)[unique=true];cronExpression;maxAcceptableDelay;
 #;sync mplProductCatalog\:Staged->Online;0 0/10 * * * ?;30;
 #Change for TISPT-215
-;sync mplProductCatalog\:Staged->Online;0 0 0/5 * * ?;;
+#Commented against CAR-304
+#;sync mplProductCatalog\:Staged->Online;0 0 0/5 * * ?;;
 
 # MPL SHOP BY LOOK   
 INSERT_UPDATE MplShopByLook;collectionCategory(code,$catalogVersion);collectionId[unique=true];collectionName;collectionDescription;startDate[dateformat=yyyy-MM-dd];endDate[dateformat=yyyy-MM-dd];productCollections(code,$catalogVersion);gender;targetAgeGroup;occasion;topLeft;topRight;bottomLeft;bottomRight

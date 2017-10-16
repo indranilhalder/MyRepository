@@ -52,7 +52,6 @@ public class TicketCreationCRMserviceImpl implements TicketCreationCRMservice
 
 	@Override
 	public void ticketCreationModeltoWsDTO(final SendTicketRequestData sendTicketRequestData) throws JAXBException
-
 	{
 		final AddressInfoDTO addressInfo = new AddressInfoDTO();
 		try
@@ -183,6 +182,12 @@ public class TicketCreationCRMserviceImpl implements TicketCreationCRMservice
 						ticketLineObj.setTimeSlotTo(sendTicketLineItemData.getTimeSlotTo());
 					}
 					//R2.3 start
+
+					//TPR-4134
+					if (StringUtils.isNotEmpty(sendTicketLineItemData.getReverseSealLostflag()))
+					{
+						ticketLineObj.setReverseSealLostflag(sendTicketLineItemData.getReverseSealLostflag());
+					}
 					ticketlineItemsXMLDataList.add(ticketLineObj);
 				}
 				ticket.setLineItemDataList(ticketlineItemsXMLDataList);
@@ -335,6 +340,11 @@ public class TicketCreationCRMserviceImpl implements TicketCreationCRMservice
 					{
 						ticketLineObj.setReturnReasonCode(sendTicketLineItemData.getReturnReasonCode());
 					}
+					//TPR-4134
+					if (null != sendTicketLineItemData.getReverseSealLostflag())
+					{
+						ticketLineObj.setReverseSealLostflag(sendTicketLineItemData.getReverseSealLostflag());
+					}
 					ticketlineItemsXMLDataList.add(ticketLineObj);
 				}
 				ticket.setLineItemDataList(ticketlineItemsXMLDataList);
@@ -403,6 +413,175 @@ public class TicketCreationCRMserviceImpl implements TicketCreationCRMservice
 		final String xmlString = sw.toString();
 		LOG.debug(xmlString);
 		return xmlString;
+	}
+
+	/**
+	 * The existing ticket population method has been overloaded to incorporate the changes need for ticket structure for
+	 * return and cancel scenarios || TPR-6778
+	 *
+	 * @param sendTicketRequestData
+	 * @param overloadParam
+	 * @throws JAXBException
+	 */
+	@Override
+	public void ticketCreationModeltoWsDTO(final SendTicketRequestData sendTicketRequestData, final Boolean overloadParam)
+			throws JAXBException
+	{
+		LOG.info("Inside overloaded method ticketCreationModeltoWsDTO....");
+		final AddressInfoDTO addressInfo = new AddressInfoDTO();
+		try
+		{
+			//one touch--start
+			TicketMasterXMLData ticket = null;
+			final List<SendTicketLineItemData> sendTicketLineItemDataList = sendTicketRequestData.getLineItemDataList();
+			ArrayList<TicketlineItemsXMLData> ticketlineItemsXMLDataList = null;
+			if (null != sendTicketLineItemDataList)
+			{
+				for (final SendTicketLineItemData sendTicketLineItemData : sendTicketLineItemDataList)
+				{
+					ticketlineItemsXMLDataList = new ArrayList<TicketlineItemsXMLData>();
+					//one touch--end
+					ticket = new TicketMasterXMLData();
+					if (null != sendTicketRequestData.getCustomerID())
+					{
+						ticket.setCustomerID(sendTicketRequestData.getCustomerID());
+						LOG.debug("ticket create: customer Id>>>>> " + sendTicketRequestData.getCustomerID());
+					}
+					if (null != sendTicketRequestData.getOrderId())
+					{
+						ticket.setOrderId(sendTicketRequestData.getOrderId());
+						LOG.debug("ticket create:order Id>>>>> " + sendTicketRequestData.getOrderId());
+					}
+					if (null != sendTicketRequestData.getSubOrderId())
+					{
+						ticket.setSubOrderId(sendTicketRequestData.getSubOrderId());
+						LOG.debug("ticket create:suborder Id>>>>> " + sendTicketRequestData.getSubOrderId());
+					}
+					if (null != sendTicketRequestData.getTicketType())
+					{
+						ticket.setTicketType(sendTicketRequestData.getTicketType());
+						LOG.debug("ticket create:TicketType>>>>> " + sendTicketRequestData.getTicketType());
+					}
+					if (null != sendTicketRequestData.getTicketSubType())
+					{
+						ticket.setTicketSubType(sendTicketRequestData.getTicketSubType());
+						LOG.debug("ticket create:TicketSubType>>>>> " + sendTicketRequestData.getTicketSubType());
+
+					}
+					if (null != sendTicketRequestData.getSource())
+					{
+						ticket.setSource(sendTicketRequestData.getSource());
+						LOG.debug("ticket create:Ticket Source>>>>> " + sendTicketRequestData.getSource());
+
+					}
+
+					if (null != sendTicketRequestData.getAlternateContactName())
+					{
+						ticket.setAlternateContactName(sendTicketRequestData.getAlternateContactName());
+						LOG.debug("ticket create:Ticket AlternateContactName>>>>> " + sendTicketRequestData.getAlternateContactName());
+					}
+
+					if (null != sendTicketRequestData.getAlternatePhoneNo())
+					{
+						ticket.setAlternatePhoneNo(sendTicketRequestData.getAlternatePhoneNo());
+						LOG.debug("ticket create:Ticket AlternatePhoneNo>>>>> " + sendTicketRequestData.getAlternatePhoneNo());
+
+					}
+
+					if (null != sendTicketRequestData.getRefundType())
+					{
+						ticket.setRefundType(sendTicketRequestData.getRefundType());
+						LOG.debug("ticket create:Ticket RefundType>>>>> " + sendTicketRequestData.getRefundType());
+
+					}
+					if (null != sendTicketRequestData.getReturnCategory())
+					{
+						ticket.setReturnCategory(sendTicketRequestData.getReturnCategory());
+						LOG.debug("ticket create:Ticket ReturnCategory>>>>> " + sendTicketRequestData.getReturnCategory());
+
+					}
+					if (StringUtils.isNotBlank(sendTicketRequestData.getEcomRequestId()))
+					{
+						ticket.setEcomRequestId(sendTicketRequestData.getEcomRequestId());
+					}
+
+					if (null != sendTicketRequestData.getAddressInfo())
+					{
+						if (StringUtils.isNotBlank(sendTicketRequestData.getReturnPickupDate()))
+						{
+							addressInfo.setReturnPickupDate(sendTicketRequestData.getReturnPickupDate());
+						}
+						if (StringUtils.isNotBlank(sendTicketRequestData.getTimeSlotFrom()))
+						{
+							addressInfo.setTimeSlotFrom(sendTicketRequestData.getTimeSlotFrom());
+						}
+						if (StringUtils.isNotBlank(sendTicketRequestData.getTimeSlotTo()))
+						{
+							addressInfo.setTimeSlotTo(sendTicketRequestData.getTimeSlotTo());
+						}
+
+						addressInfo.setShippingFirstName(sendTicketRequestData.getAddressInfo().getShippingFirstName());
+						addressInfo.setShippingLastName(sendTicketRequestData.getAddressInfo().getShippingLastName());
+						addressInfo.setPhoneNo(sendTicketRequestData.getAddressInfo().getPhoneNo());
+						addressInfo.setAddress1(sendTicketRequestData.getAddressInfo().getAddress1());
+						addressInfo.setAddress2(sendTicketRequestData.getAddressInfo().getAddress2());
+						addressInfo.setAddress3(sendTicketRequestData.getAddressInfo().getAddress3());
+						addressInfo.setCountry(sendTicketRequestData.getAddressInfo().getCountry());
+						addressInfo.setCity(sendTicketRequestData.getAddressInfo().getCity());
+						addressInfo.setState(sendTicketRequestData.getAddressInfo().getState());
+						addressInfo.setPincode(sendTicketRequestData.getAddressInfo().getPincode());
+						addressInfo.setLandmark(sendTicketRequestData.getAddressInfo().getLandmark());
+					}
+					ticket.setAddressInfo(addressInfo);
+					final TicketlineItemsXMLData ticketLineObj = new TicketlineItemsXMLData();
+					if (null != sendTicketLineItemData.getLineItemId())
+					{
+						ticketLineObj.setLineItemId(sendTicketLineItemData.getLineItemId());
+					}
+					if (ticket.getTicketType().equalsIgnoreCase(MarketplacecclientservicesConstants.CANCEL))
+					{
+						ticketLineObj.setCancelReasonCode(sendTicketLineItemData.getCancelReasonCode());
+					}
+					else if (ticket.getTicketType().equalsIgnoreCase("A"))
+					{
+						ticketLineObj.setCancelReasonCode(sendTicketLineItemData.getCancelReasonCode());
+					}
+					else
+					{
+						ticketLineObj.setReturnReasonCode(sendTicketLineItemData.getReturnReasonCode());
+					}
+					//R2.3 start 02-03-2017
+					if (StringUtils.isNotEmpty(sendTicketLineItemData.getTimeSlotFrom()))
+					{
+						ticketLineObj.setTimeSlotFrom(sendTicketLineItemData.getTimeSlotFrom());
+					}
+					if (StringUtils.isNotEmpty(sendTicketLineItemData.getTimeSlotTo()))
+					{
+						ticketLineObj.setTimeSlotTo(sendTicketLineItemData.getTimeSlotTo());
+					}
+					//R2.3 start
+					//TPR-4134
+					if (StringUtils.isNotEmpty(sendTicketLineItemData.getReverseSealLostflag()))
+					{
+						ticketLineObj.setReverseSealLostflag(sendTicketLineItemData.getReverseSealLostflag());
+					}
+					ticketlineItemsXMLDataList.add(ticketLineObj);
+					ticket.setLineItemDataList(ticketlineItemsXMLDataList);
+					ticketCreationCRM(ticket);
+				}
+			}
+		}
+		catch (final JAXBException e)
+		{
+			LOG.info(MarketplacecclientservicesConstants.JAXB_EXCEPTION);
+			throw e;
+		}
+		catch (final Exception ex)
+		{
+			LOG.info(MarketplacecclientservicesConstants.EXCEPTION_IS);
+			throw ex;
+		}
+		LOG.info("Finished executing overloaded method ticketCreationModeltoWsDTO....");
 	}
 
 }

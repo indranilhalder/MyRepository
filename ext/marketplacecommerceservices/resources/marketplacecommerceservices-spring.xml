@@ -138,7 +138,10 @@
 		class="com.tisl.mpl.marketplacecommerceservices.service.impl.MplPriceRowServiceImpl" />
 
 	<bean id="mplNotificationSaveService"
-		class="com.tisl.mpl.marketplacecommerceservices.service.impl.MplNotificationServiceImpl" />
+		class="com.tisl.mpl.marketplacecommerceservices.service.impl.MplNotificationServiceImpl" >
+		<property name="businessProcessService" ref="businessProcessService"/>  <!-- Added for TPR-1348 AutorefundInitiated -->
+		<property name="sendSMSService" ref="sendSMSService" />     <!-- Added for TPR-1348 AutorefundInitiated -->
+	</bean>
 
 
 
@@ -198,6 +201,18 @@
 		<property name="typeCode" value="ProductPromotion" />
 	</bean>
 	
+	<!-- PR-15 starts here -->
+	<!-- For Bulk Product Upload on HMC Configuration Screen -->
+	<bean id="orderPromotionInterceptor" class="com.tisl.mpl.interceptor.OrderPromotionInterceptor">
+	</bean>
+
+	<bean id="orderPromotionInterceptorMapping"
+		class="de.hybris.platform.servicelayer.interceptor.impl.InterceptorMapping">
+		<property name="interceptor" ref="orderPromotionInterceptor" />
+		<property name="typeCode" value="OrderPromotion" />
+	</bean>
+	<!-- PR-15 ends here -->
+	
 	<!-- PriceRowPromotionInterceptor ends -->
 	<!-- DeliveryModeInterceptor Start -->
 	<!-- <bean id="deliveryModeCreateInterceptor" class="com.tisl.mpl.interceptor.DeliveryModeCreateInterceptor"> 
@@ -221,7 +236,17 @@
 	</bean>
 
 	<!-- AddProductCategoryInterceptor End -->
+<!-- HasVariantProductForFineJewellery for Fine Jewellery Start -->
+   <bean id="addHasVariantForFineJewelleryInterceptor" class="com.tisl.mpl.interceptor.AddHasVariantForFineJewelleryInterceptor">
+	</bean>
 
+     <bean id="addHasVariantForFineJewelleryInterceptorMapping"
+		class="de.hybris.platform.servicelayer.interceptor.impl.InterceptorMapping">
+		<property name="interceptor" ref="addHasVariantForFineJewelleryInterceptor" />
+		<property name="typeCode" value="SellerInformation" />
+		
+	</bean>
+<!-- HasVariantProductForFineJewellery for Fine Jewellery End -->
 
 	<!-- AddProductCategoryInterceptor Start -->
 	<bean id="addProductColorHexCodeInterceptor"
@@ -425,6 +450,8 @@
 		class="com.tisl.mpl.marketplacecommerceservices.service.impl.MplPaymentServiceImpl">
 		<property name="mplPaymentDao" ref="mplPaymentDao" />
 		<property name="discountUtility" ref="discountUtility" />
+		<property name="mplJusPayRefundService" ref="mplJusPayRefundService" /> <!-- Added for TPR-1348 AutoReefundInitiate -->
+		<property name="mplMWalletRefundService" ref="mplMWalletRefundService" />  <!-- Added for TPR-1348 AutoReefundInitiate -->
 	</bean>
 
 
@@ -631,6 +658,8 @@
 		<property name="externalTaxesService" ref="externalTaxesService" />
 		<property name="commercePlaceOrderMethodHooks" ref="commercePlaceOrderMethodHooks" />
 		<property name="configurationService" ref="configurationService" />
+		<!-- TPR-3782 -->
+ 		<property name="priceBreakupService" ref="priceBreakupService" />
 
 	</bean>
 
@@ -817,6 +846,18 @@
 	<bean id="sizeGuideService"
 		class="com.tisl.mpl.marketplacecommerceservices.service.impl.SizeGuideServiceImpl">
 	</bean>
+	
+	<!-- for price breakup -->
+	<bean id="priceBreakupService"
+		class="com.tisl.mpl.marketplacecommerceservices.service.impl.PriceBreakupServiceImpl">
+		<property name="jewelleryAttrMapping" ref="jewelleryAttrMapping"></property>
+	</bean>
+	
+	<bean id="priceBreakupDao"
+		class="com.tisl.mpl.marketplacecommerceservices.daos.impl.PriceBreakupDaoImpl">
+	</bean>
+	<!-- for price breakup -->
+	
 	<!-- for merchant master -->
 	<bean id="merchantmaster" class="com.tisl.mpl.integration.job.MerchantMaster"
 		autowire="byName" />
@@ -1975,8 +2016,7 @@
 			autowire="byName">
 		<property name="modelService" ref="modelService" />
 	</bean>
-	
-	
+
 	<!-- Old Cron Job Deletion Logic : Added as part of PT FIX-->
 	<alias name="mplcleanupCronJobsPerformable" alias="cleanupCronJobsPerformable" />
 	<bean id="mplcleanupCronJobsPerformable" parent="abstractGenericMaintenanceJobPerformable">
@@ -2015,6 +2055,7 @@
   <!--  mrupee changes ends -->
 	<!-- Old Cron Job Deletion Logic ends: -->
 
+
 	<!-- TPR-1285 Start -->
 	<alias name="mplProductPageSiteMapGenerator" alias="productPageSiteMapGenerator"/>
 	<bean id="mplProductPageSiteMapGenerator"
@@ -2031,6 +2072,16 @@
 	    <property name="cmsPageService" ref="cmsPageService"/>
 	</bean> 
 	
+	<!-- PRDI-423 start -->
+	<alias name="mplbrandPageSiteMapGenerator" alias="mplbrandPageSiteMapGenerator"/>
+	<bean id="mplbrandPageSiteMapGenerator"
+		class="com.tisl.mpl.sitemap.generator.impl.MplBrandPageSiteMapGenerator"
+	    parent="abstractSiteMapGenerator">
+		<property name="siteMapUrlDataConverter" ref="mplCustomPageToSiteMapUrlDataConverter"/>
+		<property name="siteMapPageEnum" value="CUSTOM"/>
+	    <property name="cmsPageService" ref="cmsPageService"/>
+	</bean> 
+	<!-- PRDI-423 end-->
 	
 	<alias name="mplCustomPageToSiteMapUrlDataConverter" alias="mplCustomPageToSiteMapUrlDataConverter"/>
 	<bean id="mplCustomPageToSiteMapUrlDataConverter" parent="abstractPopulatingConverter">
@@ -2095,6 +2146,73 @@
 
 
 
+
+	<!-- Jewellery Changes Start --> 
+	
+	<alias name="mplJewelleryService" alias="mplJewelleryService" />
+	<bean id="mplJewelleryService" class="com.tisl.mpl.marketplacecommerceservices.service.impl.MplJewelleryServiceImpl"
+			autowire="byName">
+	</bean>
+	
+	
+	<alias name="mplJewelleryDao" alias="mplJewelleryDao" />
+	<bean id="mplJewelleryDao" class="com.tisl.mpl.marketplacecommerceservices.daos.impl.MplJewelleryDaoImpl"
+			autowire="byName">
+	</bean>
+	
+	<bean id="mplJewelleryUtility" class="com.tisl.mpl.util.MplJewelleryUtility">
+		<property name="mplJewelleryService" ref="mplJewelleryService" />
+	</bean>
+	<bean id="MplleadVariantWeightService"
+		class="com.tisl.mpl.marketplacecommerceservices.service.impl.MplleadVariantWeightServiceImpl" />
+	<!-- Jewellery Changes End -->
+
+	<!-- added for jewellery attribute mapping starts -->
+	
+	<alias name="defaultJewelleryAttrMapping" alias="jewelleryAttrMapping" />
+	<util:map id="defaultJewelleryAttrMapping" map-class="java.util.HashMap">
+		<entry key = "goldValue" 	value = "Gold" ></entry>
+		<entry key = "silverValue" 	value = "Silver" ></entry>
+		<entry key = "platinumValue" 	value = "Platinum" ></entry>
+		<entry key = "solitaireValue" 	value = "Solitaire" ></entry>
+		<entry key = "diamond"    	value = "Diamond" ></entry>
+		<entry key = "gemstone"   	value = "Gems Stone" ></entry>
+		<entry key = "makingcharge" value = "Making Charge" ></entry>
+		<entry key = "wastagetax" 	value = "Taxes And Duties" ></entry>				
+
+	</util:map>
+	<!-- //TPR-3752 Jewel Heading Added -->
+	<!-- added for jewellery attribute mapping ends -->
+	
+	<alias name="defaultJewelleryDescMapping" alias="jewelleryDescMapping" />
+	<util:map id="defaultJewelleryDescMapping" map-class="java.util.HashMap">
+	    <entry key ="stonefinejwlry1" 	value = "stonesizefinejwlry1" ></entry>
+		<entry key = "stonefinejwlry2" 	value = "stonesizefinejwlry2" ></entry>
+		<entry key = "stonefinejwlry3" 	value = "stonesizefinejwlry3" ></entry>
+		<entry key = "stonefinejwlry4" 	value = "stonesizefinejwlry4" ></entry>	
+		<entry key = "stonefinejwlry5" 	value = "stonesizefinejwlry5" ></entry>
+		<entry key = "stonefinejwlry6" 	value = "stonesizefinejwlry6" ></entry>	
+		<entry key = "stonefinejwlry7" 	value = "stonesizefinejwlry7" ></entry>		
+		<entry key = "stonefinejwlry8" 	value = "stonesizefinejwlry8" ></entry>	
+		<entry key = "stonefinejwlry9"	value = "stonesizefinejwlry9" ></entry>
+		<entry key = "stonefinejwlry10" value = "stonesizefinejwlry10"></entry>	
+		<entry key = "metalfinejwlry" value = "metalweightfinejwlry"  ></entry>	
+		<entry key= "diamond" value= "diamondweightfinejwlry1,diamondweightfinejwlry2,diamondweightfinejwlry3,diamondweightfinejwlry4,diamondweightfinejwlry5,diamondweightfinejwlry6,diamondweightfinejwlry7"></entry>
+				
+					
+	</util:map>
+	
+	
+	<!-- For pancard details -->
+	
+	<bean id="mplPancardServiceImpl" class="com.tisl.mpl.marketplacecommerceservices.services.pancard.impl.MplPancardServiceImpl">
+	</bean>
+	
+	
+	<bean id="mplPancardDao" class="com.tisl.mpl.marketplacecommerceservices.daos.pancard.impl.MplPancardDaoImpl">
+	</bean>
+
+
    <alias name="defaultmplReturnDao" alias="mplReturnDao"/>
 <bean class="com.tisl.mpl.returns.dao.impl.MplReturnDaoImpl" id="defaultmplReturnDao"></bean>
 
@@ -2131,6 +2249,7 @@
 		<property name="pickupStrategy" ref="pickupStrategy"/>
 		<property name="stockLevelProductStrategy" ref="stockLevelProductID"/>
 		<property name="storePickupDao" ref="storePickupDao"/>
+
 	</bean>
 	<bean id="mplDeliveryAddressServiceImpl"
 		class="com.tisl.mpl.marketplacecommerceservices.service.impl.MplDeliveryAddressServiceImpl"/>
@@ -2145,11 +2264,43 @@
 	 </bean>
 	 <!--  R2.3 Added 27-02-2017 END-->
 	 
+	 <!-- Addition for Exchange Start  -->
+<bean id="exchangeGuideService"
+		class="com.tisl.mpl.marketplacecommerceservices.service.impl.ExchangeGuideServiceImpl">
+		<property name="exchangeGuideDao" ref="exchangeGuideDao"></property>
+		<property name="modelService" ref="modelService" />
+	</bean>
+	
+	<bean id="exchangeGuideDao"
+		class="com.tisl.mpl.marketplacecommerceservices.daos.impl.ExchangeGuideDaoImpl">
+	</bean>
+	
+	
+		
+	<bean id="temporaryExchangeId"
+		class="de.hybris.platform.servicelayer.keygenerator.impl.PersistentKeyGenerator"
+		init-method="init" scope="tenant">
+		<property name="key" value="tempExchangeId" />
+		<property name="digits" value="8" />
+		<property name="start" value="10000001" />
+		<property name="numeric" value="false" />
+	</bean>
+	
+	<bean id="EXCHANGEREQUESTID"
+		class="de.hybris.platform.servicelayer.keygenerator.impl.PersistentKeyGenerator"
+		init-method="init" scope="tenant">
+		<property name="key" value="tempExchangeId" />
+		<property name="digits" value="8" />
+		<property name="start" value="10000001" />
+		<property name="numeric" value="false" />
+	</bean>
+	
+	<!-- Addition for Exchange End 	-->
 	 
 	 
 	 <!-- Changes for CAR-267 -->
    
-    <!-- <bean id="promotions.manager" class="de.hybris.platform.promotions.jalo.CachingPromotionsManager" init-method="init" destroy-method="destroy" scope="tenant" >
+   <!-- <bean id="promotions.manager" class="de.hybris.platform.promotions.jalo.CachingPromotionsManager" init-method="init" destroy-method="destroy" scope="tenant" >
     	  <property name="cache" ref="promotionsCachingStrategy"/>
 	</bean>
 	
@@ -2159,12 +2310,16 @@
 	 <alias alias="promotionsCachingStrategy" name="defaultPromotionsCachingStrategy"/>
 		<bean id="defaultPromotionsCachingStrategy" class="com.tisl.mpl.cache.strategy.MplDefaultCachingStrategy" scope="tenant"> 
 		<property name="memCacheEnabled" value="${promotion.memcache.enabled}"/>
-	</bean> -->
+	</bean>  -->
 
 	
     <!-- Override the Cart so that calls to get promotion results can be intercepted -->
    
+
+       <!--<bean id="de.hybris.platform.jalo.order.Cart" class="de.hybris.platform.promotions.jalo.order.PromotionCart" scope="prototype" />-->
+
     <!-- <bean id="de.hybris.platform.jalo.order.Cart" class="de.hybris.platform.promotions.jalo.order.PromotionCart" scope="prototype" /> -->
+
 
     <!-- CACHING FINISH -->
      <!-- CAR-285 Start Zipping XML Creation and Copying Job Sitemap Start -->
@@ -2174,6 +2329,51 @@
 			</bean>
     
     <!-- CAR-285 End -->
-</beans>
+    
+    	 
+ 	 <!-- //Added for 3782 -->
+ 	<alias name="productJwelConverter" alias="productJwelConverter"/>
+ 	<bean id="productJwelConverter" parent="abstractPopulatingConverter">
+ 		<property name="targetClass" value="de.hybris.platform.commercefacades.product.data.ProductData"/>
+ 		<property name="populators">
+ 			<list>
+ 				<ref bean="productPopulator"/>
+ 			</list>
+ 		</property>
+ 	</bean>
+ 	<!-- //Added for 3782 -->
+    <bean id="catalogUtils" class="com.tisl.mpl.util.CatalogUtils" />
+    
 
+    <!-- added for PR-4 -->
+    <bean id="SendRefundSmsCronJob"
+		class="com.tisl.mpl.marketplacecommerceservices.jobs.SendRefundSmsCronJob"
+		autowire="byName">
+	</bean>
+<!-- added for PR-4 -->
+    <bean id="mplPincodeDistanceService" class="com.tisl.mpl.marketplacecommerceservices.service.impl.MplPincodeDistanceServiceImpl" ></bean>
+    <bean id="mplDistanceMatrixUtility" class="com.tisl.mpl.util.DistanceMatrixUtility" />
+    
+    <!--  TPR-6945 Near Real time Stock and Price changes in PLP and PDP -->
+    
+	<bean id="productSpecificIndexerCronJob"
+		class="com.tisl.mpl.marketplacecommerceservices.jobs.ProductSpecificIndexerCronJob"
+		autowire="byName">
+	</bean>   
+    
+	<bean id="solrSlaveReplicatorJob"
+		class="com.tisl.mpl.marketplacecommerceservices.jobs.SolrSlaveReplicatorJob"
+		autowire="byName">
+		<property name="solrCoreNameResolver" ref="solrCoreNameResolver" />
+	</bean>
+	
+	<bean id="akamaiRefreshCronJob"
+		class="com.tisl.mpl.marketplacecommerceservices.jobs.AkamaiRefreshCronJob"
+		autowire="byName">
+	</bean>
+	
+	<!--  End TPR-6945 -->
+
+    
+</beans>
 

@@ -1,0 +1,1306 @@
+.account{
+	margin:0 auto;
+	max-width:900px;
+	.account-header,#accountHead{
+		display:none; 
+	}
+    .luxury-mobile-myaccount{
+        margin-top: 25px;
+        
+        .menu-select{
+            width: 100%;
+            @include media-breakpoint-down(sm) {
+                option{
+                    font-size: 12px;
+                }
+            }
+            
+        }
+    }
+	.wrapper{
+		display:inline-block;
+		width:100%;
+		margin-top: 50px;
+		.left-nav{
+			width:35%;
+			float:left;
+			ul{
+			padding:0px;
+			list-style-type:none;
+				li{
+					border: 1px solid #e0dfed;
+	    			border-radius: $border-radius-small;
+	    			margin-bottom:20px;
+					a{
+						display: block;
+					    padding: 15px;
+					    font-size: 18px;
+					}
+				}
+			}
+		}
+		.right-account{
+			width:59%;
+			float:left;
+			margin:0 3%;
+			border: 1px solid #e0dfed;
+    		border-radius: $border-radius-small;
+    		>h2{
+				border-bottom: 1px solid #e0dfed;
+			    border-radius: 3px;
+			    font-size:22px;
+			    padding:15px;
+			    margin:0px;
+			}
+			h2{
+				font-size:22px; 
+				margin-top:0px;
+			}
+			.block-element{
+				display:inline-block;
+				width:100%;
+			}
+    		.info{
+    			padding:20px;
+    			border-bottom:1px solid #d2d2d2;
+    			background:#fff;
+                
+                &.card-list{
+                    h2{
+                        text-align: center;
+                    }
+                }
+	    	}
+			.halfwidth{
+				width:50%;
+				float:left;
+				/*min-height:63px;*/
+			}
+			.fullwidth{
+				width:100%;
+				display:inline-block;
+				/*min-height:65px;*/
+			}
+			a.button, button{
+				background: #2d2d2d;
+			    color: #fff;
+			    border: 0px;
+			    padding: 10px 20px;
+			    width:auto;
+			    border-radius: 3px;
+                text-align: center;
+                display: block;
+                
+                 @include media-breakpoint-down(sm) {
+                     width:100%;
+                }
+			}
+			label{
+				width:100%;
+			}
+			input,select{
+				/*margin-bottom: 20px;*/
+			    padding: 8px;
+			    width: 90%;
+			    border: 1px solid #d2d2d2;
+			    border-radius: 3px;
+			    margin-bottom : 20px;
+			}           
+            #landmark{
+               width: 100%;  
+            }
+			.calender{
+				.half_span{
+					width:70px;
+					float:left;
+					/*margin-right:10px;*/
+					.selectboxit {
+						max-width:65px;
+						border: 1px solid #ddd;
+						border-radius: 3px;
+						background:#fff;
+						.selectboxit-arrow-container{
+							width:15px;
+						}
+					}
+				}
+			}
+			.gender{
+				.selectboxit{
+					width:230px !important;
+					border-radius:$border-radius-small;
+					border: 1px solid #d2d2d2;
+					background:#fff;
+				}
+				label{
+					display:block;
+					height:30px;
+				}
+			}            
+            .info.card-list{
+                h2 {
+                    font-size: 14px;
+                    margin-top: 0;
+                }
+            }
+            
+            #addressForm{             
+                .half{
+                    margin-bottom: 20px;
+                }                    
+                input, select, textarea{
+                    margin-bottom: 0px;
+                }                
+                
+            }
+		}
+		.password{
+			padding:15px;
+			border-bottom:1px solid #d2d2d2;
+			background:#f9f9f9;
+		}
+		.nickname{
+			padding:15px;
+			background:#f9f9f9;
+		}
+		.order-history{
+			.account-emptyOrderMessage{
+				padding:25px 15px;
+				text-align:center;
+				font-size:18px;
+				.lux-shopwomen,.lux-shopmen{
+					background: #2d2d2d;
+				    color: #fff;
+				    border: 0px;
+				    padding: 10px 20px;
+				    width: 200px;
+				    border-radius: 3px;
+				    display:inline-block;
+				    margin-right:10px;
+				    font-size:16px;
+				}
+				.empty-order-btn{
+					/*margin-top:70px;*/
+				}
+			}
+            #order_pagination,.pagination-order-history{
+                width: 50%;
+                float: left;  
+            }
+            .pagination-order-history{
+                ul.pagination{
+                    padding: 0px;
+                }
+            }
+            .pagination{
+                float:right;
+                list-style: none;
+                li{
+                    display: inline-block;
+                    
+                    &.active{
+                        text-decoration: underline;
+                    }
+                    
+                    &.next{
+                        span{
+                            position: relative;
+                            
+                            &:after{
+                                content: "\f0da";
+                                font: normal normal normal 14px/1 FontAwesome; 
+                                position: absolute;
+                                top: 3px;
+                                padding-left: 5px;
+                            }                            
+                        }                        
+                    }
+                }
+                
+            }
+            #displayPaginationCountUp, .navigation2, .pagination-order-history{
+                padding: 20px;
+            }
+            .pagination_ul{
+                padding: 20px;
+                clear:both;
+                
+                > li{
+                   border: 1px solid #e4e8f0; 
+                }
+                
+                li{
+                    list-style: none;
+                    .product-block{
+                        padding: 0px;
+                        
+                        li{
+                            list-style: none;
+                            
+                            @include media-breakpoint-down(sm) {
+                                .btn-sm{
+                                    width: 100%;
+                                    margin: 2px 0px;
+                                }
+                            }                            
+                        }
+                        .header{
+                            position: initial;
+                            border: 0px;
+                            height: auto!important;
+                            
+                            ul{
+                                background: #f9f9f9;
+                                border: 1px solid #e4e8f0;
+                                padding: 0px;
+                                display: table;
+                                width: 100%;
+                                
+                                @include media-breakpoint-down(sm) {
+                                    display: block;
+                                }
+                                
+                                li{
+                                    display: inline-block;
+                                    border-right: 1px solid #e4e8f0;
+                                    padding: 5px;
+                                    width: 23%;
+                                    vertical-align: top;
+                                    word-break: break-all;
+                                    display: table-cell;
+                                    
+                                    &:first-child{
+                                        width: 30%;
+                                    }
+                                    
+                                    @include media-breakpoint-down(sm) {
+                                        display: block;
+                                    }
+                                    
+                                    @include media-breakpoint-down(sm) {
+                                        display: block;
+                                         width:100%;
+                                         border-bottom: 1px solid #e4e8f0;
+                                    }
+                                    span{
+                                        display: block;
+                                    }
+                                }
+                                li:last-child{                                   
+                                    border-right:0px;                                  
+                                }
+                            }
+                        }
+                        .item{                                                  
+                             padding: 20px;                           
+                            .image{
+                                display: inline-block;
+                                width: 35%;
+                                vertical-align: top;
+                                @include media-breakpoint-down(sm) {
+                                    display: inline;
+                                    width: 100%;                                   
+                                }
+                            }
+                            .details{
+                                display: inline-block;
+                                width: 63%;
+                                vertical-align: top;
+                                
+                                 @include media-breakpoint-down(sm) {
+                                    display: inline;
+                                    width: 100%;
+                                }
+                            }
+                            
+                        }                       
+                        
+                        .modal.cancellation-request{
+                            top:25%;
+                            width: 330px;
+                            margin: auto;
+                            
+                            @include media-breakpoint-down(sm) {
+                                top:10%;
+                            }
+                            
+                            .content{                                
+                                margin: auto;
+                                background: #fff;
+                                .cancellation-request-block{
+                                    
+                                    h2{
+                                        font-size: 15px;
+                                        font-weight: bold;                                     
+                                    }
+                                    
+                                    ul{
+                                        padding: 0px;
+                                    }
+                                    .products{
+                                          .product-info{
+                                            .product-img{
+                                                vertical-align: top;
+                                                width: 32%;
+                                                display: inline-block;
+                                            }
+                                            .product{
+                                                vertical-align: top;
+                                                width: 65%;
+                                                display: inline-block;
+
+                                                .item-info{
+                                                    display: block;
+                                                    font-size: 14px;
+                                                    
+                                                    .price{
+                                                        b, .priceFormat{
+                                                            display: inline-block;                                                            
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                    
+                                    .product{
+                                        .item-info{
+                                            span{
+                                                display: block;
+                                            }
+                                        } 
+                                        .product-name{
+                                            font-size: 15px;
+                                        }
+                                        .item-info{
+                                            font-size: 16px;
+                                        }
+                                        .item{
+                                            padding: 0px;
+                                        }                                        
+                                      
+                                    }
+                                    .questions{
+                                        label{
+                                            font-size: 18px;
+                                        }
+                                    }
+                                    .return-container{
+                                        .questions{
+                                            select{
+                                                margin-bottom: 10px;
+                                                width: 100%;
+                                                font-size: 14px;
+                                            }
+                                        }
+                                    }
+                                    .item{
+                                        padding: 0px;
+                                    }
+                                }
+                            }
+                            .overlay{
+                                display: none;
+                            }
+                            .light-red.cancel-confirm{
+                                width: 100%;
+                            }                            
+                            button.close{
+                                display: block;
+                                position: absolute;
+                                width: 25px;
+                                height: 25px;
+                                top: 10px;
+                                right: 10px;
+                                left: auto;
+                                margin: 0;
+                                line-height: 1;
+                                min-width: 0;
+                                padding: 0;
+                                border: 0;
+                                background: 0;
+                                box-shadow: none;
+                                z-index: 5;        
+                                &:before {
+                                    content: "\00d7";
+                                    color: #2d2d2d;
+                                    font-family: Montserrat;
+                                    font-size: 24px;
+                                    font-weight: 500;
+                                    transition: font-weight .15s;
+                                }
+                            } 
+                        }
+                        .modal.account{
+                            
+                             .cancellation-request-block.success{
+                                h2{
+                                    font-size: 18px;
+                                    line-height: 14px;
+                                    font-weight: bold;
+                                }
+                                .return-container.container{
+                                    width: 100%;
+                                    padding: 0px;
+                                }
+                            }
+                            
+                        }
+                        
+                    }
+                }
+                
+            }
+		}
+		.card-list{
+			.saved-cards{
+				list-style-type:none;
+				padding:0px;
+                .number{
+                    background: #f9f9f9;
+                    border: 1px solid #dce1eb;
+                    position: relative;
+                    padding: 25px;
+                    width: 100%;
+                    border-radius: 10px;
+                    margin-top: 25px;
+                }
+                
+                .paymentItem{
+                    img {
+                        position: absolute;
+                        display: block;
+                        top: 40%;
+                        left: 20px;                    
+                        max-width: 50px;
+                        vertical-align: middle;
+                        
+                         @include media-breakpoint-down(sm) {  
+                             position: relative;
+                             top: 0%;
+                        left: 0px;
+                        }
+                    }
+                    .view-details{
+                        position: relative;
+                        float: right;
+                        top: 20px;
+                        right: 0;
+                        text-transform: uppercase;
+                        font-weight: 600;
+                        letter-spacing: 1.2px;
+                        margin-bottom: 5px;
+                        
+                        @include media-breakpoint-down(sm) {                            
+                            position: absolute;
+                            float: right;
+                            top: 25px;
+                            right: 10px;
+                        }
+                    } 
+                    h3{
+                        padding-left: 80px;
+                        font-weight: bold;
+                        font-size: 14px;
+                        line-height: 1.5;
+                        margin: 0px;
+                        @include media-breakpoint-down(sm) {  
+                             padding-left: 0px;
+                        }
+                    }
+                    p {
+                        font-size: 12px;
+                        line-height: 1.5;
+                        padding-left: 80px;
+                        color: #666;
+                        font-weight: 500;
+                        margin: 0px;
+                        
+                         @include media-breakpoint-down(sm) {  
+                             padding-left: 0px;
+                        }
+                    }                    
+                    
+                }
+                .paymentItem.active + .details{
+                    display: block;
+                }
+                .paymentItem.active{
+                    border-radius: 10px 10px 0px 0px;  
+                }
+                .delete-address-Popup{
+                    .content{
+                        width: 300px;
+                        height: auto;
+                        margin: auto;
+                        background: #fff;
+                        position: relative;
+                    }
+                }
+                .mpl-addressPopup.delete-address-Popup{
+                    top:25%;
+                    
+                    .overlay{
+                        display: none;
+                    }
+                    .number{
+                        background: transparent;
+                        border: 0px;
+                        position: relative;
+                        padding: 0px;
+                        width: 100%;
+                        border-radius: initial;
+                        
+                        h3, p{
+                            padding-left: 0px;
+                        } 
+                        img {
+                            position: relative;
+                            display: block;
+                            top: 0%;
+                            left: 0px;
+                            max-width: 50px;                           
+                        }
+                        
+                    }
+                    
+                    .address-deleteConfirmation{
+                        font-size: 12px;
+                        color: #ff1c47; 
+                    }
+                    .confirm-deletionButton {
+                        margin-top: 10px;
+                        background-color: #2d2d2d;
+                        color: #fff;
+                        text-transform: uppercase;
+                        height: 40px;
+                        line-height: 40px;
+                        padding: 0;
+                    }
+                    .closeColorBox {
+                        margin-top: 10px;
+                        background-color: #B9966B;
+                        opacity: .7;
+                        color: #000;
+                        height: 40px;
+                        line-height: 40px;
+                        padding: 0;
+                    }
+                    .close{
+                        display: block;
+                        position: absolute;
+                        width: 25px;
+                        height: 25px;
+                        top: 10px;
+                        right: 10px;
+                        left: auto;
+                        margin: 0;
+                        line-height: 1;
+                        min-width: 0;
+                        padding: 0;
+                        border: 0;
+                        background: 0;
+                        box-shadow: none;
+                        z-index: 5;
+                            &:before {
+                                content: "\00d7";
+                                color: #2d2d2d;
+                                font-family: "Montserrat";
+                                font-size: 24px;
+                                font-weight: 500;                        
+                                transition: font-weight .15s;
+                            }
+                    }                   
+                }
+                .details{
+                    max-height: 200px;
+                    width: 100%;
+                    display: none;
+                    border: 1px solid #dce1eb;
+                    border-radius: 0px 0px 10px 10px;
+                    
+                    ul{
+                        position: relative;
+                        padding: 20px 10px;
+                        
+                        >li, >li:first-child+li {
+                            width: 32.333%;
+                            display: inline-block;
+                            float: none;
+                            vertical-align: top;
+                            
+                            &.deletcard{
+                              vertical-align:bottom;
+                            }
+
+                             @include media-breakpoint-down(sm) {  
+                                 width: 100%;
+                                 float: none;
+                            }
+                        }
+                        h3{
+                            font-size: 14px;
+                            line-height: 1.5;
+                            margin: 0px;
+                        }
+                        p{
+                            font-size: 12px;
+                            line-height: 1.5;
+                            margin: 0px;
+                        }
+                        
+                        li a {
+                        text-decoration: underline;
+                        font-size: 12px;
+                        }
+                        a.delete {
+                            color: #333;                            
+                            top: 50%;
+                            margin-top: -5px;
+                            margin-right: 10px;
+                            font-weight: bold;
+                            text-transform: uppercase;
+                            letter-spacing: 1.2px;
+                            margin-bottom: 5px;
+                            float: right;
+                        }
+                        
+                        &.after {
+                            clear: both;
+                            content: "";
+                            display: table;
+                        }
+                    }
+                }
+                
+			}
+			.account-emptyOrderMessage{
+				text-align:center;
+			}
+		}
+		.new-address{
+			padding:15px;
+			background:#F9F9F9;
+			.halfwidth{
+				input{
+					width:95%;
+				}
+			}
+			ul{
+				list-style-type:none;
+				padding:0px;
+			}
+			input{
+				width:100%;
+			}
+			#new-address-option-1,#new-address-option-2,.residential,.commercial,#checkBox1,label[for="checkBox1"]{
+				display: inline;
+    			width: auto;
+			}
+			.residential{
+				margin-right:30px;
+			}
+			.optionsLandmark{
+				.selectboxit-container{
+					display: inline-block;
+				    width: 100%;
+				    border: 1px solid #d2d2d2;
+				    border-radius: $border-radius-small;
+				    background: #fff;
+				    .selectboxit{
+				    	width:100% !important;
+				    	height:37px;
+				    	background:#fff;
+				    }
+				}
+			}
+			.mobileno,.country{
+				input{
+					width:100%;
+				}
+			}
+			.stateselect{
+				.selectboxit-container{
+					display: inline-block;
+				    width: 100%;
+				    border: 1px solid #d2d2d2;
+				    float: left;
+				    background: #fff;
+				    border-radius: $border-radius-small;
+				    .selectboxit{
+				    	width:100% !Important;
+				    	height:37px;
+				    	background:#fff;
+				    }
+				}
+			}
+			.adresstype{
+				input{
+					display:none !important;
+				}
+				label{
+					display:inline;
+					padding:10px 10px;
+					margin-right:10px;
+				}
+			}
+			.actions{
+				button{
+					margin:0 auto;
+					
+				}
+			}
+			.address_landmarkOtherDiv{
+				margin-left:0px !important;
+			}
+			.selectboxit-container{
+				ul.selectboxit-options{
+					width:100%;
+					li{
+						a{
+							height:35px;
+							line-height:35px;
+						}
+					}
+				}
+				.otherOption{
+					line-height:35px;
+				}
+			}
+			.toggle-btn {
+			    border: 1px solid #2d2d2d;
+			    display: inline-block;
+			    padding: 10px;
+			    position: relative;
+			    text-align: center;
+			    transition: background .6s ease,color .6s ease;
+			    width: 50%;
+			    border-radius: 3px;
+			    margin-bottom: 0;
+			    font-weight: 400;
+			    z-index:1; 
+			    
+			}
+			.toggle[type="radio"]:checked + label{
+			    background: #2d2d2d;
+			    color:#fff;
+			}
+			
+		}
+		#address_item{
+			background:#fff;
+			ul{
+				padding:0px;
+				list-style-type:none;
+			}
+			.actions{
+				a{
+					margin-left:20px;
+				}
+			}
+			
+			.addressItem{
+				padding:15px;
+				border-radius:$border-radius-large;
+				border: 1px solid #d2d2d2;
+				background:#f9f9f9;
+				.actions{
+					text-align:right;
+				}
+                .make-default{
+                    float: left;
+                }
+			}
+			.mpl-addressBook{
+				margin-bottom:10px;
+                
+                address{
+                    word-wrap:break-word;
+                }
+			}
+			.mpl-addressPopup{                
+                /*left: auto;
+                right: auto;*/
+                .content{
+                    border-bottom:0px;
+                    padding: 0px;
+                }
+				.addressItem{
+					width: auto;
+				    top: 20%;
+				    position: fixed;
+				    left:auto;
+				    .buttons{
+					    .closeColorBox{
+                            color: #2d2d2d;
+                            background-color: #fff;
+                            border-color: #eef0f5;
+                                &:hover{                                    
+                                    background-color: #e6e6e6;
+                                    border-color: #c7cede;
+                                }
+					    }
+					    .confirm-deletionButton{
+					    	color:#fff;
+					    	background:#2d2d2d;
+					    }
+				    }
+				}
+				.address-deleteConfirmation {
+				    font-size: 12px;
+				    color: #ff1c47;
+				}
+			}
+		}
+	}
+	.addresses{
+		.actions{
+			button{
+				display:block;
+			}
+		}
+	}
+	ul.menu{
+		list-style-type: none;
+    	padding: 0;
+    	li{
+    		width:50%;
+    		float:left;
+    		padding:15px;
+    		height:250px;
+    		text-align:center;
+    		img{
+    			max-width:100px;
+    		}
+    		h3{
+    			font-size:18px;
+    		}
+    	}
+	}
+	.right-account{
+		.content:first-child{
+			border-bottom:1px solid #d2d2d2;
+			font-size:20px;
+		}
+		.content{
+			padding:15px;
+			h3{
+				font-size:18px;
+				margin-bottom:15px;
+			}
+		}
+		.faq{
+			padding:0px;
+		}
+		table{
+			margin:10px 0;
+			th{
+				font-size:16px;
+			}
+			td{
+				padding:5px 20px 0 0;
+			}
+		}
+	}
+	.right-account.rewards{
+		border:0px;
+		.coupon-listing{
+			border:1px solid #ddd;
+			border-radius:3px;
+			h2{
+				padding: 15px;
+    			border-bottom: 1px solid #ddd;
+			}
+			>p{
+				padding: 0 15px;
+			}
+		}
+		.coupon-container{
+		    max-width: 350px;
+		    border: 1px solid #d2d2d2;
+		    margin-left: 15px;
+		    border-radius: 3px;
+		    background: #F4F6F9;
+		    padding:0px;
+			h2{
+				border:0px;
+				padding:0px;
+				margin:0px;
+			}
+			.coupon-box{
+				display: inline-block;
+			    width: 100%;
+			    padding-top: 10px;
+			    .left{
+			    	float: left;
+				    width: 50%;
+				    padding: 15px;
+				    border-top: 1px solid #d2d2d2;
+				    text-align:center;
+				    color: #B9966B;
+				    p{
+				    	color:#333;
+				    }
+			    }
+			    .right{
+			    	float: right;
+				    width: 50%;
+				    padding: 15px;
+				    border-top: 1px solid #d2d2d2;
+				    text-align:center;
+			    }
+			}
+		}
+		.customer-service{
+			border: 1px solid #ddd;
+		    border-radius: 3px;
+		    margin-top: 20px;
+			h2{
+				padding: 15px;
+    			border-bottom: 1px solid #ddd;
+    			margin:0px;
+			}
+			ul{
+				list-style-type:none;
+				padding:0px;
+				overflow:hidden;
+				width:100%;
+				margin:0px;
+				li.step{
+					width:25%;
+					padding:10px 5px;
+					float:left;
+					text-align:center;
+					height:120px;
+					border-right:1px solid #ddd;
+					li:last-child{
+						border-right:0px solid #ddd;
+					}
+					span{
+						font-size:22px;
+					}
+				}
+			}
+		}
+	}
+}
+
+.page-termsOfUse{
+	.account{
+		.wrapper{
+			.right-account{
+				width:100%;
+			}
+		}
+	}
+}
+
+
+.breadcrumbs.wrapper{
+    list-style-type: none;
+	margin-top: 12px;
+	li{
+		display: inline-block;
+    	margin-right: 25px;
+    	position:relative;
+	}
+	li::after {
+	    width: 10px;
+	    height: 10px;
+	    position: absolute;
+	    content: url(../images/icon-breadcrumb.png);
+	    right: -20px;
+   		top: 3px;
+	}
+	li:last-child::after {
+	    content: '';
+	}
+}
+
+
+@include media-breakpoint-down(sm) {
+	.breadcrumbs.wrapper{
+		display:none;
+	}
+	.account{
+		.luxury-mobile-myaccount{
+			option{
+				font-size:0.7rem;
+			}
+		}
+		.wrapper{
+			margin-top:20px;
+		}
+		.left-nav{
+			display:none;
+		}
+		.luxury-mobile-myaccount{
+			.selectboxit-container{
+				display: inline-block;
+			    width: 100%;
+			    border: 1px solid #d2d2d2;
+			    float: left;
+			    background: #fff;
+			    border-radius: $border-radius-small;
+			    .selectboxit{
+			    	width:100% !Important;
+			    	height:37px;
+			    	background:#fff;
+			    }
+			}
+		}
+		.wrapper{
+			.right-account{
+				width:100%;
+				margin:0;
+				.halfwidth{
+					width:100%;
+					input,select{
+						width:100%;
+					}
+					.selectboxit-container{
+						width:100%;
+						.selectboxit{
+							width:100% !important;
+							background:#fff;
+						}
+					}
+				}
+				.calender{
+					.half_span{
+						width: 33.3%;
+						margin:0px;
+						.selectboxit{
+							max-width:96%;
+							background:#fff;
+						}
+					}
+				}
+				.gender{
+					margin-top:0px;
+				} 
+			}
+		}
+		.lux-shopmen{
+			margin-bottom:10px;
+		}
+		.new-address{
+			.adresstype{
+				label{
+					display:inline-block !Important; 
+					width:100% !Important;
+					margin-bottom:10px !Important;
+				}
+			} 
+		}
+		ul.menu{
+			li{
+				width:100%;
+			}
+		} 
+		.left-nav-footer-mobile{
+			width: 100%;
+		    padding: 10px;
+		    border: 1px solid #d2d2d2;
+		    border-radius: 3px;
+            margin-top: 30px;
+		}
+		.left-nav-footer-mobile + .selectboxit-container{
+			display:none;
+		}
+	} 
+	
+	
+}
+
+/*content pages */
+.tab-wrapper, .customer-care-boxes, .breadcrumbs wrapper {
+	display : none;
+}
+
+.contact-us-header {
+	margin-bottom: 30px;
+    text-align: center;
+	> .content {
+		margin-bottom: 20px;
+    	line-height: 2em;
+	}
+	ul {
+		list-style-type: none;
+	}
+	p {
+		margin-bottom : 0;
+		text-align : left;
+	}
+	.copy {
+		margin: 0 auto 50px;
+	    width: 60%;
+	    display: block;
+    }
+}
+.contactUsOptions {
+	display: inline-block;
+    width: 33%;
+    
+    a{
+	    color: #B9966B;
+	    text-decoration: underline;
+	}
+	img, img+div{ 
+		display: inline-block;
+	}
+}
+.account .wrapper .right-account textarea{
+    margin-bottom: 20px;
+    padding: 8px;
+    width: 100%;
+    border: 1px solid #d2d2d2;
+    border-radius: 3px;
+    box-shadow: none;
+}
+.page-address-book{
+    .overlay{
+        display: none;
+    }
+}
+.mpl-addressPopup.delete-address-Popup.modal.cancellation-request{
+    .addressItem{
+        width: auto;
+        top: 20%;
+        position: relative;
+        left: initial;
+        padding: 15px;
+        border-radius: 6px;
+        border: 0px;
+        background: transparent;
+        position: initial!important;
+        
+        ul{
+            font-size: 16px;
+            
+            p{
+                font-weight: bold;
+            }
+        }
+    }    
+}
+.saved-cards{
+    .mpl-addressPopup.delete-address-Popup.modal.cancellation-request{
+        .addressItem{
+            
+            padding: 0px;
+            
+            .number{
+                .acc-savecard-left{
+                    display: inline-block;
+                    vertical-align: top;
+                    width: 19%;
+                }
+                .acc-savecard-right{
+                    display: inline-block;
+                    width: 78%;
+                    vertical-align: top;
+                }
+            }
+        }
+    }  
+}
+#mplCustomerProfileForm{
+	#errfn,#errln,#errEmail,#errMob{
+		margin-top: 0px !important;
+		pading-top: 0px !important;
+	}	
+}
+
+.right-account .gender {
+	clear : both;
+}	
+
+.page-orders{
+    .product-block{
+        .account.active{
+            top: 20%;
+            .content{
+                width: 300px;
+                background: #fff;
+                margin: auto;
+                top: 20%;
+                z-index: 1;
+                position: relative;
+                font-size: 14px;
+            }
+        }
+    }
+}
+/*.mega-menu .sub-menu:before {
+    background-color: #fff;
+    position: absolute;
+    content: close-quote;
+    padding-left: 1000px;
+    margin-left: -1000px;
+    height: 100%;
+    right: 50%;
+    z-index: -1;
+    width: 100%;
+}
+.mega-menu .sub-menu:after {
+    position: absolute;
+    content: close-quote;
+    left: 0;
+    width: 100%;
+    background-color: #fff;
+    height: 100%;
+    top: 0;
+    margin-right: -1000px;
+    z-index: -2;
+}	*/
+#juspayconnErrorDiv{
+    display: none;
+}
+
+#changeAddressPopup{
+    display: none;
+    position: fixed;
+    top: 0;
+    right:0;
+    left:0;
+}
+#deliveryAddressForm .close{
+    top: -8px;
+    right: 2px;
+}
+#changeAddressPopup .modal-dialog{
+	max-height: calc(100vh - 100px);
+	overflow: auto;
+    overflow-x: hidden!important;
+}
+#changeAddressPopup .or{
+    text-align: center;
+}
+#changeAddressPopup .NOP{
+border-right: 1px solid #ccc;
+}
+#deliveryAddressForm .addressSpace{
+    word-wrap: break-word;
+    font-size: 12px;
+}
+#otpPopup{
+    position: fixed!important;
+    top: 0px;
+    left: 0;
+    right: 0;
+    .modal-content{
+        padding: 15px;
+        .modal-body{
+            .col-md-12.clearfix{
+                padding: 0px;
+            }
+        }
+        .otpForm .submitOrange{
+            background: #2d2d2d;
+        }
+        .otpForm .otpMessage{
+            padding: 5px 20px;
+        }
+    }
+}

@@ -1,0 +1,88 @@
+#
+# Create the Apparel UK Store
+#
+$storePrefix=lux
+$productCatalog=$storePrefixProductCatalog
+$currencies=INR
+$net=false
+$storeUid=$storePrefix
+$defaultCurrency=INR
+$languages=ja,en,de,zh
+$defaultLanguage=en
+$unitedKingdom=GB,GG,IM,JE
+$europeNotUK=AD,AL,AT,BA,BE,BG,BY,CH,CY,CZ,DE,DK,EE,ES,FI,FO,FR,GI,GL,GR,HR,HU,IE,IS,IT,LI,LT,LU,LV,MC,MD,ME,MK,MT,NL,NO,PL,PT,RO,RS,RU,SE,SI,SK,SM,TR,UA,VA,IN
+$asianCountries=CN,JP,VN,HK,KP,KR
+$deliveryCountries=$unitedKingdom,$europeNotUK,$asianCountries,US,IN
+$orderProcessCode=mpl-oms-submitorder-process
+$pickupInStoreMode=BUY_AND_COLLECT
+$customerAllowedToIgnoreSuggestions=true
+$paymentProvider=Mockup
+$promoGrp=luxPromoGrp
+$checkoutFlowGroup=marketplaceMultiPathCheckoutGroup
+$classificationCatalog=pcmClassification
+
+INSERT_UPDATE PromotionGroup;Identifier[unique=true];
+;$promoGrp;
+
+# Base Store
+INSERT_UPDATE BaseStore;uid[unique=true];catalogs(id);currencies(isocode);net;taxGroup(code);storelocatorDistanceUnit(code);defaultCurrency(isocode);languages(isocode);defaultLanguage(isocode);deliveryCountries(isocode);submitOrderProcessCode;pickupInStoreMode(code);customerAllowedToIgnoreSuggestions;paymentProvider;checkoutFlowGroup;captchaCheckEnabled
+;$storeUid;$productCatalog,$classificationCatalog;$currencies;$net;jp-taxes;km;$defaultCurrency;$languages;$defaultLanguage;$deliveryCountries;$orderProcessCode;$pickupInStoreMode;$customerAllowedToIgnoreSuggestions;$paymentProvider;$checkoutFlowGroup;true
+ 
+ 
+INSERT_UPDATE BaseStore2DeliveryModeRel;source(uid)[unique=true];target(code)[unique=true]
+;$storeUid;premium-net
+;$storeUid;standard-net
+;$storeUid;premium-gross
+;$storeUid;standard-gross
+#;$storeUid;pickup
+
+INSERT_UPDATE OndemandBaseStorePreference;baseStore(uid)[unique=true];externalCallsEnabled;atsFormula
+;$storeUid;true;SELLERSKU-ATS
+
+###Payment Related
+UPDATE BaseStore;uid[unique=true];CodUpperLimit;CodLowerLimit;juspayWebHookTAT;juspayEBSTAT;ebsTatExpiryAlertTime;prepaidUpperLimit;prepaidLowerLimit
+;lux;50000;2000;10;6;15;100000;0
+
+INSERT_UPDATE PaymentType;mode;isAvailable;modeId[unique=true];baseStore(uid)[default=$storeUid]
+;Credit Card;true;luxCreditCard
+;Debit Card;true;luxDebitCard
+;Netbanking;true;luxNetBanking
+;EMI;true;luxEMI
+;COD;true;luxCOD
+;Cheque;false;luxCheque
+
+INSERT_UPDATE Bank;bankName;bankCode[unique=true];baseStore(uid)
+;HDFC Bank;HDFB;
+;Axis Bank;AXIB;
+;CITI Bank;CITB;
+;ICICI Bank;ICIB;
+;State Bank of India;SBOI;
+;Bank of India;BOIN;
+;Bank of Maharashtra;BOMH;
+;Central Bank of India;CBIN;
+;Corporation Bank;CRPB;
+;Development Credit Bank;DECB;
+;Federal Bank;FEDB;
+;Industrial Development Bank of India;IDBI;
+;Indian Bank;INDB;
+;IndusInd Bank;INIB;
+;Indian Overseas Bank;INOB;
+;Jammu and Kashmir Bank;JAKB;
+;Karnataka Bank;KARB;
+;Karur Vysya;KARV;
+;State Bank of Bikaner and Jaipur;SBBJ;
+;State Bank of Hyderabad;SBOH;
+;State Bank of Mysore;SBOM;
+;State Bank of Travancore;SBOT;
+;South Indian Bank;SOIB;
+;Union Bank of India;UBOI;
+;United Bank Of India;UNBI;
+;Vijaya Bank;VIJB;
+;Yes Bank;YESB;
+;CityUnion;CITU;
+;Canara Bank;CANB;
+;State Bank of Patiala;SBOP;
+;Deutsche Bank;DETB;
+;Kotak Bank;KOTB;
+;Dhanlaxmi Bank;DHNB;
+;ING Vysya Bank;INGV;

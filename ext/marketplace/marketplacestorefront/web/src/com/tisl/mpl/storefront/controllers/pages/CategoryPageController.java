@@ -14,6 +14,7 @@
 package com.tisl.mpl.storefront.controllers.pages;
 
 
+import de.hybris.platform.acceleratorcms.model.components.ProductGridComponentModel;
 import de.hybris.platform.acceleratorservices.controllers.page.PageType;
 import de.hybris.platform.acceleratorservices.data.RequestContextData;
 import de.hybris.platform.acceleratorservices.storefront.data.MetaElementData;
@@ -22,11 +23,14 @@ import de.hybris.platform.acceleratorstorefrontcommons.constants.WebConstants;
 import de.hybris.platform.acceleratorstorefrontcommons.controllers.pages.AbstractCategoryPageController;
 import de.hybris.platform.acceleratorstorefrontcommons.util.MetaSanitizerUtil;
 import de.hybris.platform.acceleratorstorefrontcommons.util.XSSFilterUtil;
+import de.hybris.platform.basecommerce.model.site.BaseSiteModel;
 import de.hybris.platform.category.CategoryService;
 import de.hybris.platform.category.model.CategoryModel;
 import de.hybris.platform.cms2.exceptions.CMSItemNotFoundException;
+import de.hybris.platform.cms2.model.contents.components.AbstractCMSComponentModel;
 import de.hybris.platform.cms2.model.pages.CategoryPageModel;
 import de.hybris.platform.cms2.model.pages.ContentPageModel;
+import de.hybris.platform.cms2.servicelayer.data.ContentSlotData;
 import de.hybris.platform.commercefacades.product.data.CategoryData;
 import de.hybris.platform.commercefacades.product.data.ProductData;
 import de.hybris.platform.commercefacades.search.ProductSearchFacade;
@@ -41,6 +45,7 @@ import de.hybris.platform.servicelayer.config.ConfigurationService;
 import de.hybris.platform.servicelayer.exceptions.UnknownIdentifierException;
 import de.hybris.platform.servicelayer.session.Session;
 import de.hybris.platform.servicelayer.session.SessionService;
+import de.hybris.platform.site.BaseSiteService;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
@@ -78,12 +83,15 @@ import com.google.common.base.Splitter;
 import com.google.common.collect.Iterables;
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.constants.MplConstants;
+import com.tisl.mpl.core.model.CustomSkuComponentModel;
 import com.tisl.mpl.core.model.PriorityBrandsModel;
 import com.tisl.mpl.core.model.SeoContentModel;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.facade.category.MplCategoryFacade;
+import com.tisl.mpl.facades.constants.MarketplaceFacadesConstants;
 import com.tisl.mpl.marketplacecommerceservices.service.MplCmsPageService;
 import com.tisl.mpl.marketplacecommerceservices.service.brand.impl.DefaultBrandService;
+import com.tisl.mpl.solrfacet.search.impl.DefaultMplProductSearchFacade;
 import com.tisl.mpl.storefront.constants.ModelAttributetConstants;
 import com.tisl.mpl.storefront.controllers.ControllerConstants;
 import com.tisl.mpl.storefront.controllers.helpers.FrontEndErrorHelper;
@@ -132,6 +140,9 @@ public class CategoryPageController extends AbstractCategoryPageController
 	@Autowired
 	private MplCategoryFacade mplCategoryFacade;
 
+	@Resource(name = "baseSiteService")
+	private BaseSiteService baseSiteService;
+
 
 	//Below Lines Commented as Sonar Fix
 	//Start
@@ -146,6 +157,10 @@ public class CategoryPageController extends AbstractCategoryPageController
 	private SessionService sessionService;
 	@Resource(name = "productSearchFacade")
 	private ProductSearchFacade<ProductData> productSearchFacade;
+
+	@Resource(name = "defaultMplProductSearchFacade")
+	private DefaultMplProductSearchFacade searchFacade;
+
 	private static final String NEW_CATEGORY_URL_PATTERN = "/**/c-{categoryCode:.*}";
 	private static final String NEW_CATEGORY_URL_PATTERN_PAGINATION = "/**/c-{categoryCode:.*}/page-{page}";
 	private static final String CATEGORY_URL_OLD_PATTERN = "/**/c";
@@ -188,7 +203,29 @@ public class CategoryPageController extends AbstractCategoryPageController
 	//sonar fix
 	//private static final Integer PAGE_SIZE = new Integer(24);
 
+	//sonar fix
+	private static final String PAGE_SIZE_KEY = "pageSize";
+
 	private static final Integer PAGE_SIZE = Integer.valueOf(24);
+
+	private static final String SEARCH_CATEGORY_KEY = "searchCategory";
+	private static final String RESET_ALL_KEY = "resetAll";
+	private static final String CAT_NAME_KEY = "catName";
+	private static final String CAT_CODE_KEY = "catCode";
+	private static final String BUY_KEY = " Buy ";
+	private static final String ONLINE_KEY = " Online";
+	private static final String LAZY_INTERFACE_KEY = "lazyInterface";
+
+	//UF-265
+	//private static final String PRODUCT_GRID_COMPONENT_POSITION = "Section4B";
+	//For most of the templates PLP slot is Section4B
+	//For BrandPageTemplate PLP slot is Section3
+	//For FootwearCategoryLandingPageTemplate PLP slot is Section7B
+	//For FootwearBrandLandingPageTemplate PLP slot is Section4
+	//SDI-1078
+	private static final String[] PRODUCT_GRID_COMPONENT_POSITION_LIST =
+	{ "Section4B", "Section3", "Section7B", "Section4" };
+	private static final String CUSTOM_SKU_COMPONENT_POSITION = "Section4A";
 
 	/**
 	 * @return the pageSiseCount
@@ -229,9 +266,9 @@ public class CategoryPageController extends AbstractCategoryPageController
 			@RequestParam(value = PAGE, defaultValue = "0") int pageNo,
 			@RequestParam(value = SHOW, defaultValue = PAGEVAl) final ShowMode showMode,
 			@RequestParam(value = SORT, required = false) final String sortCode,
-			@RequestParam(value = "pageSize", required = false) final Integer pageSize,
-			@RequestParam(value = "searchCategory", required = false) String dropDownText,
-			@RequestParam(value = "resetAll", required = false) final boolean resetAll, final Model model,
+			@RequestParam(value = PAGE_SIZE_KEY, required = false) final Integer pageSize,
+			@RequestParam(value = SEARCH_CATEGORY_KEY, required = false) String dropDownText,
+			@RequestParam(value = RESET_ALL_KEY, required = false) final boolean resetAll, final Model model,
 			final HttpServletRequest request, final HttpServletResponse response)
 	{
 		//EQA review comments added
@@ -356,8 +393,8 @@ public class CategoryPageController extends AbstractCategoryPageController
 				catName = getCategoryModelUrlResolver().resolve(category);
 
 				final String newcatName = catName.substring(1, catName.lastIndexOf('/'));
-				model.addAttribute("catName", newcatName);
-				model.addAttribute("catCode", categoryCode.toLowerCase());
+				model.addAttribute(CAT_NAME_KEY, newcatName);
+				model.addAttribute(CAT_CODE_KEY, categoryCode.toLowerCase());
 				//model.addAttribute("brand", Boolean.valueOf(true));//SonarFix
 				model.addAttribute(BRANDNAME, Boolean.TRUE);
 				/* Added for TPR-1283 --Ends */
@@ -376,8 +413,8 @@ public class CategoryPageController extends AbstractCategoryPageController
 
 					final String cateName = category.getName();
 
-					metaKeywords = brandName + " " + cateName + ", " + brandName + " " + cateName + " Online" + "," + " Buy "
-							+ brandName + " " + cateName + "," + " Buy " + brandName + " " + cateName + " Online";
+					metaKeywords = brandName + " " + cateName + ", " + brandName + " " + cateName + ONLINE_KEY + "," + BUY_KEY
+							+ brandName + " " + cateName + "," + BUY_KEY + brandName + " " + cateName + ONLINE_KEY;
 					//EQA Review Comments added
 					metaDescription = brandName + " " + cateName + ModelAttributetConstants.DESCRIPTION_TEXT1 + brandName + " "
 							+ cateName + ModelAttributetConstants.DESCRIPTION_TEXT2 + cateName + " by " + brandName
@@ -458,9 +495,9 @@ public class CategoryPageController extends AbstractCategoryPageController
 			@RequestParam(value = "q", required = false) String searchQuery, @PathVariable("page") int pageNo,
 			@RequestParam(value = SHOW, defaultValue = PAGEVAl) final ShowMode showMode,
 			@RequestParam(value = SORT, required = false) final String sortCode,
-			@RequestParam(value = "pageSize", required = false) final Integer pageSize,
-			@RequestParam(value = "searchCategory", required = false) String dropDownText,
-			@RequestParam(value = "resetAll", required = false) final boolean resetAll, final Model model,
+			@RequestParam(value = PAGE_SIZE_KEY, required = false) final Integer pageSize,
+			@RequestParam(value = SEARCH_CATEGORY_KEY, required = false) String dropDownText,
+			@RequestParam(value = RESET_ALL_KEY, required = false) final boolean resetAll, final Model model,
 			final HttpServletRequest request, final HttpServletResponse response)
 	{
 		//EQA review comments added
@@ -584,8 +621,8 @@ public class CategoryPageController extends AbstractCategoryPageController
 				catName = getCategoryModelUrlResolver().resolve(category);
 
 				final String newcatName = catName.substring(1, catName.lastIndexOf('/'));
-				model.addAttribute("catName", newcatName);
-				model.addAttribute("catCode", categoryCode.toLowerCase());
+				model.addAttribute(CAT_NAME_KEY, newcatName);
+				model.addAttribute(CAT_CODE_KEY, categoryCode.toLowerCase());
 				//model.addAttribute("brand", Boolean.valueOf(true));//SonarFix
 				model.addAttribute(BRANDNAME, Boolean.TRUE);
 				/* Added for TPR-1283 --Ends */
@@ -604,8 +641,8 @@ public class CategoryPageController extends AbstractCategoryPageController
 
 					final String cateName = category.getName();
 
-					metaKeywords = brandName + " " + cateName + ", " + brandName + " " + cateName + " Online" + "," + " Buy "
-							+ brandName + " " + cateName + "," + " Buy " + brandName + " " + cateName + " Online";
+					metaKeywords = brandName + " " + cateName + ", " + brandName + " " + cateName + ONLINE_KEY + "," + BUY_KEY
+							+ brandName + " " + cateName + "," + BUY_KEY + brandName + " " + cateName + ONLINE_KEY;
 					//EQA Review Comments added
 					metaDescription = brandName + " " + cateName + ModelAttributetConstants.DESCRIPTION_TEXT1 + brandName + " "
 							+ cateName + ModelAttributetConstants.DESCRIPTION_TEXT2 + cateName + " by " + brandName
@@ -685,9 +722,9 @@ public class CategoryPageController extends AbstractCategoryPageController
 			@RequestParam(value = PAGE, defaultValue = "0") int pageNo,
 			@RequestParam(value = "show", defaultValue = "Page") final ShowMode showMode,
 			@RequestParam(value = "sort", required = false) final String sortCode,
-			@RequestParam(value = "pageSize", required = false) final Integer pageSize,
-			@RequestParam(value = "searchCategory", required = false) String dropDownText,
-			@RequestParam(value = "resetAll", required = false) final boolean resetAll, final Model model,
+			@RequestParam(value = PAGE_SIZE_KEY, required = false) final Integer pageSize,
+			@RequestParam(value = SEARCH_CATEGORY_KEY, required = false) String dropDownText,
+			@RequestParam(value = RESET_ALL_KEY, required = false) final boolean resetAll, final Model model,
 			final HttpServletRequest request, final HttpServletResponse response)
 	{
 		//EQA review comments added
@@ -754,8 +791,8 @@ public class CategoryPageController extends AbstractCategoryPageController
 			catName = getCategoryModelUrlResolver().resolve(category);
 
 			final String newcatName = catName.substring(1, catName.lastIndexOf('/'));
-			model.addAttribute("catName", newcatName);
-			model.addAttribute("catCode", categoryCode.toLowerCase());
+			model.addAttribute(CAT_NAME_KEY, newcatName);
+			model.addAttribute(CAT_CODE_KEY, categoryCode.toLowerCase());
 			/* Added for TPR-1283 --Ends */
 			//Set the drop down text if the attribute is not empty or null
 			if (dropDownText != null && !dropDownText.isEmpty())
@@ -882,10 +919,10 @@ public class CategoryPageController extends AbstractCategoryPageController
 			@RequestParam(value = PAGE, defaultValue = "0") int pageNo,
 			@RequestParam(value = SHOW, defaultValue = PAGEVAl) final ShowMode showMode,
 			@RequestParam(value = SORT, required = false) final String sortCode,
-			@RequestParam(value = "pageSize", required = false) Integer pageSize,
-			@RequestParam(value = "searchCategory", required = false) String dropDownText,
-			@RequestParam(value = "resetAll", required = false) final boolean resetAll,
-			@RequestParam(value = "lazyInterface", required = false) final String lazyInterface, final Model model,
+			@RequestParam(value = PAGE_SIZE_KEY, required = false) Integer pageSize,
+			@RequestParam(value = SEARCH_CATEGORY_KEY, required = false) String dropDownText,
+			@RequestParam(value = RESET_ALL_KEY, required = false) final boolean resetAll,
+			@RequestParam(value = LAZY_INTERFACE_KEY, required = false) final String lazyInterface, final Model model,
 			final HttpServletRequest request, final HttpServletResponse response)
 	{
 		String returnStatement = null;
@@ -984,15 +1021,10 @@ public class CategoryPageController extends AbstractCategoryPageController
 						return null;
 					}
 				}
-				model.addAttribute("catName", resolvedcatName);
-				model.addAttribute("catCode", categoryCode.toLowerCase());
+				model.addAttribute(CAT_NAME_KEY, resolvedcatName);
+				model.addAttribute(CAT_CODE_KEY, categoryCode.toLowerCase());
 				/* TPR-1283 changes --Ends */
 
-				//TISPRD-2315(checking whether the link has been clicked for pagination)
-				if (checkIfPagination(request) && searchQuery == null)
-				{
-					searchQuery = RELEVANCE;
-				}
 				// Get page facets to include in facet field exclude tag
 				final String pageFacets = request.getParameter(PAGE_FACET_DATA);
 				//Storing the user preferred search results count
@@ -1016,36 +1048,102 @@ public class CategoryPageController extends AbstractCategoryPageController
 
 				try
 				{
+					boolean isPlpPresentInLanding = false;
+					boolean isCustomSkuPresent = false;
 					//category = categoryService.getCategoryForCode(categoryCode);
 					final ContentPageModel categoryLandingPage = getLandingPageForCategory(category); // CAR-237 moved here for called only Once rather  line # 409 , 469 & 1053 available Code review pt#4
+					//PRDI-802 : check for availability of ProductGridComponent in the page
+					ContentSlotData contentSlotData = null;
+					//SDI-1078 : checking in all slots for PLP accross the templates
+					for (final String slotPosition : PRODUCT_GRID_COMPONENT_POSITION_LIST)
+					{
+						//To break out from outer loop
+						if (isPlpPresentInLanding)
+						{
+							break;
+						}
+						if (categoryLandingPage != null)
+						{
+							contentSlotData = mplCmsPageService.getContentSlotForPage(categoryLandingPage, slotPosition);
+							if (contentSlotData != null && CollectionUtils.isNotEmpty(contentSlotData.getCMSComponents()))
+							{
+								for (final AbstractCMSComponentModel component : contentSlotData.getCMSComponents())
+								{
+									if (component instanceof ProductGridComponentModel)
+									{
+										isPlpPresentInLanding = true;
+										break;
+									}
+									else
+									{
+										LOG.debug("#### It is not a ProductGridComponent in position " + slotPosition);
+									}
+								}
+							}
+						}
+
+					}
+
+					/* CAR-242 Moved here for calling once */
+					ProductCategorySearchPageData<SearchStateData, ProductData, CategoryData> searchPageData = null;
+					//PRDI-802 : check for availability of CustomSkuComponent in the page
+					if (categoryLandingPage != null)
+					{
+						contentSlotData = mplCmsPageService.getContentSlotForPage(categoryLandingPage, CUSTOM_SKU_COMPONENT_POSITION);
+					}
+
+					if (contentSlotData != null && CollectionUtils.isNotEmpty(contentSlotData.getCMSComponents()))
+					{
+						for (final AbstractCMSComponentModel component : contentSlotData.getCMSComponents())
+						{
+							if (component instanceof CustomSkuComponentModel)
+							{
+								isCustomSkuPresent = true;
+								final CustomSkuComponentModel customSku = (CustomSkuComponentModel) component;
+								searchPageData = (ProductCategorySearchPageData<SearchStateData, ProductData, CategoryData>) performSearchForCustomSku(
+										customSku.getLabelOrId(), searchQuery, pageNo, showMode, sortCode, count, pageFacets);
+							}
+							else
+							{
+								LOG.debug("#### It is not a CustomSkuComponent");
+							}
+						}
+					}
 					//SEO
 					this.getSEOContents(category, model, categoryLandingPage);
 
-					/* CAR-242 Moved here for calling once */
-					final ProductCategorySearchPageData<SearchStateData, ProductData, CategoryData> searchPageData = (ProductCategorySearchPageData<SearchStateData, ProductData, CategoryData>) performSearch(
-							categoryCode, searchQuery, pageNo, showMode, sortCode, count, resetAll, pageFacets);
+
+					if (!isCustomSkuPresent && isPlpPresentInLanding)
+					{
+						//TISPRD-2315(checking whether the link has been clicked for pagination)
+						if (checkIfPagination(request) && searchQuery == null)
+						{
+							searchQuery = RELEVANCE;
+						}
+						searchPageData = (ProductCategorySearchPageData<SearchStateData, ProductData, CategoryData>) performSearch(
+								categoryCode, searchQuery, pageNo, showMode, sortCode, count, resetAll, pageFacets);
+					}
 					final JSONArray priorityBrandsJsonArray = new JSONArray();
 					final JSONObject priorityBrand = new JSONObject();
-					if (null != categoryCode)
+
+					LOG.info("*****category code******" + categoryCode);
+					final List<PriorityBrandsModel> priorityBrands = brandService.priorityBrands(categoryCode);
+
+					if (CollectionUtils.isNotEmpty(priorityBrands))
 					{
-						LOG.info("*****category code******" + categoryCode);
-						final List<PriorityBrandsModel> priorityBrands = brandService.priorityBrands(categoryCode);
-
-						if (CollectionUtils.isNotEmpty(priorityBrands))
+						if (LOG.isDebugEnabled())
 						{
-							if (LOG.isDebugEnabled())
-							{
-								LOG.debug("priority brands size" + priorityBrands.size());
-							}
-							for (final PriorityBrandsModel priorityBrandsModel : priorityBrands)
-							{
-								priorityBrandsJsonArray.add(priorityBrandsModel.getBrandId());
-							}
+							LOG.debug("priority brands size" + priorityBrands.size());
 						}
-						priorityBrand.put("priorityBrands", priorityBrandsJsonArray);
-
-						model.addAttribute("PriorityBrandArray", priorityBrand.toJSONString());
+						for (final PriorityBrandsModel priorityBrandsModel : priorityBrands)
+						{
+							priorityBrandsJsonArray.add(priorityBrandsModel.getBrandId());
+						}
 					}
+					priorityBrand.put("priorityBrands", priorityBrandsJsonArray);
+
+					model.addAttribute("PriorityBrandArray", priorityBrand.toJSONString());
+
 					//Set the drop down text if the attribute is not empty or null
 					if (dropDownText != null && !dropDownText.isEmpty())
 					//Added For TISPRD-1243
@@ -1095,23 +1193,22 @@ public class CategoryPageController extends AbstractCategoryPageController
 							throw new CMSItemNotFoundException("Category Landing page is not configured for PLP" + category.getName());
 						}
 
-						/*
-						 * CAR-242 moved above to call it only once final ProductCategorySearchPageData<SearchStateData,
-						 * ProductData, CategoryData> searchPageData = (ProductCategorySearchPageData<SearchStateData,
-						 * ProductData, CategoryData>) performSearch( categoryCode, searchQuery, pageNo, showMode, sortCode,
-						 * count, resetAll, pageFacets);
-						 */
-
-						final List<ProductData> normalProductDatas = searchPageData.getResults();
-						//Set department hierarchy
-						//if (normalProductDatas.size() > 0)
-						if (CollectionUtils.isNotEmpty(normalProductDatas))
+						if (isPlpPresentInLanding)
 						{
-							model.addAttribute(ModelAttributetConstants.DEPARTMENT_HIERARCHY_DATA,
-									searchPageData.getDepartmentHierarchyData());
-							model.addAttribute(ModelAttributetConstants.DEPARTMENTS, searchPageData.getDepartments());
-							model.addAttribute(ModelAttributetConstants.CURRENT_QUERY, searchPageData.getCurrentQuery().getQuery()
-									.getValue());
+							final List<ProductData> normalProductDatas = searchPageData.getResults();
+							//Set department hierarchy
+							//if (normalProductDatas.size() > 0)
+							if (CollectionUtils.isNotEmpty(normalProductDatas))
+							{
+								model.addAttribute(ModelAttributetConstants.DEPARTMENT_HIERARCHY_DATA,
+										searchPageData.getDepartmentHierarchyData());
+								model.addAttribute(ModelAttributetConstants.DEPARTMENTS, searchPageData.getDepartments());
+								model.addAttribute(ModelAttributetConstants.CURRENT_QUERY, searchPageData.getCurrentQuery().getQuery()
+										.getValue());
+							}
+							model.addAttribute(ModelAttributetConstants.NORMAL_PRODUCTS, normalProductDatas);
+							populateModel(model, searchPageData, ShowMode.Page);
+
 						}
 
 						final String categoryName = category.getName();
@@ -1122,8 +1219,6 @@ public class CategoryPageController extends AbstractCategoryPageController
 								.replaceAll(" ", "_").toLowerCase());
 						model.addAttribute(WebConstants.BREADCRUMBS_KEY,
 								getSearchBreadcrumbBuilder().getBreadcrumbs(categoryCode, categoryName, false));
-						populateModel(model, searchPageData, ShowMode.Page);
-						model.addAttribute(ModelAttributetConstants.NORMAL_PRODUCTS, normalProductDatas);
 						model.addAttribute(ModelAttributetConstants.SHOW_CATEGORIES_ONLY, Boolean.FALSE);
 						storeCmsPageInModel(model, categoryLandingPage);
 					}
@@ -1134,7 +1229,11 @@ public class CategoryPageController extends AbstractCategoryPageController
 				{
 
 					LOG.error("************** category method exception " + exp.getMessage());
-
+					//TISPRD-2315(checking whether the link has been clicked for pagination)
+					if (checkIfPagination(request) && searchQuery == null)
+					{
+						searchQuery = RELEVANCE;
+					}
 					//ExceptionUtil.etailNonBusinessExceptionHandler(new EtailNonBusinessExceptions(exp,
 					//MarketplacecommerceservicesConstants.E0000));
 
@@ -1153,11 +1252,11 @@ public class CategoryPageController extends AbstractCategoryPageController
 						//UF-15
 						if (null != lazyInterface && lazyInterface.equals("Y"))
 						{
-							model.addAttribute("lazyInterface", Boolean.TRUE);
+							model.addAttribute(LAZY_INTERFACE_KEY, Boolean.TRUE);
 						}
 						else
 						{
-							model.addAttribute("lazyInterface", Boolean.FALSE);
+							model.addAttribute(LAZY_INTERFACE_KEY, Boolean.FALSE);
 						}
 						return performSearch;
 					}
@@ -1234,10 +1333,10 @@ public class CategoryPageController extends AbstractCategoryPageController
 			@RequestParam(value = "q", required = false) String searchQuery, @PathVariable(PAGE) int pageNo,
 			@RequestParam(value = SHOW, defaultValue = PAGEVAl) final ShowMode showMode,
 			@RequestParam(value = SORT, required = false) final String sortCode,
-			@RequestParam(value = "pageSize", required = false) Integer pageSize,
-			@RequestParam(value = "searchCategory", required = false) String dropDownText,
-			@RequestParam(value = "resetAll", required = false) final boolean resetAll,
-			@RequestParam(value = "lazyInterface", required = false) final String lazyInterface, final Model model,
+			@RequestParam(value = PAGE_SIZE_KEY, required = false) Integer pageSize,
+			@RequestParam(value = SEARCH_CATEGORY_KEY, required = false) String dropDownText,
+			@RequestParam(value = RESET_ALL_KEY, required = false) final boolean resetAll,
+			@RequestParam(value = LAZY_INTERFACE_KEY, required = false) final String lazyInterface, final Model model,
 			final HttpServletRequest request, final HttpServletResponse response)
 	{
 		String returnStatement = null;
@@ -1271,15 +1370,10 @@ public class CategoryPageController extends AbstractCategoryPageController
 					model.addAttribute(ModelAttributetConstants.SEARCH_QUERY_VALUE, searchQuery);
 				}
 
-				model.addAttribute("catName", resolvedcatName);
-				model.addAttribute("catCode", categoryCode.toLowerCase());
+				model.addAttribute(CAT_NAME_KEY, resolvedcatName);
+				model.addAttribute(CAT_CODE_KEY, categoryCode.toLowerCase());
 				/* TPR-1283 changes --Ends */
 
-				//TISPRD-2315(checking whether the link has been clicked for pagination)
-				if (checkIfPagination(request) && searchQuery == null)
-				{
-					searchQuery = RELEVANCE;
-				}
 				// Get page facets to include in facet field exclude tag
 				final String pageFacets = request.getParameter(PAGE_FACET_DATA);
 				//Storing the user preferred search results count
@@ -1299,13 +1393,51 @@ public class CategoryPageController extends AbstractCategoryPageController
 				model.addAttribute(ModelAttributetConstants.IS_CATEGORY_PAGE, Boolean.TRUE);
 				try
 				{
+					boolean isCustomSkuPresent = false;
 					final ContentPageModel categoryLandingPage = getLandingPageForCategory(category); // CAR-237 moved here for called only Once rather  line # 409 , 469 & 1053 available Code review pt#4
+
+					//UF-265
+					/* CAR-242 Moved here for calling once */
+					ProductCategorySearchPageData<SearchStateData, ProductData, CategoryData> searchPageData = null;
+					//PRDI-802 : check for availability of CustomSkuComponent in the page
+					ContentSlotData contentSlotData = null;
+					if (categoryLandingPage != null)
+					{
+						contentSlotData = mplCmsPageService.getContentSlotForPage(categoryLandingPage, CUSTOM_SKU_COMPONENT_POSITION);
+					}
+					if (contentSlotData != null && CollectionUtils.isNotEmpty(contentSlotData.getCMSComponents()))
+					{
+						for (final AbstractCMSComponentModel component : contentSlotData.getCMSComponents())
+						{
+							if (component instanceof CustomSkuComponentModel)
+							{
+								isCustomSkuPresent = true;
+								final CustomSkuComponentModel customSku = (CustomSkuComponentModel) component;
+								searchPageData = (ProductCategorySearchPageData<SearchStateData, ProductData, CategoryData>) performSearchForCustomSku(
+										customSku.getLabelOrId(), searchQuery, pageNo, showMode, sortCode, count, pageFacets);
+							}
+							else
+							{
+								LOG.debug("#### It is not a CustomSkuComponent");
+							}
+						}
+					}
+
+					if (!isCustomSkuPresent)
+					{
+						//TISPRD-2315(checking whether the link has been clicked for pagination)
+						if (checkIfPagination(request) && searchQuery == null)
+						{
+							searchQuery = RELEVANCE;
+						}
+						searchPageData = (ProductCategorySearchPageData<SearchStateData, ProductData, CategoryData>) performSearch(
+								categoryCode, searchQuery, pageNo, showMode, sortCode, count, resetAll, pageFacets);
+					}
+
 					//SEO
 					this.getSEOContents(category, model, categoryLandingPage);
 
-					/* CAR-242 Moved here for calling once */
-					final ProductCategorySearchPageData<SearchStateData, ProductData, CategoryData> searchPageData = (ProductCategorySearchPageData<SearchStateData, ProductData, CategoryData>) performSearch(
-							categoryCode, searchQuery, pageNo, showMode, sortCode, count, resetAll, pageFacets);
+
 
 					//Set the drop down text if the attribute is not empty or null
 					if (dropDownText != null && !dropDownText.isEmpty())
@@ -1387,7 +1519,10 @@ public class CategoryPageController extends AbstractCategoryPageController
 					LOG.error("************** category method exception " + exp.getMessage());
 					//ExceptionUtil.etailNonBusinessExceptionHandler(new EtailNonBusinessExceptions(exp,
 					//MarketplacecommerceservicesConstants.E0000));
-
+					if (checkIfPagination(request) && searchQuery == null)
+					{
+						searchQuery = RELEVANCE;
+					}
 					try
 					{
 						// final UserPreferencesData preferencesData = updateUserPreferences(pageSize); // CAR-236 redefined at the top line # 380 for review comment Point # 3
@@ -1403,11 +1538,11 @@ public class CategoryPageController extends AbstractCategoryPageController
 						//UF-15
 						if (null != lazyInterface && lazyInterface.equals("Y"))
 						{
-							model.addAttribute("lazyInterface", Boolean.TRUE);
+							model.addAttribute(LAZY_INTERFACE_KEY, Boolean.TRUE);
 						}
 						else
 						{
-							model.addAttribute("lazyInterface", Boolean.FALSE);
+							model.addAttribute(LAZY_INTERFACE_KEY, Boolean.FALSE);
 						}
 						return performSearch;
 					}
@@ -1525,7 +1660,13 @@ public class CategoryPageController extends AbstractCategoryPageController
 	private boolean redirectIfLuxuryCategory(final String categoryCode, final HttpServletResponse response)
 	{
 		boolean redirect = false;
-		// YTODO Auto-generated method stub
+
+		// Return false if the current is LUXURY. No Third party redirect required is the category starts with LSH while customer is in with Lux site.
+		if (isLuxurySite())
+		{
+			return redirect;
+		}
+
 		if (categoryCode.startsWith(LSH))
 		{
 			redirect = true;
@@ -1731,6 +1872,29 @@ public class CategoryPageController extends AbstractCategoryPageController
 				.categorySearch(categoryCode, searchState, pageableData);
 		searchPageData = updatePageData(searchPageData, categoryCode, searchQuery);
 		return searchPageData;
+	}
+
+
+	/**
+	 *
+	 * @param searchQuery
+	 * @param page
+	 * @param showMode
+	 * @param sortCode
+	 * @param pageSize
+	 * @return ProductSearchPageData
+	 */
+	protected ProductSearchPageData<SearchStateData, ProductData> performSearchForCustomSku(final String lookId,
+			final String searchQuery, final int page, final ShowMode showMode, final String sortCode, final int pageSize,
+			final String pageFacets)
+	{
+		final PageableData pageableData = createPageableData(page, pageSize, sortCode, showMode);
+		pageableData.setPageFacets(pageFacets);
+		final SearchStateData searchState = new SearchStateData();
+		final SearchQueryData searchQueryData = new SearchQueryData();
+		searchQueryData.setValue(searchQuery);
+		searchState.setQuery(searchQueryData);
+		return searchFacade.collectionSearch(lookId, searchState, pageableData);
 	}
 
 	private int getfilterListCountForSize(final String searchQuery)
@@ -1966,17 +2130,21 @@ public class CategoryPageController extends AbstractCategoryPageController
 			final String metaTitle)
 	{
 		final List<MetaElementData> metadata = new LinkedList<>();
-		metadata.add(createMetaElement("keywords", metaKeywords));
-		metadata.add(createMetaElement("description", metaDescription));
+		//Add the String constant in the ModelAttributeConstants file
+		metadata.add(createMetaElement(ModelAttributetConstants.KEYWORDS, metaKeywords));
+		metadata.add(createMetaElement(ModelAttributetConstants.DESCRIPTION, metaDescription));
 		//metadata.add(createMetaElement("title", metaTitle));
-		model.addAttribute("metatags", metadata);
-
+		model.addAttribute(ModelAttributetConstants.METATAGS, metadata);
+		//PRDI-422
+		model.addAttribute(ModelAttributetConstants.KEYWORDS, metaKeywords);
+		model.addAttribute(ModelAttributetConstants.DESCRIPTION, metaDescription);
 	}
 
 	/* PageTitle in header - (TPR-243) SEO Meta Tags and Titles */
 	private void updatePageTitle(final Model model, final String metaTitle)
 	{
-		model.addAttribute("metaPageTitle", metaTitle);
+		//Add the String constant in the ModelAttributeConstants file
+		model.addAttribute(ModelAttributetConstants.METAPAGETITLE, metaTitle);
 	}
 
 
@@ -2144,5 +2312,16 @@ public class CategoryPageController extends AbstractCategoryPageController
 		}
 	}
 
+	private boolean isLuxurySite()
+	{
+
+		final BaseSiteModel currentBaseSite = baseSiteService.getCurrentBaseSite();
+		if (null != currentBaseSite && StringUtils.isNotBlank(currentBaseSite.getUid())
+				&& MarketplaceFacadesConstants.LuxuryPrefix.equals(currentBaseSite.getUid()))
+		{
+			return true;
+		}
+		return false;
+	}
 
 }

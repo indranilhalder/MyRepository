@@ -56,6 +56,7 @@
 	<div class="trending"  id="ia_products_recent"></div>
 <!-- For Infinite Analytics End -->
 </div>
+<input type="hidden"  name="BrandLayoutPage" value="1"/>
 	</template:page>
 
 

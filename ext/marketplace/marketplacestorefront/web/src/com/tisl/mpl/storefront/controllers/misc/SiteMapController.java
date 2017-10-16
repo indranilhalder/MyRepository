@@ -95,6 +95,11 @@ public class SiteMapController extends AbstractPageController
 
 	private final static String SITEMAPURLPATTERN = "/{sitemapName:.+sitemap+.*}.xml";
 
+	private static final String REGEX = "[^\\w-\\s]";
+
+	private static final String hyphen_key = "-";
+	private static final String pipe_key = "||";
+
 	//TPR-1285 Dynamic sitemap Changes Ends
 
 	@RequestMapping(value = "/sitemap.xml", method = RequestMethod.GET, produces = "application/xml")
@@ -161,7 +166,7 @@ public class SiteMapController extends AbstractPageController
 								}
 								else
 								{
-								LOG.debug("navigationBar Link or Category Missing");
+									LOG.debug("navigationBar Link or Category Missing");
 								}
 							}
 						}
@@ -176,18 +181,25 @@ public class SiteMapController extends AbstractPageController
 								try
 								{
 									final Map<CategoryModel, Collection<CategoryModel>> innerLevelMap = new HashMap<CategoryModel, Collection<CategoryModel>>();
-
+									//PRDI-462
+									String l1CatName = "";
 									final CategoryModel department = categoryService.getCategoryForCode(categoryModel.getCode());
 									if (department != null)
 									{
 										final Collection<CategoryModel> secondLevelCategories = department.getCategories();
+										if (department.getName() != null)
+										{
+											//PRDI-462 Check if any special characters are present and remove them
+											l1CatName = department.getName().toLowerCase().replaceAll("'", "").replaceAll(" and ", "-")
+													.replaceAll(REGEX, "-").replaceAll(" ", "-").replace("--+", "-");
 
+										}
 										//code changes for INC_10885
 										if (department.getName() != null && CollectionUtils.isNotEmpty(department.getLinkComponents())
 												&& StringUtils.isNotEmpty(department.getLinkComponents().get(0).getUrl()))
 										{
 											final StringBuilder catName1 = new StringBuilder();
-											catName1.append(department.getName()).append("||")
+											catName1.append(department.getName()).append(pipe_key)//Sonar Fix
 													.append(department.getLinkComponents().get(0).getUrl());
 											if (StringUtils.isNotEmpty(catName1.toString()))
 											{
@@ -213,21 +225,37 @@ public class SiteMapController extends AbstractPageController
 												/* code changes for TISPRD-3183 */
 												// Fetching the third level category against a second
 												// level category
+												String l2CatName = "";
+												//Check if any special characters are present and remove them
+												l2CatName = secondLevelCategory.getName().toLowerCase().replaceAll("'", "")
+														.replaceAll(" and ", "-").replaceAll(REGEX, "-").replaceAll(" ", "-")
+														.replace("--+", "-");
+
 												final Collection<CategoryModel> thirdLevelCategory = secondLevelCategory.getCategories();
 
 												if (CollectionUtils.isNotEmpty(thirdLevelCategory))
 												{
 													for (final CategoryModel thirdLevelCategories : thirdLevelCategory)
 													{
-
 														final String categoryPathChildlevel3 = getCategoryPath(thirdLevelCategories);
 
 														final StringBuilder catName3 = new StringBuilder();
 														if (StringUtils.isNotEmpty(thirdLevelCategories.getName())
 																&& StringUtils.isNotEmpty(categoryPathChildlevel3))
 														{
-															catName3.append(thirdLevelCategories.getName()).append("||")
-																	.append(categoryPathChildlevel3);
+															final StringBuilder l3Url = new StringBuilder();
+															String l3CatName = "";
+															//Check if any special characters are present and remove them
+															l3CatName = thirdLevelCategories.getName().toLowerCase().replaceAll("'", "")
+																	.replaceAll(" and ", "-").replaceAll(REGEX, "-").replaceAll(" ", "-")
+																	.replace("--+", "-");
+
+															l3Url.append(l1CatName).append(hyphen_key).append(l2CatName).append(hyphen_key)//Sonar Fix
+																	.append(l3CatName);
+															l3Url.toString().replaceAll(" ", "-").replace("--", "-");
+															//PRDI-462 adding the L3 url to the catName3
+															catName3.append(thirdLevelCategories.getName()).append(pipe_key)//Sonar Fix
+																	.append(categoryPathChildlevel3).append(pipe_key).append(l3Url);
 
 															thirdLevelCategories.setName(catName3.toString());
 														}
@@ -247,9 +275,14 @@ public class SiteMapController extends AbstractPageController
 												if (StringUtils.isNotEmpty(secondLevelCategory.getName())
 														&& StringUtils.isNotEmpty(categoryPathChildlevel2))
 												{
+													//PRDI-462
+													final StringBuilder l2Url = new StringBuilder();
+													l2Url.append(l1CatName).append(hyphen_key).append(l2CatName);//Sonar Fix
+													l2Url.toString().replaceAll(" ", "-").replace("--", "-");
 													final StringBuilder catName2 = new StringBuilder();
-													catName2.append(secondLevelCategory.getName()).append("||")
-															.append(categoryPathChildlevel2);
+													//PRDI-462 adding the L2 url to the catName2
+													catName2.append(secondLevelCategory.getName()).append(pipe_key)//Sonar fix
+															.append(categoryPathChildlevel2).append(pipe_key).append(l2Url);
 													secondLevelCategory.setName(catName2.toString());
 												}
 												else
@@ -287,7 +320,7 @@ public class SiteMapController extends AbstractPageController
 								}
 								catch (final Exception exception)
 								{
-									
+
 									ExceptionUtil.etailNonBusinessExceptionHandler(new EtailNonBusinessExceptions(exception));
 								}
 							}

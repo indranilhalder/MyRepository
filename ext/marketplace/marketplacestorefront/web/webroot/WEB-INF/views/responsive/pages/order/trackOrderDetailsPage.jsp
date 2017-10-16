@@ -327,6 +327,14 @@
 											<spring:message code="text.orderHistory.seller.order.number"></spring:message>
 											<span>${sellerOrder.code}</span>
 										</p>
+										<c:if test="${not empty entry.exchangeApplied}">
+		              			<p class="cart_exchange">
+
+			              		<input type="hidden" id="exc_cart" value="${entry.exchangeApplied}">
+			              		<spring:theme code="marketplace.exchange.messageLabel"/>
+			              		</p>
+			              		</c:if>
+			              		<!-- TPR-1083 End -->
 									 <!--R2.3 TISRLEE-1615- Start   -->
 								   <c:if test="${entry.mplDeliveryMode.code ne 'click-and-collect'}">
 								             <c:choose>
@@ -364,7 +372,7 @@
 										<c:url value="${entry.product.url}" var="productUrl" />
 										<div class="image">
 											<a href="${productUrl}"> <product:productPrimaryImage
-													product="${entry.product}" format="thumbnail" />
+													product="${entry.product}" format="thumbnail" lazyLoad="false" />
 											</a>
 										</div>
 										<div class="details">

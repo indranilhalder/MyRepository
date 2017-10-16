@@ -9,8 +9,8 @@
 <%@ taglib prefix="sec"
 	uri="http://www.springframework.org/security/tags"%>
 <%@ taglib prefix="nav" tagdir="/WEB-INF/tags/responsive/nav"%>
-
-<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?sensor=false"></script>
+<!-- UF-405 -->
+<!-- <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?sensor=false"></script> -->
 
 
 <%@ taglib prefix="trackOrder" tagdir="/WEB-INF/tags/responsive/common/header"%> 
@@ -153,6 +153,7 @@
 								<!-- R2.3 for track order END -->
 								<%-- <li class="store-locator-header"><a href="${request.contextPath}/store-finder">Our Stores</a></li> //commented for UF-353--%>
 								<li class="download-app"><a href="${request.contextPath}/apps">Download App</a></li>
+								<li class="enter-pincode"><a data-toggle="modal" data-target="#pincode-modal">Enter Your Pincode</a></li>
 							</c:if>
 						</c:if>
 						
@@ -212,8 +213,8 @@
 					</div>
 					</div>
 					
-					<span>CHECKOUT</span>
-					
+					<span>Safe & Secure Checkout</span>		<!-- UF-281 text change -->
+					<span id="singlePageNeedHelpComponent" class="need-help-call"></span><!--Need Help? Call Number is added using js code written in acc.singlePageCheckout.js -->
 					
 					<button id="deliveryAddressSubmitUp" type="submit" class="button checkout-next" style="display:none;">Proceed to Payment</button>
 						</c:if>

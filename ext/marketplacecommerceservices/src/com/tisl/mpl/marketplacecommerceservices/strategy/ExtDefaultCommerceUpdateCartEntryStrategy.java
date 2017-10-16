@@ -17,14 +17,18 @@ import de.hybris.platform.storelocator.model.PointOfServiceModel;
 
 import javax.annotation.Resource;
 
+import org.apache.commons.lang.StringUtils;
+
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
+import com.tisl.mpl.exception.EtailBusinessExceptions;
+import com.tisl.mpl.marketplacecommerceservices.service.ExchangeGuideService;
 import com.tisl.mpl.marketplacecommerceservices.service.ExtCommerceStockService;
 import com.tisl.mpl.strategy.service.MplCheckCartLevelStrategy;
 
 
 /**
  * @author TCS
- * 
+ *
  */
 public class ExtDefaultCommerceUpdateCartEntryStrategy extends DefaultCommerceUpdateCartEntryStrategy
 {
@@ -36,6 +40,10 @@ public class ExtDefaultCommerceUpdateCartEntryStrategy extends DefaultCommerceUp
 	private final int maxOrderQuantityConstant = 10;//
 	@Resource(name = "mplCheckCartLevelStrategy")
 	private MplCheckCartLevelStrategy mplCheckCartLevelStrategy;
+
+
+	@Resource(name = "exchangeGuideService")
+	private ExchangeGuideService exchangeService;
 
 	/**
 	 * @return the commerceStockService
@@ -73,20 +81,35 @@ public class ExtDefaultCommerceUpdateCartEntryStrategy extends DefaultCommerceUp
 		final CartModel cartModel = parameters.getCart();
 		final long newQuantity = parameters.getQuantity();
 		final long entryNumber = parameters.getEntryNumber();
+		final long exchangeQuantityRestriction = 1;
 
 		ServicesUtil.validateParameterNotNull(cartModel, MarketplacecommerceservicesConstants.CART_NULL);
 
 		final AbstractOrderEntryModel entryToUpdate = getEntryForNumber(cartModel, (int) entryNumber);
 		validateEntryBeforeModification(newQuantity, entryToUpdate);
-
+		boolean isExchangeEntry = false;
+		final String exchangeId = entryToUpdate.getExchangeId();
+		if (StringUtils.isNotEmpty(exchangeId))
+		{
+			isExchangeEntry = true;
+		}
 		Integer maxOrderQuantity = null;
 
-		if (entryToUpdate.getProduct() != null)
-		{
-			maxOrderQuantity = entryToUpdate.getProduct().getMaxOrderQuantity();
+		//EQA Comment
+		final ProductModel product = entryToUpdate.getProduct();
+		if (product != null)
+		{ //EQA Comment
+			maxOrderQuantity = product.getMaxOrderQuantity();
 		}
 		final long quantityToAdd = newQuantity - entryToUpdate.getQuantity().longValue();
 
+		if (isExchangeEntry)
+		{
+			if (newQuantity + entryToUpdate.getQuantity().longValue() > exchangeQuantityRestriction && quantityToAdd > 0)
+			{
+				throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9305);
+			}
+		}
 		//commented by Techouts
 		//As we do not maintain stock at commerce side
 
@@ -101,11 +124,19 @@ public class ExtDefaultCommerceUpdateCartEntryStrategy extends DefaultCommerceUp
 		//Find stock level From USSID, Sent USSID as a parameter
 		long actualAllowedQuantityChange = 0;
 		CommerceCartModification modification = null;
-		if (entryToUpdate.getProduct() != null)
+		//EQA Comment
+		if (product != null)
 		{
-			actualAllowedQuantityChange = getAllowedCartAdjustmentForProduct(cartModel, entryToUpdate.getProduct(), quantityToAdd,
-					null, entryToUpdate.getSelectedUSSID());
+			//EQA Comment
+			actualAllowedQuantityChange = getAllowedCartAdjustmentForProduct(cartModel, product, quantityToAdd, null,
+					entryToUpdate.getSelectedUSSID());
 			modification = modifyEntry(cartModel, entryToUpdate, actualAllowedQuantityChange, newQuantity, maxOrderQuantity);
+
+			if (modification.getQuantity() == 0 && isExchangeEntry)
+			{
+				exchangeService.removeFromTransactionTable(exchangeId, "User Removed Product", cartModel);
+
+			}
 		}
 		else
 		{

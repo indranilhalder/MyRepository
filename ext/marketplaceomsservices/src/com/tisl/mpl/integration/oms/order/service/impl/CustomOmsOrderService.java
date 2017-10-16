@@ -1,7 +1,11 @@
 package com.tisl.mpl.integration.oms.order.service.impl;
 
 //import de.hybris.platform.commercefacades.order.OrderFacade;
+import de.hybris.platform.catalog.CatalogVersionService;
+import de.hybris.platform.category.model.CategoryModel;
+import de.hybris.platform.core.model.order.AbstractOrderEntryModel;
 import de.hybris.platform.core.model.order.OrderModel;
+import de.hybris.platform.core.model.product.ProductModel;
 import de.hybris.platform.core.model.user.CustomerModel;
 import de.hybris.platform.integration.commons.hystrix.OndemandHystrixCommandConfiguration;
 import de.hybris.platform.integration.commons.hystrix.OndemandHystrixCommandFactory;
@@ -20,6 +24,7 @@ import de.hybris.platform.util.localization.Localization;
 import java.io.StringWriter;
 import java.net.SocketTimeoutException;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 
@@ -27,8 +32,10 @@ import javax.annotation.Resource;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.Marshaller;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
+import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.hybris.commons.client.RestCallException;
@@ -48,10 +55,21 @@ import com.sun.jersey.api.client.ClientHandlerException;
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.constants.MarketplaceomsservicesConstants;
 import com.tisl.mpl.constants.clientservice.MarketplacecclientservicesConstants;
+import com.tisl.mpl.core.model.BrandModel;
+import com.tisl.mpl.exception.ClientEtailNonBusinessExceptions;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
+import com.tisl.mpl.marketplacecommerceservices.service.MplCommerceCartService;
+import com.tisl.mpl.marketplacecommerceservices.service.MplSellerInformationService;
+import com.tisl.mpl.samsung.wsdto.ChargeWsDTO;
+import com.tisl.mpl.samsung.wsdto.DeliveryModeWsDTO;
+import com.tisl.mpl.samsung.wsdto.OrderListWsDTO;
+import com.tisl.mpl.samsung.wsdto.OrderResponseWsDTO;
+import com.tisl.mpl.samsung.wsdto.ProductWsDTO;
 import com.tisl.mpl.service.MplCustomerWebService;
 import com.tisl.mpl.service.MplSendOrderFromCommerceToCRM;
+import com.tisl.mpl.service.MplSendOrderFromCommerceToSamsung;
 import com.tisl.mpl.service.OrderWebService;
+
 
 
 public class CustomOmsOrderService extends DefaultOmsOrderService implements MplOmsOrderService
@@ -74,6 +92,32 @@ public class CustomOmsOrderService extends DefaultOmsOrderService implements Mpl
 
 	@Autowired
 	private ChangeDeliveryAddressFacade changeDeliveryAddressFacade;
+
+	//SONAR FIX
+	//@Resource(name = "accProductFacade")
+	//private ProductFacade productFacade;
+
+	@Resource(name = "mplCommerceCartService")
+	private MplCommerceCartService mplCommerceCartService;
+
+	//SONAR FIX
+	//@Resource(name = "mplCategoryServiceImpl")
+	//private MplCategoryService mplCategoryService;
+
+	@Resource(name = "mplSellerInformationService")
+	private MplSellerInformationService mplSellerInformationService;
+
+	@Resource(name = "catalogVersionService")
+	private CatalogVersionService catalogVersionService;
+
+	@Resource(name = "mplSendOrderFromCommerceToSamsung")
+	private MplSendOrderFromCommerceToSamsung mplSendOrderFromCommerceToSamsung;
+
+	//SONAR FIX
+	/*
+	 * private static final String COLON = ":"; private final int connectionTimeout = 5 * 10000; private final int
+	 * readTimeout = 5 * 1000;
+	 */
 
 	@Override
 	public OrderPlacementResult createCrmOrder(final OrderModel orderModel)
@@ -239,6 +283,40 @@ public class CustomOmsOrderService extends DefaultOmsOrderService implements Mpl
 
 	}
 
+	/* For TPR-5667 */
+	public OrderPlacementResult createSamsungOrder(final OrderModel orderModel)
+	{
+		final OrderPlacementResult result = new OrderPlacementResult(OrderPlacementResult.Status.FAILED);
+		try
+		{
+			LOG.debug(MarketplacecclientservicesConstants.SAMSUNG_LOGGER_HEAD + "Before Samsung order call for : "
+					+ orderModel.getCode());
+			final OrderResponseWsDTO orderResponse = getOrderResponse(orderModel);
+			final JSONObject samsungResponse = mplSendOrderFromCommerceToSamsung.postResponseToSamsung(orderResponse, orderModel);
+			final String responseMessage = samsungResponse.get(MarketplaceomsservicesConstants.MESSAGE).toString();
+			if (responseMessage.equalsIgnoreCase(MarketplaceomsservicesConstants.SUCCESS))
+			{
+				result.setResult(OrderPlacementResult.Status.SUCCESS);
+			}
+		}
+		catch (final ClientEtailNonBusinessExceptions cenbex)
+		{
+			LOG.error(MarketplacecclientservicesConstants.SAMSUNG_LOGGER_HEAD
+					+ "ClientEtailNonBusinessExceptions occured while creating samsung order  ", cenbex);
+			result.setCause(cenbex);
+		}
+		catch (final Exception ex)
+		{
+			LOG.error(MarketplacecclientservicesConstants.SAMSUNG_LOGGER_HEAD + "Exception occured while creating samsung order  ",
+					ex);
+			result.setCause(ex);
+		}
+
+		return result;
+
+	}
+
+
 	//	@Override
 	//	public OrderPlacementResult createOmsOrder(final OrderModel orderModel)
 	//	{
@@ -295,6 +373,183 @@ public class CustomOmsOrderService extends DefaultOmsOrderService implements Mpl
 	//		return result;
 	//
 	//	}
+
+
+
+	/**
+	 * @param orderModel
+	 * @return orderResponseWsDTO
+	 */
+	private OrderResponseWsDTO getOrderResponse(final OrderModel orderModel)
+	{
+		final OrderResponseWsDTO orderResponseWsDTO = new OrderResponseWsDTO();
+		final List<OrderListWsDTO> orderListWsDTO = new ArrayList<OrderListWsDTO>();
+		orderResponseWsDTO.setORN(orderModel.getCode());
+		orderResponseWsDTO.setPlacedDate(orderModel.getDate().toString());
+		if (orderModel.getChildOrders() != null)
+		{
+			for (final OrderModel childOrder : orderModel.getChildOrders())
+			{
+				orderListWsDTO.add(getChildOrderResponse(childOrder));
+			}
+			orderResponseWsDTO.setOrder(orderListWsDTO);
+		}
+
+		return orderResponseWsDTO;
+	}
+
+	/**
+	 * @param childOrder
+	 * @return orderListWsDTO
+	 */
+	private OrderListWsDTO getChildOrderResponse(final OrderModel childOrder)
+	{
+		final OrderListWsDTO orderListWsDTO = new OrderListWsDTO();
+		final List<ProductWsDTO> productListWsDTO = new ArrayList<ProductWsDTO>();
+		orderListWsDTO.setOrderId(childOrder.getCode());
+		int freeBuyProduct = 0;
+		int totalEntries = 0;
+		final double convenienceChargeForOrder = childOrder.getConvenienceCharges().doubleValue();
+		double convenienceChargeForActiveProduct = 0;
+		// Loop for finding no. of freeBuy products and calculate convenience charge
+		if (CollectionUtils.isNotEmpty(childOrder.getEntries()) && convenienceChargeForOrder > 0)
+		{
+			totalEntries = childOrder.getEntries().size();
+			for (final AbstractOrderEntryModel entry : childOrder.getEntries())
+			{
+				if (entry.getGiveAway().booleanValue())
+				{
+					freeBuyProduct++;
+				}
+			}
+			final int totalActiveProducts = (totalEntries - freeBuyProduct);
+			if (totalActiveProducts > 0)
+			{
+				convenienceChargeForActiveProduct = (convenienceChargeForOrder / totalActiveProducts);
+			}
+		}
+
+		// Data assignment
+		if (CollectionUtils.isNotEmpty(childOrder.getEntries()))
+		{
+			for (final AbstractOrderEntryModel entry : childOrder.getEntries())
+			{
+				final ProductWsDTO productWsDTO = getProductResponse(entry);
+				//Charges
+				if (StringUtils.isNotEmpty(childOrder.getModeOfOrderPayment()))
+				{
+					final ChargeWsDTO charges = new ChargeWsDTO();
+					charges.setCharges(childOrder.getModeOfOrderPayment());
+					if (entry.getGiveAway().booleanValue())
+					{
+						charges.setCost(Double.valueOf(0));
+					}
+					else
+					{
+						charges.setCost(Double.valueOf(convenienceChargeForActiveProduct));
+					}
+					if (productWsDTO != null)
+					{
+						productWsDTO.setCharges(charges);
+					}
+				}
+				productListWsDTO.add(productWsDTO);
+			}
+			orderListWsDTO.setProducts(productListWsDTO);
+
+		}
+		orderListWsDTO.setStatus(childOrder.getStatus().toString());
+		orderListWsDTO.setSubTotal(childOrder.getSubtotal());
+		return orderListWsDTO;
+	}
+
+	/**
+	 * @param entry
+	 * @return productListWsDTO
+	 */
+	private ProductWsDTO getProductResponse(final AbstractOrderEntryModel entry)
+	{
+		final ProductWsDTO productListWsDTO = new ProductWsDTO();
+		final ProductModel product = entry.getProduct();
+		// USSID
+		productListWsDTO.setUSSID(entry.getSelectedUSSID());
+		// Price
+		productListWsDTO.setPrice(entry.getBasePrice());
+		//PromoDiscount
+		productListWsDTO.setPromoDiscount(Double.valueOf(entry.getCartLevelDisc().doubleValue()
+				+ entry.getTotalProductLevelDisc().doubleValue()));
+		//CouponDIscoun
+		productListWsDTO.setCouponDiscoun(entry.getCouponValue());
+		//ApportionedPrice
+		productListWsDTO.setApportionedPrice(entry.getNetAmountAfterAllDisc());
+		//productBrand
+		if (product.getBrands() != null)
+		{
+			for (final BrandModel brand : product.getBrands())
+			{
+				productListWsDTO.setProductBrand(brand.getName());
+				break;
+			}
+		}
+
+		//product Category code
+		//Setting the version of sessioncatalog
+		catalogVersionService.setSessionCatalogVersion(MarketplacecommerceservicesConstants.DEFAULT_IMPORT_CATALOG_ID,
+				MarketplacecommerceservicesConstants.DEFAULT_IMPORT_CATALOG_VERSION);
+
+		final Collection<CategoryModel> categoryList = product.getSupercategories();
+		if (categoryList != null)
+		{
+			for (final CategoryModel categoy : categoryList)
+			{
+				if (StringUtils.startsWith(categoy.getCode(), MarketplacecommerceservicesConstants.MSH)
+						|| StringUtils.startsWith(categoy.getCode(), MarketplacecommerceservicesConstants.LSH))
+				{
+					productListWsDTO.setProductCategory(categoy.getCode());
+					break;
+				}
+			}
+		}
+		//Description
+		productListWsDTO.setProductDescription(product.getArticleDescription());
+		// Name
+		productListWsDTO.setProductName(product.getName());
+		// Code
+		productListWsDTO.setListingId(product.getCode());
+		// Quantity
+		productListWsDTO.setQuantity(Integer.valueOf(entry.getQuantity().intValue()));
+		//rootcategory
+		productListWsDTO.setRootCategory(product.getProductCategoryType());
+		//Delivery mode
+		if (entry.getMplDeliveryMode() != null && entry.getMplDeliveryMode().getDeliveryMode() != null)
+		{
+			final DeliveryModeWsDTO deliveryModeWsDTO = new DeliveryModeWsDTO();
+			deliveryModeWsDTO.setCode(entry.getMplDeliveryMode().getDeliveryMode().getCode());
+			deliveryModeWsDTO.setName(entry.getMplDeliveryMode().getDeliveryMode().getName());
+			// delivery mode desc
+			final String deliveryStart = entry.getMplDeliveryMode().getDeliveryMode().getStart() != null ? entry
+					.getMplDeliveryMode().getDeliveryMode().getStart().toString()
+					: MarketplacecommerceservicesConstants.DEFAULT_START_TIME;
+			final String deliveryEnd = entry.getMplDeliveryMode().getDeliveryMode().getEnd() != null ? entry.getMplDeliveryMode()
+					.getDeliveryMode().getEnd().toString() : MarketplacecommerceservicesConstants.DEFAULT_END_TIME;
+			final String deliveryDesc = mplCommerceCartService.getDeliveryModeDescription(entry.getSelectedUSSID(), entry
+					.getMplDeliveryMode().getDeliveryMode().getCode(), deliveryStart, deliveryEnd);
+			deliveryModeWsDTO.setDesc(deliveryDesc);
+			// Delivery cost
+			if (entry.getCurrDelCharge() != null)
+			{
+				deliveryModeWsDTO.setDeliveryCost(entry.getCurrDelCharge());
+			}
+			productListWsDTO.setSelectedDeliveryMode(deliveryModeWsDTO);
+		}
+		//sellerID
+		final String sellerID = mplSellerInformationService.getSellerIdByUssid(entry.getSelectedUSSID());
+		productListWsDTO.setSellerID(sellerID);
+		//sellerName
+		productListWsDTO.setSellerName(entry.getSellerInfo());
+
+		return productListWsDTO;
+	}
 
 	@Override
 	public UpdatedSinceList<String> getUpdatedOrderIds(final Date updatedSince)
@@ -367,9 +622,9 @@ public class CustomOmsOrderService extends DefaultOmsOrderService implements Mpl
 
 	/*
 	 * @Desc Used for generating xml
-	 *
+	 * 
 	 * @param order
-	 *
+	 * 
 	 * @return String
 	 */
 	protected String getOrderAuditXml(final Order order)

@@ -140,7 +140,6 @@ function registerUserGigya(eventObject)
     		//TPR-675 PART- A  starts
    		 var categoryId = $('input[name=gigya_product_root_category]').val();
    		 var title= response.commentTitle;
-   		 console.log("Review Count inside show comments ui   "+response);
    		 var overall= response.ratings._overall; 
    		 var fit = "not_applicable";
    		 
@@ -170,9 +169,10 @@ function registerUserGigya(eventObject)
    						"review_ease_of_use" : ease_of_use	, "review_fit" : fit , "review_value_for_money": value_for_money,"user_product_rating":overall,"Seller_rating" : " " ,product_id : productIdArray}
    				);
     		  
-    		 
     		//TPR-675 PART-A  ends
-    		  
+    		 if(typeof _satellite !="undefined"){
+        		  _satellite.track('review_submit_click');
+        	 }
     		getRating($('input[name=gigya_api_key]').val(),$('input[name=gigya_product_code]').val(),$('input[name=gigya_product_root_category]').val());
     	}
     	
@@ -229,9 +229,16 @@ function registerUserGigya(eventObject)
     						$('#ratingDiv .gig-rating-readReviewsLink').text(data.streamInfo.ratingCount+" REVIEWS");
     						}
     				$('#customer').text("Customer Reviews (" + data.streamInfo.ratingCount + ")");
-    				
+    				//TPR-6655
+    				if(avgreview != undefined && $('#isGigyaforPdpEnabled').val() =='false' && avgreview  > 0.0){
+    					console.log("val from js call  "+data.streamInfo.avgRatings._overall);
+    					$('#ratingvalue').text(data.streamInfo.avgRatings._overall);
+    					$('#reviewcount').text(data.streamInfo.ratingCount);
+    				}
     				//added for tealium to get average product rating
+    				if(typeof utag !="undefined"){
    				     utag.link({"product_rating":avgreview});
+    				}
     				
     		  }
     		  

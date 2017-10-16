@@ -104,6 +104,10 @@
  <!--   tpr-250 CHANGES -->
 <input type ="hidden"  id="ussidVal" value="${ussidVal}"/>
  <!--   tpr-250 CHANGES -->
+<!--TPR-1886 | JEWELLERY  -->
+ <input type ="hidden"  id="priceRangeJewellery" value='${product.priceRangeJewellery}'/>
+
+
 
 <!-- <input type ="hidden"  id="productPromotion" value='${product.displayPromotion}'/> -->
 
@@ -127,36 +131,32 @@
 
 				<c:if test="${product.isProductNew eq true && !product.isOfferExisting}">
 					<div style="z-index: 1;" class="new">
-						<img class="brush-strokes-sprite sprite-New"
-
-							src="//${staticHost}/_ui/responsive/common/images/transparent.png"><span>New</span>
+						<%-- <img class="brush-strokes-sprite sprite-New" src="//${staticHost}/_ui/responsive/common/images/transparent.png"> --%>
+						<span>New</span>
 					</div>
 				</c:if>
 				<a class="thumb_${product.code}" href="${productUrl}"
 					title="${product.name}"> <%-- <product:productPrimaryImage
 						product="${product}" format="searchPage" /> --%> <product:productSearchPrimaryImage product="${product}" format="searchPage"/>
 						<!-- TPR-250 -->
-						        <span class="plp-wishlist" data-product="${productUrl}" data-ussid="${ussidVal}"></span>
+								<span class="plp-wishlist" data-product="${productUrl}" data-ussid="${ussidVal}"></span>	
 						<!-- TPR-250 -->
 						<%-- <span class="plp-wishlist" data-product="${productUrl}"></span> --%>
 						<span class="plpWlcode" style="display: none;">${productUrl}</span>
 			
 
 				</a>
-				
 				<c:if test="${product.isOfferExisting}">
 					<%-- <div style="z-index: 2;display: none;" class="on-sale" id="on-sale_${product.code}"> --%>
 						<div style="z-index: 2;" class="on-sale" id="on-sale_${product.code}">
 				<%-- 	<div style="z-index: 2;" class="on-sale" id="on-sale_${product.code}"> --%>
-						<img class="brush-strokes-sprite sprite-Vector_Smart_Object"
-							src="//${staticHost}/_ui/responsive/common/images/transparent.png">
+						<%-- <img class="brush-strokes-sprite sprite-Vector_Smart_Object" src="//${staticHost}/_ui/responsive/common/images/transparent.png"> --%>
 						<span>On<br>Offer</span>
 					</div>
 		         </c:if>
 				<c:if test="${!product.isOfferExisting && !product.isProductNew && product.isOnlineExclusive}">
 					<div style="z-index: 1;" class="online-exclusive">
-						<img class="brush-strokes-sprite sprite-Vector_Smart_Object"
-							src="//${staticHost}/_ui/responsive/common/images/transparent.png">
+						<%-- <img class="brush-strokes-sprite sprite-Vector_Smart_Object" src="//${staticHost}/_ui/responsive/common/images/transparent.png"> --%>
 						<span>online<br>exclusive</span>
 					</div>
 				</c:if>
@@ -272,11 +272,15 @@
 						<c:if
 							test="${not empty product.productCategoryType && product.isVariant &&  (product.productCategoryType eq 'Apparel' 
 							                          || product.productCategoryType eq 'Footwear') }">
-
-
 							<%-- <li class="product-size-list"><span class="product-size">Size : ${fn:toUpperCase(product.displaySize)} </span></li> --%>
 							<li class="product-size-list"><span class="product-size">Size: <span class="size-col">${product.displaySize}</span><%-- Price : ${product.displayPrice}### ${product.displayUrl} --%>
 							</span></li>
+						</c:if>
+						<c:if test="${not empty product.productCategoryType && product.isVariant && (product.productCategoryType eq 'FineJewellery'|| product.productCategoryType eq 'FashionJewellery')}">
+							<c:if test="${not empty product.displaySize && product.displaySize ne '[NO SIZE]'}">
+									<li class="product-size-list"><span class="product-size">${product.displayLength}: <span class="size-col">${product.displaySize}</span><%-- Price : ${product.displayPrice}### ${product.displayUrl} --%>
+								</span></li>
+							</c:if>
 						</c:if>
 						<%-- <li>Color: ${product.swatchColor}</li> --%>
 						<c:if
@@ -390,8 +394,13 @@
 				</c:if>
 
 					<ycommerce:testId code="product_productPrice">
-				<!-- tpr-250 CHANGES -->
+				<!-- tpr-250 CHANGES --><!-- TPR-1886 | jewellery   -->
 				<c:choose>
+						<c:when test="${not empty product.priceRangeJewellery}">
+							<div class="price">
+								${product.priceRangeJewellery}
+							</div>
+						</c:when>
 				<c:when test="${fn:contains(currentQuery, 'sellerId')|| not empty msiteSellerId}">
 				<c:if
 						test="${priceValue.value > 0 && (mrpPriceValue.value > priceValue.value)}">

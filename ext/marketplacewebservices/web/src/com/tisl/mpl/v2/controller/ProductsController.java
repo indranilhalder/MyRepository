@@ -636,6 +636,7 @@ public class ProductsController extends BaseController
 			suggestionData.setValue(autoSuggestion.getTerm());
 			suggestions.add(suggestionData);
 		}
+
 		suggestionDataList.setSuggestions(suggestions);
 
 		return dataMapper.map(suggestionDataList, SuggestionListWsDTO.class, fields);
@@ -875,7 +876,8 @@ public class ProductsController extends BaseController
 			}
 			if (null != sortingvalues.getSpellingSuggestion())
 			{
-				productSearchPage.setSpellingSuggestion(searchPageData.getSpellingSuggestion().getSuggestion());
+				productSearchPage.setSpellingSuggestion(searchPageData.getSpellingSuggestion().getSuggestion()
+						.replaceAll("[^a-zA-Z&0-9\\s+]+", ""));
 			}
 		}
 		return productSearchPage;
@@ -975,11 +977,56 @@ public class ProductsController extends BaseController
 					{
 						searchPageData = (ProductCategorySearchPageData<SearchStateData, ProductData, CategoryData>) productSearchFacade
 								.textSearch(searchState, pageableData);
+						//PR-23 start
+						if (searchPageData.getPagination().getTotalNumberOfResults() == 0)
+						{
+							if (StringUtils.isNotEmpty(searchText))
+							{
+
+								final String[] elements = searchText.trim().split("\\s+");
+
+								//if (elements.length == 2 || elements.length == 3)
+								if (elements.length >= 2)
+								{
+									//	final SearchStateData searchStateAll = new SearchStateData();
+									//	final SearchQueryData searchQueryDataAll = new SearchQueryData();
+									//	searchQueryDataAll.setValue(searchText);
+									searchState.setNextSearch(true);
+									//searchStateAll.setQuery(searchQueryDataAll);
+									searchPageData = (ProductCategorySearchPageData<SearchStateData, ProductData, CategoryData>) productSearchFacade
+											.textSearch(searchState, pageableData);
+
+									//searchPageData.getCurrentQuery().setTwoTokenNextSearch(true);
+								}
+							}
+						}
+						//PR-23 end
 					}
 					else if (typeID.startsWith(DROPDOWN_CATEGORY) || typeID.startsWith(DROPDOWN_BRAND) || typeID.startsWith(LSH))
 					{
 						//searchPageData = productSearchFacade.categorySearch(typeID, searchState, pageableData);
 						searchPageData = searchFacade.searchCategorySearch(typeID, searchState, pageableData);
+						//PR-23 start
+						if (searchPageData.getPagination().getTotalNumberOfResults() == 0)
+						{
+							if (StringUtils.isNotEmpty(searchText))
+							{
+
+								final String[] elements = searchText.trim().split("\\s+");
+
+								//if (elements.length == 2 || elements.length == 3)
+								if (elements.length >= 2)
+								{
+
+									searchState.setNextSearch(true);
+									searchPageData = searchFacade.searchCategorySearch(typeID, searchState, pageableData);
+
+									//searchPageData.getCurrentQuery().setTwoTokenNextSearch(true);
+								}
+							}
+						}
+						//PR-23 end
+
 						final CategoryModel category = categoryService.getCategoryForCode(typeID);
 						if (CollectionUtils.isNotEmpty(category.getCrosssellBanners()))
 						{
@@ -1010,6 +1057,30 @@ public class ProductsController extends BaseController
 					{
 						searchPageData = searchFacade.dropDownSearch(searchState, typeID, MarketplaceCoreConstants.SNS_SELLER_ID,
 								pageableData);
+
+						//PR-23 start
+						if (searchPageData.getPagination().getTotalNumberOfResults() == 0)
+						{
+							if (StringUtils.isNotEmpty(searchText))
+							{
+
+								final String[] elements = searchText.trim().split("\\s+");
+
+								//if (elements.length == 2 || elements.length == 3)
+								if (elements.length >= 2)
+								{
+
+									searchState.setNextSearch(true);
+									searchPageData = searchFacade.dropDownSearch(searchState, typeID,
+											MarketplaceCoreConstants.SNS_SELLER_ID, pageableData);
+
+									//searchPageData.getCurrentQuery().setTwoTokenNextSearch(true);
+								}
+							}
+						}
+						//PR-23 end
+
+
 					}
 
 					// Get results from All category when we don't get any results for dropdown category/brand/seller
@@ -1018,6 +1089,48 @@ public class ProductsController extends BaseController
 					{
 						searchPageData = (ProductCategorySearchPageData<SearchStateData, ProductData, CategoryData>) productSearchFacade
 								.textSearch(searchState, pageableData);
+
+						//PR-23 start
+						if (searchPageData.getPagination().getTotalNumberOfResults() == 0)
+						{
+							if (StringUtils.isNotEmpty(searchText))
+							{
+
+								final String[] elements = searchText.trim().split("\\s+");
+
+								//if (elements.length == 2 || elements.length == 3)
+								if (elements.length >= 2)
+								{
+
+									searchState.setNextSearch(true);
+									searchPageData = (ProductCategorySearchPageData<SearchStateData, ProductData, CategoryData>) productSearchFacade
+											.textSearch(searchState, pageableData);
+
+									//searchPageData.getCurrentQuery().setTwoTokenNextSearch(true);
+								}
+							}
+						}
+						//PR-23 end
+
+
+					}
+
+					//TPR-6528
+					if (null != searchPageData.getSpellingSuggestion()
+							&& StringUtils.isNotEmpty(searchPageData.getSpellingSuggestion().getSuggestion()))
+					{
+						productSearchPage.setSpellingSuggestion(searchPageData.getSpellingSuggestion().getSuggestion()
+								.replaceAll("[^a-zA-Z&0-9\\s+]+", ""));
+						final SearchStateData searchStateAll = new SearchStateData();
+						final SearchQueryData searchQueryDataAll = new SearchQueryData();
+						searchQueryDataAll.setValue(searchPageData.getSpellingSuggestion().getSuggestion().replaceAll("[()]+", ""));
+						searchStateAll.setQuery(searchQueryDataAll);
+						if (isFromLuxuryWeb)
+						{
+							searchStateAll.setLuxurySiteFrom(MarketplacecommerceservicesConstants.CHANNEL_WEB);
+						}
+						searchPageData = (ProductCategorySearchPageData<SearchStateData, ProductData, CategoryData>) searchFacade
+								.textSearch(searchStateAll, pageableData);
 					}
 
 					if (isFilter)
@@ -1091,10 +1204,7 @@ public class ProductsController extends BaseController
 				{
 					productSearchPage.setCurrentQuery(sortingvalues.getCurrentQuery());
 				}
-				if (null != searchPageData.getSpellingSuggestion() && null != searchPageData.getSpellingSuggestion().getSuggestion())
-				{
-					productSearchPage.setSpellingSuggestion(searchPageData.getSpellingSuggestion().getSuggestion());
-				}
+
 			}
 
 		}
@@ -1284,7 +1394,8 @@ public class ProductsController extends BaseController
 			}
 			if (null != sortingvalues.getSpellingSuggestion())
 			{
-				productSearchPage.setSpellingSuggestion(searchPageData.getSpellingSuggestion().getSuggestion());
+				productSearchPage.setSpellingSuggestion(searchPageData.getSpellingSuggestion().getSuggestion()
+						.replaceAll("[^a-zA-Z&0-9\\s+]+", ""));
 			}
 		}
 		return productSearchPage;

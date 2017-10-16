@@ -1,0 +1,195 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ [y] hybris Platform
+ 
+ Copyright (c) 2000-2014 hybris AG
+ All rights reserved.
+ 
+ This software is the confidential and proprietary information of hybris
+ ("Confidential Information"). You shall not disclose such Confidential
+ Information and shall use it only in accordance with the terms of the
+ license agreement you entered into with hybris.
+-->
+ 
+<beans xmlns="http://www.springframework.org/schema/beans"
+   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+   xmlns:int="http://www.springframework.org/schema/integration"
+   xmlns:file="http://www.springframework.org/schema/integration/file"
+   xmlns:p="http://www.springframework.org/schema/p"
+   xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://www.springframework.org/schema/integration
+       http://www.springframework.org/schema/integration/spring-integration.xsd
+       http://www.springframework.org/schema/integration/file
+       http://www.springframework.org/schema/integration/file/spring-integration-file.xsd">
+ 
+ <!-- General setup -->
+ 
+  <bean id="fileOrderComparator" class="de.hybris.platform.acceleratorservices.dataimport.batch.FileOrderComparator">
+		<property name="prefixPriority">
+			<map>
+				<!-- default priority is 0 -->
+				<entry key="mpljewelleryprice" value="1" />
+				<entry key="mplassociation" value="2" />
+				<!-- <entry key="weight_variant_seller" value="3" /> -->
+			</map>
+		</property>
+	</bean>
+    <bean id="baseDirectoryMarketplaceJewelleryPrice" class="java.lang.String">
+        <constructor-arg value="#{baseDirectory}/${tenantId}/marketplace-jewelleryprice" />
+    </bean>
+ 
+    <!-- 1) Scan for files -->
+    <file:inbound-channel-adapter id="batchFilesMarketplaceJewelleryPrice" directory="#{baseDirectoryMarketplaceJewelleryPrice}"
+        filename-regex="^(.*)-(\d+)\.csv" comparator="fileOrderComparator" auto-startup="#{configurationService.configuration.getProperty('etail.batch.import.hotfolder.enabled')}">
+        <int:poller fixed-rate="1000" />
+    </file:inbound-channel-adapter>
+ 
+    <!-- 2) move the file to processing and setup header -->
+    <file:outbound-gateway request-channel="batchFilesMarketplaceJewelleryPrice" reply-channel="batchFilesMarketplaceJewelleryPriceProc"
+        directory="#{baseDirectoryMarketplaceJewelleryPrice}/processing" delete-source-files="true" />
+
+ 
+  <!-- 3) transform csv to impex file -->
+ <int:service-activator input-channel="batchFilesHeader" output-channel="batchFilesTran" ref="batchTransformerTask"
+		method="execute" />
+	<bean id="batchTransformerTask" 
+		  class="de.hybris.platform.acceleratorservices.dataimport.batch.task.ImpexTransformerTask" 
+		  init-method="initConvertersMap">
+		<property name="fieldSeparator" value="," />
+		<property name="encoding" value="UTF-8" />
+		<property name="linesToSkip" value="0"/>
+		<property name="cleanupHelper" ref="cleanupHelper" />
+	</bean>
+	
+ <int:service-activator input-channel="batchFilesMarketplaceJewelleryPriceProc" output-channel="batchFilesHeaderInit"
+        ref="MarketplacePriceHeaderSetupTask" method="execute" />
+ 
+ 	<bean id="MarketplacePriceHeaderSetupTask" class="de.hybris.platform.acceleratorservices.dataimport.batch.task.HeaderSetupTask">
+        <property name="catalog" value="mplProductCatalog" />
+        <property name="net" value="false" />
+        <property name="storeBaseDirectory" ref="baseDirectoryMarketplaceJewelleryPrice" />
+    </bean>   
+ 
+   
+     <!-- Transformer converters mappings -->
+    
+     <!-- Transformer for Price Import -->
+    <bean id="batchMplpriceJewelleryConverterMapping"
+    class="de.hybris.platform.acceleratorservices.dataimport.batch.converter.mapping.impl.DefaultConverterMapping"
+    p:mapping="mpljewelleryprice"
+    p:converter-ref="batchMplpriceJewelleryConverter"/>
+       
+         
+    <!-- Transformer for JewelleryPriceRow Import -->
+     <bean id="batchJewelleryConverterMapping"
+    class="de.hybris.platform.acceleratorservices.dataimport.batch.converter.mapping.impl.DefaultConverterMapping"
+    p:mapping="mpljewelleryprice"
+    p:converter-ref="batchJewelleryConverter"/>	 
+    
+      <!-- Transformer for Product Approval when price is given Import -->      
+    <bean id="batchJewelleryHomedeliveryConverterMapping"
+    class="de.hybris.platform.acceleratorservices.dataimport.batch.converter.mapping.impl.DefaultConverterMapping"
+    p:mapping="mpljewelleryprice"
+    p:converter-ref="batchJewelleryHomedeliveryConverter"/>
+ 	 
+ 	  <!-- Transformer for Association Import -->
+     <bean id="batchMplAssociationConverterMapping"
+		class="de.hybris.platform.acceleratorservices.dataimport.batch.converter.mapping.impl.DefaultConverterMapping"
+		p:mapping="mplassociation" p:converter-ref="batchMplAssociationConverter" />
+	
+ 	 <!-- Converters -->
+ 	<!-- Converter for Price Import --> 
+       <bean id="batchMplpriceJewelleryConverter" class="com.tisl.mpl.dataimport.batch.converter.impl.ExtDefaultImpexJewlConverter">
+        <property name="header">
+            <value>#{defaultImpexProductHeader}
+            	$productCatalog=mplProductCatalog
+					$catalogVersion=catalogversion(catalog(id[default=$productCatalog]),version[default='Online'])[unique=true,default='$productCatalog:Online']
+					$taxGroup=Europe1PriceFactory_PTG(code)[default=jp-vat-full]
+					# Set product approval status to Approved only for those products that have prices.
+					$approved=approvalstatus(code)[default='approved']
+					$unit=unit(code[unique=true,default=pieces])
+					$currency=currency(isocode)[unique=true][default=INR]
+					$minqtd=minqtd[default=1]
+					$unitFactor=unitFactor[default=1]
+					$net=net[default=false]					
+             INSERT_UPDATE PriceRow;product(code,$catalogVersion)[unique=true];sellerArticleSKU[unique=true][mode=append];price[translator=de.hybris.platform.acceleratorservices.dataimport.batch.converter.PriceTranslator];mrp;siteId[default='mpl'];$unit;$currency;$minqtd;$unitFactor;$net
+            </value>
+        </property>
+        <property name="impexRow">
+            <value>;{+0};{+2};{+4};{+3}</value>
+        </property>
+        </bean>
+        
+        <!-- Converter for Product Approval when price is given Import --> 
+        <bean id="batchJewelleryHomedeliveryConverter" class="de.hybris.platform.acceleratorservices.dataimport.batch.converter.impl.DefaultImpexConverter" >
+        <property name="header">
+            <value>#{defaultImpexProductHeader}
+            	$productCatalog=mplProductCatalog
+					$catalogVersion=catalogversion(catalog(id[default=$productCatalog]),version[default='Online'])[unique=true,default='$productCatalog:Online']
+					$taxGroup=Europe1PriceFactory_PTG(code)[default=jp-vat-full]
+
+					# Set product approval status to Approved only for those products that have prices.
+					$approved=approvalstatus(code)[default='approved']
+
+					$inCurrency=INR
+					$value=value[default='0.0']
+                    $homedelivery=deliveryMode(code)[unique=true][default='home-delivery'] 
+                    $zone=zone(code)[default='in']
+                    $currency=currency(isocode)[default=$inCurrency]
+                    $minimum=minimum[default='0.0']
+                    $deliveryFulfillModes=deliveryFulfillModes(Code)[default='sship']
+				INSERT_UPDATE MplZoneDeliveryModeValue;$value;sellerArticleSKU[unique=true](sellerArticleSKU,$catalogVersion);productCode[unique=true](code,$catalogVersion);$homedelivery;$zone;$currency;$minimum;$deliveryFulfillModes
+            </value>
+        </property>
+        <property name="impexRow">
+            <value>;{5};{+1};{+0};home-delivery
+            		;{6};{+1};{+0};express-delivery
+            		;{7};{+1};{+0};click-and-collect
+            		</value>
+        </property>
+        <!-- <property name="rowFilter">
+			<bean class="de.hybris.platform.acceleratorservices.dataimport.batch.converter.impl.DefaultImpexRowFilter">
+				Row Filter to check Price Greater than 0 
+				<property name="expression" value="Double.valueOf(row[4]) > 0"/>
+			</bean>
+		</property> -->
+         </bean>
+         
+        <!-- Converter for Product Approval when price is given Import --> 
+               
+        <bean id="batchJewelleryConverter" class="de.hybris.platform.acceleratorservices.dataimport.batch.converter.impl.DefaultImpexConverter" >
+        <property name="header">
+            <value>#{defaultImpexProductHeader}
+            	$productCatalog=mplProductCatalog
+					$catalogVersion=catalogversion(catalog(id[default=$productCatalog]),version[default='Online'])[unique=true,default='$productCatalog:Online']
+					$taxGroup=Europe1PriceFactory_PTG(code)[default=jp-vat-full]
+
+					# Set product approval status to Approved only for those products that have prices.
+					$approved=approvalstatus(code)[default='approved']
+                    INSERT_UPDATE JewelleryPriceRow;ProductCode;Ussid[unique=true];makingCharges;wastageCharges;goldRate;goldValue;silverRate;silverValue;platinumRate;platinumValue;solitaireRate;solitaireValue;totalDiamondValue;diamondRateType1;diamondValueType1;diamondRateType2;diamondValueType2;diamondRateType3;diamondValueType3;diamondRateType4;diamondValueType4;diamondRateType5;diamondValueType5;diamondRateType6;diamondValueType6;diamondRateType7;diamondValueType7;totalStoneValue;stoneRateType1;stoneValueType1;stoneRateType2;stoneValueType2;stoneRateType3;stoneValueType3;stoneRateType4;stoneValueType4;stoneRateType5;stoneValueType5;stoneRateType6;stoneValueType6;stoneRateType7;stoneValueType7;stoneRateType8;stoneValueType8;stoneRateType9;stoneValueType9;stoneRateType10;stoneValueType10;
+            </value>
+        </property>
+        <property name="impexRow">
+            <value>;{+0};{+2};{8};{9};{10};{11};{12};{13};{14};{15};{16};{17};{18};{19};{20};{21};{22};{23};{24};{25};{26};{27};{28};{29};{30};{31};{32};{33};{34};{35};{36};{37};{38};{39};{40};{41};{42};{43};{44};{45};{46};{47};{48};{49};{50};{51};{52};{53}</value>
+        </property>
+         </bean>
+         
+         
+         <bean id="batchMplAssociationConverter"
+		class="de.hybris.platform.acceleratorservices.dataimport.batch.converter.impl.DefaultImpexConverter">
+			<property name="header">
+				<value>#{defaultImpexProductHeader}
+					$productCatalog=mplProductCatalog
+					$productCatalogName=Marketplace Product Catalog
+					$catalogVersion=catalogversion(catalog(id[default=$productCatalog]),version[default='Online'])[unique=true,default=$productCatalog:Online]
+					$approved=approvalstatus(code)[default='approved']
+					INSERT_UPDATE JewelleryInformation;ProductCode;PCMUSSID;USSID[unique=true];PIMAttributeId[unique=true];Weight
+				</value>
+			</property>
+			<property name="impexRow">
+				<value>;{0};{4};{1};{2};{3}</value>
+			</property>
+		</bean>  
+         
+      </beans>

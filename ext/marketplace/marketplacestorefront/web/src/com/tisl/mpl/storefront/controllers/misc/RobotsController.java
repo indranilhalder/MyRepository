@@ -14,14 +14,19 @@
 package com.tisl.mpl.storefront.controllers.misc;
 
 import de.hybris.platform.acceleratorstorefrontcommons.controllers.AbstractController;
-import com.tisl.mpl.storefront.controllers.ControllerConstants;
+import de.hybris.platform.servicelayer.config.ConfigurationService;
 
 import javax.servlet.http.HttpServletResponse;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+
+import com.tisl.mpl.storefront.controllers.ControllerConstants;
+
 
 /**
  * Controller for web robots instructions
@@ -30,6 +35,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 @Scope("tenant")
 public class RobotsController extends AbstractController
 {
+	@Autowired
+	private ConfigurationService configurationService;
 	// Number of seconds in one day
 	private static final String ONE_DAY = String.valueOf(60 * 60 * 24);
 
@@ -41,4 +48,23 @@ public class RobotsController extends AbstractController
 
 		return ControllerConstants.Views.Pages.Misc.MiscRobotsPage;
 	}
+
+
+	//Changes start  for TPR-5812
+	@RequestMapping(value = "/manifest.json", method = RequestMethod.GET)
+	public String getManifest(final Model model)
+	{
+		final String gcm_sender_id = configurationService.getConfiguration().getString("izooto.manifest.gcm_sender_id");
+		model.addAttribute("gcm_sender_id", gcm_sender_id);
+		return ControllerConstants.Views.Pages.Misc.manifest;
+	}
+
+	@RequestMapping(value = "/service-worker.js", method = RequestMethod.GET)
+	public String getserviceWorker(final Model model)
+	{
+		final String izootooJsUrl = configurationService.getConfiguration().getString("izooto.serviceWorker.url");
+		model.addAttribute("izootooJsUrl", izootooJsUrl);
+		return ControllerConstants.Views.Pages.Misc.serviceWorker;
+	}
+	//changes end for TPR-5812
 }

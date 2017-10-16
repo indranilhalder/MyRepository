@@ -44,6 +44,7 @@ import de.hybris.platform.servicelayer.model.ModelService;
 import de.hybris.platform.servicelayer.session.SessionService;
 import de.hybris.platform.servicelayer.util.ServicesUtil;
 import de.hybris.platform.store.BaseStoreModel;
+import de.hybris.platform.storelocator.model.PointOfServiceModel;
 import de.hybris.platform.voucher.VoucherModelService;
 import de.hybris.platform.voucher.jalo.PromotionVoucher;
 import de.hybris.platform.voucher.model.PromotionVoucherModel;
@@ -89,6 +90,7 @@ import com.tisl.mpl.facade.checkout.MplCartFacade;
 import com.tisl.mpl.facade.checkout.MplCheckoutFacade;
 import com.tisl.mpl.facade.checkout.MplCustomAddressFacade;
 import com.tisl.mpl.facade.config.MplConfigFacade;
+import com.tisl.mpl.facade.product.ExchangeGuideFacade;
 import com.tisl.mpl.facades.account.address.MplAccountAddressFacade;
 import com.tisl.mpl.facades.constants.MarketplaceFacadesConstants;
 import com.tisl.mpl.facades.product.data.MarketplaceDeliveryModeData;
@@ -107,6 +109,7 @@ import com.tisl.mpl.shorturl.service.ShortUrlService;
 import com.tisl.mpl.sms.facades.SendSMSFacade;
 import com.tisl.mpl.sns.push.service.impl.MplSNSMobilePushServiceImpl;
 import com.tisl.mpl.wsdto.PushNotificationData;
+
 
 
 /**
@@ -192,6 +195,10 @@ public class MplCheckoutFacadeImpl extends DefaultCheckoutFacade implements MplC
 	@Resource(name = "sellerBasedPromotionService")
 	private SellerBasedPromotionService sellerBasedPromotionService;
 
+	//Exchange Changes
+	@Resource(name = "exchangeGuideFacade")
+	private ExchangeGuideFacade exchangeGuideFacade;
+
 	@Autowired
 	private ShortUrlService googleShortUrlService;
 
@@ -251,7 +258,8 @@ public class MplCheckoutFacadeImpl extends DefaultCheckoutFacade implements MplC
 		ServicesUtil.validateParameterNotNull(addressDataList, "Address data list cannot be empty");
 		final List<AddressData> addressDataNewList = new ArrayList<AddressData>();
 		String defaultAddressId = "";
-		String firstPriority = "Home";
+		String firstPriority = MarketplacecommerceservicesConstants.HOME;
+
 		int count = 0;
 
 		final Map<String, AddressData> sortedMap = new TreeMap<String, AddressData>(new Comparator<String>()
@@ -1013,7 +1021,6 @@ public class MplCheckoutFacadeImpl extends DefaultCheckoutFacade implements MplC
 			final Map<String, List<MarketplaceDeliveryModeData>> deliveryModeDataMap, final CartData cartData)
 			throws EtailNonBusinessExceptions
 	{
-
 		List<PinCodeResponseData> pincoderesponseDataList = null;
 		pincoderesponseDataList = getSessionService().getAttribute(
 				MarketplacecommerceservicesConstants.PINCODE_RESPONSE_DATA_TO_SESSION);
@@ -1094,7 +1101,6 @@ public class MplCheckoutFacadeImpl extends DefaultCheckoutFacade implements MplC
 				}
 			}
 		}
-
 		return deliveryModeDataMap;
 	}
 
@@ -1338,7 +1344,11 @@ public class MplCheckoutFacadeImpl extends DefaultCheckoutFacade implements MplC
 		{
 			final OrderProcessModel orderProcessModel = new OrderProcessModel();
 			orderProcessModel.setOrder(order);
-			orderProcessModel.setOrderTrackUrl(trackorderurl);
+			if(null != shortTrackingUrl) {
+				orderProcessModel.setOrderTrackUrl(shortTrackingUrl);
+			}else {
+				orderProcessModel.setOrderTrackUrl(trackorderurl);
+			}
 			final OrderPlacedEvent orderplacedEvent = new OrderPlacedEvent(orderProcessModel);
 			try
 			{
@@ -1536,6 +1546,15 @@ public class MplCheckoutFacadeImpl extends DefaultCheckoutFacade implements MplC
 		result.setOrder(orderModel);
 
 		mplCommerceCheckoutService.beforeSubmitOrder(parameter, result);
+		try
+		{
+
+			exchangeGuideFacade.getExchangeRequestID(orderModel);
+		}
+		catch (final Exception e)
+		{
+			LOG.error("Exchange Could Not be Applied" + e);
+		}
 	}
 
 	/**
@@ -1552,6 +1571,14 @@ public class MplCheckoutFacadeImpl extends DefaultCheckoutFacade implements MplC
 		result.setOrder(orderModel);
 
 		mplCommerceCheckoutService.beforeSubmitOrder(parameter, result);
+		try
+		{
+			exchangeGuideFacade.getExchangeRequestID(orderModel);
+		}
+		catch (final Exception e)
+		{
+			LOG.error("Exchange Could Not be Applied" + e);
+		}
 	}
 
 
@@ -1566,16 +1593,31 @@ public class MplCheckoutFacadeImpl extends DefaultCheckoutFacade implements MplC
 		getOrderService().submitOrder(orderModel);
 	}
 
+	/**
+	 * This method overrides the OOTB placeorder method where it allows to pass the available sales application of the
+	 * cartModel
+	 *
+	 * @param cartModel
+	 */
+	@Override
+	public OrderModel placeOrder(final CartModel cartModel) throws InvalidCartException
+	{
+		final CommerceCheckoutParameter parameter = new CommerceCheckoutParameter();
+		parameter.setEnableHooks(true);
+		parameter.setCart(cartModel);
+		// For TPR-5667 : setting salesapplication
+		if (cartModel.getChannel() != null)
+		{
+			parameter.setSalesApplication(cartModel.getChannel());
+		}
+		else
+		{
+			parameter.setSalesApplication(SalesApplication.WEB);
+		}
 
-
-
-
-
-
-
-
-
-
+		final CommerceOrderResult commerceOrderResult = getCommerceCheckoutService().placeOrder(parameter);
+		return commerceOrderResult.getOrder();
+	}
 
 
 	public VoucherModelService getVoucherModelService()
@@ -2259,6 +2301,59 @@ public class MplCheckoutFacadeImpl extends DefaultCheckoutFacade implements MplC
 
 	}
 
+	@Override
+	public void rePopulateDeliveryPointOfService(final Map deliveryPOSMap, final CartModel cartModel)
+	{
+		final Iterator it = deliveryPOSMap.entrySet().iterator();
+		while (it.hasNext())
+		{
+			final Map.Entry pair = (Map.Entry) it.next();
+			System.out.println(pair.getKey() + " = " + pair.getValue());
 
+			for (final AbstractOrderEntryModel entry : cartModel.getEntries())
+			{
+				if (pair.getKey().equals(entry.getSelectedUSSID()) && null != entry.getMplDeliveryMode().getDeliveryMode()
+						&& entry.getMplDeliveryMode().getDeliveryMode().getCode().equals(MarketplaceFacadesConstants.CLICK_AND_COLLECT))
+				{
+					entry.setDeliveryPointOfService((PointOfServiceModel) pair.getValue());
+					getModelService().save(entry);
+				}
+			}
+		}
+	}
+
+
+	/**
+	 * UF-281/282:used for reseting values inserted for SD
+	 *
+	 * @param cartEntryList
+	 */
+	@Override
+	public void resetSlotEntries(final List<AbstractOrderEntryModel> cartEntryList)
+	{
+		boolean isSaveRequired = false;
+		for (final AbstractOrderEntryModel cartEntryModel : cartEntryList)
+		{
+			if (null != cartEntryModel)
+			{
+				if (null != cartEntryModel.getEdScheduledDate() && StringUtils.isNotEmpty(cartEntryModel.getEdScheduledDate()))
+				{
+					isSaveRequired = true;
+					cartEntryModel.setEdScheduledDate("".trim());
+					cartEntryModel.setTimeSlotFrom("".trim());
+					cartEntryModel.setTimeSlotTo("".trim());
+					if (cartEntryModel.getScheduledDeliveryCharge() != null
+							&& cartEntryModel.getScheduledDeliveryCharge().doubleValue() != 0.0)
+					{
+						cartEntryModel.setScheduledDeliveryCharge(Double.valueOf(0));
+					}
+				}
+			}
+		}
+		if (isSaveRequired)
+		{
+			modelService.saveAll(cartEntryList);
+		}
+	}
 
 }

@@ -5,6 +5,7 @@ package com.tisl.mpl.helper;
 
 import de.hybris.platform.catalog.CatalogVersionService;
 import de.hybris.platform.catalog.model.CatalogVersionModel;
+import de.hybris.platform.catalog.model.ProductFeatureModel;
 import de.hybris.platform.catalog.model.classification.ClassificationAttributeValueModel;
 import de.hybris.platform.category.model.CategoryModel;
 import de.hybris.platform.classification.ClassificationService;
@@ -16,6 +17,7 @@ import de.hybris.platform.commercefacades.product.ProductFacade;
 import de.hybris.platform.commercefacades.product.ProductOption;
 import de.hybris.platform.commercefacades.product.data.ClassificationData;
 import de.hybris.platform.commercefacades.product.data.FeatureData;
+import de.hybris.platform.commercefacades.product.data.FeatureValueData;
 import de.hybris.platform.commercefacades.product.data.ImageData;
 import de.hybris.platform.commercefacades.product.data.ImageDataType;
 import de.hybris.platform.commercefacades.product.data.PincodeServiceData;
@@ -42,11 +44,14 @@ import java.math.BigDecimal;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import javax.annotation.Resource;
 import javax.servlet.http.Cookie;
@@ -64,12 +69,14 @@ import com.tisl.mpl.constants.MplGlobalCodeConstants;
 import com.tisl.mpl.core.enums.ClickAndCollectEnum;
 import com.tisl.mpl.core.enums.ExpressDeliveryEnum;
 import com.tisl.mpl.core.enums.HomeDeliveryEnum;
+import com.tisl.mpl.core.model.BuyBoxModel;
 import com.tisl.mpl.core.model.ConfigureImagesCountComponentModel;
 import com.tisl.mpl.core.model.MplZoneDeliveryModeValueModel;
 import com.tisl.mpl.core.model.RichAttributeModel;
 import com.tisl.mpl.data.WishlistData;
 import com.tisl.mpl.exception.EtailBusinessExceptions;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
+import com.tisl.mpl.facade.product.MplProductFacade;
 import com.tisl.mpl.facade.wishlist.WishlistFacade;
 import com.tisl.mpl.facades.constants.MarketplaceFacadesConstants;
 import com.tisl.mpl.facades.product.data.MarketplaceDeliveryModeData;
@@ -107,36 +114,32 @@ public class ProductDetailsHelper
 	/*
 	 * Added by I313024 for TATAUNISTORE-15 END :::
 	 */
-
+	private static final String CLASSIFICATION_ATTRIBUTES_TRAVELANDLUGGAGE_GROUPNAME = "classification.attributes.travelandluggage.groupname";
+	/*
+	 * Added for travel and Luggage
+	 */
+	private static final String CLASSIFICATION_ATTRIBUTES_FINEJEWELLERY_GROUPNAME = "classification.attributes.finejewellery.groupname";
+	/*
+	 * Added for Fine Jewellery
+	 */
+	private static final String CLASSIFICATION_ATTRIBUTES_FASHIONJEWELLERY_GROUPNAME = "classification.attributes.fashionjewellery.groupname";
+	/*
+	 * Added for Fashion Jewellery
+	 */
+	//	added for fine jewellery
+	private static final String CLASSIFICATION_ATTRIBUTES_DETAILS_ORDER = "classification.attributes.details.order";
 	/**
 	 *
 	 */
 	private static final String N_A = "n/a";
 	@Resource
 	private ClassificationService classificationService;
-	/*
-	 * private MplCheckoutFacade mplCheckoutFacade;
-	 *//**
-	 * @return the mplCheckoutFacade
-	 */
-	/*
-	 * public MplCheckoutFacade getMplCheckoutFacade() { return mplCheckoutFacade; }
-	 *//**
-	 * @param mplCheckoutFacade
-	 *           the mplCheckoutFacade to set
-	 */
-	/*
-	 * public void setMplCheckoutFacade(final MplCheckoutFacade mplCheckoutFacade) { this.mplCheckoutFacade =
-	 * mplCheckoutFacade; }
-	 */
 
 	@Autowired
 	private MplDeliveryCostService deliveryCostService;
 
-
 	@Resource(name = "GigyaService")
 	private GigyaService gigyaservice;
-
 
 	@Autowired
 	private ExtendedUserServiceImpl userexService;
@@ -148,40 +151,28 @@ public class ProductDetailsHelper
 	//@Autowired
 	//private SiteConfigService siteConfigService;
 
-	public GigyaService getGigyaservice()
-	{
-		return gigyaservice;
-	}
 
-	public void setGigyaservice(final GigyaService gigyaservice)
-	{
-		this.gigyaservice = gigyaservice;
-	}
-
-	/**
-	 * @return the deliveryCostService
-	 */
-	public MplDeliveryCostService getDeliveryCostService()
-	{
-		return deliveryCostService;
-	}
-
-	/**
-	 * @param deliveryCostService
-	 *           the deliveryCostService to set
-	 */
-	public void setDeliveryCostService(final MplDeliveryCostService deliveryCostService)
-	{
-		this.deliveryCostService = deliveryCostService;
-	}
-
+	@Resource(name = "mplProductFacade")
+	private MplProductFacade mplProductFacade;
 
 	/**
 	 *
 	 */
-
 	private static final String MPL_CONTENT_CATALOG = "mplContentCatalog";
 	private static final String MEDIA_PRIORITY = "mediaPriority";
+	private static final String COLOUR = "Colour";
+	private static final String SETTING = "Setting";
+	private static final String SHAPE = "Shape";
+	private static final String COUNT = "Count";
+	private static final String SIZE = "Size";
+	private static final String STONE_FINE_JEWEL = "stonefinejwlry";
+	private static final String STONE_FINE_JEWEL_COLOR = "stonecolorfinejwlry";
+	private static final String STONE_FINE_JEWEL_COUNT = "stonecountfinejwlry";
+	private static final String STONE_FINE_JEWEL_SIZE = "stonesizefinejwlry";
+	private static final String STONE_FINE_JEWEL_SETTING = "stonesettingfinejwlry";
+	private static final String STONE_FINE_JEWEL_SHAPE = "stoneshapefinejwlry";
+	private static final String STONE_FINE_JEWEL_DETAILS = " Details";
+
 	@Resource(name = "mplDeliveryCostService")
 	private MplDeliveryCostService mplDeliveryCostService;
 	@Autowired
@@ -201,43 +192,7 @@ public class ProductDetailsHelper
 	@Resource(name = "accProductFacade")
 	private ProductFacade productFacade;
 
-	/*
-	 * @Resource(name = "GigyaService") private GigyaService gigyaservice;
-	 * 
-	 * 
-	 * @Autowired private ExtendedUserServiceImpl userexService;
-	 *//**
-	 * @return the gigyaservice
-	 */
-
-	/*
-	 * public GigyaService getGigyaservice() { return gigyaservice; }
-	 *//**
-	 * @param gigyaservice
-	 *           the gigyaservice to set
-	 */
-	/*
-	 * public void setGigyaservice(final GigyaService gigyaservice) { this.gigyaservice = gigyaservice; }
-	 */
-
-	public MplDeliveryCostService getMplDeliveryCostService()
-	{
-		return mplDeliveryCostService;
-	}
-
-
 	private PriceDataFactory priceDataFactory;
-
-	protected PriceDataFactory getPriceDataFactory()
-	{
-		return priceDataFactory;
-	}
-
-	@Required
-	public void setPriceDataFactory(final PriceDataFactory priceDataFactory)
-	{
-		this.priceDataFactory = priceDataFactory;
-	}
 
 	@SuppressWarnings("unused")
 	private static final Logger LOG = Logger.getLogger(ProductDetailsHelper.class);
@@ -343,8 +298,10 @@ public class ProductDetailsHelper
 				if (classicationDataList.isEmpty()
 						&& !(classData.getName().equalsIgnoreCase(N_A))
 						&& (configurationService.getConfiguration().getString(CLASSIFICATION_ATTRIBUTES_ELECTRONICS_GROUPNAME)
-								.contains(classData.getName()) || configurationService.getConfiguration()
-								.getString(CLASSIFICATION_ATTRIBUTES_WATCHES_GROUPNAME).contains(classData.getName())))
+								.contains(classData.getName())
+								|| configurationService.getConfiguration().getString(CLASSIFICATION_ATTRIBUTES_WATCHES_GROUPNAME)
+										.contains(classData.getName()) || configurationService.getConfiguration()
+								.getString(CLASSIFICATION_ATTRIBUTES_TRAVELANDLUGGAGE_GROUPNAME).contains(classData.getName())))
 				{
 					classicationDataList.add(classData);
 				}
@@ -362,16 +319,281 @@ public class ProductDetailsHelper
 					{
 						if (!(classData.getName().equalsIgnoreCase(N_A))
 								&& (configurationService.getConfiguration().getString(CLASSIFICATION_ATTRIBUTES_ELECTRONICS_GROUPNAME)
-										.contains(classData.getName()) || configurationService.getConfiguration()
-										.getString(CLASSIFICATION_ATTRIBUTES_WATCHES_GROUPNAME).contains(classData.getName())))
+										.contains(classData.getName())
+										|| configurationService.getConfiguration().getString(CLASSIFICATION_ATTRIBUTES_WATCHES_GROUPNAME)
+												.contains(classData.getName()) || configurationService.getConfiguration()
+										.getString(CLASSIFICATION_ATTRIBUTES_TRAVELANDLUGGAGE_GROUPNAME).contains(classData.getName())))
 						{
 							classicationDataList.add(classData);
 						}
 					}
 				}
 			}
+			productData.setClassifications(classicationDataList);
 		}
-		productData.setClassifications(classicationDataList);
+	}
+
+
+	public void groupGlassificationDataForJewelDetails(final ProductData productData)
+	{
+		final LinkedHashMap<String, Map<String, List<String>>> featureDetailsMap = new LinkedHashMap<String, Map<String, List<String>>>();
+		final LinkedHashMap<String, Map<String, List<String>>> featureDetails = new LinkedHashMap<String, Map<String, List<String>>>();
+		String classificationName = null;
+		if (null != productData.getClassifications())
+		{
+			for (final ClassificationData classData : productData.getClassifications())
+			{
+				if (!(classData.getName().equalsIgnoreCase(N_A))
+						&& (configurationService.getConfiguration().getString(CLASSIFICATION_ATTRIBUTES_FINEJEWELLERY_GROUPNAME)
+								.contains(classData.getName()) || configurationService.getConfiguration()
+								.getString(CLASSIFICATION_ATTRIBUTES_FASHIONJEWELLERY_GROUPNAME).contains(classData.getName())))
+				{
+					final List<FeatureData> classDataName = new ArrayList<FeatureData>(classData.getFeatures());
+
+					if (classData.getName().equalsIgnoreCase("Stone Details"))
+					{
+						int countStone = 0;
+						final Map<String, Collection<FeatureValueData>> stoneFeatureDataMap = new HashMap<>();
+						for (final FeatureData feature : classDataName)
+						{
+
+							stoneFeatureDataMap.put(
+									feature.getCode().substring(feature.getCode().indexOf('.') + 1, feature.getCode().length()),
+									feature.getFeatureValues());
+
+							if (feature.getCode().substring(feature.getCode().indexOf('.') + 1, feature.getCode().length())
+									.startsWith(STONE_FINE_JEWEL))
+							{
+								countStone++;
+							}
+						}
+						for (int i = 1; i <= countStone; i++)
+						{
+							final Collection<FeatureValueData> name = stoneFeatureDataMap.get(STONE_FINE_JEWEL + i);
+							if (stoneFeatureDataMap.containsKey(STONE_FINE_JEWEL + i)
+									&& featureDetails.containsKey(name.stream().findFirst().get().getValue() + STONE_FINE_JEWEL_DETAILS))
+							{
+								final LinkedHashMap<String, List<String>> featureMap = new LinkedHashMap<>();
+								final Map<String, List<String>> featureMapUpdate = featureDetails.get(name.stream().findFirst().get()
+										.getValue()
+										+ STONE_FINE_JEWEL_DETAILS);
+								final Collection<FeatureValueData> color = stoneFeatureDataMap.get(STONE_FINE_JEWEL_COLOR + i);
+
+								{
+									final List valueList = new ArrayList<>();
+									if (featureMapUpdate.get(COLOUR) != null)
+									{
+										valueList.addAll(featureMapUpdate.get(COLOUR));
+									}
+									if (color != null)
+									{
+										valueList.add(color.stream().findFirst().get().getValue());
+									}
+									featureMap.put(COLOUR, valueList);
+								}
+
+								final Collection<FeatureValueData> setting = stoneFeatureDataMap.get(STONE_FINE_JEWEL_SETTING + i);
+
+								{
+									final List valueList = new ArrayList<>();
+									if (featureMapUpdate.get(SETTING) != null)
+									{
+										valueList.addAll(featureMapUpdate.get(SETTING));
+									}
+									if (setting != null)
+									{
+										valueList.add(setting.stream().findFirst().get().getValue());
+									}
+									featureMap.put(SETTING, valueList);
+								}
+								final Collection<FeatureValueData> shape = stoneFeatureDataMap.get(STONE_FINE_JEWEL_SHAPE + i);
+
+								{
+									final List valueList = new ArrayList<>();
+									if (featureMapUpdate.get(SHAPE) != null)
+									{
+										valueList.addAll(featureMapUpdate.get(SHAPE));
+									}
+									if (shape != null)
+									{
+										valueList.add(shape.stream().findFirst().get().getValue());
+									}
+									featureMap.put(SHAPE, valueList);
+								}
+
+								final Collection<FeatureValueData> count = stoneFeatureDataMap.get(STONE_FINE_JEWEL_COUNT + i);
+
+								{
+									final List valueList = new ArrayList<>();
+									if (featureMapUpdate.get(COUNT) != null)
+									{
+										valueList.addAll(featureMapUpdate.get(COUNT));
+									}
+									if (count != null)
+									{
+										valueList.add(count.stream().findFirst().get().getValue());
+									}
+									featureMap.put(COUNT, valueList);
+								}
+
+								final Collection<FeatureValueData> size = stoneFeatureDataMap.get(STONE_FINE_JEWEL_SIZE + i);
+
+								{
+									final List valueList = new ArrayList<>();
+									if (featureMapUpdate.get(SIZE) != null)
+									{
+										valueList.addAll(featureMapUpdate.get(SIZE));
+									}
+									if (size != null)
+									{
+										valueList.add(size.stream().findFirst().get().getValue());
+									}
+									featureMap.put(SIZE, valueList);
+								}
+								featureDetails.put(name.stream().findFirst().get().getValue() + STONE_FINE_JEWEL_DETAILS, featureMap);
+							}
+
+							else if (stoneFeatureDataMap.containsKey(STONE_FINE_JEWEL + i))
+							{
+								final LinkedHashMap<String, List<String>> featureMap = new LinkedHashMap<>();
+								final Collection<FeatureValueData> color = stoneFeatureDataMap.get(STONE_FINE_JEWEL_COLOR + i);
+								if (color != null)
+								{
+									final List valueList = new ArrayList<>();
+									valueList.add(color.stream().findFirst().get().getValue());
+									featureMap.put(COLOUR, valueList);
+								}
+
+								final Collection<FeatureValueData> setting = stoneFeatureDataMap.get(STONE_FINE_JEWEL_SETTING + i);
+								if (setting != null)
+								{
+									final List valueList = new ArrayList<>();
+									valueList.add(setting.stream().findFirst().get().getValue());
+									featureMap.put(SETTING, valueList);
+								}
+
+								final Collection<FeatureValueData> shape = stoneFeatureDataMap.get(STONE_FINE_JEWEL_SHAPE + i);
+								if (shape != null)
+								{
+									final List valueList = new ArrayList<>();
+									valueList.add(shape.stream().findFirst().get().getValue());
+									featureMap.put(SHAPE, valueList);
+								}
+
+								final Collection<FeatureValueData> count = stoneFeatureDataMap.get(STONE_FINE_JEWEL_COUNT + i);
+								if (count != null)
+								{
+									final List valueList = new ArrayList<>();
+									valueList.add(count.stream().findFirst().get().getValue());
+									featureMap.put(COUNT, valueList);
+								}
+
+								final Collection<FeatureValueData> size = stoneFeatureDataMap.get(STONE_FINE_JEWEL_SIZE + i);
+								if (size != null)
+								{
+									final List valueList = new ArrayList<>();
+									valueList.add(size.stream().findFirst().get().getValue());
+									featureMap.put(SIZE, valueList);
+								}
+								featureDetails.put(name.stream().findFirst().get().getValue() + STONE_FINE_JEWEL_DETAILS, featureMap);
+							}
+
+
+						}
+
+					}
+					else
+					{
+						final LinkedHashMap<String, List<String>> featureMap = new LinkedHashMap<String, List<String>>();
+						classificationName = classData.getName();
+						for (final FeatureData feature : classDataName)
+						{
+							final ProductFeatureModel productFeature = mplProductFacade.getProductFeatureModelByProductAndQualifier(
+									productData, feature.getCode());
+							final String unit = productFeature != null && productFeature.getUnit() != null
+									&& !productFeature.getUnit().getSymbol().isEmpty() ? productFeature.getUnit().getSymbol() : "";
+							final String featurename = feature.getName();
+							final List<FeatureValueData> featuredvalue = new ArrayList<FeatureValueData>(feature.getFeatureValues());
+							final List<String> featureValueList = new ArrayList<String>();
+							for (final FeatureValueData featurevalue : featuredvalue)
+							{
+								final String featureV = featurevalue.getValue();
+								final List<String> featureMapKeys = new ArrayList<String>();
+								for (final Entry<String, List<String>> featureMapKey : featureMap.entrySet())//null check
+								{
+									featureMapKeys.add(featureMapKey.getKey());
+								}
+								if (featureMapKeys.contains(featurename))
+								{
+									for (final String key : featureMapKeys)
+									{
+										if (key != null && key.equalsIgnoreCase(featurename))
+										{
+											featureMap.get(featurename).add(featureV + MarketplaceFacadesConstants.SPACE + unit);
+										}
+									}
+								}
+								else
+								{
+									featureValueList.add(featureV + MarketplaceFacadesConstants.SPACE + unit);
+									featureMap.put(featurename, featureValueList);
+								}
+							}
+						}
+						final List<String> keyList = new ArrayList<String>();
+						if (!featureDetails.isEmpty())
+						{
+							for (final Entry<String, Map<String, List<String>>> keys : featureDetails.entrySet())
+							{
+								keyList.add(keys.getKey());
+							}
+						}
+						if (keyList.contains(classificationName))
+						{
+							for (final String key : keyList)
+							{
+								if (key != null && key.equalsIgnoreCase(classificationName))
+								{
+									featureDetails.get(classificationName).putAll(featureMap);
+								}
+							}
+						}
+						else
+						{
+							featureDetails.put(classificationName, featureMap);
+						}
+					}
+				}
+			}
+			//JWLSPCUAT-101:Product details section should be top in PDP page
+			final String featureDetailsOrder = configurationService.getConfiguration().getString(
+					CLASSIFICATION_ATTRIBUTES_DETAILS_ORDER);
+			if (StringUtils.isNotEmpty(featureDetailsOrder))
+			{
+				final String[] featureDetailsOrderArray = featureDetailsOrder.split(",");
+
+				for (final String keyArray : featureDetailsOrderArray)
+				{
+					if (featureDetails.containsKey(keyArray))
+					{
+						featureDetailsMap.put(keyArray, featureDetails.get(keyArray));
+					}
+				}
+				for (final String keyArray : featureDetails.keySet())
+				{
+					if (!featureDetailsMap.containsKey(keyArray))
+					{
+						featureDetailsMap.put(keyArray, featureDetails.get(keyArray));
+					}
+				}
+			}
+			else
+			{
+				featureDetailsMap.putAll(featureDetails);
+			}
+			//productData.setFineJewelleryDeatils(featureDetails);
+			productData.setFineJewelleryDeatils(featureDetailsMap);
+		}
 	}
 
 	public ClassificationData getExistingClasificationData(final String name, final List<ClassificationData> classificationList)
@@ -386,6 +608,8 @@ public class ProductDetailsHelper
 		}
 		return classificationData;
 	}
+
+
 
 	public PriceData formPriceData(final Double price)
 	{
@@ -480,7 +704,8 @@ public class ProductDetailsHelper
 					{
 						//TISEE-6376
 						if (wlEntry.getProduct() != null && wlEntry.getProduct().getCode() != null
-								&& wlEntry.getProduct().getCode().equals(productCode))
+								&& wlEntry.getProduct().getCode().equals(productCode)
+								&& (!wlEntry.getIsDeleted().booleanValue() || wlEntry.getIsDeleted() == null))//TPR-5787 TISSPTEN-9 check added
 						{
 							ussidEntries.add(wlEntry.getUssid());
 						}
@@ -1164,7 +1389,8 @@ public class ProductDetailsHelper
 			{
 				for (final Wishlist2EntryModel entry : lastCreatedWishlist.getEntries())
 				{
-					if (null != (entry) && null != entry.getUssid() && (entry.getUssid()).equalsIgnoreCase(ussid))
+					if (null != (entry) && null != entry.getUssid() && (entry.getUssid()).equalsIgnoreCase(ussid)
+							&& (!entry.getIsDeleted().booleanValue() || entry.getIsDeleted() == null))//TPR-5787 condition added
 					{
 						existUssid = true;
 						break;
@@ -1355,4 +1581,258 @@ public class ProductDetailsHelper
 		}
 		return removeFromWl;
 	}
+
+	/**
+	 * @param ussID
+	 * @return
+	 */
+	public BuyBoxModel buyboxPriceForJewelleryWithVariant(final String ussID)
+	{
+		BuyBoxModel buyBox = null;
+		final List<BuyBoxModel> buyBoxList = getBuyBoxService().buyboxPriceForJewelleryWithVariant(ussID);
+		if (CollectionUtils.isNotEmpty(buyBoxList))
+		{
+			buyBox = buyBoxList.get(0);
+		}
+		return buyBox;
+	}
+
+
+
+	@Required
+	public void setPriceDataFactory(final PriceDataFactory priceDataFactory)
+	{
+		this.priceDataFactory = priceDataFactory;
+	}
+
+	/**
+	 * @return the classificationService
+	 */
+	public ClassificationService getClassificationService()
+	{
+		return classificationService;
+	}
+
+	/**
+	 * @param classificationService
+	 *           the classificationService to set
+	 */
+	public void setClassificationService(final ClassificationService classificationService)
+	{
+		this.classificationService = classificationService;
+	}
+
+	/**
+	 * @return the deliveryCostService
+	 */
+	public MplDeliveryCostService getDeliveryCostService()
+	{
+		return deliveryCostService;
+	}
+
+	/**
+	 * @param deliveryCostService
+	 *           the deliveryCostService to set
+	 */
+	public void setDeliveryCostService(final MplDeliveryCostService deliveryCostService)
+	{
+		this.deliveryCostService = deliveryCostService;
+	}
+
+	/**
+	 * @return the gigyaservice
+	 */
+	public GigyaService getGigyaservice()
+	{
+		return gigyaservice;
+	}
+
+	/**
+	 * @param gigyaservice
+	 *           the gigyaservice to set
+	 */
+	public void setGigyaservice(final GigyaService gigyaservice)
+	{
+		this.gigyaservice = gigyaservice;
+	}
+
+	/**
+	 * @return the userexService
+	 */
+	public ExtendedUserServiceImpl getUserexService()
+	{
+		return userexService;
+	}
+
+	/**
+	 * @param userexService
+	 *           the userexService to set
+	 */
+	public void setUserexService(final ExtendedUserServiceImpl userexService)
+	{
+		this.userexService = userexService;
+	}
+
+	/**
+	 * @return the mplDeliveryCostService
+	 */
+	public MplDeliveryCostService getMplDeliveryCostService()
+	{
+		return mplDeliveryCostService;
+	}
+
+	/**
+	 * @param mplDeliveryCostService
+	 *           the mplDeliveryCostService to set
+	 */
+	public void setMplDeliveryCostService(final MplDeliveryCostService mplDeliveryCostService)
+	{
+		this.mplDeliveryCostService = mplDeliveryCostService;
+	}
+
+	/**
+	 * @return the wishlistFacade
+	 */
+	public WishlistFacade getWishlistFacade()
+	{
+		return wishlistFacade;
+	}
+
+	/**
+	 * @param wishlistFacade
+	 *           the wishlistFacade to set
+	 */
+	public void setWishlistFacade(final WishlistFacade wishlistFacade)
+	{
+		this.wishlistFacade = wishlistFacade;
+	}
+
+	/**
+	 * @return the userService
+	 */
+	public UserService getUserService()
+	{
+		return userService;
+	}
+
+	/**
+	 * @param userService
+	 *           the userService to set
+	 */
+	public void setUserService(final UserService userService)
+	{
+		this.userService = userService;
+	}
+
+	/**
+	 * @return the mplDeliveryInformationService
+	 */
+	public MplDeliveryInformationService getMplDeliveryInformationService()
+	{
+		return mplDeliveryInformationService;
+	}
+
+	/**
+	 * @param mplDeliveryInformationService
+	 *           the mplDeliveryInformationService to set
+	 */
+	public void setMplDeliveryInformationService(final MplDeliveryInformationService mplDeliveryInformationService)
+	{
+		this.mplDeliveryInformationService = mplDeliveryInformationService;
+	}
+
+	/**
+	 * @return the flexibleSearchService
+	 */
+	public FlexibleSearchService getFlexibleSearchService()
+	{
+		return flexibleSearchService;
+	}
+
+	/**
+	 * @param flexibleSearchService
+	 *           the flexibleSearchService to set
+	 */
+	public void setFlexibleSearchService(final FlexibleSearchService flexibleSearchService)
+	{
+		this.flexibleSearchService = flexibleSearchService;
+	}
+
+	/**
+	 * @return the configurationService
+	 */
+	public ConfigurationService getConfigurationService()
+	{
+		return configurationService;
+	}
+
+	/**
+	 * @param configurationService
+	 *           the configurationService to set
+	 */
+	public void setConfigurationService(final ConfigurationService configurationService)
+	{
+		this.configurationService = configurationService;
+	}
+
+	/**
+	 * @return the catalogVersionService
+	 */
+	public CatalogVersionService getCatalogVersionService()
+	{
+		return catalogVersionService;
+	}
+
+	/**
+	 * @param catalogVersionService
+	 *           the catalogVersionService to set
+	 */
+	public void setCatalogVersionService(final CatalogVersionService catalogVersionService)
+	{
+		this.catalogVersionService = catalogVersionService;
+	}
+
+	/**
+	 * @return the productService
+	 */
+	public ProductService getProductService()
+	{
+		return productService;
+	}
+
+	/**
+	 * @param productService
+	 *           the productService to set
+	 */
+	public void setProductService(final ProductService productService)
+	{
+		this.productService = productService;
+	}
+
+	/**
+	 * @return the productFacade
+	 */
+	public ProductFacade getProductFacade()
+	{
+		return productFacade;
+	}
+
+	/**
+	 * @param productFacade
+	 *           the productFacade to set
+	 */
+	public void setProductFacade(final ProductFacade productFacade)
+	{
+		this.productFacade = productFacade;
+	}
+
+	/**
+	 * @return the priceDataFactory
+	 */
+	public PriceDataFactory getPriceDataFactory()
+	{
+		return priceDataFactory;
+	}
+
+
 }

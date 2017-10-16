@@ -142,6 +142,7 @@
 		extends="de.hybris.platform.commercefacades.user.data.PrincipalData">
 		<property name="title" type="String" />
 		<property name="registrationDate" type="java.util.Date" />
+		<property name="gender" type="String" />
 		<!-- <property name="ipAddress" type="String" /> -->
 	</bean>
 
@@ -710,9 +711,12 @@
 		<property name="returnAWB" type="String" />
 		<property name="storeDetails"
 			type="de.hybris.platform.commercewebservicescommons.dto.store.PointOfServiceWsDTO" />
-			
-			<!-- TPR-6117 -->
+	<!-- TPR-1083 Start-->
+	<property name="exchangeId" type="String"/>
+	<property name="exchangeMessage" type="String"/>
+		<!-- TPR-6117 -->
 			<property name="maxQuantityAllowed" type="String" />
+			<!-- <property name="priceDisclaimerTextJwlry" type="String" /> -->
 	</bean>
 	<!-- -->
 	<bean class="com.tisl.mpl.wsdto.MobdeliveryModeWsDTO">
@@ -843,7 +847,11 @@
 		<property name="cartGuid" type="String"></property>
 		<!-- TPR-6117 -->
 		<property name="reachedMaxLimitforproduct" type="java.util.List&lt;com.tisl.mpl.wsdto.MaxLimitWsDto>" />
-
+                <!-- TPR-3893 starts here -->
+		<property name="firedMessage" type="String" />
+		<!-- TPR-3893 ends here -->	
+		<!-- TPR-6980 -->
+		<property name="priceDisclaimerTextJwlry" type="String" />
 	</bean>
 	<bean class="com.tisl.mpl.wsdto.CartProductsDeliveryDetailsWsDTO">
 		<property name="data" type="String" />
@@ -1023,14 +1031,33 @@
 
 		<property name="productOfferMsg" type="com.tisl.mpl.wsdto.ProductOfferMsgDTO" />
 		<property name="allOOStock" type="Boolean" />
+	<!-- Added for Exchange TPR-1083 -->
+		<property name="l3code" type="String"></property>
+ 		<property name="l3name" type="String"></property>
+ 		<property name="linkUrls" type="java.util.List&lt;com.tisl.mpl.wsdto.ExchangeLinkUrl>"/>
 		<property name="aPlusContent" type="com.tisl.mpl.wsdto.ProductAPlusWsData" />
         <property name="imageUrl" type="String" />
 	  	<!-- Added for luxury products -->
 		<property name="luxIndicator" type="String" />
+		<!-- Mobile Service for Jewellery -->
+		<property name="priceBreakUpDetailsMap" type="java.util.List&lt;com.tisl.mpl.wsdto.PriceBreakUpDto>" />
+		<property name="certificationMapFrJwlry" type="java.util.List&lt;String>" />
+		<property name="priceDisclaimerTextPDP" type="String" />
+		<property name="showPriceBrkUpPDP" type="String" />
+		<!-- <property name="fineJewelleryClassification" type="java.util.Map&lt;String,java.util.Map&lt;String,java.util.List&lt;String>>>"></property> -->
+		<property name="fineJewelleryClassificationList" type="java.util.Map&lt;String,com.tisl.mpl.wsdto.FineJwlryClassificationListDTO>" />
+
+		<property name="returnAndRefund"
+			type="java.util.List&lt;com.tisl.mpl.wsdto.RefundReturnDTO>"></property>
+		<property name="returns"
+			type="java.util.List&lt;com.tisl.mpl.wsdto.RefundReturnDTO>"></property>
+
+		<property name="isSizeOrLength" type="String" />
 
 <!-- TPR-6117 -->
 			<property name="maxQuantityAllowed" type="String" />
 	</bean>
+	
 	<!-- Added for OfferDetail of a product TPR-TPR-1299 -->
 	<bean class="com.tisl.mpl.wsdto.ProductOfferMsgDTO">
 		<property name="messageDetails" type="String" />
@@ -1042,6 +1069,12 @@
 	<bean class="com.tisl.mpl.wsdto.KnowMoreDTO">
 		<property name="knowMoreItem" type="java.lang.String"></property>
 	</bean>
+	
+	<!-- for a new tab return and refund for fine and fashion jewellery -->
+	<bean class="com.tisl.mpl.wsdto.RefundReturnDTO">
+		<property name="refundReturnItem" type="java.lang.String"></property>
+	</bean>
+	
 	<bean class="com.tisl.mpl.wsdto.FreebieDTO">
 		<property name="productName" type="String" />
 		<property name="productDescription" type="String" />
@@ -1393,6 +1426,7 @@
 		<property name="pickupPersonMobile" type="String" />
 		<property name="isPickupUpdatable" type="boolean" />
 		<property name="isCDA" type="boolean"/>	
+		
 	</bean>
 
 	<bean class="com.tisl.mpl.wsdto.ListPinCodeServiceData">
@@ -1425,6 +1459,8 @@
 		<property name="couponDiscount" type="String" />
 		<property name="pickupPersonName" type="String" />
 		<property name="pickupPersonMobile" type="String" />
+		<!-- TPR-1083 Start-->
+	<property name="exchangeId" type="String"/>
 	</bean>
 	<bean class="com.tisl.mpl.wsdto.FreebieWsDTO">
 		<property name="name" type="String" />
@@ -1499,6 +1535,8 @@
 		<property name="scheduleDeliveryTime" type="String" />
 		<property name="selfCourierDocumentLink" type="String" />
 		<property name="awbPopupLink" type="String" />
+		<!-- TPR-1083 Start-->
+	<property name="exchangeId" type="String"/>
 	</bean>
 	<bean class="com.tisl.mpl.wsdto.StatusResponseListDTO">
 		<property name="statusList"
@@ -1551,6 +1589,8 @@
 		<property name="totalDiscounts" type="String" />
 		<property name="pickupPersonName" type="String" />
 		<property name="pickupPersonMobile" type="String" />
+		<!-- TPR-1083 Start-->
+	<property name="exchangeId" type="String"/>
 	</bean>
 
 	<bean class="com.tisl.mpl.wsdto.PaymentMethodListWsDTO">
@@ -1566,6 +1606,7 @@
 			type="java.util.List&lt;com.tisl.mpl.wsdto.ReservationItemWsDTO>" />
 		<property name="delistedMessage" type="String" />
 		<property name="failedUSSIDs" type="java.util.List&lt;java.lang.String>" />
+		<property name="priceChangeNotificationMsg" type="java.lang.String" />
 	</bean>
 
 
@@ -1917,6 +1958,14 @@
 			type="de.hybris.platform.commercefacades.product.data.PriceData" />
 		<property name="mrpPrice"
 			type="de.hybris.platform.commercefacades.product.data.PriceData" />
+			
+		<!-- added for mobile web service changes for jewellery start-->
+		<property name="maxSellingPrice"
+ 			type="de.hybris.platform.commercefacades.product.data.PriceData" />
+ 		<property name="minSellingPrice"
+ 			type="de.hybris.platform.commercefacades.product.data.PriceData" />
+ 			<!-- added for mobile web service changes for jewellery end-->
+ 			
 		<property name="colour" type="String" />
 		<property name="colourCode" type="String" />
 		<property name="productTag"
@@ -2543,6 +2592,7 @@
     	<property name="brandId" type="String"/>
     </bean>
      <bean class="com.tisl.mpl.wsdto.LuxVideocomponentWsDTO">
+    	<property name="componentPosition" type="String" />
     	<property name="videoUrl" type="String"/>
     	<property name="videoDescription" type="String" />
     	<property name="previewUrl" type="String"/>
@@ -3004,13 +3054,31 @@
 			type="java.util.List&lt;com.tisl.mpl.wsdto.ReturnReasonDTO>" />
 			
 		<!--  R2.3 CRM to Commerce end-->
+		<!-- TPR-4134 -->
+		<property name="showReverseSealFrJwlry" type="java.lang.String"/>
+        <property name="reverseSealFrJwlry" type="com.tisl.mpl.wsdto.RevSealJwlryDataWsDTO"/>
+        <property name="reverseSealAvailable" type="java.lang.String"/>
+        <property name="returnModes" type="com.tisl.mpl.wsdto.ReturnModesWsDTO"></property>
 	</bean>
 	<!-- For Return Web Services Change Pincode QuickDrop Stores -->
 	<bean class="com.tisl.mpl.wsdto.QuickDropStoresList" extends="com.tisl.mpl.wsdto.ErrorDTO">
 		<property name="returnStoreDetailsList"
 			type="java.util.List&lt;de.hybris.platform.commercefacades.storelocator.data.PointOfServiceData>" />
 	</bean>
+<!-- TPR 1083 Start -->
 
+<bean class="com.tisl.mpl.wsdto.ReversePincodeExchangeData">
+<property name="pincodeResponse" type="boolean"/>
+<property name="priceMatrix" type="java.util.List&lt;com.tisl.mpl.facades.product.data.ExchangeGuideData>"/>
+</bean>
+
+<bean class="com.tisl.mpl.wsdto.ExchangeLinkUrl">
+<property name="id" type="java.lang.String"/>
+<property name="name" type="java.lang.String"/>
+<property name="url" type="java.lang.String"/>
+</bean>
+
+ 
 <!--TPR-6117-->
 	<bean class="com.tisl.mpl.wsdto.MaxLimitWsDto">
 		<property name="productCode" type="String" />
@@ -3019,5 +3087,244 @@
 		<property name="maxQuantityAllowed" type="String" />
 		<property name="userSelectedQty" type="String" />
 	</bean>
-</beans>
 
+	<bean class="com.tisl.mpl.wsdto.PriceBreakUpDto">
+		<property name="name" type="String" />
+		<property name="weightRateList" type="java.util.List&lt;String>" />
+ 		<property name="price" type="de.hybris.platform.commercefacades.product.data.PriceData" />
+	</bean>
+	<bean class="com.tisl.mpl.wsdto.FineJwlryClassificationListDTO">
+		<property name="classificationListJwlry" type="java.util.Map&lt;String,com.tisl.mpl.wsdto.FineJwlryClassificationListValueDTO>" />
+	</bean>
+	<bean class="com.tisl.mpl.wsdto.FineJwlryClassificationListValueDTO">
+		<property name="classificationListValueJwlry" type="java.util.List&lt;String>" />
+	</bean>
+       <!-- TPR-4512 -->
+	<bean class="com.tisl.mpl.wsdto.CustomerOrderInfoWsDTO">
+		
+		<property name="transactionId" type="String" />
+		<property name="productName" type="String" />
+		<property name="sellerName" type="String" />
+		<property name="shippingType" type="String" />
+		<property name="shippingMode" type="String" />
+		<property name="edd" type="String" />
+		<property name="apportionedPrice" type="String" />
+		<property name="orderStatus" type="String" />
+		<property name="paymentType" type="String" />
+		<property name="paymentMode" type="String" />
+		<property name="l4CategoryName" type="String" />
+		<property name="transactionTimestamp" type="String" />
+		<property name="transactionCreationDate" type="String" />
+		<property name="orderTimestamp" type="String" />
+		<property name="transactionStatus" type="String" />
+		<property name="transactionStatusDetails" type="String" />
+		<property name="carrierName" type="String" />
+		<property name="awbNumber" type="String" />
+		<property name="qcRejectionReason" type="String" />
+		<property name="returnCarrier" type="String" />
+		<property name="returnAwbNumber" type="String" />
+		<property name="returnType" type="String" />
+		<property name="returnRequestStatus" type="String" />
+		<property name="returnRequestTimestamp" type="String" />
+		<property name="refundDate" type="String" />
+		<property name="shippingStatus" type="String" />
+		<property name="shippingTimestamp" type="String" />
+		<property name="deliverytrackingDetails" type="java.util.List&lt;com.tisl.mpl.wsdto.DeliveryTrackingInfoWsDTO>" />
+		
+		
+		
+		
+	</bean>
+	
+	<bean class="com.tisl.mpl.wsdto.OrderInfoWsDTO" extends="com.tisl.mpl.wsdto.ErrorDTO">
+	
+	<property name="orderDate" type="String" />
+	<property name="custName" type="String" />
+	<property name="custMobileNo" type="String" />
+	<property name="orderTotal" type="String" />
+	<property name="customerOrderInfoWsDTO" type="java.util.List&lt;com.tisl.mpl.wsdto.CustomerOrderInfoWsDTO>" />
+	
+	</bean>
+	
+	<bean class="com.tisl.mpl.wsdto.DeliveryTrackingInfoWsDTO">
+	
+	<property name="deliveryTrackingDate" type="String" />
+	<property name="deliveryTrackingLocation" type="String" />
+	<property name="deliveryTrackingDescription" type="String" />
+		
+	</bean>
+	
+
+<!-- =======================================luxury Components========================================================= -->
+	<bean class="com.tisl.mpl.wsdto.RevSealJwlryDataWsDTO">
+        <property name="message" type="String"/>
+	    <property name="yes" type="String"/>
+		<property name="no" type="String"/>
+	</bean>
+	<bean class="com.tisl.mpl.wsdto.ReturnModesWsDTO">
+        <property name="selfCourier" type="boolean"/>
+	    <property name="schedulePickup" type="boolean"/>
+		<property name="quickDrop" type="boolean"/>
+	</bean>
+ 		
+	<!--============= luxuryHomePage =============-->
+	<bean class="com.tisl.mpl.wsdto.LuxuryHomePageCompWsDTO">
+		<property name="sectionId" type="String" />
+		<property name="Components" type="java.util.List&lt;com.tisl.mpl.wsdto.LuxuryComponentsListWsDTO>"/>
+		<property name="pageTitle" type="String" />
+		<property name="metaKeywords" type="String" />
+		<property name="metaDescription" type="String" />
+	</bean>
+	
+	<bean class="com.tisl.mpl.wsdto.WeeklySpecialBannerWsDTO">
+    	<property name="svglogoUrl" type="String" />
+    	<property name="imageUrl" type="String" />
+    	<property name="url" type="String" /> 
+    </bean>
+	
+	<bean class="com.tisl.mpl.wsdto.LuxShopByCategoryWsDTO">
+     <property name="title" type="String" />
+     <property name="componentPosition" type="String" />
+     <property name="relatedImage" type="java.util.List&lt;com.tisl.mpl.wsdto.LuxBannerComponentWsDTO>"/>
+    </bean>	
+		
+	 <bean class="com.tisl.mpl.wsdto.WeeklySpecialBannerListWsDTO">
+	 	<property name="componentPosition" type="String" />
+    	<property name="seeklySpecialTitle" type="String" />
+    	<property name="weeklySpecialBannerList" type="java.util.List&lt;com.tisl.mpl.wsdto.WeeklySpecialBannerWsDTO>"/>
+    </bean>
+	
+	 <bean class="com.tisl.mpl.wsdto.ShopOnLuxuryElementWsDTO">
+    	<property name="title" type="String" />
+    	<property name="imagePath" type="String" />
+    	<property name="description" type="String" /> 
+    </bean>
+    
+    <bean class="com.tisl.mpl.wsdto.ShopOnLuxuryElementListWsDTO">
+    	<property name="componentPosition" type="String" />
+    	<property name="shopOnLuxuryTitle" type="String" />
+    	<property name="shopOnLuxuryElements" type="java.util.List&lt;com.tisl.mpl.wsdto.ShopOnLuxuryElementWsDTO>"/>
+    </bean>
+
+
+   <bean class="com.tisl.mpl.wsdto.LuxRotatingImagesComponentWsDTO">
+        <property name="componentPosition" type="String" />
+        <property name="timeout" type="java.lang.Integer"/>
+    	<property name="effect" type="String" />
+    	<property name="banners" type="java.util.List&lt;com.tisl.mpl.wsdto.LuxBannerComponentWsDTO>"/>
+    </bean>
+    
+    
+    
+   <bean class="com.tisl.mpl.wsdto.LuxBannerComponentWsDTO">
+    	<property name="headline" type="String" />
+    	<property name="content" type="String"/>
+    	<property name="pageLabelOrId" type="String"/>
+    	<property name="bannerView" type="String"/>
+    	<property name="media" type="String"/>
+    	<property name="urlLink" type="String"/>
+    	<property name="external" type="java.lang.Boolean"/>
+    </bean>
+
+   
+
+   <bean class="com.tisl.mpl.wsdto.LuxCMSMediaParagraphComponentListWsDTO">
+    	<property name="media" type="String" />
+    	<property name="url" type="String"/>
+    	<property name="content" type="String"/>
+    	<property name="componentPosition" type="String" />
+    	<property name="medias" type="java.util.List&lt;com.tisl.mpl.wsdto.LuxBannerComponentWsDTO>"/>
+    </bean>
+
+	<bean class="com.tisl.mpl.wsdto.LuxuryMediaListWsDTO">
+    	<property name="componentPosition" type="String" />
+    	<property name="URL" type="String" />
+    	<property name="urlLink" type="String"/>
+    	<property name="mdeiaFormat" type="String"/>
+	</bean>
+
+
+	<bean class="com.tisl.mpl.wsdto.LuxMediaContainerWsDTO">
+    	<property name="qualifier" type="String" />
+    	<property name="name" type="String"/>
+    	<property name="medias" type="java.util.List&lt;com.tisl.mpl.wsdto.LuxuryMediaListWsDTO>"/>
+ 	</bean>
+
+
+	<bean class="com.tisl.mpl.wsdto.LuxuryLookBookComponentListWsDTO">
+		<property name="componentPosition" type="String" />
+    	<property name="layoutCode" type="String" />
+    	<property name="title" type="String"/>
+    	<property name="description" type="String"/>
+    	<property name="shopNowName" type="String" />
+    	<property name="shopNowLink" type="String"/>
+    	<property name="textArea" type="String"/>
+    	<property name="firstCol" type="java.util.List&lt;com.tisl.mpl.wsdto.LuxMediaContainerWsDTO>" />
+    	<property name="secondCol" type="java.util.List&lt;com.tisl.mpl.wsdto.LuxMediaContainerWsDTO>"/>
+    </bean>
+    
+    
+	<bean class="com.tisl.mpl.wsdto.LuxShowCaseComponentListWsDTO">
+    	<property name="title" type="String" />
+    	<property name="componentPosition" type="String" />
+    	<property name="ShowCase" type="java.util.List&lt;com.tisl.mpl.wsdto.LuxShowCaseCollectionComponentListWsDTO>"/>
+    </bean>
+    <bean class="com.tisl.mpl.wsdto.LuxShowCaseCollectionComponentListWsDTO">
+    	<property name="title" type="String" />
+    	<property name="description" type="String"/>
+    	<property name="shopNowName" type="String"/>
+    	<property name="shopNowLink" type="String"/>
+    	<property name="BannerImagePosition" type="String"/>
+    	<property name="bannerImage" type="java.util.List&lt;com.tisl.mpl.wsdto.LuxBannerComponentWsDTO>"/>
+    	<property name="productImages" type="java.util.List&lt;com.tisl.mpl.wsdto.LuxBannerComponentWsDTO>"/>
+    </bean>
+    <bean class="com.tisl.mpl.wsdto.LuxProductCarouselProductWsDTO">
+    	<property name="prdName" type="String" />
+    	<property name="prdCode" type="String"/>
+    	<property name="prdURL" type="String"/>
+    	<property name="prdImage" type="String"/>
+    	<property name="prdBrandName" type="String"/>
+    	<property name="prdPrice" type="String"/>
+    	<property name="prdMrpPrice" type="String"/>
+    	<property name="prdSavings" type="java.lang.Double"/>
+    	
+    </bean>
+    <bean class="com.tisl.mpl.wsdto.LuxProductCarouselComponentWsDTO">
+    	<property name="title" type="String" />
+    	<property name="componentPosition" type="String" />
+    	<property name="brandImage" type="String"/>
+    	<property name="brandTitle" type="String"/>
+    	<property name="shopNowLink" type="String"/>
+    	<property name="shopNowName" type="String"/>
+    	<property name="carouselProducts" type="java.util.List&lt;com.tisl.mpl.wsdto.LuxProductCarouselProductWsDTO>"/>
+    </bean>
+
+	<bean class="com.tisl.mpl.wsdto.LuxuryComponentsListWsDTO">
+		<property name="title" type="String" />
+		<property name="pageTitle" type="String" />
+		<property name="sectionid" type="String" />
+		<property name="metaKeywords" type="String" />
+		<property name="metaDescription" type="String" />
+		<property name="LuxuryWeeklySpecialBanner" type="java.util.List&lt;com.tisl.mpl.wsdto.WeeklySpecialBannerListWsDTO>" />
+		<property name="LuxuryShopOnLuxury" type="java.util.List&lt;com.tisl.mpl.wsdto.ShopOnLuxuryElementListWsDTO>"/>
+		<property name="LuxShowCaseCollectionComponent" type="java.util.List&lt;com.tisl.mpl.wsdto.LuxShowCaseComponentListWsDTO>" />
+		<property name="LuxCMSMediaParagraphComponent" type="java.util.List&lt;com.tisl.mpl.wsdto.LuxCMSMediaParagraphComponentListWsDTO>" />
+		<property name="LuxShopByCategory" type="java.util.List&lt;com.tisl.mpl.wsdto.LuxShopByCategoryWsDTO>" />
+		<property name="LuxuryCMSImageComponent" type="java.util.List&lt;com.tisl.mpl.wsdto.LuxuryMediaListWsDTO>" />
+		<property name="LuxuryRotatingImagesComponentWsDTO" type="java.util.List&lt;com.tisl.mpl.wsdto.LuxRotatingImagesComponentWsDTO>"/>
+		<property name="LuxuryLookBookComponent" type="java.util.List&lt;com.tisl.mpl.wsdto.LuxuryLookBookComponentListWsDTO>" />
+		<property name="LuxuryProductCarouselComponent" type="java.util.List&lt;com.tisl.mpl.wsdto.LuxProductCarouselComponentWsDTO>" />
+		<property name="LuxuryMedia" type="com.tisl.mpl.wsdto.LuxuryMediaListWsDTO" />
+		<property name="Luxurybannerlist" type="java.util.List&lt;com.tisl.mpl.wsdto.LuxHeroBannerWsDTO>"/>
+    	<property name="Luxurysubsections" type="java.util.List&lt;com.tisl.mpl.wsdto.LuxSignatureWsDTO>"/>
+    	<property name="Luxurycategorylist" type="java.util.List&lt;com.tisl.mpl.wsdto.LuxShopYourFavListWsDTO>"/>
+    	<property name="Luxuryvideocomponent" type="java.util.List&lt;com.tisl.mpl.wsdto.LuxVideocomponentWsDTO>"/>
+    	<property name="Luxuryengagementcomponent" type="java.util.List&lt;com.tisl.mpl.wsdto.LuxEngagementcomponentWsDTO>"/>
+    	<property name="Luxuryfeaturedproducts" type="java.util.List&lt;com.tisl.mpl.wsdto.LuxBrandProductsListWsDTO>"/>
+    	<property name="Luxuryshopbycomponents" type="java.util.List&lt;com.tisl.mpl.wsdto.LuxShopByListWsDTO>"/>
+    	<property name="LuxurysocialfeedHeadercomponent" type="com.tisl.mpl.wsdto.TextComponentWsDTO"/>
+    	<property name="Luxurysocialfeedcomponent" type="com.tisl.mpl.wsdto.LuxSocialFeedComponentWsDTO"/>
+
+	</bean>
+
+</beans>

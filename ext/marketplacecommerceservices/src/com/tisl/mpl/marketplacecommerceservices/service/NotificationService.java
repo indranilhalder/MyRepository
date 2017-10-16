@@ -31,8 +31,8 @@ public interface NotificationService
 	public boolean checkCustomerFacingEntry(final OrderStatusNotificationModel osnm);
 
 
-	public void markNotificationRead(final String customerId, final String orderNo, final String consignmentNo,
-			final String shopperStatus) throws EtailNonBusinessExceptions;
+	public void markNotificationRead(final String emailId, final String customerId, final String orderNo,
+			final String consignmentNo, final String shopperStatus) throws EtailNonBusinessExceptions;
 
 
 
@@ -71,4 +71,14 @@ public interface NotificationService
 	 * @return
 	 */
 	String triggerNpsEmail(AbstractOrderEntryModel value, OrderModel order);
+
+	/**
+	 * pan card email
+	 *
+	 * @param orderDetails
+	 * 
+	 * @throws JAXBException
+	 */
+	void triggerEmailAndSmsOnPancardReject(OrderModel orderDetails) throws JAXBException;
+
 }

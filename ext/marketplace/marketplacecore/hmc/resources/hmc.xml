@@ -724,6 +724,12 @@
 							<attribute name="invoice" />
 							<attribute name="returnAWBNum" />
 							<attribute name="returnCarrier" />
+							<!-- TPR-3809-->							
+							<attribute name="forwardSealNum" />
+							<attribute name="reverseSealNum" /> 
+
+
+
 						</listlayout>
 					</section>
 				</tab>
@@ -1442,7 +1448,7 @@
 	</type>
 
 
-	<!-- Tata Etail CustomOrderThresholdFreeGiftPromotion -->
+	<!-- Tata Etail CustomOrderThresholdFreeGiftPromotion PR-15 CHANGES -->
 	<type name="CustomOrderThresholdFreeGiftPromotion" mode="append">
 		<organizer>
 			<editor mode="append">
@@ -1453,6 +1459,23 @@
 							<text name="text.orderthresholddiscountpromotion.detaileddescription" />
 						</listlayout>
 					</section>
+					<!-- <section name="section.promotion.products">
+                        <listlayout>
+							<text name="text.promotion.excludedProducts" ></text>
+							<attribute name="excludedProducts" labelwidth="100">
+								<referencecollectioneditor
+									autoperform="true" resortable="true" add="true" remove="true"
+									create="false">
+									<itemlayout>
+										<attribute name="code" width="274" />
+										<attribute name="name" width="274" />
+									</itemlayout>
+								</referencecollectioneditor>
+							</attribute>
+							<text name="text.promotion.excludedproductcodeslist" />
+							<attribute name="excludedProductCodeList" />
+						</listlayout>
+					</section> -->
 					<section name="section.promotion.prices">
 						<columnlayout leftwidth="370">
 							<row>
@@ -1661,7 +1684,7 @@
 		</organizer>
 	</type>
 
-	<!-- Tata Etail OrderThresholdDiscountPromotion -->
+	<!-- Tata Etail OrderThresholdDiscountPromotion PR-15 MODIFICATIONS -->
 	<type name="CartOrderThresholdDiscountPromotion" mode="append">
 		<organizer>
 			<editor mode="append">
@@ -1672,6 +1695,23 @@
 							<text name="text.orderthresholddiscountpromotion.detaileddescription" />
 						</listlayout>
 					</section>
+					<!-- <section name="section.promotion.products">
+                        <listlayout>
+							<text name="text.promotion.excludedProducts" ></text>
+							<attribute name="excludedProducts" labelwidth="100">
+								<referencecollectioneditor
+									autoperform="true" resortable="true" add="true" remove="true"
+									create="false">
+									<itemlayout>
+										<attribute name="code" width="274" />
+										<attribute name="name" width="274" />
+									</itemlayout>
+								</referencecollectioneditor>
+							</attribute>
+							<text name="text.promotion.excludedproductcodeslist" />
+							<attribute name="excludedProductCodeList" />
+						</listlayout>
+					</section> -->
 					<section name="section.promotion.prices">
 						<columnlayout leftwidth="370">
 							<row>
@@ -1790,7 +1830,7 @@
 		</organizer>
 	</type>
 	
-	<!-- Tata Etail For CartOrderThresholdDiscountCashback -->
+	<!-- Tata Etail For CartOrderThresholdDiscountCashback  PR-15 Modification-->
 	<type name="CartOrderThresholdDiscountCashback" mode="append">
 		<organizer>
 			<editor mode="append">
@@ -1801,6 +1841,23 @@
 							<text name="text.orderthresholddiscountpromotion.detaileddescription" />
 						</listlayout>
 					</section>
+					<!-- <section name="section.promotion.products">
+                        <listlayout>
+							<text name="text.promotion.excludedProducts" ></text>
+							<attribute name="excludedProducts" labelwidth="100">
+								<referencecollectioneditor
+									autoperform="true" resortable="true" add="true" remove="true"
+									create="false">
+									<itemlayout>
+										<attribute name="code" width="274" />
+										<attribute name="name" width="274" />
+									</itemlayout>
+								</referencecollectioneditor>
+							</attribute>
+							<text name="text.promotion.excludedproductcodeslist" />
+							<attribute name="excludedProductCodeList" />
+						</listlayout>
+					</section> -->
 					<section name="section.promotion.prices">
 						<columnlayout leftwidth="370">
 							<row>
@@ -2970,6 +3027,8 @@
 			</editor>
 		</organizer>
 	</type>
+	
+	<!-- PR-15 modifications -->
 	<type name="BuyAboveXGetPromotionOnShippingCharges" mode="append">
 		<organizer>
 			<editor mode="append">
@@ -2980,6 +3039,23 @@
 							<text name="text.orderthresholddiscountpromotion.detaileddescription" />
 						</listlayout>
 					</section>
+					<!-- <section name="section.promotion.products">
+                        <listlayout>
+							<text name="text.promotion.excludedProducts" ></text>
+							<attribute name="excludedProducts" labelwidth="100">
+								<referencecollectioneditor
+									autoperform="true" resortable="true" add="true" remove="true"
+									create="false">
+									<itemlayout>
+										<attribute name="code" width="274" />
+										<attribute name="name" width="274" />
+									</itemlayout>
+								</referencecollectioneditor>
+							</attribute>
+							<text name="text.promotion.excludedproductcodeslist" />
+							<attribute name="excludedProductCodeList" />
+						</listlayout>
+					</section> -->
 					<section name="section.promotion.prices">
 						<listlayout>
 						    <text name="text.productpromotion.deliverymodes" />
@@ -4002,8 +4078,133 @@
  
  
  
+ <!-- TPR-3893 : Item HMC structure Declaration BundlingPromotionWithPercentageSlab starts here-->
  
+	<type name="BundlingPromotionWithPercentageSlab" mode="append">
+		<organizer>
+			<editor mode="append">
+				<tab name="tab.promotion.properties" mode="append">
+					<section name="section.promotion.products">
+						<listlayout>
+							<text name="text.productpromotion.qualifyingproductscategories" />
+							<attribute name="products" labelwidth="100">
+								<referencecollectioneditor
+									autoperform="true" resortable="true" add="true" remove="true"
+									create="false">
+									<itemlayout>
+										<attribute name="code" width="274" />
+										<attribute name="name" width="274" />
+									</itemlayout>
+								</referencecollectioneditor>
+							</attribute>
+							<attribute name="categories" labelwidth="100">
+								<referencecollectioneditor
+									autoperform="true" resortable="true" add="true" remove="true"
+									create="false">
+									<itemlayout>
+										<attribute name="code" width="274" />
+										<attribute name="name" width="274" />
+									</itemlayout>
+								</referencecollectioneditor>
+							</attribute>
+							</listlayout>
+							<listlayout>
+							<text name="text.promotion.excludedProducts" ></text>
+							<attribute name="excludedProducts" labelwidth="100">
+								<referencecollectioneditor
+									autoperform="true" resortable="true" add="true" remove="true"
+									create="false">
+									<itemlayout>
+										<attribute name="code" width="274" />
+										<attribute name="name" width="274" />
+									</itemlayout>
+								</referencecollectioneditor>
+							</attribute>
+							<text name="text.promotion.excludedproductcodeslist" />
+							<attribute name="excludedProductCodeList" />
+							<attribute name="promourl" />
+							<attribute name="bundlepromolinktext" />
+							</listlayout>
+							<listlayout>
+							<text name="text.productpromotion.qualifyingSteps" />
+							<attribute name="qualifyingCountsAndBundlePrices" labelwidth="100">
+								<referencecollectioneditor editable="true"
+									externalcreate="false" resortable="false" remove="true" create="true">
+									<itemlayout>
+										<attribute name="quantity" width="140" />
+										<attribute name="percentageDiscount" width="140" /> 
+									</itemlayout>
+								</referencecollectioneditor>
+							</attribute>							
+						</listlayout>
+					</section>
+				</tab>
+				<tab name="tab.promotion.restrictions" position="1">
+					<section name="section.promotion.restrictions">
+						<listlayout>
+							<text name="text.promotion.daterange" />
+							<attribute name="startDate" labelwidth="100" width="224" />
+							<attribute name="endDate" labelwidth="100" width="224" />
+							<text name="text.promotion.restrictions" />
+							<attribute name="restrictions" labelwidth="100" width="224">
+								<referencecollectioneditor
+									presetattribute="promotion" create="true" add="true" remove="true"
+									autosave="true">
+									<itemlayout>
+										<attribute name="restrictionType" width="150" />
+										<attribute name="renderedDescription" width="250" />
+									</itemlayout>
+								</referencecollectioneditor>
+							</attribute>
+						</listlayout>
+					</section>
+				</tab>
+				<tab name="tab.promotion.media" mode="append">
+					<section name="section.promotion.media" mode="append">
+						<columnlayout>
+							<row>
+								<attribute name="productBanner" labelwidth="100">
+									<mediaeditor />
+								</attribute>
+								<text name="text.productpromotion.productbanner" />
+							</row>
+						</columnlayout>
+					</section>
+				</tab>
+				<tab name="tab.promotion.messages" mode="append">
+					<section name="section.promotion.messages" mode="append">
+						<columnlayout leftwidth="500">
+							<row>
+								<text name="text.promotion.messages.overview" />
+							</row>
+							<row>
+								<text name="text.orderthresholddiscountpromotion.messagefired" />
+							</row>
+							<row>
+								<attribute name="messageFired" labelwidth="100" width="400">
+									<textareaeditor expanded="true" rows="5" />
+								</attribute>
+							</row>
+							<!-- <row> <text name="text.orderthresholddiscountpromotion.messagecouldhavefired" 
+								/> </row> -->
+							<row>
+								<attribute name="messageCouldHaveFired" labelwidth="100"
+									width="400">
+									<textareaeditor expanded="true" rows="5" />
+								</attribute>
+							</row>
+						</columnlayout>
+					</section>
+				</tab>
+			</editor>
+		</organizer>
+	</type>
  
+ <!-- TPR-3893 : Item HMC structure Declaration BundlingPromotionWithPercentageSlab ends here-->
+ 
+
+
+
   
 <!-- TPR-965 Limited stock Promotion started-->
 
@@ -4243,7 +4444,252 @@
 		 </organizer>
 	</type>
 
+ <!-- TPR-1083 Start -->
+	<explorertree>
+	
+		<group name="exchangeModule" description="group.exchangeModule.description">
+			<typeref type="ExchangeCouponValue" description="mpl.exchange.PriceMatrix" />
+			<typeref type="ExchangePincode" description="mpl.exchange.ExchangePincode" />
+			<typeref type="ExchangeTransaction" description="mpl.exchange.ExchangeTransaction" />
+			<typeref type="Exchange" description="mpl.exchange.Exchange"/>
+		</group>
+ </explorertree>
 
+
+ <type name="ExchangeCouponValue"  mode="append">
+		<organizer>
+			<search mode="append">
+				<condition attribute="thirdLevelCategory" />
+				<condition attribute="l4categoryCode" />
+				<condition attribute="l4categoryName" />
+				<condition attribute="isWorking" />
+				<condition attribute="couponValue" />
+			</search>
+			<result defaultview="list">
+				<listview>
+					<itemlayout mode="replace">
+						<attribute name="thirdLevelCategory" width="200"/>
+						<attribute name="l4categoryName" width="200"/>
+						<attribute name="isWorking"  width="20"/>
+						 <attribute name="couponValue" width="20"/>
+					</itemlayout>
+				</listview>
+				<editview mode="replace">
+					<itemlayout>
+						<attribute name="thirdLevelCategory" width="200"/>
+						<attribute name="l4categoryCode" width="200"/>
+						<attribute name="l4categoryName" width="200"/>
+						<attribute name="isWorking"  width="20"/>
+						 <attribute name="couponValue" width="20"/>
+					</itemlayout>
+				</editview>
+				<treeview mode="replace">
+					<itemlayout>
+						<attribute name="thirdLevelCategory" width="200"/>
+						<attribute name="l4categoryCode" width="200"/>
+						<attribute name="l4categoryName" width="200"/>
+						<attribute name="isWorking"  width="200"/>
+						 <attribute name="couponValue" width="200"/>
+					</itemlayout>
+				</treeview>
+			</result>
+			<editor>
+				
+				<tab name="mpl.exchange.priceMatrix.tab" position="0">
+				  <section name="mpl.exchange.priceMatrix.CategorySection">
+						<listlayout>
+							<attribute name="thirdLevelCategory"/>
+							<attribute name="l4categoryCode"/>
+							<attribute name="l4categoryName"/>
+						</listlayout>
+					</section>
+					<section name="mpl.exchange.priceMatrix.PricingSection">
+						<listlayout>
+						    <attribute name="isWorking" />
+							<attribute name="couponValue" />
+						</listlayout>
+					</section>
+				</tab>
+				
+			</editor>
+		</organizer>
+	</type>
+	
+<type name="ExchangePincode"  mode="append">
+		<organizer>
+			<search mode="append">
+				<condition attribute="pincode" />
+				<condition attribute="isServicable" />
+				<condition attribute="city" />
+				<condition attribute="state" />
+				
+			</search>
+			<result defaultview="list">
+				<listview>
+					<itemlayout mode="replace">
+						<attribute name="pincode" width="200"/>
+						<attribute name="isServicable" width="200"/>
+						<attribute name="city" width="200"/>
+						<attribute name="state" width="200"/>
+						
+					</itemlayout>
+				</listview>
+				<editview mode="replace">
+					<itemlayout>
+						<attribute name="pincode" width="200"/>
+						<attribute name="isServicable" width="200"/>
+						<attribute name="city" width="200"/>
+						<attribute name="state" width="200"/>
+						
+					</itemlayout>
+				</editview>
+				<treeview mode="replace">
+					<itemlayout>
+						<attribute name="pincode" width="200"/>
+						<attribute name="isServicable" width="200"/>
+						<attribute name="city" width="200"/>
+						<attribute name="state" width="200"/>
+					</itemlayout>
+				</treeview>
+			</result>
+			<editor>
+				
+				<tab name="properties" position="0">
+				  <section name="section.common">
+						<listlayout>
+							<attribute name="Pincode"/>
+							<attribute name="isServicable"/>
+						</listlayout>
+					</section>
+					
+				</tab>
+				
+			</editor>
+		</organizer>
+	</type>
+	<type name="ExchangeTransaction"  mode="append">
+		<organizer>
+			<search mode="append">
+				<condition attribute="Pincode" />
+				<condition attribute="ExchangeValue" />
+				<condition attribute="brandName" />
+				<condition attribute="productId" />
+				<condition attribute="ussid" />
+				<condition attribute="ExchangeId" />
+				<condition attribute="cartguid" />
+			</search>
+			<result defaultview="list">
+				<listview>
+					<itemlayout mode="replace">
+						<attribute name="ExchangeId" width="200"/>
+						<attribute name="cartguid" width="200"/>
+						<attribute name="productId"  width="200"/>
+						 <attribute name="ussid" width="200"/>
+					</itemlayout>
+				</listview>
+				<editview mode="replace">
+					<itemlayout>
+						<attribute name="ExchangeId" width="200"/>
+						<attribute name="cartguid" width="200"/>
+						<attribute name="productId"  width="200"/>
+						 <attribute name="ussid" width="200"/>
+					</itemlayout>
+				</editview>
+				<treeview mode="replace">
+					<itemlayout>
+						<attribute name="ExchangeId" width="200"/>
+						<attribute name="cartguid" width="200"/>
+						<attribute name="productId"  width="200"/>
+						 <attribute name="ussid" width="200"/>
+					</itemlayout>
+				</treeview>
+			</result>
+			<editor>
+				
+				<tab name="properties" position="0">
+				  <section name="section.common">
+						<listlayout>
+							<attribute name="Pincode"/>
+							<attribute name="ExchangeValue"/>
+							<attribute name="brandName"/>
+						</listlayout>
+					</section>
+					<section name="section.common">
+						<listlayout>
+						    <attribute name="productId" />
+							<attribute name="ussid" />
+							<attribute name="ExchangeId" />
+							<attribute name="cartguid" />
+						</listlayout>
+					</section>
+				</tab>
+				
+			</editor>
+		</organizer>
+	</type>
+	<type name="Exchange"  mode="append">
+		<organizer>
+			<search mode="append">
+				<condition attribute="Pincode" />
+				<condition attribute="brandName" />
+				<condition attribute="productId" />
+				<condition attribute="ussid" />
+				<condition attribute="ExchangeId" />
+				<condition attribute="cartguid" />
+				<condition attribute="ExchangeRequestId" />
+				<condition attribute="OrderID" />
+				<condition attribute="SellerOrderID" />
+				<condition attribute="TransactiondId" />
+			</search>
+			<result defaultview="list">
+				<listview>
+					<itemlayout mode="replace">
+						<attribute name="ExchangeRequestId" width="200"/>
+						<attribute name="OrderID" width="200"/>
+						<attribute name="SellerOrderID"  width="200"/>
+						 <attribute name="TransactiondId" width="200"/>
+					</itemlayout>
+				</listview>
+				<editview mode="replace">
+					<itemlayout>
+						<attribute name="ExchangeRequestId" width="200"/>
+						<attribute name="OrderID" width="200"/>
+						<attribute name="SellerOrderID"  width="200"/>
+						 <attribute name="TransactiondId" width="200"/>
+					</itemlayout>
+				</editview>
+				<treeview mode="replace">
+					<itemlayout>
+						<attribute name="ExchangeRequestId" width="200"/>
+						<attribute name="OrderID" width="200"/>
+						<attribute name="SellerOrderID"  width="200"/>
+						 <attribute name="TransactiondId" width="200"/>
+					</itemlayout>
+				</treeview>
+			</result>
+			<editor>
+				
+				<tab name="properties" position="0">
+				  <section name="section.common">
+						<listlayout>
+							<attribute name="Pincode"/>
+							<attribute name="brandName"/>
+						</listlayout>
+					</section>
+					<section name="section.common">
+						<listlayout>
+						    <attribute name="productId" />
+							<attribute name="ussid" />
+							<attribute name="ExchangeRequestId" />
+							<attribute name="cartguid" />
+						</listlayout>
+					</section>
+				</tab>
+				
+			</editor>
+		</organizer>
+	</type>
+	<!-- TPR-1083 End -->
 
 <!-- Added for TPR-4461 -->
  
@@ -4325,4 +4771,252 @@
 	</organizer>
 </type>	
 
+
+<!-- START TPR-5733 -->
+<type name="MplFooterLink" mode="append">
+		<organizer>
+			<search mode="replace">
+				<condition attribute="pk" />
+				<condition attribute="footerLinkRow" />
+				<condition attribute="footerLinkColumn" />
+			</search>
+			<result>
+				<listview mode="replace">
+					<itemlayout>
+						<attribute name="pk" />
+						<attribute name="footerLinkRow" />
+						<attribute name="footerLinkColumn" />
+					</itemlayout>
+				</listview>
+			</result>
+		</organizer>
+		<defaultreference searchattribute="pk" mode="replace">
+			<itemlayout>
+				 <attribute name="pk" />
+			</itemlayout>
+		</defaultreference>
+	</type>
+	<!-- END TPR-5733 -->
+	
+	<!-- TPR-6665 : sysnonums update to slave servers start-->
+<type name="SolrServerConfig" mode="append">
+		<organizer>
+			<search mode="replace">
+				<condition attribute="name"/>
+				<condition attribute="mode"/>
+			</search>
+			<result defaultview="list" mode="replace">
+				<listview>
+					<itemlayout>
+						<attribute name="name"/>
+						<attribute name="mode"/>
+					</itemlayout>
+				</listview>
+				<editview>
+					<itemlayout>
+						<attribute name="name"/>
+						<attribute name="mode"/>
+					</itemlayout>
+				</editview>
+				<treeview>
+					<itemlayout>
+						<attribute name="name"/>
+						<attribute name="mode"/>
+					</itemlayout>
+				</treeview>
+			</result>
+			<editor>
+				<tab name="tab.configuration.serverconfig">
+					<section name="sec.configuration.serverconfig">
+						<listlayout mode="replace">
+							<attribute name="name"/>
+							<attribute name="mode"/>
+							<attribute name="embeddedMaster"/>
+							<attribute name="aliveCheckInterval"/>
+							<attribute name="connectionTimeout"/>
+							<attribute name="socketTimeout"/>
+							<attribute name="maxTotalConnections"/>
+							<attribute name="maxTotalConnectionsPerHostConfig"/>
+							<attribute name="tcpNoDelay"/>
+
+							<attribute name="solrEndpointUrls">
+								<referencecollectioneditor resortable="false" create="true" remove="true" autosave="false"
+																	externalcreate="false" editable="true">
+									<itemlayout>
+										<attribute name="url" width="200"/>
+										<attribute name="master"/>
+									</itemlayout>
+								</referencecollectioneditor>
+							</attribute>
+							<attribute name="solrEndpointUrlsSlave">
+								<referencecollectioneditor resortable="false" create="true" remove="true" autosave="false"
+																	externalcreate="false" editable="true">
+									<itemlayout>
+										<attribute name="url" width="200"/>
+										<attribute name="slave"/>
+									</itemlayout>
+								</referencecollectioneditor>
+							</attribute>
+							<attribute name="useMasterNodeExclusivelyForIndexing"/>
+							<text name="text.usemasternodeexclusivelyforindexing.warning"/>
+						</listlayout>
+					</section>
+				</tab>
+			</editor>
+		</organizer>
+		<defaultreference mode="replace">
+			<itemlayout>
+				<attribute name="name"/>
+			</itemlayout>
+		</defaultreference>
+	</type>
+	<!-- TPR-6665 : sysnonums update to slave servers end-->
+	
+	
+	<!--PR-13 : Tata Etail FIXED PRICE- Promotion HMC Modification starts here -->
+	<type name="FixedPricePromotion" mode="append">
+		<organizer>
+			<editor mode="append">
+				<tab name="tab.promotion.properties" mode="append">
+					<section name="section.promotion.products">
+						<listlayout>
+							<text name="text.productpromotion.qualifyingproductscategories" />
+							<attribute name="products" labelwidth="100">
+								<referencecollectioneditor
+									autoperform="true" resortable="true" add="true" remove="true"
+									create="false">
+									<itemlayout>
+										<attribute name="code" width="274" />
+										<attribute name="name" width="274" />
+									</itemlayout>
+								</referencecollectioneditor>
+							</attribute>
+							<attribute name="categories" labelwidth="100">
+								<referencecollectioneditor
+									autoperform="true" resortable="true" add="true" remove="true"
+									create="false">
+									<itemlayout>
+										<attribute name="code" width="274" />
+										<attribute name="name" width="274" />
+									</itemlayout>
+								</referencecollectioneditor>
+							</attribute>
+							</listlayout>
+							<listlayout>
+							<text name="text.promotion.excludedProducts" ></text>
+							<attribute name="excludedProducts" labelwidth="100">
+								<referencecollectioneditor
+									autoperform="true" resortable="true" add="true" remove="true"
+									create="false">
+									<itemlayout>
+										<attribute name="code" width="274" />
+										<attribute name="name" width="274" />
+									</itemlayout>
+								</referencecollectioneditor>
+							</attribute>
+							<text name="text.promotion.excludedproductcodeslist" />
+							<attribute name="excludedProductCodeList" />
+							</listlayout>
+							<listlayout>
+							<text name="text.productpromotion.quantity" />
+							<attribute name="quantity" />
+							</listlayout>
+							<listlayout>
+							<text name="text.productpromotion.productFixedUnitPrice" />
+							<attribute name="productFixedUnitPrice" labelwidth="100">
+								<referencecollectioneditor editable="true"
+									externalcreate="false" resortable="false" remove="true" create="true">
+									<itemlayout>
+										<attribute name="currency" width="60" />
+										<attribute name="price" width="60" />
+									</itemlayout>
+								</referencecollectioneditor>
+							</attribute>
+							<text name="text.fixedpricepromotion.productFixedUnitPrice" />
+						</listlayout>
+					</section>
+				</tab>
+				<tab name="tab.promotion.restrictions" position="1">
+					<section name="section.promotion.restrictions">
+						<listlayout>
+							<text name="text.promotion.daterange" />
+							<attribute name="startDate" labelwidth="100" width="224" />
+							<attribute name="endDate" labelwidth="100" width="224" />
+							<text name="text.promotion.restrictions" />
+							<attribute name="restrictions" labelwidth="100" width="224">
+								<referencecollectioneditor
+									presetattribute="promotion" create="true" add="true" remove="true"
+									autosave="true">
+									<itemlayout>
+										<attribute name="restrictionType" width="150" />
+										<attribute name="renderedDescription" width="250" />
+									</itemlayout>
+								</referencecollectioneditor>
+							</attribute>
+						</listlayout>
+					</section>
+				</tab>
+				<tab name="tab.promotion.media" mode="append">
+					<section name="section.promotion.media" mode="append">
+						<columnlayout>
+							<row>
+								<attribute name="productBanner" labelwidth="100">
+									<mediaeditor />
+								</attribute>
+								<text name="text.productpromotion.productbanner" />
+							</row>
+						</columnlayout>
+					</section>
+				</tab>
+				<tab name="tab.promotion.messages" mode="append">
+					<section name="section.promotion.messages" mode="append">
+						<columnlayout leftwidth="500">
+							<row>
+								<text name="text.promotion.messages.overview" />
+							</row>
+							<row>
+								<text name="text.orderthresholddiscountpromotion.messagefired" />
+							</row>
+							<row>
+								<attribute name="messageFired" labelwidth="100" width="400">
+									<textareaeditor expanded="true" rows="5" />
+								</attribute>
+							</row>
+							<!-- <row> <text name="text.orderthresholddiscountpromotion.messagecouldhavefired" 
+								/> </row> -->
+							<row>
+								<attribute name="messageCouldHaveFired" labelwidth="100"
+									width="400">
+									<textareaeditor expanded="true" rows="5" />
+								</attribute>
+							</row>
+						</columnlayout>
+					</section>
+				</tab>
+			</editor>
+		</organizer>
+	</type>	
+<!--PR-13 : Tata Etail FIXED PRICE- Promotion HMC Modification ends here -->
+
+<!-- PR-15 starts here -->				
+    <!-- Exclude Category restriction for promotion -->
+	<type name="CategoryRestriction" mode="append">
+		<organizer>
+			<editor>
+				<tab name="properties">
+					<section name="section.restrictions" mode="replace"
+						position="0">
+						<listlayout>
+							<attribute name="categories"></attribute>
+						</listlayout>
+						<listlayout>
+							<attribute name="included"></attribute>
+						</listlayout>
+					</section>
+				</tab>
+			</editor>
+		</organizer>
+	</type>
+<!-- PR-15 starts here -->	
+	
 </configuration>

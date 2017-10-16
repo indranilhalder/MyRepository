@@ -13,13 +13,12 @@
  */
 package com.tisl.mpl.storefront.controllers.pages;
 
-import de.hybris.platform.acceleratorcms.model.components.NavigationBarCollectionComponentModel;
 import de.hybris.platform.acceleratorstorefrontcommons.controllers.pages.AbstractPageController;
-import de.hybris.platform.category.model.CategoryModel;
 import de.hybris.platform.cms2.exceptions.CMSItemNotFoundException;
 import de.hybris.platform.cms2.model.contents.components.AbstractCMSComponentModel;
 import de.hybris.platform.cms2.model.contents.contentslot.ContentSlotModel;
 import de.hybris.platform.cms2.model.pages.AbstractPageModel;
+import de.hybris.platform.cms2.model.pages.ContentPageModel;
 import de.hybris.platform.cms2.servicelayer.services.CMSComponentService;
 import de.hybris.platform.cms2.servicelayer.services.impl.DefaultCMSContentSlotService;
 import de.hybris.platform.cms2lib.model.components.BannerComponentModel;
@@ -36,10 +35,9 @@ import de.hybris.platform.core.model.product.ProductModel;
 import de.hybris.platform.core.model.user.CustomerModel;
 import de.hybris.platform.servicelayer.config.ConfigurationService;
 import de.hybris.platform.servicelayer.model.ModelService;
+import de.hybris.platform.servicelayer.session.SessionService;
 import de.hybris.platform.servicelayer.user.UserService;
 
-import java.io.UnsupportedEncodingException;
-import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
@@ -47,16 +45,18 @@ import java.util.HashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
-import java.util.TreeMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import javax.annotation.Resource;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.collections.MapUtils;
+import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.commons.lang.StringUtils;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -74,13 +74,11 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.core.enums.ShowCaseLayout;
-import com.tisl.mpl.core.model.BrandComponentModel;
 import com.tisl.mpl.core.model.MplBigFourPromoBannerComponentModel;
 import com.tisl.mpl.core.model.MplBigPromoBannerComponentModel;
 import com.tisl.mpl.core.model.MplShowcaseComponentModel;
 import com.tisl.mpl.core.model.MplShowcaseItemComponentModel;
 import com.tisl.mpl.data.NotificationData;
-import com.tisl.mpl.data.ShopByBrandData;
 import com.tisl.mpl.exception.EtailBusinessExceptions;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.facade.brand.BrandFacade;
@@ -88,6 +86,7 @@ import com.tisl.mpl.facade.cms.MplCmsFacade;
 import com.tisl.mpl.facade.latestoffers.LatestOffersFacade;
 import com.tisl.mpl.facade.stw.STWWidgetFacade;
 import com.tisl.mpl.facades.account.register.NotificationFacade;
+import com.tisl.mpl.facades.cms.data.FooterLinkData;
 import com.tisl.mpl.facades.data.FooterComponentData;
 import com.tisl.mpl.facades.data.LatestOffersData;
 import com.tisl.mpl.facades.data.STWJsonRecomendationData;
@@ -97,9 +96,11 @@ import com.tisl.mpl.marketplacecommerceservices.service.MplCmsPageService;
 import com.tisl.mpl.model.SellerInformationModel;
 import com.tisl.mpl.model.cms.components.MplNewsLetterSubscriptionModel;
 import com.tisl.mpl.seller.product.facades.BuyBoxFacade;
+import com.tisl.mpl.storefront.constants.MessageConstants;
 import com.tisl.mpl.storefront.constants.ModelAttributetConstants;
 import com.tisl.mpl.storefront.constants.RequestMappingUrlConstants;
 import com.tisl.mpl.storefront.controllers.ControllerConstants;
+import com.tisl.mpl.storefront.security.cookie.PDPPincodeCookieGenerator;
 import com.tisl.mpl.storefront.util.CSRFTokenManager;
 import com.tisl.mpl.util.ExceptionUtil;
 import com.tisl.mpl.util.GenericUtilityMethods;
@@ -128,7 +129,6 @@ public class HomePageController extends AbstractPageController
 	@Resource(name = "cmsComponentService")
 	private CMSComponentService cmsComponentService;
 
-
 	@Resource(name = "cartFacade")
 	private CartFacade cartFacade;
 
@@ -143,6 +143,13 @@ public class HomePageController extends AbstractPageController
 
 	@Resource(name = "buyBoxFacade")
 	private BuyBoxFacade buyBoxFacade;
+
+	@Resource(name = ModelAttributetConstants.SESSION_SERVICE)
+	private SessionService sessionService;
+
+	//TPR-6654
+	@Resource(name = "pdpPincodeCookieGenerator")
+	private PDPPincodeCookieGenerator pdpPincodeCookie;
 
 	@Resource(name = "homepageComponentService")
 	private HomepageComponentService homepageComponentService;
@@ -159,6 +166,10 @@ public class HomePageController extends AbstractPageController
 
 	@Resource(name = "STWFacade")
 	private STWWidgetFacade stwWidgetFacade;
+
+	//Sonar fix
+	private static final String DISP_PRICE = "dispPrice";
+	private static final String STRIKE_PRICE = "strikePrice";
 
 	/**
 	 * @return the stwWidgetFacade
@@ -240,164 +251,200 @@ public class HomePageController extends AbstractPageController
 			final Model model, final RedirectAttributes redirectModel, final HttpServletRequest request)
 			throws CMSItemNotFoundException
 	{
-		try
+		//try
+		//{
+		// TPR-1072 START
+		//			final boolean crawlingFlag = configurationService.getConfiguration().getBoolean(ModelAttributetConstants.CRAWLINGFLAG);
+		//			final String userAgent = request.getHeader(ModelAttributetConstants.USERAGENT);
+		//			final String slotUid = ModelAttributetConstants.FOOTERSLOT;
+		//			//change for TISSTRT-1527
+		//			if (crawlingFlag && !StringUtils.isEmpty(userAgent)
+		//					&& userAgent.toLowerCase().contains(ModelAttributetConstants.GOOGLEBOT))
+		//			{
+		//				//Footer content
+		//				getFooterContent(slotUid, model);
+		//				//Shop by navigation
+		//				final ContentSlotModel contentSlotModel = contentSlotService
+		//						.getContentSlotForId(ModelAttributetConstants.NAVIGATIONBARSLOT);
+		//				final List<AbstractCMSComponentModel> componentLists = contentSlotModel.getCmsComponents();
+		//				for (final AbstractCMSComponentModel cmsmodel : componentLists)
+		//				{
+		//					if (cmsmodel instanceof NavigationBarCollectionComponentModel)
+		//					{
+		//						final NavigationBarCollectionComponentModel deptModel = (NavigationBarCollectionComponentModel) cmsmodel;
+		//
+		//						model.addAttribute(ModelAttributetConstants.COMPONENT, deptModel);
+		//
+		//					}
+		//
+		//				}
+		//				//Shop by brand
+		//				final List<BrandComponentModel> brands = cmsPageService.getBrandsForShopByBrand();
+		//				final List<ShopByBrandData> shopByBrandDataList = new ArrayList<ShopByBrandData>();
+		//				BrandComponentModel brandComponent = null;
+		//				for (final BrandComponentModel brand : brands)
+		//				{
+		//					final String component = brand.getUid();
+		//					//AtoZ brands starts
+		//					if (component.equals(ModelAttributetConstants.ATOZBRANDSCOMPONENT))
+		//					{
+		//						Map<Character, List<CategoryModel>> sortedMap = null;
+		//
+		//						sortedMap = brandFacade.getAllBrandsFromCmsCockpit(component);
+		//
+		//						Map<Character, List<CategoryModel>> GroupBrandsAToE = new TreeMap<Character, List<CategoryModel>>();
+		//						Map<Character, List<CategoryModel>> GroupBrandsFToJ = new TreeMap<Character, List<CategoryModel>>();
+		//						Map<Character, List<CategoryModel>> GroupBrandsKToO = new TreeMap<Character, List<CategoryModel>>();
+		//						Map<Character, List<CategoryModel>> GroupBrandsPToT = new TreeMap<Character, List<CategoryModel>>();
+		//						Map<Character, List<CategoryModel>> GroupBrandsUToZ = new TreeMap<Character, List<CategoryModel>>();
+		//
+		//						GroupBrandsAToE = getBrandsForRange('A', 'E', sortedMap);
+		//						GroupBrandsFToJ = getBrandsForRange('F', 'J', sortedMap);
+		//						GroupBrandsKToO = getBrandsForRange('K', 'O', sortedMap);
+		//						GroupBrandsPToT = getBrandsForRange('P', 'T', sortedMap);
+		//						GroupBrandsUToZ = getBrandsForRange('U', 'Z', sortedMap);
+		//
+		//
+		//						model.addAttribute(ModelAttributetConstants.A_E_Brands, GroupBrandsAToE);
+		//						model.addAttribute(ModelAttributetConstants.F_J_Brands, GroupBrandsFToJ);
+		//						model.addAttribute(ModelAttributetConstants.K_O_Brands, GroupBrandsKToO);
+		//						model.addAttribute(ModelAttributetConstants.P_T_Brands, GroupBrandsPToT);
+		//						model.addAttribute(ModelAttributetConstants.U_Z_Brands, GroupBrandsUToZ);
+		//					}
+		//					//AtoZ brands ends
+		//
+		//					final ShopByBrandData shopByBrandData = new ShopByBrandData();
+		//					if (StringUtils.isNotEmpty(component))
+		//					{
+		//						brandComponent = (BrandComponentModel) cmsComponentService.getSimpleCMSComponent(component);
+		//					}
+		//					shopByBrandData.setLayout(brandComponent.getLayout());
+		//					shopByBrandData.setMasterBrandName(brandComponent.getMasterBrandName());
+		//					shopByBrandData.setMasterBrandUrl(brandComponent.getMasterBrandURL());
+		//					shopByBrandData.setSubBrandList(brandComponent.getSubBrandList());
+		//					shopByBrandData.setSubBrands(brandComponent.getSubBrands());
+		//					shopByBrandDataList.add(shopByBrandData);
+		//					model.addAttribute(ModelAttributetConstants.SHOPBYBRANDDATALIST, shopByBrandDataList);
+		//					for (final CategoryModel category : brandComponent.getSubBrands())
+		//					{
+		//						String categoryPath = GenericUtilityMethods.urlSafe(category.getName());
+		//						if (StringUtils.isNotEmpty(categoryPath))
+		//						{
+		//							try
+		//							{
+		//								categoryPath = URLDecoder.decode(categoryPath, "UTF-8");
+		//							}
+		//							catch (final UnsupportedEncodingException e)
+		//							{
+		//								LOG.error(e.getMessage());
+		//							}
+		//							categoryPath = categoryPath.toLowerCase();
+		//							categoryPath = GenericUtilityMethods.changeUrl(categoryPath);
+		//						}
+		//						category.setName(category.getName() + "||" + categoryPath);
+		//					}
+		//				}
+		//				model.addAttribute(ModelAttributetConstants.GOOGLEBOT, ModelAttributetConstants.GOOGLEBOT);
+		//				//				}
+		//			}
+		// TPR-1072 END
+		if (logout)
 		{
-			// TPR-1072 START
-			final boolean crawlingFlag = configurationService.getConfiguration().getBoolean(ModelAttributetConstants.CRAWLINGFLAG);
-			final String userAgent = request.getHeader(ModelAttributetConstants.USERAGENT);
-			final String slotUid = ModelAttributetConstants.FOOTERSLOT;
-			//change for TISSTRT-1527
-			if (crawlingFlag && !StringUtils.isEmpty(userAgent)
-					&& userAgent.toLowerCase().contains(ModelAttributetConstants.GOOGLEBOT))
-			{
-				//Footer content
-				getFooterContent(slotUid, model);
-				//Shop by navigation
-				final ContentSlotModel contentSlotModel = contentSlotService
-						.getContentSlotForId(ModelAttributetConstants.NAVIGATIONBARSLOT);
-				final List<AbstractCMSComponentModel> componentLists = contentSlotModel.getCmsComponents();
-				for (final AbstractCMSComponentModel cmsmodel : componentLists)
-				{
-					if (cmsmodel instanceof NavigationBarCollectionComponentModel)
-					{
-						final NavigationBarCollectionComponentModel deptModel = (NavigationBarCollectionComponentModel) cmsmodel;
-
-						model.addAttribute(ModelAttributetConstants.COMPONENT, deptModel);
-
-					}
-
-				}
-				//Shop by brand
-				final List<BrandComponentModel> brands = cmsPageService.getBrandsForShopByBrand();
-				final List<ShopByBrandData> shopByBrandDataList = new ArrayList<ShopByBrandData>();
-				BrandComponentModel brandComponent = null;
-				for (final BrandComponentModel brand : brands)
-				{
-					final String component = brand.getUid();
-					//AtoZ brands starts
-					if (component.equals(ModelAttributetConstants.ATOZBRANDSCOMPONENT))
-					{
-						Map<Character, List<CategoryModel>> sortedMap = null;
-
-						sortedMap = brandFacade.getAllBrandsFromCmsCockpit(component);
-
-						Map<Character, List<CategoryModel>> GroupBrandsAToE = new TreeMap<Character, List<CategoryModel>>();
-						Map<Character, List<CategoryModel>> GroupBrandsFToJ = new TreeMap<Character, List<CategoryModel>>();
-						Map<Character, List<CategoryModel>> GroupBrandsKToO = new TreeMap<Character, List<CategoryModel>>();
-						Map<Character, List<CategoryModel>> GroupBrandsPToT = new TreeMap<Character, List<CategoryModel>>();
-						Map<Character, List<CategoryModel>> GroupBrandsUToZ = new TreeMap<Character, List<CategoryModel>>();
-
-						GroupBrandsAToE = getBrandsForRange('A', 'E', sortedMap);
-						GroupBrandsFToJ = getBrandsForRange('F', 'J', sortedMap);
-						GroupBrandsKToO = getBrandsForRange('K', 'O', sortedMap);
-						GroupBrandsPToT = getBrandsForRange('P', 'T', sortedMap);
-						GroupBrandsUToZ = getBrandsForRange('U', 'Z', sortedMap);
-
-
-						model.addAttribute(ModelAttributetConstants.A_E_Brands, GroupBrandsAToE);
-						model.addAttribute(ModelAttributetConstants.F_J_Brands, GroupBrandsFToJ);
-						model.addAttribute(ModelAttributetConstants.K_O_Brands, GroupBrandsKToO);
-						model.addAttribute(ModelAttributetConstants.P_T_Brands, GroupBrandsPToT);
-						model.addAttribute(ModelAttributetConstants.U_Z_Brands, GroupBrandsUToZ);
-					}
-					//AtoZ brands ends
-
-					final ShopByBrandData shopByBrandData = new ShopByBrandData();
-					if (StringUtils.isNotEmpty(component))
-					{
-						brandComponent = (BrandComponentModel) cmsComponentService.getSimpleCMSComponent(component);
-					}
-					shopByBrandData.setLayout(brandComponent.getLayout());
-					shopByBrandData.setMasterBrandName(brandComponent.getMasterBrandName());
-					shopByBrandData.setMasterBrandUrl(brandComponent.getMasterBrandURL());
-					shopByBrandData.setSubBrandList(brandComponent.getSubBrandList());
-					shopByBrandData.setSubBrands(brandComponent.getSubBrands());
-					shopByBrandDataList.add(shopByBrandData);
-					model.addAttribute(ModelAttributetConstants.SHOPBYBRANDDATALIST, shopByBrandDataList);
-					for (final CategoryModel category : brandComponent.getSubBrands())
-					{
-						String categoryPath = GenericUtilityMethods.urlSafe(category.getName());
-						if (StringUtils.isNotEmpty(categoryPath))
-						{
-							try
-							{
-								categoryPath = URLDecoder.decode(categoryPath, "UTF-8");
-							}
-							catch (final UnsupportedEncodingException e)
-							{
-								LOG.error(e.getMessage());
-							}
-							categoryPath = categoryPath.toLowerCase();
-							categoryPath = GenericUtilityMethods.changeUrl(categoryPath);
-						}
-						category.setName(category.getName() + "||" + categoryPath);
-					}
-				}
-				model.addAttribute(ModelAttributetConstants.GOOGLEBOT, ModelAttributetConstants.GOOGLEBOT);
-				//				}
-			}
-			// TPR-1072 END
-			if (logout)
-			{
-				//GlobalMessages.addFlashMessage(redirectModel, GlobalMessages.INFO_MESSAGES_HOLDER, "account.confirmation.signout.title");
-				return REDIRECT_PREFIX + ROOT;
-			}
-
-			storeCmsPageInModel(model, getContentPageForLabelOrId(null));
-			setUpMetaDataForContentPage(model, getContentPageForLabelOrId(null));
-			updatePageTitle(model, getContentPageForLabelOrId(null));
+			//GlobalMessages.addFlashMessage(redirectModel, GlobalMessages.INFO_MESSAGES_HOLDER, "account.confirmation.signout.title");
+			return REDIRECT_PREFIX + ROOT;
 		}
-		catch (final EtailBusinessExceptions e)
-		{
-			ExceptionUtil.etailBusinessExceptionHandler(e, null);
 
-		}
-		catch (final EtailNonBusinessExceptions e)
-		{
-			ExceptionUtil.etailNonBusinessExceptionHandler(e);
+		storeCmsPageInModel(model, getContentPageForLabelOrId(null));
+		setUpMetaDataForContentPage(model, getContentPageForLabelOrId(null));
+		updatePageTitle(model, getContentPageForLabelOrId(null));
 
-		}
-		catch (final Exception e)
-		{
-			ExceptionUtil.etailNonBusinessExceptionHandler(new EtailNonBusinessExceptions(e,
-					MarketplacecommerceservicesConstants.E0000));
-		}
+		//UF-287
+		final JSONObject singleBanner = getHomePageBanners("Online", "yes");
+		model.addAttribute("mobileBanner", singleBanner.get("moblileBanners"));
+		model.addAttribute("desktopBanner", singleBanner.get("desktopBanners"));
+		//}
+		//		catch (final EtailBusinessExceptions e)
+		//		{
+		//			ExceptionUtil.etailBusinessExceptionHandler(e, null);
+		//
+		//		}
+		//		catch (final EtailNonBusinessExceptions e)
+		//		{
+		//			ExceptionUtil.etailNonBusinessExceptionHandler(e);
+		//
+		//		}
+		//		catch (final Exception e)
+		//		{
+		//			ExceptionUtil.etailNonBusinessExceptionHandler(new EtailNonBusinessExceptions(e,
+		//					MarketplacecommerceservicesConstants.E0000));
+		//		}
 		return getViewForPage(model);
 	}
 
-
-	/**
-	 * @param AtoZ
-	 *           brands range
-	 * @param endCharacter
-	 * @param sortedMap
-	 * @return map
-	 */
-	@SuppressWarnings(
-	{ "boxing", "javadoc" })
-	private Map<Character, List<CategoryModel>> getBrandsForRange(final Character startCharacter, final Character endCharacter,
-			final Map<Character, List<CategoryModel>> sortedMap)
+	@Override
+	protected ContentPageModel getContentPageForLabelOrId(final String labelOrId) throws CMSItemNotFoundException
 	{
-		final Map<Character, List<CategoryModel>> brandsByRange = new HashMap();
-
-		for (final Entry<Character, List<CategoryModel>> entry : sortedMap.entrySet())
-		{ //ASCII Value of entry key
-			final int entryKeyCharacterASCII = entry.getKey();
-
-			//ASCII value of startCharacter
-			final int startCharacterASCII = startCharacter;
-
-			//ASCII value of endCharacter
-			final int endCharacterASCII = endCharacter;
-
-			if (entryKeyCharacterASCII >= startCharacterASCII && entryKeyCharacterASCII <= endCharacterASCII)
+		final String siteId = getSiteConfigService().getProperty("luxury.site.id");
+		if ((getCmsSiteService().getCurrentSite().getUid()).equalsIgnoreCase(siteId))
+		{
+			final String gender = getCustomerFacade().getCurrentCustomer().getGender();
+			if (gender != null && !(gender.isEmpty()))
 			{
-				brandsByRange.put(entry.getKey(), entry.getValue());
+				switch (gender)
+				{
+					case MessageConstants.MALE:
+					{
+						final String key = getSiteConfigService().getProperty(MessageConstants.MENLANDING);
+						return super.getContentPageForLabelOrId(key);
+					}
+					case MessageConstants.FEMALE:
+					{
+						final String key = getSiteConfigService().getProperty(MessageConstants.WOMENLANDING);
+						return super.getContentPageForLabelOrId(key);
+					}
+					default:
+					{
+						return super.getContentPageForLabelOrId(labelOrId);
+					}
+				}
 			}
 
 		}
-		return new TreeMap<Character, List<CategoryModel>>(brandsByRange);
+		return super.getContentPageForLabelOrId(labelOrId);
 	}
+
+	//	/**
+	//	 * @param AtoZ
+	//	 *           brands range
+	//	 * @param endCharacter
+	//	 * @param sortedMap
+	//	 * @return map
+	//	 */
+	//	@SuppressWarnings(
+	//	{ "boxing", "javadoc" })
+	//	private Map<Character, List<CategoryModel>> getBrandsForRange(final Character startCharacter, final Character endCharacter,
+	//			final Map<Character, List<CategoryModel>> sortedMap)
+	//	{
+	//		final Map<Character, List<CategoryModel>> brandsByRange = new HashMap();
+	//
+	//		for (final Entry<Character, List<CategoryModel>> entry : sortedMap.entrySet())
+	//		{ //ASCII Value of entry key
+	//			final int entryKeyCharacterASCII = entry.getKey();
+	//
+	//			//ASCII value of startCharacter
+	//			final int startCharacterASCII = startCharacter;
+	//
+	//			//ASCII value of endCharacter
+	//			final int endCharacterASCII = endCharacter;
+	//
+	//			if (entryKeyCharacterASCII >= startCharacterASCII && entryKeyCharacterASCII <= endCharacterASCII)
+	//			{
+	//				brandsByRange.put(entry.getKey(), entry.getValue());
+	//			}
+	//
+	//		}
+	//		return new TreeMap<Character, List<CategoryModel>>(brandsByRange);
+	//	}
 
 	/**
 	 * @description this is called to update the page title
@@ -406,7 +453,9 @@ public class HomePageController extends AbstractPageController
 	 */
 	protected void updatePageTitle(final Model model, final AbstractPageModel cmsPage)
 	{
-		storeContentPageTitleInModel(model, getPageTitleResolver().resolveHomePageTitle(cmsPage.getTitle()));
+		//PRDI-422
+		storeContentPageTitleInModel(model,
+				StringEscapeUtils.unescapeHtml(getPageTitleResolver().resolveHomePageTitle(cmsPage.getTitle())));
 	}
 
 	/**
@@ -605,6 +654,7 @@ public class HomePageController extends AbstractPageController
 		{
 
 			String brandLogoUrl = EMPTY_STRING;
+			String bannerImageUrl = EMPTY_STRING;
 			String brandLogoAltText = EMPTY_STRING;
 			for (final MplShowcaseItemComponentModel showcaseItem : showCaseComponent.getShowcaseItems())
 			{
@@ -629,6 +679,33 @@ public class HomePageController extends AbstractPageController
 							}
 							showCaseItemJson.put("brandLogoAltText", brandLogoAltText);
 						}
+
+						if (null != showcaseItem.getBannerImage())
+						{
+							if (StringUtils.isNotEmpty(showcaseItem.getBannerImage().getURL()))
+							{
+								bannerImageUrl = showcaseItem.getBannerImage().getURL();
+							}
+							showCaseItemJson.put("bannerImageUrl", bannerImageUrl);
+						}
+						if (null != showcaseItem.getText())
+						{
+							if (StringUtils.isNotEmpty(showcaseItem.getText()))
+							{
+								showCaseItemJson.put("text", showcaseItem.getText());
+							}
+						}
+						if (null != showcaseItem.getBannerText())
+						{
+							if (StringUtils.isNotEmpty(showcaseItem.getBannerText()))
+							{
+								showCaseItemJson.put("bannerText", showcaseItem.getBannerText());
+							}
+						}
+						if (null != showcaseItem.getBannerUrl() && StringUtils.isNotEmpty(showcaseItem.getBannerUrl()))
+						{
+							showCaseItemJson.put("bannerUrl", showcaseItem.getBannerUrl());
+						}
 					}
 					else
 					{
@@ -638,7 +715,40 @@ public class HomePageController extends AbstractPageController
 							headerText = showcaseItem.getHeaderText();
 						}
 						showCaseItemJson.put("headerText", headerText);
+						//UF-420 starts
+						try
+						{
+							JSONObject showCaseItemDetailJson = new JSONObject();
+							MplShowcaseItemComponentModel showcaseItemDetail = null;
+							showcaseItemDetail = (MplShowcaseItemComponentModel) cmsComponentService.getSimpleCMSComponent(showcaseItem
+									.getUid());
+							showCaseItemDetailJson = getJSONForShowCaseItem(showcaseItemDetail, ShowCaseLayout.COLLECTIONSHOWCASE);
+							showCaseItemJson.put("details", showCaseItemDetailJson);
+						}
+						catch (final CMSItemNotFoundException e)
+						{
+							LOG.error(e.getStackTrace());
+							LOG.error("Could not find component with id::::" + showcaseItem.getUid());
+
+						}
+						catch (final EtailBusinessExceptions e)
+						{
+							ExceptionUtil.etailBusinessExceptionHandler(e, null);
+
+						}
+						catch (final EtailNonBusinessExceptions e)
+						{
+							ExceptionUtil.etailNonBusinessExceptionHandler(e);
+
+						}
+						catch (final Exception e)
+						{
+							ExceptionUtil.etailNonBusinessExceptionHandler(new EtailNonBusinessExceptions(e,
+									MarketplacecommerceservicesConstants.E0000));
+						}
+						//UF-420 ends
 					}
+
 					subComponentJsonArray.add(showCaseItemJson);
 				}
 				else
@@ -715,10 +825,32 @@ public class HomePageController extends AbstractPageController
 			if (showcaseItem.getProduct1() != null)
 			{
 
-				firstProduct = productFacade.getProductForOptions(showcaseItem.getProduct1(), PRODUCT_OPTIONS);
-				showCaseItemJson.put("firstProductImageUrl", getProductPrimaryImageUrl(firstProduct));
-				showCaseItemJson.put("firstProductTitle", firstProduct.getProductTitle());
-				showCaseItemJson.put("firstProductUrl", firstProduct.getUrl());
+				//PT fix : Thread Lock found in brands you love component
+				firstProduct = productFacade.getProductForOptions(showcaseItem.getProduct1(), PRODUCT_OPTIONS2);
+				if (StringUtils.isBlank(firstProduct.getHomepageImageurl()))
+				{
+					showCaseItemJson.put("firstProductImageUrl", GenericUtilityMethods.getMissingImageUrl());
+				}
+				else
+				{
+					showCaseItemJson.put("firstProductImageUrl", firstProduct.getHomepageImageurl());
+				}
+				if (StringUtils.isBlank(firstProduct.getProductTitle()))
+				{
+					showCaseItemJson.put("firstProductTitle", "");
+				}
+				else
+				{
+					showCaseItemJson.put("firstProductTitle", firstProduct.getProductTitle());
+				}
+				if (StringUtils.isBlank(firstProduct.getUrl()))
+				{
+					showCaseItemJson.put("firstProductUrl", "");
+				}
+				else
+				{
+					showCaseItemJson.put("firstProductUrl", firstProduct.getUrl());
+				}
 				String price = null;
 				try
 				{
@@ -973,7 +1105,7 @@ public class HomePageController extends AbstractPageController
 								{
 									//UF-319
 									priceMap = getProductPriceNewAndExclusive(product);
-									price = priceMap.get("dispPrice");
+									price = priceMap.get(DISP_PRICE);
 								}
 								catch (final EtailBusinessExceptions e)
 								{
@@ -1128,15 +1260,15 @@ public class HomePageController extends AbstractPageController
 					productPrice = buyBoxData.getSpecialPrice().getFormattedValueNoDecimal();
 					if (productPrice != null && StringUtils.isNotEmpty(productPrice))
 					{
-						productPriceMap.put("dispPrice", productPrice);
+						productPriceMap.put(DISP_PRICE, productPrice);
 					}
 				}
 				if (buyBoxData.getPrice() != null)
 				{
 					productPrice = buyBoxData.getPrice().getFormattedValueNoDecimal();
-					if (productPrice != null && StringUtils.isNotEmpty(productPrice) && productPriceMap.get("dispPrice") == null)
+					if (productPrice != null && StringUtils.isNotEmpty(productPrice) && productPriceMap.get(DISP_PRICE) == null)
 					{
-						productPriceMap.put("dispPrice", productPrice);
+						productPriceMap.put(DISP_PRICE, productPrice);
 					}
 					/*
 					 * else if (productPrice != null && StringUtils.isNotEmpty(productPrice)) {
@@ -1146,24 +1278,24 @@ public class HomePageController extends AbstractPageController
 				if (buyBoxData.getMrp() != null)
 				{
 					productPrice = buyBoxData.getMrp().getFormattedValueNoDecimal();
-					if (productPrice != null && StringUtils.isNotEmpty(productPrice) && productPriceMap.get("dispPrice") == null)
+					if (productPrice != null && StringUtils.isNotEmpty(productPrice) && productPriceMap.get(DISP_PRICE) == null)
 					{
-						productPriceMap.put("dispPrice", productPrice);
-						productPriceMap.put("strikePrice", MarketplacecommerceservicesConstants.EMPTY);
+						productPriceMap.put(DISP_PRICE, productPrice);
+						productPriceMap.put(STRIKE_PRICE, MarketplacecommerceservicesConstants.EMPTY);
 					}
 					else if (productPrice != null && StringUtils.isNotEmpty(productPrice))
 					{
-						productPriceMap.put("strikePrice", productPrice);
+						productPriceMap.put(STRIKE_PRICE, productPrice);
 					}
 					else
 					{
-						if (productPriceMap.get("dispPrice") == null)
+						if (productPriceMap.get(DISP_PRICE) == null)
 						{
-							productPriceMap.put("dispPrice", MarketplacecommerceservicesConstants.EMPTY);
+							productPriceMap.put(DISP_PRICE, MarketplacecommerceservicesConstants.EMPTY);
 						}
-						if (productPriceMap.get("strikePrice") == null)
+						if (productPriceMap.get(STRIKE_PRICE) == null)
 						{
-							productPriceMap.put("strikePrice", MarketplacecommerceservicesConstants.EMPTY);
+							productPriceMap.put(STRIKE_PRICE, MarketplacecommerceservicesConstants.EMPTY);
 						}
 
 					}
@@ -1171,8 +1303,8 @@ public class HomePageController extends AbstractPageController
 			}
 			else
 			{
-				productPriceMap.put("dispPrice", productPrice);
-				productPriceMap.put("strikePrice", productPrice);
+				productPriceMap.put(DISP_PRICE, productPrice);
+				productPriceMap.put(STRIKE_PRICE, productPrice);
 			}
 			LOG.info("ProductPrice>>>>>>>" + productPrice);
 			//productPriceMap.put("price", productPrice);
@@ -1430,7 +1562,9 @@ public class HomePageController extends AbstractPageController
 	 */
 	@ResponseBody
 	@RequestMapping(value = ModelAttributetConstants.NEWSLETTER, method = RequestMethod.GET)
-	public String saveNewsletterSubscriptionEmail(@RequestParam(value = "email") String emailId)
+	public String saveNewsletterSubscriptionEmail(@RequestParam(value = "email") String emailId,
+			@RequestParam(value = "gender", required = false, defaultValue = ModelAttributetConstants.EMPTY) final String gender,
+			@RequestParam(value = "isLuxury", required = false, defaultValue = ModelAttributetConstants.FALSE) final Boolean isLuxury)
 	{
 		final MplNewsLetterSubscriptionModel newsLetter = modelService.create(MplNewsLetterSubscriptionModel.class);
 		emailId = emailId.toLowerCase();
@@ -1440,18 +1574,33 @@ public class HomePageController extends AbstractPageController
 		}
 		else
 		{
-			//newsLetter.setEmailId(emailId);
-			final boolean result = brandFacade.checkEmailId(emailId);
 
-			//newsLetter.setIsSaved(Boolean.TRUE);
-
-			if (result)
+			if (isLuxury)
 			{
-				newsLetter.setEmailId(emailId);
-				newsLetter.setIsMarketplace(Boolean.TRUE);
-				modelService.save(newsLetter);
-				return "success";
+				final List<MplNewsLetterSubscriptionModel> newsLetterSubscriptionList = brandFacade.checkEmailIdForluxury(emailId,
+						"1");
+
+				if (null == newsLetterSubscriptionList || newsLetterSubscriptionList.isEmpty())
+				{
+					newsLetter.setEmailId(emailId);
+					newsLetter.setGender(gender);
+					newsLetter.setIsLuxury(Boolean.TRUE);
+					modelService.save(newsLetter);
+					return "success";
+				}
+				else
+				{
+					return "fail";
+				}
 			}
+			/*
+			 * else { //newsLetter.setEmailId(emailId); final boolean result = brandFacade.checkEmailId(emailId);
+			 *
+			 * //newsLetter.setIsSaved(Boolean.TRUE);
+			 *
+			 * if (result) { newsLetter.setEmailId(emailId); newsLetter.setIsMarketplace(Boolean.TRUE);
+			 * modelService.save(newsLetter); return "success"; }
+			 */
 			else
 			{
 				final List<MplNewsLetterSubscriptionModel> newsLetterSubscriptionList = brandFacade
@@ -1475,7 +1624,10 @@ public class HomePageController extends AbstractPageController
 				return "fail";
 			}
 		}
+
+
 	}
+
 
 	public boolean validateEmailAddress(final String email)
 	{
@@ -1652,6 +1804,17 @@ public class HomePageController extends AbstractPageController
 			//			//Need help section
 			model.addAttribute("contactNumber", fData.getContactNumber());
 
+			// For TPR-5733
+			final Map<Integer, Map<Integer, FooterLinkData>> mplFooterLinkRowList = mplCmsFacade.getFooterLinkData();
+			if (MapUtils.isNotEmpty(mplFooterLinkRowList))
+			{
+				model.addAttribute(ModelAttributetConstants.FOOTER_LINK_LIST, mplFooterLinkRowList);
+			}
+			else
+			{
+				LOG.debug("##########################   Returned empty list for footer link ####################################");
+			}
+
 		}
 
 		catch (final EtailBusinessExceptions e)
@@ -1731,5 +1894,56 @@ public class HomePageController extends AbstractPageController
 			STWJObject.put("visiterIP", getVisitorIp(request));
 		}
 		return STWJObject;
+	}
+
+	//PRDI-422
+	@Override
+	public void setUpMetaData(final Model model, final String metaKeywords, final String metaDescription)
+	{
+		model.addAttribute(ModelAttributetConstants.KEYWORDS, metaKeywords);
+		model.addAttribute(ModelAttributetConstants.DESCRIPTION, metaDescription);
+	}
+
+	//TPR-6654
+	@ResponseBody
+	@RequestMapping(value = "/homePincode", method = RequestMethod.GET)
+	public void persistPincode(@RequestParam(value = "pin") final String pin, final HttpServletRequest request,
+			final HttpServletResponse response)
+	{
+		int pincodeCookieMaxAge;
+		final Cookie cookie = GenericUtilityMethods.getCookieByName(request, "pdpPincode");
+		final String cookieMaxAge = configurationService.getConfiguration().getString("pdpPincode.cookie.age");
+		pincodeCookieMaxAge = (Integer.valueOf(cookieMaxAge)).intValue();
+		final String domain = configurationService.getConfiguration().getString("shared.cookies.domain");
+		try
+		{
+			final String regex = "\\d{6}";
+			if (pin.matches(regex))
+			{
+				if (cookie != null && cookie.getValue() != null)
+				{
+					cookie.setValue(pin);
+					cookie.setMaxAge(pincodeCookieMaxAge);
+					cookie.setPath("/");
+
+					if (null != domain && !domain.equalsIgnoreCase("localhost"))
+					{
+						cookie.setSecure(true);
+					}
+					cookie.setDomain(domain);
+					response.addCookie(cookie);
+					sessionService.setAttribute(MarketplacecommerceservicesConstants.SESSION_PINCODE, pin);
+				}
+				else
+				{
+					pdpPincodeCookie.addCookie(response, pin);
+					sessionService.setAttribute(MarketplacecommerceservicesConstants.SESSION_PINCODE, pin);
+				}
+			}
+		}
+		catch (final EtailNonBusinessExceptions e)
+		{
+			ExceptionUtil.etailNonBusinessExceptionHandler(e);
+		}
 	}
 }

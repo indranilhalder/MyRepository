@@ -1,0 +1,708 @@
+#Import Luxury Sample Products
+$productCatalog=luxProductCatalog
+$catalogVersion=catalogversion(catalog(id[default=$productCatalog]),version[default='Staged'])[unique=true,default=$productCatalog:Staged]
+$supercategories=supercategories(code, $catalogVersion)
+$baseProduct=baseProduct(code,$catalogVersion)
+$approved=approvalstatus(code)[default='approved']
+$unit=unit(code)[default='pieces']
+$clAttrModifiers=system='pcmClassification',version='1',translator=de.hybris.platform.catalog.jalo.classification.impex.ClassificationAttributeTranslator,lang=en
+$catalogversion=catalogversion(catalog(id[default=luxProductCatalog]),version[default='Staged'])[unique=true,default=luxProductCatalog:Staged]
+$variantType=variantType(code)[default='PcmProductVariant']
+$lang=en
+
+
+INSERT_UPDATE Product;code[unique=true];name[lang=$lang];title;articleMiniDescription;articleDescription;createdOn[dateformat=yyyyMMddHHmmss];reviews;mrp;$supercategories;deliveryModes(code);variantType(code);sequenceId[translator=de.hybris.platform.acceleratorservices.dataimport.batch.converter.SequenceIdTranslator];$catalogversion;$approved;$unit
+;MP000000000389912;Zudio Navy Solid Shirt;Zudio Navy Solid Shirt;This navy long-sleeved denim slim-fit shirt by Zudio rendered in pure cotton is further defined with a slight fading and flap pockets.;Zudio upgrades a classic western style with this navy denim slim-fit shirt. The long-sleeved separate rendered in pure cotton is further defined with a slight fading and flap pockets. Style over a t-shirt or wear it as is with dark blue jeans for a r";20160729163944;;799;"MPH1111101101,MSH1116101,MBH11A00315";home-delivery;PcmProductVariant
+;LUX000000000384001;Navy Solid Tshirt;Navy Solid Tshirt;This navy long-sleeved denim slim-fit shirt by Navy rendered in pure cotton is further defined with a slight fading and flap pockets.;upgrades a classic western style with this navy denim slim-fit shirt. The long-sleeved separate rendered in pure cotton is further defined with a slight fading and flap pockets. Style over a t-shirt or wear it as is with dark blue jeans for a r;20160729163944;;800;MPH1111101101,MSH1116101,MBH11A00315;home-delivery;PcmProductVariant 
+;LUX000000000384021;Mufti Tshirt;Mufti Tshirt;This Mufti Tshirt sleeved denim slim-fit shirt by Mufti rendered in pure cotton is further defined with a slight fading and flap pockets.;upgrades a classic western style with this navy denim slim-fit shirt. The long-sleeved separate rendered in pure cotton is further defined with a slight fading and flap pockets. Style over a t-shirt or wear it as is with dark blue jeans for a r;20160729163944;;900;MPH1111101101,MSH1116101,MBH11A00315;home-delivery;PcmProductVariant 
+;LUX000000000384031;Lee Tshirt;Lee Tshirt;This Lee Tshirt sleeved denim slim-fit shirt by Lee rendered in pure cotton is further defined with a slight fading and flap pockets.;upgrades a classic western style with this navy denim slim-fit shirt. The long-sleeved separate rendered in pure cotton is further defined with a slight fading and flap pockets. Style over a t-shirt or wear it as is with dark blue jeans for a r;20160729163944;;500;MPH1111101101,MSH1116101,MBH11A00315;home-delivery;PcmProductVariant 
+;LUX000000000384041;Zovi Tshirt;Zovi Tshirt;This Zovi Tshirt sleeved denim slim-fit shirt by Zovi rendered in pure cotton is further defined with a slight fading and flap pockets.;upgrades a classic western style with this navy denim slim-fit shirt. The long-sleeved separate rendered in pure cotton is further defined with a slight fading and flap pockets. Style over a t-shirt or wear it as is with dark blue jeans for a r;20160729163944;;400;MPH1111101101,MSH1116101,MBH11A00315;home-delivery;PcmProductVariant 
+;LUX000000000384051;LP Tshirt;LP Tshirt;This LP Tshirt sleeved denim slim-fit shirt by LP rendered in pure cotton is further defined with a slight fading and flap pockets.;upgrades a classic western style with this navy denim slim-fit shirt. The long-sleeved separate rendered in pure cotton is further defined with a slight fading and flap pockets. Style over a t-shirt or wear it as is with dark blue jeans for a r;20160729163944;;300;MPH1111101101,MSH1116101,MBH11A00315;home-delivery;PcmProductVariant 
+;LUX000000000384061;Arrow Tshirt;Arrow Tshirt;This Arrow Tshirt sleeved denim slim-fit shirt by LP rendered in pure cotton is further defined with a slight fading and flap pockets.;upgrades a classic western style with this navy denim slim-fit shirt. The long-sleeved separate rendered in pure cotton is further defined with a slight fading and flap pockets. Style over a t-shirt or wear it as is with dark blue jeans for a r;20160729163944;;200;MPH1111101101,MSH1116101,MBH11A00315;home-delivery;PcmProductVariant 
+;LUX000000000384071;US.Polo Tshirt;US.Polo Tshirt;This US.Polo Tshirt sleeved denim slim-fit shirt by LP rendered in pure cotton is further defined with a slight fading and flap pockets.;upgrades a classic western style with this navy denim slim-fit shirt. The long-sleeved separate rendered in pure cotton is further defined with a slight fading and flap pockets. Style over a t-shirt or wear it as is with dark blue jeans for a r;20160729163944;;250;MPH1111101101,MSH1116101,MBH11A00315;home-delivery;PcmProductVariant 
+;LUX000000000384081;JP Tshirt;JP Tshirt;This JP Tshirt sleeved denim slim-fit shirt by LP rendered in pure cotton is further defined with a slight fading and flap pockets.;upgrades a classic western style with this navy denim slim-fit shirt. The long-sleeved separate rendered in pure cotton is further defined with a slight fading and flap pockets. Style over a t-shirt or wear it as is with dark blue jeans for a r;20160729163944;;270;MPH1111101101,MSH1116101,MBH11A00315;home-delivery;PcmProductVariant 
+;LUX000000000384091;Arrow shirt;Arrow shirt;This Arrow  shirt sleeved denim slim-fit shirt by LP rendered in pure cotton is further defined with a slight fading and flap pockets.;upgrades a classic western style with this navy denim slim-fit shirt. The long-sleeved separate rendered in pure cotton is further defined with a slight fading and flap pockets. Style over a t-shirt or wear it as is with dark blue jeans for a r;20160729163944;;280;MPH1111101101,MSH1116101,MBH11A00315;home-delivery;PcmProductVariant 
+;LUX000000000384101;JP shirt;JP shirt;This JP shirt sleeved denim slim-fit shirt by LP rendered in pure cotton is further defined with a slight fading and flap pockets.;upgrades a classic western style with this navy denim slim-fit shirt. The long-sleeved separate rendered in pure cotton is further defined with a slight fading and flap pockets. Style over a t-shirt or wear it as is with dark blue jeans for a r;20160729163944;;240;MPH1111101101,MSH1116101,MBH11A00315;home-delivery;PcmProductVariant 
+
+;LUX000000000689913;Zudio Navy Solid T-Shirt;Zudio Navy Solid T-Shirt;This navy long-sleeved denim slim-fit tshirt by Zudio rendered in pure cotton is further defined with a slight fading and flap pockets.;Zudio upgrades a classic western style with this navy denim slim-fit tshirt. The long-sleeved separate rendered in pure cotton is further defined with a slight fading and flap pockets. Style over a t-shirt or wear it as is with dark blue jeans for a r;20160729163944;;882;"MPH1111101101,MSH1116101,MBH11A00315";home-delivery;PcmProductVariant 
+;LUX000000000689914;Zudio Navy Solid wallet;Zudio Navy Solid wallet;This navy long-sleeved denim slim-fit wallet by Zudio rendered in pure cotton is further defined with a slight fading and flap pockets.;Zudio upgrades a classic western style with this navy denim slim-fit wallet. The long-sleeved separate rendered in pure cotton is further defined with a slight fading and flap pockets. Style over a wallet or wear it as is with dark blue jeans for a r;20160729163944;;883;"MPH1111101101,MSH1116101,MBH11A00315";home-delivery;PcmProductVariant 
+;LUX000000000689915;Zudio Navy Solid watches;Zudio Navy Solid watches;This navy long-sleeved denim slim-fit watches by Zudio rendered in pure cotton is further defined with a slight fading and flap pockets.;Zudio upgrades a classic western style with this navy denim slim-fit watches. The long-sleeved separate rendered in pure cotton is further defined with a slight fading and flap pockets. Style over a watches or wear it as is with dark blue jeans for a r;20160729163944;;884;"MPH1111101101,MSH1116101,MBH11A00315";home-delivery;PcmProductVariant 
+;LUX000000000689916;Zudio Navy Solid socks;Zudio Navy Solid socks;This navy long-sleeved denim slim-fit socks by Zudio rendered in pure cotton is further defined with a slight fading and flap pockets.;Zudio upgrades a classic western style with this navy denim slim-fit socks. The long-sleeved separate rendered in pure cotton is further defined with a slight fading and flap pockets. Style over a socks or wear it as is with dark blue jeans for a r;20160729163944;;885;"MPH1111101101,MSH1116101,MBH11A00315";home-delivery;PcmProductVariant 
+;LUX000000000689917;Zudio Navy Solid shorts;Zudio Navy Solid shorts;This navy long-sleeved denim slim-fit shorts by Zudio rendered in pure cotton is further defined with a slight fading and flap pockets.;Zudio upgrades a classic western style with this navy denim slim-fit shorts. The long-sleeved separate rendered in pure cotton is further defined with a slight fading and flap pockets. Style over a shorts or wear it as is with dark blue jeans for a r;20160729163944;;886;"MPH1111101101,MSH1116101,MBH11A00315";home-delivery;PcmProductVariant 
+;LUX000000000689918;Zudio Navy Solid shoes;Zudio Navy Solid shoes;This navy long-sleeved denim slim-fit shoes  by Zudio rendered in pure cotton is further defined with a slight fading and flap pockets.;Zudio upgrades a classic western style with this navy denim slim-fit shoes. The long-sleeved separate rendered in pure cotton is further defined with a slight fading and flap pockets. Style over a shoes or wear it as is with dark blue jeans for a r;20160729163944;;887;"MPH1111101101,MSH1116101,MBH11A00315";home-delivery;PcmProductVariant 
+;LUX000000000689919;Zudio Navy Solid jeans;Zudio Navy Solid jeans;This navy long-sleeved denim slim-fit jeans by Zudio rendered in pure cotton is further defined with a slight fading and flap pockets.;Zudio upgrades a classic western style with this navy denim slim-fit jeans. The long-sleeved separate rendered in pure cotton is further defined with a slight fading and flap pockets. Style over a jeans or wear it as is with dark blue jeans for a r;20160729163944;;888;"MPH1111101101,MSH1116101,MBH11A00315";home-delivery;PcmProductVariant 
+;LUX000000000689920;Zudio Navy Solid volet;Zudio Navy Solid volet;This navy long-sleeved denim slim-fit volet by Zudio rendered in pure cotton is further defined with a slight fading and flap pockets.;Zudio upgrades a classic western style with this navy denim slim-fit volet. The long-sleeved separate rendered in pure cotton is further defined with a slight fading and flap pockets. Style over a volet or wear it as is with dark blue jeans for a r;20160729163944;;889;"MPH1111101101,MSH1116101,MBH11A00315";home-delivery;PcmProductVariant 
+;LUX000000000689921;Zudio Navy Solid slippers;Zudio Navy Solid slippers;This navy long-sleeved denim slim-fit slippers by Zudio rendered in pure cotton is further defined with a slight fading and flap pockets.;Zudio upgrades a classic western style with this navy denim slim-fit slippers. The long-sleeved separate rendered in pure cotton is further defined with a slight fading and flap pockets. Style over a slippers or wear it as is with dark blue jeans for a r;20160729163944;;890;"MPH1111101101,MSH1116101,MBH11A00315";home-delivery;PcmProductVariant 
+;LUX000000000689922;Zudio Navy Solid sandals;Zudio Navy Solid sandals;This navy long-sleeved denim slim-fit sandals by Zudio rendered in pure cotton is further defined with a slight fading and flap pockets.;Zudio upgrades a classic western style with this navy denim slim-fit sandals. The long-sleeved separate rendered in pure cotton is further defined with a slight fading and flap pockets. Style over a sandals or wear it as is with dark blue jeans for a r;20160729163944;;891;"MPH1111101101,MSH1116101,MBH11A00315";home-delivery;PcmProductVariant 
+
+INSERT_UPDATE PcmProductVariant;code[unique=true,alias=PIMID];name[lang=$lang];title;articleMiniDescription;articleDescription;createdOn[dateformat=yyyyMMddHHmmss];size;colour;baseProduct(code,$catalogVersion);reviews;mrp;$supercategories;deliveryModes(code);capacity;$catalogversion;$approved;$unit;
+;MP000000000389913;Zudio Navy Solid Shirt;Zudio Navy Solid Shirt;This navy long-sleeved denim slim-fit shirt by Zudio rendered in pure cotton is further defined with a slight fading and flap pockets.;Zudio upgrades a classic western style with this navy denim slim-fit shirt. The long-sleeved separate rendered in pure cotton is further defined with a slight fading and flap pockets. Style over a t-shirt or wear it as is with dark blue jeans for a r";20160729223307;S;Navy;MP000000000389912;;799;"MPH1111101101,MSH1116101,MBH11A00315";home-delivery,
+;MP000000000389922;Zudio Blue Solid Shirt;Zudio Blue Solid Shirt;"Rendered in pure cotton; this blue slim-fit shirt from Zudio showcases a subtle faded wash and features two buttoned flap pockets at the chest.";"Update your off-duty essentials with contemporary denim styles such as this blue slim-fit shirt from Zudio. Rendered in pure cotton for all-day comfort, the separate showcases a subtle faded wash and features two buttoned flap pockets at the chest. ";20160729223309;S;Blue;MP000000000389912;;799;"MPH1111101101,MSH1116101,MBH11A00315";home-delivery,
+;MP000000000390478;Zudio Navy Solid Shirt;Zudio Navy Solid Shirt;This navy long-sleeved denim slim-fit shirt by Zudio rendered in pure cotton is further defined with a slight fading and flap pockets.;Zudio upgrades a classic western style with this navy denim slim-fit shirt. The long-sleeved separate rendered in pure cotton is further defined with a slight fading and flap pockets. Style over a t-shirt or wear it as is with dark blue jeans for a r";20160729223637;M;Navy;MP000000000389912;;799;"MPH1111101101,MSH1116101,MBH11A00315";home-delivery;
+;MP000000000390479;Zudio Navy Solid Shirt;Zudio Navy Solid Shirt;This navy long-sleeved denim slim-fit shirt by Zudio rendered in pure cotton is further defined with a slight fading and flap pockets.;Zudio upgrades a classic western style with this navy denim slim-fit shirt. The long-sleeved separate rendered in pure cotton is further defined with a slight fading and flap pockets. Style over a t-shirt or wear it as is with dark blue jeans for a r";20160729223638;L;Navy;MP000000000389912;;799;"MPH1111101101,MSH1116101,MBH11A00315";home-delivery;
+;MP000000000390481;Zudio Navy Solid Shirt;Zudio Navy Solid Shirt;This navy long-sleeved denim slim-fit shirt by Zudio rendered in pure cotton is further defined with a slight fading and flap pockets.;Zudio upgrades a classic western style with this navy denim slim-fit shirt. The long-sleeved separate rendered in pure cotton is further defined with a slight fading and flap pockets. Style over a t-shirt or wear it as is with dark blue jeans for a r";20160729223639;XXL;Navy;MP000000000389912;;799;"MPH1111101101,MSH1116101,MBH11A00315";home-delivery;
+;MP000000000390485;Zudio Blue Solid Shirt;Zudio Blue Solid Shirt;"Rendered in pure cotton, this blue slim-fit shirt from Zudio showcases a subtle faded wash and features two buttoned flap pockets at the chest.";"Update your off-duty essentials with contemporary denim styles such as this blue slim-fit shirt from Zudio. Rendered in pure cotton for all-day comfort, the separate showcases a subtle faded wash and features two buttoned flap pockets at the chest. ";20160729223640;XXL;Blue;MP000000000389912;;799;"MPH1111101101,MSH1116101,MBH11A00315";home-delivery;
+;MP000000000390483;Zudio Blue Solid Shirt;Zudio Blue Solid Shirt;"Rendered in pure cotton, this blue slim-fit shirt from Zudio showcases a subtle faded wash and features two buttoned flap pockets at the chest.";"Update your off-duty essentials with contemporary denim styles such as this blue slim-fit shirt from Zudio. Rendered in pure cotton for all-day comfort, the separate showcases a subtle faded wash and features two buttoned flap pockets at the chest. ";20160730011609;L;Blue;MP000000000389912;;799;"MPH1111101101,MSH1116101,MBH11A00315";home-delivery;
+;MP000000000390484;Zudio Blue Solid Shirt;Zudio Blue Solid Shirt;"Rendered in pure cotton, this blue slim-fit shirt from Zudio showcases a subtle faded wash and features two buttoned flap pockets at the chest.";"Update your off-duty essentials with contemporary denim styles such as this blue slim-fit shirt from Zudio. Rendered in pure cotton for all-day comfort, the separate showcases a subtle faded wash and features two buttoned flap pockets at the chest. ";20160729223640;XL;Blue;MP000000000389912;;799;"MPH1111101101,MSH1116101,MBH11A00315";home-delivery;
+;MP000000000390480;Zudio Navy Solid Shirt;Zudio Navy Solid Shirt;This navy long-sleeved denim slim-fit shirt by Zudio rendered in pure cotton is further defined with a slight fading and flap pockets.;Zudio upgrades a classic western style with this navy denim slim-fit shirt. The long-sleeved separate rendered in pure cotton is further defined with a slight fading and flap pockets. Style over a t-shirt or wear it as is with dark blue jeans for a r";20160730011607;XL;Navy;MP000000000389912;;799;"MPH1111101101,MSH1116101,MBH11A00315";home-delivery;
+;MP000000000390482;Zudio Blue Solid Shirt;Zudio Blue Solid Shirt;"Rendered in pure cotton; this blue slim-fit shirt from Zudio showcases a subtle faded wash and features two buttoned flap pockets at the chest.";"Update your off-duty essentials with contemporary denim styles such as this blue slim-fit shirt from Zudio. Rendered in pure cotton for all-day comfort, the separate showcases a subtle faded wash and features two buttoned flap pockets at the chest. ";20160730011608;M;Blue;MP000000000389912;;799;"MPH1111101101,MSH1116101,MBH11A00315";home-delivery;
+;MP000000000389922;Zudio Blue Solid Shirt;Zudio Blue Solid Shirt;"Rendered in pure cotton, this blue slim-fit shirt from Zudio showcases a subtle faded wash and features two buttoned flap pockets at the chest.";"Update your off-duty essentials with contemporary denim styles such as this blue slim-fit shirt from Zudio. Rendered in pure cotton for all-day comfort, the separate showcases a subtle faded wash and features two buttoned flap pockets at the chest. ";20160729223309;S;Blue;MP000000000389912;;799;"MPH1111101101,MSH1116101,MBH11A00315";home-delivery;
+;LUX000000000384002;Navy Solid Tshirt Red;Navy Solid Tshirt Red;This navy long-sleeved denim slim-fit shirt by Zudio rendered in pure cotton is further defined with a slight fading and flap pockets.;Zudio upgrades a classic western style with this navy denim slim-fit shirt. The long-sleeved separate rendered in pure cotton is further defined with a slight fading and flap pockets. Style over a t-shirt or wear it as is with dark blue jeans for a r;20160729223307;S;Red;LUX000000000384001;;801;MPH1111101101,MSH1116101,MBH11A00315;home-delivery;10;;;; 
+;LUX000000000384003;Navy Solid Tshirt Blue;Navy Solid Tshirt Blue;Rendered in pure cotton;this blue slim-fit shirt from Zudio showcases a subtle faded wash and features two buttoned flap pockets at the chest.;20160729223637;M;Green;LUX000000000384001;;802;MPH1111101101,MSH1116101,MBH11A00315;home-delivery;20;;;; 
+;LUX000000000384004;Navy Solid Tshirt Green;Navy Solid Tshirt Green;This navy long-sleeved denim slim-fit shirt by Zudio rendered in pure cotton is further defined with a slight fading and flap pockets.;Zudio upgrades a classic western style with this navy denim slim-fit shirt. The long-sleeved separate rendered in pure cotton is further defined with a slight fading and flap pockets. Style over a t-shirt or wear it as is with dark blue jeans for a r;20160729223637;M;Blue;LUX000000000384001;;803;MPH1111101101,MSH1116101,MBH11A00315;home-delivery;30;;;; 
+;LUX000000000384005;Navy Solid Tshirt yellow;Navy Solid Tshirt yellow;This navy long-sleeved denim slim-fit shirt by Zudio rendered in pure cotton is further defined with a slight fading and flap pockets.;Zudio upgrades a classic western style with this navy denim slim-fit shirt. The long-sleeved separate rendered in pure cotton is further defined with a slight fading and flap pockets. Style over a t-shirt or wear it as is with dark blue jeans for a r;20160729223638;L;Yellow;LUX000000000384001;;804;MPH1111101101,MSH1116101,MBH11A00315;home-delivery;40;;;; 
+;LUX000000000384022;Mufti Tshirt Blue;Mufti Tshirt Blue;Mufti Tshirt cotton Red;Mufti Tshirt-fit shirt from Zudio showcases a subtle faded wash and features two buttoned flap pockets at the chest.;20160729223645;M;Red;LUX000000000384021;good;902;MPH1111101101,MSH1116101,MBH11A00315;home-delivery;50;;;; 
+;LUX000000000384023;Mufti Tshirt Red;Mufti Tshirt Red;Mufti Tshirt cotton Blue;Mufti Tshirt-Red-fit shirt from Zudio showcases a subtle faded wash and features two buttoned flap pockets at the chest.;20160729223644;M;Blue;LUX000000000384021;good;903;MPH1111101101,MSH1116101,MBH11A00315;home-delivery;10;;;; 
+;LUX000000000384024;Mufti Tshirt Green;Mufti Tshirt Green;Mufti Tshirt cotton Green;Mufti Tshirt-Green-fit shirt from Zudio showcases a subtle faded wash and features two buttoned flap pockets at the chest.;20160729223643;M;Green;LUX000000000384021;good;904;MPH1111101101,MSH1116101,MBH11A00315;home-delivery;20;;;; 
+;LUX000000000384025;Mufti Tshirt Yellow;Mufti Tshirt Yellow;Mufti Tshirt cotton Yellow;Mufti Tshirt-Yellow-fit shirt from Zudio showcases a subtle faded wash and features two buttoned flap pockets at the chest.;20160729223642;M;Yellow;LUX000000000384021;good;905;MPH1111101101,MSH1116101,MBH11A00315;home-delivery;30;;;; 
+;LUX000000000384032;Lee Tshirt Blue;Lee Tshirt Blue;Lee Tshirt cotton Red;Lee Tshirt-fit shirt from Zudio showcases a subtle faded wash and features two buttoned flap pockets at the chest.;20160729223645;M;Red;LUX000000000384031;good;502;MPH1111101101,MSH1116101,MBH11A00315;home-delivery;50;;;; 
+;LUX000000000384033;Lee Tshirt Red;Lee Tshirt Red;Lee Tshirt cotton Blue;Lee Tshirt-Red-fit shirt from Zudio showcases a subtle faded wash and features two buttoned flap pockets at the chest.;20160729223644;M;Blue;LUX000000000384031;good;503;MPH1111101101,MSH1116101,MBH11A00315;home-delivery;10;;;; 
+;LUX000000000384034;Lee Tshirt Green;Lee Tshirt Green;Lee Tshirt cotton Green;Lee Tshirt-Green-fit shirt from Zudio showcases a subtle faded wash and features two buttoned flap pockets at the chest.;20160729223643;M;Green;LUX000000000384031;good;504;MPH1111101101,MSH1116101,MBH11A00315;home-delivery;20;;;; 
+;LUX000000000384035;Lee Tshirt Yellow;Lee Tshirt Yellow;Lee Tshirt cotton Yellow;Lee Tshirt-Yellow-fit shirt from Zudio showcases a subtle faded wash and features two buttoned flap pockets at the chest.;20160729223642;M;Yellow;LUX000000000384031;good;505;MPH1111101101,MSH1116101,MBH11A00315;home-delivery;30;;;; 
+;LUX000000000384042;Zovi Tshirt Blue;Zovi Tshirt Blue;Zovi Tshirt cotton Red;Zovi Tshirt-fit shirt from Zudio showcases a subtle faded wash and features two buttoned flap pockets at the chest.;20160729223645;S;Red;LUX000000000384041;good;402;MPH1111101101,MSH1116101,MBH11A00315;home-delivery;50;;;; 
+;LUX000000000384043;Zovi Tshirt Red;Zovi Tshirt Red;Zovi Tshirt cotton Blue;Zovi Tshirt-Red-fit shirt from Zudio showcases a subtle faded wash and features two buttoned flap pockets at the chest.;20160729223644;L;Blue;LUX000000000384041;good;403;MPH1111101101,MSH1116101,MBH11A00315;home-delivery;10;;;; 
+;LUX000000000384044;Zovi Tshirt Green;Zovi Tshirt Green;Zovi Tshirt cotton Green;Zovi Tshirt-Green-fit shirt from Zudio showcases a subtle faded wash and features two buttoned flap pockets at the chest.;20160729223643;M;Green;LUX000000000384041;good;404;MPH1111101101,MSH1116101,MBH11A00315;home-delivery;20;;;; 
+;LUX000000000384045;Zovi Tshirt Yellow;Zovi Tshirt Yellow;Zovi Tshirt cotton Yellow;Zovi Tshirt-Yellow-fit shirt from Zudio showcases a subtle faded wash and features two buttoned flap pockets at the chest.;20160729223642;M;Yellow;LUX000000000384041;good;405;MPH1111101101,MSH1116101,MBH11A00315;home-delivery;30;;;; 
+;LUX000000000384052;LP Tshirt Blue;LP Tshirt Blue;LP Tshirt cotton Red;LP Tshirt-fit shirt from Zudio showcases a subtle faded wash and features two buttoned flap pockets at the chest.;20160729223645;S;Red;LUX000000000384051;good;402;MPH1111101101,MSH1116101,MBH11A00315;home-delivery;50;;;; 
+;LUX000000000384053;LP Tshirt Red;LP Tshirt Red;LP Tshirt cotton Blue;LP Tshirt-Red-fit shirt from Zudio showcases a subtle faded wash and features two buttoned flap pockets at the chest.;20160729223644;L;Blue;LUX000000000384051;good;403;MPH1111101101,MSH1116101,MBH11A00315;home-delivery;10;;;; 
+;LUX000000000384054;LP Tshirt Green;LP Tshirt Green;LP Tshirt cotton Green;LP Tshirt-Green-fit shirt from Zudio showcases a subtle faded wash and features two buttoned flap pockets at the chest.;20160729223643;M;Green;LUX000000000384051;good;404;MPH1111101101,MSH1116101,MBH11A00315;home-delivery;20;;;; 
+;LUX000000000384055;LP Tshirt Yellow;LP Tshirt Yellow;LP Tshirt cotton Yellow;LP Tshirt-Yellow-fit shirt from Zudio showcases a subtle faded wash and features two buttoned flap pockets at the chest.;20160729223642;M;Yellow;LUX000000000384051;good;405;MPH1111101101,MSH1116101,MBH11A00315;home-delivery;30;;;; 
+;LUX000000000384062;Arrow Tshirt Blue;Arrow Tshirt Blue;Arrow Tshirt cotton Red;Arrow Tshirt-fit shirt from Zudio showcases a subtle faded wash and features two buttoned flap pockets at the chest.;20160729223645;S;Red;LUX000000000384061;good;302;MPH1111101101,MSH1116101,MBH11A00315;home-delivery;50;;;; 
+;LUX000000000384063;Arrow Tshirt Red;Arrow Tshirt Red;Arrow Tshirt cotton Blue;Arrow Tshirt-Red-fit shirt from Zudio showcases a subtle faded wash and features two buttoned flap pockets at the chest.;20160729223644;L;Blue;LUX000000000384061;good;303;MPH1111101101,MSH1116101,MBH11A00315;home-delivery;10;;;; 
+;LUX000000000384064;Arrow Tshirt Green;Arrow Tshirt Green;Arrow Tshirt cotton Green;Arrow Tshirt-Green-fit shirt from Zudio showcases a subtle faded wash and features two buttoned flap pockets at the chest.;20160729223643;M;Green;LUX000000000384061;good;304;MPH1111101101,MSH1116101,MBH11A00315;home-delivery;20;;;; 
+;LUX000000000384065;Arrow Tshirt Yellow;Arrow Tshirt Yellow;Arrow Tshirt cotton Yellow;Arrow Tshirt-Yellow-fit shirt from Zudio showcases a subtle faded wash and features two buttoned flap pockets at the chest.;20160729223642;M;Yellow;LUX000000000384061;good;305;MPH1111101101,MSH1116101,MBH11A00315;home-delivery;30;;;; 
+;LUX000000000384072;US.Polo Tshirt Blue;US.Polo Tshirt Blue;US.Polo Tshirt cotton Red;US.Polo Tshirt-fit shirt from Zudio showcases a subtle faded wash and features two buttoned flap pockets at the chest.;20160729223675;S;Red;LUX000000000384071;good;702;MPH1111101101,MSH1116101,MBH11A00315;home-delivery;50;;;; 
+;LUX000000000384073;US.Polo Tshirt Red;US.Polo Tshirt Red;US.Polo Tshirt cotton Blue;US.Polo Tshirt-Red-fit shirt from Zudio showcases a subtle faded wash and features two buttoned flap pockets at the chest.;20160729223674;L;Blue;LUX000000000384071;good;703;MPH1111101101,MSH1116101,MBH11A00315;home-delivery;10;;;; 
+;LUX000000000384074;US.Polo Tshirt Green;US.Polo Tshirt Green;US.Polo Tshirt cotton Green;US.Polo Tshirt-Green-fit shirt from Zudio showcases a subtle faded wash and features two buttoned flap pockets at the chest.;20160729223673;M;Green;LUX000000000384071;good;704;MPH1111101101,MSH1116101,MBH11A00315;home-delivery;20;;;; 
+;LUX000000000384075;US.Polo Tshirt Yellow;US.Polo Tshirt Yellow;US.Polo Tshirt cotton Yellow;US.Polo Tshirt-Yellow-fit shirt from Zudio showcases a subtle faded wash and features two buttoned flap pockets at the chest.;20160729223672;M;Yellow;LUX000000000384071;good;705;MPH1111101101,MSH1116101,MBH11A00315;home-delivery;30;;;; 
+;LUX000000000384082;JP Tshirt Blue;JP Tshirt Blue;JP Tshirt cotton Red;JP Tshirt-fit shirt from Zudio showcases a subtle faded wash and features two buttoned flap pockets at the chest.;20160729223685;S;Red;LUX000000000384081;good;302;MPH1111101101,MSH1116101,MBH11A00315;home-delivery;50;;;; 
+;LUX000000000384083;JP Tshirt Red;JP Tshirt Red;JP Tshirt cotton Blue;JP Tshirt-Red-fit shirt from Zudio showcases a subtle faded wash and features two buttoned flap pockets at the chest.;20160729223684;L;Blue;LUX000000000384081;good;303;MPH1111101101,MSH1116101,MBH11A00315;home-delivery;10;;;; 
+;LUX000000000384084;JP Tshirt Green;JP Tshirt Green;JP Tshirt cotton Green;JP Tshirt-Green-fit shirt from Zudio showcases a subtle faded wash and features two buttoned flap pockets at the chest.;20160729223683;M;Green;LUX000000000384081;good;304;MPH1111101101,MSH1116101,MBH11A00315;home-delivery;20;;;; 
+;LUX000000000384085;JP Tshirt Yellow;JP Tshirt Yellow;JP Tshirt cotton Yellow;JP Tshirt-Yellow-fit shirt from Zudio showcases a subtle faded wash and features two buttoned flap pockets at the chest.;20160729223682;M;Yellow;LUX000000000384081;good;305;MPH1111101101,MSH1116101,MBH11A00315;home-delivery;30;;;; 
+;LUX000000000384092;Arrow shirt Blue;Arrow shirt Blue;Arrow shirt cotton Red;Arrow shirt-fit shirt from Zudio showcases a subtle faded wash and features two buttoned flap pockets at the chest.;20160729223685;S;Red;LUX000000000384091;good;342;MPH1111101101,MSH1116101,MBH11A00315;home-delivery;50;;;; 
+;LUX000000000384093;Arrow shirt Red;Arrow shirt Red;Arrow shirt cotton Blue;Arrow shirt-Red-fit shirt from Zudio showcases a subtle faded wash and features two buttoned flap pockets at the chest.;20160729223684;L;Blue;LUX000000000384091;good;333;MPH1111101101,MSH1116101,MBH11A00315;home-delivery;10;;;; 
+;LUX000000000384094;Arrow shirt Green;Arrow shirt Green;Arrow shirt cotton Green;Arrow shirt-Green-fit shirt from Zudio showcases a subtle faded wash and features two buttoned flap pockets at the chest.;20160729223683;M;Green;LUX000000000384091;good;354;MPH1111101101,MSH1116101,MBH11A00315;home-delivery;20;;;; 
+;LUX000000000384095;Arrow shirt Yellow;Arrow shirt Yellow;Arrow shirt cotton Yellow;Arrow shirt-Yellow-fit shirt from Zudio showcases a subtle faded wash and features two buttoned flap pockets at the chest.;20160729223682;M;Yellow;LUX000000000384091;good;105;MPH1111101101,MSH1116101,MBH11A00315;home-delivery;30;;;; 
+;LUX000000000384102;JP shirt Blue;JP shirt Blue;JP shirt cotton Red;JP shirt-fit shirt from Zudio showcases a subtle faded wash and features two buttoned flap pockets at the chest.;20160729223685;S;Red;LUX000000000384101;good;802;MPH1111101101,MSH1116101,MBH11A00315;home-delivery;50;;;; 
+;LUX000000000384103;JP shirt Red;JP shirt Red;JP shirt cotton Blue;JP shirt-Red-fit shirt from Zudio showcases a subtle faded wash and features two buttoned flap pockets at the chest.;20160729223684;L;Blue;LUX000000000384101;good;803;MPH1111101101,MSH1116101,MBH11A00315;home-delivery;10;;;; 
+;LUX000000000384104;JP shirt Green;JP shirt Green;JP shirt cotton Green;JP shirt-Green-fit shirt from Zudio showcases a subtle faded wash and features two buttoned flap pockets at the chest.;20160729223683;M;Green;LUX000000000384101;good;904;MPH1111101101,MSH1116101,MBH11A00315;home-delivery;20;;;; 
+;LUX000000000384105;JP shirt Yellow;JP shirt Yellow;JP shirt cotton Yellow;JP shirt-Yellow-fit shirt from Zudio showcases a subtle faded wash and features two buttoned flap pockets at the chest.;20160729223682;M;Yellow;LUX000000000384101;good;505;MPH1111101101,MSH1116101,MBH11A00315;home-delivery;30;;;; 
+
+;LUX000000000389913;Zudio Navy Solid T-Shirt;Zudio Navy Solid T-Shirt;This navy long-sleeved denim slim-fit T-shirt by Zudio rendered in pure cotton is further defined with a slight fading and flap pockets.;Zudio upgrades a classic western style with this navy denim slim-fit T-shirt. The long-sleeved separate rendered in pure cotton is further defined with a slight fading and flap pockets. Style over a t-shirt or wear it as is with dark blue jeans for a r;20160729223307;L;Navy;LUX000000000689913;;882;MPH1111101101,MSH1116101,MBH11A00315;home-delivery,
+;LUX000000000389914;Zudio Blue Solid T-Shirt;Zudio Blue Solid T-Shirt;Rendered in pure cotton this blue slim-fit T-shirt from Zudio showcases a subtle faded wash and features two buttoned flap pockets at the chest;Update your off-duty essentials with contemporary denim styles such as this blue slim-fit T-shirt from Zudio. Rendered in pure cotton for all-day comfort, the separate showcases a subtle faded wash and features two buttoned flap pockets at the chest;20160729223309;L;Blue;LUX000000000689913;;882;MPH1111101101,MSH1116101,MBH11A00315;home-delivery,
+;LUX000000000389915;Zudio Navy Solid wallet;Zudio Navy Solid wallet;This navy long-sleeved denim slim-fit wallet by Zudio rendered in pure cotton is further defined with a slight fading and flap pockets.;Zudio upgrades a classic western style with this navy denim slim-fit wallet. The long-sleeved separate rendered in pure cotton is further defined with a slight fading and flap pockets. Style over a wallet or wear it as is with dark blue jeans for a r;20160729223307;L;Navy;LUX000000000689914;;883;MPH1111101101,MSH1116101,MBH11A00315;home-delivery,
+;LUX000000000389916;Zudio Blue Solid wallet;Zudio Blue Solid wallet;Rendered in pure cotton this blue slim-fit wallet from Zudio showcases a subtle faded wash and features two buttoned flap pockets at the chest;Update your off-duty essentials with contemporary denim styles such as this blue slim-fit wallet from Zudio. Rendered in pure cotton for all-day comfort, the separate showcases a subtle faded wash and features two buttoned flap pockets at the chest;20160729223309;L;Blue;LUX000000000689914;;883;MPH1111101101,MSH1116101,MBH11A00315;home-delivery,
+;LUX000000000389917;Zudio Navy Solid watches;Zudio Navy Solid watches;This navy long-sleeved denim slim-fit watches by Zudio rendered in pure cotton is further defined with a slight fading and flap pockets.;Zudio upgrades a classic western style with this navy denim slim-fit watches. The long-sleeved separate rendered in pure cotton is further defined with a slight fading and flap pockets. Style over a watches or wear it as is with dark blue jeans for a r;20160729223307;L;Navy;LUX000000000689915;;884;MPH1111101101,MSH1116101,MBH11A00315;home-delivery,
+;LUX000000000389918;Zudio Blue Solid watches;Zudio Blue Solid watches;Rendered in pure cotton this blue slim-fit watches from Zudio showcases a subtle faded wash and features two buttoned flap pockets at the chest;Update your off-duty essentials with contemporary denim styles such as this blue slim-fit watches from Zudio. Rendered in pure cotton for all-day comfort, the separate showcases a subtle faded wash and features two buttoned flap pockets at the chest;20160729223309;L;Blue;LUX000000000689915;;884;MPH1111101101,MSH1116101,MBH11A00315;home-delivery,
+;LUX000000000389919;Zudio Navy Solid socks;Zudio Navy Solid socks;This navy long-sleeved denim slim-fit socks by Zudio rendered in pure cotton is further defined with a slight fading and flap pockets.;Zudio upgrades a classic western style with this navy denim slim-fit socks. The long-sleeved separate rendered in pure cotton is further defined with a slight fading and flap pockets. Style over a socks or wear it as is with dark blue jeans for a r;20160729223307;L;Navy;LUX000000000689916;;885;MPH1111101101,MSH1116101,MBH11A00315;home-delivery,
+;LUX000000000389920;Zudio Blue Solid socks;Zudio Blue Solid socks;Rendered in pure cotton this blue slim-fit socks from Zudio showcases a subtle faded wash and features two buttoned flap pockets at the chest;Update your off-duty essentials with contemporary denim styles such as this blue slim-fit socks from Zudio. Rendered in pure cotton for all-day comfort, the separate showcases a subtle faded wash and features two buttoned flap pockets at the chest;20160729223309;L;Blue;LUX000000000689916;;885;MPH1111101101,MSH1116101,MBH11A00315;home-delivery,
+;LUX000000000389921;Zudio Navy Solid shorts;Zudio Navy Solid shorts;This navy long-sleeved denim slim-fit shorts by Zudio rendered in pure cotton is further defined with a slight fading and flap pockets.;Zudio upgrades a classic western style with this navy denim slim-fit shorts. The long-sleeved separate rendered in pure cotton is further defined with a slight fading and flap pockets. Style over a shorts or wear it as is with dark blue jeans for a r;20160729223307;L;Navy;LUX000000000689917;;886;MPH1111101101,MSH1116101,MBH11A00315;home-delivery,
+;LUX000000000389922;Zudio Blue Solid shorts;Zudio Blue Solid shorts;Rendered in pure cotton this blue slim-fit shorts from Zudio showcases a subtle faded wash and features two buttoned flap pockets at the chest;Update your off-duty essentials with contemporary denim styles such as this blue slim-fit shorts from Zudio. Rendered in pure cotton for all-day comfort, the separate showcases a subtle faded wash and features two buttoned flap pockets at the chest;20160729223309;L;Blue;LUX000000000689917;;886;MPH1111101101,MSH1116101,MBH11A00315;home-delivery,
+;LUX000000000389923;Zudio Navy Solid shoes;Zudio Navy Solid shoes;This navy long-sleeved denim slim-fit shoes by Zudio rendered in pure cotton is further defined with a slight fading and flap pockets.;Zudio upgrades a classic western style with this navy denim slim-fit shoes. The long-sleeved separate rendered in pure cotton is further defined with a slight fading and flap pockets. Style over a shoes or wear it as is with dark blue jeans for a r;20160729223307;L;Navy;LUX000000000689918;;887;MPH1111101101,MSH1116101,MBH11A00315;home-delivery,
+;LUX000000000389924;Zudio Blue Solid shoes;Zudio Blue Solid shoes;Rendered in pure cotton this blue slim-fit shoes from Zudio showcases a subtle faded wash and features two buttoned flap pockets at the chest;Update your off-duty essentials with contemporary denim styles such as this blue slim-fit shoes from Zudio. Rendered in pure cotton for all-day comfort, the separate showcases a subtle faded wash and features two buttoned flap pockets at the chest;20160729223309;L;Blue;LUX000000000689918;;887;MPH1111101101,MSH1116101,MBH11A00315;home-delivery,
+;LUX000000000389925;Zudio Navy Solid jeans;Zudio Navy Solid jeans;This navy long-sleeved denim slim-fit jeans by Zudio rendered in pure cotton is further defined with a slight fading and flap pockets.;Zudio upgrades a classic western style with this navy denim slim-fit jeans. The long-sleeved separate rendered in pure cotton is further defined with a slight fading and flap pockets. Style over a jeans or wear it as is with dark blue jeans for a r;20160729223307;L;Navy;LUX000000000689919;;888;MPH1111101101,MSH1116101,MBH11A00315;home-delivery,
+;LUX000000000389926;Zudio Blue Solid jeans;Zudio Blue Solid jeans;Rendered in pure cotton this blue slim-fit jeans from Zudio showcases a subtle faded wash and features two buttoned flap pockets at the chest;Update your off-duty essentials with contemporary denim styles such as this blue slim-fit jeans from Zudio. Rendered in pure cotton for all-day comfort, the separate showcases a subtle faded wash and features two buttoned flap pockets at the chest;20160729223309;L;Blue;LUX000000000689919;;888;MPH1111101101,MSH1116101,MBH11A00315;home-delivery,
+;LUX000000000389927;Zudio Navy Solid volet;Zudio Navy Solid volet;This navy long-sleeved denim slim-fit volet by Zudio rendered in pure cotton is further defined with a slight fading and flap pockets.;Zudio upgrades a classic western style with this navy denim slim-fit volet. The long-sleeved separate rendered in pure cotton is further defined with a slight fading and flap pockets. Style over a volet or wear it as is with dark blue jeans for a r;20160729223307;L;Navy;LUX000000000689920;;889;MPH1111101101,MSH1116101,MBH11A00315;home-delivery,
+;LUX000000000389928;Zudio Blue Solid volet;Zudio Blue Solid volet;Rendered in pure cotton this blue slim-fit volet from Zudio showcases a subtle faded wash and features two buttoned flap pockets at the chest;Update your off-duty essentials with contemporary denim styles such as this blue slim-fit volet from Zudio. Rendered in pure cotton for all-day comfort, the separate showcases a subtle faded wash and features two buttoned flap pockets at the chest;20160729223309;L;Blue;LUX000000000689920;;889;MPH1111101101,MSH1116101,MBH11A00315;home-delivery,
+;LUX000000000389929;Zudio Navy Solid slippers;Zudio Navy Solid slippers;This navy long-sleeved denim slim-fit slippers by Zudio rendered in pure cotton is further defined with a slight fading and flap pockets.;Zudio upgrades a classic western style with this navy denim slim-fit slippers. The long-sleeved separate rendered in pure cotton is further defined with a slight fading and flap pockets. Style over a slippers or wear it as is with dark blue jeans for a r;20160729223307;L;Navy;LUX000000000689921;;890;MPH1111101101,MSH1116101,MBH11A00315;home-delivery,
+;LUX000000000389930;Zudio Blue Solid slippers;Zudio Blue Solid slippers;Rendered in pure cotton this blue slim-fit slippers from Zudio showcases a subtle faded wash and features two buttoned flap pockets at the chest;Update your off-duty essentials with contemporary denim styles such as this blue slim-fit slippers from Zudio. Rendered in pure cotton for all-day comfort, the separate showcases a subtle faded wash and features two buttoned flap pockets at the chest;20160729223309;L;Blue;LUX000000000689921;;890;MPH1111101101,MSH1116101,MBH11A00315;home-delivery,
+;LUX000000000389931;Zudio Navy Solid sandals;Zudio Navy Solid sandals;This navy long-sleeved denim slim-fit sandals by Zudio rendered in pure cotton is further defined with a slight fading and flap pockets.;Zudio upgrades a classic western style with this navy denim slim-fit sandals. The long-sleeved separate rendered in pure cotton is further defined with a slight fading and flap pockets. Style over a sandals or wear it as is with dark blue jeans for a r;20160729223307;L;Navy;LUX000000000689922;;891;MPH1111101101,MSH1116101,MBH11A00315;home-delivery,
+;LUX000000000389932;Zudio Blue Solid sandals;Zudio Blue Solid sandals;Rendered in pure cotton this blue slim-fit sandals from Zudio showcases a subtle faded wash and features two buttoned flap pockets at the chest;Update your off-duty essentials with contemporary denim styles such as this blue slim-fit sandals from Zudio. Rendered in pure cotton for all-day comfort, the separate showcases a subtle faded wash and features two buttoned flap pockets at the chest;20160729223309;L;Blue;LUX000000000689922;;891;MPH1111101101,MSH1116101,MBH11A00315;home-delivery,
+
+INSERT_UPDATE SellerInformation;productSource(code,$catalogVersion);sellerSKU[unique=true][mode=append];sellerArticleSku[unique=true][mode=append];USSID[unique=true][mode=append];sellerId;sellerName;sellerType;startDate[dateformat=yyyyMMddHHmmss];endDate[dateformat=yyyyMMddHHmmss];inwardDate[dateformat=yyyyMMddHHmmss];$catalogVersion
+;MP000000000389913;300658676001;100001300658676001;100001;Westside;;Platinum;20160728000000;20180728000000;20160728000000
+;MP000000000389922;300658676006;100001300658676006;100001;Westside;;Platinum;20160728000000;20180728000000;20160728000000
+;MP000000000390478;300658676002;100001300658676002;100001;Westside;;Platinum;20160728000000;20180728000000;20160728000000
+;MP000000000390479;300658676003;100001300658676003;100001;Westside;;Platinum;20160728000000;20180728000000;20160728000000
+;MP000000000390481;300658676005;100001300658676005;100001;Westside;;Platinum;20160728000000;20180728000000;20160728000000
+;MP000000000390485;300658676010;100001300658676010;100001;Westside;;Platinum;20160728000000;20180728000000;20160728000000
+;MP000000000390483;300658676008;100001300658676008;100001;Westside;;Platinum;20160728000000;20180728000000;20160728000000
+;MP000000000390484;300658676009;100001300658676009;100001;Westside;;Platinum;20160728000000;20180728000000;20160728000000
+;MP000000000390480;300658676004;100001300658676004;100001;Westside;;Platinum;20160728000000;20180728000000;20160728000000
+;MP000000000390482;300658676007;100001300658676007;100001;Westside;;Platinum;20160728000000;20180728000000;20160728000000
+;MP000000000389922;300658676006;100001300658676006;100001;Westside;;Platinum;20160728000000;20180728000000;20160728000000
+;LUX000000000384001;400658676001;200001400658676001;100001;Westside;;Platinum;20160728000000;20180728000000;20160728000000
+;LUX000000000384021;400658676021;200001400658676021;100001;Westside;;Platinum;20160728000000;20180728000000;20160728000000
+;LUX000000000384031;400658676031;200001400658676031;100001;Westside;;Platinum;20160728000000;20180728000000;20160728000000
+;LUX000000000384041;400658676041;200001400658676041;100001;Westside;;Platinum;20160728000000;20180728000000;20160728000000
+;LUX000000000384051;400658676051;200001400658676051;100001;Westside;;Platinum;20160728000000;20180728000000;20160728000000
+;LUX000000000384061;400658676061;200001400658676061;100001;Westside;;Platinum;20160728000000;20180728000000;20160728000000
+;LUX000000000384071;400658676071;200001400658676071;100001;Westside;;Platinum;20160728000000;20180728000000;20160728000000
+;LUX000000000384081;400658676081;200001400658676081;100001;Westside;;Platinum;20160728000000;20180728000000;20160728000000
+;LUX000000000384091;400658676091;200001400658676091;100001;Westside;;Platinum;20160728000000;20180728000000;20160728000000
+;LUX000000000384101;400658676101;200001400658676101;100001;Westside;;Platinum;20160728000000;20180728000000;20160728000000
+
+;LUX000000000389913;30065867389913;10000130065867389913;100001;Westside;;Platinum;20160728000000;20180728000000;20160728000000
+;LUX000000000389914;30065867389914;10000130065867389914;100001;Westside;;Platinum;20160728000000;20180728000000;20160728000000
+;LUX000000000389915;30065867389915;10000130065867389915;100001;Westside;;Platinum;20160728000000;20180728000000;20160728000000
+;LUX000000000389916;30065867389916;10000130065867389916;100001;Westside;;Platinum;20160728000000;20180728000000;20160728000000
+;LUX000000000389917;30065867389917;10000130065867389917;100001;Westside;;Platinum;20160728000000;20180728000000;20160728000000
+;LUX000000000389918;30065867389918;10000130065867389918;100001;Westside;;Platinum;20160728000000;20180728000000;20160728000000
+;LUX000000000389919;30065867389919;10000130065867389919;100001;Westside;;Platinum;20160728000000;20180728000000;20160728000000
+;LUX000000000389920;30065867389920;10000130065867389920;100001;Westside;;Platinum;20160728000000;20180728000000;20160728000000
+;LUX000000000389921;30065867389921;10000130065867389921;100001;Westside;;Platinum;20160728000000;20180728000000;20160728000000
+;LUX000000000389922;30065867389922;10000130065867389922;100001;Westside;;Platinum;20160728000000;20180728000000;20160728000000
+;LUX000000000389923;30065867389923;10000130065867389923;100001;Westside;;Platinum;20160728000000;20180728000000;20160728000000
+;LUX000000000389924;30065867389924;10000130065867389924;100001;Westside;;Platinum;20160728000000;20180728000000;20160728000000
+;LUX000000000389925;30065867389925;10000130065867389925;100001;Westside;;Platinum;20160728000000;20180728000000;20160728000000
+;LUX000000000389926;30065867389926;10000130065867389926;100001;Westside;;Platinum;20160728000000;20180728000000;20160728000000
+;LUX000000000389927;30065867389927;10000130065867389927;100001;Westside;;Platinum;20160728000000;20180728000000;20160728000000
+;LUX000000000389928;30065867389928;10000130065867389928;100001;Westside;;Platinum;20160728000000;20180728000000;20160728000000
+;LUX000000000389929;30065867389929;10000130065867389929;100001;Westside;;Platinum;20160728000000;20180728000000;20160728000000
+;LUX000000000389930;30065867389930;10000130065867389930;100001;Westside;;Platinum;20160728000000;20180728000000;20160728000000
+;LUX000000000389931;30065867389931;10000130065867389931;100001;Westside;;Platinum;20160728000000;20180728000000;20160728000000
+;LUX000000000389932;30065867389932;10000130065867389932;100001;Westside;;Platinum;20160728000000;20180728000000;20160728000000
+
+INSERT_UPDATE RichAttribute;homeDelivery(code);expressDelivery(code);clickAndCollect(code);typeOfItem1(code);typeOfItem2(code);shippingmodes(code);paymentModes(code);deliveryfulfillmodes(code);cancellationwindow;returnwindow;replacementwindow;exchangeallowedwindow;warrantyType(code);warrantyPeriod;ispromotionallowed(code);leadtimeforhomedelivery;sellerfulfilledshippingcharge;emi(code);deliveryfulfillmodebyp1(code);returnfulfillmode(code);returnfulfillmodebyp1(code);sellerhandlingtime;giftwrappable(code);returnatstoreeligible(code);isfragile(code);isprecious(code);mediationrequired(code);scheduleddelivery(code);sellerInfo(sellerArticleSKU,$catalogVersion)[unique=true];isSshipCodEligible(code);$catalogversion
+;yes;no;no;precious;premium;air;both;tship;200;30;0;0;brand;12;allow;1;0;yes;sship;sship;sship;36;no;no;no;no;no;no;100001300658676001;false
+;yes;no;no;precious;premium;air;both;tship;200;30;0;0;brand;12;allow;1;0;yes;sship;sship;sship;36;no;no;no;no;no;no;100001300658676006;false
+;yes;no;no;precious;premium;air;both;tship;200;30;0;0;brand;12;allow;1;0;yes;tship;tship;tship;36;no;no;no;no;no;no;100001300658676002;false
+;yes;no;no;precious;premium;air;both;tship;200;30;0;0;brand;12;allow;1;0;yes;sship;sship;sship;36;no;no;no;no;no;no;100001300658676003;false
+;yes;no;no;precious;premium;air;both;tship;200;30;0;0;brand;12;allow;1;0;yes;sship;sship;sship;36;no;no;no;no;no;no;100001300658676005;false
+;yes;no;no;precious;premium;air;both;tship;200;30;0;0;brand;12;allow;1;0;yes;sship;sship;sship;36;no;no;no;no;no;no;100001300658676010;false
+;yes;no;no;precious;premium;air;both;tship;200;30;0;0;brand;12;allow;1;0;yes;sship;sship;sship;36;no;no;no;no;no;no;100001300658676008;false
+;yes;no;no;precious;premium;air;both;tship;200;30;0;0;brand;12;allow;1;0;yes;sship;sship;sship;36;no;no;no;no;no;no;100001300658676009;false
+;yes;no;no;precious;premium;air;both;tship;200;30;0;0;brand;12;allow;1;0;yes;sship;sship;sship;36;no;no;no;no;no;no;100001300658676004;false
+;yes;no;no;precious;premium;air;both;tship;200;30;0;0;brand;12;allow;1;0;yes;sship;sship;sship;36;no;no;no;no;no;no;100001300658676007;false
+;yes;no;no;precious;premium;air;both;tship;200;30;0;0;brand;12;allow;1;0;yes;tship;tship;tship;36;no;no;no;no;no;no;100001300658676006;false
+;yes;no;no;precious;premium;air;both;tship;200;30;0;0;brand;12;allow;1;0;yes;sship;sship;sship;36;no;no;no;no;no;no;200001400658676001;false
+;yes;no;no;precious;premium;air;both;tship;200;30;0;0;brand;12;allow;1;0;yes;sship;sship;sship;36;no;no;no;no;no;no;200001400658676021;false
+;yes;no;no;precious;premium;air;both;tship;200;30;0;0;brand;12;allow;1;0;yes;sship;sship;sship;36;no;no;no;no;no;no;200001400658676031;false
+;yes;no;no;precious;premium;air;both;tship;200;30;0;0;brand;12;allow;1;0;yes;sship;sship;sship;36;no;no;no;no;no;no;200001400658676041;false
+;yes;no;no;precious;premium;air;both;tship;200;30;0;0;brand;12;allow;1;0;yes;sship;sship;sship;36;no;no;no;no;no;no;200001400658676051;false
+;yes;no;no;precious;premium;air;both;tship;200;30;0;0;brand;12;allow;1;0;yes;sship;sship;sship;36;no;no;no;no;no;no;200001400658676061;false
+;yes;no;no;precious;premium;air;both;tship;200;30;0;0;brand;12;allow;1;0;yes;sship;sship;sship;36;no;no;no;no;no;no;200001400658676071;false
+;yes;no;no;precious;premium;air;both;tship;200;30;0;0;brand;12;allow;1;0;yes;sship;sship;sship;36;no;no;no;no;no;no;200001400658676081;false
+;yes;no;no;precious;premium;air;both;tship;200;30;0;0;brand;12;allow;1;0;yes;sship;sship;sship;36;no;no;no;no;no;no;200001400658676091;false
+;yes;no;no;precious;premium;air;both;tship;200;30;0;0;brand;12;allow;1;0;yes;sship;sship;sship;36;no;no;no;no;no;no;200001400658676101;false
+
+;yes;no;no;precious;premium;air;both;tship;200;30;0;0;brand;12;allow;1;0;yes;sship;sship;sship;36;no;no;no;no;no;no;10000130065867389913;false
+;yes;no;no;precious;premium;air;both;tship;200;30;0;0;brand;12;allow;1;0;yes;sship;sship;sship;36;no;no;no;no;no;no;10000130065867389914;false
+;yes;no;no;precious;premium;air;both;tship;200;30;0;0;brand;12;allow;1;0;yes;sship;sship;sship;36;no;no;no;no;no;no;10000130065867389915;false
+;yes;no;no;precious;premium;air;both;tship;200;30;0;0;brand;12;allow;1;0;yes;sship;sship;sship;36;no;no;no;no;no;no;10000130065867389916;false
+;yes;no;no;precious;premium;air;both;tship;200;30;0;0;brand;12;allow;1;0;yes;sship;sship;sship;36;no;no;no;no;no;no;10000130065867389917;false
+;yes;no;no;precious;premium;air;both;tship;200;30;0;0;brand;12;allow;1;0;yes;sship;sship;sship;36;no;no;no;no;no;no;10000130065867389918;false
+;yes;no;no;precious;premium;air;both;tship;200;30;0;0;brand;12;allow;1;0;yes;sship;sship;sship;36;no;no;no;no;no;no;10000130065867389919;false
+;yes;no;no;precious;premium;air;both;tship;200;30;0;0;brand;12;allow;1;0;yes;sship;sship;sship;36;no;no;no;no;no;no;10000130065867389920;false
+;yes;no;no;precious;premium;air;both;tship;200;30;0;0;brand;12;allow;1;0;yes;sship;sship;sship;36;no;no;no;no;no;no;10000130065867389921;false
+;yes;no;no;precious;premium;air;both;tship;200;30;0;0;brand;12;allow;1;0;yes;sship;sship;sship;36;no;no;no;no;no;no;10000130065867389922;false
+;yes;no;no;precious;premium;air;both;tship;200;30;0;0;brand;12;allow;1;0;yes;sship;sship;sship;36;no;no;no;no;no;no;10000130065867389923;false
+;yes;no;no;precious;premium;air;both;tship;200;30;0;0;brand;12;allow;1;0;yes;sship;sship;sship;36;no;no;no;no;no;no;10000130065867389924;false
+;yes;no;no;precious;premium;air;both;tship;200;30;0;0;brand;12;allow;1;0;yes;sship;sship;sship;36;no;no;no;no;no;no;10000130065867389925;false
+;yes;no;no;precious;premium;air;both;tship;200;30;0;0;brand;12;allow;1;0;yes;sship;sship;sship;36;no;no;no;no;no;no;10000130065867389926;false
+;yes;no;no;precious;premium;air;both;tship;200;30;0;0;brand;12;allow;1;0;yes;sship;sship;sship;36;no;no;no;no;no;no;10000130065867389927;false
+;yes;no;no;precious;premium;air;both;tship;200;30;0;0;brand;12;allow;1;0;yes;sship;sship;sship;36;no;no;no;no;no;no;10000130065867389928;false
+;yes;no;no;precious;premium;air;both;tship;200;30;0;0;brand;12;allow;1;0;yes;sship;sship;sship;36;no;no;no;no;no;no;10000130065867389929;false
+;yes;no;no;precious;premium;air;both;tship;200;30;0;0;brand;12;allow;1;0;yes;sship;sship;sship;36;no;no;no;no;no;no;10000130065867389930;false
+;yes;no;no;precious;premium;air;both;tship;200;30;0;0;brand;12;allow;1;0;yes;sship;sship;sship;36;no;no;no;no;no;no;10000130065867389931;false
+;yes;no;no;precious;premium;air;both;tship;200;30;0;0;brand;12;allow;1;0;yes;sship;sship;sship;36;no;no;no;no;no;no;10000130065867389932;false
+
+INSERT_UPDATE RichAttribute;typeOfItem1(code);typeOfItem2(code);shippingmodes(code);paymentModes(code);deliveryfulfillmodes(code);cancellationwindow;returnwindow;replacementwindow;exchangeallowedwindow;warrantyType(code);warrantyPeriod;ispromotionallowed(code);leadtimeforhomedelivery;sellerfulfilledshippingcharge;emi(code);deliveryfulfillmodebyp1(code);returnfulfillmode(code);returnfulfillmodebyp1(code);sellerhandlingtime;giftwrappable(code);returnatstoreeligible(code);isfragile(code);isprecious(code);mediationrequired(code);scheduleddelivery(code);productsource(code,$catalogVersion)[unique=true];$catalogversion
+;precious;premium;air;both;tship;200;30;0;0;;;allow;;0;yes;sship;sship;sship;36;no;no;no;no;no;no;MP000000000389912
+;precious;premium;air;both;tship;200;30;0;0;;;allow;;0;yes;sship;sship;sship;36;no;no;no;no;no;no;MP000000000389913
+;precious;premium;air;both;tship;200;30;0;0;;;allow;;0;yes;tship;tship;tship;36;no;no;no;no;no;no;MP000000000389922
+;precious;premium;air;both;tship;200;30;0;0;;;allow;;0;yes;sship;sship;sship;36;no;no;no;no;no;no;MP000000000390478
+;precious;premium;air;both;tship;200;30;0;0;;;allow;;0;yes;sship;sship;sship;36;no;no;no;no;no;no;MP000000000389912
+;precious;premium;air;both;tship;200;30;0;0;;;allow;;0;yes;sship;sship;sship;36;no;no;no;no;no;no;MP000000000390479
+;precious;premium;air;both;tship;200;30;0;0;;;allow;;0;yes;sship;sship;sship;36;no;no;no;no;no;no;MP000000000390481
+;precious;premium;air;both;tship;200;30;0;0;;;allow;;0;yes;sship;sship;sship;36;no;no;no;no;no;no;MP000000000390485
+;precious;premium;air;both;tship;200;30;0;0;;;allow;;0;yes;sship;sship;sship;36;no;no;no;no;no;no;MP000000000390483
+;precious;premium;air;both;tship;200;30;0;0;;;allow;;0;yes;sship;sship;sship;36;no;no;no;no;no;no;MP000000000390484
+;precious;premium;air;both;tship;200;30;0;0;;;allow;;0;yes;tship;tship;tship;36;no;no;no;no;no;no;MP000000000390480
+;precious;premium;air;both;tship;200;30;0;0;;;allow;;0;yes;tship;tship;tship;36;no;no;no;no;no;no;MP000000000390482
+;precious;premium;air;both;tship;200;30;0;0;;;allow;;0;yes;sship;sship;sship;36;no;no;no;no;no;no;MP000000000389922
+;precious;premium;air;both;tship;200;30;0;0;;;allow;;0;yes;sship;sship;sship;36;no;no;no;no;no;no;LUX000000000384001 
+;precious;premium;air;both;tship;200;30;0;0;;;allow;;0;yes;tship;tship;tship;36;no;no;no;no;no;no;LUX000000000384002 
+;precious;premium;air;both;tship;200;30;0;0;;;allow;;0;yes;sship;sship;sship;36;no;no;no;no;no;no;LUX000000000384021 
+;precious;premium;air;both;tship;200;30;0;0;;;allow;;0;yes;tship;tship;tship;36;no;no;no;no;no;no;LUX000000000384022 
+;precious;premium;air;both;tship;200;30;0;0;;;allow;;0;yes;sship;sship;sship;36;no;no;no;no;no;no;LUX000000000384031 
+;precious;premium;air;both;tship;200;30;0;0;;;allow;;0;yes;tship;tship;tship;36;no;no;no;no;no;no;LUX000000000384032 
+;precious;premium;air;both;tship;200;30;0;0;;;allow;;0;yes;sship;sship;sship;36;no;no;no;no;no;no;LUX000000000384041 
+;precious;premium;air;both;tship;200;30;0;0;;;allow;;0;yes;tship;tship;tship;36;no;no;no;no;no;no;LUX000000000384042 
+;precious;premium;air;both;tship;200;30;0;0;;;allow;;0;yes;sship;sship;sship;36;no;no;no;no;no;no;LUX000000000384051 
+;precious;premium;air;both;tship;200;30;0;0;;;allow;;0;yes;tship;tship;tship;36;no;no;no;no;no;no;LUX000000000384052 
+;precious;premium;air;both;tship;200;30;0;0;;;allow;;0;yes;sship;sship;sship;36;no;no;no;no;no;no;LUX000000000384061 
+;precious;premium;air;both;tship;200;30;0;0;;;allow;;0;yes;tship;tship;tship;36;no;no;no;no;no;no;LUX000000000384062 
+;precious;premium;air;both;tship;200;30;0;0;;;allow;;0;yes;sship;sship;sship;36;no;no;no;no;no;no;LUX000000000384071 
+;precious;premium;air;both;tship;200;30;0;0;;;allow;;0;yes;tship;tship;tship;36;no;no;no;no;no;no;LUX000000000384072 
+;precious;premium;air;both;tship;200;30;0;0;;;allow;;0;yes;sship;sship;sship;36;no;no;no;no;no;no;LUX000000000384081 
+;precious;premium;air;both;tship;200;30;0;0;;;allow;;0;yes;tship;tship;tship;36;no;no;no;no;no;no;LUX000000000384082 
+;precious;premium;air;both;tship;200;30;0;0;;;allow;;0;yes;sship;sship;sship;36;no;no;no;no;no;no;LUX000000000384091 
+;precious;premium;air;both;tship;200;30;0;0;;;allow;;0;yes;tship;tship;tship;36;no;no;no;no;no;no;LUX000000000384092 
+;precious;premium;air;both;tship;200;30;0;0;;;allow;;0;yes;sship;sship;sship;36;no;no;no;no;no;no;LUX000000000384101 
+;precious;premium;air;both;tship;200;30;0;0;;;allow;;0;yes;tship;tship;tship;36;no;no;no;no;no;no;LUX000000000384102 
+
+;precious;premium;air;both;tship;200;30;0;0;;;allow;;0;yes;sship;sship;sship;36;no;no;no;no;no;no;LUX000000000689913 
+;precious;premium;air;both;tship;200;30;0;0;;;allow;;0;yes;sship;sship;sship;36;no;no;no;no;no;no;LUX000000000689914 
+;precious;premium;air;both;tship;200;30;0;0;;;allow;;0;yes;sship;sship;sship;36;no;no;no;no;no;no;LUX000000000689915 
+;precious;premium;air;both;tship;200;30;0;0;;;allow;;0;yes;sship;sship;sship;36;no;no;no;no;no;no;LUX000000000689916 
+;precious;premium;air;both;tship;200;30;0;0;;;allow;;0;yes;sship;sship;sship;36;no;no;no;no;no;no;LUX000000000689917 
+;precious;premium;air;both;tship;200;30;0;0;;;allow;;0;yes;sship;sship;sship;36;no;no;no;no;no;no;LUX000000000689918 
+;precious;premium;air;both;tship;200;30;0;0;;;allow;;0;yes;sship;sship;sship;36;no;no;no;no;no;no;LUX000000000689919 
+;precious;premium;air;both;tship;200;30;0;0;;;allow;;0;yes;sship;sship;sship;36;no;no;no;no;no;no;LUX000000000689920 
+;precious;premium;air;both;tship;200;30;0;0;;;allow;;0;yes;sship;sship;sship;36;no;no;no;no;no;no;LUX000000000689921 
+;precious;premium;air;both;tship;200;30;0;0;;;allow;;0;yes;sship;sship;sship;36;no;no;no;no;no;no;LUX000000000689922 
+
+
+INSERT_UPDATE Brand;name[unique=true];description;productSource(code,$catalogVersion)[unique=true];$catalogVersion
+;Zudio;Apparel Brand;MP000000000389912
+;Zudio;Apparel Brand;MP000000000390478
+;Zudio;Apparel Brand;MP000000000389922
+;Zudio;Apparel Brand;MP000000000389913
+;Zudio;Apparel Brand;MP000000000390483
+;Zudio;Apparel Brand;MP000000000390485
+;Zudio;Apparel Brand;MP000000000390481
+;Zudio;Apparel Brand;MP000000000390479
+;Zudio;Apparel Brand;MP000000000389912
+;Zudio;Apparel Brand;MP000000000390482
+;Zudio;Apparel Brand;MP000000000390480
+;Zudio;Apparel Brand;MP000000000390484
+;Zudio;Apparel Brand;MP000000000389922
+;Polo;Polo Brand;LUX000000000384001 
+;Mufti;Mufti Brand;LUX000000000384021 
+;Lee;Lee Brand;LUX000000000384031 
+;Zovi;Zovi Brand;LUX000000000384041 
+;LP;LP Brand;LUX000000000384051 
+;Arrow;Arrow Brand;LUX000000000384061 
+;US.Polo;US.Polo Brand;LUX000000000384071 
+;JP;JP Brand;LUX000000000384081 
+;Arrow Shirt;Arrow Shirt Brand;LUX000000000384091 
+;JP shirt;JP shirt Brand;LUX000000000384101 
+
+;Zudio;Apparel Brand;LUX000000000689913 
+;Zudio;Apparel Brand;LUX000000000689914 
+;Zudio;Apparel Brand;LUX000000000689915 
+;Zudio;Apparel Brand;LUX000000000689916 
+;Zudio;Apparel Brand;LUX000000000689917 
+;Zudio;Apparel Brand;LUX000000000689918 
+;Zudio;Apparel Brand;LUX000000000689919 
+;Zudio;Apparel Brand;LUX000000000689920 
+;Zudio;Apparel Brand;LUX000000000689921 
+;Zudio;Apparel Brand;LUX000000000689922 
+
+INSERT_UPDATE SeoContent;seoMetaTitle[unique=true];seoMetaKeyword[unique=true];seoMetaDescription[unique=true];tags;productSource(code,$catalogVersion)[unique=true];$catalogVersion
+;;;;;MP000000000389912
+;Buy Zudio Navy Solid Shirt For Men Online At Tata CLiQ;"buy Zudio Navy Solid Shirt online in India, TATACLiQ";Shop Zudio Navy Solid Shirt for men online at Tata CLiQ;;MP000000000389913
+;Buy Zudio Blue Solid Shirt For Men Online At Tata CLiQ;"buy Zudio Blue Solid Shirt online in India, TATACLiQ";Shop Zudio Blue Solid Shirt for men online at Tata CLiQ;;MP000000000389922
+;Buy Zudio Navy Solid Shirt For Men Online At Tata CLiQ;"buy Zudio Navy Solid Shirt online in India, TATACLiQ";Shop Zudio Navy Solid Shirt for men online at Tata CLiQ;;MP000000000390478
+;;;;;MP000000000389912
+;Buy Zudio Navy Solid Shirt For Men Online At Tata CLiQ;"buy Zudio Navy Solid Shirt online in India, TATACLiQ";Shop Zudio Navy Solid Shirt for men online at Tata CLiQ;;MP000000000390479
+;Buy Zudio Navy Solid Shirt For Men Online At Tata CLiQ;"buy Zudio Navy Solid Shirt online in India, TATACLiQ";Shop Zudio Navy Solid Shirt for men online at Tata CLiQ;;MP000000000390481
+;Buy Zudio Blue Solid Shirt For Men Online At Tata CLiQ;"buy Zudio Blue Solid Shirt online in India, TATACLiQ";Shop Zudio Blue Solid Shirt for men online at Tata CLiQ;;MP000000000390485
+;Buy Zudio Blue Solid Shirt For Men Online At Tata CLiQ;"buy Zudio Blue Solid Shirt online in India, TATACLiQ";Shop Zudio Blue Solid Shirt for men online at Tata CLiQ;;MP000000000390483
+;Buy Zudio Blue Solid Shirt For Men Online At Tata CLiQ;"buy Zudio Blue Solid Shirt online in India, TATACLiQ";Shop Zudio Blue Solid Shirt for men online at Tata CLiQ;;MP000000000390484
+;Buy Zudio Navy Solid Shirt For Men Online At Tata CLiQ;"buy Zudio Navy Solid Shirt online in India, TATACLiQ";Shop Zudio Navy Solid Shirt for men online at Tata CLiQ;;MP000000000390480
+;Buy Zudio Blue Solid Shirt For Men Online At Tata CLiQ;"buy Zudio Blue Solid Shirt online in India, TATACLiQ";Shop Zudio Blue Solid Shirt for men online at Tata CLiQ;;MP000000000390482
+;Buy Zudio Blue Solid Shirt For Men Online At Tata CLiQ;"buy Zudio Blue Solid Shirt online in India, TATACLiQ";Shop Zudio Blue Solid Shirt for men online at Tata CLiQ;;MP000000000389922
+;;;;;LUX000000000384001 
+;Buy Polo Navy Solid Shirt For Men Online At Tata CLiQ;"buy Polo Navy Solid Shirt online in India, TATACLiQ";Shop Polo Navy Solid Shirt for men online at Tata CLiQ;;LUX000000000384002 
+;;;;;LUX000000000384021 
+;Buy Mufti For Men Online At Tata CLiQ;"buy Mufti Shirt online in India, TATACLiQ";Shop Mufti for men online at Tata CLiQ;;LUX000000000384022 
+;;;;;LUX000000000384031 
+;Buy Lee For Men Online At Tata CLiQ;"buy Lee Shirt online in India, TATACLiQ";Shop Lee for men online at Tata CLiQ;;LUX000000000384032 
+;;;;;LUX000000000384041 
+;Buy Zovi For Men Online At Tata CLiQ;"buy Zovi Shirt online in India, TATACLiQ";Shop Zovi for men online at Tata CLiQ;;LUX000000000384042 
+;;;;;LUX000000000384051 
+;Buy LP For Men Online At Tata CLiQ;"buy LP Shirt online in India, TATACLiQ";Shop LP for men online at Tata CLiQ;;LUX000000000384052 
+;;;;;LUX000000000384061 
+;Buy Arrow For Men Online At Tata CLiQ;"buy Arrow Shirt online in India, TATACLiQ";Shop Arrow for men online at Tata CLiQ;;LUX000000000384062 
+;;;;;LUX000000000384071 
+;Buy US.Polo For Men Online At Tata CLiQ;"buy US.Polo Shirt online in India, TATACLiQ";Shop US.Polo for men online at Tata CLiQ;;LUX000000000384072 
+;;;;;LUX000000000384081 
+;Buy JP For Men Online At Tata CLiQ;"buy JP Shirt online in India, TATACLiQ";Shop JP for men online at Tata CLiQ;;LUX000000000384082 
+;;;;;LUX000000000384091 
+;Buy Arrow Shirt For Men Online At Tata CLiQ;"buy Arrow Shirt online in India, TATACLiQ";Shop Arrow for men online at Tata CLiQ;;LUX000000000384092 
+;;;;;LUX000000000384101 
+;Buy JP Shirt For Men Online At Tata CLiQ;"buy JPShirt online in India, TATACLiQ";Shop JP for men online at Tata CLiQ;;LUX000000000384102 
+ 
+;;;;;LUX000000000689913 
+;Buy Zudio Navy Solid T-Shirt For Men Online At Tata CLiQ;"buy Zudio Navy Solid T-Shirt online in India, TATACLiQ";Shop Zudio Navy Solid T-Shirt for men online at Tata CLiQ;;LUX000000000389913 
+;Buy Zudio Navy Solid T-Shirt For Men Online At Tata CLiQ;"buy Zudio Navy Solid T-Shirt online in India, TATACLiQ";Shop Zudio Navy Solid T-Shirt for men online at Tata CLiQ;;LUX000000000389914 
+;;;;;LUX000000000689914 
+;Buy Zudio Navy Solid wallet For Men Online At Tata CLiQ;"buy Zudio Navy Solid wallet online in India, TATACLiQ";Shop Zudio Navy Solid wallet for men online at Tata CLiQ;;LUX000000000389915 
+;Buy Zudio Navy Solid wallet For Men Online At Tata CLiQ;"buy Zudio Navy Solid wallet online in India, TATACLiQ";Shop Zudio Navy Solid wallet for men online at Tata CLiQ;;LUX000000000389916 
+;;;;;LUX000000000689915 
+;Buy Zudio Navy Solid watches For Men Online At Tata CLiQ;"buy Zudio Navy Solid watches online in India, TATACLiQ";Shop Zudio Navy Solid watches for men online at Tata CLiQ;;LUX000000000389917 
+;Buy Zudio Navy Solid watches For Men Online At Tata CLiQ;"buy Zudio Navy Solid watches online in India, TATACLiQ";Shop Zudio Navy Solid watches for men online at Tata CLiQ;;LUX000000000389918 
+;;;;;LUX000000000689916 
+;Buy Zudio Navy Solid socks For Men Online At Tata CLiQ;"buy Zudio Navy Solid socks online in India, TATACLiQ";Shop Zudio Navy Solid socks for men online at Tata CLiQ;;LUX000000000389919 
+;Buy Zudio Navy Solid socks For Men Online At Tata CLiQ;"buy Zudio Navy Solid socks online in India, TATACLiQ";Shop Zudio Navy Solid socks for men online at Tata CLiQ;;LUX000000000389920 
+;;;;;LUX000000000689917 
+;Buy Zudio Navy Solid shorts For Men Online At Tata CLiQ;"buy Zudio Navy Solid shorts online in India, TATACLiQ";Shop Zudio Navy Solid shorts for men online at Tata CLiQ;;LUX000000000389921 
+;Buy Zudio Navy Solid shorts For Men Online At Tata CLiQ;"buy Zudio Navy Solid shorts online in India, TATACLiQ";Shop Zudio Navy Solid shorts for men online at Tata CLiQ;;LUX000000000389922 
+;;;;;LUX000000000689918 
+;Buy Zudio Navy Solid shoes For Men Online At Tata CLiQ;"buy Zudio Navy Solid shoes online in India, TATACLiQ";Shop Zudio Navy Solid shoes for men online at Tata CLiQ;;LUX000000000389923 
+;Buy Zudio Navy Solid shoes For Men Online At Tata CLiQ;"buy Zudio Navy Solid shoes online in India, TATACLiQ";Shop Zudio Navy Solid shoes for men online at Tata CLiQ;;LUX000000000389924 
+;;;;;LUX000000000689919 
+;Buy Zudio Navy Solid jeans For Men Online At Tata CLiQ;"buy Zudio Navy Solid jeans online in India, TATACLiQ";Shop Zudio Navy Solid jeans for men online at Tata CLiQ;;LUX000000000389925 
+;Buy Zudio Navy Solid jeans For Men Online At Tata CLiQ;"buy Zudio Navy Solid jeans online in India, TATACLiQ";Shop Zudio Navy Solid jeans for men online at Tata CLiQ;;LUX000000000389926 
+;;;;;LUX000000000689920 
+;Buy Zudio Navy Solid volet For Men Online At Tata CLiQ;"buy Zudio Navy Solid volet online in India, TATACLiQ";Shop Zudio Navy Solid volet for men online at Tata CLiQ;;LUX000000000389927 
+;Buy Zudio Navy Solid volet For Men Online At Tata CLiQ;"buy Zudio Navy Solid volet online in India, TATACLiQ";Shop Zudio Navy Solid volet for men online at Tata CLiQ;;LUX000000000389928 
+;;;;;LUX000000000689921 
+;Buy Zudio Navy Solid slippers For Men Online At Tata CLiQ;"buy Zudio Navy Solid slippers online in India, TATACLiQ";Shop Zudio Navy Solid slippers for men online at Tata CLiQ;;LUX000000000389929 
+;Buy Zudio Navy Solid slippers For Men Online At Tata CLiQ;"buy Zudio Navy Solid slippers online in India, TATACLiQ";Shop Zudio Navy Solid slippers for men online at Tata CLiQ;;LUX000000000389930 
+;;;;;LUX000000000689922 
+;Buy Zudio Navy Solid sandals For Men Online At Tata CLiQ;"buy Zudio Navy Solid sandals online in India, TATACLiQ";Shop Zudio Navy Solid sandals for men online at Tata CLiQ;;LUX000000000389931 
+;Buy Zudio Navy Solid sandals For Men Online At Tata CLiQ;"buy Zudio Navy Solid sandals online in India, TATACLiQ";Shop Zudio Navy Solid sandals for men online at Tata CLiQ;;LUX000000000389932 
+
+# Insert Global Identifier
+INSERT_UPDATE GlobalIdentifier;productSource(code,$catalogVersion)[unique=true];globalIdentifierType(code);globalIdentifierTypeValue[unique=true][mode=append];$catalogVersion
+;MP000000000389913;ean;2050007123217
+;MP000000000390478;ean;2050007123224
+;MP000000000389922;ean;2050007123262
+;MP000000000390481;ean;2050007123255
+;MP000000000390483;ean;2050007123286
+;MP000000000390485;ean;2050007123309
+;MP000000000390479;ean;2050007123231
+;MP000000000390480;ean;2050007123248
+;MP000000000390482;ean;2050007123279
+;MP000000000390484;ean;2050007123293
+;MP000000000389922;ean;2050007123262
+;LUX000000000384001;ean;2050007123217 
+;LUX000000000384021;ean;2050007123224 
+;LUX000000000384031;ean;2050007123234 
+;LUX000000000384041;ean;2050007123244 
+;LUX000000000384051;ean;2050007123254 
+;LUX000000000384061;ean;2050007123264 
+;LUX000000000384071;ean;2050007123274 
+;LUX000000000384081;ean;2050007123284 
+;LUX000000000384091;ean;2050007123294 
+;LUX000000000384101;ean;2050007123304 
+ 
+;LUX000000000389913;ean;2050007123213 
+;LUX000000000389914;ean;2050007123214 
+;LUX000000000389915;ean;2050007123215 
+;LUX000000000389916;ean;2050007123216 
+;LUX000000000389917;ean;2050007123217 
+;LUX000000000389918;ean;2050007123218 
+;LUX000000000389919;ean;2050007123219 
+;LUX000000000389920;ean;2050007123220 
+;LUX000000000389921;ean;2050007123221 
+;LUX000000000389922;ean;2050007123222 
+;LUX000000000389923;ean;2050007123222 
+;LUX000000000389924;ean;2050007123223 
+;LUX000000000389925;ean;2050007123225 
+;LUX000000000389926;ean;2050007123226 
+;LUX000000000389927;ean;2050007123227 
+;LUX000000000389928;ean;2050007123228 
+;LUX000000000389929;ean;2050007123229 
+;LUX000000000389930;ean;2050007123230 
+;LUX000000000389931;ean;2050007123231 
+;LUX000000000389932;ean;2050007123232 
+
+INSERT_UPDATE ProductFeature;classificationAttributeAssignment(classificationAttribute(code,systemVersion(catalog(id),version)),classificationClass(catalogVersion(catalog(id),version),code),systemVersion(catalog(id),version));product(code,$catalogVersion)[unique=true,forceWrite=true,allownull=true];qualifier[unique=true,forceWrite=true,allownull=true];unit(code,systemVersion(catalog(id),version),unitType)[unique=true];valueType;value[translator=de.hybris.platform.catalog.jalo.classification.impex.ProductFeatureValueTranslator,allownull=true]
+;fabricapparel:pcmClassification:1:pcmClassification:1:apparelCC:pcmClassification:1;MP000000000389912;pcmClassification/1/apparelCC.fabricapparel;;1;"string,100% Cotton"
+;menfabric:pcmClassification:1:pcmClassification:1:menfabricCC:pcmClassification:1;MP000000000389912;pcmClassification/1/menfabricCC.menfabric;;4;"enum,pcmClassification,1,cotton"
+;stylecode:pcmClassification:1:pcmClassification:1:apparelCC:pcmClassification:1;MP000000000389912;pcmClassification/1/apparelCC.stylecode;;1;"string,300658676"
+;modelfit:pcmClassification:1:pcmClassification:1:modelfitCC:pcmClassification:1;MP000000000389912;pcmClassification/1/modelfitCC.modelfit;;1;"string,Model is 6'0""/182 cm and is wearing a medium"
+;multipack:pcmClassification:1:pcmClassification:1:apparelCC:pcmClassification:1;MP000000000389912;pcmClassification/1/apparelCC.multipack;;4;"enum,pcmClassification,1,no"
+;ageband:pcmClassification:1:pcmClassification:1:apparelCC:pcmClassification:1;MP000000000389912;pcmClassification/1/apparelCC.ageband;;4;"enum,pcmClassification,1,22to35"
+;displayproduct:pcmClassification:1:pcmClassification:1:apparelCC:pcmClassification:1;MP000000000389912;pcmClassification/1/apparelCC.displayproduct;;1;"string,Shirt"
+;weightapparel:pcmClassification:1:pcmClassification:1:apparelCC:pcmClassification:1;MP000000000389912;pcmClassification/1/apparelCC.weightapparel;;1;"string,350 gm"
+;menpattern:pcmClassification:1:pcmClassification:1:menpatternCC:pcmClassification:1;MP000000000389912;pcmClassification/1/menpatternCC.menpattern;;4;"enum,pcmClassification,1,solid"
+;packquantity:pcmClassification:1:pcmClassification:1:apparelCC:pcmClassification:1;MP000000000389912;pcmClassification/1/apparelCC.packquantity;;1;"string,1"
+;stylenote:pcmClassification:1:pcmClassification:1:apparelCC:pcmClassification:1;MP000000000389912;pcmClassification/1/apparelCC.stylenote;;1;"string,Same as description"
+;mencasualtopwearsize:pcmClassification:1:pcmClassification:1:mencasualtopwearsizeCC:pcmClassification:1;MP000000000389912;pcmClassification/1/mencasualtopwearsizeCC.mencasualtopwearsize;;4;"enum,pcmClassification,1,s"
+;occasion:pcmClassification:1:pcmClassification:1:apparelCC:pcmClassification:1;MP000000000389912;pcmClassification/1/apparelCC.occasion;;4;"enum,pcmClassification,1,casualwear"
+;sizechart:pcmClassification:1:pcmClassification:1:sizechartCC:pcmClassification:1;MP000000000389912;pcmClassification/1/sizechartCC.sizechart;;1;"string,ZUDIO_FSHIRT_SLIM"
+;washcare:pcmClassification:1:pcmClassification:1:washcareCC:pcmClassification:1;MP000000000389912;pcmClassification/1/washcareCC.washcare;;1;"string,Machine wash"
+;colorfamilyapparel:pcmClassification:1:pcmClassification:1:apparelCC:pcmClassification:1;MP000000000389912;pcmClassification/1/apparelCC.colorfamilyapparel;;4;"enum,pcmClassification,1,navy"
+;fittopwearmen:pcmClassification:1:pcmClassification:1:fittopwearmenCC:pcmClassification:1;MP000000000389912;pcmClassification/1/fittopwearmenCC.fittopwearmen;;4;"enum,pcmClassification,1,slimfit"
+;mencasualtopwearcollarneck:pcmClassification:1:pcmClassification:1:mencasualtopwearcollarneckCC:pcmClassification:1;MP000000000389912;pcmClassification/1/mencasualtopwearcollarneckCC.mencasualtopwearcollarneck;;4;"enum,pcmClassification,1,shirtcollar"
+;unisexapparel:pcmClassification:1:pcmClassification:1:apparelCC:pcmClassification:1;MP000000000389912;pcmClassification/1/apparelCC.unisexapparel;;4;"enum,pcmClassification,1,no"
+;mensleeve:pcmClassification:1:pcmClassification:1:mensleeveCC:pcmClassification:1;MP000000000389912;pcmClassification/1/mensleeveCC.mensleeve;;4;"enum,pcmClassification,1,fullsleeves"
+;colorapparel:pcmClassification:1:pcmClassification:1:apparelCC:pcmClassification:1;MP000000000389912;pcmClassification/1/apparelCC.colorapparel;;1;"string,Navy"
+;fabricapparel:pcmClassification:1:pcmClassification:1:apparelCC:pcmClassification:1;MP000000000389913;pcmClassification/1/apparelCC.fabricapparel;;1;"string,100% Cotton"
+;menfabric:pcmClassification:1:pcmClassification:1:menfabricCC:pcmClassification:1;MP000000000389913;pcmClassification/1/menfabricCC.menfabric;;4;"enum,pcmClassification,1,cotton"
+;stylecode:pcmClassification:1:pcmClassification:1:apparelCC:pcmClassification:1;MP000000000389913;pcmClassification/1/apparelCC.stylecode;;1;"string,300658676"
+;modelfit:pcmClassification:1:pcmClassification:1:modelfitCC:pcmClassification:1;MP000000000389913;pcmClassification/1/modelfitCC.modelfit;;1;"string,Model is 6'0""/182 cm and is wearing a medium"
+;multipack:pcmClassification:1:pcmClassification:1:apparelCC:pcmClassification:1;MP000000000389913;pcmClassification/1/apparelCC.multipack;;4;"enum,pcmClassification,1,no"
+;ageband:pcmClassification:1:pcmClassification:1:apparelCC:pcmClassification:1;MP000000000389913;pcmClassification/1/apparelCC.ageband;;4;"enum,pcmClassification,1,22to35"
+;displayproduct:pcmClassification:1:pcmClassification:1:apparelCC:pcmClassification:1;MP000000000389913;pcmClassification/1/apparelCC.displayproduct;;1;"string,Shirt"
+;stylenote:pcmClassification:1:pcmClassification:1:apparelCC:pcmClassification:1;MP000000000389913;pcmClassification/1/apparelCC.stylenote;;1;"string,Same as description"
+;weightapparel:pcmClassification:1:pcmClassification:1:apparelCC:pcmClassification:1;MP000000000389913;pcmClassification/1/apparelCC.weightapparel;;1;"string,350 gm"
+;menpattern:pcmClassification:1:pcmClassification:1:menpatternCC:pcmClassification:1;MP000000000389913;pcmClassification/1/menpatternCC.menpattern;;4;"enum,pcmClassification,1,solid"
+;packquantity:pcmClassification:1:pcmClassification:1:apparelCC:pcmClassification:1;MP000000000389913;pcmClassification/1/apparelCC.packquantity;;1;"string,1"
+;mencasualtopwearsize:pcmClassification:1:pcmClassification:1:mencasualtopwearsizeCC:pcmClassification:1;MP000000000389913;pcmClassification/1/mencasualtopwearsizeCC.mencasualtopwearsize;;4;"enum,pcmClassification,1,s"
+;occasion:pcmClassification:1:pcmClassification:1:apparelCC:pcmClassification:1;MP000000000389913;pcmClassification/1/apparelCC.occasion;;4;"enum,pcmClassification,1,casualwear"
+;sizechart:pcmClassification:1:pcmClassification:1:sizechartCC:pcmClassification:1;MP000000000389913;pcmClassification/1/sizechartCC.sizechart;;1;"string,ZUDIO_FSHIRT_SLIM"
+;colorfamilyapparel:pcmClassification:1:pcmClassification:1:apparelCC:pcmClassification:1;MP000000000389913;pcmClassification/1/apparelCC.colorfamilyapparel;;4;"enum,pcmClassification,1,navy"
+;fittopwearmen:pcmClassification:1:pcmClassification:1:fittopwearmenCC:pcmClassification:1;MP000000000389913;pcmClassification/1/fittopwearmenCC.fittopwearmen;;4;"enum,pcmClassification,1,slimfit"
+;mencasualtopwearcollarneck:pcmClassification:1:pcmClassification:1:mencasualtopwearcollarneckCC:pcmClassification:1;MP000000000389913;pcmClassification/1/mencasualtopwearcollarneckCC.mencasualtopwearcollarneck;;4;"enum,pcmClassification,1,shirtcollar"
+;washcare:pcmClassification:1:pcmClassification:1:washcareCC:pcmClassification:1;MP000000000389913;pcmClassification/1/washcareCC.washcare;;1;"string,Machine wash"
+;unisexapparel:pcmClassification:1:pcmClassification:1:apparelCC:pcmClassification:1;MP000000000389913;pcmClassification/1/apparelCC.unisexapparel;;4;"enum,pcmClassification,1,no"
+;mensleeve:pcmClassification:1:pcmClassification:1:mensleeveCC:pcmClassification:1;MP000000000389913;pcmClassification/1/mensleeveCC.mensleeve;;4;"enum,pcmClassification,1,fullsleeves"
+;colorapparel:pcmClassification:1:pcmClassification:1:apparelCC:pcmClassification:1;MP000000000389913;pcmClassification/1/apparelCC.colorapparel;;1;"string,Navy"
+;weightapparel:pcmClassification:1:pcmClassification:1:apparelCC:pcmClassification:1;MP000000000389922;pcmClassification/1/apparelCC.weightapparel;;1;"string,350 gm"
+;menfabric:pcmClassification:1:pcmClassification:1:menfabricCC:pcmClassification:1;MP000000000389922;pcmClassification/1/menfabricCC.menfabric;;4;"enum,pcmClassification,1,cotton"
+;multipack:pcmClassification:1:pcmClassification:1:apparelCC:pcmClassification:1;MP000000000389922;pcmClassification/1/apparelCC.multipack;;4;"enum,pcmClassification,1,no"
+;stylenote:pcmClassification:1:pcmClassification:1:apparelCC:pcmClassification:1;MP000000000389922;pcmClassification/1/apparelCC.stylenote;;1;"string,Same as description"
+;mencasualtopwearcollarneck:pcmClassification:1:pcmClassification:1:mencasualtopwearcollarneckCC:pcmClassification:1;MP000000000389922;pcmClassification/1/mencasualtopwearcollarneckCC.mencasualtopwearcollarneck;;4;"enum,pcmClassification,1,shirtcollar"
+;colorfamilyapparel:pcmClassification:1:pcmClassification:1:apparelCC:pcmClassification:1;MP000000000389922;pcmClassification/1/apparelCC.colorfamilyapparel;;4;"enum,pcmClassification,1,blue"
+;modelfit:pcmClassification:1:pcmClassification:1:modelfitCC:pcmClassification:1;MP000000000389922;pcmClassification/1/modelfitCC.modelfit;;1;"string,Model is 6'1""/186 cm and is wearing a medium"
+;stylecode:pcmClassification:1:pcmClassification:1:apparelCC:pcmClassification:1;MP000000000389922;pcmClassification/1/apparelCC.stylecode;;1;"string,300658676"
+;unisexapparel:pcmClassification:1:pcmClassification:1:apparelCC:pcmClassification:1;MP000000000389922;pcmClassification/1/apparelCC.unisexapparel;;4;"enum,pcmClassification,1,no"
+;washcare:pcmClassification:1:pcmClassification:1:washcareCC:pcmClassification:1;MP000000000389922;pcmClassification/1/washcareCC.washcare;;1;"string,Machine wash"
+;ageband:pcmClassification:1:pcmClassification:1:apparelCC:pcmClassification:1;MP000000000389922;pcmClassification/1/apparelCC.ageband;;4;"enum,pcmClassification,1,22to35"
+;colorapparel:pcmClassification:1:pcmClassification:1:apparelCC:pcmClassification:1;MP000000000389922;pcmClassification/1/apparelCC.colorapparel;;1;"string,Blue"
+;menpattern:pcmClassification:1:pcmClassification:1:menpatternCC:pcmClassification:1;MP000000000389922;pcmClassification/1/menpatternCC.menpattern;;4;"enum,pcmClassification,1,solid"
+;fittopwearmen:pcmClassification:1:pcmClassification:1:fittopwearmenCC:pcmClassification:1;MP000000000389922;pcmClassification/1/fittopwearmenCC.fittopwearmen;;4;"enum,pcmClassification,1,slimfit"
+;mencasualtopwearsize:pcmClassification:1:pcmClassification:1:mencasualtopwearsizeCC:pcmClassification:1;MP000000000389922;pcmClassification/1/mencasualtopwearsizeCC.mencasualtopwearsize;;4;"enum,pcmClassification,1,s"
+;displayproduct:pcmClassification:1:pcmClassification:1:apparelCC:pcmClassification:1;MP000000000389922;pcmClassification/1/apparelCC.displayproduct;;1;"string,Shirt"
+;fabricapparel:pcmClassification:1:pcmClassification:1:apparelCC:pcmClassification:1;MP000000000389922;pcmClassification/1/apparelCC.fabricapparel;;1;"string,100% Cotton"
+;occasion:pcmClassification:1:pcmClassification:1:apparelCC:pcmClassification:1;MP000000000389922;pcmClassification/1/apparelCC.occasion;;4;"enum,pcmClassification,1,casualwear"
+;mensleeve:pcmClassification:1:pcmClassification:1:mensleeveCC:pcmClassification:1;MP000000000389922;pcmClassification/1/mensleeveCC.mensleeve;;4;"enum,pcmClassification,1,fullsleeves"
+;packquantity:pcmClassification:1:pcmClassification:1:apparelCC:pcmClassification:1;MP000000000389922;pcmClassification/1/apparelCC.packquantity;;1;"string,1"
+;sizechart:pcmClassification:1:pcmClassification:1:sizechartCC:pcmClassification:1;MP000000000389922;pcmClassification/1/sizechartCC.sizechart;;1;string,ZUDIO_FSHIRT_SLIM
+;mencasualtopwearcollarneck:pcmClassification:1:pcmClassification:1:mencasualtopwearcollarneckCC:pcmClassification:1;MP000000000390478;pcmClassification/1/mencasualtopwearcollarneckCC.mencasualtopwearcollarneck;;4;enum,pcmClassification,1,shirtcollar
+;occasion:pcmClassification:1:pcmClassification:1:apparelCC:pcmClassification:1;MP000000000390478;pcmClassification/1/apparelCC.occasion;;4;enum,pcmClassification,1,casualwear
+;menfabric:pcmClassification:1:pcmClassification:1:menfabricCC:pcmClassification:1;MP000000000390478;pcmClassification/1/menfabricCC.menfabric;;4;enum,pcmClassification,1,cotton
+;unisexapparel:pcmClassification:1:pcmClassification:1:apparelCC:pcmClassification:1;MP000000000390478;pcmClassification/1/apparelCC.unisexapparel;;4;enum,pcmClassification,1,no
+;displayproduct:pcmClassification:1:pcmClassification:1:apparelCC:pcmClassification:1;MP000000000390478;pcmClassification/1/apparelCC.displayproduct;;1;string,Shirt
+;fittopwearmen:pcmClassification:1:pcmClassification:1:fittopwearmenCC:pcmClassification:1;MP000000000390478;pcmClassification/1/fittopwearmenCC.fittopwearmen;;4;enum,pcmClassification,1,slimfit
+;mencasualtopwearsize:pcmClassification:1:pcmClassification:1:mencasualtopwearsizeCC:pcmClassification:1;MP000000000390478;pcmClassification/1/mencasualtopwearsizeCC.mencasualtopwearsize;;4;enum,pcmClassification,1,m
+;colorfamilyapparel:pcmClassification:1:pcmClassification:1:apparelCC:pcmClassification:1;MP000000000390478;pcmClassification/1/apparelCC.colorfamilyapparel;;4;enum,pcmClassification,1,navy
+;weightapparel:pcmClassification:1:pcmClassification:1:apparelCC:pcmClassification:1;MP000000000390478;pcmClassification/1/apparelCC.weightapparel;;1;string,350 gm
+;fabricapparel:pcmClassification:1:pcmClassification:1:apparelCC:pcmClassification:1;MP000000000390478;pcmClassification/1/apparelCC.fabricapparel;;1;string,100% Cotton
+;stylenote:pcmClassification:1:pcmClassification:1:apparelCC:pcmClassification:1;MP000000000390478;pcmClassification/1/apparelCC.stylenote;;1;string,Same as description
+;packquantity:pcmClassification:1:pcmClassification:1:apparelCC:pcmClassification:1;MP000000000390478;pcmClassification/1/apparelCC.packquantity;;1;string,1
+;ageband:pcmClassification:1:pcmClassification:1:apparelCC:pcmClassification:1;MP000000000390478;pcmClassification/1/apparelCC.ageband;;4;enum,pcmClassification,1,22to35
+;colorapparel:pcmClassification:1:pcmClassification:1:apparelCC:pcmClassification:1;MP000000000390478;pcmClassification/1/apparelCC.colorapparel;;1;string,Navy
+;menpattern:pcmClassification:1:pcmClassification:1:menpatternCC:pcmClassification:1;MP000000000390478;pcmClassification/1/menpatternCC.menpattern;;4;enum,pcmClassification,1,solid
+;stylecode:pcmClassification:1:pcmClassification:1:apparelCC:pcmClassification:1;MP000000000390478;pcmClassification/1/apparelCC.stylecode;;1;string,300658676
+;mensleeve:pcmClassification:1:pcmClassification:1:mensleeveCC:pcmClassification:1;MP000000000390478;pcmClassification/1/mensleeveCC.mensleeve;;4;enum,pcmClassification,1,fullsleeves
+;sizechart:pcmClassification:1:pcmClassification:1:sizechartCC:pcmClassification:1;MP000000000390478;pcmClassification/1/sizechartCC.sizechart;;1;string,ZUDIO_FSHIRT_SLIM
+;washcare:pcmClassification:1:pcmClassification:1:washcareCC:pcmClassification:1;MP000000000390478;pcmClassification/1/washcareCC.washcare;;1;string,Machine wash
+;modelfit:pcmClassification:1:pcmClassification:1:modelfitCC:pcmClassification:1;MP000000000390478;pcmClassification/1/modelfitCC.modelfit;;1;string,Model is 6'0"/182 cm and is wearing a medium
+;multipack:pcmClassification:1:pcmClassification:1:apparelCC:pcmClassification:1;MP000000000390478;pcmClassification/1/apparelCC.multipack;;4;enum,pcmClassification,1,no
+;fabricapparel:pcmClassification:1:pcmClassification:1:apparelCC:pcmClassification:1;MP000000000389912;pcmClassification/1/apparelCC.fabricapparel;;1;string,100% Cotton
+;menfabric:pcmClassification:1:pcmClassification:1:menfabricCC:pcmClassification:1;MP000000000389912;pcmClassification/1/menfabricCC.menfabric;;4;enum,pcmClassification,1,cotton
+;stylecode:pcmClassification:1:pcmClassification:1:apparelCC:pcmClassification:1;MP000000000389912;pcmClassification/1/apparelCC.stylecode;;1;string,300658676
+;modelfit:pcmClassification:1:pcmClassification:1:modelfitCC:pcmClassification:1;MP000000000389912;pcmClassification/1/modelfitCC.modelfit;;1;string,Model is 6'0"/182 cm and is wearing a medium
+;multipack:pcmClassification:1:pcmClassification:1:apparelCC:pcmClassification:1;MP000000000389912;pcmClassification/1/apparelCC.multipack;;4;enum,pcmClassification,1,no
+;ageband:pcmClassification:1:pcmClassification:1:apparelCC:pcmClassification:1;MP000000000389912;pcmClassification/1/apparelCC.ageband;;4;enum,pcmClassification,1,22to35
+;displayproduct:pcmClassification:1:pcmClassification:1:apparelCC:pcmClassification:1;MP000000000389912;pcmClassification/1/apparelCC.displayproduct;;1;string,Shirt
+;weightapparel:pcmClassification:1:pcmClassification:1:apparelCC:pcmClassification:1;MP000000000389912;pcmClassification/1/apparelCC.weightapparel;;1;string,350 gm
+;menpattern:pcmClassification:1:pcmClassification:1:menpatternCC:pcmClassification:1;MP000000000389912;pcmClassification/1/menpatternCC.menpattern;;4;enum,pcmClassification,1,solid
+;packquantity:pcmClassification:1:pcmClassification:1:apparelCC:pcmClassification:1;MP000000000389912;pcmClassification/1/apparelCC.packquantity;;1;string,1
+;stylenote:pcmClassification:1:pcmClassification:1:apparelCC:pcmClassification:1;MP000000000389912;pcmClassification/1/apparelCC.stylenote;;1;string,Same as description
+;mencasualtopwearsize:pcmClassification:1:pcmClassification:1:mencasualtopwearsizeCC:pcmClassification:1;MP000000000389912;pcmClassification/1/mencasualtopwearsizeCC.mencasualtopwearsize;;4;enum,pcmClassification,1,s
+;occasion:pcmClassification:1:pcmClassification:1:apparelCC:pcmClassification:1;MP000000000389912;pcmClassification/1/apparelCC.occasion;;4;enum,pcmClassification,1,casualwear
+;sizechart:pcmClassification:1:pcmClassification:1:sizechartCC:pcmClassification:1;MP000000000389912;pcmClassification/1/sizechartCC.sizechart;;1;string,ZUDIO_FSHIRT_SLIM
+;colorfamilyapparel:pcmClassification:1:pcmClassification:1:apparelCC:pcmClassification:1;MP000000000389912;pcmClassification/1/apparelCC.colorfamilyapparel;;4;enum,pcmClassification,1,navy
+;fittopwearmen:pcmClassification:1:pcmClassification:1:fittopwearmenCC:pcmClassification:1;MP000000000389912;pcmClassification/1/fittopwearmenCC.fittopwearmen;;4;enum,pcmClassification,1,slimfit
+;mencasualtopwearcollarneck:pcmClassification:1:pcmClassification:1:mencasualtopwearcollarneckCC:pcmClassification:1;MP000000000389912;pcmClassification/1/mencasualtopwearcollarneckCC.mencasualtopwearcollarneck;;4;enum,pcmClassification,1,shirtcollar
+;washcare:pcmClassification:1:pcmClassification:1:washcareCC:pcmClassification:1;MP000000000389912;pcmClassification/1/washcareCC.washcare;;1;string,Machine wash
+;unisexapparel:pcmClassification:1:pcmClassification:1:apparelCC:pcmClassification:1;MP000000000389912;pcmClassification/1/apparelCC.unisexapparel;;4;enum,pcmClassification,1,no
+;mensleeve:pcmClassification:1:pcmClassification:1:mensleeveCC:pcmClassification:1;MP000000000389912;pcmClassification/1/mensleeveCC.mensleeve;;4;enum,pcmClassification,1,fullsleeves
+;colorapparel:pcmClassification:1:pcmClassification:1:apparelCC:pcmClassification:1;MP000000000389912;pcmClassification/1/apparelCC.colorapparel;;1;string,Navy
+;occasion:pcmClassification:1:pcmClassification:1:apparelCC:pcmClassification:1;MP000000000390479;pcmClassification/1/apparelCC.occasion;;4;enum,pcmClassification,1,casualwear
+;modelfit:pcmClassification:1:pcmClassification:1:modelfitCC:pcmClassification:1;MP000000000390479;pcmClassification/1/modelfitCC.modelfit;;1;string,Model is 6'0"/182 cm and is wearing a medium
+;mencasualtopwearsize:pcmClassification:1:pcmClassification:1:mencasualtopwearsizeCC:pcmClassification:1;MP000000000390479;pcmClassification/1/mencasualtopwearsizeCC.mencasualtopwearsize;;4;enum,pcmClassification,1,l
+;fabricapparel:pcmClassification:1:pcmClassification:1:apparelCC:pcmClassification:1;MP000000000390479;pcmClassification/1/apparelCC.fabricapparel;;1;string,100% Cotton
+;packquantity:pcmClassification:1:pcmClassification:1:apparelCC:pcmClassification:1;MP000000000390479;pcmClassification/1/apparelCC.packquantity;;1;string,1
+;sizechart:pcmClassification:1:pcmClassification:1:sizechartCC:pcmClassification:1;MP000000000390479;pcmClassification/1/sizechartCC.sizechart;;1;string,ZUDIO_FSHIRT_SLIM
+;stylenote:pcmClassification:1:pcmClassification:1:apparelCC:pcmClassification:1;MP000000000390479;pcmClassification/1/apparelCC.stylenote;;1;string,Same as description
+;weightapparel:pcmClassification:1:pcmClassification:1:apparelCC:pcmClassification:1;MP000000000390479;pcmClassification/1/apparelCC.weightapparel;;1;string,350 gm
+;displayproduct:pcmClassification:1:pcmClassification:1:apparelCC:pcmClassification:1;MP000000000390479;pcmClassification/1/apparelCC.displayproduct;;1;string,Shirt
+;multipack:pcmClassification:1:pcmClassification:1:apparelCC:pcmClassification:1;MP000000000390479;pcmClassification/1/apparelCC.multipack;;4;enum,pcmClassification,1,no
+;ageband:pcmClassification:1:pcmClassification:1:apparelCC:pcmClassification:1;MP000000000390479;pcmClassification/1/apparelCC.ageband;;4;enum,pcmClassification,1,22to35
+;mencasualtopwearcollarneck:pcmClassification:1:pcmClassification:1:mencasualtopwearcollarneckCC:pcmClassification:1;MP000000000390479;pcmClassification/1/mencasualtopwearcollarneckCC.mencasualtopwearcollarneck;;4;enum,pcmClassification,1,shirtcollar
+;mensleeve:pcmClassification:1:pcmClassification:1:mensleeveCC:pcmClassification:1;MP000000000390479;pcmClassification/1/mensleeveCC.mensleeve;;4;enum,pcmClassification,1,fullsleeves
+;colorfamilyapparel:pcmClassification:1:pcmClassification:1:apparelCC:pcmClassification:1;MP000000000390479;pcmClassification/1/apparelCC.colorfamilyapparel;;4;enum,pcmClassification,1,navy
+;menfabric:pcmClassification:1:pcmClassification:1:menfabricCC:pcmClassification:1;MP000000000390479;pcmClassification/1/menfabricCC.menfabric;;4;enum,pcmClassification,1,cotton
+;fittopwearmen:pcmClassification:1:pcmClassification:1:fittopwearmenCC:pcmClassification:1;MP000000000390479;pcmClassification/1/fittopwearmenCC.fittopwearmen;;4;enum,pcmClassification,1,slimfit
+;stylecode:pcmClassification:1:pcmClassification:1:apparelCC:pcmClassification:1;MP000000000390479;pcmClassification/1/apparelCC.stylecode;;1;string,300658676
+;unisexapparel:pcmClassification:1:pcmClassification:1:apparelCC:pcmClassification:1;MP000000000390479;pcmClassification/1/apparelCC.unisexapparel;;4;enum,pcmClassification,1,no
+;colorapparel:pcmClassification:1:pcmClassification:1:apparelCC:pcmClassification:1;MP000000000390479;pcmClassification/1/apparelCC.colorapparel;;1;string,Navy
+;menpattern:pcmClassification:1:pcmClassification:1:menpatternCC:pcmClassification:1;MP000000000390479;pcmClassification/1/menpatternCC.menpattern;;4;enum,pcmClassification,1,solid
+;washcare:pcmClassification:1:pcmClassification:1:washcareCC:pcmClassification:1;MP000000000390479;pcmClassification/1/washcareCC.washcare;;1;string,Machine wash
+;stylecode:pcmClassification:1:pcmClassification:1:apparelCC:pcmClassification:1;MP000000000390481;pcmClassification/1/apparelCC.stylecode;;1;string,300658676
+;fabricapparel:pcmClassification:1:pcmClassification:1:apparelCC:pcmClassification:1;MP000000000390481;pcmClassification/1/apparelCC.fabricapparel;;1;string,100% Cotton
+;fittopwearmen:pcmClassification:1:pcmClassification:1:fittopwearmenCC:pcmClassification:1;MP000000000390481;pcmClassification/1/fittopwearmenCC.fittopwearmen;;4;enum,pcmClassification,1,slimfit
+;mencasualtopwearcollarneck:pcmClassification:1:pcmClassification:1:mencasualtopwearcollarneckCC:pcmClassification:1;MP000000000390481;pcmClassification/1/mencasualtopwearcollarneckCC.mencasualtopwearcollarneck;;4;enum,pcmClassification,1,shirtcollar
+;colorfamilyapparel:pcmClassification:1:pcmClassification:1:apparelCC:pcmClassification:1;MP000000000390481;pcmClassification/1/apparelCC.colorfamilyapparel;;4;enum,pcmClassification,1,navy
+;weightapparel:pcmClassification:1:pcmClassification:1:apparelCC:pcmClassification:1;MP000000000390481;pcmClassification/1/apparelCC.weightapparel;;1;string,350 gm
+;displayproduct:pcmClassification:1:pcmClassification:1:apparelCC:pcmClassification:1;MP000000000390481;pcmClassification/1/apparelCC.displayproduct;;1;string,Shirt
+;multipack:pcmClassification:1:pcmClassification:1:apparelCC:pcmClassification:1;MP000000000390481;pcmClassification/1/apparelCC.multipack;;4;enum,pcmClassification,1,no
+;washcare:pcmClassification:1:pcmClassification:1:washcareCC:pcmClassification:1;MP000000000390481;pcmClassification/1/washcareCC.washcare;;1;string,Machine wash
+;ageband:pcmClassification:1:pcmClassification:1:apparelCC:pcmClassification:1;MP000000000390481;pcmClassification/1/apparelCC.ageband;;4;enum,pcmClassification,1,22to35
+;modelfit:pcmClassification:1:pcmClassification:1:modelfitCC:pcmClassification:1;MP000000000390481;pcmClassification/1/modelfitCC.modelfit;;1;string,Model is 6'0"/182 cm and is wearing a medium
+;stylenote:pcmClassification:1:pcmClassification:1:apparelCC:pcmClassification:1;MP000000000390481;pcmClassification/1/apparelCC.stylenote;;1;string,Same as description
+;unisexapparel:pcmClassification:1:pcmClassification:1:apparelCC:pcmClassification:1;MP000000000390481;pcmClassification/1/apparelCC.unisexapparel;;4;enum,pcmClassification,1,no
+;packquantity:pcmClassification:1:pcmClassification:1:apparelCC:pcmClassification:1;MP000000000390481;pcmClassification/1/apparelCC.packquantity;;1;string,1
+;sizechart:pcmClassification:1:pcmClassification:1:sizechartCC:pcmClassification:1;MP000000000390481;pcmClassification/1/sizechartCC.sizechart;;1;string,ZUDIO_FSHIRT_SLIM
+;menpattern:pcmClassification:1:pcmClassification:1:menpatternCC:pcmClassification:1;MP000000000390481;pcmClassification/1/menpatternCC.menpattern;;4;enum,pcmClassification,1,solid
+;mencasualtopwearsize:pcmClassification:1:pcmClassification:1:mencasualtopwearsizeCC:pcmClassification:1;MP000000000390481;pcmClassification/1/mencasualtopwearsizeCC.mencasualtopwearsize;;4;enum,pcmClassification,1,xxl
+;occasion:pcmClassification:1:pcmClassification:1:apparelCC:pcmClassification:1;MP000000000390481;pcmClassification/1/apparelCC.occasion;;4;enum,pcmClassification,1,casualwear
+;mensleeve:pcmClassification:1:pcmClassification:1:mensleeveCC:pcmClassification:1;MP000000000390481;pcmClassification/1/mensleeveCC.mensleeve;;4;enum,pcmClassification,1,fullsleeves
+;menfabric:pcmClassification:1:pcmClassification:1:menfabricCC:pcmClassification:1;MP000000000390481;pcmClassification/1/menfabricCC.menfabric;;4;enum,pcmClassification,1,cotton
+;colorapparel:pcmClassification:1:pcmClassification:1:apparelCC:pcmClassification:1;MP000000000390481;pcmClassification/1/apparelCC.colorapparel;;1;string,Navy
+;colorapparel:pcmClassification:1:pcmClassification:1:apparelCC:pcmClassification:1;MP000000000390485;pcmClassification/1/apparelCC.colorapparel;;1;string,Blue
+;weightapparel:pcmClassification:1:pcmClassification:1:apparelCC:pcmClassification:1;MP000000000390485;pcmClassification/1/apparelCC.weightapparel;;1;string,350 gm
+;stylenote:pcmClassification:1:pcmClassification:1:apparelCC:pcmClassification:1;MP000000000390485;pcmClassification/1/apparelCC.stylenote;;1;string,Same as description
+;washcare:pcmClassification:1:pcmClassification:1:washcareCC:pcmClassification:1;MP000000000390485;pcmClassification/1/washcareCC.washcare;;1;string,Machine wash
+;unisexapparel:pcmClassification:1:pcmClassification:1:apparelCC:pcmClassification:1;MP000000000390485;pcmClassification/1/apparelCC.unisexapparel;;4;enum,pcmClassification,1,no
+;menpattern:pcmClassification:1:pcmClassification:1:menpatternCC:pcmClassification:1;MP000000000390485;pcmClassification/1/menpatternCC.menpattern;;4;enum,pcmClassification,1,solid
+;mensleeve:pcmClassification:1:pcmClassification:1:mensleeveCC:pcmClassification:1;MP000000000390485;pcmClassification/1/mensleeveCC.mensleeve;;4;enum,pcmClassification,1,fullsleeves
+;stylecode:pcmClassification:1:pcmClassification:1:apparelCC:pcmClassification:1;MP000000000390485;pcmClassification/1/apparelCC.stylecode;;1;string,300658676
+;mencasualtopwearsize:pcmClassification:1:pcmClassification:1:mencasualtopwearsizeCC:pcmClassification:1;MP000000000390485;pcmClassification/1/mencasualtopwearsizeCC.mencasualtopwearsize;;4;enum,pcmClassification,1,xxl
+;mencasualtopwearcollarneck:pcmClassification:1:pcmClassification:1:mencasualtopwearcollarneckCC:pcmClassification:1;MP000000000390485;pcmClassification/1/mencasualtopwearcollarneckCC.mencasualtopwearcollarneck;;4;enum,pcmClassification,1,shirtcollar
+;occasion:pcmClassification:1:pcmClassification:1:apparelCC:pcmClassification:1;MP000000000390485;pcmClassification/1/apparelCC.occasion;;4;enum,pcmClassification,1,casualwear
+;packquantity:pcmClassification:1:pcmClassification:1:apparelCC:pcmClassification:1;MP000000000390485;pcmClassification/1/apparelCC.packquantity;;1;string,1
+;sizechart:pcmClassification:1:pcmClassification:1:sizechartCC:pcmClassification:1;MP000000000390485;pcmClassification/1/sizechartCC.sizechart;;1;string,ZUDIO_FSHIRT_SLIM
+;multipack:pcmClassification:1:pcmClassification:1:apparelCC:pcmClassification:1;MP000000000390485;pcmClassification/1/apparelCC.multipack;;4;enum,pcmClassification,1,no
+;ageband:pcmClassification:1:pcmClassification:1:apparelCC:pcmClassification:1;MP000000000390485;pcmClassification/1/apparelCC.ageband;;4;enum,pcmClassification,1,22to35
+;modelfit:pcmClassification:1:pcmClassification:1:modelfitCC:pcmClassification:1;MP000000000390485;pcmClassification/1/modelfitCC.modelfit;;1;string,Model is 6'1"/186 cm and is wearing a medium
+;fabricapparel:pcmClassification:1:pcmClassification:1:apparelCC:pcmClassification:1;MP000000000390485;pcmClassification/1/apparelCC.fabricapparel;;1;string,100% Cotton
+;colorfamilyapparel:pcmClassification:1:pcmClassification:1:apparelCC:pcmClassification:1;MP000000000390485;pcmClassification/1/apparelCC.colorfamilyapparel;;4;enum,pcmClassification,1,blue
+;fittopwearmen:pcmClassification:1:pcmClassification:1:fittopwearmenCC:pcmClassification:1;MP000000000390485;pcmClassification/1/fittopwearmenCC.fittopwearmen;;4;enum,pcmClassification,1,slimfit
+;displayproduct:pcmClassification:1:pcmClassification:1:apparelCC:pcmClassification:1;MP000000000390485;pcmClassification/1/apparelCC.displayproduct;;1;string,Shirt
+;menfabric:pcmClassification:1:pcmClassification:1:menfabricCC:pcmClassification:1;MP000000000390485;pcmClassification/1/menfabricCC.menfabric;;4;enum,pcmClassification,1,cotton
+;stylenote:pcmClassification:1:pcmClassification:1:apparelCC:pcmClassification:1;MP000000000390483;pcmClassification/1/apparelCC.stylenote;;1;string,Same as description
+;modelfit:pcmClassification:1:pcmClassification:1:modelfitCC:pcmClassification:1;MP000000000390483;pcmClassification/1/modelfitCC.modelfit;;1;string,Model is 6'1"/186 cm and is wearing a medium
+;colorapparel:pcmClassification:1:pcmClassification:1:apparelCC:pcmClassification:1;MP000000000390483;pcmClassification/1/apparelCC.colorapparel;;1;string,Blue
+;sizechart:pcmClassification:1:pcmClassification:1:sizechartCC:pcmClassification:1;MP000000000390483;pcmClassification/1/sizechartCC.sizechart;;1;string,ZUDIO_FSHIRT_SLIM
+;packquantity:pcmClassification:1:pcmClassification:1:apparelCC:pcmClassification:1;MP000000000390483;pcmClassification/1/apparelCC.packquantity;;1;string,1
+;displayproduct:pcmClassification:1:pcmClassification:1:apparelCC:pcmClassification:1;MP000000000390483;pcmClassification/1/apparelCC.displayproduct;;1;string,Shirt
+;mencasualtopwearsize:pcmClassification:1:pcmClassification:1:mencasualtopwearsizeCC:pcmClassification:1;MP000000000390483;pcmClassification/1/mencasualtopwearsizeCC.mencasualtopwearsize;;4;enum,pcmClassification,1,l
+;ageband:pcmClassification:1:pcmClassification:1:apparelCC:pcmClassification:1;MP000000000390483;pcmClassification/1/apparelCC.ageband;;4;enum,pcmClassification,1,22to35
+;unisexapparel:pcmClassification:1:pcmClassification:1:apparelCC:pcmClassification:1;MP000000000390483;pcmClassification/1/apparelCC.unisexapparel;;4;enum,pcmClassification,1,no
+;washcare:pcmClassification:1:pcmClassification:1:washcareCC:pcmClassification:1;MP000000000390483;pcmClassification/1/washcareCC.washcare;;1;string,Machine wash
+;fittopwearmen:pcmClassification:1:pcmClassification:1:fittopwearmenCC:pcmClassification:1;MP000000000390483;pcmClassification/1/fittopwearmenCC.fittopwearmen;;4;enum,pcmClassification,1,slimfit
+;menpattern:pcmClassification:1:pcmClassification:1:menpatternCC:pcmClassification:1;MP000000000390483;pcmClassification/1/menpatternCC.menpattern;;4;enum,pcmClassification,1,solid
+;mensleeve:pcmClassification:1:pcmClassification:1:mensleeveCC:pcmClassification:1;MP000000000390483;pcmClassification/1/mensleeveCC.mensleeve;;4;enum,pcmClassification,1,fullsleeves
+;weightapparel:pcmClassification:1:pcmClassification:1:apparelCC:pcmClassification:1;MP000000000390483;pcmClassification/1/apparelCC.weightapparel;;1;string,350 gm
+;mencasualtopwearcollarneck:pcmClassification:1:pcmClassification:1:mencasualtopwearcollarneckCC:pcmClassification:1;MP000000000390483;pcmClassification/1/mencasualtopwearcollarneckCC.mencasualtopwearcollarneck;;4;enum,pcmClassification,1,shirtcollar
+;fabricapparel:pcmClassification:1:pcmClassification:1:apparelCC:pcmClassification:1;MP000000000390483;pcmClassification/1/apparelCC.fabricapparel;;1;string,100% Cotton
+;menfabric:pcmClassification:1:pcmClassification:1:menfabricCC:pcmClassification:1;MP000000000390483;pcmClassification/1/menfabricCC.menfabric;;4;enum,pcmClassification,1,cotton
+;stylecode:pcmClassification:1:pcmClassification:1:apparelCC:pcmClassification:1;MP000000000390483;pcmClassification/1/apparelCC.stylecode;;1;string,300658676
+;colorfamilyapparel:pcmClassification:1:pcmClassification:1:apparelCC:pcmClassification:1;MP000000000390483;pcmClassification/1/apparelCC.colorfamilyapparel;;4;enum,pcmClassification,1,blue
+;multipack:pcmClassification:1:pcmClassification:1:apparelCC:pcmClassification:1;MP000000000390483;pcmClassification/1/apparelCC.multipack;;4;enum,pcmClassification,1,no
+;occasion:pcmClassification:1:pcmClassification:1:apparelCC:pcmClassification:1;MP000000000390483;pcmClassification/1/apparelCC.occasion;;4;enum,pcmClassification,1,casualwear
+;fittopwearmen:pcmClassification:1:pcmClassification:1:fittopwearmenCC:pcmClassification:1;MP000000000390484;pcmClassification/1/fittopwearmenCC.fittopwearmen;;4;enum,pcmClassification,1,slimfit
+;ageband:pcmClassification:1:pcmClassification:1:apparelCC:pcmClassification:1;MP000000000390484;pcmClassification/1/apparelCC.ageband;;4;enum,pcmClassification,1,22to35
+;colorfamilyapparel:pcmClassification:1:pcmClassification:1:apparelCC:pcmClassification:1;MP000000000390484;pcmClassification/1/apparelCC.colorfamilyapparel;;4;enum,pcmClassification,1,blue
+;displayproduct:pcmClassification:1:pcmClassification:1:apparelCC:pcmClassification:1;MP000000000390484;pcmClassification/1/apparelCC.displayproduct;;1;string,Shirt
+;sizechart:pcmClassification:1:pcmClassification:1:sizechartCC:pcmClassification:1;MP000000000390484;pcmClassification/1/sizechartCC.sizechart;;1;string,ZUDIO_FSHIRT_SLIM
+;occasion:pcmClassification:1:pcmClassification:1:apparelCC:pcmClassification:1;MP000000000390484;pcmClassification/1/apparelCC.occasion;;4;enum,pcmClassification,1,casualwear
+;washcare:pcmClassification:1:pcmClassification:1:washcareCC:pcmClassification:1;MP000000000390484;pcmClassification/1/washcareCC.washcare;;1;string,Machine wash
+;menfabric:pcmClassification:1:pcmClassification:1:menfabricCC:pcmClassification:1;MP000000000390484;pcmClassification/1/menfabricCC.menfabric;;4;enum,pcmClassification,1,cotton
+;colorapparel:pcmClassification:1:pcmClassification:1:apparelCC:pcmClassification:1;MP000000000390484;pcmClassification/1/apparelCC.colorapparel;;1;string,Blue
+;menpattern:pcmClassification:1:pcmClassification:1:menpatternCC:pcmClassification:1;MP000000000390484;pcmClassification/1/menpatternCC.menpattern;;4;enum,pcmClassification,1,solid
+;modelfit:pcmClassification:1:pcmClassification:1:modelfitCC:pcmClassification:1;MP000000000390484;pcmClassification/1/modelfitCC.modelfit;;1;string,Model is 6'1"/186 cm and is wearing a medium
+;unisexapparel:pcmClassification:1:pcmClassification:1:apparelCC:pcmClassification:1;MP000000000390484;pcmClassification/1/apparelCC.unisexapparel;;4;enum,pcmClassification,1,no
+;multipack:pcmClassification:1:pcmClassification:1:apparelCC:pcmClassification:1;MP000000000390484;pcmClassification/1/apparelCC.multipack;;4;enum,pcmClassification,1,no
+;stylenote:pcmClassification:1:pcmClassification:1:apparelCC:pcmClassification:1;MP000000000390484;pcmClassification/1/apparelCC.stylenote;;1;string,Same as description
+;mensleeve:pcmClassification:1:pcmClassification:1:mensleeveCC:pcmClassification:1;MP000000000390484;pcmClassification/1/mensleeveCC.mensleeve;;4;enum,pcmClassification,1,fullsleeves
+;mencasualtopwearcollarneck:pcmClassification:1:pcmClassification:1:mencasualtopwearcollarneckCC:pcmClassification:1;MP000000000390484;pcmClassification/1/mencasualtopwearcollarneckCC.mencasualtopwearcollarneck;;4;enum,pcmClassification,1,shirtcollar
+;mencasualtopwearsize:pcmClassification:1:pcmClassification:1:mencasualtopwearsizeCC:pcmClassification:1;MP000000000390484;pcmClassification/1/mencasualtopwearsizeCC.mencasualtopwearsize;;4;enum,pcmClassification,1,xl
+;packquantity:pcmClassification:1:pcmClassification:1:apparelCC:pcmClassification:1;MP000000000390484;pcmClassification/1/apparelCC.packquantity;;1;string,1
+;stylecode:pcmClassification:1:pcmClassification:1:apparelCC:pcmClassification:1;MP000000000390484;pcmClassification/1/apparelCC.stylecode;;1;string,300658676
+;weightapparel:pcmClassification:1:pcmClassification:1:apparelCC:pcmClassification:1;MP000000000390484;pcmClassification/1/apparelCC.weightapparel;;1;string,350 gm
+;fabricapparel:pcmClassification:1:pcmClassification:1:apparelCC:pcmClassification:1;MP000000000390484;pcmClassification/1/apparelCC.fabricapparel;;1;string,100% Cotton
+;menfabric:pcmClassification:1:pcmClassification:1:menfabricCC:pcmClassification:1;MP000000000390480;pcmClassification/1/menfabricCC.menfabric;;4;enum,pcmClassification,1,cotton
+;stylenote:pcmClassification:1:pcmClassification:1:apparelCC:pcmClassification:1;MP000000000390480;pcmClassification/1/apparelCC.stylenote;;1;string,Same as description
+;colorapparel:pcmClassification:1:pcmClassification:1:apparelCC:pcmClassification:1;MP000000000390480;pcmClassification/1/apparelCC.colorapparel;;1;string,Navy
+;washcare:pcmClassification:1:pcmClassification:1:washcareCC:pcmClassification:1;MP000000000390480;pcmClassification/1/washcareCC.washcare;;1;string,Machine wash
+;colorfamilyapparel:pcmClassification:1:pcmClassification:1:apparelCC:pcmClassification:1;MP000000000390480;pcmClassification/1/apparelCC.colorfamilyapparel;;4;enum,pcmClassification,1,navy
+;fabricapparel:pcmClassification:1:pcmClassification:1:apparelCC:pcmClassification:1;MP000000000390480;pcmClassification/1/apparelCC.fabricapparel;;1;string,100% Cotton
+;mencasualtopwearcollarneck:pcmClassification:1:pcmClassification:1:mencasualtopwearcollarneckCC:pcmClassification:1;MP000000000390480;pcmClassification/1/mencasualtopwearcollarneckCC.mencasualtopwearcollarneck;;4;enum,pcmClassification,1,shirtcollar
+;packquantity:pcmClassification:1:pcmClassification:1:apparelCC:pcmClassification:1;MP000000000390480;pcmClassification/1/apparelCC.packquantity;;1;string,1
+;fittopwearmen:pcmClassification:1:pcmClassification:1:fittopwearmenCC:pcmClassification:1;MP000000000390480;pcmClassification/1/fittopwearmenCC.fittopwearmen;;4;enum,pcmClassification,1,slimfit
+;stylecode:pcmClassification:1:pcmClassification:1:apparelCC:pcmClassification:1;MP000000000390480;pcmClassification/1/apparelCC.stylecode;;1;string,300658676
+;ageband:pcmClassification:1:pcmClassification:1:apparelCC:pcmClassification:1;MP000000000390480;pcmClassification/1/apparelCC.ageband;;4;enum,pcmClassification,1,22to35
+;displayproduct:pcmClassification:1:pcmClassification:1:apparelCC:pcmClassification:1;MP000000000390480;pcmClassification/1/apparelCC.displayproduct;;1;string,Shirt
+;mensleeve:pcmClassification:1:pcmClassification:1:mensleeveCC:pcmClassification:1;MP000000000390480;pcmClassification/1/mensleeveCC.mensleeve;;4;enum,pcmClassification,1,fullsleeves
+;multipack:pcmClassification:1:pcmClassification:1:apparelCC:pcmClassification:1;MP000000000390480;pcmClassification/1/apparelCC.multipack;;4;enum,pcmClassification,1,no
+;modelfit:pcmClassification:1:pcmClassification:1:modelfitCC:pcmClassification:1;MP000000000390480;pcmClassification/1/modelfitCC.modelfit;;1;string,Model is 6'0"/182 cm and is wearing a medium
+;occasion:pcmClassification:1:pcmClassification:1:apparelCC:pcmClassification:1;MP000000000390480;pcmClassification/1/apparelCC.occasion;;4;enum,pcmClassification,1,casualwear
+;weightapparel:pcmClassification:1:pcmClassification:1:apparelCC:pcmClassification:1;MP000000000390480;pcmClassification/1/apparelCC.weightapparel;;1;string,350 gm
+;mencasualtopwearsize:pcmClassification:1:pcmClassification:1:mencasualtopwearsizeCC:pcmClassification:1;MP000000000390480;pcmClassification/1/mencasualtopwearsizeCC.mencasualtopwearsize;;4;enum,pcmClassification,1,xl
+;sizechart:pcmClassification:1:pcmClassification:1:sizechartCC:pcmClassification:1;MP000000000390480;pcmClassification/1/sizechartCC.sizechart;;1;string,ZUDIO_FSHIRT_SLIM
+;unisexapparel:pcmClassification:1:pcmClassification:1:apparelCC:pcmClassification:1;MP000000000390480;pcmClassification/1/apparelCC.unisexapparel;;4;enum,pcmClassification,1,no
+;menpattern:pcmClassification:1:pcmClassification:1:menpatternCC:pcmClassification:1;MP000000000390480;pcmClassification/1/menpatternCC.menpattern;;4;enum,pcmClassification,1,solid
+;fabricapparel:pcmClassification:1:pcmClassification:1:apparelCC:pcmClassification:1;MP000000000390482;pcmClassification/1/apparelCC.fabricapparel;;1;string,100% Cotton
+;occasion:pcmClassification:1:pcmClassification:1:apparelCC:pcmClassification:1;MP000000000390482;pcmClassification/1/apparelCC.occasion;;4;enum,pcmClassification,1,casualwear
+;modelfit:pcmClassification:1:pcmClassification:1:modelfitCC:pcmClassification:1;MP000000000390482;pcmClassification/1/modelfitCC.modelfit;;1;string,Model is 6'1"/186 cm and is wearing a medium
+;stylenote:pcmClassification:1:pcmClassification:1:apparelCC:pcmClassification:1;MP000000000390482;pcmClassification/1/apparelCC.stylenote;;1;string,Same as description
+;colorfamilyapparel:pcmClassification:1:pcmClassification:1:apparelCC:pcmClassification:1;MP000000000390482;pcmClassification/1/apparelCC.colorfamilyapparel;;4;enum,pcmClassification,1,blue
+;mencasualtopwearcollarneck:pcmClassification:1:pcmClassification:1:mencasualtopwearcollarneckCC:pcmClassification:1;MP000000000390482;pcmClassification/1/mencasualtopwearcollarneckCC.mencasualtopwearcollarneck;;4;enum,pcmClassification,1,shirtcollar
+;sizechart:pcmClassification:1:pcmClassification:1:sizechartCC:pcmClassification:1;MP000000000390482;pcmClassification/1/sizechartCC.sizechart;;1;string,ZUDIO_FSHIRT_SLIM
+;stylecode:pcmClassification:1:pcmClassification:1:apparelCC:pcmClassification:1;MP000000000390482;pcmClassification/1/apparelCC.stylecode;;1;string,300658676
+;weightapparel:pcmClassification:1:pcmClassification:1:apparelCC:pcmClassification:1;MP000000000390482;pcmClassification/1/apparelCC.weightapparel;;1;string,350 gm
+;ageband:pcmClassification:1:pcmClassification:1:apparelCC:pcmClassification:1;MP000000000390482;pcmClassification/1/apparelCC.ageband;;4;enum,pcmClassification,1,22to35
+;fittopwearmen:pcmClassification:1:pcmClassification:1:fittopwearmenCC:pcmClassification:1;MP000000000390482;pcmClassification/1/fittopwearmenCC.fittopwearmen;;4;enum,pcmClassification,1,slimfit
+;menfabric:pcmClassification:1:pcmClassification:1:menfabricCC:pcmClassification:1;MP000000000390482;pcmClassification/1/menfabricCC.menfabric;;4;enum,pcmClassification,1,cotton
+;mensleeve:pcmClassification:1:pcmClassification:1:mensleeveCC:pcmClassification:1;MP000000000390482;pcmClassification/1/mensleeveCC.mensleeve;;4;enum,pcmClassification,1,fullsleeves
+;menpattern:pcmClassification:1:pcmClassification:1:menpatternCC:pcmClassification:1;MP000000000390482;pcmClassification/1/menpatternCC.menpattern;;4;enum,pcmClassification,1,solid
+;washcare:pcmClassification:1:pcmClassification:1:washcareCC:pcmClassification:1;MP000000000390482;pcmClassification/1/washcareCC.washcare;;1;string,Machine wash
+;colorapparel:pcmClassification:1:pcmClassification:1:apparelCC:pcmClassification:1;MP000000000390482;pcmClassification/1/apparelCC.colorapparel;;1;string,Blue
+;displayproduct:pcmClassification:1:pcmClassification:1:apparelCC:pcmClassification:1;MP000000000390482;pcmClassification/1/apparelCC.displayproduct;;1;string,Shirt
+;multipack:pcmClassification:1:pcmClassification:1:apparelCC:pcmClassification:1;MP000000000390482;pcmClassification/1/apparelCC.multipack;;4;enum,pcmClassification,1,no
+;packquantity:pcmClassification:1:pcmClassification:1:apparelCC:pcmClassification:1;MP000000000390482;pcmClassification/1/apparelCC.packquantity;;1;string,1
+;unisexapparel:pcmClassification:1:pcmClassification:1:apparelCC:pcmClassification:1;MP000000000390482;pcmClassification/1/apparelCC.unisexapparel;;4;enum,pcmClassification,1,no
+;mencasualtopwearsize:pcmClassification:1:pcmClassification:1:mencasualtopwearsizeCC:pcmClassification:1;MP000000000390482;pcmClassification/1/mencasualtopwearsizeCC.mencasualtopwearsize;;4;enum,pcmClassification,1,m
+;weightapparel:pcmClassification:1:pcmClassification:1:apparelCC:pcmClassification:1;MP000000000389922;pcmClassification/1/apparelCC.weightapparel;;1;string,350 gm
+;menfabric:pcmClassification:1:pcmClassification:1:menfabricCC:pcmClassification:1;MP000000000389922;pcmClassification/1/menfabricCC.menfabric;;4;enum,pcmClassification,1,cotton
+;multipack:pcmClassification:1:pcmClassification:1:apparelCC:pcmClassification:1;MP000000000389922;pcmClassification/1/apparelCC.multipack;;4;enum,pcmClassification,1,no
+;stylenote:pcmClassification:1:pcmClassification:1:apparelCC:pcmClassification:1;MP000000000389922;pcmClassification/1/apparelCC.stylenote;;1;string,Same as description
+;mencasualtopwearcollarneck:pcmClassification:1:pcmClassification:1:mencasualtopwearcollarneckCC:pcmClassification:1;MP000000000389922;pcmClassification/1/mencasualtopwearcollarneckCC.mencasualtopwearcollarneck;;4;enum,pcmClassification,1,shirtcollar
+;colorfamilyapparel:pcmClassification:1:pcmClassification:1:apparelCC:pcmClassification:1;MP000000000389922;pcmClassification/1/apparelCC.colorfamilyapparel;;4;enum,pcmClassification,1,blue
+;modelfit:pcmClassification:1:pcmClassification:1:modelfitCC:pcmClassification:1;MP000000000389922;pcmClassification/1/modelfitCC.modelfit;;1;string,Model is 6'1"/186 cm and is wearing a medium
+;stylecode:pcmClassification:1:pcmClassification:1:apparelCC:pcmClassification:1;MP000000000389922;pcmClassification/1/apparelCC.stylecode;;1;string,300658676
+;unisexapparel:pcmClassification:1:pcmClassification:1:apparelCC:pcmClassification:1;MP000000000389922;pcmClassification/1/apparelCC.unisexapparel;;4;enum,pcmClassification,1,no
+;washcare:pcmClassification:1:pcmClassification:1:washcareCC:pcmClassification:1;MP000000000389922;pcmClassification/1/washcareCC.washcare;;1;string,Machine wash
+;ageband:pcmClassification:1:pcmClassification:1:apparelCC:pcmClassification:1;MP000000000389922;pcmClassification/1/apparelCC.ageband;;4;enum,pcmClassification,1,22to35
+;colorapparel:pcmClassification:1:pcmClassification:1:apparelCC:pcmClassification:1;MP000000000389922;pcmClassification/1/apparelCC.colorapparel;;1;string,Blue
+;menpattern:pcmClassification:1:pcmClassification:1:menpatternCC:pcmClassification:1;MP000000000389922;pcmClassification/1/menpatternCC.menpattern;;4;enum,pcmClassification,1,solid
+;fittopwearmen:pcmClassification:1:pcmClassification:1:fittopwearmenCC:pcmClassification:1;MP000000000389922;pcmClassification/1/fittopwearmenCC.fittopwearmen;;4;enum,pcmClassification,1,slimfit
+;mencasualtopwearsize:pcmClassification:1:pcmClassification:1:mencasualtopwearsizeCC:pcmClassification:1;MP000000000389922;pcmClassification/1/mencasualtopwearsizeCC.mencasualtopwearsize;;4;enum,pcmClassification,1,s
+;displayproduct:pcmClassification:1:pcmClassification:1:apparelCC:pcmClassification:1;MP000000000389922;pcmClassification/1/apparelCC.displayproduct;;1;string,Shirt
+;fabricapparel:pcmClassification:1:pcmClassification:1:apparelCC:pcmClassification:1;MP000000000389922;pcmClassification/1/apparelCC.fabricapparel;;1;string,100% Cotton
+;occasion:pcmClassification:1:pcmClassification:1:apparelCC:pcmClassification:1;MP000000000389922;pcmClassification/1/apparelCC.occasion;;4;enum,pcmClassification,1,casualwear
+;mensleeve:pcmClassification:1:pcmClassification:1:mensleeveCC:pcmClassification:1;MP000000000389922;pcmClassification/1/mensleeveCC.mensleeve;;4;enum,pcmClassification,1,fullsleeves
+;packquantity:pcmClassification:1:pcmClassification:1:apparelCC:pcmClassification:1;MP000000000389922;pcmClassification/1/apparelCC.packquantity;;1;string,1
+;sizechart:pcmClassification:1:pcmClassification:1:sizechartCC:pcmClassification:1;MP000000000389922;pcmClassification/1/sizechartCC.sizechart;;1;string,ZUDIO_FSHIRT_SLIM
+;fabricapparel:pcmClassification:1:pcmClassification:1:apparelCC:pcmClassification:1;LUX000000000384001;pcmClassification/1/apparelCC.fabricapparel;;1;"string,100% Cotton" 
+;menfabric:pcmClassification:1:pcmClassification:1:menfabricCC:pcmClassification:1;LUX000000000384001;pcmClassification/1/menfabricCC.menfabric;;4;"enum,pcmClassification,1,cotton"
+;unisexapparel:pcmClassification:1:pcmClassification:1:apparelCC:pcmClassification:1;LUX000000000384021;pcmClassification/1/apparelCC.unisexapparel;;4;"enum,pcmClassification,1,no"
+;mensleeve:pcmClassification:1:pcmClassification:1:mensleeveCC:pcmClassification:1;LUX000000000384021;pcmClassification/1/mensleeveCC.mensleeve;;4;"enum,pcmClassification,1,fullsleeves" 
+;fabricapparel:pcmClassification:1:pcmClassification:1:apparelCC:pcmClassification:1;LUX000000000384031;pcmClassification/1/apparelCC.fabricapparel;;1;"string,100% Cotton" 
+;menfabric:pcmClassification:1:pcmClassification:1:menfabricCC:pcmClassification:1;LUX000000000384031;pcmClassification/1/menfabricCC.menfabric;;4;"enum,pcmClassification,1,cotton"
+;unisexapparel:pcmClassification:1:pcmClassification:1:apparelCC:pcmClassification:1;LUX000000000384041;pcmClassification/1/apparelCC.unisexapparel;;4;"enum,pcmClassification,1,no"
+;mensleeve:pcmClassification:1:pcmClassification:1:mensleeveCC:pcmClassification:1;LUX000000000384041;pcmClassification/1/mensleeveCC.mensleeve;;4;"enum,pcmClassification,1,fullsleeves" 
+;modelfit:pcmClassification:1:pcmClassification:1:modelfitCC:pcmClassification:1;LUX000000000384051;pcmClassification/1/modelfitCC.modelfit;;1;"string,Model is 6'0""/182 cm and is wearing a medium" 
+;multipack:pcmClassification:1:pcmClassification:1:apparelCC:pcmClassification:1;LUX000000000384051;pcmClassification/1/apparelCC.multipack;;4;"enum,pcmClassification,1,no"
+;unisexapparel:pcmClassification:1:pcmClassification:1:apparelCC:pcmClassification:1;LUX000000000384061;pcmClassification/1/apparelCC.unisexapparel;;4;"enum,pcmClassification,1,no"
+;mensleeve:pcmClassification:1:pcmClassification:1:mensleeveCC:pcmClassification:1;LUX000000000384061;pcmClassification/1/mensleeveCC.mensleeve;;4;"enum,pcmClassification,1,fullsleeves" 
+;unisexapparel:pcmClassification:1:pcmClassification:1:apparelCC:pcmClassification:1;LUX000000000384071;pcmClassification/1/apparelCC.unisexapparel;;4;"enum,pcmClassification,1,no"
+;mensleeve:pcmClassification:1:pcmClassification:1:mensleeveCC:pcmClassification:1;LUX000000000384071;pcmClassification/1/mensleeveCC.mensleeve;;4;"enum,pcmClassification,1,fullsleeves" 
+;unisexapparel:pcmClassification:1:pcmClassification:1:apparelCC:pcmClassification:1;LUX000000000384081;pcmClassification/1/apparelCC.unisexapparel;;4;"enum,pcmClassification,1,no"
+;mensleeve:pcmClassification:1:pcmClassification:1:mensleeveCC:pcmClassification:1;LUX000000000384081;pcmClassification/1/mensleeveCC.mensleeve;;4;"enum,pcmClassification,1,fullsleeves" 
+;unisexapparel:pcmClassification:1:pcmClassification:1:apparelCC:pcmClassification:1;LUX000000000384091;pcmClassification/1/apparelCC.unisexapparel;;4;"enum,pcmClassification,1,no"
+;mensleeve:pcmClassification:1:pcmClassification:1:mensleeveCC:pcmClassification:1;LUX000000000384091;pcmClassification/1/mensleeveCC.mensleeve;;4;"enum,pcmClassification,1,fullsleeves" 
+;unisexapparel:pcmClassification:1:pcmClassification:1:apparelCC:pcmClassification:1;LUX000000000384101;pcmClassification/1/apparelCC.unisexapparel;;4;"enum,pcmClassification,1,no"
+;mensleeve:pcmClassification:1:pcmClassification:1:mensleeveCC:pcmClassification:1;LUX000000000384101;pcmClassification/1/mensleeveCC.mensleeve;;4;"enum,pcmClassification,1,fullsleeves" 
+
+;fabricapparel:pcmClassification:1:pcmClassification:1:apparelCC:pcmClassification:1;LUX000000000689913;pcmClassification/1/apparelCC.fabricapparel;;1;"string,100% Cotton" 
+;menfabric:pcmClassification:1:pcmClassification:1:menfabricCC:pcmClassification:1;LUX000000000689913;pcmClassification/1/menfabricCC.menfabric;;4;"enum,pcmClassification,1,cotton"
+;fabricapparel:pcmClassification:1:pcmClassification:1:apparelCC:pcmClassification:1;LUX000000000689914;pcmClassification/1/apparelCC.fabricapparel;;1;"string,100% Cotton" 
+;menfabric:pcmClassification:1:pcmClassification:1:menfabricCC:pcmClassification:1;LUX000000000689914;pcmClassification/1/menfabricCC.menfabric;;4;"enum,pcmClassification,1,cotton"
+;fabricapparel:pcmClassification:1:pcmClassification:1:apparelCC:pcmClassification:1;LUX000000000689915;pcmClassification/1/apparelCC.fabricapparel;;1;"string,100% Cotton" 
+;menfabric:pcmClassification:1:pcmClassification:1:menfabricCC:pcmClassification:1;LUX000000000689915;pcmClassification/1/menfabricCC.menfabric;;4;"enum,pcmClassification,1,cotton"
+;fabricapparel:pcmClassification:1:pcmClassification:1:apparelCC:pcmClassification:1;LUX000000000689916;pcmClassification/1/apparelCC.fabricapparel;;1;"string,100% Cotton" 
+;menfabric:pcmClassification:1:pcmClassification:1:menfabricCC:pcmClassification:1;LUX000000000689916;pcmClassification/1/menfabricCC.menfabric;;4;"enum,pcmClassification,1,cotton"
+;fabricapparel:pcmClassification:1:pcmClassification:1:apparelCC:pcmClassification:1;LUX000000000689917;pcmClassification/1/apparelCC.fabricapparel;;1;"string,100% Cotton" 
+;menfabric:pcmClassification:1:pcmClassification:1:menfabricCC:pcmClassification:1;LUX000000000689917;pcmClassification/1/menfabricCC.menfabric;;4;"enum,pcmClassification,1,cotton"
+;fabricapparel:pcmClassification:1:pcmClassification:1:apparelCC:pcmClassification:1;LUX000000000689918;pcmClassification/1/apparelCC.fabricapparel;;1;"string,100% Cotton" 
+;menfabric:pcmClassification:1:pcmClassification:1:menfabricCC:pcmClassification:1;LUX000000000689918;pcmClassification/1/menfabricCC.menfabric;;4;"enum,pcmClassification,1,cotton"
+;fabricapparel:pcmClassification:1:pcmClassification:1:apparelCC:pcmClassification:1;LUX000000000689919;pcmClassification/1/apparelCC.fabricapparel;;1;"string,100% Cotton" 
+;menfabric:pcmClassification:1:pcmClassification:1:menfabricCC:pcmClassification:1;LUX000000000689919;pcmClassification/1/menfabricCC.menfabric;;4;"enum,pcmClassification,1,cotton"
+;fabricapparel:pcmClassification:1:pcmClassification:1:apparelCC:pcmClassification:1;LUX000000000689920;pcmClassification/1/apparelCC.fabricapparel;;1;"string,100% Cotton" 
+;menfabric:pcmClassification:1:pcmClassification:1:menfabricCC:pcmClassification:1;LUX000000000689920;pcmClassification/1/menfabricCC.menfabric;;4;"enum,pcmClassification,1,cotton"
+;fabricapparel:pcmClassification:1:pcmClassification:1:apparelCC:pcmClassification:1;LUX000000000689921;pcmClassification/1/apparelCC.fabricapparel;;1;"string,100% Cotton" 
+;menfabric:pcmClassification:1:pcmClassification:1:menfabricCC:pcmClassification:1;LUX000000000689921;pcmClassification/1/menfabricCC.menfabric;;4;"enum,pcmClassification,1,cotton"
+;fabricapparel:pcmClassification:1:pcmClassification:1:apparelCC:pcmClassification:1;LUX000000000689922;pcmClassification/1/apparelCC.fabricapparel;;1;"string,100% Cotton" 
+;menfabric:pcmClassification:1:pcmClassification:1:menfabricCC:pcmClassification:1;LUX000000000689922;pcmClassification/1/menfabricCC.menfabric;;4;"enum,pcmClassification,1,cotton"

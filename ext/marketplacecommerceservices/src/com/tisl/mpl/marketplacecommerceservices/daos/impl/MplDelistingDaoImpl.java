@@ -33,6 +33,7 @@ public class MplDelistingDaoImpl implements MplDelistingDao
 	private final static String C = "{c:";
 	private static final Logger LOG = Logger.getLogger(MplDelistingDaoImpl.class);
 
+
 	/*
 	 * (non-Javadoc)
 	 *
@@ -44,9 +45,9 @@ public class MplDelistingDaoImpl implements MplDelistingDao
 		try
 		{
 			final String queryString = //
-			SELECT + SellerInformationModel.PK + "} " //
-					+ "FROM {" + SellerInformationModel._TYPECODE + " AS c} "//
-					+ "WHERE " + C + SellerInformationModel.SELLERID + "}=?sellerId";
+					SELECT + SellerInformationModel.PK + "} " //
+							+ "FROM {" + SellerInformationModel._TYPECODE + " AS c} "//
+							+ "WHERE " + C + SellerInformationModel.SELLERID + "}=?sellerId";
 
 			LOG.info(QUERY + queryString);
 
@@ -104,15 +105,15 @@ public class MplDelistingDaoImpl implements MplDelistingDao
 		try
 		{
 			final String queryString = //
-			SELECT + SellerInformationModel.PK + "} " //
-					+ "FROM {" + SellerInformationModel._TYPECODE + " AS c} "//
-					+ "WHERE " + C + SellerInformationModel.SELLERARTICLESKU + "}=?ussid";
+					SELECT + SellerInformationModel.PK + "} " //
+							+ "FROM {" + SellerInformationModel._TYPECODE + " AS c} "//
+							+ "WHERE " + C + SellerInformationModel.SELLERARTICLESKU + "}=?ussid";
 			//As Sellerarticlesku is same as USSID
 			LOG.info(QUERY + queryString);
 
 			final FlexibleSearchQuery query = new FlexibleSearchQuery(queryString);
 			query.addQueryParameter("ussid", ussid);
-			//	query.addQueryParameter(SellerInformationModel.CATALOGVERSION, catalogVersionModel);
+			//query.addQueryParameter(SellerInformationModel.CATALOGVERSION, getCatalogVersion());
 
 
 			final List<SellerInformationModel> listSellerInformation = flexibleSearchService.<SellerInformationModel> search(query)
@@ -139,18 +140,16 @@ public class MplDelistingDaoImpl implements MplDelistingDao
 		{
 
 			final String queryString = //
-			SELECT + SellerInformationModel.PK
-					+ "} " //
-					+ "FROM {" + SellerInformationModel._TYPECODE
-					+ " AS c} "//
-					+ "WHERE " + C + SellerInformationModel.SELLERARTICLESKU + "}=?ussid" + " AND {c:"
-					+ SellerInformationModel.CATALOGVERSION + "}=?catalogVersion";
+					SELECT + SellerInformationModel.PK + "} " //
+							+ "FROM {" + SellerInformationModel._TYPECODE + " AS c} "//
+							+ "WHERE " + C + SellerInformationModel.SELLERARTICLESKU + "}=?ussid" + " AND {c:"
+							+ SellerInformationModel.CATALOGVERSION + "}=?catalogVersion";
 			//As Sellerarticlesku is same as USSID
 			LOG.info(QUERY + queryString);
 
 			final FlexibleSearchQuery query = new FlexibleSearchQuery(queryString);
 			query.addQueryParameter("ussid", ussid);
-			query.addQueryParameter(SellerInformationModel.CATALOGVERSION, catalogVersion);
+			query.addQueryParameter("catalogVersion", catalogVersion);
 
 
 			//			final List<SellerInformationModel> listSellerInformation = flexibleSearchService.<SellerInformationModel> search(query)
@@ -181,8 +180,8 @@ public class MplDelistingDaoImpl implements MplDelistingDao
 			//					+ "FROM {" + MarketplaceDelistModel._TYPECODE + " AS c} "//
 			//					+ "WHERE " + "{c:" + MarketplaceDelistModel.ISPROCESSED + "}='0'";
 			final StringBuilder stbQuery = new StringBuilder(50);
-			stbQuery.append(SELECT + MarketplaceDelistModel.PK + "} FROM " + "{" + MarketplaceDelistModel._TYPECODE
-					+ " AS c} WHERE " + C + MarketplaceDelistModel.ISPROCESSED + "}='0'");
+			stbQuery.append(SELECT + MarketplaceDelistModel.PK + "} FROM " + "{" + MarketplaceDelistModel._TYPECODE + " AS c} WHERE "
+					+ C + MarketplaceDelistModel.ISPROCESSED + "}='0'");
 
 			LOG.info(QUERY + stbQuery);
 
@@ -200,4 +199,7 @@ public class MplDelistingDaoImpl implements MplDelistingDao
 		}
 
 	}
+
+
+
 }

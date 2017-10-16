@@ -162,8 +162,8 @@ public interface MplCommerceCartService
 	 *            ,InvalidCartException
 	 *
 	 */
-	CartModel createCart(final String emailId, final String baseSiteId)
-			throws InvalidCartException, CommerceCartModificationException;
+	CartModel createCart(final String emailId, final String baseSiteId) throws InvalidCartException,
+			CommerceCartModificationException;
 
 	/**
 	 * Method for adding item to cart for Mobile service
@@ -185,6 +185,29 @@ public interface MplCommerceCartService
 
 	boolean addItemToCart(final String cartId, final CartModel cartModel, final ProductModel productModel, final long quantity,
 			final String ussid) throws InvalidCartException, CommerceCartModificationException;
+
+	/**
+	 * Method for adding item to cart for Mobile service
+	 *
+	 * @param cartId
+	 *
+	 * @param productCode
+	 *
+	 * @param quantity
+	 *
+	 * @param ussid
+	 *
+	 * @return boolean , for success return true else false
+	 *
+	 * @throws CommerceCartModificationException
+	 *            if cartid , product code , quantity id null or empty if cart id , product id is invalid if quantity is
+	 *            less than or equals to 0
+	 */
+
+	boolean addItemToCartWithExchange(final String cartId, final CartModel cartModel, final ProductModel productModel,
+			final long quantity, final String ussid, final String exchangeParam) throws InvalidCartException,
+			CommerceCartModificationException;
+
 
 
 	/**
@@ -283,7 +306,7 @@ public interface MplCommerceCartService
 
 	boolean addCartCodEligible(final Map<String, List<MarketplaceDeliveryModeData>> deliveryModeMap,
 			final List<PinCodeResponseData> pincodeResponseData, CartModel cartModel, CartData cartData)
-					throws EtailNonBusinessExceptions;
+			throws EtailNonBusinessExceptions;
 
 
 	public PriceData addConvCharge(final CartModel source, final CartData prototype);
@@ -446,7 +469,7 @@ public interface MplCommerceCartService
 	 */
 	void saveDeliveryMethForFreebie(AbstractOrderModel abstractOrderModel,
 			Map<String, MplZoneDeliveryModeValueModel> freebieModelMap, Map<String, Long> freebieParentQtyMap)
-					throws EtailNonBusinessExceptions;
+			throws EtailNonBusinessExceptions;
 
 	/**
 	 * @Desc Used as part of oms fallback
@@ -538,12 +561,14 @@ public interface MplCommerceCartService
 	 */
 	InvReserForDeliverySlotsResponseData convertDeliverySlotsDatatoWsdto(InvReserForDeliverySlotsRequestData cartdata);
 
+
 	//TPR-5346 STARTS
 	long checkMaxLimit(String code, CartModel cartModel);
 
 	boolean checkMaxLimitUpdate(long entryNumber, long quantityToBeUpdated);
 
 	boolean checkMaxLimitCheckout(CartModel serviceCart);
+
 	//TPR-5346 ENDS
 
 	//TPR-5666 samsung cart changes
@@ -554,4 +579,27 @@ public interface MplCommerceCartService
 	 */
 	public CartModel fetchCartUsingGuid(String cartGuid) throws InvalidCartException;
 
+	/**
+	 * @param cartData
+	 * @param omsDeliveryResponse
+	 * @return
+	 * @throws CMSItemNotFoundException
+	 */
+	Map<String, MarketplaceDeliveryModeData> getDeliveryModeMapForReviewOrder(CartData cartData,
+			List<PinCodeResponseData> omsDeliveryResponse) throws CMSItemNotFoundException;
+
+	/**
+	 * @param string
+	 * @param cartdatalist
+	 * @param fulfillmentType
+	 * @param selectedUSSID
+	 * @param code
+	 */
+	void populataJewelleryWeight(String string, List<CartSoftReservationData> cartdatalist, String fulfillmentType,
+			String selectedUSSID, String code);
+
+	public List<StoreLocationResponseData> getStoreLocationsforCnC(
+			final List<StoreLocationRequestData> storeLocationRequestDataList);
+
+	public String populatePriceDisclaimerCart(final CartModel cartModel);
 }

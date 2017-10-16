@@ -94,7 +94,7 @@
 			<map merge="true">
 				<entry key="previous" value-ref="REDIRECT_TO_CART"/>
 				<entry key="current" value-ref="REDIRECT_MULTI_STEP_CHECKOUTLOGGIN"/>
-				<entry key="next" value-ref="REDIRECT_TO_DELIVERY_METHOD"/>
+				<entry key="next" value-ref="REDIRECT_TO_SINGLE_STEP"/>
 			</map>
 		</property>
 		<property name="progressBarId" value="checkoutloggin"/>
@@ -115,8 +115,10 @@
 			<map merge="true">
 				<!-- <entry key="previous" value-ref="REDIRECT_TO_DELIVERY_ADDRESS"/> Commented for checkout journey modification-->
 				<entry key="previous" value-ref="REDIRECT_MULTI_STEP_CHECKOUTLOGGIN"/>
-				<entry key="current" value-ref="REDIRECT_TO_DELIVERY_METHOD"/>
-				<entry key="next" value-ref="REDIRECT_TO_PAYMENT_METHOD"/>
+				<!-- <entry key="current" value-ref="REDIRECT_TO_DELIVERY_METHOD"/>
+				<entry key="next" value-ref="REDIRECT_TO_PAYMENT_METHOD"/> --><!-- Commented for one page checout -->
+				<entry key="current" value-ref="REDIRECT_TO_SINGLE_STEP"/>
+				<entry key="next" value-ref="REDIRECT_TO_SINGLE_STEP"/>
 			</map>
 		</property>
 		<property name="progressBarId" value="deliveryMethod"/>
@@ -128,9 +130,12 @@
 		<property name="checkoutStepValidator" ref="defaultPickupCheckoutValidator"/>
 		<property name="transitions">
 			<map merge="true">
-				<entry key="previous" value-ref="REDIRECT_TO_DELIVERY_METHOD"/>
+				<!-- <entry key="previous" value-ref="REDIRECT_TO_DELIVERY_METHOD"/>
 				<entry key="current" value-ref="REDIRECT_TO_PICKUP_LOCATION"/>
-				<entry key="next" value-ref="REDIRECT_TO_PAYMENT_METHOD"/>
+				<entry key="next" value-ref="REDIRECT_TO_PAYMENT_METHOD"/> --><!-- Commented for one page checkout -->
+				<entry key="previous" value-ref="REDIRECT_TO_SINGLE_STEP"/>
+				<entry key="current" value-ref="REDIRECT_TO_SINGLE_STEP"/>
+				<entry key="next" value-ref="REDIRECT_TO_SINGLE_STEP"/>
 			</map>
 		</property>
 		<property name="progressBarId" value="deliveryMethod"/>
@@ -143,7 +148,8 @@
 		<!-- <property name="checkoutStepValidator" ref="defaultResponsivePaymentMethodCheckoutValidator"/> --> <!-- TPR-629 -->
 		<property name="transitions">
 			<map merge="true">
-				<entry key="previous" value-ref="REDIRECT_TO_DELIVERY_METHOD"/>
+				<!-- <entry key="previous" value-ref="REDIRECT_TO_DELIVERY_METHOD"/> -->
+				<entry key="previous" value-ref="REDIRECT_TO_SINGLE_STEP"/>
 				<entry key="current" value-ref="REDIRECT_TO_PAYMENT_METHOD"/>
 				<!-- <entry key="next" value-ref="REDIRECT_TO_SUMMARY"/>  Commented for checkout journey modification-->
 				<entry key="next" value="redirect:/checkout/orderConfirmation/%s"/> 
@@ -405,6 +411,10 @@
 
 	<bean id="REDIRECT_TO_DELIVERY_METHOD" class="java.lang.String">
 		<constructor-arg value="redirect:/checkout/multi/delivery-method/choose"/>
+	</bean>
+	
+	<bean id="REDIRECT_TO_SINGLE_STEP" class="java.lang.String">
+		<constructor-arg value="redirect:/checkout/single"/>
 	</bean>
 
 	<bean id="REDIRECT_TO_PICKUP_LOCATION" class="java.lang.String">

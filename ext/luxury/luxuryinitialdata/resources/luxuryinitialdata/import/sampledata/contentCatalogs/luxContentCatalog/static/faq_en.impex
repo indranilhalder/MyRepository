@@ -1,0 +1,257 @@
+
+# ImpEx for Importing CMS Content
+# English Localisation
+
+# Macros / Replacement Parameter definitions
+$storePrefix=lux
+$contentCatalog=$storePrefixContentCatalog
+
+$contentCV=catalogVersion(CatalogVersion.catalog(Catalog.id[default=$contentCatalog]),CatalogVersion.version[default=Online])[default=$contentCatalog:Online]
+$picture=media(code, $contentCV);
+$siteResource=jar:com.tisl.lux.setup.InitialDataSystemSetup&/luxuryinitialdata/import/contentCatalogs/$contentCatalog
+
+# Language
+$lang=en
+
+
+
+
+
+# CMS Paragraph Components
+UPDATE CMSParagraphComponent;$contentCV[unique=true];uid[unique=true];content[lang=$lang]
+
+;;TitleForFrequentlyAskedPageComponent;"Frequently Asked Question"
+
+
+
+
+;;FrequentlyAskedPageComponent;"
+
+<h2>These are your questions. These are our answers.</h2>
+
+
+ <div id='collapsible-panels'> 
+<h5><b>Your Account</b></h5>
+
+
+<h5 class='questions'><a href='#'>1.Do I need a Tata CliQ/Tata CliQ Luxury account to be able to shop?</a></h5>
+<div><p>You need a Tata CLiQ account to be able to shop from Tata CLiQ. However, as a member you can enjoy a truly personalized experience without the hassle of entering your details every time you shop from our site. Sign up is very easy, you can shop by simply entering your email ID and details when you place your order or login through Google or Facebook.</p></div> 
+<h5 class='questions'><a href='#'>2.How can I create an account?</a></h5>
+<div><p>Sign up with your email ID and set a password that you’ll remember. Click ‘Register’ after entering your details and wait for our confirmation mail, which will include all your account details. You can also sign-up using your Facebook or Google login credentials.
+Once you sign-up, you can enjoy faster checkouts, save your preferred delivery addresses, track your orders, request returns and enjoy a range of other services.</p></div> 
+<h5 class='questions'><a href='#'>3.Is my personal information kept private?</a></h5>
+<div><p>Yes. We take data protection seriously, and your information will be stored securely on our servers, using the highest standard of protection and will only be selectively shared with partners that abide by applicable data protection legislation. To know more about data protection please read our Privacy Policy in full.</p></div> 
+<h5 class='questions'><a href='#'>4.I forgot my password. How do I reset it?</a></h5>
+<div><p>Click on ‘Forgot your Password?’ enter your registered email ID or phone number and click ‘Reset Password’.
+
+If the email ID or phone number we have on our records matches the one you’ve entered, we’ll send you an email or SMS with instructions on how to reset your password. You will now be able to set a new password. If you haven’t received our email or SMS, please check your junk mail folder.</p></div> 
+<h5 class='questions'><a href='#'>5.Is it safe to use my credit/debit card?</a></h5>
+<div><p>All credit card and debit card payments on Tata CLiQ/Tata CLiQ Luxury are processed through secure and trusted payment gateways managed by leading banks. We are Payment Card Industry Data Security Standard (PCI DSS) complaint. PCI DSS is a proprietary information security standard for organizations that handle branded credit cards from the major card schemes including Visa, MasterCard, American Express, Discover, and JCB. The PCI Standard is mandated by the card brands and administered by the Payment Card Industry Security Standards Council. The standard helps in increased controls around cardholder data to reduce card fraud</p></div> 
+
+<h5 class='questions'><a href='#'>How do I check the status of my order?</a></h5>
+<div><p>Answer to Question One goes here.</p></div>  
+
+<h5 class='questions'><a href='#'>How do I check the status of my order?</a></h5>
+<div><p>Answer to Question two goes here.</p></div>  
+
+ </div>
+ 
+ 
+ 
+ <div id='collapsible-panels'> 
+<h5><b>Orders</b></h5>
+
+
+<h5 class='questions'><a href='#'>1.I want to know where my package is. How can I track my order?</a></h5>
+<div><p>We’ve got your package on our radar and we will always keep you in the loop. You can track your order under the Order History tab whenever you like. Select the order you want to check, and track your status. Track your order even if you aren’t signed in. Click on the Track Orders tab on our homepage, enter your tracking number (the one in your order confirmation email and SMS) followed by your email ID to see the order status yourself.</p></div>  
+<h5 class='questions'><a href='#'>2.How can I modify an order that I’ve already placed?</a></h5>
+<div><p>Sadly, we can’t modify an order once it has been placed. However, we understand that you may change your mind. Feel free to cancel an order after you’ve placed it. Make sure you do this immediately before it gets shipped, and place a new order with the correct address. To cancel a part or the full order you’ve placed, visit the Order History tab, select the appropriate order and cancel the product(s) you don’t want anymore. The Cancellation section has all the details you’ll need..</p></div> 
+<h5 class='questions'><a href='#'>3.Can I change the delivery address after I’ve placed my order?</a></h5>
+<div><p>Unfortunately, you can’t. Once an order has been placed, the delivery address can’t be modified. Check and double-check that you’ve entered the correct shipping address details while ordering..</p></div> 
+<h5 class='questions'><a href='#'>4.Is my order confirmed? Where can I find confirmation details?</a></h5>
+<div><p>You’ll get an email and SMS once the seller confirms your order. The email will give you details about your order, including the Order ID, and the information on the product(s) ordered.</p></div> 
+<h5 class='questions'><a href='#'>5.It says Out-of-Stock but I still want that product. How can I get on the wait list?</a></h5>
+<div><p>A product that is Out-of-Stock is not available for sale at the moment. However you can add the product to your wishlist and will be informed as soon as it is available again.</p></div> 
+<h5 class='questions'><a href='#'>6.All these order statuses are confusing. What do they mean?</a></h5>
+<div><p>Order Confirmed: This means your order has been confirmed and approved by the seller.
+Order Placed/Processing: Your order is being processed by the seller and will be shipped right after.
+Shipping Commenced: Your order is ready to be shipped to its destination.
+In Transit: Your order is on its way – you will get it soon.
+Shipment delivered: Your order was delivered to you.
+Ready for Pickup: Your order is ready to be picked up from the store location you wanted. (Applicable only for orders to be collected in-store).
+Picked Up: This means that you’ve picked up your order from the store.
+Not Picked Up: Looks like you haven’t picked your order up from the store yet..</p></div> 
+<h5 class='questions'><a href='#'>7.My shipping address and billing address may be different. Will that be a problem?</a></h5>
+<div><p>Not at all. You can choose to have separate shipping and billing addresses. Our team will ship the order to you accordingly.</p></div> 
+</div>
+
+
+ <div id='collapsible-panels'> 
+<h5><b>Shipping and Delivery</b></h5>
+
+
+<h5 class='questions'><a href='#'>1.What are the delivery modes available?</a></h5>
+<div><p>Answer to Question One goes here.</p></div>  
+<h5 class='questions'><a href='#'>2.How can I find out if Tata CliQ/Tata CliQ Luxury delivers to my address?</a></h5>
+<div><p>When you enter your PIN code while placing your order, we’ll instantly tell you if we can deliver to your location.</p></div>  
+<h5 class='questions'><a href='#'>3.How can I find out about the delivery charges?</a></h5>
+<div><p>Once you check out you will find out about the delivery charges.</p></div>  
+<h5 class='questions'><a href='#'>4.Will all sellers on Tata CLiQ ship to the area I live in?</a></h5>
+<div><p>Whether a seller can ship to your area or not depends on the seller’s capability to service your area through self- or partner networks, and legal restrictions, if any. Sellers may choose to not service certain areas based on their business policies or discretion.</p></div>  
+<h5 class='questions'><a href='#'>5.When will my order arrive?</a></h5>
+<div><p>We’ll send you the estimated delivery time of your order as part of the order acknowledgement email and SMS.
+You can also track your order using the tracking number provided to you. Click on the Track Order tab on the homepage. If you’re logged in to your account, just click on Track Order and select the product. We’ll show you the order status right away.
+Lost your tracking number? Not to worry, simply log in to your account and go to Order History or Track Order directly. We’ll show you the complete history and the order status for every order.</p></div>  
+<h5 class='questions'><a href='#'>6.Why does the delivery time vary from seller to seller?</a></h5>
+<div><p>The delivery time depends upon the availability of that product, and the handling time for the seller and courier partner. We’ll show you the estimated delivery time on the product page, right after you enter your PIN Code.</p></div>  
+<h5 class='questions'><a href='#'>7.My order is late. What do you have to say about this?</a></h5>
+<div><p>We keep our best team up to the task to make sure your order reaches you on time, or sooner. However, sometimes bad weather, flight delays, political disruption and other unprecedented issues can delay an order. You can keep tracking your order by logging in, going to Order History and selecting the particular order. We’ll keep you posted about any delays by SMS or email.</p></div>  
+<h5 class='questions'><a href='#'>8.Just realised I won’t be around to receive my package. How can I reschedule my delivery?</a></h5>
+<div><p>Sorry! But once the clock’s been set, you can’t reschedule a delivery.</p></div>  
+<h5 class='questions'><a href='#'>9.I missed my delivery. What happens now?</a></h5>
+<div><p>We’ll send you a notification if you aren’t around for the delivery, so that you can get in touch with us right away. Together we will sort out a delivery time that works for us both. If it doesn’t work out the first time, we’ll try delivering it up to three times to make sure your package is in your hands soon. We know just how important it is to you.</p></div>  
+<h5 class='questions'><a href='#'>10.Do you deliver internationally?</a></h5>
+<div><p>We don’t deliver internationally at the moment. Maybe in the future, though. Right now, you can place your orders from anywhere in the world as long as the shipping address is in India.</p></div>  
+<h5 class='questions'><a href='#'>11.The order status says Delivered but I haven’t received my order.</a></h5>
+<div><p>We only update the delivery status when an order has successfully been delivered. If you find any part of your order missing in the package, or if you haven’t received the delivery, please get in touch with us.</p></div>  
+<h5 class='questions'><a href='#'>12.Can I request different items from my cart to be delivered separately?</a></h5>
+<div><p>Unfortunately, at the moment we can’t ship different products in the same cart to separate addresses. Here’s hoping we can make this happen for you soon.</p></div>  
+<h5 class='questions'><a href='#'>13.My schedule is fully booked. Can I choose a specific date and time for delivery?</a></h5>
+<div><p>We always show you the estimated delivery date for all the items in your shopping cart. We advise you to place your order keeping in mind when it will be delivered, and if that works for you. Unfortunately, you can’t choose a specific date and time for delivery on Tata CliQ Luxury right now. But soon, maybe.</p></div>  
+<h5 class='questions'><a href='#'>14.When can I get my order if it says Out for Delivery?</a></h5>
+<div><p>When the order status says ‘Out-for-delivery’, it means that we’re trying to get it delivered to you on the same day. We’ll also keep you posted via SMS.</p></div>  
+<h5 class='questions'><a href='#'>15.Can I choose a specific time & date for collecting a Tata CLiQ parcel from the store?</a></h5>
+<div><p>The collection window for a CLiQ & PIQ order varies from seller to seller. This ranges from 2 to 7 days. Currently most of the sellers offer a 7-day window. The collection window starts from the day the order is in ready for collection status..</p></div>  
+
+
+
+</div>
+
+
+ <div id='collapsible-panels'> 
+<h5><b>Cancellation</b></h5>
+
+
+<h5 class='questions'><a href='#'>1.I didn’t mean to order that. How can I cancel my order?</a></h5>
+<div><p>You can cancel your order before the item(s) have been shipped. We'll refund the full amount you've paid for such a cancellation.
+Here's how to cancel your order:
+• Log in to your account and go to My TataCLiQ/My TataCLiQ Luxury
+• Select the appropriate order from ‘My Orders’
+• Click on ‘Cancel Order’ for the item(s) you want to cancel, individually
+• Select the reason and confirm the cancellation
+Once you're done, we'll send you an acknowledgement of the cancellation. Remember, you won’t be able to cancel an order after it has been shipped.</p></div>  
+<h5 class='questions'><a href='#'>2.When can I cancel my order?</a></h5>
+<div><p>Make sure you cancel your order before it has been shipped. That's the only way we can refund the full amount you've spent.</p></div>
+<h5 class='questions'><a href='#'>3.Can I cancel only part of my order?</a></h5>
+<div><p>Yes you can, you don't have to let go of everything in your cart. Before the item(s) of your order have reached the shipping stage, you can select them individually in the 'Order History' tab and cancel them.</p></div>
+<h5 class='questions'><a href='#'>4.Why do I see a disabled cancel link?</a></h5>
+<div><p>That means the item(s) from your order have already been shipped and you can't make any cancellations now.</p></div>
+<h5 class='questions'><a href='#'>5.How will I get my refund when I cancel an order?</a></h5>
+<div><p>Once your order has been cancelled, it will take around 7-8 business days for your refund to be processed and the amount to be transferred back to the source account. Check out the ‘Returns Section’ to know more</p></div>
+<h5 class='questions'><a href='#'>6.Will I get the complete refund for the order I’ve cancelled?</a></h5>
+<div><p>Yes, indeed. We'll refund the entire amount for a cancelled order.</p></div>
+<h5 class='questions'><a href='#'>7.What should I do if I don’t get my refund in the promised time?</a></h5>
+<div><p>We work on the double to make sure your refund gets to you on time. On the off-chance that it's been delayed, please get in touch with our team here. Don't forget to keep your order number handy.</p></div>
+<h5 class='questions'><a href='#'>8.This is not what I ordered. How do I replace it?</a></h5>
+<div><p>If your order or a part of it does not match the product description, we'll look into it right away. Please get in touch with us here. You can also initiate a product return by checking out the 'Returns' section.</p></div>
+<h5 class='questions'><a href='#'>9.Why was my order cancelled?</a></h5>
+<div><p>Sometimes our sellers cancel orders for various reasons – the product could be out-of-stock, of unacceptable quality, etc. Once an order has been cancelled, the refund will be processed immediately for online/credit card processes.</p></div>
+
+
+
+</div>
+
+
+
+
+ <div id='collapsible-panels'> 
+<h5><b>Returns and Refunds</b></h5>
+
+
+<h5 class='questions'><a href='#'>1.How can I initiate a return?</a></h5>
+<div><p>● Go to ‘Order History’ and select the item(s) you want to return.
+● Click on the ‘Return’ option below the item.
+● Select your reason for returning the item and confirm your return request	You will have to share your order number (the one from your confirmation email or SMS) with us, along with the reason behind your return.
+Note that in some cases, we might not find the reason for returns acceptable because of seller policies, in such cases, we will call and advice you on next </p></div> 
+<h5 class='questions'><a href='#'>2.What is the time-period within which I can return a product?</a></h5>
+<div><p>For Tata CLiQ: Apparel and other non-electronic products can be returned within 30 days of receiving the product. For electronics and appliances, you can return the product within 7 days of delivery only. Returns will be accepted only if the product received is not as described, defective, damaged or not working when reviewed.
+In case of post-usage defects, the manufacturer warranty can be used; please visit their authorised service centre for assistance.
+For Tata CLiQ Luxury: Returns are accepted only within 10 days of receiving the product.
+*Note: Tata CLiQ reserves the right to amend the Returns Policy as and when necessary.</p></div> 
+<h5 class='questions'><a href='#'3.When are returns not possible?</a></h5>
+<div><p>Returns are not possible in cases where the seller has mandated a no return policy, or for hygiene reasons. Also, we cannot accept returns after 30 days from the date of delivery for non-electronic items and 7 days for electronic products on Tata CLiQ. On Tata CLiQ Luxury, we cannot accept returns after 10 days from the date of delivery.
+If you’ve shopped on Tata CLiQ, here are some products we can’t take back at all:
+• Innerwear, lingerie, socks, clothing freebies and swimsuits, for hygiene reasons.
+• Perfumes, personal and beauty care products, as mandated by the seller.
+• Products that have already been used or installed, as mandated by the seller
+• Products that have been tampered with or are missing serial numbers, as mandated by the seller.
+• Personalised/engraved items, as mandated by the seller.
+For complete details please refer to our Returns Policy
+If you’ve shopped on Tata CLiQ Luxury, click here to see to see our guarantee and warranty page.</p></div> 
+<h5 class='questions'><a href='#'>4.What are self-courier returns?</a></h5>
+<div><p>If the pick-up facility is not available, we won’t be able to accept your return pick-up request, and we’ll have to request you to courier the package yourself. If this happens, all you have to do is share your airway bill details/copy with us, and we’ll reimburse you as per the returns policy after product is received and quality check is completed by our seller partners.
+For self-courier returns, refer to the Return Policy for number of days within which the product has been returned.</p></div> 
+<h5 class='questions'><a href='#'>5.How should I pack my product for the return?</a></h5>
+<div><p>There are a few steps you’ll have to follow:
+• Enclose the product(s), in original condition and packaging, along with the original box, as part of the return package.
+Remember, we can’t refund or exchange products if their tags/labels or seals have been tampered with – so be extra careful. Also, don’t forget to retain a proof of the postage until we send you a confirmation of ‘self-courier’.
+To find out all you need to know about returns, refer to our Returns Policy here
+The product code is mentioned on the barcode label stuck on the product tag</p></div> 
+<h5 class='questions'><a href='#'>6.Can I get a replacement for the product I’ve ordered?</a></h5>
+<div><p>Unfortunately, we can’t replace products that you’ve already ordered. On the bright side, you can request a return and place a separate order for the new product(s) you want to order.</p></div> 
+<h5 class='questions'><a href='#'>7.Can I return a part of my order?</a></h5>
+<div><p>Yes you can, just select the product(s) you want to return from your order and initiate the return right away. You should know that we can’t accept returns of incomplete product combos (for example: Buy one get one free combos, free gifts, etc.).</p></div> 
+<h5 class='questions'><a href='#'>8.When I’m returning a product, do I have to return the free gift that I got with it as well?</a></h5>
+<div><p>Unfortunately, any freebies that you got with a product will also need to be returned along with the original product.</p></div> 
+<h5 class='questions'><a href='#'>9.The free gift I’ve received is damaged/not working. What should I do?</a></h5>
+<div><p>Get in touch with us and we’ll send you another gift right away.</p></div> 
+<h5 class='questions'><a href='#'>10.Is it possible to return software on Tata CLiQ?</a></h5>
+<div><p>Yes, it is. Check our returns policy for details.</p></div> 
+<h5 class='questions'><a href='#'>11.	What is the pick-up process for the return of a product?</a></h5>
+<div><p>Once you’ve made a return request with us, it generally takes about 24-48 hours to process your return request. If your request is accepted, a pick-up will be arranged in 7-8 working days on Tata CLiQ and 3-5 working days, depending on your location.</p></div> 
+<h5 class='questions'><a href='#'>12.	Can I cancel my return request and choose to keep the product?</a></h5>
+<div><p>Sorry, but you can’t ‘cancel’ a return request you’ve already made. Here’s what you can do – at the time of pick-up, make it clear that you’d like to keep the product.</p></div> 
+<h5 class='questions'><a href='#'>13.	Within how many days to I need to self-courier a product that I want to return?</a></h5>
+<div><p>In order to find out all that you need to know about returning a product from our Returns Policy.</p></div> 
+<h5 class='questions'><a href='#'>14.	Within how many days can I initiate a return?</a></h5>
+<div><p>Please refer to our Returns Policy.</p></div> 
+<h5 class='questions'><a href='#'>15.	When are refunds possible?</a></h5>
+<div><p>As long as you initiate the cancellation or return of products according to the terms of ‘Returns’ or ‘Cancellation’ in the ‘Terms and Conditions of Sale’, your refund is good to go.
+If an order or part order has been successfully cancelled, we will refund the full amount, along with any taxes or shipping charges. You might have to pay a certain charge in the case of COD orders that you have returned. We’ll have to deduct that amount from your total refund. Your refund will be on its way as soon as we’ve received your product and it has passed the necessary quality checks.</p></div> 
+<h5 class='questions'><a href='#'>16.	What is the mode of payment for refunds?</a></h5>
+<div><p>We will refund the amount to the account you used to place the original order. Once an order has been cancelled or a return has been received, we try and get the refund to you in around 2-4 business days.
+Was yours a COD order? We will refund your money via NEFT transfer to your bank account in 3-4 working days.</p></div> 
+<h5 class='questions'><a href='#'>17.	What do I need to do for a wire-transfer of the refunded amount?</a></h5>
+<div><p>You can provide your bank account number and IFSC code and it will help us process the refund to your account. Refunds cannot be processed to third-party accounts. This means that the name on your Tata CliQ Luxury account and your bank account must match.</p></div> 
+<h5 class='questions'><a href='#'>18.	Can I change the mode of payment for my refund?</a></h5>
+<div><p>Sorry to say this, but no. You can’t change the mode of payment for your refund. The amount will be transferred to the account that you used to make your order. If yours was a COD order, you will be refunded by cheque. If the transaction fails, we’ll get in touch with you for your alternate bank account details. Once we get those, we’ll make sure that the transfer is completed successfully..</p></div> 
+<h5 class='questions'><a href='#'>19.	How will I know that my refund has been initiated?</a></h5>
+<div><p>We will send you an SMS and email confirming the initiation of your refund. Your refund should reach you within 3-4 working days, depending on your bank of transaction.</p></div> 
+<h5 class='questions'><a href='#'>20.	I still haven’t got my refund. Why?</a></h5>
+<div><p>If we’ve sent you a confirmation on the approval of your refund, you will definitely get your refund. Sometimes, we face technical difficulties that can delay payment transfers. If the wait seems too long, contact us for support.</p></div> 
+
+
+</div>
+
+
+
+
+ <div id='collapsible-panels'> 
+<h5><b>General FAQs</b></h5>
+
+
+
+<h5 class='questions'><a href='#'>1)	How do I know if my Tata CLiQ Luxury product is authentic?</a></h5>
+<div><p>We have tie-ups with authorized sources to ensure that the products that are shipped to you are authentic. For the luxury brands listed currently, we have partnered with Genesis Luxury, India’s premier luxury retail group, who represent these luxury brands in India.</p></div> 
+<h5 class='questions'><a href='#'>2) My payment got deducted but I did not get an order confirmation mail / SMS.</a></h5>
+<div><p>Sometimes, confirmation mails or SMSes could get delayed due to a technical issue. Please hold on for another 10-15 minutes for the e-mail and SMS to come through.</p></div> 
+<h5 class='questions'><a href='#'>3) I got a message saying Payment is Pending.</a></h5>
+<div><p>This means that Tata CLiQ did not receive a payment confirmation from your bank. In such cases, we try to re-confirm the payment with your bank. If your amount has already been deducted, your order will be confirmed shortly. In case we are not able to confirm your payment, we will refund the entire amount to your account or card automatically.</p></div> 
+<h5 class='questions'><a href='#'>4) I got a message saying Payment has timed out.</a></h5>
+<div><p>Payment Timeouts happen in case we're unable to get a confirmation of the payment from your bank. In such cases, any amount deducted from your bank account or card is automatically refunded.</p></div> 
+
+
+
+
+</div>
+"

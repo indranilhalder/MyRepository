@@ -1,523 +1,506 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="utf-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width" />
-
-  <title>Tata CliQ</title>
-
-</head>
-<body style="padding: 0; margin:0; font-family:Arial, Helvetica, sans-serif;">
-
-  <style type="text/css">
-	body{ padding: 0; margin:0; }
-	@media only screen and (max-width:600px) {
-		.maintable{ width: 300px }
-		.smFull{ width: 100%; display: inline-block; }
-		
-		.toplink{ font-weight: bold; display: inline-block; width: 90%; padding: 10px 5%; text-align: left;  }
-		.toplink a{ font-size:12px!important }
-		.logo{ font-weight: bold; display: inline-block; width: 100% }
-		.logo img{ width: 80px; height: auto }
-		.topLinks{display: inline-block; width: 90%; padding: 10px 5%; text-align: left;letter-spacing: 1px}
-		.inPad{display: inline-block; width: 90%; padding: 10px 5%; text-align: left;}
-		.topLinks a{font-size: 11px!important; vertical-align: middle;}
-		.topLinks span{font-size: 25px!important; vertical-align: middle; line-height: 10px}
-		.dsnone{ display: none!important }
-		.fwnormal{ font-weight: normal; }
-		.content{ line-height: 18px }
-		.lesspad img{ height: 20px }
-		.orderdetail{ text-align: left; }
-		.orderitemtable{ border-bottom: 1px solid #dadada }
-		.iprice{ text-align: left; font-weight: bold; }
-		.trackdiv{ padding: 0 0 15px; font-size: 12px!important  }
-		.followhead{ font-weight: bold; padding: 10px 0 5px; font-size: 12px!important }
-		.bordertop{padding-top:0; padding-bottom: 0 }
-		.bordertop td{border-top: 1px solid #dadada; width: 100%; display: inline-block; }
-		.socialLinks a{ display: inline-block; margin: 0 5px 0 0 }
-		.taleft{ text-align: left }
-		.btn{ font-size: 12px; width: 150px!important; padding: 7px 10px!important; letter-spacing: 0.5px }
-		.borderBot td{ width: 100%; display: inline-block;  }
-		.borderBot{  display: inline-block;width: 90%; padding: 0 5%; }
-		.foocontnt div{font-size: 12px!important  }
-		.dsBlock{ display: table-row !important;}
-		.borTotal{ border-top: 1px solid #ccc; padding: 10px 0 0 0}
-	}
-</style> 
-		<table class="maintable" width="600" border="0" cellspacing="0" cellpadding="0" align="center" style="width:100%;max-width:600px;">
-			<tbody>
-			    <tr>
-			      <td>
-			        <table width="100%" border="0" cellspacing="0" cellpadding="0" align="center">
-			          <tbody>
-			            <tr>
-			  	        	<td>
-			  	        		<table width="100%" border="0" cellspacing="0" cellpadding="0" align="center">
-			  	        		  <tbody>
-			  	        		    <tr>
-			  	        		      <td >
-			  	        		        <!--${ctx.cmsSlotContents.placeh}-->
-										<span style="display:block; height: 10px; line-height:0;font-size:0;"></span>
-			  	        		      </td>
-		  	        		        </tr>
-			  	        		    <tr>
-									
-										#if($ctx.cmsSlotContents.SiteLogoNew)
-										<td class="logo" ><a href="https://www.tatacliq.com/" target="_blank">
-										
-										<span style="width:133px; height:48px; display:block; line-height:0; font-size:0">
-										${ctx.cmsSlotContents.SiteLogoNew}</span>
-										
-										</a></td>
-										#end
-
-										<td align="right" class="toplink">
-			  	        		      	 <table width="100%" border="0" cellspacing="0" cellpadding="0" align="center">
-			  	        		      	   <tbody>
-			  	        		      	      <tr>
-					  	        		      <td >
-					  	        		        <span style="display:block; height: 15px; line-height:0;font-size:0;"></span>
-					  	        		      </td>
-				  	        		        </tr>
-			  	        		      	   	 <tr>
-			  	        		      	   	 	<td align="right">
-			  	        		      	   	 		<p class="fwnormal" style="font-size:12px;font-family:Arial, Helvetica, sans-serif;color: #aa1d3d;margin:2px 0;padding:0;"><a href="https://www.tatacliq.com/my-account/orders?tcid=em:transactional:Orderconfirmation:myorders:22052017" target="blank" style="color: #aa1d3d; line-height: 16px; text-decoration: none;">Your Orders</a></p>
-			  	        		      	          <p class="fwnormal" style="font-size:12px;font-family:Arial, Helvetica, sans-serif;color: #333333;margin:2px 0;padding:0;">Order Confirmation - Order  <span style="color: #aa1d3d;">${ctx.orderReferenceNumber}</span></p>
-			  	        		      	   	 	</td>
-			  	        		      	   	 </tr>
-			  	        		      	   </tbody>
-			  	        		      	 </table>
-			  	        		      </td>
-			  	        		    </tr>
-			  	        		  </tbody>
-			  	        		</table>
-			  	        	</td>
-			  	        	
-			  	        </tr>
-			          </tbody>
-			        </table>
-			      </td>
-			    </tr>
-				<tr>
-					<td>
-					  <table width="100%" border="0" cellspacing="0" cellpadding="0" align="center">
-					   <tbody>
-					    <tr>
-					      
-                          <td>
-					  	 <!-- starts here-->
-					  	   <table width="100%" border="0" cellspacing="0" cellpadding="0" align="center">
-					  	     <tbody>
-					  	        <tr class="dsnone">
-					  	         <td>
-					  	       	   <span style="display:block; height: 20px; line-height:0;font-size:0;"></span>
-					  	          </td>
-					  	        </tr>
-		  	        		    <tr>
-		  	        		    	<td align="center" class="topLinks">
-		  	        		    		<span style="font-size:14px;font-family:Arial, Helvetica, sans-serif;color: #aa1d3d;text-decoration:none"> FASHION </span>
-			  	        		      	<span style="font-size:20px;font-family:Arial, Helvetica, sans-serif;color: #333333;"> &middot; </span>
-			  	        		      	<span style="font-size:14px;font-family:Arial, Helvetica, sans-serif;color: #aa1d3d;text-decoration:none"> ELECTRONICS </span>
-			  	        		      	<span style="font-size:20px;font-family:Arial, Helvetica, sans-serif;color: #333333;"> &middot; </span>
-			  	        		      	<span style="font-size:14px;font-family:Arial, Helvetica, sans-serif;color: #aa1d3d;text-decoration:none"> MOBILES </span>
-			  	        		      	<span style="font-size:20px;font-family:Arial, Helvetica, sans-serif;color: #333333;"> &middot; </span>
-			  	        		      	<span style="font-size:14px;font-family:Arial, Helvetica, sans-serif;color: #aa1d3d;text-decoration:none"> LUXURY </span>
-			  	        		      	
-		  	        		    	</td> 
-		  	        		    </tr>
-		  	        		     <tr >
-		  	        		      <td style="border-bottom:1px solid #aa1d3d;"></td>
-		  	        		    </tr>
-		  	        		    <tr class="dsnone">
-		  	        		      <td>
-		  	        		        <span style="display:block; height: 15px; line-height:0;font-size:0;"></span>
-		  	        		      </td>
-		  	        		    </tr>
-		  	        		    <tr>
-		  	        		    	<td class="inPad content">
-		  	        		    		<div style="font-size:12px;font-family:Arial, Helvetica, sans-serif;color: #333333;">
-		  	        		    		<strong>Hi ${ctx.customerName},</strong>
-		  	        		    		<br>
-		  	        		    		<br>
-		  	        		    		We've got it! We'd like to confirm your order, the details of which are below. We will be sending SMS alerts about your order delivery status on your registered mobile number. 
-		  	        		    		</div>
-		  	        		    	</td>
-		  	        		    </tr>
-		  	        		    <tr>
-		  	        		      <td class="lesspad">
-									<span style="display:block; height: 20px; line-height:0;font-size:0;"></span>
-		  	        		      </td>
-		  	        		    </tr>
-		  	        		    <tr>
-		  	        		      <td style="background-color:#f5f5f5;">
-		  	        		      	 <table width="100%" border="0" cellspacing="0" cellpadding="0">
-		  	        		      	   <tbody>
-		  	        		      	      <tr>
-					  	        		      <td>
-													<span style="display:block; height: 20px; line-height:0;font-size:0;"></span>
-					  	        		      </td>
-				  	        		      </tr>
-		  	        		      	   	 <tr>
-		  	        		      	   	 	<td width="20">&nbsp;</td>
-		  	        		      	   	 	<td>
-		  	        		      	   	 	  <div style="font-size:12px;font-family:Arial, Helvetica, sans-serif;color: #333333;">
-		  	        		      	   	 	  	<strong>Your order will be send to:</strong>
-		  	        		      	   	 	  	<br>
-		  	        		      	   	 	  
-		  	        		      	   	 	  	#if($ctx.deliveryAddress)
-		  	        		      	   	 	  	<br>
-		  	        		      	   	 	  	<strong>${ctx.deliveryAddress}</strong>
-		  	        		      	   	 	  	<br>
-		  	        		      	   	 	  	<br>
-		  	        		      	   	 	  	#end
-		  	        		      	   	 	  	<br>
-		  	        		      	   	 	  	<br>
-		  	        		      	   	 	  	<br>
-		  	        		      	   	 	  	<p style="margin:0px;">
-		  	        		      	   	 	  	<a href="${ctx.trackOrderUrl}?tcid=em:transactional:Orderconfirmation:manageorder:22052017" class="btn" style="background-color: #aa1d3d; color: #ffffff; font-size: 12px; font-family: Arial, Helvetica, sans-serif; padding: 4px 10px; text-decoration: none; display: inherit; width: 120px; text-align: center; border-bottom: 2px solid #8e0f2d; text-decoration: none;">View / Manage Order</a>
-		  	        		      	   	 	  	</p>
-		  	        		      	   	 	  </div>
-		  	        		      	   	 	  
-		  	        		      	   	 	</td>
-		  	        		      	   	 	<td width="20">&nbsp;</td>
-		  	        		      	   	 </tr>
-		  	        		      	   	 <tr>
-					  	        		      <td>
-													<span style="display:block; height: 20px; line-height:0;font-size:0;"></span>
-					  	        		      </td>
-				  	        		      </tr>
-		  	        		      	   </tbody>
-		  	        		      	 </table>
-		  	        		      </td>
-		  	        		    </tr>
-		  	        		     <tr>
-		  	        		      <td>
-									<span style="display:block; height: 20px; line-height:0;font-size:0;"></span>
-		  	        		      </td>
-		  	        		    </tr>
-		  	        		    <tr>
-		  	        		     <td>
-		  	        		     	<table width="100%" border="0" cellspacing="0" cellpadding="0" class="inPad">
-		  	        		     	  <tbody>
-		  	        		     	  	<tr>
-		  	        		     	  		<td class="smFull" style="font-size:12px;font-weight:bold;font-family:Arial, Helvetica, sans-serif;color: #333333;">
-		  	        		     	  		  Order Details	
-		  	        		     	  		</td>
-		  	        		     	  		<td class="smFull orderdetail" align="right" style="font-size:12px;font-family:Arial, Helvetica, sans-serif;color: #333333;">Order placed on ${ctx.orderPlaceDate} | Order <span style="color:#aa1d3d;">${ctx.orderReferenceNumber}</span></td>
-		  	        		     	  	</tr>
-		  	        		     	  </tbody>
-		  	        		     	</table>
-		  	        		     </td>
-		  	        		    </tr>
-		  	        		     
-		  	        		    <tr class="borderBot">
-		  	        		      <td style="border-bottom:1px solid #aa1d3d;">
-										<span style="display:block; height: 3px; line-height:0;font-size:0;"></span>
-		  	        		      </td>
-		  	        		    </tr>
-		  	        		    <tr>
-		  	        		      <td>
-									 <span style="display:block; height: 20px; line-height:0;font-size:0;"></span>
-		  	        		      </td>
-		  	        		    </tr>
-		  	        		    <tr class="inPad">
-		  	        		      <td>
-		  	        		      	 <table width="100%" border="0" cellspacing="0" cellpadding="0" class="orderitemtable">
-		  	        		      	   <tbody>
-		  	        		      	   	 #set ($shippingCharge=0)
-										 #foreach( $childorder in ${ctx.childOrders} )
-												 
-												 
-										 #set ($srNo=1)
-										 #foreach($entry in ${childorder.entries})
-					  	        		 <tr>
-		  	        		      	   	 	<td width="12" class="dsnone">&nbsp;</td>
-		  	        		      	   	 	<td width="60">
-		  	        		      	   	 	  <img src="http:${entry.product.picture.url}" width="51" height="75" style="border:1px solid #cbcbcb;">
-		  	        		      	   	 	 </td>
-		  	        		      	   	 	 <td width="10">&nbsp;</td>
-		  	        		      	   	 	 <td style="vertical-align:top;">
-		  	        		      	   	 	 	<table width="100%" border="0" cellspacing="0" cellpadding="0" class="content">
-					  	        		      	   <tbody>
-					  	        		      	   	 <tr>
-					  	        		      	   	 <td class="smFull">
-				  	        		      	   	 	  <div style="font-size:12px;font-family:Arial, Helvetica, sans-serif;color:#aa1d3d;">
-				  	        		      	   	 	  $entry.quantity X  $entry.product.name
-				  	        		      	   	 	  #if($entry.product.size)
-				  	        		      	   	 	  <br>
-				  	        		      	   	 	  <span style="color:#333333">Size: $entry.product.size</span>
-				  	        		      	   	 	  #end
-				  	        		      	   	 	  <br>
-				  	        		      	   	 	  <span style="color:#333333">Sold by: $entry.SellerInfo </span>
-				  	        		      	   	 	  	
-				  	        		      	   	 	  </div>
-				  	        		      	   	 	 </td>
-				  	        		      	   	 	<td class="smFull iprice" width="110" align="right" style="vertical-align:top;font-size:12px;font-family:Arial, Helvetica, sans-serif;color: #000000;font-weight:bold;">
-				  	        		      	   	 	
-				  	        		      	   	 	&#x20b9; $ctx.numberTool.format("#0.00",$entry.netAmountAfterAllDisc)</td>
-				  	        		      	   	 	</tr>
-				  	        		      	   	 	</tbody>
-		  	        		      	   	 	</table>
-		  	        		      	   	 	</td>
-		  	        		      	   	 	<td width="12">&nbsp;</td>
-		  	        		      	   	 </tr>
-		  	        		      	   	 <tr>
-					  	        		      <td>
-													<span style="display:block; height: 20px; line-height:0;font-size:0;"></span>
-					  	        		      </td>
-					  	        		 </tr>
-										
-										#set ($srNo=$srNo+1)
-										#set($shippingCharge=$shippingCharge+$entry.currDelCharge)
-										#end	
-										 
-										 
-										 #end
-		  	        		      	   </tbody>
-		  	        		      	 </table>
-		  	        		      </td>
-		  	        		    </tr>
-		  	        		    <tr>
-		  	        		    	<td class="inPad">
-		  	        		    		<table width="100%" border="0" cellspacing="0" cellpadding="0">
-		  	        		    		  <tbody>
-		  	        		    		  	<tr>
-			  	        		    		    <td class="smFull dsnone" width="100">&nbsp;</td>
-			  	        		    		    <td class="smFull">
-			  	        		    		    	<table width="100%" border="0" cellspacing="0" cellpadding="0" class="content">
-	  	        		    		 				 <tbody>
-	  	        		    		 				 	<tr>
-			 			  	        		    		    <td style="font-size:12px;font-family:Arial, Helvetica, sans-serif;color: #000000;">Subtotal</td>
-						  	        		    		    <td align="right" class="taleft" style="font-size:12px;font-family:Arial, Helvetica, sans-serif;color: #000000; text-align: right;">&#x20b9; $ctx.numberTool.format("#0.00",$ctx.subTotal)</td>
-			 			  	        		    	   </tr>
-						  	        		    	   <tr>
-			 			  	        		    		    <td style="font-size:12px;font-family:Arial, Helvetica, sans-serif;color: #000000;">Shipping Charges</td>
-						  	        		    		    <td align="right" class="taleft" style="font-size:12px;font-family:Arial, Helvetica, sans-serif;color: #000000; text-align: right;">#if($ctx.shippingCharge == 0)
-Free
-#else
-&#x20b9; $ctx.numberTool.format("#0.00",$ctx.shippingCharge)
-#end</td>
-			 			  	        		    	   </tr>
-						  	        		    	   <tr>
-			 			  	        		    		    <td style="font-size:12px;font-family:Arial, Helvetica, sans-serif;color: #000000;">Convenience Charges</td>
-						  	        		    		    <td align="right" class="taleft" style="font-size:12px;font-family:Arial, Helvetica, sans-serif;color: #000000; text-align: right;">#if($ctx.convenienceChargesVal == 0)
-Free
-#else
-&#x20b9; $ctx.numberTool.format("#0.00",$ctx.convenienceChargesVal)
-#end</td>
-			 			  	        		    	   </tr>
-						  	        		    	   <tr>
-								  	        		      <td>
-								  	        		        <span style="display:block; height: 15px; line-height:0;font-size:0;"></span>
-								  	        		      </td>
-								  	        		      <td>&nbsp;
-								  	        		      </td>
-								  	        		   </tr>
-						  	        		    	   <tr>
-			 			  	        		    		    <td class="borTotal" style="font-size:12px;font-weight:bold;font-family:Arial, Helvetica, sans-serif;color: #000000;">Total</td>
-						  	        		    		    <td class="borTotal taleft" align="right"  style="font-size:12px;font-weight:bold;font-family:Arial, Helvetica, sans-serif;color: #000000; text-align: right;">&#x20b9; $ctx.numberTool.format("#0.00",$ctx.totalPrice)</td>
-			 			  	        		    	   </tr>
-	  	        		    		 				 </tbody>
-	  	        		    		 				</table> 
-			  	        		    		    </td>
-			  	        		    		    <td width="12">&nbsp;</td>
-			  	        		    	   </tr>
-			  	        		    	  </tbody>
-			  	        		    	 </table>
- 
-		  	        		    	</td>
-		  	        		    </tr>
-		  	        		    <tr>
-		  	        		      <td>
-		  	        		        <span style="display:block; height: 25px; line-height:0;font-size:0;"></span>
-		  	        		      </td>
-		  	        		    </tr>
-                                <tr class="dsnone">
-		  	        		    	<td align="center">
-		  	        		    	   <table width="100%" border="0" cellspacing="0" cellpadding="0" align="center" style="background:#f5f5f5;">
-		  	        		    	     <tbody>
-		  	        		    	       <tr>
-					  	        		      <td>
-													<span style="display:block; height: 15px; line-height:0;font-size:0;"></span>
-					  	        		      </td>
-					  	        		   </tr>
-		  	        		    	       <tr>
-		  	        		    	     	  <td align="center">
-                                                 <table border="0" cellspacing="0" cellpadding="0" align="center">
-					  	        		    	     <tbody>
-					  	        		    	       <tr>
-					  	        		    	     	  <td>
-                                                            <span style="width:45px;height:31px;display:block;line-height:0;font-size:0;">${ctx.cmsSlotContents.orderplaced}</span>
-					  	        		    	     	  </td>
-					  	        		    	     	  <td width="9">&nbsp;</td>
-					  	        		    	     	  <td style="font-size:10px;font-weight:bold;font-family:Arial, Helvetica, sans-serif;color:#000000;text-align:center;line-height:13px;">Order <br>Placed</td>
-					  	        		    	     	  <td width="30">&nbsp;</td>
-					  	        		    	     	  <td>
-															<span style="width:14px;height:28px;display:block;line-height:0;font-size:0;">${ctx.cmsSlotContents.arrow}</span>
-															</td>
-					  	        		    	     	  <td width="38">&nbsp;</td>
-					  	        		    	     	  <td>
-                                                            <span style="width:26px;height:36px;display:block;line-height:0;font-size:0;">${ctx.cmsSlotContents.orderprocessed}</span>
-					  	        		    	     	  </td>
-					  	        		    	     	  <td width="9">&nbsp;</td>
-					  	        		    	     	  <td style="font-size:10px;font-weight:bold;font-family:Arial, Helvetica, sans-serif;color:#909090;text-align:center;line-height:13px;">Order <br>Processed</td>
-					  	        		    	     	  <td width="31">&nbsp;</td>
-					  	        		    	     	  <td>
-															<span style="width:14px;height:28px;display:block;line-height:0;font-size:0;">${ctx.cmsSlotContents.arrow}</span>
-															</td>
-					  	        		    	     	  <td width="38">&nbsp;</td>
-					  	        		    	     	  <td>
-															<span style="width:46px;height:26px;display:block;line-height:0;font-size:0;">${ctx.cmsSlotContents.orderdelivered}</span>
-															</td>
-					  	        		    	     	   <td width="9">&nbsp;</td>
-					  	        		    	     	  <td style="font-size:10px;font-weight:bold;font-family:Arial, Helvetica, sans-serif;color:#909090;text-align:center; line-height:13px;">Order <br>Delivered</td>
-					  	        		    	       </tr>
-					  	        		    	     </tbody>
-					  	        		    	   </table>
-		  	        		    	     	  </td>
-		  	        		    	       </tr>
-		  	        		    	       <tr>
-					  	        		      <td>
-					  	        		        <span style="display:block; height: 15px; line-height:0;font-size:0;"></span>
-					  	        		      </td>
-					  	        		   </tr>
-		  	        		    	     </tbody>
-		  	        		    	   </table>
-		  	        		    	 
-		  	        		    	</td>
-		  	        		    </tr>
-
-
-
-
-		  	        		    <tr class="dsnone">
-		  	        		    	<td style="background-color:#aa1d3d" align="center">
-                                        <table  border="0" cellspacing="0" cellpadding="0" align="center">
-                                          <tbody>
-                                          	 <tr>
-                                          	 <td><span style="display:block; width:18px; height: 25px; line-height:0;font-size:0;">${ctx.cmsSlotContents.tatatrust}</span>
-											 
-											 </td>
-                                          	   <td width="70" style="font-size:10px;font-family:Arial, Helvetica, sans-serif;color: #ffffff;">
-                                          	     
-                                          	 Tata Trust
-                                          	   </td>
-                                          	   <td>
-                                          	     <span style="display:block; width:21px; height: 25px; line-height:0;font-size:0;">${ctx.cmsSlotContents.cliqnpic}</span>
-                                          	   </td>
-                                          	   <td width="90" style="font-size:10px;font-family:Arial, Helvetica, sans-serif;color: #ffffff;">
-                                          	      CLiQ and PIQ
-                                          	   </td>
-                                          	   <td>
-                                          	     <span style="display:block; width:20px; height: 25px; line-height:0;font-size:0;">${ctx.cmsSlotContents.easyreturn}</span>
-                                          	   </td>
-                                          	   <td width="84" style="font-size:10px;font-family:Arial, Helvetica, sans-serif;color: #ffffff;">
-                                          	      Easy Returns
-                                          	   </td>
-                                          	   <td>
-                                          	     <span style="display:block; width:16px; height: 25px; line-height:0;font-size:0;">${ctx.cmsSlotContents.authenticbrands}</span>
-                                          	   </td>
-                                          	   <td width="99" style="font-size:10px;font-family:Arial, Helvetica, sans-serif;color: #ffffff;">
-                                          	      Authentic Brands
-                                          	   </td>
-                                          	   <td>
-                                          	     <span style="display:block; width:25px; height: 25px; line-height:0;font-size:0;">${ctx.cmsSlotContents.freeshipping}</span>
-                                          	   </td>
-                                          	   <td style="font-size:10px;font-family:Arial, Helvetica, sans-serif;color: #ffffff;">
-                                          	     Free Shipping
-                                          	   </td>
-                                          	 </tr>
-                                          </tbody>
-                                        </table>
-		  	        		    	</td>
-		  	        		    </tr>
-
-
-
-		  	        		    
-		  	        		    <!-- stage mobile -->
-
- <!-- shipping mobile -->
-		  	        		   
-		  	        		    <!-- shipping mobile -->
-		  	        		    <!-- stage mobile -->
-		  	        		    
-
-
-
-		  	        		    <tr>
-		  	        		      <td>
-		  	        		        <span style="display:block; height: 6px; line-height:0;font-size:0;"></span>
-		  	        		      </td>
-		  	        		    </tr>
-		  	        		    <tr align="center">
-		  	        		    	<td>
-		  	        		    		
-		  	        		    		<table class="content inPad">
-		  	        		    			<tbody>
-		  	        		    				<tr>
-		  	        		    				    <td class="smFull trackdiv" width="190" style="font-size:10px;font-family:Arial, Helvetica, sans-serif;color: #000000;">Track Your Order on the go. Download our app.Stay updated on what's NEW &amp; NOW.</td>
-		  	        		    					<td class="smFull">
-														#if($ctx.cmsSlotContents.appstore)
-															<a href="https://itunes.apple.com/us/app/tata-cliq-online-shopping/id1101619385?ls=1&amp;mt=8&amp;tcid=em:transactional:Orderconfirmation:ios:22052017" target="_blank" style="text-decoration:none;"> ${ctx.cmsSlotContents.appstore}</a> 
-														#end
-														#if($ctx.cmsSlotContents.googleplay)
-															<a href="https://play.google.com/store/apps/details?id=com.tul.tatacliq&amp;tcid=em:transactional:Orderconfirmation:android:22052017" target="_blank" style="text-decoration:none;"> ${ctx.cmsSlotContents.googleplay}</a> 
-														#end
-													</td>
-		  	        		    					<td class="smFull dsnone">
-														${ctx.cmsSlotContents.linegrey}
-													</td>
-		  	        		    					<td class="smFull followhead" style="font-size:10px;font-family:Arial, Helvetica, sans-serif;color: #000000;"> Follow Us: </td>
-		  	        		    					<td class="smFull socialLinks">
-		  	        		    						#if($ctx.cmsSlotContents.fbNew)<a href="https://www.facebook.com/TataCLiQ/" target="_blank" style="text-decoration:none;"> ${ctx.cmsSlotContents.fbNew}</a> #end
-														
-						  	        		    		#if($ctx.cmsSlotContents.twitterNew)<a href="https://twitter.com/tatacliq" target="_blank" style="text-decoration:none;">${ctx.cmsSlotContents.twitterNew}</a>#end
-						  	        		    		#if($ctx.cmsSlotContents.instaNew)<a href="https://www.instagram.com/tatacliq/" target="_blank" style="text-decoration:none;">${ctx.cmsSlotContents.instaNew}</a>#end
-														
-						  	        		    		#if($ctx.cmsSlotContents.gplus)<a href="https://plus.google.com/+TataCLiQ/" target="_blank" style="text-decoration:none;">${ctx.cmsSlotContents.gplus}</a>#end
-						  	        		    		
-														#if($ctx.cmsSlotContents.youtubeNew)<a href="https://www.youtube.com/channel/UCUwkaWqIcl9dYQccKkM0VRA" target="_blank" style="text-decoration:none;">${ctx.cmsSlotContents.youtubeNew}</a>#end
-					  	        		    		</td>
-		  	        		    				</tr>
-		  	        		    			</tbody>
-		  	        		    		</table> 
-		  	        		    		
-		  	        		    	</td>
-		  	        		    </tr>
-		  	        		    <tr class="inPad bordertop">
-		  	        		      <td class="">
-		  	        		        <span style="display:block; height: 5px; line-height:0;font-size:0;"></span>
-		  	        		      </td>
-		  	        		    </tr>
-		  	        		    <tr>
-		  	        		    	<td align="center" class="content foocontnt inPad">
-		  	        		    	  <div style="font-size:10px;font-family:Arial, Helvetica, sans-serif;color: #333333;">
-		  	        		    	    This email can't receive replies. Get in touch with us by contacting Tata CLiQ Care <a href="https://www.tatacliq.com/contact?tcid=em:transactional:orderconfirmation:customercare:22052017" target="blank" style="text-decoration:underline;color: #aa1d3d;line-height:16px;">click here</a>
-		  	        		    	    <br>
-		  	        		    	    You can also write to us at <a href="mailto:hello@tatacliq.com" target="blank" style="text-decoration:underline;color: #aa1d3d;line-height:16px;">hello@tatacliq.com</a>. For help with our luxury products. Write to <a href="mailto:concierge@tatacliq.com" target="blank" style="text-decoration:underline;color:#aa1d3d;line-height:16px;">concierge@tatacliq.com</a>
-		  	        		    	  </div>
-		  	        		    	</td>
-		  	        		    </tr>
-		  	        		     <tr>
-		  	        		      <td>
-		  	        		        <span style="display:block; height: 10px; line-height:0;font-size:0;"></span>
-		  	        		      </td>
-		  	        		    </tr>
-					  	     </tbody>
-					  	   </table>
-
-                         </td>
-                         
+   <head>
+      <meta charset="utf-8">
+      <meta http-equiv="X-UA-Compatible" content="IE=edge">
+      <meta name="viewport" content="width=device-width" />
+      <title>Tata CliQ</title>
+   </head>
+   <body style="padding: 0; margin:0; font-family:Arial, Helvetica, sans-serif;">
+      <style type="text/css">
+         body{ padding: 0; margin:0; }
+         @media only screen and (max-width:600px) {
+         .maintable{ width: 300px }
+         .smFull{ width: 100%; display: inline-block; }
+         .toplink{ font-weight: bold; display: inline-block; width: 90%; padding: 10px 5%; text-align: left;  }
+         .toplink a{ font-size:12px!important }
+         .logo{ font-weight: bold; display: inline-block; width: 100% }
+         .logo img{ width: 80px; height: auto }
+         .topLinks{display: inline-block; width: 90%; padding: 10px 5%; text-align: left;letter-spacing: 1px}
+         .inPad{display: inline-block; width: 90%; padding: 10px 5%; text-align: left;}
+         .topLinks a{font-size: 11px!important; vertical-align: middle;}
+         .topLinks span{font-size: 25px!important; vertical-align: middle; line-height: 10px}
+         .dsnone{ display: none!important }
+         .fwnormal{ font-weight: normal; }
+         .content{ line-height: 18px }
+         .lesspad img{ height: 20px }
+         .orderdetail{ text-align: left; }
+         .orderitemtable{ border-bottom: 1px solid #dadada }
+         .iprice{ text-align: left; font-weight: bold; }
+         .trackdiv{ padding: 0 0 15px; font-size: 12px!important  }
+         .followhead{ font-weight: bold; padding: 10px 0 5px; font-size: 12px!important }
+         .bordertop{padding-top:0; padding-bottom: 0 }
+         .bordertop td{border-top: 1px solid #dadada; width: 100%; display: inline-block; }
+         .socialLinks a{ display: inline-block; margin: 0 5px 0 0 }
+         .taleft{ text-align: left }
+         .btn{ font-size: 12px; width: 150px!important; padding: 7px 10px!important; letter-spacing: 0.5px }
+         .borderBot td{ width: 100%; display: inline-block;  }
+         .borderBot{  display: inline-block;width: 90%; padding: 0 5%; }
+         .foocontnt div{font-size: 12px!important  }
+         .dsBlock{ display: table-row !important;}
+         .borTotal{ border-top: 1px solid #ccc; padding: 10px 0 0 0}
+         }
+      </style>
+      <table class="maintable" width="600" border="0" cellspacing="0" cellpadding="0" align="center">
+         <tbody>
+            <tr>
+               <td>
+                  <table width="100%" border="0" cellspacing="0" cellpadding="0" align="center">
+                     <tbody>
+                        <tr>
+                           <td>
+                              <table width="100%" border="0" cellspacing="0" cellpadding="0" align="center">
+                                 <tbody>
+                                    <tr>
+                                       <td >
+                                          <!--${ctx.cmsSlotContents.placeh}-->
+                                          <span style="display:block; height: 10px; line-height:0;font-size:0;"></span>
+                                       </td>
+                                    </tr>
+                                    <tr>
+                                       #if($ctx.cmsSlotContents.SiteLogoNew)
+                                       <td class="logo" ><a href="https://www.tatacliq.com/" target="_blank">
+                                          <span style="width:133px; height:48px; display:block; line-height:0; font-size:0">
+                                          ${ctx.cmsSlotContents.SiteLogoNew}</span>
+                                          </a>
+                                       </td>
+                                       #end
+                                       <td align="right" class="toplink">
+                                          <table width="100%" border="0" cellspacing="0" cellpadding="0" align="center">
+                                             <tbody>
+                                                <tr>
+                                                   <td >
+                                                      <span style="display:block; height: 15px; line-height:0;font-size:0;"></span>
+                                                   </td>
+                                                </tr>
+                                                <tr>
+                                                   <td align="right">
+                                                      <p class="fwnormal" style="font-size:12px;font-family:Arial, Helvetica, sans-serif;color: #aa1d3d;margin:2px 0;padding:0;"><a href="https://www.tatacliq.com/my-account/orders?tcid=em:transactional:Orderconfirmation:myorders:22052017" target="blank" style="color: #aa1d3d;line-height:16px;">Your Orders</a></p>
+                                                      <p class="fwnormal" style="font-size:12px;font-family:Arial, Helvetica, sans-serif;color: #333333;margin:2px 0;padding:0;">Order Confirmation - Order  <span style="color: #aa1d3d;">${ctx.orderReferenceNumber}</span></p>
+                                                   </td>
+                                                </tr>
+                                             </tbody>
+                                          </table>
+                                       </td>
+                                    </tr>
+                                 </tbody>
+                              </table>
+                           </td>
                         </tr>
-                       </tbody>
-                     </table>
-					  	 <!-- ends here-->
-				</td>
-					
-				</tr>
-			</tbody>
-		</table>
- </body>
+                     </tbody>
+                  </table>
+               </td>
+            </tr>
+            <tr>
+               <td>
+                  <table width="100%" border="0" cellspacing="0" cellpadding="0" align="center">
+                     <tbody>
+                        <tr>
+                           <td>
+                              <!-- starts here-->
+                              <table width="100%" border="0" cellspacing="0" cellpadding="0" align="center">
+                                 <tbody>
+                                    <tr class="dsnone">
+                                       <td>
+                                          <span style="display:block; height: 20px; line-height:0;font-size:0;"></span>
+                                       </td>
+                                    </tr>
+                                    <tr>
+                                       <td align="center" class="topLinks">
+                                          <a href="javascript:void(0);" style="font-size:14px;font-family:Arial, Helvetica, sans-serif;color: #aa1d3d;text-decoration:none"> FASHION </a>
+                                          <span style="font-size:20px;font-family:Arial, Helvetica, sans-serif;color: #333333;"> &middot; </span>
+                                          <a href="javascript:void(0);" style="font-size:14px;font-family:Arial, Helvetica, sans-serif;color: #aa1d3d;text-decoration:none"> ELECTRONICS </a>
+                                          <span style="font-size:20px;font-family:Arial, Helvetica, sans-serif;color: #333333;"> &middot; </span>
+                                          <a href="javascript:void(0);" style="font-size:14px;font-family:Arial, Helvetica, sans-serif;color: #aa1d3d;text-decoration:none"> MOBILES </a>
+                                          <span style="font-size:20px;font-family:Arial, Helvetica, sans-serif;color: #333333;"> &middot; </span>
+                                          <a href="javascript:void(0);" style="font-size:14px;font-family:Arial, Helvetica, sans-serif;color: #aa1d3d;text-decoration:none"> LUXURY </a>
+                                       </td>
+                                    </tr>
+                                    <tr >
+                                       <td style="border-bottom:1px solid #aa1d3d;">
+                                          <span style="display:block; height: 5px; line-height:0;font-size:0;"></span>
+                                       </td>
+                                    </tr>
+                                    <tr class="dsnone">
+                                       <td>
+                                          <span style="display:block; height: 15px; line-height:0;font-size:0;"></span>
+                                       </td>
+                                    </tr>
+                                    <tr>
+                                       <td class="inPad content">
+                                          <div style="font-size:12px;font-family:Arial, Helvetica, sans-serif;color: #333333;">
+                                             <strong>Hi ${ctx.customerName},</strong>
+                                             <br>
+                                             <br>
+                                             We've got it! We'd like to confirm your order, the details of which are below. We will be sending SMS alerts about your order delivery status on your registered mobile number. 
+                                             <br>
+                                           </div>
+                                       </td>
+                                    </tr>
+									
+                                    <!-- TPR-3765 jewellery -->
+                                    <tr>
+                                       <td>
+                                          #if($ctx.isPancardRequired >0)
+                                          <div style="font-size:12px;font-family:Arial, Helvetica, sans-serif;color: #333333;">
+                                             <br>
+                                             Orders upwards of INR 2,00,000 will be dispatched only after we receive your PAN Card copy.
+                                             <br>
+                                             <a href="${ctx.websiteUrl}pancard/pancarddetailsupload/${ctx.orderReferenceNumber}/${ctx.customerName}" target="_blank">Click here</a>
+                                              to provide your PAN Card.
+                                             <br>
+                                             For more information, do read our  <a href="${ctx.websiteUrl}faq-jewellery" target="_blank">terms & conditions</a>
+                                          </div>
+                                          #end 
+                                       </td>
+                                    </tr>
+                                    <!-- end  -->
+                                   
+                                    <tr>
+                                       <td class="lesspad">
+                                          <span style="display:block; height: 20px; line-height:0;font-size:0;"></span>
+                                       </td>
+                                    </tr>
+                                    <tr>
+                                       <td style="background-color:#f5f5f5;">
+                                          <table width="100%" border="0" cellspacing="0" cellpadding="0">
+                                             <tbody>
+                                                <tr>
+                                                   <td>
+                                                      <span style="display:block; height: 20px; line-height:0;font-size:0;"></span>
+                                                   </td>
+                                                </tr>
+                                                <tr>
+                                                   <td width="20">&nbsp;</td>
+                                                   <td>
+                                                      <div style="font-size:12px;font-family:Arial, Helvetica, sans-serif;color: #333333;">
+                                                         <strong>Your order will be send to:</strong>
+                                                         <br>
+                                                         #if($ctx.deliveryAddress)
+                                                         <br>
+                                                         <strong>${ctx.deliveryAddress}</strong>
+                                                         <br>
+                                                         <br>
+                                                         #end
+                                                         <br>
+                                                         <br>
+                                                         <br>
+                                                         <p style="margin:0px;">
+                                                            <a href="${ctx.trackOrderUrl}?tcid=em:transactional:Orderconfirmation:manageorder:22052017" class="btn" style="background-color:#aa1d3d; color:#ffffff;font-size;12px;font-family:Arial, Helvetica, sans-serif;padding:4px 10px; text-decoration:none;display:inherit;width:120px;text-align:center;border-bottom:2px solid #8e0f2d;text-decoration:none;">View / Manage Order</a>
+                                                         </p>
+                                                      </div>
+                                                   </td>
+                                                   <td width="20">&nbsp;</td>
+                                                </tr>
+                                                <tr>
+                                                   <td>
+                                                      <span style="display:block; height: 20px; line-height:0;font-size:0;"></span>
+                                                   </td>
+                                                </tr>
+                                             </tbody>
+                                          </table>
+                                       </td>
+                                    </tr>
+                                    <tr>
+                                       <td>
+                                          <span style="display:block; height: 20px; line-height:0;font-size:0;"></span>
+                                       </td>
+                                    </tr>
+                                    <tr>
+                                       <td>
+                                          <table width="100%" border="0" cellspacing="0" cellpadding="0" class="inPad">
+                                             <tbody>
+                                                <tr>
+                                                   <td class="smFull" style="font-size:12px;font-weight:bold;font-family:Arial, Helvetica, sans-serif;color: #333333;">
+                                                      Order Details	
+                                                   </td>
+                                                   <td class="smFull orderdetail" align="right" style="font-size:12px;font-family:Arial, Helvetica, sans-serif;color: #333333;">Order placed on ${ctx.orderPlaceDate} | Order <span style="color:#aa1d3d;">${ctx.orderReferenceNumber}</span></td>
+                                                </tr>
+                                             </tbody>
+                                          </table>
+                                       </td>
+                                    </tr>
+                                    <tr class="borderBot">
+                                       <td style="border-bottom:1px solid #aa1d3d;">
+                                          <span style="display:block; height: 3px; line-height:0;font-size:0;"></span>
+                                       </td>
+                                    </tr>
+                                    <tr>
+                                       <td>
+                                          <span style="display:block; height: 20px; line-height:0;font-size:0;"></span>
+                                       </td>
+                                    </tr>
+                                    <tr class="inPad">
+                                       <td>
+                                          <table width="100%" border="0" cellspacing="0" cellpadding="0" class="orderitemtable">
+                                             <tbody>
+                                               
+                                                #set ($shippingCharge=0)
+                                                #foreach( $childorder in ${ctx.childOrders} )
+                                                #set ($srNo=1)
+                                                #foreach($entry in ${childorder.entries})
+                                                <tr>
+                                                   <td width="12" class="dsnone">&nbsp;</td>
+                                                   <td width="60">
+                                                      <img src="http:${entry.product.picture.url}" width="51" height="75" style="border:1px solid #cbcbcb;">
+                                                   </td>
+                                                   <td width="10">&nbsp;</td>
+                                                   <td style="vertical-align:top;">
+                                                      <table width="100%" border="0" cellspacing="0" cellpadding="0" class="content">
+                                                         <tbody>
+                                                            <tr>
+                                                               <td class="smFull">
+                                                                  <div style="font-size:12px;font-family:Arial, Helvetica, sans-serif;color:#aa1d3d;">
+                                                                     $entry.quantity X  $entry.product.name
+                                                                     #if($entry.product.size)
+                                                                     <br>
+                                                                     <span style="color:#333333">Size: $entry.product.size</span>
+                                                                     #end
+                                                                     #if($entry.SellerInfo)
+                                                                     <br>
+                                                                     <span style="color:#333333">Sold by: $entry.SellerInfo </span>
+                                                                     #end
+                                                                  </div>
+                                                               </td>
+                                                               <td class="smFull iprice" width="110" align="right" style="vertical-align:top;font-size:12px;font-family:Arial, Helvetica, sans-serif;color: #000000;font-weight:bold;">
+                                                                  &#x20b9; $ctx.numberTool.format("#0.00",$entry.netAmountAfterAllDisc)
+                                                               </td>
+                                                            </tr>
+                                                         </tbody>
+                                                      </table>
+                                                   </td>
+                                                   <td width="12">&nbsp;</td>
+                                                </tr>
+                                                <tr>
+                                                   <td>
+                                                      <span style="display:block; height: 20px; line-height:0;font-size:0;"></span>
+                                                   </td>
+                                                </tr>
+                                               
+                                                #set ($srNo=$srNo+1)
+                                                #set($shippingCharge=$shippingCharge+$entry.currDelCharge)
+                                                #end
+                                                #end
+                                             </tbody>
+                                          </table>
+                                       </td>
+                                    </tr>
+                                    <tr>
+                                       <td class="inPad">
+                                          <table width="100%" border="0" cellspacing="0" cellpadding="0">
+                                             <tbody>
+                                                <tr>
+                                                   <td class="smFull dsnone" width="100">&nbsp;</td>
+                                                   <td class="smFull">
+                                                      <table width="100%" border="0" cellspacing="0" cellpadding="0" class="content">
+                                                         <tbody>
+                                                            <tr>
+                                                               <td style="font-size:12px;font-family:Arial, Helvetica, sans-serif;color: #000000;">Subtotal</td>
+                                                               <td align="right" class="taleft" style="font-size:12px;font-family:Arial, Helvetica, sans-serif;color: #000000; text-align: right;">&#x20b9; $ctx.numberTool.format("#0.00",$ctx.subTotal)</td>
+                                                            </tr>
+                                                            <tr>
+                                                               <td style="font-size:12px;font-family:Arial, Helvetica, sans-serif;color: #000000;">Shipping Charges</td>
+                                                               <td align="right" class="taleft" style="font-size:12px;font-family:Arial, Helvetica, sans-serif;color: #000000; text-align: right;">#if($ctx.shippingCharge == 0)
+                                                                  Free
+                                                                  #else
+                                                                  &#x20b9; $ctx.numberTool.format("#0.00",$ctx.shippingCharge)
+                                                                  #end
+                                                               </td>
+                                                            </tr>
+                                                            <tr>
+                                                               <td style="font-size:12px;font-family:Arial, Helvetica, sans-serif;color: #000000;">Convenience Charges</td>
+                                                               <td align="right" class="taleft" style="font-size:12px;font-family:Arial, Helvetica, sans-serif;color: #000000; text-align: right;">#if($ctx.convenienceChargesVal == 0)
+                                                                  Free
+                                                                  #else
+                                                                  &#x20b9; $ctx.numberTool.format("#0.00",$ctx.convenienceChargesVal)
+                                                                  #end
+                                                               </td>
+                                                            </tr>
+                                                            <tr>
+                                                               <td>
+                                                                  <span style="display:block; height: 15px; line-height:0;font-size:0;"></span>
+                                                               </td>
+                                                               <td>&nbsp;
+                                                               </td>
+                                                            </tr>
+                                                            <tr>
+                                                               <td class="borTotal" style="font-size:12px;font-weight:bold;font-family:Arial, Helvetica, sans-serif;color: #000000;">Total</td>
+                                                               <td class="borTotal taleft" align="right"  style="font-size:12px;font-weight:bold;font-family:Arial, Helvetica, sans-serif;color: #000000; text-align: right;">&#x20b9; $ctx.numberTool.format("#0.00",$ctx.totalPrice)</td>
+                                                            </tr>
+                                                         </tbody>
+                                                      </table>
+                                                   </td>
+                                                   <td width="12">&nbsp;</td>
+                                                </tr>
+                                             </tbody>
+                                          </table>
+                                       </td>
+                                    </tr>
+                                    <tr>
+                                       <td>
+                                          <span style="display:block; height: 25px; line-height:0;font-size:0;"></span>
+                                       </td>
+                                    </tr>
+                                    <tr class="dsnone">
+                                       <td align="center">
+                                          <table width="100%" border="0" cellspacing="0" cellpadding="0" align="center" style="background:#f5f5f5;">
+                                             <tbody>
+                                                <tr>
+                                                   <td>
+                                                      <span style="display:block; height: 15px; line-height:0;font-size:0;"></span>
+                                                   </td>
+                                                </tr>
+                                                <tr>
+                                                   <td align="center">
+                                                      <table border="0" cellspacing="0" cellpadding="0" align="center">
+                                                         <tbody>
+                                                            <tr>
+                                                               <td>
+                                                                  <span style="width:45px;height:31px;display:block;line-height:0;font-size:0;">${ctx.cmsSlotContents.orderplaced}</span>
+                                                               </td>
+                                                               <td width="9">&nbsp;</td>
+                                                               <td style="font-size:10px;font-weight:bold;font-family:Arial, Helvetica, sans-serif;color:#000000;text-align:center;line-height:13px;">Order <br>Placed</td>
+                                                               <td width="30">&nbsp;</td>
+                                                               <td>
+                                                                  <span style="width:14px;height:28px;display:block;line-height:0;font-size:0;">${ctx.cmsSlotContents.arrow}</span>
+                                                               </td>
+                                                               <td width="38">&nbsp;</td>
+                                                               <td>
+                                                                  <span style="width:26px;height:36px;display:block;line-height:0;font-size:0;">${ctx.cmsSlotContents.orderprocessed}</span>
+                                                               </td>
+                                                               <td width="9">&nbsp;</td>
+                                                               <td style="font-size:10px;font-weight:bold;font-family:Arial, Helvetica, sans-serif;color:#909090;text-align:center;line-height:13px;">Order <br>Processed</td>
+                                                               <td width="31">&nbsp;</td>
+                                                               <td>
+                                                                  <span style="width:14px;height:28px;display:block;line-height:0;font-size:0;">${ctx.cmsSlotContents.arrow}</span>
+                                                               </td>
+                                                               <td width="38">&nbsp;</td>
+                                                               <td>
+                                                                  <span style="width:46px;height:26px;display:block;line-height:0;font-size:0;">${ctx.cmsSlotContents.orderdelivered}</span>
+                                                               </td>
+                                                               <td width="9">&nbsp;</td>
+                                                               <td style="font-size:10px;font-weight:bold;font-family:Arial, Helvetica, sans-serif;color:#909090;text-align:center; line-height:13px;">Order <br>Delivered</td>
+                                                            </tr>
+                                                         </tbody>
+                                                      </table>
+                                                   </td>
+                                                </tr>
+                                                <tr>
+                                                   <td>
+                                                      <span style="display:block; height: 15px; line-height:0;font-size:0;"></span>
+                                                   </td>
+                                                </tr>
+                                             </tbody>
+                                          </table>
+                                       </td>
+                                    </tr>
+                                    <tr class="dsnone">
+                                       <td style="background-color:#aa1d3d" align="center">
+                                          <table  border="0" cellspacing="0" cellpadding="0" align="center">
+                                             <tbody>
+                                                <tr>
+                                                   <td><span style="display:block; width:18px; height: 25px; line-height:0;font-size:0;">${ctx.cmsSlotContents.tatatrust}</span>
+                                                   </td>
+                                                   <td width="70" style="font-size:10px;font-family:Arial, Helvetica, sans-serif;color: #ffffff;">
+                                                      Tata Trust
+                                                   </td>
+                                                   <td>
+                                                      <span style="display:block; width:21px; height: 25px; line-height:0;font-size:0;">${ctx.cmsSlotContents.cliqnpic}</span>
+                                                   </td>
+                                                   <td width="90" style="font-size:10px;font-family:Arial, Helvetica, sans-serif;color: #ffffff;">
+                                                      CLiQ and PIQ
+                                                   </td>
+                                                   <td>
+                                                      <span style="display:block; width:20px; height: 25px; line-height:0;font-size:0;">${ctx.cmsSlotContents.easyreturn}</span>
+                                                   </td>
+                                                   <td width="84" style="font-size:10px;font-family:Arial, Helvetica, sans-serif;color: #ffffff;">
+                                                      Easy Returns
+                                                   </td>
+                                                   <td>
+                                                      <span style="display:block; width:16px; height: 25px; line-height:0;font-size:0;">${ctx.cmsSlotContents.authenticbrands}</span>
+                                                   </td>
+                                                   <td width="99" style="font-size:10px;font-family:Arial, Helvetica, sans-serif;color: #ffffff;">
+                                                      Authentic Brands
+                                                   </td>
+                                                   <td>
+                                                      <span style="display:block; width:25px; height: 25px; line-height:0;font-size:0;">${ctx.cmsSlotContents.freeshipping}</span>
+                                                   </td>
+                                                   <td style="font-size:10px;font-family:Arial, Helvetica, sans-serif;color: #ffffff;">
+                                                      Free Shipping
+                                                   </td>
+                                                </tr>
+                                             </tbody>
+                                          </table>
+                                       </td>
+                                    </tr>
+                                    <!-- stage mobile -->
+                                    <!-- shipping mobile -->
+                                    <!-- shipping mobile -->
+                                    <!-- stage mobile -->
+                                    <tr>
+                                       <td>
+                                          <span style="display:block; height: 6px; line-height:0;font-size:0;"></span>
+                                       </td>
+                                    </tr>
+                                    <tr align="center">
+                                       <td>
+                                          <table class="content inPad">
+                                             <tbody>
+                                                <tr>
+                                                   <td class="smFull trackdiv" width="190" style="font-size:10px;font-family:Arial, Helvetica, sans-serif;color: #000000;">Track Your Order on the go. Download our app.Stay updated on what's NEW &amp; NOW.</td>
+                                                   <td class="smFull">
+                                                      #if($ctx.cmsSlotContents.appstore)
+                                                      <a href="https://itunes.apple.com/us/app/tata-cliq-online-shopping/id1101619385?ls=1&amp;mt=8&amp;tcid=em:transactional:Orderconfirmation:ios:22052017" target="_blank"> ${ctx.cmsSlotContents.appstore}</a> 
+                                                      #end
+                                                      #if($ctx.cmsSlotContents.googleplay)
+                                                      <a href="https://play.google.com/store/apps/details?id=com.tul.tatacliq&amp;tcid=em:transactional:Orderconfirmation:android:22052017" target="_blank"> ${ctx.cmsSlotContents.googleplay}</a> 
+                                                      #end
+                                                   </td>
+                                                   <td class="smFull dsnone">
+                                                      ${ctx.cmsSlotContents.linegrey}
+                                                   </td>
+                                                   <td class="smFull followhead" style="font-size:10px;font-family:Arial, Helvetica, sans-serif;color: #000000;"> Follow Us: </td>
+                                                   <td class="smFull socialLinks">
+                                                      #if($ctx.cmsSlotContents.fbNew)<a href="https://www.facebook.com/TataCLiQ/" target="_blank"> ${ctx.cmsSlotContents.fbNew}</a> #end
+                                                      #if($ctx.cmsSlotContents.twitterNew)<a href="https://twitter.com/tatacliq" target="_blank">${ctx.cmsSlotContents.twitterNew}</a>#end
+                                                      #if($ctx.cmsSlotContents.instaNew)<a href="https://www.instagram.com/tatacliq/" target="_blank">${ctx.cmsSlotContents.instaNew}</a>#end
+                                                      #if($ctx.cmsSlotContents.gplus)<a href="https://plus.google.com/+TataCLiQ/" target="_blank">${ctx.cmsSlotContents.gplus}</a>#end
+                                                      #if($ctx.cmsSlotContents.youtubeNew)<a href="https://www.youtube.com/channel/UCUwkaWqIcl9dYQccKkM0VRA" target="_blank">${ctx.cmsSlotContents.youtubeNew}</a>#end
+                                                   </td>
+                                                </tr>
+                                             </tbody>
+                                          </table>
+                                       </td>
+                                    </tr>
+                                    <tr class="inPad bordertop">
+                                       <td class="">
+                                          <span style="display:block; height: 5px; line-height:0;font-size:0;"></span>
+                                       </td>
+                                    </tr>
+                                    <tr>
+                                       <td align="center" class="content foocontnt inPad">
+                                          <div style="font-size:10px;font-family:Arial, Helvetica, sans-serif;color: #333333;">
+                                             This email can't receive replies. Get in touch with us by contacting Tata CLiQ Care <a href="https://www.tatacliq.com/contact?tcid=em:transactional:orderconfirmation:customercare:22052017" target="blank" style="text-decoration:underline;color: #aa1d3d;line-height:16px;">click here</a>
+                                             <br>
+                                             You can also write to us at <a href="mailto:hello@tatacliq.com" target="blank" style="text-decoration:underline;color: #aa1d3d;line-height:16px;">hello@tatacliq.com</a>. For help with our luxury products. Write to <a href="mailto:concierge@tatacliq.com" target="blank" style="text-decoration:underline;color:#aa1d3d;line-height:16px;">concierge@tatacliq.com</a>
+                                          </div>
+                                       </td>
+                                    </tr>
+                                    <tr>
+                                       <td>
+                                          <span style="display:block; height: 10px; line-height:0;font-size:0;"></span>
+                                       </td>
+                                    </tr>
+                                 </tbody>
+                              </table>
+                           </td>
+                        </tr>
+                     </tbody>
+                  </table>
+                  <!-- ends here-->
+               </td>
+            </tr>
+         </tbody>
+      </table>
+   </body>
 </html>

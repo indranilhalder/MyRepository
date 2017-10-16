@@ -1,0 +1,68 @@
+.shop-by-catagory {
+    max-width: 1150px;
+    margin: 0 auto 0px;
+	li {
+		display: inline-block;
+		margin: 0 -2px;
+		
+	}
+	.slick-slide img {
+		display: inline-block;
+	}
+    
+    .link{
+        display: none;
+        text-decoration: underline;
+    }
+    @include media-breakpoint-down(sm) {
+        .link{
+            display: block;
+        }
+    }
+}
+
+.trending-products-catagory{
+    max-width: 1150px;
+    margin: 0 auto 0px;
+	li {
+		display: inline-block;
+		margin: 0 -2px;
+		
+	}
+	.slick-slide img {
+		display: inline-block;
+	}
+    
+    .link{
+        display: none;
+        text-decoration: underline;
+    }
+    
+    .item{
+        .item-price{
+            .original-price{
+                color: #b3b3b3;
+                text-decoration: line-through;
+                margin-right: 5px;
+            }
+            .savings{
+                color: #da3549;
+            }
+            .sale-price{
+                margin-left:5px;
+            }
+        }
+    }
+    
+    @include media-breakpoint-down(sm) {
+        .link{
+            display: block;
+        }
+    }
+}
+
+/*.trending-products{
+    max-width: 920px;
+    margin: 0 auto 80px;
+}*/
+

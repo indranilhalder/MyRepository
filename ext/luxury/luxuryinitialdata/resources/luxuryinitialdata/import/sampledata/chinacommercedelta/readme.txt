@@ -1,0 +1,12 @@
+Please follow sort to import Delta : 
+1 /marketplaceinitialdata/resources/marketplaceinitialdata/import/sampledata/chinacommercedelta/cms-content(coredata).impex
+2 /marketplaceinitialdata/resources/marketplaceinitialdata/import/sampledata/productCatalogs/mplProductCatalog/categories_fa.impex
+3 /marketplaceinitialdata/resources/marketplaceinitialdata/import/sampledata/productCatalogs/mplProductCatalog/categories_watches.impex
+4 /marketplaceinitialdata/resources/marketplaceinitialdata/import/sampledata/productCatalogs/mplProductCatalog/classifications-hierarchy_watches_fa.impex
+5 /marketplaceinitialdata/resources/marketplaceinitialdata/import/sampledata/productCatalogs/mplProductCatalog/classifications-units_watches_fa.impex
+6 /marketplaceinitialdata/resources/marketplaceinitialdata/import/sampledata/productCatalogs/mplProductCatalog/classifications-system_fa.impex
+7 /marketplaceinitialdata/resources/marketplaceinitialdata/import/sampledata/productCatalogs/mplProductCatalog/classifications-system_watches.impex
+8 /marketplaceinitialdata/resources/marketplaceinitialdata/import/sampledata/chinacommercedelta/cms-content(sampledata).impex
+9 /marketplaceinitialdata/resources/marketplaceinitialdata/import/sampledata/chinacommercedelta/cms-responsive-content(sampledata).impex
+10 /marketplaceinitialdata/resources/marketplaceinitialdata/import/sampledata/chinacommercedelta/solr.impex
+11 /marketplaceinitialdata/resources/marketplaceinitialdata/import/sampledata/chinacommercedelta/solr_en.impex

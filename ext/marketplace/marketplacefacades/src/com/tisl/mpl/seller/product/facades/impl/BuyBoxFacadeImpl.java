@@ -41,6 +41,7 @@ import com.tisl.mpl.facades.product.data.BuyBoxData;
 import com.tisl.mpl.helper.ProductDetailsHelper;
 import com.tisl.mpl.marketplacecommerceservices.service.BuyBoxService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplDeliveryCostService;
+import com.tisl.mpl.marketplacecommerceservices.service.MplJewelleryService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplSellerInformationService;
 import com.tisl.mpl.model.SellerInformationModel;
 import com.tisl.mpl.seller.product.facades.BuyBoxFacade;
@@ -66,6 +67,7 @@ public class BuyBoxFacadeImpl implements BuyBoxFacade
 	//TISCR-414 - Chairmans demo feedback 10thMay CR
 	private static final String LINGERIE1 = "LINGERIE1";
 	private static final String LINGERIE2 = "LINGERIE2";
+	private static final String FINEJEWELLERY = "FineJewellery";
 
 	@SuppressWarnings("unused")
 	private static final Logger LOG = Logger.getLogger(BuyBoxFacadeImpl.class);
@@ -82,6 +84,11 @@ public class BuyBoxFacadeImpl implements BuyBoxFacade
 	@Autowired
 	private MplSellerInformationService mplSellerInformationService;
 
+	@Resource(name = "mplJewelleryService")
+	private MplJewelleryService mplJewelleryService;
+	/* SONAR FIX JEWELLERY */
+	//	@Resource(name = "mplJewelleryService")
+	//	private MplJewelleryService jewelleryService;
 
 	private static final String BUYBOX_LIST = "buyboxList";
 
@@ -543,10 +550,42 @@ public class BuyBoxFacadeImpl implements BuyBoxFacade
 					buyboxData.setMrp(productDetailsHelper.formPriceData(new Double(buyBoxMod.getMrp().doubleValue())));
 				}
 				buyboxData.setMrpPriceValue(productDetailsHelper.formPriceData(new Double(buyBoxMod.getMrp().doubleValue())));
-
+				// changes for INC144318868:Offer prize is not coming for WCMS component
+				if (null != buyBoxMod.getSpecialPriceMobile() && buyBoxMod.getSpecialPriceMobile().doubleValue() > 0.0D)
+				{
+					buyboxData.setSpecialPriceMobile(productDetailsHelper.formPriceData(new Double(buyBoxMod.getSpecialPriceMobile()
+							.doubleValue())));
+				} 
+				
 				//other sellers count
 				final int oosSellersCount = getOosSellerCount(buyboxModelList);
-				final int sellerSize = buyboxModelList.size() - 1 - oosSellersCount;
+				int sellerSize = buyboxModelList.size() - 1 - oosSellersCount;
+
+				int count = 0;
+				String pussidCheck = "pussidCheck";
+
+				for (final BuyBoxModel buyBox : buyboxModelList)
+				{
+					//****other seller count for fine jewellery
+					if (null != buyBox.getPUSSID())
+					{
+						if (!pussidCheck.contains(buyBox.getPUSSID()))
+						{
+							pussidCheck = pussidCheck.concat(buyBox.getPUSSID());
+							count++;
+						}
+					}
+				}
+				if (count > 0)
+				{
+					sellerSize = count - 1 - oosSellersCount;
+				}
+				//****other sellers count for product other than fine jewellery
+				else
+				{
+					sellerSize = buyboxModelList.size() - 1 - oosSellersCount;
+				}
+
 				final Integer noofsellers = Integer.valueOf(sellerSize);
 
 				//TPR-250:Start
@@ -715,12 +754,16 @@ public class BuyBoxFacadeImpl implements BuyBoxFacade
 	 * @return SellerInformationDataList
 	 */
 	@Override
-	public List<SellerInformationData> getsellersDetails(final String productCode) throws EtailNonBusinessExceptions,
-			EtailBusinessExceptions
+	//CKD: TPR-3809
+	//public List<SellerInformationData> getsellersDetails(final String productCode) throws EtailNonBusinessExceptions,
+	public List<SellerInformationData> getsellersDetails(final String productCode, final String prodCatType)
+			throws EtailNonBusinessExceptions, EtailBusinessExceptions
 	{
 		final List<SellerInformationData> SellerInformationDataList = new ArrayList<SellerInformationData>();
 
-		for (final Map<BuyBoxModel, RichAttributeModel> resultMap : buyBoxService.getsellersDetails(productCode))
+		//CKD: TPR-3809
+		//for (final Map<BuyBoxModel, RichAttributeModel> resultMap : buyBoxService.getsellersDetails(productCode))
+		for (final Map<BuyBoxModel, RichAttributeModel> resultMap : buyBoxService.getsellersDetails(productCode, prodCatType))
 		{
 			for (final Map.Entry<BuyBoxModel, RichAttributeModel> entry : resultMap.entrySet())
 			{
@@ -776,8 +819,17 @@ public class BuyBoxFacadeImpl implements BuyBoxFacade
 				sellerData.setUssid(buyBox.getSellerArticleSKU());
 				sellerData.setSellername(buyBox.getSellerName());
 
-				sellerData.setDeliveryModes(productDetailsHelper.getDeliveryModeLlist(rich, buyBox.getSellerArticleSKU()));
-
+				if (MarketplaceFacadesConstants.PRODUCT_TYPE.equalsIgnoreCase(prodCatType))
+				{
+					if (StringUtils.isNotEmpty(buyBox.getPUSSID()))
+					{
+						sellerData.setDeliveryModes(productDetailsHelper.getDeliveryModeLlist(rich, buyBox.getPUSSID()));
+					}
+				}
+				else
+				{
+					sellerData.setDeliveryModes(productDetailsHelper.getDeliveryModeLlist(rich, buyBox.getSellerArticleSKU()));
+				}
 
 				if (null != rich.getShippingModes())
 				{
@@ -847,6 +899,16 @@ public class BuyBoxFacadeImpl implements BuyBoxFacade
 	public RichAttributeData getRichAttributeDetails(final ProductModel productModel, final String buyboxid)
 			throws EtailNonBusinessExceptions, EtailBusinessExceptions
 	{
+		String sellerArticleSku = buyboxid;
+
+		LOG.debug("sellerArticleSku : " + sellerArticleSku);
+
+		//PRODUCT_TYPE is set to FineJewellery in MarketplaceFacadesConstants. This if block is for FineJewellery to fetch the PCMUSSID.
+		if (MarketplaceFacadesConstants.PRODUCT_TYPE.equalsIgnoreCase(productModel.getProductCategoryType()))
+		{
+			sellerArticleSku = mplJewelleryService.getJewelleryInfoByUssid(buyboxid).get(0).getPCMUSSID();
+		}
+		boolean codEligible = false;
 		final RichAttributeData richData = new RichAttributeData();
 		final StringBuilder deliveryModes = new StringBuilder();
 		boolean onlineExclusive = false;
@@ -866,7 +928,8 @@ public class BuyBoxFacadeImpl implements BuyBoxFacade
 					onlineExclusive = true;
 				}
 
-				if (buyboxid.equals(seller.getSellerArticleSKU()) && null != seller.getRichAttribute())
+				//if (buyboxid.equals(seller.getSellerArticleSKU()) && null != seller.getRichAttribute())
+				if (sellerArticleSku.equals(seller.getSellerArticleSKU()) && null != seller.getRichAttribute())
 				{
 
 					for (final RichAttributeModel rich : seller.getRichAttribute())
@@ -874,7 +937,6 @@ public class BuyBoxFacadeImpl implements BuyBoxFacade
 						if (null != rich.getPaymentModes()
 								&& (PaymentModesEnum.COD.toString().equalsIgnoreCase(rich.getPaymentModes().getCode()) || (PaymentModesEnum.BOTH
 										.toString().equalsIgnoreCase(rich.getPaymentModes().getCode()))))
-
 
 						{
 							richData.setIsCod(MarketplaceFacadesConstants.Y);
@@ -924,6 +986,23 @@ public class BuyBoxFacadeImpl implements BuyBoxFacade
 						//productDetailsHelper.getDeliveryModeATMap(deliveryInfoList)
 					}
 
+				}
+				//TPR-6907
+				if (!sellerArticleSku.equals(seller.getSellerArticleSKU()) && null != seller.getRichAttribute()
+						&& codEligible != true)
+				{
+					for (final RichAttributeModel rich : seller.getRichAttribute())
+					{
+						if (null != rich.getPaymentModes()
+								&& (PaymentModesEnum.COD.toString().equalsIgnoreCase(rich.getPaymentModes().getCode()) || (PaymentModesEnum.BOTH
+										.toString().equalsIgnoreCase(rich.getPaymentModes().getCode()))))
+
+						{
+							richData.setIsCod(MarketplaceFacadesConstants.Y);
+							codEligible = true;
+							break;
+						}
+					}
 				}
 				if (null != allowNew && allowNew.equalsIgnoreCase(Y))
 				{
@@ -1076,8 +1155,44 @@ public class BuyBoxFacadeImpl implements BuyBoxFacade
 		buyboxData.setSellerId(buyBoxMod.getSellerId());
 		buyboxData.setSellerArticleSKU(buyBoxMod.getSellerArticleSKU());
 		buyboxData.setAvailable(buyBoxMod.getAvailable());
+		/*
+		 * //TPR-3752 Jewel Heading Added
+		 */
+		if (null != buyBoxMod.getPLPMaxPrice())
+		{
+			buyboxData.setPlpMaxPrice(productDetailsHelper.formPriceData(buyBoxMod.getPLPMaxPrice()));
+		}
+		if (null != buyBoxMod.getPLPMinPrice())
+		{
+			buyboxData.setPlpMinPrice(productDetailsHelper.formPriceData(buyBoxMod.getPLPMinPrice()));
+		}
+
 		// TISRLEE-1586 03-01-2017
-		final SellerInformationModel sellerInfoModel = mplSellerInformationService.getSellerDetail(buyBoxMod.getSellerArticleSKU());
+		//final SellerInformationModel sellerInfoModel = mplSellerInformationService.getSellerDetail(buyBoxMod.getSellerArticleSKU());
+		final String productcode = buyBoxMod.getProduct();
+		ProductModel product = null;
+		String productcategory = null;
+		SellerInformationModel sellerInfoModel = null;
+		if (StringUtils.isNotEmpty(productcode))
+		{
+			product = buyBoxService.getProductDetailsByProductCode(productcode);
+
+		}
+		if (null != product && StringUtils.isNotEmpty(product.getProductCategoryType()))
+		{
+			productcategory = product.getProductCategoryType();
+		}
+
+		if (StringUtils.isNotEmpty(productcategory) && productcategory.equalsIgnoreCase(FINEJEWELLERY))
+		{
+			//			final List<JewelleryInformationModel> jewelleryInfo = jewelleryService.getJewelleryInfoByUssid(buyBoxMod
+			//					.getSellerArticleSKU());
+			sellerInfoModel = mplSellerInformationService.getSellerDetail(buyBoxMod.getPUSSID());
+		}
+		else
+		{
+			sellerInfoModel = mplSellerInformationService.getSellerDetail(buyBoxMod.getSellerArticleSKU());
+		}
 		if (CollectionUtils.isNotEmpty(sellerInfoModel.getRichAttribute()))
 		{
 			final List<RichAttributeModel> richAttributeModel = (List<RichAttributeModel>) sellerInfoModel.getRichAttribute();
@@ -1112,26 +1227,28 @@ public class BuyBoxFacadeImpl implements BuyBoxFacade
 		//CKD:TPR-250:Start: checking if list has Buy Box list has OOS seller to be removed from other sellers count when call comes from microsite
 		final int oosSellersCount = getOosSellerCount(buyboxModelList);
 
+		//for fine jewellery other seller count
+		int count = 0;
+		String pussidCheck = "pussidCheck";
+		int sellerSize = -20;
+		if (StringUtils.isNotEmpty(productcategory) && productcategory.equalsIgnoreCase(FINEJEWELLERY))
+		{
+			for (final BuyBoxModel bModel : buyboxModelList)
+			{
+				if (null != bModel.getPUSSID() && !pussidCheck.contains(bModel.getPUSSID()))
+				{
+					pussidCheck = pussidCheck.concat(bModel.getPUSSID());
+					count++;
+				}
+			}
+			sellerSize = count - 1 - oosSellersCount;
+		}
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-		//other sellers count
-		int sellerSize = buyboxModelList.size() - 1 - oosSellersCount;
+		//other sellers count for category other than fine jewellery
+		else
+		{
+			sellerSize = buyboxModelList.size() - 1 - oosSellersCount;
+		}
 		if (isMicroSellerOOS)
 		{
 			sellerSize = sellerSize + 1;
@@ -1287,5 +1404,11 @@ public class BuyBoxFacadeImpl implements BuyBoxFacade
 			msiteBboxOtherSellerList = null;
 		}
 		return bBoxSellerIdFound;
+	}
+
+	@Override
+	public String findPussid(final String selectedUSSID)
+	{
+		return buyBoxService.findPussid(selectedUSSID);
 	}
 }

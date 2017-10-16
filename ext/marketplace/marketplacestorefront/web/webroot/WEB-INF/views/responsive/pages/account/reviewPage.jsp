@@ -49,18 +49,19 @@
 		        <c:otherwise>
 		        <c:if test="${not empty productDataModifyMap }">
 		        <p><spring:theme code="myaccount.review.recentPurchase"/></p>
-							<div class="carousel js-owl-carousel js-owl-lazy-reference js-owl-carousel-reference my-review-carousel" id="my-review-carousel">
-							
-								<c:forEach items="${productDataModifyMap}" var="product">
+	        				<c:forEach items="${productDataModifyMap}" var="product">
 								<script type="text/javascript">
 								 var productTitle_${product.value.code} = "${product.value.productTitle}";
 								 var brandName_${product.value.code} = "${product.value.brand.brandname}";
 								</script>
+							</c:forEach>
+							<div class="carousel js-owl-carousel js-owl-lazy-reference js-owl-carousel-reference my-review-carousel" id="my-review-carousel">
+							
+								<c:forEach items="${productDataModifyMap}" var="product">
 								<div class="slide item" id="no-image-link${product.value.code}"><a
 									class="product-tile" href='<c:url value="${product.value.url}"></c:url>'>
-										<div class="image">
-											
-												<product:productPrimaryImage product="${product.value}" format="searchPage" />
+										<div class="image">											
+												<product:productPrimaryImage product="${product.value}" format="searchPage" lazyLoad="false" />
 										</div>
 										<div class="short-info">
 											<p class="company">${product.value.brand.brandname}</p>

@@ -169,6 +169,7 @@ function focusOnElement() {
 		//setting price //TODO : price logic
 	  	tbodycontent+="<div data='Price' class='Price'>"; 
 	  
+	  
 		if((null!=sellersArray[i]['spPrice'])&&(sellersArray[i]['spPrice']!='')&&(sellersArray[i]['spPrice'].value!=0))
 	  	{  	  		
 	  		sellerPrice = sellersArray[i]['spPrice'];
@@ -211,11 +212,28 @@ function focusOnElement() {
 	     }
 		}
 		
+		
 	  	if (parseFloat(sellerPriceValue) > emiCuttOffAmount.value) {
 	  		tbodycontent+="<p>";
 	  		tbodycontent+=$('#emiavailableid').text();
 	  		tbodycontent+="</p>";
 		}
+	  //TPR-6907
+	    if($("#isPinCodeChecked").val()=="true"){
+	    	if(ussidIdsForCOD.indexOf(ussid)!=-1){
+	    		 tbodycontent+='<p class="cod" id="codEligible">'
+	    	     tbodycontent+=$('#cashondeliveryid').text();
+	    		 tbodycontent+='</p>'
+	    	} 
+	    	
+	    }
+	    else{
+	    	if(sellersArray[i].isCod=='Y'){
+	    		tbodycontent+='<p class="cod" id="codEligible">'
+    		    tbodycontent+=$('#cashondeliveryid').text();
+	    		tbodycontent+='</p>'
+    		    }
+	    }
 	  	tbodycontent+="</div>"; 
 	       var modes = sellersArray[i]['deliveryModes'];
 	        var deliveryMap="";
@@ -232,7 +250,20 @@ function focusOnElement() {
 		  		if(modes[j]['code'].toLowerCase().indexOf("collect")!=-1){
 		  			isClickDelivery=true;
 		  		}
-		  		deliveryMap+=modes[j]['code']+"-"+modes[j]['deliveryCost'].formattedValue;
+		  		//UF-306 Starts here
+		  		if(modes[j]['code']=='home-delivery')
+	  			{
+		  			deliveryMap+='standard-shipping'+"-"+modes[j]['deliveryCost'].formattedValue;
+	  			}
+		  		else if(modes[j]['code']=='express-delivery')
+	  			{
+		  			deliveryMap+='express-shipping'+"-"+modes[j]['deliveryCost'].formattedValue;
+	  			}
+		  		else if(modes[j]['code']=='click-and-collect')
+	  			{
+		  			deliveryMap+='CLiQ AND PiQ'+"-"+modes[j]['deliveryCost'].formattedValue;
+	  			}
+		  		//UF-306 Ends here
 		  	
 		  	}
 		  	var deliveryModeMap="";
@@ -287,17 +318,18 @@ function focusOnElement() {
 	    //console.log(JSON.stringfy(deliveryModeMap));
 	    //tbodycontent+="</li>";
 	   // if(ussidIdsForCOD==""||ussidIdsForCOD==[]){
-	    if($("#isPinCodeChecked").val()=="true"){
-	    	if(ussidIdsForCOD.indexOf(ussid)!=-1){
-	    		 tbodycontent+="<li>"+$('#cashondeliveryid').text()+"</li>";
-	    	} 
-	    	
-	    }
-	    else{
-	    	if(sellersArray[i].isCod=='Y'){
-    		    tbodycontent+="<li>"+$('#cashondeliveryid').text()+"</li>";
-    		    }
-	    }
+	    //TPR-6907
+//	    if($("#isPinCodeChecked").val()=="true"){
+//	    	if(ussidIdsForCOD.indexOf(ussid)!=-1){
+//	    		 tbodycontent+="<li>"+$('#cashondeliveryid').text()+"</li>";
+//	    	} 
+//	    	
+//	    }
+//	    else{
+//	    	if(sellersArray[i].isCod=='Y'){
+//    		    tbodycontent+="<li>"+$('#cashondeliveryid').text()+"</li>";
+//    		    }
+//	    }
 	  //UF-250(0 Day replacement guarantee text to be removed.)
 	    //tbodycontent+="<li>"; 
 	   // tbodycontent+=sellersArray[i]['replacement']+$('#replacementguranteeid').text();
@@ -440,7 +472,7 @@ function focusOnElement() {
 		//TPR-887 //INC144313255
 		 $(document).off('click', '#addToCartFormId'+index+' #buyNowButton'+index).on('click', '#addToCartFormId'+index+' #buyNowButton'+index, function(event) {
 		 //$(document).on('click','#addToCartFormId'+index+' #buyNowButton'+index,function(){
-	        if(!$("#variant li ").hasClass("selected") && typeof($(".variantFormLabel").html())== 'undefined' && $("#ia_product_rootCategory_type").val()!='Electronics' && $("#ia_product_rootCategory_type").val()!='Accessories' && $("#ia_product_rootCategory_type").val()!='Watches'){
+	        if(!$("#variant li ").hasClass("selected") && typeof($(".variantFormLabel").html())== 'undefined' && $("#ia_product_rootCategory_type").val()!='Electronics' && $("#ia_product_rootCategory_type").val()!='Accessories' && $("#ia_product_rootCategory_type").val()!='Watches' && $("#showSize").val()=='true'){
 			  		
 	        		$("#buyNowFormIdOthersel"+index).html($('#selectSizeId').text());
 					$("#buyNowFormIdOthersel"+index).show();

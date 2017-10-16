@@ -4,10 +4,14 @@
 package com.tisl.mpl.promotion.helper;
 
 import de.hybris.platform.catalog.model.CatalogVersionModel;
+import de.hybris.platform.catalog.model.classification.ClassificationClassModel;
+import de.hybris.platform.category.CategoryService;
+import de.hybris.platform.category.model.CategoryModel;
 import de.hybris.platform.core.Registry;
 import de.hybris.platform.core.model.order.AbstractOrderEntryModel;
 import de.hybris.platform.core.model.order.AbstractOrderModel;
 import de.hybris.platform.core.model.order.CartModel;
+import de.hybris.platform.core.model.product.ProductModel;
 import de.hybris.platform.core.model.user.CustomerModel;
 import de.hybris.platform.jalo.JaloInvalidParameterException;
 import de.hybris.platform.jalo.SessionContext;
@@ -26,7 +30,11 @@ import de.hybris.platform.servicelayer.exceptions.ModelNotFoundException;
 import de.hybris.platform.servicelayer.model.ModelService;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -594,6 +602,7 @@ public class MplPromotionHelper
 
 
 
+	//commented for PR-15 starts here
 	/**
 	 * Populate Seller Specific Data for Cart Promotions
 	 *
@@ -604,16 +613,55 @@ public class MplPromotionHelper
 	 * @param restrictionList
 	 * @return validProductUssidMap
 	 */
+	/*
+	 * public Map<String, AbstractOrderEntry> getCartSellerEligibleProducts(final SessionContext arg0, final
+	 * AbstractOrder order, final List<AbstractPromotionRestriction> restrictionList) { //CR Changes final Map<String,
+	 * AbstractOrderEntry> validProductUssidMap = new ConcurrentHashMap<String, AbstractOrderEntry>();
+	 *
+	 * final List<AbstractOrderEntry> entries = (null != order) ? order.getEntries() : new
+	 * ArrayList<AbstractOrderEntry>();
+	 *
+	 * // if (CollectionUtils.isNotEmpty(entries)) // { boolean isFreebie = false; boolean isofValidSeller = false;
+	 * String selectedUSSID = MarketplacecommerceservicesConstants.EMPTYSPACE;
+	 *
+	 *
+	 * for (final AbstractOrderEntry entry : entries) { isFreebie = validateEntryForFreebie(entry); if (!isFreebie) {
+	 * isofValidSeller = getDefaultPromotionsManager().checkSellerData(arg0, restrictionList, entry); if
+	 * (isofValidSeller) { try { selectedUSSID = (String) entry.getAttribute(arg0,
+	 * MarketplacecommerceservicesConstants.SELECTEDUSSID); } catch (JaloInvalidParameterException |
+	 * JaloSecurityException e) { LOG.error(e); } validProductUssidMap.put(selectedUSSID, entry); } } } //}
+	 *
+	 * return validProductUssidMap; }
+	 */
+	//commented for PR-15 ends here
+
+
+	// PR-15 starts here
+
+	/**
+	 * Populate Seller Specific Data for Cart Promotions
+	 *
+	 * TPR-715
+	 *
+	 * @param arg0
+	 * @param order
+	 * @param restrictionList
+	 * @return validProductUssidMap
+	 * @throws JaloSecurityException
+	 * @throws JaloInvalidParameterException
+	 */
+	@SuppressWarnings("deprecation")
 	public Map<String, AbstractOrderEntry> getCartSellerEligibleProducts(final SessionContext arg0, final AbstractOrder order,
-			final List<AbstractPromotionRestriction> restrictionList)
+			final List<AbstractPromotionRestriction> restrictionList, final List<Product> allowedProductList)
+			throws JaloInvalidParameterException, JaloSecurityException
 	{
-		//CR Changes
+
 		final Map<String, AbstractOrderEntry> validProductUssidMap = new ConcurrentHashMap<String, AbstractOrderEntry>();
 
 		final List<AbstractOrderEntry> entries = (null != order) ? order.getEntries() : new ArrayList<AbstractOrderEntry>();
 
-		//		if (CollectionUtils.isNotEmpty(entries))
-		//		{
+
+
 		boolean isFreebie = false;
 		boolean isofValidSeller = false;
 		String selectedUSSID = MarketplacecommerceservicesConstants.EMPTYSPACE;
@@ -624,25 +672,40 @@ public class MplPromotionHelper
 			isFreebie = validateEntryForFreebie(entry);
 			if (!isFreebie)
 			{
-				isofValidSeller = getDefaultPromotionsManager().checkSellerData(arg0, restrictionList, entry);
-				if (isofValidSeller)
+				if (CollectionUtils.isNotEmpty(allowedProductList) && allowedProductList.contains(entry.getProduct()))
 				{
-					try
+					if (CollectionUtils.isEmpty(restrictionList))
 					{
-						selectedUSSID = (String) entry.getAttribute(arg0, MarketplacecommerceservicesConstants.SELECTEDUSSID);
+						selectedUSSID = entry.getAttribute(arg0, MarketplacecommerceservicesConstants.SELECTEDUSSID).toString();
+						validProductUssidMap.put(selectedUSSID, entry);
 					}
-					catch (JaloInvalidParameterException | JaloSecurityException e)
+					else
 					{
-						LOG.error(e);
+						isofValidSeller = getDefaultPromotionsManager().checkSellerData(arg0, restrictionList, entry);
+						if (isofValidSeller)
+						{
+							try
+							{
+								selectedUSSID = (String) entry.getAttribute(arg0, MarketplacecommerceservicesConstants.SELECTEDUSSID);
+							}
+							catch (JaloInvalidParameterException | JaloSecurityException e)
+							{
+								LOG.error(e);
+							}
+							validProductUssidMap.put(selectedUSSID, entry);
+						}
 					}
-					validProductUssidMap.put(selectedUSSID, entry);
+
 				}
 			}
 		}
-		//}
+
 
 		return validProductUssidMap;
 	}
+
+	// PR-15 ends here
+
 
 
 	/**
@@ -1372,6 +1435,133 @@ public class MplPromotionHelper
 
 		return eligibleCount;
 	}
+
+
+	/**
+	 * Car-158
+	 *
+	 * @Description: Category Data corresponding to a Product for Promotion Intercepter
+	 * @param productdata
+	 * @return productCategoryData
+	 */
+
+	public List<CategoryModel> getcategoryData(final ProductModel productdata)
+	{
+		List<CategoryModel> productCategoryData = null;
+		//final List<CategoryModel> superCategoryData = null;
+		//final CatalogVersionModel oCatalogVersionModel = catalogData();
+
+		HashSet<CategoryModel> superCategoryData = null;
+		List<CategoryModel> superCategoryList = null;
+
+		if (null != productdata)
+		{
+			productCategoryData = new ArrayList<>(productdata.getSupercategories());
+
+			if (CollectionUtils.isNotEmpty(productCategoryData))
+			{
+				superCategoryList = new ArrayList<CategoryModel>();
+				superCategoryData = (HashSet<CategoryModel>) getAllSupercategories(productCategoryData);
+				if (CollectionUtils.isNotEmpty(superCategoryData))
+				{
+					final List<CategoryModel> dataList = new ArrayList<CategoryModel>(superCategoryData);
+					superCategoryList.addAll(dataList);
+				}
+				superCategoryList.addAll(productCategoryData);
+			}
+		}
+		return superCategoryList;
+	}
+
+	public List<CategoryModel> getAllCategories(final List<CategoryModel> categories)
+	{
+		final List<CategoryModel> categoryList = new ArrayList<CategoryModel>();
+		try
+		{
+			for (final CategoryModel category : categories)
+			{
+				//				final CategoryModel oModel = categoryService.getCategoryForCode(getDefaultPromotionsManager().catalogData(),
+				//						category.getCode());Car-158
+				if (null != category)
+				{
+					categoryList.add(category);
+					final Collection<CategoryModel> subCategoryList = categoryService.getAllSubcategoriesForCategory(category);
+					if (CollectionUtils.isNotEmpty(subCategoryList))
+					{
+						categoryList.addAll(populateSubCategoryData(subCategoryList));
+					}
+				}
+			}
+		}
+		catch (final Exception exception)
+		{
+			LOG.error(exception.getMessage());
+		}
+		return categoryList;
+	}
+
+	public List<CategoryModel> populateSubCategoryData(final Collection<CategoryModel> subCategoryList)
+	{
+		final List<CategoryModel> categoryList = new ArrayList<CategoryModel>();
+		for (final CategoryModel category : subCategoryList)
+		{
+			if (!(category instanceof ClassificationClassModel))
+			{
+				categoryList.add(category);
+			}
+		}
+
+		return categoryList;
+	}
+
+	/**
+	 * car-158 Get All Category Tree Structure
+	 *
+	 * @param categories
+	 * @return result
+	 */
+	public Collection<CategoryModel> getAllSupercategories(final Collection<CategoryModel> categories)
+	{
+		Collection<CategoryModel> result = null;
+		Collection<CategoryModel> currentLevel = new ArrayList<CategoryModel>();
+		for (final CategoryModel categoryModel : categories)
+		{
+			final List<CategoryModel> superCategories = categoryModel.getSupercategories();
+			if (superCategories != null)
+			{
+				currentLevel.addAll(superCategories);
+			}
+		}
+
+		while (!CollectionUtils.isEmpty(currentLevel))
+		{
+			for (final Iterator iterator = currentLevel.iterator(); iterator.hasNext();)
+			{
+				final CategoryModel categoryModel = (CategoryModel) iterator.next();
+				if (result == null)
+				{
+					result = new HashSet<CategoryModel>();
+				}
+				if (!result.add(categoryModel))
+				{
+					// avoid cycles by removing all which are already found
+					iterator.remove();
+				}
+			}
+
+			if (currentLevel.isEmpty())
+			{
+				break;
+			}
+			final Collection<CategoryModel> nextLevel = getAllSupercategories(currentLevel);
+			currentLevel = nextLevel;
+		}
+
+		return result == null ? Collections.EMPTY_LIST : result;
+	}
+
+	@Autowired
+	private CategoryService categoryService;
 
 
 }

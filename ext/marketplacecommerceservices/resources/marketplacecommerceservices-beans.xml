@@ -209,6 +209,7 @@
 		<!-- TPR-174 - Welcome back status message -->
 		<property name="gotMerged" type="boolean"/>
 		<property name="deliverySlotCharge" type="de.hybris.platform.commercefacades.product.data.PriceData"/>
+		<property name="exchangeAppliedCart" type="Boolean" />
 	</bean>
 	<bean class="de.hybris.platform.commercefacades.order.data.OrderData">
 		<property name="convenienceChargeForCOD" type="de.hybris.platform.commercefacades.product.data.PriceData"/>
@@ -265,13 +266,12 @@
 		<property name="fulfillmentType" type="String"/>
 		<property name="deliveryMode" type="String"/>
 		<property name="quantity" type="Integer"/>
-
-		<property name="transportMode" type="String"/>
-		
+		<property name="jewellery" type="boolean"/>
+		<property name="listingId" type="String"/>	
+		<property name="transportMode" type="String"/>		
 		<!-- Added new ServiceableSlavesData   -->
 		<property name="serviceableSlaves" type="java.util.List&lt;de.hybris.platform.commercefacades.product.data.ServiceableSlavesData>" />
-		<property name="cncServiceableSlaves" type="java.util.List&lt;de.hybris.platform.commercefacades.product.data.CNCServiceableSlavesData>" />
-
+		<property name="cncServiceableSlaves" type="java.util.List&lt;de.hybris.platform.commercefacades.product.data.CNCServiceableSlavesData>" />		
 	</bean>
 	<!--END: Added for Cart Soft Reservation -->
 	
@@ -311,6 +311,8 @@
 		<property name="TimeSlotFrom" type="String"/>
 		<property name="TimeSlotTo" type="String"/>
 		<!-- R2.3 END -->
+		<!-- TPR-4134 -->
+		<property name="reverseSealLostflag" type="String"/>
 	</bean>
 	
 	<!-- Return Item AddressInfo Data -->
@@ -489,6 +491,9 @@
 		<property name="isCancellationMissed" type="boolean"/>
 		
 		<property name="eddDateBetWeen" type="String"/>
+		<!-- TPR-1083 Exchange Start -->
+		<property name="exchangeApplied" type="String" />
+		<!-- TPR-1083 Exchange End -->
 		<!-- TPR-5346 -->
 		<property name="maxCountReached" type="boolean"/>
 	</bean>
@@ -628,7 +633,7 @@
     	<property name="deliveryCost" type="de.hybris.platform.commercefacades.product.data.PriceData" />
     	<property name="voucherDiscount" type="com.tisl.mpl.data.VoucherDiscountData" />
     	<property name="promoExpiryMsg" type="String" />		<!-- TPR-629 -->
-    	<property name="totalDiscntIncMrp" type="de.hybris.platform.commercefacades.product.data.PriceData" />		<!-- UF-260 -->
+    	<property name="totalDiscntIncMrp" type="de.hybris.platform.commercefacades.product.data.PriceData" />	<!-- UF-260 -->
     </bean> 
 	
 	<!-- Data class for Payment Specific Promotions Ends-->
@@ -818,7 +823,22 @@
 		<property name="returnFulfillmentMode" type="String"/>
 		<!--Bug Id TISRLUAT-818  -->
 		<property name="selfCourierDocumentLink" type="String"/>
+		<!-- TPR-4134 -->
+		<property name="reverseSealLostflag" type="String"/>
 	</bean>
+	<!-- TPR-1083 Exchange Start -->
+	<bean class="de.hybris.platform.commerceservices.service.data.CommerceCartParameter">
+		<property name="exchangeParam" type="String">	<!-- TPR-629 -->
+			<description>Exchange Parameters</description>
+		</property>
+	</bean>
+	
+	<bean class="com.tisl.mpl.facades.product.data.ExchangeGuideDropdownData">
+		<property name="l4categorylist" type="java.util.Set&lt;String>" />
+		<property name="isWorkinglist" type="java.util.Set&lt;String>" />
+		<property name="priceList" type="java.util.Set&lt;String>" />
+	</bean>
+	<!-- TPR-1083 Exchange Ends -->
 	
 	<!-- TPR-1072 START -->
 	<bean class="com.tisl.mpl.data.ShopByBrandData">
@@ -829,4 +849,62 @@
  		<property name="layout" type="com.tisl.mpl.core.enums.LayoutStructure" />
  	</bean>
 	<!-- TPR-1072 END -->
+	
+	<!-- //PRICE BREAKUP STARTS:TPR-3752- -->
+	<bean class="com.tisl.mpl.data.PriceBreakupData">
+	<property name="name" type="String" />
+	<property name="weightRateList" type="java.util.List&lt;String>" />
+	<property name="price" type="de.hybris.platform.commercefacades.product.data.PriceData" />
+	</bean>
+	
+
+	<!-- For TPR-5733 -->
+	<bean class="com.tisl.mpl.facades.cms.data.FooterLinkData">
+		<property name="footerLinkRow" type="Integer"/>
+		<property name="footerLinkColumn" type="Integer"/>
+		<property name="footerLinkName" type="String"/>
+		<property name="footerLinkURL" type="String"/>
+	</bean>
+	
+	<!-- TPR-5667 : Samsung order response | start -->
+	<bean class="com.tisl.mpl.samsung.wsdto.ChargeWsDTO">
+    	<property name="charges" type="String"/>
+    	<property name="cost" type="Double"/>
+    </bean>
+    <bean class="com.tisl.mpl.samsung.wsdto.DeliveryModeWsDTO">
+    	<property name="code" type="String"/>
+    	<property name="deliveryCost" type="Double"/>
+    	<property name="desc" type="String"/>
+    	<property name="name" type="String"/>
+    </bean>
+	<bean class="com.tisl.mpl.samsung.wsdto.ProductWsDTO">
+    	<property name="USSID" type="String"/>
+    	<property name="price" type="Double"/>
+    	<property name="promoDiscount" type="Double"/>
+    	<property name="couponDiscoun" type="Double"/>
+    	<property name="apportionedPrice" type="Double"/>
+    	<property name="productBrand" type="String"/>
+    	<property name="productCategory" type="String"/>
+    	<property name="productDescription" type="String"/>
+    	<property name="productName" type="String"/>
+    	<property name="listingId" type="String"/>
+    	<property name="quantity" type="Integer"/>
+    	<property name="Charges" type="com.tisl.mpl.samsung.wsdto.ChargeWsDTO"/>
+    	<property name="rootCategory" type="String"/>
+    	<property name="selectedDeliveryMode" type="com.tisl.mpl.samsung.wsdto.DeliveryModeWsDTO"/>
+    	<property name="sellerID" type="String"/>
+    	<property name="sellerName" type="String"/>
+    </bean>
+	<bean class="com.tisl.mpl.samsung.wsdto.OrderListWsDTO">
+    	<property name="orderId" type="String"/>
+    	<property name="products" type="java.util.List&lt;com.tisl.mpl.samsung.wsdto.ProductWsDTO>"/>
+    	<property name="status" type="String"/>
+    	<property name="subTotal" type="Double"/>
+    </bean>
+    <bean class="com.tisl.mpl.samsung.wsdto.OrderResponseWsDTO">
+    	<property name="ORN" type="String"/>
+    	<property name="placedDate" type="String"/>
+    	<property name="Order" type="java.util.List&lt;com.tisl.mpl.samsung.wsdto.OrderListWsDTO>"/>
+    </bean>
+    <!-- TPR-5667 : Samsung order response | end -->
 </beans>

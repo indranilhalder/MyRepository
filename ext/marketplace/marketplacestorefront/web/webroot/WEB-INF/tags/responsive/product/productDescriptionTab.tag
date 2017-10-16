@@ -78,7 +78,24 @@
   		</c:if>
   		 
   		<ul>
-  		
+  			<c:choose>
+  				<c:when test="${'TravelAndLuggage' eq product.rootCategory}">
+  					<c:forEach var="classification" items="${mapConfigurableAttributes}">
+				   		<c:choose>
+   							<c:when test="${not empty classification.value }">
+   						 		<li> ${classification.key} -
+   						 		<c:forEach var="classValue" items="${classification.value }">
+   						 			${classValue.key} &nbsp;&nbsp;${classValue.value}</li>
+   						 		 </c:forEach>
+   							</c:when>
+   						<c:otherwise>
+   						<li> ${classification.key}</li>
+   						</c:otherwise>	
+   						</c:choose>
+					</c:forEach>
+  				</c:when>
+  			</c:choose>
+  			
   			<c:forEach var="classification" items="${mapConfigurableAttribute}">
 				   <li>${classification.value}</li>
 			</c:forEach>
@@ -88,4 +105,3 @@
 	</ycommerce:testId>
 </div>
 <!-- PDP changes end -->
-

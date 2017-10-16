@@ -17,7 +17,8 @@ recEndPoint = rootEP + '/SocialGenomix/recommendations/products';
 // *******************************************************************************
 // Populating Dynamic Parameter Values For IA
 var allsizes = [ "XXS", "XS", "S", "M", "L", "XL", "XXL" ];
-var hotDropdownselected = 'All Department';
+//PRDI-294
+var hotDropdownselected = 'All Departments';
 var sortDropdownselected = "";
 var currentPageURL = window.location.href;
 ecompany = $('#ecompanyForIA').val();
@@ -102,8 +103,13 @@ if (currentPageURL.indexOf("/c-mbh") > -1) {
 }
 // changes end
 if (currentPageURL.indexOf("/m/") > -1) {
-	site_page_type = 'seller';
+	
 	seller_id = $('#mSellerID').val();
+	//INC144319294
+	if(seller_id != undefined && seller_id != "")
+	{
+		site_page_type = 'seller';
+	}
 }
 var footerPageType = $('#ia_footer_page_id').val();
 if (footerPageType === 'footerLinkPage') {
@@ -711,6 +717,8 @@ function makeProductHtml(widgetElement, obj, rid) {
 	var mrp=""
 	var spPrice="";
 	var isProductPresent=false;
+	//PRDI-274
+	var html = '';
 	
 	if(iaResponseData != null && iaResponseData != undefined)
 	{
@@ -779,7 +787,8 @@ function makeProductHtml(widgetElement, obj, rid) {
 							 */
 		IAurl += '&rspid=' + spid;
 	}
-	var html = '';
+	//PRDI-274
+	//var html = '';
 
 	/* TISPRO-303 Changes-checking with 'type' */
 	if ((obj.colors != null && obj.colors.length < 2)
@@ -1033,10 +1042,11 @@ function makeProductHtml(widgetElement, obj, rid) {
 	html += '<p style="font-size: 12px;margin-top: 33px;color: rgb(255, 28, 71);" id="status'
 			+ obj.site_product_id + '"></p>';
 	html += '</li>';
-	
-	return html;
+	//PRDI-274
+	//return html;
 	}
-	
+	//PRDI-274
+	return html;
 	}
 
 /* Call Recommendation API, retry if no session id */
@@ -1249,10 +1259,12 @@ function updatePage(response, widgetMode) {
 
 		var catHtml = '<div class="select-view ">';
 		// for release 2 changes in home-page headers-All Departments
-		catHtml += '<div class="select-list"><span class="selected hotSelected">All Departments</span><ul id="ia_category_select" style="width: auto;">';
+		//PRDI-294
+		catHtml += '<div class="select-list"><span class="selected hotSelected">'+ hotDropdownselected +'</span><ul id="ia_category_select" style="width: auto;">';
 		for (var i = 0; i < categoryFilters.length; i++) {
 			if (i == 0) {
-				catHtml += '<li class="category_li" id="allCat">All Departments</li>';
+				//PRDI-294
+				catHtml += '<li class="category_li" id="">All Departments</li>';
 			}
 			catHtml += '<li class="category_li" id="'
 					+ categoryCodeForFilters[i] + '">' + categoryFilters[i]

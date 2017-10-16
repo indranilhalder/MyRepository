@@ -19,10 +19,17 @@
 <spring:url value="/my-account/payment-details" var="paymentDetailsUrl" />
 <spring:url value="/my-account/orders" var="ordersUrl" />
 <spring:url value="/my-account/default/wishList" var="wishlistUrl" />
+<spring:eval expression="T(de.hybris.platform.util.Config).getParameter('marketplace.contactus.link')" var="contactUrl"/>
 
 	<template:page pageTitle="${pageTitle}">
 	<div class="account">
 		<div class="page-header">
+		<c:choose>
+ 			<c:when test="${not empty fineJewSelfCourierError && fineJewSelfCourierError eq true}">
+ 			<span><spring:theme code="return.fineJwlry.selfCourier.errorMessage"
+ 					arguments="${contactUrl}" /></span>
+ 			</c:when>
+ 		<c:otherwise>
 			<c:choose>
 			<c:when test="${quickdrop eq 'true'}">
 			<h2><spring:message code="return.success"></spring:message></h2>
@@ -40,6 +47,8 @@
 				<p>${returnLogisticsMessage}</p>
 			<%-- </c:otherwise> 
 			</c:choose>--%>
+			</c:otherwise>
+			</c:choose>
 		</div>
 		<div class="wrapper">
 			<a class="return-order-history" href="/my-account/orders">Back to
@@ -57,12 +66,12 @@
 											<c:choose>
 												<c:when test="${fn:toLowerCase(entryReturn.product.luxIndicator)=='luxury'}">
 														<product:productPrimaryImage
-															product="${entryReturn.product}" format="luxuryCartIcon" />
+															product="${entryReturn.product}" format="luxuryCartIcon" lazyLoad="false"/>
 							
 												</c:when>
 												<c:otherwise>
 														<product:productPrimaryImage
-															product="${entryReturn.product}" format="thumbnail" />
+															product="${entryReturn.product}" format="thumbnail" lazyLoad="false"/>
 														
 												</c:otherwise>
 											</c:choose>
@@ -78,7 +87,33 @@
 											<p class="item-info">											
 												<span>Qty: ${entryReturn.quantity}</span>
 												<c:if test="${not empty entryReturn.product.size}">
-				 									<span>Size: ${entryReturn.product.size}</span>
+													<c:choose>
+														<c:when test="${(not empty entryReturn.product.rootCategory) && (entryReturn.product.rootCategory == 'FineJewellery' || entryReturn.product.rootCategory == 'FashionJewellery') }">
+															<spring:theme code="product.variant.size.noSize" var="noSize"/>
+															<c:if test="${entryReturn.product.size ne noSize}">
+																<spring:eval expression="T(de.hybris.platform.util.Config).getParameter('mpl.jewellery.category')" var="lengthVariant"/>
+																<c:set var = "categoryListArray" value = "${fn:split(lengthVariant, ',')}" />
+																<c:forEach items="${entry.product.categories}" var="categories">
+														   			<c:forEach items = "${categoryListArray}" var="lengthVariantArray">
+														   				<c:if test="${categories.code eq lengthVariantArray}">
+														   				 	<c:set var="lengthSize" value="true"/>
+														   				</c:if> 
+														   			</c:forEach>
+														   		</c:forEach>
+														   		<c:choose>
+														   			<c:when test="${true eq lengthSize}">
+														   				<span><spring:theme code="product.variant.length.colon"/>${entryReturn.product.size}</span>
+														   			</c:when>
+														   			<c:otherwise>
+														   				<span>Size: ${entryReturn.product.size}</span>
+														   			</c:otherwise>
+														   		</c:choose>
+															</c:if>
+														</c:when>
+														<c:otherwise>
+															<span>Size: ${entryReturn.product.size}</span>
+														</c:otherwise>
+				 									</c:choose>
 												</c:if>
 												<c:if test="${not empty entryReturn.product.colour}">
 													<span>Color: ${entryReturn.product.colour}</span>

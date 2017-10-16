@@ -234,11 +234,11 @@ public class NotificationFacadeImpl implements NotificationFacade
 	 * java.lang.String, java.lang.String)
 	 */
 	@Override
-	public void markNotificationRead(final String customerId, final String orderNo, final String consignmentNo,
-			final String shopperStatus) throws EtailNonBusinessExceptions
+	public void markNotificationRead(final String emailId, final String customerId, final String orderNo,
+			final String consignmentNo, final String shopperStatus) throws EtailNonBusinessExceptions
 	{
 
-		notificationService.markNotificationRead(customerId, orderNo, consignmentNo, shopperStatus);
+		notificationService.markNotificationRead(emailId, customerId, orderNo, consignmentNo, shopperStatus);
 
 	}
 
@@ -252,7 +252,7 @@ public class NotificationFacadeImpl implements NotificationFacade
 		if (user != null)
 		{
 			//markNotificationRead(user.getUid(), orderNo, consignmentNo, shopperStatus);
-			markNotificationRead(user.getOriginalUid(), orderNo, consignmentNo, shopperStatus);
+			markNotificationRead(user.getOriginalUid(), user.getUid(), orderNo, consignmentNo, shopperStatus);
 		}
 	}
 
@@ -317,7 +317,9 @@ public class NotificationFacadeImpl implements NotificationFacade
 		try
 		{
 			getNotificationService().triggerEmailAndSmsOnOrderConfirmation(orderModel, trackOrderUrl);
+
 		}
+
 		catch (final JAXBException e)
 		{
 			LOG.error("Error while sending notifications from job>>>>>>", e);
@@ -331,4 +333,35 @@ public class NotificationFacadeImpl implements NotificationFacade
 	}
 
 
+
+
+	/**
+	 * This method sends opan card reject email tpr-3765
+	 *
+	 * @param orderModel
+	 */
+
+
+	//	@Override
+	//	public void sendPancardRejectNotification(final OrderModel orderModel)
+	//	{
+	//		//Email and sms for Payment_Successful
+	//		final String trackOrderUrl = getConfigurationService().getConfiguration().getString(
+	//				MarketplacecommerceservicesConstants.SMS_ORDER_TRACK_URL)
+	//				+ orderModel.getCode();
+	//		try
+	//		{
+	//			getNotificationService().triggerEmailAndSmsOnPancardReject(orderModel, trackOrderUrl);
+	//		}
+	//		catch (final JAXBException e)
+	//		{
+	//			LOG.error("Error while sending notifications from job>>>>>>", e);
+	//			throw new EtailNonBusinessExceptions(e);
+	//		}
+	//		catch (final Exception ex)
+	//		{
+	//			LOG.error("Error while sending notifications>>>>>>", ex);
+	//			throw new EtailNonBusinessExceptions(ex);
+	//		}
+	//	}
 }

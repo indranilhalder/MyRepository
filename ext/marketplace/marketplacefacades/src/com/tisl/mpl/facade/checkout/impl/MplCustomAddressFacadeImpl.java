@@ -16,6 +16,7 @@ import de.hybris.platform.commercefacades.product.data.PriceData;
 import de.hybris.platform.commercefacades.product.data.PriceDataType;
 import de.hybris.platform.commercefacades.user.data.AddressData;
 import de.hybris.platform.converters.Converters;
+import de.hybris.platform.core.model.JewelleryInformationModel;
 import de.hybris.platform.core.model.c2l.CurrencyModel;
 import de.hybris.platform.core.model.order.AbstractOrderEntryModel;
 import de.hybris.platform.core.model.order.AbstractOrderModel;
@@ -34,8 +35,11 @@ import de.hybris.platform.servicelayer.util.ServicesUtil;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+
+import javax.annotation.Resource;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.log4j.Logger;
@@ -43,12 +47,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.Assert;
 
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
+import com.tisl.mpl.core.enums.DeliveryFulfillModesEnum;
 import com.tisl.mpl.core.model.MplZoneDeliveryModeValueModel;
 import com.tisl.mpl.core.model.RichAttributeModel;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.facade.checkout.MplCustomAddressFacade;
 import com.tisl.mpl.facades.constants.MarketplaceFacadesConstants;
 import com.tisl.mpl.marketplacecommerceservices.service.MplDeliveryCostService;
+import com.tisl.mpl.marketplacecommerceservices.service.MplJewelleryService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplSellerInformationService;
 import com.tisl.mpl.model.SellerInformationModel;
 
@@ -76,11 +82,15 @@ public class MplCustomAddressFacadeImpl extends DefaultCheckoutFacade implements
 	@Autowired
 	private MplSellerInformationService mplSellerInformationService;
 
+	@Resource(name = "mplJewelleryService")
+	private MplJewelleryService jewelleryService;
 
 	@Autowired
 	private SessionService sessionService;
 
 	private static final Logger LOG = Logger.getLogger(MplCustomAddressFacadeImpl.class);
+
+	private static final String FINEJEWELLERY = "FineJewellery";
 
 	/**
 	 * @return the cartFacade
@@ -232,6 +242,58 @@ public class MplCustomAddressFacadeImpl extends DefaultCheckoutFacade implements
 		return cartData;
 	}
 
+	/**
+	 * @description: It is responsible for fetching Cart Data//CAR-323
+	 * @return CartData
+	 */
+	@Override
+	public CartData getCheckoutCart(final CartModel cart)
+	{
+		final CartModel cartModel = cart;
+		CartData cartData = null;
+		if (null != cartModel)
+		{
+			cartData = getMplExtendedCartConverter().convert(cartModel);
+
+			if (cartData != null)
+			{
+				cartData.setDeliveryAddress(getDeliveryAddress(cartModel));
+				cartData.setPaymentInfo(getPaymentDetails(cartModel));
+
+			}
+			if (null != cartModel.getConvenienceCharges())
+			{
+				cartData.setConvenienceChargeForCOD(createPrice(cartModel, cartModel.getConvenienceCharges()));
+			}
+			if (null != cartModel.getTotalPriceWithConv())
+			{
+				cartData.setTotalPriceWithConvCharge(createPrice(cartModel, cartModel.getTotalPriceWithConv()));
+			}
+		}
+		else
+		{
+			LOG.error(">>>> getCheckoutCart() CartModel is null ");
+		}
+		return cartData;
+	}
+
+
+	//CAR-323
+	protected CCPaymentInfoData getPaymentDetails(final CartModel cartModel)
+	{
+		final CartModel cart = cartModel;
+		if (cart != null)
+		{
+			final PaymentInfoModel paymentInfo = cart.getPaymentInfo();
+			if (paymentInfo instanceof CreditCardPaymentInfoModel)
+			{
+				return getCreditCardPaymentInfoConverter().convert((CreditCardPaymentInfoModel) paymentInfo);
+			}
+		}
+
+		return null;
+	}
+
 
 	/**
 	 * @description: It is creating price data for a price value
@@ -265,9 +327,34 @@ public class MplCustomAddressFacadeImpl extends DefaultCheckoutFacade implements
 	 * @return AddressData
 	 */
 	@Override
-	protected AddressData getDeliveryAddress()
+	public AddressData getDeliveryAddress()
 	{
 		final CartModel cart = getCart();
+		if (cart != null)
+		{
+			final AddressModel deliveryAddress = cart.getDeliveryAddress();
+			if (deliveryAddress != null)
+			{
+				// Ensure that the delivery address is in the set of supported addresses
+				final AddressModel supportedAddress = getDeliveryAddressModelForCode(deliveryAddress.getPk().toString());
+				if (supportedAddress != null)
+				{
+					return getCustomAddressConverter().convert(supportedAddress);
+				}
+			}
+		}
+
+		return null;
+	}
+
+	/**
+	 * @description: It is responsible for fetching cart delivery address
+	 * @return AddressData
+	 */
+	@Override
+	public AddressData getDeliveryAddress(final CartModel cartModel)
+	{
+		final CartModel cart = cartModel;
 		if (cart != null)
 		{
 			final AddressModel deliveryAddress = cart.getDeliveryAddress();
@@ -413,7 +500,7 @@ public class MplCustomAddressFacadeImpl extends DefaultCheckoutFacade implements
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.tisl.mpl.facade.checkout.MplCustomAddressFacade#populateDeliveryMethodData(java.lang.String,
 	 * java.lang.String)
 	 */
@@ -444,7 +531,26 @@ public class MplCustomAddressFacadeImpl extends DefaultCheckoutFacade implements
 							deliveryCode, MarketplacecommerceservicesConstants.INR, sellerArticleSKU);
 
 					//TISEE-289
-					final SellerInformationModel sellerInfoModel = getMplSellerInformationService().getSellerDetail(sellerArticleSKU);
+					//final SellerInformationModel sellerInfoModel = getMplSellerInformationService().getSellerDetail(sellerArticleSKU);
+					SellerInformationModel sellerInfoModel = null;
+					if (entry.getProduct().getProductCategoryType().equalsIgnoreCase(FINEJEWELLERY))
+					{
+						final List<JewelleryInformationModel> jewelleryInfo = jewelleryService
+								.getJewelleryInfoByUssid(sellerArticleSKU);
+						if (CollectionUtils.isNotEmpty(jewelleryInfo))
+						{
+							sellerInfoModel = getMplSellerInformationService().getSellerDetail(jewelleryInfo.get(0).getPCMUSSID());
+						}
+						else
+						{
+							LOG.error("No entry for JewelleryInformationModel for " + sellerArticleSKU);
+						}
+					}
+					else
+					{
+						sellerInfoModel = getMplSellerInformationService().getSellerDetail(sellerArticleSKU);
+					}
+
 					if (sellerInfoModel != null && sellerInfoModel.getRichAttribute() != null
 							&& ((List<RichAttributeModel>) sellerInfoModel.getRichAttribute()).get(0).getDeliveryFulfillModes() != null)
 					{
@@ -510,9 +616,9 @@ public class MplCustomAddressFacadeImpl extends DefaultCheckoutFacade implements
 
 	/*
 	 * Set delivery mode using USSID
-	 * 
+	 *
 	 * @param deliveryCode
-	 * 
+	 *
 	 * @param sellerArticleSKUID
 	 */
 	@Override
@@ -666,7 +772,10 @@ public class MplCustomAddressFacadeImpl extends DefaultCheckoutFacade implements
 			if (isValidDeliveryAddress(cartModel, addressModel))
 			{
 				getModelService().save(cartModel);
-				getModelService().save(addressModel);
+				if (null != addressModel)
+				{
+					getModelService().save(addressModel);
+				}
 				getModelService().refresh(cartModel);
 				return true;
 			}
@@ -730,6 +839,7 @@ public class MplCustomAddressFacadeImpl extends DefaultCheckoutFacade implements
 				MarketplaceFacadesConstants.TSHIPTHRESHOLDVALUE);
 		tshipThresholdValue = (tshipThresholdValue != null && !tshipThresholdValue.isEmpty()) ? tshipThresholdValue : Integer
 				.toString(0);
+
 		List<PinCodeResponseData> pincoderesponseDataList = null;
 		pincoderesponseDataList = sessionService
 				.getAttribute(MarketplacecommerceservicesConstants.PINCODE_RESPONSE_DATA_TO_SESSION);
@@ -743,16 +853,46 @@ public class MplCustomAddressFacadeImpl extends DefaultCheckoutFacade implements
 				if (sellerArticleSKU.equals(entry.getSelectedUSSID()) && !entry.getGiveAway().booleanValue())
 				{
 					//Retrieve delivery modes and delivery charges for a USSID and saving them in cart entry.This will be taken forward to Order entry
-					final MplZoneDeliveryModeValueModel mplZoneDeliveryModeValueModel = mplDeliveryCostService.getDeliveryCost(
-							deliveryCode, MarketplacecommerceservicesConstants.INR, sellerArticleSKU);
+					MplZoneDeliveryModeValueModel mplZoneDeliveryModeValueModel = null;
 
 					//TISEE-289
-					final SellerInformationModel sellerInfoModel = getMplSellerInformationService().getSellerDetail(sellerArticleSKU);
-					if (sellerInfoModel != null && sellerInfoModel.getRichAttribute() != null
-							&& ((List<RichAttributeModel>) sellerInfoModel.getRichAttribute()).get(0).getDeliveryFulfillModes() != null)
+					//for fine jewellery
+					SellerInformationModel sellerInfoModel = null;
+					if (entry.getProduct().getProductCategoryType().equalsIgnoreCase(FINEJEWELLERY))
 					{
-						fulfillmentType = ((List<RichAttributeModel>) sellerInfoModel.getRichAttribute()).get(0)
-								.getDeliveryFulfillModes().getCode();
+						final List<JewelleryInformationModel> jewelleryInfo = jewelleryService
+								.getJewelleryInfoByUssid(sellerArticleSKU);
+						if (CollectionUtils.isNotEmpty(jewelleryInfo))
+						{
+							sellerInfoModel = getMplSellerInformationService().getSellerDetail(jewelleryInfo.get(0).getPCMUSSID());
+							mplZoneDeliveryModeValueModel = mplDeliveryCostService.getDeliveryCost(deliveryCode,
+									MarketplacecommerceservicesConstants.INR, jewelleryInfo.get(0).getPCMUSSID());
+						}
+						else
+						{
+							LOG.error("No entry for JewelleryInformationModel for " + sellerArticleSKU);
+						}
+
+					}
+					else
+					{
+						sellerInfoModel = getMplSellerInformationService().getSellerDetail(sellerArticleSKU);
+						mplZoneDeliveryModeValueModel = mplDeliveryCostService.getDeliveryCost(deliveryCode,
+								MarketplacecommerceservicesConstants.INR, sellerArticleSKU);
+					}
+					Collection<RichAttributeModel> richAttributeModelList = null;
+					if (null != sellerInfoModel)
+					{
+						richAttributeModelList = sellerInfoModel.getRichAttribute();
+					}
+					DeliveryFulfillModesEnum deliveryFulfillModes = null;
+					if (null != sellerInfoModel)
+					{
+						deliveryFulfillModes = ((List<RichAttributeModel>) richAttributeModelList).get(0).getDeliveryFulfillModes();
+					}
+					if (deliveryFulfillModes != null)
+					{
+						fulfillmentType = deliveryFulfillModes.getCode();
 
 
 						//Blocked for TPR-579
@@ -780,24 +920,27 @@ public class MplCustomAddressFacadeImpl extends DefaultCheckoutFacade implements
 						/*
 						 * if (fulfillmentType.equalsIgnoreCase(MarketplaceFacadesConstants.TSHIPCODE) &&
 						 * entry.getTotalPrice().doubleValue() > Double.parseDouble(tshipThresholdValue))
-						 * 
-						 * 
-						 * 
+						 *
+						 *
+						 *
 						 * // For Release 1 , TShip delivery cost will always be zero . Hence , commenting the below code
 						 * which check configuration from HAC // if
 						 * (fulfillmentType.equalsIgnoreCase(MarketplaceFacadesConstants.TSHIPCODE) // &&
 						 * entry.getTotalPrice().doubleValue() > Double.parseDouble(tshipThresholdValue)) // // { //
 						 * mplZoneDeliveryModeValueModel.setValue(Double.valueOf(0.0)); // }
-						 * 
+						 *
 						 * { mplZoneDeliveryModeValueModel.setValue(Double.valueOf(0.0)); }
 						 */
-
 					}
 
 					entry.setMplDeliveryMode(mplZoneDeliveryModeValueModel);
-					if (mplZoneDeliveryModeValueModel.getValue() != null
-							&& null != mplZoneDeliveryModeValueModel.getDeliveryFulfillModes()
-							&& fulfillmentType.equalsIgnoreCase(mplZoneDeliveryModeValueModel.getDeliveryFulfillModes().getCode()))
+					DeliveryFulfillModesEnum deliveryFulfillModesEnum = null;
+					if (null != mplZoneDeliveryModeValueModel)
+					{
+						deliveryFulfillModesEnum = mplZoneDeliveryModeValueModel.getDeliveryFulfillModes();
+					}
+					if (null != deliveryFulfillModesEnum && mplZoneDeliveryModeValueModel.getValue() != null
+							&& fulfillmentType.equalsIgnoreCase(deliveryFulfillModesEnum.getCode()))
 					{
 						if (entry.getIsBOGOapplied().booleanValue())
 						{
@@ -823,9 +966,14 @@ public class MplCustomAddressFacadeImpl extends DefaultCheckoutFacade implements
 					LOG.debug(" >>> Delivery cost for ussid  " + sellerArticleSKU + " of fulfilment type " + fulfillmentType + " is "
 							+ deliveryCost);
 
+					final MplZoneDeliveryModeValueModel mplZoneDeliveryModeValueModelEntry = entry.getMplDeliveryMode();
+					DeliveryModeModel deliveryModeModel = null;
+					if (null != mplZoneDeliveryModeValueModelEntry)
+					{
+						deliveryModeModel = mplZoneDeliveryModeValueModelEntry.getDeliveryMode();
+					}
 					//if delivery mode is changed from  c-n-c to other and if it contains POS then we need to remove the POS from that entry
-					if (null != entry.getMplDeliveryMode() && null != entry.getMplDeliveryMode().getDeliveryMode()
-							&& !entry.getMplDeliveryMode().getDeliveryMode().getCode().equals(MarketplaceFacadesConstants.C_C)
+					if (null != deliveryModeModel && !deliveryModeModel.getCode().equals(MarketplaceFacadesConstants.C_C)
 							&& null != entry.getDeliveryPointOfService())
 					{
 						entry.setDeliveryPointOfService(null);
@@ -977,7 +1125,7 @@ public class MplCustomAddressFacadeImpl extends DefaultCheckoutFacade implements
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * com.tisl.mpl.facade.checkout.MplCustomAddressFacade#getDeliveryAddresses(de.hybris.platform.commercefacades.user
 	 * .data.AddressData)

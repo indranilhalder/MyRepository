@@ -7,9 +7,11 @@ import de.hybris.platform.acceleratorservices.model.cms2.pages.EmailPageModel;
 import de.hybris.platform.acceleratorservices.process.email.context.AbstractEmailContext;
 import de.hybris.platform.basecommerce.model.site.BaseSiteModel;
 import de.hybris.platform.commercefacades.order.data.OrderData;
+import de.hybris.platform.core.model.JwlryRevSealInfoModel;
 import de.hybris.platform.core.model.c2l.LanguageModel;
 import de.hybris.platform.core.model.order.AbstractOrderEntryModel;
 import de.hybris.platform.core.model.order.OrderModel;
+import de.hybris.platform.core.model.product.ProductModel;
 import de.hybris.platform.core.model.user.AddressModel;
 import de.hybris.platform.core.model.user.CustomerModel;
 import de.hybris.platform.ordersplitting.model.ConsignmentModel;
@@ -21,6 +23,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
+import javax.annotation.Resource;
+
 import org.apache.commons.lang.StringUtils;
 import org.apache.velocity.tools.generic.NumberTool;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,7 +32,8 @@ import org.springframework.beans.factory.annotation.Required;
 
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.core.model.OrderUpdateProcessModel;
-import com.tisl.mpl.shorturl.service.ShortUrlService;
+import com.tisl.mpl.marketplacecommerceservices.service.MplJewelleryService;
+
 
 
 /**
@@ -72,11 +77,22 @@ public class OrderDeliveryEmailContext extends AbstractEmailContext<OrderUpdateP
 	private static final String ORDERPLACEDATE = "orderPlaceDate";
 	private static final String SUBTOTAL = "subTotal";
 	private static final String CONVENIENCECHARGE = "convenienceChargesVal";
+	private static final String COUNT = "count"; //added for jewellery
+	private static final String WEBSITE_URL = "websiteUrl";
+	private static final String JWLRY_FRWRD_SEAL_DESCRIPTION = "jwlryFrwrdSealDesc";
+	private static final String JWLRY_FRWRD_SEAL_IMAGE = "jwlryFrwrdSealImg";
+	private static final String JWLRY_REV_SEAL_DESCRIPTION = "jwlryRevSealDesc";
+	private static final String JWLRY_REV_SEAL_IMAGE = "jwlryRevSealImg";
+
 
 	@Autowired
 	private ConfigurationService configurationService;
-	@Autowired
-	private ShortUrlService shortUrlService;
+
+	@Resource(name = "mplJewelleryService")
+	private MplJewelleryService mplJewelleryService;
+
+	//	@Autowired
+	//	private ShortUrlService shortUrlService;//Sonar Fix
 
 
 	@Override
@@ -131,6 +147,7 @@ public class OrderDeliveryEmailContext extends AbstractEmailContext<OrderUpdateP
 		double shippingCharge = 0;
 		double subTotal = 0;
 		double totalPrice = 0;
+		double count = 0; //added for jewellery
 
 		for (final String entryNumber : entryNumbers)
 		{
@@ -147,6 +164,24 @@ public class OrderDeliveryEmailContext extends AbstractEmailContext<OrderUpdateP
 					formatter = new SimpleDateFormat("MMM d, yyyy");
 					final String orderPlaceDate = formatter.format(childOrder.getCreationtime());
 					put(ORDERPLACEDATE, orderPlaceDate);
+
+					//added for jewellery-TPR-3765 start
+					final ProductModel prod = childOrder.getProduct();
+					if (prod != null && prod.getProductCategoryType().equalsIgnoreCase("FineJewellery"))
+					{
+						count += 1;
+						final String sellerId = childOrder.getSelectedUSSID().substring(0, 6);
+						final JwlryRevSealInfoModel sealInfo = mplJewelleryService.getSealInfo(sellerId);
+						if (null != sealInfo)
+						{
+							put(JWLRY_FRWRD_SEAL_DESCRIPTION, sealInfo.getFrwrdSealDescription());
+							put(JWLRY_FRWRD_SEAL_IMAGE, sealInfo.getFrwrdSealImageUrl());
+							put(JWLRY_REV_SEAL_DESCRIPTION, sealInfo.getRevSealDescription());
+							put(JWLRY_REV_SEAL_IMAGE, sealInfo.getRevSealImageUrl());
+						}
+					}
+					//added for jewellery-TPR-3765 end
+
 
 					//					final ProductModel productModel = childOrder.getProduct();
 					//					final String productImageUrl = productModel.getPicture().getURL();
@@ -167,7 +202,8 @@ public class OrderDeliveryEmailContext extends AbstractEmailContext<OrderUpdateP
 				MarketplacecommerceservicesConstants.MPL_TRACK_ORDER_LONG_URL_FORMAT)
 				+ orderReferenceNumber;
 		/* Added in R2.3 for shortUrl START */
-		final String shortUrl = shortUrlService.genearateShortURL(orderReferenceNumber);
+		//	final String shortUrl = shortUrlService.genearateShortURL(orderReferenceNumber);
+		final String shortUrl = orderUpdateProcessModel.getOrderTrackUrl();
 		put(TRACK_ORDER_URL, null != shortUrl ? shortUrl : trackOrderUrl);
 
 
@@ -182,8 +218,19 @@ public class OrderDeliveryEmailContext extends AbstractEmailContext<OrderUpdateP
 		put(AWBNUMBER, orderUpdateProcessModel.getAwbNumber());
 		put(SUBTOTAL, Double.valueOf(subTotal));
 		put(CONVENIENCECHARGE, Double.valueOf(convenienceChargesVal));
-
 		put(NAMEOFPERSON, deliveryAddress.getFirstname());
+
+		//added for jewellery
+		put(COUNT, Double.valueOf(count));
+		String websiteUrl = null;
+		websiteUrl = getConfigurationService().getConfiguration().getString(
+				MarketplacecommerceservicesConstants.SMS_SERVICE_WEBSITE_URL);
+		if (null != websiteUrl)
+		{
+			put(WEBSITE_URL, websiteUrl);
+		}
+		//end
+
 		final StringBuilder deliveryAddr = new StringBuilder(150);
 
 

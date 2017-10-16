@@ -19,6 +19,8 @@ import de.hybris.platform.cms2.exceptions.CMSItemNotFoundException;
 import de.hybris.platform.cms2.servicelayer.services.CMSComponentService;
 import de.hybris.platform.commercefacades.customer.CustomerFacade;
 import de.hybris.platform.commercefacades.order.CheckoutFacade;
+import de.hybris.platform.commercefacades.order.data.OrderData;
+import de.hybris.platform.commercefacades.order.data.OrderEntryData;
 import de.hybris.platform.commercefacades.product.PriceDataFactory;
 import de.hybris.platform.commercefacades.product.data.CategoryData;
 import de.hybris.platform.commercefacades.product.data.ImageData;
@@ -36,6 +38,7 @@ import de.hybris.platform.commercefacades.user.data.CountryData;
 import de.hybris.platform.commercefacades.user.data.CustomerData;
 import de.hybris.platform.commerceservices.customer.CustomerAccountService;
 import de.hybris.platform.commerceservices.customer.DuplicateUidException;
+import de.hybris.platform.commerceservices.enums.SalesApplication;
 import de.hybris.platform.commerceservices.search.facetdata.ProductCategorySearchPageData;
 import de.hybris.platform.commerceservices.search.pagedata.PageableData;
 import de.hybris.platform.commercewebservicescommons.cache.CacheControl;
@@ -50,10 +53,16 @@ import de.hybris.platform.commercewebservicescommons.errors.exceptions.RequestPa
 import de.hybris.platform.commercewebservicescommons.mapping.DataMapper;
 import de.hybris.platform.commercewebservicescommons.mapping.FieldSetBuilder;
 import de.hybris.platform.commercewebservicescommons.mapping.impl.FieldSetBuilderContext;
+import de.hybris.platform.core.GenericSearchConstants.LOG;
 import de.hybris.platform.core.model.c2l.CurrencyModel;
+import de.hybris.platform.core.model.order.AbstractOrderEntryModel;
+import de.hybris.platform.core.model.order.OrderModel;
 import de.hybris.platform.core.model.product.PincodeModel;
 import de.hybris.platform.core.model.user.UserModel;
 import de.hybris.platform.enumeration.EnumerationService;
+import de.hybris.platform.ordersplitting.model.ConsignmentEntryModel;
+import de.hybris.platform.servicelayer.config.ConfigurationService;
+import de.hybris.platform.servicelayer.dto.converter.Converter;
 import de.hybris.platform.servicelayer.event.EventService;
 import de.hybris.platform.servicelayer.exceptions.UnknownIdentifierException;
 import de.hybris.platform.servicelayer.model.ModelService;
@@ -74,11 +83,13 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.math.BigDecimal;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -98,6 +109,7 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.http.MediaType;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
@@ -117,22 +129,31 @@ import com.tisl.mpl.constants.MarketplacewebservicesConstants;
 import com.tisl.mpl.core.constants.MarketplaceCoreConstants;
 import com.tisl.mpl.core.enums.FeedbackCategory;
 import com.tisl.mpl.core.model.MplEnhancedSearchBoxComponentModel;
+import com.tisl.mpl.core.util.DateUtilHelper;
+import com.tisl.mpl.data.CODSelfShipData;
+import com.tisl.mpl.data.CODSelfShipResponseData;
 import com.tisl.mpl.exception.EtailBusinessExceptions;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.facade.brand.BrandFacade;
 import com.tisl.mpl.facade.netbank.MplNetBankingFacade;
+import com.tisl.mpl.facade.pancard.MplPancardFacade;
+import com.tisl.mpl.facade.product.ExchangeGuideFacade;
 import com.tisl.mpl.facades.account.address.MplAccountAddressFacade;
+import com.tisl.mpl.facades.account.cancelreturn.CancelReturnFacade;
+import com.tisl.mpl.facades.account.register.MplOrderFacade;
 import com.tisl.mpl.facades.constants.MarketplaceFacadesConstants;
 import com.tisl.mpl.facades.product.data.MplCustomerProfileData;
 import com.tisl.mpl.facades.product.data.StateData;
 import com.tisl.mpl.marketplacecommerceservices.event.LuxuryPdpQuestionEvent;
 import com.tisl.mpl.marketplacecommerceservices.service.ExtendedUserService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplCustomerProfileService;
+import com.tisl.mpl.marketplacecommerceservices.service.OrderModelService;
 import com.tisl.mpl.model.SellerMasterModel;
 import com.tisl.mpl.model.cms.components.MplNewsLetterSubscriptionModel;
 import com.tisl.mpl.order.data.CardTypeDataList;
 import com.tisl.mpl.pincode.facade.PinCodeServiceAvilabilityFacade;
 import com.tisl.mpl.pincode.facade.PincodeServiceFacade;
+import com.tisl.mpl.pojo.PanCardResDTO;
 import com.tisl.mpl.populator.HttpRequestCustomerUpdatePopulator;
 import com.tisl.mpl.search.feedback.facades.UpdateFeedbackFacade;
 import com.tisl.mpl.service.HomescreenService;
@@ -160,10 +181,16 @@ import com.tisl.mpl.wsdto.HomescreenListData;
 import com.tisl.mpl.wsdto.ListPinCodeServiceData;
 import com.tisl.mpl.wsdto.MplAutoCompleteResultWsData;
 import com.tisl.mpl.wsdto.NewsletterWsDTO;
+import com.tisl.mpl.wsdto.OneTouchCancelReturnCrmRequestDTO;
+import com.tisl.mpl.wsdto.OneTouchCancelReturnCrmRequestList;
+import com.tisl.mpl.wsdto.OneTouchCancelReturnDTO;
+import com.tisl.mpl.wsdto.OrderInfoWsDTO;
 import com.tisl.mpl.wsdto.PaymentInfoWsDTO;
 import com.tisl.mpl.wsdto.PinWsDto;
 import com.tisl.mpl.wsdto.ProductSearchPageWsDto;
+import com.tisl.mpl.wsdto.ResponseMaster;
 import com.tisl.mpl.wsdto.RestrictionPins;
+import com.tisl.mpl.wsdto.ReversePincodeExchangeData;
 import com.tisl.mpl.wsdto.SearchDropdownWsDTO;
 import com.tisl.mpl.wsdto.SellerMasterWsDTO;
 import com.tisl.mpl.wsdto.SellerSlaveDTO;
@@ -186,6 +213,8 @@ public class MiscsController extends BaseController
 {
 
 	private static final String APPLICATION_JSON = "application/json"; //Sonar fix
+	private static final String ROLE_TRUSTED_CLIENT = "ROLE_TRUSTED_CLIENT"; //Sonar fix
+	private static final String ROLE_CLIENT = "ROLE_CLIENT"; //Sonar fix
 
 
 	@Resource(name = "brandFacade")
@@ -257,25 +286,12 @@ public class MiscsController extends BaseController
 	@Resource(name = "categoryService")
 	private CategoryService categoryService;
 
-	//	private static final String APPLICATION_TYPE = "application/json";
-	//	public static final String EMAIL_REGEX = "\\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,4}\\b";
-	/*
-	 * @Resource(name = "mplPaymentFacade") private MplPaymentFacade mplPaymentFacade; private static final String
-	 * APPLICATION_TYPE = "application/json"; public static final String EMAIL_REGEX =
-	 * "\\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,4}\\b";
-	 *
-	 * /**
-	 *
-	 * /*
-	 *
-	 * @Resource(name = "mplPaymentFacade") private MplPaymentFacade mplPaymentFacade; private static final String
-	 *                APPLICATION_TYPE = "application/json"; public static final String EMAIL_REGEX =
-	 *                "\\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,4}\\b";
-	 *
-	 *                /**
-	 *
-	 * @return the configurationService
-	 */
+	//Exchange Changes
+	@Resource(name = "exchangeGuideFacade")
+	private ExchangeGuideFacade exchangeGuideFacade;
+
+	@Resource(name = "mplPancardFacadeImpl")
+	private MplPancardFacade mplPancardFacade;
 	@Autowired
 	private MplVersionService mplVersionService;
 	//Priority
@@ -309,6 +325,27 @@ public class MiscsController extends BaseController
 	@Autowired
 	private SessionService sessionService;
 
+	//TPR-4512
+	@Resource(name = "mplOrderFacade")
+	private MplOrderFacade mplOrderFacade;
+
+	@Autowired
+	private ConfigurationService configurationService;
+	//Newly added for TPR-1345:One touch CRM
+	@Resource(name = "orderModelService")
+	private OrderModelService orderModelService;
+	@Resource(name = "orderConverter")
+	private Converter<OrderModel, OrderData> orderConverter;
+	@Resource(name = "cancelReturnFacade")
+	private CancelReturnFacade cancelReturnFacade;
+
+
+	@Autowired
+	private DateUtilHelper dateUtilHelper;
+
+
+
+
 	/*
 	 * private static final String DROPDOWN_BRAND = "MBH"; private static final String DROPDOWN_CATEGORY = "MSH";
 	 */
@@ -316,6 +353,8 @@ public class MiscsController extends BaseController
 	 * @Autowired private MplCheckoutFacade mplCheckoutFacade;
 	 */
 	private static final Logger LOG = Logger.getLogger(MiscsController.class);
+	public static final String RETURN_TYPE_COD = "01";
+	private static final String SUCCESS = "Success";
 
 	/**
 	 * Lists all available languages (all languages used for a particular store). If the list of languages for a base
@@ -432,7 +471,7 @@ public class MiscsController extends BaseController
 	}
 
 	@Secured(
-	{ "ROLE_CLIENT", "ROLE_CUSTOMERGROUP", "ROLE_TRUSTED_CLIENT", "ROLE_CUSTOMERMANAGERGROUP" })
+	{ ROLE_CLIENT, "ROLE_CUSTOMERGROUP", ROLE_TRUSTED_CLIENT, "ROLE_CUSTOMERMANAGERGROUP" })
 	@RequestMapping(value = "/{baseSiteId}/updateprofile", method = RequestMethod.POST)
 	//	@ResponseStatus(HttpStatus.OK)
 	public void updateUser(final HttpServletRequest request) throws DuplicateUidException
@@ -699,7 +738,7 @@ public class MiscsController extends BaseController
 	//reset password or change password arunashis
 
 	@Secured(
-	{ "ROLE_CLIENT", "ROLE_CUSTOMERGROUP", "ROLE_TRUSTED_CLIENT", "ROLE_CUSTOMERMANAGERGROUP" })
+	{ ROLE_CLIENT, "ROLE_CUSTOMERGROUP", ROLE_TRUSTED_CLIENT, "ROLE_CUSTOMERMANAGERGROUP" })
 	@RequestMapping(value = "/{baseSiteId}/{userId}/password", method = RequestMethod.PUT)
 	//@ResponseStatus(value = HttpStatus.ACCEPTED)
 	@ResponseBody
@@ -711,7 +750,7 @@ public class MiscsController extends BaseController
 		final UserSignUpWsDTO customer = new UserSignUpWsDTO();
 		customer.setPassword(newPassword);
 		validate(customer, "password", passwordStrengthValidator);
-		if (containsRole(auth, "ROLE_TRUSTED_CLIENT") || containsRole(auth, "ROLE_CUSTOMERMANAGERGROUP"))
+		if (containsRole(auth, ROLE_TRUSTED_CLIENT) || containsRole(auth, "ROLE_CUSTOMERMANAGERGROUP"))
 		{
 			extUserService.setPassword(userId, newPassword);
 		}
@@ -856,17 +895,35 @@ public class MiscsController extends BaseController
 		try
 		{
 			LOG.debug("searchAndSuggest---------" + searchString);
-			final List<AutocompleteSuggestionData> suggestions = productSearchFacade.getAutocompleteSuggestions(searchString);
-			if (CollectionUtils.isNotEmpty(suggestions) && suggestions.size() > 0)
+			final List<AutocompleteSuggestionData> finalSuggestions = new ArrayList<AutocompleteSuggestionData>();
+			List<AutocompleteSuggestionData> suggestions = productSearchFacade.getAutocompleteSuggestions(searchString);
+			if (CollectionUtils.isNotEmpty(suggestions))
 			{
-				wsData.setSuggestions(suggestions);
+				finalSuggestions.add(suggestions.get(0));
+				wsData.setSuggestions(finalSuggestions);
 			}
 			else
 			{
 				String substr = "";
 				substr = searchString.substring(0, searchString.length() - 1);
-				wsData.setSuggestions(productSearchFacade.getAutocompleteSuggestions(substr));
+				suggestions = productSearchFacade.getAutocompleteSuggestions(substr);
+				if (CollectionUtils.isNotEmpty(suggestions))
+				{
+					finalSuggestions.add(suggestions.get(0));
+				}
+				wsData.setSuggestions(finalSuggestions);
 			}
+
+			//if (CollectionUtils.isNotEmpty(suggestions) && suggestions.size() > 0)
+			//			{
+			//				wsData.setSuggestions(suggestions);
+			//			}
+			//			else
+			//			{
+			//				String substr = "";
+			//				substr = searchString.substring(0, searchString.length() - 1);
+			//				wsData.setSuggestions(productSearchFacade.getAutocompleteSuggestions(substr));
+			//			}
 			LOG.debug("searchAndSuggest-------------Size" + suggestions.size());
 
 			//resultData.setSuggestions(productSearchFacade.getAutocompleteSuggestions(term));
@@ -1376,7 +1433,6 @@ public class MiscsController extends BaseController
 
 	// check brand or category TPR-816
 	/**
-	 * <<<<<<< HEAD
 	 *
 	 * @param deliveryMode
 	 * @param ussid
@@ -1401,11 +1457,11 @@ public class MiscsController extends BaseController
 	 * deliveryModeData.setName(MplZoneDeliveryModeValueModel.getDeliveryMode().getName()); } if (null != ussid) {
 	 * deliveryModeData.setSellerArticleSKU(ussid); }
 	 *
-	 * } return deliveryModeData; } =======
+	 * } return deliveryModeData; }
 	 *
 	 * @param code
 	 *
-	 * @return >>>>>>> origin/GOLDEN_PROD_SUPPORT_07122016
+	 * @return
 	 */
 	@RequestMapping(value = "/{baseSiteId}/checkBrandOrCategory", method = RequestMethod.GET)
 	@ResponseBody
@@ -1607,10 +1663,6 @@ public class MiscsController extends BaseController
 	 * @return userResultWsDto
 	 * @throws CMSItemNotFoundException
 	 */
-	/*
-	 * @Secured( { "ROLE_CUSTOMERGROUP", "ROLE_TRUSTED_CLIENT", "ROLE_CUSTOMERMANAGERGROUP" })
-	 */
-
 	@RequestMapping(value = "/{baseSiteId}/feedbackno", method = RequestMethod.GET, produces = APPLICATION_JSON)
 	@ResponseBody
 	public UserResultWsDto captureFeedbackNo(@RequestParam final String emailId, @RequestParam final String searchCategory,
@@ -1645,10 +1697,6 @@ public class MiscsController extends BaseController
 	 * @description to get Feedback
 	 * @return Map containing feedback categories
 	 */
-	/*
-	 * @Secured( { "ROLE_CUSTOMERGROUP", "ROLE_TRUSTED_CLIENT", "ROLE_CUSTOMERMANAGERGROUP" })
-	 */
-
 	@RequestMapping(value = "/{baseSiteId}/getFeedbackCategory", method = RequestMethod.GET, produces = APPLICATION_JSON)
 	@ResponseBody
 	public UserResultWsDto getFeedbackCategory()
@@ -1773,4 +1821,747 @@ public class MiscsController extends BaseController
 		final Matcher matcher = pattern.matcher(email);
 		return matcher.matches();
 	}//LW-176 ends
+
+
+
+	/**
+	 * Is Pincode Exchange Serviceable
+	 *
+	 * @param pincode
+	 * @param l3code
+	 * @return reverseCheckdata
+	 * @throws CMSItemNotFoundException
+	 */
+
+	@RequestMapping(value = "/{baseSiteId}/reversePincodeCheck/{pincode}", method = RequestMethod.POST)
+	@ResponseBody
+	public ReversePincodeExchangeData reversePincodeCheck(@PathVariable final String pincode,
+			@RequestParam(required = false) final String l3code) throws CMSItemNotFoundException
+	{
+
+		final ReversePincodeExchangeData reverseCheckdata = new ReversePincodeExchangeData();
+		final boolean isServicable = exchangeGuideFacade.isBackwardServiceble(pincode);
+		reverseCheckdata.setPincodeResponse(exchangeGuideFacade.isBackwardServiceble(pincode));
+		if (isServicable && StringUtils.isNotEmpty(l3code))
+		{
+			reverseCheckdata.setPriceMatrix(exchangeGuideFacade.getExchangeGuide(l3code));
+		}
+
+
+		return reverseCheckdata;
+	}
+
+	/*
+	 * to receive pancard status from SP for jewellery
+	 *
+	 * @param restrictionXML
+	 *
+	 * @return void
+	 */
+	@RequestMapping(value = "/{baseSiteId}/miscs/pancardStatus", method = RequestMethod.POST)
+	@ResponseBody
+	public void pancardStatusFromSP(final InputStream panStatusXML) throws RequestParameterException, JAXBException
+	{
+		try
+		{
+			final JAXBContext jaxbContext = JAXBContext.newInstance(PanCardResDTO.class);
+			final Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
+			final PanCardResDTO resDTO = (PanCardResDTO) jaxbUnmarshaller.unmarshal(panStatusXML);
+
+			mplPancardFacade.setPancardRes(resDTO);
+		}
+		catch (final RequestParameterException e)
+		{
+			LOG.error("the exception is **** " + e);
+		}
+		catch (final JAXBException e)
+		{
+			LOG.error("the exception is **** " + e);
+		}
+		catch (final Exception e)
+		{
+			LOG.error("the exception is **** " + e);
+		}
+	}
+
+	//TPR-4840 starts
+	@Secured(
+	{ ROLE_CLIENT, ROLE_TRUSTED_CLIENT })
+	@RequestMapping(value = "/{baseSiteId}/orderCustDetailsByOrderId", method = RequestMethod.POST, produces = APPLICATION_JSON)
+	@ResponseBody
+	public OrderInfoWsDTO fetchCustomerOrderInfoByOrderId(
+			@RequestParam(value = "orderRefNo", required = true) final String orderRefNo) throws EtailNonBusinessExceptions
+	{
+		OrderInfoWsDTO orderInfoWsDTO = new OrderInfoWsDTO();
+		OrderModel orderModel = null;
+		try
+		{
+			if (StringUtils.isNotEmpty(orderRefNo))
+			{
+				//Fetching parent order model by order id
+				orderModel = mplOrderFacade.getOrderByParentOrderNo(orderRefNo);
+				orderInfoWsDTO = mplOrderFacade.storeOrderInfoByOrderNo(orderModel);
+			}
+		}
+		catch (final Exception e)
+		{
+			LOG.error("Exception occured", e);
+			orderInfoWsDTO.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
+		}
+		return orderInfoWsDTO;
+	}
+
+	//TPR-4840 ends
+
+	//TPR-4841 starts
+	@Secured(
+	{ ROLE_CLIENT, ROLE_TRUSTED_CLIENT })
+	@RequestMapping(value = "/{baseSiteId}/orderCustDetailsByTransactionId", method = RequestMethod.POST, produces = APPLICATION_JSON)
+	@ResponseBody
+	public OrderInfoWsDTO fetchCustomerOrderInfoByTransactionId(
+			@RequestParam(value = "transactionId", required = true) final String transactionId) throws EtailNonBusinessExceptions
+	{
+
+		OrderInfoWsDTO orderInformationWsDTO = new OrderInfoWsDTO();
+		OrderModel orderModel = null;
+
+		try
+		{
+			if (StringUtils.isNotEmpty(transactionId))
+			{
+				//Fetching sub order model by transaction id
+				orderModel = mplOrderFacade.fetchOrderInfoByTransactionId(transactionId);
+				orderInformationWsDTO = mplOrderFacade.storeOrderInfoByTransactionId(orderModel, transactionId);
+			}
+
+		}
+		catch (final Exception e)
+		{
+			LOG.error("Exception occured", e);
+			orderInformationWsDTO.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
+		}
+		return orderInformationWsDTO;
+
+	}
+
+	//TPR-4841 ends
+
+	//TPR-5225 starts
+	@Secured(
+	{ ROLE_CLIENT, ROLE_TRUSTED_CLIENT })
+	@RequestMapping(value = "/{baseSiteId}/orderCustDetailsByMobileNo", method = RequestMethod.POST, produces = APPLICATION_JSON)
+	@ResponseBody
+	public OrderInfoWsDTO fetchCustomerOrderInfoByMobileNo(@RequestParam(value = "mobileNo", required = true) final String mobileNo)
+			throws EtailNonBusinessExceptions
+	{
+
+		final int countLimit = Integer.parseInt(getConfigurationService().getConfiguration().getString(
+				MarketplacecommerceservicesConstants.TRANSACTION_NO_KEY));
+
+		//SDI-1193
+		final int transactionLimit = Integer.parseInt(getConfigurationService().getConfiguration().getString(
+				MarketplacecommerceservicesConstants.TRANSACTION_LIMIT_BY_DATE));
+
+		LOG.debug("**Transaction count Limit**" + countLimit);
+		LOG.debug("**Transaction Limit by date**" + transactionLimit);
+		OrderInfoWsDTO orderInformationWsDTO = new OrderInfoWsDTO();
+		List<OrderModel> orderModels = new ArrayList<OrderModel>();
+		try
+		{
+
+			if (StringUtils.isNotEmpty(mobileNo))
+			{
+				//Fetching parent order models by mobile no
+				orderModels = mplOrderFacade.getOrderWithMobileNo(mobileNo, countLimit, transactionLimit);
+				orderInformationWsDTO = mplOrderFacade.storeOrderInfoByMobileNo(orderModels, countLimit);
+			}
+
+		}
+		catch (final Exception e)
+		{
+			LOG.error("Exception occured", e);
+			orderInformationWsDTO.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
+		}
+		return orderInformationWsDTO;
+	}
+
+	//TPR-5225 ends
+
+
+	/**
+	 * @return the configurationService
+	 */
+	public ConfigurationService getConfigurationService()
+	{
+		return configurationService;
+	}
+
+	/**
+	 * @param configurationService
+	 *           the configurationService to set
+	 */
+	public void setConfigurationService(final ConfigurationService configurationService)
+	{
+		this.configurationService = configurationService;
+	}
+
+	//TPR-5225 ends
+
+	/**
+	 * Method: One touch Cancel and return--TPR-1345
+	 *
+	 * @param crmRequestXML
+	 *           the input XML request from CRM
+	 * @return XML , the output XML response to CRM
+	 */
+	@RequestMapping(value = "/{baseSiteId}/oneTouch", method = RequestMethod.POST, consumes =
+	{ MediaType.APPLICATION_XML_VALUE }, produces =
+	{ MediaType.APPLICATION_XML_VALUE })
+	@ResponseBody
+	public Object oneTouchCancelReturn(final InputStream crmRequestXML)
+	{
+		LOG.info("==========Inside oneTouchCancelReturn controller==========");
+		//instances & variables
+		OneTouchCancelReturnDTO output = null;
+		final Set<OneTouchCancelReturnDTO> outputList = new HashSet<OneTouchCancelReturnDTO>();
+		final ResponseMaster oneTouchReturnDTOList = new ResponseMaster();
+		boolean serviceabilty = true;
+		boolean resultFlag = false;
+		final String ussid = null;
+		OrderEntryData orderEntry = new OrderEntryData();
+		OneTouchCancelReturnCrmRequestList crmReqObj = null;
+		String consignmentStatus = null;
+		String transactionId = null;
+		CODSelfShipData codSelfShipData = null;
+		//New addition
+		final List<String> checkList = new ArrayList<String>();
+		final List<String> masterCheckList = new ArrayList<String>();
+		String delayValue = "0";
+		long delay = 0;
+		List<AbstractOrderEntryModel> orderEntriesModel = null;
+
+		try
+		{
+			//Converting XML to JAVA Object
+			final JAXBContext jaxbContext = JAXBContext.newInstance(OneTouchCancelReturnCrmRequestList.class);
+			final Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
+			crmReqObj = (OneTouchCancelReturnCrmRequestList) jaxbUnmarshaller.unmarshal(crmRequestXML);
+			final String delayOnOff = configurationService.getConfiguration().getString("onetouch.time.delay.onOff");
+			LOG.debug("===========Thread on off switch:==========" + delayOnOff);
+			if ("Y".equalsIgnoreCase(delayOnOff))
+			{
+				delayValue = configurationService.getConfiguration().getString("onetouch.time.delay");
+
+				if (StringUtils.isNotEmpty(delayValue) && null != delayValue)
+				{
+					delay = Long.parseLong(delayValue);
+				}
+			}
+			//Iterating over each object
+			outer: for (final OneTouchCancelReturnCrmRequestDTO oneTouchCrmObj : crmReqObj.getOneTouchCancelReturnRequestDTOlist())
+			{
+				codSelfShipData = null;
+				consignmentStatus = null;
+				output = new OneTouchCancelReturnDTO();
+				//Mandatory fields validation
+				if (StringUtils.isNotEmpty(oneTouchCrmObj.getOrderRefNum())
+						&& StringUtils.isNotEmpty(oneTouchCrmObj.getSubOrderNum()) && StringUtils.isNotEmpty(oneTouchCrmObj.getUSSID())
+						&& StringUtils.isNotEmpty(oneTouchCrmObj.getTicketType())
+						&& StringUtils.isNotEmpty(oneTouchCrmObj.getTransactionId()))
+				{
+					transactionId = oneTouchCrmObj.getTransactionId();
+					if (LOG.isDebugEnabled())
+					{
+						LOG.debug("===========transaction id:==========" + oneTouchCrmObj.getTransactionId());
+						LOG.debug("===========sub order id:============" + oneTouchCrmObj.getSubOrderNum());
+					}
+					try
+					{
+						final OrderModel subOrderModel = orderModelService.getOrder(oneTouchCrmObj.getSubOrderNum());//Sub order model
+						final OrderData orderData = getOrderConverter().convert(subOrderModel); //model converted to data
+						orderEntriesModel = cancelReturnFacade.associatedEntries(subOrderModel, oneTouchCrmObj.getTransactionId());//associated order entries
+						if (!masterCheckList.contains(oneTouchCrmObj.getTransactionId()))
+						{
+							for (final AbstractOrderEntryModel abstractOrderEntryModel : orderEntriesModel)
+							{
+								masterCheckList.add(abstractOrderEntryModel.getTransactionID());
+							}
+						}
+						else
+						{
+							continue outer;
+						}
+						boolean deliveryCheckFlag = false;
+						if (oneTouchCrmObj.getTicketType().equalsIgnoreCase(MarketplacewebservicesConstants.RETURN_TICKET))
+						{
+							if (!checkList.contains(oneTouchCrmObj.getTransactionId()))
+							{
+								//Pincode serviceablity check for RSP tickets
+								if (oneTouchCrmObj.getTicketSubType().equalsIgnoreCase(MarketplacewebservicesConstants.TICKET_TYPE_RSP))
+								{
+									serviceabilty = cancelReturnFacade.oneTouchPincodeCheck(orderData, oneTouchCrmObj.getPincode(),
+											oneTouchCrmObj.getTransactionId());
+									LOG.debug("========Pincode serviceablity check result is=========" + serviceabilty);
+								}
+								//Checking the promotion Buy A and B get C free
+								final boolean isBuyAandBgetC = cancelReturnFacade.appliedPromotionCheckOnetouch(subOrderModel);
+								if (isBuyAandBgetC)
+								{
+									LOG.debug("===Inside BuyAandBgetC check====");
+									boolean deliverymodeValidator = true;
+									checkloop: for (final AbstractOrderEntryModel orderEntry1 : orderEntriesModel)
+									{
+										LOG.debug("===Inside checkloop check====");
+										checkList.add(orderEntry1.getTransactionID());
+										deliveryCheckFlag = true;
+										for (final ConsignmentEntryModel con : orderEntry1.getConsignmentEntries())
+										{
+											LOG.debug("===Inside ConsignmentEntryModel loop===="
+													+ con.getConsignment().getStatus().getCode());
+											if (orderEntry1.getMplDeliveryMode().getDeliveryMode().getCode()
+													.equalsIgnoreCase(MarketplacecommerceservicesConstants.CLICK_AND_COLLECT))
+											{
+												LOG.debug("===Inside click and collect check loop====");
+												deliverymodeValidator = false;
+											}
+
+											if (deliverymodeValidator)
+											{
+												if (!(con.getConsignment().getStatus().getCode())
+														.equalsIgnoreCase(MarketplacewebservicesConstants.DELIVERED_STATUS.toString()))
+												{
+													LOG.debug("===Inside delivered loop====");
+													deliveryCheckFlag = false;
+													break checkloop;
+												}
+											}
+											else if (!deliverymodeValidator)
+											{
+												if (!(con.getConsignment().getStatus().getCode())
+														.equalsIgnoreCase(MarketplacewebservicesConstants.ORDER_COLLECTED_STATUS.toString()))
+												{
+													LOG.debug("===Inside order collected loop====");
+													deliveryCheckFlag = false;
+													break checkloop;
+												}
+											}
+										}
+									}
+									if (!deliveryCheckFlag)
+									{
+										LOG.debug("===Inside deliveryCheckFlag loop====");
+										for (final AbstractOrderEntryModel orderEntry2 : orderEntriesModel)
+										{
+											output = new OneTouchCancelReturnDTO();
+											for (final ConsignmentEntryModel con : orderEntry2.getConsignmentEntries())
+											{
+												if ((con.getConsignment().getStatus().getCode()).equalsIgnoreCase("RETURN_INITIATED"))
+												{
+													output = populateResponseDateForCRM(oneTouchCrmObj.getOrderRefNum(),
+															orderEntry2.getTransactionID(), serviceabilty,
+															MarketplacewebservicesConstants.VALID_FLAG_S, "RETINIT_CSCP_S", true);
+													outputList.add(output);
+												}
+												else
+												{
+													output = populateResponseDateForCRM(oneTouchCrmObj.getOrderRefNum(),
+															orderEntry2.getTransactionID(), serviceabilty,
+															MarketplacewebservicesConstants.VALID_FLAG_F, "RETINIT_CSCP_F", true);
+													outputList.add(output);
+												}
+											}
+										}
+										continue outer;
+									}
+								}
+							}
+						}
+						LOG.debug("========Fetching order entry details for transaction id========" + oneTouchCrmObj.getTransactionId());
+						for (final OrderEntryData entry : orderData.getEntries())
+						{
+							if (null != entry.getTransactionId())
+							{
+								if (entry.getTransactionId().equalsIgnoreCase(transactionId))
+								{
+									orderEntry = entry;
+									if (orderEntry.isGiveAway() || orderEntry.isIsBOGOapplied())
+
+									{
+										continue outer;
+									}
+									break;
+								}
+							}
+							else
+							{
+								LOG.debug("===Inside blank transaction id loop====");
+								output = populateResponseDateForCRM(oneTouchCrmObj.getOrderRefNum(), null, serviceabilty,
+										MarketplacewebservicesConstants.VALID_FLAG_F, "BLK_TXN", false);
+								outputList.add(output);
+								continue outer;
+							}
+						}
+						LOG.debug("========Fetching consignment details for order entry=========" + oneTouchCrmObj.getTransactionId());
+						//FETCHING ORDER CONSIGNMENT STATUS
+						if (null != orderEntry.getConsignment() && null != orderEntry.getConsignment().getStatus())
+						{
+							consignmentStatus = orderEntry.getConsignment().getStatus().getCode();
+						}
+						else
+						{
+							output = populateResponseDateForCRM(oneTouchCrmObj.getOrderRefNum(), oneTouchCrmObj.getTransactionId(),
+									serviceabilty, MarketplacewebservicesConstants.VALID_FLAG_F, "BLK_CNSGNMNT", false);
+							outputList.add(output);
+							continue;
+						}
+						//For cancel
+						if (oneTouchCrmObj.getTicketType().equalsIgnoreCase(MarketplacewebservicesConstants.CANCEL_TICKET))
+						{
+							LOG.debug("========Initiating cancellation of consignment=========");
+							//----------IF CONSIGNMENT IS ALREADY CANCELLED---------
+							if (!getMplOrderFacade().checkCancelStatus(consignmentStatus,
+									MarketplacewebservicesConstants.CANCEL_ORDER_STATUS)
+									&& getMplOrderFacade().checkCancelStatus(consignmentStatus,
+											MarketplacewebservicesConstants.CANCEL_ELIGIBLE_STATUS))
+							{
+								resultFlag = cancelReturnFacade.oneTouchCancel(subOrderModel, orderData, orderEntry,
+										oneTouchCrmObj.getCancelReasonCode(), ussid, oneTouchCrmObj.getTicketType(),
+										oneTouchCrmObj.getRefundType(), false, SalesApplication.CALLCENTER, orderEntriesModel);
+								for (final AbstractOrderEntryModel abstractOrderEntryModel : orderEntriesModel)
+								{
+									output = new OneTouchCancelReturnDTO();
+									//Successful cancellation
+									if (resultFlag)
+									{
+										output.setOrderRefNum(oneTouchCrmObj.getOrderRefNum());
+										output.setTransactionId(abstractOrderEntryModel.getTransactionID());
+										output.setValidFlag(MarketplacewebservicesConstants.VALID_FLAG_S);
+										outputList.add(output);
+									}
+									//Failed cancellation
+									else
+									{
+										output.setTransactionId(abstractOrderEntryModel.getTransactionID());
+										output.setOrderRefNum(oneTouchCrmObj.getOrderRefNum());
+										output.setValidFlag(MarketplacewebservicesConstants.VALID_FLAG_F);
+										output.setRemarks(MarketplacewebservicesConstants.ERROR_IN_OMS);
+										outputList.add(output);
+									}
+								}
+							}
+							//---------IF CONSIGNMENT IS ALREADY CANCELLED-----------
+							else
+							{
+								for (final AbstractOrderEntryModel abstractOrderEntryModel : orderEntriesModel)
+								{
+									output = populateResponseDateForCRM(oneTouchCrmObj.getOrderRefNum(),
+											abstractOrderEntryModel.getTransactionID(), serviceabilty,
+											MarketplacewebservicesConstants.VALID_FLAG_F, "CNCL_INIT", false);
+									outputList.add(output);
+								}
+							}
+						}
+						//For Return
+						else if (oneTouchCrmObj.getTicketType().equalsIgnoreCase(MarketplacewebservicesConstants.RETURN_TICKET))
+						{
+							boolean FICO = false;
+							//-----------IF CONSIGNMENT IS ALREADY RETURNED--------
+							if (!getMplOrderFacade().checkCancelStatus(consignmentStatus,
+									MarketplacewebservicesConstants.RETURN_ORDER_STATUS)
+									&& (consignmentStatus.equalsIgnoreCase(MarketplacewebservicesConstants.DELIVERED_STATUS.toString()) || consignmentStatus
+											.equalsIgnoreCase(MarketplacewebservicesConstants.ORDER_COLLECTED_STATUS.toString())))
+							{
+								//******INITITATING RETURN********
+								if (serviceabilty)
+								{
+									LOG.debug("========Initiating Return of consignment=========");
+									resultFlag = cancelReturnFacade.oneTouchReturn(orderData, orderEntry,
+											oneTouchCrmObj.getReturnReasonCode(), oneTouchCrmObj.getTicketType(),
+											SalesApplication.CALLCENTER, oneTouchCrmObj.getPincode(), orderEntriesModel, subOrderModel,
+											codSelfShipData, oneTouchCrmObj.getUSSID(), oneTouchCrmObj.getTransactionId());
+									//Return is successfull
+									for (final AbstractOrderEntryModel abstractOrderEntryModel : orderEntriesModel)
+									{
+										output = new OneTouchCancelReturnDTO();
+										if (resultFlag)
+										{
+											output.setOrderRefNum(oneTouchCrmObj.getOrderRefNum());
+											output.setTransactionId(abstractOrderEntryModel.getTransactionID());
+											output.setValidFlag(MarketplacewebservicesConstants.VALID_FLAG_S);
+											output.setServiceability(MarketplacewebservicesConstants.VALID_FLAG_S);
+
+											//TPR-6389 :: NEFT details have to be passed on to FICO after one touch return
+											LOG.debug("--------Populating bank details for return of COD orders--------");
+											if (subOrderModel.getModeOfOrderPayment().equalsIgnoreCase(MarketplacewebservicesConstants.COD)
+													&& null != oneTouchCrmObj.getAccNum())
+											{
+												LOG.debug("Step 1");
+												codSelfShipData = null;
+												codSelfShipData = populateCODDataForFICO(subOrderModel, oneTouchCrmObj, orderData,
+														abstractOrderEntryModel);
+												LOG.debug("Step 2");
+												if (null != codSelfShipData)
+												{
+													LOG.debug("Sending bank details to FICO start.....");
+													FICO = sendBankDetailsToFICO(codSelfShipData);
+												}
+												if (FICO)
+												{
+													output.setRemarks("Bank details successfully sent to FICO");
+												}
+												else
+												{
+													output.setRemarks("Failed to send Bank details to FICO");
+													LOG.debug("Failed to send Bank details to FICO");
+												}
+											}
+											//TPR-6389--END
+
+											outputList.add(output);
+										}
+										//Return is failure
+										else
+										{
+											output.setTransactionId(abstractOrderEntryModel.getTransactionID());
+											output.setOrderRefNum(oneTouchCrmObj.getOrderRefNum());
+											output.setValidFlag(MarketplacewebservicesConstants.VALID_FLAG_F);
+											output.setRemarks(MarketplacewebservicesConstants.ERROR_IN_OMS);
+											outputList.add(output);
+										}
+									}
+								}
+								//Pincode is not serviceable
+								else
+								{
+									for (final AbstractOrderEntryModel abstractOrderEntryModel : orderEntriesModel)
+									{
+										output = new OneTouchCancelReturnDTO();
+										output.setOrderRefNum(oneTouchCrmObj.getOrderRefNum());
+										output.setTransactionId(abstractOrderEntryModel.getTransactionID());
+										output.setValidFlag(MarketplacewebservicesConstants.VALID_FLAG_F);
+										output.setServiceability(MarketplacewebservicesConstants.VALID_FLAG_F);
+										output.setRemarks(MarketplacewebservicesConstants.PINCODE_NOT_SERVICEABLE);
+										outputList.add(output);
+									}
+								}
+							}
+							//---------IF CONSIGNMENT IS ALREADY RETURNED--------
+							else
+							{
+
+								for (final AbstractOrderEntryModel abstractOrderEntryModel : orderEntriesModel)
+								{
+									output = new OneTouchCancelReturnDTO();
+									///new addition to handle CS cockpit issues
+									if (consignmentStatus.equalsIgnoreCase("RETURN_INITIATED"))
+									{
+										output.setOrderRefNum(oneTouchCrmObj.getOrderRefNum());
+										output.setTransactionId(abstractOrderEntryModel.getTransactionID());
+										output.setServiceability(serviceabilty ? "S" : "F");
+										//output.setServiceability(MarketplacewebservicesConstants.VALID_FLAG_S);
+										output.setValidFlag(MarketplacewebservicesConstants.VALID_FLAG_S);
+										output.setRemarks(serviceabilty ? MarketplacewebservicesConstants.RETURN_ALREADY_INITIATED_CSCP
+												: MarketplacewebservicesConstants.PINCODE_NOT_SERVICEABLE);
+										outputList.add(output);
+									}
+									else
+									{
+										output.setOrderRefNum(oneTouchCrmObj.getOrderRefNum());
+										output.setTransactionId(abstractOrderEntryModel.getTransactionID());
+										output.setServiceability(serviceabilty ? "S" : "F");
+										output.setValidFlag(MarketplacewebservicesConstants.VALID_FLAG_F);
+										output.setRemarks(MarketplacewebservicesConstants.RETURN_ALREADY_INITIATED);
+										outputList.add(output);
+									}
+
+								}
+							}
+						}
+					}
+					catch (final Exception e)
+					{
+						LOG.error(e.getMessage());
+						//Failure response
+						output.setOrderRefNum(oneTouchCrmObj.getOrderRefNum());
+						output.setValidFlag(MarketplacewebservicesConstants.VALID_FLAG_F);
+						output.setTransactionId(oneTouchCrmObj.getTransactionId());
+						output.setRemarks(e.getMessage());
+						outputList.add(output);
+					}
+				}
+				else
+				{
+					output.setOrderRefNum(oneTouchCrmObj.getOrderRefNum());
+					output.setTransactionId(oneTouchCrmObj.getTransactionId());
+					output.setValidFlag(MarketplacewebservicesConstants.VALID_FLAG_F);
+					output.setRemarks(MarketplacewebservicesConstants.MISSING_MANDATORY_FIELDS);
+					outputList.add(output);
+				}
+				if ("Y".equalsIgnoreCase(delayOnOff))
+				{
+					Thread.sleep(delay); // do nothing for 1000 miliseconds (1 second)
+				}
+			}
+			LOG.debug("========Sending response in XML format=========");
+			//Automatic conversion of JAVA object to XML
+			oneTouchReturnDTOList.setOneTouchList(new ArrayList<OneTouchCancelReturnDTO>(outputList));
+		}
+		catch (final Exception e)
+		{
+			LOG.error(e.getMessage());
+			//output.setOrderRefNum(oneTouchCrmObj.getOrderRefNum());
+			output.setValidFlag(MarketplacewebservicesConstants.VALID_FLAG_F);
+			output.setRemarks(MarketplacewebservicesConstants.FORMAT_MISMATCH);
+			outputList.add(output);
+		}
+		LOG.info("==========Finished executing oneTouchCancelReturn controller==========");
+		return oneTouchReturnDTOList;
+	}
+
+	/**
+	 * Method to populate bank details that will sent to FICO for COD return orders.
+	 */
+	private CODSelfShipData populateCODDataForFICO(final OrderModel subOrderModel,
+			final OneTouchCancelReturnCrmRequestDTO oneTouchdto, final OrderData orderData, final AbstractOrderEntryModel orderEntry)
+	{
+		LOG.debug("Inside populateCODDataForFICO method.....");
+		CODSelfShipData codSelfShipData = new CODSelfShipData();
+		try
+		{
+			final String title = getConfigurationService().getConfiguration()
+					.getString(oneTouchdto.getTitle().toString() + "_title");
+			if (null != subOrderModel.getUser().getUid())
+			{
+				codSelfShipData.setCustomerNumber(subOrderModel.getUser().getUid());
+			}
+			codSelfShipData.setTitle(title.toUpperCase());
+			codSelfShipData.setOrderRefNo(oneTouchdto.getOrderRefNum());
+			codSelfShipData.setOrderNo(oneTouchdto.getSubOrderNum());
+			codSelfShipData.setBankName(oneTouchdto.getBankName());
+			codSelfShipData.setBankBranch(oneTouchdto.getBranch());
+			codSelfShipData.setName(oneTouchdto.getAccHolderName());
+			codSelfShipData.setBankKey(oneTouchdto.getIFSC());
+			codSelfShipData.setBankAccount(oneTouchdto.getAccNum());
+			codSelfShipData.setTransactionID(orderEntry.getTransactionID());
+			codSelfShipData.setTransactionType(subOrderModel.getModeOfOrderPayment());
+			codSelfShipData.setOrderTag(MarketplacewebservicesConstants.ORDERTAG_TYPE_POSTPAID);
+			codSelfShipData.setPaymentMode("N");
+			codSelfShipData.setAmount(orderEntry.getNetAmountAfterAllDisc().toString());
+			codSelfShipData.setTransactionType(RETURN_TYPE_COD);
+			if (null != orderData.getCreated())
+			{
+				final SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy");
+				codSelfShipData.setOrderDate(dateUtilHelper.convertDateWithFormat(formatter.format(orderData.getCreated())));
+				codSelfShipData.setTransactionDate(dateUtilHelper.convertDateWithFormat(formatter.format(orderData.getCreated())));
+			}
+		}
+		catch (final Exception e)
+		{
+			LOG.error(e);
+			codSelfShipData = null;
+			return codSelfShipData;
+		}
+		LOG.debug("finished executing populateCODDataForFICO method.....");
+		return codSelfShipData;
+	}
+
+	//TPR-6389 :: NEFT details have to be passed on to FICO after a one touch return
+	private boolean sendBankDetailsToFICO(final CODSelfShipData codSelfShipData)
+	{
+		LOG.info("Starting sending bank details to FICO");
+		try
+		{
+			if (null != codSelfShipData)
+			{
+				final CODSelfShipResponseData codSelfShipResponseData = cancelReturnFacade.codPaymentInfoToFICO(codSelfShipData);
+				if (null == codSelfShipResponseData.getSuccess() || !codSelfShipResponseData.getSuccess().equalsIgnoreCase(SUCCESS))
+				{
+					cancelReturnFacade.saveCODReturnsBankDetails(codSelfShipData);
+					LOG.debug("Failed to post COD return paymnet details to FICO Order No:" + codSelfShipData.getOrderRefNo());
+
+				}
+				cancelReturnFacade.insertUpdateCustomerBankDetails(codSelfShipData);
+			}
+		}
+		catch (final Exception ex)
+		{
+			LOG.error(ex);
+			return false;
+		}
+		LOG.info("Finished sending bank details to FICO");
+		return true;
+		//TPR-6389 :: END
+	}
+
+	//populate response data for CRM response
+	private OneTouchCancelReturnDTO populateResponseDateForCRM(final String orderNum, final String txnId,
+			final boolean serviceabilty, final String validFlag, final String msgCategory, final boolean returnCancelFlag)
+	{
+		final OneTouchCancelReturnDTO output = new OneTouchCancelReturnDTO();
+		output.setOrderRefNum(orderNum);
+		if (null != txnId)
+		{
+			output.setTransactionId(txnId);
+		}
+		if (returnCancelFlag)
+		{
+			output.setServiceability(serviceabilty ? "S" : "F");
+		}
+		output.setValidFlag(validFlag);
+
+		switch (msgCategory)
+		{
+			case "RETINIT_CSCP_S":
+				output.setRemarks(serviceabilty ? MarketplacewebservicesConstants.RETURN_ALREADY_INITIATED_CSCP
+						: MarketplacewebservicesConstants.PINCODE_NOT_SERVICEABLE);
+
+			case "RETINIT_CSCP_F":
+				output.setRemarks(serviceabilty ? "All the products in promotion are not in delivered status"
+						: MarketplacewebservicesConstants.PINCODE_NOT_SERVICEABLE);
+
+			case "BLK_TXN":
+				output.setRemarks("Transaction ID is not found in commerce system");
+
+			case "BLK_CNSGNMNT":
+				output.setRemarks("No consignment found");
+
+			case "CNCL_INIT":
+				output.setRemarks("Order is not eligible for cancellation in commerce system");
+		}
+		return output;
+	}
+
+	/**
+	 * @return the orderConverter
+	 */
+	public Converter<OrderModel, OrderData> getOrderConverter()
+	{
+		return orderConverter;
+	}
+
+	/**
+	 * @param orderConverter
+	 *           the orderConverter to set
+	 */
+	public void setOrderConverter(final Converter<OrderModel, OrderData> orderConverter)
+	{
+		this.orderConverter = orderConverter;
+	}
+
+	/**
+	 * @return the mplOrderFacade
+	 */
+	public MplOrderFacade getMplOrderFacade()
+	{
+		return mplOrderFacade;
+	}
+
+	/**
+	 * @param mplOrderFacade
+	 *           the mplOrderFacade to set
+	 */
+	public void setMplOrderFacade(final MplOrderFacade mplOrderFacade)
+	{
+		this.mplOrderFacade = mplOrderFacade;
+	}
 }

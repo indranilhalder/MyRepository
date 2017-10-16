@@ -145,6 +145,11 @@
 				</td>
 			</tr>
 			<tr>
+				<td colspan="4" style="vertical-align:top;" class="structureViewSection">
+					<cockpit code="SamsungChat" />
+				</td>
+			</tr>
+			<tr>
 				<td height="270px" colspan="4" class="structureViewSection">
 					<cockpit code="Footer" />
 				</td>
