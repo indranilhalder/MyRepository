@@ -14,6 +14,7 @@ import de.hybris.platform.core.model.order.OrderModel;
 import de.hybris.platform.core.model.user.CustomerModel;
 import de.hybris.platform.orderhistory.model.OrderHistoryEntryModel;
 import de.hybris.platform.orderprocessing.model.OrderProcessModel;
+import de.hybris.platform.ordersplitting.model.ConsignmentEntryModel;
 import de.hybris.platform.ordersplitting.model.ConsignmentModel;
 import de.hybris.platform.payment.model.PaymentTransactionEntryModel;
 import de.hybris.platform.payment.model.PaymentTransactionModel;
@@ -179,6 +180,9 @@ public class AutoRefundInitiateAction extends AbstractProceduralAction<OrderProc
 													if(CollectionUtils.isNotEmpty(returnEntry.getOrderEntry().getConsignmentEntries())){
 														 LOG.debug("Step :2 getting the consignment status for ..."+returnEntry.getOrderEntry().getConsignmentEntries());
 														boolean consignmentStatusForRTO = false;
+														for(ConsignmentEntryModel str:returnEntry.getOrderEntry().getConsignmentEntries()){
+															System.out.println("********Consignment Entry Status :************:"+str.toString());
+														}
 														if(returnEntry.getOrderEntry().getConsignmentEntries().contains(ConsignmentStatus.RETURNINITIATED_BY_RTO)){
 															LOG.debug("Step :3  consignment for RETURNINITIATED_BY_RTO  ...");
 															final List<AbstractOrderEntryModel> orderEntriesModel = associatedEntries(orderModel,returnEntry.getOrderEntry().getTransactionID());
