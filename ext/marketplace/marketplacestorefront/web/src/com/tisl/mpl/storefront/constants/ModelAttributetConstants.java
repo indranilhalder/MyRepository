@@ -925,4 +925,13 @@ public final class ModelAttributetConstants
 	public static final String IS_SAMSUNG_PAGE = "isSamsungPage";
 	//UF-422
 	public static final String PDP_SIZE_COUNTER = "pdpSizeCounter";
+	
+// TPR-3878 START
+	public static final String SPECIAL_FEATURES_LIST = "specialFeatures";
+	public static final String MOVEMENT = "Movement";
+	public static final String MOVEMENT_LIST = "movementList";
+	public static final String FUNCTIONALITY = "functionality";
+	public static final String SPECIAL_FEATURES = "special Features";
+	public static final String FEATURES = "Features";
+	// TPR-3878 END
 }
