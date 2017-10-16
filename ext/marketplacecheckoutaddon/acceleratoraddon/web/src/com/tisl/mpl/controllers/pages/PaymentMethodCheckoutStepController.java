@@ -130,6 +130,7 @@ import com.tisl.mpl.data.MplPromoPriceData;
 import com.tisl.mpl.data.SavedCardData;
 import com.tisl.mpl.exception.EtailBusinessExceptions;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
+import com.tisl.mpl.exception.QCServiceCallException;
 import com.tisl.mpl.facade.checkout.MplCartFacade;
 import com.tisl.mpl.facade.checkout.MplCheckoutFacade;
 import com.tisl.mpl.facade.checkout.MplCustomAddressFacade;
@@ -150,12 +151,17 @@ import com.tisl.mpl.model.BankModel;
 import com.tisl.mpl.model.PaymentModeRestrictionModel;
 import com.tisl.mpl.model.PaymentTypeModel;
 import com.tisl.mpl.model.SellerInformationModel;
+import com.tisl.mpl.pojo.request.Customer;
+import com.tisl.mpl.pojo.request.QCCustomerRegisterRequest;
 import com.tisl.mpl.pojo.response.BalanceBucketWise;
 import com.tisl.mpl.pojo.response.Bucket;
+import com.tisl.mpl.pojo.response.QCCustomerRegisterResponse;
 import com.tisl.mpl.pojo.response.QCRedeeptionResponse;
+import com.tisl.mpl.pojo.response.RedimGiftCardResponse;
 import com.tisl.mpl.storefront.constants.MessageConstants;
 import com.tisl.mpl.storefront.constants.ModelAttributetConstants;
 import com.tisl.mpl.storefront.controllers.helpers.FrontEndErrorHelper;
+import com.tisl.mpl.storefront.web.forms.AddToCardWalletForm;
 import com.tisl.mpl.storefront.web.forms.EgvDetailForm;
 import com.tisl.mpl.storefront.web.forms.PaymentForm;
 import com.tisl.mpl.storefront.web.forms.validator.MplEgvFormValidator;
@@ -174,8 +180,8 @@ import reactor.function.support.UriUtils;
 @RequestMapping(value = MarketplacecheckoutaddonConstants.MPLPAYMENTURL)
 public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepController
 {
-	
-	
+
+
 	private static final String GIFT_CARD = "/giftCard-";
 	private static final String EGVGUID = "EGVGUID";
 	private static final String MARKETPLACE_HEADER_EGV_PRODUCT_CODE = "marketplace.header.egvProductCode";
@@ -6668,14 +6674,19 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 			}
 			else
 			{
-				if(mplEgvFormValidator.validate(egvDetailForm)){
+				if (mplEgvFormValidator.validate(egvDetailForm))
+				{
 					final EgvDetailsData egvDetailsData = populateEGVFormToData(egvDetailForm);
 					giftCartData = mplCartFacade.getGiftCartModel(egvDetailsData);
 					giftCartData.setEgvTotelAmount(egvDetailsData.getGiftRange());
-					}else{
-					
-						return  MarketplacecheckoutaddonConstants.REDIRECT+GIFT_CARD+getConfigurationService().getConfiguration().getString(MARKETPLACE_HEADER_EGV_PRODUCT_CODE)+"/?isInvalidForm="+Boolean.TRUE;
-					}
+				}
+				else
+				{
+
+					return MarketplacecheckoutaddonConstants.REDIRECT + GIFT_CARD
+							+ getConfigurationService().getConfiguration().getString(MARKETPLACE_HEADER_EGV_PRODUCT_CODE)
+							+ "/?isInvalidForm=" + Boolean.TRUE;
+				}
 			}
 			giftCartData.setIsEGVCart(true);
 			Map<String, Boolean> paymentModeMap = null;
@@ -6914,5 +6925,94 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 		return orderId + "|" + guid;
 	}
 
+
+	@RequireHardLogIn
+	@RequestMapping(value = "/addEGV", method = RequestMethod.GET)
+	public String showAddEGVPopup(final Model model)
+
+			throws CMSItemNotFoundException, QCServiceCallException
+	{
+
+		model.addAttribute("addToCardWalletForm", new AddToCardWalletForm());
+		return "pages/payment/addGiftCard";
+	}
+
+	@RequireHardLogIn
+	@RequestMapping(value = "/addEGVToWallet", method = RequestMethod.POST)
+	public @ResponseBody String addEGV(final AddToCardWalletForm addToCardWalletForm, final Model model)
+			throws CMSItemNotFoundException, QCServiceCallException
+	{
+		try
+		{
+			final CustomerModel currentCustomer = (CustomerModel) userService.getCurrentUser();
+
+			if (null != currentCustomer && null != currentCustomer.getIsWalletActivated()
+					&& !currentCustomer.getIsWalletActivated().booleanValue())
+			{
+				final QCCustomerRegisterRequest customerRegisterReq = new QCCustomerRegisterRequest();
+				final Customer custInfo = new Customer();
+				custInfo.setEmail(currentCustomer.getOriginalUid());
+				custInfo.setEmployeeID(currentCustomer.getUid());
+				custInfo.setCorporateName("Tata Unistore Ltd");
+
+				if (null != currentCustomer.getFirstName())
+				{
+					custInfo.setFirstname(currentCustomer.getFirstName());
+				}
+				if (null != currentCustomer.getLastName())
+				{
+					custInfo.setLastName(currentCustomer.getLastName());
+				}
+
+				customerRegisterReq.setExternalwalletid(currentCustomer.getOriginalUid());
+				customerRegisterReq.setCustomer(custInfo);
+				customerRegisterReq.setNotes("Activating Customer " + currentCustomer.getOriginalUid());
+				final QCCustomerRegisterResponse customerRegisterResponse = mplWalletFacade
+						.createWalletContainer(customerRegisterReq);
+
+				if (null != customerRegisterResponse && null != customerRegisterResponse.getResponseCode()
+						&& customerRegisterResponse.getResponseCode() == Integer.valueOf(0))
+				{
+
+					final RedimGiftCardResponse response = mplWalletFacade.getAddEGVToWallet(addToCardWalletForm.getCardNumber(),
+							addToCardWalletForm.getCardPin());
+
+					if (null != response && null != response.getResponseCode() && response.getResponseCode() == Integer.valueOf(0))
+					{
+						return "SUCCESS";
+					}
+					else
+					{
+
+						LOG.error("card Add Error " + response.getResponseMessage());
+						return "ERROR";
+					}
+
+				}
+			}
+			else if (null != currentCustomer && null != currentCustomer.getIsWalletActivated()
+					&& currentCustomer.getIsWalletActivated().booleanValue())
+			{
+				final RedimGiftCardResponse response = mplWalletFacade.getAddEGVToWallet(addToCardWalletForm.getCardNumber(),
+						addToCardWalletForm.getCardPin());
+
+				if (null != response && null != response.getResponseCode() && response.getResponseCode() == Integer.valueOf(0))
+				{
+					return "SUCCESS";
+				}
+				else
+				{
+					LOG.error("card Add Error " + response.getResponseMessage());
+					return "ERROR";
+				}
+			}
+
+		}
+		catch (final Exception ex)
+		{
+			ex.printStackTrace();
+		}
+		return "ERROR";
+	}
 
 }

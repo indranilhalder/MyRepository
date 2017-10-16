@@ -12,6 +12,56 @@
 <%@ taglib prefix="cart" tagdir="/WEB-INF/tags/responsive/cart" %>
 <%@ taglib prefix="format" tagdir="/WEB-INF/tags/shared/format" %>
 
+
+<script type="text/javascript">
+
+function showAddEGV(){
+	ACC.singlePageCheckout.showAjaxLoader();
+	var url=ACC.config.encodedContextPath +"/checkout/multi/payment-method/addEGV";
+	var xhrResponse=ACC.singlePageCheckout.ajaxRequest(url,"GET","",false);
+    
+    xhrResponse.fail(function(xhr, textStatus, errorThrown) {
+		console.log("ERROR:"+textStatus + ': ' + errorThrown);
+		ACC.singlePageCheckout.hideAjaxLoader();
+		data={displaymessage:"Network error occured",type:"error"};
+	});
+    
+    xhrResponse.done(function(data) {
+    	var elementId="singlePageAddEGVPopup";
+    	ACC.singlePageCheckout.modalPopup(elementId,data);
+	});
+    
+    xhrResponse.always(function(){
+    	ACC.singlePageCheckout.hideAjaxLoader();
+	});
+}
+
+function addEGVAjax(){
+	//ACC.singlePageCheckout.showAjaxLoader();
+	var form=$("#addToCardWalletFormId").closest("form");
+	var url=ACC.config.encodedContextPath +"/checkout/multi/payment-method/addEGVToWallet";
+	var data=$(form).serialize().replace(/\+/g,'%20');
+	ACC.singlePageCheckout.showAjaxLoader();
+	var xhrResponse=ACC.singlePageCheckout.ajaxRequest(url,"POST",data,false);
+    
+    xhrResponse.fail(function(xhr, textStatus, errorThrown) {
+		console.log("ERROR:"+textStatus + ': ' + errorThrown);
+		ACC.singlePageCheckout.hideAjaxLoader();
+		data={displaymessage:"Network error occured",type:"error"};
+		ACC.singlePageCheckout.hideAjaxLoader();
+		
+	});
+    
+    xhrResponse.done(function(data) {
+
+    	ACC.singlePageCheckout.hideAjaxLoader();
+    	$("#singlePageAddEGVPopup").hide();
+    	useWalletForPaymentAjax();
+    	WalletDetailAjax();
+	});
+ }
+
+</script>
 <c:url value="${currentStepUrl}" var="choosePaymentMethodUrl" />
 <spring:url value="/checkout/multi/debitTermsAndConditions" var="getDebitTermsAndConditionsUrl"/>
 
@@ -235,7 +285,17 @@
 			<div class="col-xs-12">
 				<div class="giftInfoBottom">
 					<div class="addNewGiftCard">
-						<span class="addNewCard"><a href="/wallet"><spring:theme code="text.cliq.cash.payment.addcard.label" /> </a></span>
+					
+					<div class="modal fade" id="singlePageAddEGVPopup">
+						<div class="content" style="padding: 40px;max-width: 650px;">
+							<span id="modalBody"></span>
+							<!-- <button class="close" data-dismiss="modal"></button> -->
+						</div>
+						<div class="overlay" data-dismiss="modal">
+						</div>
+					</div>
+					
+						<span class="addNewCard" onclick="showAddEGV();"><spring:theme code="text.cliq.cash.payment.addcard.label" /></span>
 						<span class="viewCardTerms"><a href="#"><spring:theme code="text.cliq.cash.payment.term.label" /> </a></span>
 					</div>
 					<br />
