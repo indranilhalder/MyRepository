@@ -1914,8 +1914,20 @@ ACC.singlePageCheckout = {
 //    	        		}
 //        	        });
         			
-        			//Populating sub-total which is subject to change on order item removal
-        			$("#orderTotalSpanId ul.totals li.subtotal span.amt span.priceFormat").html(data.subTotalPrice.formattedValue);
+        			//CAR-343 Starts
+        			try {
+    					var subTotalPrice=jQuery.parseJSON(data.subTotalPrice);
+    					//Populating sub-total which is subject to change on order item removal
+        				$("#orderTotalSpanId ul.totals li.subtotal span.amt span.priceFormat").html(subTotalPrice.formattedValue);
+    				}
+    				catch(e) 
+    				{
+    					console.log("Subtotal JS Exception="+e);
+    				}
+    				//Populating sub-total which is subject to change on order item removal
+        			//$("#orderTotalSpanId ul.totals li.subtotal span.amt span.priceFormat").html(data.subTotalPrice.formattedValue);
+    				//CAR-343 Ends
+        			
         			//alert("Saved or New"+savedOrNew);
         			if(savedOrNew=="savedCard")
         			{
@@ -2004,8 +2016,19 @@ ACC.singlePageCheckout = {
         			$("#selectedReviewOrderDivId").show();
     				callOnReady();//This method is in showAddPaymentMethod.jsp
         			
+    				//CAR-343 Starts
+    				try {
+    					var subTotalPrice=jQuery.parseJSON(data.subTotalPrice);
+    					//Populating sub-total which is subject to change on order item removal
+        				$("#orderTotalSpanId ul.totals li.subtotal span.amt span.priceFormat").html(subTotalPrice.formattedValue);
+    				}
+    				catch(e) 
+    				{
+    					console.log("Subtotal JS Exception="+e);
+    				}
     				//Populating sub-total which is subject to change on order item removal
-    				$("#orderTotalSpanId ul.totals li.subtotal span.amt span.priceFormat").html(data.subTotalPrice.formattedValue);
+        			//$("#orderTotalSpanId ul.totals li.subtotal span.amt span.priceFormat").html(data.subTotalPrice.formattedValue);
+    				//CAR-343 Ends
         			/*//$("#orderDetailsSectionId").html(data);
         			$("#totalWithConvField").html(data.totalPrice);*/
     	        	
