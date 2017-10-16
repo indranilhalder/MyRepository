@@ -3109,6 +3109,7 @@ function loadDefaultWishListName_SizeGuide() {
 			e.stopPropagation();
 			$(".Emi > p").removeClass("active mobile");
 			$(".emi-overlay").remove();
+			$("body").removeClass("no-scroll");	/*add for SDI-763*/
 			});
 		$(".pdp .Emi > #EMImodal-content").on("click",function(e){
 			e.stopPropagation();

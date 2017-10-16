@@ -1257,7 +1257,7 @@
 														</select>
 														
 														
-														<span class="error-message" id="emiNoBankError">No Banks available.</span>
+														<span class="error-message" id="emiNoBankError">No Bank Selected.</span>  	<!-- change for INC144318889 -->
 														<span class="error-message" id="emiPromoError"></span>
 														<div id="radioForEMI" class="banks">
 														<p class="emi-plan">Select a plan</p>	

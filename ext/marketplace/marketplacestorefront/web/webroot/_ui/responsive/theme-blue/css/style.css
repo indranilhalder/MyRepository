@@ -60053,6 +60053,7 @@ background: transparent;}
 /*------- TIS_JIRA:358 for luxury --------*/
 body.page-wishlist .body-Content .wrapper{
 	    padding: 0 30px;
+	    margin-top: 5px;	/* add for PRDI-444 */
 } 
 .cart.wrapper .product-block li.item ul .item-edit-details li .popover.bottom{
 z-index:11;}
