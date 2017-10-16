@@ -729,11 +729,11 @@
 
 					<c:if test="${empty searchPageData.results}">
 						<div class="account-emptyOrderMessage">
-							<spring:theme code="text.account.orderHistory.noOrders"
+							<spring:theme code="text.account.orderHistory.noOrders.luxury"
 								text="You have no orders" />
 							
 							<div class="empty-order-btn">	
-								<p class="mb-40">Start your search here</p>
+								<p class="mb-40">For any queries call us on +91- 9029108282 Alternatively, email Tata CLiQ Luxury Care at luxury@tatacliq.com</p>
 								<p><a class="lux-shopmen" href="${menLandingurl}">Shop Men</a><a class="lux-shopwomen" href="${womenLandingUrl}">Shop Women</a></p>
 							</div>
 						</div>
