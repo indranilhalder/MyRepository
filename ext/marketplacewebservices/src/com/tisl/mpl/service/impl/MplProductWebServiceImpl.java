@@ -312,7 +312,7 @@ public class MplProductWebServiceImpl implements MplProductWebService
 
 	/*
 	 * To get product details for a product code
-	 * 
+	 *
 	 * @see com.tisl.mpl.service.MplProductWebService#getProductdetailsForProductCode(java.lang.String)
 	 */
 	@Override
@@ -1886,12 +1886,12 @@ public class MplProductWebServiceImpl implements MplProductWebService
 	/*
 	 * private PromotionData checkHighestPriority(final List<PromotionData> enabledPromotionList) {
 	 * Collections.sort(enabledPromotionList, new Comparator<PromotionData>() {
-	 * 
+	 *
 	 * @Override public int compare(final PromotionData promo1, final PromotionData promo2) { int priority = 0; if (null
 	 * != promo1.getPriority() && null != promo2.getPriority()) { priority =
 	 * promo1.getPriority().compareTo(promo2.getPriority()); } return priority; }
-	 * 
-	 * 
+	 *
+	 *
 	 * }); Collections.reverse(enabledPromotionList); return enabledPromotionList.get(0); }
 	 */
 
@@ -2267,10 +2267,16 @@ public class MplProductWebServiceImpl implements MplProductWebService
 						for (final Map.Entry<String, String> sizeEntry : variantData.getSizeLink().entrySet())
 						{
 							variantSizePCode = "";
+							//INC144318807
 							if (StringUtils.isNotEmpty(sizeEntry.getValue()))
 							{
 								sizeLinkData.setSize(sizeEntry.getValue());
+								sizeLinkData.setIsAvailable(true);
 							}
+							else
+							{
+								sizeLinkData.setIsAvailable(false);
+							} //INC144318807
 							if (StringUtils.isNotEmpty(sizeEntry.getKey()))
 							{
 								sizeLinkData.setUrl(sizeEntry.getKey());
@@ -2282,7 +2288,7 @@ public class MplProductWebServiceImpl implements MplProductWebService
 							}
 							//TISSTRT-1411
 							//by default its available
-							sizeLinkData.setIsAvailable(true);
+							//INC144318807	/*sizeLinkData.setIsAvailable(true);*/ //INC144318807
 							//check teh stock availability
 							if (MapUtils.isNotEmpty(stockAvailibilty) && stockAvailibilty.containsKey(variantSizePCode))
 							{
