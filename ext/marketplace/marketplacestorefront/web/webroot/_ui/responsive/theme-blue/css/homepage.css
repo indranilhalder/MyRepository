@@ -3479,6 +3479,10 @@ header>.content .top ul a[href="/helpservices"] {
 	}
 }
 
+.owl-carousel.home-product-you-care-carousel {
+    padding: 0 20px 77px;
+}
+
 @media ( max-width : 767px) {
 	.MenuWrap {
 		position: relative;
@@ -4073,7 +4077,7 @@ header>.content .top ul a[href="/helpservices"] {
 		padding: 0px 0 1px;
 		margin: 0 5px;
 	}
-	.home-product-you-care-carousel {
+	.owl-carousel.home-product-you-care-carousel {
 		padding: 0;
 		margin: 0;
 	}
@@ -4606,6 +4610,6 @@ background: url(../images/search_image.png) no-repeat;}
 }
 /*Rainbow Sale Homepage Changes End - Vamshi*/
 
-.owl-carousel.home-product-you-care-carousel {
-    padding: 0 20px 77px;
+#productYouCare .short-info>h3 span:hover, #productYouCare .short-info>h3 span:hover:after, #bestPicks .short-info:hover span {
+    color: #a9143c;
 }
