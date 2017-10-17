@@ -48447,7 +48447,7 @@ padding:0 40px;	}
 /* TPR-628 ends*/
 
 /*TPR-873*/
-.product-info>div.wishAddLogin, .product-info>div.wishAddSucess,.product-info>div.wishAddLogin, .product-info>div.wishRemoveSucess, .product-info>div.wishAlreadyAdded,div.wishAlreadyAddedPlp,div.wishAddLoginPlp,div.wishAddSucessPlp,div.wishRemoveSucessPlp,div.wishAddSucessQV,div.wishAddLoginQV,div.wishAlreadyAddedQV {
+.product-info>div.wishAddLogin, .product-info>div.wishAddSucess,.product-info>div.wishAddLogin, .product-info>div.wishRemoveSucess, .product-info>div.wishAlreadyAdded,div.wishAlreadyAddedPlp,div.wishAddLoginPlp,div.wishAddSucessPlp,div.wishRemoveSucessPlp,div.wishAddSucessQV, div.wishRemoveSucessQV, div.wishAddLoginQV,div.wishAlreadyAddedQV {
 	display: inline-block;
     position: fixed;
    	z-index: 100099;
@@ -48470,7 +48470,7 @@ padding:0 40px;	}
 
 
 
-.product-info>div.wishAddLogin.active, .product-info>div.wishAddSucess.active,.product-info>div.wishAddLogin.active, .product-info>div.wishRemoveSucess.active, .product-info>div.wishAlreadyAdded.active,div.wishAlreadyAddedPlp.active,div.wishRemoveSucessPlp.active,div.wishAddLoginPlp.active,div.wishAddSucessPlp.active,div.wishAddSucessQV.active,div.wishAddLoginQV.active,div.wishAlreadyAddedQV.active{
+.product-info>div.wishAddLogin.active, .product-info>div.wishAddSucess.active,.product-info>div.wishAddLogin.active, .product-info>div.wishRemoveSucess.active, .product-info>div.wishAlreadyAdded.active,div.wishAlreadyAddedPlp.active,div.wishRemoveSucessPlp.active,div.wishAddLoginPlp.active,div.wishAddSucessPlp.active,div.wishAddSucessQV.active, div.wishRemoveSucessQV.active,div.wishAddLoginQV.active,div.wishAlreadyAddedQV.active{
 	opacity: 1;
 	top: 90px;
 }
@@ -48483,12 +48483,12 @@ padding:0 40px;	}
 	}
 } */
 
-.product-info>div.wishAddSucess>span,.product-info>div.wishRemoveSucess>span,div.wishAddSucessPlp>span,div.wishRemoveSucessPlp>span,div.wishAddSucessQV>span{
+.product-info>div.wishAddSucess>span,.product-info>div.wishRemoveSucess>span,div.wishAddSucessPlp>span,div.wishRemoveSucessPlp>span,div.wishAddSucessQV>span,div.wishRemoveSucessQV>span{
 	margin-left: 30px;
 	    line-height: 20px;
 }
 
-.product-info>div.wishAddSucess,.product-info>div.wishRemoveSucess,div.wishAddSucessPlp,div.wishRemoveSucessPlp,div.wishAddSucessQV{
+.product-info>div.wishAddSucess,.product-info>div.wishRemoveSucess,div.wishAddSucessPlp,div.wishRemoveSucessPlp,div.wishAddSucessQV,div.wishRemoveSucessQV{
 	color:green;
 
 }
@@ -48497,7 +48497,7 @@ padding:0 40px;	}
 }
 
 
-.wishAddSucess:before,.wishRemoveSucess:before,div.wishAddSucessPlp:before,div.wishRemoveSucessPlp:before,div.wishAddSucessQV:before{
+.wishAddSucess:before,.wishRemoveSucess:before,div.wishAddSucessPlp:before,div.wishRemoveSucessPlp:before,div.wishAddSucessQV:before,div.wishRemoveSucessQV:before{
 
     content: "";
     width: 9px;
@@ -48514,7 +48514,7 @@ padding:0 40px;	}
     left: 24px;
     margin: auto;
 }
-.wishAddSucess:after,.wishRemoveSucess:after,div.wishAddSucessPlp:after,div.wishRemoveSucessPlp:after,div.wishAddSucessQV:after{
+.wishAddSucess:after,.wishRemoveSucess:after,div.wishAddSucessPlp:after,div.wishRemoveSucessPlp:after,div.wishAddSucessQV:after,div.wishRemoveSucessQV:after{
 
 	width: 30px;
     height: 30px;
@@ -67499,7 +67499,7 @@ padding:0px;
 
 /* Fixes Unit Testing */
 @media screen and (-ms-high-contrast: active), (-ms-high-contrast: none) {  
-	.product-info>div.wishAddLogin, .product-info>div.wishAddSucess, .product-info>div.wishAddLogin, .product-info>div.wishRemoveSucess, .product-info>div.wishAlreadyAdded, div.wishAlreadyAddedPlp, div.wishAddLoginPlp, div.wishAddSucessPlp, div.wishRemoveSucessPlp, div.wishAddSucessQV, div.wishAddLoginQV, div.wishAlreadyAddedQV {
+	.product-info>div.wishAddLogin, .product-info>div.wishAddSucess, .product-info>div.wishAddLogin, .product-info>div.wishRemoveSucess, .product-info>div.wishAlreadyAdded, div.wishAlreadyAddedPlp, div.wishAddLoginPlp, div.wishAddSucessPlp, div.wishRemoveSucessPlp, div.wishAddSucessQV, div.wishRemoveSucessQV, div.wishAddLoginQV, div.wishAlreadyAddedQV {
     display: inline-block;
     position: fixed;
     z-index: 100099;
