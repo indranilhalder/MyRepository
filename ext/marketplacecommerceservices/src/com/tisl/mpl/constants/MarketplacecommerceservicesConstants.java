@@ -1821,7 +1821,7 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	//.intern();
 
 	//SprintPaymentFixes:- New query added //PaymentFix2017:- queryTAT added
-	public static final String PAYMENTPENDINGQUERY = "select {o.pk} from {Order as o},{OrderStatus as os} where  {o.creationtime} <= ?queryTAT and {o.status}={os.pk} and {os.code}=?status"
+	public static final String PAYMENTPENDINGQUERY = "select {o.pk} from {Order as o},{OrderStatus as os} where  {o.creationtime} <= ?queryTAT and {o.status}={os.pk} and {os.code}=?status and {o.type}=?type"
 			.intern();
 
 	//public static final String PAYMENTPENDINGQUERY =
