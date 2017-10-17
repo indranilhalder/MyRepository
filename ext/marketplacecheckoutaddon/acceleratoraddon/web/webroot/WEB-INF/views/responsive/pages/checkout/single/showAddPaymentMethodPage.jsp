@@ -1663,7 +1663,7 @@
 												
 												<div class="radio">
 													 <input type="radio" name="priority_paytm" id="radioButton_Paytm" value="paytm" checked/>
-													 <label for="priority_paytm" class="numbers creditLabel"> <span><img src="${commonResourcePath}/images/paytm.png" alt=""></span></label>
+													 <label for="priority_paytm"  class="numbers creditLabel"><img src="${commonResourcePath}/images/paytm.png" alt=""></label>
 									   			<%-- <span id="paytmInfo" style="display:none">
 														<spring:theme code="checkout.multi.paymentMethod.eWallet.Info" />
 													</span> --%>
