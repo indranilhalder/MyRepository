@@ -2152,6 +2152,24 @@ public class ProductPageController extends MidPageController
 			final String googleClientid = configurationService.getConfiguration().getString("google.data-clientid");
 			final String facebookAppid = configurationService.getConfiguration().getString("facebook.app_id");
 			LOG.debug("===========After step3 block=================");
+
+			String prodImageUrl = MarketplacecclientservicesConstants.EMPTY;
+			/* INC144316527 */
+			if (CollectionUtils.isNotEmpty(productData.getImages()))
+			{
+				//Set product image(product) url
+				for (final ImageData img : productData.getImages())
+				{
+					if (null != img && StringUtils.isNotEmpty(img.getFormat())
+							&& img.getFormat().equalsIgnoreCase(MarketplacecommerceservicesConstants.PRODUCT_IMAGE))
+					{
+						prodImageUrl = img.getUrl().toString();
+					}
+				}
+			}
+			model.addAttribute(ModelAttributetConstants.PROD_IMAGE_URL, prodImageUrl);
+			/* INC144316527 */
+
 			/* Configurable tabs to be displayed in the PDP page */
 			model.addAttribute(ModelAttributetConstants.VALID_TABS, validTabs);
 			model.addAttribute(ModelAttributetConstants.SHARED_PATH, sharePath);
