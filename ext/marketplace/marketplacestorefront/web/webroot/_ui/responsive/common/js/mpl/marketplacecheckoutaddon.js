@@ -5603,6 +5603,7 @@ $(".edit_address").click(function(){
 	$("#juspayAmountId").hide();
 	$("#useCliqCashId").hide();
 	$("#loadingCliqCashId").hide();
+	$("#redeemVoucherAlertId").hide();
 	
 	$("#useGiftCardCheckbox").prop('disabled',true);
 	 $(".useGiftCardBtn").css('cursor','not-allowed');
@@ -5778,6 +5779,8 @@ if ($(window).width() < 768 && $("#walletContainerId").hasClass("giftCheckoutCon
 
 function showAddEGV(){
 	ACC.singlePageCheckout.showAjaxLoader();
+	$("#redeemVoucherAlertId").hide();
+	
 	var url=ACC.config.encodedContextPath +"/checkout/multi/payment-method/addEGV";
 	var xhrResponse=ACC.singlePageCheckout.ajaxRequest(url,"GET","",false);
     
@@ -5798,27 +5801,51 @@ function showAddEGV(){
 }
 
 function addEGVAjax(){
-	//ACC.singlePageCheckout.showAjaxLoader();
-	var form=$("#addToCardWalletFormId").closest("form");
-	var url=ACC.config.encodedContextPath +"/checkout/multi/payment-method/addEGVToWallet";
-	var data=$(form).serialize().replace(/\+/g,'%20');
-	ACC.singlePageCheckout.showAjaxLoader();
-	var xhrResponse=ACC.singlePageCheckout.ajaxRequest(url,"POST",data,false);
-    
-    xhrResponse.fail(function(xhr, textStatus, errorThrown) {
-		console.log("ERROR:"+textStatus + ': ' + errorThrown);
-		ACC.singlePageCheckout.hideAjaxLoader();
-		data={displaymessage:"Network error occured",type:"error"};
-		ACC.singlePageCheckout.hideAjaxLoader();
+	
+	if ($("#giftVoucherNoId").val() == '' && $("#giftVoucherPinId").val() == '') {
+		$("#redeemVoucherAlertId").show();
+		document.getElementById('redeemVoucherError').innerHTML = $("#addGiftCardId").attr("data-egvError");
+		return false;
+	} else if ($("#giftVoucherNoId").val() == '') {
+		$("#redeemVoucherAlertId").show();
+		document.getElementById('redeemVoucherError').innerHTML = $("#addGiftCardId").attr("data-egvVoucherError");
+		return false;
+	} else if ($("#giftVoucherPinId").val() == ''){
+		$("#redeemVoucherAlertId").show();
+		document.getElementById('redeemVoucherError').innerHTML = $("#addGiftCardId").attr("data-egvPinError");
+		return false;
+	} else {
+		$("#redeemVoucherAlertId").hide();
 		
-	});
-    
-    xhrResponse.done(function(data) {    	
-    	$("#singlePageAddEGVPopup").modal('hide');
-    	useWalletForPaymentAjax();
-    	WalletDetailAjax();
-    	ACC.singlePageCheckout.hideAjaxLoader();
-	});
+		//ACC.singlePageCheckout.showAjaxLoader();
+		var form=$("#addToCardWalletFormId").closest("form");
+		var url=ACC.config.encodedContextPath +"/checkout/multi/payment-method/addEGVToWallet";
+		var data=$(form).serialize().replace(/\+/g,'%20');
+		ACC.singlePageCheckout.showAjaxLoader();
+		var xhrResponse=ACC.singlePageCheckout.ajaxRequest(url,"POST",data,false);
+	    
+	    xhrResponse.fail(function(xhr, textStatus, errorThrown) {
+			console.log("ERROR:"+textStatus + ': ' + errorThrown);
+			ACC.singlePageCheckout.hideAjaxLoader();
+			data={displaymessage:"Network error occured",type:"error"};
+			ACC.singlePageCheckout.hideAjaxLoader();
+			
+		});
+	    
+	    xhrResponse.done(function(data) { 
+	    	if(data === "SUCCESS"){
+	    	$("#singlePageAddEGVPopup").modal('hide');
+	    	useWalletForPaymentAjax();
+	    	WalletDetailAjax();
+	    	ACC.singlePageCheckout.hideAjaxLoader();
+	    	}else{
+	    		console.log("Response for QC "+data);
+	    		ACC.singlePageCheckout.hideAjaxLoader();
+	    	}
+		});
+
+	}
+	
  }
 
 /**
