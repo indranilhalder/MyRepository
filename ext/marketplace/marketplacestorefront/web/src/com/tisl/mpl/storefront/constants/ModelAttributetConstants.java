@@ -905,6 +905,9 @@ public final class ModelAttributetConstants
 	public static final String ICID = "icid";
 	public static final String SHARE = "share";
 
+	//INC144316527
+	public static final String PROD_IMAGE_URL = "prodImageUrl";
+
 	public static final String MESSAGE = "message";
 
 	public static final String EMAILORPASSINVALID = "Email or Password invalid";
