@@ -270,7 +270,7 @@ $(document).ready(function() {
     	searchResultStorageData = "false"; // not same with last search url
     } 
     
-    if (window.localStorage &&  (html = window.localStorage.getItem('productlazyarray')) && searchResultStorageData == 'true' && html != '' && lazyfrompdp != '' && lazyfrompdp == 'true' && ($('#pageType').val() == 'productsearch' || $('#pageType').val() == 'category')) {
+    if (window.localStorage &&  (html = window.localStorage.getItem('productlazyarray')) && searchResultStorageData == 'true' && html != '' && html != undefined && lazyfrompdp != '' && lazyfrompdp == 'true' && ($('#pageType').val() == 'productsearch' || $('#pageType').val() == 'category')) {
     	
     		$('ul.product-listing.product-grid.lazy-grid,ul.product-listing.product-grid.lazy-grid-facet,ul.product-list').html(decodeURI(html));
         	
@@ -406,7 +406,11 @@ $(document).ready(function() {
         
         $(document).on('click','.product-item',function(){
         	if(window.localStorage){
-        		var productGridHtml = $('ul.product-listing.product-grid.lazy-grid,ul.product-listing.product-grid.lazy-grid-facet,ul.product-list,.product-listing.product-grid.lazy-grid-normal').html();
+			if($('input[name=customSku]').length == 1){
+			   var productGridHtml = $('ul.product-listing.product-grid.custom-sku,ul.product-listing.product-grid.lazy-grid-facet,ul.product-list,.product-listing.product-grid.lazy-grid-normal').html();
+			} else {
+			   var productGridHtml = $('ul.product-listing.product-grid.lazy-grid,ul.product-listing.product-grid.lazy-grid-facet,ul.product-list,.product-listing.product-grid.lazy-grid-normal').html();
+			}	
         		window.localStorage.setItem("productlazyarray",encodeURI(productGridHtml));
         		window.localStorage.setItem('lazyfrompdp','true');
         	}
