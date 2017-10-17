@@ -312,7 +312,7 @@ public class MplProductWebServiceImpl implements MplProductWebService
 
 	/*
 	 * To get product details for a product code
-	 * 
+	 *
 	 * @see com.tisl.mpl.service.MplProductWebService#getProductdetailsForProductCode(java.lang.String)
 	 */
 	@Override
@@ -1886,12 +1886,12 @@ public class MplProductWebServiceImpl implements MplProductWebService
 	/*
 	 * private PromotionData checkHighestPriority(final List<PromotionData> enabledPromotionList) {
 	 * Collections.sort(enabledPromotionList, new Comparator<PromotionData>() {
-	 * 
+	 *
 	 * @Override public int compare(final PromotionData promo1, final PromotionData promo2) { int priority = 0; if (null
 	 * != promo1.getPriority() && null != promo2.getPriority()) { priority =
 	 * promo1.getPriority().compareTo(promo2.getPriority()); } return priority; }
-	 * 
-	 * 
+	 *
+	 *
 	 * }); Collections.reverse(enabledPromotionList); return enabledPromotionList.get(0); }
 	 */
 
@@ -2247,20 +2247,24 @@ public class MplProductWebServiceImpl implements MplProductWebService
 					capacityLinkData = new CapacityLinkData();
 					// For Color
 					if (StringUtils.isNotEmpty(variantData.getColour()))
-					{
+					{//INC144317643
 						colorLinkData.setColor(variantData.getColour());
+						final String hexCode = (variantData.getColour()).replaceAll("\\s", "");
+						colorLinkData.setColorHexCode(configurationService.getConfiguration().getString(
+								"colorhexcode." + hexCode.toLowerCase(), ""));//INC144317643
 					}
 					//checking for colour hex code
-					if (StringUtils.isNotEmpty(variantData.getColourCode()))
-					{
-						colorLinkData.setColorHexCode(variantData.getColourCode());
-					}
+					/* start comment of INC144317643 */
+					/*
+					 * if (StringUtils.isNotEmpty(variantData.getColourCode())) {
+					 * colorLinkData.setColorHexCode(variantData.getColourCode()); }
+					 */
+					/* end comment of INC144317643 */
 					if (StringUtils.isNotEmpty(variantData.getUrl()))
 					{
 						colorLinkData.setColorurl(variantData.getUrl());
 					}
 					variantMobileData.setColorlink(colorLinkData);
-
 					//For Size
 					if (MapUtils.isNotEmpty(variantData.getSizeLink()))
 					{
