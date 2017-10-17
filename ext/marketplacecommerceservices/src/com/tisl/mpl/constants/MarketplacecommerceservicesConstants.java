@@ -2277,4 +2277,15 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 
 	public final static String PINCODE_RESPONSE_DATA_PDP = "PincodeResponseDataForPDP";
 	public static final String KM = "km";
+
+	//Return Window Increase
+	public static final String FetchConsignmentList = "SELECT {c.pk} FROM {Order as o}, {Consignment as c}, {EnumerationValue as en} WHERE {c.order} ={o.pk} and {c.status} = {en.pk} and {en.code}='DELIVERED' and {o.versionid} IS NULL AND {o.type}  ='SubOrder' AND {c.code} IN (?code)";
+	public static final String ConsignmentListFailure = "Error while fetching consignment list";
+
+	public static final String RETURNWINDOWBATCH = "mpl.returnWindowIncrease.use";
+
+	public static final String PROCESSED = "PROCESSED";
+	public static final String NOTFOUND = "NOT_FOUND";
+
+	public static final String FETCHCRONJOBDEBUGLOG = "Error while fetching cronjob with code :";
 }
