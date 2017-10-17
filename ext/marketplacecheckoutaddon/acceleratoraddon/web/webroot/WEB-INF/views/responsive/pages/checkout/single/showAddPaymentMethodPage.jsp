@@ -12,56 +12,6 @@
 <%@ taglib prefix="cart" tagdir="/WEB-INF/tags/responsive/cart" %>
 <%@ taglib prefix="format" tagdir="/WEB-INF/tags/shared/format" %>
 
-
-<script type="text/javascript">
-
-function showAddEGV(){
-	ACC.singlePageCheckout.showAjaxLoader();
-	var url=ACC.config.encodedContextPath +"/checkout/multi/payment-method/addEGV";
-	var xhrResponse=ACC.singlePageCheckout.ajaxRequest(url,"GET","",false);
-    
-    xhrResponse.fail(function(xhr, textStatus, errorThrown) {
-		console.log("ERROR:"+textStatus + ': ' + errorThrown);
-		ACC.singlePageCheckout.hideAjaxLoader();
-		data={displaymessage:"Network error occured",type:"error"};
-	});
-    
-    xhrResponse.done(function(data) {
-    	var elementId="singlePageAddEGVPopup";
-    	ACC.singlePageCheckout.modalPopup(elementId,data);
-	});
-    
-    xhrResponse.always(function(){
-    	ACC.singlePageCheckout.hideAjaxLoader();
-	});
-}
-
-function addEGVAjax(){
-	//ACC.singlePageCheckout.showAjaxLoader();
-	var form=$("#addToCardWalletFormId").closest("form");
-	var url=ACC.config.encodedContextPath +"/checkout/multi/payment-method/addEGVToWallet";
-	var data=$(form).serialize().replace(/\+/g,'%20');
-	ACC.singlePageCheckout.showAjaxLoader();
-	var xhrResponse=ACC.singlePageCheckout.ajaxRequest(url,"POST",data,false);
-    
-    xhrResponse.fail(function(xhr, textStatus, errorThrown) {
-		console.log("ERROR:"+textStatus + ': ' + errorThrown);
-		ACC.singlePageCheckout.hideAjaxLoader();
-		data={displaymessage:"Network error occured",type:"error"};
-		ACC.singlePageCheckout.hideAjaxLoader();
-		
-	});
-    
-    xhrResponse.done(function(data) {
-
-    	ACC.singlePageCheckout.hideAjaxLoader();
-    	$("#singlePageAddEGVPopup").hide();
-    	useWalletForPaymentAjax();
-    	WalletDetailAjax();
-	});
- }
-
-</script>
 <c:url value="${currentStepUrl}" var="choosePaymentMethodUrl" />
 <spring:url value="/checkout/multi/debitTermsAndConditions" var="getDebitTermsAndConditionsUrl"/>
 
@@ -263,16 +213,16 @@ function addEGVAjax(){
 					<table>
 						<tr>
 							<td class="giftWalletImg"><img src="\_ui\responsive\common\images\walletImg.png" alt="wallet" /></td>
-							<td class="cliqTotalBalance"><p><strong><spring:theme code="text.cliq.cash.payment.cliqcash.label" /></strong></p><p class="cliqTotalBalanceLabel"><spring:theme code="text.cliq.cash.payment.total.label" /><strong>&#8377;</strong></p></td>
+							<td class="cliqTotalBalance"><p><strong><spring:theme code="text.cliq.cash.payment.cliqcash.label" /></strong></p><p class="cliqTotalBalanceLabel"><spring:theme code="text.cliq.cash.payment.total.label" /><strong>&#8377; 0</strong></p></td>
 						</tr>
 					</table>
 				</div>
 			</div>
 			<div class="giftCheckoutSectionSize">
-				<div class="giftCheckoutInnerCols1"><label for="cashOtherThanGiftCard"><p><spring:theme code="text.cliq.cash.payment.cash.label"/></p><p id="qcCashId"><strong>&#8377;0</strong></p></label></div>
+				<div class="giftCheckoutInnerCols1"><label for="cashOtherThanGiftCard"><p><spring:theme code="text.cliq.cash.payment.cash.label"/></p><p id="qcCashId"><strong>&#8377; 0</strong></p></label></div>
 			</div>
 			<div class="giftCheckoutSectionSize">
-				<div class="giftCheckoutInnerCols2"><label for="giftCardAmt"><p><spring:theme code="text.cliq.cash.payment.card.label"/></p><p id="qcGiftCardId"><strong>&#8377;0</strong></p></label></div>
+				<div class="giftCheckoutInnerCols2"><label for="giftCardAmt"><p><spring:theme code="text.cliq.cash.payment.card.label"/></p><p id="qcGiftCardId"><strong>&#8377; 0</strong></p></label></div>
 			</div>
 			<div class="giftCheckoutSectionSize">
 				<div class="giftCheckoutInnerCols3">
@@ -295,7 +245,7 @@ function addEGVAjax(){
 						</div>
 					</div>
 					
-						<span class="addNewCard" onclick="showAddEGV();"><spring:theme code="text.cliq.cash.payment.addcard.label" /></span>
+						<span class="addNewCard" onclick="showAddEGV();"><a href="#"><spring:theme code="text.cliq.cash.payment.addcard.label" /></a></span>
 						<span class="viewCardTerms"><a href="#"><spring:theme code="text.cliq.cash.payment.term.label" /> </a></span>
 					</div>
 					<br />

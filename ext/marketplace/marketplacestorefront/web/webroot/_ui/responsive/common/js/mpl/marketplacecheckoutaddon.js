@@ -5776,6 +5776,51 @@ if ($(window).width() < 768 && $("#walletContainerId").hasClass("giftCheckoutCon
 	WalletDetailAjax();
 }
 
+function showAddEGV(){
+	ACC.singlePageCheckout.showAjaxLoader();
+	var url=ACC.config.encodedContextPath +"/checkout/multi/payment-method/addEGV";
+	var xhrResponse=ACC.singlePageCheckout.ajaxRequest(url,"GET","",false);
+    
+    xhrResponse.fail(function(xhr, textStatus, errorThrown) {
+		console.log("ERROR:"+textStatus + ': ' + errorThrown);
+		ACC.singlePageCheckout.hideAjaxLoader();
+		data={displaymessage:"Network error occured",type:"error"};
+	});
+    
+    xhrResponse.done(function(data) {
+    	var elementId="singlePageAddEGVPopup";
+    	ACC.singlePageCheckout.modalPopup(elementId,data);
+	});
+    
+    xhrResponse.always(function(){
+    	ACC.singlePageCheckout.hideAjaxLoader();
+	});
+}
+
+function addEGVAjax(){
+	//ACC.singlePageCheckout.showAjaxLoader();
+	var form=$("#addToCardWalletFormId").closest("form");
+	var url=ACC.config.encodedContextPath +"/checkout/multi/payment-method/addEGVToWallet";
+	var data=$(form).serialize().replace(/\+/g,'%20');
+	ACC.singlePageCheckout.showAjaxLoader();
+	var xhrResponse=ACC.singlePageCheckout.ajaxRequest(url,"POST",data,false);
+    
+    xhrResponse.fail(function(xhr, textStatus, errorThrown) {
+		console.log("ERROR:"+textStatus + ': ' + errorThrown);
+		ACC.singlePageCheckout.hideAjaxLoader();
+		data={displaymessage:"Network error occured",type:"error"};
+		ACC.singlePageCheckout.hideAjaxLoader();
+		
+	});
+    
+    xhrResponse.done(function(data) {    	
+    	$("#singlePageAddEGVPopup").modal('hide');
+    	useWalletForPaymentAjax();
+    	WalletDetailAjax();
+    	ACC.singlePageCheckout.hideAjaxLoader();
+	});
+ }
+
 /**
  * Wallet Changes End
  */
