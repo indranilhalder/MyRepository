@@ -638,12 +638,12 @@ $(document).ready(function()
 			                    }
 			                    if (window.localStorage) {
 			                        var date = new Date();
- +				                	var minutes = 600;
- +				                	date.setTime(date.getTime() + (minutes * 60 * 1000)); 
- +				                	
- +				                    $.cookie("dept-list", "true", {
- +				                        expires: date,
- +				                        path: "/"
+				                	var minutes = 600;
+				                	date.setTime(date.getTime() + (minutes * 60 * 1000)); 
+				                	
+				                    $.cookie("dept-list", "true", {
+				                        expires: date,
+				                        path: "/"
 
 			                        });
 			                        window.localStorage.setItem(
