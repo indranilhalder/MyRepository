@@ -8,14 +8,18 @@ import de.hybris.platform.core.model.user.CustomerModel;
 import de.hybris.platform.cronjob.enums.CronJobResult;
 import de.hybris.platform.cronjob.enums.CronJobStatus;
 import de.hybris.platform.cronjob.model.CronJobModel;
+import de.hybris.platform.servicelayer.config.ConfigurationService;
 import de.hybris.platform.servicelayer.cronjob.AbstractJobPerformable;
 import de.hybris.platform.servicelayer.cronjob.PerformResult;
 
 import java.util.Date;
 import java.util.List;
 
+import javax.annotation.Resource;
+
 import org.apache.log4j.Logger;
 
+import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.exception.EtailBusinessExceptions;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.marketplacecommerceservices.service.FetchCustomerDetailsService;
@@ -32,6 +36,9 @@ public class CustomerDetailsPopulateJob extends AbstractJobPerformable<CronJobMo
 
 	@SuppressWarnings("unused")
 	private final static Logger LOG = Logger.getLogger(CustomerDetailsPopulateJob.class.getName());
+	
+	@Resource(name = "configurationService")
+	private ConfigurationService configurationService;
 
 	/**
 	 * @Description : Fetch Customer Creation and Update Records
@@ -86,7 +93,25 @@ public class CustomerDetailsPopulateJob extends AbstractJobPerformable<CronJobMo
 		if (null != customerData && !customerData.isEmpty())
 		{
 			LOG.debug("******customerData not empty or null******");
-			getCustomerXMLUtlity().generateCustomerXMlData(customerData);
+
+			final int rowLimit = configurationService.getConfiguration().getInt(
+					MarketplacecommerceservicesConstants.CUSTOMERMASTER_ROWLIMIT);
+			if (rowLimit > 0)
+			{
+				int startIndex = 0;
+				final int listSize = customerData.size();
+				while (startIndex < listSize)
+				{
+					final int endIndex = (startIndex + rowLimit) < listSize ? (startIndex + rowLimit) : listSize;
+					final List<CustomerModel> partCustomerData = customerData.subList(startIndex, endIndex);
+					getCustomerXMLUtlity().generateCustomerXMlData(partCustomerData);
+					startIndex += rowLimit;
+				}
+			}
+			else
+			{
+				getCustomerXMLUtlity().generateCustomerXMlData(customerData);
+			}
 		}
 
 	}
@@ -101,8 +126,26 @@ public class CustomerDetailsPopulateJob extends AbstractJobPerformable<CronJobMo
 
 		if (null != customerData && !customerData.isEmpty())
 		{
-			LOG.debug("customerData not empty or null");
-			getCustomerXMLUtlity().generateCustomerXMlData(customerData);
+			LOG.debug("******customerData not empty or null******");
+
+			final int rowLimit = configurationService.getConfiguration().getInt(
+					MarketplacecommerceservicesConstants.CUSTOMERMASTER_ROWLIMIT);
+			if (rowLimit > 0)
+			{
+				int startIndex = 0;
+				final int listSize = customerData.size();
+				while (startIndex < listSize)
+				{
+					final int endIndex = (startIndex + rowLimit) < listSize ? (startIndex + rowLimit) : listSize;
+					final List<CustomerModel> partCustomerData = customerData.subList(startIndex, endIndex);
+					getCustomerXMLUtlity().generateCustomerXMlData(partCustomerData);
+					startIndex += rowLimit;
+				}
+			}
+			else
+			{
+				getCustomerXMLUtlity().generateCustomerXMlData(customerData);
+			}
 		}
 	}
 

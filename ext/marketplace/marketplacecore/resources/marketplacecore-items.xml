@@ -922,7 +922,11 @@
 			<value code="Ms" /> <!-- CNC => only for click and collect -->
 			<value code="Mrs" /> <!-- OD => only for home and express delivery -->
 		</enumtype>
-
+		<!-- SDI-1561 -->
+	    <enumtype code="CreditCardType" autocreate="false" generate="false">
+			<value code="jcb"/>
+			<value code="discover"/>
+		</enumtype>
 		<!-- <enumtype code="ComponentTypeEnum" autocreate="true" generate="true" 
 			dynamic="true"> <description>Component Type For Components</description> 
 			<value code="BannerCarousel" /> <value code="Banners3CarouselType" /> <value 

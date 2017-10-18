@@ -2247,20 +2247,24 @@ public class MplProductWebServiceImpl implements MplProductWebService
 					capacityLinkData = new CapacityLinkData();
 					// For Color
 					if (StringUtils.isNotEmpty(variantData.getColour()))
-					{
+					{//INC144317643
 						colorLinkData.setColor(variantData.getColour());
+						final String hexCode = (variantData.getColour()).replaceAll("\\s", "");
+						colorLinkData.setColorHexCode(configurationService.getConfiguration().getString(
+								"colorhexcode." + hexCode.toLowerCase(), ""));//INC144317643
 					}
 					//checking for colour hex code
-					if (StringUtils.isNotEmpty(variantData.getColourCode()))
-					{
-						colorLinkData.setColorHexCode(variantData.getColourCode());
-					}
+					/* start comment of INC144317643 */
+					/*
+					 * if (StringUtils.isNotEmpty(variantData.getColourCode())) {
+					 * colorLinkData.setColorHexCode(variantData.getColourCode()); }
+					 */
+					/* end comment of INC144317643 */
 					if (StringUtils.isNotEmpty(variantData.getUrl()))
 					{
 						colorLinkData.setColorurl(variantData.getUrl());
 					}
 					variantMobileData.setColorlink(colorLinkData);
-
 					//For Size
 					if (MapUtils.isNotEmpty(variantData.getSizeLink()))
 					{
@@ -2840,8 +2844,9 @@ public class MplProductWebServiceImpl implements MplProductWebService
 				for (final ImageData img : productData.getImages())
 				{
 					if (null != img && null != img.getUrl() && StringUtils.isNotEmpty(img.getFormat())
-					//&& img.getFormat().toLowerCase().equals(MarketplacecommerceservicesConstants.THUMBNAIL) Sonar fix
-							&& img.getFormat().equalsIgnoreCase(MarketplacecommerceservicesConstants.PRODUCT_IMAGE))
+							//&& img.getFormat().toLowerCase().equals(MarketplacecommerceservicesConstants.THUMBNAIL) Sonar fix
+							&& img.getFormat().equalsIgnoreCase(MarketplacecommerceservicesConstants.PRODUCT_IMAGE)
+							&& img.getMediaPriority().intValue() == 1)//INC144317283 Fix
 					{
 						productDetailMobile.setImageUrl(img.getUrl());
 						break;
