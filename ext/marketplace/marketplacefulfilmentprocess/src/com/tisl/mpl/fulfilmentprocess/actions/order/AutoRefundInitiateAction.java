@@ -180,10 +180,18 @@ public class AutoRefundInitiateAction extends AbstractProceduralAction<OrderProc
 													if(CollectionUtils.isNotEmpty(returnEntry.getOrderEntry().getConsignmentEntries())){
 														 LOG.debug("Step :2 getting the consignment status for ..."+returnEntry.getOrderEntry().getConsignmentEntries());
 														boolean consignmentStatusForRTO = false;
-														for(ConsignmentModel str:orderModel.getConsignments()){
-															System.out.println("********Consignment Entry Object :************:"+str.toString());
-															System.out.println("********Consignment Entry Code :************:"+str.getCode());
-															System.out.println("********Consignment Entry Status :************:"+str.getStatus());
+														for(OrderModel order:orderModel.getChildOrders()){
+															System.out.println("********Consignment Entry Object :************:"+order.getCode());
+															for(AbstractOrderEntryModel orderEntry:order.getEntries()){
+																System.out.println("********Consignment Entry Object :************:"+orderEntry.getOrderLineId());
+																for(ConsignmentEntryModel consignmentEntry:orderEntry.getConsignmentEntries()){
+																	System.out.println("********Consignment Entry Object :************:"+consignmentEntry.getConsignment().getStatus());
+																	System.out.println("********Consignment Entry Code :************:"+consignmentEntry.getConsignment().getCode());
+																	System.out.println("********Consignment Entry Status :************:"+consignmentEntry.getConsignment().getStatusDisplay());
+																}
+																
+															}
+															
 														}
 														if(orderModel.getConsignments().contains(ConsignmentStatus.RETURNINITIATED_BY_RTO)){
 															LOG.debug("Step :3  consignment for RETURNINITIATED_BY_RTO  ...");
