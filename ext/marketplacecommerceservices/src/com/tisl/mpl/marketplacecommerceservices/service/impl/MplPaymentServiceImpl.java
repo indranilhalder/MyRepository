@@ -851,6 +851,19 @@ public class MplPaymentServiceImpl implements MplPaymentService
 				{
 					debitCardPaymentInfoModel.setType(CreditCardType.SWITCH);
 				}
+				//SDI-1561
+				else if (MarketplacecommerceservicesConstants.DINERS.equalsIgnoreCase(response.getCardBrand()))
+				{
+					debitCardPaymentInfoModel.setType(CreditCardType.DINERS);
+				}
+				else if (MarketplacecommerceservicesConstants.JCB.equalsIgnoreCase(response.getCardBrand()))
+				{
+					debitCardPaymentInfoModel.setType(CreditCardType.JCB);
+				}
+				else if (MarketplacecommerceservicesConstants.DISCOVER.equalsIgnoreCase(response.getCardBrand()))
+				{
+					debitCardPaymentInfoModel.setType(CreditCardType.DISCOVER);
+				}
 				else
 				{
 					debitCardPaymentInfoModel.setType(CreditCardType.MASTER);
@@ -1044,6 +1057,19 @@ public class MplPaymentServiceImpl implements MplPaymentService
 				else if (MarketplacecommerceservicesConstants.SWITCHCARD.equalsIgnoreCase(response.getCardBrand()))
 				{
 					creditCardPaymentInfoModel.setType(CreditCardType.SWITCH);
+				}
+				//SDI-1561
+				else if (MarketplacecommerceservicesConstants.DINERS.equalsIgnoreCase(response.getCardBrand()))
+				{
+					creditCardPaymentInfoModel.setType(CreditCardType.DINERS);
+				}
+				else if (MarketplacecommerceservicesConstants.JCB.equalsIgnoreCase(response.getCardBrand()))
+				{
+					creditCardPaymentInfoModel.setType(CreditCardType.JCB);
+				}
+				else if (MarketplacecommerceservicesConstants.DISCOVER.equalsIgnoreCase(response.getCardBrand()))
+				{
+					creditCardPaymentInfoModel.setType(CreditCardType.DISCOVER);
 				}
 				else
 				{
@@ -1278,6 +1304,19 @@ public class MplPaymentServiceImpl implements MplPaymentService
 				else if (MarketplacecommerceservicesConstants.SWITCHCARD.equalsIgnoreCase(cardRes.getCardBrand()))
 				{
 					emiPaymentInfoModel.setType(CreditCardType.SWITCH);
+				}
+				//SDI-1561
+				else if (MarketplacecommerceservicesConstants.DINERS.equalsIgnoreCase(cardRes.getCardBrand()))
+				{
+					emiPaymentInfoModel.setType(CreditCardType.DINERS);
+				}
+				else if (MarketplacecommerceservicesConstants.JCB.equalsIgnoreCase(cardRes.getCardBrand()))
+				{
+					emiPaymentInfoModel.setType(CreditCardType.JCB);
+				}
+				else if (MarketplacecommerceservicesConstants.DISCOVER.equalsIgnoreCase(cardRes.getCardBrand()))
+				{
+					emiPaymentInfoModel.setType(CreditCardType.DISCOVER);
 				}
 				else
 				{
@@ -3285,11 +3324,11 @@ public class MplPaymentServiceImpl implements MplPaymentService
 
 	/*
 	 * @description : fetching bank model for a bank name TISPRO-179\
-	 * 
+	 *
 	 * @param : bankName
-	 * 
+	 *
 	 * @return : BankModel
-	 * 
+	 *
 	 * @throws EtailNonBusinessExceptions
 	 */
 	@Override
@@ -3301,9 +3340,9 @@ public class MplPaymentServiceImpl implements MplPaymentService
 
 	/*
 	 * @Description : Fetching bank name for net banking-- TISPT-169
-	 * 
+	 *
 	 * @return List<BankforNetbankingModel>
-	 * 
+	 *
 	 * @throws EtailNonBusinessExceptions
 	 */
 	@Override
@@ -3680,7 +3719,7 @@ public class MplPaymentServiceImpl implements MplPaymentService
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see * SprintPaymentFixes:- This method is setting paymentTransactionModel and the paymentTransactionEntryModel
 	 * against the cart for non-COD from OMS Submit Order Job de.hybris.platform.core.model.order.OrderModel)
 	 */
@@ -3830,7 +3869,7 @@ public class MplPaymentServiceImpl implements MplPaymentService
 
 	/*
 	 * @desc getPaymentModeFrompayInfo
-	 * 
+	 *
 	 * @see SprintPaymentFixes:- ModeOfpayment set same as in Payment Info
 	 */
 	@Override
@@ -3871,7 +3910,7 @@ public class MplPaymentServiceImpl implements MplPaymentService
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see SprintPaymentFixes:- This method is setting paymentTransactionModel and the paymentTransactionEntryModel
 	 * against the cart for pre paid from OMS Submit Order Job
 	 */
@@ -3935,7 +3974,7 @@ public class MplPaymentServiceImpl implements MplPaymentService
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @desc SprintPaymentFixes:- This method is setting paymentTransactionModel and the paymentTransactionEntryModel
 	 * against the cart for COD from OMS Submit Order Job
 	 */
