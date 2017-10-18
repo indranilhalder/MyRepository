@@ -7,11 +7,12 @@
 <%@ taglib prefix="component" tagdir="/WEB-INF/tags/shared/component" %>
 <%@ taglib prefix="ycommerce" uri="http://hybris.com/tld/ycommercetags" %>
 
-
-<section class="brand-follow mb-40 clearfix">
-    <picture><img src="${component.brandImage.url}" alt=""></picture>
-    <h3>${component.brandTitle}</h3>
-</section>
+<c:if test="${component.brandImage ne ' ' and component.brandImage ne 'null'}">
+	<section class="brand-follow mb-40 clearfix">
+		<picture><img src="${component.brandImage.url}" alt=""></picture>
+		<h3>${component.brandTitle}</h3>
+	</section> 
+</c:if>
 
 
 <section class="trending-products mb-40 text-center">
@@ -79,10 +80,10 @@
                                             </c:if>
                                             <c:if test="${product.price.value <= 0 || (product.productMRP.value == product.price.value)}">
 											<span class="price">
-								<%--<c:if test="${product.productMRP.value > 0}">
+								<c:if test="${product.productMRP.value > 0}">
                                     <c:choose>
                                         <c:when test="${product.productMRP.value > 0}">
-											<span class="priceFormat">
+											<span class="priceFormat full">
 											<span id="priceEqual_${product.code}">${product.productMRP.formattedValueNoDecimal}</span></span>
                                         </c:when>
                                         <c:otherwise>
@@ -95,7 +96,7 @@
                                         </c:otherwise>
                                     </c:choose>
 
-                                </c:if>--%>
+                                </c:if>
 							</span>
                                             </c:if>
                                         </ycommerce:testId>

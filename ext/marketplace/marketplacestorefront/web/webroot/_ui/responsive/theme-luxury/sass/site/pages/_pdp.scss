@@ -753,8 +753,8 @@
 		width: 96px;
 		height: 27px;
 		bottom: 20px;
-		left: -5px;
-        top:35px;
+		left: 0px;
+        top:10px;
 	}	
 	.newseason{		
 		background: $Sprite_icon no-repeat -650px -30px;		
@@ -762,8 +762,8 @@
 		width: 96px;
 		height: 27px;
 		bottom: 20px;
-		left: -5px;
-        top:35px;
+		left: 0px;
+        top:10px;
 	}
 	.trending{		
 		background: $Sprite_icon no-repeat -650px -60px;		
@@ -771,8 +771,8 @@
 		width: 96px;
 		height: 27px;
 		bottom: 20px;
-		left: -5px;
-        top:35px;
+		left: 0px;
+        top:10px;
 	}
     .editors{		
 		background: $Sprite_icon no-repeat -650px -90px;		
@@ -780,8 +780,8 @@
 		width: 96px;
 		height: 27px;
 		bottom: 20px;
-		left: -5px;
-        top:35px;
+		left: 0px;
+        top:10px;
 	}
     .newarrival{		
 		background: $Sprite_icon no-repeat -650px -120px;		
@@ -789,8 +789,8 @@
 		width: 96px;
 		height: 27px;
 		bottom: 20px;
-		left: -5px;
-        top:35px;
+		left: 0px;
+        top:10px;
 	}
     .onsale{		
 		background: $Sprite_icon no-repeat -650px -150px;		
@@ -799,13 +799,13 @@
 		height: 27px;
 		bottom: 20px;
 		left: -5px;
-        top:35px;
+        top:10px;
 	}
 }
 .product-list-wrapper{
     .offer-icon{
         .exclusive, .newseason, .trending, .editors, .newarrival, .onsale{
-            left: -6px;
+            left: 0px;
         }
     }
 }
