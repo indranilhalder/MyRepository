@@ -373,7 +373,7 @@
 					<copy file="${yui.compresser.jar}" tofile="${minifier.ie8.yui.compresser.jar}" />
 					<copy file="${yui.compresser.jar}" tofile="${minifier.ie9.yui.compresser.jar}" />
 					<copy todir="${mpstorefront.mincss.temp.dir}">
-						<fileset dir="${mpstorefront.css.dir}" includes="*.css" excludes="hybris.cms.live.edit.css,main-ie8.css,main-ie9.css,fonts.min.css,preload.css" />
+						<fileset dir="${mpstorefront.css.dir}" includes="*.css" excludes="hybris.cms.live.edit.css,main-ie8.css,main-ie9.css,fonts.min.css,preload.css,style.css" />
 					</copy>
 					<copy todir="${mpstorefront.mincss.temp.ie8.dir}">
 						<fileset dir="${mpstorefront.css.dir}" includes="main-ie8.css" />
