@@ -2288,4 +2288,8 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String NOTFOUND = "NOT_FOUND";
 
 	public static final String FETCHCRONJOBDEBUGLOG = "Error while fetching cronjob with code :";
+	
+	public static final String CUSTOMERMASTER_ROWLIMIT = "customermaster.batchjob.rowlimit";
+	public static final String PAYMENTINFO_F_ROWLIMIT = "paymentinfo.batchjob.forward.rowlimit";
+	public static final String PAYMENTINFO_R_ROWLIMIT = "paymentinfo.batchjob.reverse.rowlimit";
 }
