@@ -454,6 +454,7 @@
 				$("#changeAddressPopup, .changeAdddd").css("z-index", "999999");
 				$(".wrapBG").css("z-index", "99");
 				$(".changeAdddd").css("overflow-y", "hidden");
+				
 				var className = $(this).attr("data-class");
 				//alert(className);
 				//alert("Test"+($("."+className+" .addressline1").text())+($("."+className+" .addressline2").text()+$("."+className+" .addressline3").text()));
@@ -523,6 +524,39 @@
 			$("#saveBlockData").click(function(event){
 				$("#changeAddressPopup").hide();
 				$(".wrapBG").hide();
+				//TPR-5273 starts
+				 var returnMethod =	 $('input[name="returnMethod"]:checked').parents('.selectReturnMethod').find("div > b").text();
+				 
+				 if(returnMethod == 'Return to Store'){
+					 if(typeof(utag) != "undefined"){
+							utag.link({
+								link_text: "quick_drop_selected",
+								event_type : "quick_drop_selected",
+								pin_quick_drop : $('#pin').val()
+							});
+						}
+				 }
+				 else if(returnMethod == 'Schedule Pickup'){
+						 var scheduleReturnDate =	 $('input[name="scheduleReturnDate"]:checked').val();
+						 var scheduleReturnTime =	 $('input[name="scheduleReturnTime"]:checked').val();
+						 if(typeof(utag) != "undefined"){
+							 utag.link({
+								 link_text: "schedule_pickup_selected",
+								 event_type : "schedule_pickup_selected",
+								 preferred_dop : scheduleReturnDate,
+								 preferred_top : scheduleReturnTime
+							 });
+						 }
+				 }
+				 else{
+					 if(typeof(utag) != "undefined"){
+						 utag.link({
+							 link_text: "self_courier_selected",
+							 event_type : "self_courier_selected",
+						 });
+					 } 
+				 }
+				//TPR-5273 ends
 			});
 			
 			$(".addNewAddressPopup").click(function(){
