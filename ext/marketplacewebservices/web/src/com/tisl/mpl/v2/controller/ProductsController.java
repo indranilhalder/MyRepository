@@ -117,6 +117,7 @@ import com.tisl.mpl.v2.helper.ProductsHelper;
 import com.tisl.mpl.validator.PointOfServiceValidator;
 import com.tisl.mpl.wsdto.BreadcrumbResponseWsDTO;
 import com.tisl.mpl.wsdto.DepartmentHierarchyWs;
+import com.tisl.mpl.wsdto.EgvProductInfoWSDTO;
 import com.tisl.mpl.wsdto.LuxHeroBannerWsDTO;
 import com.tisl.mpl.wsdto.ProductAPlusWsData;
 import com.tisl.mpl.wsdto.ProductCompareWsDTO;
@@ -1596,6 +1597,58 @@ public class ProductsController extends BaseController
 			productDTOList.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
 		}
 		return productDTOList;
+	}
+
+	
+	
+	/**
+	 * Returns the reviews for a product with a given product code.
+	 *
+	 * @return product's review list
+	 */
+	@RequestMapping(value = "/egvProductInfo", method = RequestMethod.GET)
+	//@CacheControl(directive = CacheControlDirective.PRIVATE, maxAge = 120)
+	//@Cacheable(value = "productCache", key = "T(de.hybris.platform.commercewebservicescommons.cache.CommerceCacheKeyGenerator).generateKey(true,true,#productCode,#fields)")
+	@ResponseBody
+	public EgvProductInfoWSDTO getEgvProductInfo(@RequestParam(defaultValue = DEFAULT_FIELD_SET) final String fields, final HttpServletRequest request)
+	{
+		EgvProductInfoWSDTO egvProductData = new EgvProductInfoWSDTO();
+		try {
+			 egvProductData = mplProductWebService.getEgvProductDetails();
+			 if(null != egvProductData){
+				 egvProductData.setStatus(MarketplacecommerceservicesConstants.SUCCESS_FLAG);
+			 }else {
+				 egvProductData = new EgvProductInfoWSDTO();
+				 egvProductData.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
+			 }
+		}
+		catch (final EtailNonBusinessExceptions e)
+		{
+			ExceptionUtil.etailNonBusinessExceptionHandler(e);
+			if (null != e.getErrorMessage())
+			{
+				egvProductData.setError(e.getErrorMessage());
+			}
+			egvProductData.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
+		}
+		catch (final EtailBusinessExceptions e)
+		{
+			ExceptionUtil.etailBusinessExceptionHandler(e, null);
+			if (null != e.getErrorMessage())
+			{
+				egvProductData.setError(e.getErrorMessage());
+			}
+			egvProductData.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
+		}
+		//TPR-799
+		catch (final Exception e)
+		{
+			ExceptionUtil.getCustomizedExceptionTrace(e);
+			egvProductData.setError(Localization.getLocalizedString(MarketplacecommerceservicesConstants.E0000));
+			egvProductData.setErrorCode(MarketplacecommerceservicesConstants.E0000);
+			egvProductData.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
+		}
+		return egvProductData;
 	}
 
 	/**

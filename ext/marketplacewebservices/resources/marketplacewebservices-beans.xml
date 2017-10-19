@@ -3397,7 +3397,7 @@
 	</bean>
 	
 	
-	<!-- <bean class="com.tisl.mpl.wsdto.BucketEntryWsDto" extends="com.tisl.mpl.wsdto.ErrorDTO">
+	 <bean class="com.tisl.mpl.wsdto.BucketEntryWsDto" extends="com.tisl.mpl.wsdto.ErrorDTO">
 		<property name="expiryTimestamp" type="String" />
 		<property name="transactionTimestamp" type="String" />
 		<property name="transactionType" type="String" />
@@ -3412,20 +3412,21 @@
 		<property name="bucketDisplayName" type="String" />
 		<property name="bucketId" type="String" />
 		<property name="totalEntryCount" type="int" />
+		<property name="pageNumber" type="int" />
+		<property name="pageSize" type="int" />
 		<property name="discalimer" type="String" />
 		<property name="bucketMaxLimit" type="com.tisl.mpl.wsdto.TotalCliqCashBalanceWsDto" />
 		<property name="bucketTotal" type="com.tisl.mpl.wsdto.TotalCliqCashBalanceWsDto" />
-		<property name="entries" type="com.tisl.mpl.wsdto.BucketEntryWsDto" />	
+		<property name="entries" type="java.util.List&lt;com.tisl.mpl.wsdto.BucketEntryWsDto>"  />	
 	</bean>
 	
-    
+   
 	
 	<bean class="com.tisl.mpl.wsdto.UserCliqCashWsDto" extends="com.tisl.mpl.wsdto.ErrorDTO">
 		<property name="balanceClearedAsOf" type="String" />
 		<property name="totalCliqCashBalance" type="com.tisl.mpl.wsdto.TotalCliqCashBalanceWsDto" />
-		<property name="buckets" type="java.util.List&lt;com.tisl.mpl.wsdto.BucketsWsDto" /> 
-		                               
-	</bean>
+		<property name="buckets" type="java.util.List&lt;com.tisl.mpl.wsdto.BucketsWsDto>"  />                
+	</bean> 
 
      
 	
@@ -3433,9 +3434,9 @@
     	<property name="status" type="String" />
     	<property name="cliqCashDisclaimer" type="String"/>
     	<property name="offers" type="java.util.List&lt;String> "/>
-    	<property name="cliqCash" type="com.tisl.mpl.wsdto.UserCliqCashWsDTO"/>
+    	<property name="cliqCash" type="com.tisl.mpl.wsdto.UserCliqCashWsDto"/>
     	
-    </bean> -->
+    </bean> 
     
      <bean class="com.tisl.mpl.wsdto.CliqCashWsDto" extends="com.tisl.mpl.wsdto.ErrorDTO">
 		<property name="balanceClearedAsOf" type="String" />
@@ -3444,6 +3445,27 @@
 	
 	<bean class="com.tisl.mpl.wsdto.ResendEGVNotificationWsDTO" extends="com.tisl.mpl.wsdto.ErrorDTO">
 	</bean>
+	
+	<bean class="com.tisl.mpl.wsdto.AmountOptionsWSDTO" extends="com.tisl.mpl.wsdto.ErrorDTO">
+		<property name="minPrice" type="com.tisl.mpl.wsdto.TotalCliqCashBalanceWsDto" />
+		<property name="maxPrice" type="com.tisl.mpl.wsdto.TotalCliqCashBalanceWsDto" />
+		<property name="options" type="java.util.List&lt;com.tisl.mpl.wsdto.TotalCliqCashBalanceWsDto>" />
+	</bean>
+	
+	<bean class="com.tisl.mpl.wsdto.variantImagelinkWSDTO" extends="com.tisl.mpl.wsdto.ErrorDTO">
+		<property name="imageUrl" type="String" />
+		<property name="productCode" type="String" />
+	</bean>
+	
+	<bean class="com.tisl.mpl.wsdto.EgvProductInfoWSDTO" extends="com.tisl.mpl.wsdto.ProductDetailMobileWsData">
+		<property name="amountOptions" type="com.tisl.mpl.wsdto.AmountOptionsWSDTO" />
+		<property name="variantOptionsGiftCard" type="java.util.List&lt;com.tisl.mpl.wsdto.variantImagelinkWSDTO>" />
+		<property name="isMoreDesigns" type="boolean" />
+		<property name="productDisclaimerForGC" type="String" />
+		<property name="giftCartImageUrl" type="String" />
+		<property name="tncURL" type="String" />
+	</bean>
+	
 	<!-- Added  For Buying Of EGV Functionality End  -->
 	
 	

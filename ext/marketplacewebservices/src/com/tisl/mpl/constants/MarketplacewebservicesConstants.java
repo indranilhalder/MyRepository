@@ -606,4 +606,14 @@ public class MarketplacewebservicesConstants
 	public static final String PAYMENT_MODE_CLIQ_CASH = "Cliq Cash";
 	public static final String PAYMENT_MODE_SPLIT = "split";
 	public static final String PAYMENT__MODE_JUSPAY = "Juspay";
+	public static final String USER_CLIQCASH_DETAILS = "getUserCliqCashDetails";
+	public static final String BUCKET_DETAILS = "getBucketDetails";
+	
+	public static final String BUYING_EGV_MIN_PRICE = "mpl.buyingEgv.minPrice".intern();
+
+	public static final String BUYING_EGV_MAX_PRICE = "mpl.buyingEgv.maxPrice".intern();
+
+	public static final String BUYING_EGV_PRICE_OPTIONS = "mpl.buyingEgv.priceOptions".intern();
+	public static final String BUYING_EGV_PRODUCT_DISCLAIMER="SoldbyQwikCilverSolutionsPvt.Ltd.anddeliveredbyTataCliQ.CGiftCardsaresubjecttoTermsandConditions.HaveTataCliQGiftCard(s)?Redeemyourgiftcard.";
+
 }
