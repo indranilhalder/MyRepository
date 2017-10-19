@@ -63,7 +63,6 @@ import de.hybris.platform.core.model.JewelleryInformationModel;
 import de.hybris.platform.core.model.c2l.CurrencyModel;
 import de.hybris.platform.core.model.enumeration.EnumerationValueModel;
 import de.hybris.platform.core.model.order.AbstractOrderEntryModel;
-import de.hybris.platform.core.model.order.AbstractOrderModel;
 import de.hybris.platform.core.model.order.CartModel;
 import de.hybris.platform.core.model.order.OrderModel;
 import de.hybris.platform.core.model.order.price.DiscountModel;
@@ -243,6 +242,7 @@ import com.tisl.mpl.util.ExceptionUtil;
 import com.tisl.mpl.util.MplTimeconverUtility;
 import com.tisl.mpl.validation.data.AddressValidationData;
 import com.tisl.mpl.webservice.businessvalidator.DefaultCommonAsciiValidator;
+import com.tisl.mpl.wsdto.ApplyCliqCashWsDto;
 import com.tisl.mpl.wsdto.BuyingEgvRequestWsDTO;
 import com.tisl.mpl.wsdto.BuyingEgvResponceWsDTO;
 import com.tisl.mpl.wsdto.CommonCouponsDTO;
@@ -266,7 +266,6 @@ import com.tisl.mpl.wsdto.NetBankingListWsDTO;
 import com.tisl.mpl.wsdto.NetBankingWsDTO;
 import com.tisl.mpl.wsdto.OrderCreateInJusPayWsDto;
 import com.tisl.mpl.wsdto.OrderProductWsDTO;
-import com.tisl.mpl.wsdto.ApplyCliqCashWsDto;
 import com.tisl.mpl.wsdto.QuickDropStoresList;
 import com.tisl.mpl.wsdto.RedeemCliqVoucherWsDTO;
 import com.tisl.mpl.wsdto.ResendEGVNotificationWsDTO;
@@ -282,6 +281,7 @@ import com.tisl.mpl.wsdto.RevSealJwlryDataWsDTO;
 import com.tisl.mpl.wsdto.ThirdPartyWalletWsDTO;
 import com.tisl.mpl.wsdto.TotalCliqCashBalanceWsDto;
 import com.tisl.mpl.wsdto.UpdateCustomerDetailDto;
+import com.tisl.mpl.wsdto.UserCliqCashWsDto;
 import com.tisl.mpl.wsdto.UserResultWsDto;
 import com.tisl.mpl.wsdto.ValidateOtpWsDto;
 import com.tisl.mpl.wsdto.WalletPaymentWsDTO;
@@ -9323,50 +9323,45 @@ public class UsersController extends BaseCommerceController
 		return responce;
 	}
 	
-//	@Secured(
-//			{ CUSTOMER, "ROLE_TRUSTED_CLIENT", CUSTOMERMANAGER })
-//			@RequestMapping(value = MarketplacewebservicesConstants.USER_CLIQCASH_DETAILS, method = RequestMethod.POST, produces = APPLICATION_TYPE)
-//			@ResponseBody
-//			public ResendEGVNotificationWsDTO getUserCliqCashDetails(@RequestParam final String orderId)
-//					throws EtailNonBusinessExceptions, EtailBusinessExceptions, CalculationException
-//
-//	{
-//		
-//		double balanceAmount = 0;
-//		CustomerWalletDetailResponse customerWalletDetailData = new CustomerWalletDetailResponse();
-//		WalletTransacationsList walletTrasacationsListData1 = new WalletTransacationsList();
-//		final CustomerModel currentCustomer = (CustomerModel) userService.getCurrentUser();
-//		UserCliqCashWsDto userCliqCash = new UserCliqCashWsDto();
-//		try
-//		{
-//
-//			customerWalletDetailData = mplWalletFacade.getCustomerWallet(currentCustomer.getCustomerWalletDetail().getWalletId());
-//			if (null != customerWalletDetailData.getWallet() && customerWalletDetailData.getWallet().getBalance().doubleValue() > 0)
-//			{
-//				balanceAmount = customerWalletDetailData.getWallet().getBalance().doubleValue();
-//			}
-//			final WalletTransacationsList walletTrasacationsListData = mplWalletFacade.getWalletTransactionList();
-//			if (null != walletTrasacationsListData && null != walletTrasacationsListData.getResponseCode()
-//					&& walletTrasacationsListData.getResponseCode().intValue() == 0)
-//			{
-//				walletTrasacationsListData1 = walletTrasacationsListData;
-//				
-//			//	userCliqCash.setBalanceClearedAsOf(balanceClearedAsOf);
-//				BucketsWsDto wsDto = new BucketsWsDto();
-//				wsDto.setBucketId(walletTrasacationsListData1.getTransactionId().toString());
-//				wsDto.setBucketMaxLimit(bucketMaxLimit);
-//			}
-//           
-//			
-//		}
-//		catch (final Exception ex) {
-////		{
-////			responce.setStatus(MarketplacecommerceservicesConstants.FAILURE_FLAG);
-////			responce.setError(ex.getMessage());
-//			LOG.error("Exception occrred Creating  Electronics Gift Card Guid" + ex.getMessage());
-//		}
-//		return userCliqCash;
-//	}
+	@Secured(
+			{ CUSTOMER, "ROLE_TRUSTED_CLIENT", CUSTOMERMANAGER })
+			@RequestMapping(value = MarketplacewebservicesConstants.USER_CLIQCASH_DETAILS, method = RequestMethod.POST, produces = APPLICATION_TYPE)
+			@ResponseBody
+			public UserCliqCashWsDto getUserCliqCashDetails()
+					throws EtailNonBusinessExceptions, EtailBusinessExceptions, CalculationException
+
+	{
+		UserCliqCashWsDto responce = new UserCliqCashWsDto();
+		try
+		{
+			final CustomerModel currentCustomer = (CustomerModel) userService.getCurrentUser();
+			if (null != currentCustomer)
+			{
+
+				responce = mplCartWebService.getUserCliqCashDetails(currentCustomer);
+				if (null == responce)
+				{
+					responce = new UserCliqCashWsDto();
+					responce.setStatus(MarketplacecommerceservicesConstants.FAILURE_FLAG);
+				}
+			}
+			else
+			{
+				responce.setStatus(MarketplacecommerceservicesConstants.FAILURE_FLAG);
+				responce.setError(Localization.getLocalizedString(MarketplacecommerceservicesConstants.B5002));
+				responce.setErrorCode(MarketplacecommerceservicesConstants.B5002);
+			}
+		}
+		catch (final Exception ex)
+		{
+			{
+				responce.setStatus(MarketplacecommerceservicesConstants.FAILURE_FLAG);
+				responce.setError(ex.getMessage());
+				LOG.error("Exception occrred Getting Cliq Cash Details of user " + ex.getMessage());
+			}
+		}
+		return responce;
+	}
 //	
 //	
 //	@Secured(

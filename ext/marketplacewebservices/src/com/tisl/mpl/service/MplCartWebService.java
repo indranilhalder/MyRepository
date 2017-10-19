@@ -17,6 +17,7 @@ import de.hybris.platform.core.model.order.AbstractOrderModel;
 import de.hybris.platform.core.model.order.CartModel;
 import de.hybris.platform.core.model.order.OrderModel;
 import de.hybris.platform.core.model.user.AddressModel;
+import de.hybris.platform.core.model.user.CustomerModel;
 import de.hybris.platform.order.InvalidCartException;
 
 import java.util.List;
@@ -25,9 +26,10 @@ import java.util.Map;
 import com.tisl.mpl.exception.EtailBusinessExceptions;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.facades.product.data.MarketplaceDeliveryModeData;
+import com.tisl.mpl.wsdto.ApplyCliqCashWsDto;
 import com.tisl.mpl.wsdto.CartDataDetailsWsDTO;
 import com.tisl.mpl.wsdto.GetWishListProductWsDTO;
-import com.tisl.mpl.wsdto.ApplyCliqCashWsDto;
+import com.tisl.mpl.wsdto.UserCliqCashWsDto;
 import com.tisl.mpl.wsdto.WebSerResponseWsDTO;
 
 
@@ -183,5 +185,7 @@ public interface MplCartWebService
 			throws CommerceCartRestorationException, CommerceCartMergingException;
 	
 	ApplyCliqCashWsDto applyCLiqCash(AbstractOrderModel order,Double walletAmount);
+	public UserCliqCashWsDto getUserCliqCashDetails(CustomerModel currentCustomer);
+	
 
 }
