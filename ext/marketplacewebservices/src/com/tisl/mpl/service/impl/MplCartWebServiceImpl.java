@@ -82,8 +82,6 @@ import java.util.stream.Collectors;
 
 import javax.annotation.Resource;
 
-import net.sourceforge.pmd.util.StringUtil;
-
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.MapUtils;
 import org.apache.commons.lang.StringUtils;
@@ -105,6 +103,7 @@ import com.tisl.mpl.facade.checkout.MplCartFacade;
 import com.tisl.mpl.facade.wishlist.WishlistFacade;
 import com.tisl.mpl.facades.product.data.BuyBoxData;
 import com.tisl.mpl.facades.product.data.MarketplaceDeliveryModeData;
+import com.tisl.mpl.facades.wallet.MplWalletFacade;
 import com.tisl.mpl.jalo.BundlingPromotionWithPercentageSlab;
 import com.tisl.mpl.marketplacecommerceservices.service.ExchangeGuideService;
 import com.tisl.mpl.marketplacecommerceservices.service.ExtendedUserService;
@@ -114,6 +113,7 @@ import com.tisl.mpl.marketplacecommerceservices.service.MplStockService;
 import com.tisl.mpl.marketplacecommerceservices.service.impl.MplCommerceCartServiceImpl;
 import com.tisl.mpl.model.BundlingPromotionWithPercentageSlabModel;
 import com.tisl.mpl.model.SellerInformationModel;
+import com.tisl.mpl.pojo.response.CustomerWalletDetailResponse;
 import com.tisl.mpl.seller.product.facades.BuyBoxFacade;
 import com.tisl.mpl.service.MplCartWebService;
 import com.tisl.mpl.util.DiscountUtility;
@@ -125,7 +125,10 @@ import com.tisl.mpl.wsdto.GetWishListProductWsDTO;
 import com.tisl.mpl.wsdto.MaxLimitData;
 import com.tisl.mpl.wsdto.MaxLimitWsDto;
 import com.tisl.mpl.wsdto.MobdeliveryModeWsDTO;
+import com.tisl.mpl.wsdto.ApplyCliqCashWsDto;
 import com.tisl.mpl.wsdto.WebSerResponseWsDTO;
+
+import net.sourceforge.pmd.util.StringUtil;
 
 
 
@@ -215,6 +218,10 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 
 	@Autowired
 	private ConfigurationService configurationService;
+	
+	@Autowired
+	private MplWalletFacade mplWalletFacade;
+	
 
 	/**
 	 * Service to create cart
@@ -3417,6 +3424,103 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 	public void setConfigurationService(final ConfigurationService configurationService)
 	{
 		this.configurationService = configurationService;
+	}
+
+
+	/* (non-Javadoc)
+	 * @see com.tisl.mpl.service.MplCartWebService#applyCLiqCash(de.hybris.platform.core.model.order.AbstractOrderModel)
+	 */
+	@Override
+	public ApplyCliqCashWsDto applyCLiqCash(AbstractOrderModel cart,Double walletAmount)
+	{
+		final ApplyCliqCashWsDto applyCliqCashWsDto = new ApplyCliqCashWsDto();
+		try {
+			final CustomerModel currentCustomer = (CustomerModel) getUserService().getCurrentUser();
+			CustomerWalletDetailResponse responce=null;
+			
+			// We can get The Wallet Balance From QC .. If only Customer registered with QC 
+			
+			if(null == walletAmount) {
+				if (null != currentCustomer && null != currentCustomer.getCustomerWalletDetail()
+						&& null != currentCustomer.getCustomerWalletDetail().getWalletId())
+				{
+					// Getting The Customer Cliq Cash Balance From QC
+					responce = mplWalletFacade.getCustomerWallet(currentCustomer.getCustomerWalletDetail().getWalletId().trim());
+					if (null != responce && responce.getResponseCode() == Integer.valueOf(0) && null != responce.getWallet()
+							&& null != responce.getWallet().getBalance())
+					{
+						walletAmount = responce.getWallet().getBalance();
+					}
+				}
+			}
+			
+			applyCliqCashWsDto.setDiscount(Double.valueOf(0));
+			applyCliqCashWsDto.setTotalAmount(cart.getTotalPrice().toString());
+			if (null != walletAmount &&  walletAmount.doubleValue() > 0.0D)
+			{
+				LOG.debug("Bucket Balance =" + walletAmount);
+				final Double totalAmt = cart.getTotalPrice();
+
+				 // If  Customer is Having Enough money in Cliq Cash Then  pay Using Cliq Cash   
+				 // Otherwise He needs to Pay the Remaining Amount using Other Payment Methods( Net Banking ,Debit Cart ... ) 
+				
+				//	 if Customer Is having Enough Money In Cliq Cash , Then Saving SplitModeInfo as CLIQ_CASH 
+				if (null != totalAmt && walletAmount.doubleValue() >= totalAmt.doubleValue())
+				{
+					cart.setSplitModeInfo(MarketplacewebservicesConstants.PAYMENT_MODE_CLIQ_CASH);
+					cart.setPayableWalletAmount(totalAmt);
+					cart.setTotalWalletAmount(walletAmount);
+					getModelService().save(cart);
+					getModelService().refresh(cart);
+					applyCliqCashWsDto.setDiscount(cart.getTotalDiscounts());
+					applyCliqCashWsDto.setIsRemainingAmount(false);
+					applyCliqCashWsDto.setCliqCashApplied(totalAmt);
+					applyCliqCashWsDto.setPaybleAmount(Double.valueOf(0));
+					applyCliqCashWsDto.setTotalAmount(cart.getTotalPrice().toString());
+					applyCliqCashWsDto.setStatus(MarketplacecommerceservicesConstants.SUCCESS_FLAG);
+					
+				}
+				
+				//  else if Customer Is Not having Enough Money In Cliq Cash , Then Saving SplitModeInfo as SPLIT_MODE 
+				else
+				{
+					double juspayTotalAmt = 0.0D;
+					if (null != totalAmt && totalAmt.doubleValue() > 0.0D && null != walletAmount && walletAmount.doubleValue() > 0.0D)
+					{
+						juspayTotalAmt = totalAmt.doubleValue() - walletAmount.doubleValue();
+					}
+					else if (null != cart.getTotalPrice() && cart.getTotalPrice().doubleValue() > 0.0D)
+					{
+						juspayTotalAmt = cart.getTotalPrice().doubleValue();
+					}
+					applyCliqCashWsDto.setIsRemainingAmount(true);
+					if (null != walletAmount && walletAmount.doubleValue() > 0.0D)
+					{
+						applyCliqCashWsDto.setCliqCashApplied(walletAmount);
+					}
+					applyCliqCashWsDto.setIsRemainingAmount(true);
+					applyCliqCashWsDto.setDiscount(cart.getTotalDiscounts());
+					applyCliqCashWsDto.setPaybleAmount(Double.valueOf(juspayTotalAmt));
+					applyCliqCashWsDto.setTotalAmount(cart.getTotalPrice().toString());
+					cart.setSplitModeInfo(MarketplacewebservicesConstants.PAYMENT_MODE_SPLIT);
+					cart.setPayableWalletAmount(walletAmount);
+					cart.setTotalWalletAmount(walletAmount);
+					getModelService().save(cart);
+					getModelService().refresh(cart);
+					applyCliqCashWsDto.setStatus(MarketplacecommerceservicesConstants.SUCCESS_FLAG);
+				}
+
+			}else {
+				applyCliqCashWsDto.setStatus(MarketplacecommerceservicesConstants.FAILURE_FLAG);
+				applyCliqCashWsDto.setError(Localization.getLocalizedString(MarketplacecommerceservicesConstants.B5001));
+				applyCliqCashWsDto.setErrorCode(MarketplacecommerceservicesConstants.B5001);
+			}
+		}catch (Exception e) {
+			LOG.error("Exception occurred while applying cliqCash");
+			throw e;
+		}
+		
+	return applyCliqCashWsDto;
 	}
 
 

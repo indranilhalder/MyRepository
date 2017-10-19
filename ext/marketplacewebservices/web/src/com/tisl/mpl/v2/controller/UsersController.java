@@ -63,6 +63,7 @@ import de.hybris.platform.core.model.JewelleryInformationModel;
 import de.hybris.platform.core.model.c2l.CurrencyModel;
 import de.hybris.platform.core.model.enumeration.EnumerationValueModel;
 import de.hybris.platform.core.model.order.AbstractOrderEntryModel;
+import de.hybris.platform.core.model.order.AbstractOrderModel;
 import de.hybris.platform.core.model.order.CartModel;
 import de.hybris.platform.core.model.order.OrderModel;
 import de.hybris.platform.core.model.order.price.DiscountModel;
@@ -227,7 +228,6 @@ import com.tisl.mpl.pincode.facade.PincodeServiceFacade;
 import com.tisl.mpl.pojo.request.Customer;
 import com.tisl.mpl.pojo.request.QCCustomerRegisterRequest;
 import com.tisl.mpl.pojo.response.BalanceBucketWise;
-import com.tisl.mpl.pojo.response.CustomerWalletDetailResponse;
 import com.tisl.mpl.pojo.response.QCCustomerRegisterResponse;
 import com.tisl.mpl.pojo.response.QCRedeeptionResponse;
 import com.tisl.mpl.pojo.response.RedimGiftCardResponse;
@@ -266,7 +266,7 @@ import com.tisl.mpl.wsdto.NetBankingListWsDTO;
 import com.tisl.mpl.wsdto.NetBankingWsDTO;
 import com.tisl.mpl.wsdto.OrderCreateInJusPayWsDto;
 import com.tisl.mpl.wsdto.OrderProductWsDTO;
-import com.tisl.mpl.wsdto.PayCliqCashWsDto;
+import com.tisl.mpl.wsdto.ApplyCliqCashWsDto;
 import com.tisl.mpl.wsdto.QuickDropStoresList;
 import com.tisl.mpl.wsdto.RedeemCliqVoucherWsDTO;
 import com.tisl.mpl.wsdto.ResendEGVNotificationWsDTO;
@@ -8882,12 +8882,12 @@ public class UsersController extends BaseCommerceController
 	{ CUSTOMER, "ROLE_TRUSTED_CLIENT", CUSTOMERMANAGER })
 	@RequestMapping(value = MarketplacewebservicesConstants.APPLY_CLIQCASH, method = RequestMethod.POST, produces = APPLICATION_TYPE)
 	@ResponseBody
-	public PayCliqCashWsDto applyCliqCash(@RequestParam final String cartGuid)
+	public ApplyCliqCashWsDto applyCliqCash(@RequestParam final String cartGuid)
 			throws EtailNonBusinessExceptions, EtailBusinessExceptions, CalculationException
 	{
-		LOG.info("Applying  cliq Cash For Card Guid "+cartGuid);
-		final PayCliqCashWsDto payCliqCashWsDto = new PayCliqCashWsDto();
-		final OrderModel orderModel = getMplPaymentFacade().getOrderByGuid(cartGuid);
+		LOG.info("Applying  cliq Cash For Card Guid " + cartGuid);
+		ApplyCliqCashWsDto applyCliqCashWsDto = new ApplyCliqCashWsDto();
+		OrderModel orderModel = getMplPaymentFacade().getOrderByGuid(cartGuid);
 		CartModel cart = null;
 
 		try
@@ -8895,166 +8895,28 @@ public class UsersController extends BaseCommerceController
 			if (null == orderModel)
 			{
 				cart = mplPaymentWebFacade.findCartAnonymousValues(cartGuid);
-				final CustomerModel currentCustomer = (CustomerModel) getUserService().getCurrentUser();
-				CustomerWalletDetailResponse responce=null;
-				
-				// We can get The Wallet Balance From QC .. If only Customer registered with QC 
-				if (null != currentCustomer && null != currentCustomer.getCustomerWalletDetail()
-						&& null != currentCustomer.getCustomerWalletDetail().getWalletId())
-				{
-				// Getting The Customer Cliq Cash Balance From QC
-					 responce = mplWalletFacade
-							.getCustomerWallet(currentCustomer.getCustomerWalletDetail().getWalletId().trim());
-				}
-				payCliqCashWsDto.setDiscount(Double.valueOf(0));
-				payCliqCashWsDto.setTotalAmount(cart.getTotalPrice().toString());
-				if (null != responce && responce.getResponseCode() == Integer.valueOf(0)
-						&& null != responce.getWallet() && null != responce.getWallet().getBalance())
-				{
-
-					final Double WalletAmt = responce.getWallet().getBalance();
-					LOG.debug("Bucket Balance =" + WalletAmt);
-					final Double totalAmt = cart.getTotalPrice();
-
-					 // If  Customer is Having Enough money in Cliq Cash Then  pay Using Cliq Cash   
-					 // Otherwise He needs to Pay the Remaining Amount using Other Payment Methods( Net Banking ,Debit Cart ... ) 
-					
-					//	 if Customer Is having Enough Money In Cliq Cash , Then Saving SplitModeInfo as CLIQ_CASH 
-					if (null != WalletAmt && null != totalAmt && WalletAmt.doubleValue() >= totalAmt.doubleValue())
-					{
-						cart.setSplitModeInfo(MarketplacewebservicesConstants.PAYMENT_MODE_CLIQ_CASH);
-						cart.setPayableWalletAmount(totalAmt);
-						cart.setTotalWalletAmount(WalletAmt);
-						getModelService().save(cart);
-						getModelService().refresh(cart);
-						payCliqCashWsDto.setDiscount(cart.getTotalDiscounts());
-						payCliqCashWsDto.setIsRemainingAmount(false);
-						payCliqCashWsDto.setCliqCashApplied(totalAmt);
-						payCliqCashWsDto.setPaybleAmount(Double.valueOf(0));
-						payCliqCashWsDto.setTotalAmount(cart.getTotalPrice().toString());
-						payCliqCashWsDto.setStatus(MarketplacecommerceservicesConstants.SUCCESS_FLAG);
-						
-					}
-					
-					//  else if Customer Is Not having Enough Money In Cliq Cash , Then Saving SplitModeInfo as SPLIT_MODE 
-					else
-					{
-						double juspayTotalAmt = 0.0D;
-						if (null != totalAmt && totalAmt.doubleValue() > 0.0D && null != WalletAmt && WalletAmt.doubleValue() > 0.0D)
-						{
-							juspayTotalAmt = totalAmt.doubleValue() - WalletAmt.doubleValue();
-						}
-						else if (null != cart.getTotalPrice() && cart.getTotalPrice().doubleValue() > 0.0D)
-						{
-							juspayTotalAmt = cart.getTotalPrice().doubleValue();
-						}
-						payCliqCashWsDto.setIsRemainingAmount(true);
-						if (null != WalletAmt && WalletAmt.doubleValue() > 0.0D)
-						{
-							payCliqCashWsDto.setCliqCashApplied(WalletAmt);
-						}
-						payCliqCashWsDto.setIsRemainingAmount(true);
-						payCliqCashWsDto.setDiscount(cart.getTotalDiscounts());
-						payCliqCashWsDto.setPaybleAmount(Double.valueOf(juspayTotalAmt));
-						payCliqCashWsDto.setTotalAmount(cart.getTotalPrice().toString());
-						cart.setSplitModeInfo(MarketplacewebservicesConstants.PAYMENT_MODE_SPLIT);
-						cart.setPayableWalletAmount(WalletAmt);
-						cart.setTotalWalletAmount(WalletAmt);
-						getModelService().save(cart);
-						getModelService().refresh(cart);
-						payCliqCashWsDto.setStatus(MarketplacecommerceservicesConstants.SUCCESS_FLAG);
-					}
-
-				}else {
-					payCliqCashWsDto.setStatus(MarketplacecommerceservicesConstants.FAILURE_FLAG);
-					payCliqCashWsDto.setError(Localization.getLocalizedString(MarketplacecommerceservicesConstants.B5001));
-					payCliqCashWsDto.setErrorCode(MarketplacecommerceservicesConstants.B5001);
-				}
+				applyCliqCashWsDto = mplCartWebService.applyCLiqCash(cart, null);
 			}
 			else
 			{
-
-				final CustomerModel currentCustomer = (CustomerModel) getUserService().getCurrentUser();
-
-				CustomerWalletDetailResponse responce=null;
-				if (null != currentCustomer && null != currentCustomer.getCustomerWalletDetail()
-						&& null != currentCustomer.getCustomerWalletDetail().getWalletId())
-				{
-					 responce = mplWalletFacade
-							.getCustomerWallet(currentCustomer.getCustomerWalletDetail().getWalletId().trim());
-				}
-				payCliqCashWsDto.setDiscount(Double.valueOf(0));
-				payCliqCashWsDto.setTotalAmount(orderModel.getTotalPrice().toString());
-				if (null != responce && responce.getResponseCode() == Integer.valueOf(0)
-						&& null != responce.getWallet() && null != responce.getWallet().getBalance())
-				{
-
-					final Double WalletAmt = responce.getWallet().getBalance();
-					LOG.debug("Bucket Balance =" + WalletAmt);
-					final Double totalAmt = orderModel.getTotalPrice();
-
-					if (null != WalletAmt && null != totalAmt && WalletAmt.doubleValue() >= totalAmt.doubleValue())
-					{
-						orderModel.setSplitModeInfo(MarketplacewebservicesConstants.PAYMENT_MODE_CLIQ_CASH);
-						orderModel.setPayableWalletAmount(totalAmt);
-						orderModel.setTotalWalletAmount(WalletAmt);
-						getModelService().save(orderModel);
-						getModelService().refresh(orderModel);
-						payCliqCashWsDto.setDiscount(orderModel.getTotalDiscounts());
-						payCliqCashWsDto.setIsRemainingAmount(false);
-						payCliqCashWsDto.setCliqCashApplied(totalAmt);
-						payCliqCashWsDto.setPaybleAmount(Double.valueOf(0));
-						payCliqCashWsDto.setTotalAmount(orderModel.getTotalPrice().toString());
-						payCliqCashWsDto.setStatus(MarketplacecommerceservicesConstants.SUCCESS_FLAG);
-					}
-					else
-					{
-						double juspayTotalAmt = 0.0D;
-						if (null != totalAmt && totalAmt.doubleValue() > 0.0D && null != WalletAmt && WalletAmt.doubleValue() > 0.0D)
-						{
-							juspayTotalAmt = totalAmt.doubleValue() - WalletAmt.doubleValue();
-						}
-						else if (null != orderModel.getTotalPrice() && orderModel.getTotalPrice().doubleValue() > 0.0D)
-						{
-							juspayTotalAmt = orderModel.getTotalPrice().doubleValue();
-						}
-						payCliqCashWsDto.setIsRemainingAmount(true);
-						if (null != WalletAmt && WalletAmt.doubleValue() > 0.0D)
-						{
-							payCliqCashWsDto.setCliqCashApplied(WalletAmt);
-						}
-
-						payCliqCashWsDto.setDiscount(orderModel.getTotalDiscounts());
-						payCliqCashWsDto.setPaybleAmount(Double.valueOf(juspayTotalAmt));
-						payCliqCashWsDto.setTotalAmount(orderModel.getTotalPrice().toString());
-						orderModel.setSplitModeInfo(MarketplacewebservicesConstants.PAYMENT_MODE_SPLIT);
-						orderModel.setPayableWalletAmount(WalletAmt);
-						orderModel.setTotalWalletAmount(WalletAmt);
-						getModelService().save(orderModel);
-						getModelService().refresh(orderModel);
-						payCliqCashWsDto.setStatus(MarketplacecommerceservicesConstants.SUCCESS_FLAG);
-					}
-
-				}else {
-					payCliqCashWsDto.setStatus(MarketplacecommerceservicesConstants.FAILURE_FLAG);
-				}
+				applyCliqCashWsDto = mplCartWebService.applyCLiqCash(orderModel, null);
 			}
 		}
 		catch (final EtailNonBusinessExceptions ex)
 		{
-			payCliqCashWsDto.setStatus(MarketplacecommerceservicesConstants.FAILURE_FLAG);
-			payCliqCashWsDto.setError(ex.getErrorCode());
-			payCliqCashWsDto.setErrorCode(ex.getErrorCode());
-			payCliqCashWsDto.setError(ex.getErrorMessage());
+			applyCliqCashWsDto.setStatus(MarketplacecommerceservicesConstants.FAILURE_FLAG);
+			applyCliqCashWsDto.setError(ex.getErrorCode());
+			applyCliqCashWsDto.setErrorCode(ex.getErrorCode());
+			applyCliqCashWsDto.setError(ex.getErrorMessage());
 			LOG.error("Exception occrred while applying Cliq cash" + ex.getMessage());
 		}
 		catch (final Exception ex)
 		{
-			payCliqCashWsDto.setStatus(MarketplacecommerceservicesConstants.FAILURE_FLAG);
-			payCliqCashWsDto.setError(ex.getMessage());
+			applyCliqCashWsDto.setStatus(MarketplacecommerceservicesConstants.FAILURE_FLAG);
+			applyCliqCashWsDto.setError(ex.getMessage());
 			LOG.error("Exception occrred while applying Cliq cash" + ex.getMessage());
 		}
-		return payCliqCashWsDto;
+		return applyCliqCashWsDto;
 
 	}
 
@@ -9072,12 +8934,12 @@ public class UsersController extends BaseCommerceController
 	{ CUSTOMER, "ROLE_TRUSTED_CLIENT", CUSTOMERMANAGER })
 	@RequestMapping(value = MarketplacewebservicesConstants.REMOVE_CLIQCASH, method = RequestMethod.POST, produces = APPLICATION_TYPE)
 	@ResponseBody
-	public PayCliqCashWsDto removeCliqCash(@RequestParam final String cartGuid)
+	public ApplyCliqCashWsDto removeCliqCash(@RequestParam final String cartGuid)
 			throws EtailNonBusinessExceptions, EtailBusinessExceptions, CalculationException
 	{
 		LOG.info("Removing cliq Cash ");
-		final PayCliqCashWsDto payCliqCashWsDto = new PayCliqCashWsDto();
-		final OrderModel orderModel = getMplPaymentFacade().getOrderByGuid(cartGuid);
+		 ApplyCliqCashWsDto removeCliqCashWsDto = new ApplyCliqCashWsDto();
+		 OrderModel orderModel = getMplPaymentFacade().getOrderByGuid(cartGuid);
 		CartModel cart = null;
 		try
 		{
@@ -9085,48 +8947,48 @@ public class UsersController extends BaseCommerceController
 			//  Removing the cliqCash balacne from Order and Setting SplitModeInfo To JUSPAY
 			if (null != orderModel)
 			{
-				payCliqCashWsDto.setDiscount(orderModel.getTotalDiscounts());
+				removeCliqCashWsDto.setDiscount(orderModel.getTotalDiscounts());
 				if (null != orderModel.getTotalPrice())
 				{
-					payCliqCashWsDto.setTotalAmount(orderModel.getTotalPrice().toString());
+					removeCliqCashWsDto.setTotalAmount(orderModel.getTotalPrice().toString());
 				}
-				payCliqCashWsDto.setPaybleAmount(orderModel.getTotalPrice());
+				removeCliqCashWsDto.setPaybleAmount(orderModel.getTotalPrice());
 				orderModel.setSplitModeInfo(MarketplacewebservicesConstants.PAYMENT__MODE_JUSPAY);
 				orderModel.setPayableWalletAmount(Double.valueOf(0.0D));
 				getModelService().save(orderModel);
 				getModelService().refresh(orderModel);
-				payCliqCashWsDto.setStatus(MarketplacecommerceservicesConstants.SUCCESS_FLAG);
+				removeCliqCashWsDto.setStatus(MarketplacecommerceservicesConstants.SUCCESS_FLAG);
 			}
 			else
 			{
 				cart = mplPaymentWebFacade.findCartAnonymousValues(cartGuid);
-				payCliqCashWsDto.setDiscount(cart.getTotalDiscounts());
+				removeCliqCashWsDto.setDiscount(cart.getTotalDiscounts());
 				if (null != cart.getTotalPrice())
 				{
-					payCliqCashWsDto.setPaybleAmount(cart.getTotalPrice());
+					removeCliqCashWsDto.setPaybleAmount(cart.getTotalPrice());
 				}
 				cart.setSplitModeInfo(MarketplacewebservicesConstants.PAYMENT__MODE_JUSPAY);
 				cart.setPayableWalletAmount(Double.valueOf(0.0D));
 				getModelService().save(cart);
 				getModelService().refresh(cart);
-				payCliqCashWsDto.setStatus(MarketplacecommerceservicesConstants.SUCCESS_FLAG);
+				removeCliqCashWsDto.setStatus(MarketplacecommerceservicesConstants.SUCCESS_FLAG);
 			}
 
 		}
 		catch (final EtailNonBusinessExceptions ex)
 		{
-			payCliqCashWsDto.setStatus(MarketplacecommerceservicesConstants.FAILURE_FLAG);
-			payCliqCashWsDto.setErrorCode(ex.getErrorCode());
-			payCliqCashWsDto.setError(ex.getErrorMessage());
+			removeCliqCashWsDto.setStatus(MarketplacecommerceservicesConstants.FAILURE_FLAG);
+			removeCliqCashWsDto.setErrorCode(ex.getErrorCode());
+			removeCliqCashWsDto.setError(ex.getErrorMessage());
 			LOG.error("Exception occrred while Removing Cliq cash" + ex.getMessage());
 		}
 		catch (final Exception ex)
 		{
-			payCliqCashWsDto.setStatus(MarketplacecommerceservicesConstants.FAILURE_FLAG);
-			payCliqCashWsDto.setError(ex.getMessage());
+			removeCliqCashWsDto.setStatus(MarketplacecommerceservicesConstants.FAILURE_FLAG);
+			removeCliqCashWsDto.setError(ex.getMessage());
 			LOG.error("Exception occrred while Removing Cliq cash" + ex.getMessage());
 		}
-		return payCliqCashWsDto;
+		return removeCliqCashWsDto;
 
 	}
 
@@ -9149,13 +9011,21 @@ public class UsersController extends BaseCommerceController
 	{ CUSTOMER, "ROLE_TRUSTED_CLIENT", CUSTOMERMANAGER })
 	@RequestMapping(value = MarketplacewebservicesConstants.REDEEM_CLIQ_VOUCHER, method = RequestMethod.POST, produces = APPLICATION_TYPE)
 	@ResponseBody
-	public RedeemCliqVoucherWsDTO redeemCliqVoucher(@RequestParam final String couponCode, @RequestParam final String passKey)
+	public RedeemCliqVoucherWsDTO redeemCliqVoucher(@RequestParam final String couponCode, @RequestParam final String passKey,
+			@RequestParam(required=false) final String cartGuid)
 			throws EtailNonBusinessExceptions, EtailBusinessExceptions, CalculationException
 
 	{
-		LOG.info("Redeeming CLiq Cash Voucher Card Number "+couponCode);
+		LOG.info("Redeeming CLiq Cash Voucher Card Number " + couponCode);
 		boolean customerRegisteredwithQc = false;
-		final RedeemCliqVoucherWsDTO redeemCliqVoucherWsDTO = new RedeemCliqVoucherWsDTO();
+		RedeemCliqVoucherWsDTO redeemCliqVoucherWsDTO = new RedeemCliqVoucherWsDTO();
+		OrderModel orderModel = null;
+		CartModel cart = null;
+		ApplyCliqCashWsDto applyCliqCashWsDto = null;
+		if (null != cartGuid)
+		{
+			cart = mplPaymentWebFacade.findCartAnonymousValues(cartGuid);
+		}
 		try
 		{
 			final CustomerModel currentCustomer = (CustomerModel) userService.getCurrentUser();
@@ -9197,10 +9067,14 @@ public class UsersController extends BaseCommerceController
 					modelService.save(currentCustomer);
 					customerRegisteredwithQc = true;
 					redeemCliqVoucherWsDTO.setStatus(MarketplacecommerceservicesConstants.SUCCESS_FLAG);
-				}else {
+				}
+				else
+				{
 					redeemCliqVoucherWsDTO.setStatus(MarketplacecommerceservicesConstants.FAILURE_FLAG);
 				}
-			}else {
+			}
+			else
+			{
 				customerRegisteredwithQc = true;
 			}
 			if (customerRegisteredwithQc)
@@ -9236,19 +9110,42 @@ public class UsersController extends BaseCommerceController
 							redeemCliqVoucherWsDTO.setAcknowledgement("Congrats!  Money has been added to your Cliq Cash balance");
 							redeemCliqVoucherWsDTO.setIsWalletLimitReached(false);
 							redeemCliqVoucherWsDTO.setStatus(MarketplacecommerceservicesConstants.SUCCESS_FLAG);
+							if (null != cart)
+							{
+								applyCliqCashWsDto = mplCartWebService.applyCLiqCash(cart, response.getWallet().getBalance());
+
+							}
+							else if (null != cartGuid)
+							{
+								orderModel = getMplPaymentFacade().getOrderByGuid(cartGuid);
+								applyCliqCashWsDto = mplCartWebService.applyCLiqCash(orderModel, response.getWallet().getBalance());
+							}
+							if (null != applyCliqCashWsDto)
+							{
+								redeemCliqVoucherWsDTO.setApplyCliqCash(applyCliqCashWsDto);
+							}
 						}
 						else
 						{
 							redeemCliqVoucherWsDTO.setStatus(MarketplacecommerceservicesConstants.FAILURE_FLAG);
 							redeemCliqVoucherWsDTO.setError(response.getResponseMessage());
 						}
+
+
 					}
 					else
 					{
 						redeemCliqVoucherWsDTO.setStatus(MarketplacecommerceservicesConstants.FAILURE_FLAG);
+						redeemCliqVoucherWsDTO.setError(response.getResponseMessage());
 					}
-				}else {
+				}
+				else
+				{
 					redeemCliqVoucherWsDTO.setStatus(MarketplacecommerceservicesConstants.FAILURE_FLAG);
+					if (null != response)
+					{
+						redeemCliqVoucherWsDTO.setError(response.getResponseMessage());
+					}
 				}
 			}
 			else
@@ -9425,6 +9322,99 @@ public class UsersController extends BaseCommerceController
 		}
 		return responce;
 	}
+	
+//	@Secured(
+//			{ CUSTOMER, "ROLE_TRUSTED_CLIENT", CUSTOMERMANAGER })
+//			@RequestMapping(value = MarketplacewebservicesConstants.USER_CLIQCASH_DETAILS, method = RequestMethod.POST, produces = APPLICATION_TYPE)
+//			@ResponseBody
+//			public ResendEGVNotificationWsDTO getUserCliqCashDetails(@RequestParam final String orderId)
+//					throws EtailNonBusinessExceptions, EtailBusinessExceptions, CalculationException
+//
+//	{
+//		
+//		double balanceAmount = 0;
+//		CustomerWalletDetailResponse customerWalletDetailData = new CustomerWalletDetailResponse();
+//		WalletTransacationsList walletTrasacationsListData1 = new WalletTransacationsList();
+//		final CustomerModel currentCustomer = (CustomerModel) userService.getCurrentUser();
+//		UserCliqCashWsDto userCliqCash = new UserCliqCashWsDto();
+//		try
+//		{
+//
+//			customerWalletDetailData = mplWalletFacade.getCustomerWallet(currentCustomer.getCustomerWalletDetail().getWalletId());
+//			if (null != customerWalletDetailData.getWallet() && customerWalletDetailData.getWallet().getBalance().doubleValue() > 0)
+//			{
+//				balanceAmount = customerWalletDetailData.getWallet().getBalance().doubleValue();
+//			}
+//			final WalletTransacationsList walletTrasacationsListData = mplWalletFacade.getWalletTransactionList();
+//			if (null != walletTrasacationsListData && null != walletTrasacationsListData.getResponseCode()
+//					&& walletTrasacationsListData.getResponseCode().intValue() == 0)
+//			{
+//				walletTrasacationsListData1 = walletTrasacationsListData;
+//				
+//			//	userCliqCash.setBalanceClearedAsOf(balanceClearedAsOf);
+//				BucketsWsDto wsDto = new BucketsWsDto();
+//				wsDto.setBucketId(walletTrasacationsListData1.getTransactionId().toString());
+//				wsDto.setBucketMaxLimit(bucketMaxLimit);
+//			}
+//           
+//			
+//		}
+//		catch (final Exception ex) {
+////		{
+////			responce.setStatus(MarketplacecommerceservicesConstants.FAILURE_FLAG);
+////			responce.setError(ex.getMessage());
+//			LOG.error("Exception occrred Creating  Electronics Gift Card Guid" + ex.getMessage());
+//		}
+//		return userCliqCash;
+//	}
+//	
+//	
+//	@Secured(
+//			{ CUSTOMER, "ROLE_TRUSTED_CLIENT", CUSTOMERMANAGER })
+//			@RequestMapping(value = MarketplacewebservicesConstants.BUCKET_DETAILS, method = RequestMethod.POST, produces = APPLICATION_TYPE)
+//			@ResponseBody
+//			public UserCliqCashWsDto getBucketDetails(@RequestParam final String bucketId,@RequestParam final String pageNumner,
+//					@RequestParam final String pageSize)
+//					throws EtailNonBusinessExceptions, EtailBusinessExceptions, CalculationException
+//
+//	{
+//		
+//		double balanceAmount = 0;
+//		CustomerWalletDetailResponse customerWalletDetailData = new CustomerWalletDetailResponse();
+//		WalletTransacationsList walletTrasacationsListData1 = new WalletTransacationsList();
+//		final CustomerModel currentCustomer = (CustomerModel) userService.getCurrentUser();
+//		UserCliqCashWsDto userCliqCash = new UserCliqCashWsDto();
+//		try
+//		{
+//
+//			customerWalletDetailData = mplWalletFacade.getCustomerWallet(currentCustomer.getCustomerWalletDetail().getWalletId());
+//			if (null != customerWalletDetailData.getWallet() && customerWalletDetailData.getWallet().getBalance().doubleValue() > 0)
+//			{
+//				balanceAmount = customerWalletDetailData.getWallet().getBalance().doubleValue();
+//			}
+//			final WalletTransacationsList walletTrasacationsListData = mplWalletFacade.getWalletTransactionList();
+//			if (null != walletTrasacationsListData && null != walletTrasacationsListData.getResponseCode()
+//					&& walletTrasacationsListData.getResponseCode().intValue() == 0)
+//			{
+//				walletTrasacationsListData1 = walletTrasacationsListData;
+//				
+//			//	userCliqCash.setBalanceClearedAsOf(balanceClearedAsOf);
+//				BucketsWsDto wsDto = new BucketsWsDto();
+//				wsDto.setBucketId(walletTrasacationsListData1.getTransactionId().toString());
+//				wsDto.setBucketMaxLimit(bucketMaxLimit);
+//			}
+//           
+//			
+//		}
+//		catch (final Exception ex) {
+////		{
+////			responce.setStatus(MarketplacecommerceservicesConstants.FAILURE_FLAG);
+////			responce.setError(ex.getMessage());
+//			LOG.error("Exception occrred Creating  Electronics Gift Card Guid" + ex.getMessage());
+//		}
+//		return userCliqCash;
+//	}
+//	
 	/**
 	 * @param s
 	 * @return

@@ -27,6 +27,7 @@ import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.facades.product.data.MarketplaceDeliveryModeData;
 import com.tisl.mpl.wsdto.CartDataDetailsWsDTO;
 import com.tisl.mpl.wsdto.GetWishListProductWsDTO;
+import com.tisl.mpl.wsdto.ApplyCliqCashWsDto;
 import com.tisl.mpl.wsdto.WebSerResponseWsDTO;
 
 
@@ -180,5 +181,7 @@ public interface MplCartWebService
 	 */
 	public CartRestorationData restoreAnonymousCartAndMerge(final String fromAnonymousCartGuid, final String toUserCartGuid)
 			throws CommerceCartRestorationException, CommerceCartMergingException;
+	
+	ApplyCliqCashWsDto applyCLiqCash(AbstractOrderModel order,Double walletAmount);
 
 }

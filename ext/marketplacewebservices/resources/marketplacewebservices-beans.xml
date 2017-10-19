@@ -3360,6 +3360,7 @@
 		<property name="acknowledgement" type="String" />
 		<property name="isWalletLimitReached" type="boolean" />
 		<property name="totalCliqCashBalance" type="com.tisl.mpl.wsdto.TotalCliqCashBalanceWsDto"/>
+		<property name="applyCliqCash" type="com.tisl.mpl.wsdto.ApplyCliqCashWsDto"/>
 	</bean>	
 	
 	
@@ -3388,7 +3389,7 @@
 		
 	</bean>	
 	
-	 <bean class="com.tisl.mpl.wsdto.PayCliqCashWsDto" extends="com.tisl.mpl.wsdto.ErrorDTO">
+	 <bean class="com.tisl.mpl.wsdto.ApplyCliqCashWsDto" extends="com.tisl.mpl.wsdto.ErrorDTO">
 		<property name="totalAmount" type="String" />
 		<property name="discount" type="Double" />
 		<property name="cliqCashApplied" type="Double" />
