@@ -193,6 +193,16 @@ public class AutoRefundInitiateAction extends AbstractProceduralAction<OrderProc
 															}
 															
 														}
+														
+														for(AbstractOrderEntryModel orderEntry:orderModel.getEntries()){
+															System.out.println("********Consignment Entry Object :************:"+orderEntry.getOrderLineId());
+															for(ConsignmentEntryModel consignmentEntry:orderEntry.getConsignmentEntries()){
+																System.out.println("********Consignment Entry Object :************:"+consignmentEntry.getConsignment().getStatus());
+																System.out.println("********Consignment Entry Code :************:"+consignmentEntry.getConsignment().getCode());
+																System.out.println("********Consignment Entry Status :************:"+consignmentEntry.getConsignment().getStatusDisplay());
+															}
+															
+														}
 														if(orderModel.getConsignments().contains(ConsignmentStatus.RETURNINITIATED_BY_RTO)){
 															LOG.debug("Step :3  consignment for RETURNINITIATED_BY_RTO  ...");
 															final List<AbstractOrderEntryModel> orderEntriesModel = associatedEntries(orderModel,returnEntry.getOrderEntry().getTransactionID());
