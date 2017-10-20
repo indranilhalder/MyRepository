@@ -114,7 +114,7 @@
 
 								<div class="mobile_main">
 									<form:input path="mobileNumber" id="profileMobileNumber"
-										onkeyup="kpressmob()" maxlength="10" />
+										onkeyup="kpressmobile()" maxlength="10" />
 									<div class="errorMessage">
 										<div id="errMob"></div>
 									</div>
@@ -231,7 +231,7 @@
 											text="Confirm New Password*" /></label>
 									<!-- <input type="password"  path="checkNewPassword" id="checkNewPassword"
 										onkeypress="kpresscnp()" maxlength="140" /> -->
-									<form:password path="checkNewPassword" onkeyup="kpresscnp()" />
+									<form:password path="checkNewPassword" onkeypress="kpresscnp()" />
 									<div class="errorMessage">
 										<div id="errCnfNewpwd"></div>
 									</div>
@@ -278,6 +278,58 @@
 			    onSelect: function() {
 		        }
 			    });
+		   
+		    //For numeric
+			$("#profileMobileNumber").keydown(function(event) {
+				// Allow only backspace and delete
+				if ( event.keyCode == 46 || event.keyCode == 8) {
+					// let it happen, don't do anything
+				}
+				else {
+					// Ensure that it is a number and stop the keypress
+					if ((event.keyCode !==9) && (event.keyCode < 48 || event.keyCode > 57 )) {
+						event.preventDefault();	
+					}	
+		                else{
+		            
+		              if($.trim($(this).val()) =='')
+		            {
+		                if(event.keyCode == 48){
+		                event.preventDefault();	
+		                }
+		            }
+		                    
+		            }
+				}
+			});
+		    $("#profileMobileNumber").keydown(function(event) {
+				// Allow only backspace and delete
+				if ( event.keyCode == 46 || event.keyCode == 8 ) {
+					// let it happen, don't do anything
+		            if($.trim($(this).val()).length==0)
+		            {
+		                if(event.keyCode==48){
+		                event.preventDefault();	
+		                }
+		            }
+				}
+				else {
+					// Ensure that it is a number and stop the keypress
+					if (event.keyCode < 48 || event.keyCode > 57 ) {
+						event.preventDefault();	
+					}	
+		            else{
+		                 
+		              if($.trim($(this).val()) =='')
+		            {
+		                if(event.keyCode == 48){
+		                event.preventDefault();	
+		                }
+		            }
+		            }
+				}
+			});
+		    
 		});
 	   
 	</script>
