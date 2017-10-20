@@ -3445,6 +3445,7 @@ function validateCVV() {
 		var number = handle[0].value;
 		if (number == "") {
 			errorHandle.innerHTML = "Please enter a valid CVV number.";
+			cvvErrorCapture("credit_card");
 			return false;
 		} else {
 			var count = 0;
@@ -3453,12 +3454,14 @@ function validateCVV() {
 					count++;
 			if (count == number.length) {
 				errorHandle.innerHTML = "Spaces are not allowed.";
+				cvvErrorCapture("credit_card");
 				return false;
 			} else {
 				for ( var index = 0; index < number.length; index++)
 					if (number.charAt(index) < '0'
 							|| number.charAt(index) > '9' || number.length < 3) {
 						errorHandle.innerHTML = "Please enter a valid CVV number.";
+						cvvErrorCapture("credit_card");
 						return false;
 					}
 			}
@@ -3483,6 +3486,7 @@ function validateCVVDc() {
 		var number = handle[1].value;
 		if (number == "") {
 			errorHandle.innerHTML = "Please enter a valid CVV number.";
+			cvvErrorCapture("debit_card");
 			return false;
 		} else {
 			var count = 0;
@@ -3491,12 +3495,14 @@ function validateCVVDc() {
 					count++;
 			if (count == number.length) {
 				errorHandle.innerHTML = "Spaces are not allowed.";
+				cvvErrorCapture("debit_card");
 				return false;
 			} else {
 				for ( var index = 0; index < number.length; index++)
 					if (number.charAt(index) < '0'
 							|| number.charAt(index) > '9' || number.length < 3) {
 						errorHandle.innerHTML = "Please enter a valid CVV number.";
+						cvvErrorCapture("debit_card");
 						return false;
 					}
 			}
@@ -3521,6 +3527,7 @@ function validateCVVEmi() {
 		var number = handle[2].value;
 		if (number == "") {
 			errorHandle.innerHTML = "Please enter a valid CVV number.";
+			cvvErrorCapture("Emi");
 			return false;
 		} else {
 			var count = 0;
@@ -3529,12 +3536,14 @@ function validateCVVEmi() {
 					count++;
 			if (count == number.length) {
 				errorHandle.innerHTML = "Spaces are not allowed.";
+				cvvErrorCapture("Emi");
 				return false;
 			} else {
 				for ( var index = 0; index < number.length; index++)
 					if (number.charAt(index) < '0'
 							|| number.charAt(index) > '9' || number.length < 3) {
 						errorHandle.innerHTML = "Please enter a valid CVV number.";
+						cvvErrorCapture("Emi");
 						return false;
 					}
 			}
@@ -3547,6 +3556,13 @@ function validateCVVEmi() {
 		errorHandle.innerHTML = "";
 		return true;
 	}
+}
+
+//TPR-5277 Starts
+function cvvErrorCapture(paymentType){
+	if(typeof utag !="undefined"){
+		   utag.link({error_type : paymentType+'_cvv_error'});
+		}
 }
 
 function validateCardNo(formSubmit) {
