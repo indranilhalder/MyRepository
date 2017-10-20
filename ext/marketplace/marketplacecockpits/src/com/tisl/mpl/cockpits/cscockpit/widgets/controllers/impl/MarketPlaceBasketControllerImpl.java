@@ -323,7 +323,7 @@ implements MarketPlaceBasketController {
 	public Boolean reserveCart(final CartModel cart)  throws ValidationException{
 		Boolean isCartReserved = Boolean.TRUE;
 		List<ResourceMessage> errorMessages = new ArrayList<ResourceMessage>();
-<<<<<<< HEAD
+
 		String fulfillmentType = null;
 		modelService.refresh(cart);
 
@@ -343,7 +343,7 @@ implements MarketPlaceBasketController {
 		}
 
 		// if store agent is logged in
-		final String agentId = agentIdForStore.getAgentIdForStore(
+		String agentId = agentIdForStore.getAgentIdForStore(
 				MarketplacecommerceservicesConstants.CSCOCKPIT_USER_GROUP_STOREMANAGERAGENTGROUP);
 		
 		if (StringUtils.isEmpty(agentId))
