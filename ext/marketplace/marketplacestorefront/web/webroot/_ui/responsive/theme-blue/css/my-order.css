@@ -105,7 +105,14 @@ body .account .right-account .order-history .navigation2 #ofPagination {
     display: inline-block;
     line-height: 30px;
 }
-
+body .account .right-account .order-history .product-block li.header>ul>li:first-child span.orderDate {
+    height: 16px;
+    font-size: 12px;
+    line-height: 1.33;
+    letter-spacing: .6px;
+    text-align: left;
+    color: #666;
+}
 
 
 @media (min-width: 791px){
