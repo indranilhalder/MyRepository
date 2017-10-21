@@ -17,6 +17,10 @@
 <link rel="stylesheet" type="text/css" media="all" href="${themeResourcePath}/css/plp-serp.css"/>
 <link rel="stylesheet" type="text/css" media="all" href="${themeResourcePath}/css/sign-up.css"/>
 <link rel="stylesheet" type="text/css" media="all" href="${themeResourcePath}/css/wishlist.css"/>
+<link rel="stylesheet" type="text/css" media="all" href="${themeResourcePath}/css/saved-address.css"/>
+<link rel="stylesheet" type="text/css" media="all" href="${themeResourcePath}/css/saved-card.css"/>
+<link rel="stylesheet" type="text/css" media="all" href="${themeResourcePath}/css/review.css"/>
+<link rel="stylesheet" type="text/css" media="all" href="${themeResourcePath}/css/my-order.css"/>
 <%-- <link rel="stylesheet" type="text/css" media="all" href="${themeResourcePath}/css/jquery-picZoomer.css"/>
 <link rel="stylesheet" type="text/css" media="all" href="${themeResourcePath}/css/reset.css"/>
 <link rel="stylesheet" type="text/css" media="all" href="${themeResourcePath}/css/jqtree.css"/> --%>
