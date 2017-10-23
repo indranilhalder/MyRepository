@@ -28,6 +28,9 @@ import javax.annotation.Resource;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import java.util.Collection;
+
+import org.apache.commons.collections.CollectionUtils;
 
 import com.tisl.mpl.businesscontentimport.BusinessContentImportUtility;
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
@@ -84,6 +87,14 @@ public class ReturnWindowIncreasePrepareInterceptor implements PrepareIntercepto
 	@Override
 	public void onPrepare(final Object o, final InterceptorContext its) throws InterceptorException
 	{
+	
+		String transactionId;
+		final Date systime = new Date();
+		List<String> transactionIdList;
+		transactionIdList = new ArrayList<String>(0);
+		Map<String, ReturnWindowAuditModel> map;
+		map = new LinkedHashMap<String, ReturnWindowAuditModel>();
+		ReturnWindowAuditModel obj;
 		if (o instanceof ReturnWindowIncreaseModel)
 		{
 			try
@@ -110,13 +121,7 @@ public class ReturnWindowIncreasePrepareInterceptor implements PrepareIntercepto
 				final InputStream inputStream = mediaService.getStreamFromMedia(returnWindowIncreaseModel.getCsvFile());
 
 				final BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
-				String transactionId;
-				final Date systime = new Date();
-				List<String> transactionIdList;
-				transactionIdList = new ArrayList<String>(0);
-				Map<String, ReturnWindowAuditModel> map;
-				map = new LinkedHashMap<String, ReturnWindowAuditModel>();
-				ReturnWindowAuditModel obj;
+				
 				final EmployeeModel emp = (EmployeeModel) userService.getCurrentUser();
 				LOG.debug("Before Loop start");
 
@@ -152,20 +157,23 @@ public class ReturnWindowIncreasePrepareInterceptor implements PrepareIntercepto
 				{
 					updatedConsignmentList = returnWindowIncreaseService.getConsignment(transactionIdList);
 					LOG.debug("Consignment fetched from DB");
-					if (null != updatedConsignmentList)
+					if (CollectionUtils.isNotEmpty(updatedConsignmentList))
 					{
 
 						for (int i = 0; i < updatedConsignmentList.size(); i++)
 						{
 							try
 							{
-								updatedConsignmentList.get(i).setDeliveryDate(systime);
-
-								if (StringUtils.isNotEmpty(updatedConsignmentList.get(i).getCode()))
+								if (null != updatedConsignmentList.get(i))
 								{
-									LOG.debug("Consignment Updating systime...  " + updatedConsignmentList.get(i).getCode());
-									map.get(updatedConsignmentList.get(i).getCode()).setStatus(
-											MarketplacecommerceservicesConstants.PROCESSED);
+									updatedConsignmentList.get(i).setDeliveryDate(systime);
+
+									if (StringUtils.isNotEmpty(updatedConsignmentList.get(i).getCode()))
+									{
+										LOG.debug("Consignment Updating systime...  " + updatedConsignmentList.get(i).getCode());
+										map.get(updatedConsignmentList.get(i).getCode()).setStatus(
+												MarketplacecommerceservicesConstants.PROCESSED);
+									}
 								}
 
 								LOG.debug("Consignment status set as processed");
