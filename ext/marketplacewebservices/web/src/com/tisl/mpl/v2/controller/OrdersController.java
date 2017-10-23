@@ -86,7 +86,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.multipart.MultipartFile;
-import com.hybris.oms.domain.changedeliveryaddress.TransactionSDDto;
 
 import com.tis.mpl.facade.address.validator.MplDeliveryAddressComparator;
 import com.tis.mpl.facade.changedelivery.MplDeliveryAddressFacade;
@@ -144,6 +143,7 @@ import com.tisl.mpl.wsdto.StatusResponseListDTO;
 import com.tisl.mpl.wsdto.StatusResponseMessageDTO;
 import com.tisl.mpl.wsdto.UserResultWsDto;
 import com.tisl.mpl.wsdto.WebSerResponseWsDTO;
+import com.hybris.oms.domain.changedeliveryaddress.TransactionSDDto;
 
 
 /**
@@ -1534,22 +1534,22 @@ public class OrdersController extends BaseCommerceController
 					final OrderDataWsDTO order = getOrderDetailsFacade.getOrderdetails(orderDetails);
 
 					//Paytm
-					final OrderModel orderModel = orderModelService.getOrder(orderDetails.getCode());
+					//final OrderModel orderModel = orderModelService.getOrderModel(orderDetails.getCode());
 
 					//Paytm Change..
-					String paytmTransactionId = null;
-					if (null != orderModel.getPaymentTransactions() && null != orderModel.getPaymentTransactions().get(0)
-							&& null != orderModel.getPaymentTransactions().get(0).getEntries()
-							&& null != orderModel.getPaymentTransactions().get(0).getEntries().get(0)
-							&& orderModel.getPaymentMode().getCode().equalsIgnoreCase("paytm"))
-					{
-						paytmTransactionId = orderModel.getPaymentTransactions().get(0).getEntries().get(0).getRequestId();
-					}
+					//	String paytmTransactionId = null;
+					//	if (null != orderModel.getPaymentTransactions() && null != orderModel.getPaymentTransactions().get(0)
+					//			&& null != orderModel.getPaymentTransactions().get(0).getEntries()
+					//			&& null != orderModel.getPaymentTransactions().get(0).getEntries().get(0)
+					//			&& orderModel.getModeOfOrderPayment().equalsIgnoreCase("paytm"))
+					//	{
+					//		paytmTransactionId = orderModel.getPaymentTransactions().get(0).getEntries().get(0).getRequestId();
+					//	}
 
 					//paytm changes
 					if (null != order)
 					{
-						order.setPaytmTransactionId(paytmTransactionId);
+						//order.setPaytmTransactionId(paytmTransactionId);
 						orderTrackingListWsDTO.add(order);
 						orderCount++;
 					}

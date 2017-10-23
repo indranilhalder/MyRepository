@@ -1461,6 +1461,8 @@
 		<property name="pickupPersonMobile" type="String" />
 		<!-- TPR-1083 Start-->
 	<property name="exchangeId" type="String"/>
+	<!-- Paytm changes -->
+	<property name="isWalletPay" type="boolean"/>
 	</bean>
 	<bean class="com.tisl.mpl.wsdto.FreebieWsDTO">
 		<property name="name" type="String" />
@@ -1591,6 +1593,7 @@
 		<property name="pickupPersonMobile" type="String" />
 		<!-- TPR-1083 Start-->
 	<property name="exchangeId" type="String"/>
+	<!-- Paytm related changes -->
 	<property name="paytmTransactionId" type="String" />
 	</bean>
 

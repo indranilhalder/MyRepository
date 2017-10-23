@@ -39,7 +39,7 @@ public final class MarketplaceomsordersConstants extends GeneratedMarketplaceoms
 	//Added for third party Wallet
 
 	public static final String PAYMENTMETHOD_MRUPEE = "MRUPEE";
-	public static final String PAYMENTMETHOD_PAYTM = "MRUPEE"; //PAYTM changes
+	public static final String PAYMENTMETHOD_PAYTM = "PAYTM"; //PAYTM changes
 
 
 	public static final String REFUND_TYPE_CODE = "S";
