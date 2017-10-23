@@ -92,6 +92,7 @@ import com.tisl.mpl.sms.facades.SendSMSFacade;
 import com.tisl.mpl.util.ExceptionUtil;
 import com.tisl.mpl.wallet.service.DefaultMplMrupeePaymentService;
 
+
 /**
  * @author TCS
  *
@@ -1080,26 +1081,29 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 									&& (StringUtils.equalsIgnoreCase("CREDIT", binModel.getCardType()) || StringUtils.equalsIgnoreCase(
 											"CC", binModel.getCardType())) && null != savedCard.getBillingAddress())
 							{
-								final SavedCardData savedCardData = setSavedCreditCards(juspayCard, binModel, savedCard);
+								SavedCardData savedCardData = setSavedCreditCards(juspayCard, binModel, savedCard);
 
 								savedCardDataMap.put(savedCard.getCreationtime(), savedCardData);
+								savedCardData = null;
 							}
 
 							else if (juspayCard.getCardReference().equalsIgnoreCase(savedCard.getCardReferenceNumber())
 									&& null != binModel && StringUtils.isEmpty(binModel.getCardType())
 									&& null != savedCard.getBillingAddress())
 							{
-								final SavedCardData savedCardData = setSavedCreditCards(juspayCard, binModel, savedCard);
+								SavedCardData savedCardData = setSavedCreditCards(juspayCard, binModel, savedCard);
 
 								savedCardDataMap.put(savedCard.getCreationtime(), savedCardData);
+								savedCardData = null;
 							}
 
 							else if (juspayCard.getCardReference().equalsIgnoreCase(savedCard.getCardReferenceNumber())
 									&& null == binModel && null != savedCard.getBillingAddress())
 							{
-								final SavedCardData savedCardData = setSavedCreditCards(juspayCard, binModel, savedCard);
+								SavedCardData savedCardData = setSavedCreditCards(juspayCard, binModel, savedCard);
 
 								savedCardDataMap.put(savedCard.getCreationtime(), savedCardData);
+								savedCardData = null;
 							}
 						}
 					}
@@ -1255,26 +1259,29 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 									&& (StringUtils.equalsIgnoreCase("DEBIT", binModel.getCardType()) || StringUtils.equalsIgnoreCase(
 											"DC", binModel.getCardType())))
 							{
-								final SavedCardData savedCardData = setSavedDebitCards(juspayCard, binModel);
+								SavedCardData savedCardData = setSavedDebitCards(juspayCard, binModel);
 
 								savedCardDataMap.put(savedCard.getCreationtime(), savedCardData);
+								savedCardData = null;
 							}
 
 							else if (juspayCard.getCardReference().equalsIgnoreCase(savedCard.getCardReferenceNumber())
 									&& null != binModel && StringUtils.isEmpty(binModel.getCardType())
 									&& null == savedCard.getBillingAddress())
 							{
-								final SavedCardData savedCardData = setSavedDebitCards(juspayCard, binModel);
+								SavedCardData savedCardData = setSavedDebitCards(juspayCard, binModel);
 
 								savedCardDataMap.put(savedCard.getCreationtime(), savedCardData);
+								savedCardData = null;
 							}
 
 							else if (juspayCard.getCardReference().equalsIgnoreCase(savedCard.getCardReferenceNumber())
 									&& null == binModel && null == savedCard.getBillingAddress())
 							{
-								final SavedCardData savedCardData = setSavedDebitCards(juspayCard, binModel);
+								SavedCardData savedCardData = setSavedDebitCards(juspayCard, binModel);
 
 								savedCardDataMap.put(savedCard.getCreationtime(), savedCardData);
+								savedCardData = null;
 							}
 						}
 					}
@@ -1603,26 +1610,29 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 									&& (StringUtils.equalsIgnoreCase("CREDIT", binModel.getCardType()) || StringUtils.equalsIgnoreCase(
 											"CC", binModel.getCardType())) && null != savedCard.getBillingAddress())
 							{
-								final SavedCardData savedCardData = setSavedCreditCards(juspayCard, binModel, savedCard);
+								SavedCardData savedCardData = setSavedCreditCards(juspayCard, binModel, savedCard);
 
 								savedCardDataMap.put(savedCard.getCreationtime(), savedCardData);
+								savedCardData = null;
 							}
 
 							else if (juspayCard.getCardReference().equalsIgnoreCase(savedCard.getCardReferenceNumber())
 									&& null != binModel && StringUtils.isEmpty(binModel.getCardType())
 									&& null != savedCard.getBillingAddress())
 							{
-								final SavedCardData savedCardData = setSavedCreditCards(juspayCard, binModel, savedCard);
+								SavedCardData savedCardData = setSavedCreditCards(juspayCard, binModel, savedCard);
 
 								savedCardDataMap.put(savedCard.getCreationtime(), savedCardData);
+								savedCardData = null;
 							}
 
 							else if (juspayCard.getCardReference().equalsIgnoreCase(savedCard.getCardReferenceNumber())
 									&& null == binModel && null != savedCard.getBillingAddress())
 							{
-								final SavedCardData savedCardData = setSavedCreditCards(juspayCard, binModel, savedCard);
+								SavedCardData savedCardData = setSavedCreditCards(juspayCard, binModel, savedCard);
 
 								savedCardDataMap.put(savedCard.getCreationtime(), savedCardData);
+								savedCardData = null;
 							}
 						}
 					}
@@ -1910,8 +1920,9 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 										binModel.getCardType())) && null != savedCard.getBillingAddress())
 						{
 
-							final SavedCardData savedCardData = setSavedCreditCards(juspayCard, binModel, savedCard);
+							SavedCardData savedCardData = setSavedCreditCards(juspayCard, binModel, savedCard);
 							savedCreditCardDataMap.put(savedCard.getCreationtime(), savedCardData);
+							savedCardData = null;
 						}
 						else if (juspayCard.getCardReference().equalsIgnoreCase(savedCard.getCardReferenceNumber())
 								&& null != binModel
@@ -1919,22 +1930,25 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 										binModel.getCardType()) || StringUtils.equalsIgnoreCase(MarketplacecommerceservicesConstants.DC,
 										binModel.getCardType())))
 						{
-							final SavedCardData savedCardData = setSavedDebitCards(juspayCard, binModel);
+							SavedCardData savedCardData = setSavedDebitCards(juspayCard, binModel);
 							savedDebitCardDataMap.put(savedCard.getCreationtime(), savedCardData);
+							savedCardData = null;
 						}
 						else if (juspayCard.getCardReference().equalsIgnoreCase(savedCard.getCardReferenceNumber()) && null != binModel
 								&& StringUtils.isEmpty(binModel.getCardType()))
 						{
 							if (null != savedCard.getBillingAddress()) //Credit Card
 							{
-								final SavedCardData savedCardData = setSavedCreditCards(juspayCard, binModel, savedCard);
+								SavedCardData savedCardData = setSavedCreditCards(juspayCard, binModel, savedCard);
 								savedCreditCardDataMap.put(savedCard.getCreationtime(), savedCardData);
+								savedCardData = null;
 							}
 							else
 							//Debit Card
 							{
-								final SavedCardData savedCardData = setSavedDebitCards(juspayCard, binModel);
+								SavedCardData savedCardData = setSavedDebitCards(juspayCard, binModel);
 								savedDebitCardDataMap.put(savedCard.getCreationtime(), savedCardData);
+								savedCardData = null;
 							}
 						}
 						else if (juspayCard.getCardReference().equalsIgnoreCase(savedCard.getCardReferenceNumber()) && null == binModel)
@@ -1947,8 +1961,9 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 							else
 							//Debit Card
 							{
-								final SavedCardData savedCardData = setSavedDebitCards(juspayCard, binModel);
+								SavedCardData savedCardData = setSavedDebitCards(juspayCard, binModel);
 								savedDebitCardDataMap.put(savedCard.getCreationtime(), savedCardData);
+								savedCardData = null;
 							}
 						}
 					}
