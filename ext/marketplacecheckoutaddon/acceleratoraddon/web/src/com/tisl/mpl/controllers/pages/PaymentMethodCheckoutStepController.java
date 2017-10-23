@@ -3286,6 +3286,8 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 					paymentInfo.put(paymentMode, Double.valueOf(cart.getTotalPriceWithConv().doubleValue() - walletAmount));
 					getSessionService().setAttribute(MarketplacecheckoutaddonConstants.PAYMENTMODE, paymentInfo);
 
+					System.out.println("**paymentmode In appliedPromotion::" + paymentMode);
+
 					//TISPRO-540 - Setting Payment mode in Cart
 					if (StringUtils.isNotEmpty(paymentMode)
 							&& paymentMode.equalsIgnoreCase(MarketplacecheckoutaddonConstants.CREDITCARDMODE))
@@ -3322,6 +3324,11 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 							&& paymentMode.equalsIgnoreCase(MarketplacecommerceservicesConstants.MRUPEE))
 					{
 						cart.setModeOfPayment(MarketplacecommerceservicesConstants.MRUPEE);
+						getModelService().save(cart);
+					}
+					else if (StringUtils.isNotEmpty(paymentMode) && paymentMode.equalsIgnoreCase("paytm"))
+					{
+						cart.setModeOfPayment("PAYTM");
 						getModelService().save(cart);
 					}
 
@@ -3581,6 +3588,53 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 		final boolean mplMobileIsBlackListed = getMplPaymentFacade().isMobileBlackListed(mobileNumber);
 		return mplMobileIsBlackListed;
 	}
+
+	/**
+	 * This method is used to submit the PAYTM Payment details to Juspay for processing
+	 *
+	 * @param juspayOrderId
+	 * @return String
+	 * @throws EtailNonBusinessExceptions
+	 */
+	@RequestMapping(value = MarketplacecheckoutaddonConstants.SUBMIT_PAYTM_FORM, method = RequestMethod.GET)
+	@RequireHardLogIn
+	public @ResponseBody String submitPaytmForm(final String juspayOrderId) throws EtailNonBusinessExceptions
+	{
+		final String paymentMethodType = "WALLET";
+		final String paymentMethod = "PAYTM";
+		final String redirectAfterPayment = MarketplacecheckoutaddonConstants.TRUEVALUE;
+		final String format = MarketplacecheckoutaddonConstants.JSON;
+		String paytmResponse = null;
+
+		//Logic when payment mode is Netbanking
+		try
+		{
+
+			paytmResponse = getMplPaymentFacade().getPaytmOrderStatus(juspayOrderId, paymentMethodType, paymentMethod,
+					redirectAfterPayment, format);
+			if (null != paytmResponse)
+			{
+				return paytmResponse;
+			}
+		}
+		catch (final AdapterException e)
+		{
+			LOG.error("AdapterException in submitPaytmForm", e);
+		}
+		catch (final Exception e)
+		{
+			LOG.error("Exception in submitPaytmForm", e);
+		}
+
+		return paytmResponse;
+	}
+
+
+
+
+
+
+
 
 
 	/**
@@ -4913,7 +4967,7 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.controllers.pages.CheckoutStepController#enterStep(org.springframework.ui.Model,
 	 * org.springframework.web.servlet.mvc.support.RedirectAttributes)
 	 */

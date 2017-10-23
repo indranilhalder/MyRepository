@@ -328,10 +328,16 @@
 									<p>${subOrder.mplPaymentInfo.cardAccountHolderName}</p>
 									${subOrder.mplPaymentInfo.paymentOption}
   										</c:when>
+  										<c:when test="${not empty subOrder.mplPaymentInfo.paymentOption && fn:toLowerCase(subOrder.mplPaymentInfo.paymentOption) eq 'paytm'}">
+  											<h2>Payment Method</h2>
+								  			<span>${subOrder.mplPaymentInfo.paymentOption}</span>
+  											<p>Paytm txn ID# ${paytmTransactionId}</p>
+  										</c:when>
 								  		<c:otherwise>
 								  			<h2>Payment Method</h2>
 								  			<span>${subOrder.mplPaymentInfo.paymentOption}</span>
 									<p>${subOrder.mplPaymentInfo.cardAccountHolderName}</p>
+								
 								  		</c:otherwise>
 								  	</c:choose>
 								<c:set var="cardNumberMasked"
