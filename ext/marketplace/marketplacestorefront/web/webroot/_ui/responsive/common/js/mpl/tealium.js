@@ -2316,3 +2316,13 @@ $(document).on('mouseup','.simpleSearchToggle',function(){
 	   }
 });
 //UF-472|Responsive search icon ends
+
+//TPR-5271 starts| edit address
+$(document).on('click','#changeAddressLink',function(){
+	if(typeof(utag) !="undefined"){
+		utag.link({
+			link_text: "edit_shipping_address_clicked",
+			event_type : "edit_shipping_address_clicked"
+		});
+	   }
+});
