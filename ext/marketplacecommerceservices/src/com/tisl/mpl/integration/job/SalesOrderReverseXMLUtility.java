@@ -104,7 +104,7 @@ public class SalesOrderReverseXMLUtility
 			{
 				bulkSalesDataList = getParentOrderData(orderModelList);
 				final int rowLimit = getConfigurationService().getConfiguration().getInt(
-						MarketplacecommerceservicesConstants.PAYMENTINFO_F_ROWLIMIT);
+						MarketplacecommerceservicesConstants.PAYMENTINFO_R_ROWLIMIT,0);
 				if (rowLimit > 0)
 				{
 					int startIndex = 0;

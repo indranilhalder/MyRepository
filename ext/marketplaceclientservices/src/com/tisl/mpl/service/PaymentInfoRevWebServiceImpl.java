@@ -60,7 +60,7 @@ public class PaymentInfoRevWebServiceImpl
 			xmlfile.canExecute();
 			FileUtils.writeStringToFile(xmlfile, xmlString);
 			LOG.debug("File created successfully!!!");
-			final int sleepDuration = configurationService.getConfiguration().getInt("paymentinfo.batchjob.sleep.duration");
+			final int sleepDuration = configurationService.getConfiguration().getInt("paymentinfo.batchjob.sleep.duration",0);
 			if(sleepDuration > 0)
 			{
 				Thread.sleep(sleepDuration);

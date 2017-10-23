@@ -95,7 +95,7 @@ public class CustomerDetailsPopulateJob extends AbstractJobPerformable<CronJobMo
 			LOG.debug("******customerData not empty or null******");
 
 			final int rowLimit = configurationService.getConfiguration().getInt(
-					MarketplacecommerceservicesConstants.CUSTOMERMASTER_ROWLIMIT);
+					MarketplacecommerceservicesConstants.CUSTOMERMASTER_ROWLIMIT,0);
 			if (rowLimit > 0)
 			{
 				int startIndex = 0;
@@ -129,7 +129,7 @@ public class CustomerDetailsPopulateJob extends AbstractJobPerformable<CronJobMo
 			LOG.debug("******customerData not empty or null******");
 
 			final int rowLimit = configurationService.getConfiguration().getInt(
-					MarketplacecommerceservicesConstants.CUSTOMERMASTER_ROWLIMIT);
+					MarketplacecommerceservicesConstants.CUSTOMERMASTER_ROWLIMIT,0);
 			if (rowLimit > 0)
 			{
 				int startIndex = 0;
