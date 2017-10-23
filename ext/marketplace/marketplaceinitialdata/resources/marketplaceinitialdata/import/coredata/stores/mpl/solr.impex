@@ -855,8 +855,8 @@ INSERT_UPDATE Sizesystem;name[unique=true];from;to;conversionUnit;propertyName;
 
 ##########  Impex for kidswear end  ##########	
 							 
-# impex for indexing custom solr score attribute
+# start PR-9/ relevance solr score
 INSERT_UPDATE SolrIndexedProperty;solrIndexedType(identifier)[unique=true];name[unique=true];type(code);sortableType(code);currency[default=false];localized[default=false];multiValue[default=false];useForSpellchecking[default=false];useForAutocomplete[default=false];fieldValueProvider;valueProviderParameter
-;$solrIndexedType; customscore                  ;int ;            ;    ;;    ;;;                 ;
+;$solrIndexedType; relevancescore                  ;int ;            ;    ;;    ;;;                 ;
 
-
+# End PR-9/ relevance solr score 

@@ -13280,12 +13280,12 @@
 		</typegroup>
 
 		<!-- TPR-6665 : sysnonums update to slave servers end -->
-	<!-- extends="LocalizableItem" -->	
-   <typegroup name="Sole_score">
-     <itemtype code="Product" autocreate="false" generate="true"
-				extends="LocalizableItem" jaloclass="de.hybris.platform.jalo.product.Product">
+		
+	<!-- start:PR-9: Solr relevance score -->	
+   <typegroup name="Solr_relevancescore">
+     <itemtype code="Product" autocreate="false" generate="true" jaloclass="de.hybris.platform.jalo.product.Product">
                 <attributes>
-                    <attribute autocreate="true" qualifier="customscore" type="int"
+                    <attribute autocreate="true" qualifier="relevancescore" type="int"
                         generate="true">
                         <persistence type="property" />
                         <modifiers read="true" write="true" search="true"
@@ -13295,5 +13295,6 @@
                 </attributes>
             </itemtype>
             </typegroup>
+      <!-- end:PR-9: Solr relevance score -->
 	</itemtypes>
 </items>
