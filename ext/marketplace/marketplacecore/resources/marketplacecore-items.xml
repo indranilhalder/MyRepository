@@ -13280,6 +13280,34 @@
 		</typegroup>
 
 		<!-- TPR-6665 : sysnonums update to slave servers end -->
-
+		<!-- TPR- 5989 : Web Form to create a Ticket from commerce -->
+		<typegroup name="MPL_WEB_CRM_TICKET">
+		<itemtype code="MplWebCrmTicket" autocreate="true" generate="true" extends="GenericItem">
+				<deployment table="MplWebCrmTicket" typecode="11890" />
+				<attributes>
+					<attribute qualifier="nodeType" type="java.lang.String">
+						<modifiers search="true" read="true" write="true" optional="false"/>
+						<persistence type="property" />
+					</attribute>
+					<attribute qualifier="nodeText" type="java.lang.String">
+						<persistence type="property" />
+						<modifiers search="true" optional="false" read="true" write="true" />
+					</attribute>
+					<attribute qualifier="nodeCrmCode" type="java.lang.String">
+						<persistence type="property" />
+						<modifiers search="true" optional="false" read="true" write="true" />
+					</attribute>
+					<attribute qualifier="nodeParent" type="java.lang.String">
+						<persistence type="property" />
+						<modifiers search="true" optional="false" read="true" write="true" />
+					</attribute>
+					<attribute qualifier="nodeDisplay" type="boolean">
+					<defaultvalue>java.lang.Boolean.TRUE</defaultvalue>
+						<persistence type="property" />
+						<modifiers search="true" optional="false" read="true" write="true" />
+					</attribute>
+				</attributes>
+			</itemtype>
+		</typegroup>
 	</itemtypes>
 </items>
