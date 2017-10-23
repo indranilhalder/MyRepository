@@ -791,9 +791,9 @@ function openPop_quick(ussidfromSeller) {
 
 	var loggedIn = $("#loggedIn").val();
 
-	var productCodePost = $("#productCodePost").val();
+	var productCodePostQuickView = productCodeQuickView;
 	var productcodearray = [];
-	productcodearray.push(productCodePost);
+	productcodearray.push(productCodePostQuickView);
 
 	var wishName = "";
 
@@ -832,9 +832,9 @@ function openPop_quick(ussidfromSeller) {
 		sizeSelected = false;
 	}
 
-	var dataString = 'wish=' + wishName + '&product=' + productCodePost
+	var dataString = 'wish=' + wishName + '&product=' + productCodePostQuickView
 			+ '&ussid=' + ussidValue + '&sizeSelected=' + sizeSelected;
-
+	
 	// if(loggedIn == 'false') {
 	if (!headerLoggedinStatus) {
 		$("div.wishAddLoginQv").addClass("active");
@@ -844,7 +844,7 @@ function openPop_quick(ussidfromSeller) {
 	} else {
 		var isInWishlist = getLastModifiedWishlistQuick(ussidValue);
 		if (isInWishlist) {
-			removeFromWishlistInQuickView(wishName, productCodePost,
+			removeFromWishlistInQuickView(wishName, productCodePostQuickView,
 					ussidValue, isMSDEnabled, isApparelExist, rootCategoryMSD,
 					salesHierarchyCategoryMSD, priceformad, "INR");
 		} else {
