@@ -215,9 +215,9 @@ public class OrdersController extends BaseCommerceController
 	private MplPaymentWebFacade mplPaymentWebFacade;
 	/*
 	 * @Autowired private BaseStoreService baseStoreService;
-	 *
+	 * 
 	 * @Autowired private CheckoutCustomerStrategy checkoutCustomerStrategy;
-	 *
+	 * 
 	 * @Autowired private CustomerAccountService customerAccountService;
 	 */
 	@Resource(name = "orderModelService")
@@ -440,9 +440,9 @@ public class OrdersController extends BaseCommerceController
 
 	/*
 	 * @description Send invoice for mobile service
-	 *
+	 * 
 	 * @param orderNumber
-	 *
+	 * 
 	 * @param lineID
 	 */
 
@@ -1079,11 +1079,11 @@ public class OrdersController extends BaseCommerceController
 
 	/*
 	 * @description Setting DeliveryAddress
-	 *
+	 * 
 	 * @param orderDetail
-	 *
+	 * 
 	 * @param type (1-Billing, 2-Shipping)
-	 *
+	 * 
 	 * @return BillingAddressWsDTO
 	 */
 	protected BillingAddressWsDTO setAddress(final OrderData orderDetail, final int type)
@@ -1532,24 +1532,8 @@ public class OrdersController extends BaseCommerceController
 
 
 					final OrderDataWsDTO order = getOrderDetailsFacade.getOrderdetails(orderDetails);
-
-					//Paytm
-					//final OrderModel orderModel = orderModelService.getOrderModel(orderDetails.getCode());
-
-					//Paytm Change..
-					//	String paytmTransactionId = null;
-					//	if (null != orderModel.getPaymentTransactions() && null != orderModel.getPaymentTransactions().get(0)
-					//			&& null != orderModel.getPaymentTransactions().get(0).getEntries()
-					//			&& null != orderModel.getPaymentTransactions().get(0).getEntries().get(0)
-					//			&& orderModel.getModeOfOrderPayment().equalsIgnoreCase("paytm"))
-					//	{
-					//		paytmTransactionId = orderModel.getPaymentTransactions().get(0).getEntries().get(0).getRequestId();
-					//	}
-
-					//paytm changes
 					if (null != order)
 					{
-						//order.setPaytmTransactionId(paytmTransactionId);
 						orderTrackingListWsDTO.add(order);
 						orderCount++;
 					}

@@ -1425,7 +1425,11 @@
 		<property name="pickupPersonName" type="String" />
 		<property name="pickupPersonMobile" type="String" />
 		<property name="isPickupUpdatable" type="boolean" />
-		<property name="isCDA" type="boolean"/>	
+		<property name="isCDA" type="boolean"/>
+		
+		<!-- Paytm related changes -->
+		<property name="walletTransactionId" type="String" />
+		<property name="isWalletPay" type="boolean"/>
 		
 	</bean>
 
@@ -1593,8 +1597,6 @@
 		<property name="pickupPersonMobile" type="String" />
 		<!-- TPR-1083 Start-->
 	<property name="exchangeId" type="String"/>
-	<!-- Paytm related changes -->
-	<property name="paytmTransactionId" type="String" />
 	</bean>
 
 	<bean class="com.tisl.mpl.wsdto.PaymentMethodListWsDTO">
