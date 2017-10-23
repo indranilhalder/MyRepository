@@ -77,14 +77,14 @@ public class SalesOrderXMLUtility
 	 * @Description: Generate XML Data for Order
 	 * @param orderData
 	 */
-	public void generateOrderData(final List<OrderModel> orderData)
+	public void generateOrderData(final List<OrderModel> orderModelList)
 	{
 		List<SalesOrderXMLData> bulkSalesDataList = null;
 		try
 		{
-			if (null != orderData && !orderData.isEmpty())
+			if (null != orderModelList && !orderModelList.isEmpty())
 			{
-				bulkSalesDataList = getParentOrderData(orderData);
+				bulkSalesDataList = getParentOrderData(orderModelList);
 				final int rowLimit = getConfigurationService().getConfiguration().getInt(
 						MarketplacecommerceservicesConstants.PAYMENTINFO_F_ROWLIMIT);
 				if (rowLimit > 0)

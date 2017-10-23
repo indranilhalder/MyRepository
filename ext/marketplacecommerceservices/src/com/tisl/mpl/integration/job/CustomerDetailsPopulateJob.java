@@ -89,8 +89,8 @@ public class CustomerDetailsPopulateJob extends AbstractJobPerformable<CronJobMo
 	 */
 	private void specificCustomerDetails(final Date mplConfigDate, final Date startTime)
 	{
-		final List<CustomerModel> customerData = getFetchCustomerDetailsService().specificCustomerDetails(mplConfigDate, startTime);
-		if (null != customerData && !customerData.isEmpty())
+		final List<CustomerModel> customerModelList = getFetchCustomerDetailsService().specificCustomerDetails(mplConfigDate, startTime);
+		if (null != customerModelList && !customerModelList.isEmpty())
 		{
 			LOG.debug("******customerData not empty or null******");
 
@@ -99,18 +99,18 @@ public class CustomerDetailsPopulateJob extends AbstractJobPerformable<CronJobMo
 			if (rowLimit > 0)
 			{
 				int startIndex = 0;
-				final int listSize = customerData.size();
+				final int listSize = customerModelList.size();
 				while (startIndex < listSize)
 				{
 					final int endIndex = (startIndex + rowLimit) < listSize ? (startIndex + rowLimit) : listSize;
-					final List<CustomerModel> partCustomerData = customerData.subList(startIndex, endIndex);
-					getCustomerXMLUtlity().generateCustomerXMlData(partCustomerData);
+					final List<CustomerModel> partCustomerModelList = customerModelList.subList(startIndex, endIndex);
+					getCustomerXMLUtlity().generateCustomerXMlData(partCustomerModelList);
 					startIndex += rowLimit;
 				}
 			}
 			else
 			{
-				getCustomerXMLUtlity().generateCustomerXMlData(customerData);
+				getCustomerXMLUtlity().generateCustomerXMlData(customerModelList);
 			}
 		}
 
@@ -122,9 +122,9 @@ public class CustomerDetailsPopulateJob extends AbstractJobPerformable<CronJobMo
 	 */
 	private void populateCustomerDetails()
 	{
-		final List<CustomerModel> customerData = getFetchCustomerDetailsService().fetchCustomerDetails();
+		final List<CustomerModel> customerModelList = getFetchCustomerDetailsService().fetchCustomerDetails();
 
-		if (null != customerData && !customerData.isEmpty())
+		if (null != customerModelList && !customerModelList.isEmpty())
 		{
 			LOG.debug("******customerData not empty or null******");
 
@@ -133,18 +133,18 @@ public class CustomerDetailsPopulateJob extends AbstractJobPerformable<CronJobMo
 			if (rowLimit > 0)
 			{
 				int startIndex = 0;
-				final int listSize = customerData.size();
+				final int listSize = customerModelList.size();
 				while (startIndex < listSize)
 				{
 					final int endIndex = (startIndex + rowLimit) < listSize ? (startIndex + rowLimit) : listSize;
-					final List<CustomerModel> partCustomerData = customerData.subList(startIndex, endIndex);
-					getCustomerXMLUtlity().generateCustomerXMlData(partCustomerData);
+					final List<CustomerModel> partCustomerModelList = customerModelList.subList(startIndex, endIndex);
+					getCustomerXMLUtlity().generateCustomerXMlData(partCustomerModelList);
 					startIndex += rowLimit;
 				}
 			}
 			else
 			{
-				getCustomerXMLUtlity().generateCustomerXMlData(customerData);
+				getCustomerXMLUtlity().generateCustomerXMlData(customerModelList);
 			}
 		}
 	}

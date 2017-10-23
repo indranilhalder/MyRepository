@@ -93,16 +93,16 @@ public class SalesOrderReverseXMLUtility
 	 * @Description: Generate XML Data for Order
 	 * @param orderData
 	 */
-	public void generateCanellOrderData(final List<OrderModel> orderData)
+	public void generateCanellOrderData(final List<OrderModel> orderModelList)
 	{
 
 		List<SalesOrderXMLData> bulkSalesDataList = null;
 
 		try
 		{
-			if (null != orderData && !orderData.isEmpty())
+			if (null != orderModelList && !orderModelList.isEmpty())
 			{
-				bulkSalesDataList = getParentOrderData(orderData);
+				bulkSalesDataList = getParentOrderData(orderModelList);
 				final int rowLimit = getConfigurationService().getConfiguration().getInt(
 						MarketplacecommerceservicesConstants.PAYMENTINFO_F_ROWLIMIT);
 				if (rowLimit > 0)
@@ -112,8 +112,8 @@ public class SalesOrderReverseXMLUtility
 					while (startIndex < listSize)
 					{
 						final int endIndex = (startIndex + rowLimit) < listSize ? (startIndex + rowLimit) : listSize;
-						final List<SalesOrderXMLData> partCustomerData = bulkSalesDataList.subList(startIndex, endIndex);
-						generatePartCanellOrderData(partCustomerData);
+						final List<SalesOrderXMLData> partSalesData = bulkSalesDataList.subList(startIndex, endIndex);
+						generatePartCanellOrderData(partSalesData);
 						startIndex += rowLimit;
 					}
 				}
