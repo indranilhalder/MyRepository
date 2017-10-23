@@ -70,6 +70,19 @@
 												test="${fn:escapeXml(creditCard.value.cardIssuer) eq 'AMEX'}">
 												<img src="${commonResourcePath}/images/American_Express.png">
 											</c:if>
+											<!--  SDI-1561 -->
+											<c:if
+												test="${fn:escapeXml(creditCard.value.cardIssuer) eq 'DINERS'}">
+												<img src="${commonResourcePath}/images/dinner_club.png">
+											</c:if>
+											<c:if
+												test="${fn:escapeXml(creditCard.value.cardIssuer) eq 'JCB'}">
+												<img src="${commonResourcePath}/images/JCB.png">
+											</c:if>
+											<c:if
+												test="${fn:escapeXml(creditCard.value.cardIssuer) eq 'DISCOVER'}">
+												<img src="${commonResourcePath}/images/Discover.png">
+											</c:if>
 											<a href="#nogo" class="view-details">View Card Details</a>
 
 											<h3>${fn:escapeXml(creditCard.value.cardIssuer)}</h3>
@@ -142,6 +155,19 @@
 															<img
 																src="${commonResourcePath}/images/American_Express.png">
 														</c:if>
+														<!--  SDI-1561 -->
+											<c:if
+												test="${fn:escapeXml(creditCard.value.cardIssuer) eq 'DINERS'}">
+												<img src="${commonResourcePath}/images/dinner_club.png">
+											</c:if>
+											<c:if
+												test="${fn:escapeXml(creditCard.value.cardIssuer) eq 'JCB'}">
+												<img src="${commonResourcePath}/images/JCB.png">
+											</c:if>
+											<c:if
+												test="${fn:escapeXml(creditCard.value.cardIssuer) eq 'DISCOVER'}">
+												<img src="${commonResourcePath}/images/Discover.png">
+											</c:if>
 														<br><br>
 														<h3>${fn:escapeXml(creditCard.value.cardIssuer)}</h3>
 														<c:if test="${not empty creditCard.value.cardType}">
@@ -196,6 +222,18 @@
 												</c:when>
 												<c:when test="${fn:escapeXml(debitCard.value.cardBrand) eq 'MASTERCARD'}">
 													<img src="${commonResourcePath}/images/Master_Card.png">
+												</c:when>
+												<!--  SDI-1561 -->
+												<c:when test="${fn:escapeXml(creditCard.value.cardIssuer) eq 'DINERS'}">
+													<img src="${commonResourcePath}/images/dinner_club.png">
+												</c:when>
+												<c:when
+													test="${fn:escapeXml(creditCard.value.cardIssuer) eq 'JCB'}">
+													<img src="${commonResourcePath}/images/JCB.png">
+												</c:when>
+												<c:when
+													test="${fn:escapeXml(creditCard.value.cardIssuer) eq 'DISCOVER'}">
+													<img src="${commonResourcePath}/images/Discover.png">
 												</c:when>
 												<c:otherwise>
 												<img class="credit-cards-sprite sprite-mastercard"
@@ -260,6 +298,19 @@
 																test="${fn:escapeXml(debitCard.value.cardBrand) eq 'MASTERCARD'}">
 																<img src="${commonResourcePath}/images/Master_Card.png">
 															</c:when>
+															<!--  SDI-1561 -->
+												<c:when
+													test="${fn:escapeXml(creditCard.value.cardIssuer) eq 'DINERS'}">
+													<img src="${commonResourcePath}/images/dinner_club.png">
+												</c:when>
+												<c:when
+													test="${fn:escapeXml(creditCard.value.cardIssuer) eq 'JCB'}">
+													<img src="${commonResourcePath}/images/JCB.png">
+												</c:when>
+												<c:when
+													test="${fn:escapeXml(creditCard.value.cardIssuer) eq 'DISCOVER'}">
+													<img src="${commonResourcePath}/images/Discover.png">
+												</c:when>
 															<c:otherwise>
 																<img class="credit-cards-sprite sprite-mastercard"
 																	src="${commonResourcePath}/images/Maestro.png">
