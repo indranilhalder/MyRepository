@@ -82,18 +82,24 @@ public class MplBuyBoxUtility
 			// TPR-1886 | Fetch price logic for Jewellery
 			if (productModel.getProductCategoryType().equalsIgnoreCase(FINE_JEWELLERY))
 			{
-				if ((buyBoxWinnerModel.getPLPMaxPrice() != null && buyBoxWinnerModel.getPLPMaxPrice().doubleValue() > 0)
-						&& (buyBoxWinnerModel.getPLPMinPrice() != null && buyBoxWinnerModel.getPLPMinPrice().doubleValue() > 0))//SONAR FIX JEWELLERY
+				final List<BuyBoxModel> buyModList = getVariantListForPriceRange(productModel.getCode());
+				if (CollectionUtils.isNotEmpty(buyModList))
 				{
-					final double maxPrice = buyBoxWinnerModel.getPLPMaxPrice().doubleValue();
-					final double minPrice = buyBoxWinnerModel.getPLPMinPrice().doubleValue();
-					final double avgPrice = (maxPrice + minPrice) / 2;
-					price = Double.valueOf(avgPrice);
-				}
-				else
-				{
-					// Any of Max price and min price is null
-					price = productModel.getMrp();
+					final List<BuyBoxModel> modifiableBuyBox = new ArrayList<BuyBoxModel>(buyModList);
+					modifiableBuyBox.sort(Comparator.comparing(BuyBoxModel::getPrice).reversed());
+
+					if (CollectionUtils.isNotEmpty(modifiableBuyBox))
+					{
+						final double minPrice = modifiableBuyBox.get(modifiableBuyBox.size() - 1).getPrice().doubleValue();
+						final double maxPrice = modifiableBuyBox.get(0).getPrice().doubleValue();
+						final double avgPrice = (maxPrice + minPrice) / 2;
+						price = Double.valueOf(avgPrice);
+					}
+					else
+					{
+						// Any of Max price and min price is null
+						price = productModel.getMrp();
+					}
 				}
 			} /// end of Jewellery
 			else

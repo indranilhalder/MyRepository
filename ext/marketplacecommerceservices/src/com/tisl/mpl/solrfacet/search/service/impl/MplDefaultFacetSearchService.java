@@ -19,10 +19,12 @@ import de.hybris.platform.solrfacetsearch.search.impl.SolrSearchResult;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
+import org.apache.commons.collections.MapUtils;
 import org.apache.commons.lang.BooleanUtils;
 import org.apache.solr.client.solrj.response.FacetField;
 import org.apache.solr.client.solrj.response.FacetField.Count;
@@ -161,8 +163,8 @@ public class MplDefaultFacetSearchService extends DefaultFacetSearchService
 			return new SolrSearchResult(numberOfResults, facets, indexedType, identifiers, queryResponse, pageSize, offset,
 					breadcrumbs, query, null);
 		}
-		return new SolrSearchResult(numberOfResults, facets, indexedType, identifiers, queryResponse, pageSize, offset,
-				breadcrumbs, query, null, this.searchResultConverters.getConverterMapping(indexedType.getCode()));
+		return new SolrSearchResult(numberOfResults, facets, indexedType, identifiers, queryResponse, pageSize, offset, breadcrumbs,
+				query, null, this.searchResultConverters.getConverterMapping(indexedType.getCode()));
 	}
 
 	private String getFacetFieldName(final IndexedType indexedType, final FacetField facetField)
@@ -185,43 +187,56 @@ public class MplDefaultFacetSearchService extends DefaultFacetSearchService
 	protected List<ValueRange> getValueRanges(final IndexedProperty property, final String qualifier)
 	{
 		List<ValueRange> valueRangesList = new ArrayList<ValueRange>();
+		//final Set<ValueRange> valueRangesRemove = new HashSet<ValueRange>();
+		final Map<String, ValueRange> map = new LinkedHashMap<String, ValueRange>();
 		ValueRangeSet valueRangeSet;
 		// Customized mpl price range will be taken
 		if (property.getName().equalsIgnoreCase("price"))
 		{
-			//			if (MapUtils.isNotEmpty(property.getValueRangeSets()))
-			//			{
-			//				for (final Map.Entry<String, ValueRangeSet> entry : property.getValueRangeSets().entrySet())
-			//				{
-			//					valueRangesList.addAll(entry.getValue().getValueRanges());
-			//				}
-			//			}
+			if (MapUtils.isNotEmpty(property.getValueRangeSets()))
+			{
+				for (final Map.Entry<String, ValueRangeSet> entry : property.getValueRangeSets().entrySet())
+				{
+					valueRangesList.addAll(entry.getValue().getValueRanges());
+				}
+			}
+
+			for (final ValueRange valuerange : valueRangesList)
+			{
+				map.put(valuerange.getName(), valuerange);
+			}
+
+			valueRangesList.clear();
+			valueRangesList.addAll(map.values());
+
+			//valueRangesRemove.addAll(valueRangesList);
+
 			//commented for SDI-575/576
-			valueRangeSet = property.getValueRangeSets().get("INR-APPAREL");
-			if (valueRangeSet != null)
-			{
-				valueRangesList = valueRangeSet.getValueRanges();
-			}
-
-			valueRangeSet = property.getValueRangeSets().get("INR-ELECTRONICS");
-			if (valueRangeSet != null)
-			{
-				valueRangesList.addAll(valueRangeSet.getValueRanges());
-			}
-
-			// JEWELLERY CHANGES START
-			valueRangeSet = property.getValueRangeSets().get("INR-FASHIONJEWELLERY");
-			if (valueRangeSet != null)
-			{
-				valueRangesList.addAll(valueRangeSet.getValueRanges());
-			}
-			// JEWELLERY CHANGES END
-
-			valueRangeSet = property.getValueRangeSets().get("INR-LUXURY");
-			if (valueRangeSet != null)
-			{
-				valueRangesList.addAll(valueRangeSet.getValueRanges());
-			}
+			//			valueRangeSet = property.getValueRangeSets().get("INR-APPAREL");
+			//			if (valueRangeSet != null)
+			//			{
+			//				valueRangesList = valueRangeSet.getValueRanges();
+			//			}
+			//
+			//			valueRangeSet = property.getValueRangeSets().get("INR-ELECTRONICS");
+			//			if (valueRangeSet != null)
+			//			{
+			//				valueRangesList.addAll(valueRangeSet.getValueRanges());
+			//			}
+			//
+			//			// JEWELLERY CHANGES START
+			//			valueRangeSet = property.getValueRangeSets().get("INR-FASHIONJEWELLERY");
+			//			if (valueRangeSet != null)
+			//			{
+			//				valueRangesList.addAll(valueRangeSet.getValueRanges());
+			//			}
+			//			// JEWELLERY CHANGES END
+			//
+			//			valueRangeSet = property.getValueRangeSets().get("INR-LUXURY");
+			//			if (valueRangeSet != null)
+			//			{
+			//				valueRangesList.addAll(valueRangeSet.getValueRanges());
+			//			}
 
 			return valueRangesList;
 		}
