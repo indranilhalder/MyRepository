@@ -261,6 +261,17 @@ ${stringMessage}
 							json = json.concat(']}');
 							var orderCode = $('#scheduledDeliveryOrderCode').val();
 							var orderId = orderCode;
+							//TPR-5272 | rescedule click starts
+							if(typeof(utag) !="undefined"){
+				    			utag.link({
+				    				link_text     : "reschedule_clicked",
+				    				event_type    : "reschedule_clicked",
+				    				preferred_dod :  selectedDate ,
+				    				preferred_tod :  selectedTime ,
+				    				order_id      :  orderId
+				    			});
+				    		   }
+							//TPR-5272 | rescedule click ends
 						$.ajax({
 								type : "GET",
 								url : ACC.config.encodedContextPath+ "/my-account/"
