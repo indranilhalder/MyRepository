@@ -103,12 +103,16 @@ public class BulkCancellationPrepareInterceptor implements PrepareInterceptor
 				{
 					//out.append(line);
 					final String[] lineData = line.split(CSVSPLITBY);
-					final BulkCancellationProcessModel bulkCancelProcessModel = new BulkCancellationProcessModel();
-					bulkCancelProcessModel.setParentOrderNo(lineData[0]);
-					bulkCancelProcessModel.setTransactionId(lineData[1]);
-					bulkCancelProcessModel.setLoadStatus(ZEROVALUE);
 
-					updatedBulkCancellationProcessList.add(bulkCancelProcessModel);
+					if (lineData.length >= 2)
+					{
+						final BulkCancellationProcessModel bulkCancelProcessModel = new BulkCancellationProcessModel();
+						bulkCancelProcessModel.setParentOrderNo(lineData[0]);
+						bulkCancelProcessModel.setTransactionId(lineData[1]);
+						bulkCancelProcessModel.setLoadStatus(ZEROVALUE);
+
+						updatedBulkCancellationProcessList.add(bulkCancelProcessModel);
+					}
 				}
 				//System.out.println(out.toString()); //Prints the string content read from input stream
 				reader.close();
