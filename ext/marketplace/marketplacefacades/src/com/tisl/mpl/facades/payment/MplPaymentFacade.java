@@ -480,9 +480,10 @@ public interface MplPaymentFacade
 	 * @param refNo
 	 */
 	String getWalletAuditEntries(String refNo);
+
 	/***
 	 * cscockpit specific order payment status call
-	 * 
+	 *
 	 * @param url
 	 * @return
 	 */
@@ -492,13 +493,25 @@ public interface MplPaymentFacade
 
 	/**
 	 * Added for TPR-4461
-	 * 
+	 *
 	 * @param banklist
 	 * @param bank
 	 * @param boolean
 	 */
 	public boolean validateBank(final List<BankModel> bankList, final String bank);
 
-
+	/**
+	 * Added for paytm integration
+	 * 
+	 * @param juspayOrderId
+	 * @param paymentMethodType
+	 * @param paymentMethod
+	 * @param redirectAfterPayment
+	 * @param format
+	 * @return
+	 * @throws EtailNonBusinessExceptions
+	 */
+	public String getPaytmOrderStatus(String juspayOrderId, String paymentMethodType, String paymentMethod,
+			String redirectAfterPayment, String format) throws EtailNonBusinessExceptions;
 
 }

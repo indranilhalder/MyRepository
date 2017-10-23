@@ -1071,6 +1071,19 @@ public class AccountPageController extends AbstractMplSearchPageController
 			if (orderModel != null)
 			{
 				final OrderData orderDetail = mplCheckoutFacade.getOrderDetailsForCode(orderModel);
+
+				//Paytm Change..
+				String paytmTransactionId = null;
+				if (null != orderModel.getPaymentTransactions() && null != orderModel.getPaymentTransactions().get(0)
+						&& null != orderModel.getPaymentTransactions().get(0).getEntries()
+						&& null != orderModel.getPaymentTransactions().get(0).getEntries().get(0)
+						&& orderModel.getModeOfOrderPayment().equalsIgnoreCase("paytm"))
+				{
+					paytmTransactionId = orderModel.getPaymentTransactions().get(0).getEntries().get(0).getRequestId();
+				}
+
+				model.addAttribute("paytmTransactionId", paytmTransactionId);
+
 				final String finalOrderDate = getFormattedDate(orderDetail.getCreated());
 				final List<OrderData> subOrderList = orderDetail.getSellerOrderList();
 				final List<OrderEntryData> orderList = orderDetail.getEntries();
