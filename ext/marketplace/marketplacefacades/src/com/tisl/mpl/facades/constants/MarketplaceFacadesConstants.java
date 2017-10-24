@@ -27,9 +27,6 @@ public class MarketplaceFacadesConstants extends GeneratedMarketplaceFacadesCons
 	public static final String INR = "INR";
 
 	public static final String PAYMENT_METHOS_COD = "COD";
-	// EGV Changes Start 
-	public static final String PAYMENT_METHOD_CLIQ_CASH = "Cliq Cash";
-   // EGV Changes End 
 	public static final String REFUND_FAILED = "Refund Failed";
 	public static final String FAILURE = "FAILURE";
 
@@ -172,11 +169,7 @@ public class MarketplaceFacadesConstants extends GeneratedMarketplaceFacadesCons
 	//Adding code for Luxury Facades
 	public static final String LuxuryPrefix = "lux";
 	public static final String PRODUCT_TYPE = "FineJewellery";
-	
-	public static final String CHANNEL_WEB = "WEB";
-	public static final String CHANNEL_MOBILE = "MOBILE";
-	public static final String EGV_RESEND_EMAILAVAILABLE = "mpl.egv.resendEmailEnabled";
-
+	public static final String SESSION_SERVICE = "sessionService";
 
 	private MarketplaceFacadesConstants()
 	{
