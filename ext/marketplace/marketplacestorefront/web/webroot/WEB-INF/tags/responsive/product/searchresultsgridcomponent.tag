@@ -73,4 +73,26 @@
 	<nav:pagination top="false"  supportShowPaged="${isShowPageAllowed}" supportShowAll="${isShowAllAllowed}"  searchPageData="${searchPageData}" searchUrl="${searchPageData.currentQuery.url}"  numberPagesShown="${numberPagesShown}"/>
 
 </div> --%>
+
+<div class="bottom-pagination">
+<div class=""><span class=""><span>Total Pages :: ${searchPageData.pagination.numberOfPages}</span></span>
+<c:choose>
+<c:when test="${searchPageData.pagination.numberOfPages > 1}">
+<div class=""><a href=""><span>Previous</span></a></div>
+    <ul class="">
+    	<c:forEach begin="1" end="${searchPageData.pagination.numberOfPages}" var="page">
+        <li class="pageNoLi"><a class="pageNo" href="#nogo">${page}</a></li>
+        </c:forEach>
+    </ul>
+    <div class=""><a href=""><span>Next</span></a></div>
+</c:when>
+<c:otherwise>
+    <ul class="">
+        <li class="pageNo"><a class="" href="#nogo">1</a></li>
+    </ul>
+</c:otherwise>
+</c:choose>
+</div>
+</div>
+
 <input type="hidden" name="searchPanel" value="1"/>

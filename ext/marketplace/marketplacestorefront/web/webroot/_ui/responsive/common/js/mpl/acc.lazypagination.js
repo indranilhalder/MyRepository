@@ -144,6 +144,42 @@ function getProductSetData() {
         }
     }
 }
+    //Normal pagination
+    function getProductSetData(pageNoPagination) {
+
+    	 var pathName = window.location.pathname;
+    	    var query = window.location.search;
+    	    
+    	    //INC144316143
+    	    if ($('#pageType').val() == 'productsearch' || $('#pageType').val() == 'category') {
+
+    	        window.localStorage.setItem('lastUrlpathName',encodeURI(pathName));
+    	        window.localStorage.setItem('lastUrlquery',encodeURI(query));
+
+    	    }
+        
+        if(pageNoPagination <= totalNoOfPages){
+        	
+        	if(facetAjaxUrl){
+        		ajaxUrl = facetAjaxUrl.replace(/page-[0-9]+/, 'page-' + pageNoPagination);
+        		var sort = findGetParameter('sort');
+        		if(sort){
+        			ajaxUrl = ajaxUrl + '&sort='+ sort;
+        		}
+        		window.history.replaceState({}, "", ajaxUrl);
+        	}else{
+        		ajaxUrl = pathName.replace(/page-[0-9]+/, 'page-' + pageNoPagination);
+        		var nextPaginatedAjaxUrl = pathName.replace(/page-[0-9]+/, 'page-' + pageNoPagination);
+                if (query) {
+                    ajaxUrl = ajaxUrl + query;
+                    nextPaginatedAjaxUrl = nextPaginatedAjaxUrl + query;
+                }
+                window.history.replaceState({}, "", nextPaginatedAjaxUrl);
+        	}
+        	
+        	ajaxPLPLoad(ajaxUrl);
+        }
+}
 
 //INC144315462 and INC144315104
 function getProductSetDataCustomSku() {
@@ -353,6 +389,13 @@ $(document).ready(function() {
                 }
             }
         });
+        
+        // Normal pagination 
+        $(document).on('click', '.pageNo', function() {
+        	var clickedPageNo = parseInt($(this).text());
+            getProductSetData(clickedPageNo);
+          });
+        
         // listner for load more
         $(document).on('click', '.loadMorePageButton', function() {
           //  getProductSetData();
