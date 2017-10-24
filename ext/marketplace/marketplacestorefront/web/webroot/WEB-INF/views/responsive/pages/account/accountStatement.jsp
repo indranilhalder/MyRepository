@@ -14,9 +14,8 @@
     text-align: center;
     }
 .orderStatementTable thead .orderTransactionId {vertical-align: middle;}
-.accountPopupClose {top: 23% !important; right: 10% !important; font-size: 28px !important; padding: 0px 0px 7px 7px; background: black; color: white !important;}
+.accountPopupClose {top: 15% !important; right: 10% !important; font-size: 28px !important; padding: 0px 0px 7px 7px; background: black; color: white !important;}
 @media(max-width: 768px) {
-	.accountPopupClose {top: 15% !important;}
 	.orderStatementOrderId {font-size: 18px;}
 }
 </style>

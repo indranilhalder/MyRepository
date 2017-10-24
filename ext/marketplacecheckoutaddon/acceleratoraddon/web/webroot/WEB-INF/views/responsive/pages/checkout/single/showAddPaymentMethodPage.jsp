@@ -1673,7 +1673,7 @@
 									<!-- UF-281/282 Ends -->
 									
 									<!-- COD error messages ends -->
-									<button type="button" class="button topPlaceOrderBtn"><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.paymentButton"/></button>
+									<button type="button" class="topPlaceOrderCodBtn topPlaceOrderBtn"><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.paymentButton"/></button>
 										<div id="paymentFormButton" class="pay cont-del">	
 						<!-- Terms & Conditions Link -->
 
