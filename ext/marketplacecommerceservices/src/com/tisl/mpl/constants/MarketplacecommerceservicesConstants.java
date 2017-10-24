@@ -1046,6 +1046,12 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String B2001 = "B2001";
 	public static final String B2002 = "B2002";
 
+
+	// Codes For EGV Functionaity START
+	public static final String B5001 = "B5001";
+	public static final String B5002 = "B5002";
+	// Codes For EGV Functionaity END
+
 	//For Sales Report
 	public static final String DATE_FORMAT_REPORT = "ddMMyyyyHHmmss";
 	public static final String ORDER_ERROR = "B8000";
@@ -2277,4 +2283,31 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 
 	public final static String PINCODE_RESPONSE_DATA_PDP = "PincodeResponseDataForPDP";
 	public static final String KM = "km";
+	public static final String ENABLED_SPILT_PAYMENT_FORMOBILE = "egv.mobile.payment.splitModelEnabled";
+
+	// EGV  changes Start
+
+	public static final String BUCKET_NAME_PROMOTON = "PROMOTION";
+	public static final String QC_REFUND_TYPE_CANCEL = "CANCEL";
+	public static final String QC_REFUND_TYPE_RETURN = "RETURN";
+	public static final String QC_REFUND_TYPE_REFUND = "REFUND";
+	
+	
+	public static final String QC_PAYMENT_FAIL_HEADER = "Customer Name,Customer Email,AMount,Bucket Name".intern();
+	public static final String QC_PAYMENT_FAIL_FILE_LOCATION = "mpl.egv.QcPaymentFailLocation".intern();
+	public static final String QC_PAYMENT_FAIL_PATH = "${HYBRIS_DATA_DIR}/feed/report/qcPaymentFail".intern();
+	public static final String QC_PAYMENT_FAIL_NAME = "qcPaymentFail".intern();
+	// EGV Changes End
+	public static final String RMSVERIFICATIONFAILEDSTATUS = "status".trim();
+	
+	public static final String WALLETAPPORTIONINFOSTATUS = "status".trim();
+	
+	public static final String WALLETAPPORTIONINFOTYPE = "type".trim();
+	
+	public static final String RMSVERIFICATIONFAILEDQUERY = "select {o.pk} from {Order as o},{OrderStatus as os} where {o.status}={os.pk} and {os.code}=?status";
+
+	public static final String PAYMENT_MODE_SPLIT = "split".trim();
+	public static final String PAYMENT_MODE_LIQ_CASH = "cliq cash".trim();
+
+
 }

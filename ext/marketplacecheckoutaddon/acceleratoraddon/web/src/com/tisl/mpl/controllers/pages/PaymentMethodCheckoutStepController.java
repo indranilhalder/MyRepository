@@ -24,11 +24,14 @@ import de.hybris.platform.cms2.model.pages.ContentPageModel;
 import de.hybris.platform.commercefacades.order.data.CartData;
 import de.hybris.platform.commercefacades.order.data.OrderData;
 import de.hybris.platform.commercefacades.order.data.OrderEntryData;
+import de.hybris.platform.commercefacades.product.PriceDataFactory;
 import de.hybris.platform.commercefacades.product.data.PriceData;
+import de.hybris.platform.commercefacades.product.data.PriceDataType;
 import de.hybris.platform.commercefacades.user.data.AddressData;
 import de.hybris.platform.commercefacades.voucher.exceptions.VoucherOperationException;
 import de.hybris.platform.commerceservices.order.CommerceCartModificationException;
 import de.hybris.platform.commerceservices.order.CommerceCartService;
+import de.hybris.platform.core.Registry;
 import de.hybris.platform.core.enums.OrderStatus;
 import de.hybris.platform.core.model.JewelleryInformationModel;
 import de.hybris.platform.core.model.order.AbstractOrderEntryModel;
@@ -48,6 +51,7 @@ import de.hybris.platform.promotions.util.Tuple2;
 import de.hybris.platform.servicelayer.config.ConfigurationService;
 import de.hybris.platform.servicelayer.exceptions.ModelSavingException;
 import de.hybris.platform.servicelayer.model.ModelService;
+import de.hybris.platform.servicelayer.search.FlexibleSearchService;
 import de.hybris.platform.servicelayer.user.UserService;
 import de.hybris.platform.store.services.BaseStoreService;
 import de.hybris.platform.voucher.VoucherService;
@@ -57,6 +61,7 @@ import de.hybris.platform.voucher.model.VoucherModel;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.math.BigDecimal;
 import java.nio.charset.Charset;
 import java.security.InvalidKeyException;
 import java.security.MessageDigest;
@@ -88,6 +93,8 @@ import org.codehaus.jackson.map.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -95,6 +102,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.granule.json.JSONException;
+import com.granule.json.JSONObject;
 import com.hybris.oms.tata.model.MplBUCConfigurationsModel;
 import com.tisl.mpl.bin.facade.BinFacade;
 import com.tisl.mpl.checkout.steps.validation.impl.ResponsivePaymentCheckoutStepValidator;
@@ -107,6 +116,8 @@ import com.tisl.mpl.core.enums.DeliveryFulfillModesEnum;
 import com.tisl.mpl.core.enums.PaymentModesEnum;
 import com.tisl.mpl.core.enums.WalletEnum;
 import com.tisl.mpl.core.model.BankforNetbankingModel;
+import com.tisl.mpl.core.model.MplPaymentAuditEntryModel;
+import com.tisl.mpl.core.model.MplPaymentAuditModel;
 import com.tisl.mpl.core.model.MplZoneDeliveryModeValueModel;
 import com.tisl.mpl.core.model.RichAttributeModel;
 import com.tisl.mpl.core.model.SavedCardModel;
@@ -119,6 +130,7 @@ import com.tisl.mpl.data.MplPromoPriceData;
 import com.tisl.mpl.data.SavedCardData;
 import com.tisl.mpl.exception.EtailBusinessExceptions;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
+import com.tisl.mpl.exception.QCServiceCallException;
 import com.tisl.mpl.facade.checkout.MplCartFacade;
 import com.tisl.mpl.facade.checkout.MplCheckoutFacade;
 import com.tisl.mpl.facade.checkout.MplCustomAddressFacade;
@@ -126,19 +138,33 @@ import com.tisl.mpl.facade.config.MplConfigFacade;
 import com.tisl.mpl.facade.product.PriceBreakupFacade;
 import com.tisl.mpl.facades.account.register.NotificationFacade;
 import com.tisl.mpl.facades.constants.MarketplaceFacadesConstants;
+import com.tisl.mpl.facades.egv.data.EgvDetailsData;
 import com.tisl.mpl.facades.payment.MplPaymentFacade;
 import com.tisl.mpl.facades.product.data.MarketplaceDeliveryModeData;
+import com.tisl.mpl.facades.wallet.MplWalletFacade;
 import com.tisl.mpl.juspay.response.ListCardsResponse;
+import com.tisl.mpl.marketplacecommerceservices.daos.MplOrderDao;
+import com.tisl.mpl.marketplacecommerceservices.egv.service.cart.MplEGVCartService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplJewelleryService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplSellerInformationService;
 import com.tisl.mpl.model.BankModel;
 import com.tisl.mpl.model.PaymentModeRestrictionModel;
 import com.tisl.mpl.model.PaymentTypeModel;
 import com.tisl.mpl.model.SellerInformationModel;
+import com.tisl.mpl.pojo.request.Customer;
+import com.tisl.mpl.pojo.request.QCCustomerRegisterRequest;
+import com.tisl.mpl.pojo.response.BalanceBucketWise;
+import com.tisl.mpl.pojo.response.Bucket;
+import com.tisl.mpl.pojo.response.QCCustomerRegisterResponse;
+import com.tisl.mpl.pojo.response.QCRedeeptionResponse;
+import com.tisl.mpl.pojo.response.RedimGiftCardResponse;
 import com.tisl.mpl.storefront.constants.MessageConstants;
 import com.tisl.mpl.storefront.constants.ModelAttributetConstants;
 import com.tisl.mpl.storefront.controllers.helpers.FrontEndErrorHelper;
+import com.tisl.mpl.storefront.web.forms.AddToCardWalletForm;
+import com.tisl.mpl.storefront.web.forms.EgvDetailForm;
 import com.tisl.mpl.storefront.web.forms.PaymentForm;
+import com.tisl.mpl.storefront.web.forms.validator.MplEgvFormValidator;
 import com.tisl.mpl.util.ExceptionUtil;
 import com.tisl.mpl.util.GenericUtilityMethods;
 
@@ -154,6 +180,15 @@ import reactor.function.support.UriUtils;
 @RequestMapping(value = MarketplacecheckoutaddonConstants.MPLPAYMENTURL)
 public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepController
 {
+
+
+	private static final String GIFT_CARD = "/giftCard-";
+	private static final String EGVGUID = "EGVGUID";
+	private static final String MARKETPLACE_HEADER_EGV_PRODUCT_CODE = "marketplace.header.egvProductCode";
+
+
+
+
 	private static final Logger LOG = Logger.getLogger(PaymentMethodCheckoutStepController.class);
 
 
@@ -161,6 +196,7 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 	//Added for TPR-4461 (GETTING THE BANK OF THE USER'S PAYMENT MODE) starts here
 	public static String bankNameUserPaymentMode;
 
+	private static final String GIFT_CART_PAYMENT = "/giftCartPayment";
 
 	/**
 	 * @return the bankNameUserPaymentMode
@@ -170,6 +206,8 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 		return bankNameUserPaymentMode;
 	}
 
+	@Autowired
+	MplEGVCartService mplEGVCartService;
 
 	/**
 	 * @param bankNameUserPaymentMode
@@ -215,6 +253,9 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 	//private CommerceCartCalculationStrategy commerceCartCalculationStrategy;
 	//@Resource(name = "blacklistService")
 	//private BlacklistService blacklistService;
+
+	@Autowired
+	private MplOrderDao mplOrderDao;
 
 	@Autowired
 	private HttpServletRequest request;
@@ -268,6 +309,28 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 
 	@Resource(name = "mplJewelleryService")
 	private MplJewelleryService jewelleryService;
+	@Resource(name = "mplWalletFacade")
+	private MplWalletFacade mplWalletFacade;
+	@Autowired
+	MplEgvFormValidator mplEgvFormValidator;
+
+	/**
+	 * @return the mplWalletFacade
+	 */
+	public MplWalletFacade getMplWalletFacade()
+	{
+		return mplWalletFacade;
+	}
+
+
+	/**
+	 * @param mplWalletFacade
+	 *           the mplWalletFacade to set
+	 */
+	public void setMplWalletFacade(final MplWalletFacade mplWalletFacade)
+	{
+		this.mplWalletFacade = mplWalletFacade;
+	}
 
 	private final String checkoutPageName = "Payment Options";
 	private final String RECEIVED_INR = "Congrats Received";
@@ -514,6 +577,8 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 
 			final String payNowPromotionCheck = getSessionService()
 					.getAttribute(MarketplacecheckoutaddonConstants.PAYNOWPROMOTIONEXPIRED);
+			//Egv Changes
+			model.addAttribute("isEGVCart", Boolean.FALSE);
 			if (StringUtils.isNotEmpty(payNowPromotionCheck)
 					&& payNowPromotionCheck.equalsIgnoreCase(MarketplacecommerceservicesConstants.TRUE))
 			{
@@ -2849,6 +2914,23 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 		//			model.addAttribute(MarketplacecheckoutaddonConstants.CARTDATA, cartData);
 		//		}
 
+
+		//Egv Order changes
+		final CartModel cart = mplEGVCartService.getEGVCartModel(guid);
+		if (cart != null && cart.getIsEGVCart().booleanValue())
+		{
+			try
+			{
+				return getEGVOrderStatus(model, redirectAttributes, guid);
+			}
+			catch (final CalculationException e)
+			{
+				// YTODO Auto-generated catch block
+				e.printStackTrace();
+			}
+
+		}
+
 		//Order Status from Juspay
 		try
 		{
@@ -2867,6 +2949,152 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 					//Redirection when transaction is successful i.e. CHARGED
 					if (null != orderStatusResponse)
 					{
+
+						/**
+						 * Wallet Changes
+						 */
+
+						try
+						{
+							boolean qcFlag = false;
+							if (orderToBeUpdated.getSplitModeInfo().equalsIgnoreCase("Split"))
+							{
+								if (MarketplacecheckoutaddonConstants.CHARGED.equalsIgnoreCase(orderStatusResponse))
+								{
+									final List<MplPaymentAuditModel> mplAudit = mplOrderDao.getAuditLists(orderToBeUpdated.getGuid());
+									if (null != mplAudit)
+									{
+										for (final MplPaymentAuditModel mplPaymentAuditModel : mplAudit)
+										{
+											if (null != mplPaymentAuditModel && null != mplPaymentAuditModel.getAuditEntries())
+											{
+												for (final MplPaymentAuditEntryModel mplPaymentAuditEntry : mplPaymentAuditModel
+														.getAuditEntries())
+												{
+													if (null != mplPaymentAuditEntry.getStatus()
+															&& !mplPaymentAuditEntry.getStatus().toString().equalsIgnoreCase("DECLINED")) // case for EBS....
+													{
+														qcFlag = true;
+
+													}
+													else
+													{
+														qcFlag = false;
+														break;
+													}
+												}
+											}
+										}
+
+										if (qcFlag)
+										{
+											model.addAttribute(MarketplacecheckoutaddonConstants.PAYMENTID, null);
+											setCheckoutStepLinksForModel(model, getCheckoutStep());
+											QCRedeeptionResponse qcResponse = new QCRedeeptionResponse();
+											try
+											{
+
+												final String qcUniqueCode = getMplPaymentFacade().generateQCCode();
+												final CustomerModel currentCustomer = (CustomerModel) getUserService().getCurrentUser();
+												qcResponse = getMplPaymentFacade().createQCOrderRequest(orderToBeUpdated.getGuid(),
+														orderToBeUpdated, currentCustomer.getCustomerWalletDetail().getWalletId(), "Cliq Cash",
+														qcUniqueCode, "WEB", 0.0D, 0.0D);
+
+												if (null != qcResponse && null != qcResponse.getResponseCode()
+														&& qcResponse.getResponseCode().intValue() == 0)
+												{
+													return updateOrder(orderToBeUpdated, redirectAttributes);
+												}
+												else if (null != qcResponse && null != qcResponse.getResponseCode()
+														&& qcResponse.getResponseCode().intValue() != 0)
+												{
+
+													orderToBeUpdated.setStatus(OrderStatus.RMS_VERIFICATION_FAILED); /// retuen for Juspay becsause qc fail
+													getModelService().save(orderToBeUpdated);
+													LOG.error("For GUID:- " + guid + " order failed Can not be placed Qlick Cash Error");
+													GlobalMessages.addFlashMessage(redirectAttributes, GlobalMessages.ERROR_MESSAGES_HOLDER,
+															MarketplacecheckoutaddonConstants.PAYMENTTRANERRORMSG);
+													return MarketplacecheckoutaddonConstants.REDIRECT + MarketplacecheckoutaddonConstants.CART;
+												}
+												else if (null == qcResponse || null == qcResponse.getResponseCode())
+												{
+													orderToBeUpdated.setStatus(OrderStatus.RMS_VERIFICATION_FAILED); /// NO Exception No qcResponse Try With Juspay
+													getModelService().save(orderToBeUpdated);
+
+													LOG.error("For GUID:- " + guid + " order already been processed");
+													GlobalMessages.addFlashMessage(redirectAttributes, GlobalMessages.ERROR_MESSAGES_HOLDER,
+															MarketplacecheckoutaddonConstants.PAYMENTTRANERRORMSG);
+													return MarketplacecheckoutaddonConstants.REDIRECT + MarketplacecheckoutaddonConstants.CART;
+												}
+
+											}
+											catch (final Exception ex)
+											{
+												ex.printStackTrace();
+												GlobalMessages.addFlashMessage(redirectAttributes, GlobalMessages.ERROR_MESSAGES_HOLDER,
+														MarketplacecheckoutaddonConstants.TRANERRORMSG);
+												if (null != qcResponse && null != qcResponse.getResponseCode()
+														&& qcResponse.getResponseCode().intValue() == 0
+														&& MarketplacecheckoutaddonConstants.CHARGED.equalsIgnoreCase(orderStatusResponse))
+												{
+													orderToBeUpdated.setStatus(OrderStatus.RMS_VERIFICATION_FAILED); // return for Juspay and Qc Retuen Trigger exception acccured
+													getModelService().save(orderToBeUpdated);
+
+													LOG.error("For GUID:- " + guid + " order already been processed");
+													GlobalMessages.addFlashMessage(redirectAttributes, GlobalMessages.ERROR_MESSAGES_HOLDER,
+															MarketplacecheckoutaddonConstants.PAYMENTTRANERRORMSG);
+													return MarketplacecheckoutaddonConstants.REDIRECT + MarketplacecheckoutaddonConstants.CART;
+												}
+												else if (null != qcResponse && null != qcResponse.getResponseCode()
+														&& qcResponse.getResponseCode().intValue() != 0
+														&& MarketplacecheckoutaddonConstants.CHARGED.equalsIgnoreCase(orderStatusResponse))
+												{
+
+													orderToBeUpdated.setStatus(OrderStatus.RMS_VERIFICATION_FAILED);// return for Juspay only no dudection from QC
+													getModelService().save(orderToBeUpdated); /////////////////////////////// need to update Aduit entries for Juspay and QC on condiction basices
+													LOG.error("For GUID:- " + guid + " order already been processed");
+													GlobalMessages.addFlashMessage(redirectAttributes, GlobalMessages.ERROR_MESSAGES_HOLDER,
+															MarketplacecheckoutaddonConstants.PAYMENTTRANERRORMSG);
+													return MarketplacecheckoutaddonConstants.REDIRECT + MarketplacecheckoutaddonConstants.CART;
+												}
+											}
+										}
+										else
+										{
+											System.out.println("PARTIAL OREDER JUSPAY FAIL *****************************");
+											orderToBeUpdated.setStatus(OrderStatus.RMS_VERIFICATION_FAILED); //// need to discuess this case when ebs is DECLINED and juspay is chared what status to put
+											LOG.error("For GUID:- " + guid + " order already been processed");
+											GlobalMessages.addFlashMessage(redirectAttributes, GlobalMessages.ERROR_MESSAGES_HOLDER,
+													MarketplacecheckoutaddonConstants.PAYMENTTRANERRORMSG);
+											return MarketplacecheckoutaddonConstants.REDIRECT + MarketplacecheckoutaddonConstants.CART;
+										}
+
+									}
+									else
+									{
+										System.out.println("PARTIAL OREDER JUSPAY FAIL *****************************");
+										orderToBeUpdated.setStatus(OrderStatus.RMS_VERIFICATION_FAILED); //// need to discuess this case when ebs is DECLINED and juspay is chared what status to put
+
+										LOG.error("For GUID:- " + guid + " order already been processed");
+										GlobalMessages.addFlashMessage(redirectAttributes, GlobalMessages.ERROR_MESSAGES_HOLDER,
+												MarketplacecheckoutaddonConstants.PAYMENTTRANERRORMSG);
+										return MarketplacecheckoutaddonConstants.REDIRECT + MarketplacecheckoutaddonConstants.CART;
+									}
+
+								}
+							}
+						}
+						catch (final Exception ex)
+						{
+
+							ex.printStackTrace();
+						}
+
+						/**
+						 * Wallet Changes End
+						 */
+
+
 						if (MarketplacecheckoutaddonConstants.CHARGED.equalsIgnoreCase(orderStatusResponse))
 						{
 							model.addAttribute(MarketplacecheckoutaddonConstants.PAYMENTID, null);
@@ -3658,7 +3886,7 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 	public @ResponseBody String createJuspayOrder(final String firstName, final String lastName, final String netBankName,
 			final String addressLine1, final String addressLine2, final String addressLine3, final String country,
 			final String state, final String city, final String pincode, final String cardSaved, final String sameAsShipping,
-			final String guid, final Model model) //Parameter guid added for TPR-629 //parameter netBankName added for TPR-4461
+			final String guid, final Model model, final boolean isEGVOrder) //Parameter guid added for TPR-629 //parameter netBankName added for TPR-4461
 			throws EtailNonBusinessExceptions
 	{
 		//TPR-4461 parameter netBankName added starts here added only for getting bank name for netbanking/saved credit card/saved debit card
@@ -3707,6 +3935,10 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 				uid = customer.getUid();
 			}
 
+			if (!isEGVOrder)
+			{
+				mplEGVCartService.removeOldEGVCartCurrentCustomer();
+			}
 
 			//Payment Soln changes	TPR-629
 			OrderModel orderModel = null;
@@ -3721,7 +3953,38 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 			if (orderModel == null)
 			{
 				//Existing code for catModel
-				final CartModel cart = getCartService().getSessionCart();
+				//Existing code for catModel
+				CartModel cart;
+				if (isEGVOrder)
+				{
+					try
+					{
+
+						orderId = createJuspayOrderFroEGV(firstName, lastName, country, state, city, pincode, cardSaved, sameAsShipping,
+								guid, orderId, returnUrlBuilder, paymentAddressLine1, paymentAddressLine2, paymentAddressLine3, uid);
+
+					}
+					catch (final ModelSavingException e)
+					{
+						LOG.error(MarketplacecheckoutaddonConstants.LOGERROR, e);
+					}
+					catch (final AdapterException e)
+					{
+						LOG.error(MarketplacecheckoutaddonConstants.LOGERROR, e);
+						orderId = "JUSPAY_CONN_ERROR";
+					}
+					catch (final EtailNonBusinessExceptions e)
+					{
+						ExceptionUtil.etailNonBusinessExceptionHandler(e);
+						orderId = "NONBusinessException" + e.getErrorMessage();
+						LOG.error(MarketplacecheckoutaddonConstants.LOGERROR, e);
+					}
+					return orderId;
+				}
+				else
+				{
+					cart = getCartService().getSessionCart();
+				}
 
 				//TPR-4461 Starts here for payment mode and bank restriction validation for Voucher
 				final ArrayList<DiscountModel> voucherList = new ArrayList<DiscountModel>(
@@ -3947,11 +4210,22 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 				}
 				else
 				{
+					/**
+					 * Wallet Changes
+					 */
+
+
+					final Double totalCartVal = cart.getTotalPrice();
+
+					/**
+					 * Wallet Changes END
+					 */
+
 					LOG.info("::Going to Create Juspay OrderId::");
 					orderId = getMplPaymentFacade().createJuspayOrder(cart, null, firstName, lastName, paymentAddressLine1,
 							paymentAddressLine2, paymentAddressLine3, country, state, city, pincode,
 							cardSaved + MarketplacecheckoutaddonConstants.STRINGSEPARATOR + sameAsShipping, returnUrlBuilder.toString(),
-							uid, MarketplacecheckoutaddonConstants.CHANNEL_WEB);
+							uid, MarketplacecheckoutaddonConstants.CHANNEL_WEB, 0.0D);
 
 					//orderId = "987654321";
 
@@ -3963,6 +4237,17 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 					final boolean isValidCart = getMplPaymentFacade().checkCart(cart);
 					if (isValidCart)
 					{
+						/**
+						 * Change for Wallet
+						 */
+						if (cart.getSplitModeInfo().equalsIgnoreCase("Split"))
+						{
+							cart.setTotalPrice(totalCartVal);
+						}
+						/**
+						 * Change for Wallet end
+						 */
+
 						//final OrderData orderData = getMplCheckoutFacade().placeOrder();
 						getMplCheckoutFacade().placeOrder();
 					}
@@ -4092,7 +4377,7 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 						orderId = getMplPaymentFacade().createJuspayOrder(null, orderModel, firstName, lastName, paymentAddressLine1,
 								paymentAddressLine2, paymentAddressLine3, country, state, city, pincode,
 								cardSaved + MarketplacecheckoutaddonConstants.STRINGSEPARATOR + sameAsShipping,
-								returnUrlBuilder.toString(), uid, MarketplacecheckoutaddonConstants.CHANNEL_WEB);
+								returnUrlBuilder.toString(), uid, MarketplacecheckoutaddonConstants.CHANNEL_WEB, 0.0D);
 					}
 				}
 				else if (null != orderModel.getPaymentInfo())
@@ -4932,14 +5217,17 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 		final List<OrderEntryData> sellerList = cartData.getEntries();
 		for (final OrderEntryData seller : sellerList)
 		{
-			final String sellerID = seller.getSelectedSellerInformation().getSellerID();
-			if (cartLevelSellerID != null)
+			if (seller.getSelectedSellerInformation() != null)
 			{
-				cartLevelSellerID += "_" + sellerID;
-			}
-			else
-			{
-				cartLevelSellerID = sellerID;
+				final String sellerID = seller.getSelectedSellerInformation().getSellerID();
+				if (cartLevelSellerID != null)
+				{
+					cartLevelSellerID += "_" + sellerID;
+				}
+				else
+				{
+					cartLevelSellerID = sellerID;
+				}
 			}
 		}
 		return cartLevelSellerID;
@@ -5854,5 +6142,868 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 		return codEligible;
 	}
 	//UF-281/282 End
+
+
+	@RequestMapping(value = "/useWalletForPayment", method = RequestMethod.POST)
+	@RequireHardLogIn
+	public @ResponseBody JSONObject UseWalletForPayment(@RequestParam("walletMode") final String value)
+			throws UnsupportedEncodingException, JSONException
+	{
+
+		final JSONObject jsonObject = new JSONObject();
+		jsonObject.put("disableJsMode", false);
+		final CartModel cart = getCartService().getSessionCart();
+		final DecimalFormat df = new DecimalFormat("#.##");
+		try
+		{
+
+			//			if (null != getSessionService().getAttribute("disableCODandWAllet"))
+			//			{
+			//				final String disableCODandWAllet =
+			//
+			//				if (null != disableCODandWAllet && disableCODandWAllet.equalsIgnoreCase("false"))
+			//				{
+			if (StringUtils.isNotEmpty(value) && value.equalsIgnoreCase("true"))
+			{
+
+				final CustomerModel currentCustomer = (CustomerModel) getUserService().getCurrentUser();
+
+				final BalanceBucketWise balBucketwise = mplWalletFacade
+						.getQCBucketBalance(currentCustomer.getCustomerWalletDetail().getWalletId());
+
+				if (balBucketwise.getResponseCode() == Integer.valueOf(0) && null != balBucketwise.getWallet().getBalance())
+				{
+					final Double WalletAmt = Double.valueOf((df.format(balBucketwise.getWallet().getBalance().doubleValue())));
+					final Double totalAmt = cart.getTotalPriceWithConv();
+
+					System.out.println("totalAmt ----------^^^^^^^  " + totalAmt);
+
+					if (Double.parseDouble("" + WalletAmt) >= Double.parseDouble("" + totalAmt))
+					{
+
+						getSessionService().setAttribute("WalletTotal", "" + totalAmt);
+						getSessionService().setAttribute("getCliqCashMode", value);
+						jsonObject.put("disableJsMode", true);
+						cart.setSplitModeInfo("CliqCash");
+						//jsonObject.put("juspayAmt", 0);
+						getModelService().save(cart);
+						getModelService().refresh(cart);
+					}
+					else
+					{
+						double juspayTotalAmt = Double.parseDouble("" + totalAmt) - Double.parseDouble("" + WalletAmt);
+						juspayTotalAmt = Double.parseDouble(df.format(juspayTotalAmt));
+						getSessionService().setAttribute("WalletTotal", "" + WalletAmt);
+						getSessionService().setAttribute("juspayTotalAmt", "" + juspayTotalAmt);
+						getSessionService().setAttribute("cliqCashPaymentMode", "Cliq Cash");
+						jsonObject.put("disableJsMode", false);
+						jsonObject.put("juspayAmt", juspayTotalAmt);
+						cart.setSplitModeInfo("Split");
+						getModelService().save(cart);
+						getModelService().refresh(cart);
+					}
+				}
+			}
+			else
+			{
+				jsonObject.put("disableJsMode", false);
+				cart.setSplitModeInfo("Juspay");
+				getModelService().save(cart);
+				getModelService().refresh(cart);
+				jsonObject.put("juspayAmt", 0);
+			}
+			//}
+			//}
+		}
+		catch (
+
+		final Exception ex)
+		{
+			ex.printStackTrace();
+			jsonObject.put("disableJsMode", false);
+		}
+		return jsonObject;
+	}
+
+
+	/**
+	 * @param request
+	 * @throws JSONException
+	 */
+	@RequestMapping(value = "/useWalletDetail", method = RequestMethod.GET)
+	@RequireHardLogIn
+	public @ResponseBody JSONObject getCurrentUserWallet(final HttpServletRequest request)
+			throws UnsupportedEncodingException, JSONException
+	{
+		final JSONObject jsonObject = new JSONObject();
+		BalanceBucketWise balBucketwise = new BalanceBucketWise();
+		final CartModel cart = getCartService().getSessionCart();
+		//final Double totalCartAmt = cart.getTotalPriceWithConv();
+		double totalCartAmt = cart.getTotalPrice().doubleValue();
+
+		totalCartAmt += (null != cart.getScheduleDelCharge() ? cart.getScheduleDelCharge().doubleValue() : 0)
+				+ (null != cart.getDeliveryCost() ? cart.getDeliveryCost().doubleValue() : 0);
+		final DecimalFormat df = new DecimalFormat("#.##");
+
+		double cashBalance = 0;
+		double egvBalance = 0;
+		double totalWalletAmt = 0;
+		double juspayAmt = 0;
+
+		try
+		{
+			final CustomerModel customer = (CustomerModel) getUserService().getCurrentUser();
+			balBucketwise = mplWalletFacade.getQCBucketBalance(customer.getCustomerWalletDetail().getWalletId());
+
+			if (balBucketwise.getResponseCode() == Integer.valueOf(0) && null != balBucketwise.getBuckets())
+			{
+
+				for (final Bucket bucketType : balBucketwise.getBuckets())
+				{
+					if (bucketType.getType().equalsIgnoreCase("CUSTOMER"))
+					{
+						egvBalance += Double.parseDouble(bucketType.getAmount().toString().isEmpty() ? "0"
+								: "" + Double.parseDouble(bucketType.getAmount().toString()));
+						egvBalance = Double.parseDouble(df.format(egvBalance));
+					}
+					else
+					{
+
+						cashBalance += Double.parseDouble(bucketType.getAmount().toString().isEmpty() ? "0"
+								: "" + Double.parseDouble(bucketType.getAmount().toString()));
+						cashBalance = Double.parseDouble(df.format(cashBalance));
+					}
+
+				}
+
+				totalWalletAmt = Double.parseDouble(balBucketwise.getWallet().getBalance().toString().isEmpty() ? "0"
+						: "" + Double.parseDouble(balBucketwise.getWallet().getBalance().toString()));
+				totalWalletAmt = Double.parseDouble(df.format(totalWalletAmt));
+
+				if (Double.parseDouble("" + totalWalletAmt) < Double.parseDouble("" + totalCartAmt))
+				{
+					juspayAmt = Double.parseDouble("" + totalCartAmt) - Double.parseDouble("" + totalWalletAmt);
+					juspayAmt = Double.parseDouble(df.format(juspayAmt));
+
+				}
+
+			}
+
+			if (totalWalletAmt == 0)
+			{
+				getSessionService().setAttribute("getCliqCashMode", "false");
+				getSessionService().setAttribute("cliqCashPaymentMode", StringUtils.EMPTY);
+				jsonObject.put("totalWalletAmt", "0");
+				jsonObject.put("totalCash", "" + "0");
+				jsonObject.put("totalEgvBalance", "" + "0");
+				jsonObject.put("disableWallet", true);
+				//jsonObject.put("juspayAmt", "0");
+
+			}
+			else
+			{
+
+				jsonObject.put("totalWalletAmt", totalWalletAmt);
+				jsonObject.put("totalCash", "" + cashBalance);
+				jsonObject.put("totalEgvBalance", "" + egvBalance);
+				jsonObject.put("disableWallet", false);
+				//jsonObject.put("juspayAmt", juspayAmt);
+			}
+		}
+		catch (final Exception e)
+		{
+			e.printStackTrace();
+			System.out.println(" Error in QuickSilver Api --" + balBucketwise.getResponseCode() + " Message-"
+					+ balBucketwise.getResponseMessage());
+			jsonObject.put("totalWalletAmt", "0");
+			jsonObject.put("totalCash", "" + cashBalance);
+			jsonObject.put("totalEgvBalance", "" + egvBalance);
+			jsonObject.put("disableWallet", true);
+			jsonObject.put("juspayAmt", "0");
+
+		}
+
+		return jsonObject;
+	}
+
+	/**
+	 * @param model
+	 */
+	@RequestMapping(value = "/createWalletOrder", method = RequestMethod.GET)
+	@RequireHardLogIn
+	@ResponseBody
+	public String createWalletOrder(final Model model, final RedirectAttributes redirectAttributes)
+			throws EtailNonBusinessExceptions
+	{
+		String orderId = null;
+		try
+		{
+			final CustomerModel customer = (CustomerModel) getUserService().getCurrentUser();
+			String uid = "";
+			if (null != customer)
+			{
+				uid = customer.getUid();
+			}
+			LOG.info(uid);
+
+			final CartModel cart = getCartService().getSessionCart();
+
+
+			final CartData cData = getMplCartFacade().getCartDataFromCartModel(cart, false);
+			//added for CAR:127
+
+			//final Double cartTotals = cart.getTotalPriceWithConv();
+			boolean redirectFlag = false;
+			//final String returnUrl = request.getRequestURL().substring(0, request.getRequestURL().indexOf("/", 8))
+			//		+ request.getContextPath()
+			//		+ getConfigurationService().getConfiguration().getString(MarketplacecheckoutaddonConstants.JUSPAYRETURNMETHOD);
+			//try
+			//{
+			//TISPRD-3025 - LOG to handle address --- moved to facade layer
+
+			//				final StringBuilder sb = new StringBuilder();
+			//				sb.append("firstName:::").append(firstName).append("|lastName:::").append(lastName).append("|addressLine1:::")
+			//						.append(paymentAddressLine1).append("|addressLine2:::").append(paymentAddressLine2).append("|addressLine3:::")
+			//						.append(paymentAddressLine3).append("|country:::").append(country).append("|state:::").append(state)
+			//						.append("|city:::").append(city).append("|pincode:::").append(pincode).append("|cardSaved:::")
+			//						.append(cardSaved).append("|sameAsShipping:::").append(sameAsShipping).append("|cartGUID:::").append(cartGuid);
+			//
+			//				LOG.error("Address details entered >>>" + sb.toString());
+			//Address log code moved to facade to handle both web and mobile
+
+			LOG.debug(" TIS-414  : Checking - onclick of pay now button pincode servicabilty and promotion");
+			if (!redirectFlag && !getMplCheckoutFacade().isPromotionValid(cart))
+			{
+				getSessionService().setAttribute(MarketplacecheckoutaddonConstants.PAYNOWPROMOTIONEXPIRED, "TRUE");
+				redirectFlag = true;
+				LOG.info("::setting redirect flag--1::");
+			}
+			//TISST-13012
+			//				final boolean cartItemDelistedStatus = getMplCartFacade().isCartEntryDelisted(cart);
+			//				if (!redirectFlag && cartItemDelistedStatus)
+			//				{
+			//					redirectFlag = true;
+			//				}
+
+			if (!redirectFlag)
+			{
+				final boolean cartItemDelistedStatus = getMplCartFacade().isCartEntryDelisted(cart);
+				if (cartItemDelistedStatus)
+				{
+					redirectFlag = true;
+					LOG.info("::setting redirect flag--2::");
+				}
+			}
+
+
+			//TISUTO-12 , TISUTO-11
+			if (!redirectFlag)
+			{
+
+				//TPR3780 STARTS HERE
+				//	final double prevTotalCartPrice = cart.getTotalPrice().doubleValue();
+				//TPR3780 ENDS HERE
+
+				//commented for CAR:127
+				/*
+				 * final boolean inventoryReservationStatus = getMplCartFacade().isInventoryReserved(
+				 * MarketplacecclientservicesConstants.OMS_INVENTORY_RESV_TYPE_PAYMENTPENDING, null);
+				 */
+
+				final boolean inventoryReservationStatus = getMplCartFacade().isInventoryReserved(
+
+						//MarketplacecclientservicesConstants.OMS_INVENTORY_RESV_TYPE_PAYMENTPENDING, null);
+						MarketplacecclientservicesConstants.OMS_INVENTORY_RESV_TYPE_PAYMENTPENDING, cData, cart);
+
+				//TPR3780 STARTS HERE
+
+				Boolean replaced = Boolean.FALSE;
+				replaced = getSessionService().getAttribute("replacedUssid");
+				//	final CartModel cartModelAfterinventoryCheck = getCartService().getSessionCart();
+				//	final double newTotalCartPrice = cartModelAfterinventoryCheck.getTotalPrice().doubleValue();
+
+
+				if (null != replaced && replaced.booleanValue())
+				{
+					//return MarketplacecheckoutaddonConstants.INVENTORYRESERVED;
+					final String updateStatus = MarketplacecheckoutaddonConstants.UPDATED;
+					getSessionService().removeAttribute("replacedUssid");
+					redirectFlag = true;
+					LOG.info("::setting redirect flag--inv reservation changed for new item::");
+					getSessionService().setAttribute("flashupdateStatus", updateStatus);
+				}
+
+				//TPR3780 ENDS HERE
+
+
+				if (!inventoryReservationStatus)
+				{
+
+					getSessionService().setAttribute(MarketplacecclientservicesConstants.OMS_INVENTORY_RESV_SESSION_ID, "TRUE");
+					redirectFlag = true;
+					LOG.info("::setting redirect flag--3::");
+				}
+			}
+
+			if (!redirectFlag && !getMplCheckoutFacade().isCouponValid(cart))
+			{
+				getSessionService().setAttribute(MarketplacecheckoutaddonConstants.PAYNOWCOUPONINVALID, "TRUE");
+				redirectFlag = true;
+				LOG.info("::setting redirect flag--4::");
+			}
+
+			//TISPRO-497
+			//				final Double cartTotal = cart.getTotalPrice();
+			//				final Double cartTotalWithConvCharge = cart.getTotalPriceWithConv();
+			//
+			//				if (!redirectFlag && cartTotal.doubleValue() <= 0.0 || cartTotalWithConvCharge.doubleValue() <= 0.0)
+			//				{
+			//					getSessionService().setAttribute(MarketplacecheckoutaddonConstants.CARTAMOUNTINVALID, "TRUE");
+			//					redirectFlag = true;
+			//				}
+			if (!redirectFlag)
+			{
+				final Double cartTotal = cart.getTotalPrice();
+				final Double cartTotalWithConvCharge = cart.getTotalPriceWithConv();
+
+				LOG.info("::cartTotal**::" + cartTotal);
+				LOG.info("::cartTotalWithConvCharge**::" + cartTotalWithConvCharge);
+				if (cartTotal.doubleValue() <= 0.0 || cartTotalWithConvCharge.doubleValue() <= 0.0)
+				{
+					getSessionService().setAttribute(MarketplacecheckoutaddonConstants.CARTAMOUNTINVALID, "TRUE");
+					redirectFlag = true;
+					LOG.info("::setting redirect flag--5::");
+				}
+			}
+
+			//TISPRO-578
+			if (!redirectFlag && !getMplPaymentFacade().isValidCart(cart))
+			{
+				getSessionService().setAttribute(MarketplacecheckoutaddonConstants.CART_DELIVERYMODE_ADDRESS_INVALID, "TRUE");
+				redirectFlag = true;
+				LOG.info("::setting redirect flag--6::");
+			}
+
+			if (redirectFlag)
+			{
+				LOG.info("::returning redirect String::");
+				return MarketplacecheckoutaddonConstants.REDIRECTSTRING; //IQA for TPR-629
+			}
+
+
+			if (cart.getSplitModeInfo().equalsIgnoreCase("CliqCash"))
+			{
+				final OrderData orderData;
+				final boolean isValidCart = getMplPaymentFacade().checkCart(cart);
+				if (isValidCart)
+				{
+					orderData = getMplCheckoutFacade().placeOrder();
+
+				}
+				else
+				{
+					throw new InvalidCartException("************PaymentMethodCheckoutStepController : placeOrder : Invalid Cart!!!"
+							+ (StringUtils.isNotEmpty(cart.getGuid()) ? cart.getGuid() : MarketplacecommerceservicesConstants.EMPTY));
+				}
+
+
+				final OrderModel orderToBeUpdated = getMplPaymentFacade().getOrderByGuid(orderData.getGuid());
+
+				QCRedeeptionResponse qcResponse = new QCRedeeptionResponse();
+
+				try
+				{
+					final String qcUniqueCode = getMplPaymentFacade().generateQCCode();
+					final CustomerModel currentCustomer = (CustomerModel) getUserService().getCurrentUser();
+					qcResponse = getMplPaymentFacade().createQCOrderRequest(orderToBeUpdated.getGuid(), orderToBeUpdated,
+							currentCustomer.getCustomerWalletDetail().getWalletId(), "Cliq Cash", qcUniqueCode, "WEB", 0.0D, 0.0D);
+
+					if (null != qcResponse && null != qcResponse.getResponseCode() && qcResponse.getResponseCode().intValue() == 0)
+					{
+
+						return updateQCOrder(orderToBeUpdated, redirectAttributes);
+					}
+					else if (null != qcResponse && null != qcResponse.getResponseCode()
+							&& qcResponse.getResponseCode().intValue() != 0)
+					{
+
+						orderToBeUpdated.setStatus(OrderStatus.PAYMENT_FAILED); /// return QC fail and Update Audit Entry Try With Juspay
+						getModelService().save(orderToBeUpdated);
+						//getSessionService().setAttribute("cliqCashPaymentMode", "false");
+						cart.setSplitModeInfo("juspay");
+						GlobalMessages.addFlashMessage(redirectAttributes, GlobalMessages.ERROR_MESSAGES_HOLDER,
+								MarketplacecheckoutaddonConstants.PAYMENTTRANERRORMSG);
+						return MarketplacecheckoutaddonConstants.MPLPAYMENTURL + MarketplacecheckoutaddonConstants.PAYVALUE
+								+ MarketplacecheckoutaddonConstants.VALUE + orderToBeUpdated.getGuid();
+					}
+
+					else if (null == qcResponse || null == qcResponse.getResponseCode())
+					{
+
+						orderToBeUpdated.setStatus(OrderStatus.PAYMENT_FAILED); /// NO Exception No qcResponse Try With Juspay
+						getModelService().save(orderToBeUpdated);
+						cart.setSplitModeInfo("juspay");
+						GlobalMessages.addFlashMessage(redirectAttributes, GlobalMessages.ERROR_MESSAGES_HOLDER,
+								MarketplacecheckoutaddonConstants.PAYMENTTRANERRORMSG);
+						return MarketplacecheckoutaddonConstants.MPLPAYMENTURL + MarketplacecheckoutaddonConstants.PAYVALUE
+								+ MarketplacecheckoutaddonConstants.VALUE + orderToBeUpdated.getGuid();
+					}
+
+				}
+				catch (final Exception ex)
+				{
+
+					if (null != qcResponse && null != qcResponse.getResponseCode() && qcResponse.getResponseCode().intValue() == 0)
+					{
+						orderToBeUpdated.setStatus(OrderStatus.RMS_VERIFICATION_FAILED);
+						getModelService().save(orderToBeUpdated);
+						LOG.error("Some Error in QC Service");
+						System.out.println("Some Error in QC Service");
+						return "QC PAYMENT SUCCESS EXCEPTION";
+						/// Return In JS Ajax Call  And Execute Refund call refund...........
+					}
+
+					GlobalMessages.addFlashMessage(redirectAttributes, GlobalMessages.ERROR_MESSAGES_HOLDER,
+							MarketplacecheckoutaddonConstants.PAYMENTTRANERRORMSG);
+					return "QC PAYMENT EXCEPTION"; /// Return In JS Ajax Call
+				}
+			}
+
+		}
+		catch (final ModelSavingException e)
+		{
+			LOG.error(MarketplacecheckoutaddonConstants.LOGERROR, e);
+		}
+		catch (final AdapterException e)
+		{
+			LOG.error(MarketplacecheckoutaddonConstants.LOGERROR, e);
+			orderId = "QC_CONN_ERROR";
+			//to be check
+			//return MarketplacecheckoutaddonConstants.REDIRECTTOPAYMENT;
+		}
+		catch (final EtailNonBusinessExceptions e)
+		{
+			ExceptionUtil.etailNonBusinessExceptionHandler(e);
+			orderId = "NONBusinessException" + e.getErrorMessage();
+			LOG.error(MarketplacecheckoutaddonConstants.LOGERROR, e);
+		}
+		catch (final Exception e)
+		{
+			LOG.error(MarketplacecheckoutaddonConstants.LOGERROR, e);
+		}
+
+		return orderId;
+	}
+
+
+	private String updateQCOrder(final OrderModel orderToBeUpdated, final RedirectAttributes redirectAttributes)
+			throws InvalidCartException, CalculationException, EtailNonBusinessExceptions
+	{
+		try
+		{
+			if (null != orderToBeUpdated && CollectionUtils.isEmpty(orderToBeUpdated.getChildOrders())
+					&& null != orderToBeUpdated.getPaymentInfo())
+			{
+				getMplCheckoutFacade().beforeSubmitOrder(orderToBeUpdated);
+
+
+				getMplCheckoutFacade().submitOrder(orderToBeUpdated);
+
+				//order confirmation email and sms
+				getNotificationFacade().sendOrderConfirmationNotification(orderToBeUpdated);
+
+				final OrderData orderData = getMplCheckoutFacade().getOrderDetailsForCode(orderToBeUpdated);
+
+				System.out.println("------------------------ Final QC OrderData Status ::::::::: " + orderData.getStatus());
+
+				return "/checkout/orderConfirmation/" + orderData.getCode();
+			}
+
+			else if (null != orderToBeUpdated && null == orderToBeUpdated.getPaymentInfo()
+					&& OrderStatus.PAYMENT_TIMEOUT.equals(orderToBeUpdated.getStatus()))
+			{
+				LOG.error("Issue with update order...redirecting to payment page only");
+				GlobalMessages.addFlashMessage(redirectAttributes, GlobalMessages.ERROR_MESSAGES_HOLDER,
+						MarketplacecheckoutaddonConstants.PAYMENTIMEOUTRRORMSG);
+				return getCheckoutStep().currentStep();
+			}
+			else
+			{
+				LOG.error("Issue with update order...redirecting to payment page only");
+				GlobalMessages.addFlashMessage(redirectAttributes, GlobalMessages.ERROR_MESSAGES_HOLDER,
+						MarketplacecheckoutaddonConstants.PAYMENTTRANERRORMSG);
+				return getCheckoutStep().currentStep();
+			}
+		}
+		catch (final ModelSavingException e)
+		{
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0007);
+		}
+		catch (final Exception e)
+		{
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000);
+		}
+	}
+
+
+	//GiFT CART Payment Start 13-09-2017
+	@RequireHardLogIn
+	@RequestMapping(value = GIFT_CART_PAYMENT, method =
+	{ RequestMethod.POST, RequestMethod.GET })
+	public String getGiftPayment(@ModelAttribute("egvDetailsform") final EgvDetailForm egvDetailForm,
+			final BindingResult bindingResult, final Model model, final HttpServletRequest request)
+			throws UnsupportedEncodingException
+	{
+		try
+		{
+			CartData giftCartData = null;
+
+			if (egvDetailForm.getProductCode() == null)
+			{
+				final String guid = getSessionService().getAttribute(EGVGUID);
+				giftCartData = mplCartFacade.getGiftCartData(guid);
+			}
+			else
+			{
+				if (mplEgvFormValidator.validate(egvDetailForm))
+				{
+					final EgvDetailsData egvDetailsData = populateEGVFormToData(egvDetailForm);
+					giftCartData = mplCartFacade.getGiftCartModel(egvDetailsData);
+					giftCartData.setEgvTotelAmount(egvDetailsData.getGiftRange());
+				}
+				else
+				{
+
+					return MarketplacecheckoutaddonConstants.REDIRECT + GIFT_CARD
+							+ getConfigurationService().getConfiguration().getString(MARKETPLACE_HEADER_EGV_PRODUCT_CODE)
+							+ "/?isInvalidForm=" + Boolean.TRUE;
+				}
+			}
+			giftCartData.setIsEGVCart(true);
+			Map<String, Boolean> paymentModeMap = null;
+			final OrderData orderData = null;
+			final String checkoutSellerID = populateCheckoutSellers(giftCartData);
+			model.addAttribute(MarketplacecheckoutaddonConstants.CHECKOUT_SELLER_IDS, checkoutSellerID);
+			//Getting Payment modes
+			paymentModeMap = getMplPaymentFacade().getPaymentModes(MarketplacecheckoutaddonConstants.MPLSTORE, false, giftCartData);
+			//Cart guid added to propagate to further methods via jsp
+			model.addAttribute(MarketplacecheckoutaddonConstants.GUID, giftCartData.getGuid());
+			getSessionService().setAttribute(EGVGUID, giftCartData.getGuid());
+			model.addAttribute(MarketplacecheckoutaddonConstants.CARTTOORDERCONVERT, Boolean.FALSE); //INC144315475
+			GenericUtilityMethods.populateTealiumDataForCartCheckout(model, giftCartData);
+			final PriceDataFactory priceDataFactory = Registry.getApplicationContext().getBean("priceDataFactory",
+					PriceDataFactory.class);
+			Long cartTotalMrp = Long.valueOf(0);
+
+			try
+			{
+				final long cost = (long) giftCartData.getEgvTotelAmount();
+				cartTotalMrp = Long.valueOf(cost);
+			}
+			catch (final Exception exception)
+			{
+				LOG.error("Error Occure " + exception);
+			}
+
+			final double couponDiscount = 0.0D;
+			final BigDecimal totalDiscount = new BigDecimal(couponDiscount);
+			final BigDecimal cartTotalMrpValue = new BigDecimal(cartTotalMrp.longValue());
+			final PriceData cartTotalMrpVal = priceDataFactory.create(PriceDataType.BUY, cartTotalMrpValue,
+					MarketplacecommerceservicesConstants.INR);
+			final PriceData totalDiscountVal = priceDataFactory.create(PriceDataType.BUY, totalDiscount,
+					MarketplacecommerceservicesConstants.INR);
+			model.addAttribute("cartTotalMrp", cartTotalMrpVal);
+			model.addAttribute("totalDiscount", totalDiscountVal);
+
+
+			final PaymentForm paymentForm = new PaymentForm();
+			setupAddPaymentPage(model);
+			if (MapUtils.isNotEmpty(paymentModeMap)) // Code optimization for performance fix TISPT-169
+			{
+				//Adding payment modes in model to be accessed from jsp
+				model.addAttribute(MarketplacecheckoutaddonConstants.PAYMENTMODES, paymentModeMap);
+				model.addAttribute(MarketplacecheckoutaddonConstants.TRANERRORMSG, "");
+				timeOutSet(model);
+
+
+				model.addAttribute(MarketplacecheckoutaddonConstants.NEWPAYMENTFORMMPLURL,
+						MarketplacecheckoutaddonConstants.NEWPAYMENTVIEWURL);
+				model.addAttribute(MarketplacecheckoutaddonConstants.PAYMENTFORM, paymentForm);
+
+				final Double cartTotal = Double.valueOf(egvDetailForm.getGiftRange());
+				setupMplCardForm(model, cartTotal);
+				//Adding all the details in model to be accessed from jsp
+				model.addAttribute(MarketplacecheckoutaddonConstants.ORDERDATA, orderData);
+				model.addAttribute("isCart", Boolean.TRUE);
+				model.addAttribute("isEGVCart", Boolean.TRUE);
+
+				model.addAttribute(MarketplacecheckoutaddonConstants.MRUPEE_MERCHANT_URL,
+						getConfigurationService().getConfiguration().getString(MarketplacecheckoutaddonConstants.MRUPEEURL));
+				model.addAttribute(MarketplacecheckoutaddonConstants.MRUPEE_CODE,
+						getConfigurationService().getConfiguration().getString(MarketplacecheckoutaddonConstants.MRUPEE_MERCHANT_CODE));
+
+				model.addAttribute(MarketplacecheckoutaddonConstants.MRUPEE_NARRATION, getConfigurationService().getConfiguration()
+						.getString(MarketplacecheckoutaddonConstants.MRUPEE_NARRATION_VALUE));
+				model.addAttribute(MarketplacecheckoutaddonConstants.JUSPAYJSNAME,
+						getConfigurationService().getConfiguration().getString(MarketplacecheckoutaddonConstants.JUSPAYJSNAMEVALUE));
+				model.addAttribute(MarketplacecheckoutaddonConstants.SOPFORM, new PaymentDetailsForm());
+				//Terms n Conditions Link
+				model.addAttribute(MarketplacecheckoutaddonConstants.TNCLINK,
+						getConfigurationService().getConfiguration().getString(MarketplacecheckoutaddonConstants.TNCLINKVALUE));
+				model.addAttribute(MarketplacecheckoutaddonConstants.NEWPAYMENTFORMMPLURL,
+						MarketplacecheckoutaddonConstants.NEWPAYMENTVIEWURL);
+			}
+		}
+		catch (final BindingException e)
+		{
+			LOG.error(MarketplacecheckoutaddonConstants.LOGERROR, e);
+		}
+
+		catch (final ModelSavingException e)
+		{
+			LOG.error(MarketplacecommerceservicesConstants.E0007, e);
+
+		}
+		catch (final EtailBusinessExceptions e)
+		{
+			ExceptionUtil.etailBusinessExceptionHandler(e, null);
+			LOG.error(MarketplacecommerceservicesConstants.B6001, e);
+		}
+		catch (final EtailNonBusinessExceptions e)
+		{
+			ExceptionUtil.etailNonBusinessExceptionHandler(e);
+			LOG.error(MarketplacecommerceservicesConstants.B6001, e);
+		}
+		catch (final Exception e)
+		{
+			LOG.error(MarketplacecheckoutaddonConstants.LOGERROR, e);
+		}
+		model.addAttribute("checkoutPageName", checkoutPageName);
+		return MarketplacecheckoutaddonControllerConstants.Views.Pages.MultiStepCheckout.AddPaymentMethodPage;
+	}
+
+	/**
+	 * @param egvDetailForm
+	 * @return
+	 */
+	private EgvDetailsData populateEGVFormToData(final EgvDetailForm egvDetailForm)
+	{
+		final EgvDetailsData egvDetailsData = new EgvDetailsData();
+		egvDetailsData.setFromEmailAddress(egvDetailForm.getFromEmailAddress());
+		egvDetailsData.setProductCode(egvDetailForm.getProductCode());
+		egvDetailsData.setGiftRange(egvDetailForm.getGiftRange());
+		egvDetailsData.setOpenTextAmount(egvDetailForm.getOpenTextAmount());
+		egvDetailsData.setToEmailAddress(egvDetailForm.getToEmailAddress());
+		egvDetailsData.setMessageBox(egvDetailForm.getMessageBox());
+		egvDetailsData.setTotalEGV(egvDetailForm.getTotalEGV());
+		egvDetailsData.setFromFirstName(egvDetailForm.getFromFirstName());
+		egvDetailsData.setFromLastName(egvDetailForm.getFromLastName());
+		egvDetailsData.setFromPhoneNo(egvDetailForm.getFromPhoneNo());
+		return egvDetailsData;
+	}
+
+	/**
+	 * @param model
+	 * @param redirectAttributes
+	 * @param guid
+	 * @return
+	 * @throws InvalidCartException
+	 * @throws CalculationException
+	 */
+	private String getEGVOrderStatus(final Model model, final RedirectAttributes redirectAttributes, final String guid)
+			throws InvalidCartException, CalculationException
+	{
+		final OrderModel orderToBeUpdated = getMplPaymentFacade().getOrderByGuid(guid);
+		String orderStatusResponse = null;
+		orderStatusResponse = getMplPaymentFacade().getOrderStatusFromJuspay(guid, null, orderToBeUpdated, null);
+		//Redirection when transaction is successful i.e. CHARGED
+		if (null != orderStatusResponse)
+		{
+			if (MarketplacecheckoutaddonConstants.CHARGED.equalsIgnoreCase(orderStatusResponse))
+			{
+				model.addAttribute(MarketplacecheckoutaddonConstants.PAYMENTID, null);
+				setCheckoutStepLinksForModel(model, getCheckoutStep());
+				return updateOrder(orderToBeUpdated, redirectAttributes);
+			}
+			else if (MarketplacecheckoutaddonConstants.JUSPAY_DECLINED.equalsIgnoreCase(orderStatusResponse))
+			{
+				GlobalMessages.addFlashMessage(redirectAttributes, GlobalMessages.ERROR_MESSAGES_HOLDER,
+						MarketplacecheckoutaddonConstants.DECLINEDERRORMSG);
+				return MarketplacecheckoutaddonConstants.REDIRECT + MarketplacecheckoutaddonConstants.MPLPAYMENTURL
+						+ MarketplacecheckoutaddonConstants.PAYVALUE + MarketplacecheckoutaddonConstants.VALUE + guid;
+			}
+			else if (MarketplacecheckoutaddonConstants.AUTHORIZATION_FAILED.equalsIgnoreCase(orderStatusResponse)
+					|| MarketplacecheckoutaddonConstants.AUTHENTICATION_FAILED.equalsIgnoreCase(orderStatusResponse)
+					|| MarketplacecheckoutaddonConstants.PENDING_VBV.equalsIgnoreCase(orderStatusResponse))
+			{
+				GlobalMessages.addFlashMessage(redirectAttributes, GlobalMessages.ERROR_MESSAGES_HOLDER,
+						MarketplacecheckoutaddonConstants.VBVERRORMSG);
+				return MarketplacecheckoutaddonConstants.REDIRECT + MarketplacecheckoutaddonConstants.MPLPAYMENTURL
+						+ MarketplacecheckoutaddonConstants.PAYVALUE + MarketplacecheckoutaddonConstants.VALUE + guid;
+			}
+			else
+			{
+				GlobalMessages.addFlashMessage(redirectAttributes, GlobalMessages.ERROR_MESSAGES_HOLDER,
+						MarketplacecheckoutaddonConstants.TRANERRORMSG);
+				return MarketplacecheckoutaddonConstants.REDIRECT + MarketplacecheckoutaddonConstants.MPLPAYMENTURL
+						+ MarketplacecheckoutaddonConstants.PAYVALUE + MarketplacecheckoutaddonConstants.VALUE + guid;
+			}
+		}
+		else
+		{
+			return updateOrder(orderToBeUpdated, redirectAttributes);
+		}
+
+	}
+
+	/**
+	 * @param firstName
+	 * @param lastName
+	 * @param country
+	 * @param state
+	 * @param city
+	 * @param pincode
+	 * @param cardSaved
+	 * @param sameAsShipping
+	 * @param guid
+	 * @param orderId
+	 * @param returnUrlBuilder
+	 * @param paymentAddressLine1
+	 * @param paymentAddressLine2
+	 * @param paymentAddressLine3
+	 * @param uid
+	 * @return
+	 * @throws InvalidCartException
+	 */
+	private String createJuspayOrderFroEGV(final String firstName, final String lastName, final String country, final String state,
+			final String city, final String pincode, final String cardSaved, final String sameAsShipping, final String guid,
+			String orderId, final StringBuilder returnUrlBuilder, final String paymentAddressLine1, final String paymentAddressLine2,
+			final String paymentAddressLine3, final String uid) throws InvalidCartException
+	{
+		try
+		{
+
+			final CartModel cart = mplEGVCartService.getEGVCartModel(guid);
+			LOG.info("::Going to Create Juspay OrderId::");
+			orderId = getMplPaymentFacade().createJuspayOrder(cart, null, firstName, lastName, paymentAddressLine1,
+					paymentAddressLine2, paymentAddressLine3, country, state, city, pincode,
+					cardSaved + MarketplacecheckoutaddonConstants.STRINGSEPARATOR + sameAsShipping, returnUrlBuilder.toString(), uid,
+					MarketplacecheckoutaddonConstants.CHANNEL_WEB, 0.0D);
+			getMplCheckoutFacade().placeEGVOrder(cart);
+
+			/*
+			 * if (null != orderModel.getPaymentInfo()) { LOG.error("Order already has payment info >>>" +
+			 * orderModel.getPaymentInfo().getCode()); return "redirect_with_details"; } else {
+			 * LOG.error("Order status is Payment_Pending for orderCode>>>" + orderModel.getCode()); return
+			 * "redirect_with_details"; }
+			 */
+		}
+		catch (final ModelSavingException e)
+		{
+			LOG.error(MarketplacecheckoutaddonConstants.LOGERROR, e);
+		}
+		catch (final AdapterException e)
+		{
+			LOG.error(MarketplacecheckoutaddonConstants.LOGERROR, e);
+			orderId = "JUSPAY_CONN_ERROR";
+		}
+		catch (final EtailNonBusinessExceptions e)
+		{
+			ExceptionUtil.etailNonBusinessExceptionHandler(e);
+			orderId = "NONBusinessException" + e.getErrorMessage();
+			LOG.error(MarketplacecheckoutaddonConstants.LOGERROR, e);
+		}
+		return orderId + "|" + guid;
+	}
+
+
+	@RequireHardLogIn
+	@RequestMapping(value = "/addEGV", method = RequestMethod.GET)
+	public String showAddEGVPopup(final Model model)
+
+			throws CMSItemNotFoundException, QCServiceCallException
+	{
+
+		model.addAttribute("addToCardWalletForm", new AddToCardWalletForm());
+		return "pages/payment/addGiftCard";
+	}
+
+	@RequireHardLogIn
+	@RequestMapping(value = "/addEGVToWallet", method = RequestMethod.POST)
+	public @ResponseBody String addEGV(final AddToCardWalletForm addToCardWalletForm, final Model model)
+			throws CMSItemNotFoundException, QCServiceCallException
+	{
+		try
+		{
+			final CustomerModel currentCustomer = (CustomerModel) userService.getCurrentUser();
+
+			if (null != currentCustomer && null != currentCustomer.getIsWalletActivated()
+					&& !currentCustomer.getIsWalletActivated().booleanValue())
+			{
+				final QCCustomerRegisterRequest customerRegisterReq = new QCCustomerRegisterRequest();
+				final Customer custInfo = new Customer();
+				custInfo.setEmail(currentCustomer.getOriginalUid());
+				custInfo.setEmployeeID(currentCustomer.getUid());
+				custInfo.setCorporateName("Tata Unistore Ltd");
+
+				if (null != currentCustomer.getFirstName())
+				{
+					custInfo.setFirstname(currentCustomer.getFirstName());
+				}
+				if (null != currentCustomer.getLastName())
+				{
+					custInfo.setLastName(currentCustomer.getLastName());
+				}
+
+				customerRegisterReq.setExternalwalletid(currentCustomer.getOriginalUid());
+				customerRegisterReq.setCustomer(custInfo);
+				customerRegisterReq.setNotes("Activating Customer " + currentCustomer.getOriginalUid());
+				final QCCustomerRegisterResponse customerRegisterResponse = mplWalletFacade
+						.createWalletContainer(customerRegisterReq);
+
+				if (null != customerRegisterResponse && null != customerRegisterResponse.getResponseCode()
+						&& customerRegisterResponse.getResponseCode() == Integer.valueOf(0))
+				{
+
+					final RedimGiftCardResponse response = mplWalletFacade.getAddEGVToWallet(addToCardWalletForm.getCardNumber(),
+							addToCardWalletForm.getCardPin());
+
+					if (null != response && null != response.getResponseCode() && response.getResponseCode() == Integer.valueOf(0))
+					{
+						return "SUCCESS";
+					}
+					else
+					{
+
+						LOG.error("card Add Error " + response.getResponseMessage());
+						return "ERROR";
+					}
+
+				}
+			}
+			else if (null != currentCustomer && null != currentCustomer.getIsWalletActivated()
+					&& currentCustomer.getIsWalletActivated().booleanValue())
+			{
+				final RedimGiftCardResponse response = mplWalletFacade.getAddEGVToWallet(addToCardWalletForm.getCardNumber(),
+						addToCardWalletForm.getCardPin());
+
+				if (null != response && null != response.getResponseCode() && response.getResponseCode() == Integer.valueOf(0))
+				{
+					return "SUCCESS";
+				}
+				else
+				{
+					LOG.error("card Add Error " + response.getResponseMessage());
+					return "ERROR";
+				}
+			}
+
+		}
+		catch (final Exception ex)
+		{
+			ex.printStackTrace();
+		}
+		return "ERROR";
+	}
 
 }

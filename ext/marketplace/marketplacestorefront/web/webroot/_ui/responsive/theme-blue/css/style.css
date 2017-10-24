@@ -73540,7 +73540,8 @@ body.template-pages-account-accountOrderHistoryPage .account .right-account .ord
 	text-align: center;
 }
 body.template-pages-account-accountOrderHistoryPage .account .right-account .order-history .product-block li.header>ul>li.viewDetailsAnchor a,
-body.template-pages-account-accountOrderHistoryPage .account .right-account .order-history .product-block li.header>ul>li.trackOrderAnchor a{
+body.template-pages-account-accountOrderHistoryPage .account .right-account .order-history .product-block li.header>ul>li.trackOrderAnchor a,
+body.template-pages-account-accountOrderHistoryPage .account .right-account .order-history .product-block li.header>ul>li.resendEmail span{
 	height: 16px;
 	font-size: 12px;
   	line-height: 1.33;
@@ -73548,6 +73549,7 @@ body.template-pages-account-accountOrderHistoryPage .account .right-account .ord
   	text-align: center;
   	color: #a5173c;
   	text-transform: uppercase;
+  	cursor: pointer;
 }
 body .account .right-account .order-history:not(.responsiveProfile) .product-block li.item .orderUpdatesBlock {
     float: right;
@@ -77444,8 +77446,325 @@ background: url(../images/search_image.png) no-repeat;}
     display: none !important;
 }
 }
+
 /* SDI-1393 start */
 .page-viewAllTrending.pageType-ContentPage #ia_products_hot .right-block .select-view .select-list {
     z-index: 2;
 }
 /* SDI-1393 End */
+
+/* Wallet css*/
+
+.giftCheckoutContainer {
+		border: solid 1px #dddddd;
+		padding: 10px;
+		padding-top: 6px;
+	}
+	
+	.cliqTotalBalance {padding-left: 5%; vertical-align: middle;}
+	.cliqTotalBalance p {padding: 2px;}
+	.cliqTotalBalanceLabel {font-size: 10px;}
+	.giftCheckoutContainer input[type="checkbox"] {display: block;}
+	
+	.giftCheckoutInnerCols3 input[type="checkbox"]+label:before {display: none;}
+	.useGiftCardBtn input[type="checkbox"] {display: none;}
+	.useGiftCardBtn, .useGiftCardBtn:hover {
+	    border: solid 1px #a5173c;
+	    color: #a5173c;
+	    background-color: white;
+	    font-size: 12px;
+	    padding: 0px 20px;
+	    letter-spacing: normal;
+	    height: 25px !important;
+	    cursor: pointer;
+	}
+	
+	.addNewGiftCard .viewCardTerms {float: right;}
+	.addNewGiftCard .viewCardTerms a {color: #a5173c; font-weight: bold;}
+	.addNewGiftCard .addNewCard a {color: #a5173c; font-weight: bold;}
+	.payRemainingDesc {color: #666666; font-size: 12px;}
+	
+	.giftInfoLeft {border-right: 1px solid #dddddd; border-bottom: none; padding: 4%; padding-left: 0;}
+	.giftWalletImg {vertical-align: middle;}
+	.giftCheckoutInnerCols1, .giftCheckoutInnerCols2, .giftCheckoutInnerCols3 {padding: 4%;}
+	.giftInfoBottom {border-top: 1px solid #dddddd; padding: 0; margin-top: 1%; padding-top: 1%;}
+	.topPlaceOrderBtn {margin: 12px 0 0 !important}
+	.emiTopOrderPlaceButton {background-color: #a5173c; font-size: 12px; color: white; height: 40px; line-height: normal; padding: 10px; width: 40%; font-weight: 400;}
+	#netbanking .nbButton .topPlaceOrderBtn {margin-left: 35px !important;}
+	
+	
+	@media(max-width: 767px){
+		.cliqCashPlaceOrderBtnMobile {bottom: 7.2px;left: auto;right: 8px !important;width: 50%;height: 33.5px !important;font-weight: normal;background-color: #a5173c;line-height: 1 !important;font-size: 12px !important;position: fixed;z-index: 99; color: white;}
+		.emiTopOrderPlaceButton {display: none !important;}
+	}
+	
+	@media(min-width: 768px){
+		.cliqCashPlaceOrderBtnMobile {display: none !important;}
+	}
+	
+	@media(min-width: 651px){
+		.useGiftCardBtn, .useGiftCardBtn:hover {float: right; line-height: normal; padding-top: 5px;}
+		.giftCheckoutInnerCols1 {text-align: center;}
+		.giftCheckoutInnerCols2 {text-align: center;}
+	}
+	
+	@media(max-width: 650px){
+	.giftInfoLeft {border-bottom: 1px solid #dddddd; border-right: none; padding: 4%; padding-left: 0;}
+	.giftCheckoutInnerCols1 {padding: 20% 0%; text-align: left;}
+	.giftCheckoutInnerCols2 {padding: 20% 0%; text-align: left;}
+	.giftCheckoutInnerCols3 {padding: 20% 0%; text-align: right;}
+	.giftCheckoutContainer button {height: 18px !important;}
+	.giftCheckoutContainer {border-radius: 4px; font-size: 10px; background-color: white; padding: 0;}
+	.giftInfoBottom {border-top: 1px solid #dddddd; padding: 4% 0; margin-top: 0;}
+	.useGiftCardBtn {height: 25px !important; line-height: normal !important; padding: 5px 6px !important;}
+    .cliqCashApplyAlert {border-radius: 4px;}
+	}
+	
+	#paytm_logo_img {width: 100px;}
+	
+/* wallet css end */	
+
+
+/* Cliq Cash Page */
+
+.closeCashSuccess {
+	float: right;
+	font-size: initial;
+	cursor: pointer;
+}
+
+.cliqCashContainer {
+	margin: 2%;
+}
+
+.cliqCashContainerOne {
+	border: solid 1px #dddddd;
+	padding: 2%;
+}
+
+.cliqCashContainerLeft {
+	float: left;
+	line-height: 22px;
+}
+
+.cliqCashContainerRight {
+	float: right;
+	width: 50%;
+	text-align: right;
+}
+
+.cliqCashInnerTop {
+	font-size: 26px;
+	margin-bottom: 10px;
+}
+
+.cliqCashWalletImg {
+	vertical-align: middle;
+}
+
+.cliqCashBtns, .cliqCashBtns:hover {
+	display: inline;
+	border: solid 1px #a5173c;
+	color: white;
+	background-color: #a5173c;
+	font-size: 14px;
+	padding: 5px 20px;
+	font-weight: normal;
+	margin-top: 2%;
+	letter-spacing: normal;
+	height: 25px;
+	margin-left: 4%;
+}
+/* .cliqCashBtns:hover {color:white; background-color: #a5173c;} */
+.cliqCashContainerLeft p {
+	padding-left: 3%;
+}
+
+.cliqCashContainerTwo {
+	overflow: hidden;
+	border: 1px solid #ccc;
+	background-color: #f1f1f1;
+	border-top-left-radius: 4px;
+	border-top-right-radius: 4px;
+}
+
+/* Style the buttons inside the tab */
+.cliqCashContainerTwo button {
+	background-color: inherit;
+	float: left;
+	border: none;
+	outline: none;
+	cursor: pointer;
+	font-size: 14px !important;
+	padding: 1% 2%;
+	transition: 0.3s;
+	font-size: 17px;
+}
+
+.cliqCashBannerSection {
+    font-weight: 100;
+    width: 100%;
+    text-align: center;
+    height: 300px;
+    background: url(../images/CliqCashBanner.jpg) no-repeat center;
+}
+.cliqCashBannerSectionInfo {
+	font-size: 24px;
+	padding-top: 5%;
+	color: #ffedc2;
+	font-family: serif;
+}
+
+.cliqCashBannerSectionInfoC1 {font-size: 40px;}
+@media (max-width: 768px) {
+ .cliqCashBannerSection {border-radius: 4px;}
+ .cliqCashBannerSectionInfo {font-size: 18px !important; padding-top: 24%;}
+ .cliqCashBannerSectionInfoC1 {font-size: 24px;}
+}
+
+/* Change background color of buttons on hover */
+.cliqCashContainerTwo button:hover {
+	color: #a5173c;
+}
+
+/* Create an active/current tablink class */
+.cliqCashContainerTwo button.active {
+	color: #a5173c;
+	border-bottom: 3px solid #a5173c;
+}
+
+/* Style the tab content */
+.cliqCashContainerTwoContent {
+	display: none;
+	border: 1px solid #ccc;
+	border-top: none;
+}
+
+.cliqStatementTable {
+	width: 100%;
+}
+
+.cliqStatementTable thead td {
+	font-weight: bold;
+}
+
+.cliqStatementTable thead {
+	background-color: #ddd
+}
+
+.cliqStatementTable td {
+	padding: 2%;
+}
+
+.cliqStatementTable tbody tr:nth-child(even) {
+	background-color: #f2f2f2;
+}
+
+@media ( max-width : 650px) {
+	.cliqCashContainer {
+		margin: 3%;
+	}
+	.cliqCashContainerOne {
+		border-radius: 4px;
+	}
+	.cliqCashInnerTop {
+		font-size: 18px;
+	}
+	.cliqCashContainerHead > .cliqCashInnerTop {text-align: center;}
+	.cliqCashContainerLeft {
+		border-bottom: 1px solid #ddd;
+		width: 100%;
+	}
+	.cliqCashBtns {
+		height: 30px !important;
+		margin-top: 10px !important;
+		float: right !important;
+	}
+	.cliqCashContainerTwoContent {
+		overflow-x: auto;
+	}
+	.cliqCashSuccessAlert {
+		border-radius: 4px;
+	}
+	.cliqCashContainerTwo button {
+		font-size: 12px !important;
+	}
+}
+
+/* Cliq Cash End */
+
+/* ADD GIFT POPUP */
+#singlePageAddEGVPopup .content {max-width: 600px;left: 2px;}
+.addVoucherPopupBtn, .addVoucherPopupBtn:hover {
+	padding: 10px 15px;
+	cursor: pointer;	
+}
+
+.redeemVoucherPopupAlert {display: none; font-size: small; margin-bottom: 2% !important;}
+
+
+/* Add EGV TO Wallet */
+.addGiftContainer {border: 1px solid #ddd;}
+	/* .addGiftVoucherSection {padding: 0 !important;}
+	.addGiftVoucherSub {padding: 0;} */
+	.giftVoucherNo, .giftVoucherPin {
+	  width: 100%;
+	  height: 37px !important;
+	  border-radius: 4px;
+	  border: none !important;
+	  background-color: #ededed;
+	}
+	.addVoucherBtn, .addVoucherBtn:hover, .addVoucherBtn:active  {
+	  max-width: 230px;
+	  height: 30px;
+	  border: none;
+	  line-height: 12px;
+	  background-color: #a9143c;
+	  color: white;
+	  font-size: 12px;
+	  font-weight: 400;
+	  padding: 0 15px;
+	}
+	
+	.addMoreBtn, .addMoreBtn:hover, .addMoreBtn:active {
+	  font-size: 10px;
+	  border: 1px solid #a9143c;
+	  padding: 0 5px;
+	  height: 25px;
+	  line-height: normal;
+	  margin-top: 5px;
+	  color: #a9143c;
+	  position: absolute;
+      right: 2%;
+      cursor: pointer;
+      z-index: 1;
+	}
+	
+	.addMoreGiftVouchers {margin-top: 2%;}
+	
+	.addMoreGiftVouchersBtn {float: right;}
+	
+	.voucherHeadingTexts {padding-left: 0 !important;color: black;text-align: left;font-size: small;}
+	.dividerVS {margin: 2%; border-bottom: none; border-top: 1px solid #ddd;}
+	
+	@media(min-width: 651px){
+		.addGiftContainer{margin-left: 10% ;margin-right: 10%;}
+		.voucherHeadingTexts {padding-top: 4%;}
+		.dividerVS { margin-bottom: 0;}
+		.redeemToWalletBtn {float: right;}
+		.redeemVoucherAlert {padding: 10px !important; margin: 0 !important;}
+	}
+	
+	@media(max-width: 650px){
+		.addGiftVoucherSection {padding: 0 !important;}
+		.addGiftContainer {margin: 3%; border-radius: 8px; padding-top: 8px;}
+		.addVoucherBtn {font-size: 12px !important;}
+		.addGiftBlock {padding-top: 2%;}
+		.addMoreGiftVouchers {margin-top: 5%;}
+		.addMoreBtn, .addMoreBtn:hover, .addMoreBtn:active {font-size: 8px; height: 20px; margin-top: -5px; right: 5%;}
+		.redeemVoucherAlert {border-radius: 4px !important;}
+		.giftCardPinNo {margin-top: 15px !important;}
+	}
+
+/* Add EGV To Wallet End */	
+	
