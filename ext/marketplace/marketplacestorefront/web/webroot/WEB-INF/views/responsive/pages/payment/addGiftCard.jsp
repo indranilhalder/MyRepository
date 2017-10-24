@@ -11,7 +11,6 @@
 <spring:theme code="text.addEgv.voucher.error.message" var="egvVoucherError" text="Please enter voucher number"/>
 <spring:theme code="text.addEgv.pin.error.message" var="egvPinError" text="Please enter pin number"/>
 <spring:theme code="text.addEGV.button.label" var="addEgvButton" text="ADD TO WALLET"/>   
-
 <form:form id="addToCardWalletFormId"  method="post" commandName="addToCardWalletForm">
 	<div>
 	<br/>
@@ -36,11 +35,11 @@
 		</div>
 		
 		<div class="col-sm-12 addMoreGiftVouchers clearfix">
-		<div id="redeemVoucherAlertId" class="alert alert-warning redeemVoucherAlert col-sm-4">
+		<div id="redeemVoucherAlertId" class="alert alert-warning redeemVoucherAlert redeemVoucherPopupAlert col-lg-4">
 				<span id="redeemVoucherError"></span>
 	   </div>
 			<!-- <span class="btn addVoucherBtn addMoreGiftVouchersBtn pull-left">Add Gift Voucher<span class="glyphicon glyphicon-plus"></span></span> -->
-			<span class="redeemToWalletBtn" onclick= "addEGVAjax();">${addEgvButton}</span>
+			<span class="redeemToWalletBtn addVoucherBtn addVoucherPopupBtn" onclick= "addEGVAjax();">${addEgvButton}</span>
 		</div>
 		<br />&nbsp;
 	</div>

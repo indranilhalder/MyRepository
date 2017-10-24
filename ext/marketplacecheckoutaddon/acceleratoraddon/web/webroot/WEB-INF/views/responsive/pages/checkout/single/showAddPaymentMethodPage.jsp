@@ -11,7 +11,6 @@
 <%@ taglib prefix="address" tagdir="/WEB-INF/tags/responsive/address" %>
 <%@ taglib prefix="cart" tagdir="/WEB-INF/tags/responsive/cart" %>
 <%@ taglib prefix="format" tagdir="/WEB-INF/tags/shared/format" %>
-
 <c:url value="${currentStepUrl}" var="choosePaymentMethodUrl" />
 <spring:url value="/checkout/multi/debitTermsAndConditions" var="getDebitTermsAndConditionsUrl"/>
 
@@ -237,7 +236,7 @@
 					<div class="addNewGiftCard">
 					
 					<div class="modal fade" id="singlePageAddEGVPopup">
-						<div class="content" style="padding: 40px;max-width: 650px;">
+						<div class="content">
 							<span id="modalBody"></span>
 							<!-- <button class="close" data-dismiss="modal"></button> -->
 						</div>
@@ -1674,7 +1673,7 @@
 									<!-- UF-281/282 Ends -->
 									
 									<!-- COD error messages ends -->
-										
+									<button type="button" class="button topPlaceOrderBtn"><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.paymentButton"/></button>
 										<div id="paymentFormButton" class="pay cont-del">	
 						<!-- Terms & Conditions Link -->
 
@@ -1687,8 +1686,7 @@
 									<div id="submitPaymentFormCODButton"  style="display:block;">	
 										<spring:theme code="checkout.multi.paymentMethod.codContinue" />
 									</div>
-								</button> 
-								<button type="button" class="button topPlaceOrderBtn"><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.paymentButton"/></button>
+								</button>
 								<%-- <p class="payment-redirect"><spring:theme code="text.secure.payment.gateway"/></p> --%>
 									
 							</div>

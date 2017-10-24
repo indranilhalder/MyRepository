@@ -77686,8 +77686,17 @@ background: url(../images/search_image.png) no-repeat;}
 
 /* Cliq Cash End */
 
-/* Add EGV TO Wallet */
+/* ADD GIFT POPUP */
+#singlePageAddEGVPopup .content {max-width: 600px;left: 2px;}
+.addVoucherPopupBtn, .addVoucherPopupBtn:hover {
+	padding: 10px 15px;
+	cursor: pointer;	
+}
 
+.redeemVoucherPopupAlert {display: none; font-size: small; margin-bottom: 2% !important;}
+
+
+/* Add EGV TO Wallet */
 .addGiftContainer {border: 1px solid #ddd;}
 	/* .addGiftVoucherSection {padding: 0 !important;}
 	.addGiftVoucherSub {padding: 0;} */
@@ -77698,7 +77707,7 @@ background: url(../images/search_image.png) no-repeat;}
 	  border: none !important;
 	  background-color: #ededed;
 	}
-	.addVoucherBtn, .addVoucherBtn:hover  {
+	.addVoucherBtn, .addVoucherBtn:hover, .addVoucherBtn:active  {
 	  max-width: 230px;
 	  height: 30px;
 	  border: none;
@@ -77728,7 +77737,7 @@ background: url(../images/search_image.png) no-repeat;}
 	
 	.addMoreGiftVouchersBtn {float: right;}
 	
-	.voucherHeadingTexts {padding-left: 0 !important;}
+	.voucherHeadingTexts {padding-left: 0 !important;color: black;text-align: left;font-size: small;}
 	.dividerVS {margin: 2%; border-bottom: none; border-top: 1px solid #ddd;}
 	
 	@media(min-width: 651px){
