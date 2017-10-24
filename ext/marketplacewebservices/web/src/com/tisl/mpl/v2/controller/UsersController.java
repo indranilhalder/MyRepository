@@ -6868,14 +6868,16 @@ public class UsersController extends BaseCommerceController
 					if (null != egvCart && null != egvCart.getIsEGVCart() && egvCart.getIsEGVCart().booleanValue())
 					{
 
-						orderCreateInJusPayWsDto = createJuspayOrderForEGV(firstName, lastName, country, state, city, pincode,
+						juspayOrderId = createJuspayOrderForEGV(firstName, lastName, country, state, city, pincode,
 								cardSaved, sameAsShipping, egvCart.getGuid(), returnUrlBuilder, paymentAddressLine1, paymentAddressLine2,
 								paymentAddressLine3, uid);
-						if (null != orderCreateInJusPayWsDto && null != orderCreateInJusPayWsDto.getJuspayOrderId())
+						 OrderModel order = getMplCheckoutFacade().placeEGVOrder(cart);
+						if (null != juspayOrderId && null != order)
 						{
 							orderCreateInJusPayWsDto.setJuspayMerchantId(juspayMerchantId);
 							orderCreateInJusPayWsDto.setJuspayReturnUrl(juspayReturnUrl);
 							orderCreateInJusPayWsDto.setJuspayOrderId(juspayOrderId);
+							orderCreateInJusPayWsDto.setOrderId(order.getCode());
 							orderCreateInJusPayWsDto.setStatus(MarketplacecommerceservicesConstants.SUCCESS_FLAG);
 						}
 						else
@@ -7137,6 +7139,36 @@ public class UsersController extends BaseCommerceController
 			}
 			else
 			{
+				
+				 //	Buying of EGV START
+				
+				if (null != orderModel.getIsEGVCart() && orderModel.getIsEGVCart().booleanValue())
+				{
+
+					juspayOrderId = createJuspayOrderForEGV(firstName, lastName, country, state, city, pincode,
+							cardSaved, sameAsShipping, orderModel.getGuid(), returnUrlBuilder, paymentAddressLine1, paymentAddressLine2,
+							paymentAddressLine3, uid);
+					// OrderModel order = getMplCheckoutFacade().placeEGVOrder(cart);
+					if (null != juspayOrderId)
+					{
+						orderCreateInJusPayWsDto.setJuspayMerchantId(juspayMerchantId);
+						orderCreateInJusPayWsDto.setJuspayReturnUrl(juspayReturnUrl);
+						orderCreateInJusPayWsDto.setJuspayOrderId(juspayOrderId);
+						orderCreateInJusPayWsDto.setOrderId(orderModel.getCode());
+						orderCreateInJusPayWsDto.setStatus(MarketplacecommerceservicesConstants.SUCCESS_FLAG);
+					}
+					else
+					{
+						orderCreateInJusPayWsDto.setStatus(MarketplacecommerceservicesConstants.FAILURE_FLAG);
+
+					}
+					return orderCreateInJusPayWsDto;
+
+				}
+				
+				//	Buying of EGV END
+				
+				
 				//TPR-4461 STARTS HERE WHEN ORDER MODEL IS NOT NULL
 				final ArrayList<DiscountModel> voucherList = new ArrayList<DiscountModel>(getVoucherService().getAppliedVouchers(
 						orderModel));
@@ -7354,31 +7386,31 @@ public class UsersController extends BaseCommerceController
 		return orderCreateInJusPayWsDto;
 	}
 
-	private OrderCreateInJusPayWsDto createJuspayOrderForEGV(final String firstName, final String lastName, final String country,
+	private String createJuspayOrderForEGV(final String firstName, final String lastName, final String country,
 			final String state, final String city, final String pincode, final String cardSaved, final String sameAsShipping,
 			final String guid, final StringBuilder returnUrlBuilder, final String paymentAddressLine1,
 			final String paymentAddressLine2, final String paymentAddressLine3, final String uid) throws InvalidCartException
 	{
 
-		final OrderCreateInJusPayWsDto juspayOrderWsDto = new OrderCreateInJusPayWsDto();
+		 String juspayOrderId=null;
 		try
 		{
 
 			final CartModel cart = mplEGVCartService.getEGVCartModel(guid);
 			LOG.info("::Going to Create Juspay OrderId::");
-			final String juspayOrderId = getMplPaymentFacade().createJuspayOrder(cart, null, firstName, lastName,
+			juspayOrderId = getMplPaymentFacade().createJuspayOrder(cart, null, firstName, lastName,
 					paymentAddressLine1, paymentAddressLine2, paymentAddressLine3, country, state, city, pincode,
 					cardSaved + MarketplacewebservicesConstants.STRINGSEPARATOR + sameAsShipping, returnUrlBuilder.toString(), uid,
 					MarketplacewebservicesConstants.CHANNEL_MOBILE, cart.getTotalPrice().doubleValue());
-			final OrderModel order = getMplCheckoutFacade().placeEGVOrder(cart);
-			if (null != order && null != order.getCode())
-			{
-				juspayOrderWsDto.setOrderId(order.getCode());
-			}
-			if (null != juspayOrderId)
-			{
-				juspayOrderWsDto.setJuspayOrderId(juspayOrderId);
-			}
+//			final OrderModel order = getMplCheckoutFacade().placeEGVOrder(cart);
+//			if (null != order && null != order.getCode())
+//			{
+//				juspayOrderWsDto.setOrderId(order.getCode());
+//			}
+//			if (null != juspayOrderId)
+//			{
+//				juspayOrderWsDto.setJuspayOrderId(juspayOrderId);
+//			}
 		}
 		catch (final EtailNonBusinessExceptions e)
 		{
@@ -7389,7 +7421,7 @@ public class UsersController extends BaseCommerceController
 			LOG.error("Exception Occurred while createJuspayOrderForEGV " + e.getMessage());
 		}
 
-		return juspayOrderWsDto;
+		return juspayOrderId;
 	}
 
 

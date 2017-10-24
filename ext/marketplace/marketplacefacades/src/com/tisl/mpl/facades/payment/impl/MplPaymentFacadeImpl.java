@@ -2968,8 +2968,14 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 			//Get payment modes
 			final List<PaymentTypeModel> paymentTypes = getMplPaymentService().getPaymentModes(store);
 			boolean flag = false;
+			boolean isEgvOrder=false;
+			
 			if (null != abstractOrderModel)
 			{
+				if(null != abstractOrderModel.getIsEGVCart() && abstractOrderModel.getIsEGVCart().booleanValue()){
+					
+					isEgvOrder=true;
+				}
 				for (final AbstractOrderEntryModel entry : abstractOrderModel.getEntries())
 				{
 					if (entry.getMplDeliveryMode() != null && entry.getMplDeliveryMode().getDeliveryMode() != null)
@@ -3000,6 +3006,11 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 					if (flag && mode.getMode().equalsIgnoreCase(MarketplaceFacadesConstants.PAYMENT_METHOS_COD))
 					{
 						LOG.debug("Ignoring to add COD payment for CNC Product ");
+					}
+					else if (isEgvOrder && (mode.getMode().equalsIgnoreCase(MarketplaceFacadesConstants.PAYMENT_METHOS_COD) || 
+							mode.getMode().equalsIgnoreCase(MarketplaceFacadesConstants.PAYMENT_METHOD_CLIQ_CASH)))
+					{
+						LOG.debug("Ignoring to add "+mode.getMode()+" payment for EGV Order ");
 					}
 					else
 					{
