@@ -215,6 +215,7 @@
 								<c:forEach items="${debitCards}" var="debitCard" varStatus="debitStatus">
 									<li>
 										<!--  CARD DETAILS -->
+										<!--  SDI-1561 -->
 										<div class="number paymentItem">
 											<c:choose>
 												<c:when test="${fn:escapeXml(debitCard.value.cardBrand) eq 'VISA'}">
@@ -223,7 +224,7 @@
 												<c:when test="${fn:escapeXml(debitCard.value.cardBrand) eq 'MASTERCARD'}">
 													<img src="${commonResourcePath}/images/Master_Card.png">
 												</c:when>
-												<!--  SDI-1561 -->
+												
 												<c:when test="${fn:escapeXml(creditCard.value.cardIssuer) eq 'DINERS'}">
 													<img src="${commonResourcePath}/images/dinner_club.png">
 												</c:when>
@@ -298,7 +299,7 @@
 																test="${fn:escapeXml(debitCard.value.cardBrand) eq 'MASTERCARD'}">
 																<img src="${commonResourcePath}/images/Master_Card.png">
 															</c:when>
-															<!--  SDI-1561 -->
+															
 												<c:when
 													test="${fn:escapeXml(creditCard.value.cardIssuer) eq 'DINERS'}">
 													<img src="${commonResourcePath}/images/dinner_club.png">
