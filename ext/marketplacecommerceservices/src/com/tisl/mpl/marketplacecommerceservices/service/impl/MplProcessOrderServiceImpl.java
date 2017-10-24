@@ -232,7 +232,7 @@ public class MplProcessOrderServiceImpl implements MplProcessOrderService
 									LOG.debug("latest Juspay Event Success");
 									//commented for CAR:127
 									//takeActionAgainstOrder(latestSuccess, orderModel, true);
-									if (null == orderModel.getChildOrders())
+									if (CollectionUtils.isEmpty(orderModel.getChildOrders()))
 									{
 										takeActionAgainstOrder(latestSuccess, orderModel, true, orderData);
 									}
@@ -250,7 +250,7 @@ public class MplProcessOrderServiceImpl implements MplProcessOrderService
 											+ "  one Parent ID already been processed.  this is duplicate Order ID");
 									LOG.error("Hence , changing the Order to Payment Failed");
 
-									if (null == orderModel.getChildOrders())
+									if (CollectionUtils.isEmpty(orderModel.getChildOrders()))
 									{
 										getOrderStatusSpecifier().setOrderStatus(orderModel, OrderStatus.PAYMENT_TIMEOUT);
 									}
@@ -308,7 +308,7 @@ public class MplProcessOrderServiceImpl implements MplProcessOrderService
 
 							}
 
-							if (null == orderModel.getChildOrders())
+							if (CollectionUtils.isEmpty(orderModel.getChildOrders()))
 							{
 								getOrderStatusSpecifier().setOrderStatus(orderModel, OrderStatus.PAYMENT_TIMEOUT);
 							}
@@ -567,7 +567,7 @@ public class MplProcessOrderServiceImpl implements MplProcessOrderService
 							MarketplacecommerceservicesConstants.OMS_INVENTORY_RESV_TYPE_ORDERDEALLOCATE, defaultPinCode, orderModel,
 							null, SalesApplication.WEB);
 
-					if (null == orderModel.getChildOrders())
+					if (CollectionUtils.isEmpty(orderModel.getChildOrders()))
 					{
 						getOrderStatusSpecifier().setOrderStatus(orderModel, OrderStatus.PAYMENT_FAILED);
 					}

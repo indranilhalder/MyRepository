@@ -30,9 +30,9 @@ public class MplProcessOrderDaoImpl implements MplProcessOrderDao
 	private FlexibleSearchService flexibleSearchService;
 
 	/*
-	 * 
+	 *
 	 * (non-Javadoc) //PaymentFix2017:- queryTAT added
-	 * 
+	 *
 	 * @see com.tisl.mpl.marketplacecommerceservices.daos.MplProcessOrderDao#getPaymentPedingOrders()
 	 */
 	@Override
@@ -48,7 +48,7 @@ public class MplProcessOrderDaoImpl implements MplProcessOrderDao
 			orderListQuery.addQueryParameter(MarketplacecommerceservicesConstants.PAYMENTPENDINGSTATUS, statusCode);
 			orderListQuery.addQueryParameter(MarketplacecommerceservicesConstants.PAYMENTPENDINGSKIPTIME, queryTAT);
 			orderListQuery.addQueryParameter(MarketplacecommerceservicesConstants.ORDERTYPE,
-					MarketplacecommerceservicesConstants.PARENT);
+					MarketplacecommerceservicesConstants.PARENTORDER);
 
 			//fetching PAYMENT PENDING order list from DB using flexible search query
 			final List<OrderModel> orderList = getFlexibleSearchService().<OrderModel> search(orderListQuery).getResult();
