@@ -106,4 +106,9 @@ public interface PincodeServiceFacade
 	 */
 	public List<PointOfServiceData> getAllReturnableStores(String pincode, String sellerId);
 
+	public List<PointOfServiceData> getProductWdPosCommerce(final List<StoreLocationRequestData> storeLocationRequestDataList,
+			final String pincode);
+
+	public List<PointOfServiceData> getProductWdPos(final List<StoreLocationResponseData> response, final String pincode);
+
 }

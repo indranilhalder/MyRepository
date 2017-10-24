@@ -77,7 +77,6 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
-import java.math.RoundingMode;
 import java.net.HttpURLConnection;
 import java.net.InetSocketAddress;
 import java.net.Proxy;
@@ -153,7 +152,6 @@ import com.tisl.mpl.facade.product.SizeGuideFacade;
 import com.tisl.mpl.facade.product.impl.CustomProductFacadeImpl;
 import com.tisl.mpl.facades.MplSlaveMasterFacade;
 import com.tisl.mpl.facades.constants.MarketplaceFacadesConstants;
-import com.tisl.mpl.facades.data.ATSResponseData;
 import com.tisl.mpl.facades.data.MplAjaxProductData;
 import com.tisl.mpl.facades.data.StoreLocationRequestData;
 import com.tisl.mpl.facades.data.StoreLocationResponseData;
@@ -584,7 +582,7 @@ public class ProductPageController extends MidPageController
 				 * final String metaTitle = productData.getSeoMetaTitle(); final String pdCode = productData.getCode();
 				 * final String metaDescription = productData.getSeoMetaDescription(); //TISPRD-4977 final String
 				 * metaKeyword = productData.getSeoMetaKeyword(); //final String metaKeywords = productData.gets
-				 * 
+				 *
 				 * setUpMetaData(model, metaDescription, metaTitle, pdCode, metaKeyword);
 				 */
 				//AKAMAI fix
@@ -1392,6 +1390,7 @@ public class ProductPageController extends MidPageController
 						pincodeResponse = pinCodeFacade.getResonseForPinCode(productCode, pin,
 								pincodeServiceFacade.populatePinCodeServiceData(productCode, myLocation.getGPS()));
 						sessionService.setAttribute(MarketplacecommerceservicesConstants.PINCODE_RESPONSE_DATA_PDP, pincodeResponse);
+						sessionService.setAttribute(MarketplacecommerceservicesConstants.PINCODE_MODEL_PDP, pinCodeModelObj);
 						return pincodeResponse;
 					}
 					catch (final Exception e)
@@ -2909,11 +2908,11 @@ public class ProductPageController extends MidPageController
 	 */
 	/*
 	 * private MarketplaceDeliveryModeData fetchDeliveryModeDataForUSSID(final String deliveryMode, final String ussid) {
-	 * 
+	 *
 	 * final MarketplaceDeliveryModeData deliveryModeData = new MarketplaceDeliveryModeData(); final
 	 * MplZoneDeliveryModeValueModel mplZoneDeliveryModeValueModel = mplCheckoutFacade
 	 * .populateDeliveryCostForUSSIDAndDeliveryMode(deliveryMode, MarketplaceFacadesConstants.INR, ussid);
-	 * 
+	 *
 	 * final PriceData priceData = productDetailsHelper.formPriceData(mplZoneDeliveryModeValueModel.getValue());
 	 * deliveryModeData.setCode(mplZoneDeliveryModeValueModel.getDeliveryMode().getCode());
 	 * deliveryModeData.setDescription(mplZoneDeliveryModeValueModel.getDeliveryMode().getDescription());
@@ -2933,76 +2932,76 @@ public class ProductPageController extends MidPageController
 	 */
 	/*
 	 * private List<PincodeServiceData> populatePinCodeServiceData(final String productCode) {
-	 * 
-	 * 
-	 * 
+	 *
+	 *
+	 *
 	 * final List<PincodeServiceData> requestData = new ArrayList<>(); PincodeServiceData data = null;
-	 * 
+	 *
 	 * MarketplaceDeliveryModeData deliveryModeData = null; try { final ProductModel productModel =
-	 * 
-	 * 
+	 *
+	 *
 	 * productService.getProductForCode(productCode); final ProductData productData =
-	 * 
+	 *
 	 * productFacade.getProductForOptions(productModel, Arrays.asList(ProductOption.BASIC, ProductOption.SELLER,
 	 * ProductOption.PRICE));
-	 * 
-	 * 
+	 *
+	 *
 	 * for (final SellerInformationData seller : productData.getSeller()) { final List<MarketplaceDeliveryModeData>
-	 * 
+	 *
 	 * deliveryModeList = new ArrayList<MarketplaceDeliveryModeData>(); data = new PincodeServiceData(); if ((null !=
-	 * 
+	 *
 	 * seller.getDeliveryModes()) && !(seller.getDeliveryModes().isEmpty())) { for (final MarketplaceDeliveryModeData
-	 * 
+	 *
 	 * deliveryMode : seller.getDeliveryModes()) { deliveryModeData =
-	 * 
+	 *
 	 * fetchDeliveryModeDataForUSSID(deliveryMode.getCode(), seller.getUssid()); deliveryModeList.add(deliveryModeData);
-	 * 
-	 * 
+	 *
+	 *
 	 * } data.setDeliveryModes(deliveryModeList); } if (null != seller.getFullfillment() &&
-	 * 
+	 *
 	 * StringUtils.isNotEmpty(seller.getFullfillment())) {
-	 * 
+	 *
 	 * data.setFullFillmentType(MplGlobalCodeConstants.GLOBALCONSTANTSMAP.get(seller.getFullfillment().toUpperCase())); }
-	 * 
+	 *
 	 * if (null != seller.getShippingMode() && (StringUtils.isNotEmpty(seller.getShippingMode()))) {
-	 * 
+	 *
 	 * data.setTransportMode(MplGlobalCodeConstants.GLOBALCONSTANTSMAP.get(seller.getShippingMode().toUpperCase())); } if
-	 * 
+	 *
 	 * (null != seller.getSpPrice() && !(seller.getSpPrice().equals(ModelAttributetConstants.EMPTY))) { data.setPrice(new
-	 * 
+	 *
 	 * Double(seller.getSpPrice().getValue().doubleValue())); } else if (null != seller.getMopPrice() &&
-	 * 
+	 *
 	 * !(seller.getMopPrice().equals(ModelAttributetConstants.EMPTY))) { data.setPrice(new
-	 * 
+	 *
 	 * Double(seller.getMopPrice().getValue().doubleValue())); } else if (null != seller.getMrpPrice() &&
-	 * 
+	 *
 	 * !(seller.getMrpPrice().equals(ModelAttributetConstants.EMPTY))) { data.setPrice(new
-	 * 
+	 *
 	 * Double(seller.getMrpPrice().getValue().doubleValue())); } else {
-	 * 
-	 * 
-	 * 
+	 *
+	 *
+	 *
 	 * LOG.info("*************** No price avaiable for seller :" + seller.getSellerID()); continue; } if (null !=
-	 * 
-	 * 
+	 *
+	 *
 	 * seller.getIsCod() && StringUtils.isNotEmpty(seller.getIsCod())) { data.setIsCOD(seller.getIsCod()); }
-	 * 
-	 * 
-	 * 
+	 *
+	 *
+	 *
 	 * data.setSellerId(seller.getSellerID()); data.setUssid(seller.getUssid());
-	 * 
+	 *
 	 * data.setIsDeliveryDateRequired(ControllerConstants.Views.Fragments.Product.N); requestData.add(data); } } catch
-	 * 
-	 * 
-	 * 
-	 * 
-	 * 
+	 *
+	 *
+	 *
+	 *
+	 *
 	 * (final EtailBusinessExceptions e) { ExceptionUtil.etailBusinessExceptionHandler(e, null); }
-	 * 
-	 * 
-	 * 
+	 *
+	 *
+	 *
 	 * catch (final Exception e) {
-	 * 
+	 *
 	 * throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000); } return requestData; }
 	 */
 
@@ -4000,35 +3999,40 @@ public class ProductPageController extends MidPageController
 		List<PointOfServiceData> posDatas = new ArrayList<>();
 		List<StoreLocationResponseData> omsResponse = new ArrayList<StoreLocationResponseData>();
 		List<StoreLocationRequestData> storeLocationRequestDataList = new ArrayList<StoreLocationRequestData>();
+		Boolean active = null;
 		try
 		{
-			//call service to get list of ATS and ussid
-			try
+			active = configurationService.getConfiguration().getBoolean(MarketplacecommerceservicesConstants.STORE_DISPLAY_PDP,
+					Boolean.FALSE);
+			if (active)
 			{
-				omsResponse = pincodeServiceFacade.getListofStoreLocationsforPincode(pincode, ussId, productCode);
-				if (omsResponse.size() > 0)
+				//call service to get list of ATS and ussid
+				try
 				{
-					posDatas = getProductWdPos(omsResponse, pincode);
-					//mplProductFacade.storeLocatorFilterdPDP(pincode, ussId);
-				}
-			}
-			catch (final ClientEtailNonBusinessExceptions e)
-			{
-				LOG.error("::::::Exception in calling OMS Pincode service:::::::::" + e.getErrorCode());
-				if (null != e.getErrorCode()
-						&& ("O0001".equalsIgnoreCase(e.getErrorCode()) || "O0002".equalsIgnoreCase(e.getErrorCode()) || "O0007"
-								.equalsIgnoreCase(e.getErrorCode())))
-				{
-					storeLocationRequestDataList = pincodeServiceFacade.getStoresFromCommerce(pincode, ussId);
-					if (storeLocationRequestDataList.size() > 0)
+					omsResponse = pincodeServiceFacade.getListofStoreLocationsforPincode(pincode, ussId, productCode);
+					if (CollectionUtils.isNotEmpty(omsResponse))
 					{
-						//populates oms response to data object
-						posDatas = getProductWdPosCommerce(storeLocationRequestDataList, pincode);
+						posDatas = pincodeServiceFacade.getProductWdPos(omsResponse, pincode);
 					}
 				}
+				catch (final ClientEtailNonBusinessExceptions e)
+				{
+					LOG.error("::::::Exception in calling OMS Pincode service:::::::::" + e.getErrorCode());
+					if (null != e.getErrorCode()
+							&& ("O0001".equalsIgnoreCase(e.getErrorCode()) || "O0002".equalsIgnoreCase(e.getErrorCode()) || "O0007"
+									.equalsIgnoreCase(e.getErrorCode())))
+					{
+						storeLocationRequestDataList = pincodeServiceFacade.getStoresFromCommerce(pincode, ussId);
+						if (CollectionUtils.isNotEmpty(storeLocationRequestDataList))
+						{
+							//populates commerce response to data object
+							posDatas = pincodeServiceFacade.getProductWdPosCommerce(storeLocationRequestDataList, pincode);
+						}
+					}
+				}
+				//sorting posdata
+				Collections.sort(posDatas, (a, b) -> a.getDistanceKm().compareTo(b.getDistanceKm()));
 			}
-			//sorting posdata
-			Collections.sort(posDatas, (a, b) -> a.getDistanceKm().compareTo(b.getDistanceKm()));
 			model.addAttribute(ControllerConstants.Views.Fragments.Product.STORE_AVAIL, posDatas);
 		}
 		catch (final EtailBusinessExceptions e)
@@ -4043,167 +4047,5 @@ public class ProductPageController extends MidPageController
 		return ControllerConstants.Views.Fragments.Product.StoreLocatorPopup;
 	}
 
-	/**
-	 * @author TCS This method populates List of Ats and ussid to the data object.
-	 * @param response
-	 * @return list of pos with product.
-	 */
-	@SuppressWarnings("boxing")
-	private List<PointOfServiceData> getProductWdPos(final List<StoreLocationResponseData> response, final String pincode)
-	{
-		if (LOG.isDebugEnabled())
-		{
-			LOG.debug("from getProductWdPos method which gets product with pos");
-		}
-		final List<PointOfServiceData> posDataList = new ArrayList<PointOfServiceData>();
-		//iterate over oms response
-		Double distance = 0d;
-		final List<PointOfServiceModel> posModelList = new ArrayList<PointOfServiceModel>();
-		try
-		{
-			for (final StoreLocationResponseData storeLocationResponseData : response)
-			{
-				final String ussId = storeLocationResponseData.getUssId();
-				final String pincodeSellerId = ussId.substring(0, 6);
-				//get stores from commerce
-				if (LOG.isDebugEnabled())
-				{
-					LOG.debug("Get stores from commerce");
-				}
-				for (final ATSResponseData atsResponseData : storeLocationResponseData.getAts())
-				{
-					PointOfServiceModel posModel = null;
-					final int availableQty = atsResponseData.getQuantity();
-					if (availableQty >= 1)
-					{
-						posModel = mplSlaveMasterFacade.findPOSBySellerAndSlave(pincodeSellerId, atsResponseData.getStoreId());
-						if (null != posModel)
-						{
-							posModelList.add(posModel);
-						}
-					}
-				}
-			}
-			//get stores from commerce from ats response
-			if (CollectionUtils.isNotEmpty(posModelList))
-			{
-				final PincodeModel pinCodeModelObj = pincodeServiceFacade.getLatAndLongForPincode(pincode);
-				final LocationDTO dto = new LocationDTO();
-				Location myLocation = null;
-				if (null != pinCodeModelObj)
-				{
-					try
-					{
-						dto.setLongitude(pinCodeModelObj.getLongitude().toString());
-						dto.setLatitude(pinCodeModelObj.getLatitude().toString());
-						myLocation = new LocationDtoWrapper(dto);
-						LOG.debug("Selected Location for Latitude:" + myLocation.getGPS().getDecimalLatitude());
-						LOG.debug("Selected Location for Longitude:" + myLocation.getGPS().getDecimalLongitude());
-						//populate model to data
-						for (final PointOfServiceModel pointOfServiceModel : posModelList)
-						{
-							PointOfServiceData posData = new PointOfServiceData();
-							if (null != pointOfServiceModel)
-							{
-								posData = pointOfServiceConverter.convert(pointOfServiceModel);
-								distance = pincodeService.calculateDistance(myLocation.getGPS(), pointOfServiceModel);
-								posData.setDistanceKm(new BigDecimal(distance.doubleValue()).setScale(2, RoundingMode.HALF_UP)
-										.doubleValue());
-								posData.setStatus(MarketplacecommerceservicesConstants.KM);
-								posDataList.add(posData);
-							}
-						}
-					}
-					catch (final Exception e)
-					{
-						LOG.error(e);
-					}
-				}
 
-			}
-		}
-		catch (final Exception e)
-		{
-			LOG.error(e);
-		}
-		return posDataList;
-	}
-
-	/**
-	 * @author TECH This method populates List of stores and product to the data object if oms is down.
-	 * @param storeLocationRequestDataList
-	 * @return list of product with stores
-	 */
-	@SuppressWarnings("boxing")
-	private List<PointOfServiceData> getProductWdPosCommerce(final List<StoreLocationRequestData> storeLocationRequestDataList,
-			final String pincode)
-	{
-		if (LOG.isDebugEnabled())
-		{
-			LOG.debug("from getProductWdPos method if oms is down which gets product with pos");
-		}
-		final List<PointOfServiceModel> posModelList = new ArrayList<PointOfServiceModel>();
-		final List<PointOfServiceData> posDataList = new ArrayList<PointOfServiceData>();
-		Double distance = 0d;
-		try
-		{
-			for (final StoreLocationRequestData storeLocationRequestData : storeLocationRequestDataList)
-			{
-
-				final String ussId = storeLocationRequestData.getUssId();
-				final String pincodeSellerId = ussId.substring(0, 6);
-				if (null != storeLocationRequestData.getStoreId())
-				{
-					for (int i = 0; i < storeLocationRequestData.getStoreId().size(); i++)
-					{
-						final PointOfServiceModel posModel = mplSlaveMasterFacade.findPOSBySellerAndSlave(pincodeSellerId,
-								storeLocationRequestData.getStoreId().get(i));
-						posModelList.add(posModel);
-					}
-				}
-			}
-			//get stores from commerce from ats response
-			if (CollectionUtils.isNotEmpty(posModelList))
-			{
-				final PincodeModel pinCodeModelObj = pincodeServiceFacade.getLatAndLongForPincode(pincode);
-				final LocationDTO dto = new LocationDTO();
-				Location myLocation = null;
-				if (null != pinCodeModelObj)
-				{
-					try
-					{
-						dto.setLongitude(pinCodeModelObj.getLongitude().toString());
-						dto.setLatitude(pinCodeModelObj.getLatitude().toString());
-						myLocation = new LocationDtoWrapper(dto);
-						LOG.debug("Selected Location for Latitude:" + myLocation.getGPS().getDecimalLatitude());
-						LOG.debug("Selected Location for Longitude:" + myLocation.getGPS().getDecimalLongitude());
-						for (final PointOfServiceModel pointOfServiceModel : posModelList)
-						{
-							//prepare pos data objects
-							PointOfServiceData posData = new PointOfServiceData();
-							if (null != pointOfServiceModel)
-							{
-								posData = pointOfServiceConverter.convert(pointOfServiceModel);
-								distance = pincodeService.calculateDistance(myLocation.getGPS(), pointOfServiceModel);
-								posData.setDistanceKm(new BigDecimal(distance.doubleValue()).setScale(2, RoundingMode.HALF_UP)
-										.doubleValue());
-								posData.setStatus(MarketplacecommerceservicesConstants.KM);
-								posDataList.add(posData);
-							}
-						}
-					}
-					catch (final Exception e)
-					{
-						LOG.error(e);
-					}
-				}
-			}
-
-		}
-		catch (final Exception e)
-		{
-			LOG.error(e);
-		}
-		return posDataList;
-	}
 }
