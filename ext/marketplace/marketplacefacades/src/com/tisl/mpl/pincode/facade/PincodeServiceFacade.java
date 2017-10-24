@@ -106,14 +106,4 @@ public interface PincodeServiceFacade
 	 */
 	public List<PointOfServiceData> getAllReturnableStores(String pincode, String sellerId);
 
-	/**
-	 * Get all available Stores for Seller to return products at store
-	 *
-	 * @param pincode
-	 * @param ussId
-	 * @param productCode
-	 * @return List<PointOfServiceData>
-	 */
-	public List<PointOfServiceData> getStoresSortedByDistance(final String pincode, final String sellerUssId);
-
 }

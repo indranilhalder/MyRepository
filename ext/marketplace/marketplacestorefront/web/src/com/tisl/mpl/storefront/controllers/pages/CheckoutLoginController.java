@@ -51,6 +51,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.tisl.lux.facade.CommonUtils;
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.exception.EtailBusinessExceptions;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
@@ -100,6 +101,9 @@ public class CheckoutLoginController extends AbstractLoginPageController
 
 	@Resource(name = "registerPageValidator")
 	private RegisterPageValidator registerPageValidator;
+
+	@Autowired
+	private CommonUtils commonUtils;
 
 	/**
 	 * @return the resourceBreadcrumbBuilder
@@ -244,7 +248,15 @@ public class CheckoutLoginController extends AbstractLoginPageController
 				GlobalMessages.addErrorMessage(model, "login.error.account.not.found.title");
 			}
 
-			return getView();
+			if (commonUtils.isLuxurySite())
+			{
+				return "redirect:/?showPopup=true";
+			}
+			else
+			{
+				return getView();
+			}
+
 		}
 		catch (final EtailBusinessExceptions e)
 		{

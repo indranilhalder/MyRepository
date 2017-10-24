@@ -128,6 +128,7 @@ import com.google.gson.Gson;
 import com.granule.json.JSON;
 import com.granule.json.JSONArray;
 import com.granule.json.JSONObject;
+import com.tisl.lux.facade.CommonUtils;
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.constants.MplConstants;
 import com.tisl.mpl.constants.MplConstants.USER;
@@ -377,6 +378,10 @@ public class ProductPageController extends MidPageController
 	@Resource(name = "pointOfServiceConverter")
 	private Converter<PointOfServiceModel, PointOfServiceData> pointOfServiceConverter;
 
+	@Autowired
+	private CommonUtils commonUtils;
+
+
 	//SONAR FIX JEWELLERY
 	//	@Resource(name = "jewelleryDescMapping")
 	//	private Map<String, String> jewelleryDescMapping;
@@ -587,7 +592,7 @@ public class ProductPageController extends MidPageController
 				 * final String metaTitle = productData.getSeoMetaTitle(); final String pdCode = productData.getCode();
 				 * final String metaDescription = productData.getSeoMetaDescription(); //TISPRD-4977 final String
 				 * metaKeyword = productData.getSeoMetaKeyword(); //final String metaKeywords = productData.gets
-				 * 
+				 *
 				 * setUpMetaData(model, metaDescription, metaTitle, pdCode, metaKeyword);
 				 */
 				//AKAMAI fix
@@ -1122,7 +1127,7 @@ public class ProductPageController extends MidPageController
 						//Critical Sonar Fix
 						//fix for INC144314955
 						//final double roundedOffValuebefore = Math.round(savingPriceCalPer * 100.0) / 100.0;
-						final double roundedOffValuebefore = Math.floor((savingPriceCalPer * 100.0) / 100.0);
+						final double roundedOffValuebefore = Math.ceil((savingPriceCalPer * 100.0) / 100.0);
 						final BigDecimal roundedOffValue = new BigDecimal((int) roundedOffValuebefore);
 
 						buyboxJson.put(ControllerConstants.Views.Fragments.Product.SAVINGONPRODUCT, roundedOffValue);
@@ -1134,7 +1139,7 @@ public class ProductPageController extends MidPageController
 						//Critical Sonar Fix
 						//fix for INC144314955
 						//final double roundedOffValuebefore = Math.round(savingPriceCalPer * 100.0) / 100.0;
-						final double roundedOffValuebefore = Math.floor((savingPriceCalPer * 100.0) / 100.0);
+						final double roundedOffValuebefore = Math.ceil((savingPriceCalPer * 100.0) / 100.0);
 						final BigDecimal roundedOffValue = new BigDecimal((int) roundedOffValuebefore);
 						buyboxJson.put(ControllerConstants.Views.Fragments.Product.SAVINGONPRODUCT, roundedOffValue);
 					}
@@ -1579,10 +1584,22 @@ public class ProductPageController extends MidPageController
 			model.addAttribute(ModelAttributetConstants.PRODUCT_CATEGORY_TYPE, productModel.getProductCategoryType());
 			model.addAttribute(PRODUCT_SIZE_TYPE, productDetailsHelper.getSizeType(productModel));
 			setUpMetaData(model, metaDescription, metaTitle, pdCode, metaKeyword);
-			final String googleClientid = configurationService.getConfiguration().getString("google.data-clientid");
-			final String facebookAppid = configurationService.getConfiguration().getString("facebook.app_id");
-			model.addAttribute(ModelAttributetConstants.GOOGLECLIENTID, googleClientid);
-			model.addAttribute(ModelAttributetConstants.FACEBOOKAPPID, facebookAppid);
+
+
+			if (commonUtils.isLuxurySite())
+			{
+				final String googleClientid = configurationService.getConfiguration().getString("lux.google.data-clientid");
+				final String facebookAppid = configurationService.getConfiguration().getString("lux.facebook.app_id");
+				model.addAttribute(ModelAttributetConstants.GOOGLECLIENTID, googleClientid);
+				model.addAttribute(ModelAttributetConstants.FACEBOOKAPPID, facebookAppid);
+			}
+			else
+			{
+				final String googleClientid = configurationService.getConfiguration().getString("google.data-clientid");
+				final String facebookAppid = configurationService.getConfiguration().getString("facebook.app_id");
+				model.addAttribute(ModelAttributetConstants.GOOGLECLIENTID, googleClientid);
+				model.addAttribute(ModelAttributetConstants.FACEBOOKAPPID, facebookAppid);
+			}
 			populateTealiumData(productData, model, breadcrumbList);
 			//AKAMAI fix
 			if (productModel instanceof PcmProductVariantModel)
@@ -1758,11 +1775,21 @@ public class ProductPageController extends MidPageController
 			final String sharePath = configurationService.getConfiguration().getString("social.share.path");
 			model.addAttribute(ModelAttributetConstants.EMI_CUTTOFFAMOUNT, emiCuttOffAmount);
 			model.addAttribute(ModelAttributetConstants.SHARED_PATH, sharePath);
-			final String googleClientid = configurationService.getConfiguration().getString("google.data-clientid");
-			final String facebookAppid = configurationService.getConfiguration().getString("facebook.app_id");
+			if (commonUtils.isLuxurySite())
+			{
+				final String googleClientid = configurationService.getConfiguration().getString("lux.google.data-clientid");
+				final String facebookAppid = configurationService.getConfiguration().getString("lux.facebook.app_id");
+				model.addAttribute(ModelAttributetConstants.GOOGLECLIENTID, googleClientid);
+				model.addAttribute(ModelAttributetConstants.FACEBOOKAPPID, facebookAppid);
+			}
+			else
+			{
+				final String googleClientid = configurationService.getConfiguration().getString("google.data-clientid");
+				final String facebookAppid = configurationService.getConfiguration().getString("facebook.app_id");
+				model.addAttribute(ModelAttributetConstants.GOOGLECLIENTID, googleClientid);
+				model.addAttribute(ModelAttributetConstants.FACEBOOKAPPID, facebookAppid);
+			}
 			model.addAttribute(PRODUCT_SIZE_TYPE, productDetailsHelper.getSizeType(productModel));
-			model.addAttribute(ModelAttributetConstants.GOOGLECLIENTID, googleClientid);
-			model.addAttribute(ModelAttributetConstants.FACEBOOKAPPID, facebookAppid);
 
 			//AKAMAI fix
 			if (productModel instanceof PcmProductVariantModel)
@@ -2151,8 +2178,20 @@ public class ProductPageController extends MidPageController
 			final String emiCuttOffAmount = configurationService.getConfiguration().getString("marketplace.emiCuttOffAmount");
 			final String cliqCareNumber = configurationService.getConfiguration().getString("cliq.care.number");
 			final String cliqCareMail = configurationService.getConfiguration().getString("cliq.care.mail");
-			final String googleClientid = configurationService.getConfiguration().getString("google.data-clientid");
-			final String facebookAppid = configurationService.getConfiguration().getString("facebook.app_id");
+			if (commonUtils.isLuxurySite())
+			{
+				final String googleClientid = configurationService.getConfiguration().getString("lux.google.data-clientid");
+				final String facebookAppid = configurationService.getConfiguration().getString("lux.facebook.app_id");
+				model.addAttribute(ModelAttributetConstants.GOOGLECLIENTID, googleClientid);
+				model.addAttribute(ModelAttributetConstants.FACEBOOKAPPID, facebookAppid);
+			}
+			else
+			{
+				final String googleClientid = configurationService.getConfiguration().getString("google.data-clientid");
+				final String facebookAppid = configurationService.getConfiguration().getString("facebook.app_id");
+				model.addAttribute(ModelAttributetConstants.GOOGLECLIENTID, googleClientid);
+				model.addAttribute(ModelAttributetConstants.FACEBOOKAPPID, facebookAppid);
+			}
 			LOG.debug("===========After step3 block=================");
 			/* Configurable tabs to be displayed in the PDP page */
 			model.addAttribute(ModelAttributetConstants.VALID_TABS, validTabs);
@@ -2177,8 +2216,8 @@ public class ProductPageController extends MidPageController
 					((cliqCareNumber == null || cliqCareNumber.isEmpty()) ? CUSTOMER_CARE_NUMBER : cliqCareNumber));
 			model.addAttribute(ModelAttributetConstants.CLIQCAREMAIL,
 					((cliqCareMail == null || cliqCareMail.isEmpty()) ? CUSTOMER_CARE_EMAIL : cliqCareMail));
-			model.addAttribute(ModelAttributetConstants.GOOGLECLIENTID, googleClientid);
-			model.addAttribute(ModelAttributetConstants.FACEBOOKAPPID, facebookAppid);
+
+
 			model.addAttribute(PRODUCT_SIZE_TYPE, productDetailsHelper.getSizeType(productModel));
 			final String metaDescription = productData.getSeoMetaDescription();
 			final String metaTitle = productData.getSeoMetaTitle();
@@ -2377,7 +2416,8 @@ public class ProductPageController extends MidPageController
 						{
 							final String properitsValue = configurationService.getConfiguration().getString(
 									ModelAttributetConstants.CONFIGURABLE_ATTRIBUTE + productData.getRootCategory());
-							final String descValues = configurationService.getConfiguration().getString(
+
+							final String descValues = getSiteConfigService().getProperty(
 									ModelAttributetConstants.DESC_PDP_PROPERTIES + productData.getRootCategory());
 							//for jwl certification
 							final String certificationValue = configurationService.getConfiguration().getString(
@@ -2911,11 +2951,11 @@ public class ProductPageController extends MidPageController
 	 */
 	/*
 	 * private MarketplaceDeliveryModeData fetchDeliveryModeDataForUSSID(final String deliveryMode, final String ussid) {
-	 * 
+	 *
 	 * final MarketplaceDeliveryModeData deliveryModeData = new MarketplaceDeliveryModeData(); final
 	 * MplZoneDeliveryModeValueModel mplZoneDeliveryModeValueModel = mplCheckoutFacade
 	 * .populateDeliveryCostForUSSIDAndDeliveryMode(deliveryMode, MarketplaceFacadesConstants.INR, ussid);
-	 * 
+	 *
 	 * final PriceData priceData = productDetailsHelper.formPriceData(mplZoneDeliveryModeValueModel.getValue());
 	 * deliveryModeData.setCode(mplZoneDeliveryModeValueModel.getDeliveryMode().getCode());
 	 * deliveryModeData.setDescription(mplZoneDeliveryModeValueModel.getDeliveryMode().getDescription());
@@ -2935,76 +2975,76 @@ public class ProductPageController extends MidPageController
 	 */
 	/*
 	 * private List<PincodeServiceData> populatePinCodeServiceData(final String productCode) {
-	 * 
-	 * 
-	 * 
+	 *
+	 *
+	 *
 	 * final List<PincodeServiceData> requestData = new ArrayList<>(); PincodeServiceData data = null;
-	 * 
+	 *
 	 * MarketplaceDeliveryModeData deliveryModeData = null; try { final ProductModel productModel =
-	 * 
-	 * 
+	 *
+	 *
 	 * productService.getProductForCode(productCode); final ProductData productData =
-	 * 
+	 *
 	 * productFacade.getProductForOptions(productModel, Arrays.asList(ProductOption.BASIC, ProductOption.SELLER,
 	 * ProductOption.PRICE));
-	 * 
-	 * 
+	 *
+	 *
 	 * for (final SellerInformationData seller : productData.getSeller()) { final List<MarketplaceDeliveryModeData>
-	 * 
+	 *
 	 * deliveryModeList = new ArrayList<MarketplaceDeliveryModeData>(); data = new PincodeServiceData(); if ((null !=
-	 * 
+	 *
 	 * seller.getDeliveryModes()) && !(seller.getDeliveryModes().isEmpty())) { for (final MarketplaceDeliveryModeData
-	 * 
+	 *
 	 * deliveryMode : seller.getDeliveryModes()) { deliveryModeData =
-	 * 
+	 *
 	 * fetchDeliveryModeDataForUSSID(deliveryMode.getCode(), seller.getUssid()); deliveryModeList.add(deliveryModeData);
-	 * 
-	 * 
+	 *
+	 *
 	 * } data.setDeliveryModes(deliveryModeList); } if (null != seller.getFullfillment() &&
-	 * 
+	 *
 	 * StringUtils.isNotEmpty(seller.getFullfillment())) {
-	 * 
+	 *
 	 * data.setFullFillmentType(MplGlobalCodeConstants.GLOBALCONSTANTSMAP.get(seller.getFullfillment().toUpperCase())); }
-	 * 
+	 *
 	 * if (null != seller.getShippingMode() && (StringUtils.isNotEmpty(seller.getShippingMode()))) {
-	 * 
+	 *
 	 * data.setTransportMode(MplGlobalCodeConstants.GLOBALCONSTANTSMAP.get(seller.getShippingMode().toUpperCase())); } if
-	 * 
+	 *
 	 * (null != seller.getSpPrice() && !(seller.getSpPrice().equals(ModelAttributetConstants.EMPTY))) { data.setPrice(new
-	 * 
+	 *
 	 * Double(seller.getSpPrice().getValue().doubleValue())); } else if (null != seller.getMopPrice() &&
-	 * 
+	 *
 	 * !(seller.getMopPrice().equals(ModelAttributetConstants.EMPTY))) { data.setPrice(new
-	 * 
+	 *
 	 * Double(seller.getMopPrice().getValue().doubleValue())); } else if (null != seller.getMrpPrice() &&
-	 * 
+	 *
 	 * !(seller.getMrpPrice().equals(ModelAttributetConstants.EMPTY))) { data.setPrice(new
-	 * 
+	 *
 	 * Double(seller.getMrpPrice().getValue().doubleValue())); } else {
-	 * 
-	 * 
-	 * 
+	 *
+	 *
+	 *
 	 * LOG.info("*************** No price avaiable for seller :" + seller.getSellerID()); continue; } if (null !=
-	 * 
-	 * 
+	 *
+	 *
 	 * seller.getIsCod() && StringUtils.isNotEmpty(seller.getIsCod())) { data.setIsCOD(seller.getIsCod()); }
-	 * 
-	 * 
-	 * 
+	 *
+	 *
+	 *
 	 * data.setSellerId(seller.getSellerID()); data.setUssid(seller.getUssid());
-	 * 
+	 *
 	 * data.setIsDeliveryDateRequired(ControllerConstants.Views.Fragments.Product.N); requestData.add(data); } } catch
-	 * 
-	 * 
-	 * 
-	 * 
-	 * 
+	 *
+	 *
+	 *
+	 *
+	 *
 	 * (final EtailBusinessExceptions e) { ExceptionUtil.etailBusinessExceptionHandler(e, null); }
-	 * 
-	 * 
-	 * 
+	 *
+	 *
+	 *
 	 * catch (final Exception e) {
-	 * 
+	 *
 	 * throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000); } return requestData; }
 	 */
 
@@ -3292,7 +3332,7 @@ public class ProductPageController extends MidPageController
 				//Critical Sonar Fix
 				//fix for INC144314955
 				//final double roundedOffValuebefore = Math.round(savingPriceCalPer * 100.0) / 100.0;
-				final double roundedOffValuebefore = Math.floor((savingPriceCalPer * 100.0) / 100.0);
+				final double roundedOffValuebefore = Math.ceil((savingPriceCalPer * 100.0) / 100.0);
 				final BigDecimal roundedOffValue = new BigDecimal((int) roundedOffValuebefore);
 
 				buyboxJson.put(ControllerConstants.Views.Fragments.Product.SAVINGONPRODUCT, roundedOffValue);
@@ -3305,7 +3345,7 @@ public class ProductPageController extends MidPageController
 				//Critical Sonar Fix
 				//fix for INC144314955
 				//final double roundedOffValuebefore = Math.round(savingPriceCalPer * 100.0) / 100.0;
-				final double roundedOffValuebefore = Math.floor((savingPriceCalPer * 100.0) / 100.0);
+				final double roundedOffValuebefore = Math.ceil((savingPriceCalPer * 100.0) / 100.0);
 				final BigDecimal roundedOffValue = new BigDecimal((int) roundedOffValuebefore);
 				buyboxJson.put(ControllerConstants.Views.Fragments.Product.SAVINGONPRODUCT, roundedOffValue);
 			}

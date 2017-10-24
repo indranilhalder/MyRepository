@@ -51,6 +51,21 @@
     }
 }
 
+.footer-popular-accordian-title {
+    cursor: pointer;
+    padding: 10px;
+    border-top: 1px solid #ddd;
+    border-bottom: 1px solid #ddd
+}
+#footer-popular-accordian-icon {
+    margin: 0 !important
+   
+}
+footer .mega-menu {
+    padding: 0 10px !important;
+    display: none
+}
+
 .footer-top{
         margin-bottom: 30px;
 		h1{
@@ -171,7 +186,7 @@ footer{
 	}
 
 	.footer-inner-wrapper{
-		padding:45px 0;
+		padding:45px;
 		h3{
 			color:$gray-dark;
 			font-size:$font-size-h5;
@@ -286,10 +301,14 @@ footer{
         border-top: 1px solid $light-gray;
 		float: left;
 		width: 100%;
-		padding: 0;
-		margin-bottom: 0;
-        padding-top: 30px;
-
+		padding: 0;	
+        margin-bottom: 0px;
+        padding-top: 30px; 
+        
+        @include media-breakpoint-down(sm) {
+            margin-bottom: 50px;
+        }
+        
 		h5{
 			font-weight: 700;
 			position: relative;

@@ -12,7 +12,7 @@
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
 <%@ taglib prefix="ycommerce" uri="http://hybris.com/tld/ycommercetags"%>
 <%@ taglib prefix="format" tagdir="/WEB-INF/tags/shared/format"%>
-<%@ taglib prefix="product" tagdir="/WEB-INF/tags/responsive/product"%>
+<%@ taglib prefix="product" tagdir="/WEB-INF/tags/addons/luxurycheckoutaddon/responsive/product"%>
 <%@ taglib prefix="order" tagdir="/WEB-INF/tags/responsive/order"%>
 
 <spring:url value="/my-account/profile" var="profileUrl" />
@@ -163,7 +163,7 @@
 										<li class="header">
 											<ul>
 												<li class="date"><span><spring:theme
-															code="text.orderHistory.order.placed" /></span> <%-- <fmt:formatDate
+															code="luxury.text.orderHistory.order.placed" /></span> <%-- <fmt:formatDate
 														value="${orderHistoryDetail.created}"
 														pattern="MMMMM dd, yyyy" /> ${formatedDate} --%> <c:if
 														test="${orderDataMap[orderHistoryDetail.code] ne null}">
@@ -237,7 +237,7 @@
 														<c:choose>
 															<c:when test="${fn:toLowerCase(entry.product.luxIndicator)=='luxury'}">
 																	<a href="${productUrl}"> <product:productPrimaryImage
-																					product="${entry.product}" format="luxuryCartIcon" />
+																					product="${entry.product}" format="luxuryThumbnail" />
 																			</a>
 										
 															</c:when>
@@ -283,12 +283,12 @@
 																		displayFreeForZero="true" />
 																</ycommerce:testId>
 															</p>
-															<p>
+															<%-- <span>
 																<spring:theme text="Schedule Delivery and Shipping Charges:" />
 																&nbsp;
 															<c:choose>
 																<c:when test="${entry.currDelCharge.value=='0.0'}">
-																	<%-- <spring:theme code="order.free"  /> --%>
+																	<spring:theme code="order.free"  />
 																	
 															      <c:choose>
 																	<c:when test="${not empty entry.scheduledDeliveryCharge}">
@@ -307,7 +307,7 @@
 																	<format:price priceData="${entry.currDelCharge}" />
 																</c:otherwise>
 															</c:choose>
-															</p>
+															</span> --%>
 														</div>
 														<c:if
 															test="${not empty entry.imeiDetails.serialNum &&  fn:length(entry.imeiDetails.serialNum) > 0}">
@@ -341,10 +341,14 @@
 															</c:choose>
 														</c:forEach> --%>
 
-														<p>
+														<%-- <p>
 															<spring:theme
 																code="text.orderHistory.seller.order.number" />&nbsp;
 															${subOrder.code}
+														</p> --%>
+														<p>
+															<spring:theme
+																code="text.orderHistory.shpping" />
 														</p>
 														<p>
 															<c:forEach items="${entry.product.baseOptions}"
@@ -496,7 +500,7 @@
 																				<c:choose>
 																					<c:when test="${fn:toLowerCase(entryCancel.product.luxIndicator)=='luxury'}">
 																							<a href="${productUrl}"> <product:productPrimaryImage
-																																	product="${entryCancel.product}" format="luxuryCartIcon" />
+																																	product="${entryCancel.product}" format="luxuryThumbnail" />
 																															</a>
 																
 																					</c:when>
@@ -600,7 +604,7 @@
 															onclick="reloadOrderPage()" class="close pull-right"
 															aria-hidden="true" data-dismiss="modal"></button> -->
 														<div class="cancellation-request-block success">
-															<h2>Request Cancellation</h2>
+															<h2>Cancellation Request</h2>
 
 															<div>
 																<h2 class="trackOrderLnHt">
@@ -624,7 +628,7 @@
 																				<c:choose>
 																					<c:when test="${fn:toLowerCase(entryCancel.product.luxIndicator)=='luxury'}">
 																							<a href="${productUrl}"> <product:productPrimaryImage
-																																	product="${entryCancel.product}" format="luxuryCartIcon" />
+																																	product="${entryCancel.product}" format="luxuryThumbnail" />
 																															</a>
 																
 																					</c:when>
@@ -724,15 +728,16 @@
 					</c:if>
 
 					<c:if test="${empty searchPageData.results}">
-						<div class="account-emptyOrderMessage">
-							<spring:theme code="text.account.orderHistory.noOrders"
-								text="You have no orders" />
-							
-							<div class="empty-order-btn">	
-								<p class="mb-40">Start your search here</p>
-								<p><a class="lux-shopmen" href="${menLandingurl}">Shop Men</a><a class="lux-shopwomen" href="${womenLandingUrl}">Shop Women</a></p>
-							</div>
-						</div>
+                        <div class="account-emptyOrderMessage">
+                                <%-- <spring:theme code="text.account.orderHistory.noOrders.luxury"
+                                    text="You have no orders" /> --%>
+                            Due to site upgradations for orders placed prior to the 16th of October, please redirect to <a href='https://www.tatacliq.com/my-account/orders'>www.tatacliq.com/my-account/orders</a>
+                            <br /> <br />
+                            <div class="empty-order-btn">
+                                <p class="mb-40">For any queries call us on +91- 9029108282 Alternatively, email Tata CLiQ Luxury Care at luxury@tatacliq.com</p>
+                                <p><a class="lux-shopmen" href="${menLandingurl}">Shop Men</a><a class="lux-shopwomen" href="${womenLandingUrl}">Shop Women</a></p>
+                            </div>
+                        </div>
 					</c:if>
 
 				</div>
