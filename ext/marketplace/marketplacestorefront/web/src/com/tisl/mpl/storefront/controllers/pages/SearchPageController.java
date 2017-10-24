@@ -272,7 +272,7 @@ public class SearchPageController extends AbstractSearchPageController
 		final SearchQueryData searchQueryData = new SearchQueryData();
 		if (dropDownValue != null)
 		{
-			searchCategory = dropDownValue;
+			searchCategory = XSSFilterUtil.filter(dropDownValue);
 		}
 		searchQueryData.setValue(XSSFilterUtil.filter(searchText));
 		searchState.setQuery(searchQueryData);
@@ -1430,9 +1430,9 @@ public class SearchPageController extends AbstractSearchPageController
 	/*
 	 * protected <E> List<E> subList(final List<E> list, final int maxElements) { if (CollectionUtils.isEmpty(list)) {
 	 * return Collections.emptyList(); }
-	 *
+	 * 
 	 * if (list.size() > maxElements) { return list.subList(0, maxElements); }
-	 *
+	 * 
 	 * return list; }
 	 */
 

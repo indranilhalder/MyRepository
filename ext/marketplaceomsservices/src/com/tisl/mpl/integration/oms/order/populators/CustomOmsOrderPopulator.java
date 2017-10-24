@@ -379,8 +379,14 @@ public class CustomOmsOrderPopulator implements Populator<OrderModel, Order>
 			//Added for third party wallet
 			else if (paymentInfoModel instanceof ThirdPartyWalletInfoModel)
 			{
-				//return MplGlobalCodeConstants.GLOBALCONSTANTSMAP.get(MarketplaceomsordersConstants.PAYMENTMETHOD_EMI.toUpperCase());
-				return MplCodeMasterUtility.getglobalCode(MarketplaceomsordersConstants.PAYMENTMETHOD_MRUPEE);
+				//changes for paytm integration--Start
+				if (((ThirdPartyWalletInfoModel) paymentInfoModel).getProviderName().equalsIgnoreCase("PAYTM"))
+				{
+					return MplCodeMasterUtility.getglobalCode(MarketplaceomsordersConstants.PAYMENTMETHOD_PAYTM);
+				}else{
+					return MplCodeMasterUtility.getglobalCode(MarketplaceomsordersConstants.PAYMENTMETHOD_MRUPEE);
+				//changes for paytm integration--End
+				}
 			}
 
 			else

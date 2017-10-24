@@ -7207,6 +7207,11 @@
 					</attribute>
 					<!-- UF-314 End -->
 				</attributes>
+				<indexes>
+					<index name="IDX_DELIVERYMODE_CODE">
+						<key attribute="code" />
+					</index>
+				</indexes>
 			</itemtype>
 			<!-- deliverymode changes end -->
 

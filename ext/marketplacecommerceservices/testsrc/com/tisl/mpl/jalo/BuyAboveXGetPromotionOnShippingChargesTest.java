@@ -112,7 +112,7 @@ public class BuyAboveXGetPromotionOnShippingChargesTest extends MplServicelayerT
 				.search("SELECT {PK} FROM {AbstractPromotion} WHERE {code}='ShippingCartPromotion'").getResult().get(0);
 		junit.framework.Assert.assertNotNull(promotion);
 
-		System.out.println("Promotion Code" + promotion.getCode());
+		//		System.out.println("Promotion Code" + promotion.getCode());
 		if (promotion instanceof BuyAboveXGetPromotionOnShippingChargesModel)
 		{
 			final BuyAboveXGetPromotionOnShippingChargesModel discountModel = (BuyAboveXGetPromotionOnShippingChargesModel) promotion;
@@ -263,7 +263,7 @@ public class BuyAboveXGetPromotionOnShippingChargesTest extends MplServicelayerT
 				.search("SELECT {PK} FROM {AbstractPromotion} WHERE {code}='ShippingCartPromotion'").getResult().get(0);
 		junit.framework.Assert.assertNotNull(promotion);
 
-		System.out.println("Promotion Code" + promotion.getCode());
+		//	System.out.println("Promotion Code" + promotion.getCode());
 		promotion.setEnabled(Boolean.FALSE);
 		modelService.save(promotion);
 	}

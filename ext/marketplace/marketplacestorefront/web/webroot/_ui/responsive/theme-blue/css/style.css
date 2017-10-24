@@ -77449,3 +77449,11 @@ background: url(../images/search_image.png) no-repeat;}
     z-index: 2;
 }
 /* SDI-1393 End */
+
+/*paytm integration start*/
+label[for='priority_paytm'] img{
+	height: 70px;
+    margin-top: -29px;
+    margin-left: 10px;
+}
+/*paytm integration end*/
