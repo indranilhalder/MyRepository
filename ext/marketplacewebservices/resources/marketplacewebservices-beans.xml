@@ -3299,6 +3299,32 @@
     	<property name="carouselProducts" type="java.util.List&lt;com.tisl.mpl.wsdto.LuxProductCarouselProductWsDTO>"/>
     </bean>
 
+	<bean class="com.tisl.mpl.wsdto.LuxuryMediaWsDTO">
+		<property name="code" type="String" />
+		<property name="name" type="String"/>
+    	<property name="altText" type="String" />
+    	<property name="URL" type="String" />
+    	<property name="urlLink" type="String"/>
+    	<property name="mediaFormat" type="String"/>
+    	<property name="mediaType" type="String"/>
+	</bean>
+	
+	<bean class="com.tisl.mpl.wsdto.LuxurySimpleBannerComponentWsDTO">
+     	<property name="pk" type="java.lang.String" />
+    	<property name="bannerForCategory" type="java.lang.String" />
+    	<property name="associatedCategory" type="java.lang.String" />
+    	<property name="componentPosition" type="java.lang.String" />
+    	<property name="title" type="java.lang.String" />
+    	<property name="description" type="java.lang.String"/>
+    	<property name="icid2" type="java.lang.String"/>
+    	<property name="deeplinkType" type="java.lang.String"/>
+    	<property name="deeplinkTypeId" type="java.lang.String"/>
+    	<property name="deeplinkTypeVal" type="java.lang.String"/>
+    	<property name="appPosition" type="java.lang.String"/>
+    	<property name="media" type="com.tisl.mpl.wsdto.LuxuryMediaWsDTO"/>
+    	<property name="external" type="java.lang.Boolean"/>
+    </bean>
+    
 	<bean class="com.tisl.mpl.wsdto.LuxuryComponentsListWsDTO">
 		<property name="title" type="String" />
 		<property name="pageTitle" type="String" />
@@ -3324,6 +3350,7 @@
     	<property name="Luxuryshopbycomponents" type="java.util.List&lt;com.tisl.mpl.wsdto.LuxShopByListWsDTO>"/>
     	<property name="LuxurysocialfeedHeadercomponent" type="com.tisl.mpl.wsdto.TextComponentWsDTO"/>
     	<property name="Luxurysocialfeedcomponent" type="com.tisl.mpl.wsdto.LuxSocialFeedComponentWsDTO"/>
+    	<property name="LuxurySimpleBannerComponent" type="java.util.List&lt;com.tisl.mpl.wsdto.LuxurySimpleBannerComponentWsDTO>"/>
 
 	</bean>
 
