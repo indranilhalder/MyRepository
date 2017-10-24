@@ -13280,6 +13280,21 @@
 		</typegroup>
 
 		<!-- TPR-6665 : sysnonums update to slave servers end -->
+ <!-- Car-Changes-Start-CAR-331-->
+<typegroup name="Mpl_Restriction" >
+<itemtype code="DateRestriction" extends="Restriction" jaloclass="de.hybris.platform.voucher.jalo.DateRestriction"
+autocreate="false" generate="false">
+<indexes>
+<index name="P_IDX_RESTRICTIONS">
+<key attribute="itemtype" />
+<key attribute="ENDDATE" />
+<key attribute="STARTDATE" />
 
+</index>
+</indexes>
+
+</itemtype>
+</typegroup>
+<!-- Car-Changes-End-CAR-331-->
 	</itemtypes>
 </items>
