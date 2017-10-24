@@ -5610,13 +5610,13 @@ $(".edit_address").click(function(){
 	 $(".useGiftCardBtn").css('cursor','not-allowed');
 	 $(".useGiftCardBtn").css('opacity','0.5');
 	
-	if($(window).width()>650){
+	/*if($(window).width()>650){
 		$(".giftCheckoutSectionSize").removeClass("col-xs-4");
 		$(".giftCheckoutSectionSize").addClass("col-xs-3");
 	} else {
 		$(".giftCheckoutSectionSize").removeClass("col-xs-3");
 		$(".giftCheckoutSectionSize").addClass("col-xs-4");
-	}		
+	}*/		
 	
 	
 	$(document).on("click","#useGiftCardCheckbox",function() {
@@ -5753,6 +5753,7 @@ function WalletDetailAjax(){
 			$(".cliqTotalBalanceLabel").html(data.totalWalletAmt);
 			$("#qcCashId").html(data.totalCash);
 			$("#qcGiftCardId").html(data.totalEgvBalance);
+			//$("#qcPointsId").html(data.totalPointsBalance);
 			
 			if(data.disableWallet){
 				 $("#useGiftCardCheckbox").prop('disabled',true);

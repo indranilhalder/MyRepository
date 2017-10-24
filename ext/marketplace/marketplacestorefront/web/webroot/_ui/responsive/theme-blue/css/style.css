@@ -77466,7 +77466,7 @@ background: url(../images/search_image.png) no-repeat;}
 	.cliqTotalBalanceLabel {font-size: 10px;}
 	.giftCheckoutContainer input[type="checkbox"] {display: block;}
 	
-	.giftCheckoutInnerCols3 input[type="checkbox"]+label:before {display: none;}
+	.giftCheckoutInnerCols4 input[type="checkbox"]+label:before {display: none;}
 	.useGiftCardBtn input[type="checkbox"] {display: none;}
 	.useGiftCardBtn, .useGiftCardBtn:hover {
 	    border: solid 1px #a5173c;
@@ -77485,8 +77485,9 @@ background: url(../images/search_image.png) no-repeat;}
 	.payRemainingDesc {color: #666666; font-size: 12px;}
 	
 	.giftInfoLeft {border-right: 1px solid #dddddd; border-bottom: none; padding: 4%; padding-left: 0;}
+	.giftCheckoutInfoMiddle {padding: 0;}
 	.giftWalletImg {vertical-align: middle;}
-	.giftCheckoutInnerCols1, .giftCheckoutInnerCols2, .giftCheckoutInnerCols3 {padding: 4%;}
+	.giftCheckoutInnerCols1, .giftCheckoutInnerCols2, .giftCheckoutInnerCols3, .giftCheckoutInnerCols4 {padding: 4%;}
 	.giftInfoBottom {border-top: 1px solid #dddddd; padding: 0; margin-top: 1%; padding-top: 1%;}
 	.topPlaceOrderCodBtn {height: 42px !important; font-size: 12px !important}
 	.topPlaceOrderBtn {margin: 12px 0 0 !important}
@@ -77505,15 +77506,15 @@ background: url(../images/search_image.png) no-repeat;}
 	
 	@media(min-width: 651px){
 		.useGiftCardBtn, .useGiftCardBtn:hover {float: right; line-height: normal; padding-top: 5px;}
-		.giftCheckoutInnerCols1 {text-align: center;}
-		.giftCheckoutInnerCols2 {text-align: center;}
+		.giftCheckoutInnerCols1, .giftCheckoutInnerCols2, .giftCheckoutInnerCols3 {text-align: center;}
 	}
 	
 	@media(max-width: 650px){
 	.giftInfoLeft {border-bottom: 1px solid #dddddd; border-right: none; padding: 4%; padding-left: 0;}
 	.giftCheckoutInnerCols1 {padding: 20% 0%; text-align: left;}
 	.giftCheckoutInnerCols2 {padding: 20% 0%; text-align: left;}
-	.giftCheckoutInnerCols3 {padding: 20% 0%; text-align: right;}
+	.giftCheckoutInnerCols3 {padding: 20% 0%; text-align: left;}
+	.giftCheckoutInnerCols4 {padding: 20% 0%; text-align: right;}
 	.giftCheckoutContainer button {height: 18px !important;}
 	.giftCheckoutContainer {border-radius: 4px; font-size: 10px; background-color: white; padding: 0;}
 	.giftInfoBottom {border-top: 1px solid #dddddd; padding: 4% 0; margin-top: 0;}
