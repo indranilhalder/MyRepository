@@ -2013,7 +2013,6 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String WALLETORDERID = "wallertOrderId";
 	public static final String CHECKSUMKEY = "checksumKey";
 	public static final String MRUPEE = "MRUPEE";
-	public static final String PAYTM = "Paytm";//Paytm
 	public static final String MRUPEE_CODE = "MRupee";
 	public static final String TPWALLETAUDITQUERY = "select {a:pk} from {MplPaymentAudit As a} where {a.auditId}=?auditId"
 			.intern();
@@ -2276,6 +2275,15 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	//PR-15 (Rainbow)
 	public static final String CATEGORYRESTRICTION = "CategoryRestriction";
 
-	public final static String PINCODE_RESPONSE_DATA_PDP = "PincodeResponseDataForPDP";
-	public static final String KM = "km";
+	public final static String PINCODE_RESPONSE_DATA_PDP = "PincodeResponseDataForPDP".intern();
+	public static final String KM = "km".intern();
+	public final static String PINCODE_MODEL_PDP = "PincodeModelPDP".intern();
+	public static final String POS_QUERY_FOR_SELLER_AND_SLAVE = "select {pos:pk} from {PointOfService As pos} where {pos.slaveId} in ("
+			.intern();
+	public static final String POS_QUERY_FOR_SELLER_AND_SLAVE2 = ") and {pos.active}=?active".intern();
+	public static final String POS_SLAVEID = "slaveId".intern();
+	public static final String POS_ACTIVE = "active".intern();
+	public static final String STORE_DISPLAY_PDP = "pdp.store.display".intern();
+
+	public static final String PAYTM = "Paytm".intern();//Paytm
 }

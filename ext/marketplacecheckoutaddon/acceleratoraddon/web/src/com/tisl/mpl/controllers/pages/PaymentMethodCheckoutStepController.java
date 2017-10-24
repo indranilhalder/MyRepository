@@ -2569,12 +2569,12 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 				final Tuple2<?, ?> storedSavedCards = getMplPaymentFacade().listStoredCards(customer, listCardsResponse);
 				LOG.debug("*********************************************************************");
 
-				LOG.debug("Stored Card" + storedSavedCards);
+				//LOG.debug("Stored Card" + storedSavedCards);//CAR-335
 
 				savedCreditCards = (Map<Date, SavedCardData>) storedSavedCards.getFirst();
 				savedDebitCards = (Map<Date, SavedCardData>) storedSavedCards.getSecond();
-				LOG.debug("Credit Card" + savedCreditCards);
-				LOG.debug("Debit Card" + savedDebitCards);
+				//LOG.debug("Credit Card" + savedCreditCards);//CAR-335
+				//LOG.debug("Debit Card" + savedDebitCards);//CAR-335
 				LOG.debug("*********************************************************************");
 			}
 		}

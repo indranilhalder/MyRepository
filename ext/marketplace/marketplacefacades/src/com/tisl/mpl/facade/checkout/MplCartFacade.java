@@ -698,7 +698,7 @@ public interface MplCartFacade extends CartFacade
 	 * @return
 	 */
 	public List<StoreLocationResponseData> getStoreLocationsforCnC(
-			final List<StoreLocationRequestData> storeLocationRequestDataList);
+			final List<StoreLocationRequestData> storeLocationRequestDataList, final String sellerUssId);
 
 	public String populatePriceDisclaimerCart(final CartModel cartModel);
 }
