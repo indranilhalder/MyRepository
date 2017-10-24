@@ -16,7 +16,7 @@
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <%-- <%@ taglib prefix="regex" uri="/WEB-INF/common/tld/regex.tld" %> --%>
 <%@ taglib uri="http://htmlcompressor.googlecode.com/taglib/compressor" prefix="compress" %>
-<compress:html removeIntertagSpaces="true">
+<compress:html removeIntertagSpaces="true" enabled="${minificationHTML}">
 <!DOCTYPE html>
 <html lang="${currentLanguage.isocode}">
 <head>
@@ -449,7 +449,9 @@
  			if($("#pageType").val() != "homepage" && $("#pageType").val() != "product" 
  					&& $("input[name=newBrandLandingPage]").length == 0 
  					&& $("#pageType").val() != "productsearch" 
- 					&& $("input[name=productGrid]").length == 0){
+ 					&& $("input[name=productGrid]").length == 0
+ 					&& $("input[name=apparelCategoryLandingPage]").length == 0
+					&& $("input[name=BrandLayoutPage]").length == 0){
  			callGigya();
  			}
  		});
@@ -476,7 +478,7 @@
         or fn:contains(pageBodyCssClasses, 'productGridPage') 
         or fn:contains(pageBodyCssClasses, 'searchGridPage')
         or fn:contains(pageBodyCssClasses, 'apparelCategoryLandingPage')
-        or fn:contains(pageBodyCssClasses, 'BrandPageTemplate')
+        or fn:contains(pageBodyCssClasses, 'BrandLayoutPage')
         or fn:contains(pageBodyCssClasses, 'apparelCategoryLandingPageV1')
 	    or fn:contains(pageBodyCssClasses, 'FootwearBrandLandingPageTemplate')
 	    or fn:contains(pageBodyCssClasses, 'FootwearCategoryLandingPageTemplate')
@@ -588,7 +590,7 @@
 		<div class="overlay"></div>
 		<div class="content">
 		<div class="modal-body">
-		<button class="close" data-dismiss="modal"><span aria-hidden="true">×</span></button>
+		<button class="close" data-dismiss="modal"><span aria-hidden="true">Ã—</span></button>
 		<!-- <button class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span></button> -->
 		<h4>Enter Pincode</h4>
 		<input id="home_pin" type="text" placeholder="Pincode" maxlength="6" onkeypress="return isNum(event)"/>

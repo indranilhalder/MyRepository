@@ -157,9 +157,14 @@
                 margin-bottom: 15px;
             }
             .delivery{
-                border-top: 1px solid #ccc;
-                padding-top: 15px;                
-                padding-left: 30px;
+                border-bottom: 1px solid #ccc;               
+                padding: 15px 10px 15px 30px;  
+            }
+        
+            &:last-child{
+                .delivery{
+                    border-bottom: 0px; 
+                }                
             }
         }
         .proceed-button{
@@ -383,6 +388,18 @@
             @include media-breakpoint-down(sm) {
                 padding-left: 10px;
             }
+    }
+    
+    .deliveryaddress{
+        .checkout-shipping{
+            .addresslist-right{
+                .address{
+                    span{
+                        display: block;
+                    }
+                }
+            }
+        }        
     }
 }
 .right-block .coupon-code{
@@ -672,6 +689,10 @@
             }
         }
     }
+    
+    #emi{
+        display: none;
+    }
 }
 .checkout-shipping.addNewAddress .formaddress{
     width:100%!important;
@@ -767,7 +788,13 @@
     padding: 10px;
     border-radius: 5px;
     display: inline-block;
-        margin: 5px;
+    background: #f9f9f9;
+    margin: 5px;
+    
+    
+    @media (max-width:420px){
+        width: 45%;
+    }
 }
 #netbanking .bank-select label{
  width:100%;
@@ -1110,14 +1137,17 @@ checkout-shipping-items.left-block-width{
         
         .card.card-num{
             display: inline-block;
-            width: 12%;
+            width: 15%;
+             @include media-breakpoint-down(sm) {
+                width: 100%;
+            }
         }
         creditCardsRadio{
             visibility: hidden;
         }
         .card-details{
             display: inline-block;
-            width: 60%;
+            width: 57%;
             
             @include media-breakpoint-down(sm) {
                 width: 100%;
@@ -1268,6 +1298,9 @@ checkout-shipping-items.left-block-width{
         margin-bottom: 5px;
     }
 }
+.cart.wrapper .product-block li.item>ul>li.headerWidth div.product {   
+        float: left;
+}
 .cart.wrapper .product-block li.item>ul>li:first-child div.product {
     margin-bottom: 10px;
 }
@@ -1320,6 +1353,10 @@ checkout-shipping-items.left-block-width{
 
     .cart.wrapper .product-block li.item>ul>li.delivery ul, .confirmation .product-block li.item>ul>li.delivery ul {
         margin-bottom: 60%;
+        line-height: 16px;
+    }
+    .cart.wrapper .product-block li.item>ul>li.delivery ul{
+        margin-bottom: 0%;
         line-height: 16px;
     }
     .cartSection{
@@ -1385,6 +1422,13 @@ ul.delivered.scrollThis {
     font-weight: 500;    
   
 }
+.cart.wrapper .left-block{
+    .delivered{
+        input[type="radio"] ~ label {          
+            padding-left: 20px;  
+        }
+    }
+}
 .cart.wrapper .checkout-shipping-items.left-block.left-block-width .delivery.deliveryWidth ul li span {
     padding-left: 20px;
 }
@@ -1405,6 +1449,24 @@ ul.delivered.scrollThis {
      @include media-breakpoint-down(sm) {
          width: 100% !important;
          margin-bottom: 30px;
+    }
+    .change_txt.txt0{
+        cursor: pointer;
+    }
+    .change_pincode_block{
+        .input0.row{
+            margin-left: 0px;
+            margin-right: 0px;
+            
+            input{
+                height: 27px;
+            }
+            .submitPincode{
+                height: 27px !important;
+                color: #fff !important;
+                background-color: #2d2d2d;
+            }
+        }
     }
 }
 .cart.wrapper .product-block li.item>ul>li.mapConatinerParent {   
@@ -1571,9 +1633,19 @@ ul.delivered.scrollThis {
     width: 100%;
 }
 .cart.wrapper .checkout-shipping-items.left-block.left-block-width .radio_btn {
-    border: 2px solid #fff !important;
-    clip: inherit !important;   
-    outline: 0;
+    height: 15px!important;
+    color: #fff;
+    padding: 0!important;
+    border: 1px solid #B9966B!important;  
+    border-radius: 50%;
+    position: static;
+    overflow: auto;
+    -webkit-appearance: none;
+    appearance: none;
+}
+.cart.wrapper .checkout-shipping-items.left-block.left-block-width .radio_btn:checked {
+    background-color: #B9966B;
+    border: 2px solid #B9966B!important;
 }
 .label_txt {
     margin-left: -137px;
@@ -1659,6 +1731,14 @@ h2.panel-defaultHeading {
     border: 0;
     border-top: 1px solid #eaeaeb;
 }
+.checkout.wrapper #netbanking .product-block li.item {
+    border: 0;
+    border-top: 0px;
+    
+    #netbankingIssueError{
+        display: none;
+    }
+}
 #pickup{
     width: 100%!important;
 }
@@ -1707,6 +1787,207 @@ h2.panel-defaultHeading {
     .checkout-content.checkout-payment{
         margin-bottom: 50px;
     }
+    
+    .dupDisplay{
+        .stateInput{
+            #statesReadOnly{
+                height: 34px;
+                padding: 6px 12px;
+                border: 1px solid #cfcfcf;
+                border-radius: 3px;
+                font-size: 14px;
+                line-height: 1.42857;
+                color: #555;
+                width: 100%;
+                margin-top: 5px;
+            }
+            #statesReadOnly[readonly="readonly"]{
+                background-color: #eee;
+                opacity: 1;
+            }           
+        }
+    }
+    .emi{
+        .item{
+            background: #fff;
+            padding: 25px;
+            border-radius: 10px;
+            border:1px solid #ccc!important;
+            margin-top: 10px;
+            
+            @include media-breakpoint-down(sm) {
+                padding: 10px 0px 20px 10px;
+            } 
+            
+            .item.new-form {
+                padding: 0px;
+                border: 0px!important;
+                margin: 0px;
+                border-radius: initial;
+                
+                @include media-breakpoint-down(sm) {
+                    .card-group.row{
+                        margin-right: -10px;                        
+                    }
+                    .card_exp_month{
+                        width: 50%;                            
+                    }
+                }
+            }
+        }
+        .bank-select{            
+            #bankNameForEMI{
+                width: 280px;
+                height: 40px;
+                border: 1px solid #ccc;
+                border-radius: 5px;
+                background: #fff;
+                
+                @include media-breakpoint-down(sm) {
+                    width: 260px;
+                }
+            }
+            #radioForEMI{ 
+                .emi-plan{
+                    margin-top: 20px;
+                }
+                #EMITermTable{
+                    width: 100%;
+                        
+                    tr{  
+                        width: calc(49% - 2px);
+                        float: left;                       
+                        background: #f9f9f9;
+                        padding-left: 0;                       
+                        border: 1px solid #ccc;
+                        padding: 10px;
+                        border-radius: 5px;
+                        display: inline-block; 
+                        margin-top: 15px;
+                        
+                        &:nth-child(odd){
+                            margin-right: 15px;
+                        }
+                        
+                        @include media-breakpoint-down(sm) {
+                            
+                            width: 100%;
+                            float: none;
+                            background: #fff;
+                            border: 0px;
+                            padding: 10px 0px;
+                            border-radius: 0px;
+                            display: inline-block;
+                            margin-bottom: 5px;
+                            background: #fff;
+                            
+                            &:nth-child(odd){
+                                background: #fff;
+                            }
+
+                            label {                            
+                                margin-bottom: 0px;
+                            }
+                        }
+                    }
+                    td{
+                        position: relative;
+                        
+                        label{
+                            font-weight:bold;
+                            @include media-breakpoint-down(sm) {
+                                font-weight: normal;
+                            }
+                        }
+                        
+                        @include media-breakpoint-down(sm) {
+                            
+                            display: inline-block;
+                            padding: 0px;                            
+                            width: auto;
+
+                            &:before{
+                                content: "";
+                                width: auto;
+                            }
+                        }
+                        
+                        &:first-child {
+                            display: block; 
+                            @include media-breakpoint-down(sm) {
+                                display:inline-block;
+                            }
+                        }
+                        &:nth-child(2){
+                          padding-left: 30px;
+                          padding-right: 3px;
+                            @include media-breakpoint-down(sm) {
+                              padding-left: 0px;
+                            }
+                        }
+                        &:last-child {
+                            padding-bottom: 0px;
+                            padding-left: 5px;
+                        }
+                    }
+                    
+                    input[type=radio]{
+                        display: inherit;
+                        width: 28px!important;
+                        height: 28px!important;
+                        margin: 0;
+                        opacity: 0;
+                        cursor: pointer;
+                        width: 15px;
+                        height: 15px;
+                        z-index: 10;
+                        position: absolute;
+                    }
+                    input[type=radio]~label::before{
+                        content: "";
+                        width: 20px;
+                        height: 20px;
+                        border-radius: 3px;
+                        background: #fff;
+                        border: 1px solid #c8c7cc;
+                        position: absolute;
+                        top: 0;
+                        bottom: 0;
+                        left: 0;
+                        margin: auto;
+                    }
+                    input[type=radio]:checked~label::before{
+                        color: #fff;
+                        background: url(../images/tick.png) 3px 1px no-repeat #b99d6b;
+                        border-color: #b99d6b;
+                        text-align: center;
+                        line-height: 16px;
+                    }
+                }
+            }           
+        }
+        #cardEmi{
+            #billingAddressEmi, .controls.remember.le-checkbox{
+                padding: 10px 25px;
+            }           
+            fieldset{
+                padding: 0px;
+            }
+            #billingAddressEmi{
+                clear: both;
+            }
+        }
+        
+        .new-card input#sameAsShippingEmi:checked+label+fieldset {
+            display: none;
+        }
+        
+        .le-checkbox fieldset label{
+            padding-left: 0px;
+            font-weight: 700;
+        }
+        
+    }
 }
 @include media-breakpoint-down(sm) {
     .page-multiStepCheckoutSummaryPage{
@@ -1723,6 +2004,72 @@ h2.panel-defaultHeading {
         #hamburger-menu{
             span{
                 display: none;
+            }
+        }
+    }
+}
+#savedCard, #savedDebitCard{
+    .debit-card-group.card-sec{
+        .radio{
+            label{
+                margin-top: 25px;
+                @include media-breakpoint-down(sm)
+                {
+                     margin-top: 0px;
+                }
+            }
+        }
+    }
+    .credit-card-group.card-sec, .debit-card-group.card-sec{
+        margin-bottom: 10px;
+        
+        .radio{
+            input[type=radio] {
+                margin: 0;
+                opacity: 0;
+                cursor: pointer;
+                width: 15px;
+                height: 15px;
+                z-index: 10;
+                position: absolute;
+            }
+            label{
+                padding-left: 30px;
+                line-height: 140%;
+                font-weight: 300;
+                display: inline-block;
+                position: relative;
+                cursor:pointer;
+                float: left;
+            }
+            label { 
+                line-height: 25px; 
+            }
+            input[type="radio"]{
+                width:28px !important;
+                height:28px !important;
+            }
+
+            input[type=radio] ~ label::before{
+                content: "";
+                width: 20px;
+                height: 20px;
+                border-radius: $border-radius-small;
+                background: #fff;
+                border: 1px solid #c8c7cc;
+                position: absolute;
+                top: 0;
+                bottom: 0;
+                left: 0;
+                margin: auto;
+            } 
+            input[type=radio]:checked ~ label::before{
+                color: #fff;
+                background: #b99d6b url('../images/tick.png') no-repeat;
+                background-position: 3px 1px;
+                border-color:#b99d6b;
+                text-align: center;
+                line-height: 16px;
             }
         }
     }

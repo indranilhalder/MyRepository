@@ -1764,7 +1764,11 @@ ACC.singlePageCheckout = {
         		
         		ACC.singlePageCheckout.getSelectedDeliveryModes(callFrom);
         	}
-        	
+        	if(callFrom=="removeCartItem")
+        	{
+        		ACC.singlePageCheckout.attachDeliveryModeChangeEvent();
+        		ACC.singlePageCheckout.showHideCodTab();
+        	} 
         	//Resetting voucher on removal of cart item, we are doing it twice once in proceedOnAddressSelection,getDeliverOptionsPage
     		var couponCode=$("#couponFieldId").val();
     		if(couponCode!="")

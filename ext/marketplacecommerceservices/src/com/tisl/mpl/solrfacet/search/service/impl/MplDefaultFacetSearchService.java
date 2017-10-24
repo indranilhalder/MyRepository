@@ -3,7 +3,9 @@
  */
 package com.tisl.mpl.solrfacet.search.service.impl;
 
+import de.hybris.platform.basecommerce.model.site.BaseSiteModel;
 import de.hybris.platform.servicelayer.config.ConfigurationService;
+import de.hybris.platform.site.BaseSiteService;
 import de.hybris.platform.solrfacetsearch.config.IndexedProperty;
 import de.hybris.platform.solrfacetsearch.config.IndexedType;
 import de.hybris.platform.solrfacetsearch.config.ValueRange;
@@ -23,6 +25,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
+import org.apache.commons.collections.MapUtils;
 import org.apache.commons.lang.BooleanUtils;
 import org.apache.solr.client.solrj.response.FacetField;
 import org.apache.solr.client.solrj.response.FacetField.Count;
@@ -36,10 +39,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Required;
 
 
+
 public class MplDefaultFacetSearchService extends DefaultFacetSearchService
 {
 	//TPR-4947 performance fix start
 	private SearchResultConverters searchResultConverters;
+	
+	@Autowired
+	private BaseSiteService baseSiteService;
+
 
 	/**
 	 * @param searchResultConverters
@@ -178,6 +186,20 @@ public class MplDefaultFacetSearchService extends DefaultFacetSearchService
 		}
 		return this.fieldNameProvider.getPropertyName(facetField.getName());
 	}
+	
+	public boolean isLuxurySite()
+	{
+		final BaseSiteModel currentBaseSite = baseSiteService.getCurrentBaseSite();
+		final String site = currentBaseSite.getUid();
+
+		boolean isLuxury = false;
+
+		if (site.equalsIgnoreCase("lux"))
+		{
+			isLuxury = true;
+		}
+		return isLuxury;
+	}
 
 	//TPR-4947 performance fix end
 
@@ -189,34 +211,36 @@ public class MplDefaultFacetSearchService extends DefaultFacetSearchService
 		// Customized mpl price range will be taken
 		if (property.getName().equalsIgnoreCase("price"))
 		{
-			//			if (MapUtils.isNotEmpty(property.getValueRangeSets()))
-			//			{
-			//				for (final Map.Entry<String, ValueRangeSet> entry : property.getValueRangeSets().entrySet())
-			//				{
-			//					valueRangesList.addAll(entry.getValue().getValueRanges());
-			//				}
-			//			}
-			//commented for SDI-575/576
-			valueRangeSet = property.getValueRangeSets().get("INR-APPAREL");
-			if (valueRangeSet != null)
-			{
-				valueRangesList = valueRangeSet.getValueRanges();
-			}
+			if(isLuxurySite()){
+   			if (MapUtils.isNotEmpty(property.getValueRangeSets()))
+   			{
+   				for (final Map.Entry<String, ValueRangeSet> entry : property.getValueRangeSets().entrySet())
+   				{
+   					valueRangesList.addAll(entry.getValue().getValueRanges());
+   				}
+   			}
+			}else{
+				//commented for SDI-575/576
+				valueRangeSet = property.getValueRangeSets().get("INR-APPAREL");
+				if (valueRangeSet != null)
+				{
+					valueRangesList = valueRangeSet.getValueRanges();
+				}
 
-			valueRangeSet = property.getValueRangeSets().get("INR-ELECTRONICS");
-			if (valueRangeSet != null)
-			{
-				valueRangesList.addAll(valueRangeSet.getValueRanges());
-			}
+				valueRangeSet = property.getValueRangeSets().get("INR-ELECTRONICS");
+				if (valueRangeSet != null)
+				{
+					valueRangesList.addAll(valueRangeSet.getValueRanges());
+				}
 
-			// JEWELLERY CHANGES START
-			valueRangeSet = property.getValueRangeSets().get("INR-FASHIONJEWELLERY");
-			if (valueRangeSet != null)
-			{
-				valueRangesList.addAll(valueRangeSet.getValueRanges());
+				// JEWELLERY CHANGES START
+				valueRangeSet = property.getValueRangeSets().get("INR-FASHIONJEWELLERY");
+				if (valueRangeSet != null)
+				{
+					valueRangesList.addAll(valueRangeSet.getValueRanges());
+				}
+				// JEWELLERY CHANGES END
 			}
-			// JEWELLERY CHANGES END
-
 			valueRangeSet = property.getValueRangeSets().get("INR-LUXURY");
 			if (valueRangeSet != null)
 			{

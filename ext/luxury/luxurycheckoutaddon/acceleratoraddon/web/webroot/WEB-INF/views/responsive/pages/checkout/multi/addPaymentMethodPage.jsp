@@ -280,7 +280,7 @@
 																	</c:otherwise>   
 														        </c:choose>	
 														        </div>
-														        <input type="radio" data-id="savedCCard" name="creditCards" class="card_token creditCardsRadio" id="cc${status.index}"  value="${map.value.cardToken}"  />
+														        <input type="radio" data-id="savedCCard" name="creditCards" class="card_token creditCardsRadio" id="cc${status.index}"  value="${map.value.cardToken}"   />
 									                 	 		<label for="cc${status.index}" data-id="savedCCard" class="numbers"></label>
 														        </div>
 														        </div>
@@ -481,14 +481,16 @@
 								                           		<span class="error-message" id="address1Error"></span>
 							                           		</div>
 						                           		</div> --%>
-						                           		<div class="full">
+						                           		<div class="full mb-20">						                           		
 						                           			<label><spring:theme code="text.addressBook.addressline1"/></label> <!-- TPR-4387 -->
+							                           		<br>
 							                           		<!-- <input type="text" id="address1" maxlength="40" required="required"> -->
-							                           		<textarea class="full-address" id="line1" maxlength="120" onKeyUp="return taCount(this,'myCounter')" required="required"></textarea>
+							                           		<textarea class="full-address form-control" id="line1" maxlength="120" onKeyUp="return taCount(this,'myCounter')" required="required" rows="2" cols="60"></textarea>
 							                           			Remaining characters :
 							                           			<span id='myCounter'></span>
 							                           		<span class="error-message" id="address1Error"></span>
 						                           		</div>
+						                           		<br>
 						                           		<div class="row mb-20 hide">
 							                           		<div class="full col-md-12">
 								                           		<label><spring:theme code="text.addressline2"/></label>
@@ -504,9 +506,9 @@
 							                           		</div>
 						                           		</div>
 						                     			<div class="row mb-20">
-						                           		<div class="full">
+						                           		<div class="half col-md-12">
 							                           		<label><spring:theme code="text.city"/></label>
-							                           		<input type="text" id="city" required="required" maxlength="40">
+							                           		<input type="text" id="city" required="required" maxlength="40" class="form-control">
 							                           		<span class="error-message" id="cityError"></span>
 						                           		</div>
 						                           		</div>
@@ -525,7 +527,7 @@
 						                           		<div class="row mb-20">
 							                           		<div class="full col-md-12">
 								                           		<label><spring:theme code="text.country"/></label></br>
-							                           			<select id="country" >
+							                           			<select id="country"  class="form-control">
 							                           				<c:forEach var="countryName" items="${country}">
 																		<option value="${countryName}">${countryName}</option>
 																	</c:forEach>
@@ -635,11 +637,12 @@
 				        							
 										        			<%-- <span class="visa card_image"><img src="${commonResourcePath}/images/Visa.png" alt=""></span> --%>
 										                    		<input type="radio" data-id="savedDCard" name="debitCards" class="card_token  debitCardsRadio" id="dc${status.index}"  value="${map.value.cardToken}"/>
+										                    		<label for="dc${status.index}" data-id="savedDCard" class="numbers"></label>
 										                    		<div class="card-details">
-										                    		<label for="dc${status.index}" data-id="savedDCard" class="numbers">
+										                    		
 										                    		
 										                    		<span>${map.value.cardBrand}</span> ending in ${map.value.cardEndingDigits}
-										                    		</label>
+										                    		
 										                  				<p>${map.value.nameOnCard}</p>
 										                  				<p><spring:theme code="text.expires.on"/> ${map.value.expiryMonth}/${map.value.expiryYear}</p>
 										                  				</div>
@@ -892,7 +895,7 @@
 								       							<th><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.interestRate"/></th>
 								       							<th><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.monthlyInstallment"/></th>
 								       							<th><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.interestPayable"/></th> --%>
-															</table> 
+															</table> 															
 															<%-- <form:hidden path="selectedTerm" value="select"/> --%>
 															<input type="hidden" name="selectedTerm" id="selectedTerm" value="select"/>
 														</div>	
@@ -921,34 +924,33 @@
 				                  		<input type="hidden" class="emi_bank" id="emi_bank">
 				                  		<input type="hidden" id="ebsDownCheck" value="${ebsDownCheck}"/>
 				                  		<!-- <p>NEW CARD</p> -->
-										<div class="card-group">
-											<div class="form-group">
-						                    	<fieldset>
-						                        	<div class="full account-only">
+										<div class="card-group row">
+											<div class="form-group">						                    	
+						                        	<%-- <div class="full account-only col-md-12 mb-20">
 					 									<label><spring:theme code="text.cardtype"/> *</label>
-					 										<select>
+					 										<select class="form-control">
 					  											<option><spring:theme code="text.select"/></option>
 					  										</select>
-													</div>
-						                            <div class="controls full">
-						                            	<label class="control-label"><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.cardNo"/></label>
-						                            	<input type="text" class="card_number" id="cardNoEmi" maxlength="16" autocomplete="off" placeholder="Enter your card number"> 
+													</div> --%>
+						                            <div class="controls full  col-md-6">
+						                            	<%-- <label class="control-label"><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.cardNo"/></label> --%>
+						                            	<input type="text" class="card_number form-control" id="cardNoEmi" maxlength="16" autocomplete="off" placeholder="Enter your card number"> 
 						                            	 <!-- <input type="hidden" class="card_number" value="" /> -->  
 						                            	<input type="hidden" id="cardTypeEmi" disabled="disabled"/>
 						                            	<span class="error-message" id="cardNoErrorEmi"></span>
 													</div>
 						                            
-						                            <div class="controls full">
+						                            <%-- <div class="controls full col-md-12">
 						                            	<label class="control-label"><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.cardName"/></label>
-						                            	<input type="text" name="memberName" class="name_on_card name-card" maxlength="79" autocomplete="off">
+						                            	<input type="text" name="memberName" class="name_on_card name-card" maxlength="79" autocomplete="off" placeholder="Full Name (as mentioned on card)">
 						                            	<span class="error-message" id="memberNameErrorEmi"></span>
-						                            </div>
+						                            </div> --%>
 						                           
-						                            <div class="controls full exp ">
-						                             	<label class="control-label expires">
+						                            <div class="controls full exp col-md-4">
+						                             	<%-- <label class="control-label expires">
 						                             		<spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.expiryDate"/>
-						                             	</label>
-						                            	<select class="card_exp_month" name="expmm" > 	
+						                             	</label> --%>
+						                            	<select class="card_exp_month form-control" name="expmm" > 	
 							                            	<option value="month"><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.mm"/></option>
 															<option value="01"><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.01"/></option>
 															<option value="02"><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.02"/></option>
@@ -965,7 +967,7 @@
 														</select>  
 														
 														<c:set var="currentyear" value="<%= java.util.Calendar.getInstance().get(java.util.Calendar.YEAR)%>"></c:set>
-														<select class="card_exp_year" name="expyy" >
+														<select class="card_exp_year form-control" name="expyy" >
 							                            	<option value="year" selected><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.yyyy"/></option>
 							                            	<c:forEach var="i" begin="${currentyear}" end="${currentyear + noOfYearsFromCurrentYear}">
 															   <option value="${i}">${i}</option>
@@ -974,90 +976,105 @@
 														<span class="error-message" id="expYYErrorEmi"></span>
 						                            </div>
 						                            
-													<div class="controls full cvv">
+													<div class="controls full cvv col-md-2">
 														
 														<input type="hidden" id="cvvHelpContent" value="<spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.CVVHelpContent"/>">
 														<input type="hidden" id="cvvHelpContent" value="${cvvHelp}">
-						                            	<label class="control-label"><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.CVV"/><span class="cvv_mobile"> [?]</span></label>
-						                           		<input type="password" autocomplete="new-password" class="security_code span1" name="cvv" maxlength="4" />
+						                            	<%-- <label class="control-label"><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.CVV"/><span class="cvv_mobile"> [?]</span></label> --%>
+						                           		<input type="password" autocomplete="new-password" class="security_code span1 form-control" name="cvv" maxlength="4" placeholder="CVV"/>
 						                           		<a href="#cvvHelpText" class="cvvHelp" id="cvvHelp"></a>
 						                           		<span class="error-message" id="cvvErrorEmi"></span> 
-						                            </div>
-												</fieldset>
-		            							<div class="controls remember" id="billingAddressEmi">
+						                            </div>	
+						                            <div class="controls full col-md-12 mt-20">
+						                            	<%-- <label class="control-label"><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.cardName"/></label> --%>
+						                            	<input type="text" name="memberName" class="name_on_card name-card form-control" maxlength="79" autocomplete="off" placeholder="Full Name (as mentioned on card)">
+						                            	<span class="error-message" id="memberNameErrorEmi"></span>
+						                            </div>											
+		            							<div class="controls remember mt-20" id="billingAddressEmi">
 					                            	<h2><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.billingAddress"/></h2>
-					                             <c:choose>
-						                             <c:when test="${isCart eq true}">
-							                            <c:forEach var="cartItem" items="${cartData.entries}">
-							                            <c:set var="deliveryMode" value="${cartItem.mplDeliveryMode.code}"/>
-															 <c:if test="${deliveryMode ne 'click-and-collect'}"> 
-																 <c:set var="flag" value="true"/>
-															  </c:if>  
-												    	</c:forEach>
-												    </c:when>
-												    <c:otherwise>
-												    	<c:forEach var="orderItem" items="${orderData.entries}">
-							                            <c:set var="deliveryMode" value="${orderItem.mplDeliveryMode.code}"/>
-															 <c:if test="${deliveryMode ne 'click-and-collect'}"> 
-																 <c:set var="flag" value="true"/>
-															  </c:if>  
-												    	</c:forEach>
-												    </c:otherwise>
-											    </c:choose>
-										    	<c:if test="${flag eq true}">
-					                            	<input type="checkbox" id="sameAsShippingEmi" name="billing-shipping" checked="checked" /><label for="sameAsShippingEmi"><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.sameAsShipping"/></label>
-					                           	</c:if>   	
+					                            <div class="le-checkbox mt-20 mb-10 emi-payment-billing">
+						                             <c:choose>
+							                             <c:when test="${isCart eq true}">
+								                            <c:forEach var="cartItem" items="${cartData.entries}">
+								                            <c:set var="deliveryMode" value="${cartItem.mplDeliveryMode.code}"/>
+																 <c:if test="${deliveryMode ne 'click-and-collect'}"> 
+																	 <c:set var="flag" value="true"/>
+																  </c:if>  
+													    	</c:forEach>
+													    </c:when>
+													    <c:otherwise>
+													    	<c:forEach var="orderItem" items="${orderData.entries}">
+								                            <c:set var="deliveryMode" value="${orderItem.mplDeliveryMode.code}"/>
+																 <c:if test="${deliveryMode ne 'click-and-collect'}"> 
+																	 <c:set var="flag" value="true"/>
+																  </c:if>  
+													    	</c:forEach>
+													    </c:otherwise>
+												    </c:choose>
+											    	<c:if test="${flag eq true}">
+						                            	<input type="checkbox" id="sameAsShippingEmi" name="billing-shipping" checked="checked" /><label for="sameAsShippingEmi"><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.sameAsShipping"/></label>
+						                           	</c:if>
+					                           	</div>	   	
 					                           		<fieldset>
-						                           		<div class="half">
-							                           		<label><spring:theme code="text.first.name"/></label>
-							                           		<input type="text" id="firstNameEmi" required="required" maxlength="40">
-							                           		<span class="error-message" id="firstNameErrorEmi"></span>
-						                           		</div>
-						                           		<div class="half">
-							                           		<label><spring:theme code="text.last.name"/></label>
-							                           		<input type="text" id="lastNameEmi" required="required" maxlength="40">
-							                           		<span class="error-message" id="lastNameErrorEmi"></span>
-						                           		</div>
-						                           		<div class="full">
-							                           		<label><spring:theme code="text.addressline1"/></label>
-							                           		<input type="text" id="address1Emi" maxlength="40" required="required">
-							                           		<span class="error-message" id="address1ErrorEmi"></span>
-						                           		</div>
-						                           		<div class="full">
-							                           		<label><spring:theme code="text.addressline2"/></label>
-							                           		<input type="text" id="address2Emi" maxlength="40">
-							                           		<span class="error-message" id="address2ErrorEmi"></span>
-						                           		</div>
-						                           		<div class="full">
-							                           		<label><spring:theme code="text.landmark"/> </label>
-							                           		<input type="text" id="address3Emi" maxlength="40">
-							                           		<span class="error-message" id="address3ErrorEmi"></span>
-						                           		</div>
-						                           		<div class="full">
-							                           		<label><spring:theme code="text.city"/></label>
-							                           		<input type="text" id="cityEmi" required="required" maxlength="40">
-							                           		<span class="error-message" id="cityErrorEmi"></span>
-						                           		</div>
-						                           		<div class="half">
-							                           		<label><spring:theme code="text.state"/></label>
-							                           		<input type="text" id="stateEmi" required="required" maxlength="40">
-							                           		<span class="error-message" id="stateErrorEmi"></span>
-						                           		</div>
-						                           		<div class="half">
-						                           			<label><spring:theme code="text.country"/></label>
-						                           			<select id="countryEmi" >
-						                           				<c:forEach var="countryName" items="${country}">
-																	<option value="${countryName}">${countryName}</option>
-																</c:forEach>
-															</select>
-						                           		</div>
-						                           		<div class="full">
-							                           		<label><spring:theme code="text.pincode"/></label>
-							                           		<input type="text" id="pincodeEmi" maxlength="10" onchange="validatePin()"><span class="error-message" id="pinErrorEmi"></span>
-						                           		</div>
+					                           		   <div class="row">
+							                           		<div class="half col-md-6 mt-20">
+								                           		<label><spring:theme code="text.first.name"/></label>
+								                           		<input type="text" id="firstNameEmi" required="required" maxlength="40" class="form-control">
+								                           		<span class="error-message" id="firstNameErrorEmi"></span>
+							                           		</div>
+							                           		<div class="half col-md-6 mt-20">
+								                           		<label><spring:theme code="text.last.name"/></label>
+								                           		<input type="text" id="lastNameEmi" required="required" maxlength="40" class="form-control">
+								                           		<span class="error-message" id="lastNameErrorEmi"></span>
+							                           		</div>
+							                           	</div>
+							                           	<div class="row">	
+							                           		<div class="full col-md-12 mt-20">
+								                           		<label><spring:theme code="text.addressline1"/></label>
+								                           		<input type="text" id="address1Emi" maxlength="40" required="required" class="form-control">
+								                           		<span class="error-message" id="address1ErrorEmi"></span>
+							                           		</div>
+							                           		<div class="full col-md-12 mt-20">
+								                           		<label><spring:theme code="text.addressline2"/></label>
+								                           		<input type="text" id="address2Emi" maxlength="40" class="form-control">
+								                           		<span class="error-message" id="address2ErrorEmi"></span>
+							                           		</div>
+							                           		<div class="full col-md-12 mt-20">
+								                           		<label><spring:theme code="text.landmark"/> </label>
+								                           		<input type="text" id="address3Emi" maxlength="40" class="form-control">
+								                           		<span class="error-message" id="address3ErrorEmi"></span>
+							                           		</div>
+							                           		<div class="full col-md-12 mt-20">
+								                           		<label><spring:theme code="text.city"/></label>
+								                           		<input type="text" id="cityEmi" required="required" maxlength="40" class="form-control">
+								                           		<span class="error-message" id="cityErrorEmi"></span>
+							                           		</div>
+							                           	</div>
+							                           	<div class="row">
+							                           		<div class="half col-md-6 mt-20">
+								                           		<label><spring:theme code="text.state"/></label>
+								                           		<input type="text" id="stateEmi" required="required" maxlength="40" class="form-control">
+								                           		<span class="error-message" id="stateErrorEmi"></span>
+							                           		</div>
+							                           		<div class="half col-md-6 mt-20">
+							                           			<label><spring:theme code="text.country"/></label>
+							                           			<select id="countryEmi"  class="form-control">
+							                           				<c:forEach var="countryName" items="${country}">
+																		<option value="${countryName}">${countryName}</option>
+																	</c:forEach>
+																</select>
+							                           		</div>
+							                           	</div>
+							                           	<div class="row">
+							                           		<div class="full col-md-6 mt-20">
+								                           		<label><spring:theme code="text.pincode"/></label>
+								                           		<input type="text" id="pincodeEmi" maxlength="10" onchange="validatePin()" class="form-control"><span class="error-message" id="pinErrorEmi"></span>
+							                           		</div>
+							                           	</div>
+						                           		
 					                           		</fieldset>
 					                            </div> 
-					                            <div class="controls remember">
+					                            <div class="controls remember le-checkbox">
 					                            	<input type="checkbox" class="juspay_locker_save checkbox"  id="save-card-emi" name="save-card-emi" /><label for="save-card-emi"><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.saveCard"/></label>		                        	
 					                            </div>
 		            							<input type="hidden" class="redirect" value="${redirect}">	
@@ -1068,7 +1085,7 @@
 			            			<div class="row">
 				            			<div class="pay newCardPaymentCCEmi col-md-6">
 										
-										<button type="button" class="make_payment button btn-block payment-button" id="make_emi_payment"><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.paymentButton"/></button>
+										<button type="button" class="make_payment button payment-button btn-lg btn-primary" id="make_emi_payment"><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.paymentButton"/></button>
 										<!-- <p class="payment-redirect">You will be re-directed to secure payment gateway</p> -->
 										<%-- <p onclick="teliumTrack()"><spring:theme code="checkout.multi.paymentMethod.selectMode.tnc.pretext" /><a href="<c:url value="${tncLink}"/>" target="_blank"><spring:theme code="checkout.multi.paymentMethod.selectMode.tnc" /></a></p> --%>
 									    </div>

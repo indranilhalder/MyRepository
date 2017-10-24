@@ -52,14 +52,14 @@
 	
 	<div class="container footer-popular-search">
 	    <div class="footer-bottom-links">
-		   <h5><span>POPULAR SEARCHES</span></h5>
+		   <h5 class="footer-popular-accordian-title"><span>POPULAR SEARCHES</span><span class="pull-right footer-popular-accordian-right"><span id="footer-popular-accordian-icon" class="glyphicon glyphicon-plus"></span></span></h5>
 	   </div>
 	</div>
 	
 	<div class="modal fade" id="popUpModal" style="z-index:1000000000;" tabindex="-1" role="modal" aria-labelledby="popUpModalLabel" aria-hidden="true">
 	<div class="overlay" data-dismiss="modal"></div>
 		<div class="modal-dialog modal-lg">
-		<div class="modal-content content" style="width:90%; max-width:90%;">
+		<div class="modal-content content">
 			
 		</div>
 		<!-- /.modal-content -->

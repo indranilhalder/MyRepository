@@ -1,0 +1,15 @@
+$storePrefix=lux
+$contentCatalog=$storePrefixContentCatalog
+$contentCV=catalogVersion(CatalogVersion.catalog(Catalog.id[default=$contentCatalog]),CatalogVersion.version[default=Online])[default=$contentCatalog:Online]
+
+REMOVE ContentSlotForPage;$contentCV[unique=true];uid[unique=true];position[unique=true];page(uid,$contentCV)[unique=true][default='notFound'];contentSlot(uid,$contentCV)[unique=true];;;
+;;MiddleContent-NotFoundError;MiddleContent;;MiddleContent-NotFoundError;;;
+
+REMOVE ContentSlotForPage;$contentCV[unique=true];uid[unique=true];position[unique=true];page(uid,$contentCV)[unique=true][default='businessErrorFound'];contentSlot(uid,$contentCV)[unique=true];;;
+;;MiddleContent-BusinessError;MiddleContent;;MiddleContent-BusinessError;;;
+
+REMOVE ContentSlotForPage;$contentCV[unique=true];uid[unique=true];position[unique=true];page(uid,$contentCV)[unique=true][default='nonBusinessErrorFound'];contentSlot(uid,$contentCV)[unique=true];;;
+;;MiddleContent-NonBusinessError;MiddleContent;;MiddleContent-NonBusinessError;;;
+
+
+

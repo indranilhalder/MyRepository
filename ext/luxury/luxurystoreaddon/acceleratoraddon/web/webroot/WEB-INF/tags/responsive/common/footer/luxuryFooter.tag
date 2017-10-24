@@ -18,7 +18,7 @@
 				<div class="row signup-email-wrapper">
 					<div class="col-sm-6 send-awesome-email">
 						<p class="email-tit">Sign up to our newsletters</p>
-						<p>Be the first to know about new products, exclusive collections,latest trends,stories and more.</p>
+						<p>Be the first to know about new products, exclusive collections, latest trends, stories and more.</p>
 					</div>
 					<div class="col-sm-6 signup-email nopadding">
 						<div class="col-sm-6 nopadding">
@@ -26,8 +26,8 @@
 						</div>
 						<div class="col-sm-3 nopadding">
 							<select id="gender" class="gender">
-								<option value="Male">Male</option>
-								<option value="Female">Female</option>
+								<option value="Male">Men</option>
+								<option value="Female">Women</option>
 							</select>
 						</div>
 						<div class="col-sm-3 nopadding">
@@ -85,7 +85,7 @@
 					} else if (data == "success") {
 						
 						$("#error_message").css({"display":"block"});
-			            document.getElementById("error_message").innerHTML = "<font color='#60a119'>Yay! We can't wait to be pen-pals with you.</font>";
+			            document.getElementById("error_message").innerHTML = "<font color='#60a119'>Thank You for registering for our newsletter</font>";
 			          //TPR-667 START
 			            /* utag.link({
 							"link_obj": this, "link_text": "newsletter_subscription" , "event_type" : "newsletter_subscription" 

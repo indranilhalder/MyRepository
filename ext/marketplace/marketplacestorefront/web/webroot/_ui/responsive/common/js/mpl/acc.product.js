@@ -468,6 +468,10 @@ sendAddToBag : function(formId, isBuyNow) {
 	
 	var input_name = "qty";
 	var stock_id = "stock";
+	//SDI-1023
+	if(formId == "addToCartForm" && $("#pageType").val() == "/sellersdetailpage") {
+		 $("#addToCartForm #stock").val($("#winning_product_stock").val());
+	}
 	var ussid="ussid";
 	var dataString = $('#' + formId).serialize();
 	var quantity = $("#" + formId + " :input[name='" + input_name + "']")

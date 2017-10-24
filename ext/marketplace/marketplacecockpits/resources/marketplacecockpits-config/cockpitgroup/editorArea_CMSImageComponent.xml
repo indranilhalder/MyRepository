@@ -49,7 +49,12 @@
 		<property qualifier="Item.creationTime" />
 		<property qualifier="Item.modifiedtime" />
 	</group>
-	
+
+	<group qualifier="mobileApp" visible="true" initially-opened="false">
+		<label key="marketplacecockpits.AbstractCMSComponent.appPosition" />
+		<property  qualifier="AbstractCMSComponent.appPosition" />
+	</group>
+
 	<custom-group 
 		class="de.hybris.platform.cockpit.services.config.impl.UnassignedEditorSectionConfiguration" 
 		qualifier="unassigned"
