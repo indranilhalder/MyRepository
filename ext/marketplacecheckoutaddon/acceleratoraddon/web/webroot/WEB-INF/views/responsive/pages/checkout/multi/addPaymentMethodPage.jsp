@@ -382,7 +382,7 @@
 														            <c:when test="${fn:containsIgnoreCase(map.value.cardBrand, 'discover')}">
 														           <span class="visa card_image"><img src="${commonResourcePath}/images/Discover.png" alt=""></span>
 														           </c:when>
-														           <c:when test="${fn:containsIgnoreCase(map.value.cardBrand, 'discover')}">
+														           <c:when test="${fn:containsIgnoreCase(map.value.cardBrand, 'jcb')}">
 														           <span class="visa card_image"><img src="${commonResourcePath}/images/JCB.png" alt=""></span>
 														           </c:when>
 														           <c:otherwise>
@@ -703,7 +703,7 @@
 														            <c:when test="${fn:containsIgnoreCase(map.value.cardBrand, 'discover')}">
 														           <span class="visa card_image"><img src="${commonResourcePath}/images/Discover.png" alt=""></span>
 														           </c:when>
-														           <c:when test="${fn:containsIgnoreCase(map.value.cardBrand, 'discover')}">
+														           <c:when test="${fn:containsIgnoreCase(map.value.cardBrand, 'jcb')}">
 														           <span class="visa card_image"><img src="${commonResourcePath}/images/JCB.png" alt=""></span>
 														           </c:when>
 														           <c:otherwise>
