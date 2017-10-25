@@ -51,9 +51,9 @@ import de.hybris.platform.promotions.util.Tuple2;
 import de.hybris.platform.servicelayer.config.ConfigurationService;
 import de.hybris.platform.servicelayer.exceptions.ModelSavingException;
 import de.hybris.platform.servicelayer.model.ModelService;
-import de.hybris.platform.servicelayer.search.FlexibleSearchService;
 import de.hybris.platform.servicelayer.user.UserService;
 import de.hybris.platform.store.services.BaseStoreService;
+import de.hybris.platform.util.localization.Localization;
 import de.hybris.platform.voucher.VoucherService;
 import de.hybris.platform.voucher.model.PromotionVoucherModel;
 import de.hybris.platform.voucher.model.RestrictionModel;
@@ -331,6 +331,8 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 	{
 		this.mplWalletFacade = mplWalletFacade;
 	}
+
+
 
 	private final String checkoutPageName = "Payment Options";
 	private final String RECEIVED_INR = "Congrats Received";
@@ -6209,7 +6211,7 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 			{
 				jsonObject.put("disableJsMode", false);
 				cart.setSplitModeInfo("Juspay");
-			   getSessionService().setAttribute("WalletTotal", "" + 0);
+				getSessionService().setAttribute("WalletTotal", "" + 0);
 				getModelService().save(cart);
 				getModelService().refresh(cart);
 				jsonObject.put("juspayAmt", 0);
@@ -6255,61 +6257,76 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 		try
 		{
 			final CustomerModel customer = (CustomerModel) getUserService().getCurrentUser();
-			balBucketwise = mplWalletFacade.getQCBucketBalance(customer.getCustomerWalletDetail().getWalletId());
 
-			if (balBucketwise.getResponseCode() == Integer.valueOf(0) && null != balBucketwise.getBuckets())
+			if (customer.getIsWalletActivated().booleanValue())
 			{
+				balBucketwise = mplWalletFacade.getQCBucketBalance(customer.getCustomerWalletDetail().getWalletId());
 
-				for (final Bucket bucketType : balBucketwise.getBuckets())
+				if (balBucketwise.getResponseCode() == Integer.valueOf(0) && null != balBucketwise.getBuckets())
 				{
-					if (bucketType.getType().equalsIgnoreCase("CUSTOMER"))
-					{
-						egvBalance += Double.parseDouble(bucketType.getAmount().toString().isEmpty() ? "0"
-								: "" + Double.parseDouble(bucketType.getAmount().toString()));
-						egvBalance = Double.parseDouble(df.format(egvBalance));
-					}
-					else
-					{
 
-						cashBalance += Double.parseDouble(bucketType.getAmount().toString().isEmpty() ? "0"
-								: "" + Double.parseDouble(bucketType.getAmount().toString()));
-						cashBalance = Double.parseDouble(df.format(cashBalance));
+					for (final Bucket bucketType : balBucketwise.getBuckets())
+					{
+						if (bucketType.getType().equalsIgnoreCase("CUSTOMER"))
+						{
+							egvBalance += Double.parseDouble(bucketType.getAmount().toString().isEmpty() ? "0"
+									: "" + Double.parseDouble(bucketType.getAmount().toString()));
+							egvBalance = Double.parseDouble(df.format(egvBalance));
+						}
+						else
+						{
+
+							cashBalance += Double.parseDouble(bucketType.getAmount().toString().isEmpty() ? "0"
+									: "" + Double.parseDouble(bucketType.getAmount().toString()));
+							cashBalance = Double.parseDouble(df.format(cashBalance));
+						}
+
+					}
+
+					totalWalletAmt = Double.parseDouble(balBucketwise.getWallet().getBalance().toString().isEmpty() ? "0"
+							: "" + Double.parseDouble(balBucketwise.getWallet().getBalance().toString()));
+					totalWalletAmt = Double.parseDouble(df.format(totalWalletAmt));
+
+					if (Double.parseDouble("" + totalWalletAmt) < Double.parseDouble("" + totalCartAmt))
+					{
+						juspayAmt = Double.parseDouble("" + totalCartAmt) - Double.parseDouble("" + totalWalletAmt);
+						juspayAmt = Double.parseDouble(df.format(juspayAmt));
+
 					}
 
 				}
 
-				totalWalletAmt = Double.parseDouble(balBucketwise.getWallet().getBalance().toString().isEmpty() ? "0"
-						: "" + Double.parseDouble(balBucketwise.getWallet().getBalance().toString()));
-				totalWalletAmt = Double.parseDouble(df.format(totalWalletAmt));
-
-				if (Double.parseDouble("" + totalWalletAmt) < Double.parseDouble("" + totalCartAmt))
+				if (totalWalletAmt == 0)
 				{
-					juspayAmt = Double.parseDouble("" + totalCartAmt) - Double.parseDouble("" + totalWalletAmt);
-					juspayAmt = Double.parseDouble(df.format(juspayAmt));
+					getSessionService().setAttribute("getCliqCashMode", "false");
+					getSessionService().setAttribute("cliqCashPaymentMode", StringUtils.EMPTY);
+					jsonObject.put("totalWalletAmt", "0");
+					jsonObject.put("totalCash", "" + "0");
+					jsonObject.put("totalEgvBalance", "" + "0");
+					jsonObject.put("disableWallet", true);
+					jsonObject.put("isWalletActive", true);
+					jsonObject.put("walletDisableMsg", "");
 
 				}
+				else
+				{
 
+					jsonObject.put("totalWalletAmt", totalWalletAmt);
+					jsonObject.put("totalCash", "" + cashBalance);
+					jsonObject.put("totalEgvBalance", "" + egvBalance);
+					jsonObject.put("disableWallet", false);
+					jsonObject.put("isWalletActive", true);
+					jsonObject.put("walletDisableMsg", "");
+				}
 			}
-
-			if (totalWalletAmt == 0)
+			else
 			{
-				getSessionService().setAttribute("getCliqCashMode", "false");
-				getSessionService().setAttribute("cliqCashPaymentMode", StringUtils.EMPTY);
 				jsonObject.put("totalWalletAmt", "0");
 				jsonObject.put("totalCash", "" + "0");
 				jsonObject.put("totalEgvBalance", "" + "0");
 				jsonObject.put("disableWallet", true);
-				//jsonObject.put("juspayAmt", "0");
-
-			}
-			else
-			{
-
-				jsonObject.put("totalWalletAmt", totalWalletAmt);
-				jsonObject.put("totalCash", "" + cashBalance);
-				jsonObject.put("totalEgvBalance", "" + egvBalance);
-				jsonObject.put("disableWallet", false);
-				//jsonObject.put("juspayAmt", juspayAmt);
+				jsonObject.put("isWalletActive", false);
+				jsonObject.put("walletDisableMsg", Localization.getLocalizedString("text.cliq.cash.payment.wallet.disable.label"));
 			}
 		}
 		catch (final Exception e)
@@ -6322,6 +6339,8 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 			jsonObject.put("totalEgvBalance", "" + egvBalance);
 			jsonObject.put("disableWallet", true);
 			jsonObject.put("juspayAmt", "0");
+			jsonObject.put("isWalletActive", true);
+			jsonObject.put("walletDisableMsg", "");
 
 		}
 

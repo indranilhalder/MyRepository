@@ -53,11 +53,25 @@
 						</tr>
 					</table>
 				</div>
-				<div class="cliqCashContainerRight">
-					<a class="cliqCashBtns" href="<c:url value="/wallet"/>"><spring:theme
+				
+				<c:choose>
+				<c:when test="${isCustomerWalletActive}">
+						<div class="cliqCashContainerRight">
+					     <a class="cliqCashBtns" href="<c:url value="/wallet"/>"><spring:theme
 							text="ADD GIFT CARD" code="text.add.cliq.cash.addgiftcard.label" />
-					</a>
-				</div>
+				     	</a>
+				     </div>
+				</c:when>
+				<c:otherwise>
+				<div class="cliqCashContainerRight">
+					     <a class="cliqCashBtns" style="display: none; " href="<c:url value="/wallet"/>"><spring:theme
+							text="ADD GIFT CARD" code="text.add.cliq.cash.addgiftcard.label" />
+				     	</a>
+				     </div>
+				
+				</c:otherwise>
+				</c:choose>
+		
 			</div>
 		</div>
 		<br />

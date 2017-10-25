@@ -235,18 +235,26 @@ public class WalletController extends AbstractPageController
 						walletTrasacationsListData1 = walletTrasacationsListData;
 					}
 
+					if (null != walletTrasacationsListData && walletTrasacationsListData.getResponseCode() == 10545)
+					{
+
+						GlobalMessages.addFlashMessage(redirectAttributes, GlobalMessages.INFO_MESSAGES_HOLDER,
+								"text.cliq.cash.payment.wallet.disable.label", null);
+					}
+
 				}
+
 				else
 				{
-					//					GlobalMessages.addFlashMessage(redirectAttributes, GlobalMessages.INFO_MESSAGES_HOLDER,
-					//							"text.cliqcash.use.wallet.fail", null);
+					GlobalMessages.addFlashMessage(redirectAttributes, GlobalMessages.INFO_MESSAGES_HOLDER,
+							"text.cliqcash.use.wallet.fail", null);
 					System.out.println("Fail To active user wallet" + (null != customerRegisterResponse.getResponseMessage()
 							? customerRegisterResponse.getResponseMessage() : "QC Not Responding"));
 					LOG.error("Fail To active user wallet" + (null != customerRegisterResponse.getResponseMessage()
 							? customerRegisterResponse.getResponseMessage() : "QC Not Responding"));
 				}
 			}
-
+			model.addAttribute("isCustomerWalletActive", currentCustomer.getIsWalletActivated().booleanValue());
 		}
 		catch (final Exception ex)
 		{
@@ -270,6 +278,8 @@ public class WalletController extends AbstractPageController
 		model.addAttribute("WalletBalance", balanceAmount);
 		model.addAttribute("walletTrasacationsListData", walletTrasacationsListData1.getWalletTransactions());
 		model.addAttribute("dateFormat", dateFormat);
+
+
 
 
 		return "addon:/marketplacecheckoutaddon/pages/checkout/single/cliqcash";

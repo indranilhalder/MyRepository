@@ -5761,11 +5761,24 @@ function WalletDetailAjax(){
 				 $(".useGiftCardBtn").css('opacity','0.5');
 				 $("#addCliqCashId").show();
 				 $("#useCliqCashId").hide();
+				 
 			} else {
 				$("#useGiftCardCheckbox").prop('disabled',false);
 				 $(".useGiftCardBtn").css('cursor','pointer');
 				 $(".useGiftCardBtn").css('opacity','1');
 				 $("#useCliqCashId").show(); 
+				
+			}
+			
+		if(!data.isWalletActive){
+			$("#useGiftCardCheckbox").prop('disabled',true);
+			 $(".useGiftCardBtn").css('cursor','not-allowed');
+			 $(".useGiftCardBtn").css('opacity','0.5');
+			 $("#addCliqCashId").show();
+			 $("#useCliqCashId").hide();
+			 $("#addNewCardId").hide();
+			 document.getElementById('addCliqCashId').innerHTML ="";
+			 document.getElementById('addCliqCashId').innerHTML = data.walletDisableMsg;
 				
 			}
 		},	
