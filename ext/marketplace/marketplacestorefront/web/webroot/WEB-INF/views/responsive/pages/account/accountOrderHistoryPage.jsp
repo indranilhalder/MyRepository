@@ -30,6 +30,17 @@
 <spring:eval expression="T(de.hybris.platform.util.Config).getParameter('order.return.enabled')" var="returnFlag"/> 
 <style>
 
+.orderRedeemedStatusInfo {
+	text-align: right;
+	color: green;
+}
+
+.orderRedeemedStatusInfo span {
+	font-weight: bold;
+	padding: 2px;
+	border: 2px dashed;
+}
+
 .showStatementModel {
  display: none;
  position: fixed;
@@ -594,7 +605,7 @@
 															<c:forEach items="${egvStatusMap}" var="entryforEgv">
 																
 																	<c:if test="${entryforEgv.key eq orderHistoryDetail.code and entryforEgv.value eq 'REDEEMED'}">
-																	
+																	<div class="status orderRedeemedStatusInfo"><span>REEDEMED</span></div><br />
 																	<div class="statusDate">
 																              <span><spring:theme code="text.orderHistory.seller.order.numbe" text="Redeemed:" /></span>&nbsp;
 																              <c:forEach items="${approvedFlag.statusRecords}" var="recordDate">
