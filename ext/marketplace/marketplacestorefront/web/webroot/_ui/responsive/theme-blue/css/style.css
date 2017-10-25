@@ -77011,3 +77011,9 @@ body .account .right-account form label.invite-text-lbl{
 	padding-right: 20px;
 	}
 /* Quantity dropdown in homefurnishing end */
+
+/* HOME-208 Start */
+#quantity_dropdown{
+	   float: right;
+}
+/* HOME-208 End */

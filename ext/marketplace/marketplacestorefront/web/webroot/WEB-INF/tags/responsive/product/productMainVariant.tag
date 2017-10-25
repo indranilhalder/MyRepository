@@ -309,9 +309,21 @@ share mobile -->
    		</c:choose>
 	</c:when>
 	<c:otherwise>
-               <span>
+               <c:choose>
+   			 <c:when test="${product.rootCategory =='HomeFurnishing'}">
+   			 <span>
+					<spring:theme code="product.variant.size.HF"></spring:theme><c:if test="${not empty productSizeType}">(${productSizeType})</c:if>
+			  </span> 
+			   <span>
+					<spring:theme code="product.variant.quantity"></spring:theme><c:if test="${not empty productSizeType}">(${productSizeType})</c:if>
+			  </span> 
+   			 </c:when>
+   			 <c:otherwise>
+   			 <span>
 					<spring:theme code="product.variant.size"></spring:theme><c:if test="${not empty productSizeType}">(${productSizeType})</c:if>
-			  </span>
+			  </span> 
+   			 </c:otherwise>
+   			 </c:choose>
     </c:otherwise>
 	</c:choose>		
 	
