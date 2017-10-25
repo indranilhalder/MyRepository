@@ -6249,7 +6249,7 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 				+ (null != cart.getDeliveryCost() ? cart.getDeliveryCost().doubleValue() : 0);
 		final DecimalFormat df = new DecimalFormat("#.##");
 
-		final double cashBalance = 0;
+		double cashBalance = 0;
 		double egvBalance = 0;
 		double walletPoint = 0;
 		double totalWalletAmt = 0;
@@ -6274,13 +6274,14 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 									: "" + Double.parseDouble(bucketType.getAmount().toString()));
 							egvBalance = Double.parseDouble(df.format(egvBalance));
 						}
-						//						if (bucketType.getType().equalsIgnoreCase("CREDIT"))
-						//						{
-						//							cashBalance += Double.parseDouble(bucketType.getAmount().toString().isEmpty() ? "0"
-						//									: "" + Double.parseDouble(bucketType.getAmount().toString()));
-						//							cashBalance = Double.parseDouble(df.format(cashBalance));
-						//						}
-						else
+						if (bucketType.getType().equalsIgnoreCase("CREDIT"))
+						{
+							cashBalance += Double.parseDouble(bucketType.getAmount().toString().isEmpty() ? "0"
+									: "" + Double.parseDouble(bucketType.getAmount().toString()));
+							cashBalance = Double.parseDouble(df.format(cashBalance));
+						}
+						if (bucketType.getType().equalsIgnoreCase("GOODWILL") || bucketType.getType().equalsIgnoreCase("PROMOTION")
+								|| bucketType.getType().equalsIgnoreCase("CASHBACK"))
 						{
 
 							walletPoint += Double.parseDouble(bucketType.getAmount().toString().isEmpty() ? "0"
