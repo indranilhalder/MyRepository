@@ -632,11 +632,11 @@ function validateForm() {
 			$("#giftCardFromFirstNameError").show();
 			$("#giftCardFromFirstNameError").text("First name cannot be blank.");
 			formValid = false;
-	}else if(letters.test(firstName) == false){
+	}/* else if(letters.test(firstName) == false){
 		$("#giftCardFromFirstNameError").show();
 		$("#giftCardFromFirstNameError").text("First name should contain only alphabets.");
 			formValid = false;
-	}else {
+	} */else {
 		$("#giftCardFromFirstNameError").hide();
 	}
 	
@@ -645,11 +645,11 @@ function validateForm() {
 			$("#giftCardFromLastNameError").show();
 			$("#giftCardFromLastNameError").text("Last name cannot be blank.");
 			formValid = false;
-	}else if(letters.test(lastName) == false){
+	}/* else if(letters.test(lastName) == false){
 		$("#giftCardFromLastNameError").show();
 		$("#giftCardFromNameError").text("Last name should contain only alphabets.");
 			formValid = false;
-	}else {
+	} */else {
 		$("#giftCardFromLastNameError").hide();
 	}
   
