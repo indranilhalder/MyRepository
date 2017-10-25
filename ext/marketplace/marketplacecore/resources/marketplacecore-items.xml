@@ -13282,8 +13282,8 @@
 		<!-- TPR-6665 : sysnonums update to slave servers end -->
 		<!-- TPR- 5989 : Web Form to create a Ticket from commerce -->
 		<typegroup name="MPL_WEB_CRM_TICKET">
-		<itemtype code="MplWebCrmTicket" autocreate="true" generate="true" extends="GenericItem">
-				<deployment table="MplWebCrmTicket" typecode="11890" />
+		<itemtype code="MplWebCrm" autocreate="true" generate="true" extends="GenericItem">
+				<deployment table="MplWebCrm" typecode="11890" />
 				<attributes>
 					<attribute qualifier="nodeType" type="java.lang.String">
 						<modifiers search="true" read="true" write="true" optional="false"/>
@@ -13317,6 +13317,58 @@
 					</attribute>
 					<attribute qualifier="nodeDisplay" type="boolean">
 					<defaultvalue>java.lang.Boolean.TRUE</defaultvalue>
+						<persistence type="property" />
+						<modifiers search="true" optional="false" read="true" write="true" />
+					</attribute>
+				</attributes>
+			</itemtype>
+			
+			<itemtype code="MplWebCrmTicket" autocreate="true" generate="true" extends="GenericItem">
+				<deployment table="MplWebCrmTicket" typecode="11898" />
+				<attributes>
+					<attribute qualifier="commerceTicketId" type="java.lang.String">
+						<modifiers search="true" read="true" write="true" optional="false"/>
+						<persistence type="property" />
+					</attribute>
+					<attribute qualifier="typeOfQuery" type="java.lang.String">
+						<persistence type="property" />
+						<modifiers search="true" optional="false" read="true" write="true" />
+					</attribute>
+					<attribute qualifier="transactionId" type="java.lang.String">
+						<persistence type="property" />
+						<modifiers search="true" optional="false" read="true" write="true" />
+					</attribute>
+					<attribute qualifier="L1" type="java.lang.String">
+						<persistence type="property" />
+						<modifiers search="true" optional="false" read="true" write="true" />
+					</attribute>
+					<attribute qualifier="L2" type="java.lang.String">
+						<persistence type="property" />
+						<modifiers search="true" optional="false" read="true" write="true" />
+					</attribute>
+					<attribute qualifier="L3" type="java.lang.String">
+					<defaultvalue>java.lang.Boolean.TRUE</defaultvalue>
+						<persistence type="property" />
+						<modifiers search="true" optional="false" read="true" write="true" />
+					</attribute>
+					<attribute qualifier="L4" type="java.lang.String">
+					       <persistence type="property" />
+						<modifiers search="true" optional="false" read="true" write="true" />
+					</attribute>
+					<attribute qualifier="comment" type="java.lang.String">
+						<persistence type="property" />
+						<modifiers search="true" optional="false" read="true" write="true" />
+					</attribute>
+					<attribute qualifier="attachment" type="java.lang.String">
+						<persistence type="property" />
+						<modifiers search="true" optional="false" read="true" write="true" />
+					</attribute>
+					<attribute qualifier="sentToPI" type="boolean">
+					<defaultvalue>java.lang.Boolean.TRUE</defaultvalue>
+						<persistence type="property" />
+						<modifiers search="true" optional="false" read="true" write="true" />
+					</attribute>
+					<attribute qualifier="crmTicketId" type="java.lang.String">				
 						<persistence type="property" />
 						<modifiers search="true" optional="false" read="true" write="true" />
 					</attribute>
