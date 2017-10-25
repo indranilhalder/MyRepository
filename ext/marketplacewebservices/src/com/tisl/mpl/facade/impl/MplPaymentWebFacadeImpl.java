@@ -331,6 +331,12 @@ public class MplPaymentWebFacadeImpl implements MplPaymentWebFacade
 				// Validate Cart Model is not null
 				if (null != cart)
 				{
+					/*EGV Changes START */
+					
+					if(null != cart.getPayableWalletAmount() && cart.getPayableWalletAmount().doubleValue() > 0.0D ) {
+						promoPriceData.setCliqCashApplied(true);
+					}
+					/*EGV Changes END */
 					final Map<String, MplZoneDeliveryModeValueModel> freebieModelMap = new HashMap<String, MplZoneDeliveryModeValueModel>();
 					final Map<String, Long> freebieParentQtyMap = new HashMap<String, Long>();
 					if (cart.getEntries() != null)
@@ -523,6 +529,13 @@ public class MplPaymentWebFacadeImpl implements MplPaymentWebFacade
 				// Validate Cart Model is not null
 				if (null != order)
 				{
+					/*EGV Changes START */
+					
+					if(null != order.getPayableWalletAmount() && order.getPayableWalletAmount().doubleValue() > 0.0D ) {
+						promoPriceData.setCliqCashApplied(true);
+					}
+					
+					/*EGV Changes END */
 					final Map<String, MplZoneDeliveryModeValueModel> freebieModelMap = new HashMap<String, MplZoneDeliveryModeValueModel>();
 					final Map<String, Long> freebieParentQtyMap = new HashMap<String, Long>();
 					if (order.getEntries() != null)

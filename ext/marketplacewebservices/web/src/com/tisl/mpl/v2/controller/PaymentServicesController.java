@@ -384,16 +384,20 @@ public class PaymentServicesController extends BaseController
 							throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9075);
 						}
 						
-						if (cart.getSplitModeInfo().equalsIgnoreCase(MarketplacewebservicesConstants.PAYMENT_MODE_SPLIT))
+						if (null != cart.getSplitModeInfo() && cart.getSplitModeInfo().equalsIgnoreCase(MarketplacewebservicesConstants.PAYMENT_MODE_SPLIT))
 						{
 							
-							if (null != cart.getPayableWalletAmount())
+							if (null != cart.getPayableWalletAmount() && cart.getPayableWalletAmount().doubleValue() > 0.0D )
 							{
 								promoPriceData.setPaybleAmount(Double.valueOf(cart.getTotalPrice().doubleValue()-cart.getPayableWalletAmount().doubleValue()));
+								promoPriceData.setCliqCashApplied(true);
 							}
 						}
-						else
+						else if (null != cart.getSplitModeInfo() && cart.getSplitModeInfo().equalsIgnoreCase(MarketplacewebservicesConstants.PAYMENT_MODE_CLIQ_CASH))
 						{
+							promoPriceData.setPaybleAmount(Double.valueOf(0.0D));
+							promoPriceData.setCliqCashApplied(true);
+						}else {
 							promoPriceData.setPaybleAmount(cart.getTotalPrice());
 							promoPriceData.setCliqCashApplied(false);
 						}
@@ -446,6 +450,24 @@ public class PaymentServicesController extends BaseController
 				else
 				{
 					throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9053);
+				}
+				
+				if (null != orderModel.getSplitModeInfo() && orderModel.getSplitModeInfo().equalsIgnoreCase(MarketplacewebservicesConstants.PAYMENT_MODE_SPLIT))
+				{
+					
+					if (null != orderModel.getPayableWalletAmount() && orderModel.getPayableWalletAmount().doubleValue() > 0.0D )
+					{
+						promoPriceData.setPaybleAmount(Double.valueOf(orderModel.getTotalPrice().doubleValue()-orderModel.getPayableWalletAmount().doubleValue()));
+						promoPriceData.setCliqCashApplied(true);
+					}
+				}
+				else if (null != orderModel.getSplitModeInfo() &&  orderModel.getSplitModeInfo().equalsIgnoreCase(MarketplacewebservicesConstants.PAYMENT_MODE_CLIQ_CASH))
+				{
+					promoPriceData.setPaybleAmount(Double.valueOf(0.0D));
+					promoPriceData.setCliqCashApplied(true);
+				}else {
+					promoPriceData.setPaybleAmount(orderModel.getTotalPrice());
+					promoPriceData.setCliqCashApplied(false);
 				}
 			}
 
