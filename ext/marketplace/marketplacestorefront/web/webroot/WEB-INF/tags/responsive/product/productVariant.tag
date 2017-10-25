@@ -315,7 +315,7 @@ var buyingGuideData ='${buyingGuide}';
    			 <span>
 					<spring:theme code="product.variant.size.HF"></spring:theme><c:if test="${not empty productSizeType}">(${productSizeType})</c:if>
 			  </span> 
-			   <span>
+			     <span style="float: right;">
 					<spring:theme code="product.variant.quantity"></spring:theme><c:if test="${not empty productSizeType}">(${productSizeType})</c:if>
 			  </span> 
    			 </c:when>
