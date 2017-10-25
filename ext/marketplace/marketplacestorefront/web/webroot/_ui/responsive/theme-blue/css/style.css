@@ -77457,3 +77457,34 @@ label[for='priority_paytm'] img{
     margin-left: 10px;
 }
 /*paytm integration end*/
+
+/* Pagination link */
+li.pageNoLi {
+    display: inline-block;
+}
+a.pageNo {
+    display: inline-block;
+    padding: 7px 4px;
+    margin: 5px;
+    cursor: pointer;
+    height: 32px;
+    width: 32px;
+    border-radius: 50%;
+}
+.prev-block{
+	text-transform: uppercase;
+    display: inline-block;
+    padding: 12px 25px;
+    cursor: pointer;
+}
+.pagination-block{
+    display: inline-block;
+    padding: 12px 25px;
+    cursor: pointer;
+}
+.next-block{
+	text-transform: uppercase;
+    display: inline-block;
+    padding: 12px 25px;
+    cursor: pointer;
+}

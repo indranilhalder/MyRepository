@@ -78,13 +78,13 @@
 <div class=""><span class=""><span>Total Pages :: ${searchPageData.pagination.numberOfPages}</span></span>
 <c:choose>
 <c:when test="${searchPageData.pagination.numberOfPages > 1}">
-<div class=""><a href=""><span>Previous</span></a></div>
-    <ul class="">
+<div class="prev-block"><a href=""><span class="prev-page">Previous</span></a></div>
+    <ul class="pagination-block">
     	<c:forEach begin="1" end="${searchPageData.pagination.numberOfPages}" var="page">
         <li class="pageNoLi"><a class="pageNo" href="#nogo">${page}</a></li>
         </c:forEach>
     </ul>
-    <div class=""><a href=""><span>Next</span></a></div>
+    <div class="next-block"><a href="next-page"><span>Next</span></a></div>
 </c:when>
 <c:otherwise>
     <ul class="">
