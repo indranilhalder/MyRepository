@@ -77488,3 +77488,18 @@ a.pageNo {
     padding: 12px 25px;
     cursor: pointer;
 }
+a.pageNo.active{
+    display: inline-block;
+    background: #a9133d;
+    padding: 12px 25px;
+    cursor: pointer;
+    display: inline-block;
+    padding: 9px 4px;
+    margin: 5px;
+    cursor: pointer;
+    height: 32px;
+    width: 32px;
+    border-radius: 50%;
+    color: #fff;
+}
+/* Pagination link */
