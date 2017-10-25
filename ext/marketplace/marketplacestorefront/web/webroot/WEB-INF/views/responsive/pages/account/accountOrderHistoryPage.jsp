@@ -349,6 +349,7 @@
 												&nbsp;${entry.quantity}
 												</c:if>
 															</p>
+															<c:if test="${orderHistoryDetail.isEGVOrder ne  true}">
 															<p>
 																<c:if test="${not empty entry.product.size}">
 																	<c:choose>
@@ -389,6 +390,7 @@
 																	&nbsp;${entry.product.colour}
 																</c:if>
 															</p>
+															</c:if>
 														
 														<div class="attributes">
 
@@ -401,6 +403,7 @@
 																		displayFreeForZero="true" />
 																</ycommerce:testId>
 															</p>
+															<c:if test="${orderHistoryDetail.isEGVOrder ne  true}">
 															<p>
 																<%-- <spring:theme text="Delivery Charges:" /> --%>
 
@@ -428,6 +431,7 @@
 																</c:otherwise>
 															</c:choose>
 															</p>
+															</c:if>
 														</div>
 														<c:if
 															test="${not empty entry.imeiDetails.serialNum &&  fn:length(entry.imeiDetails.serialNum) > 0}">
