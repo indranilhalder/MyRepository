@@ -644,21 +644,21 @@ public class MplOrderEntryPopulator extends OrderEntryPopulator
 					apportionDetaValue.setCardExpiry(getCardExpDate(apportionDeta.getCardExpiry()));
 					apportionDetaValue.setOrderId(apportionDeta.getOrderId());
 					apportionDetaValue.setCardNumber(apportionDeta.getCardNumber());
-					apportionDetaValue.setQcApportionValue(apportionDeta.getQcApportionValue());
-					apportionDetaValue.setQcDeliveryValue(apportionDeta.getQcDeliveryValue());
-					apportionDetaValue.setQcShippingValue(apportionDeta.getQcShippingValue());
-					apportionDetaValue.setQcSchedulingValue(apportionDeta.getQcSchedulingValue());
+					apportionDetaValue.setQcApportionValue(getRoundUpValue(apportionDeta.getQcApportionValue()));
+					apportionDetaValue.setQcDeliveryValue(getRoundUpValue(apportionDeta.getQcDeliveryValue()));
+					apportionDetaValue.setQcShippingValue(getRoundUpValue(apportionDeta.getQcShippingValue()));
+					apportionDetaValue.setQcSchedulingValue(getRoundUpValue(apportionDeta.getQcSchedulingValue()));
 					walletCardApportionDetaList.add(apportionDetaValue);
 				}
 				walletApportionPaymentData.setWalletCardApportionDataList(walletCardApportionDetaList);
-				walletApportionPaymentData.setJuspayApportionValue(source.getWalletApportionPaymentInfo().getJuspayApportionValue());
-				walletApportionPaymentData.setJuspayDeliveryValue(source.getWalletApportionPaymentInfo().getJuspayDeliveryValue());
-				walletApportionPaymentData.setJuspaySchedulingValue(source.getWalletApportionPaymentInfo().getJuspaySchedulingValue());
-				walletApportionPaymentData.setJuspayShippingValue(source.getWalletApportionPaymentInfo().getJuspayShippingValue());
-				walletApportionPaymentData.setQcApportionPartValue(source.getWalletApportionPaymentInfo().getQcApportionPartValue());
-				walletApportionPaymentData.setQcSchedulingPartValue(source.getWalletApportionPaymentInfo().getQcSchedulingPartValue());
-				walletApportionPaymentData.setQcDeliveryPartValue(source.getWalletApportionPaymentInfo().getQcDeliveryPartValue());
-				walletApportionPaymentData.setQcShippingPartValue(source.getWalletApportionPaymentInfo().getQcShippingPartValue());
+				walletApportionPaymentData.setJuspayApportionValue(getRoundUpValue(source.getWalletApportionPaymentInfo().getJuspayApportionValue()));
+				walletApportionPaymentData.setJuspayDeliveryValue(getRoundUpValue(source.getWalletApportionPaymentInfo().getJuspayDeliveryValue()));
+				walletApportionPaymentData.setJuspaySchedulingValue(getRoundUpValue(source.getWalletApportionPaymentInfo().getJuspaySchedulingValue()));
+				walletApportionPaymentData.setJuspayShippingValue(getRoundUpValue(source.getWalletApportionPaymentInfo().getJuspayShippingValue()));
+				walletApportionPaymentData.setQcApportionPartValue(getRoundUpValue(source.getWalletApportionPaymentInfo().getQcApportionPartValue()));
+				walletApportionPaymentData.setQcSchedulingPartValue(getRoundUpValue(source.getWalletApportionPaymentInfo().getQcSchedulingPartValue()));
+				walletApportionPaymentData.setQcDeliveryPartValue(getRoundUpValue(source.getWalletApportionPaymentInfo().getQcDeliveryPartValue()));
+				walletApportionPaymentData.setQcShippingPartValue(getRoundUpValue(source.getWalletApportionPaymentInfo().getQcShippingPartValue()));
 				walletApportionPaymentData.setOrderid(source.getWalletApportionPaymentInfo().getOrderId());
 				walletApportionPaymentData.setStatus(source.getWalletApportionPaymentInfo().getStatus());
 				walletApportionPaymentData.setType(source.getWalletApportionPaymentInfo().getType());
@@ -696,23 +696,23 @@ public class MplOrderEntryPopulator extends OrderEntryPopulator
 					apportionDetaValue.setCardExpiry(getCardExpDate(apportionDeta.getCardExpiry()));
 					apportionDetaValue.setOrderId(apportionDeta.getOrderId());
 					apportionDetaValue.setCardNumber(apportionDeta.getCardNumber());
-					apportionDetaValue.setQcApportionValue(apportionDeta.getQcApportionValue());
-					apportionDetaValue.setQcDeliveryValue(apportionDeta.getQcDeliveryValue());
-					apportionDetaValue.setQcShippingValue(apportionDeta.getQcShippingValue());
-					apportionDetaValue.setQcSchedulingValue(apportionDeta.getQcSchedulingValue());
+					apportionDetaValue.setQcApportionValue(getRoundUpValue(apportionDeta.getQcApportionValue()));
+					apportionDetaValue.setQcDeliveryValue(getRoundUpValue(apportionDeta.getQcDeliveryValue()));
+					apportionDetaValue.setQcShippingValue(getRoundUpValue(apportionDeta.getQcShippingValue()));
+					apportionDetaValue.setQcSchedulingValue(getRoundUpValue(getRoundUpValue(apportionDeta.getQcSchedulingValue())));
 					walletCardApportionDetaList.add(apportionDetaValue);
 				}
 				walletApportionPaymentData.setWalletCardApportionDataList(walletCardApportionDetaList);
 			}
 			
-			walletApportionPaymentData.setJuspayApportionValue(source.getWalletApportionPaymentInfo().getJuspayApportionValue());
-			walletApportionPaymentData.setJuspayDeliveryValue(source.getWalletApportionPaymentInfo().getJuspayDeliveryValue());
-			walletApportionPaymentData.setJuspaySchedulingValue(source.getWalletApportionPaymentInfo().getJuspaySchedulingValue());
-			walletApportionPaymentData.setJuspayShippingValue(source.getWalletApportionPaymentInfo().getJuspayShippingValue());
-			walletApportionPaymentData.setQcApportionPartValue(source.getWalletApportionPaymentInfo().getQcApportionPartValue());
-			walletApportionPaymentData.setQcSchedulingPartValue(source.getWalletApportionPaymentInfo().getQcSchedulingPartValue());
-			walletApportionPaymentData.setQcDeliveryPartValue(source.getWalletApportionPaymentInfo().getQcDeliveryPartValue());
-			walletApportionPaymentData.setQcShippingPartValue(source.getWalletApportionPaymentInfo().getQcShippingPartValue());
+			walletApportionPaymentData.setJuspayApportionValue(getRoundUpValue(source.getWalletApportionPaymentInfo().getJuspayApportionValue()));
+			walletApportionPaymentData.setJuspayDeliveryValue(getRoundUpValue(source.getWalletApportionPaymentInfo().getJuspayDeliveryValue()));
+			walletApportionPaymentData.setJuspaySchedulingValue(getRoundUpValue(source.getWalletApportionPaymentInfo().getJuspaySchedulingValue()));
+			walletApportionPaymentData.setJuspayShippingValue(getRoundUpValue(source.getWalletApportionPaymentInfo().getJuspayShippingValue()));
+			walletApportionPaymentData.setQcApportionPartValue(getRoundUpValue(source.getWalletApportionPaymentInfo().getQcApportionPartValue()));
+			walletApportionPaymentData.setQcSchedulingPartValue(getRoundUpValue(source.getWalletApportionPaymentInfo().getQcSchedulingPartValue()));
+			walletApportionPaymentData.setQcDeliveryPartValue(getRoundUpValue(source.getWalletApportionPaymentInfo().getQcDeliveryPartValue()));
+			walletApportionPaymentData.setQcShippingPartValue(getRoundUpValue(source.getWalletApportionPaymentInfo().getQcShippingPartValue()));
 			walletApportionPaymentData.setOrderid(source.getWalletApportionPaymentInfo().getOrderId());
 			walletApportionPaymentData.setStatus(source.getWalletApportionPaymentInfo().getStatus());
 			walletApportionPaymentData.setType(source.getWalletApportionPaymentInfo().getType());
@@ -749,4 +749,15 @@ public class MplOrderEntryPopulator extends OrderEntryPopulator
 		return null;
 	}
 	
+	
+	//Getting Round up value
+	private String getRoundUpValue(String value){
+		try{
+		Math.round(Float.parseFloat(value));
+		return Integer.toString(Math.round(Float.parseFloat(value)));
+		}catch(Exception exception){
+			exception.printStackTrace();
+		}
+		return null;
+	}
 }

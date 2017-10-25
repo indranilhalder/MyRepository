@@ -28,18 +28,22 @@
 		<table class="orderStatementTable table-bordered table">
 		<thead>
 			<tr>
-				<td class="orderTransactionId" rowspan="2">Transaction Id</td>
+				<td class="orderTransactionId" rowspan="3">Product</td>
 				<td colspan="8">Payment Information</td>
 			</tr>
 			<tr>
-				<td>Prepaid Apportion</td>
-				<td>Prepaid Delivery</td>
-				<td>Prepaid Shipping</td>
-				<td>Prepaid Scheduling</td>
-				<td>Wallet Apportion</td>
-				<td>Wallet Delivery</td>
-				<td>Wallet Shipping</td>
-				<td>Wallet Scheduling</td>
+				<td colspan="4">Amount payed using ${orderDetail.mplPaymentInfo.paymentOption} : ${juspayAmount}</td>
+				<td colspan="4">Amount payed using CliQ Cash: ${cliqCashAmount}</td>
+			</tr>
+			<tr>
+				<td>Product Charges</td>
+				<td>Delivery Charges</td>
+				<td>Shipping Charges</td>
+				<td>Scheduling Charges</td>
+				<td>Product Charges</td>
+				<td>Delivery Charges</td>
+				<td>Shipping Charges</td>
+				<td>Scheduling Charges</td>
 			</tr>
 		</thead>
 		<tbody>
@@ -108,83 +112,98 @@
 			</c:forEach>
 		</tbody>
 	</table>
+	
+	<c:if test="${not empty entry.walletApportionforReverseData}">				
+	<br />
+	
+	<table class="orderStatementTable table-bordered table">
+		<thead>
+			<tr>
+				<td class="orderTransactionId" rowspan="2">Product</td>
+				<td colspan="8">Refund Information</td>
+			</tr>
+			<%-- <tr>
+				<td colspan="4">Amount payed using ${orderDetail.mplPaymentInfo.paymentOption} : ${juspayAmount}</td>
+				<td colspan="4">Amount payed using CliQ Cash: ${cliqCashAmount}</td>
+			</tr> --%>
+			<tr>
+				<td>Product Charges</td>
+				<td>Delivery Charges</td>
+				<td>Shipping Charges</td>
+				<td>Scheduling Charges</td>
+				<td>Product Charges</td>
+				<td>Delivery Charges</td>
+				<td>Shipping Charges</td>
+				<td>Scheduling Charges</td>
+			</tr>
+		</thead>
+		<tbody>
+		<c:forEach items="${orderDetail.sellerOrderList}" var="sellerOrder"
+		varStatus="status">
+			<tr class="orderSellerId">
+				<td colspan="9"><span>Seller Order Id: ${sellerOrder.code}</span></td>
+			</tr>
+			<c:forEach items="${sellerOrder.entries}" var="entry"
+			varStatus="entryStatus">
+			<tr>
+				<td>${entry.transactionId}</td>
+				
+				<c:if test="${not empty entry.walletApportionforReverseData}">
+				<td>
+					<c:if
+						test="${not empty entry.walletApportionforReverseData.juspayApportionValue}">
+						 ${entry.walletApportionforReverseData.juspayApportionValue}
+					</c:if>
+				</td>
+				<td>
+					<c:if
+						test="${not empty entry.walletApportionforReverseData.juspayDeliveryValue}">
+						  ${entry.walletApportionforReverseData.juspayDeliveryValue}
+					</c:if>
+				</td>
+				<td>
+					<c:if
+						test="${not empty entry.walletApportionforReverseData.juspayShippingValue}">
+						  ${entry.walletApportionforReverseData.juspayShippingValue}
+					</c:if>
+				</td>
+				<td>
+					<c:if
+						test="${not empty entry.walletApportionforReverseData.juspaySchedulingValue}">
+						  ${entry.walletApportionforReverseData.juspaySchedulingValue}
+					</c:if>
+				</td>
+				<td>
+					<c:if
+						test="${not empty entry.walletApportionforReverseData.qcApportionPartValue}">
+						 ${entry.walletApportionforReverseData.qcApportionPartValue}
+					</c:if>
+				</td>
+				<td>
+					<c:if
+						test="${not empty entry.walletApportionforReverseData.qcDeliveryPartValue}">
+						  ${entry.walletApportionforReverseData.qcDeliveryPartValue}
+					</c:if>
+				</td>
+				<td>
+					<c:if
+						test="${not empty entry.walletApportionforReverseData.qcShippingPartValue}">
+						 ${entry.walletApportionforReverseData.qcShippingPartValue}
+					</c:if>
+				</td>
+				<td>
+					<c:if
+						test="${not empty entry.walletApportionforReverseData.qcSchedulingPartValue}">
+						  ${entry.walletApportionforReverseData.qcSchedulingPartValue}
+					</c:if>
+				</td>
+				</c:if>
+			</tr>
+			</c:forEach>
+			</c:forEach>
+		</tbody>
+	</table>
+	</c:if>
 	</div>
 	
-
-
-	<%-- <c:forEach items="${orderDetail.sellerOrderList}" var="sellerOrder"
-		varStatus="status">
-		<br><span>Seller Order Id ${sellerOrder.code}</span><br>
-		<c:forEach items="${sellerOrder.entries}" var="entry"
-			varStatus="entryStatus"><br><br>
-			<span>TransactionId: ${entry.transactionId}</span><br>
-			
-			<!--  -->
-			
-			<c:if test="${not empty entry.walletApportionPaymentData}">
-
-              <span>Payment information</span> <br>
-				<c:if
-					test="${not empty entry.walletApportionPaymentData.juspayApportionValue}">
-					JuspayApportion ${entry.walletApportionPaymentData.juspayApportionValue}<br>
-
-				</c:if>
-				
-				<c:if
-					test="${not empty entry.walletApportionPaymentData.juspayDeliveryValue}">
-					JuspayDelivery  ${entry.walletApportionPaymentData.juspayDeliveryValue}<br>
-
-				</c:if>
-				
-				<c:if
-					test="${not empty entry.walletApportionPaymentData.juspayShippingValue}">
-					juspayShippingValue  ${entry.walletApportionPaymentData.juspayShippingValue}<br>
-
-				</c:if>
-				
-				<c:if
-					test="${not empty entry.walletApportionPaymentData.juspaySchedulingValue}">
-					JuspayScheduling :${entry.walletApportionPaymentData.juspaySchedulingValue} <br>
-
-				</c:if>
-				
-				<c:if
-					test="${not empty entry.walletApportionPaymentData.qcApportionPartValue}">
-					QcApportionPart  :${entry.walletApportionPaymentData.qcApportionPartValue}
-<br>
-				</c:if>
-				
-				<c:if
-					test="${not empty entry.walletApportionPaymentData.qcDeliveryPartValue}">
-					qcDeliveryPartValue  ${entry.walletApportionPaymentData.qcDeliveryPartValue}
-<br>
-
-				</c:if>
-				
-				
-				
-				<c:if
-					test="${not empty entry.walletApportionPaymentData.qcDeliveryPartValue}">
-					qcDeliveryPartValue  ${entry.walletApportionPaymentData.qcDeliveryPartValue}
-<br>
-
-				</c:if>
-				
-				<c:if
-					test="${not empty entry.walletApportionPaymentData.qcDeliveryPartValue}">
-					qcDeliveryPartValue  ${entry.walletApportionPaymentData.qcDeliveryPartValue}
-<br>
-
-				</c:if>
-				
-				
-			</c:if>
-
-			<c:if test="${not empty entry.walletApportionPaymentData}">
-
-			</c:if>
-
-		</c:forEach>
-
-	</c:forEach> --%>
 </div>

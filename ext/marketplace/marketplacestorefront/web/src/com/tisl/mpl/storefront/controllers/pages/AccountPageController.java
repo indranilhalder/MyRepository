@@ -68,6 +68,7 @@ import de.hybris.platform.core.model.user.CustomerModel;
 import de.hybris.platform.core.model.user.UserModel;
 import de.hybris.platform.ordersplitting.model.ConsignmentEntryModel;
 import de.hybris.platform.ordersplitting.model.ConsignmentModel;
+import de.hybris.platform.payment.model.PaymentTransactionModel;
 import de.hybris.platform.returns.model.ReturnEntryModel;
 import de.hybris.platform.returns.model.ReturnRequestModel;
 import de.hybris.platform.servicelayer.config.ConfigurationService;
@@ -84,6 +85,9 @@ import de.hybris.platform.wishlist2.model.Wishlist2EntryModel;
 import de.hybris.platform.wishlist2.model.Wishlist2Model;
 
 import java.io.UnsupportedEncodingException;
+import java.math.BigDecimal;
+import java.math.MathContext;
+import java.math.RoundingMode;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLEncoder;
@@ -140,7 +144,6 @@ import com.granule.json.JSONObject;
 import com.hybris.oms.domain.changedeliveryaddress.TransactionSDDto;
 import com.tis.mpl.facade.address.validator.MplDeliveryAddressComparator;
 import com.tis.mpl.facade.changedelivery.MplDeliveryAddressFacade;
-import com.tisl.mpl.constants.GeneratedMarketplacecommerceservicesConstants.Enumerations.OrderStatus;
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.constants.clientservice.MarketplacecclientservicesConstants;
 import com.tisl.mpl.core.enums.AddressType;
@@ -254,6 +257,10 @@ import com.tisl.mpl.wsdto.GigyaProductReviewWsDTO;
 @RequestMapping(value = RequestMappingUrlConstants.LINK_MY_ACCOUNT)
 public class AccountPageController extends AbstractMplSearchPageController
 {
+	/**
+	 * 
+	 */
+	private static final String CLIQ_CASH = "Cliq Cash";
 	// Internal Redirects
 	private static final String REDIRECT_MY_ACCOUNT = REDIRECT_PREFIX + "/my-account";
 	private static final String REDIRECT_TO_ADDRESS_BOOK_PAGE = REDIRECT_PREFIX + RequestMappingUrlConstants.LINK_MY_ACCOUNT
@@ -8405,6 +8412,37 @@ public class AccountPageController extends AbstractMplSearchPageController
 		OrderModel orderModel = orderModelService.getOrderModel(orderId); 
 		OrderData orderDetail = mplCheckoutFacade.getOrderDetailsForCode(orderModel);
 		model.addAttribute("orderDetail",orderDetail);
+		
+		if (CollectionUtils.isNotEmpty(orderModel.getPaymentTransactions()))
+		{
+			for (PaymentTransactionModel paymentTransactionModel : orderModel.getPaymentTransactions())
+			{
+				if (CLIQ_CASH.equalsIgnoreCase(paymentTransactionModel.getPaymentProvider()))
+				{
+					model.addAttribute("cliqCashAmount", roundBigDecimal(paymentTransactionModel.getPlannedAmount()).toPlainString());
+				}
+				else
+				{
+					model.addAttribute("juspayAmount", roundBigDecimal(paymentTransactionModel.getPlannedAmount()).toPlainString());
+				}
+			}
+		}
+		
 		return ControllerConstants.Views.Pages.Account.GET_Statement_Page;
+	}
+	
+	private BigDecimal roundBigDecimal(final BigDecimal input){
+		try
+		{
+	    return input.round(
+	        new MathContext(
+	            input.toBigInteger().toString().length(),
+	            RoundingMode.HALF_UP
+	        )
+	    );
+		}catch(Exception excepton){
+			LOG.error("Error While Getting amount"+excepton.getMessage());
+		}
+		return null;
 	}
 }
