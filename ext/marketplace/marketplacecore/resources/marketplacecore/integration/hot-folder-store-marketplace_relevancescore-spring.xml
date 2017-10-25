@@ -58,7 +58,7 @@
                 
                  $catalogVersion=catalogVersion(catalog(id[default='mplProductCatalog']),version[default='Online'])[unique=true,default='mplProductCatalog:Online'];;;;;;;;;;;;;;;;;;
               
-                INSERT_UPDATE product;code[unique=true];relevancescore;$catalogVersion
+                UPDATE product;code[unique=true];relevancescore;$catalogVersion
        		</value>
         </property>
         <property name="impexRow">
