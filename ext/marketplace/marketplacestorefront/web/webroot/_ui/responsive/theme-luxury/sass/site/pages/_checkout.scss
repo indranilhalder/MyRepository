@@ -1137,14 +1137,17 @@ checkout-shipping-items.left-block-width{
         
         .card.card-num{
             display: inline-block;
-            width: 12%;
+            width: 15%;
+             @include media-breakpoint-down(sm) {
+                width: 100%;
+            }
         }
         creditCardsRadio{
             visibility: hidden;
         }
         .card-details{
             display: inline-block;
-            width: 60%;
+            width: 57%;
             
             @include media-breakpoint-down(sm) {
                 width: 100%;
@@ -1821,6 +1824,15 @@ h2.panel-defaultHeading {
                 border: 0px!important;
                 margin: 0px;
                 border-radius: initial;
+                
+                @include media-breakpoint-down(sm) {
+                    .card-group.row{
+                        margin-right: -10px;                        
+                    }
+                    .card_exp_month{
+                        width: 50%;                            
+                    }
+                }
             }
         }
         .bank-select{            
@@ -1992,6 +2004,72 @@ h2.panel-defaultHeading {
         #hamburger-menu{
             span{
                 display: none;
+            }
+        }
+    }
+}
+#savedCard, #savedDebitCard{
+    .debit-card-group.card-sec{
+        .radio{
+            label{
+                margin-top: 25px;
+                @include media-breakpoint-down(sm)
+                {
+                     margin-top: 0px;
+                }
+            }
+        }
+    }
+    .credit-card-group.card-sec, .debit-card-group.card-sec{
+        margin-bottom: 10px;
+        
+        .radio{
+            input[type=radio] {
+                margin: 0;
+                opacity: 0;
+                cursor: pointer;
+                width: 15px;
+                height: 15px;
+                z-index: 10;
+                position: absolute;
+            }
+            label{
+                padding-left: 30px;
+                line-height: 140%;
+                font-weight: 300;
+                display: inline-block;
+                position: relative;
+                cursor:pointer;
+                float: left;
+            }
+            label { 
+                line-height: 25px; 
+            }
+            input[type="radio"]{
+                width:28px !important;
+                height:28px !important;
+            }
+
+            input[type=radio] ~ label::before{
+                content: "";
+                width: 20px;
+                height: 20px;
+                border-radius: $border-radius-small;
+                background: #fff;
+                border: 1px solid #c8c7cc;
+                position: absolute;
+                top: 0;
+                bottom: 0;
+                left: 0;
+                margin: auto;
+            } 
+            input[type=radio]:checked ~ label::before{
+                color: #fff;
+                background: #b99d6b url('../images/tick.png') no-repeat;
+                background-position: 3px 1px;
+                border-color:#b99d6b;
+                text-align: center;
+                line-height: 16px;
             }
         }
     }

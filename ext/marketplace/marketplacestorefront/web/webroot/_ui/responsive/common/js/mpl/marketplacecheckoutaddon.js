@@ -535,7 +535,7 @@ function displayCODForm()
 						data: { 'paymentMode' : paymentMode , 'guid' : guid },
 						cache: false,
 						success : function(response) {
-							console.log(response);
+							//console.log(response); commented for SDI-1732
 							if(response==null){
 								$(location).attr('href',ACC.config.encodedContextPath+"/cart"); // TISEE-510
 							}
@@ -4981,7 +4981,8 @@ function applyPromotion(bankName,binValue,formSubmit)
 				$("#no-click,.loaderDiv").remove();
 				$(".make_payment, #make_saved_cc_payment_up, #make_cc_payment_up, #make_nb_payment_up, #paymentButtonId_up").removeAttr('disabled');
 				//TISPT-29
-				if(paymentMode=='EMI' || paymentMode=='Credit Card' || paymentMode=='Debit card' || paymentMode=='Netbanking')
+				//SDI-1732
+				if(paymentMode=='EMI' || paymentMode=='Credit Card' || paymentMode=='Debit Card' || paymentMode=='Netbanking')
 				{
 					isCodSet = false;
 				}

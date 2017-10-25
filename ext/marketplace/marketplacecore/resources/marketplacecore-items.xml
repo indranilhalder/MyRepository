@@ -6414,6 +6414,12 @@
 						<modifiers optional="true" read="true" write="true" />
 						<persistence type="property" />
 					</attribute>
+					
+					<!-- Adding attribute to identify store for OIS orders -->
+ 					<attribute qualifier="storeId" type="java.lang.String">
+ 						<modifiers optional="true" read="true" write="true" />
+ 						<persistence type="property" />
+ 					</attribute>
 
 					<attribute qualifier="deliveryAddresses" type="addressList">
 						<modifiers optional="true" />

@@ -7,12 +7,15 @@ import java.util.Date;
 import java.util.Map;
 import java.util.Set;
 
+import javax.annotation.Resource;
+
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.tisl.mpl.cockpits.constants.MarketplaceCockpitsConstants;
 import com.tisl.mpl.cockpits.cscockpit.services.StoreAgentUserRole;
+import com.tisl.mpl.marketplacecommerceservices.service.AgentIdForStore;
 
 import de.hybris.platform.cockpit.session.UISessionUtils;
 import de.hybris.platform.core.model.order.OrderModel;
@@ -38,6 +41,9 @@ public class MarketplaceDefaultOrderSearchQueryBuilder extends
 	
 	@Autowired
 	StoreAgentUserRole storeAgentUserRole;
+	
+	@Resource
+	private AgentIdForStore agentIdForStore;
 
 	private static final String JOIN_CUSTOMER_TABLE_PART_QUERY = " LEFT JOIN Customer AS c ON {c:pk} = {o:user}";
 
@@ -102,12 +108,10 @@ public class MarketplaceDefaultOrderSearchQueryBuilder extends
 		final boolean searchEmailId = StringUtils.isNotEmpty(emailId);
 		final boolean searchThreshold = thresholddays != 0;
 		String agentId = StringUtils.EMPTY;
-		if (storeAgentUserRole.isUserInRole(MarketplaceCockpitsConstants.CSCOCKPIT_USER_GROUP_STOREMANAGERAGENTGROUP)) {
-			final JaloSession jSession = JaloSession.getCurrentSession();
-			if(jSession != null)
-			{
-				agentId = (String) jSession.getAttribute("sellerId");
-			}
+		if (storeAgentUserRole.isUserInRole(MarketplaceCockpitsConstants.CSCOCKPIT_USER_GROUP_STOREMANAGERAGENTGROUP)) 
+		{
+			agentId = agentIdForStore
+					.getAgentIdForStore(MarketplaceCockpitsConstants.CSCOCKPIT_USER_GROUP_STOREMANAGERAGENTGROUP);
 		}
 		StringBuilder query = new StringBuilder();
 		StringBuilder query2=new StringBuilder();

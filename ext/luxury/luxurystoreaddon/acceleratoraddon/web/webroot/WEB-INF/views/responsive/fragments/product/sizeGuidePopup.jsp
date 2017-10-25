@@ -634,13 +634,13 @@ var productCodeSG = '${product.code}';
 		<span id="pinNotServicableSizeGuide" style="display: none" class="sizeGuide-message">
 			<font color="#ff1c47">We're sorry. We don't service this pin code currently. Would you like to try entering another pin code that also works for you?</font>
 		</span>
-		<span id="addToCartSizeGuideTitleoutOfStockId" style="display: none"><p class="inventory">
+		<span id="addToCartSizeGuideTitleoutOfStockId" style="display: none"><%-- <p class="inventory">
 			<span id="outOfStockText" class="sizeGuide-message">
 			<spring:theme code="product.product.outOfStock" />
 			</span>
 		<input type="button" onClick="openPop_SizeGuide();" id="add_to_wishlist-sizeguide" class="wishlist" data-toggle="popover" data-placement="bottom" value="<spring:theme code="text.add.to.wishlist"/>"/>
 			<!-- <font color="#ff1c47">Product is out of stock for the selected size</font> -->
-		</p></span>
+		</p> --%></span>
 		
 	<span id="sizeSelectedSizeGuide"   class="sizeGuide-message" style="display: none;color:#ff1c47"><spring:theme code="variant.pleaseselectsize"/></span>
 	<%-- <span id="addToCartButtonId">

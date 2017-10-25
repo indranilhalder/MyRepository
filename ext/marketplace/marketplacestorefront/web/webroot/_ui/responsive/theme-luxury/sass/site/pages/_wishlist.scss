@@ -287,7 +287,7 @@ div.wishlist-nav {
         -webkit-transition: background .3s;
         -moz-transition: background .3s;
         transition: background .3s;
-        min-height: 150px;
+        min-height: 180px;
 
         >form {
         left: 17%;
@@ -383,6 +383,17 @@ div.wishlist-nav {
                         }
                     }
                 }
+            }
+        }
+    }
+}
+#redirectsToPDP{
+    @include media-breakpoint-down(sm) {
+        .modal-content{
+            width: 85%!important;
+            
+            .modal-header{
+                border: 0px;
             }
         }
     }
