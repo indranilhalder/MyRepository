@@ -3186,6 +3186,8 @@
      <property name="title" type="String" />
      <property name="componentPosition" type="String" />
      <property name="relatedImage" type="java.util.List&lt;com.tisl.mpl.wsdto.LuxBannerComponentWsDTO>"/>
+		 <property name="shopNowName" type="String" /> 
+		 <property name="shopNowLink" type="String"/> 
     </bean>	
 		
 	 <bean class="com.tisl.mpl.wsdto.WeeklySpecialBannerListWsDTO">

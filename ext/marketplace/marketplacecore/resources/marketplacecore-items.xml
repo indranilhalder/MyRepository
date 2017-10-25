@@ -1437,6 +1437,20 @@
 						optional="false" />
 					<persistence type='property' />
 				</attribute>
+				<attribute type="java.lang.String" qualifier="shopNowName"
+						   autocreate="true" generate="true">
+					<description>shop Now Name</description>
+					<modifiers read="true" write="true" search="true"
+							   optional="true" />
+					<persistence type='property' />
+				</attribute>
+				<attribute type="java.lang.String" qualifier="shopNowLink"
+						   autocreate="true" generate="true">
+					<description>shop Now link</description>
+					<modifiers read="true" write="true" search="true"
+							   optional="true" />
+					<persistence type='property' />
+				</attribute>
 			</attributes>
 		</itemtype>
 
