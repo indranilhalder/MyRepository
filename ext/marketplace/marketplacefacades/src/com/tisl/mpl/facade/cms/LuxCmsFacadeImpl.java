@@ -388,12 +388,12 @@ public class LuxCmsFacadeImpl implements LuxCmsFacade
 					for (final ImageData img : productData.getImages())
 					{
 						if (null != img && StringUtils.isNotEmpty(img.getFormat())
-								&& img.getFormat().equalsIgnoreCase(MarketplacecommerceservicesConstants.CARTPAGE))
+								&& img.getFormat().equalsIgnoreCase(MarketplacecommerceservicesConstants.SEARCHPAGE))
 						{
 							setValue(luxProductCarouselProductWsDTO::setPrdImage, img.getUrl());
 						}
 						else if (null != img && StringUtils.isNotEmpty(img.getFormat())
-								&& img.getFormat().equalsIgnoreCase(MarketplacecommerceservicesConstants.LUXURYCARTPAGE))
+								&& img.getFormat().equalsIgnoreCase(MarketplacecommerceservicesConstants.LUXURYSEARCHPAGE))
 						{
 							setValue(luxProductCarouselProductWsDTO::setPrdImage, img.getUrl());
 						}
@@ -733,7 +733,7 @@ public class LuxCmsFacadeImpl implements LuxCmsFacade
 			luxBannerComponentelement.setPageLabelOrId(bannerComponent.getPageLabelOrId());
 			luxBannerComponentelement.setBannerView(bannerComponent.getBannerView().getCode());
 			luxBannerComponentelement.setUrlLink(bannerComponent.getUrlLink());
-			luxBannerComponentelement.setUrlLink(bannerComponent.getMedia().getURL());
+			luxBannerComponentelement.setMedia(bannerComponent.getMedia().getURL());
 			relatedImageList.add(luxBannerComponentelement);
 		}
 		if (null == luxuryComponent.getLuxShopByCategory())
