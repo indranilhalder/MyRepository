@@ -217,18 +217,23 @@
 					</table>
 				</div>
 			</div>
-			<div class="giftCheckoutSectionSize">
-				<div class="giftCheckoutInnerCols1"><label for="cashOtherThanGiftCard"><p><spring:theme code="text.cliq.cash.payment.cash.label"/></p><p id="qcCashId"><strong>&#8377; 0</strong></p></label></div>
-			</div>
-			<div class="giftCheckoutSectionSize">
-				<div class="giftCheckoutInnerCols2"><label for="giftCardAmt"><p><spring:theme code="text.cliq.cash.payment.card.label"/></p><p id="qcGiftCardId"><strong>&#8377; 0</strong></p></label></div>
-			</div>
-			<div class="giftCheckoutSectionSize">
-				<div class="giftCheckoutInnerCols3">
-					<label class="useGiftCardBtn"><input id="useGiftCardCheckbox" type="checkbox" />
-						<span id="useGiftBtnText"><spring:theme code="text.cliq.cash.payment.use.label"/></span>
-						<span id="unUseGiftBtnText"><spring:theme code="text.cliq.cash.payment.remove.label" /></span>
-					</label>
+			<div class="col-md-9 giftCheckoutInfoMiddle">
+				<div class="giftCheckoutSectionSize col-xs-3">
+					<div class="giftCheckoutInnerCols1"><label for="cashOtherThanGiftCard"><p><spring:theme code="text.cliq.cash.payment.cash.label"/></p>&#8377; <span id="qcCashId"><strong>0</strong></span></label></div>
+				</div>
+				<div class="giftCheckoutSectionSize col-xs-3">
+					<div class="giftCheckoutInnerCols2"><label for="giftCardAmt"><p><spring:theme code="text.cliq.cash.payment.card.label"/></p>&#8377; <span id="qcGiftCardId"><strong>0</strong></span></label></div>
+				</div>
+				<div class="giftCheckoutSectionSize col-xs-3">
+					<div class="giftCheckoutInnerCols3"><label for="rewardPoints"><p><spring:theme code="text.cliq.cash.payment.points.label"/></p><p id="qcPointsId"><strong>0</strong></p></label></div>
+				</div>
+				<div class="giftCheckoutSectionSize col-xs-3">
+					<div class="giftCheckoutInnerCols4">
+						<label class="useGiftCardBtn"><input id="useGiftCardCheckbox" type="checkbox" />
+							<span id="useGiftBtnText"><spring:theme code="text.cliq.cash.payment.use.label"/></span>
+							<span id="unUseGiftBtnText"><spring:theme code="text.cliq.cash.payment.remove.label" /></span>
+						</label>
+					</div>
 				</div>
 			</div>
 			<div class="col-xs-12">
