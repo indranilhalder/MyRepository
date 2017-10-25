@@ -5753,7 +5753,7 @@ function WalletDetailAjax(){
 			$(".cliqTotalBalanceLabel").html(data.totalWalletAmt);
 			$("#qcCashId").html(data.totalCash);
 			$("#qcGiftCardId").html(data.totalEgvBalance);
-			//$("#qcPointsId").html(data.totalPointsBalance);
+			$("#qcPointsId").html(data.walletPoint); 
 			
 			if(data.disableWallet){
 				 $("#useGiftCardCheckbox").prop('disabled',true);

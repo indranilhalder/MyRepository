@@ -6251,6 +6251,7 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 
 		double cashBalance = 0;
 		double egvBalance = 0;
+		final double walletPoint = 0;
 		double totalWalletAmt = 0;
 		double juspayAmt = 0;
 
@@ -6273,12 +6274,18 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 									: "" + Double.parseDouble(bucketType.getAmount().toString()));
 							egvBalance = Double.parseDouble(df.format(egvBalance));
 						}
+						if (bucketType.getType().equalsIgnoreCase("CREDIT"))
+						{
+							cashBalance += Double.parseDouble(bucketType.getAmount().toString().isEmpty() ? "0"
+									: "" + Double.parseDouble(bucketType.getAmount().toString()));
+							cashBalance = Double.parseDouble(df.format(walletPoint));
+						}
 						else
 						{
 
-							cashBalance += Double.parseDouble(bucketType.getAmount().toString().isEmpty() ? "0"
+							walletPoint += Double.parseDouble(bucketType.getAmount().toString().isEmpty() ? "0"
 									: "" + Double.parseDouble(bucketType.getAmount().toString()));
-							cashBalance = Double.parseDouble(df.format(cashBalance));
+							walletPoint = Double.parseDouble(df.format(cashBalance));
 						}
 
 					}
@@ -6301,8 +6308,9 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 					getSessionService().setAttribute("getCliqCashMode", "false");
 					getSessionService().setAttribute("cliqCashPaymentMode", StringUtils.EMPTY);
 					jsonObject.put("totalWalletAmt", "0");
-					jsonObject.put("totalCash", "" + "0");
-					jsonObject.put("totalEgvBalance", "" + "0");
+					jsonObject.put("totalCash", "" + 0);
+					jsonObject.put("totalEgvBalance", "" + 0);
+					jsonObject.put("walletPoint", "" + 0);
 					jsonObject.put("disableWallet", true);
 					jsonObject.put("isWalletActive", true);
 					jsonObject.put("walletDisableMsg", "");
@@ -6314,6 +6322,7 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 					jsonObject.put("totalWalletAmt", totalWalletAmt);
 					jsonObject.put("totalCash", "" + cashBalance);
 					jsonObject.put("totalEgvBalance", "" + egvBalance);
+					jsonObject.put("walletPoint", "" + walletPoint);
 					jsonObject.put("disableWallet", false);
 					jsonObject.put("isWalletActive", true);
 					jsonObject.put("walletDisableMsg", "");
@@ -6322,8 +6331,9 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 			else
 			{
 				jsonObject.put("totalWalletAmt", "0");
-				jsonObject.put("totalCash", "" + "0");
-				jsonObject.put("totalEgvBalance", "" + "0");
+				jsonObject.put("totalCash", "" + 0);
+				jsonObject.put("totalEgvBalance", "" + 0);
+				jsonObject.put("walletPoint", "" + 0);
 				jsonObject.put("disableWallet", true);
 				jsonObject.put("isWalletActive", false);
 				jsonObject.put("walletDisableMsg", Localization.getLocalizedString("text.cliq.cash.payment.wallet.disable.label"));
@@ -6335,8 +6345,9 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 			System.out.println(" Error in QuickSilver Api --" + balBucketwise.getResponseCode() + " Message-"
 					+ balBucketwise.getResponseMessage());
 			jsonObject.put("totalWalletAmt", "0");
-			jsonObject.put("totalCash", "" + cashBalance);
-			jsonObject.put("totalEgvBalance", "" + egvBalance);
+			jsonObject.put("walletPoint", "" + 0);
+			jsonObject.put("totalCash", "" + 0);
+			jsonObject.put("totalEgvBalance", "" + 0);
 			jsonObject.put("disableWallet", true);
 			jsonObject.put("juspayAmt", "0");
 			jsonObject.put("isWalletActive", true);
