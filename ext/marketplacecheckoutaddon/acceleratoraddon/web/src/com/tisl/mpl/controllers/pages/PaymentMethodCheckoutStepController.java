@@ -6249,9 +6249,9 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 				+ (null != cart.getDeliveryCost() ? cart.getDeliveryCost().doubleValue() : 0);
 		final DecimalFormat df = new DecimalFormat("#.##");
 
-		double cashBalance = 0;
+		final double cashBalance = 0;
 		double egvBalance = 0;
-		final double walletPoint = 0;
+		double walletPoint = 0;
 		double totalWalletAmt = 0;
 		double juspayAmt = 0;
 
@@ -6274,18 +6274,18 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 									: "" + Double.parseDouble(bucketType.getAmount().toString()));
 							egvBalance = Double.parseDouble(df.format(egvBalance));
 						}
-						if (bucketType.getType().equalsIgnoreCase("CREDIT"))
-						{
-							cashBalance += Double.parseDouble(bucketType.getAmount().toString().isEmpty() ? "0"
-									: "" + Double.parseDouble(bucketType.getAmount().toString()));
-							cashBalance = Double.parseDouble(df.format(walletPoint));
-						}
+						//						if (bucketType.getType().equalsIgnoreCase("CREDIT"))
+						//						{
+						//							cashBalance += Double.parseDouble(bucketType.getAmount().toString().isEmpty() ? "0"
+						//									: "" + Double.parseDouble(bucketType.getAmount().toString()));
+						//							cashBalance = Double.parseDouble(df.format(cashBalance));
+						//						}
 						else
 						{
 
 							walletPoint += Double.parseDouble(bucketType.getAmount().toString().isEmpty() ? "0"
 									: "" + Double.parseDouble(bucketType.getAmount().toString()));
-							walletPoint = Double.parseDouble(df.format(cashBalance));
+							walletPoint = Double.parseDouble(df.format(walletPoint));
 						}
 
 					}
