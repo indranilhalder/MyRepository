@@ -13301,6 +13301,20 @@
 						<persistence type="property" />
 						<modifiers search="true" optional="false" read="true" write="true" />
 					</attribute>
+					<attribute qualifier="ticketType" type="boolean">
+					<defaultvalue>java.lang.Boolean.TRUE</defaultvalue>
+						<persistence type="property" />
+						<modifiers search="true" optional="false" read="true" write="true" />
+					</attribute>
+					<attribute qualifier="createTicket" type="boolean">
+					<defaultvalue>java.lang.Boolean.TRUE</defaultvalue>
+						<persistence type="property" />
+						<modifiers search="true" optional="false" read="true" write="true" />
+					</attribute>
+					<attribute qualifier="ticketAnswer" type="java.lang.String">
+					       <persistence type="property" />
+						<modifiers search="true" optional="false" read="true" write="true" />
+					</attribute>
 					<attribute qualifier="nodeDisplay" type="boolean">
 					<defaultvalue>java.lang.Boolean.TRUE</defaultvalue>
 						<persistence type="property" />
