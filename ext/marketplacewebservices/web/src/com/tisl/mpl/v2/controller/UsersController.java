@@ -9481,6 +9481,15 @@ public class UsersController extends BaseCommerceController
 			{
 				egvDetailsData.setGiftRange(requestData.getPriceSelectedByUserPerQuantity().doubleValue());
 			}
+			
+			if (null != requestData.getFirstName())
+			{
+				egvDetailsData.setFromFirstName(requestData.getFirstName());
+			}
+			if (null != requestData.getLastName())
+			{
+				egvDetailsData.setFromLastName(requestData.getLastName());
+			}
 
 			//			if(null != requestData.getMessageOnCard()) {
 			//				egvDetailsData.setMessageBox(egvDetailForm.getMessageBox());

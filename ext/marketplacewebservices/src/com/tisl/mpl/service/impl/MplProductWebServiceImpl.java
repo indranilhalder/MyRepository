@@ -3023,6 +3023,7 @@ public class MplProductWebServiceImpl implements MplProductWebService
 			}
 			
 			egvProductData.setAmountOptions(amountOptions);
+			egvProductData.setIsCustomizationAvailable(true);
 			egvProductData.setIsMoreDesigns(false);
 			egvProductData.setProductDisclaimerForGC(MarketplacewebservicesConstants.BUYING_EGV_PRODUCT_DISCLAIMER);
 			egvProductData.setGiftCartImageUrl("https://pcmuat.tataunistore.com/images/437Wx649H/MP000000000000016_437Wx649H_20151025191017.jpeg");

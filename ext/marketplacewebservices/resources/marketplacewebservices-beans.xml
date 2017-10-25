@@ -3396,6 +3396,8 @@
 	
 	<bean class="com.tisl.mpl.wsdto.BuyingEgvRequestWsDTO">
 		<property name="productID" type="String" />
+		<property name="firstName" type="String" />
+		<property name="lastName" type="String" />
 		<property name="priceSelectedByUserPerQuantity" type="Double" />
 		<property name="quantity" type="int" />
 		<property name="receiverName" type="String" />
@@ -3492,6 +3494,7 @@
 		<property name="variantOptionsGiftCard" type="java.util.List&lt;com.tisl.mpl.wsdto.variantImagelinkWSDTO>" />
 		<property name="isMoreDesigns" type="boolean" />
 		<property name="productDisclaimerForGC" type="String" />
+		<property name="isCustomizationAvailable" type="boolean" />
 		<property name="giftCartImageUrl" type="String" />
 		<property name="tncURL" type="String" />
 	</bean>
