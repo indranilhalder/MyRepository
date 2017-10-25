@@ -45,7 +45,9 @@ function innerLazyLoad(options) {
         //TISSPTXI-21
         $("img.lazy").lazyload();
     } else {
-        $('ul.product-listing.product-grid.lazy-grid,ul.product-listing.product-grid.lazy-grid-facet,ul.product-list,ul.product-listing.product-grid.lazy-grid-normal,ul.product-listing.product-grid.custom-sku').append(gridHTML);
+    	//TPR-7078 Remove Lazy loading
+        //$('ul.product-listing.product-grid.lazy-grid,ul.product-listing.product-grid.lazy-grid-facet,ul.product-list,ul.product-listing.product-grid.lazy-grid-normal,ul.product-listing.product-grid.custom-sku').append(gridHTML);
+        $('ul.product-listing.product-grid.lazy-grid,ul.product-listing.product-grid.lazy-grid-facet,ul.product-list,ul.product-listing.product-grid.lazy-grid-normal,ul.product-listing.product-grid.custom-sku').html(gridHTML);
         $("img.lazy").lazyload();
     }
     deleteArraySet(productItemArray);
@@ -345,7 +347,8 @@ $(document).ready(function() {
     		directPaginatedLoad = false;
     	}
     }
-        $(window).on('scroll', function() {
+    //TPR-7078 - do  not remove the commented code 
+/*        $(window).on('scroll', function() {
             if ($('.lazy-reached').length != 0) {
             	
             	var productItemArrayLength = $('ul.product-listing.product-grid.lazy-grid,ul.product-listing.product-grid.lazy-grid-facet,ul.product-list,ul.product-listing.product-grid.lazy-grid-normal,ul.product-listing.product-grid.custom-sku').find('li.product-item').length;
@@ -388,9 +391,9 @@ $(document).ready(function() {
                     }
                 }
             }
-        });
+        });*/
         
-        // Normal pagination 
+        //TPR- 7078 Remove Lazy loading Normal pagination 
         $(document).on('click', '.pageNo', function() {
         	var clickedPageNo = parseInt($(this).text());
             getProductSetData(clickedPageNo);
