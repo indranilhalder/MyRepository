@@ -77504,13 +77504,14 @@ background: url(../images/search_image.png) no-repeat;}
 		.cliqCashPlaceOrderBtnMobile {display: none !important;}
 	}
 	
-	@media(min-width: 651px){
+	@media(min-width: 768px){
 		.useGiftCardBtn, .useGiftCardBtn:hover {float: right; line-height: normal; padding-top: 5px;}
 		.giftCheckoutInnerCols1, .giftCheckoutInnerCols2, .giftCheckoutInnerCols3 {text-align: center;}
 	}
 	
-	@media(max-width: 650px){
+	@media(max-width: 767px){
 	.giftInfoLeft {border-bottom: 1px solid #dddddd; border-right: none; padding: 4%; padding-left: 0;}
+	.giftCheckoutInfoMiddle {width: 100%;}
 	.giftCheckoutInnerCols1 {padding: 20% 0%; text-align: left;}
 	.giftCheckoutInnerCols2 {padding: 20% 0%; text-align: left;}
 	.giftCheckoutInnerCols3 {padding: 20% 0%; text-align: left;}
