@@ -176,54 +176,12 @@ public class AutoRefundInitiateAction extends AbstractProceduralAction<OrderProc
 											 if(null != orderModel.getSplitModeInfo() && orderModel.getSplitModeInfo().equalsIgnoreCase("Split")){
 													//Start Added the code for QC
 												 try{
-													 LOG.debug("Step :1 getting the consignment for ORDER ...");
-													if(CollectionUtils.isNotEmpty(returnEntry.getOrderEntry().getConsignmentEntries())){
-														 LOG.debug("Step :2 getting the consignment status for ..."+returnEntry.getOrderEntry().getConsignmentEntries());
-														boolean consignmentStatusForRTO = false;
-														for(OrderModel order:orderModel.getChildOrders()){
-															System.out.println("********Consignment Entry Object :************:"+order.getCode());
-															for(AbstractOrderEntryModel orderEntry:order.getEntries()){
-																System.out.println("********Consignment Entry Object :************:"+orderEntry.getOrderLineId());
-																for(ConsignmentEntryModel consignmentEntry:orderEntry.getConsignmentEntries()){
-																	System.out.println("********Consignment Entry Object :************:"+consignmentEntry.getConsignment().getStatus());
-																	System.out.println("********Consignment Entry Code :************:"+consignmentEntry.getConsignment().getCode());
-																	System.out.println("********Consignment Entry Status :************:"+consignmentEntry.getConsignment().getStatusDisplay());
-																}
-																
-															}
-															
-														}
-														
-														for(AbstractOrderEntryModel orderEntry:orderModel.getEntries()){
-															System.out.println("********Consignment Entry Object :************:"+orderEntry.getOrderLineId());
-															for(ConsignmentEntryModel consignmentEntry:orderEntry.getConsignmentEntries()){
-																System.out.println("********Consignment Entry Object :************:"+consignmentEntry.getConsignment().getStatus());
-																System.out.println("********Consignment Entry Code :************:"+consignmentEntry.getConsignment().getCode());
-																System.out.println("********Consignment Entry Status :************:"+consignmentEntry.getConsignment().getStatusDisplay());
-															}
-															
-														}
-														if(orderModel.getConsignments().contains(ConsignmentStatus.RETURNINITIATED_BY_RTO)){
-															LOG.debug("Step :3  consignment for RETURNINITIATED_BY_RTO  ...");
-															final List<AbstractOrderEntryModel> orderEntriesModel = associatedEntries(orderModel,returnEntry.getOrderEntry().getTransactionID());
-															LOG.debug("Step :4 associatedEntries for this order ...");
-															for (final AbstractOrderEntryModel abstractOrderEntryModel : orderEntriesModel)
-															{
-															LOG.debug("Step :5 going to create createRefund for this order");
-															createRefund(orderModel, abstractOrderEntryModel, "01", SalesApplication.WEB);
-															LOG.debug("Step :6 successfully create createRefund for this order");
-															consignmentStatusForRTO=true;
-															 QCRedeeptionResponse  response =qcCallforReturnRefund( orderModel ,(RefundEntryModel) returnEntry,consignmentStatusForRTO);
-			   											 qcstatus = constructQuickCilverOrderEntry(response,returnEntry.getOrderEntry().getTransactionID());
-			   											 LOG.debug("Step :7 successfully create constructQuickCilverOrderEntry for this order");
-															}
-														}else{ 
+												
 															LOG.debug("Step :8 this is NON - RETURNINITIATED_BY_RTO order ");
-		   											  QCRedeeptionResponse  response =qcCallforReturnRefund( orderModel ,(RefundEntryModel) returnEntry,consignmentStatusForRTO);
+		   											  QCRedeeptionResponse  response =qcCallforReturnRefund( orderModel ,(RefundEntryModel) returnEntry,false);
 		   											  qcstatus = constructQuickCilverOrderEntry(response,returnEntry.getOrderEntry().getTransactionID());
 		   											  LOG.debug("Step :9 successfully create constructQuickCilverOrderEntry for this order");
-														}
-													}
+													
 													//End Added the code for QC
 												 }catch(Exception e){
 													 e.getMessage();
