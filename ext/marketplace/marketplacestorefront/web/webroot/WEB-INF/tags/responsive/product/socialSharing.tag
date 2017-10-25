@@ -58,7 +58,7 @@
 		</li>
 		<li>
 		<!--TISBBC-26 message changed-->
-			<a class="fb" onclick="return openPopup('https://www.facebook.com/dialog/feed?link=' + window.location.host+ $('#productUrl').text() + '&amp;app_id=' + $('#facebookAppid').text() + '&amp;description='+$('#sharepretext').text()+' '+window.location.host+ $('#productUrl').text() +' '+$('#shareposttext').text()+' &amp;redirect_uri=http://www.facebook.com/'+' &amp;picture=$('#prodImageUrl').text()','share_facebook')"></a>
+			<a class="fb" onclick="return openPopup('https://www.facebook.com/dialog/feed?link=' + window.location.host+ $('#productUrl').text() + '&amp;app_id=' + $('#facebookAppid').text() + '&amp;description='+$('#sharepretext').text()+' '+window.location.host+ $('#productUrl').text() +' '+$('#shareposttext').text()+' &amp;redirect_uri=http://www.facebook.com/'+' &amp;picture='+$('#prodImageUrl').text(),'share_facebook')"></a>
 			</li>
 		<li>
 			<button class="g-interactivepost"
