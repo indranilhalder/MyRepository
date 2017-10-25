@@ -16,7 +16,7 @@
     http://www.springframework.org/schema/context/spring-context.xsd">
     
      <bean id="baseDirectoryMarketplacerelevanceScore" class="java.lang.String">
-        <constructor-arg value="#{baseDirectory}/${tenantId}/marketplace-relevanceScore" />
+        <constructor-arg value="#{baseDirectory}/${tenantId}/marketplace-relevanceScore/relevanceScore" />
     </bean>
     
      <!-- 1) Scan for files -->
