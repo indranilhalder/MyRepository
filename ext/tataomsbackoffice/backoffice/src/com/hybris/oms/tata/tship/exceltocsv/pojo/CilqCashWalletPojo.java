@@ -19,6 +19,7 @@ public class CilqCashWalletPojo
       private String cardExpiry;
       private String batchNumber;
       private String comments;
+      private String remarks;
 		/**
 		 * @return the customerName
 		 */
@@ -159,6 +160,20 @@ public class CilqCashWalletPojo
 		{
 			this.comments = comments;
 		}
+		/**
+		 * @return the remarks
+		 */
+		public String getRemarks()
+		{
+			return remarks;
+		}
+		/**
+		 * @param remarks the remarks to set
+		 */
+		public void setRemarks(String remarks)
+		{
+			this.remarks = remarks;
+		}
 		/* (non-Javadoc)
 		 * @see java.lang.Object#toString()
 		 */
@@ -168,7 +183,7 @@ public class CilqCashWalletPojo
 			return "CilqCashWalletPojo [customerName=" + customerName + ", customerEmailId=" + customerEmailId + ", amount="
 					+ amount + ", bucketName=" + bucketName + ", transactionId=" + transactionId + ", walletId=" + walletId
 					+ ", cardNumber=" + cardNumber + ", cardExpiry=" + cardExpiry + ", batchNumber=" + batchNumber + ", comments="
-					+ comments + "]";
+					+ comments + ", remarks=" + remarks + "]";
 		}
 		
       

@@ -50,4 +50,8 @@ public interface MplWalletFacade
 	public QCRedeeptionResponse createPromotion(String walletId, QCCustomerPromotionRequest request);
 	
 	public QCRedeeptionResponse qcCredit(final String walletId, final QCCreditRequest request);
+	
+	public CustomerWalletDetailResponse activateQCUserAccount(String walletId);
+	
+	public CustomerWalletDetailResponse deactivateQCUserAccount(String walletId);
 }

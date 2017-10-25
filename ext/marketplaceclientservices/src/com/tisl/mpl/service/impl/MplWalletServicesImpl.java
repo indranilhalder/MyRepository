@@ -1135,4 +1135,117 @@ public class MplWalletServicesImpl implements MplWalletServices
 		
 	}
 
+
+	@Override
+	public CustomerWalletDetailResponse activateQCUserAccount(final String walletId,final String transactionId)
+	{
+		CustomerWalletDetailResponse customerWalletDetailResponse = new CustomerWalletDetailResponse();
+		try
+		{
+			//	final Client client = Client.create();
+			final Client client = getProxyConnection();
+			LOG.debug("Successfully client .................." + client);
+			ClientResponse response = null;
+			WebResource webResource = null;
+			String output = null;
+			QCCreditRequest creditRequest =new QCCreditRequest();
+			final ObjectMapper objectMapper = new ObjectMapper();
+			final String requestBody = objectMapper.writeValueAsString(creditRequest);
+			webResource = client
+					.resource(UriBuilder.fromUri("http://" + getConfigurationService().getConfiguration().getString("qcUrl")
+							+ "/QwikCilver/eGMS.RestAPI/api/wallet/" + walletId + "/Activate").build());
+
+			response = webResource.type(MediaType.APPLICATION_JSON)
+					.header(MarketplaceclientservicesConstants.FORWARDING_ENTITY_ID, "tatacliq.com")
+					.header(MarketplaceclientservicesConstants.FORWARDING_ENTITY_PASSWORD, "tatacliq.com")
+					.header(MarketplaceclientservicesConstants.TERMINAL_ID, "webpos-tul-dev10")
+					.header(MarketplaceclientservicesConstants.USERNAME, "tulwebuser")
+					.header(MarketplaceclientservicesConstants.PASSWORD, "webusertul")
+					.header(MarketplaceclientservicesConstants.DATE_AT_CLIENT, dateFormat.format(new Date()))
+					.header(MarketplaceclientservicesConstants.IS_FORWARDING_ENTIRY_EXISTS, "true")
+					.header(MarketplaceclientservicesConstants.CONTENT_TYPE, "application/json")
+					.header(MarketplaceclientservicesConstants.MERCHANT_OUTLET_NAME, "TUL-Online")
+					.header(MarketplaceclientservicesConstants.ACQUIRERID, "Tata Unistore Ltd")
+					.header(MarketplaceclientservicesConstants.ORGANIZATION_NAME, "Tata Unistore Ltd")
+					.header(MarketplaceclientservicesConstants.POS_ENTRY_MODE, "2")
+					.header(MarketplaceclientservicesConstants.POS_TYPE_ID, "1")
+					.header(MarketplaceclientservicesConstants.POS_NAME, "webpos-tul-qc-01")
+					.header(MarketplaceclientservicesConstants.TERM_APP_VERSION, "null")
+					.header(MarketplaceclientservicesConstants.CURRENT_BATCH_NUMBER,
+							getConfigurationService().getConfiguration().getString("qc.batch.number"))
+					.header(MarketplaceclientservicesConstants.TRANSACTION_ID, transactionId)
+					.type(MediaType.APPLICATION_JSON).post(ClientResponse.class,requestBody);
+
+			if (null != response)
+			{
+				output = response.getEntity(String.class);
+				LOG.debug(" ************** output----" + output);
+				customerWalletDetailResponse = objectMapper.readValue(output, CustomerWalletDetailResponse.class);
+				return customerWalletDetailResponse;
+			}
+		}
+		catch (final Exception ex)
+		{
+			LOG.error(ex.getMessage());
+			return customerWalletDetailResponse;
+		}
+		return customerWalletDetailResponse;
+	}
+
+	@Override
+	public CustomerWalletDetailResponse deactivateQCUserAccount(final String walletId,final String transactionId)
+	{
+		CustomerWalletDetailResponse customerWalletDetailResponse = new CustomerWalletDetailResponse();
+		try
+		{
+			//	final Client client = Client.create();
+			final Client client = getProxyConnection();
+			LOG.debug("Successfully client .................." + client);
+			ClientResponse response = null;
+			WebResource webResource = null;
+			String output = null;
+			QCCreditRequest creditRequest =new QCCreditRequest();
+			final ObjectMapper objectMapper = new ObjectMapper();
+			final String requestBody = objectMapper.writeValueAsString(creditRequest);
+			webResource = client
+					.resource(UriBuilder.fromUri("http://" + getConfigurationService().getConfiguration().getString("qcUrl")
+							+ "/QwikCilver/eGMS.RestAPI/api/wallet/" + walletId + "/Deactivate").build());
+
+			response = webResource.type(MediaType.APPLICATION_JSON)
+					.header(MarketplaceclientservicesConstants.FORWARDING_ENTITY_ID, "tatacliq.com")
+					.header(MarketplaceclientservicesConstants.FORWARDING_ENTITY_PASSWORD, "tatacliq.com")
+					.header(MarketplaceclientservicesConstants.TERMINAL_ID, "webpos-tul-dev10")
+					.header(MarketplaceclientservicesConstants.USERNAME, "tulwebuser")
+					.header(MarketplaceclientservicesConstants.PASSWORD, "webusertul")
+					.header(MarketplaceclientservicesConstants.DATE_AT_CLIENT, dateFormat.format(new Date()))
+					.header(MarketplaceclientservicesConstants.IS_FORWARDING_ENTIRY_EXISTS, "true")
+					.header(MarketplaceclientservicesConstants.CONTENT_TYPE, "application/json")
+					.header(MarketplaceclientservicesConstants.MERCHANT_OUTLET_NAME, "TUL-Online")
+					.header(MarketplaceclientservicesConstants.ACQUIRERID, "Tata Unistore Ltd")
+					.header(MarketplaceclientservicesConstants.ORGANIZATION_NAME, "Tata Unistore Ltd")
+					.header(MarketplaceclientservicesConstants.POS_ENTRY_MODE, "2")
+					.header(MarketplaceclientservicesConstants.POS_TYPE_ID, "1")
+					.header(MarketplaceclientservicesConstants.POS_NAME, "webpos-tul-qc-01")
+					.header(MarketplaceclientservicesConstants.TERM_APP_VERSION, "null")
+					.header(MarketplaceclientservicesConstants.CURRENT_BATCH_NUMBER,
+							getConfigurationService().getConfiguration().getString("qc.batch.number"))
+					.header(MarketplaceclientservicesConstants.TRANSACTION_ID, transactionId)
+					.type(MediaType.APPLICATION_JSON).post(ClientResponse.class,requestBody);
+
+			if (null != response)
+			{
+				output = response.getEntity(String.class);
+				LOG.debug(" ************** output----" + output);
+				customerWalletDetailResponse = objectMapper.readValue(output, CustomerWalletDetailResponse.class);
+				return customerWalletDetailResponse;
+			}
+		}
+		catch (final Exception ex)
+		{
+			LOG.error(ex.getMessage());
+			return customerWalletDetailResponse;
+		}
+		return customerWalletDetailResponse;
+	}
+
 }

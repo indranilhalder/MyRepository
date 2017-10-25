@@ -18,6 +18,7 @@
 	    	<textbox id="textbox"  disabled="true"/>
 	         <button sclass="uploadTxtbox" label="Load Amount" upload="true,maxsize=302400,accept=.csv" id="upload_button"></button> 
 			 <button sclass="cancleTxtbox" label="Cancel Load" upload="true,maxsize=302400,accept=.csv" id="cancle_upload_button"></button> 
+			 <button sclass="activeAndDeactiveTxtbox" label="Activate And Deactivate QC Accounts" upload="true,maxsize=302400,accept=.csv" id="upload_button_for_activate_and_deactivate"></button> 
 	    </div>
 		
 		
@@ -35,6 +36,13 @@
 				<button id="cancelcsv" sclass="cng-action-icon"
 					style="margin-left:2px;padding:0px 3px 0px 0px;font-size:12px"
 					image="${wr}/images/csv_text.png" label="Bulk  Wallet Cancle File Download " />
+			</hbox>
+			
+			 <hbox pack="center">
+		  <label sclass="cancelheading" value="QC Accounts Activate and Decativate Accounts File download:"></label>
+				<button id="activeanddeactiveaccountscsv" sclass="cng-action-icon"
+					style="margin-left:2px;padding:0px 3px 0px 0px;font-size:12px"
+					image="${wr}/images/csv_text.png" label="QC Accounts Activate and Decativate Accounts File download " />
 			</hbox>
 	
 	   </vlayout>

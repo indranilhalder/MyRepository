@@ -64,5 +64,9 @@ public interface MplWalletServices
 	public QCRedeeptionResponse qcCredit(String walletId, QCCreditRequest request);
 	
    public WalletCardApportionDetailModel getOrderFromWalletCardNumber(final String cardNumber);
+   
+	public CustomerWalletDetailResponse activateQCUserAccount(final String walletId,final String transactionId);
+	
+	public CustomerWalletDetailResponse deactivateQCUserAccount(final String walletId, final String transactionId);
 
 }

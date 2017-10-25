@@ -40,6 +40,7 @@ import com.tisl.mpl.marketplacecommerceservices.service.ExtendedUserService;
 import com.tisl.mpl.pojo.request.Customer;
 import com.tisl.mpl.pojo.request.QCCustomerPromotionRequest;
 import com.tisl.mpl.pojo.request.QCCustomerRegisterRequest;
+import com.tisl.mpl.pojo.response.CustomerWalletDetailResponse;
 import com.tisl.mpl.pojo.response.QCCustomerRegisterResponse;
 import com.tisl.mpl.pojo.response.QCRedeeptionResponse;
 
@@ -530,5 +531,159 @@ private StringBuilder uploadWallettCashFile(List<CilqCashWalletPojo> cilqCashWal
 
       return result;
   }
-
+   
+	/**
+	 * this method will call while uploading file
+	 *
+	 * @param uploadEvent
+	 * @throws FileNotFoundException 
+	 */
+	@ViewEvent(componentID = "upload_button_for_activate_and_deactivate", eventName = Events.ON_UPLOAD)
+	public void uploadWalletAccountsActivateAndDeactivate(final UploadEvent uploadEvent) throws FileNotFoundException
+	{
+		textbox.setText("");
+		emptyFileError.setVisible(false);
+		media = uploadEvent.getMedia();
+		final String fileName = media.getName();
+		
+		boolean messageFlag=false;
+		if (fileName.endsWith(CSV) || fileName.endsWith(".xlsx"))
+		{
+			System.out.println("**********************File Name :"+fileName);
+			List<CilqCashWalletPojo> cilqCashWalletPojoList = new ArrayList<CilqCashWalletPojo>();
+			  Scanner scanner = new Scanner(media.getStreamData());
+			  try{
+	        while (scanner.hasNext()) {
+	      	  CilqCashWalletPojo pojo = new CilqCashWalletPojo();
+	            List<String> line = parseLine(scanner.nextLine());
+	            try{
+	            pojo.setWalletId(line.get(0));
+	            pojo.setCustomerEmailId(line.get(1));
+	            pojo.setRemarks(line.get(2));
+	            if(null != line.get(1) && !line.get(1).isEmpty() && line.get(1).contains("@")){
+	            cilqCashWalletPojoList.add(pojo);
+	            }
+	            }catch(Exception e){
+	            	Messagebox.show("Please upload file valid format like  Customer Wallet Id ,Customer Email ,Remarks ", "Error Message", Messagebox.OK, Messagebox.ERROR);
+	            	messageFlag=true;
+	            }
+	        }
+			  }catch(Exception eObj){
+				  eObj.printStackTrace();
+			  }finally{
+				  scanner.close();
+			  }
+	        PrintWriter pw = null;
+	      
+	        String fileUploadLocation =null;
+	        String fileUploadName =null;
+	        if (null != configurationService)
+				{
+					fileUploadLocation = configurationService.getConfiguration().getString("mpl.wallet.bulkuploadfileLocation");
+					fileUploadName =  configurationService.getConfiguration().getString("mpl.wallet.bulkupload.activateanddeactivate.filename");
+				   if(null != fileUploadLocation && !fileUploadLocation.isEmpty() && null!=fileUploadName ){
+				   	  try {
+			      	      pw = new PrintWriter(new File(fileUploadLocation+fileUploadName));
+			      	      StringBuilder  builder=activateAndDeactivateQCAccounts(cilqCashWalletPojoList,pw);
+			    	         pw.write(builder.toString());
+			          	   pw.close();
+			      	  } catch (FileNotFoundException e) {
+			      	      e.printStackTrace();
+			      	  }finally{
+			      		  pw.close();
+			      	  }
+				   }
+				}
+      	  System.out.println("successfully created File..........");
+      	  if(!messageFlag){
+      	  Messagebox.show("SuccessFully Uploaded wallet", "Success Message", Messagebox.OK, Messagebox.INFORMATION);
+      	  }
+		}
+	}
+   
+   
+   private StringBuilder activateAndDeactivateQCAccounts(List<CilqCashWalletPojo> cilqCashWalletPojoList, PrintWriter pw){
+   	StringBuilder  builder = new StringBuilder();
+   	  boolean  headerCheck = false ;
+        boolean  responseCheck = false ;
+        String commentMsg = "";
+   		CustomerWalletDetailResponse response = null;
+   		
+   	 for(CilqCashWalletPojo walletObj:cilqCashWalletPojoList){
+     	  CustomerModel currentCustomer =  extendedUserService.getUserForOriginalUid(walletObj.getCustomerEmailId());
+     	  if(null!= currentCustomer  ){
+     		  LOG.debug("First Name :"+currentCustomer.getDisplayName());
+        	  if (null != currentCustomer.getIsWalletActivated() && currentCustomer.getIsWalletActivated().booleanValue()){
+        		  if(walletObj.getRemarks().equalsIgnoreCase("Deactivate")){
+        		  LOG.debug("Customer Have Active wallet account Id :"+currentCustomer.getCustomerWalletDetail().getWalletId());
+        		  response =  mplWalletFacade.deactivateQCUserAccount(currentCustomer.getCustomerWalletDetail().getWalletId());
+        		  if(response.getResponseCode()== 0){
+        			  commentMsg ="Success";
+        			currentCustomer.setIsWalletActivated(Boolean.FALSE);
+        			modelService.save(currentCustomer);
+        		  }else{
+        				 commentMsg ="Failure";
+        		  }
+        		  }
+     	  }else if(null != currentCustomer.getIsWalletActivated() && currentCustomer.getIsWalletActivated().equals(Boolean.FALSE)){
+     		LOG.debug("Customer Have Deactive wallet account Id :"+currentCustomer.getCustomerWalletDetail().getWalletId());
+     	 if(walletObj.getRemarks().equalsIgnoreCase("Activate")){
+   		  response =  mplWalletFacade.activateQCUserAccount(currentCustomer.getCustomerWalletDetail().getWalletId());
+   		  if(response.getResponseCode()== 0){
+   			  commentMsg ="Success";
+   			  currentCustomer.setIsWalletActivated(Boolean.TRUE);
+       			modelService.save(currentCustomer);
+   			  
+   		  }else{
+   				 commentMsg ="Failure";
+   		  }  
+     	 }
+     	  }else{
+     		  commentMsg= "user does not exist";
+     		  responseCheck=true;
+     		  
+     	  }
+     	  CilqCashWalletPojo pojo= new CilqCashWalletPojo();
+     	  if(!responseCheck){
+     	  pojo.setWalletId(currentCustomer.getCustomerWalletDetail().getWalletId());
+     	  pojo.setCustomerEmailId(walletObj.getCustomerEmailId());
+     	  pojo.setRemarks(walletObj.getRemarks());
+     	  pojo.setComments(commentMsg);
+     	  String columnNamesList =null;
+     	  if(!headerCheck){
+     		  columnNamesList = "Wallet Id,Email ID,Remarks,Comments";
+     		  builder.append(columnNamesList +"\n");
+     		  headerCheck=true;
+     	  }
+     	 
+     	  builder.append(pojo.getWalletId()+",");
+     	  builder.append(pojo.getCustomerEmailId()+",");
+     	  builder.append(pojo.getRemarks()+",");
+     	  builder.append(pojo.getComments());
+     	  builder.append('\n');	 
+         }
+       }
+   	}
+   	 return builder;
+   }
+   
+   @ViewEvent(componentID = "activeanddeactiveaccountscsv", eventName = Events.ON_CLICK)
+	public void qcAccountActiveAndDeactiveUploadedCsv() throws InterruptedException, FileNotFoundException
+	{
+     System.out.println("**********getUploadedCsv***********");
+     String fileUploadLocation =null;
+     String fileDownloadName =null;
+     if (null != configurationService)
+		{
+			fileUploadLocation = configurationService.getConfiguration().getString("mpl.wallet.bulkuploadfileLocation");
+			fileDownloadName =  configurationService.getConfiguration().getString("mpl.wallet.bulkupload.activateanddeactivate.filename");
+		   if(null != fileUploadLocation && !fileUploadLocation.isEmpty() && null!=fileDownloadName){
+		   	  final File file = new File(fileUploadLocation.trim()+fileDownloadName);
+					if (file.exists()){
+						Filedownload.save(file, null);
+					}
+		   }
+		}
+     System.out.println("Successfully.....Downloading file...");
+	}
 }

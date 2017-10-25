@@ -331,4 +331,19 @@ public class MplWalletFacadeImpl implements MplWalletFacade
 	{
 		return getMplWalletServices().qcCredit(walletId, request);
 	}
+
+
+	@Override
+	public CustomerWalletDetailResponse activateQCUserAccount(String walletId)
+	{
+		final String transactionId = generateQCTransactionId();
+		return getMplWalletServices().activateQCUserAccount(walletId,transactionId);
+	}
+
+	@Override
+	public CustomerWalletDetailResponse deactivateQCUserAccount(String walletId)
+	{
+		final String transactionId = generateQCTransactionId();
+		return getMplWalletServices().deactivateQCUserAccount(walletId,transactionId);
+	}
 }
