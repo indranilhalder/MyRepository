@@ -658,7 +658,7 @@ public class MplOrderEntryPopulator extends OrderEntryPopulator
 				walletApportionPaymentData.setQcApportionPartValue(source.getWalletApportionPaymentInfo().getQcApportionPartValue());
 				walletApportionPaymentData.setQcSchedulingPartValue(source.getWalletApportionPaymentInfo().getQcSchedulingPartValue());
 				walletApportionPaymentData.setQcDeliveryPartValue(source.getWalletApportionPaymentInfo().getQcDeliveryPartValue());
-				walletApportionPaymentData.setQcShippingPartValue(source.getWalletApportionPaymentInfo().getOrderId());
+				walletApportionPaymentData.setQcShippingPartValue(source.getWalletApportionPaymentInfo().getQcShippingPartValue());
 				walletApportionPaymentData.setOrderid(source.getWalletApportionPaymentInfo().getOrderId());
 				walletApportionPaymentData.setStatus(source.getWalletApportionPaymentInfo().getStatus());
 				walletApportionPaymentData.setType(source.getWalletApportionPaymentInfo().getType());
@@ -712,7 +712,7 @@ public class MplOrderEntryPopulator extends OrderEntryPopulator
 			walletApportionPaymentData.setQcApportionPartValue(source.getWalletApportionPaymentInfo().getQcApportionPartValue());
 			walletApportionPaymentData.setQcSchedulingPartValue(source.getWalletApportionPaymentInfo().getQcSchedulingPartValue());
 			walletApportionPaymentData.setQcDeliveryPartValue(source.getWalletApportionPaymentInfo().getQcDeliveryPartValue());
-			walletApportionPaymentData.setQcShippingPartValue(source.getWalletApportionPaymentInfo().getOrderId());
+			walletApportionPaymentData.setQcShippingPartValue(source.getWalletApportionPaymentInfo().getQcShippingPartValue());
 			walletApportionPaymentData.setOrderid(source.getWalletApportionPaymentInfo().getOrderId());
 			walletApportionPaymentData.setStatus(source.getWalletApportionPaymentInfo().getStatus());
 			walletApportionPaymentData.setType(source.getWalletApportionPaymentInfo().getType());
