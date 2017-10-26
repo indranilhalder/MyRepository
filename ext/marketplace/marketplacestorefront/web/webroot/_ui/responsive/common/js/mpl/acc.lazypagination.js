@@ -128,7 +128,7 @@ function getProductSetData() {
                     }
                     window.history.replaceState({}, "", nextPaginatedAjaxUrl);
             	}
-				ajaxPLPLoad(ajaxUrl);
+				//ajaxPLPLoad(ajaxUrl);
             }
         } else { // if no url with page no occourance found.
             if (pageNoPagination <= totalNoOfPages) {
@@ -142,7 +142,7 @@ function getProductSetData() {
                 //window.history.replaceState({}, "", nextPaginatedAjaxUrl);
                 directPaginatedLoad =false;
             }
-			ajaxPLPLoad(ajaxUrl);
+			//ajaxPLPLoad(ajaxUrl);
         }
     }
 }
@@ -348,7 +348,7 @@ $(document).ready(function() {
     	}
     }
     //TPR-7078 - do  not remove the commented code 
-/*        $(window).on('scroll', function() {
+        $(window).on('scroll', function() {
             if ($('.lazy-reached').length != 0) {
             	
             	var productItemArrayLength = $('ul.product-listing.product-grid.lazy-grid,ul.product-listing.product-grid.lazy-grid-facet,ul.product-list,ul.product-listing.product-grid.lazy-grid-normal,ul.product-listing.product-grid.custom-sku').find('li.product-item').length;
@@ -391,7 +391,7 @@ $(document).ready(function() {
                     }
                 }
             }
-        });*/
+        });
         
         //TPR- 7078 Remove Lazy loading Normal pagination 
         $(document).on('click', '.pageNo', function() {
@@ -859,6 +859,7 @@ function sortCustomSku(this_data,drop_down){
 		break;
 	}
 }
+
 
 function lazyPushInitalPage(){
 	
