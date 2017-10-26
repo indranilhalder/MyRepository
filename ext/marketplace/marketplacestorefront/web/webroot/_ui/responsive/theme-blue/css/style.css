@@ -77525,6 +77525,9 @@ background: url(../images/search_image.png) no-repeat;}
 	
 	#paytm_logo_img {width: 100px;}
 	
+	.splitTotalPayableInfo, #finalCliqCashUsedDefault {display: none;}
+	#finalCliqCashUsed {text-transform: none;}
+	
 /* wallet css end */	
 
 
