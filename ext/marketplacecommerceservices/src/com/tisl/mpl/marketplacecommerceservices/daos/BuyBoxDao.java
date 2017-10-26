@@ -108,6 +108,7 @@ public interface BuyBoxDao
 	 */
 	String findPussid(String selectedUSSID);
 
+
 	/**
 	 * This Method is for Seller Monogramming Message Changes
 	 *
@@ -116,5 +117,8 @@ public interface BuyBoxDao
 	 * @return String
 	 */
 	public String getSellerMonogrammingMsg(String productCode, String sellerId);
+
+	public List<BuyBoxModel> getVariantListForPriceRange(final String code);
+
 
 }

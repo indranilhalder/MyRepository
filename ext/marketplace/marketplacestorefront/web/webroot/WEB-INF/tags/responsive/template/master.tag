@@ -16,7 +16,7 @@
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <%-- <%@ taglib prefix="regex" uri="/WEB-INF/common/tld/regex.tld" %> --%>
 <%@ taglib uri="http://htmlcompressor.googlecode.com/taglib/compressor" prefix="compress" %>
-<compress:html removeIntertagSpaces="true">
+<compress:html removeIntertagSpaces="true" enabled="${minificationHTML}">
 <!DOCTYPE html>
 <html lang="${currentLanguage.isocode}">
 <head>
@@ -60,7 +60,8 @@
 <link rel="stylesheet" type="text/css" media="all" href="//${productMediadnsHost1}/preload.css?${rand}"/>
 </c:if> --%>
 
-
+<spring:eval expression="T(de.hybris.platform.util.Config).getParameter('dtm.static.url')" var="dtmUrl"/>
+<script src="${dtmUrl}"></script>
 
 
 <%-- <link rel="stylesheet" type="text/css" media="all" href="${themeResourcePath}/css/preload.css"/> --%>
@@ -336,8 +337,8 @@
 	src="${commonResourcePath}/js/jquery-2.1.1.min.js"></script>
 	<%-- Inject any additional CSS required by the page --%>
 	<jsp:invoke fragment="pageCss"/>
-	
 	<%-- <analytics:analytics/> --%>
+<div id ="DTMhome"></div>
 	<%-- <generatedVariables:generatedVariables/> --%>
 
 <c:if test="${param.frame ne null}">	
@@ -346,6 +347,7 @@
 <c:if test="${fn:contains(requestScope['javax.servlet.forward.request_uri'],'/my-account')}">
 	<link rel="stylesheet" type="text/css" media="all" href="${themeResourcePath}/css/pikaday.css"/>
 </c:if>
+
 <!--Added for TPR-5812  -->
 <c:if test="${isIzootoEnabled=='Y'}">
  <script> window._izq = window._izq || []; window._izq.push(["init"]); </script>
@@ -353,6 +355,7 @@
 <script src="${izootoScript}"></script>
 </c:if>
  <!-- Changes End  TPR-5812 -->
+
 </head>
 <c:if test="${empty buildNumber}">
 <c:set var="buildNumber" value= "100000"/>
@@ -436,8 +439,19 @@
  		var commonResource='${commonResourcePath}';
  		var buildNumber='${buildNumber}'; 
  		
- 		$(window).on('load',function(){
+ 		/*$(window).on('load',function(){
  			if($("#pageType").val() != "homepage"){
+ 			callGigya();
+ 			}
+ 		});*/
+ 		<!-- BLP PDP Change -->
+ 		$(window).on('load',function(){
+ 			if($("#pageType").val() != "homepage" && $("#pageType").val() != "product" 
+ 					&& $("input[name=newBrandLandingPage]").length == 0 
+ 					&& $("#pageType").val() != "productsearch" 
+ 					&& $("input[name=productGrid]").length == 0
+ 					&& $("input[name=apparelCategoryLandingPage]").length == 0
+					&& $("input[name=BrandLayoutPage]").length == 0){
  			callGigya();
  			}
  		});
@@ -457,7 +471,81 @@
 		</c:otherwise>
 		</c:choose>
 	</c:if>
-
+	
+	<c:if test="${!fn:contains(themeResourcePath,'theme-luxury') && !(fn:contains(pageBodyCssClasses, 'homepage') 
+	    or fn:contains(pageBodyCssClasses, 'newBrandLandingPageTemplate')
+        or fn:contains(pageBodyCssClasses, 'productDetails') 
+        or fn:contains(pageBodyCssClasses, 'productGridPage') 
+        or fn:contains(pageBodyCssClasses, 'searchGridPage')
+        or fn:contains(pageBodyCssClasses, 'apparelCategoryLandingPage')
+        or fn:contains(pageBodyCssClasses, 'BrandLayoutPage')
+        or fn:contains(pageBodyCssClasses, 'apparelCategoryLandingPageV1')
+	    or fn:contains(pageBodyCssClasses, 'FootwearBrandLandingPageTemplate')
+	    or fn:contains(pageBodyCssClasses, 'FootwearCategoryLandingPageTemplate')
+	    or fn:contains(pageBodyCssClasses, 'electronicsCategoryLandingPage')
+        )}">
+        
+        <script>
+        $(document).ready(function(){
+         	var forceLoginUser = ($.cookie("mpl-user") == "anonymous") && window.location.search.indexOf("boxed-login") >= 1 ? "Y" : "N";
+    		var isMobile = screen.width < 460 ? "true" : "false" ;
+    		if(forceLoginUser == "Y"){
+    		if(isMobile == "true"){
+    		setTimeout(function(){
+    		window.location.href="/login";
+    		},10000);
+    		}else{
+    		$.ajax({
+    		url: "/login?frame=true&box-login",
+    		type: "GET",
+    		responseType: "text/html",
+    		success: function(response){
+    			$("#login-modal").find(".content").html('<button id="close-login" type="button" class="close"></button>'+response);
+    		},
+    		fail: function(response){
+    			alert(response);
+    		}
+    		});
+    		setTimeout(function(){
+    		$("#login-modal").modal({
+    			 backdrop: 'static',
+    			 keyboard: false
+    		 });
+    		},2000);
+    		}
+    		}
+        });
+        </script>
+        </c:if>
+        
+	<script>
+	$(document).ready(function(){
+		
+		/*Search Icon Changes - Responsive Vamshi*/
+		if($(window).width()<651){ 
+				$('#search_form').hide();
+				$(".simpleSearchToggle").show();
+				$(document).on("click", function(e){
+					if($(e.target).is(".simpleSearchToggle") || $(e.target).is(".js-site-search-input") || $(e.target).is("#searchButton")){
+						if($(e.target).is(".simpleSearchToggle")) {
+							$('#search_form').toggle(function () {});
+							$(".js-site-search-input").focus();
+						} else {
+							$("#search_form").show();
+						}
+					}else{
+						$("#search_form").hide(function () {});
+					}
+				});
+			} else {
+				$(".simpleSearchToggle").hide();
+			}
+	});
+	
+	$(document).on("click","#close-login",function(){
+		window.location.href="/";
+	});
+</script>
 
 	<tealium:sync/> 
 <%-- <script type="text/javascript">
@@ -476,13 +564,44 @@
 		<input type="hidden" id="accesibility_refreshScreenReaderBufferField" name="accesibility_refreshScreenReaderBufferField" value=""/>
 	</form>
 	<div id="ariaStatusMsg" class="skip" role="status" aria-relevant="text" aria-live="polite"></div>
+	
+	<c:if test="${isSamsungPage eq true }">
+		<spring:eval expression="T(de.hybris.platform.util.Config).getParameter('samsung.chat.icon.uri')" var="samsungChatIconURI"/>
+		<div class="samsung-chat-div" id="samsung-chat-icon-id">
+			<img title="Samsung Live Chat" alt="Samsung Live Chat" src="${samsungChatIconURI}">
+		</div>
+	</c:if>
 
 	<%-- Load JavaScript required by the site --%>
+	<!-- SDI-1103 -->
 	<template:javaScript/>
-	
+	<script type="text/javascript">if(typeof _satellite !="undefined"){_satellite.pageBottom();}</script>
 	<%-- Inject any additional JavaScript required by the page --%>
 	<jsp:invoke fragment="pageScripts"/>	
-	
+	<%-- TPR-6399 --%>
+	<!-- Modal -->
+<div class="modal fade login-modal" id="login-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+		<div class="overlay"></div>
+		<div class="content">
+		</div>
+</div>
+<!-- TPR-6654 starts-->
+<div class="modal fade pincode-modal" id="pincode-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+		<div class="overlay"></div>
+		<div class="content">
+		<div class="modal-body">
+		<button class="close" data-dismiss="modal"><span aria-hidden="true">×</span></button>
+		<!-- <button class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span></button> -->
+		<h4>Enter Pincode</h4>
+		<input id="home_pin" type="text" placeholder="Pincode" maxlength="6" onkeypress="return isNum(event)"/>
+		<button class="viewOrderButton homepage_submit" id="homepagePincodeCheck"><spring:theme code="product.submit"/></button>
+		<br/>
+		<br/>
+        <div id="errorMessage" class="error_text"></div>
+		</div>
+		</div>
+</div>
+<!-- TPR-6654 starts-->
 </body>
 
 <debug:debugFooter/>

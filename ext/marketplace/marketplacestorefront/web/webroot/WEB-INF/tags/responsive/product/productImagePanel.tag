@@ -9,13 +9,14 @@
 <%@ attribute name="galleryImages" required="true" type="java.util.List"%>
 <!-- below js code is responsible for zoom functionality of image on hover -->
 <script type="text/javascript">
-	$(function() {
+<!-- PDP Change -->
+	/*$(function() {
 		$('.productImagePrimaryLink').picZoomer();
 		/* $('.piclist li').on('click', function(event) {
 			var $pic = $(this).find('img');
 			$('.picZoomer-pic').attr('src', $pic.attr('src'));
 		}); */
-	});
+	//});
 
 	function hit(options) {
 
@@ -68,7 +69,10 @@
 		var x = $("#player").attr('src');
 		var z = $("#player").attr('src', x + "&autoplay=0");
 	}
-	$(document)
+	
+	<!-- PDP Change -->
+	
+	/*$(document)
 			.ready(
 					function() {
 						if ($(window).width() > 789) {
@@ -85,7 +89,8 @@
 								zoomWindowFadeOut : 750
 							});
 						}
-					});
+					});*/
+					
 </script>
 
 
@@ -112,7 +117,7 @@
 			data-href="${productZoomImagesUrl}" target="_blank"
 			data-toggle="modal"
 			title="<spring:theme code="text.add.to.wishlist"/>">
-			<product:productPrimaryImage product="${product}" format="zoom"/>
+			<product:productPrimaryImage product="${product}" lazyLoad="false" format="zoom"/>
 		</div>
 	</div>
 	<!-- 	<iframe name="videoFrame" id="videoFrame" width="400" height="560" frameborder="0"  style="display:none"  allowfullscreen ></iframe>

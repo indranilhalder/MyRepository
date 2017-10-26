@@ -14,4 +14,8 @@ import de.hybris.platform.commercefacades.product.data.ProductData;
 public interface MplProductFacade
 {
 	public ProductFeatureModel getProductFeatureModelByProductAndQualifier(ProductData product, String qualifier);
+
+	public String getPDPPincodeSession();
+
+	public void setPDPPincodeSession(final String pincode);
 }

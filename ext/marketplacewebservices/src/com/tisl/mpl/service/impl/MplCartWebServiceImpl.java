@@ -55,6 +55,7 @@ import de.hybris.platform.product.ProductService;
 import de.hybris.platform.promotions.model.OrderPromotionModel;
 import de.hybris.platform.promotions.model.ProductPromotionModel;
 import de.hybris.platform.promotions.model.PromotionResultModel;
+import de.hybris.platform.servicelayer.config.ConfigurationService;
 import de.hybris.platform.servicelayer.dto.converter.ConversionException;
 import de.hybris.platform.servicelayer.dto.converter.Converter;
 import de.hybris.platform.servicelayer.model.ModelService;
@@ -75,6 +76,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
@@ -103,12 +105,14 @@ import com.tisl.mpl.facade.checkout.MplCartFacade;
 import com.tisl.mpl.facade.wishlist.WishlistFacade;
 import com.tisl.mpl.facades.product.data.BuyBoxData;
 import com.tisl.mpl.facades.product.data.MarketplaceDeliveryModeData;
+import com.tisl.mpl.jalo.BundlingPromotionWithPercentageSlab;
 import com.tisl.mpl.marketplacecommerceservices.service.ExchangeGuideService;
 import com.tisl.mpl.marketplacecommerceservices.service.ExtendedUserService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplDeliveryCostService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplJewelleryService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplStockService;
 import com.tisl.mpl.marketplacecommerceservices.service.impl.MplCommerceCartServiceImpl;
+import com.tisl.mpl.model.BundlingPromotionWithPercentageSlabModel;
 import com.tisl.mpl.model.SellerInformationModel;
 import com.tisl.mpl.seller.product.facades.BuyBoxFacade;
 import com.tisl.mpl.service.MplCartWebService;
@@ -208,6 +212,9 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 
 	@Resource(name = "mplJewelleryService")
 	private MplJewelleryService mplJewelleryService;
+
+	@Autowired
+	private ConfigurationService configurationService;
 
 	/**
 	 * Service to create cart
@@ -798,6 +805,7 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 		CartDataDetailsWsDTO cartDataDetails = new CartDataDetailsWsDTO();
 		CartModel cart = null;
 		String delistMessage = MarketplacewebservicesConstants.EMPTY;
+
 		try
 		{
 			//CAR changes
@@ -832,6 +840,41 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 					cart.setChannel(SalesApplication.WEB);
 					modelService.save(cart);
 				}
+				//TPR-3893 starts here
+				final Set<PromotionResultModel> promotions = cart.getAllPromotionResults();
+				int totalNoOfProducts = 0;
+				int maxSlabProductQuantity = 0;
+				String firedMessage = null;
+				for (final PromotionResultModel productPromotion : promotions)
+				{
+					if (productPromotion != null && null != productPromotion.getPromotion()
+							&& productPromotion.getPromotion() instanceof BundlingPromotionWithPercentageSlabModel)
+					{
+						final BundlingPromotionWithPercentageSlab bundlingPromo = (BundlingPromotionWithPercentageSlab) getModelService()
+								.getSource((BundlingPromotionWithPercentageSlabModel) productPromotion.getPromotion());
+
+						if (bundlingPromo != null)
+						{
+							totalNoOfProducts = bundlingPromo.getNoOfAllowedCartProducts();
+							LOG.debug("The no. of allowed cart products is " + totalNoOfProducts);
+							maxSlabProductQuantity = bundlingPromo.getMaxSlabProuductQuantity();
+							LOG.debug("The no. of allowed cart products is " + maxSlabProductQuantity);
+						}
+						if (StringUtils.isNotEmpty(((BundlingPromotionWithPercentageSlabModel) productPromotion.getPromotion())
+								.getMessageFired()))
+						{
+							firedMessage = ((BundlingPromotionWithPercentageSlabModel) productPromotion.getPromotion())
+									.getMessageFired();
+						}
+						LOG.debug("The fired message is " + firedMessage);
+						if (totalNoOfProducts > maxSlabProductQuantity && StringUtils.isNotEmpty(firedMessage))
+						{
+							cartDataDetails.setFiredMessage(firedMessage);
+							break;
+						}
+					}
+				}
+				//TPR-3893 ends here
 			}
 			else
 			{
@@ -1095,11 +1138,6 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 				else
 				{
 					LOG.debug("*************** Mobile webservice root category is empty ********************");
-				}
-
-				if ((MarketplacecommerceservicesConstants.FINEJEWELLERY).equalsIgnoreCase(productData.getRootCategory()))
-				{
-					gwlp.setPriceDisclaimerTextJwlry(MarketplacewebservicesConstants.PRICE_DISCLAIMER_JEWELLERY);
 				}
 
 				final String catId = mplProductWebService.getCategoryCodeOfProduct(productData);
@@ -2055,7 +2093,6 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 		//CAR-57
 		List<PinCodeResponseData> pinCodeRes = null;
 
-
 		try
 		{
 			if (cartModel != null)
@@ -2198,6 +2235,13 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 				cartDataDetails.setOfferDetails(cartOfferList);
 			}
 
+			//TPR-6980:Change in the logic of display of price disclaimer in the cart for Fine Jewellery
+			final String displayMsgFinal = mplCommerceCartService.populatePriceDisclaimerCart(cartModel);
+
+			if (StringUtils.isNotEmpty(displayMsgFinal))
+			{
+				cartDataDetails.setPriceDisclaimerTextJwlry(displayMsgFinal);
+			}
 
 		}
 		catch (final Exception e)
@@ -3116,6 +3160,7 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 	/*
 	 * (non-Javadoc)
 	 * 
+	 * 
 	 * @see com.tisl.mpl.service.MplCartWebService#addProductToCartwithExchange(java.lang.String, java.lang.String,
 	 * java.lang.String, java.lang.String, boolean, java.lang.String, java.lang.String)
 	 */
@@ -3355,5 +3400,28 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 		cartService.changeCurrentCartUser(userService.getCurrentUser());
 		return getCartRestorationConverter().convert(commerceCartRestoration);
 	}
+
+
+	/**
+	 * @return the configurationService
+	 */
+	public ConfigurationService getConfigurationService()
+	{
+		return configurationService;
+	}
+
+	/**
+	 * @param configurationService
+	 *           the configurationService to set
+	 */
+	public void setConfigurationService(final ConfigurationService configurationService)
+	{
+		this.configurationService = configurationService;
+	}
+
+
+
+
+
 
 }

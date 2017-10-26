@@ -115,9 +115,9 @@ tr.d0 td {
 					<c:if test="${container.luxuryThumbnail.mediaType.code eq 'Image'}">
 						<div><img src="${container.luxuryThumbnail.url}" data-zoom-image="${container.luxurySuperZoom.url}"></div>
 					</c:if>
-					<c:if test="${container.luxuryThumbnail.mediaType.code eq 'Video'}">
+					<c:if test="${container.thumbnail.mediaType.code eq 'Video'}">
 						<c:set var="videoAvailable" value="true"/>
-						<c:set var="videoUrl" value="${container.luxuryThumbnail.url}"/>
+						<c:set var="videoUrl" value="${container.thumbnail.url}"/>
 					</c:if>
 				</c:forEach>
 			</div>
@@ -129,9 +129,12 @@ tr.d0 td {
 							<c:forEach items="${galleryImages}" var="container">
 								<c:if test="${container.luxuryThumbnail.mediaType.code eq 'Image'}">
 										<c:set var="isImgAdded" value="true"/>
-									<div><img src="${container.luxurySuperZoom.url}" data-zoom-image="${container.luxurySuperZoom.url}" class="zoomer"></div>
+									<div><img src="${container.luxuryProduct.url}" data-zoom-image="${container.luxurySuperZoom.url}" class="zoomer"></div>
 								</c:if>
-								<c:if test="${empty container.luxurySuperZoom && isImgAdded ne 'true'}">
+								<c:if test="${container.thumbnail.mediaType.code eq 'Video'}">
+									<c:set var="isImgAdded" value="true"/>
+								</c:if>
+								<c:if test="${empty container.luxuryProduct && isImgAdded ne 'true'}">
 									<theme:luxuryImage imgClass="${imgClass}" code="img.missingProductImage.product" alt="${fn:escapeXml(product.name)}" title="${fn:escapeXml(product.name)}"/>
 								</c:if>
 							</c:forEach>
@@ -531,5 +534,4 @@ tr.d0 td {
 </div>
 </div>
 </div>
-
 

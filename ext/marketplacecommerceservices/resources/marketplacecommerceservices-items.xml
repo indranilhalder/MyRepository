@@ -130,6 +130,53 @@
 	</relations>
 
 	<itemtypes>
+	
+		<!-- 168108:TPR-6945:Near Real time Stock and Price changes in PLP and PDP -->
+		
+<!-- 		<itemtype code="FlashSaleProductList" autocreate="true" generate="true">
+			<deployment table="FlashSaleProductList" typecode="24677" />
+			<attributes>
+					<attribute autocreate="true" qualifier="productListingId"
+						type="java.lang.String">
+						<persistence type="property" />
+						<modifiers read="true" write="true" search="true"
+							optional="false" />
+						<description>This Attribute represents the ProductLists to be updated</description>
+					</attribute>
+			</attributes>
+		</itemtype>
+ -->		
+		<itemtype code="AkamaiRefreshUrlList" autocreate="true" generate="true">
+			<deployment table="AkamaiRefreshUrlList" typecode="24678" /> --> 
+			<attributes>
+					<attribute autocreate="true" qualifier="refreshUrl"
+						type="java.lang.String">
+						<persistence type="property">
+							<columntype database="oracle">
+								<value>CLOB</value>
+							</columntype>
+							<columntype database="mysql">
+								<value>text</value>
+							</columntype>
+							<columntype database="sqlserver">
+								<value>nvarchar(max)</value>
+							</columntype>
+							<columntype database="hsqldb">
+								<value>LONGVARCHAR</value>
+							</columntype>
+							<columntype>
+								<value>varchar</value>
+							</columntype>
+						</persistence>
+						<description>This Attribute represents the URL those are to be refreshed.</description>
+						<modifiers read="true" write="true" search="true"
+							optional="false" />
+					</attribute>
+			</attributes>
+		</itemtype>
+		
+		<!-- End 168108:TPR-6945 -->
+	
 		<!-- <itemtype generate="true" code="MyProduct" jaloclass="com.tisl.mpl.jalo.MyProduct" 
 			extends="Product" autocreate="true" > <attributes> <attribute qualifier="myExampleInitialStringField" 
 			type="java.lang.String"> <description>My Example Initial String Value</description> 
@@ -2949,6 +2996,207 @@
 			</attributes>
 		</itemtype>  
 		<!-- TPR-629 ends -->
+		
+		<!-- TPR-3893 starts here -->
+		<!-- *** PROMOTION QUANTITY PRICES ROW redeclared here for Bundling Promotions with Percentage Slabs*** -->
+
+		<itemtype code="PromotionQuantityAndPricesRow"
+			autocreate="false"
+			generate="false">
+			<attributes>
+               <attribute qualifier="percentageDiscount" autocreate="true"
+					type="java.lang.Double">
+					<defaultvalue>Double.valueOf(0D)</defaultvalue>
+					<description>Percentage discount.</description>
+					<modifiers read="true" write="true" search="true"
+						optional="true" />
+					<persistence type="property" />
+              </attribute>	
+              <attribute type="java.lang.String" qualifier="quantityPercentageUniqueRowId">
+                        <description>To generate QuantityPercentage unique row Id for bulk upload</description>
+						<modifiers read="true" write="true" search="true"
+						optional="true" />
+						<persistence type="property" />
+			  </attribute>
+			</attributes>
+		</itemtype>
+		
+		<!-- Item Declaration for  Bundling Promotions with Percentage Slabs -->
+		<itemtype code="BundlingPromotionWithPercentageSlab"
+			extends="ProductPromotion"
+			jaloclass="com.tisl.mpl.jalo.BundlingPromotionWithPercentageSlab"
+			autocreate="true"
+			generate="true">
+
+			<attributes>
+				<attribute
+					qualifier="qualifyingCountsAndBundlePrices"
+					autocreate="true"
+					type="PromotionQuantityAndPricesRowCollectionType">
+					<description>The qualifying count and percentage discount for each step.</description>
+					<persistence type="property" />
+					<modifiers read="true" write="true" search="false" initial="false" optional="true" partof="true"/>
+				</attribute>
+				<attribute qualifier="messageFired" type="localized:java.lang.String">
+					<description>The message to show when the promotion has fired.</description>
+					<modifiers read="true" write="true" optional="true" />
+					<persistence type="property">
+						<columntype database="oracle">
+							<value>varchar2(4000)</value>
+						</columntype>
+						<columntype database="mysql">
+							<value>text</value>
+						</columntype>
+						<columntype database="sqlserver">
+							<value>nvarchar(max)</value>
+						</columntype>
+						<columntype database="hsqldb">
+							<value>LONGVARCHAR</value>
+						</columntype>
+						<columntype>
+							<value>varchar</value>
+						</columntype>
+					</persistence>
+				</attribute>
+				<attribute qualifier="messageCouldHaveFired" type="localized:java.lang.String">
+					<description>The message to show when the promotion could have potentially fire.</description>
+					<modifiers read="true" write="true" optional="true" />
+					<persistence type="property">
+						<columntype database="oracle">
+							<value>varchar2(4000)</value>
+						</columntype>
+						<columntype database="mysql">
+							<value>text</value>
+						</columntype>
+						<columntype database="sqlserver">
+							<value>nvarchar(max)</value>
+						</columntype>
+						<columntype database="hsqldb">
+							<value>LONGVARCHAR</value>
+						</columntype>
+						<columntype>
+							<value>varchar</value>
+						</columntype>
+					</persistence>
+				</attribute>
+				<attribute qualifier="promourl" type="localized:java.lang.String">
+					<description>Configurable link on PDP to be displayed for Bundling promotion</description>
+					<modifiers read="true" write="true" optional="true" />
+					<persistence type="property">
+						<columntype database="oracle">
+							<value>varchar2(4000)</value>
+						</columntype>
+						<columntype database="mysql">
+							<value>text</value>
+						</columntype>
+						<columntype database="sqlserver">
+							<value>nvarchar(max)</value>
+						</columntype>
+						<columntype database="hsqldb">
+							<value>LONGVARCHAR</value>
+						</columntype>
+						<columntype>
+							<value>varchar</value>
+						</columntype>
+					</persistence>
+				</attribute>
+				<attribute qualifier="bundlepromolinktext" type="localized:java.lang.String">
+					<description>Configurable link name on PDP to be displayed for Bundling promotion</description>
+					<modifiers read="true" write="true" optional="true" />
+					<persistence type="property">
+						<columntype database="oracle">
+							<value>varchar2(4000)</value>
+						</columntype>
+						<columntype database="mysql">
+							<value>text</value>
+						</columntype>
+						<columntype database="sqlserver">
+							<value>nvarchar(max)</value>
+						</columntype>
+						<columntype database="hsqldb">
+							<value>LONGVARCHAR</value>
+						</columntype>
+						<columntype>
+							<value>varchar</value>
+						</columntype>
+					</persistence>
+				</attribute>		
+			</attributes>
+		</itemtype>	
+		
+		
+		<!-- TPR-3893 ends here -->
+		
+		<!-- PR-13 Fixed Price Promotion starts here -->		
+		<itemtype code="FixedPricePromotion" extends="ProductPromotion"
+			jaloclass="com.tisl.mpl.jalo.FixedPricePromotion" autocreate="true"
+			generate="true">
+			<attributes>
+				<attribute
+					qualifier="productFixedUnitPrice"
+					autocreate="true"
+					type="PromotionPriceRowCollectionType">
+					<description>Fixed price to sell the product at in specific currencies.</description>
+					<persistence type="property" />
+					<modifiers read="true" write="true" search="false" initial="false" optional="true" partof="true"/>
+				</attribute>
+				<attribute qualifier="quantity" autocreate="true"
+					type="java.lang.Long">
+					<description>The quantity.</description>
+					<defaultvalue>Long.valueOf(1)</defaultvalue>
+					<persistence type="property" />
+				</attribute>				
+				<attribute qualifier="messageFired" type="localized:java.lang.String">
+					<description>The message to show when the promotion has fired.
+					</description>
+					<modifiers read="true" write="true" optional="true" />
+					<persistence type="property">
+						<columntype database="oracle">
+							<value>varchar2(4000)</value>
+						</columntype>
+						<columntype database="mysql">
+							<value>text</value>
+						</columntype>
+						<columntype database="sqlserver">
+							<value>nvarchar(max)</value>
+						</columntype>
+						<columntype database="hsqldb">
+							<value>LONGVARCHAR</value>
+						</columntype>
+						<columntype>
+							<value>varchar</value>
+						</columntype>
+					</persistence>
+				</attribute>				
+				<attribute qualifier="messageCouldHaveFired" type="localized:java.lang.String">
+					<description>The message to show when the promotion could have
+						potentially fire.</description>
+					<modifiers read="true" write="true" optional="true" />
+					<persistence type="property">
+						<columntype database="oracle">
+							<value>varchar2(4000)</value>
+						</columntype>
+						<columntype database="mysql">
+							<value>text</value>
+						</columntype>
+						<columntype database="sqlserver">
+							<value>nvarchar(max)</value>
+						</columntype>
+						<columntype database="hsqldb">
+							<value>LONGVARCHAR</value>
+						</columntype>
+						<columntype>
+							<value>varchar</value>
+						</columntype>
+					</persistence>
+				</attribute>
+   		    </attributes>
+        </itemtype>
+		
+		<!-- PR-13 Fixed Price Promotion ends here -->
+		
+		
+		
 			
 			<!-- Item Declaration for  Bundle Promotions -->
 			<!-- TPR-1294 : Item Declaration Bundle Promotion-->
@@ -3164,6 +3412,62 @@
 		
 		</typegroup>
 		
+		<!-- PR-15 starts-->
+		<typegroup name="OrderPromoRestriction">		
+		 <itemtype code="CategoryRestriction"
+			extends="AbstractPromotionRestriction"
+			jaloclass="com.tisl.mpl.jalo.CategoryRestriction"
+			autocreate="true"
+			generate="true">
+			<attributes>				
+				<attribute autocreate="true" qualifier="categories"
+					type="CategoryCollection">
+					<description>the categories the cart level promotion is valid for.</description>
+					<persistence type="property" />
+					<modifiers search="false" />
+				</attribute>
+				<attribute qualifier="included" autocreate="true"
+						type="java.lang.Boolean">
+						<description>Flag to check whether category restriction included or excluded</description>
+						<defaultvalue>Boolean.TRUE</defaultvalue>
+						<persistence type="property" />
+						<modifiers read="true" write="true" optional="true" />
+			    </attribute>
+				
+				
+				<!-- <attribute qualifier="excludedCategoryCodeList" autocreate="true"
+					generate="true" type="java.lang.String">
+					<description>Promotion should not be applied for list of product codes separated by comma </description>
+					<persistence type="property" />
+					<modifiers read="true" write="true" search="false"
+						optional="true" />
+				</attribute> -->				
+			</attributes>
+		</itemtype>		
+		
+		<itemtype code="OrderPromotion" extends="AbstractPromotion"
+			jaloclass="de.hybris.platform.promotions.jalo.OrderPromotion"
+			autocreate="false" generate="false">
+			<attributes>
+			    <attribute qualifier="excludedProducts" autocreate="true"
+					generate="true" type="ProductCollection">
+					<description>List of products to be excluded</description>
+					<persistence type="property" />
+					<modifiers read="true" write="true" search="false"
+						optional="true" />
+			    </attribute>
+			    
+			    <attribute qualifier="excludedProductCodeList" autocreate="true"
+					generate="true" type="java.lang.String">
+					<description>Promotion should not be applied for list of product codes separated by comma </description>
+					<persistence type="property" />
+					<modifiers read="true" write="true" search="false"
+						optional="true" />
+				</attribute>
+		    </attributes>
+		</itemtype>		       
+		</typegroup>
+		 <!-- PR-15 ends -->
 		
 		
 	</itemtypes>

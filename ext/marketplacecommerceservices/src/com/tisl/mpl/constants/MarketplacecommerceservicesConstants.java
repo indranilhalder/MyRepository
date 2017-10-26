@@ -432,6 +432,8 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String WISHLIST_NO = "Wishlist";
 	public static final String THUMBNAIL = "thumbnail";
 	public static final String SEARCHPAGE = "searchPage";
+	public static final String CARTPAGE = "cartPage";
+	public static final String LUXURYSEARCHPAGE = "luxurySearchPage";
 	public static final String WISHLIST_EXISTS_MSG = "Wishlist name already exists.";
 
 	//Mobile home page
@@ -1919,6 +1921,7 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String MEGANAVNODE = "luxury.root.navigation.node.id";
 
 	public static final String LUXURY_CARTICON = "luxuryCartIcon";
+	public static final String LUXURYCARTPAGE = "luxuryCartPage";
 
 	//TPR-1285
 	//public static final String L4CATEGORYQUERY =
@@ -2175,8 +2178,11 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String MOBILE_NO_NOT_PRESENT = "Mobile number is not present in Commerce System".intern();
 	public static final String TRANSACTION_ID_NOT_PRESENT = "TransactionId is not present in Commerce System".intern();
 	public static final String ORDER_ID_NOT_PRESENT = "Order Reference Number is not present in Commerce System".intern();
-	public static final String MOBILE_QUERY = "SELECT UNIQUE {a:pk} FROM {order as a},{address as b} WHERE {a:user}={b:owner} AND {b.cellphone}=?mobileNo AND {a.type}=?type AND ({a.creationtime} > sysdate -180) order by {a.creationtime} desc fetch first ?queryCount rows only"
+	//SDI-1193
+	public static final String MOBILE_QUERY = "SELECT UNIQUE {a:pk} FROM {order as a},{address as b} WHERE {a:user}={b:owner} AND {b.cellphone}=?mobileNo AND {a.type}=?type AND ({a.creationtime} > sysdate -?transactionLimit) order by {a.creationtime} desc fetch first ?queryCount rows only"
 			.intern();
+	//SDI-1193
+	public static final String TRANSACTION_LIMIT_BY_DATE = "transaction.limit";
 	public static final String MOBILE_QUERY_FOR_L4CATEGORY = "select distinct {c.pk} from {product as p},{CategoryProductRelation as cp},{Category as c},{catalogversion as cv} where {cp.TARGET} = {p.pk} and {cp.SOURCE} = {c.pk} and {c.code} like 'MPH%' and {p.varianttype} is null and {p.catalogversion}={cv.pk} and {cv.version}='Online' and {p.code} = ?productCode"
 			.intern();
 	public static final String TRANSACTION_QUERY = "select {b:pk} from {orderentry as a},{order as b} where p_orderlineid=?transactionId and {a:order}={b:pk} and {b:type}=?type"
@@ -2258,4 +2264,17 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String SCHEDULE_PICKUP = "schedulePickup";
 	public static final String QUICK_DROP = "quickDrop";
 	public static final String ISCHECKOUT_PINCODE_SERVICEABLE = "isCheckoutPincodeServiceable";
+
+	//PR-4
+	public static final String BULK_SMS_1 = "select {sms: amount}, {sms: utrNumber} ,{sms: arnNumber} ,{a:orderlineid},{add:firstname},{add:phone1} from {orderentry as a join order as b on {a:order}={b:pk} join address as add on {b:deliveryAddress}={add:pk} join RefundTransactionEntry as sms on {a:orderlineid}={sms:transactionId}}  where p_orderlineid in ("
+			.intern();
+	public static final String BULK_SMS_2 = ") and {b:type}='SubOrder' and {b:VersionID} is null".intern();
+
+	public static final String FINEJEW_SELFCOURIER_ERRORMSG = "Schedule pick up is not available at this pincode. Please <a href='/contact'>*contact us*</a> for returns.";
+	public static final String FINEJEW_ORDER_RETURN = "Order return has been initiated";
+	//PR-15 (Rainbow)
+	public static final String CATEGORYRESTRICTION = "CategoryRestriction";
+
+	public final static String PINCODE_RESPONSE_DATA_PDP = "PincodeResponseDataForPDP";
+	public static final String KM = "km";
 }

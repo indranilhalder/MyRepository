@@ -163,9 +163,15 @@
 			<cms:pageSlot position="Section4B" var="feature">
 				<cms:component component="${feature}"/>
 			</cms:pageSlot>
-			</div>
-	<product:productCompare/>		
+	</div>
+	<div class="samsung-chat-div" id="samsung-chat-icon-id">
+		<cms:pageSlot position="SamsungChat" var="feature">
+			<cms:component component="${feature}"/>
+		</cms:pageSlot>
+	</div>	
+	<product:productCompare/>
 	<!-- For Infinite Analytics Start -->
 	<div class="trending" id="ia_products_new"></div>
 	<!-- For Infinite Analytics End -->
+	<input type="hidden" name="apparelCategoryLandingPage" value="1"/>
 </template:page>

@@ -138,7 +138,9 @@ $(document).ready(function(){
 		class="qty js-qty-selector-input" value="1" />
 	<input type="hidden" maxlength="3" size="1" id="stock" name="stock"
 		value="" />
-
+			<!-- SDI-1023 -->
+		<input type="hidden" maxlength="3" size="1" id="winning_product_stock" name="winning_product_stock" value="">
+		
 	<input type="hidden" maxlength="3" size="1" id="pinCodeChecked"
 		name="pinCodeChecked" value="false">
 	<%-- </c:if> --%>

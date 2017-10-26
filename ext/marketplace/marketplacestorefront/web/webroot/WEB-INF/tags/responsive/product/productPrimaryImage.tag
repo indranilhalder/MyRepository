@@ -6,7 +6,6 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="theme" tagdir="/WEB-INF/tags/shared/theme" %>
 <%@ taglib prefix="ycommerce" uri="http://hybris.com/tld/ycommercetags" %>
-
 <c:set value="${ycommerce:productImage(product, format)}" var="primaryImage"/>
 
 <c:choose>
@@ -27,7 +26,7 @@
 			<c:otherwise>
 			<c:choose>
 			<c:when test="${lazyLoad eq false}">
-			<img class="picZoomer-pic lazy"  src="${primaryImage.url}" data-zoom-image="" alt="${fn:escapeXml(product.name)}" title="${fn:escapeXml(product.name)}"/>
+			<img class="picZoomer-pic"  src="${primaryImage.url}" data-zoom-image="" alt="${fn:escapeXml(product.name)}" title="${fn:escapeXml(product.name)}"/>
 			</c:when>
 			<c:otherwise>
 			<img class="picZoomer-pic lazy"  data-original="${primaryImage.url}" src="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAASABIAAD/2wCEAAEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAf/CABEIAXYA/AMBEQACEQEDEQH/xAAZAAEAAwEBAAAAAAAAAAAAAAAAAwQIBwr/2gAIAQEAAAAA95AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAzVpVzR0tmrSoAAAKltElVLYAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAD//EABQBAQAAAAAAAAAAAAAAAAAAAAD/2gAIAQIQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAD/xAAUAQEAAAAAAAAAAAAAAAAAAAAA/9oACAEDEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA/8QAKRAAAQIFAwQBBQEAAAAAAAAAAwECBBESExQFISIQFRYxBgAHQ1GQQP/aAAgBAQABPwD+dnmHyzyC5lxeR3Cx2ipcWd+1g4lNuf4K5ZE+d27z6/cvWNW0rT4BummNCji4gw4qLAqsKy2NjggaVEVwlNUV9TKSKkPJHoytHfbTWNW1XT49upGNFDhIgI4WLOqvK+4N7jAcVURxVDSJ9T6iIkRJXqyhG9PMPlnkFzLi8juFjtFS4s79rBxKbc/wVyyJ87t3n/pwIHKzcKEzZSy8YOVKVMsi3dlTxlX629cep4cEUJwIkIogL9nhONhRPRFmiOGRrmOku+7V3/UkX6BDghRNBDBFDhZswIBsEJiKs1Roxtaxs132am/7mq9cCBys3ChM2UsvGDlSlTLIt3ZU8ZV+tvXH+Zv/xAAUEQEAAAAAAAAAAAAAAAAAAACg/9oACAECAQE/ADwf/8QAFBEBAAAAAAAAAAAAAAAAAAAAoP/aAAgBAwEBPwA8H//Z" data-zoom-image="" alt="${fn:escapeXml(product.name)}" title="${fn:escapeXml(product.name)}"/>
@@ -37,8 +36,7 @@
 		</c:choose>
 	</c:when>
 	<c:otherwise>
-
-		<theme:image code="img.missingProductImage.product" alt="${fn:escapeXml(product.name)}" title="${fn:escapeXml(product.name)}"/>
+		<theme:image lazyLoad="false" code="img.missingProductImage.product" alt="${fn:escapeXml(product.name)}" title="${fn:escapeXml(product.name)}"/>
 	</c:otherwise>
 </c:choose>
 

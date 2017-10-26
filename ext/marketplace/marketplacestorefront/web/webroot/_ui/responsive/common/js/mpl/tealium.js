@@ -1133,7 +1133,7 @@ function tealiumCallOnPageLoad()
 			pdp_video_product_id=$('#product_id').val();
 		}
 	})
-	
+	var isImageHoverTriggered = false;
 	// Added for tealium
 	if (pageType == "homepage") {
 		
@@ -1400,8 +1400,10 @@ function tealiumCallOnPageLoad()
 					type : 'GET',
 					cache : false,
 					success : function(data) {
+						try{
 						// console.log(data);
 						var tealiumData = "";
+						var topFivePlpData = populateFirstFiveProductsPlpOnLoad();
 						tealiumData += ',"user_login_type":"'	//TPR-668
 							+ user_login_type + '",';
 						tealiumData += '"page_category_name":"'
@@ -1412,6 +1414,10 @@ function tealiumCallOnPageLoad()
 							+ $("#page_name").val() + '",';
 						tealiumData += '"categoryId":"'
 							+ $("#categoryId").val() + '",';
+						tealiumData += '"plp_first_5_products":'            //tisprdt-6227 starts
+							+ topFivePlpData + ',';
+						tealiumData += '"product_id":'
+							+ topFivePlpData + ',';           //tisprdt-6227 ends
 						if($("#out_of_stock_count").val() != undefined  && $("#out_of_stock_count").val() != null && $("#out_of_stock_count").val() != ''){
 						tealiumData += '"out_of_stock_totalcount":"'		// TPR-4707
 							+ $("#out_of_stock_count").val() + '",';
@@ -1451,6 +1457,10 @@ function tealiumCallOnPageLoad()
 						data = data.replace("}<TealiumScript>", tealiumData);
 						$('#tealiumHome').html(data);
 					}
+						catch(e){
+							console.log("error:tealium plp pageLoad"+e.message);
+						}
+					}
 				});
 	}
 	// Tealium end
@@ -1464,8 +1474,10 @@ function tealiumCallOnPageLoad()
 			type : 'GET',
 			cache : false,
 			success : function(data) {
+			try{
 				// console.log(data);
 				var tealiumData = "";
+				var topFiveSerpData = populateFirstFiveProductsSerpOnLoad();
 				//TPR-430
 				var product_category = null;
 				var page_subcategory_name = null;
@@ -1482,6 +1494,10 @@ function tealiumCallOnPageLoad()
 					+ $("#search_results").val() + '",';
 				tealiumData += '"search_type":"'		// TPR-666
 					+ $("#search_type").val() + '",';
+				tealiumData += '"serp_first_5_products":'            //tisprdt-6227 starts
+					+ topFiveSerpData + ',';
+				tealiumData += '"product_id":'
+					+ topFiveSerpData + ',';           //tisprdt-6227 ends
 				if($("#out_of_stock_count").val() != undefined  && $("#out_of_stock_count").val() != null && $("#out_of_stock_count").val() != ''){
 				tealiumData += '"out_of_stock_count":"'		// TPR-4722
 					+ $("#out_of_stock_count").val() + '",';
@@ -1512,6 +1528,10 @@ function tealiumCallOnPageLoad()
 				
 				data = data.replace("}<TealiumScript>", tealiumData);
 				$('#tealiumHome').html(data);
+			}
+			catch(e){
+				console.log("error:tealium serp pageLoad"+e.message);
+			   }
 			}
 		});
 		
@@ -1951,7 +1971,7 @@ $(document).on('click','.list_title .UlContainer .sort',function(){
 /*TPR-4719, TPR-4704 | Search Filter in SERP|PLP*/
 var restrictionFlag='false';
 
-function setupSessionValues(){
+function setupSessionValuesUtag(){
 	if($('.bottom-pagination .facet-list.filter-opt').children().length > 0){
 		var filterTypeList=[];
 		var filterTypeFinalList=[];
@@ -2024,14 +2044,43 @@ function populateFirstFiveProductsSerp(){
    }
 }
 
+//tisprdt-6227 |onload top 5 products fix
+function populateFirstFiveProductsSerpOnLoad(){
+	var count = 5; 
+	var productArray= [];
+    var searchResult = $("ul.product-list li.product-item").length;
+	if(searchResult < count ){
+		count = searchResult;
+    }
+   for(var i=0;i< count;i++)
+   {
+	 var selector = 'ul.product-list li.product-item:eq('+i+') span.serpProduct #productCode';
+	 product = $(selector).val();
+	 productArray.push(product);
+   }
+
+	var finalproductArray=[];
+	for (i = 0; i < productArray.length; i++) { 
+		finalproductArray.push("\""+productArray[i]+"\"");
+	}
+	
+   if(productArray.length == 0){
+	   if(typeof utag !="undefined"){
+			 utag.link({ error_type: 'NoProductsFound' });
+		 }  
+   }
+   
+   return "["+finalproductArray+"]";
+}
+
 $( window ).load(function() {
-	if($('#pageType').val() == "productsearch"){
+	/*if($('#pageType').val() == "productsearch"){
 		populateFirstFiveProductsSerp();	
 	}
 	
 	if($('#pageType').val() == "category" || $('#pageType').val() == "electronics" ){
 		populateFirstFiveProductsPlp();
-	}
+	}*/
 	
 	if($('#pageType').val() == "productsearch" ){
 		  var isVisible = $('.search-empty.no-results.wrapper:visible').is(':visible');
@@ -2067,6 +2116,36 @@ function populateFirstFiveProductsPlp(){
 			 utag.link({ error_type: 'NoProductsFound' });
 		 }  
    }
+}
+
+//tisprdt-6227 |onload top 5 products fix
+function populateFirstFiveProductsPlpOnLoad(){
+	var count = 5; 
+	var productArray= [];
+    var searchResult = $("ul.product-listing.product-grid li.product-item").length;
+	if(searchResult < count ){
+		count = searchResult;
+    }
+	for(var i=0;i< count;i++)
+	{
+		var  selector = 'ul.product-listing.product-grid li.product-item:eq('+i+') span.serpProduct #productCode';
+		if(typeof selector !="undefined"){
+			product = $(selector).val();
+		}
+		productArray.push(product);
+
+	}
+	if(productArray.length == 0){
+		if(typeof utag !="undefined"){
+			utag.link({ error_type: 'NoProductsFound' });
+		}  
+	}
+	var finalproductArray=[];
+	for (i = 0; i < productArray.length; i++) { 
+		finalproductArray.push("\""+productArray[i]+"\"");
+	}
+		  
+	return "["+finalproductArray+"]";
 }
 
 //TPR-4725 |quick view  size|serp
@@ -2187,11 +2266,12 @@ $(document).on("mouseover",".zoomContainer",function(e) {
 		else {
 			page = "quickview";
 		}
-		if(typeof utag !="undefined"){
+		if(typeof(utag)!="undefined" && (!isImageHoverTriggered)){
 			utag.link({
 				link_text: page+"_image_hover",
 				event_type : page+"_image_hover"
 			});
+			isImageHoverTriggered = true;
 		}
 	}
 });	
@@ -2201,7 +2281,7 @@ $(window).unload(function(event) {
 	var pageType = $('#pageType').val();
 	if(pageType == 'category' || pageType == 'productsearch'){
 		if(restrictionFlag != 'true'){
-			setupSessionValues();
+			setupSessionValuesUtag();
 		}
 	}
 });
@@ -2226,3 +2306,13 @@ $(document).on('click','#selectedDeliveryOptionsDivId span:last-child',function(
 	});
 //UF-398 ends
 
+//UF-472|Responsive search icon starts
+$(document).on('mouseup','.simpleSearchToggle',function(){
+	if(typeof(utag) !="undefined"){
+		utag.link({
+			link_text: "searchToggle_clicked",
+			event_type : "searchToggle_clicked"
+		});
+	   }
+});
+//UF-472|Responsive search icon ends

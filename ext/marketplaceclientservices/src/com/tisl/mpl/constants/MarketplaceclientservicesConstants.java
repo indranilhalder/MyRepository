@@ -33,6 +33,8 @@ public final class MarketplaceclientservicesConstants extends GeneratedMarketpla
 	public final static String GENPROXYPORT = "proxy.port";
 	public static final String LuxuryPrefix = "lux";
 	public static final String LUX_TRACK_ORDER_LONG_URL_FORMAT = "lux.order.track.longurl.format".intern();
+	public static final String SHORTURL_CONNECTION_TIMEOUT = "short.url.connection.timeout";
+	public static final String SHORTURL_READ_TIMEOUT = "short.url.read.timeout";
 
 	// Pincode Serviceabilty constants
 	/*

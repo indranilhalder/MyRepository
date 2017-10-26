@@ -12,6 +12,6 @@
 <input type="hidden" id="search_type" value="${searchType}">	<!-- For TPR-666 -->
 <template:page pageTitle="${pageTitle}">
 		<div class="mainContent-wrapper searchEmpty">
-			<h3 class="desktop"><spring:theme code="lux.search.no.results" text="We couldn't find any matches! Please check the spelling or try searching something else." /></h3>
+			<h3 class="desktop"><spring:theme code="lux.search.no.results"  /></h3>
 		</div>
 </template:page>

@@ -629,9 +629,18 @@ ACC.carousel = {
 	},*/
 	blpTopDealsCarousel: function(){
 		//changes for tpr-599(BLP and CLP changes)
-		var slideBy= $('#slideBy').val()?$('#slideBy').val():1;
-		var autoplayTimeout= $('#autoplayTimeout').val()?$('#autoplayTimeout').val():5000;
-		var autoPlay= $('#autoPlay').val()?$.parseJSON($('#autoPlay').val()):true;
+		//changes for TISPRDT-6243
+		var slideBy= $('.top_deal_blp #slideByOffer').val()?$('.top_deal_blp #slideByOffer').val():1;
+		var autoplayTimeout= $('.top_deal_blp #autoplayTimeoutOffer').val()?$('.top_deal_blp #autoplayTimeoutOffer').val():5000;
+		var autoPlay= $('.top_deal_blp #autoPlayOffer').val()?$.parseJSON($('.top_deal_blp #autoPlayOffer').val()):true;
+		
+		//CAROUSEL AUTOWIDTH ATTRIBUTE
+		var autoWidthAttr = false;
+		if($(window).width()<481){
+			autoWidthAttr = true;
+		} else {
+			autoWidthAttr = false;
+		}
 		$(".top_deal_blp .offersCarousel").owlCarousel({
 					/*autoWidth : true,*/	/*add for INC144315059*/	/*commented for TISPRDT-1936*/
 					items:5,
@@ -640,6 +649,7 @@ ACC.carousel = {
             		dots:false,
             		navText:[],
             		autoplay: autoPlay,
+            		autoWidth: autoWidthAttr,
                     autoHeight : false,
                     autoplayTimeout: autoplayTimeout,
                     slideBy: slideBy,

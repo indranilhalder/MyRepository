@@ -83,6 +83,10 @@
 		height: 149px;
 	}
     
+    .inner .header-left {
+        display: none
+    }
+    
     @include media-breakpoint-down(sm) {           
         #createNewList{
             display: none;
@@ -553,7 +557,8 @@
                     left: 8px;
                     line-height: 19px;
                     text-align: center;
-                    font-weight: bold;                   
+                    font-weight: bold;  
+                    display: none;
                 }               
 			}
 			li.header-bag-link{
@@ -721,6 +726,29 @@
 	
 }
 
+.header .header-right>ul>li.header-account-link a:after,
+.header .header-right>ul>li.logged_in>a:after {
+    position: absolute;
+    top: 2px;
+    left: 0;
+    content: "";
+    background: url(../images/luxuary_sprite.png) -2846px -44px no-repeat;
+    height: 100%;
+    width: 100%
+}
+.header .header-right>ul>li.header-account-link a,
+.header .header-right>ul>li.logged_in a {
+    padding-left: 25px;
+    text-decoration: none
+}
+.header .header-right>ul>li.logged_in a {
+   height: 28px;
+    padding-top: 4px;
+}
+.header .header-right>ul>li.logged_in .sign-pop li a{
+    padding-left: 0px;
+     padding-top: 0px;
+}		
 #mypopUpModal{
     overflow: hidden;
     

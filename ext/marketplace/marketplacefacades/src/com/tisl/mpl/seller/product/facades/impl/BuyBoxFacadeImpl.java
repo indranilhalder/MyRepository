@@ -550,7 +550,13 @@ public class BuyBoxFacadeImpl implements BuyBoxFacade
 					buyboxData.setMrp(productDetailsHelper.formPriceData(new Double(buyBoxMod.getMrp().doubleValue())));
 				}
 				buyboxData.setMrpPriceValue(productDetailsHelper.formPriceData(new Double(buyBoxMod.getMrp().doubleValue())));
-
+				// changes for INC144318868:Offer prize is not coming for WCMS component
+				if (null != buyBoxMod.getSpecialPriceMobile() && buyBoxMod.getSpecialPriceMobile().doubleValue() > 0.0D)
+				{
+					buyboxData.setSpecialPriceMobile(productDetailsHelper.formPriceData(new Double(buyBoxMod.getSpecialPriceMobile()
+							.doubleValue())));
+				} 
+				
 				//other sellers count
 				final int oosSellersCount = getOosSellerCount(buyboxModelList);
 				int sellerSize = buyboxModelList.size() - 1 - oosSellersCount;
@@ -902,7 +908,7 @@ public class BuyBoxFacadeImpl implements BuyBoxFacade
 		{
 			sellerArticleSku = mplJewelleryService.getJewelleryInfoByUssid(buyboxid).get(0).getPCMUSSID();
 		}
-
+		boolean codEligible = false;
 		final RichAttributeData richData = new RichAttributeData();
 		final StringBuilder deliveryModes = new StringBuilder();
 		boolean onlineExclusive = false;
@@ -929,10 +935,8 @@ public class BuyBoxFacadeImpl implements BuyBoxFacade
 					for (final RichAttributeModel rich : seller.getRichAttribute())
 					{
 						if (null != rich.getPaymentModes()
-								&& (PaymentModesEnum.COD.toString().equalsIgnoreCase(rich.getPaymentModes().getCode())
-										|| (PaymentModesEnum.BOTH.toString().equalsIgnoreCase(rich.getPaymentModes().getCode()))))
-
-
+								&& (PaymentModesEnum.COD.toString().equalsIgnoreCase(rich.getPaymentModes().getCode()) || (PaymentModesEnum.BOTH
+										.toString().equalsIgnoreCase(rich.getPaymentModes().getCode()))))
 						{
 							richData.setIsCod(MarketplaceFacadesConstants.Y);
 						}
@@ -981,6 +985,23 @@ public class BuyBoxFacadeImpl implements BuyBoxFacade
 						//productDetailsHelper.getDeliveryModeATMap(deliveryInfoList)
 					}
 
+				}
+				//TPR-6907
+				if (!sellerArticleSku.equals(seller.getSellerArticleSKU()) && null != seller.getRichAttribute()
+						&& codEligible != true)
+				{
+					for (final RichAttributeModel rich : seller.getRichAttribute())
+					{
+						if (null != rich.getPaymentModes()
+								&& (PaymentModesEnum.COD.toString().equalsIgnoreCase(rich.getPaymentModes().getCode()) || (PaymentModesEnum.BOTH
+										.toString().equalsIgnoreCase(rich.getPaymentModes().getCode()))))
+
+						{
+							richData.setIsCod(MarketplaceFacadesConstants.Y);
+							codEligible = true;
+							break;
+						}
+					}
 				}
 				if (null != allowNew && allowNew.equalsIgnoreCase(Y))
 				{
@@ -1390,6 +1411,7 @@ public class BuyBoxFacadeImpl implements BuyBoxFacade
 		return buyBoxService.findPussid(selectedUSSID);
 	}
 
+
 	/**
 	 * This Method is for Seller Monogramming Message Changes
 	 *
@@ -1402,4 +1424,6 @@ public class BuyBoxFacadeImpl implements BuyBoxFacade
 	{
 		return buyBoxService.getSellerMonogrammingMsg(productCode, sellerId);
 	}
+
 }
+

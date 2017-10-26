@@ -314,64 +314,44 @@ public class MplClassificationPropertyValueProvider extends ClassificationProper
 		{
 
 			//TPR-3548 Start
-			if (indexedProperty.getIsNumericRange().equals(Boolean.TRUE))
+			/*
+			 * if (indexedProperty.getIsNumericRange().equals(Boolean.TRUE)) { for (final LanguageModel language :
+			 * indexConfig.getLanguages()) {
+			 * 
+			 * final Locale locale = this.i18nService.getCurrentLocale(); try { merge issue fixed.
+			 * this.i18nService.setCurrentLocale(this.localeService.getLocaleByString(language.getIsocode()));
+			 * 
+			 * final List<FeatureValue> listFeatureValue = featureValues;
+			 * 
+			 * for (final FeatureValue singleFeatureValue : listFeatureValue) { Object value =
+			 * singleFeatureValue.getValue(); //if (null != value && value instanceof String) SONAR FIX JEWELLERY if (value
+			 * instanceof String) { final String vString = (String) value; value = Double.valueOf(vString); }
+			 * singleFeatureValue.setValue(value); //clearing the existing value listFeatureValue.clear(); //adding the
+			 * standard value listFeatureValue.add(singleFeatureValue); }
+			 * 
+			 * //result.addAll(extractFieldValues(indexedProperty, language, listFeatureValue));
+			 * result.addAll(extractFieldValues(indexedProperty, language, (feature.isLocalized()) ? feature.getValues() :
+			 * featureValues)); } finally { this.i18nService.setCurrentLocale(locale); }
+			 * 
+			 * 
+			 * 
+			 * } } //TPR-3548 End else {
+			 */
+			for (final LanguageModel language : indexConfig.getLanguages())
 			{
-				for (final LanguageModel language : indexConfig.getLanguages())
+				final Locale locale = this.i18nService.getCurrentLocale();
+				try
 				{
-
-					final Locale locale = this.i18nService.getCurrentLocale();
-					try
-					{ //merge issue fixed.
-						this.i18nService.setCurrentLocale(this.localeService.getLocaleByString(language.getIsocode()));
-
-						final List<FeatureValue> listFeatureValue = featureValues;
-
-						for (final FeatureValue singleFeatureValue : listFeatureValue)
-						{
-							Object value = singleFeatureValue.getValue();
-							//if (null != value && value instanceof String) SONAR FIX JEWELLERY
-							if (value instanceof String)
-							{
-								final String vString = (String) value;
-								value = Double.valueOf(vString);
-							}
-							singleFeatureValue.setValue(value);
-							//clearing the existing value
-							listFeatureValue.clear();
-							//adding the standard value
-							listFeatureValue.add(singleFeatureValue);
-						}
-
-						//result.addAll(extractFieldValues(indexedProperty, language, listFeatureValue));
-						result.addAll(extractFieldValues(indexedProperty, language, (feature.isLocalized()) ? feature.getValues()
-								: featureValues));
-					}
-					finally
-					{
-						this.i18nService.setCurrentLocale(locale);
-					}
-
-
-
+					this.i18nService.setCurrentLocale(this.localeService.getLocaleByString(language.getIsocode()));
+					result.addAll(extractFieldValues(indexedProperty, language, (feature.isLocalized()) ? feature.getValues()
+							: featureValues));
 				}
-			} //TPR-3548 End
-			else
-			{
-				for (final LanguageModel language : indexConfig.getLanguages())
+				finally
 				{
-					final Locale locale = this.i18nService.getCurrentLocale();
-					try
-					{
-						this.i18nService.setCurrentLocale(this.localeService.getLocaleByString(language.getIsocode()));
-						result.addAll(extractFieldValues(indexedProperty, language, (feature.isLocalized()) ? feature.getValues()
-								: featureValues));
-					}
-					finally
-					{
-						this.i18nService.setCurrentLocale(locale);
-					}
+					this.i18nService.setCurrentLocale(locale);
 				}
 			}
+			//}
 
 		}
 		else

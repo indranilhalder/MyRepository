@@ -289,9 +289,18 @@ public class MplProcessOrderServiceImpl implements MplProcessOrderService
 							 * MarketplacecommerceservicesConstants.OMS_INVENTORY_RESV_TYPE_ORDERDEALLOCATE, defaultPinCode);
 							 */
 
-							getMplCommerceCartService().isInventoryReserved(orderData,
-									MarketplacecommerceservicesConstants.OMS_INVENTORY_RESV_TYPE_ORDERDEALLOCATE, defaultPinCode,
-									orderModel, null, SalesApplication.WEB);
+							try
+							{
+								getMplCommerceCartService().isInventoryReserved(orderData,
+										MarketplacecommerceservicesConstants.OMS_INVENTORY_RESV_TYPE_ORDERDEALLOCATE, defaultPinCode,
+										orderModel, null, SalesApplication.WEB);
+							}
+							catch (final Exception e1)
+							{
+								LOG.error("Error in isInventoryReserved in MplProcessOrderServiceImpl================================",
+										e1);
+
+							}
 							getOrderStatusSpecifier().setOrderStatus(orderModel, OrderStatus.PAYMENT_TIMEOUT);
 
 							//TPR-965

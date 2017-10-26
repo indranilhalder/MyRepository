@@ -254,7 +254,7 @@
 					$uidGroup=admingroup,marketplaceGroup,ETAILREAD
 					$catalogVersion2=catalogversion(catalog(id[default=$productCatalog]),version[default='Online'])[unique=true,default=$productCatalog:Online]
 					$catalogVersion=catalogVersion(catalog(id),version)[unique=true]
-				INSERT_UPDATE category;code[unique=true];name[lang=en];supercategories(code,$catalogVersion)[cellDecorator=com.tisl.mpl.core.celldecorator.SuperCategoryDecorator];$catalogVersion2;allowedPrincipals(uid);
+				INSERT_UPDATE category;code[unique=true];name[lang=en];supercategories(code,$catalogVersion)[cellDecorator=com.tisl.lux.core.celldecorator.LuxurySuperCategoryDecorator];$catalogVersion2;allowedPrincipals(uid);
            </value>
         </property>
         <property name="impexRow">
@@ -505,7 +505,7 @@
 				$clAttrModifiers=system='pcmClassification',version='1',translator=de.hybris.platform.catalog.jalo.classification.impex.ClassificationAttributeTranslator,lang=en
 				$catalogversion=catalogversion(catalog(id[default=luxProductCatalog]),version[default='Online'])[unique=true,default=luxProductCatalog:Online]
 			    
-			    INSERT_UPDATE SizeGuide;sizeGuideId[unique=true]; dimension[unique=true][cellDecorator=com.tisl.mpl.core.celldecorator.SizeGuideDimensionDecorator];unit;size[unique=true];value;categoryCode;brand;fitType;imageUrl;usSize;euroSize;age;$catalogVersion
+			    INSERT_UPDATE SizeGuide;sizeGuideId[unique=true]; dimension[unique=true][cellDecorator=com.tisl.lux.core.celldecorator.SizeGuideDimensionDecorator];unit;size[unique=true];value;categoryCode;brand;fitType;imageUrl;usSize;euroSize;age;$catalogVersion
 			</value>
         </property>
         <property name="impexRow">
@@ -646,7 +646,7 @@
     			$lang=en
     		      
 				
-				INSERT_UPDATE Product;code[unique=true];name[lang=$lang];title;articleMiniDescription;articleDescription;createdOn[dateformat=yyyyMMddHHmmss];reviews;mrp;$supercategories[cellDecorator=com.tisl.mpl.core.celldecorator.LuxuryProductCategoryDecorator];deliveryModes(code);variantType(code);luxIndicator(code)[default='marketplace'];$catalogversion;$approved;$unit
+				INSERT_UPDATE Product;code[unique=true];name[lang=$lang];title;articleMiniDescription;articleDescription;createdOn[dateformat=yyyyMMddHHmmss];reviews;mrp;$supercategories[cellDecorator=com.tisl.lux.core.celldecorator.LuxuryProductCategoryDecorator];deliveryModes(code);variantType(code);luxIndicator(code)[default='marketplace'];$catalogversion;$approved;$unit
             </value>
         </property>
         <property name="impexRow">
@@ -669,7 +669,7 @@
 				$clAttrModifiers=system='pcmClassification',version='1',translator=de.hybris.platform.catalog.jalo.classification.impex.ClassificationAttributeTranslator,lang=en
 				$catalogversion=catalogversion(catalog(id[default=luxProductCatalog]),version[default='Online'])[unique=true,default=luxProductCatalog:Online]
 				          
-				INSERT_UPDATE PcmProductVariant;code[unique=true,alias=PIMID];name[lang=$lang];title;articleMiniDescription;articleDescription;createdOn[dateformat=yyyyMMddHHmmss];size;colour;baseProduct(code,$catalogVersion);reviews;mrp;$supercategories[cellDecorator=com.tisl.mpl.core.celldecorator.LuxuryVariantProductCategoryDecorator];deliveryModes(code);capacity;luxIndicator(code)[default='marketplace'];$catalogversion;$approved;$unit;
+				INSERT_UPDATE PcmProductVariant;code[unique=true,alias=PIMID];name[lang=$lang];title;articleMiniDescription;articleDescription;createdOn[dateformat=yyyyMMddHHmmss];size;colour;baseProduct(code,$catalogVersion);reviews;mrp;$supercategories[cellDecorator=com.tisl.lux.core.celldecorator.LuxuryVariantProductCategoryDecorator];deliveryModes(code);capacity;luxIndicator(code)[default='marketplace'];$catalogversion;$approved;$unit;
             </value>
         </property>
         <property name="impexRow">
