@@ -714,8 +714,8 @@ public class LuxCmsFacadeImpl implements LuxCmsFacade
 		final List<LuxBannerComponentWsDTO> relatedImageList = new ArrayList<LuxBannerComponentWsDTO>();
 
 		setValue(luxShopByCategoryWsDTO::setTitle, luxShopByCategoryComponent.getTitle());
-		setValue(luxShopByCategoryWsDTO::setShopNowLink, luxShopByCategoryWsDTO.getShopNowLink());
-		setValue(luxShopByCategoryWsDTO::setShopNowName, luxShopByCategoryWsDTO.getShopNowName());
+		setValue(luxShopByCategoryWsDTO::setShopNowLink, luxShopByCategoryComponent.getShopNowLink());
+		setValue(luxShopByCategoryWsDTO::setShopNowName, luxShopByCategoryComponent.getShopNowName());
 		setValue(luxShopByCategoryWsDTO::setComponentPosition, luxShopByCategoryComponent.getAppPosition());
 
 		if (StringUtils.isNotEmpty(luxShopByCategoryComponent.getAppPosition()))
