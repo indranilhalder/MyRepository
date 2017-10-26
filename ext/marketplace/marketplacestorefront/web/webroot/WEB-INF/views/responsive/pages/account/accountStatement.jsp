@@ -22,6 +22,7 @@
 
 <div>
 <span class="accountPopupClose close">&times;</span>
+<c:set var="cancelAndRetun" value="false" />
 <div class="orderStatementOrderId"> <span>Order ID: ${orderDetail.code}</span></div><br />
 
 	<div class="orderStatementContainer">
@@ -54,6 +55,13 @@
 			</tr>
 			<c:forEach items="${sellerOrder.entries}" var="entry"
 			varStatus="entryStatus">
+			
+			       <c:if
+						test="${not empty entry.walletApportionforReverseData and cancelAndRetun eq false}">
+					    <c:set var="cancelAndRetun" value="true" />
+					</c:if>
+					
+					
 			<tr>
 				<td>${entry.transactionId}</td>
 				
@@ -113,7 +121,7 @@
 		</tbody>
 	</table>
 	
-	<c:if test="${not empty entry.walletApportionforReverseData}">				
+	<c:if test="${cancelAndRetun eq true}">				
 	<br />
 	
 	<table class="orderStatementTable table-bordered table">
@@ -138,63 +146,63 @@
 			</tr>
 		</thead>
 		<tbody>
-		<c:forEach items="${orderDetail.sellerOrderList}" var="sellerOrder"
+		<c:forEach items="${orderDetail.sellerOrderList}" var="subOrder"
 		varStatus="status">
 			<tr class="orderSellerId">
-				<td colspan="9"><span>Seller Order Id: ${sellerOrder.code}</span></td>
+				<td colspan="9"><span>Seller Order Id: ${subOrder.code}</span></td>
 			</tr>
-			<c:forEach items="${sellerOrder.entries}" var="entry"
+			<c:forEach items="${subOrder.entries}" var="entryObject"
 			varStatus="entryStatus">
 			<tr>
-				<td>${entry.transactionId}</td>
+				<td>${entryObject.transactionId}</td>
 				
-				<c:if test="${not empty entry.walletApportionforReverseData}">
+				<c:if test="${not empty entryObject.walletApportionforReverseData}">
 				<td>
 					<c:if
-						test="${not empty entry.walletApportionforReverseData.juspayApportionValue}">
-						 ${entry.walletApportionforReverseData.juspayApportionValue}
+						test="${not empty entryObject.walletApportionforReverseData.juspayApportionValue}">
+						 ${entryObject.walletApportionforReverseData.juspayApportionValue}
 					</c:if>
 				</td>
 				<td>
 					<c:if
-						test="${not empty entry.walletApportionforReverseData.juspayDeliveryValue}">
-						  ${entry.walletApportionforReverseData.juspayDeliveryValue}
+						test="${not empty entryObject.walletApportionforReverseData.juspayDeliveryValue}">
+						  ${entryObject.walletApportionforReverseData.juspayDeliveryValue}
 					</c:if>
 				</td>
 				<td>
 					<c:if
-						test="${not empty entry.walletApportionforReverseData.juspayShippingValue}">
-						  ${entry.walletApportionforReverseData.juspayShippingValue}
+						test="${not empty entryObject.walletApportionforReverseData.juspayShippingValue}">
+						  ${entryObject.walletApportionforReverseData.juspayShippingValue}
 					</c:if>
 				</td>
 				<td>
 					<c:if
-						test="${not empty entry.walletApportionforReverseData.juspaySchedulingValue}">
-						  ${entry.walletApportionforReverseData.juspaySchedulingValue}
+						test="${not empty entryObject.walletApportionforReverseData.juspaySchedulingValue}">
+						  ${entryObject.walletApportionforReverseData.juspaySchedulingValue}
 					</c:if>
 				</td>
 				<td>
 					<c:if
-						test="${not empty entry.walletApportionforReverseData.qcApportionPartValue}">
-						 ${entry.walletApportionforReverseData.qcApportionPartValue}
+						test="${not empty entryObject.walletApportionforReverseData.qcApportionPartValue}">
+						 ${entryObject.walletApportionforReverseData.qcApportionPartValue}
 					</c:if>
 				</td>
 				<td>
 					<c:if
-						test="${not empty entry.walletApportionforReverseData.qcDeliveryPartValue}">
-						  ${entry.walletApportionforReverseData.qcDeliveryPartValue}
+						test="${not empty entryObject.walletApportionforReverseData.qcDeliveryPartValue}">
+						  ${entryObject.walletApportionforReverseData.qcDeliveryPartValue}
 					</c:if>
 				</td>
 				<td>
 					<c:if
-						test="${not empty entry.walletApportionforReverseData.qcShippingPartValue}">
-						 ${entry.walletApportionforReverseData.qcShippingPartValue}
+						test="${not empty entryObject.walletApportionforReverseData.qcShippingPartValue}">
+						 ${entryObject.walletApportionforReverseData.qcShippingPartValue}
 					</c:if>
 				</td>
 				<td>
 					<c:if
-						test="${not empty entry.walletApportionforReverseData.qcSchedulingPartValue}">
-						  ${entry.walletApportionforReverseData.qcSchedulingPartValue}
+						test="${not empty entryObject.walletApportionforReverseData.qcSchedulingPartValue}">
+						  ${entryObject.walletApportionforReverseData.qcSchedulingPartValue}
 					</c:if>
 				</td>
 				</c:if>
