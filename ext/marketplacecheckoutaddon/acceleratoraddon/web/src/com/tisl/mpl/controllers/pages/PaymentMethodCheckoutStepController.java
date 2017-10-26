@@ -6561,9 +6561,10 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 					{
 
 						orderToBeUpdated.setStatus(OrderStatus.PAYMENT_FAILED); /// return QC fail and Update Audit Entry Try With Juspay
+						orderToBeUpdated.setSplitModeInfo("juspay");
 						getModelService().save(orderToBeUpdated);
 						//getSessionService().setAttribute("cliqCashPaymentMode", "false");
-						cart.setSplitModeInfo("juspay");
+
 						GlobalMessages.addFlashMessage(redirectAttributes, GlobalMessages.ERROR_MESSAGES_HOLDER,
 								MarketplacecheckoutaddonConstants.PAYMENTTRANERRORMSG);
 						return MarketplacecheckoutaddonConstants.MPLPAYMENTURL + MarketplacecheckoutaddonConstants.PAYVALUE
@@ -6574,8 +6575,9 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 					{
 
 						orderToBeUpdated.setStatus(OrderStatus.PAYMENT_FAILED); /// NO Exception No qcResponse Try With Juspay
+						orderToBeUpdated.setSplitModeInfo("juspay");
 						getModelService().save(orderToBeUpdated);
-						cart.setSplitModeInfo("juspay");
+
 						GlobalMessages.addFlashMessage(redirectAttributes, GlobalMessages.ERROR_MESSAGES_HOLDER,
 								MarketplacecheckoutaddonConstants.PAYMENTTRANERRORMSG);
 						return MarketplacecheckoutaddonConstants.MPLPAYMENTURL + MarketplacecheckoutaddonConstants.PAYVALUE
@@ -6589,6 +6591,7 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 					if (null != qcResponse && null != qcResponse.getResponseCode() && qcResponse.getResponseCode().intValue() == 0)
 					{
 						orderToBeUpdated.setStatus(OrderStatus.RMS_VERIFICATION_FAILED);
+						orderToBeUpdated.setSplitModeInfo("juspay");
 						getModelService().save(orderToBeUpdated);
 						LOG.error("Some Error in QC Service");
 						System.out.println("Some Error in QC Service");
