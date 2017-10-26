@@ -3242,7 +3242,7 @@
     	<property name="componentPosition" type="String" />
     	<property name="URL" type="String" />
     	<property name="urlLink" type="String"/>
-    	<property name="mdeiaFormat" type="String"/>
+    	<property name="mediaFormat" type="String"/>
 	</bean>
 
 

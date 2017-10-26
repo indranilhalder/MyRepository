@@ -860,7 +860,7 @@ public class LuxCmsFacadeImpl implements LuxCmsFacade
 
 					if (null != luxuryMedia.getMediaFormat() && StringUtils.isNotEmpty(luxuryMedia.getMediaFormat().getQualifier()))
 					{
-						luxuryMediaList.setMdeiaFormat(luxuryMedia.getMediaFormat().getQualifier());
+						luxuryMediaList.setMediaFormat(luxuryMedia.getMediaFormat().getQualifier());
 
 					}
 					medias.add(luxuryMediaList);
