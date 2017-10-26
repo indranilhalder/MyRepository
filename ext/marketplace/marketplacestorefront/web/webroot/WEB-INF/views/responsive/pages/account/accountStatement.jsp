@@ -187,26 +187,26 @@
 				<c:forEach items="${entryObject.walletApportionforReverseData.walletCardApportionDataList}" var="entryBucketObject">
 					<td>
 						<c:if
-							test="${not empty entryBucketObject.qcApportionPartValue}">
-							 ${entryBucketObject.qcApportionPartValue}
+							test="${not empty entryBucketObject.qcApportionValue}">
+							 ${entryBucketObject.qcApportionValue}
 						</c:if>
 					</td>
 					<td>
 						<c:if
-							test="${not empty entryBucketObject.qcDeliveryPartValue}">
-							  ${entryBucketObject.qcDeliveryPartValue}
+							test="${not empty entryBucketObject.qcDeliveryValue}">
+							  ${entryBucketObject.qcDeliveryValue}
 						</c:if>
 					</td>
 					<td>
 						<c:if
-							test="${not empty entryBucketObject.qcShippingPartValue}">
-							 ${entryBucketObject.qcShippingPartValue}
+							test="${not empty entryBucketObject.qcShippingValue}">
+							 ${entryBucketObject.qcShippingValue}
 						</c:if>
 					</td>
 					<td>
 						<c:if
-							test="${not empty entryBucketObject.qcSchedulingPartValue}">
-							  ${entryBucketObject.qcSchedulingPartValue}
+							test="${not empty entryBucketObject.qcSchedulingValue}">
+							  ${entryBucketObject.qcSchedulingValue}
 						</c:if>
 					</td>
 				</c:forEach>
