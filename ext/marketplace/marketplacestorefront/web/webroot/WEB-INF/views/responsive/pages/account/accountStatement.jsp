@@ -181,30 +181,36 @@
 						  ${entryObject.walletApportionforReverseData.juspaySchedulingValue}
 					</c:if>
 				</td>
-				<td>
-					<c:if
-						test="${not empty entryObject.walletApportionforReverseData.qcApportionPartValue}">
-						 ${entryObject.walletApportionforReverseData.qcApportionPartValue}
-					</c:if>
-				</td>
-				<td>
-					<c:if
-						test="${not empty entryObject.walletApportionforReverseData.qcDeliveryPartValue}">
-						  ${entryObject.walletApportionforReverseData.qcDeliveryPartValue}
-					</c:if>
-				</td>
-				<td>
-					<c:if
-						test="${not empty entryObject.walletApportionforReverseData.qcShippingPartValue}">
-						 ${entryObject.walletApportionforReverseData.qcShippingPartValue}
-					</c:if>
-				</td>
-				<td>
-					<c:if
-						test="${not empty entryObject.walletApportionforReverseData.qcSchedulingPartValue}">
-						  ${entryObject.walletApportionforReverseData.qcSchedulingPartValue}
-					</c:if>
-				</td>
+				
+				<c:if test="${not empty entryObject.walletApportionforReverseData.walletCardApportionDataList}">
+				
+				<c:forEach items="${entryObject.walletApportionforReverseData.walletCardApportionDataList}" var="entryBucketObject">
+					<td>
+						<c:if
+							test="${not empty entryBucketObject.qcApportionPartValue}">
+							 ${entryBucketObject.qcApportionPartValue}
+						</c:if>
+					</td>
+					<td>
+						<c:if
+							test="${not empty entryBucketObject.qcDeliveryPartValue}">
+							  ${entryBucketObject.qcDeliveryPartValue}
+						</c:if>
+					</td>
+					<td>
+						<c:if
+							test="${not empty entryBucketObject.qcShippingPartValue}">
+							 ${entryBucketObject.qcShippingPartValue}
+						</c:if>
+					</td>
+					<td>
+						<c:if
+							test="${not empty entryBucketObject.qcSchedulingPartValue}">
+							  ${entryBucketObject.qcSchedulingPartValue}
+						</c:if>
+					</td>
+				</c:forEach>
+				</c:if>
 				</c:if>
 			</tr>
 			</c:forEach>
