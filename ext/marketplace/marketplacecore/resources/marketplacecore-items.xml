@@ -13330,47 +13330,82 @@
 						<modifiers search="true" read="true" write="true" optional="false"/>
 						<persistence type="property" />
 					</attribute>
-					<attribute qualifier="typeOfQuery" type="java.lang.String">
+					<attribute qualifier="ticketType" type="java.lang.String">
 						<persistence type="property" />
 						<modifiers search="true" optional="false" read="true" write="true" />
+					</attribute>
+					<attribute qualifier="ticketSubType" type="java.lang.String">
+						<persistence type="property" />
+						<modifiers search="true" optional="false" read="true" write="true" />
+					</attribute>
+					<attribute qualifier="orderCode" type="java.lang.String">
+						<persistence type="property" />
+						<modifiers search="true" optional="true" read="true" write="true" />
+					</attribute>
+					<attribute qualifier="subOrderCode" type="java.lang.String">
+						<persistence type="property" />
+						<modifiers search="true" optional="true" read="true" write="true" />
 					</attribute>
 					<attribute qualifier="transactionId" type="java.lang.String">
 						<persistence type="property" />
-						<modifiers search="true" optional="false" read="true" write="true" />
+						<modifiers search="true" optional="true" read="true" write="true" />
 					</attribute>
-					<attribute qualifier="L1" type="java.lang.String">
+					<attribute qualifier="L0code" type="java.lang.String">
 						<persistence type="property" />
 						<modifiers search="true" optional="false" read="true" write="true" />
 					</attribute>
-					<attribute qualifier="L2" type="java.lang.String">
+					<attribute qualifier="L1code" type="java.lang.String">
 						<persistence type="property" />
 						<modifiers search="true" optional="false" read="true" write="true" />
 					</attribute>
-					<attribute qualifier="L3" type="java.lang.String">
-					<defaultvalue>java.lang.Boolean.TRUE</defaultvalue>
+					<attribute qualifier="L2code" type="java.lang.String">
 						<persistence type="property" />
 						<modifiers search="true" optional="false" read="true" write="true" />
 					</attribute>
-					<attribute qualifier="L4" type="java.lang.String">
+					<attribute qualifier="L3code" type="java.lang.String">
+						<persistence type="property" />
+						<modifiers search="true" optional="false" read="true" write="true" />
+					</attribute>
+					<attribute qualifier="L4code" type="java.lang.String">
 					       <persistence type="property" />
 						<modifiers search="true" optional="false" read="true" write="true" />
 					</attribute>
 					<attribute qualifier="comment" type="java.lang.String">
 						<persistence type="property" />
-						<modifiers search="true" optional="false" read="true" write="true" />
+						<modifiers search="false" optional="true" read="true" write="true" />
 					</attribute>
-					<attribute qualifier="attachment" type="java.lang.String">
+					<attribute qualifier="crmTicketRef" type="java.lang.String">				
+						<persistence type="property" />
+						<modifiers search="true" optional="true" read="true" write="true" />
+					</attribute>
+					<attribute qualifier="customerId" type="java.lang.String">				
 						<persistence type="property" />
 						<modifiers search="true" optional="false" read="true" write="true" />
 					</attribute>
-					<attribute qualifier="sentToPI" type="boolean">
-					<defaultvalue>java.lang.Boolean.TRUE</defaultvalue>
+					<attribute qualifier="status" type="java.lang.String">				
 						<persistence type="property" />
-						<modifiers search="true" optional="false" read="true" write="true" />
+						<modifiers search="true" optional="true" read="true" write="true" />
 					</attribute>
-					<attribute qualifier="crmTicketId" type="java.lang.String">				
-						<persistence type="property" />
-						<modifiers search="true" optional="false" read="true" write="true" />
+					<attribute qualifier="attachments" type="java.lang.String">
+						<persistence type="property">
+							<columntype database="oracle">
+								<value>varchar2(4000)</value>
+							</columntype>
+							<columntype database="mysql">
+								<value>text</value>
+							</columntype>
+							<columntype database="sqlserver">
+								<value>nvarchar(max)</value>
+							</columntype>
+							<columntype database="hsqldb">
+								<value>LONGVARCHAR</value>
+							</columntype>
+							<columntype>
+								<value>varchar</value>
+							</columntype>
+						</persistence>
+						<description>File Paths for attachments</description>					
+						<modifiers read="true" write="true"	optional="true" />
 					</attribute>
 				</attributes>
 			</itemtype>

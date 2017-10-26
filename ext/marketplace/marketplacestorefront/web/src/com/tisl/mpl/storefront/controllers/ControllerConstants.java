@@ -250,6 +250,7 @@ public interface ControllerConstants
 				//Changes for TPR-5812
 				String manifest = "pages/misc/manifest";
 				String serviceWorker = "pages/misc/service-worker";
+				String webForm = "pages/misc/ticketWebForm";
 			}
 
 			interface Guest
