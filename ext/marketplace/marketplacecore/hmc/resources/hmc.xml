@@ -3899,6 +3899,7 @@
 		<group name="mpl"  description="group.mplConfig.description">
 			<typeref type="MplConfig"  description="mpl.config.table.description"/>
             <typeref type="OrderShortUrlInfo"  description="mpl.shorturl.report.description"/>
+            <typeref type="mplQCProgramConfig"  description="mpl.config.programid.table.description"/>
 		</group>
 	</explorertree>
 	
@@ -4771,6 +4772,51 @@
 	</organizer>
 </type>	
 
+
+<type name="mplQCProgramConfig" mode="append">
+  <organizer>
+   <search mode="append">
+    <condition attribute="programId" />
+    <condition attribute="description" />
+   </search>
+   <result defaultview="list">
+    <listview>
+     <itemlayout mode="replace">
+      <attribute name="programId" width="200"></attribute>
+      <attribute name="description" width="200"></attribute>
+     </itemlayout>
+    </listview>
+    <editview mode="replace">
+     <itemlayout>
+      <attribute name="programId" width="200" />
+      <attribute name="description" width="200" />
+      <attribute name="statusFlag" width="200" />
+     </itemlayout>
+    </editview>
+    <treeview mode="replace">
+     <itemlayout>
+      <attribute name="programId" width="200" />
+      <attribute name="description" width="200" />
+      <attribute name="statusFlag" width="200" />
+     </itemlayout>
+    </treeview>
+   </result>
+   <editor>
+    
+    <tab name="mplconfig.tab" position="0">
+      <section name="mplconfig.section">
+      <listlayout>
+       <attribute name="programId"/>
+       <attribute name="description"/>
+       <attribute name="statusFlag"/>
+      </listlayout>
+     </section>
+    </tab>
+    
+   </editor>
+   
+  </organizer>
+ </type>
 
 <!-- START TPR-5733 -->
 <type name="MplFooterLink" mode="append">

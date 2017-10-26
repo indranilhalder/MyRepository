@@ -13935,6 +13935,29 @@
 		</typegroup>
 
 		<!-- TPR-6665 : sysnonums update to slave servers end -->
-
+		
+		<!-- Start  QuckCilver Program Id Creation -->
+		<typegroup name="MplQCProgramConfiguration">
+			<itemtype code="mplQCProgramConfig" autocreate="true" generate="true">
+				<deployment table="MplQCProgramConfig" typecode="23768" />
+				<attributes>
+					<attribute autocreate="true" qualifier="programId" type="java.lang.String"
+						generate="true">
+						<persistence type="property" />
+						<modifiers unique="true" optional="false" />
+					</attribute>
+					<attribute autocreate="true" qualifier="description"
+						type="java.lang.String" generate="true">
+						<persistence type="property" />
+					</attribute>
+					<attribute autocreate="true" qualifier="statusFlag" type="java.lang.Boolean"
+						generate="true">
+						<defaultvalue>java.lang.Boolean.FALSE</defaultvalue>
+						<persistence type="property" />
+					</attribute>
+				</attributes>
+			</itemtype>
+		</typegroup>
+          <!-- End  QuckCilver Program Id Creation -->
 	</itemtypes>
 </items>

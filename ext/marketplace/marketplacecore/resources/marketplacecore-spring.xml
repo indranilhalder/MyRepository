@@ -2069,4 +2069,13 @@ http://www.springframework.org/schema/aop/spring-aop.xsd">
 	<property name="sessionService" ref="sessionService" />
 </bean>
 
+<alias name="mplQcProgramConfigService" alias="mplQcProgramConfigService" /> 
+	<bean id="mplQcProgramConfigService" class="com.tisl.mpl.core.mplqcprogram.serviceimpl.MplQCProgramServiceImpl">
+    </bean>
+	
+	<alias name="mplQcProgramConfigDao" alias="mplQcProgramConfigDao" />
+	<bean id="mplQcProgramConfigDao" class="com.tisl.mpl.core.mplqcprogram.daoimpl.MplQCProgramDaoImpl" >
+    </bean>
+
+
 </beans>
