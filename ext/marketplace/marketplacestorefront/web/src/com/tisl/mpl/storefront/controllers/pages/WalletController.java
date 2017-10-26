@@ -235,13 +235,10 @@ public class WalletController extends AbstractPageController
 						walletTrasacationsListData1 = walletTrasacationsListData;
 					}
 
-					if (null != walletTrasacationsListData && walletTrasacationsListData.getResponseCode() == 10545)
-					{
-
-						GlobalMessages.addFlashMessage(redirectAttributes, GlobalMessages.INFO_MESSAGES_HOLDER,
-								"text.cliq.cash.payment.wallet.disable.label", null);
-					}
-
+				}
+				else if (null != customerRegisterResponse.getResponseCode() && customerRegisterResponse.getResponseCode() == 10545)
+				{
+					GlobalMessages.addErrorMessage(model, "text.cliq.cash.payment.wallet.disable.label");
 				}
 
 				else
