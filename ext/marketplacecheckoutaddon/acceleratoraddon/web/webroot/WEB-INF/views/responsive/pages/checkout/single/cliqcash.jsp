@@ -14,9 +14,7 @@
 <c:set var="dateStyle" value="dd/MM/yyyy	" />
 
 <template:page pageTitle="${pageTitle}">
-	<div id="globalMessages">
-		<common:globalMessages />
-	</div>
+
 
 	<div class="cliqCashContainer">
 		<div class="cliqCashContainerHead">
