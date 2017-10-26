@@ -241,6 +241,14 @@ public class MarketPlaceDefaultOrderController extends DefaultOrderController
 		      			e.getMessage();
 		      			LOG.error("Quck Cilver giving response code "+response.getResponseCode()+" Order Id :"+orderEntryModel.get(0).getOrder().getParentReference().getCode());
 		      		}
+				try{
+					paymentTransactionModel = mplJusPayRefundService.doRefund(
+							orderEntryModel.get(0).getOrder(), totalRefundAmount,
+							PaymentTransactionType.RETURN,uniqueRequestId);
+				}catch(Exception e){
+	      			e.getMessage();
+	      			LOG.error("Juspay response code  Order Id :"+orderEntryModel.get(0).getOrder().getParentReference().getCode());
+				}
 			}else if (qcPaymentStatus){
 				 try{
 			   	      	QCCreditRequest qcCreditRequest =new QCCreditRequest();
@@ -249,7 +257,34 @@ public class MarketPlaceDefaultOrderController extends DefaultOrderController
 			   	      	qcCreditRequest.setNotes("Cancel for "+ totalRefundAmountForQc.toString());    	
 			   	      	response = mplWalletFacade.qcCredit(walletId , qcCreditRequest);
 				   	     for (OrderEntryModel orderEntry : orderEntryModel) {
-				   	    	constructQuickCilverOrderEntry(response,orderEntry.getTransactionID());
+				   	    	    if(null != orderEntry.getOrder().getSplitModeInfo() && orderEntry.getOrder().getSplitModeInfo().equalsIgnoreCase("CliqCash")){
+				   	    	    	constructQuickCilverOrderEntry(response,orderEntry.getTransactionID());
+				   	    	    	ConsignmentStatus newStatus = null;
+									if (orderEntry != null
+											&& CollectionUtils.isNotEmpty(orderEntry
+													.getConsignmentEntries())) {
+										// ConsignmentModel consignmentModel = orderEntry
+										// .getConsignmentEntries().iterator().next()
+										// .getConsignment();
+										if (response.getResponseCode() == Integer.valueOf("0")) {
+											newStatus = ConsignmentStatus.RETURN_COMPLETED;
+										} else {
+											newStatus = ConsignmentStatus.REFUND_INITIATED;
+										}
+										// getModelService().save(consignmentModel);
+										mplJusPayRefundService.makeRefundOMSCall(orderEntry,
+												paymentTransactionModel,
+												calculateSplitQcRefundAmount(orderEntry),
+												newStatus,null);
+										
+										//Start TISPRD-871
+										if(newStatus.equals(ConsignmentStatus.RETURN_COMPLETED)){
+											orderEntry.setJuspayRequestId(uniqueRequestId);
+											getModelService().save(orderEntry);
+										}
+									}
+				   	    	    }
+				   	         	
 				   	     }
 			   	      	LOG.debug("*****************************"+response.getResponseCode());
 				      	 }catch(Exception e){
@@ -265,10 +300,11 @@ public class MarketPlaceDefaultOrderController extends DefaultOrderController
 				 
 				 return  qcStatus + ","+ response.getTransactionId() + "," + totalRefundAmountForQc;
 				
-			}	
+			}else {	
 				paymentTransactionModel = mplJusPayRefundService.doRefund(
 						orderEntryModel.get(0).getOrder(), totalRefundAmount,
 						PaymentTransactionType.RETURN,uniqueRequestId);
+			}
 			if (null != paymentTransactionModel) {
 				mplJusPayRefundService.attachPaymentTransactionModel(
 						orderEntryModel.get(0).getOrder(),
