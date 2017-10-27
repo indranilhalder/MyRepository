@@ -77477,8 +77477,7 @@ a.pageNo {
     display: inline-block;
     padding: 12px 25px;
     cursor: pointer;
-    background: #a9133d;
-    color:#fff;
+    color:#a9133d;
 }
 .pagination-block{
     display: inline-block;
@@ -77490,8 +77489,7 @@ a.pageNo {
     display: inline-block;
     padding: 12px 25px;
     cursor: pointer;
-    background: #a9133d;
-    color:#fff;
+    color:#a9133d;
 }
 a.pageNo.active{
     display: inline-block;
@@ -77506,5 +77504,11 @@ a.pageNo.active{
     width: 32px;
     border-radius: 50%;
     color: #fff;
+}
+.next-page span{
+	color:#a9133d;
+}
+.prev-page{
+	color:#a9133d;
 }
 /* Pagination link */
