@@ -10,7 +10,8 @@ var bankNameSelected=null;
 // Display forms based on mode button click
 //$("#viewPaymentCredit, #viewPaymentCreditMobile ").click(function (){
 function viewPaymentCredit(){
-	
+	//SDI-2149
+	$(".card_nochooseErrorSavedCard_popup").css("display","none");
 	/*TPR-3446 new starts*/
 	var staticHost = $('#staticHost').val();
 	//$("body").append("<div id='no-click' style='opacity:0.40; background:transparent; z-index: 100000; width:100%; height:100%; position: fixed; top: 0; left:0;'></div>");
@@ -54,6 +55,8 @@ function viewPaymentCredit(){
 
 //$("#viewPaymentDebit, #viewPaymentDebitMobile").click(function(){
 function viewPaymentDebit(){
+	//SDI-2149
+	$(".card_nochooseErrorSavedCard_popup").css("display","none");
 	/*TPR-3446 new starts*/
 	var staticHost = $('#staticHost').val();
 	//$("body").append("<div id='no-click' style='opacity:0.40; background:transparent; z-index: 100000; width:100%; height:100%; position: fixed; top: 0; left:0;'></div>");
