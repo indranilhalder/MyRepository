@@ -1638,6 +1638,9 @@ function savedCreditCardRadioChange(radioId){
 	     $("#"+radioId).parent().find('.card_ebsErrorSavedCard_hide').removeClass("card_ebsErrorSavedCard_hide").addClass("card_ebsErrorSavedCard");
 	     $("#"+radioId).parent().parent().parent().find(".cvv").find('.card_cvvErrorSavedCard_hide').removeClass("card_cvvErrorSavedCard_hide").addClass("card_cvvErrorSavedCard");
 	     $(".security_code_hide").val(null);
+	     //SDI-2149
+	     $(".card_nochooseErrorSavedCard_popup").css("display","none");
+	     $('#make_saved_cc_payment').removeClass("saved_card_disabled");
 	   // TISEE-5555
 	 	$('.security_code_hide').prop('disabled', true);
 	 	$('.security_code').prop('disabled', false); 
@@ -1682,6 +1685,9 @@ function savedDebitCardRadioChange(radioId){
 	     $("#"+radioId).parent().find('.card_ebsErrorSavedCard_hide').removeClass("card_ebsErrorSavedCard_hide").addClass("card_ebsErrorSavedCard");
 	     $("#"+radioId).parent().parent().parent().find(".cvv").find('.card_cvvErrorSavedCard_hide').removeClass("card_cvvErrorSavedCard_hide").addClass("card_cvvErrorSavedCard");
 	     $(".security_code_hide").val(null);
+	   //SDI-2149
+	     $(".card_nochooseErrorSavedCard_popup").css("display","none");
+	     $('#make_saved_dc_payment').removeClass("saved_card_disabled");
 	   // TISEE-5555
 	 	$('.security_code_hide').prop('disabled', true);
 	 	$('.security_code').prop('disabled', false); 
@@ -2371,7 +2377,13 @@ function savedDebitCardRadioChange(radioId){
 	var password = $(".card_token").parent().parent().parent().find(".cvv").find(".cvvValdiation").val();
 	var ebsDownCheck=$("#ebsDownCheck").val();
 	var isDomestic=$(".card_token").parent().parent().parent().find('.card').find('.radio').find('.card_is_domestic').val();
-	if (password.length < 3 && 	$(".card_brand").val()!="MAESTRO"){
+	//SDI-2149
+	if($('#savedCreditCard input[name=creditCards]:checked').length<=0){
+		$(".card_nochooseErrorSavedCard_popup").css("display","block");
+		$(this).addClass("saved_card_disabled");
+		return false;
+	}
+	else if (password.length < 3 && 	$(".card_brand").val()!="MAESTRO"){
 		$(".card_cvvErrorSavedCard").css("display","block");	
 		$(".card_cvvErrorSavedCard_popup").css("display","block");	//UF-211
 		$(this).addClass("saved_card_disabled");	//UF-211
@@ -2396,8 +2408,13 @@ function savedDebitCardRadioChange(radioId){
 		var password = $(".card_token").parent().parent().parent().find(".cvv").find(".cvvValdiation").val();
 		var ebsDownCheck=$("#ebsDownCheck").val();
 		var isDomestic=$(".card_token").parent().parent().parent().find('.card').find('.radio').find('.card_is_domestic').val();
-		
-		if (password.length < 3 && 	$(".card_brand").val()!="MAESTRO"){
+		//SDI-2149
+		if($('#savedDebitCard input[name=debitCards]:checked').length<=0){
+			$(".card_nochooseErrorSavedCard_popup").css("display","block");
+			$(this).addClass("saved_card_disabled");
+			return false;
+		}
+		else if (password.length < 3 && 	$(".card_brand").val()!="MAESTRO"){
 			$(".card_cvvErrorSavedCard").css("display","block");	
 			$(".card_cvvErrorSavedCard_popup").css("display","block");	//UF-217
 			$(".card_token").parent().parent().parent().find(".cvv").find(".cvvValdiation").focus();	//UF-217

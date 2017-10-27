@@ -431,6 +431,9 @@
 											style="display: none;">
 											Enter a valid <span>CVV</span> to continue
 										</div>
+										<div id="nochooseErrorSavedCard2" class="card_nochooseErrorSavedCard_popup error-message" style="display : none;">
+												Choose any card to continue
+											</div>
 										<div class="pay top-padding saved-card-button">
 											<button type="submit"
 												class="make_payment button btn-block payment-button"
@@ -586,6 +589,9 @@
 											style="display: none;">
 											Enter a valid <span>CVV</span> to continue
 										</div>
+										<div id="nochooseErrorSavedCard1" class="card_nochooseErrorSavedCard_popup error-message" style="display : none;">
+												Choose any card to continue
+									   </div>
 										<div class="pay top-padding saved-card-button">
 											<button type="submit"
 												class="make_payment button btn-block payment-button"
@@ -727,6 +733,9 @@
 				<!-- Terms & Conditions Link -->
 					<div id="cvvErrorSavedCard2" class="card_cvvErrorSavedCard_popup error-message" style="display : none;">
 												Enter a valid <span>CVV</span> to continue
+											</div>
+											<div id="nochooseErrorSavedCard2" class="card_nochooseErrorSavedCard_popup error-message" style="display : none;">
+												Choose any card to continue
 											</div>
 											<div class="pay top-padding saved-card-button">
 												<button type="submit" class="make_payment button btn-block payment-button" id="make_saved_cc_payment"><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.paymentButton"/></button>
@@ -1056,6 +1065,9 @@
 											<!-- Adding here the cvv error message -->
 											<div id="cvvErrorSavedCard1" class="card_cvvErrorSavedCard_popup error-message" style="display : none;">
 												Enter a valid <span>CVV</span> to continue
+											</div>
+											<div id="nochooseErrorSavedCard1" class="card_nochooseErrorSavedCard_popup error-message" style="display : none;">
+												Choose any card to continue
 											</div>
 											<div class="pay top-padding saved-card-button">
 												<button type="submit" class="make_payment button btn-block payment-button" id="make_saved_dc_payment"><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.paymentButton"/></button>
