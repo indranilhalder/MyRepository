@@ -158,6 +158,7 @@ public class MarketplacewebservicesConstants
 	public static final String COD = "COD".intern();
 	public static final String NETBANKING = "Netbanking".intern();
 	public static final String WALLET = "Wallet".intern();
+	public static final String CLIQ_CASH = "Cliq Cash".intern();
 	public static final String PAYMENTMODE = "paymentMode".intern();
 
 	public static final String DECIMALULLCHK = "0.0".intern();

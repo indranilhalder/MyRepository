@@ -3401,6 +3401,7 @@
 		<property name="priceSelectedByUserPerQuantity" type="Double" />
 		<property name="quantity" type="int" />
 		<property name="receiverName" type="String" />
+		<property name="mobileNumber" type="String" />
 		<property name="receiverEmailID" type="String" />
 		<property name="messageOnCard" type="String" />
 		<property name="from" type="String" />
@@ -3497,6 +3498,7 @@
 		<property name="isCustomizationAvailable" type="boolean" />
 		<property name="giftCartImageUrl" type="String" />
 		<property name="tncURL" type="String" />
+		<property name="sellerimageUrl" type="String" />
 	</bean>
 	
 	<!-- Added  For Buying Of EGV Functionality End  -->

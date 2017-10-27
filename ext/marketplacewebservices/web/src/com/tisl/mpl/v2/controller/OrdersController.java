@@ -612,6 +612,8 @@ public class OrdersController extends BaseCommerceController
 			{
 				// pay Amount Here from QC  If payment SplitModeInfo is CLIQ_CASH  
 				// For SplitMode and Juspay Amount is already deducted In UpdatePaymentTransactions API 
+				orderModel.setModeOfOrderPayment(MarketplacewebservicesConstants.CLIQ_CASH);
+				modelService.save(orderModel);
 				try
 				{
 					LOG.debug("Payment Mode Split Mode .. So paying  remaiing amount through Wallet ");

@@ -3026,7 +3026,9 @@ public class MplProductWebServiceImpl implements MplProductWebService
 			egvProductData.setIsCustomizationAvailable(true);
 			egvProductData.setIsMoreDesigns(false);
 			egvProductData.setProductDisclaimerForGC(MarketplacewebservicesConstants.BUYING_EGV_PRODUCT_DISCLAIMER);
-			egvProductData.setGiftCartImageUrl("https://pcmuat.tataunistore.com/images/437Wx649H/MP000000000000016_437Wx649H_20151025191017.jpeg");
+			egvProductData.setGiftCartImageUrl("https://qa2.tataunistore.com/_ui/responsive/theme-blue/images/GiftCard.jpg");
+		//	egvProductData.setSellerimageUrl("https://qa2.tataunistore.com/_ui/responsive/theme-blue/images/GiftCard.jpg");
+
 		}catch (Exception e) {
 			LOG.error("Exception occurredd while getting EGV Product Details "+e.getMessage());
 		}
