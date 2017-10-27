@@ -300,3 +300,8 @@ function sort(this_data,drop_down){
 		break;
 	}
 }
+
+function sortReplaceState(url){
+	var nextPaginatedAjaxUrl = url.replace(/page-[0-9]+/, 'page-1');
+	 window.history.replaceState({}, '', nextPaginatedAjaxUrl);
+}
