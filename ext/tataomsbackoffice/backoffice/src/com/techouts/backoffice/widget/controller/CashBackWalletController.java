@@ -31,6 +31,7 @@ import org.zkoss.zul.Textbox;
 
 import com.hybris.cockpitng.annotations.ViewEvent;
 import com.hybris.cockpitng.util.DefaultWidgetController;
+import com.hybris.oms.tata.constants.TataomsbackofficeConstants;
 import com.hybris.oms.tata.services.FilePathProviderService;
 import com.hybris.oms.tata.tship.exceltocsv.pojo.CilqCashWalletPojo;
 import com.tisl.mpl.core.model.CustomerWalletDetailModel;
@@ -191,7 +192,21 @@ private StringBuilder uploadWallettCashFile(List<CilqCashWalletPojo> cilqCashWal
      		  if(response.getResponseCode()== 0){
      			  commentMsg ="Success";
      		  }else{
-     				 commentMsg ="Failure";
+        			  if(response.getResponseCode() == Integer.valueOf(TataomsbackofficeConstants.ERROR_CODE_10004)){
+        				commentMsg =  TataomsbackofficeConstants.ERROR_CODE_10004_DESC;
+        			  }else if(response.getResponseCode() == Integer.valueOf(TataomsbackofficeConstants.ERROR_CODE_10027)){
+        				commentMsg =  TataomsbackofficeConstants.ERROR_CODE_10027_DESC;
+        			  }else if(response.getResponseCode() == Integer.valueOf(TataomsbackofficeConstants.ERROR_CODE_10528)){
+        				commentMsg =  TataomsbackofficeConstants.ERROR_CODE_10528_DESC;
+        			  }else if(response.getResponseCode() == Integer.valueOf(TataomsbackofficeConstants.ERROR_CODE_10086)){
+        				commentMsg =  TataomsbackofficeConstants.ERROR_CODE_10086_DESC;
+        			  }else if(response.getResponseCode() == Integer.valueOf(TataomsbackofficeConstants.ERROR_CODE_10096)){
+        				commentMsg =  TataomsbackofficeConstants.ERROR_CODE_10096_DESC;
+        			  }else if(response.getResponseCode() == Integer.valueOf(TataomsbackofficeConstants.ERROR_CODE_10550)){
+        				commentMsg =  TataomsbackofficeConstants.ERROR_CODE_10550_DESC;
+        			  }else{
+        				 commentMsg ="Failure";
+        			  }
      				}
      	  }else{
      		  try{
@@ -361,7 +376,21 @@ private StringBuilder uploadWallettCashFile(List<CilqCashWalletPojo> cilqCashWal
 	   	     				{
 	    	      			commentMsg= "Success";
 	   	     				}else{
-	   	     					commentMsg= "Failed";
+	   	     					if(responseObj.getResponseCode() == Integer.valueOf(TataomsbackofficeConstants.ERROR_CODE_10004)){
+	   	           				commentMsg =  TataomsbackofficeConstants.ERROR_CODE_10004_DESC;
+	   	           			  }else if(responseObj.getResponseCode() == Integer.valueOf(TataomsbackofficeConstants.ERROR_CODE_10027)){
+	   	           				commentMsg =  TataomsbackofficeConstants.ERROR_CODE_10027_DESC;
+	   	           			  }else if(responseObj.getResponseCode() == Integer.valueOf(TataomsbackofficeConstants.ERROR_CODE_10528)){
+	   	           				commentMsg =  TataomsbackofficeConstants.ERROR_CODE_10528_DESC;
+	   	           			  }else if(responseObj.getResponseCode() == Integer.valueOf(TataomsbackofficeConstants.ERROR_CODE_10086)){
+	   	           				commentMsg =  TataomsbackofficeConstants.ERROR_CODE_10086_DESC;
+	   	           			  }else if(responseObj.getResponseCode() == Integer.valueOf(TataomsbackofficeConstants.ERROR_CODE_10096)){
+	   	           				commentMsg =  TataomsbackofficeConstants.ERROR_CODE_10096_DESC;
+	   	           			  }else if(responseObj.getResponseCode() == Integer.valueOf(TataomsbackofficeConstants.ERROR_CODE_10550)){
+	   	           				commentMsg =  TataomsbackofficeConstants.ERROR_CODE_10550_DESC;
+	   	           			  }else{
+	   	           				 commentMsg ="Failure";
+	   	           			  }
 	   	     				}
 	    	      	  }else{
 	    	      		 commentMsg= "user does not have wallet Id";
@@ -622,7 +651,21 @@ private StringBuilder uploadWallettCashFile(List<CilqCashWalletPojo> cilqCashWal
         			currentCustomer.setIsWalletActivated(Boolean.FALSE);
         			modelService.save(currentCustomer);
         		  }else{
+        			if(response.getResponseCode() == Integer.valueOf(TataomsbackofficeConstants.ERROR_CODE_10004)){
+        				commentMsg =  TataomsbackofficeConstants.ERROR_CODE_10004_DESC;
+        			  }else if(response.getResponseCode() == Integer.valueOf(TataomsbackofficeConstants.ERROR_CODE_10027)){
+        				commentMsg =  TataomsbackofficeConstants.ERROR_CODE_10027_DESC;
+        			  }else if(response.getResponseCode() == Integer.valueOf(TataomsbackofficeConstants.ERROR_CODE_10528)){
+        				commentMsg =  TataomsbackofficeConstants.ERROR_CODE_10528_DESC;
+        			  }else if(response.getResponseCode() == Integer.valueOf(TataomsbackofficeConstants.ERROR_CODE_10086)){
+        				commentMsg =  TataomsbackofficeConstants.ERROR_CODE_10086_DESC;
+        			  }else if(response.getResponseCode() == Integer.valueOf(TataomsbackofficeConstants.ERROR_CODE_10096)){
+        				commentMsg =  TataomsbackofficeConstants.ERROR_CODE_10096_DESC;
+        			  }else if(response.getResponseCode() == Integer.valueOf(TataomsbackofficeConstants.ERROR_CODE_10550)){
+        				commentMsg =  TataomsbackofficeConstants.ERROR_CODE_10550_DESC;
+        			  }else{
         				 commentMsg ="Failure";
+        			  }
         		  }
         		  }
      	  }else if(null != currentCustomer.getIsWalletActivated() && currentCustomer.getIsWalletActivated().equals(Boolean.FALSE)){
@@ -635,7 +678,21 @@ private StringBuilder uploadWallettCashFile(List<CilqCashWalletPojo> cilqCashWal
        			modelService.save(currentCustomer);
    			  
    		  }else{
-   				 commentMsg ="Failure";
+   			  if(response.getResponseCode() == Integer.valueOf(TataomsbackofficeConstants.ERROR_CODE_10004)){
+       				commentMsg =  TataomsbackofficeConstants.ERROR_CODE_10004_DESC;
+       			  }else if(response.getResponseCode() == Integer.valueOf(TataomsbackofficeConstants.ERROR_CODE_10027)){
+       				commentMsg =  TataomsbackofficeConstants.ERROR_CODE_10027_DESC;
+       			  }else if(response.getResponseCode() == Integer.valueOf(TataomsbackofficeConstants.ERROR_CODE_10528)){
+       				commentMsg =  TataomsbackofficeConstants.ERROR_CODE_10528_DESC;
+       			  }else if(response.getResponseCode() == Integer.valueOf(TataomsbackofficeConstants.ERROR_CODE_10086)){
+       				commentMsg =  TataomsbackofficeConstants.ERROR_CODE_10086_DESC;
+       			  }else if(response.getResponseCode() == Integer.valueOf(TataomsbackofficeConstants.ERROR_CODE_10096)){
+       				commentMsg =  TataomsbackofficeConstants.ERROR_CODE_10096_DESC;
+       			  }else if(response.getResponseCode() == Integer.valueOf(TataomsbackofficeConstants.ERROR_CODE_10550)){
+       				commentMsg =  TataomsbackofficeConstants.ERROR_CODE_10550_DESC;
+       			  }else{
+       				 commentMsg ="Failure";
+       			  }
    		  }  
      	 }
      	  }else{
