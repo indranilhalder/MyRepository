@@ -77477,6 +77477,8 @@ a.pageNo {
     display: inline-block;
     padding: 12px 25px;
     cursor: pointer;
+    background: #a9133d;
+    color:#fff;
 }
 .pagination-block{
     display: inline-block;
@@ -77488,6 +77490,8 @@ a.pageNo {
     display: inline-block;
     padding: 12px 25px;
     cursor: pointer;
+    background: #a9133d;
+    color:#fff;
 }
 a.pageNo.active{
     display: inline-block;
