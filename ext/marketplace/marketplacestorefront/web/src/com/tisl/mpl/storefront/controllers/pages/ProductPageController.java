@@ -1953,6 +1953,8 @@ public class ProductPageController extends MidPageController
 			//Added for TPR-6855 : Quick View Changes
 			final String productCategoryType = productModel.getProductCategoryType();
 			removeSizeGuideForHome(productCategoryType, model);
+			populateBuyingGuide(productModel, model);
+			getQuantityDropdownData(productCategoryType, model);
 
 		}
 		catch (final EtailBusinessExceptions e)

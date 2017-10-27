@@ -56,6 +56,13 @@
 			}			
 		});
 	});
+	
+	
+var buyingGuideData ='${buyingGuide}';
+function redirectURL(val){
+	//console.log(val);
+	window.open(val,'_blank');
+}
 </script>
 <c:set var="clothing"><spring:theme code='product.clothing'/></c:set>
 
@@ -256,7 +263,19 @@
    		</c:choose>
 	</c:when>
 	<c:otherwise>
+	
+	<c:choose>
+	<c:when test="${product.rootCategory =='HomeFurnishing'}">
+   			 <span>
+					<spring:theme code="product.variant.size.HF"></spring:theme><c:if test="${not empty productSizeType}">(${productSizeType})</c:if>
+			  </span> 
+   	 </c:when>
+	<c:otherwise>
+	
     <spring:theme code="product.variant.size"></spring:theme><c:if test="${not empty productSizeType}">(${productSizeType})</c:if>
+    
+    </c:otherwise>
+    </c:choose>
 	</c:otherwise>
 	</c:choose>	
 	</p>
@@ -266,6 +285,15 @@
 			<spring:theme code="product.variants.quickview.size.guide"/>
 		</a>
 		</c:if>
+		
+		<!-- Added for PDP Changes for Home Furnishing : TPR-6738-->
+    
+			<c:if test="${not empty buyingGuide}">
+					<a class="buying-guide" role="button" onclick = "redirectURL(buyingGuideData);"> 
+					<spring:theme code="product.variants.buying.guide" />
+					</a>
+			</c:if>
+			<!--  PDP Changes for Home Furnishing Ends-->
 		
 		<div class="select-size">
 		 <c:choose>
@@ -395,6 +423,8 @@
 	</c:choose>
 	</ul>	
 		</div>
+		
+		
 	</form:form>
 	</c:if>
 	
