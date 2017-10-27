@@ -3857,27 +3857,55 @@ $(document).ready(function(){
 /*PRDI-402 end*/
 /* start change of PRDI-92 */
 $(document).ready(function() {
-    if ($(".facet_desktop .facet.js-facet.Dial li.filter-colour").hasClass("deactivate")){
-        $(".facet_desktop .facet.js-facet.Dial li.filter-colour").removeClass("deactivate");
-    }
-	if($('.facet_desktop .facet.js-facet.Dial').hasClass("Colour")){
-		$('.facet_desktop .facet.js-facet.Dial.Colour .more-lessFacetLinks').remove();
+	if ($(".facet_desktop .facet.js-facet.Dial li.filter-colour").hasClass("deactivate")){
+		$(".facet_desktop .facet.js-facet.Dial li.filter-colour").removeClass("deactivate");
 	}
-	
+	/*start change of INC144319119*/
+	/*if($('.facet_desktop .facet.js-facet.Dial').hasClass("Colour")){
+		$('.facet_desktop .facet.js-facet.Dial.Colour .more-lessFacetLinks').remove();
+	}*/
+	if ($(".facet_mobile .facet.js-facet.Dial li.filter-colour").hasClass("deactivate")){
+        $(".facet_mobile .facet.js-facet.Dial li.filter-colour").removeClass("deactivate");
+    }
+	/*end change of INC144319119*/
 });
 
-
-$(window).on("load resize click",function(){
+$(window).on("load",function(){
 	setTimeout(function(){
 		if ($(".facet_desktop .facet.js-facet.Dial li.filter-colour").hasClass("deactivate")){
 			$(".facet_desktop .facet.js-facet.Dial li.filter-colour").removeClass("deactivate");
 		}
-		if($('.facet_desktop .facet.js-facet.Dial').hasClass("Colour")){
+		/*start change of INC144319119*/
+		/*if($('.facet_desktop .facet.js-facet.Dial').hasClass("Colour")){
 			$('.facet_desktop .facet.js-facet.Dial.Colour .more-lessFacetLinks').remove();
-		}
+		}*/
+		if ($(".facet_mobile .facet.js-facet.Dial li.filter-colour").hasClass("deactivate")){
+			$(".facet_mobile .facet.js-facet.Dial li.filter-colour").removeClass("deactivate");
+        }
+		/*end change of INC144319119*/
 	},500);
 });
+
+$(window).on("resize click",function(){
+	if ($(".facet_desktop .facet.js-facet.Dial li.filter-colour").hasClass("deactivate")){
+		$(".facet_desktop .facet.js-facet.Dial li.filter-colour").removeClass("deactivate");
+	}
+	/*start change of INC144319119*/
+	if ($(".facet_mobile .facet.js-facet.Dial li.filter-colour").hasClass("deactivate")){
+		$(".facet_mobile .facet.js-facet.Dial li.filter-colour").removeClass("deactivate");
+    }
+	/*end change of INC144319119*/
+});
 /* end change of PRDI-92 */
+
+/*start change of INC144319119*/
+$(window).on("scroll",function(){
+	if ($(".facet_desktop .facet.js-facet.Dial li.filter-colour").hasClass("deactivate")){
+		$(".facet_desktop .facet.js-facet.Dial li.filter-colour").removeClass("deactivate");
+	}
+});
+/*end change of INC144319119*/
+
 $(".accordin").smk_Accordion({
     closeAble: true,
     closeOther: false,

@@ -242,6 +242,9 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String AMEX = "AMEX".intern();
 	public static final String AMERICAN_EXPRESS = "AMERICAN EXPRESS".intern();
 	public static final String DINERSCARD = "DinersCard".intern();
+	public static final String DINERS = "DINERS".intern();
+	public static final String JCB = "JCB".intern();
+	public static final String DISCOVER = "DISCOVER".intern();
 	public static final String VISA = "VISA".intern();
 	public static final String EUROCARD = "EuroCard".intern();
 	public static final String SWITCHCARD = "SwitchCard".intern();
@@ -1821,7 +1824,7 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	//.intern();
 
 	//SprintPaymentFixes:- New query added //PaymentFix2017:- queryTAT added
-	public static final String PAYMENTPENDINGQUERY = "select {o.pk} from {Order as o},{OrderStatus as os} where  {o.creationtime} <= ?queryTAT and {o.status}={os.pk} and {os.code}=?status"
+	public static final String PAYMENTPENDINGQUERY = "select {o.pk} from {Order as o},{OrderStatus as os} where  {o.creationtime} <= ?queryTAT and {o.status}={os.pk} and {os.code}=?status and {o.type}=?type"
 			.intern();
 
 	//public static final String PAYMENTPENDINGQUERY =

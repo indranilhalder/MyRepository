@@ -12,20 +12,59 @@ var pageType = $('#pageType').val();
 var isSerp = false;
 
 $(document).ready(function(){
-	
+
+	//INC144318859 remove previous cache data | old cache issue
+    if ($('#pageType').val() != 'productsearch' && $('#pageType').val() != 'product' && $('#pageType').val() != 'category') 
+	{ 
+        var lastUrlpathNameprvdata = window.localStorage.getItem('lastUrlpathName');
+        var lastUrlqueryprvdata    = window.localStorage.getItem('lastUrlquery');
+		var htmlprvdata            = window.localStorage.getItem('productlazyarray');
+		var lazyfrompdpprvdata     = window.localStorage.getItem("lazyfrompdp");
+		if(lastUrlpathNameprvdata != null || lastUrlqueryprvdata != null || htmlprvdata != null || lazyfrompdpprvdata != null) 
+		    {
+			   // console.log("removed cache data");
+        		window.localStorage.removeItem('lazyfrompdp');
+          		window.localStorage.removeItem('productlazyarray');
+          		window.localStorage.removeItem('lastUrlpathName');
+          		window.localStorage.removeItem('lastUrlquery');
+		    }	
+				
+	}
+    
+  //set the total no of pages 
+    totalNoOfPages = $('input[name=noOfPages]').val();
+    totalNoOfPages == '' ? 0 : parseInt(totalNoOfPages);
+    
 $(window).on('scroll', function() {
 	var productItemArrayLength = $('ul.product-listing.product-grid.lazy-grid,ul.product-listing.product-grid.lazy-grid-facet,ul.product-list,ul.product-listing.product-grid.lazy-grid-normal,ul.product-listing.product-grid.custom-sku').find('li.product-item').length;
 	
     if(productItemArrayLength > 16){
     	lazyPushInitalPage();
     }
-	innerLazyLoad({effect: true});
+	//innerLazyLoad({effect: true});
 });
 
 $(document).on('click', '.pageNo', function() {
     var clickedPageNo = parseInt($(this).text());
     getProductSetData(clickedPageNo);
 });
+
+$(document).on('click','.sort',function(){
+	//sort($(this),false);
+
+	// INC144315462 and INC144315104
+	if($('input[name=customSku]').length){
+		sortCustomSku($(this),false);
+		}else{
+			if(lazyPagePush){
+				lazyPushInitalPage();
+			}
+		 sort($(this),false);
+	 	}
+
+
+});
+
 });
 
 		  
@@ -80,7 +119,7 @@ function innerLazyLoad(options) {
 function getProductSetData(pageNoPagination) {
 
     	 var pathName = window.location.pathname;
-    	    var query = window.location.search;
+    	 var query = window.location.search;
     	    
     	    //INC144316143
     	    if ($('#pageType').val() == 'productsearch' || $('#pageType').val() == 'category') {
@@ -304,4 +343,16 @@ function sort(this_data,drop_down){
 function sortReplaceState(url){
 	var nextPaginatedAjaxUrl = url.replace(/page-[0-9]+/, 'page-1');
 	 window.history.replaceState({}, '', nextPaginatedAjaxUrl);
+}
+function findGetParameter(parameterName) {
+    var result = null,
+        tmp = [];
+    location.search
+    .substr(1)
+        .split("&")
+        .forEach(function (item) {
+        tmp = item.split("=");
+        if (tmp[0] === parameterName) result = decodeURIComponent(tmp[1]);
+    });
+    return result;
 }

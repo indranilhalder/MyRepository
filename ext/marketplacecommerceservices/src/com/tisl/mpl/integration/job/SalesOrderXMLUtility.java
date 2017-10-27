@@ -77,65 +77,37 @@ public class SalesOrderXMLUtility
 	 * @Description: Generate XML Data for Order
 	 * @param orderData
 	 */
-	public String generateOrderData(final List<OrderModel> orderData)
+	public void generateOrderData(final List<OrderModel> orderModelList)
 	{
-
-
-		BulkSalesOrderXMLData xmlData = null;
 		List<SalesOrderXMLData> bulkSalesDataList = null;
-		String xmlString = MarketplacecommerceservicesConstants.EMPTYSPACE;
-		boolean invalidXMLToFICO = false;
-
 		try
 		{
-			if (null != orderData && !orderData.isEmpty())
+			if (null != orderModelList && !orderModelList.isEmpty())
 			{
-				xmlData = new BulkSalesOrderXMLData();
-				bulkSalesDataList = getParentOrderData(orderData);
-				if (null != bulkSalesDataList && !bulkSalesDataList.isEmpty())
+				bulkSalesDataList = getParentOrderData(orderModelList);
+				final int rowLimit = getConfigurationService().getConfiguration().getInt(
+						MarketplacecommerceservicesConstants.PAYMENTINFO_F_ROWLIMIT,0);
+				if (rowLimit > 0)
 				{
-					LOG.debug("full order data");
-					xmlData.setOrderDataList(bulkSalesDataList);
-					LOG.debug("bulk sales list set");
-					final JAXBContext context = JAXBContext.newInstance(BulkSalesOrderXMLData.class);
-					final Marshaller m = context.createMarshaller();
-					m.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
-					final StringWriter sw = new StringWriter();
-					m.marshal(xmlData, sw);
-					xmlString = sw.toString();
-					LOG.info(xmlString);
-
-					final DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-					factory.setIgnoringComments(true);
-					factory.setCoalescing(true); // Convert CDATA to Text nodes
-					factory.setNamespaceAware(false); // No namespaces: this is default factory.setValidating(false); //
-					// Don't validate DTD: also default
-
-					final DocumentBuilder parser = factory.newDocumentBuilder();
-
-					final Document document = parser.parse(new InputSource(new StringReader(xmlString)));
-
-					NodeList nm = null;
-					Node node = null;
-
-					nm = document.getElementsByTagName("SalesOrders");
-
-					if (null != nm)
+					int startIndex = 0;
+					final int listSize = bulkSalesDataList.size();
+					while (startIndex < listSize)
 					{
-						node = nm.item(0);
-						if (null != node && StringUtils.isEmpty(node.getTextContent()))
-						{
-							invalidXMLToFICO = true;
-						}
+						final int endIndex = (startIndex + rowLimit) < listSize ? (startIndex + rowLimit) : listSize;
+						final List<SalesOrderXMLData> partCustomerData = bulkSalesDataList.subList(startIndex, endIndex);
+						generatePartOrderData(partCustomerData);
+						startIndex += rowLimit;
 					}
-
-					if (!invalidXMLToFICO)
-					{
-						paymentInfoRevWebService.paymentInfoRev(xmlString);
-					}
-
 				}
+				else
+				{
+					generatePartOrderData(bulkSalesDataList);
+				}
+
+
 			}
+
+
 		}
 		catch (final EtailBusinessExceptions e)
 		{
@@ -150,7 +122,6 @@ public class SalesOrderXMLUtility
 			ExceptionUtil.etailNonBusinessExceptionHandler(new EtailNonBusinessExceptions(e));
 		}
 
-		return xmlString;
 	}
 
 	private boolean checkCOD(final OrderModel orderModel)
@@ -633,6 +604,78 @@ public class SalesOrderXMLUtility
 	protected ConfigurationService getConfigurationService()
 	{
 		return Registry.getApplicationContext().getBean("configurationService", ConfigurationService.class);
+	}
+	
+	private void generatePartOrderData(final List<SalesOrderXMLData> bulkSalesDataList)
+	{
+
+
+		BulkSalesOrderXMLData xmlData = null;
+		String xmlString = MarketplacecommerceservicesConstants.EMPTYSPACE;
+		boolean invalidXMLToFICO = false;
+
+		try
+		{
+
+			xmlData = new BulkSalesOrderXMLData();
+			if (null != bulkSalesDataList && !bulkSalesDataList.isEmpty())
+			{
+				LOG.debug("full order data");
+				xmlData.setOrderDataList(bulkSalesDataList);
+				LOG.debug("bulk sales list set");
+				final JAXBContext context = JAXBContext.newInstance(BulkSalesOrderXMLData.class);
+				final Marshaller m = context.createMarshaller();
+				m.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
+				final StringWriter sw = new StringWriter();
+				m.marshal(xmlData, sw);
+				xmlString = sw.toString();
+				LOG.info(xmlString);
+
+				final DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+				factory.setIgnoringComments(true);
+				factory.setCoalescing(true); // Convert CDATA to Text nodes
+				factory.setNamespaceAware(false); // No namespaces: this is default factory.setValidating(false); //
+				// Don't validate DTD: also default
+
+				final DocumentBuilder parser = factory.newDocumentBuilder();
+
+				final Document document = parser.parse(new InputSource(new StringReader(xmlString)));
+
+				NodeList nm = null;
+				Node node = null;
+
+				nm = document.getElementsByTagName("SalesOrders");
+
+				if (null != nm)
+				{
+					node = nm.item(0);
+					if (null != node && StringUtils.isEmpty(node.getTextContent()))
+					{
+						invalidXMLToFICO = true;
+					}
+				}
+
+				if (!invalidXMLToFICO)
+				{
+					paymentInfoRevWebService.paymentInfoRev(xmlString);
+				}
+
+			}
+
+		}
+		catch (final EtailBusinessExceptions e)
+		{
+			ExceptionUtil.etailBusinessExceptionHandler(e, null);
+		}
+		catch (final EtailNonBusinessExceptions e)
+		{
+			ExceptionUtil.etailNonBusinessExceptionHandler(e);
+		}
+		catch (final Exception e)
+		{
+			ExceptionUtil.etailNonBusinessExceptionHandler(new EtailNonBusinessExceptions(e));
+		}
+
 	}
 
 }

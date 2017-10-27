@@ -388,7 +388,7 @@
 																			src="${commonResourcePath}/images/Discover.png" alt=""></span>
 																	</c:when>
 																	<c:when
-																		test="${fn:containsIgnoreCase(map.value.cardBrand, 'discover')}">
+																		test="${fn:containsIgnoreCase(map.value.cardBrand, 'jcb')}">
 																		<span class="visa card_image"><img
 																			src="${commonResourcePath}/images/JCB.png" alt=""></span>
 																	</c:when>
@@ -542,7 +542,7 @@
 																			src="${commonResourcePath}/images/Discover.png" alt=""></span>
 																	</c:when>
 																	<c:when
-																		test="${fn:containsIgnoreCase(map.value.cardBrand, 'discover')}">
+																		test="${fn:containsIgnoreCase(map.value.cardBrand, 'jcb')}">
 																		<span class="visa card_image"><img
 																			src="${commonResourcePath}/images/JCB.png" alt=""></span>
 																	</c:when>
@@ -703,14 +703,14 @@
 														            <c:when test="${fn:containsIgnoreCase(map.value.cardBrand, 'discover')}">
 														           <span class="visa card_image"><img src="${commonResourcePath}/images/Discover.png" alt=""></span>
 														           </c:when>
-														           <c:when test="${fn:containsIgnoreCase(map.value.cardBrand, 'discover')}">
+														           <c:when test="${fn:containsIgnoreCase(map.value.cardBrand, 'jcb')}">
 														           <span class="visa card_image"><img src="${commonResourcePath}/images/JCB.png" alt=""></span>
 														           </c:when>
 														           <c:otherwise>
 																	<span class="visa card_image"><img src="${commonResourcePath}/images/Visa.png" alt=""></span>
 																	</c:otherwise>   
 														        </c:choose>		
-										                 		<input type="radio" data-id="savedCCard" name="creditCards" class="card_token creditCardsRadio" id="cc${status.index}"  value="${map.value.cardToken}" onchange="savedCreditCardRadioChange(cc${status.index});"/>
+										                 		<input type="radio" data-id="savedCCard" name="creditCards" class="card_token creditCardsRadio" id="cc${status.index}"  value="${map.value.cardToken}" onchange="savedCreditCardRadioChange('cc${status.index}');"/>
 									                 	 		<label for="cc${status.index}" data-id="savedCCard" class="numbers">
 									                 	 			<span>${map.value.cardBrand}</span> ending in ${map.value.cardEndingDigits}</label>
 									                 	 			<!-- <span class="saved">Saved card</span> -->
@@ -1029,7 +1029,7 @@
 														            <c:when test="${fn:containsIgnoreCase(map.value.cardBrand, 'discover')}">
 														           <span class="visa card_image"><img src="${commonResourcePath}/images/Discover.png" alt=""></span>
 														           </c:when>
-														           <c:when test="${fn:containsIgnoreCase(map.value.cardBrand, 'discover')}">
+														           <c:when test="${fn:containsIgnoreCase(map.value.cardBrand, 'jcb')}">
 														           <span class="visa card_image"><img src="${commonResourcePath}/images/JCB.png" alt=""></span>
 														           </c:when>
 														           <c:otherwise>
@@ -1038,7 +1038,7 @@
 														        </c:choose>															 
 				        							
 										        			<%-- <span class="visa card_image"><img src="${commonResourcePath}/images/Visa.png" alt=""></span> --%>
-										                    		<input type="radio" data-id="savedDCard" name="debitCards" class="card_token  debitCardsRadio" id="dc${status.index}"  value="${map.value.cardToken}" onchange="savedDebitCardRadioChange(dc${status.index});"/>
+										                    		<input type="radio" data-id="savedDCard" name="debitCards" class="card_token  debitCardsRadio" id="dc${status.index}"  value="${map.value.cardToken}" onchange="savedDebitCardRadioChange('dc${status.index}');"/>
 										                    		<label for="dc${status.index}" data-id="savedDCard" class="numbers"><span>${map.value.cardBrand}</span> ending in ${map.value.cardEndingDigits}</label>
 										                  				<p>${map.value.nameOnCard}</p>
 										                  				<p><spring:theme code="text.expires.on"/> ${map.value.expiryMonth}/${map.value.expiryYear}</p>
@@ -1276,7 +1276,7 @@
 														</select>
 														
 														
-														<span class="error-message" id="emiNoBankError">No Banks available.</span>
+														<span class="error-message" id="emiNoBankError"><spring:theme code="checkout.multi.paymentMethod.emi.emiNoBankError"/></span>  	<!-- change for INC144318889 -->
 														<span class="error-message" id="emiPromoError"></span>
 														<div id="radioForEMI" class="banks">
 														<p class="emi-plan">Select a plan</p>	

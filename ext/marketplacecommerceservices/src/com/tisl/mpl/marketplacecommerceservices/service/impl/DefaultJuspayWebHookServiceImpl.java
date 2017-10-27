@@ -148,11 +148,11 @@ public class DefaultJuspayWebHookServiceImpl implements JuspayWebHookService
 			/*
 			 * if (flag) {//check only if call is coming from method fetchWebHookData for (final JuspayWebhookModel oModel
 			 * : webHookDetailList) { if (null != oModel.getOrderStatus() && oModel.getIsExpired().booleanValue()) {
-			 *
+			 * 
 			 * final OrderModel ordrMdl = getMplPaymentService().fetchOrderOnGUID(oModel.getOrderStatus().getOrderId()); if
 			 * ((null != ordrMdl.getIsWallet() && WalletEnum.NONWALLET.toString().equals(ordrMdl.getIsWallet().getCode()))
 			 * || ordrMdl.getIsWallet() == null) {
-			 *
+			 * 
 			 * //getting all the webhook data where isExpired is Y and adding into a list uniqueList.add(oModel); //} } } }
 			 */
 
@@ -1724,6 +1724,8 @@ public class DefaultJuspayWebHookServiceImpl implements JuspayWebHookService
 			final List<MplPaymentAuditEntryModel> auditEntryList, final List<JuspayEBSResponseDataModel> ebsResponseList,
 			final MplPaymentAuditModel auditModel)
 	{
+		boolean rmsEligibleFlag = false;
+		rmsEligibleFlag = checkRMSFailedEligible(orderModel);
 
 		if (StringUtils.isNotEmpty(orderStatusResponse.getRiskResponse().getEbsRiskLevel()))
 		{
@@ -1746,7 +1748,10 @@ public class DefaultJuspayWebHookServiceImpl implements JuspayWebHookService
 							|| orderStatusResponse.getRiskResponse().getEbsRiskLevel()
 									.equalsIgnoreCase(MarketplacecommerceservicesConstants.RED))
 					{
-						getOrderStatusSpecifier().setOrderStatus(orderModel, OrderStatus.RMS_VERIFICATION_PENDING);
+						if (rmsEligibleFlag)
+						{
+							getOrderStatusSpecifier().setOrderStatus(orderModel, OrderStatus.RMS_VERIFICATION_PENDING);
+						}
 					}
 				}
 				//Condition for International Card
@@ -1755,13 +1760,16 @@ public class DefaultJuspayWebHookServiceImpl implements JuspayWebHookService
 					if (orderStatusResponse.getRiskResponse().getEbsRiskLevel()
 							.equalsIgnoreCase(MarketplacecommerceservicesConstants.YELLOW))
 					{
-						getOrderStatusSpecifier().setOrderStatus(orderModel, OrderStatus.RMS_VERIFICATION_PENDING);
+						if (rmsEligibleFlag)
+						{
+							getOrderStatusSpecifier().setOrderStatus(orderModel, OrderStatus.RMS_VERIFICATION_PENDING);
+						}
 					}
 					if (orderStatusResponse.getRiskResponse().getEbsRiskLevel()
 							.equalsIgnoreCase(MarketplacecommerceservicesConstants.RED))
 					{
-						boolean rmsEligibleFlag = false;
-						rmsEligibleFlag = checkRMSFailedEligible(orderModel);
+						//boolean rmsEligibleFlag = false;
+						//rmsEligibleFlag = checkRMSFailedEligible(orderModel);
 						if (rmsEligibleFlag)
 						{
 							getOrderStatusSpecifier().setOrderStatus(orderModel, OrderStatus.RMS_VERIFICATION_FAILED);
@@ -1772,7 +1780,10 @@ public class DefaultJuspayWebHookServiceImpl implements JuspayWebHookService
 		}
 		else
 		{
-			getOrderStatusSpecifier().setOrderStatus(orderModel, OrderStatus.RMS_VERIFICATION_PENDING);
+			if (rmsEligibleFlag)
+			{
+				getOrderStatusSpecifier().setOrderStatus(orderModel, OrderStatus.RMS_VERIFICATION_PENDING);
+			}
 		}
 
 		if (!orderModel.getStatus().equals(OrderStatus.RMS_VERIFICATION_PENDING))
@@ -1855,7 +1866,7 @@ public class DefaultJuspayWebHookServiceImpl implements JuspayWebHookService
 	/*
 	 * private OrderModel getParentOrder(final String orderGuid) throws EtailNonBusinessExceptions { return
 	 * getJuspayWebHookDao().fetchOrderOnGUID(orderGuid);
-	 * 
+	 *
 	 * }
 	 */
 	/**
