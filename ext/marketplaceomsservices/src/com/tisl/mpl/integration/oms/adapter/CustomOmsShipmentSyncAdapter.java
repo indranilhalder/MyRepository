@@ -58,6 +58,7 @@ import com.tisl.mpl.constants.MarketplaceomsservicesConstants;
 import com.tisl.mpl.core.model.ImeiDetailModel;
 import com.tisl.mpl.core.model.InvoiceDetailModel;
 import com.tisl.mpl.core.model.MplZoneDeliveryModeValueModel;
+import com.tisl.mpl.core.model.WalletCardApportionDetailModel;
 import com.tisl.mpl.data.SendSMSRequestData;
 import com.tisl.mpl.globalcodes.utilities.MplCodeMasterUtility;
 //import com.tisl.mpl.fulfilmentprocess.events.OrderRefundEvent;
@@ -847,12 +848,27 @@ public class CustomOmsShipmentSyncAdapter extends DefaultOmsShipmentSyncAdapter 
 								&& COD.intern().equalsIgnoreCase(entry.getPaymentMode().getMode()))
 						{
 							refundEntryModel.setAmount(NumberUtils.createBigDecimal("0"));
+							refundEntryModel.setAmountForQc(NumberUtils.createDouble("0"));
 						}
 						else
 						{
-							final Double amount = orderEntry.getCurrDelCharge();
-
-							refundEntryModel.setAmount(NumberUtils.createBigDecimal(amount.toString()));
+							 if(null != orderModel.getSplitModeInfo() && orderModel.getSplitModeInfo().equalsIgnoreCase("Split")) {
+								 if(null!= orderEntry.getWalletApportionPaymentInfo() &&null != orderEntry.getWalletApportionPaymentInfo().getJuspayDeliveryValue()){
+									 refundEntryModel.setAmount(NumberUtils.createBigDecimal(orderEntry.getWalletApportionPaymentInfo().getJuspayDeliveryValue()));
+								 }
+								 if(null!= orderEntry.getWalletApportionPaymentInfo() &&null != orderEntry.getWalletApportionPaymentInfo().getQcDeliveryPartValue()){
+							   	 refundEntryModel.setAmountForQc(NumberUtils.createDouble(orderEntry.getWalletApportionPaymentInfo().getQcDeliveryPartValue()));
+							   }
+							 }else if(null != orderModel.getSplitModeInfo() &&orderModel.getSplitModeInfo().equalsIgnoreCase("CliqCash")){
+								   refundEntryModel.setAmount(NumberUtils.createBigDecimal("0"));
+								   if(null!= orderEntry.getWalletApportionPaymentInfo() &&null != orderEntry.getWalletApportionPaymentInfo().getQcDeliveryPartValue()){
+								   	 refundEntryModel.setAmountForQc(NumberUtils.createDouble(orderEntry.getWalletApportionPaymentInfo().getQcDeliveryPartValue()));
+								   }
+							 }else{
+								 final Double amount = orderEntry.getCurrDelCharge();
+									refundEntryModel.setAmount(NumberUtils.createBigDecimal(amount.toString()));
+									refundEntryModel.setAmountForQc(NumberUtils.createDouble("0"));
+							 }	
 						}
 
 					}
@@ -863,12 +879,29 @@ public class CustomOmsShipmentSyncAdapter extends DefaultOmsShipmentSyncAdapter 
 								&& COD.intern().equalsIgnoreCase(entry.getPaymentMode().getMode()))
 						{
 							refundEntryModel.setAmount(NumberUtils.createBigDecimal("0"));
+							refundEntryModel.setAmountForQc(NumberUtils.createDouble("0"));
 						}
 						else
 						{
-							final Double amount = orderEntry.getScheduledDeliveryCharge();
-
-							refundEntryModel.setAmount(NumberUtils.createBigDecimal(amount.toString()));
+							
+							 if(null != orderModel.getSplitModeInfo() && orderModel.getSplitModeInfo().equalsIgnoreCase("Split")) {
+								 if(null!= orderEntry.getWalletApportionPaymentInfo() &&null != orderEntry.getWalletApportionPaymentInfo().getJuspaySchedulingValue()){
+									 refundEntryModel.setAmount(NumberUtils.createBigDecimal(orderEntry.getWalletApportionPaymentInfo().getJuspaySchedulingValue()));
+								 }
+								 if(null!= orderEntry.getWalletApportionPaymentInfo() &&null != orderEntry.getWalletApportionPaymentInfo().getQcSchedulingPartValue()){
+							   	 refundEntryModel.setAmountForQc(NumberUtils.createDouble(orderEntry.getWalletApportionPaymentInfo().getQcSchedulingPartValue()));
+							   }
+							 }else if(null != orderModel.getSplitModeInfo() &&orderModel.getSplitModeInfo().equalsIgnoreCase("CliqCash")){
+								   refundEntryModel.setAmount(NumberUtils.createBigDecimal("0"));
+								   if(null!= orderEntry.getWalletApportionPaymentInfo() &&null != orderEntry.getWalletApportionPaymentInfo().getQcSchedulingPartValue()){
+								   	 refundEntryModel.setAmountForQc(NumberUtils.createDouble(orderEntry.getWalletApportionPaymentInfo().getQcSchedulingPartValue()));
+								   }
+							 }else{
+								   final Double amount = orderEntry.getScheduledDeliveryCharge();
+									refundEntryModel.setAmount(NumberUtils.createBigDecimal(amount.toString()));
+									refundEntryModel.setAmountForQc(NumberUtils.createDouble("0"));
+							 }
+							
 						}
 					}
 					else
@@ -877,13 +910,30 @@ public class CustomOmsShipmentSyncAdapter extends DefaultOmsShipmentSyncAdapter 
 								&& COD.intern().equalsIgnoreCase(entry.getPaymentMode().getMode()))
 						{
 							refundEntryModel.setAmount(NumberUtils.createBigDecimal("0"));
+							refundEntryModel.setAmountForQc(NumberUtils.createDouble("0"));
 						}
 						else
 						{
-							final Double amount = orderEntry.getNetAmountAfterAllDisc()
-									+ (orderEntry.getCurrDelCharge() != null ? orderEntry.getCurrDelCharge() : 0D);
-
-							refundEntryModel.setAmount(NumberUtils.createBigDecimal(amount.toString()));
+						   double refundAmount =0.0D;
+						   double refundAmountForQc =0.0D;
+							 if(null != orderModel.getSplitModeInfo() && orderModel.getSplitModeInfo().equalsIgnoreCase("Split")) {
+						      	//call for Juspay
+						      	refundAmount = calculateSplitJuspayRefundAmount(orderEntry);
+									
+									//call for QuckCilver
+						      	refundAmountForQc = calculateSplitQcRefundAmount(orderEntry);
+						      	
+						     }else if(null != orderModel.getSplitModeInfo() &&orderModel.getSplitModeInfo().equalsIgnoreCase("CliqCash")){
+						      	
+						      	//call for QuckCilver
+						      	refundAmountForQc = calculateSplitQcRefundAmount(orderEntry);
+									
+						      }else{
+						      	refundAmount= orderEntry.getNetAmountAfterAllDisc()
+      									+ (orderEntry.getCurrDelCharge() != null ? orderEntry.getCurrDelCharge() : 0D);
+						      }
+							refundEntryModel.setAmount(NumberUtils.createBigDecimal(String.valueOf(refundAmount)));
+							refundEntryModel.setAmountForQc(NumberUtils.createDouble(String.valueOf(refundAmountForQc)));
 						}
 					}
 				}
@@ -1305,6 +1355,60 @@ public class CustomOmsShipmentSyncAdapter extends DefaultOmsShipmentSyncAdapter 
 		}
 
 		return null;
+	}
+	
+	
+	private double calculateSplitJuspayRefundAmount(AbstractOrderEntryModel orderEntry){
+		double refundAmount =0.0D;
+		if(null != orderEntry.getWalletApportionPaymentInfo() && null != orderEntry.getWalletApportionPaymentInfo().getJuspayApportionValue()){
+			refundAmount += Double.valueOf(orderEntry.getWalletApportionPaymentInfo().getJuspayApportionValue()).doubleValue();
+		}
+		if(null != orderEntry.getWalletApportionPaymentInfo() && null != orderEntry.getWalletApportionPaymentInfo().getJuspayDeliveryValue()){
+			refundAmount += Double.valueOf(orderEntry.getWalletApportionPaymentInfo().getJuspayDeliveryValue()).doubleValue();
+		}
+		if(null != orderEntry.getWalletApportionPaymentInfo() && null != orderEntry.getWalletApportionPaymentInfo().getJuspaySchedulingValue()){
+			refundAmount += Double.valueOf(orderEntry.getWalletApportionPaymentInfo().getJuspaySchedulingValue()).doubleValue();
+		}
+		if(null != orderEntry.getWalletApportionPaymentInfo() && null != orderEntry.getWalletApportionPaymentInfo().getJuspayShippingValue()){
+			refundAmount += Double.valueOf(orderEntry.getWalletApportionPaymentInfo().getJuspayShippingValue()).doubleValue();
+		}
+		return refundAmount;
+	}
+	
+	private double calculateSplitQcRefundAmount(AbstractOrderEntryModel orderEntry){
+		double refundAmountForQc =0.0D;
+		double cashBackAmt=0;
+		if(null !=orderEntry &&  null != orderEntry.getWalletApportionPaymentInfo() && null!= orderEntry.getWalletApportionPaymentInfo().getWalletCardList()){
+			for(WalletCardApportionDetailModel cardApportionDetail : orderEntry.getWalletApportionPaymentInfo().getWalletCardList()){
+				if(null != cardApportionDetail && null!= cardApportionDetail.getBucketType()){
+				if(cardApportionDetail.getBucketType().equalsIgnoreCase("CASHBACK")){
+					cashBackAmt += Double.parseDouble(cardApportionDetail.getQcApportionValue()) +  Double.parseDouble( null != cardApportionDetail.getQcDeliveryValue() ? cardApportionDetail.getQcDeliveryValue() : ""+0 )
+							+Double.parseDouble( null != cardApportionDetail.getQcSchedulingValue() ? cardApportionDetail.getQcSchedulingValue() : ""+0 )+
+							Double.parseDouble( null != cardApportionDetail.getQcShippingValue() ? cardApportionDetail.getQcShippingValue() : ""+0 );
+				}
+				}
+			}
+		}
+		if(null != orderEntry.getWalletApportionPaymentInfo() && null != orderEntry.getWalletApportionPaymentInfo().getQcApportionPartValue()){
+   		refundAmountForQc += Double.valueOf(orderEntry.getWalletApportionPaymentInfo().getQcApportionPartValue()).doubleValue();
+   	}
+   	if(null != orderEntry.getWalletApportionPaymentInfo() && null != orderEntry.getWalletApportionPaymentInfo().getQcDeliveryPartValue()){
+   		refundAmountForQc += Double.valueOf(orderEntry.getWalletApportionPaymentInfo().getQcDeliveryPartValue()).doubleValue();
+   	}
+   	if(null != orderEntry.getWalletApportionPaymentInfo() && null != orderEntry.getWalletApportionPaymentInfo().getQcSchedulingPartValue()){
+   		refundAmountForQc += Double.valueOf(orderEntry.getWalletApportionPaymentInfo().getQcSchedulingPartValue()).doubleValue();
+   	}
+   	if(null != orderEntry.getWalletApportionPaymentInfo() && null != orderEntry.getWalletApportionPaymentInfo().getQcShippingPartValue()){
+   		refundAmountForQc += Double.valueOf(orderEntry.getWalletApportionPaymentInfo().getQcShippingPartValue()).doubleValue();
+   	}
+   	
+   	
+   	if(cashBackAmt > 0){
+   		
+   		refundAmountForQc -= cashBackAmt;
+   	}
+   	
+		return refundAmountForQc;
 	}
 
 	//send sms data For Secondary data R2.3 Change BUG ID E2E 1563 END
