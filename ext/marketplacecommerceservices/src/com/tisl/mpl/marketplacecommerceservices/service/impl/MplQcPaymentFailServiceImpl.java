@@ -9,6 +9,8 @@ import de.hybris.platform.core.enums.OrderStatus;
 import de.hybris.platform.core.model.order.AbstractOrderEntryModel;
 import de.hybris.platform.core.model.order.OrderModel;
 import de.hybris.platform.core.model.user.CustomerModel;
+import de.hybris.platform.payment.enums.PaymentTransactionType;
+import de.hybris.platform.payment.model.PaymentTransactionModel;
 import de.hybris.platform.servicelayer.config.ConfigurationService;
 import de.hybris.platform.servicelayer.model.ModelService;
 
@@ -26,13 +28,13 @@ import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
+import com.tisl.mpl.core.enums.JuspayRefundType;
 import com.tisl.mpl.core.model.JuspayWebhookModel;
 import com.tisl.mpl.core.model.MplPaymentAuditModel;
+import com.tisl.mpl.core.model.RefundTransactionMappingModel;
 import com.tisl.mpl.core.model.WalletApportionReturnInfoModel;
 import com.tisl.mpl.core.model.WalletCardApportionDetailModel;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
-import com.tisl.mpl.juspay.PaymentService;
-import com.tisl.mpl.marketplacecommerceservices.daos.JuspayWebHookDao;
 import com.tisl.mpl.marketplacecommerceservices.daos.MplOrderDao;
 import com.tisl.mpl.marketplacecommerceservices.daos.MplProcessOrderDao;
 import com.tisl.mpl.marketplacecommerceservices.service.MplJusPayRefundService;
@@ -43,6 +45,7 @@ import com.tisl.mpl.pojo.response.QCRedeeptionResponse;
 import com.tisl.mpl.promotion.dao.MplQcPaymentFailDao;
 import com.tisl.mpl.service.MplWalletServices;
 import com.tisl.mpl.util.GenericUtilityMethods;
+import com.tisl.mpl.util.OrderStatusSpecifier;
 
 
 public class MplQcPaymentFailServiceImpl implements MplQcPaymentFailService
@@ -74,6 +77,10 @@ public class MplQcPaymentFailServiceImpl implements MplQcPaymentFailService
 
 	@Autowired
 	private MplWalletServices mplWalletService;
+	@Autowired
+	private OrderStatusSpecifier orderStatusSpecifier;
+	@Autowired
+	private MplCancelOrderTicketImpl mplCancelOrderTicketImpl;
 
 
 	//@Autowired
@@ -626,27 +633,38 @@ public class MplQcPaymentFailServiceImpl implements MplQcPaymentFailService
 
 					try
 					{
-						//TISPRO-130
-						if (null != webHookModel.getOrderStatus().getPaymentMethodType() && webHookModel.getOrderStatus()
-								.getPaymentMethodType().equalsIgnoreCase(MarketplacecommerceservicesConstants.PAYMENT_METHOD_NB))
+						//Initiating refund
+						final PaymentTransactionModel paymentTransactionModel = initiateRefund(orderModel);
+						//Creating cancel order ticket
+						final boolean ticketstatus = mplCancelOrderTicketImpl.createCancelTicket(orderModel);
+						if (ticketstatus)
 						{
-							//calling refund service where there will be cart only for NB
-							mplJusPayRefundService.doRefund(auditModel.getAuditId(),
-									webHookModel.getOrderStatus().getPaymentMethodType());
+							orderStatusSpecifier.setOrderStatus(orderModel, OrderStatus.CANCELLATION_INITIATED);
 						}
-						//TISPRO-675
-						else if (StringUtils.isNotEmpty(webHookModel.getOrderStatus().getEmiBank())
-								&& StringUtils.isNotEmpty(webHookModel.getOrderStatus().getEmiTenure()))
+						//Refund model mapping for initiated refund
+						//Refund code executed first to avoid refund failure during oms inventory call
+						if (null != paymentTransactionModel && StringUtils.isNotEmpty(paymentTransactionModel.getCode()))
 						{
-							//calling refund service where there will be cart only for EMI
-							mplJusPayRefundService.doRefund(auditModel.getAuditId(), MarketplacecommerceservicesConstants.EMI);
+							final String status = paymentTransactionModel.getStatus();
+							if (StringUtils.isNotEmpty(status) && status.equalsIgnoreCase("SUCCESS"))
+							{
+								orderStatusSpecifier.setOrderStatus(orderModel, OrderStatus.ORDER_CANCELLED);
+							}
+							else if (StringUtils.isNotEmpty(status) && status.equalsIgnoreCase("FAILURE"))
+							{
+								orderStatusSpecifier.setOrderStatus(orderModel, OrderStatus.REFUND_IN_PROGRESS);
+							}
+							else if (StringUtils.isNotEmpty(status) && status.equalsIgnoreCase("PENDING"))
+							{
+								orderStatusSpecifier.setOrderStatus(orderModel, OrderStatus.REFUND_INITIATED);
+								mplCancelOrderTicketImpl.refundMapping(paymentTransactionModel.getCode(), orderModel);
+							}
 						}
 						else
 						{
-							//calling refund service where there will be cart only for CARD
-							mplJusPayRefundService.doRefund(auditModel.getAuditId(),
-									webHookModel.getOrderStatus().getCardResponse().getCardType());
+							orderStatusSpecifier.setOrderStatus(orderModel, OrderStatus.REFUND_INITIATED);
 						}
+
 					}
 					catch (final Exception e)
 					{
@@ -665,5 +683,77 @@ public class MplQcPaymentFailServiceImpl implements MplQcPaymentFailService
 		}
 
 	}
+	
+
+	/**
+	 * @param orderModel
+	 * @return
+	 */
+	private PaymentTransactionModel initiateRefund(final OrderModel order)
+	{
+		PaymentTransactionModel paymentTransactionModel = null;
+		final String uniqueRequestId = mplJusPayRefundService.getRefundUniqueRequestId();
+		try
+		{
+			paymentTransactionModel = mplJusPayRefundService.doRefund(order, order.getTotalPriceWithConv().doubleValue(),
+					PaymentTransactionType.CANCEL, uniqueRequestId);
+			if (null != paymentTransactionModel)
+			{
+				mplJusPayRefundService.attachPaymentTransactionModel(order, paymentTransactionModel);
+			}
+			else
+			{
+				LOG.error("Failed to Refund");
+			}
+		}
+		catch (final Exception e)
+		{
+			LOG.error(e.getMessage(), e);
+			paymentTransactionModel = mplJusPayRefundService.createPaymentTransactionModel(order, "FAILURE",
+					order.getTotalPriceWithConv(), PaymentTransactionType.CANCEL, "FAILURE", uniqueRequestId);
+			mplJusPayRefundService.attachPaymentTransactionModel(order, paymentTransactionModel);
+
+			// TISSIT-1784 Code addition started
+			if (CollectionUtils.isNotEmpty(order.getChildOrders()))
+			{
+				for (final OrderModel subOrderModel : order.getChildOrders())
+				{
+					if (subOrderModel != null && CollectionUtils.isNotEmpty(subOrderModel.getEntries()))
+					{
+						for (final AbstractOrderEntryModel subOrderEntryModel : subOrderModel.getEntries())
+						{
+							if (subOrderEntryModel != null)
+							{
+								//TISPRO-216 Starts
+								double refundAmount = 0D;
+								double deliveryCost = 0D;
+								if (subOrderEntryModel.getCurrDelCharge() != null)
+								{
+									deliveryCost = subOrderEntryModel.getCurrDelCharge().doubleValue();
+								}
+
+								refundAmount = subOrderEntryModel.getNetAmountAfterAllDisc().doubleValue() + deliveryCost;
+								refundAmount = mplJusPayRefundService.validateRefundAmount(refundAmount, subOrderModel);
+								//TISPRO-216 Ends
+
+								// Making RTM entry to be picked up by webhook job
+								final RefundTransactionMappingModel refundTransactionMappingModel = modelService
+										.create(RefundTransactionMappingModel.class);
+								refundTransactionMappingModel.setRefundedOrderEntry(subOrderEntryModel);
+								refundTransactionMappingModel.setJuspayRefundId(uniqueRequestId);
+								refundTransactionMappingModel.setCreationtime(new Date());
+								refundTransactionMappingModel.setRefundType(JuspayRefundType.CANCELLED_FOR_RISK);
+								refundTransactionMappingModel.setRefundAmount(new Double(refundAmount));//TISPRO-216 : Refund amount Set in RTM
+								modelService.save(refundTransactionMappingModel);
+							}
+						}
+					}
+				}
+			}
+			// TISSIT-1784 Code addition ended
+		}
+		return paymentTransactionModel;
+	}
+
 
 }

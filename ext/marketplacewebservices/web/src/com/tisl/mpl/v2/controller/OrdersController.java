@@ -768,6 +768,7 @@ public class OrdersController extends BaseCommerceController
 			 * "|").equals( getSessionService().getAttribute(WebConstants.ANONYMOUS_CHECKOUT_GUID))) { return
 			 * getCheckoutRedirectUrl(); }
 			 */
+			orderWsDTO.setPaymentMethod(orderModel.getModeOfOrderPayment());
 			if (null != orderDetail && orderDetail.getEntries() != null && !orderDetail.getEntries().isEmpty())
 			{
 				final SimpleDateFormat sdformat = new SimpleDateFormat(MarketplacewebservicesConstants.DATEFORMAT_FULL);
