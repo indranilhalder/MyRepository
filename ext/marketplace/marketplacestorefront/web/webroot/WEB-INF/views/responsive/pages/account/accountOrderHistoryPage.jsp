@@ -39,6 +39,7 @@
 	font-weight: bold;
 	padding: 2px;
 	border: 2px dashed;
+	position: relative !important;
 }
 
 .showStatementModel {
