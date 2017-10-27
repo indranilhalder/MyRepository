@@ -93,60 +93,33 @@ public class SalesOrderReverseXMLUtility
 	 * @Description: Generate XML Data for Order
 	 * @param orderData
 	 */
-	public String generateCanellOrderData(final List<OrderModel> orderData)
+	public void generateCanellOrderData(final List<OrderModel> orderModelList)
 	{
 
-		BulkSalesOrderXMLData xmlData = null;
 		List<SalesOrderXMLData> bulkSalesDataList = null;
-		String xmlString = MarketplacecommerceservicesConstants.EMPTYSPACE;
-		boolean invalidXMLToFICO = false;
 
 		try
 		{
-			if (null != orderData && !orderData.isEmpty())
+			if (null != orderModelList && !orderModelList.isEmpty())
 			{
-				xmlData = new BulkSalesOrderXMLData();
-				bulkSalesDataList = getParentOrderData(orderData);
-				if (null != bulkSalesDataList && !bulkSalesDataList.isEmpty())
+				bulkSalesDataList = getParentOrderData(orderModelList);
+				final int rowLimit = getConfigurationService().getConfiguration().getInt(
+						MarketplacecommerceservicesConstants.PAYMENTINFO_R_ROWLIMIT,0);
+				if (rowLimit > 0)
 				{
-					xmlData.setOrderDataList(bulkSalesDataList);
-					final JAXBContext context = JAXBContext.newInstance(BulkSalesOrderXMLData.class);
-					final Marshaller m = context.createMarshaller();
-					m.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
-					final StringWriter sw = new StringWriter();
-					m.marshal(xmlData, sw);
-					xmlString = sw.toString();
-					LOG.info(xmlString);
-
-					final DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-					factory.setIgnoringComments(true);
-					factory.setCoalescing(true); // Convert CDATA to Text nodes
-					factory.setNamespaceAware(false); // No namespaces: this is default factory.setValidating(false); //
-					// Don't validate DTD: also default
-
-					final DocumentBuilder parser = factory.newDocumentBuilder();
-
-					final Document document = parser.parse(new InputSource(new StringReader(xmlString)));
-
-					NodeList nm = null;
-					Node node = null;
-
-					nm = document.getElementsByTagName("SalesOrders");
-
-					if (null != nm)
+					int startIndex = 0;
+					final int listSize = bulkSalesDataList.size();
+					while (startIndex < listSize)
 					{
-						node = nm.item(0);
-						if (null != node && StringUtils.isEmpty(node.getTextContent()))
-						{
-							invalidXMLToFICO = true;
-						}
+						final int endIndex = (startIndex + rowLimit) < listSize ? (startIndex + rowLimit) : listSize;
+						final List<SalesOrderXMLData> partSalesData = bulkSalesDataList.subList(startIndex, endIndex);
+						generatePartCanellOrderData(partSalesData);
+						startIndex += rowLimit;
 					}
-
-					if (!invalidXMLToFICO)
-					{
-						paymentInfoCancelService.paymentCancelRev(xmlString);
-					}
-
+				}
+				else
+				{
+					generatePartCanellOrderData(bulkSalesDataList);
 				}
 			}
 		}
@@ -163,7 +136,6 @@ public class SalesOrderReverseXMLUtility
 			ExceptionUtil.etailNonBusinessExceptionHandler(new EtailNonBusinessExceptions(e));
 		}
 
-		return xmlString;
 	}
 
 	private Map checkCanelReturn(final OrderModel orderModel)
@@ -1171,4 +1143,70 @@ public class SalesOrderReverseXMLUtility
 		return Registry.getApplicationContext().getBean("configurationService", ConfigurationService.class);
 	}
 
+	private void generatePartCanellOrderData(final List<SalesOrderXMLData> bulkSalesDataList)
+	{
+
+		BulkSalesOrderXMLData xmlData = null;
+		String xmlString = MarketplacecommerceservicesConstants.EMPTYSPACE;
+		boolean invalidXMLToFICO = false;
+
+		try
+		{
+			xmlData = new BulkSalesOrderXMLData();
+			if (null != bulkSalesDataList && !bulkSalesDataList.isEmpty())
+			{
+				xmlData.setOrderDataList(bulkSalesDataList);
+				final JAXBContext context = JAXBContext.newInstance(BulkSalesOrderXMLData.class);
+				final Marshaller m = context.createMarshaller();
+				m.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
+				final StringWriter sw = new StringWriter();
+				m.marshal(xmlData, sw);
+				xmlString = sw.toString();
+				LOG.info(xmlString);
+
+				final DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+				factory.setIgnoringComments(true);
+				factory.setCoalescing(true); // Convert CDATA to Text nodes
+				factory.setNamespaceAware(false); // No namespaces: this is default factory.setValidating(false); //
+				// Don't validate DTD: also default
+
+				final DocumentBuilder parser = factory.newDocumentBuilder();
+
+				final Document document = parser.parse(new InputSource(new StringReader(xmlString)));
+
+				NodeList nm = null;
+				Node node = null;
+
+				nm = document.getElementsByTagName("SalesOrders");
+
+				if (null != nm)
+				{
+					node = nm.item(0);
+					if (null != node && StringUtils.isEmpty(node.getTextContent()))
+					{
+						invalidXMLToFICO = true;
+					}
+				}
+
+				if (!invalidXMLToFICO)
+				{
+					paymentInfoCancelService.paymentCancelRev(xmlString);
+				}
+
+			}
+		}
+		catch (final EtailBusinessExceptions e)
+		{
+			ExceptionUtil.etailBusinessExceptionHandler(e, null);
+		}
+		catch (final EtailNonBusinessExceptions e)
+		{
+			ExceptionUtil.etailNonBusinessExceptionHandler(e);
+		}
+		catch (final Exception e)
+		{
+			ExceptionUtil.etailNonBusinessExceptionHandler(new EtailNonBusinessExceptions(e));
+		}
+
+	}
 }

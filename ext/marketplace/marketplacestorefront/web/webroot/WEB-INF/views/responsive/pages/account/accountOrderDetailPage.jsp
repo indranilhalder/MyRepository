@@ -3667,6 +3667,13 @@ $("#saveBlockData").click(function(){
 						$(this).find("ul>li.progress.processing span.dot:not(.inactive)").last().parents("li.progress").prevAll().addClass("full_track");
 					});
 			});
+			/* start change of PRDI-527 */
+			var ua_check = window.navigator.userAgent;
+			var msie_check = ua_check.indexOf("MSIE ");
+			if(msie_check > 0 || !!navigator.userAgent.match(/Trident.*rv\:11\./)){
+				$("body .account .right-account .order-history.order-details li.item .status").css("right", "350");
+			}
+			/* end change of PRDI-527 */
 		</script>
 
 		<!--   AWB CSS for PopUp -->

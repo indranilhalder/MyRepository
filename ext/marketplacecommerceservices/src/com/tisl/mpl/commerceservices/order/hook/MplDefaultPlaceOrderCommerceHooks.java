@@ -2766,8 +2766,45 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 				&& sequenceGeneratorApplicable.equalsIgnoreCase(MarketplacecclientservicesConstants.TRUE))
 		{
 			final String subOrderIdSequence = getMplCommerceCartService().generateSubOrderId();
-			subOrderID = dateFormat.format(date).toString().concat(middlecharacters).concat(middleDigits).concat(middlecharacters)
-					.concat(subOrderIdSequence);
+
+
+			//orderId fix-INC144318679
+
+			if (!subOrderIdSequence.isEmpty())
+			{
+				switch (subOrderIdSequence.length())
+				{
+					case 6:
+						subOrderID = dateFormat.format(date).toString().concat(middlecharacters).concat(middleDigits)
+								.concat(middlecharacters).concat(subOrderIdSequence);
+						break;
+					case 7:
+						subOrderID = dateFormat.format(date).toString().concat(middlecharacters).concat(twoZero)
+								.concat(subOrderIdSequence.substring(0, 1)).concat(middlecharacters)
+								.concat(subOrderIdSequence.substring(1));
+						break;
+					case 8:
+						subOrderID = dateFormat.format(date).toString().concat(middlecharacters).concat(oneZero)
+								.concat(subOrderIdSequence.substring(0, 2)).concat(middlecharacters)
+								.concat(subOrderIdSequence.substring(2));
+						break;
+					case 9:
+						subOrderID = dateFormat.format(date).toString().concat(middlecharacters)
+								.concat(subOrderIdSequence.substring(0, 3)).concat(middlecharacters)
+								.concat(subOrderIdSequence.substring(3));
+						break;
+					default:
+						subOrderID = dateFormat.format(date).toString().concat(middlecharacters)
+								.concat(subOrderIdSequence.substring(0, 3)).concat(middlecharacters)
+								.concat(subOrderIdSequence.substring(3));
+				}
+			}
+
+			/*
+			 * subOrderID =
+			 * dateFormat.format(date).toString().concat(middlecharacters).concat(middleDigits).concat(middlecharacters)
+			 * .concat(subOrderIdSequence);
+			 */
 		}
 		else
 		{

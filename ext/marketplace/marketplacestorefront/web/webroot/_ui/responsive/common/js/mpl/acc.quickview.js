@@ -786,157 +786,254 @@ function selectWishlist_quick(i) {
 		}
 	});
 }*/
-function openPop_quick(ussidfromSeller){
-	
-	var loggedIn=$("#loggedIn").val();
 
-	var productCodePost = $("#productCodePost").val();
+function openPop_quick(ussidfromSeller) {
+
+	var loggedIn = $("#loggedIn").val();
+
+	var productCodePostQuickView = productCodeQuickView;
+	var productcodearray = [];
+	productcodearray.push(productCodePostQuickView);
 
 	var wishName = "";
-	
-	var ussidValue=$("#ussid_quick").val();
-  
-	/*if (wishListList == "") {
-		wishName = $("#defaultWishName").val();
-	} else {
-		wishName = wishListList[$("#hidWishlist").val()];
+
+	var ussidValue = $("#ussid_quick").val();
+
+	var isMSDEnabled = $("input[name=isMSDEnabled]").val();
+	if (isMSDEnabled === 'true') {
+
+		var isApparelExist = $("input[name=isApparelExist]").val();
+
+		var salesHierarchyCategoryMSD = $(
+				"input[name=salesHierarchyCategoryMSD]").val();
+
+		var rootCategoryMSD = $("input[name=rootCategoryMSD]").val();
+
+		var productCodeMSD = $("input[name=productCodeMSD]").val();
+
+		var priceformad = $("input[id=price-for-mad]").val();
+
+		if (typeof isMSDEnabled === 'undefined') {
+			isMSDEnabled = false;
+		}
+
+		if (typeof isApparelExist === 'undefined') {
+			isApparelExist = false;
+		}
 	}
-	if(wishName==""){
-		var msg=$('#wishlistnotblank').text();
-		$('#addedMessage').show();
-		$('#addedMessage').html(msg);
-		return false;
-	}
-    if(wishName==undefined||wishName==null){
-    	if(alreadyAddedWlName_pdp!=undefined || alreadyAddedWlName_pdp!=""){
-    		if(alreadyAddedWlName_pdp=="[]"){
-    			$("#wishlistErrorId_pdp").html("Please select a wishlist");
-    		}
-    		else{
-    			alreadyAddedWlName_pdp=alreadyAddedWlName_pdp.replace("[","");
-    			alreadyAddedWlName_pdp=alreadyAddedWlName_pdp.replace("]","");
-    			$("#wishlistErrorId_pdp").html("Product already added in your wishlist "+alreadyAddedWlName_pdp);
-    		}
-    		$("#wishlistErrorId_pdp").css("display","block");
-    	}
-    	return false;
-    }*/
+
 	var requiredUrl = ACC.config.encodedContextPath + "/p"
 			+ "-addToWishListInPDP";
-    var sizeSelected=true;
-    if(!$("#quickViewVariant li ").hasClass("selected") && typeof($(".variantFormLabel").html())== 'undefined' && $("#ia_product_rootCategory_type").val()!='Electronics' && $("#ia_product_rootCategory_type").val()!='TravelAndLuggage'){
-    	sizeSelected=false;
-    }
-	var dataString = 'wish=' + wishName + '&product=' + productCodePost
-			+ '&ussid=' + ussidValue+'&sizeSelected=' + sizeSelected;
+	var sizeSelected = true;
 
-	if(loggedIn == 'false') {
+	if (!$("#quickViewVariant li ").hasClass("selected")
+			&& typeof ($(".variantFormLabel").html()) == 'undefined'
+			&& $("#ia_product_rootCategory_type").val() != 'Electronics') {
+		sizeSelected = false;
+	}
+
+	var dataString = 'wish=' + wishName + '&product=' + productCodePostQuickView
+			+ '&ussid=' + ussidValue + '&sizeSelected=' + sizeSelected;
+	
+	// if(loggedIn == 'false') {
+	if (!headerLoggedinStatus) {
 		$("div.wishAddLoginQv").addClass("active");
-		setTimeout(function(){
+		setTimeout(function() {
 			$("div.wishAddLoginQv").removeClass("active")
-		},3000);
+		}, 3000);
+	} else {
+		var isInWishlist = getLastModifiedWishlistQuick(ussidValue);
+		if (isInWishlist) {
+			removeFromWishlistInQuickView(wishName, productCodePostQuickView,
+					ussidValue, isMSDEnabled, isApparelExist, rootCategoryMSD,
+					salesHierarchyCategoryMSD, priceformad, "INR");
+		} else {
+			$
+					.ajax({
+						contentType : "application/json; charset=utf-8",
+						url : requiredUrl,
+						data : dataString,
+						dataType : "json",
+						success : function(data) {
+							if (data == true) {
+								// $("#radio_" +
+								// $("#hidWishlist").val()).prop("disabled",
+								// true);
+								// var msg=$('#wishlistSuccess').text();
+								// $('#addedMessage').show();
+								// $('#addedMessage').html(msg);
+								$("div.wishAddSucessQv").addClass("active");
+								$('.wishlist-icon-qv').addClass("added");
+								setTimeout(function() {
+									$("div.wishAddSucessQv").removeClass(
+											"active")
+								}, 3000);
+								$("#add_to_wishlist_quick").attr("disabled",
+										true);
+								$(
+										'.add_to_cart_form .out_of_stock #add_to_wishlist_quick')
+										.addClass("wishDisabled");
+								$(
+										'.product-info .picZoomer-pic-wp .zoom a,.product-image-container.device a.wishlist-icon')
+										.addClass("added");
+								/*
+								 * setTimeout(function() {
+								 * $("#addedMessage").fadeOut().empty(); },
+								 * 1500);
+								 */
+								// $('#addedMessage').delay(3000).fadeOut('slow');
+								// // TISTI-225
+								populateMyWishlistFlyOut(wishName);
+
+								// For MSD
+								if (isMSDEnabled === 'true') {
+									if (Boolean(isMSDEnabled)
+											&& Boolean(isApparelExist)
+											&& (rootCategoryMSD === 'Clothing')) {
+										ACC.track.trackAddToWishListForMAD(
+												productCodeMSD,
+												salesHierarchyCategoryMSD,
+												priceformad, "INR");
+									}
+								}
+								// End MSD
+
+								if (typeof utag != "undefined") {
+									utag
+											.link({
+												link_obj : this,
+												link_text : "add_to_wishlist_quickview",
+												event_type : "add_to_wishlist_quickview",
+												product_sku_wishlist : productarray
+											});
+								}
+
+								// openPop(ussidValue);
+								// $('#myModal').modal('hide');
+								//	
+							}
+							/*
+							 * else{
+							 * $("div.wishAlreadyAddedQv").addClass("active");
+							 * setTimeout(function(){
+							 * $("div.wishAlreadyAddedQv").removeClass("active")
+							 * },3000); if(typeof utag !="undefined"){
+							 * utag.link({error_type : 'wishlist_error'}); } }
+							 */
+						},
+					});
+
+			// $('a.wishlist#wishlist').popover('hide');
+			// $('input.wishlist#add_to_wishlist').popover('hide');
+
+			setTimeout(function() {
+				$('a.wishlist#wishlist').popover('hide');
+				$('input.wishlist#add_to_wishlist').popover('hide');
+			}, 0);
+
+		}
+
 	}
-	else {
-	 		
-		$.ajax({
-			contentType : "application/json; charset=utf-8",
-			url : requiredUrl,
-			data : dataString,
-			dataType : "json",
-			success : function(data) {
-				if (data == true) {
-					console.log('Inside data true'); //TPR-5787
-					//$("#radio_" + $("#hidWishlist").val()).prop("disabled", true);
-					//var msg=$('#wishlistSuccess').text();
-					//$('#addedMessage').show();
-					//$('#addedMessage').html(msg);
-					$("div.wishAddSucessQv").addClass("active");
-					$('.wishlist-icon-qv').addClass("added");
-					setTimeout(function(){
-						$("div.wishAddSucessQv").removeClass("active")
-					},3000);
-					$("#add_to_wishlist_quick").attr("disabled",true);
-					$('.add_to_cart_form .out_of_stock #add_to_wishlist_quick').addClass("wishDisabled");
-					$('.product-info .picZoomer-pic-wp .zoom a,.product-image-container.device a.wishlist-icon').addClass("added");
-					/*setTimeout(function() {
-						  $("#addedMessage").fadeOut().empty();
-						}, 1500);*/
-					//$('#addedMessage').delay(3000).fadeOut('slow'); // TISTI-225
-					populateMyWishlistFlyOut(wishName);
-					
-					//For MSD
-					var isMSDEnabled =  $("input[name=isMSDEnabled]").val();								
-					if(isMSDEnabled === 'true')
-					{
-					
-					var isApparelExist  = $("input[name=isApparelExist]").val();
-							
-					var salesHierarchyCategoryMSD =  $("input[name=salesHierarchyCategoryMSD]").val();
-					
-					var rootCategoryMSD  = $("input[name=rootCategoryMSD]").val();
-						
-					var productCodeMSD =  $("input[name=productCodeMSD]").val();
-							
-					var priceformad =  $("input[id=price-for-mad]").val();
-								
-					
-					if(typeof isMSDEnabled === 'undefined')
-					{
-						isMSDEnabled = false;						
+}
+
+function getLastModifiedWishlistQuick(ussidValue) {
+	var isInWishlist = false;
+	var requiredUrl = ACC.config.encodedContextPath + "/p"
+			+ "-getLastModifiedWishlistByUssid";
+	var dataString = 'ussid=' + ussidValue;
+	$
+			.ajax({
+				contentType : "application/json; charset=utf-8",
+				url : requiredUrl,
+				data : dataString,
+				dataType : "json",
+				async : false,
+				success : function(data) {
+					if (data == true) {
+						isInWishlist = true;
+						$(
+								'.product-info .picZoomer-pic-wp .zoom a,.product-image-container.device a.wishlist-icon')
+								.addClass("added");
+						$("#add_to_wishlist_quick").attr("disabled", true);
+						$(
+								'.add_to_cart_form .out_of_stock #add_to_wishlist_quick')
+								.addClass("wishDisabled");
 					}
-					
-					if(typeof isApparelExist === 'undefined')
-					{
-						isApparelExist = false;						
-					}	
-					
-					if(Boolean(isMSDEnabled) && Boolean(isApparelExist) && (rootCategoryMSD === 'Clothing'))
-						{					
-						ACC.track.trackAddToWishListForMAD(productCodeMSD, salesHierarchyCategoryMSD, priceformad,"INR");
-						}	
-					}
-					//End MSD
-					// For TPR-4712,TPR-4725
-					var productCode = $('#cboxLoadedContent #productCode').val();
-					var productarray=[];
-					productarray.push(productCode);
-					if(typeof utag !="undefined"){
-						utag.link({
-							link_text: "add_to_wishlist_quickview" ,
-							event_type : "add_to_wishlist_quickview" ,
-							product_sku_wishlist : productarray
-						});
-					}
-					
-					
-					//openPop(ussidValue);
-				//	$('#myModal').modal('hide');
-				//	
+
+				},
+				error : function(xhr, status, error) {
+					$("#wishlistErrorId_pdp").html(
+							"Could not add the product in your wishlist");
 				}
-				else{
-					console.log('Inside data false'); //TPR-5787
-					$("div.wishAlreadyAddedQv").removeClass("active");//TPR-5787
-					//$("div.wishAlreadyAddedQv").addClass("active");//TPR-5787
-					//setTimeout(function(){//TPR-5787
-					//	$("div.wishAlreadyAddedQv").removeClass("active")//TPR-5787
-					//},3000);//TPR-5787
-					if(typeof utag !="undefined"){
-						utag.link({error_type : 'wishlist_error'});
+			});
+	return isInWishlist;
+}
+
+function removeFromWishlistInQuickView(wishlistName, productCode, ussid,
+		isMSDEnabled, isApparelExist, rootCategoryMSD, catID, price, currency) {
+	var requiredUrl = ACC.config.encodedContextPath + "/p" + "-removeFromWl";
+	var dataString = 'wish=' + wishlistName + '&product=' + productCode
+			+ '&ussid=' + ussid;
+
+	$
+			.ajax({
+				url : requiredUrl,
+				type : "GET",
+				data : dataString,
+				dataType : "json",
+				cache : false,
+				contentType : "application/json; charset=utf-8",
+				success : function(data) {
+					// FOR MSD
+					if (Boolean(isMSDEnabled) && Boolean(isApparelExist)
+							&& (rootCategoryMSD == 'Clothing')) {
+						try {
+							track([ 'removeFromWishlist', productCode, catID,
+									price, currency ]);
+						} catch (err) {
+							console
+									.log('Error Adding trackers when remove from cart: '
+											+ err.message);
 						}
+					}
+
+					$(".wishRemoveSucessQV").addClass("active");
+					$('.wishlist-icon-qv').removeClass("added");
+					setTimeout(function() {
+						$(".wishRemoveSucessQV").removeClass("active")
+					}, 3000)
+					$("#add_to_wishlist_quick").attr("disabled", false);
+					$('.add_to_cart_form .out_of_stock #add_to_wishlist_quick')
+							.removeClass("wishDisabled");
+					$(
+							'.product-info .picZoomer-pic-wp .zoom a,.product-image-container.device a.wishlist-icon')
+							.removeClass("added");
+					populateMyWishlistFlyOut(wishlistName);
+
+					/* TPR-646 Changes */
+					utag.link({
+						"link_obj" : this,
+						"link_text" : 'remove_from_wishlist_quickview',
+						"event_type" : 'remove_from_wishlist_quickview',
+						"product_sku_wishlist" : "" + productCode
+					});
+
+					// END MSD
+					// window.location.href = ACC.config.encodedContextPath +
+					// "/my-account/wishList";
+					//window.location.href = ACC.config.encodedContextPath + "/my-account/viewParticularWishlist?particularWishlist="+wishlistName;
+				},
+				error : function(xhr, status, error) {
+					if (status == "parsererror") {
+						window.location.href = ACC.config.encodedContextPath
+								+ "/login";
+					} else {
+
+						alert("Some issues are there with Wishlist at this time. Please try later or contact our helpdesk");
+					}
+
 				}
-			},
-		});
-	
-	//$('a.wishlist#wishlist').popover('hide');
-	//$('input.wishlist#add_to_wishlist').popover('hide');
-	
-		/*setTimeout(function() {
-			$('a.wishlist#wishlist').popover('hide');
-			$('input.wishlist#add_to_wishlist').popover('hide');
-
-			}, 0);*/
-	}
-
+			});
 }
 
 function loadDefaultWishListName_quick() {

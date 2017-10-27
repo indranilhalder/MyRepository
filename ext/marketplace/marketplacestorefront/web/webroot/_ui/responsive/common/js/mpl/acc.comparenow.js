@@ -256,6 +256,8 @@
 
                                         }	
                                         else {
+					    //INC144317579
+                                            $('#compare' + productCode).html('Add to Compare');
                                             $('#compareError')
                                                 .html(
                                                     "You can add maximum " + items + " products to compare");
