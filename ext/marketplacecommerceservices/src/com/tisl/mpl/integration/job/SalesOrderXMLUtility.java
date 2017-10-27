@@ -605,7 +605,6 @@ public class SalesOrderXMLUtility
 											else
 											{
 												merchantInfoXMlData.setMerchantCode(oModel.getPaymentProvider());
-												merchantInfoXMlData.setBucketId(oModel.getPaymentProvider());
 											}
 											if (null != oModel.getCode())
 											{
@@ -789,7 +788,6 @@ public class SalesOrderXMLUtility
 					else
 					{
 						merchantInfoXMlData.setMerchantCode(oModel.getPaymentProvider());
-						merchantInfoXMlData.setBucketId(oModel.getPaymentProvider());
 					}
 					if (null != oModel.getCode())
 					{
