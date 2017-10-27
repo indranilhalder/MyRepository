@@ -51,16 +51,13 @@
 			</span>
 		</li>
 	</c:if>
-	<li class="shipping cliqCashAppliedInfo">
+	<%-- <li class="shipping cliqCashAppliedInfo">
 		<span class="shippingSpan"><spring:theme code="basket.page.totals.cliqcash"/></span>
 		<span class="pull-right">
 			<span id="finalCliqCashUsedDefault"><spring:theme code="basket.page.totals.cliqcashbefore"/></span>
 			<span id="finalCliqCashUsed"><spring:theme code="basket.page.totals.cliqcashbefore"/></span>
-			<%-- <ycommerce:testId code="Order_Totals_Delivery">
-				<format:price priceData="${cartData.deliveryCost}" displayFreeForZero="TRUE"/>
-			</ycommerce:testId> --%>
 		</span>
-	</li>
+	</li> --%>
 	
 	<li id="convChargeFieldId">
 		<span><spring:theme code="basket.page.totals.convenience"/></span>
@@ -114,10 +111,11 @@
 			 
 			  </c:when>
 			  <c:otherwise>
-				  <span class="defaultTotalPayablePrice"><span id="totalWithConvField" style="float: right">
+			  		<span id="totalWithConvField" style="float: right"><format:price priceData="${cartData.totalPrice}"/></span>
+				  <%-- <span class="defaultTotalPayablePrice"><span id="totalWithConvField" style="float: right">
 				   	<format:price priceData="${cartData.totalPrice}"/></span></span>
 					
-					<span class="splitTotalPayableInfo" style="float: right"><span class="splitTotalPayablePrice"></span></span>
+					<span class="splitTotalPayableInfo" style="float: right"><span class="splitTotalPayablePrice"></span></span> --%>
 			  </c:otherwise>
 			</c:choose>
 		</div>
@@ -144,11 +142,12 @@
 			  <format:price priceData="${cartTotalMrp}"/>
 			  </c:when>
 			  <c:otherwise>
-			  	<span class="defaultTotalPayablePrice">
+			  	<format:price priceData="${cartData.totalPrice}"/></span>
+			  	<%-- <span class="defaultTotalPayablePrice">
 			  		<span id="totalWithConvField">
 				   	<format:price priceData="${cartData.totalPrice}"/></span>
 					</span>
-					<span class="splitTotalPayableInfo"><span class="splitTotalPayablePrice"></span></span>
+					<span class="splitTotalPayableInfo"><span class="splitTotalPayablePrice"></span></span> --%>
 			  </c:otherwise>
 	  </c:choose>
       </ycommerce:testId></span></li>
@@ -210,7 +209,7 @@
 	<li class="total" id="total">
 		<div id="totalPriceConvChargeId">
 			<spring:theme code="basket.page.totals.total"/> 
-			<span id="totalWithConvField" style="float: right"><format:price priceData="${orderData.totalPrice}" /></span>
+			<span id="totalWithConvField" style="float: right"><format:price priceData="${orderData.totalPrice}"/></span>
 		</div>
 	</li>
 	
