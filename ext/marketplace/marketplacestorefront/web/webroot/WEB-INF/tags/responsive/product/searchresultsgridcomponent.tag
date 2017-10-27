@@ -80,7 +80,7 @@
 <c:when test="${searchPageData.pagination.numberOfPages > 1}">
 <div class="prev-block"><a href=""><span class="prev-page">Previous</span></a></div>
     <ul class="pagination-block">
-    	<c:forEach begin="1" end="${searchPageData.pagination.numberOfPages}" var="page">
+    	<c:forEach begin="1" end="${searchPageData.pagination.numberOfPages}" var="page" varStatus="loop">
         <li class="pageNoLi"><a class="pageNo" href="#nogo">${page}</a></li>
         </c:forEach>
     </ul>
