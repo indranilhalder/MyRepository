@@ -970,7 +970,6 @@ public class SalesOrderReverseXMLUtility
 											else
 											{
 												splitMerchantInfoXMlDataJuspay.setMerchantCode(oModel.getPaymentProvider());
-												splitMerchantInfoXMlDataJuspay.setBucketId(oModel.getPaymentProvider());
 											}
 											if (null != oModel.getCode())
 											{
@@ -1112,7 +1111,6 @@ public class SalesOrderReverseXMLUtility
 										else
 										{
 											merchantInfoXMlDataJuspay.setMerchantCode(oModel.getPaymentProvider());
-											merchantInfoXMlDataJuspay.setBucketId(oModel.getPaymentProvider());
 										}
 										if (null != oModel.getCode())
 										{
