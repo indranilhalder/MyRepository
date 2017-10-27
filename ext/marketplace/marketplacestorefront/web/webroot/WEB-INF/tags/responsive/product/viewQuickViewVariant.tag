@@ -260,9 +260,13 @@
 	</c:otherwise>
 	</c:choose>	
 	</p>
+	
+		<c:if test="${empty removeSizeGuide}">
         <a class="size-guide" href="${sizeGuideUrl}" role="button" data-toggle="modal" data-target="#popUpModal" data-productcode="${product.code}" data-sizeSelected="${selectedSize}">
 			<spring:theme code="product.variants.quickview.size.guide"/>
 		</a>
+		</c:if>
+		
 		<div class="select-size">
 		 <c:choose>
 		    <c:when test="${selectedSize!=null}"> 

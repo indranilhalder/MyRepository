@@ -184,9 +184,7 @@ import com.tisl.mpl.storefront.security.cookie.PDPPincodeCookieGenerator;
 import com.tisl.mpl.storefront.web.forms.SellerInformationDetailsForm;
 import com.tisl.mpl.util.ExceptionUtil;
 
-
 import atg.taglib.json.util.JSONException;
-
 
 import com.tisl.mpl.util.GenericUtilityMethods;
 
@@ -546,7 +544,8 @@ public class ProductPageController extends MidPageController
 			{
 				if (null != sessionService.getAttribute(MarketplacecommerceservicesConstants.SESSION_PINCODE))
 				{
-					model.addAttribute(ModelAttributetConstants.PINCODE, sessionService.getAttribute(ModelAttributetConstants.PINCODE));
+					model.addAttribute(ModelAttributetConstants.PINCODE,
+							sessionService.getAttribute(ModelAttributetConstants.PINCODE));
 				}
 
 				populateProductDetailForDisplay(productModel, model, request);
@@ -1861,7 +1860,7 @@ public class ProductPageController extends MidPageController
 			model.addAttribute(ModelAttributetConstants.PDP_SIZE_COUNTER, sizeCounter);
 			//UF-422 ends
 			//displayConfigurableAttribute(productData, model);
-			
+
 			//CKD:TPR-6804
 			if (ModelAttributetConstants.HOME_FURNISHING.equalsIgnoreCase(productData.getRootCategory()))
 			{
@@ -1950,6 +1949,11 @@ public class ProductPageController extends MidPageController
 				model.addAttribute(MarketplacecommerceservicesConstants.ALLVARIANTSSTRING, allVariantsString);
 			}
 			//returnStatement = ControllerConstants.Views.Fragments.Product.QuickViewPopup;
+
+			//Added for TPR-6855 : Quick View Changes
+			final String productCategoryType = productModel.getProductCategoryType();
+			removeSizeGuideForHome(productCategoryType, model);
+
 		}
 		catch (final EtailBusinessExceptions e)
 		{
@@ -2158,9 +2162,10 @@ public class ProductPageController extends MidPageController
 		try
 		{
 
-			final ProductData productData = productFacade.getProductForOptions(productModel, Arrays.asList(ProductOption.BASIC,
-					ProductOption.SUMMARY, ProductOption.DESCRIPTION, ProductOption.GALLERY, ProductOption.CATEGORIES,
-					ProductOption.PROMOTIONS, ProductOption.CLASSIFICATION, ProductOption.VARIANT_FULL));
+			final ProductData productData = productFacade.getProductForOptions(productModel,
+					Arrays.asList(ProductOption.BASIC, ProductOption.SUMMARY, ProductOption.DESCRIPTION, ProductOption.GALLERY,
+							ProductOption.CATEGORIES, ProductOption.PROMOTIONS, ProductOption.CLASSIFICATION,
+							ProductOption.VARIANT_FULL));
 			//UF-432
 			if (productModel instanceof PcmProductVariantModel)
 			{
@@ -2219,7 +2224,7 @@ public class ProductPageController extends MidPageController
 			/* final Map<String, String> deliveryModeATMap = productDetailsHelper.getDeliveryModeATMap(deliveryInfo); */
 			final Map<String, Map<String, Integer>> deliveryModeATMap = productDetailsHelper.getDeliveryModeATMap(deliveryInfo);
 			model.addAttribute(ControllerConstants.Views.Fragments.Product.DELIVERY_MODE_MAP, deliveryModeATMap);
-			
+
 
 			//TPR-6654
 			final String pincode = (String) sessionService.getAttribute(MarketplacecommerceservicesConstants.SESSION_PINCODE);
@@ -2230,7 +2235,7 @@ public class ProductPageController extends MidPageController
 				//model.addAttribute(ControllerConstants.Views.Fragments.Product.STORE_AVAIL, mplProductFacade.storeLocatorPDP(pincode));
 			}
 			//displayConfigurableAttribute(productData, model);
-			
+
 			//CKD:TPR-6804
 			if (ModelAttributetConstants.HOME_FURNISHING.equalsIgnoreCase(productData.getRootCategory()))
 			{
@@ -2258,8 +2263,8 @@ public class ProductPageController extends MidPageController
 			}
 
 			LOG.debug("===========After FASHIONJEWELLERY block=================");
-			final String validTabs = configurationService.getConfiguration().getString(
-					"mpl.categories." + productData.getRootCategory());
+			final String validTabs = configurationService.getConfiguration()
+					.getString("mpl.categories." + productData.getRootCategory());
 
 
 			//this method is called to fetch the details of seller specific description to show in return refund tab for fine jewellery.
@@ -2872,11 +2877,11 @@ public class ProductPageController extends MidPageController
 						if (null != productData.getRootCategory())
 						{
 
-							final String properitsValue = configurationService.getConfiguration().getString(
-									ModelAttributetConstants.CONFIGURABLE_ATTRIBUTE + productData.getRootCategory());
+							final String properitsValue = configurationService.getConfiguration()
+									.getString(ModelAttributetConstants.CONFIGURABLE_ATTRIBUTE + productData.getRootCategory());
 
-							final String descValues = getSiteConfigService().getProperty(
-									ModelAttributetConstants.DESC_PDP_PROPERTIES + productData.getRootCategory());
+							final String descValues = getSiteConfigService()
+									.getProperty(ModelAttributetConstants.DESC_PDP_PROPERTIES + productData.getRootCategory());
 							//for jwl certification
 							final String certificationValue = configurationService.getConfiguration().getString(
 									ModelAttributetConstants.CONFIGURABLE_ATTRIBUTE + productData.getRootCategory() + ".certification");
@@ -4549,11 +4554,13 @@ public class ProductPageController extends MidPageController
 	 *
 	 * @return Store details
 	 */
-	@RequestMapping(value = PRODUCT_OLD_URL_PATTERN + ControllerConstants.Views.Fragments.Product.STORE, method = RequestMethod.GET)
+	@RequestMapping(value = PRODUCT_OLD_URL_PATTERN
+			+ ControllerConstants.Views.Fragments.Product.STORE, method = RequestMethod.GET)
 	public String getAllStoreForPincode(
 			@PathVariable(value = ControllerConstants.Views.Fragments.Product.PINCODE) final String pincode,
 			@PathVariable(value = ControllerConstants.Views.Fragments.Product.USSID) final String ussId,
-			@PathVariable(value = ControllerConstants.Views.Fragments.Product.PRODUCT_CODE) final String productCode, final Model model)
+			@PathVariable(value = ControllerConstants.Views.Fragments.Product.PRODUCT_CODE) final String productCode,
+			final Model model)
 	{
 		if (LOG.isDebugEnabled())
 		{
@@ -4580,9 +4587,8 @@ public class ProductPageController extends MidPageController
 			catch (final ClientEtailNonBusinessExceptions e)
 			{
 				LOG.error("::::::Exception in calling OMS Pincode service:::::::::" + e.getErrorCode());
-				if (null != e.getErrorCode()
-						&& ("O0001".equalsIgnoreCase(e.getErrorCode()) || "O0002".equalsIgnoreCase(e.getErrorCode()) || "O0007"
-								.equalsIgnoreCase(e.getErrorCode())))
+				if (null != e.getErrorCode() && ("O0001".equalsIgnoreCase(e.getErrorCode())
+						|| "O0002".equalsIgnoreCase(e.getErrorCode()) || "O0007".equalsIgnoreCase(e.getErrorCode())))
 				{
 					storeLocationRequestDataList = pincodeServiceFacade.getStoresFromCommerce(pincode, ussId);
 					if (storeLocationRequestDataList.size() > 0)
@@ -4672,8 +4678,8 @@ public class ProductPageController extends MidPageController
 							{
 								posData = pointOfServiceConverter.convert(pointOfServiceModel);
 								distance = pincodeService.calculateDistance(myLocation.getGPS(), pointOfServiceModel);
-								posData.setDistanceKm(new BigDecimal(distance.doubleValue()).setScale(2, RoundingMode.HALF_UP)
-										.doubleValue());
+								posData.setDistanceKm(
+										new BigDecimal(distance.doubleValue()).setScale(2, RoundingMode.HALF_UP).doubleValue());
 								posData.setStatus(MarketplacecommerceservicesConstants.KM);
 								posDataList.add(posData);
 							}
@@ -4750,8 +4756,8 @@ public class ProductPageController extends MidPageController
 							{
 								posData = pointOfServiceConverter.convert(pointOfServiceModel);
 								distance = pincodeService.calculateDistance(myLocation.getGPS(), pointOfServiceModel);
-								posData.setDistanceKm(new BigDecimal(distance.doubleValue()).setScale(2, RoundingMode.HALF_UP)
-										.doubleValue());
+								posData.setDistanceKm(
+										new BigDecimal(distance.doubleValue()).setScale(2, RoundingMode.HALF_UP).doubleValue());
 								posData.setStatus(MarketplacecommerceservicesConstants.KM);
 								posDataList.add(posData);
 							}
