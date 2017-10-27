@@ -117,7 +117,7 @@
 				  <span class="defaultTotalPayablePrice"><span id="totalWithConvField" style="float: right">
 				   	<format:price priceData="${cartData.totalPrice}"/></span></span>
 					
-					<span class="splitTotalPayableInfo" style="float: right">&#8377;<span class="splitTotalPayablePrice"></span></span>
+					<span class="splitTotalPayableInfo" style="float: right"><span class="splitTotalPayablePrice"></span></span>
 			  </c:otherwise>
 			</c:choose>
 		</div>
@@ -148,7 +148,7 @@
 			  		<span id="totalWithConvField">
 				   	<format:price priceData="${cartData.totalPrice}"/></span>
 					</span>
-					<span class="splitTotalPayableInfo">&#8377;<span class="splitTotalPayablePrice"></span></span>
+					<span class="splitTotalPayableInfo"><span class="splitTotalPayablePrice"></span></span>
 			  </c:otherwise>
 	  </c:choose>
       </ycommerce:testId></span></li>

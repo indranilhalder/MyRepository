@@ -5740,7 +5740,7 @@ function useWalletForPaymentAjax(){
 					 $("#finalCliqCashUsed").html("&#8377;"+totalPayable);
 				 }
 				  
-				 $(".splitTotalPayablePrice").html(0);
+				 $(".splitTotalPayablePrice").html("&#8377;"+0);
 				
 			}else{
 				//alert(data.disableJsMode);
@@ -5762,7 +5762,7 @@ function useWalletForPaymentAjax(){
 					 $("#finalCliqCashUsed").html("&#8377;"+availableCliqCash);
 				 }
 				 
-				 $(".splitTotalPayablePrice").html(splitPayable);
+				 $(".splitTotalPayablePrice").html("&#8377;"+splitPayable);
 			}
 		},	
 	   
