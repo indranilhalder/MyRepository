@@ -116,6 +116,7 @@ import com.tisl.mpl.core.enums.DeliveryFulfillModesEnum;
 import com.tisl.mpl.core.enums.PaymentModesEnum;
 import com.tisl.mpl.core.enums.WalletEnum;
 import com.tisl.mpl.core.model.BankforNetbankingModel;
+import com.tisl.mpl.core.model.CustomerWalletDetailModel;
 import com.tisl.mpl.core.model.MplPaymentAuditEntryModel;
 import com.tisl.mpl.core.model.MplPaymentAuditModel;
 import com.tisl.mpl.core.model.MplZoneDeliveryModeValueModel;
@@ -6329,7 +6330,7 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 					jsonObject.put("walletDisableMsg", "");
 				}
 			}
-			else
+			else if (!customer.getIsWalletActivated().booleanValue() && null != customer.getCustomerWalletDetail())
 			{
 				jsonObject.put("totalWalletAmt", "0");
 				jsonObject.put("totalCash", "" + 0);
@@ -6338,6 +6339,17 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 				jsonObject.put("disableWallet", true);
 				jsonObject.put("isWalletActive", false);
 				jsonObject.put("walletDisableMsg", Localization.getLocalizedString("text.cliq.cash.payment.wallet.disable.label"));
+			}
+			else
+			{
+				jsonObject.put("totalWalletAmt", "0");
+				jsonObject.put("totalCash", "" + 0);
+				jsonObject.put("totalEgvBalance", "" + 0);
+				jsonObject.put("walletPoint", "" + 0);
+				jsonObject.put("disableWallet", true);
+				jsonObject.put("isWalletActive", true);
+				jsonObject.put("walletDisableMsg", "");
+
 			}
 		}
 		catch (final Exception e)
@@ -6974,7 +6986,7 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 			final CustomerModel currentCustomer = (CustomerModel) userService.getCurrentUser();
 
 			if (null != currentCustomer && null != currentCustomer.getIsWalletActivated()
-					&& !currentCustomer.getIsWalletActivated().booleanValue())
+					&& !currentCustomer.getIsWalletActivated().booleanValue() && null == currentCustomer.getCustomerWalletDetail())
 			{
 				final QCCustomerRegisterRequest customerRegisterReq = new QCCustomerRegisterRequest();
 				final Customer custInfo = new Customer();
@@ -7000,6 +7012,17 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 				if (null != customerRegisterResponse && null != customerRegisterResponse.getResponseCode()
 						&& customerRegisterResponse.getResponseCode() == Integer.valueOf(0))
 				{
+					final CustomerWalletDetailModel custWalletDetail = modelService.create(CustomerWalletDetailModel.class);
+					custWalletDetail.setWalletId(customerRegisterResponse.getWallet().getWalletNumber());
+					custWalletDetail.setWalletState(customerRegisterResponse.getWallet().getStatus());
+					custWalletDetail.setCustomer(currentCustomer);
+					custWalletDetail.setServiceProvider("Tata Unistore Ltd");
+
+					modelService.save(custWalletDetail);
+
+					currentCustomer.setCustomerWalletDetail(custWalletDetail);
+					currentCustomer.setIsWalletActivated(Boolean.TRUE);
+					modelService.save(currentCustomer);
 
 					final RedimGiftCardResponse response = mplWalletFacade.getAddEGVToWallet(addToCardWalletForm.getCardNumber(),
 							addToCardWalletForm.getCardPin());
