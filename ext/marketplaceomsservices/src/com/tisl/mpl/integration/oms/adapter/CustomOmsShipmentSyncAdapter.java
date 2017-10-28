@@ -588,7 +588,7 @@ public class CustomOmsShipmentSyncAdapter extends DefaultOmsShipmentSyncAdapter 
 				//Added TPR-1348
 				if ("Y".equalsIgnoreCase(configurationService.getConfiguration().getString(
 						MarketplaceomsservicesConstants.AUTO_REFUND_ENABLED))
-						&& ConsignmentStatus.RETURN_CLOSED.equals(shipmentNewStatus))
+						&& ConsignmentStatus.RETURN_CLOSED.equals(shipmentNewStatus) && !isOrderCOD(orderModel)) //Changed for SDI-930
 				{
 					startAutomaticRefundProcess(orderModel); //Start the new Automatic Process
 				}
@@ -1516,15 +1516,15 @@ public class CustomOmsShipmentSyncAdapter extends DefaultOmsShipmentSyncAdapter 
 	 * ConsignmentModel consignment : orderModel.getConsignments()) { for (final ConsignmentEntryModel s :
 	 * consignment.getConsignmentEntries()) { if (s.getOrderEntry().getEntryNumber().equals(line.getOrderLineId())) {
 	 * return consignment; } }
-	 * 
-	 * 
-	 * 
-	 * 
+	 *
+	 *
+	 *
+	 *
 	 * }
-	 * 
-	 * 
-	 * 
-	 * 
+	 *
+	 *
+	 *
+	 *
 	 * return null; }
 	 */
 
@@ -1704,6 +1704,36 @@ public class CustomOmsShipmentSyncAdapter extends DefaultOmsShipmentSyncAdapter 
 		this.businessProcessService = businessProcessService;
 	}
 
+	//Added for SDI-930
+	private boolean isOrderCOD(final OrderModel order)
+	{
+		final List<PaymentTransactionModel> tranactions = new ArrayList<PaymentTransactionModel>(order.getPaymentTransactions());
+		boolean flag = false;
+		if (CollectionUtils.isNotEmpty(tranactions))
+		{
+			for (final PaymentTransactionModel transaction : tranactions)
+			{
+				if (CollectionUtils.isNotEmpty(transaction.getEntries()))
+				{
+					for (final PaymentTransactionEntryModel entry : transaction.getEntries())
+					{
+						if (entry.getPaymentMode() != null && entry.getPaymentMode().getMode() != null
+								&& entry.getPaymentMode().getMode().equalsIgnoreCase("COD"))
+						{
+							flag = true;
+							break;
+						}
+					}
+				}
+				if (flag)
+				{
+					break;
+				}
+			}
+		}
+
+		return flag;
+	}
 
 	private void startAutomaticRefundProcess(final OrderModel orderModel)
 	{

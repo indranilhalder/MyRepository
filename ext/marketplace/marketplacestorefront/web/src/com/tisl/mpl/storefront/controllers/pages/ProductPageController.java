@@ -1377,12 +1377,12 @@ public class ProductPageController extends MidPageController
 					}
 					cookie.setDomain(domain);
 					response.addCookie(cookie);
-					sessionService.setAttribute(MarketplacecommerceservicesConstants.SESSION_PINCODE, pin);
+					//sessionService.setAttribute(MarketplacecommerceservicesConstants.SESSION_PINCODE, pin);
 				}
 				else
 				{
 					pdpPincodeCookie.addCookie(response, pin);
-					sessionService.setAttribute(MarketplacecommerceservicesConstants.SESSION_PINCODE, pin);
+					//sessionService.setAttribute(MarketplacecommerceservicesConstants.SESSION_PINCODE, pin);
 				}
 				final PincodeModel pinCodeModelObj = pincodeServiceFacade.getLatAndLongForPincode(pin);
 				final LocationDTO dto = new LocationDTO();
@@ -2084,13 +2084,14 @@ public class ProductPageController extends MidPageController
 			final Map<String, Map<String, Integer>> deliveryModeATMap = productDetailsHelper.getDeliveryModeATMap(deliveryInfo);
 			model.addAttribute(ControllerConstants.Views.Fragments.Product.DELIVERY_MODE_MAP, deliveryModeATMap);
 			//TPR-6654
-			final String pincode = (String) sessionService.getAttribute(MarketplacecommerceservicesConstants.SESSION_PINCODE);
-			//			sessionService.setAttribute(MarketplacecommerceservicesConstants.SESSION_PINCODE, pincode);
-			if (StringUtils.isNotEmpty(pincode))
-			{
-				model.addAttribute(ModelAttributetConstants.PINCODE, pincode);
-				//model.addAttribute(ControllerConstants.Views.Fragments.Product.STORE_AVAIL, mplProductFacade.storeLocatorPDP(pincode));
-			}
+			/*
+			 * final String pincode = (String)
+			 * sessionService.getAttribute(MarketplacecommerceservicesConstants.SESSION_PINCODE); //
+			 * sessionService.setAttribute(MarketplacecommerceservicesConstants.SESSION_PINCODE, pincode); if
+			 * (StringUtils.isNotEmpty(pincode)) { model.addAttribute(ModelAttributetConstants.PINCODE, pincode);
+			 * //model.addAttribute(ControllerConstants.Views.Fragments.Product.STORE_AVAIL,
+			 * mplProductFacade.storeLocatorPDP(pincode)); }
+			 */
 			displayConfigurableAttribute(productData, model);
 			//if (productModel.getProductCategoryType().equalsIgnoreCase(ELECTRONICS))
 
@@ -2193,6 +2194,24 @@ public class ProductPageController extends MidPageController
 				model.addAttribute(ModelAttributetConstants.FACEBOOKAPPID, facebookAppid);
 			}
 			LOG.debug("===========After step3 block=================");
+
+			String prodImageUrl = MarketplacecclientservicesConstants.EMPTY;
+			/* INC144316527 */
+			if (CollectionUtils.isNotEmpty(productData.getImages()))
+			{
+				//Set product image(product) url
+				for (final ImageData img : productData.getImages())
+				{
+					if (null != img && StringUtils.isNotEmpty(img.getFormat())
+							&& img.getFormat().equalsIgnoreCase(MarketplacecommerceservicesConstants.PRODUCT_IMAGE))
+					{
+						prodImageUrl = img.getUrl().toString();
+					}
+				}
+			}
+			model.addAttribute(ModelAttributetConstants.PROD_IMAGE_URL, prodImageUrl);
+			/* INC144316527 */
+
 			/* Configurable tabs to be displayed in the PDP page */
 			model.addAttribute(ModelAttributetConstants.VALID_TABS, validTabs);
 			model.addAttribute(ModelAttributetConstants.SHARED_PATH, sharePath);

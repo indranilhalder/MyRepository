@@ -353,6 +353,9 @@ if(pathname =='/checkout/multi/delivery-method/select'){
 <div class="wishAddSucessQV">
 	<span><spring:theme code="mpl.pdp.wishlistSuccess"></spring:theme></span>
 </div>
+<div class="wishRemoveSucessQV">
+	<span><spring:theme code="mpl.pdp.wishlistRemoveSuccess"></spring:theme></span>
+</div>
 <div class="wishAddLoginQV">
 	<span><spring:theme code="product.wishListNonLoggedIn"></spring:theme></span>
 </div>
