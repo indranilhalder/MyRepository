@@ -14,7 +14,6 @@ import de.hybris.platform.core.model.order.AbstractOrderModel;
 import de.hybris.platform.core.model.order.CartModel;
 import de.hybris.platform.core.model.order.OrderModel;
 import de.hybris.platform.core.model.order.price.DiscountModel;
-import de.hybris.platform.core.model.user.AddressModel;
 import de.hybris.platform.core.model.user.CustomerModel;
 import de.hybris.platform.order.CalculationService;
 import de.hybris.platform.order.InvalidCartException;
@@ -151,7 +150,7 @@ public class MplCommercePlaceOrderStrategyImpl implements MplCommercePlaceOrderS
 				{
 					for (final CategoryModel cat : abstractOrderEntryModel.getProduct().getSupercategories())
 					{
-						if (StringUtils.isNotEmpty(cat.getCode()) && (cat.getCode().length() >= 5))
+						if (StringUtils.isNotEmpty(cat.getCode()) && (cat.getCode().length() >= 5) && (cat.getCode().startsWith("MPH")))
 						{
 							abstractOrderEntryModel.setProductRootCatCode(cat.getCode().substring(0, 5));
 							break;
@@ -175,45 +174,7 @@ public class MplCommercePlaceOrderStrategyImpl implements MplCommercePlaceOrderS
 			final OrderModel orderModel = getOrderService().createOrderFromCart(cartModel);
 
 			//TISPRO-540
-			 boolean isValidOrder = checkOrder(orderModel);
-			 
-			if(cartModel.getIsEGVCart().booleanValue()){
-				isValidOrder=cartModel.getIsEGVCart().booleanValue();
-				orderModel.setIsEGVCart(cartModel.getIsEGVCart());
-				orderModel.setRecipientId(cartModel.getRecipientId());
-				orderModel.setRecipientMessage(cartModel.getRecipientMessage());
-				orderModel.setGiftFromId(cartModel.getGiftFromId());
-				orderModel.setFromFirstName(cartModel.getFromFirstName());
-				orderModel.setFromLastName(cartModel.getFromLastName());
-				orderModel.setFromPhoneNo(cartModel.getFromPhoneNo());
-				if(orderModel.getUser()!=null && CollectionUtils.isNotEmpty(orderModel.getUser().getAddresses())){
-					orderModel.setDeliveryAddress((AddressModel) orderModel.getUser().getAddresses().toArray()[0]);
-				}else{
-					try{
-					AddressModel addressModel=new AddressModel();
-					addressModel.setLine1("1stFloor");
-					addressModel.setLine2("EmpirePlaza2");
-					addressModel.setAddressLine3("LalBahadurShastriMarg");
-					addressModel.setFirstname("Tata");
-					addressModel.setLastname("UnistoreLtd");
-					addressModel.setPhone1("");
-					addressModel.setState("Maharashtra");
-					addressModel.setCity("Mumbai");
-					addressModel.setPostalcode("400083");
-					addressModel.setOwner(orderModel.getUser());
-					getModelService().save(addressModel);
-					orderModel.setDeliveryAddress(addressModel);
-					}catch(Exception excpetion){
-						LOG.error("Error Occure while address create for egv order");
-					}
-				}
-				
-
-				
-				
-				LOG.error("****** MplCommercePlaceOrderStrategyImpl : placeOrder :EGV Order !!");
-			}
-			
+			final boolean isValidOrder = checkOrder(orderModel);
 
 			if (!isValidOrder)
 			{
@@ -531,11 +492,11 @@ public class MplCommercePlaceOrderStrategyImpl implements MplCommercePlaceOrderS
 
 	/*
 	 * @Desc To identify if already a order model exists with same cart guid //TISPRD-181
-	 * 
-	 * 
+	 *
+	 *
 	 * @param cartModel
-	 * 
-	 * 
+	 *
+	 *
 	 * @return boolean
 	 */
 	private OrderModel isOrderAlreadyExists(final CartModel cartModel)
@@ -592,19 +553,19 @@ public class MplCommercePlaceOrderStrategyImpl implements MplCommercePlaceOrderS
 	/*
 	 * private Double getTotalDiscountForTotalPrice(final List<AbstractOrderEntryModel> entries) { Double discount =
 	 * Double.valueOf(0);
-	 * 
-	 * 
+	 *
+	 *
 	 * double promoDiscount = 0.0D; double couponDiscount = 0.0D;
-	 * 
-	 * 
+	 *
+	 *
 	 * if (CollectionUtils.isNotEmpty(entries)) { for (final AbstractOrderEntryModel oModel : entries) { if (null !=
 	 * oModel && !oModel.getGiveAway().booleanValue()) { couponDiscount += (null == oModel.getCouponValue() ? 0.0d :
 	 * oModel.getCouponValue().doubleValue()); promoDiscount += (null == oModel.getTotalProductLevelDisc() ? 0.0d :
 	 * oModel.getTotalProductLevelDisc() .doubleValue()) + (null == oModel.getCartLevelDisc() ? 0.0d :
 	 * oModel.getCartLevelDisc().doubleValue()); } }
-	 * 
-	 * 
-	 * 
+	 *
+	 *
+	 *
 	 * discount = Double.valueOf(couponDiscount + promoDiscount); } return discount; }
 	 */
 

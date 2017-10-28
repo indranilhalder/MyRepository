@@ -11,6 +11,7 @@
 <%@ taglib prefix="address" tagdir="/WEB-INF/tags/responsive/address" %>
 <%@ taglib prefix="cart" tagdir="/WEB-INF/tags/responsive/cart" %>
 <%@ taglib prefix="format" tagdir="/WEB-INF/tags/shared/format" %>
+
 <c:url value="${currentStepUrl}" var="choosePaymentMethodUrl" />
 <spring:url value="/checkout/multi/debitTermsAndConditions" var="getDebitTermsAndConditionsUrl"/>
 
@@ -199,87 +200,15 @@
 					<%-- <button type="button" class="positive right cod-otp-button_top" onclick="mobileBlacklist()" ><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.sendOTP" text="Verify Number" /></button> --%>
 					<button type="button" class="button positive right cod_payment_button_top proceed-button" onclick="submitForm()" id="paymentButtonId_up"><spring:theme code="checkout.multi.paymentMethod.codContinue" /></button>
 					<button type="button" class="button btn-block payment-button make_payment_top_savedCard proceed-button" id="make_mrupee_payment_up"><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.paymentButton"/></button>
-					<button type="button" class="button topPlaceOrderBtn cliqCashPlaceOrderBtnMobile"><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.paymentButton"/></button>
-
-<spring:eval expression="T(de.hybris.platform.util.Config).getParameter('marketplace.header.wallet')" var="walletEnable"/>
-<!-- Added for Wallet -->
-<c:if test="${walletEnable}">
-<div class="giftCheckoutContainer">
-  <div id="walletContainerId" class="giftCheckoutContainerTable">
-		<div class="clearfix">
-			<div class="col-md-3">
-				<div class="giftInfoLeft">
-					<table>
-						<tr>
-							<td class="giftWalletImg"><img src="\_ui\responsive\common\images\walletImg.png" alt="wallet" /></td>
-							<td class="cliqTotalBalance"><p><strong><spring:theme code="text.cliq.cash.payment.cliqcash.label" /></strong></p><p class="cliqTotalBalanceLabel"><spring:theme code="text.cliq.cash.payment.total.label" /><strong>&#8377; 0</strong></p></td>
-						</tr>
-					</table>
-				</div>
-			</div>
-			<div class="col-md-9 giftCheckoutInfoMiddle">
-				<div class="giftCheckoutSectionSize col-xs-3">
-					<div class="giftCheckoutInnerCols1"><label for="cashOtherThanGiftCard"><p><spring:theme code="text.cliq.cash.payment.cash.label"/></p>&#8377; <span id="qcCashId"><strong>0</strong></span></label></div>
-				</div>
-				<div class="giftCheckoutSectionSize col-xs-3">
-					<div class="giftCheckoutInnerCols2"><label for="giftCardAmt"><p><spring:theme code="text.cliq.cash.payment.card.label"/></p>&#8377; <span id="qcGiftCardId"><strong>0</strong></span></label></div>
-				</div>
-				<div class="giftCheckoutSectionSize col-xs-3">
-					<div class="giftCheckoutInnerCols3"><label for="rewardPoints"><p><spring:theme code="text.cliq.cash.payment.points.label"/></p><p id="qcPointsId"><strong>0</strong></p></label></div>
-				</div>
-				<div class="giftCheckoutSectionSize col-xs-3">
-					<div class="giftCheckoutInnerCols4">
-						<label class="useGiftCardBtn"><input id="useGiftCardCheckbox" type="checkbox" />
-							<span id="useGiftBtnText"><spring:theme code="text.cliq.cash.payment.use.label"/></span>
-							<span id="unUseGiftBtnText"><spring:theme code="text.cliq.cash.payment.remove.label" /></span>
-						</label>
-					</div>
-				</div>
-			</div>
-			<div class="col-xs-12">
-				<div class="giftInfoBottom">
-					<div class="addNewGiftCard">
-					
-					<div class="modal fade" id="singlePageAddEGVPopup">
-						<div class="content">
-							<span id="modalBody"></span>
-							<!-- <button class="close" data-dismiss="modal"></button> -->
-						</div>
-						<div class="overlay" data-dismiss="modal">
-						</div>
-					</div>
-					
-						<span class="addNewCard" onclick="showAddEGV();"><a href="#"><spring:theme code="text.cliq.cash.payment.addcard.label" /></a></span>
-						<span class="viewCardTerms"><a href="#"><spring:theme code="text.cliq.cash.payment.term.label" /> </a></span>
-					</div>
-					<br />
-					<div class="payRemainingDesc">
-						<i id="juspayAmountId"><spring:theme code="text.cliq.cash.payment.juspyamt.label"/> <strong id="JuspayAmtId">&#8377; 0</strong> <spring:theme code="text.cliq.cash.payment.juspyamt1.label" /></i>
-						<i id="addCliqCashId"><spring:theme code="text.cliq.cash.payment.addcash.label" /> </i>
-						<i id="useCliqCashId"><spring:theme code="text.cliq.cash.usecash.label"  /> </i>
-						<i id="loadingCliqCashId"><spring:theme code="text.cliq.cash.loadingcash.label"  /> </i>
-					</div>
-				</div>
-			</div>
-		</div>
-	</div>
-</div>
-<div class="col-sm-12 alert alert-success cliqCashApplyAlert"></div>
-<br />&nbsp; <br />
-</c:if>
-<!-- End for Wallet -->
-
-
-
 
 				<!-- TISCR-305 ends -->	
 				<div class="left-block choose-payment">
 
 				<div class="checkout-indent payments tab-view">
 				<c:if test="${not is_responsive}">
-				
-				
 					<ul class="checkout-paymentmethod nav">
+
+
 
 
 					<c:forEach var="map" items="${paymentModes}">
@@ -351,23 +280,6 @@
 												<li>
 				       								<span id="viewPaymentCOD" onclick="viewPaymentCOD();">
 				       									<spring:theme code="checkout.multi.paymentMethod.selectMode.COD" />
-				       								</span>
-			       								</li>
-												
-													</c:when>
-											</c:choose>
-										</c:if>
-									</c:forEach>
-									
-									<c:forEach var="map" items="${paymentModes}">
-									<c:if test="${map.value eq true}">
-										<c:choose>
-			    							<c:when test="${map.key eq 'Paytm Wallet'}">
-			    								<input type="hidden" id="paytm" value="${map.value}" />
-												<li>
-				       								<span id="paytmId" onclick="#">
-				       								<img alt="Paytm" id="paytm_logo_img" src="\_ui\responsive\common\images\paytmLogo.png">
-<%-- 				       							     <spring:theme code="" /> --%>
 				       								</span>
 			       								</li>
 												
@@ -457,7 +369,7 @@
 																			src="${commonResourcePath}/images/Discover.png" alt=""></span>
 																	</c:when>
 																	<c:when
-																		test="${fn:containsIgnoreCase(map.value.cardBrand, 'discover')}">
+																		test="${fn:containsIgnoreCase(map.value.cardBrand, 'jcb')}">
 																		<span class="visa card_image"><img
 																			src="${commonResourcePath}/images/JCB.png" alt=""></span>
 																	</c:when>
@@ -526,7 +438,6 @@
 												<spring:theme
 													code="checkout.multi.paymentMethod.addPaymentDetails.paymentButton" />
 											</button>
-											<button type="button" class="button topPlaceOrderBtn"><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.paymentButton"/></button>
 		
 		
 		
@@ -612,7 +523,7 @@
 																			src="${commonResourcePath}/images/Discover.png" alt=""></span>
 																	</c:when>
 																	<c:when
-																		test="${fn:containsIgnoreCase(map.value.cardBrand, 'discover')}">
+																		test="${fn:containsIgnoreCase(map.value.cardBrand, 'jcb')}">
 																		<span class="visa card_image"><img
 																			src="${commonResourcePath}/images/JCB.png" alt=""></span>
 																	</c:when>
@@ -682,7 +593,6 @@
 												<spring:theme
 													code="checkout.multi.paymentMethod.addPaymentDetails.paymentButton" />
 											</button>
-											<button type="button" class="button topPlaceOrderBtn"><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.paymentButton"/></button>
 											<!-- <p class="payment-redirect">You will be re-directed to secure payment gateway</p> -->
 											<%-- <p onclick="teliumTrack()"><spring:theme code="checkout.multi.paymentMethod.selectMode.tnc.pretext" /><a href="<c:url value="${tncLink}"/>" target="_blank"><spring:theme code="checkout.multi.paymentMethod.selectMode.tnc" /></a><p> --%>
 										</div>
@@ -706,7 +616,7 @@
 					</ul>
 					</c:if>
 					<input type="hidden" id="paymentMode" name="paymentMode"/>
-					<ul class="tabs" id="paymentOptionsMobiles">
+					<ul class="tabs">
 					<c:if test="${is_responsive}">
 					<c:forEach var="map" items="${paymentModes}">
 									<c:if test="${map.value eq true}">
@@ -774,14 +684,14 @@
 														            <c:when test="${fn:containsIgnoreCase(map.value.cardBrand, 'discover')}">
 														           <span class="visa card_image"><img src="${commonResourcePath}/images/Discover.png" alt=""></span>
 														           </c:when>
-														           <c:when test="${fn:containsIgnoreCase(map.value.cardBrand, 'discover')}">
+														           <c:when test="${fn:containsIgnoreCase(map.value.cardBrand, 'jcb')}">
 														           <span class="visa card_image"><img src="${commonResourcePath}/images/JCB.png" alt=""></span>
 														           </c:when>
 														           <c:otherwise>
 																	<span class="visa card_image"><img src="${commonResourcePath}/images/Visa.png" alt=""></span>
 																	</c:otherwise>   
 														        </c:choose>		
-										                 		<input type="radio" data-id="savedCCard" name="creditCards" class="card_token creditCardsRadio" id="cc${status.index}"  value="${map.value.cardToken}" onchange="savedCreditCardRadioChange(cc${status.index});"/>
+										                 		<input type="radio" data-id="savedCCard" name="creditCards" class="card_token creditCardsRadio" id="cc${status.index}"  value="${map.value.cardToken}" onchange="savedCreditCardRadioChange('cc${status.index}');"/>
 									                 	 		<label for="cc${status.index}" data-id="savedCCard" class="numbers">
 									                 	 			<span>${map.value.cardBrand}</span> ending in ${map.value.cardEndingDigits}</label>
 									                 	 			<!-- <span class="saved">Saved card</span> -->
@@ -1024,7 +934,6 @@
 			            		<div class="pay newCardPaymentCC">
 									
 									<button type="submit" class="make_payment button btn-block payment-button" id="make_cc_payment"><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.paymentButton"/></button>
-									<button type="button" class="button topPlaceOrderBtn"><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.paymentButton"/></button>
 									<!-- <p class="payment-redirect">You will be re-directed to secure payment gateway</p> -->
 									<%-- <p onclick="teliumTrack()"><spring:theme code="checkout.multi.paymentMethod.selectMode.tnc.pretext" /><a href="<c:url value="${tncLink}"/>" target="_blank"><spring:theme code="checkout.multi.paymentMethod.selectMode.tnc" /></a></p> --%>
 								</div>
@@ -1101,7 +1010,7 @@
 														            <c:when test="${fn:containsIgnoreCase(map.value.cardBrand, 'discover')}">
 														           <span class="visa card_image"><img src="${commonResourcePath}/images/Discover.png" alt=""></span>
 														           </c:when>
-														           <c:when test="${fn:containsIgnoreCase(map.value.cardBrand, 'discover')}">
+														           <c:when test="${fn:containsIgnoreCase(map.value.cardBrand, 'jcb')}">
 														           <span class="visa card_image"><img src="${commonResourcePath}/images/JCB.png" alt=""></span>
 														           </c:when>
 														           <c:otherwise>
@@ -1110,7 +1019,7 @@
 														        </c:choose>															 
 				        							
 										        			<%-- <span class="visa card_image"><img src="${commonResourcePath}/images/Visa.png" alt=""></span> --%>
-										                    		<input type="radio" data-id="savedDCard" name="debitCards" class="card_token  debitCardsRadio" id="dc${status.index}"  value="${map.value.cardToken}" onchange="savedDebitCardRadioChange(dc${status.index});"/>
+										                    		<input type="radio" data-id="savedDCard" name="debitCards" class="card_token  debitCardsRadio" id="dc${status.index}"  value="${map.value.cardToken}" onchange="savedDebitCardRadioChange('dc${status.index}');"/>
 										                    		<label for="dc${status.index}" data-id="savedDCard" class="numbers"><span>${map.value.cardBrand}</span> ending in ${map.value.cardEndingDigits}</label>
 										                  				<p>${map.value.nameOnCard}</p>
 										                  				<p><spring:theme code="text.expires.on"/> ${map.value.expiryMonth}/${map.value.expiryYear}</p>
@@ -1150,7 +1059,6 @@
 											</div>
 											<div class="pay top-padding saved-card-button">
 												<button type="submit" class="make_payment button btn-block payment-button" id="make_saved_dc_payment"><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.paymentButton"/></button>
-												<button type="button" class="button topPlaceOrderBtn"><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.paymentButton"/></button>
 												<!-- <p class="payment-redirect">You will be re-directed to secure payment gateway</p> -->
 												<%-- <p onclick="teliumTrack()"><spring:theme code="checkout.multi.paymentMethod.selectMode.tnc.pretext" /><a href="<c:url value="${tncLink}"/>" target="_blank"><spring:theme code="checkout.multi.paymentMethod.selectMode.tnc" /></a><p> --%>
 											</div>
@@ -1275,7 +1183,6 @@
 			            		<div class="pay newCardPayment">
 									
 									<button type="submit" class="make_payment button btn-block payment-button" id="make_dc_payment"><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.paymentButton"/></button>
-									<button type="button" class="button topPlaceOrderBtn"><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.paymentButton"/></button>
 									<!-- <p class="payment-redirect">You will be re-directed to secure payment gateway</p> -->
 									<%-- <p onclick="teliumTrack()"><spring:theme code="checkout.multi.paymentMethod.selectMode.tnc.pretext" /><a href="<c:url value="${tncLink}"/>" target="_blank"><spring:theme code="checkout.multi.paymentMethod.selectMode.tnc" /></a></p> --%>
 								</div>
@@ -1313,7 +1220,6 @@
 									<!-- Terms & Conditions Link -->
 									<div class="pay top-padding nbButton">
 										<button type="button" class="make_payment button btn-block payment-button" id="make_nb_payment" onclick="submitNBForm()"><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.paymentButton"/></button>
-										<button type="button" class="button topPlaceOrderBtn"><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.paymentButton"/></button>
 										<div class="terms">
 										<p class="redirect"><spring:theme code="text.secure.payment.gateway"/></p>
 										<p onclick="teliumTrack()"><spring:theme code="checkout.multi.paymentMethod.selectMode.tnc.pretext" /><a href="<c:url value="${tncLink}"/>" target="_blank" class="conditions"><spring:theme code="checkout.multi.paymentMethod.selectMode.tnc" /></a></p>
@@ -1351,7 +1257,7 @@
 														</select>
 														
 														
-														<span class="error-message" id="emiNoBankError">No Banks available.</span>
+														<span class="error-message" id="emiNoBankError"><spring:theme code="checkout.multi.paymentMethod.emi.emiNoBankError"/></span>  	<!-- change for INC144318889 -->
 														<span class="error-message" id="emiPromoError"></span>
 														<div id="radioForEMI" class="banks">
 														<p class="emi-plan">Select a plan</p>	
@@ -1374,7 +1280,6 @@
 											<c:choose>
 											<c:when test="${map.key eq 'Credit Card'}">
 										<input type="hidden" id="CreditCard" value="${map.value}" />
-										<button class="topPlaceOrderBtn emiTopOrderPlaceButton"><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.paymentButton"/></button>
 											<!-- EMI CREDIT CARD -->
 													<div id="cardEmi" style="display: none;">
 														<!-- <ul class="product-block blocks"> -->
@@ -1678,7 +1583,7 @@
 									<!-- UF-281/282 Ends -->
 									
 									<!-- COD error messages ends -->
-									<button type="button" class="topPlaceOrderCodBtn topPlaceOrderBtn"><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.paymentButton"/></button>
+										
 										<div id="paymentFormButton" class="pay cont-del">	
 						<!-- Terms & Conditions Link -->
 
@@ -1691,7 +1596,7 @@
 									<div id="submitPaymentFormCODButton"  style="display:block;">	
 										<spring:theme code="checkout.multi.paymentMethod.codContinue" />
 									</div>
-								</button>
+								</button> 
 								<%-- <p class="payment-redirect"><spring:theme code="text.secure.payment.gateway"/></p> --%>
 									
 							</div>
@@ -1755,7 +1660,6 @@
 										
 											    <div class="pay newCardPaymentMR">
 												     <button type="button" class="make_payment button btn-block payment-button" id="make_mrupee_payment"><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.paymentButton"/></button>
-											    	<button type="button" class="button topPlaceOrderBtn"><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.paymentButton"/></button>
 											    </div>
 									    </ycommerce:testId>
 									</form>
@@ -1773,7 +1677,6 @@
 					<!-- mRupee Changes ends -->
 						
 			</ul>
-			
 				</div>
 				</div>
 		<div id="orderDetailsSectionId">
@@ -1874,4 +1777,4 @@
 		 $(this).parent().addClass("active"); 
 		 $('ul.accepted-cards li').removeClass('active-card');
 	 });
-	</script>	
+	</script>

@@ -15,12 +15,10 @@ import de.hybris.platform.servicelayer.config.ConfigurationService;
 
 import java.io.StringReader;
 import java.io.StringWriter;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.Date;
 import java.util.List;
 
 import javax.xml.bind.JAXBContext;
@@ -39,8 +37,6 @@ import org.xml.sax.InputSource;
 
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.core.model.MplZoneDeliveryModeValueModel;
-import com.tisl.mpl.core.model.WalletApportionPaymentInfoModel;
-import com.tisl.mpl.core.model.WalletCardApportionDetailModel;
 import com.tisl.mpl.exception.EtailBusinessExceptions;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.jalo.DefaultPromotionManager;
@@ -48,7 +44,6 @@ import com.tisl.mpl.jalo.DefaultPromotionManager;
 import com.tisl.mpl.model.SellerInformationModel;
 import com.tisl.mpl.pojo.BulkSalesOrderXMLData;
 import com.tisl.mpl.pojo.ChildOrderXMlData;
-import com.tisl.mpl.pojo.MerchantInfoXMlData;
 import com.tisl.mpl.pojo.SalesOrderXMLData;
 import com.tisl.mpl.pojo.SubOrderXMLData;
 import com.tisl.mpl.promotion.service.SellerBasedPromotionService;
@@ -62,25 +57,12 @@ import com.tisl.mpl.util.ExceptionUtil;
  */
 public class SalesOrderXMLUtility
 {
-
-	/**
-	 * 
-	 */
-	private static final String ERROR_GETTING_EXCEPTION_WHILE_CHANING_DATE_FORMAT = "Error Getting Exception while  Chaning date Format";
-	/**
-	 * 
-	 */
-	private static final String CLIQ_CASH = "Cliq Cash";
-	private static final String PAYMENT_JUSPAY_MERCHANT_TYPE = "payment.juspay.merchantType";
-	private static final String PAYMENT_QC_MERCHANT_TYPE = "payment.qc.merchantType";
-	private static final String PAYMENT_QC_MERCHANT_ID = "payment.qc.merchantID";
 	@SuppressWarnings("unused")
 	private final static Logger LOG = Logger.getLogger(SalesOrderXMLUtility.class.getName());
 	@Autowired
 	private PaymentInfoRevWebServiceImpl paymentInfoRevWebService;
 	private String payemntrefid = null;
 	private boolean xmlToFico = true;
-
 
 	private static String REFUNDED_DELIVERY_MESSAGE = "setting refunded delivery charge...";
 
@@ -95,70 +77,41 @@ public class SalesOrderXMLUtility
 	 * @Description: Generate XML Data for Order
 	 * @param orderData
 	 */
-	public String generateOrderData(final List<OrderModel> orderData)
+	public void generateOrderData(final List<OrderModel> orderModelList)
 	{
-
-
-		BulkSalesOrderXMLData xmlData = null;
 		List<SalesOrderXMLData> bulkSalesDataList = null;
-		String xmlString = MarketplacecommerceservicesConstants.EMPTYSPACE;
-		boolean invalidXMLToFICO = false;
-
 		try
 		{
-			if (null != orderData && !orderData.isEmpty())
+			if (null != orderModelList && !orderModelList.isEmpty())
 			{
-				xmlData = new BulkSalesOrderXMLData();
-				bulkSalesDataList = getParentOrderData(orderData);
-				if (null != bulkSalesDataList && !bulkSalesDataList.isEmpty())
+				bulkSalesDataList = getParentOrderData(orderModelList);
+				final int rowLimit = getConfigurationService().getConfiguration().getInt(
+						MarketplacecommerceservicesConstants.PAYMENTINFO_F_ROWLIMIT,0);
+				if (rowLimit > 0)
 				{
-					LOG.debug("full order data");
-					xmlData.setOrderDataList(bulkSalesDataList);
-					LOG.debug("bulk sales list set");
-					final JAXBContext context = JAXBContext.newInstance(BulkSalesOrderXMLData.class);
-					final Marshaller m = context.createMarshaller();
-					m.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
-					final StringWriter sw = new StringWriter();
-					m.marshal(xmlData, sw);
-					xmlString = sw.toString();
-					LOG.info(xmlString);
-
-					final DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-					factory.setIgnoringComments(true);
-					factory.setCoalescing(true); // Convert CDATA to Text nodes
-					factory.setNamespaceAware(false); // No namespaces: this is default factory.setValidating(false); //
-					// Don't validate DTD: also default
-
-					final DocumentBuilder parser = factory.newDocumentBuilder();
-
-					final Document document = parser.parse(new InputSource(new StringReader(xmlString)));
-
-					NodeList nm = null;
-					Node node = null;
-
-					nm = document.getElementsByTagName("SalesOrders");
-
-					if (null != nm)
+					int startIndex = 0;
+					final int listSize = bulkSalesDataList.size();
+					while (startIndex < listSize)
 					{
-						node = nm.item(0);
-						if (null != node && StringUtils.isEmpty(node.getTextContent()))
-						{
-							invalidXMLToFICO = true;
-						}
+						final int endIndex = (startIndex + rowLimit) < listSize ? (startIndex + rowLimit) : listSize;
+						final List<SalesOrderXMLData> partCustomerData = bulkSalesDataList.subList(startIndex, endIndex);
+						generatePartOrderData(partCustomerData);
+						startIndex += rowLimit;
 					}
-
-					if (!invalidXMLToFICO)
-					{
-						paymentInfoRevWebService.paymentInfoRev(xmlString);
-					}
-
 				}
+				else
+				{
+					generatePartOrderData(bulkSalesDataList);
+				}
+
+
 			}
+
+
 		}
 		catch (final EtailBusinessExceptions e)
 		{
 			ExceptionUtil.etailBusinessExceptionHandler(e, null);
-			LOG.error("Error Occr");
 		}
 		catch (final EtailNonBusinessExceptions e)
 		{
@@ -169,7 +122,6 @@ public class SalesOrderXMLUtility
 			ExceptionUtil.etailNonBusinessExceptionHandler(new EtailNonBusinessExceptions(e));
 		}
 
-		return xmlString;
 	}
 
 	private boolean checkCOD(final OrderModel orderModel)
@@ -232,25 +184,39 @@ public class SalesOrderXMLUtility
 						salesXMLData.setOrderType(MarketplacecommerceservicesConstants.PREPAID_SPACE);
 						if (null != order.getPaymentTransactions() && xmlToFico)
 						{
-							/*
-							 * final List<PaymentTransactionModel> list = order.getPaymentTransactions(); if (null != list &&
-							 * !list.isEmpty()) { for (final PaymentTransactionModel oModel : list) {
-							 * 
-							 * if (null != oModel.getStatus() && null != oModel.getPaymentProvider() &&
-							 * oModel.getStatus().equalsIgnoreCase(MarketplacecommerceservicesConstants.SUCCESS)) {
-							 * LOG.debug("Inside Parent order: Pyment Transaction model"); if
-							 * (MarketplacecommerceservicesConstants.MRUPEE_CODE.equalsIgnoreCase(oModel.getPaymentProvider()))
-							 * { salesXMLData.setMerchantCode(getConfigurationService().getConfiguration().getString(
-							 * MarketplacecommerceservicesConstants.MRUPEE_MERCHANT_CODE)); } else {
-							 * salesXMLData.setMerchantCode(oModel.getPaymentProvider()); } if (null != oModel.getCode()) {
-							 * payemntrefid = oModel.getCode(); LOG.debug("Inside Parent order: Pyment Transaction model" +
-							 * payemntrefid); } else { xmlToFico = false; }
-							 * 
-							 * }
-							 * 
-							 * } }
-							 */
-							//the Egv  wallet Change
+							final List<PaymentTransactionModel> list = order.getPaymentTransactions();
+							if (null != list && !list.isEmpty())
+							{
+								for (final PaymentTransactionModel oModel : list)
+								{
+
+									if (null != oModel.getStatus() && null != oModel.getPaymentProvider()
+											&& oModel.getStatus().equalsIgnoreCase(MarketplacecommerceservicesConstants.SUCCESS))
+									{
+										LOG.debug("Inside Parent order: Pyment Transaction model");
+										if (MarketplacecommerceservicesConstants.MRUPEE_CODE.equalsIgnoreCase(oModel.getPaymentProvider()))
+										{
+											salesXMLData.setMerchantCode(getConfigurationService().getConfiguration().getString(
+													MarketplacecommerceservicesConstants.MRUPEE_MERCHANT_CODE));
+										}
+										else
+										{
+											salesXMLData.setMerchantCode(oModel.getPaymentProvider());
+										}
+										if (null != oModel.getCode())
+										{
+											payemntrefid = oModel.getCode();
+											LOG.debug("Inside Parent order: Pyment Transaction model" + payemntrefid);
+										}
+										else
+										{
+											xmlToFico = false;
+										}
+
+									}
+
+								}
+							}
 
 						}
 						else
@@ -270,13 +236,11 @@ public class SalesOrderXMLUtility
 								LOG.debug("set sub order list");
 							}
 						}
-						/*
-						 * if (salesXMLData.getMerchantCode() != null && !(salesXMLData.getMerchantCode().isEmpty()) &&
-						 * salesXMLData.getSubOrderList() != null && !(salesXMLData.getSubOrderList().isEmpty()))
-						 *///INC144317909 Fix
-
-						if (salesXMLData.getSubOrderList() != null && !(salesXMLData.getSubOrderList().isEmpty()))
+						if (salesXMLData.getMerchantCode() != null && !(salesXMLData.getMerchantCode().isEmpty())
+								&& salesXMLData.getSubOrderList() != null && !(salesXMLData.getSubOrderList().isEmpty()))//INC144317909 Fix
 						{
+
+
 							bulkSalesDataList.add(salesXMLData);
 						}
 					}
@@ -296,7 +260,6 @@ public class SalesOrderXMLUtility
 	{
 		final List<SubOrderXMLData> subOrderDataList = new ArrayList<SubOrderXMLData>();
 		List<ChildOrderXMlData> childOrderDataList = new ArrayList<ChildOrderXMlData>();
-
 		if (null != childOrders && !childOrders.isEmpty())
 		{
 			for (final OrderModel order : childOrders)
@@ -319,7 +282,7 @@ public class SalesOrderXMLUtility
 					{
 						//content
 						LOG.debug("call child order");
-						childOrderDataList = getChildOrderDataForXML(order.getEntries(), order);
+						childOrderDataList = getChildOrderDataForXML(order.getEntries());
 
 					}
 				}
@@ -340,7 +303,7 @@ public class SalesOrderXMLUtility
 	/**
 	 * @param entries
 	 */
-	private List<ChildOrderXMlData> getChildOrderDataForXML(final List<AbstractOrderEntryModel> entries, OrderModel chaildModel)
+	private List<ChildOrderXMlData> getChildOrderDataForXML(final List<AbstractOrderEntryModel> entries)
 	{
 		final List<ChildOrderXMlData> childOrderDataList = new ArrayList<ChildOrderXMlData>();
 		List<String> categoryList = new ArrayList<String>();
@@ -383,10 +346,6 @@ public class SalesOrderXMLUtility
 							xmlData.setDeliveryMode(MarketplacecommerceservicesConstants.ED);
 						}
 						LOG.info("DeliveryMode For FICO  >>>>>>>> " + entry.getMplDeliveryMode().getDeliveryMode().getCode());
-					} else if(xmlToFico && chaildModel.getIsEGVCart().booleanValue()){
-						
-						LOG.info("DeliveryMode For FICO For  Egv orderrrrrrrr >>>>>>>> ");
-						xmlData.setDeliveryMode(MarketplacecommerceservicesConstants.HD);
 					}
 					else
 					{
@@ -402,10 +361,14 @@ public class SalesOrderXMLUtility
 					{
 						xmlToFico = false;
 					}
-					/*
-					 * if (null != payemntrefid && xmlToFico) { xmlData.setPaymentRefID(payemntrefid); } else { xmlToFico =
-					 * false; }
-					 */
+					if (null != payemntrefid && xmlToFico)
+					{
+						xmlData.setPaymentRefID(payemntrefid);
+					}
+					else
+					{
+						xmlToFico = false;
+					}
 
 					/*
 					 * if (null != entry.getProduct() && null != entry.getProduct().getProductCategoryType()) {
@@ -442,7 +405,7 @@ public class SalesOrderXMLUtility
 					}
 
 					LOG.debug("total price call" + entry.getTotalPrice());
-			/*		if (null != entry.getTotalPrice() && xmlToFico)
+					if (null != entry.getTotalPrice() && xmlToFico)
 					{
 						if (entry.getNetAmountAfterAllDisc().doubleValue() > 0)
 						{
@@ -455,7 +418,7 @@ public class SalesOrderXMLUtility
 							xmlData.setAmount(entry.getTotalPrice().doubleValue());
 						}
 						LOG.debug("after price set");
-					}*/
+					}
 					//TISPRD-901 // TISSQAUAT-4104
 					if (StringUtils.isNotEmpty(entry.getFulfillmentType()) && xmlToFico)
 					{
@@ -471,169 +434,90 @@ public class SalesOrderXMLUtility
 						LOG.debug("set fulfilment mode");
 					}
 
-					/*
-					 * if (null != entry.getMplDeliveryMode() && xmlToFico) { LOG.debug("inside del mode" +
-					 * entry.getMplDeliveryMode()); final MplZoneDeliveryModeValueModel zoneDelivery =
-					 * entry.getMplDeliveryMode(); if (null != zoneDelivery && null != zoneDelivery.getDeliveryMode() &&
-					 * entry.getCurrDelCharge() != null && entry.getRefundedDeliveryChargeAmt() != null && null !=
-					 * zoneDelivery.getDeliveryMode().getCode() &&
-					 * zoneDelivery.getDeliveryMode().getCode().equalsIgnoreCase("express-delivery")) {
-					 * LOG.debug("inside express del"); // TISPRDT-1186 START if (entry.getCurrDelCharge().doubleValue() > 0)
-					 * { LOG.debug("setting current delivery charge..."); //
-					 * xmlData.setExpressdeliveryCharge(entry.getCurrDelCharge().doubleValue());
-					 * xmlData.setShipmentCharge(entry.getCurrDelCharge().doubleValue()); } else {
-					 * LOG.debug(REFUNDED_DELIVERY_MESSAGE + entry.getRefundedDeliveryChargeAmt());
-					 * xmlData.setShipmentCharge(entry.getRefundedDeliveryChargeAmt().doubleValue()); }
-					 * xmlData.setExpressdeliveryCharge(0.00); // TISPRDT-1186 END
-					 * LOG.debug("set express del charge from curr del charge" + entry.getCurrDelCharge().doubleValue());//
-					 * zoneDelivery.getValue().doubleValue()
-					 * 
-					 * if (null != entry.getScheduledDeliveryCharge() && entry.getScheduledDeliveryCharge().doubleValue() >
-					 * 0) { LOG.debug("setting schedule delivery charge..." + entry.getScheduledDeliveryCharge());
-					 * xmlData.setScheduleDelCharge(entry.getScheduledDeliveryCharge().doubleValue()); } else if (null !=
-					 * entry.getRefundedScheduleDeliveryChargeAmt() &&
-					 * entry.getRefundedScheduleDeliveryChargeAmt().doubleValue() > 0)// INC144316465 STARTS {
-					 * LOG.debug(REFUNDED_DELIVERY_MESSAGE + entry.getRefundedScheduleDeliveryChargeAmt());
-					 * xmlData.setScheduleDelCharge(entry.getRefundedScheduleDeliveryChargeAmt().doubleValue()); } else {
-					 * xmlData.setScheduleDelCharge(0.00); } // INC144316465 end } else if (null != zoneDelivery && null !=
-					 * zoneDelivery.getDeliveryMode() && entry.getCurrDelCharge() != null &&
-					 * entry.getRefundedDeliveryChargeAmt() != null && null != zoneDelivery.getDeliveryMode().getCode() &&
-					 * zoneDelivery.getDeliveryMode().getCode().equalsIgnoreCase("home-delivery")) {
-					 * 
-					 * LOG.debug("inside home del"); if (entry.getCurrDelCharge().doubleValue() > 0) {
-					 * LOG.debug("setting current delivery charge...");
-					 * xmlData.setShipmentCharge(entry.getCurrDelCharge().doubleValue()); } else {
-					 * LOG.debug(REFUNDED_DELIVERY_MESSAGE + entry.getRefundedDeliveryChargeAmt());
-					 * xmlData.setShipmentCharge(entry.getRefundedDeliveryChargeAmt().doubleValue()); } // TISPRDT-1186 START
-					 * xmlData.setExpressdeliveryCharge(0.00); // TISPRDT-1186 END if (null !=
-					 * entry.getScheduledDeliveryCharge() && entry.getScheduledDeliveryCharge().doubleValue() > 0) {
-					 * LOG.debug("setting schedule delivery charge..." + entry.getScheduledDeliveryCharge());
-					 * xmlData.setScheduleDelCharge(entry.getScheduledDeliveryCharge().doubleValue()); } // INC144316465
-					 * STARTS else if (null != entry.getRefundedScheduleDeliveryChargeAmt() &&
-					 * entry.getRefundedScheduleDeliveryChargeAmt().doubleValue() > 0) { LOG.debug(REFUNDED_DELIVERY_MESSAGE
-					 * + entry.getRefundedScheduleDeliveryChargeAmt());
-					 * xmlData.setScheduleDelCharge(entry.getRefundedScheduleDeliveryChargeAmt().doubleValue()); } else {
-					 * xmlData.setScheduleDelCharge(0.00); }
-					 * 
-					 * // INC144316465 end LOG.debug("set del charge"); } }
-					 */
-
-					List<MerchantInfoXMlData> merchantInfoList = new ArrayList<MerchantInfoXMlData>();
-					if (entry.getWalletApportionPaymentInfo() != null)
+					if (null != entry.getMplDeliveryMode() && xmlToFico)
 					{
-						WalletApportionPaymentInfoModel paymentInfoModel = entry.getWalletApportionPaymentInfo();
-						if (!CollectionUtils.isEmpty(paymentInfoModel.getWalletCardList()))
+						LOG.debug("inside del mode" + entry.getMplDeliveryMode());
+						final MplZoneDeliveryModeValueModel zoneDelivery = entry.getMplDeliveryMode();
+						if (null != zoneDelivery && null != zoneDelivery.getDeliveryMode() && entry.getCurrDelCharge() != null
+								&& entry.getRefundedDeliveryChargeAmt() != null && null != zoneDelivery.getDeliveryMode().getCode()
+								&& zoneDelivery.getDeliveryMode().getCode().equalsIgnoreCase("express-delivery"))
 						{
-							for (WalletCardApportionDetailModel apporationWalllet : paymentInfoModel.getWalletCardList())
+							LOG.debug("inside express del");
+							// TISPRDT-1186 START
+							if (entry.getCurrDelCharge().doubleValue() > 0)
 							{
+								LOG.debug("setting current delivery charge...");
+								//	xmlData.setExpressdeliveryCharge(entry.getCurrDelCharge().doubleValue());
+								xmlData.setShipmentCharge(entry.getCurrDelCharge().doubleValue());
+							}
+							else
+							{
+								LOG.debug(REFUNDED_DELIVERY_MESSAGE + entry.getRefundedDeliveryChargeAmt());
+								xmlData.setShipmentCharge(entry.getRefundedDeliveryChargeAmt().doubleValue());
+							}
+							xmlData.setExpressdeliveryCharge(0.00);
+							//	TISPRDT-1186 END
+							LOG.debug("set express del charge from curr del charge" + entry.getCurrDelCharge().doubleValue());// zoneDelivery.getValue().doubleValue()
 
-								MerchantInfoXMlData merchantInfoXMlData = new MerchantInfoXMlData();
-								merchantInfoXMlData
-										.setMerchantType(getConfigurationService().getConfiguration().getString(PAYMENT_QC_MERCHANT_TYPE));
-								merchantInfoXMlData
-										.setMerchantCode(getConfigurationService().getConfiguration().getString(PAYMENT_QC_MERCHANT_ID));
-								double qcDelivery = 0;
-								if (apporationWalllet.getQcDeliveryValue() != null)
-								{
-									qcDelivery = Double.parseDouble(apporationWalllet.getQcDeliveryValue());
-								}
-								merchantInfoXMlData.setShipmentCharge(qcDelivery);
-								double scheduleDelCharge = 0;
-								if (apporationWalllet.getQcSchedulingValue() != null)
-								{
-									scheduleDelCharge = Double.parseDouble(apporationWalllet.getQcSchedulingValue());
-								}
-								merchantInfoXMlData.setScheduleDelCharge(scheduleDelCharge);
-								double shippingValue = 0;
-								if (apporationWalllet.getQcShippingValue() != null)
-								{
-									shippingValue = Double.parseDouble(apporationWalllet.getQcShippingValue());
-								}
-								merchantInfoXMlData.setExpressDelCharge(shippingValue);
+							if (null != entry.getScheduledDeliveryCharge() && entry.getScheduledDeliveryCharge().doubleValue() > 0)
+							{
+								LOG.debug("setting schedule delivery charge..." + entry.getScheduledDeliveryCharge());
+								xmlData.setScheduleDelCharge(entry.getScheduledDeliveryCharge().doubleValue());
+							}
+							else if (null != entry.getRefundedScheduleDeliveryChargeAmt()
+									&& entry.getRefundedScheduleDeliveryChargeAmt().doubleValue() > 0)// INC144316465 STARTS
+							{
+								LOG.debug(REFUNDED_DELIVERY_MESSAGE + entry.getRefundedScheduleDeliveryChargeAmt());
+								xmlData.setScheduleDelCharge(entry.getRefundedScheduleDeliveryChargeAmt().doubleValue());
+							}
+							else
+							{
+								xmlData.setScheduleDelCharge(0.00);
+							}
+							// INC144316465 end
+						}
+						else if (null != zoneDelivery && null != zoneDelivery.getDeliveryMode() && entry.getCurrDelCharge() != null
+								&& entry.getRefundedDeliveryChargeAmt() != null && null != zoneDelivery.getDeliveryMode().getCode()
+								&& zoneDelivery.getDeliveryMode().getCode().equalsIgnoreCase("home-delivery"))
+						{
 
-								//merchantInfoXMlData.setReversePaymentRefId(payemntrefid); 
-
-
-								double total = 0;
-								if (apporationWalllet.getCardAmount() != null)
-								{
-									total = Double.parseDouble(apporationWalllet.getCardAmount());
-								}
-								
-								merchantInfoXMlData.setBucketId(apporationWalllet.getBucketType());
-								merchantInfoXMlData.setProductAmount(total);
-								merchantInfoXMlData.setCardNumber(apporationWalllet.getCardNumber());
-								if (chaildModel.getParentReference() != null)
-								{
-									merchantInfoXMlData.setPaymentRefID(chaildModel.getParentReference().getCode());
-								}
-								String cardExpDate = getCardExpDate(apporationWalllet);
-								merchantInfoXMlData.setCardExpiryDate(cardExpDate);
-								merchantInfoList.add(merchantInfoXMlData);
+							LOG.debug("inside home del");
+							if (entry.getCurrDelCharge().doubleValue() > 0)
+							{
+								LOG.debug("setting current delivery charge...");
+								xmlData.setShipmentCharge(entry.getCurrDelCharge().doubleValue());
+							}
+							else
+							{
+								LOG.debug(REFUNDED_DELIVERY_MESSAGE + entry.getRefundedDeliveryChargeAmt());
+								xmlData.setShipmentCharge(entry.getRefundedDeliveryChargeAmt().doubleValue());
+							}
+							// TISPRDT-1186 START
+							xmlData.setExpressdeliveryCharge(0.00);
+							// TISPRDT-1186 END
+							if (null != entry.getScheduledDeliveryCharge() && entry.getScheduledDeliveryCharge().doubleValue() > 0)
+							{
+								LOG.debug("setting schedule delivery charge..." + entry.getScheduledDeliveryCharge());
+								xmlData.setScheduleDelCharge(entry.getScheduledDeliveryCharge().doubleValue());
+							}
+							// INC144316465 STARTS
+							else if (null != entry.getRefundedScheduleDeliveryChargeAmt()
+									&& entry.getRefundedScheduleDeliveryChargeAmt().doubleValue() > 0)
+							{
+								LOG.debug(REFUNDED_DELIVERY_MESSAGE + entry.getRefundedScheduleDeliveryChargeAmt());
+								xmlData.setScheduleDelCharge(entry.getRefundedScheduleDeliveryChargeAmt().doubleValue());
+							}
+							else
+							{
+								xmlData.setScheduleDelCharge(0.00);
 							}
 
+							// INC144316465 end
 
-							 if (StringUtils.isNotEmpty(paymentInfoModel.getJuspayApportionValue())
-							         && Double.parseDouble((paymentInfoModel.getJuspayApportionValue())) > 0){
-								MerchantInfoXMlData merchantInfoXMlData = new MerchantInfoXMlData();
-								merchantInfoXMlData.setMerchantType(
-										getConfigurationService().getConfiguration().getString(PAYMENT_JUSPAY_MERCHANT_TYPE));
-								//need be check
-								merchantInfoXMlData.setProductAmount((Double.parseDouble(paymentInfoModel.getJuspayApportionValue())));
-						
-								merchantInfoXMlData.setExpressDelCharge(Double.parseDouble(paymentInfoModel.getJuspayDeliveryValue()));
-								merchantInfoXMlData.setScheduleDelCharge(Double.parseDouble(paymentInfoModel.getJuspaySchedulingValue()));
-								merchantInfoXMlData.setShipmentCharge(Double.parseDouble(paymentInfoModel.getJuspayShippingValue()));
-
-								final List<PaymentTransactionModel> list = chaildModel.getPaymentTransactions();
-								if (null != list && !list.isEmpty())
-								{
-									LOG.debug("DeliveryMode list"+list);
-									for (final PaymentTransactionModel oModel : list)
-									{
-										LOG.debug("DeliveryMode oModel"+oModel);
-										if (null != oModel.getStatus() && null != oModel.getPaymentProvider() && !oModel.getPaymentProvider().equalsIgnoreCase(CLIQ_CASH)
-												&& oModel.getStatus().equalsIgnoreCase(MarketplacecommerceservicesConstants.SUCCESS))
-										{
-											
-											if (MarketplacecommerceservicesConstants.MRUPEE_CODE
-													.equalsIgnoreCase(oModel.getPaymentProvider()))
-											{
-												merchantInfoXMlData.setMerchantCode(getConfigurationService().getConfiguration()
-														.getString(MarketplacecommerceservicesConstants.MRUPEE_MERCHANT_CODE));
-											}
-											else
-											{
-												merchantInfoXMlData.setMerchantCode(oModel.getPaymentProvider());
-											}
-											if (null != oModel.getCode())
-											{
-												payemntrefid = oModel.getCode();
-												LOG.debug("Inside Parent order: Pyment Transaction model" + payemntrefid);
-											}
-										}
-									}
-									merchantInfoXMlData.setPaymentRefID(payemntrefid);
-								}
-								merchantInfoList.add(merchantInfoXMlData);
-
-							}
+							LOG.debug("set del charge");
 						}
 					}
-					else
-					{
-						MerchantInfoXMlData merchantInfoXMlData = getMarchantInfo(chaildModel, entry);
-						merchantInfoXMlData
-								.setMerchantType(getConfigurationService().getConfiguration().getString(PAYMENT_JUSPAY_MERCHANT_TYPE));
-						merchantInfoList.add(merchantInfoXMlData);
-					}
 
-					xmlData.setMerchantInfoList(merchantInfoList);
-					
-					double tAmount=0;
-					tAmount = getTotalAmount(merchantInfoList, tAmount);
-					//setting Total amount of product
-					xmlData.setAmount(tAmount);
 					LOG.debug(">>>>>>> before prodcatlist");
 					List<CategoryModel> productCategoryList = new ArrayList<>();
 					if (xmlToFico)
@@ -704,174 +588,6 @@ public class SalesOrderXMLUtility
 
 	}
 
-	/**
-	 * @param merchantInfoList
-	 * @param tAmount
-	 * @return
-	 */
-	private double getTotalAmount(List<MerchantInfoXMlData> merchantInfoList, double tAmount)
-	{try{
-		for(MerchantInfoXMlData merchantInfoXMlTotal:merchantInfoList){
-			tAmount=merchantInfoXMlTotal.getScheduleDelCharge()+merchantInfoXMlTotal.getShipmentCharge()+merchantInfoXMlTotal.getExpressDelCharge()+merchantInfoXMlTotal.getProductAmount();	
-		}
-		return tAmount;
-	}catch(Exception exception){
-		LOG.error("Error occure while sum of total amount"+exception.getMessage());
-	}
-		return tAmount;
-	}
-
-	/**
-	 * @param apporationWalllet
-	 * @return
-	 * @throws ParseException
-	 */
-	@SuppressWarnings("javadoc")
-	private String getCardExpDate(WalletCardApportionDetailModel apporationWalllet) 
-	{
-		String cardExpDate = apporationWalllet.getCardExpiry();
-		SimpleDateFormat format1 = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
-		SimpleDateFormat format2 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-		if(StringUtils.isNotEmpty(cardExpDate)){
-		Date date = null;
-		try {
-			date = format1.parse(cardExpDate);
-			LOG.info("Card Exp converting");
-			return format2.format(date);
-		} catch (ParseException e) {
-			LOG.error(ERROR_GETTING_EXCEPTION_WHILE_CHANING_DATE_FORMAT);
-		}
-		}
-		return null;
-	}
-
-	/**
-	 * @param chaildModel
-	 * @param entry
-	 * @return
-	 */
-	
-	private MerchantInfoXMlData getMarchantInfo(OrderModel chaildModel, final AbstractOrderEntryModel entry)
-	{
-		MerchantInfoXMlData merchantInfoXMlData = new MerchantInfoXMlData();
-		
-		if (null != entry.getTotalPrice())
-		{
-			if (entry.getNetAmountAfterAllDisc().doubleValue() > 0)
-			{
-				LOG.debug("*****total price with discount*****" + entry.getNetAmountAfterAllDisc());
-				merchantInfoXMlData.setProductAmount(entry.getNetAmountAfterAllDisc().doubleValue());
-			}
-			else
-			{
-				LOG.debug("total price call" + entry.getTotalPrice());
-				merchantInfoXMlData.setProductAmount(entry.getTotalPrice().doubleValue());
-			}
-			LOG.debug("after price set");
-		}
-		merchantInfoXMlData.setShipmentCharge(entry.getCurrDelCharge().doubleValue());
-		final List<PaymentTransactionModel> list = chaildModel.getPaymentTransactions();
-		if (null != list && !list.isEmpty())
-		{
-
-			for (final PaymentTransactionModel oModel : list)
-			{
-
-				if (null != oModel.getStatus() && null != oModel.getPaymentProvider() &&  !oModel.getPaymentProvider().equalsIgnoreCase(CLIQ_CASH)
-						&& oModel.getStatus().equalsIgnoreCase(MarketplacecommerceservicesConstants.SUCCESS))
-				{
-					if (MarketplacecommerceservicesConstants.MRUPEE_CODE.equalsIgnoreCase(oModel.getPaymentProvider()))
-					{
-						merchantInfoXMlData.setMerchantCode(getConfigurationService().getConfiguration()
-								.getString(MarketplacecommerceservicesConstants.MRUPEE_MERCHANT_CODE));
-					}
-					else
-					{
-						merchantInfoXMlData.setMerchantCode(oModel.getPaymentProvider());
-					}
-					if (null != oModel.getCode())
-					{
-						payemntrefid = oModel.getCode();
-						LOG.debug("Inside Parent order: Pyment Transaction model" + payemntrefid);
-					}
-				}
-
-			}
-
-			merchantInfoXMlData.setPaymentRefID(payemntrefid);
-		}
-
-		if (null != entry.getMplDeliveryMode() && xmlToFico)
-		{
-			final MplZoneDeliveryModeValueModel zoneDelivery = entry.getMplDeliveryMode();
-			if (null != zoneDelivery && null != zoneDelivery.getDeliveryMode() && entry.getCurrDelCharge() != null
-					&& entry.getRefundedDeliveryChargeAmt() != null && null != zoneDelivery.getDeliveryMode().getCode()
-					&& zoneDelivery.getDeliveryMode().getCode().equalsIgnoreCase("express-delivery"))
-			{
-				// TISPRDT-1186 START
-				if (entry.getCurrDelCharge().doubleValue() > 0)
-				{
-					//	xmlData.setExpressdeliveryCharge(entry.getCurrDelCharge().doubleValue());
-					merchantInfoXMlData.setShipmentCharge(entry.getCurrDelCharge().doubleValue());
-				}
-				else
-				{
-					merchantInfoXMlData.setShipmentCharge(entry.getRefundedDeliveryChargeAmt().doubleValue());
-				}
-				merchantInfoXMlData.setExpressDelCharge(0.00);
-				//	TISPRDT-1186 END
-
-				if (null != entry.getScheduledDeliveryCharge() && entry.getScheduledDeliveryCharge().doubleValue() > 0)
-				{
-					merchantInfoXMlData.setScheduleDelCharge(entry.getScheduledDeliveryCharge().doubleValue());
-				}
-				else if (null != entry.getRefundedScheduleDeliveryChargeAmt()
-						&& entry.getRefundedScheduleDeliveryChargeAmt().doubleValue() > 0)// INC144316465 STARTS
-				{
-					merchantInfoXMlData.setScheduleDelCharge(entry.getRefundedScheduleDeliveryChargeAmt().doubleValue());
-				}
-				else
-				{
-					merchantInfoXMlData.setScheduleDelCharge(0.00);
-				}
-				// INC144316465 end
-			}
-			else if (null != zoneDelivery && null != zoneDelivery.getDeliveryMode() && entry.getCurrDelCharge() != null
-					&& entry.getRefundedDeliveryChargeAmt() != null && null != zoneDelivery.getDeliveryMode().getCode()
-					&& zoneDelivery.getDeliveryMode().getCode().equalsIgnoreCase("home-delivery"))
-			{
-
-				if (entry.getCurrDelCharge().doubleValue() > 0)
-				{
-					merchantInfoXMlData.setShipmentCharge(entry.getCurrDelCharge().doubleValue());
-				}
-				else
-				{
-					merchantInfoXMlData.setShipmentCharge(entry.getRefundedDeliveryChargeAmt().doubleValue());
-				}
-				// TISPRDT-1186 START
-				merchantInfoXMlData.setExpressDelCharge(0.00);
-				// TISPRDT-1186 END
-				if (null != entry.getScheduledDeliveryCharge() && entry.getScheduledDeliveryCharge().doubleValue() > 0)
-				{
-					merchantInfoXMlData.setScheduleDelCharge(entry.getScheduledDeliveryCharge().doubleValue());
-				}
-				// INC144316465 STARTS
-				else if (null != entry.getRefundedScheduleDeliveryChargeAmt()
-						&& entry.getRefundedScheduleDeliveryChargeAmt().doubleValue() > 0)
-				{
-					merchantInfoXMlData.setScheduleDelCharge(entry.getRefundedScheduleDeliveryChargeAmt().doubleValue());
-				}
-				else
-				{
-					merchantInfoXMlData.setScheduleDelCharge(0.00);
-				}
-				// INC144316465 end
-			}
-		}
-		return merchantInfoXMlData;
-	}
-
 	protected DefaultPromotionManager getDefaultPromotionsManager()
 	{
 		return Registry.getApplicationContext().getBean("defaultPromotionManager", DefaultPromotionManager.class);
@@ -888,6 +604,78 @@ public class SalesOrderXMLUtility
 	protected ConfigurationService getConfigurationService()
 	{
 		return Registry.getApplicationContext().getBean("configurationService", ConfigurationService.class);
+	}
+	
+	private void generatePartOrderData(final List<SalesOrderXMLData> bulkSalesDataList)
+	{
+
+
+		BulkSalesOrderXMLData xmlData = null;
+		String xmlString = MarketplacecommerceservicesConstants.EMPTYSPACE;
+		boolean invalidXMLToFICO = false;
+
+		try
+		{
+
+			xmlData = new BulkSalesOrderXMLData();
+			if (null != bulkSalesDataList && !bulkSalesDataList.isEmpty())
+			{
+				LOG.debug("full order data");
+				xmlData.setOrderDataList(bulkSalesDataList);
+				LOG.debug("bulk sales list set");
+				final JAXBContext context = JAXBContext.newInstance(BulkSalesOrderXMLData.class);
+				final Marshaller m = context.createMarshaller();
+				m.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
+				final StringWriter sw = new StringWriter();
+				m.marshal(xmlData, sw);
+				xmlString = sw.toString();
+				LOG.info(xmlString);
+
+				final DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+				factory.setIgnoringComments(true);
+				factory.setCoalescing(true); // Convert CDATA to Text nodes
+				factory.setNamespaceAware(false); // No namespaces: this is default factory.setValidating(false); //
+				// Don't validate DTD: also default
+
+				final DocumentBuilder parser = factory.newDocumentBuilder();
+
+				final Document document = parser.parse(new InputSource(new StringReader(xmlString)));
+
+				NodeList nm = null;
+				Node node = null;
+
+				nm = document.getElementsByTagName("SalesOrders");
+
+				if (null != nm)
+				{
+					node = nm.item(0);
+					if (null != node && StringUtils.isEmpty(node.getTextContent()))
+					{
+						invalidXMLToFICO = true;
+					}
+				}
+
+				if (!invalidXMLToFICO)
+				{
+					paymentInfoRevWebService.paymentInfoRev(xmlString);
+				}
+
+			}
+
+		}
+		catch (final EtailBusinessExceptions e)
+		{
+			ExceptionUtil.etailBusinessExceptionHandler(e, null);
+		}
+		catch (final EtailNonBusinessExceptions e)
+		{
+			ExceptionUtil.etailNonBusinessExceptionHandler(e);
+		}
+		catch (final Exception e)
+		{
+			ExceptionUtil.etailNonBusinessExceptionHandler(new EtailNonBusinessExceptions(e));
+		}
+
 	}
 
 }
