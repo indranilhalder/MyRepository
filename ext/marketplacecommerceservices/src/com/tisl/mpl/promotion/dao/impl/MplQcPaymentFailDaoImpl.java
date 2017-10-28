@@ -90,6 +90,7 @@ public class MplQcPaymentFailDaoImpl implements MplQcPaymentFailDao
 			final String queryString = MarketplacecommerceservicesConstants.RMSVERIFICATIONFAILEDQUERY;
 			final FlexibleSearchQuery orderListQuery = new FlexibleSearchQuery(queryString);
 			orderListQuery.addQueryParameter(MarketplacecommerceservicesConstants.RMSVERIFICATIONFAILEDSTATUS, orderStatus);
+			orderListQuery.addQueryParameter(MarketplacecommerceservicesConstants.TYPE, "Parent");
 			final List<OrderModel> orderList = flexibleSearchService.<OrderModel> search(orderListQuery).getResult();
 
 			return orderList;

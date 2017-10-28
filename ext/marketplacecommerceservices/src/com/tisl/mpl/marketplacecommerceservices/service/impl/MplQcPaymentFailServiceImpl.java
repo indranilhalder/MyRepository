@@ -368,33 +368,35 @@ public class MplQcPaymentFailServiceImpl implements MplQcPaymentFailService
 					if (paymentSplitMode.trim().equalsIgnoreCase(MarketplacecommerceservicesConstants.PAYMENT_MODE_SPLIT.trim()))
 					{
 						try {
-							for ( PaymentTransactionModel paymentEntry : orderModel.getPaymentTransactions()) {
-								if(null !=paymentEntry && null != paymentEntry.getPaymentProvider() && !paymentEntry.getPaymentProvider().equalsIgnoreCase(MarketplacecommerceservicesConstants.PAYMENT_MODE_LIQ_CASH.trim()))
-									{
-										processJuspayRefund(orderModel,paymentEntry.getRequestId());
-									}
-								break;
-							}
-							
-						}catch (Exception e) {
-							LOG.error("Exception occurred while while Refunding Juspay AMount"+e.getMessage());
-						}
-
-						// Refunding Amount Paid Through QC 
-						try {
 							if(null != orderModel.getPaymentTransactions() ) {
 								for ( PaymentTransactionModel paymentEntry : orderModel.getPaymentTransactions()) {
 									if(null !=paymentEntry && null != paymentEntry.getPaymentProvider() && paymentEntry.getPaymentProvider().equalsIgnoreCase(MarketplacecommerceservicesConstants.PAYMENT_MODE_LIQ_CASH.trim()))
 										{
 											processQcRefund(orderModel);
+											break;
 										}
-									break;
+									
 								}
 							}
 						
 						}catch (Exception e) {
 							LOG.error("Exception occurred while while Refunding Qc AMount"+e.getMessage());
 						}
+						try {
+							for ( PaymentTransactionModel paymentEntry : orderModel.getPaymentTransactions()) {
+								if(null !=paymentEntry && null != paymentEntry.getPaymentProvider() && !paymentEntry.getPaymentProvider().equalsIgnoreCase(MarketplacecommerceservicesConstants.PAYMENT_MODE_LIQ_CASH.trim()))
+									{
+										processJuspayRefund(orderModel,paymentEntry.getRequestId());
+										break;
+									}
+								
+							}
+							
+						}catch (Exception e) {
+							LOG.error("Exception occurred while while Refunding Juspay AMount"+e.getMessage());
+						}
+
+						
 					}else if(paymentSplitMode.trim().equalsIgnoreCase(MarketplacecommerceservicesConstants.PAYMENT_MODE_LIQ_CASH.trim())){
 						
 						try {
@@ -402,6 +404,7 @@ public class MplQcPaymentFailServiceImpl implements MplQcPaymentFailService
 								for ( PaymentTransactionModel paymentEntry : orderModel.getPaymentTransactions()) {
 									if(null !=paymentEntry && null != paymentEntry.getPaymentProvider() && paymentEntry.getPaymentProvider().equalsIgnoreCase(MarketplacecommerceservicesConstants.PAYMENT_MODE_LIQ_CASH.trim()))
 										processQcRefund(orderModel);
+									break;
 								}
 							}
 						}catch (Exception e) {
@@ -421,10 +424,13 @@ public class MplQcPaymentFailServiceImpl implements MplQcPaymentFailService
 	private void processQcRefund(OrderModel orderModel)
 	{
 		double totalQcRefundAmount = 0.0D;
-		for (AbstractOrderEntryModel orderEntry : orderModel.getEntries()) {
-			totalQcRefundAmount += calculateSplitQcRefundAmount(orderEntry);
+		if(null != orderModel.getChildOrders()) {
+			for (OrderModel childOrder : orderModel.getChildOrders()) {
+				for (AbstractOrderEntryModel orderEntry : childOrder.getEntries()) {
+					totalQcRefundAmount += calculateSplitQcRefundAmount(orderEntry);
+				}
+			}
 		}
-		
 		String walletId = null;
 		DecimalFormat daecimalFormat = new DecimalFormat("#.00");
 		CustomerModel customerModel = (CustomerModel) orderModel.getUser();
@@ -453,10 +459,12 @@ public class MplQcPaymentFailServiceImpl implements MplQcPaymentFailService
 					orderStatusSpecifier.setOrderStatus(orderModel, OrderStatus.REFUND_INITIATED);
 				}
 			}
-		
-			for (AbstractOrderEntryModel entry : orderModel.getEntries())
-			{
-				constructQuickCilverOrderEntry(response, entry);
+			if(null != orderModel.getChildOrders()) {
+				for (OrderModel childOrder : orderModel.getChildOrders()) {
+					for (AbstractOrderEntryModel orderEntry : childOrder.getEntries()) {
+						constructQuickCilverOrderEntry(response, orderEntry);
+					}
+				}
 			}
 		}
 		
@@ -664,9 +672,16 @@ public class MplQcPaymentFailServiceImpl implements MplQcPaymentFailService
 
 				{
 					double totalJuspayRefundAmount = 0.0D;
-					for (AbstractOrderEntryModel orderEntry : orderModel.getEntries()) {
-						totalJuspayRefundAmount += calculateSplitJuspayRefundAmount(orderEntry);
+					
+					if(null != orderModel.getChildOrders()) {
+						for (OrderModel childOrder : orderModel.getChildOrders()) {
+							for (AbstractOrderEntryModel orderEntry : childOrder.getEntries()) {
+								totalJuspayRefundAmount += calculateSplitJuspayRefundAmount(orderEntry);
+							}
+						}
+						
 					}
+					
 					
 					try
 					{

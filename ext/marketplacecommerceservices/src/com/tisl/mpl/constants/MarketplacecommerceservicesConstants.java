@@ -2322,7 +2322,7 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 		
 		public static final String WALLETAPPORTIONINFOTYPE = "type".trim();
 		
-		public static final String RMSVERIFICATIONFAILEDQUERY = "select {o.pk} from {Order as o},{OrderStatus as os} where {o.status}={os.pk} and {os.code}=?status";
+		public static final String RMSVERIFICATIONFAILEDQUERY = "select {o.pk} from {Order as o},{OrderStatus as os} where {o.status}={os.pk} and {o.type}=?type and {os.code}=?status";
 
 		public static final String PAYMENT_MODE_SPLIT = "split".trim();
 		public static final String PAYMENT_MODE_LIQ_CASH = "cliq cash".trim();
