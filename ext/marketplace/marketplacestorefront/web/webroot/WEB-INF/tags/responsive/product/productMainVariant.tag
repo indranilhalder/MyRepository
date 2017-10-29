@@ -312,9 +312,14 @@ share mobile -->
 	<c:otherwise>
                <c:choose>
    			 <c:when test="${product.rootCategory =='HomeFurnishing'}">
-   			 <span>
-					<spring:theme code="product.variant.size.HF"></spring:theme><c:if test="${not empty productSizeType}">(${productSizeType})</c:if>
-			  </span> 
+	   			 <c:choose>
+	   			 <c:when test="${productSize !='No Size'}">
+		   			<span>
+						<spring:theme code="product.variant.size.HF"></spring:theme><c:if test="${not empty productSizeType}">(${productSizeType})</c:if>
+				  </span>
+				  </c:when>
+	   			 </c:choose>
+   			  
 			   <span style="float: right;">
 					<spring:theme code="product.variant.quantity"></spring:theme><c:if test="${not empty productSizeType}">(${productSizeType})</c:if>
 			  </span> 
@@ -348,6 +353,8 @@ share mobile -->
 <c:choose>
   <c:when test="${product.rootCategory =='HomeFurnishing'}">
   <br>
+  <c:choose>
+  <c:when test="${productSize !='No Size'}">
   <select id="variant_dropdown" class="variant-select">
    <c:forEach items="${product.variantOptions}" var="variantOption">
 			      <c:forEach items="${variantOption.colourCode}" var="color">                  
@@ -423,6 +430,10 @@ share mobile -->
 			    </c:forEach>
 			  </c:forEach>
 			  </select>
+			  
+			  </c:when>
+			  </c:choose>
+			  
 			  
 			   <select id="quantity_dropdown" class="variant-select">
 			   <c:forEach items="${quantityList}" var="quantity">
