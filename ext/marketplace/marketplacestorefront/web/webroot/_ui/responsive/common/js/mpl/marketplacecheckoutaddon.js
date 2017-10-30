@@ -8851,6 +8851,9 @@ $("*[data-id=newCCard]").click(function(){
 	$("#make_cc_payment_up").show();
 	$(".card_cvvErrorSavedCard").hide();
 	$("#card_form").find("input[type=password]").val("");
+	//SDI-2149
+	$('#savedCreditCard .security_code').prop('disabled', true); 
+	$('#savedCreditCard .security_code').removeClass("security_code").addClass("security_code_hide");
 	//$("#savedCreditCard").find(".error-message").hide();
 });
 
@@ -8901,6 +8904,9 @@ $("*[data-id=newDCard]").click(function(){
 	$("#make_dc_payment_up").show();
 	$(".card_cvvErrorSavedCard").hide();
 	$("#card_form_saved_debit").find("input[type=password]").val("");
+	//SDI-2149
+	$('#savedDebitCard .security_code').prop('disabled', true); 
+	$('#savedDebitCard .security_code').removeClass("security_code").addClass("security_code_hide");
 	//$("#savedDebitCard").find(".error-message").hide();
 });
 
