@@ -31,7 +31,6 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-
 import com.tisl.mpl.core.model.CustomerWalletDetailModel;
 import com.tisl.mpl.exception.QCServiceCallException;
 import com.tisl.mpl.facade.checkout.MplCheckoutFacade;
@@ -132,8 +131,7 @@ public class WalletController extends AbstractPageController
 			}
 			else if (null != response && null != response.getResponseCode() && response.getResponseCode() != Integer.valueOf(0))
 			{
-				GlobalMessages.addFlashMessage(redirectAttributes, GlobalMessages.ERROR_MESSAGES_HOLDER,
-						"text.cliqcash.add.money.Fail", null);
+				setValidErrorCodeHandling(response.getResponseCode().intValue(),redirectAttributes);
 				LOG.error("card Add Error " + response.getResponseMessage());
 				return REDIRECT_PREFIX + "/wallet/getcliqcashPage";
 			}
@@ -243,8 +241,9 @@ public class WalletController extends AbstractPageController
 
 				else
 				{
-					GlobalMessages.addFlashMessage(redirectAttributes, GlobalMessages.INFO_MESSAGES_HOLDER,
-							"text.cliqcash.use.wallet.fail", null);
+				/*	GlobalMessages.addFlashMessage(redirectAttributes, GlobalMessages.INFO_MESSAGES_HOLDER,
+							"text.cliqcash.use.wallet.fail", null);*/
+					setValidErrorCodeHandling(customerRegisterResponse.getResponseCode().intValue() ,redirectAttributes);
 					System.out.println("Fail To active user wallet" + (null != customerRegisterResponse.getResponseMessage()
 							? customerRegisterResponse.getResponseMessage() : "QC Not Responding"));
 					LOG.error("Fail To active user wallet" + (null != customerRegisterResponse.getResponseMessage()
@@ -275,12 +274,32 @@ public class WalletController extends AbstractPageController
 		model.addAttribute("WalletBalance", balanceAmount);
 		model.addAttribute("walletTrasacationsListData", walletTrasacationsListData1.getWalletTransactions());
 		model.addAttribute("dateFormat", dateFormat);
-
-
-
-
 		return "addon:/marketplacecheckoutaddon/pages/checkout/single/cliqcash";
 	}
+    private void setValidErrorCodeHandling(final int errorCode ,final RedirectAttributes redirectAttributes){
+   	 if(errorCode == Integer.valueOf(ModelAttributetConstants.ERROR_CODE_10004).intValue()){
+				GlobalMessages.addFlashMessage(redirectAttributes, GlobalMessages.ERROR_MESSAGES_HOLDER,
+						ModelAttributetConstants.ERROR_CODE_10004_DESC , null);
+			  }else if(errorCode == Integer.valueOf(ModelAttributetConstants.ERROR_CODE_10027).intValue()){
+				GlobalMessages.addFlashMessage(redirectAttributes, GlobalMessages.ERROR_MESSAGES_HOLDER,
+						ModelAttributetConstants.ERROR_CODE_10027_DESC , null);
+			  }else if(errorCode == Integer.valueOf(ModelAttributetConstants.ERROR_CODE_10528).intValue()){
+				GlobalMessages.addFlashMessage(redirectAttributes, GlobalMessages.ERROR_MESSAGES_HOLDER,
+						ModelAttributetConstants.ERROR_CODE_10528_DESC , null);
+			  }else if(errorCode == Integer.valueOf(ModelAttributetConstants.ERROR_CODE_10086).intValue()){
+				GlobalMessages.addFlashMessage(redirectAttributes, GlobalMessages.ERROR_MESSAGES_HOLDER,
+						ModelAttributetConstants.ERROR_CODE_10086_DESC , null);
+			  }else if(errorCode == Integer.valueOf(ModelAttributetConstants.ERROR_CODE_10096).intValue()){
+				GlobalMessages.addFlashMessage(redirectAttributes, GlobalMessages.ERROR_MESSAGES_HOLDER,
+						ModelAttributetConstants.ERROR_CODE_10096_DESC , null);
+			  }else if(errorCode == Integer.valueOf(ModelAttributetConstants.ERROR_CODE_10550).intValue()){
+				GlobalMessages.addFlashMessage(redirectAttributes, GlobalMessages.ERROR_MESSAGES_HOLDER,
+						ModelAttributetConstants.ERROR_CODE_10550_DESC , null);
+			  }else{
+				GlobalMessages.addFlashMessage(redirectAttributes, GlobalMessages.ERROR_MESSAGES_HOLDER,
+						"text.cliqcash.add.money.Fail", null);
+			  }
+    }
 }
 
 

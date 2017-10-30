@@ -7035,7 +7035,8 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 					{
 
 						LOG.error("card Add Error " + response.getResponseMessage());
-						return "ERROR";
+					//	return "ERROR";
+						return setValidErrorCodeHandling(response.getResponseCode().intValue());
 					}
 
 				}
@@ -7053,7 +7054,8 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 				else
 				{
 					LOG.error("card Add Error " + response.getResponseMessage());
-					return "ERROR";
+					//return "ERROR";
+					return setValidErrorCodeHandling(response.getResponseCode().intValue());
 				}
 			}
 
@@ -7064,5 +7066,25 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 		}
 		return "ERROR";
 	}
+	
+	 private String  setValidErrorCodeHandling(final int errorCode ){
+		 String errorMessage = "";
+   	 if(errorCode == Integer.valueOf(ModelAttributetConstants.ERROR_CODE_10004).intValue()){
+   		     errorMessage= ModelAttributetConstants.ERROR_CODE_10004_DESC;
+			  }else if(errorCode == Integer.valueOf(ModelAttributetConstants.ERROR_CODE_10027).intValue()){
+				errorMessage= ModelAttributetConstants.ERROR_CODE_10027_DESC;
+			  }else if(errorCode == Integer.valueOf(ModelAttributetConstants.ERROR_CODE_10528).intValue()){
+				errorMessage= ModelAttributetConstants.ERROR_CODE_10528_DESC;
+			  }else if(errorCode == Integer.valueOf(ModelAttributetConstants.ERROR_CODE_10086).intValue()){
+				errorMessage= ModelAttributetConstants.ERROR_CODE_10086_DESC;
+			  }else if(errorCode == Integer.valueOf(ModelAttributetConstants.ERROR_CODE_10096).intValue()){
+				errorMessage= ModelAttributetConstants.ERROR_CODE_10096_DESC;
+			  }else if(errorCode == Integer.valueOf(ModelAttributetConstants.ERROR_CODE_10550).intValue()){
+				errorMessage= ModelAttributetConstants.ERROR_CODE_10550_DESC;
+			  }else{
+				  errorMessage= "Error";
+			  }
+   	 return errorMessage;
+    }
 
 }

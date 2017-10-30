@@ -6010,6 +6010,8 @@ function addEGVAjax(){
 	    	ACC.singlePageCheckout.hideAjaxLoader();
 	    	}else{
 	    		console.log("Response for QC "+data);
+	    		document.getElementById('redeemVoucherError').innerHTML = data;
+	    		$("#redeemVoucherAlertId").show();
 	    		ACC.singlePageCheckout.hideAjaxLoader();
 	    	}
 		});
