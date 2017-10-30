@@ -5893,6 +5893,21 @@
 
 			</itemtype>
 
+			<!-- Added for 5989 :: START -->
+			<itemtype code="WebFormTicketProcess" extends="BusinessProcess"
+				autocreate="true" generate="true" jaloclass="com.tisl.mpl.core.jalo.WebFormTicketProcess">
+				<description>Represents process that is used for sending the web form ticket to PI</description>
+				<attributes>
+					<attribute qualifier="MplWebCrmTicket" type="MplWebCrmTicket">
+						<description>Web form ticket details</description>
+						<modifiers />
+						<persistence type="property" />
+					</attribute>
+				</attributes>
+			</itemtype>
+			<!-- Added for 5989 :: END -->
+
+
 			<itemtype code="OrderRefundProcess" extends="OrderProcess"
 				autocreate="true" generate="true"
 				jaloclass="com.tisl.mpl.core.jalo.OrderRefundProcess">

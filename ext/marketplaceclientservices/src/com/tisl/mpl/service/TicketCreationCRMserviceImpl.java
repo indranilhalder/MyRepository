@@ -26,6 +26,8 @@ import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.WebResource;
 import com.sun.jersey.api.client.filter.HTTPBasicAuthFilter;
 import com.tisl.mpl.constants.clientservice.MarketplacecclientservicesConstants;
+import com.tisl.mpl.core.model.MplWebCrmTicketModel;
+import com.tisl.mpl.data.DuplicateTicketRequestData;
 import com.tisl.mpl.data.SendTicketLineItemData;
 import com.tisl.mpl.data.SendTicketRequestData;
 import com.tisl.mpl.wsdto.AddressInfoDTO;
@@ -49,6 +51,8 @@ public class TicketCreationCRMserviceImpl implements TicketCreationCRMservice
 
 	@Resource(name = "configurationService")
 	private ConfigurationService configurationService;
+	@Resource(name = "clientIntegration")
+	private ClientIntegration clientIntegration;
 
 	@Override
 	public void ticketCreationModeltoWsDTO(final SendTicketRequestData sendTicketRequestData) throws JAXBException
@@ -249,7 +253,7 @@ public class TicketCreationCRMserviceImpl implements TicketCreationCRMservice
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.service.TicketCreationCRMservice#ticketCreationModeltoXMLData(com.tisl.mpl.data.
 	 * SendTicketRequestData)
 	 */
@@ -362,7 +366,7 @@ public class TicketCreationCRMserviceImpl implements TicketCreationCRMservice
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.service.TicketCreationCRMservice#createTicketInCRM(com.tisl.mpl.wsdto.TicketMasterXMLData)
 	 */
 	@Override
@@ -584,4 +588,83 @@ public class TicketCreationCRMserviceImpl implements TicketCreationCRMservice
 		LOG.info("Finished executing overloaded method ticketCreationModeltoWsDTO....");
 	}
 
+	/**
+	 * This method is created to send the web form tickets to CRM via PI ( TPR-5989 )
+	 *
+	 * @return String message success or failure
+	 * @param mplWebCrmTicketModel
+	 * @throws JAXBException
+	 */
+	private DuplicateTicketRequestData populateDuplicateReq(final MplWebCrmTicketModel mplWebCrmTicketModel) throws Exception
+	{
+		final DuplicateTicketRequestData duplicateTicketRequestData = new DuplicateTicketRequestData();
+		if (null != mplWebCrmTicketModel.getTicketSubType() && mplWebCrmTicketModel.getTicketSubType().equalsIgnoreCase("NO"))
+		{
+			duplicateTicketRequestData.setCustomerId(mplWebCrmTicketModel.getCustomerId());
+		}
+		if (null != mplWebCrmTicketModel.getL0code())
+		{
+			duplicateTicketRequestData.setL0CatCode(mplWebCrmTicketModel.getL0code());
+		}
+		if (null != mplWebCrmTicketModel.getL1code())
+		{
+			duplicateTicketRequestData.setL1CatCode(mplWebCrmTicketModel.getL1code());
+		}
+		if (null != mplWebCrmTicketModel.getL2code())
+		{
+			duplicateTicketRequestData.setL2CatCode(mplWebCrmTicketModel.getL2code());
+		}
+		if (null != mplWebCrmTicketModel.getL3code())
+		{
+			duplicateTicketRequestData.setL3CatCode(mplWebCrmTicketModel.getL3code());
+		}
+		if (null != mplWebCrmTicketModel.getOrderCode())
+		{
+			duplicateTicketRequestData.setParentOrderId(mplWebCrmTicketModel.getOrderCode());
+		}
+		if (null != mplWebCrmTicketModel.getSubOrderCode())
+		{
+			duplicateTicketRequestData.setSubOrderId(mplWebCrmTicketModel.getSubOrderCode());
+		}
+		if (null != mplWebCrmTicketModel.getTransactionId())
+		{
+			duplicateTicketRequestData.setTransactionId(mplWebCrmTicketModel.getTransactionId());
+		}
+		return duplicateTicketRequestData;
+	}
+
+	/**
+	 * This method is created to check the duplicate web from ticket ( TPR-5989 )
+	 *
+	 * @param mplWebCrmTicketModel
+	 * @return String message success or failure
+	 * @throws JAXBException
+	 */
+	@Override
+	public String checkDuplicateWebFormTicket(final MplWebCrmTicketModel mplWebCrmTicketModel) throws Exception
+	{
+		LOG.info("Starting to execute checkDuplicateWebFormTicket method....");
+		String result = null;
+		DuplicateTicketRequestData duplicateReq = null;
+		final StringWriter duplicateXmlString = new StringWriter();
+		try
+		{
+			duplicateReq = populateDuplicateReq(mplWebCrmTicketModel);
+			final JAXBContext context = JAXBContext.newInstance(DuplicateTicketRequestData.class);
+			final Marshaller marshaller = context.createMarshaller();
+			marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
+			marshaller.marshal(duplicateReq, duplicateXmlString);
+
+			LOG.debug(" CRM Duplicate Ticket Xml File >>>>>>>>>>>>>>>> " + duplicateXmlString);
+			result = clientIntegration.checkDuplicateWebFormTicket(duplicateXmlString.toString());
+
+			LOG.info("Finished to execute checkDuplicateWebFormTicket method....");
+		}
+		catch (final Exception ex)
+		{
+			LOG.error(ex);
+			throw ex;
+		}
+		return result;
+	}
 }
