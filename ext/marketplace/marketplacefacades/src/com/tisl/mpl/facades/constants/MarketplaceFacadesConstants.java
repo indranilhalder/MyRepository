@@ -28,7 +28,11 @@ public class MarketplaceFacadesConstants extends GeneratedMarketplaceFacadesCons
 
 	public static final String PAYMENT_METHOS_COD = "COD";
 	// EGV Changes Start 
-	public static final String PAYMENT_METHOD_CLIQ_CASH = "Cliq Cash";
+	
+	public static final String PAYMENT_METHOD_CLIQ_CASH = "Cliq Cash".intern();
+	public static final String PAYMENT_METHOD_PAYTM = "PAYTM".intern();
+	public static final String PAYMENT_METHOD_MRUPEE = "MRUPEE".intern();
+	public static final String PAYMENT_METHOD_NET_BANKING = "Net Banking".intern();
    // EGV Changes End 
 	public static final String REFUND_FAILED = "Refund Failed";
 	public static final String FAILURE = "FAILURE";

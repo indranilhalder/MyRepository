@@ -2650,7 +2650,7 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 
 		int splitQty = 0;
 		if (clonedSubOrder.getSplitModeInfo().equalsIgnoreCase("Split")
-				|| clonedSubOrder.getSplitModeInfo().equalsIgnoreCase("CliqCash"))
+				||(clonedSubOrder.getSplitModeInfo().equalsIgnoreCase("CliqCash") || clonedSubOrder.getSplitModeInfo().equalsIgnoreCase("Cliq Cash")))
 		{
 			splitQty = abstractOrderEntryModel.getQuantity().intValue();
 
@@ -2912,7 +2912,7 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 
 
 			if (clonedSubOrder.getSplitModeInfo().equalsIgnoreCase("Split")
-					|| clonedSubOrder.getSplitModeInfo().equalsIgnoreCase("CliqCash"))
+					|| (clonedSubOrder.getSplitModeInfo().equalsIgnoreCase("CliqCash") || clonedSubOrder.getSplitModeInfo().equalsIgnoreCase("Cliq Cash")))
 			{
 				setPaymentModeApporsionValue(abstractOrderEntryModel, splitQty, orderEntryModel, clonedSubOrder);
 				//setPaymentModeApporsionValue(abstractOrderEntryModel, quantity, orderEntryModel, clonedSubOrder);

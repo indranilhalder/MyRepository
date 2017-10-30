@@ -3008,7 +3008,10 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 						LOG.debug("Ignoring to add COD payment for CNC Product ");
 					}
 					else if (isEgvOrder && (mode.getMode().equalsIgnoreCase(MarketplaceFacadesConstants.PAYMENT_METHOS_COD) || 
-							mode.getMode().equalsIgnoreCase(MarketplaceFacadesConstants.PAYMENT_METHOD_CLIQ_CASH)))
+							mode.getMode().equalsIgnoreCase(MarketplaceFacadesConstants.PAYMENT_METHOD_CLIQ_CASH) ||
+							mode.getMode().equalsIgnoreCase(MarketplaceFacadesConstants.PAYMENT_METHOD_MRUPEE) || 
+							mode.getMode().equalsIgnoreCase(MarketplaceFacadesConstants.PAYMENT_METHOD_NET_BANKING) || 
+							mode.getMode().equalsIgnoreCase(MarketplaceFacadesConstants.PAYMENT_METHOD_PAYTM) ))
 					{
 						LOG.debug("Ignoring to add "+mode.getMode()+" payment for EGV Order ");
 					}

@@ -325,6 +325,29 @@ public class MplPaymentWebFacadeImpl implements MplPaymentWebFacade
 
 			//Added for TPR-1035
 			promoPriceData = getMplPaymentWebService().validateBinNumber(binNo, paymentMode, bankName, userId);
+			if(null != cart && null != cart.getIsEGVCart() && cart.getIsEGVCart().booleanValue()){
+				if (StringUtils.isNotEmpty(paymentMode) && paymentMode.equalsIgnoreCase(MarketplacewebservicesConstants.CREDIT))
+				{
+					cart.setModeOfPayment(MarketplacewebservicesConstants.CREDIT);
+					cart.setConvenienceCharges(Double.valueOf(0.0));
+					getModelService().save(cart);
+				}
+				else if (StringUtils.isNotEmpty(paymentMode)
+						&& paymentMode.equalsIgnoreCase(MarketplacewebservicesConstants.DEBIT))
+				{
+					cart.setModeOfPayment(MarketplacewebservicesConstants.DEBIT);
+					cart.setConvenienceCharges(Double.valueOf(0.0));
+					getModelService().save(cart);
+				}
+				else if (StringUtils.isNotEmpty(paymentMode)
+						&& paymentMode.equalsIgnoreCase(MarketplacewebservicesConstants.NETBANKING))
+				{
+					cart.setModeOfPayment(MarketplacewebservicesConstants.NETBANKING);
+					cart.setConvenienceCharges(Double.valueOf(0.0));
+					getModelService().save(cart);
+				}
+				return promoPriceData;
+			}
 			if (promoPriceData.getBinCheck().booleanValue())
 			{
 				data = new MplPromoPriceData();
@@ -523,6 +546,30 @@ public class MplPaymentWebFacadeImpl implements MplPaymentWebFacade
 		{
 			// Validate Correct Input
 			promoPriceData = getMplPaymentWebService().validateBinNumber(binNo, paymentMode, bankName, userId);
+			
+			if(null != order && null != order.getIsEGVCart() && order.getIsEGVCart().booleanValue()){
+				if (StringUtils.isNotEmpty(paymentMode) && paymentMode.equalsIgnoreCase(MarketplacewebservicesConstants.CREDIT))
+				{
+					order.setModeOfOrderPayment(MarketplacewebservicesConstants.CREDIT);
+					order.setConvenienceCharges(Double.valueOf(0.0));
+					getModelService().save(order);
+				}
+				else if (StringUtils.isNotEmpty(paymentMode)
+						&& paymentMode.equalsIgnoreCase(MarketplacewebservicesConstants.DEBIT))
+				{
+					order.setModeOfOrderPayment(MarketplacewebservicesConstants.DEBIT);
+					order.setConvenienceCharges(Double.valueOf(0.0));
+					getModelService().save(order);
+				}
+				else if (StringUtils.isNotEmpty(paymentMode)
+						&& paymentMode.equalsIgnoreCase(MarketplacewebservicesConstants.NETBANKING))
+				{
+					order.setModeOfOrderPayment(MarketplacewebservicesConstants.NETBANKING);
+					order.setConvenienceCharges(Double.valueOf(0.0));
+					getModelService().save(order);
+				}
+				return promoPriceData;
+			}
 			if (promoPriceData.getBinCheck().booleanValue())
 			{
 				data = new MplPromoPriceData();
