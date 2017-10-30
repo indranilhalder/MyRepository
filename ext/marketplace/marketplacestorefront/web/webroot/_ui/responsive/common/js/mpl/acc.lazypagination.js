@@ -5,7 +5,7 @@ var lazyPagePush = true;
 var ajaxUrl = '';
 var pageType = $('#pageType').val();
 var isSerp = false;
-var totalPageCountToShow = 5; 
+var totalPageCountToShow = 2; 
 
 $(document).ready(function(){
 
@@ -39,7 +39,7 @@ $(window).on('scroll', function() {
     }
 });
 
-$(document).on('click', '.pageNo', function() {
+$(document).on('click', '.pageNo', function(e) {
 	e.preventDefault();
     var clickedPageNo = parseInt($(this).text());
     $(".pageNo").removeClass("active");
@@ -54,28 +54,45 @@ var size_li = $lis.length;
 var x = totalPageCountToShow,
 start = 0;
 
-$(document).on('click', '.next-block', function() {
+$(document).on('click', '.next-block', function(e) {
 	e.preventDefault();
-	var nextPageNo = $(".pageNo.active").parent().next().text();
-	if(nextPageNo && !isLastPage()){
-		getProductSetData(nextPageNo);
-		$(".pageNo.active").removeClass("active");
-		$(".pageNo.active").parent().next().find("a").addClass("active");
-		 $("#pageOf").text(nextPageNo);
+	var nextPageNo = $(".pageNo.active").parent().next();
+	if($(nextPageNo).text() && isLastPageNext()){
+		getProductSetData($(nextPageNo).text());
+		$(nextPageNo).find("a").addClass("active");
+		$(nextPageNo).prev().find("a").removeClass("active");
+		$("#pageOf").text($(nextPageNo).text());
 	}else if (start + x < size_li) {
         $lis.slice(start, start + x).hide();
         start += x;
         $lis.slice(start, start + x).show();
-        getProductSetData(nextPageNo);
-        $(".pageNo.active").removeClass("active");
-		$(".pageNo.active").parent().next().find("a").addClass("active");
-		$("#pageOf").text(nextPageNo);
+        getProductSetData($(nextPageNo).text());
+        $(nextPageNo).find("a").addClass("active");
+		$(nextPageNo).prev().find("a").removeClass("active");
+		$("#pageOf").text($(nextPageNo).text());
     }
 });
 
-$(document).on('click', '.prev-block', function() {
+$(document).on('click', '.prev-block', function(e) {
 	e.preventDefault();
-    if (start - x >= 0) {
+	var nextPageNo = $(".pageNo.active").parent().prev();
+	if($(nextPageNo).text() && isLastPagePrev()){
+		getProductSetData($(nextPageNo).text());
+		$(nextPageNo).find("a").addClass("active");
+		$(nextPageNo).next().find("a").removeClass("active");
+		$("#pageOf").text($(nextPageNo).text());
+	}else if (start - x >= 0) {
+        $lis.slice(start, start + x).hide();
+        start -= x;
+        $lis.slice(start, start + x).show();
+        getProductSetData($(nextPageNo).text());
+        $(nextPageNo).find("a").addClass("active");
+		$(nextPageNo).next().find("a").removeClass("active");
+		$("#pageOf").text($(nextPageNo).text());
+    }
+	
+	
+	if (start - x >= 0) {
         $lis.slice(start, start + x).hide();
         start -= x;
         $lis.slice(start, start + x).show();
@@ -100,9 +117,14 @@ $(document).on('click','.sort',function(){
 
 });
 
-function isLastPage(){
+function isLastPageNext(){
 	
-	return !$(".pageNo.active").parent().next().is(":visible");
+	return $(".pageNo.active").parent().next().is(":visible");
+}
+
+function isLastPagePrev(){
+	
+	return $(".pageNo.active").parent().prev().is(":visible");
 }
 		  
 function lazyPushInitalPage(){

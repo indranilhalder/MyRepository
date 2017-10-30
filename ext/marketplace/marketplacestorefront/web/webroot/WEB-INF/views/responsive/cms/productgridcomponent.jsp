@@ -73,16 +73,16 @@
     <ul class="pagination-block">
     	<c:forEach begin="1" end="${searchPageData.pagination.numberOfPages}" var="page" varStatus="loop">
     	<c:choose>
-    		<c:when test="${loop.index eq 0 }">
-    		<li class="pageNoLi"><a class="pageNo active" href="/${requestScope['javax.servlet.forward.request_uri']}/page-${page}">${page}</a></li>
+    		<c:when test="${loop.index eq 1}">
+    		<li class="pageNoLi"><a class="pageNo active" href="#/${requestScope['javax.servlet.forward.request_uri']}/page-${page}">${page}</a></li>
     		</c:when>
     		<c:otherwise>
-    		<li class="pageNoLi"><a class="pageNo" href="/${requestScope['javax.servlet.forward.request_uri']}/page-${page}">${page}</a></li>
+    		<li class="pageNoLi"><a class="pageNo" href="#/${requestScope['javax.servlet.forward.request_uri']}/page-${page}">${page}</a></li>
     		</c:otherwise>
     	</c:choose>
         </c:forEach>
     </ul>
-    <div class="next-block"><a href="next-page"><span>Next</span></a></div>
+    <div class="next-block"><a href="#next-page"><span>Next</span></a></div>
 </c:when>
 <%-- <c:otherwise>
     <ul class="">
