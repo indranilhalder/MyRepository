@@ -77460,6 +77460,14 @@ label[for='priority_paytm'] img{
 /*paytm integration end*/
 
 /* Pagination link */
+.bottom-pagination.pagination-search{
+	display: inline-block;
+    position: relative;
+    float: right;
+    width: 80.16%;
+    padding: 0 0 0 20px;
+    text-align: center;
+}
 li.pageNoLi {
     display: inline-block;
 }
@@ -77510,5 +77518,21 @@ a.pageNo.active{
 }
 .prev-page{
 	color:#a9133d;
+}
+.total-pagecount{
+	position: absolute;
+    left: 2%;
+    top: 27px;
+}
+@media (max-width: 767px){
+.bottom-pagination.pagination-search{
+    width: 100%;
+    padding: 0;
+}
+.total-pagecount{
+	position: relative;
+    left: 0;
+    top: 0;
+}
 }
 /* Pagination link */

@@ -74,8 +74,8 @@
 
 </div> --%>
 
-<div class="bottom-pagination">
-<div class=""><span class=""><span>Total Pages :: ${searchPageData.pagination.numberOfPages}</span></span>
+<div class="bottom-pagination pagination-search">
+<div class=""><span class="total-pagecount"><span>Total Pages :: ${searchPageData.pagination.numberOfPages}</span></span>
 <c:choose>
 <c:when test="${searchPageData.pagination.numberOfPages > 1}">
 <div class="prev-block"><a href=""><span class="prev-page">Previous</span></a></div>
