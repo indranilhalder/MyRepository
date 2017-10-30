@@ -3822,7 +3822,7 @@ function onSizeSelectPopulateDOM()//First Method to be called in size select aja
 						var responseProductUrl=jsonData['url'];
 						var responseProductArticleDescription=jsonData['articleDescription'];
 						var responsePdpSellerIds=jsonData['pdpSellerIDs'];
-						//var responseMsdRESTURL=jsonData['msdRESTURL'];
+						var responseMsdRESTURL=jsonData['msdRESTURL'];
 						if(typeof(jsonData['productSize'])!='undefined')
 						{
 							var responseProductSize=jsonData['productSize'];
@@ -4176,7 +4176,7 @@ function onSizeSelectDropDownPopulateDOM()//First Method to be called in size se
 						var responseProductUrl=jsonData['url'];
 						var responseProductArticleDescription=jsonData['articleDescription'];
 						var responsePdpSellerIds=jsonData['pdpSellerIDs'];
-						//var responseMsdRESTURL=jsonData['msdRESTURL'];
+						var responseMsdRESTURL=jsonData['msdRESTURL'];
 						if(typeof(jsonData['productSize'])!='undefined')
 						{
 							var responseProductSize=jsonData['productSize'];
