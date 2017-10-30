@@ -77759,7 +77759,7 @@ background: url(../images/search_image.png) no-repeat;}
 		.voucherHeadingTexts {padding-top: 4%;}
 		.dividerVS { margin-bottom: 0;}
 		.redeemToWalletBtn {float: right;}
-		.redeemVoucherAlert {padding: 10px !important; margin: 0 !important;}
+		.redeemVoucherAlert {padding: 10px !important; margin: 0 0 10px !important;}
 	}
 	
 	@media(max-width: 650px){
