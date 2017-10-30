@@ -76940,7 +76940,8 @@ body .account .right-account form label.invite-text-lbl{
 	display: inline-block;
 	width: 49%;
 	vertical-align: top;
-	margin-bottom: 40px;
+	margin-bottom: 10px;
+	float: left;
 }
 .pdp .product-info.wrapper .tabs-block .tabs.pdp li ul.homefurnishing-overview li{
 	font-size: 12px;
@@ -77560,3 +77561,12 @@ background: url(../images/search_image.png) no-repeat;}
 }
 /* SDI-1393 End */
 
+/* HOME-210 start */
+.homefurnishing-overview:nth-child(2) {
+    float: right ! important;
+}
+.homefurnishing-overview:nth-child(3) {
+    float: right ! important;
+}
+
+/* HOME-210 End */
