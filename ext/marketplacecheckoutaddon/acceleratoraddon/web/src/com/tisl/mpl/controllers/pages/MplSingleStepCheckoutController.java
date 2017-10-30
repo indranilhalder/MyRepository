@@ -3475,6 +3475,7 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 		return "addon:/marketplacecheckoutaddon/pages/checkout/single/showChooseDeliverySlotPage";
 	}
 
+	@SuppressWarnings("deprecation")
 	@RequestMapping(value = MarketplacecheckoutaddonConstants.GETREVIEWORDER, method = RequestMethod.GET)
 	public String viewReviewOrder(final Model model) throws UnsupportedEncodingException
 	{
@@ -3489,7 +3490,7 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 			}
 
 			final CartModel cartModel = cartService.getSessionCart();
-			commerceCartService.recalculateCart(cartModel);//SDI-2158 fix
+			commerceCartService.recalculateCart(cartModel);//SDI-2158 fix recalculation
 			mplCartFacade.setCartSubTotalForReviewOrder(cartModel);
 			mplCartFacade.totalMrpCal(cartModel);
 			//UF-260
@@ -4951,7 +4952,7 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 
 	/*
 	 * @Description adding wishlist popup in cart page
-	 * 
+	 *
 	 * @param String productCode,String wishName, model
 	 */
 
@@ -5009,7 +5010,7 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 
 	/*
 	 * @Description showing wishlist popup in cart page
-	 * 
+	 *
 	 * @param String productCode, model
 	 */
 	@ResponseBody
