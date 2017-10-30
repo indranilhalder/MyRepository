@@ -74,7 +74,7 @@
 
 </div> --%>
 
-<div class="bottom-pagination">
+<div class="bottom-pagination pagination-search">
 <div class="">
 <c:if test="${searchPageData.pagination.numberOfPages > 1}">
 <span class="">
