@@ -5885,6 +5885,7 @@ function useWalletForPaymentAjax(){
 				 
 				 $(".splitTotalPayablePrice").html("&#8377;"+splitPayable);*/
 			}
+		    applyPromotion(null,"none","none");
 		},	
 	   
 		fail : function(data){
