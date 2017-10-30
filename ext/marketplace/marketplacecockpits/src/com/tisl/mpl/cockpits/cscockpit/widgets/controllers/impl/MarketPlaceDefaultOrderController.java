@@ -3,6 +3,8 @@
  */
 package com.tisl.mpl.cockpits.cscockpit.widgets.controllers.impl;
 
+import java.math.BigDecimal;
+import java.math.MathContext;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.ArrayList;
@@ -46,6 +48,7 @@ import com.tisl.mpl.marketplacecommerceservices.service.MplJusPayRefundService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplMWalletRefundService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplOrderService;
 import com.tisl.mpl.marketplacecommerceservices.service.OrderModelService;
+import com.tisl.mpl.model.PaymentTypeModel;
 import com.tisl.mpl.pojo.request.QCCreditRequest;
 import com.tisl.mpl.pojo.response.QCCard;
 import com.tisl.mpl.pojo.response.QCRedeeptionResponse;
@@ -258,7 +261,7 @@ public class MarketPlaceDefaultOrderController extends DefaultOrderController
 			   	      	response = mplWalletFacade.qcCredit(walletId , qcCreditRequest);
 				   	     for (OrderEntryModel orderEntry : orderEntryModel) {
 				   	    	    if(null != orderEntry.getOrder().getSplitModeInfo() && orderEntry.getOrder().getSplitModeInfo().equalsIgnoreCase("CliqCash")){
-				   	    	    	constructQuickCilverOrderEntry(response,orderEntry.getTransactionID());
+				   	    	    	constructQuickCilverOrderEntry(response,orderEntry.getTransactionID(),orderEntry.getOrder());
 				   	    	    	ConsignmentStatus newStatus = null;
 									if (orderEntry != null
 											&& CollectionUtils.isNotEmpty(orderEntry
@@ -316,7 +319,7 @@ public class MarketPlaceDefaultOrderController extends DefaultOrderController
 					// the state.
 					if(null != orderEntry.getOrder().getSplitModeInfo() && orderEntry.getOrder().getSplitModeInfo().equalsIgnoreCase("Split")){
 						returnModel =constructQuickCilverOrderEntryForSplit(response,orderEntry.getTransactionID());
-						saveQCandJuspayResponse(orderEntry,paymentTransactionModel,returnModel);
+						saveQCandJuspayResponse(orderEntry,paymentTransactionModel,returnModel ,orderEntry.getOrder());
 					}
 					ConsignmentStatus newStatus = null;
 					if (orderEntry != null
@@ -1377,12 +1380,13 @@ public class MarketPlaceDefaultOrderController extends DefaultOrderController
 		return refundAmountForQc;
 	}
 	
-	private void constructQuickCilverOrderEntry(final QCRedeeptionResponse response,String transactionId){
+	private void constructQuickCilverOrderEntry(final QCRedeeptionResponse response,String transactionId,final OrderModel subOrderModel){
 		
 		
 		 AbstractOrderEntryModel abstractOrderEntryModel = mplOrderService.getEntryModel(transactionId);
 			final WalletApportionReturnInfoModel walletApportionModel = getModelService().create(WalletApportionReturnInfoModel.class);
 		  List<WalletCardApportionDetailModel> walletCardApportionDetailModelList = new ArrayList<WalletCardApportionDetailModel>();
+		  String qcResponseStatus = "";
 		 if(null != response && null != response.getCards()){
 		  for(QCCard qcCard:response.getCards()){
 				final WalletCardApportionDetailModel model = getModelService().create(WalletCardApportionDetailModel.class);
@@ -1409,8 +1413,10 @@ public class MarketPlaceDefaultOrderController extends DefaultOrderController
 			walletApportionModel.setType("CANCEL");
 			if(StringUtils.equalsIgnoreCase(response.getResponseCode().toString(),"0")){
 				walletApportionModel.setStatusForQc("SUCCESS");
+				qcResponseStatus= "SUCCESS";
 			}else{
 				walletApportionModel.setStatusForQc("PENDING");
+				qcResponseStatus = "PENDING";
 			}
 			System.out.println("Before Saving Juspay Response is :"+walletApportionModel.getJuspayApportionValue());
 			modelService.save(walletApportionModel);
@@ -1421,6 +1427,44 @@ public class MarketPlaceDefaultOrderController extends DefaultOrderController
 			modelService.save(abstractOrderEntryModel);
 			System.out.println("After setting  Order Entry Response is :"+walletApportionModel.getJuspayApportionValue());
 	     LOG.debug("abstractOrderEntryModel Saved Successfully..............");
+	     
+	     final PaymentTransactionModel paymentTransactionModel = modelService.create(PaymentTransactionModel.class);
+			paymentTransactionModel.setCode(response.getTransactionId().toString());
+			paymentTransactionModel.setRequestId(response.getTransactionId().toString());
+			paymentTransactionModel.setStatus(qcResponseStatus);
+			paymentTransactionModel.setOrder(subOrderModel);
+			final PaymentTransactionEntryModel paymentTransactionEntryModel = modelService
+					.create(PaymentTransactionEntryModel.class);
+			paymentTransactionEntryModel.setCode(response.getTransactionId().toString());
+			final BigDecimal bigAmount = new BigDecimal(response.getAmount().doubleValue(), MathContext.DECIMAL64);
+			paymentTransactionEntryModel.setAmount(bigAmount);
+			paymentTransactionEntryModel.setRequestId(response.getTransactionId().toString());
+			paymentTransactionEntryModel.setTime(new Date());
+			paymentTransactionEntryModel.setCurrency(subOrderModel.getCurrency());
+			paymentTransactionEntryModel.setTransactionStatus(qcResponseStatus);
+			paymentTransactionEntryModel.setTransactionStatusDetails(qcResponseStatus);
+			PaymentTypeModel model= new PaymentTypeModel();
+			for (final PaymentTransactionModel paymentTransaction : subOrderModel.getPaymentTransactions())
+			{
+				for (final PaymentTransactionEntryModel paymentTransactionEntry : paymentTransaction.getEntries())
+				{
+					if ("success".equalsIgnoreCase(paymentTransactionEntry.getTransactionStatus())
+							|| "ACCEPTED".equalsIgnoreCase(paymentTransactionEntry.getTransactionStatus()))
+					{
+						model = paymentTransactionEntry.getPaymentMode();
+					}
+
+				}
+
+			}
+			paymentTransactionEntryModel.setPaymentMode(model);
+			paymentTransactionEntryModel.setType(PaymentTransactionType.CANCEL);
+			modelService.save(paymentTransactionEntryModel);
+			final List<PaymentTransactionEntryModel> entries = new ArrayList<>();
+			entries.add(paymentTransactionEntryModel);
+			paymentTransactionModel.setEntries(entries);
+			modelService.save(paymentTransactionModel);
+			LOG.debug("Payment Transaction created SuccessFully......:");
 		 }
 		
 	}
@@ -1466,11 +1510,11 @@ public class MarketPlaceDefaultOrderController extends DefaultOrderController
 		return walletApportionModel;
 	}
 	
-	private void saveQCandJuspayResponse(final OrderEntryModel orderEntry,final PaymentTransactionModel paymentTransactionModel,final WalletApportionReturnInfoModel returnModel){
+	private void saveQCandJuspayResponse(final OrderEntryModel orderEntry,final PaymentTransactionModel paymentTransactionModel,final WalletApportionReturnInfoModel returnModel ,final OrderModel subOrderModel){
 		WalletApportionReturnInfoModel walletApportionModel = getModelService().create(WalletApportionReturnInfoModel.class);
 		
 		 List<WalletCardApportionDetailModel> walletCardApportionDetailModelList = new ArrayList<WalletCardApportionDetailModel>();
-		 
+		 String qcResponseStatus ="";
 		 if(null != returnModel && null != returnModel.getWalletCardList()){
 		  for(WalletCardApportionDetailModel qcCard:returnModel.getWalletCardList()){
 				final WalletCardApportionDetailModel model = getModelService().create(WalletCardApportionDetailModel.class);
@@ -1511,6 +1555,9 @@ public class MarketPlaceDefaultOrderController extends DefaultOrderController
 		walletApportionModel.setType("CANCEL");
 		if(null != returnModel.getStatusForQc() ){
 			walletApportionModel.setStatusForQc(returnModel.getStatusForQc());
+			qcResponseStatus= "SUCCESS";
+		}else{
+			qcResponseStatus = "PENDING";
 		}
 		
 		if (StringUtils.equalsIgnoreCase(paymentTransactionModel.getStatus(), MarketplacecommerceservicesConstants.SUCCESS)){
@@ -1528,5 +1575,43 @@ public class MarketPlaceDefaultOrderController extends DefaultOrderController
 		modelService.save(orderEntry);
 		System.out.println("After setting  Order Entry Response is :"+walletApportionModel.getJuspayApportionValue());
      LOG.debug("abstractOrderEntryModel Saved Successfully..............");
+     
+     final PaymentTransactionModel transactionModel = modelService.create(PaymentTransactionModel.class);
+		transactionModel.setCode(returnModel.getTransactionId().toString());
+		transactionModel.setRequestId(returnModel.getTransactionId().toString());
+		transactionModel.setStatus(qcResponseStatus);
+		transactionModel.setOrder(subOrderModel);
+		final PaymentTransactionEntryModel paymentTransactionEntryModel = modelService
+				.create(PaymentTransactionEntryModel.class);
+		paymentTransactionEntryModel.setCode(returnModel.getTransactionId().toString());
+		final BigDecimal bigAmount = new BigDecimal(calculateSplitQcRefundAmount(orderEntry), MathContext.DECIMAL64);
+		paymentTransactionEntryModel.setAmount(bigAmount);
+		paymentTransactionEntryModel.setRequestId(returnModel.getTransactionId().toString());
+		paymentTransactionEntryModel.setTime(new Date());
+		paymentTransactionEntryModel.setCurrency(subOrderModel.getCurrency());
+		paymentTransactionEntryModel.setTransactionStatus(qcResponseStatus);
+		paymentTransactionEntryModel.setTransactionStatusDetails(qcResponseStatus);
+		PaymentTypeModel model= new PaymentTypeModel();
+		for (final PaymentTransactionModel paymentTransaction : subOrderModel.getPaymentTransactions())
+		{
+			for (final PaymentTransactionEntryModel paymentTransactionEntry : paymentTransaction.getEntries())
+			{
+				if ("success".equalsIgnoreCase(paymentTransactionEntry.getTransactionStatus())
+						|| "ACCEPTED".equalsIgnoreCase(paymentTransactionEntry.getTransactionStatus()))
+				{
+					model = paymentTransactionEntry.getPaymentMode();
+				}
+
+			}
+
+		}
+		paymentTransactionEntryModel.setPaymentMode(model);
+		paymentTransactionEntryModel.setType(PaymentTransactionType.CANCEL);
+		modelService.save(paymentTransactionEntryModel);
+		final List<PaymentTransactionEntryModel> entries = new ArrayList<>();
+		entries.add(paymentTransactionEntryModel);
+		transactionModel.setEntries(entries);
+		modelService.save(transactionModel);
+		LOG.debug("Payment Transaction for Split Mode.... created SuccessFully......:");
 	}
 }

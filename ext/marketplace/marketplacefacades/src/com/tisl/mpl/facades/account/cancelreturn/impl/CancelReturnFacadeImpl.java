@@ -52,6 +52,8 @@ import de.hybris.platform.servicelayer.user.UserService;
 import de.hybris.platform.store.services.BaseStoreService;
 import de.hybris.platform.storelocator.model.PointOfServiceModel;
 
+import java.math.BigDecimal;
+import java.math.MathContext;
 import java.text.DateFormat;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
@@ -130,6 +132,7 @@ import com.tisl.mpl.marketplacecommerceservices.service.MplProcessOrderService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplSellerInformationService;
 import com.tisl.mpl.marketplacecommerceservices.service.OrderModelService;
 import com.tisl.mpl.model.CRMTicketDetailModel;
+import com.tisl.mpl.model.PaymentTypeModel;
 import com.tisl.mpl.model.SellerInformationModel;
 import com.tisl.mpl.ordercancel.MplOrderCancelEntry;
 import com.tisl.mpl.ordercancel.MplOrderCancelRequest;
@@ -364,7 +367,6 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 				if (CollectionUtils.isNotEmpty(orderLineRequest.getOrderLine()))
 				{
 					cancelOrRetrnanable = cancelOrderInOMS(orderLineRequest, cancelOrRetrnanable, isReturn);
-					
 				}
 			}
 			if (ticketTypeCode.equalsIgnoreCase("R") && bogoOrFreeBie) //TISEE-933
@@ -2271,7 +2273,8 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
    	      	qcCreditRequest.setNotes("Cancel for "+ daecimalFormat.format(orderCancelRequest.getAmountTORefundForQc()));    	
    	      	response = mplWalletFacade.qcCredit(walletId , qcCreditRequest);
    	      	LOG.debug("*****************************"+response.getResponseCode());
-   	      	constructQuickCilverOrderEntry(response,transactionId);
+   	      	constructQuickCilverOrderEntry(response,transactionId,subOrderModel, orderRequestRecord);
+   	      	/*initiateOrderStatusUpdateForQCOrder(subOrderModel, orderRequestRecord,response,transactionId);*/
 	      	 }catch(Exception e){
 	      			e.getMessage();
 	      			LOG.error("Quck Cilver giving response code "+response.getResponseCode()+" Order Id :"+subOrderModel.getParentReference().getCode());
@@ -2396,7 +2399,7 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 									
 								if(null != subOrderModel.getSplitModeInfo() && subOrderModel.getSplitModeInfo().equalsIgnoreCase("Split")){
 									returnModel =constructQuickCilverOrderEntryForSplit(response,transactionId);
-									saveQCandJuspayResponse(orderEntry,paymentTransactionModel,returnModel);
+									saveQCandJuspayResponse(orderEntry,paymentTransactionModel,returnModel,subOrderModel);
 								}
 
 								if (StringUtils.equalsIgnoreCase(paymentTransactionModel.getStatus(),
@@ -2463,7 +2466,7 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 				else
 				{
 					if(null !=response && null !=transactionId){
-						constructQuickCilverOrderEntry(response,transactionId);
+						constructQuickCilverOrderEntry(response,transactionId,subOrderModel,orderRequestRecord);
 					}
 					LOG.debug("****** initiateRefund >>Payment transaction mode is null");
 					////TISSIT-1801
@@ -2497,13 +2500,15 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 
 		modelService.save(orderRequestRecord);
 	}
-	private void constructQuickCilverOrderEntry(final QCRedeeptionResponse response,String transactionId){
+	private void constructQuickCilverOrderEntry(final QCRedeeptionResponse response,String transactionId, final OrderModel subOrderModel,
+			final OrderCancelRecordEntryModel orderRequestRecord){
 		
 		
 		 AbstractOrderEntryModel abstractOrderEntryModel = mplOrderService.getEntryModel(transactionId);
 			final WalletApportionReturnInfoModel walletApportionModel = getModelService().create(WalletApportionReturnInfoModel.class);
 		  List<WalletCardApportionDetailModel> walletCardApportionDetailModelList = new ArrayList<WalletCardApportionDetailModel>();
 		 if(null != response && null != response.getCards()){
+			 String qcResponseStatus = "";
 		  for(QCCard qcCard:response.getCards()){
 				final WalletCardApportionDetailModel model = getModelService().create(WalletCardApportionDetailModel.class);
 				model.setCardNumber(qcCard.getCardNumber());
@@ -2529,27 +2534,109 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 			walletApportionModel.setType("CANCEL");
 			if(StringUtils.equalsIgnoreCase(response.getResponseCode().toString(),"0")){
 				walletApportionModel.setStatusForQc("SUCCESS");
+				qcResponseStatus = "SUCCESS";
 			}else{
 				walletApportionModel.setStatusForQc("PENDING");
+				qcResponseStatus = "PENDING";
 			}
-			System.out.println("Before Saving Juspay Response is :"+walletApportionModel.getJuspayApportionValue());
+			LOG.debug("Before Saving Juspay Response is :"+walletApportionModel.getJuspayApportionValue());
 			modelService.save(walletApportionModel);
-			System.out.println("After Saving Juspay Response is :"+walletApportionModel.getJuspayApportionValue());
-			
+			LOG.debug("After Saving Juspay Response is :"+walletApportionModel.getJuspayApportionValue());
 			abstractOrderEntryModel.setWalletApportionReturnInfo(walletApportionModel);
-			System.out.println("Before setting  Order Entry Response is :"+walletApportionModel.getJuspayApportionValue());
+			LOG.debug("Before setting  Order Entry Response is :"+walletApportionModel.getJuspayApportionValue());
 			modelService.save(abstractOrderEntryModel);
-			System.out.println("After setting  Order Entry Response is :"+walletApportionModel.getJuspayApportionValue());
-	     LOG.debug("abstractOrderEntryModel Saved Successfully..............");
-			
+			LOG.debug("After setting  Order Entry Response is :"+walletApportionModel.getJuspayApportionValue());
+			LOG.debug("Try to creating the Payment Transaction ......:");
+			final PaymentTransactionModel paymentTransactionModel = modelService.create(PaymentTransactionModel.class);
+	  			paymentTransactionModel.setCode(response.getTransactionId().toString());
+	  			paymentTransactionModel.setRequestId(response.getTransactionId().toString());
+	  			paymentTransactionModel.setStatus(qcResponseStatus);
+	  			paymentTransactionModel.setOrder(subOrderModel);
+	  			final PaymentTransactionEntryModel paymentTransactionEntryModel = modelService
+	  					.create(PaymentTransactionEntryModel.class);
+	  			paymentTransactionEntryModel.setCode(response.getTransactionId().toString());
+	  			final BigDecimal bigAmount = new BigDecimal(response.getAmount().doubleValue(), MathContext.DECIMAL64);
+	  			paymentTransactionEntryModel.setAmount(bigAmount);
+	  			paymentTransactionEntryModel.setRequestId(response.getTransactionId().toString());
+	  			paymentTransactionEntryModel.setTime(new Date());
+	  			paymentTransactionEntryModel.setCurrency(subOrderModel.getCurrency());
+	  			paymentTransactionEntryModel.setTransactionStatus(qcResponseStatus);
+	  			paymentTransactionEntryModel.setTransactionStatusDetails(qcResponseStatus);
+	  			PaymentTypeModel model= new PaymentTypeModel();
+	  			for (final PaymentTransactionModel paymentTransaction : subOrderModel.getPaymentTransactions())
+	  			{
+	  				for (final PaymentTransactionEntryModel paymentTransactionEntry : paymentTransaction.getEntries())
+	  				{
+	  					if ("success".equalsIgnoreCase(paymentTransactionEntry.getTransactionStatus())
+	  							|| "ACCEPTED".equalsIgnoreCase(paymentTransactionEntry.getTransactionStatus()))
+	  					{
+	  						model = paymentTransactionEntry.getPaymentMode();
+	  					}
+
+	  				}
+
+	  			}
+	  			paymentTransactionEntryModel.setPaymentMode(model);
+	  			paymentTransactionEntryModel.setType(PaymentTransactionType.CANCEL);
+	  			modelService.save(paymentTransactionEntryModel);
+	  			final List<PaymentTransactionEntryModel> entries = new ArrayList<>();
+	  			entries.add(paymentTransactionEntryModel);
+	  			paymentTransactionModel.setEntries(entries);
+	  			modelService.save(paymentTransactionModel);
+	  			LOG.debug("Payment Transaction created SuccessFully......:");
+	  			
+	  			if (CollectionUtils.isNotEmpty(orderRequestRecord.getOrderEntriesModificationEntries()))
+				{
+					for (final OrderEntryModificationRecordEntryModel modificationEntry : orderRequestRecord
+							.getOrderEntriesModificationEntries())
+					{
+						final OrderEntryModel orderEntry = modificationEntry.getOrderEntry();
+						ConsignmentStatus newStatus = null;
+						if (orderEntry != null)
+						{
+							if (StringUtils.equalsIgnoreCase(paymentTransactionModel.getStatus(),
+									MarketplacecommerceservicesConstants.SUCCESS))
+							{
+								newStatus = ConsignmentStatus.ORDER_CANCELLED;
+							}
+							else if (StringUtils.equalsIgnoreCase(paymentTransactionModel.getStatus(), "PENDING"))
+							{
+								newStatus = ConsignmentStatus.REFUND_INITIATED;
+								final RefundTransactionMappingModel refundTransactionMappingModel = modelService
+										.create(RefundTransactionMappingModel.class);
+								refundTransactionMappingModel.setRefundedOrderEntry(orderEntry);
+								refundTransactionMappingModel.setJuspayRefundId(paymentTransactionModel.getCode());
+								refundTransactionMappingModel.setCreationtime(new Date());
+								refundTransactionMappingModel.setRefundType(JuspayRefundType.CANCELLED);
+								refundTransactionMappingModel.setRefundAmount(new Double(response.getAmount().doubleValue()));//TISPRO-216 : Refund amount Set in RTM
+								modelService.save(refundTransactionMappingModel);
+							}
+							else
+							{
+								newStatus = ConsignmentStatus.REFUND_IN_PROGRESS;
+							}
+
+							modelService.save(orderEntry);
+							LOG.debug("****** initiateRefund : Step 3  >>Payment transaction mode is not null >> Calling OMS with status as received from JUSPAY "
+									+ newStatus.getCode());
+
+							//mplJusPayRefundService.makeRefundOMSCall(orderEntry, paymentTransactionModel,orderRequestRecord.getRefundableAmount(), newStatus);
+
+							mplJusPayRefundService.makeRefundOMSCall(orderEntry, paymentTransactionModel,
+									Double.valueOf(response.getAmount().doubleValue()), newStatus, null);
+
+						}
+					}
+				}
+	  		
 		 }
 		
 	}
-	private void saveQCandJuspayResponse(final OrderEntryModel orderEntry,final PaymentTransactionModel paymentTransactionModel,final WalletApportionReturnInfoModel returnModel){
+	private void saveQCandJuspayResponse(final OrderEntryModel orderEntry,final PaymentTransactionModel paymentTransactionModel,final WalletApportionReturnInfoModel returnModel , final OrderModel subOrderModel){
 		WalletApportionReturnInfoModel walletApportionModel = getModelService().create(WalletApportionReturnInfoModel.class);
 		
 		 List<WalletCardApportionDetailModel> walletCardApportionDetailModelList = new ArrayList<WalletCardApportionDetailModel>();
-		 
+		 String qcResponseStatus = "";
 		 if(null != returnModel && null != returnModel.getWalletCardList()){
 		  for(WalletCardApportionDetailModel qcCard:returnModel.getWalletCardList()){
 				final WalletCardApportionDetailModel model = getModelService().create(WalletCardApportionDetailModel.class);
@@ -2590,12 +2677,15 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 		walletApportionModel.setType("CANCEL");
 		if(null != returnModel.getStatusForQc() ){
 			walletApportionModel.setStatusForQc(returnModel.getStatusForQc());
+			 qcResponseStatus = "SUCCESS"; 
+		}else{
+			qcResponseStatus = "PENDING";
 		}
 		
 		if (StringUtils.equalsIgnoreCase(paymentTransactionModel.getStatus(), MarketplacecommerceservicesConstants.SUCCESS)){
 			walletApportionModel.setStatus("SUCCESS");
 		}else if (StringUtils.equalsIgnoreCase(paymentTransactionModel.getStatus(), "PENDING")){
-			walletApportionModel.setStatus("PENDING");
+			walletApportionModel.setStatus("PENDING");	  
 		}
 		
 		System.out.println("Before Saving Juspay Response is :"+walletApportionModel.getJuspayApportionValue());
@@ -2607,6 +2697,46 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 		modelService.save(orderEntry);
 		System.out.println("After setting  Order Entry Response is :"+walletApportionModel.getJuspayApportionValue());
      LOG.debug("abstractOrderEntryModel Saved Successfully..............");
+     
+     
+     final PaymentTransactionModel transactionModel = modelService.create(PaymentTransactionModel.class);
+			transactionModel.setCode(returnModel.getTransactionId().toString());
+			transactionModel.setRequestId(returnModel.getTransactionId().toString());
+			transactionModel.setStatus(qcResponseStatus);
+			transactionModel.setOrder(subOrderModel);
+			final PaymentTransactionEntryModel paymentTransactionEntryModel = modelService
+					.create(PaymentTransactionEntryModel.class);
+			paymentTransactionEntryModel.setCode(returnModel.getTransactionId().toString());
+			final BigDecimal bigAmount = new BigDecimal(calculateSplitQcRefundAmount(orderEntry), MathContext.DECIMAL64);
+			paymentTransactionEntryModel.setAmount(bigAmount);
+			paymentTransactionEntryModel.setRequestId(returnModel.getTransactionId().toString());
+			paymentTransactionEntryModel.setTime(new Date());
+			paymentTransactionEntryModel.setCurrency(subOrderModel.getCurrency());
+			paymentTransactionEntryModel.setTransactionStatus(qcResponseStatus);
+			paymentTransactionEntryModel.setTransactionStatusDetails(qcResponseStatus);
+			PaymentTypeModel model= new PaymentTypeModel();
+			for (final PaymentTransactionModel paymentTransaction : subOrderModel.getPaymentTransactions())
+			{
+				for (final PaymentTransactionEntryModel paymentTransactionEntry : paymentTransaction.getEntries())
+				{
+					if ("success".equalsIgnoreCase(paymentTransactionEntry.getTransactionStatus())
+							|| "ACCEPTED".equalsIgnoreCase(paymentTransactionEntry.getTransactionStatus()))
+					{
+						model = paymentTransactionEntry.getPaymentMode();
+					}
+
+				}
+
+			}
+			paymentTransactionEntryModel.setPaymentMode(model);
+			paymentTransactionEntryModel.setType(PaymentTransactionType.CANCEL);
+			modelService.save(paymentTransactionEntryModel);
+			final List<PaymentTransactionEntryModel> entries = new ArrayList<>();
+			entries.add(paymentTransactionEntryModel);
+			transactionModel.setEntries(entries);
+			modelService.save(transactionModel);
+			LOG.debug("Payment Transaction for Split Mode.... created SuccessFully......:");
+     
 	}
 
 	@Override
