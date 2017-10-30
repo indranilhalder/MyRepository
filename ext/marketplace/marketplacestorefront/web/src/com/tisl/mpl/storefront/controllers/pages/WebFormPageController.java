@@ -24,6 +24,7 @@ import org.apache.log4j.Logger;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
@@ -48,7 +49,7 @@ public class WebFormPageController extends AbstractPageController
 	@Resource(name = "storeBreadcrumbBuilder")
 	private StoreBreadcrumbBuilder storeBreadcrumbBuilder;
 
-	private static final String WEB_FORM = "ticketWebForm";
+	private static final String WEB_FORM = "faq";
 
 	@RequestMapping(method = RequestMethod.GET)
 	public String ticketFormView(final Model model, final RedirectAttributes redirectModel) throws CMSItemNotFoundException
@@ -61,6 +62,15 @@ public class WebFormPageController extends AbstractPageController
 		storeCmsPageInModel(model, getContentPageForLabelOrId(WEB_FORM));
 		setUpMetaDataForContentPage(model, getContentPageForLabelOrId(WEB_FORM));
 		return ControllerConstants.Views.Pages.Misc.webForm;
+	}
+
+	@RequestMapping(method = RequestMethod.POST)
+	public String ticketFormSave(@ModelAttribute final TicketWebForm webForm, final Model model,
+			final RedirectAttributes redirectModel) throws CMSItemNotFoundException
+	{
+
+
+		return ControllerConstants.Views.Pages.Misc.webFormSuccess;
 	}
 
 }

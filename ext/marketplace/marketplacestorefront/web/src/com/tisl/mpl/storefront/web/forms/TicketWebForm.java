@@ -3,8 +3,6 @@
  */
 package com.tisl.mpl.storefront.web.forms;
 
-import de.hybris.platform.commercefacades.order.data.OrderEntryData;
-
 import java.util.List;
 
 
@@ -16,50 +14,84 @@ import java.util.List;
 public class TicketWebForm
 {
 
-	private String commerceTicketId;
-	private String typeOfQuery;
+	private String ticketType;
+	private String ticketSubType;
+	private String orderCode;
+	private String subOrderCode;
 	private String transactionId;
 	private String nodeL1;
 	private String nodeL2;
 	private String nodeL3;
 	private String nodeL4;
 	private String comment;
-	private String attachment;
-	private String crmTicketId;
-	private List<OrderEntryData> entries;
+	private List<String> attachments;
 
 	/**
-	 * @return the commerceTicketId
+	 * @return the ticketType
 	 */
-	public String getCommerceTicketId()
+	public String getTicketType()
 	{
-		return commerceTicketId;
+		return ticketType;
 	}
 
 	/**
-	 * @param commerceTicketId
-	 *           the commerceTicketId to set
+	 * @param ticketType
+	 *           the ticketType to set
 	 */
-	public void setCommerceTicketId(final String commerceTicketId)
+	public void setTicketType(final String ticketType)
 	{
-		this.commerceTicketId = commerceTicketId;
+		this.ticketType = ticketType;
 	}
 
 	/**
-	 * @return the typeOfQuery
+	 * @return the ticketSubType
 	 */
-	public String getTypeOfQuery()
+	public String getTicketSubType()
 	{
-		return typeOfQuery;
+		return ticketSubType;
 	}
 
 	/**
-	 * @param typeOfQuery
-	 *           the typeOfQuery to set
+	 * @param ticketSubType
+	 *           the ticketSubType to set
 	 */
-	public void setTypeOfQuery(final String typeOfQuery)
+	public void setTicketSubType(final String ticketSubType)
 	{
-		this.typeOfQuery = typeOfQuery;
+		this.ticketSubType = ticketSubType;
+	}
+
+	/**
+	 * @return the orderCode
+	 */
+	public String getOrderCode()
+	{
+		return orderCode;
+	}
+
+	/**
+	 * @param orderCode
+	 *           the orderCode to set
+	 */
+	public void setOrderCode(final String orderCode)
+	{
+		this.orderCode = orderCode;
+	}
+
+	/**
+	 * @return the subOrderCode
+	 */
+	public String getSubOrderCode()
+	{
+		return subOrderCode;
+	}
+
+	/**
+	 * @param subOrderCode
+	 *           the subOrderCode to set
+	 */
+	public void setSubOrderCode(final String subOrderCode)
+	{
+		this.subOrderCode = subOrderCode;
 	}
 
 	/**
@@ -165,56 +197,21 @@ public class TicketWebForm
 	}
 
 	/**
-	 * @return the attachment
+	 * @return the attachments
 	 */
-	public String getAttachment()
+	public List<String> getAttachments()
 	{
-		return attachment;
+		return attachments;
 	}
 
 	/**
-	 * @param attachment
-	 *           the attachment to set
+	 * @param attachments
+	 *           the attachments to set
 	 */
-	public void setAttachment(final String attachment)
+	public void setAttachments(final List<String> attachments)
 	{
-		this.attachment = attachment;
+		this.attachments = attachments;
 	}
-
-	/**
-	 * @return the crmTicketId
-	 */
-	public String getCrmTicketId()
-	{
-		return crmTicketId;
-	}
-
-	/**
-	 * @param crmTicketId
-	 *           the crmTicketId to set
-	 */
-	public void setCrmTicketId(final String crmTicketId)
-	{
-		this.crmTicketId = crmTicketId;
-	}
-
-	/**
-	 * @return the entries
-	 */
-	public List<OrderEntryData> getEntries()
-	{
-		return entries;
-	}
-
-	/**
-	 * @param entries
-	 *           the entries to set
-	 */
-	public void setEntries(final List<OrderEntryData> entries)
-	{
-		this.entries = entries;
-	}
-
 
 
 }

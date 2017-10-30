@@ -251,6 +251,7 @@ public interface ControllerConstants
 				String manifest = "pages/misc/manifest";
 				String serviceWorker = "pages/misc/service-worker";
 				String webForm = "pages/misc/ticketWebForm";
+				String webFormSuccess = "pages/misc/ticketWebFormSuccess";
 			}
 
 			interface Guest

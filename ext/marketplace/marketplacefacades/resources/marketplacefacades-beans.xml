@@ -1295,4 +1295,24 @@
 		<property name="nodeDesc" type="String" />
 		<property name="category" type="String" />
 	</bean>
+	
+	<bean class="com.tisl.mpl.facades.cms.data.WebFormData">
+		<property name="nodes" type="java.util.List&lt;com.tisl.mpl.facades.cms.data.Node>" />
+		<property name="commerceTicketId" type="String" />
+		<property name="ticketType" type="String" />
+		<property name="ticketSubType" type="String" />
+		<property name="orderCode" type="String" />
+		<property name="subOrderCode" type="String" />
+		<property name="transactionId" type="String" />
+		<property name="L0code" type="String" />
+		<property name="L1code" type="String" />
+		<property name="L2code" type="String" />
+		<property name="L3code" type="String" />
+		<property name="L4code" type="String" />
+		<property name="comment" type="String" />
+		<property name="crmTicketRef" type="String" />
+		<property name="customerId" type="String" />
+		<property name="status" type="String" />
+		<property name="attachments" type="String" />
+	</bean>
 </beans>
