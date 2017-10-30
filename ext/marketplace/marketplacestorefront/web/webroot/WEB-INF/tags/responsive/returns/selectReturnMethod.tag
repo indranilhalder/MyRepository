@@ -27,16 +27,18 @@
 				</div>
 				</c:if>
 			</div>
-			<div class="selectReturnMethod scheduled col-md-12 col-sm-12">
-				<div class="selectRadio col-md-2 col-sm-2 col-xs-2">
-						<form:radiobutton id="QuickDrop" onclick="changeRadioColor('scheduled')"
-						class="radioButton" value="schedule" name="returnMethod" path="returnMethod" />
+			<c:if test="${disableRsp ne true}">
+				<div class="selectReturnMethod scheduled col-md-12 col-sm-12">
+					<div class="selectRadio col-md-2 col-sm-2 col-xs-2">
+							<form:radiobutton id="QuickDrop" onclick="changeRadioColor('scheduled')"
+							class="radioButton" value="schedule" name="returnMethod" path="returnMethod" />
+					</div>
+					<div class="col-md-10 col-sm-10 col-xs-10">
+						<b><spring:theme code="text.order.returns.schedulepickup"/></b> <br /> 
+						<span><spring:theme code="text.order.returns.pickedupfromaddress"/></span>
+					</div>
 				</div>
-				<div class="col-md-10 col-sm-10 col-xs-10">
-					<b><spring:theme code="text.order.returns.schedulepickup"/></b> <br /> 
-					<span><spring:theme code="text.order.returns.pickedupfromaddress"/></span>
-				</div>
-			</div>
+			</c:if>
 			<div class="selectReturnMethod self col-md-12 col-sm-12">
 				<div class="selectRadio col-md-2 col-sm-2 col-xs-2">
 
@@ -155,7 +157,7 @@
 		</div>
 		</c:if> 
 		<!-- Scheduled Pickup -->
-
+<c:if test="${disableRsp ne true}"> <!-- TPR 7140  -->
 		<div class="col-md-9 scheduledPickup">
 			<div class="col-md-6 col-sm-6 col-xs-12">
 				<div class="col-md-12 col-xs-12">
@@ -249,7 +251,7 @@
 				</c:if>
 			</div>
 		</div>
-
+</c:if>
 
 		<!-- self Courier -->
 
@@ -314,6 +316,14 @@
 	</c:choose>
 
 </div>
+<c:choose>
+<c:when test="${disableRsp eq true}">
+	<span id="hideRsp" style="display:none">true</span>
+</c:when>
+<c:otherwise>
+	<span id="hideRsp" style="display:none">false</span>
+</c:otherwise>
+</c:choose>
 <style>
 .firstTataCliq span{
 	margin-bottom: -4px !important;

@@ -236,6 +236,8 @@
 				$(".thirdTataCliq .returnMethod .selectReturnMethod").addClass("greyColor");
 			} else if(selection == "R") {
 				console.log(returnMethod);
+				try
+				{
 				if(returnMethod == "COD")  {
 					checkCODValidations();
 					if(checkCODValidations() == true){
@@ -303,7 +305,13 @@
 								getScheduledPikupData();
 							}
 						/*}*/
-					}  
+					}
+				}
+				catch(e)
+				{
+					console.log(e);
+				}
+				hideRspShowRss();
 				} else {
 				$(".secondTataCliq .accContents").append("<div class='errorTextSelection'>Please select atleast one Return Type.</div>");
 			}
@@ -964,7 +972,7 @@
 							{
 							$('.errorCodemessage').show(); 
 							$(".errorCodemessage").text(data.title);
-							 
+							 $("#hideRsp").text("true");//TPR-7140
 							}
 							
 							//$("#changeAddressPopup, .wrapBG").fadeOut(300);
@@ -1098,4 +1106,14 @@ $(document).ready(function(){
 	}
 	
 });	
-		
+//TPR-7140		
+function hideRspShowRss(){
+	var hideRsp=$("#hideRsp").text();
+	if(hideRsp=="true")
+	{
+		$(".scheduled").hide();
+		changeRadioColor('self');
+		$("input[name='returnMethod']").prop( "checked", false );
+		$(".selectReturnMethod.self input[name='returnMethod']").prop( "checked", true );
+	}
+}
