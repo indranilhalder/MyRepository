@@ -40,6 +40,7 @@ $(window).on('scroll', function() {
 });
 
 $(document).on('click', '.pageNo', function() {
+	e.preventDefault();
     var clickedPageNo = parseInt($(this).text());
     $(".pageNo").removeClass("active");
     $(this).addClass("active");
