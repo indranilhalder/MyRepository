@@ -75,22 +75,34 @@
 </div> --%>
 
 <div class="bottom-pagination">
-<div class=""><span class=""><span>Total Pages :: ${searchPageData.pagination.numberOfPages}</span></span>
+<div class="">
+<c:if test="${searchPageData.pagination.numberOfPages > 1}">
+<span class="">
+<span>Pages <span id="pageOf">1</span> of ${searchPageData.pagination.numberOfPages}</span>
+</span>
+</c:if>
 <c:choose>
 <c:when test="${searchPageData.pagination.numberOfPages > 1}">
 <div class="prev-block"><a href=""><span class="prev-page">Previous</span></a></div>
     <ul class="pagination-block">
     	<c:forEach begin="1" end="${searchPageData.pagination.numberOfPages}" var="page" varStatus="loop">
-        <li class="pageNoLi"><a class="pageNo" href="#nogo">${page}</a></li>
+    	<c:choose>
+    		<c:when test="${loop.index eq 0 }">
+    		<li class="pageNoLi"><a class="pageNo active" href="/search/page-${page}?q=${param.text}">${page}</a></li>
+    		</c:when>
+    		<c:otherwise>
+    		<li class="pageNoLi"><a class="pageNo" href="/search/page-${page}?q=${param.text}">${page}</a></li>
+    		</c:otherwise>
+    	</c:choose>
         </c:forEach>
     </ul>
     <div class="next-block"><a href="next-page"><span>Next</span></a></div>
 </c:when>
-<c:otherwise>
+<%-- <c:otherwise>
     <ul class="">
         <li class="pageNo"><a class="" href="#nogo">1</a></li>
     </ul>
-</c:otherwise>
+</c:otherwise> --%>
 </c:choose>
 </div>
 </div>

@@ -44,6 +44,7 @@ $(document).on('click', '.pageNo', function() {
     $(".pageNo").removeClass("active");
     $(this).addClass("active");
     getProductSetData(clickedPageNo);
+    $("#pageOf").text(clickedPageNo);
 });
 
 var $lis = $(".pagination-block li").hide();
@@ -52,16 +53,26 @@ var size_li = $lis.length;
 var x = totalPageCountToShow,
 start = 0;
 
-$(".next-block").click(function (e) {
+$(document).on('click', '.next-block', function() {
 	e.preventDefault();
-    if (start + x < size_li) {
+	var nextPageNo = $(".pageNo.active").parent().next().text();
+	if(nextPageNo && !isLastPage()){
+		getProductSetData(nextPageNo);
+		$(".pageNo.active").removeClass("active");
+		$(".pageNo.active").parent().next().find("a").addClass("active");
+		 $("#pageOf").text(nextPageNo);
+	}else if (start + x < size_li) {
         $lis.slice(start, start + x).hide();
         start += x;
         $lis.slice(start, start + x).show();
+        getProductSetData(nextPageNo);
+        $(".pageNo.active").removeClass("active");
+		$(".pageNo.active").parent().next().find("a").addClass("active");
+		$("#pageOf").text(nextPageNo);
     }
 });
 
-$(".prev-block").click(function (e) {
+$(document).on('click', '.prev-block', function() {
 	e.preventDefault();
     if (start - x >= 0) {
         $lis.slice(start, start + x).hide();
@@ -70,16 +81,9 @@ $(".prev-block").click(function (e) {
     }
 });
 
-$(document).on('click', '.next-block', function() {
-    var clickedPageNo = parseInt($(this).text());
-    $(".pageNo").removeClass("active");
-    $(this).addClass("active");
-    getProductSetData(clickedPageNo);
-});
 
 $(document).on('click','.sort',function(){
 	//sort($(this),false);
-
 	// INC144315462 and INC144315104
 	if($('input[name=customSku]').length){
 		sortCustomSku($(this),false);
@@ -95,6 +99,10 @@ $(document).on('click','.sort',function(){
 
 });
 
+function isLastPage(){
+	
+	return !$(".pageNo.active").parent().next().is(":visible");
+}
 		  
 function lazyPushInitalPage(){
 	
