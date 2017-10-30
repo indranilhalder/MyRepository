@@ -2863,7 +2863,7 @@ function savedDebitCardRadioChange(radioId){
 		$(".card_token_hide").parent().find('.card_is_domestic').removeClass("card_is_domestic").addClass("card_is_domestic_hide");
 		$(".card_token_hide").parent().find('.card_ebsErrorSavedCard').removeClass("card_ebsErrorSavedCard").addClass("card_ebsErrorSavedCard_hide");
 		$(".card_token_hide").parent().parent().parent().find(".cvv").find('.card_cvvErrorSavedCard').removeClass("card_cvvErrorSavedCard").addClass("card_cvvErrorSavedCard_hide");
-		applyPromotion(null,"none","none");
+		applyPromotion(null,"none","none",true);
 	}
 	else if($("#paymentMode").val()=="EMI"){
 		var selectedBank=$("#bankNameForEMI").val();
@@ -2895,7 +2895,7 @@ function savedDebitCardRadioChange(radioId){
 		$(".card_token_hide").parent().find('.card_is_domestic').removeClass("card_is_domestic").addClass("card_is_domestic_hide");
 		$(".card_token_hide").parent().find('.card_ebsErrorSavedCard').removeClass("card_ebsErrorSavedCard").addClass("card_ebsErrorSavedCard_hide");
 		$(".card_token_hide").parent().parent().parent().find(".cvv").find('.card_cvvErrorSavedCard').removeClass("card_cvvErrorSavedCard").addClass("card_cvvErrorSavedCard_hide");
-		applyPromotion(null,"none","none");
+		applyPromotion(null,"none","none",true);
 	}
 	// TISEE-5555
 	$('.security_code_hide').prop('disabled', true);
@@ -3768,7 +3768,7 @@ function validateCardNo(formSubmit) {
 //				{
 					binStatus=true;
 					if($("#paymentMode").val()!='EMI'){
-						applyPromotion(null,binStatus,formSubmit);
+						applyPromotion(null,binStatus,formSubmit,true);
 					}
 					else
 					{
@@ -4060,7 +4060,7 @@ function validateDebitCardNo(formSubmit) {
 //					{
 						binStatus=true;
 						if(cardType!='EMI'){
-							applyPromotion(null,binStatus,formSubmit);
+							applyPromotion(null,binStatus,formSubmit,true);
 						}
 						//TPR-629
 						else
@@ -4951,13 +4951,13 @@ function setBankForSavedCard(bankName){
 //	});	
 	bankNameSelected=bankName;
 	//alert(bankName);
-	applyPromotion(bankName,"none","none");	
+	applyPromotion(bankName,"none","none",false);	
 
 }
 
 
 //TPR-629---changes in parameter
-function applyPromotion(bankName,binValue,formSubmit)
+function applyPromotion(bankName,binValue,formSubmit,isNewCard)
 {
 	var staticHost=$('#staticHost').val();
 	//Commenting the below two lines for UF-97
@@ -4971,7 +4971,7 @@ function applyPromotion(bankName,binValue,formSubmit)
 	var guid=$("#guid").val();
 	$.ajax({
 		url: ACC.config.encodedContextPath + "/checkout/multi/payment-method/applyPromotions",
-		data: { 'paymentMode' : paymentMode , 'bankName' : bankName , 'guid' : guid},
+		data: { 'paymentMode' : paymentMode , 'bankName' : bankName , 'guid' : guid , 'isNewCard' : isNewCard},
 		type: "GET",
 		cache: false,
 		dataType:'json',
