@@ -1428,6 +1428,13 @@ $("#otpMobileNUMField").focus(function(){
 			cache: false,
 			async: false,
 			success : function(rsponse) {
+				
+				if(response=='EGVOderError'){
+					var egvProductCode=$("#egvProductCode").val();
+					var egvUrl="/giftCard-"+egvProductCode+"/?egvErrorMsg="+response;
+					$(location).attr('href',ACC.config.encodedContextPath+egvUrl);
+				}
+				
 				if(response=='redirect'){
 //					if($(".redirect").val()=="false"){
 //						Juspay.stopSecondFactor();
@@ -1545,7 +1552,12 @@ $("#otpMobileNUMField").focus(function(){
 			cache: false,
 			async: false,
 			success : function(response) {
-
+				
+				if(response=='EGVOderError'){
+					var egvProductCode=$("#egvProductCode").val();
+					var egvUrl="/giftCard-"+egvProductCode+"/?egvErrorMsg="+response;
+					$(location).attr('href',ACC.config.encodedContextPath+egvUrl);
+				}
 				if(response=='redirect'){
 //					if($(".redirect").val()=="false"){
 //						Juspay.stopSecondFactor();
@@ -2916,6 +2928,12 @@ function submitNBForm(){
 			type: "GET",
 			cache: false,
 			success : function(response) {
+				
+				if(response=='EGVOderError'){
+					var egvProductCode=$("#egvProductCode").val();
+					var egvUrl="/giftCard-"+egvProductCode+"/?egvErrorMsg="+response;
+					$(location).attr('href',ACC.config.encodedContextPath+egvUrl);
+				}
 				
 				if(response=='redirect'){
 					$(location).attr('href',ACC.config.encodedContextPath+"/cart"); //TIS 404

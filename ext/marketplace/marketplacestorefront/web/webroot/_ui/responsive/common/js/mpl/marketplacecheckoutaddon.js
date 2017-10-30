@@ -1792,6 +1792,12 @@ function savedDebitCardRadioChange(radioId){
 			cache: false,
 			async: false,
 			success : function(response) {
+				//egv Changes
+				if(response=='EGVOderError'){
+					var egvProductCode=$("#egvProductCode").val();
+					var egvUrl="/giftCard-"+egvProductCode+"/?egvErrorMsg="+response;
+					$(location).attr('href',ACC.config.encodedContextPath+egvUrl);
+				}
 				//TPR:3780:jewellery
 				if(response=='reload_for_inventory'){
 					$(location).attr('href',ACC.config.encodedContextPath+"/checkout/multi/payment-method/pay?dispMsg=true");
@@ -1945,6 +1951,12 @@ function savedDebitCardRadioChange(radioId){
 			cache: false,
 			async: false,
 			success : function(response) {
+				//egv Changes
+				if(response=='EGVOderError'){
+					var egvProductCode=$("#egvProductCode").val();
+					var egvUrl="/giftCard-"+egvProductCode+"/?egvErrorMsg="+response;
+					$(location).attr('href',ACC.config.encodedContextPath+egvUrl);
+				}
 				//TPR:3780:jewellery
 				if(response=='reload_for_inventory'){
 					$(location).attr('href',ACC.config.encodedContextPath+"/checkout/multi/payment-method/pay?dispMsg=true");
@@ -2117,6 +2129,12 @@ function savedDebitCardRadioChange(radioId){
 			cache: false,
 			async: false,
 			success : function(response) {
+				//egv Changes
+				if(response=='EGVOderError'){
+					var egvProductCode=$("#egvProductCode").val();
+					var egvUrl="/giftCard-"+egvProductCode+"/?egvErrorMsg="+response;
+					$(location).attr('href',ACC.config.encodedContextPath+egvUrl);
+				}
 				//TPR:3780:jewellery
 				if(response=='reload_for_inventory'){
 					$(location).attr('href',ACC.config.encodedContextPath+"/checkout/multi/payment-method/pay?dispMsg=true");
@@ -2312,6 +2330,14 @@ function savedDebitCardRadioChange(radioId){
 			cache: false,
 			async: false,
 			success : function(response) {
+				
+				//egv Changes
+				if(response=='EGVOderError'){
+					var egvProductCode=$("#egvProductCode").val();
+					var egvUrl="/giftCard-"+egvProductCode+"/?egvErrorMsg="+response;
+					$(location).attr('href',ACC.config.encodedContextPath+egvUrl);
+				}
+				
 				//TPR:3780:jewellery
 				if(response=='reload_for_inventory'){
 					$(location).attr('href',ACC.config.encodedContextPath+"/checkout/multi/payment-method/pay?dispMsg=true");
@@ -5352,6 +5378,14 @@ function submitNBForm(){
 			type: "GET",
 			cache: false,
 			success : function(response) {
+				
+			    //egv Changes
+				if(response=='EGVOderError'){
+					var egvProductCode=$("#egvProductCode").val();
+					var egvUrl="/giftCard-"+egvProductCode+"/?egvErrorMsg="+response;
+					$(location).attr('href',ACC.config.encodedContextPath+egvUrl);
+				}
+				
 				//TPR:3780:jewellery
 				if(response=='reload_for_inventory'){
 					$(location).attr('href',ACC.config.encodedContextPath+"/checkout/multi/payment-method/pay?dispMsg=true");

@@ -4270,7 +4270,7 @@ public class ProductPageController extends MidPageController
 	@RequireHardLogIn
 	@RequestMapping(value = ControllerConstants.Views.Fragments.Product.PRODUCT_CODE_GIFT_CART, method = RequestMethod.GET)
 	public String getGitProductDetails(@PathVariable(ControllerConstants.Views.Fragments.Product.PRODUCT_CODE) String productCode,
-			final Model model, final HttpServletRequest request,@RequestParam(value = "isInvalidForm", required = false, defaultValue = "false") final boolean isInvalidForm)
+			final Model model, final HttpServletRequest request,@RequestParam(value = "egvErrorMsg", required = false) final String egvErrorMsg)
 	{
 		try
 		{
@@ -4316,9 +4316,15 @@ public class ProductPageController extends MidPageController
 		}
 		final EgvDetailForm egvDetailsform = new EgvDetailForm();
 		model.addAttribute("egvDetailsform", egvDetailsform);
-		if (isInvalidForm)
+		if (StringUtils.isNotEmpty(egvErrorMsg))
 		{
-			model.addAttribute(ERRO_MSG,PLEASE_PROVIDE_CORRECT_INFORMATION);
+			 if(egvErrorMsg.equalsIgnoreCase("formValidation")){
+			     model.addAttribute(ERRO_MSG,PLEASE_PROVIDE_CORRECT_INFORMATION);
+			 }
+			 else if(egvErrorMsg.equalsIgnoreCase("EGVOderError")){
+				 GlobalMessages.addMessage(model, GlobalMessages.CONF_MESSAGES_HOLDER, "mpl.gift.error.message",
+							new Object[] {});
+			 }
 		}
 		final ContentPageModel contentPage = getContentPageForLabelOrId("egvPDPPage");
 		storeCmsPageInModel(model, contentPage);

@@ -282,7 +282,9 @@ public class MplWalletServicesImpl implements MplWalletServices
 
 			final ObjectMapper objectMapper = new ObjectMapper();
 			final String requestBody = objectMapper.writeValueAsString(purchaseEGVRequest);
-
+			
+			LOG.debug("Qc Request Post...###############"+requestBody);
+          
 			response = webResource.type(MediaType.APPLICATION_JSON).header("ForwardingEntityId", "tatacliq.com")
 					.header("ForwardingEntityPassword", "tatacliq.com").header("TerminalId", "webpos-tul-dev10")
 					.header("Username", "tulwebuser").header("Password", "webusertul").header("TransactionId", transactionId)

@@ -1415,6 +1415,16 @@ public class MplCheckoutFacadeImpl extends DefaultCheckoutFacade implements MplC
 
 			try
 			{
+				String url;
+				if (order.getIsEGVCart().booleanValue())
+				{
+					url = "My Account";
+				}
+				else
+				{
+					url = null != shortTrackingUrl ? shortTrackingUrl : trackingUrl;
+				}
+				
 				getSendSMSFacade().sendSms(
 						MarketplacecommerceservicesConstants.SMS_SENDER_ID,
 
@@ -1422,7 +1432,7 @@ public class MplCheckoutFacadeImpl extends DefaultCheckoutFacade implements MplC
 								.replace(MarketplacecommerceservicesConstants.SMS_VARIABLE_ZERO, firstName)
 								.replace(MarketplacecommerceservicesConstants.SMS_VARIABLE_ONE, orderReferenceNumber)
 								.replace(MarketplacecommerceservicesConstants.SMS_VARIABLE_TWO,
-										null == shortTrackingUrl ? trackingUrl : shortTrackingUrl), mobileNumber);
+										url), mobileNumber);
 
 			}
 			catch (final EtailNonBusinessExceptions ex)
@@ -1562,6 +1572,11 @@ public class MplCheckoutFacadeImpl extends DefaultCheckoutFacade implements MplC
 				sellerOrderList.add(sellerOrderData);
 			}
 			orderData.setSellerOrderList(sellerOrderList);
+			
+			//Egv changes start
+			  orderData.setIsEGVOrder(orderModel.getIsEGVCart().booleanValue());
+			//Egv changes End
+			  
 			return orderData;
 		}
 		catch (final IllegalArgumentException ex)

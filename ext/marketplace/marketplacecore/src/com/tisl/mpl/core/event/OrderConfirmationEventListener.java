@@ -127,14 +127,22 @@ public class OrderConfirmationEventListener extends AbstractSiteEventListener<Or
 			final String trackingUrl = configurationService.getConfiguration().getString(
 					MarketplacecommerceservicesConstants.MPL_TRACK_ORDER_LONG_URL_FORMAT)
 					+ orderReferenceNumber;
-
+			String url=null;
+			if (orderDetails.getIsEGVCart().booleanValue())
+			{
+				url = "My Account";
+			}
+			else
+			{
+				url = null != shortTrackingUrl ? shortTrackingUrl : trackingUrl;
+			}
 //			final String shortTrackingUrl = googleShortUrlService
 //					.genearateShortURL(orderModel.getParentReference() == null ? orderModel.getCode() : orderModel
 //							.getParentReference().getCode());
 			final String content = MarketplacecommerceservicesConstants.SMS_MESSAGE_ORDER_PLACED
 					.replace(MarketplacecommerceservicesConstants.SMS_VARIABLE_ZERO, firstName)
 					.replace(MarketplacecommerceservicesConstants.SMS_VARIABLE_ONE, orderReferenceNumber)
-					.replace(MarketplacecommerceservicesConstants.SMS_VARIABLE_TWO, null !=shortTrackingUrl?shortTrackingUrl : trackingUrl);
+					.replace(MarketplacecommerceservicesConstants.SMS_VARIABLE_TWO, url);
 
 			final SendSMSRequestData smsRequestData = new SendSMSRequestData();
 			smsRequestData.setSenderID(MarketplacecommerceservicesConstants.SMS_SENDER_ID);

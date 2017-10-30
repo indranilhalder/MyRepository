@@ -8413,6 +8413,12 @@ public class AccountPageController extends AbstractMplSearchPageController
 		OrderData orderDetail = mplCheckoutFacade.getOrderDetailsForCode(orderModel);
 		model.addAttribute("orderDetail",orderDetail);
 		
+		if("Juspay".equalsIgnoreCase(orderModel.getSplitModeInfo())){
+			model.addAttribute("juspayMode", Boolean.TRUE);
+		}else{
+			model.addAttribute("juspayMode", Boolean.FALSE);
+		}
+		
 		if (CollectionUtils.isNotEmpty(orderModel.getPaymentTransactions()))
 		{
 			for (PaymentTransactionModel paymentTransactionModel : orderModel.getPaymentTransactions())

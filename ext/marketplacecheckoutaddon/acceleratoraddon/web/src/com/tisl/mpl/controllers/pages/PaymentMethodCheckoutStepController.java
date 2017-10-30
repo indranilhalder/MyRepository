@@ -2928,8 +2928,10 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 			}
 			catch (final CalculationException e)
 			{
-				// YTODO Auto-generated catch block
-				e.printStackTrace();
+				LOG.error("Exception while creating EGV Child Order:: "+e.getMessage());
+				mplEGVCartService.removeOldEGVCartCurrentCustomer();
+				return MarketplacecheckoutaddonConstants.REDIRECT + GIFT_CARD
+						+ getConfigurationService().getConfiguration().getString(MARKETPLACE_HEADER_EGV_PRODUCT_CODE);
 			}
 
 		}
@@ -3962,26 +3964,14 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 				{
 					try
 					{
-
-						orderId = createJuspayOrderFroEGV(firstName, lastName, country, state, city, pincode, cardSaved, sameAsShipping,
+						orderId = createJuspayOrderForEGV(firstName, lastName, country, state, city, pincode, cardSaved, sameAsShipping,
 								guid, orderId, returnUrlBuilder, paymentAddressLine1, paymentAddressLine2, paymentAddressLine3, uid);
-
 					}
 					catch (final ModelSavingException e)
 					{
 						LOG.error(MarketplacecheckoutaddonConstants.LOGERROR, e);
 					}
-					catch (final AdapterException e)
-					{
-						LOG.error(MarketplacecheckoutaddonConstants.LOGERROR, e);
-						orderId = "JUSPAY_CONN_ERROR";
-					}
-					catch (final EtailNonBusinessExceptions e)
-					{
-						ExceptionUtil.etailNonBusinessExceptionHandler(e);
-						orderId = "NONBusinessException" + e.getErrorMessage();
-						LOG.error(MarketplacecheckoutaddonConstants.LOGERROR, e);
-					}
+				
 					return orderId;
 				}
 				else
@@ -4635,6 +4625,14 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 				LOG.error("Issue with update order...redirecting to payment page only");
 				GlobalMessages.addFlashMessage(redirectAttributes, GlobalMessages.ERROR_MESSAGES_HOLDER,
 						MarketplacecheckoutaddonConstants.PAYMENTTRANERRORMSG);
+				
+				
+				if(orderToBeUpdated.getIsEGVCart().booleanValue()){
+					mplEGVCartService.removeOldEGVCartCurrentCustomer();
+					return MarketplacecheckoutaddonConstants.REDIRECT + GIFT_CARD
+							+ getConfigurationService().getConfiguration().getString(MARKETPLACE_HEADER_EGV_PRODUCT_CODE);
+				}
+				
 				return getCheckoutStep().currentStep();
 			}
 		}
@@ -6724,7 +6722,7 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 
 					return MarketplacecheckoutaddonConstants.REDIRECT + GIFT_CARD
 							+ getConfigurationService().getConfiguration().getString(MARKETPLACE_HEADER_EGV_PRODUCT_CODE)
-							+ "/?isInvalidForm=" + Boolean.TRUE;
+							+ "/?egvErrorMsg=" + "formValidation";
 				}
 			}
 			giftCartData.setIsEGVCart(true);
@@ -6762,8 +6760,7 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 					MarketplacecommerceservicesConstants.INR);
 			model.addAttribute("cartTotalMrp", cartTotalMrpVal);
 			model.addAttribute("totalDiscount", totalDiscountVal);
-
-
+			model.addAttribute("egvProductCode", getConfigurationService().getConfiguration().getString(MARKETPLACE_HEADER_EGV_PRODUCT_CODE));
 			final PaymentForm paymentForm = new PaymentForm();
 			setupAddPaymentPage(model);
 			if (MapUtils.isNotEmpty(paymentModeMap)) // Code optimization for performance fix TISPT-169
@@ -6923,7 +6920,7 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 	 * @return
 	 * @throws InvalidCartException
 	 */
-	private String createJuspayOrderFroEGV(final String firstName, final String lastName, final String country, final String state,
+	private String createJuspayOrderForEGV(final String firstName, final String lastName, final String country, final String state,
 			final String city, final String pincode, final String cardSaved, final String sameAsShipping, final String guid,
 			String orderId, final StringBuilder returnUrlBuilder, final String paymentAddressLine1, final String paymentAddressLine2,
 			final String paymentAddressLine3, final String uid) throws InvalidCartException
@@ -6938,30 +6935,26 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 					cardSaved + MarketplacecheckoutaddonConstants.STRINGSEPARATOR + sameAsShipping, returnUrlBuilder.toString(), uid,
 					MarketplacecheckoutaddonConstants.CHANNEL_WEB, 0.0D);
 			getMplCheckoutFacade().placeEGVOrder(cart);
-
-			/*
-			 * if (null != orderModel.getPaymentInfo()) { LOG.error("Order already has payment info >>>" +
-			 * orderModel.getPaymentInfo().getCode()); return "redirect_with_details"; } else {
-			 * LOG.error("Order status is Payment_Pending for orderCode>>>" + orderModel.getCode()); return
-			 * "redirect_with_details"; }
-			 */
+			return orderId + "|" + guid;
 		}
 		catch (final ModelSavingException e)
 		{
 			LOG.error(MarketplacecheckoutaddonConstants.LOGERROR, e);
+			mplEGVCartService.removeOldEGVCartCurrentCustomer();
+		  return "EGVOderError";
 		}
 		catch (final AdapterException e)
 		{
-			LOG.error(MarketplacecheckoutaddonConstants.LOGERROR, e);
-			orderId = "JUSPAY_CONN_ERROR";
+			 LOG.error(MarketplacecheckoutaddonConstants.LOGERROR, e);
+			 mplEGVCartService.removeOldEGVCartCurrentCustomer();
+			 return "EGVOderError";
 		}
 		catch (final EtailNonBusinessExceptions e)
 		{
 			ExceptionUtil.etailNonBusinessExceptionHandler(e);
-			orderId = "NONBusinessException" + e.getErrorMessage();
-			LOG.error(MarketplacecheckoutaddonConstants.LOGERROR, e);
+			mplEGVCartService.removeOldEGVCartCurrentCustomer();
+			 return "EGVOderError";
 		}
-		return orderId + "|" + guid;
 	}
 
 
