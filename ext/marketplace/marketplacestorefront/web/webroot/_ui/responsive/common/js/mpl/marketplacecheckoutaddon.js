@@ -5812,7 +5812,7 @@ function useWalletForPaymentAjax(){
 		    if(data.disableJsMode){
 		    	//alert(data.disableJsMode);
 				 $("#make_saved_cc_payment, #make_saved_dc_payment, #make_cc_payment, #make_dc_payment, #make_nb_payment, #paymentButtonId, #make_emi_payment, #make_mrupee_payment").hide();
-				 $("#make_saved_cc_payment_up, #make_saved_dc_payment_up, #make_cc_payment_up, #make_dc_payment_up, #make_nb_payment_up, #make_emi_payment_up, #paymentButtonId_up, #make_mrupee_payment_up").hide();
+				 //$("#make_saved_cc_payment_up, #make_saved_dc_payment_up, #make_cc_payment_up, #make_dc_payment_up, #make_nb_payment_up, #make_emi_payment_up, #paymentButtonId_up, #make_mrupee_payment_up").hide();
 			     $(".topPlaceOrderBtn").show();
 			     $(".choose-payment").find('*').prop('disabled',true);
 			     $("#paymentOptionsMobiles li span").css('pointer-events', 'none');
@@ -5832,7 +5832,41 @@ function useWalletForPaymentAjax(){
 			}else{
 				//alert(data.disableJsMode);
 				 $("#make_saved_cc_payment, #make_saved_dc_payment, #make_cc_payment, #make_dc_payment, #make_nb_payment, #paymentButtonId, #make_emi_payment, #make_mrupee_payment").show();
-				 $("#make_saved_cc_payment_up, #make_saved_dc_payment_up, #make_cc_payment_up, #make_dc_payment_up, #make_nb_payment_up, #make_emi_payment_up, #paymentButtonId_up, #make_mrupee_payment_up").show();
+				 //$("#make_saved_cc_payment_up, #make_saved_dc_payment_up, #make_cc_payment_up, #make_dc_payment_up, #make_nb_payment_up, #make_emi_payment_up, #paymentButtonId_up, #make_mrupee_payment_up").show();
+				 
+				//COD, EMI Place Order Button Fix
+				 if($(window).width() < 768){
+					//Responsive
+					 if(value.checked){
+						 $("#make_emi_payment_up, #paymentButtonId_up").hide();
+						 debugger;
+						 $("#paymentButtonId").attr('style', 'display: none !important');
+						 debugger;
+					 } else {
+						 $("#make_emi_payment_up, #paymentButtonId_up").show();
+						 if($("#viewPaymentEMIMobile").closest("li").hasClass("active")){
+							 ACC.singlePageCheckout.onPaymentModeSelection('EMI','newCard','','false');
+						 }
+						 if($("#viewPaymentCODMobile").closest("li").hasClass("active")){
+							 ACC.singlePageCheckout.onPaymentModeSelection('COD','newCard','','false');
+							 $(".totals.outstanding-totalss").css("bottom","0px");
+						 }
+					 }
+				 } else {
+					 //Web View
+					 if(value.checked){
+						 $("#paymentButtonId, #make_emi_payment").hide();
+					 } else {
+						 $("#paymentButtonId, #make_emi_payment").show();
+						 if($("#viewPaymentEMI").closest("li").hasClass("active")){
+							 viewPaymentEMI();
+						 }
+						 if($("#viewPaymentCOD").closest("li").hasClass("active")){
+							 viewPaymentCOD();
+						 }
+					 }
+				 }
+				 
 				 $(".topPlaceOrderBtn").hide();
 				 $(".topPlaceOrderBtn").prop('disabled',true);
 				 $(".choose-payment").find('*').prop('disabled',false);
