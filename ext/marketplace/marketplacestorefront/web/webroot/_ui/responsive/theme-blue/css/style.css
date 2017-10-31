@@ -77568,5 +77568,13 @@ background: url(../images/search_image.png) no-repeat;}
 .homefurnishing-overview:nth-child(3) {
     float: right ! important;
 }
+@media (max-width: 767px){
+.homefurnishing-overview:nth-child(2) {
+    float: right ! important;
+}
+.homefurnishing-overview:nth-child(3) {
+    float: right ! important;
+}
+}
 
 /* HOME-210 End */
