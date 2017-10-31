@@ -88,6 +88,10 @@
 	.orders-product-block .header ul .viewDetailsAnchor {text-align: left; position: static !important;}
 	.orders-product-block .header ul .trackOrderAnchor {position: static !important;}
 }
+
+@media(max-width: 768px) {
+	.orders-product-block .header ul .trackOrderAnchor, .orders-product-block .header ul .viewDetailsAnchor {position: static !important;}
+}
 </style>
 
 <!-- LW-230 -->
