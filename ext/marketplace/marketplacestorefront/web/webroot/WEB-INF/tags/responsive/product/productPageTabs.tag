@@ -33,7 +33,6 @@ var buyboxskuId='';
 <c:set var="validTabs" value="${VALID_TABS}" />
 <c:choose>
 <c:when test="${product.rootCategory =='HomeFurnishing'}">
-
 <div class="nav-wrapper">
 <ul class="nav pdp productNav">
 <!-- INC144315154 start -->
@@ -65,7 +64,6 @@ var buyboxskuId='';
 		</c:if>
 		<!--CKD:TPR-6804:Start -->
 	<c:if test="${fn:contains(validTabs, 'overview')}">
-		
 		<li id="tabs_productOverview" class="active"><spring:theme
 				code="product.product.overview" /></li>
 	</c:if>
@@ -718,4 +716,3 @@ var buyboxskuId='';
 </c:choose>
 <%-- UF-377 ends --%>
  <div id="servicableUssid"></div>
-
