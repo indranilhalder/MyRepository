@@ -349,15 +349,14 @@ public class PaymentServicesController extends BaseController
 			if (StringUtils.isNotEmpty(cartGuid))
 			{
 				//final String orderGuid = decryptKey(guid);
-				orderModel = getMplPaymentFacade().getOrderByGuid(cartGuid);
+			//	orderModel = getMplPaymentFacade().getOrderByGuid(cartGuid);
+				cart = mplPaymentWebFacade.findCartAnonymousValues(cartGuid);
 			}
 
-			if (null == orderModel)
+			if (null != cart)
 			{
-				cart = mplPaymentWebFacade.findCartAnonymousValues(cartGuid);
 				//TISPT-29
-				if (null != cart)
-				{
+
 					if (StringUtils.isNotEmpty(paymentMode)
 							&& (paymentMode.equalsIgnoreCase(MarketplacewebservicesConstants.CREDIT)
 									|| paymentMode.equalsIgnoreCase(MarketplacewebservicesConstants.DEBIT)
@@ -406,11 +405,7 @@ public class PaymentServicesController extends BaseController
 					{
 						throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9053);
 					}
-				}
-				else
-				{
-					throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9050);
-				}
+
 
 			}
 			else
@@ -429,6 +424,7 @@ public class PaymentServicesController extends BaseController
 									.equalsIgnoreCase(MarketplacewebservicesConstants.COD)))
 
 				{
+					orderModel = getMplPaymentFacade().getOrderByGuid(cartGuid);
 					if (!paymentMode.equalsIgnoreCase(MarketplacewebservicesConstants.COD))
 					{
 						//setting in cartmodel

@@ -1565,6 +1565,8 @@
 		<property name="scheduleDeliveryDate" type="String" />
 		<property name="scheduleDeliveryTime" type="String" />
 		<property name="selfCourierDocumentLink" type="String" />
+		<property name="WalletApportionPaymentData" type="com.tisl.mpl.facades.egv.data.WalletApportionPaymentData" />
+		<property name="walletApportionforReverseData" type="com.tisl.mpl.facades.egv.data.WalletApportionPaymentData" />
 		<property name="awbPopupLink" type="String" />
 		<!-- TPR-1083 Start-->
 	<property name="exchangeId" type="String"/>
@@ -1627,6 +1629,7 @@
 		<property name="resendAvailable" type="boolean" />
 		<property name="resendAttemptedCount" type="int"/>
 		<property name="egvCartNumber" type="String" />
+		<property name="isEgvOrder" type="boolean" />
 	<!-- Added For EGV Functionality End -->	
 	</bean>
 
