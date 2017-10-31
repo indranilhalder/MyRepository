@@ -77578,8 +77578,14 @@ background: url(../images/search_image.png) no-repeat;}
 }
 
 /* HOME-210 End */
-
+.home-buying-guide{
+	border-left: 2px solid #9b9b9b;
+    padding-left: 10px;
+    margin-left: 10px;
+}
 .home-pdp-quantity,
 .home-pdp-size{
 	border: 0px solid transparent ! important;
+	padding: 0;
+    margin: 0;
 }
