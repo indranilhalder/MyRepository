@@ -73,7 +73,7 @@
 	<nav:pagination top="false"  supportShowPaged="${isShowPageAllowed}" supportShowAll="${isShowAllAllowed}"  searchPageData="${searchPageData}" searchUrl="${searchPageData.currentQuery.url}"  numberPagesShown="${numberPagesShown}"/>
 
 </div> --%>
-======= ${pageNo}
+
 <div class="bottom-pagination pagination-search">
 <div class="">
 <c:if test="${searchPageData.pagination.numberOfPages > 1}">
