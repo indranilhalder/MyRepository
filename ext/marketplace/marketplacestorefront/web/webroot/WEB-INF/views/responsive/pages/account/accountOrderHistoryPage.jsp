@@ -77,16 +77,16 @@
 
 .resend_email_limit {margin-bottom: 0 !important; display: none;}
 
-.product-block .header ul .viewDetails {width: 50% !important;} 
-.product-block .header ul li {width: 16% !important;}
-.product-block .header ul .resendEmail {text-align: right;}
+.orders-product-block .header ul .viewDetails {width: 50% !important;} 
+.orders-product-block .header ul li {width: 16% !important;}
+.orders-product-block .header ul .resendEmail {text-align: right;}
 
 @media(max-width: 480px) {
-	.product-block .header ul .viewDetails {width: 100% !important;}
-	.product-block li.header > ul > li {width: 33% !important;}
-	.product-block .header ul .resendEmail {text-align: center;}
-	.product-block .header ul .viewDetailsAnchor {text-align: left; position: static !important;}
-	.product-block .header ul .trackOrderAnchor {position: static !important;}
+	.orders-product-block .header ul .viewDetails {width: 100% !important;}
+	.orders-product-block li.header > ul > li {width: 33% !important; float: left;}
+	.orders-product-block .header ul .resendEmail {text-align: center;}
+	.orders-product-block .header ul .viewDetailsAnchor {text-align: left; position: static !important;}
+	.orders-product-block .header ul .trackOrderAnchor {position: static !important;}
 }
 </style>
 
@@ -193,7 +193,7 @@
 										var="orderNumEnd"
 										value="${fn:substring(orderNumberMasked, orderNumberLength-7, orderNumberLength)}" />
 
-									<ul class="product-block">
+									<ul class="product-block orders-product-block">
 
 										<%-- <li class="header">
 											<ul>
