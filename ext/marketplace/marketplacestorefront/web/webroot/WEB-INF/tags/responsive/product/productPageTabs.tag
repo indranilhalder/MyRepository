@@ -716,4 +716,3 @@ var buyboxskuId='';
 </c:choose>
 <%-- UF-377 ends --%>
  <div id="servicableUssid"></div>
-

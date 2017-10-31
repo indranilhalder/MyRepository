@@ -253,6 +253,7 @@ public final class ModelAttributetConstants
 	public static final String ERROR_OCCURED = "errorOccured";
 	public static final String ERR_MSG = "errMsg";
 	public static final String WARRANTY = "Warranty";
+	public static final String WARRANTY_DETAILS_HF = "Warranty Details";
 	public static final String PINCODE = "pincode";
 	public static final String CLIQCARENUMBER = "cliqCareNumber";
 	public static final String CLIQCAREMAIL = "cliqCareMail";
@@ -934,6 +935,8 @@ public final class ModelAttributetConstants
 	public static final String CLASSIFICATION_ATTR_HF = "HomeFurnishing.";
 	public static final String CLASSIFICATION_ATTR_PD = "ProductDetails";
 	public static final String CLASSIFICATION_ATTR_SI = "SetInformation";
+	public static final String CLASSIFICATION_ATTR_SI_SPACE = "Set Information";
+	public static final String CLASSIFICATION_ATTR_SI_SIZE = "Size";
 	public static final String CLASSIFICATION_ATTR_CAINS = "CareInstructions";
 	public static final String CLASSIFICATION_ATTR_WASHCARE = "WashCare";
 	public static final String CLASSIFICATION_ATTR_PF = "ProductFeatures";
