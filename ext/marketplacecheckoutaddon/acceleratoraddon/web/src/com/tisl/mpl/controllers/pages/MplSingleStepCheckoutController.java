@@ -3490,7 +3490,10 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 			}
 
 			final CartModel cartModel = cartService.getSessionCart();
-			commerceCartService.recalculateCart(cartModel);//SDI-2158 fix recalculation
+			//SDI-2158 fix recalculation starts here
+			mplCouponFacade.releaseVoucherInCheckout(cartModel);
+			commerceCartService.recalculateCart(cartModel);
+			//SDI-2158 fix recalculation ends here
 			mplCartFacade.setCartSubTotalForReviewOrder(cartModel);
 			mplCartFacade.totalMrpCal(cartModel);
 			//UF-260
