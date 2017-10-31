@@ -77570,10 +77570,10 @@ background: url(../images/search_image.png) no-repeat;}
 }
 @media (max-width: 767px){
 .homefurnishing-overview:nth-child(2) {
-    float: right ! important;
+    float: left ! important;
 }
 .homefurnishing-overview:nth-child(3) {
-    float: right ! important;
+    float: left ! important;
 }
 }
 
