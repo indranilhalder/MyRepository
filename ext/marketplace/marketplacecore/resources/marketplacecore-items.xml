@@ -5895,7 +5895,7 @@
 
 			<!-- Added for 5989 :: START -->
 			<itemtype code="WebFormTicketProcess" extends="BusinessProcess"
-				autocreate="true" generate="true" jaloclass="com.tisl.mpl.core.jalo.WebFormTicketProcess">
+				autocreate="true" generate="true" jaloclass="de.hybris.platform.webform.jalo.WebFormTicketProcess">
 				<description>Represents process that is used for sending the web form ticket to PI</description>
 				<attributes>
 					<attribute qualifier="MplWebCrmTicket" type="MplWebCrmTicket">

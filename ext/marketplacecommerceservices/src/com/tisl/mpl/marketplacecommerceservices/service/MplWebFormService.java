@@ -26,4 +26,13 @@ public interface MplWebFormService
 
 	public boolean checkDuplicateWebCRMTickets(String ticketType, String orderCode, String subOrderCode, String transactionId,
 			String L0code, String L1code, String L2code, String L3code, String L4code, String customerId);
+
+	/**
+	 * This method is created to send the web form ticket to PI after duplication check ( TPR- 5989 )
+	 *
+	 * @param mplWebCrmTicketModel
+	 * @return the success/failure message
+	 * @throws Exception
+	 */
+	public String sendTicketToPI(MplWebCrmTicketModel mplWebCrmTicketModel) throws Exception;
 }
