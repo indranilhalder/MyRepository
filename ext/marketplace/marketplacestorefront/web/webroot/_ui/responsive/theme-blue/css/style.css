@@ -77496,7 +77496,7 @@ background: url(../images/search_image.png) no-repeat;}
 	#netbanking .nbButton .topPlaceOrderBtn {margin-left: 35px !important;}
 	
 	
-	@media(max-width: 767px){
+	@media(max-width: 768px){
 		.cliqCashPlaceOrderBtnMobile {bottom: 7.2px;left: auto;right: 8px !important;width: 50%;height: 33.5px !important;font-weight: normal;background-color: #a5173c;line-height: 1 !important;font-size: 12px !important;position: fixed;z-index: 99; color: white;}
 		.emiTopOrderPlaceButton {display: none !important;}
 	}
@@ -77510,7 +77510,7 @@ background: url(../images/search_image.png) no-repeat;}
 		.giftCheckoutInnerCols1, .giftCheckoutInnerCols2, .giftCheckoutInnerCols3 {text-align: center;}
 	}
 	
-	@media(max-width: 767px){
+	@media(max-width: 768px){
 	.giftInfoLeft {border-bottom: 1px solid #dddddd; border-right: none; padding: 4%; padding-left: 0;}
 	.giftCheckoutInfoMiddle {width: 100%;}
 	.giftCheckoutInnerCols1 {padding: 20% 0%; text-align: left;}
