@@ -2,6 +2,7 @@
 <%@ taglib prefix="nav" tagdir="/WEB-INF/tags/responsive/nav" %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <%@ taglib prefix="product" tagdir="/WEB-INF/tags/responsive/product" %>
+<%@ taglib uri = "http://java.sun.com/jsp/jstl/functions" prefix = "fn" %>
 
 <input type="hidden" name="noOfPages" value="${searchPageData.pagination.numberOfPages}"/>
 
@@ -73,7 +74,6 @@
 	<nav:pagination top="false"  supportShowPaged="${isShowPageAllowed}" supportShowAll="${isShowAllAllowed}"  searchPageData="${searchPageData}" searchUrl="${searchPageData.currentQuery.url}"  numberPagesShown="${numberPagesShown}"/>
 
 </div> --%>
-
 <div class="bottom-pagination pagination-search">
 <div class="">
 <c:if test="${searchPageData.pagination.numberOfPages > 1}">
@@ -98,11 +98,6 @@
     </ul>
     <div class="next-block"><a href="next-page"><span>Next</span></a></div>
 </c:when>
-<%-- <c:otherwise>
-    <ul class="">
-        <li class="pageNo"><a class="" href="#nogo">1</a></li>
-    </ul>
-</c:otherwise> --%>
 </c:choose>
 </div>
 </div>
