@@ -58,7 +58,7 @@ $(document).on('click', '.next-block', function(e) {
 	e.preventDefault();
 	var nextPageNo = $(".pageNo.active").parent().next();
 	if($(nextPageNo).text() && isLastPageNext()){
-		getProductSetData($(nextPageNo).text());
+		//getProductSetData($(nextPageNo).text());
 		$(nextPageNo).find("a").addClass("active");
 		$(nextPageNo).prev().find("a").removeClass("active");
 		$("#pageOf").text($(nextPageNo).text());
@@ -66,7 +66,7 @@ $(document).on('click', '.next-block', function(e) {
         $lis.slice(start, start + x).hide();
         start += x;
         $lis.slice(start, start + x).show();
-        getProductSetData($(nextPageNo).text());
+        //getProductSetData($(nextPageNo).text());
         $(nextPageNo).find("a").addClass("active");
 		$(nextPageNo).prev().find("a").removeClass("active");
 		$("#pageOf").text($(nextPageNo).text());
@@ -77,7 +77,7 @@ $(document).on('click', '.prev-block', function(e) {
 	e.preventDefault();
 	var nextPageNo = $(".pageNo.active").parent().prev();
 	if($(nextPageNo).text() && isLastPagePrev()){
-		getProductSetData($(nextPageNo).text());
+		//getProductSetData($(nextPageNo).text());
 		$(nextPageNo).find("a").addClass("active");
 		$(nextPageNo).next().find("a").removeClass("active");
 		$("#pageOf").text($(nextPageNo).text());
@@ -85,17 +85,10 @@ $(document).on('click', '.prev-block', function(e) {
         $lis.slice(start, start + x).hide();
         start -= x;
         $lis.slice(start, start + x).show();
-        getProductSetData($(nextPageNo).text());
+        //getProductSetData($(nextPageNo).text());
         $(nextPageNo).find("a").addClass("active");
 		$(nextPageNo).next().find("a").removeClass("active");
 		$("#pageOf").text($(nextPageNo).text());
-    }
-	
-	
-	if (start - x >= 0) {
-        $lis.slice(start, start + x).hide();
-        start -= x;
-        $lis.slice(start, start + x).show();
     }
 });
 
