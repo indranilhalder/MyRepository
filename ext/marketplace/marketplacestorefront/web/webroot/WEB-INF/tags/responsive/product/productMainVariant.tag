@@ -345,7 +345,7 @@ share mobile -->
 			<!-- Added for PDP Changes for Home Furnishing : TPR-6738-->
     
 			<c:if test="${not empty buyingGuide}">
-					<a class="buying-guide" role="button" onclick = "redirectURL(buyingGuideData);"> 
+					<a class="buying-guide home-buying-guide" role="button" onclick = "redirectURL(buyingGuideData);"> 
 					<spring:theme code="product.variants.buying.guide" />
 					</a>
 			</c:if>
