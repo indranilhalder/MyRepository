@@ -606,7 +606,7 @@
 															<c:forEach items="${egvStatusMap}" var="entryforEgv">
 																
 																	<c:if test="${entryforEgv.key eq orderHistoryDetail.code and entryforEgv.value eq 'REDEEMED'}">
-																	<div class="status orderRedeemedStatusInfo"><span>REEDEMED</span></div><br />
+																	<div class="status orderRedeemedStatusInfo"><span>REDEEMED</span></div><br />
 																	<div class="statusDate">
 																              <span><spring:theme code="text.orderHistory.seller.order.numbe" text="Redeemed:" /></span>&nbsp;
 																              <c:forEach items="${approvedFlag.statusRecords}" var="recordDate">
