@@ -156,12 +156,12 @@
 							        <spring:eval expression="T(de.hybris.platform.util.Config).getParameter('marketplace.header.egvurl')" var="egvUrlEnable"/>
 								
 								<c:if test="${egvUrlEnable}">
-								    <li class="track_order_header"><a href="/wallet/getcliqcashPage" >
+								    <li class=""><a href="/wallet/getcliqcashPage" >
 										<spring:theme code="trackorder.header.cliqcash" text="CliQ Cash"/></a>		
 							       </li>
 							       <c:set var="myVar" value="/giftCard-" />
 							       <c:set var ="egvProduct"  value="${myVar}${productCode}"/> 
-							       <li class="track_order_header"><a href="<c:url value="${egvProduct}"/>">
+							       <li class=""><a href="<c:url value="${egvProduct}"/>">
 							          <spring:theme code="trackorder.header.giftCard" text="Gift Card"/></a>
 							       </li>
 							    </c:if>
