@@ -179,9 +179,13 @@ public class DefaultGetOrderDetailsFacadeImpl implements GetOrderDetailsFacade
 				if (orderDetails.isResendEgvMailAvailable())
 				{
 					orderTrackingWsDTO.setResendAvailable(true);
-				}else {
-					orderTrackingWsDTO.setResendAvailable(false);
 				}
+				
+				if (orderDetails.isIsEGVOrder())
+				{
+					orderTrackingWsDTO.setIsEgvOrder(true);
+				}
+				
 				/*Added For EGV Functionality End*/ 
 				if (StringUtils.isNotEmpty(orderDetails.getPickupName()))
 				{
@@ -1731,6 +1735,15 @@ public class DefaultGetOrderDetailsFacadeImpl implements GetOrderDetailsFacade
 				if(null != orderDetail.getEgvCardNumber()){
 					orderTrackingWsDTO.setEgvCartNumber(orderDetail.getEgvCardNumber());
 				}
+				if(orderDetail.isIsEGVOrder() ){
+					orderTrackingWsDTO.setIsEgvOrder(true);
+				}
+				if(null != orderModel.getModeOfOrderPayment()){
+					orderTrackingWsDTO.setPaymentMethod(orderModel.getModeOfOrderPayment());
+				}
+				
+			//	setUpStatementData(orderTrackingWsDTO,orderDetail);
+				
 				/*Added For EGV Functionality End */
 				//orderTrackingWsDTO.setRecipientname(recipientname);
 				if (null != orderDetail.getDeliveryAddress())
@@ -1856,6 +1869,12 @@ public class DefaultGetOrderDetailsFacadeImpl implements GetOrderDetailsFacade
 							else
 							{
 								orderproductdto = new OrderProductWsDTO();
+								if(null !=entry.getWalletApportionPaymentData() ){
+									orderproductdto.setWalletApportionPaymentData(entry.getWalletApportionPaymentData());
+								}
+								if(null !=entry.getWalletApportionforReverseData() ){
+									orderproductdto.setWalletApportionforReverseData(entry.getWalletApportionforReverseData());
+								}
 								ordershipmentdetailstdtos = new ArrayList<Ordershipmentdetailstdto>();
 								//								if (!entry.isGiveAway())
 								//								{
@@ -2457,8 +2476,14 @@ public class DefaultGetOrderDetailsFacadeImpl implements GetOrderDetailsFacade
 						{
 							//getting the product code
 							final ProductModel productModel = mplOrderFacade.getProductForCode(product.getCode());
-
+							if(null !=orderEntry.getWalletApportionPaymentData() ){
+								orderproductdto.setWalletApportionPaymentData(orderEntry.getWalletApportionPaymentData());
+							}
+							if(null !=orderEntry.getWalletApportionforReverseData() ){
+								orderproductdto.setWalletApportionforReverseData(orderEntry.getWalletApportionforReverseData());
+							}
 							orderproductdto = new OrderProductWsDTO();
+							
 							ordershipmentdetailstdtos = new ArrayList<Ordershipmentdetailstdto>();
 							//set image
 							orderproductdto.setImageURL(setImageURL(product));
@@ -2786,6 +2811,8 @@ public class DefaultGetOrderDetailsFacadeImpl implements GetOrderDetailsFacade
 				}
 			}
 		}
+		
+	 
 		catch (final EtailBusinessExceptions e)
 		{
 			ExceptionUtil.getCustomizedExceptionTrace(e);
@@ -2804,6 +2831,7 @@ public class DefaultGetOrderDetailsFacadeImpl implements GetOrderDetailsFacade
 
 		return orderTrackingWsDTO;
 	}
+
 
 	/**
 	 * @param entry

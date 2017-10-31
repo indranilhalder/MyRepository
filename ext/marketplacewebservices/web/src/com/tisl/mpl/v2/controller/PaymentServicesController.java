@@ -1502,19 +1502,15 @@ public class PaymentServicesController extends BaseController
 		//OrderData orderData = null;
 		try
 		{
-			if (StringUtils.isNotEmpty(cartGuid))
+
+			cart = mplPaymentWebFacade.findCartAnonymousValues(cartGuid);
+			if (null != cart)
 			{
-				orderModel = getMplPaymentFacade().getOrderByGuid(cartGuid);
-			}
-			if (null == orderModel)
-			{
-				cart = mplPaymentWebFacade.findCartAnonymousValues(cartGuid);
+				//cart = mplPaymentWebFacade.findCartAnonymousValues(cartGuid);
 				final CartModel egvCart = mplEGVCartService.getEGVCartModel(cartGuid);
 				if(null != egvCart && null != egvCart.getIsEGVCart() && egvCart.getIsEGVCart().booleanValue()) {
 					isEgvOrder = true;
 				}
-				if (cart != null)
-				{
 					//CAR-111
 					//cartData = getMplExtendedCartConverter().convert(cart);
 					final Map<String, Boolean> paymentMode = getMplPaymentFacade().getPaymentModes(
@@ -1526,30 +1522,30 @@ public class PaymentServicesController extends BaseController
 					cart.setPayableWalletAmount(Double.valueOf(0.0D));
 					modelService.save(cart);
 					modelService.refresh(cart);
-					
-				}
-				else
-				{
-					throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9050);
-				}
 			}
 			else
 			{
 				//CAR-111
 				//orderData = mplCheckoutFacade.getOrderDetailsForCode(orderModel);
 				//Getting Payment modes
-				if(null != orderModel.getIsEGVCart() && orderModel.getIsEGVCart().booleanValue()) {
-					isEgvOrder = true;
+				orderModel = getMplPaymentFacade().getOrderByGuid(cartGuid);
+				if(null != orderModel) {
+					if(null != orderModel.getIsEGVCart() && orderModel.getIsEGVCart().booleanValue()) {
+						isEgvOrder = true;
+					}
+					final Map<String, Boolean> paymentMode = getMplPaymentFacade()
+							.getPaymentModes(MarketplacewebservicesConstants.MPLSTORE, orderModel);
+					paymentModesData = getMplPaymentWebFacade().potentialPromotionOnPaymentMode(orderModel);
+					paymentModesData.setPaymentModes(paymentMode);
+					paymentModesData.setStatus(MarketplacecommerceservicesConstants.SUCCESS);
+					orderModel.setSplitModeInfo(MarketplacewebservicesConstants.PAYMENT__MODE_JUSPAY);
+					orderModel.setPayableWalletAmount(Double.valueOf(0.0D));
+					modelService.save(orderModel);
+					modelService.refresh(orderModel);
+				}else {
+					throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9050);
 				}
-				final Map<String, Boolean> paymentMode = getMplPaymentFacade()
-						.getPaymentModes(MarketplacewebservicesConstants.MPLSTORE, orderModel);
-				paymentModesData = getMplPaymentWebFacade().potentialPromotionOnPaymentMode(orderModel);
-				paymentModesData.setPaymentModes(paymentMode);
-				paymentModesData.setStatus(MarketplacecommerceservicesConstants.SUCCESS);
-				orderModel.setSplitModeInfo(MarketplacewebservicesConstants.PAYMENT__MODE_JUSPAY);
-				orderModel.setPayableWalletAmount(Double.valueOf(0.0D));
-				modelService.save(cart);
-				modelService.refresh(cart);
+				
 			}
 
 			/* Added for cliq Cash Functionality start */

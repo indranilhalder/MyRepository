@@ -8923,20 +8923,21 @@ public class UsersController extends BaseCommerceController
 	public ApplyCliqCashWsDto applyCliqCash(@RequestParam final String cartGuid)
 			throws EtailNonBusinessExceptions, EtailBusinessExceptions, CalculationException
 	{
-		LOG.info("Applying  cliq Cash For Card Guid " + cartGuid);
 		ApplyCliqCashWsDto applyCliqCashWsDto = new ApplyCliqCashWsDto();
-		OrderModel orderModel = getMplPaymentFacade().getOrderByGuid(cartGuid);
-		CartModel cart = null;
+		OrderModel orderModel = null;
+		CartModel cart = mplPaymentWebFacade.findCartAnonymousValues(cartGuid);
 
 		try
 		{
-			if (null == orderModel)
+			if (null != cart)
 			{
-				cart = mplPaymentWebFacade.findCartAnonymousValues(cartGuid);
+				LOG.info("Applying  cliq Cash For Card Guid " + cartGuid);
 				applyCliqCashWsDto = mplCartWebService.applyCLiqCash(cart, null);
 			}
 			else
 			{
+				orderModel = getMplPaymentFacade().getOrderByGuid(cartGuid);
+				LOG.info("Applying  cliq Cash For Order Guid " + cartGuid);
 				applyCliqCashWsDto = mplCartWebService.applyCLiqCash(orderModel, null);
 			}
 		}
@@ -8977,39 +8978,41 @@ public class UsersController extends BaseCommerceController
 	{
 		LOG.info("Removing cliq Cash ");
 		 ApplyCliqCashWsDto removeCliqCashWsDto = new ApplyCliqCashWsDto();
-		 OrderModel orderModel = getMplPaymentFacade().getOrderByGuid(cartGuid);
-		CartModel cart = null;
+		 OrderModel orderModel = null;
+		CartModel cart = mplPaymentWebFacade.findCartAnonymousValues(cartGuid);
 		try
 		{
 			
-			//  Removing the cliqCash balacne from Order and Setting SplitModeInfo To JUSPAY
-			if (null != orderModel)
+			//  Removing the cliqCash balacne from Cart and Setting SplitModeInfo To JUSPAY
+			if (null != cart)
 			{
-				removeCliqCashWsDto.setDiscount(orderModel.getTotalDiscounts());
-				if (null != orderModel.getTotalPrice())
-				{
-					removeCliqCashWsDto.setTotalAmount(orderModel.getTotalPrice().toString());
-				}
-				removeCliqCashWsDto.setPaybleAmount(orderModel.getTotalPrice());
-				orderModel.setSplitModeInfo(MarketplacewebservicesConstants.PAYMENT__MODE_JUSPAY);
-				orderModel.setPayableWalletAmount(Double.valueOf(0.0D));
-				getModelService().save(orderModel);
-				getModelService().refresh(orderModel);
-				removeCliqCashWsDto.setStatus(MarketplacecommerceservicesConstants.SUCCESS_FLAG);
-			}
-			else
-			{
-				cart = mplPaymentWebFacade.findCartAnonymousValues(cartGuid);
 				removeCliqCashWsDto.setDiscount(cart.getTotalDiscounts());
 				if (null != cart.getTotalPrice())
 				{
-					removeCliqCashWsDto.setPaybleAmount(cart.getTotalPrice());
+					removeCliqCashWsDto.setTotalAmount(cart.getTotalPrice().toString());
 				}
+				removeCliqCashWsDto.setPaybleAmount(cart.getTotalPrice());
 				cart.setSplitModeInfo(MarketplacewebservicesConstants.PAYMENT__MODE_JUSPAY);
 				cart.setPayableWalletAmount(Double.valueOf(0.0D));
 				getModelService().save(cart);
 				getModelService().refresh(cart);
 				removeCliqCashWsDto.setStatus(MarketplacecommerceservicesConstants.SUCCESS_FLAG);
+			}
+			else
+			{
+				orderModel = getMplPaymentFacade().getOrderByGuid(cartGuid);
+				if(null !=orderModel ) {
+					removeCliqCashWsDto.setDiscount(orderModel.getTotalDiscounts());
+					if (null != orderModel.getTotalPrice())
+					{
+						removeCliqCashWsDto.setPaybleAmount(orderModel.getTotalPrice());
+					}
+					orderModel.setSplitModeInfo(MarketplacewebservicesConstants.PAYMENT__MODE_JUSPAY);
+					orderModel.setPayableWalletAmount(Double.valueOf(0.0D));
+					getModelService().save(orderModel);
+					getModelService().refresh(orderModel);
+					removeCliqCashWsDto.setStatus(MarketplacecommerceservicesConstants.SUCCESS_FLAG);
+				}
 			}
 
 		}

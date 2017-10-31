@@ -376,7 +376,12 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 						getOrderStatusSpecifier().setOrderStatus(orderModel, OrderStatus.PAYMENT_PENDING);
 					}
 				}
-
+				if (null != orderModel.getSplitModeInfo()
+						&& (orderModel.getSplitModeInfo().equalsIgnoreCase(MarketplacecommerceservicesConstants.CLIQ_CASH)
+								|| orderModel.getSplitModeInfo().equalsIgnoreCase(MarketplacecommerceservicesConstants.CLIQCASH)))
+				{
+					orderModel.setModeOfOrderPayment(MarketplacecommerceservicesConstants.CLIQ_CASH);
+				}
 				getModelService().save(orderModel);
 				////////////// Order Issue:- Order  ID updated first then Voucher Invalidation Model update
 

@@ -1447,6 +1447,7 @@
 		<!-- <property name="statusDisplayMsg" type="java.util.Map&lt;String,String>" 
 			/> -->
 		<property name="pickupPersonName" type="String" />
+		<property name="isEgvOrder" type="boolean" />
 		<property name="pickupPersonMobile" type="String" />
 		<property name="isPickupUpdatable" type="boolean" />
 		<property name="isCDA" type="boolean"/>	
@@ -1487,6 +1488,7 @@
 		<property name="pickupPersonName" type="String" />
 		<property name="pickupPersonMobile" type="String" />
 		<property name="cliqCashApplied" type="boolean" />
+		<property name="isEgvOrder" type="boolean" />
 		<property name="cliqCashAmountDeducted" type="java.lang.Double" />
 		<!-- TPR-1083 Start-->
 	<property name="exchangeId" type="String"/>

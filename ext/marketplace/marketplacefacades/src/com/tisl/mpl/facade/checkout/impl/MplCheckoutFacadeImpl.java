@@ -1574,8 +1574,14 @@ public class MplCheckoutFacadeImpl extends DefaultCheckoutFacade implements MplC
 			orderData.setSellerOrderList(sellerOrderList);
 			
 			//Egv changes start
-			  orderData.setIsEGVOrder(orderModel.getIsEGVCart().booleanValue());
+			if (null != orderModel.getIsEGVCart() && orderModel.getIsEGVCart().booleanValue())
+			{
+				orderData.setIsEGVOrder(orderModel.getIsEGVCart().booleanValue());
+				getEGVData(orderData, orderModel);
+			}
 			//Egv changes End
+			
+			
 			  
 			return orderData;
 		}

@@ -769,6 +769,9 @@ public class OrdersController extends BaseCommerceController
 			 * getCheckoutRedirectUrl(); }
 			 */
 			orderWsDTO.setPaymentMethod(orderModel.getModeOfOrderPayment());
+			if(orderDetail.isIsEGVOrder()){
+				orderWsDTO.setIsEgvOrder(true);
+			}
 			if (null != orderDetail && orderDetail.getEntries() != null && !orderDetail.getEntries().isEmpty())
 			{
 				final SimpleDateFormat sdformat = new SimpleDateFormat(MarketplacewebservicesConstants.DATEFORMAT_FULL);
