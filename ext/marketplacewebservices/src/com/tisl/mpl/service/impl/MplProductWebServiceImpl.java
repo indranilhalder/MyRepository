@@ -2053,10 +2053,18 @@ public class MplProductWebServiceImpl implements MplProductWebService
 							  //electronics
 							else
 							{
+								//SDI-2041
+								final ProductFeatureModel productFeature = mplProductFacade.getProductFeatureModelByProductAndQualifier(
+										productData, featureData.getCode());
 								if (null != featureData.getName() && null != featureValueData.getValue())
-
 								{
-									mapConfigurableAttribute.put(featureData.getName(), featureValueData.getValue());
+									String fValue = featureValueData.getValue();
+									if (null != productFeature && null != productFeature.getUnit()
+											&& !productFeature.getUnit().getSymbol().isEmpty())
+									{
+										fValue = fValue.concat(" ").concat(productFeature.getUnit().getSymbol());
+									}
+									mapConfigurableAttribute.put(featureData.getName(), fValue);
 								}
 
 							}
