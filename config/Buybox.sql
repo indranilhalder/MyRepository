@@ -721,7 +721,7 @@ AS
                       WHERE     P.p_sellerarticlesku = I.p_sellerarticlesku
                             AND P.p_catalogversion = v_catalogversion_buybox
                             AND PLD.p_ussid(+) = JI.P_PCMUSSID
-							--AND (JI.P_PCMUSSID = SI.p_sellerarticlesku AND SI.p_hasVariant=1)--to be checked
+							AND (JI.P_PCMUSSID = SI.p_sellerarticlesku AND SI.p_hasVariant=1)--to be checked
 							AND P.PK = pp1.p_pricerow
                             AND (pp1.p_promotionchannel='Web' OR pp1.p_promotionchannel is null)
                             AND (pp1.p_promotionstartdate BETWEEN v_last_run_price_update
@@ -765,7 +765,7 @@ IF (v_jmergepromostdtcount > 0)
                       WHERE     P.p_sellerarticlesku = I.p_sellerarticlesku
                             AND P.p_catalogversion = v_catalogversion_buybox
                             AND PLD.p_ussid(+) = JI.P_PCMUSSID
-							--AND (JI.P_PCMUSSID = SI.p_sellerarticlesku AND SI.p_hasVariant=1)--to be checked
+							AND (JI.P_PCMUSSID = SI.p_sellerarticlesku AND SI.p_hasVariant=1)--to be checked
 							AND P.PK = pp1.p_pricerow
                             AND (pp1.p_promotionchannel='Mobile' OR pp1.p_promotionchannel is null)
                             AND (pp1.p_promotionstartdate BETWEEN v_last_run_price_update
@@ -809,7 +809,7 @@ IF (v_jmergepromostdtcount > 0)
                       WHERE     P.p_sellerarticlesku = I.p_sellerarticlesku
                             AND P.p_catalogversion = v_catalogversion_buybox
                             AND PLD.p_ussid(+) = JI.P_PCMUSSID
-							--AND (JI.P_PCMUSSID = SI.p_sellerarticlesku AND SI.p_hasVariant=1)--to be checked
+							AND (JI.P_PCMUSSID = SI.p_sellerarticlesku AND SI.p_hasVariant=1)--to be checked
                             AND P.PK = pp1.p_pricerow
 							AND (pp1.p_promotionchannel='Web' OR pp1.p_promotionchannel is null)
                             AND (pp1.p_promotionenddate BETWEEN v_last_run_price_update
@@ -853,7 +853,7 @@ IF (v_jmergepromoenddtcount > 0)
                       WHERE     P.p_sellerarticlesku = I.p_sellerarticlesku
                             AND P.p_catalogversion = v_catalogversion_buybox
                             AND PLD.p_ussid(+) = JI.P_PCMUSSID
-							--AND (JI.P_PCMUSSID = SI.p_sellerarticlesku AND SI.p_hasVariant=1)--to be checked
+							AND (JI.P_PCMUSSID = SI.p_sellerarticlesku AND SI.p_hasVariant=1)--to be checked
                             AND P.PK = pp1.p_pricerow
 							AND (pp1.p_promotionchannel='Mobile' OR pp1.p_promotionchannel is null)
                             AND (pp1.p_promotionenddate BETWEEN v_last_run_price_update
