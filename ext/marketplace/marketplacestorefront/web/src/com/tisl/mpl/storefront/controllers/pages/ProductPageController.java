@@ -2637,7 +2637,7 @@ public class ProductPageController extends MidPageController
 										}
 
 
-										if (featureData.getName().toLowerCase().contains(ModelAttributetConstants.WARRANTY.toLowerCase()))
+										if (featureData.getName().toLowerCase().contains(ModelAttributetConstants.WARRANTY_DETAILS_HF.toLowerCase()))
 										{
 											warrentyList.add(featureValueData.getValue());
 										}
@@ -2654,11 +2654,7 @@ public class ProductPageController extends MidPageController
 												mapConfigurableAttribute.put(featureData.getName(), featureValueData.getValue());
 											}
 
-											if (featureData.getName().toLowerCase()
-													.contains(ModelAttributetConstants.WARRANTY.toLowerCase()))
-											{
-												warrentyList.add(featureValueData.getValue());
-											}
+											
 										}
 
 									}
