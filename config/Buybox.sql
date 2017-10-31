@@ -720,6 +720,8 @@ AS
 							mplsellerinfo SI
                       WHERE     P.p_sellerarticlesku = I.p_sellerarticlesku
                             AND P.p_catalogversion = v_catalogversion_buybox
+     						AND SI.p_catalogversion = v_catalogversion_buybox
+     						AND P.p_sellerarticlesku = JI.P_USSID
                             AND PLD.p_ussid(+) = JI.P_PCMUSSID
 							AND (JI.P_PCMUSSID = SI.p_sellerarticlesku AND SI.p_hasVariant=1)--to be checked
 							AND P.PK = pp1.p_pricerow
@@ -764,6 +766,8 @@ IF (v_jmergepromostdtcount > 0)
 							mplsellerinfo SI
                       WHERE     P.p_sellerarticlesku = I.p_sellerarticlesku
                             AND P.p_catalogversion = v_catalogversion_buybox
+     						AND SI.p_catalogversion = v_catalogversion_buybox
+     						AND P.p_sellerarticlesku = JI.P_USSID
                             AND PLD.p_ussid(+) = JI.P_PCMUSSID
 							AND (JI.P_PCMUSSID = SI.p_sellerarticlesku AND SI.p_hasVariant=1)--to be checked
 							AND P.PK = pp1.p_pricerow
@@ -808,6 +812,8 @@ IF (v_jmergepromostdtcount > 0)
 							mplsellerinfo SI
                       WHERE     P.p_sellerarticlesku = I.p_sellerarticlesku
                             AND P.p_catalogversion = v_catalogversion_buybox
+     						AND SI.p_catalogversion = v_catalogversion_buybox
+     						AND P.p_sellerarticlesku = JI.P_USSID
                             AND PLD.p_ussid(+) = JI.P_PCMUSSID
 							AND (JI.P_PCMUSSID = SI.p_sellerarticlesku AND SI.p_hasVariant=1)--to be checked
                             AND P.PK = pp1.p_pricerow
@@ -852,6 +858,8 @@ IF (v_jmergepromoenddtcount > 0)
 							mplsellerinfo SI
                       WHERE     P.p_sellerarticlesku = I.p_sellerarticlesku
                             AND P.p_catalogversion = v_catalogversion_buybox
+     						AND SI.p_catalogversion = v_catalogversion_buybox
+     						AND P.p_sellerarticlesku = JI.P_USSID
                             AND PLD.p_ussid(+) = JI.P_PCMUSSID
 							AND (JI.P_PCMUSSID = SI.p_sellerarticlesku AND SI.p_hasVariant=1)--to be checked
                             AND P.PK = pp1.p_pricerow
