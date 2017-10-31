@@ -853,6 +853,10 @@ INSERT_UPDATE Sizesystem;name[unique=true];from;to;conversionUnit;propertyName;
 ;15-16 Yto14-16 Y;15-16 Y;14-16 Y;0.00;KidswearSize
 ;14-16 Yto14-16 Y;14-16 Y;14-16 Y;0.00;KidswearSize
 
-##########  Impex for kidswear end  ##########								 
+##########  Impex for kidswear end  ##########	
+							 
+# start PR-9/ relevance solr score
+INSERT_UPDATE SolrIndexedProperty;solrIndexedType(identifier)[unique=true];name[unique=true];type(code);sortableType(code);currency[default=false];localized[default=false];multiValue[default=false];useForSpellchecking[default=false];useForAutocomplete[default=false];fieldValueProvider;valueProviderParameter
+;$solrIndexedType; relevancescore                  ;int ;            ;    ;;    ;;;                 ;
 
-
+# End PR-9/ relevance solr score 
