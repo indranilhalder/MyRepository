@@ -314,13 +314,13 @@ share mobile -->
    			 <c:when test="${product.rootCategory =='HomeFurnishing'}">
 	   			 <c:choose>
 	   			 <c:when test="${productSize !='No Size'}">
-		   			<span>
+		   			<span class="home-pdp-size">
 						<spring:theme code="product.variant.size.HF"></spring:theme><c:if test="${not empty productSizeType}">(${productSizeType})</c:if>
 				  </span>
 				  </c:when>
 	   			 </c:choose>
    			  
-			   <span style="float: right;">
+			   <span class="home-pdp-quantity">
 					<spring:theme code="product.variant.quantity"></spring:theme><c:if test="${not empty productSizeType}">(${productSizeType})</c:if>
 			  </span> 
    			 </c:when>

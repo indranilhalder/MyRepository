@@ -77578,3 +77578,8 @@ background: url(../images/search_image.png) no-repeat;}
 }
 
 /* HOME-210 End */
+
+.home-pdp-quantity,
+.home-pdp-size{
+	border: 0px solid transparent ! important;
+}
