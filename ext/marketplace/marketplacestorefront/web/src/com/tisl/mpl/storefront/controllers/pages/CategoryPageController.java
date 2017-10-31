@@ -1327,6 +1327,7 @@ public class CategoryPageController extends AbstractCategoryPageController
 	 * @return String
 	 */
 
+	@SuppressWarnings("boxing")
 	@RequestMapping(value =
 	{ NEW_CATEGORY_URL_PATTERN_PAGINATION }, method = RequestMethod.GET)
 	public String categoryPagination(@PathVariable(CATERGORYCODE) String categoryCode,
@@ -1356,6 +1357,7 @@ public class CategoryPageController extends AbstractCategoryPageController
 				String searchCode = new String(categoryCode);
 				//SEO: New pagination detection TISCR 340
 				pageNo = getPaginatedPageNo(request);
+				model.addAttribute("pageNo", pageNo);
 				/* TPR-1283 Changes --Starts */
 				final CategoryModel category = categoryService.getCategoryForCode(categoryCode);
 				final String urlName = getCategoryModelUrlResolver().resolve(category);

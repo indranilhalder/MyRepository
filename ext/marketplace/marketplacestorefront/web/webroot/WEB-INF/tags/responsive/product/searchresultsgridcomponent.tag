@@ -73,7 +73,7 @@
 	<nav:pagination top="false"  supportShowPaged="${isShowPageAllowed}" supportShowAll="${isShowAllAllowed}"  searchPageData="${searchPageData}" searchUrl="${searchPageData.currentQuery.url}"  numberPagesShown="${numberPagesShown}"/>
 
 </div> --%>
-
+======= ${pageNo}
 <div class="bottom-pagination pagination-search">
 <div class="">
 <c:if test="${searchPageData.pagination.numberOfPages > 1}">
@@ -87,7 +87,7 @@
     <ul class="pagination-block">
     	<c:forEach begin="1" end="${searchPageData.pagination.numberOfPages}" var="page" varStatus="loop">
     	<c:choose>
-    		<c:when test="${loop.index eq 0}">
+    		<c:when test="${loop.index eq 1}">
     		<li class="pageNoLi"><a class="pageNo active" href="/search/page-${page}?q=${param.text}">${page}</a></li>
     		</c:when>
     		<c:otherwise>

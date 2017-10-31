@@ -2,6 +2,7 @@
 <%@ taglib prefix="nav" tagdir="/WEB-INF/tags/responsive/nav"%>
 <%@ taglib prefix="product" tagdir="/WEB-INF/tags/responsive/product"%>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
+<%@ taglib uri = "http://java.sun.com/jsp/jstl/functions" prefix = "fn" %>
 
 <div class="right-block">
 	<nav:pagination top="true" supportShowPaged="${isShowPageAllowed}"
@@ -74,10 +75,25 @@
     	<c:forEach begin="1" end="${searchPageData.pagination.numberOfPages}" var="page" varStatus="loop">
     	<c:choose>
     		<c:when test="${loop.index eq 1}">
-    		<li class="pageNoLi"><a class="pageNo active" href="${requestScope['javax.servlet.forward.request_uri']}/page-${page}">${page}</a></li>
+    		<c:choose>
+    			<c:when test="${fn:contains(requestScope['javax.servlet.forward.request_uri'],'page')}">
+    			<li class="pageNoLi"><a class="pageNo active" href="${requestScope['javax.servlet.forward.request_uri']}">${page}</a></li>
+    			</c:when>
+    			<c:otherwise>
+    			<li class="pageNoLi"><a class="pageNo active" href="${requestScope['javax.servlet.forward.request_uri']}/page-${page}">${page}</a></li>
+    			</c:otherwise>
+    		</c:choose>
+    		
     		</c:when>
     		<c:otherwise>
-    		<li class="pageNoLi"><a class="pageNo" href="${requestScope['javax.servlet.forward.request_uri']}/page-${page}">${page}</a></li>
+    		<c:choose>
+    			<c:when test="${fn:contains(requestScope['javax.servlet.forward.request_uri'],'page')}">
+    			<li class="pageNoLi"><a class="pageNo" href="${requestScope['javax.servlet.forward.request_uri']}">${page}</a></li>
+    			</c:when>
+    			<c:otherwise>
+    			<li class="pageNoLi"><a class="pageNo" href="${requestScope['javax.servlet.forward.request_uri']}/page-${page}">${page}</a></li>
+    			</c:otherwise>
+    		</c:choose>
     		</c:otherwise>
     	</c:choose>
         </c:forEach>
@@ -97,5 +113,6 @@
 		});
 		
 	});
+var currentPageNoFrom = "${pageNo}"; 	
 </script>
 <input type="hidden" name="productGrid" value="1"/>
