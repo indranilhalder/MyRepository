@@ -4015,6 +4015,8 @@ function getBuyBoxDataAjax(productCode,variantCodesJson)
 						$("#addToCartButton").hide();
 						$('#buyNowButton').hide();
 						$("#outOfStockId").show();
+						$('.addtocart-component').removeClass("col-md-6");
+						$('.addtocart-component').addClass("col-md-12");
 						$("#allVariantOutOfStock").show();
 						$("#otherSellerInfoId").show();
 						$("#otherSellersId").html(data['othersSellersCount']);
@@ -4028,6 +4030,8 @@ function getBuyBoxDataAjax(productCode,variantCodesJson)
 						$("#addToCartButton").hide();
 						$("#outOfStockId").show();
 						$("#buyNowButton").hide();
+						$('.addtocart-component').removeClass("col-md-6");
+						$('.addtocart-component').addClass("col-md-12");
 						//}
 						$("#otherSellerInfoId").hide();
 						$("#otherSellerLinkId").show();
@@ -4047,6 +4051,8 @@ function getBuyBoxDataAjax(productCode,variantCodesJson)
 							$("#addToCartButton").hide();
 							$("#buyNowButton").hide();
 							$("#outOfStockId").show();
+							$('.addtocart-component').removeClass("col-md-6");
+							$('.addtocart-component').addClass("col-md-12");
 						//}
 						$("#otherSellerInfoId").hide();
 						$("#otherSellerLinkId").hide();
@@ -4068,6 +4074,8 @@ function getBuyBoxDataAjax(productCode,variantCodesJson)
 						$("#outOfStockId").show();
 						$("#allVariantOutOfStock").show();
 						$("#buyNowButton").hide();
+						$('.addtocart-component').removeClass("col-md-6");
+						$('.addtocart-component').addClass("col-md-12");
 						//}
 						$("#otherSellerInfoId").hide();
 						$("#otherSellerLinkId").show();
@@ -4091,6 +4099,8 @@ function getBuyBoxDataAjax(productCode,variantCodesJson)
 							$("#addToCartButton").hide();
 							$("#buyNowButton").hide();
 							$("#outOfStockId").show();
+							$('.addtocart-component').removeClass("col-md-6");
+							$('.addtocart-component').addClass("col-md-12");
 							$("#allVariantOutOfStock").show();
 							$("#variant li a").each(function(){
 							$(this).removeAttr("href");

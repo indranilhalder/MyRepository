@@ -146,38 +146,40 @@
 													<div id="popup_confirm_address_removal_${creditCard.value.cardToken}">
 														<div class="addressItem">
 													<div class="number paymentItem">
-														<c:if
-															test="${fn:escapeXml(creditCard.value.cardBrand) eq 'VISA'}">
-															<img src="${commonResourcePath}/images/Visa.png">
-														</c:if>
-														<c:if
-															test="${fn:escapeXml(creditCard.value.cardBrand) eq 'MASTERCARD'}">
-															<img src="${commonResourcePath}/images/Master_Card.png">
-														</c:if>
-														<c:if
-															test="${fn:escapeXml(creditCard.value.cardIssuer) eq 'AMEX'}">
-															<img
-																src="${commonResourcePath}/images/American_Express.png">
-														</c:if>
-														<br><br>
-														<h3>${fn:escapeXml(creditCard.value.cardIssuer)}</h3>
-														<c:if test="${not empty creditCard.value.cardType}">
-															<h3>${fn:escapeXml(creditCard.value.cardType)}&nbsp;CARD</h3>
-														</c:if>
-														<p>${fn:escapeXml(creditCard.value.cardBrand)}&nbsp;ending
-															in&nbsp;${creditCard.value.cardEndingDigits}</p>
-														<p>
-															<spring:theme code="text.expires" text="Expires" />
-															${fn:escapeXml(creditCard.value.expiryMonth)}/
-															<c:set var="expiryYearMasked"
-																value=" ${fn:escapeXml(creditCard.value.expiryYear)}" />
-															<c:set var="expiryYearLength"
-																value="${fn:length(expiryYearMasked)}" />
-															<c:set var="expiryYearNumEnd"
-																value="${fn:substring(expiryYearMasked, expiryYearLength-4, expiryYearLength)}" />${fn:substring(expiryYearMasked, expiryYearLength-4, expiryYearLength)}
-														</p>
-													</div>
-													<br>
+													    <div class="acc-savecard-left">
+															<c:if
+																test="${fn:escapeXml(creditCard.value.cardBrand) eq 'VISA'}">
+																<img src="${commonResourcePath}/images/Visa.png">
+															</c:if>
+															<c:if
+																test="${fn:escapeXml(creditCard.value.cardBrand) eq 'MASTERCARD'}">
+																<img src="${commonResourcePath}/images/Master_Card.png">
+															</c:if>
+															<c:if
+																test="${fn:escapeXml(creditCard.value.cardIssuer) eq 'AMEX'}">
+																<img
+																	src="${commonResourcePath}/images/American_Express.png">
+															</c:if>
+														</div>
+														 <div class="acc-savecard-right">														
+															<h3>${fn:escapeXml(creditCard.value.cardIssuer)}</h3>
+															<c:if test="${not empty creditCard.value.cardType}">
+																<h3>${fn:escapeXml(creditCard.value.cardType)}&nbsp;CARD</h3>
+															</c:if>
+															<p>${fn:escapeXml(creditCard.value.cardBrand)}&nbsp;ending
+																in&nbsp;${creditCard.value.cardEndingDigits}</p>
+															<p>
+																<spring:theme code="text.expires" text="Expires" />
+																${fn:escapeXml(creditCard.value.expiryMonth)}/
+																<c:set var="expiryYearMasked"
+																	value=" ${fn:escapeXml(creditCard.value.expiryYear)}" />
+																<c:set var="expiryYearLength"
+																	value="${fn:length(expiryYearMasked)}" />
+																<c:set var="expiryYearNumEnd"
+																	value="${fn:substring(expiryYearMasked, expiryYearLength-4, expiryYearLength)}" />${fn:substring(expiryYearMasked, expiryYearLength-4, expiryYearLength)}
+															</p>
+														</div>
+													</div>													
 													<p Class="address-deleteConfirmation">
 																<spring:theme code="text.adress.remove.confirmation"
 																	text="Are you sure you would like to delete this card?" />
@@ -252,7 +254,7 @@
 														data-target="#delete-card_${debitCard.value.cardToken}_${debitStatus.index}"
 														data-mylist="<spring:theme code="text.help" />"
 														data-dismiss="modal">
-														<spring:theme code="text.remove" text="Delete Address" />
+														<spring:theme code="text.remove" text="Delete Card" />
 													</a>
 												</li>
 	
@@ -267,6 +269,7 @@
 													<div id="popup_confirm_address_removal_${debitCard.value.cardToken}">
 														<div class="addressItem">
 													<div class="number paymentItem">
+													   <div class="acc-savecard-left">
 														<c:choose>
 															<c:when
 																test="${fn:escapeXml(debitCard.value.cardBrand) eq 'VISA'}">
@@ -280,8 +283,9 @@
 																<img class="credit-cards-sprite sprite-mastercard"
 																	src="${commonResourcePath}/images/Maestro.png">
 															</c:otherwise>
-														</c:choose>
-														<br><br>
+														</c:choose>	
+														</div>
+														<div class="acc-savecard-right">													
 														<h3>${fn:escapeXml(debitCard.value.cardIssuer)}</h3>
 														<c:if test="${not empty debitCard.value.cardType}">
 															<h3>${fn:escapeXml(debitCard.value.cardType)}&nbsp;CARD</h3>
@@ -298,8 +302,8 @@
 															<c:set var="expiryYearNumEnd"
 																value="${fn:substring(expiryYearMasked, expiryYearLength-4, expiryYearLength)}" />${fn:substring(expiryYearMasked, expiryYearLength-4, expiryYearLength)}
 														</p>
-													</div>
-													<br>
+														</div>
+													</div>													
 													<p Class="address-deleteConfirmation">
 																<spring:theme code="text.adress.remove.confirmation"
 																	text="Are you sure you would like to delete this card?" />
