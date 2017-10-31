@@ -77578,6 +77578,15 @@ background: url(../images/search_image.png) no-repeat;}
 }
 
 /* HOME-210 End */
+/* TPR-6740 start */
+#stw_widget_hf .product-tile {
+    margin-bottom: 15px;
+}
+.gotopdp {
+    position: absolute;
+    bottom: 0;
+}
+/* TPR-6740 end */
 .home-buying-guide{
 	border-left: 2px solid #9b9b9b;
     padding-left: 10px;
