@@ -13314,24 +13314,40 @@
 					</attribute>
 					<attribute qualifier="nodeParent" type="java.lang.String">
 						<persistence type="property" />
-						<modifiers search="true" optional="false" read="true" write="true" />
+						<modifiers search="true" optional="true" read="true" write="true" />
 					</attribute>
-					<attribute qualifier="ticketType" type="boolean">
-					<defaultvalue>java.lang.Boolean.TRUE</defaultvalue>
-						<persistence type="property" />
-						<modifiers search="true" optional="false" read="true" write="true" />
-					</attribute>
-					<attribute qualifier="createTicket" type="boolean">
-					<defaultvalue>java.lang.Boolean.TRUE</defaultvalue>
+					<attribute qualifier="ticketType" type="java.lang.String">
 						<persistence type="property" />
 						<modifiers search="true" optional="false" read="true" write="true" />
 					</attribute>
 					<attribute qualifier="ticketAnswer" type="java.lang.String">
-					       <persistence type="property" />
+						<persistence type="property">
+							<columntype database="oracle">
+								<value>varchar2(4000)</value>
+							</columntype>
+							<columntype database="mysql">
+								<value>text</value>
+							</columntype>
+							<columntype database="sqlserver">
+								<value>nvarchar(max)</value>
+							</columntype>
+							<columntype database="hsqldb">
+								<value>LONGVARCHAR</value>
+							</columntype>
+							<columntype>
+								<value>varchar</value>
+							</columntype>
+						</persistence>
+						<description>Ticket Answer</description>					
+						<modifiers read="true" write="true"	optional="true" />
+					</attribute>
+					<attribute qualifier="createTicketAllowed" type="boolean">
+						<defaultvalue>java.lang.Boolean.TRUE</defaultvalue>
+						<persistence type="property" />
 						<modifiers search="true" optional="false" read="true" write="true" />
 					</attribute>
-					<attribute qualifier="nodeDisplay" type="boolean">
-					<defaultvalue>java.lang.Boolean.TRUE</defaultvalue>
+					<attribute qualifier="nodeDisplayAllowed" type="boolean">
+						<defaultvalue>java.lang.Boolean.TRUE</defaultvalue>
 						<persistence type="property" />
 						<modifiers search="true" optional="false" read="true" write="true" />
 					</attribute>
@@ -13396,6 +13412,10 @@
 					<attribute qualifier="customerId" type="java.lang.String">				
 						<persistence type="property" />
 						<modifiers search="true" optional="false" read="true" write="true" />
+					</attribute>
+					<attribute qualifier="customerMobile" type="java.lang.String">				
+						<persistence type="property" />
+						<modifiers search="true" optional="true" read="true" write="true" />
 					</attribute>
 					<attribute qualifier="status" type="java.lang.String">				
 						<persistence type="property" />

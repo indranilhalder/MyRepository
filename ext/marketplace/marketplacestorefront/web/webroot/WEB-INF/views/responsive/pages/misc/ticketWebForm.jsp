@@ -20,6 +20,8 @@
 	             </div>
 	               <button class="closeBtn active" id="closeCustCareSec">X</button>
             </div>
+            
+            ${formFields}
             <div class="custmCareQrySec" style="display: block;">
                 <div class="custmCareForms">
                   <div class="formGroup">
@@ -135,15 +137,6 @@
 				        </select><span class="holder active">Wrong delivered message received</span></span>
 					  </div>
 					  <div class="formGroup">
-				        <h3 class="secLabel">Sub-issue 2</h3>
-				         <span class="customSelectWrap"><select class="customSelect">
-				            <option>Select your exact problem</option>
-					    	<option>Wrong delivered message received</option>
-					    	<option>Wrong delivered message received</option>
-					    	<option>Wrong delivered message received</option>         
-				        </select><span class="holder active">Wrong delivered message received</span></span>
-					  </div>
-					  <div class="formGroup">
 				        <h3 class="secLabel">Name</h3>
 					    <input type="text" class="formControl feildError" placeholder="Enter Your Name">
 					    <p class="errorTxt">Name Canot be empty.</p>
@@ -182,7 +175,7 @@
          </div>
 
 
-
+</div>
 
 </template:page>
 
