@@ -317,6 +317,14 @@
 												varStatus="entryStatus">
 
 												<c:url value="${entry.product.url}" var="productUrl" />
+												<!-- Egv Product url Changes-->
+												  <c:if test="${orderHistoryDetail.isEGVOrder eq  true}">
+												  <spring:eval expression="T(de.hybris.platform.util.Config).getParameter('marketplace.header.egvProductCode')" var="productCode"/>
+												    <c:set var="myVar" value="/giftCard-" />
+												    <c:set var ="egvProduct"  value="${myVar}${productCode}"/>
+													<c:url value="${egvProduct}" var="productUrl" />	
+												  </c:if>
+												  
 												<c:set var="orderEntrySellerSKU"
 													value="${entry.mplDeliveryMode.sellerArticleSKU}" />
 												<c:forEach items="${entry.product.seller}" var="seller">
