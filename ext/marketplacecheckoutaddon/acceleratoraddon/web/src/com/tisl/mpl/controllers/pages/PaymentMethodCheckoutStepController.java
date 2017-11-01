@@ -31,6 +31,7 @@ import de.hybris.platform.commercefacades.user.data.AddressData;
 import de.hybris.platform.commercefacades.voucher.exceptions.VoucherOperationException;
 import de.hybris.platform.commerceservices.order.CommerceCartModificationException;
 import de.hybris.platform.commerceservices.order.CommerceCartService;
+import de.hybris.platform.core.GenericSearchConstants.LOG;
 import de.hybris.platform.core.Registry;
 import de.hybris.platform.core.enums.OrderStatus;
 import de.hybris.platform.core.model.JewelleryInformationModel;
@@ -474,6 +475,7 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 
 				if (cartData != null)
 				{
+
 					//cartModel.setIsExpressCheckoutSelected(Boolean.valueOf(true));
 					//getModelService().save(cartModel);
 
@@ -511,6 +513,7 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 				final CartModel cartModel = getCartService().getSessionCart();
 				//Moved to single method in facade TPR-629
 				getMplPaymentFacade().populateDeliveryPointOfServ(cartModel);
+				cartModel.setSplitModeInfo("juspay");
 
 				//TISST-13012
 				//final boolean cartItemDelistedStatus = getMplCartFacade().isCartEntryDelisted(getCartService().getSessionCart()); TISPT-169
@@ -2928,7 +2931,7 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 			}
 			catch (final CalculationException e)
 			{
-				LOG.error("Exception while creating EGV Child Order:: "+e.getMessage());
+				LOG.error("Exception while creating EGV Child Order:: " + e.getMessage());
 				mplEGVCartService.removeOldEGVCartCurrentCustomer();
 				return MarketplacecheckoutaddonConstants.REDIRECT + GIFT_CARD
 						+ getConfigurationService().getConfiguration().getString(MARKETPLACE_HEADER_EGV_PRODUCT_CODE);
@@ -3971,7 +3974,7 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 					{
 						LOG.error(MarketplacecheckoutaddonConstants.LOGERROR, e);
 					}
-				
+
 					return orderId;
 				}
 				else
@@ -4625,14 +4628,15 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 				LOG.error("Issue with update order...redirecting to payment page only");
 				GlobalMessages.addFlashMessage(redirectAttributes, GlobalMessages.ERROR_MESSAGES_HOLDER,
 						MarketplacecheckoutaddonConstants.PAYMENTTRANERRORMSG);
-				
-				
-				if(orderToBeUpdated.getIsEGVCart().booleanValue()){
+
+
+				if (orderToBeUpdated.getIsEGVCart().booleanValue())
+				{
 					mplEGVCartService.removeOldEGVCartCurrentCustomer();
 					return MarketplacecheckoutaddonConstants.REDIRECT + GIFT_CARD
 							+ getConfigurationService().getConfiguration().getString(MARKETPLACE_HEADER_EGV_PRODUCT_CODE);
 				}
-				
+
 				return getCheckoutStep().currentStep();
 			}
 		}
@@ -6760,7 +6764,8 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 					MarketplacecommerceservicesConstants.INR);
 			model.addAttribute("cartTotalMrp", cartTotalMrpVal);
 			model.addAttribute("totalDiscount", totalDiscountVal);
-			model.addAttribute("egvProductCode", getConfigurationService().getConfiguration().getString(MARKETPLACE_HEADER_EGV_PRODUCT_CODE));
+			model.addAttribute("egvProductCode",
+					getConfigurationService().getConfiguration().getString(MARKETPLACE_HEADER_EGV_PRODUCT_CODE));
 			final PaymentForm paymentForm = new PaymentForm();
 			setupAddPaymentPage(model);
 			if (MapUtils.isNotEmpty(paymentModeMap)) // Code optimization for performance fix TISPT-169
@@ -6941,19 +6946,19 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 		{
 			LOG.error(MarketplacecheckoutaddonConstants.LOGERROR, e);
 			mplEGVCartService.removeOldEGVCartCurrentCustomer();
-		  return "EGVOderError";
+			return "EGVOderError";
 		}
 		catch (final AdapterException e)
 		{
-			 LOG.error(MarketplacecheckoutaddonConstants.LOGERROR, e);
-			 mplEGVCartService.removeOldEGVCartCurrentCustomer();
-			 return "EGVOderError";
+			LOG.error(MarketplacecheckoutaddonConstants.LOGERROR, e);
+			mplEGVCartService.removeOldEGVCartCurrentCustomer();
+			return "EGVOderError";
 		}
 		catch (final EtailNonBusinessExceptions e)
 		{
 			ExceptionUtil.etailNonBusinessExceptionHandler(e);
 			mplEGVCartService.removeOldEGVCartCurrentCustomer();
-			 return "EGVOderError";
+			return "EGVOderError";
 		}
 	}
 
@@ -7028,7 +7033,7 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 					{
 
 						LOG.error("card Add Error " + response.getResponseMessage());
-					//	return "ERROR";
+						//	return "ERROR";
 						return setValidErrorCodeHandling(response.getResponseCode().intValue());
 					}
 
@@ -7059,25 +7064,39 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 		}
 		return "ERROR";
 	}
-	
-	 private String  setValidErrorCodeHandling(final int errorCode ){
-		 String errorMessage = "";
-   	 if(errorCode == Integer.valueOf(ModelAttributetConstants.ERROR_CODE_10004).intValue()){
-   		     errorMessage= ModelAttributetConstants.ERROR_CODE_10004_DESC;
-			  }else if(errorCode == Integer.valueOf(ModelAttributetConstants.ERROR_CODE_10027).intValue()){
-				errorMessage= ModelAttributetConstants.ERROR_CODE_10027_DESC;
-			  }else if(errorCode == Integer.valueOf(ModelAttributetConstants.ERROR_CODE_10528).intValue()){
-				errorMessage= ModelAttributetConstants.ERROR_CODE_10528_DESC;
-			  }else if(errorCode == Integer.valueOf(ModelAttributetConstants.ERROR_CODE_10086).intValue()){
-				errorMessage= ModelAttributetConstants.ERROR_CODE_10086_DESC;
-			  }else if(errorCode == Integer.valueOf(ModelAttributetConstants.ERROR_CODE_10096).intValue()){
-				errorMessage= ModelAttributetConstants.ERROR_CODE_10096_DESC;
-			  }else if(errorCode == Integer.valueOf(ModelAttributetConstants.ERROR_CODE_10550).intValue()){
-				errorMessage= ModelAttributetConstants.ERROR_CODE_10550_DESC;
-			  }else{
-				  errorMessage= "Error";
-			  }
-   	 return errorMessage;
-    }
+
+	private String setValidErrorCodeHandling(final int errorCode)
+	{
+		String errorMessage = "";
+		if (errorCode == Integer.valueOf(ModelAttributetConstants.ERROR_CODE_10004).intValue())
+		{
+			errorMessage = ModelAttributetConstants.ERROR_CODE_10004_DESC;
+		}
+		else if (errorCode == Integer.valueOf(ModelAttributetConstants.ERROR_CODE_10027).intValue())
+		{
+			errorMessage = ModelAttributetConstants.ERROR_CODE_10027_DESC;
+		}
+		else if (errorCode == Integer.valueOf(ModelAttributetConstants.ERROR_CODE_10528).intValue())
+		{
+			errorMessage = ModelAttributetConstants.ERROR_CODE_10528_DESC;
+		}
+		else if (errorCode == Integer.valueOf(ModelAttributetConstants.ERROR_CODE_10086).intValue())
+		{
+			errorMessage = ModelAttributetConstants.ERROR_CODE_10086_DESC;
+		}
+		else if (errorCode == Integer.valueOf(ModelAttributetConstants.ERROR_CODE_10096).intValue())
+		{
+			errorMessage = ModelAttributetConstants.ERROR_CODE_10096_DESC;
+		}
+		else if (errorCode == Integer.valueOf(ModelAttributetConstants.ERROR_CODE_10550).intValue())
+		{
+			errorMessage = ModelAttributetConstants.ERROR_CODE_10550_DESC;
+		}
+		else
+		{
+			errorMessage = "Error";
+		}
+		return errorMessage;
+	}
 
 }
