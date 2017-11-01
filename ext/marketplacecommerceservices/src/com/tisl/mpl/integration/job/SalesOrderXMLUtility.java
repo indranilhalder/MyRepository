@@ -546,6 +546,7 @@ public class SalesOrderXMLUtility
 								MerchantInfoXMlData merchantInfoXMlData = new MerchantInfoXMlData();
 								merchantInfoXMlData.setMerchantType(
 										getConfigurationService().getConfiguration().getString(PAYMENT_JUSPAY_MERCHANT_TYPE));
+								merchantInfoXMlData.setBucketId("");
 								//need be check
 								merchantInfoXMlData.setProductAmount((Double.parseDouble(paymentInfoModel.getJuspayApportionValue())));
 						
@@ -593,6 +594,7 @@ public class SalesOrderXMLUtility
 						MerchantInfoXMlData merchantInfoXMlData = getMarchantInfo(chaildModel, entry);
 						merchantInfoXMlData
 								.setMerchantType(getConfigurationService().getConfiguration().getString(PAYMENT_JUSPAY_MERCHANT_TYPE));
+						merchantInfoXMlData.setBucketId("");
 						merchantInfoList.add(merchantInfoXMlData);
 					}
 
