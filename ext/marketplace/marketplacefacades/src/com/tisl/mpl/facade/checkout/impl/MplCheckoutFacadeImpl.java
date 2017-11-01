@@ -797,11 +797,17 @@ public class MplCheckoutFacadeImpl extends DefaultCheckoutFacade implements MplC
 				}
 				orderData.setSellerOrderList(sellerOrderList);
 				
-				//EGV Changes 28-39-2017 start 
-				if(orderModel.getIsEGVCart().booleanValue()){
-					orderData.setIsEGVOrder(orderModel.getIsEGVCart().booleanValue());
-					getEGVData(orderData, orderModel);
+				//EGV Changes  start 
+				try {
+					LOG.debug("Populating EGV Data For Order"+orderModel.getCode());
+					if(null != orderModel.getIsEGVCart() && orderModel.getIsEGVCart().booleanValue()){
+						orderData.setIsEGVOrder(orderModel.getIsEGVCart().booleanValue());
+						getEGVData(orderData, orderModel);
+					}
+				}catch (Exception e) {
+					LOG.error("Exception ocurred while populating EGV Data for Order id "+orderModel.getCode()+ " "+e.getMessage());
 				}
+				//EGV Changes  END 
 			}
 			return orderData;
 		}
@@ -1416,7 +1422,7 @@ public class MplCheckoutFacadeImpl extends DefaultCheckoutFacade implements MplC
 			try
 			{
 				String url;
-				if (order.getIsEGVCart().booleanValue())
+				if (null != order.getIsEGVCart() && order.getIsEGVCart().booleanValue())
 				{
 					url = "My Account";
 				}
@@ -1573,13 +1579,17 @@ public class MplCheckoutFacadeImpl extends DefaultCheckoutFacade implements MplC
 			}
 			orderData.setSellerOrderList(sellerOrderList);
 			
-			//Egv changes start
-			if (null != orderModel.getIsEGVCart() && orderModel.getIsEGVCart().booleanValue())
-			{
-				orderData.setIsEGVOrder(orderModel.getIsEGVCart().booleanValue());
-				getEGVData(orderData, orderModel);
+			//EGV Changes  start 
+			try {
+				LOG.debug("Populating EGV Data For Order"+orderModel.getCode());
+				if(null != orderModel.getIsEGVCart() && orderModel.getIsEGVCart().booleanValue()){
+					orderData.setIsEGVOrder(orderModel.getIsEGVCart().booleanValue());
+					getEGVData(orderData, orderModel);
+				}
+			}catch (Exception e) {
+				LOG.error("Exception ocurred while populating EGV Data for Order id "+orderModel.getCode()+ " "+e.getMessage());
 			}
-			//Egv changes End
+			//EGV Changes  END 
 			
 			
 			  

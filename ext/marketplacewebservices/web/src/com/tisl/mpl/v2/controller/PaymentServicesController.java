@@ -1151,7 +1151,7 @@ public class PaymentServicesController extends BaseController
 		
 		// Buying Of EGV Changes Start 
 		final CartModel cart = mplEGVCartService.getEGVCartModel(cartGuid);
-		if (cart != null && cart.getIsEGVCart().booleanValue())
+		if (cart != null && null != cart.getIsEGVCart() && cart.getIsEGVCart().booleanValue())
 		{
 			OrderData orderData = null;
 

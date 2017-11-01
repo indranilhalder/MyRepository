@@ -128,7 +128,7 @@ public class OrderConfirmationEventListener extends AbstractSiteEventListener<Or
 					MarketplacecommerceservicesConstants.MPL_TRACK_ORDER_LONG_URL_FORMAT)
 					+ orderReferenceNumber;
 			String url=null;
-			if (orderDetails.getIsEGVCart().booleanValue())
+			if (null != orderDetails.getIsEGVCart() && orderDetails.getIsEGVCart().booleanValue())
 			{
 				url = "My Account";
 			}

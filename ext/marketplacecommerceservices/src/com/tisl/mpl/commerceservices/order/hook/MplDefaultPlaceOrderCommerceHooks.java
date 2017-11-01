@@ -822,7 +822,7 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 				/**
 				 * EGV CARD PURCHASE
 				 */
-				if (orderModel.getIsEGVCart().booleanValue())
+				if (null != orderModel.getIsEGVCart() && orderModel.getIsEGVCart().booleanValue())
 				{
 
 					mplEGVCartService.removeOldEGVCartCurrentCustomer();
@@ -895,7 +895,7 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 		String status = FAIL;
 		try
 		{
-			if (orderModel.getIsEGVCart().booleanValue())
+			if (null !=orderModel.getIsEGVCart() && orderModel.getIsEGVCart().booleanValue())
 			{
 				final Customer customer = new Customer();
 				final PurchaseEGVRequest purchaseEGVRequest = new PurchaseEGVRequest();
@@ -1272,7 +1272,7 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 						 * entryModelList.getSelectedUSSID());
 						 */
 						//EGV Order change
-						if (!sellerOrderList.getIsEGVCart().booleanValue())
+						if (null !=sellerOrderList.getIsEGVCart() && !sellerOrderList.getIsEGVCart().booleanValue())
 						{
 
 							final MplZoneDeliveryModeValueModel valueModel = deliveryCostService.getDeliveryCost(

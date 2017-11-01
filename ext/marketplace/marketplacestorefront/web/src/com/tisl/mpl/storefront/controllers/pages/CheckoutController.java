@@ -631,7 +631,7 @@ public class CheckoutController extends AbstractCheckoutController
 				model.addAttribute("metaRobots", "noindex,nofollow");
 
 				//TISCR-413
-				if(!orderModel.getIsEGVCart()){
+				if(null != orderModel.getIsEGVCart() && !orderModel.getIsEGVCart()){
 				final Map<String, Integer> deliveryTimeMap = getDeliveryTime(orderModel);
 
 				model.addAttribute("deliveryStartTime", deliveryTimeMap.get(MarketplacecommerceservicesConstants.DELIVERY_STARTTIME));

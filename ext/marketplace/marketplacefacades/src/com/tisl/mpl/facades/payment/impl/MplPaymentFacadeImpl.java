@@ -2473,7 +2473,7 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 				/**
 				 * QC CHANGE
 				 */
-				if (!cart.getIsEGVCart().booleanValue())
+				if (null != cart.getIsEGVCart() && !cart.getIsEGVCart().booleanValue())
 				{
 
 					if (MarketplacecommerceservicesConstants.CHANNEL_WEB.equalsIgnoreCase(channel))
