@@ -3,8 +3,12 @@
  */
 package com.tisl.mpl.marketplacecommerceservices.service.impl;
 
+import de.hybris.platform.commercefacades.order.data.OrderData;
+import de.hybris.platform.commercefacades.order.data.OrderEntryData;
+import de.hybris.platform.core.model.order.OrderModel;
 import de.hybris.platform.processengine.BusinessProcessService;
 import de.hybris.platform.servicelayer.config.ConfigurationService;
+import de.hybris.platform.servicelayer.dto.converter.Converter;
 import de.hybris.platform.servicelayer.model.ModelService;
 
 import java.util.List;
@@ -18,6 +22,7 @@ import com.tisl.mpl.core.model.MplWebCrmModel;
 import com.tisl.mpl.core.model.MplWebCrmTicketModel;
 import com.tisl.mpl.marketplacecommerceservices.daos.MplWebFormDao;
 import com.tisl.mpl.marketplacecommerceservices.service.MplWebFormService;
+import com.tisl.mpl.marketplacecommerceservices.service.OrderModelService;
 import com.tisl.mpl.service.ClientIntegration;
 import com.tisl.mpl.service.TicketCreationCRMservice;
 
@@ -46,11 +51,17 @@ public class MplWebFormServiceImpl implements MplWebFormService
 	@Autowired
 	private ConfigurationService configurationService;
 
+	@Resource(name = "orderModelService")
+	private OrderModelService orderModelService;
+	@Resource(name = "orderConverter")
+	private Converter<OrderModel, OrderData> orderConverter;
+
+
 	private static final Logger LOG = Logger.getLogger(MplWebFormServiceImpl.class);
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.tisl.mpl.marketplacecommerceservices.service.MplWebFormService#getWebCRMParentNodes()
 	 */
 	@Override
@@ -64,7 +75,7 @@ public class MplWebFormServiceImpl implements MplWebFormService
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.tisl.mpl.marketplacecommerceservices.service.MplWebFormService#getWebCRMByNodes(java.lang.String)
 	 */
 	@Override
@@ -77,7 +88,7 @@ public class MplWebFormServiceImpl implements MplWebFormService
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.tisl.mpl.marketplacecommerceservices.service.MplWebFormService#getWebCRMTicket(java.lang.String)
 	 */
 	@Override
@@ -90,7 +101,7 @@ public class MplWebFormServiceImpl implements MplWebFormService
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * com.tisl.mpl.marketplacecommerceservices.service.MplWebFormService#checkDuplicateWebCRMTickets(java.lang.String,
 	 * java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String,
@@ -116,17 +127,57 @@ public class MplWebFormServiceImpl implements MplWebFormService
 	public String sendTicketToPI(final MplWebCrmTicketModel mplWebCrmTicketModel) throws Exception
 	{
 		String duplicateResult = null;
-		String sentResult = null;
+		String sentResult = "failure";
 		final String duplicateCheckEnable = configurationService.getConfiguration().getString("webform.duplicate.check", "Y");
 		if (duplicateCheckEnable.equalsIgnoreCase("Y"))
 		{
 			duplicateResult = ticketCreationService.checkDuplicateWebFormTicket(mplWebCrmTicketModel);
 		}
-		if (null != duplicateResult && duplicateResult.equalsIgnoreCase("N"))
+		if (null != duplicateResult && duplicateResult.equalsIgnoreCase("success"))
 		{
-			sentResult = clientIntegration.sendWebFormTicket();
+			sentResult = clientIntegration.sendWebFormTicket(mplWebCrmTicketModel);
 		}
 		return sentResult;
 	}
 
+	@Override
+	public String populateWebformTicketData(final MplWebCrmTicketModel mplWebCrmTicketModel) throws Exception
+	{
+		OrderEntryData orderEntry = null;
+		final OrderModel subOrderModel = orderModelService.getOrder(mplWebCrmTicketModel.getSubOrderCode());//Sub order model
+		final OrderData orderData = getOrderConverter().convert(subOrderModel); //model converted to data
+		for (final OrderEntryData entry : orderData.getEntries())
+		{
+			if (null != entry.getTransactionId())
+			{
+				if (entry.getTransactionId().equalsIgnoreCase(mplWebCrmTicketModel.getTransactionId()))
+				{
+					orderEntry = entry;
+				}
+			}
+		}
+		ticketCreationService.populateWebFormData(mplWebCrmTicketModel, subOrderModel, orderData, orderEntry);
+
+		return null;
+	}
+
+
+	/**
+	 * @return the orderConverter
+	 */
+	public Converter<OrderModel, OrderData> getOrderConverter()
+	{
+		return orderConverter;
+	}
+
+
+
+	/**
+	 * @param orderConverter
+	 *           the orderConverter to set
+	 */
+	public void setOrderConverter(final Converter<OrderModel, OrderData> orderConverter)
+	{
+		this.orderConverter = orderConverter;
+	}
 }

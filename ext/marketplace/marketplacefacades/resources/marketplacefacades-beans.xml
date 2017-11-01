@@ -1315,4 +1315,11 @@
 		<property name="status" type="String" />
 		<property name="attachments" type="String" />
 	</bean>
+	<!-- Added for TPR-5989 -->
+	<bean class="com.tis.mpl.facade.data.TicketStatusUpdate">
+		<property name="ecommRequestId" type="String" />
+		<property name="crmTicketID" type="String" />
+		<property name="status" type="String" />
+	</bean>
+	
 </beans>

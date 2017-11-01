@@ -3,10 +3,14 @@
  */
 package com.tisl.mpl.service;
 
+import de.hybris.platform.commercefacades.order.data.OrderData;
+import de.hybris.platform.commercefacades.order.data.OrderEntryData;
+import de.hybris.platform.core.model.order.OrderModel;
 import de.hybris.platform.servicelayer.config.ConfigurationService;
 
 import java.io.StringWriter;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import javax.annotation.Resource;
@@ -33,6 +37,7 @@ import com.tisl.mpl.data.SendTicketRequestData;
 import com.tisl.mpl.wsdto.AddressInfoDTO;
 import com.tisl.mpl.wsdto.TicketMasterXMLData;
 import com.tisl.mpl.wsdto.TicketlineItemsXMLData;
+import com.tisl.mpl.wsdto.UploadImage;
 
 
 
@@ -53,6 +58,8 @@ public class TicketCreationCRMserviceImpl implements TicketCreationCRMservice
 	private ConfigurationService configurationService;
 	@Resource(name = "clientIntegration")
 	private ClientIntegration clientIntegration;
+
+
 
 	@Override
 	public void ticketCreationModeltoWsDTO(final SendTicketRequestData sendTicketRequestData) throws JAXBException
@@ -666,5 +673,117 @@ public class TicketCreationCRMserviceImpl implements TicketCreationCRMservice
 			throw ex;
 		}
 		return result;
+	}
+
+	@Override
+	public TicketMasterXMLData populateWebFormData(final MplWebCrmTicketModel mplWebCrmTicketModel,
+			final OrderModel subOrderModel, final OrderData orderData, final OrderEntryData orderEntry) throws Exception
+	{
+		final AddressInfoDTO addressInfo = new AddressInfoDTO();
+		final TicketMasterXMLData ticket = new TicketMasterXMLData();
+		final UploadImage uploadImage = new UploadImage();
+		final List<UploadImage> uploadImageList = new ArrayList<UploadImage>();
+
+		try
+		{
+			if (null != mplWebCrmTicketModel.getCustomerId())
+			{
+				ticket.setCustomerID(mplWebCrmTicketModel.getCustomerId());
+			}
+			if (null != mplWebCrmTicketModel.getOrderCode())
+			{
+				ticket.setOrderId(mplWebCrmTicketModel.getOrderCode());
+			}
+			if (null != mplWebCrmTicketModel.getSubOrderCode())
+			{
+				ticket.setSubOrderId(mplWebCrmTicketModel.getSubOrderCode());
+			}
+			ticket.setTicketType("W");
+			if (null != mplWebCrmTicketModel.getTicketSubType())
+			{
+				ticket.setTicketSubType(mplWebCrmTicketModel.getTicketSubType());
+			}
+			//if (null != sendTicketRequestData.getSource())//to-do
+			//	{
+			//		ticket.setSource(sendTicketRequestData.getSource());
+			//		LOG.debug("ticket create:Ticket Source>>>>> " + sendTicketRequestData.getSource());
+
+			//	}
+			//	if (StringUtils.isNotBlank(sendTicketRequestData.getEcomRequestId())) //to-do
+			//	{
+			//		ticket.setEcomRequestId(sendTicketRequestData.getEcomRequestId());
+			//	}
+			if (null != mplWebCrmTicketModel.getL0code())
+			{
+				ticket.setL0CatCode(mplWebCrmTicketModel.getL0code());
+			}
+			if (null != mplWebCrmTicketModel.getL1code())
+			{
+				ticket.setL1CatCode(mplWebCrmTicketModel.getL1code());
+			}
+			if (null != mplWebCrmTicketModel.getL2code())
+			{
+				ticket.setL2CatCode(mplWebCrmTicketModel.getL2code());
+			}
+			if (null != mplWebCrmTicketModel.getL3code())
+			{
+				ticket.setL3CatCode(mplWebCrmTicketModel.getL3code());
+			}
+			if (null != mplWebCrmTicketModel.getL4code())
+			{
+				ticket.setL4CatCode(mplWebCrmTicketModel.getL4code());
+			}
+			if (null != mplWebCrmTicketModel.getTicketType())
+			{
+				ticket.setTicketCat(mplWebCrmTicketModel.getTicketType());
+			}
+			if (null != mplWebCrmTicketModel.getComment())
+			{
+				ticket.setComments(mplWebCrmTicketModel.getComment());
+			}
+			if (null != mplWebCrmTicketModel.getAttachments())
+			{
+				final List<String> items = Arrays.asList(mplWebCrmTicketModel.getAttachments().split(","));
+				for (final String path : items)
+				{
+					uploadImage.setImagePath(path);
+					uploadImageList.add(uploadImage);
+				}
+				ticket.setUploadImage(uploadImageList);
+			}
+
+
+
+			//	if (null != sendTicketRequestData.getAddressInfo())// to -do
+			//	{
+			//		addressInfo.setPhoneNo(sendTicketRequestData.getAddressInfo().getPhoneNo());
+			//	}
+			ticket.setAddressInfo(addressInfo);
+			//Line item details loop
+			final ArrayList<TicketlineItemsXMLData> ticketlineItemsXMLDataList = new ArrayList<TicketlineItemsXMLData>();
+			final TicketlineItemsXMLData ticketLineObj = new TicketlineItemsXMLData();
+			if (null != mplWebCrmTicketModel.getTransactionId())
+			{
+				ticketLineObj.setLineItemId(mplWebCrmTicketModel.getTransactionId());
+			}
+			ticketlineItemsXMLDataList.add(ticketLineObj);
+			ticket.setLineItemDataList(ticketlineItemsXMLDataList);
+
+			//call for sending it to PI
+			ticketCreationCRM(ticket);
+		}
+		catch (final JAXBException e)
+		{
+			LOG.info(MarketplacecclientservicesConstants.JAXB_EXCEPTION);
+			throw e;
+		}
+		catch (final Exception ex)
+		{
+			LOG.info(MarketplacecclientservicesConstants.EXCEPTION_IS);
+			throw ex;
+		}
+
+
+		return null;
 	}
 }

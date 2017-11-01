@@ -53,7 +53,6 @@ import de.hybris.platform.commercewebservicescommons.errors.exceptions.RequestPa
 import de.hybris.platform.commercewebservicescommons.mapping.DataMapper;
 import de.hybris.platform.commercewebservicescommons.mapping.FieldSetBuilder;
 import de.hybris.platform.commercewebservicescommons.mapping.impl.FieldSetBuilderContext;
-import de.hybris.platform.core.GenericSearchConstants.LOG;
 import de.hybris.platform.core.model.c2l.CurrencyModel;
 import de.hybris.platform.core.model.order.AbstractOrderEntryModel;
 import de.hybris.platform.core.model.order.OrderModel;
@@ -117,6 +116,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.Validator;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -124,6 +124,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.converters.basic.DateConverter;
+import com.tis.mpl.facade.data.TicketStatusUpdate;
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.constants.MarketplacewebservicesConstants;
 import com.tisl.mpl.core.constants.MarketplaceCoreConstants;
@@ -215,6 +216,8 @@ public class MiscsController extends BaseController
 	private static final String APPLICATION_JSON = "application/json"; //Sonar fix
 	private static final String ROLE_TRUSTED_CLIENT = "ROLE_TRUSTED_CLIENT"; //Sonar fix
 	private static final String ROLE_CLIENT = "ROLE_CLIENT"; //Sonar fix
+
+
 
 
 	@Resource(name = "brandFacade")
@@ -1443,7 +1446,7 @@ public class MiscsController extends BaseController
 	 * final MarketplaceDeliveryModeData deliveryModeData = new MarketplaceDeliveryModeData(); final
 	 * MplZoneDeliveryModeValueModel MplZoneDeliveryModeValueModel = mplCheckoutFacade
 	 * .populateDeliveryCostForUSSIDAndDeliveryMode(deliveryMode, MarketplaceFacadesConstants.INR, ussid);
-	 *
+	 * 
 	 * if (null != MplZoneDeliveryModeValueModel) { if (null != MplZoneDeliveryModeValueModel.getValue()) { final
 	 * PriceData priceData = formPriceData(MplZoneDeliveryModeValueModel.getValue()); if (null != priceData) {
 	 * deliveryModeData.setDeliveryCost(priceData); } } if (null != MplZoneDeliveryModeValueModel.getDeliveryMode() &&
@@ -1456,11 +1459,11 @@ public class MiscsController extends BaseController
 	 * MplZoneDeliveryModeValueModel.getDeliveryMode().getName()) {
 	 * deliveryModeData.setName(MplZoneDeliveryModeValueModel.getDeliveryMode().getName()); } if (null != ussid) {
 	 * deliveryModeData.setSellerArticleSKU(ussid); }
-	 *
+	 * 
 	 * } return deliveryModeData; }
-	 *
+	 * 
 	 * @param code
-	 *
+	 * 
 	 * @return
 	 */
 	@RequestMapping(value = "/{baseSiteId}/checkBrandOrCategory", method = RequestMethod.GET)
@@ -1853,9 +1856,9 @@ public class MiscsController extends BaseController
 
 	/*
 	 * to receive pancard status from SP for jewellery
-	 *
+	 * 
 	 * @param restrictionXML
-	 *
+	 * 
 	 * @return void
 	 */
 	@RequestMapping(value = "/{baseSiteId}/miscs/pancardStatus", method = RequestMethod.POST)
@@ -2020,6 +2023,9 @@ public class MiscsController extends BaseController
 	@ResponseBody
 	public Object oneTouchCancelReturn(final InputStream crmRequestXML)
 	{
+
+
+
 		LOG.info("==========Inside oneTouchCancelReturn controller==========");
 		//instances & variables
 		OneTouchCancelReturnDTO output = null;
@@ -2564,4 +2570,28 @@ public class MiscsController extends BaseController
 	{
 		this.mplOrderFacade = mplOrderFacade;
 	}
+
+	/**
+	 * This method is for web form ticket status update (TPR-5989)
+	 */
+	@Secured(
+	{ ROLE_CLIENT, ROLE_TRUSTED_CLIENT })
+	@RequestMapping(value = "/{baseSiteId}/webformTicketStatus", method = RequestMethod.POST, produces = APPLICATION_JSON)
+	@ResponseBody
+	public Object webformTicketStatusUpdate(@RequestBody final TicketStatusUpdate ticketStatusUpdate)
+			throws EtailNonBusinessExceptions
+	{
+		try
+		{
+			//to-do
+
+		}
+		catch (final Exception e)
+		{
+			LOG.error("Exception occured", e);
+		}
+		return null;
+	}
+
+
 }
