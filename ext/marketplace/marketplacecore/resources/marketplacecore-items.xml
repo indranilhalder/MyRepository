@@ -13915,6 +13915,19 @@
 						<modifiers read="true" write="true" search="true" />
 						<defaultvalue>"0"</defaultvalue>
 					</attribute>
+					
+					 <attribute autocreate="true" generate="true" qualifier="trnsStatus"
+						type="java.lang.String">
+						<persistence type="property" />
+						<modifiers read="true" write="true" search="true" />
+					</attribute>
+					
+					<attribute autocreate="true" generate="true" qualifier="transactionId"
+						type="java.lang.String">
+						<persistence type="property" />
+						<modifiers read="true" write="true" search="true" />
+					</attribute>
+					
 				</attributes>
 			</itemtype>
 			
@@ -14041,8 +14054,11 @@
 					</attribute>
 				</attributes>
 			</itemtype>
-
+			
 		</typegroup>
+		
+		
+		
 
 		<!-- TPR-6665 : sysnonums update to slave servers end -->
 		
