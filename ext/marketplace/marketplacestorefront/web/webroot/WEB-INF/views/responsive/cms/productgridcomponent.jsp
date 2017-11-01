@@ -88,8 +88,8 @@
     		<c:otherwise>
     		<c:choose>
     			<c:when test="${fn:contains(requestScope['javax.servlet.forward.request_uri'],'page')}">
-    			<c:set var="splittedURL" value="${fn:split(requestScope['javax.servlet.forward.request_uri']) , '/' }"></c:set>
-    			<li class="pageNoLi"><a class="pageNo" href="${splittedURL[0]}/${splittedURL[1]}//page-${page}">${page}</a></li>
+    			<c:set var="splittedURL" value="${fn:split(requestScope['javax.servlet.forward.request_uri'] , '/' )}"></c:set>
+    			<li class="pageNoLi"><a class="pageNo" href="${splittedURL[0]}/${splittedURL[1]}">${page}</a></li>
     			</c:when>
     			<c:otherwise>
     			<li class="pageNoLi"><a class="pageNo" href="${requestScope['javax.servlet.forward.request_uri']}/page-${page}">${page}</a></li>
