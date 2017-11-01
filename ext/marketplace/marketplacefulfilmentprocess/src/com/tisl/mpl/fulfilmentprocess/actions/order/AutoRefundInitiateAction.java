@@ -11,8 +11,6 @@ import de.hybris.platform.core.model.order.OrderModel;
 import de.hybris.platform.orderhistory.model.OrderHistoryEntryModel;
 import de.hybris.platform.orderprocessing.model.OrderProcessModel;
 import de.hybris.platform.ordersplitting.model.ConsignmentModel;
-import de.hybris.platform.payment.model.PaymentTransactionEntryModel;
-import de.hybris.platform.payment.model.PaymentTransactionModel;
 import de.hybris.platform.processengine.action.AbstractProceduralAction;
 import de.hybris.platform.returns.model.RefundEntryModel;
 import de.hybris.platform.returns.model.ReturnEntryModel;
@@ -43,9 +41,6 @@ public class AutoRefundInitiateAction extends AbstractProceduralAction<OrderProc
 	private static final String REFUND_MODE_C = "C";
 	private static final String REFUND_MODE_WALLET = "W";
 
-	private List<OrderEntryModel> refundList;
-	private List<ReturnEntryModel> returnList;
-
 	@Autowired
 	private ModelService modelService;
 
@@ -64,12 +59,13 @@ public class AutoRefundInitiateAction extends AbstractProceduralAction<OrderProc
 		boolean refundReasonSiteError = false;
 		boolean refundedByWallet = false;
 
-		refundList = Collections.synchronizedList(new ArrayList<OrderEntryModel>());
-		returnList = Collections.synchronizedList(new ArrayList<ReturnEntryModel>());
+		//Changed for SDI-930
+		final List<OrderEntryModel> refundList = Collections.synchronizedList(new ArrayList<OrderEntryModel>());
+		final List<ReturnEntryModel> returnList = Collections.synchronizedList(new ArrayList<ReturnEntryModel>());
 
 		final OrderModel orderModel = process.getOrder();
 		LOG.error("Inside AutoRefundInitiateAction for Order #" + orderModel.getCode());
-		if (orderModel != null && !isOrderCOD(orderModel))
+		if (orderModel != null) //Changed for SDI-930
 		{
 			final List<ReturnRequestModel> returnRequestList = orderModel.getReturnRequests();
 			if (CollectionUtils.isNotEmpty(returnRequestList))
@@ -112,7 +108,7 @@ public class AutoRefundInitiateAction extends AbstractProceduralAction<OrderProc
 									if (status.equals(ConsignmentStatus.RETURN_CLOSED) && !refundedAtRts && !refundedByWallet
 											&& !refundReasonSiteError)
 									{
-										populateRefundList(orderModel);
+										populateRefundList(orderModel, refundList, returnList); //Changed for SDI-930
 
 										if (CollectionUtils.isNotEmpty(refundList))
 										{
@@ -131,6 +127,7 @@ public class AutoRefundInitiateAction extends AbstractProceduralAction<OrderProc
 													historyEntry.setLineId(consignment.getCode());
 													historyEntry.setDescription(ConsignmentStatus.REFUND_INITIATED.toString());
 													modelService.save(historyEntry);
+													modelService.refresh(historyEntry); //Added for SDI-930
 													LOG.error("AutoRefundInitiateAction: historyEntry is set to REFUND_INITIATED for Order #"
 															+ orderModel.getCode());
 												}
@@ -209,37 +206,8 @@ public class AutoRefundInitiateAction extends AbstractProceduralAction<OrderProc
 		}
 	}
 
-	private boolean isOrderCOD(final OrderModel order)
-	{
-		final List<PaymentTransactionModel> tranactions = new ArrayList<PaymentTransactionModel>(order.getPaymentTransactions());
-		boolean flag = false;
-		if (CollectionUtils.isNotEmpty(tranactions))
-		{
-			for (final PaymentTransactionModel transaction : tranactions)
-			{
-				if (CollectionUtils.isNotEmpty(transaction.getEntries()))
-				{
-					for (final PaymentTransactionEntryModel entry : transaction.getEntries())
-					{
-						if (entry.getPaymentMode() != null && entry.getPaymentMode().getMode() != null
-								&& entry.getPaymentMode().getMode().equalsIgnoreCase("COD"))
-						{
-							flag = true;
-							break;
-						}
-					}
-				}
-				if (flag)
-				{
-					break;
-				}
-			}
-		}
 
-		return flag;
-	}
-
-	protected void populateRefundList(final OrderModel orderModel)
+	protected void populateRefundList(final OrderModel orderModel, final List refundList, final List returnList) //Changed for SDI-930
 	{
 		boolean refundedAtRts = false;
 		boolean refundedByWallet = false;

@@ -42,7 +42,7 @@ public class PaymentInfoRevWebServiceImpl
 		try
 		{
 			//24 hour format
-			final SimpleDateFormat sdf = new SimpleDateFormat("ddMMyyyy_HHmmss");
+			final SimpleDateFormat sdf = new SimpleDateFormat("ddMMyyyy_HHmmssSSS");
 			final Date curDate = new Date();
 			final String strDate = sdf.format(curDate);
 			final String folderPath = configurationService.getConfiguration().getString("paymentInfo.batchJob.folder.path");
@@ -60,6 +60,11 @@ public class PaymentInfoRevWebServiceImpl
 			xmlfile.canExecute();
 			FileUtils.writeStringToFile(xmlfile, xmlString);
 			LOG.debug("File created successfully!!!");
+			final int sleepDuration = configurationService.getConfiguration().getInt("paymentinfo.batchjob.sleep.duration",0);
+			if(sleepDuration > 0)
+			{
+				Thread.sleep(sleepDuration);
+			}
 		}
 
 

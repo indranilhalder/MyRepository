@@ -922,7 +922,11 @@
 			<value code="Ms" /> <!-- CNC => only for click and collect -->
 			<value code="Mrs" /> <!-- OD => only for home and express delivery -->
 		</enumtype>
-
+		<!-- SDI-1561 -->
+	    <enumtype code="CreditCardType" autocreate="false" generate="false">
+			<value code="jcb"/>
+			<value code="discover"/>
+		</enumtype>
 		<!-- <enumtype code="ComponentTypeEnum" autocreate="true" generate="true" 
 			dynamic="true"> <description>Component Type For Components</description> 
 			<value code="BannerCarousel" /> <value code="Banners3CarouselType" /> <value 
@@ -11096,8 +11100,114 @@
 					</attribute>
 				</attributes>
 			</itemtype>
+			<!-- Bulk Cancellation Upload -->
+			<itemtype code="BulkCancellation" generate="true" extends="GenericItem"
+				autocreate="true" jaloclass="com.tisl.mpl.core.jalo.BulkCancellation">
+				<deployment table="mplBulkCancelUpload" typecode="14599" />
+				<attributes>
+					<attribute qualifier="csvFile" type="Media" autocreate="true"
+						generate="true">
+						<modifiers read="true" write="true" search="true" />
+						<description>CSV file</description>
+						<persistence type="property" />
+					</attribute>
+
+					<attribute qualifier="csvFileError" type="java.lang.String"
+						autocreate="true" generate="true">
+						<modifiers read="true" write="true" search="true" />
+						<description>CSV file Errors</description>
+						<persistence type="property">
+							<columntype database="oracle">
+								<value>CLOB</value>
+							</columntype>
+							<columntype database="mysql">
+								<value>text</value>
+							</columntype>
+							<columntype database="sqlserver">
+								<value>nvarchar(max)</value>
+							</columntype>
+							<columntype database="hsqldb">
+								<value>LONGVARCHAR</value>
+							</columntype>
+							<columntype>
+								<value>varchar</value>
+							</columntype>
+						</persistence>
+					</attribute>
+				</attributes>
+			</itemtype>
+		</typegroup>
+		
+		<!-- Return Window Changes Starts -->
+		<typegroup name="ReturnWindowIncreaseGroup">
+		<itemtype code="ReturnWindowIncrease" generate="true" extends="GenericItem"
+				autocreate="true" jaloclass="com.tisl.mpl.core.jalo.ReturnWindowIncrease">
+				<deployment table="mplReturnWindowUpload" typecode="14600" />
+				<attributes>
+					<attribute qualifier="csvFile" type="Media" autocreate="true"
+						generate="true">
+						<modifiers read="true" write="true" search="true" />
+						<description>CSV file</description>
+						<persistence type="property" />
+					</attribute>
+
+					<attribute qualifier="csvFileError" type="java.lang.String"
+						autocreate="true" generate="true">
+						<modifiers read="true" write="true" search="true" />
+						<description>CSV file Errors</description>
+						<persistence type="property">
+							<columntype database="oracle">
+								<value>CLOB</value>
+							</columntype>
+							<columntype database="mysql">
+								<value>text</value>
+							</columntype>
+							<columntype database="sqlserver">
+								<value>nvarchar(max)</value>
+							</columntype>
+							<columntype database="hsqldb">
+								<value>LONGVARCHAR</value>
+							</columntype>
+							<columntype>
+								<value>varchar</value>
+							</columntype>
+						</persistence>
+					</attribute>
+				</attributes>
+			</itemtype>
+			<itemtype code="ReturnWindowAudit" extends="GenericItem" autocreate="true" generate="true" jaloclass="de.hybris.platform.jalo.ReturnWindowAudit">
+				<deployment table="Mplretwinaudit" typecode="16100" />
+				<attributes>
+					<attribute qualifier="transactionId"  autocreate="true" type="java.lang.String"
+						generate="true">
+						<description>Transaction Id</description>
+						<modifiers optional="false" read="true" write="true"/>
+						<persistence type="property" />
+					</attribute>
+					<attribute qualifier="status"  autocreate="true" type="java.lang.String"
+						generate="true">
+						<description>Load Status</description>
+						<modifiers optional="false" read="true" write="true"/>
+						<persistence type="property" />
+					</attribute>
+					<attribute qualifier="user"  autocreate="true" type="Employee"
+						generate="true">
+						<description>User</description>
+						<modifiers optional="true" read="true" write="true"/>
+						<persistence type="property" />
+					</attribute>
+					<attribute qualifier="batchts"  autocreate="true" type="java.util.Date"
+						generate="true">
+						<description>Batch TimeStamp</description>
+						<modifiers optional="false" read="true" write="true"/>
+						<persistence type="property" />
+					</attribute>
+					
+				</attributes>
+			</itemtype>
 		</typegroup>
 
+		<!--  Return Window Changes Ends -->
 
 		<!-- A+ Content TPR-978 -->
 		<typegroup name="APlusContentGroup">

@@ -242,6 +242,9 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String AMEX = "AMEX".intern();
 	public static final String AMERICAN_EXPRESS = "AMERICAN EXPRESS".intern();
 	public static final String DINERSCARD = "DinersCard".intern();
+	public static final String DINERS = "DINERS".intern();
+	public static final String JCB = "JCB".intern();
+	public static final String DISCOVER = "DISCOVER".intern();
 	public static final String VISA = "VISA".intern();
 	public static final String EUROCARD = "EuroCard".intern();
 	public static final String SWITCHCARD = "SwitchCard".intern();
@@ -1821,7 +1824,7 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	//.intern();
 
 	//SprintPaymentFixes:- New query added //PaymentFix2017:- queryTAT added
-	public static final String PAYMENTPENDINGQUERY = "select {o.pk} from {Order as o},{OrderStatus as os} where  {o.creationtime} <= ?queryTAT and {o.status}={os.pk} and {os.code}=?status"
+	public static final String PAYMENTPENDINGQUERY = "select {o.pk} from {Order as o},{OrderStatus as os} where  {o.creationtime} <= ?queryTAT and {o.status}={os.pk} and {os.code}=?status and {o.type}=?type"
 			.intern();
 
 	//public static final String PAYMENTPENDINGQUERY =
@@ -2277,4 +2280,19 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 
 	public final static String PINCODE_RESPONSE_DATA_PDP = "PincodeResponseDataForPDP";
 	public static final String KM = "km";
+
+	//Return Window Increase
+	public static final String FetchConsignmentList = "SELECT {c.pk} FROM {Order as o}, {Consignment as c}, {EnumerationValue as en} WHERE {c.order} ={o.pk} and {c.status} = {en.pk} and {en.code}='DELIVERED' and {o.versionid} IS NULL AND {o.type}  ='SubOrder' AND {c.code} IN (?code)";
+	public static final String ConsignmentListFailure = "Error while fetching consignment list";
+
+	public static final String RETURNWINDOWBATCH = "mpl.returnWindowIncrease.use";
+
+	public static final String PROCESSED = "PROCESSED";
+	public static final String NOTFOUND = "NOT_FOUND";
+
+	public static final String FETCHCRONJOBDEBUGLOG = "Error while fetching cronjob with code :";
+
+	public static final String CUSTOMERMASTER_ROWLIMIT = "customermaster.batchjob.rowlimit";
+	public static final String PAYMENTINFO_F_ROWLIMIT = "paymentinfo.batchjob.forward.rowlimit";
+	public static final String PAYMENTINFO_R_ROWLIMIT = "paymentinfo.batchjob.reverse.rowlimit";
 }
