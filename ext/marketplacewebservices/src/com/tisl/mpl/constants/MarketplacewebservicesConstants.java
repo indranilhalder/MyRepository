@@ -604,7 +604,7 @@ public class MarketplacewebservicesConstants
 	public static final String CHANNEL_WEB = "WEB";
 	//INC144317480: Order Threshold Discount Promotion: Netbanking Payment Mode Restriction doesn't work
 	//public static final String BANKNAMEFORNETBANKING = "bankNameforNetbanking";
-	public static final String PAYMENT_MODE_CLIQ_CASH = "Cliq Cash";
+	public static final String PAYMENT_MODE_CLIQ_CASH = "CliqCash";
 	public static final String PAYMENT_MODE_SPLIT = "split";
 	public static final String PAYMENT__MODE_JUSPAY = "Juspay";
 	public static final String USER_CLIQCASH_DETAILS = "/{userId}/cliqcash/getUserCliqCashDetails";
