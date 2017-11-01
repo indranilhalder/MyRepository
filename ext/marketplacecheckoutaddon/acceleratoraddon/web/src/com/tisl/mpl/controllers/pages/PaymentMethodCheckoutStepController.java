@@ -159,26 +159,26 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 
 
 	//Added for TPR-4461 (GETTING THE BANK OF THE USER'S PAYMENT MODE) starts here
-	public static String bankNameUserPaymentMode;
+	//public static String bankNameUserPaymentMode;
 
 
 	/**
 	 * @return the bankNameUserPaymentMode
 	 */
-	public static String getBankNameUserPaymentMode()
-	{
-		return bankNameUserPaymentMode;
-	}
+	//	public static String getBankNameUserPaymentMode()
+	//	{
+	//		return bankNameUserPaymentMode;
+	//	}
 
 
 	/**
 	 * @param bankNameUserPaymentMode
 	 *           the bankNameUserPaymentMode to set
 	 */
-	public static void setBankNameUserPaymentMode(final String bankNameUserPaymentMode)
-	{
-		PaymentMethodCheckoutStepController.bankNameUserPaymentMode = bankNameUserPaymentMode;
-	}
+	//	public static void setBankNameUserPaymentMode(final String bankNameUserPaymentMode)
+	//	{
+	//		PaymentMethodCheckoutStepController.bankNameUserPaymentMode = bankNameUserPaymentMode;
+	//	}
 
 	//TPR-4461 ends here
 
@@ -745,10 +745,10 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 
 		//getSessionService().setAttribute(MarketplacecommerceservicesConstants.BANKFROMBINFORPROMOTION,
 		//	(null != selectedEMIBank && StringUtils.isNotEmpty(selectedEMIBank)) ? selectedEMIBank : null);//selected EMI BANK setting for voucher payment mode and bank specific restriction
-		if (null != selectedEMIBank && StringUtils.isNotEmpty(selectedEMIBank))
-		{
-			setBankNameUserPaymentMode(selectedEMIBank);
-		}
+		//		if (null != selectedEMIBank && StringUtils.isNotEmpty(selectedEMIBank))
+		//		{
+		//			setBankNameUserPaymentMode(selectedEMIBank);
+		//		}
 		/////////////////TPR-4461///////////////////
 
 		//if (null != cartData && null != cartData.getTotalPrice())
@@ -3565,7 +3565,7 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 				//Added for TPR-4461 starts here for voucher
 				LOG.debug("Inside bincheck::::::The bank name to be set while selecting the card for payment is "
 						+ binData.getBankName());
-				setBankNameUserPaymentMode(binData.getBankName());
+				//setBankNameUserPaymentMode(binData.getBankName());
 				//TPR-4461 ends here
 			}
 
@@ -3687,10 +3687,10 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 	{
 		//TPR-4461 parameter netBankName added starts here added only for getting bank name for netbanking/saved credit card/saved debit card
 		LOG.debug("The bank name for netbanking is" + netBankName);
-		if (StringUtils.isNotEmpty(netBankName) && netBankName != null)
-		{
-			setBankNameUserPaymentMode(netBankName);//Card's Bank List
-		}
+		//		if (StringUtils.isNotEmpty(netBankName) && netBankName != null)
+		//		{
+		//			setBankNameUserPaymentMode(netBankName);//Card's Bank List
+		//		}
 
 		//TPR-4461 parameter netBankName added ends here added only for netbanking bankname
 		String orderId = null;
@@ -3779,7 +3779,9 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 								LOG.debug("Inside createjuspay order method ::cart model:: TISSTRT-1526-1  : the banklist set in voucher is: "
 										+ bankLists);
 
-								final String banknameforUserPaymentMode = getBankNameUserPaymentMode(); // Bank of User's Payment Mode
+								//final String banknameforUserPaymentMode = getBankNameUserPaymentMode(); // Bank of User's Payment Mode
+								final String banknameforUserPaymentMode = getSessionService().getAttribute(
+										MarketplacecheckoutaddonConstants.BANKFROMBIN);
 
 								LOG.debug("Inside createjuspay order method ::cart model:: TISSTRT-1526-2  : the bank selected while paying through card is: "
 										+ banknameforUserPaymentMode);
@@ -4029,8 +4031,9 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 								final List<PaymentTypeModel> paymentTypeList = ((PaymentModeRestrictionModel) restriction)
 										.getPaymentTypeData(); //Voucher Payment mode
 								final List<BankModel> bankLists = ((PaymentModeRestrictionModel) restriction).getBanks(); //Voucher Bank Restriction List
-								final String banknameforUserPaymentMode = getBankNameUserPaymentMode(); // Bank of User's Payment Mode
-
+								//final String banknameforUserPaymentMode = getBankNameUserPaymentMode(); // Bank of User's Payment Mode
+								final String banknameforUserPaymentMode = getSessionService().getAttribute(
+										MarketplacecheckoutaddonConstants.BANKFROMBIN);
 
 
 								if (CollectionUtils.isNotEmpty(paymentTypeList))
@@ -4212,10 +4215,10 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 
 		//getSessionService().setAttribute(MarketplacecommerceservicesConstants.BANKFROMBINFORPROMOTION,
 		//	(null != bankName && StringUtils.isNotEmpty(bankName)) ? bankName : null);//selected EMI BANK setting for voucher payment mode and bank specific restriction
-		if (null != bankName && StringUtils.isNotEmpty(bankName))
-		{
-			setBankNameUserPaymentMode(bankName);
-		}
+		//		if (null != bankName && StringUtils.isNotEmpty(bankName))
+		//		{
+		//			setBankNameUserPaymentMode(bankName);
+		//		}
 		/////////////////TPR-4461///////////////////
 
 		final CustomerModel customer = (CustomerModel) getUserService().getCurrentUser();

@@ -1747,6 +1747,7 @@
 	$(".new_card_tab.credit_tab").click(function(){
 		$(this).addClass("active_tab");
 		$(".saved_card_tab.credit_tab").removeClass("active_tab");
+		$("#cardNo").val('');//TISUAT-6002
 		$(this).parents("#card").find("#savedCard").hide();
 		$(this).parents("#card").find("#savedCard").next("li").hide();
 		$(this).parents("#card").find(".terms").first().hide();
@@ -1769,6 +1770,7 @@
 	$(".new_card_tab.debit_tab").click(function(){
 		$(this).addClass("active_tab");
 		$(".saved_card_tab.debit_tab").removeClass("active_tab");
+		$("#cardNoDc").val('');//TISUAT-6002
 		$(this).parents("#cardDebit").find("#savedCardDebit").hide();
 		$(this).parents("#cardDebit").find("#savedCardDebit").next("li").hide();
 		$(this).parents("#cardDebit").find(".terms").first().hide();
