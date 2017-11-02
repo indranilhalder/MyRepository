@@ -5889,10 +5889,10 @@ function useWalletForPaymentAjax(){
 				 $("#paymentOptionsMobiles li span").css('pointer-events', 'all');
 				 $(".checkout-paymentmethod li span").css('pointer-events', 'all');
 				
-				 $("#JuspayAmtId").html(data.juspayAmt);
-					
-				 $("#addCliqCashId").text("");
-			    document.getElementById('addCliqCashId').innerHTML = $(".payRemainingDesc").attr("data-useJuspay") + data.juspayAmt + $(".payRemainingDesc").attr("data-useJuspay1");
+			    if(!value.checked){
+			    	 $("#addCliqCashId").text("");
+					 document.getElementById('addCliqCashId').innerHTML = $(".payRemainingDesc").attr("data-useCliqCash");
+			    }
 			}
 		   
 		},	
@@ -5932,6 +5932,7 @@ function useWalletForPaymentAndPromoAjax(){
 		cache : false,
 		success : function(data) {
 			
+			$("#addCliqCashId").show();
 			$("#no-click,.loaderDiv").remove();
 			 
 			if(value.checked){
@@ -6012,8 +6013,12 @@ function useWalletForPaymentAndPromoAjax(){
 				 
 				 $("#JuspayAmtId").html(data.juspayAmt);
 				 $("#addCliqCashId").text("");
-			    document.getElementById('addCliqCashId').innerHTML = $(".payRemainingDesc").attr("data-useJuspay") + data.juspayAmt + $(".payRemainingDesc").attr("data-useJuspay1");
+			    document.getElementById('addCliqCashId').innerHTML = $(".payRemainingDesc").attr("data-useJuspay") +"<b>"+ data.juspayAmt +"&nbsp; </b>" + $(".payRemainingDesc").attr("data-useJuspay1");
 			
+			    if(!value.checked){
+			    	 $("#addCliqCashId").text("");
+					 document.getElementById('addCliqCashId').innerHTML = $(".payRemainingDesc").attr("data-useCliqCash");
+			    }
 			}
 		   
 		},	
@@ -6032,8 +6037,11 @@ function useWalletForPaymentAndPromoAjax(){
 
 function WalletDetailAjax(){
 	
+	var value = document.getElementById('useGiftCardCheckbox');	
+	if(!value.checked){
 	 $("#addCliqCashId").text("");
 	 document.getElementById('addCliqCashId').innerHTML = $(".payRemainingDesc").attr("data-loadingCliqCash");
+	}
 	
 	$.ajax({
 		url : ACC.config.encodedContextPath + "/checkout/multi/payment-method/useWalletDetail",
@@ -6050,9 +6058,11 @@ function WalletDetailAjax(){
 				 $("#useGiftCardCheckbox").prop('disabled',true);
 				 $(".useGiftCardBtn").css('cursor','not-allowed');
 				 $(".useGiftCardBtn").css('opacity','0.5');
-				   
+				 
+				 if(!value.checked){
 				 $("#addCliqCashId").text("");
 				 document.getElementById('addCliqCashId').innerHTML = $(".payRemainingDesc").attr("data-addCliqCash");
+				 }
 				 
 			} else {
 				$("#useGiftCardCheckbox").prop('disabled',false);
