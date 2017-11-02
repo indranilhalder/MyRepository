@@ -9,6 +9,8 @@ import de.hybris.platform.acceleratorstorefrontcommons.controllers.pages.Abstrac
 import de.hybris.platform.acceleratorstorefrontcommons.controllers.util.GlobalMessages;
 import de.hybris.platform.cms2.exceptions.CMSItemNotFoundException;
 import de.hybris.platform.cms2.model.pages.ContentPageModel;
+import de.hybris.platform.core.GenericSearchConstants.LOG;
+import de.hybris.platform.core.model.order.OrderModel;
 import de.hybris.platform.core.model.user.CustomerModel;
 import de.hybris.platform.order.CartService;
 import de.hybris.platform.servicelayer.config.ConfigurationService;
@@ -24,18 +26,23 @@ import java.util.Date;
 import javax.annotation.Resource;
 
 import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
 import com.tisl.mpl.core.model.CustomerWalletDetailModel;
 import com.tisl.mpl.exception.QCServiceCallException;
 import com.tisl.mpl.facade.checkout.MplCheckoutFacade;
 import com.tisl.mpl.facades.payment.MplPaymentFacade;
 import com.tisl.mpl.facades.wallet.MplWalletFacade;
+import com.tisl.mpl.marketplacecommerceservices.service.ExtendedUserService;
+import com.tisl.mpl.marketplacecommerceservices.service.OrderModelService;
 import com.tisl.mpl.pojo.request.Customer;
 import com.tisl.mpl.pojo.request.QCCustomerRegisterRequest;
 import com.tisl.mpl.pojo.response.CustomerWalletDetailResponse;
@@ -81,9 +88,15 @@ public class WalletController extends AbstractPageController
 	@Resource(name = "mplWalletFacade")
 	private MplWalletFacade mplWalletFacade;
 
+	@Resource(name = "orderModelService")
+	private OrderModelService orderModelService;
+	@Autowired
+	private ExtendedUserService extendedUserService;
+	
 
 	private static final Logger LOG = Logger.getLogger(WalletController.class);
 	protected static final String REDIM_WALLET_CODE_PATTERN = "/redimWallet";
+	protected static final String REDIM_WALLET_FROM_EMAIL = "/redimWalletFromEmail/";
 	final DateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy hh:mm:ss");
 
 	@ModelAttribute("getCurrentDate")
@@ -300,6 +313,73 @@ public class WalletController extends AbstractPageController
 						"text.cliqcash.add.money.Fail", null);
 			  }
     }
+    
+    
+    
+    
+    /*Add Cliq cash amount  from Email*/  
+ 	@RequestMapping(value = REDIM_WALLET_FROM_EMAIL, method = RequestMethod.GET)
+   @RequireHardLogIn
+ 	public String getRedimWalletForEmail(@RequestParam(value = ModelAttributetConstants.ORDERCODE, required = false) final String orderCode,
+ 			final Model model, final RedirectAttributes redirectAttributes) throws CMSItemNotFoundException, Exception
+ 	{
+ 		try
+ 		{
+ 			OrderModel orderModel = orderModelService.getOrderModel(orderCode);
+ 			String recipientId=orderModel.getRecipientId();
+ 			CustomerModel walletCustomer=null;
+ 			try{
+ 				walletCustomer =  extendedUserService.getUserForOriginalUid(recipientId);
+ 			}catch(Exception exception){
+ 				LOG.error("Exception occur while adding money for customer wallet"+exception.getMessage());
+ 				
+ 				GlobalMessages.addFlashMessage(redirectAttributes, GlobalMessages.ERROR_MESSAGES_HOLDER,
+ 						"mpl.gift.card.add.error.message.newuser");
+ 				return REDIRECT_PREFIX + "/login";
+ 			}	 
+ 			if(walletCustomer==null){
+ 				GlobalMessages.addFlashMessage(redirectAttributes, GlobalMessages.ERROR_MESSAGES_HOLDER,
+ 						"mpl.gift.card.add.error.message.newuser");
+ 				return REDIRECT_PREFIX + "/login";
+ 			}
+ 			
+ 			CustomerModel currentCustomer = (CustomerModel) userService.getCurrentUser();
+ 			if(!currentCustomer.getOriginalUid().equalsIgnoreCase(currentCustomer.getOriginalUid())){	
+ 				GlobalMessages.addFlashMessage(redirectAttributes, GlobalMessages.ERROR_MESSAGES_HOLDER,
+ 						"mpl.gift.card.add.error.message.anotheruser");
+ 				return REDIRECT_PREFIX + "/login";
+ 			}
+ 			
+ 			String cardNumber=orderModel.getEntries().get(0).getWalletApportionPaymentInfo().getWalletCardList().get(0).getCardNumber();
+ 			String cardPin=orderModel.getEntries().get(0).getWalletApportionPaymentInfo().getWalletCardList().get(0).getCardPinNumber();
+ 			 
+ 			RedimGiftCardResponse response = mplWalletFacade.getAddEGVToWallet(cardNumber,cardPin);
+ 			if(response!=null && response.getResponseCode() !=null){
+ 				LOG.info("Code Response" + response.getResponseMessage()+response.getResponseCode().intValue());
+ 			}
+ 			if (null != response && null != response.getResponseCode() && null == Integer.valueOf(0))
+ 			{
+ 				GlobalMessages.addFlashMessage(redirectAttributes, GlobalMessages.INFO_MESSAGES_HOLDER,
+ 						"text.cliqcash.add.money.success", null);
+ 				LOG.info("card Added Sucesss " + response.getResponseMessage());
+ 				return REDIRECT_PREFIX + "/wallet/getcliqcashPage";
+ 			}
+ 			else if (null != response && null != response.getResponseCode() && response.getResponseCode() != Integer.valueOf(0))
+ 			{
+ 				setValidErrorCodeHandling(response.getResponseCode().intValue(),redirectAttributes);
+ 				LOG.error("card Add Error " + response.getResponseMessage());
+ 				return REDIRECT_PREFIX + "/wallet/getcliqcashPage";
+ 			}
+ 		}
+ 		catch (final Exception ex)
+ 		{
+ 			GlobalMessages.addMessage(redirectAttributes, GlobalMessages.ERROR_MESSAGES_HOLDER, "text.cliqcash.add.money.Fail",
+ 					null);
+ 			ex.printStackTrace();
+ 		}
+ 		return REDIRECT_PREFIX + "/walletr";
+ 	}
+    
 }
 
 

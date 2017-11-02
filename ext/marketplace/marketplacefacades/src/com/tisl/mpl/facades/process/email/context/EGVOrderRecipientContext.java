@@ -19,8 +19,6 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import com.tisl.mpl.core.model.WalletCardApportionDetailModel;
-
 /**
  * @author PankajS
  *
@@ -28,6 +26,10 @@ import com.tisl.mpl.core.model.WalletCardApportionDetailModel;
 public class EGVOrderRecipientContext extends AbstractEmailContext<OrderProcessModel>
 {
 
+	/**
+	 * 
+	 */
+	private static final String MARKETPLACE_EGV_CARD_ADD_URL = "marketplace.egv.card.add.url";
 	private static final String CUSTOMER_CARE_NUMBER = "customerCareNumber";
 	private static final String CUSTOMER_CARE_EMAIL = "customerCareEmail";
 	private static final String ERROR_GETTING_EXCEPTION_WHILE_CHANING_DATE_FORMAT = "Error Getting Exception while  Chaning date Format";
@@ -66,15 +68,27 @@ public class EGVOrderRecipientContext extends AbstractEmailContext<OrderProcessM
 	  }
 	   put("senderMSG",orderProcessModel.getOrder().getRecipientMessage());
 	   put("senderName",orderProcessModel.getOrder().getGiftFromId());
+	   
+	   put("email",email);
 		put(EMAIL,email);
+		
+		 try
+		{
+			String addMoney = getConfigurationService().getConfiguration()
+					.getString(MARKETPLACE_EGV_CARD_ADD_URL) + orderProcessModel.getOrder().getCode();
+			put("addMoney",addMoney);
+		}
+		catch (Exception e)
+		{
+			e.printStackTrace();
+		}
+		
 		put("orderNumber",orderProcessModel.getOrder().getCode());
 		final String customerCareNumber = configurationService.getConfiguration().getString("marketplace.sms.service.contactno",
 				"1800-208-8282");
 		put(CUSTOMER_CARE_NUMBER, customerCareNumber);
 		final String customerCareEmail = configurationService.getConfiguration().getString("cliq.care.mail", "hello@tatacliq.com");
 		put(CUSTOMER_CARE_EMAIL, customerCareEmail);
-
-
 	}
 	
 	
