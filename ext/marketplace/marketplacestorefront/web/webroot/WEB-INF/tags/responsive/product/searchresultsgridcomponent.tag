@@ -94,7 +94,7 @@
     			<li class="pageNoLi"><a class="pageNo active" href="/${splittedURL[0]}/page-${page}">${page}</a></li>
     			</c:when>
     			<c:otherwise>
-    			<li class="pageNoLi"><a class="pageNo active" href="/${requestScope['javax.servlet.forward.request_uri']}/page-${page}">${page}</a></li>
+    			<li class="pageNoLi"><a class="pageNo active" href="/${requestScope['javax.servlet.forward.request_uri']}page-${page}">${page}</a></li>
     			</c:otherwise>
     		</c:choose>
     		
@@ -106,7 +106,7 @@
     			<li class="pageNoLi"><a class="pageNo" href="/${splittedURL[0]}/page-${page}">${page}</a></li>
     			</c:when>
     			<c:otherwise>
-    			<li class="pageNoLi"><a class="pageNo" href="/${requestScope['javax.servlet.forward.request_uri']}/page-${page}">${page}</a></li>
+    			<li class="pageNoLi"><a class="pageNo" href="/${requestScope['javax.servlet.forward.request_uri']}page-${page}">${page}</a></li>
     			</c:otherwise>
     		</c:choose>
     		</c:otherwise>
