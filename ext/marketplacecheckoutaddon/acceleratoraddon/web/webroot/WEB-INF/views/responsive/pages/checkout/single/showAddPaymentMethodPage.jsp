@@ -249,17 +249,11 @@
 						<div class="overlay" data-dismiss="modal">
 						</div>
 					</div>
-					
 					<c:choose>
 				<c:when test="${isCustomerWalletActive}">
 						<span class="addNewCard" onclick="showAddEGV();"><a href="#"><spring:theme code="text.cliq.cash.payment.addcard.label" /></a></span>
 				</c:when>
 				<c:otherwise>
-				<div class="cliqCashContainerRight">
-					     <a class="cliqCashBtns" style="display: none; " href="<c:url value="/wallet"/>"><spring:theme
-							text="ADD GIFT CARD" code="text.add.cliq.cash.addgiftcard.label" />
-				     	</a>
-				     </div>
 				       <span class="addNewCard" style="display: none;"><a href="#"><spring:theme code="text.cliq.cash.payment.addcard.label" /></a></span>
 				</c:otherwise>
 				</c:choose>
@@ -268,11 +262,14 @@
 						<span class="viewCardTerms"><a href="#"><spring:theme code="text.cliq.cash.payment.term.label" /> </a></span>
 					</div>
 					<br />
-					<div class="payRemainingDesc">
-						<i id="juspayAmountId"><spring:theme code="text.cliq.cash.payment.juspyamt.label"/> <strong id="JuspayAmtId">&#8377; 0</strong> <spring:theme code="text.cliq.cash.payment.juspyamt1.label" /></i>
-						<i id="addCliqCashId"><spring:theme code="text.cliq.cash.payment.addcash.label" /> </i>
-						<i id="useCliqCashId"><spring:theme code="text.cliq.cash.usecash.label"  /> </i>
-						<i id="loadingCliqCashId"><spring:theme code="text.cliq.cash.loadingcash.label"  /> </i>
+					<spring:theme code="text.cliq.cash.payment.addcash.label"  var="addCliqCash"/>
+					<spring:theme code="text.cliq.cash.usecash.label" var="useCliqCash" /> 
+					<spring:theme code="text.cliq.cash.payment.juspyamt.label" var="useJuspay" /> 
+					<spring:theme code="text.cliq.cash.payment.juspyamt1.label" var="useJuspay1" />
+					<spring:theme code="text.cliq.cash.loadingcash.label" var="loadingCliqCash" /> 
+					<div class="payRemainingDesc" data-addCliqCash="${addCliqCash}" data-useCliqCash="${useCliqCash}" data-useJuspay="${useJuspay}" 
+					     data-useJuspay1="${useJuspay1}" data-loadingCliqCash="${loadingCliqCash}">
+						<i id="addCliqCashId"> </i>
 					</div>
 				</div>
 			</div>

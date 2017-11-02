@@ -6156,17 +6156,12 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 
 		final JSONObject jsonObject = new JSONObject();
 		jsonObject.put("disableJsMode", false);
+		jsonObject.put("apportionMode", "Juspay");
 		final CartModel cart = getCartService().getSessionCart();
 		final DecimalFormat df = new DecimalFormat("#.##");
 		try
 		{
 
-			//			if (null != getSessionService().getAttribute("disableCODandWAllet"))
-			//			{
-			//				final String disableCODandWAllet =
-			//
-			//				if (null != disableCODandWAllet && disableCODandWAllet.equalsIgnoreCase("false"))
-			//				{
 			if (StringUtils.isNotEmpty(value) && value.equalsIgnoreCase("true"))
 			{
 
@@ -6180,8 +6175,6 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 					final Double WalletAmt = Double.valueOf((df.format(balBucketwise.getWallet().getBalance().doubleValue())));
 					final Double totalAmt = cart.getTotalPriceWithConv();
 
-					System.out.println("totalAmt ----------^^^^^^^  " + totalAmt);
-
 					if (Double.parseDouble("" + WalletAmt) >= Double.parseDouble("" + totalAmt))
 					{
 
@@ -6190,6 +6183,7 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 						getSessionService().setAttribute("juspayTotalAmt", "" + 0);
 						jsonObject.put("disableJsMode", true);
 						cart.setSplitModeInfo("CliqCash");
+						jsonObject.put("apportionMode", "CliqCash");
 						//jsonObject.put("juspayAmt", 0);
 						getModelService().save(cart);
 						getModelService().refresh(cart);
@@ -6204,6 +6198,7 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 						jsonObject.put("disableJsMode", false);
 						jsonObject.put("juspayAmt", juspayTotalAmt);
 						cart.setSplitModeInfo("Split");
+						jsonObject.put("apportionMode", "Split");
 						getModelService().save(cart);
 						getModelService().refresh(cart);
 					}
@@ -6213,13 +6208,13 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 			{
 				jsonObject.put("disableJsMode", false);
 				cart.setSplitModeInfo("Juspay");
+				jsonObject.put("apportionMode", "Juspay");
 				getSessionService().setAttribute("WalletTotal", "" + 0);
 				getModelService().save(cart);
 				getModelService().refresh(cart);
 				jsonObject.put("juspayAmt", 0);
 			}
-			//}
-			//}
+		
 		}
 		catch (
 

@@ -5717,15 +5717,12 @@ $(".edit_address").click(function(){
 	$(".cliqCashApplyAlert").hide();
 	$("#unUseGiftBtnText").hide();
 	$(".topPlaceOrderBtn").hide();
-	$("#addCliqCashId").hide();
-	$("#juspayAmountId").hide();
-	$("#useCliqCashId").hide();
-	$("#loadingCliqCashId").hide();
 	$("#redeemVoucherAlertId").hide();
 	
 	$("#useGiftCardCheckbox").prop('disabled',true);
 	 $(".useGiftCardBtn").css('cursor','not-allowed');
 	 $(".useGiftCardBtn").css('opacity','0.5');
+	
 	
 	/*if($(window).width()>650){
 		$(".giftCheckoutSectionSize").removeClass("col-xs-4");
@@ -5797,26 +5794,31 @@ function useWalletForPaymentAjax(){
 	$("body").append("<div id='no-click' style='opacity:0.5; background:#000; z-index: 100000; width:100%; height:100%; position: fixed; top: 0; left:0;'></div>");
 	$("body").append('<div class="loaderDiv" style="position: fixed; left: 45%;top:45%;z-index: 10000"><img src="'+staticHost+'/_ui/responsive/common/images/red_loader.gif" class="spinner"></div>');
 
+	
 	$.ajax({
 		url : ACC.config.encodedContextPath + "/checkout/multi/payment-method/useWalletForPayment",
 		data : {"walletMode":value.checked},
 		type : "POST",
 		cache : false,
-		success : function(data) {
-			
-			$("#no-click,.loaderDiv").remove();
-			applyPromotion(null,"none","none");
-			 
+		success : function(data) {			
+		
+			$("#addCliqCashId").show();
+						
 			if(value.checked){
-				 
+				
 				$("#useGiftBtnText").hide();
 				$("#unUseGiftBtnText").show();
-				$(".cliqCashApplyAlert").text('CliQ Cash applied successfully.');
+				$(".cliqCashApplyAlert").text('CLiQ Cash applied successfully.');
 			    $(".cliqCashApplyAlert").show();
 			    $("#viewPaymentCOD").hide();
 			    $("#paytmId").hide();
-			    $("#juspayAmountId").hide();    
-			    useWalletForPaymentAndPromoAjax();
+			    
+			    if(data.apportionMode === 'Split' || data.apportionMode === 'CliqCash'){
+			     applyPromotion(null,"none","none");	
+			     
+			     useWalletForPaymentAndPromoAjax();
+			     }
+			
 			    }else{
 				$("#unUseGiftBtnText").hide();
 				$("#useGiftBtnText").show();
@@ -5826,13 +5828,17 @@ function useWalletForPaymentAjax(){
 				$(".choose-payment").find('*').prop('disabled',false);
 				$("#paymentOptionsMobiles li span").css('pointer-events', 'all');
 				$(".checkout-paymentmethod li span").css('pointer-events', 'all');
-				$("#juspayAmountId").hide();
-				$("#useCliqCashId").show(); 
+				 
+				applyPromotion(null,"none","none");
+				
+				 $("#addCliqCashId").text("");
+				 document.getElementById('addCliqCashId').innerHTML = $(".payRemainingDesc").attr("data-useCliqCash");
 	
 			}
 			
+			$("#no-click,.loaderDiv").remove();
+			
 		    if(data.disableJsMode){
-		    	//alert(data.disableJsMode);
 				 $("#make_saved_cc_payment, #make_saved_dc_payment, #make_cc_payment, #make_dc_payment, #make_nb_payment, #paymentButtonId, #make_emi_payment, #make_mrupee_payment").hide();
 				 //$("#make_saved_cc_payment_up, #make_saved_dc_payment_up, #make_cc_payment_up, #make_dc_payment_up, #make_nb_payment_up, #make_emi_payment_up, #paymentButtonId_up, #make_mrupee_payment_up").hide();
 			     $(".topPlaceOrderBtn").show();
@@ -5840,9 +5846,7 @@ function useWalletForPaymentAjax(){
 			     $("#paymentOptionsMobiles li span").css('pointer-events', 'none');
 			     $(".checkout-paymentmethod li span").css('pointer-events', 'none');
 			     $(".topPlaceOrderBtn").prop('disabled',false);
-			     $("#juspayAmountId").hide();
-				 $("#useCliqCashId").hide(); 
-				
+			 	
 			}else{
 				 $("#make_saved_cc_payment, #make_saved_dc_payment, #make_cc_payment, #make_dc_payment, #make_nb_payment, #paymentButtonId, #make_emi_payment, #make_mrupee_payment").show();
 				 
@@ -5884,11 +5888,11 @@ function useWalletForPaymentAjax(){
 				 $(".choose-payment").find('*').prop('disabled',false);
 				 $("#paymentOptionsMobiles li span").css('pointer-events', 'all');
 				 $(".checkout-paymentmethod li span").css('pointer-events', 'all');
-				 $("#addCliqCashId").hide();
-				 $("#useCliqCashId").hide();
-				 $("#juspayAmountId").show();
+				
 				 $("#JuspayAmtId").html(data.juspayAmt);
-		
+					
+				 $("#addCliqCashId").text("");
+			    document.getElementById('addCliqCashId').innerHTML = $(".payRemainingDesc").attr("data-useJuspay") + data.juspayAmt + $(".payRemainingDesc").attr("data-useJuspay1");
 			}
 		   
 		},	
@@ -5900,7 +5904,10 @@ function useWalletForPaymentAjax(){
 	});
 	}
 
-
+/**
+ * 
+ * Fix for Apply Promotion
+ */
 function useWalletForPaymentAndPromoAjax(){
 	
 	if ($(window).width() < 768 && $("#walletContainerId").hasClass("giftCheckoutContainerTable")) {
@@ -5935,7 +5942,6 @@ function useWalletForPaymentAndPromoAjax(){
 			    $(".cliqCashApplyAlert").show();
 			    $("#viewPaymentCOD").hide();
 			    $("#paytmId").hide();
-			    $("#juspayAmountId").hide();
 
 			    }else{
 				$("#unUseGiftBtnText").hide();
@@ -5946,8 +5952,9 @@ function useWalletForPaymentAndPromoAjax(){
 				$(".choose-payment").find('*').prop('disabled',false);
 				$("#paymentOptionsMobiles li span").css('pointer-events', 'all');
 				$(".checkout-paymentmethod li span").css('pointer-events', 'all');
-				$("#juspayAmountId").hide();
-				$("#useCliqCashId").show(); 
+				
+				 $("#addCliqCashId").text("");
+				 document.getElementById('addCliqCashId').innerHTML = $(".payRemainingDesc").attr("data-useCliqCash");
 	
 			}
 			
@@ -5960,8 +5967,6 @@ function useWalletForPaymentAndPromoAjax(){
 			     $("#paymentOptionsMobiles li span").css('pointer-events', 'none');
 			     $(".checkout-paymentmethod li span").css('pointer-events', 'none');
 			     $(".topPlaceOrderBtn").prop('disabled',false);
-			     $("#juspayAmountId").hide();
-				 $("#useCliqCashId").hide(); 
 				
 			}else{
 				 $("#make_saved_cc_payment, #make_saved_dc_payment, #make_cc_payment, #make_dc_payment, #make_nb_payment, #paymentButtonId, #make_emi_payment, #make_mrupee_payment").show();
@@ -6004,11 +6009,11 @@ function useWalletForPaymentAndPromoAjax(){
 				 $(".choose-payment").find('*').prop('disabled',false);
 				 $("#paymentOptionsMobiles li span").css('pointer-events', 'all');
 				 $(".checkout-paymentmethod li span").css('pointer-events', 'all');
-				 $("#addCliqCashId").hide();
-				 $("#useCliqCashId").hide();
-				 $("#juspayAmountId").show();
+				 
 				 $("#JuspayAmtId").html(data.juspayAmt);
-		
+				 $("#addCliqCashId").text("");
+			    document.getElementById('addCliqCashId').innerHTML = $(".payRemainingDesc").attr("data-useJuspay") + data.juspayAmt + $(".payRemainingDesc").attr("data-useJuspay1");
+			
 			}
 		   
 		},	
@@ -6020,15 +6025,22 @@ function useWalletForPaymentAndPromoAjax(){
 	});
 	}
 
+/**
+ * 
+ * Fix for Apply Promotion End
+ */
+
 function WalletDetailAjax(){
-	$("#loadingCliqCashId").show();
+	
+	 $("#addCliqCashId").text("");
+	 document.getElementById('addCliqCashId').innerHTML = $(".payRemainingDesc").attr("data-loadingCliqCash");
+	
 	$.ajax({
 		url : ACC.config.encodedContextPath + "/checkout/multi/payment-method/useWalletDetail",
 		type : "GET",
 		cache : false,
 		success : function(data) {
 			
-			$("#loadingCliqCashId").hide();
 			$(".cliqTotalBalanceLabel").html(data.totalWalletAmt);
 			$("#qcCashId").html(data.totalCash);
 			$("#qcGiftCardId").html(data.totalEgvBalance);
@@ -6038,14 +6050,19 @@ function WalletDetailAjax(){
 				 $("#useGiftCardCheckbox").prop('disabled',true);
 				 $(".useGiftCardBtn").css('cursor','not-allowed');
 				 $(".useGiftCardBtn").css('opacity','0.5');
-				 $("#addCliqCashId").show();
-				 $("#useCliqCashId").hide();
+				   
+				 $("#addCliqCashId").text("");
+				 document.getElementById('addCliqCashId').innerHTML = $(".payRemainingDesc").attr("data-addCliqCash");
 				 
 			} else {
 				$("#useGiftCardCheckbox").prop('disabled',false);
 				 $(".useGiftCardBtn").css('cursor','pointer');
 				 $(".useGiftCardBtn").css('opacity','1');
-				 $("#useCliqCashId").show(); 
+				 var value = document.getElementById('useGiftCardCheckbox');	
+				 if(!value.checked){
+				 $("#addCliqCashId").text("");
+				 document.getElementById('addCliqCashId').innerHTML = $(".payRemainingDesc").attr("data-useCliqCash");
+				 }
 				
 			}
 			
