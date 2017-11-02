@@ -182,10 +182,8 @@ var stwRender = {
 
     carousel: function(STWJObject) {
     	if(STWJObject !=null && (STWJObject.STWElements !="" && STWJObject.STWElements !=null ))
-    		
     	//if(STWJObject.STWElements)
     	{
-    	
         var stwWidgetProducts = "";
         stwWidgetProducts += '<div class="carousel-component">';
         stwWidgetProducts += '<div class="carousel js-owl-carousel js-owl-lazy-reference js-owl-carousel-reference stw-widget-owl">';
@@ -203,10 +201,15 @@ var stwRender = {
             stwWidgetProducts += ' <div class="short-info"><ul class="color-swatch"><li><span  style="background-color: ' + value.availableColor + ';border: 1px solid rgb(204, 211, 217);" title="' + value.availableColor + '"></span></li></ul>';
             stwWidgetProducts += '<div class="brand">' + value.productBrand + '</div>';
             stwWidgetProducts += ' <a href="' + value.productUrl + '" class="item"><h3 class="product-name">' + value.productName + '</h3>';
+            if(savingPriceCal > 0){
             stwWidgetProducts += '<div class="price"><span class="stw-mrp">&#8377;' + value.mrp + '</span><span class="stw-mop">&#8377;' + value.mop + '</span>';
             stwWidgetProducts += '<p class="savings pdp-savings"> <span>(-' + savingsOnProduct + '%)</span></p>';
             stwWidgetProducts += '</div></a></div></li></div></div>';
-            
+            }
+            else{
+            	stwWidgetProducts += '<div class="price"><span>&#8377;' + value.mrp + '</span>';	
+            	stwWidgetProducts += '</div></a></div></li></div></div>';
+            }
         });
         stwWidgetProducts += '</div></div>';
         return stwWidgetProducts;

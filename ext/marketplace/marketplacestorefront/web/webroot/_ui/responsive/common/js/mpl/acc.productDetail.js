@@ -1612,7 +1612,11 @@ $( document ).ready(function() {
 		{
 		return false;
 		}
-	
+	//Akamai cache fix
+	 var pincode	= readCookiewithName("pdpPincode");
+	 if(pincode!==""){
+	 	$("#pin").val(pincode);
+	 }	
 	var requiredUrl = ACC.config.encodedContextPath + "/p-" + productCode
 			+ "/buybox";
 	//var dataString = 'productCode=' + productCode;
@@ -3105,6 +3109,7 @@ function loadDefaultWishListName_SizeGuide() {
 			e.stopPropagation();
 			$(".Emi > p").removeClass("active mobile");
 			$(".emi-overlay").remove();
+			$("body").removeClass("no-scroll");	/*add for SDI-763*/
 			});
 		$(".pdp .Emi > #EMImodal-content").on("click",function(e){
 			e.stopPropagation();
@@ -5539,3 +5544,15 @@ function onSubmitExc()
 $("#change_pincode").click(function(){
 	$("#pin").focus();
 });
+
+function readCookiewithName(name) {
+	var nameEQ = name + "=";
+	var ca = document.cookie.split(';');
+	for(var i=0;i < ca.length;i++) {
+		var c = ca[i];
+		while (c.charAt(0)==' ') c = c.substring(1,c.length);
+		if (c.indexOf(nameEQ) == 0) return c.substring(nameEQ.length,c.length);
+	}
+	return null;
+}
+

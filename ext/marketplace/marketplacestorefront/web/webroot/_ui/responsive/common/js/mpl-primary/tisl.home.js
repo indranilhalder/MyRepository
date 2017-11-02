@@ -100,9 +100,12 @@ $(document).on("mouseover touchend", "div.departmenthover", function() {
                             html);
                     }
                     if (window.localStorage) {
-                        $.cookie("dept-list", "true", {
-                            expires: 1,
-                            path: "/"
+                        var date = new Date();
+			    var minutes = 600;
+			    date.setTime(date.getTime() + (minutes * 60 * 1000));
+			    $.cookie("dept-list", "true", {
+ 	                        expires: date,
+ 	                        path: "/"
 
                         });
                         window.localStorage.setItem(
@@ -476,7 +479,7 @@ function populateEnhancedSearch(enhancedSearchData)
 	{
 		var slotUid = "FooterSlot";
 		var pageName = $('#pageName').val();
-		if (!$.cookie("dept-list") && window.localStorage) {
+		if (!$.cookie("footer-dept-list") && window.localStorage) {	//SDI-359 fix
 	        for (var key in localStorage) {
 	            if (key.indexOf("footerhtml") >= 0) {
 	                window.localStorage.removeItem(key);                
@@ -500,7 +503,7 @@ function populateEnhancedSearch(enhancedSearchData)
 	            	$("#footerByAjaxId").html(footerhtml);
 	            	
 	                if (window.localStorage) {
-	                    $.cookie("dept-list", "true", {
+	                    $.cookie("footer-dept-list", "true", {		//SDI-359 fix
 	                        expires: 1,
 	                        path: "/"
 
@@ -602,7 +605,7 @@ $(document).ready(function()
 
 			        if (!$.cookie("dept-list") && window.localStorage) {
 			            for (var key in localStorage) {
-			                if (key.indexOf("atozbrandmenuhtml") >= 0) {
+			                if ((key.indexOf("atozbrandmenuhtml") >= 0 ) || (key.indexOf("brandhtml") >= 0)) {	//SDI-359 fix
 			                    window.localStorage.removeItem(key);
 			                    // console.log("Deleting.." + key);
 			                }
@@ -634,9 +637,13 @@ $(document).ready(function()
 			                            html);
 			                    }
 			                    if (window.localStorage) {
-			                        $.cookie("dept-list", "true", {
-			                            expires: 1,
-			                            path: "/"
+			                        var date = new Date();
+				                	var minutes = 600;
+				                	date.setTime(date.getTime() + (minutes * 60 * 1000)); 
+				                	
+				                    $.cookie("dept-list", "true", {
+				                        expires: date,
+				                        path: "/"
 
 			                        });
 			                        window.localStorage.setItem(
@@ -700,6 +707,7 @@ $(document).ready(function()
                
                $("a.tracklinkcls").attr('href','/login');
                $("a.tracklinkcls").html('<span class="bell-icon"></span>&nbsp;Notifications');
+               $(".dropdown.sign-in-dropdown.sign-in.ajaxloginhi span#mobile-menu-toggle").remove();	/*add for PRDI-409 & PRDI-438*/
            } else {
                var firstName = data.userFirstName;
                if (firstName == null || firstName.trim() ==

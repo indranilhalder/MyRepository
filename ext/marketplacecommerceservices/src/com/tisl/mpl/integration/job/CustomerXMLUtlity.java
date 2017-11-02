@@ -109,7 +109,7 @@ public class CustomerXMLUtlity
 					}
 					xmlString = stringWriter.toString();
 					LOG.debug(xmlString);
-					final SimpleDateFormat sdf = new SimpleDateFormat("ddMMyyyy_HHmmss");
+					final SimpleDateFormat sdf = new SimpleDateFormat("ddMMyyyy_HHmmssSSS");
 					final Date curDate = new Date();
 					final String strDate = sdf.format(curDate);
 					final String folderPath = configurationService.getConfiguration().getString("customerMaster.batchJob.folder.path");
@@ -127,6 +127,11 @@ public class CustomerXMLUtlity
 					//	xmlfile.setExecutable(true);
 					FileUtils.writeStringToFile(xmlfile, xmlString);
 					LOG.debug("File created successfully!!!");
+					final int sleepDuration = configurationService.getConfiguration().getInt("customermaster.batchjob.sleep.duration");
+					if(sleepDuration > 0)
+					{
+						Thread.sleep(sleepDuration);
+					}
 				}
 			}
 			//Content

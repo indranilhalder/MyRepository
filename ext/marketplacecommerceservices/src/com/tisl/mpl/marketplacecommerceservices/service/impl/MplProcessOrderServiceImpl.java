@@ -232,7 +232,10 @@ public class MplProcessOrderServiceImpl implements MplProcessOrderService
 									LOG.debug("latest Juspay Event Success");
 									//commented for CAR:127
 									//takeActionAgainstOrder(latestSuccess, orderModel, true);
-									takeActionAgainstOrder(latestSuccess, orderModel, true, orderData);
+									if (CollectionUtils.isEmpty(orderModel.getChildOrders()))
+									{
+										takeActionAgainstOrder(latestSuccess, orderModel, true, orderData);
+									}
 
 									for (final JuspayWebhookModel jspayPostBefore : postedBeforeTime)
 									{
@@ -247,7 +250,10 @@ public class MplProcessOrderServiceImpl implements MplProcessOrderService
 											+ "  one Parent ID already been processed.  this is duplicate Order ID");
 									LOG.error("Hence , changing the Order to Payment Failed");
 
-									getOrderStatusSpecifier().setOrderStatus(orderModel, OrderStatus.PAYMENT_TIMEOUT);
+									if (CollectionUtils.isEmpty(orderModel.getChildOrders()))
+									{
+										getOrderStatusSpecifier().setOrderStatus(orderModel, OrderStatus.PAYMENT_TIMEOUT);
+									}
 								}
 								//If ORDER_FAILED event posted with in juspayWebhookRetryTAT time with no ORDER_SUCCEEDED event
 								else if ((new Date()).after(orderTATForTimeout)
@@ -301,7 +307,11 @@ public class MplProcessOrderServiceImpl implements MplProcessOrderService
 										e1);
 
 							}
-							getOrderStatusSpecifier().setOrderStatus(orderModel, OrderStatus.PAYMENT_TIMEOUT);
+
+							if (CollectionUtils.isEmpty(orderModel.getChildOrders()))
+							{
+								getOrderStatusSpecifier().setOrderStatus(orderModel, OrderStatus.PAYMENT_TIMEOUT);
+							}
 
 							//TPR-965
 							removePromotionInvalidation(orderModel);
@@ -557,7 +567,10 @@ public class MplProcessOrderServiceImpl implements MplProcessOrderService
 							MarketplacecommerceservicesConstants.OMS_INVENTORY_RESV_TYPE_ORDERDEALLOCATE, defaultPinCode, orderModel,
 							null, SalesApplication.WEB);
 
-					getOrderStatusSpecifier().setOrderStatus(orderModel, OrderStatus.PAYMENT_FAILED);
+					if (CollectionUtils.isEmpty(orderModel.getChildOrders()))
+					{
+						getOrderStatusSpecifier().setOrderStatus(orderModel, OrderStatus.PAYMENT_FAILED);
+					}
 					//limited stock promotion issue starts here
 					removePromotionInvalidation(orderModel);
 					//limited stock promotion issue ends here
@@ -589,39 +602,39 @@ public class MplProcessOrderServiceImpl implements MplProcessOrderService
 					modelService.save(juspayWebhookModel);
 				}
 
-				//SprintPaymentFixes:- if any case Order Status Updation fails and Order is ready to mode to other Environment then change status to Payment_Successful or Payment Timeout
-				else if (null != orderModel.getPaymentInfo() && CollectionUtils.isNotEmpty(orderModel.getChildOrders())
-						&& CollectionUtils.isNotEmpty(orderModel.getPaymentTransactions()))
-				{
-
-					LOG.debug("Inside With payment Info-->payment Successful");
-					boolean successFlag = false;
-					for (final PaymentTransactionModel paymentTransaction : orderModel.getPaymentTransactions())
-					{
-						if (paymentTransaction.getStatus().equalsIgnoreCase("SUCCESS"))
-						{
-
-							//PaymentFix2017: setIsSentToOMS not required
-							//No Need to change to FALSE
-							//orderModel.setIsSentToOMS(Boolean.FALSE);
-							//orderModel.setOmsSubmitStatus("");
-							getOrderStatusSpecifier().setOrderStatus(orderModel, OrderStatus.PAYMENT_SUCCESSFUL);
-							successFlag = true;
-							break;
-						}
-					}
-					if (!successFlag)
-					{
-						getOrderStatusSpecifier().setOrderStatus(orderModel, OrderStatus.PAYMENT_FAILED);
-						//limited stock promotion issue starts here
-						removePromotionInvalidation(orderModel);
-						//limited stock promotion issue ends here
-					}
-
-					juspayWebhookModel.setIsExpired(Boolean.TRUE);
-					//SprintPaymentFixes:- juspayModel save added
-					modelService.save(juspayWebhookModel);
-				}
+				//				//SprintPaymentFixes:- if any case Order Status Updation fails and Order is ready to mode to other Environment then change status to Payment_Successful or Payment Timeout
+				//				else if (null != orderModel.getPaymentInfo() && CollectionUtils.isNotEmpty(orderModel.getChildOrders())
+				//						&& CollectionUtils.isNotEmpty(orderModel.getPaymentTransactions()))
+				//				{
+				//
+				//					LOG.debug("Inside With payment Info-->payment Successful");
+				//					boolean successFlag = false;
+				//					for (final PaymentTransactionModel paymentTransaction : orderModel.getPaymentTransactions())
+				//					{
+				//						if (paymentTransaction.getStatus().equalsIgnoreCase("SUCCESS"))
+				//						{
+				//
+				//							//PaymentFix2017: setIsSentToOMS not required
+				//							//No Need to change to FALSE
+				//							//orderModel.setIsSentToOMS(Boolean.FALSE);
+				//							//orderModel.setOmsSubmitStatus("");
+				//							getOrderStatusSpecifier().setOrderStatus(orderModel, OrderStatus.PAYMENT_SUCCESSFUL);
+				//							successFlag = true;
+				//							break;
+				//						}
+				//					}
+				//					if (!successFlag)
+				//					{
+				//						getOrderStatusSpecifier().setOrderStatus(orderModel, OrderStatus.PAYMENT_FAILED);
+				//						//limited stock promotion issue starts here
+				//						removePromotionInvalidation(orderModel);
+				//						//limited stock promotion issue ends here
+				//					}
+				//
+				//					juspayWebhookModel.setIsExpired(Boolean.TRUE);
+				//					//SprintPaymentFixes:- juspayModel save added
+				//					modelService.save(juspayWebhookModel);
+				//				}
 
 				//SprintPaymentFixes:- for modeOfPayment as COD, if there is no child orders the Order will be failed
 				if (null != orderModel.getModeOfOrderPayment() && orderModel.getModeOfOrderPayment().equalsIgnoreCase("COD")
