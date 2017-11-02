@@ -675,6 +675,16 @@ public class TicketCreationCRMserviceImpl implements TicketCreationCRMservice
 		return result;
 	}
 
+	/**
+	 * This method is created to populate the data for crm ticket
+	 *
+	 * @param mplWebCrmTicketModel
+	 * @param subOrderModel
+	 * @param orderData
+	 * @param orderEntry
+	 * @return TicketMasterXMLData
+	 * @throws Exception
+	 */
 	@Override
 	public TicketMasterXMLData populateWebFormData(final MplWebCrmTicketModel mplWebCrmTicketModel,
 			final OrderModel subOrderModel, final OrderData orderData, final OrderEntryData orderEntry) throws Exception
@@ -703,16 +713,10 @@ public class TicketCreationCRMserviceImpl implements TicketCreationCRMservice
 			{
 				ticket.setTicketSubType(mplWebCrmTicketModel.getTicketSubType());
 			}
-			//if (null != sendTicketRequestData.getSource())//to-do
-			//	{
-			//		ticket.setSource(sendTicketRequestData.getSource());
-			//		LOG.debug("ticket create:Ticket Source>>>>> " + sendTicketRequestData.getSource());
-
-			//	}
-			//	if (StringUtils.isNotBlank(sendTicketRequestData.getEcomRequestId())) //to-do
-			//	{
-			//		ticket.setEcomRequestId(sendTicketRequestData.getEcomRequestId());
-			//	}
+			if (StringUtils.isNotBlank(mplWebCrmTicketModel.getCommerceTicketId())) //to-do
+			{
+				ticket.setEcomRequestId(mplWebCrmTicketModel.getCommerceTicketId());
+			}
 			if (null != mplWebCrmTicketModel.getL0code())
 			{
 				ticket.setL0CatCode(mplWebCrmTicketModel.getL0code());
@@ -751,13 +755,10 @@ public class TicketCreationCRMserviceImpl implements TicketCreationCRMservice
 				}
 				ticket.setUploadImage(uploadImageList);
 			}
-
-
-
-			//	if (null != sendTicketRequestData.getAddressInfo())// to -do
-			//	{
-			//		addressInfo.setPhoneNo(sendTicketRequestData.getAddressInfo().getPhoneNo());
-			//	}
+			if (null != mplWebCrmTicketModel.getCustomerMobile())// to -do
+			{
+				addressInfo.setPhoneNo(mplWebCrmTicketModel.getCustomerMobile());
+			}
 			ticket.setAddressInfo(addressInfo);
 			//Line item details loop
 			final ArrayList<TicketlineItemsXMLData> ticketlineItemsXMLDataList = new ArrayList<TicketlineItemsXMLData>();
@@ -770,20 +771,13 @@ public class TicketCreationCRMserviceImpl implements TicketCreationCRMservice
 			ticket.setLineItemDataList(ticketlineItemsXMLDataList);
 
 			//call for sending it to PI
-			ticketCreationCRM(ticket);
-		}
-		catch (final JAXBException e)
-		{
-			LOG.info(MarketplacecclientservicesConstants.JAXB_EXCEPTION);
-			throw e;
+			//ticketCreationCRM(ticket);
 		}
 		catch (final Exception ex)
 		{
 			LOG.info(MarketplacecclientservicesConstants.EXCEPTION_IS);
 			throw ex;
 		}
-
-
-		return null;
+		return ticket;
 	}
 }

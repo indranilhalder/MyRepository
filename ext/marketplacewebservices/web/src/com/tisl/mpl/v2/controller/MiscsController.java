@@ -145,6 +145,7 @@ import com.tisl.mpl.facades.account.register.MplOrderFacade;
 import com.tisl.mpl.facades.constants.MarketplaceFacadesConstants;
 import com.tisl.mpl.facades.product.data.MplCustomerProfileData;
 import com.tisl.mpl.facades.product.data.StateData;
+import com.tisl.mpl.facades.webform.MplWebFormFacade;
 import com.tisl.mpl.marketplacecommerceservices.event.LuxuryPdpQuestionEvent;
 import com.tisl.mpl.marketplacecommerceservices.service.ExtendedUserService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplCustomerProfileService;
@@ -216,6 +217,9 @@ public class MiscsController extends BaseController
 	private static final String APPLICATION_JSON = "application/json"; //Sonar fix
 	private static final String ROLE_TRUSTED_CLIENT = "ROLE_TRUSTED_CLIENT"; //Sonar fix
 	private static final String ROLE_CLIENT = "ROLE_CLIENT"; //Sonar fix
+	private static final String FAILURE = "Failure";
+	public static final String RETURN_TYPE_COD = "01";
+	private static final String SUCCESS = "Success";
 
 
 
@@ -232,29 +236,12 @@ public class MiscsController extends BaseController
 	private HttpRequestCustomerUpdatePopulator httpRequestCustomerUpdatePopulator;
 	@Resource(name = "customerFacade")
 	private CustomerFacade customerFacade;
-	/*
-	 * @Resource private ModelService modelService;
-	 * 
-	 * @Autowired private ForgetPasswordFacade forgetPasswordFacade;
-	 * 
-	 * @Autowired private ExtendedUserServiceImpl userexService;
-	 * 
-	 * @Autowired private WishlistFacade wishlistFacade;
-	 * 
-	 * @Autowired private MplSellerMasterService mplSellerInformationService;
-	 */
 	@Autowired
 	private UserService userService;
 	@Autowired
 	private MplCustomerProfileService mplCustomerProfileService;
-	/*
-	 * @Autowired private Wishlist2Service wishlistService;
-	 */
 	@Resource(name = "passwordStrengthValidator")
 	private Validator passwordStrengthValidator;
-	/*
-	 * @Autowired private MplCartFacade mplCartFacade;
-	 */
 	@Autowired
 	private ExtendedUserService extUserService;
 	@Autowired
@@ -265,11 +252,6 @@ public class MiscsController extends BaseController
 	private HomescreenService homescreenservice;
 	@Resource(name = "fieldSetBuilder")
 	private FieldSetBuilder fieldSetBuilder;
-	/*
-	 * @Resource(name = "i18NFacade") private I18NFacade i18NFacade;
-	 * 
-	 * @Autowired private MplCommerceCartServiceImpl mplCommerceCartService;
-	 */
 	@Autowired
 	private MplRestrictionServiceImpl restrictionserviceimpl;
 	@Autowired
@@ -327,11 +309,9 @@ public class MiscsController extends BaseController
 	public static final String EMAIL_REGEX = "\\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,4}\\b";
 	@Autowired
 	private SessionService sessionService;
-
 	//TPR-4512
 	@Resource(name = "mplOrderFacade")
 	private MplOrderFacade mplOrderFacade;
-
 	@Autowired
 	private ConfigurationService configurationService;
 	//Newly added for TPR-1345:One touch CRM
@@ -341,23 +321,13 @@ public class MiscsController extends BaseController
 	private Converter<OrderModel, OrderData> orderConverter;
 	@Resource(name = "cancelReturnFacade")
 	private CancelReturnFacade cancelReturnFacade;
-
-
 	@Autowired
 	private DateUtilHelper dateUtilHelper;
 
-
-
-
-	/*
-	 * private static final String DROPDOWN_BRAND = "MBH"; private static final String DROPDOWN_CATEGORY = "MSH";
-	 */
-	/*
-	 * @Autowired private MplCheckoutFacade mplCheckoutFacade;
-	 */
+	@Autowired
+	private MplWebFormFacade mplWebFormFacade;
 	private static final Logger LOG = Logger.getLogger(MiscsController.class);
-	public static final String RETURN_TYPE_COD = "01";
-	private static final String SUCCESS = "Success";
+
 
 	/**
 	 * Lists all available languages (all languages used for a particular store). If the list of languages for a base
@@ -2574,24 +2544,21 @@ public class MiscsController extends BaseController
 	/**
 	 * This method is for web form ticket status update (TPR-5989)
 	 */
-	@Secured(
-	{ ROLE_CLIENT, ROLE_TRUSTED_CLIENT })
-	@RequestMapping(value = "/{baseSiteId}/webformTicketStatus", method = RequestMethod.POST, produces = APPLICATION_JSON)
+	@RequestMapping(value = "/{baseSiteId}/webformTicketStatus", method = RequestMethod.POST, consumes = APPLICATION_JSON)
 	@ResponseBody
-	public Object webformTicketStatusUpdate(@RequestBody final TicketStatusUpdate ticketStatusUpdate)
+	public String webformTicketStatusUpdate(@RequestBody final TicketStatusUpdate ticketStatusUpdate)
 			throws EtailNonBusinessExceptions
 	{
 		try
 		{
-			//to-do
-
+			mplWebFormFacade.webFormticketStatusUpdate(ticketStatusUpdate);
+			return SUCCESS;
 		}
-		catch (final Exception e)
+		catch (final Exception exc)
 		{
-			LOG.error("Exception occured", e);
+			LOG.error(exc);
+			return FAILURE;
 		}
-		return null;
+
 	}
-
-
 }

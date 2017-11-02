@@ -5,8 +5,10 @@ package com.tisl.mpl.marketplacecommerceservices.service;
 
 import java.util.List;
 
+import com.tis.mpl.facade.data.TicketStatusUpdate;
 import com.tisl.mpl.core.model.MplWebCrmModel;
 import com.tisl.mpl.core.model.MplWebCrmTicketModel;
+import com.tisl.mpl.wsdto.TicketMasterXMLData;
 
 
 /**
@@ -38,7 +40,9 @@ public interface MplWebFormService
 	 */
 	public String sendTicketToPI(final MplWebCrmTicketModel mplWebCrmTicketModel) throws Exception;
 
-	public String populateWebformTicketData(final MplWebCrmTicketModel mplWebCrmTicketModel) throws Exception;
+	public TicketMasterXMLData populateWebformTicketData(final MplWebCrmTicketModel mplWebCrmTicketModel) throws Exception;
+
+	public boolean webformTicketStatusUpdate(final TicketStatusUpdate ticketStatusUpdate);
 
 
 

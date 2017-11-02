@@ -17,13 +17,19 @@ import java.util.List;
 import javax.annotation.Resource;
 
 import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
 
+import com.tis.mpl.facade.data.TicketStatusUpdate;
+import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
+import com.tisl.mpl.core.keygenerator.MplPrefixablePersistentKeyGenerator;
 import com.tisl.mpl.core.model.MplWebCrmModel;
+import com.tisl.mpl.core.model.MplWebCrmTicketModel;
 import com.tisl.mpl.facade.checkout.MplCheckoutFacade;
 import com.tisl.mpl.facades.account.register.MplOrderFacade;
 import com.tisl.mpl.facades.cms.data.Node;
 import com.tisl.mpl.facades.cms.data.WebForm;
 import com.tisl.mpl.marketplacecommerceservices.service.MplWebFormService;
+import com.tisl.mpl.service.ClientIntegration;
 
 
 /**
@@ -45,10 +51,14 @@ public class MplDefaultWebFormFacade implements MplWebFormFacade
 	private MplOrderFacade mplOrderFacade;
 	@Resource
 	private MplCheckoutFacade mplCheckoutFacade;
+	@Autowired
+	private MplPrefixablePersistentKeyGenerator prefixableKeyGenerator;
+	@Autowired
+	private ClientIntegration clientIntegration;
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.tisl.mpl.facades.webform.MplWebFormFacade#getWebCRMForm()
 	 */
 	@Override
@@ -141,7 +151,7 @@ public class MplDefaultWebFormFacade implements MplWebFormFacade
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.tisl.mpl.facades.webform.MplWebFormFacade#checkDuplicateWebCRMTickets(java.lang.String, java.lang.String,
 	 * java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String,
 	 * java.lang.String, java.lang.String)
@@ -154,6 +164,35 @@ public class MplDefaultWebFormFacade implements MplWebFormFacade
 		// YTODO Auto-generated method stub
 		return mplWebFormService.checkDuplicateWebCRMTickets(ticketType, orderCode, subOrderCode, transactionId, L0code, L1code,
 				L2code, L3code, L4code, customerId);
+	}
+
+	/**
+	 * This nethod is created to update the ticket status in commerce DB, from the realtime response received from CRM
+	 * (TPR-5989)
+	 *
+	 * @param ticketStatusUpdate
+	 * @return success/failure response
+	 */
+	@Override
+	public boolean webFormticketStatusUpdate(final TicketStatusUpdate ticketStatusUpdate)
+	{
+		return mplWebFormService.webformTicketStatusUpdate(ticketStatusUpdate);
+	}
+
+	/**
+	 * This method is created to send the ticket to CRM via PI
+	 *
+	 * @param mplWebCrmTicketModel
+	 * @return the success/failure boolean response
+	 */
+	@Override
+	public String sendWebformTicket(final MplWebCrmTicketModel mplWebCrmTicketModel) throws Exception
+	{
+		//Setting ECOM request prefix as E to for COMM triggered Ticket
+		prefixableKeyGenerator.setPrefix(MarketplacecommerceservicesConstants.TICKETID_PREFIX_E);
+		mplWebCrmTicketModel.setCommerceTicketId(prefixableKeyGenerator.generate().toString());
+		//Sending ticket to CRM via PI
+		return clientIntegration.sendWebFormTicket(mplWebCrmTicketModel);
 	}
 
 }

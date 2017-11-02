@@ -52,6 +52,16 @@ public interface TicketCreationCRMservice
 	 */
 	public String checkDuplicateWebFormTicket(final MplWebCrmTicketModel mplWebCrmTicketModel) throws Exception;
 
+	/**
+	 * This method is created to populate the data for crm ticket
+	 *
+	 * @param mplWebCrmTicketModel
+	 * @param subOrderModel
+	 * @param orderData
+	 * @param orderEntry
+	 * @return TicketMasterXMLData
+	 * @throws Exception
+	 */
 	public TicketMasterXMLData populateWebFormData(final MplWebCrmTicketModel mplWebCrmTicketModel,
 			final OrderModel subOrderModel, final OrderData orderData, final OrderEntryData orderEntry) throws Exception;
 

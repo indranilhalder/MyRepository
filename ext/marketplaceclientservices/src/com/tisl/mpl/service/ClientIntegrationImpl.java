@@ -50,20 +50,16 @@ public class ClientIntegrationImpl implements ClientIntegration
 	@Override
 	public String sendWebFormTicket(final MplWebCrmTicketModel mplWebCrmTicketModel)
 	{
-
 		try
 		{
 			final WebFormTicketProcessModel webFormTicketProcessModel = (WebFormTicketProcessModel) businessProcessService
 					.createProcess("WebFormTicket-process-" + System.currentTimeMillis(), "WebFormTicket-process");
-			//webFormTicketProcessModel.setMplWebCrmTicket(null);// to-do
+			webFormTicketProcessModel.setMplWebCrmTicket(mplWebCrmTicketModel);
 			businessProcessService.startProcess(webFormTicketProcessModel);
-			//LOG.error("CustomOmsShipmentSyncAdapter: in the CustomOmsShipmentSyncAdapter.startAutomaticRefundProcess() for Order #"
-			//		+ orderModel.getCode());
 		}
 		catch (final Exception e)
 		{
-			System.out.println("========================" + e.getMessage());
-			e.printStackTrace();
+			LOG.error(e.getStackTrace());
 		}
 		return null;
 	}
