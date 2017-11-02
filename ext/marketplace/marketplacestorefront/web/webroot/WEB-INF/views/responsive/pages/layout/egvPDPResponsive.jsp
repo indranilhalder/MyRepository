@@ -723,7 +723,7 @@ function validateForm() {
 		});
 		
 		//Updating Message
-		$("#giftCardMessageText").keyup(function(){
+		$("#giftCardMessageText").on('keyup blur', function(){
 	       var giftCardMessage = document.getElementById('updatedGiftCardMessageText');
 	       giftCardMessage.style.fontStyle = 'normal';
 	       giftCardMessage.style.wordWrap = 'break-word';
@@ -731,7 +731,7 @@ function validateForm() {
 	    });
 		
 		//Auto Update Name from First and Last names
-		$(".giftCard_fromFirstName, .giftCard_fromLastName").keyup(function(){
+		$(".giftCard_fromFirstName, .giftCard_fromLastName").on('keyup blur', function(){
 			var firstName = document.getElementById('giftCard_fromFirstName').value;
 			var lastName = document.getElementById('giftCard_fromLastName').value;
 			document.getElementById('giftCard_fromName').value = firstName+" "+lastName;
@@ -744,7 +744,7 @@ function validateForm() {
 			document.getElementById('customAmount').value = $("input[name=giftRange]:checked").val();
 		});
 		
-		$("#customGiftValue").keyup(function(){
+		$("#customGiftValue").on('keyup blur', function(){
 			$('input[name=giftRange]:checked').parents().find('.active').removeClass('active');
 			$("input[name=giftRange]").prop('checked', false);
 	       document.getElementById('updatedCustomGiftValue').innerHTML = $(this).val();
