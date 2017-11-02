@@ -51,6 +51,11 @@ $(document).on('click', '.pageNo', function(e) {
   }, 100); 
 });
 
+var $lis = $(".pagination-block li").hide();
+var size_li = $lis.length;
+var x = totalPageCountToShow,
+start = 0;
+
 initialPaginationDisplay();
 
 $(document).on('click', '.next-block', function(e) {
@@ -415,12 +420,9 @@ function findGetParameter(parameterName) {
 }
 
 function initialPaginationDisplay(){
+	
 	$(".pageNoLi").removeAttr("style");
-	var $lis = $(".pagination-block li").hide();
 	$lis.slice(0, totalPageCountToShow).show();
-	var size_li = $lis.length;
-	var x = totalPageCountToShow,
-	start = 0;
 	$(".pageNo").removeClass("active");
 	if(!$(".pagination-block li").first().find(".pageNo").hasClass("active")){
 		$(".pagination-block li").first().find(".pageNo").addClass("active");
