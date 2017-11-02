@@ -9499,9 +9499,10 @@ public class UsersController extends BaseCommerceController
 				egvDetailsData.setFromPhoneNo(requestData.getMobileNumber());
 			}
 
-			//			if(null != requestData.getMessageOnCard()) {
-			//				egvDetailsData.setMessageBox(egvDetailForm.getMessageBox());
-			//			}
+			if (null != requestData.getMessageOnCard())
+			{
+				egvDetailsData.setMessageBox(requestData.getMessageOnCard());
+			}
 
 			egvDetailsData.setTotalEGV(requestData.getQuantity());
 		}
