@@ -42,6 +42,7 @@ import de.hybris.platform.commercefacades.voucher.exceptions.VoucherOperationExc
 import de.hybris.platform.commerceservices.order.CommerceCartModificationException;
 import de.hybris.platform.commerceservices.order.CommerceCartService;
 import de.hybris.platform.core.Constants.USER;
+import de.hybris.platform.core.GenericSearchConstants.LOG;
 import de.hybris.platform.core.model.JewelleryInformationModel;
 import de.hybris.platform.core.model.c2l.CurrencyModel;
 import de.hybris.platform.core.model.order.AbstractOrderEntryModel;
@@ -49,7 +50,6 @@ import de.hybris.platform.core.model.order.CartModel;
 import de.hybris.platform.core.model.order.OrderModel;
 import de.hybris.platform.core.model.order.delivery.DeliveryModeModel;
 import de.hybris.platform.core.model.product.PincodeModel;
-import de.hybris.platform.core.model.product.ProductModel;
 import de.hybris.platform.core.model.user.AddressModel;
 import de.hybris.platform.core.model.user.CustomerModel;
 import de.hybris.platform.core.model.user.UserModel;
@@ -483,6 +483,26 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 				model.addAttribute(MarketplacecheckoutaddonConstants.CHECKOUT_SELLER_IDS, cartLevelSellerID);
 				GenericUtilityMethods.populateTealiumDataForCartCheckout(model, cartUssidData);
 				model.addAttribute("checkoutPageName", selectAddress);
+
+				/**
+				 * Wallet Changes
+				 */
+				boolean checkUserWalletStatus = false;
+				final CustomerModel currentCustomer = (CustomerModel) userService.getCurrentUser();
+
+				if (null != currentCustomer && null != currentCustomer.getIsWalletActivated()
+						&& currentCustomer.getIsWalletActivated())
+				{
+					checkUserWalletStatus = true;
+				}
+
+				model.addAttribute("isCustomerWalletActive", checkUserWalletStatus);
+				cartModel.setSplitModeInfo("juspay");
+
+				/**
+				 * Wallet Changes End
+				 */
+
 				if (isResponsive)
 				{
 					model.addAttribute("deviceType", "mobile");
@@ -3682,29 +3702,7 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 		paymentModeMap = getMplPaymentFacade().getPaymentModes(MarketplacecheckoutaddonConstants.MPLSTORE, false, cartData);
 		prepareDataForPage(model);
 
-
-		/// Check for EGV IN CART IS YES DISABLE COD AND WALLET PAY   ************************************ write logice for ordermodel also
-
 		getSessionService().setAttribute("disableCODandWAllet", "false");
-		//getSessionService().setAttribute("getCliqCashMode", "false");
-		//getSessionService().setAttribute("jsPayMode", "false");
-		//getSessionService().setAttribute("cliqCashPaymentMode", StringUtils.EMPTY);
-
-		//		for (final OrderEntryData entryData : cartData.getEntries())
-		//		{
-		//
-		//			if (entryData.getProduct().getCode().equalsIgnoreCase("98765440"))
-		//			{
-		//
-		//				getSessionService().setAttribute("disableCODandWAllet", "true");
-		//
-		//				paymentModeMap.remove(PaymentModesEnum.COD);
-		//				paymentModeMap.remove("Cliq Cash");
-		//
-		//			}
-		//			break;
-		//
-		//		}
 
 		model.addAttribute(MarketplacecheckoutaddonConstants.PAYMENTMODES, paymentModeMap);
 		model.addAttribute(MarketplacecheckoutaddonConstants.TRANERRORMSG, "");

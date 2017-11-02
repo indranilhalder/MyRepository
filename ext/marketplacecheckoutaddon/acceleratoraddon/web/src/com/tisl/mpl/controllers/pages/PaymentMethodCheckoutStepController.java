@@ -513,7 +513,6 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 				final CartModel cartModel = getCartService().getSessionCart();
 				//Moved to single method in facade TPR-629
 				getMplPaymentFacade().populateDeliveryPointOfServ(cartModel);
-				cartModel.setSplitModeInfo("juspay");
 
 				//TISST-13012
 				//final boolean cartItemDelistedStatus = getMplCartFacade().isCartEntryDelisted(getCartService().getSessionCart()); TISPT-169

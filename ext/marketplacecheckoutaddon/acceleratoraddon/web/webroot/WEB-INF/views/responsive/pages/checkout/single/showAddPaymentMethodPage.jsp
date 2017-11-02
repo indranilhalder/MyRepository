@@ -250,7 +250,21 @@
 						</div>
 					</div>
 					
+					<c:choose>
+				<c:when test="${isCustomerWalletActive}">
 						<span class="addNewCard" onclick="showAddEGV();"><a href="#"><spring:theme code="text.cliq.cash.payment.addcard.label" /></a></span>
+				</c:when>
+				<c:otherwise>
+				<div class="cliqCashContainerRight">
+					     <a class="cliqCashBtns" style="display: none; " href="<c:url value="/wallet"/>"><spring:theme
+							text="ADD GIFT CARD" code="text.add.cliq.cash.addgiftcard.label" />
+				     	</a>
+				     </div>
+				       <span class="addNewCard" style="display: none;"><a href="#"><spring:theme code="text.cliq.cash.payment.addcard.label" /></a></span>
+				</c:otherwise>
+				</c:choose>
+					
+						
 						<span class="viewCardTerms"><a href="#"><spring:theme code="text.cliq.cash.payment.term.label" /> </a></span>
 					</div>
 					<br />
