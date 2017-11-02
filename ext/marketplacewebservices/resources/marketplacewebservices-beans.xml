@@ -890,6 +890,7 @@
 		<property name="isTemporaryPassword" type="String" />
 		<property name="sessionToken" type="String" />
 		<property name="sessionSecret" type="String" />
+		<property name="returnModes" type="com.tisl.mpl.wsdto.ReturnModesWsDTO"></property>
 	</bean>
 	<!-- Registration Mobile web service -->
 
@@ -2842,6 +2843,7 @@
 		<property name="isPincodeServiceable" type="boolean" />
 		<property name="returnLogisticsResponseDTO"
 			type="java.util.List&lt;com.tisl.mpl.wsdto.ReturnLogisticsResponseDTO>" />
+		<property name="returnModes" type="com.tisl.mpl.wsdto.ReturnModesWsDTO"></property>	<!--TPR7140 -->
 	</bean>
 <bean class="com.tisl.mpl.wsdto.ReturnLogisticsResponseDTO">
 		<property name="isReturnLogisticsAvailable" type="String" />
@@ -3171,6 +3173,8 @@
         <property name="selfCourier" type="boolean"/>
 	    <property name="schedulePickup" type="boolean"/>
 		<property name="quickDrop" type="boolean"/>
+		<property name="productRichAttrOfQuickDrop" type="String" />
+		<property name="sellerRichAttrOfQuickDrop" type="String" />		
 	</bean>
  		
 	<!--============= luxuryHomePage =============-->
