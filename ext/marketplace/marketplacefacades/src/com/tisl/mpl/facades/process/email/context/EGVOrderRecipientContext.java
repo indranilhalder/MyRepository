@@ -74,8 +74,9 @@ public class EGVOrderRecipientContext extends AbstractEmailContext<OrderProcessM
 		
 		 try
 		{
-			String addMoney = getConfigurationService().getConfiguration()
+			String addMoney = configurationService.getConfiguration()
 					.getString(MARKETPLACE_EGV_CARD_ADD_URL) + orderProcessModel.getOrder().getCode();
+			LOG.info("Add money  URl #####"+addMoney);
 			put("addMoney",addMoney);
 		}
 		catch (Exception e)

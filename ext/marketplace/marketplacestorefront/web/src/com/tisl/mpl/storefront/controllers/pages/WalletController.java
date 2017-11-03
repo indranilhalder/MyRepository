@@ -9,7 +9,6 @@ import de.hybris.platform.acceleratorstorefrontcommons.controllers.pages.Abstrac
 import de.hybris.platform.acceleratorstorefrontcommons.controllers.util.GlobalMessages;
 import de.hybris.platform.cms2.exceptions.CMSItemNotFoundException;
 import de.hybris.platform.cms2.model.pages.ContentPageModel;
-import de.hybris.platform.core.GenericSearchConstants.LOG;
 import de.hybris.platform.core.model.order.OrderModel;
 import de.hybris.platform.core.model.user.CustomerModel;
 import de.hybris.platform.order.CartService;
@@ -332,7 +331,6 @@ public class WalletController extends AbstractPageController
  				walletCustomer =  extendedUserService.getUserForOriginalUid(recipientId);
  			}catch(Exception exception){
  				LOG.error("Exception occur while adding money for customer wallet"+exception.getMessage());
- 				
  				GlobalMessages.addFlashMessage(redirectAttributes, GlobalMessages.ERROR_MESSAGES_HOLDER,
  						"mpl.gift.card.add.error.message.newuser");
  				return REDIRECT_PREFIX + "/login";
@@ -344,7 +342,7 @@ public class WalletController extends AbstractPageController
  			}
  			
  			CustomerModel currentCustomer = (CustomerModel) userService.getCurrentUser();
- 			if(!currentCustomer.getOriginalUid().equalsIgnoreCase(currentCustomer.getOriginalUid())){	
+ 			if(!currentCustomer.getOriginalUid().equalsIgnoreCase(walletCustomer.getOriginalUid())){	
  				GlobalMessages.addFlashMessage(redirectAttributes, GlobalMessages.ERROR_MESSAGES_HOLDER,
  						"mpl.gift.card.add.error.message.anotheruser");
  				return REDIRECT_PREFIX + "/login";
@@ -377,7 +375,7 @@ public class WalletController extends AbstractPageController
  					null);
  			ex.printStackTrace();
  		}
- 		return REDIRECT_PREFIX + "/walletr";
+ 		return REDIRECT_PREFIX + "/wallet/getcliqcashPage";
  	}
     
 }
