@@ -51,12 +51,17 @@ $(document).on('click', '.pageNo', function(e) {
   }, 100); 
 });
 
+
 var $lis = $(".pagination-block li").hide();
 var size_li = $lis.length;
 var x = totalPageCountToShow,
 start = 0;
-
-initialPaginationDisplay();
+$(".pageNoLi").removeAttr("style");
+$lis.slice(0, totalPageCountToShow).show();
+$(".pageNo").removeClass("active");
+if(!$(".pagination-block li").first().find(".pageNo").hasClass("active")){
+	$(".pagination-block li").first().find(".pageNo").addClass("active");
+}
 
 $(document).on('click', '.next-block', function(e) {
 	e.preventDefault();
@@ -421,6 +426,10 @@ function findGetParameter(parameterName) {
 
 function initialPaginationDisplay(){
 	
+	var $lis = $(".pagination-block li").hide();
+	var size_li = $lis.length;
+	var x = totalPageCountToShow,
+	start = 0;
 	$(".pageNoLi").removeAttr("style");
 	$lis.slice(0, totalPageCountToShow).show();
 	$(".pageNo").removeClass("active");
