@@ -2968,13 +2968,14 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 			//Get payment modes
 			final List<PaymentTypeModel> paymentTypes = getMplPaymentService().getPaymentModes(store);
 			boolean flag = false;
-			boolean isEgvOrder=false;
-			
+			boolean isEgvOrder = false;
+
 			if (null != abstractOrderModel)
 			{
-				if(null != abstractOrderModel.getIsEGVCart() && abstractOrderModel.getIsEGVCart().booleanValue()){
-					
-					isEgvOrder=true;
+				if (null != abstractOrderModel.getIsEGVCart() && abstractOrderModel.getIsEGVCart().booleanValue())
+				{
+
+					isEgvOrder = true;
 				}
 				for (final AbstractOrderEntryModel entry : abstractOrderModel.getEntries())
 				{
@@ -3007,13 +3008,13 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 					{
 						LOG.debug("Ignoring to add COD payment for CNC Product ");
 					}
-					else if (isEgvOrder && (mode.getMode().equalsIgnoreCase(MarketplaceFacadesConstants.PAYMENT_METHOS_COD) || 
-							mode.getMode().equalsIgnoreCase(MarketplaceFacadesConstants.PAYMENT_METHOD_CLIQ_CASH) ||
-							mode.getMode().equalsIgnoreCase(MarketplaceFacadesConstants.PAYMENT_METHOD_MRUPEE) || 
-							mode.getMode().equalsIgnoreCase(MarketplaceFacadesConstants.PAYMENT_METHOD_NET_BANKING) || 
-							mode.getMode().equalsIgnoreCase(MarketplaceFacadesConstants.PAYMENT_METHOD_PAYTM) ))
+					else if (isEgvOrder && (mode.getMode().equalsIgnoreCase(MarketplaceFacadesConstants.PAYMENT_METHOS_COD)
+							|| mode.getMode().equalsIgnoreCase(MarketplaceFacadesConstants.PAYMENT_METHOD_CLIQ_CASH)
+							|| mode.getMode().equalsIgnoreCase(MarketplaceFacadesConstants.PAYMENT_METHOD_MRUPEE)
+							|| mode.getMode().equalsIgnoreCase(MarketplaceFacadesConstants.PAYMENT_METHOD_NET_BANKING)
+							|| mode.getMode().equalsIgnoreCase(MarketplaceFacadesConstants.PAYMENT_METHOD_PAYTM)))
 					{
-						LOG.debug("Ignoring to add "+mode.getMode()+" payment for EGV Order ");
+						LOG.debug("Ignoring to add " + mode.getMode() + " payment for EGV Order ");
 					}
 					else
 					{
@@ -3597,12 +3598,12 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 
 				productprice -= abstractOrderEntryModel.getCartLevelDisc().doubleValue();
 			}
-			if (null != abstractOrderEntryModel.getCartLevelPercentageDisc()
-					&& abstractOrderEntryModel.getCartLevelPercentageDisc().doubleValue() > 0)
-			{
-
-				productprice -= abstractOrderEntryModel.getCartLevelPercentageDisc().doubleValue();
-			}
+			//			if (null != abstractOrderEntryModel.getCartLevelPercentageDisc()
+			//					&& abstractOrderEntryModel.getCartLevelPercentageDisc().doubleValue() > 0)
+			//			{
+			//
+			//				productprice -= abstractOrderEntryModel.getCartLevelPercentageDisc().doubleValue();
+			//			}
 
 			final double cliqCashPartVal = (productprice / totalBillingAmount) * walletTotal;
 
