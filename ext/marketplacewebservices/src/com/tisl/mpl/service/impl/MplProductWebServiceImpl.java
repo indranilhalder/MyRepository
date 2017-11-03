@@ -50,8 +50,10 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -92,7 +94,10 @@ import com.tisl.mpl.seller.product.facades.ProductOfferDetailFacade;
 import com.tisl.mpl.service.MplProductWebService;
 import com.tisl.mpl.util.ExceptionUtil;
 import com.tisl.mpl.wsdto.CapacityLinkData;
+import com.tisl.mpl.wsdto.ClassificationDTO;
+import com.tisl.mpl.wsdto.ClassificationDTOLister;
 import com.tisl.mpl.wsdto.ClassificationMobileWsData;
+import com.tisl.mpl.wsdto.Classifications;
 import com.tisl.mpl.wsdto.ColorLinkData;
 import com.tisl.mpl.wsdto.DeliveryModeData;
 import com.tisl.mpl.wsdto.ExchangeLinkUrl;
@@ -312,7 +317,7 @@ public class MplProductWebServiceImpl implements MplProductWebService
 
 	/*
 	 * To get product details for a product code
-	 * 
+	 *
 	 * @see com.tisl.mpl.service.MplProductWebService#getProductdetailsForProductCode(java.lang.String)
 	 */
 	@Override
@@ -345,6 +350,11 @@ public class MplProductWebServiceImpl implements MplProductWebService
 		final Map<String, FineJwlryClassificationListDTO> fineJewelleryClassificationList = new LinkedHashMap<String, FineJwlryClassificationListDTO>();
 		String ussidJwlry = "";
 
+		//Added for TPR-6869
+		String sellerID = MarketplacecommerceservicesConstants.EMPTY;
+		String sellerMonogramMessage = MarketplacecommerceservicesConstants.EMPTY;
+		String buyingGuideURL = MarketplacecommerceservicesConstants.EMPTY;
+
 		//for new tab return refund for fine and fashion jewellery
 		List<RefundReturnDTO> refundReturnList = null;
 		try
@@ -359,6 +369,10 @@ public class MplProductWebServiceImpl implements MplProductWebService
 				productData = productFacade.getProductForOptions(productModel, Arrays.asList(ProductOption.BASIC,
 						ProductOption.SUMMARY, ProductOption.DESCRIPTION, ProductOption.GALLERY, ProductOption.CATEGORIES,
 						ProductOption.PROMOTIONS, ProductOption.CLASSIFICATION, ProductOption.VARIANT_FULL, ProductOption.SELLER));
+
+				//Added for TPR-6869
+
+				buyingGuideURL = populateBuyingGuide(productModel);
 
 				//TISPT-396
 				/*
@@ -412,6 +426,14 @@ public class MplProductWebServiceImpl implements MplProductWebService
 							stockAvailibilty.put(pCode, Integer.valueOf(0));
 						}
 						buyBoxData = (BuyBoxData) buydata.get("pdp_buy_box");
+
+						//Added for TPR-6869
+						sellerID = getSellerIDData(buydata);
+
+						if (StringUtils.isNotEmpty(sellerID))
+						{
+							sellerMonogramMessage = buyBoxFacade.getSellerMonogrammingMsg(productCode, sellerID);
+						}
 					}
 					//Commented for TPR-797
 					//buyBoxData = buyBoxFacade.buyboxPrice(productCode);
@@ -670,6 +692,17 @@ public class MplProductWebServiceImpl implements MplProductWebService
 				{
 					productDetailMobile.setMrp(buyBoxData.getMrp().getFormattedValue());
 				}
+
+				if (StringUtils.isNotEmpty(sellerMonogramMessage))
+				{
+					productDetailMobile.setCustomizationInfoText(sellerMonogramMessage);
+				}
+
+				if (StringUtils.isNotEmpty(buyingGuideURL))
+				{
+					productDetailMobile.setBuyingGuideUrl(buyingGuideURL);
+				}
+
 				if (null != buyboxdataCheck && null != buyboxdataCheck.getFullfillment())
 				{
 					productDetailMobile.setFulfillmentType(buyboxdataCheck.getFullfillment());
@@ -688,8 +721,104 @@ public class MplProductWebServiceImpl implements MplProductWebService
 				 */
 				if (CollectionUtils.isNotEmpty(productData.getClassifications()))
 				{
-					/* Details section of a product */
-					displayConfigurableAttribute(productData, productDetailMobile);
+					if (MarketplacewebservicesConstants.HOME_FURNISHING.equalsIgnoreCase(productModel.getProductCategoryType()))
+					{
+						final String[] overviewtabSectEntry = configurationService.getConfiguration()
+								.getString("classification.attributes.HomeFurnishing.sectionSeq").split(",");
+						final Map<String, List<String>> mapConfigurableAttributes = displayConfigurableAttributeForHF(productData);
+						final List<ClassificationDTOLister> classificationDTOListerList = new ArrayList<ClassificationDTOLister>();
+						for (final Iterator<Map.Entry<String, List<String>>> it = mapConfigurableAttributes.entrySet().iterator(); it
+								.hasNext();)
+						{
+							final Entry<String, List<String>> entry = it.next();
+
+							//Product Details,Care Instructions,Set Information,Key Product Points
+
+							if (entry.getKey().equals(overviewtabSectEntry[0]))
+							{
+								//For Product Details
+								final List<String> productDetList = entry.getValue();
+								final List<ClassificationDTO> classificationList = new ArrayList<ClassificationDTO>();
+								final ClassificationDTOLister lister = new ClassificationDTOLister();
+								final Classifications classifications = new Classifications();
+								for (final String prodDetail : productDetList)
+								{
+									final ClassificationDTO classDTO = new ClassificationDTO();
+									String prodAttrVal = null;
+									final String[] prodAttr = prodDetail.split(":", 2);
+									final String prodAttrName = prodAttr[0];
+									if (prodAttr.length >= 2)
+									{
+										prodAttrVal = prodAttr[1];
+									}
+									classDTO.setKey(prodAttrName);
+									classDTO.setValue(prodAttrVal);
+									classificationList.add(classDTO);
+									classifications.setClassificationList(classificationList);
+
+								}
+								lister.setKey(overviewtabSectEntry[0]);
+								lister.setValue(classifications);
+								classificationDTOListerList.add(lister);
+							}
+							else if (entry.getKey().equals(overviewtabSectEntry[2]))
+							{
+								//for Set Information
+								final List<String> setInfoList = entry.getValue();
+								final List<ClassificationDTO> classificationList = new ArrayList<ClassificationDTO>();
+								final ClassificationDTOLister lister = new ClassificationDTOLister();
+								final Classifications classifications = new Classifications();
+								for (final String setInfo : setInfoList)
+								{
+									final ClassificationDTO classDTO = new ClassificationDTO();
+									String setAttrVal = null;
+									final String[] setAttr = setInfo.split(":", 2);
+									final String setAttrName = setAttr[0];
+									if (setAttr.length >= 2)
+									{
+										setAttrVal = setAttr[1];
+									}
+									classDTO.setKey(setAttrName);
+									classDTO.setValue(setAttrVal);
+									classificationList.add(classDTO);
+									classifications.setClassificationList(classificationList);
+								}
+								lister.setKey(overviewtabSectEntry[2]);
+								lister.setValue(classifications);
+								classificationDTOListerList.add(lister);
+							}
+							else if (entry.getKey().equals(overviewtabSectEntry[1]))
+							{
+								//For Care Instructions
+								final List<String> careInsList = entry.getValue();
+								final ClassificationDTOLister lister = new ClassificationDTOLister();
+								final Classifications classifications = new Classifications();
+
+								classifications.setClassificationValues(careInsList);
+								lister.setKey(overviewtabSectEntry[1]);
+								lister.setValue(classifications);
+								classificationDTOListerList.add(lister);
+							}
+							else if (entry.getKey().equals(overviewtabSectEntry[3]))
+							{
+								//For Key Product Points
+								final List<String> keyProdPtsList = entry.getValue();
+								final ClassificationDTOLister lister = new ClassificationDTOLister();
+								final Classifications classifications = new Classifications();
+
+								classifications.setClassificationValues(keyProdPtsList);
+								lister.setKey(overviewtabSectEntry[3]);
+								lister.setValue(classifications);
+								classificationDTOListerList.add(lister);
+							}
+						}
+						productDetailMobile.setClassificationList(classificationDTOListerList);
+					}
+					else
+					{
+						displayConfigurableAttribute(productData, productDetailMobile);
+					}
+
 					/* Specifications of a product */
 					if (MarketplacecommerceservicesConstants.FINEJEWELLERY.equalsIgnoreCase(productModel.getProductCategoryType()))
 					{
@@ -1024,6 +1153,57 @@ public class MplProductWebServiceImpl implements MplProductWebService
 	//		}
 	//		return warrantyList;
 	//	}
+	/**
+	 * This Method deals with population of Buying Guide details on PDP
+	 *
+	 * @param productModel
+	 */
+	private String populateBuyingGuide(final ProductModel productModel)
+	{
+		String buyingGuideCode = MarketplacecommerceservicesConstants.EMPTY;
+		try
+		{
+			final List<CategoryModel> superCategoryDetails = new ArrayList<>(productModel.getSupercategories());
+
+			if (CollectionUtils.isNotEmpty(superCategoryDetails))
+			{
+				for (final CategoryModel category : superCategoryDetails)
+				{
+					buyingGuideCode = category.getBuyingGuide();
+
+					if (StringUtils.isNotEmpty(buyingGuideCode))
+					{
+						LOG.error("Buying Guide redirect URL" + buyingGuideCode);
+						break;
+					}
+				}
+			}
+		}
+		catch (final Exception exception)
+		{
+			LOG.error("Error during population of Buying Guide Details >> for Product >>" + productModel.getCode() + "Error>>"
+					+ exception);
+		}
+
+		return buyingGuideCode;
+	}
+
+	/**
+	 * Gets Seller ID Data
+	 *
+	 * @param buydata
+	 * @return String
+	 */
+	private String getSellerIDData(final Map<String, Object> buydata)
+	{
+		final BuyBoxData buyboxdata = (BuyBoxData) buydata.get("pdp_buy_box");
+
+		if (null != buyboxdata && StringUtils.isNotEmpty(buyboxdata.getSellerId()))
+		{
+			return buyboxdata.getSellerId();
+		}
+		return null;
+	}
 
 	/**
 	 * @param buyBoxData
@@ -1886,12 +2066,12 @@ public class MplProductWebServiceImpl implements MplProductWebService
 	/*
 	 * private PromotionData checkHighestPriority(final List<PromotionData> enabledPromotionList) {
 	 * Collections.sort(enabledPromotionList, new Comparator<PromotionData>() {
-	 * 
+	 *
 	 * @Override public int compare(final PromotionData promo1, final PromotionData promo2) { int priority = 0; if (null
 	 * != promo1.getPriority() && null != promo2.getPriority()) { priority =
 	 * promo1.getPriority().compareTo(promo2.getPriority()); } return priority; }
-	 * 
-	 * 
+	 *
+	 *
 	 * }); Collections.reverse(enabledPromotionList); return enabledPromotionList.get(0); }
 	 */
 
@@ -2247,30 +2427,40 @@ public class MplProductWebServiceImpl implements MplProductWebService
 					capacityLinkData = new CapacityLinkData();
 					// For Color
 					if (StringUtils.isNotEmpty(variantData.getColour()))
-					{
+					{//INC144317643
 						colorLinkData.setColor(variantData.getColour());
+						final String hexCode = (variantData.getColour()).replaceAll("\\s", "");
+						colorLinkData.setColorHexCode(configurationService.getConfiguration().getString(
+								"colorhexcode." + hexCode.toLowerCase(), ""));//INC144317643
 					}
 					//checking for colour hex code
-					if (StringUtils.isNotEmpty(variantData.getColourCode()))
-					{
-						colorLinkData.setColorHexCode(variantData.getColourCode());
-					}
+					/* start comment of INC144317643 */
+					/*
+					 * if (StringUtils.isNotEmpty(variantData.getColourCode())) {
+					 * colorLinkData.setColorHexCode(variantData.getColourCode()); }
+					 */
+					/* end comment of INC144317643 */
 					if (StringUtils.isNotEmpty(variantData.getUrl()))
 					{
 						colorLinkData.setColorurl(variantData.getUrl());
 					}
 					variantMobileData.setColorlink(colorLinkData);
-
 					//For Size
 					if (MapUtils.isNotEmpty(variantData.getSizeLink()))
 					{
 						for (final Map.Entry<String, String> sizeEntry : variantData.getSizeLink().entrySet())
 						{
 							variantSizePCode = "";
+							//INC144318807
 							if (StringUtils.isNotEmpty(sizeEntry.getValue()))
 							{
 								sizeLinkData.setSize(sizeEntry.getValue());
+								sizeLinkData.setIsAvailable(true);
 							}
+							else
+							{
+								sizeLinkData.setIsAvailable(false);
+							} //INC144318807
 							if (StringUtils.isNotEmpty(sizeEntry.getKey()))
 							{
 								sizeLinkData.setUrl(sizeEntry.getKey());
@@ -2282,7 +2472,7 @@ public class MplProductWebServiceImpl implements MplProductWebService
 							}
 							//TISSTRT-1411
 							//by default its available
-							sizeLinkData.setIsAvailable(true);
+							//INC144318807	/*sizeLinkData.setIsAvailable(true);*/ //INC144318807
 							//check teh stock availability
 							if (MapUtils.isNotEmpty(stockAvailibilty) && stockAvailibilty.containsKey(variantSizePCode))
 							{
@@ -2663,7 +2853,7 @@ public class MplProductWebServiceImpl implements MplProductWebService
 					}
 				}
 			}
-			//model.addAttribute(ModelAttributetConstants.MAP_CONFIGURABLE_ATTRIBUTE, mapConfigurableAttribute);
+			//model.addAttribute(MarketplacewebservicesConstants.MAP_CONFIGURABLE_ATTRIBUTE, mapConfigurableAttribute);
 			if (MarketplacewebservicesConstants.CLOTHING.equalsIgnoreCase(productData.getRootCategory())
 					|| MarketplacewebservicesConstants.FOOTWEAR.equalsIgnoreCase(productData.getRootCategory())
 					|| MarketplacewebservicesConstants.TRAVELANDLUGGAGE.equalsIgnoreCase(productData.getRootCategory())
@@ -2834,8 +3024,9 @@ public class MplProductWebServiceImpl implements MplProductWebService
 				for (final ImageData img : productData.getImages())
 				{
 					if (null != img && null != img.getUrl() && StringUtils.isNotEmpty(img.getFormat())
-					//&& img.getFormat().toLowerCase().equals(MarketplacecommerceservicesConstants.THUMBNAIL) Sonar fix
-							&& img.getFormat().equalsIgnoreCase(MarketplacecommerceservicesConstants.PRODUCT_IMAGE))
+							//&& img.getFormat().toLowerCase().equals(MarketplacecommerceservicesConstants.THUMBNAIL) Sonar fix
+							&& img.getFormat().equalsIgnoreCase(MarketplacecommerceservicesConstants.PRODUCT_IMAGE)
+							&& img.getMediaPriority().intValue() == 1)//INC144317283 Fix
 					{
 						productDetailMobile.setImageUrl(img.getUrl());
 						break;
@@ -3103,5 +3294,287 @@ public class MplProductWebServiceImpl implements MplProductWebService
 	public void setRedirectHandlers(final Map<KeywordRedirectMatchType, KeywordRedirectHandler> redirectHandlers)
 	{
 		this.redirectHandlers = redirectHandlers;
+	}
+
+	private Map<String, List<String>> displayConfigurableAttributeForHF(final ProductData productData)
+	{
+		final Map<String, String> mapConfigurableAttribute = new HashMap<String, String>();
+		final Map<String, List<String>> mapConfigurableAttributes = new LinkedHashMap<String, List<String>>();
+		final List<String> warrentyList = new ArrayList<String>();
+		try
+		{
+			/* Checking the presence of classification attributes */
+			if (null != productData.getClassifications())
+			{
+				final String propertiesValue = configurationService.getConfiguration().getString(
+						MarketplacewebservicesConstants.CONFIGURABLE_ATTRIBUTE + productData.getRootCategory());
+				//final String[] overviewSectionSeq = configurationService.getConfiguration().getString(MarketplacewebservicesConstants.OVERVIEW_SEC_SEQ).split(MarketplacewebservicesConstants.COMMA);
+				final String descValues = configurationService.getConfiguration().getString(
+						MarketplacewebservicesConstants.DESC_PDP_PROPERTIES + productData.getRootCategory());
+				final List<ClassificationData> ConfigurableAttributeList = new ArrayList<ClassificationData>(
+						productData.getClassifications());
+				
+				String keyProdptsHeaderName = null;
+				final StringBuffer groupString = new StringBuffer();
+				
+				for (final ClassificationData configurableAttributData : ConfigurableAttributeList)
+				{
+					keyProdptsHeaderName = configurableAttributData.getName();
+					final List<FeatureData> featureDataList = new ArrayList<FeatureData>(configurableAttributData.getFeatures());
+					final List<String> productFeatureDataList = new ArrayList<String>();
+					if (configurationService.getConfiguration()
+							.getString((MarketplacewebservicesConstants.CONFIGURABLE_ATTRIBUTE + MarketplacewebservicesConstants.HOME_FURNISHING))
+							.contains(configurableAttributData.getName()))
+					{
+						int lastGroupNo = 0;
+						String nameStr = null;
+						String qtyStr = null;
+						String detStr = null;
+						boolean setInfoFlag = false;
+						for (final FeatureData featureData : featureDataList)
+						{
+							final List<FeatureValueData> featureValueList = new ArrayList<FeatureValueData>(
+									featureData.getFeatureValues());
+							if (null != productData.getRootCategory())
+							{
+								final FeatureValueData featureValueData = featureValueList.get(0);
+
+								if (featureData.getFeatureValues().iterator().hasNext()
+										&& configurationService
+												.getConfiguration()
+												.getString(
+														MarketplacewebservicesConstants.CLASSIFICATION_ATTR
+																+ MarketplacewebservicesConstants.CLASSIFICATION_ATTR_HF
+																+ configurableAttributData.getName().replaceAll(MarketplacewebservicesConstants.SPACE_REGEX, MarketplacewebservicesConstants.NO_SPACE))
+												.contains(featureData.getName()))
+								{
+									//CKD:CAR-289
+									final ProductFeatureModel productFeature = mplProductFacade
+											.getProductFeatureModelByProductAndQualifier(productData, featureData.getCode());
+									String unit = MarketplacewebservicesConstants.NO_SPACE;
+
+									if (productFeature.getUnit() != null && !productFeature.getUnit().getSymbol().isEmpty())
+									{
+										unit = productFeature.getUnit().getSymbol();
+									}
+
+									if (configurableAttributData.getName().replaceAll(MarketplacewebservicesConstants.SPACE_REGEX, MarketplacewebservicesConstants.NO_SPACE)
+											.equals(MarketplacewebservicesConstants.CLASSIFICATION_ATTR_PF))
+									{
+										keyProdptsHeaderName = MarketplacewebservicesConstants.KEY_PROD_PTS;
+										productFeatureDataList.add(featureData.getFeatureValues().iterator().next().getValue());
+									}
+									else if (configurableAttributData.getName().replaceAll(MarketplacewebservicesConstants.SPACE_REGEX, MarketplacewebservicesConstants.NO_SPACE)
+											.equals(MarketplacewebservicesConstants.CLASSIFICATION_ATTR_WASHCARE))
+									{
+										productFeatureDataList.add(configurableAttributData.getName() + MarketplacewebservicesConstants.COLON
+												+ featureData.getFeatureValues().iterator().next().getValue());
+									}
+									else if (configurableAttributData.getName().replaceAll(MarketplacewebservicesConstants.SPACE_REGEX, MarketplacewebservicesConstants.NO_SPACE)
+											.equals(MarketplacewebservicesConstants.CLASSIFICATION_ATTR_CAINS))
+									{
+										for (final FeatureValueData data : featureData.getFeatureValues())
+										{
+											productFeatureDataList.add(data.getValue());
+										}
+									}
+									else if (configurableAttributData.getName().replaceAll(MarketplacewebservicesConstants.SPACE_REGEX, MarketplacewebservicesConstants.NO_SPACE)
+											.equals(MarketplacewebservicesConstants.CLASSIFICATION_ATTR_SI))
+									{
+
+										int currentGroupNo = 0;
+										if (featureData.getName().contains(MarketplacewebservicesConstants.SET_COMPONENT)
+												|| featureData.getName().contains(MarketplacewebservicesConstants.SET_COMPONENT_DETAILS))
+										{
+											currentGroupNo = Integer.valueOf(featureData.getName()
+													.replaceAll(MarketplacewebservicesConstants.ALPHBET_REGEX, MarketplacewebservicesConstants.NO_SPACE).trim()).intValue();
+										}
+										if (featureData.getName().equalsIgnoreCase(MarketplacewebservicesConstants.SET))
+										{
+											setInfoFlag = featureData.getFeatureValues().iterator().next().getValue()
+													.equalsIgnoreCase(MarketplacewebservicesConstants.YES);
+										}
+										if (setInfoFlag && currentGroupNo > 0)
+										{
+											if (currentGroupNo > lastGroupNo && currentGroupNo > 1)
+											{
+												if (lastGroupNo >= 1)
+												{
+													groupString.append(qtyStr = null != qtyStr ? qtyStr + MarketplacewebservicesConstants.SINGLE_SPACE : MarketplacewebservicesConstants.NO_SPACE).append(
+															nameStr = null != nameStr ? nameStr + MarketplacewebservicesConstants.SINGLE_SPACE : MarketplacewebservicesConstants.NO_SPACE);
+													if ((StringUtils.isNotBlank(qtyStr) || StringUtils.isNotBlank(nameStr)) && StringUtils.isNotBlank(detStr)  )
+													{
+														groupString.append(MarketplacewebservicesConstants.COLON);
+													}
+													groupString.append(detStr = null != detStr ? detStr + MarketplacewebservicesConstants.SINGLE_SPACE : MarketplacewebservicesConstants.NO_SPACE);
+													qtyStr = null;
+													nameStr = null;
+													detStr = null;
+												}
+												groupString.append(MarketplacewebservicesConstants.PIPE);
+											}
+											if (featureData.getName().equalsIgnoreCase(MarketplacewebservicesConstants.SET))
+											{
+												setInfoFlag = featureData.getFeatureValues().iterator().next().getValue()
+														.equalsIgnoreCase(MarketplacewebservicesConstants.YES);
+											}
+											else if (featureData.getName().contains(MarketplacewebservicesConstants.SET_COMPONENT)
+													&& featureData.getName().contains(MarketplacewebservicesConstants.NAME))
+											{
+												nameStr = featureData.getFeatureValues().iterator().next().getValue();
+											}
+
+											else if (featureData.getName().contains(MarketplacewebservicesConstants.SET_COMPONENT)
+													&& featureData.getName().contains(MarketplacewebservicesConstants.QTY))
+											{
+												qtyStr = featureData.getFeatureValues().iterator().next().getValue();
+											}
+
+											else if (featureData.getName().contains(MarketplacewebservicesConstants.SET_COMPONENT_DETAILS)
+													&& featureData.getName().contains(MarketplacewebservicesConstants.DETAILS))
+											{
+												detStr = featureData.getFeatureValues().iterator().next().getValue();
+											}
+											else
+											{
+												LOG.error("Somthing Wrong : Set Info Attributes are not correct as per configured");
+											}
+											lastGroupNo = currentGroupNo;
+										}
+									}
+									else
+									{
+										productFeatureDataList.add(featureData.getName() + MarketplacewebservicesConstants.COLON + featureValueData.getValue() + 
+												MarketplacewebservicesConstants.SINGLE_SPACE + unit);
+									}
+
+									if (descValues != null && StringUtils.isNotBlank(descValues))
+									{
+										final String[] descValue = descValues.split(MarketplacewebservicesConstants.COMMA);
+										if (descValue != null && descValue.length > 0)
+										{
+											for (final String value : descValue)
+											{
+												if (value.equalsIgnoreCase(featureData.getName()))
+												{
+													mapConfigurableAttribute.put(featureData.getName(), featureValueData.getValue());
+												}
+											}
+										}
+
+									}
+
+									if (featureData.getName().toLowerCase().contains(MarketplacewebservicesConstants.WARRANTY.toLowerCase()))
+									{
+										warrentyList.add(featureValueData.getValue());
+									}
+
+									else
+									{
+										if (StringUtils.isBlank(propertiesValue.toLowerCase()))
+										{
+											mapConfigurableAttribute.put(featureData.getName(), featureValueData.getValue());
+										}
+										if (propertiesValue.toLowerCase().contains(configurableAttributData.getCode().toLowerCase()))
+
+										{
+											mapConfigurableAttribute.put(featureData.getName(), featureValueData.getValue());
+										}
+
+										if (featureData.getName().toLowerCase().contains(MarketplacewebservicesConstants.WARRANTY.toLowerCase()))
+										{
+											warrentyList.add(featureValueData.getValue());
+										}
+									}
+
+								}
+							}
+						}
+						// To capture the last Set info
+						groupString.append(qtyStr = null != qtyStr ? qtyStr + MarketplacewebservicesConstants.SINGLE_SPACE :  MarketplacewebservicesConstants.NO_SPACE).append(
+								nameStr = null != nameStr ? nameStr + MarketplacewebservicesConstants.SINGLE_SPACE : MarketplacewebservicesConstants.NO_SPACE);
+						if ((StringUtils.isNotBlank(qtyStr) || StringUtils.isNotBlank(nameStr)) && (StringUtils.isNotBlank(detStr)))
+						{
+							groupString.append(MarketplacewebservicesConstants.COLON);
+						}
+						groupString.append(detStr = null != detStr ? detStr + MarketplacewebservicesConstants.SINGLE_SPACE : MarketplacewebservicesConstants.NO_SPACE);
+						qtyStr = null;
+						nameStr = null;
+						detStr = null;
+						
+						if (configurableAttributData.getName().replaceAll(MarketplacewebservicesConstants.SPACE_REGEX, MarketplacewebservicesConstants.NO_SPACE).
+								equals(MarketplacewebservicesConstants.CLASSIFICATION_ATTR_SI) 
+								&& groupString.toString().trim().length()>0)
+						{
+								productFeatureDataList.addAll(Arrays.asList(groupString.toString().split(MarketplacewebservicesConstants.PIPE_REGEX)));
+							
+						}
+					}
+					else
+					{
+						continue;
+					}
+					List tempList;
+					if (mapConfigurableAttributes.containsKey(configurableAttributData.getName()))
+					{
+						tempList = mapConfigurableAttributes.get(configurableAttributData.getName());
+						tempList.addAll(productFeatureDataList);
+						mapConfigurableAttributes.put(keyProdptsHeaderName, tempList);
+						tempList = null;
+					}
+					else if (mapConfigurableAttributes.containsKey(MarketplacewebservicesConstants.CLASSIFICATION_ATTR_CARE_INS)
+							&& configurableAttributData.getName().equals(MarketplacewebservicesConstants.CLASSIFICATION_ATTR_WASH_CARE))
+					{
+						tempList = mapConfigurableAttributes.get(MarketplacewebservicesConstants.CLASSIFICATION_ATTR_CARE_INS);
+						tempList.addAll(productFeatureDataList);
+						Collections.reverse(tempList);
+						mapConfigurableAttributes.put(MarketplacewebservicesConstants.CLASSIFICATION_ATTR_CARE_INS, tempList);
+						tempList = null;
+					}
+					else if (mapConfigurableAttributes.containsKey(MarketplacewebservicesConstants.CLASSIFICATION_ATTR_WASH_CARE)
+							&& configurableAttributData.getName().equals(MarketplacewebservicesConstants.CLASSIFICATION_ATTR_CARE_INS))
+					{
+						tempList = mapConfigurableAttributes.get(MarketplacewebservicesConstants.CLASSIFICATION_ATTR_WASH_CARE);
+						tempList.addAll(productFeatureDataList);
+						Collections.reverse(tempList);
+						mapConfigurableAttributes.put(MarketplacewebservicesConstants.CLASSIFICATION_ATTR_CARE_INS, tempList);
+						tempList = null;
+						removeKeyfromMap(mapConfigurableAttributes, MarketplacewebservicesConstants.CLASSIFICATION_ATTR_WASH_CARE);
+					}
+					else if (!productFeatureDataList.isEmpty())
+					{
+						{
+							mapConfigurableAttributes.put(keyProdptsHeaderName, productFeatureDataList);
+						}
+
+					}
+				}
+			}
+			/*else
+			{
+				final Map<String, String> treeMapConfigurableAttribute = new TreeMap<String, String>(mapConfigurableAttribute);
+			}*/
+		}
+		catch (final EtailNonBusinessExceptions e)
+		{
+			throw new EtailNonBusinessExceptions(e, MarketplacewebservicesConstants.E0000);
+		}
+		return mapConfigurableAttributes;
+	}
+
+	/**
+	 * @param mapConfigurableAttributes
+	 * @param classKey
+	 */
+	private void removeKeyfromMap(final Map<String, List<String>> mapConfigurableAttributes, final String classKey)
+	{
+		for (final Iterator<Map.Entry<String, List<String>>> it = mapConfigurableAttributes.entrySet().iterator(); it.hasNext();)
+		{
+			final Entry<String, List<String>> entry = it.next();
+			if (entry.getKey().equals(classKey))
+			{
+				it.remove();
+			}
+		}
 	}
 }

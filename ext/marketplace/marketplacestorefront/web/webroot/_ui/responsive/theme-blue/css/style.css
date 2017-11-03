@@ -48447,7 +48447,7 @@ padding:0 40px;	}
 /* TPR-628 ends*/
 
 /*TPR-873*/
-.product-info>div.wishAddLogin, .product-info>div.wishAddSucess,.product-info>div.wishAddLogin, .product-info>div.wishRemoveSucess, .product-info>div.wishAlreadyAdded,div.wishAlreadyAddedPlp,div.wishAddLoginPlp,div.wishAddSucessPlp,div.wishRemoveSucessPlp,div.wishAddSucessQV,div.wishAddLoginQV,div.wishAlreadyAddedQV {
+.product-info>div.wishAddLogin, .product-info>div.wishAddSucess,.product-info>div.wishAddLogin, .product-info>div.wishRemoveSucess, .product-info>div.wishAlreadyAdded,div.wishAlreadyAddedPlp,div.wishAddLoginPlp,div.wishAddSucessPlp,div.wishRemoveSucessPlp,div.wishAddSucessQV, div.wishRemoveSucessQV, div.wishAddLoginQV,div.wishAlreadyAddedQV {
 	display: inline-block;
     position: fixed;
    	z-index: 100099;
@@ -48470,7 +48470,7 @@ padding:0 40px;	}
 
 
 
-.product-info>div.wishAddLogin.active, .product-info>div.wishAddSucess.active,.product-info>div.wishAddLogin.active, .product-info>div.wishRemoveSucess.active, .product-info>div.wishAlreadyAdded.active,div.wishAlreadyAddedPlp.active,div.wishRemoveSucessPlp.active,div.wishAddLoginPlp.active,div.wishAddSucessPlp.active,div.wishAddSucessQV.active,div.wishAddLoginQV.active,div.wishAlreadyAddedQV.active{
+.product-info>div.wishAddLogin.active, .product-info>div.wishAddSucess.active,.product-info>div.wishAddLogin.active, .product-info>div.wishRemoveSucess.active, .product-info>div.wishAlreadyAdded.active,div.wishAlreadyAddedPlp.active,div.wishRemoveSucessPlp.active,div.wishAddLoginPlp.active,div.wishAddSucessPlp.active,div.wishAddSucessQV.active, div.wishRemoveSucessQV.active,div.wishAddLoginQV.active,div.wishAlreadyAddedQV.active{
 	opacity: 1;
 	top: 90px;
 }
@@ -48483,12 +48483,12 @@ padding:0 40px;	}
 	}
 } */
 
-.product-info>div.wishAddSucess>span,.product-info>div.wishRemoveSucess>span,div.wishAddSucessPlp>span,div.wishRemoveSucessPlp>span,div.wishAddSucessQV>span{
+.product-info>div.wishAddSucess>span,.product-info>div.wishRemoveSucess>span,div.wishAddSucessPlp>span,div.wishRemoveSucessPlp>span,div.wishAddSucessQV>span,div.wishRemoveSucessQV>span{
 	margin-left: 30px;
 	    line-height: 20px;
 }
 
-.product-info>div.wishAddSucess,.product-info>div.wishRemoveSucess,div.wishAddSucessPlp,div.wishRemoveSucessPlp,div.wishAddSucessQV{
+.product-info>div.wishAddSucess,.product-info>div.wishRemoveSucess,div.wishAddSucessPlp,div.wishRemoveSucessPlp,div.wishAddSucessQV,div.wishRemoveSucessQV{
 	color:green;
 
 }
@@ -48497,7 +48497,7 @@ padding:0 40px;	}
 }
 
 
-.wishAddSucess:before,.wishRemoveSucess:before,div.wishAddSucessPlp:before,div.wishRemoveSucessPlp:before,div.wishAddSucessQV:before{
+.wishAddSucess:before,.wishRemoveSucess:before,div.wishAddSucessPlp:before,div.wishRemoveSucessPlp:before,div.wishAddSucessQV:before,div.wishRemoveSucessQV:before{
 
     content: "";
     width: 9px;
@@ -48514,7 +48514,7 @@ padding:0 40px;	}
     left: 24px;
     margin: auto;
 }
-.wishAddSucess:after,.wishRemoveSucess:after,div.wishAddSucessPlp:after,div.wishRemoveSucessPlp:after,div.wishAddSucessQV:after{
+.wishAddSucess:after,.wishRemoveSucess:after,div.wishAddSucessPlp:after,div.wishRemoveSucessPlp:after,div.wishAddSucessQV:after,div.wishRemoveSucessQV:after{
 
 	width: 30px;
     height: 30px;
@@ -60053,6 +60053,7 @@ background: transparent;}
 /*------- TIS_JIRA:358 for luxury --------*/
 body.page-wishlist .body-Content .wrapper{
 	    padding: 0 30px;
+	    margin-top: 5px;	/* add for PRDI-444 */
 } 
 .cart.wrapper .product-block li.item ul .item-edit-details li .popover.bottom{
 z-index:11;}
@@ -67498,7 +67499,7 @@ padding:0px;
 
 /* Fixes Unit Testing */
 @media screen and (-ms-high-contrast: active), (-ms-high-contrast: none) {  
-	.product-info>div.wishAddLogin, .product-info>div.wishAddSucess, .product-info>div.wishAddLogin, .product-info>div.wishRemoveSucess, .product-info>div.wishAlreadyAdded, div.wishAlreadyAddedPlp, div.wishAddLoginPlp, div.wishAddSucessPlp, div.wishRemoveSucessPlp, div.wishAddSucessQV, div.wishAddLoginQV, div.wishAlreadyAddedQV {
+	.product-info>div.wishAddLogin, .product-info>div.wishAddSucess, .product-info>div.wishAddLogin, .product-info>div.wishRemoveSucess, .product-info>div.wishAlreadyAdded, div.wishAlreadyAddedPlp, div.wishAddLoginPlp, div.wishAddSucessPlp, div.wishRemoveSucessPlp, div.wishAddSucessQV, div.wishRemoveSucessQV, div.wishAddLoginQV, div.wishAlreadyAddedQV {
     display: inline-block;
     position: fixed;
     z-index: 100099;
@@ -76930,6 +76931,102 @@ body .account .right-account form label.invite-text-lbl{
 }
 
 /* TISSPTEN-120 END */
+/*homefurinshing-overview-tab start*/
+.product-info>div.tabs-block.HomeFurnishing{
+	width: 100%;
+    margin: 0 !important;
+    padding: 70px 30px 30px 30px;
+}
+.pdp .product-info.wrapper .tabs-block .tabs.pdp li ul.homefurnishing-overview{
+	display: inline-block;
+	width: 49%;
+	vertical-align: top;
+	margin-bottom: 10px;
+	float: left;
+}
+.pdp .product-info.wrapper .tabs-block .tabs.pdp li ul.homefurnishing-overview li{
+	font-size: 12px;
+  	line-height: 1.33;
+  	letter-spacing: 0.6px;
+  	color: rgba(0, 0, 0, 0.6);
+  	margin-bottom: 8px;
+  	list-style: square;
+}
+.pdp .product-info.wrapper .tabs-block .tabs.pdp li ul.homefurnishing-overview li.homefurnishing-overview-title{
+	list-style: none;
+	color: #000;
+	text-transform: uppercase;
+	margin-bottom: 16px;
+	margin-left: -15px;
+	
+}
+.product-info>div.tabs-block.HomeFurnishing .nav-wrapper .nav.pdp.productNav li{
+	padding-bottom: 8px;
+}
+/*homefurinshing-overview-tab end*/
+/*home furnishing pdp monogramming start*/
+.sellerMonogramming{
+	font-size: 12px;
+  line-height: 1.5;
+  letter-spacing: 0.6px;
+  margin-top: 12px;
+}
+.product-info .size span+a.buying-guide:after{
+	display: none;
+}
+.product-info .size span+a {
+    color: #a5173c;
+}
+/*home furnishing pdp monogramming end*/
+@media(max-width: 767px){
+	.product-specification-accordion.smk_accordion .accordion_in .acc_content ul .product-desc .key-label .homefurnishing-overview{
+		list-style-type: disc;
+    	margin-left: 16px;
+    	margin-bottom: 48px;
+	}
+	.product-specification-accordion.smk_accordion .accordion_in .acc_content ul .product-desc .key-label .homefurnishing-overview .homefurnishing-overview-title{
+		list-style: none;
+    	color: #000;
+    	text-transform: uppercase;
+    	margin-bottom: 16px;
+	}
+	.product-specification-accordion.smk_accordion .accordion_in .acc_content ul .product-desc .key-label .homefurnishing-overview .homefurnishing-overview-desc{
+		font-size: 12px;
+    	line-height: 1.33;
+    	letter-spacing: 0.6px;
+    	color: rgba(0, 0, 0, 0.6);
+   	 	margin-bottom: 8px;
+    	list-style: square;
+    	margin-left: 15px;
+	}
+	.product-info>div.tabs-block.HomeFurnishing{
+    	float: none;
+    	display: block;
+    	clear: both;
+    	padding: 30px 0 0;
+}
+}
+@media(max-width: 380px){
+	.product-specification-accordion.smk_accordion .accordion_in .acc_content ul .product-desc .key-label .homefurnishing-overview .homefurnishing-overview-desc{
+		letter-spacing: normal;
+	}
+}
+
+
+/* TPR-6740:changes for STW widget in Home Furnishing */
+#stw_widget_hf .carousel-component .gotopdp{
+	width: 225px;
+    height: 36px;
+    background-color: #ffffff;
+    border: solid 1px #444444;
+}
+#stw_widget_hf .carousel-component .gotopdp a{
+	font-size: 12px;
+    line-height: 3;
+    letter-spacing: 0.6px;
+    text-align: center;
+    color: #000000;
+}
 
 /*TPR-6399 start*/
 #login-modal .content{
@@ -77181,11 +77278,26 @@ body .account .right-account form label.invite-text-lbl{
     white-space: normal;
 }
 /*TPR-6654 end*/
+
 /* TISPRDT-2410 start */
 #singlePageAddressPopup .product-block.addresses.new-form .half .dupDisplay label{
 	    margin-bottom: 5px;
 	    }
 /* TISPRDT-2410 end */
+/* Quantity dropdown in homefurnishing start */ nmk
+.pdp select#quantity_dropdown{
+	margin-left: 24px;
+	}
+.pdp .product-detail.HomeFurnishing select#variant_dropdown{
+	padding-right: 20px;
+	}
+/* Quantity dropdown in homefurnishing end */
+
+
+/* HOME-208 Start */
+/* #quantity_dropdown{
+	   float: right;
+} */
 
 /* TPR-6947 start */
 body.template-pages-my-account-returnSuccess .mainContent-wrapper .container .body-Content .account .page-header span a{
@@ -77449,3 +77561,74 @@ background: url(../images/search_image.png) no-repeat;}
     z-index: 2;
 }
 /* SDI-1393 End */
+
+/* HOME-210 start */
+.homefurnishing-overview:nth-child(2) {
+    float: right ! important;
+}
+.homefurnishing-overview:nth-child(3) {
+    float: right ! important;
+}
+@media (max-width: 767px){
+.homefurnishing-overview:nth-child(2) {
+    float: left ! important;
+}
+.homefurnishing-overview:nth-child(3) {
+    float: left ! important;
+}
+}
+
+/* HOME-210 End */
+/* TPR-6740 start */
+#stw_widget_hf .product-tile {
+    margin-bottom: 15px;
+}
+.gotopdp {
+    position: absolute;
+    bottom: 0;
+}
+/* TPR-6740 end */
+/* HOME-227 start */
+.home-pdp-size + span + .buying-guide.home-buying-guide,
+.home-pdp-size + .buying-guide.home-buying-guide{
+	border-left: 2px solid #9b9b9b;
+    padding-left: 10px !important;
+    margin-left: 10px !important;
+    float:left;
+}
+.buying-guide.home-buying-guide{
+    float:left;
+}
+.home-pdp-size{
+	float:left;
+}
+.home-pdp-size{
+	border: 0px solid transparent ! important;
+	padding: 0 !important;
+    margin: 0 0 10px 0 !important;
+}
+.home-pdp-quantity{
+	border: 0px solid transparent ! important;
+}
+/* #variant_dropdown + #quantity_dropdown{
+	margin-left: 28%;
+} */
+.buying-guide.home-buying-guide + br + #quantity_dropdown{
+	margin-left: 40%;
+}
+quantity_dropdown{
+	margin-left: 0%;
+}
+.home-pdp-size + .home-pdp-quantity + .buying-guide.home-buying-guide + br + #variant_dropdown {
+    width: 38%;
+}
+.home-pdp-size + .home-pdp-quantity + .buying-guide.home-buying-guide + br + #variant_dropdown + #quantity_dropdown {
+    margin-left: 4%;
+}
+select#quantity_dropdown:nth-child(5) {
+    margin-left: 3%;
+}
+span.home-pdp-quantity:nth-last-child(4) {
+    margin-left: 10%;
+}
+/* HOME-227 End */

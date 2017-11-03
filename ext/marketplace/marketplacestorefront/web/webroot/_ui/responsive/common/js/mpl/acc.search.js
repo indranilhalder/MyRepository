@@ -777,7 +777,7 @@ $(document).on("click",".plp-wishlist",function(e){
 						
 					},
 					error : function(xhr, status, error){
-						alert(error);
+						console.log(error);
 					}
 				});
 				
@@ -857,7 +857,7 @@ $(document).on("click",".plp-wishlist",function(e){
 						
 					},
 					error : function(xhr, status, error){
-						alert(error);
+						console.log(error);
 						if(typeof utag !="undefined"){
 							utag.link({error_type : 'wishlist_error'});
 							}

@@ -263,7 +263,7 @@ tr.d0 td {
 			<product:emiDetail product="${product}" />
 			<!-- TPR-6907 -->
 			<div id= "codEli"><a id="codLink" href=""><spring:theme code="cod.available"/></a></div>
-			<!-- TPR-6907 -->
+			<!-- TPR-6907 -->				
 			<!-- TPR-1083 Exchange Start -->
 			<input id="l3category" type="hidden" value="${product.level3CategoryCode}"/>
  			<!-- Exchange section -->
@@ -319,6 +319,8 @@ tr.d0 td {
 			<cms:pageSlot position="AddToCart" var="component">
 					<cms:component component="${component}" />
 				</cms:pageSlot>
+				
+			<div class="sellerMonogramming"></div>	
 			<div class="SoldWrap">
 				<%-- <ycommerce:testId
 					code="productDetails_productNamePrice_label_${product.code}">
@@ -706,6 +708,7 @@ tr.d0 td {
 	<%-- End Gigya Rating & Reviews --%>
 </div>
 
+<div id="stw_widget_hf" class="lazy-reached-stw"></div>
 
 <div class="add-to-wishlist-container">
 <form>
@@ -758,5 +761,8 @@ tr.d0 td {
 
 <script type="text/javascript">
 	var prop = '${mapConfigurableAttributes}';
-	prop =prop.replace(/[{}]/g, '');	
+	prop =prop.replace(/[{}]/g, '');
+	
+//TPR-6740	
+	var isStwheaderforPDP = '${isStwheaderforPDP}';
 </script>

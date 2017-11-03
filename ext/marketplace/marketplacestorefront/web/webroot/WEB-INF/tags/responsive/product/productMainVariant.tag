@@ -87,7 +87,13 @@ $("#variant").change(function() {
 
 //AKAMAI Fix 
 
+function redirectURL(val){
+	//console.log(val);
+	window.open(val,'_blank');
+}
+
 var productSizeVar = '${productSize}';
+var buyingGuideData ='${buyingGuide}';
 </script>
 <!-- logic for displaying color and size variant -->
 <!-- displaying colour swatches -->
@@ -280,8 +286,7 @@ share mobile -->
 <c:if test="${noVariant!=true&&notApparel!=true}">
 <c:if test="${showSizeGuideForFA eq true}">
 <div class="size" style="font-size: 12px;">
-
-    <c:choose> 
+<c:choose>		
 	<c:when test="${ product.rootCategory =='FineJewellery' || product.rootCategory =='FashionJewellery'}">
 	    <spring:eval expression="T(de.hybris.platform.util.Config).getParameter('mpl.jewellery.category')" var="lengthVariant"/>
      	<c:set var = "categoryListArray" value = "${fn:split(lengthVariant, ',')}" />
@@ -305,21 +310,147 @@ share mobile -->
    		</c:choose>
 	</c:when>
 	<c:otherwise>
-               <span>
+               <c:choose>
+   			 <c:when test="${product.rootCategory =='HomeFurnishing'}">
+	   			 <c:choose>
+	   			 <c:when test="${productSize !='No Size'}">
+		   			<span class="home-pdp-size">
+						<spring:theme code="product.variant.size.HF"></spring:theme><c:if test="${not empty productSizeType}">(${productSizeType})</c:if>
+				  </span>
+				  </c:when>
+	   			 </c:choose>
+   			  
+			   <span class="home-pdp-quantity">
+					<spring:theme code="product.variant.quantity"></spring:theme><c:if test="${not empty productSizeType}">(${productSizeType})</c:if>
+			  </span> 
+   			 </c:when>
+   			 <c:otherwise>
+   			 <span>
 					<spring:theme code="product.variant.size"></spring:theme><c:if test="${not empty productSizeType}">(${productSizeType})</c:if>
-			  </span>
+			  </span> 
+   			 </c:otherwise>
+   			 </c:choose>
     </c:otherwise>
-	</c:choose>				  
-				 <a class="size-guide" href="${sizeGuideUrl}" role="button"
-			data-toggle="modal" data-target="#popUpModal" data-productcode="${product.code}" data-sizeSelected="${selectedSize}"> <spring:theme
-				code="product.variants.size.guide" />
-			</a>
-		<!-- Size guide Pop-up -->
-		
+	</c:choose>		
+	
+			<c:if test="${empty removeSizeGuide}">		  
+						 <a class="size-guide" href="${sizeGuideUrl}" role="button"
+					data-toggle="modal" data-target="#popUpModal" data-productcode="${product.code}" data-sizeSelected="${selectedSize}"> <spring:theme
+						code="product.variants.size.guide" />
+					</a>
+			</c:if>	
+			<!-- Size guide Pop-up -->	
+			
+			
+			<!-- Added for PDP Changes for Home Furnishing : TPR-6738-->
+    
+			<c:if test="${not empty buyingGuide}">
+					<a class="buying-guide home-buying-guide" role="button" onclick = "redirectURL(buyingGuideData);"> 
+					<spring:theme code="product.variants.buying.guide" />
+					</a>
+			</c:if>
+			<!--  PDP Changes for Home Furnishing Ends-->
+<c:choose>
+  <c:when test="${product.rootCategory =='HomeFurnishing'}">
+  <br>
+  <c:choose>
+  <c:when test="${productSize !='No Size'}">
+  <select id="variant_dropdown" class="variant-select">
+   <c:forEach items="${product.variantOptions}" var="variantOption">
+			      <c:forEach items="${variantOption.colourCode}" var="color">                  
+					<c:choose>
+						<c:when test="${not empty currentColor}">
+							<c:if test="${currentColor eq color}">
+								<c:set var="currentColor" value="${color}" />						
+								<c:forEach var="entry" items="${variantOption.sizeLink}">
+									<c:url value="${entry.key}" var="link" />
+									<%--  <a href="${link}?selectedSize=true${msiteSellerForSize}">${entry.value}</a> --%>
+									<c:choose>
+										<c:when test="${(variantOption.code eq product.code)}">
+											<c:choose>
+												<c:when test="${selectedSize eq null}">
+												<!--CKD:TPR-250  -->
+												 <option value="${link}?selectedSize=true${msiteSellerForSize}" data-productCode="${variantOption.code}" >${entry.value}</option>
+													
+												</c:when>
+												<c:otherwise>
+													<!--CKD:TPR-250  -->
+													 <option value="${link}?selectedSize=true${msiteSellerForSize}" data-productCode="${variantOption.code}" selected>${entry.value}</option>
+													
+												</c:otherwise>
+											 </c:choose>
+										 </c:when>
+										 <c:otherwise>
+											<!--CKD:TPR-250  -->
+											 <option data-vcode="${link}" value="${link}?selectedSize=true${msiteSellerForSize}" data-productCode="${variantOption.code}" >${entry.value}</option>
+										 </c:otherwise>
+									</c:choose>
+								  </c:forEach>
+							  </c:if>
+						</c:when>	
+					    <c:otherwise>									
+						  <c:forEach var="entry" items="${variantOption.sizeLink}">
+						   <c:url value="${entry.key}" var="link" />
+						   <c:if test="${entry.key eq product.url}">
+						   <c:set var="currentColor" value="${color}" />
+						   <c:set var="currentColor" value="${variantOption.colour}" />
+						   </c:if>
+						   <c:forEach items="${product.variantOptions}" var="variantOption">
+							 <c:forEach items="${variantOption.colour}" var="color">
+								<c:if test="${currentColor eq color}">
+									<c:forEach var="entry" items="${variantOption.sizeLink}">
+										<c:url value="${entry.key}" var="link" />
+										    <c:choose>
+											      <c:when test="${(variantOption.code eq product.code)}">
+														<c:choose>
+															<c:when test="${selectedSize eq null}">
+														<!--CKD:TPR-250  -->
+														 <option value="${link}?selectedSize=true${msiteSellerForSize}" data-productCode="${variantOption.code}">${entry.value}</option>
+																
+															</c:when>
+															<c:otherwise>
+															<!--CKD:TPR-250  -->
+															 <option value="${link}?selectedSize=true${msiteSellerForSize}" data-productCode="${variantOption.code}" selected>${entry.value}</option>
+																
+															</c:otherwise>
+														</c:choose>
+												</c:when>	
+												<c:otherwise>
+													<!--CKD:TPR-250  -->
+													 <option data-vcode="${link}" value="${link}?selectedSize=true${msiteSellerForSize}" data-productCode="${variantOption.code}" >${entry.value}</option>
+												</c:otherwise>												
+											</c:choose>
+										</c:forEach>
+									  </c:if>
+								</c:forEach>
+							</c:forEach>
+				    	</c:forEach>
+					  </c:otherwise>
+			      </c:choose>
+			    </c:forEach>
+			  </c:forEach>
+			  </select>
+			  
+			  </c:when>
+			  </c:choose>
+			  
+			  
+			   <select id="quantity_dropdown" class="variant-select">
+			   <c:forEach items="${quantityList}" var="quantity">
+					<option value="${quantity}">${quantity}</option>
+				</c:forEach>
+			   </select>
+  </c:when>
+  <c:otherwise>
+			
+			
+			
+								  
 		<!-- Added for PDP Size ChartChange -->
-		<ul id="variant" class="variant-select">
+
+			   <ul id="variant" class="variant-select">
 			<%-- <c:choose>
-		<select id="variant" class="variant-select">
+		
 			<c:choose>
 				<c:when test="${selectedSize eq null}">
 					<option value="#" selected="selected"><spring:theme
@@ -333,16 +464,16 @@ share mobile -->
 			<c:choose>                                              
 			   <c:when test="${ product.rootCategory =='FineJewellery' || product.rootCategory =='FashionJewellery'}">	
 			    
-			    
 			     <!-- UF-422:Changes for PDP when product has only one size -->
 				 <c:set var="selectedClass" value=""/>
 				<c:if test= "${fn:length(product.variantOptions) eq 1 || pdpSizeCounter eq 1}">
-				<c:set var ="selectedClass" value ="class='selected'"/></c:if>	
-								    		     			
+					<c:set var ="selectedClass" value ="class='selected'"/>
+				</c:if>	
 				<c:forEach items="${product.variantOptions}" var="variantOption">
 					<c:forEach var="entry" items="${variantOption.sizeLink}">
 						<c:url value="${entry.key}" var="link" />							
 							<c:choose>
+							
 									<c:when test="${(variantOption.code eq product.code)}">
 										<c:choose>
 											<c:when test="${selectedSize eq null}">										
@@ -383,17 +514,22 @@ share mobile -->
 											<c:choose>
 												<c:when test="${selectedSize eq null}">
 												<!--CKD:TPR-250  -->
+
 													<li ${selectedClass}><a href="${link}?selectedSize=true${msiteSellerForSize}" data-productCode="${variantOption.code}">${entry.value}</a></li>
+
 												</c:when>
 												<c:otherwise>
 													<!--CKD:TPR-250  -->
+													
 													<li class="selected"><a href="${link}?selectedSize=true${msiteSellerForSize}"  data-productCode="${variantOption.code}">${entry.value}</a></li>
 												</c:otherwise>
 											 </c:choose>
 										 </c:when>
 										 <c:otherwise>
 											<!--CKD:TPR-250  -->
+
 										    <li ${selectedClass}><a href="${link}?selectedSize=true${msiteSellerForSize}"  data-productCode="${variantOption.code}">${entry.value}</a></li>
+
 										 </c:otherwise>
 									</c:choose>
 								  </c:forEach>
@@ -417,17 +553,22 @@ share mobile -->
 													<c:choose>
 															<c:when test="${selectedSize eq null}">
 														<!--CKD:TPR-250  -->
+
 																<li ${selectedClass}><a href="${link}?selectedSize=true${msiteSellerForSize}" data-productCode="${variantOption.code}">${entry.value}</a></li>
+
 															</c:when>
 															<c:otherwise>
 															<!--CKD:TPR-250  -->
+															
 																<li class="selected"><a href="${link}?selectedSize=true${msiteSellerForSize}" data-productCode="${variantOption.code}">${entry.value}</a></li>
 															</c:otherwise>
 														</c:choose>
 												</c:when>	
 												<c:otherwise>
 													<!--CKD:TPR-250  -->
+
 													<li ${selectedClass} data-vcode="${link}"><a href="${link}?selectedSize=true${msiteSellerForSize}" data-productCode="${variantOption.code}">${entry.value}</a></li>
+
 												</c:otherwise>												
 											</c:choose>
 										</c:forEach>
@@ -441,7 +582,10 @@ share mobile -->
 			  </c:forEach>
 		   </c:otherwise>
 	     </c:choose>
-     </ul>		                     
+     </ul>		    
+     <!-- Added for size drop down in Home Furnishing -->    
+     </c:otherwise>
+</c:choose>			             
                  <%--  </c:otherwise> --%>
 		<%-- </c:choose>   --%> 
                     
