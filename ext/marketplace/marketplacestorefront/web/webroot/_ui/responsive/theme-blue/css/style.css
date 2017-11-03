@@ -77492,7 +77492,8 @@ background: url(../images/search_image.png) no-repeat;}
 
 	.showcase-section a.btn-red, .showcase-section a.trending-button, #showcaseMobile a.button.trending-button, #showcaseMobile a.button.maroon {
 		height: 25px !important; min-height: 25px !important; padding: 5% 0px !important; margin-left: 0 !important;
-		line-height: unset !important; width: auto !important; font-size: 10px !important; position: static !important; max-width: 100px;}
+		line-height: unset !important; width: auto !important; font-size: 10px !impo
+		HOME-239rtant; position: static !important; max-width: 100px;}
 	.showcase-section .showcase-section-right {padding: 0;}
 	.showcase-section .showcase-section-left {padding: 0;}
 	.showcase-section .desc-section h1 {font-size: 14px !important; padding-top: 0 !important; text-align: left !important;}
@@ -77632,3 +77633,10 @@ span.home-pdp-quantity:nth-last-child(4) {
     margin-left: 10%;
 }
 /* HOME-227 End */
+/* HOME-239 start */
+	@media (max-width: 767px){
+.product-specification-accordion.smk_accordion .accordion_in .acc_content ul .product-desc .key-label .homefurnishing-overview {
+    clear: both;
+}
+}
+/* HOME-239 End */
