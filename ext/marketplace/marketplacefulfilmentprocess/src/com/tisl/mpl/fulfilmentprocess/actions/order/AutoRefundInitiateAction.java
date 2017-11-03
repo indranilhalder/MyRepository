@@ -190,7 +190,7 @@ public class AutoRefundInitiateAction extends AbstractProceduralAction<OrderProc
 														LOG.debug("Step :8 this is NON - RETURNINITIATED_BY_RTO order ");
 														final List<WalletCardApportionDetailModel> walletCardApportionDetailModelList = qcCallforReturnRefund(orderModel,
 																(RefundEntryModel) returnEntry);
-														 constructQuickCilverOrderEntry(walletCardApportionDetailModelList, returnEntry.getOrderEntry().getTransactionID(),orderModel);
+														 constructQuickCilverOrderEntry(walletCardApportionDetailModelList, returnEntry,orderModel);
 														LOG.debug("Step :9 successfully create constructQuickCilverOrderEntry for this order");
 													}
 													//End Added the code for QC
@@ -227,7 +227,7 @@ public class AutoRefundInitiateAction extends AbstractProceduralAction<OrderProc
 													//Start Added the code for QC
 													final List<WalletCardApportionDetailModel> walletCardApportionDetailModelList = qcCallforReturnRefund(orderModel,
 															(RefundEntryModel) returnEntry);
-													result = constructQuickCilverOrderEntry(walletCardApportionDetailModelList,returnEntry.getOrderEntry().getTransactionID(),orderModel);
+													result = constructQuickCilverOrderEntry(walletCardApportionDetailModelList,returnEntry,orderModel);
 													//End Added the code for QC
 												}
 												catch (final Exception e)
@@ -376,98 +376,12 @@ public class AutoRefundInitiateAction extends AbstractProceduralAction<OrderProc
 		return orderEntries;
 	}
 
-	private boolean createRefund(final OrderModel subOrderModel, final AbstractOrderEntryModel abstractOrderEntryModel,
-			final String reasonCode, final SalesApplication salesApplication)
+	private String constructQuickCilverOrderEntry(final List<WalletCardApportionDetailModel> walletCardApportionDetailModelList, final ReturnEntryModel returnEntry,final OrderModel subOrderModel)
 	{
-
-		boolean returnReqCreated = false;
-		final List<RefundEntryModel> refundList = new ArrayList<>();
-		try
-		{
-			final ReturnRequestModel returnRequestModel = returnService.createReturnRequest(subOrderModel);
-			returnRequestModel.setRMA(returnService.createRMA(returnRequestModel));
-			returnRequestModel.setTypeofreturn(TypeofReturn.REVERSE_PICKUP);
-			returnRequestModel.setReturnRaisedFrom(salesApplication);
-			//End
-
-			if (null != abstractOrderEntryModel)
-			{
-				final RefundEntryModel refundEntryModel = modelService.create(RefundEntryModel.class);
-				refundEntryModel.setOrderEntry(abstractOrderEntryModel);
-				refundEntryModel.setReturnRequest(returnRequestModel);
-				refundEntryModel.setReason(RefundReason.valueOf(getReasonDesc(reasonCode)));
-				refundEntryModel.setStatus(ReturnStatus.RETURN_INITIATED);
-				refundEntryModel.setAction(ReturnAction.IMMEDIATE);
-				refundEntryModel.setNotes(getReasonDesc(reasonCode));
-				refundEntryModel.setExpectedQuantity(abstractOrderEntryModel.getQuantity());//Single line quantity
-				refundEntryModel.setReceivedQuantity(abstractOrderEntryModel.getQuantity());//Single line quantity
-				refundEntryModel.setRefundedDate(new Date());
-				final List<PaymentTransactionModel> tranactions = subOrderModel.getPaymentTransactions();
-				if (CollectionUtils.isNotEmpty(tranactions))
-				{
-					final PaymentTransactionEntryModel paymentTransEntry = tranactions.iterator().next().getEntries().iterator()
-							.next();
-
-					if (paymentTransEntry.getPaymentMode() != null && paymentTransEntry.getPaymentMode().getMode() != null
-							&& COD.equalsIgnoreCase(paymentTransEntry.getPaymentMode().getMode()))
-					{
-						refundEntryModel.setAmount(NumberUtils.createBigDecimal("0"));
-					}
-					else
-					{
-						if (null != subOrderModel.getSplitModeInfo() && subOrderModel.getSplitModeInfo().equalsIgnoreCase("Split"))
-						{
-							double refundAmountForQc = 0.0D;
-							double refundAmountForJuspay = 0.0D;
-							//call for Juspay
-							refundAmountForJuspay = calculateSplitJuspayRefundAmount(abstractOrderEntryModel);
-							//call for QuckCilver
-							refundAmountForQc = calculateSplitQcRefundAmount(abstractOrderEntryModel);
-							refundEntryModel.setAmount(NumberUtils.createBigDecimal(Double.toString(refundAmountForJuspay)));
-							refundEntryModel.setAmountForQc(NumberUtils.createDouble(Double.toString(refundAmountForQc)));
-						}
-						else if (null != subOrderModel.getSplitModeInfo()
-								&& subOrderModel.getSplitModeInfo().equalsIgnoreCase("CliqCash"))
-						{
-							double refundAmountForQc = 0.0D;
-							//call for QuckCilver
-							refundAmountForQc = calculateSplitQcRefundAmount(abstractOrderEntryModel);
-							refundEntryModel.setAmountForQc(NumberUtils.createDouble(Double.toString(refundAmountForQc)));
-							refundEntryModel.setAmount(NumberUtils.createBigDecimal("0"));
-						}
-						else
-						{
-
-							final double amount = (abstractOrderEntryModel.getNetAmountAfterAllDisc() != null
-									? abstractOrderEntryModel.getNetAmountAfterAllDisc().doubleValue() : 0D)
-									+ (abstractOrderEntryModel.getCurrDelCharge() != null
-											? abstractOrderEntryModel.getCurrDelCharge().doubleValue() : 0D)
-									+ (abstractOrderEntryModel.getScheduledDeliveryCharge() != null
-											? abstractOrderEntryModel.getScheduledDeliveryCharge().doubleValue() : 0D);
-
-							refundEntryModel.setAmount(NumberUtils.createBigDecimal(Double.toString(amount)));
-							refundEntryModel.setAmountForQc(NumberUtils.createDouble("0"));
-
-						}
-					}
-				}
-				refundList.add(refundEntryModel);
-			}
-			modelService.saveAll(refundList);
-			modelService.save(returnRequestModel);
-			returnReqCreated = true;
-		}
-		catch (final Exception e)
-		{
-			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000);
-		}
-		return returnReqCreated;
-	}
-
-	private String constructQuickCilverOrderEntry(final List<WalletCardApportionDetailModel> walletCardApportionDetailModelList, final String transactionId,final OrderModel subOrderModel)
-	{
+		
          String result = "FAILURE";
-		   final AbstractOrderEntryModel abstractOrderEntryModel = mplOrderService.getEntryModel(transactionId);
+         final OrderEntryModel abstractOrderEntryModel = (OrderEntryModel) returnEntry.getOrderEntry();
+		   //final AbstractOrderEntryModel abstractOrderEntryModel = mplOrderService.getEntryModel(transactionId);
 		   final List<WalletCardApportionDetailModel> walletCardApportionDetailList =new ArrayList<WalletCardApportionDetailModel>();
 			final WalletApportionReturnInfoModel walletApportionReturnModel = getModelService().create(WalletApportionReturnInfoModel.class);
 		   List<String> qcResponseStatus = new ArrayList<String>();
@@ -504,7 +418,7 @@ public class AutoRefundInitiateAction extends AbstractProceduralAction<OrderProc
 				 }
 			 }
 			 walletApportionReturnModel.setWalletCardList(walletCardApportionDetailList);
-			 walletApportionReturnModel.setTransactionId(transactionId);
+			 walletApportionReturnModel.setTransactionId(returnEntry.getOrderEntry().getTransactionID());
 			 walletApportionReturnModel.setType("RETURN");
 			if(qcResponseStatus.contains("PENDING")){
         	 walletApportionReturnModel.setStatus("PENDING");
@@ -538,7 +452,6 @@ public class AutoRefundInitiateAction extends AbstractProceduralAction<OrderProc
 			
 			DecimalFormat decimalFormat =new DecimalFormat("#.00");
 			AbstractOrderEntryModel abstractOrderEntryModel =returnEntry.getOrderEntry();
-			
 			 if(null != abstractOrderEntryModel && null != abstractOrderEntryModel.getWalletApportionPaymentInfo()){
    			 for(WalletCardApportionDetailModel cardApportionDetail : abstractOrderEntryModel.getWalletApportionPaymentInfo().getWalletCardList()){
    				 double qcCliqCashAmt =0.0D;
