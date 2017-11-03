@@ -11,7 +11,7 @@
 
 				<div class="modal-body">
 					<button type="button" class="close" data-dismiss="modal"
-						aria-label="Close">
+						aria-label="Close" onclick="hideRspShowRss();">
 						<span aria-hidden="true">&times;</span>
 					</button>
 

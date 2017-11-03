@@ -2142,7 +2142,7 @@ public class AccountPageController extends AbstractMplSearchPageController
 						scheduleDatesEmpty = true;
 					}
 				}
-
+				model.addAttribute("disableRsp", Boolean.FALSE);
 				model.addAttribute(ModelAttributetConstants.SCHEDULE_TIMESLOTS, timeSlots);
 				model.addAttribute(ModelAttributetConstants.RETURN_DATES, returnableDates);
 				model.addAttribute(ModelAttributetConstants.RETURN_SCHEDULE_INFO, scheduleDatesEmpty);
