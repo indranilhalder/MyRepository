@@ -77513,16 +77513,22 @@ a.pageNo.active{
     border-radius: 50%;
     color: #fff;
 }
-.next-page span{
+.next-page span,
+.next-block a span
+{
 	color:#a9133d;
+	/* font-weight: bold; */
 }
 .prev-page{
 	color:#a9133d;
+	/* font-weight: bold; */
 }
 .total-pagecount{
 	position: absolute;
     left: 2%;
     top: 27px;
+    float: left;
+    top: 26px;
 }
 @media (max-width: 767px){
 .bottom-pagination.pagination-search{
