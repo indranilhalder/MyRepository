@@ -27,17 +27,23 @@
 				</div>
 				</c:if>
 			</div>
-			<div class="selectReturnMethod scheduled col-md-12 col-sm-12">
-				<div class="selectRadio col-md-2 col-sm-2 col-xs-2">
-						<form:radiobutton id="QuickDrop" onclick="changeRadioColor('scheduled')"
-						class="radioButton" value="schedule" name="returnMethod" path="returnMethod" />
+			<c:set var="slotPresent" value="false"></c:set>
+			<c:if test="${returnDates.size()>0}">
+				<c:set var="slotPresent" value="true"></c:set>
+			</c:if>
+			<c:if test="${disableRsp ne true && slotPresent eq 'true'}">
+				<div class="selectReturnMethod scheduled col-md-12 col-sm-12">
+					<div class="selectRadio col-md-2 col-sm-2 col-xs-2">
+							<form:radiobutton id="QuickDrop" onclick="changeRadioColor('scheduled')"
+							class="radioButton" value="schedule" name="returnMethod" path="returnMethod" />
+					</div>
+					<div class="col-md-10 col-sm-10 col-xs-10">
+						<b><spring:theme code="text.order.returns.schedulepickup"/></b> <br /> 
+						<span><spring:theme code="text.order.returns.pickedupfromaddress"/></span>
+					</div>
 				</div>
-				<div class="col-md-10 col-sm-10 col-xs-10">
-					<b><spring:theme code="text.order.returns.schedulepickup"/></b> <br /> 
-					<span><spring:theme code="text.order.returns.pickedupfromaddress"/></span>
-				</div>
-			</div>
-			<div class="selectReturnMethod self col-md-12 col-sm-12">
+			</c:if>
+			<div class="selectReturnMethod self col-md-12 col-sm-12" <c:if test="${disableRsp eq false && slotPresent eq 'true'}">style="display:none"</c:if>>
 				<div class="selectRadio col-md-2 col-sm-2 col-xs-2">
 
 						<form:radiobutton id="QuickDrop" onclick="changeRadioColor('self')"
@@ -155,7 +161,7 @@
 		</div>
 		</c:if> 
 		<!-- Scheduled Pickup -->
-
+<c:if test="${disableRsp ne true && slotPresent eq 'true'}"> <!-- TPR 7140  -->
 		<div class="col-md-9 scheduledPickup">
 			<div class="col-md-6 col-sm-6 col-xs-12">
 				<div class="col-md-12 col-xs-12">
@@ -249,11 +255,11 @@
 				</c:if>
 			</div>
 		</div>
-
+</c:if>
 
 		<!-- self Courier -->
 
-		<div class="col-md-9 selfCourier">
+		<div class="col-md-9 selfCourier" <c:if test="${disableRsp eq false && slotPresent eq true}">style="display:none"</c:if>>
 			<b><spring:theme code="text.order.returns.selfcourier"/> </b><br/><br />
 			<div class="col-md-12 selfCourierArea">
 				<div class="col-md-2 col-xs-12 col-sm-2">
@@ -314,6 +320,14 @@
 	</c:choose>
 
 </div>
+<c:choose>
+<c:when test="${disableRsp eq true || slotPresent eq 'false'}">
+	<span id="hideRsp" style="display:none">true</span>
+</c:when>
+<c:otherwise>
+	<span id="hideRsp" style="display:none">false</span>
+</c:otherwise>
+</c:choose>
 <style>
 .firstTataCliq span{
 	margin-bottom: -4px !important;

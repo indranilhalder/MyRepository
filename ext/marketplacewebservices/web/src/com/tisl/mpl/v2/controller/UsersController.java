@@ -7333,14 +7333,82 @@ public class UsersController extends BaseCommerceController
 	public ReturnPincodeDTO returnPincodeServiceability(@RequestParam final String pincode, @RequestParam final String orderCode,
 			@RequestParam final String transactionId) throws EtailNonBusinessExceptions
 	{
-
+		final OrderData subOrderDetails = mplCheckoutFacade.getOrderDetailsForCode(orderCode);
+		final List<OrderEntryData> subOrderEntries = subOrderDetails.getEntries();
+		OrderEntryData orderEntry = new OrderEntryData();
 		final ReturnPincodeDTO returnPincodeDTO = new ReturnPincodeDTO();
+		String sellerRichAttrOfQuickDrop = "";
+		String productRichAttrOfQuickDrop = "";
+		String ussid = "";
+		boolean isFineJew = false;
 
 		ReturnPincodeDTO returnPincodeAvailDTO = null;
-
+		final ReturnModesWsDTO returnmodes = new ReturnModesWsDTO();
 		try
 		{
 
+			for (final OrderEntryData entry : subOrderEntries)
+			{
+				if (entry.getTransactionId().equalsIgnoreCase(transactionId.trim()))
+				{
+					orderEntry = entry;
+					final ProductModel productModel = getMplOrderFacade().getProductForCode(orderEntry.getProduct().getCode());
+					List<RichAttributeModel> productRichAttributeModel = null;
+					if (null != productModel && productModel.getRichAttribute() != null)
+					{
+						productRichAttributeModel = (List<RichAttributeModel>) productModel.getRichAttribute();
+						if (productRichAttributeModel != null && productRichAttributeModel.get(0).getReturnAtStoreEligible() != null)
+						{
+							productRichAttrOfQuickDrop = productRichAttributeModel.get(0).getReturnAtStoreEligible().toString();
+						}
+					}
+
+					if (productModel.getProductCategoryType().equalsIgnoreCase(MarketplacecommerceservicesConstants.FINEJEWELLERY))
+					{
+						isFineJew = true;
+						final List<JewelleryInformationModel> jewelleryInfo = jewelleryService.getJewelleryInfoByUssid(orderEntry
+								.getSelectedUssid());
+						ussid = (CollectionUtils.isNotEmpty(jewelleryInfo)) ? jewelleryInfo.get(0).getPCMUSSID() : "";
+
+						LOG.debug("PCMUSSID FOR JEWELLERY :::::::::: " + "for " + orderEntry.getSelectedUssid() + " is "
+								+ jewelleryInfo.get(0).getPCMUSSID());
+					}
+					else
+					{
+						ussid = orderEntry.getSelectedUssid();
+					}
+
+					final List<SellerInformationModel> sellerInfo = (List<SellerInformationModel>) productModel
+							.getSellerInformationRelator();
+
+					for (final SellerInformationModel sellerInformationModel : sellerInfo)
+					{
+						/* if (sellerInformationModel.getSellerArticleSKU().equals(orderEntry.getSelectedUssid())) */
+						if (sellerInformationModel.getSellerArticleSKU().equals(ussid))
+						{
+							List<RichAttributeModel> sellerRichAttributeModel = null;
+							if (sellerInformationModel.getRichAttribute() != null)
+							{
+								sellerRichAttributeModel = (List<RichAttributeModel>) sellerInformationModel.getRichAttribute();
+								if (sellerRichAttributeModel != null
+										&& sellerRichAttributeModel.get(0).getReturnAtStoreEligible() != null)
+								{
+									sellerRichAttrOfQuickDrop = sellerRichAttributeModel.get(0).getReturnAtStoreEligible().toString();
+								}
+							}
+						}
+					}
+					if (StringUtils.isNotEmpty(productRichAttrOfQuickDrop) && StringUtils.isNotEmpty(sellerRichAttrOfQuickDrop))
+					{
+						if ((productRichAttrOfQuickDrop.equalsIgnoreCase("yes") && sellerRichAttrOfQuickDrop.equalsIgnoreCase("yes")))
+						{
+							returnmodes.setQuickDrop(true);
+						}
+					}
+					break;
+
+				}
+			}
 			final OrderData orderDetails = orderFacade.getOrderDetailsForCode(orderCode);
 
 			boolean returnLogisticsCheck = true;
@@ -7363,7 +7431,13 @@ public class UsersController extends BaseCommerceController
 				if (response.getIsReturnLogisticsAvailable().equalsIgnoreCase("N"))
 				{
 					returnLogisticsCheck = false;
-
+					returnmodes.setSchedulePickup(false);
+					returnmodes.setSelfCourier(true);
+					if (isFineJew)
+					{
+						returnmodes.setSelfCourier(false);
+					}
+					returnPincodeDTO.setReturnModes(returnmodes);
 				}
 
 				if (!returnLogisticsCheck)
@@ -7388,6 +7462,7 @@ public class UsersController extends BaseCommerceController
 
 		catch (final EtailNonBusinessExceptions e)
 		{
+			LOG.error("in EtailNonBusinessExceptions");
 			ExceptionUtil.etailNonBusinessExceptionHandler(e);
 			if (null != e.getErrorMessage())
 			{
@@ -7402,6 +7477,7 @@ public class UsersController extends BaseCommerceController
 
 		catch (final EtailBusinessExceptions e)
 		{
+			LOG.error("in EtailBusinessExceptions");
 			ExceptionUtil.etailBusinessExceptionHandler(e, null);
 			if (null != e.getErrorMessage())
 			{
@@ -7445,8 +7521,33 @@ public class UsersController extends BaseCommerceController
 		boolean showRevSeal = false;
 		final RevSealJwlryDataWsDTO revSealFrJwlry = new RevSealJwlryDataWsDTO();
 		final ReturnModesWsDTO returnModes = new ReturnModesWsDTO();
+		final OrderData subOrderDetails = mplCheckoutFacade.getOrderDetailsForCode(orderCode);
+		final List<OrderEntryData> subOrderEntries = subOrderDetails.getEntries();
+		String sellerRichAttrOfQuickDrop = "";
+		String productRichAttrOfQuickDrop = "";
 		try
 		{
+			//TPR-7140
+			//Initial on load conditons
+			for (final OrderEntryData entry : subOrderEntries)
+			{
+				if (entry.getTransactionId().equalsIgnoreCase(transactionId.trim()))
+				{
+					final List<String> returnableDates = cancelReturnFacade.getReturnableDates(entry);
+					if (CollectionUtils.isNotEmpty(returnableDates))
+					{
+						returnModes.setSchedulePickup(true);
+						returnModes.setSelfCourier(false);
+					}
+					else
+					{
+						returnModes.setSchedulePickup(false);
+						returnModes.setSelfCourier(true);
+					}
+					break;
+				}
+			}
+
 			final List<OrderProductWsDTO> orderproductWsDto = getOrderDetailsFacade.getOrderdetailsForApp(orderCode, transactionId,
 					returnCancelFlag);
 			if (orderproductWsDto.size() > 0)
@@ -7456,9 +7557,10 @@ public class UsersController extends BaseCommerceController
 				returnReasonData = mplOrderFacade.getReturnReasonForOrderItem(returnCancelFlag);
 
 				//TPR-4134 starts
-				returnModes.setSelfCourier(true);
-				returnModes.setSchedulePickup(true);
-				returnModes.setQuickDrop(true);
+
+
+
+				//	returnModes.setQuickDrop(true);
 				returnRequestDTO.setShowReverseSealFrJwlry(MarketplacecommerceservicesConstants.NO);
 
 				if (StringUtils.isNotEmpty(revSealSellerList))
@@ -7477,20 +7579,64 @@ public class UsersController extends BaseCommerceController
 						}
 					}
 				}
+
 				for (final OrderProductWsDTO orderEntryDto : orderproductWsDto)
 				{
-					final ProductModel productModel = getMplOrderFacade().getProductForCode(orderEntryDto.getProductcode());
-					if (null != productModel
-							&& MarketplacecommerceservicesConstants.FINEJEWELLERY
-									.equalsIgnoreCase(productModel.getProductCategoryType()))
+
+					if (orderEntryDto.getTransactionId().equalsIgnoreCase(transactionId.trim()))
 					{
-						isFineJew = true;
-						if (showRevSeal)
+						final ProductModel productModel = getMplOrderFacade().getProductForCode(orderEntryDto.getProductcode());
+						List<RichAttributeModel> productRichAttributeModel = null;
+						if (null != productModel && productModel.getRichAttribute() != null)
 						{
-							returnRequestDTO.setShowReverseSealFrJwlry(MarketplacecommerceservicesConstants.YES);
+							productRichAttributeModel = (List<RichAttributeModel>) productModel.getRichAttribute();
+							if (productRichAttributeModel != null && productRichAttributeModel.get(0).getReturnAtStoreEligible() != null)
+							{
+								productRichAttrOfQuickDrop = (productRichAttributeModel.get(0).getReturnAtStoreEligible().toString());
+							}
 						}
-						returnModes.setSelfCourier(false);
-						returnRequestDTO.setReverseSealFrJwlry(revSealFrJwlry);
+						final List<SellerInformationModel> sellerInfo = (List<SellerInformationModel>) productModel
+								.getSellerInformationRelator();
+
+						for (final SellerInformationModel sellerInformationModel : sellerInfo)
+						{
+							/* if (sellerInformationModel.getSellerArticleSKU().equals(orderEntry.getSelectedUssid())) */
+							if (sellerInformationModel.getSellerArticleSKU().equals(orderEntryDto.getUSSID()))
+							{
+								List<RichAttributeModel> sellerRichAttributeModel = null;
+								if (sellerInformationModel.getRichAttribute() != null)
+								{
+									sellerRichAttributeModel = (List<RichAttributeModel>) sellerInformationModel.getRichAttribute();
+									if (sellerRichAttributeModel != null
+											&& sellerRichAttributeModel.get(0).getReturnAtStoreEligible() != null)
+									{
+										sellerRichAttrOfQuickDrop = sellerRichAttributeModel.get(0).getReturnAtStoreEligible().toString();
+									}
+								}
+							}
+							if (StringUtils.isNotEmpty(productRichAttrOfQuickDrop) && StringUtils.isNotEmpty(sellerRichAttrOfQuickDrop))
+							{
+								if ((productRichAttrOfQuickDrop.equalsIgnoreCase("yes") && sellerRichAttrOfQuickDrop
+										.equalsIgnoreCase("yes")))
+								{
+									returnModes.setQuickDrop(true);
+								}
+							}
+
+						}
+						//break;
+						if (MarketplacecommerceservicesConstants.FINEJEWELLERY.equalsIgnoreCase(productModel.getProductCategoryType()))
+						{
+							isFineJew = true;
+
+							if (showRevSeal)
+							{
+								returnRequestDTO.setShowReverseSealFrJwlry(MarketplacecommerceservicesConstants.YES);
+							}
+							returnModes.setSelfCourier(false);
+							returnRequestDTO.setReverseSealFrJwlry(revSealFrJwlry);
+							break;
+						}
 						break;
 					}
 				}
@@ -7567,6 +7713,7 @@ public class UsersController extends BaseCommerceController
 			OrderEntryData orderEntry = new OrderEntryData();
 			List<OrderEntryData> returnOrderEntry = new ArrayList<OrderEntryData>();
 			final Map<String, List<OrderEntryData>> returnProductMap = new HashMap<>();
+
 			for (final OrderEntryData entry : subOrderEntries)
 			{
 				if (entry.getTransactionId().equalsIgnoreCase(transactionId.trim()))
@@ -7762,7 +7909,14 @@ public class UsersController extends BaseCommerceController
 		final ReturnInfoData returnInfoData = new ReturnInfoData();
 		final MplUserResultWsDto output = new MplUserResultWsDto();
 		final ReturnItemAddressData returnAddrData = new ReturnItemAddressData();
+		final ReturnModesWsDTO returnModes = new ReturnModesWsDTO();
+		String productRichAttrOfQuickDrop = "";
+		String sellerRichAttrOfQuickDrop = "";
+		//Default values
+		returnModes.setSchedulePickup(true);
+		returnModes.setSelfCourier(true);
 		boolean isFineJwlry = false;
+		String ussid = "";
 		try
 		{
 			final CustomerData customerData = customerFacade.getCurrentCustomer();
@@ -7775,8 +7929,62 @@ public class UsersController extends BaseCommerceController
 				if (entry.getTransactionId().equalsIgnoreCase(transactionId))
 				{
 					subOrderEntry = entry;
+					final ProductModel productModel = getMplOrderFacade().getProductForCode(subOrderEntry.getProduct().getCode());
+					List<RichAttributeModel> productRichAttributeModel = null;
+					if (null != productModel && productModel.getRichAttribute() != null)
+					{
+						productRichAttributeModel = (List<RichAttributeModel>) productModel.getRichAttribute();
+						if (productRichAttributeModel != null && productRichAttributeModel.get(0).getReturnAtStoreEligible() != null)
+						{
+							productRichAttrOfQuickDrop = productRichAttributeModel.get(0).getReturnAtStoreEligible().toString();
+						}
+					}
+
+					if (productModel.getProductCategoryType().equalsIgnoreCase(MarketplacecommerceservicesConstants.FINEJEWELLERY))
+					{
+						final List<JewelleryInformationModel> jewelleryInfo = jewelleryService.getJewelleryInfoByUssid(subOrderEntry
+								.getSelectedUssid());
+						ussid = (CollectionUtils.isNotEmpty(jewelleryInfo)) ? jewelleryInfo.get(0).getPCMUSSID() : "";
+
+						LOG.debug("PCMUSSID FOR JEWELLERY :::::::::: " + "for " + subOrderEntry.getSelectedUssid() + " is "
+								+ jewelleryInfo.get(0).getPCMUSSID());
+					}
+					else
+					{
+						ussid = subOrderEntry.getSelectedUssid();
+					}
+
+					final List<SellerInformationModel> sellerInfo = (List<SellerInformationModel>) productModel
+							.getSellerInformationRelator();
+
+					for (final SellerInformationModel sellerInformationModel : sellerInfo)
+					{
+						/* if (sellerInformationModel.getSellerArticleSKU().equals(orderEntry.getSelectedUssid())) */
+						if (sellerInformationModel.getSellerArticleSKU().equals(ussid))
+						{
+							List<RichAttributeModel> sellerRichAttributeModel = null;
+							if (sellerInformationModel.getRichAttribute() != null)
+							{
+								sellerRichAttributeModel = (List<RichAttributeModel>) sellerInformationModel.getRichAttribute();
+								if (sellerRichAttributeModel != null
+										&& sellerRichAttributeModel.get(0).getReturnAtStoreEligible() != null)
+								{
+									sellerRichAttrOfQuickDrop = sellerRichAttributeModel.get(0).getReturnAtStoreEligible().toString();
+								}
+							}
+						}
+
+					}
+					if (StringUtils.isNotEmpty(productRichAttrOfQuickDrop) && StringUtils.isNotEmpty(sellerRichAttrOfQuickDrop))
+					{
+						if ((productRichAttrOfQuickDrop.equalsIgnoreCase("yes") && sellerRichAttrOfQuickDrop.equalsIgnoreCase("yes")))
+						{
+							returnModes.setQuickDrop(true);
+						}
+					}
 					break;
 				}
+
 			}
 			if (null != subOrderEntry.getProduct()
 					&& MarketplacecommerceservicesConstants.FINEJEWELLERY.equalsIgnoreCase(subOrderEntry.getProduct()
@@ -7827,6 +8035,10 @@ public class UsersController extends BaseCommerceController
 						{
 							returnLogisticsCheck = false;
 							output.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
+							returnModes.setSelfCourier(true);//TPR-7140
+							returnModes.setSchedulePickup(false);
+
+
 						}
 						else if (response.getIsReturnLogisticsAvailable().equalsIgnoreCase("Y"))
 						{
@@ -7837,6 +8049,7 @@ public class UsersController extends BaseCommerceController
 				}
 				if (!returnLogisticsCheck)
 				{
+					output.setReturnModes(returnModes);
 					return output;
 				}
 				final String returnPickupDate = returnData.getScheduleReturnDate();
@@ -7911,6 +8124,10 @@ public class UsersController extends BaseCommerceController
 				if (!cancellationStatus)
 				{
 					output.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
+					LOG.error("*****implementReturnItem status error*****");
+					returnModes.setSchedulePickup(true);
+					returnModes.setSelfCourier(false);
+					output.setReturnModes(returnModes);
 					return output;
 				}
 				else
@@ -7946,6 +8163,19 @@ public class UsersController extends BaseCommerceController
 					LOG.error("Eception occurred while doing return in quickDrop Mehod for order " + orderCode + " exception is "
 							+ e.getMessage());
 					output.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
+					final List<String> returnableDates = cancelReturnFacade.getReturnableDates(subOrderEntry);
+					if (CollectionUtils.isNotEmpty(returnableDates))
+					{
+						returnModes.setSchedulePickup(true);
+						returnModes.setSelfCourier(false);
+					}
+					else
+					{
+						returnModes.setSchedulePickup(false);
+						returnModes.setSelfCourier(true);
+					}
+					returnModes.setQuickDrop(true);
+					output.setReturnModes(returnModes);//TPR-7140
 					return output;
 				}
 			}
@@ -8053,11 +8283,14 @@ public class UsersController extends BaseCommerceController
 				if (!cancellationStatusForSelfShip)
 				{
 					output.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
+					returnModes.setSelfCourier(true);
+					returnModes.setSchedulePickup(false);
 				}
 				else
 				{
 					output.setStatus(MarketplacecommerceservicesConstants.SUCCESS_FLAG);
 				}
+				output.setReturnModes(returnModes);//TPR-7140
 				return output;
 			}
 		}
