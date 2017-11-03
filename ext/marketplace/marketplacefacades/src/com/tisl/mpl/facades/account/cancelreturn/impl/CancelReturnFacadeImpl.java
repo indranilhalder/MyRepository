@@ -366,8 +366,7 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 
 				if (CollectionUtils.isNotEmpty(orderLineRequest.getOrderLine()))
 				{
-					/*cancelOrRetrnanable = cancelOrderInOMS(orderLineRequest, cancelOrRetrnanable, isReturn);*/
-					cancelOrRetrnanable = true;
+					cancelOrRetrnanable = cancelOrderInOMS(orderLineRequest, cancelOrRetrnanable, isReturn);
 				
 				}
 			}
@@ -466,10 +465,8 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 				else
 				{
 					//TISPRD-1641
-					/*ticketCreationStatus = createTicketInCRM(subOrderDetails, subOrderEntry, ticketTypeCode, reasonCode, refundType,
-							ussid, customerData, subOrderModel, returnLogisticsCheck);*/
-					
-					ticketCreationStatus = true;
+					ticketCreationStatus = createTicketInCRM(subOrderDetails, subOrderEntry, ticketTypeCode, reasonCode, refundType,
+							ussid, customerData, subOrderModel, returnLogisticsCheck);
 					
 				}
 				//TISRLEE-1703 end
@@ -605,8 +602,7 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 
 				if (CollectionUtils.isNotEmpty(orderLineRequest.getOrderLine()))
 				{
-					/*cancelOrRetrnanable = cancelOrderInOMS(orderLineRequest, cancelOrRetrnanable, isReturn);*/
-					cancelOrRetrnanable = true;
+					cancelOrRetrnanable = cancelOrderInOMS(orderLineRequest, cancelOrRetrnanable, isReturn);
 				}
 
 

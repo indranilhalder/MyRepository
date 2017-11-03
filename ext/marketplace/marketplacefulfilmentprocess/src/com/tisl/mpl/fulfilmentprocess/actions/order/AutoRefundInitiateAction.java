@@ -48,6 +48,7 @@ import com.tisl.mpl.core.model.WalletApportionReturnInfoModel;
 import com.tisl.mpl.core.model.WalletCardApportionDetailModel;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.facades.product.data.ReturnReasonData;
+import com.tisl.mpl.marketplacecommerceservices.service.MplJusPayRefundService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplNotificationService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplOrderService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplPaymentService;
@@ -90,6 +91,9 @@ public class AutoRefundInitiateAction extends AbstractProceduralAction<OrderProc
 	@Autowired
 	private ReturnService returnService;
 
+	
+	@Autowired
+	private MplJusPayRefundService mplJusPayRefundService;
 
 	@Override
 	public void executeAction(final OrderProcessModel process)
@@ -179,7 +183,7 @@ public class AutoRefundInitiateAction extends AbstractProceduralAction<OrderProc
 													&& orderModel.getSplitModeInfo().equalsIgnoreCase("Split"))
 											{
 												//Start Added the code for QC
-												try
+												/*try
 												{
 													LOG.debug("Step :1 getting the consignment for ORDER ...");
 													if (CollectionUtils.isNotEmpty(returnEntry.getOrderEntry().getConsignmentEntries()))
@@ -200,7 +204,7 @@ public class AutoRefundInitiateAction extends AbstractProceduralAction<OrderProc
 													e.getMessage();
 													LOG.error("AutoRefundInitiateAction: Exception is getting while QC responce for Order #"
 															+ orderModel.getCode());
-												}
+												}*/
 												try
 												{
 													LOG.error(
@@ -228,6 +232,7 @@ public class AutoRefundInitiateAction extends AbstractProceduralAction<OrderProc
 													final List<WalletCardApportionDetailModel> walletCardApportionDetailModelList = qcCallforReturnRefund(orderModel,
 															(RefundEntryModel) returnEntry);
 													result = constructQuickCilverOrderEntry(walletCardApportionDetailModelList,returnEntry,orderModel);
+													
 													//End Added the code for QC
 												}
 												catch (final Exception e)
@@ -236,6 +241,17 @@ public class AutoRefundInitiateAction extends AbstractProceduralAction<OrderProc
 													e.getMessage();
 													LOG.error("AutoRefundInitiateAction: Exception is getting while QC responce for Order #"
 															+ orderModel.getCode());
+							  						try{
+							  							PaymentTransactionModel paymentTransactionModel= null;
+							  							ConsignmentStatus newStatus =  ConsignmentStatus.REFUND_IN_PROGRESS;
+							  							double refundAmount =0.0D;
+							  							refundAmount = calculateSplitQcRefundAmount(returnEntry.getOrderEntry());
+							  						     mplJusPayRefundService.makeRefundOMSCall(returnEntry.getOrderEntry(), paymentTransactionModel, Double.valueOf(refundAmount), newStatus, null);
+							               	 }catch(Exception ex){
+							               			ex.getMessage();
+							               			LOG.error("Quck Cilver giving response code  Order Id :"+orderModel.getCode());
+							               	} 
+
 												}
 											}
 											else
@@ -380,6 +396,7 @@ public class AutoRefundInitiateAction extends AbstractProceduralAction<OrderProc
 	{
 		
          String result = "FAILURE";
+         PaymentTransactionModel paymentTransactionModel= null;
          final OrderEntryModel abstractOrderEntryModel = (OrderEntryModel) returnEntry.getOrderEntry();
 		   //final AbstractOrderEntryModel abstractOrderEntryModel = mplOrderService.getEntryModel(transactionId);
 		   final List<WalletCardApportionDetailModel> walletCardApportionDetailList =new ArrayList<WalletCardApportionDetailModel>();
@@ -414,7 +431,7 @@ public class AutoRefundInitiateAction extends AbstractProceduralAction<OrderProc
 						walletCardApportionDetailModel.setTrnsStatus(walletCardApportionDetailModelObj.getTrnsStatus());
 						walletCardApportionDetailList.add(walletCardApportionDetailModel);
 						qcResponseStatus.add(walletCardApportionDetailModelObj.getTrnsStatus());
-						createPaymentEntryForQCTransaction(subOrderModel,walletCardApportionDetailModel);
+						paymentTransactionModel = createPaymentEntryForQCTransaction(subOrderModel,walletCardApportionDetailModel);
 				 }
 			 }
 			 walletApportionReturnModel.setWalletCardList(walletCardApportionDetailList);
@@ -429,6 +446,30 @@ public class AutoRefundInitiateAction extends AbstractProceduralAction<OrderProc
 			modelService.save(walletApportionReturnModel);
 			abstractOrderEntryModel.setWalletApportionReturnInfo(walletApportionReturnModel);
 			modelService.save(abstractOrderEntryModel);
+			
+  					ConsignmentStatus newStatus = null;
+  						if (StringUtils.equalsIgnoreCase(result,MarketplacecommerceservicesConstants.SUCCESS))
+  						{
+  							newStatus = ConsignmentStatus.ORDER_CANCELLED;
+  						}
+  						else if (StringUtils.equalsIgnoreCase(result, "PENDING"))
+  						{
+  							newStatus = ConsignmentStatus.REFUND_INITIATED;
+  						}
+  						else
+  						{
+  							newStatus = ConsignmentStatus.REFUND_IN_PROGRESS;
+  						}
+
+  						//modelService.save(abstractOrderEntryModel);
+  						LOG.debug("****** initiateRefund : Step 3  >>Payment transaction mode is not null >> Calling OMS with status as received from JUSPAY "
+  								+ newStatus.getCode());
+  						try{
+  						     mplJusPayRefundService.makeRefundOMSCall(abstractOrderEntryModel, paymentTransactionModel, Double.valueOf(calculateSplitQcRefundAmount(abstractOrderEntryModel)), newStatus, null);
+               	 }catch(Exception e){
+               			e.getMessage();
+               			LOG.error("Quck Cilver giving response code  Order Id :"+subOrderModel.getParentReference().getCode());
+               	} 
 			return result;
 		}
 
@@ -472,14 +513,6 @@ public class AutoRefundInitiateAction extends AbstractProceduralAction<OrderProc
    				 }
    			 }
    		 }
-			
-			/*final QCCreditRequest qcCreditRequest = new QCCreditRequest();
-			qcCreditRequest.setInvoiceNumber(orderModel.getParentReference().getCode());
-			qcCreditRequest.setAmount(returnEntry.getAmountForQc().toString());
-			qcCreditRequest.setNotes("Cancel for " + returnEntry.getAmountForQc().toString());
-			qcRedeeptionResponse = mplWalletServices.qcCredit(walletId, qcCreditRequest);*/
-
-
 		}
 		catch (final Exception e)
 		{
@@ -694,7 +727,7 @@ public class AutoRefundInitiateAction extends AbstractProceduralAction<OrderProc
 		return walletCardApportionDetailModel;
 	}
 	
-private void createPaymentEntryForQCTransaction(final OrderModel subOrderModel,final WalletCardApportionDetailModel walletCardApportionDetailModel){
+private PaymentTransactionModel createPaymentEntryForQCTransaction(final OrderModel subOrderModel,final WalletCardApportionDetailModel walletCardApportionDetailModel){
 		
 		final PaymentTransactionModel paymentTransactionModel = modelService.create(PaymentTransactionModel.class);
 			paymentTransactionModel.setCode(walletCardApportionDetailModel.getTransactionId().toString());
@@ -732,7 +765,7 @@ private void createPaymentEntryForQCTransaction(final OrderModel subOrderModel,f
   			paymentTransactionModel.setEntries(entries);
   			modelService.save(paymentTransactionModel);
   			LOG.debug("Payment Transaction created SuccessFully......:");
-
+     return paymentTransactionModel;
 	}
 	
 
@@ -811,5 +844,23 @@ private void createPaymentEntryForQCTransaction(final OrderModel subOrderModel,f
 	public void setMplPaymentService(final MplPaymentService mplPaymentService)
 	{
 		this.mplPaymentService = mplPaymentService;
+	}
+	
+	/**
+	 * @return the mplJusPayRefundService
+	 */
+	public MplJusPayRefundService getMplJusPayRefundService()
+	{
+		return mplJusPayRefundService;
+	}
+
+
+	/**
+	 * @param mplJusPayRefundService
+	 *           the mplJusPayRefundService to set
+	 */
+	public void setMplJusPayRefundService(final MplJusPayRefundService mplJusPayRefundService)
+	{
+		this.mplJusPayRefundService = mplJusPayRefundService;
 	}
 }
