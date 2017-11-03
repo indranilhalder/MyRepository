@@ -321,10 +321,12 @@ public class CartOrderThresholdDiscountPromotion extends GeneratedCartOrderThres
 							if (customerWalletDetailResponse.getResponseCode().intValue() == 0)
 							{
 								orderSubtotalAfterDiscounts -= customerWalletDetailResponse.getWallet().getBalance().doubleValue();
-								if (orderSubtotalAfterDiscounts < threshold.doubleValue())
+								if (orderSubtotalAfterDiscounts <= threshold.doubleValue())
 								{
+									orderSubtotalAfterDiscounts += customerWalletDetailResponse.getWallet().getBalance().doubleValue();
 									checkWalletUsed = true;
 								}
+
 							}
 						}
 						/**

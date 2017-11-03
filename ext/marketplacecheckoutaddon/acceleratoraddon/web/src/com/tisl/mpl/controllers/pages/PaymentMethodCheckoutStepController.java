@@ -72,6 +72,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -6173,8 +6174,16 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 				if (balBucketwise.getResponseCode() == Integer.valueOf(0) && null != balBucketwise.getWallet().getBalance())
 				{
 					final Double WalletAmt = Double.valueOf((df.format(balBucketwise.getWallet().getBalance().doubleValue())));
-					final Double totalAmt = cart.getTotalPriceWithConv();
+					
+					double totalCartAmt = cart.getTotalPrice().doubleValue();
+					
+					System.out.println("totalAmt"+totalCartAmt);
 
+					totalCartAmt += (null != cart.getScheduleDelCharge() ? cart.getScheduleDelCharge().doubleValue() : 0)
+							+ (null != cart.getDeliveryCost() ? cart.getDeliveryCost().doubleValue() : 0);
+
+					System.out.println("**************  totalAmt"+totalCartAmt);
+					
 					if (Double.parseDouble("" + WalletAmt) >= Double.parseDouble("" + totalAmt))
 					{
 
