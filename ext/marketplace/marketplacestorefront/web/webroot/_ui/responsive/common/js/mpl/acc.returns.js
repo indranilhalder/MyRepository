@@ -1114,6 +1114,7 @@ function hideRspShowRss(){
 		$(".scheduled").hide();
 		changeRadioColor('self');
 		$("input[name='returnMethod']").prop( "checked", false );
+		$(".selectReturnMethod.self").show();
 		$(".selectReturnMethod.self input[name='returnMethod']").prop( "checked", true );
 	}
 }
