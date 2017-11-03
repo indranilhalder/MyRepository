@@ -279,12 +279,23 @@ public class MplCommercePlaceOrderStrategyImpl implements MplCommercePlaceOrderS
 					//getPromotionsService().transferPromotionsToOrder(cartModel, orderModel, false);
 
 					//Changes for CAR-262 + INC_10922, Update order for Promotion & Coupon
-					updateOrderForPromotion(cartModel, orderModel);
-					updateOrderForCoupon(cartModel, orderModel);
+					if(null !=orderModel.getIsEGVCart() && orderModel.getIsEGVCart().booleanValue()){
+						LOG.info("Igonre Promotions for EGV Order");
+					}else {
+						updateOrderForPromotion(cartModel, orderModel);
+						updateOrderForCoupon(cartModel, orderModel);
+					}
 
 					final Double subTotal = orderModel.getSubtotal();
 					LOG.info("order subTotal is -- " + subTotal);
-					final boolean deliveryCostPromotionApplied = isDeliveryCostPromotionApplied(orderModel);
+					 boolean deliveryCostPromotionApplied = false;
+					if(null !=orderModel.getIsEGVCart() && orderModel.getIsEGVCart().booleanValue()){
+						LOG.info("Igonre Promotions for EGV Order");
+					}else {
+						  deliveryCostPromotionApplied = isDeliveryCostPromotionApplied(orderModel);
+					}
+
+					
 					Double totalPrice = Double.valueOf(0.0);
 
 

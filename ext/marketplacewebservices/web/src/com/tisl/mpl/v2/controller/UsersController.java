@@ -6869,13 +6869,11 @@ public class UsersController extends BaseCommerceController
 				{
 					//TPR-4461 STARTS HERE WHEN ORDER MODEL IS NULL
 					
-					 // Buying Of EGV  Changes Start 
-					CartModel egvCart = mplEGVCartService.getEGVCartModel(cartGuid);
-					if (null != egvCart && null != egvCart.getIsEGVCart() && egvCart.getIsEGVCart().booleanValue())
+					if (null != cart.getIsEGVCart() && cart.getIsEGVCart().booleanValue())
 					{
 
-						juspayOrderId = createJuspayOrderForEGV(firstName, lastName, country, state, city, pincode,
-								cardSaved, sameAsShipping, egvCart.getGuid(), returnUrlBuilder, paymentAddressLine1, paymentAddressLine2,
+						juspayOrderId = createJuspayOrderForEGV(null,cart,firstName, lastName, country, state, city, pincode,
+								cardSaved, sameAsShipping, cart.getGuid(), returnUrlBuilder, paymentAddressLine1, paymentAddressLine2,
 								paymentAddressLine3, uid);
 						 OrderModel order = getMplCheckoutFacade().placeEGVOrder(cart);
 						if (null != juspayOrderId && null != order)
@@ -7151,7 +7149,7 @@ public class UsersController extends BaseCommerceController
 				if (null != orderModel.getIsEGVCart() && orderModel.getIsEGVCart().booleanValue())
 				{
 
-					juspayOrderId = createJuspayOrderForEGV(firstName, lastName, country, state, city, pincode,
+					juspayOrderId = createJuspayOrderForEGV(orderModel,null,firstName, lastName, country, state, city, pincode,
 							cardSaved, sameAsShipping, orderModel.getGuid(), returnUrlBuilder, paymentAddressLine1, paymentAddressLine2,
 							paymentAddressLine3, uid);
 					// OrderModel order = getMplCheckoutFacade().placeEGVOrder(cart);
@@ -7392,7 +7390,7 @@ public class UsersController extends BaseCommerceController
 		return orderCreateInJusPayWsDto;
 	}
 
-	private String createJuspayOrderForEGV(final String firstName, final String lastName, final String country,
+	private String createJuspayOrderForEGV(OrderModel orderModel,CartModel cart,final String firstName, final String lastName, final String country,
 			final String state, final String city, final String pincode, final String cardSaved, final String sameAsShipping,
 			final String guid, final StringBuilder returnUrlBuilder, final String paymentAddressLine1,
 			final String paymentAddressLine2, final String paymentAddressLine3, final String uid) throws InvalidCartException
@@ -7401,13 +7399,19 @@ public class UsersController extends BaseCommerceController
 		 String juspayOrderId=null;
 		try
 		{
-
-			final CartModel cart = mplEGVCartService.getEGVCartModel(guid);
+			Double amount = Double.valueOf(0.0D);
+			if(null != orderModel){
+				amount=orderModel.getTotalPrice();
+			}else if(null != cart) {
+				amount=cart.getTotalPrice();
+			}
+			
+			
 			LOG.info("::Going to Create Juspay OrderId::");
-			juspayOrderId = getMplPaymentFacade().createJuspayOrder(cart, null, firstName, lastName,
+			juspayOrderId = getMplPaymentFacade().createJuspayOrder(cart, orderModel, firstName, lastName,
 					paymentAddressLine1, paymentAddressLine2, paymentAddressLine3, country, state, city, pincode,
 					cardSaved + MarketplacewebservicesConstants.STRINGSEPARATOR + sameAsShipping, returnUrlBuilder.toString(), uid,
-					MarketplacewebservicesConstants.CHANNEL_MOBILE, cart.getTotalPrice().doubleValue());
+					MarketplacewebservicesConstants.CHANNEL_MOBILE, amount.doubleValue());
 //			final OrderModel order = getMplCheckoutFacade().placeEGVOrder(cart);
 //			if (null != order && null != order.getCode())
 //			{
@@ -8924,19 +8928,20 @@ public class UsersController extends BaseCommerceController
 			throws EtailNonBusinessExceptions, EtailBusinessExceptions, CalculationException
 	{
 		ApplyCliqCashWsDto applyCliqCashWsDto = new ApplyCliqCashWsDto();
-		OrderModel orderModel = null;
-		CartModel cart = mplPaymentWebFacade.findCartAnonymousValues(cartGuid);
+		OrderModel orderModel = getMplPaymentFacade().getOrderByGuid(cartGuid);
+		CartModel cart = null;
 
 		try
 		{
-			if (null != cart)
+			if (null == orderModel)
 			{
+				cart = mplPaymentWebFacade.findCartAnonymousValues(cartGuid);
 				LOG.info("Applying  cliq Cash For Card Guid " + cartGuid);
 				applyCliqCashWsDto = mplCartWebService.applyCLiqCash(cart, null);
 			}
 			else
 			{
-				orderModel = getMplPaymentFacade().getOrderByGuid(cartGuid);
+				//orderModel = getMplPaymentFacade().getOrderByGuid(cartGuid);
 				LOG.info("Applying  cliq Cash For Order Guid " + cartGuid);
 				applyCliqCashWsDto = mplCartWebService.applyCLiqCash(orderModel, null);
 			}
@@ -8978,14 +8983,15 @@ public class UsersController extends BaseCommerceController
 	{
 		LOG.info("Removing cliq Cash ");
 		 ApplyCliqCashWsDto removeCliqCashWsDto = new ApplyCliqCashWsDto();
-		 OrderModel orderModel = null;
-		CartModel cart = mplPaymentWebFacade.findCartAnonymousValues(cartGuid);
+		 OrderModel orderModel = getMplPaymentFacade().getOrderByGuid(cartGuid);
+		CartModel cart = null;
 		try
 		{
 			
 			//  Removing the cliqCash balacne from Cart and Setting SplitModeInfo To JUSPAY
-			if (null != cart)
+			if (null == orderModel)
 			{
+				 cart = mplPaymentWebFacade.findCartAnonymousValues(cartGuid);
 				removeCliqCashWsDto.setDiscount(cart.getTotalDiscounts());
 				if (null != cart.getTotalPrice())
 				{
@@ -9000,8 +9006,7 @@ public class UsersController extends BaseCommerceController
 			}
 			else
 			{
-				orderModel = getMplPaymentFacade().getOrderByGuid(cartGuid);
-				if(null !=orderModel ) {
+			//	orderModel = getMplPaymentFacade().getOrderByGuid(cartGuid);
 					removeCliqCashWsDto.setDiscount(orderModel.getTotalDiscounts());
 					if (null != orderModel.getTotalPrice())
 					{
@@ -9012,7 +9017,6 @@ public class UsersController extends BaseCommerceController
 					getModelService().save(orderModel);
 					getModelService().refresh(orderModel);
 					removeCliqCashWsDto.setStatus(MarketplacecommerceservicesConstants.SUCCESS_FLAG);
-				}
 			}
 
 		}
@@ -9060,13 +9064,13 @@ public class UsersController extends BaseCommerceController
 		LOG.info("Redeeming CLiq Cash Voucher Card Number " + couponCode);
 		boolean customerRegisteredwithQc = false;
 		RedeemCliqVoucherWsDTO redeemCliqVoucherWsDTO = new RedeemCliqVoucherWsDTO();
-		OrderModel orderModel = null;
+		OrderModel orderModel = getMplPaymentFacade().getOrderByGuid(cartGuid);
 		CartModel cart = null;
 		ApplyCliqCashWsDto applyCliqCashWsDto = null;
-		if (null != cartGuid)
-		{
-			cart = mplPaymentWebFacade.findCartAnonymousValues(cartGuid);
-		}
+//		if (null != cartGuid)
+//		{
+//			cart = mplPaymentWebFacade.findCartAnonymousValues(cartGuid);
+//		}
 		try
 		{
 			final CustomerModel currentCustomer = (CustomerModel) userService.getCurrentUser();
@@ -9151,14 +9155,14 @@ public class UsersController extends BaseCommerceController
 							redeemCliqVoucherWsDTO.setAcknowledgement("Congrats!  Money has been added to your Cliq Cash balance");
 							redeemCliqVoucherWsDTO.setIsWalletLimitReached(false);
 							redeemCliqVoucherWsDTO.setStatus(MarketplacecommerceservicesConstants.SUCCESS_FLAG);
-							if (null != cart)
+							if (null == orderModel)
 							{
+								cart = mplPaymentWebFacade.findCartAnonymousValues(cartGuid);
 								applyCliqCashWsDto = mplCartWebService.applyCLiqCash(cart, response.getWallet().getBalance());
 
 							}
 							else if (null != cartGuid)
 							{
-								orderModel = getMplPaymentFacade().getOrderByGuid(cartGuid);
 								applyCliqCashWsDto = mplCartWebService.applyCLiqCash(orderModel, response.getWallet().getBalance());
 							}
 							if (null != applyCliqCashWsDto)

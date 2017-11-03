@@ -3414,7 +3414,7 @@ public class CartsController extends BaseCommerceController
 	{
 		ApplyCouponsDTO applycouponDto = new ApplyCouponsDTO();
 		CartModel cartModel = null;
-		OrderModel orderModel = null;
+		OrderModel orderModel =mplPaymentFacade.getOrderByGuid(cartGuid);
 		try
 		{
 			final StringBuilder logBuilder = new StringBuilder();
@@ -3422,13 +3422,14 @@ public class CartsController extends BaseCommerceController
 
 			//Fetching orderModel based on guid TPR-629
 			
-			if (StringUtils.isNotEmpty(cartGuid))
+//			if (StringUtils.isNotEmpty(cartGuid))
+//			{
+//				cartModel = mplPaymentWebFacade.findCartAnonymousValues(cartGuid);
+//			}
+			//Redeem coupon for cartModel
+			if (null == orderModel)
 			{
 				cartModel = mplPaymentWebFacade.findCartAnonymousValues(cartGuid);
-			}
-			//Redeem coupon for cartModel
-			if (null != cartModel)
-			{
 			     LOG.debug(" Applying coupon For Cart Guid "+cartGuid);
 					cartModel.setChannel(SalesApplication.MOBILE);
 					getModelService().save(cartModel);
@@ -3492,11 +3493,9 @@ public class CartsController extends BaseCommerceController
 					applycouponDto.setCouponMessage(getMplCouponFacade().getCouponMessageInfo(cartModel));
 				//}
 			}
-			else
+			else 
 			{
 				LOG.debug(" Applying coupon For Order  Guid "+cartGuid);
-				orderModel = mplPaymentFacade.getOrderByGuid(cartGuid);
-				if(null != orderModel) {
 					applycouponDto = mplCouponWebFacade.applyVoucher(couponCode, null, orderModel, paymentMode);
 					applycouponDto.setTotal(String.valueOf(getMplCheckoutFacade()
 							.createPrice(orderModel, orderModel.getTotalPriceWithConv()).getValue().setScale(2, BigDecimal.ROUND_HALF_UP)));
@@ -3551,12 +3550,7 @@ public class CartsController extends BaseCommerceController
 						LOG.error("Exception occurred while setting splitPaymentMode" + e.getMessage());
 					}
 					applycouponDto.setCouponMessage(getMplCouponFacade().getCouponMessageInfo(orderModel));
-				}else {
-					LOG.debug(MarketplacecommerceservicesConstants.INVALID_CART_ID + cartGuid);
-					throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9064);
-				}
-				
-			
+
 			}
 		}
 		catch (final EtailNonBusinessExceptions e)
@@ -3619,22 +3613,23 @@ public class CartsController extends BaseCommerceController
 	{
 		ReleaseCouponsDTO releaseCouponDto = new ReleaseCouponsDTO();
 		CartModel cartModel = null;
-		OrderModel orderModel = null;
+		OrderModel orderModel = mplPaymentFacade.getOrderByGuid(cartGuid);
 		double walletAmount = 0.0D;
 		double discountAmount=0.0D;
 		try
 		{
 
-			if (StringUtils.isNotEmpty(cartGuid))
-			{
-				cartModel = mplPaymentWebFacade.findCartAnonymousValues(cartGuid);
-			//	orderModel = mplPaymentFacade.getOrderByGuid(cartGuid);
-			}
+//			if (StringUtils.isNotEmpty(cartGuid))
+//			{
+//				cartModel = mplPaymentWebFacade.findCartAnonymousValues(cartGuid);
+//			//	orderModel = mplPaymentFacade.getOrderByGuid(cartGuid);
+//			}
 			
 			
 			//Release coupon for cartModel
-			if (null != cartModel)
+			if (null == orderModel)
 			{
+				cartModel = mplPaymentWebFacade.findCartAnonymousValues(cartGuid);
 				LOG.debug(" Releasing coupon For Cart Guid "+cartGuid);
 				//final Double totalWithoutCoupon = cartModel.getTotalPrice();
 					if(null != cartModel.getTotalDiscounts()&& cartModel.getTotalDiscounts().doubleValue() > 0.0D) {
@@ -3709,8 +3704,6 @@ public class CartsController extends BaseCommerceController
 
 			else
 			{
-				orderModel = mplPaymentFacade.getOrderByGuid(cartGuid);
-				if(null != orderModel) {
 					LOG.debug(" Releasing coupon For Order Guid "+cartGuid);
 					if(null != orderModel.getTotalWalletAmount() && orderModel.getTotalWalletAmount().doubleValue() > 0.0D) {
 						walletAmount = orderModel.getTotalWalletAmount().doubleValue();
@@ -3772,10 +3765,6 @@ public class CartsController extends BaseCommerceController
 					releaseCouponDto.setTotal(String.valueOf(getMplCheckoutFacade()
 							.createPrice(orderModel, orderModel.getTotalPriceWithConv()).getValue().setScale(2, BigDecimal.ROUND_HALF_UP)));
 
-				}else {
-					LOG.debug(MarketplacecommerceservicesConstants.INVALID_CART_ID + cartGuid);
-					throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9064);
-				}
 			
 			}
 		}

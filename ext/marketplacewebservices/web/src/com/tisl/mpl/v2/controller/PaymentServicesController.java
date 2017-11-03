@@ -349,14 +349,13 @@ public class PaymentServicesController extends BaseController
 			if (StringUtils.isNotEmpty(cartGuid))
 			{
 				//final String orderGuid = decryptKey(guid);
-			//	orderModel = getMplPaymentFacade().getOrderByGuid(cartGuid);
-				cart = mplPaymentWebFacade.findCartAnonymousValues(cartGuid);
+				orderModel = getMplPaymentFacade().getOrderByGuid(cartGuid);
 			}
 
-			if (null != cart)
+			if (null == orderModel)
 			{
 				//TISPT-29
-
+				cart = mplPaymentWebFacade.findCartAnonymousValues(cartGuid);
 					if (StringUtils.isNotEmpty(paymentMode)
 							&& (paymentMode.equalsIgnoreCase(MarketplacewebservicesConstants.CREDIT)
 									|| paymentMode.equalsIgnoreCase(MarketplacewebservicesConstants.DEBIT)
@@ -424,7 +423,6 @@ public class PaymentServicesController extends BaseController
 									.equalsIgnoreCase(MarketplacewebservicesConstants.COD)))
 
 				{
-					orderModel = getMplPaymentFacade().getOrderByGuid(cartGuid);
 					if (!paymentMode.equalsIgnoreCase(MarketplacewebservicesConstants.COD))
 					{
 						//setting in cartmodel
@@ -1145,13 +1143,13 @@ public class PaymentServicesController extends BaseController
 			LOG.debug(String.format("PaymentMode: %s | cartGuid: %s | UserId : %s | juspayOrderID : %s", paymentMode, cartGuid,
 					userId, juspayOrderID));
 		}
-		OrderModel orderToBeUpdated = null;
+		OrderModel orderToBeUpdated = mplPaymentFacade.getOrderByGuid(cartGuid);
 		String statusResponse = "";
 		boolean alreadyProcessed = false;
 		
-		// Buying Of EGV Changes Start 
-		final CartModel cart = mplEGVCartService.getEGVCartModel(cartGuid);
-		if (cart != null && null != cart.getIsEGVCart() && cart.getIsEGVCart().booleanValue())
+//		// Buying Of EGV Changes Start 
+//		final CartModel cart = mplEGVCartService.getEGVCartModel(cartGuid);
+		if (orderToBeUpdated != null && null != orderToBeUpdated.getIsEGVCart() && orderToBeUpdated.getIsEGVCart().booleanValue())
 		{
 			OrderData orderData = null;
 
@@ -1185,7 +1183,7 @@ public class PaymentServicesController extends BaseController
 		try
 		{
 			//final String orderGuid = decryptKey(guid);
-			orderToBeUpdated = mplPaymentFacade.getOrderByGuid(cartGuid);
+			//orderToBeUpdated = mplPaymentFacade.getOrderByGuid(cartGuid);
 			//OrderIssue:- If PaymentTransaction with Success already been created, we wont allow to re process the order
 			if (null != orderToBeUpdated)
 			{
@@ -1498,13 +1496,12 @@ public class PaymentServicesController extends BaseController
 		//OrderData orderData = null;
 		try
 		{
-
-			cart = mplPaymentWebFacade.findCartAnonymousValues(cartGuid);
-			if (null != cart)
+			orderModel = getMplPaymentFacade().getOrderByGuid(cartGuid);
+			
+			if (null == orderModel)
 			{
-				//cart = mplPaymentWebFacade.findCartAnonymousValues(cartGuid);
-				final CartModel egvCart = mplEGVCartService.getEGVCartModel(cartGuid);
-				if(null != egvCart && null != egvCart.getIsEGVCart() && egvCart.getIsEGVCart().booleanValue()) {
+				cart = mplPaymentWebFacade.findCartAnonymousValues(cartGuid);
+				if(null !=cart && null != cart.getIsEGVCart() && cart.getIsEGVCart().booleanValue()) {
 					isEgvOrder = true;
 				}
 					//CAR-111
@@ -1521,11 +1518,6 @@ public class PaymentServicesController extends BaseController
 			}
 			else
 			{
-				//CAR-111
-				//orderData = mplCheckoutFacade.getOrderDetailsForCode(orderModel);
-				//Getting Payment modes
-				orderModel = getMplPaymentFacade().getOrderByGuid(cartGuid);
-				if(null != orderModel) {
 					if(null != orderModel.getIsEGVCart() && orderModel.getIsEGVCart().booleanValue()) {
 						isEgvOrder = true;
 					}
@@ -1538,10 +1530,6 @@ public class PaymentServicesController extends BaseController
 					orderModel.setPayableWalletAmount(Double.valueOf(0.0D));
 					modelService.save(orderModel);
 					modelService.refresh(orderModel);
-				}else {
-					throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9050);
-				}
-				
 			}
 
 			/* Added for cliq Cash Functionality start */
