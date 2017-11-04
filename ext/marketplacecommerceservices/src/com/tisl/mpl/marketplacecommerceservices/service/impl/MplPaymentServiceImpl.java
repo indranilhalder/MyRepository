@@ -222,9 +222,6 @@ public class MplPaymentServiceImpl implements MplPaymentService
 	private OrderModelService orderModelService;
 	
 	@Autowired
-	private MplPaymentService mplPaymentService;
-	
-	@Autowired
 	private MplWalletServices mplWalletServices;
 
 	/**
@@ -5248,7 +5245,7 @@ private PaymentTransactionModel createPaymentEntryForQCTransaction(final OrderMo
    					     
    						   QCCreditRequest qcCreditRequest =new QCCreditRequest();
    		    	      	qcCreditRequest.setAmount(decimalFormat.format(qcCliqCashAmt));
-   		    	      	qcCreditRequest.setInvoiceNumber(mplPaymentService.createQCPaymentId());
+   		    	      	qcCreditRequest.setInvoiceNumber(createQCPaymentId());
    		    	      	qcCreditRequest.setNotes("Cancel for "+ decimalFormat.format(qcCliqCashAmt));    	
    		    	      	qcRedeeptionResponse = mplWalletServices.qcCredit(walletId, qcCreditRequest);
    		    	      	walletCardApportionDetailModelList.add(getQcWalletCardResponse(qcRedeeptionResponse,cardApportionDetail));

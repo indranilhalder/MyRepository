@@ -256,6 +256,25 @@ public class AutoRefundInitiateAction extends AbstractProceduralAction<OrderProc
 											}
 											else
 											{
+												
+												
+												try
+												{
+													LOG.error(
+															"AutoRefundInitiateAction: Going to call mplPaymentService.doRefundPayment(refundList); for Order #"
+																	+ orderModel.getCode());
+													result = mplPaymentService.doRefundPayment(refundList,
+															((RefundEntryModel) returnEntry).getAmount());
+												}
+												catch (final Exception e)
+												{
+													e.getMessage();
+													LOG.error(
+															"AutoRefundInitiateAction: After call mplPaymentService.doRefundPayment(refundList); for Order #"
+																	+ orderModel.getCode());
+												}
+												
+												if(((RefundEntryModel) returnEntry).getAmount() == null){
 												LOG.error(
 														"AutoRefundInitiateAction: Going to call mplPaymentService.doRefundPayment(refundList); for Order #"
 																+ orderModel.getCode());
@@ -263,7 +282,7 @@ public class AutoRefundInitiateAction extends AbstractProceduralAction<OrderProc
 												LOG.error(
 														"AutoRefundInitiateAction: After call mplPaymentService.doRefundPayment(refundList); for Order #"
 																+ orderModel.getCode());
-
+												}
 
 											}
 											final String[] resultArray = result.split(",");
