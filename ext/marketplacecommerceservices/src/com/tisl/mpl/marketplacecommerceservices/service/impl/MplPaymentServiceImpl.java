@@ -26,7 +26,6 @@ import de.hybris.platform.core.model.order.payment.EMIPaymentInfoModel;
 import de.hybris.platform.core.model.order.payment.JusPayPaymentInfoModel;
 import de.hybris.platform.core.model.order.payment.NetbankingPaymentInfoModel;
 import de.hybris.platform.core.model.order.payment.PaymentInfoModel;
-import de.hybris.platform.core.model.order.payment.QCWalletPaymentInfoModel;
 import de.hybris.platform.core.model.order.payment.ThirdPartyWalletInfoModel;
 import de.hybris.platform.core.model.order.price.DiscountModel;
 import de.hybris.platform.core.model.user.AddressModel;
@@ -46,8 +45,6 @@ import de.hybris.platform.promotions.model.AbstractPromotionRestrictionModel;
 import de.hybris.platform.promotions.model.OrderPromotionModel;
 import de.hybris.platform.promotions.model.ProductPromotionModel;
 import de.hybris.platform.promotions.model.PromotionResultModel;
-import de.hybris.platform.returns.model.RefundEntryModel;
-import de.hybris.platform.returns.model.ReturnEntryModel;
 import de.hybris.platform.servicelayer.config.ConfigurationService;
 import de.hybris.platform.servicelayer.dto.converter.Converter;
 import de.hybris.platform.servicelayer.exceptions.ModelNotFoundException;
@@ -65,8 +62,6 @@ import de.hybris.platform.voucher.model.VoucherModel;
 
 import java.io.IOException;
 import java.math.BigDecimal;
-import java.math.MathContext;
-import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -106,8 +101,6 @@ import com.tisl.mpl.core.model.MplPaymentAuditModel;
 import com.tisl.mpl.core.model.PaymentModeApportionModel;
 import com.tisl.mpl.core.model.RefundTransactionMappingModel;
 import com.tisl.mpl.core.model.SavedCardModel;
-import com.tisl.mpl.core.model.WalletApportionReturnInfoModel;
-import com.tisl.mpl.core.model.WalletCardApportionDetailModel;
 import com.tisl.mpl.data.EMITermRateData;
 import com.tisl.mpl.data.MplPromoPriceData;
 import com.tisl.mpl.data.MplPromotionData;
@@ -128,14 +121,9 @@ import com.tisl.mpl.marketplacecommerceservices.service.MplMWalletRefundService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplPaymentService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplPaymentTransactionService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplVoucherService;
-import com.tisl.mpl.marketplacecommerceservices.service.OrderModelService;
 import com.tisl.mpl.model.BankModel;
 import com.tisl.mpl.model.PaymentModeSpecificPromotionRestrictionModel;
 import com.tisl.mpl.model.PaymentTypeModel;
-import com.tisl.mpl.pojo.request.QCCreditRequest;
-import com.tisl.mpl.pojo.response.QCCard;
-import com.tisl.mpl.pojo.response.QCRedeeptionResponse;
-import com.tisl.mpl.service.MplWalletServices;
 import com.tisl.mpl.util.DiscountUtility;
 import com.tisl.mpl.util.GenericUtilityMethods;
 import com.tisl.mpl.util.MplEMICalculator;
@@ -218,14 +206,6 @@ public class MplPaymentServiceImpl implements MplPaymentService
 
 	@Autowired
 	private MplJusPayRefundService mplJusPayRefundService; //Added for TPR-1348
-	@Autowired
-	private OrderModelService orderModelService;
-	
-	@Autowired
-	private MplPaymentService mplPaymentService;
-	
-	@Autowired
-	private MplWalletServices mplWalletServices;
 
 	/**
 	 * @return the mplJusPayRefundService
@@ -2147,7 +2127,7 @@ public class MplPaymentServiceImpl implements MplPaymentService
 			final String bankName = getSessionService().getAttribute(MarketplacecommerceservicesConstants.BANKFROMBIN);
 			final String paymentMode = getSessionService()
 					.getAttribute(MarketplacecommerceservicesConstants.PAYMENTMODEFORPROMOTION);
-			getSessionService().removeAttribute(MarketplacecommerceservicesConstants.BANKFROMBIN);
+			//getSessionService().removeAttribute(MarketplacecommerceservicesConstants.BANKFROMBIN); commented for SDI-2154/SDI-2155/SDI-2157
 
 			if (StringUtils.isNotEmpty(paymentMode) && paymentMode.equalsIgnoreCase("EMI") && StringUtils.isNotEmpty(bankName))
 
@@ -2237,7 +2217,7 @@ public class MplPaymentServiceImpl implements MplPaymentService
 			final String bankName = getSessionService().getAttribute(MarketplacecommerceservicesConstants.BANKFROMBIN);
 			final String paymentMode = getSessionService()
 					.getAttribute(MarketplacecommerceservicesConstants.PAYMENTMODEFORPROMOTION);
-			getSessionService().removeAttribute(MarketplacecommerceservicesConstants.BANKFROMBIN);
+			//getSessionService().removeAttribute(MarketplacecommerceservicesConstants.BANKFROMBIN);commented for SDI-2154/SDI-2155/SDI-2157
 
 			if (StringUtils.isNotEmpty(paymentMode) && paymentMode.equalsIgnoreCase("EMI") && StringUtils.isNotEmpty(bankName))
 
@@ -2565,16 +2545,6 @@ public class MplPaymentServiceImpl implements MplPaymentService
 	 */
 	@Override
 	public String createPaymentId()
-	{
-		return getJuspayOrderIdGenerator().generate().toString();
-	}
-
-	/**
-	 *
-	 * @return String
-	 */
-	@Override
-	public String createQCPaymentId()
 	{
 		return getJuspayOrderIdGenerator().generate().toString();
 	}
@@ -4877,503 +4847,211 @@ public class MplPaymentServiceImpl implements MplPaymentService
 
 	//Added for TPR-1348
 	@Override
-	public String doRefundPayment(final List<OrderEntryModel> orderEntryModel, final BigDecimal amountToRefund)
+	public String doRefundPayment(final List<OrderEntryModel> orderEntryModel)
 	{
 		Double totalRefundAmount = 0d;
 		PaymentTransactionModel paymentTransactionModel = null;
-		if (null != amountToRefund && amountToRefund.doubleValue() > 0)
+		for (final OrderEntryModel orderEntry : orderEntryModel)
 		{
-			totalRefundAmount = amountToRefund.doubleValue();
+			totalRefundAmount += orderEntry.getNetAmountAfterAllDisc();
 		}
-		else
+
+
+		if (CollectionUtils.isNotEmpty(orderEntryModel))
 		{
-			for (final OrderEntryModel orderEntry : orderEntryModel)
+			//		Mrupee implementation
+			final OrderModel order = orderEntryModel.get(0).getOrder();
+			final String uniqueRequestId = mplJusPayRefundService.getRefundUniqueRequestId();
+			if ((null != order.getIsWallet() && WalletEnum.NONWALLET.toString().equalsIgnoreCase(order.getIsWallet().getCode()))
+					|| null == order.getIsWallet())
 			{
-				totalRefundAmount += orderEntry.getNetAmountAfterAllDisc();
-			}
-		}
-		//		Mrupee implementation
-		final OrderModel order = orderEntryModel.get(0).getOrder();
-		final String uniqueRequestId = mplJusPayRefundService.getRefundUniqueRequestId();
-		if ((null != order.getIsWallet() && WalletEnum.NONWALLET.toString().equalsIgnoreCase(order.getIsWallet().getCode()))
-				|| null == order.getIsWallet())
-		{
-			try
-			{
-				
-				try{
-					for (final OrderEntryModel orderEntry : orderEntryModel)
+				try
+				{
+					paymentTransactionModel = mplJusPayRefundService.doRefund(orderEntryModel.get(0).getOrder(), totalRefundAmount,
+							PaymentTransactionType.RETURN, uniqueRequestId);
+					if (null != paymentTransactionModel)
 					{
-						final OrderModel subOrderModel = orderModelService.getOrder(orderEntry.getOrder().getCode());
-						if (null != subOrderModel.getSplitModeInfo() && subOrderModel.getSplitModeInfo().equalsIgnoreCase("Split"))
+						mplJusPayRefundService
+								.attachPaymentTransactionModel(orderEntryModel.get(0).getOrder(), paymentTransactionModel);
+						for (final OrderEntryModel orderEntry : orderEntryModel)
 						{
-							//saveQCandJuspayResponse(orderEntry, paymentTransactionModel);
-							
-							final List<WalletCardApportionDetailModel> walletCardApportionDetailModelList = qcCallforReturnRefund(subOrderModel,orderEntry);
-						   constructQuickCilverOrderEntry(walletCardApportionDetailModelList,orderEntry,subOrderModel);
+
+							// If CosignmentEnteries are present then update OMS with
+							// the state.
+							ConsignmentStatus newStatus = null;
+							if (orderEntry != null && CollectionUtils.isNotEmpty(orderEntry.getConsignmentEntries()))
+							{
+								// ConsignmentModel consignmentModel = orderEntry
+								// .getConsignmentEntries().iterator().next()
+								// .getConsignment();
+								if (StringUtils.equalsIgnoreCase(paymentTransactionModel.getStatus(), "SUCCESS"))
+								{
+									newStatus = ConsignmentStatus.RETURN_COMPLETED;
+								}
+								else if (StringUtils.equalsIgnoreCase(paymentTransactionModel.getStatus(), "PENDING"))
+								{
+									newStatus = ConsignmentStatus.REFUND_INITIATED;
+									final RefundTransactionMappingModel refundTransactionMappingModel = getModelService().create(
+											RefundTransactionMappingModel.class);
+									refundTransactionMappingModel.setRefundedOrderEntry(orderEntry);
+									refundTransactionMappingModel.setJuspayRefundId(paymentTransactionModel.getCode());
+									refundTransactionMappingModel.setCreationtime(new Date());
+									refundTransactionMappingModel.setRefundType(JuspayRefundType.RETURN);
+									refundTransactionMappingModel.setRefundAmount(orderEntry.getNetAmountAfterAllDisc());//TISPRO-216 : Refund amount Set in RTM
+									getModelService().save(refundTransactionMappingModel);
+								}
+								else
+								{
+									newStatus = ConsignmentStatus.REFUND_IN_PROGRESS;
+								}
+								// getModelService().save(consignmentModel);
+								mplJusPayRefundService.makeRefundOMSCall(orderEntry, paymentTransactionModel,
+										orderEntry.getNetAmountAfterAllDisc(), newStatus, null);
+
+								//Start TISPRD-871
+								if (newStatus.equals(ConsignmentStatus.RETURN_COMPLETED))
+								{
+									orderEntry.setJuspayRequestId(uniqueRequestId);
+									getModelService().save(orderEntry);
+								}
+							}
 						}
 					}
-				}catch(Exception e){
-					LOG.error("Quck Cilver giving response code  Order Id :"+order.getCode());
-				}
-				paymentTransactionModel = mplJusPayRefundService.doRefund(orderEntryModel.get(0).getOrder(), totalRefundAmount,
-						PaymentTransactionType.RETURN, uniqueRequestId);
-				if (null != paymentTransactionModel)
-				{
-					mplJusPayRefundService.attachPaymentTransactionModel(orderEntryModel.get(0).getOrder(), paymentTransactionModel);
-					for (final OrderEntryModel orderEntry : orderEntryModel)
+					else
 					{
 
-						// If CosignmentEnteries are present then update OMS with
-						// the state.
-						ConsignmentStatus newStatus = null;
-						if (orderEntry != null && CollectionUtils.isNotEmpty(orderEntry.getConsignmentEntries()))
+						//TISSIT-1801
+						LOG.error("Manual Refund Failed");
+						for (final OrderEntryModel orderEntry : orderEntryModel)
 						{
-							// ConsignmentModel consignmentModel = orderEntry
-							// .getConsignmentEntries().iterator().next()
-							// .getConsignment();
-							if (StringUtils.equalsIgnoreCase(paymentTransactionModel.getStatus(), "SUCCESS"))
-							{
-								newStatus = ConsignmentStatus.RETURN_COMPLETED;
-							}
-							else if (StringUtils.equalsIgnoreCase(paymentTransactionModel.getStatus(), "PENDING"))
-							{
-								newStatus = ConsignmentStatus.REFUND_INITIATED;
-								final RefundTransactionMappingModel refundTransactionMappingModel = getModelService()
-										.create(RefundTransactionMappingModel.class);
-								refundTransactionMappingModel.setRefundedOrderEntry(orderEntry);
-								refundTransactionMappingModel.setJuspayRefundId(paymentTransactionModel.getCode());
-								refundTransactionMappingModel.setCreationtime(new Date());
-								refundTransactionMappingModel.setRefundType(JuspayRefundType.RETURN);
-								refundTransactionMappingModel.setRefundAmount(orderEntry.getNetAmountAfterAllDisc());//TISPRO-216 : Refund amount Set in RTM
-								getModelService().save(refundTransactionMappingModel);
-							}
-							else
-							{
-								newStatus = ConsignmentStatus.REFUND_IN_PROGRESS;
-							}
-							// getModelService().save(consignmentModel);
 							mplJusPayRefundService.makeRefundOMSCall(orderEntry, paymentTransactionModel,
-									orderEntry.getNetAmountAfterAllDisc(), newStatus, null);
-
-							//Start TISPRD-871
-							if (newStatus.equals(ConsignmentStatus.RETURN_COMPLETED))
-							{
-								orderEntry.setJuspayRequestId(uniqueRequestId);
-								getModelService().save(orderEntry);
-							}
+									orderEntry.getNetAmountAfterAllDisc(), ConsignmentStatus.REFUND_IN_PROGRESS, null);
 						}
+
+						paymentTransactionModel = mplJusPayRefundService.createPaymentTransactionModel(orderEntryModel.get(0)
+								.getOrder(), FAILURE_KEY, totalRefundAmount, PaymentTransactionType.RETURN, "NO Response FROM PG",
+								uniqueRequestId);
+						mplJusPayRefundService
+								.attachPaymentTransactionModel(orderEntryModel.get(0).getOrder(), paymentTransactionModel);
+						//TISSIT-1801
+
 					}
 				}
-				else
+				catch (final Exception e)
 				{
+					LOG.error(e.getMessage(), e);
 
-					//TISSIT-1801
-					LOG.error("Manual Refund Failed");
+					// TISSIT-1784 Code addition started
 					for (final OrderEntryModel orderEntry : orderEntryModel)
 					{
 						mplJusPayRefundService.makeRefundOMSCall(orderEntry, paymentTransactionModel,
-								orderEntry.getNetAmountAfterAllDisc(), ConsignmentStatus.REFUND_IN_PROGRESS, null);
+								orderEntry.getNetAmountAfterAllDisc(), ConsignmentStatus.REFUND_INITIATED, null);
+
+						// Making RTM entry to be picked up by webhook job
+						final RefundTransactionMappingModel refundTransactionMappingModel = getModelService().create(
+								RefundTransactionMappingModel.class);
+						refundTransactionMappingModel.setRefundedOrderEntry(orderEntry);
+						refundTransactionMappingModel.setJuspayRefundId(uniqueRequestId);
+						refundTransactionMappingModel.setCreationtime(new Date());
+						refundTransactionMappingModel.setRefundType(JuspayRefundType.RETURN);
+						refundTransactionMappingModel.setRefundAmount(orderEntry.getNetAmountAfterAllDisc());//TISPRO-216 : Refund amount Set in RTM
+						getModelService().save(refundTransactionMappingModel);
 					}
+					// TISSIT-1784 Code addition ended
 
 					paymentTransactionModel = mplJusPayRefundService.createPaymentTransactionModel(orderEntryModel.get(0).getOrder(),
-							FAILURE_KEY, totalRefundAmount, PaymentTransactionType.RETURN, "NO Response FROM PG", uniqueRequestId);
+							FAILURE_KEY, totalRefundAmount, PaymentTransactionType.RETURN, FAILURE_KEY, uniqueRequestId);
 					mplJusPayRefundService.attachPaymentTransactionModel(orderEntryModel.get(0).getOrder(), paymentTransactionModel);
-					//TISSIT-1801
 
 				}
 			}
-			catch (final Exception e)
+			else if (null != order.getIsWallet() && WalletEnum.MRUPEE.toString().equalsIgnoreCase(order.getIsWallet().getCode()))
 			{
-				LOG.error(e.getMessage(), e);
-
-				// TISSIT-1784 Code addition started
-				for (final OrderEntryModel orderEntry : orderEntryModel)
+				final String uniqueRequestId1 = mplMWalletRefundService.getRefundUniqueRequestId();
+				try
 				{
-					mplJusPayRefundService.makeRefundOMSCall(orderEntry, paymentTransactionModel,
-							orderEntry.getNetAmountAfterAllDisc(), ConsignmentStatus.REFUND_INITIATED, null);
-
-					// Making RTM entry to be picked up by webhook job
-					final RefundTransactionMappingModel refundTransactionMappingModel = getModelService()
-							.create(RefundTransactionMappingModel.class);
-					refundTransactionMappingModel.setRefundedOrderEntry(orderEntry);
-					refundTransactionMappingModel.setJuspayRefundId(uniqueRequestId);
-					refundTransactionMappingModel.setCreationtime(new Date());
-					refundTransactionMappingModel.setRefundType(JuspayRefundType.RETURN);
-					refundTransactionMappingModel.setRefundAmount(orderEntry.getNetAmountAfterAllDisc());//TISPRO-216 : Refund amount Set in RTM
-					getModelService().save(refundTransactionMappingModel);
-				}
-				// TISSIT-1784 Code addition ended
-
-				paymentTransactionModel = mplJusPayRefundService.createPaymentTransactionModel(orderEntryModel.get(0).getOrder(),
-						FAILURE_KEY, totalRefundAmount, PaymentTransactionType.RETURN, FAILURE_KEY, uniqueRequestId);
-				mplJusPayRefundService.attachPaymentTransactionModel(orderEntryModel.get(0).getOrder(), paymentTransactionModel);
-
-			}
-		}
-		else if (null != order.getIsWallet() && WalletEnum.MRUPEE.toString().equalsIgnoreCase(order.getIsWallet().getCode()))
-		{
-			final String uniqueRequestId1 = mplMWalletRefundService.getRefundUniqueRequestId();
-			try
-			{
-				paymentTransactionModel = mplMWalletRefundService.doRefund(orderEntryModel.get(0).getOrder(), totalRefundAmount,
-						PaymentTransactionType.RETURN, uniqueRequestId1);
-				if (null != paymentTransactionModel)
-				{
-					mplJusPayRefundService.attachPaymentTransactionModel(orderEntryModel.get(0).getOrder(), paymentTransactionModel);
-					for (final OrderEntryModel orderEntry : orderEntryModel)
+					paymentTransactionModel = mplMWalletRefundService.doRefund(orderEntryModel.get(0).getOrder(), totalRefundAmount,
+							PaymentTransactionType.RETURN, uniqueRequestId1);
+					if (null != paymentTransactionModel)
 					{
-						// If CosignmentEnteries are present then update OMS with
-						// the state.
-						ConsignmentStatus newStatus = null;
-						if (orderEntry != null && CollectionUtils.isNotEmpty(orderEntry.getConsignmentEntries()))
+						mplJusPayRefundService
+								.attachPaymentTransactionModel(orderEntryModel.get(0).getOrder(), paymentTransactionModel);
+						for (final OrderEntryModel orderEntry : orderEntryModel)
 						{
+							// If CosignmentEnteries are present then update OMS with
+							// the state.
+							ConsignmentStatus newStatus = null;
+							if (orderEntry != null && CollectionUtils.isNotEmpty(orderEntry.getConsignmentEntries()))
+							{
 
-							if (StringUtils.equalsIgnoreCase(paymentTransactionModel.getStatus(),
-									MarketplacecommerceservicesConstants.SUCCESS))
-							{
-								newStatus = ConsignmentStatus.RETURN_COMPLETED;
+								if (StringUtils.equalsIgnoreCase(paymentTransactionModel.getStatus(),
+										MarketplacecommerceservicesConstants.SUCCESS))
+								{
+									newStatus = ConsignmentStatus.RETURN_COMPLETED;
+								}
+								else if (StringUtils.equalsIgnoreCase(paymentTransactionModel.getStatus(),
+										MarketplacecommerceservicesConstants.FAILURE))
+								{
+									newStatus = ConsignmentStatus.REFUND_IN_PROGRESS;
+								}
+								else
+								{
+									newStatus = ConsignmentStatus.REFUND_INITIATED;
+								}
+								// getModelService().save(consignmentModel);
+								//							mplJusPayRefundService.makeRefundOMSCall(orderEntry,
+								//									paymentTransactionModel,
+								//									orderEntry.getNetAmountAfterAllDisc(),
+								//									newStatus);
+								//R2.3
+								mplJusPayRefundService.makeRefundOMSCall(orderEntry, paymentTransactionModel,
+										orderEntry.getNetAmountAfterAllDisc(), newStatus, null);
+								if (newStatus.equals(ConsignmentStatus.RETURN_COMPLETED))
+								{
+									//orderEntry.setJuspayRequestId(uniqueRequestId);
+									getModelService().save(orderEntry);
+								}
 							}
-							else if (StringUtils.equalsIgnoreCase(paymentTransactionModel.getStatus(),
-									MarketplacecommerceservicesConstants.FAILURE))
-							{
-								newStatus = ConsignmentStatus.REFUND_IN_PROGRESS;
-							}
-							else
-							{
-								newStatus = ConsignmentStatus.REFUND_INITIATED;
-							}
-							// getModelService().save(consignmentModel);
-							//							mplJusPayRefundService.makeRefundOMSCall(orderEntry,
-							//									paymentTransactionModel,
-							//									orderEntry.getNetAmountAfterAllDisc(),
-							//									newStatus);
+						}
+					}
+					else
+					{
+						LOG.error("Manual Refund Failed");
+						for (final OrderEntryModel orderEntry : orderEntryModel)
+						{
+							//mplJusPayRefundService.makeRefundOMSCall(orderEntry,paymentTransactionModel,orderEntry.getNetAmountAfterAllDisc(),ConsignmentStatus.REFUND_IN_PROGRESS);
 							//R2.3
 							mplJusPayRefundService.makeRefundOMSCall(orderEntry, paymentTransactionModel,
-									orderEntry.getNetAmountAfterAllDisc(), newStatus, null);
-							if (newStatus.equals(ConsignmentStatus.RETURN_COMPLETED))
-							{
-								//orderEntry.setJuspayRequestId(uniqueRequestId);
-								getModelService().save(orderEntry);
-							}
+									orderEntry.getNetAmountAfterAllDisc(), ConsignmentStatus.REFUND_IN_PROGRESS, null);
 						}
+						paymentTransactionModel = mplJusPayRefundService.createPaymentTransactionModel(orderEntryModel.get(0)
+								.getOrder(), FAILURE_KEY, totalRefundAmount, PaymentTransactionType.RETURN, "NO Response FROM PG",
+								uniqueRequestId);
+						mplJusPayRefundService
+								.attachPaymentTransactionModel(orderEntryModel.get(0).getOrder(), paymentTransactionModel);
 					}
 				}
-				else
+				catch (final Exception e)
 				{
-					LOG.error("Manual Refund Failed");
+					LOG.error(e.getMessage(), e);
 					for (final OrderEntryModel orderEntry : orderEntryModel)
 					{
-						//mplJusPayRefundService.makeRefundOMSCall(orderEntry,paymentTransactionModel,orderEntry.getNetAmountAfterAllDisc(),ConsignmentStatus.REFUND_IN_PROGRESS);
+						//mplJusPayRefundService.makeRefundOMSCall(orderEntry,paymentTransactionModel,orderEntry.getNetAmountAfterAllDisc(),ConsignmentStatus.REFUND_INITIATED);
 						//R2.3
 						mplJusPayRefundService.makeRefundOMSCall(orderEntry, paymentTransactionModel,
-								orderEntry.getNetAmountAfterAllDisc(), ConsignmentStatus.REFUND_IN_PROGRESS, null);
+								orderEntry.getNetAmountAfterAllDisc(), ConsignmentStatus.REFUND_INITIATED, null);
 					}
 					paymentTransactionModel = mplJusPayRefundService.createPaymentTransactionModel(orderEntryModel.get(0).getOrder(),
-							FAILURE_KEY, totalRefundAmount, PaymentTransactionType.RETURN, "NO Response FROM PG", uniqueRequestId);
+							FAILURE_KEY, totalRefundAmount, PaymentTransactionType.RETURN, FAILURE_KEY, uniqueRequestId);
 					mplJusPayRefundService.attachPaymentTransactionModel(orderEntryModel.get(0).getOrder(), paymentTransactionModel);
 				}
 			}
-			catch (final Exception e)
-			{
-				LOG.error(e.getMessage(), e);
-				for (final OrderEntryModel orderEntry : orderEntryModel)
-				{
-					//mplJusPayRefundService.makeRefundOMSCall(orderEntry,paymentTransactionModel,orderEntry.getNetAmountAfterAllDisc(),ConsignmentStatus.REFUND_INITIATED);
-					//R2.3
-					mplJusPayRefundService.makeRefundOMSCall(orderEntry, paymentTransactionModel,
-							orderEntry.getNetAmountAfterAllDisc(), ConsignmentStatus.REFUND_INITIATED, null);
-				}
-				paymentTransactionModel = mplJusPayRefundService.createPaymentTransactionModel(orderEntryModel.get(0).getOrder(),
-						FAILURE_KEY, totalRefundAmount, PaymentTransactionType.RETURN, FAILURE_KEY, uniqueRequestId);
-				mplJusPayRefundService.attachPaymentTransactionModel(orderEntryModel.get(0).getOrder(), paymentTransactionModel);
-			}
+
+
 		}
 		final String result = paymentTransactionModel.getStatus() + "," + paymentTransactionModel.getCode() + ","
 				+ totalRefundAmount;
 		return result;
-	}
-
-	
-	private String constructQuickCilverOrderEntry(final List<WalletCardApportionDetailModel> walletCardApportionDetailModelList, final OrderEntryModel abstractOrderEntryModel,final OrderModel subOrderModel)
-	{
-		
-         String result = "FAILURE";
-		   final List<WalletCardApportionDetailModel> walletCardApportionDetailList =new ArrayList<WalletCardApportionDetailModel>();
-			final WalletApportionReturnInfoModel walletApportionReturnModel = getModelService().create(WalletApportionReturnInfoModel.class);
-		   List<String> qcResponseStatus = new ArrayList<String>();
-		 
-		   if (null != abstractOrderEntryModel.getWalletApportionPaymentInfo()
-					&& null != abstractOrderEntryModel.getWalletApportionPaymentInfo().getQcApportionPartValue())
-			{
-		   	walletApportionReturnModel.setQcApportionPartValue(abstractOrderEntryModel.getWalletApportionPaymentInfo().getQcApportionPartValue());
-			}
-			if (null != abstractOrderEntryModel.getWalletApportionPaymentInfo()
-					&& null != abstractOrderEntryModel.getWalletApportionPaymentInfo().getQcDeliveryPartValue())
-			{
-				walletApportionReturnModel.setQcDeliveryPartValue(abstractOrderEntryModel.getWalletApportionPaymentInfo().getQcDeliveryPartValue());
-			}
-			if (null != abstractOrderEntryModel.getWalletApportionPaymentInfo()
-					&& null != abstractOrderEntryModel.getWalletApportionPaymentInfo().getQcSchedulingPartValue())
-			{
-				walletApportionReturnModel.setQcSchedulingPartValue(abstractOrderEntryModel.getWalletApportionPaymentInfo().getQcSchedulingPartValue());
-			}
-			if (null != abstractOrderEntryModel.getWalletApportionPaymentInfo()
-					&& null != abstractOrderEntryModel.getWalletApportionPaymentInfo().getQcShippingPartValue())
-			{
-				walletApportionReturnModel.setQcShippingPartValue(abstractOrderEntryModel.getWalletApportionPaymentInfo().getQcShippingPartValue());
-			}
-			if (null != abstractOrderEntryModel.getWalletApportionPaymentInfo()
-					&& null != abstractOrderEntryModel.getWalletApportionPaymentInfo().getJuspayApportionValue())
-			{
-				walletApportionReturnModel.setJuspayApportionValue(abstractOrderEntryModel.getWalletApportionPaymentInfo().getJuspayApportionValue());
-			}
-			if (null != abstractOrderEntryModel.getWalletApportionPaymentInfo()
-					&& null != abstractOrderEntryModel.getWalletApportionPaymentInfo().getJuspayDeliveryValue())
-			{
-				walletApportionReturnModel.setJuspayDeliveryValue(abstractOrderEntryModel.getWalletApportionPaymentInfo().getJuspayDeliveryValue());
-			}
-			if (null != abstractOrderEntryModel.getWalletApportionPaymentInfo()
-					&& null != abstractOrderEntryModel.getWalletApportionPaymentInfo().getJuspaySchedulingValue())
-			{
-				walletApportionReturnModel.setJuspaySchedulingValue(abstractOrderEntryModel.getWalletApportionPaymentInfo().getJuspaySchedulingValue());
-			}
-			if (null != abstractOrderEntryModel.getWalletApportionPaymentInfo()
-					&& null != abstractOrderEntryModel.getWalletApportionPaymentInfo().getJuspayShippingValue())
-			{
-				walletApportionReturnModel.setJuspayShippingValue(abstractOrderEntryModel.getWalletApportionPaymentInfo().getJuspayShippingValue());
-			}
-			if(null != walletCardApportionDetailModelList &&  walletCardApportionDetailModelList.size()>0){
-				 
-				 for(WalletCardApportionDetailModel walletCardApportionDetailModelObj :walletCardApportionDetailModelList){
-						final WalletCardApportionDetailModel walletCardApportionDetailModel = getModelService().create(WalletCardApportionDetailModel.class);
-						walletCardApportionDetailModel.setCardNumber(walletCardApportionDetailModelObj.getCardNumber());
-						walletCardApportionDetailModel.setCardExpiry(walletCardApportionDetailModelObj.getCardExpiry());
-						walletCardApportionDetailModel.setCardAmount(walletCardApportionDetailModelObj.getCardAmount().toString());
-						walletCardApportionDetailModel.setBucketType(walletCardApportionDetailModelObj.getBucketType());
-						walletCardApportionDetailModel.setQcApportionValue(walletCardApportionDetailModelObj.getQcApportionValue());
-						walletCardApportionDetailModel.setQcDeliveryValue(walletCardApportionDetailModelObj.getQcDeliveryValue());
-						walletCardApportionDetailModel.setQcSchedulingValue(walletCardApportionDetailModelObj.getQcSchedulingValue());
-						walletCardApportionDetailModel.setQcShippingValue(walletCardApportionDetailModelObj.getQcShippingValue());
-						walletCardApportionDetailModel.setTransactionId(walletCardApportionDetailModelObj.getTransactionId());
-						walletCardApportionDetailModel.setTrnsStatus(walletCardApportionDetailModelObj.getTrnsStatus());
-						walletCardApportionDetailList.add(walletCardApportionDetailModel);
-						qcResponseStatus.add(walletCardApportionDetailModelObj.getTrnsStatus());
-						createPaymentEntryForQCTransaction(subOrderModel,walletCardApportionDetailModel);
-				 }
-			 }
-			 walletApportionReturnModel.setWalletCardList(walletCardApportionDetailList);
-			 walletApportionReturnModel.setTransactionId(abstractOrderEntryModel.getTransactionID());
-			 walletApportionReturnModel.setType("RETURN");
-			if(qcResponseStatus.contains("PENDING")){
-        	 walletApportionReturnModel.setStatus("PENDING");
-         }else{
-        	 walletApportionReturnModel.setStatus("SUCCESS");
-        	result="SUCCESS";
-         }
-			modelService.save(walletApportionReturnModel);
-			abstractOrderEntryModel.setWalletApportionReturnInfo(walletApportionReturnModel);
-			modelService.save(abstractOrderEntryModel);
-			
-			return result;
-		}
-	
-private PaymentTransactionModel createPaymentEntryForQCTransaction(final OrderModel subOrderModel,final WalletCardApportionDetailModel walletCardApportionDetailModel){
-		
-		final PaymentTransactionModel paymentTransactionModel = modelService.create(PaymentTransactionModel.class);
-			paymentTransactionModel.setCode(walletCardApportionDetailModel.getTransactionId().toString());
-			paymentTransactionModel.setRequestId(walletCardApportionDetailModel.getTransactionId().toString());
-			paymentTransactionModel.setStatus(walletCardApportionDetailModel.getTrnsStatus());
-			paymentTransactionModel.setOrder(subOrderModel);
-			final PaymentTransactionEntryModel paymentTransactionEntryModel = modelService.create(PaymentTransactionEntryModel.class);
-			paymentTransactionEntryModel.setCode(walletCardApportionDetailModel.getTransactionId().toString());
-			final BigDecimal bigAmount = new BigDecimal(walletCardApportionDetailModel.getCardAmount(), MathContext.DECIMAL64);
-			paymentTransactionEntryModel.setAmount(bigAmount);
-			paymentTransactionEntryModel.setRequestId(walletCardApportionDetailModel.getTransactionId().toString());
-			paymentTransactionEntryModel.setTime(new Date());
-			paymentTransactionEntryModel.setCurrency(subOrderModel.getCurrency());
-			paymentTransactionEntryModel.setTransactionStatus(walletCardApportionDetailModel.getTrnsStatus());
-			paymentTransactionEntryModel.setTransactionStatusDetails(walletCardApportionDetailModel.getTrnsStatus());
-			PaymentTypeModel model= new PaymentTypeModel();
-			for (final PaymentTransactionModel paymentTransaction : subOrderModel.getPaymentTransactions())
-			{
-				for (final PaymentTransactionEntryModel paymentTransactionEntry : paymentTransaction.getEntries())
-				{
-					if ("success".equalsIgnoreCase(paymentTransactionEntry.getTransactionStatus())
-							|| "ACCEPTED".equalsIgnoreCase(paymentTransactionEntry.getTransactionStatus()))
-					{
-						model = paymentTransactionEntry.getPaymentMode();
-					}
-
-				}
-
-			}
-			paymentTransactionEntryModel.setPaymentMode(model);
-  			paymentTransactionEntryModel.setType(PaymentTransactionType.RETURN);
-  			modelService.save(paymentTransactionEntryModel);
-  			final List<PaymentTransactionEntryModel> entries = new ArrayList<>();
-  			entries.add(paymentTransactionEntryModel);
-  			paymentTransactionModel.setEntries(entries);
-  			modelService.save(paymentTransactionModel);
-  			LOG.debug("Payment Transaction created SuccessFully......:");
-     return paymentTransactionModel;
-	}
-
-	private List<WalletCardApportionDetailModel>  qcCallforReturnRefund(final OrderModel orderModel, final OrderEntryModel abstractOrderEntryModel)
-	{
-		LOG.debug("AutoRefundInitiateAction: Going to call QC  mplWalletServices.qcCredit(walletInfo); for Order #"
-				+ orderModel.getCode());
-		String walletId = null;
-		QCRedeeptionResponse qcRedeeptionResponse = null;
-		List<WalletCardApportionDetailModel> walletCardApportionDetailModelList = new ArrayList<WalletCardApportionDetailModel>();
-		final CustomerModel customerModel = (CustomerModel) orderModel.getUser();
-
-		try
-		{
-
-			if (null != customerModel && null != customerModel.getCustomerWalletDetail())
-			{
-				walletId = customerModel.getCustomerWalletDetail().getWalletId();
-			}
-			
-			DecimalFormat decimalFormat =new DecimalFormat("#.00");
-			//AbstractOrderEntryModel abstractOrderEntryModel =returnEntry.getOrderEntry();
-			 if(null != abstractOrderEntryModel && null != abstractOrderEntryModel.getWalletApportionPaymentInfo()){
-   			 for(WalletCardApportionDetailModel cardApportionDetail : abstractOrderEntryModel.getWalletApportionPaymentInfo().getWalletCardList()){
-   				 double qcCliqCashAmt =0.0D;
-   					if(null != cardApportionDetail && null!= cardApportionDetail.getBucketType()){
-   					if(!cardApportionDetail.getBucketType().equalsIgnoreCase("CASHBACK")){
-   						 qcCliqCashAmt = Double.parseDouble(cardApportionDetail.getQcApportionValue()) +  Double.parseDouble( null != cardApportionDetail.getQcDeliveryValue() ? cardApportionDetail.getQcDeliveryValue() : ""+0 )
-   								+Double.parseDouble( null != cardApportionDetail.getQcSchedulingValue() ? cardApportionDetail.getQcSchedulingValue() : ""+0 )+
-   								Double.parseDouble( null != cardApportionDetail.getQcShippingValue() ? cardApportionDetail.getQcShippingValue() : ""+0 );
-   					     
-   						   QCCreditRequest qcCreditRequest =new QCCreditRequest();
-   		    	      	qcCreditRequest.setAmount(decimalFormat.format(qcCliqCashAmt));
-   		    	      	qcCreditRequest.setInvoiceNumber(mplPaymentService.createQCPaymentId());
-   		    	      	qcCreditRequest.setNotes("Cancel for "+ decimalFormat.format(qcCliqCashAmt));    	
-   		    	      	qcRedeeptionResponse = mplWalletServices.qcCredit(walletId, qcCreditRequest);
-   		    	      	walletCardApportionDetailModelList.add(getQcWalletCardResponse(qcRedeeptionResponse,cardApportionDetail));
-   					
-   					}
-   				 }
-   			 }
-   		 }
-		}
-		catch (final Exception e)
-		{
-			LOG.error(
-					"AutoRefundInitiateAction: After call mplWalletServices.qcCredit(walletInfo); for Order #" + orderModel.getCode());
-		}
-		return walletCardApportionDetailModelList;
-	}
-	private WalletCardApportionDetailModel getQcWalletCardResponse(QCRedeeptionResponse response, WalletCardApportionDetailModel walletObject){
-		 final WalletCardApportionDetailModel walletCardApportionDetailModel =new WalletCardApportionDetailModel();
-		 if(null != response && null != response.getCards()){
-			  for(QCCard qcCard:response.getCards()){
-				  walletCardApportionDetailModel.setCardNumber(qcCard.getCardNumber());
-				  walletCardApportionDetailModel.setCardExpiry(qcCard.getExpiry());
-				  walletCardApportionDetailModel.setCardAmount(qcCard.getAmount().toString());
-				  walletCardApportionDetailModel.setBucketType(qcCard.getBucketType());
-				}
-			  if(StringUtils.equalsIgnoreCase(response.getResponseCode().toString(),"0")){
-				  walletCardApportionDetailModel.setTrnsStatus("SUCCESS");
-				}else{
-					walletCardApportionDetailModel.setTrnsStatus("PENDING");
-				}
-			  walletCardApportionDetailModel.setTransactionId(response.getTransactionId().toString());
-			  walletCardApportionDetailModel.setQcApportionValue(walletObject.getQcApportionValue());
-			  walletCardApportionDetailModel.setQcDeliveryValue(walletObject.getQcDeliveryValue());
-			  walletCardApportionDetailModel.setQcSchedulingValue(walletObject.getQcSchedulingValue());
-			  walletCardApportionDetailModel.setQcShippingValue(walletObject.getQcShippingValue());
-		 }
-		
-		return walletCardApportionDetailModel;
-	}
-	private void saveQCandJuspayResponse(final OrderEntryModel orderEntry, final PaymentTransactionModel paymentTransactionModel)
-	{
-		final WalletApportionReturnInfoModel walletApportionModel = getModelService().create(WalletApportionReturnInfoModel.class);
-
-		final List<WalletCardApportionDetailModel> walletCardApportionDetailModelList = new ArrayList<WalletCardApportionDetailModel>();
-		if (null != orderEntry && null != orderEntry.getWalletApportionReturnInfo())
-		{
-			for (final WalletCardApportionDetailModel qcCard : orderEntry.getWalletApportionReturnInfo().getWalletCardList())
-			{
-				final WalletCardApportionDetailModel model = getModelService().create(WalletCardApportionDetailModel.class);
-				model.setCardNumber(qcCard.getCardNumber());
-				model.setCardExpiry(qcCard.getCardExpiry());
-				model.setCardAmount(qcCard.getCardAmount().toString());
-				model.setBucketType(qcCard.getBucketType());
-				walletCardApportionDetailModelList.add(model);
-			}
-
-			modelService.saveAll(walletCardApportionDetailModelList);
-			walletApportionModel.setWalletCardList(walletCardApportionDetailModelList);
-			if (null != orderEntry.getWalletApportionPaymentInfo()
-					&& null != orderEntry.getWalletApportionPaymentInfo().getQcApportionPartValue())
-			{
-				walletApportionModel.setQcApportionPartValue(orderEntry.getWalletApportionPaymentInfo().getQcApportionPartValue());
-			}
-			if (null != orderEntry.getWalletApportionPaymentInfo()
-					&& null != orderEntry.getWalletApportionPaymentInfo().getQcDeliveryPartValue())
-			{
-				walletApportionModel.setQcDeliveryPartValue(orderEntry.getWalletApportionPaymentInfo().getQcDeliveryPartValue());
-			}
-			if (null != orderEntry.getWalletApportionPaymentInfo()
-					&& null != orderEntry.getWalletApportionPaymentInfo().getQcSchedulingPartValue())
-			{
-				walletApportionModel.setQcSchedulingPartValue(orderEntry.getWalletApportionPaymentInfo().getQcSchedulingPartValue());
-			}
-			if (null != orderEntry.getWalletApportionPaymentInfo()
-					&& null != orderEntry.getWalletApportionPaymentInfo().getQcShippingPartValue())
-			{
-				walletApportionModel.setQcShippingPartValue(orderEntry.getWalletApportionPaymentInfo().getQcShippingPartValue());
-			}
-			if (null != orderEntry.getWalletApportionPaymentInfo()
-					&& null != orderEntry.getWalletApportionPaymentInfo().getJuspayApportionValue())
-			{
-				walletApportionModel.setJuspayApportionValue(orderEntry.getWalletApportionPaymentInfo().getJuspayApportionValue());
-			}
-			if (null != orderEntry.getWalletApportionPaymentInfo()
-					&& null != orderEntry.getWalletApportionPaymentInfo().getJuspayDeliveryValue())
-			{
-				walletApportionModel.setJuspayDeliveryValue(orderEntry.getWalletApportionPaymentInfo().getJuspayDeliveryValue());
-			}
-			if (null != orderEntry.getWalletApportionPaymentInfo()
-					&& null != orderEntry.getWalletApportionPaymentInfo().getJuspaySchedulingValue())
-			{
-				walletApportionModel.setJuspaySchedulingValue(orderEntry.getWalletApportionPaymentInfo().getJuspaySchedulingValue());
-			}
-			if (null != orderEntry.getWalletApportionPaymentInfo()
-					&& null != orderEntry.getWalletApportionPaymentInfo().getJuspayShippingValue())
-			{
-				walletApportionModel.setJuspayShippingValue(orderEntry.getWalletApportionPaymentInfo().getJuspayShippingValue());
-			}
-			walletApportionModel.setTransactionId(orderEntry.getTransactionID());
-			walletApportionModel.setOrderId(orderEntry.getOrder().getCode());
-			walletApportionModel.setType("RETURN");
-			if(null != orderEntry.getWalletApportionReturnInfo() && null != orderEntry.getWalletApportionReturnInfo().getStatusForQc()){
-				walletApportionModel.setStatusForQc(orderEntry.getWalletApportionReturnInfo().getStatusForQc());
-			}
-			if (StringUtils.equalsIgnoreCase(paymentTransactionModel.getStatus(), MarketplacecommerceservicesConstants.SUCCESS))
-			{
-				walletApportionModel.setStatus("SUCCESS");
-			}
-			else if (StringUtils.equalsIgnoreCase(paymentTransactionModel.getStatus(), "PENDING"))
-			{
-				walletApportionModel.setStatus("PENDING");
-			}
-			System.out.println("Before Saving Juspay Response is :" + walletApportionModel.getJuspayApportionValue());
-			modelService.save(walletApportionModel);
-			System.out.println("After Saving Juspay Response is :" + walletApportionModel.getJuspayApportionValue());
-			modelService.refresh(walletApportionModel);
-
-			orderEntry.setWalletApportionReturnInfo(walletApportionModel);
-			System.out.println("Before setting  Order Entry Response is :" + walletApportionModel.getJuspayApportionValue());
-			modelService.save(orderEntry);
-			System.out.println("After setting  Order Entry Response is :" + walletApportionModel.getJuspayApportionValue());
-			modelService.refresh(orderEntry);
-			LOG.debug("abstractOrderEntryModel Saved Successfully..............");
-		}
 	}
 
 
@@ -5501,157 +5179,5 @@ private PaymentTransactionModel createPaymentEntryForQCTransaction(final OrderMo
 		getModelService().save(orderModel);
 		getModelService().refresh(orderModel);
 
-	}
-
-	@Override
-	public void setQCPaymentTransaction(final ArrayList<String> rs, final Map<String, Double> paymentMode,
-			final AbstractOrderModel order, final String cliqCashPaymentMode, final String WalletTotal)
-			throws EtailNonBusinessExceptions //Changed to abstractOrderModel for TPR-629
-	{
-
-		try
-		{
-			System.out.println("---- ::::: IN SIDE TRANSACTION CREATION ::::-----");
-
-			final List<PaymentTransactionEntryModel> paymentTransactionEntryList = new ArrayList<PaymentTransactionEntryModel>();
-			Collection<PaymentTransactionModel> collection = order.getPaymentTransactions();
-			final List<PaymentTransactionModel> paymentTransactionList = new ArrayList<PaymentTransactionModel>();
-			//final PaymentTransactionModel payTranModel = null;
-
-			if (null == collection || collection.isEmpty())
-			{
-				collection = new ArrayList<PaymentTransactionModel>();
-			}
-
-			paymentTransactionList.addAll(collection);
-
-			final double walletAmt = Double.parseDouble(WalletTotal);
-
-			final Date date = new Date();
-
-			final List<PaymentTransactionModel> listPay = new ArrayList<PaymentTransactionModel>();
-
-			final PaymentTypeModel paymenttype = getMplPaymentDao().getPaymentMode("Cliq Cash", order.getStore());
-
-			final PaymentTransactionEntryModel paymentTransactionEntry = getModelService()
-					.create(PaymentTransactionEntryModel.class);
-			//TODO:Change required when Order Ref No. is ready
-			if (StringUtils.isNotEmpty(rs.get(0)))
-			{
-				paymentTransactionEntry.setCode(rs.get(0) + "-" + rs.get(2));
-			}
-			paymentTransactionEntry.setAmount(BigDecimal.valueOf(walletAmt));
-			paymentTransactionEntry.setTime(date);
-			paymentTransactionEntry.setRequestToken(rs.get(2));
-			paymentTransactionEntry.setRequestId(rs.get(1));
-			paymentTransactionEntry.setCurrency(order.getCurrency());
-			paymentTransactionEntry.setType(PaymentTransactionType.QC_CAPTURE);
-			paymentTransactionEntry.setTransactionStatus(MarketplacecommerceservicesConstants.SUCCESS);
-			paymentTransactionEntry.setPaymentMode(paymenttype);
-
-
-
-			getModelService().save(paymentTransactionEntry);
-			paymentTransactionEntryList.add(paymentTransactionEntry);
-
-			final PaymentTransactionModel paymentTransactionModel = getModelService().create(PaymentTransactionModel.class);
-
-			paymentTransactionModel.setEntries(paymentTransactionEntryList);
-			paymentTransactionModel.setPaymentProvider(paymenttype.getMode());
-			paymentTransactionModel.setCreationtime(date);
-			paymentTransactionModel.setRequestId(rs.get(1));
-			paymentTransactionModel.setRequestToken("0");
-			paymentTransactionModel.setCode(rs.get(0) + "-" + System.currentTimeMillis());
-			paymentTransactionModel.setStatus(MarketplacecommerceservicesConstants.SUCCESS);
-			paymentTransactionModel.setOrder(order);
-
-			paymentTransactionModel.setPlannedAmount(BigDecimal.valueOf(walletAmt));
-
-			getModelService().save(paymentTransactionModel);
-			listPay.add(paymentTransactionModel);
-
-			if (null == order.getPaymentInfo())
-			{
-				final QCWalletPaymentInfoModel qcPaymentInfo = getModelService().create(QCWalletPaymentInfoModel.class);
-
-				qcPaymentInfo.setCode(rs.get(2));
-				qcPaymentInfo.setType(paymenttype.getMode());
-				qcPaymentInfo.setOwner(order.getOwner());
-				//qcPaymentInfo.setCashOwner("NA");
-				qcPaymentInfo.setUser(order.getUser());
-
-				order.setPaymentInfo(qcPaymentInfo);
-			}
-
-			paymentTransactionList.addAll(listPay);
-
-			order.setPaymentTransactions(paymentTransactionList);
-
-			getModelService().save(order);
-		}
-		catch (final ModelSavingException e)
-		{
-			LOG.error(MarketplacecommerceservicesConstants.PAYMENT_TRAN_EXC_LOG + e);
-			throw new ModelSavingException(e + ": Exception while saving payment transaction entry with");
-		}
-	}
-
-	@Override
-	public boolean createQCEntryInAudit(final String qcOrderID, final String channel, final String cartGuId, final String qcAmount,
-			final String qcResponseCode, final String transactionId) throws EtailNonBusinessExceptions
-	{
-		boolean flag = false;
-		try
-		{
-			Assert.notNull(qcOrderID, "Parameter QC cannot be null.");
-
-			final List<MplPaymentAuditEntryModel> auditEntryList = new ArrayList<MplPaymentAuditEntryModel>();
-			final MplPaymentAuditModel auditModel = getModelService().create(MplPaymentAuditModel.class);
-			final MplPaymentAuditEntryModel auditEntry = getModelService().create(MplPaymentAuditEntryModel.class);
-			auditEntry.setAuditId(qcOrderID);
-
-			if (null != qcResponseCode && qcResponseCode.equalsIgnoreCase("0"))
-			{
-				auditModel.setChannel(GenericUtilityMethods.returnChannelData(channel));
-				auditModel.setAuditId(transactionId);
-				auditModel.setCartGUID(cartGuId);
-				auditModel.setRequestDate(new Date());
-				auditModel.setPaymentAmount(Double.valueOf(qcAmount));
-				auditEntry.setStatus(MplPaymentAuditStatusEnum.COMPLETED);
-				auditEntry.setAuditId(transactionId);
-				auditEntry.setCreationtime(new Date());
-				auditEntryList.add(auditEntry);
-				auditModel.setAuditEntries(auditEntryList);
-				getModelService().save(auditModel);
-				flag = true;
-			}
-			else
-			{
-				auditEntry.setStatus(MplPaymentAuditStatusEnum.DECLINED);
-				auditModel.setChannel(GenericUtilityMethods.returnChannelData(channel));
-				auditModel.setAuditId(transactionId);
-				auditModel.setCartGUID(cartGuId);
-				auditModel.setRequestDate(new Date());
-				auditEntry.setAuditId(transactionId);
-				auditEntry.setCreationtime(new Date());
-				auditModel.setPaymentAmount(Double.valueOf(qcAmount));
-				auditEntryList.add(auditEntry);
-				auditModel.setAuditEntries(auditEntryList);
-				getModelService().save(auditModel);
-				flag = false;
-			}
-
-		}
-		catch (
-
-		final ModelSavingException e)
-		{
-			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0007);
-		}
-		catch (final Exception e)
-		{
-			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000);
-		}
-		return flag;
 	}
 }
