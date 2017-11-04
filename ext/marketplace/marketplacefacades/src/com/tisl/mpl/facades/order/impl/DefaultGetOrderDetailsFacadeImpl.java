@@ -174,7 +174,7 @@ public class DefaultGetOrderDetailsFacadeImpl implements GetOrderDetailsFacade
 				}
 				if (StringUtils.isNotEmpty(orderDetails.getEgvCardExpDate()))
 				{
-					orderTrackingWsDTO.setCartEexpiryDate(orderDetails.getEgvCardExpDate());
+					orderTrackingWsDTO.setCartExpiryDate(orderDetails.getEgvCardExpDate());
 				}
 				if (orderDetails.isResendEgvMailAvailable())
 				{
@@ -1725,7 +1725,7 @@ public class DefaultGetOrderDetailsFacadeImpl implements GetOrderDetailsFacade
 				/*Added For EGV Functionality Start */
 				if (null != orderDetail.getEgvCardExpDate())
 				{
-					orderTrackingWsDTO.setCartEexpiryDate(orderDetail.getEgvCardExpDate());
+					orderTrackingWsDTO.setCartExpiryDate(orderDetail.getEgvCardExpDate());
 				}
 				if(orderDetail.isResendEgvMailAvailable()) {
 					orderTrackingWsDTO.setResendAvailable(true);
@@ -1738,7 +1738,7 @@ public class DefaultGetOrderDetailsFacadeImpl implements GetOrderDetailsFacade
 				if(orderDetail.isIsEGVOrder() ){
 					orderTrackingWsDTO.setIsEgvOrder(true);
 				}
-				if(null != orderModel.getModeOfOrderPayment()){
+				if(null !=orderModel.getSplitModeInfo() && orderModel.getSplitModeInfo().trim().equalsIgnoreCase(MarketplaceFacadesConstants.CLIQ_CASH.trim()) && null != orderModel.getModeOfOrderPayment()){
 					orderTrackingWsDTO.setPaymentMethod(orderModel.getModeOfOrderPayment());
 				}
 				

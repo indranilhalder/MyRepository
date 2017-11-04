@@ -1451,10 +1451,11 @@
 		<property name="pickupPersonMobile" type="String" />
 		<property name="isPickupUpdatable" type="boolean" />
 		<property name="isCDA" type="boolean"/>	
-		<property name="cartEexpiryDate" type="String" />
+		<property name="cartExpiryDate" type="String" />
 		<property name="resendAvailable" type="boolean" />
 		<property name="resendAttemptedCount" type="int"/>
 		<property name="egvCartNumber" type="String" />
+		<property name="giftCartStatus" type="String" />
 	</bean>
 
 	<bean class="com.tisl.mpl.wsdto.ListPinCodeServiceData">
@@ -1625,11 +1626,12 @@
 		<!-- TPR-1083 Start-->
 	<property name="exchangeId" type="String"/>
 	<!-- Added For EGV Functionality Start -->
-	<property name="cartEexpiryDate" type="String" />
+	<property name="cartExpiryDate" type="String" />
 		<property name="resendAvailable" type="boolean" />
 		<property name="resendAttemptedCount" type="int"/>
 		<property name="egvCartNumber" type="String" />
 		<property name="isEgvOrder" type="boolean" />
+		<property name="giftCartStatus" type="String" />
 	<!-- Added For EGV Functionality End -->	
 	</bean>
 

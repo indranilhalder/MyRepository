@@ -117,7 +117,10 @@ public class MplVoucherServiceImpl implements MplVoucherService
 				}
 
 				//recalculating cart
-				final Double deliveryCost = cartModel.getDeliveryCost();
+				 Double deliveryCost = cartModel.getDeliveryCost();
+				 if(null !=deliveryCost &&  deliveryCost.doubleValue() <=0.0D) {
+					 deliveryCost = Double.valueOf(getModifiedDeliveryCost(cartModel.getEntries()));
+				 }
 				Double modDeliveryCost = Double.valueOf(0);
 
 				final CommerceCartParameter parameter = new CommerceCartParameter();
@@ -163,7 +166,10 @@ public class MplVoucherServiceImpl implements MplVoucherService
 				}
 
 				//recalculating cart
-				final Double deliveryCost = orderModel.getDeliveryCost();
+				 Double deliveryCost = orderModel.getDeliveryCost();
+				if(null !=deliveryCost &&  deliveryCost.doubleValue() <=0.0D) {
+					 deliveryCost = Double.valueOf(getModifiedDeliveryCost(orderModel.getEntries()));
+				 }
 				Double modDeliveryCost = Double.valueOf(0);
 
 				final CommerceCartParameter parameter = new CommerceCartParameter();

@@ -9464,7 +9464,6 @@ public class UsersController extends BaseCommerceController
 		final EgvDetailsData egvDetailsData = new EgvDetailsData();
 		if (null != requestData)
 		{
-			final CustomerModel currentCustomer = (CustomerModel) getUserService().getCurrentUser();
 			egvDetailsData.setProductCode(requestData.getProductID());
 			if (null != requestData.getPriceSelectedByUserPerQuantity()
 					&& requestData.getPriceSelectedByUserPerQuantity().doubleValue() > 0.0D)
@@ -9480,9 +9479,9 @@ public class UsersController extends BaseCommerceController
 			{
 				egvDetailsData.setToEmailAddress(requestData.getReceiverEmailID());
 			}
-			if (null != currentCustomer && null != currentCustomer.getOriginalUid())
+			if (null != requestData.getFrom())
 			{
-				egvDetailsData.setFromEmailAddress(currentCustomer.getOriginalUid());
+				egvDetailsData.setFromEmailAddress(requestData.getFrom());
 			}
 			if (null != requestData.getPriceSelectedByUserPerQuantity())
 			{

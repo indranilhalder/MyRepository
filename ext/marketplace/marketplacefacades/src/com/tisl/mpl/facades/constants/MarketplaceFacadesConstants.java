@@ -25,14 +25,16 @@ public class MarketplaceFacadesConstants extends GeneratedMarketplaceFacadesCons
 	public static final String EXTENSIONNAME = "marketplacefacades";
 	public static final String STYLE_SWATCH = "styleSwatch";
 	public static final String INR = "INR";
-
+	public static final String PAYMENT_METHOD_CREDIT_CARD="Credit Card";
+	public static final String PAYMENT_METHOD_DEBIT_CARD="Debit Card";
 	public static final String PAYMENT_METHOS_COD = "COD";
 	// EGV Changes Start 
 	
 	public static final String PAYMENT_METHOD_CLIQ_CASH = "Cliq Cash".intern();
 	public static final String PAYMENT_METHOD_PAYTM = "PAYTM".intern();
 	public static final String PAYMENT_METHOD_MRUPEE = "MRUPEE".intern();
-	public static final String PAYMENT_METHOD_NET_BANKING = "Net Banking".intern();
+	public static final String PAYMENT_METHOD_NET_BANKING = "Net Banking";
+	public static final String PAYMENT_METHOD_NET_BANK ="Netbanking";
    // EGV Changes End 
 	public static final String REFUND_FAILED = "Refund Failed";
 	public static final String FAILURE = "FAILURE";
@@ -180,6 +182,7 @@ public class MarketplaceFacadesConstants extends GeneratedMarketplaceFacadesCons
 	public static final String CHANNEL_WEB = "WEB";
 	public static final String CHANNEL_MOBILE = "MOBILE";
 	public static final String EGV_RESEND_EMAILAVAILABLE = "mpl.egv.resendEmailEnabled";
+	public static final String CLIQ_CASH = "CliqCash";
 
 
 	private MarketplaceFacadesConstants()

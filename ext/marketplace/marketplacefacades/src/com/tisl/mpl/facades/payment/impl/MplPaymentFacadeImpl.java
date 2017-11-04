@@ -2972,11 +2972,45 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 
 			if (null != abstractOrderModel)
 			{
+				
+				// EVG Changes Start
 				if (null != abstractOrderModel.getIsEGVCart() && abstractOrderModel.getIsEGVCart().booleanValue())
 				{
 
 					isEgvOrder = true;
 				}
+				
+				if(isEgvOrder) {
+					if (CollectionUtils.isNotEmpty(paymentTypes))
+					{
+						//looping through the mode to get payment Types
+						for (final PaymentTypeModel mode : paymentTypes)
+						{
+							if(null != mode.getMode() ){
+								if (mode.getMode().trim().equalsIgnoreCase(MarketplaceFacadesConstants.PAYMENT_METHOD_CREDIT_CARD.trim())
+										|| mode.getMode().trim().equalsIgnoreCase(MarketplaceFacadesConstants.PAYMENT_METHOD_DEBIT_CARD.trim())
+										|| mode.getMode().trim().equalsIgnoreCase(MarketplaceFacadesConstants.PAYMENT_METHOD_NET_BANKING.trim())
+										|| mode.getMode().trim().equalsIgnoreCase(MarketplaceFacadesConstants.PAYMENT_METHOD_NET_BANK.trim()))
+								{
+									LOG.info("Adding payment Mode "+mode.getMode()+" For EGV Order");
+									data.put(mode.getMode(), mode.getIsAvailable());
+								}
+								else
+								{
+									LOG.debug("Ignoring to add " + mode.getMode() + " payment for EGV Order ");
+								}
+							}
+					
+						}
+					}
+					else
+					{
+						throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B6001);
+					}
+					return data;
+				}
+				
+				// EVG Changes End
 				for (final AbstractOrderEntryModel entry : abstractOrderModel.getEntries())
 				{
 					if (entry.getMplDeliveryMode() != null && entry.getMplDeliveryMode().getDeliveryMode() != null)
@@ -3007,14 +3041,6 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 					if (flag && mode.getMode().equalsIgnoreCase(MarketplaceFacadesConstants.PAYMENT_METHOS_COD))
 					{
 						LOG.debug("Ignoring to add COD payment for CNC Product ");
-					}
-					else if (isEgvOrder && (mode.getMode().equalsIgnoreCase(MarketplaceFacadesConstants.PAYMENT_METHOS_COD)
-							|| mode.getMode().equalsIgnoreCase(MarketplaceFacadesConstants.PAYMENT_METHOD_CLIQ_CASH)
-							|| mode.getMode().equalsIgnoreCase(MarketplaceFacadesConstants.PAYMENT_METHOD_MRUPEE)
-							|| mode.getMode().equalsIgnoreCase(MarketplaceFacadesConstants.PAYMENT_METHOD_NET_BANKING)
-							|| mode.getMode().equalsIgnoreCase(MarketplaceFacadesConstants.PAYMENT_METHOD_PAYTM)))
-					{
-						LOG.debug("Ignoring to add " + mode.getMode() + " payment for EGV Order ");
 					}
 					else
 					{
