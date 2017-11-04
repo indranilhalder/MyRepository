@@ -319,7 +319,7 @@ public class MplProductWebServiceImpl implements MplProductWebService
 
 	/*
 	 * To get product details for a product code
-	 *
+	 * 
 	 * @see com.tisl.mpl.service.MplProductWebService#getProductdetailsForProductCode(java.lang.String)
 	 */
 	@Override
@@ -698,7 +698,9 @@ public class MplProductWebServiceImpl implements MplProductWebService
 					/* Details section of a product */
 					displayConfigurableAttribute(productData, productDetailMobile);
 					/* Specifications of a product */
-					if (MarketplacecommerceservicesConstants.FINEJEWELLERY.equalsIgnoreCase(productModel.getProductCategoryType()))
+					if (MarketplacecommerceservicesConstants.FINEJEWELLERY.equalsIgnoreCase(productModel.getProductCategoryType())
+							|| MarketplacecommerceservicesConstants.FASHIONJEWELLERY.equalsIgnoreCase(productModel
+									.getProductCategoryType()))
 					{
 						productDetailsHelper.groupGlassificationDataForJewelDetails(productData);
 						if (MapUtils.isNotEmpty(productData.getFineJewelleryDeatils()))
@@ -775,14 +777,14 @@ public class MplProductWebServiceImpl implements MplProductWebService
 				}
 				if (CollectionUtils.isNotEmpty(refundReturnList))
 				{
-					if (MarketplacecommerceservicesConstants.FINEJEWELLERY.equalsIgnoreCase(productModel.getProductCategoryType()))
-					{
-						productDetailMobile.setReturnAndRefund(refundReturnList);
-					}
-					if (MarketplacecommerceservicesConstants.FASHIONJEWELLERY.equalsIgnoreCase(productModel.getProductCategoryType()))
-					{
-						productDetailMobile.setReturns(refundReturnList);
-					}
+					//
+					//{
+					productDetailMobile.setReturnAndRefund(refundReturnList);
+					//}
+					//					if (MarketplacecommerceservicesConstants.FASHIONJEWELLERY.equalsIgnoreCase(productModel.getProductCategoryType()))
+					//					{
+					//						productDetailMobile.setReturns(refundReturnList);
+					//					}
 				}
 
 				if (null != productData.getBrand() && null != productData.getBrand().getBrandname())
@@ -1893,12 +1895,12 @@ public class MplProductWebServiceImpl implements MplProductWebService
 	/*
 	 * private PromotionData checkHighestPriority(final List<PromotionData> enabledPromotionList) {
 	 * Collections.sort(enabledPromotionList, new Comparator<PromotionData>() {
-	 *
+	 * 
 	 * @Override public int compare(final PromotionData promo1, final PromotionData promo2) { int priority = 0; if (null
 	 * != promo1.getPriority() && null != promo2.getPriority()) { priority =
 	 * promo1.getPriority().compareTo(promo2.getPriority()); } return priority; }
-	 *
-	 *
+	 * 
+	 * 
 	 * }); Collections.reverse(enabledPromotionList); return enabledPromotionList.get(0); }
 	 */
 
@@ -2058,10 +2060,18 @@ public class MplProductWebServiceImpl implements MplProductWebService
 							  //electronics
 							else
 							{
+								//SDI-2041
+								final ProductFeatureModel productFeature = mplProductFacade.getProductFeatureModelByProductAndQualifier(
+										productData, featureData.getCode());
 								if (null != featureData.getName() && null != featureValueData.getValue())
-
 								{
-									mapConfigurableAttribute.put(featureData.getName(), featureValueData.getValue());
+									String fValue = featureValueData.getValue();
+									if (null != productFeature && null != productFeature.getUnit()
+											&& StringUtils.isNotEmpty(productFeature.getUnit().getSymbol()))
+									{
+										fValue = fValue.concat(" ").concat(productFeature.getUnit().getSymbol());
+									}
+									mapConfigurableAttribute.put(featureData.getName(), fValue);
 								}
 
 							}
@@ -2570,7 +2580,8 @@ public class MplProductWebServiceImpl implements MplProductWebService
 							//apparel
 							final FeatureValueData featureValueData = featureValueList.get(0);
 							if ((MarketplacewebservicesConstants.CLOTHING.equalsIgnoreCase(productData.getRootCategory()))
-									|| (MarketplacewebservicesConstants.FOOTWEAR.equalsIgnoreCase(productData.getRootCategory())))
+									|| (MarketplacewebservicesConstants.FOOTWEAR.equalsIgnoreCase(productData.getRootCategory()) || MarketplacewebservicesConstants.FASHIONJEWELLERY
+											.equalsIgnoreCase(productData.getRootCategory())))
 							{
 
 								//								mapConfigurableAttribute.put(featureValueData.getValue(),
@@ -2684,7 +2695,8 @@ public class MplProductWebServiceImpl implements MplProductWebService
 			if (MarketplacewebservicesConstants.CLOTHING.equalsIgnoreCase(productData.getRootCategory())
 					|| MarketplacewebservicesConstants.FOOTWEAR.equalsIgnoreCase(productData.getRootCategory())
 					|| MarketplacewebservicesConstants.TRAVELANDLUGGAGE.equalsIgnoreCase(productData.getRootCategory())
-					|| MarketplacewebservicesConstants.FINEJEWELLERY.equalsIgnoreCase(productData.getRootCategory()))
+					|| MarketplacewebservicesConstants.FINEJEWELLERY.equalsIgnoreCase(productData.getRootCategory())
+					|| MarketplacewebservicesConstants.FASHIONJEWELLERY.equalsIgnoreCase(productData.getRootCategory()))
 			{
 				productDetailMobile.setDetails(mapConfigurableAttribute);
 				productDetailMobile.setCertificationMapFrJwlry(certificationVal);

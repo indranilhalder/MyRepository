@@ -1715,10 +1715,11 @@ public class GenericUtilityMethods
 				MarketplacecommerceservicesConstants.INR);
 
 		//if (!(cartModel instanceof OrderModel) && (OrderStatus.PAYMENT_PENDING.equals(cartModel.getStatus())))
-		if (abstractOrderModel instanceof CartModel)
-		{
-			couponDiscount = 0.0D;
-		}
+		//SDI-2156
+		//if (abstractOrderModel instanceof CartModel)
+		//{
+			//couponDiscount = 0.0D;
+		//}
 
 		final BigDecimal totalDiscount = new BigDecimal(cartTotalMrp.longValue() - cartTotalNetSelPrice - couponDiscount);
 		final PriceData totalDiscountVal = priceDataFactory.create(PriceDataType.BUY, totalDiscount,

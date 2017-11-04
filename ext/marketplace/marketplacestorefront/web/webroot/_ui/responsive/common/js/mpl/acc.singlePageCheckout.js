@@ -1951,6 +1951,8 @@ ACC.singlePageCheckout = {
 	//Function called when proceed button of review order page is clicked.
 	proceedToPayment:function(element){
 		ACC.singlePageCheckout.showAjaxLoader();
+		//SDI-2158 FIX
+		resetAppliedCouponFormOnRemoval();
 		//function call to validate payment before proceeding
 		var xhrValidateResponse=ACC.singlePageCheckout.validateCartForPayment();
 		xhrValidateResponse.fail(function(xhr, textStatus, errorThrown) {
