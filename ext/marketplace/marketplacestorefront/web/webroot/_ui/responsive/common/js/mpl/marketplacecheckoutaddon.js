@@ -10,8 +10,7 @@ var bankNameSelected=null;
 // Display forms based on mode button click
 //$("#viewPaymentCredit, #viewPaymentCreditMobile ").click(function (){
 function viewPaymentCredit(){
-	//SDI-2149
-	$(".card_nochooseErrorSavedCard_popup").css("display","none");
+	
 	/*TPR-3446 new starts*/
 	var staticHost = $('#staticHost').val();
 	//$("body").append("<div id='no-click' style='opacity:0.40; background:transparent; z-index: 100000; width:100%; height:100%; position: fixed; top: 0; left:0;'></div>");
@@ -55,8 +54,6 @@ function viewPaymentCredit(){
 
 //$("#viewPaymentDebit, #viewPaymentDebitMobile").click(function(){
 function viewPaymentDebit(){
-	//SDI-2149
-	$(".card_nochooseErrorSavedCard_popup").css("display","none");
 	/*TPR-3446 new starts*/
 	var staticHost = $('#staticHost').val();
 	//$("body").append("<div id='no-click' style='opacity:0.40; background:transparent; z-index: 100000; width:100%; height:100%; position: fixed; top: 0; left:0;'></div>");
@@ -461,7 +458,7 @@ function displayCODForm()
 		data: { /*'cartValue' : cartValue , */'request' : httpRequest , 'guid' : guid},		//Commented as not used - TPR-629
 		cache: false,
 		success :function(response,textStatus, jqXHR) {
-			//console.log(response);
+			console.log(response);
 			//UF-281/282:Starts
 			if (jqXHR.responseJSON && response.displaymessage=="codNotallowed") {
 				$("#codNotAllowedMessage").css("display","block");
@@ -1641,9 +1638,6 @@ function savedCreditCardRadioChange(radioId){
 	     $("#"+radioId).parent().find('.card_ebsErrorSavedCard_hide').removeClass("card_ebsErrorSavedCard_hide").addClass("card_ebsErrorSavedCard");
 	     $("#"+radioId).parent().parent().parent().find(".cvv").find('.card_cvvErrorSavedCard_hide').removeClass("card_cvvErrorSavedCard_hide").addClass("card_cvvErrorSavedCard");
 	     $(".security_code_hide").val(null);
-	     //SDI-2149
-	     $(".card_nochooseErrorSavedCard_popup").css("display","none");
-	     $('#make_saved_cc_payment').removeClass("saved_card_disabled");
 	   // TISEE-5555
 	 	$('.security_code_hide').prop('disabled', true);
 	 	$('.security_code').prop('disabled', false); 
@@ -1688,9 +1682,6 @@ function savedDebitCardRadioChange(radioId){
 	     $("#"+radioId).parent().find('.card_ebsErrorSavedCard_hide').removeClass("card_ebsErrorSavedCard_hide").addClass("card_ebsErrorSavedCard");
 	     $("#"+radioId).parent().parent().parent().find(".cvv").find('.card_cvvErrorSavedCard_hide').removeClass("card_cvvErrorSavedCard_hide").addClass("card_cvvErrorSavedCard");
 	     $(".security_code_hide").val(null);
-	   //SDI-2149
-	     $(".card_nochooseErrorSavedCard_popup").css("display","none");
-	     $('#make_saved_dc_payment').removeClass("saved_card_disabled");
 	   // TISEE-5555
 	 	$('.security_code_hide').prop('disabled', true);
 	 	$('.security_code').prop('disabled', false); 
@@ -2432,13 +2423,7 @@ function savedDebitCardRadioChange(radioId){
 	var password = $(".card_token").parent().parent().parent().find(".cvv").find(".cvvValdiation").val();
 	var ebsDownCheck=$("#ebsDownCheck").val();
 	var isDomestic=$(".card_token").parent().parent().parent().find('.card').find('.radio').find('.card_is_domestic').val();
-	//SDI-2149
-	if($('#savedCreditCard input[name=creditCards]:checked').length<=0){
-		$(".card_nochooseErrorSavedCard_popup").css("display","block");
-		$(this).addClass("saved_card_disabled");
-		return false;
-	}
-	else if (password.length < 3 && 	$(".card_brand").val()!="MAESTRO"){
+	if (password.length < 3 && 	$(".card_brand").val()!="MAESTRO"){
 		$(".card_cvvErrorSavedCard").css("display","block");	
 		$(".card_cvvErrorSavedCard_popup").css("display","block");	//UF-211
 		$(this).addClass("saved_card_disabled");	//UF-211
@@ -2463,13 +2448,8 @@ function savedDebitCardRadioChange(radioId){
 		var password = $(".card_token").parent().parent().parent().find(".cvv").find(".cvvValdiation").val();
 		var ebsDownCheck=$("#ebsDownCheck").val();
 		var isDomestic=$(".card_token").parent().parent().parent().find('.card').find('.radio').find('.card_is_domestic').val();
-		//SDI-2149
-		if($('#savedDebitCard input[name=debitCards]:checked').length<=0){
-			$(".card_nochooseErrorSavedCard_popup").css("display","block");
-			$(this).addClass("saved_card_disabled");
-			return false;
-		}
-		else if (password.length < 3 && 	$(".card_brand").val()!="MAESTRO"){
+		
+		if (password.length < 3 && 	$(".card_brand").val()!="MAESTRO"){
 			$(".card_cvvErrorSavedCard").css("display","block");	
 			$(".card_cvvErrorSavedCard_popup").css("display","block");	//UF-217
 			$(".card_token").parent().parent().parent().find(".cvv").find(".cvvValdiation").focus();	//UF-217
@@ -2915,7 +2895,7 @@ function savedDebitCardRadioChange(radioId){
 		$(".card_token_hide").parent().find('.card_is_domestic').removeClass("card_is_domestic").addClass("card_is_domestic_hide");
 		$(".card_token_hide").parent().find('.card_ebsErrorSavedCard').removeClass("card_ebsErrorSavedCard").addClass("card_ebsErrorSavedCard_hide");
 		$(".card_token_hide").parent().parent().parent().find(".cvv").find('.card_cvvErrorSavedCard').removeClass("card_cvvErrorSavedCard").addClass("card_cvvErrorSavedCard_hide");
-		applyPromotion(null,"none","none",true);
+		applyPromotion(null,"none","none");
 	}
 	else if($("#paymentMode").val()=="EMI"){
 		var selectedBank=$("#bankNameForEMI").val();
@@ -2947,7 +2927,7 @@ function savedDebitCardRadioChange(radioId){
 		$(".card_token_hide").parent().find('.card_is_domestic').removeClass("card_is_domestic").addClass("card_is_domestic_hide");
 		$(".card_token_hide").parent().find('.card_ebsErrorSavedCard').removeClass("card_ebsErrorSavedCard").addClass("card_ebsErrorSavedCard_hide");
 		$(".card_token_hide").parent().parent().parent().find(".cvv").find('.card_cvvErrorSavedCard').removeClass("card_cvvErrorSavedCard").addClass("card_cvvErrorSavedCard_hide");
-		applyPromotion(null,"none","none",true);
+		applyPromotion(null,"none","none");
 	}
 	// TISEE-5555
 	$('.security_code_hide').prop('disabled', true);
@@ -3830,7 +3810,7 @@ function validateCardNo(formSubmit) {
 						if(isEGVOrder){
 					       dopayment(binStatus);
 					      } else {
-					       applyPromotion(null,binStatus,formSubmit,true);
+					       applyPromotion(null,binStatus,formSubmit);
 					      }
 					}
 					else
@@ -4132,7 +4112,7 @@ function validateDebitCardNo(formSubmit) {
 							if(isEGVOrder){
 						       dopayment(binStatus);
 						      } else {
-						       applyPromotion(null,binStatus,formSubmit,true);
+						       applyPromotion(null,binStatus,formSubmit);
 						      }
 						}
 						//TPR-629
@@ -5024,13 +5004,13 @@ function setBankForSavedCard(bankName){
 //	});	
 	bankNameSelected=bankName;
 	//alert(bankName);
-	applyPromotion(bankName,"none","none",false);	
+	applyPromotion(bankName,"none","none");	
 
 }
 
 
 //TPR-629---changes in parameter
-function applyPromotion(bankName,binValue,formSubmit,isNewCard)
+function applyPromotion(bankName,binValue,formSubmit)
 {
 	var isEGVOrder=$("#isEGVOrder").val();
 	if(isEGVOrder == ''){
@@ -5056,7 +5036,7 @@ if(!isEGVOrder)
 	var guid=$("#guid").val();
 	$.ajax({
 		url: ACC.config.encodedContextPath + "/checkout/multi/payment-method/applyPromotions",
-		data: { 'paymentMode' : paymentMode , 'bankName' : bankName , 'guid' : guid , 'isNewCard' : isNewCard},
+		data: { 'paymentMode' : paymentMode , 'bankName' : bankName , 'guid' : guid},
 		type: "GET",
 		cache: false,
 		dataType:'json',
@@ -5327,6 +5307,7 @@ if(!isEGVOrder)
 			//$("body").append("<div id='no-click' style='opacity:0.65; background:#000; z-index: 100000; width:100%; height:100%; position: fixed; top: 0; left:0;'></div>");
 			//isNewCard = false;
 		//}
+			
 		},
 		error : function(resp) {
 			$("#no-click,.loaderDiv").remove();
@@ -5334,6 +5315,7 @@ if(!isEGVOrder)
 			$("#no-click1,.loaderDiv1").remove();
 		}
 	});
+}
 }
 
 
@@ -8035,6 +8017,7 @@ $("#cardNo").blur(function(){
 			// Check if session is timed out before validating card
 			if(isSessionActive()){
 				validateCardNo("none");
+				//useWalletForPaymentAjax();
 			}
 			else{
 				redirectToCheckoutLogin();
@@ -8740,6 +8723,8 @@ $("#couponSubmitButton").click(function(){
 			 				//TPR-658
 			 				onSubmitAnalytics("success");
 			 				//TISCSXII-2217 |Coupon success 
+			 				WalletDetailAjax();
+			 				useWalletForPaymentAjax();
 			 				dtmCouponCheck("success",couponCode);
 			 			}
 		 				else
@@ -8837,7 +8822,8 @@ function removeAppliedVoucher(){
 // 				$("#couponSubmitButton").css("opacity","1");
  				
  				resetAppliedCouponFormOnRemoval();
- 				
+ 				WalletDetailAjax();
+ 				useWalletForPaymentAjax();
  				console.log("cupon2");
  				//window.location.reload();
  		},
@@ -9419,9 +9405,6 @@ $("*[data-id=newCCard]").click(function(){
 	$("#make_cc_payment_up").show();
 	$(".card_cvvErrorSavedCard").hide();
 	$("#card_form").find("input[type=password]").val("");
-	//SDI-2149
-	$('#savedCreditCard .security_code').prop('disabled', true); 
-	$('#savedCreditCard .security_code').removeClass("security_code").addClass("security_code_hide");
 	//$("#savedCreditCard").find(".error-message").hide();
 });
 
@@ -9472,9 +9455,6 @@ $("*[data-id=newDCard]").click(function(){
 	$("#make_dc_payment_up").show();
 	$(".card_cvvErrorSavedCard").hide();
 	$("#card_form_saved_debit").find("input[type=password]").val("");
-	//SDI-2149
-	$('#savedDebitCard .security_code').prop('disabled', true); 
-	$('#savedDebitCard .security_code').removeClass("security_code").addClass("security_code_hide");
 	//$("#savedDebitCard").find(".error-message").hide();
 });
 
