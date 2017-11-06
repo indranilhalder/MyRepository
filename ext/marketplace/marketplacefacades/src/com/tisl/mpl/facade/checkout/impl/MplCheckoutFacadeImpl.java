@@ -863,6 +863,10 @@ public class MplCheckoutFacadeImpl extends DefaultCheckoutFacade implements MplC
 					orderData.setResendEgvMailAvailable(false);
 				}
 				
+				if(null != orderModel.getStatus()){
+					orderData.setStatus(orderModel.getStatus());
+				}
+				
 			//	orderData.setre
 			}
 		}

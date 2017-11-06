@@ -13,6 +13,7 @@ import de.hybris.platform.commerceservices.customer.CustomerAccountService;
 import de.hybris.platform.commerceservices.strategies.CheckoutCustomerStrategy;
 import de.hybris.platform.commercewebservicescommons.dto.store.PointOfServiceWsDTO;
 import de.hybris.platform.commercewebservicescommons.mapping.DataMapper;
+import de.hybris.platform.core.enums.OrderStatus;
 import de.hybris.platform.core.model.JewelleryInformationModel;
 import de.hybris.platform.core.model.order.AbstractOrderEntryModel;
 import de.hybris.platform.core.model.order.OrderModel;
@@ -170,7 +171,7 @@ public class DefaultGetOrderDetailsFacadeImpl implements GetOrderDetailsFacade
 				/*Added For EGV Functionality Start*/ 
 				if (StringUtils.isNotEmpty(orderDetails.getEgvCardNumber()))
 				{
-					orderTrackingWsDTO.setEgvCartNumber(orderDetails.getEgvCardNumber());
+					orderTrackingWsDTO.setEgvCardNumber(orderDetails.getEgvCardNumber());
 				}
 				if (StringUtils.isNotEmpty(orderDetails.getEgvCardExpDate()))
 				{
@@ -184,6 +185,14 @@ public class DefaultGetOrderDetailsFacadeImpl implements GetOrderDetailsFacade
 				if (orderDetails.isIsEGVOrder())
 				{
 					orderTrackingWsDTO.setIsEgvOrder(true);
+					if(null != orderDetails.getMplPaymentInfo() && null != orderDetails.getStatus()) {
+						if(OrderStatus.REDEEMED.getCode().equalsIgnoreCase(orderDetails.getStatus().getCode())){
+							orderTrackingWsDTO.setGiftCardStatus(orderDetails.getStatus().getCode());
+						}else {
+							orderTrackingWsDTO.setGiftCardStatus(OrderStatus.CONFIRMED.getCode());
+						}
+						
+					}
 				}
 				
 				/*Added For EGV Functionality End*/ 
@@ -1733,14 +1742,24 @@ public class DefaultGetOrderDetailsFacadeImpl implements GetOrderDetailsFacade
 					orderTrackingWsDTO.setResendAvailable(false);
 				}
 				if(null != orderDetail.getEgvCardNumber()){
-					orderTrackingWsDTO.setEgvCartNumber(orderDetail.getEgvCardNumber());
+					orderTrackingWsDTO.setEgvCardNumber(orderDetail.getEgvCardNumber());
 				}
 				if(orderDetail.isIsEGVOrder() ){
 					orderTrackingWsDTO.setIsEgvOrder(true);
+					if(null != orderDetail.getMplPaymentInfo() && null != orderDetail.getStatus()) {
+						if(OrderStatus.REDEEMED.getCode().equalsIgnoreCase(orderDetail.getStatus().getCode())){
+							orderTrackingWsDTO.setGiftCardStatus(orderDetail.getStatus().getCode());
+						}else {
+							orderTrackingWsDTO.setGiftCardStatus(OrderStatus.CONFIRMED.getCode());
+						}
+						
+					}
+					
 				}
 				if(null !=orderModel.getSplitModeInfo() && orderModel.getSplitModeInfo().trim().equalsIgnoreCase(MarketplaceFacadesConstants.CLIQ_CASH.trim()) && null != orderModel.getModeOfOrderPayment()){
 					orderTrackingWsDTO.setPaymentMethod(orderModel.getModeOfOrderPayment());
 				}
+				
 				
 			//	setUpStatementData(orderTrackingWsDTO,orderDetail);
 				

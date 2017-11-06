@@ -230,6 +230,11 @@ public class MplVoucherServiceImpl implements MplVoucherService
 				{
 					deliveryCost += entry.getCurrDelCharge().doubleValue();
 				}
+				if (null != entry && !entry.getGiveAway().booleanValue() && null != entry.getScheduledDeliveryCharge()
+						&& entry.getScheduledDeliveryCharge().doubleValue() > 0)
+				{
+					deliveryCost += entry.getScheduledDeliveryCharge().doubleValue();
+				}
 			}
 		}
 		return deliveryCost;
