@@ -71,7 +71,7 @@ var stwService = {
                 		var header = stwRender.blpheader(json);
                 		var carousel = stwRender.carousel(json);
                 	}
-                	else{
+                	else if($("#for_homefurnishing").val()== true){
                 		var header = stwRender.HFheader(json);
                 		var carousel = stwRender.carouselHF(json);
                 	}
@@ -158,13 +158,20 @@ var stwRender = {
     },
     
    HFheader: function() {
+	   if($('#for_homefurnishing').val()== true){
         var stwWidgetHeading = "";
         stwWidgetHeading += '<div class="best_seller_section hide_clplist">';
         stwWidgetHeading += '<div class="content">' + isStwheaderforPDP + '</div>';
         stwWidgetHeading += '</div>';
+	   }
+	   else{
+		   var stwWidgetHeading = "";
+	   }
         return stwWidgetHeading;
-
     },
+    
+    
+    
     tabs: function(STWJObject) {
         var tabsFormationHtml = "";
         tabsFormationHtml += '<div class="Menu"><div class="mobile selectmenu">ALL</div>';

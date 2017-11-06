@@ -762,7 +762,4 @@ tr.d0 td {
 <script type="text/javascript">
 	var prop = '${mapConfigurableAttributes}';
 	prop =prop.replace(/[{}]/g, '');
-	
-//TPR-6740	
-	var isStwheaderforPDP = '${isStwheaderforPDP}';
 </script>

@@ -24,7 +24,7 @@
 <c:if test="${empty selectedSize}">
 <c:set var="selectedSizeForSizeGuide" value="false"/>
 </c:if>
-
+<input type="hidden" id="for_homefurnishing" value="${product.rootCategory =='HomeFurnishing'}">
 <c:url var="sizeGuideUrl"
 	value="/p-sizeGuide?productCode=${product.code}&sizeSelected=${selectedSizeForSizeGuide}" scope="request"></c:url>
 <style>
@@ -94,6 +94,8 @@ function redirectURL(val){
 
 var productSizeVar = '${productSize}';
 var buyingGuideData ='${buyingGuide}';
+//TPR-6740	
+var isStwheaderforPDP = '${isStwheaderforPDP}';
 </script>
 <!-- logic for displaying color and size variant -->
 <!-- displaying colour swatches -->
