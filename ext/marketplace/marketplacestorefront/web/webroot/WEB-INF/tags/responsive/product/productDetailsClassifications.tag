@@ -154,7 +154,7 @@
 									<td><c:choose>
 											<c:when test="${not empty classification.value }">
 												<c:forEach var="classValue" items="${classification.value }">
-   						 			${classValue.key} &nbsp;&nbsp;${classValue.value}
+   						 			${classValue.key}&nbsp;${classValue.value} <!--SDI-2041  -->
    						 		 </c:forEach>
 											</c:when>
 											<c:otherwise>
