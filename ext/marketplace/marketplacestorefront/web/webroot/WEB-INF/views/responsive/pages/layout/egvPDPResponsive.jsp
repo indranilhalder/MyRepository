@@ -14,262 +14,8 @@
 	tagdir="/WEB-INF/tags/responsive/formElement"%>
 <%@ taglib prefix="order" tagdir="/WEB-INF/tags/responsive/order"%>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
+<%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 
-<style>
-	.Tanishq {
-	  font-family: Montserrat;
-	  font-size: 12px;
-	  line-height: 1.33;
-	  letter-spacing: 0.6px;
-	  text-align: left;
-	  color: #000000;
-	  color: var(--black);
-	}
-	
-	.Diwali-GIft-Card {
-	  font-family: Montserrat;
-	  font-size: 20px;
-	  line-height: 1.4;
-	  letter-spacing: 0.6px;
-	  text-align: left;
-	  color: #000000;
-	  color: var(--black);
-	}
-	
-	.Oval {
-	  background-color: #a9133d;
-	  color: white;
-	  border-radius: 50%;
-	  padding: 0px 5px;
-	}
-
-	/* .giftContSub {z-index: 9;} */
-	.giftLabel img {width: 100%;}
-	.giftCard_input {
-	  width: 100%;
-	  height: 37px !important;
-	  border-radius: 4px;
-	  border: none !important;
-	  background-color: #ededed;
-	}
-	.giftCard_textarea {
-	  width: 100%;
-	  max-width: 510px;
-	  padding: 10px;
-	  min-height: 100px;
-	  max-height: 153px;
-	  border-radius: 4px;
-	  border: none !important;
-	  background-color: #ededed;
-	  font-size: 12px;
-	}
-	.giftLabel {cursor: pointer;}
-	.moreGiftTemplates {color: #a9133d; cursor: pointer;}
-	.giftAmountBtns {
-	  width: 72px;
-	  height: 32px;
-	  margin: 5px;
-	  border-radius: 4px;
-	  background-color: #ffffff;
-	  background-color: var(--white-two);
-	  box-shadow: 0 1px 1px 0 rgba(0, 0, 0, 0.18);
-	}
-	.giftAmountBtns:focus {border-color: #a9133d;}
-	.qtyField {width: 35px; height: 35px; border-radius: 4px; text-align: center; padding: 0 !important;}
-	.textRight {text-align: right;}
-	.giftBuyBtn {
-	  width: 100%;
-	  max-width: 200px;
-	  min-width: 140px;
-	  height: 42px;
-	  line-height: 12px;
-	  background-color: #a9143c;
-	  color: white;
-	  font-size: 12px;
-	  font-weight: 400;
-	}
-	.btn.active {border: 1px solid #a9133d;}
-	
-	.giftImgRight {width: 500px;}
-	
-	.giftFinalTemp {
-		border-radius: 4px;
-		/* border: 1px solid #ccc; */
-		box-shadow: 0 2px 3px 0 rgba(0, 0, 0, 0.1);
-	}
-	
-	.giftFinalTempContainer {
-		padding: 2%;
-	}
-	
-	.giftFinalTempTop img {
-		width:100%;
-		border-top-left-radius: 4px; border-top-right-radius: 4px; 
-		/* background: url(../_ui/responsive/common/images/egv_template.png) no-repeat center; */
-	}
-	
-	.giftFinalTempMiddle {
-		padding: 15px;
-		color: darkgrey;
-		min-height: 100px;
-		text-align: justify;
-		line-height: normal;
-		border-top: 1px solid #ccc;
-	}
-	
-	.giftFinalTempBottom {
-		color: #444;
-		padding: 15px;
-		font-size: 30px;
-		border-top: 1px solid #ccc;
-	}
-	
-	.giftTermsDesc {
-		font-size: 12px;
-		color: darkgrey;
-		/* text-align: right; */
-	}
-		
-	
-	@media(max-width: 650px){
-		.giftContSub {padding-bottom: 10%;}
-		.giftContSub1 {border-bottom: 1px solid #ddd;}
-		.giftContSub2 {padding-top: 5%;}
-		.giftTermsDesc {text-align: left;}
-		.giftCategoryTab button {padding: 5px !important; font-size: 8px !important; overflow: hidden;}
-		.giftBuyBtn {max-width: 100%; bottom: 0; left: 0; right: 0; position: fixed; z-index: 12;}
-	}
-	
-	@media(min-width: 1024px){
-		.giftContSub2 {padding-left: 8% !important;}
-		.giftFinalTempContainer {margin-left: 3%; padding-left: 0% !important; width: 75%; float: left;}
-		.giftTermsDesc {margin-left: 1%;}
-	}
-	
-	@media(min-width: 651px){
-		.headingTexts {text-align: right; padding-top: 2%;}
-		.giftContSub1 {float: right !important;}
-		.giftContSub1, .giftContSub3 {padding-left: 10%;}
-		/* .stepTexts {text-align: center;} */
-	}
-	
-	/* POPUP CODE */
-	/* The Modal (background) */
-	.giftDesignModel {
-	    display: none; /* Hidden by default */
-	    position: fixed; /* Stay in place */
-	    z-index: 99999; /* Sit on top */
-	    padding-top: 90px; /* Location of the box */
-	    left: 0;
-	    top: 0;
-	    width: 100%; /* Full width */
-	    height: 100%; /* Full height */
-	    overflow: auto; /* Enable scroll if needed */
-	    background-color: rgb(0,0,0); /* Fallback color */
-	    background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
-	}
-	
-	/* Modal Content */
-	.giftDesignModelContent {
-	    background-color: #fefefe;
-	    margin: auto;
-	    padding: 20px;
-	    border: 1px solid #888;
-	    width: 80%;
-	}
-	
-	/* The Close Button */
-	.giftDesignModelClose {
-	    float: right;
-	    font-size: 28px;
-	    font-weight: bold;
-	    top: 80px;
-	    right: 9%;
-	    background-color: black;
-	    color: white;
-	    padding: 1px 7px;
-	    border-radius: 50%;
-	    position: absolute;
-	}
-	
-	.giftDesignModelClose:hover,
-	.giftDesignModelClose:focus {
-	    cursor: pointer;
-	}
-	
-	.giftModalContainer {
-	
-	}
-	
-	.giftCategoryTab {
-		float: left;
-	    border: 1px solid #ccc;
-	    border-right: none;
-	    background-color: #f1f1f1;
-	    width: 15%;
-	    height: 500px;
-	}
-	
-	.giftCategoryTab button {
-	    display: block;
-	    background-color: inherit;
-	    color: black;
-	    font-size: 14px !important;
-	    padding: 15px;
-	    width: 100%;
-	    border: none;
-	    outline: none;
-	    text-align: left;
-	    cursor: pointer;
-	    transition: 0.3s;
-	    font-size: 17px;
-	}
-	
-	.giftCategoryTab button:hover {
-	    background-color: #ddd;
-	}
-	
-	.giftCategoryTab button.active {
-	    background-color: #fff;
-	}
-	
-	.giftCategoryTabcontent {
-	    float: left;
-	    padding: 12px;
-	    border: 1px solid #ccc;
-	    width: 85%;
-	    border-left: none;
-	    height: 500px;
-	    overflow-y: auto;
-	}
-	
-	.extGiftTempItem {
-	    cursor: pointer;
-	}
-	
-	.extGiftTempItem:hover {
-		border: 1px solid #a9133d;
-	}
-	
-	.extGiftTempItem p {
-		padding: 0px 8px;
-	}
-	
-	.extGiftTemplateImg {
-		height: 230px;
-	}
-	
-	.extGiftDesc {
-		height: 24px;
-		overflow: hidden;
-	}
-	
-	.extGiftTemplateImg img {
-		width: 100%;
-	}
-	
-	#customAmountError, #giftCardFromNameError, #giftCardFromFirstNameError, #giftCardFromLastNameError, #giftCardEmailError, #giftCardPhoneNoError {display: none;}
-</style>
 <template:page pageTitle="${pageTitle}">
 <div>
 	<br />
@@ -282,7 +28,7 @@
 						<img src="../_ui/responsive/theme-blue/images/GiftCard.jpg" />
 					</div>
 					<div class="giftFinalTempMiddle">
-						<span><i id="updatedGiftCardMessageText">Your message here</i></span>
+						<span><i id="updatedGiftCardMessageText"><spring:theme code="egv.product.msg.default"/></i></span>
 					</div>
 					<div class="giftFinalTempBottom">
 						<span>&#8377;<span id="updatedCustomGiftValue"></span></span>
@@ -296,10 +42,10 @@
 			<div class="clearfix">
 				<div class="">
 					<div class="col-sm-2">
-					<!-- <span class="Tanishq">Tata CliQ</span> -->
+					<!-- <span class="Gift_Main_Heading">Tata CliQ</span> -->
 					</div>
 					<div class="col-sm-10">
-					<span class="Diwali-GIft-Card">Gift Card</span>
+					<span class="Gift_Card"><spring:theme code="egv.product.msg.giftCard"/></span>
 					<br />&nbsp;
 					</div>
 				</div>
@@ -404,7 +150,7 @@
 										<div class="extGiftTemplateImg"><img src="https://cdn.zeplin.io/58987458375db68f0b01107e/assets/93E01EE1-736A-4931-861C-368B8536DA9E.png" /></div>
 										<div>
 											<p><strong>Tanishq</strong></p><p class="extGiftDesc">Special Birthday Gift Cards with additional benifits...</p>
-											<br /><p><strong>&#8377; 500</strong></p>
+											<br /><p><strong>&#8377; 500</strong></p> 
 										</div>
 									  </div>
 									  
@@ -451,7 +197,7 @@
 					<!-- STEP &nbsp;<span class="Oval">1</span> --><br />&nbsp;
 				</div>
 				<div class="col-sm-10">
-					<span>ENTER DETAILS FOR YOUR GIFT CARD</span><br />&nbsp;
+					<span><spring:theme code="egv.product.msg.enterCardDetails"/></span><br />&nbsp;
 					
 						<c:if test="${not empty erroMsg}">
 						<div id="backend_validation_section" class="backend_validation_fail">
@@ -468,27 +214,19 @@
 							commandName="egvDetailsform">
 			<div class="clearfix">
 				<div class="col-sm-2 headingTexts">
-					Amount<br />&nbsp;
+					<spring:theme code="egv.product.msg.giftAmount"/> <br />&nbsp;
 				</div>
 				<div class="col-sm-10">
 					<div class="btn-group" data-toggle="buttons">
-						<span class="btn giftAmountBtns">
-							<input type="radio" name="giftRange" value="500">&#8377; 500
-						</span>
-						<span class="btn giftAmountBtns">
-							<input type="radio" name="giftRange" value="1000">&#8377; 1000
-						</span>
-						<span class="btn giftAmountBtns">
-							<input type="radio" name="giftRange" value="1500">&#8377; 1500
-						</span>
-						<span class="btn giftAmountBtns">
-							<input type="radio" name="giftRange" value="2000">&#8377; 2000
-						</span>
-						<span class="btn giftAmountBtns">
-							<input type="radio" name="giftRange" value="2500">&#8377; 2500
-						</span>
+						<c:forEach items="${amountList}" var="amount">
+							<span class="btn giftAmountBtns">
+								<input type="radio" name="giftRange" value="${amount}">&#8377; ${amount}
+							</span>
+						</c:forEach>
 					</div>
-					<div><br />or<br />&nbsp;
+					<div><br /><spring:theme code="egv.product.msg.or"/><br />&nbsp;
+					
+					
 					<div class="alert alert-warning" id="customAmountError">
 						
 					</div>
@@ -500,7 +238,7 @@
 			</div>
 			<div class="clearfix">
 				<div class="col-sm-2 headingTexts">
-					To<br />&nbsp;
+					<spring:theme code="egv.product.msg.to"/><br />&nbsp;
 				</div>
 				<div class="col-sm-10">
 					<form:input path="toEmailAddress"  class="giftCard_input giftCard_toEmail" type="email" placeholder="Enter Recipient e-mail Address" /><br />&nbsp;
@@ -509,7 +247,7 @@
 			</div>
 			<div class="clearfix">
 				<div class="col-sm-2 headingTexts">
-					First Name<br />&nbsp;
+					<spring:theme code="egv.product.msg.firstName"/><br />&nbsp;
 				</div>
 				<div class="col-sm-10">
 					<form:input path="fromFirstName" class="giftCard_input giftCard_fromFirstName" id="giftCard_fromFirstName" type="text" placeholder="First Name" /><br />&nbsp;
@@ -518,7 +256,7 @@
 			</div>
 			<div class="clearfix">
 				<div class="col-sm-2 headingTexts">
-					Last Name<br />&nbsp;
+					<spring:theme code="egv.product.msg.lastName"/><br />&nbsp;
 				</div>
 				<div class="col-sm-10">
 					<form:input path="fromLastName" class="giftCard_input giftCard_fromLastName" id="giftCard_fromLastName" type="text" placeholder="Last Name" /><br />&nbsp;
@@ -527,7 +265,7 @@
 			</div>
 		 	<div class="clearfix">
 				<div class="col-sm-2 headingTexts">
-					From<br />&nbsp;
+					<spring:theme code="egv.product.msg.from"/><br />&nbsp;
 				</div>
 				<div class="col-sm-10">
 					<form:input path="fromEmailAddress" class="giftCard_input giftCard_fromName" id="giftCard_fromName" type="text" placeholder="From Name" /><br />&nbsp;
@@ -536,7 +274,7 @@
 			</div>
 			<div class="clearfix">
 				<div class="col-sm-2 headingTexts">
-					Phone<br />&nbsp;
+				 <spring:theme code="egv.product.msg.phone"/><br />&nbsp;
 				</div>
 				<div class="col-sm-10">
 					<form:input path="fromPhoneNo" class="giftCard_input giftCard_phoneNo" type="text" maxlength="10" placeholder="Mobile Number" onkeypress="return isNumber(event)" /><br />&nbsp;
@@ -545,7 +283,7 @@
 			</div>
 			<div class="clearfix">
 				<div class="col-sm-2 headingTexts">
-					Message<br />&nbsp;
+					<spring:theme code="egv.product.msg.message"/><br />&nbsp;
 				</div>
 				<div class="col-sm-10">
 					<input type="hidden" id="customAmount" />
@@ -557,8 +295,8 @@
 					&nbsp;
 				</div>
 				<div class="col-sm-10">
-					Qty &nbsp; <input  type="text" class="qtyField" disabled value="1" />
-					<button  type="submit" class="giftBuyBtn pull-right">BUY NOW</button>
+					<spring:theme code="egv.product.msg.qty"/> &nbsp; <input  type="text" class="qtyField" disabled value="1" />
+					<button  type="submit" class="giftBuyBtn pull-right"><spring:theme code="egv.product.msg.buyNow"/></button>
 				</div>
 			</div> 
 			</form:form>
@@ -569,7 +307,7 @@
 			<div class="col-sm-12">
 				<br /> &nbsp;
 				<div class="giftTermsDesc">
-					<span> Sold by <strong>QwikCilver Solutions Pvt. Ltd.</strong><!--  and delivered by Tata CliQ. Credit and Debit Cards issued outside India cannot be used to purchase Tata CliQ Gift Cards. Tata CliQ Gift Cards are subjected to Terms and Conditions. Have a Tata CliQ Gift Card? <a href="#">Redeem</a> your gift card -->
+					<span><spring:theme code="egv.product.msg.soldBy"/><strong><spring:theme code="egv.product.msg.qc"/></strong>
 					</span>
 				</div>
 			</div>

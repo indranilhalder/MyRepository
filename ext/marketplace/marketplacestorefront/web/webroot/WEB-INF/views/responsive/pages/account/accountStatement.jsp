@@ -3,59 +3,6 @@
 <%@ taglib prefix="cms" uri="http://hybris.com/tld/cmstags"%>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 <%@ taglib prefix="format" tagdir="/WEB-INF/tags/shared/format"%>
-<style>
-.orderStatementContainer {
-	overflow: auto;
-	max-height: 400px;
-}
-
-.orderStatementOrderId {
-	font-size: 24px;
-}
-
-.orderStatementTable {
-	width: 100%;
-}
-
-.orderStatementTable td {
-	border: 1px solid grey;
-	padding: 1%;
-}
-
-.orderStatementTable .orderSellerId {
-	background-color: #ddd;
-}
-
-.orderStatementTable .orderSellerId td {
-	text-align: center;
-}
-
-.orderStatementTable thead {
-	background-color: darkgrey;
-	font-weight: bold;
-	text-align: center;
-}
-
-.orderStatementTable thead .orderTransactionId {
-	vertical-align: middle;
-}
-
-.accountPopupClose {
-	top: 15% !important;
-	right: 10% !important;
-	font-size: 28px !important;
-	padding: 0px 0px 7px 7px;
-	background: black;
-	color: white !important;
-}
-
-@media ( max-width : 768px) {
-	.orderStatementOrderId {
-		font-size: 18px;
-	}
-}
-</style>
-
 <div>
 	<span class="accountPopupClose close">&times;</span>
 	<c:set var="cancelAndRetun" value="false" />

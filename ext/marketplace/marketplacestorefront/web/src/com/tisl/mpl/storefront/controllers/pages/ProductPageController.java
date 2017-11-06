@@ -4291,7 +4291,15 @@ public class ProductPageController extends MidPageController
 			model.addAttribute(ModelAttributetConstants.MSD_JS_URL, msdjsURL);
 			model.addAttribute(ModelAttributetConstants.IS_MSD_ENABLED, isMSDEnabled);
 			model.addAttribute(ModelAttributetConstants.MSD_REST_URL, msdRESTURL);
-
+			try{
+			 String productPrice=configurationService.getConfiguration().getString("mpl.buyingEgv.priceOptions");	
+			 String [] amountList = productPrice.split(",");
+			 model.addAttribute("amountList", amountList);
+			}catch(Exception exception){
+				LOG.error("Exception Occur while getting product price  ");
+			}
+			 
+			 model.addAttribute(ModelAttributetConstants.MSD_REST_URL, msdRESTURL);
 			if (productModel instanceof PcmProductVariantModel)
 			{
 				final PcmProductVariantModel variantProductModel = (PcmProductVariantModel) productModel;

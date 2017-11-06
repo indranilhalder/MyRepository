@@ -28,71 +28,7 @@
 
 <spring:eval expression="T(de.hybris.platform.util.Config).getParameter('order.cancel.enabled')" var="cancelFlag"/> 
 <spring:eval expression="T(de.hybris.platform.util.Config).getParameter('order.return.enabled')" var="returnFlag"/> 
-<style>
 
-.orderRedeemedStatusInfo {
-	text-align: right;
-	color: green;
-}
-
-.orderRedeemedStatusInfo span {
-	font-weight: bold;
-	padding: 2px;
-	border: 2px dashed;
-	position: relative !important;
-}
-
-.showStatementModel {
- display: none;
- position: fixed;
- z-index: 1;
- padding-top: 100px;
- left: 0;
- top: 0;
- width: 100%;
- height: 100%;
- overflow: auto;
- background-color: rgb(0, 0, 0);
- background-color: rgba(0, 0, 0, 0.4);
-}
-
-.showStatementModel-content {
- background-color: #fefefe;
- margin: auto;
- padding: 20px;
- border: 1px solid #888;
- width: 80%;
-}
-
-.resend_order_email {
-    height: 16px;
-    font-size: 12px;
-    line-height: 1.33;
-    letter-spacing: .6px;
-    text-align: center;
-    color: #a5173c;
-    cursor: pointer;
-    text-transform: uppercase;
-}
-
-.resend_email_limit {margin-bottom: 0 !important; display: none;}
-
-.orders-product-block .header ul .viewDetails {width: 50% !important;} 
-.orders-product-block .header ul li {width: 16% !important;}
-.orders-product-block .header ul .resendEmail {text-align: right;}
-
-@media(max-width: 480px) {
-	.orders-product-block .header ul .viewDetails {width: 100% !important;}
-	.orders-product-block li.header > ul > li {width: 33% !important; float: left;}
-	.orders-product-block .header ul .resendEmail {text-align: center;}
-	.orders-product-block .header ul .viewDetailsAnchor {text-align: left; position: static !important;}
-	.orders-product-block .header ul .trackOrderAnchor {position: static !important;}
-}
-
-@media(max-width: 768px) {
-	.orders-product-block .header ul .trackOrderAnchor, .orders-product-block .header ul .viewDetailsAnchor {position: static !important;}
-}
-</style>
 
 <!-- LW-230 -->
 <input type="hidden" id="isLuxury" value="${isLuxury}"/>
