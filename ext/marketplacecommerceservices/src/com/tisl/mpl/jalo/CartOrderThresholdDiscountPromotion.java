@@ -320,12 +320,12 @@ public class CartOrderThresholdDiscountPromotion extends GeneratedCartOrderThres
 								//final CustomerWalletDetailResponse customerWalletDetailResponse = getMplWalletServices()
 								//	.getCustomerWallet(cm.getCustomerWalletDetail().getWalletId(), code[1].toString());
 
-								if (null != cartModel.getPayableWalletAmount())
+								if (null != cartModel.getTotalWalletAmount())
 								{
-									orderSubtotalAfterDiscounts -= cartModel.getPayableWalletAmount().doubleValue();
+									orderSubtotalAfterDiscounts -= cartModel.getTotalWalletAmount().doubleValue();
 									if (orderSubtotalAfterDiscounts <= threshold.doubleValue())
 									{
-										orderSubtotalAfterDiscounts += cartModel.getPayableWalletAmount().doubleValue();
+										orderSubtotalAfterDiscounts += cartModel.getTotalWalletAmount().doubleValue();
 										checkWalletUsed = true;
 									}
 
@@ -343,9 +343,9 @@ public class CartOrderThresholdDiscountPromotion extends GeneratedCartOrderThres
 								//final CustomerWalletDetailResponse customerWalletDetailResponse = getMplWalletServices()
 								//	.getCustomerWallet(cm.getCustomerWalletDetail().getWalletId(), code[1].toString());
 
-								if (null != cartModel.getPayableWalletAmount())
+								if (null != cartModel.getTotalWalletAmount())
 								{
-									if (cartModel.getPayableWalletAmount().doubleValue() >= orderSubtotalAfterDiscounts)
+									if (cartModel.getTotalWalletAmount().doubleValue() >= orderSubtotalAfterDiscounts)
 									{
 										checkWalletUsed = true;
 									}

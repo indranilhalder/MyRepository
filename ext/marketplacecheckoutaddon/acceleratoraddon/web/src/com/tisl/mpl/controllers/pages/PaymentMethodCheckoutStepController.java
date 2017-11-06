@@ -6195,14 +6195,14 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 			if (StringUtils.isNotEmpty(value) && value.equalsIgnoreCase("true"))
 			{
 
-				final CustomerModel currentCustomer = (CustomerModel) getUserService().getCurrentUser();
+				//final CustomerModel currentCustomer = (CustomerModel) getUserService().getCurrentUser();
 
-				final BalanceBucketWise balBucketwise = mplWalletFacade
-						.getQCBucketBalance(currentCustomer.getCustomerWalletDetail().getWalletId());
+//				final BalanceBucketWise balBucketwise = mplWalletFacade
+//						.getQCBucketBalance(currentCustomer.getCustomerWalletDetail().getWalletId());
 
-				if (balBucketwise.getResponseCode() == Integer.valueOf(0) && null != balBucketwise.getWallet().getBalance())
+				if (null != cart.getTotalWalletAmount())
 				{
-					final Double WalletAmt = Double.valueOf((df.format(balBucketwise.getWallet().getBalance().doubleValue())));
+					final Double WalletAmt = cart.getTotalWalletAmount();
 					
 					double totalCartAmt = cart.getTotalPrice().doubleValue();
 					
