@@ -291,43 +291,73 @@ public class CartOrderThresholdDiscountPromotion extends GeneratedCartOrderThres
 						//							promotionResults.add(result);
 						//						}
 
+
 						/**
 						 * Fix for Wallet
 						 */
 						boolean checkWalletUsed = false;
 						boolean checkPaymentRestriction = false;
 
-						for (final AbstractPromotionRestriction restriction : restrictionList)
+						try
 						{
-							if (restriction instanceof PaymentModeSpecificPromotionRestriction)
+
+							for (final AbstractPromotionRestriction restriction : restrictionList)
 							{
-								checkPaymentRestriction = true;
+								if (restriction instanceof PaymentModeSpecificPromotionRestriction)
+								{
+									checkPaymentRestriction = true;
+								}
+							}
+							final CartModel cartModel = getCartService().getSessionCart();
+
+
+							if (null != cartModel && null != cartModel.getSplitModeInfo() && checkPaymentRestriction
+									&& cartModel.getSplitModeInfo().equalsIgnoreCase("Split"))
+							{
+
+								final CustomerModel cm = (CustomerModel) cartModel.getUser();
+
+								final String code[] = cartModel.getCode().split("-");
+
+								final CustomerWalletDetailResponse customerWalletDetailResponse = getMplWalletServices()
+										.getCustomerWallet(cm.getCustomerWalletDetail().getWalletId(), code[1].toString());
+
+								if (customerWalletDetailResponse.getResponseCode().intValue() == 0)
+								{
+									orderSubtotalAfterDiscounts -= customerWalletDetailResponse.getWallet().getBalance().doubleValue();
+									if (orderSubtotalAfterDiscounts <= threshold.doubleValue())
+									{
+										orderSubtotalAfterDiscounts += customerWalletDetailResponse.getWallet().getBalance().doubleValue();
+										checkWalletUsed = true;
+									}
+
+								}
+							}
+
+							if (null != cartModel && null != cartModel.getSplitModeInfo() && checkPaymentRestriction
+									&& cartModel.getSplitModeInfo().equalsIgnoreCase("CliqCash"))
+							{
+
+								final CustomerModel cm = (CustomerModel) cartModel.getUser();
+
+								final String code[] = cartModel.getCode().split("-");
+
+								final CustomerWalletDetailResponse customerWalletDetailResponse = getMplWalletServices()
+										.getCustomerWallet(cm.getCustomerWalletDetail().getWalletId(), code[1].toString());
+
+								if (customerWalletDetailResponse.getResponseCode().intValue() == 0)
+								{
+									if (customerWalletDetailResponse.getWallet().getBalance().doubleValue() >= orderSubtotalAfterDiscounts)
+									{
+										checkWalletUsed = true;
+									}
+
+								}
 							}
 						}
-						final CartModel cartModel = getCartService().getSessionCart();
-
-
-						if (null != cartModel && null != cartModel.getSplitModeInfo()
-								&& cartModel.getSplitModeInfo().equalsIgnoreCase("Split") && checkPaymentRestriction)
+						catch (final Exception ex)
 						{
-
-							final CustomerModel cm = (CustomerModel) cartModel.getUser();
-
-							final String code[] = cartModel.getCode().split("-");
-
-							final CustomerWalletDetailResponse customerWalletDetailResponse = getMplWalletServices()
-									.getCustomerWallet(cm.getCustomerWalletDetail().getWalletId(), code[1].toString());
-
-							if (customerWalletDetailResponse.getResponseCode().intValue() == 0)
-							{
-								orderSubtotalAfterDiscounts -= customerWalletDetailResponse.getWallet().getBalance().doubleValue();
-								if (orderSubtotalAfterDiscounts <= threshold.doubleValue())
-								{
-									orderSubtotalAfterDiscounts += customerWalletDetailResponse.getWallet().getBalance().doubleValue();
-									checkWalletUsed = true;
-								}
-
-							}
+							ex.printStackTrace();
 						}
 						/**
 						 * Fix for Wallet End
