@@ -16,11 +16,11 @@ import java.util.List;
 import javax.annotation.Resource;
 
 import org.apache.log4j.Logger;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import com.tis.mpl.facade.data.TicketStatusUpdate;
 import com.tisl.mpl.core.model.MplWebCrmModel;
 import com.tisl.mpl.core.model.MplWebCrmTicketModel;
+import com.tisl.mpl.facades.cms.data.WebFormData;
 import com.tisl.mpl.marketplacecommerceservices.daos.MplWebFormDao;
 import com.tisl.mpl.marketplacecommerceservices.service.MplWebFormService;
 import com.tisl.mpl.marketplacecommerceservices.service.OrderModelService;
@@ -44,19 +44,23 @@ public class MplWebFormServiceImpl implements MplWebFormService
 	@Resource
 	private MplWebFormDao mplWebFormDao;
 
-	@Autowired
+	@Resource
 	private ClientIntegration clientIntegration;
 
-	@Autowired
+	@Resource
 	private TicketCreationCRMservice ticketCreationService;
 
-	@Autowired
+	@Resource
 	private ConfigurationService configurationService;
 
 	@Resource(name = "orderModelService")
 	private OrderModelService orderModelService;
+
 	@Resource(name = "orderConverter")
 	private Converter<OrderModel, OrderData> orderConverter;
+
+	@Resource(name = "webFormDataConverter")
+	private Converter<WebFormData, MplWebCrmTicketModel> webFormDataConverter;
 
 	private static final String SUCCESS = "success";
 	private static final String FAILURE = "failure";
@@ -66,7 +70,7 @@ public class MplWebFormServiceImpl implements MplWebFormService
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.marketplacecommerceservices.service.MplWebFormService#getWebCRMParentNodes()
 	 */
 	@Override
@@ -80,7 +84,7 @@ public class MplWebFormServiceImpl implements MplWebFormService
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.marketplacecommerceservices.service.MplWebFormService#getWebCRMByNodes(java.lang.String)
 	 */
 	@Override
@@ -93,7 +97,7 @@ public class MplWebFormServiceImpl implements MplWebFormService
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.marketplacecommerceservices.service.MplWebFormService#getWebCRMTicket(java.lang.String)
 	 */
 	@Override
@@ -106,19 +110,18 @@ public class MplWebFormServiceImpl implements MplWebFormService
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see
 	 * com.tisl.mpl.marketplacecommerceservices.service.MplWebFormService#checkDuplicateWebCRMTickets(java.lang.String,
 	 * java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String,
 	 * java.lang.String, java.lang.String, java.lang.String)
 	 */
 	@Override
-	public boolean checkDuplicateWebCRMTickets(final String ticketType, final String orderCode, final String subOrderCode,
-			final String transactionId, final String L0code, final String L1code, final String L2code, final String L3code,
-			final String L4code, final String customerId)
+	public boolean checkDuplicateWebCRMTickets(final WebFormData formData)
 	{
-		return mplWebFormDao.checkDuplicateWebCRMTickets(ticketType, orderCode, subOrderCode, transactionId, L0code, L1code,
-				L2code, L3code, L4code, customerId);
+		return mplWebFormDao.checkDuplicateWebCRMTickets(formData.getTicketType(), formData.getOrderCode(),
+				formData.getSubOrderCode(), formData.getTransactionId(), formData.getL0code(), formData.getL1code(),
+				formData.getL2code(), formData.getL3code(), formData.getL4code(), formData.getCustomerId());
 	}
 
 	/**
@@ -152,7 +155,7 @@ public class MplWebFormServiceImpl implements MplWebFormService
 	{
 		OrderEntryData orderEntry = null;
 		final OrderModel subOrderModel = orderModelService.getOrder(mplWebCrmTicketModel.getSubOrderCode());//Sub order model
-		final OrderData orderData = getOrderConverter().convert(subOrderModel); //model converted to data
+		final OrderData orderData = orderConverter.convert(subOrderModel); //model converted to data
 		for (final OrderEntryData entry : orderData.getEntries())
 		{
 			if (null != entry.getTransactionId())
@@ -169,31 +172,9 @@ public class MplWebFormServiceImpl implements MplWebFormService
 		return ticketMasterXMLData;
 	}
 
-
-	/**
-	 * @return the orderConverter
-	 */
-	public Converter<OrderModel, OrderData> getOrderConverter()
-	{
-		return orderConverter;
-	}
-
-
-
-	/**
-	 * @param orderConverter
-	 *           the orderConverter to set
-	 */
-	public void setOrderConverter(final Converter<OrderModel, OrderData> orderConverter)
-	{
-		this.orderConverter = orderConverter;
-	}
-
-
-
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see
 	 * com.tisl.mpl.marketplacecommerceservices.service.MplWebFormService#webformTicketStatusUpdate(com.tis.mpl.facade
 	 * .data.TicketStatusUpdate)
@@ -201,8 +182,27 @@ public class MplWebFormServiceImpl implements MplWebFormService
 	@Override
 	public boolean webformTicketStatusUpdate(final TicketStatusUpdate ticketStatusUpdate)
 	{
-		// YTODO Auto-generated method stub
-		//dao refernce to be called
-		return false;
+		final MplWebCrmTicketModel crmTicket = mplWebFormDao.getWebCRMTicket(ticketStatusUpdate.getEcommRequestId());
+		crmTicket.setStatus(ticketStatusUpdate.getStatus());
+		crmTicket.setCrmTicketRef(ticketStatusUpdate.getCrmTicketID());
+		//Save updated send by CRM
+		modelService.save(crmTicket);
+		return true;
 	}
+
+	@Override
+	public boolean sendWebFormTicket(final WebFormData ticketData)
+	{
+		if (checkDuplicateWebCRMTickets(ticketData))
+		{
+			final MplWebCrmTicketModel webFormModel = new MplWebCrmTicketModel();
+			return clientIntegration.sendWebFormTicket(webFormDataConverter.convert(ticketData, webFormModel));
+		}
+		else
+		{
+			return false;
+		}
+	}
+
+
 }

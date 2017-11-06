@@ -23,13 +23,12 @@ import com.tis.mpl.facade.data.TicketStatusUpdate;
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.core.keygenerator.MplPrefixablePersistentKeyGenerator;
 import com.tisl.mpl.core.model.MplWebCrmModel;
-import com.tisl.mpl.core.model.MplWebCrmTicketModel;
 import com.tisl.mpl.facade.checkout.MplCheckoutFacade;
 import com.tisl.mpl.facades.account.register.MplOrderFacade;
-import com.tisl.mpl.facades.cms.data.Node;
+import com.tisl.mpl.facades.cms.data.NodeFormData;
 import com.tisl.mpl.facades.cms.data.WebForm;
+import com.tisl.mpl.facades.cms.data.WebFormData;
 import com.tisl.mpl.marketplacecommerceservices.service.MplWebFormService;
-import com.tisl.mpl.service.ClientIntegration;
 
 
 /**
@@ -53,12 +52,10 @@ public class MplDefaultWebFormFacade implements MplWebFormFacade
 	private MplCheckoutFacade mplCheckoutFacade;
 	@Autowired
 	private MplPrefixablePersistentKeyGenerator prefixableKeyGenerator;
-	@Autowired
-	private ClientIntegration clientIntegration;
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.facades.webform.MplWebFormFacade#getWebCRMForm()
 	 */
 	@Override
@@ -66,7 +63,7 @@ public class MplDefaultWebFormFacade implements MplWebFormFacade
 	{
 		final WebForm form = new WebForm();
 		List<MplWebCrmModel> webCrmModels = new ArrayList<>();
-		final List<Node> nodes = new ArrayList<>();
+		final List<NodeFormData> nodes = new ArrayList<>();
 		CustomerModel currentUser = null;
 		final List<OrderData> orderDatas = new ArrayList<>();
 		try
@@ -96,10 +93,13 @@ public class MplDefaultWebFormFacade implements MplWebFormFacade
 			webCrmModels = mplWebFormService.getWebCRMParentNodes();
 			for (final MplWebCrmModel crmModel : webCrmModels)
 			{
-				final Node node = new Node();
-				node.setCategory(crmModel.getNodeType());
+				final NodeFormData node = new NodeFormData();
+				node.setNodeType(crmModel.getNodeType());
 				node.setNodeCode(crmModel.getNodeCrmCode());
 				node.setNodeDesc(crmModel.getNodeText());
+				node.setCreateTicketAllowed(Boolean.valueOf(crmModel.isCreateTicketAllowed()));
+				node.setNodeDisplayAllowed(Boolean.valueOf(crmModel.isNodeDisplayAllowed()));
+				node.setTicketAnswer(crmModel.getTicketAnswer());
 				nodes.add(node);
 			}
 
@@ -118,7 +118,7 @@ public class MplDefaultWebFormFacade implements MplWebFormFacade
 	{
 		final WebForm form = new WebForm();
 		List<MplWebCrmModel> webCrmModels = new ArrayList<>();
-		final List<Node> nodes = new ArrayList<>();
+		final List<NodeFormData> nodes = new ArrayList<>();
 		CustomerModel currentUser = null;
 		try
 		{
@@ -133,10 +133,13 @@ public class MplDefaultWebFormFacade implements MplWebFormFacade
 			webCrmModels = mplWebFormService.getWebCRMByNodes(nodeParent);
 			for (final MplWebCrmModel crmModel : webCrmModels)
 			{
-				final Node node = new Node();
-				node.setCategory(crmModel.getNodeType());
+				final NodeFormData node = new NodeFormData();
+				node.setNodeType(crmModel.getNodeType());
 				node.setNodeCode(crmModel.getNodeCrmCode());
 				node.setNodeDesc(crmModel.getNodeText());
+				node.setCreateTicketAllowed(Boolean.valueOf(crmModel.isCreateTicketAllowed()));
+				node.setNodeDisplayAllowed(Boolean.valueOf(crmModel.isNodeDisplayAllowed()));
+				node.setTicketAnswer(crmModel.getTicketAnswer());
 				nodes.add(node);
 			}
 
@@ -151,23 +154,27 @@ public class MplDefaultWebFormFacade implements MplWebFormFacade
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.facades.webform.MplWebFormFacade#checkDuplicateWebCRMTickets(java.lang.String, java.lang.String,
 	 * java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String,
 	 * java.lang.String, java.lang.String)
 	 */
 	@Override
-	public boolean checkDuplicateWebCRMTickets(final String ticketType, final String orderCode, final String subOrderCode,
-			final String transactionId, final String L0code, final String L1code, final String L2code, final String L3code,
-			final String L4code, final String customerId)
+	public boolean checkDuplicateWebCRMTickets(final WebFormData formData)
 	{
-		// YTODO Auto-generated method stub
-		return mplWebFormService.checkDuplicateWebCRMTickets(ticketType, orderCode, subOrderCode, transactionId, L0code, L1code,
-				L2code, L3code, L4code, customerId);
+		try
+		{
+			return mplWebFormService.checkDuplicateWebCRMTickets(formData);
+		}
+		catch (final Exception e)
+		{
+			LOG.error("checkDuplicateWebCRMTickets" + e);
+			return false;
+		}
 	}
 
 	/**
-	 * This nethod is created to update the ticket status in commerce DB, from the realtime response received from CRM
+	 * This method is created to update the ticket status in commerce DB, from the realtime response received from CRM
 	 * (TPR-5989)
 	 *
 	 * @param ticketStatusUpdate
@@ -176,23 +183,31 @@ public class MplDefaultWebFormFacade implements MplWebFormFacade
 	@Override
 	public boolean webFormticketStatusUpdate(final TicketStatusUpdate ticketStatusUpdate)
 	{
-		return mplWebFormService.webformTicketStatusUpdate(ticketStatusUpdate);
+		try
+		{
+			return mplWebFormService.webformTicketStatusUpdate(ticketStatusUpdate);
+		}
+		catch (final Exception e)
+		{
+			LOG.error("webFormticketStatusUpdate" + e);
+			return false;
+		}
 	}
 
 	/**
 	 * This method is created to send the ticket to CRM via PI
 	 *
-	 * @param mplWebCrmTicketModel
+	 * @param formData
 	 * @return the success/failure boolean response
 	 */
 	@Override
-	public String sendWebformTicket(final MplWebCrmTicketModel mplWebCrmTicketModel) throws Exception
+	public boolean sendWebformTicket(final WebFormData formData) throws Exception
 	{
 		//Setting ECOM request prefix as E to for COMM triggered Ticket
 		prefixableKeyGenerator.setPrefix(MarketplacecommerceservicesConstants.TICKETID_PREFIX_E);
-		mplWebCrmTicketModel.setCommerceTicketId(prefixableKeyGenerator.generate().toString());
+		formData.setCommerceTicketId(prefixableKeyGenerator.generate().toString());
 		//Sending ticket to CRM via PI
-		return clientIntegration.sendWebFormTicket(mplWebCrmTicketModel);
+		return mplWebFormService.sendWebFormTicket(formData);
 	}
 
 }

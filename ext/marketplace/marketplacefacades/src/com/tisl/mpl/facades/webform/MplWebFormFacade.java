@@ -6,8 +6,8 @@ package com.tisl.mpl.facades.webform;
 import de.hybris.platform.commerceservices.search.pagedata.PageableData;
 
 import com.tis.mpl.facade.data.TicketStatusUpdate;
-import com.tisl.mpl.core.model.MplWebCrmTicketModel;
 import com.tisl.mpl.facades.cms.data.WebForm;
+import com.tisl.mpl.facades.cms.data.WebFormData;
 
 
 
@@ -23,8 +23,7 @@ public interface MplWebFormFacade
 
 	public WebForm getWebCRMChildren(final String parentNode);
 
-	public boolean checkDuplicateWebCRMTickets(String ticketType, String orderCode, String subOrderCode, String transactionId,
-			String L0code, String L1code, String L2code, String L3code, String L4code, String customerId);
+	public boolean checkDuplicateWebCRMTickets(WebFormData formData);
 
 	/**
 	 * This nethod is created to update the ticket status in commerce DB, from the realtime response received from CRM
@@ -38,8 +37,8 @@ public interface MplWebFormFacade
 	/**
 	 * This method is created to send the ticket to CRM via PI
 	 *
-	 * @param mplWebCrmTicketModel
+	 * @param formData
 	 * @return the success/failure boolean response
 	 */
-	public String sendWebformTicket(final MplWebCrmTicketModel mplWebCrmTicketModel) throws Exception;
+	public boolean sendWebformTicket(final WebFormData formData) throws Exception;
 }

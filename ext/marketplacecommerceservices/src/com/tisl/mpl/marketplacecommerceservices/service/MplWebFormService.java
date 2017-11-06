@@ -8,6 +8,7 @@ import java.util.List;
 import com.tis.mpl.facade.data.TicketStatusUpdate;
 import com.tisl.mpl.core.model.MplWebCrmModel;
 import com.tisl.mpl.core.model.MplWebCrmTicketModel;
+import com.tisl.mpl.facades.cms.data.WebFormData;
 import com.tisl.mpl.wsdto.TicketMasterXMLData;
 
 
@@ -20,16 +21,13 @@ public interface MplWebFormService
 	/**
 	 * @return List
 	 */
-	public List<MplWebCrmModel> getWebCRMParentNodes();
+	public List<MplWebCrmModel> getWebCRMParentNodes() throws Exception;
 
-	public List<MplWebCrmModel> getWebCRMByNodes(String nodeParent);
+	public List<MplWebCrmModel> getWebCRMByNodes(String nodeParent) throws Exception;
 
-	public MplWebCrmTicketModel getWebCRMTicket(String commerceTicketId);
+	public MplWebCrmTicketModel getWebCRMTicket(String commerceTicketId) throws Exception;
 
-	public boolean checkDuplicateWebCRMTickets(String ticketType, String orderCode, String subOrderCode, String transactionId,
-			String L0code, String L1code, String L2code, String L3code, String L4code, String customerId);
-
-
+	public boolean checkDuplicateWebCRMTickets(final WebFormData formData) throws Exception;
 
 	/**
 	 * This method is created to send the web form ticket to PI after duplication check ( TPR- 5989 )
@@ -42,7 +40,9 @@ public interface MplWebFormService
 
 	public TicketMasterXMLData populateWebformTicketData(final MplWebCrmTicketModel mplWebCrmTicketModel) throws Exception;
 
-	public boolean webformTicketStatusUpdate(final TicketStatusUpdate ticketStatusUpdate);
+	public boolean webformTicketStatusUpdate(final TicketStatusUpdate ticketStatusUpdate) throws Exception;
+
+	public boolean sendWebFormTicket(final WebFormData formData) throws Exception;
 
 
 

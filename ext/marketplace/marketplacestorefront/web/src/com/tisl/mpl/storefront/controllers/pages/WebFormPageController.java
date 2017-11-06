@@ -15,6 +15,8 @@ package com.tisl.mpl.storefront.controllers.pages;
 
 import de.hybris.platform.acceleratorstorefrontcommons.breadcrumb.impl.StoreBreadcrumbBuilder;
 import de.hybris.platform.cms2.exceptions.CMSItemNotFoundException;
+import de.hybris.platform.commercefacades.customer.CustomerFacade;
+import de.hybris.platform.commercefacades.user.data.CustomerData;
 import de.hybris.platform.commerceservices.search.pagedata.PageableData;
 import de.hybris.platform.servicelayer.config.ConfigurationService;
 
@@ -33,6 +35,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.granule.json.JSONException;
 import com.granule.json.JSONObject;
+import com.tisl.mpl.facades.cms.data.WebFormData;
 import com.tisl.mpl.facades.webform.MplWebFormFacade;
 import com.tisl.mpl.storefront.constants.MessageConstants;
 import com.tisl.mpl.storefront.constants.ModelAttributetConstants;
@@ -55,11 +58,13 @@ public class WebFormPageController extends AbstractMplSearchPageController
 	@Resource(name = "storeBreadcrumbBuilder")
 	private StoreBreadcrumbBuilder storeBreadcrumbBuilder;
 
-	private static final String WEB_FORM = "faq";
-
 	@Resource(name = "mplWebFormFacade")
 	private MplWebFormFacade mplWebFormFacade;
 
+	@Resource(name = "customerFacade")
+	private CustomerFacade customerFacade;
+
+	private static final String WEB_FORM = "faq";
 
 	@RequestMapping(method = RequestMethod.GET)
 	public String ticketFormView(
@@ -84,7 +89,28 @@ public class WebFormPageController extends AbstractMplSearchPageController
 	public String ticketFormSave(@ModelAttribute final TicketWebForm webForm, final Model model,
 			final RedirectAttributes redirectModel) throws CMSItemNotFoundException
 	{
+		final WebFormData formData = new WebFormData();
+		try
+		{
+			formData.setComment(webForm.getComment());
+			final CustomerData currentUser = customerFacade.getCurrentCustomer();
+			if (currentUser != null)
+			{
+				formData.setCustomerId(currentUser.getUid());
+			}
+			formData.setOrderCode(webForm.getOrderCode());
+			formData.setSubOrderCode(webForm.getSubOrderCode());
+			formData.setTransactionId(webForm.getTransactionId());
 
+			//formData.setL0code(webForm.get);
+
+			mplWebFormFacade.sendWebformTicket(formData);
+			model.addAttribute("ticketForm", webForm);
+		}
+		catch (final Exception e)
+		{
+			LOG.error("ticketFormSave" + e);
+		}
 		return ControllerConstants.Views.Pages.Misc.webFormSuccess;
 	}
 

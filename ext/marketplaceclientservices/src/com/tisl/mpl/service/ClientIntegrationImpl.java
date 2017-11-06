@@ -14,7 +14,6 @@ import javax.ws.rs.core.UriBuilder;
 import javax.xml.bind.JAXBException;
 
 import org.apache.log4j.Logger;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.ClientResponse;
@@ -39,7 +38,7 @@ public class ClientIntegrationImpl implements ClientIntegration
 	@Resource(name = "configurationService")
 	private ConfigurationService configurationService;
 
-	@Autowired
+	@Resource
 	private BusinessProcessService businessProcessService;
 
 	/*
@@ -48,7 +47,7 @@ public class ClientIntegrationImpl implements ClientIntegration
 	 * @see com.tisl.mpl.service.ClientIntegration#sendWebFormTicket()
 	 */
 	@Override
-	public String sendWebFormTicket(final MplWebCrmTicketModel mplWebCrmTicketModel)
+	public boolean sendWebFormTicket(final MplWebCrmTicketModel mplWebCrmTicketModel)
 	{
 		try
 		{
@@ -61,7 +60,7 @@ public class ClientIntegrationImpl implements ClientIntegration
 		{
 			LOG.error(e.getStackTrace());
 		}
-		return null;
+		return true;
 	}
 
 	/**

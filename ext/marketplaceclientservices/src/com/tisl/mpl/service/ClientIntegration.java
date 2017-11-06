@@ -14,7 +14,7 @@ import com.tisl.mpl.core.model.MplWebCrmTicketModel;
  */
 public interface ClientIntegration
 {
-	public String sendWebFormTicket(final MplWebCrmTicketModel mplWebCrmTicketModel);
+	public boolean sendWebFormTicket(final MplWebCrmTicketModel mplWebCrmTicketModel);
 
 	/**
 	 * This method is created to check the duplicate tickets in CRM, using a realtime web service call (TPR-5989)

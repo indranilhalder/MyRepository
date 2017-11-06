@@ -5,6 +5,8 @@ package com.tisl.mpl.storefront.web.forms;
 
 import java.util.List;
 
+import org.springframework.web.multipart.MultipartFile;
+
 
 /**
  * @author TCS
@@ -19,12 +21,15 @@ public class TicketWebForm
 	private String orderCode;
 	private String subOrderCode;
 	private String transactionId;
+	private String contactEmail;
+	private String contactMobile;
+	private String contactName;
 	private String nodeL1;
 	private String nodeL2;
 	private String nodeL3;
 	private String nodeL4;
 	private String comment;
-	private List<String> attachments;
+	private List<MultipartFile> attachments;
 
 	/**
 	 * @return the ticketType
@@ -199,7 +204,7 @@ public class TicketWebForm
 	/**
 	 * @return the attachments
 	 */
-	public List<String> getAttachments()
+	public List<MultipartFile> getAttachments()
 	{
 		return attachments;
 	}
@@ -208,9 +213,60 @@ public class TicketWebForm
 	 * @param attachments
 	 *           the attachments to set
 	 */
-	public void setAttachments(final List<String> attachments)
+	public void setAttachments(final List<MultipartFile> attachments)
 	{
 		this.attachments = attachments;
+	}
+
+	/**
+	 * @return the contactEmail
+	 */
+	public String getContactEmail()
+	{
+		return contactEmail;
+	}
+
+	/**
+	 * @param contactEmail
+	 *           the contactEmail to set
+	 */
+	public void setContactEmail(final String contactEmail)
+	{
+		this.contactEmail = contactEmail;
+	}
+
+	/**
+	 * @return the contactMobile
+	 */
+	public String getContactMobile()
+	{
+		return contactMobile;
+	}
+
+	/**
+	 * @param contactMobile
+	 *           the contactMobile to set
+	 */
+	public void setContactMobile(final String contactMobile)
+	{
+		this.contactMobile = contactMobile;
+	}
+
+	/**
+	 * @return the contactName
+	 */
+	public String getContactName()
+	{
+		return contactName;
+	}
+
+	/**
+	 * @param contactName
+	 *           the contactName to set
+	 */
+	public void setContactName(final String contactName)
+	{
+		this.contactName = contactName;
 	}
 
 

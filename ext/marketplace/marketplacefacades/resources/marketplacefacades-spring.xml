@@ -2070,9 +2070,6 @@ class="de.hybris.platform.commercefacades.product.impl.DefaultImageFormatMapping
 		
 	</bean>
 	
-
-	
-	
 	<alias name="defaultEndpointSlaveUrlConverter" alias="endpointSlaveUrlConverter" />
 	<bean id="defaultEndpointSlaveUrlConverter" parent="abstractPopulatingConverter">
 		<property name="targetClass" value="com.tisl.mpl.facades.search.data.EndpointSlaveURL" />
@@ -2089,6 +2086,20 @@ class="de.hybris.platform.commercefacades.product.impl.DefaultImageFormatMapping
 	<!-- TPR-6665: Update synonyms in solr slave  end-->
 	
 	<bean id="mplWebFormFacade" class="com.tisl.mpl.facades.webform.MplDefaultWebFormFacade" />
+	
+	<alias name="defaultWebFormPopulator" alias="webFormPopulator" />
+	<bean id="defaultWebFormPopulator" class="com.tisl.mpl.facades.populators.CustomWebFormPopulator">
+	</bean>
+	
+	<alias name="defaultWebFormDataConverter" alias="webFormDataConverter"/>
+	<bean id="defaultWebFormDataConverter" parent="abstractPopulatingConverter">
+		<property name="targetClass" value="com.tisl.mpl.core.model.MplWebCrmTicketModel"/>
+		<property name="populators">
+			<list>
+				<ref bean="webFormPopulator"/>
+			</list>
+		</property>
+	</bean>
 	
 </beans>
 
