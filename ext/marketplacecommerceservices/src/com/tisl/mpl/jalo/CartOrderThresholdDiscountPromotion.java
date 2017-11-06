@@ -310,7 +310,8 @@ public class CartOrderThresholdDiscountPromotion extends GeneratedCartOrderThres
 
 
 							if (null != cartModel && null != cartModel.getSplitModeInfo() && checkPaymentRestriction
-									&& cartModel.getSplitModeInfo().equalsIgnoreCase("Split"))
+									&& cartModel.getSplitModeInfo().equalsIgnoreCase("Split")
+									|| cartModel.getSplitModeInfo().equalsIgnoreCase("CliqCash"))
 							{
 
 								//final CustomerModel cm = (CustomerModel) cartModel.getUser();
@@ -323,30 +324,10 @@ public class CartOrderThresholdDiscountPromotion extends GeneratedCartOrderThres
 								if (null != cartModel.getTotalWalletAmount())
 								{
 									orderSubtotalAfterDiscounts -= cartModel.getTotalWalletAmount().doubleValue();
-									if (orderSubtotalAfterDiscounts <= threshold.doubleValue())
+									if (orderSubtotalAfterDiscounts <= threshold.doubleValue()
+											|| cartModel.getTotalWalletAmount().doubleValue() >= orderSubtotalAfterDiscounts)
 									{
 										orderSubtotalAfterDiscounts += cartModel.getTotalWalletAmount().doubleValue();
-										checkWalletUsed = true;
-									}
-
-								}
-							}
-
-							if (null != cartModel && null != cartModel.getSplitModeInfo() && checkPaymentRestriction
-									&& cartModel.getSplitModeInfo().equalsIgnoreCase("CliqCash"))
-							{
-
-								//final CustomerModel cm = (CustomerModel) cartModel.getUser();
-
-								//final String code[] = cartModel.getCode().split("-");
-
-								//final CustomerWalletDetailResponse customerWalletDetailResponse = getMplWalletServices()
-								//	.getCustomerWallet(cm.getCustomerWalletDetail().getWalletId(), code[1].toString());
-
-								if (null != cartModel.getTotalWalletAmount())
-								{
-									if (cartModel.getTotalWalletAmount().doubleValue() >= orderSubtotalAfterDiscounts)
-									{
 										checkWalletUsed = true;
 									}
 
