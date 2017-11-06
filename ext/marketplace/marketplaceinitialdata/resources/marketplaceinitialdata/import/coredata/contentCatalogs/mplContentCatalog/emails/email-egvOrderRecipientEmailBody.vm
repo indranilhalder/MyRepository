@@ -1,51 +1,60 @@
-<style>
-.templateContainer {margin :5%;}
-.tempTopSection {border: 1px solid yellowgreen; display: block; overflow: hidden; height: 250px;}
-.tempTopLeft {padding: 2%; width: 45%; border-right: 1px solid lightsteelblue; float: left; height: 100%;}
-.tempTopRight {float: left;padding: 2%; width: 45%;}
-.tempGiftCardId {padding: 2%; border: 1px solid black;}
-.tempGiftValue {font-size: 42px; font-weight: bold; padding: 10% 38%;}
-.configText {color: red;}
-.tempBottomLeft {float: left;}
-.tempBottomRight {float: right;}
-@media(max-width: 650px){
-	.tempGiftValue {font-size: 22px;}
-}
-</style>
-
+<!DOCTYPE HTML>
 <html>
-	<div class="templateContainer">
-		<div class="tempTopSection">
-			<div class="tempTopLeft">
-				<div class="tempGiftCardId">
-					Gift card id: ${ctx.cardNumber}
-					
-					Gift Card Pin:${ctx.cardPin}
+<head>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+</head>
+<body>
+	<div style="margin :2%;border-radius: 4px;">
+		<div>
+			<div style="text-align: center;">
+				<div style="display: inline-table;border-radius: 4px;width: 100%;max-width: 400px; background-color: #f6f6f6;">
+					<div style="display: grid;">
+						${ctx.cmsSlotContents.productImage}
+					</div>
+					<div style="padding: 15px;color: darkgrey;text-align: justify;line-height: normal;border-top: 1px solid #ccc;">
+						<span><i>${ctx.senderMSG}</i></span>
+					</div>
+					<div style="text-align: left;padding: 8px 15px;font-size: 28px;border-top: 1px solid #ccc;">
+						<span>&#8377;${ctx.cardAmount}</span>
+					</div>
 				</div>
-				<div>
-					
-				</div>
-			</div>
-			<div class="tempTopRight">
-				<div class="tempGiftValue">
-					&#8377;${ctx.cardAmount}
-				</div>
-				<div class="tempGiftCardId">
-					Expiry Date: ${ctx.cardExp}
-				</div>
-				
 			</div>
 		</div>
-		<br />
-		<div>
-			<p>Congratulations!!</p>
-			<p>You have been gifted a Tata CLiQ voucher by <span class="configText">${ctx.senderName}</span></p>
-			<p>You can use the gift card across the Tata CLiQ site (www.tatacliq.com & luxury.tatacliq.com) and the Tata CLiQ app.</p>
+		<br />&nbsp;
+		<div style="text-align: center;">
+			<a href="${ctx.addMoney}"style="font-family: Arial; background-color:#aa1d3d; color:#ffffff; font-size;12px; padding:8px 16px;text-decoration:none; width:120px; text-align:center;" >Add to my wallet</a>
+		</div>
+		<br />&nbsp;
+		<div style="text-align: center;">
+			<div style="width: 100%;max-width: 500px; background-color: #f6f6f6;border-radius: 4px;display: inline-block;">
+				<div style="font-weight: bold; background-color: #f6f6f6; padding: 10px;border-top-right-radius: 4px;border-top-left-radius: 4px;"><span>GIFT CARD DETAILS</span></div>
+				<table style="width: 100%;word-break: break-all;border-top: 1px solid #ccc;" cellpadding="5" cellspacing="0">
+					<thead style="color: #aa1d3d;">
+						<tr>
+							<th>Card Id</th>
+							<th>Card Pin</th>
+							<th>Expiry Date</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<td style="border-top: 1px solid #ccc;">${ctx.cardNumber}</td>
+							<td style="border-top: 1px solid #ccc;">${ctx.cardPin}</td>
+							<td style="border-top: 1px solid #ccc;">${ctx.cardExp}</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+		</div>
+		<div style="padding: 5%;">
+			<p><b>Congratulations!!</b></p>
+			<p>You have been gifted a Tata CLiQ voucher by <span style="color: #aa1d3d;">${ctx.senderName}</span></p>
+			<p>You can use the gift card across the Tata CLiQ site (www.tatacliq.com) and the Tata CLiQ app.</p>
 			<p>How to use:</p>
 			<p>If you are a customer:</p>
 			<ol>
 				<li>Login to your account</li>
-				<li>Add the gift card in your CLiQ Cash account by visiting <span class="configText">add card url</span></li>
+				<li>Go to your CLiQ cash page</span></li>
 				<li>Enter the gift card code</li>
 				<li>Click on to add your balance</li>
 			</ol>
@@ -58,14 +67,14 @@
 			<ol>
 				<li>
 					Redemption.<br />
-					Gift Cards may only be redeemed toward the purchase of eligible products on <a href="www.tatacliq.com">www.tatacliq.com</a> or <a href="luxury.tatacliq.com">luxury.tatacliq.com</a>. Purchases are deducted from the redeemer's CLiQ Cash balance. Any unused CLiQ cash balance will remain associated with the redeemer's tatacliq.com account and applied to purchases in order of earliest expiration date. If a purchase exceeds the redeemer's CLiQ Cash balance, the remaining amount must be paid with by credit card, net banking or debit card. No fees or charges apply to Gift Cards. QwikCilver may provide Gift Card purchasers with information about the redemption status of Gift Cards that they purchase or use.
+					Gift Cards may only be redeemed toward the purchase of eligible products on <a href="www.tatacliq.com">www.tatacliq.com</a>. Purchases are deducted from the redeemer's CLiQ Cash balance. Any unused CLiQ cash balance will remain associated with the redeemer's tatacliq.com account and applied to purchases in order of earliest expiration date. If a purchase exceeds the redeemer's CLiQ Cash balance, the remaining amount must be paid with by credit card, net banking or debit card. No fees or charges apply to Gift Cards. QwikCilver may provide Gift Card purchasers with information about the redemption status of Gift Cards that they purchase or use.
 				</li>
 				<li>
-					<p>Gift Cards, including any unused Gift Card balances, expire <span class="configText">one year</span> from the date of issuance. Gift Cards may only be purchased in denominations ranging from Rs. 10 to Rs. 10,000, or such other limits as QwikCilver may determine. GiftCards cannot be used to purchase other gift cards. Gift Cards cannot be reloaded, resold, transferred for value or redeemed for cash. Unused Gift Card balances associated with an tatacliq.com account may not be transferred to another tatacliq.com account. No interest will be payable by QwikCilver on any Gift Card or Gift Card balance. QwikCilver makes no representation or warranty that <a href="www.tatacliq.com">www.tatacliq.com</a> will always be accessible without interruption.</p>
+					<p>Gift Cards, including any unused Gift Card balances, expire <span style="color: #aa1d3d;">one year</span> from the date of issuance. Gift Cards may only be purchased in denominations ranging from Rs. 10 to Rs. 10,000, or such other limits as QwikCilver may determine. GiftCards cannot be used to purchase other gift cards. Gift Cards cannot be reloaded, resold, transferred for value or redeemed for cash. Unused Gift Card balances associated with an tatacliq.com account may not be transferred to another tatacliq.com account. No interest will be payable by QwikCilver on any Gift Card or Gift Card balance. QwikCilver makes no representation or warranty that <a href="www.tatacliq.com">www.tatacliq.com</a> will always be accessible without interruption.</p>
 				</li>
 				<li>
 					Fraud.<br />
-					QwikCilver is not responsible if a Gift Card is lost, stolen, destroyed or used without permission. Tata UniStore Limited ("Tata CLiQ") will have the right to close customer accounts and take payment from alternative forms of payment if a fraudulently obtained Gift Card is redeemed and/or used to make purchases on www.tatacliq.com or <a href="luxury.tatacliq.com">luxury.tatacliq.com</a>.
+					QwikCilver is not responsible if a Gift Card is lost, stolen, destroyed or used without permission. Tata UniStore Limited ("Tata CLiQ") will have the right to close customer accounts and take payment from alternative forms of payment if a fraudulently obtained Gift Card is redeemed and/or used to make purchases on <a href="www.tatacliq.com">www.tatacliq.com</a>.
 				</li>
 				<li>
 					Governing Law and Jurisdiction.<br />
@@ -85,10 +94,11 @@
 					Website address: <a href="www.qwikcilver.com">www.qwikcilver.com</a>
 				</li>
 			</ol>
-			<div>
-				<span class="tempBottomLeft">Gift card id:${ctx.cardNumber}</span>
-				<span class="tempBottomRight">Order No: ${ctx.orderNumber}</span>
-			</div>
+		</div>
+		<div style="padding: 2%; background-color: #f6f6f6; border-radius: 4px; clear: both; display: table; width: -webkit-fill-available;">
+			<span style="float: left;">Gift card id:${ctx.cardNumber}</span>
+			<span style="float: right;">Order No: ${ctx.orderNumber}</span>
 		</div>
 	</div>
+</body>
 </html>
