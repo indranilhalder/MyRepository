@@ -1906,7 +1906,9 @@ function displayDeliveryDetails(sellerName) {
 				else
 					{
 						$("#returnWindow").text(data['returnWindow']);
+						$("#knowmoreMobile #defaultKnowMoreLi #returnWindow").text(data['returnWindow']);//SDI-2046
 						$("#returnWindowRefRet").text(data['returnWindow']);
+						$("#returnsAndRefundsMobile #defaultRetRefLi #returnWindowRefRet").text(data['returnWindow']);//SDI-2046
 						$("#returnWindowRet").text(data['returnWindow']);
 					}
 				//TISCR-414 - Chairmans demo feedback 10thMay CR ends
