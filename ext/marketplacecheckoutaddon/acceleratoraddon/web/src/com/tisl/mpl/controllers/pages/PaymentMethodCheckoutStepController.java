@@ -6264,13 +6264,14 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 		return jsonObject;
 	}
 
-	@RequestMapping(value = "/setWalletForPayment", method = RequestMethod.GET)
+	@RequestMapping(value = "/setWalletForPayment", method = RequestMethod.POST)
 	@RequireHardLogIn
-	public @ResponseBody String setWalletForPayment(@RequestParam("walletMode") final String value)
+	public @ResponseBody JSONObject setWalletForPayment(@RequestParam("walletMode") final String value)
 			throws UnsupportedEncodingException, JSONException
 	{
 		final CartModel cart = getCartService().getSessionCart();
-		//final DecimalFormat df = new DecimalFormat("#.##");
+		final JSONObject jsonObject = new JSONObject();
+		jsonObject.put("disableJsMode", false);
 		try
 		{
 
@@ -6299,9 +6300,11 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 						cart.setSplitModeInfo("CliqCash");
 						getModelService().save(cart);
 						getModelService().refresh(cart);
+						jsonObject.put("disableJsMode", true);
 					}
 					else
 					{
+						jsonObject.put("disableJsMode", false);
 						cart.setSplitModeInfo("Split");
 						getModelService().save(cart);
 						getModelService().refresh(cart);
@@ -6310,18 +6313,19 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 			}
 			else
 			{
+				jsonObject.put("disableJsMode", false);
 				cart.setSplitModeInfo("Juspay");
 				getModelService().save(cart);
 				getModelService().refresh(cart);
 			}
-			return "success";
+			return jsonObject;
 		
 		}
 		catch (final Exception ex)
 		{
 			ex.printStackTrace();
 		}
-		return "fail";
+		return jsonObject;
 	}
 	
 

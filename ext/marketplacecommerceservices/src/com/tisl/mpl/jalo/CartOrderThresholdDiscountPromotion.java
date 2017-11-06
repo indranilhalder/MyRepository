@@ -2,7 +2,6 @@ package com.tisl.mpl.jalo;
 
 import de.hybris.platform.core.Registry;
 import de.hybris.platform.core.model.order.CartModel;
-import de.hybris.platform.core.model.user.CustomerModel;
 import de.hybris.platform.jalo.Item;
 import de.hybris.platform.jalo.JaloBusinessException;
 import de.hybris.platform.jalo.JaloInvalidParameterException;
@@ -38,7 +37,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.exception.EtailBusinessExceptions;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
-import com.tisl.mpl.pojo.response.CustomerWalletDetailResponse;
 import com.tisl.mpl.promotion.helper.MplPromotionHelper;
 import com.tisl.mpl.service.MplWalletServices;
 import com.tisl.mpl.util.ExceptionUtil;
@@ -315,19 +313,19 @@ public class CartOrderThresholdDiscountPromotion extends GeneratedCartOrderThres
 									&& cartModel.getSplitModeInfo().equalsIgnoreCase("Split"))
 							{
 
-								final CustomerModel cm = (CustomerModel) cartModel.getUser();
+								//final CustomerModel cm = (CustomerModel) cartModel.getUser();
 
-								final String code[] = cartModel.getCode().split("-");
+								//final String code[] = cartModel.getCode().split("-");
 
-								final CustomerWalletDetailResponse customerWalletDetailResponse = getMplWalletServices()
-										.getCustomerWallet(cm.getCustomerWalletDetail().getWalletId(), code[1].toString());
+								//final CustomerWalletDetailResponse customerWalletDetailResponse = getMplWalletServices()
+								//	.getCustomerWallet(cm.getCustomerWalletDetail().getWalletId(), code[1].toString());
 
-								if (customerWalletDetailResponse.getResponseCode().intValue() == 0)
+								if (null != cartModel.getPayableWalletAmount())
 								{
-									orderSubtotalAfterDiscounts -= customerWalletDetailResponse.getWallet().getBalance().doubleValue();
+									orderSubtotalAfterDiscounts -= cartModel.getPayableWalletAmount().doubleValue();
 									if (orderSubtotalAfterDiscounts <= threshold.doubleValue())
 									{
-										orderSubtotalAfterDiscounts += customerWalletDetailResponse.getWallet().getBalance().doubleValue();
+										orderSubtotalAfterDiscounts += cartModel.getPayableWalletAmount().doubleValue();
 										checkWalletUsed = true;
 									}
 
@@ -338,16 +336,16 @@ public class CartOrderThresholdDiscountPromotion extends GeneratedCartOrderThres
 									&& cartModel.getSplitModeInfo().equalsIgnoreCase("CliqCash"))
 							{
 
-								final CustomerModel cm = (CustomerModel) cartModel.getUser();
+								//final CustomerModel cm = (CustomerModel) cartModel.getUser();
 
-								final String code[] = cartModel.getCode().split("-");
+								//final String code[] = cartModel.getCode().split("-");
 
-								final CustomerWalletDetailResponse customerWalletDetailResponse = getMplWalletServices()
-										.getCustomerWallet(cm.getCustomerWalletDetail().getWalletId(), code[1].toString());
+								//final CustomerWalletDetailResponse customerWalletDetailResponse = getMplWalletServices()
+								//	.getCustomerWallet(cm.getCustomerWalletDetail().getWalletId(), code[1].toString());
 
-								if (customerWalletDetailResponse.getResponseCode().intValue() == 0)
+								if (null != cartModel.getPayableWalletAmount())
 								{
-									if (customerWalletDetailResponse.getWallet().getBalance().doubleValue() >= orderSubtotalAfterDiscounts)
+									if (cartModel.getPayableWalletAmount().doubleValue() >= orderSubtotalAfterDiscounts)
 									{
 										checkWalletUsed = true;
 									}
