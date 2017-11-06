@@ -5840,7 +5840,13 @@ function useWalletForPaymentAjax(){
 				$(".choose-payment").find('*').prop('disabled',false);
 				$("#paymentOptionsMobiles li span").css('pointer-events', 'all');
 				$(".checkout-paymentmethod li span").css('pointer-events', 'all');
+				
+				$("#addCliqCashId").text("");
+				document.getElementById('addCliqCashId').innerHTML = $(".payRemainingDesc").attr("data-useCliqCash");
 			}
+		},
+		fail : function(data){
+			$("#no-click,.loaderDiv").remove();
 		},
 
 		complete : function(data){
