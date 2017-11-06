@@ -5886,7 +5886,7 @@ function useWalletForPaymentAndPromoAjax(){
 		success : function(data) {
 
 			$("#addCliqCashId").show();
-			$("#no-click,.loaderDiv").remove();
+			
 
 			if(value.checked){
 
@@ -5973,6 +5973,8 @@ function useWalletForPaymentAndPromoAjax(){
 					document.getElementById('addCliqCashId').innerHTML = $(".payRemainingDesc").attr("data-useCliqCash");
 				}
 			}
+			
+			$("#no-click,.loaderDiv").remove();
 
 		},	
 
