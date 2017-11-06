@@ -6205,10 +6205,10 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 					
 					double totalCartAmt = cart.getTotalPrice().doubleValue();
 					
-					System.out.println("totalAmt"+totalCartAmt);
+				//	System.out.println("totalAmt"+totalCartAmt);
 
-					totalCartAmt += (null != cart.getScheduleDelCharge() ? cart.getScheduleDelCharge().doubleValue() : 0)
-							+ (null != cart.getDeliveryCost() ? cart.getDeliveryCost().doubleValue() : 0);
+//					totalCartAmt += (null != cart.getScheduleDelCharge() ? cart.getScheduleDelCharge().doubleValue() : 0)
+//							+ (null != cart.getDeliveryCost() ? cart.getDeliveryCost().doubleValue() : 0);
 
 					System.out.println("**************  totalAmt"+totalCartAmt);
 					
@@ -6282,6 +6282,8 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 		totalCartAmt += (null != cart.getScheduleDelCharge() ? cart.getScheduleDelCharge().doubleValue() : 0)
 				+ (null != cart.getDeliveryCost() ? cart.getDeliveryCost().doubleValue() : 0);
 		final DecimalFormat df = new DecimalFormat("#.##");
+		
+		System.out.println("totalCartAmt Load Wallet"+totalCartAmt);
 
 		double cashBalance = 0;
 		double egvBalance = 0;
