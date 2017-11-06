@@ -158,6 +158,7 @@ import com.tisl.mpl.pojo.request.Customer;
 import com.tisl.mpl.pojo.request.QCCustomerRegisterRequest;
 import com.tisl.mpl.pojo.response.BalanceBucketWise;
 import com.tisl.mpl.pojo.response.Bucket;
+import com.tisl.mpl.pojo.response.CustomerWalletDetailResponse;
 import com.tisl.mpl.pojo.response.QCCustomerRegisterResponse;
 import com.tisl.mpl.pojo.response.QCRedeeptionResponse;
 import com.tisl.mpl.pojo.response.RedimGiftCardResponse;
@@ -6263,6 +6264,66 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 		return jsonObject;
 	}
 
+	@RequestMapping(value = "/setWalletForPayment", method = RequestMethod.GET)
+	@RequireHardLogIn
+	public @ResponseBody String setWalletForPayment(@RequestParam("walletMode") final String value)
+			throws UnsupportedEncodingException, JSONException
+	{
+		final CartModel cart = getCartService().getSessionCart();
+		//final DecimalFormat df = new DecimalFormat("#.##");
+		try
+		{
+
+			if (StringUtils.isNotEmpty(value) && value.equalsIgnoreCase("true"))
+			{
+
+				//final CustomerModel currentCustomer = (CustomerModel) getUserService().getCurrentUser();
+
+				//CustomerWalletDetailResponse customerWalletDetailResponse = mplWalletFacade.getCustomerWallet(currentCustomer.getCustomerWalletDetail().getWalletId());
+
+				if (null != cart.getTotalWalletAmount())
+				{
+					final Double WalletAmt = cart.getTotalWalletAmount();
+					
+					double totalCartAmt = cart.getTotalPrice().doubleValue();
+					
+				//	System.out.println("totalAmt"+totalCartAmt);
+
+//					totalCartAmt += (null != cart.getScheduleDelCharge() ? cart.getScheduleDelCharge().doubleValue() : 0)
+//							+ (null != cart.getDeliveryCost() ? cart.getDeliveryCost().doubleValue() : 0);
+
+					System.out.println("**************  totalAmt"+totalCartAmt);
+					
+					if (Double.parseDouble("" + WalletAmt) >= Double.parseDouble("" + totalCartAmt))
+					{
+						cart.setSplitModeInfo("CliqCash");
+						getModelService().save(cart);
+						getModelService().refresh(cart);
+					}
+					else
+					{
+						cart.setSplitModeInfo("Split");
+						getModelService().save(cart);
+						getModelService().refresh(cart);
+					}
+				}
+			}
+			else
+			{
+				cart.setSplitModeInfo("Juspay");
+				getModelService().save(cart);
+				getModelService().refresh(cart);
+			}
+			return "success";
+		
+		}
+		catch (final Exception ex)
+		{
+			ex.printStackTrace();
+		}
+		return "fail";
+	}
+	
 
 	/**
 	 * @param request
@@ -6283,7 +6344,7 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 				+ (null != cart.getDeliveryCost() ? cart.getDeliveryCost().doubleValue() : 0);
 		final DecimalFormat df = new DecimalFormat("#.##");
 		
-		System.out.println("totalCartAmt Load Wallet"+totalCartAmt);
+		System.out.println("totalCartAmt Load Wallet ***** "+totalCartAmt);
 
 		double cashBalance = 0;
 		double egvBalance = 0;
@@ -6299,8 +6360,12 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 			{
 				balBucketwise = mplWalletFacade.getQCBucketBalance(customer.getCustomerWalletDetail().getWalletId());
 
-				if (balBucketwise.getResponseCode() == Integer.valueOf(0) && null != balBucketwise.getBuckets())
+				if (balBucketwise.getResponseCode() == Integer.valueOf(0) && null != balBucketwise.getBuckets() && null != balBucketwise.getWallet())
 				{
+					
+					cart.setTotalWalletAmount(balBucketwise.getWallet().getBalance());
+					getModelService().save(cart);
+					getModelService().refresh(cart);
 
 					for (final Bucket bucketType : balBucketwise.getBuckets())
 					{
@@ -7060,6 +7125,7 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 
 					if (null != response && null != response.getResponseCode() && response.getResponseCode() == Integer.valueOf(0))
 					{
+						
 						return "SUCCESS";
 					}
 					else
