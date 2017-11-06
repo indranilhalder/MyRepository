@@ -3827,11 +3827,7 @@ function validateCardNo(formSubmit) {
 //				{
 					binStatus=true;
 					if($("#paymentMode").val()!='EMI'){
-						if(isEGVOrder){
-					       dopayment(binStatus);
-					      } else {
-					       applyPromotion(null,binStatus,formSubmit,true);
-					      }
+						applyPromotion(null,binStatus,formSubmit,true);
 					}
 					else
 					{
@@ -4129,11 +4125,7 @@ function validateDebitCardNo(formSubmit) {
 //					{
 						binStatus=true;
 						if(cardType!='EMI'){
-							if(isEGVOrder){
-						       dopayment(binStatus);
-						      } else {
-						       applyPromotion(null,binStatus,formSubmit,true);
-						      }
+							applyPromotion(null,binStatus,formSubmit,true);
 						}
 						//TPR-629
 						else
@@ -5335,6 +5327,11 @@ if(!isEGVOrder)
 			$("#no-click1,.loaderDiv1").remove();
 		}
 	});
+} else {
+	if(formSubmit=="formSubmit")
+	{
+		dopayment(binValue);
+	}
 }
 }
 
