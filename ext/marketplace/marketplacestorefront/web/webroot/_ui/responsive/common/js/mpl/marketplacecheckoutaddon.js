@@ -5325,7 +5325,14 @@ if(!isEGVOrder)
 			$("#no-click,.loaderDiv").remove();
 			$(".make_payment").removeAttr('disabled');
 			$("#no-click1,.loaderDiv1").remove();
-		}
+		},
+		
+		complete : function(resp){
+			var value = document.getElementById('useGiftCardCheckbox');	
+			   if(value.checked){
+				     useWalletForPaymentAndPromoAjax();
+				  }		
+			}
 	});
 } else {
 	if(formSubmit=="formSubmit")
@@ -5820,8 +5827,7 @@ function useWalletForPaymentAjax(){
 		success : function(data) {			
 		
 			$("#addCliqCashId").show();
-		    applyPromotion(null,"none","none");
-						
+		   			
 			if(value.checked){
 				$("#useGiftBtnText").hide();
 				$("#unUseGiftBtnText").show();
@@ -5908,18 +5914,18 @@ function useWalletForPaymentAjax(){
 					 document.getElementById('addCliqCashId').innerHTML = $(".payRemainingDesc").attr("data-useCliqCash");
 						
 			    }
-			    if(value.checked && (data.apportionMode === 'Split' || data.apportionMode === 'CliqCash')){
-			    	//alert("hi");
-				     useWalletForPaymentAndPromoAjax();
-				  }
 			}
 		   
 		},	
 	   
 		fail : function(data){
 			$("#no-click,.loaderDiv").remove();
-	}
-		
+	},
+	
+	complete : function(data){
+				 applyPromotion(null,"none","none");		
+				}
+	
 	});
 	}
 
