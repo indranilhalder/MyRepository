@@ -5822,12 +5822,30 @@ function useWalletForPaymentAjax(){
 		cache : false,
 		success : function(data) {			
 
-				//alert(data);
+			if(value.checked){
+
+				$("#useGiftBtnText").hide();
+				$("#unUseGiftBtnText").show();
+				//$(".cliqCashApplyAlert").text('CliQ Cash applied successfully.');
+				//$(".cliqCashApplyAlert").show();
+				$("#viewPaymentCOD").hide();
+				$("#paytmId").hide();
+
+			}else{
+				$("#unUseGiftBtnText").hide();
+				$("#useGiftBtnText").show();
+				$(".cliqCashApplyAlert").hide();				
+				$(".topPlaceOrderBtn").hide();
+				$("#make_cc_payment").show();
+				$(".choose-payment").find('*').prop('disabled',false);
+				$("#paymentOptionsMobiles li span").css('pointer-events', 'all');
+				$(".checkout-paymentmethod li span").css('pointer-events', 'all');
+			}
 		},
 
 		complete : function(data){
 
-				applyPromotion(null,"none","none");
+			applyPromotion(null,"none","none");
 		}
 
 	});
