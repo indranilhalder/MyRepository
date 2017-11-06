@@ -2134,7 +2134,7 @@ public class MplPaymentServiceImpl implements MplPaymentService
 			final String bankName = getSessionService().getAttribute(MarketplacecommerceservicesConstants.BANKFROMBIN);
 			final String paymentMode = getSessionService()
 					.getAttribute(MarketplacecommerceservicesConstants.PAYMENTMODEFORPROMOTION);
-			getSessionService().removeAttribute(MarketplacecommerceservicesConstants.BANKFROMBIN);
+			//getSessionService().removeAttribute(MarketplacecommerceservicesConstants.BANKFROMBIN); commented for SDI-2154/SDI-2155/SDI-2157
 
 			if (StringUtils.isNotEmpty(paymentMode) && paymentMode.equalsIgnoreCase("EMI") && StringUtils.isNotEmpty(bankName))
 
@@ -2224,7 +2224,7 @@ public class MplPaymentServiceImpl implements MplPaymentService
 			final String bankName = getSessionService().getAttribute(MarketplacecommerceservicesConstants.BANKFROMBIN);
 			final String paymentMode = getSessionService()
 					.getAttribute(MarketplacecommerceservicesConstants.PAYMENTMODEFORPROMOTION);
-			getSessionService().removeAttribute(MarketplacecommerceservicesConstants.BANKFROMBIN);
+			//getSessionService().removeAttribute(MarketplacecommerceservicesConstants.BANKFROMBIN);commented for SDI-2154/SDI-2155/SDI-2157
 
 			if (StringUtils.isNotEmpty(paymentMode) && paymentMode.equalsIgnoreCase("EMI") && StringUtils.isNotEmpty(bankName))
 

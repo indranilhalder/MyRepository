@@ -288,6 +288,7 @@ function sort(this_data,drop_down){
 	}
 	var pathName = window.location.pathname;
 	pathName = pathName.replace(/page-[0-9]+/, 'page-1');
+	pageType = $('#pageType').val();			//TISUAT-5999 fix
 	
 	var url = '';
 	switch (item) {

@@ -118,7 +118,9 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import reactor.function.support.UriUtils;
 
+
 import com.fasterxml.jackson.databind.ObjectMapper;
+
 import com.granule.json.JSONException;
 import com.granule.json.JSONObject;
 import com.hybris.oms.tata.model.MplBUCConfigurationsModel;
@@ -3476,6 +3478,7 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 		return "addon:/marketplacecheckoutaddon/pages/checkout/single/showChooseDeliverySlotPage";
 	}
 
+	@SuppressWarnings("deprecation")
 	@RequestMapping(value = MarketplacecheckoutaddonConstants.GETREVIEWORDER, method = RequestMethod.GET)
 	public String viewReviewOrder(final Model model) throws UnsupportedEncodingException
 	{
@@ -3490,6 +3493,10 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 			}
 
 			final CartModel cartModel = cartService.getSessionCart();
+			//SDI-2158 fix recalculation starts here
+			mplCouponFacade.releaseVoucherInCheckout(cartModel);
+			commerceCartService.recalculateCart(cartModel);
+			//SDI-2158 fix recalculation ends here
 			mplCartFacade.setCartSubTotalForReviewOrder(cartModel);
 			mplCartFacade.totalMrpCal(cartModel);
 			//UF-260
