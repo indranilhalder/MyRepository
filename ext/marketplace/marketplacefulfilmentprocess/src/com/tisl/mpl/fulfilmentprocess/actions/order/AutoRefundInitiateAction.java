@@ -469,7 +469,7 @@ public class AutoRefundInitiateAction extends AbstractProceduralAction<OrderProc
   					ConsignmentStatus newStatus = null;
   						if (StringUtils.equalsIgnoreCase(result,MarketplacecommerceservicesConstants.SUCCESS))
   						{
-  							newStatus = ConsignmentStatus.ORDER_CANCELLED;
+  							newStatus = ConsignmentStatus.RETURN_COMPLETED;
   						}
   						else if (StringUtils.equalsIgnoreCase(result, "PENDING"))
   						{
@@ -479,6 +479,7 @@ public class AutoRefundInitiateAction extends AbstractProceduralAction<OrderProc
   						{
   							newStatus = ConsignmentStatus.REFUND_IN_PROGRESS;
   						}
+
 
   						//modelService.save(abstractOrderEntryModel);
   						LOG.debug("****** initiateRefund : Step 3  >>Payment transaction mode is not null >> Calling OMS with status as received from JUSPAY "
