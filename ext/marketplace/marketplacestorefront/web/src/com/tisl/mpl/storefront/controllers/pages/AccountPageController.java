@@ -66,8 +66,10 @@ import de.hybris.platform.core.model.order.OrderModel;
 import de.hybris.platform.core.model.product.ProductModel;
 import de.hybris.platform.core.model.user.CustomerModel;
 import de.hybris.platform.core.model.user.UserModel;
+import de.hybris.platform.orderhistory.model.OrderHistoryEntryModel;
 import de.hybris.platform.ordersplitting.model.ConsignmentEntryModel;
 import de.hybris.platform.ordersplitting.model.ConsignmentModel;
+import de.hybris.platform.payment.model.PaymentTransactionEntryModel;
 import de.hybris.platform.payment.model.PaymentTransactionModel;
 import de.hybris.platform.returns.model.ReturnEntryModel;
 import de.hybris.platform.returns.model.ReturnRequestModel;
@@ -8411,9 +8413,44 @@ public class AccountPageController extends AbstractMplSearchPageController
 		
 		OrderModel orderModel = orderModelService.getOrderModel(orderId); 
 		OrderData orderDetail = mplCheckoutFacade.getOrderDetailsForCode(orderModel);
-		model.addAttribute("orderDetail",orderDetail);
+		
 		
 		if("Juspay".equalsIgnoreCase(orderModel.getSplitModeInfo())){
+			boolean isCanAndReturn = false;
+			if(CollectionUtils.isNotEmpty(orderDetail.getSellerOrderList())){
+			for (OrderData sellerOrder : orderDetail.getSellerOrderList())
+			{
+				for (OrderEntryData entry : sellerOrder.getEntries())
+				{
+					for (OrderModel chaildOrder : orderModel.getChildOrders())
+					{
+						if(CollectionUtils.isNotEmpty(chaildOrder.getHistoryEntries())){
+						for (OrderHistoryEntryModel orderHistoryEntryModel : chaildOrder.getHistoryEntries())
+						{
+							if ((StringUtils.isNotEmpty(orderHistoryEntryModel.getLineId())
+									&& entry.getOrderLineId().equalsIgnoreCase(orderHistoryEntryModel.getLineId()))
+									&& "REFUND_INITIATED".equalsIgnoreCase(orderHistoryEntryModel.getDescription()))
+							{
+								entry.setIsCanAndReturn(true);
+								isCanAndReturn = true;
+								break;
+							}
+						}
+						}
+						if (isCanAndReturn)
+						{
+							isCanAndReturn = false;
+							break;
+						}
+						else
+						{
+							entry.setIsCanAndReturn(false);
+						}
+					}
+
+				}
+			}
+			}
 			model.addAttribute("juspayMode", Boolean.TRUE);
 		}else{
 			model.addAttribute("juspayMode", Boolean.FALSE);
@@ -8433,6 +8470,7 @@ public class AccountPageController extends AbstractMplSearchPageController
 				}
 			}
 		}
+		model.addAttribute("orderDetail",orderDetail);
 		
 		return ControllerConstants.Views.Pages.Account.GET_Statement_Page;
 	}

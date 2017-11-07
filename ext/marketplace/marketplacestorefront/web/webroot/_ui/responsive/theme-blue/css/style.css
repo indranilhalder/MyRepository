@@ -78188,4 +78188,5 @@ background: url(../images/search_image.png) no-repeat;}
 @media(max-width: 768px) {
 	.orders-product-block .header ul .trackOrderAnchor, .orders-product-block .header ul .viewDetailsAnchor {position: static !important;}
 }
+.juspayConnErrorSection {top: 0 !important;}
 /*Account Page CSS*/	

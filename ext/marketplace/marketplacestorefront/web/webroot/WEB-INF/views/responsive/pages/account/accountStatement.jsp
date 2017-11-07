@@ -46,7 +46,7 @@
 						varStatus="entryStatus">
 
 						<c:if
-							test="${not empty entry.walletApportionforReverseData and cancelAndRetun eq false}">
+							test="${entry.isCanAndReturn or not empty entry.walletApportionforReverseData and cancelAndRetun eq false}">
 							<c:set var="cancelAndRetun" value="true" />
 						</c:if>
 
@@ -149,13 +149,23 @@
 								<td>${entryObject.transactionId}</td>
 								<c:choose>
 									<c:when test="${juspayMode eq true}">
-										<td><format:price
-												priceData="${entryObject.amountAfterAllDisc}"
-												displayFreeForZero="true" /></td>
-										<td><format:price
-												priceData="${entryObject.currDelCharge}" /></td>
-										<td>0</td>
-										<td>${entryObject.scheduledDeliveryCharge}</td>
+										<c:choose>
+											<c:when test="${entryObject.isCanAndReturn eq true}">
+												<td><format:price
+														priceData="${entryObject.amountAfterAllDisc}"
+														displayFreeForZero="true" /></td>
+												<td><format:price
+														priceData="${entryObject.currDelCharge}" /></td>
+												<td>0</td>
+												<td>${entryObject.scheduledDeliveryCharge}</td>
+											</c:when>
+											<c:otherwise>
+												<td>0</td>
+												<td>0</td>
+												<td>0</td>
+												<td>0</td>
+											</c:otherwise>
+										</c:choose>
 										<td>0</td>
 										<td>0</td>
 										<td>0</td>

@@ -4596,7 +4596,9 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 	 */
 	private CartModel getCartModelForEGVProduct(final EgvDetailsData egvDetailForm)
 	{
-
+		//remove old egv cart for current Customer and create new Cart 
+		 mplEGVCartService.removeOldEGVCartCurrentCustomer();
+		
 		final CartModel cardModel = cartFactory.createCart();
 		cardModel.setPincodeNumber(_400083);
 		final List<AbstractOrderEntryModel> orderModelList = new ArrayList<AbstractOrderEntryModel>();
@@ -4613,7 +4615,6 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 		cardModel.setModeOfPayment(CREDIT_CARD);
 		cardModel.setNet(Boolean.FALSE);
 		cardModel.setSite(cmsSiteService.getCurrentSite());
-		cardModel.setSubtotal(Double.valueOf(egvDetailForm.getGiftRange()));
 		cardModel.setSubtotal(Double.valueOf(egvDetailForm.getGiftRange()));
 		cardModel.setTotalPrice(Double.valueOf(egvDetailForm.getGiftRange()));
 		cardModel.setTotalPriceWithConv(Double.valueOf(egvDetailForm.getGiftRange()));
@@ -4648,7 +4649,6 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 		//remove old EGA Cart
 		String productSellerGiftCardUssId = null;
 		String productSellerName = null;
-		mplEGVCartService.removeOldEGVCartCurrentCustomer();
 		final CartEntryModel abstractOrderEntryModel = getModelService().create(CartEntryModel.class);
 		final ProductModel productModel = productService.getProductForCode(egvDetailForm.getProductCode());
 		abstractOrderEntryModel.setQualifyingCount(Integer.valueOf(1));

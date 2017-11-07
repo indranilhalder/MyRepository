@@ -640,6 +640,7 @@
 			
 			<property name="returnMethodType" type="String"></property>
 			<property name="isRefundable" type="boolean"></property>
+			<property name="isCanAndReturn" type="boolean"></property>
 	</bean>
 	
 	<bean class="de.hybris.platform.commercefacades.order.data.ImeiDetailData">

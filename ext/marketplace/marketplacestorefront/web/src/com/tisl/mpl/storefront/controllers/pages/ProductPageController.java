@@ -58,6 +58,7 @@ import de.hybris.platform.commerceservices.url.UrlResolver;
 import de.hybris.platform.core.model.JewelleryInformationModel;
 import de.hybris.platform.core.model.product.PincodeModel;
 import de.hybris.platform.core.model.product.ProductModel;
+import de.hybris.platform.core.model.user.CustomerModel;
 import de.hybris.platform.core.model.user.UserModel;
 import de.hybris.platform.product.ProductService;
 import de.hybris.platform.servicelayer.config.ConfigurationService;
@@ -463,6 +464,13 @@ public class ProductPageController extends MidPageController
 			if (null != productCode)
 			{
 				productCode = productCode.toUpperCase();
+			}
+			
+			try{
+			   CustomerModel currentCustomer =(CustomerModel) userService.getCurrentUser();			   
+			   
+			}catch(Exception exception){
+				LOG.error("getting ");
 			}
 
 			LOG.debug("**************************************opening pdp for*************" + productCode);
@@ -4279,6 +4287,23 @@ public class ProductPageController extends MidPageController
 			{
 				productCode = productCode.toUpperCase();
 			}
+			
+			try
+			{
+				CustomerModel currentCustomer = (CustomerModel) userService.getCurrentUser();
+				if(currentCustomer ==null){
+					return REDIRECT_PREFIX + "/login";
+				}
+				if(currentCustomer.getOriginalUid()==null){
+					return REDIRECT_PREFIX + "/login";
+				}
+			}
+			catch (Exception exception)
+			{
+				LOG.error("Getting Excpetion While getting current customer ");
+				return REDIRECT_PREFIX + "/login";
+			}
+
 			final ProductModel productModel = productService.getProductForCode(productCode);
 			populateProductDetailForDisplay(productModel, model, request);
 

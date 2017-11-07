@@ -19,7 +19,7 @@
 <input type="hidden"  id ="tealiumOrderFlag" value ="${cartToOrderConvert}"  />
 <cart:tealiumCartParameters/>
 <br/><br/><br/><br/><br/><br/><br/><br/><br/>
-				<div class="alert alert-danger alert-dismissable" id="juspayconnErrorDiv">	<!-- TPR-629 changes for error -->
+				<div class="alert alert-danger alert-dismissable juspayConnErrorSection" id="juspayconnErrorDiv">	<!-- TPR-629 changes for error -->
 					<button class="close juspayCloseButton" type="button">&times;</button>
 					<span id="juspayErrorMsg">Some issues are there with payment</span>
 				</div>
