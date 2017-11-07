@@ -47,7 +47,7 @@ public class MplWebFormServiceImpl implements MplWebFormService
 	@Resource
 	private ClientIntegration clientIntegration;
 
-	@Resource
+	@Resource(name = "ticketCreate")
 	private TicketCreationCRMservice ticketCreationService;
 
 	@Resource

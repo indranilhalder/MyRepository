@@ -13318,7 +13318,7 @@
 					</attribute>
 					<attribute qualifier="ticketType" type="java.lang.String">
 						<persistence type="property" />
-						<modifiers search="true" optional="false" read="true" write="true" />
+						<modifiers search="true" optional="true" read="true" write="true" />
 					</attribute>
 					<attribute qualifier="ticketAnswer" type="java.lang.String">
 						<persistence type="property">
@@ -13344,12 +13344,12 @@
 					<attribute qualifier="createTicketAllowed" type="boolean">
 						<defaultvalue>java.lang.Boolean.TRUE</defaultvalue>
 						<persistence type="property" />
-						<modifiers search="true" optional="false" read="true" write="true" />
+						<modifiers search="true" optional="true" read="true" write="true" />
 					</attribute>
 					<attribute qualifier="nodeDisplayAllowed" type="boolean">
 						<defaultvalue>java.lang.Boolean.TRUE</defaultvalue>
 						<persistence type="property" />
-						<modifiers search="true" optional="false" read="true" write="true" />
+						<modifiers search="true" optional="true" read="true" write="true" />
 					</attribute>
 				</attributes>
 			</itemtype>
@@ -13363,11 +13363,11 @@
 					</attribute>
 					<attribute qualifier="ticketType" type="java.lang.String">
 						<persistence type="property" />
-						<modifiers search="true" optional="false" read="true" write="true" />
+						<modifiers search="true" optional="true" read="true" write="true" />
 					</attribute>
 					<attribute qualifier="ticketSubType" type="java.lang.String">
 						<persistence type="property" />
-						<modifiers search="true" optional="false" read="true" write="true" />
+						<modifiers search="true" optional="true" read="true" write="true" />
 					</attribute>
 					<attribute qualifier="orderCode" type="java.lang.String">
 						<persistence type="property" />
@@ -13399,7 +13399,7 @@
 					</attribute>
 					<attribute qualifier="L4code" type="java.lang.String">
 					       <persistence type="property" />
-						<modifiers search="true" optional="false" read="true" write="true" />
+						<modifiers search="true" optional="true" read="true" write="true" />
 					</attribute>
 					<attribute qualifier="comment" type="java.lang.String">
 						<persistence type="property" />

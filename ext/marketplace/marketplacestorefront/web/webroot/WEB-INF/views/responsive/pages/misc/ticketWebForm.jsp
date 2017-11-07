@@ -33,7 +33,7 @@
 		<div class="custmCareQrySec" style="display: block;">
 			<form name="customerWebForm" id="customerWebForm" action="${ticketUrl}" method="POST" enctype="application/x-www-form-urlencoded">
 			
-				<input type="hidden" name="nodeL0" value="" />
+			<input type="hidden" name="nodeL0" value="Customer" />
 			
 			<div class="custmCareForms">
 				<div class="formGroup">
@@ -74,6 +74,9 @@
 					                </div>
 				                </div> -->
 							<ul class="orderDrop" style="display: none;">
+							
+							<c:if test="${formFields.orderDatas ne null }">
+							
 								<c:forEach items="${formFields.orderDatas.sellerOrderList}"
 									var="sellerOrder" varStatus="status">
 									<c:forEach items="${sellerOrder.entries}" var="entry"
@@ -97,7 +100,7 @@
 												<div class="prodTxt">
 													<p class="orderDate">
 														Order on:
-														<fmt:formatDate alue="${sellerOrder.created}"
+														<fmt:formatDate value="${sellerOrder.created}"
 															pattern="MMMMM dd, yyyy" />${formatedDate}
 													</p>
 													<p class="prodName">${entry.product.name}</p>
@@ -112,6 +115,8 @@
 										</li>
 									</c:forEach>
 								</c:forEach>
+								
+							</c:if>
 							</ul>
 						</div>
 					</div>
