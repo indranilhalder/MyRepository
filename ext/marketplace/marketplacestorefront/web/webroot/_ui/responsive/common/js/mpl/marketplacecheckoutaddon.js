@@ -5990,9 +5990,11 @@ function useWalletForPaymentAndPromoAjax(){
 				$(".checkout-paymentmethod li span").css('pointer-events', 'none');
 				$(".topPlaceOrderBtn").prop('disabled',false);
 				
-				var divText = "";
-				divText = document.createElement('li').innerHTML = '<span class="shippingSpan"> CliqCash Applied </span><span class="pull-right">'+data.cliqCashAmt+'</span>';
-				$(divText).addClass('shipping');
+	            $('.cliqCashInfoSection').remove();
+				var divText = document.createElement('li');
+				$(divText).addClass('cliqCashInfoSection');
+				var cliqCash = data.totalCartAmt;
+				divText.innerHTML = '<span class="shippingSpan cliqCashSpan" id="cliqCashPayId"> CliqCash Applied </span><span class="pull-right cliqCashSpanAmt">&#8377;'+cliqCash+'</span>';
 				$('#convChargeFieldId').before(divText);
 
 			}else{

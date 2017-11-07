@@ -6223,6 +6223,7 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 						cart.setSplitModeInfo("CliqCash");
 						jsonObject.put("apportionMode", "CliqCash");
 						jsonObject.put("cliqCashAmt", WalletAmt);
+						jsonObject.put("totalCartAmt", totalCartAmt);
 						//jsonObject.put("juspayAmt", 0);
 						getModelService().save(cart);
 						getModelService().refresh(cart);
@@ -6237,6 +6238,7 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 						jsonObject.put("disableJsMode", false);
 						jsonObject.put("juspayAmt", juspayTotalAmt);
 						jsonObject.put("cliqCashAmt", WalletAmt);
+						jsonObject.put("totalCartAmt", totalCartAmt);
 						cart.setSplitModeInfo("Split");
 						jsonObject.put("apportionMode", "Split");
 						getModelService().save(cart);
