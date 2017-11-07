@@ -444,6 +444,14 @@
 															</button>
 														</span>
 														</c:if>
+														<c:if test="${(empty wpproduct.wishlistProductSize && wpproduct.productCategory eq 'HomeFurnishing')}">
+														<span>
+															<button id="addToCartButtonwl" type="${buttonType}"
+																class="blue button js-add-to-cart_wl">
+																<spring:theme code="basket.add.to.basket" />
+															</button>
+														</span>
+														</c:if>
 														
 													</c:otherwise>
 												</c:choose>
