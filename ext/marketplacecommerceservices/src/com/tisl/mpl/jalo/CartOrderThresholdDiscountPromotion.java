@@ -37,6 +37,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.exception.EtailBusinessExceptions;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
+import com.tisl.mpl.marketplacecommerceservices.daos.MplCommerceCartDao;
 import com.tisl.mpl.promotion.helper.MplPromotionHelper;
 import com.tisl.mpl.service.MplWalletServices;
 import com.tisl.mpl.util.ExceptionUtil;
@@ -306,26 +307,18 @@ public class CartOrderThresholdDiscountPromotion extends GeneratedCartOrderThres
 									checkPaymentRestriction = true;
 								}
 							}
-							final CartModel cartModel = getCartService().getSessionCart();
+							final CartModel cartModel = getMplCommerceCartDao().getCart(order.getCode());
+							
+						//	final CartModel cartModel = getCartService().getSessionCart();
 
 
 							if (null != cartModel && null != cartModel.getSplitModeInfo() && checkPaymentRestriction
-									&& cartModel.getSplitModeInfo().equalsIgnoreCase("Split")
-									|| cartModel.getSplitModeInfo().equalsIgnoreCase("CliqCash"))
+									&& cartModel.getSplitModeInfo().equalsIgnoreCase("Split"))
 							{
-
-								//final CustomerModel cm = (CustomerModel) cartModel.getUser();
-
-								//final String code[] = cartModel.getCode().split("-");
-
-								//final CustomerWalletDetailResponse customerWalletDetailResponse = getMplWalletServices()
-								//	.getCustomerWallet(cm.getCustomerWalletDetail().getWalletId(), code[1].toString());
-
 								if (null != cartModel.getTotalWalletAmount())
 								{
 									orderSubtotalAfterDiscounts -= cartModel.getTotalWalletAmount().doubleValue();
-									if (orderSubtotalAfterDiscounts <= threshold.doubleValue()
-											|| cartModel.getTotalWalletAmount().doubleValue() >= orderSubtotalAfterDiscounts)
+									if (orderSubtotalAfterDiscounts <= threshold.doubleValue())
 									{
 										orderSubtotalAfterDiscounts += cartModel.getTotalWalletAmount().doubleValue();
 										checkWalletUsed = true;
@@ -827,6 +820,11 @@ public class CartOrderThresholdDiscountPromotion extends GeneratedCartOrderThres
 		return Registry.getApplicationContext().getBean("cartService", CartService.class);
 	}
 
+	protected MplCommerceCartDao getMplCommerceCartDao()
+	{
+		return Registry.getApplicationContext().getBean("mplCommerceCartDao", MplCommerceCartDao.class);
+	}
+	
 	protected MplWalletServices getMplWalletServices()
 	{
 		return Registry.getApplicationContext().getBean("mplWalletServices", MplWalletServices.class);
