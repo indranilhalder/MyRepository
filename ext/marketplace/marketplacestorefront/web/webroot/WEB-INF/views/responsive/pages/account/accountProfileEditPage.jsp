@@ -279,56 +279,30 @@
 		        }
 			    });
 		   
-		    //For numeric
-			$("#profileMobileNumber").keydown(function(event) {
-				// Allow only backspace and delete
-				if ( event.keyCode == 46 || event.keyCode == 8) {
-					// let it happen, don't do anything
-				}
-				else {
-					// Ensure that it is a number and stop the keypress
-					if ((event.keyCode !==9) && (event.keyCode < 48 || event.keyCode > 57 )) {
-						event.preventDefault();	
-					}	
-		                else{
-		            
-		              if($.trim($(this).val()) =='')
-		            {
-		                if(event.keyCode == 48){
-		                event.preventDefault();	
-		                }
-		            }
-		                    
-		            }
-				}
+				    //For numeric
+			$('#profileMobileNumber').on('keypress', function(ev) {
+		    var keyCode = window.event ? ev.keyCode : ev.which;
+		    //codes for 0-9
+		    if (keyCode < 48 || keyCode > 57) {
+		        //codes for backspace, delete, enter
+		        if (keyCode != 0 && keyCode != 8 && keyCode != 13 && !ev.ctrlKey) {
+		            ev.preventDefault();
+		        }
+		    }
+		});
+			$('#profileMobileNumber').on('keyup keypress', function(ev) {
+			var regex = /^[1-9]\d{0,9}$/g;
+			var data= $.trim($(this).val());
+			if(!regex.test(data))
+			{
+			 if(event.keyCode==48 || event.keyCode==96){
+					                event.preventDefault();	
+			                     $(this).val(data.slice(1));
+			                     $(this).caretToStart();
+					                }
+			}
 			});
-		    $("#profileMobileNumber").keydown(function(event) {
-				// Allow only backspace and delete
-				if ( event.keyCode == 46 || event.keyCode == 8 ) {
-					// let it happen, don't do anything
-		            if($.trim($(this).val()).length==0)
-		            {
-		                if(event.keyCode==48){
-		                event.preventDefault();	
-		                }
-		            }
-				}
-				else {
-					// Ensure that it is a number and stop the keypress
-					if (event.keyCode < 48 || event.keyCode > 57 ) {
-						event.preventDefault();	
-					}	
-		            else{
-		                 
-		              if($.trim($(this).val()) =='')
-		            {
-		                if(event.keyCode == 48){
-		                event.preventDefault();	
-		                }
-		            }
-		            }
-				}
-			});
+		 
 		    
 		});
 	   
