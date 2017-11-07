@@ -312,15 +312,32 @@ share mobile -->
    		</c:choose>
 	</c:when>
 	<c:otherwise>
+	
                <c:choose>
    			 <c:when test="${product.rootCategory =='HomeFurnishing'}">
-	   			 <c:choose>
-	   			 <c:when test="${productSize !='No Size'}">
-		   			<span class="home-pdp-size">
-						<spring:theme code="product.variant.size.HF"></spring:theme><c:if test="${not empty productSizeType}">(${productSizeType})</c:if>
-				  </span>
-				  </c:when>
-	   			 </c:choose>
+	   		<spring:eval expression="T(de.hybris.platform.util.Config).getParameter('mpl.homefurnishing.category')" var="quantityVariant"/>
+	   		
+     	<c:set var = "categoryListArray_1" value = "${fn:split(quantityVariant, ',')}" />
+		<c:forEach items="${product.categories}" var="categories">
+   			<c:forEach items = "${categoryListArray_1}" var="quantityVariantArray">
+   		   				<c:if test="${categories.code eq quantityVariantArray}">
+   				 	<c:set var="quantity" value="true"/>
+   				</c:if> 
+   			</c:forEach>
+   		</c:forEach>
+   		<c:choose>
+   			<c:when test="${true eq quantity}">
+   				<span><spring:theme code="product.variant.size.HF"></spring:theme>
+   				<c:if test="${not empty productSizeType}">(${productSizeType})</c:if>
+			  </span>
+   			</c:when>
+   			<c:otherwise>
+   				<span>
+					<spring:theme code="product.variant.size.HF"></spring:theme>
+					<c:if test="${not empty productSizeType}">(${productSizeType})</c:if>
+			  </span> 
+   			</c:otherwise>
+   		</c:choose>
    			  
 			   <span class="home-pdp-quantity">
 					<spring:theme code="product.variant.quantity"></spring:theme><c:if test="${not empty productSizeType}">(${productSizeType})</c:if>
