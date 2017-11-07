@@ -589,7 +589,7 @@ body.template-pages-layout-errorPageTemplate .hero .major-promos span.major-prom
 }
 
 body.template-pages-layout-errorPageTemplate .hero .major-promos span.major-promo-description p:first-child
-	{
+{
 	color: #a9143c;
 	font-size: 20px;
 	padding: 20px 0px
@@ -691,9 +691,12 @@ body.template-pages-layout-errorPageTemplate .accountnavigationcollectioncompone
 		margin-top: 7px;
 	}
 	body.template-pages-layout-errorPageTemplate .hero .major-promos span.major-promo-description p:first-child
-		{
+	{
 		color: #a9143c;
-		font-size: 15.31px;
+	    font-size: 15.31px;
+	    margin: 0 10px;
+	    padding: 20px 10px;
+	    line-height: 1.4;
 	}
 	body.template-pages-layout-errorPageTemplate .hero .major-promos span.major-promo-description p:last-child
 		{
