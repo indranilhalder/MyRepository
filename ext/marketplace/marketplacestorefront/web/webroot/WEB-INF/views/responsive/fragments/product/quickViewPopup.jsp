@@ -100,6 +100,7 @@ tr.d0 td {
  var productCodeQuickView = '${product.code}';
  var variantCodesPdp = '${allVariantsString}';
  var msiteBuyBoxSeller = '${msiteBuyBoxSellerId}'; //CKD:TPR-250 
+ var productCategoryType = '${product.rootCategory}';
  $( document ).ready(function() {
 	 //Enable CTA's
 	 removedisabled();
@@ -112,8 +113,8 @@ tr.d0 td {
 	 setBuyBoxDetails(msiteBuyBoxSeller);
 //CKD:TPR-250:End
 	 
-	 
-	 
+	 ACC.quickview.onSizeSelectDropDownQuickView();
+		ACC.quickview.onQuantitySelectDropDownQuick();
 	 getRating_Qview('${gigyaAPIKey}','${product.code}','${product.rootCategory}');
 	 
 	 var timer = setInterval(function(){

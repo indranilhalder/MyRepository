@@ -340,6 +340,49 @@ function redirectURL(val){
 					</c:forEach>
 					</c:forEach>	  
 				</c:when>
+								<%-- Added for Home Furnishing --%>
+				  <c:when test="${product.rootCategory=='HomeFurnishing'}">	
+			
+			      
+			     <!-- UF-422:Changes for PDP when product has only one size -->
+				 <c:set var="selectedClass" value=""/>
+					<c:if test= "${fn:length(product.variantOptions) eq 1 || pdpSizeCounter eq 1}">
+						<c:set var ="selectedClass" value ="class='selected'"/></c:if>	
+				  <select id="variant_dropdown" class="variant-select">
+					     
+		 			<c:forEach items="${product.variantOptions}" var="variantOption">
+					<c:forEach var="entry" items="${variantOption.sizeLink}">
+				
+					<c:url value="${entry.key}/quickView" var="link" />							
+					<c:choose>
+						<c:when test="${(variantOption.code eq product.code)}">
+							<c:choose>
+								<c:when test="${selectedSize eq null}">										
+									<option value="${link}?selectedSize=true${msiteSellerForSize}" data-productCode="${variantOption.code}" >${entry.value}</option>
+								
+								</c:when>
+								<c:otherwise>											
+									 <option value="${link}?selectedSize=true${msiteSellerForSize}" data-productCode="${variantOption.code}" selected>${entry.value}</option>
+									
+								</c:otherwise>
+							</c:choose>
+						</c:when>
+						<c:otherwise>								
+							<option data-vcode="${link}" value="${link}?selectedSize=true${msiteSellerForSize}" data-productCode="${variantOption.code}" >${entry.value}</option>
+						
+						</c:otherwise>
+					</c:choose>
+					</c:forEach>
+					</c:forEach>	
+					</select>  
+					
+					 <select id="quantity_dropdown" class="variant-select">
+			   <c:forEach items="${quantityList}" var="quantity">
+					<option value="${quantity}">${quantity}</option>
+				</c:forEach>
+			   </select>
+				</c:when>
+								<%-- End Home Furnishing --%>	
 				<c:otherwise>
 				 <%-- <li><spring:theme
 							code="text.select.size" /></li> --%>
