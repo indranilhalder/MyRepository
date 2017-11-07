@@ -489,10 +489,11 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 				 * Wallet Changes
 				 */
 				boolean checkUserWalletStatus = false;
+				
 				final CustomerModel currentCustomer = (CustomerModel) userService.getCurrentUser();
 
 				if (null != currentCustomer && null != currentCustomer.getIsWalletActivated()
-						&& currentCustomer.getIsWalletActivated())
+						&& !currentCustomer.getIsWalletActivated().booleanValue() && null == currentCustomer.getCustomerWalletDetail())
 				{
 					checkUserWalletStatus = true;
 				}
