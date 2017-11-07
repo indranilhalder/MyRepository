@@ -78173,6 +78173,10 @@ background: url(../images/search_image.png) no-repeat;}
 .orders-product-block .header ul li {width: 16% !important;}
 .orders-product-block .header ul .resendEmail {text-align: right;}
 
+/*Cliq Cash in Total*/
+.cliqCashSpan {color: #666; float: left !important; text-transform: none;}
+.cliqCashSpanAmt {font-size: 14px;}
+
 @media(max-width: 480px) {
 	.orders-product-block .header ul .viewDetails {width: 100% !important;}
 	.orders-product-block li.header > ul > li {width: 33% !important; float: left;}

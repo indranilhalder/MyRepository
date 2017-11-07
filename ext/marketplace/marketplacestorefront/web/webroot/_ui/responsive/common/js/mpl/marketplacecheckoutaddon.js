@@ -5844,6 +5844,9 @@ function useWalletForPaymentAjax(){
 				
 				$("#addCliqCashId").text("");
 				document.getElementById('addCliqCashId').innerHTML = $(".payRemainingDesc").attr("data-useCliqCash");
+				
+				$('.cliqCashInfoSection').remove();
+			
 			}
 			
 			if(data.disableJsMode){
@@ -5969,6 +5972,10 @@ function useWalletForPaymentAndPromoAjax(){
 
 				$("#addCliqCashId").text("");
 				document.getElementById('addCliqCashId').innerHTML = $(".payRemainingDesc").attr("data-useCliqCash");
+				
+				if($("body").hasClass("shippingSpan")){
+				$('.shippingSpan').remove();
+				}
 
 			}
 
@@ -5984,6 +5991,11 @@ function useWalletForPaymentAndPromoAjax(){
 				$("#paymentOptionsMobiles li span").css('pointer-events', 'none');
 				$(".checkout-paymentmethod li span").css('pointer-events', 'none');
 				$(".topPlaceOrderBtn").prop('disabled',false);
+				
+				var divText = "";
+				divText = document.createElement('li').innerHTML = '<span class="shippingSpan"> CliqCash Applied </span><span class="pull-right">'+data.cliqCashAmt+'</span>';
+				$(divText).addClass('shipping');
+				$('#convChargeFieldId').before(divText);
 
 			}else{
 				$("#make_saved_cc_payment, #make_saved_dc_payment, #make_cc_payment, #make_dc_payment, #make_nb_payment, #paymentButtonId, #make_emi_payment, #make_mrupee_payment").show();
@@ -6028,10 +6040,27 @@ function useWalletForPaymentAndPromoAjax(){
 				$("#paymentOptionsMobiles li span").css('pointer-events', 'all');
 				$(".checkout-paymentmethod li span").css('pointer-events', 'all');
 
+
 				$("#JuspayAmtId").html(data.juspayAmt);
 				$("#addCliqCashId").text("");
 				document.getElementById('addCliqCashId').innerHTML = $(".payRemainingDesc").attr("data-useJuspay") +"<b>"+ data.juspayAmt +"&nbsp; </b>" + $(".payRemainingDesc").attr("data-useJuspay1");
 
+//				alert($(".orderTotalSpanId").hasClass("shippingSpan"));
+//				if($("body").hasClass("shippingSpan") == true){
+//					$('.shippingSpan').empty();
+//				}
+				
+				$('.cliqCashInfoSection').remove();
+				
+				var divText = document.createElement('li');
+				$(divText).addClass('cliqCashInfoSection');
+				divText.innerHTML = '<span class="shippingSpan cliqCashSpan" id="cliqCashPayId"> CliqCash Applied </span><span class="pull-right cliqCashSpanAmt">&#8377;'+data.cliqCashAmt+'</span>';
+				
+				$('#convChargeFieldId').before(divText);
+				
+				document.getElementById('totalWithConvField').innerHTML ="";
+				document.getElementById('totalWithConvField').innerHTML =  data.juspayAmt;
+				
 				if(!value.checked){
 					$("#addCliqCashId").text("");
 					document.getElementById('addCliqCashId').innerHTML = $(".payRemainingDesc").attr("data-useCliqCash");
