@@ -308,9 +308,6 @@ public class CartOrderThresholdDiscountPromotion extends GeneratedCartOrderThres
 								}
 							}
 							final CartModel cartModel = getMplCommerceCartDao().getCart(order.getCode());
-							
-						//	final CartModel cartModel = getCartService().getSessionCart();
-
 
 							if (null != cartModel && null != cartModel.getSplitModeInfo() && checkPaymentRestriction
 									&& cartModel.getSplitModeInfo().equalsIgnoreCase("Split"))
@@ -326,6 +323,13 @@ public class CartOrderThresholdDiscountPromotion extends GeneratedCartOrderThres
 
 								}
 							}
+
+							if (null != cartModel && null != cartModel.getSplitModeInfo() && checkPaymentRestriction
+									&& cartModel.getSplitModeInfo().equalsIgnoreCase("CliqCash"))
+							{
+								checkWalletUsed = true;
+							}
+
 						}
 						catch (final Exception ex)
 						{
@@ -824,7 +828,7 @@ public class CartOrderThresholdDiscountPromotion extends GeneratedCartOrderThres
 	{
 		return Registry.getApplicationContext().getBean("mplCommerceCartDao", MplCommerceCartDao.class);
 	}
-	
+
 	protected MplWalletServices getMplWalletServices()
 	{
 		return Registry.getApplicationContext().getBean("mplWalletServices", MplWalletServices.class);
