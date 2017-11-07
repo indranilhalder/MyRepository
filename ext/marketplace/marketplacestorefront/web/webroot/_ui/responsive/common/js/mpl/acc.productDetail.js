@@ -4357,7 +4357,7 @@ function onSizeSelectDropDownPopulateDOM()//First Method to be called in size se
 							//On buybox complete
 							xhrBuyBox.always(function(){
 								//showing/hiding buttons on page change
-								$('#pin').val("");
+								//$('#pin').val("");
 								//$("#addToCartButton").show(); // commented for TPR-250 :was overriding
 
 								$('#addToCartButton-wrong').hide();
