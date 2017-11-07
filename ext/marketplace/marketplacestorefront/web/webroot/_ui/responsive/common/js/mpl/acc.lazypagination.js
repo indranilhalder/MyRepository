@@ -26,7 +26,7 @@ $(document).ready(function(){
 		    }	
 				
 	}
-    
+    toggleNextPrevButton();
   //set the total no of pages 
     totalNoOfPages = $('input[name=noOfPages]').val();
     totalNoOfPages == '' ? 0 : parseInt(totalNoOfPages);
@@ -56,8 +56,13 @@ var $lis = $(".pagination-block li").hide();
 var size_li = $lis.length;
 var x = totalPageCountToShow,
 start = 0;
-$(".pageNoLi").removeAttr("style");
+//$(".pageNoLi").removeAttr("style");
 $lis.slice(0, totalPageCountToShow).show();
+
+if($(".pagination-block li").find(".active").parent().index() == 1){
+	$(".prev-page").hide();
+}
+
 $(".pageNo").removeClass("active");
 if(!$(".pagination-block li").first().find(".pageNo").hasClass("active")){
 	$(".pagination-block li").first().find(".pageNo").addClass("active");
@@ -80,6 +85,7 @@ $(document).on('click', '.next-block', function(e) {
 		$(nextPageNo).prev().find("a").removeClass("active");
 		$("#pageOf").text($(nextPageNo).text());
     }
+	toggleNextPrevButton();
 	$('html, body').animate({
         scrollTop: 0
     }, 100);
@@ -102,6 +108,7 @@ $(document).on('click', '.prev-block', function(e) {
 		$(nextPageNo).next().find("a").removeClass("active");
 		$("#pageOf").text($(nextPageNo).text());
     }
+	toggleNextPrevButton()
 	$('html, body').animate({
         scrollTop: 0
     }, 100);
@@ -288,7 +295,6 @@ function sort(this_data,drop_down){
 	}
 	var pathName = window.location.pathname;
 	pathName = pathName.replace(/page-[0-9]+/, 'page-1');
-	pageType = $('#pageType').val();			//TISUAT-5999 fix
 	
 	var url = '';
 	switch (item) {
@@ -431,10 +437,25 @@ function initialPaginationDisplay(){
 	var size_li = $lis.length;
 	var x = totalPageCountToShow,
 	start = 0;
-	$(".pageNoLi").removeAttr("style");
+	//$(".pageNoLi").removeAttr("style");
 	$lis.slice(0, totalPageCountToShow).show();
 	$(".pageNo").removeClass("active");
 	if(!$(".pagination-block li").first().find(".pageNo").hasClass("active")){
 		$(".pagination-block li").first().find(".pageNo").addClass("active");
+	}
+}
+
+function toggleNextPrevButton(){
+	
+	if(totalNoOfPages == ($(".pagination-block li").find(".active").parent().index() + 1)){
+		$(".next-block").hide();
+	}else{
+		$(".next-block").show();
+	}
+	
+	if($(".pagination-block li").find(".active").parent().index() == 0){
+		$(".prev-block").hide();
+	}else{
+		$(".prev-block").show();
 	}
 }
