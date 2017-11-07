@@ -3551,7 +3551,7 @@ function validateCVVEmi() {
 		var number = handle[2].value;
 		if (number == "") {
 			errorHandle.innerHTML = "Please enter a valid CVV number.";
-			cvvErrorCapture("Emi");
+			cvvErrorCapture("emi");
 			return false;
 		} else {
 			var count = 0;
@@ -3560,14 +3560,14 @@ function validateCVVEmi() {
 					count++;
 			if (count == number.length) {
 				errorHandle.innerHTML = "Spaces are not allowed.";
-				cvvErrorCapture("Emi");
+				cvvErrorCapture("emi");
 				return false;
 			} else {
 				for ( var index = 0; index < number.length; index++)
 					if (number.charAt(index) < '0'
 							|| number.charAt(index) > '9' || number.length < 3) {
 						errorHandle.innerHTML = "Please enter a valid CVV number.";
-						cvvErrorCapture("Emi");
+						cvvErrorCapture("emi");
 						return false;
 					}
 			}
