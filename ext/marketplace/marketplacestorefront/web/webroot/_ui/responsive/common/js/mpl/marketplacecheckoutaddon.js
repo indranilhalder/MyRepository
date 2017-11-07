@@ -5973,9 +5973,7 @@ function useWalletForPaymentAndPromoAjax(){
 				$("#addCliqCashId").text("");
 				document.getElementById('addCliqCashId').innerHTML = $(".payRemainingDesc").attr("data-useCliqCash");
 				
-				if($("body").hasClass("shippingSpan")){
-				$('.shippingSpan').remove();
-				}
+				$('.cliqCashInfoSection').remove();
 
 			}
 
@@ -6045,17 +6043,11 @@ function useWalletForPaymentAndPromoAjax(){
 				$("#addCliqCashId").text("");
 				document.getElementById('addCliqCashId').innerHTML = $(".payRemainingDesc").attr("data-useJuspay") +"<b>"+ data.juspayAmt +"&nbsp; </b>" + $(".payRemainingDesc").attr("data-useJuspay1");
 
-//				alert($(".orderTotalSpanId").hasClass("shippingSpan"));
-//				if($("body").hasClass("shippingSpan") == true){
-//					$('.shippingSpan').empty();
-//				}
-				
 				$('.cliqCashInfoSection').remove();
 				
 				var divText = document.createElement('li');
 				$(divText).addClass('cliqCashInfoSection');
 				divText.innerHTML = '<span class="shippingSpan cliqCashSpan" id="cliqCashPayId"> CliqCash Applied </span><span class="pull-right cliqCashSpanAmt">&#8377;'+data.cliqCashAmt+'</span>';
-				
 				$('#convChargeFieldId').before(divText);
 				
 				document.getElementById('totalWithConvField').innerHTML ="";
