@@ -26,7 +26,7 @@ $(document).ready(function(){
 		    }	
 				
 	}
-    
+    toggleNextPrevButton();
   //set the total no of pages 
     totalNoOfPages = $('input[name=noOfPages]').val();
     totalNoOfPages == '' ? 0 : parseInt(totalNoOfPages);
@@ -449,9 +449,13 @@ function toggleNextPrevButton(){
 	
 	if(totalNoOfPages == ($(".pagination-block li").find(".active").parent().index() + 1)){
 		$(".next-block").hide();
+	}else{
+		$(".next-block").show();
 	}
 	
 	if($(".pagination-block li").find(".active").parent().index() == 0){
 		$(".prev-block").hide();
+	}else{
+		$(".prev-block").show();
 	}
 }
