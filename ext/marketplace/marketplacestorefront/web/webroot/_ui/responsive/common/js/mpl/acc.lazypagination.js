@@ -49,6 +49,7 @@ $(document).on('click', '.pageNo', function(e) {
     $('html, body').animate({
         scrollTop: 0
   }, 100); 
+    toggleNextPrevButton(); 
 });
 
 
@@ -108,7 +109,7 @@ $(document).on('click', '.prev-block', function(e) {
 		$(nextPageNo).next().find("a").removeClass("active");
 		$("#pageOf").text($(nextPageNo).text());
     }
-	toggleNextPrevButton()
+	toggleNextPrevButton();
 	$('html, body').animate({
         scrollTop: 0
     }, 100);
@@ -412,6 +413,7 @@ function sort(this_data,drop_down){
 		break;
 	}
 	initialPaginationDisplay();
+	toggleNextPrevButton();
 }
 
 function sortReplaceState(url){
