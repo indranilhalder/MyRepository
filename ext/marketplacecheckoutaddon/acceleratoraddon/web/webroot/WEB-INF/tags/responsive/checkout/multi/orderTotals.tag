@@ -142,7 +142,7 @@
 			  <format:price priceData="${cartTotalMrp}"/>
 			  </c:when>
 			  <c:otherwise>
-			  	<format:price priceData="${cartData.totalPrice}"/></span>
+			  	<format:price priceData="${cartData.totalPrice}"/>
 			  	<%-- <span class="defaultTotalPayablePrice">
 			  		<span id="totalWithConvField">
 				   	<format:price priceData="${cartData.totalPrice}"/></span>
