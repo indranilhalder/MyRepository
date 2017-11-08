@@ -114,7 +114,7 @@
 
 								<div class="mobile_main">
 									<form:input path="mobileNumber" id="profileMobileNumber"
-										onkeyup="kpressmobile()" maxlength="10" />
+										 maxlength="10" />
 									<div class="errorMessage">
 										<div id="errMob"></div>
 									</div>
@@ -231,7 +231,7 @@
 											text="Confirm New Password*" /></label>
 									<!-- <input type="password"  path="checkNewPassword" id="checkNewPassword"
 										onkeypress="kpresscnp()" maxlength="140" /> -->
-									<form:password path="checkNewPassword" onkeypress="kpresscnp()" />
+									<form:password path="checkNewPassword" onkeyup="kpresscnp()" />
 									<div class="errorMessage">
 										<div id="errCnfNewpwd"></div>
 									</div>
@@ -278,32 +278,16 @@
 			    onSelect: function() {
 		        }
 			    });
-		   
-				    //For numeric
-			$('#profileMobileNumber').on('keypress', function(ev) {
-		    var keyCode = window.event ? ev.keyCode : ev.which;
-		    //codes for 0-9
-		    if (keyCode < 48 || keyCode > 57) {
-		        //codes for backspace, delete, enter
-		        if (keyCode != 0 && keyCode != 8 && keyCode != 13 && !ev.ctrlKey) {
-		            ev.preventDefault();
-		        }
-		    }
-		});
-			$('#profileMobileNumber').on('keyup keypress', function(ev) {
-			var regex = /^[1-9]\d{0,9}$/g;
-			var data= $.trim($(this).val());
-			if(!regex.test(data))
-			{
-			 if(event.keyCode==48 || event.keyCode==96){
-					                event.preventDefault();	
-			                     $(this).val(data.slice(1));
-			                     $(this).caretToStart();
-					                }
-			}
-			});
-		 
-		    
+		    $('#profileMobileNumber').on('keyup', function(ev) {
+				var regex = /^[1-9]\d{0,9}$/g;
+				var data= $.trim($(this).val());
+				if(!regex.test(data))
+				{
+					event.preventDefault();	
+				    $(this).val(data.slice(1));					                
+				}
+				});
+
 		});
 	   
 	</script>
