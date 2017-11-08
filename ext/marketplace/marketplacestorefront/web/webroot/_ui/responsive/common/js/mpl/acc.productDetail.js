@@ -5077,6 +5077,19 @@ function populateProductPageTabs(jsonData)
 			$("#warrantyAccordion").html(populateProductDetailsTab(jsonData));
 		}
 	}
+	//HOME-244
+	if(jsonData['validTabs'].includes('overview'))
+	{
+		//$('ul.tabs.pdp>li:eq(1)').html(populateProductDetailsTab(jsonData));
+		var index=$('ul.nav.pdp>li').index($('#tabs_productOverview'));
+		if(index!=-1)
+		{
+			var selector='ul.tabs.pdp>li:eq('+index+')';
+			$(selector).html(populateProductDetailsTab(jsonData));
+			//UF-377
+			$("#overviewAccordion").html(populateProductDetailsTab(jsonData));
+		}
+	}
 	
 	var catType = $("#categoryType").val();
 	if((catType != undefined) && (("FINEJEWELLERY" == catType.toUpperCase()) || ("FASHIONJEWELLERY" == catType.toUpperCase()))){
