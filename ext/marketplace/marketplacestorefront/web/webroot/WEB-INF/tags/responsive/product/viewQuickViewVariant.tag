@@ -269,6 +269,10 @@ function redirectURL(val){
    			 <span>
 					<spring:theme code="product.variant.size.HF"></spring:theme><c:if test="${not empty productSizeType}">(${productSizeType})</c:if>
 			  </span> 
+			  
+			     <span class="home-pdp-quantity">
+					<spring:theme code="product.variant.quantity"></spring:theme><c:if test="${not empty productSizeType}">(${productSizeType})</c:if>
+			  </span> 
    	 </c:when>
 	<c:otherwise>
 	
@@ -342,7 +346,8 @@ function redirectURL(val){
 				</c:when>
 								<%-- Added for Home Furnishing --%>
 				  <c:when test="${product.rootCategory=='HomeFurnishing'}">	
-			
+			<c:choose>
+				  <c:when test="${productSize !='No Size'}">
 			      
 			     <!-- UF-422:Changes for PDP when product has only one size -->
 				 <c:set var="selectedClass" value=""/>
@@ -375,7 +380,8 @@ function redirectURL(val){
 					</c:forEach>
 					</c:forEach>	
 					</select>  
-					
+					</c:when>
+					</c:choose>
 					 <select id="quantity_dropdown" class="variant-select">
 			   <c:forEach items="${quantityList}" var="quantity">
 					<option value="${quantity}">${quantity}</option>
