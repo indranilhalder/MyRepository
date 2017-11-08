@@ -48,12 +48,14 @@ import com.tisl.lux.model.LuxuryVideoComponentModel;
 import com.tisl.lux.model.cms.components.LuxShowCaseCollectionComponentModel;
 import com.tisl.lux.model.cms.components.LuxShowCaseComponentModel;
 import com.tisl.lux.model.cms.components.LuxuryLookBookComponentModel;
+import com.tisl.lux.model.cms.components.LuxurySimpleBannerComponentModel;
 import com.tisl.lux.model.cms.components.ShopOnLuxuryElementModel;
 import com.tisl.lux.model.cms.components.ShopOnLuxuryModel;
 import com.tisl.lux.model.cms.components.WeeklySpecialBannerModel;
 import com.tisl.lux.model.cms.components.WeeklySpecialModel;
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.core.model.LuxProductCarouselComponentModel;
+import com.tisl.mpl.facades.constants.MarketplaceFacadesConstants;
 import com.tisl.mpl.facades.product.data.BuyBoxData;
 import com.tisl.mpl.marketplacecommerceservices.service.impl.MplCMSPageServiceImpl;
 import com.tisl.mpl.model.cms.components.LuxCMSMediaParagraphComponentModel;
@@ -72,10 +74,14 @@ import com.tisl.mpl.wsdto.LuxVideocomponentWsDTO;
 import com.tisl.mpl.wsdto.LuxuryComponentsListWsDTO;
 import com.tisl.mpl.wsdto.LuxuryLookBookComponentListWsDTO;
 import com.tisl.mpl.wsdto.LuxuryMediaListWsDTO;
+import com.tisl.mpl.wsdto.LuxuryMediaWsDTO;
+import com.tisl.mpl.wsdto.LuxurySimpleBannerComponentWsDTO;
 import com.tisl.mpl.wsdto.ShopOnLuxuryElementListWsDTO;
 import com.tisl.mpl.wsdto.ShopOnLuxuryElementWsDTO;
 import com.tisl.mpl.wsdto.WeeklySpecialBannerListWsDTO;
 import com.tisl.mpl.wsdto.WeeklySpecialBannerWsDTO;
+
+import net.sourceforge.pmd.util.StringUtil;
 
 
 
@@ -186,7 +192,6 @@ public class LuxCmsFacadeImpl implements LuxCmsFacade
 						final LuxCMSMediaParagraphComponentModel LuxCMSMediaParagraphComponent = (LuxCMSMediaParagraphComponentModel) abstractCMSComponentModel;
 						luxuryComponentsList = getLuxCMSMediaParagraphWsDTO(LuxCMSMediaParagraphComponent, luxuryComponentsListWsDTO);
 						break;
-
 					case "LuxuryLookBookComponent":
 						final LuxuryLookBookComponentModel luxuryLookBookComponent = (LuxuryLookBookComponentModel) abstractCMSComponentModel;
 						luxuryComponentsList = getLuxuryLookBookComponentWsDTO(luxuryLookBookComponent, luxuryComponentsListWsDTO);
@@ -212,6 +217,11 @@ public class LuxCmsFacadeImpl implements LuxCmsFacade
 						luxuryComponentsList = getLuxProductCarouselComponentWsDTO(luxProductCarouselComponent,
 								luxuryComponentsListWsDTO);
 						break;
+					case "LuxurySimpleBannerComponent":
+						final LuxurySimpleBannerComponentModel luxurySimpleBannerComponent = (LuxurySimpleBannerComponentModel) abstractCMSComponentModel;
+						luxuryComponentsList = getLuxurySimpleBannerComponentWsDTO(luxurySimpleBannerComponent,
+								luxuryComponentsListWsDTO);
+						break;
 					default:
 						break;
 				}
@@ -219,6 +229,119 @@ public class LuxCmsFacadeImpl implements LuxCmsFacade
 
 		}
 		return luxuryComponentsList;
+	}
+
+	private LuxuryComponentsListWsDTO getLuxurySimpleBannerComponentWsDTO(
+			final LuxurySimpleBannerComponentModel luxurySimpleBannerComponent, final LuxuryComponentsListWsDTO luxuryComponent)
+	{
+		final List<LuxurySimpleBannerComponentWsDTO> objectList = new ArrayList<LuxurySimpleBannerComponentWsDTO>();
+		final LuxurySimpleBannerComponentWsDTO luxurySimpleBannerComponentWsDTO = new LuxurySimpleBannerComponentWsDTO();
+
+		if (luxurySimpleBannerComponent.getMedia() != null)
+		{
+
+			final LuxuryMediaWsDTO mediaWsDTO = new LuxuryMediaWsDTO();
+
+			if (luxurySimpleBannerComponent.getMedia().getAltText() != null)
+			{
+				mediaWsDTO.setAltText(luxurySimpleBannerComponent.getMedia().getAltText());
+			}
+
+			if (luxurySimpleBannerComponent.getMedia().getMediaFormat() != null
+					&& StringUtils.isNotEmpty(luxurySimpleBannerComponent.getMedia().getMediaFormat().getName()))
+			{
+				mediaWsDTO.setMediaFormat(luxurySimpleBannerComponent.getMedia().getMediaFormat().getName());
+			}
+
+			if (luxurySimpleBannerComponent.getMedia().getMediaType() != null)
+			{
+				mediaWsDTO.setMediaType(luxurySimpleBannerComponent.getMedia().getMediaType().getCode());
+			}
+
+			if (StringUtil.isNotEmpty(luxurySimpleBannerComponent.getName()))
+			{
+				mediaWsDTO.setName(luxurySimpleBannerComponent.getName());
+			}
+
+			if (StringUtil.isNotEmpty(luxurySimpleBannerComponent.getMedia().getURL()))
+			{
+				mediaWsDTO.setURL(luxurySimpleBannerComponent.getMedia().getURL());
+			}
+
+			if (StringUtil.isNotEmpty(luxurySimpleBannerComponent.getUrlLink()))
+			{
+				mediaWsDTO.setUrlLink(luxurySimpleBannerComponent.getUrlLink());
+			}
+
+			luxurySimpleBannerComponentWsDTO.setMedia(mediaWsDTO);
+		}
+
+		if (luxurySimpleBannerComponent.getAssociatedCategory() != null)
+		{
+			luxurySimpleBannerComponentWsDTO.setAssociatedCategory(luxurySimpleBannerComponent.getAssociatedCategory().getCode());
+		}
+
+		if (luxurySimpleBannerComponent.getBannerForCategory() != null)
+		{
+			luxurySimpleBannerComponentWsDTO.setBannerForCategory(luxurySimpleBannerComponent.getBannerForCategory().getCode());
+		}
+
+		if (StringUtils.isNotEmpty(luxurySimpleBannerComponent.getAppPosition()))
+		{
+			luxurySimpleBannerComponentWsDTO.setComponentPosition(luxurySimpleBannerComponent.getAppPosition());
+		}
+		else
+		{
+			luxurySimpleBannerComponentWsDTO.setComponentPosition(MarketplaceFacadesConstants.SPACE);
+		}
+
+		if (StringUtil.isNotEmpty(luxurySimpleBannerComponent.getAppPosition()))
+		{
+			luxurySimpleBannerComponentWsDTO.setComponentPosition(luxurySimpleBannerComponent.getAppPosition());
+		}
+
+		if (StringUtil.isNotEmpty(luxurySimpleBannerComponent.getDeeplinkType()))
+		{
+			luxurySimpleBannerComponentWsDTO.setDeeplinkType(luxurySimpleBannerComponent.getDeeplinkType());
+		}
+
+		if (StringUtil.isNotEmpty(luxurySimpleBannerComponent.getDeeplinkTypeId()))
+		{
+			luxurySimpleBannerComponentWsDTO.setDeeplinkTypeId(luxurySimpleBannerComponent.getDeeplinkTypeId());
+		}
+
+		if (StringUtil.isNotEmpty(luxurySimpleBannerComponent.getDeeplinkTypeVal()))
+		{
+			luxurySimpleBannerComponentWsDTO.setDeeplinkTypeVal(luxurySimpleBannerComponent.getDeeplinkTypeVal());
+		}
+
+		if (StringUtil.isNotEmpty(luxurySimpleBannerComponent.getDescription()))
+		{
+			luxurySimpleBannerComponentWsDTO.setDescription(luxurySimpleBannerComponent.getDescription());
+		}
+
+		if (StringUtil.isNotEmpty(luxurySimpleBannerComponent.getIcid2()))
+		{
+			luxurySimpleBannerComponentWsDTO.setIcid2(luxurySimpleBannerComponent.getIcid2());
+		}
+
+		if (StringUtil.isNotEmpty(luxurySimpleBannerComponent.getTitle()))
+		{
+			luxurySimpleBannerComponentWsDTO.setTitle(luxurySimpleBannerComponent.getTitle());
+		}
+
+		luxurySimpleBannerComponentWsDTO.setExternal(luxurySimpleBannerComponent.isExternal());
+
+		if (luxuryComponent.getLuxurySimpleBannerComponent() != null)
+		{
+			luxuryComponent.getLuxurySimpleBannerComponent().add(luxurySimpleBannerComponentWsDTO);
+		}
+		else
+		{
+			objectList.add(luxurySimpleBannerComponentWsDTO);
+			luxuryComponent.setLuxurySimpleBannerComponent(objectList);
+		}
+		return luxuryComponent;
 	}
 
 	private LuxuryComponentsListWsDTO getLuxProductCarouselComponentWsDTO(
@@ -265,12 +388,12 @@ public class LuxCmsFacadeImpl implements LuxCmsFacade
 					for (final ImageData img : productData.getImages())
 					{
 						if (null != img && StringUtils.isNotEmpty(img.getFormat())
-								&& img.getFormat().equalsIgnoreCase(MarketplacecommerceservicesConstants.CARTPAGE))
+								&& img.getFormat().equalsIgnoreCase(MarketplacecommerceservicesConstants.SEARCHPAGE))
 						{
 							setValue(luxProductCarouselProductWsDTO::setPrdImage, img.getUrl());
 						}
 						else if (null != img && StringUtils.isNotEmpty(img.getFormat())
-								&& img.getFormat().equalsIgnoreCase(MarketplacecommerceservicesConstants.LUXURYCARTPAGE))
+								&& img.getFormat().equalsIgnoreCase(MarketplacecommerceservicesConstants.LUXURYSEARCHPAGE))
 						{
 							setValue(luxProductCarouselProductWsDTO::setPrdImage, img.getUrl());
 						}
@@ -591,6 +714,8 @@ public class LuxCmsFacadeImpl implements LuxCmsFacade
 		final List<LuxBannerComponentWsDTO> relatedImageList = new ArrayList<LuxBannerComponentWsDTO>();
 
 		setValue(luxShopByCategoryWsDTO::setTitle, luxShopByCategoryComponent.getTitle());
+		setValue(luxShopByCategoryWsDTO::setShopNowLink, luxShopByCategoryComponent.getShopNowLink());
+		setValue(luxShopByCategoryWsDTO::setShopNowName, luxShopByCategoryComponent.getShopNowName());
 		setValue(luxShopByCategoryWsDTO::setComponentPosition, luxShopByCategoryComponent.getAppPosition());
 
 		if (StringUtils.isNotEmpty(luxShopByCategoryComponent.getAppPosition()))
@@ -610,7 +735,7 @@ public class LuxCmsFacadeImpl implements LuxCmsFacade
 			luxBannerComponentelement.setPageLabelOrId(bannerComponent.getPageLabelOrId());
 			luxBannerComponentelement.setBannerView(bannerComponent.getBannerView().getCode());
 			luxBannerComponentelement.setUrlLink(bannerComponent.getUrlLink());
-			luxBannerComponentelement.setUrlLink(bannerComponent.getMedia().getURL());
+			luxBannerComponentelement.setMedia(bannerComponent.getMedia().getURL());
 			relatedImageList.add(luxBannerComponentelement);
 		}
 		if (null == luxuryComponent.getLuxShopByCategory())
@@ -735,7 +860,7 @@ public class LuxCmsFacadeImpl implements LuxCmsFacade
 
 					if (null != luxuryMedia.getMediaFormat() && StringUtils.isNotEmpty(luxuryMedia.getMediaFormat().getQualifier()))
 					{
-						luxuryMediaList.setMdeiaFormat(luxuryMedia.getMediaFormat().getQualifier());
+						luxuryMediaList.setMediaFormat(luxuryMedia.getMediaFormat().getQualifier());
 
 					}
 					medias.add(luxuryMediaList);

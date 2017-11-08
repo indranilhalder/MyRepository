@@ -922,7 +922,6 @@
 			<value code="Ms" /> <!-- CNC => only for click and collect -->
 			<value code="Mrs" /> <!-- OD => only for home and express delivery -->
 		</enumtype>
-
 		<!-- SDI-1561 -->
 	    <enumtype code="CreditCardType" autocreate="false" generate="false">
 			<value code="jcb"/>
@@ -1440,6 +1439,20 @@
 					<description>Title</description>
 					<modifiers read="true" write="true" search="true"
 						optional="false" />
+					<persistence type='property' />
+				</attribute>
+				<attribute type="java.lang.String" qualifier="shopNowName"
+						   autocreate="true" generate="true">
+					<description>shop Now Name</description>
+					<modifiers read="true" write="true" search="true"
+							   optional="true" />
+					<persistence type='property' />
+				</attribute>
+				<attribute type="java.lang.String" qualifier="shopNowLink"
+						   autocreate="true" generate="true">
+					<description>shop Now link</description>
+					<modifiers read="true" write="true" search="true"
+							   optional="true" />
 					<persistence type='property' />
 				</attribute>
 			</attributes>
@@ -7212,11 +7225,6 @@
 					</attribute>
 					<!-- UF-314 End -->
 				</attributes>
-				<indexes>
-					<index name="IDX_DELIVERYMODE_CODE">
-						<key attribute="code" />
-					</index>
-				</indexes>
 			</itemtype>
 			<!-- deliverymode changes end -->
 
@@ -11198,8 +11206,9 @@
 				</attributes>
 			</itemtype>
 		</typegroup>
-				
+
 		<!--  Return Window Changes Ends -->
+
 		<!-- A+ Content TPR-978 -->
 		<typegroup name="APlusContentGroup">
 			<itemtype code="APlusContent" generate="true" extends="GenericItem"
@@ -13395,21 +13404,21 @@
 		</typegroup>
 
 		<!-- TPR-6665 : sysnonums update to slave servers end -->
- <!-- Car-Changes-Start-CAR-331-->
-<typegroup name="Mpl_Restriction" >
-<itemtype code="DateRestriction" extends="Restriction" jaloclass="de.hybris.platform.voucher.jalo.DateRestriction"
-autocreate="false" generate="false">
-<indexes>
-<index name="P_IDX_RESTRICTIONS">
-<key attribute="itemtype" />
-<key attribute="ENDDATE" />
-<key attribute="STARTDATE" />
-
-</index>
-</indexes>
-
-</itemtype>
-</typegroup>
-<!-- Car-Changes-End-CAR-331-->
+		
+	<!-- start:PR-9: Solr relevance score -->	
+   <typegroup name="Solr_relevancescore">
+     <itemtype code="Product" autocreate="false" generate="true" jaloclass="de.hybris.platform.jalo.product.Product">
+                <attributes>
+                    <attribute autocreate="true" qualifier="relevancescore" type="int"
+                        generate="true">
+                        <persistence type="property" />
+                        <modifiers read="true" write="true" search="true"
+                            initial="true" optional="true" unique="false" />
+							<defaultvalue>Integer.valueOf(0)</defaultvalue>
+                    </attribute>
+                </attributes>
+            </itemtype>
+            </typegroup>
+      <!-- end:PR-9: Solr relevance score -->
 	</itemtypes>
 </items>
