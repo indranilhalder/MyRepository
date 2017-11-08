@@ -314,10 +314,10 @@ public class CartOrderThresholdDiscountPromotion extends GeneratedCartOrderThres
 							{
 								if (null != cartModel.getTotalWalletAmount())
 								{
-									if (null != cartModel.getTotalDiscounts() && cartModel.getTotalDiscounts().doubleValue() > 0)
-									{
-										orderSubtotalAfterDiscounts -= cartModel.getTotalDiscounts().doubleValue();
-									}
+									//									if (null != cartModel.getTotalDiscounts() && cartModel.getTotalDiscounts().doubleValue() > 0)
+									//									{
+									//										orderSubtotalAfterDiscounts -= cartModel.getTotalDiscounts().doubleValue();
+									//									}
 
 									orderSubtotalAfterDiscounts -= cartModel.getTotalWalletAmount().doubleValue();
 									if (orderSubtotalAfterDiscounts <= threshold.doubleValue())
