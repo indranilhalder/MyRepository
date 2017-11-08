@@ -3159,8 +3159,9 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 						&& (paymentMode.equalsIgnoreCase(MarketplacecheckoutaddonConstants.CREDITCARDMODE)
 								|| paymentMode.equalsIgnoreCase(MarketplacecheckoutaddonConstants.DEBITCARDMODE)
 								|| paymentMode.equalsIgnoreCase(MarketplacecheckoutaddonConstants.NETBANKINGMODE)
-								|| paymentMode.equalsIgnoreCase(MarketplacecheckoutaddonConstants.EMIMODE) || paymentMode
-									.equalsIgnoreCase(MarketplacecommerceservicesConstants.MRUPEE)))
+								|| paymentMode.equalsIgnoreCase(MarketplacecheckoutaddonConstants.EMIMODE)
+								|| paymentMode.equalsIgnoreCase(MarketplacecommerceservicesConstants.MRUPEE) || paymentMode
+									.equalsIgnoreCase("paytm")))
 				{
 					//setting in cartmodel
 					cart.setConvenienceCharges(Double.valueOf(0));
@@ -3379,8 +3380,9 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 							&& (paymentMode.equalsIgnoreCase(MarketplacecheckoutaddonConstants.CREDITCARDMODE)
 									|| paymentMode.equalsIgnoreCase(MarketplacecheckoutaddonConstants.DEBITCARDMODE)
 									|| paymentMode.equalsIgnoreCase(MarketplacecheckoutaddonConstants.NETBANKINGMODE)
-									|| paymentMode.equalsIgnoreCase(MarketplacecheckoutaddonConstants.EMIMODE) || paymentMode
-										.equalsIgnoreCase(MarketplacecommerceservicesConstants.MRUPEE)))
+									|| paymentMode.equalsIgnoreCase(MarketplacecheckoutaddonConstants.EMIMODE)
+									|| paymentMode.equalsIgnoreCase(MarketplacecommerceservicesConstants.MRUPEE) || paymentMode
+										.equalsIgnoreCase("paytm")))
 					{
 						//setting in orderModel
 						orderModel.setConvenienceCharges(Double.valueOf(0));
@@ -3486,6 +3488,11 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 							&& paymentMode.equalsIgnoreCase(MarketplacecommerceservicesConstants.MRUPEE))
 					{
 						orderModel.setModeOfOrderPayment(MarketplacecommerceservicesConstants.MRUPEE);
+						getModelService().save(orderModel);
+					}
+					else if (StringUtils.isNotEmpty(paymentMode) && paymentMode.equalsIgnoreCase("paytm"))
+					{
+						orderModel.setModeOfOrderPayment("PAYTM");
 						getModelService().save(orderModel);
 					}
 
@@ -4995,7 +5002,7 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.tisl.mpl.controllers.pages.CheckoutStepController#enterStep(org.springframework.ui.Model,
 	 * org.springframework.web.servlet.mvc.support.RedirectAttributes)
 	 */
