@@ -1333,3 +1333,10 @@ border-right: 1px solid #ccc;
         }
     }
 }
+#frmUpdatePassword{
+    .errorMessage{
+        #errCurpwd{
+            margin-top: 10px;
+        }
+    }
+}

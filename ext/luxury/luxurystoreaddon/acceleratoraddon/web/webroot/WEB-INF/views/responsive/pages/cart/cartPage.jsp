@@ -12,8 +12,8 @@
 <template:page pageTitle="${pageTitle}">
 
 
-	<%-- <cart:tealiumCartParameters/>
-	<cart:cartValidation/>
+<cart:tealiumCartParameters/>
+	<%--<cart:cartValidation/>
 	<cart:cartPickupValidation/> --%>
 
 	<%--<div class="cart-top-bar">
