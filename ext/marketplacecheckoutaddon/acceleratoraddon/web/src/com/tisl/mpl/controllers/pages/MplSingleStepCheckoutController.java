@@ -118,9 +118,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import reactor.function.support.UriUtils;
 
-
 import com.fasterxml.jackson.databind.ObjectMapper;
-
 import com.granule.json.JSONException;
 import com.granule.json.JSONObject;
 import com.hybris.oms.tata.model.MplBUCConfigurationsModel;
@@ -3836,7 +3834,7 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 		}
 		catch (final Exception e)
 		{
-			e.printStackTrace();
+			LOG.error("error in validate payment", e);
 			jsonObj.put("displaymessage", "jsonExceptionMsg");
 			jsonObj.put("type", "errorCode");
 		}
@@ -4962,7 +4960,7 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 
 	/*
 	 * @Description adding wishlist popup in cart page
-	 * 
+	 *
 	 * @param String productCode,String wishName, model
 	 */
 
@@ -5020,7 +5018,7 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 
 	/*
 	 * @Description showing wishlist popup in cart page
-	 * 
+	 *
 	 * @param String productCode, model
 	 */
 	@ResponseBody
