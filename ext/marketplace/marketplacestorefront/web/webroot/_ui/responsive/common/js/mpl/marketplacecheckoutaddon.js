@@ -8784,7 +8784,6 @@ $("#couponSubmitButton").click(function(){
 					//TPR-6369 |Error tracking dtm
 					dtmErrorTracking(" Coupon not applied Error","errorname");
 				},
-				
 				complete : function(resp){
 					var value = document.getElementById('useGiftCardCheckbox');	
 					if(value.checked){
@@ -8877,6 +8876,7 @@ function removeAppliedVoucher(){
 			if(value.checked){
 				useWalletForPaymentAjax();
 			}
+		}
 	});	 
 //	});
 }
