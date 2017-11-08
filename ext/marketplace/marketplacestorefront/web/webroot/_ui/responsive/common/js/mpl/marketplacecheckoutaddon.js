@@ -8762,8 +8762,6 @@ $("#couponSubmitButton").click(function(){
 								//TPR-658
 								onSubmitAnalytics("success");
 								//TISCSXII-2217 |Coupon success 
-								WalletDetailAjax();
-								useWalletForPaymentAjax();
 								dtmCouponCheck("success",couponCode);
 							}
 							else
@@ -8785,6 +8783,13 @@ $("#couponSubmitButton").click(function(){
 					}
 					//TPR-6369 |Error tracking dtm
 					dtmErrorTracking(" Coupon not applied Error","errorname");
+				},
+				
+				complete : function(resp){
+					var value = document.getElementById('useGiftCardCheckbox');	
+					if(value.checked){
+						useWalletForPaymentAjax();
+					}		
 				}
 			});	 
 		}
@@ -8861,13 +8866,17 @@ function removeAppliedVoucher(){
 //			$("#couponSubmitButton").css("opacity","1");
 
 			resetAppliedCouponFormOnRemoval();
-			WalletDetailAjax();
-			useWalletForPaymentAjax();
 			console.log("cupon2");
 			//window.location.reload();
 		},
 		error : function(resp) {
-		}
+		},
+		
+		complete : function(resp){
+			var value = document.getElementById('useGiftCardCheckbox');	
+			if(value.checked){
+				useWalletForPaymentAjax();
+			}
 	});	 
 //	});
 }
