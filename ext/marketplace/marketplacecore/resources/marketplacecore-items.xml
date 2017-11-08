@@ -3925,7 +3925,14 @@
 					</attribute>
 
 				</attributes>
-			</itemtype>
+				<!-- TPR-4512 Start -->
+						<indexes>
+							<index name="IDX_CELLPHONE">
+								<key attribute="cellphone" />
+							</index>
+						</indexes>
+				<!-- TPR-4512 End -->
+				</itemtype>
 
 			<itemtype code="Employee" jaloclass="de.hybris.platform.jalo.user.Employee"
 				autocreate="false" generate="false">
@@ -6417,6 +6424,11 @@
 						<key attribute="entryNumber" />
 						<key attribute="order" />
 					</index>
+					<!-- TPR-4512 Start -->
+					<index name="IDX_ORDERLINE_ID">
+						<key attribute="orderLineId" />
+					</index>
+					<!-- TPR-4512 End -->
 				</indexes>
 			</itemtype>
 			<!-- Tata Etail change - Apportioned value capturing ends -->
@@ -13763,7 +13775,26 @@
                 </attributes>
             </itemtype>
             </typegroup>
-      <!-- end:PR-9: Solr relevance score -->		
+      <!-- end:PR-9: Solr relevance score -->
+
+
+	<!-- Car-Changes-Start-CAR-331 -->
+	<typegroup name="Mpl_Restriction">
+		<itemtype code="DateRestriction" extends="Restriction"
+			jaloclass="de.hybris.platform.voucher.jalo.DateRestriction"
+			autocreate="false" generate="false">
+			<indexes>
+				<index name="P_IDX_RESTRICTIONS">
+					<key attribute="itemtype" />
+					<key attribute="ENDDATE" />
+					<key attribute="STARTDATE" />
+
+				</index>
+			</indexes>
+
+		</itemtype>
+	</typegroup>
+	<!-- Car-Changes-End-CAR-331 -->	
 									 
   </itemtypes>
 </items>
