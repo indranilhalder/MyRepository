@@ -856,6 +856,14 @@
 			<value code="marketplace" />
 			<value code="luxury" />
 		</enumtype>
+
+
+										
+																
+								  
+						 
+						 
+			 
 		
 		
 <!-- us-10: added by i324321 start -->
@@ -1401,6 +1409,16 @@
 					   
 				   
 			 
+														  
+																 
+									 
+													  
+					  
+				   
+																			
+					   
+				   
+			 
        <!-- Relation between PriceRows and MplPricePromoRel  -->
         <relation code="MplPriceRowPromotionRelation"
             	autocreate="true" generate="true" localized="false">
@@ -1490,34 +1508,37 @@
 						autocreate="true" generate="true">
 						<description>Title</description>																																			  
 						<modifiers read="true" write="true" search="true"
-							optional="false" />												  
+							optional="false" />												  					
 						<persistence type='property' />						   
+						   
+				</attribute>
+				<attribute type="java.lang.String" qualifier="shopNowName"
+						   autocreate="true" generate="true">
+					<description>shop Now Name</description>
+					<modifiers read="true" write="true" search="true"
+							   optional="true" />
+					<persistence type='property' />
+				</attribute>
+				<attribute type="java.lang.String" qualifier="shopNowLink"
+						   autocreate="true" generate="true">
+					<description>shop Now link</description>
+					<modifiers read="true" write="true" search="true"
+							   optional="true" />
+					<persistence type='property' />
 				</attribute>
 		</attributes>
 	</itemtype>	
 
 	
-<!--  
-<itemtype code="ImageShowCaseComponent" autocreate="true"
-				generate="true" extends="SimpleCMSComponent"
-				jaloclass="com.tisl.mpl.jalo.cms.components.ImageShowCaseComponent">
-		<attributes>
-			<attribute type="ShowCaseCollection" qualifier="showCaseBanner" autocreate="true" generate="true">
-			<description>Show Case Banner</description>
-			<modifiers read="true" write="true" search="true"
-							optional="false" />
-			<persistence type='property' />			 
-		</attribute>
-		<attribute type="java.lang.String" qualifier="title"
-		autocreate="true" generate="true">
-			<description>Title</description>
-		    <modifiers read="true" write="true" search="true"
-							optional="false" />
-			<persistence type='property' />
-			</attribute>
-		</attributes>
-	</itemtype> -->
-	
+	<!-- <itemtype code="ImageShowCaseComponent" autocreate="true" generate="true" 
+			extends="SimpleCMSComponent" jaloclass="com.tisl.mpl.jalo.cms.components.ImageShowCaseComponent"> 
+			<attributes> <attribute type="ShowCaseCollection" qualifier="showCaseBanner" 
+			autocreate="true" generate="true"> <description>Show Case Banner</description> 
+			<modifiers read="true" write="true" search="true" optional="false" /> <persistence 
+			type='property' /> </attribute> <attribute type="java.lang.String" qualifier="title" 
+			autocreate="true" generate="true"> <description>Title</description> <modifiers 
+			read="true" write="true" search="true" optional="false" /> <persistence type='property' 
+			/> </attribute> </attributes> </itemtype> -->
 	
 	
 	 <!-- test MNPGridImageComponent -->
@@ -13723,8 +13744,26 @@
 				</attributes>
 		</itemtype>
 		</typegroup>
+
+														   
 		
 		<!-- TPR-6665 : sysnonums update to slave servers end-->
 
+<!-- start:PR-9: Solr relevance score -->	
+   <typegroup name="Solr_relevancescore">
+     <itemtype code="Product" autocreate="false" generate="true" jaloclass="de.hybris.platform.jalo.product.Product">
+                <attributes>
+                    <attribute autocreate="true" qualifier="relevancescore" type="int"
+                        generate="true">
+                        <persistence type="property" />
+                        <modifiers read="true" write="true" search="true"
+                            initial="true" optional="true" unique="false" />
+							<defaultvalue>Integer.valueOf(0)</defaultvalue>
+                    </attribute>
+                </attributes>
+            </itemtype>
+            </typegroup>
+      <!-- end:PR-9: Solr relevance score -->		
+									 
   </itemtypes>
 </items>

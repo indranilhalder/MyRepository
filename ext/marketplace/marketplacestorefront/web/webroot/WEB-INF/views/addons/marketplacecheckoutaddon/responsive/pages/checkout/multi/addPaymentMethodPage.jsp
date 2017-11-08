@@ -389,7 +389,7 @@
 																	<span class="visa card_image"><img src="${commonResourcePath}/images/Visa.png" alt=""></span>
 																	</c:otherwise>   
 														        </c:choose>		
-										                 		<input type="radio" data-id="savedCCard" name="creditCards" class="card_token creditCardsRadio" id="cc${status.index}"  value="${map.value.cardToken}" onchange="savedCreditCardRadioChange(cc${status.index});"/>
+										                 		<input type="radio" data-id="savedCCard" name="creditCards" class="card_token creditCardsRadio" id="cc${status.index}"  value="${map.value.cardToken}" onchange="savedCreditCardRadioChange('cc${status.index}');"/>
 									                 	 		<label for="cc${status.index}" data-id="savedCCard" class="numbers">
 									                 	 			<span>${map.value.cardBrand}</span> ending in ${map.value.cardEndingDigits}</label>
 									                 	 			<!-- <span class="saved">Saved card</span> -->
@@ -425,6 +425,9 @@
 				<!-- Terms & Conditions Link -->
 					<div id="cvvErrorSavedCard2" class="card_cvvErrorSavedCard_popup error-message" style="display : none;">
 												Enter a valid <span>CVV</span> to continue
+											</div>
+											<div id="nochooseErrorSavedCard2" class="card_nochooseErrorSavedCard_popup error-message" style="display : none;">
+												Choose any card to continue
 											</div>
 											<div class="pay top-padding saved-card-button">
 												<button type="submit" class="make_payment button btn-block payment-button" id="make_saved_cc_payment"><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.paymentButton"/></button>
@@ -712,7 +715,7 @@
 														        </c:choose>															 
 				        							
 										        			<%-- <span class="visa card_image"><img src="${commonResourcePath}/images/Visa.png" alt=""></span> --%>
-										                    		<input type="radio" data-id="savedDCard" name="debitCards" class="card_token  debitCardsRadio" id="dc${status.index}"  value="${map.value.cardToken}" onchange="savedDebitCardRadioChange(dc${status.index});"/>
+										                    		<input type="radio" data-id="savedDCard" name="debitCards" class="card_token  debitCardsRadio" id="dc${status.index}"  value="${map.value.cardToken}" onchange="savedDebitCardRadioChange('dc${status.index}');"/>
 										                    		<label for="dc${status.index}" data-id="savedDCard" class="numbers"><span>${map.value.cardBrand}</span> ending in ${map.value.cardEndingDigits}</label>
 										                  				<p>${map.value.nameOnCard}</p>
 										                  				<p><spring:theme code="text.expires.on"/> ${map.value.expiryMonth}/${map.value.expiryYear}</p>
@@ -749,6 +752,9 @@
 											<!-- Adding here the cvv error message -->
 											<div id="cvvErrorSavedCard1" class="card_cvvErrorSavedCard_popup error-message" style="display : none;">
 												Enter a valid <span>CVV</span> to continue
+											</div>
+											<div id="nochooseErrorSavedCard1" class="card_nochooseErrorSavedCard_popup error-message" style="display : none;">
+												Choose any card to continue
 											</div>
 											<div class="pay top-padding saved-card-button">
 												<button type="submit" class="make_payment button btn-block payment-button" id="make_saved_dc_payment"><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.paymentButton"/></button>
@@ -1417,6 +1423,7 @@
 	$(".new_card_tab.credit_tab").click(function(){
 		$(this).addClass("active_tab");
 		$(".saved_card_tab.credit_tab").removeClass("active_tab");
+		$("#cardNo").val('');//TISUAT-6002 
 		$(this).parents("#card").find("#savedCard").hide();
 		$(this).parents("#card").find("#savedCard").next("li").hide();
 		$(this).parents("#card").find(".terms").first().hide();
@@ -1439,6 +1446,7 @@
 	$(".new_card_tab.debit_tab").click(function(){
 		$(this).addClass("active_tab");
 		$(".saved_card_tab.debit_tab").removeClass("active_tab");
+		$("#cardNoDc").val('');//TISUAT-6002
 		$(this).parents("#cardDebit").find("#savedCardDebit").hide();
 		$(this).parents("#cardDebit").find("#savedCardDebit").next("li").hide();
 		$(this).parents("#cardDebit").find(".terms").first().hide();
