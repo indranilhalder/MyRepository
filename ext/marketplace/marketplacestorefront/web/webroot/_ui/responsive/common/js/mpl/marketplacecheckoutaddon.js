@@ -8797,13 +8797,13 @@ $("#couponSubmitButton").click(function(){
 
 //TPR-658 START
 function onSubmitAnalytics(msg){
-	var couponCode = $('#couponFieldId').val().toLowerCase().replace(/  +/g, ' ').replace(/ /g,"_").replace(/['"]/g,"");
-	utag.link({
-		/*link_obj: this,*/ /*TISUATSE-102*/
-		link_text: 'apply_coupon_'+msg ,
-		event_type : 'apply_coupon',
-		coupon_code : couponCode
-	});
+//	var couponCode = $('#couponFieldId').val().toLowerCase().replace(/  +/g, ' ').replace(/ /g,"_").replace(/['"]/g,"");
+//	utag.link({
+//		/*link_obj: this,*/ /*TISUATSE-102*/
+//		link_text: 'apply_coupon_'+msg ,
+//		event_type : 'apply_coupon',
+//		coupon_code : couponCode
+//	});
 
 	// TPR-6029 | for checkout button click from cart | start
 
