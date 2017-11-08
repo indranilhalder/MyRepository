@@ -77580,3 +77580,9 @@ a.pageNo.active{
 }
 }
 /* Pagination link */
+@media (min-width: 768px)
+{
+.cart.wrapper.checkout-payment .right-block.billing.checkout-list-right h3 {
+    text-align: left ! important;
+}
+}

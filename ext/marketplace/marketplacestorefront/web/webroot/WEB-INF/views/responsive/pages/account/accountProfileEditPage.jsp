@@ -278,7 +278,7 @@
 			    onSelect: function() {
 		        }
 			    });
-		    $('#profileMobileNumber').on('keyup keypress', function(ev) {
+		    $('#profileMobileNumber').on('keyup', function(ev) {
 				var regex = /^[1-9]\d{0,9}$/g;
 				var data= $.trim($(this).val());
 				if(!regex.test(data))
