@@ -341,6 +341,11 @@ share mobile -->
    			  
 			   <span class="home-pdp-quantity">
 					<spring:theme code="product.variant.quantity"></spring:theme><c:if test="${not empty productSizeType}">(${productSizeType})</c:if>
+					<select id="quantity_dropdown" class="variant-select">
+			   <c:forEach items="${quantityList}" var="quantity">
+					<option value="${quantity}">${quantity}</option>
+				</c:forEach>
+			   </select>
 			  </span> 
    			 </c:when>
    			 <c:otherwise>
@@ -454,11 +459,11 @@ share mobile -->
 			  </c:choose>
 			  
 			  
-			   <select id="quantity_dropdown" class="variant-select">
+			   <%-- <select id="quantity_dropdown" class="variant-select">
 			   <c:forEach items="${quantityList}" var="quantity">
 					<option value="${quantity}">${quantity}</option>
 				</c:forEach>
-			   </select>
+			   </select> --%>
   </c:when>
   <c:otherwise>
 			
