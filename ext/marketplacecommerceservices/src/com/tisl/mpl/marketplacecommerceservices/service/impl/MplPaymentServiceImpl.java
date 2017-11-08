@@ -5183,7 +5183,7 @@ public class MplPaymentServiceImpl implements MplPaymentService
 			return result;
 		}
 	
-private void createPaymentEntryForQCTransaction(final OrderModel subOrderModel,final WalletCardApportionDetailModel walletCardApportionDetailModel){
+private PaymentTransactionModel createPaymentEntryForQCTransaction(final OrderModel subOrderModel,final WalletCardApportionDetailModel walletCardApportionDetailModel){
 		
 		final PaymentTransactionModel paymentTransactionModel = modelService.create(PaymentTransactionModel.class);
 			paymentTransactionModel.setCode(walletCardApportionDetailModel.getTransactionId().toString());
@@ -5221,6 +5221,9 @@ private void createPaymentEntryForQCTransaction(final OrderModel subOrderModel,f
   			paymentTransactionModel.setEntries(entries);
   			modelService.save(paymentTransactionModel);
   			LOG.debug("Payment Transaction created SuccessFully......:");
+  			
+  			return paymentTransactionModel;
+  			
 	}
 
 	private List<WalletCardApportionDetailModel>  qcCallforReturnRefund(final OrderModel orderModel, final OrderEntryModel abstractOrderEntryModel)
@@ -5739,6 +5742,9 @@ private void createPaymentEntryForQCTransaction(final OrderModel subOrderModel,f
 				walletApportionReturnModel.setQcShippingPartValue(orderEntry.getWalletApportionPaymentInfo().getQcShippingPartValue());
 			}	
 			
+			final List<PaymentTransactionModel> paymentTransactions = new ArrayList<PaymentTransactionModel>(
+					subOrderModel.getPaymentTransactions());
+			
 			 if(null != walletCardApportionDetailModelList &&  walletCardApportionDetailModelList.size()>0){
 				 
 				 for(WalletCardApportionDetailModel walletCardApportionDetailModelObj :walletCardApportionDetailModelList){
@@ -5755,7 +5761,8 @@ private void createPaymentEntryForQCTransaction(final OrderModel subOrderModel,f
 						walletCardApportionDetailModel.setTrnsStatus(walletCardApportionDetailModelObj.getTrnsStatus());
 						walletCardApportionDetailList.add(walletCardApportionDetailModel);
 						qcResponseStatus.add(walletCardApportionDetailModelObj.getTrnsStatus());
-						createPaymentEntryForQCTransaction(subOrderModel,walletCardApportionDetailModel);
+						PaymentTransactionModel paymentTransactionModel=	createPaymentEntryForQCTransaction(subOrderModel,walletCardApportionDetailModel);
+						paymentTransactions.add(paymentTransactionModel);
 				 }
 			 }
 			 walletApportionReturnModel.setWalletCardList(walletCardApportionDetailList);
@@ -5766,6 +5773,10 @@ private void createPaymentEntryForQCTransaction(final OrderModel subOrderModel,f
        }else{
       	 walletApportionReturnModel.setStatus("SUCCESS");
        }
+       subOrderModel.setPaymentTransactions(paymentTransactions);
+			modelService.saveAll(paymentTransactions);
+			modelService.saveAll(subOrderModel);
 		return walletApportionReturnModel;
 	}
+	
 }
