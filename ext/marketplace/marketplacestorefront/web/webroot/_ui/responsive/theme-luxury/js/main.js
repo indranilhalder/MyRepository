@@ -2896,3 +2896,15 @@ $(document).ready(function (){
     });
     checkforPriceFilter();
 });
+
+$(document).ready(function() {
+    $("body.page-cartPage #checkout-id a").removeClass("checkout-disabled");
+    $("body.page-cartPage #checkout-id a").click(function (event) {
+        if ($("#defaultPinCodeIds").val() === '' || $("#defaultPinCodeIds").val().length == 0) {
+            $("#defaultPinCodeIds").focus();
+            $("#defaultPinCodeIds").css('border', '1px solid red');
+            event.preventDefault();
+            return false;
+        }
+    })
+});

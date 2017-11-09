@@ -17,7 +17,6 @@
 			</a>
 		</li>
 		</c:forEach>
-		
 	</ul>
-	<a href="#" class="link">See All</a>
+	<a href="${component.shopNowLink}" class="link">${component.shopNowName}</a>
 </section>
