@@ -357,4 +357,62 @@ public class MplProductDaoImpl extends DefaultProductDao implements MplProductDa
 				MarketplacecommerceservicesConstants.DEFAULT_IMPORT_CATALOG_VERSION);
 		return catalogVersionModel;
 	}
+
+	@Override
+	public String getSizeForSTWProduct(final String productCode)
+	{
+		List<String> size = null;
+		final String query = "Select {pcmv.size} from {PcmProductVariant as pcmv} where {pcmv.code}=?productCode";
+
+		try
+		{
+			final FlexibleSearchQuery flexiQuery = new FlexibleSearchQuery(query);
+			flexiQuery.setResultClassList(Collections.singletonList(String.class));
+			final SearchResult<String> searchResult = getFlexibleSearchService().search(flexiQuery);
+			LOG.debug("findProductForHasVariant: searchResult********** " + searchResult);
+			size = searchResult.getResult();
+		}
+		catch (final Exception e)
+		{
+			LOG.error(e);
+		}
+		if (size != null)
+		{
+			return size.get(0);
+		}
+		else
+		{
+			return "";
+		}
+	}
+
+	@Override
+	public String getVariantsForSTWProducts(final String productCode)
+	{
+		List<String> variants = null;
+		final String query = "select {p.pk} from {product as p} where {p.pk} IN ({{select {pcm.pk} from {PcmProductVariant as pcm}"
+				+ "where {pcm.baseproduct} IN ({{SELECT {p.baseproduct} from {PcmProductVariant as p} }})}})"
+				+ "AND {p.code}='987654322'";
+
+		try
+		{
+			final FlexibleSearchQuery flexiQuery = new FlexibleSearchQuery(query);
+			//flexiQuery.setResultClassList(Collections.singletonList(String.class));
+			final SearchResult<String> searchResult = getFlexibleSearchService().search(flexiQuery);
+			LOG.debug("findProductForHasVariant: searchResult********** " + searchResult);
+			variants = searchResult.getResult();
+		}
+		catch (final Exception e)
+		{
+			LOG.error(e);
+		}
+		if (variants != null)
+		{
+			return variants.get(0);
+		}
+		else
+		{
+			return "";
+		}
+	}
 }
