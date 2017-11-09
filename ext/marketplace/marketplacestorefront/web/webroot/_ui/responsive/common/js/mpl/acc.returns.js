@@ -526,6 +526,7 @@
 
 			$(".close").click(function() {
 				$("#changeAddressPopup").hide();
+				$("#otpPopup").hide();//TISPRNXIII-41
 				$(".wrapBG").hide();
 			});
 			
@@ -589,6 +590,7 @@
 
 			$(".close").click(function() {
 				$("#changeAddressPopup").hide();
+				$("#otpPopup").hide();//TISPRNXIII-41
 				$(".wrapBG").hide();
 			});
 			
