@@ -247,7 +247,7 @@ function redirectURL(val){
 	<!-- End Size guide Pop-up -->
 	<form:form action="/" method="get" id="variantForm"  class="sizeVariantForm quickview-popup ${product.rootCategory}" >
      
-    <p class="sizetext">
+    <p class="sizetext size">
     <c:choose> 
 	<c:when test="${ product.rootCategory =='FineJewellery' || product.rootCategory =='FashionJewellery'}">  
    		<c:choose>
@@ -266,12 +266,17 @@ function redirectURL(val){
 	
 	<c:choose>
 	<c:when test="${product.rootCategory =='HomeFurnishing'}">
-   			 <span>
+   			 <span class="home-pdp-size">
 					<spring:theme code="product.variant.size.HF"></spring:theme><c:if test="${not empty productSizeType}">(${productSizeType})</c:if>
 			  </span> 
 			  
 			     <span class="home-pdp-quantity">
 					<spring:theme code="product.variant.quantity"></spring:theme><c:if test="${not empty productSizeType}">(${productSizeType})</c:if>
+			  <select id="quantity_dropdown" class="variant-select">
+			   <c:forEach items="${quantityList}" var="quantity">
+					<option value="${quantity}">${quantity}</option>
+				</c:forEach>
+			   </select>
 			  </span> 
    	 </c:when>
 	<c:otherwise>
@@ -282,6 +287,14 @@ function redirectURL(val){
     </c:choose>
 	</c:otherwise>
 	</c:choose>	
+	<!-- Added for PDP Changes for Home Furnishing : TPR-6738-->
+    
+			<c:if test="${not empty buyingGuide}">
+					<a class="buying-guide buying-guide home-buying-guide" role="button" onclick = "redirectURL(buyingGuideData);"> 
+					<spring:theme code="product.variants.buying.guide" />
+					</a>
+			</c:if>
+			<!--  PDP Changes for Home Furnishing Ends-->
 	</p>
 	
 		<c:if test="${empty removeSizeGuide}">
@@ -290,14 +303,7 @@ function redirectURL(val){
 		</a>
 		</c:if>
 		
-		<!-- Added for PDP Changes for Home Furnishing : TPR-6738-->
-    
-			<c:if test="${not empty buyingGuide}">
-					<a class="buying-guide" role="button" onclick = "redirectURL(buyingGuideData);"> 
-					<spring:theme code="product.variants.buying.guide" />
-					</a>
-			</c:if>
-			<!--  PDP Changes for Home Furnishing Ends-->
+		
 		
 		<div class="select-size">
 		 <c:choose>
@@ -382,11 +388,11 @@ function redirectURL(val){
 					</select>  
 					</c:when>
 					</c:choose>
-					 <select id="quantity_dropdown" class="variant-select">
+					 <%-- <select id="quantity_dropdown" class="variant-select">
 			   <c:forEach items="${quantityList}" var="quantity">
 					<option value="${quantity}">${quantity}</option>
 				</c:forEach>
-			   </select>
+			   </select> --%>
 				</c:when>
 								<%-- End Home Furnishing --%>	
 				<c:otherwise>

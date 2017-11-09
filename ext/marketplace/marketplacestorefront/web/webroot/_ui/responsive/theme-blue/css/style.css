@@ -77697,6 +77697,16 @@ select#quantity_dropdown {
  #variant_dropdown {
     width: 38%;
 }
+p.sizetext.size {
+    border: 0px solid !important;
+    margin-bottom: 30px !important;
+}
+.sizetext .home-pdp-quantity:nth-child(2) {
+    left: 36%;
+}
+.sizetext span.home-pdp-quantity:nth-last-child(2) {
+    left: 10%;
+}
 /* HOME-227 End */
 /* HOME-239 start */
 	@media (max-width: 767px){

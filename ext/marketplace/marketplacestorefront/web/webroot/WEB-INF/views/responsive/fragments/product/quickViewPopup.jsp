@@ -630,7 +630,7 @@ display:none;
  	
    <div class="product-content" style="margin-top:5px;">
    <product:emiDetail product="${product}" />
-	   <div class="swatch">
+	   <div class="">
 	<product:viewQuickViewVariant/>
 	<spring:eval expression="T(de.hybris.platform.util.Config).getParameter('mpl.cart.maximumConfiguredQuantity.lineItem')" var="maxQuantityCount"/>
 	<%-- <div class="qty">
