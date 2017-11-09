@@ -5580,9 +5580,9 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
    					 walletApportionReturnModel.setTransactionId(transactionId);
    					 walletApportionReturnModel.setType("CANCEL");
    		          if(qcResponseStatus.contains("PENDING")){
-   		         	 walletApportionReturnModel.setStatus("PENDING");
+   		         	 walletApportionReturnModel.setStatusForQc("PENDING");
    		          }else{
-   		         	 walletApportionReturnModel.setStatus("SUCCESS");
+   		         	 walletApportionReturnModel.setStatusForQc("SUCCESS");
    		          }
    		          modelService.save(walletApportionReturnModel);
    		 			abstractOrderEntryModel.setWalletApportionReturnInfo(walletApportionReturnModel);
