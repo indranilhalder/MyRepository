@@ -3,6 +3,7 @@
 <%@ taglib prefix="product" tagdir="/WEB-INF/tags/responsive/product"%>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 <%@ taglib uri = "http://java.sun.com/jsp/jstl/functions" prefix = "fn" %>
+<%@ taglib prefix="pagination" tagdir="/WEB-INF/tags/responsive/nav/pagination"%>
 
 <div class="right-block">
 	<nav:pagination top="true" supportShowPaged="${isShowPageAllowed}"
@@ -104,6 +105,13 @@
 </c:when>
 </c:choose>
 </div>
+
+<!-- Old pagination block -->
+<pagination:pageSelectionPagination top="${top}"
+							searchUrl="${searchUrl}" searchPageData="${searchPageData}"
+							numberPagesShown="${numberPagesShown}"
+							themeMsgKey="${themeMsgKey}" />
+							
 </div>
 
 <script>

@@ -3,6 +3,7 @@
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <%@ taglib prefix="product" tagdir="/WEB-INF/tags/responsive/product" %>
 <%@ taglib uri = "http://java.sun.com/jsp/jstl/functions" prefix = "fn" %>
+<%@ taglib prefix="pagination" tagdir="/WEB-INF/tags/responsive/nav/pagination"%>
 
 <input type="hidden" name="noOfPages" value="${searchPageData.pagination.numberOfPages}"/>
 
@@ -117,6 +118,12 @@
 </c:when>
 </c:choose>
 </div>
+
+<!-- Old pagination block -->
+<pagination:pageSelectionPagination top="${top}"
+							searchUrl="${searchUrl}" searchPageData="${searchPageData}"
+							numberPagesShown="${numberPagesShown}"
+							themeMsgKey="${themeMsgKey}" />
 </div>
 
 <input type="hidden" name="searchPanel" value="1"/>
