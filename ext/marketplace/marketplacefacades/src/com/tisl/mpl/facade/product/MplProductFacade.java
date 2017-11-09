@@ -18,4 +18,16 @@ public interface MplProductFacade
 	public String getPDPPincodeSession();
 
 	public void setPDPPincodeSession(final String pincode);
+
+	/**
+	 * @param productCode
+	 * @return
+	 */
+	public String getSizeForSTWProduct(String productCode);
+
+	/**
+	 * @param productCode
+	 * @return
+	 */
+	public String getVariantsForSTWProducts(String productCode);
 }

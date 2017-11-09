@@ -55,4 +55,16 @@ public interface MplProductDao extends ProductDao
 	ProductModel findProductData(String code);
 
 	List<ProductModel> findProductForHasVariant(String code);
+
+	/**
+	 * @param productCode
+	 * @return
+	 */
+	public String getSizeForSTWProduct(String productCode);
+
+	/**
+	 * @param productCode
+	 * @return
+	 */
+	public String getVariantsForSTWProducts(String productCode);
 }

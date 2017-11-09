@@ -15,4 +15,16 @@ import java.util.List;
 public interface MplProductService
 {
 	List<ProductFeatureModel> findProductFeaturesByQualifierAndProductCode(String code, String qualifier);
+
+	/**
+	 * @param productCode
+	 * @return
+	 */
+	String getSizeForSTWProduct(String productCode);
+
+	/**
+	 * @param productCode
+	 * @return
+	 */
+	String getVariantsForSTWProducts(String productCode);
 }

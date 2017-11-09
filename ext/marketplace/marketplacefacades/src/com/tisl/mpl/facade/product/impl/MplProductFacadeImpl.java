@@ -121,5 +121,18 @@ public class MplProductFacadeImpl implements MplProductFacade
 		sessionService.setAttribute(MarketplacecommerceservicesConstants.SESSION_PINCODE, pincode);
 	}
 
+	@Override
+	public String getSizeForSTWProduct(final String productCode)
+	{
+		return mplProductService.getSizeForSTWProduct(productCode);
+
+	}
+
+	@Override
+	public String getVariantsForSTWProducts(final String productCode)
+	{
+		return mplProductService.getVariantsForSTWProducts(productCode);
+
+	}
 
 }
