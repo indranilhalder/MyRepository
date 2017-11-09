@@ -77595,3 +77595,12 @@ label[for='priority_paytm'] img {
     margin-left: 30px;
 }
 }
+
+/* TISPRNXIII-34 start */
+@media (max-width: 768px){				
+button#saveBlockData {
+    margin-top: 10px;
+    margin-left: 10px;
+}
+}
+/* TISPRNXIII-34 end */ 

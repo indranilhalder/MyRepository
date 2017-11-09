@@ -239,55 +239,59 @@ ${stringMessage}
 
 											});
 
-					$("#reschedule").click(function(){  
-			             var rescheduleData = {};
-						 var json = '{"rescheduleDataList" : [';
-						 var jsonLeg = json.length;
-						 $("input.timeTribhuvan[data-name='timeRadio'][data-picked='yes']").each(function(){
-							 
-								  var selectedDate = $(this).attr('data-date');
-								  var selectedTxnId = $(this).attr('data-txnId');
-								  var selectedTime = $(this).val();
-								    rescheduleData['productCode'] = selectedTxnId;
-									rescheduleData['date'] = selectedDate;
-									rescheduleData['time'] = selectedTime;
-									json = json.concat(JSON.stringify(rescheduleData));
-									json = json.concat(',');	
-																
-							});								
-							if (json.length > jsonLeg) {
-								json = json.substring(0,json.length - 1);
-							}
-							json = json.concat(']}');
-							var orderCode = $('#scheduledDeliveryOrderCode').val();
-							var orderId = orderCode;
-							//TPR-5272 | rescedule click starts
-							if(typeof(utag) !="undefined"){
-				    			utag.link({
-				    				link_text     : "reschedule_clicked",
-				    				event_type    : "reschedule_clicked",
-				    				preferred_dod :  selectedDate ,
-				    				preferred_tod :  selectedTime ,
-				    				order_id      :  orderId
-				    			});
-				    		   }
-							//TPR-5272 | rescedule click ends
-						$.ajax({
-								type : "GET",
-								url : ACC.config.encodedContextPath+ "/my-account/"
-								                + orderCode
-												+ "/reScheduledDeliveryDate",
-								data : "entryData="+ json,
-								contentType : "html/text",
-								success : function(response){
-								           	          $("#changeAddressPopup").hide();
-								 	                  $("#showOrderDetails").hide();
-									                  $("#otpPopup").empty().html(response).show();
-										  },	
-										failure : function(data) {
-										}
-									}); 
-						});
+							$("#reschedule").click(function(){  
+					             var rescheduleData = {};
+								 var json = '{"rescheduleDataList" : [';
+								 var jsonLeg = json.length;
+								 var selectedDate ="";
+								 var selectedTime ="";
+								 $("input.timeTribhuvan[data-name='timeRadio'][data-picked='yes']").each(function(){
+									 
+										  var selectedDate = $(this).attr('data-date');
+										  var selectedTxnId = $(this).attr('data-txnId');
+										  var selectedTime = $(this).val();
+										    rescheduleData['productCode'] = selectedTxnId;
+											rescheduleData['date'] = selectedDate;
+											rescheduleData['time'] = selectedTime;
+											json = json.concat(JSON.stringify(rescheduleData));
+											json = json.concat(',');	
+																		
+									});								
+									if (json.length > jsonLeg) {
+										json = json.substring(0,json.length - 1);
+									}
+									json = json.concat(']}');
+									var orderCode = $('#scheduledDeliveryOrderCode').val();
+									var orderId = orderCode;
+									
+									//TPR-5272 | rescedule click starts
+									if(typeof(utag) !="undefined"){
+						    			utag.link({
+						    				link_text     : "reschedule_clicked",
+						    				event_type    : "reschedule_clicked",
+						    				preferred_dod :  selectedDate ,
+						    				preferred_tod :  selectedTime ,
+						    				order_id      :  orderId
+						    			});
+						    		   }
+									//TPR-5272 | rescedule click ends
+									
+								$.ajax({
+										type : "GET",
+										url : ACC.config.encodedContextPath+ "/my-account/"
+										                + orderCode
+														+ "/reScheduledDeliveryDate",
+										data : "entryData="+ json,
+										contentType : "html/text",
+										success : function(response){
+										           	          $("#changeAddressPopup").hide();
+										 	                  $("#showOrderDetails").hide();
+											                  $("#otpPopup").empty().html(response).show();
+												  },	
+												failure : function(data) {
+												}
+											}); 
+								});
 	});
 	</script>
 
