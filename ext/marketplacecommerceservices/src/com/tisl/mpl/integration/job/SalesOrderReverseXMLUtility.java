@@ -77,7 +77,7 @@ public class SalesOrderReverseXMLUtility
 	/**
 	 * 
 	 */
-	private static final String CLIQ_CASH = "CliqCash";
+	private static final String CLIQ_CASH = "Cliq Cash";
 	/**
 	 * 
 	 */
@@ -854,13 +854,10 @@ public class SalesOrderReverseXMLUtility
 							if(StringUtils.isNotEmpty(chaildModel.getSplitModeInfo()) && SPLIT.equalsIgnoreCase(chaildModel.getSplitModeInfo())){
 								
 								LOG.info("Split merchantInfoXMlData and QC merchantInfoXMlData");
-								if(entry.getWalletApportionReturnInfo() !=null && entry.getWalletApportionReturnInfo().getWalletCardList() !=null && StringUtils.isNotEmpty(entry.getWalletApportionReturnInfo().getStatus()) &&
-										entry.getWalletApportionReturnInfo().getStatus().equalsIgnoreCase(SUCCESS) && entry.getWalletApportionReturnInfo().getStatusForQc().equalsIgnoreCase(SUCCESS)){
+								if(entry.getWalletApportionReturnInfo() !=null && entry.getWalletApportionReturnInfo().getWalletCardList() !=null 
+										&& entry.getWalletApportionReturnInfo().getStatus()!=null && SUCCESS.equalsIgnoreCase(entry.getWalletApportionReturnInfo().getStatus())  && entry.getWalletApportionReturnInfo().getStatusForQc().equalsIgnoreCase(SUCCESS)){
 									LOG.info("Split merchantInfoXMlData for  QC data");
-									
-									
 									for(WalletCardApportionDetailModel walletCardApportionDetailModel:entry.getWalletApportionReturnInfo().getWalletCardList()){
-										
 										LOG.debug("QC bucket data##"+getConfigurationService().getConfiguration().getString(PAYMENT_QC_MERCHANT_TYPE));
 										MerchantInfoXMlData splitMerchantInfoXMlDataQC=new MerchantInfoXMlData();
 										splitMerchantInfoXMlDataQC
@@ -923,42 +920,44 @@ public class SalesOrderReverseXMLUtility
 										splitMerchantInfoXMlDataQC.setProductAmount(totalAmount);
 										merchantInfoList.add(splitMerchantInfoXMlDataQC);
 									}
+								}else{
+									LOG.debug("XmltoFixo flag false setting ... split order information ");
+									xmlToFico=false;
 								}
 								
-								
+								if(xmlToFico){
 								LOG.info("Juspay MerchantInfoXMlData");
 								MerchantInfoXMlData splitMerchantInfoXMlDataJuspay=new MerchantInfoXMlData();
 								splitMerchantInfoXMlDataJuspay.setMerchantType(getConfigurationService().getConfiguration().getString(PAYMENT_JUSPAY_MERCHANT_TYPE));
 								splitMerchantInfoXMlDataJuspay.setBucketId("");
-									if (null != list && !list.isEmpty())
-									{
-										for (final PaymentTransactionModel oModel : list)
-										{
-											LOG.debug("DeliveryMode oModel"+oModel);
-											if (null != oModel.getStatus() && null != oModel.getPaymentProvider() && !oModel.getPaymentProvider().equalsIgnoreCase(CLIQ_CASH)
-													&& oModel.getStatus().equalsIgnoreCase(MarketplacecommerceservicesConstants.SUCCESS))
-											{
-												
-												LOG.debug("Inside Parent order: Pyment Transaction model");
-												if (MarketplacecommerceservicesConstants.MRUPEE_CODE
-														.equalsIgnoreCase(oModel.getPaymentProvider()))
-												{
-													splitMerchantInfoXMlDataJuspay.setMerchantCode(getConfigurationService().getConfiguration()
-															.getString(MarketplacecommerceservicesConstants.MRUPEE_MERCHANT_CODE));
-												}
-												else
-												{
-													splitMerchantInfoXMlDataJuspay.setMerchantCode(oModel.getPaymentProvider());
-												}
-												if (null != oModel.getCode())
-												{
-													payemntrefid = oModel.getCode();
-													LOG.debug("Inside Parent order: Pyment Transaction model" + payemntrefid);
-												}
-											}
+								if (null != list && !list.isEmpty())
+								{
 
+									for (final PaymentTransactionModel oModel : list)
+									{
+
+										if (null != oModel.getStatus() && null != oModel.getPaymentProvider() &&  !oModel.getPaymentProvider().equalsIgnoreCase(CLIQ_CASH)
+												&& oModel.getStatus().equalsIgnoreCase(MarketplacecommerceservicesConstants.SUCCESS))
+										{
+											if (MarketplacecommerceservicesConstants.MRUPEE_CODE.equalsIgnoreCase(oModel.getPaymentProvider()))
+											{
+												splitMerchantInfoXMlDataJuspay.setMerchantCode(getConfigurationService().getConfiguration()
+														.getString(MarketplacecommerceservicesConstants.MRUPEE_MERCHANT_CODE));
+											}
+											else
+											{
+												splitMerchantInfoXMlDataJuspay.setMerchantCode(oModel.getPaymentProvider());
+											}
+											if (null != oModel.getCode())
+											{
+												payemntrefid = oModel.getCode();
+												LOG.debug("Inside Parent order: Pyment Transaction model" + payemntrefid);
+											}
 										}
+
 									}
+								}
+
 										splitMerchantInfoXMlDataJuspay.setPaymentRefID(payemntrefid);
 										
 										if (StringUtils.isNotEmpty(entry.getJuspayRequestId()))
@@ -997,6 +996,7 @@ public class SalesOrderReverseXMLUtility
 										splitMerchantInfoXMlDataJuspay.setShipmentCharge(juspayDelivery);
 										
 								      merchantInfoList.add(splitMerchantInfoXMlDataJuspay);
+								}
 									
 								}
 							
@@ -1017,9 +1017,7 @@ public class SalesOrderReverseXMLUtility
 									merchantInfoXMlDataQC.setBucketId(walletCardApportionDetailQcData.getBucketType());
 									String cardExpDate = getCardExpDate(walletCardApportionDetailQcData);
 									merchantInfoXMlDataQC.setCardExpiryDate(cardExpDate);
-									
 									merchantInfoXMlDataQC.setCardNumber(walletCardApportionDetailQcData.getCardNumber());
-									
 									for (final PaymentTransactionModel oModel : list)
 									{
 										if (null != oModel.getStatus() && null != oModel.getPaymentProvider() && oModel.getPaymentProvider().equalsIgnoreCase(CLIQ_CASH)
@@ -1579,7 +1577,7 @@ public class SalesOrderReverseXMLUtility
 	private double getTotalAmount(List<MerchantInfoXMlData> merchantInfoList, double tAmount)
 	{try{
 		for(MerchantInfoXMlData merchantInfoXMlTotal:merchantInfoList){
-			tAmount=merchantInfoXMlTotal.getScheduleDelCharge()+merchantInfoXMlTotal.getShipmentCharge()+merchantInfoXMlTotal.getExpressDelCharge()+merchantInfoXMlTotal.getProductAmount();	
+			tAmount +=merchantInfoXMlTotal.getScheduleDelCharge()+merchantInfoXMlTotal.getShipmentCharge()+merchantInfoXMlTotal.getExpressDelCharge()+merchantInfoXMlTotal.getProductAmount();	
 		}
 		return tAmount;
 	}catch(Exception exception){
