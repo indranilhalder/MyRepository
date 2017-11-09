@@ -9308,6 +9308,17 @@ $("#make_mrupee_payment , #make_mrupee_payment_up").click(function(){
 				});
 		}
 })
+
+
+$("#make_paytm_payment").click(function(){
+	 if(isSessionActive()==false){
+		 redirectToCheckoutLogin();
+		}
+		else{
+			submitPaytmForm();
+		}
+})
+
 function displayThrdPrtyWlt(){
 	$("#make_mrupee_payment_up").show();
 	$("li#MRUPEE").css("display","block");

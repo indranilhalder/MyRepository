@@ -3156,6 +3156,10 @@ ACC.singlePageCheckout = {
 		{
 			viewPaymentMRupee();
 		}
+		if(paymentMode=="PAYTM")
+		{
+			viewPaymentPaytm();
+		}
 	},
 	//Function called when a saved card is selected.
 	paymentOnSavedCardSelection:function(paymentMode,savedOrNew,radioId,callFromCvv)
