@@ -5,6 +5,8 @@ package com.tisl.mpl.facades.webform;
 
 import de.hybris.platform.commerceservices.search.pagedata.PageableData;
 
+import java.util.List;
+
 import com.tis.mpl.facade.data.TicketStatusUpdate;
 import com.tisl.mpl.facades.cms.data.WebForm;
 import com.tisl.mpl.facades.cms.data.WebFormData;
@@ -41,4 +43,13 @@ public interface MplWebFormFacade
 	 * @return the success/failure boolean response
 	 */
 	public boolean sendWebformTicket(final WebFormData formData) throws Exception;
+
+	/**
+	 * This method converts the hierachical data model to pojo
+	 * 
+	 * @param nodeParent
+	 * @return List<WebFormData>
+	 */
+	public List<WebFormData> getCrmParentChildNodes(final String nodeParent);
+
 }

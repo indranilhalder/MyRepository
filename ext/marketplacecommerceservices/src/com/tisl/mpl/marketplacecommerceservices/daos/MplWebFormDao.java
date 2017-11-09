@@ -23,4 +23,6 @@ public interface MplWebFormDao
 
 	public boolean checkDuplicateWebCRMTickets(String ticketType, String orderCode, String subOrderCode, String transactionId,
 			String L0code, String L1code, String L2code, String L3code, String L4code, String customerId);
+
+	public List<MplWebCrmModel> getCrmParentChildNodes(String nodeParent);
 }

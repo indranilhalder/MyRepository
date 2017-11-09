@@ -127,5 +127,34 @@ public class MplWebFormDaoImpl implements MplWebFormDao
 	}
 
 
+	/*
+	 * (non-Javadoc)
+	 *
+	 * @see com.tisl.mpl.marketplacecommerceservices.daos.MplWebFormDao#getCrmParentChildNodes()
+	 */
+	@Override
+	public List<MplWebCrmModel> getCrmParentChildNodes(final String nodeParent)
+	{
+		final String fetchHierarchicalData = "SELECT " + "{L0." + MplWebCrmModel.NODETEXT + "} AS L0TEXT,{L0."
+				+ MplWebCrmModel.NODECRMCODE + "} AS L0CODE,{L0." + MplWebCrmModel.NODEPARENT + "} AS L0PARENT, " + "{L1."
+				+ MplWebCrmModel.NODETEXT + "} AS L1TEXT,{L1." + MplWebCrmModel.NODECRMCODE + "} AS L1CODE,{L1."
+				+ MplWebCrmModel.NODEPARENT + "} AS L1PARENT, " + "{L2." + MplWebCrmModel.NODETEXT + "} AS L2TEXT,{L2."
+				+ MplWebCrmModel.NODECRMCODE + "} AS L2CODE,{L2." + MplWebCrmModel.NODEPARENT + "} AS L2PARENT, " + "{L3."
+				+ MplWebCrmModel.NODETEXT + "} AS L3TEXT,{L3." + MplWebCrmModel.NODECRMCODE + "} AS L3CODE ,{L3."
+				+ MplWebCrmModel.NODEPARENT + "} AS L3PARENT" + "FROM {" + MplWebCrmModel._TYPECODE + " AS L0 " + "LEFT JOIN "
+				+ MplWebCrmModel._TYPECODE + " AS L1 ON {L1." + MplWebCrmModel.NODEPARENT + "} = {L0." + MplWebCrmModel.NODECRMCODE
+				+ "} LEFT JOIN " + MplWebCrmModel._TYPECODE + " AS L2 ON {L2." + MplWebCrmModel.NODEPARENT + "} = {L1."
+				+ MplWebCrmModel.NODECRMCODE + "}" + "LEFT JOIN " + MplWebCrmModel._TYPECODE + " AS L3 ON {L3."
+				+ MplWebCrmModel.NODEPARENT + "} = {L3." + MplWebCrmModel.NODECRMCODE + "}} " + "WHERE {L0."
+				+ MplWebCrmModel.NODEPARENT + "} = ?nodeParent";
+
+		LOG.debug("getCrmParentChildNodes Query " + fetchHierarchicalData);
+		final FlexibleSearchQuery query = new FlexibleSearchQuery(fetchHierarchicalData);
+		query.addQueryParameter("nodeParent", nodeParent);
+		final List<MplWebCrmModel> result = flexibleSearchService.<MplWebCrmModel> search(query).getResult();
+		return CollectionUtils.isNotEmpty(result) ? result : null;
+	}
+
+
 
 }
