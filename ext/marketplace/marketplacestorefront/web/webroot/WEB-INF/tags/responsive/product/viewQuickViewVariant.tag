@@ -305,7 +305,7 @@ function redirectURL(val){
 		
 		
 		
-		<div class="select-size">
+		<div class="select-size" style="width:50%;">
 		 <c:choose>
 		    <c:when test="${selectedSize!=null}"> 
 			<span class="selected quickViewSelect">${product.size}</span>
