@@ -63,6 +63,7 @@ import de.hybris.platform.core.model.JewelleryInformationModel;
 import de.hybris.platform.core.model.c2l.CurrencyModel;
 import de.hybris.platform.core.model.enumeration.EnumerationValueModel;
 import de.hybris.platform.core.model.order.AbstractOrderEntryModel;
+import de.hybris.platform.core.model.order.AbstractOrderModel;
 import de.hybris.platform.core.model.order.CartModel;
 import de.hybris.platform.core.model.order.OrderModel;
 import de.hybris.platform.core.model.order.price.DiscountModel;
@@ -8991,7 +8992,9 @@ public class UsersController extends BaseCommerceController
 			//  Removing the cliqCash balacne from Cart and Setting SplitModeInfo To JUSPAY
 			if (null == orderModel)
 			{
-				 cart = mplPaymentWebFacade.findCartAnonymousValues(cartGuid);
+				cart = mplPaymentWebFacade.findCartAnonymousValues(cartGuid);
+				getCommerceCartService().recalculateCart(cart);
+				 
 				removeCliqCashWsDto.setDiscount(cart.getTotalDiscounts());
 				if (null != cart.getTotalPrice())
 				{
@@ -9007,6 +9010,8 @@ public class UsersController extends BaseCommerceController
 			else
 			{
 			//	orderModel = getMplPaymentFacade().getOrderByGuid(cartGuid);
+				AbstractOrderModel order =orderModel; 
+				getCommerceCartService().recalculateCart((CartModel)order);
 					removeCliqCashWsDto.setDiscount(orderModel.getTotalDiscounts());
 					if (null != orderModel.getTotalPrice())
 					{

@@ -3460,6 +3460,7 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 				}
 			}
 			
+			getCommerceCartService().recalculateCart((CartModel)cart);
 			applyCliqCashWsDto.setDiscount(Double.valueOf(0));
 			applyCliqCashWsDto.setTotalAmount(cart.getTotalPrice().toString());
 			if (null != walletAmount &&  walletAmount.doubleValue() > 0.0D)

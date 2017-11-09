@@ -145,6 +145,7 @@ import com.tisl.mpl.facades.account.address.MplAccountAddressFacade;
 import com.tisl.mpl.facades.payment.MplPaymentFacade;
 import com.tisl.mpl.facades.product.data.MarketplaceDeliveryModeData;
 import com.tisl.mpl.helper.AddToCartHelper;
+import com.tisl.mpl.marketplacecommerceservices.egv.service.cart.MplEGVCartService;
 import com.tisl.mpl.marketplacecommerceservices.service.ExtendedUserService;
 import com.tisl.mpl.marketplacecommerceservices.service.impl.MplCommerceCartServiceImpl;
 import com.tisl.mpl.mplcommerceservices.service.data.InvReserForDeliverySlotsRequestData;
@@ -276,6 +277,9 @@ public class CartsController extends BaseCommerceController
 	//TPR-6971
 	@Resource(name = "exchangeGuideFacade")
 	private ExchangeGuideFacade exchangeFacade;
+	
+	@Autowired
+	private MplEGVCartService mplEGVCartService;
 
 	/**
 	 * @return the mplCouponFacade
@@ -483,6 +487,12 @@ public class CartsController extends BaseCommerceController
 		final WebSerResponseWsDTO response = new WebSerResponseWsDTO();
 		final CartDataList cartDataList = new CartDataList();
 		List<CartData> cartsList = null;
+		try {
+			LOG.debug("Removing Old EGV Cart If Any");
+			mplEGVCartService.removeOldEGVCartCurrentCustomer();
+		}catch (Exception e) {
+			LOG.error("Exception Occurred while Removing old Cart"+e.getMessage());
+		}
 		if (savedCartsOnly)
 		{
 			final PageableData pageableData = new PageableData();
