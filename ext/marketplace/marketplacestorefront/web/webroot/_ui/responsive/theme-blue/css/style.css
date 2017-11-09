@@ -1,4 +1,4 @@
-/* http://meyerweb.com/eric/tools/css/reset/ 
+﻿/* http://meyerweb.com/eric/tools/css/reset/ 
    v2.0 | 20110126
    License: none (public domain)
 */
@@ -77584,5 +77584,14 @@ a.pageNo.active{
 {
 .cart.wrapper.checkout-payment .right-block.billing.checkout-list-right h3 {
     text-align: left ! important;
+}
+}
+
+
+/*Paytm changes*/
+@media (max-width: 768px){
+
+label[for='priority_paytm'] img {
+    margin-left: 30px;
 }
 }
