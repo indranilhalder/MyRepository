@@ -332,7 +332,7 @@ share mobile -->
 			  </span>
    			</c:when>
    			<c:otherwise>
-   				<span>
+   				<span class="home-pdp-size">
 					<spring:theme code="product.variant.size.HF"></spring:theme>
 					<c:if test="${not empty productSizeType}">(${productSizeType})</c:if>
 			  </span> 
