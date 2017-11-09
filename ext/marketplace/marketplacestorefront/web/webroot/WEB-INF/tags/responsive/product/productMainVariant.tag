@@ -327,15 +327,23 @@ share mobile -->
    		</c:forEach>
    		<c:choose>
    			<c:when test="${true eq quantity}">
+   			<c:choose>
+   				<c:when test="${productSize !='No Size'}">
    				<span><spring:theme code="product.variant.size.HF"></spring:theme>
    				<c:if test="${not empty productSizeType}">(${productSizeType})</c:if>
-			  </span>
+   				 </span>
+   				</c:when>
+				</c:choose>
    			</c:when>
    			<c:otherwise>
+   			<c:choose>
+   				<c:when test="${productSize !='No Size'}">
    				<span class="home-pdp-size">
 					<spring:theme code="product.variant.size.HF"></spring:theme>
 					<c:if test="${not empty productSizeType}">(${productSizeType})</c:if>
 			  </span> 
+			  </c:when>
+				</c:choose>
    			</c:otherwise>
    		</c:choose>
    			  
@@ -348,6 +356,7 @@ share mobile -->
 			   </select>
 			  </span> 
    			 </c:when>
+   			 
    			 <c:otherwise>
    			 <span>
 					<spring:theme code="product.variant.size"></spring:theme><c:if test="${not empty productSizeType}">(${productSizeType})</c:if>

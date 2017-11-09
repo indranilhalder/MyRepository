@@ -77680,7 +77680,7 @@ span.home-pdp-quantity:nth-last-child(4) {
    left: 14%;;
 }
 span.home-pdp-quantity:nth-last-child(3) {
-   left: 37%;;
+   left: 35%;;
 }
 .buying-guide.home-buying-guide{
 	margin-right: 0 !important;
@@ -77710,6 +77710,7 @@ p.sizetext.size {
 #quickViewVariant select#variant_dropdown {
     width: 100%;
 }
+
 /* HOME-227 End */
 /* HOME-239 start */
 	@media (max-width: 767px){
