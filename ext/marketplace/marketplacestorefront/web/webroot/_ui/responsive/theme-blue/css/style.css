@@ -77649,9 +77649,9 @@ background: url(../images/search_image.png) no-repeat;}
 .home-pdp-quantity{
 	border: 0px solid transparent ! important;
     position: relative;		
-	left: 14%;
+	/* left: 49%; */
 }
-.home-pdp-quantity:nth-child(2),
+.home-pdp-quantity:nth-child(2)
 {
 	position: relative;
     left: 14%;
@@ -77661,18 +77661,15 @@ background: url(../images/search_image.png) no-repeat;}
 	margin-bottom: 35px ! important;
 	left:0%;
 }
-/* #variant_dropdown + #quantity_dropdown{
-	margin-left: 28%;
-} */
 .buying-guide.home-buying-guide + br + #quantity_dropdown{
 	margin-left: 40%;
 }
 #quantity_dropdown{
 	margin-left: 0%;
 }
-.home-pdp-size + .home-pdp-quantity + .buying-guide.home-buying-guide + br + #variant_dropdown {
+/* .home-pdp-size + .home-pdp-quantity + .buying-guide.home-buying-guide + br + #variant_dropdown {
     width: 38%;
-}
+} */
 .home-pdp-size + .home-pdp-quantity + .buying-guide.home-buying-guide + br + #variant_dropdown + #quantity_dropdown {
     margin-left: 4%;
 }
@@ -77680,7 +77677,10 @@ select#quantity_dropdown:nth-child(5) {
     margin-left: 3%;
 }
 span.home-pdp-quantity:nth-last-child(4) {
-    margin-left: 10%;
+   left: 14%;;
+}
+span.home-pdp-quantity:nth-last-child(3) {
+   left: 49%;;
 }
 .buying-guide.home-buying-guide{
 	margin-right: 0 !important;
@@ -77694,6 +77694,9 @@ select#quantity_dropdown {
      top: 24px;
      left: 0;
  }
+ #variant_dropdown {
+    width: 38%;
+}
 /* HOME-227 End */
 /* HOME-239 start */
 	@media (max-width: 767px){
