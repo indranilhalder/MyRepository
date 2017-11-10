@@ -77574,9 +77574,18 @@ a.pageNo.active{
     padding: 0;
 }
 .total-pagecount{
-	position: relative;
-    left: 0;
-    top: 0;
+	top: 8px;
+    margin-right: 8%;
+}
+.pagination li {
+    font-size: 12px;
+}
+.total-pagecount{
+	font-size: 12px
+}
+.bottom-pagination.pagination-search>span {
+    display: inline-block;
+    margin-right: 10%;
 }
 }
 /* Pagination link */
@@ -77586,8 +77595,6 @@ a.pageNo.active{
     text-align: left ! important;
 }
 }
-
-
 /*Paytm changes*/
 @media (max-width: 768px){
 
@@ -77619,14 +77626,22 @@ button#saveBlockData {
     background: #a9133d;
     color: white;
     border-radius: 50%;
-    width: 35px;
-    height: 35px;
+    width: 29px;
+    height: 29px;
     text-align: center;
-    padding: 3px 0;
 }
 .listing.wrapper .bottom-pagination.pagination-search .pagination li a{
     display: inline-block;
-    width: 35px;
-    height: 35px;
-    text-align: center;
+    width: 29px;
+    height: 29px;
+    text-align: center
 } 
+.listing.wrapper .bottom-pagination.pagination-search li.page-item.last {
+    display: none;
+}
+.listing.wrapper .bottom-pagination.pagination-search li.page-item.first {
+    display: none;
+}
+.total-pagecount{
+	font-size: 14px
+}
