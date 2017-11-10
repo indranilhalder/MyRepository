@@ -439,7 +439,7 @@ var buyingGuideData ='${buyingGuide}';
 			  </c:forEach>
 			  </select>
 				
-				  <select id="quantity_dropdown" class="variant-select">
+				  <select id="quantity_dropdown" class="variant-select" style="width: 20%;float: right;position:relative;top:0;">
 			   <c:forEach items="${quantityList}" var="quantity">
 					<option value="${quantity}">${quantity}</option>
 				</c:forEach>
