@@ -77699,10 +77699,11 @@ select#quantity_dropdown {
 }
 p.sizetext.size {
     border: 0px solid !important;
+    height: auto ! important;
    /*  margin-bottom: 30px !important; */
 }
 .sizetext .home-pdp-quantity:nth-child(2) {
-    left: 36%;
+    left: 46%;
 }
 .sizetext span.home-pdp-quantity:nth-last-child(2) {
     left: 10%;
@@ -77710,7 +77711,9 @@ p.sizetext.size {
 #quickViewVariant select#variant_dropdown {
     width: 100%;
 }
-
+.sizetext select#quantity_dropdown {
+    top: 27px;
+}
 /* HOME-227 End */
 /* HOME-239 start */
 	@media (max-width: 767px){
