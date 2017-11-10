@@ -74,7 +74,7 @@
 	<nav:pagination top="false"  supportShowPaged="${isShowPageAllowed}" supportShowAll="${isShowAllAllowed}"  searchPageData="${searchPageData}" searchUrl="${searchPageData.currentQuery.url}"  numberPagesShown="${numberPagesShown}"/>
 
 </div> --%>
-<div class="bottom-pagination pagination-search">
+<%-- <div class="bottom-pagination pagination-search">
 <div class="">
 <c:if test="${searchPageData.pagination.numberOfPages > 1}">
 <span class="">
@@ -117,7 +117,7 @@
 </c:when>
 </c:choose>
 </div>
-</div>
+</div> --%>
 
 <div class="bottom-pagination pagination-search">
 <c:if test="${searchPageData.pagination.numberOfPages > 1}">
