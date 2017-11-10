@@ -23,7 +23,7 @@ ${stringMessage}
 				<form class="form-horizontal">
 					<div class="modal-body">
 						<button type="button" class="close" data-dismiss="modal"
-							aria-label="Close">
+							aria-label="Close" onclick="javascript:$('#otpPopup').hide();">
 							<span aria-hidden="true">×</span>
 						</button>
 						<h4>
