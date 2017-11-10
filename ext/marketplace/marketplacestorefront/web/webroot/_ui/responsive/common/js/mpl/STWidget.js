@@ -250,7 +250,7 @@ var stwRender = {
             stwWidgetProducts += '<div onclick=popupwindow("' + product + '") class="IAQuickView" style="position: absolute; text-transform: uppercase;cursor: pointer; bottom: 0; z-index: -1; visibility: hidden; color: #00cbe9;display: block; width: 100%; text-align: center;background: #f8f9fb;background-color: rgba(248, 249, 251,0.77);-webkit-font-smoothing: antialiased;height: 70px;font-size:12px;"><span>Quick View</span></div></div>';
             stwWidgetProducts += ' <div class="short-info"><ul class="color-swatch"><li><span  style="background-color: ' + value.availableColor + ';border: 1px solid rgb(204, 211, 217);" title="' + value.availableColor + '"></span></li></ul>';
             stwWidgetProducts += '<div class="brand">' + value.productBrand + '</div>';
-            stwWidgetProducts += '<div class="productSize">' + value.stwavailableSizes + '</div>';
+            //stwWidgetProducts += '<div class="productSize">' + value.stwavailableSizes + '</div>';
             stwWidgetProducts += ' <a href="' + value.productUrl + '" class="item"><h3 class="product-name">' + value.productName + '</h3>';
             stwWidgetProducts += '<div class="price"><span class="stw-mrp">&#8377;' + value.mrp + '</span><span class="stw-mop">&#8377;' + value.mop + '</span>';
             stwWidgetProducts += '<p class="savings pdp-savings"> <span>(-' + savingsOnProduct + '%)</span></p>';
@@ -261,7 +261,7 @@ var stwRender = {
         });
         stwWidgetProducts += '</div></div>';
         return stwWidgetProducts;
-        }
+        } 
     },
     
     

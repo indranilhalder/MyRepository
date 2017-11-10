@@ -22,9 +22,9 @@ public interface MplProductService
 	 */
 	String getSizeForSTWProduct(String productCode);
 
-	/**
-	 * @param productCode
-	 * @return
-	 */
-	String getVariantsForSTWProducts(String productCode);
+	//	/**
+	//	 * @param productCode
+	//	 * @return
+	//	 */
+	//	PcmProductVariantModel getVariantsForSTWProducts(String productCode);
 }

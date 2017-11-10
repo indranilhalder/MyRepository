@@ -1895,13 +1895,13 @@ public class HomePageController extends AbstractPageController
 			final String stwWidgetBlpHeading = configurationService.getConfiguration().getString("stw.blpheading");
 			//TPR-6740-changes for PDP widget
 			final String stwavailableSizes = mplProductFacade.getSizeForSTWProduct(productCode);
-			final String stwavailablevariants = mplProductFacade.getVariantsForSTWProducts(productCode);
+			//final PcmProductVariantModel stwavailablevariants = mplProductFacade.getVariantsForSTWProducts(productCode);
 			STWJObject.put("STWBlpHeading", stwWidgetBlpHeading);
 			STWJObject.put("STWHeading", stwWidgetHeading);
 			STWJObject.put("STWElements", stwRecData);
 			STWJObject.put("STWCategories", stwCategories);
 			STWJObject.put("stwavailableSizes", stwavailableSizes);
-			STWJObject.put("stwavailablevariants", stwavailablevariants);
+			//STWJObject.put("stwavailablevariants", stwavailablevariants);
 			STWJObject.put("visiterIP", getVisitorIp(request));
 		}
 		return STWJObject;

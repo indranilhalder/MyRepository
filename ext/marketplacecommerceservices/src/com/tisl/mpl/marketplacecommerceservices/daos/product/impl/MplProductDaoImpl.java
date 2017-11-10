@@ -386,33 +386,33 @@ public class MplProductDaoImpl extends DefaultProductDao implements MplProductDa
 		}
 	}
 
-	@Override
-	public String getVariantsForSTWProducts(final String productCode)
-	{
-		List<String> variants = null;
-		final String query = "select {p.pk} from {product as p} where {p.pk} IN ({{select {pcm.pk} from {PcmProductVariant as pcm}"
-				+ "where {pcm.baseproduct} IN ({{SELECT {p.baseproduct} from {PcmProductVariant as p} }})}})"
-				+ "AND {p.code}='987654322'";
-
-		try
-		{
-			final FlexibleSearchQuery flexiQuery = new FlexibleSearchQuery(query);
-			//flexiQuery.setResultClassList(Collections.singletonList(String.class));
-			final SearchResult<String> searchResult = getFlexibleSearchService().search(flexiQuery);
-			LOG.debug("findProductForHasVariant: searchResult********** " + searchResult);
-			variants = searchResult.getResult();
-		}
-		catch (final Exception e)
-		{
-			LOG.error(e);
-		}
-		if (variants != null)
-		{
-			return variants.get(0);
-		}
-		else
-		{
-			return "";
-		}
-	}
+	//	@Override
+	//	public PcmProductVariantModel getVariantsForSTWProducts(final String productCode)
+	//	{
+	//		List<PcmProductVariantModel> variants = null;
+	//		final String query = "select {p.pk} from {product as p} where {p.pk} IN ({{select {pcm.pk} from {PcmProductVariant as pcm}"
+	//				+ " where {pcm.baseproduct} IN ({{SELECT {p.baseproduct} from {PcmProductVariant as p} }})}})"
+	//				+ " AND {p.code}='987654322'";
+	//
+	//		try
+	//		{
+	//			final FlexibleSearchQuery flexiQuery = new FlexibleSearchQuery(query);
+	//			//flexiQuery.setResultClassList(Collections.singletonList(String.class));
+	//			final SearchResult<PcmProductVariantModel> searchResult = getFlexibleSearchService().search(flexiQuery);
+	//			LOG.debug("findProductForHasVariant: searchResult********** " + searchResult);
+	//			variants = searchResult.getResult();
+	//		}
+	//		catch (final Exception e)
+	//		{
+	//			LOG.error(e);
+	//		}
+	//		if (variants != null)
+	//		{
+	//			return variants.get(0);
+	//		}
+	//		else
+	//		{
+	//			return null;
+	//		}
+	//	}
 }
