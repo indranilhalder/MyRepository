@@ -31,7 +31,7 @@ $(document).ready(function(){
     totalNoOfPages = $('input[name=noOfPages]').val();
     totalNoOfPages == '' ? 0 : parseInt(totalNoOfPages);
     
-$(window).on('scroll', function() {
+$(window).on('scroll', function() { 
 	var productItemArrayLength = $('ul.product-listing.product-grid.lazy-grid,ul.product-listing.product-grid.lazy-grid-facet,ul.product-list,ul.product-listing.product-grid.lazy-grid-normal,ul.product-listing.product-grid.custom-sku').find('li.product-item').length;
 	
     if(productItemArrayLength > 16){
@@ -46,15 +46,15 @@ $(window).on('scroll', function() {
 
 
 
-
+/*
 var $lis = $(".pagination-block li").hide();
 var size_li = $lis.length;
 var x = totalPageCountToShow,
 start = 0;
 //$(".pageNoLi").removeAttr("style");
-$lis.slice(0, totalPageCountToShow).show();
+$lis.slice(0, totalPageCountToShow).show();*/
 
-$(document).on('click', '.pageNo', function(e) {
+/*$(document).on('click', '.pageNo', function(e) {
 	e.preventDefault();
     var clickedPageNo = parseInt($(this).text());
     $(".pageNo").removeClass("active");
@@ -74,19 +74,19 @@ $(document).on('click', '.pageNo', function(e) {
         scrollTop: 0
   }, 100); 
     toggleNextPrevButton(); 
-});
+});*/
 
 
-if($(".pagination-block li").find(".active").parent().index() == 1){
+/*if($(".pagination-block li").find(".active").parent().index() == 1){
 	$(".prev-page").hide();
 }
 
 $(".pageNo").removeClass("active");
 if(!$(".pagination-block li").first().find(".pageNo").hasClass("active")){
 	$(".pagination-block li").first().find(".pageNo").addClass("active");
-}
+}*/
 
-$(document).on('click', '.next-block', function(e) {
+/*$(document).on('click', '.next-block', function(e) {
 	e.preventDefault();
 	var nextPageNo = $(".pageNo.active").parent().next();
 	if($(nextPageNo).text() && isLastPageNext()){
@@ -107,9 +107,9 @@ $(document).on('click', '.next-block', function(e) {
 	$('html, body').animate({
         scrollTop: 0
     }, 100);
-});
+});*/
 
-$(document).on('click', '.prev-block', function(e) {
+/*$(document).on('click', '.prev-block', function(e) {
 	e.preventDefault();
 	var nextPageNo = $(".pageNo.active").parent().prev();
 	if($(nextPageNo).text() && isLastPagePrev()){
@@ -130,7 +130,7 @@ $(document).on('click', '.prev-block', function(e) {
 	$('html, body').animate({
         scrollTop: 0
     }, 100);
-});
+});*/
 
 
 $(document).on('click','.sort',function(){
@@ -158,6 +158,9 @@ $(document).on('change','.responsiveSort',function(){
 			}
 });
 
+$(document).on("click",".page-link",function(e){
+	e.preventDeafult();
+});
 
 });
 
@@ -880,8 +883,9 @@ $('.pagination-blocks').twbsPagination({
     visiblePages: totalPageCountToShow,
     next: 'Next',
     prev: 'Prev',
-    href: true,
+    href: false,
     onPageClick: function (event, page) {
+    	event.preventDefault();
     	getProductSetData(page);
     	$('html, body').animate({
             scrollTop: 0

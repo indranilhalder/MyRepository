@@ -77612,3 +77612,21 @@ button#saveBlockData {
 }
 }
 /* TISPRNXIII-38 */
+/* TPR-7078 */
+.listing.wrapper .bottom-pagination.pagination-search .pagination li.active a {
+    display: inline-block;
+    border-bottom: 2px solid transparent;
+    background: #a9133d;
+    color: white;
+    border-radius: 50%;
+    width: 35px;
+    height: 35px;
+    text-align: center;
+    padding: 3px 0;
+}
+.listing.wrapper .bottom-pagination.pagination-search .pagination li a{
+    display: inline-block;
+    width: 35px;
+    height: 35px;
+    text-align: center;
+} 
