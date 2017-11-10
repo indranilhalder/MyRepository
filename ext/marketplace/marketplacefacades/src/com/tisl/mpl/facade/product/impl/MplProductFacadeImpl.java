@@ -128,11 +128,11 @@ public class MplProductFacadeImpl implements MplProductFacade
 
 	}
 
-	//	@Override
-	//	public PcmProductVariantModel getVariantsForSTWProducts(final String productCode)
-	//	{
-	//		return mplProductService.getVariantsForSTWProducts(productCode);
-	//
-	//	}
+	@Override
+	public List<String> getVariantsForSTWProducts(final String productCode)
+	{
+		return mplProductService.getVariantsForSTWProducts(productCode);
+
+	}
 
 }

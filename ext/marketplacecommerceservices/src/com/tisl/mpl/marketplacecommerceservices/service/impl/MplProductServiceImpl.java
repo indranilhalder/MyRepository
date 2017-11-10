@@ -72,16 +72,16 @@ public class MplProductServiceImpl implements MplProductService
 		return productDao.getSizeForSTWProduct(productCode);
 	}
 
-	//	/*
-	//	 * (non-Javadoc)
-	//	 * 
-	//	 * @see com.tisl.mpl.marketplacecommerceservices.service.MplProductService#getSizeForSTWProduct(java.lang.String)
-	//	 */
-	//	@Override
-	//	public PcmProductVariantModel getVariantsForSTWProducts(final String productCode)
-	//	{
-	//
-	//		return productDao.getVariantsForSTWProducts(productCode);
-	//	}
+	/*
+	 * (non-Javadoc)
+	 *
+	 * @see com.tisl.mpl.marketplacecommerceservices.service.MplProductService#getSizeForSTWProduct(java.lang.String)
+	 */
+	@Override
+	public List<String> getVariantsForSTWProducts(final String productCode)
+	{
+
+		return productDao.getVariantsForSTWProducts(productCode);
+	}
 
 }
