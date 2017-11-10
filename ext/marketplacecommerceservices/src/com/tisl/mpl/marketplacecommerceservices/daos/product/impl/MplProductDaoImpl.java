@@ -13,6 +13,7 @@ import de.hybris.platform.servicelayer.search.FlexibleSearchQuery;
 import de.hybris.platform.servicelayer.search.SearchResult;
 import de.hybris.platform.servicelayer.search.exceptions.FlexibleSearchException;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -386,33 +387,35 @@ public class MplProductDaoImpl extends DefaultProductDao implements MplProductDa
 		}
 	}
 
-	//	@Override
-	//	public PcmProductVariantModel getVariantsForSTWProducts(final String productCode)
-	//	{
-	//		List<PcmProductVariantModel> variants = null;
-	//		final String query = "select {p.pk} from {product as p} where {p.pk} IN ({{select {pcm.pk} from {PcmProductVariant as pcm}"
-	//				+ " where {pcm.baseproduct} IN ({{SELECT {p.baseproduct} from {PcmProductVariant as p} }})}})"
-	//				+ " AND {p.code}='987654322'";
-	//
-	//		try
-	//		{
-	//			final FlexibleSearchQuery flexiQuery = new FlexibleSearchQuery(query);
-	//			//flexiQuery.setResultClassList(Collections.singletonList(String.class));
-	//			final SearchResult<PcmProductVariantModel> searchResult = getFlexibleSearchService().search(flexiQuery);
-	//			LOG.debug("findProductForHasVariant: searchResult********** " + searchResult);
-	//			variants = searchResult.getResult();
-	//		}
-	//		catch (final Exception e)
-	//		{
-	//			LOG.error(e);
-	//		}
-	//		if (variants != null)
-	//		{
-	//			return variants.get(0);
-	//		}
-	//		else
-	//		{
-	//			return null;
-	//		}
-	//	}
+
+	@Override
+	public List<String> getVariantsForSTWProducts(final String productCode)
+	{
+
+		final String query = "select {pcm.colourHexCode} from {PcmProductVariant as pcm}}"
+				+ " where {pcm.baseproduct} IN ({{SELECT {p.baseproduct} from {PcmProductVariant as p}})"
+				+ " AND {pcm.pk} IN ({{select {p.pk} from {product as p} where {p.code} = '987654322' }})'";
+
+		List<String> variants = null;
+		try
+		{
+			final FlexibleSearchQuery flexiQuery = new FlexibleSearchQuery(query);
+			//flexiQuery.setResultClassList(Collections.singletonList(String.class));
+			final SearchResult<String> searchResult = getFlexibleSearchService().search(flexiQuery);
+			LOG.debug("findProductForHasVariant: searchResult********** " + searchResult);
+			variants = searchResult.getResult();
+		}
+		catch (final Exception e)
+		{
+			LOG.error(e);
+		}
+		if (variants != null)
+		{
+			return variants;
+		}
+		else
+		{
+			return new ArrayList<String>();
+		}
+	}
 }
