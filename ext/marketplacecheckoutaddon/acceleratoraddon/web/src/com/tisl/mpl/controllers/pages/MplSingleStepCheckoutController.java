@@ -3494,6 +3494,9 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 			//SDI-2158 fix recalculation starts here
 			mplCouponFacade.releaseVoucherInCheckout(cartModel);
 			commerceCartService.recalculateCart(cartModel);
+			final Map<String, MplZoneDeliveryModeValueModel> freebieModelMap = new HashMap<String, MplZoneDeliveryModeValueModel>();
+			final Map<String, Long> freebieParentQtyMap = new HashMap<String, Long>();
+			populateFreebieProductData(cartModel, freebieModelMap, freebieParentQtyMap);
 			//SDI-2158 fix recalculation ends here
 			mplCartFacade.setCartSubTotalForReviewOrder(cartModel);
 			mplCartFacade.totalMrpCal(cartModel);
@@ -4960,7 +4963,7 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 
 	/*
 	 * @Description adding wishlist popup in cart page
-	 *
+	 * 
 	 * @param String productCode,String wishName, model
 	 */
 
@@ -5018,7 +5021,7 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 
 	/*
 	 * @Description showing wishlist popup in cart page
-	 *
+	 * 
 	 * @param String productCode, model
 	 */
 	@ResponseBody
