@@ -6,7 +6,20 @@ var ajaxUrl = '';
 var pageType = $('#pageType').val();
 var isSerp = false;
 var totalPageCountToShow = 2; 
-
+var settings = {
+	    totalPages: $('input[name=noOfPages]').val(),
+	    visiblePages: totalPageCountToShow,
+	    next: 'Next',
+	    prev: 'Prev',
+	    href: false,
+	    onPageClick: function (event, page) {
+	    	event.preventDefault();
+	    	getProductSetData(page);
+	    	$('html, body').animate({
+	            scrollTop: 0
+	        }, 100);
+	    }
+}
 $(document).ready(function(){
 
 	//INC144318859 remove previous cache data | old cache issue
@@ -295,6 +308,8 @@ function sortCustomSku(this_data,drop_down){
 	default:
 		break;
 	}
+	$(".pagination-blocks").twbsPagination('destroy');
+	$('.pagination-blocks').twbsPagination(settings);
 }
 
 function isLastPageNext(){
@@ -577,8 +592,8 @@ function sort(this_data,drop_down){
 	default:
 		break;
 	}
-	initialPaginationDisplay();
-	toggleNextPrevButton();
+	$(".pagination-blocks").twbsPagination('destroy');
+	$('.pagination-blocks').twbsPagination(settings);
 }
 
 function sortReplaceState(url){
@@ -878,17 +893,4 @@ function toggleNextPrevButton(){
     e.fn.twbsPagination.version = "1.4"
 })(window.jQuery, window, document);
 
-$('.pagination-blocks').twbsPagination({
-    totalPages: $('input[name=noOfPages]').val(),
-    visiblePages: totalPageCountToShow,
-    next: 'Next',
-    prev: 'Prev',
-    href: false,
-    onPageClick: function (event, page) {
-    	event.preventDefault();
-    	getProductSetData(page);
-    	$('html, body').animate({
-            scrollTop: 0
-        }, 100);
-    }
-});
+$('.pagination-blocks').twbsPagination(settings);
