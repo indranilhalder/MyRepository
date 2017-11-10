@@ -247,9 +247,9 @@ ${stringMessage}
 								 var selectedTime ="";
 								 $("input.timeTribhuvan[data-name='timeRadio'][data-picked='yes']").each(function(){
 									 
-										  var selectedDate = $(this).attr('data-date');
+										  	selectedDate = $(this).attr('data-date');
 										  var selectedTxnId = $(this).attr('data-txnId');
-										  var selectedTime = $(this).val();
+										  	selectedTime = $(this).val();
 										    rescheduleData['productCode'] = selectedTxnId;
 											rescheduleData['date'] = selectedDate;
 											rescheduleData['time'] = selectedTime;
