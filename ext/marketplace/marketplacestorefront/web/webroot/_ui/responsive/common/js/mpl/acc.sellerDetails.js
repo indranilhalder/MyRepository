@@ -448,7 +448,7 @@ function focusOnElement() {
 			 
 			 
 			
-        if(!$("#variant li ").hasClass("selected") && typeof($(".variantFormLabel").html())== 'undefined' && $("#ia_product_rootCategory_type").val()!='Electronics'&& $("#ia_product_rootCategory_type").val()!='Watches' && $("#ia_product_rootCategory_type").val()!='Accessories' && $("#showSize").val()=='true'){
+        if(!$("#variant li ").hasClass("selected") && typeof($(".variantFormLabel").html())== 'undefined' && $("#ia_product_rootCategory_type").val()!='Electronics'&& $("#ia_product_rootCategory_type").val()!='Watches' && $("#ia_product_rootCategory_type").val()!='Accessories' && $("#categoryType").val()!='HomeFurnishing' && $("#showSize").val()=='true'){
 		  		
 		   		/*$("#addToCartFormIdOthersel"+index).html($('#selectSizeId').text());
 				$("#addToCartFormIdOthersel"+index).show();*/

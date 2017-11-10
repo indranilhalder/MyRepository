@@ -137,9 +137,9 @@ ACC.product = {
 		
 	
 		$(document).off('click', '#addToCartFormQuick').on('click', '#addToCartFormQuick', function(event) { 
-		   
+			  //console.log("QucikView not Here");
 			 $("#qty1").val($("#quantity").val());
-				if($("#sizeSelected").val()!='no'){
+				if($("#sizeSelected").val()!='no' || $("#categoryType").val()=='HomeFurnishing'){
 				
 					/*TPR-681
 					var productCodePost = $("#productCodePost").val();

@@ -4978,6 +4978,32 @@ function populateProductWarrantyTab(jsonData)
 	htmlCode=htmlCode+'</div>';
 	return htmlCode;
 }
+//Used to populate productOverviewTab.tag by ajax //HOME-244
+function populateProductOverviewTab(jsonData)
+{
+	var htmlCode="";
+	htmlCode=htmlCode+'<div class="product-desc">';
+	htmlCode=htmlCode+'<span class="">';
+	htmlCode=htmlCode+'<ul class="homefurnishing-overview">';
+	$.each(jsonData['mapConfigurableAttributes'],function(key,value){
+		//htmlCode=htmlCode+'<li class="homefurnishing-overview-desc">'+ key+' - '+value+'</li>';
+		if(value!="")
+		{
+			$.each(value,function(key1,value1){
+				htmlCode=htmlCode+'<li class="homefurnishing-overview-desc"> '+ key +' - '+ key1 +' &nbsp;&nbsp;'+value1+'</li>';
+			});
+		}
+		else
+		{
+			htmlCode=htmlCode+'<li class="homefurnishing-overview-desc">'+ key+'</li>';
+		}
+	});
+	
+	htmlCode=htmlCode+'</ul>';
+	htmlCode=htmlCode+'</span>';
+	htmlCode=htmlCode+'</div>';
+	return htmlCode;
+}
 function getProductDetailOnSizeChange(productCode)
 {
 	url=ACC.config.encodedContextPath + "/p-ajaxProductData?productCode=" + productCode;
@@ -5080,14 +5106,13 @@ function populateProductPageTabs(jsonData)
 	//HOME-244
 	if(jsonData['validTabs'].includes('overview'))
 	{
-		//$('ul.tabs.pdp>li:eq(1)').html(populateProductDetailsTab(jsonData));
 		var index=$('ul.nav.pdp>li').index($('#tabs_productOverview'));
 		if(index!=-1)
 		{
 			var selector='ul.tabs.pdp>li:eq('+index+')';
-			$(selector).html(populateProductDetailsTab(jsonData));
+			$(selector).html(populateProductOverviewTab(jsonData));
 			//UF-377
-			$("#overviewAccordion").html(populateProductDetailsTab(jsonData));
+			$("#overviewAccordion").html(populateProductOverviewTab(jsonData));
 		}
 	}
 	
