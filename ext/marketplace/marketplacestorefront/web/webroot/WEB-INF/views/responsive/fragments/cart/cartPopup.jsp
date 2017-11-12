@@ -90,7 +90,9 @@
 										</c:if>
 									</c:when>
 									<c:otherwise>
+									<c:if test="${!fn:containsIgnoreCase(entry.product.size, 'No Size')}">
 										<li><spring:theme code="cart.popup.size" />&nbsp;${entry.product.size}</li>
+									</c:if>
 									</c:otherwise>
 								</c:choose>
 								</c:if>

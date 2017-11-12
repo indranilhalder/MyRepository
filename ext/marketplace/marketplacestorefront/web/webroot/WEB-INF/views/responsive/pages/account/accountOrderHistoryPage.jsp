@@ -712,12 +712,16 @@
 																								</c:if>
 																							</c:when>
 																							<c:otherwise>
+																							<c:if test="${!fn:containsIgnoreCase(entryCancel.product.size, 'No Size')}">
 																								<span><b>Size:</b> ${entryCancel.product.size}</span>
+																							</c:if>
 																							</c:otherwise>
 																						</c:choose>
 																					</c:if>
 																					<c:if test="${not empty entryCancel.product.colour}">
+																					 <c:if test="${!fn:containsIgnoreCase(entryCancel.product.colour, 'No Color')}">
 																						<span><b>Color:</b> ${entryCancel.product.colour}</span>
+																					</c:if>
 																					</c:if>
 																					 
 																					 <span
