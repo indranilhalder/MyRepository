@@ -327,27 +327,39 @@ function setBuyBoxDetails(msiteBuyBoxSeller) // CKD:TPR-250
 				//alert("--"+ $(".quickViewSelect").html());
 				
 				//if (allStockZero == 'Y' && data['othersSellersCount']>0) {
-				if (isOOSQuick() && data['othersSellersCount']>0) {
+				if (isOOSQuick() && data['othersSellersCount']>0 && productCategoryType!='HomeFurnishing') {
 					$("#addToCartButtonQuick").hide();
 					$('.js-add-to-cart-qv').hide();
 					$("#outOfStockIdQuick").show();
-				}else if (isOOSQuick() && data['othersSellersCount']==0){
+				}else if (isOOSQuick() && data['othersSellersCount']==0 && productCategoryType!='HomeFurnishing'){
 					$("#addToCartButtonQuick").hide();
 					$('.js-add-to-cart-qv').hide();
 					$("#outOfStockIdQuick").show();
-				}else if (allStockZero == 'Y' && data['othersSellersCount']>0 && $("ul[label=sizes] li").length == 0) { //TPR-465
+				}else if (allStockZero == 'Y' && data['othersSellersCount']>0 && $("ul[label=sizes] li").length == 0 && productCategoryType!='HomeFurnishing') { //TPR-465
 					//if( $(".quickViewSelect").html()!="Select") {  //TISPRD-1173
 					$("#addToCartButtonQuick").hide();
 					$('.js-add-to-cart-qv').hide();
 					$("#outOfStockIdQuick").show();
 					//}					
 				}
-				else if (allStockZero == 'Y' && data['othersSellersCount']==0 && $("ul[label=sizes] li").length == 0){
+				else if (allStockZero == 'Y' && data['othersSellersCount']==0 && $("ul[label=sizes] li").length == 0 && productCategoryType!='HomeFurnishing'){
 					//if($(".quickViewSelect").html()!="Select"){	//TISPRD-1173 TPR-465
 						$("#addToCartButton").hide();
 						$('.js-add-to-cart-qv').hide();
 						$("#outOfStockIdQuick").show();
 					//}					
+				}
+				else if(allStockZero == 'Y' && data['othersSellersCount']>0  && productCategoryType=='HomeFurnishing')
+					{
+						$("#addToCartButton").hide();
+						$('.js-add-to-cart-qv').hide();
+						$("#outOfStockIdQuick").show();
+					}
+				else if(allStockZero == 'Y' && data['othersSellersCount']==0  && productCategoryType=='HomeFurnishing')
+				{
+					$("#addToCartButton").hide();
+					$('.js-add-to-cart-qv').hide();
+					$("#outOfStockIdQuick").show();
 				}
 				else
 					{
@@ -1236,6 +1248,7 @@ $(document).on('click','#buyNowQv .js-add-to-cart-qv',function(event){
 		  				$("#addToCartFormQuickTitle").fadeOut(5000);
 		  				errorAddToBag("size_not_selected"); //Error for tealium analytics
  	    return false;
+ 	    //console.log("QucikView Here");
 	 }	 
 	ACC.product.sendToCartPageQuick("addToCartFormQuick",true);
 

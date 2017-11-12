@@ -217,6 +217,9 @@ tr.d0 td {
  	
  	var url = "https://comments.us1.gigya.com/comments.getStreamInfo?apiKey="+key+"&categoryID="+category+"&streamId="+productCode+"&includeRatingDetails=true&format=jsonp&callback=?";
  	  $.getJSON(url, function(data){
+ 		  
+ 		if("undefined" != typeof(data.streamInfo))
+ 		{
  	  	var totalCount=data.streamInfo.ratingCount;
  		//Reverse the source array
  		var ratingArray = data.streamInfo.ratingDetails._overall.ratings;
@@ -264,7 +267,7 @@ tr.d0 td {
  			
  			
  			
- 			
+ 		}
  	  });
  	  
  	// var avgrating = '${product.averageRating}';
