@@ -1600,9 +1600,9 @@ public class HomePageController extends AbstractPageController
 			}
 			/*
 			 * else { //newsLetter.setEmailId(emailId); final boolean result = brandFacade.checkEmailId(emailId);
-			 *
+			 * 
 			 * //newsLetter.setIsSaved(Boolean.TRUE);
-			 *
+			 * 
 			 * if (result) { newsLetter.setEmailId(emailId); newsLetter.setIsMarketplace(Boolean.TRUE);
 			 * modelService.save(newsLetter); return "success"; }
 			 */
@@ -1706,7 +1706,7 @@ public class HomePageController extends AbstractPageController
 					/*
 					 * for (final NotificationData single : notificationMessagelist) { if (single.getNotificationRead() !=
 					 * null && !single.getNotificationRead().booleanValue()) { notificationCount++; }
-					 *
+					 * 
 					 * }
 					 */
 
@@ -1883,7 +1883,7 @@ public class HomePageController extends AbstractPageController
 	@RequestMapping(value = "/getStwrecomendations", method = RequestMethod.GET)
 	public JSONObject getStwWidgetData(final HttpServletRequest request)
 	{
-		final String productCode = null;
+		//final String productCode = null;
 		final JSONObject STWJObject = new JSONObject();
 		final String stwUse = configurationService.getConfiguration().getString("stw.use");
 		if (stwUse.equalsIgnoreCase("Y"))
@@ -1894,14 +1894,12 @@ public class HomePageController extends AbstractPageController
 			final String stwWidgetHeading = configurationService.getConfiguration().getString("stw.heading");
 			final String stwWidgetBlpHeading = configurationService.getConfiguration().getString("stw.blpheading");
 			//TPR-6740-changes for PDP widget
-			final String stwavailableSizes = mplProductFacade.getSizeForSTWProduct(productCode);
-			final List<String> stwavailablevariants = mplProductFacade.getVariantsForSTWProducts(productCode);
 			STWJObject.put("STWBlpHeading", stwWidgetBlpHeading);
 			STWJObject.put("STWHeading", stwWidgetHeading);
 			STWJObject.put("STWElements", stwRecData);
 			STWJObject.put("STWCategories", stwCategories);
-			STWJObject.put("stwavailableSizes", stwavailableSizes);
-			STWJObject.put("stwavailablevariants", stwavailablevariants);
+			//STWJObject.put("stwavailableSizes", stwavailableSizes);
+			//STWJObject.put("stwavailablevariants", stwavailablevariants);
 			STWJObject.put("visiterIP", getVisitorIp(request));
 		}
 		return STWJObject;
