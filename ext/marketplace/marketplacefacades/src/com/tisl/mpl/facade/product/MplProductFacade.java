@@ -6,6 +6,8 @@ package com.tisl.mpl.facade.product;
 import de.hybris.platform.catalog.model.ProductFeatureModel;
 import de.hybris.platform.commercefacades.product.data.ProductData;
 
+import java.util.List;
+
 
 /**
  * @author i313024
@@ -25,9 +27,10 @@ public interface MplProductFacade
 	 */
 	public String getSizeForSTWProduct(String productCode);
 
-	//	/**
-	//	 * @param productCode
-	//	 * @return
-	//	 */
-	//	public PcmProductVariantModel getVariantsForSTWProducts(String productCode);
+	/**
+	 * @param productCode
+	 * @return
+	 */
+	public List<String> getVariantsForSTWProducts(String productCode);
+
 }
