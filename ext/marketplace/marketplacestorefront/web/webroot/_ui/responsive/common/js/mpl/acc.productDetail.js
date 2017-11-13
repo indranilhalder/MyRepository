@@ -4989,13 +4989,14 @@ function populateProductOverviewTab(jsonData)
 		//htmlCode=htmlCode+'<li class="homefurnishing-overview-desc">'+ key+' - '+value+'</li>';
 		if(value!="")
 		{
+			htmlCode=htmlCode+'<li class="homefurnishing-overview-title">'+ key+'</li>';
 			$.each(value,function(key1,value1){
-				htmlCode=htmlCode+'<li class="homefurnishing-overview-desc"> '+ key +' - '+ key1 +' &nbsp;&nbsp;'+value1+'</li>';
+				htmlCode=htmlCode+'<li class="homefurnishing-overview-desc">'+value1+'</li>';
 			});
 		}
 		else
 		{
-			htmlCode=htmlCode+'<li class="homefurnishing-overview-desc">'+ key+'</li>';
+			htmlCode=htmlCode+'<li class="homefurnishing-overview-title">'+ key+'</li>';
 		}
 	});
 	

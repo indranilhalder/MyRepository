@@ -27,12 +27,12 @@
  function selectProductSize()
 {	
 	 var requiredUrl=$("#sizevariant option:selected" ).val();	
-	
+	console.log("requiredUrl"+requiredUrl);
 	if(requiredUrl=="#"){
 		return false;
 	}
 	
-	  $("#sizevariantForm").attr("action",requiredUrl);
+	 $("#sizevariantForm").attr("action",requiredUrl);
 	 $("#sizevariantForm").submit();   
 }
 
