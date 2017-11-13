@@ -52,6 +52,14 @@ public class LoginLuxuryController
 	private static final Logger LOG = Logger.getLogger(LoginLuxuryController.class);
 
 
+	/**
+	 * 
+	 */
+	public LoginLuxuryController()
+	{
+		super();
+	}
+
 	@RequestMapping(method = RequestMethod.GET, value = "/signin")
 	public String getLoginFragment(final Model model, final LoginForm form, @RequestParam(value = IS_SIGN_IN_ACTIVE, required = false) final String isSignInActive)
 	{
