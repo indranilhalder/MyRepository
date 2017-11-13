@@ -1278,7 +1278,32 @@
 		
 		<property name="endpointSlaveURLs" type="java.util.List&lt;com.tisl.mpl.facades.search.data.EndpointSlaveURL>"></property>
 		
+	</bean>	
+	<!-- TPR-6665: Update synonyms in solr slave  end -->
+	
+	
+	<!-- MSD -->
+	
+	<bean class="com.tisl.mpl.facades.data.MSDRequestdata">
+		<property name="api_key" type="String"></property>
+		<property name="widget_list" type="String"></property>
+		<property name="product_id" type="String"></property>
+		<property name="details" type="String"></property>
+		<property name="num_results" type="String"></property>
+		<property name="mad_uuid" type="String"></property>
 	</bean>
 	
-	<!-- TPR-6665: Update synonyms in solr slave  end -->
+	<bean class="com.tisl.mpl.facades.data.MSDResponsedata">
+	<property name="Msddata" type="java.util.List&lt;com.tisl.mpl.facades.data.MSDResponsedataList>"></property>
+	</bean>
+	
+	<bean class="com.tisl.mpl.facades.data.MSDResponsedataList">
+	<property name="title" type="String"></property>
+		<property name="price" type="Double"></property>
+		<property name="image_link" type="String"></property>
+		<property name="parent_id" type="String"></property>
+		<property name="link" type="String"></property>
+		<property name="product_id" type="String"></property>
+	</bean>
+	
 </beans>
