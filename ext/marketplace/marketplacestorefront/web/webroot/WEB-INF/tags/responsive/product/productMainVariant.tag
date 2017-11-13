@@ -329,7 +329,7 @@ share mobile -->
    			<c:when test="${true eq quantity}">
    			<c:choose>
    				<c:when test="${productSize !='No Size'}">
-   				<span><spring:theme code="product.variant.size.HF"></spring:theme>
+   				<span><spring:theme code="product.variant.quantity"></spring:theme>
    				<c:if test="${not empty productSizeType}">(${productSizeType})</c:if>
    				 </span>
    				</c:when>
