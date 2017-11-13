@@ -24,7 +24,7 @@
 <c:if test="${empty selectedSize}">
 <c:set var="selectedSizeForSizeGuide" value="false"/>
 </c:if>
-<input type="hidden" id="for_homefurnishing" value="${product.rootCategory =='HomeFurnishing'}">
+<input type="hidden" id="for_homefurnishing" name="for_homefurnishing" value="${product.rootCategory =='HomeFurnishing'}">
 <c:url var="sizeGuideUrl"
 	value="/p-sizeGuide?productCode=${product.code}&sizeSelected=${selectedSizeForSizeGuide}" scope="request"></c:url>
 <style>
