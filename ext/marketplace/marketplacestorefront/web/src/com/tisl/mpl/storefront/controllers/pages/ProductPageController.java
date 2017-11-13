@@ -2965,25 +2965,6 @@ public class ProductPageController extends MidPageController
 									}
 
 								}
-                        if(null != featureData.getName()) {
-                        	if (featureData.getName().toLowerCase().contains(ModelAttributetConstants.WARRANTY.toLowerCase()))
-   								{
-   									warrentyList.add(featureValueData.getValue());
-   								}
-   								/*TPR-1996 START */
-   								if (featureData.getName().toLowerCase().contains(ModelAttributetConstants.SPECIAL_FEATURES.toLowerCase()))
-   								{
-   									specialFeaturesList.add(featureValueData.getValue());
-   								}else if (featureData.getName().toLowerCase().contains(ModelAttributetConstants.MOVEMENT.toLowerCase()))
-   								{
-   									movementList.add(featureValueData.getValue());
-   								}else if (featureData.getName().toLowerCase().contains(ModelAttributetConstants.FUNCTIONALITY.toLowerCase()))
-   								{
-   									functionalityList.add(featureValueData.getValue());
-   								}
-                        }
-								
-								/*TPR-1996 END */
 							
 					if (featureData.getName().equalsIgnoreCase("certification"))
 								{
@@ -3023,26 +3004,27 @@ public class ProductPageController extends MidPageController
 								{
 									mapConfigurableAttribute.put(featureData.getName(), featureValueData.getValue());
 								}
-                        if(null != featureData.getName()) {
-                        	if (featureData.getName().toLowerCase().contains(ModelAttributetConstants.WARRANTY.toLowerCase()))
-   								{
-   									warrentyList.add(featureValueData.getValue());
-   								}
-   								/*TPR-1996 START */
-   								if (featureData.getName().toLowerCase().contains(ModelAttributetConstants.SPECIAL_FEATURES.toLowerCase()))
-   								{
-   									specialFeaturesList.add(featureValueData.getValue());
-   								}else if (featureData.getName().toLowerCase().contains(ModelAttributetConstants.MOVEMENT.toLowerCase()))
-   								{
-   									movementList.add(featureValueData.getValue());
-   								}else if (featureData.getName().toLowerCase().contains(ModelAttributetConstants.FUNCTIONALITY.toLowerCase()))
-   								{
-   									functionalityList.add(featureValueData.getValue());
-   								}
-                        }
+                       
+							}
+							 
+							/*TPR-1996 START */
+							 if(null != featureData.getName()) {
+                      	if (featureData.getName().toLowerCase().contains(ModelAttributetConstants.WARRANTY.toLowerCase()))
+ 								{
+ 									warrentyList.add(featureValueData.getValue());
+ 								}else if (featureData.getName().toLowerCase().contains(ModelAttributetConstants.SPECIAL_FEATURES.toLowerCase()))
+ 								{
+ 									specialFeaturesList.add(featureValueData.getValue());
+ 								}else if (featureData.getName().toLowerCase().contains(ModelAttributetConstants.MOVEMENT.toLowerCase()))
+ 								{
+ 									movementList.add(featureValueData.getValue());
+ 								}else if (featureData.getName().toLowerCase().contains(ModelAttributetConstants.FUNCTIONALITY.toLowerCase()))
+ 								{
+ 									functionalityList.add(featureValueData.getValue());
+ 								}
+                      }
 								
 								/*TPR-1996 END */
-							}
 
 						}
 					}
