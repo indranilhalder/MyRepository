@@ -398,38 +398,94 @@
 										<c:set var="selectedClass" value="class='selected'" />
 									</c:if>
 									<select id="variant_dropdown" class="variant-select">
-
-										<c:forEach items="${product.variantOptions}"
-											var="variantOption">
-											<c:forEach var="entry" items="${variantOption.sizeLink}">
-
-												<c:url value="${entry.key}/quickView" var="link" />
-												<c:choose>
-													<c:when test="${(variantOption.code eq product.code)}">
-														<c:choose>
-															<c:when test="${selectedSize eq null}">
+								<c:forEach items="${product.variantOptions}" var="variantOption">
+								<c:url value="${variantOption.url}/quickView" var="variantUrl" />
+								<c:forEach items="${variantOption.colourCode}" var="color">
+									<c:choose>
+										<c:when test="${not empty currentColor}">
+											<c:if test="${currentColor eq color}">
+												<c:set var="currentColor" value="${color}" />
+												<c:forEach var="entry" items="${variantOption.sizeLink}">
+													<c:url value="${entry.key}" var="link" />
+													<%--  <a href="${link}?selectedSize=true">${entry.value}</a> --%>
+													<c:choose>
+														<c:when test="${(variantOption.code eq product.code)}">
+															<c:choose>
+																<c:when test="${selectedSize eq null}">
+																	<!--CKD:TPR-250:  -->
+																	<option
+																		value="${variantUrl}?selectedSize=true${msiteSellerForSize}"
+																		data-productCode="${variantOption.code}">${entry.value}</option>
+																</c:when>
+																<c:otherwise>
+																	<!--CKD:TPR-250:  -->
 																<option
-																	value="${link}?selectedSize=true${msiteSellerForSize}"
-																	data-productCode="${variantOption.code}">${entry.value}</option>
-
-															</c:when>
-															<c:otherwise>
-																<option
-																	value="${link}?selectedSize=true${msiteSellerForSize}"
+																	value="${variantUrl}?selectedSize=true${msiteSellerForSize}"
 																	data-productCode="${variantOption.code}" selected>${entry.value}</option>
-
-															</c:otherwise>
-														</c:choose>
-													</c:when>
-													<c:otherwise>
-														<option data-vcode="${link}"
-															value="${link}?selectedSize=true${msiteSellerForSize}"
+																</c:otherwise>
+															</c:choose>
+														</c:when>
+														<c:otherwise>
+															<!--CKD:TPR-250:  -->
+															<option data-vcode="${variantUrl}"
+															value="${variantUrl}?selectedSize=true${msiteSellerForSize}"
 															data-productCode="${variantOption.code}">${entry.value}</option>
-
-													</c:otherwise>
-												</c:choose>
+														</c:otherwise>
+													</c:choose>
+												</c:forEach>
+											</c:if>
+										</c:when>
+										<c:otherwise>
+											<c:forEach var="entry" items="${variantOption.sizeLink}">
+												<c:url value="${entry.key}" var="link" />
+												<c:if test="${entry.key eq product.url}">
+													<c:set var="currentColor" value="${color}" />
+													<c:set var="currentColor" value="${variantOption.colour}" />
+												</c:if>
+												<c:forEach items="${product.variantOptions}"
+													var="variantOption">
+													<c:forEach items="${variantOption.colour}" var="color">
+														<c:if test="${currentColor eq color}">
+															<c:url value="${variantOption.url}/quickView"
+																var="variantUrl" />
+															<c:forEach var="entry" items="${variantOption.sizeLink}">
+																<c:url value="${entry.key}" var="link" />
+																<c:choose>
+																	<c:when test="${(variantOption.code eq product.code)}">
+																		<c:url value="${variantOption.url}/quickView"
+																			var="variantUrl" />
+																		<c:choose>
+																			<c:when test="${selectedSize eq null}">
+																				<!--CKD:TPR-250:  -->
+																				<option
+																		value="${variantUrl}?selectedSize=true${msiteSellerForSize}"
+																		data-productCode="${variantOption.code}">${entry.value}</option>
+																			</c:when>
+																			<c:otherwise>
+																				<!--CKD:TPR-250:  -->
+																				<option
+																	value="${variantUrl}?selectedSize=true${msiteSellerForSize}"
+																	data-productCode="${variantOption.code}" selected>${entry.value}</option>
+																			</c:otherwise>
+																		</c:choose>
+																	</c:when>
+																	<c:otherwise>
+																		<!--CKD:TPR-250:  -->
+																		<option data-vcode="${link}"
+															value="${variantUrl}?selectedSize=true${msiteSellerForSize}"
+															data-productCode="${variantOption.code}">${entry.value}</option>
+																	</c:otherwise>
+																</c:choose>
+															</c:forEach>
+														</c:if>
+													</c:forEach>
+												</c:forEach>
 											</c:forEach>
-										</c:forEach>
+										</c:otherwise>
+									</c:choose>
+								</c:forEach>
+							</c:forEach>
+										
 									</select>
 								</c:when>
 							</c:choose>
