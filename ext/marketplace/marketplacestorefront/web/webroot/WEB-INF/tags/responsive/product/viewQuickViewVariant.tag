@@ -283,10 +283,12 @@
 
 						<c:choose>
 							<c:when test="${product.rootCategory =='HomeFurnishing'}">
+							<c:if test="${!fn:containsIgnoreCase(productSizeQuick, 'No Size')}">
 								<span class="home-pdp-size"> <spring:theme
 										code="product.variant.size.HF"></spring:theme>
 									<c:if test="${not empty productSizeType}">(${productSizeType})</c:if>
 								</span>
+							</c:if>
 
 								<span class="home-pdp-quantity"> <spring:theme
 										code="product.variant.quantity"></spring:theme>
