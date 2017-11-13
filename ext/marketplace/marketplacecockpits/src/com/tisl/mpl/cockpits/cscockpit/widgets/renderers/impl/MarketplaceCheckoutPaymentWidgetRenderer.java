@@ -192,8 +192,13 @@ public class MarketplaceCheckoutPaymentWidgetRenderer extends
 				boolean authorize=true;
 				Div otparea = new Div();
 				otparea.setVisible(authorize);	
-				final String agentId = agentIdForStore.getAgentIdForStore(
+				String agentId = agentIdForStore.getAgentIdForStore(
 						MarketplacecommerceservicesConstants.CSCOCKPIT_USER_GROUP_STOREMANAGERAGENTGROUP);
+				if (StringUtils.isEmpty(agentId))
+				{
+					agentId = agentIdForStore
+							.getAgentIdForStore(MarketplacecommerceservicesConstants.CSCOCKPIT_USER_GROUP_STOREADMINAGENTGROUP);
+				}
 				
 				if(!buttonLabelChangeFlag && !juspayOrderCreationFlag)
 				{
@@ -204,7 +209,7 @@ public class MarketplaceCheckoutPaymentWidgetRenderer extends
 							createAuthorizeEventListener(widget));
 				}
 				else if(buttonLabelChangeFlag && !juspayOrderCreationFlag &&
-						(agentId != null && StringUtils.isNotEmpty(agentId)))
+						(StringUtils.isNotEmpty(agentId)))
 				{
 					authorizeButton = new Button(LabelUtils.getLabel(
 							widget, "payNow"));
@@ -734,8 +739,13 @@ protected class ValidateAuthorizeEventListener implements EventListener {
 				}
 		}
 		
-		final String agentId = agentIdForStore.getAgentIdForStore(
+		String agentId = agentIdForStore.getAgentIdForStore(
 				MarketplacecommerceservicesConstants.CSCOCKPIT_USER_GROUP_STOREMANAGERAGENTGROUP);
+		if (StringUtils.isEmpty(agentId))
+		{
+			agentId = agentIdForStore
+					.getAgentIdForStore(MarketplacecommerceservicesConstants.CSCOCKPIT_USER_GROUP_STOREADMINAGENTGROUP);
+		}
 		if(StringUtils.isNotEmpty(agentId))
 		{
 			Listitem listItemPayNow = listbox.appendItem(MarketplaceCockpitsConstants.JUSPAY_PAYMENT_VALUE,MarketplaceCockpitsConstants.JUSPAY_PAYMENT);

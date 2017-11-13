@@ -15,6 +15,7 @@ import de.hybris.platform.core.model.order.CartModel;
 import de.hybris.platform.core.model.order.OrderModel;
 import de.hybris.platform.core.model.order.price.DiscountModel;
 import de.hybris.platform.core.model.user.CustomerModel;
+import de.hybris.platform.jalo.JaloSession;
 import de.hybris.platform.order.CalculationService;
 import de.hybris.platform.order.InvalidCartException;
 import de.hybris.platform.order.OrderService;
@@ -118,8 +119,26 @@ public class MplCommercePlaceOrderStrategyImpl implements MplCommercePlaceOrderS
 		ServicesUtil.validateParameterNotNull(cartModel, "Cart model cannot be null");
 		final CommerceOrderResult result = new CommerceOrderResult();
 
-		final String agentId = agentIdForStore
+		String storeId = StringUtils.EMPTY;
+		String agentId = agentIdForStore
 				.getAgentIdForStore(MarketplacecommerceservicesConstants.CSCOCKPIT_USER_GROUP_STOREMANAGERAGENTGROUP);
+		if (StringUtils.isEmpty(agentId))
+		{
+			agentId = agentIdForStore
+					.getAgentIdForStore(MarketplacecommerceservicesConstants.CSCOCKPIT_USER_GROUP_STOREADMINAGENTGROUP);
+		}
+		else
+		{
+			final JaloSession jSession = JaloSession.getCurrentSession();
+			if (jSession != null)
+			{
+				final String loginId = (String) jSession.getAttribute("sellerId");
+				if (StringUtils.isNotEmpty(loginId) && loginId.contains("-"))
+				{
+					storeId = loginId.split("-")[1];
+				}
+			}
+		}
 
 		try
 		{
@@ -301,6 +320,10 @@ public class MplCommercePlaceOrderStrategyImpl implements MplCommercePlaceOrderS
 					{
 
 						orderModel.setAgentId(agentId);
+					}
+					if (StringUtils.isNotEmpty(storeId))
+					{
+						orderModel.setStoreId(storeId);
 					}
 					getModelService().save(orderModel);
 
@@ -563,9 +586,6 @@ public class MplCommercePlaceOrderStrategyImpl implements MplCommercePlaceOrderS
 	 * oModel.getCouponValue().doubleValue()); promoDiscount += (null == oModel.getTotalProductLevelDisc() ? 0.0d :
 	 * oModel.getTotalProductLevelDisc() .doubleValue()) + (null == oModel.getCartLevelDisc() ? 0.0d :
 	 * oModel.getCartLevelDisc().doubleValue()); } }
-	 *
-	 *
-	 *
 	 * discount = Double.valueOf(couponDiscount + promoDiscount); } return discount; }
 	 */
 

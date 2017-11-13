@@ -215,9 +215,13 @@ tr.d0 td {
 									</c:when>
 									<c:otherwise>
 										<p class="size disclaimer-txt more">
+										
+										<c:if test="${!fn:containsIgnoreCase(entry.product.size, 'No Size')}">
 											<ycommerce:testId code="cart_product_size">
 												<spring:theme code="product.variant.size" />:&nbsp;${entry.product.size}&nbsp;
 											</ycommerce:testId>
+											</c:if>
+										
 										</p>
 									</c:otherwise>
 								</c:choose>

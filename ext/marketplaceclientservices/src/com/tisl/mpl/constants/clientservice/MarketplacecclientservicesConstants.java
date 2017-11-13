@@ -310,4 +310,7 @@ public class MarketplacecclientservicesConstants
 	public static final String BULK_SMS_SERVICE_ENABLED = "marketplace.BulkSms.service.enabled";
 	public static final String BULK_SMS_SERVICE_URL = "marketplace.bulksms.service.url";
 
+	public static final String KIDSWEAR = "Kidswear";
+	public static final String HOMEFURNISHING = "HomeFurnishing";
+
 }

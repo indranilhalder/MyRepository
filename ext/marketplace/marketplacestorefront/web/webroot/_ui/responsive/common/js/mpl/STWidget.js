@@ -1,13 +1,19 @@
 var product = "";
 var tabsLoaded = false;
 var stw = {
-    renderFlatWidget: function(divElement) {
+   renderFlatWidget: function(divElement) {
         var brand = window.location.pathname.split("/")[1];
+
         stwService.call('', brand);
     },
     renderTabsWidget: function(divElement) {
         var category = "";
         stwService.call(category, '');
+    },  
+    renderFlatWidgetHF: function(divElement) {
+        //var brand = window.location.pathname.split("/")[1];
+	   var brand = "";
+        stwService.call('', brand);
     },
 }
 var callbackVar;
@@ -37,8 +43,9 @@ var stwService = {
             success: function(json) {
             	if(!$.isEmptyObject(json)){
             		var vistingIp = stwRender.visitingIpAddress(json);
-                var isIpAvialable = stwRender.wigetLoaderOnIp(vistingIp);
+                var isIpAvialable = true;//stwRender.wigetLoaderOnIp(vistingIp);
                 if (($("#pageType").val() == "homepage") && (isIpAvialable == true)) {
+                	
                     var stw_block = null;
                     if (tabsLoaded) {
                         var carousel = stwRender.carousel(json);
@@ -59,12 +66,31 @@ var stwService = {
                     }
 
                 } else {
-                    var header = stwRender.blpheader(json);
-                    var carousel = stwRender.carousel(json);
+                	if ($("#stw_widget_blp").length)
+                	{
+                		var header = stwRender.blpheader(json);
+                		var carousel = stwRender.carousel(json);
+                	}
+                	else if($("#for_homefurnishing").val()=="true"){
+                		//alert($('#for_homefurnishing').val());
+                		var header = stwRender.HFheader(json);
+                		var carousel = stwRender.carouselHF(json);
+                	}
+                	else{
+                		var carousel = "";
+                	}
+                    
                     if(( carousel != undefined && carousel !="") && carousel!=null)
                     {
-                    var stw_block_Blp = "<div class='best_seller stw-list'>" + header + "</div>" + carousel;
-                    $("#stw_widget_blp").html(stw_block_Blp);
+	                    var stw_block_Blp = "<div class='best_seller stw-list'>" + header + "</div>" + carousel;
+	                    if ($("#stw_widget_blp").length) {
+	                    	$("#stw_widget_blp").html(stw_block_Blp);
+	                    }
+	                    else {
+	                    	
+	                    	$("#stw_widget_hf").html(stw_block_Blp);
+	                    }
+                    
                     }
                     stwRender.bindCarousel();
                 }
@@ -134,6 +160,22 @@ var stwRender = {
         return stwWidgetHeading;
 
     },
+    
+   HFheader: function() {
+	   if($('#for_homefurnishing').val()=="true"){
+        var stwWidgetHeading = "";
+        stwWidgetHeading += '<div class="best_seller_section hide_clplist">';
+        stwWidgetHeading += '<div class="content">' + isStwheaderforPDP + '</div>';
+        stwWidgetHeading += '</div>';
+	   }
+	   else{
+		   var stwWidgetHeading = "";
+	   }
+        return stwWidgetHeading;
+    },
+    
+    
+    
     tabs: function(STWJObject) {
         var tabsFormationHtml = "";
         tabsFormationHtml += '<div class="Menu"><div class="mobile selectmenu">ALL</div>';
@@ -147,6 +189,8 @@ var stwRender = {
         tabsFormationHtml += '</ul></div>';
         return tabsFormationHtml;
     },
+    
+
     carousel: function(STWJObject) {
     	if(STWJObject !=null && (STWJObject.STWElements !="" && STWJObject.STWElements !=null ))
     	//if(STWJObject.STWElements)
@@ -182,6 +226,47 @@ var stwRender = {
         return stwWidgetProducts;
         }
     },
+    
+    carouselHF: function(STWJObject) {
+    	
+    	if(STWJObject !=null && (STWJObject.STWElements !="" && STWJObject.STWElements !=null ))
+    		
+    	//if(STWJObject.STWElements)
+    	{
+    	
+        var stwWidgetProducts = "";
+        stwWidgetProducts += '<div class="carousel-component">';
+        stwWidgetProducts += '<div class="carousel js-owl-carousel js-owl-lazy-reference js-owl-carousel-reference stw-widget-owl">';
+        $.each(STWJObject.STWElements, function(index, value) {
+            var productId = value.listingId;
+            var product = productId.toUpperCase();
+            if (null != value.mrp && null != value.mop) {
+                var savingPriceCal = (value.mrp - value.mop);
+                var savingPriceCalPer = (savingPriceCal / value.mrp) * 100;
+                var savingsOnProduct = Math.round((savingPriceCalPer * 100) / 100);
+            }
+            stwWidgetProducts += '<div class="item slide">';
+            stwWidgetProducts += '<div class="product-tile"><li onmouseover="showQuickview(this)" onmouseout="hideQuickView(this)" class="look slide product-tile stw_widget_list_elements productParentList" style="display: inline-block;position: relative;"><div class="image"><a href="' + value.productUrl + '" class="product-tile"> <img src="' + value.imageUrl + '"></a>';
+            stwWidgetProducts += '<div onclick=popupwindow("' + product + '") class="IAQuickView" style="position: absolute; text-transform: uppercase;cursor: pointer; bottom: 0; z-index: -1; visibility: hidden; color: #00cbe9;display: block; width: 100%; text-align: center;background: #f8f9fb;background-color: rgba(248, 249, 251,0.77);-webkit-font-smoothing: antialiased;height: 70px;font-size:12px;"><span>Quick View</span></div></div>';
+            stwWidgetProducts += ' <div class="short-info"><ul class="color-swatch"><li><span  style="background-color: ' + value.availableColor + ';border: 1px solid rgb(204, 211, 217);" title="' + value.availableColor + '"></span></li></ul>';
+            stwWidgetProducts += '<div class="brand">' + value.productBrand + '</div>';
+            stwWidgetProducts += '<div class="productSize">' + STWJObject.stwavailableSizes + '</div>';
+            stwWidgetProducts += '<div class="productclors">' + STWJObject.stwavailablevariants + '</div>';
+            stwWidgetProducts += ' <a href="' + value.productUrl + '" class="item"><h3 class="product-name">' + value.productName + '</h3>';
+            stwWidgetProducts += '<div class="price"><span class="stw-mrp">&#8377;' + value.mrp + '</span><span class="stw-mop">&#8377;' + value.mop + '</span>';
+            stwWidgetProducts += '<p class="savings pdp-savings"> <span>(-' + savingsOnProduct + '%)</span></p>';
+            stwWidgetProducts += '</div></a></div></li></div>';
+            stwWidgetProducts += '<div class="gotopdp"><a href="'+value.productUrl+'">View</a></div></div>';
+            
+
+        });
+        stwWidgetProducts += '</div></div>';
+        return stwWidgetProducts;
+        } 
+    },
+    
+    
+    
     bindCarousel: function() {
     	$(".stw-widget-owl").owlCarousel({
             items: 5,
@@ -233,6 +318,10 @@ $(document).ready(function() {
 		}else if (!$('#stw_widget_blp').attr('loaded') && $('#stw_widget_blp').length == 1 && wS > (hT + hH - wH)) {
 	        stw.renderFlatWidget();
 	        $('#stw_widget_blp').attr('loaded', true);
+	    }
+		else if (!$('#stw_widget_hf').attr('loaded') && $('#stw_widget_hf').length == 1 && wS > (hT + hH - wH)) {
+	        stw.renderFlatWidgetHF();
+	        $('#stw_widget_hf').attr('loaded', true);
 	    }
 		}
 	});

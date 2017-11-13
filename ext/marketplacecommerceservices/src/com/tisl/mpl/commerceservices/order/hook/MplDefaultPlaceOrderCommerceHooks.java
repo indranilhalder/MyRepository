@@ -318,11 +318,11 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 					orderModel.setModeOfOrderPayment(MarketplacecommerceservicesConstants.COD);
 					getModelService().save(orderModel);
 				}
-				else if (orderModel.getPaymentInfo() instanceof JusPayPaymentInfoModel)
-				{
-					LOG.debug("Payment Info for juspay");
-					getOrderStatusSpecifier().setOrderStatus(orderModel, OrderStatus.PAYMENT_SUCCESSFUL);
-				}
+				//				else if (orderModel.getPaymentInfo() instanceof JusPayPaymentInfoModel)
+				//				{
+				//					LOG.debug("Payment Info for juspay");
+				//					getOrderStatusSpecifier().setOrderStatus(orderModel, OrderStatus.PAYMENT_SUCCESSFUL);
+				//				}
 				else
 				{
 					LOG.debug("Payment Info Prepaid");

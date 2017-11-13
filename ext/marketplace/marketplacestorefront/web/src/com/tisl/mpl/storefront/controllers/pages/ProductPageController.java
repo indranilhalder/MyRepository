@@ -89,10 +89,12 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 import java.util.TreeMap;
 
@@ -123,8 +125,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import atg.taglib.json.util.JSONException;
-
 import com.google.gson.Gson;
 import com.granule.json.JSON;
 import com.granule.json.JSONArray;
@@ -143,6 +143,7 @@ import com.tisl.mpl.data.WishlistData;
 import com.tisl.mpl.exception.ClientEtailNonBusinessExceptions;
 import com.tisl.mpl.exception.EtailBusinessExceptions;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
+import com.tisl.mpl.facade.checkout.MplCartFacade;
 import com.tisl.mpl.facade.checkout.storelocator.MplStoreLocatorFacade;
 import com.tisl.mpl.facade.comparator.SizeGuideHeaderComparator;
 import com.tisl.mpl.facade.product.ExchangeGuideFacade;
@@ -180,7 +181,11 @@ import com.tisl.mpl.storefront.controllers.helpers.FrontEndErrorHelper;
 import com.tisl.mpl.storefront.security.cookie.PDPPincodeCookieGenerator;
 import com.tisl.mpl.storefront.web.forms.SellerInformationDetailsForm;
 import com.tisl.mpl.util.ExceptionUtil;
+
+import atg.taglib.json.util.JSONException;
+
 import com.tisl.mpl.util.GenericUtilityMethods;
+
 
 
 /**
@@ -268,8 +273,17 @@ public class ProductPageController extends MidPageController
 	private static final String IA_USS_IDS = "iaUssIds";
 
 	private static final String REGEX = "[^\\w\\s]";
+	
+	
+	private static final String FEATURE1 = "Feature1";
+	private static final String FEATURE2 = "Feature2";
+	private static final String FEATURE3 = "Feature3";
 
 	private static final String NEW_LINE = "\n";//Sonar Fix
+
+	private static final String MPH = "MPH".intern();
+
+
 
 	//TPR-6405
 	private static final String SAMSUNG = "Samsung";
@@ -377,6 +391,9 @@ public class ProductPageController extends MidPageController
 	private CommonUtils commonUtils;
 
 
+	@Resource(name = "mplCartFacade")
+	private MplCartFacade mplCartFacade;
+
 	//SONAR FIX JEWELLERY
 	//	@Resource(name = "jewelleryDescMapping")
 	//	private Map<String, String> jewelleryDescMapping;
@@ -481,9 +498,9 @@ public class ProductPageController extends MidPageController
 				model.addAttribute("aplusHTML", "");
 			}
 
-
+			//Added for TPR-6740
+			final String isStwheaderforPDP = configurationService.getConfiguration().getString("isStwheaderforPDP.name", "");
 			// TPR- 4389 STARTS FROM HERE
-
 			final ProductModel productModel = productService.getProductForCode(productCode);
 			//TPR-6655
 			final boolean isGigyaforPdpEnabled = configurationService.getConfiguration().getBoolean("gigya.pdpCall");
@@ -551,6 +568,8 @@ public class ProductPageController extends MidPageController
 				model.addAttribute(ModelAttributetConstants.MSD_JS_URL, msdjsURL);
 				model.addAttribute(ModelAttributetConstants.IS_MSD_ENABLED, isMSDEnabled);
 				model.addAttribute(ModelAttributetConstants.MSD_REST_URL, msdRESTURL);
+				//STW
+				model.addAttribute(ModelAttributetConstants.STW_HEADER_PDP, isStwheaderforPDP);
 
 				//CAR-255
 				/*
@@ -599,6 +618,15 @@ public class ProductPageController extends MidPageController
 
 				returnStatement = getViewForPage(model);
 			}
+
+			//Added for TPR-6738
+			populateBuyingGuide(productModel, model);
+			//changes for TPR-6738 ends
+			//Added for TPR-6855
+			final String productCategoryType = productModel.getProductCategoryType();
+			removeSizeGuideForHome(productCategoryType, model);
+			getQuantityDropdownData(productCategoryType, model);
+
 		}
 		catch (final EtailBusinessExceptions e)
 		{
@@ -623,6 +651,93 @@ public class ProductPageController extends MidPageController
 
 
 		return returnStatement;
+	}
+
+
+	/**
+	 * @param categoryType
+	 * @param model
+	 */
+	private void getQuantityDropdownData(final String categoryType, final Model model)
+	{
+		try
+		{
+			final String productCategoryType = categoryType;
+			if (StringUtils.isNotEmpty(productCategoryType)
+					&& StringUtils.equalsIgnoreCase(ModelAttributetConstants.HOME_FURNISHING, productCategoryType))
+			{
+				final ArrayList<Integer> quantityConfigurationList = getMplCartFacade().getQuantityConfiguratioList();
+				if (CollectionUtils.isNotEmpty(quantityConfigurationList))
+				{
+					model.addAttribute(ModelAttributetConstants.QUANTITY_DROPDOWN_LIST, quantityConfigurationList);
+				}
+			}
+		}
+		catch (final Exception exception)
+		{
+			LOG.error("Error during Removal of Size Guide Details >> for Home Furnishing >>" + "Error>>" + exception);
+		}
+
+
+	}
+
+	/**
+	 * The Logic Identifies the PDP to be that of Home or not and if so removes Size Guide
+	 *
+	 * @param categoryType
+	 * @param model
+	 */
+	private void removeSizeGuideForHome(final String categoryType, final Model model)
+	{
+		try
+		{
+			final String productCategoryType = categoryType;
+			if (StringUtils.isNotEmpty(productCategoryType)
+					&& StringUtils.equalsIgnoreCase(ModelAttributetConstants.HOME_FURNISHING, productCategoryType))
+			{
+				model.addAttribute(ModelAttributetConstants.REMOVE_SIZEGUIDE, productCategoryType);
+			}
+		}
+		catch (final Exception exception)
+		{
+			LOG.error("Error during Removal of Size Guide Details >> for Home Furnishing >>" + "Error>>" + exception);
+		}
+	}
+
+	/**
+	 * This Method deals with population of Buying Guide details on PDP
+	 *
+	 * @param productModel
+	 * @param model
+	 */
+	private void populateBuyingGuide(final ProductModel productModel, final Model model)
+	{
+		try
+		{
+			final List<CategoryModel> superCategoryDetails = new ArrayList<>(productModel.getSupercategories());
+
+			if (CollectionUtils.isNotEmpty(superCategoryDetails))
+			{
+				for (final CategoryModel category : superCategoryDetails)
+				{
+					//final String code = category.getCode();
+					final String buyingGuideCode = category.getBuyingGuide();
+
+					if (StringUtils.isNotEmpty(buyingGuideCode))
+					{
+						LOG.error("Buying Guide redirect URL" + buyingGuideCode);
+						model.addAttribute(ModelAttributetConstants.BUYING_GUIDE, buyingGuideCode);
+						break;
+					}
+				}
+			}
+		}
+		catch (final Exception exception)
+		{
+			LOG.error("Error during population of Buying Guide Details >> for Product >>" + productModel.getCode() + "Error>>"
+					+ exception);
+		}
+
 	}
 
 	//Changes for UF-238
@@ -1625,6 +1740,15 @@ public class ProductPageController extends MidPageController
 				model.addAttribute(MarketplacecommerceservicesConstants.ALLVARIANTSSTRING, allVariantsString);
 			}
 			returnStatement = getViewForPage(model);
+
+			//Added for TPR-6738
+			populateBuyingGuide(productModel, model);
+			//changes for TPR-6738 ends
+
+			//Added for TPR-6855
+			final String productCategoryType = productModel.getProductCategoryType();
+			removeSizeGuideForHome(productCategoryType, model);
+			getQuantityDropdownData(productCategoryType, model);
 		}
 		catch (final EtailBusinessExceptions e)
 		{
@@ -1706,7 +1830,6 @@ public class ProductPageController extends MidPageController
 					ProductOption.GALLERY, ProductOption.VARIANT_FULL));//Fix for TISPT-150
 		}
 
-
 		//final String returnStatement = null;
 		//CKD:TPR-250:Start
 		model.addAttribute("msiteBuyBoxSellerId", StringUtils.isNotBlank(sellerId) ? sellerId : null);
@@ -1715,6 +1838,7 @@ public class ProductPageController extends MidPageController
 		try
 		{
 			populateProductData(productData, model);
+
 			//UF-422 starts
 			int sizeCounter = 0;
 			if (null != productData && CollectionUtils.isNotEmpty(productData.getVariantOptions()))
@@ -1733,7 +1857,18 @@ public class ProductPageController extends MidPageController
 			}
 			model.addAttribute(ModelAttributetConstants.PDP_SIZE_COUNTER, sizeCounter);
 			//UF-422 ends
-			displayConfigurableAttribute(productData, model);
+			//displayConfigurableAttribute(productData, model);
+
+			//CKD:TPR-6804
+			if (ModelAttributetConstants.HOME_FURNISHING.equalsIgnoreCase(productData.getRootCategory()))
+			{
+				displayConfigurableAttributeForHF(productData, model);
+			}
+			else
+			{
+				displayConfigurableAttribute(productData, model);
+			}
+
 			getRequestContextData(request).setProduct(productModel);
 			model.addAttribute(IMG_COUNT, Integer.valueOf(productDetailsHelper.getCountForGalleryImages()));
 			model.addAttribute(SELECTED_SIZE, selectedSize);
@@ -1812,6 +1947,13 @@ public class ProductPageController extends MidPageController
 				model.addAttribute(MarketplacecommerceservicesConstants.ALLVARIANTSSTRING, allVariantsString);
 			}
 			//returnStatement = ControllerConstants.Views.Fragments.Product.QuickViewPopup;
+
+			//Added for TPR-6855 : Quick View Changes
+			final String productCategoryType = productModel.getProductCategoryType();
+			removeSizeGuideForHome(productCategoryType, model);
+			populateBuyingGuide(productModel, model);
+			getQuantityDropdownData(productCategoryType, model);
+
 		}
 		catch (final EtailBusinessExceptions e)
 		{
@@ -2079,16 +2221,29 @@ public class ProductPageController extends MidPageController
 			/* final Map<String, String> deliveryModeATMap = productDetailsHelper.getDeliveryModeATMap(deliveryInfo); */
 			final Map<String, Map<String, Integer>> deliveryModeATMap = productDetailsHelper.getDeliveryModeATMap(deliveryInfo);
 			model.addAttribute(ControllerConstants.Views.Fragments.Product.DELIVERY_MODE_MAP, deliveryModeATMap);
+
+
 			//TPR-6654
-			/*
-			 * final String pincode = (String)
-			 * sessionService.getAttribute(MarketplacecommerceservicesConstants.SESSION_PINCODE); //
-			 * sessionService.setAttribute(MarketplacecommerceservicesConstants.SESSION_PINCODE, pincode); if
-			 * (StringUtils.isNotEmpty(pincode)) { model.addAttribute(ModelAttributetConstants.PINCODE, pincode);
-			 * //model.addAttribute(ControllerConstants.Views.Fragments.Product.STORE_AVAIL,
-			 * mplProductFacade.storeLocatorPDP(pincode)); }
-			 */
-			displayConfigurableAttribute(productData, model);
+
+			//final String pincode = (String) sessionService.getAttribute(MarketplacecommerceservicesConstants.SESSION_PINCODE);
+			//			sessionService.setAttribute(MarketplacecommerceservicesConstants.SESSION_PINCODE, pincode);
+//			if (StringUtils.isNotEmpty(pincode))
+//			{
+//				model.addAttribute(ModelAttributetConstants.PINCODE, pincode);
+//				//model.addAttribute(ControllerConstants.Views.Fragments.Product.STORE_AVAIL, mplProductFacade.storeLocatorPDP(pincode));
+//			}
+			//displayConfigurableAttribute(productData, model);
+
+			//CKD:TPR-6804
+			if (ModelAttributetConstants.HOME_FURNISHING.equalsIgnoreCase(productData.getRootCategory()))
+			{
+				displayConfigurableAttributeForHF(productData, model);
+			}
+			else
+			{
+				displayConfigurableAttribute(productData, model);
+			}
+
 			//if (productModel.getProductCategoryType().equalsIgnoreCase(ELECTRONICS))
 
 			if (ELECTRONICS.equalsIgnoreCase(productModel.getProductCategoryType())
@@ -2104,9 +2259,11 @@ public class ProductPageController extends MidPageController
 			{
 				productDetailsHelper.groupGlassificationDataForJewelDetails(productData);
 			}
+
 			LOG.debug("===========After FASHIONJEWELLERY block=================");
 			final String validTabs = configurationService.getConfiguration().getString(
 					"mpl.categories." + productData.getRootCategory());
+
 
 			//this method is called to fetch the details of seller specific description to show in return refund tab for fine jewellery.
 			if (FINEJEWELLERY.equalsIgnoreCase(productModel.getProductCategoryType()))
@@ -2393,6 +2550,263 @@ public class ProductPageController extends MidPageController
 		model.addAttribute(CMS_PAGE_TITLE, metaTitle);
 	}
 
+	@SuppressWarnings("boxing")
+	private void displayConfigurableAttributeForHF(final ProductData productData, final Model model)
+	{
+		{
+			final Map<String, String> mapConfigurableAttribute = new HashMap<String, String>();
+			final Map<String, List<String>> mapConfigurableAttributes = new LinkedHashMap<String, List<String>>();
+			final List<String> warrentyList = new ArrayList<String>();
+			try
+			{
+				/* Checking the presence of classification attributes */
+				if (null != productData.getClassifications())
+				{
+					final String propertiesValue = configurationService.getConfiguration()
+							.getString(ModelAttributetConstants.CONFIGURABLE_ATTRIBUTE + productData.getRootCategory());
+					final String[] overviewSectionSeq = configurationService.getConfiguration()
+							.getString(ModelAttributetConstants.OVERVIEW_SEC_SEQ).split(ModelAttributetConstants.COMMA);
+					model.addAttribute("overviewTabSeq", overviewSectionSeq);
+					final List<ClassificationData> ConfigurableAttributeList = new ArrayList<ClassificationData>(
+							productData.getClassifications());
+
+					String keyProdptsHeaderName = null;
+					final StringBuffer groupString = new StringBuffer();
+
+					for (final ClassificationData configurableAttributData : ConfigurableAttributeList)
+					{
+						keyProdptsHeaderName = configurableAttributData.getName();
+						final List<FeatureData> featureDataList = new ArrayList<FeatureData>(configurableAttributData.getFeatures());
+						final List<String> productFeatureDataList = new ArrayList<String>();
+						if (configurationService.getConfiguration()
+								.getString((ModelAttributetConstants.CONFIGURABLE_ATTRIBUTE + ModelAttributetConstants.HOME_FURNISHING))
+								.contains(configurableAttributData.getName()))
+						{
+							boolean setInfoFlag = false;
+							 boolean isetInfoComputed=false;
+							for (final FeatureData featureData : featureDataList)
+							{
+								final List<FeatureValueData> featureValueList = new ArrayList<FeatureValueData>(
+										featureData.getFeatureValues());
+								if (null != productData.getRootCategory())
+								{
+									final FeatureValueData featureValueData = featureValueList.get(0);
+
+									if (featureData.getFeatureValues().iterator().hasNext()
+											&& configurationService.getConfiguration()
+													.getString(
+															ModelAttributetConstants.CLASSIFICATION_ATTR
+																	+ ModelAttributetConstants.CLASSIFICATION_ATTR_HF
+																	+ configurableAttributData.getName().replaceAll(
+																			ModelAttributetConstants.SPACE_REGEX, ModelAttributetConstants.NO_SPACE))
+													.contains(featureData.getName()))
+									{
+										//CKD:CAR-289
+										final ProductFeatureModel productFeature = mplProductFacade
+												.getProductFeatureModelByProductAndQualifier(productData, featureData.getCode());
+										String unit = ModelAttributetConstants.NO_SPACE;
+
+										if (productFeature.getUnit() != null && !productFeature.getUnit().getSymbol().isEmpty())
+										{
+											unit = productFeature.getUnit().getSymbol();
+										}
+
+										if (configurableAttributData.getName()
+												.replaceAll(ModelAttributetConstants.SPACE_REGEX, ModelAttributetConstants.NO_SPACE)
+												.equals(ModelAttributetConstants.CLASSIFICATION_ATTR_PF))
+										{
+											keyProdptsHeaderName = ModelAttributetConstants.KEY_PROD_PTS;
+											productFeatureDataList.add(featureData.getFeatureValues().iterator().next().getValue());
+										}
+										else if (configurableAttributData.getName()
+												.replaceAll(ModelAttributetConstants.SPACE_REGEX, ModelAttributetConstants.NO_SPACE)
+												.equals(ModelAttributetConstants.CLASSIFICATION_ATTR_WASHCARE))
+										{
+											productFeatureDataList.add(configurableAttributData.getName() + ModelAttributetConstants.COLON
+													+ featureData.getFeatureValues().iterator().next().getValue());
+										}
+										else if (configurableAttributData.getName()
+												.replaceAll(ModelAttributetConstants.SPACE_REGEX, ModelAttributetConstants.NO_SPACE)
+												.equals(ModelAttributetConstants.CLASSIFICATION_ATTR_CAINS))
+										{
+											for (final FeatureValueData data : featureData.getFeatureValues())
+											{
+												productFeatureDataList.add(data.getValue());
+											}
+										}
+										else if (configurableAttributData.getName()
+												.equals(ModelAttributetConstants.CLASSIFICATION_ATTR_SI_SPACE))
+										{
+
+											if (featureData.getName().equalsIgnoreCase(ModelAttributetConstants.SET))
+											{
+												setInfoFlag = featureData.getFeatureValues().iterator().next().getValue()
+														.equalsIgnoreCase(ModelAttributetConstants.YES);
+											}
+											if (setInfoFlag && !featureData.getName().equalsIgnoreCase(ModelAttributetConstants.SET) && !isetInfoComputed)
+											{
+
+												productFeatureDataList
+												.addAll(Arrays.asList(groupSetInfoHF(configurableAttributData,configurationService.getConfiguration()
+														.getInteger(ModelAttributetConstants.CONFIGURABLE_ATTRIBUTE + ModelAttributetConstants.HOME_FURNISHING + ModelAttributetConstants.CLASSIFICATION_ATTR_SI + "."+ModelAttributetConstants.CLASSIFICATION_ATTR_SI_SPACE,10).intValue()).split(ModelAttributetConstants.PIPE_REGEX)));
+												isetInfoComputed=true;
+
+											}
+										}
+										else
+										{
+											productFeatureDataList.add(featureData.getName() + ModelAttributetConstants.COLON
+													+ featureValueData.getValue() + ModelAttributetConstants.SINGLE_SPACE + unit);
+										}
+
+
+										if (featureData.getName().toLowerCase().contains(ModelAttributetConstants.WARRANTY_DETAILS_HF.toLowerCase()))
+										{
+											warrentyList.add(featureValueData.getValue());
+										}
+
+										else
+										{
+											if (StringUtils.isBlank(propertiesValue.toLowerCase()))
+											{
+												mapConfigurableAttribute.put(featureData.getName(), featureValueData.getValue());
+											}
+											if (propertiesValue.toLowerCase().contains(configurableAttributData.getCode().toLowerCase()))
+
+											{
+												mapConfigurableAttribute.put(featureData.getName(), featureValueData.getValue());
+											}
+
+											
+										}
+
+									}
+								}
+							}
+
+
+						}
+						else
+						{
+							continue;
+						}
+						List tempList;
+						if (mapConfigurableAttributes.containsKey(configurableAttributData.getName()))
+						{
+							tempList = mapConfigurableAttributes.get(configurableAttributData.getName());
+							tempList.addAll(productFeatureDataList);
+							mapConfigurableAttributes.put(keyProdptsHeaderName, tempList);
+							tempList = null;
+						}
+						else if (mapConfigurableAttributes.containsKey(ModelAttributetConstants.CLASSIFICATION_ATTR_CARE_INS)
+								&& configurableAttributData.getName().equals(ModelAttributetConstants.CLASSIFICATION_ATTR_WASH_CARE))
+						{
+							tempList = mapConfigurableAttributes.get(ModelAttributetConstants.CLASSIFICATION_ATTR_CARE_INS);
+							tempList.addAll(productFeatureDataList);
+							Collections.reverse(tempList);
+							mapConfigurableAttributes.put(ModelAttributetConstants.CLASSIFICATION_ATTR_CARE_INS, tempList);
+							tempList = null;
+						}
+						else if (mapConfigurableAttributes.containsKey(ModelAttributetConstants.CLASSIFICATION_ATTR_WASH_CARE)
+								&& configurableAttributData.getName().equals(ModelAttributetConstants.CLASSIFICATION_ATTR_CARE_INS))
+						{
+							tempList = mapConfigurableAttributes.get(ModelAttributetConstants.CLASSIFICATION_ATTR_WASH_CARE);
+							tempList.addAll(productFeatureDataList);
+							Collections.reverse(tempList);
+							mapConfigurableAttributes.put(ModelAttributetConstants.CLASSIFICATION_ATTR_CARE_INS, tempList);
+							tempList = null;
+							removeKeyfromMap(mapConfigurableAttributes, ModelAttributetConstants.CLASSIFICATION_ATTR_WASH_CARE);
+						}
+						else if (!productFeatureDataList.isEmpty())
+						{
+							{
+								mapConfigurableAttributes.put(keyProdptsHeaderName, productFeatureDataList);
+							}
+
+						}
+					}
+				}
+				else
+				{
+					final Map<String, String> treeMapConfigurableAttribute = new TreeMap<String, String>(mapConfigurableAttribute);
+					model.addAttribute(ModelAttributetConstants.MAP_CONFIGURABLE_ATTRIBUTE, treeMapConfigurableAttribute);
+				}
+				model.addAttribute(ModelAttributetConstants.MAP_CONFIGURABLE_ATTRIBUTE, mapConfigurableAttribute);
+				model.addAttribute(ModelAttributetConstants.MAP_CONFIGURABLE_ATTRIBUTES, mapConfigurableAttributes);
+				model.addAttribute(ModelAttributetConstants.WARRANTY, warrentyList);
+			}
+			catch (final EtailNonBusinessExceptions e)
+			{
+				throw new EtailNonBusinessExceptions(e, ModelAttributetConstants.E0000);
+			}
+		}
+	}
+
+	/**
+	 * @param mapConfigurableAttributes
+	 * @param classKey
+	 */
+	private void removeKeyfromMap(final Map<String, List<String>> mapConfigurableAttributes, final String classKey)
+	{
+		for (final Iterator<Map.Entry<String, List<String>>> it = mapConfigurableAttributes.entrySet().iterator(); it.hasNext();)
+		{
+			final Entry<String, List<String>> entry = it.next();
+			if (entry.getKey().equals(classKey))
+			{
+				it.remove();
+			}
+		}
+	}
+
+
+	private String groupSetInfoHF(final ClassificationData configurableAttributData, final int setCount)
+	{
+		final StringBuffer groupedString = new StringBuffer(5000);
+
+		final Collection<FeatureData> featureColletion = configurableAttributData.getFeatures();
+		for (int i = 1; i <= setCount; i++)
+		{
+			//for Quantity
+			final String featureQty = ModelAttributetConstants.SET_COMPONENT + ModelAttributetConstants.SINGLE_SPACE + i
+					+ ModelAttributetConstants.SINGLE_SPACE + ModelAttributetConstants.QTY;
+			final Collection<FeatureValueData> featureValueQty = featureColletion.stream()
+					.filter(x -> featureQty.equals(x.getName())).map(FeatureData::getFeatureValues).findAny().orElse(null);
+
+
+			if (CollectionUtils.isNotEmpty(featureValueQty) && StringUtils.isNotEmpty(featureValueQty.iterator().next().getValue()))
+			{
+				groupedString.append(featureValueQty.iterator().next().getValue() + ModelAttributetConstants.SINGLE_SPACE);
+			}
+
+			//for Name
+			final String featureName = ModelAttributetConstants.SET_COMPONENT + ModelAttributetConstants.SINGLE_SPACE + i
+					+ ModelAttributetConstants.SINGLE_SPACE + ModelAttributetConstants.NAME;
+			final Collection<FeatureValueData> featureValue = featureColletion.stream().filter(x -> featureName.equals(x.getName()))
+					.map(FeatureData::getFeatureValues).findAny().orElse(null);
+
+			if (CollectionUtils.isNotEmpty(featureValue) && StringUtils.isNotEmpty(featureValue.iterator().next().getValue()))
+			{
+				groupedString.append(featureValue.iterator().next().getValue() + ModelAttributetConstants.SINGLE_SPACE);
+			}
+
+			//for Details
+			final String featureDesc = ModelAttributetConstants.SET_COMPONENT_DETAILS + ModelAttributetConstants.SINGLE_SPACE + i
+					+ ModelAttributetConstants.SINGLE_SPACE + ModelAttributetConstants.DETAILS;
+			final Collection<FeatureValueData> featureValuedetails = featureColletion.stream()
+					.filter(x -> featureDesc.equals(x.getName())).map(FeatureData::getFeatureValues).findAny().orElse(null);
+
+			if (CollectionUtils.isNotEmpty(featureValuedetails)
+					&& StringUtils.isNotEmpty(featureValuedetails.iterator().next().getValue()))
+			{
+				groupedString.append(ModelAttributetConstants.COLON + featureValuedetails.iterator().next().getValue()
+						+ ModelAttributetConstants.PIPE);
+			}
+
+
+		}
+
+		return groupedString.toString().substring(0, groupedString.toString().lastIndexOf('|') - 1);
+	}
 
 	/**
 	 * Displaying classification attributes in the Details tab of the PDP page
@@ -2406,7 +2820,15 @@ public class ProductPageController extends MidPageController
 	{
 		final Map<String, String> mapConfigurableAttribute = new HashMap<String, String>();
 		final Map<String, Map<String, String>> mapConfigurableAttributes = new LinkedHashMap<String, Map<String, String>>();
+	
+		// In which order the Values are inserting to this map ,In Same order the values will displayed in storeFront
+		final Map<String, Map<String, String>> mapWatchesConfigurableAttributes = new LinkedHashMap<String, Map<String, String>>();
 		final List<String> warrentyList = new ArrayList<String>();
+		/*TPR-1996 START */
+		final List<String> specialFeaturesList = new ArrayList<String>();
+		final List<String> movementList = new ArrayList<String>();
+		final List<String> functionalityList = new ArrayList<String>();
+		/*TPR-1996 END */
 		try
 		{
 			/* Checking the presence of classification attributes */
@@ -2414,6 +2836,7 @@ public class ProductPageController extends MidPageController
 			{
 				final List<ClassificationData> ConfigurableAttributeList = new ArrayList<ClassificationData>(
 						productData.getClassifications());
+				final Map<String, String> mapFeaturesList = new LinkedHashMap<String, String>();
 				for (final ClassificationData configurableAttributData : ConfigurableAttributeList)
 				{
 					final List<FeatureData> featureDataList = new ArrayList<FeatureData>(configurableAttributData.getFeatures());
@@ -2429,6 +2852,7 @@ public class ProductPageController extends MidPageController
 						 */
 						if (null != productData.getRootCategory())
 						{
+
 							final String properitsValue = configurationService.getConfiguration().getString(
 									ModelAttributetConstants.CONFIGURABLE_ATTRIBUTE + productData.getRootCategory());
 
@@ -2437,6 +2861,7 @@ public class ProductPageController extends MidPageController
 							//for jwl certification
 							final String certificationValue = configurationService.getConfiguration().getString(
 									ModelAttributetConstants.CONFIGURABLE_ATTRIBUTE + productData.getRootCategory() + ".certification");
+
 							//apparel
 							final FeatureValueData featureValueData = featureValueList.get(0);
 							if ((ModelAttributetConstants.CLOTHING.equalsIgnoreCase(productData.getRootCategory()))
@@ -2475,7 +2900,10 @@ public class ProductPageController extends MidPageController
 									|| ModelAttributetConstants.WATCHES.equalsIgnoreCase(productData.getRootCategory()))
 
 							{
-								final String[] propertiesValues = properitsValue.split(",");
+								String[] propertiesValues = null;
+								if(null != properitsValue) {
+									propertiesValues = properitsValue.split(",");
+								}
 								//for jwl certification
 								final String[] certificationValues = certificationValue.split(",");
 
@@ -2493,19 +2921,28 @@ public class ProductPageController extends MidPageController
 											{
 												productFeatureMap.clear();
 											}
-											productFeatureMap.put(featureValueData.getValue(),
-													productFeature != null && productFeature.getUnit() != null
-															&& !productFeature.getUnit().getSymbol().isEmpty() ? productFeature.getUnit()
-															.getSymbol() : "");
-											mapConfigurableAttributes.put(featureData.getName(), productFeatureMap);
+											// TPR-3878  START 
+											if(FEATURE1.equalsIgnoreCase(value) || FEATURE2.equalsIgnoreCase(value) || FEATURE3.equalsIgnoreCase(value)) {
+												mapFeaturesList.put(featureValueData.getValue(),
+														productFeature != null && productFeature.getUnit() != null && productFeature.getUnit().getSymbol() != null
+														&& !productFeature.getUnit().getSymbol().isEmpty() ? productFeature.getUnit()
+														.getSymbol() : "");
+											}else { 
+												productFeatureMap.put(featureValueData.getValue(),
+														productFeature != null && productFeature.getUnit() != null && productFeature.getUnit().getSymbol() != null
+																&& !productFeature.getUnit().getSymbol().isEmpty() ? productFeature.getUnit()
+																.getSymbol() : "");
+												mapConfigurableAttributes.put(featureData.getName(), productFeatureMap);
+											}
+										 // TPR-3878  END 
 										}
 
 										/*
 										 * else if (value.equalsIgnoreCase(featureData.getCode().substring(
 										 * featureData.getCode().lastIndexOf(".") + 1))) {
-										 * 
+										 *
 										 * if (productFeatureMap.size() > 0) { productFeatureMap.clear(); }
-										 * 
+										 *
 										 * productFeatureMap.put(featureValueData.getValue(), jewelleryDescMapping.get(value));
 										 * mapConfigurableAttributes.put(featureData.getName(), productFeatureMap); }
 										 */
@@ -2527,12 +2964,27 @@ public class ProductPageController extends MidPageController
 									}
 
 								}
-
-								if (featureData.getName().toLowerCase().contains(ModelAttributetConstants.WARRANTY.toLowerCase()))
-								{
-									warrentyList.add(featureValueData.getValue());
-								}
-								if (featureData.getName().equalsIgnoreCase("certification"))
+                        if(null != featureData.getName()) {
+                        	if (featureData.getName().toLowerCase().contains(ModelAttributetConstants.WARRANTY.toLowerCase()))
+   								{
+   									warrentyList.add(featureValueData.getValue());
+   								}
+   								/*TPR-1996 START */
+   								if (featureData.getName().toLowerCase().contains(ModelAttributetConstants.SPECIAL_FEATURES.toLowerCase()))
+   								{
+   									specialFeaturesList.add(featureValueData.getValue());
+   								}else if (featureData.getName().toLowerCase().contains(ModelAttributetConstants.MOVEMENT.toLowerCase()))
+   								{
+   									movementList.add(featureValueData.getValue());
+   								}else if (featureData.getName().toLowerCase().contains(ModelAttributetConstants.FUNCTIONALITY.toLowerCase()))
+   								{
+   									functionalityList.add(featureValueData.getValue());
+   								}
+                        }
+								
+								/*TPR-1996 END */
+							
+					if (featureData.getName().equalsIgnoreCase("certification"))
 								{
 									final List<FeatureValueData> featureValueDataList = new ArrayList<FeatureValueData>(
 											featureData.getFeatureValues());
@@ -2570,16 +3022,36 @@ public class ProductPageController extends MidPageController
 								{
 									mapConfigurableAttribute.put(featureData.getName(), featureValueData.getValue());
 								}
-
-								if (featureData.getName().toLowerCase().contains(ModelAttributetConstants.WARRANTY.toLowerCase()))
-								{
-									warrentyList.add(featureValueData.getValue());
-								}
+                        if(null != featureData.getName()) {
+                        	if (featureData.getName().toLowerCase().contains(ModelAttributetConstants.WARRANTY.toLowerCase()))
+   								{
+   									warrentyList.add(featureValueData.getValue());
+   								}
+   								/*TPR-1996 START */
+   								if (featureData.getName().toLowerCase().contains(ModelAttributetConstants.SPECIAL_FEATURES.toLowerCase()))
+   								{
+   									specialFeaturesList.add(featureValueData.getValue());
+   								}else if (featureData.getName().toLowerCase().contains(ModelAttributetConstants.MOVEMENT.toLowerCase()))
+   								{
+   									movementList.add(featureValueData.getValue());
+   								}else if (featureData.getName().toLowerCase().contains(ModelAttributetConstants.FUNCTIONALITY.toLowerCase()))
+   								{
+   									functionalityList.add(featureValueData.getValue());
+   								}
+                        }
+								
+								/*TPR-1996 END */
 							}
 
 						}
 					}
 				}
+			 // TPR-3878  START 
+			//Values for the Attributes "Feature 1", "Feature 2" and "Feature 3" should be concatenated with comma as a separator and Label "Features"
+				if(MapUtils.isNotEmpty(mapFeaturesList)) {
+					mapConfigurableAttributes.put(ModelAttributetConstants.FEATURES, mapFeaturesList);
+				}
+			// TPR-3878  END 
 			}
 			//model.addAttribute(ModelAttributetConstants.MAP_CONFIGURABLE_ATTRIBUTE, mapConfigurableAttribute);
 			if (ModelAttributetConstants.CLOTHING.equalsIgnoreCase(productData.getRootCategory())
@@ -2590,8 +3062,36 @@ public class ProductPageController extends MidPageController
 				model.addAttribute(ModelAttributetConstants.MAP_CONFIGURABLE_ATTRIBUTES, mapConfigurableAttributes);
 
 			}
-			else if (ModelAttributetConstants.FASHION_ACCESSORIES.equalsIgnoreCase(productData.getRootCategory())
-					|| ModelAttributetConstants.WATCHES.equalsIgnoreCase(productData.getRootCategory()))
+			else if (ModelAttributetConstants.WATCHES.equalsIgnoreCase(productData.getRootCategory()))
+			{
+				final String properitsValue = configurationService.getConfiguration().getString(
+						ModelAttributetConstants.CONFIGURABLE_ATTRIBUTE + productData.getRootCategory());
+			   String[] propertiesValues = null;
+				if(null != properitsValue) {
+					propertiesValues = properitsValue.split(",");
+				}
+				
+			//	final Map<String, Map<String, String>> mapConfigurableAttributes = new LinkedHashMap<String, Map<String, String>>();
+			
+			//	TPR-1999  START
+			// Inserting Values into mapWatchesConfigurableAttributes According to the order mentioned in Property "classification.attributes.Watches"
+			// The same order will be displayed storeFront
+				if(null != properitsValue && MapUtils.isNotEmpty(mapConfigurableAttributes)) {
+					for (final String value : propertiesValues)
+					{
+						if (mapConfigurableAttributes.keySet().contains(value))
+						{
+							mapWatchesConfigurableAttributes.put(value,mapConfigurableAttributes.get(value));
+						}
+					}
+				}
+			//	model.addAttribute(ModelAttributetConstants.MAP_CONFIGURABLE_ATTRIBUTES, mapConfigurableAttributes);
+				model.addAttribute(ModelAttributetConstants.MAP_CONFIGURABLE_ATTRIBUTES, mapWatchesConfigurableAttributes);
+			 //	TPR-1999  END
+				
+				final Map<String, String> treeMapConfigurableAttribute = new TreeMap<String, String>(mapConfigurableAttribute);
+				model.addAttribute(ModelAttributetConstants.MAP_CONFIGURABLE_ATTRIBUTE, treeMapConfigurableAttribute);
+			}else if (ModelAttributetConstants.FASHION_ACCESSORIES.equalsIgnoreCase(productData.getRootCategory()))
 			{
 				model.addAttribute(ModelAttributetConstants.MAP_CONFIGURABLE_ATTRIBUTES, mapConfigurableAttributes);
 				final Map<String, String> treeMapConfigurableAttribute = new TreeMap<String, String>(mapConfigurableAttribute);
@@ -2604,6 +3104,11 @@ public class ProductPageController extends MidPageController
 			}
 
 			model.addAttribute(ModelAttributetConstants.WARRANTY, warrentyList);
+			/*TPR-1996 START */
+			model.addAttribute(ModelAttributetConstants.SPECIAL_FEATURES_LIST, specialFeaturesList);
+			model.addAttribute(ModelAttributetConstants.MOVEMENT_LIST, movementList);
+			model.addAttribute(ModelAttributetConstants.FUNCTIONALITY, functionalityList);
+			/*TPR-1996 END */
 		}
 		catch (final EtailNonBusinessExceptions e)
 		{
@@ -2770,6 +3275,7 @@ public class ProductPageController extends MidPageController
 		buyboxJson.put(ModelAttributetConstants.ERR_MSG, ModelAttributetConstants.EMPTY);
 		try
 		{
+			final String pdpProductCode = productCode;
 			if (null != productCode)
 			{
 				if (!StringUtils.isEmpty(variantCode))
@@ -2794,6 +3300,17 @@ public class ProductPageController extends MidPageController
 				buyboxJson = getPopulatedBuyBoxJson(buydata, buyboxJson);
 				buyboxJson.put("buyboxList", buyboxdata);
 
+				final String sellerIdentifier = getSellerID(buydata);
+				if (StringUtils.isNotEmpty(pdpProductCode) && StringUtils.isNotEmpty(sellerIdentifier))
+				{
+					final String message = buyBoxFacade.getSellerMonogrammingMsg(pdpProductCode, sellerIdentifier);
+					if (StringUtils.isNotEmpty(message))
+					{
+						LOG.debug("Seller Monogramming Message >> Seller>>" + sellerId + "Message" + message);
+						buyboxJson.put(ModelAttributetConstants.SELLERMESSAGE, message);
+					}
+				}
+
 			}
 			else
 			{
@@ -2814,6 +3331,23 @@ public class ProductPageController extends MidPageController
 			buyboxJson.put(ModelAttributetConstants.ERR_MSG, ModelAttributetConstants.ERROR_OCCURED);
 		}
 		return buyboxJson;
+	}
+
+	/**
+	 * Gets Seller ID Data
+	 *
+	 * @param buydata
+	 * @return String
+	 */
+	private String getSellerID(final Map<String, Object> buydata)
+	{
+		final BuyBoxData buyboxdata = (BuyBoxData) buydata.get("pdp_buy_box");
+
+		if (null != buyboxdata && StringUtils.isNotEmpty(buyboxdata.getSellerId()))
+		{
+			return buyboxdata.getSellerId();
+		}
+		return null;
 	}
 
 	@ResponseBody
@@ -3280,6 +3814,7 @@ public class ProductPageController extends MidPageController
 			{
 				LOG.debug("display " + displayConfigurableAttributeForPriceBreakup);
 			}
+
 			if (StringUtils.isNotEmpty(displayConfigurableAttributeForPriceBreakup))
 			{
 				final List<PriceBreakupData> PriceMap = priceBreakupFacade.getPricebreakup(buyboxdata.getSellerArticleSKU(),
@@ -3740,6 +4275,7 @@ public class ProductPageController extends MidPageController
 		}
 
 		final ProductModel productModel = productService.getProductForCode(productCode);
+
 		//		final ProductData productData = productFacade.getProductForOptions(productModel, Arrays.asList(ProductOption.BASIC,
 		//				ProductOption.SELLER, ProductOption.SUMMARY, ProductOption.DESCRIPTION, ProductOption.CATEGORIES,
 		//				ProductOption.GALLERY, ProductOption.CLASSIFICATION, ProductOption.VARIANT_FULL));
@@ -3882,9 +4418,20 @@ public class ProductPageController extends MidPageController
 			final ProductData productData = customProductFacade.getProductForAjaxOptions(productModel,
 					Arrays.asList(ProductOption.CATEGORIES, ProductOption.CLASSIFICATION));
 			mplAjaxProductData = new MplAjaxProductData();
-			displayConfigurableAttribute(productData, model);
+
+			//CKD:TPR-6804
+			if (ModelAttributetConstants.HOME_FURNISHING.equalsIgnoreCase(productData.getRootCategory()))
+			{
+				displayConfigurableAttributeForHF(productData, model);
+			}
+			else
+			{
+				displayConfigurableAttribute(productData, model);
+			}
+			//displayConfigurableAttribute(productData, model);
 			final String validTabs = configurationService.getConfiguration().getString(
 					"mpl.categories." + productData.getRootCategory());
+
 			mplAjaxProductData.setValidTabs(validTabs);
 			mplAjaxProductData.setMapConfigurableAttribute((Map<String, String>) model.asMap().get(
 					ModelAttributetConstants.MAP_CONFIGURABLE_ATTRIBUTE));
@@ -4034,6 +4581,23 @@ public class ProductPageController extends MidPageController
 	}
 
 	/**
+	 * @return the mplCartFacade
+	 */
+	public MplCartFacade getMplCartFacade()
+	{
+		return mplCartFacade;
+	}
+
+	/**
+	 * @param mplCartFacade
+	 *           the mplCartFacade to set
+	 */
+	public void setMplCartFacade(final MplCartFacade mplCartFacade)
+	{
+		this.mplCartFacade = mplCartFacade;
+	}
+
+	/**
 	 * @desc Returns nearby store location based on pincode.
 	 *
 	 * @return Store details
@@ -4042,10 +4606,8 @@ public class ProductPageController extends MidPageController
 	public String getAllStoreForPincode(
 			@PathVariable(value = ControllerConstants.Views.Fragments.Product.PINCODE) final String pincode,
 			@PathVariable(value = ControllerConstants.Views.Fragments.Product.USSID) final String ussId,
-			@PathVariable(value = ControllerConstants.Views.Fragments.Product.PRODUCT_CODE) final String productCode
-
-			, final Model model)
-
+			@PathVariable(value = ControllerConstants.Views.Fragments.Product.PRODUCT_CODE) final String productCode,
+			final Model model)
 	{
 		if (LOG.isDebugEnabled())
 		{

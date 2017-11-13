@@ -100,6 +100,7 @@ tr.d0 td {
  var productCodeQuickView = '${product.code}';
  var variantCodesPdp = '${allVariantsString}';
  var msiteBuyBoxSeller = '${msiteBuyBoxSellerId}'; //CKD:TPR-250 
+ var productCategoryType = '${product.rootCategory}';
  $( document ).ready(function() {
 	 //Enable CTA's
 	 removedisabled();
@@ -112,8 +113,8 @@ tr.d0 td {
 	 setBuyBoxDetails(msiteBuyBoxSeller);
 //CKD:TPR-250:End
 	 
-	 
-	 
+	 ACC.quickview.onSizeSelectDropDownQuickView();
+		ACC.quickview.onQuantitySelectDropDownQuick();
 	 getRating_Qview('${gigyaAPIKey}','${product.code}','${product.rootCategory}');
 	 
 	 var timer = setInterval(function(){
@@ -216,6 +217,9 @@ tr.d0 td {
  	
  	var url = "https://comments.us1.gigya.com/comments.getStreamInfo?apiKey="+key+"&categoryID="+category+"&streamId="+productCode+"&includeRatingDetails=true&format=jsonp&callback=?";
  	  $.getJSON(url, function(data){
+ 		  
+ 		if("undefined" != typeof(data.streamInfo))
+ 		{
  	  	var totalCount=data.streamInfo.ratingCount;
  		//Reverse the source array
  		var ratingArray = data.streamInfo.ratingDetails._overall.ratings;
@@ -263,7 +267,7 @@ tr.d0 td {
  			
  			
  			
- 			
+ 		}
  	  });
  	  
  	// var avgrating = '${product.averageRating}';
@@ -629,7 +633,7 @@ display:none;
  	
    <div class="product-content" style="margin-top:5px;">
    <product:emiDetail product="${product}" />
-	   <div class="swatch">
+	   <div class="">
 	<product:viewQuickViewVariant/>
 	<spring:eval expression="T(de.hybris.platform.util.Config).getParameter('mpl.cart.maximumConfiguredQuantity.lineItem')" var="maxQuantityCount"/>
 	<%-- <div class="qty">

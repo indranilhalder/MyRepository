@@ -84,6 +84,7 @@ import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.facade.brand.BrandFacade;
 import com.tisl.mpl.facade.cms.MplCmsFacade;
 import com.tisl.mpl.facade.latestoffers.LatestOffersFacade;
+import com.tisl.mpl.facade.product.MplProductFacade;
 import com.tisl.mpl.facade.stw.STWWidgetFacade;
 import com.tisl.mpl.facades.account.register.NotificationFacade;
 import com.tisl.mpl.facades.cms.data.FooterLinkData;
@@ -166,6 +167,10 @@ public class HomePageController extends AbstractPageController
 
 	@Resource(name = "STWFacade")
 	private STWWidgetFacade stwWidgetFacade;
+
+	//TPR-6740
+	@Resource(name = "mplProductFacade")
+	private MplProductFacade mplProductFacade;
 
 	//Sonar fix
 	private static final String DISP_PRICE = "dispPrice";
@@ -1876,8 +1881,9 @@ public class HomePageController extends AbstractPageController
 
 	@ResponseBody
 	@RequestMapping(value = "/getStwrecomendations", method = RequestMethod.GET)
-	public JSONObject getStwWidgetDada(final HttpServletRequest request)
+	public JSONObject getStwWidgetData(final HttpServletRequest request)
 	{
+		final String productCode = null;
 		final JSONObject STWJObject = new JSONObject();
 		final String stwUse = configurationService.getConfiguration().getString("stw.use");
 		if (stwUse.equalsIgnoreCase("Y"))
@@ -1887,10 +1893,15 @@ public class HomePageController extends AbstractPageController
 			final String stwCategories = configurationService.getConfiguration().getString("stw.categories");
 			final String stwWidgetHeading = configurationService.getConfiguration().getString("stw.heading");
 			final String stwWidgetBlpHeading = configurationService.getConfiguration().getString("stw.blpheading");
+			//TPR-6740-changes for PDP widget
+			final String stwavailableSizes = mplProductFacade.getSizeForSTWProduct(productCode);
+			final List<String> stwavailablevariants = mplProductFacade.getVariantsForSTWProducts(productCode);
 			STWJObject.put("STWBlpHeading", stwWidgetBlpHeading);
 			STWJObject.put("STWHeading", stwWidgetHeading);
 			STWJObject.put("STWElements", stwRecData);
 			STWJObject.put("STWCategories", stwCategories);
+			STWJObject.put("stwavailableSizes", stwavailableSizes);
+			STWJObject.put("stwavailablevariants", stwavailablevariants);
 			STWJObject.put("visiterIP", getVisitorIp(request));
 		}
 		return STWJObject;
