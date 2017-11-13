@@ -77607,6 +77607,7 @@ background: url(../images/search_image.png) no-repeat;}
 }
 .homefurnishing-overview:nth-child(3) {
     float: right ! important;
+    margin-bottom: 60px; /* TISPRDT-6538 */
 }
 @media (max-width: 767px){
 .homefurnishing-overview:nth-child(2) {
@@ -77700,7 +77701,7 @@ select#quantity_dropdown {
 p.sizetext.size {
     border: 0px solid !important;
     height: auto ! important;
-   /*  margin-bottom: 30px !important; */
+    margin-bottom: 0px !important; 
 }
 .sizetext .home-pdp-quantity:nth-child(2) {
     left: 46%;
