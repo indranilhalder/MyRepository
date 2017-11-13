@@ -77678,7 +77678,8 @@ a.pageNo.active{
     left: 2%;
     top: 27px;
     float: left;
-    top: 26px;
+    top: 7px;
+    font-size: 14px
 }
 @media (max-width: 767px){
 .bottom-pagination.pagination-search{
@@ -77754,8 +77755,8 @@ button#saveBlockData {
 .listing.wrapper .bottom-pagination.pagination-search li.page-item.first {
     display: none;
 }
-.total-pagecount{
-	font-size: 14px
+.bottom-pagination.pagination-search .pagination li.prev.disabled a, .pagination li.next.disabled a {
+    cursor: not-allowed;
 }
 
 /* HOME-210 start */
