@@ -30,6 +30,64 @@
 					<c:otherwise>
 					<li class="stylenote" itemprop="description">${product.articleDescription}</li></c:otherwise>
 				</c:choose>
+              
+              <!-- TPR-1996 START  -->
+  		 
+          <c:if test = "${not empty functionality}">
+       		<div class="tabs_warranty">
+             <ul> 
+              <li>
+  					<spring:theme code="text.product.feature.functionality"/>  - 
+                    <c:forEach items="${functionality}" var="function">
+  					    ${function} &nbsp
+  			        </c:forEach>
+  			 </li>
+  		    </ul> 
+          </div>
+     	 </c:if>
+     	 
+     	  <c:if test = "${not empty movementList}">
+          <div class="tabs_warranty">
+             <ul> 
+              <li>
+  					<spring:theme code="text.product.feature.movement"/> - 
+                    <c:forEach items="${movementList}" var="movement">
+  					    ${movement} &nbsp
+  			        </c:forEach>
+  			 </li>
+  		    </ul> 
+          </div>
+          </c:if>
+          
+          <c:if test = "${not empty specialFeatures}">
+          <div class="tabs_warranty">
+             <ul> 
+              <li>
+  					<spring:theme code="text.product.feature.specialFeatures"/> -
+                    <c:forEach items="${specialFeatures}" var="features">
+  					    ${features} &nbsp
+  			        </c:forEach>
+  			 </li>
+  		    </ul> 
+          </div>
+         </c:if>
+            
+           <c:if test = "${not empty Warranty}">
+            <div class="tabs_warranty">
+             <ul> 
+              <li>
+  					<spring:theme code="text.product.feature.warranty"/> - 
+                    <c:forEach items="${Warranty}" var="warranty">
+  					    ${warranty} &nbsp
+  			        </c:forEach>
+  			 </li>
+  		    </ul> 
+          </div>
+          </c:if>
+
+
+      <!-- TPR-1996 END  -->
+			
   		</ul>
 	</ycommerce:testId>
 </div>

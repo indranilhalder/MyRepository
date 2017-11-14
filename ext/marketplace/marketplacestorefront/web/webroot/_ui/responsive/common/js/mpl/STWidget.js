@@ -3,7 +3,6 @@ var tabsLoaded = false;
 var stw = {
    renderFlatWidget: function(divElement) {
         var brand = window.location.pathname.split("/")[1];
-
         stwService.call('', brand);
     },
     renderTabsWidget: function(divElement) {
@@ -11,9 +10,11 @@ var stw = {
         stwService.call(category, '');
     },  
     renderFlatWidgetHF: function(divElement) {
-        //var brand = window.location.pathname.split("/")[1];
-	   var brand = "";
-        stwService.call('', brand);
+    	if($('#for_homefurnishing').val() == "true"){
+    	 //var category = "" ;
+    	 var category = $('#for_homefurnishing_category').val();
+         stwService.call(category, '');
+    	}
     },
 }
 var callbackVar;

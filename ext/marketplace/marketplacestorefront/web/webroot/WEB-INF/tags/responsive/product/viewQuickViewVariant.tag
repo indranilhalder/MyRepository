@@ -59,6 +59,22 @@
 		//console.log(val);
 		window.open(val, '_blank');
 	}
+	
+	$(document).ready(function(){
+		var dd = document.getElementById('variant_dropdown');
+		if(null!=dd)
+		{
+			for (var i = 0; i < dd.options.length; i++) {
+			    if (dd.options[i].text == productSizeQuickVar) {
+			        dd.selectedIndex = i;
+			        break;
+			    }
+			}
+			
+		}
+	});
+	
+	
 </script>
 <c:set var="clothing">
 	<spring:theme code='product.clothing' />
@@ -318,9 +334,7 @@
 					</a>
 				</c:if>
 				<!--  PDP Changes for Home Furnishing Ends-->
-			</p>
-
-			<c:if test="${empty removeSizeGuide}">
+				<c:if test="${empty removeSizeGuide}">
 				<a class="size-guide" href="${sizeGuideUrl}" role="button"
 					data-toggle="modal" data-target="#popUpModal"
 					data-productcode="${product.code}"
@@ -328,6 +342,16 @@
 						code="product.variants.quickview.size.guide" />
 				</a>
 			</c:if>
+			</p>
+
+			<%-- <c:if test="${empty removeSizeGuide}">
+				<a class="size-guide" href="${sizeGuideUrl}" role="button"
+					data-toggle="modal" data-target="#popUpModal"
+					data-productcode="${product.code}"
+					data-sizeSelected="${selectedSize}"> <spring:theme
+						code="product.variants.quickview.size.guide" />
+				</a>
+			</c:if> --%>
 
 
 

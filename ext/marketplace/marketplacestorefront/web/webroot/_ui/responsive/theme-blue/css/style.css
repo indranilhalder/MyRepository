@@ -77607,7 +77607,9 @@ background: url(../images/search_image.png) no-repeat;}
 }
 .homefurnishing-overview:nth-child(3) {
     float: right ! important;
-    margin-bottom: 60px; /* TISPRDT-6538 */
+}
+.homefurnishing-overview:nth-child(4) {
+    clear:both;
 }
 @media (max-width: 767px){
 .homefurnishing-overview:nth-child(2) {
@@ -77721,5 +77723,24 @@ p.sizetext.size {
 .product-specification-accordion.smk_accordion .accordion_in .acc_content ul .product-desc .key-label .homefurnishing-overview {
     clear: both;
 }
+}
+.quickview .product-detail .sizetext a.size-guide:after {
+    background: #a8103d none repeat scroll 0 0;
+    border-radius: 10px;
+    color: #fff;
+    content: "?";
+    display: inline-block;
+    font-size: 10px;
+    font-weight: normal;
+    height: 15px;
+    line-height: 15px;
+    position: absolute;
+   	right: -22px;
+    text-align: center;
+    top: 2px;
+    width: 15px;
+}
+.sizetext a.size-guide {
+    position: relative;
 }
 /* HOME-239 End */
