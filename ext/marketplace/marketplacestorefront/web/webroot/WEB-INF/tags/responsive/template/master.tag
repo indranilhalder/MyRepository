@@ -61,8 +61,6 @@
 </c:if> --%>
 
 <spring:eval expression="T(de.hybris.platform.util.Config).getParameter('dtm.static.url')" var="dtmUrl"/>
-<script src="${dtmUrl}"></script>
-
 
 <%-- <link rel="stylesheet" type="text/css" media="all" href="${themeResourcePath}/css/preload.css"/> --%>
 <link rel="apple-touch-icon" href="${themeResourcePath}/images/Appicon.png">
@@ -355,7 +353,7 @@
 <script src="${izootoScript}"></script>
 </c:if>
  <!-- Changes End  TPR-5812 -->
-
+<script>var digitalData = null;</script>
 </head>
 <c:if test="${empty buildNumber}">
 <c:set var="buildNumber" value= "100000"/>
@@ -545,6 +543,49 @@
 			} else {
 				$(".simpleSearchToggle").hide();
 			}
+		
+		var pluginsDTM = document.createElement("script");
+		pluginsDTM.src = "${dtmUrl}";
+		
+		document.body.appendChild(pluginsDTM);
+		pluginsDTM.onload = function() {
+		
+			    var isImageHoverTriggered = false;		// flag to identify mouse hover action
+			    var visitor_ip = ACC.config.VisitorIp;
+				
+				var user_type = "facebook";
+				var user_id ="12345678";
+				var site_region = $("#site_section").val();
+				var site_currency ='INR';
+				var domain_name = document.domain;
+				
+				//var user_login_type = $('#userLoginType').val().trim();
+				var pageType = $('#pageType').val();
+				var pageName= $('#pageName').val().toLowerCase();
+
+				var subdomain = window.location.href.split("/")[2].split(".")[0];
+				var subDomain= "";
+				if(subdomain != "undefined"){
+					subDomain = subdomain;
+				}
+				var d = new Date(); // for now
+				
+			//	alert("hie dtm????????"+pageType);
+			//   onload generic variables for all pages| Digital data obj defination starts
+				digitalData = {
+					page : {
+						pageInfo : {
+							pageName  : pageName,
+							domain    : domain_name,
+							subDomain : subDomain
+						},
+						category : {
+							primaryCategory : pageType
+						}
+					}
+				}	
+			console.log("Digital data loaded:"+d.getHours()+":"+d.getMinutes()+":"+ d.getSeconds());
+		}	
 	});
 	
 	$(document).on("click","#close-login",function(){

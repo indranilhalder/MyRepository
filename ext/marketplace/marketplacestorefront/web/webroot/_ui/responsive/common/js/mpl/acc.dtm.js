@@ -1,4 +1,4 @@
-var digitalData;
+/*var digitalData;
 var isImageHoverTriggered = false;		// flag to identify mouse hover action
 $(document).ready(function(){
 
@@ -64,7 +64,38 @@ $(document).ready(function(){
 		}
 	}
 	
-	if(user_id != "anonymous"){
+*/
+//$(document).ready(function(){
+			var user_type = "facebook";
+			var user_id ="12345678";
+			var currentPageURL = window.location.href;
+			var pageType = $('#pageType').val();
+			var pageNameU = $('#pageName').val();
+			var tealiumOrderFlag = $('#tealiumOrderFlag').val();
+			var Promo_Id ="";
+			if($("#product_applied_promotion_title").val() && $("#product_applied_promotion_code").val() !=undefined)
+			{
+				 var promo_title=$("#product_applied_promotion_title").val().toLowerCase().replace(/([~!@#$%^&*()-+=`{}\[\]\|\\:;'<>,.\/? ])+/g, '_');
+				 var promo_id=$("#product_applied_promotion_code").val().toLowerCase().replace(/([~!@#$%^&*()-+=`{}\[\]\|\\:;'<>,.\/? ])+/g, '_');
+				 Promo_Id = promo_title+":" + promo_id;
+			}
+			
+			var product_category ="";
+			var page_subcategory_name_L2 ="";
+			var page_subcategory_name_l3 ="";
+			if($("#product_category").val() !=undefined && $("#product_category").val() !=null){ 
+				product_category = $("#product_category").val().toLowerCase().replace(/_+/g, '_') ;  
+			}
+			if($("#page_subcategory_name").val() !=undefined && $("#page_subcategory_name").val() !=null){ 
+				page_subcategory_name_L2 = $("#page_subcategory_name").val().toLowerCase().replace(/_+/g, '_') ;
+			}
+			if($("#page_subcategory_name_l3").val() !=undefined && $("#page_subcategory_name_l3").val() != null){ 
+				page_subcategory_name_L3 = $("#page_subcategory_name_l3").val().toLowerCase().replace(/_+/g, '_');
+			}
+			
+			var sellerList = $('#pdpSellerIDs').val();
+			var user_login_type = $('#userLoginType').val().trim().toLowerCase();	
+			if(user_id != "anonymous"){
 		digitalData.account = {
 			login : {
 				customerID : user_id
@@ -110,7 +141,7 @@ $(document).ready(function(){
 	if (pageType == "product"
 			|| pageType == "/sellersdetailpage") {
 		try{
-			
+			//alert("pdp page ");
 			   var product_id = $("#product_id").val().toLowerCase();
 			   var product_category = $("#product_category").val().toLowerCase();
 			   var product_brand = $("#product_brand").val().toLowerCase();
@@ -122,20 +153,9 @@ $(document).ready(function(){
 			      if(typeof _satellite !="undefined"){
 			          _satellite.track('cpj_pdp');
 			       }
-			      
+			      console.log("here in pdp digitalData");
 				/*onload data*/
-			  	digitalData = {
-			  			page : {
-			  				pageInfo : {
-			  					pageName  : $('#page_name').val().toLowerCase(),
-			  					domain    : domain_name,
-			  					subDomain : subDomain
-			  				  },
-			  				category : {
-			  					primaryCategory : pageType
-			  				 }
-			  			   },
-			  			cpj : {
+			  	digitalData.cpj = {
 			                 product : {
 				                    id : product_id,
 				                    category : product_category,
@@ -144,7 +164,6 @@ $(document).ready(function(){
 			                brand : {
 				                 name : product_brand
 			                }
-			  		    }
 			  	    }
 			
 			       if(prevPageUrl != "" && prevPageUrl != 'undefined'){
@@ -283,7 +302,7 @@ $(document).ready(function(){
 				   _satellite.track('cpj_category_pages');
 				}
 				
-				digitalData = {
+		/*		digitalData = {
 						page : {
 							pageInfo : {
 								pageName  : $('#page_name').val().toLowerCase(),
@@ -294,7 +313,7 @@ $(document).ready(function(){
 								primaryCategory : pageType
 							}
 						}
-					}
+					}*/
 				  /*  product impressions*/
 				    dtmProductImpressionsPlp();
 					//digitalData.page.category.subCategory1 = ListValue("product_category");
@@ -315,7 +334,7 @@ $(document).ready(function(){
 			    _satellite.track('cpj_search_pages');
 			}
 			 
-			digitalData = {
+		/*	digitalData = {
 					page : {
 						pageInfo : {
 							pageName  : $('#page_name').val().toLowerCase(),
@@ -326,7 +345,7 @@ $(document).ready(function(){
 							primaryCategory : pageType
 						}
 					}
-				}
+				}*/
 			
 			//TPR-6367  | for null search
 		     var isVisible = $('.search-empty.no-results.wrapper:visible').is(':visible');
@@ -431,7 +450,7 @@ $(document).ready(function(){
 			var checkoutPageName = pageName +":" + $('#checkoutPageName').val().toLowerCase();
 			var product ='';
 			var productCategory ='';
-			digitalData = {
+	/*		digitalData = {
 					page : {
 						pageInfo : {
 							pageName  : checkoutPageName,
@@ -442,7 +461,7 @@ $(document).ready(function(){
 							primaryCategory : "checkout"
 						}
 					}
-				}
+				}*/
 			
 			if($("#product_id").val()!= ''){
 				product = JSON.parse($("#product_id").val().toLowerCase());
@@ -636,7 +655,7 @@ $(document).ready(function(){
 	}
 	
 	// Assignment of digial data object
-	var DTMscript ='<script type="text/javascript"> var digitalData = '+JSON.stringify(digitalData)+'</script>';
+/*	var DTMscript ='<script type="text/javascript"> var digitalData = '+JSON.stringify(digitalData)+'</script>';
 	
 	if(domain_name =="www.tatacliq.com"){
 		script=DTM_SCRIPT_PROD;
@@ -646,7 +665,7 @@ $(document).ready(function(){
 	}
 	DTMscript+=script;
 	
-	$('#DTMhome').html(DTMscript);
+	$('#DTMhome').html(DTMscript);*/
 	
 	//for footer clicks
 	$(document).on('click','.yCmsComponent',function(){
@@ -840,7 +859,7 @@ $(document).ready(function(){
     }
 
   
-});
+//});
 //SDI-1103
 function getIcid2FromUrl()
 {
