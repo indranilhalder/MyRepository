@@ -1619,7 +1619,9 @@ $("#otpMobileNUMField").focus(function(){
 //     var frm = $(this.form)
 //     
 // }).on('change', function(e){
-function savedCreditCardRadioChange(radioId){
+//TISUAT-6057
+//function savedCreditCardRadioChange(radioId){
+  function savedCreditCardRadioChange(element){
   //var $this = $(this)
     // var cg = $this.parents("div.credit-card-group:first")
 	     // TISBOX-1732
@@ -1628,19 +1630,26 @@ function savedCreditCardRadioChange(radioId){
 	     $("input[name=debitCards]:radio.card_token").removeClass("card_token").addClass("card_token_hide");
 	     $("input[name=emiCards]:radio.card_token").removeClass("card_token").addClass("card_token_hide");
 	     $(".card_token_hide").parent().parent().parent().find(".cvv").find(".security_code").removeClass("security_code").addClass("security_code_hide");
-		 $("#"+radioId).removeClass("card_token_hide").addClass("card_token");
+		 //$("#"+radioId).removeClass("card_token_hide").addClass("card_token");
+	     $(element).removeClass("card_token_hide").addClass("card_token");
 		 $(".card_bank").removeClass("card_bank").addClass("card_bank_hide");
 		 $(".card_brand").removeClass("card_brand").addClass("card_brand_hide");
 		 $('.card_is_domestic').removeClass("card_is_domestic").addClass("card_is_domestic_hide");
 		 $('.card_ebsErrorSavedCard').removeClass("card_ebsErrorSavedCard").addClass("card_ebsErrorSavedCard_hide");
 		 $('.card_cvvErrorSavedCard').removeClass("card_cvvErrorSavedCard").addClass("card_cvvErrorSavedCard_hide");
-	     $("#"+radioId).parent().find('.card_bank_hide').removeClass("card_bank_hide").addClass("card_bank"); 
+	     /*$("#"+radioId).parent().find('.card_bank_hide').removeClass("card_bank_hide").addClass("card_bank"); 
 	     $("#"+radioId).parent().parent().parent().find(".cvv").find(".security_code_hide").removeClass("security_code_hide").addClass("security_code");
 	     $("#"+radioId).parent().find('.card_brand_hide').removeClass("card_brand_hide").addClass("card_brand");
 	     $("#"+radioId).parent().find('.card_is_domestic_hide').removeClass("card_is_domestic_hide").addClass("card_is_domestic");
 	     $("#"+radioId).parent().find('.card_ebsErrorSavedCard_hide').removeClass("card_ebsErrorSavedCard_hide").addClass("card_ebsErrorSavedCard");
-	     $("#"+radioId).parent().parent().parent().find(".cvv").find('.card_cvvErrorSavedCard_hide').removeClass("card_cvvErrorSavedCard_hide").addClass("card_cvvErrorSavedCard");
-	     $(".security_code_hide").val(null);
+	     $("#"+radioId).parent().parent().parent().find(".cvv").find('.card_cvvErrorSavedCard_hide').removeClass("card_cvvErrorSavedCard_hide").addClass("card_cvvErrorSavedCard");*/
+		 $(element).parent().find('.card_bank_hide').removeClass("card_bank_hide").addClass("card_bank"); 
+	     $(element).parent().parent().parent().find(".cvv").find(".security_code_hide").removeClass("security_code_hide").addClass("security_code");
+	     $(element).parent().find('.card_brand_hide').removeClass("card_brand_hide").addClass("card_brand");
+	     $(element).parent().find('.card_is_domestic_hide').removeClass("card_is_domestic_hide").addClass("card_is_domestic");
+	     $(element).parent().find('.card_ebsErrorSavedCard_hide').removeClass("card_ebsErrorSavedCard_hide").addClass("card_ebsErrorSavedCard");
+	     $(element).parent().parent().parent().find(".cvv").find('.card_cvvErrorSavedCard_hide').removeClass("card_cvvErrorSavedCard_hide").addClass("card_cvvErrorSavedCard");
+		 $(".security_code_hide").val(null);
 	     //SDI-2149
 	     $(".card_nochooseErrorSavedCard_popup").css("display","none");
 	     $('#make_saved_cc_payment').removeClass("saved_card_disabled");
@@ -1666,7 +1675,9 @@ function savedCreditCardRadioChange(radioId){
 //	     var frm = $(this.form)
 //	     
 //	 }).on('change', function(e){
-function savedDebitCardRadioChange(radioId){
+//TISUAT-6057  
+//function savedDebitCardRadioChange(radioId){
+  function savedDebitCardRadioChange(element){
 	     //var $this = $(this)
 	     // TISBOX-1732
 	     $(".card_cvvErrorSavedCard, card_cvvErrorSavedCard_hide, .card_ebsErrorSavedCard, .card_ebsErrorSavedCard_hide").css("display","none");
@@ -1675,18 +1686,25 @@ function savedDebitCardRadioChange(radioId){
 	     $("input[name=debitCards]:radio.card_token").removeClass("card_token").addClass("card_token_hide");
 	     $("input[name=emiCards]:radio.card_token").removeClass("card_token").addClass("card_token_hide");
 	     $(".card_token_hide").parent().parent().parent().find(".cvv").find(".security_code").removeClass("security_code").addClass("security_code_hide");
-	     $("#"+radioId).removeClass("card_token_hide").addClass("card_token");
+	     //$("#"+radioId).removeClass("card_token_hide").addClass("card_token");
+	     $(element).removeClass("card_token_hide").addClass("card_token");
 	     $(".card_bank").removeClass("card_bank").addClass("card_bank_hide");
 	     $(".card_brand").removeClass("card_brand").addClass("card_brand_hide");
 	     $('.card_is_domestic').removeClass("card_is_domestic").addClass("card_is_domestic_hide");
 	     $('.card_ebsErrorSavedCard').removeClass("card_ebsErrorSavedCard").addClass("card_ebsErrorSavedCard_hide");
 	     $('.card_cvvErrorSavedCard').removeClass("card_cvvErrorSavedCard").addClass("card_cvvErrorSavedCard_hide");
-	     $("#"+radioId).parent().find('.card_bank_hide').removeClass("card_bank_hide").addClass("card_bank"); 
+	     /*$("#"+radioId).parent().find('.card_bank_hide').removeClass("card_bank_hide").addClass("card_bank"); 
 	     $("#"+radioId).parent().parent().parent().find(".cvv").find(".security_code_hide").removeClass("security_code_hide").addClass("security_code");
 	     $("#"+radioId).parent().find('.card_brand_hide').removeClass("card_brand_hide").addClass("card_brand");
 	     $("#"+radioId).parent().find('.card_is_domestic_hide').removeClass("card_is_domestic_hide").addClass("card_is_domestic");
 	     $("#"+radioId).parent().find('.card_ebsErrorSavedCard_hide').removeClass("card_ebsErrorSavedCard_hide").addClass("card_ebsErrorSavedCard");
-	     $("#"+radioId).parent().parent().parent().find(".cvv").find('.card_cvvErrorSavedCard_hide').removeClass("card_cvvErrorSavedCard_hide").addClass("card_cvvErrorSavedCard");
+	     $("#"+radioId).parent().parent().parent().find(".cvv").find('.card_cvvErrorSavedCard_hide').removeClass("card_cvvErrorSavedCard_hide").addClass("card_cvvErrorSavedCard");*/
+	     $(element).parent().find('.card_bank_hide').removeClass("card_bank_hide").addClass("card_bank"); 
+	     $(element).parent().parent().parent().find(".cvv").find(".security_code_hide").removeClass("security_code_hide").addClass("security_code");
+	     $(element).parent().find('.card_brand_hide').removeClass("card_brand_hide").addClass("card_brand");
+	     $(element).parent().find('.card_is_domestic_hide').removeClass("card_is_domestic_hide").addClass("card_is_domestic");
+	     $(element).parent().find('.card_ebsErrorSavedCard_hide').removeClass("card_ebsErrorSavedCard_hide").addClass("card_ebsErrorSavedCard");
+	     $(element).parent().parent().parent().find(".cvv").find('.card_cvvErrorSavedCard_hide').removeClass("card_cvvErrorSavedCard_hide").addClass("card_cvvErrorSavedCard");
 	     $(".security_code_hide").val(null);
 	   //SDI-2149
 	     $(".card_nochooseErrorSavedCard_popup").css("display","none");
