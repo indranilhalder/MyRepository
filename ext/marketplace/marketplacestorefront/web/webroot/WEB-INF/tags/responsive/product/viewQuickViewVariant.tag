@@ -59,6 +59,22 @@
 		//console.log(val);
 		window.open(val, '_blank');
 	}
+	
+	$(document).ready(function(){
+		var dd = document.getElementById('variant_dropdown');
+		if(null!=dd)
+		{
+			for (var i = 0; i < dd.options.length; i++) {
+			    if (dd.options[i].text == productSizeQuickVar) {
+			        dd.selectedIndex = i;
+			        break;
+			    }
+			}
+			
+		}
+	});
+	
+	
 </script>
 <c:set var="clothing">
 	<spring:theme code='product.clothing' />

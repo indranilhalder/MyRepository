@@ -97,6 +97,21 @@ var productSizeVar = '${productSize}';
 var buyingGuideData ='${buyingGuide}';
 //TPR-6740	
 var isStwheaderforPDP = '${isStwheaderforPDP}';
+
+$(document).ready(function(){
+	var dd = document.getElementById('variant_dropdown');
+	if(null!=dd)
+	{
+		for (var i = 0; i < dd.options.length; i++) {
+		    if (dd.options[i].text == productSizeVar) {
+		        dd.selectedIndex = i;
+		        break;
+		    }
+		}
+		
+	}
+});
+
 </script>
 <!-- logic for displaying color and size variant -->
 <!-- displaying colour swatches -->
