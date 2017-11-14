@@ -12,7 +12,7 @@ var stw = {
     renderFlatWidgetHF: function(divElement) {
     	if($('#for_homefurnishing').val() == "true"){
     	 //var category = "" ;
-    	 var category = $('#for_homefurnishing').val();
+    	 var category = $('#for_homefurnishing_category').val();
          stwService.call(category, '');
     	}
     },

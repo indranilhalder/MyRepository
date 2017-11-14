@@ -26,6 +26,15 @@
 </c:if>
 
 <input type="hidden" id="for_homefurnishing" name="for_homefurnishing" value="${product.rootCategory =='HomeFurnishing'}">
+
+<c:forEach items="${wpproduct.productData.categories}"
+	var="categoryForMSD">
+	<c:if test="${fn:startsWith(categoryForMSD.code, 'MSH')}">
+		<input type="hidden" value="${categoryForMSD.code}"
+			name ="for_homefurnishing_category" id="for_homefurnishing_category" />
+	</c:if>
+</c:forEach>
+
 <c:url var="sizeGuideUrl"
 	value="/p-sizeGuide?productCode=${product.code}&sizeSelected=${selectedSizeForSizeGuide}" scope="request"></c:url>
 <style>
