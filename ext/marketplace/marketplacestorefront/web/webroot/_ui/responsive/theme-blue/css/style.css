@@ -77607,7 +77607,7 @@ background: url(../images/search_image.png) no-repeat;}
 }
 .homefurnishing-overview:nth-child(3) {
     float: right ! important;
-    margin-bottom: 60px; /* TISPRDT-6538 */
+    margin-bottom: 60px ! important; /* TISPRDT-6538 */
 }
 @media (max-width: 767px){
 .homefurnishing-overview:nth-child(2) {
