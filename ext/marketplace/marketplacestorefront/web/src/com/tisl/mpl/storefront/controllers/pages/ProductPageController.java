@@ -156,6 +156,7 @@ import com.tisl.mpl.facade.product.MplProductFacade;
 import com.tisl.mpl.facade.product.PriceBreakupFacade;
 import com.tisl.mpl.facade.product.SizeGuideFacade;
 import com.tisl.mpl.facade.product.impl.CustomProductFacadeImpl;
+import com.tisl.mpl.facades.MplSlaveMasterFacade;
 import com.tisl.mpl.facades.constants.MarketplaceFacadesConstants;
 import com.tisl.mpl.facades.data.ATSResponseData;
 import com.tisl.mpl.facades.data.MSDRequestdata;
@@ -4847,7 +4848,7 @@ public class ProductPageController extends MidPageController
 		final JSONObject MSDJObject = new JSONObject();
 		final String msdUse = configurationService.getConfiguration().getString("isMSDEnabled");
 		MSDResponsedata msdRecData = null;
-		final String productCode = null;
+		String productCode = null;
 		if (msdUse.equalsIgnoreCase("true"))
 		{
 			final MSDRequestdata msdRequest = new MSDRequestdata();
