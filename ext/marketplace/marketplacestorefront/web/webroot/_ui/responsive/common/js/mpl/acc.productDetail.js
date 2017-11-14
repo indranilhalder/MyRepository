@@ -120,16 +120,9 @@ ACC.productDetail = {
 			}
 		});
 
-		$("#variant").change(function() {
-			var url = "";
-			var selectedIndex = 0;
-			$("#variant option:selected").each(function() {
-				url = $(this).attr('value');
-				selectedIndex = $(this).attr("index");
-			});
-			if (selectedIndex != 0) {
-				window.location.href = url;
-			}
+		$("#variant_dropdown").change(function() {
+			var productCode=$("#variant_dropdown option:selected").attr("data-productCode");
+			loadVariant(productCode);
 		});
 		
 		// added for jewellery PDP size dropdown 		
@@ -5597,5 +5590,32 @@ function readCookiewithName(name) {
 		if (c.indexOf(nameEQ) == 0) return c.substring(nameEQ.length,c.length);
 	}
 	return null;
+}
+
+function selectProductSize()
+{	
+	var productCode=$("#variant_dropdown option:selected" ).attr("data-productCode");	
+	console.log("productCode"+productCode);
+	var requiredUrl = ACC.config.encodedContextPath + "/p"+"/"+productCode+"/viewSellers";
+	console.log("requiredUrl"+requiredUrl);
+	
+	if(requiredUrl=="#"){
+		return false;
+	}
+	 $("#sizevariantForm").attr("action",requiredUrl);
+	 //$("#sizevariantForm").submit();   
+}
+
+function loadVariant(x){
+	
+	var requiredUrl = ACC.config.encodedContextPath + "/p"+"/"+x+"/viewSellers";
+
+	 $('#variantForm').attr('action',requiredUrl);
+	 $("#variantForm").submit();
+}
+
+function redirectURL(val){
+	//console.log(val);
+	window.open(val,'_blank');
 }
 
