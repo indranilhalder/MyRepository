@@ -27,7 +27,7 @@
 
 <input type="hidden" id="for_homefurnishing" name="for_homefurnishing" value="${product.rootCategory =='HomeFurnishing'}">
 
-<c:forEach items="${wpproduct.productData.categories}"
+<c:forEach items="${product.categories}"
 	var="categoryForMSD">
 	<c:if test="${fn:startsWith(categoryForMSD.code, 'MSH')}">
 		<input type="hidden" value="${categoryForMSD.code}"
