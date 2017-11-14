@@ -4984,19 +4984,21 @@ function populateProductOverviewTab(jsonData)
 	var htmlCode="";
 	htmlCode=htmlCode+'<div class="product-desc">';
 	htmlCode=htmlCode+'<span class="">';
-	htmlCode=htmlCode+'<ul class="homefurnishing-overview">';
+	//htmlCode=htmlCode+'<ul class="homefurnishing-overview">';
 	$.each(jsonData['mapConfigurableAttributes'],function(key,value){
 		//htmlCode=htmlCode+'<li class="homefurnishing-overview-desc">'+ key+' - '+value+'</li>';
 		if(value!="")
-		{
+		{	htmlCode=htmlCode+'<ul class="homefurnishing-overview">';
 			htmlCode=htmlCode+'<li class="homefurnishing-overview-title">'+ key+'</li>';
 			$.each(value,function(key1,value1){
 				htmlCode=htmlCode+'<li class="homefurnishing-overview-desc">'+value1+'</li>';
 			});
+			htmlCode=htmlCode+'</ul>';
 		}
 		else
-		{
+		{	htmlCode=htmlCode+'<ul class="homefurnishing-overview">';
 			htmlCode=htmlCode+'<li class="homefurnishing-overview-title">'+ key+'</li>';
+			htmlCode=htmlCode+'</ul>';
 		}
 	});
 	
