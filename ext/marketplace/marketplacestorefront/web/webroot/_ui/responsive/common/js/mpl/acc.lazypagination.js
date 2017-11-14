@@ -5,7 +5,10 @@ var lazyPagePush = true;
 var ajaxUrl = '';
 var pageType = $('#pageType').val();
 var isSerp = false;
-var totalPageCountToShow = 2; 
+var totalPageCountToShow = 10; 
+if($(window).width() <= 410){
+totalPageCountToShow = 3;
+}
 var settings = {
 	    totalPages: $('input[name=noOfPages]').val(),
 	    visiblePages: totalPageCountToShow,
@@ -39,7 +42,7 @@ $(document).ready(function(){
 		    }	
 				
 	}
-    toggleNextPrevButton();
+   // toggleNextPrevButton();
   //set the total no of pages 
     totalNoOfPages = $('input[name=noOfPages]').val();
     totalNoOfPages == '' ? 0 : parseInt(totalNoOfPages);
@@ -894,3 +897,9 @@ function toggleNextPrevButton(){
 })(window.jQuery, window, document);
 
 $('.pagination-blocks').twbsPagination(settings);
+$(window).on("resize",function(){
+$('.pagination-blocks').twbsPagination('destroy');
+	settings.visiblePages = 3;
+	$('.pagination-blocks').twbsPagination(settings);
+	
+});
