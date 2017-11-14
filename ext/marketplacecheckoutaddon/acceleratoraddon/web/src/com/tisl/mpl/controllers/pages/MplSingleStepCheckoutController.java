@@ -3493,6 +3493,13 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 			//SDI-2158 fix recalculation starts here
 			mplCouponFacade.releaseVoucherInCheckout(cartModel);
 			commerceCartService.recalculateCart(cartModel);
+			
+			//Fix starts for - Order cant be placed with freebie 
+			final Map<String, MplZoneDeliveryModeValueModel> freebieModelMap = new HashMap<String, MplZoneDeliveryModeValueModel>();
+			final Map<String, Long> freebieParentQtyMap = new HashMap<String, Long>();
+			populateFreebieProductData(cartModel, freebieModelMap, freebieParentQtyMap);
+			//Fix ends for - Order cant be placed with freebie 
+			
 			//SDI-2158 fix recalculation ends here
 			mplCartFacade.setCartSubTotalForReviewOrder(cartModel);
 			mplCartFacade.totalMrpCal(cartModel);
