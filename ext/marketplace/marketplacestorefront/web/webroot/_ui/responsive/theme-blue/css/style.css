@@ -77724,4 +77724,23 @@ p.sizetext.size {
     clear: both;
 }
 }
+.quickview .product-detail .sizetext a.size-guide:after {
+    background: #a8103d none repeat scroll 0 0;
+    border-radius: 10px;
+    color: #fff;
+    content: "?";
+    display: inline-block;
+    font-size: 10px;
+    font-weight: normal;
+    height: 15px;
+    line-height: 15px;
+    position: absolute;
+   	right: -22px;
+    text-align: center;
+    top: 2px;
+    width: 15px;
+}
+.sizetext a.size-guide {
+    position: relative;
+}
 /* HOME-239 End */

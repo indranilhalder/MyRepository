@@ -334,9 +334,7 @@
 					</a>
 				</c:if>
 				<!--  PDP Changes for Home Furnishing Ends-->
-			</p>
-
-			<c:if test="${empty removeSizeGuide}">
+				<c:if test="${empty removeSizeGuide}">
 				<a class="size-guide" href="${sizeGuideUrl}" role="button"
 					data-toggle="modal" data-target="#popUpModal"
 					data-productcode="${product.code}"
@@ -344,6 +342,16 @@
 						code="product.variants.quickview.size.guide" />
 				</a>
 			</c:if>
+			</p>
+
+			<%-- <c:if test="${empty removeSizeGuide}">
+				<a class="size-guide" href="${sizeGuideUrl}" role="button"
+					data-toggle="modal" data-target="#popUpModal"
+					data-productcode="${product.code}"
+					data-sizeSelected="${selectedSize}"> <spring:theme
+						code="product.variants.quickview.size.guide" />
+				</a>
+			</c:if> --%>
 
 
 
