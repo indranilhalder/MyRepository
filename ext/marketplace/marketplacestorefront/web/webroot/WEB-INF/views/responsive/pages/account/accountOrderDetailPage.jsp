@@ -1840,6 +1840,10 @@
 								<input type="hidden" id="newCode" value="${subOrder.code}" />
 								<c:forEach items="${sellerOrder.entries}" var="entry"
 									varStatus="entryStatus">
+									
+									<c:set var="isVolume" value="false"/>
+									<c:set var="isWeight" value="false"/>
+									
 									<c:if test="${deliveryType eq entry.mplDeliveryMode.code}">
 									
 									<c:if
@@ -2096,6 +2100,47 @@
 																</c:choose>
 															</c:if>
 														</c:when>
+														
+														<c:when test="${not empty entry.product.rootCategory && entry.product.rootCategory=='HomeFurnishing'}">
+														
+														<spring:eval expression="T(de.hybris.platform.util.Config).getParameter('mpl.homefurnishing.category.weight')" var="weightVariant"/>
+														<c:set var = "categoryListArray" value = "${fn:split(weightVariant, ',')}" />
+																			
+																			<c:forEach items="${entry.product.categories}" var="categories">
+																			<c:forEach items = "${categoryListArray}" var="weightVariantArray">
+																					<c:if test="${categories.code eq weightVariantArray}">
+																						<c:set var="isWeight" value="true"/>
+																					</c:if> 
+																			</c:forEach>				
+																			</c:forEach> 
+																			
+														<spring:eval expression="T(de.hybris.platform.util.Config).getParameter('mpl.homefurnishing.category.volume')" var="volumeVariant"/>
+																			<c:set var = "categoryListArray" value = "${fn:split(volumeVariant, ',')}" />
+																			
+																			<c:forEach items="${entry.product.categories}" var="categories">
+																			<c:forEach items = "${categoryListArray}" var="volumeVariantArray">
+																					<c:if test="${categories.code eq volumeVariantArray}">
+																						<c:set var="isVolume" value="true"/>
+																					</c:if> 
+																			</c:forEach>				
+																			</c:forEach>
+														
+														<c:choose>
+																<c:when test="${true eq isWeight}">
+																			<p><spring:theme code="product.variant.weight"/>:&nbsp;${entry.product.size}</p>
+																</c:when>
+																<c:when test="${true eq isVolume}">
+																			<p><spring:theme code="product.variant.volume"/>:&nbsp;${entry.product.size}</p>
+																 </c:when>
+																<c:otherwise>
+																	<c:if test="${!fn:containsIgnoreCase(entry.product.size, 'No Size')}">
+																	<p>Size: ${entry.product.size}</p>
+																	</c:if>
+																</c:otherwise>
+														</c:choose>
+														
+														</c:when>
+														
 														<c:otherwise>
 														<c:if test="${!fn:containsIgnoreCase(entry.product.size, 'No Size')}">
 															<p>Size: ${entry.product.size}</p>
