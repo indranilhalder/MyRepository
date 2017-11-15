@@ -112,6 +112,7 @@ import org.apache.commons.httpclient.util.URIUtil;
 import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
+import org.codehaus.jackson.map.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.http.HttpStatus;
@@ -4478,8 +4479,17 @@ public class ProductPageController extends MidPageController
 			mplAjaxProductData.setError(e.getMessage());
 		}
 		finally
+		{	try
 		{
-			returnStatement = gson.toJson(mplAjaxProductData);
+			final ObjectMapper mapper = new ObjectMapper();
+			returnStatement = mapper.writeValueAsString(mplAjaxProductData);
+		}
+		catch (final Exception e)
+		{
+			ExceptionUtil.etailNonBusinessExceptionHandler(new EtailNonBusinessExceptions(e,
+					MarketplacecommerceservicesConstants.E0000));
+			mplAjaxProductData.setError(e.getMessage());
+		}
 		}
 		return returnStatement;
 	}

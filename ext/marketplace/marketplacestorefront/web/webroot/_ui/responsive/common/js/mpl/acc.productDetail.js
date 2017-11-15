@@ -4976,7 +4976,7 @@ function populateProductOverviewTab(jsonData)
 {
 	var htmlCode="";
 	htmlCode=htmlCode+'<div class="product-desc">';
-	htmlCode=htmlCode+'<span class="">';
+	htmlCode=htmlCode+'<span class="key-label">';
 	//htmlCode=htmlCode+'<ul class="homefurnishing-overview">';
 	$.each(jsonData['mapConfigurableAttributes'],function(key,value){
 		//htmlCode=htmlCode+'<li class="homefurnishing-overview-desc">'+ key+' - '+value+'</li>';
