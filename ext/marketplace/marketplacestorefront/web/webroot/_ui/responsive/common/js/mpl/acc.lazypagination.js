@@ -176,7 +176,7 @@ $(document).on('change','.responsiveSort',function(){
 });
 
 $(document).on("click",".page-link",function(e){
-	e.preventDeafult();
+	e.preventDefault();
 });
 
 });
@@ -899,8 +899,9 @@ function toggleNextPrevButton(){
 
 $('.pagination-blocks').twbsPagination(settings);
 $(window).on("resize",function(){
+if($(window).width() <= 410){
 $('.pagination-blocks').twbsPagination('destroy');
-	settings.visiblePages = 3;
-	$('.pagination-blocks').twbsPagination(settings);
-	
+settings.visiblePages = 3;
+$('.pagination-blocks').twbsPagination(settings);
+}
 });
