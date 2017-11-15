@@ -4479,9 +4479,17 @@ public class ProductPageController extends MidPageController
 			mplAjaxProductData.setError(e.getMessage());
 		}
 		finally
+		{	try
 		{
 			final ObjectMapper mapper = new ObjectMapper();
 			returnStatement = mapper.writeValueAsString(mplAjaxProductData);
+		}
+		catch (final Exception e)
+		{
+			ExceptionUtil.etailNonBusinessExceptionHandler(new EtailNonBusinessExceptions(e,
+					MarketplacecommerceservicesConstants.E0000));
+			mplAjaxProductData.setError(e.getMessage());
+		}
 		}
 		return returnStatement;
 	}
