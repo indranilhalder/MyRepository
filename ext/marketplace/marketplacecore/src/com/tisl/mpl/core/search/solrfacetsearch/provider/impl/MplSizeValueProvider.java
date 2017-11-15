@@ -50,7 +50,7 @@ public class MplSizeValueProvider extends AbstractPropertyFieldValueProvider imp
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see
 	 * de.hybris.platform.solrfacetsearch.provider.FieldValueProvider#getFieldValues(de.hybris.platform.solrfacetsearch
 	 * .config.IndexConfig, de.hybris.platform.solrfacetsearch.config.IndexedProperty, java.lang.Object)
@@ -97,7 +97,7 @@ public class MplSizeValueProvider extends AbstractPropertyFieldValueProvider imp
 			final Set<String> sizes = new TreeSet<String>();
 			if (pcmVariantModel.getProductCategoryType().equalsIgnoreCase("FineJewellery")
 					|| pcmVariantModel.getProductCategoryType().equalsIgnoreCase("FashionJewellery")
-					&& pcmVariantModel.getProductCategoryType().equalsIgnoreCase(MarketplaceCoreConstants.HOME_FURNISHING))
+					|| pcmVariantModel.getProductCategoryType().equalsIgnoreCase(MarketplaceCoreConstants.HOME_FURNISHING))
 			{
 				final List<String> lengthCategoryList = Arrays.asList(getConfigurationService().getConfiguration()
 						.getString("mpl.jewellery.category", "").split(","));
