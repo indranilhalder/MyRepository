@@ -5,7 +5,10 @@ var lazyPagePush = true;
 var ajaxUrl = '';
 var pageType = $('#pageType').val();
 var isSerp = false;
-var totalPageCountToShow = 2; 
+var totalPageCountToShow = 10; 
+if($(window).width() <= 410){
+totalPageCountToShow = 3;
+}
 var settings = {
 	    totalPages: $('input[name=noOfPages]').val(),
 	    visiblePages: totalPageCountToShow,
@@ -18,6 +21,7 @@ var settings = {
 	    	$('html, body').animate({
 	            scrollTop: 0
 	        }, 100);
+		$("#pageOf").text(page);    
 	    }
 }
 $(document).ready(function(){
@@ -39,7 +43,7 @@ $(document).ready(function(){
 		    }	
 				
 	}
-    toggleNextPrevButton();
+   // toggleNextPrevButton();
   //set the total no of pages 
     totalNoOfPages = $('input[name=noOfPages]').val();
     totalNoOfPages == '' ? 0 : parseInt(totalNoOfPages);
@@ -172,7 +176,7 @@ $(document).on('change','.responsiveSort',function(){
 });
 
 $(document).on("click",".page-link",function(e){
-	e.preventDeafult();
+	e.preventDefault();
 });
 
 });
@@ -894,3 +898,10 @@ function toggleNextPrevButton(){
 })(window.jQuery, window, document);
 
 $('.pagination-blocks').twbsPagination(settings);
+$(window).on("resize",function(){
+if($(window).width() <= 410){
+$('.pagination-blocks').twbsPagination('destroy');
+settings.visiblePages = 3;
+$('.pagination-blocks').twbsPagination(settings);
+}
+});

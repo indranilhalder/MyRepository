@@ -77766,6 +77766,9 @@ button#saveBlockData {
 .homefurnishing-overview:nth-child(3) {
     float: right ! important;
 }
+.homefurnishing-overview:nth-child(4) {
+    clear:both;
+}
 @media (max-width: 767px){
 .homefurnishing-overview:nth-child(2) {
     float: left ! important;
@@ -77858,7 +77861,7 @@ select#quantity_dropdown {
 p.sizetext.size {
     border: 0px solid !important;
     height: auto ! important;
-   /*  margin-bottom: 30px !important; */
+    margin-bottom: 0px !important; 
 }
 .sizetext .home-pdp-quantity:nth-child(2) {
     left: 46%;
@@ -77879,4 +77882,24 @@ p.sizetext.size {
     clear: both;
 }
 }
-/* HOME-239 End */
+
+.quickview .product-detail .sizetext a.size-guide:after {
+    background: #a8103d none repeat scroll 0 0;
+    border-radius: 10px;
+    color: #fff;
+    content: "?";
+    display: inline-block;
+    font-size: 10px;
+    font-weight: normal;
+    height: 15px;
+    line-height: 15px;
+    position: absolute;
+   	right: -22px;
+    text-align: center;
+    top: 2px;
+    width: 15px;
+}
+.sizetext a.size-guide {
+    position: relative;
+}
+

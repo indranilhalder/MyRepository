@@ -314,6 +314,7 @@ tr.d0 td {
 		}
 		$(".imageListCarousel").show();
 	});
+	
  </script>
  <style type="text/css">
 tr.d0 td {

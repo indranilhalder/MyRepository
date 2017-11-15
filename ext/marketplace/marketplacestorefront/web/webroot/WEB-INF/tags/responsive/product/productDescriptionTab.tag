@@ -29,7 +29,7 @@
               <li>
   					<spring:theme code="text.product.feature.functionality"/>  - 
                     <c:forEach items="${functionality}" var="function">
-  					    ${function}
+  					    ${function} &nbsp
   			        </c:forEach>
   			 </li>
   		    </ul> 
@@ -42,7 +42,7 @@
               <li>
   					<spring:theme code="text.product.feature.movement"/> - 
                     <c:forEach items="${movementList}" var="movement">
-  					    ${movement}
+  					    ${movement} &nbsp
   			        </c:forEach>
   			 </li>
   		    </ul> 
@@ -55,7 +55,7 @@
               <li>
   					<spring:theme code="text.product.feature.specialFeatures"/> -
                     <c:forEach items="${specialFeatures}" var="features">
-  					    ${features}
+  					    ${features} &nbsp
   			        </c:forEach>
   			 </li>
   		    </ul> 
@@ -68,7 +68,7 @@
               <li>
   					<spring:theme code="text.product.feature.warranty"/> - 
                     <c:forEach items="${Warranty}" var="warranty">
-  					    ${warranty}
+  					    ${warranty} &nbsp
   			        </c:forEach>
   			 </li>
   		    </ul> 

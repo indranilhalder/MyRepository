@@ -1340,7 +1340,8 @@ function lazyPaginationFacet(response){
     $("#productGrid").html($.strRemove("ul.product-listing.product-grid.lazy-grid,ul.product-listing.product-grid.lazy-grid-facet,ul.product-list,ul.product-listing.product-grid.custom-sku", response));
 	initPageLoad = true;
     innerLazyLoad({isSerp:true});
-    
+    $(".pagination-blocks").twbsPagination('destroy');
+    $('.pagination-blocks').twbsPagination(settings);
 }
 
 //UF-15
