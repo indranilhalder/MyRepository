@@ -547,7 +547,7 @@
 		var pluginsDTM = document.createElement("script");
 		pluginsDTM.src = "${dtmUrl}";
 		
-		document.body.appendChild(pluginsDTM);
+		document.head.appendChild(pluginsDTM);
 		pluginsDTM.onload = function() {
 		
 			    var isImageHoverTriggered = false;		// flag to identify mouse hover action
