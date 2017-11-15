@@ -9,6 +9,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import javax.annotation.Resource;
+
 import org.apache.commons.beanutils.BeanToPropertyValueTransformer;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
@@ -18,6 +20,7 @@ import org.apache.log4j.Logger;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.tisl.mpl.core.model.BuyBoxModel;
+import com.tisl.mpl.facade.product.MplProductFacade;
 import com.tisl.mpl.facade.stw.STWWidgetFacade;
 import com.tisl.mpl.facades.data.STWJsonData;
 import com.tisl.mpl.facades.data.STWJsonRecomendationData;
@@ -37,6 +40,8 @@ public class STWWidgetFacadeImpl implements STWWidgetFacade
 	private static final Logger LOG = Logger.getLogger(STWWidgetFacadeImpl.class);//sonar fix
 	private STWWidgetService stwWidgetService;
 	private BuyBoxService buyBoxService;
+	@Resource
+	private MplProductFacade mplProductFacade;
 
 	/**
 	 * @return the buyBoxService
@@ -82,6 +87,7 @@ public class STWWidgetFacadeImpl implements STWWidgetFacade
 		List<STWJsonRecomendationData> stwFinalAfterBuyBox = new ArrayList<STWJsonRecomendationData>();
 		try
 		{
+
 			stwjsonAsString = stwWidgetService.callSTWService(stwParamsMap);
 			if (null != stwjsonAsString)
 			{
@@ -140,6 +146,7 @@ public class STWWidgetFacadeImpl implements STWWidgetFacade
 
 		for (final BuyBoxModel buyBoxModel : buyBoxModelList)
 		{
+			//final ProductModel product = buyBoxModel.getProduct();
 			final String buyBoxListingIdLwrCase = buyBoxModel.getProduct().toLowerCase();
 			if (listingIds.contains(buyBoxListingIdLwrCase))
 			{
@@ -161,6 +168,11 @@ public class STWWidgetFacadeImpl implements STWWidgetFacade
 					stwPojo.setMop(buyBoxModel.getPrice().toString());
 				}
 				stwPojo.setMrp(buyBoxModel.getMrp().toString());
+				final String stwavailableSizes = mplProductFacade.getSizeForSTWProduct(buyBoxListingIdLwrCase);
+				stwPojo.setAvailableSizes(stwavailableSizes);
+				final List<String> stwavailablevariants = mplProductFacade.getVariantsForSTWProducts(buyBoxListingIdLwrCase);
+				StringUtils.join(stwavailablevariants, ',');
+				stwPojo.setAvailableColors(StringUtils.join(stwavailablevariants, ','));
 				finalStwRecomendationData.add(stwPojo);
 			}
 		}

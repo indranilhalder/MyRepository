@@ -15,48 +15,20 @@
 <%-- <script type="text/javascript"
 	src="${commonResourcePath}/js/acc.sellerDetails.js"></script> --%>
 <script>
-/* $(document).ready(function(){
-	var currentColour = '${product.colour}';
-	$(".color-swatch li span").each(function(){
-		var title = $(this).attr("title");
-		if(currentColour == title){
-			$(this).parent().parent().addClass("active");
-		}			
-	});
-}); */
- function selectProductSize()
-{	
-	 var requiredUrl=$("#sizevariant option:selected" ).val();	
-	
-	if(requiredUrl=="#"){
-		return false;
-	}
-	
-	  $("#sizevariantForm").attr("action",requiredUrl);
-	 $("#sizevariantForm").submit();   
-}
-
-
-
-
-function loadVariant(x){
-	
-	var requiredUrl = ACC.config.encodedContextPath + "/p"+"/"+x+"/viewSellers";
-
-	 $('#variantForm').attr('action',requiredUrl);
-	 $("#variantForm").submit();
-}
-
-function redirectURL(val){
-	//console.log(val);
-	window.open(val,'_blank');
-}
-
 var buyingGuideData ='${buyingGuide}';
 </script>
 <c:url var="sizeGuideUrl"
 	value="/p-sizeGuide?productCode=${product.code}&sizeSelected=${selectedSize}" scope="request"></c:url>
 <input type="hidden" id="product_allVariantsListingId" value="${allVariantsString}"/>
+
+<c:choose>
+	<c:when test="${not empty msiteSellerId}">
+		<c:url value="/p/${product.code}/viewSellers?sellerId=${msiteSellerId}"	var="quantityVariantUrl" />
+	</c:when>
+	<c:otherwise>
+		<c:url value="/p/${product.code}/viewSellers"	var="quantityVariantUrl" />
+	</c:otherwise>
+</c:choose>
 <!--CKD:TPR-250 Start -->
 <c:choose>
 	<c:when test="${not empty param.sellerId}">
@@ -345,8 +317,7 @@ var buyingGuideData ='${buyingGuide}';
 			
 			
 			
-			<ul id="variant" class="form-control variant-select"
-				onchange="selectProductSize()">
+			<ul id="hfvariant" class="form-control variant-select" >
 				<%-- <c:choose>
 					<c:when test="${defaultSelectedSize==''}">
 						<option value="#" selected="selected"><spring:theme
@@ -439,9 +410,9 @@ var buyingGuideData ='${buyingGuide}';
 			  </c:forEach>
 			  </select>
 				
-				  <select id="quantity_dropdown" class="variant-select" style="width: 20%;float: right;position:relative;top:0;">
+				  <select id="quantity_dropdown" style="width: 20%;float: right;position:relative;top:0;">
 			   <c:forEach items="${quantityList}" var="quantity">
-					<option value="${quantity}">${quantity}</option>
+					<option value="${quantity}" >${quantity}</option>
 				</c:forEach>
 			   </select>
 				

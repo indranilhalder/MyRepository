@@ -531,17 +531,17 @@ function getRichAttributeQuickView(sellerName)
 function dispQuickViewPrice(mrp, mop, spPrice, savingsOnProduct) {
 
 	if(null!= mrp){
-		$("#quickMrpPriceId").append(mrp.formattedValueNoDecimal);
+		$("#quickMrpPriceId").html(mrp.formattedValueNoDecimal);
 	}
 	if(null!= mop){
-		$("#quickMopPriceId").append(mop.formattedValueNoDecimal);
+		$("#quickMopPriceId").html(mop.formattedValueNoDecimal);
 	}
 	if(null!= spPrice){
-		$("#quickSpPriceId").append(spPrice.formattedValueNoDecimal);
+		$("#quickSpPriceId").html(spPrice.formattedValueNoDecimal);
 	} 
 ////TISPRM-33
 	if(null!= savingsOnProduct){
-		$("#savingsOnProductIdQV").append("(-"+savingsOnProduct+" %)");
+		$("#savingsOnProductIdQV").html("(-"+savingsOnProduct+" %)");
 	} 
 
 	if(null!= savingsOnProduct && savingsOnProduct != 0){
