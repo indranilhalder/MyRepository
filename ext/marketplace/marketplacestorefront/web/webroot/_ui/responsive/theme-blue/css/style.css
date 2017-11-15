@@ -76948,14 +76948,15 @@ body .account .right-account form label.invite-text-lbl{
 /* TISSPTEN-120 start */
 
 @media (max-width: 768px){
-	.page-returnSubmit .thirdTataCliq .col-md-6.col-sm-6.col-xs-6.update-pickup-address {
+.page-returnSubmit .thirdTataCliq .col-md-6.col-sm-6.col-xs-6.update-pickup-address {
     margin-left: -3px;
     margin-top: 0px;
 }
 .page-returnSubmit .accordtionTataCliq .accContents .scheduledPickup .selectDateTime .selectRadio input {
     margin: 10px auto 15px auto ! important;
 }
-.thirdTataCliq .selectReturnMethod.self.col-md-12.col-sm-12.blackColor {
+.thirdTataCliq .selectReturnMethod.self.col-md-12.col-sm-12.blackColor,
+.selectReturnMethod.self.col-md-12.col-sm-12.greyColor {
     float: left;
     margin-bottom: 25px;
 }
@@ -76965,7 +76966,6 @@ body .account .right-account form label.invite-text-lbl{
 .thirdTataCliq .col-md-9.scheduledPickup + .col-md-9.selfCourier b {
     display: inline-block;
 }
-
 }
 
 /* TISSPTEN-120 END */
