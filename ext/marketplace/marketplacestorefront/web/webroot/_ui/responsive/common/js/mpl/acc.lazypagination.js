@@ -21,6 +21,7 @@ var settings = {
 	    	$('html, body').animate({
 	            scrollTop: 0
 	        }, 100);
+		$("#pageOf").text(page);    
 	    }
 }
 $(document).ready(function(){
