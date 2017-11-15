@@ -29,6 +29,7 @@ import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Required;
 
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
+import com.tisl.mpl.core.constants.MarketplaceCoreConstants;
 import com.tisl.mpl.core.model.PcmProductVariantModel;
 import com.tisl.mpl.util.MplBuyBoxUtility;
 
@@ -49,7 +50,7 @@ public class MplSizeValueProvider extends AbstractPropertyFieldValueProvider imp
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * de.hybris.platform.solrfacetsearch.provider.FieldValueProvider#getFieldValues(de.hybris.platform.solrfacetsearch
 	 * .config.IndexConfig, de.hybris.platform.solrfacetsearch.config.IndexedProperty, java.lang.Object)
@@ -95,22 +96,37 @@ public class MplSizeValueProvider extends AbstractPropertyFieldValueProvider imp
 
 			final Set<String> sizes = new TreeSet<String>();
 			if (pcmVariantModel.getProductCategoryType().equalsIgnoreCase("FineJewellery")
-					|| pcmVariantModel.getProductCategoryType().equalsIgnoreCase("FashionJewellery"))
+					|| pcmVariantModel.getProductCategoryType().equalsIgnoreCase("FashionJewellery")
+					&& pcmVariantModel.getProductCategoryType().equalsIgnoreCase(MarketplaceCoreConstants.HOME_FURNISHING))
 			{
 				final List<String> lengthCategoryList = Arrays.asList(getConfigurationService().getConfiguration()
 						.getString("mpl.jewellery.category", "").split(","));
+				final List<String> weightCategoryList = Arrays.asList(getConfigurationService().getConfiguration()
+						.getString("mpl.homefurnishing.category.weight", "").split(","));
+				final List<String> volumeCategoryList = Arrays.asList(getConfigurationService().getConfiguration()
+						.getString("mpl.homefurnishing.category.volume", "").split(","));
+
 				final Collection<CategoryModel> superCategories = pcmVariantModel.getSupercategories();
 				if (CollectionUtils.isNotEmpty(superCategories) && CollectionUtils.isNotEmpty(lengthCategoryList))
 				{
 					for (final CategoryModel primaryCategory : superCategories)
 					{
-						if (primaryCategory != null && StringUtils.isNotEmpty(primaryCategory.getCode())
-								&& primaryCategory.getCode().startsWith("MPH"))
+						if (primaryCategory != null && StringUtils.isNotEmpty(primaryCategory.getCode()))
 						{
 							if (lengthCategoryList.contains(primaryCategory.getCode()))
 							{
 								//sizes.add("Length:");
 								qualifier = "Length";
+							}
+							if (weightCategoryList.contains(primaryCategory.getCode()))
+							{
+
+								qualifier = "Weight";
+							}
+							if (volumeCategoryList.contains(primaryCategory.getCode()))
+							{
+
+								qualifier = "Volume";
 							}
 						}
 					}
