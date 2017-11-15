@@ -360,16 +360,7 @@ share mobile -->
    				</c:when>
 				</c:choose>
    			</c:when>
-   			<c:otherwise>
-   			<c:choose>
-   				<c:when test="${productSize !='No Size'}">
-   				<span class="home-pdp-size">
-					<spring:theme code="product.variant.size.HF"></spring:theme>
-					<c:if test="${not empty productSizeType}">(${productSizeType})</c:if>
-			  </span> 
-			  </c:when>
-				</c:choose>
-   			</c:otherwise>
+   			
    		</c:choose> 
      	<c:set var = "categoryListArray_1" value = "${fn:split(quantityVariant, ',')}" />
 		<c:forEach items="${product.categories}" var="categories">
