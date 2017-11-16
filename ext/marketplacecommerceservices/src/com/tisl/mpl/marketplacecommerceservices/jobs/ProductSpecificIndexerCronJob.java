@@ -7,7 +7,6 @@ import de.hybris.platform.core.PK;
 import de.hybris.platform.cronjob.enums.CronJobResult;
 import de.hybris.platform.cronjob.enums.CronJobStatus;
 import de.hybris.platform.cronjob.model.CronJobModel;
-import de.hybris.platform.servicelayer.config.ConfigurationService;
 import de.hybris.platform.servicelayer.cronjob.AbstractJobPerformable;
 import de.hybris.platform.servicelayer.cronjob.PerformResult;
 import de.hybris.platform.servicelayer.search.FlexibleSearchQuery;
@@ -40,8 +39,6 @@ public class ProductSpecificIndexerCronJob extends AbstractJobPerformable //,Abs
 {
 	private static final Logger LOG = Logger.getLogger(ProductSpecificIndexerCronJob.class.getName());
 
-	@Autowired
-	private ConfigurationService configurationService;
 
 	@Autowired
 	private IndexerService indexerService;

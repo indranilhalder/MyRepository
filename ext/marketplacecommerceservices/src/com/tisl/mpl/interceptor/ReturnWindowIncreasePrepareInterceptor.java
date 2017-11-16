@@ -3,7 +3,6 @@
  */
 package com.tisl.mpl.interceptor;
 
-import de.hybris.platform.core.model.ReturnWindowAuditModel;
 import de.hybris.platform.core.model.user.EmployeeModel;
 import de.hybris.platform.ordersplitting.model.ConsignmentModel;
 import de.hybris.platform.servicelayer.config.ConfigurationService;
@@ -25,17 +24,13 @@ import java.util.Map;
 
 import javax.annotation.Resource;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
-import java.util.Collection;
-
-import org.apache.commons.collections.CollectionUtils;
 
 import com.tisl.mpl.businesscontentimport.BusinessContentImportUtility;
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
-import com.tisl.mpl.core.model.ReturnWindowIncreaseModel;
-import com.tisl.mpl.returnwindowincrease.dao.ReturnWindowIncreaseDao;
 import com.tisl.mpl.returnwindowincrease.service.ReturnWindowIncreaseService;
 
 
@@ -60,8 +55,6 @@ public class ReturnWindowIncreasePrepareInterceptor implements PrepareIntercepto
 	private UserService userService;
 	@Autowired
 	private ReturnWindowIncreaseService returnWindowIncreaseService;
-	@Autowired
-	private ReturnWindowIncreaseDao returnWindowIncreaseDao;
 
 
 	/**
@@ -87,7 +80,7 @@ public class ReturnWindowIncreasePrepareInterceptor implements PrepareIntercepto
 	@Override
 	public void onPrepare(final Object o, final InterceptorContext its) throws InterceptorException
 	{
-	
+
 		String transactionId;
 		final Date systime = new Date();
 		List<String> transactionIdList;
@@ -121,7 +114,7 @@ public class ReturnWindowIncreasePrepareInterceptor implements PrepareIntercepto
 				final InputStream inputStream = mediaService.getStreamFromMedia(returnWindowIncreaseModel.getCsvFile());
 
 				final BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
-				
+
 				final EmployeeModel emp = (EmployeeModel) userService.getCurrentUser();
 				LOG.debug("Before Loop start");
 
@@ -234,7 +227,7 @@ public class ReturnWindowIncreasePrepareInterceptor implements PrepareIntercepto
 	}
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see de.hybris.platform.servicelayer.interceptor.LoadInterceptor#onLoad(java.lang.Object,
 	 * de.hybris.platform.servicelayer.interceptor.InterceptorContext)
 	 */

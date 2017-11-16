@@ -387,8 +387,7 @@ public class ProductPageController extends MidPageController
 	private BuyBoxService buyBoxService;
 	@Resource(name = "mplSlaveMasterFacade")
 	private MplSlaveMasterFacade mplSlaveMasterFacade;
-	@Resource(name = "mplStoreLocatorFacade")
-	private MplStoreLocatorFacade mplStoreLocatorFacade;
+
 	@Resource(name = "pointOfServiceConverter")
 	private Converter<PointOfServiceModel, PointOfServiceData> pointOfServiceConverter;
 
@@ -2417,7 +2416,7 @@ public class ProductPageController extends MidPageController
 				final String[] configurationFAs = configurationFA.split(",");
 				for (final CategoryModel supercategory : superCategories)
 				{
-					if (supercategory.getCode().startsWith("MPH"))
+					if (supercategory.getCode().startsWith(MPH))
 					{
 						int num = 0;
 						for (final String fashow : configurationFAs)
@@ -4103,7 +4102,7 @@ public class ProductPageController extends MidPageController
 				final String[] configurationFAs = configurationFA.split(",");
 				for (final CategoryModel supercategory : superCategories)
 				{
-					if (supercategory.getCode().startsWith("MPH"))
+					if (supercategory.getCode().startsWith(MPH))
 					{
 						int num = 0;
 						for (final String fashow : configurationFAs)
@@ -4479,17 +4478,18 @@ public class ProductPageController extends MidPageController
 			mplAjaxProductData.setError(e.getMessage());
 		}
 		finally
-		{	try
 		{
-			final ObjectMapper mapper = new ObjectMapper();
-			returnStatement = mapper.writeValueAsString(mplAjaxProductData);
-		}
-		catch (final Exception e)
-		{
-			ExceptionUtil.etailNonBusinessExceptionHandler(new EtailNonBusinessExceptions(e,
-					MarketplacecommerceservicesConstants.E0000));
-			mplAjaxProductData.setError(e.getMessage());
-		}
+			try
+			{
+				final ObjectMapper mapper = new ObjectMapper();
+				returnStatement = mapper.writeValueAsString(mplAjaxProductData);
+			}
+			catch (final Exception e)
+			{
+				ExceptionUtil.etailNonBusinessExceptionHandler(new EtailNonBusinessExceptions(e,
+						MarketplacecommerceservicesConstants.E0000));
+				mplAjaxProductData.setError(e.getMessage());
+			}
 		}
 		return returnStatement;
 	}

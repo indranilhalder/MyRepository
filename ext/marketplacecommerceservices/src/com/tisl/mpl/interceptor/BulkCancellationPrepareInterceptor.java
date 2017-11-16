@@ -28,7 +28,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import com.tisl.mpl.bulk.service.BulkCancellationService;
 import com.tisl.mpl.businesscontentimport.BusinessContentImportUtility;
-import com.tisl.mpl.core.model.BulkCancellationModel;
 
 
 /**
@@ -59,8 +58,7 @@ public class BulkCancellationPrepareInterceptor implements PrepareInterceptor
 	private MediaService mediaService;
 	@Autowired
 	private ModelService modelService;
-	@Autowired
-	private CronJobModel cronJobModel;
+
 	@Autowired
 	private CronJobService cronJobService;
 	@Autowired

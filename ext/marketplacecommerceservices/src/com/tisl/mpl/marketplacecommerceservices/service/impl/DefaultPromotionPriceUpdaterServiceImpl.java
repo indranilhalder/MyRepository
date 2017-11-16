@@ -16,7 +16,6 @@ import de.hybris.platform.promotions.model.AbstractPromotionRestrictionModel;
 import de.hybris.platform.promotions.model.ProductPromotionModel;
 import de.hybris.platform.promotions.model.PromotionPriceRowModel;
 import de.hybris.platform.servicelayer.model.ModelService;
-import de.hybris.platform.servicelayer.search.FlexibleSearchService;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -1970,8 +1969,9 @@ public class DefaultPromotionPriceUpdaterServiceImpl implements PromotionPriceUp
 		}
 	}
 
-	@Autowired
-	private FlexibleSearchService flexibleSearchService;
+	// SONAR fix
+	//	@Autowired
+	//	private FlexibleSearchService flexibleSearchService;
 	@Resource(name = "mplPromotionHelper")
 	MplPromotionHelper mplPromotionHelper;
 }

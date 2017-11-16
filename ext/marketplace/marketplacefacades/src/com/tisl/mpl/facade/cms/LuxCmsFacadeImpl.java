@@ -102,12 +102,6 @@ public class LuxCmsFacadeImpl implements LuxCmsFacade
 	@Autowired
 	private BuyBoxFacade buyBoxFacade;
 
-	@Resource(name = "priceDataFactory")
-	private PriceDataFactory priceDataFactory;
-
-	@Resource(name = "commonI18NService")
-	private CommonI18NService commonI18NService;
-
 	private MplCMSPageServiceImpl mplCMSPageService;
 
 
@@ -164,8 +158,8 @@ public class LuxCmsFacadeImpl implements LuxCmsFacade
 			final LuxuryComponentsListWsDTO luxuryComponentsListWsDTO) throws CMSItemNotFoundException
 	{
 
-		final List<AbstractCMSComponentModel> abstractCMSComponentModelList = cmsRestrictionService
-				.evaluateCMSComponents(contentSlot.getCmsComponents(), null);
+		final List<AbstractCMSComponentModel> abstractCMSComponentModelList = cmsRestrictionService.evaluateCMSComponents(
+				contentSlot.getCmsComponents(), null);
 		LuxuryComponentsListWsDTO luxuryComponentsList = luxuryComponentsListWsDTO;
 
 		if (null != abstractCMSComponentModelList)
@@ -433,7 +427,6 @@ public class LuxCmsFacadeImpl implements LuxCmsFacade
 
 		return luxuryComponent;
 	}
-
 
 	private LuxuryComponentsListWsDTO getLuxCMSImagesComponentWsDTO(final CMSImageComponentModel CMSImageComponent,
 			final LuxuryComponentsListWsDTO luxuryComponent)
