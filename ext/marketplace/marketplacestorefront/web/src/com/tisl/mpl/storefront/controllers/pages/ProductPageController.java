@@ -288,7 +288,7 @@ public class ProductPageController extends MidPageController
 
 	private static final String MPH = "MPH".intern();
 
-
+	private static final String PRODUCTCODE = "productCode";
 
 	//TPR-6405
 	private static final String SAMSUNG = "Samsung";
@@ -613,7 +613,7 @@ public class ProductPageController extends MidPageController
 				 * final String metaTitle = productData.getSeoMetaTitle(); final String pdCode = productData.getCode();
 				 * final String metaDescription = productData.getSeoMetaDescription(); //TISPRD-4977 final String
 				 * metaKeyword = productData.getSeoMetaKeyword(); //final String metaKeywords = productData.gets
-				 *
+				 * 
 				 * setUpMetaData(model, metaDescription, metaTitle, pdCode, metaKeyword);
 				 */
 				//AKAMAI fix
@@ -817,7 +817,7 @@ public class ProductPageController extends MidPageController
 	//		final List<MetaElementData> metadata = new LinkedList<>();
 	//		metadata.add(createMetaElement(ModelAttributetConstants.DESCRIPTION, metaDescription));
 	//		//metadata.add(createMetaElement(ModelAttributetConstants.TITLE, metaTitle));
-	//		metadata.add(createMetaElement("productCode", pdCode));
+	//		metadata.add(createMetaElement(PRODUCTCODE, pdCode));
 	//		//metadata.add(createMetaElement(ModelAttributetConstants.KEYWORDS, metaKeywords));
 	//		model.addAttribute(ModelAttributetConstants.METATAGS, metadata);
 	//		model.addAttribute(ModelAttributetConstants.PMETATTITLE, metaTitle); //TISPRD-4977
@@ -2549,14 +2549,14 @@ public class ProductPageController extends MidPageController
 			model.addAttribute(ModelAttributetConstants.KEYWORDS, metaKeywords); //PRDI-422
 		}
 		//metadata.add(createMetaElement(ModelAttributetConstants.TITLE, metaTitle));
-		metadata.add(createMetaElement("productCode", productCode));
+		metadata.add(createMetaElement(PRODUCTCODE, productCode));
 		model.addAttribute(ModelAttributetConstants.METATAGS, metadata);
 		model.addAttribute(ModelAttributetConstants.PMETATTITLE, metaTitle); //TISPRD-4977
 		//Added for UF-33
 		model.addAttribute(CMS_PAGE_TITLE, metaTitle);
 	}
 
-	@SuppressWarnings("boxing")
+	@SuppressWarnings(BOXING)
 	private void displayConfigurableAttributeForHF(final ProductData productData, final Model model)
 	{
 		{
@@ -2963,9 +2963,9 @@ public class ProductPageController extends MidPageController
 										/*
 										 * else if (value.equalsIgnoreCase(featureData.getCode().substring(
 										 * featureData.getCode().lastIndexOf(".") + 1))) {
-										 *
+										 * 
 										 * if (productFeatureMap.size() > 0) { productFeatureMap.clear(); }
-										 *
+										 * 
 										 * productFeatureMap.put(featureValueData.getValue(), jewelleryDescMapping.get(value));
 										 * mapConfigurableAttributes.put(featureData.getName(), productFeatureMap); }
 										 */
@@ -3515,11 +3515,11 @@ public class ProductPageController extends MidPageController
 	 */
 	/*
 	 * private MarketplaceDeliveryModeData fetchDeliveryModeDataForUSSID(final String deliveryMode, final String ussid) {
-	 *
+	 * 
 	 * final MarketplaceDeliveryModeData deliveryModeData = new MarketplaceDeliveryModeData(); final
 	 * MplZoneDeliveryModeValueModel mplZoneDeliveryModeValueModel = mplCheckoutFacade
 	 * .populateDeliveryCostForUSSIDAndDeliveryMode(deliveryMode, MarketplaceFacadesConstants.INR, ussid);
-	 *
+	 * 
 	 * final PriceData priceData = productDetailsHelper.formPriceData(mplZoneDeliveryModeValueModel.getValue());
 	 * deliveryModeData.setCode(mplZoneDeliveryModeValueModel.getDeliveryMode().getCode());
 	 * deliveryModeData.setDescription(mplZoneDeliveryModeValueModel.getDeliveryMode().getDescription());
@@ -3539,76 +3539,76 @@ public class ProductPageController extends MidPageController
 	 */
 	/*
 	 * private List<PincodeServiceData> populatePinCodeServiceData(final String productCode) {
-	 *
-	 *
-	 *
+	 * 
+	 * 
+	 * 
 	 * final List<PincodeServiceData> requestData = new ArrayList<>(); PincodeServiceData data = null;
-	 *
+	 * 
 	 * MarketplaceDeliveryModeData deliveryModeData = null; try { final ProductModel productModel =
-	 *
-	 *
+	 * 
+	 * 
 	 * productService.getProductForCode(productCode); final ProductData productData =
-	 *
+	 * 
 	 * productFacade.getProductForOptions(productModel, Arrays.asList(ProductOption.BASIC, ProductOption.SELLER,
 	 * ProductOption.PRICE));
-	 *
-	 *
+	 * 
+	 * 
 	 * for (final SellerInformationData seller : productData.getSeller()) { final List<MarketplaceDeliveryModeData>
-	 *
+	 * 
 	 * deliveryModeList = new ArrayList<MarketplaceDeliveryModeData>(); data = new PincodeServiceData(); if ((null !=
-	 *
+	 * 
 	 * seller.getDeliveryModes()) && !(seller.getDeliveryModes().isEmpty())) { for (final MarketplaceDeliveryModeData
-	 *
+	 * 
 	 * deliveryMode : seller.getDeliveryModes()) { deliveryModeData =
-	 *
+	 * 
 	 * fetchDeliveryModeDataForUSSID(deliveryMode.getCode(), seller.getUssid()); deliveryModeList.add(deliveryModeData);
-	 *
-	 *
+	 * 
+	 * 
 	 * } data.setDeliveryModes(deliveryModeList); } if (null != seller.getFullfillment() &&
-	 *
+	 * 
 	 * StringUtils.isNotEmpty(seller.getFullfillment())) {
-	 *
+	 * 
 	 * data.setFullFillmentType(MplGlobalCodeConstants.GLOBALCONSTANTSMAP.get(seller.getFullfillment().toUpperCase())); }
-	 *
+	 * 
 	 * if (null != seller.getShippingMode() && (StringUtils.isNotEmpty(seller.getShippingMode()))) {
-	 *
+	 * 
 	 * data.setTransportMode(MplGlobalCodeConstants.GLOBALCONSTANTSMAP.get(seller.getShippingMode().toUpperCase())); } if
-	 *
+	 * 
 	 * (null != seller.getSpPrice() && !(seller.getSpPrice().equals(ModelAttributetConstants.EMPTY))) { data.setPrice(new
-	 *
+	 * 
 	 * Double(seller.getSpPrice().getValue().doubleValue())); } else if (null != seller.getMopPrice() &&
-	 *
+	 * 
 	 * !(seller.getMopPrice().equals(ModelAttributetConstants.EMPTY))) { data.setPrice(new
-	 *
+	 * 
 	 * Double(seller.getMopPrice().getValue().doubleValue())); } else if (null != seller.getMrpPrice() &&
-	 *
+	 * 
 	 * !(seller.getMrpPrice().equals(ModelAttributetConstants.EMPTY))) { data.setPrice(new
-	 *
+	 * 
 	 * Double(seller.getMrpPrice().getValue().doubleValue())); } else {
-	 *
-	 *
-	 *
+	 * 
+	 * 
+	 * 
 	 * LOG.info("*************** No price avaiable for seller :" + seller.getSellerID()); continue; } if (null !=
-	 *
-	 *
+	 * 
+	 * 
 	 * seller.getIsCod() && StringUtils.isNotEmpty(seller.getIsCod())) { data.setIsCOD(seller.getIsCod()); }
-	 *
-	 *
-	 *
+	 * 
+	 * 
+	 * 
 	 * data.setSellerId(seller.getSellerID()); data.setUssid(seller.getUssid());
-	 *
+	 * 
 	 * data.setIsDeliveryDateRequired(ControllerConstants.Views.Fragments.Product.N); requestData.add(data); } } catch
-	 *
-	 *
-	 *
-	 *
-	 *
+	 * 
+	 * 
+	 * 
+	 * 
+	 * 
 	 * (final EtailBusinessExceptions e) { ExceptionUtil.etailBusinessExceptionHandler(e, null); }
-	 *
-	 *
-	 *
+	 * 
+	 * 
+	 * 
 	 * catch (final Exception e) {
-	 *
+	 * 
 	 * throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000); } return requestData; }
 	 */
 
@@ -3812,7 +3812,7 @@ public class ProductPageController extends MidPageController
 	 * @param buyboxJson
 	 * @throws com.granule.json.JSONException
 	 */
-	@SuppressWarnings("boxing")
+	@SuppressWarnings(BOXING)
 	private JSONObject getPopulatedBuyBoxJson(final Map<String, Object> buydata, final JSONObject buyboxJson)
 			throws com.granule.json.JSONException
 	{
@@ -3922,7 +3922,7 @@ public class ProductPageController extends MidPageController
 
 	//TPR-978
 	@RequestMapping(value = PRODUCT_OLD_URL_PATTERN + "-fetchPageContents", method = RequestMethod.GET)
-	public String fetchPageContents(@RequestParam(value = "productCode") String productCode, final Model model)
+	public String fetchPageContents(@RequestParam(value = PRODUCTCODE) String productCode, final Model model)
 			throws com.granule.json.JSONException
 	{
 
@@ -4692,7 +4692,7 @@ public class ProductPageController extends MidPageController
 	 * @param response
 	 * @return list of pos with product.
 	 */
-	@SuppressWarnings("boxing")
+	@SuppressWarnings(BOXING)
 	private List<PointOfServiceData> getProductWdPos(final List<StoreLocationResponseData> response, final String pincode)
 	{
 		if (LOG.isDebugEnabled())
@@ -4778,7 +4778,7 @@ public class ProductPageController extends MidPageController
 	 * @param storeLocationRequestDataList
 	 * @return list of product with stores
 	 */
-	@SuppressWarnings("boxing")
+	@SuppressWarnings(BOXING)
 	private List<PointOfServiceData> getProductWdPosCommerce(final List<StoreLocationRequestData> storeLocationRequestDataList,
 			final String pincode)
 	{
@@ -4869,9 +4869,9 @@ public class ProductPageController extends MidPageController
 			final String msdMad_Uid = configurationService.getConfiguration().getString("mad.uid.key");
 			final String widget_list = configurationService.getConfiguration().getString("widgetlist.key");
 			final String msdHeader = configurationService.getConfiguration().getString("msdHeader.key");
-			if (request.getParameterMap().containsKey("productCode"))
+			if (request.getParameterMap().containsKey(PRODUCTCODE))
 			{
-				productCode = request.getParameter("productCode").toString();
+				productCode = request.getParameter(PRODUCTCODE).toString();
 			}
 			msdRequest.setProduct_id(productCode);
 			msdRequest.setApi_key(msdApiKey);
