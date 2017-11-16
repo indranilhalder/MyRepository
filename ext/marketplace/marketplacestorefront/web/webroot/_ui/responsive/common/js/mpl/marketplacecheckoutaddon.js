@@ -5244,9 +5244,25 @@ function applyPromotion(bankName,binValue,formSubmit,isNewCard)
 		//}
 		},
 		error : function(resp) {
-			$("#no-click,.loaderDiv").remove();
+			//TISUAT-6037 starts here
+			if(ACC.singlePageCheckout.getIsResponsive())
+				{
+				ACC.singlePageCheckout.resetPaymentModes();
+				$('.security_code').removeClass("security_code").addClass("security_code_hide");
+				$('.cvvValdiation').prop('disabled', true);
+				$("#juspayErrorMsg").html("Oops, something went wrong! Please click on PROCEED to complete your purchase.");
+				$("#juspayconnErrorDiv").css("display","block");
+				}
+			else
+				{
+				ACC.singlePageCheckout.showAccordion("#reviewOrder"); 
+				$('.error_msg_backfrom_payment').html("Oops, something went wrong! Please click on PROCEED to complete your purchase."); 
+				}
+			
+			/*$("#no-click,.loaderDiv").remove();
 			$(".make_payment").removeAttr('disabled');
-			$("#no-click1,.loaderDiv1").remove();
+			$("#no-click1,.loaderDiv1").remove();*/
+			//TISUAT-6037 ends here
 		}
 	});
 }
