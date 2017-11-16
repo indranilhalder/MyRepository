@@ -1103,21 +1103,21 @@ public class DefaultPromotionPriceUpdaterServiceImpl implements PromotionPriceUp
 
 
 
-	@SuppressWarnings(UNUSED)
-	private List<String> getExcludedProductData(final List<ProductModel> exproductList)
-	{
-		final List<String> exProductList = new ArrayList<String>();
-
-		for (final ProductModel product : exproductList)
-		{
-			if (StringUtils.isNotEmpty(product.getCode()))
-			{
-				exProductList.add(product.getCode());
-			}
-		}
-
-		return exProductList;
-	}
+	//	@SuppressWarnings(UNUSED)
+	//	private List<String> getExcludedProductData(final List<ProductModel> exproductList)
+	//	{
+	//		final List<String> exProductList = new ArrayList<String>();
+	//
+	//		for (final ProductModel product : exproductList)
+	//		{
+	//			if (StringUtils.isNotEmpty(product.getCode()))
+	//			{
+	//				exProductList.add(product.getCode());
+	//			}
+	//		}
+	//
+	//		return exProductList;
+	//	}
 
 	private void clearExistingData(final String promoCode)
 	{
@@ -1137,7 +1137,7 @@ public class DefaultPromotionPriceUpdaterServiceImpl implements PromotionPriceUp
 			 * pm.setPromotionValue(null); pm.setPromotionIdentifier(MarketplacecommerceservicesConstants.EMPTY);
 			 * pm.setMaxDiscount(null); pm.setPromotionChannel(null); pmList.addAll(price.getPromotionalPriceRow());
 			 * pmList.add(pm); price.setPromotionalPriceRow(pmList); priceRowtobeSaved.add(price); }
-			 * 
+			 *
 			 * if (CollectionUtils.isNotEmpty(promoPriceList)) { modelService.saveAll(priceRowtobeSaved); }
 			 */
 			final List<PromotionalPriceRowModel> priceRowModelList = updatePromotionalPriceDao.fetchPromoPriceData(promoCode);
@@ -1193,97 +1193,97 @@ public class DefaultPromotionPriceUpdaterServiceImpl implements PromotionPriceUp
 	//		return stagedProductList;
 	//	}
 
-	@SuppressWarnings(UNUSED)
-	private boolean validateProductData(final ProductModel product, final Integer priority)
-	{
-		boolean flag = false;
-		try
-		{
-			//			final ProductModel oModel = productService.getProductForCode(getDefaultPromotionsManager().catalogData(),
-			//					product.getCode());//change
-			//			if (null != oModel)
-			//			{//Car-158 chnage
-			flag = validateCategoryProductData(product, priority);
-			//}
-		}
-		catch (final Exception e)
-		{
-			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000);
-		}
-		return flag;
-	}
+	//	@SuppressWarnings(UNUSED)
+	//	private boolean validateProductData(final ProductModel product, final Integer priority)
+	//	{
+	//		boolean flag = false;
+	//		try
+	//		{
+	//			//			final ProductModel oModel = productService.getProductForCode(getDefaultPromotionsManager().catalogData(),
+	//			//					product.getCode());//change
+	//			//			if (null != oModel)
+	//			//			{//Car-158 chnage
+	//			flag = validateCategoryProductData(product, priority);
+	//			//}
+	//		}
+	//		catch (final Exception e)
+	//		{
+	//			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000);
+	//		}
+	//		return flag;
+	//	}
 
-	@SuppressWarnings(UNUSED)
-	private boolean getBrandsForProduct(final ProductModel product, final List<String> brands, final List<String> rejectBrandList)
-	{
-		boolean allow = false;
-		List<String> brandList = null;
-
-		try
-		{
-
-			if (brands.isEmpty() && rejectBrandList.isEmpty()) //no need to proceed if there is no brand restriction
-			{
-				return true;
-			}
-
-			final List<CategoryModel> categories = getImmediateSuperCategory(product);
-			String brandCode = "";//Car-158
-			if (categories != null && !categories.isEmpty())
-			{
-				brandList = new ArrayList<String>();
-				for (final CategoryModel category : categories)
-				{
-					if (category.getCode().startsWith("MBH"))
-					{
-						brandList.add(category.getCode());
-						brandCode = brandList.get(0);
-						break; //Car-158
-					}
-
-				}
-			}
-
-			if (CollectionUtils.isNotEmpty(brands) && CollectionUtils.isNotEmpty(brandList))
-			{
-				//final String productBrand = brandList.get(0);//Car-158 CHNAGES
-				if (brands.contains(brandCode))
-				{
-					allow = true;
-				}
-			}
-
-
-			if (CollectionUtils.isNotEmpty(rejectBrandList) && CollectionUtils.isNotEmpty(brandList))
-			{
-				//	final String productBrand = brandList.get(0);
-				if (rejectBrandList.contains(brandCode)) //Car-158 CHNAGES
-				{
-					allow = false;
-				}
-				else
-				{
-					allow = true;
-				}
-			}
-
-			LOG.debug("******** Special Price - product:" + product.getCode() + " is brand restricted.");
-		}
-		catch (final EtailBusinessExceptions e)
-		{
-			throw e;
-		}
-		catch (final EtailNonBusinessExceptions e)
-		{
-			throw e;
-		}
-		catch (final Exception e)
-		{
-			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000);
-		}
-
-		return allow;
-	}
+	//	@SuppressWarnings(UNUSED)
+	//	private boolean getBrandsForProduct(final ProductModel product, final List<String> brands, final List<String> rejectBrandList)
+	//	{
+	//		boolean allow = false;
+	//		List<String> brandList = null;
+	//
+	//		try
+	//		{
+	//
+	//			if (brands.isEmpty() && rejectBrandList.isEmpty()) //no need to proceed if there is no brand restriction
+	//			{
+	//				return true;
+	//			}
+	//
+	//			final List<CategoryModel> categories = getImmediateSuperCategory(product);
+	//			String brandCode = "";//Car-158
+	//			if (categories != null && !categories.isEmpty())
+	//			{
+	//				brandList = new ArrayList<String>();
+	//				for (final CategoryModel category : categories)
+	//				{
+	//					if (category.getCode().startsWith("MBH"))
+	//					{
+	//						brandList.add(category.getCode());
+	//						brandCode = brandList.get(0);
+	//						break; //Car-158
+	//					}
+	//
+	//				}
+	//			}
+	//
+	//			if (CollectionUtils.isNotEmpty(brands) && CollectionUtils.isNotEmpty(brandList))
+	//			{
+	//				//final String productBrand = brandList.get(0);//Car-158 CHNAGES
+	//				if (brands.contains(brandCode))
+	//				{
+	//					allow = true;
+	//				}
+	//			}
+	//
+	//
+	//			if (CollectionUtils.isNotEmpty(rejectBrandList) && CollectionUtils.isNotEmpty(brandList))
+	//			{
+	//				//	final String productBrand = brandList.get(0);
+	//				if (rejectBrandList.contains(brandCode)) //Car-158 CHNAGES
+	//				{
+	//					allow = false;
+	//				}
+	//				else
+	//				{
+	//					allow = true;
+	//				}
+	//			}
+	//
+	//			LOG.debug("******** Special Price - product:" + product.getCode() + " is brand restricted.");
+	//		}
+	//		catch (final EtailBusinessExceptions e)
+	//		{
+	//			throw e;
+	//		}
+	//		catch (final EtailNonBusinessExceptions e)
+	//		{
+	//			throw e;
+	//		}
+	//		catch (final Exception e)
+	//		{
+	//			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000);
+	//		}
+	//
+	//		return allow;
+	//	}
 
 
 	private List<CategoryModel> getImmediateSuperCategory(final ProductModel product)
@@ -1362,33 +1362,33 @@ public class DefaultPromotionPriceUpdaterServiceImpl implements PromotionPriceUp
 	 * clearExistingData(promoCode); final List<String> product = new ArrayList<String>(); //List<String>
 	 * stagedProductList = new ArrayList<String>();//why? // final List<String> promoproductList = new
 	 * ArrayList<String>();//Car-153 final List<PriceRowModel> priceList = new ArrayList<PriceRowModel>();
-	 * 
+	 *
 	 * if (CollectionUtils.isNotEmpty(products)) { for (final ProductModel itrProduct : products) { if
 	 * (getBrandsForProduct(itrProduct, brands, rejectBrandList) && validateProductData(itrProduct, priority)) {
 	 * product.add(itrProduct.getPk().toString()); //promoproductList.add(itrProduct.getCode());//Car-158 } } }
-	 * 
+	 *
 	 * if (CollectionUtils.isNotEmpty(categories)) { //TISPRO-352 : Fix final List<ProductModel> productList =
 	 * fetchProductList(categories); if (CollectionUtils.isNotEmpty(productList)) { for (final ProductModel itrProduct :
 	 * productList) { if (getBrandsForProduct(itrProduct, brands, rejectBrandList) && validateProductData(itrProduct,
 	 * priority)) { product.add(itrProduct.getPk().toString()); //promoproductList.add(itrProduct.getCode());//CAR-158 }
 	 * } }
-	 * 
-	 * 
+	 *
+	 *
 	 * //Car-158 // final ConcurrentHashMap<List<String>, List<String>> categoryDetailsMap =
 	 * getEligibleProductList(brands, // rejectBrandList, priority, categories); // if
 	 * (MapUtils.isNotEmpty(categoryDetailsMap)) // { // for (final ConcurrentHashMap.Entry<List<String>, List<String>>
 	 * entry : categoryDetailsMap.entrySet()) // { // product.addAll(entry.getKey()); // //
 	 * promoproductList.addAll(entry.getValue());//Car-158 // LOG.debug("Key = " + entry.getKey() + ", Value = " +
 	 * entry.getValue()); // } // } }
-	 * 
-	 * 
+	 *
+	 *
 	 * LOG.debug("******** Special Price - Disable Promotion Applicable product List:" + product);
-	 * 
-	 * 
+	 *
+	 *
 	 * if (!product.isEmpty()) { //Car-158 // stagedProductList = getStagedProductDetails(promoproductList); // For
 	 * adding the staged catalog price Row for Product // if (CollectionUtils.isNotEmpty(stagedProductList)) // { //
 	 * product.addAll(stagedProductList); // }
-	 * 
+	 *
 	 * final List<PriceRowModel> priceRow = updatePromotionalPriceDao.fetchPricedData(product); for (final PriceRowModel
 	 * price : priceRow) { if (!isEnabled) { price.setPromotionStartDate(null); price.setPromotionEndDate(null);
 	 * price.setIsPercentage(null); price.setPromotionValue(null);
@@ -1397,11 +1397,11 @@ public class DefaultPromotionPriceUpdaterServiceImpl implements PromotionPriceUp
 	 * price.setPromotionStartDate(null); price.setPromotionEndDate(null); price.setIsPercentage(null);
 	 * price.setPromotionValue(null); price.setPromotionIdentifier(MarketplacecommerceservicesConstants.EMPTY);
 	 * price.setMaxDiscount(null); } priceList.add(price); }
-	 * 
+	 *
 	 * if (CollectionUtils.isNotEmpty(priceList)) { modelService.saveAll(priceList); //NEED CHANGE }
-	 * 
+	 *
 	 * } }
-	 * 
+	 *
 	 * catch (final EtailBusinessExceptions e) { throw e; } catch (final EtailNonBusinessExceptions e) { throw e; } catch
 	 * (final Exception e) { throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000); } }
 	 */
@@ -1695,18 +1695,18 @@ public class DefaultPromotionPriceUpdaterServiceImpl implements PromotionPriceUp
 	//	}
 
 
-	@SuppressWarnings(UNUSED)
-	private boolean validateExclusion(final List<String> exProductList, final ProductModel product)
-	{
-		boolean flag = true;
-
-		if (CollectionUtils.isNotEmpty(exProductList) && exProductList.contains(product.getCode()))
-		{
-			flag = false;
-		}
-
-		return flag;
-	}
+	//	@SuppressWarnings(UNUSED)
+	//	private boolean validateExclusion(final List<String> exProductList, final ProductModel product)
+	//	{
+	//		boolean flag = true;
+	//
+	//		if (CollectionUtils.isNotEmpty(exProductList) && exProductList.contains(product.getCode()))
+	//		{
+	//			flag = false;
+	//		}
+	//
+	//		return flag;
+	//	}
 
 	/**
 	 * @return the categoryService
