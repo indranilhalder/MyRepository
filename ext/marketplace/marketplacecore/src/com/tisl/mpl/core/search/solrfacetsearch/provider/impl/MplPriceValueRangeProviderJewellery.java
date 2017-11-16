@@ -29,7 +29,6 @@ import org.springframework.beans.factory.annotation.Required;
 
 import com.tisl.mpl.core.model.BuyBoxModel;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
-import com.tisl.mpl.marketplacecommerceservices.service.BuyBoxService;
 import com.tisl.mpl.util.MplBuyBoxUtility;
 import com.tisl.mpl.util.MplJewelleryUtility;
 
@@ -98,7 +97,7 @@ public class MplPriceValueRangeProviderJewellery extends AbstractPropertyFieldVa
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see
 	 * de.hybris.platform.solrfacetsearch.provider.FieldValueProvider#getFieldValues(de.hybris.platform.solrfacetsearch.
 	 * config.IndexConfig, de.hybris.platform.solrfacetsearch.config.IndexedProperty, java.lang.Object)

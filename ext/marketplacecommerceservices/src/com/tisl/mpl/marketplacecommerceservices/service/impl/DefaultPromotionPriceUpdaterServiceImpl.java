@@ -70,7 +70,8 @@ public class DefaultPromotionPriceUpdaterServiceImpl implements PromotionPriceUp
 	@Resource
 	private ModelService modelService;
 
-	@SuppressWarnings("unused")
+	private static final String UNUSED = "unused";
+	@SuppressWarnings(UNUSED)
 	private final static Logger LOG = Logger.getLogger(DefaultPromotionPriceUpdaterServiceImpl.class.getName());
 
 	@Autowired
@@ -1102,7 +1103,7 @@ public class DefaultPromotionPriceUpdaterServiceImpl implements PromotionPriceUp
 
 
 
-	@SuppressWarnings("unused")
+	@SuppressWarnings(UNUSED)
 	private List<String> getExcludedProductData(final List<ProductModel> exproductList)
 	{
 		final List<String> exProductList = new ArrayList<String>();
@@ -1136,7 +1137,7 @@ public class DefaultPromotionPriceUpdaterServiceImpl implements PromotionPriceUp
 			 * pm.setPromotionValue(null); pm.setPromotionIdentifier(MarketplacecommerceservicesConstants.EMPTY);
 			 * pm.setMaxDiscount(null); pm.setPromotionChannel(null); pmList.addAll(price.getPromotionalPriceRow());
 			 * pmList.add(pm); price.setPromotionalPriceRow(pmList); priceRowtobeSaved.add(price); }
-			 *
+			 * 
 			 * if (CollectionUtils.isNotEmpty(promoPriceList)) { modelService.saveAll(priceRowtobeSaved); }
 			 */
 			final List<PromotionalPriceRowModel> priceRowModelList = updatePromotionalPriceDao.fetchPromoPriceData(promoCode);
@@ -1192,7 +1193,7 @@ public class DefaultPromotionPriceUpdaterServiceImpl implements PromotionPriceUp
 	//		return stagedProductList;
 	//	}
 
-	@SuppressWarnings("unused")
+	@SuppressWarnings(UNUSED)
 	private boolean validateProductData(final ProductModel product, final Integer priority)
 	{
 		boolean flag = false;
@@ -1212,7 +1213,7 @@ public class DefaultPromotionPriceUpdaterServiceImpl implements PromotionPriceUp
 		return flag;
 	}
 
-	@SuppressWarnings("unused")
+	@SuppressWarnings(UNUSED)
 	private boolean getBrandsForProduct(final ProductModel product, final List<String> brands, final List<String> rejectBrandList)
 	{
 		boolean allow = false;
@@ -1361,33 +1362,33 @@ public class DefaultPromotionPriceUpdaterServiceImpl implements PromotionPriceUp
 	 * clearExistingData(promoCode); final List<String> product = new ArrayList<String>(); //List<String>
 	 * stagedProductList = new ArrayList<String>();//why? // final List<String> promoproductList = new
 	 * ArrayList<String>();//Car-153 final List<PriceRowModel> priceList = new ArrayList<PriceRowModel>();
-	 *
+	 * 
 	 * if (CollectionUtils.isNotEmpty(products)) { for (final ProductModel itrProduct : products) { if
 	 * (getBrandsForProduct(itrProduct, brands, rejectBrandList) && validateProductData(itrProduct, priority)) {
 	 * product.add(itrProduct.getPk().toString()); //promoproductList.add(itrProduct.getCode());//Car-158 } } }
-	 *
+	 * 
 	 * if (CollectionUtils.isNotEmpty(categories)) { //TISPRO-352 : Fix final List<ProductModel> productList =
 	 * fetchProductList(categories); if (CollectionUtils.isNotEmpty(productList)) { for (final ProductModel itrProduct :
 	 * productList) { if (getBrandsForProduct(itrProduct, brands, rejectBrandList) && validateProductData(itrProduct,
 	 * priority)) { product.add(itrProduct.getPk().toString()); //promoproductList.add(itrProduct.getCode());//CAR-158 }
 	 * } }
-	 *
-	 *
+	 * 
+	 * 
 	 * //Car-158 // final ConcurrentHashMap<List<String>, List<String>> categoryDetailsMap =
 	 * getEligibleProductList(brands, // rejectBrandList, priority, categories); // if
 	 * (MapUtils.isNotEmpty(categoryDetailsMap)) // { // for (final ConcurrentHashMap.Entry<List<String>, List<String>>
 	 * entry : categoryDetailsMap.entrySet()) // { // product.addAll(entry.getKey()); // //
 	 * promoproductList.addAll(entry.getValue());//Car-158 // LOG.debug("Key = " + entry.getKey() + ", Value = " +
 	 * entry.getValue()); // } // } }
-	 *
-	 *
+	 * 
+	 * 
 	 * LOG.debug("******** Special Price - Disable Promotion Applicable product List:" + product);
-	 *
-	 *
+	 * 
+	 * 
 	 * if (!product.isEmpty()) { //Car-158 // stagedProductList = getStagedProductDetails(promoproductList); // For
 	 * adding the staged catalog price Row for Product // if (CollectionUtils.isNotEmpty(stagedProductList)) // { //
 	 * product.addAll(stagedProductList); // }
-	 *
+	 * 
 	 * final List<PriceRowModel> priceRow = updatePromotionalPriceDao.fetchPricedData(product); for (final PriceRowModel
 	 * price : priceRow) { if (!isEnabled) { price.setPromotionStartDate(null); price.setPromotionEndDate(null);
 	 * price.setIsPercentage(null); price.setPromotionValue(null);
@@ -1396,11 +1397,11 @@ public class DefaultPromotionPriceUpdaterServiceImpl implements PromotionPriceUp
 	 * price.setPromotionStartDate(null); price.setPromotionEndDate(null); price.setIsPercentage(null);
 	 * price.setPromotionValue(null); price.setPromotionIdentifier(MarketplacecommerceservicesConstants.EMPTY);
 	 * price.setMaxDiscount(null); } priceList.add(price); }
-	 *
+	 * 
 	 * if (CollectionUtils.isNotEmpty(priceList)) { modelService.saveAll(priceList); //NEED CHANGE }
-	 *
+	 * 
 	 * } }
-	 *
+	 * 
 	 * catch (final EtailBusinessExceptions e) { throw e; } catch (final EtailNonBusinessExceptions e) { throw e; } catch
 	 * (final Exception e) { throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000); } }
 	 */
@@ -1694,7 +1695,7 @@ public class DefaultPromotionPriceUpdaterServiceImpl implements PromotionPriceUp
 	//	}
 
 
-	@SuppressWarnings("unused")
+	@SuppressWarnings(UNUSED)
 	private boolean validateExclusion(final List<String> exProductList, final ProductModel product)
 	{
 		boolean flag = true;

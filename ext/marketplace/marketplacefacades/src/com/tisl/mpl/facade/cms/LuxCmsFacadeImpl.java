@@ -15,7 +15,6 @@ import de.hybris.platform.cms2.model.relations.ContentSlotForTemplateModel;
 import de.hybris.platform.cms2.servicelayer.services.CMSRestrictionService;
 import de.hybris.platform.cms2lib.model.components.BannerComponentModel;
 import de.hybris.platform.cms2lib.model.components.RotatingImagesComponentModel;
-import de.hybris.platform.commercefacades.product.PriceDataFactory;
 import de.hybris.platform.commercefacades.product.ProductFacade;
 import de.hybris.platform.commercefacades.product.ProductOption;
 import de.hybris.platform.commercefacades.product.data.ImageData;
@@ -25,7 +24,6 @@ import de.hybris.platform.commerceservices.enums.UiExperienceLevel;
 import de.hybris.platform.core.model.media.MediaContainerModel;
 import de.hybris.platform.core.model.media.MediaModel;
 import de.hybris.platform.core.model.product.ProductModel;
-import de.hybris.platform.servicelayer.i18n.CommonI18NService;
 import de.hybris.platform.servicelayer.session.SessionExecutionBody;
 import de.hybris.platform.servicelayer.session.SessionService;
 

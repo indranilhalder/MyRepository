@@ -37,10 +37,7 @@ import com.tisl.mpl.businesscontentimport.BusinessContentImportUtility;
 public class BulkCancellationPrepareInterceptor implements PrepareInterceptor
 {
 	private static final String UNUSED = "unused";
-	@SuppressWarnings(UNUSED)
-	private static final String ERROR_PREFIX = "ERROR_";
-	@SuppressWarnings(UNUSED)
-	private static final String PROCESSED_PREFIX = "PROCESSED_";
+
 	@SuppressWarnings(UNUSED)
 	private static final String JOBCODE = "initiateCancelForOrderCronJob";
 	@SuppressWarnings(UNUSED)
