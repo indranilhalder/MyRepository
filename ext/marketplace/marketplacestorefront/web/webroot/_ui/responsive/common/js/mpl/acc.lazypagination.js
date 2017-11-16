@@ -898,10 +898,11 @@ function toggleNextPrevButton(){
 })(window.jQuery, window, document);
 
 $('.pagination-blocks').twbsPagination(settings);
-$(window).on("resize",function(){
+
+/*$(window).on("resize",function(){
 if($(window).width() <= 410){
 $('.pagination-blocks').twbsPagination('destroy');
 settings.visiblePages = 2;
 $('.pagination-blocks').twbsPagination(settings);
 }
-});
+});*/
