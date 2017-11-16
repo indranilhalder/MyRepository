@@ -274,6 +274,8 @@ public class ProductPageController extends MidPageController
 	private static final String PRODUCT_OLD_URL_PATTERN = "/**/p";
 	private static final String BOXING = "boxing";
 	private static final String USSID = "ussid";
+	private static final String PRODUCTCODE = "productCode";
+
 	//TPR-3736
 	private static final String IA_USS_IDS = "iaUssIds";
 
@@ -2577,7 +2579,6 @@ public class ProductPageController extends MidPageController
 							productData.getClassifications());
 
 					String keyProdptsHeaderName = null;
-					final StringBuffer groupString = new StringBuffer();
 
 					for (final ClassificationData configurableAttributData : ConfigurableAttributeList)
 					{
@@ -4420,7 +4421,6 @@ public class ProductPageController extends MidPageController
 	{
 		LOG.debug("***************************productClassAttribs call for*************" + productCode);
 		String returnStatement = null;
-		final Gson gson = new Gson();
 		MplAjaxProductData mplAjaxProductData = null;
 		LinkedHashMap<String, Map<String, List<String>>> featureDetails = new LinkedHashMap<String, Map<String, List<String>>>();
 		try
@@ -4855,7 +4855,6 @@ public class ProductPageController extends MidPageController
 	public MSDResponsedata getMSDWidgetData(final HttpServletRequest request)
 	{
 
-		final JSONObject MSDJObject = new JSONObject();
 		final String msdUse = configurationService.getConfiguration().getString("isMSDEnabled");
 		MSDResponsedata msdRecData = null;
 		String productCode = null;
@@ -4868,7 +4867,6 @@ public class ProductPageController extends MidPageController
 			final String msdDetails = configurationService.getConfiguration().getString("details.key");
 			final String msdMad_Uid = configurationService.getConfiguration().getString("mad.uid.key");
 			final String widget_list = configurationService.getConfiguration().getString("widgetlist.key");
-			final String msdHeader = configurationService.getConfiguration().getString("msdHeader.key");
 			if (request.getParameterMap().containsKey(PRODUCTCODE))
 			{
 				productCode = request.getParameter(PRODUCTCODE).toString();

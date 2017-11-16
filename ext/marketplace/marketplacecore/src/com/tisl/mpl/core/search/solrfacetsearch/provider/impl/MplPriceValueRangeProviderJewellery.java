@@ -38,8 +38,8 @@ import com.tisl.mpl.util.MplJewelleryUtility;
  * @author TCS
  *
  */
-public class MplPriceValueRangeProviderJewellery extends AbstractPropertyFieldValueProvider
-		implements FieldValueProvider, Serializable
+public class MplPriceValueRangeProviderJewellery extends AbstractPropertyFieldValueProvider implements FieldValueProvider,
+		Serializable
 {
 
 	private static final String FINE_JEWELLERY = "FineJewellery";
@@ -47,8 +47,6 @@ public class MplPriceValueRangeProviderJewellery extends AbstractPropertyFieldVa
 	private FieldNameProvider fieldNameProvider;
 	private MplBuyBoxUtility mplBuyBoxUtility;
 	private MplJewelleryUtility mplJewelleryUtility;
-	@Resource(name = "buyBoxService")
-	private BuyBoxService buyBoxService;
 
 	/**
 	 * @return the mplJewelleryUtility

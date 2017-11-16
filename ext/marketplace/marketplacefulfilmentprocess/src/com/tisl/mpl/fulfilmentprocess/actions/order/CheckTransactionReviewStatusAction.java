@@ -228,7 +228,7 @@ public class CheckTransactionReviewStatusAction extends AbstractAction<OrderProc
 		{
 			/*
 			 * TISOMSII-86
-			 *
+			 * 
 			 * This block will execute only incase of standalone CNC cart and OMS is not using pincode to deallocate cart
 			 * reservation. As pincode is mandatory in Inventory reservation adding dummy pincode for cart deallocation
 			 */
@@ -458,6 +458,7 @@ public class CheckTransactionReviewStatusAction extends AbstractAction<OrderProc
 	 * @param order
 	 * @return PaymentTransactionModel
 	 */
+	@SuppressWarnings("unused")
 	private PaymentTransactionModel initiateRefund(final OrderModel order)
 	{
 		PaymentTransactionModel paymentTransactionModel = null;
@@ -702,7 +703,7 @@ public class CheckTransactionReviewStatusAction extends AbstractAction<OrderProc
 	}
 	/*
 	 * protected Converter<OrderModel, OrderData> getOrderConverter() { return orderConverter; }
-	 *
+	 * 
 	 * @Required public void setOrderConverter(final Converter<OrderModel, OrderData> orderConverter) {
 	 * this.orderConverter = orderConverter; }
 	 */
