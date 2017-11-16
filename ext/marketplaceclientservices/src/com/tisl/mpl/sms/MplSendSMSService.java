@@ -181,7 +181,7 @@ public class MplSendSMSService implements SendSmsService
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.tisl.mpl.sms.SendSmsService#sendBulkSms(java.util.List)
 	 */
 	@Override
@@ -254,14 +254,16 @@ public class MplSendSMSService implements SendSmsService
 					.entity(sw.toString()).post(ClientResponse.class);
 			LOG.debug("========== Step:3==========");
 			LOG.debug("========== response status ::" + response.getStatus());
-			if (checkResponseStatus(String.valueOf(response.getStatus()), globalResponse))
-			{
-				return true;
-			}
-			else
-			{
-				return false;
-			}
+			//			if (checkResponseStatus(String.valueOf(response.getStatus()), globalResponse))
+			//			{
+			//				return true;
+			//			}
+			//			else
+			//			{
+			//				return false;
+			//			}
+
+			return checkResponseStatus(String.valueOf(response.getStatus()), globalResponse);
 		}
 		catch (final Exception ex)
 		{

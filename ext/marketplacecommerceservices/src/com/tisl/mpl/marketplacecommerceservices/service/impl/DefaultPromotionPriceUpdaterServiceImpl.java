@@ -1102,6 +1102,7 @@ public class DefaultPromotionPriceUpdaterServiceImpl implements PromotionPriceUp
 
 
 
+	@SuppressWarnings("unused")
 	private List<String> getExcludedProductData(final List<ProductModel> exproductList)
 	{
 		final List<String> exProductList = new ArrayList<String>();
@@ -1191,6 +1192,7 @@ public class DefaultPromotionPriceUpdaterServiceImpl implements PromotionPriceUp
 	//		return stagedProductList;
 	//	}
 
+	@SuppressWarnings("unused")
 	private boolean validateProductData(final ProductModel product, final Integer priority)
 	{
 		boolean flag = false;
@@ -1210,6 +1212,7 @@ public class DefaultPromotionPriceUpdaterServiceImpl implements PromotionPriceUp
 		return flag;
 	}
 
+	@SuppressWarnings("unused")
 	private boolean getBrandsForProduct(final ProductModel product, final List<String> brands, final List<String> rejectBrandList)
 	{
 		boolean allow = false;
@@ -1691,6 +1694,7 @@ public class DefaultPromotionPriceUpdaterServiceImpl implements PromotionPriceUp
 	//	}
 
 
+	@SuppressWarnings("unused")
 	private boolean validateExclusion(final List<String> exProductList, final ProductModel product)
 	{
 		boolean flag = true;
