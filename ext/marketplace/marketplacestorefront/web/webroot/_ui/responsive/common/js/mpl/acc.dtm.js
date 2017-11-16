@@ -65,6 +65,32 @@ $(document).ready(function(){
 	}
 	
 */
+debugger
+//var digitalData;
+var domain_name = document.domain;
+var pageType = $('#pageType').val();
+var pageName= $('#pageName').val().toLowerCase();
+var subdomain = window.location.href.split("/")[2].split(".")[0];
+var subDomain= "";
+if(subdomain != "undefined"){
+	subDomain = subdomain;
+}
+var d = new Date(); // for now
+			//	alert("hie dtm????????"+pageType);
+			//   onload generic variables for all pages| Digital data obj defination starts
+				var digitalData = {
+					page : {
+						pageInfo : {
+							pageName  : pageName,
+							domain    : domain_name,
+							subDomain : subDomain
+						},
+						category : {
+							primaryCategory : pageType
+						}
+					}
+				}	
+				console.log("Digital data loaded:"+d.getHours()+":"+d.getMinutes()+":"+ d.getSeconds());
 //$(document).ready(function(){
 			var user_type = "facebook";
 			var user_id ="12345678";
@@ -1340,18 +1366,18 @@ function dtmSearchTags(){
 	        	}
 	    	}
 	    		
-			if(typeof digitalData.account != "undefined"){
-				if(typeof digitalData.account.login != "undefined"){
-					digitalData.account.login.type = user_login_type;
-					digitalData.account.login.location = location;
-				}
-				else{
-					digitalData.account.login = {
-						type : user_login_type,
-						location : location
-					}
-				}
-			}
+//			if(typeof digitalData.account != "undefined"){
+//				if(typeof digitalData.account.login != "undefined"){
+//					digitalData.account.login.type = user_login_type;
+//					digitalData.account.login.location = location;
+//				}
+//				else{
+//					digitalData.account.login = {
+//						type : user_login_type,
+//						location : location
+//					}
+//				}
+//			}
 			else{
 				digitalData.account = {
 					login : {

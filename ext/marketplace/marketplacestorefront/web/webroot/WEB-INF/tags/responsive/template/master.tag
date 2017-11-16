@@ -60,7 +60,7 @@
 <link rel="stylesheet" type="text/css" media="all" href="//${productMediadnsHost1}/preload.css?${rand}"/>
 </c:if> --%>
 
-<spring:eval expression="T(de.hybris.platform.util.Config).getParameter('dtm.static.url')" var="dtmUrl"/>
+<%-- <spring:eval expression="T(de.hybris.platform.util.Config).getParameter('dtm.static.url')" var="dtmUrl"/> --%>
 
 <%-- <link rel="stylesheet" type="text/css" media="all" href="${themeResourcePath}/css/preload.css"/> --%>
 <link rel="apple-touch-icon" href="${themeResourcePath}/images/Appicon.png">
@@ -353,7 +353,7 @@
 <script src="${izootoScript}"></script>
 </c:if>
  <!-- Changes End  TPR-5812 -->
-<script>var digitalData = null;</script>
+<!-- <script>var digitalData = null;</script> -->
 </head>
 <c:if test="${empty buildNumber}">
 <c:set var="buildNumber" value= "100000"/>
@@ -544,13 +544,14 @@
 				$(".simpleSearchToggle").hide();
 			}
 		
-		var pluginsDTM = document.createElement("script");
-		pluginsDTM.src = "${dtmUrl}";
+// 		var pluginsDTM = document.createElement("script");
+// 		pluginsDTM.src = "${dtmUrl}";
 		
-		document.head.appendChild(pluginsDTM);
-		pluginsDTM.onload = function() {
+// 		document.head.appendChild(pluginsDTM);
+// 		pluginsDTM.onload =
+			//function pluginsDTM() {
 		
-			    var isImageHoverTriggered = false;		// flag to identify mouse hover action
+			   /*  var isImageHoverTriggered = false;		// flag to identify mouse hover action
 			    var visitor_ip = ACC.config.VisitorIp;
 				
 				var user_type = "facebook";
@@ -568,24 +569,24 @@
 				if(subdomain != "undefined"){
 					subDomain = subdomain;
 				}
-				var d = new Date(); // for now
-				
+				var d = new Date(); // for now */
+			//	var digitalData;
 			//	alert("hie dtm????????"+pageType);
 			//   onload generic variables for all pages| Digital data obj defination starts
-				digitalData = {
-					page : {
-						pageInfo : {
-							pageName  : pageName,
-							domain    : domain_name,
-							subDomain : subDomain
-						},
-						category : {
-							primaryCategory : pageType
-						}
-					}
-				}	
-			console.log("Digital data loaded:"+d.getHours()+":"+d.getMinutes()+":"+ d.getSeconds());
-		}	
+// 				digitalData = {
+// 					page : {
+// 						pageInfo : {
+// 							pageName  : pageName,
+// 							domain    : domain_name,
+// 							subDomain : subDomain
+// 						},
+// 						category : {
+// 							primaryCategory : pageType
+// 						}
+// 					}
+// 				}	
+			
+		//}	
 	});
 	
 	$(document).on("click","#close-login",function(){

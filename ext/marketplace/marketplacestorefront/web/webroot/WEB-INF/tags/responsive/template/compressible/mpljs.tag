@@ -45,6 +45,9 @@
 	src="${commonResourcePath}/js/plugins/jquery.visible.js"></script>
 <%-- Custom ACC JS --%>
 
+<script type="text/javascript"
+	src="${commonResourcePath}/js/mpl/adobeMarketing.js"></script>
+
 <%-- <script type="text/javascript"
 	src="${commonResourcePath}/js/mpl/acc.address.js"></script> --%>
 <script type="text/javascript"
