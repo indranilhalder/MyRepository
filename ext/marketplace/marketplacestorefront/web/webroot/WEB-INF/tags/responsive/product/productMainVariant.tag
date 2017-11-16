@@ -366,7 +366,7 @@ share mobile -->
    			<c:when test="${true eq quantity}">
    			<c:choose>
    				<c:when test="${productSize !='No Size'}">
-   				<span><spring:theme code="product.variant.weight"></spring:theme>
+   				<span class="home-pdp-size"><spring:theme code="product.variant.weight"></spring:theme>
    				<c:if test="${not empty productSizeType}">(${productSizeType})</c:if>
    				 </span>
    				</c:when>
@@ -375,7 +375,7 @@ share mobile -->
    			<c:when test="${true eq volume}">
    			<c:choose>
    				<c:when test="${productSize !='No Size'}">
-   				<span><spring:theme code="product.variant.volume"></spring:theme>
+   				<span class="home-pdp-size"><spring:theme code="product.variant.volume"></spring:theme>
    				<c:if test="${not empty productSizeType}">(${productSizeType})</c:if>
    				 </span>
    				</c:when>

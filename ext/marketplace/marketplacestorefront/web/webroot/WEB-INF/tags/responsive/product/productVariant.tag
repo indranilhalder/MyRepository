@@ -344,7 +344,7 @@ var buyingGuideData ='${buyingGuide}';
 											<c:when test="${true eq quantity}">
 												<c:choose>
 													<c:when test="${productSize !='No Size'}">
-														<span><spring:theme code="product.variant.weight"></spring:theme>
+														<span class="home-pdp-size"><spring:theme code="product.variant.weight"></spring:theme>
 															<c:if test="${not empty productSizeType}">(${productSizeType})</c:if>
 														</span>
 													</c:when>
@@ -353,23 +353,30 @@ var buyingGuideData ='${buyingGuide}';
 											<c:when test="${true eq volume}">
 												<c:choose>
 													<c:when test="${productSize !='No Size'}">
-														<span><spring:theme code="product.variant.volume"></spring:theme>
+														<span class="home-pdp-size"><spring:theme code="product.variant.volume"></spring:theme>
 															<c:if test="${not empty productSizeType}">(${productSizeType})</c:if>
 														</span>
 													</c:when>
 												</c:choose>
 											</c:when>
 											<c:otherwise>
+											<c:choose>
 											<c:when test="${productSize!='No Size'}">
-												<span> <spring:theme code="product.variant.size.HF"></spring:theme>
+												<span class="home-pdp-size"> <spring:theme code="product.variant.size.HF"></spring:theme>
 													<c:if test="${not empty productSizeType}">(${productSizeType})</c:if>
 												</span>
 											</c:when>
+											</c:choose>
 											</c:otherwise>
 										</c:choose>
-										<span style="float: right;"> <spring:theme
+										<span class="home-pdp-quantity"> <spring:theme
 												code="product.variant.quantity"></spring:theme> <c:if
 												test="${not empty productSizeType}">(${productSizeType})</c:if>
+										<select id="quantity_dropdown" class="variant-select">
+										<c:forEach items="${quantityList}" var="quantity">
+											<option value="${quantity}">${quantity}</option>
+										</c:forEach>
+									</select>
 										</span>
 									</c:when>
 									<c:otherwise>
@@ -391,7 +398,7 @@ var buyingGuideData ='${buyingGuide}';
 						</c:if>
 						<!-- Added for PDP Changes for Home Furnishing : TPR-6738-->
 						<c:if test="${not empty buyingGuide}">
-							<a class="buying-guide" role="button"
+							<a class="buying-guide home-buying-guide" role="button"
 								onclick="redirectURL(buyingGuideData);"> <spring:theme
 									code="product.variants.buying.guide" />
 							</a>
@@ -399,8 +406,8 @@ var buyingGuideData ='${buyingGuide}';
 						<!--  PDP Changes for Home Furnishing Ends-->
 
 
-
-						<ul id="hfvariant" class="form-control variant-select">
+					</div>
+						<ul id="hfvariant" class="form-control variant-select" style="margin-top:0px;">
 							<%-- <c:choose>
 					<c:when test="${defaultSelectedSize==''}">
 						<option value="#" selected="selected"><spring:theme
@@ -518,12 +525,7 @@ var buyingGuideData ='${buyingGuide}';
 										</c:when>
 									</c:choose>
 
-									<select id="quantity_dropdown" class="variant-select"
-										style="width: 20%; float: right; position: relative; top: 0;">
-										<c:forEach items="${quantityList}" var="quantity">
-											<option value="${quantity}">${quantity}</option>
-										</c:forEach>
-									</select>
+								
 
 
 								</c:when>
@@ -673,7 +675,7 @@ var buyingGuideData ='${buyingGuide}';
 							</c:choose>
 						</ul>
 
-					</div>
+					
 				</form:form>
 				<%-- <a class="size-guide" href="${sizeGuideUrl}" role="button"
 			data-toggle="modal" data-target="#popUpModal" data-productcode="${product.code}" data-sizeSelected="${selectedSize}"> <spring:theme
