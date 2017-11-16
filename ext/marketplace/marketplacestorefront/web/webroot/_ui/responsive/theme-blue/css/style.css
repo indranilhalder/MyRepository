@@ -77910,5 +77910,15 @@ p.sizetext.size {
 .selectReturnMethod.scheduled.col-md-12.col-sm-12.greyColor {
     float: left;
 } 
+.accordtionTataCliq .accContents .slectionRefund .col-md-12 .col-md-3{
+	padding: 0px ! important;
+}
+.accordtionTataCliq .accContents .slectionRefund .col-md-12.col-sm-12 .col-md-2.col-sm-2 {
+    width: 23.666667%;
+    padding: 0px ! important;
+}
+.col-md-9.quickDrop {
+    clear: both;
+}
 }
 /* TISPRNXIII-53 end */
