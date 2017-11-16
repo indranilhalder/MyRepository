@@ -94,10 +94,7 @@ import com.tisl.mpl.seller.product.facades.ProductOfferDetailFacade;
 import com.tisl.mpl.service.MplProductWebService;
 import com.tisl.mpl.util.ExceptionUtil;
 import com.tisl.mpl.wsdto.CapacityLinkData;
-import com.tisl.mpl.wsdto.ClassificationDTO;
-import com.tisl.mpl.wsdto.ClassificationDTOLister;
 import com.tisl.mpl.wsdto.ClassificationMobileWsData;
-import com.tisl.mpl.wsdto.Classifications;
 import com.tisl.mpl.wsdto.ColorLinkData;
 import com.tisl.mpl.wsdto.DeliveryModeData;
 import com.tisl.mpl.wsdto.ExchangeLinkUrl;
@@ -317,7 +314,7 @@ public class MplProductWebServiceImpl implements MplProductWebService
 
 	/*
 	 * To get product details for a product code
-	 * 
+	 *
 	 * @see com.tisl.mpl.service.MplProductWebService#getProductdetailsForProductCode(java.lang.String)
 	 */
 	@Override
@@ -2068,12 +2065,12 @@ public class MplProductWebServiceImpl implements MplProductWebService
 	/*
 	 * private PromotionData checkHighestPriority(final List<PromotionData> enabledPromotionList) {
 	 * Collections.sort(enabledPromotionList, new Comparator<PromotionData>() {
-	 * 
+	 *
 	 * @Override public int compare(final PromotionData promo1, final PromotionData promo2) { int priority = 0; if (null
 	 * != promo1.getPriority() && null != promo2.getPriority()) { priority =
 	 * promo1.getPriority().compareTo(promo2.getPriority()); } return priority; }
-	 * 
-	 * 
+	 *
+	 *
 	 * }); Collections.reverse(enabledPromotionList); return enabledPromotionList.get(0); }
 	 */
 
@@ -3325,17 +3322,19 @@ public class MplProductWebServiceImpl implements MplProductWebService
 						MarketplacewebservicesConstants.DESC_PDP_PROPERTIES + productData.getRootCategory());
 				final List<ClassificationData> ConfigurableAttributeList = new ArrayList<ClassificationData>(
 						productData.getClassifications());
-				
+
 				String keyProdptsHeaderName = null;
 				final StringBuffer groupString = new StringBuffer();
-				
+
 				for (final ClassificationData configurableAttributData : ConfigurableAttributeList)
 				{
 					keyProdptsHeaderName = configurableAttributData.getName();
 					final List<FeatureData> featureDataList = new ArrayList<FeatureData>(configurableAttributData.getFeatures());
 					final List<String> productFeatureDataList = new ArrayList<String>();
-					if (configurationService.getConfiguration()
-							.getString((MarketplacewebservicesConstants.CONFIGURABLE_ATTRIBUTE + MarketplacewebservicesConstants.HOME_FURNISHING))
+					if (configurationService
+							.getConfiguration()
+							.getString(
+									(MarketplacewebservicesConstants.CONFIGURABLE_ATTRIBUTE + MarketplacewebservicesConstants.HOME_FURNISHING))
 							.contains(configurableAttributData.getName()))
 					{
 						int lastGroupNo = 0;
@@ -3357,8 +3356,9 @@ public class MplProductWebServiceImpl implements MplProductWebService
 												.getString(
 														MarketplacewebservicesConstants.CLASSIFICATION_ATTR
 																+ MarketplacewebservicesConstants.CLASSIFICATION_ATTR_HF
-																+ configurableAttributData.getName().replaceAll(MarketplacewebservicesConstants.SPACE_REGEX, MarketplacewebservicesConstants.NO_SPACE))
-												.contains(featureData.getName()))
+																+ configurableAttributData.getName().replaceAll(
+																		MarketplacewebservicesConstants.SPACE_REGEX,
+																		MarketplacewebservicesConstants.NO_SPACE)).contains(featureData.getName()))
 								{
 									//CKD:CAR-289
 									final ProductFeatureModel productFeature = mplProductFacade
@@ -3370,19 +3370,29 @@ public class MplProductWebServiceImpl implements MplProductWebService
 										unit = productFeature.getUnit().getSymbol();
 									}
 
-									if (configurableAttributData.getName().replaceAll(MarketplacewebservicesConstants.SPACE_REGEX, MarketplacewebservicesConstants.NO_SPACE)
+									if (configurableAttributData
+											.getName()
+											.replaceAll(MarketplacewebservicesConstants.SPACE_REGEX,
+													MarketplacewebservicesConstants.NO_SPACE)
 											.equals(MarketplacewebservicesConstants.CLASSIFICATION_ATTR_PF))
 									{
 										keyProdptsHeaderName = MarketplacewebservicesConstants.KEY_PROD_PTS;
 										productFeatureDataList.add(featureData.getFeatureValues().iterator().next().getValue());
 									}
-									else if (configurableAttributData.getName().replaceAll(MarketplacewebservicesConstants.SPACE_REGEX, MarketplacewebservicesConstants.NO_SPACE)
+									else if (configurableAttributData
+											.getName()
+											.replaceAll(MarketplacewebservicesConstants.SPACE_REGEX,
+													MarketplacewebservicesConstants.NO_SPACE)
 											.equals(MarketplacewebservicesConstants.CLASSIFICATION_ATTR_WASHCARE))
 									{
-										productFeatureDataList.add(configurableAttributData.getName() + MarketplacewebservicesConstants.COLON
+										productFeatureDataList.add(configurableAttributData.getName()
+												+ MarketplacewebservicesConstants.COLON
 												+ featureData.getFeatureValues().iterator().next().getValue());
 									}
-									else if (configurableAttributData.getName().replaceAll(MarketplacewebservicesConstants.SPACE_REGEX, MarketplacewebservicesConstants.NO_SPACE)
+									else if (configurableAttributData
+											.getName()
+											.replaceAll(MarketplacewebservicesConstants.SPACE_REGEX,
+													MarketplacewebservicesConstants.NO_SPACE)
 											.equals(MarketplacewebservicesConstants.CLASSIFICATION_ATTR_CAINS))
 									{
 										for (final FeatureValueData data : featureData.getFeatureValues())
@@ -3390,7 +3400,10 @@ public class MplProductWebServiceImpl implements MplProductWebService
 											productFeatureDataList.add(data.getValue());
 										}
 									}
-									else if (configurableAttributData.getName().replaceAll(MarketplacewebservicesConstants.SPACE_REGEX, MarketplacewebservicesConstants.NO_SPACE)
+									else if (configurableAttributData
+											.getName()
+											.replaceAll(MarketplacewebservicesConstants.SPACE_REGEX,
+													MarketplacewebservicesConstants.NO_SPACE)
 											.equals(MarketplacewebservicesConstants.CLASSIFICATION_ATTR_SI))
 									{
 
@@ -3398,8 +3411,13 @@ public class MplProductWebServiceImpl implements MplProductWebService
 										if (featureData.getName().contains(MarketplacewebservicesConstants.SET_COMPONENT)
 												|| featureData.getName().contains(MarketplacewebservicesConstants.SET_COMPONENT_DETAILS))
 										{
-											currentGroupNo = Integer.valueOf(featureData.getName()
-													.replaceAll(MarketplacewebservicesConstants.ALPHBET_REGEX, MarketplacewebservicesConstants.NO_SPACE).trim()).intValue();
+											//											currentGroupNo = Integer.valueOf(featureData.getName()
+											//													.replaceAll(MarketplacewebservicesConstants.ALPHBET_REGEX, MarketplacewebservicesConstants.NO_SPACE).trim()).intValue();
+
+											currentGroupNo = Integer.parseInt(featureData
+													.getName()
+													.replaceAll(MarketplacewebservicesConstants.ALPHBET_REGEX,
+															MarketplacewebservicesConstants.NO_SPACE).trim());
 										}
 										if (featureData.getName().equalsIgnoreCase(MarketplacewebservicesConstants.SET))
 										{
@@ -3412,13 +3430,19 @@ public class MplProductWebServiceImpl implements MplProductWebService
 											{
 												if (lastGroupNo >= 1)
 												{
-													groupString.append(qtyStr = null != qtyStr ? qtyStr + MarketplacewebservicesConstants.SINGLE_SPACE : MarketplacewebservicesConstants.NO_SPACE).append(
-															nameStr = null != nameStr ? nameStr + MarketplacewebservicesConstants.SINGLE_SPACE : MarketplacewebservicesConstants.NO_SPACE);
-													if ((StringUtils.isNotBlank(qtyStr) || StringUtils.isNotBlank(nameStr)) && StringUtils.isNotBlank(detStr)  )
+													groupString.append(
+															qtyStr = null != qtyStr ? qtyStr + MarketplacewebservicesConstants.SINGLE_SPACE
+																	: MarketplacewebservicesConstants.NO_SPACE).append(
+															nameStr = null != nameStr ? nameStr + MarketplacewebservicesConstants.SINGLE_SPACE
+																	: MarketplacewebservicesConstants.NO_SPACE);
+													if ((StringUtils.isNotBlank(qtyStr) || StringUtils.isNotBlank(nameStr))
+															&& StringUtils.isNotBlank(detStr))
 													{
 														groupString.append(MarketplacewebservicesConstants.COLON);
 													}
-													groupString.append(detStr = null != detStr ? detStr + MarketplacewebservicesConstants.SINGLE_SPACE : MarketplacewebservicesConstants.NO_SPACE);
+													groupString.append(detStr = null != detStr ? detStr
+															+ MarketplacewebservicesConstants.SINGLE_SPACE
+															: MarketplacewebservicesConstants.NO_SPACE);
 													qtyStr = null;
 													nameStr = null;
 													detStr = null;
@@ -3456,8 +3480,8 @@ public class MplProductWebServiceImpl implements MplProductWebService
 									}
 									else
 									{
-										productFeatureDataList.add(featureData.getName() + MarketplacewebservicesConstants.COLON + featureValueData.getValue() + 
-												MarketplacewebservicesConstants.SINGLE_SPACE + unit);
+										productFeatureDataList.add(featureData.getName() + MarketplacewebservicesConstants.COLON
+												+ featureValueData.getValue() + MarketplacewebservicesConstants.SINGLE_SPACE + unit);
 									}
 
 									if (descValues != null && StringUtils.isNotBlank(descValues))
@@ -3476,7 +3500,8 @@ public class MplProductWebServiceImpl implements MplProductWebService
 
 									}
 
-									if (featureData.getName().toLowerCase().contains(MarketplacewebservicesConstants.WARRANTY.toLowerCase()))
+									if (featureData.getName().toLowerCase()
+											.contains(MarketplacewebservicesConstants.WARRANTY.toLowerCase()))
 									{
 										warrentyList.add(featureValueData.getValue());
 									}
@@ -3493,7 +3518,8 @@ public class MplProductWebServiceImpl implements MplProductWebService
 											mapConfigurableAttribute.put(featureData.getName(), featureValueData.getValue());
 										}
 
-										if (featureData.getName().toLowerCase().contains(MarketplacewebservicesConstants.WARRANTY.toLowerCase()))
+										if (featureData.getName().toLowerCase()
+												.contains(MarketplacewebservicesConstants.WARRANTY.toLowerCase()))
 										{
 											warrentyList.add(featureValueData.getValue());
 										}
@@ -3503,23 +3529,29 @@ public class MplProductWebServiceImpl implements MplProductWebService
 							}
 						}
 						// To capture the last Set info
-						groupString.append(qtyStr = null != qtyStr ? qtyStr + MarketplacewebservicesConstants.SINGLE_SPACE :  MarketplacewebservicesConstants.NO_SPACE).append(
-								nameStr = null != nameStr ? nameStr + MarketplacewebservicesConstants.SINGLE_SPACE : MarketplacewebservicesConstants.NO_SPACE);
+						groupString.append(
+								qtyStr = null != qtyStr ? qtyStr + MarketplacewebservicesConstants.SINGLE_SPACE
+										: MarketplacewebservicesConstants.NO_SPACE).append(
+								nameStr = null != nameStr ? nameStr + MarketplacewebservicesConstants.SINGLE_SPACE
+										: MarketplacewebservicesConstants.NO_SPACE);
 						if ((StringUtils.isNotBlank(qtyStr) || StringUtils.isNotBlank(nameStr)) && (StringUtils.isNotBlank(detStr)))
 						{
 							groupString.append(MarketplacewebservicesConstants.COLON);
 						}
-						groupString.append(detStr = null != detStr ? detStr + MarketplacewebservicesConstants.SINGLE_SPACE : MarketplacewebservicesConstants.NO_SPACE);
+						groupString.append(detStr = null != detStr ? detStr + MarketplacewebservicesConstants.SINGLE_SPACE
+								: MarketplacewebservicesConstants.NO_SPACE);
 						qtyStr = null;
 						nameStr = null;
 						detStr = null;
-						
-						if (configurableAttributData.getName().replaceAll(MarketplacewebservicesConstants.SPACE_REGEX, MarketplacewebservicesConstants.NO_SPACE).
-								equals(MarketplacewebservicesConstants.CLASSIFICATION_ATTR_SI) 
-								&& groupString.toString().trim().length()>0)
+
+						if (configurableAttributData.getName()
+								.replaceAll(MarketplacewebservicesConstants.SPACE_REGEX, MarketplacewebservicesConstants.NO_SPACE)
+								.equals(MarketplacewebservicesConstants.CLASSIFICATION_ATTR_SI)
+								&& groupString.toString().trim().length() > 0)
 						{
-								productFeatureDataList.addAll(Arrays.asList(groupString.toString().split(MarketplacewebservicesConstants.PIPE_REGEX)));
-							
+							productFeatureDataList.addAll(Arrays.asList(groupString.toString().split(
+									MarketplacewebservicesConstants.PIPE_REGEX)));
+
 						}
 					}
 					else
@@ -3562,10 +3594,10 @@ public class MplProductWebServiceImpl implements MplProductWebService
 					}
 				}
 			}
-			/*else
-			{
-				final Map<String, String> treeMapConfigurableAttribute = new TreeMap<String, String>(mapConfigurableAttribute);
-			}*/
+			/*
+			 * else { final Map<String, String> treeMapConfigurableAttribute = new TreeMap<String,
+			 * String>(mapConfigurableAttribute); }
+			 */
 		}
 		catch (final EtailNonBusinessExceptions e)
 		{
