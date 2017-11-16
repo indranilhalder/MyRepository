@@ -28,16 +28,17 @@ import java.util.TreeSet;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.MapUtils;
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
-import com.tisl.mpl.core.model.BuyBoxModel;
 
 
 public class ProductSpecificIndexerCronJob extends AbstractJobPerformable //,AbstractItemDao
 {
 	private static final Logger LOG = Logger.getLogger(ProductSpecificIndexerCronJob.class.getName());
+	private static final String ERROR_GOING_TO_ABORT = "ERROR: Going to ABORT ProductSpecificIndexerCronJob .................";
 
 
 	@Autowired
@@ -64,7 +65,7 @@ public class ProductSpecificIndexerCronJob extends AbstractJobPerformable //,Abs
 			if (productList == null || productList.size() == 0)
 			{
 				LOG.error("ERROR: No product found in the DB to Index ....:");
-				LOG.error("ERROR: Going to ABORT ProductSpecificIndexerCronJob .................");
+				LOG.error(ERROR_GOING_TO_ABORT);
 
 				return new PerformResult(CronJobResult.ERROR, CronJobStatus.ABORTED);
 			}
@@ -79,14 +80,14 @@ public class ProductSpecificIndexerCronJob extends AbstractJobPerformable //,Abs
 			else
 			{
 				LOG.error("ERROR: facetSearchConfigModel found null");
-				LOG.error("ERROR: Going to ABORT ProductSpecificIndexerCronJob .................");
+				LOG.error(ERROR_GOING_TO_ABORT);
 				return new PerformResult(CronJobResult.ERROR, CronJobStatus.ABORTED);
 			}
 
 			if (facetSearchConfig == null)
 			{
 				LOG.error("ERROR: ..facetSearchConfig found null");
-				LOG.error("ERROR: Going to ABORT ProductSpecificIndexerCronJob .................");
+				LOG.error(ERROR_GOING_TO_ABORT);
 
 				return new PerformResult(CronJobResult.ERROR, CronJobStatus.ABORTED);
 			}
@@ -108,7 +109,7 @@ public class ProductSpecificIndexerCronJob extends AbstractJobPerformable //,Abs
 				else
 				{
 					LOG.error("ERROR: !! No Update to SOLR document done ..indexTypeList is empty..:");
-					LOG.error("ERROR: Going to ABORT ProductSpecificIndexerCronJob .................");
+					LOG.error(ERROR_GOING_TO_ABORT);
 
 					return new PerformResult(CronJobResult.ERROR, CronJobStatus.ABORTED);
 				}
@@ -117,7 +118,7 @@ public class ProductSpecificIndexerCronJob extends AbstractJobPerformable //,Abs
 		catch (final Exception e)
 		{
 			LOG.error("ERROR: ... Exiting" + e);
-			LOG.error("ERROR: Going to ABORT ProductSpecificIndexerCronJob .................");
+			LOG.error(ERROR_GOING_TO_ABORT);
 
 			e.printStackTrace();
 			return new PerformResult(CronJobResult.ERROR, CronJobStatus.ABORTED);
@@ -130,12 +131,9 @@ public class ProductSpecificIndexerCronJob extends AbstractJobPerformable //,Abs
 	//This method reads the External files for ProductsListingIds and return the PKs for them
 	public List<PK> getProductData()
 	{
-		final String propLine = "";
 		StringBuffer productString = new StringBuffer();
 		List<PK> prodList = null;
 		final List<String> flashSaleProductListModelList = new ArrayList();
-		final List<BuyBoxModel> flashSaleProductListModelListBB = null;
-		final String prodListFilePath = "";
 		final Set<String> listingIdSet = new TreeSet();
 		String flashSaleUSSIDListString = "";
 		String formattedFlashSaleUSSIDListString = "";
@@ -155,7 +153,7 @@ public class ProductSpecificIndexerCronJob extends AbstractJobPerformable //,Abs
 					if ("mpl".equalsIgnoreCase(baseStoreModel.getUid()))
 					{
 						flashSaleUSSIDListString = baseStoreModel.getFlashSaleUSSIDList();
-						if (flashSaleUSSIDListString != null && flashSaleUSSIDListString.trim().length() > 0)
+						if (StringUtils.isNotEmpty(flashSaleUSSIDListString))
 						{
 							LOG.error("DEBUG: flashSaleUSSIDList from {BaseStore}:: " + flashSaleUSSIDList);
 							flashSaleUSSIDList = Arrays.asList(flashSaleUSSIDListString.trim().split(
@@ -175,10 +173,10 @@ public class ProductSpecificIndexerCronJob extends AbstractJobPerformable //,Abs
 							{
 								LOG.error("ERROR: flashSaleUSSIDList is null or empty");
 							}
-							if (formattedFlashSaleUSSIDListString != null && formattedFlashSaleUSSIDListString.length() > 0)
+							if (StringUtils.isNotEmpty(formattedFlashSaleUSSIDListString))
 							{
 								sb = new StringBuffer(formattedFlashSaleUSSIDListString);
-								if (sb != null && sb.length() > 0)
+								if (StringUtils.isNotEmpty(sb.toString()))
 								{
 									sb.deleteCharAt(sb.toString().lastIndexOf(",")); // remove the last `,` from the string.
 
@@ -216,13 +214,13 @@ public class ProductSpecificIndexerCronJob extends AbstractJobPerformable //,Abs
 					for (final String listingId : flashSaleProductListModelList)
 					{
 						//listingId = prodListModel.getProductListingId();
-						if (listingId != null && listingId.trim().length() > 0 && !listingIdSet.contains(listingId))
+						if (StringUtils.isNotEmpty(listingId) && !listingIdSet.contains(listingId))
 						{
 							productString.append("'" + listingId.trim() + "',");
 							listingIdSet.add(listingId);
 						}
 					}
-					if (productString != null && productString.length() > 0)
+					if (StringUtils.isNotEmpty(productString.toString()))
 					{
 						productString.deleteCharAt(productString.toString().lastIndexOf(",")); // remove the last `,` from the string.
 						LOG.error("DEBUG: The File List to be indexed ::" + productString);
@@ -244,7 +242,7 @@ public class ProductSpecificIndexerCronJob extends AbstractJobPerformable //,Abs
 				LOG.error("ERROR: getProductData() ..No Products found in the FIle:" + e);
 				e.printStackTrace();
 			}
-			if (productString != null && productString.length() > 0)
+			if (StringUtils.isNotEmpty(productString.toString()))
 			{
 				final String queryString = "select distinct{PK} from {product}  where {CODE} in (" + productString.toString() + ")";
 				final FlexibleSearchQuery query = new FlexibleSearchQuery(queryString);

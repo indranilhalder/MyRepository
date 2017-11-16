@@ -64,8 +64,8 @@ public class SolrSlaveReplicatorJob extends AbstractJobPerformable
 
 		final String waitTimeForSlaveforMasterIndexUpdate = configurationService.getConfiguration().getString(
 				"SolrSlaveReplicatorJob.mandatory.waittime.insec.forMasterIndexUpdateToComplete");
-
-		if (waitTimeForSlaveforMasterIndexUpdate != null && waitTimeForSlaveforMasterIndexUpdate.trim().length() > 0)
+		//Sonar fix
+		if (StringUtils.isNotEmpty(waitTimeForSlaveforMasterIndexUpdate))
 		{
 			try
 			{
@@ -143,9 +143,6 @@ public class SolrSlaveReplicatorJob extends AbstractJobPerformable
 
 				if (sb != null && sb.toString().trim().length() > 0)
 				{
-					final long estimatedSeconds = 0, queueLength = 0, httpStatus = 0, pingAfterSeconds = 0;
-					final String responseHeader = "";
-					String responseHeaderStatus = "";
 					//final String QTime = "", status = "", indexversion = "", generation = "", submissionTime = "";
 
 					try
@@ -203,7 +200,8 @@ public class SolrSlaveReplicatorJob extends AbstractJobPerformable
 		{
 			final String waittimeForAllSlaveReplicationToComplete = configurationService.getConfiguration().getString(
 					"SolrSlaveReplicatorJob.mandatory.waittime.insec.forAllSlaveReplicationToComplete");
-			if (waittimeForAllSlaveReplicationToComplete != null && waittimeForAllSlaveReplicationToComplete.trim().length() > 0)
+
+			if (StringUtils.isNotEmpty(waittimeForAllSlaveReplicationToComplete))
 			{
 				final int threadWaitTimeinSec = Integer.parseInt(waittimeForAllSlaveReplicationToComplete);
 				LOG.error("DEBUG: Going to Sleep SolrSlaveReplicatorJob for ::" + threadWaitTimeinSec
@@ -256,7 +254,7 @@ public class SolrSlaveReplicatorJob extends AbstractJobPerformable
 							if (StringUtils.isNotEmpty(endpointSlaveURLs.getUrl()) && endpointSlaveURLs.isSlave())
 							{
 								slaveurl = addContextValue(endpointSlaveURLs.getUrl(), contextValue);
-								if (slaveurl != null && slaveurl.trim().length() > 0)
+								if (StringUtils.isNotEmpty(slaveurl))
 								{
 									slaveList.add(slaveurl);
 								}
@@ -346,7 +344,7 @@ public class SolrSlaveReplicatorJob extends AbstractJobPerformable
 			//final String authStringEnc = new String(Base64.getEncoder().encode(authString.getBytes()));
 			//urlHTTPConn.setRequestProperty("Authorization", "Basic " + authStringEnc);
 
-			if (null != methodSent && methodSent.trim().length() > 0)
+			if (StringUtils.isNotEmpty(methodSent))
 			{
 				urlHTTPConn.setRequestMethod(methodSent);
 			}
