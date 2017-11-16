@@ -77702,12 +77702,13 @@ a.pageNo.active{
 }
 }
 /* Pagination link */
-@media (min-width: 768px)
-{
+
+/* TISPRNXIII-14 start */
 .cart.wrapper.checkout-payment .right-block.billing.checkout-list-right h3 {
     text-align: left ! important;
 }
-}
+/* TISPRNXIII-14 end */
+
 /*Paytm changes*/
 @media (max-width: 768px){
 
@@ -77877,12 +77878,11 @@ p.sizetext.size {
 }
 /* HOME-227 End */
 /* HOME-239 start */
-	@media (max-width: 767px){
+@media (max-width: 767px){
 .product-specification-accordion.smk_accordion .accordion_in .acc_content ul .product-desc .key-label .homefurnishing-overview {
     clear: both;
 }
 }
-
 .quickview .product-detail .sizetext a.size-guide:after {
     background: #a8103d none repeat scroll 0 0;
     border-radius: 10px;
@@ -77902,4 +77902,13 @@ p.sizetext.size {
 .sizetext a.size-guide {
     position: relative;
 }
-
+/* TISPRNXIII-53 start */
+@media (max-width: 767px){
+.col-md-9.selfCourier {
+    clear: both;
+}
+.selectReturnMethod.scheduled.col-md-12.col-sm-12.greyColor {
+    float: left;
+} 
+}
+/* TISPRNXIII-53 end */
