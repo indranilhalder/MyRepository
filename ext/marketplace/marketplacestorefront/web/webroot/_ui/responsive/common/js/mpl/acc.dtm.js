@@ -12,7 +12,7 @@ $(document).ready(function(){
 	var site_region = $("#site_section").val();
 	var site_currency ='INR';
 	var domain_name = document.domain;
-	
+	var d = new Date();
 	//var user_login_type = $('#userLoginType').val().trim();
 	var pageType = $('#pageType').val();
 	var pageName= $('#pageName').val().toLowerCase();
@@ -63,24 +63,25 @@ $(document).ready(function(){
 			}
 		}
 	}
+		console.log("Digital data loaded:"+d.getHours()+":"+d.getMinutes()+":"+ d.getSeconds());
 	
 */
-
+var digitalData ;
 $(document).ready(function(){
 	_satellite.pageBottom();
-	
-
-var domain_name = document.domain;
-var pageType = $('#pageType').val();
-var pageName= $('#pageName').val().toLowerCase();
-var subdomain = window.location.href.split("/")[2].split(".")[0];
-var subDomain= "";
-if(subdomain != "undefined"){
-	subDomain = subdomain;
-}
-var d = new Date(); 
+			var domain_name = document.domain;
+			var pageType = $('#pageType').val();
+			var pageName= $('#pageName').val().toLowerCase();
+			var subdomain = window.location.href.split("/")[2].split(".")[0];
+			var subDomain= "";
+			if(subdomain != "undefined"){
+				subDomain = subdomain;
+			}
+			var dateD = new Date(); 
+			
 			//   onload generic variables for all pages| Digital data obj defination starts
-				var digitalData = {
+			
+				 digitalData = {
 					page : {
 						pageInfo : {
 							pageName  : pageName,
@@ -92,10 +93,10 @@ var d = new Date();
 						}
 					}
 				}	
-				console.log("Digital data loaded:"+d.getHours()+":"+d.getMinutes()+":"+ d.getSeconds());
+				console.log("Digital data loaded:"+dateD.getHours()+":"+dateD.getMinutes()+":"+ dateD.getSeconds());
 
-			var user_type = "facebook";
-			var user_id ="12345678";
+			var user_type = $.cookie("mpl-userType");
+			var user_id = $.cookie("mpl-user");
 			var currentPageURL = window.location.href;
 			var pageType = $('#pageType').val();
 			var pageNameU = $('#pageName').val();
@@ -124,12 +125,12 @@ var d = new Date();
 			var sellerList = $('#pdpSellerIDs').val();
 			var user_login_type = $('#userLoginType').val().trim().toLowerCase();	
 			if(user_id != "anonymous"){
-		digitalData.account = {
-			login : {
-				customerID : user_id
-			}	
-		}
-	}
+					digitalData.account = {
+						login : {
+							customerID : user_id
+						}	
+					}
+	         }
 	//user login type for g+,fb
 	if(user_login_type != '' && user_login_type != undefined && user_login_type != null 
 		&& user_login_type != 'email' && user_login_type!= 'guest_user'){
