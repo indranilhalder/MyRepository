@@ -65,8 +65,11 @@ $(document).ready(function(){
 	}
 	
 */
-debugger
-//var digitalData;
+
+$(document).ready(function(){
+	_satellite.pageBottom();
+	
+
 var domain_name = document.domain;
 var pageType = $('#pageType').val();
 var pageName= $('#pageName').val().toLowerCase();
@@ -91,7 +94,7 @@ var d = new Date(); // for now
 					}
 				}	
 				console.log("Digital data loaded:"+d.getHours()+":"+d.getMinutes()+":"+ d.getSeconds());
-//$(document).ready(function(){
+
 			var user_type = "facebook";
 			var user_id ="12345678";
 			var currentPageURL = window.location.href;
@@ -679,7 +682,7 @@ var d = new Date(); // for now
   		           }
 	           }
 	}
-	
+	});	
 	// Assignment of digial data object
 /*	var DTMscript ='<script type="text/javascript"> var digitalData = '+JSON.stringify(digitalData)+'</script>';
 	
