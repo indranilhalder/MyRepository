@@ -190,9 +190,11 @@
 									<c:otherwise>
 										<p class="size">
 											<c:if test="${!fn:containsIgnoreCase(entry.product.size, 'No Size')}">
+											
 												<ycommerce:testId code="cart_product_size">
-													<spring:theme code="product.variant.size" />:&nbsp;${entry.product.size}f
+													<spring:theme code="product.variant.size" />:&nbsp;${entry.product.size}
 												</ycommerce:testId>
+												
 											</c:if>
 										</p>
 									</c:otherwise>
