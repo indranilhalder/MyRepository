@@ -77488,3 +77488,15 @@ background: url(../images/search_image.png) no-repeat;}
     z-index: 2;
 }
 /* SDI-1393 End */
+
+.error_msg_backfrom_payment{
+    line-height: normal;
+    letter-spacing: .6px;
+    color: red;
+    font-size: 14px;
+    border-radius: 4px;
+    background-color: #ffe5ec;
+    width: 100%;
+    padding: 10px;
+    text-align: center;
+}

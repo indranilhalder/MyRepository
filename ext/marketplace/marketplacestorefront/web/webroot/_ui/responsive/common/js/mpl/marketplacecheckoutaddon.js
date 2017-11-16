@@ -5256,7 +5256,8 @@ function applyPromotion(bankName,binValue,formSubmit,isNewCard)
 			else
 				{
 				ACC.singlePageCheckout.showAccordion("#reviewOrder"); 
-				$('.error_msg_backfrom_payment').html("Oops, something went wrong! Please click on PROCEED to complete your purchase."); 
+				$('.error_msg_backfrom_payment').html("Oops, something went wrong! Please click on PROCEED to complete your purchase.");
+				$('.error_msg_backfrom_payment').css("display","block");
 				}
 			
 			/*$("#no-click,.loaderDiv").remove();

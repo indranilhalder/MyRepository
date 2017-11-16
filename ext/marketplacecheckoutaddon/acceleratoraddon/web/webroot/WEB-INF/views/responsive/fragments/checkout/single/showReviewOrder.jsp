@@ -742,7 +742,7 @@
 			</li>
 		</ul>
 		</div>
-		<div class="error_msg_backfrom_payment"></div> <!-- TISUAT-6037 fix-->
+		<div class="error_msg_backfrom_payment" style="display:none"></div> <!-- TISUAT-6037 fix-->
 		<button class="button checkout-review-button"
 				type="button" id="del_continue_btn" onclick="ACC.singlePageCheckout.proceedToPayment(this)";>
 				<spring:theme code="checkout.single.deliveryMethod.continue" text="PROCEED" /></button>
