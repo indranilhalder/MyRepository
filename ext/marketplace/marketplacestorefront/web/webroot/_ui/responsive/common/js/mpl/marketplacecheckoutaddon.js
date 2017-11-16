@@ -5250,7 +5250,7 @@ function applyPromotion(bankName,binValue,formSubmit,isNewCard)
 				ACC.singlePageCheckout.resetPaymentModes();
 				$('.security_code').removeClass("security_code").addClass("security_code_hide");
 				$('.cvvValdiation').prop('disabled', true);
-				$("#juspayErrorMsg").html("Oops, something went wrong! Please click on PROCEED to complete your purchase.");
+				$("#juspayErrorMsg").html("Oops, something went wrong! Please re-select a payment mode and complete your purchase.");
 				$("#juspayconnErrorDiv").css("display","block");
 				}
 			else
