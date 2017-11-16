@@ -78,8 +78,7 @@ var subDomain= "";
 if(subdomain != "undefined"){
 	subDomain = subdomain;
 }
-var d = new Date(); // for now
-			//	alert("hie dtm????????"+pageType);
+var d = new Date(); 
 			//   onload generic variables for all pages| Digital data obj defination starts
 				var digitalData = {
 					page : {
@@ -682,7 +681,7 @@ var d = new Date(); // for now
   		           }
 	           }
 	}
-	});	
+		
 	// Assignment of digial data object
 /*	var DTMscript ='<script type="text/javascript"> var digitalData = '+JSON.stringify(digitalData)+'</script>';
 	
@@ -888,7 +887,7 @@ var d = new Date(); // for now
     }
 
   
-//});
+});
 //SDI-1103
 function getIcid2FromUrl()
 {
