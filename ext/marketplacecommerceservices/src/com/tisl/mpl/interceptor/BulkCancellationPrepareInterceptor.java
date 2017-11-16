@@ -28,6 +28,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import com.tisl.mpl.bulk.service.BulkCancellationService;
 import com.tisl.mpl.businesscontentimport.BusinessContentImportUtility;
+import com.tisl.mpl.core.model.BulkCancellationModel;
 
 
 /**

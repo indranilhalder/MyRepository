@@ -101,7 +101,7 @@ public class SolrSlaveReplicatorJob extends AbstractJobPerformable
 						sb.append(line);
 					}
 
-					if (sb != null && sb.toString().trim().length() > 0)
+					if (StringUtils.isNotEmpty(sb.toString()))
 					{
 						LOG.error("DEBUG: Returned Response:: " + sb.toString());
 					}
@@ -141,7 +141,7 @@ public class SolrSlaveReplicatorJob extends AbstractJobPerformable
 				/******************** Read The Status of response **************************************/
 
 
-				if (sb != null && sb.toString().trim().length() > 0)
+				if (StringUtils.isNotEmpty(sb.toString()))
 				{
 					//final String QTime = "", status = "", indexversion = "", generation = "", submissionTime = "";
 
@@ -162,7 +162,9 @@ public class SolrSlaveReplicatorJob extends AbstractJobPerformable
 
 						if ("status".equalsIgnoreCase(statusElement.getAttribute("name")))
 						{
-							LOG.error("DEBUG: Status (0 means OK):: " + (responseHeaderStatus = statusElement.getTextContent()));
+							//Sonar fix :: responseHeaderStatus is not used
+							//LOG.error("DEBUG: Status (0 means OK):: " + (responseHeaderStatus = statusElement.getTextContent()));
+							LOG.error("DEBUG: Status (0 means OK):: " + (statusElement.getTextContent()));
 						}
 						else
 						{
