@@ -307,9 +307,13 @@ var buyingGuideData ='${buyingGuide}';
 							<c:otherwise>
 								<c:choose>
 									<c:when test="${product.rootCategory =='HomeFurnishing'}">
+										<c:choose>
+										<c:when test="${productSize!='No Size'}">
 										<span> <spring:theme code="product.variant.size.HF"></spring:theme>
 											<c:if test="${not empty productSizeType}">(${productSizeType})</c:if>
 										</span>
+										</c:when>
+										</c:choose>
 										<span style="float: right;"> <spring:theme
 												code="product.variant.quantity"></spring:theme>
 											<c:if test="${not empty productSizeType}">(${productSizeType})</c:if>
@@ -461,7 +465,7 @@ var buyingGuideData ='${buyingGuide}';
 											</c:when>
 											</c:choose>
 											
-											<select id="quantity_dropdown"
+											<select id="quantity_dropdown" class="variant-select"
 												style="width: 20%; float: right; position: relative; top: 0;">
 												<c:forEach items="${quantityList}" var="quantity">
 													<option value="${quantity}">${quantity}</option>
