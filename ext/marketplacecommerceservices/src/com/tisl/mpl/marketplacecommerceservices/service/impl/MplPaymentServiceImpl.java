@@ -3324,11 +3324,11 @@ public class MplPaymentServiceImpl implements MplPaymentService
 
 	/*
 	 * @description : fetching bank model for a bank name TISPRO-179\
-	 *
+	 * 
 	 * @param : bankName
-	 *
+	 * 
 	 * @return : BankModel
-	 *
+	 * 
 	 * @throws EtailNonBusinessExceptions
 	 */
 	@Override
@@ -3340,9 +3340,9 @@ public class MplPaymentServiceImpl implements MplPaymentService
 
 	/*
 	 * @Description : Fetching bank name for net banking-- TISPT-169
-	 *
+	 * 
 	 * @return List<BankforNetbankingModel>
-	 *
+	 * 
 	 * @throws EtailNonBusinessExceptions
 	 */
 	@Override
@@ -3719,7 +3719,7 @@ public class MplPaymentServiceImpl implements MplPaymentService
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see * SprintPaymentFixes:- This method is setting paymentTransactionModel and the paymentTransactionEntryModel
 	 * against the cart for non-COD from OMS Submit Order Job de.hybris.platform.core.model.order.OrderModel)
 	 */
@@ -3754,7 +3754,7 @@ public class MplPaymentServiceImpl implements MplPaymentService
 			LOG.info("Creating Payment transaction from Submit Order Job:- ModeOfPayment :- " + paymentMode + " For Order ID:- "
 					+ orderModel.getCode());
 
-			if (!paymentModeFromInfo.equalsIgnoreCase("COD"))
+			if (!paymentModeFromInfo.equalsIgnoreCase(MarketplacecommerceservicesConstants.COD))
 			{
 				LOG.info("Creating Payment transaction from Submit Order Job:- ModeOfPayment Prepaid" + " For Order ID:- "
 						+ orderModel.getCode());
@@ -3869,7 +3869,7 @@ public class MplPaymentServiceImpl implements MplPaymentService
 
 	/*
 	 * @desc getPaymentModeFrompayInfo
-	 *
+	 * 
 	 * @see SprintPaymentFixes:- ModeOfpayment set same as in Payment Info
 	 */
 	@Override
@@ -3879,7 +3879,7 @@ public class MplPaymentServiceImpl implements MplPaymentService
 		{
 			if (payInfo instanceof CODPaymentInfoModel)
 			{
-				return "COD";
+				return MarketplacecommerceservicesConstants.COD;
 			}
 			else if (payInfo instanceof CreditCardPaymentInfoModel)
 			{
@@ -3910,7 +3910,7 @@ public class MplPaymentServiceImpl implements MplPaymentService
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see SprintPaymentFixes:- This method is setting paymentTransactionModel and the paymentTransactionEntryModel
 	 * against the cart for pre paid from OMS Submit Order Job
 	 */
@@ -3974,7 +3974,7 @@ public class MplPaymentServiceImpl implements MplPaymentService
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @desc SprintPaymentFixes:- This method is setting paymentTransactionModel and the paymentTransactionEntryModel
 	 * against the cart for COD from OMS Submit Order Job
 	 */
@@ -5160,9 +5160,9 @@ public class MplPaymentServiceImpl implements MplPaymentService
 		}
 		//setting the payment modes and the amount against it in session to be used later
 		final Map<String, Double> paymentInfo = new HashMap<String, Double>();
-		paymentInfo.put("COD", orderModel.getConvenienceCharges());
+		paymentInfo.put(MarketplacecommerceservicesConstants.COD, orderModel.getConvenienceCharges());
 		sessionService.setAttribute("paymentModes", paymentInfo);
-		sessionService.setAttribute("paymentModeForPromotion", "COD");
+		sessionService.setAttribute("paymentModeForPromotion", MarketplacecommerceservicesConstants.COD);
 		getModelService().save(codPaymentInfoModel);
 		getModelService().save(orderModel);
 		getModelService().refresh(orderModel);
