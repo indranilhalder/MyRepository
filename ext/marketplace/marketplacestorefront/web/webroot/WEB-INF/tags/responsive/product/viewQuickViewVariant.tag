@@ -362,10 +362,10 @@
 								</span>
 							</c:when>
 							<c:otherwise>
-
+								<span>
 								<spring:theme code="product.variant.size"></spring:theme>
 								<c:if test="${not empty productSizeType}">(${productSizeType})</c:if>
-
+								</span>
 							</c:otherwise>
 						</c:choose>
 					</c:otherwise>
