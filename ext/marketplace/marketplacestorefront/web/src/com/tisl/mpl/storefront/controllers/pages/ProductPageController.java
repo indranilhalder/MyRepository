@@ -2579,7 +2579,13 @@ public class ProductPageController extends MidPageController
 
 					String keyProdptsHeaderName = null;
 					final StringBuffer groupString = new StringBuffer();
-
+					String prodDimension="Product Dimensions";
+					String prodDimensionValue="";
+					boolean islengthAvailable=false;
+					boolean iswidthAvailable=false;
+					
+					String length="";
+					String width="";
 					for (final ClassificationData configurableAttributData : ConfigurableAttributeList)
 					{
 						keyProdptsHeaderName = configurableAttributData.getName();
@@ -2595,6 +2601,7 @@ public class ProductPageController extends MidPageController
 							{
 								final List<FeatureValueData> featureValueList = new ArrayList<FeatureValueData>(
 										featureData.getFeatureValues());
+								
 								if (null != productData.getRootCategory())
 								{
 									final FeatureValueData featureValueData = featureValueList.get(0);
@@ -2670,9 +2677,34 @@ public class ProductPageController extends MidPageController
 											}
 										}
 										else
+											
+										{  
+											if(featureData.getName().equals("Length") || featureData.getName().equals("Width") )
 										{
+																								
+												if(featureData.getName().equals("Length"))
+												{
+												length=featureValueData.getValue()+ unit;
+												islengthAvailable=true;
+												}
+												if(featureData.getName().equals("Width"))
+												{
+												width=featureValueData.getValue()+unit;
+												iswidthAvailable=true;
+												}
+												
+												if(islengthAvailable && iswidthAvailable)
+												{
+													prodDimensionValue= length + " X " + width;
+													productFeatureDataList.add(prodDimension + ModelAttributetConstants.COLON
+															+ prodDimensionValue);	
+												}
+										}
+											else
+											{
 											productFeatureDataList.add(featureData.getName() + ModelAttributetConstants.COLON
 													+ featureValueData.getValue() + ModelAttributetConstants.SINGLE_SPACE + unit);
+											}
 										}
 
 
