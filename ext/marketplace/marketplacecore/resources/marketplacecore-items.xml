@@ -5961,6 +5961,19 @@
 					</attribute>
 				</attributes>
 			</itemtype>
+			
+			<!-- SDI-2788 -->
+			<itemtype code="InitiateRefundProcess" extends="OrderProcess"
+				autocreate="true" generate="true"
+				jaloclass="com.tisl.mpl.core.jalo.InitiateRefundProcess">
+				<description>Represents process that is used to initiate Refund</description>
+				<attributes>
+					<attribute qualifier="refundTransactionId" type="java.lang.String">
+						<persistence type="property" />
+						<description>Attribute contains transaction ID to be refunded</description>
+					</attribute>
+				</attributes>
+			</itemtype>	
 
 		</typegroup>
 		<!-- Blacklist Model -->
