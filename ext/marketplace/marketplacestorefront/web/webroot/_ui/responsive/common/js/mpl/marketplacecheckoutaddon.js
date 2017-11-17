@@ -1,7 +1,7 @@
 var isCodSet = false;	//this is a variable to check whether convenience charge is set or not
 var binStatus= false;
 var isNewCard = false; // this is variable to fix paynow blackout issue
-
+var isCodeligible = true; //cod fix
 var couponApplied=false;
 var bankNameSelected=null;
 //var promoAvailable=$("#promoAvailable").val();
@@ -480,6 +480,7 @@ function displayCODForm()
 			$("#enterOTP, #submitPaymentFormButton, #submitPaymentFormCODButton, #paymentFormButton, #otpSentMessage").css("display","none");/*modified for pprd testing -- changing back*/
 			if(codEligible=="BLACKLISTED")
 			{
+				isCodeligible = false;
 				//TPR-4746
 				paymentErrorTrack("cod_unavailable");
 				$("#customerBlackListMessage").css("display","block");
@@ -493,6 +494,7 @@ function displayCODForm()
 			}
 			else if(codEligible=="NOT_TSHIP")
 			{
+				isCodeligible = false;
 				//TPR-4746
 				paymentErrorTrack("cod_unavailable");
 				$("#fulfillmentMessage").css("display","block");
@@ -506,6 +508,7 @@ function displayCODForm()
 			}
 			else if(codEligible=="ITEMS_NOT_ELIGIBLE")
 			{
+				isCodeligible = false;
 				//TPR-4746
 				paymentErrorTrack("cod_unavailable");
 				$("#codItemEligibilityMessage").css("display","block");
@@ -519,6 +522,7 @@ function displayCODForm()
 			}
 			else if(codEligible=="NOT_PINCODE_SERVICEABLE")
 			{
+				isCodeligible = false;
 				//TPR-4746
 				paymentErrorTrack("cod_unavailable");
 				$("#codMessage").css("display","block");
@@ -9297,6 +9301,11 @@ function submitCODForm(){
 		}
 	}
 	else if($("#paymentMode").val()=="COD"){
+		//cod fix
+		 var coddisplaymsg = $('#codEligible').val();
+		 if(isCodeligible == false || coddisplaymsg != 'ITEMS_ELIGIBLE') {
+			 return false;
+		 }
 		var otpNUMField= $('#otpNUMField').val();
 		//TPR-665
 		if(typeof utag !="undefined"){
@@ -9524,3 +9533,13 @@ function populateIsExchangeApplied(response,stringCaller)
 		}
 		}
 }
+//cod fix
+$('#silentOrderPostForm').submit(function() {
+	var coddisplaymsg = $('#codEligible').val();
+	 if(isCodeligible == false || coddisplaymsg != 'ITEMS_ELIGIBLE') {
+		 return false;
+	 } else {
+		 return true;
+	 }
+	  
+});
