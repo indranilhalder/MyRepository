@@ -2295,4 +2295,12 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String CUSTOMERMASTER_ROWLIMIT = "customermaster.batchjob.rowlimit";
 	public static final String PAYMENTINFO_F_ROWLIMIT = "paymentinfo.batchjob.forward.rowlimit";
 	public static final String PAYMENTINFO_R_ROWLIMIT = "paymentinfo.batchjob.reverse.rowlimit";
+
+	//PR-4 || Refund sms cron job
+	public static final String BULK_CUSTOMER_SMS_1 = "Hey ";
+	public static final String BULK_CUSTOMER_SMS_2 = ", We have successfully refunded Rs ";
+	public static final String BULK_CUSTOMER_SMS_3 = " to your bank account against Tata CLiQ order no ";
+	public static final String BULK_CUSTOMER_SMS_4 = " For delay over 5 days please contact your bank with ref number ";
+	public static final String BULK_CUSTOMER_SMS_5 = ".For few banks, It may take up to 10-15 days to reflect in your account.";
+	public static final String LIMIT_QUERY = "select {transactionId} from {RefundTransactionEntry} order by {creationtime} limit ";
 }
