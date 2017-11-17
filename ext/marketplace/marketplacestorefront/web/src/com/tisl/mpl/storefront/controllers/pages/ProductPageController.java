@@ -2637,8 +2637,10 @@ public class ProductPageController extends MidPageController
 												.replaceAll(ModelAttributetConstants.SPACE_REGEX, ModelAttributetConstants.NO_SPACE)
 												.equals(ModelAttributetConstants.CLASSIFICATION_ATTR_WASHCARE))
 										{
-											productFeatureDataList.add(configurableAttributData.getName() + ModelAttributetConstants.COLON
-													+ featureData.getFeatureValues().iterator().next().getValue());
+											for (final FeatureValueData data : featureData.getFeatureValues())
+											{
+												productFeatureDataList.add(featureData.getName()+ModelAttributetConstants.COLON + data.getValue());
+											}
 										}
 										else if (configurableAttributData.getName()
 												.replaceAll(ModelAttributetConstants.SPACE_REGEX, ModelAttributetConstants.NO_SPACE)
