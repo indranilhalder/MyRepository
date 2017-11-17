@@ -77926,3 +77926,8 @@ p.sizetext.size {
     width: 68% ! important;
     float: right;
 }
+/* TISPRNXIII-74 Start */
+.selectRadio.col-md-2.col-sm-2.col-xs-2 {
+    clear: both;
+}
+/* TISPRNXIII-74 End */
