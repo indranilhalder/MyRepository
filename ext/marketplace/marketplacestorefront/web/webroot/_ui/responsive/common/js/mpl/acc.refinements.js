@@ -1340,7 +1340,7 @@ function lazyPaginationFacet(response){
     $("#productGrid").html($.strRemove("ul.product-listing.product-grid.lazy-grid,ul.product-listing.product-grid.lazy-grid-facet,ul.product-list,ul.product-listing.product-grid.custom-sku", response));
 	initPageLoad = true;
     innerLazyLoad({isSerp:true});
-    settings.visiblePages = $('input[name=noOfPages]').val();	
+    settings.totalPages = $('input[name=noOfPages]').val();	
     $(".pagination-blocks").twbsPagination('destroy');
     $('.pagination-blocks').twbsPagination(settings);
 }
