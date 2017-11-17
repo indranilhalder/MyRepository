@@ -77922,3 +77922,7 @@ p.sizetext.size {
 }
 }
 /* TISPRNXIII-53 end */
+.cart.wrapper .right-block.billing .block.bottom.order-details>ul li.item .product {
+    width: 68% ! important;
+    float: right;
+}
