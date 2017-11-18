@@ -199,11 +199,8 @@ INSERT_UPDATE SolrIndexerQuery;solrIndexedType(identifier)[unique=true];identifi
 ;$solrIndexedType;$searchIndexNamePrefix-fullQuery;full;;;false;"
  SELECT  DISTINCT {P.PK}  FROM {BUYBOX AS BBOX  JOIN PRODUCT AS P ON {P.CODE}={BBOX.PRODUCT}  JOIN CATEGORYPRODUCTRELATION AS C2P ON {P.PK}={C2P.TARGET}  JOIN CATEGORY AS C ON {C2P.SOURCE}={C.PK} }  WHERE ({C.CODE} LIKE 'MSH%' OR {C.CODE} LIKE 'LSH%') AND  {BBOX.DELISTED} != 1  AND {BBOX.PRICE} > $freebiePriceThreshold  AND ( SYSDATE BETWEEN {BBOX.SELLERSTARTDATE} AND {BBOX.SELLERENDDATE} ) 
  ";anonymous
-;$solrIndexedType;$searchIndexNamePrefix-updateQuery;update;;;;"
-SELECT distinct pk,code from ({{SELECT {p.PK} as pk , {p:code} AS code FROM {ProductPromotion AS PP JOIN ProductPromotionRelation AS PPR ON {PPR.target} = {PP.PK} JOIN Product AS p ON {p.PK} = {PPR.SOURCE} JOIN BuyBox AS bbox ON {p.code}={bbox.product} JOIN CategoryProductRelation AS c2p ON {p.PK}={c2p.target} JOIN Category AS c ON {c2p.source}={c.PK} } WHERE ({c.code} LIKE 'MSH%' OR {c.code} LIKE 'LSH%') AND {PPR:modifiedtime} >= (?lastIndexTime - 15/1440) AND {bbox.delisted} != 1 AND {bbox.price} > $freebiePriceThreshold AND ( sysdate BETWEEN {bbox.sellerstartdate} AND {bbox.sellerenddate} ) }} UNION {{SELECT  {p.PK} as pk , {p:code} AS code FROM {BuyBox AS bbox JOIN Product AS p ON {p.code}={bbox.product} JOIN CategoryProductRelation AS c2p ON {p.PK}={c2p.target} JOIN Category AS c ON {c2p.source}={c.PK}} WHERE ({c.code} LIKE 'MSH%' OR {c.code} LIKE 'LSH%') AND ({bbox:modifiedtime} >= (?lastIndexTime - 15/1440) OR  {p:modifiedtime} >= (?lastIndexTime - 15/1440)) AND {bbox.delisted} != 1 AND {bbox.price} > $freebiePriceThreshold AND ( sysdate BETWEEN {bbox.sellerstartdate} AND {bbox.sellerenddate} )}})
-";anonymous
-;$solrIndexedType;$searchIndexNamePrefix-deleteQuery;delete;;;;"SELECT distinct{p.PK} FROM {Product AS p} 						WHERE {p.code} IN ( 										{{ SELECT distinct{bbox.product} FROM 	{BuyBox AS bbox} 													WHERE 	{bbox:modifiedtime} + 15/1440>= ?lastIndexTime 													AND ({bbox.product}={p.code} 													AND ({bbox.delisted} = 1 														OR (sysdate not between {bbox.sellerstartdate} and {bbox.sellerenddate})))													AND {bbox.product} NOT IN (													{{														SELECT distinct{bbox.product} FROM {BuyBox AS bbox} 															WHERE {bbox.delisted} != 1 															AND (sysdate between {bbox.sellerstartdate} and {bbox.sellerenddate})													}})										}} 									) 						AND {p.varianttype} IS NULL
-";anonymous
+;$solrIndexedType;$searchIndexNamePrefix-updateQuery;update;;;;"SELECT distinct pk,code from ({{SELECT {p.PK} as pk , {p:code} AS code FROM {ProductPromotion AS PP JOIN ProductPromotionRelation  AS PPR ON {PPR.target} = {PP.PK} JOIN Product AS p ON {p.PK} = {PPR.SOURCE} JOIN BuyBox AS bbox ON {p.code}={bbox.product} JOIN CategoryProductRelation AS c2p ON {p.PK}={c2p.target} JOIN Category AS c ON {c2p.source}={c.PK} } WHERE ({c.code} LIKE 'MSH%' OR {c.code} LIKE 'LSH%') AND {PPR:modifiedtime} >= ({{ SELECT {mc.mplConfigDate} FROM {MplConfiguration AS mc} where {mc:mplConfigCode}='update-mplIndex-cronJob' }}) AND {bbox.delisted} != 1 AND {bbox.price} > 1 AND ( sysdate BETWEEN {bbox.sellerstartdate} AND {bbox.sellerenddate} ) }} UNION {{SELECT  {p.PK} as pk , {p:code} AS code FROM {BuyBox AS bbox JOIN Product AS p ON {p.code}={bbox.product} JOIN CategoryProductRelation AS c2p ON {p.PK}={c2p.target} JOIN Category AS c ON {c2p.source}={c.PK}} WHERE ({c.code} LIKE 'MSH%' OR {c.code} LIKE 'LSH%') AND ({bbox:modifiedtime} >= ({{ SELECT {mc.mplConfigDate} FROM {MplConfiguration AS mc} where {mc:mplConfigCode}='update-mplIndex-cronJob' }}) OR  {p:modifiedtime} >= ({{ SELECT {mc.mplConfigDate} FROM {MplConfiguration AS mc} where {mc:mplConfigCode}='update-mplIndex-cronJob' }})) AND {bbox.delisted} != 1 AND {bbox.price} > 1 AND ( sysdate BETWEEN {bbox.sellerstartdate} AND {bbox.sellerenddate} )}})";anonymous
+;$solrIndexedType;$searchIndexNamePrefix-deleteQuery;delete;;;;"SELECT distinct{p.PK} FROM {Product AS p} WHERE {p.code} IN ({{ SELECT distinct{bbox.product} FROM 	{BuyBox AS bbox} WHERE 	{bbox:modifiedtime} >= ({{ SELECT {mc.mplConfigDate} FROM {MplConfiguration AS mc} where {mc:mplConfigCode}='delete-mplIndex-cronJob' }}) AND ({bbox.product}={p.code} AND ({bbox.delisted} = 1 OR (sysdate not between {bbox.sellerstartdate} and {bbox.sellerenddate}))) AND {bbox.product} NOT IN ( {{ SELECT distinct{bbox.product} FROM {BuyBox AS bbox} WHERE {bbox.delisted} != 1 AND (sysdate between {bbox.sellerstartdate} and {bbox.sellerenddate}) }}) }} ) AND {p.varianttype} IS NULL";anonymous
 
 # Define the available sorts
 INSERT_UPDATE SolrSort;&sortRefID;indexedType(identifier)[unique=true];code[unique=true];useBoost;name
@@ -394,6 +391,8 @@ INSERT_UPDATE Job;code[unique=true];nodeId
 INSERT_UPDATE CronJob; code[unique=true];job(code);singleExecutable;sessionLanguage(isocode)
 ;enableMplIndexingCompositeCronJob;enableMplIndexingCompositeJob;false;en
 ;disableMplIndexingCompositeCronJob;disableMplIndexingCompositeJob;false;en
+;delete-mplIndex-cronJob-LastRunTimeUpdaterCronjob;updateLastRunTimeJob;false;en
+;update-mplIndex-cronJob-LastRunTimeUpdaterCronjob;updateLastRunTimeJob;false;en
 
 # TISPRO-371 Start update and delete index solr cron job into single composite cronjob
 INSERT_UPDATE CompositeCronJob;code[unique=true];job(code);sessionLanguage(isocode);runningOnClusterNode
@@ -402,9 +401,11 @@ INSERT_UPDATE CompositeCronJob;code[unique=true];job(code);sessionLanguage(isoco
  
 #Items to run from the Composite Cron Job
  INSERT_UPDATE CompositeEntry;code[unique=true];executablecronjob(code);compositecronjob(code);compositecronjobpos
- ;delete-mplIndex-cronJob;delete-mplIndex-cronJob;mplIndexingCompositeCronjob;1
- ;update-mplIndex-cronJob;update-mplIndex-cronJob;mplIndexingCompositeCronjob;2
- 
+;delete-mplIndex-cronJob;delete-mplIndex-cronJob;mplIndexingCompositeCronjob;1
+;delete-mplIndex-cronJob-LastRunTimeUpdaterCronjob;delete-mplIndex-cronJob-LastRunTimeUpdaterCronjob;mplIndexingCompositeCronjob;2
+;update-mplIndex-cronJob;update-mplIndex-cronJob;mplIndexingCompositeCronjob;3
+;update-mplIndex-cronJob-LastRunTimeUpdaterCronjob;update-mplIndex-cronJob-LastRunTimeUpdaterCronjob;mplIndexingCompositeCronjob;4
+
  ;disableMplIndexingCompositeCronJob;disableMplIndexingCompositeCronJob;mplFullIndexingCompositeCronjob;1
  ;full-mplIndex-cronJob;full-mplIndex-cronJob;mplFullIndexingCompositeCronjob;2
  ;enableMplIndexingCompositeCronJob;enableMplIndexingCompositeCronJob;mplFullIndexingCompositeCronjob;3
