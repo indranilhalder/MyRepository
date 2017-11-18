@@ -2583,9 +2583,11 @@ public class ProductPageController extends MidPageController
 					String prodDimensionValue = "";
 					boolean islengthAvailable = false;
 					boolean iswidthAvailable = false;
+					boolean isheightAvailable=false;
 
 					String length = "";
 					String width = "";
+					String height="";
 					for (final ClassificationData configurableAttributData : ConfigurableAttributeList)
 					{
 						keyProdptsHeaderName = configurableAttributData.getName();
@@ -2694,14 +2696,13 @@ public class ProductPageController extends MidPageController
 													width = featureValueData.getValue() + unit;
 													iswidthAvailable = true;
 												}
-
-												if (islengthAvailable && iswidthAvailable)
+												if (featureData.getName().equals("Height"))
 												{
-													prodDimensionValue = length + " X " + width;
-													productFeatureDataList.add(prodDimension + MarketplacecommerceservicesConstants.SPACE
-															+ ModelAttributetConstants.COLON + MarketplacecommerceservicesConstants.SPACE
-															+ prodDimensionValue);
+													height = featureValueData.getValue() + unit;
+													isheightAvailable = true;
 												}
+
+												
 											}
 											else
 											{
@@ -2772,6 +2773,20 @@ public class ProductPageController extends MidPageController
 						if (mapConfigurableAttributes.containsKey(configurableAttributData.getName()))
 						{
 							tempList = mapConfigurableAttributes.get(configurableAttributData.getName());
+							if (islengthAvailable && iswidthAvailable && isheightAvailable)
+							{
+								prodDimensionValue = length + " X " + width + " X " + height;
+								productFeatureDataList.add(prodDimension + MarketplacecommerceservicesConstants.SPACE
+										+ ModelAttributetConstants.COLON + MarketplacecommerceservicesConstants.SPACE
+										+ prodDimensionValue);
+							}
+							else if (islengthAvailable && iswidthAvailable)
+							{
+								prodDimensionValue = length + " X " + width;
+								productFeatureDataList.add(prodDimension + MarketplacecommerceservicesConstants.SPACE
+										+ ModelAttributetConstants.COLON + MarketplacecommerceservicesConstants.SPACE
+										+ prodDimensionValue);
+							}
 							tempList.addAll(productFeatureDataList);
 							mapConfigurableAttributes.put(keyProdptsHeaderName, tempList);
 							tempList = null;
