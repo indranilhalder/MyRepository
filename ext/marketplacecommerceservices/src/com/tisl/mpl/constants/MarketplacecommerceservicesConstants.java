@@ -2295,4 +2295,7 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String CUSTOMERMASTER_ROWLIMIT = "customermaster.batchjob.rowlimit";
 	public static final String PAYMENTINFO_F_ROWLIMIT = "paymentinfo.batchjob.forward.rowlimit";
 	public static final String PAYMENTINFO_R_ROWLIMIT = "paymentinfo.batchjob.reverse.rowlimit";
+
+	public static final String FINISHED = "FINISHED";
+
 }

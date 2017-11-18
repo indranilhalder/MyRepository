@@ -2000,6 +2000,20 @@
  	</bean>
  	<!-- Bean for Promotion Job ends-->
 
+
+	<!-- Bean for Indexing timestamp update in MplConfiguration  Starts -->
+	
+	<bean id="mplLastIndexTimeService" 
+		class="com.tisl.mpl.marketplacecommerceservices.service.impl.DefaultMplLastIndexTimeServiceImpl"/>
+		
+	<bean id="mplLastIndexTimeDao"
+		class="com.tisl.mpl.marketplacecommerceservices.daos.impl.MplLastIndexTimeDaoImpl"/>
+		
+	<bean id="updateLastRunTimeJob" class="com.tisl.mpl.marketplacecommerceservices.jobs.UpdateLastRunTimeJob" autowire="byName"/>
+	
+	<!-- Bean for Indexing timestamp update in MplConfiguration  ends  -->
+	
+	
 	<!-- LW-245 -->
 	<bean id="brandProductLuxuryExportJob" class="com.tisl.mpl.integration.job.BrandProductLuxuryExportJob"
 		parent="abstractJobPerformable"
