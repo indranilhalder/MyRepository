@@ -2683,7 +2683,7 @@ public class ProductPageController extends MidPageController
 										else
 
 										{
-											if (featureData.getName().equals("Length") || featureData.getName().equals("Width"))
+											if (featureData.getName().equals("Length") || featureData.getName().equals("Width") || featureData.getName().equals("Height"))
 											{
 
 												if (featureData.getName().equals("Length"))
