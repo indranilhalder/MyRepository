@@ -25,3 +25,13 @@
 <input type="hidden" id="page_subcategory_L1" value='${productCategoryList}'/>
 <input type="hidden" id="page_subcategory_L2" value='${pageSubCategories}'/>
 <input type="hidden" id="page_subcategory_l3" value='${page_subcategory_name_L3}'/>
+<!-- added for kidswear:L4 needs to be populated -->
+<input type="hidden" id="page_subcategory_name_l4" value='${page_subcategory_name_L4}'/>
+<!-- TPR-4831 -->
+<input type="hidden" id="page_subcategory_L1" value='${productCategoryList}'/>
+<input type="hidden" id="page_subcategory_L2" value='${pageSubCategories}'/>
+<input type="hidden" id="page_subcategory_l3" value='${page_subcategory_name_L3}'/>
+<!-- added for kidswear:L4 needs to be populated -->
+<input type="hidden" id="page_subcategory_l4" value='${page_subcategory_name_L4}'/>
+<!-- TPR-6371 | dtm track promotions -->
+<input type="hidden" id="promolist" value='${promolist}'/>

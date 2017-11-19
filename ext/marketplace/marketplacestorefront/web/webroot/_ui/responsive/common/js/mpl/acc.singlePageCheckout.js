@@ -123,6 +123,10 @@ ACC.singlePageCheckout = {
 	},
 	//Function used to fetch edit address form. 
 	getEditAddress:function(element,event){
+		/*TISPRNXIII-54*/
+    	if(typeof utag !="undefined"){
+			utag.link({ link_text : 'edit_address' ,event_type : 'edit_address_clicked'});
+		}
 		event.preventDefault();
 		//The ajax loader is loaded here and hidden in last line of showEditAddressDetails.jsp
 		ACC.singlePageCheckout.showAjaxLoader();
@@ -134,6 +138,10 @@ ACC.singlePageCheckout = {
 			ACC.singlePageCheckout.hideAjaxLoader();
 			data={displaymessage:"Network error occured",type:"error"};
 			ACC.singlePageCheckout.processError("#selectedAddressMessage",data);
+			/*TISPRNXIII-57*/
+        	if(typeof utag !="undefined"){
+				utag.link({ error_type : 'address_error'});
+			}
 		});
         
         xhrResponse.done(function(data) {
@@ -172,12 +180,20 @@ ACC.singlePageCheckout = {
 	        
 	        xhrResponse.fail(function(xhr, textStatus, errorThrown) {
 				console.log("ERROR:"+textStatus + ': ' + errorThrown);
+				/*TISPRNXIII-57*/
+	        	if(typeof utag !="undefined"){
+					utag.link({ error_type : 'address_error'});
+				}
 			});
 	        
 	        xhrResponse.done(function(data, textStatus, jqXHR) {
 	            if (jqXHR.responseJSON) {
 	                if(data.type!="response" && data.type!="confirm")
 	                {
+	                	/*TISPRNXIII-57*/
+	    	        	if(typeof utag !="undefined"){
+	    					utag.link({ error_type : 'address_error'});
+	    				}
 	                	ACC.singlePageCheckout.processError("#addressMessage",data);
 	                }
 	                else if(data.type=="confirm")
@@ -197,9 +213,9 @@ ACC.singlePageCheckout = {
 		        	ACC.singlePageCheckout.getDeliveryAddresses();
 		        	$("#selectedAddressMessage").hide();
 		        	ACC.singlePageCheckout.attachDeliveryModeChangeEvent();
-		        	//TISPRDT-2353
+		        	/*TISPRNXIII-55*/
 		        	if(typeof utag !="undefined"){
-						utag.link({ link_text : 'edit_address_saved' ,event_type : 'edit_address_saved'});
+						utag.link({ link_text : 'save_edited_address' ,event_type : 'save_edited_address_clicked'});
 					}
 		        	//calling tealium 
 		            $("#checkoutPageName").val("Choose Your Delivery Options");
@@ -1963,6 +1979,8 @@ ACC.singlePageCheckout = {
 	//Function called when proceed button of review order page is clicked.
 	proceedToPayment:function(element){
 		ACC.singlePageCheckout.showAjaxLoader();
+		//SDI-2158 FIX
+		resetAppliedCouponFormOnRemoval();
 		//function call to validate payment before proceeding
 		var xhrValidateResponse=ACC.singlePageCheckout.validateCartForPayment();
 		xhrValidateResponse.fail(function(xhr, textStatus, errorThrown) {
@@ -3153,6 +3171,10 @@ ACC.singlePageCheckout = {
 		if(paymentMode=="MRUPEE")
 		{
 			viewPaymentMRupee();
+		}
+		if(paymentMode=="PAYTM")
+		{
+			viewPaymentPaytm();
 		}
 	},
 	//Function called when a saved card is selected.

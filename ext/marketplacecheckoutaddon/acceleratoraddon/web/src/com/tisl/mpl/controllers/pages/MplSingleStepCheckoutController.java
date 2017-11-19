@@ -3476,6 +3476,7 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 		return "addon:/marketplacecheckoutaddon/pages/checkout/single/showChooseDeliverySlotPage";
 	}
 
+	@SuppressWarnings("deprecation")
 	@RequestMapping(value = MarketplacecheckoutaddonConstants.GETREVIEWORDER, method = RequestMethod.GET)
 	public String viewReviewOrder(final Model model) throws UnsupportedEncodingException
 	{
@@ -3490,6 +3491,16 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 			}
 
 			final CartModel cartModel = cartService.getSessionCart();
+			//SDI-2158 fix recalculation starts here
+			mplCouponFacade.releaseVoucherInCheckout(cartModel);
+			commerceCartService.recalculateCart(cartModel);
+			//Fix starts for - Order cant be placed with freebie 
+			final Map<String, MplZoneDeliveryModeValueModel> freebieModelMap = new HashMap<String, MplZoneDeliveryModeValueModel>();
+			final Map<String, Long> freebieParentQtyMap = new HashMap<String, Long>();
+			populateFreebieProductData(cartModel, freebieModelMap, freebieParentQtyMap);
+			//Fix ends for - Order cant be placed with freebie 
+			
+			//SDI-2158 fix recalculation ends here
 			mplCartFacade.setCartSubTotalForReviewOrder(cartModel);
 			mplCartFacade.totalMrpCal(cartModel);
 			//UF-260
@@ -3829,7 +3840,7 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 		}
 		catch (final Exception e)
 		{
-			e.printStackTrace();
+			LOG.error("error in validate payment", e);
 			jsonObj.put("displaymessage", "jsonExceptionMsg");
 			jsonObj.put("type", "errorCode");
 		}

@@ -2134,6 +2134,7 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 
 	//OIS store manager agent group
 	public static final String CSCOCKPIT_USER_GROUP_STOREMANAGERAGENTGROUP = "storemanageragentgroup";
+	public static final String CSCOCKPIT_USER_GROUP_STOREADMINAGENTGROUP = "storeadminagentgroup";
 
 	//Agent specific order search query
 	public static final String ORDER_BY_AGENT = "select {pk} from {Order} where {user}=?user and {agentId}=?agentId ";

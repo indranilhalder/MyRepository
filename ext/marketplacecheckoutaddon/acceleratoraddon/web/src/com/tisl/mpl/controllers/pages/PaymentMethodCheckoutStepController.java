@@ -159,26 +159,26 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 
 
 	//Added for TPR-4461 (GETTING THE BANK OF THE USER'S PAYMENT MODE) starts here
-	public static String bankNameUserPaymentMode;
+	//public static String bankNameUserPaymentMode;
 
 
 	/**
 	 * @return the bankNameUserPaymentMode
 	 */
-	public static String getBankNameUserPaymentMode()
-	{
-		return bankNameUserPaymentMode;
-	}
+	//	public static String getBankNameUserPaymentMode()
+	//	{
+	//		return bankNameUserPaymentMode;
+	//	}
 
 
 	/**
 	 * @param bankNameUserPaymentMode
 	 *           the bankNameUserPaymentMode to set
 	 */
-	public static void setBankNameUserPaymentMode(final String bankNameUserPaymentMode)
-	{
-		PaymentMethodCheckoutStepController.bankNameUserPaymentMode = bankNameUserPaymentMode;
-	}
+	//	public static void setBankNameUserPaymentMode(final String bankNameUserPaymentMode)
+	//	{
+	//		PaymentMethodCheckoutStepController.bankNameUserPaymentMode = bankNameUserPaymentMode;
+	//	}
 
 	//TPR-4461 ends here
 
@@ -745,10 +745,10 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 
 		//getSessionService().setAttribute(MarketplacecommerceservicesConstants.BANKFROMBINFORPROMOTION,
 		//	(null != selectedEMIBank && StringUtils.isNotEmpty(selectedEMIBank)) ? selectedEMIBank : null);//selected EMI BANK setting for voucher payment mode and bank specific restriction
-		if (null != selectedEMIBank && StringUtils.isNotEmpty(selectedEMIBank))
-		{
-			setBankNameUserPaymentMode(selectedEMIBank);
-		}
+		//		if (null != selectedEMIBank && StringUtils.isNotEmpty(selectedEMIBank))
+		//		{
+		//			setBankNameUserPaymentMode(selectedEMIBank);
+		//		}
 		/////////////////TPR-4461///////////////////
 
 		//if (null != cartData && null != cartData.getTotalPrice())
@@ -3119,10 +3119,10 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 	@SuppressWarnings("deprecation")
 	@RequestMapping(value = MarketplacecheckoutaddonConstants.APPLYPROMOTIONS, method = RequestMethod.GET)
 	@RequireHardLogIn
-	public @ResponseBody MplPromoPriceData applyPromotions(final String paymentMode, final String bankName, final String guid)
-			throws CMSItemNotFoundException, InvalidCartException, CalculationException, ModelSavingException,
-			NumberFormatException, JaloInvalidParameterException, VoucherOperationException, JaloSecurityException,
-			JaloPriceFactoryException //Parameters added for TPR-629
+	public @ResponseBody MplPromoPriceData applyPromotions(final String paymentMode, final String bankName, final String guid,
+			final boolean isNewCard) throws CMSItemNotFoundException, InvalidCartException, CalculationException,
+			ModelSavingException, NumberFormatException, JaloInvalidParameterException, VoucherOperationException,
+			JaloSecurityException, JaloPriceFactoryException //Parameters added for TPR-629
 	{
 		final long startTime = System.currentTimeMillis();
 		LOG.debug("Entering Controller applyPromotions()=====" + System.currentTimeMillis());
@@ -3159,8 +3159,9 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 						&& (paymentMode.equalsIgnoreCase(MarketplacecheckoutaddonConstants.CREDITCARDMODE)
 								|| paymentMode.equalsIgnoreCase(MarketplacecheckoutaddonConstants.DEBITCARDMODE)
 								|| paymentMode.equalsIgnoreCase(MarketplacecheckoutaddonConstants.NETBANKINGMODE)
-								|| paymentMode.equalsIgnoreCase(MarketplacecheckoutaddonConstants.EMIMODE) || paymentMode
-									.equalsIgnoreCase(MarketplacecommerceservicesConstants.MRUPEE)))
+								|| paymentMode.equalsIgnoreCase(MarketplacecheckoutaddonConstants.EMIMODE)
+								|| paymentMode.equalsIgnoreCase(MarketplacecommerceservicesConstants.MRUPEE) || paymentMode
+									.equalsIgnoreCase("paytm")))
 				{
 					//setting in cartmodel
 					cart.setConvenienceCharges(Double.valueOf(0));
@@ -3181,11 +3182,23 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 					//INC144317480: Order Threshold Discount Promotion: Netbanking Payment Mode Restriction doesn't work
 					//INC144318909 - EMI Option is not working in "Order threshold discount promotion"
 					//INC144319439 - Tata eTail:Payment mode restricition not appliable on saved cards
-					if (getSessionService().getAttribute(MarketplacecheckoutaddonConstants.BANKFROMBIN) == null
-							&& StringUtils.isNotEmpty(bankName) && !bankName.equalsIgnoreCase(MarketplacecommerceservicesConstants.NULL))
+
+
+
+					//SDI-2154/SDI-2155/SDI-2157 starts here
+
+					/*
+					 * if (getSessionService().getAttribute(MarketplacecheckoutaddonConstants.BANKFROMBIN) == null &&
+					 * StringUtils.isNotEmpty(bankName) &&
+					 * !bankName.equalsIgnoreCase(MarketplacecommerceservicesConstants.NULL)) {
+					 * getSessionService().setAttribute(MarketplacecheckoutaddonConstants.BANKFROMBIN, bankName); }
+					 */
+					if (!isNewCard)
 					{
 						getSessionService().setAttribute(MarketplacecheckoutaddonConstants.BANKFROMBIN, bankName);
 					}
+
+					//SDI-2154/SDI-2155/SDI-2157 ends here
 
 					//INC144317480: Order Threshold Discount Promotion: Netbanking Payment Mode Restriction doesn't work
 					//					if (StringUtils.isNotEmpty(paymentMode)
@@ -3367,8 +3380,9 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 							&& (paymentMode.equalsIgnoreCase(MarketplacecheckoutaddonConstants.CREDITCARDMODE)
 									|| paymentMode.equalsIgnoreCase(MarketplacecheckoutaddonConstants.DEBITCARDMODE)
 									|| paymentMode.equalsIgnoreCase(MarketplacecheckoutaddonConstants.NETBANKINGMODE)
-									|| paymentMode.equalsIgnoreCase(MarketplacecheckoutaddonConstants.EMIMODE) || paymentMode
-										.equalsIgnoreCase(MarketplacecommerceservicesConstants.MRUPEE)))
+									|| paymentMode.equalsIgnoreCase(MarketplacecheckoutaddonConstants.EMIMODE)
+									|| paymentMode.equalsIgnoreCase(MarketplacecommerceservicesConstants.MRUPEE) || paymentMode
+										.equalsIgnoreCase("paytm")))
 					{
 						//setting in orderModel
 						orderModel.setConvenienceCharges(Double.valueOf(0));
@@ -3384,11 +3398,24 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 					//INC144317480: Order Threshold Discount Promotion: Netbanking Payment Mode Restriction doesn't work
 					//INC144318909 - EMI Option is not working in "Order threshold discount promotion"
 					//INC144319439 - Tata eTail:Payment mode restricition not appliable on saved cards
-					if (getSessionService().getAttribute(MarketplacecheckoutaddonConstants.BANKFROMBIN) == null
-							&& StringUtils.isNotEmpty(bankName) && !bankName.equalsIgnoreCase(MarketplacecommerceservicesConstants.NULL))
+
+
+					//SDI-2154/SDI-2155/SDI-2157 changes starts here
+
+					/*
+					 * if (getSessionService().getAttribute(MarketplacecheckoutaddonConstants.BANKFROMBIN) == null &&
+					 * StringUtils.isNotEmpty(bankName) &&
+					 * !bankName.equalsIgnoreCase(MarketplacecommerceservicesConstants.NULL)) {
+					 * getSessionService().setAttribute(MarketplacecheckoutaddonConstants.BANKFROMBIN, bankName); }
+					 */
+
+					if (!isNewCard)
 					{
 						getSessionService().setAttribute(MarketplacecheckoutaddonConstants.BANKFROMBIN, bankName);
 					}
+					//SDI-2154/SDI-2155/SDI-2157 changes ends here
+
+
 					//INC144317480: Order Threshold Discount Promotion: Netbanking Payment Mode Restriction doesn't work
 					//					if (StringUtils.isNotEmpty(paymentMode)
 					//							&& paymentMode.equalsIgnoreCase(MarketplacecheckoutaddonConstants.NETBANKINGMODE))
@@ -3461,6 +3488,11 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 							&& paymentMode.equalsIgnoreCase(MarketplacecommerceservicesConstants.MRUPEE))
 					{
 						orderModel.setModeOfOrderPayment(MarketplacecommerceservicesConstants.MRUPEE);
+						getModelService().save(orderModel);
+					}
+					else if (StringUtils.isNotEmpty(paymentMode) && paymentMode.equalsIgnoreCase("paytm"))
+					{
+						orderModel.setModeOfOrderPayment("PAYTM");
 						getModelService().save(orderModel);
 					}
 
@@ -3547,7 +3579,7 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 				//Added for TPR-4461 starts here for voucher
 				LOG.debug("Inside bincheck::::::The bank name to be set while selecting the card for payment is "
 						+ binData.getBankName());
-				setBankNameUserPaymentMode(binData.getBankName());
+				//setBankNameUserPaymentMode(binData.getBankName());
 				//TPR-4461 ends here
 			}
 
@@ -3716,10 +3748,10 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 	{
 		//TPR-4461 parameter netBankName added starts here added only for getting bank name for netbanking/saved credit card/saved debit card
 		LOG.debug("The bank name for netbanking is" + netBankName);
-		if (StringUtils.isNotEmpty(netBankName) && netBankName != null)
-		{
-			setBankNameUserPaymentMode(netBankName);//Card's Bank List
-		}
+		//		if (StringUtils.isNotEmpty(netBankName) && netBankName != null)
+		//		{
+		//			setBankNameUserPaymentMode(netBankName);//Card's Bank List
+		//		}
 
 		//TPR-4461 parameter netBankName added ends here added only for netbanking bankname
 		String orderId = null;
@@ -3808,7 +3840,9 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 								LOG.debug("Inside createjuspay order method ::cart model:: TISSTRT-1526-1  : the banklist set in voucher is: "
 										+ bankLists);
 
-								final String banknameforUserPaymentMode = getBankNameUserPaymentMode(); // Bank of User's Payment Mode
+								//final String banknameforUserPaymentMode = getBankNameUserPaymentMode(); // Bank of User's Payment Mode
+								final String banknameforUserPaymentMode = getSessionService().getAttribute(
+										MarketplacecheckoutaddonConstants.BANKFROMBIN);
 
 								LOG.debug("Inside createjuspay order method ::cart model:: TISSTRT-1526-2  : the bank selected while paying through card is: "
 										+ banknameforUserPaymentMode);
@@ -4058,8 +4092,9 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 								final List<PaymentTypeModel> paymentTypeList = ((PaymentModeRestrictionModel) restriction)
 										.getPaymentTypeData(); //Voucher Payment mode
 								final List<BankModel> bankLists = ((PaymentModeRestrictionModel) restriction).getBanks(); //Voucher Bank Restriction List
-								final String banknameforUserPaymentMode = getBankNameUserPaymentMode(); // Bank of User's Payment Mode
-
+								//final String banknameforUserPaymentMode = getBankNameUserPaymentMode(); // Bank of User's Payment Mode
+								final String banknameforUserPaymentMode = getSessionService().getAttribute(
+										MarketplacecheckoutaddonConstants.BANKFROMBIN);
 
 
 								if (CollectionUtils.isNotEmpty(paymentTypeList))
@@ -4241,10 +4276,10 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 
 		//getSessionService().setAttribute(MarketplacecommerceservicesConstants.BANKFROMBINFORPROMOTION,
 		//	(null != bankName && StringUtils.isNotEmpty(bankName)) ? bankName : null);//selected EMI BANK setting for voucher payment mode and bank specific restriction
-		if (null != bankName && StringUtils.isNotEmpty(bankName))
-		{
-			setBankNameUserPaymentMode(bankName);
-		}
+		//		if (null != bankName && StringUtils.isNotEmpty(bankName))
+		//		{
+		//			setBankNameUserPaymentMode(bankName);
+		//		}
 		/////////////////TPR-4461///////////////////
 
 		final CustomerModel customer = (CustomerModel) getUserService().getCurrentUser();
@@ -4967,7 +5002,7 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.tisl.mpl.controllers.pages.CheckoutStepController#enterStep(org.springframework.ui.Model,
 	 * org.springframework.web.servlet.mvc.support.RedirectAttributes)
 	 */

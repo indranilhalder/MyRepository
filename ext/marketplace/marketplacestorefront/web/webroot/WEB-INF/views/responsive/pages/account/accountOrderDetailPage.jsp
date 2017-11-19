@@ -745,12 +745,16 @@
 															</c:if>
 														</c:when>
 														<c:otherwise>
+														<c:if test="${!fn:containsIgnoreCase(entry.product.size, 'No Size')}">
 															<p>Size: ${entry.product.size}</p>
+														</c:if>
 														</c:otherwise>
 													</c:choose>
 												</c:if>
 												<c:if test="${not empty entry.product.colour}">
+												<c:if test="${!fn:containsIgnoreCase(entry.product.colour, 'No Color')}">
 													<p>Color: ${entry.product.colour}</p>
+												</c:if>
 												</c:if>
 												<p>
 													Price:
@@ -2091,18 +2095,24 @@
 																	  <p><spring:theme code="product.variant.length.colon"/> ${entry.product.size}</p>
 																	</c:when>
 																	<c:otherwise>
+																	<c:if test="${!fn:containsIgnoreCase(entry.product.size, 'No Size')}">
 																	  <p>Size: ${entry.product.size}</p>
+																	 </c:if>
 																	</c:otherwise>
 																</c:choose>
 															</c:if>
 														</c:when>
 														<c:otherwise>
+														<c:if test="${!fn:containsIgnoreCase(entry.product.size, 'No Size')}">
 															<p>Size: ${entry.product.size}</p>
+														</c:if>
 														</c:otherwise>
 													</c:choose>
 												</c:if>
 												<c:if test="${not empty entry.product.colour}">
+												<c:if test="${!fn:containsIgnoreCase(entry.product.colour, 'No Color')}">
 													<p>Color: ${entry.product.colour}</p>
+												</c:if>
 												</c:if>
 												<p class="track-order-price">
 
@@ -2269,15 +2279,19 @@
 																									</c:if>
 																								</c:when>
 																								<c:otherwise>
+																								<c:if test="${!fn:containsIgnoreCase(entryCancel.product.size, 'No Size')}">
 																									<span><b>Size:</b>
-																																							${entryCancel.product.size}</span>
+																									${entryCancel.product.size}</span>
+																								</c:if>													
 																								</c:otherwise>
 																							</c:choose>
 																						</c:if>
 																						<c:if
 																							test="${not empty entryCancel.product.colour}">
+																							<c:if test="${!fn:containsIgnoreCase(entryCancel.product.colour, 'No Color')}">
 																							<span><b>Color:</b>
 																								${entryCancel.product.colour}</span>
+																							</c:if>
 																						</c:if>
 
 																						<span class="price"><b>Price:</b> <ycommerce:testId

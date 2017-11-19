@@ -200,7 +200,8 @@
 					<%-- <button type="button" class="positive right cod-otp-button_top" onclick="mobileBlacklist()" ><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.sendOTP" text="Verify Number" /></button> --%>
 					<button type="button" class="button positive right cod_payment_button_top proceed-button" onclick="submitForm()" id="paymentButtonId_up"><spring:theme code="checkout.multi.paymentMethod.codContinue" /></button>
 					<button type="button" class="button btn-block payment-button make_payment_top_savedCard proceed-button" id="make_mrupee_payment_up"><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.paymentButton"/></button>
-
+					<button type="button" class="button btn-block payment-button make_payment_top_savedCard proceed-button" id="make_paytm_payment"><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.paymentButton"/></button>
+					
 				<!-- TISCR-305 ends -->	
 				<div class="left-block choose-payment">
 
@@ -450,6 +451,9 @@
 											style="display: none;">
 											Enter a valid <span>CVV</span> to continue
 										</div>
+										<div id="nochooseErrorSavedCard2" class="card_nochooseErrorSavedCard_popup error-message" style="display : none;">
+												Choose any card to continue
+											</div>
 										<div class="pay top-padding saved-card-button">
 											<button type="submit"
 												class="make_payment button btn-block payment-button"
@@ -605,6 +609,9 @@
 											style="display: none;">
 											Enter a valid <span>CVV</span> to continue
 										</div>
+										<div id="nochooseErrorSavedCard1" class="card_nochooseErrorSavedCard_popup error-message" style="display : none;">
+												Choose any card to continue
+									   </div>
 										<div class="pay top-padding saved-card-button">
 											<button type="submit"
 												class="make_payment button btn-block payment-button"
@@ -746,6 +753,9 @@
 				<!-- Terms & Conditions Link -->
 					<div id="cvvErrorSavedCard2" class="card_cvvErrorSavedCard_popup error-message" style="display : none;">
 												Enter a valid <span>CVV</span> to continue
+											</div>
+											<div id="nochooseErrorSavedCard2" class="card_nochooseErrorSavedCard_popup error-message" style="display : none;">
+												Choose any card to continue
 											</div>
 											<div class="pay top-padding saved-card-button">
 												<button type="submit" class="make_payment button btn-block payment-button" id="make_saved_cc_payment"><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.paymentButton"/></button>
@@ -1075,6 +1085,9 @@
 											<!-- Adding here the cvv error message -->
 											<div id="cvvErrorSavedCard1" class="card_cvvErrorSavedCard_popup error-message" style="display : none;">
 												Enter a valid <span>CVV</span> to continue
+											</div>
+											<div id="nochooseErrorSavedCard1" class="card_nochooseErrorSavedCard_popup error-message" style="display : none;">
+												Choose any card to continue
 											</div>
 											<div class="pay top-padding saved-card-button">
 												<button type="submit" class="make_payment button btn-block payment-button" id="make_saved_dc_payment"><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.paymentButton"/></button>
@@ -1637,11 +1650,29 @@
 						 <c:forEach var="map" items="${paymentModes}">
 									<c:if test="${map.value eq true}">
 										<c:choose>
-											<c:when test="${map.key eq 'TW'}">
+											<c:when test="${map.key eq 'MRUPEE'}">
 												<input type="hidden" id="TW" value="${map.value}" />
 	
 												<li class="paymentModeMobile">
 													<span id="viewPaymentMRupeeMobile"  onclick="ACC.singlePageCheckout.onPaymentModeSelection('MRUPEE','newCard','','false');">
+														<spring:theme code="checkout.multi.paymentMethod.selectMode.ThrdPrtWllt" />
+													</span>
+												</li>
+												</c:when>
+											</c:choose>
+										</c:if>
+									</c:forEach>
+						</c:if>
+						<c:if test="${is_responsive}">
+						<!-- Paytm Changes -->
+						 <c:forEach var="map" items="${paymentModes}">
+									<c:if test="${map.value eq true}">
+										<c:choose>
+											<c:when test="${map.key eq 'PAYTM'}">
+												<input type="hidden" id="TW" value="${map.value}" />
+	
+												<li class="paymentModeMobile">
+													<span id="viewPaymentMRupeeMobile"  onclick="ACC.singlePageCheckout.onPaymentModeSelection('PAYTM','newCard','','false');">
 														<spring:theme code="checkout.multi.paymentMethod.selectMode.ThrdPrtWllt" />
 													</span>
 												</li>
@@ -1790,6 +1821,7 @@
 	$(".new_card_tab.credit_tab").click(function(){
 		$(this).addClass("active_tab");
 		$(".saved_card_tab.credit_tab").removeClass("active_tab");
+		$("#cardNo").val('');//TISUAT-6002
 		$(this).parents("#card").find("#savedCard").hide();
 		$(this).parents("#card").find("#savedCard").next("li").hide();
 		$(this).parents("#card").find(".terms").first().hide();
@@ -1812,6 +1844,7 @@
 	$(".new_card_tab.debit_tab").click(function(){
 		$(this).addClass("active_tab");
 		$(".saved_card_tab.debit_tab").removeClass("active_tab");
+		$("#cardNoDc").val('');//TISUAT-6002
 		$(this).parents("#cardDebit").find("#savedCardDebit").hide();
 		$(this).parents("#cardDebit").find("#savedCardDebit").next("li").hide();
 		$(this).parents("#cardDebit").find(".terms").first().hide();

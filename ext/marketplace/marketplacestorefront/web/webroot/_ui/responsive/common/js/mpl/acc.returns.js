@@ -73,6 +73,16 @@
 				$(".thirdTataCliq .returnMethod .self").removeClass("blackColor").addClass("greyColor");
 				$(".thirdTataCliq .returnMethod .quickDrop").show(); 
 				$(".thirdTataCliq .returnMethod .selfCourier, .thirdTataCliq .returnMethod .scheduledPickup").hide();
+				
+				if($(".quickDropArea .checkButton:checked").length < 1){
+					
+					
+					$('.quickDrop .quickDropArea .error_text').show().text("please select atleast one store.");
+					$('#saveBlockData').prop('disabled', true);
+				}else{
+					$('.quickDrop .quickDropArea .error_text').hide();
+					$('#saveBlockData').prop('disabled', false);
+				}
 			} else if(type == "scheduled") {
 				$(".thirdTataCliq .returnMethod .quick").removeClass("blackColor").addClass("greyColor");
 				$(".thirdTataCliq .returnMethod .scheduled").addClass("blackColor").removeClass("greyColor");
@@ -81,6 +91,7 @@
 				$(".thirdTataCliq .returnMethod .selfCourier, .thirdTataCliq .returnMethod .quickDrop").hide();
 				showPickupTimeDate('address1');
 				$(".scheduledPickupArea .address1 input, .selectRadioDate0, .scheduledPickup #scheduleReturnTime1").prop("checked", true);
+				$('#saveBlockData').prop('disabled', false);
 				
 			} else if(type == "self") {
 				$(".thirdTataCliq .returnMethod .quick").removeClass("blackColor").addClass("greyColor");
@@ -88,6 +99,7 @@
 				$(".thirdTataCliq .returnMethod .self").addClass("blackColor").removeClass("greyColor");
 				$(".thirdTataCliq .returnMethod .selfCourier").show(); 
 				$(".thirdTataCliq .returnMethod .quickDrop, .thirdTataCliq .returnMethod .scheduledPickup").hide();
+				$('#saveBlockData').prop('disabled', false);
 			} 
 		}
 		

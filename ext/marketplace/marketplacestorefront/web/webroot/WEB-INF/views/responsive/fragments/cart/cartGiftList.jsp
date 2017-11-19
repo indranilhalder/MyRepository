@@ -159,7 +159,8 @@ $( document ).ready(function() {
 
 
 									<c:if
-										test="${(not empty product.size && product.rootCategory eq 'Clothing')||(not empty product.size && product.rootCategory eq 'Footwear')||(not empty product.size && product.size ne 'NO SIZE' && product.rootCategory eq 'FineJewellery')||(not empty product.size && product.size ne 'NO SIZE' && product.rootCategory eq 'FashionJewellery')}">
+										test="${(not empty product.size && product.rootCategory eq 'Clothing')||(not empty product.size && product.rootCategory eq 'Footwear')||(not empty product.size && product.size ne 'NO SIZE' && product.rootCategory eq 'FineJewellery')||(not empty product.size && product.size ne 'NO SIZE' && product.rootCategory eq 'FashionJewellery')
+										|| (not empty product.size && product.rootCategory eq 'HomeFurnishing')}">
 										<ul class="">
 											<li><button id="addToCartButton" type="button"
 													class="addToBagButton treat-urself-button"
@@ -192,6 +193,17 @@ $( document ).ready(function() {
 										test="${(empty product.size && product.rootCategory eq 'Clothing')||(empty product.size && product.rootCategory eq 'Footwear')}">
 										<span id="addToCartButtonId treat-urself-button"
 											style="display: none; width: 120px;">
+											<button type="button" id="addToCartButton"
+												class="blue button sizeNotSpecified_wl" data-toggle="modal"
+												data-target="#redirectsToPDP">
+												<spring:theme code="basket.add.to.basket" />
+											</button>
+										</span>
+									</c:if>
+									<c:if
+										test="${(empty product.size && product.rootCategory eq 'HomeFurnishing')}">
+										<span id="addToCartButtonId treat-urself-button"
+											style="display: block !important; width: 120px;">
 											<button type="button" id="addToCartButton"
 												class="blue button sizeNotSpecified_wl" data-toggle="modal"
 												data-target="#redirectsToPDP">

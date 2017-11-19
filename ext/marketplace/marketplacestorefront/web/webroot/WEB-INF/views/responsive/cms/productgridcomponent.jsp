@@ -61,7 +61,7 @@
 		numberPagesShown="${numberPagesShown}" hide="true"/>
 </div>
 
-<div class="bottom-pagination pagination-search">
+<%-- <div class="bottom-pagination pagination-search">
 <div class="">
 <c:if test="${searchPageData.pagination.numberOfPages > 1}">
 <span class="">
@@ -104,6 +104,16 @@
 </c:when>
 </c:choose>
 </div>
+</div> --%>
+
+<div class="bottom-pagination pagination-search">
+<c:if test="${searchPageData.pagination.numberOfPages > 1}">
+<span class="">
+<span class="total-pagecount">Pages <span id="pageOf">1</span> of ${searchPageData.pagination.numberOfPages}</span>
+</span>
+</c:if>
+<ul class="pagination-blocks">
+</ul>
 </div>
 
 <script>
