@@ -43,6 +43,8 @@ public class NPSFeedbackQuestionFacadeImpl implements NPSFeedbackQuestionFacade
 	@Resource
 	private ModelService modelService;
 
+	private static final String DATEFORMAT = "dd/MM/yyyy hh:mm:ss a";
+
 	//sonar fix
 	/*
 	 * @Autowired private OrderService orderService;
@@ -129,8 +131,8 @@ public class NPSFeedbackQuestionFacadeImpl implements NPSFeedbackQuestionFacade
 			final Integer responseIdInt = Integer.valueOf(responseId);
 
 			npsFeedbackModel.setResponseId(responseIdInt.toString());
-			final SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy hh:mm:ss a");
-			final SimpleDateFormat dateFormatParse = new SimpleDateFormat("dd/MM/yyyy hh:mm:ss a");
+			final SimpleDateFormat dateFormat = new SimpleDateFormat(DATEFORMAT);
+			final SimpleDateFormat dateFormatParse = new SimpleDateFormat(DATEFORMAT);
 			final Date date = new Date();
 			final String SurveyDate = dateFormat.format(date);
 
@@ -200,8 +202,8 @@ public class NPSFeedbackQuestionFacadeImpl implements NPSFeedbackQuestionFacade
 			npsFeedbackModel.setResponseTime(new Date());
 			//npsFeedbackModel.setOriginalSurveyDate();
 			//TISPRDT-2140 starts
-			final SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy hh:mm:ss a");
-			final SimpleDateFormat dateFormatParse = new SimpleDateFormat("dd/MM/yyyy hh:mm:ss a");
+			final SimpleDateFormat dateFormat = new SimpleDateFormat(DATEFORMAT);
+			final SimpleDateFormat dateFormatParse = new SimpleDateFormat(DATEFORMAT);
 			final Date date = new Date();
 			final String SurveyDate = dateFormat.format(date);
 			npsFeedbackModel.setOriginalSurveyDate(dateFormatParse.parse(SurveyDate));

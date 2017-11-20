@@ -151,6 +151,10 @@ public class DefaultPromotionManager extends PromotionsManager
 	@Resource(name = "mplCategoryServiceImpl")
 	MplCategoryService mplCategoryServiceImpl;
 
+	private static final String AS_PPROM = " ) AS pprom";
+	private static final String PPROM = " ) pprom";
+	private static final String SELECT_CAT2PROD_TARGET = "{{ SELECT {cat2prod:target} as pk  ";
+
 	//Change for FineJewellery
 	/**
 	 * @return the jewelleryService
@@ -5334,7 +5338,7 @@ public class DefaultPromotionManager extends PromotionsManager
 
 					params.put("promotionCategories", promotionCategories);
 				}
-				//promQuery.append(" ) AS pprom");
+				//promQuery.append(AS_PPROM);
 			}
 			else
 			{
@@ -5363,7 +5367,7 @@ public class DefaultPromotionManager extends PromotionsManager
 								.append(MarketplacecommerceservicesConstants.QUERYPRODUCT);
 					}
 				}
-				//promQuery.append(" ) pprom");
+				//promQuery.append(PPROM);
 			}
 
 			//---------Check for brand: starts------------//
@@ -5376,11 +5380,11 @@ public class DefaultPromotionManager extends PromotionsManager
 
 			if (!(Config.isOracleUsed()))
 			{
-				promQuery.append(" ) AS pprom");
+				promQuery.append(AS_PPROM);
 			}
 			else
 			{
-				promQuery.append(" ) pprom");
+				promQuery.append(PPROM);
 			}
 
 			final List cartProducts = getSession().getFlexibleSearch().search(ctx, promQuery.toString(), params, Product.class)
@@ -5656,11 +5660,11 @@ public class DefaultPromotionManager extends PromotionsManager
 
 		if (!(Config.isOracleUsed()))
 		{
-			promQuery.append(" ) AS pprom");
+			promQuery.append(AS_PPROM);
 		}
 		else
 		{
-			promQuery.append(" ) pprom");
+			promQuery.append(PPROM);
 		}
 
 		final List cartSecondProducts = getSession().getFlexibleSearch().search(ctx, promQuery.toString(), params, Product.class)
@@ -5730,7 +5734,7 @@ public class DefaultPromotionManager extends PromotionsManager
 
 					params.put("promotionCategories", promotionCategories);
 				}
-				//promQuery.append(" ) AS pprom");
+				//promQuery.append(AS_PPROM);
 			}
 			else
 			{
@@ -5759,7 +5763,7 @@ public class DefaultPromotionManager extends PromotionsManager
 								.append("} in (?product) }}");
 					}
 				}
-				//				promQuery.append(" ) pprom");
+				//				promQuery.append(PPROM);
 			}
 
 			//---------Check for brand: starts------------//
@@ -5772,11 +5776,11 @@ public class DefaultPromotionManager extends PromotionsManager
 
 			if (!(Config.isOracleUsed()))
 			{
-				promQuery.append(" ) AS pprom");
+				promQuery.append(AS_PPROM);
 			}
 			else
 			{
-				promQuery.append(" ) pprom");
+				promQuery.append(PPROM);
 			}
 
 			final List cartProducts = getSession().getFlexibleSearch().search(ctx, promQuery.toString(), params, Product.class)
@@ -5935,7 +5939,7 @@ public class DefaultPromotionManager extends PromotionsManager
 					&& PromotionType.equalsIgnoreCase(MarketplacecommerceservicesConstants.BRANDRESTRICTION)
 					&& CollectionUtils.isNotEmpty(brandList))
 			{
-				promQuery.append("{{ SELECT {cat2prod:target} as pk  ");
+				promQuery.append(SELECT_CAT2PROD_TARGET);
 				promQuery.append(MarketplacecommerceservicesConstants.QUERYFROM)
 						.append(GeneratedCatalogConstants.Relations.CATEGORYPRODUCTRELATION).append(" AS cat2prod } ");
 				promQuery.append("WHERE {cat2prod:target} in (?product) AND {cat2prod:source} in (?brands) }} ");
@@ -5944,9 +5948,9 @@ public class DefaultPromotionManager extends PromotionsManager
 					&& PromotionType.equalsIgnoreCase(MarketplacecommerceservicesConstants.EXCLUDEBRANDRESTRICTION)
 					&& CollectionUtils.isNotEmpty(brandList))
 			{
-				promQuery.append("{{ SELECT {cat2prod:target} as pk  ");
-				promQuery.append(MarketplacecommerceservicesConstants.QUERYFROM)
-						.append(GeneratedCatalogConstants.Relations.CATEGORYPRODUCTRELATION);
+				promQuery.append(SELECT_CAT2PROD_TARGET);
+				promQuery.append(MarketplacecommerceservicesConstants.QUERYFROM).append(
+						GeneratedCatalogConstants.Relations.CATEGORYPRODUCTRELATION);
 				promQuery.append(" AS cat2prod JOIN ").append(MarketplacecommerceservicesConstants.TYPE_CATEGORY)
 						.append(" AS category on {cat2prod:source} = {category.pk}} ");
 				promQuery
@@ -6211,11 +6215,11 @@ public class DefaultPromotionManager extends PromotionsManager
 
 		if (!(Config.isOracleUsed()))
 		{
-			promQuery.append(" ) AS pprom");
+			promQuery.append(AS_PPROM);
 		}
 		else
 		{
-			promQuery.append(" ) pprom");
+			promQuery.append(PPROM);
 		}
 
 		final List cartProducts = getSession().getFlexibleSearch().search(ctx, promQuery.toString(), params, Product.class)
@@ -6308,16 +6312,16 @@ public class DefaultPromotionManager extends PromotionsManager
 
 		if (isIncluded)
 		{
-			promQuery.append("{{ SELECT {cat2prod:target} as pk  ");
+			promQuery.append(SELECT_CAT2PROD_TARGET);
 			promQuery.append(MarketplacecommerceservicesConstants.QUERYFROM)
 					.append(GeneratedCatalogConstants.Relations.CATEGORYPRODUCTRELATION).append(" AS cat2prod } ");
 			promQuery.append("WHERE {cat2prod:target} in (?product) AND {cat2prod:source} in (?categories) }} ");
 		}
 		else
 		{
-			promQuery.append("{{ SELECT {cat2prod:target} as pk  ");
-			promQuery.append(MarketplacecommerceservicesConstants.QUERYFROM)
-					.append(GeneratedCatalogConstants.Relations.CATEGORYPRODUCTRELATION);
+			promQuery.append(SELECT_CAT2PROD_TARGET);
+			promQuery.append(MarketplacecommerceservicesConstants.QUERYFROM).append(
+					GeneratedCatalogConstants.Relations.CATEGORYPRODUCTRELATION);
 			promQuery.append(" AS cat2prod JOIN ").append(MarketplacecommerceservicesConstants.TYPE_CATEGORY)
 					.append(" AS category on {cat2prod:source} = {category.pk}} ");
 			promQuery

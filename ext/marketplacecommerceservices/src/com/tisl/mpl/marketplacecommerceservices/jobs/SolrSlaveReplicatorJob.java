@@ -64,8 +64,8 @@ public class SolrSlaveReplicatorJob extends AbstractJobPerformable
 
 		final String waitTimeForSlaveforMasterIndexUpdate = configurationService.getConfiguration().getString(
 				"SolrSlaveReplicatorJob.mandatory.waittime.insec.forMasterIndexUpdateToComplete");
-
-		if (waitTimeForSlaveforMasterIndexUpdate != null && waitTimeForSlaveforMasterIndexUpdate.trim().length() > 0)
+		//Sonar fix
+		if (StringUtils.isNotEmpty(waitTimeForSlaveforMasterIndexUpdate))
 		{
 			try
 			{
@@ -101,7 +101,7 @@ public class SolrSlaveReplicatorJob extends AbstractJobPerformable
 						sb.append(line);
 					}
 
-					if (sb != null && sb.toString().trim().length() > 0)
+					if (StringUtils.isNotEmpty(sb.toString()))
 					{
 						LOG.error("DEBUG: Returned Response:: " + sb.toString());
 					}
@@ -141,11 +141,8 @@ public class SolrSlaveReplicatorJob extends AbstractJobPerformable
 				/******************** Read The Status of response **************************************/
 
 
-				if (sb != null && sb.toString().trim().length() > 0)
+				if (StringUtils.isNotEmpty(sb.toString()))
 				{
-					final long estimatedSeconds = 0, queueLength = 0, httpStatus = 0, pingAfterSeconds = 0;
-					final String responseHeader = "";
-					String responseHeaderStatus = "";
 					//final String QTime = "", status = "", indexversion = "", generation = "", submissionTime = "";
 
 					try
@@ -165,7 +162,9 @@ public class SolrSlaveReplicatorJob extends AbstractJobPerformable
 
 						if ("status".equalsIgnoreCase(statusElement.getAttribute("name")))
 						{
-							LOG.error("DEBUG: Status (0 means OK):: " + (responseHeaderStatus = statusElement.getTextContent()));
+							//Sonar fix :: responseHeaderStatus is not used
+							//LOG.error("DEBUG: Status (0 means OK):: " + (responseHeaderStatus = statusElement.getTextContent()));
+							LOG.error("DEBUG: Status (0 means OK):: " + (statusElement.getTextContent()));
 						}
 						else
 						{
@@ -203,7 +202,8 @@ public class SolrSlaveReplicatorJob extends AbstractJobPerformable
 		{
 			final String waittimeForAllSlaveReplicationToComplete = configurationService.getConfiguration().getString(
 					"SolrSlaveReplicatorJob.mandatory.waittime.insec.forAllSlaveReplicationToComplete");
-			if (waittimeForAllSlaveReplicationToComplete != null && waittimeForAllSlaveReplicationToComplete.trim().length() > 0)
+
+			if (StringUtils.isNotEmpty(waittimeForAllSlaveReplicationToComplete))
 			{
 				final int threadWaitTimeinSec = Integer.parseInt(waittimeForAllSlaveReplicationToComplete);
 				LOG.error("DEBUG: Going to Sleep SolrSlaveReplicatorJob for ::" + threadWaitTimeinSec
@@ -256,7 +256,7 @@ public class SolrSlaveReplicatorJob extends AbstractJobPerformable
 							if (StringUtils.isNotEmpty(endpointSlaveURLs.getUrl()) && endpointSlaveURLs.isSlave())
 							{
 								slaveurl = addContextValue(endpointSlaveURLs.getUrl(), contextValue);
-								if (slaveurl != null && slaveurl.trim().length() > 0)
+								if (StringUtils.isNotEmpty(slaveurl))
 								{
 									slaveList.add(slaveurl);
 								}
@@ -346,7 +346,7 @@ public class SolrSlaveReplicatorJob extends AbstractJobPerformable
 			//final String authStringEnc = new String(Base64.getEncoder().encode(authString.getBytes()));
 			//urlHTTPConn.setRequestProperty("Authorization", "Basic " + authStringEnc);
 
-			if (null != methodSent && methodSent.trim().length() > 0)
+			if (StringUtils.isNotEmpty(methodSent))
 			{
 				urlHTTPConn.setRequestMethod(methodSent);
 			}

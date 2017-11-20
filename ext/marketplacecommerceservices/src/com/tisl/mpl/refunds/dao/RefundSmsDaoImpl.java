@@ -101,14 +101,17 @@ public class RefundSmsDaoImpl extends AbstractItemDao implements RefundSmsDao
 			final SearchResult<String> rows = search(fQuery);
 			for (final String row : rows.getResult())
 			{
-				query.append("'");
+				//query.append("'");
+				query.append(MarketplacecommerceservicesConstants.INVERTED_COMMA);
 				query.append(row);
-				query.append("'");
-				query.append(",");
+				//query.append("'");
+				query.append(MarketplacecommerceservicesConstants.INVERTED_COMMA);
+				//query.append(",");
+				query.append(MarketplacecommerceservicesConstants.COMMA);
 			}
 			dynamicQuery = query.substring(0, query.length() - 1);
 
-			System.out.println("=========================================" + dynamicQuery.toString());
+			//System.out.println("=========================================" + dynamicQuery.toString());
 
 		}
 		catch (final Exception ex)
@@ -121,7 +124,7 @@ public class RefundSmsDaoImpl extends AbstractItemDao implements RefundSmsDao
 	@Override
 	public void deleteRows(final String str) throws Exception
 	{
-		final StringBuilder query = new StringBuilder();
+		final StringBuilder query = new StringBuilder(100);
 		try
 		{
 			query.append("select {pk} from {RefundTransactionEntry} where {transactionid} in ( ");
