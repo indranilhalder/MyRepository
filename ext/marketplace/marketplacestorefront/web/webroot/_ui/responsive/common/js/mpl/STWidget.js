@@ -11,8 +11,8 @@ var stw = {
     },  
     renderFlatWidgetHF: function(divElement) {
     	if($('#for_homefurnishing').val() == "true"){
-    	 //var category = "" ;
-    	 var category = $('#for_homefurnishing_category').val();
+    	 var category = "home";
+    	 //alert(category);
          stwService.call(category, '');
     	}
     },
@@ -315,13 +315,16 @@ $(document).ready(function() {
 		
 		if (!$('#stw_widget').attr('loaded') && $('#stw_widget').length == 1 && wS > (hT + hH - wH)) {
 			stw.renderTabsWidget();
+			console.log("1stw");
 	        $('#stw_widget').attr('loaded', true);
 		}else if (!$('#stw_widget_blp').attr('loaded') && $('#stw_widget_blp').length == 1 && wS > (hT + hH - wH)) {
 	        stw.renderFlatWidget();
+	        console.log("2stw");
 	        $('#stw_widget_blp').attr('loaded', true);
 	    }
 		else if (!$('#stw_widget_hf').attr('loaded') && $('#stw_widget_hf').length == 1 && wS > (hT + hH - wH)) {
 	        stw.renderFlatWidgetHF();
+	        console.log("3stw");
 	        $('#stw_widget_hf').attr('loaded', true);
 	    }
 		}

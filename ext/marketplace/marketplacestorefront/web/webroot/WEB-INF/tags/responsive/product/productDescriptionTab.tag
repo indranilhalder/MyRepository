@@ -22,7 +22,8 @@
   		<%-- INC144316941 End --%>
   		
   		<!-- TPR-1996 START  -->
-  		 
+  		 <c:choose>
+					<c:when test="${product.rootCategory=='Watches'}">
           <c:if test = "${not empty functionality}">
        		<div class="tabs_warranty">
              <ul> 
@@ -74,6 +75,8 @@
   		    </ul> 
           </div>
           </c:if>
+       </c:when>
+</c:choose>
       <!-- TPR-1996 END  -->
   		</c:if>
   		 

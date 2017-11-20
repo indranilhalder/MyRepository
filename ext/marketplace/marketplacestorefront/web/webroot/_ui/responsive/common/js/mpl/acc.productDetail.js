@@ -120,7 +120,7 @@ ACC.productDetail = {
 			}
 		});
 
-		$("#variant_dropdown").change(function() {
+		$("#hfvariant > #variant_dropdown").change(function() {
 			var productCode=$("#variant_dropdown option:selected").attr("data-productCode");
 			loadVariant(productCode);
 		});
@@ -3734,7 +3734,7 @@ function onQuantitySelectDropDown()
 {
 	$("select#quantity_dropdown.variant-select").on('change',function(e){
 		//console.log("================>called while size is selected================>");
-	$("#qty").val(this.value);
+		$(".qty").val(this.value);
 
 	});
 }
@@ -4978,7 +4978,7 @@ function populateProductOverviewTab(jsonData)
 {
 	var htmlCode="";
 	htmlCode=htmlCode+'<div class="product-desc">';
-	htmlCode=htmlCode+'<span class="">';
+	htmlCode=htmlCode+'<span class="key-label">';
 	//htmlCode=htmlCode+'<ul class="homefurnishing-overview">';
 	$.each(jsonData['mapConfigurableAttributes'],function(key,value){
 		//htmlCode=htmlCode+'<li class="homefurnishing-overview-desc">'+ key+' - '+value+'</li>';
