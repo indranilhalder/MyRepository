@@ -60,8 +60,10 @@
 <link rel="stylesheet" type="text/css" media="all" href="//${productMediadnsHost1}/preload.css?${rand}"/>
 </c:if> --%>
 
-<%-- <spring:eval expression="T(de.hybris.platform.util.Config).getParameter('dtm.static.url')" var="dtmUrl"/> --%>
 
+ <spring:eval expression="T(de.hybris.platform.util.Config).getParameter('dtm.static.url')" var="dtmUrl"/>
+<script src="${dtmUrl}"></script>
+<!-- <script src="//assets.adobedtm.com/9fd06d4068c619c47b289b9c496761efd086a233/satelliteLib-9d27bc3356d4973d37a14f45dd3a41618b35a35astaging.js"></script> --> 
 <%-- <link rel="stylesheet" type="text/css" media="all" href="${themeResourcePath}/css/preload.css"/> --%>
 <link rel="apple-touch-icon" href="${themeResourcePath}/images/Appicon.png">
 <link rel="android-touch-icon" href="${themeResourcePath}/images/Appicon.png" />
