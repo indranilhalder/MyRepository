@@ -48,7 +48,7 @@ public class SendRefundSmsCronJob extends AbstractJobPerformable<CronJobModel>
 			{
 				//SDI-2578 || Changes start
 				final int batch = configurationService.getConfiguration().getInt("bulksms.perbatch.sms"); //50
-				final int dbPerformBatch = configurationService.getConfiguration().getInt("bulksms.perbatch.dbperformance", 10);
+				final int dbPerformBatch = configurationService.getConfiguration().getInt("bulksms.perbatch.dbperformance", 300);
 				final StringBuilder queryString = new StringBuilder();
 
 				final int totCount = refundSmsDao.eligibleSmsCount(); //300
@@ -56,8 +56,10 @@ public class SendRefundSmsCronJob extends AbstractJobPerformable<CronJobModel>
 				for (int superLoop = 1; superLoop <= superCheckLoop; superLoop++)
 				{
 					queryString.setLength(0);// Making query string empty
-					queryString.append("select {transactionId} from {RefundTransactionEntry} order by {creationtime} limit ");
+					//queryString.append("select {transactionId} from {RefundTransactionEntry} order by {creationtime} limit ");
+					queryString.append("select {transactionId} from {RefundTransactionEntry} where rownum <=");
 					queryString.append(String.valueOf(dbPerformBatch));
+					queryString.append(" order by {creationtime}");
 					//SDI-2578 || Changes end
 
 					final String query = refundSmsDao.getAllTransactionsForSms(queryString.toString());
