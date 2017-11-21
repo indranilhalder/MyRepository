@@ -826,9 +826,8 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 				// COD checking
 				if (null != cartData
 						&& MarketplacecheckoutaddonConstants.PAYMENTCOD.equalsIgnoreCase(paymentForm.getPaymentModeValue())
-						//&& paymentForm.getCodEligible().equalsIgnoreCase(CodCheckMessage.ITEMS_ELIGIBLE.toString())
-						&& getSessionService().getAttribute(MarketplacecheckoutaddonConstants.CODELIGIBLE_SESSION).equals(
-								CodCheckMessage.ITEMS_ELIGIBLE.toString()))
+						&& CodCheckMessage.ITEMS_ELIGIBLE.toString().equals(
+								getSessionService().getAttribute(MarketplacecheckoutaddonConstants.CODELIGIBLE_SESSION)))
 				{
 					//Adding cartdata into model
 					model.addAttribute(MarketplacecheckoutaddonConstants.CARTDATA, cartData);
@@ -855,8 +854,8 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 			//Handled for OrderModel TPR-629
 			else
 			{
-				if (getSessionService().getAttribute(MarketplacecheckoutaddonConstants.CODELIGIBLE_SESSION).equals(
-						CodCheckMessage.ITEMS_ELIGIBLE.toString()))
+				if (CodCheckMessage.ITEMS_ELIGIBLE.toString().equals(
+						getSessionService().getAttribute(MarketplacecheckoutaddonConstants.CODELIGIBLE_SESSION)))
 				{
 
 					if (null == orderModel.getPaymentInfo() && !OrderStatus.PAYMENT_TIMEOUT.equals(orderModel.getStatus()))
@@ -4985,7 +4984,7 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.tisl.mpl.controllers.pages.CheckoutStepController#enterStep(org.springframework.ui.Model,
 	 * org.springframework.web.servlet.mvc.support.RedirectAttributes)
 	 */
