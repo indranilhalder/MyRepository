@@ -128,6 +128,33 @@
 									</c:forEach>									
 							</form:select>
 						</div>
+						<br/><br/>
+						<br/><br/>
+						<br/><br/>
+						<!-- Abhijit || start -->
+						<div class="col-md-7 col-sm-7 col-xs-12 selectReasonForReturn">
+							<%-- <b><spring:theme code="text.order.returns.reasonvalidation.message"></spring:theme></b> <br/><br/> --%>
+							<form:select name="reasonList" class="reasonSelectBox" path="returnReason">
+								    <option selected='selected' value="NA"><spring:theme code="text.subRequestDropdown.selected"/></option>
+									<c:forEach items="${reasonDataList}" var="reason"
+										varStatus="reasonStatus">
+										<form:option value="${reason.code}">${reason.reasonDescription}</form:option>	
+									</c:forEach>									
+							</form:select>						
+		</div>
+						<div class="col-md-7 col-sm-7 col-xs-12">
+									<span class="add-comment-title">Comment</span>
+									<br/>
+									<textarea rows="3" cols="45" placeholder="Max 250 Characters" id="addCommentArea"></textarea>       
+					    			<br/>
+					    			<span>Upload Image<label class="upload-image-title" for="upload-photo">Browse</label></span>
+					    			<br/>
+					    			<label>(Accpeted format JPEG,PNG,PDF & Max file size 5MB)</label>
+									<input type="file" name="photo" id="upload-photo" />
+					    			</div>
+						<!-- Abhijit || end -->
+						
+						
 						
 						<!-- TPR-4134 -->
 						<input type="hidden" id="ifShowReverseSeal" value="${showReverseSeal}">
@@ -150,4 +177,20 @@
 						</div>
 					</div>
 				</div>
-			
+				<!-- <style>
+				.upload-image-title {
+				    cursor: pointer;
+					margin: 10px 18px;
+					color: #a9143c;
+				}
+				#upload-photo {
+				   opacity: 0;
+				   position: absolute;
+				   z-index: -1;
+				}
+				.add-comment-title{
+					color: #a9143c;
+				    font-size: 14px;
+				    margin: 10px 0;
+				}
+				</style> -->
