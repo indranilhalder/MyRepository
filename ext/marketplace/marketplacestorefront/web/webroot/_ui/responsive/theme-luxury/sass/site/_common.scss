@@ -721,3 +721,8 @@ footer{
 .new-brand-slider-wrapper a {		
     cursor: pointer		
 }
+.page-LuxCategorySearchResultsPage, .page-LuxSearchResultsPage, .page-productGrid{
+    .breadcrumbs.wrapper li::after{
+        top: 6px!important;
+    }  
+}

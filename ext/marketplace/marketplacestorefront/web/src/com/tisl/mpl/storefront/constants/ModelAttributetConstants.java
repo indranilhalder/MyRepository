@@ -253,6 +253,7 @@ public final class ModelAttributetConstants
 	public static final String ERROR_OCCURED = "errorOccured";
 	public static final String ERR_MSG = "errMsg";
 	public static final String WARRANTY = "Warranty";
+	public static final String WARRANTY_DETAILS_HF = "Warranty Details";
 	public static final String PINCODE = "pincode";
 	public static final String CLIQCARENUMBER = "cliqCareNumber";
 	public static final String CLIQCAREMAIL = "cliqCareMail";
@@ -633,6 +634,8 @@ public final class ModelAttributetConstants
 	public static final String IS_MSD_ENABLED = "isMSDEnabled";
 	public static final String IS_PRODUCTPAGE = "isProductPage";
 	public static final String MSD_REST_URL = "msdRESTURL";
+	//STW :TPR-6740
+	public static final String STW_HEADER_PDP = "isStwheaderforPDP";
 	// Friends Invite **************
 
 	public static final String ERROR_EMAIL_SENDING = "error_email_sending";
@@ -905,6 +908,9 @@ public final class ModelAttributetConstants
 	public static final String ICID = "icid";
 	public static final String SHARE = "share";
 
+	//INC144316527
+	public static final String PROD_IMAGE_URL = "prodImageUrl";
+
 	public static final String MESSAGE = "message";
 
 	public static final String EMAILORPASSINVALID = "Email or Password invalid";
@@ -913,6 +919,7 @@ public final class ModelAttributetConstants
 	//PRDI-422
 	public static final String METAPAGETITLE = "metaPageTitle";
 
+
 	/* TPR-5733 */
 	public static final String FOOTER_LINK_LIST = "footerLinkList";
 	//TPR-6654
@@ -920,9 +927,56 @@ public final class ModelAttributetConstants
 	/* UF-432 */
 	public static final String MULTI_COLOUR_FLAG = "multiColorFlag";
 	public static final String BUYBOX_AVAILABLE = "buybox_available";
+
+	//TPR-6738
+	public static final String BUYING_GUIDE = "buyingGuide".intern();
+	public static final String REMOVE_SIZEGUIDE = "removeSizeGuide".intern();
+
+	//CKD:TPR-6804 / TPR-6869
+	public static final String HOME_FURNISHING = "HomeFurnishing";
+	public static final String CLASSIFICATION_ATTR = "classification.attributes.";
+	public static final String CLASSIFICATION_ATTR_HF = "HomeFurnishing.";
+	public static final String CLASSIFICATION_ATTR_PD = "ProductDetails";
+	public static final String CLASSIFICATION_ATTR_SI = "SetInformation";
+	public static final String CLASSIFICATION_ATTR_SI_SPACE = "Set Information";
+	public static final String CLASSIFICATION_ATTR_SI_SIZE = "Size";
+	public static final String CLASSIFICATION_ATTR_CAINS = "CareInstructions";
+	public static final String CLASSIFICATION_ATTR_WASHCARE = "WashCare";
+	public static final String CLASSIFICATION_ATTR_PF = "ProductFeatures";
+	public static final String CLASSIFICATION_ATTR_CARE_INS = "Care Instructions";
+	public static final String CLASSIFICATION_ATTR_WASH_CARE = "Wash Care";
+	public static final String KEY_PROD_PTS = "Key Product Points";
+	public static final String SET_COMPONENT = "Set Component";
+	public static final String SET_COMPONENT_DETAILS = "Set Componenent";
+	public static final String NAME = "Name";
+	public static final String QTY = "Quantity";
+	public static final String DETAILS = "Details";
+	public static final String OVERVIEW_SEC_SEQ = "classification.attributes.HomeFurnishing.sectionSeq";
+	public static final String SET = "Set";
+	public static final String YES = "Yes";
+	public static final String ALPHBET_REGEX = "[*a-zA-Z]";
+	public static final String SPACE_REGEX = "\\s";
+	public static final String PIPE_REGEX = "\\|";
+	public static final String NO_SPACE = "";
+
+	public static final String SELLERMESSAGE = "sellerMessage".intern();
+
+	public static final String QUANTITY_DROPDOWN_LIST = "quantityList".intern();
+
+
 	public static final String FINEJWLRY_SELFCOURIER_ERROR = "fineJewSelfCourierError";
 	//TPR-6405
 	public static final String IS_SAMSUNG_PAGE = "isSamsungPage";
 	//UF-422
 	public static final String PDP_SIZE_COUNTER = "pdpSizeCounter";
+	
+// TPR-3878 START
+	public static final String SPECIAL_FEATURES_LIST = "specialFeatures";
+	public static final String MOVEMENT = "Movement";
+	public static final String MOVEMENT_LIST = "movementList";
+	public static final String FUNCTIONALITY = "functionality";
+	public static final String SPECIAL_FEATURES = "special Features";
+	public static final String FEATURES = "Features";
+	// TPR-3878 END
+
 }

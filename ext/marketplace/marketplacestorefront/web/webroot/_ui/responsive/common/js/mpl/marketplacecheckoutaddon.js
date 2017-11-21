@@ -10,7 +10,8 @@ var bankNameSelected=null;
 // Display forms based on mode button click
 //$("#viewPaymentCredit, #viewPaymentCreditMobile ").click(function (){
 function viewPaymentCredit(){
-	
+	//SDI-2149
+	$(".card_nochooseErrorSavedCard_popup").css("display","none");
 	/*TPR-3446 new starts*/
 	var staticHost = $('#staticHost').val();
 	//$("body").append("<div id='no-click' style='opacity:0.40; background:transparent; z-index: 100000; width:100%; height:100%; position: fixed; top: 0; left:0;'></div>");
@@ -54,6 +55,8 @@ function viewPaymentCredit(){
 
 //$("#viewPaymentDebit, #viewPaymentDebitMobile").click(function(){
 function viewPaymentDebit(){
+	//SDI-2149
+	$(".card_nochooseErrorSavedCard_popup").css("display","none");
 	/*TPR-3446 new starts*/
 	var staticHost = $('#staticHost').val();
 	//$("body").append("<div id='no-click' style='opacity:0.40; background:transparent; z-index: 100000; width:100%; height:100%; position: fixed; top: 0; left:0;'></div>");
@@ -458,7 +461,7 @@ function displayCODForm()
 		data: { /*'cartValue' : cartValue , */'request' : httpRequest , 'guid' : guid},		//Commented as not used - TPR-629
 		cache: false,
 		success :function(response,textStatus, jqXHR) {
-			console.log(response);
+			//console.log(response);
 			//UF-281/282:Starts
 			if (jqXHR.responseJSON && response.displaymessage=="codNotallowed") {
 				$("#codNotAllowedMessage").css("display","block");
@@ -535,7 +538,7 @@ function displayCODForm()
 						data: { 'paymentMode' : paymentMode , 'guid' : guid },
 						cache: false,
 						success : function(response) {
-							console.log(response);
+							//console.log(response); commented for SDI-1732
 							if(response==null){
 								$(location).attr('href',ACC.config.encodedContextPath+"/cart"); // TISEE-510
 							}
@@ -1059,6 +1062,7 @@ function getSelectedEMIBank(){
 	if(selectedBank!="Select"){
 		// Code to reset the values
 		setBankForSavedCard(selectedBank);
+		$("#emiNoBankError").hide();	/*add for INC144318889*/
 	}
 	else{
 		hideTable();
@@ -1637,6 +1641,9 @@ function savedCreditCardRadioChange(radioId){
 	     $("#"+radioId).parent().find('.card_ebsErrorSavedCard_hide').removeClass("card_ebsErrorSavedCard_hide").addClass("card_ebsErrorSavedCard");
 	     $("#"+radioId).parent().parent().parent().find(".cvv").find('.card_cvvErrorSavedCard_hide').removeClass("card_cvvErrorSavedCard_hide").addClass("card_cvvErrorSavedCard");
 	     $(".security_code_hide").val(null);
+	     //SDI-2149
+	     $(".card_nochooseErrorSavedCard_popup").css("display","none");
+	     $('#make_saved_cc_payment').removeClass("saved_card_disabled");
 	   // TISEE-5555
 	 	$('.security_code_hide').prop('disabled', true);
 	 	$('.security_code').prop('disabled', false); 
@@ -1681,6 +1688,9 @@ function savedDebitCardRadioChange(radioId){
 	     $("#"+radioId).parent().find('.card_ebsErrorSavedCard_hide').removeClass("card_ebsErrorSavedCard_hide").addClass("card_ebsErrorSavedCard");
 	     $("#"+radioId).parent().parent().parent().find(".cvv").find('.card_cvvErrorSavedCard_hide').removeClass("card_cvvErrorSavedCard_hide").addClass("card_cvvErrorSavedCard");
 	     $(".security_code_hide").val(null);
+	   //SDI-2149
+	     $(".card_nochooseErrorSavedCard_popup").css("display","none");
+	     $('#make_saved_dc_payment').removeClass("saved_card_disabled");
 	   // TISEE-5555
 	 	$('.security_code_hide').prop('disabled', true);
 	 	$('.security_code').prop('disabled', false); 
@@ -2370,7 +2380,13 @@ function savedDebitCardRadioChange(radioId){
 	var password = $(".card_token").parent().parent().parent().find(".cvv").find(".cvvValdiation").val();
 	var ebsDownCheck=$("#ebsDownCheck").val();
 	var isDomestic=$(".card_token").parent().parent().parent().find('.card').find('.radio').find('.card_is_domestic').val();
-	if (password.length < 3 && 	$(".card_brand").val()!="MAESTRO"){
+	//SDI-2149
+	if($('#savedCreditCard input[name=creditCards]:checked').length<=0){
+		$(".card_nochooseErrorSavedCard_popup").css("display","block");
+		$(this).addClass("saved_card_disabled");
+		return false;
+	}
+	else if (password.length < 3 && 	$(".card_brand").val()!="MAESTRO"){
 		$(".card_cvvErrorSavedCard").css("display","block");	
 		$(".card_cvvErrorSavedCard_popup").css("display","block");	//UF-211
 		$(this).addClass("saved_card_disabled");	//UF-211
@@ -2395,8 +2411,13 @@ function savedDebitCardRadioChange(radioId){
 		var password = $(".card_token").parent().parent().parent().find(".cvv").find(".cvvValdiation").val();
 		var ebsDownCheck=$("#ebsDownCheck").val();
 		var isDomestic=$(".card_token").parent().parent().parent().find('.card').find('.radio').find('.card_is_domestic').val();
-		
-		if (password.length < 3 && 	$(".card_brand").val()!="MAESTRO"){
+		//SDI-2149
+		if($('#savedDebitCard input[name=debitCards]:checked').length<=0){
+			$(".card_nochooseErrorSavedCard_popup").css("display","block");
+			$(this).addClass("saved_card_disabled");
+			return false;
+		}
+		else if (password.length < 3 && 	$(".card_brand").val()!="MAESTRO"){
 			$(".card_cvvErrorSavedCard").css("display","block");	
 			$(".card_cvvErrorSavedCard_popup").css("display","block");	//UF-217
 			$(".card_token").parent().parent().parent().find(".cvv").find(".cvvValdiation").focus();	//UF-217
@@ -2842,7 +2863,7 @@ function savedDebitCardRadioChange(radioId){
 		$(".card_token_hide").parent().find('.card_is_domestic').removeClass("card_is_domestic").addClass("card_is_domestic_hide");
 		$(".card_token_hide").parent().find('.card_ebsErrorSavedCard').removeClass("card_ebsErrorSavedCard").addClass("card_ebsErrorSavedCard_hide");
 		$(".card_token_hide").parent().parent().parent().find(".cvv").find('.card_cvvErrorSavedCard').removeClass("card_cvvErrorSavedCard").addClass("card_cvvErrorSavedCard_hide");
-		applyPromotion(null,"none","none");
+		applyPromotion(null,"none","none",true);
 	}
 	else if($("#paymentMode").val()=="EMI"){
 		var selectedBank=$("#bankNameForEMI").val();
@@ -2874,7 +2895,7 @@ function savedDebitCardRadioChange(radioId){
 		$(".card_token_hide").parent().find('.card_is_domestic').removeClass("card_is_domestic").addClass("card_is_domestic_hide");
 		$(".card_token_hide").parent().find('.card_ebsErrorSavedCard').removeClass("card_ebsErrorSavedCard").addClass("card_ebsErrorSavedCard_hide");
 		$(".card_token_hide").parent().parent().parent().find(".cvv").find('.card_cvvErrorSavedCard').removeClass("card_cvvErrorSavedCard").addClass("card_cvvErrorSavedCard_hide");
-		applyPromotion(null,"none","none");
+		applyPromotion(null,"none","none",true);
 	}
 	// TISEE-5555
 	$('.security_code_hide').prop('disabled', true);
@@ -3658,23 +3679,35 @@ function validateCardNo(formSubmit) {
 		errorHandle.innerHTML = "Sorry, the entered card type is not supported";
 		return false;
 	}
-	// Commented for unsupported card types in Release 1
-	/*else if(cardType=='DINERS' && !(value.length==16 || value.length==15 || value.length==14)){
+	// Commented for unsupported card types in Release 1 
+	//SDI-1561
+	else if(cardType=='DINERS' && !(value.length==16 || value.length==15 || value.length==14)){
 		binStatus=false;
-		errorHandle.innerHTML = "   Please enter a valid card no. ";
+		if(formSubmit=="formSubmit")
+		{
+			dopayment(binStatus);
+		}
+		errorHandle.innerHTML = "Please enter a valid card number";
 		return false;
 	}
 	else if(cardType=='DISCOVER' && value.length!=16){
 		binStatus=false;
-		errorHandle.innerHTML = "   Please enter a valid card no. ";
+		if(formSubmit=="formSubmit")
+		{
+			dopayment(binStatus);
+		}
+		errorHandle.innerHTML = "Please enter a valid card number";
 		return false;
 	}
 	else if(cardType=='JCB' && !(value.length==15 || value.length==16)){
 		binStatus=false;
-		errorHandle.innerHTML = "   Please enter a valid card no. ";
+		if(formSubmit=="formSubmit")
+		{
+			dopayment(binStatus);
+		}
+		errorHandle.innerHTML = "Please enter a valid card number";
 		return false;
-	}*/
-
+	}
 	else if(result==false){
 		binStatus=false;
 		//TPR-629
@@ -3735,7 +3768,7 @@ function validateCardNo(formSubmit) {
 //				{
 					binStatus=true;
 					if($("#paymentMode").val()!='EMI'){
-						applyPromotion(null,binStatus,formSubmit);
+						applyPromotion(null,binStatus,formSubmit,true);
 					}
 					else
 					{
@@ -3939,22 +3972,34 @@ function validateDebitCardNo(formSubmit) {
 			return false;
 		}
 		//Commented for unsupported card types in Release 1
-		
-		/*else if(cardType=='DINERS' && !(value.length==16 || value.length==15 || value.length==14)){
+		//SDI-1561
+		else if(cardType=='DINERS' && !(value.length==16 || value.length==15 || value.length==14)){
 			binStatus=false;
-			errorHandle.innerHTML = "   Please enter a valid card no. ";
+			if(formSubmit=="formSubmit")
+			{
+				dopayment(binStatus);
+			}
+			errorHandle.innerHTML = "Please enter a valid card number";
 			return false;
 		}
 		else if(cardType=='DISCOVER' && value.length!=16){
 			binStatus=false;
-			errorHandle.innerHTML = "   Please enter a valid card no. ";
+			if(formSubmit=="formSubmit")
+			{
+				dopayment(binStatus);
+			}
+			errorHandle.innerHTML = "Please enter a valid card number";
 			return false;
 		}
 		else if(cardType=='JCB' && !(value.length==15 || value.length==16)){
 			binStatus=false;
-			errorHandle.innerHTML = "   Please enter a valid card no. ";
+			if(formSubmit=="formSubmit")
+			{
+				dopayment(binStatus);
+			}
+			errorHandle.innerHTML = "Please enter a valid card number";
 			return false;
-		}*/
+		}
 		else if(result==false){
 			binStatus=false;
 			//TPR-629
@@ -4015,7 +4060,7 @@ function validateDebitCardNo(formSubmit) {
 //					{
 						binStatus=true;
 						if(cardType!='EMI'){
-							applyPromotion(null,binStatus,formSubmit);
+							applyPromotion(null,binStatus,formSubmit,true);
 						}
 						//TPR-629
 						else
@@ -4178,22 +4223,34 @@ function validateEmiCardNo(formSubmit) {
 			return false;
 		}
 		//Commented for unsupported card types in Release 1
-		
-		/*else if(cardType=='DINERS' && !(value.length==16 || value.length==15 || value.length==14)){
+		//SDI-1561
+		else if(cardType=='DINERS' && !(value.length==16 || value.length==15 || value.length==14)){
 			binStatus=false;
-			errorHandle.innerHTML = "   Please enter a valid card no. ";
+			if(formSubmit=="formSubmit")
+			{
+				dopayment(binStatus);
+			}
+			errorHandle.innerHTML = "Please enter a valid card";
 			return false;
 		}
 		else if(cardType=='DISCOVER' && value.length!=16){
 			binStatus=false;
-			errorHandle.innerHTML = "   Please enter a valid card no. ";
+			if(formSubmit=="formSubmit")
+			{
+				dopayment(binStatus);
+			}
+			errorHandle.innerHTML = "Please enter a valid card";
 			return false;
 		}
 		else if(cardType=='JCB' && !(value.length==15 || value.length==16)){
 			binStatus=false;
-			errorHandle.innerHTML = "   Please enter a valid card no. ";
+			if(formSubmit=="formSubmit")
+			{
+				dopayment(binStatus);
+			}
+			errorHandle.innerHTML = "Please enter a valid card";
 			return false;
-		}*/
+		}
 		else if(result==false){
 			binStatus=false;
 			//TPR-629
@@ -4325,11 +4382,19 @@ function creditCardTypeFromNumber(number){
 	        visa: /^4/,
 	        mastercard: /^5[1-5]/,
 	        amex: /^3[47]/,
-	        // diners: /^(36|38|30[0-5])\d+$/,
-	        // discover: /^(6011|65|64[4-9]|622)\d+$/,
-	        // jcb: /^35\d+$/
+	        diners: /^(36|38|30[0-5])\d+$/,
+	        discover: /^(6011|65|64[4-9]|622)\d+$/,
+	        jcb: /^35\d+$/
 	    };
-	    if (re.maestro.test(number)) {
+	   if (re.discover.test(number)) {
+	     document.getElementById("cardType").value='DISCOVER';
+	     $("#cardNo").attr('maxlength','16');
+	     $(".security_code").attr('maxlength','3');
+	    // $('ul.accepted-cards li').removeclass('active-card');
+	     //$('ul.accepted-cards li span.discover').parent('li').addclass('active-card');
+	     $("#newMaestroMessage").css("display","none");
+	    } 
+	   else if (re.maestro.test(number)) {
 	        document.getElementById("cardType").value='MAESTRO';
 	        $("#cardNo").attr('maxlength','19');
 	        $(".security_code").attr('maxlength','3');
@@ -4365,24 +4430,24 @@ function creditCardTypeFromNumber(number){
 		        $('ul.accepted-cards li span.amex').parent('li').addClass('active-card');
 		        $("#newMaestroMessage").css("display","none");
 	    }
-	    // Commented for unsupported card types in Release 1
-	    
-	    /*
-		 * else if (re.diners.test(number)) {
-		 * document.getElementById("cardType").value='DINERS';
-		 * $('ul.accepted-cards li').removeClass('active-card');
-		 * $('ul.accepted-cards li
-		 * span.diners').parent('li').addClass('active-card'); } else if
-		 * (re.discover.test(number)) {
-		 * document.getElementById("cardType").value='DISCOVER';
-		 * $('ul.accepted-cards li').removeClass('active-card');
-		 * $('ul.accepted-cards li
-		 * span.discover').parent('li').addClass('active-card'); } else if
-		 * (re.jcb.test(number)) {
-		 * document.getElementById("cardType").value='JCB'; $('ul.accepted-cards
-		 * li').removeClass('active-card'); $('ul.accepted-cards li
-		 * span.jcb').parent('li').addClass('active-card'); }
-		 */ else {
+	    // Commented for unsupported card types in Release 1 //SDI-1561
+	    else if (re.diners.test(number)) {
+		     document.getElementById("cardType").value='DINERS';
+		     $("#cardNo").attr('maxlength','14');
+		     $(".security_code").attr('maxlength','3');
+		    // $('ul.accepted-cards li').removeclass('active-card');
+		    // $('ul.accepted-cards li span.diners').parent('li').addclass('active-card'); 
+		     $("#newMaestroMessage").css("display","none");
+		 } 
+		 else if (re.jcb.test(number)) {
+		     document.getElementById("cardType").value='JCB'; 
+		     $("#cardNo").attr('maxlength','16');
+		     $(".security_code").attr('maxlength','3');
+		    // $('ul.accepted-cards li').removeclass('active-card');
+		    // $('ul.accepted-cards li span.jcb').parent('li').addclass('active-card'); 
+		     $("#newMaestroMessage").css("display","none");
+		 }
+	     else {
 	    	document.getElementById("cardType").value="";
 	    	 $('ul.accepted-cards li').removeClass('active-card');
 	    	 $("#newMaestroMessage").css("display","none");
@@ -4398,11 +4463,19 @@ function debitCardTypeFromNumber(number){
 	        visa: /^4/,
 	        mastercard: /^5[1-5]/,
 	        amex: /^3[47]/,
-	        //diners: /^(36|38|30[0-5])\d+$/,
-	        //discover: /^(6011|65|64[4-9]|622)\d+$/,
-	        //jcb: /^35\d+$/
+	        diners: /^(36|38|30[0-5])\d+$/,
+	        discover: /^(6011|65|64[4-9]|622)\d+$/,
+	        jcb: /^35\d+$/
 	    };
-	    if (re.maestro.test(number)) {
+	  if (re.discover.test(number)) {
+	     $("#cardTypeDc").val('DISCOVER');
+	     $("#cardNoDc").attr('maxlength','16');
+	     $(".security_code").attr('maxlength','3');
+	    // $('ul.accepted-cards li').removeclass('active-card');
+	    // $('ul.accepted-cards li span.discover').parent('li').addclass('active-card'); 
+	     $("#newMaestroMessage").css("display","none");
+	   } 
+	  else if (re.maestro.test(number)) {
 	        $("#cardTypeDc").val('MAESTRO');
 	        $("#cardNoDc").attr('maxlength','19');
 	        $(".security_code").attr('maxlength','3');
@@ -4438,21 +4511,25 @@ function debitCardTypeFromNumber(number){
 		        $('ul.accepted-cards li span.amex').parent('li').addClass('active-card');
 		        $("#newMaestroMessage").css("display","none");
 	    }
-	    //Commented for unsupported card types in Release 1
-	    
-	    /*else if (re.diners.test(number)) {
-	    	document.getElementById("cardType").value='DINERS';
-	    	 $('ul.accepted-cards li').removeClass('active-card');
-		        $('ul.accepted-cards li span.diners').parent('li').addClass('active-card');
-	    } else if (re.discover.test(number)) {
-	    	document.getElementById("cardType").value='DISCOVER';
-	    	 $('ul.accepted-cards li').removeClass('active-card');
-		        $('ul.accepted-cards li span.discover').parent('li').addClass('active-card');
-	    } else if (re.jcb.test(number)) {
-	    	document.getElementById("cardType").value='JCB';
-	    	 $('ul.accepted-cards li').removeClass('active-card');
-		        $('ul.accepted-cards li span.jcb').parent('li').addClass('active-card');
-	    }*/ else {
+	    //Commented for unsupported card types in Release 1 //SDI-1561
+	    else if (re.diners.test(number)) {
+		     $("#cardTypeDc").val('DINERS');
+		     $("#cardNoDc").attr('maxlength','14');
+		     $(".security_code").attr('maxlength','3');
+		     //$('ul.accepted-cards li').removeclass('active-card');
+		    // $('ul.accepted-cards li span.diners').parent('li').addclass('active-card'); 
+		     $("#newMaestroMessage").css("display","none");
+		 } 
+		
+		else if (re.jcb.test(number)) {
+			$("#cardTypeDc").val('JCB');
+			 $("#cardNoDc").attr('maxlength','16');
+			 $(".security_code").attr('maxlength','3');
+		    // $('ul.accepted-cards li').removeclass('active-card');
+		    // $('ul.accepted-cards li span.jcb').parent('li').addclass('active-card'); 
+		     $("#newMaestroMessage").css("display","none");
+		}
+	    else {
 	    	$("#cardTypeDc").val("");
 	    	 $('ul.accepted-cards li').removeClass('active-card');
 	    	 $("#newMaestroMessage").css("display","none");
@@ -4467,11 +4544,19 @@ function emiCardTypeFromNumber(number){
 	        visa: /^4/,
 	        mastercard: /^5[1-5]/,
 	        amex: /^3[47]/,
-	        //diners: /^(36|38|30[0-5])\d+$/,
-	        //discover: /^(6011|65|64[4-9]|622)\d+$/,
-	        //jcb: /^35\d+$/
+	        diners: /^(36|38|30[0-5])\d+$/,
+	        discover: /^(6011|65|64[4-9]|622)\d+$/,
+	        jcb: /^35\d+$/
 	    };
-	    if (re.maestro.test(number)) {
+	 if (re.discover.test(number)) {
+	     $("#cardTypeEmi").val('DISCOVER');
+	     $("#cardNoEmi").attr('maxlength','16');
+	     $(".security_code").attr('maxlength','3');
+	     //$('ul.accepted-cards li').removeclass('active-card');
+	    // $('ul.accepted-cards li span.discover').parent('li').addclass('active-card'); 
+	     $("#newMaestroMessage").css("display","none");
+	    } 
+	 else if (re.maestro.test(number)) {
 	        $("#cardTypeEmi").val('MAESTRO');
 	        $("#cardNoEmi").attr('maxlength','19');
 	        $(".security_code").attr('maxlength','3');
@@ -4506,12 +4591,29 @@ function emiCardTypeFromNumber(number){
 	    	 $('ul.accepted-cards li').removeClass('active-card');
 		        $('ul.accepted-cards li span.amex').parent('li').addClass('active-card');
 		        $("#newMaestroMessage").css("display","none");
-	    }else{
+	    }
+	    else if (re.diners.test(number)) {
+		     $("#cardTypeEmi").val('DINERS');
+		     $("#cardNoEmi").attr('maxlength','14');
+		     $(".security_code").attr('maxlength','3');
+		    // $('ul.accepted-cards li').removeclass('active-card');
+		    // $('ul.accepted-cards li span.diners').parent('li').addclass('active-card'); 
+		     $("#newMaestroMessage").css("display","none");
+		 } 
+		else if (re.jcb.test(number)) {
+		     $("#cardTypeEmi").val('JCB');
+		     $("#cardNoEmi").attr('maxlength','16');
+		     $(".security_code").attr('maxlength','3');
+		    // $('ul.accepted-cards li').removeclass('active-card');
+		    // $('ul.accepted-cards li span.jcb').parent('li').addclass('active-card'); 
+		     $("#newMaestroMessage").css("display","none");
+		}
+	    else{
 	    	 $("#cardTypeEmi").val("");
 	    	 $('ul.accepted-cards li').removeClass('active-card');
 	    	 $("#newMaestroMessage").css("display","none");
 	    }
-	    }
+ }
 	    
 $('#cardNo').keyup(function(){
 	   if($(this).val().length >= 1){
@@ -4849,13 +4951,13 @@ function setBankForSavedCard(bankName){
 //	});	
 	bankNameSelected=bankName;
 	//alert(bankName);
-	applyPromotion(bankName,"none","none");	
+	applyPromotion(bankName,"none","none",false);	
 
 }
 
 
 //TPR-629---changes in parameter
-function applyPromotion(bankName,binValue,formSubmit)
+function applyPromotion(bankName,binValue,formSubmit,isNewCard)
 {
 	var staticHost=$('#staticHost').val();
 	//Commenting the below two lines for UF-97
@@ -4869,7 +4971,7 @@ function applyPromotion(bankName,binValue,formSubmit)
 	var guid=$("#guid").val();
 	$.ajax({
 		url: ACC.config.encodedContextPath + "/checkout/multi/payment-method/applyPromotions",
-		data: { 'paymentMode' : paymentMode , 'bankName' : bankName , 'guid' : guid},
+		data: { 'paymentMode' : paymentMode , 'bankName' : bankName , 'guid' : guid , 'isNewCard' : isNewCard},
 		type: "GET",
 		cache: false,
 		dataType:'json',
@@ -4981,7 +5083,8 @@ function applyPromotion(bankName,binValue,formSubmit)
 				$("#no-click,.loaderDiv").remove();
 				$(".make_payment, #make_saved_cc_payment_up, #make_cc_payment_up, #make_nb_payment_up, #paymentButtonId_up").removeAttr('disabled');
 				//TISPT-29
-				if(paymentMode=='EMI' || paymentMode=='Credit Card' || paymentMode=='Debit card' || paymentMode=='Netbanking')
+				//SDI-1732
+				if(paymentMode=='EMI' || paymentMode=='Credit Card' || paymentMode=='Debit Card' || paymentMode=='Netbanking')
 				{
 					isCodSet = false;
 				}
@@ -8748,6 +8851,9 @@ $("*[data-id=newCCard]").click(function(){
 	$("#make_cc_payment_up").show();
 	$(".card_cvvErrorSavedCard").hide();
 	$("#card_form").find("input[type=password]").val("");
+	//SDI-2149
+	$('#savedCreditCard .security_code').prop('disabled', true); 
+	$('#savedCreditCard .security_code').removeClass("security_code").addClass("security_code_hide");
 	//$("#savedCreditCard").find(".error-message").hide();
 });
 
@@ -8798,6 +8904,9 @@ $("*[data-id=newDCard]").click(function(){
 	$("#make_dc_payment_up").show();
 	$(".card_cvvErrorSavedCard").hide();
 	$("#card_form_saved_debit").find("input[type=password]").val("");
+	//SDI-2149
+	$('#savedDebitCard .security_code').prop('disabled', true); 
+	$('#savedDebitCard .security_code').removeClass("security_code").addClass("security_code_hide");
 	//$("#savedDebitCard").find(".error-message").hide();
 });
 

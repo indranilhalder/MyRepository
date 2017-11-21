@@ -34,6 +34,10 @@
 	</li>
 
 	<c:forEach items="${cartData.entries}" var="entry" varStatus="status">
+	
+	<c:set var="isWeight" value="false"/>
+	<c:set var="isVolume" value="false"/>
+	
 		<span id ="entryItemReview${entry.entryNumber}">
 		<c:if test="${status.last}">
 			<input type="hidden" value="${status.index}" id="ProductCount">
@@ -137,14 +141,64 @@
 												</ycommerce:testId>
 											</p>
 										</c:if>
+										
 									</c:when>
+									<c:when test="${not empty entry.product.rootCategory && entry.product.rootCategory=='HomeFurnishing'}">
+									<p class="size">
+									<ycommerce:testId code="cart_product_size">
+									
+									<spring:eval expression="T(de.hybris.platform.util.Config).getParameter('mpl.homefurnishing.category.weight')" var="weightVariant"/>
+									<c:set var = "categoryListArray" value = "${fn:split(weightVariant, ',')}" />
+									
+									<c:forEach items="${entry.product.categories}" var="categories">
+									<c:forEach items = "${categoryListArray}" var="weightVariantArray">
+											<c:if test="${categories.code eq weightVariantArray}">
+												<c:set var="isWeight" value="true"/>
+											</c:if> 
+									</c:forEach>				
+									</c:forEach> 
+									
+									<spring:eval expression="T(de.hybris.platform.util.Config).getParameter('mpl.homefurnishing.category.volume')" var="volumeVariant"/>
+									<c:set var = "categoryListArray" value = "${fn:split(volumeVariant, ',')}" />
+									
+									<c:forEach items="${entry.product.categories}" var="categories">
+									<c:forEach items = "${categoryListArray}" var="volumeVariantArray">
+											<c:if test="${categories.code eq volumeVariantArray}">
+												<c:set var="isVolume" value="true"/>
+											</c:if> 
+									</c:forEach>				
+									</c:forEach>
+									
+									<c:choose>
+											<c:when test="${true eq isWeight}">
+													<spring:theme code="product.variant.weight"/>:&nbsp;${entry.product.size}
+											</c:when>
+											<c:when test="${true eq isVolume}">
+													<spring:theme code="product.variant.volume"/>:&nbsp;${entry.product.size}
+											</c:when>
+											<c:otherwise>
+											<c:if test="${!fn:containsIgnoreCase(entry.product.size, 'No Size')}">
+													<spring:theme code="product.variant.size" />:&nbsp;${entry.product.size}
+											</c:if>
+											</c:otherwise>
+									</c:choose>
+									
+									</ycommerce:testId>
+									</p>
+									</c:when>
+									
 									<c:otherwise>
 										<p class="size">
-											<ycommerce:testId code="cart_product_size">
-												<spring:theme code="product.variant.size" />:&nbsp;${entry.product.size}
-											</ycommerce:testId>
+											<c:if test="${!fn:containsIgnoreCase(entry.product.size, 'No Size')}">
+											
+												<ycommerce:testId code="cart_product_size">
+													<spring:theme code="product.variant.size" />:&nbsp;${entry.product.size}
+												</ycommerce:testId>
+												
+											</c:if>
 										</p>
 									</c:otherwise>
+									
 								</c:choose>
 							</c:if>
 							<!-- Exchange UI Defects -->

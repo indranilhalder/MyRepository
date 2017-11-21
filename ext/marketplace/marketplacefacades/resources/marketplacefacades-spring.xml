@@ -1873,7 +1873,10 @@ class="de.hybris.platform.commercefacades.product.impl.DefaultImageFormatMapping
 		class="com.tisl.mpl.facade.product.impl.MplJewelleryFacadeImpl">
 	</bean> 
 	
-	
+	<bean id="msdWidgetFacade"   class="com.tisl.mpl.facade.msd.impl.MSDWidgetFacadeImpl">
+	</bean>
+	<bean id="msdService"   class="com.tisl.mpl.service.MSDServiceImpl">
+	</bean>
 	
 	<!-- added for pancard details -->
 	

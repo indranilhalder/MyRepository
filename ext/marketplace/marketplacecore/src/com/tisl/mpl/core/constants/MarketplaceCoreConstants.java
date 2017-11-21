@@ -120,4 +120,7 @@ public final class MarketplaceCoreConstants extends GeneratedMarketplaceCoreCons
 	//public static final String AND = "and".intern();
 	public static final String WHOLE_WORD_REGEX = "\\band\\b".intern();
 	public static final String AMPERSAND = "&".intern();
+
+	public static final String HOME_FURNISHING = "HomeFurnishing";
+	public static final String NOSIZE = "NO SIZE";
 }

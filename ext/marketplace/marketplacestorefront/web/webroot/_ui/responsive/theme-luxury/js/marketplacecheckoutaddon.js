@@ -2867,6 +2867,7 @@ $("#otpMobileNUMField").focus(function(){
 				 $("#firstName, #lastName, #address1, #address2, #address3, #state, #city, #pincode").attr("readonly", false); 
 				 $("#country").attr("disabled", false); 
 				 $("#country").val("India"); 
+				 $(".payment-billing-form").show();
 			 } 
 			 /*$("#myCounter").html((120));*/
 		 }, 

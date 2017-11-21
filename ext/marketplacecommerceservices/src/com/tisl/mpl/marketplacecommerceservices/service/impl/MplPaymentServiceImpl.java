@@ -851,6 +851,19 @@ public class MplPaymentServiceImpl implements MplPaymentService
 				{
 					debitCardPaymentInfoModel.setType(CreditCardType.SWITCH);
 				}
+				//SDI-1561
+				else if (MarketplacecommerceservicesConstants.DINERS.equalsIgnoreCase(response.getCardBrand()))
+				{
+					debitCardPaymentInfoModel.setType(CreditCardType.DINERS);
+				}
+				else if (MarketplacecommerceservicesConstants.JCB.equalsIgnoreCase(response.getCardBrand()))
+				{
+					debitCardPaymentInfoModel.setType(CreditCardType.JCB);
+				}
+				else if (MarketplacecommerceservicesConstants.DISCOVER.equalsIgnoreCase(response.getCardBrand()))
+				{
+					debitCardPaymentInfoModel.setType(CreditCardType.DISCOVER);
+				}
 				else
 				{
 					debitCardPaymentInfoModel.setType(CreditCardType.MASTER);
@@ -1044,6 +1057,19 @@ public class MplPaymentServiceImpl implements MplPaymentService
 				else if (MarketplacecommerceservicesConstants.SWITCHCARD.equalsIgnoreCase(response.getCardBrand()))
 				{
 					creditCardPaymentInfoModel.setType(CreditCardType.SWITCH);
+				}
+				//SDI-1561
+				else if (MarketplacecommerceservicesConstants.DINERS.equalsIgnoreCase(response.getCardBrand()))
+				{
+					creditCardPaymentInfoModel.setType(CreditCardType.DINERS);
+				}
+				else if (MarketplacecommerceservicesConstants.JCB.equalsIgnoreCase(response.getCardBrand()))
+				{
+					creditCardPaymentInfoModel.setType(CreditCardType.JCB);
+				}
+				else if (MarketplacecommerceservicesConstants.DISCOVER.equalsIgnoreCase(response.getCardBrand()))
+				{
+					creditCardPaymentInfoModel.setType(CreditCardType.DISCOVER);
 				}
 				else
 				{
@@ -1278,6 +1304,19 @@ public class MplPaymentServiceImpl implements MplPaymentService
 				else if (MarketplacecommerceservicesConstants.SWITCHCARD.equalsIgnoreCase(cardRes.getCardBrand()))
 				{
 					emiPaymentInfoModel.setType(CreditCardType.SWITCH);
+				}
+				//SDI-1561
+				else if (MarketplacecommerceservicesConstants.DINERS.equalsIgnoreCase(cardRes.getCardBrand()))
+				{
+					emiPaymentInfoModel.setType(CreditCardType.DINERS);
+				}
+				else if (MarketplacecommerceservicesConstants.JCB.equalsIgnoreCase(cardRes.getCardBrand()))
+				{
+					emiPaymentInfoModel.setType(CreditCardType.JCB);
+				}
+				else if (MarketplacecommerceservicesConstants.DISCOVER.equalsIgnoreCase(cardRes.getCardBrand()))
+				{
+					emiPaymentInfoModel.setType(CreditCardType.DISCOVER);
 				}
 				else
 				{
@@ -2088,7 +2127,7 @@ public class MplPaymentServiceImpl implements MplPaymentService
 			final String bankName = getSessionService().getAttribute(MarketplacecommerceservicesConstants.BANKFROMBIN);
 			final String paymentMode = getSessionService()
 					.getAttribute(MarketplacecommerceservicesConstants.PAYMENTMODEFORPROMOTION);
-			getSessionService().removeAttribute(MarketplacecommerceservicesConstants.BANKFROMBIN);
+			//getSessionService().removeAttribute(MarketplacecommerceservicesConstants.BANKFROMBIN); commented for SDI-2154/SDI-2155/SDI-2157
 
 			if (StringUtils.isNotEmpty(paymentMode) && paymentMode.equalsIgnoreCase("EMI") && StringUtils.isNotEmpty(bankName))
 
@@ -2178,7 +2217,7 @@ public class MplPaymentServiceImpl implements MplPaymentService
 			final String bankName = getSessionService().getAttribute(MarketplacecommerceservicesConstants.BANKFROMBIN);
 			final String paymentMode = getSessionService()
 					.getAttribute(MarketplacecommerceservicesConstants.PAYMENTMODEFORPROMOTION);
-			getSessionService().removeAttribute(MarketplacecommerceservicesConstants.BANKFROMBIN);
+			//getSessionService().removeAttribute(MarketplacecommerceservicesConstants.BANKFROMBIN);commented for SDI-2154/SDI-2155/SDI-2157
 
 			if (StringUtils.isNotEmpty(paymentMode) && paymentMode.equalsIgnoreCase("EMI") && StringUtils.isNotEmpty(bankName))
 
@@ -4816,186 +4855,199 @@ public class MplPaymentServiceImpl implements MplPaymentService
 		{
 			totalRefundAmount += orderEntry.getNetAmountAfterAllDisc();
 		}
-		//		Mrupee implementation
-		final OrderModel order = orderEntryModel.get(0).getOrder();
-		final String uniqueRequestId = mplJusPayRefundService.getRefundUniqueRequestId();
-		if ((null != order.getIsWallet() && WalletEnum.NONWALLET.toString().equalsIgnoreCase(order.getIsWallet().getCode()))
-				|| null == order.getIsWallet())
+
+
+		if (CollectionUtils.isNotEmpty(orderEntryModel))
 		{
-			try
+			//		Mrupee implementation
+			final OrderModel order = orderEntryModel.get(0).getOrder();
+			final String uniqueRequestId = mplJusPayRefundService.getRefundUniqueRequestId();
+			if ((null != order.getIsWallet() && WalletEnum.NONWALLET.toString().equalsIgnoreCase(order.getIsWallet().getCode()))
+					|| null == order.getIsWallet())
 			{
-				paymentTransactionModel = mplJusPayRefundService.doRefund(orderEntryModel.get(0).getOrder(), totalRefundAmount,
-						PaymentTransactionType.RETURN, uniqueRequestId);
-				if (null != paymentTransactionModel)
+				try
 				{
-					mplJusPayRefundService.attachPaymentTransactionModel(orderEntryModel.get(0).getOrder(), paymentTransactionModel);
-					for (final OrderEntryModel orderEntry : orderEntryModel)
+					paymentTransactionModel = mplJusPayRefundService.doRefund(orderEntryModel.get(0).getOrder(), totalRefundAmount,
+							PaymentTransactionType.RETURN, uniqueRequestId);
+					if (null != paymentTransactionModel)
 					{
-
-						// If CosignmentEnteries are present then update OMS with
-						// the state.
-						ConsignmentStatus newStatus = null;
-						if (orderEntry != null && CollectionUtils.isNotEmpty(orderEntry.getConsignmentEntries()))
+						mplJusPayRefundService
+								.attachPaymentTransactionModel(orderEntryModel.get(0).getOrder(), paymentTransactionModel);
+						for (final OrderEntryModel orderEntry : orderEntryModel)
 						{
-							// ConsignmentModel consignmentModel = orderEntry
-							// .getConsignmentEntries().iterator().next()
-							// .getConsignment();
-							if (StringUtils.equalsIgnoreCase(paymentTransactionModel.getStatus(), "SUCCESS"))
-							{
-								newStatus = ConsignmentStatus.RETURN_COMPLETED;
-							}
-							else if (StringUtils.equalsIgnoreCase(paymentTransactionModel.getStatus(), "PENDING"))
-							{
-								newStatus = ConsignmentStatus.REFUND_INITIATED;
-								final RefundTransactionMappingModel refundTransactionMappingModel = getModelService().create(
-										RefundTransactionMappingModel.class);
-								refundTransactionMappingModel.setRefundedOrderEntry(orderEntry);
-								refundTransactionMappingModel.setJuspayRefundId(paymentTransactionModel.getCode());
-								refundTransactionMappingModel.setCreationtime(new Date());
-								refundTransactionMappingModel.setRefundType(JuspayRefundType.RETURN);
-								refundTransactionMappingModel.setRefundAmount(orderEntry.getNetAmountAfterAllDisc());//TISPRO-216 : Refund amount Set in RTM
-								getModelService().save(refundTransactionMappingModel);
-							}
-							else
-							{
-								newStatus = ConsignmentStatus.REFUND_IN_PROGRESS;
-							}
-							// getModelService().save(consignmentModel);
-							mplJusPayRefundService.makeRefundOMSCall(orderEntry, paymentTransactionModel,
-									orderEntry.getNetAmountAfterAllDisc(), newStatus, null);
 
-							//Start TISPRD-871
-							if (newStatus.equals(ConsignmentStatus.RETURN_COMPLETED))
+							// If CosignmentEnteries are present then update OMS with
+							// the state.
+							ConsignmentStatus newStatus = null;
+							if (orderEntry != null && CollectionUtils.isNotEmpty(orderEntry.getConsignmentEntries()))
 							{
-								orderEntry.setJuspayRequestId(uniqueRequestId);
-								getModelService().save(orderEntry);
+								// ConsignmentModel consignmentModel = orderEntry
+								// .getConsignmentEntries().iterator().next()
+								// .getConsignment();
+								if (StringUtils.equalsIgnoreCase(paymentTransactionModel.getStatus(), "SUCCESS"))
+								{
+									newStatus = ConsignmentStatus.RETURN_COMPLETED;
+								}
+								else if (StringUtils.equalsIgnoreCase(paymentTransactionModel.getStatus(), "PENDING"))
+								{
+									newStatus = ConsignmentStatus.REFUND_INITIATED;
+									final RefundTransactionMappingModel refundTransactionMappingModel = getModelService().create(
+											RefundTransactionMappingModel.class);
+									refundTransactionMappingModel.setRefundedOrderEntry(orderEntry);
+									refundTransactionMappingModel.setJuspayRefundId(paymentTransactionModel.getCode());
+									refundTransactionMappingModel.setCreationtime(new Date());
+									refundTransactionMappingModel.setRefundType(JuspayRefundType.RETURN);
+									refundTransactionMappingModel.setRefundAmount(orderEntry.getNetAmountAfterAllDisc());//TISPRO-216 : Refund amount Set in RTM
+									getModelService().save(refundTransactionMappingModel);
+								}
+								else
+								{
+									newStatus = ConsignmentStatus.REFUND_IN_PROGRESS;
+								}
+								// getModelService().save(consignmentModel);
+								mplJusPayRefundService.makeRefundOMSCall(orderEntry, paymentTransactionModel,
+										orderEntry.getNetAmountAfterAllDisc(), newStatus, null);
+
+								//Start TISPRD-871
+								if (newStatus.equals(ConsignmentStatus.RETURN_COMPLETED))
+								{
+									orderEntry.setJuspayRequestId(uniqueRequestId);
+									getModelService().save(orderEntry);
+								}
 							}
 						}
 					}
-				}
-				else
-				{
+					else
+					{
 
-					//TISSIT-1801
-					LOG.error("Manual Refund Failed");
+						//TISSIT-1801
+						LOG.error("Manual Refund Failed");
+						for (final OrderEntryModel orderEntry : orderEntryModel)
+						{
+							mplJusPayRefundService.makeRefundOMSCall(orderEntry, paymentTransactionModel,
+									orderEntry.getNetAmountAfterAllDisc(), ConsignmentStatus.REFUND_IN_PROGRESS, null);
+						}
+
+						paymentTransactionModel = mplJusPayRefundService.createPaymentTransactionModel(orderEntryModel.get(0)
+								.getOrder(), FAILURE_KEY, totalRefundAmount, PaymentTransactionType.RETURN, "NO Response FROM PG",
+								uniqueRequestId);
+						mplJusPayRefundService
+								.attachPaymentTransactionModel(orderEntryModel.get(0).getOrder(), paymentTransactionModel);
+						//TISSIT-1801
+
+					}
+				}
+				catch (final Exception e)
+				{
+					LOG.error(e.getMessage(), e);
+
+					// TISSIT-1784 Code addition started
 					for (final OrderEntryModel orderEntry : orderEntryModel)
 					{
 						mplJusPayRefundService.makeRefundOMSCall(orderEntry, paymentTransactionModel,
-								orderEntry.getNetAmountAfterAllDisc(), ConsignmentStatus.REFUND_IN_PROGRESS, null);
+								orderEntry.getNetAmountAfterAllDisc(), ConsignmentStatus.REFUND_INITIATED, null);
+
+						// Making RTM entry to be picked up by webhook job
+						final RefundTransactionMappingModel refundTransactionMappingModel = getModelService().create(
+								RefundTransactionMappingModel.class);
+						refundTransactionMappingModel.setRefundedOrderEntry(orderEntry);
+						refundTransactionMappingModel.setJuspayRefundId(uniqueRequestId);
+						refundTransactionMappingModel.setCreationtime(new Date());
+						refundTransactionMappingModel.setRefundType(JuspayRefundType.RETURN);
+						refundTransactionMappingModel.setRefundAmount(orderEntry.getNetAmountAfterAllDisc());//TISPRO-216 : Refund amount Set in RTM
+						getModelService().save(refundTransactionMappingModel);
 					}
+					// TISSIT-1784 Code addition ended
 
 					paymentTransactionModel = mplJusPayRefundService.createPaymentTransactionModel(orderEntryModel.get(0).getOrder(),
-							FAILURE_KEY, totalRefundAmount, PaymentTransactionType.RETURN, "NO Response FROM PG", uniqueRequestId);
+							FAILURE_KEY, totalRefundAmount, PaymentTransactionType.RETURN, FAILURE_KEY, uniqueRequestId);
 					mplJusPayRefundService.attachPaymentTransactionModel(orderEntryModel.get(0).getOrder(), paymentTransactionModel);
-					//TISSIT-1801
 
 				}
 			}
-			catch (final Exception e)
+			else if (null != order.getIsWallet() && WalletEnum.MRUPEE.toString().equalsIgnoreCase(order.getIsWallet().getCode()))
 			{
-				LOG.error(e.getMessage(), e);
-
-				// TISSIT-1784 Code addition started
-				for (final OrderEntryModel orderEntry : orderEntryModel)
+				final String uniqueRequestId1 = mplMWalletRefundService.getRefundUniqueRequestId();
+				try
 				{
-					mplJusPayRefundService.makeRefundOMSCall(orderEntry, paymentTransactionModel,
-							orderEntry.getNetAmountAfterAllDisc(), ConsignmentStatus.REFUND_INITIATED, null);
-
-					// Making RTM entry to be picked up by webhook job
-					final RefundTransactionMappingModel refundTransactionMappingModel = getModelService().create(
-							RefundTransactionMappingModel.class);
-					refundTransactionMappingModel.setRefundedOrderEntry(orderEntry);
-					refundTransactionMappingModel.setJuspayRefundId(uniqueRequestId);
-					refundTransactionMappingModel.setCreationtime(new Date());
-					refundTransactionMappingModel.setRefundType(JuspayRefundType.RETURN);
-					refundTransactionMappingModel.setRefundAmount(orderEntry.getNetAmountAfterAllDisc());//TISPRO-216 : Refund amount Set in RTM
-					getModelService().save(refundTransactionMappingModel);
-				}
-				// TISSIT-1784 Code addition ended
-
-				paymentTransactionModel = mplJusPayRefundService.createPaymentTransactionModel(orderEntryModel.get(0).getOrder(),
-						FAILURE_KEY, totalRefundAmount, PaymentTransactionType.RETURN, FAILURE_KEY, uniqueRequestId);
-				mplJusPayRefundService.attachPaymentTransactionModel(orderEntryModel.get(0).getOrder(), paymentTransactionModel);
-
-			}
-		}
-		else if (null != order.getIsWallet() && WalletEnum.MRUPEE.toString().equalsIgnoreCase(order.getIsWallet().getCode()))
-		{
-			final String uniqueRequestId1 = mplMWalletRefundService.getRefundUniqueRequestId();
-			try
-			{
-				paymentTransactionModel = mplMWalletRefundService.doRefund(orderEntryModel.get(0).getOrder(), totalRefundAmount,
-						PaymentTransactionType.RETURN, uniqueRequestId1);
-				if (null != paymentTransactionModel)
-				{
-					mplJusPayRefundService.attachPaymentTransactionModel(orderEntryModel.get(0).getOrder(), paymentTransactionModel);
-					for (final OrderEntryModel orderEntry : orderEntryModel)
+					paymentTransactionModel = mplMWalletRefundService.doRefund(orderEntryModel.get(0).getOrder(), totalRefundAmount,
+							PaymentTransactionType.RETURN, uniqueRequestId1);
+					if (null != paymentTransactionModel)
 					{
-						// If CosignmentEnteries are present then update OMS with
-						// the state.
-						ConsignmentStatus newStatus = null;
-						if (orderEntry != null && CollectionUtils.isNotEmpty(orderEntry.getConsignmentEntries()))
+						mplJusPayRefundService
+								.attachPaymentTransactionModel(orderEntryModel.get(0).getOrder(), paymentTransactionModel);
+						for (final OrderEntryModel orderEntry : orderEntryModel)
 						{
+							// If CosignmentEnteries are present then update OMS with
+							// the state.
+							ConsignmentStatus newStatus = null;
+							if (orderEntry != null && CollectionUtils.isNotEmpty(orderEntry.getConsignmentEntries()))
+							{
 
-							if (StringUtils.equalsIgnoreCase(paymentTransactionModel.getStatus(),
-									MarketplacecommerceservicesConstants.SUCCESS))
-							{
-								newStatus = ConsignmentStatus.RETURN_COMPLETED;
+								if (StringUtils.equalsIgnoreCase(paymentTransactionModel.getStatus(),
+										MarketplacecommerceservicesConstants.SUCCESS))
+								{
+									newStatus = ConsignmentStatus.RETURN_COMPLETED;
+								}
+								else if (StringUtils.equalsIgnoreCase(paymentTransactionModel.getStatus(),
+										MarketplacecommerceservicesConstants.FAILURE))
+								{
+									newStatus = ConsignmentStatus.REFUND_IN_PROGRESS;
+								}
+								else
+								{
+									newStatus = ConsignmentStatus.REFUND_INITIATED;
+								}
+								// getModelService().save(consignmentModel);
+								//							mplJusPayRefundService.makeRefundOMSCall(orderEntry,
+								//									paymentTransactionModel,
+								//									orderEntry.getNetAmountAfterAllDisc(),
+								//									newStatus);
+								//R2.3
+								mplJusPayRefundService.makeRefundOMSCall(orderEntry, paymentTransactionModel,
+										orderEntry.getNetAmountAfterAllDisc(), newStatus, null);
+								if (newStatus.equals(ConsignmentStatus.RETURN_COMPLETED))
+								{
+									//orderEntry.setJuspayRequestId(uniqueRequestId);
+									getModelService().save(orderEntry);
+								}
 							}
-							else if (StringUtils.equalsIgnoreCase(paymentTransactionModel.getStatus(),
-									MarketplacecommerceservicesConstants.FAILURE))
-							{
-								newStatus = ConsignmentStatus.REFUND_IN_PROGRESS;
-							}
-							else
-							{
-								newStatus = ConsignmentStatus.REFUND_INITIATED;
-							}
-							// getModelService().save(consignmentModel);
-							//							mplJusPayRefundService.makeRefundOMSCall(orderEntry,
-							//									paymentTransactionModel,
-							//									orderEntry.getNetAmountAfterAllDisc(),
-							//									newStatus);
+						}
+					}
+					else
+					{
+						LOG.error("Manual Refund Failed");
+						for (final OrderEntryModel orderEntry : orderEntryModel)
+						{
+							//mplJusPayRefundService.makeRefundOMSCall(orderEntry,paymentTransactionModel,orderEntry.getNetAmountAfterAllDisc(),ConsignmentStatus.REFUND_IN_PROGRESS);
 							//R2.3
 							mplJusPayRefundService.makeRefundOMSCall(orderEntry, paymentTransactionModel,
-									orderEntry.getNetAmountAfterAllDisc(), newStatus, null);
-							if (newStatus.equals(ConsignmentStatus.RETURN_COMPLETED))
-							{
-								//orderEntry.setJuspayRequestId(uniqueRequestId);
-								getModelService().save(orderEntry);
-							}
+									orderEntry.getNetAmountAfterAllDisc(), ConsignmentStatus.REFUND_IN_PROGRESS, null);
 						}
+						paymentTransactionModel = mplJusPayRefundService.createPaymentTransactionModel(orderEntryModel.get(0)
+								.getOrder(), FAILURE_KEY, totalRefundAmount, PaymentTransactionType.RETURN, "NO Response FROM PG",
+								uniqueRequestId);
+						mplJusPayRefundService
+								.attachPaymentTransactionModel(orderEntryModel.get(0).getOrder(), paymentTransactionModel);
 					}
 				}
-				else
+				catch (final Exception e)
 				{
-					LOG.error("Manual Refund Failed");
+					LOG.error(e.getMessage(), e);
 					for (final OrderEntryModel orderEntry : orderEntryModel)
 					{
-						//mplJusPayRefundService.makeRefundOMSCall(orderEntry,paymentTransactionModel,orderEntry.getNetAmountAfterAllDisc(),ConsignmentStatus.REFUND_IN_PROGRESS);
+						//mplJusPayRefundService.makeRefundOMSCall(orderEntry,paymentTransactionModel,orderEntry.getNetAmountAfterAllDisc(),ConsignmentStatus.REFUND_INITIATED);
 						//R2.3
 						mplJusPayRefundService.makeRefundOMSCall(orderEntry, paymentTransactionModel,
-								orderEntry.getNetAmountAfterAllDisc(), ConsignmentStatus.REFUND_IN_PROGRESS, null);
+								orderEntry.getNetAmountAfterAllDisc(), ConsignmentStatus.REFUND_INITIATED, null);
 					}
 					paymentTransactionModel = mplJusPayRefundService.createPaymentTransactionModel(orderEntryModel.get(0).getOrder(),
-							FAILURE_KEY, totalRefundAmount, PaymentTransactionType.RETURN, "NO Response FROM PG", uniqueRequestId);
+							FAILURE_KEY, totalRefundAmount, PaymentTransactionType.RETURN, FAILURE_KEY, uniqueRequestId);
 					mplJusPayRefundService.attachPaymentTransactionModel(orderEntryModel.get(0).getOrder(), paymentTransactionModel);
 				}
 			}
-			catch (final Exception e)
-			{
-				LOG.error(e.getMessage(), e);
-				for (final OrderEntryModel orderEntry : orderEntryModel)
-				{
-					//mplJusPayRefundService.makeRefundOMSCall(orderEntry,paymentTransactionModel,orderEntry.getNetAmountAfterAllDisc(),ConsignmentStatus.REFUND_INITIATED);
-					//R2.3
-					mplJusPayRefundService.makeRefundOMSCall(orderEntry, paymentTransactionModel,
-							orderEntry.getNetAmountAfterAllDisc(), ConsignmentStatus.REFUND_INITIATED, null);
-				}
-				paymentTransactionModel = mplJusPayRefundService.createPaymentTransactionModel(orderEntryModel.get(0).getOrder(),
-						FAILURE_KEY, totalRefundAmount, PaymentTransactionType.RETURN, FAILURE_KEY, uniqueRequestId);
-				mplJusPayRefundService.attachPaymentTransactionModel(orderEntryModel.get(0).getOrder(), paymentTransactionModel);
-			}
+
+
 		}
 		final String result = paymentTransactionModel.getStatus() + "," + paymentTransactionModel.getCode() + ","
 				+ totalRefundAmount;

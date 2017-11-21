@@ -1623,22 +1623,22 @@ function getBuyBoxDataAjax(productCode, variantCodesJson) {
                 $(".primary_promo_title").hide(), $(".primary_promo_img").hide())));
                 var allStockZero = data.allOOStock, sellerName = data.sellerName, sellerID = data.sellerId, oosMicro = data.isOOsForMicro;
                 $("#sellerNameId").html(sellerName), $("#sellerSelId").val(sellerID), data.othersSellersCount > 0 && 1 == oosMicro ? ($("#addToCartButton").hide(), 
-                $("#buyNowButton").hide(), $("#outOfStockId").show(), $("#allVariantOutOfStock").show(), 
+                $("#buyNowButton").hide(), $("#outOfStockId").show(),$('.addtocart-component').removeClass("col-md-6"),$('.addtocart-component').addClass("col-md-12"), $("#allVariantOutOfStock").show(), 
                 $("#otherSellerInfoId").show(), $("#otherSellersId").html(data.othersSellersCount), 
                 $("#otherSellerLinkId").show()) : isOOS() && data.othersSellersCount > 0 ? ($("#addToCartButton").hide(), 
-                $("#outOfStockId").show(), $("#buyNowButton").hide(), $("#otherSellerInfoId").hide(), 
+                $("#outOfStockId").show(), $('.addtocart-component').removeClass("col-md-6"),$('.addtocart-component').addClass("col-md-12"),$("#buyNowButton").hide(), $("#otherSellerInfoId").hide(), 
                 $("#otherSellerLinkId").show(), $("#pdpPincodeCheck").hide(), $("#pin").attr("disabled", !0), 
                 $("#pdpPincodeCheckDList").show(), $("#buyNowButton").attr("disabled", !0), $("#allVariantOutOfStock").show()) : isOOS() && 0 == data.othersSellersCount ? ($("#addToCartButton").hide(), 
-                $("#buyNowButton").hide(), $("#outOfStockId").show(), $("#otherSellerInfoId").hide(), 
+                $("#buyNowButton").hide(), $("#outOfStockId").show(),$('.addtocart-component').removeClass("col-md-6"),$('.addtocart-component').addClass("col-md-12"), $("#otherSellerInfoId").hide(), 
                 $("#otherSellerLinkId").hide(), $("#pdpPincodeCheck").hide(), $("#pin").attr("disabled", !0), 
                 $("#pdpPincodeCheckDList").show(), $("#buyNowButton").attr("disabled", !0), $("#allVariantOutOfStock").show()) : "Y" == allStockZero && data.othersSellersCount > 0 && $("#variant li").length == $("#variant li.strike").length ? ($("#addToCartButton").hide(), 
-                $("#outOfStockId").show(), $("#allVariantOutOfStock").show(), $("#buyNowButton").hide(), 
+                $("#outOfStockId").show(), $('.addtocart-component').removeClass("col-md-6"),$('.addtocart-component').addClass("col-md-12"),$("#allVariantOutOfStock").show(), $("#buyNowButton").hide(), 
                 $("#otherSellerInfoId").hide(), $("#otherSellerLinkId").show(), $("#pdpPincodeCheck").hide(), 
                 $("#pin").attr("disabled", !0), $("#pdpPincodeCheckDList").show(), $("#buyNowButton").attr("disabled", !0), 
                 $("#variant li a").each(function() {
                     $(this).removeAttr("href"), $(this).parent().addClass("strike");
                 })) : "Y" == allStockZero && 0 == data.othersSellersCount && $("#variant li").length == $("#variant li.strike").length ? ($("#addToCartButton").hide(), 
-                $("#buyNowButton").hide(), $("#outOfStockId").show(), $("#allVariantOutOfStock").show(), 
+                $("#buyNowButton").hide(), $("#outOfStockId").show(),$('.addtocart-component').removeClass("col-md-6"),$('.addtocart-component').addClass("col-md-12"), $("#allVariantOutOfStock").show(), 
                 $("#variant li a").each(function() {
                     $(this).removeAttr("href"), $(this).parent().addClass("strike");
                 }), $("#otherSellerInfoId").hide(), $("#otherSellerLinkId").hide(), $("#pdpPincodeCheck").hide(), 
@@ -2761,7 +2761,7 @@ function populateBillingAddress() {
                 $("#country").attr("disabled", !0);
                 $("#isLuxury").val() && $("#line1").val(values[2] + values[3] + values[4]);
             } else $("#firstName, #lastName, #address1, #address2, #address3, #state, #city, #pincode").attr("readonly", !1), 
-            $("#country").attr("disabled", !1), $("#country").val("India");
+            $("#country").attr("disabled", !1), $("#country").val("India"), $(".payment-billing-form").show();
         },
         error: function(resp) {}
     });
@@ -17284,7 +17284,8 @@ TATA.CommonFunctions = {
         });
     },
     setHeader: function(data) {
-        0 == data.cartcount ? $("span.js-mini-cart-count,span.js-mini-cart-count-hover, span.responsive-bag-count").hide() : $("span.js-mini-cart-count,span.js-mini-cart-count-hover,span.responsive-bag-count").show();
+        0 == data.cartcount ? $("span.js-mini-cart-count,span.js-mini-cart-count-hover, span.responsive-bag-count").hide() : ($("span.js-mini-cart-count,span.js-mini-cart-count-hover,span.responsive-bag-count").show(), 
+        $("span.js-mini-cart-count,span.js-mini-cart-count-hover,span.responsive-bag-count").html(data.cartcount));
     },
     urlToProductCode: function(productURL) {
         var n = productURL.lastIndexOf("-");
@@ -17354,9 +17355,9 @@ TATA.CommonFunctions = {
         }, 3e3), !1);
     },
     leftBarAccordian: function() {
-        $(window).width() >= 768 ? ($(".facet").addClass("open"), $(document).on("click", ".facetHead", function(e) {
+        $(window).width() >= 768 ? $(document).on("click", ".facetHead", function(e) {
             e.stopPropagation(), $(this).closest(".facet").toggleClass("open", function() {});
-        })) : $(document).on("click", ".facetHead", function(e) {
+        }) : $(document).on("click", ".facetHead", function(e) {
             e.stopPropagation(), $(this).closest(".facet").addClass("open").find(".allFacetValues").show(), 
             $(this).closest(".facet").siblings().removeClass("open").find(".allFacetValues").hide();
         });
@@ -17548,12 +17549,14 @@ TATA.CommonFunctions = {
                 url: ajaxUrl,
                 data: {
                     pageSize: 24,
-                    lazyInterface: "Y"
+                    lazyInterface: "Y",
+                    icid: ""
                 },
                 success: function(x) {
                     var filtered = $.parseHTML(x);
-                    $(filtered).has(".product-grid") && $(".product-grid-wrapper").append($(filtered).find(".product-grid-wrapper")), 
-                    $("#pageQuery").val(ajaxUrl);
+                    $(filtered).has(".product-grid") && $(".product-grid", filtered).each(function() {
+                        $(".product-grid-wrapper").append($(this));
+                    }), $("#pageQuery").val(ajaxUrl);
                 },
                 complete: function() {
                     $("body").removeClass("loader");
@@ -17584,7 +17587,8 @@ TATA.CommonFunctions = {
             $("body").addClass("loader"), $.ajax({
                 url: requestUrl,
                 data: {
-                    lazyInterface: "Y"
+                    lazyInterface: "Y",
+                    icid: ""
                 },
                 success: function(x) {
                     var filtered = $.parseHTML(x);
@@ -17600,7 +17604,10 @@ TATA.CommonFunctions = {
                         $(".leftbar").removeClass("active"), $(".facet").removeClass("open");
                     }), void 0 !== facetHeadId && null !== facetHeadId && "" !== facetHeadId && $("#" + facetHeadId).click();
                 }
-            });
+            }), console.log("replace the current URL with parameters");
+            var currentURL = window.location.href.split("?")[0];
+            console.log(requestUrl.split("?")[1]), console.log("current URL is " + currentURL), 
+            history.pushState(null, null, currentURL + "?" + requestUrl.split("?")[1]);
         },
         Filtershow: function() {
             $(".plp-mob-filter").on("click", function() {
@@ -18011,15 +18018,44 @@ $(document).ready(function() {
         $(".footer-popular-search .mega-menu").slideToggle("400", function() {
             $(window).scrollTop($(document).height());
         }), $("#footer-popular-accordian-icon").toggleClass("glyphicon-minus", "glyphicon-plus");
+    }), $(".cartItemBlankPincode .defaultPinCode").on("click", function(e) {
+        e.stopImmediatePropagation(), $(window).width() >= 768 && $("html, body").animate({
+            scrollTop: $(".cartBottomCheck").position().top
+        }, 800);
     });
 }), $(window).scroll(function() {
     TATA.CommonFunctions.WindowScroll();
-}), $(document).ready(function() {
+}), checkforPriceFilter = function() {
+    console.log("check for sort Parameter");
+    var sortValue = $.urlParam("sort");
+    if (null != sortValue) {
+        console.log($.urlParam("sort"));
+        var sorting = "relevance";
+        if ("isProductNew" === sortValue) {
+            console.log("Is PRoduct New");
+            var sorting = "new";
+        } else if ("isDiscountedPrice" === sortValue) {
+            console.log("Is Discounted Price");
+            var sorting = "discount";
+        } else if ("price-asc" === sortValue) {
+            console.log("price Ascending");
+            var sorting = "low";
+        } else if ("price-desc" === sortValue) {
+            console.log("price Decending");
+            var sorting = "high";
+        } else console.log("Releavance-Default");
+        console.log($(".responsiveSort option[value=" + sorting).text()), $("span .selectboxit-text").html($(".responsiveSort option[value=" + sorting).text()), 
+        $(".responsiveSort option[value=" + sorting).attr("selected", "selected");
+    } else console.log("no sort parameters in the URL");
+}, $.urlParam = function(name) {
+    var results = new RegExp("[?&]" + name + "=([^&#]*)").exec(window.location.href);
+    return null != results ? results[1] || 0 : null;
+}, $(document).ready(function() {
     $("#clear_filter").click(function() {
         $(".reset-filters").trigger("click");
     }), $("#apply_filter").click(function() {
         $(".plp-leftbar-close a").trigger("click");
-    });
+    }), checkforPriceFilter();
 }), $(document).ready(function() {
     null != document.getElementById("check_MyRewards") && void 0 != document.getElementById("check_MyRewards") && (document.getElementById("check_MyRewards").checked = !0);
 }), $(document).ready(function() {
@@ -19216,3 +19252,16 @@ $("#popUpExpAddress").on("hidden.bs.modal", function() {
 }), $(".card_exp_month, .card_exp_year").on("change", function() {
     $(this).css("color", "#000");
 });
+
+ $(document).ready(function() {
+        $("body.page-cartPage #checkout-id a").removeClass("checkout-disabled");
+        $("body.page-cartPage #checkout-id a").click(function (event) {
+            if ($("#defaultPinCodeIds").val() === '' || $("#defaultPinCodeIds").val().length == 0) {
+                $("#defaultPinCodeIds").focus();
+                $("#defaultPinCodeIds").css('border', '1px solid red');
+                event.preventDefault();
+                return false;
+            }
+        })
+    });
+

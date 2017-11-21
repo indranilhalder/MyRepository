@@ -119,8 +119,8 @@ var buyboxskuId='';
 		
 		<c:if test="${fn:contains(validTabs, 'knowmore')}">
 		<div class="accordion-content">
-			<product:productTataPromiseTab product="${product}" />
-			</div>
+			<product:luxProductTataPromiseTab product="${product}" />
+		</div>
 		</c:if>
 		
 		<div class="accordion-title emi-header" id="emiStickerId" style="display: none;">	

@@ -86,7 +86,7 @@
 														 </c:when>
 													 </c:choose>
 													<!-- INC_11620/INC_11466 -->
-													 <!--<div class="item-price delivery-price delivery-price-mobile">
+													 <div class="item-price delivery-price delivery-price-mobile">
 														<ycommerce:testId code="cart_totalProductPrice_label">
 														<c:choose>
 														<c:when test="${not empty entry.totalSalePrice}">
@@ -100,7 +100,7 @@
 																</c:choose>
 														</ycommerce:testId>
 														
-													   </div>-->
+													   </div>
 													<ycommerce:testId code="cart_product_colour">
 																<%-- <div class="colour"><spring:theme code="text.colour"/>${entry.product.colour}</div> --%>
 													</ycommerce:testId>

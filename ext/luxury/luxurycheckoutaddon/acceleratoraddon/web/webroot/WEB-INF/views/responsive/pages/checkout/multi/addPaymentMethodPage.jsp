@@ -280,7 +280,7 @@
 																	</c:otherwise>   
 														        </c:choose>	
 														        </div>
-														        <input type="radio" data-id="savedCCard" name="creditCards" class="card_token creditCardsRadio" id="cc${status.index}"  value="${map.value.cardToken}"  style="visibility: hidden;" />
+														        <input type="radio" data-id="savedCCard" name="creditCards" class="card_token creditCardsRadio" id="cc${status.index}"  value="${map.value.cardToken}"   />
 									                 	 		<label for="cc${status.index}" data-id="savedCCard" class="numbers"></label>
 														        </div>
 														        </div>
@@ -637,11 +637,12 @@
 				        							
 										        			<%-- <span class="visa card_image"><img src="${commonResourcePath}/images/Visa.png" alt=""></span> --%>
 										                    		<input type="radio" data-id="savedDCard" name="debitCards" class="card_token  debitCardsRadio" id="dc${status.index}"  value="${map.value.cardToken}"/>
+										                    		<label for="dc${status.index}" data-id="savedDCard" class="numbers"></label>
 										                    		<div class="card-details">
-										                    		<label for="dc${status.index}" data-id="savedDCard" class="numbers">
+										                    		
 										                    		
 										                    		<span>${map.value.cardBrand}</span> ending in ${map.value.cardEndingDigits}
-										                    		</label>
+										                    		
 										                  				<p>${map.value.nameOnCard}</p>
 										                  				<p><spring:theme code="text.expires.on"/> ${map.value.expiryMonth}/${map.value.expiryYear}</p>
 										                  				</div>
