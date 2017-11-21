@@ -18,7 +18,6 @@ import de.hybris.platform.servicelayer.model.ModelService;
 
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -62,8 +61,8 @@ public class AutoRefundInitiateAction extends AbstractProceduralAction<InitiateR
 		boolean refundedByWallet = false;
 
 		//Changed for SDI-930
-		final List<OrderEntryModel> refundList = Collections.synchronizedList(new ArrayList<OrderEntryModel>());
-		final List<ReturnEntryModel> returnList = Collections.synchronizedList(new ArrayList<ReturnEntryModel>());
+		final List<OrderEntryModel> refundList = new ArrayList<OrderEntryModel>();
+		final List<ReturnEntryModel> returnList = new ArrayList<ReturnEntryModel>();
 
 		//SDI-2788
 		final String refundTransactionId = process.getRefundTransactionId();
@@ -198,10 +197,6 @@ public class AutoRefundInitiateAction extends AbstractProceduralAction<InitiateR
 										}
 									}
 								}
-								else
-								{
-									LOG.error("No Order Entry or No Consignment for automatic Refund");
-								}
 							}
 						}
 					}
@@ -219,7 +214,7 @@ public class AutoRefundInitiateAction extends AbstractProceduralAction<InitiateR
 	{
 		boolean refundedAtRts = false;
 		boolean refundedByWallet = false;
-		Set<String> uniqueTransactionList = new HashSet<String>();
+		Set<String> uniqueTransactionSet = new HashSet<String>();
 
 		if (orderModel != null)
 		{
@@ -246,7 +241,8 @@ public class AutoRefundInitiateAction extends AbstractProceduralAction<InitiateR
 							if (returnEntry instanceof RefundEntryModel)
 							{
 								//SDI-2788
-								if (returnEntry.getOrderEntry() != null && returnEntry.getOrderEntry().getOrderLineId().equals(refundTransactionId)
+								if (returnEntry.getOrderEntry() != null && null != returnEntry.getOrderEntry().getOrderLineId()
+										&& returnEntry.getOrderEntry().getOrderLineId().equals(refundTransactionId)
 										&& CollectionUtils.isNotEmpty(returnEntry.getOrderEntry().getConsignmentEntries()))
 								{
 									final ConsignmentStatus status = returnEntry.getOrderEntry().getConsignmentEntries().iterator().next()
@@ -273,7 +269,7 @@ public class AutoRefundInitiateAction extends AbstractProceduralAction<InitiateR
 										boolean isUnique = true;
 										final ReturnEntryModel returnEntryModel = returnEntry;
 										final OrderEntryModel orderEntryModel = (OrderEntryModel) returnEntryModel.getOrderEntry();
-										isUnique = uniqueTransactionList.add(orderEntryModel.getOrderLineId());
+										isUnique = uniqueTransactionSet.add(orderEntryModel.getOrderLineId());
 										if(isUnique)
 										{
 											refundList.add(orderEntryModel);
