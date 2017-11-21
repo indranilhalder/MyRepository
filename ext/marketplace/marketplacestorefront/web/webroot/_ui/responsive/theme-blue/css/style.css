@@ -73252,8 +73252,11 @@ span#juspayErrorMsg{
 }
 @media(max-width: 767px){
 	#juspayconnErrorDiv{
-    top: 70px !important;
-}
+		/* start change of TISUAT-6086 */
+	    /* top: 70px !important; */
+	    top: 10px !important;
+	    /* end change of TISUAT-6086 */
+	}
 }
 /*TPR-4461 end*/
 
