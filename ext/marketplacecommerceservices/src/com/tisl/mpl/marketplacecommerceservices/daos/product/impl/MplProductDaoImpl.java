@@ -374,6 +374,7 @@ public class MplProductDaoImpl extends DefaultProductDao implements MplProductDa
 		{
 			final FlexibleSearchQuery flexiQuery = new FlexibleSearchQuery(query);
 			flexiQuery.setResultClassList(Collections.singletonList(String.class));
+			flexiQuery.addQueryParameter("productCode", productCode);
 			final SearchResult<String> searchResult = getFlexibleSearchService().search(flexiQuery);
 			LOG.debug("findProductForHasVariant: searchResult********** " + searchResult);
 			size = searchResult.getResult();
@@ -382,7 +383,7 @@ public class MplProductDaoImpl extends DefaultProductDao implements MplProductDa
 		{
 			LOG.error(e);
 		}
-		if (size != null)
+		if (CollectionUtils.isNotEmpty(size))
 		{
 			return size.get(0);
 		}
@@ -397,15 +398,13 @@ public class MplProductDaoImpl extends DefaultProductDao implements MplProductDa
 	public List<String> getVariantsForSTWProducts(final String productCode)
 	{
 
-		final String query = "select {pcm.colourHexCode} from {PcmProductVariant as pcm}}"
-				+ " where {pcm.baseproduct} IN ({{SELECT {p.baseproduct} from {PcmProductVariant as p}})"
-				+ " AND {pcm.pk} IN ({{select {p.pk} from {product as p} where {p.code} = '987654322' }})'";
+		final String query = "select {pcm.colourHexCode} from {PcmProductVariant as pcm} where {pcm.baseproduct} IN ({{SELECT {q.baseproduct} from {PcmProductVariant as q}}}) AND {pcm.pk} IN ({{select {p.pk} from {product as p} where {p.code} = ?productCode}})";
 
 		List<String> variants = null;
 		try
 		{
 			final FlexibleSearchQuery flexiQuery = new FlexibleSearchQuery(query);
-			//flexiQuery.setResultClassList(Collections.singletonList(String.class));
+			flexiQuery.addQueryParameter("productCode", productCode);
 			final SearchResult<String> searchResult = getFlexibleSearchService().search(flexiQuery);
 			LOG.debug("findProductForHasVariant: searchResult********** " + searchResult);
 			variants = searchResult.getResult();
