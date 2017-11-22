@@ -2409,7 +2409,14 @@
 	</bean>
 	
 	<!--  End TPR-6945 -->
+	
+	<bean id="refundClearPerformableDao"
+		class="com.tisl.mpl.marketplacecommerceservices.daos.impl.RefundClearPerformableDaoImpl" />
 
+	<bean id="refundClearPerformableService"
+		class="com.tisl.mpl.marketplacecommerceservices.service.impl.DefaultRefundClearPerformableServiceImpl">
+			<property name="modelService" ref="modelService" />
+	</bean>
     
 </beans>
 
