@@ -207,7 +207,24 @@ input[type="radio"]+label:before, input[type="checkbox"]+label:before {
     font-weight: normal;
     color: #a9a9a9;
 }
-
+body .account .right-account ul.saved-cards>li a.delete, body .account .right-account ul.saved-cards>li a.view-details, body .account .right-account ul.saved-cards>li a.make-default {
+    position: relative;
+    float: right;
+    top: 0;
+    right: 0;
+    text-transform: uppercase;
+    font-weight: 600;
+    letter-spacing: 1.2px;
+    margin-bottom: 5px;
+}
+body .account .right-account ul.saved-cards>li a.make-default {
+    position: absolute;
+    top: 20px;
+    right: 10px;
+}
+body .account .right-account ul.saved-cards>li a.view-details, body .account .right-account ul.saved-cards>li a.make-default {
+    color: #a9143c;
+}
 @media (max-width: 650px){
 #stateListDropDown {
     margin-top: 10px;
@@ -240,7 +257,9 @@ body .account .right-account form.new-card .half:nth-of-type(odd), body .account
     margin-right: 0;
     float: right;
 }
-
+body .account .right-account ul.saved-cards>li a.make-default {
+    top: 5px;
+}
 }
 @media (max-width: 790px){
 body .account .right-account ul.saved-cards>li .actions {
@@ -248,6 +267,10 @@ body .account .right-account ul.saved-cards>li .actions {
 }
 .edit {
     float: right;
+}
+body .account .right-account ul.saved-cards>li a {
+    line-height: 1.5;
+    margin-right: 12px;
 }
 }
 @media (min-width: 791px){

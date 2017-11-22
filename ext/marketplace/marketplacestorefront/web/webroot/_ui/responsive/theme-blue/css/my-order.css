@@ -113,13 +113,374 @@ body .account .right-account .order-history .product-block li.header>ul>li:first
     text-align: left;
     color: #666;
 }
+.pagination {
+    line-height: 30px;
+    padding: 0 30px;
+}
+body .account .right-account .order-history .pagination {
+    display: inline-block;
+    float: right;
+}
+body .account .right-account .order-history .top .pagination.mobile {
+    position: absolute;
+    right: 20px;
+    top: 55px;
+}
+body .account .right-account .order-history .top .pagination.mobile {
+    right: 20px;
+}
+body .account .right-account .order-history .product-block li.header {
+    display: block;
+}
+body .account .right-account .order-history .product-block>li.item {
+    padding: 20px;
+    font-size: 12px;
+    font-weight: 400;
+    position: relative;
+    border-top: 0;
+    padding-right: 0;
+    padding-left: 0;
+}
+body .account .right-account .order-history .product-block li.item .image {
+    width: 100px;
+    float: left;
+    margin-right: 20px;
+    min-height: 175px;
+}
+body .account .right-account .order-history .product-block li.item p, body .account .right-account .order-history .product-block li.item a, body .account .right-account .order-history .product-block li.item h2:first-child {
+    font-size: 12px;
+    line-height: 1.5;
+    letter-spacing: .6px;
+    text-align: left;
+    color: #666;
+    font-weight: normal;
+}
+body .account .right-account .order-history .product-block li.item a {
+    display: block;
+    text-decoration: underline;
+}
+body .account .right-account .order-history .product-block li.item .product-name a {
+    text-decoration: none;
+}
+body .account .right-account .order-history .product-block li.item .image img {
+    width: 100%;
+    height: auto;
+}
+body .account .right-account .order-history:not(.responsiveProfile) .product-block li.item .details {
+    width: calc(67% - 140px);
+    width: -webkit-calc(67% - 140px);
+}
+body .account .right-account .order-history .product-block li.item .attributes {
+    margin-bottom: 0;
+    margin-top: 15px;
+}
+body .account .right-account .order-history:not(.responsiveProfile) .product-block li.item .orderUpdatesBlock {
+    float: right;
+    margin-top: 40px;
+}
+.status.statusDelivered {
+    background: url(../images/my-account-sprite-v1.png) no-repeat -240px 0;
+    height: 30px;
+    width: 82px;
+    float: right;
+    margin-bottom: 11px;
+}
+.status.statusConfirmed span, .status.statusShipped span, .status.statusDelivered span {
+    display: none;
+}
+.statusDate {
+    height: 18px;
+    font-family: Montserrat;
+    font-size: 14px;
+    line-height: 1.29;
+    letter-spacing: .5px;
+    text-align: right;
+    color: #000;
+    clear: both;
+}
+body .account .right-account .order-history .product-block li.item .actions {
+    clear: both;
+    position: relative;
+}
+body .account .right-account .order-history .product-block li.item::after {
+    clear: both;
+    content: "";
+    display: table;
+}
+body .account .right-account .order-history .product-block li.item .actions a {
+    font-size: 11px;
+}
+body .account .right-account .order-history .product-block li.item .actions a {
+    line-height: 30px;
+    display: table;
+}
+body .account .right-account .order-history .product-block li.item .actions a, body .account .right-account .order-history.order-details li.item .actions a:visited {
+    text-decoration: none;
+    color: #a9143c;
+}
+body .account .right-account .order-history .product-block li.item .actions a, body .account .right-account .order-history.order-details li.item .actions a:visited {
+    text-decoration: none;
+    color: #a9143c;
+}
+body .account .right-account .order-history .product-block li.item h2 {
+    font-size: 14px;
+    font-weight: 600;
+    margin-bottom: 0;
+    letter-spacing: normal;
+    height: auto;
+}
+body .account .right-account .order-history .product-block li.item p, body .account .right-account .order-history .product-block li.item a, body .account .right-account .order-history .product-block li.item h2:first-child {
+    font-size: 12px;
+    line-height: 1.5;
+    letter-spacing: .6px;
+    text-align: left;
+    color: #666;
+    font-weight: normal;
+}
+body .account .right-account .order-history .product-block li.item h2:first-child {
+    font-size: 12px;
+    font-weight: normal;
+    height: 18px;
+}
+body .account .right-account .order-history .product-block li.item .actions a+span {
+    font-size: 12px;
+    line-height: 1.5;
+    letter-spacing: .6px;
+    text-align: left;
+    color: #666;
+    font-weight: normal;
+}
+.track-order-header, .track-order-del-charge {
+    display: none;
+}
 
+/* Order Details */
+body .account .right-account .order-history.order-details .product-block {
+    border: 0;
+    margin-top: 19px;
+    border-top: 1px solid #eee;
+}
+body .account .right-account .order-history .product-block li.header {
+    display: block;
+}
+body .account .right-account .order-history.order-details li.header {
+    height: auto;
+    background-color: transparent;
+    padding: 28px 21px;
+    padding-bottom: 0;
+    margin-bottom: 32px;
+}
+body .account .right-account .order-history.order-details li.header {
+    background-image: linear-gradient(to bottom,#f9f9f9,#fff);
+}
+body .account .right-account .order-history.order-details li.header * {
+    background: transparent !important;
+}
+body .account .right-account .order-history.order-details li.header>ul {
+    margin-bottom: 58px;
+}
+body .account .right-account .order-history.order-details li.header>ul, body .account .right-account .order-history.order-details li.header>ul>li {
+    background-color: #fff;
+    padding: 0;
+}
+body .account .right-account .order-history.order-details li.header>ul, body .account .right-account .order-history.order-details li.header>ul>li {
+    background-color: #fff;
+    padding: 0;
+}
+body .account .right-account .order-history.order-details li.header>ul>li {
+    width: 25%;
+    border-right-color: #dfd1d5;
+}
 
+body .account .right-account .order-history.order-details li.header>ul>li {
+    width: 100%;
+}
+body .account .right-account .order-history.order-details li.header>ul>li:first-child {
+    height: 16px;
+    font-size: 16px;
+    line-height: 1;
+    letter-spacing: .6px;
+    text-align: left;
+    color: #000;
+    margin-bottom: 2px;
+    font-weight: 600;
+}
+body .account .right-account .order-history.order-details li.header>ul>li:first-child span {
+    border-left-color: #dfd1d5;
+}
+body .account .right-account .order-history.order-details li.header>ul>li span {
+    left: -1px;
+    right: -1px;
+}
+body .account .right-account .order-history.order-details li.header>ul>li:last-child {
+    height: 16px;
+    font-size: 12px;
+    line-height: 1.33;
+    letter-spacing: .6px;
+    text-align: left;
+    color: #666;
+}
+body .account .right-account .order-history.order-details li.header div {
+    width: 48%;
+    line-height: 1.5;
+    font-size: 12px;
+    display: inline-block;
+}
+body .account .right-account .order-history.order-details li.header div.totals {
+    padding-top: 0;
+}
+body .account .right-account .order-history.order-details li.header div.totals {
+    vertical-align: top;
+}
+body .account .right-account .order-history .product-block li.header .totals#anchor>h2 {
+    height: 16px;
+    font-size: 16px;
+    line-height: 1;
+    letter-spacing: .8px;
+    text-align: left;
+    color: #000;
+    margin-bottom: 15px;
+    font-weight: 600;
+}
+body .account .right-account .order-history.order-details li.header div.totals>ul {
+    font-size: 12px;
+    line-height: 1.5;
+    letter-spacing: .6px;
+    text-align: left;
+    color: #666;
+}
+body .account .right-account .order-history.order-details li.header div {
+    width: 48%;
+    line-height: 1.5;
+    font-size: 12px;
+    display: inline-block;
+}
+body .account .right-account .order-history.order-details li.header div.payment-method {
+    padding-top: 48px;
+    color: #666;
+}
+body .account .right-account .order-history.order-details li.item {
+    padding: 0;
+    padding-bottom: 20px;
+    padding-top: 20px;
+    border-top: solid 1px #eee;
+    font-size: 12px;
+    font-weight: 400;
+    position: relative;
+}
+body .account .right-account .order-history.order-details li.item#shipping-track-order:not(.in-store) .item-header {
+    border-bottom: 0;
+    display: block;
+}
+body .account .right-account .order-history.order-details li.item .item-header {
+    margin-bottom: 20px;
+}
+#shipping-track-order .item-header h2 {
+    width: 100%;
+}
+#shipping-track-order .item-header h2, #shipping-track-order .item-header h3 {
+    font-size: 16px;
+    line-height: 1;
+    letter-spacing: .8px;
+    text-align: left;
+    color: #000;
+    padding: 0 20px;
+    font-weight: normal !important;
+    height: auto;
+    margin-bottom: 10px;
+}
+#shipping-track-order .item-header h2+.col-md-8.col-sm-6, #shipping-track-order .item-header h3+.col-md-8.col-sm-6 {
+    font-size: 12px;
+    font-weight: normal;
+    padding: 0;
+    width: 100%;
+}
+#shipping-track-order .item-header address {
+    padding: 0 20px;
+    color: #666;
+    margin-bottom: 5px;
+}
+body .account .right-account .order-history.order-details li.item .item-header address {
+    font-size: 12px;
+    padding: 20px;
+    line-height: 1.5;
+    word-wrap: break-word;
+}
+.order-history.order-details .itemBorder {
+    border: 0;
+    display: none;
+}
+body .account .right-account .order-history.order-details li.item:not(.in-store).first .item-fulfillment {
+    border: 0;
+}
+body .account .right-account .order-history.order-details li.item .item-fulfillment p {
+    font-weight: normal;
+}
+body .account .right-account .order-history.order-details li.item .item-fulfillment p:last-of-type {
+    margin-bottom: 10px;
+}
+body .account .right-account .order-history.order-details li.item .item-fulfillment {
+    font-size: 11px;
+    font-style: italic;
+    line-height: 1.27;
+    letter-spacing: .6px;
+    text-align: left;
+    color: #bbb;
+    margin-left: 20px;
+    margin-bottom: 20px;
+}
+body .account .right-account .order-history.order-details li.item:not(.in-store).first .item-fulfillment {
+    display: block;
+    padding-top: 36px;
+    border-top: solid 1px #eee;
+    line-height: 0;
+    margin-bottom: 16px;
+    color: #666;
+}
+body .account .right-account .order-history.order-details li.item .item-fulfillment {
+    padding-top: 5px !important;
+}
 @media (min-width: 791px){
+.nav-orderHistory {
+    display: none;
+}
 body .account .right-account ul.pagination_ul {
     padding: 29px 20px;
     border: 1px solid #eee;
     margin-right: 18px;
     margin-bottom: 16px;
+}
+body .account .right-account .order-history:not(.responsiveProfile) .product-block li.item .details {
+    float: left;
+}
+body .account .right-account .order-history .product-block li.item h2.product-name:first-child {
+    line-height: normal;
+}
+}
+@media (max-width: 790px){
+body .account .right-account .order-history .product-block li.item .details {
+    padding-right: 70px;
+    padding-left: 70px;
+    float: none;
+    width: 100%;
+}
+.order-history.order-details * {
+    font-weight: normal !important;
+}
+body .account .right-account .order-history.order-details li.item .item-fulfillment p:last-of-type {
+    margin-bottom: 10px;
+}
+body .account .right-account .order-history.order-details li.item #pickNo {
+    padding-bottom: 10px;
+}
+}
+@media (max-width: 650px){
+body .account .right-account .order-history.order-details li.header>ul>li span, body .account .right-account .order-history.order-details li.header>ul>li span:not(.no-display) {
+    left: auto;
+    right: auto;
+    margin: 0;
+    background-color: transparent;
+    display: inline;
+    border: 0;
 }
 }

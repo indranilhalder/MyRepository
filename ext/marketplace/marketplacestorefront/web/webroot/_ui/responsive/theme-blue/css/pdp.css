@@ -1,3 +1,12 @@
+/* Social share- Email */
+.click2chat-container.send-email-container label[for="forgotPassword_email"] {
+    margin-bottom: 10px;
+}
+.click2chat-container.send-email-container h2 {
+    margin-bottom: 5px;
+    font-size: 16px;
+}
+/* Social share- Email */
 .Manufacturer.Temp04 .Padd h2:after {
     content: '';
     margin: 0 auto 10px;

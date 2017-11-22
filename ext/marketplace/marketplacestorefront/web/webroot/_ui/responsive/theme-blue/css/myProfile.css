@@ -21,8 +21,6 @@ body .account .right-account form label {
     font-size: 16px;
     font-weight: 500;
     margin-bottom: 5px;
-}
-body .account .right-account form label {
     margin-bottom: 1px;
     line-height: 1;
     letter-spacing: 0.6px;
@@ -85,7 +83,7 @@ body .account .right-account .info fieldset form .half.quarter.titleName .contro
     background-color: #ffffff;
     border-radius: 0;
 }
-body .account .right-account form .quarter {
+body .account .right-account form .half.quarter {
     width: 18%;
 }
 body .account .right-account form .half input {
@@ -294,7 +292,7 @@ body .account .right-account .password form .half:nth-of-type(odd) {
 
 @media (max-width: 650px){
 body .account .right-account form label {
-    font-size: 12px;
+    font-size: 12px ;
 }
 }
 

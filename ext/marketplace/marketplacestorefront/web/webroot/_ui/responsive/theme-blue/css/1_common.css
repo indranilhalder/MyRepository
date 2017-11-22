@@ -1497,3 +1497,9 @@ button.close {
 	bottom: -10px;
 }
 /*popover css end*/
+/* Error alert messages */
+.alert-warning {
+    background-color: #fcf8e3;
+    border-color: #faebcc;
+    color: #8a6d3b;
+}

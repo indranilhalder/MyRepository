@@ -3610,7 +3610,7 @@ background:#f8f8f8;
     margin-left: 0px;
 }
  .marketplace-checkout span.need-help-call {
-    display: none;
+    display: none !important;
 }
 p#cncpickuppincode_tooltip {
     left: 10%;

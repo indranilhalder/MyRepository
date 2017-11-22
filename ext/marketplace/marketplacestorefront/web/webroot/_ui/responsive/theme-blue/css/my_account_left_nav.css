@@ -184,14 +184,6 @@ body #account-invite .right-account>div form {
     border-top: solid 1px #eeeeee;
    /*  padding: 20px 0; */
 }
-body .account .right-account form label {
-    margin-bottom: 1px;
-    line-height: 1;
-    letter-spacing: 0.6px;
-    display: block;
-    font-size: 16px;
-    font-weight: 500;
-}
 body #account-invite .right-account>div input[type="text"] {
     border: none;
     font-size: 12px;

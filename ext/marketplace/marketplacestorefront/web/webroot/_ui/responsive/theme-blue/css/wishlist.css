@@ -536,6 +536,28 @@ div.wishlist-content .pagination a.active {
 	text-align: left;
 	height: 15px !important;
 }
+.product-info>div.wishAddSucess, .product-info>div.wishRemoveSucess, div.wishAddSucessPlp, div.wishRemoveSucessPlp, div.wishAddSucessQV, div.wishRemoveSucessQV {
+    color: green;
+}
+.product-info>div.wishAddLogin, .product-info>div.wishAddSucess, .product-info>div.wishAddLogin, .product-info>div.wishRemoveSucess, .product-info>div.wishAlreadyAdded, div.wishAlreadyAddedPlp, div.wishAddLoginPlp, div.wishAddSucessPlp, div.wishRemoveSucessPlp, div.wishAddSucessQV, div.wishRemoveSucessQV, div.wishAddLoginQV, div.wishAlreadyAddedQV {
+    display: inline-block;
+    position: fixed;
+    z-index: 100099;
+    left: 0;
+    right: 0;
+    top: -100px;
+    margin: auto;
+    text-align: center;
+    opacity: 0;
+    font-size: 14px;
+    padding: 12px 10px;
+    color: #212121;
+    background: #f3f3f3;
+    box-shadow: 0 1px 6px 0 rgba(0,0,0,.1);
+    border: 1px solid rgba(0,0,0,.1);
+    transition: opacity .25s,top .45s;
+    width: 300px;
+}
 
 @media ( min-width : 640px) {
 	.modal-dialog {

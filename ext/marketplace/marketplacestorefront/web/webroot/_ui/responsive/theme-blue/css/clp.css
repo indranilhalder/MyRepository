@@ -1681,8 +1681,11 @@ margin-top:50px;
 .best_seller .best_seller_section .color-swatch {
 	display: none;
 }
-.best_seller .best_seller_section .product-tile .details.short-info, .best_seller .best_seller_section .product-tile .image a img{
+.best_seller .best_seller_section .product-tile .image a img{
 	margin:0;
+}
+.best_seller .best_seller_section .product-tile .details.short-info, .best_seller .best_seller_section .product-tile .image a img{
+	margin:10;
 }
 .best_seller .best_seller_section .product-tile .details.short-info .brand,
 .stw-widget-owl .product-tile .short-info .brand,
