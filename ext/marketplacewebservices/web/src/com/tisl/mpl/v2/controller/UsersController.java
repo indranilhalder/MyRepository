@@ -7557,7 +7557,10 @@ public class UsersController extends BaseCommerceController
 				returnReasonData = mplOrderFacade.getReturnReasonForOrderItem(returnCancelFlag);
 
 				//TPR-4134 starts
-
+				if (null != returnReasonData)
+				{
+					LOG.info("list size primary" + returnReasonData.getReturnReasonDetailsList().size());
+				}
 
 
 				//	returnModes.setQuickDrop(true);
@@ -7593,6 +7596,7 @@ public class UsersController extends BaseCommerceController
 							if (productRichAttributeModel != null && productRichAttributeModel.get(0).getReturnAtStoreEligible() != null)
 							{
 								productRichAttrOfQuickDrop = (productRichAttributeModel.get(0).getReturnAtStoreEligible().toString());
+								LOG.info("productRichAttrOfQuickDrop" + productRichAttrOfQuickDrop);
 							}
 						}
 						final List<SellerInformationModel> sellerInfo = (List<SellerInformationModel>) productModel
@@ -7611,6 +7615,7 @@ public class UsersController extends BaseCommerceController
 											&& sellerRichAttributeModel.get(0).getReturnAtStoreEligible() != null)
 									{
 										sellerRichAttrOfQuickDrop = sellerRichAttributeModel.get(0).getReturnAtStoreEligible().toString();
+										LOG.info("sellerRichAttrOfQuickDrop" + sellerRichAttrOfQuickDrop);
 									}
 								}
 							}
@@ -7620,6 +7625,10 @@ public class UsersController extends BaseCommerceController
 										.equalsIgnoreCase("yes")))
 								{
 									returnModes.setQuickDrop(true);
+								}
+								else
+								{
+									returnModes.setQuickDrop(false);
 								}
 							}
 
@@ -7645,6 +7654,7 @@ public class UsersController extends BaseCommerceController
 			}
 			if (null != returnReasonData && CollectionUtils.isNotEmpty(returnReasonData.getReturnReasonDetailsList()))
 			{
+				LOG.info("list size>>>>" + returnReasonData.getReturnReasonDetailsList().size());
 				for (final ReturnReasonData entry : returnReasonData.getReturnReasonDetailsList())
 				{
 					if (!isFineJew
@@ -7731,6 +7741,7 @@ public class UsersController extends BaseCommerceController
 						if (productRichAttributeModel != null && productRichAttributeModel.get(0).getReturnAtStoreEligible() != null)
 						{
 							productRichAttrOfQuickDrop = productRichAttributeModel.get(0).getReturnAtStoreEligible().toString();
+							LOG.info("productRichAttrOfQuickDrop" + productRichAttrOfQuickDrop);
 						}
 					}
 
@@ -7765,6 +7776,7 @@ public class UsersController extends BaseCommerceController
 										&& sellerRichAttributeModel.get(0).getReturnAtStoreEligible() != null)
 								{
 									sellerRichAttrOfQuickDrop = sellerRichAttributeModel.get(0).getReturnAtStoreEligible().toString();
+									LOG.info("sellerRichAttrOfQuickDrop" + sellerRichAttrOfQuickDrop);
 								}
 							}
 						}
@@ -7980,6 +7992,10 @@ public class UsersController extends BaseCommerceController
 						if ((productRichAttrOfQuickDrop.equalsIgnoreCase("yes") && sellerRichAttrOfQuickDrop.equalsIgnoreCase("yes")))
 						{
 							returnModes.setQuickDrop(true);
+						}
+						else
+						{
+							returnModes.setQuickDrop(false);
 						}
 					}
 					break;
