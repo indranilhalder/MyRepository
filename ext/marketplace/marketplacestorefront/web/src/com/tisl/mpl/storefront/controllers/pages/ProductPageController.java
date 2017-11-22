@@ -4804,34 +4804,55 @@ public class ProductPageController extends MidPageController
 	}
 
 	//MSD FOR HOME FURNISHING PDP
-	public MSDResponsedata getMSDWidgetData(final HttpServletRequest request)
+	@ResponseBody
+	@RequestMapping(value = "/getMSDWidgets", method = RequestMethod.GET)
+	public JSONObject getMSDWidgetData(final HttpServletRequest request)
 	{
 
+		final JSONObject MSDJObject = new JSONObject();
 		final String msdUse = configurationService.getConfiguration().getString("isMSDEnabled");
 		MSDResponsedata msdRecData = null;
 		String productCode = null;
-		if (msdUse.equalsIgnoreCase("true"))
+		try
 		{
-			final MSDRequestdata msdRequest = new MSDRequestdata();
-
-
-			final String msdApiKey = configurationService.getConfiguration().getString("api.key");
-			final String msdDetails = configurationService.getConfiguration().getString("details.key");
-			final String msdMad_Uid = configurationService.getConfiguration().getString("mad.uid.key");
-			final String widget_list = configurationService.getConfiguration().getString("widgetlist.key");
-			if (request.getParameterMap().containsKey(PRODUCTCODE))
+			if (msdUse.equalsIgnoreCase("true"))
 			{
-				productCode = request.getParameter(PRODUCTCODE).toString();
+				final MSDRequestdata msdRequest = new MSDRequestdata();
+
+
+				final String msdApiKey = configurationService.getConfiguration().getString("api.key");
+				final String msdDetails = configurationService.getConfiguration().getString("details.key");
+				final String msdMad_Uid = configurationService.getConfiguration().getString("mad.uid.key");
+				final String widget_list = configurationService.getConfiguration().getString("widgetlist.key");
+				final String num_results = configurationService.getConfiguration().getString("num_results.key");
+				final String msdHeader = configurationService.getConfiguration().getString("msdHeader.key");
+				if (request.getParameterMap().containsKey("productCode"))
+				{
+					productCode = request.getParameter("productCode").toString();
+				}
+				msdRequest.setProduct_id(productCode);
+				msdRequest.setApi_key(msdApiKey);
+				msdRequest.setDetails(msdDetails);
+				msdRequest.setMad_uuid(msdMad_Uid);
+				msdRequest.setWidget_list(widget_list);
+				msdRequest.setNum_results(num_results);
+				msdRecData = msdWidgetFacade.getMSDWidgetFinalData(msdRequest);
+				MSDJObject.put("responsedata", msdRecData.getMsddata());
+
+
 			}
-			msdRequest.setProduct_id(productCode);
-			msdRequest.setApi_key(msdApiKey);
-			msdRequest.setDetails(msdDetails);
-			msdRequest.setMad_uuid(msdMad_Uid);
-			msdRequest.setWidget_list(widget_list);
-			msdRecData = msdWidgetFacade.getMSDWidgetFinalData(msdRequest);
 
 		}
-		return msdRecData;
-	}
+		catch (final EtailNonBusinessExceptions e)
+		{
+			ExceptionUtil.etailNonBusinessExceptionHandler(e);
+		}
+		catch (final Exception e)
+		{
+			LOG.error("Error during populating MSD >> for Home Furnishing >>" + "Error>>" + e);
+		}
 
+
+		return MSDJObject;
+	}
 }
