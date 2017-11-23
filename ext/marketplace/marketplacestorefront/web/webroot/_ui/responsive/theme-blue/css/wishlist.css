@@ -537,7 +537,7 @@ div.wishlist-content .pagination a.active {
 	height: 15px !important;
 }
 .product-info>div.wishAddSucess, .product-info>div.wishRemoveSucess, div.wishAddSucessPlp, div.wishRemoveSucessPlp, div.wishAddSucessQV, div.wishRemoveSucessQV {
-    color: green;
+    color: green !important;
 }
 .product-info>div.wishAddLogin, .product-info>div.wishAddSucess, .product-info>div.wishAddLogin, .product-info>div.wishRemoveSucess, .product-info>div.wishAlreadyAdded, div.wishAlreadyAddedPlp, div.wishAddLoginPlp, div.wishAddSucessPlp, div.wishRemoveSucessPlp, div.wishAddSucessQV, div.wishRemoveSucessQV, div.wishAddLoginQV, div.wishAlreadyAddedQV {
     display: inline-block;

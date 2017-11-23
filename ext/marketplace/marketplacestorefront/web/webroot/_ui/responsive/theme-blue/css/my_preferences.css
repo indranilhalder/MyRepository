@@ -188,6 +188,24 @@ body .account.preferences .right-account div.email-pref form fieldset.feedback>p
 body .account.preferences .right-account div.email-pref form fieldset.feedback label:last-child {
     margin-bottom: 0;
 }
+.alert.alert-danger a.close {
+    color: transparent;
+    margin-right: 10px;
+    float: left;
+    margin-top: -6px;
+    background-image: url(../images/Delete.png);
+    height: 24px;
+    width: 24px;
+}
+.alert.alert-danger a.close {
+    margin-right: 10px !important;
+    margin-top: -6px !important;
+    right: auto !important;
+    top: auto !important;
+    position: static !important;
+    border-radius: 0 !important;
+    border: 0 !important;
+}
 @media (max-width: 400px){
 body .account.preferences .right-account div.email-pref form .button-set a, body .account.preferences .right-account div.email-pref form .button-set button {
     font-size: 10px;
