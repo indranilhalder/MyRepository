@@ -12996,6 +12996,7 @@ p.sizetext.size {
 }
 .sizetext a.size-guide {
     position: relative;
+    color: #333 !important;
 }
 /* HOME-239 End */
 .click2chat-container.send-email-container label[for="forgotPassword_email"] {
