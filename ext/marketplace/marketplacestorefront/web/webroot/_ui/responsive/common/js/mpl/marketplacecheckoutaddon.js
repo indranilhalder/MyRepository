@@ -4,6 +4,9 @@ var isNewCard = false; // this is variable to fix paynow blackout issue
 var isCodeligible = true; //cod fix
 var couponApplied=false;
 var bankNameSelected=null;
+
+var checkTamperingPlaceOrder = false; //TISUAT-6107 fix
+
 //var promoAvailable=$("#promoAvailable").val();
 //var bankAvailable=$("#bankAvailable").val();
 
@@ -729,7 +732,15 @@ function submitForm(){
 	{
 		var code=bankCodeCheck();
 		if(code){
-			submitNBForm();
+			//TISUAT-6037 fix
+			if(!checkTamperingPlaceOrder){			
+				submitNBForm();
+			}
+			else{
+		 	$("#juspayErrorMsg").html("Oops, something went wrong! Please re-select a payment mode and complete your purchase.");
+		 	$("#juspayconnErrorDiv").css("display","block");
+		 	$("body,html").animate({ scrollTop: 0 });
+		 	}		
 		}
 		else{
 			$("#netbankingIssueError").css("display","block");
@@ -2415,16 +2426,30 @@ function savedDebitCardRadioChange(radioId){
 		$(".card_token").parent().parent().parent().find(".cvv").find(".cvvValdiation").focus();	//UF-211
 		return false;
 	}
- 	else if($(".card_brand").val()=="MAESTRO" && password==""){
- 		createJuspayOrderForSavedCard(); 
+ 	else if($(".card_brand").val()=="MAESTRO" && password==""){	//TISUAT-6037 fix
+ 		if(!checkTamperingPlaceOrder){
+ 			createJuspayOrderForSavedCard();  		
+ 		}
+ 		else{
+	 	$("#juspayErrorMsg").html("Oops, something went wrong! Please re-select a payment mode and complete your purchase.");
+	 	$("#juspayconnErrorDiv").css("display","block");
+	 	$("body,html").animate({ scrollTop: 0 });
+	 	}
  	}
 	else if(ebsDownCheck=="Y" && (isDomestic=="false" || isDomestic==""))
 	{
 		$(".card_ebsErrorSavedCard").css("display","block");		
 		return false;
 	}
-	else{
+	else{	//TISUAT-6037 fix
+		if(!checkTamperingPlaceOrder){			
 		createJuspayOrderForSavedCard(); 
+		}
+		else{
+	 	$("#juspayErrorMsg").html("Oops, something went wrong! Please re-select a payment mode and complete your purchase.");
+	 	$("#juspayconnErrorDiv").css("display","block");
+	 	$("body,html").animate({ scrollTop: 0 });
+	 	}
 	}
  });
  
@@ -2446,8 +2471,15 @@ function savedDebitCardRadioChange(radioId){
 			$(this).addClass("saved_card_disabled");	//UF-217
 			return false;
 		}
-	 	else if($(".card_brand").val()=="MAESTRO" && password==""){
-	 		createJuspayOrderForSavedDebitCard(); 
+	 	else if($(".card_brand").val()=="MAESTRO" && password==""){	//TISUAT-6037 fix
+	 		if(!checkTamperingPlaceOrder){
+	 	    createJuspayOrderForSavedDebitCard(); 
+	 		}
+	 		else{
+	 		 $("#juspayErrorMsg").html("Oops, something went wrong! Please re-select a payment mode and complete your purchase.");
+	 		 $("#juspayconnErrorDiv").css("display","block");
+	 		 $("body,html").animate({ scrollTop: 0 });
+	 		 }
 	 	}
 		else if(ebsDownCheck=="Y" && (isDomestic=="false" || isDomestic==""))
 		{
@@ -2455,7 +2487,14 @@ function savedDebitCardRadioChange(radioId){
 			return false;
 		}
 		else{
+			if(!checkTamperingPlaceOrder){	//TISUAT-6037 fix
 			createJuspayOrderForSavedDebitCard(); 
+			}
+			else{
+			$("#juspayErrorMsg").html("Oops, something went wrong! Please re-select a payment mode and complete your purchase.");
+			$("#juspayconnErrorDiv").css("display","block");
+			$("body,html").animate({ scrollTop: 0 });
+			}
 		}
 	 })
  
@@ -4997,7 +5036,9 @@ function applyPromotion(bankName,binValue,formSubmit,isNewCard)
 		type: "GET",
 		cache: false,
 		dataType:'json',
-		success : function(response) {
+		success : function(response) {			
+			checkTamperingPlaceOrder=false;//TISUAT-6107 fix
+			
 			if(null!=response.promoExpiryMsg && response.promoExpiryMsg=="redirect")
 			{
 				$(location).attr('href',ACC.config.encodedContextPath+"/cart"); // TISEE-510
@@ -5266,6 +5307,7 @@ function applyPromotion(bankName,binValue,formSubmit,isNewCard)
 		//}
 		},
 		error : function(resp) {
+			checkTamperingPlaceOrder = true;
 			//TISUAT-6037 starts here
 			if(ACC.singlePageCheckout.getIsResponsive())
 				{
@@ -9294,7 +9336,15 @@ function submitCODForm(){
 	{
 		var code=bankCodeCheck();
 		if(code){
-			submitNBForm();
+			//TISUAT-6037 fix
+			if(!checkTamperingPlaceOrder){			
+				submitNBForm();
+			}
+			else{
+		 	$("#juspayErrorMsg").html("Oops, something went wrong! Please re-select a payment mode and complete your purchase.");
+		 	$("#juspayconnErrorDiv").css("display","block");
+		 	$("body,html").animate({ scrollTop: 0 });
+		 	}			
 		}
 		else{
 			$("#netbankingIssueError").css("display","block");
