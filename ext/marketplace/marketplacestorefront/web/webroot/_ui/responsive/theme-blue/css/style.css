@@ -77488,3 +77488,13 @@ background: url(../images/search_image.png) no-repeat;}
     z-index: 2;
 }
 /* SDI-1393 End */
+
+/* start CAR-327 */
+#termsAndConditionsheading{
+	font-size: 12px;
+    font-weight: bold;
+}
+#termsAndConditions{
+	font-size: 12px;
+}
+/* end CAR-327 */

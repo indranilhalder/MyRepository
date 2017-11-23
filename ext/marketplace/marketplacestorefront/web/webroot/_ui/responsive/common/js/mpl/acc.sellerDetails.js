@@ -206,12 +206,19 @@ function focusOnElement() {
 		tbodycontent+='<span class="sale" id="mopPriceId">'
 		tbodycontent+=sellerPrice.formattedValueNoDecimal;
 		tbodycontent+="</span>"
-		if(promorestrictedSellers!=undefined){
-			   if(promorestrictedSellers.indexOf(sellersArray[i]['sellerID'])!=-1){
-				   tbodycontent+="<div class='tooltip_wrapper offer-tooltip-wrapper'><a name='yes' id='offer"+index+"' >Offer Available</a><span class='tooltip_pop offer-popover'>"+promoData.promoDescription+"<br><br>From&nbsp;"+promoStartDate+"<br>To&nbsp;"+promoEndDate+"<br>'</span></div>";
-	     }
-		}
+		//CAR-327 starts here	
+			
+			tbodycontent+='<span class="offerstart"></span>'; 	
+				
+				
+			/*if(promorestrictedSellers!=undefined){
+				   if(promorestrictedSellers.indexOf(sellersArray[i]['sellerID'])!=-1){		
+					   tbodycontent+="<div class='tooltip_wrapper offer-tooltip-wrapper'><a name='yes' id='offer"+index+"' >Offer Available</a><span class='tooltip_pop offer-popover'>"+promoData.promoDescription+"<br><br>From&nbsp;"+promoStartDate+"<br>To&nbsp;"+promoEndDate+"<br>'</span></div>";
+		     }
+			    
+			}*/
 		
+		//CAR-327 ends here
 		
 	  	if (parseFloat(sellerPriceValue) > emiCuttOffAmount.value) {
 	  		tbodycontent+="<p>";
@@ -413,6 +420,16 @@ function focusOnElement() {
 	  	}	
 	    }
 	  	$("#sellerDetailTbdy").html(tbodycontent);
+	  	
+	    //CAR-327 starts here
+	    for (var i = 0; i < sellersArray.length; i++) {
+        	
+			var sellerIdValue = sellersArray[i]['sellerID'];
+		    var productCode = $("#product").val();
+		    populatePrimaryOfrMsgWrapperOtherSellers(productCode, sellerIdValue, null);
+        }
+	    //CAR-327 ends here
+	  	
 	  	var noOfSellers= (sellerDetailsArray.length)-$('.oosOtherSeller').length;
 	  	if(noOfSellers ==0){
 	  	
@@ -643,7 +660,7 @@ function focusOnElement() {
 	    return offSatrtamorPm;
 		} 
 	 
-	//Added for displaying Non HMC configurable offer messages , TPR-589
+//Added for displaying Non HMC configurable offer messages , TPR-589
 		
 	    function  populateOfferMsgWrapper(productCode, sellerId, divId ){
 			var requiredUrl = ACC.config.encodedContextPath + "/p-" + productCode
@@ -657,9 +674,9 @@ function focusOnElement() {
 				data : dataString,
 				dataType : "json",
 				success : function(data) {		
-						var pagelevelOffer = "<div class='pdp-offer-title pdp-title'><b>OFFER: </b><span id='offerDetailId'></span></div>" ;	
+						var pagelevelOffer = "<div class='pdp-offer-title pdp-title' id='offerDetailIdSecondDiv'><b>OFFER: </b><span id='offerDetailId'></span></div>" ;	
 
-						var modallevelOffer = "<div class='pdp-offerDesc pdp-promo offercalloutdesc'><h3 class='product-name highlight desk-offer'><span id='message'></span></h3><h3 class='offer-price'></h3><div class='show-offerdate'><p><span id='messageDet'></span></p><div class='offer-date'><div class='from-date'><span class='from'>From:</span><span class='date-time' id='offerstartyearTime'></span><span class='date-time' id='offerstarthourTime'></span></div><div class='to-date'><span class='to'>To:</span><span class='date-time' id='offerendyearTime'></span><span class='date-time' id='offerendhourTime'></span></div></div></div></div>";
+						var modallevelOffer = "<div class='pdp-offerDesc pdp-promo offercalloutdesc' style='margin-top:10px'><h3 class='product-name highlight desk-offer'><span id='message'></span></h3><h3 class='offer-price'></h3><div class='show-offerdate'><p><span id='messageDet'></span></p><div class='offer-date'><div class='from-date'><span class='from'>From:</span><span class='date-time' id='offerstartyearTime'></span><span class='date-time' id='offerstarthourTime'></span></div><div class='to-date'><span class='to'>To:</span><span class='date-time' id='offerendyearTime'></span><span class='date-time' id='offerendhourTime'></span></div></div></div></div>";
 						if (data['offerMessageMap'] != null) {			
 
 						    var offerMessageMap = data['offerMessageMap'];	
@@ -693,6 +710,11 @@ function focusOnElement() {
 									 }					 
 								 });
 								 
+								//message[sellerid] =
+								//if(){
+									//$("otherseller_"+key).val(message);
+									
+								//}
 								 if(sellerId == key)
 								 {	
 									if(!$.isEmptyObject(offerMessageMap)){	
@@ -700,7 +722,7 @@ function focusOnElement() {
 											if($(".pdp-promo-title").length > 0){
 												$(pagelevelOffer).insertAfter(".pdp-promo-block");
 												$(modallevelOffer).insertAfter(".pdp-promoDesc");
-											}else{				
+											}else{	
 												//$(".pdp-promo-block").append(pagelevelOffer);
 												$(pagelevelOffer).insertAfter(".pdp-promo-block");
 												$(".offer-block").append(modallevelOffer);					
@@ -776,8 +798,197 @@ function focusOnElement() {
 			});	
 		}		
 		// End of TPR-589
-		
-	 
+	    
+	    //Start of CAR-327
+	    function populatePrimaryOfrMsgWrapperOtherSellers(productCode, sellerId, divId )
+	    {
+	    	var index = -1;
+	    	var requiredUrl = ACC.config.encodedContextPath + "/p-" + productCode
+			                  + "/getPrimaryCalloutOfferMessage";
+			var dataString = 'productCode=' + productCode + '&sellerId=' + sellerId;	
+			$.ajax({
+				contentType : "application/json; charset=utf-8",
+				url : requiredUrl,
+				async: false,
+				cache : false,
+				data : dataString,
+				dataType : "json",
+				success : function(data) {		
+						if (data['primaryOfferMessageMap'] != null) {		
+							
+						    var offerMessageMap = data['primaryOfferMessageMap'];	
+							var message = null;
+							var messageDet = null;
+							var messageStartDate = null;
+							var messageEndDate = null;
+							var termsAndConditions = null;
+							var termsAndConditionsHeading = "Terms And Conditions :";
+							var tbodycontent = "";
+																															
+												
+							$.each( offerMessageMap, function(key,value){		
+								
+								$.each(value, function(keyInternal,valueInternal){
+									 if(keyInternal == 'message'){
+										 message = valueInternal;
+									 }else if(keyInternal == 'messageDet'){
+										 messageDet = valueInternal;
+									 }
+									 if(keyInternal == 'startDate'){
+										 messageStartDate = valueInternal;
+									 }
+									 if(keyInternal == 'endDate'){
+										 messageEndDate = valueInternal;
+									 }	
+									 if(keyInternal == 'termsAndConditions'){
+										 termsAndConditions = valueInternal;
+									 }	
+								 });
+																
+								if(sellerId == key)
+									 {	
+										if(!$.isEmptyObject(offerMessageMap)){	
+											index ++;
+											tbodycontent+="<div class='tooltip_wrapper offer-tooltip-wrapper' id='car327'><a name='yes' id='offer"+index+"'>Offer Available</a><span class='tooltip_pop offer-popover'>"+message+"<br><br>From&nbsp;"+messageStartDate+"<br>To&nbsp;"+messageEndDate+"<br></span></div>";
+																					
+										}
+										if($("#car327").length < 1){
+											$("#sellerDetailTbdy .Price .offerstart").append(tbodycontent);
+										}
+									 }	
+									
+								})							
+								
+						}						
+				}
+			});	
+		}		
+	       
+	     
+	    	    
+	    function  populatePrimaryCalloutOfferMsgWrapper(productCode, sellerId, divId ){
+	    	var requiredUrl = ACC.config.encodedContextPath + "/p-" + productCode
+			                  + "/getPrimaryCalloutOfferMessage";
+			var dataString = 'productCode=' + productCode + '&sellerId=' + sellerId;	
+			$.ajax({
+				contentType : "application/json; charset=utf-8",
+				url : requiredUrl,
+				async: false,
+				cache : false,
+				data : dataString,
+				dataType : "json",
+				success : function(data) {		
+						var pagelevelOffer = "<div class='pdp-offer-title pdp-title' id='offerDetailIdDiv'><b>OFFER: </b><span id='offerDetailIdPromotion'></span></div>" ;	
+
+						var modallevelOffer = "<div class='pdp-offerDesc pdp-promo offercalloutdesc'><h3 class='product-name highlight desk-offer'><span id='messagePrimary'></span></h3><h3 class='offer-price'></h3><div class='show-offerdate'><p><span id='messageDetPrimary'></span></p><p id='termsP'><span id='termsAndConditionsheading'></span><br><span id='termsAndConditions'></span></p><div class='offer-date'><div class='from-date'><span class='from'>From:</span><span class='date-time' id='offerstartyearTimePrimary'></span><span class='date-time' id='offerstarthourTimePrimary'></span></div><div class='to-date'><span class='to'>To:</span><span class='date-time' id='offerendyearTimePrimary'></span><span class='date-time' id='offerendhourTimePrimary'></span></div></div></div></div>";
+						if (data['primaryOfferMessageMap'] != null) {			
+
+						    var offerMessageMap = data['primaryOfferMessageMap'];	
+							var x=$('<div/>');	
+							var message = null;
+							var messageDet = null;
+							var messageStartDate = null;
+							var messageEndDate = null;
+							var termsAndConditions = null;
+							var termsAndConditionsHeading = "Terms And Conditions :";
+
+							$(".pdp-promo-title-link").css("display","none");		
+							if($("#promolist").val()=="All" || $("#promolist").val()=="Web" ||!$.isEmptyObject(offerMessageMap)){
+								$("#promolist").val(offerMessageMap);
+								$(".pdp-promo-title-link").css("display", "block");		
+							} 
+									
+												
+							$.each( offerMessageMap, function(key,value){							
+							
+								 if(sellerId == key)
+								 {	
+									 $.each(value, function(keyInternal,valueInternal){
+										 if(keyInternal == 'message'){
+											 message = valueInternal;
+										 }else if(keyInternal == 'messageDet'){
+											 messageDet = valueInternal;
+										 }
+										 if(keyInternal == 'startDate'){
+											 messageStartDate = valueInternal;
+										 }
+										 if(keyInternal == 'endDate'){
+											 messageEndDate = valueInternal;
+										 }	
+										 if(keyInternal == 'termsAndConditions'){
+											 termsAndConditions = valueInternal;
+										 }	
+									 });
+									 
+									 
+									if(!$.isEmptyObject(offerMessageMap)){	
+										    $(".pdp-promo-title-link").show();
+										    if($("#offerDetailIdPromotion").text() != $("#offerDetailIdPromotion").html(message)){
+										    	if($("#offerDetailIdDiv").length < 1){
+										    		if($(".pdp-promo-title").length > 0){
+														$(pagelevelOffer).insertAfter(".pdp-promo-block");
+														$(modallevelOffer).insertAfter(".pdp-promoDesc");
+										    		}else{	
+														$(pagelevelOffer).insertAfter(".pdp-promo-block");
+														$(".offer-block").append(modallevelOffer);					
+										    		}	
+										    	}
+										    }
+									}	
+									if(divId != null)
+									{
+										var offerMessageDiv="<div class='offerMessage-block' id='offerMessageId'>"+messageDet+"</div>";
+										var divSpecificId ='#'+divId;
+										$(divSpecificId).html(offerMessageDiv);
+									}
+									else
+									{
+										$(".pdp-offer").html(message);						
+									}
+									$("#messagePrimary").html(message);
+									$("#offerDetailIdPromotion").html(message);
+									$("#messageDetPrimary").html(messageDet);
+									if(termsAndConditions != null)
+									{
+										$("#termsAndConditionsheading").html(termsAndConditionsHeading);
+										$("#termsAndConditions").html(termsAndConditions);
+									}
+									else{
+										$("#termsAndConditionsheading").remove();
+										$("#termsAndConditions").remove();
+										$("#termsP").remove();
+									}
+									
+							       var dateSplit = messageStartDate.split(" ");
+				                   var firstpart = dateSplit[0];
+				                   var secondpart = dateSplit[1];
+				                   var thirdpart = secondpart.split(".")[0];                   
+				                   var resfirstpart = firstpart.split("-").reverse().join("/");                  
+				                   var offStartTime =  populateOfferMessageTime(thirdpart);                
+				                   var offStart = thirdpart.concat(offStartTime);
+				                $(".offerstartyear-time, #offerstartyearTimePrimary").html(resfirstpart);
+				                $(".offerstarthour-time, #offerstarthourTimePrimary").html(offStart);                
+								var enddateSplit = messageEndDate.split(" ");
+				                var enddtfstpart = enddateSplit[0];
+				                var enddtsecondpart = enddateSplit[1];
+				                var edthirdpart = enddtsecondpart.split(".")[0];                  
+				                var resEdfirstpart = enddtfstpart.split("-").reverse().join("/");                 
+				                var offEndTime =  populateOfferMessageTime(edthirdpart);              
+				                var offEnd = edthirdpart.concat(offEndTime);               
+				              $(".offerendyear-time,#offerendyearTimePrimary").html(resEdfirstpart);
+				              $(".offerendhour-time,#offerendhourTimePrimary").html(offEnd);            
+								 }
+								 /*else
+								 {									
+									 x.append("<p>"+message+"</p>");								 
+								 }	*/			
+								})	
+														
+								}						
+				}
+			});	
+		}		
+		// End of CAR-327
 	 
 	 
 	 

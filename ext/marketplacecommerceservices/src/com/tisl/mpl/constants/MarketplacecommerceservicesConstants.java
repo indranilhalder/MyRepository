@@ -1905,6 +1905,8 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String MESSAGESTARTDATE = "startDate".intern();
 	public static final String MESSAGEENDDATE = "endDate".intern();
 
+	public static final String TERMSANDCONDITIONS = "termsAndConditions".intern();//CAR-327 added
+
 	//Added For TPR-1035
 	public static final String BIN_ERROR_HEADER = "BIN,CUSTOMER_ID,PAYMENTMODE,DATE,TYPE_OF_ERROR".intern();
 	public static final String BIN_ERROR_FILE_LOCATION = "bin.errorreport.csv.path".intern();

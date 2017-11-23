@@ -1397,6 +1397,10 @@ function pincodeServiceability(){
 											/*TPR-642 & 640 ends*/
 												//TPR-6029 |DTM IMPLEMENTATION
 												 dtmPdpPincode("success",productCode,pin);
+												 //CAR-327 starts here
+												 var currentSeller=$(sellerSelId).val();
+												 populatePrimaryCalloutOfferMsgWrapper(productCode, currentSeller, null);
+												 //CAR-327 ends here
 
 										} else {
 											//$("#home").hide();
@@ -1905,11 +1909,11 @@ function displayDeliveryDetails(sellerName) {
 				}
 				else
 					{
-						$("#returnWindow").text(data['returnWindow']);
-						$("#knowmoreMobile #defaultKnowMoreLi #returnWindow").text(data['returnWindow']);//SDI-2046
-						$("#returnWindowRefRet").text(data['returnWindow']);
-						$("#returnsAndRefundsMobile #defaultRetRefLi #returnWindowRefRet").text(data['returnWindow']);//SDI-2046
-						$("#returnWindowRet").text(data['returnWindow']);
+					$("#returnWindow").text(data['returnWindow']);
+					$("#knowmoreMobile #defaultKnowMoreLi #returnWindow").text(data['returnWindow']);//SDI-2046
+					$("#returnWindowRefRet").text(data['returnWindow']);
+					$("#returnsAndRefundsMobile #defaultRetRefLi #returnWindowRefRet").text(data['returnWindow']);//SDI-2046
+					$("#returnWindowRet").text(data['returnWindow']);
 					}
 				//TISCR-414 - Chairmans demo feedback 10thMay CR ends
 				}
@@ -3732,7 +3736,8 @@ function onSizeSelectPopulateDOM()//First Method to be called in size select aja
 		
 		var currentSelectedElement=this;
 		var productCode="";
-		productCode=$(currentSelectedElement).attr("data-productCode");
+		var currentSeller="";
+		productCode=$(currentSelectedElement).attr("data-productCode");	
 		
 		//console.log("================>data-productCode================>"+productCode);
 		
@@ -3751,10 +3756,13 @@ function onSizeSelectPopulateDOM()//First Method to be called in size select aja
 			$("body").append('<div class="loaderDiv" style="position: fixed; left: 45%;top:45%;z-index: 10000"><img src="'+staticHost+'/_ui/responsive/common/images/red_loader.gif" class="spinner"></div>'); //UF-263
 			//$("body").append('<img src="'+staticHost+'/_ui/responsive/common/images/spinner.gif" class="spinner" style="position: fixed; left: 45%;top:45%; height: 30px;z-index: 10000">');
 			
-			if($('#promolist').val()!='')
-			{	//If promotion exist for the existing product
-				$("#promolist").val("");//Set it empty as we are not sure if the new selected product has promotion yet
-			}
+			
+			//Commented for CAR-327 starts here
+//			if($('#promolist').val()!='')
+//			{	//If promotion exist for the existing product
+//				$("#promolist").val("");//Set it empty as we are not sure if the new selected product has promotion yet
+//			}
+			//Commented for CAR-327 starts here
 			
 			//To get product code from URL
 			//productCode=getProductCodeFromPdpUrl(href);
@@ -3787,7 +3795,7 @@ function onSizeSelectPopulateDOM()//First Method to be called in size select aja
 			xhrAjaxProductData.done(function(data) {
 				try{
 					//Populating productPromotionSection.tag
-					$('#productPromotionSection').html(data);
+					//$('#productPromotionSection').html(data);
 					var jsonData= JSON.parse($('#sizeSelectAjaxData').text());
 					var pin = $("#pin").val();
 					$('#sizeSelectAjaxData').remove();
@@ -3816,15 +3824,22 @@ function onSizeSelectPopulateDOM()//First Method to be called in size select aja
 						{
 							var responseProductSize="";
 						}
-						if(typeof(jsonData['potentialPromotions'])!='undefined')
-						{
-							var responsePotentialPromotions=jsonData['potentialPromotions'];
-						}
-						else{
-							var responsePotentialPromotions=[];
-						}
 						
-
+						//Commented for CAR-327 starts here
+//						if(typeof(jsonData['potentialPromotions'])!='undefined')
+//						{
+//							var responsePotentialPromotions=jsonData['potentialPromotions'];
+//						}
+//						else{
+//							var responsePotentialPromotions=[];
+//						}
+						//Commented for CAR-327 ends here
+						
+						//CAR-327 starts
+						currentSeller=$(sellerSelId).val();
+						populatePrimaryCalloutOfferMsgWrapper(productCode, currentSeller, null);
+						//CAR-327 ends
+						
 						$('#selectedSize').val("true");
 						
 						$("input[name=productCodeMSD]").val(responseProductCode);
@@ -3910,7 +3925,8 @@ function onSizeSelectPopulateDOM()//First Method to be called in size select aja
 						
 						//Promotions handled here
 						//populateProductPromotionsData(potentialPromotions)
-						populatePromotionsInProductDetailsPanel(responsePotentialPromotions);
+						//COMMENTED FOR CAR-327
+						//populatePromotionsInProductDetailsPanel(responsePotentialPromotions);
 						
 						//Used to re-write the browser URL so that onReload the user stays on the same page
 					    changeBrowserUrl(originalUrl);
@@ -4479,8 +4495,11 @@ function getBuyBoxDataAjax(productCode,variantCodesJson)
 					}
 					//Added for displaying offer messages other than promotion, TPR-589	
 				//	ACC.productDetail.
-					populateOfferMsgWrapper(productCode, sellerID, null);
-					
+					//PRIMARY CALLOUT
+					populatePrimaryCalloutOfferMsgWrapper(productCode, sellerID, null);//Added for CAR-327
+					//SECONDARY CALLOUT
+					populateOfferMsgWrapper(productCode, sellerID, null);	
+										
 				}	
 
 			} 
