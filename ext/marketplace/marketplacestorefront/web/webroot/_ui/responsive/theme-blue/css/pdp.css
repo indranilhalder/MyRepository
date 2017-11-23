@@ -1327,18 +1327,23 @@ button.otherSellersFont {
     content: "";
     display: table
 }
-.product-info .product-content .swatch .color-swatch li {
+.product-info .product-content .color-swatch li {
     cursor: pointer;
     display: inline-block;
     float: left;
     width: 20px;
     height: 20px;
-
     margin: 2px;
     border: 1px solid transparent;
     -webkit-transition: border-color 0.15s;
     -moz-transition: border-color 0.15s;
     transition: border-color 0.15s
+}
+.product-info .product-content .color-swatch li:hover, .product-info .product-content .color-swatch li.active {
+    border-color: #000;
+    -webkit-transition: border-color .3s;
+    -moz-transition: border-color .3s;
+    transition: border-color .3s;
 }
 .product-info .product-content .swatch .color-swatch li span {
     display: block;
