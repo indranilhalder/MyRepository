@@ -4910,6 +4910,9 @@ color:#a9143c;
     width:10px;
     border: 2px solid #fff;
 }
+.compare input[type="checkbox"]:checked ~ .compareText {
+    color: #a9143c;
+}
 .IAQuickView,.iaAddToCartButton,div.MSDQuickView{
 	height: auto !important;
 	font-weight: 600;
@@ -11297,9 +11300,12 @@ height: 80%;
 .page-productDetails .trending h2 {		
 		margin: 20px 25px;		
 	}
-	.trending h2 span {		
+.trending h2 span {		
 		font-size: 20px;		
 	}
+#EMITermTable th {
+    width: auto;
+}
 	/*Mobile
 ---------------------------------------------*/
 	.product-info .product-image-container.device,
@@ -12094,6 +12100,10 @@ p#unserviceablepincode_tooltip,p#error-Id_tooltip,p#emptyId_tooltip{
       }
 }
 @media ( max-width : 650px) {
+
+#emiTableDiv #EMITermTable {
+    word-wrap: break-word;
+}
 	.popover.bottom>.arrow:after{
 	top:2px !important;
 	}
@@ -13006,4 +13016,33 @@ p.sizetext.size {
 /* HOME-239 End */
 .click2chat-container.send-email-container label[for="forgotPassword_email"] {
     margin-bottom: 10px;
+}
+#emiTableDiv #EMITermTable {
+    padding: 2px;
+    display: none;
+    border: 1px solid #cdcdcd;
+    width: 100%;
+    font-size: 14px;
+    margin-top: 10px;
+    font-weight: 500;
+    background: #fff;
+    border-collapse: separate;
+}
+#emiTableDiv #EMITermTable th {
+    font-weight: 500;
+    vertical-align: middle;
+    text-align: center;
+    padding: 10px 5px;
+    border-bottom: 1px solid #cdcdcd;
+}
+#emiTableDiv #EMITermTable td {
+    padding: 10px 5px;
+    position: relative;
+    vertical-align: middle;
+    text-align: center;
+}
+@media (max-width: 850px){
+#emiTableDiv #EMITermTable {
+    font-size: 12px;
+}
 }
