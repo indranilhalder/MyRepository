@@ -13046,3 +13046,24 @@ p.sizetext.size {
     font-size: 12px;
 }
 }
+/* start CMR-17 */
+.stats-table {
+	width: 100%;
+    margin-bottom: 15px;
+}
+.stats-table tr {
+	width: 100%;
+}
+.stats-table tr td:nth-child(odd) {
+	text-transform: capitalize;
+    font-weight: 500;
+    width: 15%;
+}
+.stats-table tr td {
+	padding: 15px 20px;
+    width: 35%;
+}
+.stats-table.mobile {
+	display: none;
+}
+/* end CMR 17 */
