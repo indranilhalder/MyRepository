@@ -83,8 +83,29 @@ body .account .right-account ul.saved-cards>li .details>ul, body .account .right
     position: relative;
     padding: 20px 10px;
 }
-
+body .account .right-account ul.saved-cards .details p {
+    padding-left: 0;
+}
+body .account .right-account ul.saved-cards>li .active+.details {
+    max-height: 200px;
+    -webkit-transition: max-height .15s;
+    -moz-transition: max-height .15s;
+    transition: max-height .15s;
+}
+body .account .right-account ul.saved-cards>li a.delete {
+    color: #ff1e48;
+    position: absolute;
+    top: 50%;
+    margin-top: -5px;
+    margin-right: 10px;
+    font-weight: bold;
+}
 @media (max-width: 650px){
+body .account .right-account ul.saved-cards>li a.delete {
+    top: 20px;
+    margin-top: 0;
+    font-weight: bold;
+}
 body .account .right-account ul.saved-cards>li img {
     position: static;
     -webkit-transform: none;
@@ -109,5 +130,8 @@ body .account .right-account ul.saved-cards>li .number h3, body .account .right-
 body .account .right-account ul.saved-cards>li .details>ul li {
     width: 100% !important;
     padding-bottom: 10px;
+}
+body .account .right-account form label {
+    font-size: 12px;
 }
 }

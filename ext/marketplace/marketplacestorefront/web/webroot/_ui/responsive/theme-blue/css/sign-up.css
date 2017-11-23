@@ -1212,6 +1212,19 @@ body.template-pages-LoginPageTemplate .sign-in.tab-view .form-group #password_lo
     margin-top: -8px!important;
     margin-right: -8px!important;
 }
+/* Forgot password popup */
+#forgotPasswordSuccessPopup .content {
+    width: 35%;
+    padding: 40px;
+}
+#forgotPasswordSuccessPopup .content h1 {
+    font-size: 24px;
+    margin-bottom: 15px;
+}
+#forgotPasswordSuccessPopup .content div.forgotPasswordSuccessPopup-desc {
+    line-height: normal;
+    text-align: justify;
+}
 @media (min-width: 768px)
 {
 .sign-in.wrapper {

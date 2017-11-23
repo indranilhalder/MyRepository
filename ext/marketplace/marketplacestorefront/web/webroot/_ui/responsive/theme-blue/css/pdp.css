@@ -1310,7 +1310,7 @@ button.otherSellersFont {
     content: "";
     display: table
 }
-.product-info .product-content .swatch p {
+.product-info .product-content .color-swatch-container  p {
     margin-bottom: 5px;
     font-size: 14px;
     font-weight: bold;
@@ -7128,11 +7128,11 @@ span.Close{ position:absolute;right: 5px;    top: 5px; display:inline-block; col
 }
 
 .product-info>div.wishAddSucess,.product-info>div.wishRemoveSucess,div.wishAddSucessPlp,div.wishRemoveSucessPlp,div.wishAddSucessQV{
-	color:green;
+	color:green !important;
 
 }
 .product-info>div.wishAddLogin, .product-info>div.wishAlreadyAdded,div.wishAlreadyAddedPlp, div.wishAddLoginPlp,div.wishAddLoginQV, div.wishAlreadyAddedQV{
-	color: #a91f3d;
+	color: #a91f3d !important;
 }
 .wishAddSucess:before,.wishRemoveSucess:before,div.wishAddSucessPlp:before,div.wishRemoveSucessPlp:before,div.wishAddSucessQV:before{
 
@@ -12991,10 +12991,13 @@ p.sizetext.size {
     position: absolute;
    	right: -22px;
     text-align: center;
-    top: 2px;
+    top: -2px;
     width: 15px;
 }
 .sizetext a.size-guide {
     position: relative;
 }
 /* HOME-239 End */
+.click2chat-container.send-email-container label[for="forgotPassword_email"] {
+    margin-bottom: 10px;
+}

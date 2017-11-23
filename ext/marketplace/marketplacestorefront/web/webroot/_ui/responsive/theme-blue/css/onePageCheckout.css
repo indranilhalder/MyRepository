@@ -576,7 +576,15 @@ margin: 0;
     background-image: url(../images/select-arrow-new.png);
     background-position: 98%;
 }
-
+#emiRangeError,
+#codItemEligibilityMessage {
+    color: #ff1c47;
+    font-size: 12px;
+    line-height: 1.5;
+}
+.has-error .help-block, .has-error .radio, .has-error .checkbox, .has-error .radio-inline, .has-error .checkbox-inline, .has-error.help-block {
+    color: #ff1c47;
+}
 /*TISSTRT-1600*/
 .error-message#cvvError, .error-message#cvvErrorEmi, .error-message#cvvErrorDc {
     margin-left:32px;
@@ -5012,6 +5020,9 @@ margin-top: 0px !important;}
 }
 }
 @media (max-width: 767px){
+.checkTab .formaddress .heading-form {
+    padding: 0 !important;
+}
 .cart.wrapper.checkout-payment .left-block .payments.tab-view .tabs {
     display: block;
     width: 100%;

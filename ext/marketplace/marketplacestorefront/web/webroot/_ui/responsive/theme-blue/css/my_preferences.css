@@ -188,13 +188,26 @@ body .account.preferences .right-account div.email-pref form fieldset.feedback>p
 body .account.preferences .right-account div.email-pref form fieldset.feedback label:last-child {
     margin-bottom: 0;
 }
-
+@media (max-width: 400px){
+body .account.preferences .right-account div.email-pref form .button-set a, body .account.preferences .right-account div.email-pref form .button-set button {
+    font-size: 10px;
+}
+}
+@media (max-width: 650px){
+body .account.preferences .right-account div.email-pref form .button-set a {
+    margin-left: 16px;
+}
+}
 @media (min-width: 651px){}
 body .account.preferences .right-account div.email-pref form .button-set button, body .account.preferences .right-account div.email-pref form .button-set a {
     float: left;
 }
 }
-
+@media (max-width: 790px){
+body .account.preferences .right-account div.email-pref form .button-set a, body .account.preferences .right-account div.email-pref form .button-set button {
+    display: inline-block;
+}
+}
 @media (min-width: 791px){
 body .account .right-account::after {
     clear: both;

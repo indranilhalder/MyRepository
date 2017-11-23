@@ -207,6 +207,11 @@ input[type="radio"]+label:before, input[type="checkbox"]+label:before {
     font-weight: normal;
     color: #a9a9a9;
 }
+body .account .right-account ul.saved-cards>li a.make-default {
+    position: absolute;
+    top: 20px;
+    right: 10px;
+}
 body .account .right-account ul.saved-cards>li a.delete, body .account .right-account ul.saved-cards>li a.view-details, body .account .right-account ul.saved-cards>li a.make-default {
     position: relative;
     float: right;
@@ -217,11 +222,7 @@ body .account .right-account ul.saved-cards>li a.delete, body .account .right-ac
     letter-spacing: 1.2px;
     margin-bottom: 5px;
 }
-body .account .right-account ul.saved-cards>li a.make-default {
-    position: absolute;
-    top: 20px;
-    right: 10px;
-}
+
 body .account .right-account ul.saved-cards>li a.view-details, body .account .right-account ul.saved-cards>li a.make-default {
     color: #a9143c;
 }
@@ -258,7 +259,7 @@ body .account .right-account form.new-card .half:nth-of-type(odd), body .account
     float: right;
 }
 body .account .right-account ul.saved-cards>li a.make-default {
-    top: 5px;
+    top: 5px ! important;
 }
 }
 @media (max-width: 790px){

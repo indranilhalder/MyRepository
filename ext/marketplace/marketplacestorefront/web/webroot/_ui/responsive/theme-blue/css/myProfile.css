@@ -292,7 +292,7 @@ body .account .right-account .password form .half:nth-of-type(odd) {
 
 @media (max-width: 650px){
 body .account .right-account form label {
-    font-size: 12px ;
+    font-size: 12px ! important;
 }
 }
 

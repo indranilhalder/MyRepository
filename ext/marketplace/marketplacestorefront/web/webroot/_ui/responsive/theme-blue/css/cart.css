@@ -5791,3 +5791,6 @@ li.item>ul li:last-child {
     padding-bottom: 24px;
 } 
 /* TISCSXII-2240 END */
+.cart.wrapper .add-to-wishlist-popover-table tbody tr td input[type="radio"]+label {
+    padding-left: 18px !important;
+}

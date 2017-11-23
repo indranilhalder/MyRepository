@@ -1,74 +1,101 @@
 body .account .right-account .my-reviews h2 {
-    font-size: 24px;
-    padding: 10px 0 0 10px;
+	font-size: 24px;
+	padding: 10px 0 0 10px;
 }
+
 body .account .right-account .my-reviews .wrapper>p {
-    font-size: 12px;
-    padding-left: 10px;
-    margin-bottom: 20px;
-    font-weight: 500;
+	font-size: 12px;
+	padding-left: 10px;
+	margin-bottom: 20px;
+	font-weight: 500;
 }
+
 body .account .right-account p.noReview {
-    font-size: 14px;
-    padding: 0;
-    font-weight: 500;
-    color: #a9143c;
-    text-align: center;
-    margin: 10px 0;
+	font-size: 14px;
+	padding: 0;
+	font-weight: 500;
+	color: #a9143c;
+	text-align: center;
+	margin: 10px 0;
 }
+
 .reviews .toolbar {
-    background-color: #f0f4f5;
-    padding: 10px 0;
+	background-color: #f0f4f5;
+	padding: 10px 0;
 }
-body.page-reviews .account .my-reviews .wrapper, body.page-reviews .account .toolbar .wrapper {
-    margin-top: 0;
+
+body.page-reviews .account .my-reviews .wrapper, body.page-reviews .account .toolbar .wrapper
+	{
+	margin-top: 0;
 }
+
 body .account .right-account .reviews .toolbar .account-only {
-    display: block;
+	display: block;
 }
+
 body .account .right-account .reviews .toolbar .account-only {
-    display: block;
+	display: block;
 }
+
 body .account .right-account .reviews .toolbar .account-only h2 {
-    text-transform: capitalize;
+	text-transform: capitalize;
 }
+
 body .account .right-account .reviews .toolbar .wrapper::after {
-    clear: both;
-    content: "";
-    display: table;
+	clear: both;
+	content: "";
+	display: table;
 }
+
 body .account .right-account .reviews .toolbar .pagination {
-    float: right;
-    padding: 0 10px;
-    padding-left: 0;
-    line-height: 40px;
+	float: right;
+	padding: 0 10px;
+	padding-left: 0;
+	line-height: 40px;
 }
+
 .product-tile+.new-review:hover {
-    color: #a9143c !important;
-    text-decoration: underline !important;
+	color: #a9143c !important;
+	text-decoration: underline !important;
 }
+
 .product-tile+.new-review {
-    color: #a9143c !important;
-    text-align: left;
-    padding: 0;
-    margin-top: 10px;
+	color: #a9143c !important;
+	text-align: left;
+	padding: 0;
+	margin-top: 10px;
 }
+
 .product-tile+.new-review {
-    display: block;
-    font-size: 12px;
-    padding: 10px;
-    color: #a9143c;
-    text-decoration: underline;
+	display: block;
+	font-size: 12px;
+	padding: 10px;
+	color: #a9143c;
+	text-decoration: underline;
 }
+
 body .account .right-account .reviews h2 {
-    font-size: 18px;
-    padding: 10px 0 0 10px;
+	font-size: 18px;
+	padding: 10px 0 0 10px;
 }
+
 body .account .right-account .my-reviews {
-    border: 1px solid #f0f4f5;
-    margin-bottom: 20px;
-    text-align: left;
+	border: 1px solid #f0f4f5;
+	margin-bottom: 20px;
+	text-align: left;
 }
-body.page-reviews .account .my-reviews .wrapper, body.page-reviews .account .toolbar .wrapper {
-    margin-top: 0;
+
+body.page-reviews .account .my-reviews .wrapper, body.page-reviews .account .toolbar .wrapper
+	{
+	margin-top: 0;
+}
+
+.product-tile+.new-review {
+	color: #a9143c !important;
+	text-align: left;
+	padding: 0;
+	margin-top: 10px;
+	text-decoration: underline;
+	display: block;
+	font-size: 12px;
 }

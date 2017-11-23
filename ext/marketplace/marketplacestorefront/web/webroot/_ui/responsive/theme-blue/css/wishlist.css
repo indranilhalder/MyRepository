@@ -558,14 +558,41 @@ div.wishlist-content .pagination a.active {
     transition: opacity .25s,top .45s;
     width: 300px;
 }
-
+.pagination .next:after {
+    content: "";
+    display: inline-block;
+    height: 0;
+    width: 0;
+    margin-left: 5px;
+    border-bottom: 5px solid transparent;
+    border-left: 5px solid #000;
+    border-top: 5px solid transparent;
+    -webkit-transition: border .3s;
+    -moz-transition: border .3s;
+    transition: border .3s;
+}
+.wishlistPagination ul.pagination li.next {
+    float: right;
+    border: 0;
+}
+.wishlistPagination ul.pagination li {
+    margin: 0 2px;
+}
+.wishlistPagination ul.pagination li.wishlistPageNo.currentPage {
+    border-bottom: 1px solid #000;
+}
+.wishlistPagination ul.pagination li {
+    margin: 0 2px;
+}
+.pagination li {
+    display: inline-block;
+}
 @media ( min-width : 640px) {
 	.modal-dialog {
 		width: 600px;
 		margin: 30px auto;
 	}
 }
-
 @media ( min-width : 651px) {
 	div.wishlist-nav {
 		width: 25%;
@@ -599,4 +626,36 @@ div.wishlist-content .pagination a.active {
 	.wishlist-content .products>ul>li>form button[type="submit"] {
 		min-width: 170px;
 	}
+}
+.product-info>div.wishAddLogin.active, .product-info>div.wishAddSucess.active, .product-info>div.wishAddLogin.active, .product-info>div.wishRemoveSucess.active, .product-info>div.wishAlreadyAdded.active, div.wishAlreadyAddedPlp.active, div.wishRemoveSucessPlp.active, div.wishAddLoginPlp.active, div.wishAddSucessPlp.active, div.wishAddSucessQV.active, div.wishRemoveSucessQV.active, div.wishAddLoginQV.active, div.wishAlreadyAddedQV.active {
+    opacity: 1;
+    top: 90px;
+}
+.wishAddSucess:before, .wishRemoveSucess:before, div.wishAddSucessPlp:before, div.wishRemoveSucessPlp:before, div.wishAddSucessQV:before, div.wishRemoveSucessQV:before {
+    content: "";
+    width: 9px;
+    height: 14px;
+    position: absolute;
+    border-bottom: 2px solid;
+    border-right: 2px solid;
+    border-color: #fff;
+    background: transparent;
+    top: 0;
+    bottom: 5px;
+    transform: rotate(45deg);
+    z-index: 1;
+    left: 24px;
+    margin: auto;
+}
+.wishAddSucess:after, .wishRemoveSucess:after, div.wishAddSucessPlp:after, div.wishRemoveSucessPlp:after, div.wishAddSucessQV:after, div.wishRemoveSucessQV:after {
+    width: 30px;
+    height: 30px;
+    content: "";
+    border-radius: 100%;
+    background: green;
+    position: absolute;
+    top: 0;
+    left: 14px;
+    bottom: 0;
+    margin: auto;
 }
