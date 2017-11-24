@@ -3297,30 +3297,6 @@
 							optional="false" removable="false" initial="true" private="false"
 							partof="false" />
 					</attribute>
-					<!-- CAR-347 -->
-					<attribute type="java.lang.String" qualifier="transactionStatusDetails"
-						autocreate="true" >
-						<persistence type="property">
-							<columntype database="oracle">
-								<value>varchar2(2000)</value>
-							</columntype>
-							<columntype database="mysql">
-								<value>text</value>
-							</columntype>
-							<columntype database="sqlserver">
-								<value>nvarchar(max)</value>
-							</columntype>
-							<columntype database="hsqldb">
-								<value>LONGVARCHAR</value>
-							</columntype>
-							<columntype>
-								<value>varchar</value>
-							</columntype>
-
-						</persistence>
-						<modifiers read="true" write="true" search="true"
-							optional="true" />
-					</attribute>
 				</attributes>
 				
 			</itemtype>
