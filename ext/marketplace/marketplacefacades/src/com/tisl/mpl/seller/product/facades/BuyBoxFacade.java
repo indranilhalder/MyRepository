@@ -24,13 +24,15 @@ public interface BuyBoxFacade
 {
 	public BuyBoxData buyboxPrice(String ProductCode) throws EtailNonBusinessExceptions;
 
-//CKD:TPR-250 Start
+	//CKD:TPR-250 Start
 	//Added channel for TISPRD-8944
-	public Map<String, Object> buyboxPricePDP(String ProductCode, String bBoxSellerId, String Channel) throws EtailNonBusinessExceptions;
+	public Map<String, Object> buyboxPricePDP(String ProductCode, String bBoxSellerId, String Channel)
+			throws EtailNonBusinessExceptions;
 
 	//CKD: TPR-3809
 	//public List<SellerInformationData> getsellersDetails(String productCode) throws EtailNonBusinessExceptions;
-	public List<SellerInformationData> getsellersDetails(String productCode, String productCatType) throws EtailNonBusinessExceptions;
+	public List<SellerInformationData> getsellersDetails(String productCode, String productCatType)
+			throws EtailNonBusinessExceptions;
 
 	/**
 	 * @param productModel
@@ -47,13 +49,22 @@ public interface BuyBoxFacade
 
 	//TPR-3736
 	public Map<String, List<Double>> getBuyBoxDataForUssids(final String ussidList) throws EtailNonBusinessExceptions;
-	
+
 	//CKD:TPR-3809
 	/**
 	 * @param selectedUSSID
 	 * @return
 	 */
 	public String findPussid(String selectedUSSID);
+
+	/**
+	 * This Method is for Seller Monogramming Message Changes
+	 *
+	 * @param sellerId
+	 * @param productCode
+	 * @return String
+	 */
+	public String getSellerMonogrammingMsg(String productCode, String sellerId);
 
 
 }

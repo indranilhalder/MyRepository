@@ -29,6 +29,7 @@ public class AgentIdForStoreImpl implements AgentIdForStore
 	public String getAgentIdForStore(final String agentGroup)
 	{
 		String agentID = StringUtils.EMPTY;
+		String sellerIdorLoginId = StringUtils.EMPTY;
 		final JaloSession jSession = JaloSession.getCurrentSession();
 		if (jSession != null)
 		{
@@ -36,6 +37,14 @@ public class AgentIdForStoreImpl implements AgentIdForStore
 		}
 		if (StringUtils.isNotEmpty(agentID))
 		{
+			if (agentID.contains("-"))
+			{
+				sellerIdorLoginId = agentID.split("-")[0];
+			}
+			else
+			{
+				sellerIdorLoginId = agentID;
+			}
 			final UserModel user = userService.getUserForUID(agentID);
 			final Set<PrincipalGroupModel> userGroups = user.getAllGroups();
 
@@ -43,7 +52,7 @@ public class AgentIdForStoreImpl implements AgentIdForStore
 			{
 				if (ug != null && ug.getUid().equalsIgnoreCase(agentGroup))
 				{
-					return agentID;
+					return sellerIdorLoginId;
 				}
 			}
 		}

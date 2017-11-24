@@ -99,7 +99,7 @@ if(loginStatus){
 
 <c:if test="${isMSDEnabled}">
 	<c:choose>
-	<c:when test="${product.rootCategory=='Clothing'}">
+	<c:when test="${product.rootCategory=='Clothing' && product.rootCategory=='HomeFurnishing'}">
 	<c:set var="MSDRESTURL" scope="request" value="${msdRESTURL}"/>
 	<c:forEach items="${product.categories}" var="categoryForMSD">
 			<c:if test="${fn:startsWith(categoryForMSD.code, 'MSH')}">

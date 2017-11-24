@@ -310,4 +310,13 @@ public class MarketplacecclientservicesConstants
 	public static final String BULK_SMS_SERVICE_ENABLED = "marketplace.BulkSms.service.enabled";
 	public static final String BULK_SMS_SERVICE_URL = "marketplace.bulksms.service.url";
 
+	public static final String KIDSWEAR = "Kidswear";
+	public static final String HOMEFURNISHING = "HomeFurnishing";
+
+	//MSD
+	public static final String MSD_CONNECTION_TIMEOUT = "msd.connection.timeout";
+	public static final String MSD_READ_TIMEOUT = "msd.read.timeout";
+	public static final String MSD_HTTP_ERRORCODE = "msd.http.errorcode";
+	public static final String MSD_WIDGET_URL = "msd.widget.url";
+
 }
