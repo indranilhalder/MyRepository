@@ -207,6 +207,11 @@ body .account.preferences .right-account div.email-pref form fieldset.feedback l
     border: 0 !important;
 }
 @media (max-width: 400px){
+body .account.preferences .right-account div.email-pref form .button-set button {
+    min-width: 120px;
+}
+}
+@media (max-width: 400px){
 body .account.preferences .right-account div.email-pref form .button-set a, body .account.preferences .right-account div.email-pref form .button-set button {
     font-size: 10px;
 }
@@ -224,6 +229,9 @@ body .account.preferences .right-account div.email-pref form .button-set button,
 @media (max-width: 790px){
 body .account.preferences .right-account div.email-pref form .button-set a, body .account.preferences .right-account div.email-pref form .button-set button {
     display: inline-block;
+}
+.button-set {
+    margin-top: 55px;
 }
 }
 @media (min-width: 791px){

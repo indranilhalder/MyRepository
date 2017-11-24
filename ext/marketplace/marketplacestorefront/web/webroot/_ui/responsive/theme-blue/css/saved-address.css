@@ -244,6 +244,11 @@ body .account .right-account .mpl-addressPopup.modal .confirm-deletionButton {
     line-height: 40px;
     padding: 0;
 }
+body .account .right-account ul.saved-cards>li a.make-default {
+    position: absolute !important;
+    top: 20px !important;
+    right: 10px !important;
+}
 @media (max-width: 650px){
 #stateListDropDown {
     margin-top: 10px;

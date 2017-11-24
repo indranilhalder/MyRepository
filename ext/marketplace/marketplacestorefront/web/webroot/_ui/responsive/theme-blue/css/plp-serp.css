@@ -1807,7 +1807,10 @@ li.price .discount-off {
 	border-radius: 0 !important;
 	/* border: 1px solid #fff !important; */
 }
-
+.product-facet .filter-colour:not(.selected-multi-colour) input[value='Multi_multi']+input.js-facet-colourbutton {
+    background: url(../images/Sprite-combined.png) no-repeat scroll -6px -114px !important;
+    background-size: 85px 220px !important;
+}
 .product-facet .filter-strapcolor input.js-facet-colourbutton {
 	margin-left: 0;
 	margin-right: 0;
@@ -4059,12 +4062,6 @@ body.page-productGrid .facet-list.filter-opt {
 		width: 100%;
 		padding: 15px 0 20px;
 	}
-	.searchSpellingSuggestionPrompt {
-		position: absolute;
-		top: 28px;
-		left: 0;
-		right: 0;
-	}
 	.listing.wrapper .right-block .listing-menu {
 		padding: 0;
 	}
@@ -5072,20 +5069,22 @@ select:focus {
 .listing-leftmenu .search input {
 	padding: 8px 5px !important;
 }
-
 }
 /* Search text result */
+@media (min-width: 791px){
+.searchSpellingSuggestionPrompt {
+    left: -12%;
+}
+}
 .searchSpellingSuggestionPrompt {
 	margin: 20px 0;
 	text-align: center;
 	font-size: 18px;
 	position: relative;
 }
-
 .searchSpellingSuggestionPrompt .quote {
 	color: #a9143c;
 }
-
 .searchSpellingSuggestionPrompt a {
 	color: #a9143c;
 	text-transform: uppercase;

@@ -3475,3 +3475,106 @@ margin-top:30px;
     -webkit-transform: rotate(-225deg);
 }
 /*UF-466 end*/
+/* Shop By brand */
+.brands-left {
+    line-height: 40px;
+    vertical-align: middle;
+    width: 30%;
+    float: left;
+    padding-left: 50px;
+}
+.brands-left h2 {
+    text-transform: capitalize;
+    font-size: 14px;
+    font-weight: 700;
+    letter-spacing: 1px;
+}
+.brands-left .menu-select, .cmsBrands .menu-select, .cmsMultiBrands .menu-select {
+    display: none;
+}
+.brands-left ul li {
+    font-size: 14px;
+    font-weight: 500;
+}
+.brands-left ul li a {
+    border-bottom: 1px solid transparent;
+}
+#ToBeHidden {
+    display: none;
+}
+.brands-main h1, .cmsBrands h1, .cmsMultiBrands h1 {
+    font-size: 22px;
+    font-weight: 500;
+    margin: 30px 0 10px 0;
+    position: relative;
+    color: #000;
+    font-family: inherit;
+}
+.brands-main p, .cmsBrands p, .cmsMultiBrands p {
+    line-height: 20px;
+    margin-bottom: 30px;
+}
+.brands-main ul, .cmsBrands ul, .cmsMultiBrands ul {
+    display: inline-block;
+    width: 100%;
+}
+.brands-main ul li, .cmsBrands ul li, .cmsMultiBrands ul li {
+    position: relative;
+    width: 25%;
+    padding-left: 60px;
+    line-height: 20px;
+    padding-bottom: 50px;
+    display: inline-block;
+    margin-left: -3px;
+    vertical-align: top;
+}
+.list_custom li:first-child:before, .list_custom li.no-separator:before {
+    content: "";
+    display: inline-block;
+    position: absolute;
+    height: 1px;
+    background-color: #fff;
+    width: 500%;
+    left: 0;
+    top: -30px;
+    z-index: 1;
+}
+.list_custom li:before {
+    content: "";
+    display: inline-block;
+    position: absolute;
+    height: 1px;
+    background-color: #f0f4f5;
+    width: 400%;
+    left: 0;
+    top: -30px;
+}
+.brands-main ul .letter, .cmsBrands ul .letter, .cmsMultiBrands ul .letter {
+    position: absolute;
+    top: 3px;
+    left: 0;
+    padding-left: 0;
+    font-size: 32px;
+    line-height: 32px;
+}
+.brands-main ul li a, .cmsBrands ul li a, .cmsMultiBrands ul li a {
+    display: block;
+    text-transform: capitalize;
+}
+.brands-left .menu-select, .cmsBrands .menu-select, .cmsMultiBrands .menu-select {
+    display: none;
+}
+.brands-page {
+    margin: 0 auto;
+    position: relative;
+    max-width: 1300px;
+    padding: 0 10px;
+    width: 100%;
+    overflow: hidden;
+    clear: both;
+}
+@media (min-width: 791px){
+.brands-page ul .desktop ul.list_custom li {
+    display: inline-block !important;
+}
+}

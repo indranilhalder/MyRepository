@@ -1,5 +1,6 @@
 body.page-wishlist .body-Content .wrapper {
 	padding: 0 30px;
+	margin-top: 5px;
 }
 
 body.wishlist header+.wrapper {
@@ -658,4 +659,12 @@ div.wishlist-content .pagination a.active {
     left: 14px;
     bottom: 0;
     margin: auto;
+}
+#deleteConfirmation .modal-title b, #removeProductConfirmation .modal-title b {
+    font-weight: 500;
+}
+#deleteConfirmation .modal-title, #removeProductConfirmation .modal-title {
+    font-size: 24px;
+    margin-bottom: 15px;
+    line-height: 24px;
 }
