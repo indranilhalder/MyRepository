@@ -4,10 +4,14 @@
 package com.tisl.mpl.marketplacecommerceservices.daos;
 
 import de.hybris.platform.core.model.order.OrderModel;
+import de.hybris.platform.jalo.order.AbstractOrderEntry;
 
 import java.util.Date;
 import java.util.List;
 
+import com.tisl.mpl.core.model.JuspayOrderStatusModel;
+import com.tisl.mpl.core.model.MplPaymentAuditModel;
+import com.tisl.mpl.core.model.RefundTransactionMappingModel;
 import com.tisl.mpl.model.MplConfigurationModel;
 
 
@@ -25,6 +29,25 @@ public interface RefundClearPerformableDao
 	 * @return
 	 */
 	List<OrderModel> getRefundClearOrders(Date refundClearTAT);
+
+	/**
+	 * @param guid
+	 */
+	List<MplPaymentAuditModel> fetchAuditDataList(String guid);
+
+
+	List<JuspayOrderStatusModel> fetchWebhookTableStatus(String reqId);
+
+	/**
+	 * @param juspayReqiestID
+	 * @return
+	 */
+	List<RefundTransactionMappingModel> fetchRefundTransactionMapping(String juspayReqiestID);
+
+	/**
+	 * @param orderEntry
+	 */
+	RefundTransactionMappingModel fetchRefundTransactionByEntry(AbstractOrderEntry orderEntry);
 
 
 }

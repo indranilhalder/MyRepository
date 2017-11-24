@@ -2303,4 +2303,8 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 			.intern();
 	public static final String ORDERSTATUSONE = "statusOne".intern();
 	public static final String ORDERSTATUSTWO = "statusTwo".intern();
+	public static final String REFUNDCLEARWEBHHOKQUERY = "select {js.pk} from {JuspayWebhook as jw}, {JuspayOrderStatus as js} where {jw.orderstatus}={js.pk} and {js.orderId}=?reqId order by {js.creationtime} desc"
+			.intern();
+
+	public static final String REFUNDEVENTSTAUSJUSPAY = "webhook.refund.eventname";
 }

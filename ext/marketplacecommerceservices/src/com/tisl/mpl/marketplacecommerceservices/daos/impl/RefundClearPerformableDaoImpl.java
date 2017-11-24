@@ -5,6 +5,7 @@ package com.tisl.mpl.marketplacecommerceservices.daos.impl;
 
 import de.hybris.platform.core.enums.OrderStatus;
 import de.hybris.platform.core.model.order.OrderModel;
+import de.hybris.platform.jalo.order.AbstractOrderEntry;
 import de.hybris.platform.servicelayer.search.FlexibleSearchQuery;
 import de.hybris.platform.servicelayer.search.FlexibleSearchService;
 
@@ -15,6 +16,9 @@ import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
+import com.tisl.mpl.core.model.JuspayOrderStatusModel;
+import com.tisl.mpl.core.model.MplPaymentAuditModel;
+import com.tisl.mpl.core.model.RefundTransactionMappingModel;
 import com.tisl.mpl.marketplacecommerceservices.daos.RefundClearPerformableDao;
 import com.tisl.mpl.model.MplConfigurationModel;
 
@@ -74,6 +78,73 @@ public class RefundClearPerformableDaoImpl implements RefundClearPerformableDao
 
 		return orderList;
 	}
+
+
+
+	public List<MplPaymentAuditModel> fetchAuditDataList(final String guid)
+	{
+		final String queryString = //
+		"SELECT {p:" + MplPaymentAuditModel.PK
+				+ "} "//
+				+ MarketplacecommerceservicesConstants.QUERYFROM + MplPaymentAuditModel._TYPECODE + " AS p} where" + "{p."
+				+ MplPaymentAuditModel.CARTGUID + "} = ?guid";
+		final FlexibleSearchQuery query = new FlexibleSearchQuery(queryString);
+		query.addQueryParameter("guid", guid);
+		return getFlexibleSearchService().<MplPaymentAuditModel> search(query).getResult();
+
+	}
+
+
+	@Override
+	public List<JuspayOrderStatusModel> fetchWebhookTableStatus(final String reqId)
+	{
+
+		final String queryString = MarketplacecommerceservicesConstants.REFUNDCLEARWEBHHOKQUERY;
+
+		//forming the flexible search query
+		final FlexibleSearchQuery hookListQuery = new FlexibleSearchQuery(queryString);
+		hookListQuery.addQueryParameter(MarketplacecommerceservicesConstants.WEBHOOKREQSTATUS, reqId);
+
+		final List<JuspayOrderStatusModel> hookList = flexibleSearchService.<JuspayOrderStatusModel> search(hookListQuery)
+				.getResult();
+
+		return hookList;
+
+	}
+
+
+
+
+	@Override
+	public List<RefundTransactionMappingModel> fetchRefundTransactionMapping(final String juspayRefundId)
+	{
+		final String queryString = //
+		"SELECT {rtm:" + RefundTransactionMappingModel.PK
+				+ "} "//
+				+ MarketplacecommerceservicesConstants.QUERYFROM + RefundTransactionMappingModel._TYPECODE + " AS rtm} where"
+				+ "{rtm." + RefundTransactionMappingModel.JUSPAYREFUNDID + "} = ?juspayRefundId";
+		final FlexibleSearchQuery query = new FlexibleSearchQuery(queryString);
+		query.addQueryParameter("juspayRefundId", juspayRefundId);
+		return getFlexibleSearchService().<RefundTransactionMappingModel> search(query).getResult();
+	}
+
+
+
+	@Override
+	public RefundTransactionMappingModel fetchRefundTransactionByEntry(final AbstractOrderEntry orderEntry)
+	{
+		final String queryString = //
+		"SELECT {rtm:" + RefundTransactionMappingModel.PK
+				+ "} "//
+				+ MarketplacecommerceservicesConstants.QUERYFROM + RefundTransactionMappingModel._TYPECODE + " AS rtm} where"
+				+ "{rtm." + RefundTransactionMappingModel.REFUNDEDORDERENTRY + "} = ?orderEntry";
+		final FlexibleSearchQuery query = new FlexibleSearchQuery(queryString);
+		query.addQueryParameter("orderEntry", orderEntry.getPK());
+
+		return getFlexibleSearchService().<RefundTransactionMappingModel> searchUnique(query);
+
+	}
+
 
 	/**
 	 * @return the flexibleSearchService
