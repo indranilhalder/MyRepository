@@ -368,25 +368,25 @@
 														           <span class="visa card_image payment-failed-card-image"><img src="${commonResourcePath}/images/Visa.png" alt=""></span>
 														           </c:when> 
 														           	<c:when test="${fn:containsIgnoreCase(map.value.cardBrand, 'master')}">
-														           <span class="visa card_image"><img src="${commonResourcePath}/images/Master_Card.png" alt=""></span>
+														           <span class="visa card_image payment-failed-card-image"><img src="${commonResourcePath}/images/Master_Card.png" alt=""></span>
 														           </c:when>
 														           <c:when test="${fn:containsIgnoreCase(map.value.cardBrand, 'maestro')}">
-														           <span class="visa card_image"><img src="${commonResourcePath}/images/Maestro.png" alt=""></span>
+														           <span class="visa card_image payment-failed-card-image"><img src="${commonResourcePath}/images/Maestro.png" alt=""></span>
 														           </c:when>
 														           <c:when test="${fn:containsIgnoreCase(map.value.cardBrand, 'amex')}">
-														           <span class="visa card_image"><img src="${commonResourcePath}/images/American_Express.png" alt=""></span>
+														           <span class="visa card_image payment-failed-card-image"><img src="${commonResourcePath}/images/American_Express.png" alt=""></span>
 														           </c:when>
 														           <c:when test="${fn:containsIgnoreCase(map.value.cardBrand, 'diners')}">
-														           <span class="visa card_image"><img src="${commonResourcePath}/images/dinner_club.png" alt=""></span>
+														           <span class="visa card_image payment-failed-card-image"><img src="${commonResourcePath}/images/dinner_club.png" alt=""></span>
 														           </c:when>
 														            <c:when test="${fn:containsIgnoreCase(map.value.cardBrand, 'discover')}">
-														           <span class="visa card_image"><img src="${commonResourcePath}/images/Discover.png" alt=""></span>
+														           <span class="visa card_image payment-failed-card-image"><img src="${commonResourcePath}/images/Discover.png" alt=""></span>
 														           </c:when>
 														           <c:when test="${fn:containsIgnoreCase(map.value.cardBrand, 'jcb')}">
-														           <span class="visa card_image"><img src="${commonResourcePath}/images/JCB.png" alt=""></span>
+														           <span class="visa card_image payment-failed-card-image"><img src="${commonResourcePath}/images/JCB.png" alt=""></span>
 														           </c:when>
 														           <c:otherwise>
-																	<span class="visa card_image"><img src="${commonResourcePath}/images/Visa.png" alt=""></span>
+																	<span class="visa card_image payment-failed-card-image"><img src="${commonResourcePath}/images/Visa.png" alt=""></span>
 																	</c:otherwise>   
 														        </c:choose>
 														        <!-- change for TISUAT-6057 -->		
@@ -694,25 +694,25 @@
 														           <span class="visa card_image payment-failed-card-image"><img src="${commonResourcePath}/images/Visa.png" alt=""></span>
 														           </c:when> 
 														           	<c:when test="${fn:containsIgnoreCase(map.value.cardBrand, 'master')}">
-														           <span class="visa card_image"><img src="${commonResourcePath}/images/Master_Card.png" alt=""></span>
+														           <span class="visa card_image payment-failed-card-image"><img src="${commonResourcePath}/images/Master_Card.png" alt=""></span>
 														           </c:when>
 														           <c:when test="${fn:containsIgnoreCase(map.value.cardBrand, 'maestro')}">
-														           <span class="visa card_image"><img src="${commonResourcePath}/images/Maestro.png" alt=""></span>
+														           <span class="visa card_image payment-failed-card-image"><img src="${commonResourcePath}/images/Maestro.png" alt=""></span>
 														           </c:when>
 														           <c:when test="${fn:containsIgnoreCase(map.value.cardBrand, 'amex')}">
-														           <span class="visa card_image"><img src="${commonResourcePath}/images/American_Express.png" alt=""></span>
+														           <span class="visa card_image payment-failed-card-image"><img src="${commonResourcePath}/images/American_Express.png" alt=""></span>
 														           </c:when>
 														           <c:when test="${fn:containsIgnoreCase(map.value.cardBrand, 'diners')}">
-														           <span class="visa card_image"><img src="${commonResourcePath}/images/dinner_club.png" alt=""></span>
+														           <span class="visa card_image payment-failed-card-image"><img src="${commonResourcePath}/images/dinner_club.png" alt=""></span>
 														           </c:when>
 														            <c:when test="${fn:containsIgnoreCase(map.value.cardBrand, 'discover')}">
-														           <span class="visa card_image"><img src="${commonResourcePath}/images/Discover.png" alt=""></span>
+														           <span class="visa card_image payment-failed-card-image"><img src="${commonResourcePath}/images/Discover.png" alt=""></span>
 														           </c:when>
 														           <c:when test="${fn:containsIgnoreCase(map.value.cardBrand, 'jcb')}">
-														           <span class="visa card_image"><img src="${commonResourcePath}/images/JCB.png" alt=""></span>
+														           <span class="visa card_image payment-failed-card-image"><img src="${commonResourcePath}/images/JCB.png" alt=""></span>
 														           </c:when>
 														           <c:otherwise>
-																	<span class="visa card_image"><img src="${commonResourcePath}/images/Visa.png" alt=""></span>
+																	<span class="visa card_image payment-failed-card-image"><img src="${commonResourcePath}/images/Visa.png" alt=""></span>
 																	</c:otherwise>   
 														        </c:choose>															 
 				        							
