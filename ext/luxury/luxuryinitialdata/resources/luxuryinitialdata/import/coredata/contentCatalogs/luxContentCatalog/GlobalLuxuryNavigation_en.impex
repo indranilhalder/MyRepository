@@ -1,0 +1,132 @@
+
+#
+# Import the CMS content for the site emails
+#
+$storePrefix=lux
+$contentCatalog=$storePrefixContentCatalog
+$contentCV=catalogVersion(CatalogVersion.catalog(Catalog.id[default=$contentCatalog]),CatalogVersion.version[default=Staged])[default=$contentCatalog:Staged]
+$emailResource=jar:com.tisl.lux.setup.InitialDataSystemSetup&/luxuryinitialdata/import/coredata/contentCatalogs/$contentCatalog/emails
+$picture=media(code, $contentCV);
+$siteResource=jar:com.tisl.lux.setup.InitialDataSystemSetup&/luxuryinitialdata/import/contentCatalogs/$contentCatalog
+# Language
+$lang=en
+# Import config properties into impex macros
+UPDATE GenericItem[processor=de.hybris.platform.commerceservices.impex.impl.ConfigPropertyImportProcessor];pk[unique=true]
+
+
+UPDATE CMSLinkComponent;$contentCV[unique=true];uid[unique=true];linkName[lang=$lang]           
+;;TopsLinkWomen;"Tops"                  
+;;Tops&T-shirtsLink;"Tops&T-shirts"                  
+;;JeansLink;"Jeans"                  
+;;DressesLink;"Dresses"   						 
+;;SatchelsLink;"Satchels"
+;;ToteBagsLink;"ToteBags"
+;;Hobo&ShoulderBagsLink;"Hobo&ShoulderBags"
+;;CrossbodyBagsLink;"CrossbodyBags"
+;;WalletsLink;"Wallets"
+;;EveningBagsLink;"EveningBags"
+;;Cases&pouchesLink;"Cases&pouches"
+;;BackPacksLink;"BackPacks"
+;;VanityBagsLink;"VanityBags"												   
+;;FlatsLink;"Flats"
+;;Loafers&MoccasinsLink;"Loafers&Moccasins"
+;;SneakersLink;"Sneakers"											   
+;;BeltsLink;"Belts"
+
+
+
+UPDATE CMSNavigationNode;$contentCV[unique=true];uid[unique=true];title[lang=$lang]              
+;;WomenNavNodeNewArrivalsGlobalLuxe;"Women" 
+;;MenNavNodeNewArrivalsGlobalLuxe;"Men"
+;;WomenNavNodeNewArrivalsIndieLuxe;"Women"
+;;MenNavNodeNewArrivalsIndieLuxe;"Men"
+;;WomenNavNodeNewArrivalsGifting;"Women"
+;;MenNavNodeNewArrivalsGifting;"Men"
+						 
+
+
+
+# CMS Navigation Nodes
+UPDATE CMSLinkComponent;$contentCV[unique=true];uid[unique=true];linkName[lang=$lang]           
+;;HandBagsLinkNewArrivalsWomen;"HandBags"
+;;WalletsLinkNewArrivalsWomen;"Wallets"
+;;ClothingLinkNewArrivalsWomen;"Clothing"
+;;ShoesLinkNewArrivalsWomen;"Shoes"						 						   
+;;SpringSummer17LinkShoesLinkNewArrivalsWomen;"SpringSummer 17"												   
+;;ClothingLinkNewArrivalsMen;"Clothing"
+;;BagsLinkNewArrivalsMen;"Bags"
+;;WalletsLinkNewArrivalsMen;"Wallets"
+;;AccessoriesLinkNewArrivalsMen;"Accessories"
+;;ShoesLinkNewArrivalsMen;"Shoes"												   
+;;SpringSummer17LinkNewArrivalsMen;"SpringSummer 17"
+
+
+UPDATE CMSNavigationNode;$contentCV[unique=true];uid[unique=true];title[lang=$lang]              
+;;ClothingNavNodeWomenGlobalLuxe;"Clothing" 
+;;BagsNavNodeWomenGlobalLuxe;"Bags"
+;;ShoesNavNodeWomenGlobalLuxe;"Shoes"                  
+;;AccessoriesNavNodeWomenGlobalLuxe;"Accessories" 
+;;ClothingNavNodeWomenIndieLuxe;"Clothing" 
+;;BagsNavNodeWomenIndieLuxe;"Bags"
+;;ShoesNavNodeWomenIndieLuxe;"Shoes"                  
+;;AccessoriesNavNodeWomenIndieLuxe;"Accessories" 
+;;ClothingNavNodeWomenGifting;"Clothing" 
+;;BagsNavNodeWomenGifting;"Bags"
+;;ShoesNavNodeWomenGifting;"Shoes"                  
+;;AccessoriesNavNodeWomenGifting;"Accessories" 
+
+
+
+# CMS Navigation Nodes
+UPDATE CMSLinkComponent  ; $contentCV[unique=true] ; uid[unique=true]             ; linkName[lang=$lang]
+					     ;                         ; MensGroomingCategoryLink     ; "MensGrooming"
+						 ;                         ; EditorsPicksCategoryLink     ; "EditorsPicks"
+                         ;                         ; TopsLink                     ; "Tops"                  
+                         ;                         ; DressShoesLink               ; "Blazers&Vests"                  
+                         ;                         ; BottomsLink                  ; "Bottoms"                  
+                         ;                         ; OuterwearLink                ; "Outerwear "                 
+                         ;                         ; ActivewearLink               ; "Activewear"                   
+                         ;                         ; Socks&UnderwearLink          ; "Socks&Underwear"                   
+                         ;                         ; Sleep&LoungewearLink         ; "Sleep&Loungewear"                   
+                         ;                         ; SwimwearLink                 ; "Swimwear"                   
+                         ;                         ; Bundles&SetsLink             ; "Bundles&Sets"
+                         ;                         ; BootsLink                    ; "Boots"                  
+                         ;                         ; Blazers&VestsLink            ; "Blazers&Vests"                  
+                         ;                         ; Loafers&Slip-onsLink         ; "Loafers&Slip-ons"                  
+                         ;                         ; SandalsLink                  ; "Sandals "                 
+                         ;                         ; SneakersLink                 ; "Sneakers" 			 
+                         ;                         ; GlovesLink                  ; "Gloves"                   
+                         ;                         ; HatsLink                    ; "Hats"                   
+                         ;                         ; OpticalLink                 ; "Optical"                   
+                         ;                         ; SunglassesLink              ; "Sunglasses"                  
+                         ;                         ; ColeHaanLink                 ; "ColeHaan"                  
+                         ;                         ; FrenchConnectionLink         ; "FrenchConnection"                  
+                         ;                         ; LacosteLink                  ; "Lacoste "                 
+                         ;                         ; MichaelKorsLink              ; "MichaelKors" 
+						 ;						   ; NewBalanceLink               ; "NewBalance"
+                         ;                         ; ReasonClothingLink           ; "ReasonClothing"
+
+
+
+
+
+
+UPDATE CMSNavigationNode ; $contentCV[unique=true] ; uid[unique=true]                      ; title[lang=$lang]              
+                         ;                         ; ClothingNavNodeGlobalLuxe             ; "Clothing"                  
+                         ;                         ; ShoesNavNodeGlobalLuxe           	   ; "Shoes"                  
+                         ;                         ; AccessoriesNavNodeGlobalLuxe          ; "Accessories"                  
+                         ;                         ; MensGroomingNavNodeGlobalLuxe         ; "MensGrooming"                 
+                         ;                         ; EditorsPicksNavNodeGlobalLuxe         ; "EditorsPicks"                   
+                         ;                         ; PopularBrandsNavNodeGlobalLuxe        ; "PopularBrands"   
+                         ;                         ; ClothingNavNodeIndieLuxe              ; "Clothing"                  
+                         ;                         ; ShoesNavNodeIndieLuxe           	   ; "Shoes"                  
+                         ;                         ; AccessoriesNavNodeIndieLuxe           ; "Accessories"                  
+                         ;                         ; MensGroomingNavNodeIndieLuxe          ; "MensGrooming"                 
+                         ;                         ; EditorsPicksNavNodeIndieLuxe          ; "EditorsPicks"                   
+                         ;                         ; PopularBrandsNavNodeIndieLuxe         ; "PopularBrands" 
+                         ;                         ; ClothingNavNodeGifting                ; "Clothing"                  
+                         ;                         ; ShoesNavNodeGifting           	       ; "Shoes"                  
+                         ;                         ; AccessoriesNavNodeGifting             ; "Accessories"                  
+                         ;                         ; MensGroomingNavNodeGifting            ; "MensGrooming"                 
+                         ;                         ; EditorsPicksNavNodeGifting            ; "EditorsPicks"                   
+                         ;                         ; PopularBrandsNavNodeGifting           ; "PopularBrands" 	

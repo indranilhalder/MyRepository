@@ -78,14 +78,14 @@
 	top: 0;
 	width: 100%;
 	z-index: 999;
-	height: 107px;
-	@include media-breakpoint-up(md) {
+	/*height: 107px;*/
+	/*@include media-breakpoint-up(md) {
 		height: 149px;
-	}
+	}*/
     
-    .inner .header-left {
+   /* .inner .header-left {
         display: none
-    }
+    }*/
     
     @include media-breakpoint-down(sm) {           
         #createNewList{
@@ -179,6 +179,9 @@
         }
 	}
 	.main-nav {
+        padding-top: 5px;
+        padding-bottom: 20px;
+        
 		@include media-breakpoint-down(sm) {
 			margin-top: 14px;
 			position: fixed;
@@ -194,10 +197,10 @@
 			overflow-y: auto;
 		}
 
-		@include media-breakpoint-up(md) {
+		/*@include media-breakpoint-up(md) {
 			display: block;
 			margin-top: 66px;
-		}
+		}*/
 
 		ul {
 			list-style: none;
@@ -257,6 +260,12 @@
 				a {
 					text-decoration: none;
 					display: block;
+                    font-size: 18px;
+                    color: #818181;
+                    
+                    &.active{
+                        color: #333;
+                    }
 				}
 			}
 
@@ -323,17 +332,43 @@
 						position: absolute;
 						left: 0;
 						right: 0;
-						top: 100%;
-						background: rgba(255, 255, 255, 0.95);
+						top: 46px;
+						/*background: #ccc;*/
 						z-index: 1;
-						border-top: 1px solid $border;
+						/*border-top: 1px solid $border;*/
 						text-align: left;
-						padding: 20px 100px;
-						margin-left: calc(50% - 50vw);
-    					margin-right: calc(50% - 50vw);
-    				.sub-menu-inner {
-							max-width: 1050px;
-							margin: 0 auto;
+						padding: 5px 0px;
+						width:100vw;
+                        background: rgba(249,249,249,.95);
+                       /*margin-left: calc(50% - 50vw);
+    margin-right: calc(50% - 50vw);*/
+                        
+                        &:before{
+                            background: rgba(249,249,249,.95);
+                            content: "";
+                            position: absolute;
+                            left: -50%;
+                            top:0;
+                            bottom: 0;
+                            width: 100%;
+                        }
+                        
+    				ul.sub-menu-inner {
+                            z-index: 1;
+                            position: relative;
+                            
+                        li{
+                            display: inline-block;
+                            padding: 5px 0px;
+                            padding-right: 10px;
+                            
+                            a{
+                                color: #333333;
+                                font-size: 16px;
+                                padding-bottom: 10px;
+                            }
+                        }
+                        
 						}
 						h4 {
 							font-weight: 700;
@@ -342,7 +377,7 @@
 							> li {
 								> a {
 									font-size: 14px;
-									font-weight: 700;
+									/*font-weight: 700;*/
                                     padding-bottom: 50px;
                                     
                                     ~ .sub-menu{
@@ -375,7 +410,7 @@
 				}
 			}
 		}
-
+        
         .wishlist, .notifi, .mob-login{
            padding-left: 20px;
 
@@ -467,6 +502,93 @@
                     }
                 }
             }
+        }        
+        
+        .sup-menu{
+            display: none;
+            
+            
+        }
+        .sub-menu-inner{
+            
+            
+            li{
+                
+                               
+                &:hover{
+                     .sup-menu{
+                         
+                        display: block;
+                        position: absolute;
+                        left: 0;
+                        right: 0;
+                         background: rgba(255,255,255,.95);
+                        z-index: 1;                        
+                        text-align: left;
+                        padding: 20px 0;
+                        width: 100vw;
+                        
+                         @include media-breakpoint-down(sm) {
+                            position:inherit;                           
+                            background: transparent;                            
+                            width: 100%;
+                             
+                            &:before, &:after{
+                               display: none;
+                            }
+
+                         } 
+                         
+                         &:before, &:after{
+                             /*border-top: 1px solid #e3e3e3;*/
+                             background: rgba(255,255,255,.95);
+                            content: "";
+                            position: absolute;
+                            left: -50%;
+                            top:0;
+                            bottom: 0;
+                            width: 100%;
+                        }
+                        
+                         
+                         .sup-menu-inner{
+                             display: block;
+                             position: relative;
+                             z-index: 1;
+                             
+                             ul{
+                                margin-bottom: 50px;
+                                 
+                                li{
+                                display: block;                                 
+                                padding: 0px;
+                                margin: 15px 0px; 
+
+                                    a{
+                                    font-size: 14px; 
+                                     padding-bottom: 0px;
+
+                                     &:hover{
+                                        &:after{
+                                            content: "";
+                                            width: 100%;
+                                            background-color: #2d2d2d;
+                                            height: 2px;
+                                            position: absolute;
+                                            bottom: -3px;
+                                            left: 0;
+                                            display: none;
+                                            z-index: 2;
+                                        }
+                                     }
+                                    }
+                                }
+                                 
+                             }
+                          }
+                        }
+                }
+            }
         }
 	}
 	.header-right, .header-left {
@@ -475,6 +597,7 @@
 		z-index: 1;
 	}
 	.header-right {
+        z-index: 0;
 		right: 0;
 		> ul {
 			list-style: none;
@@ -978,7 +1101,7 @@
 		text-align: center;
 	}
 }
-.sticky-nav {
+/*.sticky-nav {
 	@include media-breakpoint-up(md) {
 		padding-top: 107px;
 	}
@@ -1005,7 +1128,7 @@
 			top: 43px;
 		}
 	}
-}
+}*/
 @include media-breakpoint-down(sm) {
 	.menu-open {
 		position: fixed;
@@ -1020,9 +1143,11 @@
 	.header-promo{
 		display:none;
 	}
-	.sticky-nav .header,header {
+	/*.sticky-nav .header,header {
 	    height: 68px !important;        
-	}
+	}*/
+    
+    
 }
 
 
@@ -1063,7 +1188,7 @@
 
 
 
-@media (min-width : 768px) and (max-width : 1024px)  { 
+/*@media (min-width : 768px) and (max-width : 1024px)  { 
 	.sticky-nav{
 		header{
 			.logo-main-nav-wrapper{
@@ -1079,7 +1204,7 @@
 			}
 		}
 	}
-}
+}*/
 .tooltip {
     z-index: 1070;
     display: block;
@@ -1133,5 +1258,60 @@
                 }               
             } 
         }
+    }
+}
+
+ /*
+Credits:
+Code snippet by @maridlcrmn (Follow me on Twitter)
+Images by Nike.com (http://www.nike.com/us/en_us/)
+Logo by Sneaker-mission.com (http://www.sneaker-mission.com/)
+*/
+
+.navbar-brand { 
+  width: 70px;
+  height: 50px;
+  background: url('http://www.sneaker-mission.com/uploads/3/1/2/7/31279819/5617441.png') no-repeat center center;
+  background-size: 50px;  
+}
+
+.nav-tabs {
+  display: inline-block;
+  border-bottom: none;
+  padding-top: 15px;
+  font-weight: bold;
+}
+.nav-tabs > li > a, 
+.nav-tabs > li > a:hover, 
+.nav-tabs > li > a:focus, 
+.nav-tabs > li.active > a, 
+.nav-tabs > li.active > a:hover,
+.nav-tabs > li.active > a:focus {
+  border: none;
+  border-radius: 0;
+}
+
+.nav-list { border-bottom: 1px solid #eee; }
+.nav-list > li { 
+  padding: 20px 15px 15px;
+  border-left: 1px solid #eee; 
+}
+.nav-list > li:last-child { border-right: 1px solid #eee; }
+.nav-list > li > a:hover { text-decoration: none; }
+.nav-list > li > a > span {
+  display: block;
+  font-weight: bold;
+  text-transform: uppercase;
+}
+
+.mega-dropdown { position: static !important; }
+.mega-dropdown-menu {
+  padding: 20px 15px 15px;
+  text-align: center;
+  width: 100%;
+}
+@include media-breakpoint-down(sm) {
+    .header .main-nav>ul>li a.active, .header .main-nav>ul>li a{
+        color: #fff;
     }
 }

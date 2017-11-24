@@ -1210,7 +1210,7 @@ TATA.Pages = {
             if($(window).width() <= 767){
                 $('.sort-by-fature .selectboxit-text').html('SORT');
             }
-            $(".luxgender-carousel .js-owl-carousel").owlCarousel({
+           /* $(".luxgender-carousel .js-owl-carousel").owlCarousel({
                 dots: true,
                 loop:true,
                 merge:true,
@@ -1222,7 +1222,7 @@ TATA.Pages = {
                         items:4,
                     }
                 },
-            });
+            });*/
 
             $(".lux-main-banner-slider .electronic-rotatingImage").owlCarousel({
                 dots: true,
