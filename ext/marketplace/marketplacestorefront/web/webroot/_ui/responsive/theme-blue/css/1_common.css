@@ -1351,6 +1351,12 @@ opacity
 }
 /*popover css end*/
 /* Error alert messages */
+.error-message {
+    color: #ff1c47;
+    font-size: 12px;
+    display: inline-block;
+    padding-top: 5px;
+}
 .alert-warning {
 	background-color: #fcf8e3;
 	border-color: #faebcc;
