@@ -487,6 +487,19 @@ public class ReturnPageController extends AbstractMplSearchPageController
 				returnData.setUssid(returnForm.getUssid());
 				returnData.setReturnMethod(returnForm.getReturnMethod());
 				returnData.setReturnFulfillmentMode(returnFulfillmentType);
+				//TPR-5954
+				if (null != returnForm.getComments())
+				{
+					returnData.setComments(returnForm.getComments());
+				}
+				if (null != returnForm.getSubReturnReason())
+				{
+					returnData.setSubReasonCode(returnForm.getSubReturnReason());
+				}
+				if (null != returnForm.getImagePath())
+				{
+					returnData.getImageUrl();
+				}
 
 				// TPR-4134
 				if (null != returnForm.getReverseSeal())
@@ -621,6 +634,19 @@ public class ReturnPageController extends AbstractMplSearchPageController
 				returnInfoDataObj.setReasonCode(returnForm.getReturnReason());
 				returnInfoDataObj.setUssid(returnForm.getUssid());
 				returnInfoDataObj.setReturnMethod(returnForm.getReturnMethod());
+				//TPR-5954
+				if (null != returnForm.getComments())
+				{
+					returnInfoDataObj.setComments(returnForm.getComments());
+				}
+				if (null != returnForm.getSubReturnReason())
+				{
+					returnInfoDataObj.setSubReasonCode(returnForm.getSubReturnReason());
+				}
+				if (null != returnForm.getImagePath())
+				{
+					returnInfoDataObj.setImageUrl(returnForm.getImagePath());
+				}
 				final boolean cancellationStatusForSelfShip = cancelReturnFacade.implementReturnItem(subOrderDetails, subOrderEntry,
 						returnInfoDataObj, customerData, SalesApplication.WEB, returnAddrData);
 				if (!cancellationStatusForSelfShip)
@@ -1437,5 +1463,20 @@ public class ReturnPageController extends AbstractMplSearchPageController
 		this.accountAddressFacade = accountAddressFacade;
 	}
 
-
+	//TPR-5954
+	@ResponseBody
+	@RequestMapping(value = "/fetchSubReason", method = RequestMethod.GET)
+	public List<ReturnReasonData> fetchSubReturnReason(@RequestParam final String parentReasonCode)
+	{
+		List<ReturnReasonData> returnableStores = null;
+		try
+		{
+			returnableStores = mplOrderFacade.getSubReasonCode(parentReasonCode);
+		}
+		catch (final Exception ex)
+		{
+			returnableStores = new ArrayList<ReturnReasonData>();
+		}
+		return returnableStores;
+	}
 }

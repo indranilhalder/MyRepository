@@ -1064,4 +1064,29 @@ $(document).ready(function(){
 	}
 	
 });	
+
+function fetchCatSpecificReason(element){
+	try{
+	var code=$("#returnReason :selected").val();
+		  $.ajax({
+			  url: ACC.config.encodedContextPath+"/my-account/returns/fetchSubReason",
+			  type: "GET",
+			  data :"parentReasonCode="+code,
+			  success: function(data) {
+				  var options = $("#returnSubReason");
+				  $("#returnSubReason").html('');				  
+				    $.each(data, function(item,obj) {					
+				        options.append($("<option />").val(obj.code).text(obj.reasonDescription));
+				    });
+			  },
+			  error:function(data){
+				  console.log("Error in fetchCatSpecificReason"+data);
+			  }
+		  });
+	}
+	catch(e)
+	{
+		console.log("Error:"+e);
+	}
+}
 		

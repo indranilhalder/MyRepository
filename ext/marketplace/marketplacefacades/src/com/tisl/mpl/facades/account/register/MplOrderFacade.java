@@ -31,6 +31,12 @@ public interface MplOrderFacade
 {
 	List<ReturnReasonData> getReturnReasonForOrderItem();
 
+	//TPR-5954
+	public List<ReturnReasonData> getCatSpecificRetReason(final String L2CatName) throws Exception;
+
+	//TPR-5954
+	public List<ReturnReasonData> getSubReasonCode(final String parentReturnReasonCode) throws Exception;
+
 	/**
 	 * Returns the order history of the current user for given statuses.
 	 *

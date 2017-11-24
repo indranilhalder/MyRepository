@@ -135,7 +135,8 @@ public class MplCancelOrderRequest
 	 */
 	@XmlAccessorType(XmlAccessType.FIELD)
 	@XmlType(name = "", propOrder =
-	{ "orderId", "transactionId", "returnCancelFlag", "requestID", "reasonCode", "returnCancelRemarks", "pinCode","returnFulfillmentMode" })
+	{ "orderId", "transactionId", "returnCancelFlag", "requestID", "reasonCode", "returnCancelRemarks", "pinCode",
+			"returnFulfillmentMode", "subReasonCode", "comments", "imageUrl" })
 	public static class OrderLine
 	{
 
@@ -155,8 +156,66 @@ public class MplCancelOrderRequest
 		protected String pinCode;
 		@XmlElement(name = "ReturnFulfilmentType", required = true)
 		protected String returnFulfillmentMode;
-		
-		
+
+		//TPR-5954
+		@XmlElement(name = "SubReasonCode")
+		protected String subReasonCode;
+		@XmlElement(name = "Comments")
+		protected String comments;
+		@XmlElement(name = "ImageUrl")
+		protected String imageUrl;
+
+		/**
+		 * @return the subReasonCode
+		 */
+		public String getSubReasonCode()
+		{
+			return subReasonCode;
+		}
+
+		/**
+		 * @param subReasonCode
+		 *           the subReasonCode to set
+		 */
+		public void setSubReasonCode(final String subReasonCode)
+		{
+			this.subReasonCode = subReasonCode;
+		}
+
+		/**
+		 * @return the comments
+		 */
+		public String getComments()
+		{
+			return comments;
+		}
+
+		/**
+		 * @param comments
+		 *           the comments to set
+		 */
+		public void setComments(final String comments)
+		{
+			this.comments = comments;
+		}
+
+		/**
+		 * @return the imageUrl
+		 */
+		public String getImageUrl()
+		{
+			return imageUrl;
+		}
+
+		/**
+		 * @param imageUrl
+		 *           the imageUrl to set
+		 */
+		public void setImageUrl(final String imageUrl)
+		{
+			this.imageUrl = imageUrl;
+		}
+
 		/**
 		 * @return the returnFulfillmentMode
 		 */
@@ -166,9 +225,10 @@ public class MplCancelOrderRequest
 		}
 
 		/**
-		 * @param returnFulfillmentMode the returnFulfillmentMode to set
+		 * @param returnFulfillmentMode
+		 *           the returnFulfillmentMode to set
 		 */
-		public void setReturnFulfillmentMode(String returnFulfillmentMode)
+		public void setReturnFulfillmentMode(final String returnFulfillmentMode)
 		{
 			this.returnFulfillmentMode = returnFulfillmentMode;
 		}
@@ -314,16 +374,17 @@ public class MplCancelOrderRequest
 		/**
 		 * @return the pinCode
 		 */
-		
+
 		public String getPinCode()
 		{
 			return pinCode;
 		}
 
 		/**
-		 * @param pinCode the pinCode to set
+		 * @param pinCode
+		 *           the pinCode to set
 		 */
-		public void setPinCode(String pinCode)
+		public void setPinCode(final String pinCode)
 		{
 			this.pinCode = pinCode;
 		}

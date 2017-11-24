@@ -120,7 +120,7 @@
 							
 							
 							
-							<form:select name="reasonList" class="reasonSelectBox" path="returnReason">
+							<form:select name="reasonList" class="reasonSelectBox" path="returnReason" onchange="fetchCatSpecificReason(this)">
 								    <option selected='selected' value="NA"><spring:theme code="text.requestDropdown.selected"/></option>
 									<c:forEach items="${reasonDataList}" var="reason"
 										varStatus="reasonStatus">
@@ -128,30 +128,33 @@
 									</c:forEach>									
 							</form:select>
 						</div>
+						
 						<br/><br/>
 						<br/><br/>
 						<br/><br/>
+						
 						<!-- Abhijit || start -->
 						<div class="col-md-7 col-sm-7 col-xs-12 selectReasonForReturn">
-							<%-- <b><spring:theme code="text.order.returns.reasonvalidation.message"></spring:theme></b> <br/><br/> --%>
-							<form:select name="reasonList" class="reasonSelectBox" path="returnReason">
+							<form:select name="reasonList" class="reasonSelectBox" path="subReturnReason" id="returnSubReason">
 								    <option selected='selected' value="NA"><spring:theme code="text.subRequestDropdown.selected"/></option>
 									<c:forEach items="${reasonDataList}" var="reason"
 										varStatus="reasonStatus">
 										<form:option value="${reason.code}">${reason.reasonDescription}</form:option>	
 									</c:forEach>									
 							</form:select>						
-		</div>
+						</div>
 						<div class="col-md-7 col-sm-7 col-xs-12">
+							<form:select name="reasonList" class="reasonSelectBox" path="comments" id="newReturnComments">
 									<span class="add-comment-title">Comment</span>
 									<br/>
-									<textarea rows="3" cols="45" placeholder="Max 250 Characters" id="addCommentArea"></textarea>       
-					    			<br/>
+									<textarea maxlength="250" rows="3" cols="45" placeholder="Max 250 Characters" id="addCommentArea" path=comments></textarea>       
+					   	 			<br/>
+					   		</form:select>
 					    			<span>Upload Image<label class="upload-image-title" for="upload-photo">Browse</label></span>
 					    			<br/>
 					    			<label>(Accpeted format JPEG,PNG,PDF & Max file size 5MB)</label>
 									<input type="file" name="photo" id="upload-photo" />
-					    			</div>
+					    </div>
 						<!-- Abhijit || end -->
 						
 						

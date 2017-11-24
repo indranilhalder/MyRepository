@@ -77506,6 +77506,8 @@ background: url(../images/search_image.png) no-repeat;}
 				    margin: 10px 0;
 				}
 
-
+.accordtionTataCliq .accContents.selectReason.col-md-12 .col-md-7.col-sm-7.col-xs-12.selectReasonForReturn #returnSubReason{
+    width: 47%;
+}
 
 
