@@ -3797,7 +3797,10 @@ body.page-cartPage .cart.wrapper .product-block li.item li.price>ul>span.delSeat
 	{
 	display: inline-block;
 }
-
+#exCartAlert .alert-dismissable .close{
+	float: left;
+    left: 0;
+}
 /*TISBBC-47 fix end*/
 /*TISPRDT 1673 fix start*/
 .mop_span {

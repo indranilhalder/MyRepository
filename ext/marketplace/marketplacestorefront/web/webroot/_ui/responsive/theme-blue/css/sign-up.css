@@ -988,7 +988,15 @@ margin-top:0px;
 	    margin-top: 10px;
 } */
 }
-
+.global-alerts button.close {
+    top: 6px !important;
+}
+.global-alerts button.close {
+    float: left;
+    opacity: 1;
+    left: 0;
+    margin-right: 10px;
+}
 @media (max-width: 650px){
 .secure.secureTransaction.secMobile:before{
 	top:-16px;

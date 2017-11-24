@@ -2418,7 +2418,8 @@ div.productInfo span:before {
 	color: #a9a9a9;
 }
 
-.product-listing .product-item .product-tile label {
+.product-listing .product-item .product-tile label,
+.product-item .product-tile .compare label {
 	float: left;
 }
 

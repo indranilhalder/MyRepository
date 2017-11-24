@@ -346,7 +346,6 @@ a.morelink, .more-link {
     padding-right: 5%;
 	width: 100%;
 }
-
 .wrapper-block{
 	max-width:1024px;
 	margin:0 auto;
@@ -1332,8 +1331,8 @@ button.otherSellersFont {
     display: inline-block;
     float: left;
     width: 20px;
-    height: 20px;
-    margin: 2px;
+    /* height: 20px;
+    margin: 2px; */
     border: 1px solid transparent;
     -webkit-transition: border-color 0.15s;
     -moz-transition: border-color 0.15s;

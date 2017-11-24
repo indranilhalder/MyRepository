@@ -226,6 +226,24 @@ body .account .right-account ul.saved-cards>li a.delete, body .account .right-ac
 body .account .right-account ul.saved-cards>li a.view-details, body .account .right-account ul.saved-cards>li a.make-default {
     color: #a9143c;
 }
+body .account .right-account .mpl-addressPopup.modal .closeColorBox {
+    margin-top: 10px;
+    background-color: #ffb810;
+    opacity: .7;
+    color: #000;
+    height: 40px;
+    line-height: 40px;
+    padding: 0;
+}
+body .account .right-account .mpl-addressPopup.modal .confirm-deletionButton {
+    margin-top: 10px;
+    background-color: #a9143c;
+    color: #fff;
+    text-transform: uppercase;
+    height: 40px;
+    line-height: 40px;
+    padding: 0;
+}
 @media (max-width: 650px){
 #stateListDropDown {
     margin-top: 10px;
