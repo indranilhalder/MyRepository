@@ -77503,3 +77503,8 @@ background: url(../images/search_image.png) no-repeat;}
     padding: 10px;
     text-align: center;
 }
+/* start change for TISUAT-6116 */
+.page-multiStepCheckoutSummaryPage .alert.alert-danger.alert-dismissable#juspayconnErrorDiv {
+	top: 1px !important;
+}
+/* end change for TISUAT-6116 */
