@@ -407,7 +407,7 @@ var buyingGuideData ='${buyingGuide}';
 
 
 					</div>
-						<ul id="hfvariant" class="form-control variant-select" style="margin-top:0px;">
+						
 							<%-- <c:choose>
 					<c:when test="${defaultSelectedSize==''}">
 						<option value="#" selected="selected"><spring:theme
@@ -422,6 +422,7 @@ var buyingGuideData ='${buyingGuide}';
 							<!-- JWLSPCUAT-99:After click on other seller link in PDP Size in not loading and color attribute is showing -->
 							<c:choose>
 								<c:when test="${product.rootCategory =='HomeFurnishing'}">
+								<ul id="hfvariant" class="form-control variant-select" style="margin-top:0px;">
 									<!-- NO Size Fix TISPRDT-6629 -->
 									<c:choose>
 										<c:when test="${productSize!='No Size'}">
@@ -524,12 +525,13 @@ var buyingGuideData ='${buyingGuide}';
 
 										</c:when>
 									</c:choose>
-
+									</ul>
 								
 
 
 								</c:when>
 								<c:otherwise>
+							<ul id="variant" class="form-control variant-select" style="margin-top:0px;">
 									<c:choose>
 										<c:when
 											test="${ product.rootCategory =='FineJewellery' || product.rootCategory =='FashionJewellery'}">
@@ -671,9 +673,10 @@ var buyingGuideData ='${buyingGuide}';
 											</c:forEach>
 										</c:otherwise>
 									</c:choose>
+									</ul>
 								</c:otherwise>
 							</c:choose>
-						</ul>
+					
 
 					
 				</form:form>
