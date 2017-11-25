@@ -7,9 +7,8 @@ import de.hybris.platform.basecommerce.enums.ConsignmentStatus;
 import de.hybris.platform.core.enums.OrderStatus;
 import de.hybris.platform.core.model.order.AbstractOrderEntryModel;
 import de.hybris.platform.core.model.order.OrderModel;
-import de.hybris.platform.jalo.order.AbstractOrderEntry;
-import de.hybris.platform.ordersplitting.jalo.Consignment;
-import de.hybris.platform.ordersplitting.jalo.ConsignmentEntry;
+import de.hybris.platform.ordersplitting.model.ConsignmentEntryModel;
+import de.hybris.platform.ordersplitting.model.ConsignmentModel;
 import de.hybris.platform.payment.enums.PaymentTransactionType;
 import de.hybris.platform.payment.model.PaymentTransactionModel;
 import de.hybris.platform.servicelayer.config.ConfigurationService;
@@ -109,26 +108,27 @@ public class DefaultRefundClearPerformableServiceImpl implements RefundClearPerf
 			{
 				final Set consignments = order.getConsignments();
 				final ArrayList<String> refundRequestIdList = new ArrayList<String>();
-				for (final Iterator iterator = consignments.iterator(); iterator.hasNext();)
+				if (CollectionUtils.isNotEmpty(consignments))
 				{
-
-					final Consignment consignment = (Consignment) iterator.next();
-
-
-					if (consignment.getStatus().getCode().equals(ConsignmentStatus.REFUND_IN_PROGRESS.getCode())
-							|| consignment.getStatus().getCode().equals(ConsignmentStatus.REFUND_INITIATED.getCode()))
+					for (final Iterator iterator = consignments.iterator(); iterator.hasNext();)
 					{
 
-						final Set consignmentEntries = consignment.getConsignmentEntries();
-						for (final Iterator iteratorC = consignmentEntries.iterator(); iteratorC.hasNext();)
+						final ConsignmentModel consignment = (ConsignmentModel) iterator.next();
+
+						if (consignment.getStatus().getCode().equals(ConsignmentStatus.REFUND_IN_PROGRESS.getCode())
+								|| consignment.getStatus().getCode().equals(ConsignmentStatus.REFUND_INITIATED.getCode()))
 						{
-							final ConsignmentEntry consignmentEntry = (ConsignmentEntry) iterator.next();
 
-							refundRequestIdList.add(fetchRefundRequestID(consignmentEntry.getOrderEntry()));
+							final Set consignmentEntries = consignment.getConsignmentEntries();
+							for (final Iterator iteratorC = consignmentEntries.iterator(); iteratorC.hasNext();)
+							{
+								final ConsignmentEntryModel consignmentEntry = (ConsignmentEntryModel) iteratorC.next();
+
+								refundRequestIdList.add(fetchRefundRequestID(consignmentEntry.getOrderEntry()));
+							}
+
 						}
-
 					}
-
 				}
 
 				checkWebhookEntryForRefund(order.getGuid(), order, refundRequestIdList);
@@ -139,14 +139,14 @@ public class DefaultRefundClearPerformableServiceImpl implements RefundClearPerf
 	}
 
 	/**
-	 * @param orderEntry
+	 * @param abstractOrderEntryModel
 	 * @return
 	 */
-	private String fetchRefundRequestID(final AbstractOrderEntry orderEntry)
+	private String fetchRefundRequestID(final AbstractOrderEntryModel abstractOrderEntryModel)
 	{
 		// YTODO Auto-generated method stub
 		final RefundTransactionMappingModel refundTransactionMappingModel = refundClearPerformableDao
-				.fetchRefundTransactionByEntry(orderEntry);
+				.fetchRefundTransactionByEntry(abstractOrderEntryModel);
 		return refundTransactionMappingModel.getJuspayRefundId();
 	}
 
@@ -226,8 +226,10 @@ public class DefaultRefundClearPerformableServiceImpl implements RefundClearPerf
 
 					//do refund
 					//update order status
+
 					makeRefundUpdateStatus(refund, order, juspayOrderID, uniqRequestID);
 				}
+
 			}
 
 		}

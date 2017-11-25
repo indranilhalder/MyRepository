@@ -4,8 +4,8 @@
 package com.tisl.mpl.marketplacecommerceservices.daos.impl;
 
 import de.hybris.platform.core.enums.OrderStatus;
+import de.hybris.platform.core.model.order.AbstractOrderEntryModel;
 import de.hybris.platform.core.model.order.OrderModel;
-import de.hybris.platform.jalo.order.AbstractOrderEntry;
 import de.hybris.platform.servicelayer.search.FlexibleSearchQuery;
 import de.hybris.platform.servicelayer.search.FlexibleSearchService;
 
@@ -131,7 +131,7 @@ public class RefundClearPerformableDaoImpl implements RefundClearPerformableDao
 
 
 	@Override
-	public RefundTransactionMappingModel fetchRefundTransactionByEntry(final AbstractOrderEntry orderEntry)
+	public RefundTransactionMappingModel fetchRefundTransactionByEntry(final AbstractOrderEntryModel orderEntry)
 	{
 		final String queryString = //
 		"SELECT {rtm:" + RefundTransactionMappingModel.PK
@@ -139,7 +139,7 @@ public class RefundClearPerformableDaoImpl implements RefundClearPerformableDao
 				+ MarketplacecommerceservicesConstants.QUERYFROM + RefundTransactionMappingModel._TYPECODE + " AS rtm} where"
 				+ "{rtm." + RefundTransactionMappingModel.REFUNDEDORDERENTRY + "} = ?orderEntry";
 		final FlexibleSearchQuery query = new FlexibleSearchQuery(queryString);
-		query.addQueryParameter("orderEntry", orderEntry.getPK());
+		query.addQueryParameter("orderEntry", orderEntry.getPk());
 
 		return getFlexibleSearchService().<RefundTransactionMappingModel> searchUnique(query);
 

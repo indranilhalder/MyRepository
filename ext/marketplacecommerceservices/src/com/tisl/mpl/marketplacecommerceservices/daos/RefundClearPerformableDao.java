@@ -3,8 +3,8 @@
  */
 package com.tisl.mpl.marketplacecommerceservices.daos;
 
+import de.hybris.platform.core.model.order.AbstractOrderEntryModel;
 import de.hybris.platform.core.model.order.OrderModel;
-import de.hybris.platform.jalo.order.AbstractOrderEntry;
 
 import java.util.Date;
 import java.util.List;
@@ -45,9 +45,9 @@ public interface RefundClearPerformableDao
 	List<RefundTransactionMappingModel> fetchRefundTransactionMapping(String juspayReqiestID);
 
 	/**
-	 * @param orderEntry
+	 * @param abstractOrderEntryModel
 	 */
-	RefundTransactionMappingModel fetchRefundTransactionByEntry(AbstractOrderEntry orderEntry);
+	RefundTransactionMappingModel fetchRefundTransactionByEntry(AbstractOrderEntryModel abstractOrderEntryModel);
 
 
 }
