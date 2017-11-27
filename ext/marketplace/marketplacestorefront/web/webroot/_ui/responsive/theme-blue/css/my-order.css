@@ -273,7 +273,6 @@ body .account .right-account .order-history.order-details li.header>ul, body .ac
     padding: 0;
 }
 body .account .right-account .order-history.order-details li.header>ul>li {
-    width: 25%;
     border-right-color: #dfd1d5;
 }
 
@@ -687,9 +686,6 @@ table.track-table tr {
 	    z-index: 12;
 	    bottom: 0;
 	}
-	body .account .right-account .order-history .product-block li.header>ul>li {
-		width: 49%;
-	}
 	body.template-pages-account-accountOrderHistoryPage .account .right-account .order-history .product-block li.header>ul>li.trackOrderAnchor {
 		right: 0;
 	    padding-left: 34px;
@@ -707,6 +703,40 @@ table.track-table tr {
 	body .account .right-account .order-history .bottom .pagination.mobile {
 		position: static;
 		padding: 0 15px;
+	}
+	.nav-orderHistory {
+		font-weight: 600;
+    	font-family: "Montserrat";
+    	font-size: 12px;
+    	margin-bottom: 20px;
+    	/* display: none; */
+	}
+	.nav-orderHistory::before {
+		content: "";
+	    display: inline-block;
+	    height: 0;
+	    width: 0;
+	    border-bottom: 5px solid transparent;
+	    border-right: 5px solid #000;
+	    border-top: 5px solid transparent;
+	    -webkit-transition: border .3s;
+	    -moz-transition: border .3s;
+	    transition: border .3s;
+	    margin-right: 5px;
+	    margin-top: 1px;
+	}
+	body .account .right-account .order-history.order-details.responsiveProfile li.header div.totals {
+		padding-bottom: 30px;
+	}
+	body .account .right-account .order-history.order-details.responsiveProfile li.header div.totals, body .account .right-account .order-history.order-details.responsiveProfile li.header div, .order-details.responsiveProfile .totals ul li {
+		width: 100%;
+	}
+	.order-details .totals ul li>span {
+		float: right;
+    	margin-right: 20px;
+	}
+	.order-details .totals ul li.shipping-li>span.amt {
+		padding-right: 20px;
 	}
 }
 @media (max-width: 650px){
@@ -730,6 +760,11 @@ table.track-table tr {
 @media (min-width: 1050px){
 	body .account .right-account .order-history.order-details .product-block li.item .details {
 		width: 30%;
+	}
+}
+@media (max-width: 585px){
+	.order-details .totals ul li span.shipping-text {
+		width: 100%;
 	}
 }
 body .account .right-account .order-history .pagination li {
@@ -794,4 +829,26 @@ body .right-account .order-history .cancellation-request-block {
     font-weight: bold;
     padding-left: 10px;
     padding-right: 10px;
+}
+.order-details .totals ul li.shipping-li {
+	display: table;
+}
+.order-details .totals ul li span.shipping-text {
+	display: table-cell;
+	width: 256px;
+    float: none;
+    margin-right: 0;
+}
+.order-details .totals ul li.shipping-li>span.amt {
+	float: none;
+    display: table-cell;
+    text-align: right;
+    vertical-align: bottom;
+    padding-right: 30px;
+}
+body .account .right-account .order-history.order-details li.header div.totals .grand-total {
+	margin-top: 10px;
+}
+body.template-pages-account-accountOrderDetailPage .product-block.order-details .totals {
+	text-transform: none;
 }
