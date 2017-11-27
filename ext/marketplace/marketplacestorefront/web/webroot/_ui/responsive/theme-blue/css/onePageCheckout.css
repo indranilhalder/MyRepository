@@ -2166,7 +2166,7 @@ body .account.preferences input[type="checkbox"]+label, input[type="radio"]+labe
     color: #a9a9a9;
 }
 #new-address-option-1:checked+label, #new-address-option-2:checked+label {
-    color: #000;
+    color: #000 !important;
 }
 #countrySelector.clearfix {
     display: none;

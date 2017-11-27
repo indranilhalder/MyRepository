@@ -1381,3 +1381,7 @@ opacity
     -ms-user-select: none;
     user-select: none;
 }
+.pagination li.prev, .pagination li.next {
+    font-weight: 500;
+    cursor: pointer;
+}

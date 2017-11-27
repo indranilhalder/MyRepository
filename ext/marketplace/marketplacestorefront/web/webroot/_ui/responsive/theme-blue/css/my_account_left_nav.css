@@ -430,7 +430,7 @@ body .account .right-account button#inviteFriends.blue {
     display: inline-block;
 }
 body .account .right-account form label.invite-text-lbl {
-    font-size: 16px;
+    font-size: 16px ! important;
 }
 .copy-link {
     position: relative;
@@ -490,7 +490,11 @@ body #account-invite .right-account>div.social-invites .social {
     padding-bottom: 48px;
 }
 }
-
+@media (max-width: 420px){
+body #account-invite .right-account>div form .mytextarea#mytextarea {
+    height: 60px;
+}
+}
 
 
 
