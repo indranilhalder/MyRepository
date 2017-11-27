@@ -222,14 +222,6 @@ body .account .right-account .order-history .product-block li.item h2 {
     letter-spacing: normal;
     height: auto;
 }
-body .account .right-account .order-history .product-block li.item p, body .account .right-account .order-history .product-block li.item a, body .account .right-account .order-history .product-block li.item h2:first-child {
-    font-size: 12px;
-    line-height: 1.5;
-    letter-spacing: .6px;
-    text-align: left;
-    color: #666;
-    font-weight: normal;
-}
 body .account .right-account .order-history .product-block li.item h2:first-child {
     font-size: 12px;
     font-weight: normal;
@@ -567,6 +559,61 @@ body .account .right-account .order-history.order-details li.item .status>ul>li.
 body .account .right-account .order-history.order-details li.item .status>ul>li.progress span.dot.inactive:before {
 	background-color: #e3e3e3;
 }
+body .account .right-account .order-history.order-details li.item .status>ul>li.progress:nth-child(2) .message {
+	left: -100% !important;
+}
+body .account .right-account .order-history.order-details li.item .status>ul>li.progress .message {
+	min-height: 83px;
+    margin-left: 14px;
+}
+body .account .right-account .order-history.order-details li.item .status>ul>li.progress:nth-child(3) .message {
+	left: -200% !important;
+}
+#track-more-info p.active {
+	display: inline;
+    font-weight: bold;
+    letter-spacing: .5px;
+    font-size: 10px;
+    cursor: pointer;
+}
+body .account .right-account .order-history.order-details li.item .status .message div p {
+	position: absolute;
+    top: 10px;
+    right: 5px;
+    text-transform: capitalize;
+}
+#track-more-info p span {
+	position: static;
+	text-decoration: underline;
+}
+#track-more-info p:first-child:after, #track-more-info p:last-child:after {
+	font-family: 'FontAwesome';
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    margin-left: 5px;
+}
+#track-more-info p:first-child:after {
+	content: "\f078";
+}
+#track-more-info p:last-child:after {
+    content: "\f077";
+}
+body .account .right-account .order-history.order-details li.item .status .message div {
+	line-height: 19px;
+}
+table.track-table-head tr {
+	background: silver;
+}
+table.track-table-head tr td {
+	padding: 5px;
+}
+table.track-table-head, table.track-table {
+	border-left: 1px solid silver;
+    border-right: 1px solid silver;
+}
+table.track-table tr {
+	border-bottom: 1px solid silver;
+}
 @media (min-width: 791px){
 	.nav-orderHistory {
 	    display: none;
@@ -584,8 +631,8 @@ body .account .right-account .order-history.order-details li.item .status>ul>li.
 	    line-height: normal;
 	}
 	body .account .right-account .order-history.order-details li.item .status {
-		top: 0;
-    	margin-top: 23px;	
+		top: 145px;
+    	margin-top: 40px;	
 	}
 }
 @media (max-width: 790px){
@@ -680,6 +727,11 @@ body .account .right-account .order-history.order-details li.item .status>ul>li.
 		margin-left: 0;
 	}
 }
+@media (min-width: 1050px){
+	body .account .right-account .order-history.order-details .product-block li.item .details {
+		width: 30%;
+	}
+}
 body .account .right-account .order-history .pagination li {
 	font-size: 12px;
     margin: auto 2px;
@@ -708,4 +760,38 @@ body .account .right-account .order-history .bottom .pagination.mobile {
 }
 body .account .right-account .order-history.order-details li.item .status {
 	display: table;
+}
+body .right-account .order-history .cancellation-request-block {
+	    text-align: left;
+}
+#changeAddressPopup, #otpPopup {
+	display: none;
+    position: fixed;
+    top: 10px;
+    left: 0;
+}
+#changeAddressPopup {
+	margin: 0 auto;
+    width: 100%;
+    height: 700px;
+}
+#changeAddressPopup .close {
+	float: right;
+}
+.row {
+	margin-left: 0 !important;
+    margin-right: 0 !important;
+}
+#deliveryAddressForm h4 {
+	margin-bottom: 10px !important;
+}
+.NOP {
+	padding: 0 !important;
+}
+#saveBlockData, .saveBlockData, .saveBlockData:hover, .saveBlockData:focus .saveBlockData:active {
+	background: #a9143c;
+    color: #fff;
+    font-weight: bold;
+    padding-left: 10px;
+    padding-right: 10px;
 }

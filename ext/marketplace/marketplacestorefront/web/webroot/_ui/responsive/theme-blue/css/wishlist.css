@@ -588,12 +588,6 @@ div.wishlist-content .pagination a.active {
 .pagination li {
     display: inline-block;
 }
-@media ( min-width : 640px) {
-	.modal-dialog {
-		width: 600px;
-		margin: 30px auto;
-	}
-}
 @media ( min-width : 651px) {
 	div.wishlist-nav {
 		width: 25%;
