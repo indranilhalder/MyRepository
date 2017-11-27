@@ -5793,3 +5793,11 @@ li.item>ul li:last-child {
 	background: transparent;
 	letter-spacing: 0px;
 }
+.cart.wrapper .product-block li.item>ul>li.delivery ul>span, .cart.wrapper .product-block li.item>ul>li.delivery span.pincodeServiceError {
+    color: #ff1c47;
+    line-height: 22px;
+}
+#redirectsToPDP .modal-content.content>.close {
+    right: 5px !important;
+    top: 5px !important;
+}
