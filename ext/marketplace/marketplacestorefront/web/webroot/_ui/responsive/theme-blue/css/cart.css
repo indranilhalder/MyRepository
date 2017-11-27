@@ -2947,7 +2947,7 @@ body.page-cartPage .cart.wrapper .product-block li.item>ul>li:first-child div.pr
 
 body.page-cartPage .cart.wrapper .product-block li.item>ul>li:first-child div.product
 	{
-	float: none;
+	float: left;	/* change for CMR-86 */
 	display: inline-block;
 	width: 68%;
 	padding-left: 0;
@@ -4492,6 +4492,7 @@ body.page-cartPage .cart.wrapper .product-block li.item li.price>ul>span.delSeat
 		position: relative;
 		cursor: pointer;
 		font-size: 12px;
+		text-align: left;	/* add for CMR-86 */
 	}
 	.cart.wrapper .product-block li.item>ul.desktop>li.delivery p.mobile-delivery:after
 		{
@@ -4560,6 +4561,7 @@ body.page-cartPage .cart.wrapper .product-block li.item li.price>ul>span.delSeat
 	body.page-cartPage .cart.wrapper .product-block li.item>ul>li.delivery ul
 		{
 		padding-left: 20px;
+		text-align: left;	/* add for CMR-86 */
 	}
 	.MyBag-top-section {
 		overflow: hidden;
