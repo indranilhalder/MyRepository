@@ -3548,47 +3548,39 @@ body.page-cartPage .cart.wrapper .product-block li.header ul li {
 	font-size: 12px;
 	color: #666666;
 }
-
 body.page-cartPage .cart.wrapper .product-block li.item .productItemInfo h2.product-brand-name
 	{
 	font-weight: bold !important;
 }
-
 body.page-cartPage .cart.wrapper .product-block li.item .productItemInfo p.size
 	{
 	color: #000;
 	font-style: normal;
 }
-
 body.page-cartPage .cart.wrapper .product-block li.item>ul.desktop>li.qty,
 	body.page-cartPage .cart.wrapper .product-block li.header ul li.quantity
 	{
 	width: 10% !important;
 }
-
 body.page-cartPage span.delSeat.delAction {
 	color: #999999;
 }
-
 body.page-cartPage p.cartItemBlankPincode {
 	color: #666666;
 }
-
 body.page-cartPage p.cartItemBlankPincode a {
 	color: #92002e;
 }
-
 body.page-cartPage .cart.wrapper .product-block li.header ul li.delivery span
 	{
 	color: #92002e;
 }
-
 body.page-cartPage .cart.wrapper .product-block li.item>ul>li.delivery li
-	{
+{
 	padding-left: 0px;
 	position: relative;
+	text-align: left;
 }
-
 p#unserviceablepincode_tooltip, p#error-Id_tooltip, p#emptyId_tooltip, p#error-Id_tooltip_btm,
 	p#unserviceablepincode_tooltip_btm, p#emptyId_tooltip_btm {
 	width: 206px;

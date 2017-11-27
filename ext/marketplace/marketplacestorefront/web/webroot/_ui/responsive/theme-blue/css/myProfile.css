@@ -138,9 +138,6 @@ body .account .right-account form .full.phone input {
     float: left;
     width: 36%;
 }
-body .account .right-account form input {
-    font-size: 12px;
-}
 body .account .right-account form div.select.calender.quarter.birthday, body .account .right-account form div.select.calender.quarter.anniversaryday {
     margin-top: 40px;
     margin-bottom: 55px;

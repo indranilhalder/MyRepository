@@ -43,14 +43,11 @@ body .account .right-account form input, body .account .right-account form selec
     letter-spacing: 0.6px;
 }
 body .account .right-account form input {
-    font-size: 12px;
-}
-body .account .right-account form input {
     border-color: #DFD1D5;
     height: 32px;
     line-height: 26px;
     width: 100%;
-    font-size: 14px;
+    font-size: 12px;
 }
 body .account.preferences .right-account div.email-pref form div label {
     opacity: 1;
