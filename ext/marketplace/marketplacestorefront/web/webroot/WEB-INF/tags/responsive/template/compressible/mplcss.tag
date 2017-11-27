@@ -22,6 +22,7 @@
 <link rel="stylesheet" type="text/css" media="all" href="${themeResourcePath}/css/review.css"/>
 <link rel="stylesheet" type="text/css" media="all" href="${themeResourcePath}/css/my-order.css"/>
 <link rel="stylesheet" type="text/css" media="all" href="${themeResourcePath}/css/compare_now.css"/>
+<link rel="stylesheet" type="text/css" media="all" href="${themeResourcePath}/css/my-account.css"/>
 <%-- <link rel="stylesheet" type="text/css" media="all" href="${themeResourcePath}/css/jquery-picZoomer.css"/>
 <link rel="stylesheet" type="text/css" media="all" href="${themeResourcePath}/css/reset.css"/>
 <link rel="stylesheet" type="text/css" media="all" href="${themeResourcePath}/css/jqtree.css"/> --%>

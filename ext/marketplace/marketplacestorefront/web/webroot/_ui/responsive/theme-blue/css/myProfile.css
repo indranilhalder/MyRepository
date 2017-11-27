@@ -410,3 +410,9 @@ body .account .right-account .responsiveProfile.password .blue.changePass {
     margin-right: 10px;
     display: block;
 }
+@media (max-width: 370px)
+{
+body .account .right-account select {
+    padding-left: 5px;
+}
+}
