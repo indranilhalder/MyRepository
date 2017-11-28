@@ -39,6 +39,7 @@
 	text-transform:none;
 	font-weight: normal;
 	letter-spacing: normal;
+	text-transform: capitalize;
 }
 .cart.wrapper.checkout-payment .right-block.billing.checkout-list-right .block{
 	margin:8px auto 28px;
@@ -5589,7 +5590,7 @@ transform-origin:0 0;
 }
 }
 .cart.wrapper .product-block li.item>ul>li:first-child div.product .product-name {
-    margin-bottom: 0;
+    margin-bottom: 0 !important;
 }
 #paymentFormButton.pay.cont-del {
     display: block !important;

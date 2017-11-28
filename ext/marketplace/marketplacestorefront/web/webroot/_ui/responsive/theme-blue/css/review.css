@@ -99,3 +99,16 @@ body.page-reviews .account .my-reviews .wrapper, body.page-reviews .account .too
 	display: block;
 	font-size: 12px;
 }
+body .account .right-account .reviews .review-list .wrapper>li .review .details {
+    width: 55% !important;
+}
+body .account .right-account .reviews .review-list .wrapper>li .review .stats {
+    width: 45% !important;
+    position: relative !important;
+}
+.reviews .review-list>.wrapper>li .review .stats .rate-details.two-block .before {
+    display: inline-block;
+    width: 100%;
+    margin-bottom: 20px;
+    text-align: left;
+}
