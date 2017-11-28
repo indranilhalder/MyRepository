@@ -974,3 +974,89 @@ body .account .right-account .order-history.order-details li.item .status>ul>li.
     font-size: 26px;
 }
 /* end Track order */
+
+/* Order Confirmation Start */
+.confirmation .thanks h3 {
+    color: #a9143c;
+    font-size: 26px;
+    margin: 40px 0;
+    display: inline-block;
+    width: 100%;
+}
+.checkout-success-body-headline {
+    font-weight: normal;
+}
+.confirmation .thanks p {
+    line-height: 2.2;
+    font-size: 14px;
+}
+.confirmation .thanks p strong {
+    font-weight: bold;
+}
+.confirmation .thanks p a {
+    color: #a9143c;
+    text-decoration: underline;
+}
+.confirmation .thanks {
+    background: #f8f9fb;
+    text-align: center;
+    padding-bottom: 60px;
+    padding-top: 20px;
+}
+.checkout-success .checkout-success-body {
+    text-align: center;
+}
+.cart.wrapper::after, .confirmation::after {
+    clear: both;
+    content: "";
+    display: table;
+}
+.confirmation .right-block.billing, .confirmation .left-block {
+    margin-top: 20px !important;
+}
+.confirmation .right-block.billing h2, .confirmation .left-block h2 {
+    width: 100%;
+    font-weight: 500;
+    margin: 20px 0 !important;
+    margin-top: 0 !important;
+}
+.confirmation .right-block .block .totals li.subtotalthanks .priceFormat, .confirmation .right-block .block .totals li#cartPromotionAppliedthanks .priceFormat {
+    float: right;
+}
+.confirmation .right-block .block .totals li.shippingthanks span:first-child {
+    display: inline-block;
+}
+#total {
+    padding: 22px 0;
+    border-top: 1px solid #e8e8e8;
+    border-bottom: 1px solid #e8e8e8;
+    margin-top: 11px;
+}
+.confirmation .product-block li.header ul li.shipping ul.home:before, .confirmation .product-block li ul li.shipping ul.Home:before {
+    font-family: 'FontAwesome';
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    font-weight: 100;
+    content: "\f015";
+}
+.confirmation .product-block li.header ul li.shipping ul.home:before, .confirmation .product-block li.header ul li.shipping ul.express:before, .confirmation .product-block li.header ul li.shipping ul.collect:before, .confirmation .product-block li ul li.shipping ul.Home:before, .confirmation .product-block li ul li.shipping ul.Express:before, .confirmation .product-block li ul li.shipping ul.collect:before {
+    position: absolute;
+}
+.confirmation .product-block li.header ul li.shipping ul.home, .confirmation .product-block li ul li.shipping ul.Home {
+    color: #a9143c;
+}
+.confirmation .product-block li.header ul li.shipping ul.home, .confirmation .product-block li.header ul li.shipping ul.express, .confirmation .product-block li.header ul li.shipping ul.collect, .confirmation .product-block li ul li.shipping ul.Home, .confirmation .product-block li ul li.shipping ul.Express, .confirmation .product-block li ul li.shipping ul.collect {
+    line-height: 1.8;
+}
+.confirmation .left-block .address p {
+    text-transform: uppercase;
+    color: #a9143c;
+    margin: 10px 0;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 1px;
+}
+address, .deliver-type, .shipping p {
+    font-size: 12px;
+}
+/* Order Confirmation End */
