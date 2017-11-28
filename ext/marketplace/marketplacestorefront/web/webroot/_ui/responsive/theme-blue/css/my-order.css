@@ -353,7 +353,7 @@ body .account .right-account .order-history.order-details li.item {
     position: relative;
 }
 body .account .right-account .order-history.order-details li.item#shipping-track-order:not(.in-store) .item-header {
-    border-bottom: 0;
+    border-bottom: 0;	/* add for CMR-105 */
     display: block;
 }
 body .account .right-account .order-history.order-details li.item .item-header {
@@ -394,11 +394,9 @@ body .account .right-account .order-history.order-details li.item .item-header a
     border: 0;
     display: none;
 }
-body .account .right-account .order-history.order-details li.item:not(.in-store).first .item-fulfillment {
-    border: 0;
-}
 body .account .right-account .order-history.order-details li.item .item-fulfillment p {
     font-weight: normal;
+    margin-top: 2px;
 }
 body .account .right-account .order-history.order-details li.item .item-fulfillment p:last-of-type {
     margin-bottom: 10px;
@@ -416,7 +414,7 @@ body .account .right-account .order-history.order-details li.item .item-fulfillm
 body .account .right-account .order-history.order-details li.item:not(.in-store).first .item-fulfillment {
     display: block;
     padding-top: 36px;
-    border-top: solid 1px #eee;
+    border: 0;
     line-height: 0;
     margin-bottom: 16px;
     color: #666;
@@ -634,6 +632,13 @@ table.track-table tr {
     	margin-top: 40px;	
 	}
 }
+.order-details .totals ul li.shipping-li>span.amt {
+	float: none;
+    display: table-cell;
+    text-align: right;
+    vertical-align: bottom;
+    padding-right: 30px;
+}
 @media (max-width: 790px){
 	body .account .right-account .order-history .product-block li.item .details {
 	    padding-right: 70px;
@@ -709,7 +714,6 @@ table.track-table tr {
     	font-family: "Montserrat";
     	font-size: 12px;
     	margin-bottom: 20px;
-    	/* display: none; */
 	}
 	.nav-orderHistory::before {
 		content: "";
@@ -734,6 +738,39 @@ table.track-table tr {
 
 	.order-details .totals ul li.shipping-li>span.amt {
 		padding-right: 20px;
+	}
+	body .account .right-account .order-history.order-details.responsiveProfile li.item:not(.in-store).first .item-header {
+		margin-bottom: -75px;
+    	overflow: hidden;
+	}
+	#shipping-track-order .item-header h2, #shipping-track-order .item-header h3, #shipping-track-order .item-header address {
+		padding: 0;
+	}
+	body .account .right-account .order-history.order-details.responsiveProfile li.item:not(.in-store).first .item-header+.col-md-4.col-sm-6 {
+		top: 75px;
+	}
+	body .account .right-account .order-history.order-details.responsiveProfile li.item:not(.in-store).first .item-fulfillment {
+		margin-top: 75px !important;
+		margin-left: 0;
+	}
+	body .account .right-account .order-history.order-details li.item .item-fulfillment, body .account .right-account .order-history.order-details li.item:not(.in-store).first .item-fulfillment {
+		line-height: 18px;
+	}
+	body .account .right-account .order-history.order-details .product-block li.item .image {
+		min-height: auto;
+		width: 50px;
+	}
+	body .account .right-account .order-history.responsiveProfile .product-block li.item .actions {
+		margin-left: 70px;
+	    margin-bottom: 12px;
+	}
+	body .account .right-account .order-history.order-details.responsiveProfile li.item .status {
+		padding-right: 0;
+		padding-bottom: 36px;
+    	padding-top: 36px;   	
+	}
+	body .account .right-account .order-history.order-details.responsiveProfile li.item .status:not(.suman) {
+		padding-left: 12.5%;
 	}
 }
 @media (min-width: 791px){
@@ -767,6 +804,18 @@ table.track-table tr {
 @media (max-width: 585px){
 	.order-details .totals ul li span.shipping-text {
 		width: 100%;
+	}
+}
+@media (max-width: 1060px){
+	body .account .right-account .order-history.order-details li.header+li.item .item-header {
+		padding-top: 0 !important;
+	}
+	body .account .right-account .order-history.order-details li.item .status {
+		position: static;
+	    width: 100%;
+	    float: left;
+	    padding: 5px 20px 85px;
+	    padding-bottom: 0;
 	}
 }
 body .account .right-account .order-history .pagination li {
@@ -841,13 +890,6 @@ body .right-account .order-history .cancellation-request-block {
     float: none;
     margin-right: 0;
 }
-.order-details .totals ul li.shipping-li>span.amt {
-	float: none;
-    display: table-cell;
-    text-align: right;
-    vertical-align: bottom;
-    padding-right: 30px;
-}
 body .account .right-account .order-history.order-details li.header div.totals .grand-total {
 	margin-top: 10px;
 }
@@ -872,4 +914,13 @@ body .account .right-account .order-history.order-details li.header .payment-met
     box-shadow: 0 2px 16px 0 rgba(0,0,0,0.5);
     -webkit-overflow-scrolling: touch;
     border: 0;
+}
+.editIconCSS {
+	margin-bottom: 5px;
+}
+body .account .right-account .order-history.order-details li.item .item-fulfillment span {
+	 font-weight: normal !important;	/* add for CMR-107 */
+}
+body .account .right-account .order-history.order-details li.item .image {
+	margin-left: 20px;
 }
