@@ -624,6 +624,7 @@
 	<%-- Load JavaScript required by the site --%>
 	<!-- SDI-1103 -->
 	<template:javaScript/>
+	<!-- commenting from here -->
 	<!--  <script type="text/javascript">if(typeof _satellite !="undefined"){_satellite.pageBottom();}</script> --> 
 	<%-- Inject any additional JavaScript required by the page --%>
 	<jsp:invoke fragment="pageScripts"/>	
