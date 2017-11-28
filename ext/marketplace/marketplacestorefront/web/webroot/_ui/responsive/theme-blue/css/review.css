@@ -112,3 +112,31 @@ body .account .right-account .reviews .review-list .wrapper>li .review .stats {
     margin-bottom: 20px;
     text-align: left;
 }
+#reviewPluginContainer h2.modal-title span.popUpProductTitle {
+    font-size: inherit;
+    font-weight: normal;
+    margin: 0;
+    padding: 0;
+    letter-spacing: normal;
+}
+.status.statusShipped {
+    background: url(../images/my-account-sprite-v1.png) no-repeat -161px 0;
+    height: 30px;
+    width: 82px;
+    float: right;
+    margin-bottom: 11px;
+}
+.status.statusDelivered {
+    background: url(../images/my-account-sprite-v1.png) no-repeat -240px 0;
+    height: 30px;
+    width: 82px;
+    float: right;
+    margin-bottom: 11px;
+}
+.status.statusConfirmed{
+    background: url(../images/my-account-sprite-v1.png) no-repeat -91px 0px;
+    height: 30px;
+    width: 68px;
+    float: right;
+    margin-bottom: 11px;
+}
