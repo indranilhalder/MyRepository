@@ -68,7 +68,7 @@ $(document).ready(function(){
 */
 var digitalData ;
 $(document).ready(function(){
-	_satellite.pageBottom();
+	
 			var domain_name = document.domain;
 			var pageType = $('#pageType').val();
 			var pageName= $('#pageName').val().toLowerCase();
@@ -886,7 +886,7 @@ $(document).ready(function(){
     		_satellite.track('cpj_checkout_proceed_to_address');
     	}	
     }
-
+    _satellite.pageBottom();
   
 });
 //SDI-1103
