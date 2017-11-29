@@ -2300,5 +2300,10 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String PAYMENTINFO_R_ROWLIMIT = "paymentinfo.batchjob.reverse.rowlimit";
 
 	public static final String FINISHED = "FINISHED";
+	
+	//SDI-2924
+	public static final String FPC_DURATION_SKIP = "mpl.forwardpaymentcleanup.duration.skip";
+    public static final String FPC_DURATION_THRESHOLD = "mpl.forwardpaymentcleanup.duration.threshold";
+	public static final String FPC_DURATION_OVERLAP = "mpl.forwardpaymentcleanup.duration.overlap";
 
 }

@@ -2049,5 +2049,10 @@ http://www.springframework.org/schema/aop/spring-aop.xsd">
 		<property name="solrCoreNameResolver" ref="solrCoreNameResolver" />
 	</bean>
 	<!-- TPR-6665: solr server : synonyms injection end -->
+	
+	<!-- SDI-2924 -->
+	<bean id="forwardPaymentCleanUpJob" class="com.tisl.mpl.core.payment.cronjob.ForwardPaymentCleanUpJob"
+		autowire="byName">
+	</bean>
 
 </beans>

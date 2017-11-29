@@ -2424,6 +2424,12 @@
 	
 	<!--  End TPR-6945 -->
 
+	<!-- SDI-2924 -->
+	<bean id="forwardPaymentCleanUpService"
+		class="com.tisl.mpl.marketplacecommerceservices.service.impl.ForwardPaymentCleanUpServiceImpl" />
+	<bean id="forwardPaymentCleanUpDao"
+		class="com.tisl.mpl.marketplacecommerceservices.daos.impl.ForwardPaymentCleanUpDaoImpl">
+	</bean>
     
 </beans>
 
