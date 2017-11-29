@@ -2430,6 +2430,11 @@
 	<bean id="forwardPaymentCleanUpDao"
 		class="com.tisl.mpl.marketplacecommerceservices.daos.impl.ForwardPaymentCleanUpDaoImpl">
 	</bean>
+	<!-- TPR-7415 -->
+    <bean id="omsSubmissionPendingReportJob"
+		class="com.tisl.mpl.marketplacecommerceservices.jobs.OmsSubmissionPendingReportJob"
+		autowire="byName">
+	</bean>
     
 </beans>
 

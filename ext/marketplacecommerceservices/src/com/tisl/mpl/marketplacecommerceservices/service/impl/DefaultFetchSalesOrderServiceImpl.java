@@ -178,4 +178,29 @@ public class DefaultFetchSalesOrderServiceImpl implements FetchSalesOrderService
 		return fetchSalesOrderDao.getCronDetailsCode(code);
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.tisl.mpl.marketplacecommerceservices.service.FetchSalesOrderService#fetchSpecifiedDataForPymntScss(java.util
+	 * .Date, java.util.Date)
+	 */
+	@Override
+	public List<OrderModel> fetchSpecifiedDataForPymntScss(final Date mplConfigDate, final Date startTime)
+	{
+		return fetchSalesOrderDao.getOmsSubmissionPendingOrderList(mplConfigDate, startTime);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 *
+	 * @see com.tisl.mpl.marketplacecommerceservices.service.FetchSalesOrderService#fetchSpecifiedDataForPymntScss()
+	 */
+	@Override
+	public List<OrderModel> fetchSpecifiedDataForPymntScss()
+	{
+		return fetchSalesOrderDao.getOmsSubmissionPendingOrderList();
+	}
+
+
 }

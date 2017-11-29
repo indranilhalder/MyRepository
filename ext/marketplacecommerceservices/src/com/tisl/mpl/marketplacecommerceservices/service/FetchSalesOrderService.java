@@ -49,4 +49,20 @@ public interface FetchSalesOrderService
 	public Map<String, String> fetchOrderIdsToday();
 
 	public CronJobModel getCronDetailsCode(String code);
+
+	/**
+	 * TPR-7415
+	 * 
+	 * @param mplConfigDate
+	 * @param startTime
+	 * @return List<OrderModel>
+	 */
+	public List<OrderModel> fetchSpecifiedDataForPymntScss(Date mplConfigDate, Date startTime);
+
+	/**
+	 * TPR-7415
+	 * 
+	 * @return List<OrderModel>
+	 */
+	public List<OrderModel> fetchSpecifiedDataForPymntScss();
 }
