@@ -323,6 +323,7 @@ implements MarketPlaceBasketController {
 	public Boolean reserveCart(final CartModel cart)  throws ValidationException{
 		Boolean isCartReserved = Boolean.TRUE;
 		List<ResourceMessage> errorMessages = new ArrayList<ResourceMessage>();
+
 		String fulfillmentType = null;
 		modelService.refresh(cart);
 
@@ -342,8 +343,14 @@ implements MarketPlaceBasketController {
 		}
 
 		// if store agent is logged in
-		final String agentId = agentIdForStore.getAgentIdForStore(
+		String agentId = agentIdForStore.getAgentIdForStore(
 				MarketplacecommerceservicesConstants.CSCOCKPIT_USER_GROUP_STOREMANAGERAGENTGROUP);
+		
+		if (StringUtils.isEmpty(agentId))
+		{
+			agentId = agentIdForStore
+					.getAgentIdForStore(MarketplacecommerceservicesConstants.CSCOCKPIT_USER_GROUP_STOREADMINAGENTGROUP);
+		}
 
 		for(AbstractOrderEntryModel entry : cart.getEntries()){
 			//CKD:TPR-3809
@@ -992,9 +999,14 @@ implements MarketPlaceBasketController {
 		/**
 		 * TPR-5712 : if store manager logged in
 		 */
-		final String agentId = agentIdForStore.getAgentIdForStore(
+		String agentId = agentIdForStore.getAgentIdForStore(
 				MarketplacecommerceservicesConstants.CSCOCKPIT_USER_GROUP_STOREMANAGERAGENTGROUP);
-
+		if (StringUtils.isEmpty(agentId))
+		{
+			agentId = agentIdForStore
+					.getAgentIdForStore(MarketplacecommerceservicesConstants.CSCOCKPIT_USER_GROUP_STOREADMINAGENTGROUP);
+		}
+		
 		if (configurationService
 				.getConfiguration()
 				.getBoolean(

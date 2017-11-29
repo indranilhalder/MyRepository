@@ -56,7 +56,8 @@ public interface BuyBoxService
 	//get seller data
 	//CKD: TPR-3809
 	//Set<Map<BuyBoxModel, RichAttributeModel>> getsellersDetails(String productCode) throws EtailNonBusinessExceptions;
-	Set<Map<BuyBoxModel, RichAttributeModel>> getsellersDetails(String productCode, String prodCatType) throws EtailNonBusinessExceptions;
+	Set<Map<BuyBoxModel, RichAttributeModel>> getsellersDetails(String productCode, String prodCatType)
+			throws EtailNonBusinessExceptions;
 
 	//
 	List<BuyBoxModel> buyBoxStockForSeller(final String sellerID);
@@ -95,7 +96,7 @@ public interface BuyBoxService
 
 	/**
 	 * TPR-5712 buybox price for all seller
-	 * 
+	 *
 	 * @param productCode
 	 * @return
 	 * @throws EtailNonBusinessExceptions
@@ -117,4 +118,13 @@ public interface BuyBoxService
 	 * @return
 	 */
 	public String findPussid(String selectedUSSID);
+
+	/**
+	 * This Method is for Seller Monogramming Message Changes
+	 *
+	 * @param sellerId
+	 * @param productCode
+	 * @return String
+	 */
+	public String getSellerMonogrammingMsg(String productCode, String sellerId);
 }
