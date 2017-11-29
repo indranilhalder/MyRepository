@@ -1078,7 +1078,13 @@ function fetchCatSpecificReason(element){
 				    $.each(data, function(item,obj) {					
 				        options.append($("<option />").val(obj.code).text(obj.reasonDescription));
 				    });
+				    if($.isEmptyObject(data)){
+				    	$("select [name=subReasonList]").hide();
+				    }
 			  },
+			  complete : function(){
+				  
+			  }
 			  error:function(data){
 				  console.log("Error in fetchCatSpecificReason"+data);
 			  }

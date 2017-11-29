@@ -40,6 +40,9 @@ public interface MplOrderDao
 	//TPR-5954
 	public List<ReturnReasonModel> getSubReturnReason(String parentReturnReasonCode) throws Exception;
 
+	//TPR-5954
+	public String fetchReasonDesc(final String returnReasonCode) throws Exception;
+
 	/**
 	 * @param customerModel
 	 * @param store

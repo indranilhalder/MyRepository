@@ -155,6 +155,33 @@ public class DefaultMplOrderDao implements MplOrderDao
 		}
 	}
 
+	//TPR-5954
+	@Override
+	public String fetchReasonDesc(final String returnReasonCode) throws Exception
+	{
+		String returnReasons = null;
+		try
+		{
+			final String queryString = "select {reasonCodes}, {reasonDesc} from {ReturnReasonCatChild} where {reasonCodes} = '"
+					+ returnReasonCode + "' ";
+			final FlexibleSearchQuery fQuery = new FlexibleSearchQuery(queryString);
+			fQuery.setResultClassList(Arrays.asList(String.class, String.class));
+			final SearchResult<List<Object>> rows = flexibleSearchService.search(fQuery);
+
+			for (final List<Object> row : rows.getResult())
+			{
+				if (null != row.get(1))
+				{
+					returnReasons = (String.valueOf(row.get(1)));
+				}
+			}
+			return returnReasons;
+		}
+		catch (final Exception e)
+		{
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000);
+		}
+	}
 
 	/**
 	 *

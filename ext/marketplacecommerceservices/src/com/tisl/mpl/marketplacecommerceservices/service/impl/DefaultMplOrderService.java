@@ -211,6 +211,20 @@ public class DefaultMplOrderService implements MplOrderService
 		}
 	}
 
+	//TPR-5954
+	@Override
+	public String fetchReasonDesc(final String returnCode) throws Exception
+	{
+		try
+		{
+			final String reasonDesc = mplOrderDao.fetchReasonDesc(returnCode);
+			return reasonDesc;
+		}
+		catch (final Exception e)
+		{
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000);
+		}
+	}
 
 	/**
 	 *

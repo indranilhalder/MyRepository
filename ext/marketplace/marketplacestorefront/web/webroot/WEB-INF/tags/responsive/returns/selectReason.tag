@@ -133,23 +133,30 @@
 						<br/><br/>
 						<br/><br/>
 						
-						<!-- Abhijit || start -->
+						<!-- TPR-5954 || start -->
 						<div class="col-md-7 col-sm-7 col-xs-12 selectReasonForReturn">
-							<form:select name="reasonList" class="reasonSelectBox" path="subReturnReason" id="returnSubReason">
-								    <option selected='selected' value="NA"><spring:theme code="text.subRequestDropdown.selected"/></option>
+							<form:select name="subReasonList" class="subReasonSelectBox" path="subReturnReason" id="returnSubReason">
+								    <option selected='selected' value="NA"><spring:theme code="text.subrequestDropdown.selected"/></option>
 									<c:forEach items="${reasonDataList}" var="reason"
 										varStatus="reasonStatus">
 										<form:option value="${reason.code}">${reason.reasonDescription}</form:option>	
 									</c:forEach>									
 							</form:select>						
 						</div>
-						<div class="col-md-7 col-sm-7 col-xs-12">
-							<form:select name="reasonList" class="reasonSelectBox" path="comments" id="newReturnComments">
+						
+						<br/><br/>
+						<br/><br/>
+						<br/><br/>
+						
+						<div class="col-md-7 col-sm-7 col-xs-12 ">
+						
+						<form:textarea maxlength="250"  rows="3" cols="45" path="comments" name="returnComments" placeholder="Comments" />
+							<%-- <form:select name="commentsList" class="commentsBox" path="comments" id="newReturnComments">
 									<span class="add-comment-title">Comment</span>
 									<br/>
-									<textarea maxlength="250" rows="3" cols="45" placeholder="Max 250 Characters" id="addCommentArea" path=comments></textarea>       
+									<textarea maxlength="250" rows="3" cols="45" placeholder="Max 250 Characters" id="addCommentArea"></textarea>       
 					   	 			<br/>
-					   		</form:select>
+					   		</form:select> --%>
 					   		<%-- <form:select>
 					    			<span>Upload Image<label class="upload-image-title" for="upload-photo">Browse</label></span>
 					    			<br/>
@@ -157,7 +164,7 @@
 									<input type="file" name="photo" id="upload-photo" />
 							</form:select> --%>
 					    </div>
-						<!-- Abhijit || end -->
+						<!-- TPR-5954 || end -->
 						
 						
 						
