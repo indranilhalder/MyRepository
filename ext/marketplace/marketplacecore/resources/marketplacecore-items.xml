@@ -13851,10 +13851,6 @@
 		</itemtype>
 	</typegroup>
 	<!-- TPR-5954 || Category specific return reason ||End -->
-	</itemtypes>
-</items>
-
-
 
 	<!-- Car-Changes-Start-CAR-331 -->
 	<typegroup name="Mpl_Restriction">

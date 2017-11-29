@@ -1082,9 +1082,6 @@ function fetchCatSpecificReason(element){
 				    	$("select [name=subReasonList]").hide();
 				    }
 			  },
-			  complete : function(){
-				  
-			  }
 			  error:function(data){
 				  console.log("Error in fetchCatSpecificReason"+data);
 			  }
