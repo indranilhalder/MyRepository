@@ -12,29 +12,6 @@
 
 <h2 class="mb-20"><spring:theme code="luxury.header.link.register" /> </h2>
 
-	<!-- For  Gigya and API Social Login -->
-<%-- <c:choose> 
-  <c:when test="${isGigyaEnabled=='Y'}">
-   <ul class="social-connect" id="gSignInWrapper">
-<li>
-   <!--  <br /> -->
-   <!--  <h4>Please sign in using one of the following providers:</h4><br /><br /> -->
-    <div id="loginDivReg"></div>
-    
-    </li>
-</ul>
-  </c:when>
-  <c:otherwise>
- 
-<div class="header-soc-login mb-20">
-	<a class="fb-login btn btn-fb" href="${urlVisitForFacebook}">FACEBOOK</a>
-	<a class="g-login btn btn-default btn-gp" href="${urlVisit}">GOOGLE</a>
-</div>
-  </c:otherwise>
-</c:choose> --%>
-
-<!-- End  Gigya and API Social Login -->
-
 <c:if test="${useNativeSocial=='Y'}">
 	<ul class="social-connect" id="gSignInWrapper">
 		<div class="header-soc-login mb-20 ">
