@@ -1920,7 +1920,7 @@
 	-webkit-font-smoothing: antialiased;
 	-moz-osx-font-smoothing: grayscale;
 	font-weight: 100;
-	content: "\f015";
+	/* content: "\f015"; */
 	top: 0;
 	left: 25px;
 	font-size: 14px;
@@ -3436,23 +3436,16 @@ body.page-cartPage .cart.wrapper .MyBag-buttons ul.checkout-types a.checkoutButt
 	width: 180px;
 	margin-top: 0px;
 }
-
-.MyBag-top-section {
-	margin: 0px;
-}
-
 body.page-cartPage .MyBag-pincode input#defaultPinCodeIds {
 	width: 148px;
 	text-transform: initial;
 	font-size: 12px;
 	padding-left: 8px;
 }
-
 body.page-cartPage .MyBag-pincode button#pinCodeButtonIds {
 	width: 110px;
 	background-color: #666;
 }
-
 body.page-cartPage .MyBag-buttons p.desk-view {
 	display: none;
 }
@@ -5800,4 +5793,12 @@ li.item>ul li:last-child {
 #redirectsToPDP .modal-content.content>.close {
     right: 5px !important;
     top: 5px !important;
+}
+.MyBag-top-section {
+	margin: 0px;
+}
+.cart.wrapper .product-block li.item>ul>li:first-child div.product .product-name {
+    font-size: 11px;
+    line-height: 18px !important;
+    font-weight: normal;
 }

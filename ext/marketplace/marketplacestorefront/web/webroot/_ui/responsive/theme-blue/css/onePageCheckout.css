@@ -5641,4 +5641,22 @@ transform-origin:0 0;
     width: 13em !important;
     margin-left: 10px;
 }
-
+.checkout.wrapper .product-block li.header>ul li.delivery ul, .checkout.wrapper .product-block li.item>ul li.delivery ul {
+    margin-bottom: 0 !important;
+}
+.radio_btn {
+    display: block !important;
+    height: 15px !important;
+    width: 15px !important;
+    cursor: pointer;
+    float: left;
+    border-radius: 50% !important;
+    padding: 0 !important;
+}
+#paymentFormButton.pay.cont-del #submitPaymentFormCODButton {
+    display: block !important;
+}
+.cart.wrapper.checkout-payment .blocks .cash #otpNUM p {
+    padding: 0;
+    font-size: 14px;
+}
