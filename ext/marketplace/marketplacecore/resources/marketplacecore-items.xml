@@ -8066,6 +8066,23 @@
 						<modifiers read="true" write="true" optional="true" />
 						<persistence type="property" />
 					</attribute>
+					<!-- Added for TPR-5954 || Start -->
+					<attribute qualifier="subReason" type="java.lang.String">
+						<description>Sub reason value</description>
+						<modifiers read="true" write="true" optional="true" />
+						<persistence type="property" />
+					</attribute>
+					<attribute qualifier="returnRemarks" type="java.lang.String">
+						<description>remarks for return</description>
+						<modifiers read="true" write="true" optional="true" />
+						<persistence type="property" />
+					</attribute>
+					<attribute qualifier="imgUrl" type="java.lang.String">
+						<description>url of the uploaded image</description>
+						<modifiers read="true" write="true" optional="true" />
+						<persistence type="property" />
+					</attribute>
+					<!-- Added for TPR-5954 || End -->
 				</attributes>
 			</itemtype>
 			<itemtype code="RefundEntry" autocreate="false" generate="true">
@@ -13786,6 +13803,54 @@
             </typegroup>
       <!-- end:PR-9: Solr relevance score -->
 
+      <!-- TPR-5954 || Category specific return reason ||Start -->
+     <typegroup name="ReturnCat">
+	<itemtype code="ReturnReasonCatChild" autocreate="true"
+			generate="true" extends="GenericItem" jaloclass="com.tisl.mpl.core.jalo.ReturnReasonCatChild">
+			<deployment table="MplRetReasonCat" typecode="25126" />
+			<attributes>
+				<attribute qualifier="reasonCodes" type="java.lang.String">
+					<description>This is the reason codes</description>
+					<modifiers optional="false" unique="true" write="true"
+							read="true" />
+					<persistence type="property" />
+				</attribute>
+				<attribute qualifier="reasonDesc" type="java.lang.String">
+					<description>The reason descriptions</description>
+					<modifiers optional="true" unique="false" write="true"
+							read="true" />
+					<persistence type="property" />
+				</attribute>
+				<attribute qualifier="parentRelation" type="java.lang.String">
+					<description>The parent child relation</description>
+					<modifiers optional="true" unique="false" write="true"
+							read="true" />
+					<persistence type="property" />
+				</attribute>
+			</attributes>
+		</itemtype>
+	</typegroup>
+	 <typegroup name="ReturnCat">
+	<itemtype code="ReturnReasonCatMaster" autocreate="true"
+			generate="true" extends="GenericItem" jaloclass="com.tisl.mpl.core.jalo.ReturnReasonCatMaster">
+			<deployment table="MplRetReasonCatMap" typecode="25127" />
+			<attributes>
+				<attribute qualifier="prodCat" type="java.lang.String">
+					<description>product category</description>
+					<modifiers optional="false" unique="false" write="true"
+							read="true" />
+					<persistence type="property" />
+				</attribute>
+				<attribute qualifier="reasonCode" type="java.lang.String">
+					<description>The reason descriptions</description>
+					<modifiers optional="true" unique="true" write="true"
+							read="true" />
+					<persistence type="property" />
+				</attribute>
+			</attributes>
+		</itemtype>
+	</typegroup>
+	<!-- TPR-5954 || Category specific return reason ||End -->
 
 	<!-- Car-Changes-Start-CAR-331 -->
 	<typegroup name="Mpl_Restriction">
@@ -13807,3 +13872,4 @@
 									 
   </itemtypes>
 </items>
+

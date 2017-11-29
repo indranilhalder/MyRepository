@@ -3,6 +3,7 @@
  */
 package com.tisl.mpl.integration.oms.order.populators;
 
+import de.hybris.platform.catalog.CatalogVersionService;
 import de.hybris.platform.category.model.CategoryModel;
 import de.hybris.platform.commerceservices.externaltax.TaxCodeStrategy;
 import de.hybris.platform.converters.Populator;
@@ -99,6 +100,9 @@ public class CustomOmsOrderLinePopulator implements Populator<OrderEntryModel, O
 	//
 	//	@Resource(name = "catalogVersionService")
 	//	private CatalogVersionService catalogVersionService;
+
+	@Resource(name = "catalogVersionService")
+	private CatalogVersionService catalogVersionService;
 
 	@Override
 	public void populate(final OrderEntryModel source, final OrderLine target) throws ConversionException
@@ -269,7 +273,10 @@ public class CustomOmsOrderLinePopulator implements Populator<OrderEntryModel, O
 				target.setCategoryName(source.getProductRootCatCode());
 			}
 
-
+			//product Category code
+			//Setting the version of sessioncatalog
+			catalogVersionService.setSessionCatalogVersion(MarketplacecommerceservicesConstants.DEFAULT_IMPORT_CATALOG_ID,
+					MarketplacecommerceservicesConstants.DEFAULT_IMPORT_CATALOG_VERSION);
 			//TPR-5954 || Category specific return reason || Start
 			Collection<CategoryModel> superCategories = prodModel.getSupercategories();
 
@@ -451,14 +458,14 @@ public class CustomOmsOrderLinePopulator implements Populator<OrderEntryModel, O
 			/*
 			 * if (richAttributeModel.get(0).getDeliveryFulfillModeByP1() != null &&
 			 * richAttributeModel.get(0).getDeliveryFulfillModeByP1().getCode() != null)
-			 * 
+			 *
 			 * { final String fulfilmentType =
 			 * richAttributeModel.get(0).getDeliveryFulfillModeByP1().getCode().toUpperCase();
 			 * target.setFulfillmentTypeP1(fulfilmentType); }
-			 * 
+			 *
 			 * if (richAttributeModel.get(0).getDeliveryFulfillModes() != null &&
 			 * richAttributeModel.get(0).getDeliveryFulfillModes().getCode() != null)
-			 * 
+			 *
 			 * { final String fulfilmentType = richAttributeModel.get(0).getDeliveryFulfillModes().getCode().toUpperCase();
 			 * if(fulfilmentType.equalsIgnoreCase(MarketplaceomsservicesConstants.BOTH)){
 			 * if(richAttributeModel.get(0).getDeliveryFulfillModeByP1
@@ -662,7 +669,7 @@ public class CustomOmsOrderLinePopulator implements Populator<OrderEntryModel, O
 	 * (!category.getSupercategories().isEmpty()) { for (final CategoryModel superCategory :
 	 * category.getSupercategories()) { getCategoryName(superCategory); } } } catch (final Exception e) { throw new
 	 * EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000); }
-	 * 
+	 *
 	 * }
 	 */
 
