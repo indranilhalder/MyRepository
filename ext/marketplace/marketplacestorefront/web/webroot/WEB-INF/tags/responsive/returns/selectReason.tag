@@ -150,10 +150,12 @@
 									<textarea maxlength="250" rows="3" cols="45" placeholder="Max 250 Characters" id="addCommentArea" path=comments></textarea>       
 					   	 			<br/>
 					   		</form:select>
+					   		<%-- <form:select>
 					    			<span>Upload Image<label class="upload-image-title" for="upload-photo">Browse</label></span>
 					    			<br/>
 					    			<label>(Accpeted format JPEG,PNG,PDF & Max file size 5MB)</label>
 									<input type="file" name="photo" id="upload-photo" />
+							</form:select> --%>
 					    </div>
 						<!-- Abhijit || end -->
 						

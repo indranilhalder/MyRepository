@@ -1465,6 +1465,7 @@ public class ReturnPageController extends AbstractMplSearchPageController
 
 	//TPR-5954
 	@ResponseBody
+	@RequireHardLogIn
 	@RequestMapping(value = "/fetchSubReason", method = RequestMethod.GET)
 	public List<ReturnReasonData> fetchSubReturnReason(@RequestParam final String parentReasonCode)
 	{
@@ -1479,4 +1480,63 @@ public class ReturnPageController extends AbstractMplSearchPageController
 		}
 		return returnableStores;
 	}
+
+	//TPR-5954
+	@RequestMapping(value = "/uploadImg", method = RequestMethod.POST)
+	@RequireHardLogIn
+	public String uploadImages(final MultipartFile returnImgFile, final Model model, final HttpServletRequest request,
+			final RedirectAttributes redirectAttributes) throws CMSItemNotFoundException, Exception
+	{
+		try
+		{
+			LOG.debug("***************:" + returnImgFile.getOriginalFilename());
+			String fileUploadLocation = null;
+			String date = null;
+			Path path = null;
+			//TISRLUAT-50
+			if (null != configurationService)
+			{
+				fileUploadLocation = configurationService.getConfiguration().getString(RequestMappingUrlConstants.FILE_UPLOAD_PATH);
+				if (null != fileUploadLocation && !fileUploadLocation.isEmpty())
+				{
+					try
+					{
+						final byte barr[] = returnImgFile.getBytes();
+						final SimpleDateFormat sdf = new SimpleDateFormat("YYYY/MM/dd");
+						date = sdf.format(new Date());
+						path = Paths.get(fileUploadLocation + File.separator + date);
+						if (!Files.exists(path))
+						{
+							try
+							{
+								Files.createDirectories(path);
+							}
+							catch (final IOException e)
+							{
+								//fail to create directory
+								LOG.error("Exception ,While creating the Directory " + e.getMessage());
+							}
+						}
+						final BufferedOutputStream bout = new BufferedOutputStream(new FileOutputStream(path + File.separator
+								+ returnImgFile.getOriginalFilename()));
+						bout.write(barr);
+						bout.flush();
+						bout.close();
+						LOG.debug("FileUploadLocation   :" + fileUploadLocation);
+					}
+					catch (final Exception e)
+					{
+						LOG.error("Exception is:" + e);
+					}
+				}
+
+			}
+		}
+		catch (final Exception ex)
+		{
+			LOG.error(ex.getStackTrace());
+		}
+		return "OK";
+	}
+
 }

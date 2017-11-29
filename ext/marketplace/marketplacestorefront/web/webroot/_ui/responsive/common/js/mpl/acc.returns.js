@@ -1089,4 +1089,7 @@ function fetchCatSpecificReason(element){
 		console.log("Error:"+e);
 	}
 }
+
+
+/*function uploadImage()*/
 		
