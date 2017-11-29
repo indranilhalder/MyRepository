@@ -377,6 +377,12 @@ public interface ControllerConstants
 				public static final String OTHERSELLERS_PAGE_LIMIT = "othersellers.pageLimit";
 				public static final String VIEW_SELLERS = "viewSellers";
 				public static final String PRODUCT_CODE = "productCode";
+
+				//CAR-327 starts here
+				public static final String SELLERID = "sellerId";
+				public static final String PRIMARYOFFERMESSAGEMAP = "primaryOfferMessageMap";
+				//CAR-327 ends here
+
 				public static final String SIZESELECTED = "sizeSelected";
 				public static final String BUYBOXUSSID = "buyboxussid";
 				public static final String ALLSELLERS = "allsellers";
