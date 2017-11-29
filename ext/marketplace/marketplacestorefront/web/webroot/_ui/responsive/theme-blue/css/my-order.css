@@ -970,8 +970,8 @@ body .account .right-account .order-history.order-details li.item .status>ul>li.
     border: 0;
 }
 .track-order-modal .content>.close:before {
-	color: #000;
-    font-size: 26px;
+	color: #000 !important;
+    font-size: 26px !important;
 }
 /* end Track order */
 

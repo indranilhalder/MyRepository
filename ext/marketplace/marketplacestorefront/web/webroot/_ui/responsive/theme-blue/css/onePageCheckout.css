@@ -39,7 +39,7 @@
 	text-transform:none;
 	font-weight: normal;
 	letter-spacing: normal;
-	text-transform: capitalize;
+	text-transform: capitalize !important;
 }
 .cart.wrapper.checkout-payment .right-block.billing.checkout-list-right .block{
 	margin:8px auto 28px;
@@ -3385,11 +3385,9 @@ body.page-multiStepCheckoutSummaryPage header, body.page-checkout-login header {
 	margin-bottom: 9px;
 	}
 .cart.wrapper.checkout-payment .right-block.billing.checkout-list-right h3{
-	font-size: 14px;
   	line-height: 2;
   	text-align: center;
-  	color: #000000;
-  	text-transform: capitalize;
+  	text-transform: capitalize !important;
     margin-top: 13px;
 	}
 #singlePageDesktop{
@@ -5643,3 +5641,4 @@ transform-origin:0 0;
     width: 13em !important;
     margin-left: 10px;
 }
+

@@ -140,3 +140,10 @@ body .account .right-account .reviews .review-list .wrapper>li .review .stats {
     float: right;
     margin-bottom: 11px;
 }
+#deleteReview h2.modal-title, #updateReview h2.modal-title, #reviewPluginContainer h2.modal-title, h2.modal-title#myModalLabel {
+    font-size: inherit;
+    font-weight: normal;
+    margin: 0;
+    padding: 0;
+    letter-spacing: normal;
+}

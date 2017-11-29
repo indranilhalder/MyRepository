@@ -1376,6 +1376,9 @@
  .checkout-paymentmethod {
 	display: none;
 }
+.body-Content {
+    background: #fff;
+}
 </style>
 
 <script>
