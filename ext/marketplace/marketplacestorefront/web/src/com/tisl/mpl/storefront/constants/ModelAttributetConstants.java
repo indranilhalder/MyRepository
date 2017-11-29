@@ -974,8 +974,8 @@ public final class ModelAttributetConstants
 	public static final String FB_API_KEY = "mplfbid";
 	public static final String GOOGLE_API_KEY = "mplgoogleid";
 	public static final String USE_NATIVE_API_SOCIAL = "useNativeSocial";
-	
-// TPR-3878 START
+
+	// TPR-3878 START
 	public static final String SPECIAL_FEATURES_LIST = "specialFeatures";
 	public static final String MOVEMENT = "Movement";
 	public static final String MOVEMENT_LIST = "movementList";

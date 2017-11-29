@@ -14,7 +14,7 @@
 <h2 class="mb-20"><spring:theme code="luxury.header.link.signin" /></h2>
 
 	<!-- For  Gigya and API Social Login -->
-<c:choose> 
+<%-- <c:choose> 
   <c:when test="${isGigyaEnabled=='Y'}">
    <ul class="social-connect" id="gSignInWrapper">
 <li>
@@ -33,9 +33,21 @@
 	</div>
 	</ul>
   </c:otherwise>
-</c:choose>
+</c:choose> --%>
 
 <!-- End  Gigya and API Social Login -->
+
+<c:if test="${useNativeSocial=='Y'}">
+   <ul class="social-connect" id="gSignInWrapper">
+   	<div class="header-soc-login mb-20 ">
+		<button class="fb-login btn btn-fb" onclick="ACC.socialLogin.facebookSocialLogin();">FACEBOOK</button>
+		<button id="customBtndrop" class="g-login btn btn-default btn-gp" >GOOGLE</button>
+		<script type="text/javascript">
+			ACC.socialLogin.attachSignin( document.getElementById('customBtndrop'));
+		</script>
+	</div>
+	</ul>
+</c:if>
 
 <p class="mb-20">OR</p>
 <form:form action="/j_spring_security_check" method="post" commandName="loginForm">

@@ -168,11 +168,9 @@
 	src="${commonResourcePath}/js/mpl/tealium.js"></script>
 	
 	<!-- Start Added for new Social Login Changes -->
+	<script src="https://connect.facebook.net/en_US/sdk.js" async defer></script>
+	<script src="https://apis.google.com/js/platform.js" async defer></script>
 	<script type="text/javascript"
-	src="${commonResourcePath}/js/plugins/facebook2_10.js"></script>
-<script type="text/javascript"
-	src="${commonResourcePath}/js/plugins/googleLogin.js"></script>
-<script type="text/javascript"
 	src="${commonResourcePath}/js/mpl/acc.socialLogin.js"></script>
 	
 	<!-- End Added for new Social Login Changes -->

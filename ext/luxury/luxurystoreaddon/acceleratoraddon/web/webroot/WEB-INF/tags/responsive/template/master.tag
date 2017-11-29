@@ -279,7 +279,14 @@
 
 <input type="hidden" id="isLuxury" value="true"/>
 
-
+<c:if test="${useNativeSocial=='Y'}">
+	<script type="text/javascript">
+	var fbid='${mplfbid}';
+	var gid='${mplgoogleid}';
+</script>
+	<meta name="fbid" content="${mplfbid}"/>
+	<meta name="gid" content="${mplgoogleid}"/>
+</c:if>
 <!-- For Gigya Social Login --><!-- TISPT-261 -->
 	<c:if test="${isLuxuryGigyaEnabled=='Y'}">
 		<c:choose>

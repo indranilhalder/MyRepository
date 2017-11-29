@@ -89,7 +89,7 @@ function registerUserGigya(eventObject)
     			onAddReviewClicked:reviewClick,
     		}
     		
-    		gigya.comments.showRatingUI(ratingsParams);
+    		/*gigya.comments.showRatingUI(ratingsParams);*/
 
     		var params = {
     			categoryID : $('input[name=gigya_product_root_category]').val(),
@@ -111,7 +111,7 @@ function registerUserGigya(eventObject)
     			onError: onErrorHandler
     			// userAction: shareUserAction
     		}
-    		gigya.comments.showCommentsUI(params);	
+    		/*gigya.comments.showCommentsUI(params);*/	
     		
     		//TISPRD-3152 FIX
     		var pageName = $('#pageName').val();
@@ -256,7 +256,7 @@ function registerUserGigya(eventObject)
     		
     		  }  
     		  
-    		  gigya.comments.showRatingUI(ratingsParams);
+    		  /*gigya.comments.showRatingUI(ratingsParams);*/
 //    		$.getJSON("https://comments.us1.gigya.com/comments.getStreamInfo?apiKey="+key+"&categoryID="+category+"&streamId="+productCode+"&includeRatingDetails=true&format=jsonp&callback=hello",
 //    		         function(data) {
 //    			
@@ -291,7 +291,7 @@ function registerUserGigya(eventObject)
     		}
     	}
     	/*$(function(){*/
-    		if(typeof($('#loginDiv').html())!= undefined){
+    		/*if(typeof($('#loginDiv').html())!= undefined){
     			gigya.socialize.showLoginUI({
     	            height: 100
     	            ,width: 330
@@ -345,7 +345,7 @@ function registerUserGigya(eventObject)
     		            ,cid:''
     		            ,enabledProviders : 'facebook,google'
     		            });
-    		}
+    		}*/
  
     
     	function getPdpRatingOnSizeSelect(key,productCode,category)//UF-60
@@ -384,7 +384,7 @@ function registerUserGigya(eventObject)
     	    	    			onError: onErrorHandler
     	    	    			// userAction: shareUserAction
     	    	    		}
-	    	    	    gigya.comments.showCommentsUI(params);
+	    	    	    /*gigya.comments.showCommentsUI(params);*/
     	            }
     	        }
     		}
