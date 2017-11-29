@@ -23,13 +23,11 @@ import java.util.List;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Required;
 
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.core.constants.MarketplaceCoreConstants;
 import com.tisl.mpl.core.model.PcmProductVariantModel;
-import com.tisl.mpl.standardizationfactory.StandardizationService;
 
 
 /**
@@ -37,33 +35,11 @@ import com.tisl.mpl.standardizationfactory.StandardizationService;
  *
  */
 //Index size for a PcmProductVariantModel
-public class MplSizeFacetValueProvider extends AbstractPropertyFieldValueProvider implements FieldValueProvider, Serializable
+public class MplWeightFacetValueProvider extends AbstractPropertyFieldValueProvider implements FieldValueProvider, Serializable
 {
 	private FieldNameProvider fieldNameProvider;
 
-	//For TPR:4847: size facet clubbing for kidswear
-	@Autowired
-	private StandardizationService sizeStandard;
 
-	//For TPR:4847: size facet clubbing for kidswear
-
-	//	@Autowired
-	//	private ConfigurationService configurationService;
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * de.hybris.platform.solrfacetsearch.provider.FieldValueProvider#getFieldValues(de.hybris.platform.solrfacetsearch
-	 * .config.IndexConfig, de.hybris.platform.solrfacetsearch.config.IndexedProperty, java.lang.Object)
-	 */
-	/**
-	 * @return Collection<fieldValues>
-	 * @param indexConfig
-	 *           ,indexedProperty,model
-	 * @description: It returns the size of a specific variant product
-	 *
-	 */
 	@Override
 	public Collection<FieldValue> getFieldValues(final IndexConfig indexConfig, final IndexedProperty indexedProperty,
 			final Object model) throws FieldValueProviderException
@@ -71,72 +47,44 @@ public class MplSizeFacetValueProvider extends AbstractPropertyFieldValueProvide
 		if (model instanceof PcmProductVariantModel)
 		{
 			//Model should be instance of PcmProductVariantModel
-			final PcmProductVariantModel pcmColorModel = (PcmProductVariantModel) model;
+			final PcmProductVariantModel pcmSizeModel = (PcmProductVariantModel) model;
 			//Get size for a product
-			String size = pcmColorModel.getSize();
-			String kidswearSize = "";
+			String weight = null;
 
 			final List<String> weightCategoryList = Arrays.asList(getConfigurationService().getConfiguration()
 					.getString("mpl.homefurnishing.category.weight", "").split(","));
-			final List<String> volumeCategoryList = Arrays.asList(getConfigurationService().getConfiguration()
-					.getString("mpl.homefurnishing.category.volume", "").split(","));
 
-			/**
-			 * This logic used to fix issue: TISREL-654 ('Size' facet shouldn't get displayed in the PLP of Belts category)
-			 */
-			if ("Accessories".equalsIgnoreCase(pcmColorModel.getProductCategoryType()))
+
+			if (MarketplaceCoreConstants.HOME_FURNISHING.equalsIgnoreCase(pcmSizeModel.getProductCategoryType()))
 			{
-				return Collections.emptyList();
-			}
-
-
-			if (MarketplaceCoreConstants.HOME_FURNISHING.equalsIgnoreCase(pcmColorModel.getProductCategoryType()))
-			{
-				if (size.equalsIgnoreCase(MarketplaceCoreConstants.NOSIZE) && StringUtils.isNotEmpty(size))
-				{
-					return Collections.emptyList();
-				}
-				final Collection<CategoryModel> superCategories = pcmColorModel.getSupercategories();
-				if (CollectionUtils.isNotEmpty(superCategories) && CollectionUtils.isNotEmpty(weightCategoryList)
-						&& CollectionUtils.isNotEmpty(volumeCategoryList))
+				final Collection<CategoryModel> superCategories = pcmSizeModel.getSupercategories();
+				if (CollectionUtils.isNotEmpty(superCategories) && CollectionUtils.isNotEmpty(weightCategoryList))
 				{
 					for (final CategoryModel primaryCategory : superCategories)
 					{
 						if (primaryCategory != null && StringUtils.isNotEmpty(primaryCategory.getCode()))
 						{
-							if (weightCategoryList.contains(primaryCategory.getCode())
-									|| volumeCategoryList.contains(primaryCategory.getCode()))
+							if (weightCategoryList.contains(primaryCategory.getCode()))
 							{
-								return Collections.emptyList();
+								weight = pcmSizeModel.getSize();
 							}
-
 						}
+
 					}
 				}
-
-			}
-			//For TPR:4847: size facet clubbing
-			if ("Kidswear".equalsIgnoreCase(pcmColorModel.getProductCategoryTypeL2()))
-			{
-				kidswearSize = sizeStandard.getStandardValueNonNumeric(size, "KidswearSize", "0.0");
-
-				if (null != kidswearSize && StringUtils.isNotEmpty(kidswearSize))
+				if (weight.equalsIgnoreCase(MarketplaceCoreConstants.NOSIZE))
 				{
-					size = kidswearSize;
+					return Collections.emptyList();
 				}
 			}
-			//For TPR:4847: size facet clubbing
-			/**
-			 * Fix issue : TISREL-654 End
-			 */
-			//If size is not empty
-			if (size != null && !size.isEmpty())
+
+			if (StringUtils.isNotEmpty(weight))
 			{
 				final Collection<FieldValue> fieldValues = new ArrayList<FieldValue>();
 
 				{
 					//add field values
-					fieldValues.addAll(createFieldValue(size, indexedProperty));
+					fieldValues.addAll(createFieldValue(weight, indexedProperty));
 				}
 				//return the field values
 				return fieldValues;
