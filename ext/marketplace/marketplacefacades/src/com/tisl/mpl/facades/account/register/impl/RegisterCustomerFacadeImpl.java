@@ -393,7 +393,7 @@ public class RegisterCustomerFacadeImpl extends DefaultCustomerFacade implements
 	 * @return ExtRegisterData
 	 */
 	@Override
-	public ExtRegisterData registerSocial(final ExtRegisterData registerData, final boolean isMobile)
+	public ExtRegisterData registerSocial(final ExtRegisterData registerData, final boolean isMobile, final int platformNumber) //SDI-639
 	{
 		try
 		{
@@ -467,7 +467,7 @@ public class RegisterCustomerFacadeImpl extends DefaultCustomerFacade implements
 
 				//Register customer social
 				newCustomer.setCustomerRegisteredBySocialMedia(Boolean.TRUE);
-				data = extDefaultCustomerService.registerUserForSocialSignup(newCustomer);
+				data = extDefaultCustomerService.registerUserForSocialSignup(newCustomer, platformNumber); //SDI-639
 				extUserService.addToRegisteredGroup(newCustomer);
 
 				/*

@@ -13,6 +13,7 @@ import de.hybris.platform.servicelayer.search.FlexibleSearchQuery;
 import de.hybris.platform.servicelayer.search.SearchResult;
 import de.hybris.platform.servicelayer.search.exceptions.FlexibleSearchException;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -356,5 +357,65 @@ public class MplProductDaoImpl extends DefaultProductDao implements MplProductDa
 				MarketplacecommerceservicesConstants.DEFAULT_IMPORT_CATALOG_ID,
 				MarketplacecommerceservicesConstants.DEFAULT_IMPORT_CATALOG_VERSION);
 		return catalogVersionModel;
+	}
+
+	@Override
+	public String getSizeForSTWProduct(final String productCode)
+	{
+		List<String> size = null;
+		final String query = "Select {pcmv.size} from {PcmProductVariant as pcmv} where {pcmv.code}=?productCode";
+
+		try
+		{
+			final FlexibleSearchQuery flexiQuery = new FlexibleSearchQuery(query);
+			flexiQuery.setResultClassList(Collections.singletonList(String.class));
+			final SearchResult<String> searchResult = getFlexibleSearchService().search(flexiQuery);
+			LOG.debug("findProductForHasVariant: searchResult********** " + searchResult);
+			size = searchResult.getResult();
+		}
+		catch (final Exception e)
+		{
+			LOG.error(e);
+		}
+		if (size != null)
+		{
+			return size.get(0);
+		}
+		else
+		{
+			return "";
+		}
+	}
+
+
+	@Override
+	public List<String> getVariantsForSTWProducts(final String productCode)
+	{
+
+		final String query = "select {pcm.colourHexCode} from {PcmProductVariant as pcm}}"
+				+ " where {pcm.baseproduct} IN ({{SELECT {p.baseproduct} from {PcmProductVariant as p}})"
+				+ " AND {pcm.pk} IN ({{select {p.pk} from {product as p} where {p.code} = '987654322' }})'";
+
+		List<String> variants = null;
+		try
+		{
+			final FlexibleSearchQuery flexiQuery = new FlexibleSearchQuery(query);
+			//flexiQuery.setResultClassList(Collections.singletonList(String.class));
+			final SearchResult<String> searchResult = getFlexibleSearchService().search(flexiQuery);
+			LOG.debug("findProductForHasVariant: searchResult********** " + searchResult);
+			variants = searchResult.getResult();
+		}
+		catch (final Exception e)
+		{
+			LOG.error(e);
+		}
+		if (variants != null)
+		{
+			return variants;
+		}
+		else
+		{
+			return new ArrayList<String>();
+		}
 	}
 }

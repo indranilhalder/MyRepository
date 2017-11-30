@@ -137,9 +137,9 @@ ACC.product = {
 		
 	
 		$(document).off('click', '#addToCartFormQuick').on('click', '#addToCartFormQuick', function(event) { 
-		   
+			  //console.log("QucikView not Here");
 			 $("#qty1").val($("#quantity").val());
-				if($("#sizeSelected").val()!='no'){
+				if($("#sizeSelected").val()!='no' || $("#categoryType").val()=='HomeFurnishing'){
 				
 					/*TPR-681
 					var productCodePost = $("#productCodePost").val();
@@ -306,12 +306,14 @@ ACC.product = {
 			// Product code passed as an array for Web Analytics   INC_11511 
 			var productCodeArray=[];
 			productCodeArray.push(productCode);	// Product code passed as an array for Web Analytics
-			utag.link({
-				"link_obj" : this,
-			    "link_text": 'add_tobag_wishlist',
-			    "event_type": 'add_tobag_wishlist',
-			    "product_sku_wishlist" : "" + productCodeArray
-			});
+			//utag undefined fix for wishlist
+			if(typeof(utag) != "undefined"){
+				utag.link({
+				    "link_text": 'add_tobag_wishlist',
+				    "event_type": 'add_tobag_wishlist',
+				    "product_sku_wishlist" : "" + productCodeArray
+				});	
+			}
 			
 			/*TPR-646 ends*/
 			  ACC.product.sendAddToBagWl(formElem.attr("id"));
@@ -828,11 +830,14 @@ sendAddToBagQuick:function(formId){
 			if(!utagError){
 				var productCodeArray=[];
 				productCodeArray.push(productCode);	// Product code passed as an array for Web Analytics
-				utag.link({
-					link_text: 'quick_view_addtobag' , 
-					event_type : 'quick_view_addtobag', 
-					product_sku_quick_view : productCodeArray
-				});
+				if(typeof(utag) != "undefined"){
+					utag.link({
+						link_text: 'quick_view_addtobag' , 
+						event_type : 'quick_view_addtobag', 
+						product_sku_quick_view : productCodeArray
+					});	
+				}
+			
 			}
 			/*TPR-681 Ends*/
 			//End MSD
@@ -981,7 +986,7 @@ sendAddToBagQuick:function(formId){
 				//if(isSuccess){
 				if(!utagError && !digitalDataError){
 					//TISQAEE-64 Buy Now Quick View
-					if(typeof utag !="undefined"){
+					if(typeof(utag)!="undefined"){
 						utag.link({
 							link_text: 'quickview_buynow' ,
 							event_type : 'quickview_buynow',
@@ -1627,11 +1632,12 @@ applyBrandFilter: function(){$allListElements = $('ul > li.filter-brand').find("
 
 /*TPR-655 START*/
 $(document).on('click','.go-to-bag.mini-cart-checkout-button',function(){
-	utag.link({
-		link_obj: this,
-		link_text: 'hover_goto_mybag',
-		event_type : 'hover_mybag'
-	});
+	if(typeof(utag)!='undefined'){
+		utag.link({
+			link_text: 'hover_goto_mybag',
+			event_type : 'hover_mybag'
+		});	
+	}
 })	
 /*TPR-655 END*/
 

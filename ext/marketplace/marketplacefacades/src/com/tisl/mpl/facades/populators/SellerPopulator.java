@@ -173,8 +173,13 @@ public class SellerPopulator<SOURCE extends ProductModel, TARGET extends Product
 		/**
 		 * TPR-5712: OIS change to handle delisted products
 		 */
-		final String sellerId = agentIdForStore
+		String sellerId = agentIdForStore
 				.getAgentIdForStore(MarketplacecommerceservicesConstants.CSCOCKPIT_USER_GROUP_STOREMANAGERAGENTGROUP);
+		if (StringUtils.isEmpty(sellerId))
+		{
+			sellerId = agentIdForStore
+					.getAgentIdForStore(MarketplacecommerceservicesConstants.CSCOCKPIT_USER_GROUP_STOREADMINAGENTGROUP);
+		}
 
 		if (null != productModel.getSellerInformationRelator())
 		{

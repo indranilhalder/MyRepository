@@ -82,15 +82,15 @@ public class BuyBoxServiceImpl implements BuyBoxService
 
 	/*
 	 * This service method will return buybox prices for product code
-	 * 
+	 *
 	 * @param - productCode
-	 * 
+	 *
 	 * @return- buyBoxList
 	 */
 	@Override
 	//added for jewellery
-	public List<BuyBoxModel> buyboxPriceForJewellery(final String pcmUssid) throws EtailNonBusinessExceptions,
-			EtailBusinessExceptions
+	public List<BuyBoxModel> buyboxPriceForJewellery(final String pcmUssid)
+			throws EtailNonBusinessExceptions, EtailBusinessExceptions
 	{
 
 		final List<BuyBoxModel> buyBoxList = buyBoxDao.buyBoxPriceForJewellery(pcmUssid);
@@ -175,7 +175,7 @@ public class BuyBoxServiceImpl implements BuyBoxService
 	{
 		//CKD: TPR-3809
 		//final Set<Map<BuyBoxModel, RichAttributeModel>> resultMap = buyBoxDao.getsellersDetails(productCode);
-		final Set<Map<BuyBoxModel, RichAttributeModel>> resultMap = buyBoxDao.getsellersDetails(productCode,prodCatType);
+		final Set<Map<BuyBoxModel, RichAttributeModel>> resultMap = buyBoxDao.getsellersDetails(productCode, prodCatType);
 		return resultMap;
 	}
 
@@ -204,8 +204,8 @@ public class BuyBoxServiceImpl implements BuyBoxService
 	 * @throws EtailBusinessExceptions
 	 */
 	@Override
-	public BuyBoxModel buyboxForSizeGuide(final String productCode, final String sellerId) throws EtailNonBusinessExceptions,
-			EtailBusinessExceptions
+	public BuyBoxModel buyboxForSizeGuide(final String productCode, final String sellerId)
+			throws EtailNonBusinessExceptions, EtailBusinessExceptions
 	{
 		//Get Buybox data in respect of product code and seller id
 		return buyBoxDao.buyBoxForSizeGuide(productCode, sellerId);
@@ -239,7 +239,7 @@ public class BuyBoxServiceImpl implements BuyBoxService
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.tisl.mpl.marketplacecommerceservices.service.BuyBoxService#getBuyBoxDataForUssids(java.util.List)
 	 */
 	//TPR-3736
@@ -280,8 +280,7 @@ public class BuyBoxServiceImpl implements BuyBoxService
 
 	// TISPRD-8944
 	@Override
-	public List<BuyBoxModel> buyboxPriceMobile(final String productCode) throws EtailNonBusinessExceptions,
-			EtailBusinessExceptions
+	public List<BuyBoxModel> buyboxPriceMobile(final String productCode) throws EtailNonBusinessExceptions, EtailBusinessExceptions
 	{
 		final List<BuyBoxModel> buyBoxList = buyBoxDao.buyBoxPriceMobile(productCode);
 
@@ -292,8 +291,8 @@ public class BuyBoxServiceImpl implements BuyBoxService
 	 * TPR-5712 service to get price for all the sellers
 	 */
 	@Override
-	public List<BuyBoxModel> buyboxPriceForAllSeller(final String productCode) throws EtailNonBusinessExceptions,
-			EtailBusinessExceptions
+	public List<BuyBoxModel> buyboxPriceForAllSeller(final String productCode)
+			throws EtailNonBusinessExceptions, EtailBusinessExceptions
 	{
 
 		final List<BuyBoxModel> buyBoxList = buyBoxDao.buyBoxPriceForAllSeller(productCode);
@@ -308,7 +307,7 @@ public class BuyBoxServiceImpl implements BuyBoxService
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * com.tisl.mpl.marketplacecommerceservices.service.BuyBoxService#buyboxPriceForJewelleryWithVariant(java.lang.String
 	 * )
@@ -323,5 +322,18 @@ public class BuyBoxServiceImpl implements BuyBoxService
 	public String findPussid(final String selectedUSSID)
 	{
 		return buyBoxDao.findPussid(selectedUSSID);
+	}
+
+	/**
+	 * This Method is for Seller Monogramming Message Changes
+	 *
+	 * @param sellerId
+	 * @param productCode
+	 * @return String
+	 */
+	@Override
+	public String getSellerMonogrammingMsg(final String productCode, final String sellerId)
+	{
+		return buyBoxDao.getSellerMonogrammingMsg(productCode, sellerId);
 	}
 }
