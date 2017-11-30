@@ -3573,8 +3573,19 @@ margin-top:30px;
     overflow: hidden;
     clear: both;
 }
-@media (min-width: 791px){
-.brands-page ul .desktop ul.list_custom li {
-    display: inline-block !important;
+.brands-page .brands-left>ul>li.active, .brands-page .brands-left>ul>li.active a {
+    color: #a9143c;
+    text-decoration: underline;
 }
+.brands-main, .cmsBrands, .cmsMultiBrands {
+    float: left;
+    width: 70%;
+}
+body .account .right-account .order-history.order-details li.item .status .nav {
+    width: 94%;
+}
+@media (min-width: 791px){
+	.brands-page ul .desktop ul.list_custom li {
+	    display: inline-block !important;
+	}
 }

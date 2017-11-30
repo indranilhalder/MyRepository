@@ -240,6 +240,13 @@ body .account .right-account .order-history .product-block li.item .actions a+sp
 }
 
 /* Order Details */
+.order-details .totals ul li {
+    display: inline-block;
+    width: 80%;
+}
+body .account .right-account .order-history.order-details li.header div h3, body .account .right-account .order-history.order-details li.header div .grand-total {
+    font-weight: 600;
+}
 body .account .right-account .order-history.order-details .product-block {
     border: 0;
     margin-top: 19px;
@@ -794,7 +801,7 @@ table.track-table tr {
 @media (min-width: 791px){
 .order-details .totals ul li>span {
 		float: right;
-    	margin-right: 20px;
+    	margin-right: 30px;
 }}
 @media (max-width: 650px){
 	body .account .right-account .order-history.order-details li.header>ul>li span, body .account .right-account .order-history.order-details li.header>ul>li span:not(.no-display) {
@@ -1050,6 +1057,9 @@ body .account .right-account .order-history.order-details li.item .status>ul>li.
 .confirmation .product-block li.header ul li.shipping ul.home, .confirmation .product-block li.header ul li.shipping ul.express, .confirmation .product-block li.header ul li.shipping ul.collect, .confirmation .product-block li ul li.shipping ul.Home, .confirmation .product-block li ul li.shipping ul.Express, .confirmation .product-block li ul li.shipping ul.collect {
     line-height: 1.8;
 }
+.confirmation .product-block li.header ul li.shipping ul.express, .confirmation .product-block li ul li.shipping ul.Express {
+    color: #ffa800;
+}
 .confirmation .left-block .address p {
     text-transform: uppercase;
     color: #a9143c;
@@ -1061,4 +1071,303 @@ body .account .right-account .order-history.order-details li.item .status>ul>li.
 address, .deliver-type, .shipping p {
     font-size: 12px;
 }
+.confirmation {
+    padding: 0 ! important;
+}
+.confirmation .right-block.billing h1, .confirmation .left-block h1 {
+    width: 100%;
+    margin-top: 0;
+}
+.confirmation .left-block .address {
+    margin-bottom: 20px;
+}
+.cart.wrapper .right-block .block.bottom.order-details address, .checkout.wrapper .product-block.addresses li.item address, .confirmation .left-block .address address {
+    word-wrap: break-word;
+}
+.confirmation .left-block .address address {
+    line-height: 1.5;
+    font-size: 14px !important;
+}
+.confirmation .product-block li ul li.shipping .deliver-type {
+    font-size: 14px;
+}
+.confirmation .product-block li.header ul li.shipping ul.home .deliver-type, .confirmation .product-block li.header ul li.shipping ul.express .deliver-type, .confirmation .product-block li.header ul li.shipping ul.collect .deliver-type, .confirmation .product-block li ul li.shipping ul.Home .deliver-type, .confirmation .product-block li ul li.shipping ul.Express .deliver-type, .confirmation .product-block li ul li.shipping ul.collect .deliver-type {
+    display: inline-block;
+    padding-left: 24px;
+}
+.confirmation .product-block li.header ul li.shipping ul.home .deliver, .confirmation .product-block li.header ul li.shipping ul.express .deliver, .confirmation .product-block li.header ul li.shipping ul.collect .deliver, .confirmation .product-block li ul li.shipping ul.Home .deliver, .confirmation .product-block li ul li.shipping ul.Express .deliver, .confirmation .product-block li ul li.shipping ul.collect .deliver {
+    display: inline-block;
+    padding-left: 25px;
+    font-size: 8px;
+    letter-spacing: 1px;
+    font-weight: bold;
+}
+.confirmation .product-block li ul li.shipping .deliver {
+    font-size: 12px !important;
+}
+body .account .right-account .order-history.order-details li.item .order::after {
+    clear: both;
+    content: "";
+    display: table;
+}
+@media (min-width: 651px){
+	.confirmation {
+	    padding: 0 !important;
+	}
+}
+@media (max-width: 650px){
+	.confirmation .left-block {
+    border: 1px solid #f0f4f5;
+    padding: 10px;
+	}
+	body .account .right-account .order-history.order-details li.item .status>ul>li.progress span.dot:before {
+    z-index: 2;
+    content: "";
+    display: inline-block;
+    width: 10px;
+    height: 10px;
+    border-radius: 100%;
+    background-color: #7ed321;
+    position: relative;
+    top: 3px;
+	}
+}
 /* Order Confirmation End */
+
+/* Cancel Request start*/
+.cancellation-request-block {
+    display: block;
+}
+body .right-account .order-history .cancellation-request-block h2 {
+    background: #f0f4f5;
+    line-height: 30px;
+    padding: 15px 10px;
+    text-align: left;
+    color: #a9143c;
+    letter-spacing: normal;
+    font-size: 28px !important;
+    font-weight: 500 !important;
+    height: auto !important;
+    margin-bottom: 20px !important;
+}
+.return-form {
+    margin: 20px auto;
+    max-width: 900px;
+}
+body .right-account .order-history .cancellation-request-block .return-form {
+    margin: 0;
+}
+body .right-account .order-history .cancellation-request-block .return-form .return-container {
+    border: 0;
+    padding: 10px 15px !important;
+}
+.return-form .return-container .products {
+    float: left;
+    width: 100%;
+}
+body .account .right-account .cancellation-request-block form.return-form .products li.item {
+    padding: 0 !important;
+}
+.return-form .return-container .products .item .product-info {
+    position: relative;
+    padding: 0;
+}
+body .account .right-account .order-history .product-block li.item::after {
+    clear: both;
+    content: "";
+    display: table;
+}
+.return-form .return-container .products .item .product-info::after {
+    clear: both;
+    content: "";
+    display: table;
+}
+.return-form .return-container .products .item .product-info .product-img {
+    float: left;
+    width: 35%;
+    max-width: 120px;
+    margin-right: 5%;
+}
+.return-form .return-container .products .item .product-info .product-img img {
+    max-width: 100%;
+}
+.return-form .return-container .products .item .product-info .product {
+    float: left;
+    width: 55%;
+    margin-right: 5%;
+}
+.return-form .return-container .products .item .product-info li::after {
+    clear: both;
+    content: "";
+    display: table;
+}
+body .account .right-account .order-history .product-block .cancellation-request-block li.item h2.product-name:first-child {
+    font-size: 19px;
+    margin-bottom: 40px;
+    font-weight: 500;
+    background: transparent;
+    padding: 0;
+    height: initial;
+}
+.return-form .return-container .products .item .product-info .item-info {
+    line-height: 1.2;
+}
+.return-form .return-container .products .item .product-info .item-info span {
+    display: block;
+    font-size: 14px;
+    margin-bottom: 2px;
+}
+body .account .right-account .order-history .product-block li.item p b {
+    font-weight: 500;
+}
+body .right-account .order-history .cancellation-request-block .return-form .return-container .questions {
+    width: 45%;
+}
+.return-form .return-container .questions {
+    display: block;
+    float: right;
+    position: relative;
+}
+.return-form .return-container .questions>label:first-of-type {
+    display: block;
+    background: #fff;
+    width: -webkit-calc(100% - -50px);
+    width: calc(100% - -50px);
+    height: 50px;
+    margin-left: -25px;
+    line-height: 50px;
+    padding-left: 25px;
+    vertical-align: middle;
+}
+body .right-account .order-history .cancellation-request-block .return-form .return-container .questions label {
+    background-color: transparent;
+    font-weight: 600;
+    line-height: 1.5;
+    height: auto;
+    font-size: 14px;
+}
+.return-form .container::after {
+    clear: both;
+    content: "";
+    display: table;
+}
+.return-form .return-container::after {
+    clear: both;
+    content: "";
+    display: table;
+}
+.container:after, .row:after {
+    clear: both;
+}
+body .right-account .order-history .cancellation-request-block .return-form .buttons {
+    text-align: right;
+    margin-bottom: 15px;
+    padding: 0 15px;
+}
+.return-form .buttons #returnReject {
+    background: #a9143c;
+    border: 2px solid #a9143c;
+}
+.return-form .return-container .questions select {
+    display: block;
+    width: 100%;
+    height: 40px;
+    font-size: 14px;
+    font-weight: bold;
+    padding-right: 20px;
+}
+body .right-account .order-history .cancellation-request-block .return-form .light-red {
+    border: 2px solid #a9143c;
+    background-color: #a9143c;
+    color: #fff;
+    display: inline-block;
+    height: 40px;
+    line-height: 2px;
+}
+.return-form .return-container::after {
+    clear: both;
+    content: "";
+    display: table;
+}
+body .account .right-account button {
+  /*   height: 40px;
+    line-height: 40px; */
+    font-size: 12px;
+    padding: 0 20px;
+    letter-spacing: 1px;
+    min-width: 225px;
+    font-weight: 500;
+    clear: both;
+}
+body .right-account .order-history .cancellation-request-block.success>div h2.trackOrderLnHt {
+    height: auto;
+}
+body .right-account .order-history .cancellation-request-block.success>div h2 {
+    color: #a9143c;
+    padding: 20px 15px 15px;
+    font-size: 28px;
+    margin: 0;
+    background-color: transparent;
+    text-align: center;
+    line-height: 28px;
+}
+body .right-account .order-history .cancellation-request-block.success>div>h2>#resultTitle {
+    font-size: 28px;
+    margin-top: 0;
+}
+body .right-account .order-history .cancellation-request-block.success>div div {
+    width: 60%;
+    font-size: 14px;
+    line-height: 24px;
+    margin: 0 auto 20px;
+    font-weight: 500;
+}
+
+body .right-account .order-history .cancellation-request-block.success>div>h2.trackOrderLnHt>#resultTitle {
+    line-height: 1.5;
+}
+
+@media (min-width: 791px){
+	.return-form button {
+    width: auto;
+	}
+	.return-form .return-container {
+	    border-top: 2px solid #dfd1d5;
+	    margin-bottom: 50px;
+	}
+	.return-form .return-container .products {
+    width: 50%;
+	}
+	body .account .right-account .order-history .product-block li.item h2.product-name:first-child {
+    line-height: normal;
+	}
+	.return-form .return-container .questions {
+    width: 30%;
+    margin-top: 0;
+	}
+}
+
+/* Cancel Request end*/
+/* Edit address */
+.textInputChangeAddress, #showOTP input {
+    width: 100% !important;
+}
+.changeAdddd input {
+    width: 100%;
+    margin-top: 3px;
+}
+.address_townCity, .otherLandMark {
+    width: 100%;
+}
+.textInputChangeAddress, #showOTP input {
+    width: 100% !important;
+}
+.addressTextChange {
+    line-height: 15px;
+}
+#changeAddressPopup, #otpPopup {
+    margin: 0 auto;
+    width: 100%;
+    height: 700px;
+}
+/* Edit address */
