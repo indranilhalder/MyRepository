@@ -2194,7 +2194,14 @@
 	</bean>
 <!-- TPR-1984 END -->
 
+<!-- Size Guide Upload starts -->
+<bean id="sizeGuideUploadPrepareInterceptor" class="com.tisl.mpl.interceptor.SizeGuideUploadPrepareInterceptor" autowire="byName"></bean>
+<bean id="sizeGuideUploadPrepareInterceptorMapping" class="de.hybris.platform.servicelayer.interceptor.impl.InterceptorMapping">
+	<property name="interceptor" ref="sizeGuideUploadPrepareInterceptor"></property>
+	<property name="typeCode" value="SizeGuideUpload"></property>
+</bean>
 
+<!-- Size Guide Upload ends -->
 
 
 	<!-- Jewellery Changes Start --> 
