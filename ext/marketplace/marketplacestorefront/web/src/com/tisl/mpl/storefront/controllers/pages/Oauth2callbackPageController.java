@@ -22,6 +22,7 @@ import de.hybris.platform.acceleratorstorefrontcommons.forms.LoginForm;
 import de.hybris.platform.cms2.exceptions.CMSItemNotFoundException;
 import de.hybris.platform.cms2.model.pages.AbstractPageModel;
 import de.hybris.platform.commercefacades.order.CartFacade;
+import de.hybris.platform.servicelayer.config.ConfigurationService;
 import de.hybris.platform.servicelayer.session.SessionService;
 
 import java.io.IOException;
@@ -110,6 +111,9 @@ public class Oauth2callbackPageController extends AbstractLoginPageController
 
 	@Autowired
 	private CartFacade cartFacade;
+
+	@Autowired
+	private ConfigurationService configurationService;
 
 	protected static final String REDIRECT_URL_CHOOSE_DELIVERY_METHOD = "/checkout/multi/delivery-method/choose";
 
@@ -381,7 +385,7 @@ public class Oauth2callbackPageController extends AbstractLoginPageController
 		try
 		{
 			boolean isExist = false; //SDI-639
-			
+
 			//SDI-639 starts here
 			int platformNumber = MarketplacecommerceservicesConstants.PLATFORM_ZERO;
 			//added for IQA starts here
