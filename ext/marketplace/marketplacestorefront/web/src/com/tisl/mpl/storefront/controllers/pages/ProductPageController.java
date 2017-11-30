@@ -1991,6 +1991,9 @@ public class ProductPageController extends MidPageController
 			}
 			//returnStatement = ControllerConstants.Views.Fragments.Product.QuickViewPopup;
 
+			//Added for TPR-7417
+			storeCmsPageInModel(model, getContentPageForLabelOrId(ControllerConstants.Views.Fragments.Product.QUICK_VIEW));
+
 			//Added for TPR-6855 : Quick View Changes
 			final String productCategoryType = productModel.getProductCategoryType();
 			removeSizeGuideForHome(productCategoryType, model);
@@ -2015,7 +2018,7 @@ public class ProductPageController extends MidPageController
 
 
 
-		return ControllerConstants.Views.Fragments.Product.QuickViewPopup;
+		return ControllerConstants.Views.Fragments.Product.QuickViewLayOutPopup; //Added for TPR-7417
 	}
 
 	@Deprecated
@@ -2719,7 +2722,8 @@ public class ProductPageController extends MidPageController
 										else
 
 										{
-											if (featureData.getName().equals("Length") || featureData.getName().equals("Width") || featureData.getName().equals("Height"))
+											if (featureData.getName().equals("Length") || featureData.getName().equals("Width")
+													|| featureData.getName().equals("Height"))
 											{
 
 												if (featureData.getName().equals("Length"))
@@ -2728,7 +2732,7 @@ public class ProductPageController extends MidPageController
 													islengthAvailable = true;
 													if(!productFeatureDataList.contains(prodDimension))
 													{
-													productFeatureDataList.add(prodDimension);
+														productFeatureDataList.add(prodDimension);
 													}
 												}
 												if (featureData.getName().equals("Width"))
@@ -2737,7 +2741,7 @@ public class ProductPageController extends MidPageController
 													iswidthAvailable = true;
 													if(!productFeatureDataList.contains(prodDimension))
 													{
-													productFeatureDataList.add(prodDimension);
+														productFeatureDataList.add(prodDimension);
 													}
 												}
 												if (featureData.getName().equals("Height"))
@@ -2746,7 +2750,7 @@ public class ProductPageController extends MidPageController
 													isheightAvailable = true;
 													if(!productFeatureDataList.contains(prodDimension))
 													{
-													productFeatureDataList.add(prodDimension);
+														productFeatureDataList.add(prodDimension);
 													}
 												}
 
@@ -2821,25 +2825,25 @@ public class ProductPageController extends MidPageController
 						if (mapConfigurableAttributes.containsKey(configurableAttributData.getName()))
 						{
 							tempList = mapConfigurableAttributes.get(configurableAttributData.getName());
-							
-							if(productFeatureDataList.contains(prodDimension))
+
+							if (productFeatureDataList.contains(prodDimension))
 							{
-							if (islengthAvailable && iswidthAvailable && isheightAvailable)
-							{
-								prodDimensionValue = length + " X " + width + " X " + height;
-								productFeatureDataList.add(prodDimension + MarketplacecommerceservicesConstants.SPACE
-										+ ModelAttributetConstants.COLON + MarketplacecommerceservicesConstants.SPACE
-										+ prodDimensionValue);
-								productFeatureDataList.remove(prodDimension);
-							}
-							else if (islengthAvailable && iswidthAvailable)
-							{
-								prodDimensionValue = length + " X " + width;
-								productFeatureDataList.add(prodDimension + MarketplacecommerceservicesConstants.SPACE
-										+ ModelAttributetConstants.COLON + MarketplacecommerceservicesConstants.SPACE
-										+ prodDimensionValue);
-								productFeatureDataList.remove(prodDimension);
-							}
+								if (islengthAvailable && iswidthAvailable && isheightAvailable)
+								{
+									prodDimensionValue = length + " X " + width + " X " + height;
+									productFeatureDataList.add(prodDimension + MarketplacecommerceservicesConstants.SPACE
+											+ ModelAttributetConstants.COLON + MarketplacecommerceservicesConstants.SPACE
+											+ prodDimensionValue);
+									productFeatureDataList.remove(prodDimension);
+								}
+								else if (islengthAvailable && iswidthAvailable)
+								{
+									prodDimensionValue = length + " X " + width;
+									productFeatureDataList.add(prodDimension + MarketplacecommerceservicesConstants.SPACE
+											+ ModelAttributetConstants.COLON + MarketplacecommerceservicesConstants.SPACE
+											+ prodDimensionValue);
+									productFeatureDataList.remove(prodDimension);
+								}
 							}
 							tempList.addAll(productFeatureDataList);
 							mapConfigurableAttributes.put(keyProdptsHeaderName, tempList);
@@ -2867,26 +2871,26 @@ public class ProductPageController extends MidPageController
 						else if (!productFeatureDataList.isEmpty())
 						{
 							{
-								if(productFeatureDataList.contains(prodDimension))
-							
-							{
-							if (islengthAvailable && iswidthAvailable && isheightAvailable)
-							{
-								prodDimensionValue = length + " X " + width + " X " + height;
-								productFeatureDataList.add(prodDimension + MarketplacecommerceservicesConstants.SPACE
-										+ ModelAttributetConstants.COLON + MarketplacecommerceservicesConstants.SPACE
-										+ prodDimensionValue);
-								productFeatureDataList.remove(prodDimension);
-							}
-							else if (islengthAvailable && iswidthAvailable)
-							{
-								prodDimensionValue = length + " X " + width;
-								productFeatureDataList.add(prodDimension + MarketplacecommerceservicesConstants.SPACE
-										+ ModelAttributetConstants.COLON + MarketplacecommerceservicesConstants.SPACE
-										+ prodDimensionValue);
-								productFeatureDataList.remove(prodDimension);
-							}
-							}
+								if (productFeatureDataList.contains(prodDimension))
+
+								{
+									if (islengthAvailable && iswidthAvailable && isheightAvailable)
+									{
+										prodDimensionValue = length + " X " + width + " X " + height;
+										productFeatureDataList.add(prodDimension + MarketplacecommerceservicesConstants.SPACE
+												+ ModelAttributetConstants.COLON + MarketplacecommerceservicesConstants.SPACE
+												+ prodDimensionValue);
+										productFeatureDataList.remove(prodDimension);
+									}
+									else if (islengthAvailable && iswidthAvailable)
+									{
+										prodDimensionValue = length + " X " + width;
+										productFeatureDataList.add(prodDimension + MarketplacecommerceservicesConstants.SPACE
+												+ ModelAttributetConstants.COLON + MarketplacecommerceservicesConstants.SPACE
+												+ prodDimensionValue);
+										productFeatureDataList.remove(prodDimension);
+									}
+								}
 								mapConfigurableAttributes.put(keyProdptsHeaderName, productFeatureDataList);
 							}
 
@@ -5391,39 +5395,39 @@ public class ProductPageController extends MidPageController
 		}
 		return posDataList;
 	}
-	
+
 	//MSD
-		public MSDResponsedata getMSDWidgetData(final HttpServletRequest request)
+	public MSDResponsedata getMSDWidgetData(final HttpServletRequest request)
+	{
+
+		final JSONObject MSDJObject = new JSONObject();
+		final String msdUse = configurationService.getConfiguration().getString("isMSDEnabled");
+		MSDResponsedata msdRecData = null;
+		String productCode = null;
+		if (msdUse.equalsIgnoreCase("true"))
 		{
+			final MSDRequestdata msdRequest = new MSDRequestdata();
 
-			final JSONObject MSDJObject = new JSONObject();
-			final String msdUse = configurationService.getConfiguration().getString("isMSDEnabled");
-			MSDResponsedata msdRecData = null;
-			String productCode = null;
-			if (msdUse.equalsIgnoreCase("true"))
+
+			final String msdApiKey = configurationService.getConfiguration().getString("api.key");
+			final String msdDetails = configurationService.getConfiguration().getString("details.key");
+			final String msdMad_Uid = configurationService.getConfiguration().getString("mad.uid.key");
+			final String widget_list = configurationService.getConfiguration().getString("widgetlist.key");
+			final String msdHeader = configurationService.getConfiguration().getString("msdHeader.key");
+			if (request.getParameterMap().containsKey("productCode"))
 			{
-				final MSDRequestdata msdRequest = new MSDRequestdata();
-
-
-				final String msdApiKey = configurationService.getConfiguration().getString("api.key");
-				final String msdDetails = configurationService.getConfiguration().getString("details.key");
-				final String msdMad_Uid = configurationService.getConfiguration().getString("mad.uid.key");
-				final String widget_list = configurationService.getConfiguration().getString("widgetlist.key");
-				final String msdHeader = configurationService.getConfiguration().getString("msdHeader.key");
-				if (request.getParameterMap().containsKey("productCode"))
-				{
-					productCode = request.getParameter("productCode").toString();
-				}
-				msdRequest.setProduct_id(productCode);
-				msdRequest.setApi_key(msdApiKey);
-				msdRequest.setDetails(msdDetails);
-				msdRequest.setMad_uuid(msdMad_Uid);
-				msdRequest.setWidget_list(widget_list);
-				msdRecData = msdWidgetFacade.getMSDWidgetFinalData(msdRequest);
-
+				productCode = request.getParameter("productCode").toString();
 			}
-			return msdRecData;
+			msdRequest.setProduct_id(productCode);
+			msdRequest.setApi_key(msdApiKey);
+			msdRequest.setDetails(msdDetails);
+			msdRequest.setMad_uuid(msdMad_Uid);
+			msdRequest.setWidget_list(widget_list);
+			msdRecData = msdWidgetFacade.getMSDWidgetFinalData(msdRequest);
+
 		}
+		return msdRecData;
+	}
 
 	//CAR-327 starts here
 
