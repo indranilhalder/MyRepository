@@ -429,6 +429,19 @@
 				 </attribute>
 		 	</attributes>
 		 </itemtype>
+		 
+		 <!-- New Coupon created for Promotion Sequencing-->
+		 
+		 <itemtype code="MplCartOfferVoucher" 
+			extends="PromotionVoucher" 
+			jaloclass="com.tisl.mpl.jalo.MplCartOfferVoucher"
+			autocreate="true" 
+			generate="true">
+			
+		</itemtype>
+		 
+		 
+		 <!-- New Coupon created for Promotion Sequencing ends -->
 		
 	</itemtypes>
 </items>
