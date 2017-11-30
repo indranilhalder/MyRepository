@@ -6031,7 +6031,18 @@
 					</attribute>
 				</attributes>
 			</itemtype>
-
+			<!-- SDI-2788 -->
+			<itemtype code="InitiateRefundProcess" extends="OrderProcess"
+				autocreate="true" generate="true"
+				jaloclass="com.tisl.mpl.core.jalo.InitiateRefundProcess">
+				<description>Represents process that is used to initiate Refund</description>
+				<attributes>
+					<attribute qualifier="refundTransactionId" type="java.lang.String">
+						<persistence type="property" />
+						<description>Attribute contains transaction ID to be refunded</description>
+					</attribute>
+				</attributes>
+			</itemtype>
 		</typegroup>
 		<!-- Blacklist Model -->
 		<typegroup name="Marketplace">
@@ -13868,6 +13879,54 @@
 		</itemtype>
 	</typegroup>
 	<!-- Car-Changes-End-CAR-331 -->	
-									 
+	
+	
+	<!-- Size Guide Upload Changes Starts -->
+		<typegroup name="SizeGuideUploadGroup">
+			<itemtype code="SizeGuideUpload" generate="true" extends="GenericItem"
+				autocreate="true" jaloclass="com.tisl.mpl.core.jalo.SizeGuideUpload">
+				<deployment table="mplSizeGuideUpload" typecode="14601" />
+				<attributes>
+				
+					<attribute qualifier="identifiers" autocreate="true"
+						type="java.lang.String" generate="true">
+						<modifiers read="true" write="true" search="true" optional="false" unique="true"/>
+						<description>Identifier</description>
+						<persistence type="property" />
+					</attribute>
+						
+					<attribute qualifier="csvFile" type="Media" autocreate="true"
+						generate="true">
+						<modifiers read="true" write="true" search="true" />
+						<description>CSV file</description>
+						<persistence type="property" />
+					</attribute>
+
+					<attribute qualifier="status" type="java.lang.String"
+						autocreate="true" generate="true">
+						<modifiers read="true" write="true" search="true" />
+						<description>Status</description>
+						<persistence type="property">
+							<columntype database="oracle">
+								<value>CLOB</value>
+							</columntype>
+							<columntype database="mysql">
+								<value>text</value>
+							</columntype>
+							<columntype database="sqlserver">
+								<value>nvarchar(max)</value>
+							</columntype>
+							<columntype database="hsqldb">
+								<value>LONGVARCHAR</value>
+							</columntype>
+							<columntype>
+								<value>varchar</value>
+							</columntype>
+						</persistence>
+					</attribute>
+				</attributes>
+			</itemtype>
+		</typegroup>
+		<!-- Size Guide Changes ends -->								 
   </itemtypes>
 </items>
