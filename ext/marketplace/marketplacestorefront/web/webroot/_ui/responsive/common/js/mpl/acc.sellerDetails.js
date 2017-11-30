@@ -896,7 +896,15 @@ function focusOnElement() {
 							$(".pdp-promo-title-link").css("display","none");		
 							if($("#promolist").val()=="All" || $("#promolist").val()=="Web" ||!$.isEmptyObject(offerMessageMap)){
 								$("#promolist").val(offerMessageMap);
-								$(".pdp-promo-title-link").css("display", "block");		
+								//$(".pdp-promo-title-link").css("display", "block");
+								if($(".pdp-promoDesc").text() == "")
+									{									
+									$(".pdp-promo-title-link").css("display", "none");
+									}
+								else
+									{									
+									$(".pdp-promo-title-link").css("display", "block");
+									}
 							} 
 									
 												
