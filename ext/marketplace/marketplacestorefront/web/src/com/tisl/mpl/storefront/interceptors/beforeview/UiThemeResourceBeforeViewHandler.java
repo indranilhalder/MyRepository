@@ -152,6 +152,8 @@ public class UiThemeResourceBeforeViewHandler implements BeforeViewHandler
 		final String useSocialLoginNative = configurationService.getConfiguration().getString("mpl.use.NativeSocialLogin", "N");
 		final String facebookAppId = configurationService.getConfiguration().getString("mpl.fb.appid", "NA");
 		final String googleAppId = configurationService.getConfiguration().getString("mpl.google.appid", "NA");
+		final String luxfacebookAppId = configurationService.getConfiguration().getString("lux.fb.appid", "NA");
+		final String luxgoogleAppId = configurationService.getConfiguration().getString("lux.google.appid", "NA");
 
 		//FOR Feedback survey
 		final String feedbackSurveyUrl = configurationService.getConfiguration().getString(MessageConstants.FEEDBACK_SURVEY_URL);
@@ -210,6 +212,8 @@ public class UiThemeResourceBeforeViewHandler implements BeforeViewHandler
 		modelAndView.addObject(ModelAttributetConstants.USE_NATIVE_API_SOCIAL, useSocialLoginNative);
 		modelAndView.addObject(ModelAttributetConstants.FB_API_KEY, facebookAppId);
 		modelAndView.addObject(ModelAttributetConstants.GOOGLE_API_KEY, googleAppId);
+		modelAndView.addObject(ModelAttributetConstants.FB_API_KEY_LUXURY, luxfacebookAppId);
+		modelAndView.addObject(ModelAttributetConstants.GOOGLE_API_KEY_LUXURY, luxgoogleAppId);
 		//for New Social Login Stop
 
 		modelAndView.addObject(ModelAttributetConstants.GIGYA_API_KEY, gigyaAPIKey);

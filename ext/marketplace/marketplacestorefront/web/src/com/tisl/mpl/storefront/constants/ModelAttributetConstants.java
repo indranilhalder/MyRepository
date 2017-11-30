@@ -973,6 +973,8 @@ public final class ModelAttributetConstants
 	//For New Social Login
 	public static final String FB_API_KEY = "mplfbid";
 	public static final String GOOGLE_API_KEY = "mplgoogleid";
+	public static final String FB_API_KEY_LUXURY = "luxfbid";
+	public static final String GOOGLE_API_KEY_LUXURY = "luxgoogleid";
 	public static final String USE_NATIVE_API_SOCIAL = "useNativeSocial";
 
 	// TPR-3878 START
