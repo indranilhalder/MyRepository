@@ -6364,6 +6364,75 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 		}
 	}
 
+	@Override
+	public List<StoreLocationResponseData> getStoreLocationsforCnCMobile(
+			final List<StoreLocationRequestData> storeLocationRequestDataList, final String sellerUssId, final CartModel cartModel)
+	{
+		LOG.debug("from getStoreLocationsforCnC method in serice");
+		final List<StoreLocationResponseData> responseList = new ArrayList<StoreLocationResponseData>();
+		try
+		{
+			// Commented to stop Store ATS Call
+			final StoreLocatorAtsResponseObject responseObject = pinCodeDeliveryModeService.prepStoreLocationsToOMS(
+					storeLocationRequestDataList, cartModel);
+			if (null != responseObject && null != responseObject.getItem() && !responseObject.getItem().isEmpty())
+			{
+				List<ATSResponseData> atsResponseDataList = null;
+				for (final StoreLocationRequestData storeLocationResponse : storeLocationRequestDataList)
+				{
+					final StoreLocationResponseData responseData = new StoreLocationResponseData();
+
+					for (final StoreLocatorResponseItem item : responseObject.getItem())
+					{
+						if (item.getUssId().equalsIgnoreCase(storeLocationResponse.getUssId()))
+						{
+							atsResponseDataList = new ArrayList<ATSResponseData>();
+							for (final StoreLocatorAtsResponse res : item.getATS())
+							{
+								final ATSResponseData data = new ATSResponseData();
+
+								data.setStoreId(res.getStoreId());
+								if (null != res.getQuantity())
+								{
+									data.setQuantity(res.getQuantity().intValue());
+								}
+								atsResponseDataList.add(data);
+							}
+						}
+					}
+					responseData.setUssId(storeLocationResponse.getUssId());
+					responseData.setAts(atsResponseDataList);
+					responseList.add(responseData);
+
+				}
+			}
+			return responseList;
+
+		}
+		catch (final ClientEtailNonBusinessExceptions ex)
+		{
+			LOG.error("********* Pincode serviceability exception :");
+			final StoreLocationResponseData responseData = new StoreLocationResponseData();
+			// responseData.setIsServicable(MarketplacecommerceservicesConstants.NOT_APPLICABLE);
+			responseList.add(responseData);
+			if (null != ex.getErrorCode() && ex.getErrorCode().equalsIgnoreCase("O0001"))
+			{
+				throw new ClientEtailNonBusinessExceptions("O0001", ex);
+			}
+			else if (null != ex.getErrorCode() && ex.getErrorCode().equalsIgnoreCase("O0002"))
+			{
+				throw new ClientEtailNonBusinessExceptions("O0002", ex);
+			}
+			else
+			{
+				throw new ClientEtailNonBusinessExceptions(ex);
+			}
+
+
+		}
+		//return responseList;
+	}
+
 
 	/**
 	 * This Method is used to get Valid Delivery Modes by Inventory
