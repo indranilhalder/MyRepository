@@ -274,7 +274,9 @@ public class MplGigyaReviewCommentServiceImpl implements MplGigyaReviewCommentSe
 					if (MarketplacecclientservicesConstants.CLOTHING.equalsIgnoreCase(category)
 							|| MarketplacecclientservicesConstants.FOOTWEAR.equalsIgnoreCase(category)
 							|| MarketplacecclientservicesConstants.FINEJEWELLERY.equalsIgnoreCase(category)
-							|| MarketplacecclientservicesConstants.FASHIONJEWELLERY.equalsIgnoreCase(category)) //removing unnecessary comparison of boolean objects(Sonar Fix)
+							|| MarketplacecclientservicesConstants.FASHIONJEWELLERY.equalsIgnoreCase(category)
+							|| MarketplacecclientservicesConstants.KIDSWEAR.equalsIgnoreCase(category)
+							|| MarketplacecclientservicesConstants.HOMEFURNISHING.equalsIgnoreCase(category)) //removing unnecessary comparison of boolean objects(Sonar Fix)
 					{
 						if (checkItemKey(ratings, MarketplacecclientservicesConstants.FIT))
 						{
@@ -329,8 +331,8 @@ public class MplGigyaReviewCommentServiceImpl implements MplGigyaReviewCommentSe
 
 					if (null != gsCommentObject.getString(MarketplacecclientservicesConstants.STREAM_ID))
 					{
-						final ProductModel productModel = productService.getProductForCode(gsCommentObject
-								.getString(MarketplacecclientservicesConstants.STREAM_ID));
+						final ProductModel productModel = productService
+								.getProductForCode(gsCommentObject.getString(MarketplacecclientservicesConstants.STREAM_ID));
 						//TISPT-221 Changes
 						productData = productFacade.getProductForOptions(productModel,
 								Arrays.asList(ProductOption.BASIC, ProductOption.PRICE, ProductOption.CATEGORIES));

@@ -25,7 +25,7 @@ public interface ExtDefaultCustomerService extends CustomerAccountService
 
 	public void internalSaveCustomerForSocialLogin(final CustomerModel customerModel);
 
-	public ExtRegisterData registerUserForSocialSignup(final CustomerModel customerModel);
+	public ExtRegisterData registerUserForSocialSignup(final CustomerModel customerModel, final int platformNumber);
 
 	public String generateOTPNumber(final String customerUid);
 }

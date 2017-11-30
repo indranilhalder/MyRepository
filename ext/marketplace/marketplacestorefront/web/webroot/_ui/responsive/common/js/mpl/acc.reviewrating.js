@@ -146,7 +146,7 @@ if(typeof(arrayrating)!= "undefined"){
 				if(categoryID == "Electronics"){
 					ratings = "{'_overall':"+updated_rating_overall+", 'Quality':"+updated_rating_quality+",'Ease of use':"+updated_rating_efu+",'Value for Money':"+updated_rating_vfm+"}";
 					ratingsJSON = {overall:updated_rating_overall,easeOfUse:updated_rating_efu,value_for_money:updated_rating_vfm,quality:updated_rating_quality};
-				}else if(categoryID == 'Clothing' || categoryID == 'Footwear' ){
+				}else if(categoryID == 'Clothing' || categoryID == 'Footwear' || categoryID == 'Kidswear' || categoryID == 'HomeFurnishing'){
 					ratings = "{'_overall':"+updated_rating_overall+", 'Quality':"+updated_rating_quality+",'Fit':"+updated_rating_fit+",'Value for Money':"+updated_rating_vfm+"}";	
 					ratingsJSON = {overall:updated_rating_overall,fit:updated_rating_fit,value_for_money:updated_rating_vfm,quality:updated_rating_quality};
 				}else{

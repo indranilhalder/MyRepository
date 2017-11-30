@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import com.tisl.mpl.cockpits.constants.MarketplaceCockpitsConstants;
 import com.tisl.mpl.cockpits.cscockpit.services.StoreAgentUserRole;
+import com.tisl.mpl.marketplacecommerceservices.service.AgentIdForStore;
 import com.tisl.mpl.marketplacecommerceservices.service.OrderModelService;
 
 import de.hybris.platform.cockpit.session.UISessionUtils;
@@ -35,6 +36,9 @@ public class MplDefaultCustomerOrdersStrategy extends
 	
 	@Autowired
 	StoreAgentUserRole storeAgentUserRole;
+	
+	@Resource
+	private AgentIdForStore agentIdForStore;
 	
 	@Override
 	public Collection<OrderModel> getCustomerOrders(CustomerModel customer) {
@@ -61,12 +65,9 @@ public class MplDefaultCustomerOrdersStrategy extends
 	  {
 		List<OrderModel> orderList = null;
 		if (storeAgentUserRole.isUserInRole(MarketplaceCockpitsConstants.CSCOCKPIT_USER_GROUP_STOREMANAGERAGENTGROUP)) {
-			String agentId = StringUtils.EMPTY;
-			final JaloSession jSession = JaloSession.getCurrentSession();
-			if(jSession != null)
-			{
-				agentId = (String) jSession.getAttribute("sellerId");
-			}	
+			final String agentId = agentIdForStore
+					.getAgentIdForStore(MarketplaceCockpitsConstants.CSCOCKPIT_USER_GROUP_STOREMANAGERAGENTGROUP);
+			
 			if(StringUtils.isNotEmpty(agentId))
 			{
 				orderList = orderModelService.getOrderByAgent(customer, agentId);
