@@ -807,6 +807,7 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 
 			//COD is submitted based on cart or order(after first failure payment) TPR-629
 			OrderModel orderModel = null;
+
 			if (null != paymentForm && StringUtils.isNotEmpty(paymentForm.getGuid()))
 			{
 				orderModel = getMplPaymentFacade().getOrderByGuid(paymentForm.getGuid());
@@ -821,8 +822,12 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 				final CartData cartData = getMplCustomAddressFacade().getCheckoutCart();
 
 				//Logic when Payment mode is COD
+
+				// COD checking
 				if (null != cartData
-						&& MarketplacecheckoutaddonConstants.PAYMENTCOD.equalsIgnoreCase(paymentForm.getPaymentModeValue()))
+						&& MarketplacecheckoutaddonConstants.PAYMENTCOD.equalsIgnoreCase(paymentForm.getPaymentModeValue())
+						&& CodCheckMessage.ITEMS_ELIGIBLE.toString().equals(
+								getSessionService().getAttribute(MarketplacecheckoutaddonConstants.CODELIGIBLE_SESSION)))
 				{
 					//Adding cartdata into model
 					model.addAttribute(MarketplacecheckoutaddonConstants.CARTDATA, cartData);
@@ -849,24 +854,40 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 			//Handled for OrderModel TPR-629
 			else
 			{
-
-				if (null == orderModel.getPaymentInfo() && !OrderStatus.PAYMENT_TIMEOUT.equals(orderModel.getStatus()))
+				if (CodCheckMessage.ITEMS_ELIGIBLE.toString().equals(
+						getSessionService().getAttribute(MarketplacecheckoutaddonConstants.CODELIGIBLE_SESSION)))
 				{
-					final Double orderValue = orderModel.getSubtotal();
-					final Double totalCODCharge = orderModel.getConvenienceCharges();
 
-					//saving COD Payment related info
-					getMplPaymentFacade().saveCODPaymentInfo(orderValue, totalCODCharge, orderModel);
+					if (null == orderModel.getPaymentInfo() && !OrderStatus.PAYMENT_TIMEOUT.equals(orderModel.getStatus()))
+					{
+						final Double orderValue = orderModel.getSubtotal();
+						final Double totalCODCharge = orderModel.getConvenienceCharges();
 
-					//adding Payment id to model
-					model.addAttribute(MarketplacecheckoutaddonConstants.PAYMENTID, null);
-					setCheckoutStepLinksForModel(model, getCheckoutStep());
-					return updateOrder(orderModel, redirectAttributes);
+						//saving COD Payment related info
+						getMplPaymentFacade().saveCODPaymentInfo(orderValue, totalCODCharge, orderModel);
+
+						//adding Payment id to model
+						model.addAttribute(MarketplacecheckoutaddonConstants.PAYMENTID, null);
+						setCheckoutStepLinksForModel(model, getCheckoutStep());
+						return updateOrder(orderModel, redirectAttributes);
+					}
+					//else
+					else
+					{
+						return updateOrder(orderModel, redirectAttributes);
+					}
 				}
 				else
 				{
-					return updateOrder(orderModel, redirectAttributes);
+					LOG.error("Exception while completing COD Payment in /view");
+					GlobalMessages.addFlashMessage(redirectAttributes, GlobalMessages.ERROR_MESSAGES_HOLDER,
+							MarketplacecheckoutaddonConstants.PAYMENTTRANERRORMSG);
+					//return getCheckoutStep().currentStep();
+					return MarketplacecheckoutaddonConstants.REDIRECT + MarketplacecheckoutaddonConstants.MPLPAYMENTURL
+							+ MarketplacecheckoutaddonConstants.PAYVALUE + MarketplacecheckoutaddonConstants.VALUE
+							+ paymentForm.getGuid();
 				}
+
 			}
 
 		}
@@ -913,8 +934,6 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 
 
 	}
-
-
 
 	/**
 	 * This method is responsible for adding the convenience charges for COD and recalculating the cart values for
@@ -2267,18 +2286,26 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 					{
 						//For UF-277 message changed
 						model.addAttribute(MarketplacecheckoutaddonConstants.CODELIGIBLE, CodCheckMessage.ITEMS_ELIGIBLE.toString());
+						getSessionService().setAttribute(MarketplacecheckoutaddonConstants.CODELIGIBLE_SESSION,
+								CodCheckMessage.ITEMS_ELIGIBLE.toString());
+
 						addDataForCODToModel(model, cart); //moved to single code for reuse
 					}
 					else
 					{
 						//For UF-277 message changed
 						model.addAttribute(MarketplacecheckoutaddonConstants.CODELIGIBLE, CodCheckMessage.ITEMS_NOT_ELIGIBLE.toString());
+						getSessionService().setAttribute(MarketplacecheckoutaddonConstants.CODELIGIBLE_SESSION,
+								CodCheckMessage.ITEMS_NOT_ELIGIBLE.toString());
 					}
 				}
 				else
 				{
 					//error message for Blacklisted users will go here
 					model.addAttribute(MarketplacecheckoutaddonConstants.CODELIGIBLE, CodCheckMessage.BLACKLISTED.toString());
+
+					getSessionService().setAttribute(MarketplacecheckoutaddonConstants.CODELIGIBLE_SESSION,
+							CodCheckMessage.BLACKLISTED.toString());
 				}
 
 				//Commented as code modulated above as part of TISPT-400
@@ -2425,18 +2452,24 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 					{
 						//For UF-277 message changed
 						model.addAttribute(MarketplacecheckoutaddonConstants.CODELIGIBLE, CodCheckMessage.ITEMS_ELIGIBLE.toString());
+						getSessionService().setAttribute(MarketplacecheckoutaddonConstants.CODELIGIBLE_SESSION,
+								CodCheckMessage.ITEMS_ELIGIBLE.toString());
 						addDataForCODToModel(model, orderModel);
 					}
 					else
 					{
 						//For UF-277 message changed
 						model.addAttribute(MarketplacecheckoutaddonConstants.CODELIGIBLE, CodCheckMessage.ITEMS_NOT_ELIGIBLE.toString());
+						getSessionService().setAttribute(MarketplacecheckoutaddonConstants.CODELIGIBLE_SESSION,
+								CodCheckMessage.ITEMS_NOT_ELIGIBLE.toString());
 					}
 				}
 				else
 				{
 					//error message for Blacklisted users will go here
 					model.addAttribute(MarketplacecheckoutaddonConstants.CODELIGIBLE, CodCheckMessage.BLACKLISTED.toString());
+					getSessionService().setAttribute(MarketplacecheckoutaddonConstants.CODELIGIBLE_SESSION,
+							CodCheckMessage.BLACKLISTED.toString());
 				}
 
 			}
@@ -2495,6 +2528,8 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 						//Adding to model true if the pincode is serviceable
 						model.addAttribute(MarketplacecheckoutaddonConstants.CODELIGIBLE,
 								CodCheckMessage.NOT_PINCODE_SERVICEABLE.toString());
+						getSessionService().setAttribute(MarketplacecheckoutaddonConstants.CODELIGIBLE_SESSION,
+								CodCheckMessage.NOT_PINCODE_SERVICEABLE.toString());
 						breakFlag = false;
 					}
 				}
@@ -2502,6 +2537,8 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 				{
 					//Adding to model true if the flag value is true
 					model.addAttribute(MarketplacecheckoutaddonConstants.CODELIGIBLE, CodCheckMessage.ITEMS_NOT_ELIGIBLE.toString());
+					getSessionService().setAttribute(MarketplacecheckoutaddonConstants.CODELIGIBLE_SESSION,
+							CodCheckMessage.ITEMS_NOT_ELIGIBLE.toString());
 					breakFlag = false;
 				}
 			}
@@ -2510,6 +2547,8 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 			{
 				//Adding to model true if the flag value is true
 				model.addAttribute(MarketplacecheckoutaddonConstants.CODELIGIBLE, CodCheckMessage.ITEMS_NOT_ELIGIBLE.toString());
+				getSessionService().setAttribute(MarketplacecheckoutaddonConstants.CODELIGIBLE_SESSION,
+						CodCheckMessage.ITEMS_NOT_ELIGIBLE.toString());
 				breakFlag = false;
 			}
 		}
@@ -2517,6 +2556,8 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 		{
 			//Adding to model true if the flag value is true
 			model.addAttribute(MarketplacecheckoutaddonConstants.CODELIGIBLE, CodCheckMessage.ITEMS_NOT_ELIGIBLE.toString());
+			getSessionService().setAttribute(MarketplacecheckoutaddonConstants.CODELIGIBLE_SESSION,
+					CodCheckMessage.ITEMS_NOT_ELIGIBLE.toString());
 			breakFlag = false;
 		}
 		return breakFlag;
@@ -4733,6 +4774,8 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 								{
 									//error message for Fulfillment will go here
 									model.addAttribute(MarketplacecheckoutaddonConstants.CODELIGIBLE, CodCheckMessage.NOT_TSHIP.toString());
+									getSessionService().setAttribute(MarketplacecheckoutaddonConstants.CODELIGIBLE_SESSION,
+											CodCheckMessage.NOT_TSHIP.toString());
 									break;
 								}
 							}

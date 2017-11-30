@@ -698,12 +698,26 @@ public class UsersController extends BaseCommerceController
 	@RequestMapping(value = "/socialMediaRegistration", method = RequestMethod.POST, produces = APPLICATION_TYPE)
 	@ResponseBody
 	public MplUserResultWsDto socialMediaRegistration(@RequestParam final String emailId, @RequestParam final String socialMedia,
-			@RequestParam(required = false) final boolean tataTreatsEnable) throws RequestParameterException,
+			@RequestParam(required = false) final boolean tataTreatsEnable, @RequestParam(required = false) final String platformNumber) throws RequestParameterException,
 			WebserviceValidationException, MalformedURLException
 	{
 		MplUserResultWsDto result = new MplUserResultWsDto();
 		try
 		{
+			//SDI-639 starts here
+			LOG.debug("The platform number is " + platformNumber);
+			int platformDecider;
+			if (StringUtils.isNotEmpty(platformNumber))//IQA
+			{
+				platformDecider = Integer.parseInt(platformNumber);
+			}
+			else
+			{
+				platformDecider = MarketplacecommerceservicesConstants.PLATFORM_FOUR;//for backward compatiblity mobile app and iqa
+			}
+			LOG.debug("The platform number is " + platformDecider);
+			//SDI-639 ends here
+			
 			/* TPR-1140 Case-sensitive nature resulting in duplicate customer e-mails IDs */
 			final String emailIdLwCase = emailId.toLowerCase();
 			LOG.debug("****************** Social Media User Registration mobile web service ***********" + emailId);
@@ -715,12 +729,12 @@ public class UsersController extends BaseCommerceController
 			else if (StringUtils.equalsIgnoreCase(socialMedia.toLowerCase(), MarketplacewebservicesConstants.FACEBOOK))
 			{
 				result = mobileUserService.socialMediaRegistration(emailIdLwCase, MarketplacewebservicesConstants.FACEBOOK,
-						tataTreatsEnable);
+						tataTreatsEnable, platformDecider);
 			}
 			else if (StringUtils.equalsIgnoreCase(socialMedia.toLowerCase(), MarketplacewebservicesConstants.GOOGLEPLUS))
 			{
 				result = mobileUserService.socialMediaRegistration(emailIdLwCase, MarketplacecommerceservicesConstants.GOOGLE,
-						tataTreatsEnable);
+						tataTreatsEnable, platformDecider);
 			}
 		}
 		catch (final EtailNonBusinessExceptions e)

@@ -242,27 +242,10 @@ public class MplSendSMSService implements SendSmsService
 					configurationService.getConfiguration().getString(MarketplacecclientservicesConstants.BULK_SMS_SERVICE_URL))
 					.build());
 			LOG.debug("========== Step:2==========");
-			//final JAXBContext context = JAXBContext.newInstance(BulkSmsListDTO.class);
-			//final Marshaller marshaller = context.createMarshaller();
-
-			//final JSONMarshaller marshallers = JSONJAXBContext.getJSONMarshaller(marshaller, context);
-			//marshallers.setProperty(MarshallerProperties.JSON_INCLUDE_ROOT, Boolean.TRUE);
-			//marshallers.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
-
-
 			final ClientResponse response = webResource.type(MediaType.APPLICATION_XML).accept(MediaType.APPLICATION_XML)
 					.entity(sw.toString()).post(ClientResponse.class);
 			LOG.debug("========== Step:3==========");
 			LOG.debug("========== response status ::" + response.getStatus());
-			//			if (checkResponseStatus(String.valueOf(response.getStatus()), globalResponse))
-			//			{
-			//				return true;
-			//			}
-			//			else
-			//			{
-			//				return false;
-			//			}
-
 			return checkResponseStatus(String.valueOf(response.getStatus()), globalResponse);
 		}
 		catch (final Exception ex)

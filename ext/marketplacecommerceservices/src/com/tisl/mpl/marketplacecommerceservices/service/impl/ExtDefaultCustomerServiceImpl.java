@@ -478,7 +478,7 @@ public class ExtDefaultCustomerServiceImpl extends DefaultCustomerAccountService
 	 * @return ExtRegisterData
 	 */
 	@Override
-	public ExtRegisterData registerUserForSocialSignup(final CustomerModel customerModel)
+	public ExtRegisterData registerUserForSocialSignup(final CustomerModel customerModel, final int platformNumber) //SDI-639
 	{
 		try
 		{
@@ -491,6 +491,40 @@ public class ExtDefaultCustomerServiceImpl extends DefaultCustomerAccountService
 			{
 				getUserService().setPasswordWithDefaultEncoding(customerModel, password);
 			}
+			//SDI-639 starts here
+			LOG.debug("The platform number is " + platformNumber);
+			if (platformNumber == MarketplacecommerceservicesConstants.PLATFORM_ONE)//IQA
+			{
+				customerModel.setCustomerRegistrationPlatform(configurationService.getConfiguration().getString(
+						"registration.platform.mktdesktopweb"));
+			}
+			else if (platformNumber == MarketplacecommerceservicesConstants.PLATFORM_TWO)//IQA
+			{
+				customerModel.setCustomerRegistrationPlatform(configurationService.getConfiguration().getString(
+						"registration.platform.mktiosapp"));
+			}
+			else if (platformNumber == MarketplacecommerceservicesConstants.PLATFORM_THREE)//IQA
+			{
+				customerModel.setCustomerRegistrationPlatform(configurationService.getConfiguration().getString(
+						"registration.platform.mktandroidapp"));
+			}
+			else if (platformNumber == MarketplacecommerceservicesConstants.PLATFORM_FOUR)//IQA
+			{
+				customerModel.setCustomerRegistrationPlatform(configurationService.getConfiguration().getString(
+						"registration.platform.mktmobileapp"));//for backward compatibility
+			}
+			else if (platformNumber == MarketplacecommerceservicesConstants.PLATFORM_FIVE)//IQA
+			{
+				customerModel.setCustomerRegistrationPlatform(configurationService.getConfiguration().getString(
+						"registration.platform.mktmobileweb"));
+			}
+			else
+			{
+				LOG.error(" --------- The registration platform is not in scope/not required to be stored ---------- "
+						+ platformNumber);//IQA
+			}
+			//TPR-SDI-639 ends here
+
 			internalSaveCustomerForSocialLogin(customerModel);
 			final ExtRegisterData registerData = new ExtRegisterData();
 			registerData.setLogin(customerModel.getDisplayName());
