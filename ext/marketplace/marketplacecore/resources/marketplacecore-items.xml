@@ -6235,6 +6235,86 @@
 							optional="true" initial="true" unique="true" />
 						<persistence type="property" />
 					</attribute>
+					
+					
+					<!-- TPR-7408 starts here -->
+					
+					<attribute qualifier="promoProductCostCentreOnePercentage" autocreate="true"
+						type="java.lang.Double">
+						<defaultvalue>Double.valueOf(0.00D)</defaultvalue>
+						<description>Total promoCostCentreOnePercentage</description>
+						<modifiers read="true" write="true" removable="true"
+							optional="true" initial="true" unique="true" />
+						<persistence type="property" />
+					</attribute>
+					<attribute qualifier="promoProductCostCentreTwoPercentage" autocreate="true"
+						type="java.lang.Double">
+						<defaultvalue>Double.valueOf(0.00D)</defaultvalue>
+						<description>Total promoCostCentreTwoPercentage</description>
+						<modifiers read="true" write="true" removable="true"
+							optional="true" initial="true" unique="true" />
+						<persistence type="property" />
+					</attribute>
+					<attribute qualifier="promoProductCostCentreThreePercentage" autocreate="true"
+						type="java.lang.Double">
+						<defaultvalue>Double.valueOf(0.00D)</defaultvalue>
+						<description>Total promoCostCentreThreePercentage</description>
+						<modifiers read="true" write="true" removable="true"
+							optional="true" initial="true" unique="true" />
+						<persistence type="property" />
+					</attribute>
+					<attribute qualifier="promoCartCostCentreOnePercentage" autocreate="true"
+						type="java.lang.Double">
+						<defaultvalue>Double.valueOf(0.00D)</defaultvalue>
+						<description>Total promoCostCentreOnePercentage</description>
+						<modifiers read="true" write="true" removable="true"
+							optional="true" initial="true" unique="true" />
+						<persistence type="property" />
+					</attribute>
+					<attribute qualifier="promoCartCostCentreTwoPercentage" autocreate="true"
+						type="java.lang.Double">
+						<defaultvalue>Double.valueOf(0.00D)</defaultvalue>
+						<description>Total promoCostCentreTwoPercentage</description>
+						<modifiers read="true" write="true" removable="true"
+							optional="true" initial="true" unique="true" />
+						<persistence type="property" />
+					</attribute>
+					<attribute qualifier="promoCartCostCentreThreePercentage" autocreate="true"
+						type="java.lang.Double">
+						<defaultvalue>Double.valueOf(0.00D)</defaultvalue>
+						<description>Total promoCostCentreThreePercentage</description>
+						<modifiers read="true" write="true" removable="true"
+							optional="true" initial="true" unique="true" />
+						<persistence type="property" />
+					</attribute>
+					<attribute qualifier="couponCostCentreOnePercentage" autocreate="true"
+						type="java.lang.Double">
+						<defaultvalue>Double.valueOf(0.00D)</defaultvalue>
+						<description>Total couponCostCentreOnePercentage</description>
+						<modifiers read="true" write="true" removable="true"
+							optional="true" initial="true" unique="true" />
+						<persistence type="property" />
+					</attribute>
+					<attribute qualifier="couponCostCentreTwoPercentage" autocreate="true"
+						type="java.lang.Double">
+						<defaultvalue>Double.valueOf(0.00D)</defaultvalue>
+						<description>Total couponCostCentreTwoPercentage</description>
+						<modifiers read="true" write="true" removable="true"
+							optional="true" initial="true" unique="true" />
+						<persistence type="property" />
+					</attribute>
+					<attribute qualifier="couponCostCentreThreePercentage" autocreate="true"
+						type="java.lang.Double">
+						<defaultvalue>Double.valueOf(0.00D)</defaultvalue>
+						<description>Total couponCostCentreThreePercentage</description>
+						<modifiers read="true" write="true" removable="true"
+							optional="true" initial="true" unique="true" />
+						<persistence type="property" />
+					</attribute>
+										
+					<!-- TPR-7408 ends here -->
+					
+					
 					<attribute qualifier="totalProductLevelDisc" autocreate="true"
 						type="java.lang.Double">
 						<defaultvalue>Double.valueOf(0.00D)</defaultvalue>
