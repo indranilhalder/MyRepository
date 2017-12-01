@@ -274,7 +274,11 @@ public class OmsSubmissionPendingReportJob extends AbstractJobPerformable<CronJo
 						fileWriter.append(csvFormat(((CustomerModel) subOrder.getUser()).getOriginalUid()));//Customer EmailId
 						fileWriter.append(COMMA_DELIMITER);
 						final AddressModel delAddress = subOrder.getDeliveryAddress();
-						fileWriter.append(csvFormat(delAddress.getPhone1() != null ? delAddress.getPhone1() : delAddress.getPhone2()));//Phone Number
+						if (null != delAddress)
+						{
+							fileWriter
+									.append(csvFormat(delAddress.getPhone1() != null ? delAddress.getPhone1() : delAddress.getPhone2()));//Phone Number
+						}
 						fileWriter.append(COMMA_DELIMITER);
 						//fileWriter.append(COMMA_DELIMITER);
 						fileWriter.append(NEW_LINE_SEPARATOR);
@@ -455,7 +459,7 @@ public class OmsSubmissionPendingReportJob extends AbstractJobPerformable<CronJo
 
 					LOG.debug("Inside Category>>>>>");
 					LOG.debug("Category size is >>>>> " + categoryList.size());
-					if (CollectionUtils.isNotEmpty(categoryList))
+					if (CollectionUtils.isNotEmpty(categoryList) && categoryList.size() > 1)
 					{
 						for (int i = 1; i < categoryList.size(); i++)
 						{
@@ -490,7 +494,7 @@ public class OmsSubmissionPendingReportJob extends AbstractJobPerformable<CronJo
 			{
 				name = deliveryAddressModel.getFirstname();
 			}
-			if (StringUtils.isNotBlank(deliveryAddressModel.getFirstname()))
+			if (StringUtils.isNotBlank(deliveryAddressModel.getLastname()))
 			{
 				name = name + " " + deliveryAddressModel.getLastname();
 			}
