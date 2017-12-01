@@ -736,7 +736,7 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 	 */
 	@RequestMapping(value = MarketplacecheckoutaddonConstants.GETTERMS, method = RequestMethod.GET)
 	@RequireHardLogIn
-	public @ResponseBody List<EMITermRateData> getBankTerms(final String selectedEMIBank, final Double cartTotal)
+	public @ResponseBody List<EMITermRateData> getBankTerms(final String selectedEMIBank, final String guid)
 	{
 		//final CartData cartData = getMplCustomAddressFacade().getCheckoutCart();
 		List<EMITermRateData> emiTermRate = new ArrayList<EMITermRateData>();
@@ -757,6 +757,37 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 
 		try
 		{
+			//TPR-7486 START
+			Double cartTotal = Double.valueOf(0);
+			OrderModel orderModel = null;
+
+			if (StringUtils.isNotEmpty(guid))
+			{
+				orderModel = getMplPaymentFacade().getOrderByGuid(guid);
+			}
+
+			if (null == orderModel)
+			{
+
+				final CartModel cart = getCartService().getSessionCart();
+
+				if (null != cart)
+				{
+					final CartData cData = getMplCartFacade().getCartDataFromCartModel(cart, false);
+					if (null != cData && null != cData.getTotalPriceWithConvCharge())
+					{
+						cartTotal = cData.getTotalPriceWithConvCharge().getDoubleValue();
+					}
+
+				}
+			}
+			else
+			{
+				cartTotal = orderModel.getTotalPrice();
+			}
+
+			LOG.debug("Cart Total value is:::::" + cartTotal);
+			//TPR-7486 END
 			emiTermRate = getMplPaymentFacade().getBankTerms(selectedEMIBank, cartTotal);
 		}
 		catch (final EtailNonBusinessExceptions e)
@@ -860,6 +891,7 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 
 					if (null == orderModel.getPaymentInfo() && !OrderStatus.PAYMENT_TIMEOUT.equals(orderModel.getStatus()))
 					{
+
 						final Double orderValue = orderModel.getSubtotal();
 						final Double totalCODCharge = orderModel.getConvenienceCharges();
 
@@ -886,6 +918,7 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 					return MarketplacecheckoutaddonConstants.REDIRECT + MarketplacecheckoutaddonConstants.MPLPAYMENTURL
 							+ MarketplacecheckoutaddonConstants.PAYVALUE + MarketplacecheckoutaddonConstants.VALUE
 							+ paymentForm.getGuid();
+
 				}
 
 			}
@@ -934,6 +967,8 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 
 
 	}
+
+
 
 	/**
 	 * This method is responsible for adding the convenience charges for COD and recalculating the cart values for
@@ -3696,9 +3731,505 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 		return netbankingResponse;
 	}
 
+	/**
+	 * @Description saved payment mode in session
+	 * @param string
+	 * @return boolean
+	 * @throws UnsupportedEncodingException
+	 */
+	// TPR-7486
+	private boolean savePaymentModeInfo(final String paymentInfo)
+	{
+		boolean gohead = false;
+		try
+		{
+			getSessionService().setAttribute(MarketplacecheckoutaddonConstants.PAYMENTMODEINFO, paymentInfo);
+			//final String[] paymentModeInfoArray = paymentInfo.split("@");
+			//final String paymentMode = paymentModeInfoArray[0].trim();
+			LOG.debug("paymentInfo details ...................." + paymentInfo);
+			gohead = true;
+
+		}
+		catch (final EtailBusinessExceptions e)
+		{
+			ExceptionUtil.etailBusinessExceptionHandler(e, null);
+			LOG.error("EtailBusinessExceptions while saving PaymentModeInfo ", e);
+
+		}
+		catch (final EtailNonBusinessExceptions e)
+		{
+			ExceptionUtil.etailNonBusinessExceptionHandler(e);
+			LOG.error("EtailNonBusinessExceptions while saving PaymentModeInfo ", e);
+		}
+		catch (final Exception e)
+		{
+			LOG.error("Exception occured in savePaymentModeInfo:" + e);
+			LOG.error("Stack trace:", e);
+		}
+		return gohead;
+	}
+
+	/**
+	 * @Description validate payment modes from session before place order
+	 * @param string
+	 * @return boolean
+	 * @throws UnsupportedEncodingException
+	 */
+	// TPR-7486
+	private boolean checkPaymentModeInfo(final String paymentInfo)
+	{
+		boolean gohead = false;
+		try
+		{
+			final String paymentModeInformation = getSessionService()
+					.getAttribute(MarketplacecheckoutaddonConstants.PAYMENTMODEINFO);
+
+			if (StringUtils.isNotEmpty(paymentModeInformation))
+			{
+				if (paymentModeInformation.equals(paymentInfo))
+				{
+					gohead = true; //session data & form submit data are same
+				}
+
+			}
+			//final String[] paymentModeInfoArray = paymentInfo.split("@");
+			//final String paymentMode = paymentModeInfoArray[0].trim();
+			LOG.debug("paymentInfo details ...................." + paymentModeInformation);
+
+		}
+		catch (final EtailBusinessExceptions e)
+		{
+			ExceptionUtil.etailBusinessExceptionHandler(e, null);
+			LOG.error("EtailBusinessExceptions while checking PaymentModeInfo ", e);
+
+		}
+		catch (final EtailNonBusinessExceptions e)
+		{
+			ExceptionUtil.etailNonBusinessExceptionHandler(e);
+			LOG.error("EtailNonBusinessExceptions while checking PaymentModeInfo ", e);
+		}
+		catch (final Exception e)
+		{
+			LOG.error("Exception occured in checkPaymentModeInfo:" + e);
+			LOG.error("Stack trace:", e);
+		}
+		return gohead;
+	}
+
+	/**
+	 * This method is used to return payment mode, bankname & card type(new or saved card)
+	 *
+	 * @return
+	 * @throws InvalidCartException
+	 *            newReviewStructure
+	 */
+	// TPR-7486
+	private List<String> getpaymentDetails(final String paymentInfodata) throws EtailBusinessExceptions,
+			EtailNonBusinessExceptions, Exception
+	{
+
+		final List<String> paymentModeinfo = new ArrayList<String>();
+		//newReviewStructure
+
+		final String[] paymentModeInfoArray = paymentInfodata.split("@");
+		final String paymentMode = paymentModeInfoArray[0].trim(); //Mode of payment
+		String cardType = MarketplacecommerceservicesConstants.EMPTY;
+		String cardRefNo = MarketplacecommerceservicesConstants.EMPTY;
+		String cardBinNo = MarketplacecommerceservicesConstants.EMPTY;
+		//String emiBankname = MarketplacecommerceservicesConstants.EMPTY;
+		String bankNameAsperCard = MarketplacecommerceservicesConstants.EMPTY;
+
+		if (paymentMode.equalsIgnoreCase(MarketplacecheckoutaddonConstants.CREDITCARDMODE)
+				|| paymentMode.equalsIgnoreCase(MarketplacecheckoutaddonConstants.DEBITCARDMODE))
+		{
+			cardType = paymentModeInfoArray[1].trim(); //new or saved card
+
+			if (cardType.equalsIgnoreCase(MarketplacecheckoutaddonConstants.SAVEDCARD))
+			{
+				cardRefNo = paymentModeInfoArray[2].trim(); //saved card ref no
+
+				final CustomerModel customer = (CustomerModel) userService.getCurrentUser();
+
+				if (StringUtils.isNotEmpty(cardRefNo))
+				{
+					//getting bank name as per card ref number
+					bankNameAsperCard = getMplPaymentFacade().fetchBankFromCustomerSavedCard(cardRefNo, customer);
+
+				}
+
+			}
+			else if (cardType.equalsIgnoreCase(MarketplacecheckoutaddonConstants.NEWCARD))
+			{
+				cardBinNo = paymentModeInfoArray[2].trim(); //new card 6 digit bin no
+				if (StringUtils.isNotEmpty(cardBinNo))
+				{
+					bankNameAsperCard = getMplPaymentFacade().fetchBanknameFromBin(cardBinNo);
+				}
+			}
+
+		}
+		else if (paymentMode.equalsIgnoreCase(MarketplacecheckoutaddonConstants.EMIMODE))
+		{
+			bankNameAsperCard = paymentModeInfoArray[1].trim();
+
+		}
+		else if (paymentMode.equalsIgnoreCase(MarketplacecheckoutaddonConstants.NETBANKINGMODE))
+		{
+			bankNameAsperCard = paymentModeInfoArray[1].trim();
+
+		}
+
+		LOG.debug("payment mode in getpaymentDetails method   =====" + paymentMode);
+		LOG.debug("bank name as per payment mode getpaymentDetails method   =====" + bankNameAsperCard);
+
+		paymentModeinfo.add(paymentMode);
+		paymentModeinfo.add(bankNameAsperCard);
+		paymentModeinfo.add(cardType);
+
+		return paymentModeinfo;
+
+	}
+
+	/**
+	 * This method is used to apply bank, payment mode and coupon related promotions before populating review order page
+	 *
+	 * @return
+	 * @throws InvalidCartException
+	 *            newReviewStructure
+	 */
 
 
 
+	private MplPromoPriceData validateBankAndPaymentModePromotions(final String paymentInfodata, final String guid)
+			throws CMSItemNotFoundException, InvalidCartException, CalculationException, ModelSavingException,
+			NumberFormatException, JaloInvalidParameterException, VoucherOperationException, JaloSecurityException,
+			JaloPriceFactoryException
+	{
+
+		//TPR-7486
+		if (StringUtils.isNotEmpty(paymentInfodata))
+		{
+			getSessionService().setAttribute(MarketplacecheckoutaddonConstants.PAYMENTMODEINFO, paymentInfodata);
+		}
+
+		final long startTime = System.currentTimeMillis();
+		LOG.debug("Entering Controller applyPromotions()=====" + System.currentTimeMillis());
+		List<String> paymentModeinfo = new ArrayList<String>();
+
+
+		//Payment Soln changes
+		OrderModel orderModel = null;
+		MplPromoPriceData responseData = new MplPromoPriceData();
+		String jsonResponse = MarketplacecommerceservicesConstants.EMPTY;
+		CartData cartData = null;
+		OrderData orderData = null;
+
+		String paymentMode = MarketplacecommerceservicesConstants.EMPTY; //Mode of payment
+		//String cardType = MarketplacecommerceservicesConstants.EMPTY;
+		String bankNameAsperCard = MarketplacecommerceservicesConstants.EMPTY;
+
+		try
+		{
+
+
+			paymentModeinfo = getpaymentDetails(paymentInfodata);
+			if (CollectionUtils.isNotEmpty(paymentModeinfo))
+			{
+				paymentMode = paymentModeinfo.get(0);
+				bankNameAsperCard = paymentModeinfo.get(1);
+				//cardType = paymentModeinfo.get(2);
+			}
+
+			LOG.debug("payment mode   =====" + paymentMode);
+			LOG.debug("bank name as per payment mode   =====" + bankNameAsperCard);
+
+
+			if (StringUtils.isNotEmpty(guid))
+			{
+				//final String orderGuid = decryptKey(guid);
+				orderModel = getMplPaymentFacade().getOrderByGuid(guid);
+			}
+
+			if (null == orderModel)
+			{
+				//Existing code for cartModel
+				final CartModel cart = getCartService().getSessionCart();
+				//TISEE-510 ,TISEE-5555
+
+				//TISPT-29
+				if (null != cart
+						&& StringUtils.isNotEmpty(paymentMode)
+						&& (paymentMode.equalsIgnoreCase(MarketplacecheckoutaddonConstants.CREDITCARDMODE)
+								|| paymentMode.equalsIgnoreCase(MarketplacecheckoutaddonConstants.DEBITCARDMODE)
+								|| paymentMode.equalsIgnoreCase(MarketplacecheckoutaddonConstants.NETBANKINGMODE)
+								|| paymentMode.equalsIgnoreCase(MarketplacecheckoutaddonConstants.EMIMODE) || paymentMode
+									.equalsIgnoreCase(MarketplacecommerceservicesConstants.MRUPEE)))
+				{
+					//setting in cartmodel
+					cart.setConvenienceCharges(Double.valueOf(0));
+					//saving cartmodel
+					getMplPaymentFacade().saveCart(cart);
+				}
+
+				if (!getMplCheckoutFacade().isPromotionValid(cart))
+				{
+					getSessionService().setAttribute(MarketplacecheckoutaddonConstants.PAYNOWPROMOTIONEXPIRED, "TRUE");
+					//responseData.setErrorMsgForEMI("redirect");
+					responseData.setPromoExpiryMsg(MarketplacecheckoutaddonConstants.REDIRECTSTRING);
+				}
+				else
+				{
+					getSessionService().setAttribute(MarketplacecheckoutaddonConstants.PAYMENTMODEFORPROMOTION, paymentMode);
+
+					//	if (!isNewCard)
+					//{
+					getSessionService().setAttribute(MarketplacecheckoutaddonConstants.BANKFROMBIN, bankNameAsperCard);
+					//}
+
+
+
+					final Map<String, MplZoneDeliveryModeValueModel> freebieModelMap = new HashMap<String, MplZoneDeliveryModeValueModel>();
+					final Map<String, Long> freebieParentQtyMap = new HashMap<String, Long>();
+					if (cart != null && cart.getEntries() != null)
+					{
+						for (final AbstractOrderEntryModel cartEntryModel : cart.getEntries())
+						{
+							if (cartEntryModel != null && cartEntryModel.getGiveAway() != null
+									& !cartEntryModel.getGiveAway().booleanValue() && cartEntryModel.getSelectedUSSID() != null)
+							{
+								freebieModelMap.put(cartEntryModel.getSelectedUSSID(), cartEntryModel.getMplDeliveryMode());
+								freebieParentQtyMap.put(cartEntryModel.getSelectedUSSID(), cartEntryModel.getQuantity());
+							}
+						}
+					}
+
+					cartData = getMplCartFacade().getCartDataFromCartModel(cart, false);
+					responseData = getMplPaymentFacade().applyPromotions(cartData, null, cart, null, responseData);
+
+
+					getMplPaymentFacade().populateDelvPOSForFreebie(cart, freebieModelMap, freebieParentQtyMap);
+
+					//Wallet amount assigned. Will be changed after release1
+					final double walletAmount = MarketplacecheckoutaddonConstants.WALLETAMOUNT;
+
+					//setting the payment modes and the amount against it in session to be used later
+					final Map<String, Double> paymentInfo = new HashMap<String, Double>();
+					paymentInfo.put(paymentMode, Double.valueOf(cart.getTotalPriceWithConv().doubleValue() - walletAmount));
+					getSessionService().setAttribute(MarketplacecheckoutaddonConstants.PAYMENTMODE, paymentInfo);
+
+					//TISPRO-540 - Setting Payment mode in Cart
+					if (StringUtils.isNotEmpty(paymentMode)
+							&& paymentMode.equalsIgnoreCase(MarketplacecheckoutaddonConstants.CREDITCARDMODE))
+					{
+						cart.setModeOfPayment(MarketplacecheckoutaddonConstants.CREDITCARDMODE);
+						getModelService().save(cart);
+					}
+					else if (StringUtils.isNotEmpty(paymentMode)
+							&& paymentMode.equalsIgnoreCase(MarketplacecheckoutaddonConstants.DEBITCARDMODE))
+					{
+						cart.setModeOfPayment(MarketplacecheckoutaddonConstants.DEBITCARDMODE);
+						getModelService().save(cart);
+					}
+					else if (StringUtils.isNotEmpty(paymentMode)
+							&& paymentMode.equalsIgnoreCase(MarketplacecheckoutaddonConstants.NETBANKINGMODE))
+					{
+						cart.setModeOfPayment(MarketplacecheckoutaddonConstants.NETBANKINGMODE);
+						getModelService().save(cart);
+					}
+					else if (StringUtils.isNotEmpty(paymentMode)
+							&& paymentMode.equalsIgnoreCase(MarketplacecheckoutaddonConstants.EMIMODE))
+					{
+						cart.setModeOfPayment(MarketplacecheckoutaddonConstants.EMIMODE);
+						getModelService().save(cart);
+					}
+					else if (StringUtils.isNotEmpty(paymentMode) && paymentMode.equalsIgnoreCase("COD"))
+					{
+						cart.setModeOfPayment("COD");
+						getModelService().save(cart);
+					}
+
+					//Added for third party wallet
+					else if (StringUtils.isNotEmpty(paymentMode)
+							&& paymentMode.equalsIgnoreCase(MarketplacecommerceservicesConstants.MRUPEE))
+					{
+						cart.setModeOfPayment(MarketplacecommerceservicesConstants.MRUPEE);
+						getModelService().save(cart);
+					}
+
+					//TISST-7955
+					final Map<String, String> ussidPricemap = new HashMap<String, String>();
+					if (cartData != null)
+					{
+						for (final OrderEntryData entryData : cartData.getEntries())
+						{
+							ussidPricemap.put(entryData.getSelectedUssid() + "_" + entryData.isGiveAway(), entryData.getTotalPrice()
+									.getFormattedValue());
+						}
+					}
+					final ObjectMapper objectMapper = new ObjectMapper();
+					jsonResponse = objectMapper.writeValueAsString(ussidPricemap);
+
+					//UF-260
+					GenericUtilityMethods.getCartPriceDetails(null, cart, responseData);
+				}
+
+			}
+			else
+			{
+				//Added for INC144317089: Promotion is getting reapplied on order if user clicks on "back" button from order confirmation page.
+				if (!OrderStatus.PAYMENT_SUCCESSFUL.equals(orderModel.getStatus())
+						&& CollectionUtils.isEmpty(orderModel.getChildOrders()))
+				{
+					//Code for orderModel TPR-629
+					if (null != bankNameAsperCard && !bankNameAsperCard.equalsIgnoreCase("null"))
+					{
+						getMplPaymentFacade().setBankForSavedCard(bankNameAsperCard);
+					}
+
+					//TISPT-29
+					if (StringUtils.isNotEmpty(paymentMode)
+							&& (paymentMode.equalsIgnoreCase(MarketplacecheckoutaddonConstants.CREDITCARDMODE)
+									|| paymentMode.equalsIgnoreCase(MarketplacecheckoutaddonConstants.DEBITCARDMODE)
+									|| paymentMode.equalsIgnoreCase(MarketplacecheckoutaddonConstants.NETBANKINGMODE)
+									|| paymentMode.equalsIgnoreCase(MarketplacecheckoutaddonConstants.EMIMODE) || paymentMode
+										.equalsIgnoreCase(MarketplacecommerceservicesConstants.MRUPEE)))
+					{
+						//setting in orderModel
+						orderModel.setConvenienceCharges(Double.valueOf(0));
+						getModelService().save(orderModel);
+					}
+
+					if (!getMplCheckoutFacade().isPromotionValid(orderModel))
+					{
+						responseData.setPromoExpiryMsg(MarketplacecheckoutaddonConstants.REDIRECTTOPAYMENT);
+					}
+
+					getSessionService().setAttribute(MarketplacecheckoutaddonConstants.PAYMENTMODEFORPROMOTION, paymentMode);
+
+
+					//if (!isNewCard)
+					//{
+					getSessionService().setAttribute(MarketplacecheckoutaddonConstants.BANKFROMBIN, bankNameAsperCard);
+					//}
+
+					final Map<String, MplZoneDeliveryModeValueModel> freebieModelMap = new HashMap<String, MplZoneDeliveryModeValueModel>();
+					final Map<String, Long> freebieParentQtyMap = new HashMap<String, Long>();
+					if (orderModel.getEntries() != null)
+					{
+						for (final AbstractOrderEntryModel cartEntryModel : orderModel.getEntries())
+						{
+							if (cartEntryModel != null && cartEntryModel.getGiveAway() != null
+									& !cartEntryModel.getGiveAway().booleanValue() && cartEntryModel.getSelectedUSSID() != null)
+							{
+								freebieModelMap.put(cartEntryModel.getSelectedUSSID(), cartEntryModel.getMplDeliveryMode());
+								freebieParentQtyMap.put(cartEntryModel.getSelectedUSSID(), cartEntryModel.getQuantity());
+							}
+						}
+					}
+
+					orderData = getMplCheckoutFacade().getOrderDetailsForCode(orderModel);
+					responseData = getMplPaymentFacade().applyPromotions(null, orderData, null, orderModel, responseData);
+
+					getMplPaymentFacade().populateDelvPOSForFreebie(orderModel, freebieModelMap, freebieParentQtyMap);
+
+					//Wallet amount assigned. Will be changed after release1
+					final double walletAmount = MarketplacecheckoutaddonConstants.WALLETAMOUNT;
+
+					//setting the payment modes and the amount against it in session to be used later
+					final Map<String, Double> paymentInfo = new HashMap<String, Double>();
+					paymentInfo.put(paymentMode, Double.valueOf(orderModel.getTotalPriceWithConv().doubleValue() - walletAmount));
+					getSessionService().setAttribute(MarketplacecheckoutaddonConstants.PAYMENTMODE, paymentInfo);
+
+					//TISPRO-540 - Setting Payment mode in orderModel
+					if (StringUtils.isNotEmpty(paymentMode)
+							&& paymentMode.equalsIgnoreCase(MarketplacecheckoutaddonConstants.CREDITCARDMODE))
+					{
+						orderModel.setModeOfOrderPayment(MarketplacecheckoutaddonConstants.CREDITCARDMODE);
+						getModelService().save(orderModel);
+					}
+					else if (StringUtils.isNotEmpty(paymentMode)
+							&& paymentMode.equalsIgnoreCase(MarketplacecheckoutaddonConstants.DEBITCARDMODE))
+					{
+						orderModel.setModeOfOrderPayment(MarketplacecheckoutaddonConstants.DEBITCARDMODE);
+						getModelService().save(orderModel);
+					}
+					else if (StringUtils.isNotEmpty(paymentMode)
+							&& paymentMode.equalsIgnoreCase(MarketplacecheckoutaddonConstants.NETBANKINGMODE))
+					{
+						orderModel.setModeOfOrderPayment(MarketplacecheckoutaddonConstants.NETBANKINGMODE);
+						getModelService().save(orderModel);
+					}
+					else if (StringUtils.isNotEmpty(paymentMode)
+							&& paymentMode.equalsIgnoreCase(MarketplacecheckoutaddonConstants.EMIMODE))
+					{
+						orderModel.setModeOfOrderPayment(MarketplacecheckoutaddonConstants.EMIMODE);
+						getModelService().save(orderModel);
+					}
+					else if (StringUtils.isNotEmpty(paymentMode) && paymentMode.equalsIgnoreCase("COD"))
+					{
+						orderModel.setModeOfOrderPayment("COD");
+						getModelService().save(orderModel);
+					}
+
+					//Added for third party wallet
+					else if (StringUtils.isNotEmpty(paymentMode)
+							&& paymentMode.equalsIgnoreCase(MarketplacecommerceservicesConstants.MRUPEE))
+					{
+						orderModel.setModeOfOrderPayment(MarketplacecommerceservicesConstants.MRUPEE);
+						getModelService().save(orderModel);
+					}
+
+					//TISST-7955
+					final Map<String, String> ussidPricemap = new HashMap<String, String>();
+					if (orderData != null)
+					{
+						for (final OrderEntryData entryData : orderData.getEntries())
+						{
+							ussidPricemap.put(entryData.getSelectedUssid() + "_" + entryData.isGiveAway(), entryData.getTotalPrice()
+									.getFormattedValue());
+						}
+					}
+					final ObjectMapper objectMapper = new ObjectMapper();
+					jsonResponse = objectMapper.writeValueAsString(ussidPricemap);
+
+					//UF-260
+					GenericUtilityMethods.getCartPriceDetails(null, orderModel, responseData);
+				}
+			}
+		}
+		catch (final JsonGenerationException e)
+		{
+			LOG.error("Error while generating JSON ", e);
+		}
+		catch (final JsonMappingException e)
+		{
+			LOG.error("Error while generating JSON ", e);
+		}
+		catch (final IOException e)
+		{
+			LOG.error("Error while generating JSON ", e);
+		}
+		catch (final ModelSavingException e)
+		{
+			LOG.error("Error while saving model in applyPromotion ", e);
+		}
+		catch (final EtailNonBusinessExceptions e)
+		{
+			LOG.error("Error while generating JSON ", e);
+			ExceptionUtil.etailNonBusinessExceptionHandler(e);
+		}
+		catch (final Exception e)
+		{
+			LOG.error("Error while generating JSON ", e);
+		}
+		responseData.setUssidPriceDetails(jsonResponse);
+
+
+		final long endTime = System.currentTimeMillis();
+		LOG.debug("Time taken within Controller applyPromotions()=====" + (endTime - startTime));
+		return responseData;
+
+	}
 
 	/**
 	 * This method creates juspay order. TPR-629 incorporated
@@ -3723,9 +4254,11 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 	public @ResponseBody String createJuspayOrder(final String firstName, final String lastName, final String netBankName,
 			final String addressLine1, final String addressLine2, final String addressLine3, final String country,
 			final String state, final String city, final String pincode, final String cardSaved, final String sameAsShipping,
-			final String guid, final Model model) //Parameter guid added for TPR-629 //parameter netBankName added for TPR-4461
+			final String guid, final String paymentinfo, final Model model) //Parameter guid added for TPR-629 //parameter netBankName added for TPR-4461
 			throws EtailNonBusinessExceptions
 	{
+
+
 		//TPR-4461 parameter netBankName added starts here added only for getting bank name for netbanking/saved credit card/saved debit card
 		LOG.debug("The bank name for netbanking is" + netBankName);
 		//		if (StringUtils.isNotEmpty(netBankName) && netBankName != null)
@@ -3737,6 +4270,11 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 		String orderId = null;
 		try
 		{
+
+
+
+			validateBankAndPaymentModePromotions(paymentinfo, guid);
+
 			final StringBuilder returnUrlBuilder = new StringBuilder();
 			returnUrlBuilder
 					.append(request.getRequestURL().substring(0, request.getRequestURL().indexOf("/", 8)))
@@ -4219,9 +4757,40 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 	 */
 	@RequestMapping(value = MarketplacecheckoutaddonConstants.GETEMIBANKS, method = RequestMethod.GET)
 	@RequireHardLogIn
-	public @ResponseBody List<EMIBankList> getEMIBanks(final Double cartTotal) throws InvalidCartException
+	public @ResponseBody List<EMIBankList> getEMIBanks(final String guid) throws InvalidCartException
 	{
-		LOG.info("Cart Total value is:::::" + cartTotal);
+		//LOG.info("Cart Total value is:::::" + cartTotal);
+		//TPR-7486 START
+		Double cartTotal = Double.valueOf(0);
+		OrderModel orderModel = null;
+
+		if (StringUtils.isNotEmpty(guid))
+		{
+			orderModel = getMplPaymentFacade().getOrderByGuid(guid);
+		}
+
+		if (null == orderModel)
+		{
+
+			final CartModel cart = getCartService().getSessionCart();
+
+			if (null != cart)
+			{
+				final CartData cData = getMplCartFacade().getCartDataFromCartModel(cart, false);
+				if (null != cData && null != cData.getTotalPriceWithConvCharge())
+				{
+					cartTotal = cData.getTotalPriceWithConvCharge().getDoubleValue();
+				}
+
+			}
+		}
+		else
+		{
+			cartTotal = orderModel.getTotalPrice();
+		}
+
+		LOG.debug("Cart Total value is:::::" + cartTotal);
+		//TPR-7486 END
 		final Map<String, String> emiBankNames = getMplPaymentFacade().getEMIBankNames(cartTotal);
 		final List<EMIBankList> emiBankList = new ArrayList<EMIBankList>();
 		for (final Map.Entry<String, String> entry : emiBankNames.entrySet())
@@ -4984,7 +5553,8 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
+	 * 
 	 * @see com.tisl.mpl.controllers.pages.CheckoutStepController#enterStep(org.springframework.ui.Model,
 	 * org.springframework.web.servlet.mvc.support.RedirectAttributes)
 	 */

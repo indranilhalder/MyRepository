@@ -2014,7 +2014,23 @@ ACC.singlePageCheckout = {
     				$("#orderTotalSpanId ul.totals li.subtotal span.amt span.priceFormat").html(data.subTotalPrice.formattedValue);
         			/*//$("#orderDetailsSectionId").html(data);
         			$("#totalWithConvField").html(data.totalPrice);*/
-    	        	
+    				
+    				// TPR-7486 start
+    				if(data.totalDiscount.value != 0){
+						$("#promotionApplied").css("display","block");
+						document.getElementById("promotion").innerHTML=data.totalDiscount.formattedValue;
+					}
+    				document.getElementById("totalWithConvField").innerHTML=data.totalPrice;
+    				if(document.getElementById("outstanding-amount")!=null)
+    				document.getElementById("outstanding-amount").innerHTML=data.totalPrice;
+    				document.getElementById("outstanding-amount-mobile").innerHTML=data.totalPrice;
+    				$("#codAmount").text(data.totalPrice);
+
+
+    				// TPR-7486 end 
+    				
+    				//$("#totalPriceConvChargeId span#totalWithConvField span.priceFormat").html(data.totalPrice); // TPR-7486
+    				//$("#discountApplied span#promotion span.priceFormat").html(data.totalDiscount.formattedValue); // TPR-7486
     	        	ACC.singlePageCheckout.showAccordion("#makePaymentDiv");
 	    	        //Calling the below methods to populate the latest shipping address(These methods are in marketplacecheckoutaddon.js)
 //	    	        populateAddress();
@@ -2905,6 +2921,16 @@ ACC.singlePageCheckout = {
 	{
 		var formValidationSuccess=true;
 		ACC.singlePageCheckout.mobileValidationSteps.paymentModeSelected=paymentMode;
+		//TPR-7486
+		if(savedOrNew=="savedCard")
+		{
+			$("#paymentMode_newcard_savedcard").val("savedCard"); //for responsive
+		}
+		else
+		{
+			$("#paymentMode_newcard_savedcard").val("newCard");  //for responsive
+		}
+		
 		//Below we are checking if pincode is serviceabile
 		if(!ACC.singlePageCheckout.mobileValidationSteps.isPincodeServiceable)
 		{

@@ -3493,13 +3493,13 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 			//SDI-2158 fix recalculation starts here
 			mplCouponFacade.releaseVoucherInCheckout(cartModel);
 			commerceCartService.recalculateCart(cartModel);
-			
-			//Fix starts for - Order cant be placed with freebie 
+
+			//Fix starts for - Order cant be placed with freebie
 			final Map<String, MplZoneDeliveryModeValueModel> freebieModelMap = new HashMap<String, MplZoneDeliveryModeValueModel>();
 			final Map<String, Long> freebieParentQtyMap = new HashMap<String, Long>();
 			populateFreebieProductData(cartModel, freebieModelMap, freebieParentQtyMap);
-			//Fix ends for - Order cant be placed with freebie 
-			
+			//Fix ends for - Order cant be placed with freebie
+
 			//SDI-2158 fix recalculation ends here
 			mplCartFacade.setCartSubTotalForReviewOrder(cartModel);
 			mplCartFacade.totalMrpCal(cartModel);
@@ -3831,6 +3831,7 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 			GenericUtilityMethods.getCartPriceDetails(model, cartModel, null);
 			jsonObj.put("validation", "success");
 			jsonObj.put("subTotalPrice", model.asMap().get("cartTotalMrp"));
+			jsonObj.put("totalDiscount", model.asMap().get("totalDiscount"));//TPR-7486
 			jsonObj.put("totalPrice", cartData.getTotalPriceWithConvCharge().getFormattedValueNoDecimal());
 			jsonObj.put("type", "response");
 		}
@@ -4962,7 +4963,7 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 
 	/*
 	 * @Description adding wishlist popup in cart page
-	 *
+	 * 
 	 * @param String productCode,String wishName, model
 	 */
 
@@ -5020,7 +5021,7 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 
 	/*
 	 * @Description showing wishlist popup in cart page
-	 *
+	 * 
 	 * @param String productCode, model
 	 */
 	@ResponseBody
