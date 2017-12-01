@@ -281,8 +281,8 @@
 
 <c:if test="${useNativeSocial=='Y'}">
 	<script type="text/javascript">
-	var fbid='${mplfbid}';
-	var gid='${mplgoogleid}';
+	var fbid='${luxfbid}';
+	var gid='${luxgoogleid}';
 </script>
 </c:if>
 <!-- For Gigya Social Login --><!-- TISPT-261 -->
