@@ -200,6 +200,7 @@ public class OmsSubmissionPendingReportJob extends AbstractJobPerformable<CronJo
 		}
 		catch (final Exception e)
 		{
+			LOG.error("Error in writeBlankCSV:", e);
 			throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.CSV_ERROR);
 		}
 		finally
@@ -211,6 +212,7 @@ public class OmsSubmissionPendingReportJob extends AbstractJobPerformable<CronJo
 			}
 			catch (final IOException e)
 			{
+				LOG.error("Error in writeBlankCSV:", e);
 				throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.FILE_WRITER_ERROR);
 			}
 		}
@@ -239,7 +241,9 @@ public class OmsSubmissionPendingReportJob extends AbstractJobPerformable<CronJo
 
 			for (final OrderModel subOrder : orderModels)
 			{
-				if (subOrder.getParentReference().getChildOrders().contains(subOrder))//Condition to ignore orphan child
+				final OrderModel parentReference = subOrder.getParentReference();
+				if (null != parentReference && null != parentReference.getChildOrders()
+						&& parentReference.getChildOrders().contains(subOrder))//Condition to ignore orphan child
 				{
 					for (final AbstractOrderEntryModel subOrderEntry : subOrder.getEntries())
 					{
@@ -280,6 +284,7 @@ public class OmsSubmissionPendingReportJob extends AbstractJobPerformable<CronJo
 		}
 		catch (final Exception e)
 		{
+			LOG.error("Error in writeItemsToCSV:", e);
 			throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.CSV_ERROR);
 		}
 		finally
@@ -291,6 +296,7 @@ public class OmsSubmissionPendingReportJob extends AbstractJobPerformable<CronJo
 			}
 			catch (final IOException e)
 			{
+				LOG.error("Error in writeItemsToCSV:", e);
 				throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.FILE_WRITER_ERROR);
 			}
 		}
