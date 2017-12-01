@@ -4170,7 +4170,8 @@ body.page-cartPage .cart.wrapper .product-block li.item li.price>ul>span.delSeat
 		{
 		content: "";
 	}
-	a#checkout-enabled.checkout-disabled:hover {
+	a#checkout-enabled.checkout-disabled:hover,
+	a#checkout-enabled.checkout-disabled {
 		background-color: rgba(169, 20, 60, 0.5) !important;
 		cursor: not-allowed !important;
 		pointer-events: all !important;

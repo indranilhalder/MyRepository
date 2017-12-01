@@ -5141,7 +5141,7 @@ div#savedCreditCard, div#savedDebitCard, div#savedEMICard {
     margin: 0px;
     right: 0px;
 }
-.cart.wrapper .left-block .payments.tab-view .pay.nbButton .button, .cart.wrapper .left-block .payments.tab-view .pay .button.confirm, .cart.wrapper .left-block .payments.tab-view .pay .button {
+.cart.wrapper .left-block .payments.tab-view .pay.nbButton .button {
     display: none !important;
 }
 .cart.wrapper .button.proceed-button {
