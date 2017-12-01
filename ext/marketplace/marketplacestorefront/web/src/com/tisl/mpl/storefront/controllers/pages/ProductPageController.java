@@ -4764,7 +4764,7 @@ public class ProductPageController extends MidPageController
 
 		final JSONObject MSDJObject = new JSONObject();
 		final String msdUse = configurationService.getConfiguration().getString("isMSDEnabled");
-		MSDResponsedata msdRecData = null;
+		String msdRecData = null;
 		String productCode = null;
 		try
 		{
@@ -4790,7 +4790,7 @@ public class ProductPageController extends MidPageController
 				msdRequest.setWidget_list(widget_list);
 				msdRequest.setNum_results(num_results);
 				msdRecData = msdWidgetFacade.getMSDWidgetFinalData(msdRequest);
-				MSDJObject.put("responsedata", msdRecData.getMsddata());
+				MSDJObject.put("responsedata", msdRecData);
 
 
 			}
