@@ -439,6 +439,13 @@
 			generate="true">
 			
 		</itemtype>
+		
+		<itemtype code="MplOrderRestriction"
+			extends="OrderRestriction"
+			jaloclass="com.tisl.mpl.jalo.MplOrderRestriction"
+			autocreate="true"
+			generate="true">
+		</itemtype>
 		 
 		 
 		 <!-- New Coupon created for Promotion Sequencing ends -->
