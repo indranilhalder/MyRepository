@@ -7,10 +7,7 @@ import de.hybris.platform.jalo.c2l.Currency;
 import de.hybris.platform.jalo.order.AbstractOrder;
 import de.hybris.platform.jalo.type.ComposedType;
 
-import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
-
-import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 
 
 public class MplOrderRestriction extends GeneratedMplOrderRestriction
@@ -35,7 +32,7 @@ public class MplOrderRestriction extends GeneratedMplOrderRestriction
 	{
 		final Currency minimumOrderValueCurrency = getCurrency();
 		final Currency currentOrderCurrency = anOrder.getCurrency();
-		String conVal = MarketplacecommerceservicesConstants.EMPTY;
+		Double conVal = Double.valueOf(0);
 
 		double currentTotal = anOrder.getSubtotal().doubleValue();
 		final double minimumTotal = minimumOrderValueCurrency.convert(currentOrderCurrency, getTotalAsPrimitive());
@@ -46,18 +43,22 @@ public class MplOrderRestriction extends GeneratedMplOrderRestriction
 			if (!(isValueofgoodsonlyAsPrimitive()))
 			{
 				currentTotal += anOrder.getDeliveryCosts();
+
+				LOG.debug("Current Total After Delivery Cost >>>" + currentTotal);
 			}
 
 
 			if (null != anOrder.getAttribute("convenienceCharges"))
 			{
-				conVal = (String) anOrder.getAttribute("convenienceCharges");
+				conVal = (Double) anOrder.getAttribute("convenienceCharges");
+
+				LOG.debug("Current Total After Delivery Cost >>>" + currentTotal);
 			}
 
 
-			if (StringUtils.isNotEmpty(conVal))
+			if (null != conVal && conVal.doubleValue() > 0)
 			{
-				currentTotal += Double.parseDouble(conVal);
+				currentTotal += conVal.doubleValue();
 			}
 
 
