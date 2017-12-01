@@ -72,6 +72,8 @@ public class DefaultRefundClearPerformableServiceImpl implements RefundClearPerf
 
 	final Double refundClearTATFinal = new Double(10);
 
+	final Double refundStartTime = new Double(120);
+
 
 	private static final String REFUND = "REFUND_SUCCESSFUL";
 	private static final String SUCCESS = "SUCCESS";
@@ -96,12 +98,27 @@ public class DefaultRefundClearPerformableServiceImpl implements RefundClearPerf
 
 		final String refundClearTAT = getConfigurationService().getConfiguration().getString(
 				MarketplacecommerceservicesConstants.REFUNDCLEAR_SKIPTIME);
-		final Double skipPendingOrdersTAT = (null != refundClearTAT ? Double.valueOf(refundClearTAT) : refundClearTATFinal);
+		final Double skipRefundOrdersTAT = (StringUtils.isNotEmpty(refundClearTAT) ? Double.valueOf(refundClearTAT)
+				: refundClearTATFinal);
 		final Calendar cal = Calendar.getInstance();
 		cal.setTime(new Date());
-		cal.add(Calendar.MINUTE, -skipPendingOrdersTAT.intValue());
+		cal.add(Calendar.MINUTE, -skipRefundOrdersTAT.intValue());
 		final Date queryTAT = cal.getTime();
-		orderList = refundClearPerformableDao.getRefundClearOrders(queryTAT);
+
+		final String refundOrderFetchStartTime = getConfigurationService().getConfiguration().getString(
+				MarketplacecommerceservicesConstants.ORDERFETCH_STARTTIME);
+
+
+
+		final Double skipPendingOrdersTAT = (StringUtils.isNotEmpty(refundOrderFetchStartTime) ? Double
+				.valueOf(refundOrderFetchStartTime) : refundStartTime);
+		final Calendar cal_order = Calendar.getInstance();
+		cal_order.setTime(new Date());
+		cal_order.add(Calendar.DATE, -skipPendingOrdersTAT.intValue());
+		final Date queryStartTime = cal_order.getTime();
+
+
+		orderList = refundClearPerformableDao.getRefundClearOrders(queryTAT, queryStartTime);
 		if (CollectionUtils.isNotEmpty(orderList))
 		{
 			for (final OrderModel order : orderList)
@@ -147,6 +164,7 @@ public class DefaultRefundClearPerformableServiceImpl implements RefundClearPerf
 		// YTODO Auto-generated method stub
 		final RefundTransactionMappingModel refundTransactionMappingModel = refundClearPerformableDao
 				.fetchRefundTransactionByEntry(abstractOrderEntryModel);
+
 		return refundTransactionMappingModel.getJuspayRefundId();
 	}
 
@@ -209,9 +227,15 @@ public class DefaultRefundClearPerformableServiceImpl implements RefundClearPerf
 		{
 
 			refundList = orderStatusResponse.getRefunds();
+			boolean checkJuspayFlag = false;
 
 			for (final Refund refund : refundList)
 			{
+				// Check the request ID reached to Juspay Or not
+				if (refund.getUniqueRequestId().equals(uniqRequestID))
+				{
+					checkJuspayFlag = true;
+				}
 
 				if (StringUtils.isNotEmpty(refund.getStatus()) && refund.getStatus().equalsIgnoreCase("SUCCESS")
 						&& refund.getUniqueRequestId().equals(uniqRequestID))
@@ -223,15 +247,22 @@ public class DefaultRefundClearPerformableServiceImpl implements RefundClearPerf
 				else if (StringUtils.isNotEmpty(refund.getStatus()) && refund.getStatus().equalsIgnoreCase("FAILURE")
 						&& refund.getUniqueRequestId().equals(uniqRequestID))
 				{
-
 					//do refund
 					//update order status
-
 					makeRefundUpdateStatus(refund, order, juspayOrderID, uniqRequestID);
 				}
 
 			}
+			// if the request ID not in juspay it means we have to request juspay again for making refund for that req ID present in RTM
+			if (!checkJuspayFlag)
+			{
+				makeRefundUpdateStatus(null, order, juspayOrderID, uniqRequestID);
+			}
 
+		}//If there is one one return request and that was not reached to Juspay then refund response is blank
+		else
+		{
+			makeRefundUpdateStatus(null, order, juspayOrderID, uniqRequestID);
 		}
 	}
 
@@ -495,19 +526,27 @@ public class DefaultRefundClearPerformableServiceImpl implements RefundClearPerf
 					checkStatusMakeRefund(auditId, order, juspayRefundResponseModel.getUniqueRequestId());
 				}
 			}
+		}
 
-			//Filtering out the not posted refundlist in webhook / JuspayOrderStatus
-			if (CollectionUtils.isNotEmpty(refundRequestIdList) && CollectionUtils.isNotEmpty(juspayOrderStatusRequestIdList))
+		//Filtering out the not posted refundlist in webhook / JuspayOrderStatus
+		if (CollectionUtils.isNotEmpty(refundRequestIdList) && CollectionUtils.isNotEmpty(juspayOrderStatusRequestIdList))
+		{
+			refundRequestIdList.removeAll(juspayOrderStatusRequestIdList);
+			if (CollectionUtils.isNotEmpty(refundRequestIdList))
 			{
-				refundRequestIdList.removeAll(juspayOrderStatusRequestIdList);
-
 				for (final String reqid : refundRequestIdList)
 				{
 					checkStatusMakeRefund(auditId, order, reqid);
 				}
-
 			}
-
+		}
+		//If the number of return request is only one and that too not posted by juspay
+		else if (CollectionUtils.isNotEmpty(refundRequestIdList) && CollectionUtils.isEmpty(juspayOrderStatusRequestIdList))
+		{
+			for (final String reqid : refundRequestIdList)
+			{
+				checkStatusMakeRefund(auditId, order, reqid);
+			}
 		}
 
 

@@ -26,9 +26,10 @@ public interface RefundClearPerformableDao
 
 	/**
 	 * @param refundClearTAT
+	 * @param queryStartTime
 	 * @return
 	 */
-	List<OrderModel> getRefundClearOrders(Date refundClearTAT);
+	List<OrderModel> getRefundClearOrders(Date refundClearTAT, Date queryStartTime);
 
 	/**
 	 * @param guid

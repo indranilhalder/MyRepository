@@ -19,6 +19,7 @@ import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.core.model.JuspayOrderStatusModel;
 import com.tisl.mpl.core.model.MplPaymentAuditModel;
 import com.tisl.mpl.core.model.RefundTransactionMappingModel;
+import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.marketplacecommerceservices.daos.RefundClearPerformableDao;
 import com.tisl.mpl.model.MplConfigurationModel;
 
@@ -43,54 +44,77 @@ public class RefundClearPerformableDaoImpl implements RefundClearPerformableDao
 	@Override
 	public MplConfigurationModel getCronDetails(final String code)
 	{
-		final String queryString = //
-		"SELECT {cm:" + MplConfigurationModel.PK
-				+ "} "//
-				+ MarketplacecommerceservicesConstants.QUERYFROM + MplConfigurationModel._TYPECODE + " AS cm } where" + "{cm."
-				+ MplConfigurationModel.MPLCONFIGCODE + "} = ?code";
+		try
+		{
+			final String queryString = //
+			"SELECT {cm:" + MplConfigurationModel.PK
+					+ "} "//
+					+ MarketplacecommerceservicesConstants.QUERYFROM + MplConfigurationModel._TYPECODE + " AS cm } where" + "{cm."
+					+ MplConfigurationModel.MPLCONFIGCODE + "} = ?code";
 
-		final FlexibleSearchQuery query = new FlexibleSearchQuery(queryString);
-		query.addQueryParameter(MarketplacecommerceservicesConstants.CODE, code);
-		return getFlexibleSearchService().<MplConfigurationModel> searchUnique(query);
+			final FlexibleSearchQuery query = new FlexibleSearchQuery(queryString);
+			query.addQueryParameter(MarketplacecommerceservicesConstants.CODE, code);
+			return getFlexibleSearchService().<MplConfigurationModel> searchUnique(query);
+		}
+		catch (final Exception e)
+		{
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000);
+		}
+
 	}
 
 
 
 
 	@Override
-	public List<OrderModel> getRefundClearOrders(final Date date)
+	public List<OrderModel> getRefundClearOrders(final Date date, final Date startDate)
 	{
-		//final String queryString = MarketplacecommerceservicesConstants.PAYMENTPENDINGORDERQUERY;
-		final String queryString = MarketplacecommerceservicesConstants.REFUNDCLEARORDERQUERY;
+		try
+		{
 
-		//forming the flexible search query
-		final FlexibleSearchQuery orderListQuery = new FlexibleSearchQuery(queryString);
-		orderListQuery.addQueryParameter(MarketplacecommerceservicesConstants.ORDERSTATUSONE,
-				OrderStatus.REFUND_INITIATED.getCode());
-		orderListQuery.addQueryParameter(MarketplacecommerceservicesConstants.ORDERSTATUSTWO,
-				OrderStatus.REFUND_IN_PROGRESS.getCode());
-		orderListQuery.addQueryParameter(MarketplacecommerceservicesConstants.PAYMENTPENDINGSKIPTIME, date);
-		orderListQuery.addQueryParameter(MarketplacecommerceservicesConstants.ORDERTYPE,
-				MarketplacecommerceservicesConstants.SUBORDER);
+			final String queryString = MarketplacecommerceservicesConstants.REFUNDCLEARORDERQUERY;
+			//forming the flexible search query
+			final FlexibleSearchQuery orderListQuery = new FlexibleSearchQuery(queryString);
+			orderListQuery.addQueryParameter(MarketplacecommerceservicesConstants.ORDERSTATUSONE,
+					OrderStatus.REFUND_INITIATED.getCode());
+			orderListQuery.addQueryParameter(MarketplacecommerceservicesConstants.ORDERSTATUSTWO,
+					OrderStatus.REFUND_IN_PROGRESS.getCode());
+			orderListQuery.addQueryParameter(MarketplacecommerceservicesConstants.PAYMENTPENDINGSKIPTIME, date);
+			orderListQuery.addQueryParameter(MarketplacecommerceservicesConstants.STARTTIME, startDate);
+			orderListQuery.addQueryParameter(MarketplacecommerceservicesConstants.ORDERTYPE,
+					MarketplacecommerceservicesConstants.SUBORDER);
 
-		//fetching PAYMENT PENDING order list from DB using flexible search query
-		final List<OrderModel> orderList = getFlexibleSearchService().<OrderModel> search(orderListQuery).getResult();
+			//fetching order list from DB using flexible search query
+			final List<OrderModel> orderList = getFlexibleSearchService().<OrderModel> search(orderListQuery).getResult();
 
-		return orderList;
+			return orderList;
+		}
+		catch (final Exception e)
+		{
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000);
+		}
 	}
 
 
 
+	@Override
 	public List<MplPaymentAuditModel> fetchAuditDataList(final String guid)
 	{
-		final String queryString = //
-		"SELECT {p:" + MplPaymentAuditModel.PK
-				+ "} "//
-				+ MarketplacecommerceservicesConstants.QUERYFROM + MplPaymentAuditModel._TYPECODE + " AS p} where" + "{p."
-				+ MplPaymentAuditModel.CARTGUID + "} = ?guid";
-		final FlexibleSearchQuery query = new FlexibleSearchQuery(queryString);
-		query.addQueryParameter("guid", guid);
-		return getFlexibleSearchService().<MplPaymentAuditModel> search(query).getResult();
+		try
+		{
+			final String queryString = //
+			"SELECT {p:" + MplPaymentAuditModel.PK
+					+ "} "//
+					+ MarketplacecommerceservicesConstants.QUERYFROM + MplPaymentAuditModel._TYPECODE + " AS p} where" + "{p."
+					+ MplPaymentAuditModel.CARTGUID + "} = ?guid";
+			final FlexibleSearchQuery query = new FlexibleSearchQuery(queryString);
+			query.addQueryParameter("guid", guid);
+			return getFlexibleSearchService().<MplPaymentAuditModel> search(query).getResult();
+		}
+		catch (final Exception e)
+		{
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000);
+		}
 
 	}
 
@@ -98,51 +122,68 @@ public class RefundClearPerformableDaoImpl implements RefundClearPerformableDao
 	@Override
 	public List<JuspayOrderStatusModel> fetchWebhookTableStatus(final String reqId)
 	{
+		try
+		{
+			final String queryString = MarketplacecommerceservicesConstants.REFUNDCLEARWEBHHOKQUERY;
 
-		final String queryString = MarketplacecommerceservicesConstants.REFUNDCLEARWEBHHOKQUERY;
+			//forming the flexible search query
+			final FlexibleSearchQuery hookListQuery = new FlexibleSearchQuery(queryString);
+			hookListQuery.addQueryParameter(MarketplacecommerceservicesConstants.WEBHOOKREQSTATUS, reqId);
 
-		//forming the flexible search query
-		final FlexibleSearchQuery hookListQuery = new FlexibleSearchQuery(queryString);
-		hookListQuery.addQueryParameter(MarketplacecommerceservicesConstants.WEBHOOKREQSTATUS, reqId);
+			final List<JuspayOrderStatusModel> hookList = flexibleSearchService.<JuspayOrderStatusModel> search(hookListQuery)
+					.getResult();
 
-		final List<JuspayOrderStatusModel> hookList = flexibleSearchService.<JuspayOrderStatusModel> search(hookListQuery)
-				.getResult();
-
-		return hookList;
+			return hookList;
+		}
+		catch (final Exception e)
+		{
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000);
+		}
 
 	}
-
-
 
 
 	@Override
 	public List<RefundTransactionMappingModel> fetchRefundTransactionMapping(final String juspayRefundId)
 	{
-		final String queryString = //
-		"SELECT {rtm:" + RefundTransactionMappingModel.PK
-				+ "} "//
-				+ MarketplacecommerceservicesConstants.QUERYFROM + RefundTransactionMappingModel._TYPECODE + " AS rtm} where"
-				+ "{rtm." + RefundTransactionMappingModel.JUSPAYREFUNDID + "} = ?juspayRefundId";
-		final FlexibleSearchQuery query = new FlexibleSearchQuery(queryString);
-		query.addQueryParameter("juspayRefundId", juspayRefundId);
-		return getFlexibleSearchService().<RefundTransactionMappingModel> search(query).getResult();
+		try
+		{
+			final String queryString = //
+			"SELECT {rtm:" + RefundTransactionMappingModel.PK
+					+ "} "//
+					+ MarketplacecommerceservicesConstants.QUERYFROM + RefundTransactionMappingModel._TYPECODE + " AS rtm} where"
+					+ "{rtm." + RefundTransactionMappingModel.JUSPAYREFUNDID + "} = ?juspayRefundId";
+			final FlexibleSearchQuery query = new FlexibleSearchQuery(queryString);
+			query.addQueryParameter("juspayRefundId", juspayRefundId);
+			return getFlexibleSearchService().<RefundTransactionMappingModel> search(query).getResult();
+		}
+		catch (final Exception e)
+		{
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000);
+		}
 	}
-
 
 
 	@Override
 	public RefundTransactionMappingModel fetchRefundTransactionByEntry(final AbstractOrderEntryModel orderEntry)
 	{
-		final String queryString = //
-		"SELECT {rtm:" + RefundTransactionMappingModel.PK
-				+ "} "//
-				+ MarketplacecommerceservicesConstants.QUERYFROM + RefundTransactionMappingModel._TYPECODE + " AS rtm} where"
-				+ "{rtm." + RefundTransactionMappingModel.REFUNDEDORDERENTRY + "} = ?orderEntry";
-		final FlexibleSearchQuery query = new FlexibleSearchQuery(queryString);
-		query.addQueryParameter("orderEntry", orderEntry.getPk());
 
-		return getFlexibleSearchService().<RefundTransactionMappingModel> searchUnique(query);
+		try
+		{
+			final String queryString = //
+			"SELECT {rtm:" + RefundTransactionMappingModel.PK
+					+ "} "//
+					+ MarketplacecommerceservicesConstants.QUERYFROM + RefundTransactionMappingModel._TYPECODE + " AS rtm} where"
+					+ "{rtm." + RefundTransactionMappingModel.REFUNDEDORDERENTRY + "} = ?orderEntry";
+			final FlexibleSearchQuery query = new FlexibleSearchQuery(queryString);
+			query.addQueryParameter("orderEntry", orderEntry.getPk());
 
+			return getFlexibleSearchService().<RefundTransactionMappingModel> searchUnique(query);
+		}
+		catch (final Exception e)
+		{
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000);
+		}
 	}
 
 
