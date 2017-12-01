@@ -3257,11 +3257,19 @@ $(document).ready(function(){
 			
 			//Fetch CNC stores in responsive if CNC is selected on page load
 			ACC.singlePageCheckout.fetchStoresResponsive();
+			//TPR-7486
+			$('#continue_payment_after_validate_responsive').show();
+			$('#continue_payment_after_validate').hide();
 		}
 		else
 		{
 			//For web site we are removing payment page laoded for responsive view inorder to keep unique id's in the view
 			$("#makePaymentDivMobile").html("");
+			//TPR-7486
+			$('#continue_payment_after_validate_responsive').hide();
+			$('#continue_payment_after_validate').show();
+			
+			
 		}
 		//Preventing auto complete of forms in single page
 //		$( document ).on( 'focus', ':input', function(){
