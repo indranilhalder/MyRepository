@@ -196,6 +196,14 @@ public class CustomPromotionOrderAddFreeGiftAction extends GeneratedCustomPromot
 			Map<String, Integer> qualifyingCountMap = null;
 			String productPromoCode = null;
 			String cartPromoCode = null;
+
+			//TPR-7408 starts here
+			Double promoCostCentreOnePercentage = null;
+			Double promoCostCentreTwoPercentage = null;
+			Double promoCostCentreThreePercentage = null;
+			//TPR-7408 ends here
+
+
 			Map<String, List<String>> productAssociatedItemsMap = null;
 			if (ctx.getAttributes() != null)
 			{
@@ -209,6 +217,41 @@ public class CustomPromotionOrderAddFreeGiftAction extends GeneratedCustomPromot
 						.getAttributes().get(MarketplacecommerceservicesConstants.CARTPROMOCODE) : null;
 				productAssociatedItemsMap = ctx.getAttributes().get(MarketplacecommerceservicesConstants.ASSOCIATEDITEMS) != null ? (Map<String, List<String>>) ctx
 						.getAttributes().get(MarketplacecommerceservicesConstants.ASSOCIATEDITEMS) : null;//TODO null checking
+
+				//TPR-7408 starts here
+				//			promoCostCentreOnePercentage = ctx.getAttributes().get(MarketplacecommerceservicesConstants.COSTCENTREONE) != null ? (String) ctx
+				//					.getAttributes().get(MarketplacecommerceservicesConstants.COSTCENTREONE) : null;
+				//
+				//			promoCostCentreTwoPercentage = ctx.getAttributes().get(MarketplacecommerceservicesConstants.COSTCENTRETWO) != null ? (String) ctx
+				//					.getAttributes().get(MarketplacecommerceservicesConstants.COSTCENTRETWO) : null;
+				//
+				//			promoCostCentreThreePercentage = ctx.getAttributes().get(MarketplacecommerceservicesConstants.COSTCENTRETHREE) != null ? (String) ctx
+				//					.getAttributes().get(MarketplacecommerceservicesConstants.COSTCENTRETHREE) : null;
+
+				try
+				{
+					promoCostCentreOnePercentage = (Double) getPromotionResult(ctx).getPromotion().getAttribute(ctx,
+							MarketplacecommerceservicesConstants.COSTCENTREONE);
+					promoCostCentreTwoPercentage = (Double) getPromotionResult(ctx).getPromotion().getAttribute(ctx,
+							MarketplacecommerceservicesConstants.COSTCENTRETWO);
+
+					promoCostCentreThreePercentage = (Double) getPromotionResult(ctx).getPromotion().getAttribute(ctx,
+							MarketplacecommerceservicesConstants.COSTCENTRETHREE);
+
+				}
+				catch (final JaloInvalidParameterException e)
+				{
+					// YTODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				catch (final JaloSecurityException e)
+				{
+					// YTODO Auto-generated catch block
+					e.printStackTrace();
+				}
+
+				//TPR-7408 ends here
+
 			}
 			if (null == productPromoCode && null != cartPromoCode)
 			{//This is for Cart Level Freebie Promotion
@@ -219,6 +262,17 @@ public class CustomPromotionOrderAddFreeGiftAction extends GeneratedCustomPromot
 					final double lineItemLevelPrice = cartEntry.getTotalPriceAsPrimitive();
 					cartEntry.setProperty(ctx, MarketplacecommerceservicesConstants.DESCRIPTION, entry.getProduct().getDescription());
 					cartEntry.setProperty(ctx, MarketplacecommerceservicesConstants.CARTPROMOCODE, cartPromoCode);
+
+					//TPR-7408 starts here
+					cartEntry.setProperty(ctx, MarketplacecommerceservicesConstants.CARTPROMOCOSTCENTREONE,
+							promoCostCentreOnePercentage);
+					cartEntry.setProperty(ctx, MarketplacecommerceservicesConstants.CARTPROMOCOSTCENTRETWO,
+							promoCostCentreTwoPercentage);
+					cartEntry.setProperty(ctx, MarketplacecommerceservicesConstants.CARTPROMOCOSTCENTRETHREE,
+							promoCostCentreThreePercentage);
+					//TPR-7408 ends here
+
+
 					cartEntry
 							.setProperty(ctx, MarketplacecommerceservicesConstants.TOTALSALEPRICE, Double.valueOf(lineItemLevelPrice));
 
@@ -404,7 +458,14 @@ public class CustomPromotionOrderAddFreeGiftAction extends GeneratedCustomPromot
 								entry.setProperty(ctx, MarketplacecommerceservicesConstants.PRODUCTPROMOCODE, productPromoCode);
 							}
 
-
+							//TPR-7408 starts here
+							entry.setProperty(ctx, MarketplacecommerceservicesConstants.PRODUCTPROMOCOSTCENTREONE,
+									promoCostCentreOnePercentage);
+							entry.setProperty(ctx, MarketplacecommerceservicesConstants.PRODUCTPROMOCOSTCENTRETWO,
+									promoCostCentreTwoPercentage);
+							entry.setProperty(ctx, MarketplacecommerceservicesConstants.PRODUCTPROMOCOSTCENTRETHREE,
+									promoCostCentreThreePercentage);
+							//TPR-7408 ends here
 
 
 
