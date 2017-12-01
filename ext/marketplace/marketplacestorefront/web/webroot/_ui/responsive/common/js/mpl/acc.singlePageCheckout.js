@@ -2930,6 +2930,12 @@ ACC.singlePageCheckout = {
 		{
 			$("#paymentMode_newcard_savedcard").val("newCard");  //for responsive
 		}
+		//TPR-7486
+		if(ACC.singlePageCheckout.getIsResponsive()) {
+			$('#continue_payment_after_validate_responsive').show();
+		} else {
+			$('#continue_payment_after_validate').show();
+		}	
 		
 		//Below we are checking if pincode is serviceabile
 		if(!ACC.singlePageCheckout.mobileValidationSteps.isPincodeServiceable)

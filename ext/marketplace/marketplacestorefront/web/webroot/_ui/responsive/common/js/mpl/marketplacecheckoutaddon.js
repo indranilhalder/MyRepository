@@ -56,6 +56,13 @@ function viewPaymentCredit(){
 
 	$("#paymentMode_newcard_savedcard").val("newCard"); //for responsive -- TPR-7486
 	
+	//TPR-7486
+	if(ACC.singlePageCheckout.getIsResponsive()) {
+		$('#continue_payment_after_validate_responsive').show();
+	} else {
+		$('#continue_payment_after_validate').show();
+	}	
+	
 //});
 }
 
@@ -101,6 +108,12 @@ function viewPaymentDebit(){
 	//TPR-6029|DTM CHECKOUT Changes
 	dtmPaymentModeSelection('debit card');
 	$("#paymentMode_newcard_savedcard").val("newCard"); //for responsive -- TPR-7486
+	//TPR-7486
+	if(ACC.singlePageCheckout.getIsResponsive()) {
+		$('#continue_payment_after_validate_responsive').show();
+	} else {
+		$('#continue_payment_after_validate').show();
+	}	
 //});
 }
 
@@ -131,6 +144,12 @@ function viewPaymentNetbanking(){
 	dtmPaymentModeSelection('net banking');
 
 	$("#paymentMode_newcard_savedcard").val("newCard"); //for responsive --TPR-7486
+	//TPR-7486
+	if(ACC.singlePageCheckout.getIsResponsive()) {
+		$('#continue_payment_after_validate_responsive').show();
+	} else {
+		$('#continue_payment_after_validate').show();
+	}	
 //});
 }
 
@@ -166,6 +185,12 @@ function viewPaymentCOD(){
 	//TPR-6029|DTM CHECKOUT Changes
 	dtmPaymentModeSelection('cod');
 	 $("#paymentMode_newcard_savedcard").val("newCard"); //for responsive --TPR-7486
+	//TPR-7486
+		if(ACC.singlePageCheckout.getIsResponsive()) {
+			$('#continue_payment_after_validate_responsive').show();
+		} else {
+			$('#continue_payment_after_validate').show();
+		}	
 //});
 }
 
@@ -195,6 +220,12 @@ function viewPaymentEMI(){
 	//TPR-6029|DTM CHECKOUT Changes
 	dtmPaymentModeSelection('emi');
 	 $("#paymentMode_newcard_savedcard").val("newCard"); //for responsive --TPR-7486
+	//TPR-7486
+		if(ACC.singlePageCheckout.getIsResponsive()) {
+			$('#continue_payment_after_validate_responsive').show();
+		} else {
+			$('#continue_payment_after_validate').show();
+		}	
 //});
 }
 // Mode button click function ends
@@ -478,7 +509,15 @@ function displayCODForm()
 			//UF-281/282:Starts
 			if (jqXHR.responseJSON && response.displaymessage=="codNotallowed") {
 				$("#codNotAllowedMessage").css("display","block");
-				$("#paymentButtonId_up,#paymentButtonId").css("display","none");
+				//$("#paymentButtonId_up,#paymentButtonId").css("display","none");
+				
+				//TPR-7486
+				if(ACC.singlePageCheckout.getIsResponsive()) {
+					$('#continue_payment_after_validate_responsive').hide();
+				} else {
+					$('#continue_payment_after_validate').hide();
+				}	
+				
 				return false;
 			}
 			else
@@ -488,7 +527,7 @@ function displayCODForm()
 			//UF-281/282:Ends
 			$("#otpNUM").html(response);
 			var codEligible=$("#codEligible").val();
-			console.log(codEligible);
+			//console.log(codEligible);
 			$("#paymentDetails, #otpNUM, #sendOTPNumber, #sendOTPButton").css("display","block");
 			$("#enterOTP, #submitPaymentFormButton, #submitPaymentFormCODButton, #paymentFormButton, #otpSentMessage").css("display","none");/*modified for pprd testing -- changing back*/
 			if(codEligible=="BLACKLISTED")
@@ -501,8 +540,14 @@ function displayCODForm()
 				$("#otpSentMessage").css("display","none");
 				// $("#no-click").remove();
 				$(".terms.cod").remove();
-				$("#paymentButtonId").css("display","none");//INC144315258 
-				$('#paymentFormButton').attr('style', 'display: none !important');//INC144315258 
+				//$("#paymentButtonId").css("display","none");//INC144315258 
+				//$('#paymentFormButton').attr('style', 'display: none !important');//INC144315258 
+				//TPR-7486
+				if(ACC.singlePageCheckout.getIsResponsive()) {
+					$('#continue_payment_after_validate_responsive').hide();
+				} else {
+					$('#continue_payment_after_validate').hide();
+				}	
 				applyPromotion(null,"none","none");
 			}
 			else if(codEligible=="NOT_TSHIP")
@@ -515,8 +560,14 @@ function displayCODForm()
 				$("#otpSentMessage").css("display","none");
 				// $("#no-click").remove();
 				$(".terms.cod").remove();
-				$("#paymentButtonId").css("display","none");//INC144315258 
-				$('#paymentFormButton').attr('style', 'display: none !important');//INC144315258 
+				//$("#paymentButtonId").css("display","none");//INC144315258 
+				//$('#paymentFormButton').attr('style', 'display: none !important');//INC144315258 
+				//TPR-7486
+				if(ACC.singlePageCheckout.getIsResponsive()) {
+					$('#continue_payment_after_validate_responsive').hide();
+				} else {
+					$('#continue_payment_after_validate').hide();
+				}	
 				applyPromotion(null,"none","none");
 			}
 			else if(codEligible=="ITEMS_NOT_ELIGIBLE")
@@ -529,8 +580,14 @@ function displayCODForm()
 				$("#otpSentMessage").css("display","none");
 				// $("#no-click").remove();
 				$(".terms.cod").remove();
-				$("#paymentButtonId").css("display","none");//INC144315258 
-				$('#paymentFormButton').attr('style', 'display: none !important');//INC144315258 
+				//$("#paymentButtonId").css("display","none");//INC144315258 
+				//$('#paymentFormButton').attr('style', 'display: none !important');//INC144315258 
+				//TPR-7486
+				if(ACC.singlePageCheckout.getIsResponsive()) {
+					$('#continue_payment_after_validate_responsive').hide();
+				} else {
+					$('#continue_payment_after_validate').hide();
+				}	
 				applyPromotion(null,"none","none");
 			}
 			else if(codEligible=="NOT_PINCODE_SERVICEABLE")
@@ -543,8 +600,14 @@ function displayCODForm()
 				$("#otpSentMessage").css("display","none");
 				// $("#no-click").remove();
 				$(".terms.cod").remove();
-				$("#paymentButtonId").css("display","none");//INC144315258 
-				$('#paymentFormButton').attr('style', 'display: none !important');//INC144315258 
+				//$("#paymentButtonId").css("display","none");//INC144315258 
+				//$('#paymentFormButton').attr('style', 'display: none !important');//INC144315258 
+				//TPR-7486
+				if(ACC.singlePageCheckout.getIsResponsive()) {
+					$('#continue_payment_after_validate_responsive').hide();
+				} else {
+					$('#continue_payment_after_validate').hide();
+				}	
 				applyPromotion(null,"none","none");
 			}
 			else{
@@ -561,7 +624,14 @@ function displayCODForm()
 							}
 							else{
 								isCodeligible = true; 
-								$("#paymentButtonId #submitPaymentFormCODButton").css("display","block");
+								//$("#paymentButtonId #submitPaymentFormCODButton").css("display","block");
+								//TPR-7486
+								if(ACC.singlePageCheckout.getIsResponsive()) {
+									$('#continue_payment_after_validate_responsive').show();
+								} else {
+									$('#continue_payment_after_validate').show();
+								}	
+								
 								$("#OTPGenerationErrorMessage").css("display","none");
 								$("#sendOTPNumber, #convCharge").css("display","block");
 								var totalPrice=response.totalPrice.formattedValue;
@@ -10254,6 +10324,12 @@ function getlistofEMIbanks(){
 				$("#emiRangeError").css("display","block");
 				//TPR-4746
 				paymentErrorTrack("emi_unavailable");
+				//TPR-7486
+				if(ACC.singlePageCheckout.getIsResponsive()) {
+					$('#continue_payment_after_validate_responsive').hide();
+				} else {
+					$('#continue_payment_after_validate').hide();
+				}	
 			}
 			
 		},
@@ -10327,6 +10403,12 @@ function loadTermsAsperEmiBank()
 				$("#emiNoBankError").show();
 				//TPR-4746
 				paymentErrorTrack("emi_unavailable");
+				//TPR-7486
+				if(ACC.singlePageCheckout.getIsResponsive()) {
+					$('#continue_payment_after_validate_responsive').hide();
+				} else {
+					$('#continue_payment_after_validate').hide();
+				}	
 			}
 		},
 		error : function(resp) {
@@ -10400,7 +10482,13 @@ function placeAnOrder(){
 		   
 	   }
 	   else if(modeofPayment == 'COD') {
-		   submitCODForm(formatPaymentInfo(modeofPayment));
+		   	   if(!$("#g-recaptcha-response").val()){
+					$('#captchaError').html("<font color='red'>Please verify that you are not a robot! </font>")
+					return false;
+				}
+				else{
+					submitCODForm(formatPaymentInfo(modeofPayment));
+				}				   
 	   }
 	   else if(modeofPayment == 'EMI') {
 		   var cardbinemi = getCardBinNumber('EMI');
