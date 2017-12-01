@@ -885,7 +885,7 @@ $(document).ready(function(){
     		_satellite.track('cpj_checkout_proceed_to_address');
     	}	
     }
-    _satellite.pageBottom();
+  //  _satellite.pageBottom();
   
 });
 //SDI-1103
