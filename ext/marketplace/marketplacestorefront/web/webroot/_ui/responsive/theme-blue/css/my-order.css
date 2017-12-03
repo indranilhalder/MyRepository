@@ -840,6 +840,10 @@ table.track-table tr {
     	margin-right: 30px;
 }}
 @media (max-width: 650px){
+	.confirmation .right-block.billing h1, .confirmation .left-block h1 {
+    text-align: left;
+    font-size: 24px;
+	}
 	body .account .right-account .order-history.order-details li.header>ul>li span, body .account .right-account .order-history.order-details li.header>ul>li span:not(.no-display) {
 	    left: auto;
 	    right: auto;

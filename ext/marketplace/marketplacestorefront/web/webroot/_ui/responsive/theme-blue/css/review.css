@@ -147,3 +147,6 @@ body .account .right-account .reviews .review-list .wrapper>li .review .stats {
     padding: 0;
     letter-spacing: normal;
 }
+#reviewPluginContainer .modal-header {
+    padding-right: 35px;
+}
