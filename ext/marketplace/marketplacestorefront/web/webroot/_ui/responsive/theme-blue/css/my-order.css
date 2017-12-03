@@ -674,7 +674,11 @@ table.track-table tr {
     padding-right: 30px;
 }
 @media (max-width: 790px){
-	body .account .right-account .order-history .product-block li.item .orderUpdatesBlock .status {
+	body .account .right-account .order-history .product-block li.header>ul>li {
+    width: 49%;
+	}
+	body .account .right-account .order-history .product-block li.item .image {
+    width: 50px;
     position: absolute;
     top: 20px;
     right: 0;
@@ -1150,6 +1154,10 @@ body .account .right-account .order-history.order-details li.item .order::after 
 	.confirmation {
 	    padding: 0 !important;
 	}
+	.confirmation .product-block li ul li.shipping {
+    width: 47.2%;
+    margin-left: .5%;
+	}
 }
 @media (max-width: 650px){
 	.confirmation .left-block {
@@ -1394,7 +1402,11 @@ body .right-account .order-history .cancellation-request-block.success .return-f
     margin-top: 0;
 	}
 }
-
+body .right-account .order-history .cancellation-request-block.success>div {
+    text-align: center;
+    border-bottom: 2px solid #f0f4f5;
+    margin-bottom: 0 !important;
+}
 /* Cancel Request end*/
 /* Edit address */
 .textInputChangeAddress, #showOTP input {
