@@ -1,0 +1,128 @@
+body.page-returnSubmit .account .wrapper {
+	padding: 0 31px;
+    margin-bottom: 0;
+}
+.return-order-history {
+	display: inline-block;
+    margin: 20px 0 0;
+    font-weight: 700;
+    font-size: 14px;
+}
+.return-order-history:before {
+	content: "";
+    display: inline-block;
+    margin-right: 10px;
+    height: 0;
+    width: 0;
+    border-bottom: 5px solid transparent;
+    border-right: 5px solid #000;
+    border-top: 5px solid transparent;
+    -webkit-transition: border .3s;
+    -moz-transition: border .3s;
+    transition: border .3s;
+}
+.returnItemForm .return-container {
+	width: 100%;
+    margin: 0 auto;
+}
+body.page-returnSubmit p.return-title {
+	font-size: 28px;
+    line-height: 1.29;
+    color: #000;
+    margin-bottom: 17px;
+}
+body.page-returnSubmit .accordtionTataCliq {
+	border: 0;
+    border-top: solid 1px #eee;
+    margin-top: 0;
+    /* height: auto; */
+    padding: 0 !important;
+}
+body.page-returnSubmit .accordtionTataCliq .accHeading {
+	background: #fff;
+    font-size: 16px;
+    line-height: 1;
+    letter-spacing: .6px;
+    color: #000;
+    cursor: pointer;
+    padding: 30.5px 0;
+}
+.accordtionTataCliq .accContents {
+	padding: 0 0 15px 0 !important;
+    margin-top: 10px;
+}
+body.page-returnSubmit .col-md-5.col-sm-5.col-xs-5.return-img {
+	width: 93px;
+}
+body.page-returnSubmit .col-md-7.productDetails.col-sm-7.col-xs-7.return-prod-desc {
+	width: calc(100% - 93px);
+}
+.accordtionTataCliq .accContents .productDetails {
+	padding-top: 5px;
+}
+body.page-returnSubmit .col-md-7.productDetails.col-sm-7.col-xs-7 * {
+	font-size: 12px;
+    line-height: 1.5;
+    letter-spacing: .6px;
+    color: #666;
+}
+body.page-returnSubmit .col-md-7.productDetails.col-sm-7.col-xs-7>span {
+	margin-bottom: 3px !important;
+}
+body.page-returnSubmit .col-md-7.productDetails.col-sm-7.col-xs-7 div.attributes {
+	margin-top: 15px;
+}
+body.page-returnSubmit .col-md-7.productDetails.col-sm-7.col-xs-7 div.attributes>p>span {
+	display: inline !important;
+}
+.col-md-7.col-sm-7.col-xs-12.reverseSealJwlry b, .col-md-7.col-sm-7.col-xs-12.selectReasonForReturn b {
+	font-size: 16px;
+    line-height: 1;
+    letter-spacing: .6px;
+    font-weight: normal;
+}
+.accordtionTataCliq .accContents.selectReason.col-md-12 .col-md-7.col-sm-7.col-xs-12.selectReasonForReturn #returnReason {
+	border: solid 1px #bbb;
+    font-size: 12px;
+    line-height: 1.5;
+    letter-spacing: .6px;
+    padding-right: 22px;
+    background: url(../images/plp-select-arrow.png) no-repeat 97% 13px #fff;
+    background-size: 10px;
+    width: 47%;
+}
+.accordtionTataCliq .accContents .button_holder {
+    margin-top: 45px;
+    width: 100%;
+    text-align: center;
+}
+body.page-returnSubmit .accordtionTataCliq .accContents .col-md-7.col-sm-7.col-xs-12 ~ .button_holder {
+	position: static;
+    margin-bottom: 79px;
+}
+.accordtionTataCliq .accContents .button_holder .submit-request {
+	margin: 0 auto;
+    text-align: center;
+    margin-top: 0;
+    display: inline-block;
+}
+body.page-returnSubmit .accordtionTataCliq .accContents .col-md-7.col-sm-7.col-xs-12 ~ .button_holder button {
+	width: 181px;
+    height: 42px;
+    font-size: 12px;
+    line-height: 1.33;
+    letter-spacing: .6px;
+    font-weight: normal;
+}
+.accordtionTataCliq .reasonType, .accordtionTataCliq .returnMethod, .accordtionTataCliq .accContents .quickDrop .mapArea, .accordtionTataCliq .accContents .scheduledPickup .selectDateTime {
+	display: none;
+}
+.accordtionTataCliq .reasonType.col-md-12, .accordtionTataCliq .accContents .selectReason.selectRefund.col-md-12.blackColor {
+	margin-top: 0;
+}
+.accordtionTataCliq .accContents .selectReason {
+	overflow: hidden;
+}
+.accordtionTataCliq .accContents .selectReason, .accordtionTataCliq .accContents .selectReturnMethod, .accordtionTataCliq .accContents .selectquickDrop {
+	margin-top: 15px;
+}
