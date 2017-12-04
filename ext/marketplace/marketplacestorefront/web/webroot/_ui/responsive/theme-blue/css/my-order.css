@@ -508,6 +508,7 @@ body .right-account .order-details .deliveryTrack .dot-arrow {
     left: 0;
     right: 0;
     margin: auto;
+    display:none;
 }
 body .account .right-account .order-history.order-details li.item .status>ul>li.progress:first-of-type .message {
 	margin-left: -5px;

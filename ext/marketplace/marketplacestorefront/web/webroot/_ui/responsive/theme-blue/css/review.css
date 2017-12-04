@@ -179,3 +179,10 @@ body .account .right-account .reviews .review-list .account-only.product {
 body.page-reviews .right-account .reviews .review-list .wrapper>li .product .product-tile {
     padding: 0;
 }
+body .account .right-account .reviews .navigation .btn-placement {
+    display: none;
+    width: auto;
+    float: right;
+    position: relative;
+    white-space: nowrap;
+}

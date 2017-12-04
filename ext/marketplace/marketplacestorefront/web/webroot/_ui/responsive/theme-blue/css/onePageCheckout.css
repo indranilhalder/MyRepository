@@ -208,6 +208,9 @@
 .cart.wrapper.checkout-payment .right-block.billing .block.summary-info  ul.totals li#total{
 	    padding: 19px 0px 0px;
 }
+.cart.wrapper .left-block .payments.tab-view .pay.nbButton .button, .cart.wrapper .left-block .payments.tab-view .pay .button.confirm, .cart.wrapper .left-block .payments.tab-view .pay .button {
+    display: none !important;
+}
 }
 .cart.wrapper.checkout-payment .right-block.billing.checkout-list-right h3.product-brand-name{
 	font-size: 14px !important;
@@ -5666,4 +5669,3 @@ transform-origin:0 0;
     padding: 0;
     font-size: 14px;
 }
-a

@@ -3584,6 +3584,15 @@ margin-top:30px;
 body .account .right-account .order-history.order-details li.item .status .nav {
     width: 94%;
 }
+.comparison-table.active {
+    position: fixed;
+    top: 70px;
+    margin-top: 0;
+    z-index: 2;
+    background: #fff;
+    border: 1px solid #f0f4f5;
+    box-sizing: border-box;
+}
 @media (min-width: 791px){
 	.brands-page ul .desktop ul.list_custom li {
 	    display: inline-block !important;
