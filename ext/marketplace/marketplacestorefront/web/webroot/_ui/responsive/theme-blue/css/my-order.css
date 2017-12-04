@@ -597,7 +597,7 @@ body .account .right-account .order-history.order-details li.item .status .messa
     margin-left: 5px;
 }
 #track-more-info p {
-    display: none;
+    position:static;
 }
 #track-more-info p:first-child:after {
 	content: "\f078";
@@ -681,7 +681,6 @@ table.track-table tr {
     width: 50px;
     position: absolute;
     top: 20px;
-    right: 0;
 	}
 	body .account .right-account .order-history .product-block li.item .details {
 	    padding-right: 70px;
@@ -1380,6 +1379,9 @@ body .right-account .order-history .cancellation-request-block.success .return-f
 }
 
 @media (max-width: 790px){
+	body .account .right-account .order-history .top .pagination.mobile {
+    top: 26px;
+	}
 	body .right-account .order-history .cancellation-request-block .return-form .return-container .questions {
 	    width: 100%;
 	}
