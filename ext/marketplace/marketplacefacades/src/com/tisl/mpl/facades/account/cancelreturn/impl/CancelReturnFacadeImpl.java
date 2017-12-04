@@ -1248,7 +1248,7 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 					sendTicketLineItemData.setReturnReasonCode(reasonCode);
 
 					//TPR-5954
-					sendTicketLineItemData.setSubReasonCode(returnInfoData.getSubReasonCode());
+					//sendTicketLineItemData.setSubReasonCode(returnInfoData.getSubReasonCode());
 					//sendTicketLineItemData.setImageUrl(imageUrl);//To-do post image upload
 
 					sendTicketRequestData.setRefundType(refundType);
@@ -1413,7 +1413,7 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 			sendTicketRequestData.setTicketType(ticketTypeCode);
 			sendTicketRequestData.setAddressInfo(addressInfo);
 			//TPR-5954
-			sendTicketRequestData.setComments(returnInfoData.getComments());
+			//sendTicketRequestData.setComments(returnInfoData.getComments());
 
 			final String asyncEnabled = configurationService.getConfiguration()
 					.getString(MarketplacecommerceservicesConstants.ASYNC_ENABLE).trim();
@@ -1853,15 +1853,15 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 				orderLineData.setReturnCancelRemarks(getReasonDesc(reasonCode));
 				orderLineData.setPinCode(pincode);
 				orderLineData.setReturnFulfillmentMode(returnFulfillmentMode);
-				//TPR-5954
-				if (null != infoData.getComments())
-				{
-					orderLineData.setComments(infoData.getComments());
-				}
-				if (null != infoData.getSubReasonCode())
-				{
-					orderLineData.setSubReasonCode(infoData.getSubReasonCode());
-				}
+				//				//TPR-5954
+				//				if (null != infoData.getComments())
+				//				{
+				//					orderLineData.setComments(infoData.getComments());
+				//				}
+				//				if (null != infoData.getSubReasonCode())
+				//				{
+				//					orderLineData.setSubReasonCode(infoData.getSubReasonCode());
+				//				}
 			}
 			if (StringUtils.isNotEmpty(subEntry.getOrderLineId()))
 			{
@@ -3769,15 +3769,15 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 			refundEntryModel.setExpectedQuantity(abstractOrderEntryModel.getQuantity());//Single line quantity
 			refundEntryModel.setReceivedQuantity(abstractOrderEntryModel.getQuantity());//Single line quantity
 			refundEntryModel.setRefundedDate(new Date());
-			//TPR-5954
-			if (null != returnInfoData.getSubReasonCode())
-			{
-				refundEntryModel.setSubReason(fetchSubReasonDesc(returnInfoData.getSubReasonCode()));
-			}
-			if (null != returnInfoData.getComments())
-			{
-				refundEntryModel.setReturnRemarks(returnInfoData.getComments());
-			}
+			//			//TPR-5954
+			//			if (null != returnInfoData.getSubReasonCode())
+			//			{
+			//				refundEntryModel.setSubReason(fetchSubReasonDesc(returnInfoData.getSubReasonCode()));
+			//			}
+			//			if (null != returnInfoData.getComments())
+			//			{
+			//				refundEntryModel.setReturnRemarks(returnInfoData.getComments());
+			//			}
 			//refundEntryModel.setImgUrl(value);//to-do post image url
 
 			final List<PaymentTransactionModel> tranactions = subOrderModel.getPaymentTransactions();

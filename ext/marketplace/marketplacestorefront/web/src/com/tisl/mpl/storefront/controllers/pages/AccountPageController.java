@@ -1880,7 +1880,7 @@ public class AccountPageController extends AbstractMplSearchPageController
 		boolean isFineJew = false;
 		final String revSealSellerList = configurationService.getConfiguration().getString("finejewellery.reverseseal.sellername");
 
-		String L2Cat = null;
+		//final String L2Cat = null;
 
 		try
 		{
@@ -1950,34 +1950,34 @@ public class AccountPageController extends AbstractMplSearchPageController
 						}
 					}
 
-					//TPR-5954 || Category specific return reason || Start
-					Collection<CategoryModel> superCategories = productModel.getSupercategories();
-
-					outer: for (final CategoryModel category : superCategories)
-					{
-						if (category.getCode().startsWith("MPH"))
-						{
-							superCategories = category.getSupercategories();
-							for (final CategoryModel category1 : superCategories)
-							{
-								if (category1.getCode().startsWith("MPH"))
-								{
-									superCategories = category1.getSupercategories();
-									for (final CategoryModel category2 : superCategories)
-									{
-										if (category2.getCode().startsWith("MPH"))
-										{
-											L2Cat = category2.getCode();
-											break outer;
-										}
-									}
-								}
-							}
-
-						}
-					}
-					//TPR-5954 || Category specific return reason || End
-
+					//					/*//TPR-5954 || Category specific return reason || Start
+					//					Collection<CategoryModel> superCategories = productModel.getSupercategories();
+					//
+					//					outer: for (final CategoryModel category : superCategories)
+					//					{
+					//						if (category.getCode().startsWith("MPH"))
+					//						{
+					//							superCategories = category.getSupercategories();
+					//							for (final CategoryModel category1 : superCategories)
+					//							{
+					//								if (category1.getCode().startsWith("MPH"))
+					//								{
+					//									superCategories = category1.getSupercategories();
+					//									for (final CategoryModel category2 : superCategories)
+					//									{
+					//										if (category2.getCode().startsWith("MPH"))
+					//										{
+					//											L2Cat = category2.getCode();
+					//											break outer;
+					//										}
+					//									}
+					//								}
+					//							}
+					//
+					//						}
+					//					}
+					//					//TPR-5954 || Category specific return reason || End
+					//*/
 
 
 
@@ -2044,14 +2044,17 @@ public class AccountPageController extends AbstractMplSearchPageController
 			model.addAttribute(ModelAttributetConstants.ADDRESS_DATA, addressDataList);
 
 
-			//TPR-5954
-			List<ReturnReasonData> reasonDataList = getMplOrderFacade().getCatSpecificRetReason(L2Cat);
+			//			//TPR-5954
+			//			List<ReturnReasonData> reasonDataList = getMplOrderFacade().getCatSpecificRetReason(L2Cat);
+			//
+			//			if (null == reasonDataList || reasonDataList.isEmpty())
+			//			{
+			//
+			//				reasonDataList = getMplOrderFacade().getReturnReasonForOrderItem();
+			//			}
 
-			if (null == reasonDataList || reasonDataList.isEmpty())
-			{
 
-				reasonDataList = getMplOrderFacade().getReturnReasonForOrderItem();
-			}
+			final List<ReturnReasonData> reasonDataList = getMplOrderFacade().getReturnReasonForOrderItem();
 			if (!isFineJew)
 			{
 				for (final Iterator<ReturnReasonData> iterator = reasonDataList.iterator(); iterator.hasNext();)
