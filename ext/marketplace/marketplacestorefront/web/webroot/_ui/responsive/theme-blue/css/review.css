@@ -150,3 +150,32 @@ body .account .right-account .reviews .review-list .wrapper>li .review .stats {
 #reviewPluginContainer .modal-header {
     padding-right: 35px;
 }
+body .account .right-account .reviews .review-list .wrapper>li .review{
+	    width: 75% !important;
+}
+@media (min-width: 651px){
+	body .account .right-account .reviews .review-list .account-only.product {
+	    width: 25%;
+	    padding: 30px;
+	    padding-right: 0;
+	}
+}
+body .account .right-account .reviews .review-list .account-only.product {
+    display: inline-block;
+    float: left;
+}
+.rate-bar .rating {
+    float: left;
+    width: .1px;
+    min-width: .1px;
+    height: 100%;
+    text-align: center;
+    max-width: 100%;
+    background-color: #a9143c;
+    -webkit-transition: width .3s;
+    -moz-transition: width .3s;
+    transition: width .3s;
+}
+body.page-reviews .right-account .reviews .review-list .wrapper>li .product .product-tile {
+    padding: 0;
+}
