@@ -38,11 +38,8 @@
 			
    </title>
 	<%-- Meta Content --%>
-	<!-- <meta name="apple-itunes-app" content="app-id=1101619385">
-	<meta name="google-play-app" content="app-id=com.tul.tatacliq"> -->
-	
-	<meta name="apple-itunes-app" content="app-id=1281494666, affiliate-data=ct=Smart%20Banner&pt=117857095"/>
-	<meta name="google-play-app" content="com.tataunistore.luxury">
+	<meta name="apple-itunes-app" content="app-id=1101619385">
+	<meta name="google-play-app" content="app-id=com.tul.tatacliq">
 	
 
 
@@ -299,32 +296,19 @@
 	
 		
 		
-		<!-- <meta property="fb:app_id" content="484004418446735"/> -->
-		<meta property="fb:app_id" content="707798592741796"/>
-		<meta property="og:site_name" content="Tata CLiQ Luxury" />
+		<meta property="fb:app_id" content="484004418446735"/>
+		<meta property="og:site_name" content="Tata CLiQ" />
 
 		
-		<%-- <meta property="al:ios:app_store_id" content="1101619385" />
+		<meta property="al:ios:app_store_id" content="1101619385" />
 		<meta property="al:ios:url" content="${canonical}" />
 		<meta property="al:ios:app_name" content="Tata Cliq" />
 		
 		
 		<meta property="al:android:package" content="com.tul.tatacliq" />
 		<meta property="al:android:url" content="${canonical}" />
-		<meta property="al:android:app_name" content="Tata Cliq" /> --%>
+		<meta property="al:android:app_name" content="Tata Cliq" />
 		
-		<!-- For iOS  -->
-		<meta property="al:ios:app_store_id" content="1281494666" />
-		<meta property="al:ios:url" content="https://luxury.tatacliq.com/" />
-		<meta property="al:ios:app_name" content="Tata CLiQ Luxury" />
-		
-		<!-- For Android -->
-		<meta property="al:android:package" content="com.tataunistore.luxury" />
-		<meta property="al:android:url" content="https://luxury.tatacliq.com/" />
-		<meta property="al:android:app_name" content="Tata CLiQ Luxury" />
-		
-		
-	
 	<%-- Favourite Icon --%>
 	<%-- <spring:theme code="img.favIcon" text="/" var="favIconPath"/> --%>
     <%-- <link rel="shortcut icon" type="image/x-icon" media="all" href="${themeResourcePath}/${favIconPath}" /> --%>
