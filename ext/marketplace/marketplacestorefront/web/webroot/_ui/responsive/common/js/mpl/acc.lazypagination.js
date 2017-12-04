@@ -742,7 +742,7 @@ function toggleNextPrevButton(){
             k.addClass(this.options[i + "Class"]);
             k.data("page", j);
             k.data("page-type", i);
-            k.append(h.attr("href", this.makeHref(j)).addClass(this.options.anchorClass).html(g));
+            k.append(h.attr("href", (window.location.pathname).replace(/page-[0-9]+/, 'page-'+j)+this.makeHref(j)).addClass(this.options.anchorClass).html(g));
             return k
         },
         getPages: function(j) {
