@@ -53,7 +53,6 @@ import de.hybris.platform.commercewebservicescommons.errors.exceptions.RequestPa
 import de.hybris.platform.commercewebservicescommons.mapping.DataMapper;
 import de.hybris.platform.commercewebservicescommons.mapping.FieldSetBuilder;
 import de.hybris.platform.commercewebservicescommons.mapping.impl.FieldSetBuilderContext;
-import de.hybris.platform.core.GenericSearchConstants.LOG;
 import de.hybris.platform.core.model.c2l.CurrencyModel;
 import de.hybris.platform.core.model.order.AbstractOrderEntryModel;
 import de.hybris.platform.core.model.order.OrderModel;
@@ -2039,7 +2038,9 @@ public class MiscsController extends BaseController
 		String delayValue = "0";
 		long delay = 0;
 		List<AbstractOrderEntryModel> orderEntriesModel = null;
-
+		Map<String, String> dataMap = null;//Added for TPR-5954
+		StringBuilder imgUrl = null;//Added for TPR-5954
+		String subQuery = null;//Added for TPR-5954
 		try
 		{
 			//Converting XML to JAVA Object
@@ -2077,6 +2078,23 @@ public class MiscsController extends BaseController
 					}
 					try
 					{
+						//TPR-5954 || Start
+						dataMap = new HashMap<String, String>();
+						dataMap.put("comments", oneTouchCrmObj.getComments());
+						dataMap.put("subreasoncode", oneTouchCrmObj.getSubReturnReasonCode());
+						imgUrl = new StringBuilder();
+						if (null != oneTouchCrmObj.getUploadImage())
+						{
+							for (final String up : oneTouchCrmObj.getUploadImage().getImagePath())
+							{
+								imgUrl.append(up);
+								imgUrl.append(",");
+							}
+							subQuery = imgUrl.substring(0, imgUrl.length() - 1);
+							dataMap.put("imgurl", subQuery);
+							imgUrl.setLength(0);//Emptying the image path string
+						}
+						//TPR-5954 || End
 						final OrderModel subOrderModel = orderModelService.getOrder(oneTouchCrmObj.getSubOrderNum());//Sub order model
 						final OrderData orderData = getOrderConverter().convert(subOrderModel); //model converted to data
 						orderEntriesModel = cancelReturnFacade.associatedEntries(subOrderModel, oneTouchCrmObj.getTransactionId());//associated order entries
@@ -2278,7 +2296,7 @@ public class MiscsController extends BaseController
 									resultFlag = cancelReturnFacade.oneTouchReturn(orderData, orderEntry,
 											oneTouchCrmObj.getReturnReasonCode(), oneTouchCrmObj.getTicketType(),
 											SalesApplication.CALLCENTER, oneTouchCrmObj.getPincode(), orderEntriesModel, subOrderModel,
-											codSelfShipData, oneTouchCrmObj.getUSSID(), oneTouchCrmObj.getTransactionId());
+											codSelfShipData, oneTouchCrmObj.getUSSID(), oneTouchCrmObj.getTransactionId(), dataMap);
 									//Return is successfull
 									for (final AbstractOrderEntryModel abstractOrderEntryModel : orderEntriesModel)
 									{
@@ -2413,8 +2431,10 @@ public class MiscsController extends BaseController
 			output.setValidFlag(MarketplacewebservicesConstants.VALID_FLAG_F);
 			output.setRemarks(MarketplacewebservicesConstants.FORMAT_MISMATCH);
 			outputList.add(output);
+			dataMap = null;
 		}
 		LOG.info("==========Finished executing oneTouchCancelReturn controller==========");
+		dataMap = null;
 		return oneTouchReturnDTOList;
 	}
 

@@ -55,10 +55,12 @@ import de.hybris.platform.storelocator.model.PointOfServiceModel;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.TimeZone;
 import java.util.UUID;
@@ -147,6 +149,7 @@ import com.tisl.mpl.xml.pojo.CODSelfShipmentRequest;
 import com.tisl.mpl.xml.pojo.CODSelfShipmentResponse;
 import com.tisl.mpl.xml.pojo.MplCancelOrderRequest;
 import com.tisl.mpl.xml.pojo.MplCancelOrderRequest.OrderLine;
+import com.tisl.mpl.xml.pojo.MplCancelOrderRequest.uploadImage;
 import com.tisl.mpl.xml.pojo.MplOrderIsCancellableResponse;
 import com.tisl.mpl.xml.pojo.OrderLineDataResponse;
 import com.tisl.mpl.xml.pojo.RTSAndRSSReturnInfoRequest;
@@ -1853,7 +1856,7 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 				orderLineData.setReturnCancelRemarks(getReasonDesc(reasonCode));
 				orderLineData.setPinCode(pincode);
 				orderLineData.setReturnFulfillmentMode(returnFulfillmentMode);
-				//TPR-5954
+				//TPR-5954 || Start
 				if (null != infoData.getComments())
 				{
 					orderLineData.setComments(infoData.getComments());
@@ -1862,6 +1865,19 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 				{
 					orderLineData.setSubReasonCode(infoData.getSubReasonCode());
 				}
+				if (null != infoData.getImageUrl())
+				{
+					final List<String> uploadImg = new ArrayList<String>();
+					final uploadImage image = new uploadImage();
+					final List<String> img = Arrays.asList(infoData.getImageUrl().split(","));
+					for (final String path : img)
+					{
+						uploadImg.add(path);
+					}
+					image.setImgPath(uploadImg);
+					orderLineData.setUploadImg(image);
+				}
+				//TPR-5954 || Start
 			}
 			if (StringUtils.isNotEmpty(subEntry.getOrderLineId()))
 			{
@@ -1877,7 +1893,6 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 		orderLineRequest.setOrderLine(orderLineList);
 		return orderLineRequest;
 	}
-
 
 	/**
 	 * @param reasonCode
@@ -1993,9 +2008,9 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 	/*
 	 * private MplOrderCancelRequest buildCancelRequest(final AbstractOrderEntryModel orderEntryData, final String
 	 * reasonCode, final OrderData subOrderDetails, final OrderModel subOrderModel) throws OrderCancelException {
-	 * 
+	 *
 	 * final List orderCancelEntries = new ArrayList();
-	 * 
+	 *
 	 * //Get the reason from Global Code master String reasonDescription = null; final List<CancellationReasonModel>
 	 * cancellationReasonList = mplOrderService.getCancellationReason(); for (final CancellationReasonModel
 	 * cancellationReason : cancellationReasonList) { if
@@ -2011,16 +2026,16 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 	 * orderCancelEntry : orderCancelRequest.getEntriesToCancel()) { final AbstractOrderEntryModel orderEntry =
 	 * orderCancelEntry.getOrderEntry(); final List<PaymentTransactionModel> tranactions = new
 	 * ArrayList<PaymentTransactionModel>( subOrderModel.getPaymentTransactions());
-	 * 
+	 *
 	 * if (CollectionUtils.isNotEmpty(tranactions)) { for (final PaymentTransactionModel transaction : tranactions) { if
 	 * (CollectionUtils.isNotEmpty(transaction.getEntries())) { for (final PaymentTransactionEntryModel entry :
 	 * transaction.getEntries()) { if (entry.getPaymentMode() != null && entry.getPaymentMode().getMode() != null &&
 	 * entry.getPaymentMode().getMode().equalsIgnoreCase(MarketplaceFacadesConstants.PAYMENT_METHOS_COD)) {
 	 * orderCancelRequest.setAmountToRefund(NumberUtils.DOUBLE_ZERO); return orderCancelRequest; } } } } }
-	 * 
+	 *
 	 * double deliveryCost = 0D; if (orderEntry.getCurrDelCharge() != null) { deliveryCost =
 	 * orderEntry.getCurrDelCharge().doubleValue(); }
-	 * 
+	 *
 	 * refundAmount = orderEntryData.getNetAmountAfterAllDisc().doubleValue() + deliveryCost; } //Setting Refund Amount
 	 * orderCancelRequest.setAmountToRefund(new Double(refundAmount)); return orderCancelRequest; }
 	 */
@@ -2043,7 +2058,7 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 	 * OrderCancelRecordsHandlerException { final OrderCancelRecordEntryModel result =
 	 * this.getOrderCancelRecordsHandler().createRecordEntry(orderCancelRequest, userService.getCurrentUser());
 	 * //Initiate Refund initiateRefund(subOrderDetails, subOrderModel, result);
-	 * 
+	 *
 	 * }
 	 */
 
@@ -2571,9 +2586,9 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 
 	/*
 	 * @desc Saving order history for cancellation as OMS is not sending
-	 * 
+	 *
 	 * @param subOrderData
-	 * 
+	 *
 	 * @param subOrderModel
 	 */
 	private void createHistoryEntry(final AbstractOrderEntryModel orderEntryModel, final OrderModel orderModel,
@@ -3759,13 +3774,31 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 			final RefundEntryModel refundEntryModel = modelService.create(RefundEntryModel.class);
 			refundEntryModel.setOrderEntry(abstractOrderEntryModel);
 			refundEntryModel.setReturnRequest(returnRequestModel);
+
+
+
+			//TPR-5954 || Differentiate between default and category specific codes
 			if (null != reasonCode)
 			{
-				refundEntryModel.setReason(RefundReason.valueOf(getReasonDesc(reasonCode)));
+				reasonCode.trim();
+				if (!Character.isLetter(reasonCode.charAt(0)))
+				{
+					refundEntryModel.setReason(RefundReason.valueOf(getReasonDesc(reasonCode)));
+				}
+				refundEntryModel.setNotes(getReasonDesc(reasonCode));
 			}
+			else
+			{
+				final String reasonDescNew = fetchSubReasonDesc(reasonCode);
+				refundEntryModel.setNotes(reasonDescNew);
+				//refundEntryModel.setReason(reasonDescNew);
+			}
+
+
+
+
 			refundEntryModel.setStatus(ReturnStatus.RETURN_INITIATED);
 			refundEntryModel.setAction(ReturnAction.IMMEDIATE);
-			refundEntryModel.setNotes(getReasonDesc(reasonCode));
 			refundEntryModel.setExpectedQuantity(abstractOrderEntryModel.getQuantity());//Single line quantity
 			refundEntryModel.setReceivedQuantity(abstractOrderEntryModel.getQuantity());//Single line quantity
 			refundEntryModel.setRefundedDate(new Date());
@@ -4573,7 +4606,7 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.facades.account.cancelreturn.CancelReturnFacade#checkReturnLogisticsForApp(de.hybris.platform.
 	 * commercefacades.order.data.OrderData, java.lang.String, java.lang.String)
 	 */
@@ -4770,24 +4803,31 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 	public boolean oneTouchReturn(final OrderData subOrderDetails, final OrderEntryData subOrderEntry,
 			final String reasonCodeSource, final String ticketTypeCode, final SalesApplication salesApplication,
 			final String returnPincode, final List<AbstractOrderEntryModel> orderEntries, final OrderModel subOrderModel,
-			final CODSelfShipData codSelfShipData, final String ussid, final String txnId)
+			final CODSelfShipData codSelfShipData, final String ussid, final String txnId, final Map<String, String> dataMap)
 	{
 		final boolean isReturn = true;
 		boolean cancelOrRetrnanable = true;
 		boolean omsCancellationStatus = false;
 		String returnFulfillmentType = null;
-
-		String reasonCode = null;
-		if (reasonCodeSource.length() < 2)
+		// TPR-5954 || Start
+		final ReturnInfoData infoData = new ReturnInfoData();
+		if (null != dataMap && !dataMap.isEmpty())
 		{
-			reasonCode = 0 + reasonCodeSource;
-			LOG.debug("==========================" + reasonCode);
+			if (null != dataMap.get("comments"))
+			{
+				infoData.setComments(dataMap.get("comments"));
+			}
+			if (null != dataMap.get("subreasoncode"))
+			{
+				infoData.setSubReasonCode(dataMap.get("subreasoncode"));
+			}
+			if (null != dataMap.get("imgurl"))
+			{
+				infoData.setImageUrl(dataMap.get("imgurl"));
+			}
 		}
-		else
-		{
-			reasonCode = reasonCodeSource;
-			LOG.debug("else reason==============" + reasonCode);
-		}
+		// TPR-5954 || Start
+		final String reasonCode = reasonCodeSource;//Changed for TPR-5954
 
 		try
 		{
@@ -4809,20 +4849,19 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 
 
 			MplCancelOrderRequest orderLineRequest = new MplCancelOrderRequest();
-			LOG.debug("Step 2: ------------------****************Ticket Type code : " + ticketTypeCode);
-			//orderLineRequest = populateOrderLineData(subOrderEntry, ticketTypeCode, subOrderModel, reasonCode, returnPincode);
+			LOG.debug("Step 2:>>>>>>>>>>>>>>>>>Ticket Type code : " + ticketTypeCode);
 			orderLineRequest = populateOrderLineData(subOrderEntry, ticketTypeCode, subOrderModel, reasonCode, ussid, returnPincode,
-					returnFulfillmentType, null);//to-do for TPR-5954
+					returnFulfillmentType, infoData);
 			if (CollectionUtils.isNotEmpty(orderLineRequest.getOrderLine()))
 			{
 				cancelOrRetrnanable = cancelOrderInOMS(orderLineRequest, cancelOrRetrnanable, isReturn);
 			}
-			LOG.debug("Step 2: ------------------****************cancelOrRetrnanable : " + cancelOrRetrnanable);
+			LOG.debug("Step 2:>>>>>>>>>>>>>>>>>cancelOrRetrnanable : " + cancelOrRetrnanable);
 			if (cancelOrRetrnanable)
 			{
 				for (final AbstractOrderEntryModel abstractOrderEntryModel : orderEntries)
 				{
-					LOG.debug("Step 3:------------------****************History creation start for retrun");
+					LOG.debug("Step 3:>>>>>>>>>>>>>>>>>History creation start for retrun");
 					createHistoryEntry(abstractOrderEntryModel, subOrderModel, ConsignmentStatus.RETURN_INITIATED);
 				}
 			}
@@ -4845,8 +4884,8 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 				for (final AbstractOrderEntryModel abstractOrderEntryModel : orderEntries)
 				{
 					final boolean returnReqSuccess = createRefund(subOrderModel, abstractOrderEntryModel, reasonCode,
-							salesApplication, returnPincode, subOrderDetails, null);//to-do for TPR-5954
-					LOG.debug("------------------***************Return request successful :" + returnReqSuccess);
+							salesApplication, returnPincode, subOrderDetails, infoData);//to-do for TPR-5954
+					LOG.debug(">>>>>>>>>>>>>>>>>Return request successful :" + returnReqSuccess);
 				}
 			}
 
@@ -4866,7 +4905,7 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 
 		try
 		{
-			LOG.debug("Step 8: ------------------**************** Updating commerce consignment status" + omsCancellationStatus);
+			LOG.debug("Step 8: >>>>>>>>>>>>>>>>> Updating commerce consignment status" + omsCancellationStatus);
 
 			if (omsCancellationStatus)
 			{
@@ -4879,7 +4918,7 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 		}
 		catch (final EtailNonBusinessExceptions e)
 		{
-			LOG.error("------------------Updating commerce consignment status ", e);
+			LOG.error(">>>>>>>>>>>>>>>>>Updating commerce consignment status ", e);
 			ExceptionUtil.etailNonBusinessExceptionHandler(e);
 		}
 		catch (final Exception ex)
