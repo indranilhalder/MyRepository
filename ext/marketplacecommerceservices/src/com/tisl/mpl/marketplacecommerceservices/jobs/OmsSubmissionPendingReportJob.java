@@ -35,16 +35,15 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.TreeMap;
 
 import javax.annotation.Resource;
 
-import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
@@ -413,7 +412,8 @@ public class OmsSubmissionPendingReportJob extends AbstractJobPerformable<CronJo
 		if (null != entry && null != entry.getProduct())
 		{
 			final ProductModel product = entry.getProduct();
-			List<String> categoryList = new ArrayList<String>();
+			//List<String> categoryList = new ArrayList<String>();
+			final HashMap<String, String> categoryMap = new HashMap<String, String>();
 			LOG.debug(">>>>>>> before prodcatlist");
 			List<CategoryModel> productCategoryList = new ArrayList<>();
 			productCategoryList = getDefaultPromotionsManager().getPrimarycategoryData(product);
@@ -422,19 +422,24 @@ public class OmsSubmissionPendingReportJob extends AbstractJobPerformable<CronJo
 			if (null != productCategoryList && productCategoryList.size() > 0)
 			{
 				LOG.debug("prodcatlist" + productCategoryList.size());
-				categoryList = new ArrayList<String>();
+				//categoryList = new ArrayList<String>();
 				for (final CategoryModel category : productCategoryList)
 				{
 					if (category != null && !(category instanceof ClassificationClassModel) && null != category.getCode())
 					{
 						LOG.debug("Category Data:>>>>>>>> Category Code>>>" + category.getCode());
-						categoryList.add(category.getCode());
+						//categoryList.add(category.getName()getCode());
+						if (category.getName().equalsIgnoreCase("Primary") || category.getCode().length() <= 4)
+						{
+							continue;
+						}
+						categoryMap.put(category.getCode(), category.getName());
 					}
 				}
 
-				if (!(categoryList.isEmpty()) && categoryList.size() > 0)
+				if (!(categoryMap.isEmpty()) && categoryMap.size() > 0)
 				{
-					Collections.sort(categoryList, new Comparator()
+					final Map<String, String> treeMap = new TreeMap<String, String>(new Comparator()
 					{
 
 						@Override
@@ -453,19 +458,57 @@ public class OmsSubmissionPendingReportJob extends AbstractJobPerformable<CronJo
 								return 0;
 							}
 						}
-
 					});
+					treeMap.putAll(categoryMap);
+
+					//					Collections.sort(categoryList, new Comparator()
+					//					{
+					//
+					//						@Override
+					//						public int compare(final Object o1, final Object o2)
+					//						{
+					//							if (o1.toString().length() > o2.toString().length())
+					//							{
+					//								return 1;
+					//							}
+					//							else if (o1.toString().length() < o2.toString().length())
+					//							{
+					//								return -1;
+					//							}
+					//							else
+					//							{
+					//								return 0;
+					//							}
+					//						}
+					//
+					//					});
 
 
 					LOG.debug("Inside Category>>>>>");
-					LOG.debug("Category size is >>>>> " + categoryList.size());
-					if (CollectionUtils.isNotEmpty(categoryList) && categoryList.size() > 1)
+					LOG.debug("Category size is >>>>> " + treeMap.size());
+					if (!(treeMap.isEmpty()) && treeMap.size() > 1)
 					{
-						for (int i = 1; i < categoryList.size(); i++)
+
+						int i = 1;
+						for (final Map.Entry<String, String> entrySet : treeMap.entrySet())
 						{
-							map.put("l" + i, categoryList.get(i));
-							LOG.debug("l" + i + "=" + categoryList.get(i));
+							if (StringUtils.isNotEmpty(entrySet.getValue()))
+							{
+								map.put("l" + i, entrySet.getValue());
+								LOG.debug("l" + i + "=" + entrySet.getValue());
+							}
+							else
+							{
+								map.put("l" + i, entrySet.getKey());
+								LOG.debug("l" + i + "=" + entrySet.getKey());
+							}
+							i++;
 						}
+						//						for (int i = 1; i < treeMap.size(); i++)
+						//						{
+						//							map.put("l" + i, treeMap.get(i));
+						//							LOG.debug("l" + i + "=" + categoryList.get(i));
+						//						}
 						//						map.put("l1", categoryList.get(3));
 						//						LOG.debug("l1" + categoryList.get(3));
 						//						map.put("l2", categoryList.get(2));
