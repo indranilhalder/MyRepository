@@ -17,10 +17,7 @@
    <ul class="social-connect" id="gSignInWrapper">
    	<div class="header-soc-login mb-20 ">
 		<button class="fb-login btn btn-fb" onclick="ACC.socialLogin.facebookSocialLogin();">FACEBOOK</button>
-		<button id="customBtndrop" class="g-login btn btn-default btn-gp" >GOOGLE</button>
-		<script type="text/javascript">
-			ACC.socialLogin.attachSignin( document.getElementById('customBtndrop'));
-		</script>
+		<button id="customBtndrop" class="g-login btn btn-default btn-gp" onclick="ACC.socialLogin.attachSignin(this);">GOOGLE</button>
 	</div>
 	</ul>
 </c:if>
