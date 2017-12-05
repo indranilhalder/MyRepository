@@ -17410,7 +17410,7 @@ TATA.CommonFunctions = {
                 var tab_id = $(this).attr("data-tab");
                 $("ul.tabs li").removeClass("current"), $(".tab-content").removeClass("current"), 
                 $(this).addClass("current"), $("#" + tab_id).addClass("current");
-            }), $("ul.tabs li").mouseout(function() {
+            }), $("ul.tabs li, .mega-menu.tab-content").mouseout(function() {
                 $(".tab-content").removeClass("current"), $("ul.tabs li").removeClass("current");
             }), $(".mega-menu.tab-content").mouseover(function() {
                 var tab_id = $(this).attr("id");

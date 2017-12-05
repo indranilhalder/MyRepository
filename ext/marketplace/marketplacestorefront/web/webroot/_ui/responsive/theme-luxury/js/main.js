@@ -742,7 +742,7 @@ TATA.CommonFunctions = {
                 $("#"+tab_id).addClass('current');
             });
             
-            $('ul.tabs li').mouseout(function() {
+            $('ul.tabs li, .mega-menu.tab-content').mouseout(function() {
                 $('.tab-content').removeClass('current');
                 $('ul.tabs li').removeClass('current');                
             });
