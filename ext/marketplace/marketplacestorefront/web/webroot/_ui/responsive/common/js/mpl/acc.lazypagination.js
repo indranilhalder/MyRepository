@@ -693,7 +693,7 @@ function sortCustomSku(this_data,drop_down){
 	var item = $(this_data).attr('data-name');
 	$('.sort').removeAttr('style');
 	if(!drop_down){
-		$(this_data).css('color', 'red');
+		$(this_data).css('color', 'rgb(165, 23, 60)');
 	}
 	var url = '';
 	var browserPathName = window.location.pathname;
