@@ -24,6 +24,7 @@ import com.tisl.mpl.data.CouponHistoryData;
 import com.tisl.mpl.data.VoucherDiscountData;
 import com.tisl.mpl.data.VoucherDisplayData;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
+import com.tisl.mpl.wsdto.OfferListWsData;
 
 
 /**
@@ -146,7 +147,9 @@ public interface MplCouponFacade
 	 */
 	List<VoucherModel> getAllPaymentModeSpecificOffers();
 
-	Map<Long, Double> getPaymentModerelatedVoucherswithTotal();
+	Map<String, Double> getPaymentModerelatedVoucherswithTotal();
+
+	OfferListWsData getAllOffersForMobile();
 
 
 

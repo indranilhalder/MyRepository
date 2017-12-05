@@ -3377,5 +3377,19 @@
 		<property name="LuxurySimpleBannerComponent" type="java.util.List&lt;com.tisl.mpl.wsdto.LuxurySimpleBannerComponentWsDTO>"/>																													 
 
 	</bean>
+	
+    <!--  TPR-7486 -->		
+    <bean class="com.tisl.mpl.wsdto.OfferListWsData" extends="com.tisl.mpl.wsdto.ErrorDTO">
+        <property name="totalOffers" type="String"/>
+	    <property name="coupons" type="java.util.List&lt;com.tisl.mpl.wsdto.OfferResultWsData>"/>
+	</bean>
+	<bean class="com.tisl.mpl.wsdto.OfferResultWsData">
+        <property name="offerCode" type="String"/>
+	    <property name="offerDescription" type="String"/>
+		<property name="offerTitle" type="String"/>
+		<property name="offerMaxDiscount" type="String"/>
+		<property name="offerMinCartValue" type="String"/>	
+	</bean>
+	
 
 </beans>

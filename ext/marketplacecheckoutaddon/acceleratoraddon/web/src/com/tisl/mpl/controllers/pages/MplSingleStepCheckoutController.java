@@ -443,6 +443,7 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 			//This session attribute is required for responsive one page
 			getSessionService().setAttribute("isCheckoutPincodeServiceable", isServicable);
 
+
 			storeCmsPageInModel(model, getContentPageForLabelOrId(MULTI_CHECKOUT_SUMMARY_CMS_PAGE_LABEL));
 			setUpMetaDataForContentPage(model, getContentPageForLabelOrId(MULTI_CHECKOUT_SUMMARY_CMS_PAGE_LABEL));
 			final CartData cartUssidData = getMplCustomAddressFacade().getCheckoutCart(cartModel); //CAR-323
@@ -2720,14 +2721,14 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 		try
 		{
 			final List<VoucherModel> allOffersData = mplCouponFacade.getAllPaymentModeSpecificOffers();
-			final Map<Long, Double> allOffersTotalData = mplCouponFacade.getPaymentModerelatedVoucherswithTotal();
+			final Map<String, Double> allOffersTotalData = mplCouponFacade.getPaymentModerelatedVoucherswithTotal();
 
 
 
 			/*
 			 * for (final Map<VoucherModel, String> offer : allOffersData) { for (final Map.Entry<VoucherModel, String>
 			 * entry : offer.entrySet()) {
-			 * 
+			 *
 			 * System.out.println(entry.getKey().getDescription()); System.out.println(entry.getValue()); final } }
 			 */
 
@@ -5016,7 +5017,7 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 
 	/*
 	 * @Description adding wishlist popup in cart page
-	 *
+	 * 
 	 * @param String productCode,String wishName, model
 	 */
 
@@ -5074,7 +5075,7 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 
 	/*
 	 * @Description showing wishlist popup in cart page
-	 *
+	 * 
 	 * @param String productCode, model
 	 */
 	@ResponseBody

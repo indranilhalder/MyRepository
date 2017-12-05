@@ -53,7 +53,6 @@ import de.hybris.platform.commercewebservicescommons.errors.exceptions.RequestPa
 import de.hybris.platform.commercewebservicescommons.mapping.DataMapper;
 import de.hybris.platform.commercewebservicescommons.mapping.FieldSetBuilder;
 import de.hybris.platform.commercewebservicescommons.mapping.impl.FieldSetBuilderContext;
-import de.hybris.platform.core.GenericSearchConstants.LOG;
 import de.hybris.platform.core.model.c2l.CurrencyModel;
 import de.hybris.platform.core.model.order.AbstractOrderEntryModel;
 import de.hybris.platform.core.model.order.OrderModel;
@@ -130,6 +129,7 @@ import com.tisl.mpl.core.constants.MarketplaceCoreConstants;
 import com.tisl.mpl.core.enums.FeedbackCategory;
 import com.tisl.mpl.core.model.MplEnhancedSearchBoxComponentModel;
 import com.tisl.mpl.core.util.DateUtilHelper;
+import com.tisl.mpl.coupon.facade.MplCouponFacade;
 import com.tisl.mpl.data.CODSelfShipData;
 import com.tisl.mpl.data.CODSelfShipResponseData;
 import com.tisl.mpl.exception.EtailBusinessExceptions;
@@ -181,6 +181,7 @@ import com.tisl.mpl.wsdto.HomescreenListData;
 import com.tisl.mpl.wsdto.ListPinCodeServiceData;
 import com.tisl.mpl.wsdto.MplAutoCompleteResultWsData;
 import com.tisl.mpl.wsdto.NewsletterWsDTO;
+import com.tisl.mpl.wsdto.OfferListWsData;
 import com.tisl.mpl.wsdto.OneTouchCancelReturnCrmRequestDTO;
 import com.tisl.mpl.wsdto.OneTouchCancelReturnCrmRequestList;
 import com.tisl.mpl.wsdto.OneTouchCancelReturnDTO;
@@ -342,6 +343,9 @@ public class MiscsController extends BaseController
 
 	@Autowired
 	private DateUtilHelper dateUtilHelper;
+
+	@Autowired
+	private MplCouponFacade mplCouponFacade;
 
 
 
@@ -1572,6 +1576,71 @@ public class MiscsController extends BaseController
 
 		return aboutUsBannerData;
 	}
+
+
+	/**
+	 * Display OFFERS IN PAYMENT PAGE
+	 *
+	 * @param fields
+	 * @return aboutUsBannerData
+	 * @throws CMSItemNotFoundException
+	 */
+
+	@RequestMapping(value = "/{baseSiteId}/paymentSpecificOffers", method = RequestMethod.GET)
+	@ResponseBody
+	public OfferListWsData getPaymentSpecificOffers(@RequestParam(defaultValue = DEFAULT_FIELD_SET) final String fields)
+			throws CMSItemNotFoundException
+	{
+		OfferListWsData offersData = new OfferListWsData();
+		try
+		{
+			offersData = mplCouponFacade.getAllOffersForMobile();
+			if (offersData != null)
+			{
+				offersData.setStatus(MarketplacecommerceservicesConstants.SUCCESS_FLAG);
+			}
+
+
+		}
+
+		catch (final EtailNonBusinessExceptions e)
+		{
+			ExceptionUtil.etailNonBusinessExceptionHandler(e);
+			if (null != e.getErrorMessage())
+			{
+				offersData.setError(e.getErrorMessage());
+			}
+			if (null != e.getErrorCode())
+			{
+				offersData.setErrorCode(e.getErrorCode());
+			}
+			offersData.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
+		}
+		catch (final EtailBusinessExceptions e)
+		{
+			ExceptionUtil.etailBusinessExceptionHandler(e, null);
+			if (null != e.getErrorMessage())
+			{
+				offersData.setError(e.getErrorMessage());
+			}
+			if (null != e.getErrorCode())
+			{
+				offersData.setErrorCode(e.getErrorCode());
+			}
+			offersData.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
+		}
+		catch (final Exception e)
+		{
+			ExceptionUtil.getCustomizedExceptionTrace(e);
+			offersData.setError(Localization.getLocalizedString(MarketplacecommerceservicesConstants.E0000));
+			offersData.setErrorCode(MarketplacecommerceservicesConstants.E0000);
+			offersData.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
+		}
+
+		return offersData;
+	}
+
+
 
 	/**
 	 * Display Hel and Services Page

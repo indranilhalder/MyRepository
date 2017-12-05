@@ -187,9 +187,9 @@ public class MplCouponDaoImpl implements MplCouponDao
 	}
 
 	@Override
-	public Map<Long, Double> getPaymentModerelatedVoucherswithTotal()
+	public Map<String, Double> getPaymentModerelatedVoucherswithTotal()
 	{
-		final Map<Long, Double> voucherdata = new HashMap<Long, Double>();
+		final Map<String, Double> voucherdata = new HashMap<String, Double>();
 		try
 		{
 
@@ -206,7 +206,7 @@ public class MplCouponDaoImpl implements MplCouponDao
 				for (final List<Object> row : result.getResult())
 				{
 					//final Map<Long, Double> resultMap = new HashMap<Long, Double>();
-					final Long voucher = (Long) row.get(0);
+					final String voucher = String.valueOf(row.get(0));
 					final Double total = (Double) row.get(1);
 					voucherdata.put(voucher, total);
 				}

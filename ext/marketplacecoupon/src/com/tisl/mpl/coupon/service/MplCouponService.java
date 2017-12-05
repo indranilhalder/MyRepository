@@ -47,7 +47,7 @@ public interface MplCouponService
 	 */
 	List<VoucherModel> getPaymentModerelatedVouchers();
 
-	Map<Long, Double> getPaymentModerelatedVoucherswithTotal();
+	Map<String, Double> getPaymentModerelatedVoucherswithTotal();
 
 
 	/**

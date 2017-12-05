@@ -89,7 +89,7 @@ public class MplCouponServiceImpl implements MplCouponService
 	}
 
 	@Override
-	public Map<Long, Double> getPaymentModerelatedVoucherswithTotal()
+	public Map<String, Double> getPaymentModerelatedVoucherswithTotal()
 	{
 		return getMplCouponDao().getPaymentModerelatedVoucherswithTotal();
 	}
