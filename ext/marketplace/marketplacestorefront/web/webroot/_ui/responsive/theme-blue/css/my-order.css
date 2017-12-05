@@ -678,11 +678,11 @@ table.track-table tr {
 	body .account .right-account .order-history .product-block li.header>ul>li {
     width: 49%;
 	}
-	body .account .right-account .order-history .product-block li.item .image {
+	/* body .account .right-account .order-history .product-block li.item .image {
     width: 50px;
     position: absolute;
     top: 20px;
-	}
+	} */
 	body .account .right-account .order-history .product-block li.item .details {
 	    padding-right: 70px;
 	    padding-left: 70px;
@@ -1208,6 +1208,7 @@ body .right-account .order-history .cancellation-request-block .return-form {
 body .right-account .order-history .cancellation-request-block .return-form .return-container {
     border: 0;
     padding: 10px 15px !important;
+    margin-bottom: 20px;
 }
 .return-form .return-container .products {
     float: left;
@@ -1378,29 +1379,41 @@ body .right-account .order-history .cancellation-request-block.success .return-f
     color: #a9143c;
     font-weight: 500;
 }
-body .right-account .order-history .cancellation-request-block.success .return-form .container .questions span {
-	font-weight: 500;
-    font-size: 14px;	
+body .account .right-account .order-history .product-block li.item .cancellation-request-block.success>div>h2 {
+    font-size: 14px;
+    font-weight: 600;
+    color: #a9143c;
+    padding: 20px 15px 15px;
+    text-align: center;
+    background-color: transparent;
+    height: auto;
+}
+@media (max-width: 650px){
+	body .right-account .order-history .cancellation-request-block {
+	    overflow-x: hidden;
+	    position: relative;
+	}
 }
 @media (max-width: 790px){
+	body .right-account .order-history .cancellation-request-block .return-form .buttons button {
+    width: 100%;
+    max-width: 420px;
+	}
 	body .account .right-account .order-history .top .pagination.mobile {
     top: 26px;
+	}
+	body .right-account .order-history .cancellation-request-block .return-form .return-container .questions label {
+    	font-size: 14px !important;
+	}
+	body .right-account .order-history .cancellation-request-block .return-form .buttons {
+    text-align: center;
+    padding: 0 35px 20px;
 	}
 	body .right-account .order-history .cancellation-request-block .return-form .return-container .questions {
 	    width: 100%;
 	}
 	body .right-account .order-history .cancellation-request-block.success .return-form .container .questions span {
     font-size: 18px;
-	}
-	body .right-account .order-history .cancellation-request-block h2 {
-		text-align: center;
-	}
-	body .right-account .order-history .cancellation-request-block .return-form .buttons {
-		text-align: center;
-    	padding: 0 35px 20px;
-	}
-	body .right-account .order-history .cancellation-request-block .return-form .buttons button {
-		width: 100%;
 	}
 }
 @media (min-width: 791px){
@@ -1451,3 +1464,95 @@ body .right-account .order-history .cancellation-request-block.success>div {
     height: 700px;
 }
 /* Edit address */
+
+/* CNC in order details */
+#shipping-track-order .item-header p {
+    font-weight: normal !important;
+    padding: 0 20px;
+    color: #666;
+    display: none;
+}
+body .account .right-account .order-history.order-details li.item .item-fulfillment p.track-order-pickup {
+    display: inline;
+    margin-left: -15px;
+}
+body .account .right-account .order-history.order-details li.item .item-fulfillment p.track-order-pickup {
+    display: inline;
+    margin-left: -15px;
+}
+body .account .right-account .order-history.order-details li.item .item-fulfillment p.track-order-pickup+span {
+    display: inline;
+}
+#pickName {
+    padding-top: 0;
+    display: inline-block;
+    margin-left: 0;
+    padding-left: 0 !important;
+    height: 25px !important;
+    white-space: nowrap;
+}
+.pickupeditbtn:after {
+    font-family: 'FontAwesome';
+    content: "\f040";
+    padding: 0 5px 0 5px;
+}
+.product-block.order-details .pickup_Edit {
+    margin-bottom: 10px;
+}
+.product-block.order-details .pickup_Edit .savebtn {
+    position: relative;
+}
+.pickup_Edit {
+    display: none;
+}
+@media (min-width: 791px){
+	body .account .right-account .order-history.order-details li.item #pickNo {
+	    padding-bottom: 10px;
+	}
+}
+@media (min-width: 1020px){
+	.pickup_name {
+	    padding-top: 21px;
+	    font-weight: bold;
+	}
+	.pickUpName {
+	    margin-top: 6px;
+	    z-index: 119;
+	    margin-left: 47px;
+	}
+	.pickup_mob {
+	    margin-left: -82px;
+	    padding-top: 21px;
+	    width: 71px;
+	    font-weight: bold;
+	}
+	.pickMobileNo {
+	    margin-left: -110px;
+	    height: 28px;
+	    margin-top: 7px;
+	    z-index: 10;
+	}
+	.savebtn {
+    z-index: 99;
+    min-width: 91px;
+    margin-left: -235px;
+    height: 40px;
+    line-height: 29px;
+	}
+}
+@media (max-width: 1019px){
+	.pickUpName {
+	    width: 100%;
+	    margin-top: 5px;
+	}
+	.savebtnOther {
+	    margin: 5px 0 0 45px !important;
+	    height: 34px !important;
+	    padding-top: 9px;
+	}
+}
+@media (max-width: 790px){
+	body .account .right-account .order-history.order-details.responsiveProfile li.item .status {
+	    padding-left: 15.5%;
+	}
+}

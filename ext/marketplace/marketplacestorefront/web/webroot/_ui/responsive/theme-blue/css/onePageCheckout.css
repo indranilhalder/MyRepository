@@ -4194,7 +4194,7 @@ body.page-multiStepCheckoutSummaryPage #reviewOrder.cart.wrapper .product-block 
 select.update-entry-quantity-input.review-page-select{
    background-image: none ! important;
    width: 50px ! important;
-   padding: 0px 18px 0 22px ! important;
+   padding: 0px 11px 0 22px ! important;
 }
 
 .modal#singlePageChooseSlotDeliveryPopup>div.content li.item li.deliverySlotRadio input[type="radio"] ~ label.delslot_radio{		
