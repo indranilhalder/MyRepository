@@ -437,7 +437,7 @@
 			jaloclass="com.tisl.mpl.jalo.MplCartOfferVoucher"
 			autocreate="true" 
 			generate="true">
-			
+
 		</itemtype>
 		
 		<itemtype code="MplOrderRestriction"

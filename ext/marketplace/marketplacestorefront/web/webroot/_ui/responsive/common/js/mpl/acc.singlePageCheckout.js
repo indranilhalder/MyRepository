@@ -2016,16 +2016,17 @@ ACC.singlePageCheckout = {
         			$("#totalWithConvField").html(data.totalPrice);*/
     				
     				// TPR-7486 start
-    				if(data.totalDiscount.value != 0){
-						$("#promotionApplied").css("display","block");
-						document.getElementById("promotion").innerHTML=data.totalDiscount.formattedValue;
-					}
+    				//if(data.totalDiscount.value != 0){
+						//$("#promotionApplied").css("display","block");
+						//document.getElementById("promotion").innerHTML=data.totalDiscount.formattedValue;
+					//}
     				document.getElementById("totalWithConvField").innerHTML=data.totalPrice;
     				if(document.getElementById("outstanding-amount")!=null)
     				document.getElementById("outstanding-amount").innerHTML=data.totalPrice;
     				document.getElementById("outstanding-amount-mobile").innerHTML=data.totalPrice;
     				$("#codAmount").text(data.totalPrice);
-
+    				
+    				recalculateCart();
 
     				// TPR-7486 end 
     				

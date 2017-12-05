@@ -66,4 +66,6 @@ public interface MplCouponService
 
 	boolean validateCartEligilityForCoupons(List<DiscountModel> discountList);
 
+	boolean validateCartEligilityForCartCoupons(List<DiscountModel> discountList);
+
 }

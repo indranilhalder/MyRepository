@@ -3215,7 +3215,7 @@
 			<itemtype code="AbstractOrderEntry" autocreate="false"
 				generate="false">
 
-				<attributes>
+`				<attributes>
 					<attribute autocreate="true" qualifier="convenienceChargeApportion"
 						type="java.lang.Double">
 						<persistence type="property" qualifier="convenienceChargeApportion">
@@ -3228,6 +3228,7 @@
 						<defaultvalue>Double.valueOf(0.0d)</defaultvalue>
 					</attribute>
 				</attributes>
+				
 			</itemtype>
 			<!-- Status Update -->
 
@@ -10259,6 +10260,22 @@
 						<description>Coupon Code</description>
 						<modifiers read="true" write="true" removable="true"
 							optional="true" initial="true" unique="true" />
+						<persistence type="property" />
+					</attribute>
+					
+					<attribute qualifier="cartCouponCode" autocreate="true"
+						type="java.lang.String">
+						<description>Cart Coupon Code</description>
+						<modifiers read="true" write="true" removable="true"
+							optional="true" initial="true" />
+						<persistence type="property" />
+					</attribute>
+					<attribute qualifier="cartCouponValue" autocreate="true"
+						type="java.lang.Double">
+						<defaultvalue>Double.valueOf(0.00D)</defaultvalue>
+						<description> Cart Coupon Value</description>
+						<modifiers read="true" write="true" removable="true"
+							optional="true" initial="true" />
 						<persistence type="property" />
 					</attribute>
 

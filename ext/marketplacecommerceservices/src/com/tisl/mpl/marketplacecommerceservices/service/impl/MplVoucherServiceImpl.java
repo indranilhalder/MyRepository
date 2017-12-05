@@ -54,6 +54,7 @@ import com.tisl.mpl.marketplacecommerceservices.service.MplVoucherService;
 import com.tisl.mpl.model.BuyAGetPromotionOnShippingChargesModel;
 import com.tisl.mpl.model.BuyAandBGetPromotionOnShippingChargesModel;
 import com.tisl.mpl.model.BuyAboveXGetPromotionOnShippingChargesModel;
+import com.tisl.mpl.model.MplCartOfferVoucherModel;
 import com.tisl.mpl.order.impl.MplDefaultCalculationService;
 import com.tisl.mpl.util.DiscountUtility;
 
@@ -137,8 +138,9 @@ public class MplVoucherServiceImpl implements MplVoucherService
 				//				cartModel.setTotalPrice(Double.valueOf((null == cartModel.getTotalPrice() ? 0.0d : cartModel.getTotalPrice()
 				//						.doubleValue()) + (null == deliveryCost ? 0.0d : deliveryCost.doubleValue())));
 				//TPR-1702 : Changes for Shipping + Coupon
-				cartModel.setTotalPrice(Double.valueOf((null == cartModel.getTotalPrice() ? 0.0d : cartModel.getTotalPrice()
-						.doubleValue()) + (null == deliveryCost ? 0.0d : deliveryCost.doubleValue()) - modDeliveryCost.doubleValue()));
+				cartModel.setTotalPrice(
+						Double.valueOf((null == cartModel.getTotalPrice() ? 0.0d : cartModel.getTotalPrice().doubleValue())
+								+ (null == deliveryCost ? 0.0d : deliveryCost.doubleValue()) - modDeliveryCost.doubleValue()));
 				//TPR-1702 : Changes for Shipping + Coupon
 
 				// Freebie item changes
@@ -181,8 +183,9 @@ public class MplVoucherServiceImpl implements MplVoucherService
 
 				orderModel.setDeliveryCost(deliveryCost);
 				//TPR-1702 : Changes for Shipping + Coupon
-				orderModel.setTotalPrice(Double.valueOf((null == orderModel.getTotalPrice() ? 0.0d : orderModel.getTotalPrice()
-						.doubleValue()) + (null == deliveryCost ? 0.0d : deliveryCost.doubleValue()) - modDeliveryCost.doubleValue()));
+				orderModel.setTotalPrice(
+						Double.valueOf((null == orderModel.getTotalPrice() ? 0.0d : orderModel.getTotalPrice().doubleValue())
+								+ (null == deliveryCost ? 0.0d : deliveryCost.doubleValue()) - modDeliveryCost.doubleValue()));
 				//TPR-1702 : Changes for Shipping + Coupon
 
 				// Freebie item changes
@@ -246,10 +249,10 @@ public class MplVoucherServiceImpl implements MplVoucherService
 			final List<PromotionResultModel> promotionList = new ArrayList<PromotionResultModel>(allPromotionResults);
 			for (final PromotionResultModel oModel : promotionList)
 			{
-				if (oModel.getCertainty().floatValue() == 1.0F
-						&& null != oModel.getPromotion()
+				if (oModel.getCertainty().floatValue() == 1.0F && null != oModel.getPromotion()
 						&& (oModel.getPromotion() instanceof BuyAboveXGetPromotionOnShippingChargesModel
-								|| oModel.getPromotion() instanceof BuyAGetPromotionOnShippingChargesModel || oModel.getPromotion() instanceof BuyAandBGetPromotionOnShippingChargesModel))
+								|| oModel.getPromotion() instanceof BuyAGetPromotionOnShippingChargesModel
+								|| oModel.getPromotion() instanceof BuyAandBGetPromotionOnShippingChargesModel))
 				{
 					flag = true;
 					break;
@@ -325,9 +328,10 @@ public class MplVoucherServiceImpl implements MplVoucherService
 						&& voucherCalcValue > lastVoucher.getMaxDiscountValue().doubleValue()) //When discount value is greater than coupon max discount value
 				{
 					LOG.debug("Step 13:::Inside max discount block");
-					discountList = setGlobalDiscount(discountList, voucherList, cartSubTotal, promoCalcValue, lastVoucher, lastVoucher
-							.getMaxDiscountValue().doubleValue());
+					discountList = setGlobalDiscount(discountList, voucherList, cartSubTotal, promoCalcValue, lastVoucher,
+							lastVoucher.getMaxDiscountValue().doubleValue());
 					cartModel.setGlobalDiscountValues(discountList);
+
 					getMplDefaultCalculationService().calculateTotals(cartModel, false);
 					getModelService().save(cartModel);
 
@@ -356,10 +360,10 @@ public class MplVoucherServiceImpl implements MplVoucherService
 						final BigDecimal cartTotalThreshold = BigDecimal.valueOf(0.01).multiply(BigDecimal.valueOf(size)); //Threshold is min value which is allowable after applying coupon
 						for (final AbstractOrderEntryModel entry : applicableOrderEntryList)
 						{
-							netAmountAfterAllDisc += ((null != entry.getProductPromoCode() && StringUtils.isNotEmpty(entry
-									.getProductPromoCode())) || (null != entry.getCartPromoCode() && StringUtils.isNotEmpty(entry
-									.getCartPromoCode()))) ? entry.getNetAmountAfterAllDisc().doubleValue() : entry.getTotalPrice()
-									.doubleValue();
+							netAmountAfterAllDisc += ((null != entry.getProductPromoCode()
+									&& StringUtils.isNotEmpty(entry.getProductPromoCode()))
+									|| (null != entry.getCartPromoCode() && StringUtils.isNotEmpty(entry.getCartPromoCode())))
+											? entry.getNetAmountAfterAllDisc().doubleValue() : entry.getTotalPrice().doubleValue();
 
 							productPrice += (null == entry.getTotalPrice()) ? 0.0d : entry.getTotalPrice().doubleValue();
 						}
@@ -369,12 +373,12 @@ public class MplVoucherServiceImpl implements MplVoucherService
 
 						if ((productPrice < 1) || (voucherCalcValue != 0 && (netAmountAfterAllDisc - voucherCalcValue) <= 0)) //When discount value is greater than entry totals after applying promotion
 						{
-							LOG.debug("Step 16:::inside freebie and (netAmountAfterAllDisc - voucherCalcValue) <= 0 and (productPrice - voucherCalcValue) <= 0 block");
+							LOG.debug(
+									"Step 16:::inside freebie and (netAmountAfterAllDisc - voucherCalcValue) <= 0 and (productPrice - voucherCalcValue) <= 0 block");
 							discountData = releaseVoucherAfterCheck(cartModel, null, voucherCode, Double.valueOf(productPrice),
 									applicableOrderEntryList, voucherList);
 						}
-						else if (voucherCalcValue != 0
-								&& (netAmountAfterAllDisc - voucherCalcValue) > 0
+						else if (voucherCalcValue != 0 && (netAmountAfterAllDisc - voucherCalcValue) > 0
 								&& ((BigDecimal.valueOf(netAmountAfterAllDisc).subtract(BigDecimal.valueOf(voucherCalcValue)))
 										.compareTo(cartTotalThreshold) == -1)) //When cart value after applying discount is less than .01*count of applicable entries
 						{
@@ -441,8 +445,8 @@ public class MplVoucherServiceImpl implements MplVoucherService
 						&& voucherCalcValue > lastVoucher.getMaxDiscountValue().doubleValue()) //When discount value is greater than coupon max discount value
 				{
 					LOG.debug("Step 13:::Inside max discount block");
-					discountList = setGlobalDiscount(discountList, voucherList, cartSubTotal, promoCalcValue, lastVoucher, lastVoucher
-							.getMaxDiscountValue().doubleValue());
+					discountList = setGlobalDiscount(discountList, voucherList, cartSubTotal, promoCalcValue, lastVoucher,
+							lastVoucher.getMaxDiscountValue().doubleValue());
 					orderModel.setGlobalDiscountValues(discountList);
 					getMplDefaultCalculationService().calculateTotals(orderModel, false);
 					getModelService().save(orderModel);
@@ -453,7 +457,8 @@ public class MplVoucherServiceImpl implements MplVoucherService
 				else if (voucherCalcValue != 0 && (cartSubTotal - promoCalcValue - voucherCalcValue) <= 0) //When discount value is greater than cart totals after applying promotion
 				{
 					LOG.debug("Step 14:::Inside (cartSubTotal - promoCalcValue - voucherCalcValue) <= 0 block");
-					discountData = releaseVoucherAfterCheck(null, orderModel, voucherCode, null, applicableOrderEntryList, voucherList);
+					discountData = releaseVoucherAfterCheck(null, orderModel, voucherCode, null, applicableOrderEntryList,
+							voucherList);
 				}
 				else
 				//In other cases
@@ -472,10 +477,10 @@ public class MplVoucherServiceImpl implements MplVoucherService
 						final BigDecimal cartTotalThreshold = BigDecimal.valueOf(0.01).multiply(BigDecimal.valueOf(size)); //Threshold is min value which is allowable after applying coupon
 						for (final AbstractOrderEntryModel entry : applicableOrderEntryList)
 						{
-							netAmountAfterAllDisc += ((null != entry.getProductPromoCode() && StringUtils.isNotEmpty(entry
-									.getProductPromoCode())) || (null != entry.getCartPromoCode() && StringUtils.isNotEmpty(entry
-									.getCartPromoCode()))) ? entry.getNetAmountAfterAllDisc().doubleValue() : entry.getTotalPrice()
-									.doubleValue();
+							netAmountAfterAllDisc += ((null != entry.getProductPromoCode()
+									&& StringUtils.isNotEmpty(entry.getProductPromoCode()))
+									|| (null != entry.getCartPromoCode() && StringUtils.isNotEmpty(entry.getCartPromoCode())))
+											? entry.getNetAmountAfterAllDisc().doubleValue() : entry.getTotalPrice().doubleValue();
 
 							productPrice += (null == entry.getTotalPrice()) ? 0.0d : entry.getTotalPrice().doubleValue();
 						}
@@ -485,12 +490,12 @@ public class MplVoucherServiceImpl implements MplVoucherService
 
 						if ((productPrice < 1) || (voucherCalcValue != 0 && (netAmountAfterAllDisc - voucherCalcValue) <= 0)) //When discount value is greater than entry totals after applying promotion
 						{
-							LOG.debug("Step 16:::inside freebie and (netAmountAfterAllDisc - voucherCalcValue) <= 0 and (productPrice - voucherCalcValue) <= 0 block");
+							LOG.debug(
+									"Step 16:::inside freebie and (netAmountAfterAllDisc - voucherCalcValue) <= 0 and (productPrice - voucherCalcValue) <= 0 block");
 							discountData = releaseVoucherAfterCheck(null, orderModel, voucherCode, Double.valueOf(productPrice),
 									applicableOrderEntryList, voucherList);
 						}
-						else if (voucherCalcValue != 0
-								&& (netAmountAfterAllDisc - voucherCalcValue) > 0
+						else if (voucherCalcValue != 0 && (netAmountAfterAllDisc - voucherCalcValue) > 0
 								&& ((BigDecimal.valueOf(netAmountAfterAllDisc).subtract(BigDecimal.valueOf(voucherCalcValue)))
 										.compareTo(cartTotalThreshold) == -1)) //When cart value after applying discount is less than .01*count of applicable entries
 						{
@@ -501,8 +506,8 @@ public class MplVoucherServiceImpl implements MplVoucherService
 						else
 						//In other cases, just set the coupon discount for the discount data
 						{
-							discountData.setCouponDiscount(getDiscountUtility()
-									.createPrice(orderModel, Double.valueOf(voucherCalcValue)));
+							discountData
+									.setCouponDiscount(getDiscountUtility().createPrice(orderModel, Double.valueOf(voucherCalcValue)));
 						}
 					}
 					else if (CollectionUtils.isEmpty(applicableOrderEntryList) && CollectionUtils.isNotEmpty(voucherList)) //When applicable entries list is empty
@@ -803,8 +808,7 @@ public class MplVoucherServiceImpl implements MplVoucherService
 	 */
 	@Override
 	public void setApportionedValueForVoucher(final VoucherModel voucher, final AbstractOrderModel abstractOrderModel,
-			final String voucherCode, final List<AbstractOrderEntryModel> applicableOrderEntryList)
-			throws EtailNonBusinessExceptions //Changed to abstractOrderModel for TPR-629
+			final String voucherCode, final List<AbstractOrderEntryModel> applicableOrderEntryList) throws EtailNonBusinessExceptions //Changed to abstractOrderModel for TPR-629
 	{
 		try
 		{
@@ -868,8 +872,8 @@ public class MplVoucherServiceImpl implements MplVoucherService
 
 					if ((StringUtils.isNotEmpty(entry.getProductPromoCode())) || (StringUtils.isNotEmpty(entry.getCartPromoCode())))
 					{
-						final double netAmtAftrAllDisc = entry.getNetAmountAfterAllDisc() == null ? 0.00D : entry
-								.getNetAmountAfterAllDisc().doubleValue();
+						final double netAmtAftrAllDisc = entry.getNetAmountAfterAllDisc() == null ? 0.00D
+								: entry.getNetAmountAfterAllDisc().doubleValue();
 						currNetAmtAftrAllDisc = getCurrNetAmtAftrAllDisc(netAmtAftrAllDisc, entryLevelApportionedPrice);
 					}
 					else
@@ -954,8 +958,8 @@ public class MplVoucherServiceImpl implements MplVoucherService
 	 */
 	private double getCurrNetAmtAftrAllDisc(final double amount, final BigDecimal entryLevelApportionedPrice)
 	{
-		return (amount > entryLevelApportionedPrice.doubleValue()) ? (amount - entryLevelApportionedPrice.doubleValue()) : Double
-				.parseDouble(MarketplacecommerceservicesConstants.ZEROPOINTZEROONE);
+		return (amount > entryLevelApportionedPrice.doubleValue()) ? (amount - entryLevelApportionedPrice.doubleValue())
+				: Double.parseDouble(MarketplacecommerceservicesConstants.ZEROPOINTZEROONE);
 	}
 
 
@@ -1173,6 +1177,413 @@ public class MplVoucherServiceImpl implements MplVoucherService
 	public void setMplCommerceCartService(final MplCommerceCartService mplCommerceCartService)
 	{
 		this.mplCommerceCartService = mplCommerceCartService;
+	}
+
+
+	/**
+	 * The method deals with calculation after Cart Voucher apply
+	 *
+	 * @param lastVoucher
+	 * @param cartModel
+	 * @param orderModel
+	 * @param applicableOrderEntryList
+	 */
+	@Override
+	public VoucherDiscountData checkCartAfterCartVoucherApply(final VoucherModel lastVoucher, final CartModel cartModel,
+			final OrderModel orderModel, final List<AbstractOrderEntryModel> applicableOrderEntryList)
+			throws VoucherOperationException, EtailNonBusinessExceptions
+	{
+
+		VoucherDiscountData discountData = new VoucherDiscountData();
+		final long startTime = System.currentTimeMillis();
+		try
+		{
+			LOG.debug("Step 11:::Inside checking cart after applying voucher");
+			//Total amount in cart updated with delay... Calculating value of voucher regarding to order
+
+			if (cartModel != null)
+			{
+				//For cart
+				final double cartSubTotal = cartModel.getSubtotal().doubleValue();
+				double voucherCalcValue = 0.0;
+				double discountCalcValue = 0.0;
+
+				List<DiscountValue> discountList = new ArrayList<>(cartModel.getGlobalDiscountValues()); //Discount values against the cart
+				String voucherCode = null;
+
+				if (lastVoucher instanceof MplCartOfferVoucherModel)
+				{
+					voucherCode = ((MplCartOfferVoucherModel) lastVoucher).getVoucherCode();
+					discountData.setVoucherCode(voucherCode);
+				}
+
+				final List<DiscountModel> voucherList = cartModel.getDiscounts(); //List of discounts against the cart
+				if (CollectionUtils.isNotEmpty(discountList) && CollectionUtils.isNotEmpty(voucherList))
+				{
+					for (final DiscountValue discount : discountList)
+					{
+						if (null != discount.getCode() && discount.getCode().equalsIgnoreCase(voucherCode))
+						{
+							voucherCalcValue = discount.getValue();
+						}
+
+						discountCalcValue += discount.getValue();
+
+					}
+				}
+
+
+				if (!lastVoucher.getAbsolute().booleanValue() && voucherCalcValue != 0 && null != lastVoucher.getMaxDiscountValue()
+						&& voucherCalcValue > lastVoucher.getMaxDiscountValue().doubleValue()) //When discount value is greater than coupon max discount value
+				{
+					LOG.debug("Step 13:::Inside max discount block");
+					discountList = setGlobalDiscount(discountList, lastVoucher, lastVoucher.getMaxDiscountValue().doubleValue());
+					cartModel.setGlobalDiscountValues(discountList);
+					getMplDefaultCalculationService().calculateTotals(cartModel, false);
+					getModelService().save(cartModel);
+
+					discountData.setCouponDiscount(getDiscountUtility().createPrice(cartModel,
+							Double.valueOf(lastVoucher.getMaxDiscountValue().doubleValue())));
+				}
+				else if (voucherCalcValue != 0 && (cartSubTotal - discountCalcValue) <= 0) //When discount value is greater than cart totals after applying promotion
+				{
+					LOG.debug("Step 14:::Inside (cartSubTotal - promoCalcValue - voucherCalcValue) <= 0 block");
+					discountData = releaseVoucherAfterCheck(cartModel, null, voucherCode, null, applicableOrderEntryList, voucherList);
+				}
+				else
+				//In other cases
+				{
+					double netAmountAfterAllDisc = 0.0D;
+					double productPrice = 0.0D;
+					int size = 0;
+
+					if (CollectionUtils.isNotEmpty(applicableOrderEntryList))
+					{
+						LOG.debug("Step 15:::applicableOrderEntryList is not empty");
+						for (final AbstractOrderEntryModel entry : applicableOrderEntryList)
+						{
+							size += (null == entry.getQuantity()) ? 0 : entry.getQuantity().intValue(); //Size in total count of all the order entries present in cart
+						}
+						final BigDecimal cartTotalThreshold = BigDecimal.valueOf(0.01).multiply(BigDecimal.valueOf(size)); //Threshold is min value which is allowable after applying coupon
+						for (final AbstractOrderEntryModel entry : applicableOrderEntryList)
+						{
+							netAmountAfterAllDisc += ((null != entry.getProductPromoCode()
+									&& StringUtils.isNotEmpty(entry.getProductPromoCode()))
+									|| (null != entry.getCartPromoCode() && StringUtils.isNotEmpty(entry.getCartPromoCode())))
+											? entry.getNetAmountAfterAllDisc().doubleValue() : entry.getTotalPrice().doubleValue();
+
+							productPrice += (null == entry.getTotalPrice()) ? 0.0d : entry.getTotalPrice().doubleValue();
+						}
+
+						//						LOG.debug(logBuilder.append("Step 15:::netAmountAfterAllDisc is ").append(netAmountAfterAllDisc)
+						//								.append(" & productPrice is ").append(productPrice));
+
+						if ((productPrice < 1) || (voucherCalcValue != 0 && (netAmountAfterAllDisc - voucherCalcValue) <= 0)) //When discount value is greater than entry totals after applying promotion
+						{
+							LOG.debug(
+									"Step 16:::inside freebie and (netAmountAfterAllDisc - voucherCalcValue) <= 0 and (productPrice - voucherCalcValue) <= 0 block");
+							discountData = releaseVoucherAfterCheck(cartModel, null, voucherCode, Double.valueOf(productPrice),
+									applicableOrderEntryList, voucherList);
+						}
+						else if (voucherCalcValue != 0 && (netAmountAfterAllDisc - voucherCalcValue) > 0
+								&& ((BigDecimal.valueOf(netAmountAfterAllDisc).subtract(BigDecimal.valueOf(voucherCalcValue)))
+										.compareTo(cartTotalThreshold) == -1)) //When cart value after applying discount is less than .01*count of applicable entries
+						{
+							LOG.debug("Step 16.1:::Inside (cartSubTotal - promoCalcValue - voucherCalcValue) >= 0 < 0.01 block");
+							discountData = releaseVoucherAfterCheck(cartModel, null, voucherCode, Double.valueOf(productPrice),
+									applicableOrderEntryList, voucherList);
+						}
+						else
+						//In other cases, just set the coupon discount for the discount data
+						{
+							discountData
+									.setCouponDiscount(getDiscountUtility().createPrice(cartModel, Double.valueOf(voucherCalcValue)));
+						}
+					}
+					else if (CollectionUtils.isEmpty(applicableOrderEntryList) && CollectionUtils.isNotEmpty(voucherList)) //When applicable entries list is empty
+					{
+						LOG.debug("Step 17:::applicable entries empty");
+						discountData = releaseVoucherAfterCheck(cartModel, null, voucherCode, null, applicableOrderEntryList,
+								voucherList);
+					}
+					else
+					//In other cases, just set the coupon discount for the discount data
+					{
+						discountData.setCouponDiscount(getDiscountUtility().createPrice(cartModel, Double.valueOf(voucherCalcValue)));
+					}
+				}
+			}
+			else if (orderModel != null)
+			{
+				//For order
+				final double cartSubTotal = orderModel.getSubtotal().doubleValue();
+				double voucherCalcValue = 0.0;
+				double discountCalcValue = 0.0;
+				List<DiscountValue> discountList = orderModel.getGlobalDiscountValues(); //Discount values against the cart
+				String voucherCode = null;
+				if (lastVoucher instanceof PromotionVoucherModel)
+				{
+					voucherCode = ((PromotionVoucherModel) lastVoucher).getVoucherCode();
+					discountData.setVoucherCode(voucherCode);
+				}
+
+				final List<DiscountModel> voucherList = new ArrayList<>(orderModel.getDiscounts()); //List of discounts against the cart
+				if (CollectionUtils.isNotEmpty(discountList) && CollectionUtils.isNotEmpty(voucherList))
+				{
+					for (final DiscountValue discount : discountList)
+					{
+						if (null != discount.getCode() && discount.getCode().equalsIgnoreCase(voucherCode))
+						{
+							voucherCalcValue = discount.getValue();
+						}
+
+						discountCalcValue += discount.getValue();
+
+					}
+				}
+
+				//				final StringBuilder logBuilder = new StringBuilder();
+				//				LOG.debug(logBuilder.append("Step 12:::Voucher discount in cart is ").append(voucherCalcValue)
+				//						.append(" & promo discount in cart is ").append(promoCalcValue));
+
+				if (!lastVoucher.getAbsolute().booleanValue() && voucherCalcValue != 0 && null != lastVoucher.getMaxDiscountValue()
+						&& voucherCalcValue > lastVoucher.getMaxDiscountValue().doubleValue()) //When discount value is greater than coupon max discount value
+				{
+					LOG.debug("Step 13:::Inside max discount block");
+					discountList = setGlobalDiscount(discountList, lastVoucher, lastVoucher.getMaxDiscountValue().doubleValue());
+					orderModel.setGlobalDiscountValues(discountList);
+					getMplDefaultCalculationService().calculateTotals(orderModel, false);
+					getModelService().save(orderModel);
+
+					discountData.setCouponDiscount(getDiscountUtility().createPrice(orderModel,
+							Double.valueOf(lastVoucher.getMaxDiscountValue().doubleValue())));
+				}
+				else if (voucherCalcValue != 0 && (cartSubTotal - discountCalcValue) <= 0) //When discount value is greater than cart totals after applying promotion
+				{
+					LOG.debug("Step 14:::Inside (cartSubTotal - promoCalcValue - voucherCalcValue) <= 0 block");
+					discountData = releaseVoucherAfterCheck(null, orderModel, voucherCode, null, applicableOrderEntryList,
+							voucherList);
+				}
+				else
+				//In other cases
+				{
+					double netAmountAfterAllDisc = 0.0D;
+					double productPrice = 0.0D;
+					int size = 0;
+
+					if (CollectionUtils.isNotEmpty(applicableOrderEntryList))
+					{
+						LOG.debug("Step 15:::applicableOrderEntryList is not empty");
+						for (final AbstractOrderEntryModel entry : applicableOrderEntryList)
+						{
+							size += (null == entry.getQuantity()) ? 0 : entry.getQuantity().intValue(); //Size in total count of all the order entries present in cart
+						}
+						final BigDecimal cartTotalThreshold = BigDecimal.valueOf(0.01).multiply(BigDecimal.valueOf(size)); //Threshold is min value which is allowable after applying coupon
+						for (final AbstractOrderEntryModel entry : applicableOrderEntryList)
+						{
+							netAmountAfterAllDisc += ((null != entry.getProductPromoCode()
+									&& StringUtils.isNotEmpty(entry.getProductPromoCode()))
+									|| (null != entry.getCartPromoCode() && StringUtils.isNotEmpty(entry.getCartPromoCode())))
+											? entry.getNetAmountAfterAllDisc().doubleValue() : entry.getTotalPrice().doubleValue();
+
+							productPrice += (null == entry.getTotalPrice()) ? 0.0d : entry.getTotalPrice().doubleValue();
+						}
+
+						//						LOG.debug(logBuilder.append("Step 15:::netAmountAfterAllDisc is ").append(netAmountAfterAllDisc)
+						//								.append(" & productPrice is ").append(productPrice));
+
+						if ((productPrice < 1) || (voucherCalcValue != 0 && (netAmountAfterAllDisc - voucherCalcValue) <= 0)) //When discount value is greater than entry totals after applying promotion
+						{
+							LOG.debug(
+									"Step 16:::inside freebie and (netAmountAfterAllDisc - voucherCalcValue) <= 0 and (productPrice - voucherCalcValue) <= 0 block");
+							discountData = releaseVoucherAfterCheck(null, orderModel, voucherCode, Double.valueOf(productPrice),
+									applicableOrderEntryList, voucherList);
+						}
+						else if (voucherCalcValue != 0 && (netAmountAfterAllDisc - voucherCalcValue) > 0
+								&& ((BigDecimal.valueOf(netAmountAfterAllDisc).subtract(BigDecimal.valueOf(voucherCalcValue)))
+										.compareTo(cartTotalThreshold) == -1)) //When cart value after applying discount is less than .01*count of applicable entries
+						{
+							LOG.debug("Step 16.1:::Inside (cartSubTotal - promoCalcValue - voucherCalcValue) >= 0 < 0.01 block");
+							discountData = releaseVoucherAfterCheck(null, orderModel, voucherCode, Double.valueOf(productPrice),
+									applicableOrderEntryList, voucherList);
+						}
+						else
+						//In other cases, just set the coupon discount for the discount data
+						{
+							discountData
+									.setCouponDiscount(getDiscountUtility().createPrice(orderModel, Double.valueOf(voucherCalcValue)));
+						}
+					}
+					else if (CollectionUtils.isEmpty(applicableOrderEntryList) && CollectionUtils.isNotEmpty(voucherList)) //When applicable entries list is empty
+					{
+						LOG.debug("Step 17:::applicable entries empty");
+						discountData = releaseVoucherAfterCheck(null, orderModel, voucherCode, null, applicableOrderEntryList,
+								voucherList);
+					}
+					else
+					//In other cases, just set the coupon discount for the discount data
+					{
+						discountData.setCouponDiscount(getDiscountUtility().createPrice(orderModel, Double.valueOf(voucherCalcValue)));
+					}
+				}
+			}
+
+
+		}
+		catch (final ModelSavingException e)
+		{
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0007);
+		}
+		catch (final CalculationException e)
+		{
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0017);
+		}
+		catch (final NumberFormatException e)
+		{
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0015);
+		}
+		final long endTime = System.currentTimeMillis();
+		LOG.debug("Exiting service checkCartAfterApply====== " + (endTime - startTime));
+		return discountData;
+
+	}
+
+
+	/**
+	 * The Method creates a fresh Discount Value
+	 *
+	 * @param discountList
+	 * @param lastVoucher
+	 * @param discountAmt
+	 * @return List<DiscountValue>
+	 */
+	private List<DiscountValue> setGlobalDiscount(final List<DiscountValue> discountList, final VoucherModel lastVoucher,
+			final double discountAmt)
+	{
+
+		DiscountValue discountValue = null;
+
+		final Iterator iter = discountList.iterator();
+
+		//Remove the existing discount and add a new discount row
+		while (iter.hasNext())
+		{
+			final DiscountValue discount = (DiscountValue) iter.next();
+			if (discount.getCode().equalsIgnoreCase(lastVoucher.getCode()))
+			{
+				discountValue = new DiscountValue(discount.getCode(), discountAmt, true, discount.getCurrencyIsoCode());
+
+				iter.remove();
+				break;
+			}
+		}
+
+		discountList.add(discountValue);
+		return discountList;
+
+	}
+
+
+	/**
+	 * The Method outlines the apportioning for Cart Vouchers
+	 *
+	 * @param voucher
+	 * @param abstractOrderModel
+	 * @param voucherCode
+	 * @param applicableOrderEntryList
+	 */
+	@Override
+	public void setApportionedValueForCartVoucher(final VoucherModel voucher, final AbstractOrderModel abstractOrderModel,
+			final String voucherCode, final List<AbstractOrderEntryModel> applicableOrderEntryList)
+	{
+		try
+		{
+			final long startTime = System.currentTimeMillis();
+			LOG.debug("Step 18:::Inside setApportionedValueForVoucher for Cart Vouchers ");
+			if (CollectionUtils.isNotEmpty(abstractOrderModel.getDiscounts()))
+			{
+				double totalApplicablePrice = 0.0D;
+				final BigDecimal percentageDiscount = null;
+				updateAppOrderEntriesForFreebieBogo(applicableOrderEntryList);
+
+				for (final AbstractOrderEntryModel entry : applicableOrderEntryList)
+				{
+					totalApplicablePrice += entry.getTotalPrice() == null ? 0.0D : entry.getTotalPrice().doubleValue();
+				}
+
+				final List<DiscountValue> discountList = abstractOrderModel.getGlobalDiscountValues(); //Discount values against the cart
+				final List<DiscountModel> voucherList = abstractOrderModel.getDiscounts(); //List of discounts against the cart
+				double discountValue = 0.0;
+				if (CollectionUtils.isNotEmpty(discountList) && CollectionUtils.isNotEmpty(voucherList))
+				{
+					for (final DiscountValue discount : discountList)
+					{
+						if (null != discount.getCode() && discount.getCode().equalsIgnoreCase(voucher.getCode()))
+						{
+							discountValue += discount.getValue();
+						}
+
+					}
+				}
+
+				final double formattedDiscVal = Math.round(discountValue * 100.0) / 100.0;
+
+				LOG.debug("Step 19:::percentageDiscount is " + percentageDiscount);
+
+				BigDecimal totalAmtDeductedOnItemLevel = BigDecimal.valueOf(0);
+
+				for (final AbstractOrderEntryModel entry : applicableOrderEntryList)
+				{
+					BigDecimal entryLevelApportionedPrice = null;
+					double currNetAmtAftrAllDisc = 0.00D;
+
+					final double entryTotalPrice = entry.getTotalPrice().doubleValue();
+					final BigDecimal discountPriceValue = BigDecimal.valueOf(formattedDiscVal);
+
+					if (applicableOrderEntryList.indexOf(entry) == (applicableOrderEntryList.size() - 1))
+					{
+						entryLevelApportionedPrice = getApportionedValueForSingleEntry(discountPriceValue, totalAmtDeductedOnItemLevel);
+					}
+					else
+					{
+						entryLevelApportionedPrice = getApportionedValueForEntry(discountPriceValue, entryTotalPrice,
+								totalApplicablePrice);
+						totalAmtDeductedOnItemLevel = totalAmtDeductedOnItemLevel.add(entryLevelApportionedPrice);
+					}
+
+					LOG.debug("Step 20:::entryLevelApportionedPrice is " + entryLevelApportionedPrice);
+
+					entry.setCartCouponCode(null == voucherCode ? voucher.getCode() : voucherCode);
+					entry.setCartCouponValue(Double.valueOf(entryLevelApportionedPrice.doubleValue()));
+
+					if ((StringUtils.isNotEmpty(entry.getProductPromoCode())) || (StringUtils.isNotEmpty(entry.getCartPromoCode())))
+					{
+						final double netAmtAftrAllDisc = entry.getNetAmountAfterAllDisc() == null ? 0.00D
+								: entry.getNetAmountAfterAllDisc().doubleValue();
+						currNetAmtAftrAllDisc = getCurrNetAmtAftrAllDisc(netAmtAftrAllDisc, entryLevelApportionedPrice);
+					}
+					else
+					{
+						currNetAmtAftrAllDisc = getCurrNetAmtAftrAllDisc(entryTotalPrice, entryLevelApportionedPrice);
+					}
+
+					LOG.debug("Step 21:::currNetAmtAftrAllDisc is " + currNetAmtAftrAllDisc);
+
+					entry.setNetAmountAfterAllDisc(Double.valueOf(currNetAmtAftrAllDisc));
+				}
+
+				getModelService().saveAll(applicableOrderEntryList);
+			}
+
+			final long endTime = System.currentTimeMillis();
+			LOG.debug("Exiting service setApportionedValueForVoucher====== " + (endTime - startTime));
+		}
+		catch (final ModelSavingException e)
+		{
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0007);
+		}
+
+
 	}
 
 

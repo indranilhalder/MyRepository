@@ -159,5 +159,31 @@ public class MplCouponServiceImpl implements MplCouponService
 		return flag;
 	}
 
+	/**
+	 * The method checks the applicability of Coupon in Cart / Order
+	 *
+	 * @param discountList
+	 */
+	@Override
+	public boolean validateCartEligilityForCartCoupons(final List<DiscountModel> discountList)
+	{
+		boolean flag = true;
+
+		if (CollectionUtils.isNotEmpty(discountList))
+		{
+			for (final DiscountModel discount : discountList)
+			{
+				if ((discount instanceof PromotionVoucherModel) && (discount instanceof MplCartOfferVoucherModel))
+				{
+					flag = false;
+					break;
+				}
+			}
+		}
+
+
+		return flag;
+	}
+
 
 }

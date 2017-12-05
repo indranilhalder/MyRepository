@@ -58,7 +58,8 @@ public interface MplVoucherService
 	 * @param abstractOrderModel
 	 * @return List<AbstractOrderEntryModel>
 	 */
-	List<AbstractOrderEntryModel> getOrderEntryModelFromVouEntries(VoucherModel voucherModel, AbstractOrderModel abstractOrderModel);
+	List<AbstractOrderEntryModel> getOrderEntryModelFromVouEntries(VoucherModel voucherModel,
+			AbstractOrderModel abstractOrderModel);
 
 	/**
 	 * @param voucher
@@ -104,5 +105,26 @@ public interface MplVoucherService
 	 */
 	public VoucherInvalidationModel findVoucherInvalidation(final VoucherModel voucher, final UserModel user,
 			final OrderModel order);
+
+	/**
+	 * @param lastVoucher
+	 * @param cartModel
+	 * @param orderModel
+	 * @param applicableOrderEntryList
+	 * @return VoucherDiscountData
+	 * @throws EtailNonBusinessExceptions
+	 * @throws VoucherOperationException
+	 */
+	VoucherDiscountData checkCartAfterCartVoucherApply(VoucherModel lastVoucher, CartModel cartModel, OrderModel orderModel,
+			List<AbstractOrderEntryModel> applicableOrderEntryList) throws VoucherOperationException, EtailNonBusinessExceptions;
+
+	/**
+	 * @param voucher
+	 * @param abstractOrderModel
+	 * @param voucherCode
+	 * @param applicableOrderEntryList
+	 */
+	void setApportionedValueForCartVoucher(VoucherModel voucher, AbstractOrderModel abstractOrderModel, String voucherCode,
+			List<AbstractOrderEntryModel> applicableOrderEntryList);
 
 }

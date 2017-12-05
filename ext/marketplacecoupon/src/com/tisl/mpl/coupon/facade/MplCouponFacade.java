@@ -187,4 +187,17 @@ public interface MplCouponFacade
 	public String getCouponMessageInfo(final AbstractOrderModel orderModel);
 
 
+	/**
+	 * @param voucherCode
+	 * @param cartModel
+	 * @param orderModel
+	 * @return boolean
+	 * @throws VoucherOperationException
+	 * @throws JaloInvalidParameterException
+	 * @throws NumberFormatException
+	 */
+	boolean applyCartVoucher(String voucherCode, final CartModel cartModel, final OrderModel orderModel)
+			throws VoucherOperationException, EtailNonBusinessExceptions;
+
+
 }

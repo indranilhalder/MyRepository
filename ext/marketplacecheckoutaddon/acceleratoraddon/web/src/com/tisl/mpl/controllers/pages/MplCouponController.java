@@ -133,8 +133,8 @@ public class MplCouponController
 				//TPR-4461 MESSAGE FOR PAYMENT MODE RESTRICTION FOR COUPON ends here
 
 
-				final Map<String, Double> paymentInfo = getSessionService().getAttribute(
-						MarketplacecheckoutaddonConstants.PAYMENTMODE);
+				final Map<String, Double> paymentInfo = getSessionService()
+						.getAttribute(MarketplacecheckoutaddonConstants.PAYMENTMODE);
 
 				//Update paymentInfo in session
 				getMplCouponFacade().updatePaymentInfoSession(paymentInfo, cartModel);
@@ -235,8 +235,8 @@ public class MplCouponController
 				//TPR-4461 MESSAGE FOR PAYMENT MODE RESTRICTION FOR COUPON ends here
 
 
-				final Map<String, Double> paymentInfo = getSessionService().getAttribute(
-						MarketplacecheckoutaddonConstants.PAYMENTMODE);
+				final Map<String, Double> paymentInfo = getSessionService()
+						.getAttribute(MarketplacecheckoutaddonConstants.PAYMENTMODE);
 
 				//Update paymentInfo in session
 				getMplCouponFacade().updatePaymentInfoSession(paymentInfo, orderModel);
@@ -564,6 +564,56 @@ public class MplCouponController
 	}
 
 	//TPR-4461 ends here
+
+	/**
+	 * The method deals with application of Cart Offer Coupons
+	 *
+	 *
+	 * @param manuallyselectedvoucher
+	 * @param guid
+	 * @return data
+	 */
+
+	@RequestMapping(value = MarketplacecouponConstants.CARTCOUPONREDEEM, method = RequestMethod.POST)
+	@RequireHardLogIn
+	public @ResponseBody VoucherDiscountData redeemCartCoupon(final String manuallyselectedvoucher, final String guid)
+	{
+		final VoucherDiscountData data = new VoucherDiscountData();
+		final String couponCode = manuallyselectedvoucher;
+
+		OrderModel orderModel = null;
+		boolean couponRedStatus = false;
+
+		if (StringUtils.isNotEmpty(guid))
+		{
+			orderModel = getMplPaymentFacade().getOrderByGuid(guid);
+		}
+
+		if (orderModel == null)
+		{
+			final CartModel cartModel = getCartService().getSessionCart();
+
+			try
+			{
+				couponRedStatus = getMplCouponFacade().applyCartVoucher(couponCode, cartModel, null);
+
+				LOG.debug("Cart Coupon Redemption Status is >>>>" + couponRedStatus);
+
+				//data = getMplCouponFacade().calculateValues(null, cartModel, couponRedStatus, true);
+			}
+			catch (final VoucherOperationException e)
+			{
+				//
+			}
+		}
+		else
+		{
+			//Code For Order Model
+		}
+
+		return data;
+
+	}
 
 
 }

@@ -98,6 +98,8 @@ public final class MarketplacecouponConstants extends GeneratedMarketplacecoupon
 	public static final String CHANNELINVALID_MOBILE = "Channel_Not_Applicable_Mobile".intern();
 	public static final String CHANNELINVALID_CALLCENTRE = "Channel_Not_Applicable_CallCentre".intern();
 
+	public static final String CARTCOUPONREDEEM = "/usevoucher";
+
 	private MarketplacecouponConstants()
 	{
 		//empty to avoid instantiating this constant class
