@@ -590,6 +590,10 @@ ul.tabs{
 				vertical-align: middle;
                 margin-right: 6px;
                 
+                @include media-breakpoint-down(sm) {
+                    margin-right: 0px;
+                }
+                
                 &:last-child {
                      margin-right: 0px;
                 }
@@ -603,28 +607,34 @@ ul.tabs{
 				> a {
 					display: block;
 				}
-				&.header-search-link a:after, &.header-wishlist-link a, &.header-bag-link a {
-					width: 24px;
-					height: 24px;
+				&.header-search-link a:after, &.header-wishlist-link a, &.header-bag-link a {					
 					display: block;
 				}
+                &.header-account-link{
+                    width: 23px;
+                    height: 26px;
+                    margin-right: 30px;
+                }
 				&.header-search-link {
-					width: 20px;
+                    width: 33px;
+                    height: 30px;
 					overflow: hidden;
 					
-					@include media-breakpoint-up(md) {
+					/*@include media-breakpoint-up(md) {
 						width: auto;
-					}
+					}*/
 					a {
-						position: relative;
-						padding-left: 24px;
+						position: relative;						
 						text-decoration: none;
 						&:after{
 							position: absolute;
 							top: 0px;
 							left: 0;
 							content: "";
-							background: $Sprite_icon -1730px 0 no-repeat;
+							background: $Sprite_icon -1086px -90px no-repeat;
+                            width: 33px;
+                            height: 30px;
+                            
 						}
 					}
 				}
@@ -661,9 +671,9 @@ ul.tabs{
                     
                     &:after{
                         content: '';
-                        background: url(../images/luxuary_sprite.png) -1128px -87px no-repeat;
-                        left: 5px;
-                        top: 3px;                    
+                        background: url(../images/luxuary_sprite.png) -1126px -86px no-repeat;
+                        left: 7px;
+                        top: 4px;                   
                         width: 25px;
                         height: 31px;
                         display: block;
@@ -713,13 +723,13 @@ ul.tabs{
 				display:none;
 			}
 			li.wishlist{
-				background: $Sprite -36px -2px no-repeat;
+				background: $Sprite_icon -1000px -85px no-repeat;
 				width: 30px;
-                height: 20px;
+                height: 30px;
                 margin-right:10px;
                 a{
 	                width: 30px;
-	                height: 20px;
+	                height: 30px;
                 }
 					@include media-breakpoint-down(sm) {
 							display: none;
@@ -849,7 +859,10 @@ ul.tabs{
                     width: 15px;
                     height: 29px;
                     display: block;                    
-                }               
+                }
+                &:hover{
+                    margin-left: 2px;
+                }
             }
            
         }  
@@ -877,16 +890,16 @@ ul.tabs{
 .header .header-right>ul>li.header-account-link a:after,
 .header .header-right>ul>li.logged_in>a:after {
     position: absolute;
-    top: 10px;
+    top: 7px;
     left: 0;
     content: "";
-    background: url(../images/luxuary_sprite.png) -2846px -44px no-repeat;
-    height: 100%;
-    width: 100%
+    background: url(../images/luxuary_sprite.png) -1051px -88px no-repeat;
+    width: 23px;
+	height: 26px;
 }
 .header .header-right>ul>li.header-account-link a,
 .header .header-right>ul>li.logged_in a {
-    padding-left: 25px;
+   /* padding-left: 25px;*/
     text-decoration: none
 }
 .header .header-right>ul>li.logged_in a {
