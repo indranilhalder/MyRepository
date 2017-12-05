@@ -10,6 +10,7 @@
 
 <!-- <li class="transient-mini-bag"></li> -->
 				<li class="bag">
+				My bag
 				<a href="${cartUrl}" 
 					class="mini-cart-link myBag-sticky"
 					data-mini-cart-url="${rolloverPopupUrl}"

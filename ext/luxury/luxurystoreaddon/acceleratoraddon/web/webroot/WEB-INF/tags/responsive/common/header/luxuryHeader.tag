@@ -94,7 +94,7 @@
 				<ul class="list-unstyled">
 					<sec:authorize ifAnyGranted="ROLE_ANONYMOUS">
 						<li class="header-account-link">
-							<a class="toggle-link luxury-login hidden-xs" data-target-id="#mypopUpModal" href="javascript:void(0);" role="button" data-href="/luxurylogin/signin"> Sign in</a>
+							<a class="toggle-link luxury-login hidden-xs" data-target-id="#mypopUpModal" href="javascript:void(0);" role="button" data-href="/luxurylogin/signin"></a>
 						</li>
 					</sec:authorize>
 					
@@ -114,7 +114,7 @@
 							<span class="toggle-link luxury-login hidden-xs hide" data-target-id="#mypopUpModal" data-href="/luxurylogin/signin"></span>
 						</li>
 					</sec:authorize>				
-					<li class="header-search-link"><a href="#" id="header-search-menu" class="toggle-link search" data-target-id="#header-search">Search</a></li>
+					<li class="header-search-link"><a href="#" id="header-search-menu" class="toggle-link search" data-target-id="#header-search"></a></li>
 					<sec:authorize ifNotGranted="ROLE_ANONYMOUS">
 					<li class="header-wishlist-link hidden-xs hidden-sm hidden-lg hidden-md"><a href="#" class="wishlist"><cms:pageSlot position="WishList" var="WishList" limit="1">
 						<cms:component component="${WishList}" element="li"/>
