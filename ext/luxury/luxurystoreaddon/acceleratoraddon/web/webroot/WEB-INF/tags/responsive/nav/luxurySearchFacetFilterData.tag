@@ -12,16 +12,18 @@
 				${dropDownText} (${searchPageData.pagination.totalNumberOfResults})
 			</c:when>
 			<c:when test="${not empty searchPageData.results && searchPageData.pagination.totalNumberOfResults > 0}">
-				<spring:theme code="search.page.searchText"/>
+				<%-- <spring:theme code="search.page.searchText"/>
 				<span>"<spring:theme code="search.page.searchResultsCount" arguments="${searchPageData.pagination.totalNumberOfResults}"/>"</span> 
-				<spring:theme code="search.page.searchTextItem"/>
+				<spring:theme code="search.page.searchTextItem"/> --%>
 				<c:choose>
 					<c:when test="${not empty param.text}">
-						<span class="searchString">"${param.text}"</span>
+						"<span class="searchString">${param.text}</span> in <span class="searchString">${searchCategory}</span>"
 					</c:when>
 					<c:when test="${not empty searchPageData.freeTextSearch}">
-						<span class="searchString">					
-					"<spring:theme code="search.page.searchTextValue" arguments="${searchPageData.freeTextSearch}"/>"</span>
+						"<span class="searchString">					
+							<spring:theme code="search.page.searchTextValue" arguments="${searchPageData.freeTextSearch}"/>
+						</span>
+						in <span class="searchString">${searchCategory}</span>""
 					</c:when>
 					<c:otherwise>
 						<span class="searchString">"All"</span>
