@@ -127,4 +127,27 @@ public interface MplVoucherService
 	void setApportionedValueForCartVoucher(VoucherModel voucher, AbstractOrderModel abstractOrderModel, String voucherCode,
 			List<AbstractOrderEntryModel> applicableOrderEntryList);
 
+	/**
+	 * The Method is used to remove Cart level Coupon Details
+	 *
+	 * @param cartModel
+	 * @param orderModel
+	 * @param voucherCode
+	 * @param productPrice
+	 * @param applicableOrderEntryList
+	 * @param voucherList
+	 * @return VoucherDiscountData
+	 * @throws EtailNonBusinessExceptions
+	 * @throws VoucherOperationException
+	 */
+	VoucherDiscountData releaseCartVoucherAfterCheck(final CartModel cartModel, final OrderModel orderModel,
+			final String voucherCode, final Double productPrice, final List<AbstractOrderEntryModel> applicableOrderEntryList,
+			final List<DiscountModel> voucherList) throws VoucherOperationException, EtailNonBusinessExceptions;
+
+	/**
+	 * @param voucherCode
+	 * @param cartModel
+	 * @throws VoucherOperationException
+	 */
+	void releaseCartVoucher(String voucherCode, CartModel cartModel, OrderModel orderModel) throws VoucherOperationException;
 }
