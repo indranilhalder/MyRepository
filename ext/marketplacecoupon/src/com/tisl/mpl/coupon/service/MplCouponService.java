@@ -42,6 +42,14 @@ public interface MplCouponService
 	SearchPageData<VoucherModel> getClosedVoucher(final CustomerModel customer, PageableData pageableData);
 
 	/**
+	 * TPR-7486
+	 */
+	List<VoucherModel> getPaymentModerelatedVouchers();
+
+	Map<Long, Double> getPaymentModerelatedVoucherswithTotal();
+
+
+	/**
 	 * @param customer
 	 * @param pageableData
 	 * @return SearchPageData<VoucherInvalidationModel>

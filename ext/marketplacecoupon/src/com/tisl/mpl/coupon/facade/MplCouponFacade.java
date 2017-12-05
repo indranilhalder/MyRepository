@@ -140,6 +140,15 @@ public interface MplCouponFacade
 	 */
 	SearchPageData<VoucherDisplayData> getAllClosedCoupons(CustomerModel customer, PageableData pageableData);
 
+	/**
+	 *
+	 * TPR-7486
+	 */
+	List<VoucherModel> getAllPaymentModeSpecificOffers();
+
+	Map<Long, Double> getPaymentModerelatedVoucherswithTotal();
+
+
 
 	/**
 	 * @param customer
@@ -168,7 +177,7 @@ public interface MplCouponFacade
 
 	/**
 	 * Added for TPR-4461
-	 * 
+	 *
 	 * @param orderModel
 	 * @return String
 	 */

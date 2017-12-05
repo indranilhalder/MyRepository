@@ -68,6 +68,7 @@ import de.hybris.platform.storelocator.location.Location;
 import de.hybris.platform.storelocator.location.impl.LocationDTO;
 import de.hybris.platform.storelocator.location.impl.LocationDtoWrapper;
 import de.hybris.platform.storelocator.model.PointOfServiceModel;
+import de.hybris.platform.voucher.model.VoucherModel;
 import de.hybris.platform.wishlist2.model.Wishlist2EntryModel;
 import de.hybris.platform.wishlist2.model.Wishlist2Model;
 
@@ -172,6 +173,7 @@ import com.tisl.mpl.mplcommerceservices.service.data.InvReserForDeliverySlotsReq
 import com.tisl.mpl.mplcommerceservices.service.data.InvReserForDeliverySlotsResponseData;
 import com.tisl.mpl.pincode.facade.PincodeServiceFacade;
 import com.tisl.mpl.sellerinfo.facades.MplSellerInformationFacade;
+import com.tisl.mpl.storefront.constants.MessageConstants;
 import com.tisl.mpl.storefront.constants.ModelAttributetConstants;
 import com.tisl.mpl.storefront.constants.RequestMappingUrlConstants;
 import com.tisl.mpl.storefront.controllers.helpers.FrontEndErrorHelper;
@@ -2703,6 +2705,57 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 		return MarketplacecheckoutaddonControllerConstants.Views.Fragments.Checkout.Single.PickupLocationFragmentPanel;
 	}
 
+
+	/**
+	 * This method is called to show offers in payment page.
+	 *
+	 * @return if successful return list of pos for a product else null.
+	 * @throws CMSItemNotFoundException
+	 * @throws UnsupportedEncodingException
+	 */
+	@RequestMapping(value = MarketplacecheckoutaddonConstants.PAYMENTRELATEDOFFERS, method = RequestMethod.GET)
+	public String upDatePincodeServicabilityCheck(final Model model) throws CMSItemNotFoundException, UnsupportedEncodingException
+	{
+
+		try
+		{
+			final List<VoucherModel> allOffersData = mplCouponFacade.getAllPaymentModeSpecificOffers();
+			final Map<Long, Double> allOffersTotalData = mplCouponFacade.getPaymentModerelatedVoucherswithTotal();
+
+
+
+			/*
+			 * for (final Map<VoucherModel, String> offer : allOffersData) { for (final Map.Entry<VoucherModel, String>
+			 * entry : offer.entrySet()) {
+			 * 
+			 * System.out.println(entry.getKey().getDescription()); System.out.println(entry.getValue()); final } }
+			 */
+
+
+
+
+
+
+			model.addAttribute("offerPageData", allOffersData);
+			model.addAttribute("offerPageDataTotal", allOffersTotalData);
+			model.addAttribute("total_offerPage", Integer.valueOf(allOffersData.size()));
+			return MarketplacecheckoutaddonControllerConstants.Views.Fragments.Checkout.Single.PaymentPageOfferPanel;
+		}
+		catch (final EtailBusinessExceptions e)
+		{
+			ExceptionUtil.etailBusinessExceptionHandler(e, null);
+			return frontEndErrorHelper.callBusinessError(model, MessageConstants.SYSTEM_ERROR_PAGE_BUSINESS);
+		}
+		catch (final EtailNonBusinessExceptions e)
+		{
+			ExceptionUtil.etailNonBusinessExceptionHandler(e);
+			return frontEndErrorHelper.callNonBusinessError(model, MessageConstants.SYSTEM_ERROR_PAGE_NON_BUSINESS);
+		}
+
+
+
+	}
+
 	/**
 	 * This method gets called when the "Proceed" button is clicked. It sets the selected delivery mode.
 	 *
@@ -4963,7 +5016,7 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 
 	/*
 	 * @Description adding wishlist popup in cart page
-	 * 
+	 *
 	 * @param String productCode,String wishName, model
 	 */
 
@@ -5021,7 +5074,7 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 
 	/*
 	 * @Description showing wishlist popup in cart page
-	 * 
+	 *
 	 * @param String productCode, model
 	 */
 	@ResponseBody

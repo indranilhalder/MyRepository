@@ -33,6 +33,13 @@ public interface MplCouponDao
 	 */
 	SearchPageData<VoucherModel> findClosedVoucher(CustomerModel customer, PageableData pageableData);
 
+	/**
+	 * TPR-7486
+	 */
+	List<VoucherModel> getPaymentModerelatedVouchers();
+
+	Map<Long, Double> getPaymentModerelatedVoucherswithTotal();
+
 
 	/**
 	 * @param customer

@@ -70,6 +70,26 @@ public class MplCouponServiceImpl implements MplCouponService
 	}
 
 	/**
+	 * This method returns all active vouchers/offer in payment page
+	 *
+	 * @param customer
+	 * @param pageableData
+	 * @return SearchPageData<VoucherModel>
+	 *
+	 */
+	@Override
+	public List<VoucherModel> getPaymentModerelatedVouchers()
+	{
+		return getMplCouponDao().getPaymentModerelatedVouchers();
+	}
+
+	@Override
+	public Map<Long, Double> getPaymentModerelatedVoucherswithTotal()
+	{
+		return getMplCouponDao().getPaymentModerelatedVoucherswithTotal();
+	}
+
+	/**
 	 * This method returns all voucher invalidations
 	 *
 	 * @param customer

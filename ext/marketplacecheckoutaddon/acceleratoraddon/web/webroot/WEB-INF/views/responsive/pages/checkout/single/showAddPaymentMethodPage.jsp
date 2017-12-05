@@ -40,13 +40,15 @@
 		<spring:theme code="checkout.multi.secure.checkout"/>
 	</div>
 	<div class="checkout-content checkout-payment cart checkout wrapper">
+	  <div class="offers_section_paymentpage" style="display:none" style="padding-left: 8px; margin-top: 17px;"></div>
 				<script>
 				//Moving dom ready code to a function for one page checkout as payment page loads when single page loads hence this call should be made when the user selects payment accordion
     				//$(document).ready(function(){
     				function callOnReady(){
     					<%-- var updateItHereLink = "<%=request.getParameter("Id")%>";  --%>
     					var updateItHereLink=window.location.href;
-    	
+                      	//TPR-7486
+    					ACC.singlePageCheckout.populatePaymentSpecificOffers();
     					
     					if(updateItHereLink.indexOf("updateItHereLink")>=0)
     					{

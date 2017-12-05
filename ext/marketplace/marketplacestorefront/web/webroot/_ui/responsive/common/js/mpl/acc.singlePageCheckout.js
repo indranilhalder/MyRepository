@@ -3199,7 +3199,67 @@ ACC.singlePageCheckout = {
 				savedDebitCardRadioChange(radioId);
 			}
 		}
-	}
+	},
+	populatePaymentSpecificOffers:function(){
+
+		//ACC.singlePageCheckout.showAjaxLoader();
+		var url=ACC.config.encodedContextPath + "/checkout/single/paymentRelatedOffers";
+		var xhrResponse=ACC.singlePageCheckout.ajaxRequest(url,"GET",data,false);
+        
+        xhrResponse.fail(function(xhr, textStatus, errorThrown) {
+			console.log("ERROR:"+textStatus + ': ' + errorThrown);
+		});
+        
+        xhrResponse.done(function(data, textStatus, jqXHR) {
+      
+            	$('.offers_section_paymentpage').css("display","block");
+            	$('.offers_section_paymentpage').html(data);
+            	
+		}); 
+        
+        xhrResponse.always(function(){
+        	//ACC.singlePageCheckout.hideAjaxLoader();
+		});
+	
+	},
+	chooseOffer:function(offerID){
+		//alert(offerID);
+		//$('input[name=offer_name]:checked+label::before').css("background", "black");
+		ACC.singlePageCheckout.showAjaxLoader();
+		var url=ACC.config.encodedContextPath + "/checkout/multi/coupon/usevoucher";
+		var guid = $('#guid').val();
+		var data= {manuallyselectedvoucher:offerID,guid:guid};
+		var xhrResponse=ACC.singlePageCheckout.ajaxRequest(url,"POST",data,false);
+        
+        xhrResponse.fail(function(xhr, textStatus, errorThrown) {
+			console.log("ERROR:"+textStatus + ': ' + errorThrown);
+		});
+        
+        xhrResponse.done(function(data, textStatus, jqXHR) {
+        	$("#paymentoffersPopup").modal('hide');          	      	
+            	
+		}); 
+        
+        xhrResponse.always(function(){
+        	ACC.singlePageCheckout.hideAjaxLoader();
+		});
+		
+	},
+	
+	showAllOffers:function(){
+		//$(".offer_container_poppup").show();
+		ACC.singlePageCheckout.paymentOffersPopup($(".offer_container_poppup").html());
+		$(".offer_container_poppup").remove();
+	},	
+	paymentOffersPopup:function(data){		
+     	   $("body").append('<div class="modal fade" id="paymentoffersPopup"><div class="content offer-content" style="padding: 40px;min-width: 45%;">'+data+'<button class="close" data-dismiss="modal" style="border:0px !important;margin: 0px !important;"></button></div><div class="overlay" data-dismiss="modal"></div></div>');
+
+		   $("#paymentoffersPopup").modal('show');
+	} 
+	
+	
+	
+	
 /****************MOBILE ENDS HERE************************/
 }
 //Calls to be made on dom ready.

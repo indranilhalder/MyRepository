@@ -893,6 +893,28 @@ public class MplCouponFacadeImpl implements MplCouponFacade
 		return convertPageData(getMplCouponService().getClosedVoucher(customer, pageableData), getVoucherDisplayConverter());
 	}
 
+
+	/**
+	 * This method returns all offers
+	 *
+	 * @param customer
+	 * @param pageableData
+	 * @return SearchPageData<VoucherDisplayData>
+	 *
+	 */
+	@Override
+	public List<VoucherModel> getAllPaymentModeSpecificOffers()
+	{
+		return getMplCouponService().getPaymentModerelatedVouchers();
+
+	}
+
+	@Override
+	public Map<Long, Double> getPaymentModerelatedVoucherswithTotal()
+	{
+		return getMplCouponService().getPaymentModerelatedVoucherswithTotal();
+	}
+
 	/**
 	 * This method returns all redeemed voucher data //TODO modify description
 	 *
