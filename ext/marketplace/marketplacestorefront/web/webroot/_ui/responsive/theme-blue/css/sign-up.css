@@ -1240,3 +1240,82 @@ body.template-pages-LoginPageTemplate .sign-in.tab-view .form-group #password_lo
 }
 }
 /* TPR-6399 end */
+/* Update Password */
+.account-navigation {
+    margin-bottom: 10px;
+}
+.updatePassword-wrapper {
+    border: 1px solid #dfd1d5;
+    width: 33%;
+    margin: 0 auto;
+}
+.updatePassword {
+    padding: 10px;
+    text-align: left;
+}
+.updatePassword h1, body .account .right-account .updatePassword h1 {
+    font-size: 18px;
+    font-weight: 500;
+    letter-spacing: .5px;
+    margin: 0 0 10px 0;
+}
+.updatePassword p {
+    font-size: 10px;
+    font-weight: 500;
+    margin-bottom: 10px;
+}
+.updatePassword .form-group {
+    overflow: hidden;
+}
+.updatePasswordForm label {
+    display: block;
+    font-size: 10px;
+    font-weight: 600;
+    margin-bottom: 5px;
+}
+.updatePasswordForm input[type="password"] {
+    border: 1px solid#dfd1d5;
+    height: 30px;
+    line-height: 26px;
+    padding-left: 10px;
+    margin-bottom: 10px;
+}
+.updatePassword input, body .account .right-account .updatePassword form input {
+    width: 80% !important;
+    border: 1px solid #dfd1d5 !important;
+}
+.help-block {
+    margin-top: 10px;
+}
+.help-block#updatePwd-pwd_minchar, .help-block#profile-newPassword_minchar {
+    display: none;
+}
+.updatePassword .help-block {
+    font-size: 10px;
+    font-weight: 500;
+    padding-bottom: 2px;
+}
+.updatePassword div#updatePwd-pwd_bar, .updatePassword div#profile-newPassword_bar {
+    margin-top: 5px;
+}
+.form_field-input #updatePwd-checkPwd {
+    border: 1px solid #ccc;
+    width: 50%;
+    height: 30px;
+    margin-bottom: 40px;
+}
+.updatePassword #frmUpdatePassword .blue {
+    margin-top: -30px;
+    cursor: pointer;
+    background-color: #a9143c;
+    border: 0;
+    height: 30px;
+    line-height: 24px;
+    font-size: 10px !important;
+    padding: 0 20px;
+    letter-spacing: 1px;
+    font-weight: bold;
+    -webkit-appearance: none;
+    min-width: 200px;
+    color: #fff;
+}
