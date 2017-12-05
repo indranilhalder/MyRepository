@@ -514,7 +514,7 @@ TATA.CommonFunctions = {
         });
     },
     
-    setHeader: function(data){		
+    /*setHeader: function(data){		
         if(data.cartcount==0){
             $("span.js-mini-cart-count,span.js-mini-cart-count-hover, span.responsive-bag-count").hide();
         }
@@ -524,7 +524,7 @@ TATA.CommonFunctions = {
         	$("span.js-mini-cart-count,span.js-mini-cart-count-hover,span.responsive-bag-count").html(data.cartcount);
         }
      
-	},
+	},*/
 
     urlToProductCode : function(productURL){
         var n = productURL.lastIndexOf("-");

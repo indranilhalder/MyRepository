@@ -17288,10 +17288,6 @@ TATA.CommonFunctions = {
             }
         });
     },
-    setHeader: function(data) {
-        0 == data.cartcount ? $("span.js-mini-cart-count,span.js-mini-cart-count-hover, span.responsive-bag-count").hide() : ($("span.js-mini-cart-count,span.js-mini-cart-count-hover,span.responsive-bag-count").show(), 
-        $("span.js-mini-cart-count,span.js-mini-cart-count-hover,span.responsive-bag-count").html(data.cartcount));
-    },
     urlToProductCode: function(productURL) {
         var n = productURL.lastIndexOf("-");
         return productURL.substring(n + 1, productURL.length).toUpperCase();
