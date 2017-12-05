@@ -733,8 +733,17 @@ TATA.CommonFunctions = {
                 $(this).find(".mini-bag").hide();
             });
         },
+        Headermegamenutab: function(){
+            $('ul.tabs li').hover(function(){
+                var tab_id = $(this).attr('data-tab');
+                $('ul.tabs li').removeClass('current');
+                $('.tab-content').removeClass('current');
+                $(this).addClass('current');
+                $("#"+tab_id).addClass('current');
+            })
+        },
         init: function() {
-            this.MobileMenu(), this.HeaderMinicart();
+            this.MobileMenu(), this.HeaderMinicart(), this.Headermegamenutab();
         }
     },
 

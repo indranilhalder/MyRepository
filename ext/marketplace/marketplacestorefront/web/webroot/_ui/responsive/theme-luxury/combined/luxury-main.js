@@ -1623,22 +1623,27 @@ function getBuyBoxDataAjax(productCode, variantCodesJson) {
                 $(".primary_promo_title").hide(), $(".primary_promo_img").hide())));
                 var allStockZero = data.allOOStock, sellerName = data.sellerName, sellerID = data.sellerId, oosMicro = data.isOOsForMicro;
                 $("#sellerNameId").html(sellerName), $("#sellerSelId").val(sellerID), data.othersSellersCount > 0 && 1 == oosMicro ? ($("#addToCartButton").hide(), 
-                $("#buyNowButton").hide(), $("#outOfStockId").show(),$('.addtocart-component').removeClass("col-md-6"),$('.addtocart-component').addClass("col-md-12"), $("#allVariantOutOfStock").show(), 
+                $("#buyNowButton").hide(), $("#outOfStockId").show(), $(".addtocart-component").removeClass("col-md-6"), 
+                $(".addtocart-component").addClass("col-md-12"), $("#allVariantOutOfStock").show(), 
                 $("#otherSellerInfoId").show(), $("#otherSellersId").html(data.othersSellersCount), 
                 $("#otherSellerLinkId").show()) : isOOS() && data.othersSellersCount > 0 ? ($("#addToCartButton").hide(), 
-                $("#outOfStockId").show(), $('.addtocart-component').removeClass("col-md-6"),$('.addtocart-component').addClass("col-md-12"),$("#buyNowButton").hide(), $("#otherSellerInfoId").hide(), 
+                $("#outOfStockId").show(), $("#buyNowButton").hide(), $(".addtocart-component").removeClass("col-md-6"), 
+                $(".addtocart-component").addClass("col-md-12"), $("#otherSellerInfoId").hide(), 
                 $("#otherSellerLinkId").show(), $("#pdpPincodeCheck").hide(), $("#pin").attr("disabled", !0), 
                 $("#pdpPincodeCheckDList").show(), $("#buyNowButton").attr("disabled", !0), $("#allVariantOutOfStock").show()) : isOOS() && 0 == data.othersSellersCount ? ($("#addToCartButton").hide(), 
-                $("#buyNowButton").hide(), $("#outOfStockId").show(),$('.addtocart-component').removeClass("col-md-6"),$('.addtocart-component').addClass("col-md-12"), $("#otherSellerInfoId").hide(), 
+                $("#buyNowButton").hide(), $("#outOfStockId").show(), $(".addtocart-component").removeClass("col-md-6"), 
+                $(".addtocart-component").addClass("col-md-12"), $("#otherSellerInfoId").hide(), 
                 $("#otherSellerLinkId").hide(), $("#pdpPincodeCheck").hide(), $("#pin").attr("disabled", !0), 
                 $("#pdpPincodeCheckDList").show(), $("#buyNowButton").attr("disabled", !0), $("#allVariantOutOfStock").show()) : "Y" == allStockZero && data.othersSellersCount > 0 && $("#variant li").length == $("#variant li.strike").length ? ($("#addToCartButton").hide(), 
-                $("#outOfStockId").show(), $('.addtocart-component').removeClass("col-md-6"),$('.addtocart-component').addClass("col-md-12"),$("#allVariantOutOfStock").show(), $("#buyNowButton").hide(), 
+                $("#outOfStockId").show(), $("#allVariantOutOfStock").show(), $("#buyNowButton").hide(), 
+                $(".addtocart-component").removeClass("col-md-6"), $(".addtocart-component").addClass("col-md-12"), 
                 $("#otherSellerInfoId").hide(), $("#otherSellerLinkId").show(), $("#pdpPincodeCheck").hide(), 
                 $("#pin").attr("disabled", !0), $("#pdpPincodeCheckDList").show(), $("#buyNowButton").attr("disabled", !0), 
                 $("#variant li a").each(function() {
                     $(this).removeAttr("href"), $(this).parent().addClass("strike");
                 })) : "Y" == allStockZero && 0 == data.othersSellersCount && $("#variant li").length == $("#variant li.strike").length ? ($("#addToCartButton").hide(), 
-                $("#buyNowButton").hide(), $("#outOfStockId").show(),$('.addtocart-component').removeClass("col-md-6"),$('.addtocart-component').addClass("col-md-12"), $("#allVariantOutOfStock").show(), 
+                $("#buyNowButton").hide(), $("#outOfStockId").show(), $(".addtocart-component").removeClass("col-md-6"), 
+                $(".addtocart-component").addClass("col-md-12"), $("#allVariantOutOfStock").show(), 
                 $("#variant li a").each(function() {
                     $(this).removeAttr("href"), $(this).parent().addClass("strike");
                 }), $("#otherSellerInfoId").hide(), $("#otherSellerLinkId").hide(), $("#pdpPincodeCheck").hide(), 
@@ -16868,7 +16873,7 @@ if (function(a, b) {
                 return this.optional(b) || /^[a-zA-Z0-9.!#$%&'*+\/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/.test(a);
             },
             url: function(a, b) {
-                return this.optional(b) || /^(?:(?:(?:https?|ftp):)?\/\/)(?:\S+(?::\S*)?@)?(?:(?!(?:10|127)(?:\.\d{1,3}){3})(?!(?:169\.254|192\.168)(?:\.\d{1,3}){2})(?!172\.(?:1[6-9]|2\d|3[0-1])(?:\.\d{1,3}){2})(?:[1-9]\d?|1\d\d|2[01]\d|22[0-3])(?:\.(?:1?\d{1,2}|2[0-4]\d|25[0-5])){2}(?:\.(?:[1-9]\d?|1\d\d|2[0-4]\d|25[0-4]))|(?:(?:[a-z\u00a1-\uffff0-9]-*)*[a-z\u00a1-\uffff0-9]+)(?:\.(?:[a-z\u00a1-\uffff0-9]-*)*[a-z\u00a1-\uffff0-9]+)*(?:\.(?:[a-z\u00a1-\uffff]{2,})).?)(?::\d{2,5})?(?:[/?#]\S*)?$/i.test(a);
+                return this.optional(b) || /^(?:(?:(?:https?|ftp):)?\/\/)(?:\S+(?::\S*)?@)?(?:(?!(?:10|127)(?:\.\d{1,3}){3})(?!(?:169\.254|192\.168)(?:\.\d{1,3}){2})(?!172\.(?:1[6-9]|2\d|3[0-1])(?:\.\d{1,3}){2})(?:[1-9]\d?|1\d\d|2[01]\d|22[0-3])(?:\.(?:1?\d{1,2}|2[0-4]\d|25[0-5])){2}(?:\.(?:[1-9]\d?|1\d\d|2[0-4]\d|25[0-4]))|(?:(?:[a-z\u00a1-\uffff0-9]-*)*[a-z\u00a1-\uffff0-9]+)(?:\.(?:[a-z\u00a1-\uffff0-9]-*)*[a-z\u00a1-\uffff0-9]+)*(?:\.(?:[a-z\u00a1-\uffff]{2,})).?)(?::\d{2,5})?(?:[\/?#]\S*)?$/i.test(a);
             },
             date: function(a, b) {
                 return this.optional(b) || !/Invalid|NaN/.test(new Date(a).toString());
@@ -17400,8 +17405,15 @@ TATA.CommonFunctions = {
                 $(this).find(".mini-bag").hide();
             });
         },
+        Headermegamenutab: function() {
+            $("ul.tabs li").hover(function() {
+                var tab_id = $(this).attr("data-tab");
+                $("ul.tabs li").removeClass("current"), $(".tab-content").removeClass("current"), 
+                $(this).addClass("current"), $("#" + tab_id).addClass("current");
+            });
+        },
         init: function() {
-            this.MobileMenu(), this.HeaderMinicart();
+            this.MobileMenu(), this.HeaderMinicart(), this.Headermegamenutab();
         }
     },
     Footer: function() {
@@ -17505,7 +17517,7 @@ TATA.CommonFunctions = {
                 pageQuery = url + TATA.Pages.PLP.addSortParameter()), "" != pageQuery && /page-[0-9]+/.test(pageQuery) ? (pageQueryString = pageQuery.match(/page-[0-9]+/), 
                 prevPageNoString = pageQueryString[0].split("-"), prevPageNo = parseInt(prevPageNoString[1]), 
                 currentPageNo = prevPageNo + 1, ajaxUrl = pageQuery.replace(/page-[0-9]+/, "page-" + currentPageNo)) : (currentPageNo++, 
-                ajaxUrl = pathName.replace(/[/]$/, "") + "/page-" + currentPageNo + "?" + pageQuery), 
+                ajaxUrl = pathName.replace(/[\/]$/, "") + "/page-" + currentPageNo + "?" + pageQuery), 
                 currentPageNo <= totalNoOfPages && (TATA.Pages.PLP.performLoadMore(ajaxUrl), currentPageNo == totalNoOfPages && $(this).hide());
             });
         },
@@ -17668,19 +17680,7 @@ TATA.CommonFunctions = {
     LANDING: {
         owlCarosel_customize: function() {
             $(window).width() <= 767 && $(".sort-by-fature .selectboxit-text").html("SORT"), 
-            $(".luxgender-carousel .js-owl-carousel").owlCarousel({
-                dots: !0,
-                loop: !0,
-                merge: !0,
-                responsive: {
-                    0: {
-                        items: 1
-                    },
-                    768: {
-                        items: 4
-                    }
-                }
-            }), $(".lux-main-banner-slider .electronic-rotatingImage").owlCarousel({
+            $(".lux-main-banner-slider .electronic-rotatingImage").owlCarousel({
                 dots: !0,
                 loop: !0,
                 items: 1,
@@ -18056,6 +18056,12 @@ $(document).ready(function() {
     }), $("#apply_filter").click(function() {
         $(".plp-leftbar-close a").trigger("click");
     }), checkforPriceFilter();
+}), $(document).ready(function() {
+    $("body.page-cartPage #checkout-id a").removeClass("checkout-disabled"), $("body.page-cartPage #checkout-id a").click(function(event) {
+        if ("" === $("#defaultPinCodeIds").val() || 0 == $("#defaultPinCodeIds").val().length) return $("#defaultPinCodeIds").focus(), 
+        $("#defaultPinCodeIds").css("border", "1px solid red"), event.preventDefault(), 
+        !1;
+    });
 }), $(document).ready(function() {
     null != document.getElementById("check_MyRewards") && void 0 != document.getElementById("check_MyRewards") && (document.getElementById("check_MyRewards").checked = !0);
 }), $(document).ready(function() {
@@ -19252,16 +19258,3 @@ $("#popUpExpAddress").on("hidden.bs.modal", function() {
 }), $(".card_exp_month, .card_exp_year").on("change", function() {
     $(this).css("color", "#000");
 });
-
- $(document).ready(function() {
-        $("body.page-cartPage #checkout-id a").removeClass("checkout-disabled");
-        $("body.page-cartPage #checkout-id a").click(function (event) {
-            if ($("#defaultPinCodeIds").val() === '' || $("#defaultPinCodeIds").val().length == 0) {
-                $("#defaultPinCodeIds").focus();
-                $("#defaultPinCodeIds").css('border', '1px solid red');
-                event.preventDefault();
-                return false;
-            }
-        })
-    });
-
