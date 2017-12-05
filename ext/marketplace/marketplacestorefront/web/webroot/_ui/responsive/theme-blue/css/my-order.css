@@ -1378,7 +1378,10 @@ body .right-account .order-history .cancellation-request-block.success .return-f
     color: #a9143c;
     font-weight: 500;
 }
-
+body .right-account .order-history .cancellation-request-block.success .return-form .container .questions span {
+	font-weight: 500;
+    font-size: 14px;	
+}
 @media (max-width: 790px){
 	body .account .right-account .order-history .top .pagination.mobile {
     top: 26px;
@@ -1388,6 +1391,16 @@ body .right-account .order-history .cancellation-request-block.success .return-f
 	}
 	body .right-account .order-history .cancellation-request-block.success .return-form .container .questions span {
     font-size: 18px;
+	}
+	body .right-account .order-history .cancellation-request-block h2 {
+		text-align: center;
+	}
+	body .right-account .order-history .cancellation-request-block .return-form .buttons {
+		text-align: center;
+    	padding: 0 35px 20px;
+	}
+	body .right-account .order-history .cancellation-request-block .return-form .buttons button {
+		width: 100%;
 	}
 }
 @media (min-width: 791px){
