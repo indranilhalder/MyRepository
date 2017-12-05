@@ -646,7 +646,8 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 								}
 
 								final MplZoneDeliveryModeValueModel deliveryModel = getMplDeliveryCostService().getDeliveryCost(
-										deliveryMode, MarketplacecommerceservicesConstants.INR, sellerInformationData.getUssid());
+										deliveryMode, MarketplacecommerceservicesConstants.INR, sellerInformationData.getUssid(),
+										deliveryData.getFulfilmentType());
 								DeliveryModeModel deliveryModeModel = null;
 								if (null != deliveryModel)
 								{
@@ -6748,7 +6749,8 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 								{
 
 									final MplZoneDeliveryModeValueModel deliveryModel = getMplDeliveryCostService().getDeliveryCost(
-											deliveryMode, MarketplacecommerceservicesConstants.INR, sellerInformationData.getUssid());
+											deliveryMode, MarketplacecommerceservicesConstants.INR, sellerInformationData.getUssid(),
+											deliveryData.getFulfilmentType());
 
 									if (deliveryModel != null && deliveryModel.getValue() != null
 											&& deliveryModel.getDeliveryMode() != null)

@@ -7280,6 +7280,12 @@
 						<modifiers read="true" write="true" search="true"
 							optional="false" initial="true" />
 					</attribute>
+					<attribute qualifier="chargeEnabled" type="java.lang.String"
+						autocreate="true" generate="true">
+						<persistence type="property" />
+						<modifiers read="true" write="true" search="true"
+							optional="true"/>
+					</attribute>
 					<attribute type="deliveryFulfillModesEnum" qualifier="deliveryFulfillModes">
 						<description>deliveryFulfillModes</description>
 						<modifiers read="true" write="true" optional="true"
@@ -7296,6 +7302,11 @@
 						<key attribute="deliveryMode" />
 						<key attribute="sellerArticleSKU" />
 						<key attribute="currency" />
+					</index>
+					<index name="MPLZONEENTRYVALIDX" unique="true">
+						<key attribute="deliveryMode" />
+						<key attribute="sellerArticleSKU" />
+						<key attribute="deliveryFulfillModes" />
 					</index>
 				</indexes>
 			</itemtype>
