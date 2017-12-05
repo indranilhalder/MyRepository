@@ -5,6 +5,7 @@ package com.tisl.mpl.coupon.service;
 
 import de.hybris.platform.commerceservices.search.pagedata.PageableData;
 import de.hybris.platform.commerceservices.search.pagedata.SearchPageData;
+import de.hybris.platform.core.model.order.price.DiscountModel;
 import de.hybris.platform.core.model.user.CustomerModel;
 import de.hybris.platform.voucher.model.VoucherInvalidationModel;
 import de.hybris.platform.voucher.model.VoucherModel;
@@ -61,5 +62,8 @@ public interface MplCouponService
 	 * @return Map<String, Double>
 	 */
 	Map<String, Double> getAllVoucherInvalidations(CustomerModel customer);
+
+
+	boolean validateCartEligilityForCoupons(List<DiscountModel> discountList);
 
 }

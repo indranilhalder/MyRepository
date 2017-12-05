@@ -5471,6 +5471,7 @@ function applyPromotion_bck(bankName,binValue,formSubmit,isNewCard)
 }
 
 
+
 function submitNBForm(paymentInfo){
 	$("#netbankingIssueError").css("display","none");
 	var staticHost = $('#staticHost').val();
@@ -10341,6 +10342,145 @@ function getlistofEMIbanks(){
 		}
 	});
 }
+
+//recalculate cart after review page
+
+function recalculateCart() {
+
+	var staticHost=$('#staticHost').val();
+	var paymentMode=$("#paymentMode").val();
+	$("#promotionApplied,#promotionMessage").css("display","none");
+	var guid=$("#guid").val();
+	$.ajax({
+		url: ACC.config.encodedContextPath + "/checkout/multi/payment-method/applyPromotions",
+		data: { 'paymentMode' : paymentMode , 'bankName' : "" , 'guid' : guid , 'isNewCard' : false},
+		type: "GET",
+		cache: false,
+		dataType:'json',
+		success : function(response) {
+	        checkTamperingPlaceOrder=false;//TISUAT-6107 fix		
+			if(null!=response.promoExpiryMsg && response.promoExpiryMsg=="redirect")
+			{
+				$(location).attr('href',ACC.config.encodedContextPath+"/cart"); // TISEE-510
+			}
+			else
+			{
+				var totalDiscount=0;
+				var productDiscount="";
+				var orderDiscount="";
+				$("#promotionMessage").empty();
+				var total=response.totalPrice.formattedValue;
+				document.getElementById("totalWithConvField").innerHTML=response.totalPrice.formattedValue;
+				if(document.getElementById("outstanding-amount")!=null)
+				document.getElementById("outstanding-amount").innerHTML=response.totalPrice.formattedValue;
+				document.getElementById("outstanding-amount-mobile").innerHTML=response.totalPrice.formattedValue;
+				$("#cartPromotionApplied").css("display","none");
+				$("#codAmount").text(response.totalPrice.formattedValue);
+				//TISTRT-1605 //TISBBC-35
+				if(null!= response.deliveryCost && undefined!= response.deliveryCost && undefined!=response.deliveryCost.value && null!=response.deliveryCost.value && parseFloat(response.deliveryCost.value) > 0){
+					$("#deliveryCostSpanId").html(response.deliveryCost.formattedValue);
+		 		}else{
+		 			$("#deliveryCostSpanId").html("Free");
+		 		}
+				// Coupon
+				if(null!=response.voucherDiscount && null!=response.voucherDiscount.couponDiscount)
+				{
+					if(response.voucherDiscount.couponDiscount.doubleValue<=0)
+					{
+						//TPR-4460 changes -- invalidChannelError id added
+		 				$("#couponApplied, #priceCouponError, #emptyCouponError, #appliedCouponError, #invalidCouponError," +
+		 						" #expiredCouponError, #issueCouponError, #freebieCouponError ,#invalidChannelError").css("display","none");
+		 				document.getElementById("couponValue").innerHTML=response.voucherDiscount.couponDiscount.formattedValue;
+		 				$('#couponFieldId').attr('readonly', false);
+		 				var selection = $("#voucherDisplaySelection").val();
+		 				$("#couponFieldId").val(selection);
+		 				$("#couponMessage").html("Oh no! This coupon code can't be used anymore. Please try another.");	//TPR-815
+		 				$('#couponMessage').show();
+		 				$('#couponMessage').delay(5000).fadeOut('slow');
+		 				setTimeout(function(){ $("#couponMessage").html(""); }, 10000); 	
+					}
+					else
+					{
+						$("#couponApplied").css("display","block");
+		 				document.getElementById("couponValue").innerHTML=response.voucherDiscount.couponDiscount.formattedValue;
+		 				// $("#couponFieldId").attr('disabled','disabled');
+		 				if($("#couponFieldId").val()=="")
+		 				{
+		 					$("#couponFieldId").val(response.voucherDiscount.voucherCode);
+		 				}
+		 				$('#couponFieldId').attr('readonly', true);
+		 				$("#couponMessage").html("Coupon application may be changed based on promotion application");
+		 				$('#couponMessage').show();
+		 				$('#couponMessage').delay(5000).fadeOut('slow');
+		 				setTimeout(function(){ $("#couponMessage").html(""); }, 10000);
+					}
+				}
+				if(response.mplPromo==null || response.mplPromo==[])
+				{
+					$("#promotionApplied,#promotionMessage").css("display","none");
+				}
+				else
+				{
+					for (var x = 0; x < response.mplPromo.length; x++)
+					{
+						if(!(response.mplPromo[x]==null || response.mplPromo[x]=='null' || response.mplPromo[x]=='undefined')) //TISSIT-2046 TISBM-4449
+						{
+							var promoIdentifier=response.mplPromo[x].promoTypeIdentifier;
+							if(promoIdentifier=="PotentialPromotion")
+							{
+								var spanTag = document.createElement("p");
+								spanTag.id = "p"+x;	
+								$("#promotionApplied").css("display","none");
+								$("#promotionMessage").css("display","block");
+								spanTag.innerHTML=response.mplPromo[x].potentialPromotion.promoMessage;
+								$("#promotionMessage").append(spanTag);
+								$("spanTag.id").append('</br>');
+							}
+						}
+					}
+					
+					//UF-260
+					if(response.totalDiscntIncMrp.value != 0){
+						$("#promotionApplied").css("display","block");
+						document.getElementById("promotion").innerHTML=response.totalDiscntIncMrp.formattedValue;
+					}
+					
+					// TISST-7955
+					var ussidPriceJson = JSON.parse(response.ussidPriceDetails);
+					for ( var key in ussidPriceJson) 
+					{
+						var ussid=key;
+						var ussidPrice= ussidPriceJson[key];
+						$("#"+ussid+"_productPriceId").html(ussidPrice);
+					}
+				}
+				var cartTotal=response.totalPrice.value;
+				
+				/*Added for mRupee wallet*/
+				if(cartTotal >= 20000){
+					$("#mRupeeInfo").css("display","block");			
+				}
+				//Ends here
+				
+				if(null!=response.promoExpiryMsg && response.promoExpiryMsg=="redirect_to_payment")
+				{
+					document.getElementById("juspayErrorMsg").innerHTML="Existing Promotion has expired";
+					$("#juspayconnErrorDiv").css("display","block");
+					$("#no-click,.loaderDiv").remove();
+				}
+			
+
+			}
+
+		},
+		error : function(resp) {
+          
+		}
+	});
+
+}
+
+
 function loadTermsAsperEmiBank()
 {
 	var selectedBank=$("select[id='bankNameForEMI']").find('option:selected').text();
