@@ -38,6 +38,7 @@ ul.tabs{
         text-align: left;
         text-transform: uppercase;
         opacity: 0.6;
+        font-family: Lato;
         
         &.current{
             color: #2d2d2d; 
@@ -75,6 +76,9 @@ ul.tabs{
             
             
         }
+        /*&:hover{
+            color: red;
+        }*/
     }
 }
 
@@ -315,6 +319,7 @@ ul.tabs{
                 li{
                     flex-basis: 15%;
                     text-align: left;
+                    font-family: Lato;
                 }
                 
                 .sub-menu{
@@ -425,9 +430,16 @@ ul.tabs{
 						padding: 20px 100px;
 						margin-left: calc(50% - 50vw);
     					margin-right: calc(50% - 50vw);
-    				.sub-menu-inner {
+    				    .sub-menu-inner {
 							max-width: 1290px;
 							margin: 0 auto;
+                            
+                            .col-md-3{
+                                .sub-menu{
+                                    text-transform: capitalize;
+                                }
+                            }
+                           
 						}
 						h4 {
 							font-weight: 700;
