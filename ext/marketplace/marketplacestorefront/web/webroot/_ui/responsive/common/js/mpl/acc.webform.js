@@ -33,7 +33,7 @@ $(function() {
 				 console.log("Error in crmChildNodes"+resp);	
 			 } 
 		});
-	}
+	});
 });
 
 
