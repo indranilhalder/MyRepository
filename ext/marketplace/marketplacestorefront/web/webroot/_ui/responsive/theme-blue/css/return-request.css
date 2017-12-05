@@ -126,3 +126,130 @@ body.page-returnSubmit .accordtionTataCliq .accContents .col-md-7.col-sm-7.col-x
 .accordtionTataCliq .accContents .selectReason, .accordtionTataCliq .accContents .selectReturnMethod, .accordtionTataCliq .accContents .selectquickDrop {
 	margin-top: 15px;
 }
+.selectRadio.col-md-2.col-sm-2.col-xs-2 {
+	clear: both;
+}
+.accordtionTataCliq .accContents .radioButton {
+	display: block !important;
+    height: 15px !important;
+    width: 15px !important;
+    color: #fff;
+    padding: 0 !important;
+    margin-right: 5px;
+    border: 1px solid #000 !important;
+    cursor: pointer;
+    margin-top: 5px;
+    border-radius: 50%;
+    z-index: 9999999999;
+    position: static;
+    overflow: auto;
+}
+.accordtionTataCliq .accContents .radioButton:checked {
+	background-color: #000;
+    border: 2px solid #ccc !important;
+}
+.accordtionTataCliq .accContents .selectReason.selectRefund b, .accordtionTataCliq .accContents .slectionRefund b, .accordtionTataCliq .accContents.returnMethod .selectReturnMethod b {
+	font-size: 14px;
+    line-height: 1.43;
+    letter-spacing: .6px;
+    display: inline-block;	
+}
+.accordtionTataCliq .accContents .selectReason span, .accordtionTataCliq .accContents .selectReturnMethod span, .accordtionTataCliq .accContents .selectquickDrop span {
+	line-height: 20px;
+}
+.accordtionTataCliq .slectionRefund, .accordtionTataCliq .scheduledPickup, .accordtionTataCliq .selfCourier, .accordtionTataCliq .slectionReplace, .accordtionTataCliq .selfCourier, .accordtionTataCliq .quickDrop {
+	display: none;
+}
+.accordtionTataCliq .accContents .slectionRefund, .accordtionTataCliq .accContents .slectionRefund .col-md-12 .col-md-4, .accordtionTataCliq .accContents .slectionRefund .col-md-12 .col-md-3, .accordtionTataCliq .accContents .slectionRefund .col-md-12 .col-md-2 {
+	padding: 0 15px 0 10px !important;
+}
+.accordtionTataCliq .slectionRefund .paymentCC {
+	background: #ebeff0;
+    margin: 30px;
+    padding: 25px;
+}
+.accordtionTataCliq .accContents .slectionRefund .bankDetailsText {
+	line-height: 24px;
+    font-size: 14px;
+}
+.accordtionTataCliq .slectionRefund .paymentText {
+	line-height: 20px;
+    padding-left: 40px;
+}
+body.page-returnSubmit .accordtionTataCliq .accContents.reasonType .slectionRefund ~ .button_holder, body.page-returnSubmit .accordtionTataCliq .accContents.returnMethod .button_holder {
+	margin-top: 30px;
+    margin-bottom: 21px;
+    position: static;
+}
+.accordtionTataCliq .accContents .button_holder .newRequest {
+	text-align: center;
+    margin-top: 0;
+    display: inline-block;
+    margin-right: 15px;
+}
+body.page-returnSubmit .accordtionTataCliq .accContents.reasonType .slectionRefund ~ .button_holder button, body.page-returnSubmit .accordtionTataCliq .accContents.returnMethod .button_holder button {
+	width: 181px;
+    height: 42px;
+    font-size: 12px;
+    line-height: 1.33;
+    letter-spacing: .6px;
+    font-weight: normal;	
+}
+body.page-returnSubmit .accordtionTataCliq .accContents.reasonType .slectionRefund ~ .button_holder button.light-blue.submit-request, body.page-returnSubmit .accordtionTataCliq .accContents.returnMethod .button_holder button#saveBlockData.btn.btn-primary {
+	margin-right: 26px;
+}
+body.page-returnSubmit .accordtionTataCliq.removeMargin {
+	border-bottom: solid 1px #eee;
+}
+.accordtionTataCliq .returnMethod .col-sm-6, .accordtionTataCliq .returnMethod .col-sm-12, .accordtionTataCliq .returnMethod .col-sm-2 {
+	z-index: 99;
+}
+.accordtionTataCliq .accContents .quickDropArea, .accordtionTataCliq .accContents .scheduledPickupArea {
+	height: 211px;
+    overflow-x: hidden;
+    overflow-y: scroll;
+    margin-top: 10px;
+}
+.accordtionTataCliq .greyColor {
+	color: #ccc;
+}
+.accordtionTataCliq .accContents .quickDrop span, .accordtionTataCliq .accContents .scheduledPickup span {
+	line-height: 25px;
+}
+.accordtionTataCliq .accContents.returnMethod .scheduledPickup .scheduledPickupArea .selectScheduledPickup .editAddress {
+	width: 100%;
+}
+.accordtionTataCliq .accContents a {
+	color: #a9143c;
+    text-decoration: underline;
+}
+.accordtionTataCliq .accContents .scheduledPickup .sideHead {
+	margin-top: 35px;
+}
+.accordtionTataCliq .accContents .scheduledPickup .selectDateTime .selectRadio {
+	text-align: center;
+}
+.accordtionTataCliq .accContents .scheduledPickup .selectDateTime .selectRadio input {
+	margin-left: 40px;
+    margin-bottom: 15px;
+    margin-top: 10px;
+}
+.accordtionTataCliq .accContents .selfCourierArea {
+	line-height: 18px;
+}
+.accordtionTataCliq .accContents .fa-angle-right:before {
+	font-family: FontAwesome;
+    font-weight: lighter;
+    color: #a9143c;
+    content: "\f105";
+    font-size: 70px;
+    line-height: 18px;
+    margin-right: 5px;
+    top: 2px;
+    position: relative;
+}
+@media (min-width: 791px) {
+	body.page-returnSubmit .body-Content {
+		padding-bottom: 50px !important;
+	}
+}

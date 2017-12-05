@@ -325,11 +325,6 @@ h2 {
 .form-group {
 	margin-bottom: 15px;
 }
-input[type="radio"], input[type="checkbox"] {
-	margin: 4px 0 0;
-	line-height: normal;
-	display: none;
-}
 @
 -moz-document url-prefix () {select { padding:5px15px;
 	text-indent: 0.1px;
