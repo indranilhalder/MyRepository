@@ -1920,6 +1920,9 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String MESSAGEENDDATE = "endDate".intern();
 
 	public static final String TERMSANDCONDITIONS = "termsAndConditions".intern();//CAR-327 added
+	public static final String PROMOURL = "promoUrl".intern();
+	public static final String BUNDLEPROMOLINKTEXT = "bundlePromoLinkText".intern();
+
 
 	//Added For TPR-1035
 	public static final String BIN_ERROR_HEADER = "BIN,CUSTOMER_ID,PAYMENTMODE,DATE,TYPE_OF_ERROR".intern();
