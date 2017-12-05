@@ -66,38 +66,31 @@
 		<cms:component component="${logo}" class="siteLogo"  element="div"/></cms:pageSlot>
 	              </a>
 				</div>
-			
+				
 			</div>
-			
 			<div class="header-left">
 				<%-- <a href="#"><cms:pageSlot position="MiddleHeader" var="MiddleHeader" limit="1">
 				<cms:component component="${MiddleHeader}" element="div" class="miniCart" />
-			</cms:pageSlot></a>--%>
-			<nav class="main-nav" id="main-nav">
-			<ul class="hidden-sm hidden-md hidden-lg mob-menu">
-					 <sec:authorize ifNotGranted="ROLE_ANONYMOUS">
-						<a href="<c:url value="/my-account"/>" class="account-userTitle account-userTitle-custom">
-						<ycommerce:testId code="header_LoggedUser">
-							<div class="welcome-link"><spring:theme code="header.welcome" arguments="${fname}" htmlEscape="true" />
-							<spring:theme code="lux.header.welcome" text=" - My Account"  /></div>
-						</ycommerce:testId>
-							</a>
-						</li>
-					</sec:authorize>
-					</ul>
-					
-						<ul class="mega-menu footer-cloned-ul">
-							<cms:pageSlot position="NavigationBar" var="feature">
-								<cms:component component="${feature}" />
-							</cms:pageSlot>
-						
-						</ul>
-                    
-					
-					<div class="main-nav-close hidden-md hidden-lg " id="main-nav-close"></div>
-</nav>
-			</div> 
+			</cms:pageSlot></a> --%>
+				<ul class="tabs">
+                    <cms:pageSlot position="NavigationBar" var="feature">
+						<c:forEach items="${feature.components}" var="component">
+							<li class="tab-link" data-tab="${component.uid}">
+							<c:choose>
+								<c:when test="${not empty component.navigationNode.links}">
+									${component.navigationNode.links[0].linkName}
+								</c:when>
+								<c:otherwise>
+									${component.navigationNode.title}
+								</c:otherwise>
+							</c:choose>
+							</li>
+						</c:forEach>
+					</cms:pageSlot>                
+                </ul>
+			</div>
 			<div class="header-right">
+			<div class="main-nav-close" id="main-nav-close"></div>
 				<ul class="list-unstyled">
 					<sec:authorize ifAnyGranted="ROLE_ANONYMOUS">
 						<li class="header-account-link">
@@ -139,16 +132,89 @@
 					<cms:component component="${SearchBox}" element="div"/></cms:pageSlot>
 				</div>
 			</div>
-			
+			<%-- <div class="header-right">
+				<ul class="list-unstyled">
+				<sec:authorize ifAnyGranted="ROLE_ANONYMOUS">
+					<li class="header-account-link hidden-xs"><a href="luxurylogin/signin">Sign In</a></li>
+				</sec:authorize>
+				<sec:authorize ifNotGranted="ROLE_ANONYMOUS">
+					<li><a href="/logout">Sign Out</a></li>
+				</sec:authorize>
+				<sec:authorize ifNotGranted="ROLE_ANONYMOUS">
+					<li class="logged_in">${user.firstName}
+					<ycommerce:testId code="header_LoggedUser">
+						<spring:theme code="header.welcome" arguments="${user.firstName},${user.lastName}" htmlEscape="true" />
+					</ycommerce:testId>
+					</li>
+				</sec:authorize>
+			    <li class="header-search-link"><a href="#" id="header-search-menu" class="search"><cms:pageSlot position="SearchBox" var="component" element="div" class="headerContent secondRow">
+		<cms:component component="${component}" element="div" />
+	</cms:pageSlot></a></li>
+					<sec:authorize ifNotGranted="ROLE_ANONYMOUS">
+						<li class="header-wishlist-link hidden-xs"><a href="#" class="wishlist">Wishlist</a></li>
+					</sec:authorize>
+					<li class="header-bag-link"><a href="#" class="bag"><cms:pageSlot position="MiniCart" var="cart" limit="1">
+				<cms:component component="${cart}" element="li"/>
+			</cms:pageSlot></a></li>
+				</ul>
+			</div> --%>
 		</div>		
 	</div>
-	<div class="header-search" id="header-search">
+	</div>
+	<nav class="main-nav" id="main-nav">				   
+					
+						<cms:pageSlot position="NavigationBar" var="feature">
+							<cms:component component="${feature}" />
+						</cms:pageSlot>
+						
+					
+					
+					
+					<ul class="hidden-sm hidden-md hidden-lg mob-menu">
+					 <sec:authorize ifNotGranted="ROLE_ANONYMOUS">
+						<a href="<c:url value="/my-account"/>" class="account-userTitle account-userTitle-custom">
+						<ycommerce:testId code="header_LoggedUser">
+							<div class="welcome-link"><spring:theme code="header.welcome" arguments="${fname}" htmlEscape="true" />
+							<spring:theme code="lux.header.welcome" text=" - My Account"  /></div>
+						</ycommerce:testId>
+							</a>
+						</li>
+					</sec:authorize>
+					</ul>
+					<ul class="hidden-sm hidden-md hidden-lg mob-menu">						
+							<sec:authorize ifNotGranted="ROLE_ANONYMOUS">
+								<li class="wishlist-mob">
+									<a href="<c:url value="/my-account/wishList"/>" class="wishlist">Wishlist</a>
+								</li>
+							</sec:authorize>							
+							<sec:authorize ifAnyGranted="ROLE_ANONYMOUS">
+							<li class="mob-login">
+								<a class="toggle-link luxury-login" data-target-id="#mypopUpModal" href="javascript:void(0);" role="button" data-href="/luxurylogin/signin">Sign in or Sign up</a>
+ 						
+							</li>
+						</sec:authorize>
+							<sec:authorize ifNotGranted="ROLE_ANONYMOUS">
+								<li class="mob-login"><a href="/logout">Sign Out</a>
+							</sec:authorize>
+							<%-- <sec:authorize ifNotGranted="ROLE_ANONYMOUS">
+								<a href="<c:url value="/my-account"/>" class="account-userTitle account-userTitle-custom">
+								<ycommerce:testId code="header_LoggedUser">
+									<spring:theme code="header.welcome" arguments="${fname}" htmlEscape="true" />
+									<spring:theme code="lux.header.welcome" text=" - My Account"  />
+								</ycommerce:testId>
+									</a>
+								</li>
+							</sec:authorize> --%>
+					</ul>
+					
+					
+				</nav><div class="header-search" id="header-search">
 		<div class="header-search-inner">
 			<cms:pageSlot position="SearchBox" var="component" element="div" class="search-input">
 		<cms:component component="${component}" element="div" />
 	</cms:pageSlot>
 		</div>
-	</div>
+	
 	</header>
 	
 	<cms:pageSlot position="BottomHeaderSlot" var="component" element="div"

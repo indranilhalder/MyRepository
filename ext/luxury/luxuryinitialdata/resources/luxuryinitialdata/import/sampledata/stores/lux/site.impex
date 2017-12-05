@@ -51,7 +51,7 @@ INSERT_UPDATE CMSSite;uid[unique=true];theme(code);channel(code);stores(uid);con
 
 #modify default url patterns
 INSERT_UPDATE CMSSite;uid[unique=true];urlPatterns;
-;$siteUid;(?i)^https?://luxury.tatacliq.loc(:[\d]+)?.*$,(?i)^https?://luxury.tatacliq.dev(:[\d]+)?.*$,https?://e2eluxury.tataunistore.com(:[\d]+)?.*$,https?://lux.tatacliq.com(:[\d]+)?.*$
+;$siteUid;(?i)^https?://luxury.tatacliq.loc(:[\d]+)?.*$,(?i)^https?://luxury.tatacliq.dev(:[\d]+)?.*$,https?://e2eluxury.tataunistore.com(:[\d]+)?.*$,https?://lux.tatacliq.com(:[\d]+)?.*$,(?i)^https?://local.luxury.tatacliq.com(:[\d]+)?.*$
 
 # Cart Cleanup CronJobs
 INSERT_UPDATE CartRemovalCronJob;code[unique=true];job(code)[default=cartRemovalJob];sites(uid)[default=$siteUid];sessionLanguage(isoCode)[default=en]
