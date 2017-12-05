@@ -8158,7 +8158,7 @@
 						<persistence type="property" />
 					</attribute>
 					<!-- Added for TPR-5954 || Start -->
-					<attribute qualifier="subReason" type="java.lang.String">
+					<!-- <attribute qualifier="subReason" type="java.lang.String">
 						<description>Sub reason value</description>
 						<modifiers read="true" write="true" optional="true" />
 						<persistence type="property" />
@@ -8172,7 +8172,7 @@
 						<description>url of the uploaded image</description>
 						<modifiers read="true" write="true" optional="true" />
 						<persistence type="property" />
-					</attribute>
+					</attribute> -->
 					<!-- Added for TPR-5954 || End -->
 				</attributes>
 			</itemtype>
@@ -13894,7 +13894,7 @@
       <!-- end:PR-9: Solr relevance score -->
 
       <!-- TPR-5954 || Category specific return reason ||Start -->
-     <typegroup name="ReturnCat">
+    <!--  <typegroup name="ReturnCat">
 	<itemtype code="ReturnReasonCatChild" autocreate="true"
 			generate="true" extends="GenericItem" jaloclass="com.tisl.mpl.core.jalo.ReturnReasonCatChild">
 			<deployment table="MplRetReasonCat" typecode="25126" />
@@ -13940,7 +13940,7 @@
 			</attributes>
 		</itemtype>
 	</typegroup>
-	<!-- TPR-5954 || Category specific return reason ||End -->
+	TPR-5954 || Category specific return reason ||End -->
 
 	<!-- Car-Changes-Start-CAR-331 -->
 	<typegroup name="Mpl_Restriction">

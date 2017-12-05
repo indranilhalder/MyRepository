@@ -118,9 +118,9 @@
 						<div class="col-md-7 col-sm-7 col-xs-12 selectReasonForReturn">
 							<b><spring:theme code="text.order.returns.reasonvalidation.message"></spring:theme></b> <br/><br/>
 							
+							<%-- onchange="fetchCatSpecificReason(this) " --%>
 							
-							
-							<form:select name="reasonList" class="reasonSelectBox" path="returnReason" onchange="fetchCatSpecificReason(this)">
+							<form:select name="reasonList" class="reasonSelectBox" path="returnReason" >
 								    <option selected='selected' value="NA"><spring:theme code="text.requestDropdown.selected"/></option>
 									<c:forEach items="${reasonDataList}" var="reason"
 										varStatus="reasonStatus">
@@ -133,7 +133,7 @@
 						<br/><br/>
 						<br/><br/>
 						
-						<!-- TPR-5954 || start -->
+						<%-- <!-- TPR-5954 || start -->
 						<div class="col-md-7 col-sm-7 col-xs-12 selectReasonForReturn">
 							<form:select name="subReasonList" class="subReasonSelectBox" path="subReturnReason" id="returnSubReason">
 								    <option selected='selected' value="NA"><spring:theme code="text.subrequestDropdown.selected"/></option>
@@ -151,20 +151,20 @@
 						<div class="col-md-7 col-sm-7 col-xs-12 ">
 						
 						<form:textarea maxlength="250"  rows="3" cols="45" path="comments" name="returnComments" placeholder="Comments" />
-							<%-- <form:select name="commentsList" class="commentsBox" path="comments" id="newReturnComments">
+							<form:select name="commentsList" class="commentsBox" path="comments" id="newReturnComments">
 									<span class="add-comment-title">Comment</span>
 									<br/>
 									<textarea maxlength="250" rows="3" cols="45" placeholder="Max 250 Characters" id="addCommentArea"></textarea>       
 					   	 			<br/>
-					   		</form:select> --%>
-					   		<%-- <form:select>
+					   		</form:select>
+					   		<form:select>
 					    			<span>Upload Image<label class="upload-image-title" for="upload-photo">Browse</label></span>
 					    			<br/>
 					    			<label>(Accpeted format JPEG,PNG,PDF & Max file size 5MB)</label>
 									<input type="file" name="photo" id="upload-photo" />
-							</form:select> --%>
+							</form:select>
 					    </div>
-						<!-- TPR-5954 || end -->
+						<!-- TPR-5954 || end --> --%>
 						
 						
 						
