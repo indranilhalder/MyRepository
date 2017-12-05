@@ -48,7 +48,9 @@ INSERT_UPDATE classificationAttribute;code[unique=true];name[lang=en];$classSyst
 ;specialfeatureswatches;Special Features;pcmClassification:1
 ;calendartypewatches;Calendar Type;pcmClassification:1
 ;casematerialwatches;Case Material;pcmClassification:1
-;sporttypewatches;Sport Type;pcmClassification:1
+#;sporttypewatches;Sport Type;pcmClassification:1
+;sporttypewatches;Sports Watch(Best Suited For);pcmClassification:1
+
 ;pocketwatchtypewatches;Pocket Watch Type;pcmClassification:1
 ;crowntypewatches;Crown Type;pcmClassification:1
 ;needleswatches;Needles;pcmClassification:1

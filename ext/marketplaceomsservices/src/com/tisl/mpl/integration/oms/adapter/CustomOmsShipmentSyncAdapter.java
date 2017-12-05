@@ -56,6 +56,7 @@ import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.constants.MarketplaceomsordersConstants;
 import com.tisl.mpl.constants.MarketplaceomsservicesConstants;
 import com.tisl.mpl.core.model.ImeiDetailModel;
+import com.tisl.mpl.core.model.InitiateRefundProcessModel;
 import com.tisl.mpl.core.model.InvoiceDetailModel;
 import com.tisl.mpl.core.model.MplZoneDeliveryModeValueModel;
 import com.tisl.mpl.data.SendSMSRequestData;
@@ -587,9 +588,10 @@ public class CustomOmsShipmentSyncAdapter extends DefaultOmsShipmentSyncAdapter 
 				//Added TPR-1348
 				if ("Y".equalsIgnoreCase(configurationService.getConfiguration().getString(
 						MarketplaceomsservicesConstants.AUTO_REFUND_ENABLED))
-						&& ConsignmentStatus.RETURN_CLOSED.equals(shipmentNewStatus))
+						&& ConsignmentStatus.RETURN_CLOSED.equals(shipmentNewStatus) && !isOrderCOD(orderModel)) //Changed for SDI-930
 				{
-					startAutomaticRefundProcess(orderModel); //Start the new Automatic Process
+					//SDI-2788
+					startAutomaticRefundProcess(orderModel, consignmentModel.getCode()); //Start the new Automatic Process
 				}
 
 				return true;
@@ -1412,15 +1414,15 @@ public class CustomOmsShipmentSyncAdapter extends DefaultOmsShipmentSyncAdapter 
 	 * ConsignmentModel consignment : orderModel.getConsignments()) { for (final ConsignmentEntryModel s :
 	 * consignment.getConsignmentEntries()) { if (s.getOrderEntry().getEntryNumber().equals(line.getOrderLineId())) {
 	 * return consignment; } }
-	 * 
-	 * 
-	 * 
-	 * 
+	 *
+	 *
+	 *
+	 *
 	 * }
-	 * 
-	 * 
-	 * 
-	 * 
+	 *
+	 *
+	 *
+	 *
 	 * return null; }
 	 */
 
@@ -1600,15 +1602,46 @@ public class CustomOmsShipmentSyncAdapter extends DefaultOmsShipmentSyncAdapter 
 		this.businessProcessService = businessProcessService;
 	}
 
+	//Added for SDI-930
+	private boolean isOrderCOD(final OrderModel order)
+	{
+		final List<PaymentTransactionModel> tranactions = new ArrayList<PaymentTransactionModel>(order.getPaymentTransactions());
+		boolean flag = false;
+		if (CollectionUtils.isNotEmpty(tranactions))
+		{
+			for (final PaymentTransactionModel transaction : tranactions)
+			{
+				if (CollectionUtils.isNotEmpty(transaction.getEntries()))
+				{
+					for (final PaymentTransactionEntryModel entry : transaction.getEntries())
+					{
+						if (entry.getPaymentMode() != null && entry.getPaymentMode().getMode() != null
+								&& entry.getPaymentMode().getMode().equalsIgnoreCase("COD"))
+						{
+							flag = true;
+							break;
+						}
+					}
+				}
+				if (flag)
+				{
+					break;
+				}
+			}
+		}
 
-	private void startAutomaticRefundProcess(final OrderModel orderModel)
+		return flag;
+	}
+
+	private void startAutomaticRefundProcess(final OrderModel orderModel, final String refundTransactionId)
 	{
 		try
 		{
-			final OrderProcessModel orderProcessModel = (OrderProcessModel) businessProcessService.createProcess(
+			final InitiateRefundProcessModel initiateRefundProcessModel = (InitiateRefundProcessModel) businessProcessService.createProcess(
 					"autorefundinitiate-process-" + System.currentTimeMillis(), "autorefundinitiate-process");
-			orderProcessModel.setOrder(orderModel);
-			businessProcessService.startProcess(orderProcessModel);
+			initiateRefundProcessModel.setOrder(orderModel);
+			initiateRefundProcessModel.setRefundTransactionId(refundTransactionId);
+			businessProcessService.startProcess(initiateRefundProcessModel);
 			LOG.error("CustomOmsShipmentSyncAdapter: in the CustomOmsShipmentSyncAdapter.startAutomaticRefundProcess() for Order #"
 					+ orderModel.getCode());
 		}

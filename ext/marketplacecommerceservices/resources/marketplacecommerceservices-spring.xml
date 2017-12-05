@@ -2128,6 +2128,42 @@
 <property name="interceptor" ref="aPlusContentValidateInterceptor"></property>
 <property name="typeCode" value="APlusContent"></property>
 </bean>
+
+<!-- bulk cancellation -->
+ <bean id="bulkCancellationPrepareInterceptor" class="com.tisl.mpl.interceptor.BulkCancellationPrepareInterceptor" autowire="byName"></bean>
+<bean id="BulkCancellationPrepareInterceptor" class="de.hybris.platform.servicelayer.interceptor.impl.InterceptorMapping">
+<property name="interceptor" ref="bulkCancellationPrepareInterceptor"></property>
+<property name="typeCode" value="BulkCancellation"></property>
+</bean> 
+<bean id="cronJobModel" class="de.hybris.platform.cronjob.model.CronJobModel" />
+<bean id="cronJobService" class="de.hybris.platform.servicelayer.cronjob.CronJobService" />
+
+<bean id="bulkCancellationDao" class="com.tisl.mpl.bulk.dao.BulkCancellationDaoImpl" />
+
+<alias name="bulkCancellationService" alias="bulkCancellationService" />
+	<bean id="bulkCancellationService"
+		class="com.tisl.mpl.bulk.service.BulkCancellationServiceImpl">
+		<!-- <property name="modelService" ref="modelService" /> -->
+		<property name="bulkCancellationDao" ref="bulkCancellationDao" />
+	</bean>
+	
+<!-- end bulk cancellation -->
+<!-- Return Window Increase Start -->
+<bean id="returnWindowIncreasePrepareInterceptor" class="com.tisl.mpl.interceptor.ReturnWindowIncreasePrepareInterceptor" autowire="byName"></bean>
+<bean id="ReturnWindowIncreasePrepareInterceptor" class="de.hybris.platform.servicelayer.interceptor.impl.InterceptorMapping">
+<property name="interceptor" ref="returnWindowIncreasePrepareInterceptor"></property>
+<property name="typeCode" value="ReturnWindowIncrease"></property>
+</bean>
+
+<bean id="returnWindowIncreaseDao" class="com.tisl.mpl.returnwindowincrease.dao.ReturnWindowIncreaseDaoImpl"></bean>
+<alias name="returnWindowIncreaseService" alias="returnWindowIncreaseService"/>
+<bean id="returnWindowIncreaseService" class="com.tisl.mpl.returnwindowincrease.service.ReturnWindowIncreaseServiceImpl">
+<property name="returnWindowIncreaseDao" ref="returnWindowIncreaseDao" />
+</bean>
+
+
+<!-- Return Window Increase End -->
+
 <!-- TPR-1984 START -->
 <bean id="npsFeedbackQuestionService" class="com.tisl.mpl.marketplacecommerceservices.service.impl.NPSFeedbackQuestionServiceImpl">
  	</bean>
@@ -2144,7 +2180,14 @@
 	</bean>
 <!-- TPR-1984 END -->
 
+<!-- Size Guide Upload starts -->
+<bean id="sizeGuideUploadPrepareInterceptor" class="com.tisl.mpl.interceptor.SizeGuideUploadPrepareInterceptor" autowire="byName"></bean>
+<bean id="sizeGuideUploadPrepareInterceptorMapping" class="de.hybris.platform.servicelayer.interceptor.impl.InterceptorMapping">
+	<property name="interceptor" ref="sizeGuideUploadPrepareInterceptor"></property>
+	<property name="typeCode" value="SizeGuideUpload"></property>
+</bean>
 
+<!-- Size Guide Upload ends -->
 
 
 	<!-- Jewellery Changes Start --> 

@@ -88,7 +88,9 @@ http://www.springframework.org/schema/aop/spring-aop.xsd">
 	<import
 		resource="classpath:/marketplacecore/integration/hot-folder-store-marketplace_cms-spring.xml" />
 
-
+   <!-- PR-9,Added for relevancescore -->
+    <import
+		resource="classpath:/marketplacecore/integration/hot-folder-store-marketplace_relevancescore-spring.xml" />
 
 	<!-- SystemSetup for the MarketplaceCore -->
 	<bean id="acceleratorCoreSystemSetup" class="com.tisl.mpl.core.setup.CoreSystemSetup"

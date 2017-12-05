@@ -307,9 +307,10 @@
 											<ul>
 												<!-- APPAREL SIZE COMPONENT -->
 												<c:choose>
-												<c:when test="${not empty wpproduct.wishlistProductSize}">
-												<li class="size"><spring:theme code="wishlist.size" />&nbsp
-												${fn:escapeXml(wpproduct.wishlistProductSize)}</li>
+												<c:when test="${not empty wpproduct.wishlistProductSize && !fn:containsIgnoreCase(wpproduct.wishlistProductSize, 'No Size')}">
+												<li class="size"><spring:theme code="wishlist.size" />&nbsp;
+												${fn:escapeXml(wpproduct.wishlistProductSize)}
+												</li>
 												</c:when>
 												</c:choose>
 												
@@ -440,6 +441,14 @@
 															<button type="button" id="addToCartButtonwl" 
 																class="blue button sizeNotSpecified_wl" data-toggle="modal" data-id="${lengthSize}"
 															data-target="#redirectsToPDP">
+																<spring:theme code="basket.add.to.basket" />
+															</button>
+														</span>
+														</c:if>
+														<c:if test="${(empty wpproduct.wishlistProductSize && wpproduct.productCategory eq 'HomeFurnishing')}">
+														<span>
+															<button id="addToCartButtonwl" type="${buttonType}"
+																class="blue button js-add-to-cart_wl">
 																<spring:theme code="basket.add.to.basket" />
 															</button>
 														</span>

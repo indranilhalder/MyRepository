@@ -26,7 +26,12 @@
 		<group name="catalog" mode="append" description="group.catalog.description">
 			<typeref type="MplShopByLook" description="group.MplShopByLook.description" />
 			<typeref type="APlusContent" description="group.apluscontent.description" />
+			<typeref type="SizeGuideUpload" description="group.sizeguideupload.description" />
 		</group>
+		<group name="order" mode="append" >
+  			<typeref type="BulkCancellation" description="group.bulkcancellation.description" />
+  			<typeref type="ReturnWindowIncrease" description="group.returnwindowincrease.description" />
+  		</group>
 		<group name="group.basecommerce" description="group.basecommerce.description"
 			mode="append">
 			<typeref type="OrderRefundConfig" description="orderrefundconfig.description"
@@ -2614,6 +2619,173 @@
 			</editor>
 		</organizer>
 	</type>
+	
+	<!--Bulk Cancellation -->
+	<type name="BulkCancellation" mode="append">
+		<organizer>
+			<search mode="append">
+				<condition attribute="csvFile" />
+				<condition attribute="creationtime" />
+			</search>
+			<result defaultview="list">
+				<listview>
+					<itemlayout mode="replace">
+						<attribute name="csvFile" width="300"></attribute>
+						<attribute name="csvFileError" width="600"></attribute>
+						<attribute name="creationtime" width="100"></attribute>
+					</itemlayout>
+				</listview>
+				<treeview mode="replace">
+					<itemlayout>
+						<attribute name="csvFile" />
+						<attribute name="csvFileError" />
+					</itemlayout>
+				</treeview>
+			</result>
+			<editor>
+				<essentials>
+					<columnlayout>
+						<row>
+							<attribute name="csvFile" />
+							<attribute name="csvFileError" />
+						</row>
+					</columnlayout>
+				</essentials>
+				<tab name="category.bulkcancellation.tab" position="0">
+					<section name="category.bulkcancellation.section">
+						<listlayout>
+						<attribute name="csvFile" width="300"></attribute>
+						<attribute name="csvFileError" width="600"></attribute>
+						</listlayout>
+					</section>
+				</tab>
+				<tab name="administration" position="1">
+					<section name="section.metadata">
+						<listlayout>
+							<attribute name="csvFile" mode="delete" />
+							<attribute name="csvFileError" mode="delete" />
+						</listlayout>
+					</section>
+				</tab>
+			</editor>
+		</organizer>
+	</type>
+	
+	
+		<!-- Return Window Change Start-->
+	<type name="ReturnWindowIncrease" mode="append">
+		<organizer>
+			<search mode="append">
+				<condition attribute="csvFile" />
+				<condition attribute="creationtime" />
+			</search>
+			<result defaultview="list">
+				<listview>
+					<itemlayout mode="replace">
+						<attribute name="csvFile" width="300"></attribute>
+						<attribute name="csvFileError" width="600"></attribute>
+						<attribute name="creationtime" width="100"></attribute>
+					</itemlayout>
+				</listview>
+				<treeview mode="replace">
+					<itemlayout>
+						<attribute name="csvFile" />
+						<attribute name="csvFileError" />
+					</itemlayout>
+				</treeview>
+			</result>
+			<editor>
+				<essentials>
+					<columnlayout>
+						<row>
+							<attribute name="csvFile" />
+							<attribute name="csvFileError" />
+						</row>
+					</columnlayout>
+				</essentials>
+				<tab name="category.returnwindowincrease.tab" position="0">
+					<section name="category.returnwindowincrease.section">
+						<listlayout>
+						<attribute name="csvFile" width="300"></attribute>
+						<attribute name="csvFileError" width="600"></attribute>
+						</listlayout>
+					</section>
+				</tab>
+				<tab name="administration" position="1">
+					<section name="section.metadata">
+						<listlayout>
+							<attribute name="csvFile" mode="delete" />
+							<attribute name="csvFileError" mode="delete" />
+						</listlayout>
+					</section>
+				</tab>
+			</editor>
+		</organizer>
+	</type>
+	
+	<!-- Return Window Change  -->
+	
+	<!-- Size Guide Upload Start-->
+	<type name="SizeGuideUpload" mode="append">
+		<organizer>
+			<search mode="append">
+				<condition attribute="creationtime" />
+				<condition attribute="identifiers" />
+			</search>
+			<result defaultview="list">
+				<listview>
+					<itemlayout mode="replace">
+						<attribute name="identifiers" width="200"></attribute>
+						<attribute name="csvFile" width="300"></attribute>
+						<attribute name="creationtime" width="100"></attribute>
+						<attribute name="status" width="600"></attribute>
+					</itemlayout>
+				</listview>
+				<treeview mode="replace">
+					<itemlayout>
+						<attribute name="identifiers"/>
+						<attribute name="csvFile" />
+						<attribute name="status" />
+					</itemlayout>
+				</treeview>
+			</result>
+			<editor>
+				<essentials>
+					<columnlayout>
+						<row>
+							<attribute name="identifiers"/>
+							<attribute name="csvFile" />
+						</row>
+						<row>
+							<attribute name="status" />
+						</row>
+					</columnlayout>
+				</essentials>
+				<tab name="category.sizeguideupload.tab" position="0">
+					<section name="category.sizeguideupload.section">
+						<listlayout>
+						<attribute name="identifiers" width="200"></attribute>
+						<attribute name="csvFile" width="300"></attribute>
+						<attribute name="status" width="600"></attribute>
+						</listlayout>
+					</section>
+				</tab>
+				<tab name="administration" position="1">
+					<section name="section.metadata">
+						<listlayout>
+							<attribute name="identifiers" mode="delete"/>
+							<attribute name="csvFile" mode="delete" />
+							<attribute name="status" mode="delete" />
+						</listlayout>
+					</section>
+				</tab>
+			</editor>
+		</organizer>
+	</type>
+	
+	
+	
+	
 	
 		<!-- A Plus content TPR-978 -->
 	<type name="APlusContent" mode="append">

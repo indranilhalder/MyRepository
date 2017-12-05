@@ -15,6 +15,7 @@
 <span id="productUrl" style="display:none">${request.contextPath}${product.url}</span>
 <span id="googleClientid" style="display:none">${googleClientid}</span>
 <span id="facebookAppid" style="display:none">${facebookAppid}</span>
+<span id="prodImageUrl" style="display:none">${prodImageUrl}</span>
 
 <script>
 
@@ -57,9 +58,8 @@
 		</li>
 		<li>
 		<!--TISBBC-26 message changed-->
-			<a class="fb" onclick="return openPopup('https://www.facebook.com/dialog/feed?link=' + window.location.host+ $('#productUrl').text() + '&amp;app_id=' + $('#facebookAppid').text() + '&amp;description='+$('#sharepretext').text()+' '+window.location.host+ $('#productUrl').text() +' '+$('#shareposttext').text()+' &amp;redirect_uri=http://www.facebook.com/','share_facebook')"></a> 
-			<!-- <a class="fb" onclick="return openPopup('https://www.facebook.com/dialog/feed?link=' + window.location + '&amp;app_id=145634995501895&amp;description='+$('#sharepretext').text()+' '+$('#shareposttext').text()+' &amp;redirect_uri=https://developers.facebook.com/tools/explorer')"></a>  -->				
-		</li>
+			<a class="fb" onclick="return openPopup('https://www.facebook.com/dialog/feed?link=' + window.location.host+ $('#productUrl').text() + '&amp;app_id=' + $('#facebookAppid').text() + '&amp;description='+$('#sharepretext').text()+' '+window.location.host+ $('#productUrl').text() +' '+$('#shareposttext').text()+' &amp;redirect_uri=http://www.facebook.com/'+' &amp;picture='+$('#prodImageUrl').text(),'share_facebook')"></a>
+			</li>
 		<li>
 			<button class="g-interactivepost"
 	        data-contenturl=""

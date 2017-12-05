@@ -1951,6 +1951,12 @@ ACC.singlePageCheckout = {
 	//Function called when proceed button of review order page is clicked.
 	proceedToPayment:function(element){
 		ACC.singlePageCheckout.showAjaxLoader();
+		//SDI-2158 FIX
+		resetAppliedCouponFormOnRemoval();
+		//TISUAT-6037 fix starts here
+		$(".error_msg_backfrom_payment").html("");
+		$('.error_msg_backfrom_payment').css("display","none");
+		//TISUAT-6037 fix ens here
 		//function call to validate payment before proceeding
 		var xhrValidateResponse=ACC.singlePageCheckout.validateCartForPayment();
 		xhrValidateResponse.fail(function(xhr, textStatus, errorThrown) {

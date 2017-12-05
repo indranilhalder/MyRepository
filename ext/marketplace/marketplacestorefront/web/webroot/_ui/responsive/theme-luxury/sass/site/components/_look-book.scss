@@ -20,11 +20,24 @@
 	}
 }
 .look-book-wrapper{
+    
+    .look-book-list{
+        @include media-breakpoint-down(sm){
+            max-width: 355px;
+            margin: auto;
+        }
+    }
 	.colmn.left{
 		float:left;
+        @include media-breakpoint-down(sm){
+            float:none;
+        }
 	}
 	.colmn.right{
 		float:right;
+        @include media-breakpoint-down(sm){
+            float:none;
+        }
 	}
 	li{
 		width:50%;

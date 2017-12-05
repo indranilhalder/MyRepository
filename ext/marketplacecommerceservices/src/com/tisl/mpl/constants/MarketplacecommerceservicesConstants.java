@@ -242,6 +242,9 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String AMEX = "AMEX".intern();
 	public static final String AMERICAN_EXPRESS = "AMERICAN EXPRESS".intern();
 	public static final String DINERSCARD = "DinersCard".intern();
+	public static final String DINERS = "DINERS".intern();
+	public static final String JCB = "JCB".intern();
+	public static final String DISCOVER = "DISCOVER".intern();
 	public static final String VISA = "VISA".intern();
 	public static final String EUROCARD = "EuroCard".intern();
 	public static final String SWITCHCARD = "SwitchCard".intern();
@@ -1821,7 +1824,7 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	//.intern();
 
 	//SprintPaymentFixes:- New query added //PaymentFix2017:- queryTAT added
-	public static final String PAYMENTPENDINGQUERY = "select {o.pk} from {Order as o},{OrderStatus as os} where  {o.creationtime} <= ?queryTAT and {o.status}={os.pk} and {os.code}=?status"
+	public static final String PAYMENTPENDINGQUERY = "select {o.pk} from {Order as o},{OrderStatus as os} where  {o.creationtime} <= ?queryTAT and {o.status}={os.pk} and {os.code}=?status and {o.type}=?type"
 			.intern();
 
 	//public static final String PAYMENTPENDINGQUERY =
@@ -2131,6 +2134,7 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 
 	//OIS store manager agent group
 	public static final String CSCOCKPIT_USER_GROUP_STOREMANAGERAGENTGROUP = "storemanageragentgroup";
+	public static final String CSCOCKPIT_USER_GROUP_STOREADMINAGENTGROUP = "storeadminagentgroup";
 
 	//Agent specific order search query
 	public static final String ORDER_BY_AGENT = "select {pk} from {Order} where {user}=?user and {agentId}=?agentId ";
@@ -2185,8 +2189,8 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String TRANSACTION_LIMIT_BY_DATE = "transaction.limit";
 	public static final String MOBILE_QUERY_FOR_L4CATEGORY = "select distinct {c.pk} from {product as p},{CategoryProductRelation as cp},{Category as c},{catalogversion as cv} where {cp.TARGET} = {p.pk} and {cp.SOURCE} = {c.pk} and {c.code} like 'MPH%' and {p.varianttype} is null and {p.catalogversion}={cv.pk} and {cv.version}='Online' and {p.code} = ?productCode"
 			.intern();
-	public static final String TRANSACTION_QUERY = "select {b:pk} from {orderentry as a},{order as b} where p_orderlineid=?transactionId and {a:order}={b:pk} and {b:type}=?type"
-			.intern();
+	public static final String TRANSACTION_QUERY = "select {b:pk} from {orderentry as a},{order as b} where p_orderlineid=?transactionId and {a:order}={b:pk} and {b:type}=?type and {b:VersionID} is null"//SDI-2553
+	.intern();
 	public static final String PARENT_ORDER_QUERY = "select {o:pk} from {order as o} where {o:type}=?type and {o:code}=?orderRefNo"
 			.intern();
 
@@ -2277,4 +2281,27 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 
 	public final static String PINCODE_RESPONSE_DATA_PDP = "PincodeResponseDataForPDP";
 	public static final String KM = "km";
+
+	//Return Window Increase
+	public static final String FetchConsignmentList = "SELECT {c.pk} FROM {Order as o}, {Consignment as c}, {EnumerationValue as en} WHERE {c.order} ={o.pk} and {c.status} = {en.pk} and {en.code}='DELIVERED' and {o.versionid} IS NULL AND {o.type}  ='SubOrder' AND {c.code} IN (?code)";
+	public static final String ConsignmentListFailure = "Error while fetching consignment list";
+
+	public static final String RETURNWINDOWBATCH = "mpl.returnWindowIncrease.use";
+
+	public static final String PROCESSED = "PROCESSED";
+	public static final String NOTFOUND = "NOT_FOUND";
+
+	public static final String FETCHCRONJOBDEBUGLOG = "Error while fetching cronjob with code :";
+
+	public static final String CUSTOMERMASTER_ROWLIMIT = "customermaster.batchjob.rowlimit";
+	public static final String PAYMENTINFO_F_ROWLIMIT = "paymentinfo.batchjob.forward.rowlimit";
+	public static final String PAYMENTINFO_R_ROWLIMIT = "paymentinfo.batchjob.reverse.rowlimit";
+
+	//PR-4 || Refund sms cron job
+	public static final String BULK_CUSTOMER_SMS_1 = "Hey ";
+	public static final String BULK_CUSTOMER_SMS_2 = ", We have successfully refunded Rs ";
+	public static final String BULK_CUSTOMER_SMS_3 = " to your bank account against Tata CLiQ order no ";
+	public static final String BULK_CUSTOMER_SMS_4 = " For delay over 5 days please contact your bank with ref number ";
+	public static final String BULK_CUSTOMER_SMS_5 = ".For few banks, It may take up to 10-15 days to reflect in your account.";
+	public static final String LIMIT_QUERY = "select {transactionId} from {RefundTransactionEntry} order by {creationtime} limit ";
 }

@@ -12,7 +12,7 @@
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
 <%@ taglib prefix="ycommerce" uri="http://hybris.com/tld/ycommercetags"%>
 <%@ taglib prefix="format" tagdir="/WEB-INF/tags/shared/format"%>
-<%@ taglib prefix="product" tagdir="/WEB-INF/tags/responsive/product"%>
+<%@ taglib prefix="product" tagdir="/WEB-INF/tags/addons/luxurycheckoutaddon/responsive/product"%>
 <%@ taglib prefix="order" tagdir="/WEB-INF/tags/responsive/order"%>
 
 <spring:url value="/my-account/profile" var="profileUrl" />
@@ -237,7 +237,7 @@
 														<c:choose>
 															<c:when test="${fn:toLowerCase(entry.product.luxIndicator)=='luxury'}">
 																	<a href="${productUrl}"> <product:productPrimaryImage
-																					product="${entry.product}" format="luxuryCartIcon" />
+																					product="${entry.product}" format="luxuryThumbnail" />
 																			</a>
 										
 															</c:when>
@@ -500,7 +500,7 @@
 																				<c:choose>
 																					<c:when test="${fn:toLowerCase(entryCancel.product.luxIndicator)=='luxury'}">
 																							<a href="${productUrl}"> <product:productPrimaryImage
-																																	product="${entryCancel.product}" format="luxuryCartIcon" />
+																																	product="${entryCancel.product}" format="luxuryThumbnail" />
 																															</a>
 																
 																					</c:when>
@@ -628,7 +628,7 @@
 																				<c:choose>
 																					<c:when test="${fn:toLowerCase(entryCancel.product.luxIndicator)=='luxury'}">
 																							<a href="${productUrl}"> <product:productPrimaryImage
-																																	product="${entryCancel.product}" format="luxuryCartIcon" />
+																																	product="${entryCancel.product}" format="luxuryThumbnail" />
 																															</a>
 																
 																					</c:when>
@@ -729,11 +729,12 @@
 
 					<c:if test="${empty searchPageData.results}">
 						<div class="account-emptyOrderMessage">
-							<spring:theme code="text.account.orderHistory.noOrders"
-								text="You have no orders" />
-							
+							<%-- <spring:theme code="text.account.orderHistory.noOrders.luxury"
+								text="You have no orders" /> --%>
+								Due to site upgradations for orders placed prior to the 16th of October, please redirect to <a href='https://www.tatacliq.com/my-account/orders'>www.tatacliq.com/my-account/orders</a>
+							<br /> <br />
 							<div class="empty-order-btn">	
-								<p class="mb-40">Start your search here</p>
+								<p class="mb-40">For any queries call us on +91- 9029108282 Alternatively, email Tata CLiQ Luxury Care at luxury@tatacliq.com</p>
 								<p><a class="lux-shopmen" href="${menLandingurl}">Shop Men</a><a class="lux-shopwomen" href="${womenLandingUrl}">Shop Women</a></p>
 							</div>
 						</div>
