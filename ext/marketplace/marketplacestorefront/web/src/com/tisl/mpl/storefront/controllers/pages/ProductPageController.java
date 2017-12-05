@@ -189,6 +189,7 @@ import com.tisl.mpl.marketplacecommerceservices.service.ExtStockLevelPromotionCh
 import com.tisl.mpl.marketplacecommerceservices.service.MplCmsPageService;
 import com.tisl.mpl.marketplacecommerceservices.service.PDPEmailNotificationService;
 import com.tisl.mpl.marketplacecommerceservices.service.PincodeService;
+import com.tisl.mpl.model.BundlingPromotionWithPercentageSlabModel;
 import com.tisl.mpl.model.BuyAAboveXGetPercentageOrAmountOffModel;
 import com.tisl.mpl.model.BuyABFreePrecentageDiscountModel;
 import com.tisl.mpl.model.BuyAGetPrecentageDiscountCashbackModel;
@@ -199,6 +200,7 @@ import com.tisl.mpl.model.EtailLimitedStockRestrictionModel;
 import com.tisl.mpl.model.EtailSellerSpecificRestrictionModel;
 import com.tisl.mpl.model.ExcludeManufacturersRestrictionModel;
 import com.tisl.mpl.model.ManufacturersRestrictionModel;
+import com.tisl.mpl.model.MplProductSteppedMultiBuyPromotionModel;
 import com.tisl.mpl.model.SellerInformationModel;
 import com.tisl.mpl.model.SellerMasterModel;
 import com.tisl.mpl.pincode.facade.PinCodeServiceAvilabilityFacade;
@@ -2622,11 +2624,11 @@ public class ProductPageController extends MidPageController
 					String prodDimensionValue = "";
 					boolean islengthAvailable = false;
 					boolean iswidthAvailable = false;
-					boolean isheightAvailable=false;
+					boolean isheightAvailable = false;
 
 					String length = "";
 					String width = "";
-					String height="";
+					String height = "";
 					for (final ClassificationData configurableAttributData : ConfigurableAttributeList)
 					{
 						keyProdptsHeaderName = configurableAttributData.getName();
@@ -2680,7 +2682,7 @@ public class ProductPageController extends MidPageController
 										{
 											for (final FeatureValueData data : featureData.getFeatureValues())
 											{
-												productFeatureDataList.add( data.getValue());
+												productFeatureDataList.add(data.getValue());
 											}
 										}
 										else if (configurableAttributData.getName()
@@ -2730,7 +2732,7 @@ public class ProductPageController extends MidPageController
 												{
 													length = featureValueData.getValue() + unit;
 													islengthAvailable = true;
-													if(!productFeatureDataList.contains(prodDimension))
+													if (!productFeatureDataList.contains(prodDimension))
 													{
 														productFeatureDataList.add(prodDimension);
 													}
@@ -2739,7 +2741,7 @@ public class ProductPageController extends MidPageController
 												{
 													width = featureValueData.getValue() + unit;
 													iswidthAvailable = true;
-													if(!productFeatureDataList.contains(prodDimension))
+													if (!productFeatureDataList.contains(prodDimension))
 													{
 														productFeatureDataList.add(prodDimension);
 													}
@@ -2748,13 +2750,13 @@ public class ProductPageController extends MidPageController
 												{
 													height = featureValueData.getValue() + unit;
 													isheightAvailable = true;
-													if(!productFeatureDataList.contains(prodDimension))
+													if (!productFeatureDataList.contains(prodDimension))
 													{
 														productFeatureDataList.add(prodDimension);
 													}
 												}
 
-												
+
 											}
 											else
 											{
@@ -4214,6 +4216,22 @@ public class ProductPageController extends MidPageController
 										final String promoTermsConditions = productPromotion.getTermsAndCondition();
 										LOG.debug("The promoTermsConditions: " + promoTermsConditions);
 
+										String promourl = null;
+										String bundlePromoLinkText = null;
+
+										if (productPromotion instanceof BundlingPromotionWithPercentageSlabModel)
+										{
+											promourl = ((BundlingPromotionWithPercentageSlabModel) productPromotion).getPromourl();
+											bundlePromoLinkText = ((BundlingPromotionWithPercentageSlabModel) productPromotion)
+													.getBundlepromolinktext();
+										}
+										if (productPromotion instanceof MplProductSteppedMultiBuyPromotionModel)
+										{
+											promourl = ((MplProductSteppedMultiBuyPromotionModel) productPromotion).getPromourl();
+											bundlePromoLinkText = ((MplProductSteppedMultiBuyPromotionModel) productPromotion)
+													.getBundlepromolinktext();
+										}
+
 										if (StringUtils.isNotEmpty(promoTitle))
 										{
 											offerDetMap.put(MarketplacecommerceservicesConstants.MESSAGE, promoTitle);
@@ -4233,6 +4251,15 @@ public class ProductPageController extends MidPageController
 										if (StringUtils.isNotEmpty(promoTermsConditions))
 										{
 											offerDetMap.put(MarketplacecommerceservicesConstants.TERMSANDCONDITIONS, promoTermsConditions);
+										}
+
+										if (StringUtils.isNotEmpty(promourl))
+										{
+											offerDetMap.put(MarketplacecommerceservicesConstants.PROMOURL, promourl);
+										}
+										if (StringUtils.isNotEmpty(bundlePromoLinkText))
+										{
+											offerDetMap.put(MarketplacecommerceservicesConstants.BUNDLEPROMOLINKTEXT, bundlePromoLinkText);
 										}
 
 										if (!offerMessageMap.containsKey(productSellerId))
