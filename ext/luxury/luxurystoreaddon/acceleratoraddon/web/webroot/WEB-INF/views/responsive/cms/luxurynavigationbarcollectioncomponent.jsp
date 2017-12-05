@@ -8,8 +8,10 @@
 
 <c:forEach items="${components}" var="component">
 	<c:if test="${component.navigationNode.visible}">
-		<cms:component component="${component}" evaluateRestriction="true"
+		<ul  class="mega-menu  tab-content" id="${component.uid}">
+			<cms:component component="${component}" evaluateRestriction="true"
 			navigationType="offcanvas" />
+		</ul>
 	</c:if>
 </c:forEach>
 

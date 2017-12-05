@@ -177,3 +177,12 @@ INSERT_UPDATE LuxuryNavigationBarComponent;$contentCV[unique=true];uid[unique=tr
 
 INSERT_UPDATE LuxuryNavigationBarCollectionComponent;$contentCV[unique=true];uid[unique=true];name;components(uid, $contentCV);
 ;;NavBarComponent;Luxury Navigation Bar Collection Component;GlobalLuxeBarComponent,IndieLuxeBarComponent,GiftingBarComponent
+
+REMOVE  CMSNavigationNode;uid[unique=true];$contentCV[unique=true];
+;NewArrivalsNavNode;
+;WomenNavNode;
+;MenNavNode;
+;LifestyleNavNode;
+;BeautyNavNode;
+;DesignersNavNode;
+;OnSaleNavNode;

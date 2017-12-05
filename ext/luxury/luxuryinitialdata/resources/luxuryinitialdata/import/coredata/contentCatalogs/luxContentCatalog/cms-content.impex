@@ -250,17 +250,17 @@ INSERT_UPDATE CMSNavigationNode;uid[unique=true];$contentCV[unique=true];name;pa
 
 
 
-INSERT_UPDATE LuxuryNavigationBarComponent;$contentCV[unique=true];uid[unique=true];name;wrapAfter;navigationNode(&nodeRef);link(uid, $contentCV);styleClass;dropDownLayout(code);&componentRef
-;;NewArrivalsBarComponent;New Arrivals;10;NewArrivalsNavNode;NewArrivalsCategoryLink;;AUTO;NewArrivalsBarComponent
-;;WomenBarComponent;Women;10;WomenNavNode;WomenCategoryLink;;AUTO;WomenBarComponent
-;;MenBarComponent;Men;10;MenNavNode;MenCategoryLink;;AUTO;MenBarComponent
-;;LifestyleBarComponent;Lifestyle;10;LifestyleNavNode;LifestyleCategoryLink;;AUTO;LifestyleBarComponent
-;;BeautyBarComponent;Beauty;10;BeautyNavNode;BeautyCategoryLink;;AUTO;BeautyBarComponent
-;;DesignersBarComponent;Designers;10;DesignersNavNode;DesignersCategoryLink;;AUTO;DesignersBarComponent
-;;OnSaleBarComponent;On Sale;10;OnSaleNavNode;OnSaleCategoryLink;;AUTO;OnSaleBarComponent
+#INSERT_UPDATE LuxuryNavigationBarComponent;$contentCV[unique=true];uid[unique=true];name;wrapAfter;navigationNode(&nodeRef);link(uid, $contentCV);styleClass;dropDownLayout(code);&componentRef
+#;;NewArrivalsBarComponent;New Arrivals;10;NewArrivalsNavNode;NewArrivalsCategoryLink;;AUTO;NewArrivalsBarComponent
+#;;WomenBarComponent;Women;10;WomenNavNode;WomenCategoryLink;;AUTO;WomenBarComponent
+#;;MenBarComponent;Men;10;MenNavNode;MenCategoryLink;;AUTO;MenBarComponent
+#;;LifestyleBarComponent;Lifestyle;10;LifestyleNavNode;LifestyleCategoryLink;;AUTO;LifestyleBarComponent
+#;;BeautyBarComponent;Beauty;10;BeautyNavNode;BeautyCategoryLink;;AUTO;BeautyBarComponent
+#;;DesignersBarComponent;Designers;10;DesignersNavNode;DesignersCategoryLink;;AUTO;DesignersBarComponent
+#;;OnSaleBarComponent;On Sale;10;OnSaleNavNode;OnSaleCategoryLink;;AUTO;OnSaleBarComponent
 
-INSERT_UPDATE LuxuryNavigationBarCollectionComponent;$contentCV[unique=true];uid[unique=true];name;components(uid, $contentCV);
-;;NavBarComponent;Luxury Navigation Bar Collection Component;NewArrivalsBarComponent,WomenBarComponent,MenBarComponent,LifestyleBarComponent,BeautyBarComponent,DesignersBarComponent,OnSaleBarComponent;
+INSERT_UPDATE LuxuryNavigationBarCollectionComponent;$contentCV[unique=true];uid[unique=true];name;
+;;NavBarComponent;Luxury Navigation Bar Collection Component;
 
 
 
@@ -1772,3 +1772,4 @@ INSERT_UPDATE ContentPage;$contentCV[unique=true];uid[unique=true];name;masterTe
 INSERT_UPDATE ContentPage;$contentCV[unique=true];uid[unique=true];name;masterTemplate(uid,$contentCV);label;defaultPage[default='true'];approvalStatus(code)[default='approved'];homepage[default='false']
 ;;app-page;APP Page;AppPageTemplate;/app-page
 
+###########################################################
