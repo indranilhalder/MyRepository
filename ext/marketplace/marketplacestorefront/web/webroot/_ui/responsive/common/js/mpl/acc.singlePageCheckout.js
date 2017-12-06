@@ -3205,16 +3205,17 @@ ACC.singlePageCheckout = {
 
 		//ACC.singlePageCheckout.showAjaxLoader();
 		var url=ACC.config.encodedContextPath + "/checkout/single/paymentRelatedOffers";
+		var data = null;
 		var xhrResponse=ACC.singlePageCheckout.ajaxRequest(url,"GET",data,false);
         
         xhrResponse.fail(function(xhr, textStatus, errorThrown) {
 			console.log("ERROR:"+textStatus + ': ' + errorThrown);
 		});
         
-        xhrResponse.done(function(data, textStatus, jqXHR) {
+        xhrResponse.done(function(response, textStatus, jqXHR) {
       
             	$('.offers_section_paymentpage').css("display","block");
-            	$('.offers_section_paymentpage').html(data);
+            	$('.offers_section_paymentpage').html(response);
             	
 		}); 
         
