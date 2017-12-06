@@ -3162,6 +3162,18 @@ function loadDefaultWishListName_SizeGuide() {
 			/*TPR-694 ends */
 			offerPopup($("#promotionDetailsId").html());
 		});
+		
+		
+		//CAR-327 starts here
+		$(document).on("click",".pdp-offer-title.pdp-title",function(e){
+			e.preventDefault();
+					
+			utag.link({"link_obj": this, "link_text": 'product_offer_view_details', "event_type": 'product_offer_details'}); 
+						 
+			offerPopup($("#promotionDetailsId").html());
+		});
+		//CAR-327 ends here
+	
 		$(document).on('hide.bs.modal', function () {
 		    $("#offerPopup").remove();
 		}); 
