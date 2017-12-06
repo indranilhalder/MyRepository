@@ -92,6 +92,7 @@
 			<div class="header-right">
 			<div class="main-nav-close" id="main-nav-close"></div>
 				<ul class="list-unstyled">
+					<li class="header-search-link"><a href="#" id="header-search-menu" class="toggle-link search" data-target-id="#header-search"></a></li>
 					<sec:authorize ifAnyGranted="ROLE_ANONYMOUS">
 						<li class="header-account-link">
 							<a class="toggle-link luxury-login hidden-xs" data-target-id="#mypopUpModal" href="javascript:void(0);" role="button" data-href="/luxurylogin/signin"></a>
