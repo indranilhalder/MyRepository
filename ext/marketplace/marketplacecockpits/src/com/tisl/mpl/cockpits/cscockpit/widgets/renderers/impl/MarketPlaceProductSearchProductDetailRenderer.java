@@ -1076,7 +1076,7 @@ public class MarketPlaceProductSearchProductDetailRenderer extends
 		// negative if mrp>price
 
 		if (!(null == buyBox.getMrp() || null == buyBox.getPrice() || null == buyBox
-				.getSpecialPrice())) {
+				.getSpecialPrice()) && buyBox.getSpecialPrice() > 0) {
 			String productPrice = ((MarketplaceSearchCommandController) widget
 					.getWidgetController()).formatProductPrice(buyBox
 					.getSpecialPrice());

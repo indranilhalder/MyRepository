@@ -2134,6 +2134,7 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 
 	//OIS store manager agent group
 	public static final String CSCOCKPIT_USER_GROUP_STOREMANAGERAGENTGROUP = "storemanageragentgroup";
+	public static final String CSCOCKPIT_USER_GROUP_STOREADMINAGENTGROUP = "storeadminagentgroup";
 
 	//Agent specific order search query
 	public static final String ORDER_BY_AGENT = "select {pk} from {Order} where {user}=?user and {agentId}=?agentId ";
@@ -2188,8 +2189,8 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String TRANSACTION_LIMIT_BY_DATE = "transaction.limit";
 	public static final String MOBILE_QUERY_FOR_L4CATEGORY = "select distinct {c.pk} from {product as p},{CategoryProductRelation as cp},{Category as c},{catalogversion as cv} where {cp.TARGET} = {p.pk} and {cp.SOURCE} = {c.pk} and {c.code} like 'MPH%' and {p.varianttype} is null and {p.catalogversion}={cv.pk} and {cv.version}='Online' and {p.code} = ?productCode"
 			.intern();
-	public static final String TRANSACTION_QUERY = "select {b:pk} from {orderentry as a},{order as b} where p_orderlineid=?transactionId and {a:order}={b:pk} and {b:type}=?type"
-			.intern();
+	public static final String TRANSACTION_QUERY = "select {b:pk} from {orderentry as a},{order as b} where p_orderlineid=?transactionId and {a:order}={b:pk} and {b:type}=?type and {b:VersionID} is null"//SDI-2553
+	.intern();
 	public static final String PARENT_ORDER_QUERY = "select {o:pk} from {order as o} where {o:type}=?type and {o:code}=?orderRefNo"
 			.intern();
 
@@ -2295,4 +2296,12 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String CUSTOMERMASTER_ROWLIMIT = "customermaster.batchjob.rowlimit";
 	public static final String PAYMENTINFO_F_ROWLIMIT = "paymentinfo.batchjob.forward.rowlimit";
 	public static final String PAYMENTINFO_R_ROWLIMIT = "paymentinfo.batchjob.reverse.rowlimit";
+
+	//PR-4 || Refund sms cron job
+	public static final String BULK_CUSTOMER_SMS_1 = "Hey ";
+	public static final String BULK_CUSTOMER_SMS_2 = ", We have successfully refunded Rs ";
+	public static final String BULK_CUSTOMER_SMS_3 = " to your bank account against Tata CLiQ order no ";
+	public static final String BULK_CUSTOMER_SMS_4 = " For delay over 5 days please contact your bank with ref number ";
+	public static final String BULK_CUSTOMER_SMS_5 = ".For few banks, It may take up to 10-15 days to reflect in your account.";
+	public static final String LIMIT_QUERY = "select {transactionId} from {RefundTransactionEntry} order by {creationtime} limit ";
 }

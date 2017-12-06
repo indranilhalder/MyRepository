@@ -623,7 +623,7 @@ ACC.refinements = {
 				})
 				var browserUrlLazy = appendPageNo(browserURL[0]);
 				// generating postAjaxURL
-				var pageURL = browserUrlLazy +'?'+nonEmptyDataString.replace(/:/g,"%3A");
+				var pageURL = browserUrlLazy +'?'+nonEmptyDataString.replace(/%/g,"%25").replace(/ - /g,"+-+").replace(/:/g,"%3A");		//SDI-2191 fix
 				var requiredUrl="";
 				var action = dummyForm.attr('action');
 				
