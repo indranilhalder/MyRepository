@@ -978,10 +978,13 @@ function focusOnElement() {
 									
 									if(promoUrl != null && bundlePromoLinkText != null)
 									{
-									var link = document.createElement('a');
-									link.textContent = bundlePromoLinkText;
-									link.href = promoUrl;
-									document.getElementById('promoUrl').appendChild(link);
+										if($("#promoUrl").text()==null || $("#promoUrl").text()!=bundlePromoLinkText)
+											{
+									           var link = document.createElement('a');
+									           link.textContent = bundlePromoLinkText;
+									           link.href = promoUrl;
+									           document.getElementById('promoUrl').appendChild(link);
+											}
 									}
 									else
 										{
