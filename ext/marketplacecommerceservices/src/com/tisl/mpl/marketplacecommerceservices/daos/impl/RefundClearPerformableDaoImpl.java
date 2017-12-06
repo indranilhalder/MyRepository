@@ -38,7 +38,7 @@ public class RefundClearPerformableDaoImpl implements RefundClearPerformableDao
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.tisl.mpl.marketplacecommerceservices.daos.RefundClearPerformableDao#getCronDetails(java.lang.String)
 	 */
 	@Override
@@ -122,6 +122,7 @@ public class RefundClearPerformableDaoImpl implements RefundClearPerformableDao
 	@Override
 	public List<JuspayOrderStatusModel> fetchWebhookTableStatus(final String reqId)
 	{
+		List<JuspayOrderStatusModel> hookList = null;
 		try
 		{
 			final String queryString = MarketplacecommerceservicesConstants.REFUNDCLEARWEBHHOKQUERY;
@@ -130,16 +131,15 @@ public class RefundClearPerformableDaoImpl implements RefundClearPerformableDao
 			final FlexibleSearchQuery hookListQuery = new FlexibleSearchQuery(queryString);
 			hookListQuery.addQueryParameter(MarketplacecommerceservicesConstants.WEBHOOKREQSTATUS, reqId);
 
-			final List<JuspayOrderStatusModel> hookList = flexibleSearchService.<JuspayOrderStatusModel> search(hookListQuery)
-					.getResult();
+			hookList = flexibleSearchService.<JuspayOrderStatusModel> search(hookListQuery).getResult();
 
-			return hookList;
+
 		}
 		catch (final Exception e)
 		{
-			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000);
+			LOG.error(e);
 		}
-
+		return hookList;
 	}
 
 

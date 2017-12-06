@@ -927,6 +927,14 @@
 			<value code="jcb"/>
 			<value code="discover"/>
 		</enumtype>
+		
+		<!--  added to check refund status h2refund -->
+		<enumtype code="refundFomType" autocreate="true" generate="true"
+			dynamic="false">
+			<value code="Automatic"></value>
+			<value code="Manual"></value>		
+		</enumtype>
+		
 		<!-- <enumtype code="ComponentTypeEnum" autocreate="true" generate="true" 
 			dynamic="true"> <description>Component Type For Components</description> 
 			<value code="BannerCarousel" /> <value code="Banners3CarouselType" /> <value 
@@ -8131,7 +8139,17 @@
 							<columntype database='oracle'>
 								<value>VARCHAR2(20)</value>
 							</columntype>
-						</persistence>
+						</persistence>					
+					</attribute>
+					<!--  added to check refund status h2refund -->
+					<attribute qualifier="refundDetails" type="refundFomType">
+						<modifiers read="true" write="true" search="true"
+							optional="true" />
+						<persistence type='property'>
+							<columntype database='oracle'>
+								<value>VARCHAR2(40)</value>
+							</columntype>
+						</persistence>					
 					</attribute>
 					<!-- changes for jewellery Cs-Cockpit end -->
 				</attributes>

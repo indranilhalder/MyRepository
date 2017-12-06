@@ -10,6 +10,7 @@ import de.hybris.platform.core.model.order.OrderModel;
 import de.hybris.platform.ordersplitting.model.ConsignmentEntryModel;
 import de.hybris.platform.ordersplitting.model.ConsignmentModel;
 import de.hybris.platform.payment.enums.PaymentTransactionType;
+import de.hybris.platform.payment.model.PaymentTransactionEntryModel;
 import de.hybris.platform.payment.model.PaymentTransactionModel;
 import de.hybris.platform.servicelayer.config.ConfigurationService;
 import de.hybris.platform.servicelayer.model.ModelService;
@@ -30,9 +31,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.core.enums.JuspayRefundType;
+import com.tisl.mpl.core.enums.RefundFomType;
 import com.tisl.mpl.core.model.JuspayOrderStatusModel;
 import com.tisl.mpl.core.model.JuspayRefundResponseModel;
-import com.tisl.mpl.core.model.MplPaymentAuditModel;
 import com.tisl.mpl.core.model.RefundTransactionMappingModel;
 import com.tisl.mpl.juspay.PaymentService;
 import com.tisl.mpl.juspay.Refund;
@@ -101,7 +102,15 @@ public class DefaultRefundClearPerformableServiceImpl implements RefundClearPerf
 		final Double skipRefundOrdersTAT = (StringUtils.isNotEmpty(refundClearTAT) ? Double.valueOf(refundClearTAT)
 				: refundClearTATFinal);
 		final Calendar cal = Calendar.getInstance();
-		cal.setTime(new Date());
+		if (null != lastStartDate)
+		{
+			cal.setTime(lastStartDate);
+		}
+		else
+		{
+			cal.setTime(new Date());
+		}
+
 		cal.add(Calendar.MINUTE, -skipRefundOrdersTAT.intValue());
 		final Date queryTAT = cal.getTime();
 
@@ -140,15 +149,18 @@ public class DefaultRefundClearPerformableServiceImpl implements RefundClearPerf
 							for (final Iterator iteratorC = consignmentEntries.iterator(); iteratorC.hasNext();)
 							{
 								final ConsignmentEntryModel consignmentEntry = (ConsignmentEntryModel) iteratorC.next();
-
-								refundRequestIdList.add(fetchRefundRequestID(consignmentEntry.getOrderEntry()));
+								final String requestID = fetchRefundRequestID(consignmentEntry.getOrderEntry());
+								if (null != requestID)
+								{
+									refundRequestIdList.add(requestID);
+								}
 							}
 
 						}
 					}
 				}
 
-				checkWebhookEntryForRefund(order.getGuid(), order, refundRequestIdList);
+				checkWebhookEntryForRefund(order, refundRequestIdList);
 
 			}
 		}
@@ -162,28 +174,42 @@ public class DefaultRefundClearPerformableServiceImpl implements RefundClearPerf
 	private String fetchRefundRequestID(final AbstractOrderEntryModel abstractOrderEntryModel)
 	{
 		// YTODO Auto-generated method stub
-		final RefundTransactionMappingModel refundTransactionMappingModel = refundClearPerformableDao
-				.fetchRefundTransactionByEntry(abstractOrderEntryModel);
+		String reqid = null;
+		try
+		{
+			final RefundTransactionMappingModel refundTransactionMappingModel = refundClearPerformableDao
+					.fetchRefundTransactionByEntry(abstractOrderEntryModel);
 
-		return refundTransactionMappingModel.getJuspayRefundId();
+			reqid = refundTransactionMappingModel.getJuspayRefundId();
+		}
+		catch (final Exception e)
+		{
+			LOG.error(e.getMessage(), e);
+		}
+		return reqid;
 	}
 
-
-
-	private void checkWebhookEntryForRefund(final String guid, final OrderModel order, final ArrayList<String> refundRequestIdList)
+	private void checkWebhookEntryForRefund(final OrderModel order, final ArrayList<String> refundRequestIdList)
 	{
-		List<MplPaymentAuditModel> auditModelList = new ArrayList<MplPaymentAuditModel>();
-		auditModelList = refundClearPerformableDao.fetchAuditDataList(guid);
-
 		String juspayOrderID = null;
-
-		if (CollectionUtils.isNotEmpty(auditModelList))
+		for (final PaymentTransactionModel paymentTransaction : order.getPaymentTransactions())
 		{
-			for (final MplPaymentAuditModel PaymentAuditModel : auditModelList)
+
+			for (final PaymentTransactionEntryModel paymentTransactionEntry : paymentTransaction.getEntries())
 			{
-				juspayOrderID = PaymentAuditModel.getAuditId();
-				fetchPostingStatusTakeAction(juspayOrderID, order, refundRequestIdList);
+				if ((PaymentTransactionType.CAPTURE.equals(paymentTransactionEntry.getType()) || PaymentTransactionType.AUTHORIZATION
+						.equals(paymentTransactionEntry.getType()))
+						&& ("success".equalsIgnoreCase(paymentTransactionEntry.getTransactionStatus()) || "ACCEPTED"
+								.equalsIgnoreCase(paymentTransactionEntry.getTransactionStatus())))
+				{
+					juspayOrderID = paymentTransactionEntry.getRequestToken();
+					break;
+				}
 			}
+		}
+		if (StringUtils.isNotEmpty(juspayOrderID))
+		{
+			fetchPostingStatusTakeAction(juspayOrderID, order, refundRequestIdList);
 		}
 
 	}
@@ -232,20 +258,20 @@ public class DefaultRefundClearPerformableServiceImpl implements RefundClearPerf
 			for (final Refund refund : refundList)
 			{
 				// Check the request ID reached to Juspay Or not
-				if (refund.getUniqueRequestId().equals(uniqRequestID))
+				if (refund.getUniqueRequestId().equalsIgnoreCase(uniqRequestID))
 				{
 					checkJuspayFlag = true;
 				}
 
 				if (StringUtils.isNotEmpty(refund.getStatus()) && refund.getStatus().equalsIgnoreCase("SUCCESS")
-						&& refund.getUniqueRequestId().equals(uniqRequestID))
+						&& refund.getUniqueRequestId().equalsIgnoreCase(uniqRequestID))
 				{
 					//update order status only
 					final RefundTransactionMappingModel refundTransactionModel = fetchRefundTransactioModel(uniqRequestID);
 					updateStatusOnly(refundTransactionModel, uniqRequestID, order);
 				}
 				else if (StringUtils.isNotEmpty(refund.getStatus()) && refund.getStatus().equalsIgnoreCase("FAILURE")
-						&& refund.getUniqueRequestId().equals(uniqRequestID))
+						&& refund.getUniqueRequestId().equalsIgnoreCase(uniqRequestID))
 				{
 					//do refund
 					//update order status
@@ -330,14 +356,16 @@ public class DefaultRefundClearPerformableServiceImpl implements RefundClearPerf
 		try
 		{
 			final String uniqueRequestId = mplJusPayRefundService.getRefundUniqueRequestId();
-			final String oldRequestId = refund.getUniqueRequestId();
-			final RefundTransactionMappingModel rtmModel = fetchRefundTransactioModel(oldRequestId);
-			if (null != refund.getAmount())
+			RefundTransactionMappingModel rtmModel = new RefundTransactionMappingModel();
+
+			if (null != refund && null != refund.getAmount())
 			{
+				rtmModel = fetchRefundTransactioModel(refund.getUniqueRequestId());
 				refundAmount = refund.getAmount().doubleValue();
 			}
 			else
 			{
+				rtmModel = fetchRefundTransactioModel(uniqRequestOldID);
 				refundAmount = rtmModel.getRefundAmount().doubleValue();
 			}
 
@@ -378,7 +406,31 @@ public class DefaultRefundClearPerformableServiceImpl implements RefundClearPerf
 
 			PaymentTransactionModel paymentTransactionModel = getModelService().create(PaymentTransactionModel.class);
 			paymentTransactionModel = mplJusPayRefundService.doRefund(order, refundAmount, paymentTransactionType, uniqueRequestId);
-			mplJusPayRefundService.attachPaymentTransactionModel(order, paymentTransactionModel);
+			if (null != paymentTransactionModel)
+			{
+				mplJusPayRefundService.attachPaymentTransactionModel(order, paymentTransactionModel);
+			}
+
+			//h2refund Added to know the refund type
+			try
+			{
+
+				if (CollectionUtils.isNotEmpty(rtmModel.getRefundedOrderEntry().getConsignmentEntries()))
+				{
+
+					final ConsignmentModel consignmentModel = rtmModel.getRefundedOrderEntry().getConsignmentEntries().iterator()
+							.next().getConsignment();
+					consignmentModel.setRefundDetails(RefundFomType.AUTOMATIC);
+					getModelService().save(consignmentModel);
+
+				}
+
+			}
+			catch (final Exception e)
+			{
+				LOG.error("Refund updation data failed");
+			}
+
 
 			if (StringUtils.equalsIgnoreCase(paymentTransactionModel.getStatus(), "SUCCESS") && cancelledForRisk)
 			{
