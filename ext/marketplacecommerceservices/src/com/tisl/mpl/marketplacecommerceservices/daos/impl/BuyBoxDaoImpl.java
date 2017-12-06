@@ -31,6 +31,7 @@ import com.tisl.mpl.constants.GeneratedMarketplacecommerceservicesConstants.Enum
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.constants.clientservice.MarketplacecclientservicesConstants;
 import com.tisl.mpl.core.model.BuyBoxModel;
+import com.tisl.mpl.core.model.MplSellerMonogramingModel;
 import com.tisl.mpl.core.model.RichAttributeModel;
 import com.tisl.mpl.exception.EtailBusinessExceptions;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
@@ -1367,8 +1368,55 @@ public class BuyBoxDaoImpl extends AbstractItemDao implements BuyBoxDao
 		}
 	}
 
+	/**
+	 * This Method is for Seller Monogramming Message Changes
+	 *
+	 * @param sellerId
+	 * @param productCode
+	 * @return String
+	 */
+	@Override
+	public String getSellerMonogrammingMsg(final String productCode, final String sellerId)
+	{
+		try
+		{
+			final String queryString = "select {pk} from {MplSellerMonograming} WHERE {productCode}=?productCode AND {sellerId}=?sellerId";
 
+			final FlexibleSearchQuery paymentTypeQuery = new FlexibleSearchQuery(queryString);
+			paymentTypeQuery.addQueryParameter("productCode", productCode);
+			paymentTypeQuery.addQueryParameter("sellerId", sellerId);
 
+			final List<MplSellerMonogramingModel> sellerMessageList = flexibleSearchService
+					.<MplSellerMonogramingModel> search(paymentTypeQuery).getResult();
+
+			if (CollectionUtils.isNotEmpty(sellerMessageList))
+			{
+				final MplSellerMonogramingModel oModel = sellerMessageList.get(0);
+				if (null != oModel && StringUtils.isNotEmpty(oModel.getMessage()))
+				{
+					return oModel.getMessage();
+				}
+			}
+		}
+		catch (final FlexibleSearchException e)
+		{
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0002);
+		}
+		catch (final UnknownIdentifierException e)
+		{
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0006);
+		}
+		catch (final NullPointerException e)
+		{
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0008);
+		}
+		catch (final Exception e)
+		{
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000);
+		}
+		return null;
+	}
+	
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -1401,6 +1449,7 @@ public class BuyBoxDaoImpl extends AbstractItemDao implements BuyBoxDao
 		{
 			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000);
 		}
+
 	}
 
 }

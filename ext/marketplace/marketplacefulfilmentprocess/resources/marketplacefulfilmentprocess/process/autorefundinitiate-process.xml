@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<process xmlns="http://www.hybris.de/xsd/processdefinition" start="autoRefundInitiateAction" name="autorefundinitiate-process" processClass="de.hybris.platform.orderprocessing.model.OrderProcessModel">
+<!-- //SDI-2788 -->
+<process xmlns="http://www.hybris.de/xsd/processdefinition" start="autoRefundInitiateAction" name="autorefundinitiate-process" processClass="com.tisl.mpl.core.model.InitiateRefundProcessModel">
 
 	<action id="autoRefundInitiateAction" bean="autoRefundInitiateAction">
 		<transition name="NOK" to="failed"/>

@@ -124,9 +124,10 @@ public class OrderConfirmationEventListener extends AbstractSiteEventListener<Or
 			}
 			
 			final String orderReferenceNumber = orderDetails.getCode();
+			//SDI-2038
 			final String trackingUrl = configurationService.getConfiguration().getString(
 					MarketplacecommerceservicesConstants.MPL_TRACK_ORDER_LONG_URL_FORMAT)
-					+ orderReferenceNumber;
+					+ "/" + orderReferenceNumber;
 
 //			final String shortTrackingUrl = googleShortUrlService
 //					.genearateShortURL(orderModel.getParentReference() == null ? orderModel.getCode() : orderModel

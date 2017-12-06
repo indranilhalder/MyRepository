@@ -24,13 +24,15 @@ INSERT_UPDATE classificationAttribute;code[unique=true];name[lang=en];systemVers
 ;genderfashiona;Gender
 ;occasionfashiona;Occasion
 ;colorfamilyfashiona;Color Family
-;brandcolorfashiona;Brand Color
+#;brandcolorfashiona;Brand Color
+;brandcolorfashiona;Color
 ;sizefashiona;Size
 ;multipackfashiona;Multipack
 ;multipackquantityfashiona;Multipack Quantity
 ;multipackcontentsfashiona;Multipack Contents
 ;materialtypefashiona;Material Type
-;innermaterial-bagsfashiona;Inner Material-Bags
+#;innermaterial-bagsfashiona;Inner Material-Bags
+;innermaterial-bagsfashiona;Inner Material
 ;leathertypefashiona;Leather Type
 ;careinstructionfashiona;Care Instruction
 ;feature1fashiona;Feature1
@@ -44,15 +46,21 @@ INSERT_UPDATE classificationAttribute;code[unique=true];name[lang=en];systemVers
 ;noofpocketsfashiona;No of pockets
 ;compatiblelaptopsizefashiona;Compatible Laptop Size
 ;bagtypefashiona;Bag Type
-;bag-lengthfashiona;Bag-Length
-;bag-widthfashiona;Bag-Width
-;bag-heightfashiona;Bag-Height
-;bag-capacityfashiona;Bag-Capacity
+#;bag-lengthfashiona;Bag-Length
+;bag-lengthfashiona;Length
+#;bag-widthfashiona;Bag-Width
+;bag-widthfashiona;Width
+#;bag-heightfashiona;Bag-Height
+;bag-heightfashiona;Height
+#;bag-capacityfashiona;Bag-Capacity
+;bag-capacityfashiona;Capacity
 ;hairaccessoriestypefashiona;Hair Accessories Type
 ;embellishmentfashiona;Embellishment
 ;typeofbeltfashiona;Type of Belt
-;widthofbeltfashiona;Width of Belt
-;lengthofbeltfashiona;Length of Belt
+#;widthofbeltfashiona;Width of Belt
+;widthofbeltfashiona;Width
+#;lengthofbeltfashiona;Length of Belt
+;lengthofbeltfashiona;Length
 ;beltsizefashiona;Belt Size
 ;typeofhatsandcapsfashiona;Type of Hats and Caps
 #;typeofscarvesandstolesfashiona;Type of Scarves and Stoles

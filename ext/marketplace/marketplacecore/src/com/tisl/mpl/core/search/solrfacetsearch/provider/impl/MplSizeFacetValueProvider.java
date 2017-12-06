@@ -21,6 +21,7 @@ import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Required;
 
+import com.tisl.mpl.core.constants.MarketplaceCoreConstants;
 import com.tisl.mpl.core.model.PcmProductVariantModel;
 import com.tisl.mpl.standardizationfactory.StandardizationService;
 
@@ -73,6 +74,11 @@ public class MplSizeFacetValueProvider extends AbstractPropertyFieldValueProvide
 			 * This logic used to fix issue: TISREL-654 ('Size' facet shouldn't get displayed in the PLP of Belts category)
 			 */
 			if ("Accessories".equalsIgnoreCase(pcmColorModel.getProductCategoryType()))
+			{
+				return Collections.emptyList();
+			}
+			if (MarketplaceCoreConstants.HOME_FURNISHING.equalsIgnoreCase(pcmColorModel.getProductCategoryType())
+					&& size.equalsIgnoreCase(MarketplaceCoreConstants.NOSIZE))
 			{
 				return Collections.emptyList();
 			}
