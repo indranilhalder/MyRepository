@@ -200,4 +200,17 @@ public interface MplCouponFacade
 			throws VoucherOperationException, EtailNonBusinessExceptions;
 
 
+	/**
+	 * The Method displays Coupon Data on Payment Page
+	 *
+	 * @param orderModel
+	 * @param cartModel
+	 * @param couponRedStatus
+	 * @param couponCode
+	 * @return VoucherDiscountData
+	 */
+	VoucherDiscountData populateCartVoucherData(OrderModel orderModel, CartModel cartModel, boolean couponRedStatus,
+			boolean isRedeemed, String couponCode);
+
+
 }

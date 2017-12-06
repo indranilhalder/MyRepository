@@ -578,7 +578,7 @@ public class MplCouponController
 	@RequireHardLogIn
 	public @ResponseBody VoucherDiscountData redeemCartCoupon(final String manuallyselectedvoucher, final String guid)
 	{
-		final VoucherDiscountData data = new VoucherDiscountData();
+		VoucherDiscountData data = new VoucherDiscountData();
 		final String couponCode = manuallyselectedvoucher;
 
 		OrderModel orderModel = null;
@@ -599,7 +599,7 @@ public class MplCouponController
 
 				LOG.debug("Cart Coupon Redemption Status is >>>>" + couponRedStatus);
 
-				//data = getMplCouponFacade().calculateValues(null, cartModel, couponRedStatus, true);
+				data = getMplCouponFacade().populateCartVoucherData(null, cartModel, couponRedStatus, true, couponCode);
 			}
 			catch (final VoucherOperationException e)
 			{
@@ -608,7 +608,19 @@ public class MplCouponController
 		}
 		else
 		{
-			//Code For Order Model
+			try
+			{
+				couponRedStatus = getMplCouponFacade().applyCartVoucher(couponCode, null, orderModel);
+
+				LOG.debug("Cart Coupon Redemption Status is >>>>" + couponRedStatus);
+
+				data = getMplCouponFacade().populateCartVoucherData(orderModel, null, couponRedStatus, true, couponCode);
+			}
+			catch (final VoucherOperationException e)
+			{
+				//
+			}
+
 		}
 
 		return data;
