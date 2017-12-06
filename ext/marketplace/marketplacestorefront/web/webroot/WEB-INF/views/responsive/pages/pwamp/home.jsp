@@ -13,11 +13,12 @@
 <script async custom-element="amp-form" src="https://cdn.ampproject.org/v0/amp-form-0.1.js"></script>
 <script async custom-template="amp-mustache" src="https://cdn.ampproject.org/v0/amp-mustache-0.1.js"></script>
 <script async custom-element="amp-list" src="https://cdn.ampproject.org/v0/amp-list-0.1.js"></script>
-
-	<!--AMP HTML files require a canonical link pointing to the regular HTML. If no HTML version exists, it should point to itself.-->
-<link rel="canonical" href="index.html">
+<script async custom-element="amp-install-serviceworker" src="https://cdn.ampproject.org/v0/amp-install-serviceworker-0.1.js"></script>
+<!--AMP HTML files require a canonical link pointing to the regular HTML. If no HTML version exists, it should point to itself.-->
+<link rel="canonical" href="/pwamp">
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:100,100i,300,300i,400,400i,500,500i,700,700i,900,900i">
+<link rel="manifest" href="/manifest.json">
 <meta name="viewport" content="width=device-width,minimum-scale=1,initial-scale=1,maximum-scale=1,user-scalable=no"><meta name="apple-mobile-web-app-capable" content="yes"/><meta name="apple-mobile-web-app-status-bar-style" content="black">
 
 <!-- Latest compiled and minified CSS -->
@@ -1443,35 +1444,11 @@ amp-selector [option][selected] {
 
 </style>
 <style amp-boilerplate>body{-webkit-animation:-amp-start 8s steps(1,end) 0s 1 normal both;-moz-animation:-amp-start 8s steps(1,end) 0s 1 normal both;-ms-animation:-amp-start 8s steps(1,end) 0s 1 normal both;animation:-amp-start 8s steps(1,end) 0s 1 normal both}@-webkit-keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}@-moz-keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}@-ms-keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}@-o-keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}@keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}</style><noscript><style amp-boilerplate>body{-webkit-animation:none;-moz-animation:none;-ms-animation:none;animation:none}</style></noscript>
-
-<!-- <script>
-$(document).ready(function(){
-		/*Search Icon Changes*/
-		if($(window).width()<651){
-				$('.header-search-center').hide();
-				$(".simpleSearchToggle").show();
-				$(document).on("click", function(e){
-					if($(e.target).is(".simpleSearchToggle") || $(e.target).is(".search-input") || $(e.target).is("#searchButton")){
-						if($(e.target).is(".simpleSearchToggle")) {
-							$('.header-search-center').toggle(function () {});
-							$(".search-input").focus();
-						} else {
-							$(".header-search-center").show();
-						}
-					}else{
-						$(".header-search-center").hide(function () {});
-					}
-				});
-			} else {
-				$(".simpleSearchToggle").hide();
-			}
-	});
-</script> -->
-
 </head>
 
 
 <body>
+<amp-install-serviceworker src="/cliq-service-worker.js" layout="nodisplay"></amp-install-serviceworker>
 	<header>
 		<button class="header-icon-1" on='tap:sidebar.open'><i class="fa fa-navicon"></i></button>
 		<!-- <a href="index.php" class="header-logo"><img src="./images/logo.png" /></a> -->
@@ -1489,24 +1466,6 @@ $(document).ready(function(){
 					<strong>BRAND <i class="fa fa-chevron-down"></i></strong>
 				</section>
 			</section>
-			<!-- <section class="header-search-center input-group">
-				<section class="input-group-btn desktop-item">
-					<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">Mens Clothing <span class="caret"></span></button>
-          <ul class="dropdown-menu">
-              <li><a href="#">All</a></li>
-              <li><a href="#">Womens Clothing</a></li>
-              <li class="active"><a href="#">Mens Clothing</a></li>
-              <li class="divider"></li>
-              <li><a href="#">Electronics</a></li>
-              <li><a href="#">Footwear</a></li>
-              <li><a href="#">Accessories</a></li>
-          </ul>
-				</section>
-				<input class="form-control search-input" placeholder="Search in Marketplace" />
-				<section class="input-group-btn">
-					<button class="btn btn-default"><i class="fa fa-search"></i></button>
-				</section>
-			</section> -->
 			<section class="header-search-right desktop-item">
 				<button class="btn my-bag"><i class="fa fa-shopping-bag"></i> &nbsp; My Bag</button>
 			</section>
@@ -1637,9 +1596,11 @@ $(document).ready(function(){
 	<amp-list src="/pwamp/getHomePageBanners?version=Online" height="320" layout="fixed-height">
 	<template type="amp-mustache">
 	<amp-carousel class="slider" width="400" height="120" layout="responsive" type="slides" controls autoplay loop delay="3000">
+	    {{#desktopBanners}}
 	    <div>
-			<amp-img class="responsive-img" src="" layout="fill"></amp-img>
+			<amp-img class="responsive-img" src="{{url}}" layout="fill"></amp-img>
 		</div>
+		{{/desktopBanners}}
 	</amp-carousel>
 	</template>
 	</amp-list>
@@ -1676,7 +1637,7 @@ $(document).ready(function(){
 		</div>
 		<div>
 			<div id="brandsYouLoveMobileCompCarousel">
-			<amp-list src="/pwamp/getProductsYouCare?version=Online" height="320" layout="fixed-height">
+			<amp-list src="/pwamp/getBrandsYouLove?version=Online" height="320" layout="fixed-height">
 				<template type="amp-mustache">
 			    <amp-carousel height="320" layout="fixed-height" type="carousel">
 			    	{{#subComponents}}
@@ -1745,7 +1706,7 @@ $(document).ready(function(){
 						<div class="newInDesc">
 							<p class="newInDescName">{{productTitle}}</p>
 							{{#productPrice}}
-							<p class="newInDescPrice">₹{{dispPrice}}<span class="price-right">₹{{strikePrice}}</span></p>
+							<p class="newInDescPrice">{{dispPrice}}<span class="price-right">{{strikePrice}}</span></p>
 							{{/productPrice}}
 						</div>
 					</div>
@@ -1765,13 +1726,16 @@ $(document).ready(function(){
 		<div class="stayQuedTopSection">
 			<h2 class="homeViewHeading">Stay Qued</h2>
 		</div>
+		<amp-list src="/pwamp/getStayQuedHomepage?version=Online" height="320" layout="fixed-height">
+		<template type="amp-mustache">
+		{{#allBannerJsonObject}}
 		<div class="stayQuedCenter">
 			<div class="stayOne">
 				<div>
 					<p>&nbsp;</p>
 					<p>&nbsp;</p>
-					<p class="h2 stayQuedHeading">WINTER MOVIES TO WATCH ON YOUR BIG SCREEN</p>
-					<p>Here are some winter-theme movies you can enjoy tucked inside a warm and cosy blanket</p>
+					<p class="h2 stayQuedHeading">{{promoText1}}</p>
+					<p>{{promoText2}}</p>
 					<div class="stayQuedBottom">
 						<button class="stayQuedViewAllBtn">Read The Story</button>
 					</div>
@@ -1779,107 +1743,51 @@ $(document).ready(function(){
 			</div>
 			<div class="stayTwo">
 				<div>
-					<amp-img class="responsive-img" width="auto" height="300" layout="flex-item" src="images/stayQued/11875716136990.jpg" alt="Brand Image"></amp-img>
+					<amp-img class="responsive-img" width="auto" height="300" layout="flex-item" src="{{bannerImage}}" alt="{{bannerAltText}}"></amp-img>
 				</div>
 			</div>
 		</div>
+		{{/allBannerJsonObject}}
+		</template>
+		</amp-list>
 	</div>
 
 	<!-- Hot Now -->
-	<div id="hotNowComp">
+	<!--  <div id="hotNowComp">
 		<div class="hotNowTopSection">
 			<h2 class="homeViewHeading">Hot Now</h2>
 		</div>
 		<div>
 			<div id="hotNowCompCarousel">
+			<amp-list src="/pwamp/getBestPicks?version=Online" height="320" layout="fixed-height">
+				<template type="amp-mustache">
+				<amp-list src="/pwamp/getProductsYouCare?version=Online" height="320" layout="fixed-height">
+				<template type="amp-mustache">
 				<amp-carousel height="320" layout="fixed-height" type="carousel">
+				{{#subItems}}
 					<div class="hotNowItem">
 						<div class="hotNowItemImg">
-							<amp-img class="responsive-img" layout="fill" src="images/hotNow/20170507131819.jpeg" alt="Brand Image"></amp-img>
+							<amp-img class="responsive-img" layout="fill" src="{{imageUrl}}" alt="Brand Image"></amp-img>
 						</div>
 						<div class="hotNowDesc">
 							<p class="hotNowTitle">Vivo</p>
-							<p class="hotNowDescName">Vivo V5s 64 GB (Crown Gold) 4GB RAM, Dual Sim 4G</p>
-							<p class="hotNowDescPrice">₹19980<span class="price-right">₹15390</span></p>
+							<p class="hotNowDescName">{{text}}</p>
+							
 						</div>
 					</div>
-					<div class="hotNowItem">
-						<div class="hotNowItemImg">
-							<amp-img class="responsive-img" layout="fill" src="images/hotNow/20171025041550.jpeg" alt="Brand Image"></amp-img>
-						</div>
-						<div class="hotNowDesc">
-							<p class="hotNowTitle">Xiaomi</p>
-							<p class="hotNowDescName">Xiaomi Mi Max 2 64GB (Black) 4 GB RAM, Dual SIM 4G</p>
-							<p class="hotNowDescPrice">₹17999<span class="price-right">₹15999</span></p>
-						</div>
-					</div>
-					<div class="hotNowItem">
-						<div class="hotNowItemImg">
-							<amp-img class="responsive-img" layout="fill" src="images/hotNow/20170903133053.jpeg" alt="Brand Image"></amp-img>
-						</div>
-						<div class="hotNowDesc">
-							<p class="hotNowTitle">Nike</p>
-							<p class="hotNowDescName">Nike Air Zoom Pegasus 92 White & Grey Running Shoes</p>
-							<p class="hotNowDescPrice">₹9995<span class="price-right">₹5996</span></p>
-						</div>
-					</div>
-					<div class="hotNowItem">
-						<div class="hotNowItemImg">
-							<amp-img class="responsive-img" layout="fill" src="images/hotNow/20171025020843.jpeg" alt="Brand Image"></amp-img>
-						</div>
-						<div class="hotNowDesc">
-							<p class="hotNowTitle">Samsung</p>
-							<p class="hotNowDescName">SAMSUNG Galaxy J700F Smartphone Gold</p>
-							<p class="hotNowDescPrice">₹16000<span class="price-right">₹9999</span></p>
-						</div>
-					</div>
-					<div class="hotNowItem">
-						<div class="hotNowItemImg">
-							<amp-img class="responsive-img" layout="fill" src="images/hotNow/20171025030013.jpeg" alt="Brand Image"></amp-img>
-						</div>
-						<div class="hotNowDesc">
-							<p class="hotNowTitle">Gionee</p>
-							<p class="hotNowDescName">Gionee A1 64 GB (Black) 4 GB RAM, Dual Sim 4G</p>
-							<p class="hotNowDescPrice">₹21499<span class="price-right">₹13879</span></p>
-						</div>
-					</div>
-					<div class="hotNowItem">
-						<div class="hotNowItemImg">
-							<amp-img class="responsive-img" layout="fill" src="images/hotNow/20171025030507.jpeg" alt="Brand Image"></amp-img>
-						</div>
-						<div class="hotNowDesc">
-							<p class="hotNowTitle">Oppo</p>
-							<p class="hotNowDescName">Oppo A57 4G Dual Sim 32 GB (Black) 3 GB RAM, Dual Sim 4G</p>
-							<p class="hotNowDescPrice">₹15990<span class="price-right">₹12549</span></p>
-						</div>
-					</div>
-					<div class="hotNowItem">
-						<div class="hotNowItemImg">
-							<amp-img class="responsive-img" layout="fill" src="images/hotNow/20160926145437.jpeg" alt="Brand Image"></amp-img>
-						</div>
-						<div class="hotNowDesc">
-							<p class="hotNowTitle">Nikon</p>
-							<p class="hotNowDescName">Nikon D3400 with (18-55mm & 70-300mm Lens) DSLR Camera</p>
-							<p class="hotNowDescPrice">₹47450<span class="price-right">₹37430</span></p>
-						</div>
-					</div>
-					<div class="hotNowItem">
-						<div class="hotNowItemImg">
-							<amp-img class="responsive-img" layout="fill" src="images/hotNow/20170114012822.jpeg" alt="Brand Image"></amp-img>
-						</div>
-						<div class="hotNowDesc">
-							<p class="hotNowTitle">Ambrane</p>
-							<p class="hotNowDescName">Ambrane SP-100 2.1 Channel Multimedia Speaker (Black)</p>
-							<p class="hotNowDescPrice">₹1999<span class="price-right">₹499</span></p>
-						</div>
-					</div>
+					{{/subItems}}
 				</amp-carousel>
+				</template>
+				</amp-list>
+				</template>
+				</amp-list>
+				
 			</div>
 		</div>
 		<div class="brandStudioBottom">
 			<button class="brandStudioViewAllBtn">Shop the Hot List</button>
 		</div>
-	</div>
+	</div>-->
 
 	<!-- Inspire Me -->
 	<div id="inspireMeComp">
@@ -1887,25 +1795,28 @@ $(document).ready(function(){
 			<h2 class="homeViewHeading">Inspire Me</h2>
 		</div>
 		<div class="inspireMeCompSection">
-
+			<amp-list src="/pwamp/getCollectionShowcase?version=Online" height="320" layout="fixed-height">
+			<template type="amp-mustache">
 			<amp-selector role="tablist"
 				layout="container"
 				class="ampTabContainer">
+				{{#subComponents}}
 				<div role="tab"
 					class="tabButton"
 					selected
-					option="a">Do It Better Than A Celeb: In Sneakers</div>
+					option="a">{{headerText}}</div>
+					{{#details}}
 				<div role="tabpanel"
 					class="tabContent">
 					<div class="inspireMeOne">
-						<amp-img width="280" height="360" layout="flex-item" src="images/inspireMe/11875716333598.jpg" alt="Brand Image"></amp-img>
+						<amp-img width="280" height="360" layout="flex-item" src="{{firstProductImageUrl}}" alt="Brand Image"></amp-img>
 					</div>
 					<div class="inspireMeTwo">
 						<div class="inspireMeCenter">
 							<div>
-								<p class="h4 stayQuedHeading"><strong>Do it Better Than A Celeb: In Sneakers</strong></p>
+								<p class="h4 stayQuedHeading"><strong>{{firstProductTitle}}</strong></p>
 								<p>&nbsp;</p>
-								<p>To inspire you to put together your next #ootn, we’ve tracked the styles of the most stylish men from B-town</p>
+								<p>{{text}}</p>
 								<div class="inspireMeBottom">
 									<button class="stayQuedViewAllBtn">Read The Story</button>
 								</div>
@@ -1916,65 +1827,14 @@ $(document).ready(function(){
 						</div>
 					</div>
 					<div class="inspireMeThree">
-						<amp-img width="300" height="360" layout="flex-item" src="images/inspireMe/20170714221012.jpeg" alt="Brand Image"></amp-img>
+						<amp-img width="300" height="360" layout="flex-item" src="{{bannerImageUrl}}" alt="Brand Image"></amp-img>
 					</div>
 				</div>
-				<div role="tab"
-					class="tabButton"
-					option="b">Swap Your LBD With These Sinfully Stylish Dresses</div>
-				<div role="tabpanel"
-					class="tabContent">
-					<div class="inspireMeOne">
-						<amp-img width="280" height="360" layout="flex-item" src="images/inspireMe/11875716399134.jpg" alt="Brand Image"></amp-img>
-					</div>
-					<div class="inspireMeTwo">
-						<div class="inspireMeCenter">
-							<div>
-								<p class="h4 stayQuedHeading"><strong>Swap Your LBD with These Sinfully Stylish Dresses</strong></p>
-								<p>&nbsp;</p>
-								<p>This NYE, give your LBD a break and take a look at our curated list of stylish dresses that you will proudly make a statement in</p>
-								<div class="inspireMeBottom">
-									<button class="stayQuedViewAllBtn">Read The Story</button>
-								</div>
-								<div class="inspireMeBottom">
-									<button class="inspireMeReadMoreBtn">Read More</button>
-								</div>
-							</div>
-						</div>
-					</div>
-					<div class="inspireMeThree">
-						<amp-img width="300" height="360" layout="flex-item" src="images/inspireMe/20170618012414.jpeg" alt="Brand Image"></amp-img>
-					</div>
-				</div>
-				<div role="tab"
-					class="tabButton"
-					option="c">Do it Better Than A Celeb: In Heels</div>
-				<div role="tabpanel"
-					class="tabContent">
-					<div class="inspireMeOne">
-						<amp-img width="280" height="360" layout="flex-item" src="images/inspireMe/11875716464670.jpg" alt="Brand Image"></amp-img>
-					</div>
-					<div class="inspireMeTwo">
-						<div class="inspireMeCenter">
-							<div>
-								<p class="h4 stayQuedHeading"><strong>Do it Better Than A Celeb: In Heels</strong></p>
-								<p>&nbsp;</p>
-								<p>To make sure your shoe collection is on point this season, we’ve got you celebrity inspired heels</p>
-								<div class="inspireMeBottom">
-									<button class="stayQuedViewAllBtn">Read The Story</button>
-								</div>
-								<div class="inspireMeBottom">
-									<button class="inspireMeReadMoreBtn">Read More</button>
-								</div>
-							</div>
-						</div>
-					</div>
-					<div class="inspireMeThree">
-						<amp-img width="300" height="360" layout="flex-item" src="images/inspireMe/20170708020704.jpeg" alt="Brand Image"></amp-img>
-					</div>
-				</div>
+				{{/details}}
+				{{/subComponents}}
 			</amp-selector>
-
+			</template>
+		</amp-list>
 		</div>
 	</div>
 </body>
