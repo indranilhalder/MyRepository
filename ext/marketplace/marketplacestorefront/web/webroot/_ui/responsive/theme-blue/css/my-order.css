@@ -622,7 +622,12 @@ table.track-table-head, table.track-table {
 table.track-table tr {
 	border-bottom: 1px solid silver;
 }
-
+body .account .right-account .order-history .bottom .pagination.mobile {
+	position: absolute;
+    bottom: 6px;
+    width: auto;
+    right: 0;
+}
 @media (max-width: 650px)
 {
 	.responsiveProfile .status span {
@@ -918,12 +923,6 @@ body .account .right-account .order-history .pagination li {
     -moz-transition: border .3s;
     transition: border .3s;
     margin-right: 5px;
-}
-body .account .right-account .order-history .bottom .pagination.mobile {
-	position: absolute;
-    bottom: 6px;
-    width: auto;
-    right: 0;
 }
 body .account .right-account .order-history.order-details li.item .status {
 	display: table;
@@ -1404,7 +1403,7 @@ body .account .right-account .order-history .product-block li.item .cancellation
     max-width: 420px;
 	}
 	body .account .right-account .order-history .top .pagination.mobile {
-    top: 26px;
+    top: 30px;	/* change for CMR-106 */
 	}
 	body .right-account .order-history .cancellation-request-block .return-form .return-container .questions label {
     	font-size: 14px !important;
