@@ -502,7 +502,7 @@ header{
 }
 
 .sidebar-logo{
-	background-image:url(images/sidebar-logo.png);
+	background-image:url(//assets.tatacliq.com/medias/sys_master/images/9906406817822.png);
 	height:31px;
 	width:150px;
 	background-size:150px 31px;
@@ -1455,7 +1455,7 @@ amp-selector [option][selected] {
 		<section class="col-xs-12 header-search-section">
 			<section class="header-search-left">
 				<section class="header-search-left-child logo-container">
-					<amp-img class="logo-image" width="70" height="40" layout="flex-item" src="./images/logo.png"></amp-img>
+					<amp-img class="logo-image" width="70" height="40" layout="flex-item" src="//assets.tatacliq.com/medias/sys_master/images/9906406817822.png"></amp-img>
 				</section>
 				<section class="header-category header-search-left-child desktop-item">
 					SHOP BY<br />
