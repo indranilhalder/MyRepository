@@ -39,6 +39,8 @@ public class OrderStatusSpecifier
 		boolean flag = false;
 		LOG.debug("Order id is " + order.getCode());
 
+		boolean statusChangeEligible = checkStatusChangeEligibility(order, orderStatus);
+		
 		final List<OrderModel> subOrderList = order.getChildOrders();
 		if (CollectionUtils.isNotEmpty(subOrderList))
 		{
@@ -57,20 +59,15 @@ public class OrderStatusSpecifier
 			LOG.debug("Sub ORder status changed " + flag);
 		}
 		//TPR-1081
-		else if (CollectionUtils.isEmpty(subOrderList)
-				&& (orderStatus.equals(OrderStatus.PAYMENT_PENDING) || orderStatus.equals(OrderStatus.PAYMENT_FAILED) || orderStatus
-						.equals(OrderStatus.PAYMENT_TIMEOUT)))
+		//SDI-2922
+		else if (statusChangeEligible)
 		{
-			flag = addOrderHistory(1, order, orderStatus, order.getEntries(), order, flag);
-		}
-		else
-		{
-			//setting the ORDEr Status if its not matched with status
 			flag = addOrderHistory(1, order, orderStatus, order.getEntries(), order, flag);
 		}
 		//if (flag || orderStatus.equals(OrderStatus.PAYMENT_PENDING)) //flag == true
 		//{
-		if (flag)
+		//SDI-2922
+		if (flag && statusChangeEligible)
 		{
 			order.setStatus(orderStatus);
 			getModelService().save(order);
@@ -200,6 +197,25 @@ public class OrderStatusSpecifier
 		}
 
 		return quantity;
+	}
+	
+	private boolean checkStatusChangeEligibility(final OrderModel order, final OrderStatus orderStatus)
+	{
+		if (order.getType().equals(MarketplacecommerceservicesConstants.SUBORDER))
+		{
+			return true;
+		}
+		else if (orderStatus.equals(OrderStatus.PAYMENT_SUCCESSFUL) || orderStatus.equals(OrderStatus.PAYMENT_PENDING)
+				|| orderStatus.equals(OrderStatus.PAYMENT_FAILED) || orderStatus.equals(OrderStatus.PAYMENT_TIMEOUT)
+				|| orderStatus.equals(OrderStatus.CHECKED_INVALID) || orderStatus.equals(OrderStatus.RMS_VERIFICATION_PENDING)
+				|| orderStatus.equals(OrderStatus.RMS_VERIFICATION_FAILED))
+		{
+			return true;
+		}
+		else
+		{
+			return false;
+		}
 	}
 
 	/**
