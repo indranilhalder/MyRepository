@@ -1570,3 +1570,14 @@ body .account .right-account .order-history.order-details li.item .item-fulfillm
 	    padding-left: 15.5%;
 	}
 }
+.savebtn.savebtnOther{
+	margin-left: -159px;
+    margin-top: 7px;
+    height: 28px;
+    padding-top: 6px;
+    background-color: #A9143C;
+    color: #fff;
+    border: none;
+    position: absolute;
+    line-height: 1.5;
+}
