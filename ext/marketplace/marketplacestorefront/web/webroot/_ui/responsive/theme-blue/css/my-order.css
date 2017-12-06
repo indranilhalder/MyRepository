@@ -598,6 +598,9 @@ body .account .right-account .order-history.order-details li.item .status .messa
     margin-left: 5px;
 }
 #track-more-info p {
+	display: none;	/* TISCSS-12 */
+}
+#track-more-info p {
     position:static;
 }
 #track-more-info p:first-child:after {
@@ -807,7 +810,7 @@ body .account .right-account .order-history .bottom .pagination.mobile {
 		top: 75px;
 	}
 	body .account .right-account .order-history.order-details.responsiveProfile li.item:not(.in-store).first .item-fulfillment {
-		margin-top: 75px !important;
+		margin-top: 88px !important;	/* TISCSS-12 */
 		margin-left: 0;
 	}
 	body .account .right-account .order-history.order-details li.item .item-fulfillment, body .account .right-account .order-history.order-details li.item:not(.in-store).first .item-fulfillment {
