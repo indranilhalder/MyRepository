@@ -51,7 +51,7 @@ $(document).ready(function(){
 $(window).on('scroll', function() { 
 	var productItemArrayLength = $('ul.product-listing.product-grid.lazy-grid,ul.product-listing.product-grid.lazy-grid-facet,ul.product-list,ul.product-listing.product-grid.lazy-grid-normal,ul.product-listing.product-grid.custom-sku').find('li.product-item').length;
 	
-    if(productItemArrayLength > 16){
+    if(productItemArrayLength > 16 && ){
     	lazyPushInitalPage();
     }
 });
@@ -341,6 +341,7 @@ function lazyPushInitalPage(){
 		}
 		window.history.replaceState({}, "", initialUrl);
 		lazyPagePush = false;
+		$('.pagination-blocks').twbsPagination(settings);
 	}
 }
 
@@ -897,7 +898,7 @@ function toggleNextPrevButton(){
     e.fn.twbsPagination.version = "1.4"
 })(window.jQuery, window, document);
 
-$('.pagination-blocks').twbsPagination(settings);
+//$('.pagination-blocks').twbsPagination(settings);
 
 /*$(window).on("resize",function(){
 if($(window).width() <= 410){
