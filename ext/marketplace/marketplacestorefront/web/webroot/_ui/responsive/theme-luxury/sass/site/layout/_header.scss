@@ -297,6 +297,8 @@ ul.tabs{
 			/*margin-top: 66px;*/
             background: #2d2d2d;
             color:#fff;
+            position: relative;
+            z-index: 2;
             
             .mega-menu{
                 padding-top: 10px;               
@@ -620,6 +622,10 @@ ul.tabs{
 					overflow: hidden;
                     position: relative;
                     margin-right: 20px;
+                    
+                    @include media-breakpoint-down(sm) {
+                        margin-right: 0px;
+                    }
 					
 					/*@include media-breakpoint-up(md) {
 						width: auto;
@@ -629,13 +635,12 @@ ul.tabs{
 						text-decoration: none;
 						&:after{
 							position: absolute;
-							top: 0px;
+							top: 2px;
 							left: 0;
 							content: "";
 							background: $Sprite_icon -1086px -90px no-repeat;
                             width: 33px;
                             height: 30px;
-                            
 						}
 					}
 				}
@@ -727,7 +732,7 @@ ul.tabs{
 				background: $Sprite_icon -1000px -85px no-repeat;
 				width: 30px;
                 height: 30px;
-                margin-right:10px;
+                margin-right:20px;
                 a{
 	                width: 30px;
 	                height: 30px;
@@ -785,17 +790,23 @@ ul.tabs{
 		position: absolute;
 		left: 0;
 		right: 0;
-		top: 40%;
-		margin-top: 1px;  
+		top:70px;       
+        z-index: 1;        
+        
+        
+        @include media-breakpoint-down(sm) {
+            padding: 60px 20px;
+            position: fixed;
+            bottom: 0; 
+            top:-100%;
+        }
         
 		&.active {
 			max-height: 800px;
-			padding: 60px 20px;
+            padding: 60px 20px;           
             
-            @include media-breakpoint-down(sm) {
-              padding: 30px 20px;   
-                margin-left: -20px;
-                margin-right: -20px;
+            @include media-breakpoint-down(sm) {              
+                 top:0;
             }  
 		}
 		.header-search-inner {
@@ -807,11 +818,15 @@ ul.tabs{
 				top: 20px;
 				left: 0;
 				content: "";
-				width: 24px;
-				height: 24px;
-				background: $Sprite -79px -2px no-repeat;
-				opacity: .6;
+                width: 30px;
+                height: 30px;
+				background: $Sprite_icon -1166px -84px no-repeat;
+                
+                @include media-breakpoint-down(sm) {              
+                   display: none;
+                }
 			}
+            
 			.ui-autocomplete{
 				list-style-type:none;
 				padding:0px;
@@ -838,13 +853,20 @@ ul.tabs{
             border-bottom: 1px solid $slight-gray;
             padding-bottom: 5px;
             
+            @include media-breakpoint-down(sm) {
+                border-bottom: 1px solid #2d2d2d;
+                padding-bottom: 0px;
+                display: flex;
+                justify-content: space-between;
+            } 
+            
            .search-input{
                 width:92.5%;
                 display: inline-block;
                 border-bottom: 0px;
                
                 @include media-breakpoint-down(sm) {
-                   width:84%;           
+                   width:100%;         
                 }  
             }
             
@@ -852,18 +874,33 @@ ul.tabs{
                 width: 40px;
                 height: 40px;
                 border-radius: 4px;
-                background-color: #2d2d2d;
-                display: inline-block;                
+                background-color: #fff;
+                display: inline-block;
+                
+                @include media-breakpoint-down(sm) {
+                     background-color: #2d2d2d;
+                     padding: 4px;
+                        border-radius: 0;
+                } 
                 
                 &:after{
                     content: '';
-                    background: $Sprite_icon no-repeat -2232px -40px;
+                    background: $Sprite_icon no-repeat -2230px 0;
                     width: 15px;
                     height: 29px;
-                    display: block;                    
+                    display: block;    
+                    opacity: .6;
+                    
+                    @include media-breakpoint-down(sm) {
+                        background: $Sprite_icon no-repeat -1204px -85px;
+                        width: 30px;
+                        height: 30px;
+                        opacity:1;
+                    }
                 }
                 &:hover{
                     margin-left: 2px;
+                    box-shadow: none;
                 }
             }
            
@@ -872,16 +909,19 @@ ul.tabs{
 			background: $white;
 			border: 0;					
 			padding-left: 50px;
-			font-size: 30px;
-			height:50px;
-			color: $mlight-gray;
-			/*font-style: italic;*/
+			font-size: 24px;
+			height:55px;
+			color: #2d2d2d;
+			font-style: italic;
 			padding-bottom:0px;            
+            
             @include media-breakpoint-down(sm) {
-               font-size: 17px;          
+               font-size: 17px;
+                padding-left:0px;
+                height:40px;
             } 
 			@include placeholder {
-				color: $mlight-gray;
+				color: #2d2d2d;
 			}
 		}
 	}
@@ -898,6 +938,8 @@ ul.tabs{
     background: url(../images/luxuary_sprite.png) -1051px -88px no-repeat;
     width: 23px;
 	height: 26px;
+    
+    
 }
 .header .header-right>ul>li.header-account-link a,
 .header .header-right>ul>li.logged_in a {
@@ -1367,6 +1409,19 @@ ul.tabs{
             transform: rotate(-45deg);
         }
     }
+    
+    .header-search.active{
+        .main-nav-close{
+            top:20px; 
+            right: 25px;
+            position: absolute;        
+
+            &:before, &:after {           
+                background-color: #2d2d2d;
+            } 
+        }        
+    }
+    
      .sub-menu-toggle{
             right: 10px;
             top: 10px;
@@ -1452,4 +1507,66 @@ ul.tabs{
         
     }
  
+}
+.serach-content{
+    .search-tabs{
+        margin: 0px;
+        padding: 0px;
+        list-style: none;       
+        padding: 10px 0px;
+        border-bottom: 1px solid #000;
+        
+        .tab-link {
+            display: inline-block;
+            
+            a{            
+                padding: 0px 5px;
+                font-family: Lato;
+                font-size: 14px;
+                line-height: 1.5;
+                padding: 5px 10px;
+                font-weight: 700;
+                text-transform: uppercase;
+                border-radius: 50px;
+                text-decoration: none;
+                
+                &:hover{
+                    background-color: #2d2d2d;
+                    color: #fff;
+                }
+            }
+            &.active{
+                a{
+                    background-color: #2d2d2d;
+                    color: #fff; 
+                }
+            }
+        }
+    }
+    .serach-items{
+        margin-top: 10px;
+        
+        span{
+            font-family: Lato;
+            font-size: 12px;
+            line-height: 1.5;
+            text-align: left;
+            color: #2d2d2d; 
+        }
+        ul{
+            padding: 0px;
+            list-style: none; 
+            margin-top: 10px;
+            li{
+                font-weight: 600;
+                
+                span{
+                    font-style: italic;
+                    margin-right: 5px;
+                    color: #2d2d2d;
+                    font-weight: normal;
+                }
+            }
+        }
+    }
 }
