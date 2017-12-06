@@ -1379,6 +1379,10 @@ body .right-account .order-history .cancellation-request-block.success .return-f
     color: #a9143c;
     font-weight: 500;
 }
+body .right-account .order-history .cancellation-request-block.success .return-form .container .questions span {
+ 	font-weight: 500;
+    font-size: 14px;	
+}
 body .account .right-account .order-history .product-block li.item .cancellation-request-block.success>div>h2 {
     font-size: 14px;
     font-weight: 600;
@@ -1415,6 +1419,16 @@ body .account .right-account .order-history .product-block li.item .cancellation
 	body .right-account .order-history .cancellation-request-block.success .return-form .container .questions span {
     font-size: 18px;
 	}
+	body .right-account .order-history .cancellation-request-block h2 {
+ 		text-align: center;
+ 	}
+ 	body .right-account .order-history .cancellation-request-block .return-form .buttons {
+ 		text-align: center;
+     	padding: 0 35px 20px;
+ 	}
+ 	body .right-account .order-history .cancellation-request-block .return-form .buttons button {
+ 		width: 100%;
+ 	}
 }
 @media (min-width: 791px){
 	.return-form button {
