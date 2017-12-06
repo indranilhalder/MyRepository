@@ -8,13 +8,16 @@
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 <%@ taglib prefix="format" tagdir="/WEB-INF/tags/shared/format"%>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
+<%@ taglib prefix="cms" uri="http://hybris.com/tld/cmstags"%>
 
 <spring:url value="/ticketForm" var="ticketUrl" />
 
 <template:page pageTitle="${pageTitle}">
-	<div id="globalMessages">
-		<common:globalMessages />
-	</div>
+	<cms:pageSlot position="Section2A" var="comp">
+		<cms:component component="${comp}" />
+	</cms:pageSlot>
+	
+<div class="body-Content">	
 	<div class="custmCareHelp">
 
 		<div class="custmCareHeadSec">
@@ -75,45 +78,50 @@
 				                </div> -->
 							<ul class="orderDrop" style="display: none;">
 							
-							<c:if test="${formFields.orderDatas ne null }">
+							<c:if test="${fn:length(formFields.orderDatas) gt 0}">
 							
-								<c:forEach items="${formFields.orderDatas.sellerOrderList}"
-									var="sellerOrder" varStatus="status">
-									<c:forEach items="${sellerOrder.entries}" var="entry"
-										varStatus="entryStatus">
-										<li>
-											<div class="prodImg">
-												<c:choose>
-													<c:when
-														test="${fn:toLowerCase(entry.product.luxIndicator)=='luxury'}">
-														<product:productPrimaryImage product="${entry.product}"
-															format="luxuryCartIcon" />
-													</c:when>
-													<c:otherwise>
-														<product:productPrimaryImage product="${entry.product}"
-															format="thumbnail" />
-													</c:otherwise>
-												</c:choose>
-
-											</div>
-											<div class="prodInfo">
-												<div class="prodTxt">
-													<p class="orderDate">
-														Order on:
-														<fmt:formatDate value="${sellerOrder.created}"
-															pattern="MMMMM dd, yyyy" />${formatedDate}
-													</p>
-													<p class="prodName">${entry.product.name}</p>
-													<p class="prodPrice">
-														Price:
-														<format:price priceData="${entry.totalPrice}"
-															displayFreeForZero="true" />
-													</p>
-													<span class="prodShiping">Shipped</span>
+								<c:forEach items="${formFields.orderDatas}" var="parentOrder" varStatus="parentStatus" >
+								
+									<c:forEach items="${parentOrder.sellerOrderList}" var="sellerOrder" varStatus="status" >
+										
+										<c:forEach items="${sellerOrder.entries}" var="entry"
+											varStatus="entryStatus">
+											<li>
+												<div class="prodImg">
+													<c:choose>
+														<c:when
+															test="${fn:toLowerCase(entry.product.luxIndicator)=='luxury'}">
+															<product:productPrimaryImage product="${entry.product}"
+																format="luxuryCartIcon" />
+														</c:when>
+														<c:otherwise>
+															<product:productPrimaryImage product="${entry.product}"
+																format="thumbnail" />
+														</c:otherwise>
+													</c:choose>
+	
 												</div>
-											</div>
-										</li>
+												<div class="prodInfo">
+													<div class="prodTxt">
+														<p class="orderDate">
+															Order on:
+															<fmt:formatDate value="${sellerOrder.created}"
+																pattern="MMMMM dd, yyyy" />${formatedDate}
+														</p>
+														<p class="prodName">${entry.product.name}</p>
+														<p class="prodPrice">
+															Price:
+															<format:price priceData="${entry.totalPrice}"
+																displayFreeForZero="true" />
+														</p>
+														<span class="prodShiping">Shipped</span>
+													</div>
+												</div>
+											</li>
+										</c:forEach>
+										
 									</c:forEach>
+									
 								</c:forEach>
 								
 							</c:if>
@@ -188,7 +196,7 @@
 			</form>
 		</div>
 	</div>
-
+</div>
 </template:page>
 
 <style>
