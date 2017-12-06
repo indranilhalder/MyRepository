@@ -4,5 +4,7 @@ package com.tisl.mpl.cockpits.cscockpit.widgets.controllers;
 public interface MplDefaultOrderController {
 
 	public String getPanCardStatus(String orderLineId);
+	
+	public String getUtrNoArnNo(String orderLineId);
 
 }

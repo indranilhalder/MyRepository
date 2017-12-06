@@ -5,6 +5,8 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 
+import net.sourceforge.pmd.util.StringUtil;
+
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
@@ -189,7 +191,12 @@ public class MarketPlaceOrderDetailsOrderItemsWidgetRenderer extends
 				new Object[0]));
 		listheader.setWidth("120px");
 		row.appendChild(listheader);
-
+		// TPR-7412 start
+		listheader = new Listheader(LabelUtils.getLabel(widget, "utrNoORarnNo",
+				new Object[0]));
+		listheader.setWidth("120px");
+		row.appendChild(listheader);
+		// TPR-7412 end
 		return row;
 	}
 
@@ -372,14 +379,32 @@ public class MarketPlaceOrderDetailsOrderItemsWidgetRenderer extends
 		row.appendChild(new Listcell(qtyString));
 		
 		//CKD-TPR-3809
-		String panCardStatus = ((MplDefaultOrderController)widget.getWidgetController()).getPanCardStatus(entrymodel.getOrderLineId());
+		String panCardStatus=null;
+		if(StringUtil.isNotEmpty(entrymodel.getOrderLineId())&&null!=entrymodel.getOrderLineId())
+		{
+		 panCardStatus = ((MplDefaultOrderController)widget.getWidgetController()).getPanCardStatus(entrymodel.getOrderLineId());
+		}
 		if (StringUtils.isNotBlank(panCardStatus)){
 			row.appendChild(new Listcell(panCardStatus));
 		}
 		else{
 			row.appendChild(new Listcell(MplConstants.NOT_AVAILABLE));
 		}
-
+      //	TPR-7412 start	
+		String utrNoORarnNo=null;
+		if(StringUtil.isNotEmpty(entrymodel.getOrderLineId())&&null!=entrymodel.getOrderLineId())
+		{
+		 utrNoORarnNo = ((MplDefaultOrderController)widget.getWidgetController()).getUtrNoArnNo(entrymodel.getOrderLineId());
+		}
+		if(StringUtils.isNotBlank(utrNoORarnNo))
+		{
+			row.appendChild(new Listcell(utrNoORarnNo));
+		}
+		else
+		{
+			row.appendChild(new Listcell(MplConstants.NOT_AVAILABLE));
+		}
+    //TPR-7412 end
 	}
 
 	
