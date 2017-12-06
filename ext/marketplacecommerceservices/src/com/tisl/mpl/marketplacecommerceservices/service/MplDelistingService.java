@@ -7,8 +7,12 @@ import de.hybris.platform.catalog.model.CatalogVersionModel;
 
 import java.util.List;
 
+import javax.xml.bind.JAXBException;
+
 import com.tisl.mpl.core.model.MarketplaceDelistModel;
 import com.tisl.mpl.model.SellerInformationModel;
+import com.tisl.mpl.pojo.ProductDelistingDTO;
+import com.tisl.mpl.pojo.SellerDelistingDTO;
 
 
 /**
@@ -34,6 +38,8 @@ public interface MplDelistingService
 	//TISPRD-207 Changes
 	public List<MarketplaceDelistModel> findUnprocessedRecord();
 
+	public void delistProduct(final ProductDelistingDTO delistDTO) throws JAXBException;
 
+	public void sellerDelist(final SellerDelistingDTO sellerDelistDTO) throws JAXBException;
 
 }
