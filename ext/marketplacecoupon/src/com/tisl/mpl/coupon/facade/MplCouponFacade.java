@@ -222,4 +222,7 @@ public interface MplCouponFacade
 	String getCouponCode(String manuallyselectedvoucher);
 
 
+	AbstractOrderModel removeLastCartCoupon(AbstractOrderModel oModel);
+
+
 }

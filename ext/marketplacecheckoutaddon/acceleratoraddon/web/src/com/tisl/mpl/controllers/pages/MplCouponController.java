@@ -595,17 +595,17 @@ public class MplCouponController
 
 			if (orderModel == null)
 			{
-				final CartModel cartModel = getCartService().getSessionCart();
+				CartModel cartModel = getCartService().getSessionCart();
 
 				try
 				{
+					cartModel = (CartModel) getMplCouponFacade().removeLastCartCoupon(cartModel);
 					if (StringUtils.isNotEmpty(couponCode))
 					{
 						couponRedStatus = getMplCouponFacade().applyCartVoucher(couponCode, cartModel, null);
 						LOG.debug("Cart Coupon Redemption Status is >>>>" + couponRedStatus);
 						data = getMplCouponFacade().populateCartVoucherData(null, cartModel, couponRedStatus, true, couponCode);
 					}
-
 				}
 				catch (final VoucherOperationException e)
 				{
@@ -616,6 +616,7 @@ public class MplCouponController
 			{
 				try
 				{
+					orderModel = (OrderModel) getMplCouponFacade().removeLastCartCoupon(orderModel);
 					if (StringUtils.isNotEmpty(couponCode))
 					{
 						couponRedStatus = getMplCouponFacade().applyCartVoucher(couponCode, null, orderModel);
@@ -669,8 +670,11 @@ public class MplCouponController
 			}
 		}
 
-		totalDiscount = (totalMRP) - (null == abstractOrderModel.getTotalPriceWithConv() ? 0.0d
-				: abstractOrderModel.getTotalPriceWithConv().doubleValue()) - couponDiscount;
+		totalDiscount = (totalMRP)
+				- (null == abstractOrderModel.getTotalPriceWithConv() ? 0.0d
+						: abstractOrderModel.getTotalPriceWithConv().doubleValue())
+				- couponDiscount
+				- (null == abstractOrderModel.getDeliveryCost() ? 0.0d : abstractOrderModel.getDeliveryCost().doubleValue());
 
 		data.setCouponDiscount(getMplCheckoutFacade().createPrice(abstractOrderModel, Double.valueOf(totalDiscount)));
 

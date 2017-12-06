@@ -1691,7 +1691,7 @@ public class MplCouponFacadeImpl implements MplCouponFacade
 
 			totalDiscount = (totalMRP)
 					- (null == cartModel.getTotalPriceWithConv() ? 0.0d : cartModel.getTotalPriceWithConv().doubleValue())
-					- couponDiscount;
+					- couponDiscount - (null == cartModel.getDeliveryCost() ? 0.0d : cartModel.getDeliveryCost().doubleValue());
 
 			data.setCouponDiscount(getMplCheckoutFacade().createPrice(cartModel, Double.valueOf(totalDiscount)));
 			data.setTotalPrice(getMplCheckoutFacade().createPrice(cartModel, cartModel.getTotalPriceWithConv()));
@@ -1712,7 +1712,7 @@ public class MplCouponFacadeImpl implements MplCouponFacade
 
 			totalDiscount = (totalMRP)
 					- (null == orderModel.getTotalPriceWithConv() ? 0.0d : orderModel.getTotalPriceWithConv().doubleValue())
-					- couponDiscount;
+					- couponDiscount - (null == orderModel.getDeliveryCost() ? 0.0d : orderModel.getDeliveryCost().doubleValue());
 
 			data.setCouponDiscount(getMplCheckoutFacade().createPrice(orderModel, Double.valueOf(totalDiscount)));
 			data.setTotalPrice(getMplCheckoutFacade().createPrice(orderModel, orderModel.getTotalPriceWithConv()));
@@ -1744,6 +1744,90 @@ public class MplCouponFacadeImpl implements MplCouponFacade
 	public String getCouponCode(final String manuallyselectedvoucher)
 	{
 		return getMplCouponService().getVoucherCode(manuallyselectedvoucher);
+	}
+
+
+
+	/**
+	 * The method removes the earlier applied offers
+	 *
+	 * @param oModel
+	 */
+	@Override
+	public AbstractOrderModel removeLastCartCoupon(final AbstractOrderModel oModel)
+	{
+		final List<DiscountModel> discountList = oModel.getDiscounts();
+		boolean isPresent = false;
+		MplCartOfferVoucherModel voucher = null;
+
+		double productPrice = 0.0;
+		String voucherCode = MarketplacecommerceservicesConstants.EMPTY;
+
+
+		try
+		{
+			if (CollectionUtils.isNotEmpty(discountList))
+			{
+				for (final DiscountModel discount : discountList)
+				{
+					if ((discount instanceof PromotionVoucherModel) && (discount instanceof MplCartOfferVoucherModel))
+					{
+						isPresent = true;
+						voucher = (MplCartOfferVoucherModel) discount;
+						voucherCode = voucher.getVoucherCode();
+						break;
+					}
+				}
+			}
+
+
+			if (isPresent)
+			{
+				if (oModel instanceof CartModel)
+				{
+					final List<AbstractOrderEntryModel> applicableOrderEntryList = getOrderEntryModelFromVouEntries(voucher, oModel);
+
+					productPrice = getTotalProductPrice(applicableOrderEntryList);
+
+					getMplVoucherService().releaseCartVoucherAfterCheck((CartModel) oModel, null, voucherCode,
+							Double.valueOf(productPrice), applicableOrderEntryList, discountList);
+				}
+				else if (oModel instanceof OrderModel)
+				{
+					final List<AbstractOrderEntryModel> applicableOrderEntryList = getOrderEntryModelFromVouEntries(voucher, oModel);
+
+					productPrice = getTotalProductPrice(applicableOrderEntryList);
+
+					getMplVoucherService().releaseCartVoucherAfterCheck(null, (OrderModel) oModel, voucherCode,
+							Double.valueOf(productPrice), applicableOrderEntryList, discountList);
+				}
+			}
+		}
+		catch (final Exception exception)
+		{
+			LOG.debug("Exception" + exception.getMessage());
+		}
+
+		getModelService().refresh(oModel);
+
+		return oModel;
+	}
+
+
+
+
+	private double getTotalProductPrice(final List<AbstractOrderEntryModel> applicableOrderEntryList)
+	{
+		double productPrice = 0.0;
+
+		if (CollectionUtils.isNotEmpty(applicableOrderEntryList))
+		{
+			for (final AbstractOrderEntryModel entry : applicableOrderEntryList)
+			{
+				productPrice += (null == entry.getTotalPrice()) ? 0.0d : entry.getTotalPrice().doubleValue();
+			}
+		}
+		return productPrice;
 	}
 
 
