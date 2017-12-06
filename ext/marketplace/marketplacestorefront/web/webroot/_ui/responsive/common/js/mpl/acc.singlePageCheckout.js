@@ -3279,7 +3279,7 @@ ACC.singlePageCheckout = {
 	},
 	releasePromoVoucher:function(offerID){		
     	$('.promoapplied').prop('checked', false);
-    	$('.promoapplied').removeClass("promoapplied");
+    	$('.promoapplied').removeClass("promoapplied"); 
     	//release voucher ajax call
 		ACC.singlePageCheckout.showAjaxLoader();
 		var url=ACC.config.encodedContextPath + "/checkout/multi/coupon/releasevoucher";

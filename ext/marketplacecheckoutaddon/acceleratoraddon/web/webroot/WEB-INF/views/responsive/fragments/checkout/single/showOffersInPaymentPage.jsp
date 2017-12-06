@@ -37,7 +37,7 @@
 		
 		<c:if test="${total_offerPage > 3}">
 		   <div class="viewmoreoffer" onclick="ACC.singlePageCheckout.showAllOffers()">View All ${total_offerPage} Offers</div>
-		</c:if>	
+		</c:if>	 
 </div>
 <!-- -------offer available more than 3 poppup section ------ -->
 <div class="offer_container_poppup" style="display:none">

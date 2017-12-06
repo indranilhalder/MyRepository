@@ -2102,7 +2102,7 @@ function savedDebitCardRadioChange(radioId){
 					$(".pay .loaderDiv").remove();
 					$("#no-click,.spinner").remove();									    
 				}
-				else if(response=='stayInPayment'){ //TPR-7486
+		  		else if(response=='stayInPayment'){ //TPR-7486
 					document.getElementById("juspayErrorMsg").innerHTML="Sorry! Some issue occurred";
 					$("#juspayconnErrorDiv").css("display","block");
 					$("body,html").animate({ scrollTop: 0 });
