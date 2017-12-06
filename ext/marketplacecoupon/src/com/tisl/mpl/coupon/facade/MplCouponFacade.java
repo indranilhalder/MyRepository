@@ -213,4 +213,13 @@ public interface MplCouponFacade
 			boolean isRedeemed, String couponCode);
 
 
+	/**
+	 * Get Voucher Coupon Code
+	 *
+	 * @param manuallyselectedvoucher
+	 * @return String
+	 */
+	String getCouponCode(String manuallyselectedvoucher);
+
+
 }

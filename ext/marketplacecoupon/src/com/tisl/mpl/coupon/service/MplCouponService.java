@@ -68,4 +68,7 @@ public interface MplCouponService
 
 	boolean validateCartEligilityForCartCoupons(List<DiscountModel> discountList);
 
+
+	String getVoucherCode(String manuallyselectedvoucher);
+
 }

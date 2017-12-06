@@ -54,4 +54,10 @@ public interface MplCouponDao
 	 */
 	Map<String, Double> findVoucherHistoryAllInvalidations(CustomerModel customer);
 
+	/**
+	 * @param manuallyselectedvoucher
+	 * @return String
+	 */
+	String getVoucherCode(String manuallyselectedvoucher);
+
 }

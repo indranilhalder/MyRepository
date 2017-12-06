@@ -2,6 +2,7 @@ package com.tisl.mpl.controllers.pages;
 
 import de.hybris.platform.acceleratorstorefrontcommons.annotations.RequireHardLogIn;
 import de.hybris.platform.commercefacades.voucher.exceptions.VoucherOperationException;
+import de.hybris.platform.core.model.order.AbstractOrderEntryModel;
 import de.hybris.platform.core.model.order.AbstractOrderModel;
 import de.hybris.platform.core.model.order.CartModel;
 import de.hybris.platform.core.model.order.OrderModel;
@@ -15,6 +16,7 @@ import java.util.Map;
 
 import javax.annotation.Resource;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Controller;
@@ -579,52 +581,103 @@ public class MplCouponController
 	public @ResponseBody VoucherDiscountData redeemCartCoupon(final String manuallyselectedvoucher, final String guid)
 	{
 		VoucherDiscountData data = new VoucherDiscountData();
-		final String couponCode = manuallyselectedvoucher;
-
-		OrderModel orderModel = null;
-		boolean couponRedStatus = false;
-
-		if (StringUtils.isNotEmpty(guid))
+		try
 		{
-			orderModel = getMplPaymentFacade().getOrderByGuid(guid);
+			final String couponCode = getMplCouponFacade().getCouponCode(manuallyselectedvoucher);
+
+			OrderModel orderModel = null;
+			boolean couponRedStatus = false;
+
+			if (StringUtils.isNotEmpty(guid))
+			{
+				orderModel = getMplPaymentFacade().getOrderByGuid(guid);
+			}
+
+			if (orderModel == null)
+			{
+				final CartModel cartModel = getCartService().getSessionCart();
+
+				try
+				{
+					if (StringUtils.isNotEmpty(couponCode))
+					{
+						couponRedStatus = getMplCouponFacade().applyCartVoucher(couponCode, cartModel, null);
+						LOG.debug("Cart Coupon Redemption Status is >>>>" + couponRedStatus);
+						data = getMplCouponFacade().populateCartVoucherData(null, cartModel, couponRedStatus, true, couponCode);
+					}
+
+				}
+				catch (final VoucherOperationException e)
+				{
+					data = setCartVoucherDataForException(data, cartModel);
+				}
+			}
+			else
+			{
+				try
+				{
+					if (StringUtils.isNotEmpty(couponCode))
+					{
+						couponRedStatus = getMplCouponFacade().applyCartVoucher(couponCode, null, orderModel);
+						LOG.debug("Cart Coupon Redemption Status is >>>>" + couponRedStatus);
+						data = getMplCouponFacade().populateCartVoucherData(orderModel, null, couponRedStatus, true, couponCode);
+					}
+
+				}
+				catch (final VoucherOperationException e)
+				{
+					data = setCartVoucherDataForException(data, orderModel);
+				}
+
+			}
 		}
-
-		if (orderModel == null)
+		catch (final Exception exception)
 		{
-			final CartModel cartModel = getCartService().getSessionCart();
-
-			try
-			{
-				couponRedStatus = getMplCouponFacade().applyCartVoucher(couponCode, cartModel, null);
-
-				LOG.debug("Cart Coupon Redemption Status is >>>>" + couponRedStatus);
-
-				data = getMplCouponFacade().populateCartVoucherData(null, cartModel, couponRedStatus, true, couponCode);
-			}
-			catch (final VoucherOperationException e)
-			{
-				//
-			}
-		}
-		else
-		{
-			try
-			{
-				couponRedStatus = getMplCouponFacade().applyCartVoucher(couponCode, null, orderModel);
-
-				LOG.debug("Cart Coupon Redemption Status is >>>>" + couponRedStatus);
-
-				data = getMplCouponFacade().populateCartVoucherData(orderModel, null, couponRedStatus, true, couponCode);
-			}
-			catch (final VoucherOperationException e)
-			{
-				//
-			}
-
+			LOG.debug("Exception >>>>" + exception.getMessage());
 		}
 
 		return data;
 
+	}
+
+
+	/**
+	 * Set Data Class for Voucher Exception Flow
+	 *
+	 * @param data
+	 * @param abstractOrderModel
+	 * @return VoucherDiscountData
+	 */
+	private VoucherDiscountData setCartVoucherDataForException(final VoucherDiscountData data,
+			final AbstractOrderModel abstractOrderModel)
+	{
+		final VoucherDiscountData errorData = data;
+		double totalDiscount = 0.0;
+
+		double couponDiscount = 0.0;
+		double totalMRP = 0.0;
+
+		if (CollectionUtils.isNotEmpty(abstractOrderModel.getEntries()))
+		{
+			for (final AbstractOrderEntryModel oModel : abstractOrderModel.getEntries())
+			{
+				final Double couponValue = oModel.getCouponValue();
+				final Double mrp = oModel.getMrp();
+
+				couponDiscount += (null == couponValue ? 0.0d : couponValue.doubleValue());
+				totalMRP += (null == mrp ? 0.0d : mrp.doubleValue());
+			}
+		}
+
+		totalDiscount = (totalMRP) - (null == abstractOrderModel.getTotalPriceWithConv() ? 0.0d
+				: abstractOrderModel.getTotalPriceWithConv().doubleValue()) - couponDiscount;
+
+		data.setCouponDiscount(getMplCheckoutFacade().createPrice(abstractOrderModel, Double.valueOf(totalDiscount)));
+
+		errorData.setTotalPrice(getMplCheckoutFacade().createPrice(abstractOrderModel, abstractOrderModel.getTotalPriceWithConv()));
+		errorData.setCouponRedeemed(false);
+
+		return errorData;
 	}
 
 

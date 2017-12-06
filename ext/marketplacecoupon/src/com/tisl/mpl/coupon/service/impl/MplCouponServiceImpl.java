@@ -186,4 +186,12 @@ public class MplCouponServiceImpl implements MplCouponService
 	}
 
 
+
+	@Override
+	public String getVoucherCode(final String manuallyselectedvoucher)
+	{
+		return getMplCouponDao().getVoucherCode(manuallyselectedvoucher);
+	}
+
+
 }
