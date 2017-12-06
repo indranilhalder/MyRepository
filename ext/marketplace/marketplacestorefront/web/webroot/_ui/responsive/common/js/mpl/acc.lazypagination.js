@@ -51,7 +51,7 @@ $(document).ready(function(){
 $(window).on('scroll', function() { 
 	var productItemArrayLength = $('ul.product-listing.product-grid.lazy-grid,ul.product-listing.product-grid.lazy-grid-facet,ul.product-list,ul.product-listing.product-grid.lazy-grid-normal,ul.product-listing.product-grid.custom-sku').find('li.product-item').length;
 	
-    if(productItemArrayLength > 16 && ){
+    if(productItemArrayLength > 16){
     	lazyPushInitalPage();
     }
 });
