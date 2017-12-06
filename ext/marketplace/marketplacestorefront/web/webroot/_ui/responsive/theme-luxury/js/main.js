@@ -289,6 +289,12 @@ TATA.CommonFunctions = {
             }
 
         });
+        
+        $('.header-search .main-nav-close').on('click', function(){
+            
+            $(this).parent(".header-search").removeClass("active");
+            
+        });
 
     },
 

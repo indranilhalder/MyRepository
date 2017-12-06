@@ -17149,6 +17149,8 @@ TATA.CommonFunctions = {
             TATA.CommonFunctions.loadSignInForm(elem), $("#mypopUpModal").modal(), $(".modal-backdrop").on("click", function() {
                 $("#mypopUpModal").modal("hide");
             });
+        }), $(".header-search .main-nav-close").on("click", function() {
+            $(this).parent(".header-search").removeClass("active");
         });
     },
     DocumentClick: function() {
