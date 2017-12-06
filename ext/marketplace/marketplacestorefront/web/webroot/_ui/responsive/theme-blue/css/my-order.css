@@ -1398,6 +1398,11 @@ body .account .right-account .order-history .product-block li.item .cancellation
 	}
 }
 @media (max-width: 790px){
+	body .account .right-account .order-history .product-block li.item .orderUpdatesBlock .status {
+    position: absolute;
+    top: 20px;
+    right: 0;
+	}
 	body .right-account .order-history .cancellation-request-block .return-form .buttons button {
     width: 100%;
     max-width: 420px;
