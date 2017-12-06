@@ -683,11 +683,9 @@ body .account .right-account .order-history .bottom .pagination.mobile {
 	body .account .right-account .order-history .product-block li.header>ul>li {
     width: 49%;
 	}
-	/* body .account .right-account .order-history .product-block li.item .image {
+	body .account .right-account .order-history .product-block li.item .image {
     width: 50px;
-    position: absolute;
-    top: 20px;
-	} */
+	}
 	body .account .right-account .order-history .product-block li.item .details {
 	    padding-right: 70px;
 	    padding-left: 70px;
