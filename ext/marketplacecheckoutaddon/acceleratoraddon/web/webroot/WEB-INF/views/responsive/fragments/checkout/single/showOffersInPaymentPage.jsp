@@ -14,7 +14,7 @@
 		<c:forEach items="${offerPageData}" var="offerPageData" begin="0" end="2" varStatus="status">
 				<li class="offer" id="offer${status.index}"  style="cursor:pointer;">
 					<div class="offerchoosesection">
-						 <input type="radio" name="offer_name" id ="offer_name${status.index}" value="${offerPageData.code}" onchange="ACC.singlePageCheckout.chooseOffer(this.value)">       	 			
+						 <input type="radio" name="offer_name" id ="offer_name${status.index}" value="${offerPageData.code}" onchange="ACC.singlePageCheckout.chooseOffer(this.value,'offer_name${status.index}')">       	 			
                                          <label for="offer_name${status.index}" data-id="offercode" class="numbers"> <span class="offer_title">${offerPageData.name}</span></label>
 							<br><span class="offer_des">${offerPageData.description}</span>
 							<br><span>Max Discount: Rs.${offerPageData.maxDiscountValue}</span>							
@@ -47,7 +47,7 @@
 		<c:forEach items="${offerPageData}" var="offerPageData"  varStatus="status">
 				<li class="offer" id="offerpop${status.index}"  style="cursor:pointer;">
 					<div class="offerchoosesection">
-						 <input type="radio"  name="offer_name" id ="offer_name_pop${status.index}" value="${offerPageData.code}" onchange="ACC.singlePageCheckout.chooseOffer(this.value)">       	 			
+						 <input type="radio"  name="offer_name" id ="offer_name_pop${status.index}" value="${offerPageData.code}" onchange="ACC.singlePageCheckout.chooseOffer(this.value,'offer_name_pop${status.index}')">       	 			
                                          <label for="offer_name_pop${status.index}" data-id="offercodepop" class="numbers Popup-radio"> <span class="offer_title">${offerPageData.name}</span></label>
 							<br><span class="offer_des">${offerPageData.description}</span>
 							<br><span>Max Discount: Rs.${offerPageData.maxDiscountValue}</span>								

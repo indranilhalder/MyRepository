@@ -339,7 +339,7 @@ function displayNetbankingForm(){
 			// resetConvCharge(); TISPT-29
 			$('input:password').val("");
 			$(".name_on_card").val("");	
-			applyPromotion(null,"none","none");
+			//applyPromotion(null,"none","none");
 			$("#paymentDetails, #make_nb_payment").css("display","block");
 			$(".make_payment_top_nb").css("display","block");
 			$("#submitButtons, #paymentFormButton, #submitPaymentFormButton, #submitPaymentFormCODButton").css("display","none");
@@ -548,7 +548,7 @@ function displayCODForm()
 				} else {
 					$('#continue_payment_after_validate').hide();
 				}	
-				applyPromotion(null,"none","none");
+				//applyPromotion(null,"none","none");
 			}
 			else if(codEligible=="NOT_TSHIP")
 			{
@@ -568,7 +568,7 @@ function displayCODForm()
 				} else {
 					$('#continue_payment_after_validate').hide();
 				}	
-				applyPromotion(null,"none","none");
+				//applyPromotion(null,"none","none");
 			}
 			else if(codEligible=="ITEMS_NOT_ELIGIBLE")
 			{
@@ -588,7 +588,7 @@ function displayCODForm()
 				} else {
 					$('#continue_payment_after_validate').hide();
 				}	
-				applyPromotion(null,"none","none");
+				//applyPromotion(null,"none","none");
 			}
 			else if(codEligible=="NOT_PINCODE_SERVICEABLE")
 			{
@@ -608,7 +608,7 @@ function displayCODForm()
 				} else {
 					$('#continue_payment_after_validate').hide();
 				}	
-				applyPromotion(null,"none","none");
+				//applyPromotion(null,"none","none");
 			}
 			else{
 				if(isCodSet == false){
@@ -656,7 +656,7 @@ function displayCODForm()
 								// document.getElementById("totalWithConvFields").innerHTML=totalPrice;
 								// TISPT-29
 								if(paymentMode!=null){
-									applyPromotion(null,"none","none");
+									//applyPromotion(null,"none","none");
 								}
 								isCodSet = true;
 							}
@@ -1684,7 +1684,7 @@ $("#otpMobileNUMField").focus(function(){
 			document.getElementById("outstanding-amount-mobile").innerHTML=totalPrice;
  			isCodSet = false;
  			if(paymentMode!=null){
- 				applyPromotion(null,"none","none");
+ 				//applyPromotion(null,"none","none");
 			}
  		},
  		error : function(resp) {
@@ -3060,7 +3060,7 @@ function savedDebitCardRadioChange(radioId){
 		$(".card_token_hide").parent().find('.card_is_domestic').removeClass("card_is_domestic").addClass("card_is_domestic_hide");
 		$(".card_token_hide").parent().find('.card_ebsErrorSavedCard').removeClass("card_ebsErrorSavedCard").addClass("card_ebsErrorSavedCard_hide");
 		$(".card_token_hide").parent().parent().parent().find(".cvv").find('.card_cvvErrorSavedCard').removeClass("card_cvvErrorSavedCard").addClass("card_cvvErrorSavedCard_hide");
-		applyPromotion(null,"none","none",true);
+		//applyPromotion(null,"none","none",true);
 	}
 	else if($("#paymentMode").val()=="EMI"){
 		var selectedBank=$("#bankNameForEMI").val();
@@ -3092,7 +3092,7 @@ function savedDebitCardRadioChange(radioId){
 		$(".card_token_hide").parent().find('.card_is_domestic').removeClass("card_is_domestic").addClass("card_is_domestic_hide");
 		$(".card_token_hide").parent().find('.card_ebsErrorSavedCard').removeClass("card_ebsErrorSavedCard").addClass("card_ebsErrorSavedCard_hide");
 		$(".card_token_hide").parent().parent().parent().find(".cvv").find('.card_cvvErrorSavedCard').removeClass("card_cvvErrorSavedCard").addClass("card_cvvErrorSavedCard_hide");
-		applyPromotion(null,"none","none",true);
+		//applyPromotion(null,"none","none",true);
 	}
 	// TISEE-5555
 	$('.security_code_hide').prop('disabled', true);
@@ -3965,7 +3965,7 @@ function validateCardNo_bck(formSubmit) {
 //				{
 					binStatus=true;
 					if($("#paymentMode").val()!='EMI'){
-						applyPromotion(null,binStatus,formSubmit,true);
+						//applyPromotion(null,binStatus,formSubmit,true);
 					}
 					else
 					{
@@ -4257,7 +4257,7 @@ function validateDebitCardNo_bck(formSubmit) {
 //					{
 						binStatus=true;
 						if(cardType!='EMI'){
-							applyPromotion(null,binStatus,formSubmit,true);
+							//applyPromotion(null,binStatus,formSubmit,true);
 						}
 						//TPR-629
 						else
@@ -5148,14 +5148,12 @@ function setBankForSavedCard(bankName){
 //	});	
 	bankNameSelected=bankName;
 	//alert(bankName);
-	applyPromotion(bankName,"none","none",false);	
+	//applyPromotion(bankName,"none","none",false);	
 
 }
 
 
-function applyPromotion(bankName,binValue,formSubmit,isNewCard){
-	
-}
+
 //TPR-629---changes in parameter
 function applyPromotion_bck(bankName,binValue,formSubmit,isNewCard)
 {
@@ -9389,7 +9387,7 @@ $("#make_mrupee_payment , #make_mrupee_payment_up").click(function(){
 function displayThrdPrtyWlt(){
 	$("#make_mrupee_payment_up").show();
 	$("li#MRUPEE").css("display","block");
-	applyPromotion(null,"none","none");
+	//applyPromotion(null,"none","none");
 }
 //$("#viewPaymentMRupee,#viewPaymentMRupeeMobile").click(function(){
 function viewPaymentMRupee()

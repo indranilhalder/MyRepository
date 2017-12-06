@@ -2020,11 +2020,11 @@ ACC.singlePageCheckout = {
 						//$("#promotionApplied").css("display","block");
 						//document.getElementById("promotion").innerHTML=data.totalDiscount.formattedValue;
 					//}
-    				document.getElementById("totalWithConvField").innerHTML=data.totalPrice;
-    				if(document.getElementById("outstanding-amount")!=null)
-    				document.getElementById("outstanding-amount").innerHTML=data.totalPrice;
-    				document.getElementById("outstanding-amount-mobile").innerHTML=data.totalPrice;
-    				$("#codAmount").text(data.totalPrice);
+    				//document.getElementById("totalWithConvField").innerHTML=data.totalPrice;
+    				//if(document.getElementById("outstanding-amount")!=null)
+    				//document.getElementById("outstanding-amount").innerHTML=data.totalPrice;
+    				//document.getElementById("outstanding-amount-mobile").innerHTML=data.totalPrice;
+    				//$("#codAmount").text(data.totalPrice);
     				
     				recalculateCart();
 
@@ -3223,9 +3223,11 @@ ACC.singlePageCheckout = {
 		});
 	
 	},
-	chooseOffer:function(offerID){
+	chooseOffer:function(offerID,radioId){
 		//alert(offerID);
 		//$('input[name=offer_name]:checked+label::before').css("background", "black");
+		
+		$("#"+radioId).addClass("promoapplied");
 		ACC.singlePageCheckout.showAjaxLoader();
 		var url=ACC.config.encodedContextPath + "/checkout/multi/coupon/usevoucher";
 		var guid = $('#guid').val();
@@ -3236,17 +3238,69 @@ ACC.singlePageCheckout = {
 			console.log("ERROR:"+textStatus + ': ' + errorThrown);
 		});
         
-        xhrResponse.done(function(data, textStatus, jqXHR) {
-        	$("#paymentoffersPopup").modal('hide');          	      	
+        xhrResponse.done(function(response, textStatus, jqXHR) {
+        	$("#paymentoffersPopup").modal('hide'); //for poppup
+        	
+        	if(response.couponRedeemed != false && response.redeemErrorMsg == null) { //coupon applied successfully
+	 			document.getElementById("totalWithConvField").innerHTML=response.totalPrice.formattedValue;
+	 			if(document.getElementById("outstanding-amount")!=null)
+	 			{
+	 				document.getElementById("outstanding-amount").innerHTML=response.totalPrice.formattedValue;
+	 			}
+				document.getElementById("outstanding-amount-mobile").innerHTML=response.totalPrice.formattedValue;
+	 			$("#codAmount").text(response.totalPrice.formattedValue);
+	 			
+	 			if(response.couponDiscount.value != 0){
+					$("#promotionApplied").css("display","block");
+					document.getElementById("promotion").innerHTML=response.couponDiscount.formattedValue;
+				}
+	 			
+        	} else { // not applied
+        		document.getElementById("juspayErrorMsg").innerHTML="Sorry! The Offer cannot be used for this purchase.";
+				$("#juspayconnErrorDiv").css("display","block");
+        	}
+        	
             	
 		}); 
         
         xhrResponse.always(function(){
         	ACC.singlePageCheckout.hideAjaxLoader();
 		});
+        
+        $('.promoapplied').click(function() {
+        	var releaseCode = $('.promoapplied').val();
+        	if(releaseCode != undefined && releaseCode != "") {
+        		ACC.singlePageCheckout.releasePromoVoucher(releaseCode);
+        	}
+        	
+        	
+    	})
 		
 	},
-	
+	releasePromoVoucher:function(offerID){		
+    	$('.promoapplied').prop('checked', false);
+    	$('.promoapplied').removeClass("promoapplied");
+    	//release voucher ajax call
+		ACC.singlePageCheckout.showAjaxLoader();
+		var url=ACC.config.encodedContextPath + "/checkout/multi/coupon/releasevoucher";
+		var guid = $('#guid').val();
+		var data= {manuallyselectedvoucher:offerID,guid:guid};
+		var xhrResponse=ACC.singlePageCheckout.ajaxRequest(url,"POST",data,false);
+        
+        xhrResponse.fail(function(xhr, textStatus, errorThrown) {
+			console.log("ERROR:"+textStatus + ': ' + errorThrown);
+		});
+        
+        xhrResponse.done(function(response, textStatus, jqXHR) {
+        	
+        	
+            	
+		}); 
+        
+        xhrResponse.always(function(){
+        	ACC.singlePageCheckout.hideAjaxLoader();
+		});
+	},
 	showAllOffers:function(){
 		//$(".offer_container_poppup").show();
 		ACC.singlePageCheckout.paymentOffersPopup($(".offer_container_poppup").html());
@@ -3344,4 +3398,13 @@ $(document).ready(function(){
 //	        $( this ).attr( 'autocomplete', 'false' );
 //	    });
 	}
+	
+	
 });
+
+
+
+
+
+
+
