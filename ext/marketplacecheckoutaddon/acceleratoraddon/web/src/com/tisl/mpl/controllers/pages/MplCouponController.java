@@ -6,12 +6,14 @@ import de.hybris.platform.core.model.order.AbstractOrderEntryModel;
 import de.hybris.platform.core.model.order.AbstractOrderModel;
 import de.hybris.platform.core.model.order.CartModel;
 import de.hybris.platform.core.model.order.OrderModel;
+import de.hybris.platform.core.model.order.price.DiscountModel;
 import de.hybris.platform.jalo.JaloInvalidParameterException;
 import de.hybris.platform.order.CartService;
 import de.hybris.platform.servicelayer.session.SessionService;
 import de.hybris.platform.store.services.BaseStoreService;
 import de.hybris.platform.voucher.VoucherService;
 
+import java.util.List;
 import java.util.Map;
 
 import javax.annotation.Resource;
@@ -32,6 +34,7 @@ import com.tisl.mpl.data.VoucherDiscountData;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.facade.checkout.MplCheckoutFacade;
 import com.tisl.mpl.facades.payment.MplPaymentFacade;
+import com.tisl.mpl.model.MplCartOfferVoucherModel;
 import com.tisl.mpl.util.ExceptionUtil;
 
 
@@ -639,6 +642,78 @@ public class MplCouponController
 
 		return data;
 
+	}
+
+	@RequestMapping(value = MarketplacecouponConstants.CARTCOUPONRELEASE, method = RequestMethod.POST)
+	@RequireHardLogIn
+	public @ResponseBody VoucherDiscountData releaseCartCoupon(final String manuallyselectedvoucher, final String guid)
+	{
+		VoucherDiscountData data = new VoucherDiscountData();
+		try
+		{
+			final String couponCode = getMplCouponFacade().getCouponCode(manuallyselectedvoucher);
+
+			OrderModel orderModel = null;
+
+			boolean isCartVoucherRemoved = false;
+
+			if (StringUtils.isNotEmpty(guid))
+			{
+				orderModel = getMplPaymentFacade().getOrderByGuid(guid);
+			}
+
+
+			if (null == orderModel)
+			{
+				CartModel cartModel = getCartService().getSessionCart();
+
+				cartModel = (CartModel) getMplCouponFacade().removeLastCartCoupon(cartModel);
+
+				isCartVoucherRemoved = checkforCartVoucherRemoved(cartModel.getDiscounts());
+
+				if (isCartVoucherRemoved)
+				{
+					data = getMplCouponFacade().populateCartVoucherData(null, cartModel, false, false, couponCode);
+				}
+			}
+			else
+			{
+				orderModel = (OrderModel) getMplCouponFacade().removeLastCartCoupon(orderModel);
+
+				isCartVoucherRemoved = checkforCartVoucherRemoved(orderModel.getDiscounts());
+
+				if (isCartVoucherRemoved)
+				{
+					data = getMplCouponFacade().populateCartVoucherData(orderModel, null, false, false, couponCode);
+				}
+			}
+		}
+		catch (final Exception exception)
+		{
+			LOG.debug("Exception >>>>" + exception.getMessage());
+		}
+		return data;
+	}
+
+
+
+	private boolean checkforCartVoucherRemoved(final List<DiscountModel> discounts)
+	{
+		boolean isCartVoucherRemoved = true;
+
+		if (CollectionUtils.isNotEmpty(discounts))
+		{
+			for (final DiscountModel discount : discounts)
+			{
+				if (discount instanceof MplCartOfferVoucherModel)
+				{
+					isCartVoucherRemoved = false;
+					break;
+				}
+			}
+		}
+
+		return isCartVoucherRemoved;
 	}
 
 
