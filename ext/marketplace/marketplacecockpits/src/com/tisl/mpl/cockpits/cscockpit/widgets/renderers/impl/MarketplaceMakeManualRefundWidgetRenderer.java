@@ -37,6 +37,7 @@ import com.tisl.mpl.cockpits.cscockpit.services.RefundInitiatedNotificationServi
 import com.tisl.mpl.cockpits.cscockpit.services.impl.DefaultRefundInitiatedNotificationService;
 import com.tisl.mpl.cockpits.cscockpit.widgets.controllers.MarketPlaceOrderController;
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
+import com.tisl.mpl.core.enums.RefundFomType;
 import com.tisl.mpl.data.SendSMSRequestData;
 
 import de.hybris.platform.basecommerce.enums.ConsignmentStatus;
@@ -195,6 +196,8 @@ public class MarketplaceMakeManualRefundWidgetRenderer extends
 																					.getConsignment();
 																			consignment
 																					.setStatus(ConsignmentStatus.REFUND_INITIATED);
+																			//added to check refund status h2refund 
+																			consignment.setRefundDetails(RefundFomType.MANUAL);
 																			modelService
 																					.save(consignment);
 																			final OrderHistoryEntryModel historyEntry = modelService.create(OrderHistoryEntryModel.class);
