@@ -51,7 +51,7 @@ public class RobotsController extends AbstractController
 
 
 	//Changes start  for TPR-5812
-	@RequestMapping(value = "/manifest.json", method = RequestMethod.GET)
+	@RequestMapping(value = "/manifests.json", method = RequestMethod.GET)
 	public String getManifest(final Model model)
 	{
 		final String gcm_sender_id = configurationService.getConfiguration().getString("izooto.manifest.gcm_sender_id");
