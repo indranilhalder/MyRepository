@@ -2938,6 +2938,11 @@ ACC.singlePageCheckout = {
 			$('#continue_payment_after_validate').show();
 		}	
 		
+		//TPR-7486 //REMOVE CONV CHARGE 				
+		if(paymentMode != 'COD') {
+			resetConvChargeElsewhere(); //REMOVE CONV CHARGE 
+		}
+		
 		//Below we are checking if pincode is serviceabile
 		if(!ACC.singlePageCheckout.mobileValidationSteps.isPincodeServiceable)
 		{
@@ -3293,6 +3298,26 @@ ACC.singlePageCheckout = {
 		});
         
         xhrResponse.done(function(response, textStatus, jqXHR) {
+            $("#paymentoffersPopup").modal('hide'); //for poppup
+        	
+        	if(response.couponRedeemed == false) { //coupon released successfully
+	 			document.getElementById("totalWithConvField").innerHTML=response.totalPrice.formattedValue;
+	 			if(document.getElementById("outstanding-amount")!=null)
+	 			{
+	 				document.getElementById("outstanding-amount").innerHTML=response.totalPrice.formattedValue;
+	 			}
+				document.getElementById("outstanding-amount-mobile").innerHTML=response.totalPrice.formattedValue;
+	 			$("#codAmount").text(response.totalPrice.formattedValue);
+	 			
+	 			if(response.couponDiscount.value != 0){
+					$("#promotionApplied").css("display","block");
+					document.getElementById("promotion").innerHTML=response.couponDiscount.formattedValue;
+				}
+	 			
+        	} else { // not applied
+        		document.getElementById("juspayErrorMsg").innerHTML="Sorry! The Offer cannot be used for this purchase.";
+				$("#juspayconnErrorDiv").css("display","block");
+        	}
         	
         	
             	

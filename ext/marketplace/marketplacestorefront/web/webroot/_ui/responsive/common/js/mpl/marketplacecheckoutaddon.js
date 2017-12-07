@@ -62,7 +62,7 @@ function viewPaymentCredit(){
 	} else {
 		$('#continue_payment_after_validate').show();
 	}	
-	
+	resetConvChargeElsewhere(); //REMOVE CONV CHARGE 
 //});
 }
 
@@ -114,6 +114,7 @@ function viewPaymentDebit(){
 	} else {
 		$('#continue_payment_after_validate').show();
 	}	
+	resetConvChargeElsewhere(); //REMOVE CONV CHARGE 
 //});
 }
 
@@ -150,6 +151,7 @@ function viewPaymentNetbanking(){
 	} else {
 		$('#continue_payment_after_validate').show();
 	}	
+	resetConvChargeElsewhere(); //REMOVE CONV CHARGE 
 //});
 }
 
@@ -226,6 +228,7 @@ function viewPaymentEMI(){
 		} else {
 			$('#continue_payment_after_validate').show();
 		}	
+		resetConvChargeElsewhere(); //REMOVE CONV CHARGE 	
 //});
 }
 // Mode button click function ends
@@ -647,6 +650,16 @@ function displayCODForm()
 									document.getElementById("convChargeField").innerHTML=convCharge;
 									//alert("Because you have selected COD, convenience charges have been added to your order amount")
 									$("#convChargeMessage").css("display","inline-block");
+									
+									//update total price after added conv charge
+									document.getElementById("totalWithConvField").innerHTML=totalPrice;
+									if(document.getElementById("outstanding-amount")!=null)
+									{
+										//INC144316021
+										document.getElementById("outstanding-amount").innerHTML=totalPrice;
+									}
+									document.getElementById("outstanding-amount-mobile").innerHTML=totalPrice;
+									
 								}
 								else
 								{
@@ -1665,32 +1678,34 @@ $("#otpMobileNUMField").focus(function(){
 
   function resetConvChargeElsewhere()
   {
- 	 $.ajax({
- 		url: ACC.config.encodedContextPath + "/checkout/multi/payment-method/resetConvChargeElsewhere",
- 		type: "GET",
- 		cache: false,
- 		success : function(response) {
- 			var values=response.split("|");
-			var totalPrice=values[0];
-			var convCharge=values[1];
-			$("#convChargeFieldId, #convChargeField").css("display","none");
-			document.getElementById("convChargeField").innerHTML=convCharge;
-			document.getElementById("totalWithConvField").innerHTML=totalPrice;
-			if(document.getElementById("outstanding-amount")!=null)
-			{
-				//INC144316021
-				document.getElementById("outstanding-amount").innerHTML=totalPrice;
-			}
-			document.getElementById("outstanding-amount-mobile").innerHTML=totalPrice;
- 			isCodSet = false;
- 			if(paymentMode!=null){
- 				//applyPromotion(null,"none","none");
-			}
- 		},
- 		error : function(resp) {
- 		}
- 	});	 
-  }
+	 if(isCodSet == true) { // if customer clicked on COD and convience charge already added
+	 	 $.ajax({
+	 		url: ACC.config.encodedContextPath + "/checkout/multi/payment-method/resetConvChargeElsewhere",
+	 		type: "GET",
+	 		cache: false,
+	 		success : function(response) {
+	 			var values=response.split("|");
+				var totalPrice=values[0];
+				var convCharge=values[1];
+				$("#convChargeFieldId, #convChargeField").css("display","none");
+				document.getElementById("convChargeField").innerHTML=convCharge;
+				document.getElementById("totalWithConvField").innerHTML=totalPrice;
+				if(document.getElementById("outstanding-amount")!=null)
+				{
+					//INC144316021
+					document.getElementById("outstanding-amount").innerHTML=totalPrice;
+				}
+				document.getElementById("outstanding-amount-mobile").innerHTML=totalPrice;
+	 			isCodSet = false;
+	 			if(paymentMode!=null){
+	 				//applyPromotion(null,"none","none");
+				}
+	 		},
+	 		error : function(resp) {
+	 		}
+	 	});	 
+	   }
+ }
  
  
  
