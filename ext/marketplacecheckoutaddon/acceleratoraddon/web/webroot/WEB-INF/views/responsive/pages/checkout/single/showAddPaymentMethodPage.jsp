@@ -423,6 +423,10 @@
 																	code="checkout.multi.paymentMethod.savedCard.cvvError" />
 															</div>
 														</div>
+														<!-- TPR-7448 Starts here-->
+														<input type="hidden" name="cardsTokencc${status.index}" class="card_bank" value="${map.value.cardIssuer}" />
+														<input type="hidden" name="cardsReferencecc${status.index}" class="card_brand" value="${map.value.cardReferenceNumber}" />
+														<!-- TPR-7448 Ends here-->
 													</div>
 												</c:forEach>
 											</div>
@@ -585,6 +589,10 @@
 																	code="checkout.multi.paymentMethod.savedCard.cvvError" />
 															</div>
 														</div>
+														<!-- TPR-7448 Starts here-->
+														<input type="hidden" name="cardsTokendc${status.index}" class="card_bank" value="${map.value.cardIssuer}" />
+														<input type="hidden" name="cardsReferencedc${status.index}" class="card_brand" value="${map.value.cardReferenceNumber}" />
+														<!-- TPR-7448 Ends here-->
 													</div>
 												</c:forEach>
 											</div>

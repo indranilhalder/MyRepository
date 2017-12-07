@@ -2023,10 +2023,12 @@ function savedDebitCardRadioChange(radioId){
 		    	{
 			    	var arr=response.split("|");
 			    	switch(arr[1]){
-					case "01": document.getElementById("juspayErrorMsg").innerHTML="Voucher max avail count exceeded. Try another.";
-															break;
-					case "02" : document.getElementById("juspayErrorMsg").innerHTML="Voucher max amount per month exceeded. Try another."; break;
-					case "03" :document.getElementById("juspayErrorMsg").innerHTML="Voucher max amount that can be availed is "+arr[1]+"."; break;
+			    	case "P01": document.getElementById("juspayErrorMsg").innerHTML="Voucher max avail count exceeded. Try another.";break;
+					case "P02" : document.getElementById("juspayErrorMsg").innerHTML="Voucher max amount per month exceeded. Try another."; break;
+					case "P03" :document.getElementById("juspayErrorMsg").innerHTML="Voucher max amount that can be availed is "+arr[1]+"."; break;
+					case "C01": document.getElementById("juspayErrorMsg").innerHTML="Voucher max avail count exceeded. Try another.";break;
+					case "C02" : document.getElementById("juspayErrorMsg").innerHTML="Voucher max amount per month exceeded. Try another."; break;
+					case "C03" :document.getElementById("juspayErrorMsg").innerHTML="Voucher max amount that can be availed is "+arr[1]+"."; break;
 					default:document.getElementById("juspayErrorMsg").innerHTML="Sorry! Some issue occurred with your coupon"; 
 			    	}
 			    	$("#juspayconnErrorDiv").css("display","block");
@@ -2224,10 +2226,12 @@ function savedDebitCardRadioChange(radioId){
 		    	{
 			    	var arr=response.split("|");
 			    	switch(arr[1]){
-					case "01": document.getElementById("juspayErrorMsg").innerHTML="Voucher max avail count exceeded. Try another.";
-															break;
-					case "02" : document.getElementById("juspayErrorMsg").innerHTML="Voucher max amount per month exceeded. Try another."; break;
-					case "03" :document.getElementById("juspayErrorMsg").innerHTML="Voucher max amount that can be availed is "+arr[1]+"."; break;
+			    	case "P01": document.getElementById("juspayErrorMsg").innerHTML="Voucher max avail count exceeded. Try another.";break;
+					case "P02" : document.getElementById("juspayErrorMsg").innerHTML="Voucher max amount per month exceeded. Try another."; break;
+					case "P03" :document.getElementById("juspayErrorMsg").innerHTML="Voucher max amount that can be availed is "+arr[1]+"."; break;
+					case "C01": document.getElementById("juspayErrorMsg").innerHTML="Voucher max avail count exceeded. Try another.";break;
+					case "C02" : document.getElementById("juspayErrorMsg").innerHTML="Voucher max amount per month exceeded. Try another."; break;
+					case "C03" :document.getElementById("juspayErrorMsg").innerHTML="Voucher max amount that can be availed is "+arr[1]+"."; break;
 					default:document.getElementById("juspayErrorMsg").innerHTML="Sorry! Some issue occurred with your coupon"; 
 			    	}
 			    	$("#juspayconnErrorDiv").css("display","block");
@@ -2449,10 +2453,12 @@ function savedDebitCardRadioChange(radioId){
 		    	{
 			    	var arr=response.split("|");
 			    	switch(arr[1]){
-					case "01": document.getElementById("juspayErrorMsg").innerHTML="Voucher max avail count exceeded. Try another.";
-															break;
-					case "02" : document.getElementById("juspayErrorMsg").innerHTML="Voucher max amount per month exceeded. Try another."; break;
-					case "03" :document.getElementById("juspayErrorMsg").innerHTML="Voucher max amount that can be availed is "+arr[1]+"."; break;
+			    	case "P01": document.getElementById("juspayErrorMsg").innerHTML="Voucher max avail count exceeded. Try another.";break;
+					case "P02" : document.getElementById("juspayErrorMsg").innerHTML="Voucher max amount per month exceeded. Try another."; break;
+					case "P03" :document.getElementById("juspayErrorMsg").innerHTML="Voucher max amount that can be availed is "+arr[1]+"."; break;
+					case "C01": document.getElementById("juspayErrorMsg").innerHTML="Voucher max avail count exceeded. Try another.";break;
+					case "C02" : document.getElementById("juspayErrorMsg").innerHTML="Voucher max amount per month exceeded. Try another."; break;
+					case "C03" :document.getElementById("juspayErrorMsg").innerHTML="Voucher max amount that can be availed is "+arr[1]+"."; break;
 					default:document.getElementById("juspayErrorMsg").innerHTML="Sorry! Some issue occurred with your coupon"; 
 			    	}
 			    	$("#juspayconnErrorDiv").css("display","block");
@@ -2602,7 +2608,7 @@ function savedDebitCardRadioChange(radioId){
 		
 		//TPR-7448
 		var token="";
-		token=tokenizeJuspayCard("CC");
+		token=tokenizeJuspayCard("EM");
 		
 		$.ajax({
 			url: ACC.config.encodedContextPath + "/checkout/multi/payment-method/createJuspayOrder",
@@ -2685,10 +2691,12 @@ function savedDebitCardRadioChange(radioId){
 		    	{
 			    	var arr=response.split("|");
 			    	switch(arr[1]){
-					case "01": document.getElementById("juspayErrorMsg").innerHTML="Voucher max avail count exceeded. Try another.";
-															break;
-					case "02" : document.getElementById("juspayErrorMsg").innerHTML="Voucher max amount per month exceeded. Try another."; break;
-					case "03" :document.getElementById("juspayErrorMsg").innerHTML="Voucher max amount that can be availed is "+arr[1]+"."; break;
+			    	case "P01": document.getElementById("juspayErrorMsg").innerHTML="Voucher max avail count exceeded. Try another.";break;
+					case "P02" : document.getElementById("juspayErrorMsg").innerHTML="Voucher max amount per month exceeded. Try another."; break;
+					case "P03" :document.getElementById("juspayErrorMsg").innerHTML="Voucher max amount that can be availed is "+arr[1]+"."; break;
+					case "C01": document.getElementById("juspayErrorMsg").innerHTML="Voucher max avail count exceeded. Try another.";break;
+					case "C02" : document.getElementById("juspayErrorMsg").innerHTML="Voucher max amount per month exceeded. Try another."; break;
+					case "C03" :document.getElementById("juspayErrorMsg").innerHTML="Voucher max amount that can be availed is "+arr[1]+"."; break;
 					default:document.getElementById("juspayErrorMsg").innerHTML="Sorry! Some issue occurred with your coupon"; 
 			    	}
 			    	$("#juspayconnErrorDiv").css("display","block");
@@ -10887,10 +10895,18 @@ function tokenizeJuspayCard(paymentMode)
 	else if(paymentMode=="DC")
 	{
 		merchant_id=$("#debitCard #merchant_id").val();
-		card_number=$("#debitCard #cardNo").val();
+		card_number=$("#debitCard #cardNoDc").val();
 		card_exp_year=$("#debitCard select[name=expyy] option:selected").val();
 		card_exp_month=$("#debitCard select[name=expmm] option:selected").val();
 		card_security_code=$("#debitCard input[name=cvv]").val();
+	}
+	else if(paymentMode=="EM")
+	{
+		merchant_id=$("#newCardCCEmi #merchant_id").val();
+		card_number=$("#newCardCCEmi #cardNoEmi").val();
+		card_exp_year=$("#newCardCCEmi select[name=expyy] option:selected").val();
+		card_exp_month=$("#newCardCCEmi select[name=expmm] option:selected").val();
+		card_security_code=$("#newCardCCEmi input[name=cvv]").val();
 	}
 	
 	var url=$("#juspayBaseUrl").val();
