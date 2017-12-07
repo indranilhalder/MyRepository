@@ -14,8 +14,11 @@
 package com.tisl.mpl.storefront.controllers.misc;
 
 import de.hybris.platform.acceleratorstorefrontcommons.controllers.AbstractController;
+import de.hybris.platform.cms2.model.site.CMSSiteModel;
+import de.hybris.platform.cms2.servicelayer.services.CMSSiteService;
 import de.hybris.platform.servicelayer.config.ConfigurationService;
 
+import javax.annotation.Resource;
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,16 +38,35 @@ import com.tisl.mpl.storefront.controllers.ControllerConstants;
 @Scope("tenant")
 public class RobotsController extends AbstractController
 {
+	
+	private static final String SITE_URL = "siteUrl";
+	private static final String MPL = "mpl";
+	private static final String LUX = "lux";
+	
 	@Autowired
 	private ConfigurationService configurationService;
+	
+	@Resource(name = "cmsSiteService")
+	private CMSSiteService cmsSiteService;
+	
 	// Number of seconds in one day
 	private static final String ONE_DAY = String.valueOf(60 * 60 * 24);
 
 	@RequestMapping(value = "/robots.txt", method = RequestMethod.GET)
-	public String getRobots(final HttpServletResponse response)
+	public String getRobots(final HttpServletResponse response,final Model model)
 	{
 		// Add cache control header to cache response for a day
 		response.setHeader("Cache-Control", "public, max-age=" + ONE_DAY);
+		final CMSSiteModel currentSite = cmsSiteService.getCurrentSite();
+		if ( currentSite.getUid() == MPL)
+		{
+			model.addAttribute(SITE_URL, MPL);
+			
+		}
+		else
+		{
+			model.addAttribute(SITE_URL, LUX);
+		}
 
 		return ControllerConstants.Views.Pages.Misc.MiscRobotsPage;
 	}
