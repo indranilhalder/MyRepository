@@ -678,3 +678,6 @@ div.wishlist-content .pagination a.active {
 	}
 }
 /* end of TISCSS-59 */
+.list .selectedWishlist {
+	color: #a9143c;		/* add for TISCSS-69 */
+}
