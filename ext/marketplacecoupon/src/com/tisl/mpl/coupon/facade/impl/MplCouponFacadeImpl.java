@@ -800,24 +800,67 @@ public class MplCouponFacadeImpl implements MplCouponFacade
 		boolean recalculateRequired = false;
 		try
 		{
-			if (CollectionUtils.isNotEmpty(discountList) && discountList.get(0) instanceof PromotionVoucherModel)
+			//			if (CollectionUtils.isNotEmpty(discountList) && discountList.get(0) instanceof PromotionVoucherModel)
+			//			{
+			//				final String couponCode = ((PromotionVoucherModel) discountList.get(0)).getVoucherCode(); //Only 1 coupon can be applied
+			//				getVoucherService().releaseVoucher(couponCode, cart); //Releases the voucher from the cart
+			//				final List<AbstractOrderEntryModel> entryList = cart.getEntries();
+			//				for (final AbstractOrderEntryModel entry : entryList)//Resets the coupon details against the entries
+			//				{
+			//					entry.setCouponCode(MarketplacecommerceservicesConstants.EMPTY);
+			//					entry.setCouponValue(Double.valueOf(0.00D));
+			//				}
+			//				if (CollectionUtils.isNotEmpty(entryList)) //Saving the entryList
+			//				{
+			//					getModelService().saveAll(entryList);
+			//				}
+			//
+			//				//releaseVoucher(couponCode, cart); Commented as part of Performance fix TISPT-104
+			//				//recalculateCartForCoupon(cart); Commented as part of Performance fix TISPT-104
+			//				recalculateRequired = true; //TISPT-104
+			//			}
+
+
+			if (CollectionUtils.isNotEmpty(discountList))
 			{
-				final String couponCode = ((PromotionVoucherModel) discountList.get(0)).getVoucherCode(); //Only 1 coupon can be applied
-				getVoucherService().releaseVoucher(couponCode, cart); //Releases the voucher from the cart
-				final List<AbstractOrderEntryModel> entryList = cart.getEntries();
-				for (final AbstractOrderEntryModel entry : entryList)//Resets the coupon details against the entries
+				for (final DiscountModel oModel : discountList)
 				{
-					entry.setCouponCode(MarketplacecommerceservicesConstants.EMPTY);
-					entry.setCouponValue(Double.valueOf(0.00D));
-				}
-				if (CollectionUtils.isNotEmpty(entryList)) //Saving the entryList
-				{
-					getModelService().saveAll(entryList);
+					if (oModel instanceof PromotionVoucherModel && !(oModel instanceof MplCartOfferVoucherModel))
+					{
+						final PromotionVoucherModel coupon = (PromotionVoucherModel) oModel;
+						getVoucherService().releaseVoucher(coupon.getVoucherCode(), cart);
+						final List<AbstractOrderEntryModel> entryList = cart.getEntries();
+						if (CollectionUtils.isNotEmpty(entryList))
+						{
+							for (final AbstractOrderEntryModel entry : entryList)
+							{
+								entry.setCouponCode(MarketplacecommerceservicesConstants.EMPTY);
+								entry.setCouponValue(Double.valueOf(0.00D));
+							}
+							getModelService().saveAll(entryList);
+						}
+					}
+
+					else if (oModel instanceof MplCartOfferVoucherModel)
+					{
+
+						final MplCartOfferVoucherModel coupon = (MplCartOfferVoucherModel) oModel;
+						getVoucherService().releaseVoucher(coupon.getVoucherCode(), cart);
+						final List<AbstractOrderEntryModel> entryList = cart.getEntries();
+						if (CollectionUtils.isNotEmpty(entryList))
+						{
+							for (final AbstractOrderEntryModel entry : entryList)
+							{
+								entry.setCartCouponCode(MarketplacecommerceservicesConstants.EMPTY);
+								entry.setCartCouponValue(Double.valueOf(0.00D));
+							}
+							getModelService().saveAll(entryList);
+						}
+
+					}
 				}
 
-				//releaseVoucher(couponCode, cart); Commented as part of Performance fix TISPT-104
-				//recalculateCartForCoupon(cart); Commented as part of Performance fix TISPT-104
-				recalculateRequired = true; //TISPT-104
+				recalculateRequired = true;
 			}
 		}
 		catch (final Exception ex)
@@ -1672,8 +1715,8 @@ public class MplCouponFacadeImpl implements MplCouponFacade
 		final VoucherDiscountData data = new VoucherDiscountData();
 
 		double totalDiscount = 0.0;
-		double couponDiscount = 0.0;
-		double totalMRP = 0.0;
+		//final double couponDiscount = 0.0;
+		//final double totalMRP = 0.0;
 
 		if (null != cartModel)
 		{
@@ -1681,20 +1724,25 @@ public class MplCouponFacadeImpl implements MplCouponFacade
 			{
 				for (final AbstractOrderEntryModel oModel : cartModel.getEntries())
 				{
-					final Double couponValue = oModel.getCouponValue();
 					final Double mrp = oModel.getMrp();
+					final Double netAmountAfterAllDisc = (null == oModel.getNetAmountAfterAllDisc() ? Double.valueOf(0)
+							: oModel.getNetAmountAfterAllDisc());
+					final Double entryPrice = (null == oModel.getBasePrice() ? Double.valueOf(0) : oModel.getBasePrice());
 
-					couponDiscount += (null == couponValue ? 0.0d : couponValue.doubleValue());
-					totalMRP += (null == mrp ? 0.0d : mrp.doubleValue());
+					final double value = (netAmountAfterAllDisc.doubleValue() > 0.0d) ? netAmountAfterAllDisc.doubleValue()
+							: entryPrice.doubleValue();
+
+					totalDiscount += (mrp.doubleValue() - value);
 				}
 			}
 
-			totalDiscount = (totalMRP)
-					- (null == cartModel.getTotalPriceWithConv() ? 0.0d : cartModel.getTotalPriceWithConv().doubleValue())
-					- couponDiscount - (null == cartModel.getDeliveryCost() ? 0.0d : cartModel.getDeliveryCost().doubleValue());
+			//			totalDiscount = (totalMRP)
+			//					- (null == cartModel.getTotalPriceWithConv() ? 0.0d : cartModel.getTotalPriceWithConv().doubleValue())
+			//					- couponDiscount - (null == cartModel.getDeliveryCost() ? 0.0d : cartModel.getDeliveryCost().doubleValue());
 
 			data.setCouponDiscount(getMplCheckoutFacade().createPrice(cartModel, Double.valueOf(totalDiscount)));
 			data.setTotalPrice(getMplCheckoutFacade().createPrice(cartModel, cartModel.getTotalPriceWithConv()));
+			data.setTotalDiscount(getMplCheckoutFacade().createPrice(cartModel, Double.valueOf(totalDiscount)));
 		}
 		else if (null != orderModel)
 		{
@@ -1702,20 +1750,25 @@ public class MplCouponFacadeImpl implements MplCouponFacade
 			{
 				for (final AbstractOrderEntryModel oModel : orderModel.getEntries())
 				{
-					final Double couponValue = oModel.getCouponValue();
 					final Double mrp = oModel.getMrp();
+					final Double netAmountAfterAllDisc = (null == oModel.getNetAmountAfterAllDisc() ? Double.valueOf(0)
+							: oModel.getNetAmountAfterAllDisc());
+					final Double entryPrice = (null == oModel.getBasePrice() ? Double.valueOf(0) : oModel.getBasePrice());
 
-					couponDiscount += (null == couponValue ? 0.0d : couponValue.doubleValue());
-					totalMRP += (null == mrp ? 0.0d : mrp.doubleValue());
+					final double value = (netAmountAfterAllDisc.doubleValue() > 0.0d) ? netAmountAfterAllDisc.doubleValue()
+							: entryPrice.doubleValue();
+
+					totalDiscount += (mrp.doubleValue() - value);
 				}
 			}
 
-			totalDiscount = (totalMRP)
-					- (null == orderModel.getTotalPriceWithConv() ? 0.0d : orderModel.getTotalPriceWithConv().doubleValue())
-					- couponDiscount - (null == orderModel.getDeliveryCost() ? 0.0d : orderModel.getDeliveryCost().doubleValue());
+			//			totalDiscount = (totalMRP)
+			//					- (null == orderModel.getTotalPriceWithConv() ? 0.0d : orderModel.getTotalPriceWithConv().doubleValue())
+			//					- couponDiscount - (null == orderModel.getDeliveryCost() ? 0.0d : orderModel.getDeliveryCost().doubleValue());
 
 			data.setCouponDiscount(getMplCheckoutFacade().createPrice(orderModel, Double.valueOf(totalDiscount)));
 			data.setTotalPrice(getMplCheckoutFacade().createPrice(orderModel, orderModel.getTotalPriceWithConv()));
+			data.setTotalDiscount(getMplCheckoutFacade().createPrice(cartModel, Double.valueOf(totalDiscount)));
 		}
 
 

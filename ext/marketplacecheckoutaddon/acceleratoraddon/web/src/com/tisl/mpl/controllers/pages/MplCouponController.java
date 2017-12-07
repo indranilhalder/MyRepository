@@ -9,6 +9,7 @@ import de.hybris.platform.core.model.order.OrderModel;
 import de.hybris.platform.core.model.order.price.DiscountModel;
 import de.hybris.platform.jalo.JaloInvalidParameterException;
 import de.hybris.platform.order.CartService;
+import de.hybris.platform.promotions.util.Tuple2;
 import de.hybris.platform.servicelayer.session.SessionService;
 import de.hybris.platform.store.services.BaseStoreService;
 import de.hybris.platform.voucher.VoucherService;
@@ -81,6 +82,8 @@ public class MplCouponController
 	{
 		VoucherDiscountData data = new VoucherDiscountData();
 		OrderModel orderModel = null;
+		String cartCouponCode = MarketplacecommerceservicesConstants.EMPTY;
+
 		//Fetching orderModel based on guid TPR-629
 		if (StringUtils.isNotEmpty(guid))
 		{
@@ -95,31 +98,24 @@ public class MplCouponController
 		final boolean redeem = true;
 		boolean couponRedStatus = false;
 		String couponMessageInformation = null;//Added for TPR-4461
+		boolean isCartVoucherPresent = false;
 
 		//Redeem coupon for cartModel
 		if (orderModel == null)
 		{
-			final CartModel cartModel = getCartService().getSessionCart();
+			CartModel cartModel = getCartService().getSessionCart();
 			try
 			{
-				//	Commented-----to be implemented in R2 later
-				//		final Collection<BankModel> bankList = getBaseStoreService().getCurrentBaseStore().getBanks();
-				//		if (StringUtils.isEmpty(bankNameSelected))
-				//		{
-				//			getSessionService().setAttribute("bank", bankNameSelected);
-				//		}
-				//		else
-				//		{
-				//			for (final BankModel bank : bankList)
-				//			{
-				//				if (bank.getBankName().equalsIgnoreCase(bankNameSelected))
-				//				{
-				//					//setting the bank in session to be used for Promotion
-				//					getSessionService().setAttribute("bank", bank);
-				//					break;
-				//				}
-				//			}
-				//		}
+
+				final Tuple2<Boolean, String> cartCouponObj = isCartVoucherPresent(cartModel.getDiscounts());
+
+				isCartVoucherPresent = cartCouponObj.getFirst().booleanValue();
+
+				if (isCartVoucherPresent)
+				{
+					cartCouponCode = cartCouponObj.getSecond();
+					cartModel = (CartModel) getMplCouponFacade().removeLastCartCoupon(cartModel); // Removing any Cart level Coupon Offer
+				}
 
 				//Apply the voucher
 				couponRedStatus = getMplCouponFacade().applyVoucher(couponCode, cartModel, null);
@@ -145,6 +141,29 @@ public class MplCouponController
 				getMplCouponFacade().updatePaymentInfoSession(paymentInfo, cartModel);
 
 				//getSessionService().removeAttribute("bank");	//Do not remove---needed later
+
+				if (StringUtils.isNotEmpty(cartCouponCode))
+				{
+					try
+					{
+						final boolean applyStatus = getMplCouponFacade().applyCartVoucher(cartCouponCode, cartModel, null);
+						final VoucherDiscountData newData = getMplCouponFacade().populateCartVoucherData(null, cartModel, applyStatus,
+								true, couponCode);
+
+						data.setTotalDiscount(newData.getTotalDiscount());
+						data.setTotalPrice(newData.getTotalPrice());
+
+					}
+					catch (final VoucherOperationException e)
+					{
+						LOG.debug("Failed to apply Voucher with Code >>>" + cartCouponCode);
+					}
+					catch (final Exception e)
+					{
+						ExceptionUtil.etailNonBusinessExceptionHandler((EtailNonBusinessExceptions) e);
+					}
+				}
+
 			}
 			catch (final VoucherOperationException e)
 			{
@@ -223,6 +242,16 @@ public class MplCouponController
 		{
 			try
 			{
+				final Tuple2<Boolean, String> cartCouponObj = isCartVoucherPresent(orderModel.getDiscounts());
+
+				isCartVoucherPresent = cartCouponObj.getFirst().booleanValue();
+
+				if (isCartVoucherPresent)
+				{
+					cartCouponCode = cartCouponObj.getSecond();
+					orderModel = (OrderModel) getMplCouponFacade().removeLastCartCoupon(orderModel); // Removing any Cart level Coupon Offer
+				}
+
 				//Apply the voucher
 				couponRedStatus = getMplCouponFacade().applyVoucher(couponCode, null, orderModel);
 
@@ -319,6 +348,31 @@ public class MplCouponController
 		}
 
 		return data;
+	}
+
+
+
+	private Tuple2<Boolean, String> isCartVoucherPresent(final List<DiscountModel> discounts)
+	{
+		boolean flag = false;
+		String couponCode = MarketplacecommerceservicesConstants.EMPTY;
+		if (CollectionUtils.isNotEmpty(discounts))
+		{
+			for (final DiscountModel discount : discounts)
+			{
+				if (discount instanceof MplCartOfferVoucherModel)
+				{
+					final MplCartOfferVoucherModel object = (MplCartOfferVoucherModel) discount;
+					flag = true;
+					couponCode = object.getVoucherCode();
+					break;
+				}
+			}
+		}
+
+		final Tuple2<Boolean, String> cartCouponObj = new Tuple2(Boolean.valueOf(flag), couponCode);
+
+		return cartCouponObj;
 	}
 
 
@@ -730,26 +784,30 @@ public class MplCouponController
 		final VoucherDiscountData errorData = data;
 		double totalDiscount = 0.0;
 
-		double couponDiscount = 0.0;
-		double totalMRP = 0.0;
+		//final double couponDiscount = 0.0;
+		//final double totalMRP = 0.0;
 
 		if (CollectionUtils.isNotEmpty(abstractOrderModel.getEntries()))
 		{
 			for (final AbstractOrderEntryModel oModel : abstractOrderModel.getEntries())
 			{
-				final Double couponValue = oModel.getCouponValue();
 				final Double mrp = oModel.getMrp();
+				final Double netAmountAfterAllDisc = (null == oModel.getNetAmountAfterAllDisc() ? Double.valueOf(0)
+						: oModel.getNetAmountAfterAllDisc());
+				final Double entryPrice = (null == oModel.getBasePrice() ? Double.valueOf(0) : oModel.getBasePrice());
 
-				couponDiscount += (null == couponValue ? 0.0d : couponValue.doubleValue());
-				totalMRP += (null == mrp ? 0.0d : mrp.doubleValue());
+				final double value = (netAmountAfterAllDisc.doubleValue() > 0.0d) ? netAmountAfterAllDisc.doubleValue()
+						: entryPrice.doubleValue();
+
+				totalDiscount += (mrp.doubleValue() - value);
 			}
 		}
 
-		totalDiscount = (totalMRP)
-				- (null == abstractOrderModel.getTotalPriceWithConv() ? 0.0d
-						: abstractOrderModel.getTotalPriceWithConv().doubleValue())
-				- couponDiscount
-				- (null == abstractOrderModel.getDeliveryCost() ? 0.0d : abstractOrderModel.getDeliveryCost().doubleValue());
+		//		totalDiscount = (totalMRP)
+		//				- (null == abstractOrderModel.getTotalPriceWithConv() ? 0.0d
+		//						: abstractOrderModel.getTotalPriceWithConv().doubleValue())
+		//				- couponDiscount
+		//				- (null == abstractOrderModel.getDeliveryCost() ? 0.0d : abstractOrderModel.getDeliveryCost().doubleValue());
 
 		data.setCouponDiscount(getMplCheckoutFacade().createPrice(abstractOrderModel, Double.valueOf(totalDiscount)));
 

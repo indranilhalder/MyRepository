@@ -1222,7 +1222,7 @@ public class MplVoucherServiceImpl implements MplVoucherService
 				{
 					for (final DiscountValue discount : discountList)
 					{
-						if (null != discount.getCode() && discount.getCode().equalsIgnoreCase(voucherCode))
+						if (null != discount.getCode() && discount.getCode().equalsIgnoreCase(lastVoucher.getCode()))
 						{
 							voucherCalcValue = discount.getValue();
 						}
@@ -1634,7 +1634,8 @@ public class MplVoucherServiceImpl implements MplVoucherService
 					entry.setCartCouponCode(null == voucherCode ? voucher.getCode() : voucherCode);
 					entry.setCartCouponValue(Double.valueOf(entryLevelApportionedPrice.doubleValue()));
 
-					if ((StringUtils.isNotEmpty(entry.getProductPromoCode())) || (StringUtils.isNotEmpty(entry.getCartPromoCode())))
+					if ((StringUtils.isNotEmpty(entry.getProductPromoCode())) || (StringUtils.isNotEmpty(entry.getCartPromoCode()))
+							|| StringUtils.isNotEmpty(entry.getCouponCode()))
 					{
 						final double netAmtAftrAllDisc = entry.getNetAmountAfterAllDisc() == null ? 0.00D
 								: entry.getNetAmountAfterAllDisc().doubleValue();
