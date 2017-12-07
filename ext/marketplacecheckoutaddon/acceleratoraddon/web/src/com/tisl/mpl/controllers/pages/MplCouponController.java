@@ -275,6 +275,28 @@ public class MplCouponController
 				//Update paymentInfo in session
 				getMplCouponFacade().updatePaymentInfoSession(paymentInfo, orderModel);
 
+				if (StringUtils.isNotEmpty(cartCouponCode))
+				{
+					try
+					{
+						final boolean applyStatus = getMplCouponFacade().applyCartVoucher(cartCouponCode, null, orderModel);
+						final VoucherDiscountData newData = getMplCouponFacade().populateCartVoucherData(orderModel, null, applyStatus,
+								true, couponCode);
+
+						data.setTotalDiscount(newData.getTotalDiscount());
+						data.setTotalPrice(newData.getTotalPrice());
+
+					}
+					catch (final VoucherOperationException e)
+					{
+						LOG.debug("Failed to apply Voucher with Code >>>" + cartCouponCode);
+					}
+					catch (final Exception e)
+					{
+						ExceptionUtil.etailNonBusinessExceptionHandler((EtailNonBusinessExceptions) e);
+					}
+				}
+
 			}
 			catch (final VoucherOperationException e)
 			{
