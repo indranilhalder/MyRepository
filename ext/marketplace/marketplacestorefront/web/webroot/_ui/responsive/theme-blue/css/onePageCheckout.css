@@ -2851,6 +2851,7 @@ body .account.preferences input[type="checkbox"]+label, input[type="radio"]+labe
     letter-spacing: 0.6px;
     text-align: left;
     color: #666666;
+    padding-bottom: 10px;	/* add for TISCSS-63 */
 }
 #singlePagePickupPersonPopup .name-label{
 	  height: 16px;
@@ -5674,4 +5675,7 @@ transform-origin:0 0;
 .cart.wrapper.checkout-payment .blocks .cash #otpNUM p {
     padding: 0;
     font-size: 14px;
+}
+.retail-bag {
+	padding-bottom: 5px;	/* add for TISCSS-63 */
 }
