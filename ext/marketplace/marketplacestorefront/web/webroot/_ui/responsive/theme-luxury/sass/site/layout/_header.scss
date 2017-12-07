@@ -1570,3 +1570,30 @@ ul.tabs{
         }
     }
 }
+.search-tabs{
+    input{
+       margin-bottom: 0;
+        width: auto;
+        display: none!important;
+    }
+    .toggle-btn{        
+        display: inline-block;       
+        position: relative;
+        text-align: center;
+        transition: background .6s ease,color .6s ease;
+        width: auto;       
+        z-index: 1;        
+        font-family: Lato;
+        font-size: 14px;
+        line-height: 1.5;
+        padding: 5px 10px;
+        font-weight: 700;
+        text-transform: uppercase;
+        border-radius: 50px;
+        cursor: pointer;
+    }
+    input[type=radio]:checked+label {
+        background: #2d2d2d;
+        color: #fff;
+    }
+}
