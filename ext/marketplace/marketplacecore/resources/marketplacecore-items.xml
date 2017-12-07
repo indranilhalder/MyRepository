@@ -952,7 +952,14 @@
 	    <enumtype code="CreditCardType" autocreate="false" generate="false">
 			<value code="jcb"/>
 			<value code="discover"/>
-		</enumtype>	   
+		</enumtype>	 
+
+		<!--  added to check refund status h2refund -->
+		<enumtype code="refundFomType" autocreate="true" generate="true"
+			dynamic="false">
+			<value code="Automatic"></value>
+			<value code="Manual"></value>		
+		</enumtype>		
 		 		
 		<!-- <enumtype code="ComponentTypeEnum" autocreate="true"
 			generate="true" dynamic="true">
@@ -8248,6 +8255,19 @@
 						  </persistence>
 					</attribute>
 					<!-- changes for jewellery Cs-Cockpit end -->
+					
+					<!--  added to check refund status h2refund -->
+					<attribute qualifier="refundDetails" type="refundFomType">
+						<modifiers read="true" write="true" search="true"
+							optional="true" />
+						<persistence type='property'>
+							<columntype database='oracle'>
+								<value>VARCHAR2(40)</value>
+							</columntype>
+						</persistence>					
+					</attribute>
+					<!-- changes for jewellery Cs-Cockpit end -->
+					
 				</attributes>
 
 				<!-- CAR-274 -->
@@ -13867,3 +13887,4 @@
 									 
   </itemtypes>
 </items>
+

@@ -1,8 +1,8 @@
 /*
 
  *
- * Copyright (c) 2000-2013 hybris AG
  * All rights reserved.
+ * Copyright (c) 2000-2013 hybris AG
  *
  * This software is the confidential and proprietary information of hybris
  * ("Confidential Information"). You shall not disclose such Confidential
@@ -2297,6 +2297,23 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String PAYMENTINFO_F_ROWLIMIT = "paymentinfo.batchjob.forward.rowlimit";
 	public static final String PAYMENTINFO_R_ROWLIMIT = "paymentinfo.batchjob.reverse.rowlimit";
 
+
+
+	public static final String REFUNDCLEAR_SKIPTIME = "marketplace.RefundClear.skipTime".intern();
+
+	public static final String REFUNDCLEARORDERQUERY = "select {o.pk} from {Order as o},{OrderStatus as os} where  {o.creationtime} <= ?queryTAT and {o.creationtime} >= ?startTime and {o.status}={os.pk} and {os.code} IN (?statusOne, ?statusTwo) and {o.type}=?type"
+			.intern();
+	public static final String ORDERSTATUSONE = "statusOne".intern();
+	public static final String ORDERSTATUSTWO = "statusTwo".intern();
+	public static final String REFUNDCLEARWEBHHOKQUERY = "select {js.pk} from {JuspayWebhook as jw}, {JuspayOrderStatus as js} where {jw.orderstatus}={js.pk} and {js.orderId}=?reqId and {js.status}='CHARGED' order by {js.creationtime} desc"
+			.intern();
+
+	public static final String REFUNDEVENTSTAUSJUSPAY = "webhook.refund.eventname";
+
+	public static final String ORDERFETCH_STARTTIME = "marketplace.refundorder.fetchStartTime".intern();
+
+	public static final String STARTTIME = "startTime".intern();
+
 	//PR-4 || Refund sms cron job
 	public static final String BULK_CUSTOMER_SMS_1 = "Hey ";
 	public static final String BULK_CUSTOMER_SMS_2 = ", We have successfully refunded Rs ";
@@ -2306,6 +2323,8 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String LIMIT_QUERY = "select {transactionId} from {RefundTransactionEntry} order by {creationtime} limit ";
 
 
+
 	public static final String RECEIVED = "RECEIVED";
 	public static final String SENT = "SENT";
+
 }
