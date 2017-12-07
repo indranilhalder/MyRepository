@@ -1981,13 +1981,13 @@
 		</bean>
 		
 	<!-- TPR-3487 -->	
-	<bean id="DeliveryCostInterceptor" class="com.tisl.mpl.interceptor.SaveDeliveryCostInterceptor" />
+<!-- 	<bean id="DeliveryCostInterceptor" class="com.tisl.mpl.interceptor.SaveDeliveryCostInterceptor" />
 
 	<bean id="SaveDeliveryCostInterceptorMapping"
 		class="de.hybris.platform.servicelayer.interceptor.impl.InterceptorMapping">
 		<property name="interceptor" ref="DeliveryCostInterceptor" />
 		<property name="typeCode" value="AbstractOrder" />	
-	</bean>	
+	</bean>	 -->
 	<!-- TPR-3487 -->		
 		
 	<!-- Bean for Promotion Job starts-->

@@ -82,195 +82,239 @@ public class BuyAboveXGetPromotionOnShippingCharges extends GeneratedBuyAboveXGe
 		//CR Changes : TPR-715 Ends
 		try
 		{
-			final List<EnumerationValue> listOfChannel = (List<EnumerationValue>) getProperty(arg0,
-					MarketplacecommerceservicesConstants.CHANNEL);
-			//final CartModel cartModel = getCartService().getSessionCart();
-			//checkChannelFlag = getDefaultPromotionsManager().checkChannelData(listOfChannel, cartModel.getChannel());
-			final AbstractOrder cart = arg1.getOrder();
-			checkChannelFlag = getDefaultPromotionsManager().checkChannelData(listOfChannel, cart);
-			final AbstractOrder order = arg1.getOrder();
-			final List<AbstractPromotionRestriction> restrictionList = new ArrayList<AbstractPromotionRestriction>(getRestrictions());
-			//final List<AbstractPromotionRestriction> restrictionList = new ArrayList<AbstractPromotionRestriction>(getRestrictions());//Adding restrictions to List
-			final boolean flagForPincodeRestriction = getDefaultPromotionsManager().checkPincodeSpecificRestriction(restrictionList,
-					order);
-			//for payment mode restriction check
-			final boolean flagForPaymentModeRestrEval = getDefaultPromotionsManager().getPaymentModeRestrEval(restrictionList, arg0);
-
-			//PR-15 starts here
-			final PromotionsManager.RestrictionSetResult rsr = getDefaultPromotionsManager()
-					.findEligibleProductsInBasketForCartPromo(arg0, arg1, this);
-			//PR-15 ends here
-
-			if (rsr.isAllowedToContinue() && !rsr.getAllowedProducts().isEmpty() && checkRestrictions(arg0, arg1)
-					&& checkChannelFlag && flagForPincodeRestriction && flagForPaymentModeRestrEval)//check added for PR-15
+			final boolean promotionAlreadyFired = getDefaultPromotionsManager().cartPromotionAlreadyFired(arg0, arg1.getOrder());
+			if (!promotionAlreadyFired)
 			{
-				final Double threshold = getPriceForOrder(arg0, getThresholdTotals(arg0), arg1.getOrder(),
-						MarketplacecommerceservicesConstants.THRESHOLD_TOTALS);
-				if (threshold != null)
+				final List<EnumerationValue> listOfChannel = (List<EnumerationValue>) getProperty(arg0,
+						MarketplacecommerceservicesConstants.CHANNEL);
+				//final CartModel cartModel = getCartService().getSessionCart();
+				//checkChannelFlag = getDefaultPromotionsManager().checkChannelData(listOfChannel, cartModel.getChannel());
+				final AbstractOrder cart = arg1.getOrder();
+				checkChannelFlag = getDefaultPromotionsManager().checkChannelData(listOfChannel, cart);
+				final AbstractOrder order = arg1.getOrder();
+				final List<AbstractPromotionRestriction> restrictionList = new ArrayList<AbstractPromotionRestriction>(
+						getRestrictions());
+				//final List<AbstractPromotionRestriction> restrictionList = new ArrayList<AbstractPromotionRestriction>(getRestrictions());//Adding restrictions to List
+				final boolean flagForPincodeRestriction = getDefaultPromotionsManager().checkPincodeSpecificRestriction(
+						restrictionList, order);
+				//for payment mode restriction check
+				final boolean flagForPaymentModeRestrEval = getDefaultPromotionsManager().getPaymentModeRestrEval(restrictionList,
+						arg0);
+
+				//PR-15 starts here
+				final PromotionsManager.RestrictionSetResult rsr = getDefaultPromotionsManager()
+						.findEligibleProductsInBasketForCartPromo(arg0, arg1, this);
+				//PR-15 ends here
+
+				if (rsr.isAllowedToContinue() && !rsr.getAllowedProducts().isEmpty() && checkRestrictions(arg0, arg1)
+						&& checkChannelFlag && flagForPincodeRestriction && flagForPaymentModeRestrEval)//check added for PR-15
 				{
-					//final double orderSubtotalAfterDiscounts = getOrderSubtotalAfterDiscounts(arg0, order);
-
-					//CR Changes : TPR-715
-					double orderSubtotalAfterDiscounts = 0.0D;
-					//boolean sellerFlag = false; //commented for PR-15
-					Map<String, Integer> validProdQCountMap = new HashMap<String, Integer>();
-
-					//					if (getDefaultPromotionsManager().isSellerRestrExists(restrictionList))
-					//					{
-					//						validUssidMap = getMplPromotionHelper().getCartSellerEligibleProducts(arg0, order, restrictionList);
-					//						orderSubtotalAfterDiscounts = getSellerSpecificSubtotal(arg0, validUssidMap);
-					//						setSellersubTotalValue(orderSubtotalAfterDiscounts);
-					//						sellerFlag = true;
-					//					}
-					//					else if (getDefaultPromotionsManager().isExSellerRestrExists(restrictionList))
-					//					{
-					//						validUssidMap = getMplPromotionHelper().getCartSellerInEligibleProducts(arg0, order, restrictionList);
-					//						orderSubtotalAfterDiscounts = getSellerSpecificSubtotal(arg0, validUssidMap);
-					//						setSellersubTotalValue(orderSubtotalAfterDiscounts);
-					//						sellerFlag = true;
-					//					}
-
-					//PR-15 starts here
-					final List<Product> allowedProductList = new ArrayList<Product>(rsr.getAllowedProducts());
-					//PR-15 ends here
-					if (getDefaultPromotionsManager().isSellerRestrExists(restrictionList)
-							|| getDefaultPromotionsManager().isExSellerRestrExists(restrictionList))
+					final Double threshold = getPriceForOrder(arg0, getThresholdTotals(arg0), arg1.getOrder(),
+							MarketplacecommerceservicesConstants.THRESHOLD_TOTALS);
+					if (threshold != null)
 					{
-						validUssidMap = getMplPromotionHelper().getCartSellerEligibleProducts(arg0, order, restrictionList,
-								allowedProductList);//PR-15 allowedProductList parameter added
-						orderSubtotalAfterDiscounts = getSellerSpecificSubtotal(arg0, validUssidMap);
-						setSellersubTotalValue(orderSubtotalAfterDiscounts);
-						//sellerFlag = true;//commented for PR-15
-					}
-					else
-					{
-						/* PR-15 starts here */
-						validUssidMap = getMplPromotionHelper().getCartSellerEligibleProducts(arg0, order, null, allowedProductList);
-						orderSubtotalAfterDiscounts = getSellerSpecificSubtotal(arg0, validUssidMap);
-						setSellersubTotalValue(orderSubtotalAfterDiscounts);
-						//orderSubtotalAfterDiscounts = getOrderSubtotalAfterDiscounts(arg0, order);
-						/* PR-15 ends here */
-					}
+						//final double orderSubtotalAfterDiscounts = getOrderSubtotalAfterDiscounts(arg0, order);
 
-					//CR Changes : TPR-715Ends
-
-
-					if (orderSubtotalAfterDiscounts >= threshold.doubleValue())
-					{
 						//CR Changes : TPR-715
+						double orderSubtotalAfterDiscounts = 0.0D;
+						//boolean sellerFlag = false; //commented for PR-15
+						Map<String, Integer> validProdQCountMap = new HashMap<String, Integer>();
+
+						//					if (getDefaultPromotionsManager().isSellerRestrExists(restrictionList))
+						//					{
+						//						validUssidMap = getMplPromotionHelper().getCartSellerEligibleProducts(arg0, order, restrictionList);
+						//						orderSubtotalAfterDiscounts = getSellerSpecificSubtotal(arg0, validUssidMap);
+						//						setSellersubTotalValue(orderSubtotalAfterDiscounts);
+						//						sellerFlag = true;
+						//					}
+						//					else if (getDefaultPromotionsManager().isExSellerRestrExists(restrictionList))
+						//					{
+						//						validUssidMap = getMplPromotionHelper().getCartSellerInEligibleProducts(arg0, order, restrictionList);
+						//						orderSubtotalAfterDiscounts = getSellerSpecificSubtotal(arg0, validUssidMap);
+						//						setSellersubTotalValue(orderSubtotalAfterDiscounts);
+						//						sellerFlag = true;
+						//					}
 
 						//PR-15 starts here
-
-						/*
-						 * if (!sellerFlag) { validProdQCountMap =
-						 * getDefaultPromotionsManager().getvalidProdQCForOrderShippingPromotion(
-						 * getDeliveryModeDetailsList(), order); } else if (MapUtils.isNotEmpty(validUssidMap)) {
-						 * validProdQCountMap = getMplPromotionHelper().getvalidProdQCForOrderShippingPromotion(
-						 * getDeliveryModeDetailsList(), validUssidMap); }
-						 */
-
-						if (MapUtils.isNotEmpty(validUssidMap))
-						{
-							validProdQCountMap = getMplPromotionHelper().getvalidProdQCForOrderShippingPromotion(
-									getDeliveryModeDetailsList(), validUssidMap);
-						}
-
+						final List<Product> allowedProductList = new ArrayList<Product>(rsr.getAllowedProducts());
 						//PR-15 ends here
-
-						//CR Changes : TPR-715 Ends
-
-						final Map<String, AbstractOrderEntry> validProductUssidMap = getValidProducts(order, arg0, validProdQCountMap);
-						final Map<String, String> fetchProductRichAttribute = getDefaultPromotionsManager().fetchProductRichAttribute(
-								validProdQCountMap, order);
-						final Map<String, Map<String, Double>> apportionedProdDelChargeMap = new HashMap<String, Map<String, Double>>();
-
-						final EnumerationValue discountType = getDiscTypesOnShippingCharges();
-						double adjustedDeliveryCharge = 0.00D;
-						boolean isDeliveryFreeFlag = false;
-						if (discountType.getCode().equalsIgnoreCase(MarketplacecommerceservicesConstants.PERCENTAGE_MESSAGE)
-								&& (getPercentageDiscount() != null))
+						if (getDefaultPromotionsManager().isSellerRestrExists(restrictionList)
+								|| getDefaultPromotionsManager().isExSellerRestrExists(restrictionList))
 						{
-							adjustedDeliveryCharge = getPercentageDiscount().doubleValue();
+							validUssidMap = getMplPromotionHelper().getCartSellerEligibleProducts(arg0, order, restrictionList,
+									allowedProductList);//PR-15 allowedProductList parameter added
+							orderSubtotalAfterDiscounts = getSellerSpecificSubtotal(arg0, validUssidMap);
+							setSellersubTotalValue(orderSubtotalAfterDiscounts);
+							//sellerFlag = true;//commented for PR-15
 						}
-						else if (discountType.getCode().equalsIgnoreCase(MarketplacecommerceservicesConstants.AMOUNT)
-								&& (getPriceForOrder(arg0, getDiscountPrices(arg0), order,
-										MarketplacecommerceservicesConstants.DISCOUNT_PRICES) != null))
+						else
 						{
-							final double amount = getPriceForOrder(arg0, getDiscountPrices(arg0), order,
-									MarketplacecommerceservicesConstants.DISCOUNT_PRICES).doubleValue();
-							final double totalDelCostForValidProds = getDefaultPromotionsManager().getTotalDelCostForValidProds(
-									validProductUssidMap, validProdQCountMap);
-							adjustedDeliveryCharge = (amount / totalDelCostForValidProds) * 100;
-						}
-						else if (discountType.getCode().equalsIgnoreCase(MarketplacecommerceservicesConstants.FREE))
-						{
-							isDeliveryFreeFlag = true;
+							/* PR-15 starts here */
+							validUssidMap = getMplPromotionHelper().getCartSellerEligibleProducts(arg0, order, null, allowedProductList);
+							orderSubtotalAfterDiscounts = getSellerSpecificSubtotal(arg0, validUssidMap);
+							setSellersubTotalValue(orderSubtotalAfterDiscounts);
+							//orderSubtotalAfterDiscounts = getOrderSubtotalAfterDiscounts(arg0, order);
+							/* PR-15 ends here */
 						}
 
-						//For cart level shipping promotion only, to find entries for which product shipping is applied
-						final Map<String, Boolean> isProdShippingPromoAppliedMap = getDefaultPromotionsManager()
-								.getProdShippingPromoAppliedMap(order);
+						//CR Changes : TPR-715Ends
 
-						for (final Map.Entry<String, AbstractOrderEntry> mapEntry : validProductUssidMap.entrySet())
+
+						if (orderSubtotalAfterDiscounts >= threshold.doubleValue())
 						{
-							//arg1.startLoggingConsumed(this);
-							final String validProdUssid = mapEntry.getKey();
-							final AbstractOrderEntry entry = mapEntry.getValue();
-							final String fullfillmentTypeForProduct = fetchProductRichAttribute.get(validProdUssid);
-							if ((isTShipAsPrimitive() && isSShipAsPrimitive())
-									|| ((fullfillmentTypeForProduct.equalsIgnoreCase(MarketplacecommerceservicesConstants.TSHIP) && isTShipAsPrimitive()) || (fullfillmentTypeForProduct
-											.equalsIgnoreCase(MarketplacecommerceservicesConstants.SSHIP) && isSShipAsPrimitive())))
+							//CR Changes : TPR-715
+
+							//PR-15 starts here
+
+							/*
+							 * if (!sellerFlag) { validProdQCountMap =
+							 * getDefaultPromotionsManager().getvalidProdQCForOrderShippingPromotion(
+							 * getDeliveryModeDetailsList(), order); } else if (MapUtils.isNotEmpty(validUssidMap)) {
+							 * validProdQCountMap = getMplPromotionHelper().getvalidProdQCForOrderShippingPromotion(
+							 * getDeliveryModeDetailsList(), validUssidMap); }
+							 */
+
+							if (MapUtils.isNotEmpty(validUssidMap))
 							{
-								arg1.startLoggingConsumed(this);
-								apportionedProdDelChargeMap.putAll(getDefaultPromotionsManager().calcDeliveryCharges(isDeliveryFreeFlag,
-										adjustedDeliveryCharge, validProdUssid, order, isProdShippingPromoAppliedMap));
-
-								final PromotionResult result = PromotionsManager.getInstance().createPromotionResult(arg0, this,
-										arg1.getOrder(), 1.0F);
-								final CustomShippingChargesPromotionAdjustAction poeac = getDefaultPromotionsManager()
-										.createCustomShippingChargesPromotionAdjustAction(arg0, entry, 0.0D);
-								final List consumed = arg1.finishLoggingAndGetConsumed(this, true);
-								result.setConsumedEntries(arg0, consumed);
-								result.addAction(arg0, poeac);
-								promotionResults.add(result);
+								validProdQCountMap = getMplPromotionHelper().getvalidProdQCForOrderShippingPromotion(
+										getDeliveryModeDetailsList(), validUssidMap);
 							}
+
+							//PR-15 ends here
+
+							//CR Changes : TPR-715 Ends
+
+							final Map<String, AbstractOrderEntry> validProductUssidMap = getValidProducts(order, arg0,
+									validProdQCountMap);
+							final Map<String, String> fetchProductRichAttribute = getDefaultPromotionsManager()
+									.fetchProductRichAttribute(validProdQCountMap, order);
+							final Map<String, Map<String, Double>> apportionedProdDelChargeMap = new HashMap<String, Map<String, Double>>();
+
+							final EnumerationValue discountType = getDiscTypesOnShippingCharges();
+							double adjustedDeliveryCharge = 0.00D;
+							boolean isDeliveryFreeFlag = false;
+							if (discountType.getCode().equalsIgnoreCase(MarketplacecommerceservicesConstants.PERCENTAGE_MESSAGE)
+									&& (getPercentageDiscount() != null))
+							{
+								adjustedDeliveryCharge = getPercentageDiscount().doubleValue();
+							}
+							else if (discountType.getCode().equalsIgnoreCase(MarketplacecommerceservicesConstants.AMOUNT)
+									&& (getPriceForOrder(arg0, getDiscountPrices(arg0), order,
+											MarketplacecommerceservicesConstants.DISCOUNT_PRICES) != null))
+							{
+								final double amount = getPriceForOrder(arg0, getDiscountPrices(arg0), order,
+										MarketplacecommerceservicesConstants.DISCOUNT_PRICES).doubleValue();
+								final double totalDelCostForValidProds = getDefaultPromotionsManager().getTotalDelCostForValidProds(
+										validProductUssidMap, validProdQCountMap);
+								adjustedDeliveryCharge = (amount / totalDelCostForValidProds) * 100;
+							}
+							else if (discountType.getCode().equalsIgnoreCase(MarketplacecommerceservicesConstants.FREE))
+							{
+								isDeliveryFreeFlag = true;
+							}
+							else if (discountType.getCode().equalsIgnoreCase(MarketplacecommerceservicesConstants.FORCED))
+							{
+								//							final double totalDelCostForTShipValidProds = getDefaultPromotionsManager()
+								//									.getTotalDelCostForTshipValidProds(validProductUssidMap, validProdQCountMap);
+								final double forcedTshipAmount = getShippingCharge().doubleValue();
+								adjustedDeliveryCharge = forcedTshipAmount;
+								final Map<String, Boolean> isProdShippingPromoAppliedMap = getDefaultPromotionsManager()
+										.getProdShippingPromoAppliedMap(order);
+								for (final Map.Entry<String, AbstractOrderEntry> mapEntry : validProductUssidMap.entrySet())
+								{
+									//arg1.startLoggingConsumed(this);
+									final int validProductUssidMapSize = validProductUssidMap.size();
+									final String validProdUssid = mapEntry.getKey();
+									final AbstractOrderEntry entry = mapEntry.getValue();
+									final String fullfillmentTypeForProduct = fetchProductRichAttribute.get(validProdUssid);
+									if ((isTShipAsPrimitive() && isSShipAsPrimitive())
+											|| ((fullfillmentTypeForProduct.equalsIgnoreCase(MarketplacecommerceservicesConstants.TSHIP) && isTShipAsPrimitive()) || (fullfillmentTypeForProduct
+													.equalsIgnoreCase(MarketplacecommerceservicesConstants.SSHIP) && isSShipAsPrimitive())))
+									{
+										arg1.startLoggingConsumed(this);
+										apportionedProdDelChargeMap.putAll(getDefaultPromotionsManager().calcForcedDeliveryCharges(
+												isDeliveryFreeFlag, adjustedDeliveryCharge, validProdUssid, order,
+												isProdShippingPromoAppliedMap, validProductUssidMapSize));
+
+										final PromotionResult result = PromotionsManager.getInstance().createPromotionResult(arg0, this,
+												arg1.getOrder(), 1.0F);
+										final CustomShippingChargesPromotionAdjustAction poeac = getDefaultPromotionsManager()
+												.createCustomShippingChargesPromotionAdjustAction(arg0, entry, 0.0D);
+										final List consumed = arg1.finishLoggingAndGetConsumed(this, true);
+										result.setConsumedEntries(arg0, consumed);
+										result.addAction(arg0, poeac);
+										promotionResults.add(result);
+									}
+								}
+
+							}
+							//For cart level shipping promotion only, to find entries for which product shipping is applied
+							if (!discountType.getCode().equalsIgnoreCase(MarketplacecommerceservicesConstants.FORCED))
+							{
+								final Map<String, Boolean> isProdShippingPromoAppliedMap = getDefaultPromotionsManager()
+										.getProdShippingPromoAppliedMap(order);
+
+								for (final Map.Entry<String, AbstractOrderEntry> mapEntry : validProductUssidMap.entrySet())
+								{
+									//arg1.startLoggingConsumed(this);
+									final String validProdUssid = mapEntry.getKey();
+									final AbstractOrderEntry entry = mapEntry.getValue();
+									final String fullfillmentTypeForProduct = fetchProductRichAttribute.get(validProdUssid);
+									if ((isTShipAsPrimitive() && isSShipAsPrimitive())
+											|| ((fullfillmentTypeForProduct.equalsIgnoreCase(MarketplacecommerceservicesConstants.TSHIP) && isTShipAsPrimitive()) || (fullfillmentTypeForProduct
+													.equalsIgnoreCase(MarketplacecommerceservicesConstants.SSHIP) && isSShipAsPrimitive())))
+									{
+										arg1.startLoggingConsumed(this);
+										apportionedProdDelChargeMap.putAll(getDefaultPromotionsManager().calcDeliveryCharges(
+												isDeliveryFreeFlag, adjustedDeliveryCharge, validProdUssid, order,
+												isProdShippingPromoAppliedMap));
+
+										final PromotionResult result = PromotionsManager.getInstance().createPromotionResult(arg0, this,
+												arg1.getOrder(), 1.0F);
+										final CustomShippingChargesPromotionAdjustAction poeac = getDefaultPromotionsManager()
+												.createCustomShippingChargesPromotionAdjustAction(arg0, entry, 0.0D);
+										final List consumed = arg1.finishLoggingAndGetConsumed(this, true);
+										result.setConsumedEntries(arg0, consumed);
+										result.addAction(arg0, poeac);
+										promotionResults.add(result);
+									}
+								}
+							}
+							arg0.setAttribute(MarketplacecommerceservicesConstants.VALIDPRODUCTLIST, validProductUssidMap);
+							arg0.setAttribute(MarketplacecommerceservicesConstants.QUALIFYINGCOUNT, validProdQCountMap);
+							arg0.setAttribute(MarketplacecommerceservicesConstants.CARTPROMOCODE, String.valueOf(this.getCode()));
+							arg0.setAttribute(MarketplacecommerceservicesConstants.PRODPREVCURRDELCHARGEMAP, apportionedProdDelChargeMap);
+
+							/*
+							 * arg0.setAttribute(MarketplacecommerceservicesConstants.VALIDPRODUCTLIST, validProductUssidMap);
+							 * arg0.setAttribute(MarketplacecommerceservicesConstants.QUALIFYINGCOUNT, validProdQCountMap);
+							 * arg0.setAttribute(MarketplacecommerceservicesConstants.CARTPROMOCODE,
+							 * String.valueOf(this.getCode()));
+							 * arg0.setAttribute(MarketplacecommerceservicesConstants.PRODPREVCURRDELCHARGEMAP,
+							 * apportionedProdDelChargeMap);
+							 */
+
 						}
-
-						arg0.setAttribute(MarketplacecommerceservicesConstants.VALIDPRODUCTLIST, validProductUssidMap);
-						arg0.setAttribute(MarketplacecommerceservicesConstants.QUALIFYINGCOUNT, validProdQCountMap);
-						arg0.setAttribute(MarketplacecommerceservicesConstants.CARTPROMOCODE, String.valueOf(this.getCode()));
-						arg0.setAttribute(MarketplacecommerceservicesConstants.PRODPREVCURRDELCHARGEMAP, apportionedProdDelChargeMap);
-
-						/*
-						 * arg0.setAttribute(MarketplacecommerceservicesConstants.VALIDPRODUCTLIST, validProductUssidMap);
-						 * arg0.setAttribute(MarketplacecommerceservicesConstants.QUALIFYINGCOUNT, validProdQCountMap);
-						 * arg0.setAttribute(MarketplacecommerceservicesConstants.CARTPROMOCODE,
-						 * String.valueOf(this.getCode()));
-						 * arg0.setAttribute(MarketplacecommerceservicesConstants.PRODPREVCURRDELCHARGEMAP,
-						 * apportionedProdDelChargeMap);
-						 */
-
-					}
-					else if (orderSubtotalAfterDiscounts > 0.0D)
-					{
-						if (LOG.isDebugEnabled())
+						else if (orderSubtotalAfterDiscounts > 0.0D)
 						{
-							LOG.debug("(" + getPK() + ")"
-									+ Localization.getLocalizedString("promotion.orderLevelPromotion.cartAmtLessThanThreshold.msg1")
-									+ orderSubtotalAfterDiscounts
-									+ Localization.getLocalizedString("promotion.orderLevelPromotion.cartAmtLessThanThreshold.msg2")
-									+ threshold
-									+ Localization.getLocalizedString("promotion.orderLevelPromotion.cartAmtLessThanThreshold.msg3"));
+							if (LOG.isDebugEnabled())
+							{
+								LOG.debug("(" + getPK() + ")"
+										+ Localization.getLocalizedString("promotion.orderLevelPromotion.cartAmtLessThanThreshold.msg1")
+										+ orderSubtotalAfterDiscounts
+										+ Localization.getLocalizedString("promotion.orderLevelPromotion.cartAmtLessThanThreshold.msg2")
+										+ threshold
+										+ Localization.getLocalizedString("promotion.orderLevelPromotion.cartAmtLessThanThreshold.msg3"));
+							}
+							final float certainty = (float) (orderSubtotalAfterDiscounts / threshold.doubleValue());
+							final PromotionResult result = PromotionsManager.getInstance().createPromotionResult(arg0, this,
+									arg1.getOrder(), certainty);
+							promotionResults.add(result);
 						}
-						final float certainty = (float) (orderSubtotalAfterDiscounts / threshold.doubleValue());
-						final PromotionResult result = PromotionsManager.getInstance().createPromotionResult(arg0, this,
-								arg1.getOrder(), certainty);
-						promotionResults.add(result);
 					}
 				}
+
 			}
-
-
 
 		}
 		catch (final EtailBusinessExceptions e)
@@ -293,7 +337,7 @@ public class BuyAboveXGetPromotionOnShippingCharges extends GeneratedBuyAboveXGe
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * de.hybris.platform.promotions.jalo.AbstractPromotion#getResultDescription(de.hybris.platform.jalo.SessionContext,
 	 * de.hybris.platform.promotions.jalo.PromotionResult, java.util.Locale)

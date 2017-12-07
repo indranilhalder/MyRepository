@@ -2754,15 +2754,15 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 
 			Double finalDeliveryCost = Double.valueOf(0.0);
 
-			{
-				//create session object for deliveryMethodForm which will be used if cart contains both cnc and home delivery.
-				session.setAttribute("deliveryMethodForm", deliveryMethodForm);
-				//TISPT-400
-				finalDeliveryCost = populateMplZoneDeliveryMode(deliveryMethodForm, cartModel);
-				final Map<String, Map<String, Double>> deliveryChargePromotionMap = null;
-				getMplCheckoutFacade().populateDeliveryCost(finalDeliveryCost, deliveryChargePromotionMap, cartModel); //TIS 400
 
-			}
+			//create session object for deliveryMethodForm which will be used if cart contains both cnc and home delivery.
+			session.setAttribute("deliveryMethodForm", deliveryMethodForm);
+			//TISPT-400
+			finalDeliveryCost = populateMplZoneDeliveryMode(deliveryMethodForm, cartModel);
+			final Map<String, Map<String, Double>> deliveryChargePromotionMap = null;
+
+
+
 
 			final Map<String, MplZoneDeliveryModeValueModel> freebieModelMap = new HashMap<String, MplZoneDeliveryModeValueModel>();
 			final Map<String, Long> freebieParentQtyMap = new HashMap<String, Long>();
@@ -2771,7 +2771,7 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 			{
 				applyPromotions();
 			}
-
+			getMplCheckoutFacade().populateDeliveryCost(finalDeliveryCost, deliveryChargePromotionMap, cartModel); //TIS 400
 			//populate freebie data
 			populateFreebieProductData(cartModel, freebieModelMap, freebieParentQtyMap);
 
@@ -3493,13 +3493,12 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 			//SDI-2158 fix recalculation starts here
 			mplCouponFacade.releaseVoucherInCheckout(cartModel);
 			commerceCartService.recalculateCart(cartModel);
-			
-			//Fix starts for - Order cant be placed with freebie 
+			modelService.refresh(cartModel);
+			//Fix starts for - Order cant be placed with freebie
 			final Map<String, MplZoneDeliveryModeValueModel> freebieModelMap = new HashMap<String, MplZoneDeliveryModeValueModel>();
 			final Map<String, Long> freebieParentQtyMap = new HashMap<String, Long>();
 			populateFreebieProductData(cartModel, freebieModelMap, freebieParentQtyMap);
-			//Fix ends for - Order cant be placed with freebie 
-			
+			//Fix ends for - Order cant be placed with freebie
 			//SDI-2158 fix recalculation ends here
 			mplCartFacade.setCartSubTotalForReviewOrder(cartModel);
 			mplCartFacade.totalMrpCal(cartModel);
@@ -4962,7 +4961,7 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 
 	/*
 	 * @Description adding wishlist popup in cart page
-	 *
+	 * 
 	 * @param String productCode,String wishName, model
 	 */
 
@@ -5020,7 +5019,7 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 
 	/*
 	 * @Description showing wishlist popup in cart page
-	 *
+	 * 
 	 * @param String productCode, model
 	 */
 	@ResponseBody

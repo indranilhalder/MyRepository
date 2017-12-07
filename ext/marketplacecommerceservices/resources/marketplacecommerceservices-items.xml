@@ -94,6 +94,7 @@
 			<value code="Percentage" />
 			<value code="Amount" />
 			<value code="Free" />
+			<value code="Forced" />
 		</enumtype>
 	</enumtypes>
 	
@@ -2449,6 +2450,14 @@
 					type="java.lang.Double">
 					<!-- <defaultvalue>Double.valueOf(10.0D)</defaultvalue> -->
 					<description>Percentage discount.</description>
+					<modifiers read="true" write="true" search="true"
+						optional="true" />
+					<persistence type="property" />
+				</attribute>
+				<attribute qualifier="shippingCharge" autocreate="true"
+					type="java.lang.Double">
+					<!-- <defaultvalue>Double.valueOf(10.0D)</defaultvalue> -->
+					<description>shipping charge</description>
 					<modifiers read="true" write="true" search="true"
 						optional="true" />
 					<persistence type="property" />

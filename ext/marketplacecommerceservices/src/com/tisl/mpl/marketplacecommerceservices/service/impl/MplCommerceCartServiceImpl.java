@@ -6704,6 +6704,7 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 		{
 			for (final OrderEntryData entry : cartData.getEntries())
 			{
+
 				final SellerInformationData sellerInformationData = entry.getSelectedSellerInformation();
 				final String selectedUssid = entry.getSelectedUssid();
 				//deliveryModeDataList = new ArrayList<MarketplaceDeliveryModeData>();
@@ -6767,9 +6768,10 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 										else if (isFulFillmentTypeMatch(deliveryData.getFulfilmentType(), deliveryModel
 												.getDeliveryFulfillModes().getCode(), sellerInformationData))
 										{
-											priceData = formPriceData(
-													Double.valueOf(deliveryModel.getValue().doubleValue() * entry.getQuantity().doubleValue()),
-													cartData);
+											//											priceData = formPriceData(
+											//													Double.valueOf(deliveryModel.getValue().doubleValue() * entry.getQuantity().doubleValue()),
+											//													cartData);
+											priceData = entry.getCurrDelCharge();
 										}
 										else
 										{

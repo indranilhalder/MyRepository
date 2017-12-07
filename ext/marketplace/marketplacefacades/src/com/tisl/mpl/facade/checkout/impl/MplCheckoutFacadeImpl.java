@@ -642,6 +642,7 @@ public class MplCheckoutFacadeImpl extends DefaultCheckoutFacade implements MplC
 
 		Double totalPriceAfterDeliveryCost = Double.valueOf(0.0);
 		Double discountValue = Double.valueOf(0.0);
+		double curDeliveryCharge = 0.0d;
 		//final CartData cartData = getMplExtendedCartConverter().convert(cartModel);
 		final CartData cartData = mplExtendedPromoCartConverter.convert(cartModel); //TISPT-400
 		boolean deliveryCostCalcStatus = false;
@@ -650,11 +651,16 @@ public class MplCheckoutFacadeImpl extends DefaultCheckoutFacade implements MplC
 		{
 			discountValue = Double.valueOf(cartData.getTotalDiscounts().getValue().doubleValue());
 		}
-		totalPriceAfterDeliveryCost = Double.valueOf(subTotal.doubleValue() + finalDeliveryCost.doubleValue()
-				- discountValue.doubleValue());
-
+		for (final AbstractOrderEntryModel entry : cartModel.getEntries())
+		{
+			curDeliveryCharge += entry.getCurrDelCharge().doubleValue();
+		}
+		totalPriceAfterDeliveryCost = Double.valueOf(subTotal.doubleValue() + curDeliveryCharge - discountValue.doubleValue());//tship charge change
+		cartModel.setDeliveryCost(Double.valueOf(curDeliveryCharge));
 		cartModel.setTotalPrice(totalPriceAfterDeliveryCost);
-		cartModel.setDeliveryCost(finalDeliveryCost);
+
+		cartModel.setTotalPriceWithConv(totalPriceAfterDeliveryCost);
+
 		getModelService().save(cartModel);
 		deliveryCostCalcStatus = true;
 		return deliveryCostCalcStatus;
@@ -1344,9 +1350,12 @@ public class MplCheckoutFacadeImpl extends DefaultCheckoutFacade implements MplC
 		{
 			final OrderProcessModel orderProcessModel = new OrderProcessModel();
 			orderProcessModel.setOrder(order);
-			if(null != shortTrackingUrl) {
+			if (null != shortTrackingUrl)
+			{
 				orderProcessModel.setOrderTrackUrl(shortTrackingUrl);
-			}else {
+			}
+			else
+			{
 				orderProcessModel.setOrderTrackUrl(trackorderurl);
 			}
 			final OrderPlacedEvent orderplacedEvent = new OrderPlacedEvent(orderProcessModel);
