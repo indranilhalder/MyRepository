@@ -905,6 +905,9 @@ body .account .right-account .order-history .bottom .pagination.mobile {
 		font-size: 10px;
 	}
 }
+body .account .right-account .order-history.order-details li.header>ul>li {
+	width: 100%;	/* add for TISCSS-60 */
+}
 body .account .right-account .order-history .pagination li {
 	font-size: 12px;
     margin: auto 2px;
