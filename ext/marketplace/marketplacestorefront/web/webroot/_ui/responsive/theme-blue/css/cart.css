@@ -104,11 +104,6 @@
 	font-size: 14px;
 }
 
-.cart.wrapper .right-block .block .totals li .amt, .confirmation .right-block .block .totals li .amt
-	{
-	float: right;
-}
-
 .cart.wrapper .right-block .block .totals li#total, .confirmation .right-block .block .totals li#total
 	{
 	font-weight: 600;

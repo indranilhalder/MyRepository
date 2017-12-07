@@ -1074,7 +1074,7 @@ body .right-account .order-details .deliveryTrack .dot-arrow {
 .confirmation .right-block.billing h2, .confirmation .left-block h2 {
     width: 100%;
     font-weight: 500;
-    margin: 20px 0 !important;
+    margin: 20px 0;		/* remove important for TISCSS-57 */
     margin-top: 0 !important;
 }
 .confirmation .right-block .block .totals li.subtotalthanks .priceFormat, .confirmation .right-block .block .totals li#cartPromotionAppliedthanks .priceFormat {
@@ -1083,6 +1083,13 @@ body .right-account .order-details .deliveryTrack .dot-arrow {
 .confirmation .right-block .block .totals li.shippingthanks span:first-child {
     display: inline-block;
 }
+/* start for TISCSS-57 */
+.confirmation .right-block .block .totals li.shippingthanks>span.amt {
+	display: table-cell;
+    float: none;
+    text-align: right;
+}
+/* end for TISCSS-57 */
 #total {
     padding: 22px 0;
     border-top: 1px solid #e8e8e8;
