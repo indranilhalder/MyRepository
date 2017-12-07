@@ -110,8 +110,8 @@ public class CustomOmsOrderLinePopulator implements Populator<OrderEntryModel, O
 			if (null != prodModel
 					&& MarketplacecommerceservicesConstants.FINEJEWELLERY.equalsIgnoreCase(prodModel.getProductCategoryType()))
 			{
-				final List<JewelleryInformationModel> jewelleryInfo = jewelleryService.getJewelleryInfoByUssid(source
-						.getSelectedUSSID());
+				final List<JewelleryInformationModel> jewelleryInfo = jewelleryService
+						.getJewelleryInfoByUssid(source.getSelectedUSSID());
 				if (CollectionUtils.isNotEmpty(jewelleryInfo))
 				{
 					ussid = jewelleryInfo.get(0).getPCMUSSID();
@@ -322,9 +322,11 @@ public class CustomOmsOrderLinePopulator implements Populator<OrderEntryModel, O
 			}
 
 			target.setPromotion(promotions);
-			target.setApprotionedPrice(source.getNetAmountAfterAllDisc().doubleValue() > 0 ? source.getNetAmountAfterAllDisc()
-					.doubleValue() : 2.0);
+			target.setApprotionedPrice(
+					source.getNetAmountAfterAllDisc().doubleValue() > 0 ? source.getNetAmountAfterAllDisc().doubleValue() : 2.0);
 			//Code Blocked since coupon has been out of scope for Release2
+
+			final ArrayList<CouponDto> couponList = new ArrayList<>();
 
 			if (source.getCouponCode() != null && !source.getCouponCode().isEmpty())
 			{
@@ -337,13 +339,36 @@ public class CustomOmsOrderLinePopulator implements Populator<OrderEntryModel, O
 				}
 
 				//coupon.setSellerID(sellerInfoModel.getSellerID());
-				final ArrayList<CouponDto> couponList = new ArrayList<>();
 				couponList.add(coupon);
-				target.setCoupon(couponList);
+				//target.setCoupon(couponList);
 			}
 			else
 			{
 				LOG.debug("CustomOmsOrderLinePopulator : there is no coupon for the order ");
+			}
+
+			if (StringUtils.isNotEmpty(source.getCartCouponCode()))
+			{
+
+				final CouponDto coupon = new CouponDto();
+				coupon.setCouponCode(source.getCartCouponCode());
+				if (source.getCartCouponValue().doubleValue() > 0D)
+				{
+					coupon.setCouponValue(source.getCartCouponValue().toString());
+				}
+
+				//coupon.setSellerID(sellerInfoModel.getSellerID());
+				couponList.add(coupon);
+				//target.setCoupon(couponList);
+			}
+			else
+			{
+				LOG.debug("CustomOmsOrderLinePopulator : there is no Cart coupon for the order ");
+			}
+
+			if (CollectionUtils.isNotEmpty(couponList))
+			{
+				target.setCoupon(couponList);
 			}
 
 			//TISPRDT-1226
@@ -409,22 +434,22 @@ public class CustomOmsOrderLinePopulator implements Populator<OrderEntryModel, O
 			/*
 			 * if (richAttributeModel.get(0).getDeliveryFulfillModeByP1() != null &&
 			 * richAttributeModel.get(0).getDeliveryFulfillModeByP1().getCode() != null)
-			 * 
+			 *
 			 * { final String fulfilmentType =
 			 * richAttributeModel.get(0).getDeliveryFulfillModeByP1().getCode().toUpperCase();
 			 * target.setFulfillmentTypeP1(fulfilmentType); }
-			 * 
+			 *
 			 * if (richAttributeModel.get(0).getDeliveryFulfillModes() != null &&
 			 * richAttributeModel.get(0).getDeliveryFulfillModes().getCode() != null)
-			 * 
+			 *
 			 * { final String fulfilmentType = richAttributeModel.get(0).getDeliveryFulfillModes().getCode().toUpperCase();
 			 * if(fulfilmentType.equalsIgnoreCase(MarketplaceomsservicesConstants.BOTH)){
 			 * if(richAttributeModel.get(0).getDeliveryFulfillModeByP1
 			 * ().getCode().toUpperCase().equalsIgnoreCase(MarketplaceomsservicesConstants.TSHIP)){
 			 * target.setFulfillmentTypeP2(MarketplaceomsservicesConstants.SSHIP); }else{
 			 * target.setFulfillmentTypeP2(MarketplaceomsservicesConstants.TSHIP); } }else{
-			 * target.setFulfillmentTypeP2(fulfilmentType); } } else {
-			 * LOG.debug("CustomOmsOrderLinePopulator : FulfillmentTypeP2  is null "); }
+			 * target.setFulfillmentTypeP2(fulfilmentType); } } else { LOG.debug(
+			 * "CustomOmsOrderLinePopulator : FulfillmentTypeP2  is null "); }
 			 */
 
 			if (source.getFulfillmentMode() != null)
@@ -550,8 +575,8 @@ public class CustomOmsOrderLinePopulator implements Populator<OrderEntryModel, O
 					&& richAttributeModel.get(0).getShippingModes().getCode() != null)
 			{
 
-				target.setTransportMode(MplCodeMasterUtility.getglobalCode(richAttributeModel.get(0).getShippingModes().getCode()
-						.toUpperCase()));
+				target.setTransportMode(
+						MplCodeMasterUtility.getglobalCode(richAttributeModel.get(0).getShippingModes().getCode().toUpperCase()));
 			}
 			else
 			{
