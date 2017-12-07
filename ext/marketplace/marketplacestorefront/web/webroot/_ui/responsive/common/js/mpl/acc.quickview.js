@@ -189,7 +189,7 @@ function isOOSQuick(){
 		{
 	totalOptions = $("ul[label=sizes] li").length;
 		}
-	else
+	else if(document.getElementById("variant_dropdown")!=null)
 		{
 		totalOptions=document.getElementById("variant_dropdown").length;
 		}
