@@ -3320,36 +3320,45 @@
 			<!-- PaymentTransactionEntry ends -->
 			
 			<!-- New table for PR-4 :: START -->
-			<itemtype code="RefundTransactionEntry" autocreate="true"
-				generate="true">
+			<itemtype code="RefundTransactionEntry" autocreate="true" generate="true"
+				 jaloclass="com.tisl.mpl.core.jalo.RefundTransactionEntry">
+		     <description>Utr and ARN no againt transaction ids </description>
+			<deployment table="RefundTransactionEntry" typecode="19999" />
 				<!-- New table for PR-4 -->
 				<attributes>
 					<attribute qualifier="transactionId" autocreate="true"
 						type="java.lang.String">
 						<persistence type="property" />
 						<modifiers read="true" write="true" search="true"
-							optional="false" removable="false" initial="true" private="false"
+							optional="false" removable="true" initial="true" private="false"
 							partof="false" />
 					</attribute>
 					<attribute qualifier="amount" autocreate="true"
 						type="java.lang.Double">
 						<persistence type="property" />
 						<modifiers read="true" write="true" search="true"
-							optional="false" removable="false" initial="true" private="false"
+							optional="false" removable="true" initial="true" private="false"
 							partof="false" />
 					</attribute>
 					<attribute qualifier="arnNumber" autocreate="true"
 						type="java.lang.String">
 						<persistence type="property" />
 						<modifiers read="true" write="true" search="true"
-							optional="true" removable="false" initial="true" private="false"
+							optional="true" removable="true" initial="true" private="false"
 							partof="false" />
 					</attribute>
 					<attribute qualifier="utrNumber" autocreate="true"
 						type="java.lang.String">
 						<persistence type="property" />
 						<modifiers read="true" write="true" search="true"
-							optional="true" removable="false" initial="true" private="false"
+							optional="true" removable="true" initial="true" private="false"
+							partof="false" />
+					</attribute>
+					<attribute qualifier="status" autocreate="true"
+						type="java.lang.String">
+						<persistence type="property" />
+						<modifiers read="true" write="true" search="true"
+							optional="true" removable="true" initial="true" private="false"
 							partof="false" />
 					</attribute>
 				</attributes>
@@ -13878,3 +13887,4 @@
 									 
   </itemtypes>
 </items>
+
