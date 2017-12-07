@@ -94,8 +94,8 @@ nav {
     display: inline-block;
 }
 .container:before, .container:after {
-    content: " ";
-    display: table;
+    /* content: " ";
+    display: table; */		/* commented for TISCSS-55 */
 }
 
 .sign-in.tab-view .tabs>li .left form input {
