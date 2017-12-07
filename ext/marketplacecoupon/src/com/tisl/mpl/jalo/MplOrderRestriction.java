@@ -5,8 +5,12 @@ import de.hybris.platform.jalo.JaloBusinessException;
 import de.hybris.platform.jalo.SessionContext;
 import de.hybris.platform.jalo.c2l.Currency;
 import de.hybris.platform.jalo.order.AbstractOrder;
+import de.hybris.platform.jalo.order.AbstractOrderEntry;
 import de.hybris.platform.jalo.type.ComposedType;
 
+import java.util.List;
+
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.log4j.Logger;
 
 
@@ -30,37 +34,29 @@ public class MplOrderRestriction extends GeneratedMplOrderRestriction
 	@Override
 	protected boolean isFulfilledInternal(final AbstractOrder anOrder)
 	{
+
 		final Currency minimumOrderValueCurrency = getCurrency();
 		final Currency currentOrderCurrency = anOrder.getCurrency();
-		Double conVal = Double.valueOf(0);
 
-		double currentTotal = anOrder.getSubtotal().doubleValue();
+		double currentTotal = 0;
 		final double minimumTotal = minimumOrderValueCurrency.convert(currentOrderCurrency, getTotalAsPrimitive());
 
 		try
 		{
 
-			if (!(isValueofgoodsonlyAsPrimitive()))
+			final List<AbstractOrderEntry> entryList = anOrder.getAllEntries();
+
+			if (CollectionUtils.isNotEmpty(entryList))
 			{
-				currentTotal += anOrder.getDeliveryCosts();
+				for (final AbstractOrderEntry entry : entryList)
+				{
+					final Double netAmountAfterAllDiscount = (Double) entry.getAttribute("netAmountAfterAllDisc");
+					final Double productVal = (Double) entry.getAttribute("totalPrice");
 
-				LOG.debug("Current Total After Delivery Cost >>>" + currentTotal);
+					currentTotal += (netAmountAfterAllDiscount.doubleValue() > 0) ? (netAmountAfterAllDiscount.doubleValue())
+							: (productVal.doubleValue());
+				}
 			}
-
-
-			if (null != anOrder.getAttribute("convenienceCharges"))
-			{
-				conVal = (Double) anOrder.getAttribute("convenienceCharges");
-
-				LOG.debug("Current Total After Delivery Cost >>>" + currentTotal);
-			}
-
-
-			if (null != conVal && conVal.doubleValue() > 0)
-			{
-				currentTotal += conVal.doubleValue();
-			}
-
 
 			// Coupon Evaluation
 
@@ -77,6 +73,7 @@ public class MplOrderRestriction extends GeneratedMplOrderRestriction
 		}
 
 		return (currentTotal <= minimumTotal);
+
 
 	}
 }
