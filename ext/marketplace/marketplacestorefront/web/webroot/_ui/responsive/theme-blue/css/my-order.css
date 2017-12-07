@@ -684,10 +684,11 @@ body .account .right-account .order-history .bottom .pagination.mobile {
 }
 @media (max-width: 790px){
 	body .account .right-account .order-history .product-block li.header>ul>li {
-    width: 49%;
+    	width: 49%;
 	}
 	body .account .right-account .order-history .product-block li.item .image {
-    width: 50px;
+    	width: 50px;
+        min-height: auto;	/* TISCSS-56 */
 	}
 	body .account .right-account .order-history .product-block li.item .details {
 	    padding-right: 70px;
@@ -696,15 +697,15 @@ body .account .right-account .order-history .bottom .pagination.mobile {
 	    width: 100%;
 	}
 	body .account .right-account .order-history .product-block li.item .orderUpdatesBlock {
-    float: left;
-    margin-bottom: 17px;
+	    float: left;
+	    margin-bottom: 17px;
 	}
 	body .account .right-account .order-history .product-block li.item .orderUpdatesBlock {
-    width: calc(100% - 70px);
-    float: right;
+	    width: calc(100% - 70px);
+	    float: right;
 	}
 	body .account .right-account .order-history .product-block li.item .orderUpdatesBlock .statusDate {
-    text-align: left;
+    	text-align: left;
 	}
 	.order-history.order-details * {
 	    font-weight: normal !important;
