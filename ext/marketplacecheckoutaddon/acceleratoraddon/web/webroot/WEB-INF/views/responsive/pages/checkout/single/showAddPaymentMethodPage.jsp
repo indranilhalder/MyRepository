@@ -736,6 +736,10 @@
 																<spring:theme code="checkout.multi.paymentMethod.savedCard.cvvError"/>
 															</div>
 										        		</div>
+										        		<!-- TPR-7448 Starts here-->
+														<input type="hidden" name="cardsTokencc${status.index}" class="card_bank" value="${map.value.cardToken}" />
+														<input type="hidden" name="cardsReferencecc${status.index}" class="card_brand" value="${map.value.cardReferenceNumber}" />
+														<!-- TPR-7448 Ends here-->
 													</div>
 												</c:forEach>
 											</div> 
@@ -1071,6 +1075,10 @@
 																	<spring:theme code="checkout.multi.paymentMethod.savedCard.cvvError"/>
 																</div>
 										        			</div>
+										        			<!-- TPR-7448 Starts here-->
+															<input type="hidden" name="cardsTokendc${status.index}" class="card_bank" value="${map.value.cardToken}" />
+															<input type="hidden" name="cardsReferencedc${status.index}" class="card_brand" value="${map.value.cardReferenceNumber}" />
+															<!-- TPR-7448 Ends here-->
 										   			</div>
 												</c:forEach>
 											</div>
@@ -1729,6 +1737,7 @@
 		<div id="orderDetailsSectionId">
 			<single-Checkout:showCheckoutOrderDetails cartData="${cartData}" showDeliveryAddress="true" showPaymentInfo="false" showTaxEstimate="false" showTax="true" isCart="${isCart}" orderData="${orderData}"/>
 		</div>
+		<input type="hidden" name="juspayBaseUrl" id="juspayBaseUrl" value="${juspayBaseUrl}"/><!-- TPR-7448 -->
 	</div>		
 
 <style>

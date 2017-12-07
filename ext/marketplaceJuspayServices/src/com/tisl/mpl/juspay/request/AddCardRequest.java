@@ -11,6 +11,7 @@ public class AddCardRequest
 	private String cardExpMonth;
 	private String nameOnCard;
 	private String nickname;
+	private String token;
 
 
 
@@ -148,5 +149,22 @@ public class AddCardRequest
 	{
 		this.nickname = nickname;
 		return this;
+	}
+
+	/**
+	 * @return the token
+	 */
+	public String getToken()
+	{
+		return token;
+	}
+
+	/**
+	 * @param token
+	 *           the token to set
+	 */
+	public void setToken(final String token)
+	{
+		this.token = token;
 	}
 }

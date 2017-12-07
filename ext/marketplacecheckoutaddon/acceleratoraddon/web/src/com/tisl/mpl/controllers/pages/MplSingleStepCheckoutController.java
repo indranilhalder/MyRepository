@@ -68,6 +68,7 @@ import de.hybris.platform.storelocator.location.Location;
 import de.hybris.platform.storelocator.location.impl.LocationDTO;
 import de.hybris.platform.storelocator.location.impl.LocationDtoWrapper;
 import de.hybris.platform.storelocator.model.PointOfServiceModel;
+import de.hybris.platform.voucher.model.VoucherModel;
 import de.hybris.platform.wishlist2.model.Wishlist2EntryModel;
 import de.hybris.platform.wishlist2.model.Wishlist2Model;
 
@@ -5467,6 +5468,9 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 		//Terms n Conditions Link
 		model.addAttribute(MarketplacecheckoutaddonConstants.TNCLINK,
 				configurationService.getConfiguration().getString(MarketplacecheckoutaddonConstants.TNCLINKVALUE));
+		//TPR-7448
+		model.addAttribute(MarketplacecheckoutaddonConstants.JUSPAYBASEURL,
+				configurationService.getConfiguration().getString(MarketplacecommerceservicesConstants.JUSPAYBASEURL));
 
 	}
 

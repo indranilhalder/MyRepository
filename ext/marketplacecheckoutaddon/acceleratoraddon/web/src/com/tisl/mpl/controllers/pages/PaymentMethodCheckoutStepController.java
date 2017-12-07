@@ -45,6 +45,7 @@ import de.hybris.platform.order.InvalidCartException;
 import de.hybris.platform.order.exceptions.CalculationException;
 import de.hybris.platform.payment.AdapterException;
 import de.hybris.platform.promotions.util.Tuple2;
+import de.hybris.platform.promotions.util.Tuple3;
 import de.hybris.platform.servicelayer.config.ConfigurationService;
 import de.hybris.platform.servicelayer.exceptions.ModelSavingException;
 import de.hybris.platform.servicelayer.model.ModelService;
@@ -133,6 +134,7 @@ import com.tisl.mpl.facades.product.data.MarketplaceDeliveryModeData;
 import com.tisl.mpl.juspay.response.ListCardsResponse;
 import com.tisl.mpl.marketplacecommerceservices.service.MplJewelleryService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplSellerInformationService;
+import com.tisl.mpl.marketplacecommerceservices.service.MplVoucherService;
 import com.tisl.mpl.model.BankModel;
 import com.tisl.mpl.model.PaymentModeRestrictionModel;
 import com.tisl.mpl.model.PaymentTypeModel;
@@ -274,6 +276,8 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 	private final String DISCOUNT_MSSG = " discount on purchase of Promoted Product";
 	private static final String UTF = "UTF-8";
 
+	@Resource(name = "mplVoucherService")
+	private MplVoucherService mplVoucherService;
 
 	/**
 	 * This is the GET method which renders the Payment Page. Custom method written instead of overridden method to
@@ -1826,6 +1830,8 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 		//Terms n Conditions Link
 		model.addAttribute(MarketplacecheckoutaddonConstants.TNCLINK,
 				getConfigurationService().getConfiguration().getString(MarketplacecheckoutaddonConstants.TNCLINKVALUE));
+		model.addAttribute(MarketplacecheckoutaddonConstants.JUSPAYBASEURL,
+				getConfigurationService().getConfiguration().getString(MarketplacecheckoutaddonConstants.JUSPAYBASEURL));//TPR-7448
 
 	}
 
@@ -3949,12 +3955,12 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 				//final String orderGuid = decryptKey(guid);
 				orderModel = getMplPaymentFacade().getOrderByGuid(guid);
 			}
-
 			if (null == orderModel)
 			{
 				//Existing code for cartModel
 				final CartModel cart = getCartService().getSessionCart();
 				//TISEE-510 ,TISEE-5555
+
 
 				//TISPT-29
 				if (null != cart
@@ -4254,7 +4260,9 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 	public @ResponseBody String createJuspayOrder(final String firstName, final String lastName, final String netBankName,
 			final String addressLine1, final String addressLine2, final String addressLine3, final String country,
 			final String state, final String city, final String pincode, final String cardSaved, final String sameAsShipping,
-			final String guid, final String paymentinfo, final Model model) //Parameter guid added for TPR-629 //parameter netBankName added for TPR-4461
+			final String guid, final String paymentinfo, @RequestParam(required = false) final String token,
+			@RequestParam(required = false) final String cardRefNo, @RequestParam(required = false) final String cardToken,
+			final Model model) //Parameter guid added for TPR-629 //parameter netBankName added for TPR-4461
 			throws EtailNonBusinessExceptions
 	{
 
@@ -4408,6 +4416,17 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 					}
 				}
 				//TPR-4461 Ends here for payment mode and bank restriction validation for Voucher
+
+				//TPR-7448 Starts here
+				final Tuple3<?, ?, ?> tuple3 = mplVoucherService.checkCardPerOfferValidation(cart, token, cardSaved, cardRefNo,
+						cardToken);
+				if (!((Boolean) tuple3.getFirst()).booleanValue())
+				{
+					final String failureCode = (String) tuple3.getSecond();
+					final Double priceDiff = (Double) tuple3.getThird();
+					return "one_card_per_offer_failed|" + failureCode + "|" + priceDiff;
+				}
+				//TPR-7448 Ends here
 
 
 				//added for CAR:127
@@ -4655,6 +4674,17 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 					}
 				}
 				//TPR-4461 Ends here for payment mode and bank restriction validation for Voucher
+
+				//TPR-7448 Starts here
+				final Tuple3<?, ?, ?> tuple3 = mplVoucherService.checkCardPerOfferValidation(orderModel, token, cardSaved, cardRefNo,
+						cardToken);
+				if (!((Boolean) tuple3.getFirst()).booleanValue())
+				{
+					final String failureCode = (String) tuple3.getSecond();
+					final Double priceDiff = (Double) tuple3.getThird();
+					return "one_card_per_offer_failed|" + failureCode + "|" + priceDiff;
+				}
+				//TPR-7448 Ends here
 
 				//added for CAR:127
 				oData = getMplCheckoutFacade().getOrderDetailsForCode(orderModel);

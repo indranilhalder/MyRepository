@@ -4,6 +4,7 @@
 package com.tisl.mpl.marketplacecommerceservices.service;
 
 import de.hybris.platform.commercefacades.voucher.exceptions.VoucherOperationException;
+import de.hybris.platform.core.model.VoucherCardPerOfferInvalidationModel;
 import de.hybris.platform.core.model.order.AbstractOrderEntryModel;
 import de.hybris.platform.core.model.order.AbstractOrderModel;
 import de.hybris.platform.core.model.order.CartModel;
@@ -11,12 +12,14 @@ import de.hybris.platform.core.model.order.OrderModel;
 import de.hybris.platform.core.model.order.price.DiscountModel;
 import de.hybris.platform.core.model.user.UserModel;
 import de.hybris.platform.jalo.order.AbstractOrderEntry;
+import de.hybris.platform.promotions.util.Tuple3;
 import de.hybris.platform.util.DiscountValue;
 import de.hybris.platform.voucher.model.VoucherInvalidationModel;
 import de.hybris.platform.voucher.model.VoucherModel;
 
 import java.util.List;
 
+import com.tisl.mpl.core.model.JuspayCardStatusModel;
 import com.tisl.mpl.data.VoucherDiscountData;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 
@@ -150,4 +153,36 @@ public interface MplVoucherService
 	 * @throws VoucherOperationException
 	 */
 	void releaseCartVoucher(String voucherCode, CartModel cartModel, OrderModel orderModel) throws VoucherOperationException;
+
+	/**
+	 * @param voucher
+	 * @param cardReferenceNo
+	 * @return List<VoucherCardPerOfferInvalidationModel>
+	 */
+	public List<VoucherCardPerOfferInvalidationModel> findInvalidationMaxAvailCnt(VoucherModel voucher, String cardReferenceNo);
+
+	/**
+	 * @param voucher
+	 * @param cardReferenceNo
+	 * @return List<VoucherCardPerOfferInvalidationModel>
+	 */
+	public List<VoucherCardPerOfferInvalidationModel> findInvalidationMaxAmtPMnth(VoucherModel voucher, String cardReferenceNo);
+
+	/**
+	 * @param abstractOrderModel
+	 * @param cardToken2
+	 * @param cardRefNo
+	 * @param cardSaved
+	 * @return boolean
+	 * @throws Exception
+	 */
+	public Tuple3<?, ?, ?> checkCardPerOfferValidation(AbstractOrderModel abstractOrderModel, String cardToken, String cardSaved,
+			String cardRefNo, String cardToken2) throws Exception;
+
+	/**
+	 * @param guid
+	 * @param customerId
+	 * @return List<JuspayCardStatus>
+	 */
+	public List<JuspayCardStatusModel> findJuspayCardStatus(String guid, String customerId);
 }

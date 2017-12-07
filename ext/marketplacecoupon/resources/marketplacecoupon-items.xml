@@ -119,6 +119,22 @@
 						optional="true" />
 					<persistence type="property" />
 				</attribute>
+				<!-- TPR-7448 Starts here-->
+				<attribute autocreate="true" qualifier="maxAvailCount"
+					type="java.lang.Integer">
+					<description>Max. count that can be availed for One card per offer</description>
+					<modifiers read="true" write="true" search="true"
+						optional="true" />
+					<persistence type="property" />
+				</attribute>
+				<attribute autocreate="true" qualifier="maxAmountPerMonth"
+					type="java.lang.Double">
+					<description>Max. count that can be availed per month for One card per offer</description>
+					<modifiers read="true" write="true" search="true"
+						optional="true" />
+					<persistence type="property" />
+				</attribute>
+				<!-- TPR-7448 Ends here-->
 			</attributes>
 
 		</itemtype> 
@@ -472,6 +488,47 @@
 		 
 		 
 		 <!-- New Coupon created for Promotion Sequencing ends -->
+		 
+		 <!-- TPR-7448 Starts here -->
+		 <itemtype code="VoucherCardPerOfferInvalidation" autocreate="true" generate="false">
+		 	<deployment table="MplCardOfferInvalidation" typecode="1602"/>
+			<attributes>
+				<attribute qualifier="guid" type="java.lang.String"  generate="false">
+					<description>the cart guid against which the voucher is being redeemed</description>
+					<persistence type="property"/>
+					<modifiers read="true" write="true" optional="false"/>
+					<custom-properties>
+						<property name="hmcIndexField"><value>"thefield"</value></property>
+					</custom-properties>
+				</attribute>
+				<attribute qualifier="cardRefNo" type="java.lang.String"  generate="false">
+					<description>the card reference number returned by juspay</description>
+					<persistence type="property"/>
+					<modifiers read="true" write="true" optional="false"/>
+					<custom-properties>
+						<property name="hmcIndexField"><value>"thefield"</value></property>
+					</custom-properties>
+				</attribute>
+				<attribute qualifier="voucher" type="PromotionVoucher" generate="false">
+					<description>voucher code</description>
+					<persistence type="property"/>
+					<modifiers read="true" write="true" optional="false"/>
+					<custom-properties>
+						<property name="hmcIndexField"><value>"thefield"</value></property>
+					</custom-properties>
+				</attribute>
+				<attribute qualifier="discount" type="java.lang.Double"  generate="false">
+					<defaultvalue>Double.valueOf(0.0D)</defaultvalue>
+					<description>discount received</description>
+					<persistence type="property"/>
+					<modifiers read="true" write="true" optional="false"/>
+					<custom-properties>
+						<property name="hmcIndexField"><value>"thefield"</value></property>
+					</custom-properties>
+				</attribute>
+			</attributes>
+		</itemtype>
+		<!-- TPR-7448 Ends here -->
 		
 	</itemtypes>
 </items>

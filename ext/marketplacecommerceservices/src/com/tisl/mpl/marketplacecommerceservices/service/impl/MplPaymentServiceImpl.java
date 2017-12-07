@@ -47,6 +47,7 @@ import de.hybris.platform.promotions.model.ProductPromotionModel;
 import de.hybris.platform.promotions.model.PromotionResultModel;
 import de.hybris.platform.servicelayer.config.ConfigurationService;
 import de.hybris.platform.servicelayer.dto.converter.Converter;
+import de.hybris.platform.servicelayer.exceptions.AmbiguousIdentifierException;
 import de.hybris.platform.servicelayer.exceptions.ModelNotFoundException;
 import de.hybris.platform.servicelayer.exceptions.ModelSavingException;
 import de.hybris.platform.servicelayer.i18n.I18NService;
@@ -94,6 +95,7 @@ import com.tisl.mpl.core.enums.WalletEnum;
 import com.tisl.mpl.core.model.BankforNetbankingModel;
 import com.tisl.mpl.core.model.EMIBankModel;
 import com.tisl.mpl.core.model.EMITermRowModel;
+import com.tisl.mpl.core.model.JuspayCardStatusModel;
 import com.tisl.mpl.core.model.JuspayEBSResponseDataModel;
 import com.tisl.mpl.core.model.JuspayOrderStatusModel;
 import com.tisl.mpl.core.model.MplPaymentAuditEntryModel;
@@ -107,7 +109,9 @@ import com.tisl.mpl.data.MplPromotionData;
 import com.tisl.mpl.data.VoucherDiscountData;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.juspay.PaymentService;
+import com.tisl.mpl.juspay.request.AddCardRequest;
 import com.tisl.mpl.juspay.request.GetOrderStatusRequest;
+import com.tisl.mpl.juspay.response.AddCardResponse;
 import com.tisl.mpl.juspay.response.CardResponse;
 import com.tisl.mpl.juspay.response.GetOrderStatusResponse;
 import com.tisl.mpl.marketplacecommerceservices.daos.MplOrderDao;
@@ -3328,11 +3332,11 @@ public class MplPaymentServiceImpl implements MplPaymentService
 
 	/*
 	 * @description : fetching bank model for a bank name TISPRO-179\
-	 * 
+	 *
 	 * @param : bankName
-	 * 
+	 *
 	 * @return : BankModel
-	 * 
+	 *
 	 * @throws EtailNonBusinessExceptions
 	 */
 	@Override
@@ -3344,9 +3348,9 @@ public class MplPaymentServiceImpl implements MplPaymentService
 
 	/*
 	 * @Description : Fetching bank name for net banking-- TISPT-169
-	 * 
+	 *
 	 * @return List<BankforNetbankingModel>
-	 * 
+	 *
 	 * @throws EtailNonBusinessExceptions
 	 */
 	@Override
@@ -3723,7 +3727,7 @@ public class MplPaymentServiceImpl implements MplPaymentService
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see * SprintPaymentFixes:- This method is setting paymentTransactionModel and the paymentTransactionEntryModel
 	 * against the cart for non-COD from OMS Submit Order Job de.hybris.platform.core.model.order.OrderModel)
 	 */
@@ -3873,7 +3877,7 @@ public class MplPaymentServiceImpl implements MplPaymentService
 
 	/*
 	 * @desc getPaymentModeFrompayInfo
-	 * 
+	 *
 	 * @see SprintPaymentFixes:- ModeOfpayment set same as in Payment Info
 	 */
 	@Override
@@ -3914,7 +3918,7 @@ public class MplPaymentServiceImpl implements MplPaymentService
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see SprintPaymentFixes:- This method is setting paymentTransactionModel and the paymentTransactionEntryModel
 	 * against the cart for pre paid from OMS Submit Order Job
 	 */
@@ -3978,7 +3982,7 @@ public class MplPaymentServiceImpl implements MplPaymentService
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @desc SprintPaymentFixes:- This method is setting paymentTransactionModel and the paymentTransactionEntryModel
 	 * against the cart for COD from OMS Submit Order Job
 	 */
@@ -5183,5 +5187,82 @@ public class MplPaymentServiceImpl implements MplPaymentService
 		getModelService().save(orderModel);
 		getModelService().refresh(orderModel);
 
+	}
+
+	//TPR-7448
+	@Override
+	public AddCardResponse saveAndGetCardReferenceNo(final AddCardRequest addCardRequest) throws Exception
+	{
+		final PaymentService juspayService = new PaymentService();
+
+		juspayService.setBaseUrl(getConfigurationService().getConfiguration().getString(
+				MarketplacecommerceservicesConstants.JUSPAYBASEURL));
+		juspayService.withKey(
+				getConfigurationService().getConfiguration().getString(MarketplacecommerceservicesConstants.JUSPAYMERCHANTTESTKEY))
+				.withMerchantId(
+						getConfigurationService().getConfiguration().getString(MarketplacecommerceservicesConstants.JUSPAYMERCHANTID));
+		return juspayService.saveAndGetCardReferenceNo(addCardRequest);
+	}
+
+	//TPR-7448
+	@Override
+	public AddCardResponse getCurrentCardReferenceNo(final String cardToken, final String email, final String customerId)
+			throws Exception
+	{
+		final AddCardRequest addCardRequest = new AddCardRequest();
+		addCardRequest.setCustomerEmail(email);
+		addCardRequest.setCustomerId(customerId);
+		addCardRequest.setToken(cardToken);
+		final AddCardResponse addCardResponse = saveAndGetCardReferenceNo(addCardRequest);
+		return addCardResponse;
+	}
+
+	//TPR-7448
+	@Override
+	public void rmvJuspayCardStatusForCustomer(final String customerId)
+	{
+		try
+		{
+			//Removing card reference on completion
+			final JuspayCardStatusModel juspayCardStatusModel = new JuspayCardStatusModel();
+			juspayCardStatusModel.setCustomerId(customerId);
+			final List<JuspayCardStatusModel> juspayCardStatusModelList = flexibleSearchService
+					.getModelsByExample(juspayCardStatusModel);
+			modelService.removeAll(juspayCardStatusModelList);
+		}
+		catch (final ModelNotFoundException e)
+		{
+			LOG.error("In rmvJuspayCardStatusForCustomer nothing to remove for the customer:" + customerId);
+		}
+		catch (final AmbiguousIdentifierException e)
+		{
+			LOG.error("In rmvJuspayCardStatusForCustomer some issue occured customer:" + customerId);
+		}
+	}
+
+	//TPR-7448
+	@Override
+	public JuspayCardStatusModel getJuspayCardStatusForCustomer(final String customerId)
+	{
+		JuspayCardStatusModel juspayCardStatusModel = null;
+		try
+		{
+			//Removing card reference on completion
+			final JuspayCardStatusModel juspayCardStatusModelNew = new JuspayCardStatusModel();
+			juspayCardStatusModelNew.setCustomerId(customerId);
+			juspayCardStatusModel = flexibleSearchService.getModelByExample(juspayCardStatusModelNew);
+		}
+		catch (final ModelNotFoundException e)
+		{
+			juspayCardStatusModel = new JuspayCardStatusModel();
+			LOG.error("In rmvJuspayCardStatusForCustomer nothing to remove for the customer:" + customerId);
+		}
+		catch (final AmbiguousIdentifierException e)
+		{
+			rmvJuspayCardStatusForCustomer(customerId);
+			juspayCardStatusModel = new JuspayCardStatusModel();
+			LOG.error("In rmvJuspayCardStatusForCustomer some issue occured customer:" + customerId);
+		}
+		return juspayCardStatusModel;
 	}
 }

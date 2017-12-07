@@ -377,6 +377,7 @@ public final class MarketplacecheckoutaddonConstants extends GeneratedMarketplac
 	public static final String IS_DELIVERY_OPTION_PAGE = "isDeliveryOptionPage";
 
 	public static final String CODELIGIBLE_SESSION = "codEligibleSession";
+	public static final String JUSPAYBASEURL = "juspayBaseUrl";//TPR-7448
 
 
 	//INC144317480: Order Threshold Discount Promotion: Netbanking Payment Mode Restriction doesn't work

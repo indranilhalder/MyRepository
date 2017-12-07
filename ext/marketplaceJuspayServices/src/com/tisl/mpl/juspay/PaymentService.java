@@ -1036,4 +1036,42 @@ public class PaymentService
 		return Registry.getApplicationContext().getBean("configurationService", ConfigurationService.class);
 	}
 
+	/**
+	 * Saves the card and gets the card reference no in response
+	 *
+	 * @param addCardRequest
+	 *           - AddCardRequest with all the required params
+	 * @return AddCardResponse for the given request.
+	 * @throws Exception
+	 */
+	public AddCardResponse saveAndGetCardReferenceNo(final AddCardRequest addCardRequest) throws Exception
+	{
+		final AddCardResponse addCardResponse = new AddCardResponse();
+		//Get the required params
+		final LinkedHashMap<String, String> params = new LinkedHashMap<String, String>();
+		params.put(MarketplaceJuspayServicesConstants.CUSTOMERID, addCardRequest.getCustomerId());
+		params.put("customer_email", addCardRequest.getCustomerEmail());
+		//params.put(MarketplaceJuspayServicesConstants.CARDNUMBER, String.valueOf(addCardRequest.getCardNumber()));
+		//params.put("card_exp_year", String.valueOf(addCardRequest.getCardExpYear()));
+		//params.put("card_exp_month", String.valueOf(addCardRequest.getCardExpMonth()));
+		//params.put(MarketplaceJuspayServicesConstants.NAMEONCARD,addCardRequest.getNameOnCard() != null ? addCardRequest.getNameOnCard() : "");
+		params.put("card_token", addCardRequest.getToken());
+
+		final String serializedParams = serializeParams(params);
+		final String url = baseUrl + "/cards";
+
+		final String response = makeServiceCall(url, serializedParams);
+		final JSONObject json = (JSONObject) JSONValue.parse(response);
+
+		final String cardToken = (String) json.get(MarketplaceJuspayServicesConstants.CARDTOKEN);
+		final String cardReference = (String) json.get(MarketplaceJuspayServicesConstants.CARDREF);
+
+
+		addCardResponse.setCardToken(cardToken);
+		addCardResponse.setCardReference(cardReference);
+		addCardResponse.setCardFingerprint((String) json.get("card_fingerprint"));
+		return addCardResponse;
+
+	}
+
 }

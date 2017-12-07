@@ -1922,6 +1922,12 @@ function savedDebitCardRadioChange(radioId){
 		var netBankName=bankNameSelected;//Added for TPR-4461
 		
 		var guid=$("#guid").val();
+		
+		//TPR-7448 Starts here
+		var selectedIndex=$('input[name=creditCards]:checked').attr("id");
+		var cardToken=$('input[name=cardsToken'+selectedIndex+']').val();
+		var cardRefNo=$('input[name=cardsReference'+selectedIndex+']').val();
+		//TPR-7448 Ends here
         //TISPRO-313	
 		//if($(".redirect").val()=="false"){
 			//Juspay.startSecondFactor();
@@ -1930,7 +1936,7 @@ function savedDebitCardRadioChange(radioId){
 		ACC.singlePageCheckout.showAjaxLoader();
 		$.ajax({
 			url: ACC.config.encodedContextPath + "/checkout/multi/payment-method/createJuspayOrder",
-			data: { 'firstName' : firstName , 'lastName' : lastName , 'netBankName' : netBankName, 'addressLine1' : addressLine1, 'addressLine2' : addressLine2 , 'addressLine3' : addressLine3, 'country' : country , 'state' : state, 'city' : city , 'pincode' : pincode, 'cardSaved' : cardSaved, 'sameAsShipping' : sameAsShipping , 'guid' : guid,'paymentinfo':paymentInfo},
+			data: { 'firstName' : firstName , 'lastName' : lastName , 'netBankName' : netBankName, 'addressLine1' : addressLine1, 'addressLine2' : addressLine2 , 'addressLine3' : addressLine3, 'country' : country , 'state' : state, 'city' : city , 'pincode' : pincode, 'cardSaved' : cardSaved, 'sameAsShipping' : sameAsShipping , 'guid' : guid,'paymentinfo':paymentInfo,'cardRefNo':cardRefNo,'cardToken':cardToken},
 			type: "GET",
 			cache: false,
 			async: false,
@@ -2012,6 +2018,24 @@ function savedDebitCardRadioChange(radioId){
 				else if(response=='redirect_with_details'){
 					$(location).attr('href',ACC.config.encodedContextPath+"/checkout/multi/payment-method/cardPayment/"+guid); //TPR-629
 				}
+				//TPR-7448 Starts here
+			    else if(null!=response && response.indexOf("one_card_per_offer_failed") >-1)
+		    	{
+			    	var arr=response.split("|");
+			    	switch(arr[1]){
+					case "01": document.getElementById("juspayErrorMsg").innerHTML="Voucher max avail count exceeded. Try another.";
+															break;
+					case "02" : document.getElementById("juspayErrorMsg").innerHTML="Voucher max amount per month exceeded. Try another."; break;
+					case "03" :document.getElementById("juspayErrorMsg").innerHTML="Voucher max amount that can be availed is "+arr[1]+"."; break;
+					default:document.getElementById("juspayErrorMsg").innerHTML="Sorry! Some issue occurred with your coupon"; 
+			    	}
+			    	$("#juspayconnErrorDiv").css("display","block");
+					$(".pay .loaderDiv").remove();
+					$(".pay .spinner").remove();
+					$("#no-click,.loaderDiv").remove();
+					$("#no-click,.spinner").remove();
+		    	}
+				//TPR-7448 Ends here
 				else{
 					//TISSTRT-1391
 					window.sessionStorage.removeItem("header");
@@ -2105,9 +2129,15 @@ function savedDebitCardRadioChange(radioId){
 		ACC.singlePageCheckout.showAjaxLoader();
 		
 		var guid=$("#guid").val();
+		
+		//TPR-7448 Starts here
+		var selectedIndex=$('input[name=debitCards]:checked').attr("id");
+		var cardToken=$('input[name=cardsToken'+selectedIndex+']').val();
+		var cardRefNo=$('input[name=cardsReference'+selectedIndex+']').val();
+		//TPR-7448 Ends here
 		$.ajax({
 			url: ACC.config.encodedContextPath + "/checkout/multi/payment-method/createJuspayOrder",
-			data: { 'firstName' : firstName , 'lastName' : lastName , 'netBankName' : netBankName, 'addressLine1' : addressLine1, 'addressLine2' : addressLine2 , 'addressLine3' : addressLine3, 'country' : country , 'state' : state, 'city' : city , 'pincode' : pincode, 'cardSaved' : cardSaved, 'sameAsShipping' : sameAsShipping, 'guid' : guid,'paymentinfo':paymentInfo},
+			data: { 'firstName' : firstName , 'lastName' : lastName , 'netBankName' : netBankName, 'addressLine1' : addressLine1, 'addressLine2' : addressLine2 , 'addressLine3' : addressLine3, 'country' : country , 'state' : state, 'city' : city , 'pincode' : pincode, 'cardSaved' : cardSaved, 'sameAsShipping' : sameAsShipping, 'guid' : guid,'paymentinfo':paymentInfo,'cardRefNo':cardRefNo,'cardToken':cardToken},
 			type: "GET",
 			cache: false,
 			async: false,
@@ -2189,6 +2219,24 @@ function savedDebitCardRadioChange(radioId){
 
 			    }
 				//added for INC144317450 Payment Not processing--ends
+				//TPR-7448 Starts here
+			    else if(null!=response && response.indexOf("one_card_per_offer_failed") >-1)
+		    	{
+			    	var arr=response.split("|");
+			    	switch(arr[1]){
+					case "01": document.getElementById("juspayErrorMsg").innerHTML="Voucher max avail count exceeded. Try another.";
+															break;
+					case "02" : document.getElementById("juspayErrorMsg").innerHTML="Voucher max amount per month exceeded. Try another."; break;
+					case "03" :document.getElementById("juspayErrorMsg").innerHTML="Voucher max amount that can be availed is "+arr[1]+"."; break;
+					default:document.getElementById("juspayErrorMsg").innerHTML="Sorry! Some issue occurred with your coupon"; 
+			    	}
+			    	$("#juspayconnErrorDiv").css("display","block");
+					$(".pay .loaderDiv").remove();
+					$(".pay .spinner").remove();
+					$("#no-click,.loaderDiv").remove();
+					$("#no-click,.spinner").remove();
+		    	}
+				//TPR-7448 Ends here
 				else{
 
 					 //TISPRO-313
@@ -2304,9 +2352,20 @@ function savedDebitCardRadioChange(radioId){
 		
 		// For Payement Page CR Changes ends
 		
+		//TPR-7448
+		var token="";
+		if(isDebit)
+		{
+			token=tokenizeJuspayCard("DC");
+		}
+		else
+		{
+			token=tokenizeJuspayCard("CC");
+		}
+		
 		$.ajax({
 			url: ACC.config.encodedContextPath + "/checkout/multi/payment-method/createJuspayOrder",
-			data: { 'firstName' : firstName , 'lastName' : lastName , 'addressLine1' : addressLine1, 'addressLine2' : addressLine2 , 'addressLine3' : addressLine3, 'country' : country , 'state' : state, 'city' : city , 'pincode' : pincode, 'cardSaved' : cardSaved, 'sameAsShipping' : sameAsShipping, 'guid' : guid,'paymentinfo':paymentInfo},
+			data: { 'firstName' : firstName , 'lastName' : lastName , 'addressLine1' : addressLine1, 'addressLine2' : addressLine2 , 'addressLine3' : addressLine3, 'country' : country , 'state' : state, 'city' : city , 'pincode' : pincode, 'cardSaved' : cardSaved, 'sameAsShipping' : sameAsShipping, 'guid' : guid,'paymentinfo':paymentInfo,'token':token},
 			type: "GET",
 			cache: false,
 			async: false,
@@ -2385,6 +2444,24 @@ function savedDebitCardRadioChange(radioId){
 
 			    }
 				//added for INC144317450 Payment Not processing--ends
+				//TPR-7448 Starts here
+			    else if(null!=response && response.indexOf("one_card_per_offer_failed") >-1)
+		    	{
+			    	var arr=response.split("|");
+			    	switch(arr[1]){
+					case "01": document.getElementById("juspayErrorMsg").innerHTML="Voucher max avail count exceeded. Try another.";
+															break;
+					case "02" : document.getElementById("juspayErrorMsg").innerHTML="Voucher max amount per month exceeded. Try another."; break;
+					case "03" :document.getElementById("juspayErrorMsg").innerHTML="Voucher max amount that can be availed is "+arr[1]+"."; break;
+					default:document.getElementById("juspayErrorMsg").innerHTML="Sorry! Some issue occurred with your coupon"; 
+			    	}
+			    	$("#juspayconnErrorDiv").css("display","block");
+					$(".pay .loaderDiv").remove();
+					$(".pay .spinner").remove();
+					$("#no-click,.loaderDiv").remove();
+					$("#no-click,.spinner").remove();
+		    	}
+				//TPR-7448 Ends here
 				else{	
 					//TISSTRT-1391
 					window.sessionStorage.removeItem("header");
@@ -2523,9 +2600,13 @@ function savedDebitCardRadioChange(radioId){
 		
 		// For Payement Page CR Changes ends
 		
+		//TPR-7448
+		var token="";
+		token=tokenizeJuspayCard("CC");
+		
 		$.ajax({
 			url: ACC.config.encodedContextPath + "/checkout/multi/payment-method/createJuspayOrder",
-			data: { 'firstName' : firstName , 'lastName' : lastName , 'addressLine1' : addressLine1, 'addressLine2' : addressLine2 , 'addressLine3' : addressLine3, 'country' : country , 'state' : state, 'city' : city , 'pincode' : pincode, 'cardSaved' : cardSaved, 'sameAsShipping' : sameAsShipping, 'guid' : guid,'paymentinfo':paymentInfo},
+			data: { 'firstName' : firstName , 'lastName' : lastName , 'addressLine1' : addressLine1, 'addressLine2' : addressLine2 , 'addressLine3' : addressLine3, 'country' : country , 'state' : state, 'city' : city , 'pincode' : pincode, 'cardSaved' : cardSaved, 'sameAsShipping' : sameAsShipping, 'guid' : guid,'paymentinfo':paymentInfo,'token':token},
 			type: "GET",
 			cache: false,
 			async: false,
@@ -2599,6 +2680,24 @@ function savedDebitCardRadioChange(radioId){
 
 			    }
 				//added for INC144317450 Payment Not processing--ends
+				//TPR-7448 Starts here
+			    else if(null!=response && response.indexOf("one_card_per_offer_failed") >-1)
+		    	{
+			    	var arr=response.split("|");
+			    	switch(arr[1]){
+					case "01": document.getElementById("juspayErrorMsg").innerHTML="Voucher max avail count exceeded. Try another.";
+															break;
+					case "02" : document.getElementById("juspayErrorMsg").innerHTML="Voucher max amount per month exceeded. Try another."; break;
+					case "03" :document.getElementById("juspayErrorMsg").innerHTML="Voucher max amount that can be availed is "+arr[1]+"."; break;
+					default:document.getElementById("juspayErrorMsg").innerHTML="Sorry! Some issue occurred with your coupon"; 
+			    	}
+			    	$("#juspayconnErrorDiv").css("display","block");
+					$(".pay .loaderDiv").remove();
+					$(".pay .spinner").remove();
+					$("#no-click,.loaderDiv").remove();
+					$("#no-click,.spinner").remove();
+		    	}
+				//TPR-7448 Ends here
 				else{		
 					 //TISPRO-313
 					 if($(".redirect").val()=="false"){
@@ -10768,3 +10867,48 @@ function placeAnOrder(){
 		
 }
 }
+
+//TPR-7448 Starts here
+function tokenizeJuspayCard(paymentMode)
+{
+	var merchant_id="";
+	var card_number="";
+	var card_exp_year="";
+	var card_exp_month="";
+	var card_security_code="";
+	if(paymentMode=="CC")
+	{
+		merchant_id=$("#newCardCC #merchant_id").val();
+		card_number=$("#newCardCC #cardNo").val();
+		card_exp_year=$("#newCardCC select[name=expyy] option:selected").val();
+		card_exp_month=$("#newCardCC select[name=expmm] option:selected").val();
+		card_security_code=$("#newCardCC input[name=cvv]").val();
+	}
+	else if(paymentMode=="DC")
+	{
+		merchant_id=$("#debitCard #merchant_id").val();
+		card_number=$("#debitCard #cardNo").val();
+		card_exp_year=$("#debitCard select[name=expyy] option:selected").val();
+		card_exp_month=$("#debitCard select[name=expmm] option:selected").val();
+		card_security_code=$("#debitCard input[name=cvv]").val();
+	}
+	
+	var url=$("#juspayBaseUrl").val();
+	var token="";
+	$.ajax({
+		url: url+"/card/tokenize",
+		type: "POST",
+		data: {'merchant_id' : merchant_id,'card_number':card_number,'card_exp_year':card_exp_year,'card_exp_month':card_exp_month,'card_security_code':card_security_code},
+		cache: false,
+		async:false,
+		success : function(response) {
+			token=response.token;
+		},
+		error : function(resp) {
+			console.log("Error in fetching token for juspay")
+		}
+	});
+	return token;
+}
+
+//TPR-7448 Ends here
