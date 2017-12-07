@@ -299,7 +299,7 @@ fn:contains(requestScope['javax.servlet.forward.request_uri'],'/cancelSuccess')}
 </c:if>
 
 <c:if test="${fn:contains(themeResourcePath,'theme-luxury')}">
-	<script type="text/javascript" src="${themeResourcePath}/js/lib/jquery-2.1.1.min.js"></script>
+
 	<script type="text/javascript" src="${themeResourcePath}/js/lib/jquery-ui-1.11.2.min.js"></script>
 	<script type="text/javascript" src="${themeResourcePath}/js/lib/jquery.selectBoxIt.min.js"></script>
 	<script type="text/javascript" src="${themeResourcePath}/js/lib/slick.min.js"></script>
@@ -309,4 +309,5 @@ fn:contains(requestScope['javax.servlet.forward.request_uri'],'/cancelSuccess')}
 	<script type="text/javascript" src="${themeResourcePath}/js/main.js"></script>
 	<script type="text/javascript" src="${themeResourcePath}/js/acc.accountaddress.js"></script>
 	<script type="text/javascript" src="${themeResourcePath}/js/acc.productDetail.js"></script>
+	<script type="text/javascript" src="${themeResourcePath}/js/custom-search.js"></script>
 </c:if>

@@ -4,15 +4,18 @@
 <%@ taglib prefix="cms" uri="http://hybris.com/tld/cmstags"%>
 <%@ taglib prefix="ycommerce" uri="http://hybris.com/tld/ycommercetags"%>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
+<c:set var="categories" value="${SearchBox.searchBoxCategories}"/>  
 
 <c:url value="/search/autocomplete/${component.uid}"
 	var="autocompleteUrl" />
 <c:url value="/search/" var="searchUrl" />
 <c:url value="/searchCategory/" var="searchCategory" />
 <div class="ui-front active ">
-	
+
+
+
 	<!-- Commented for cache implementation -->
-	<c:if test="${not empty categoryList}">
+	<%-- <c:if test="${not empty categoryList}">
 
 		<c:set var="categoryList" value="${categoryList}" />
 	
@@ -37,29 +40,32 @@
 		<c:set var="sellerSize" value="${fn:length(sellerList)}" />
 		
 	
-	</c:if> 
+	</c:if>  --%>
 	
 	<form id="search_form" name="search_form" method="get" action="${searchUrl}">
 		<span> <ycommerce:testId code="header_search_button">
 				<!-- <button id='searchButton' tabindex="2"></button> -->
 			</ycommerce:testId>
 		</span>
+		
 		<!-- search category List -->
-		 <div class="select-view">
-			<select id="enhancedSearchCategory" name="searchCategory" class="hide">
+		
+			<%-- <select id="enhancedSearchCategory" name="searchCategory" >
 				<optgroup label="All">
-					<option selected="selected" value="all"><spring:theme code="text.all" /></option>
+					<option selected="selected" value="LSH1010"><spring:theme code="text.all" /></option>
 				</optgroup>
-					
 					<!-- Commented for cache implementation -->
-				<c:if test="${categorySize >0}">
-				
+					
+             		 
+             		  
+				<c:forEach items="${categories}" var="category">
+							<option value="${category}" ${searchCode == category ? 'selected' : '' }>${category}</option>
+					</c:forEach>
 				<optgroup label="Departments">
-					<c:forEach items="${categoryList }" var="category">
+					<c:forEach items="${categories}" var="category">
 							<option value="${category.code}" ${searchCode == category.code ? 'selected' : '' }>${category.name}</option>
 					</c:forEach>
 				</optgroup>
-				</c:if>	
 				
 				<c:if test="${brandSize >0}">
 				
@@ -77,7 +83,7 @@
 					</c:forEach>
 				</optgroup>
 				</c:if>
-			</select> 
+			</select>  --%>
 
 		<%-- 	<div class="select-list enhanced-search">
 				<input type="hidden" id="searchCodeForDropdown" value="${searchCode}" />
@@ -107,9 +113,14 @@
  
  <div class="select-list enhanced-search">
  <ul class="dropdown" label="All">
-	<li id="all" class="selected" hidden="true"></li>
+ 	<c:set var="defaultCategory" value="all"/>
+ 	<c:if test="${categories[0].code ne null }">
+ 	<c:set var="defaultCategory" value="${categories[0].code}"/>
+ 	</c:if>
+	<li id="${defaultCategory}" class="selected" hidden="true"></li>
 </ul>
- </div>
+</div>
+ <div class="search-content">
 		<spring:theme code="search.placeholder" var="searchPlaceholder" />
 		<%-- <spring:theme code="search.placeholder.marketplace" var="searchPlaceholder" /> --%>
 
@@ -127,8 +138,19 @@
 		 <a href="#" onclick="document.getElementById('search_form').submit();" class="search-btn btn"><span class="arrow-icon"></span></a>
 		 </div>
 		 <input type="hidden" id="spellingSearchterm" value="${spellingSearchterm}" />	
+		 
+		  <div class="search-tabs"> 
+			  <c:forEach items="${categories}" var="category" varStatus="loop">
+			  <input type="radio" id="s2${category.code}" class="toggle" name="searchCategory" value="${category.code}" <c:if test="${loop.index == 0}">checked="checked"</c:if> />
+			  <label class="toggle-btn" for="s2${category.code}">${category.name}</label>
+			  </c:forEach>
+	      </div> 
+	      <div class="search-items">
+                <span>Selecting one of the suggestions will take you to results within INDIE LUXE.</span>
+                </div>
+	      </div>
 	</form>
-</div>
+	</div>
 <%-- <div style="color:#333;position:absolute;top:6px;"><cms:pageSlot position="MiniCart" var="component">
 									<cms:component component="${component}" />
 								</cms:pageSlot></div> --%>

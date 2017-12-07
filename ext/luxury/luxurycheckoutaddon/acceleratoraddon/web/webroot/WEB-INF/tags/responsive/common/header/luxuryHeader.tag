@@ -159,7 +159,7 @@
 					</cms:pageSlot></a></li>
 				</ul>
 			</div> --%>
-			<div class="header-search toggle-skip" id="header-search">
+			<div class="header-search " id="header-search">
 				<div class="header-search-inner">
 				<cms:pageSlot position="SearchBox" var="SearchBox" limit="1">
 					<cms:component component="${SearchBox}" element="div"/></cms:pageSlot>

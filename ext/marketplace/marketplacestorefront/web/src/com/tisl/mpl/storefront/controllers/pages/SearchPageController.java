@@ -51,6 +51,7 @@ import de.hybris.platform.servicelayer.exceptions.UnknownIdentifierException;
 import de.hybris.platform.servicelayer.session.Session;
 import de.hybris.platform.servicelayer.session.SessionService;
 import de.hybris.platform.servicelayer.user.UserService;
+import de.hybris.platform.util.Config;
 import de.hybris.platform.wishlist2.model.Wishlist2EntryModel;
 import de.hybris.platform.wishlist2.model.Wishlist2Model;
 
@@ -140,6 +141,7 @@ public class SearchPageController extends AbstractSearchPageController
 	private static final String DROPDOWN_MICROSITE_CATEGORY = "category-";
 	//private static final String DROPDOWN_SELLER = "seller-"; Avoid unused private fields such as 'DROPDOWN_SELLER'.
 
+	private static final String LUX_SEARCH_CATEGORIES = "lux.search.categories";
 
 	private static final String NEW_EXCLUSIVE_BREADCRUMB = "Discover New & Exclusive";
 	private static final String LAST_LINK_CLASS = "active";
@@ -232,7 +234,7 @@ public class SearchPageController extends AbstractSearchPageController
 
 
 	/**
-	 *
+	 * 
 	 * @param searchText
 	 * @param dropDownText
 	 * @param request
@@ -328,21 +330,21 @@ public class SearchPageController extends AbstractSearchPageController
 
 					if (!allSearchFlag)
 					{
-						if (dropDownValue.startsWith(DROPDOWN_CATEGORY) || dropDownValue.startsWith(DROPDOWN_BRAND))
+
+						final String searchCategories = Config.getParameter(LUX_SEARCH_CATEGORIES);
+						final String[] searchCategoryArray = searchCategories.split(",");
+						if (dropDownValue.startsWith(DROPDOWN_CATEGORY) || dropDownValue.startsWith(DROPDOWN_BRAND)
+								|| StringUtils.startsWithAny(dropDownValue, searchCategoryArray))
 						{
 							searchPageData = searchFacade.searchCategorySearch(dropDownValue, searchState, pageableData);
 							whichSearch = dropDownValue;
 						}
-						else
+						if (!commonUtils.isLuxurySite())
 						{
-							searchPageData = searchFacade.dropDownSearch(searchState, dropDownValue, MarketplaceCoreConstants.SELLER_ID,
-									pageableData);
-							whichSearch = dropDownValue;
-						}
-
-						if (searchPageData != null && searchPageData.getPagination().getTotalNumberOfResults() == 0)
-						{
-							allSearchFlag = true;
+							if (searchPageData != null && searchPageData.getPagination().getTotalNumberOfResults() == 0)
+							{
+								allSearchFlag = true;
+							}
 						}
 					}
 
@@ -491,7 +493,15 @@ public class SearchPageController extends AbstractSearchPageController
 			setUpMetaData(model, metaKeywords, metaDescription);
 
 			model.addAttribute("dropDownText", dropDownText);
-			model.addAttribute(ModelAttributetConstants.SEARCH_CATEGORY, searchCategory);
+			final CategoryModel categoryForCode = categoryService.getCategoryForCode(searchCategory);
+			if (commonUtils.isLuxurySite())
+			{
+				model.addAttribute(ModelAttributetConstants.SEARCH_CATEGORY, categoryForCode.getName());
+			}
+			else
+			{
+				model.addAttribute(ModelAttributetConstants.SEARCH_CATEGORY, searchCategory);
+			}
 			model.addAttribute("autoselectSearchDropDown", Boolean.FALSE);
 			model.addAttribute("isConceirge", "false");
 			if (searchPageData != null)
@@ -615,7 +625,7 @@ public class SearchPageController extends AbstractSearchPageController
 
 
 	/**
-	 *
+	 * 
 	 * @param searchQuery
 	 * @param page
 	 * @param showMode
@@ -832,7 +842,7 @@ public class SearchPageController extends AbstractSearchPageController
 	}
 
 	/**
-	 *
+	 * 
 	 * @param searchQuery
 	 * @param page
 	 * @param showMode
@@ -884,7 +894,7 @@ public class SearchPageController extends AbstractSearchPageController
 	}
 
 	/**
-	 *
+	 * 
 	 * @param searchQuery
 	 * @param page
 	 * @param showMode
@@ -910,7 +920,7 @@ public class SearchPageController extends AbstractSearchPageController
 
 	/**
 	 * DISPLAY ONLINE and NEW TRENDING PRODUCTS UPLOADED BY BUSINESS AS PROMOTED PRODUCTS
-	 *
+	 * 
 	 * @param searchQuery
 	 * @param page
 	 * @param showMode
@@ -934,7 +944,7 @@ public class SearchPageController extends AbstractSearchPageController
 
 	/**
 	 * DISPLAY ONLINE and NEW TRENDING PRODUCTS UPLOADED BY BUSINESS AS PROMOTED PRODUCTS BY AJAX CALL
-	 *
+	 * 
 	 * @param searchQuery
 	 * @param page
 	 * @param showMode
@@ -1094,7 +1104,7 @@ public class SearchPageController extends AbstractSearchPageController
 	}
 
 	/**
-	 *
+	 * 
 	 * @param searchQuery
 	 * @param page
 	 * @param showMode
@@ -1126,7 +1136,7 @@ public class SearchPageController extends AbstractSearchPageController
 	}
 
 	/**
-	 *
+	 * 
 	 * @param componentUid
 	 * @param term
 	 * @param category
@@ -1216,7 +1226,10 @@ public class SearchPageController extends AbstractSearchPageController
 				else
 				//if (!allSearchFlag)
 				{
-					if (category.startsWith(DROPDOWN_CATEGORY) || category.startsWith(DROPDOWN_BRAND))
+					final String searchCategories = Config.getParameter(LUX_SEARCH_CATEGORIES);
+					final String[] searchCategoryArray = searchCategories.split(",");
+					if (category.startsWith(DROPDOWN_CATEGORY) || category.startsWith(DROPDOWN_BRAND)
+							|| StringUtils.startsWithAny(category, searchCategoryArray))
 					{
 						searchPageData = searchFacade.categorySearch(category, searchState, pageableData);
 					}
@@ -1257,7 +1270,7 @@ public class SearchPageController extends AbstractSearchPageController
 	}
 
 	/**
-	 *
+	 * 
 	 * @param age
 	 * @param genderOrTitle
 	 * @param typeOfProduct
@@ -1421,7 +1434,7 @@ public class SearchPageController extends AbstractSearchPageController
 
 
 	/**
-	 *
+	 * 
 	 * @param list
 	 * @param maxElements
 	 * @return List
@@ -1430,14 +1443,14 @@ public class SearchPageController extends AbstractSearchPageController
 	/*
 	 * protected <E> List<E> subList(final List<E> list, final int maxElements) { if (CollectionUtils.isEmpty(list)) {
 	 * return Collections.emptyList(); }
-	 *
+	 * 
 	 * if (list.size() > maxElements) { return list.subList(0, maxElements); }
-	 *
+	 * 
 	 * return list; }
 	 */
 
 	/**
-	 *
+	 * 
 	 * @param searchText
 	 * @param model
 	 */
@@ -1463,9 +1476,9 @@ public class SearchPageController extends AbstractSearchPageController
 	}
 
 	/**
-	 *
+	 * 
 	 * @param resultData
-	 *
+	 * 
 	 */
 	private void cleanSearchResults(final List<ProductData> resultData)
 	{
@@ -1647,12 +1660,13 @@ public class SearchPageController extends AbstractSearchPageController
 
 	/**
 	 * This is the GET method which fetches the bank last modified wishlist in PLP
-	 *
-	 *
+	 * 
+	 * 
 	 * @return Wishlist2Model
 	 */
 	@RequestMapping(value = "/getLastModifiedWishlistByPcode", method = RequestMethod.GET)
-	public @ResponseBody boolean getLastModifiedWishlist(@RequestParam("pcode") final String pcode)
+	public @ResponseBody
+	boolean getLastModifiedWishlist(@RequestParam("pcode") final String pcode)
 	{
 		boolean existPcode = false;
 
