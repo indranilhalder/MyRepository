@@ -9,13 +9,19 @@ import de.hybris.platform.cronjob.model.CronJobModel;
 import de.hybris.platform.servicelayer.config.ConfigurationService;
 import de.hybris.platform.servicelayer.cronjob.AbstractJobPerformable;
 import de.hybris.platform.servicelayer.cronjob.PerformResult;
+import de.hybris.platform.servicelayer.model.ModelService;
 
+import java.util.ArrayList;
 import java.util.List;
+
+import javax.annotation.Resource;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 
+import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
+import com.tisl.mpl.core.model.RefundTransactionEntryModel;
 import com.tisl.mpl.refunds.dao.RefundSmsDao;
 import com.tisl.mpl.sms.SendSmsService;
 import com.tisl.mpl.wsdto.BulkSmsPerBatch;
@@ -37,6 +43,9 @@ public class SendRefundSmsCronJob extends AbstractJobPerformable<CronJobModel>
 	@Autowired
 	ConfigurationService configurationService;
 
+	@Resource(name = "modelService")
+	private ModelService modelService;
+
 	@Override
 	public PerformResult perform(final CronJobModel arg0)
 	{
@@ -56,8 +65,12 @@ public class SendRefundSmsCronJob extends AbstractJobPerformable<CronJobModel>
 				for (int superLoop = 1; superLoop <= superCheckLoop; superLoop++)
 				{
 					queryString.setLength(0);// Making query string empty
-					//queryString.append("select {transactionId} from {RefundTransactionEntry} order by {creationtime} limit ");
-					queryString.append("select {transactionId} from {RefundTransactionEntry} where rownum <=");
+					//					queryString.append("select {transactionId} from {RefundTransactionEntry} WHERE {status}= '"
+					//							+ MarketplacecommerceservicesConstants.RECEIVED + "' order by {creationtime} limit ");
+					queryString.append("select {transactionId} from {RefundTransactionEntry} where ");
+					queryString.append("{status}='" + MarketplacecommerceservicesConstants.RECEIVED + "'");
+					queryString.append(" AND ");
+					queryString.append(" rownum <=");//local system rownum will not work use limit instead
 					queryString.append(String.valueOf(dbPerformBatch));
 					queryString.append(" order by {creationtime}");
 					//SDI-2578 || Changes end
@@ -151,8 +164,17 @@ public class SendRefundSmsCronJob extends AbstractJobPerformable<CronJobModel>
 					{
 						subQuery = deleteDynamicQuery.substring(0, deleteDynamicQuery.length() - 1);
 						///delete rows
-						LOG.debug("======== Delete query==========" + subQuery);
-						refundSmsDao.deleteRows(subQuery);
+						LOG.debug("======== change status query==========" + subQuery);
+						final List<RefundTransactionEntryModel> refTraList = refundSmsDao.getModelForChangeStaus(subQuery);
+
+						final List<RefundTransactionEntryModel> newList = new ArrayList<RefundTransactionEntryModel>();
+
+						for (final RefundTransactionEntryModel refTraEntry : refTraList)
+						{
+							refTraEntry.setStatus(MarketplacecommerceservicesConstants.SENT);
+							newList.add(refTraEntry);
+						}
+						modelService.saveAll(newList);
 						subQuery = null;
 					}
 				}

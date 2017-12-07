@@ -165,7 +165,7 @@
 	<bean id="batchRefundSmsMapping"
 		class="de.hybris.platform.acceleratorservices.dataimport.batch.converter.impl.DefaultImpexConverter">
 		<property name="header">
-			<value>insert_update RefundTransactionEntry;transactionId[unique=true];utrNumber;amount;
+			<value>insert_update RefundTransactionEntry;transactionId[unique=true];utrNumber;amount;status[default='RECEIVED']
 			</value>
 		</property>
 		<property name="impexRow">
