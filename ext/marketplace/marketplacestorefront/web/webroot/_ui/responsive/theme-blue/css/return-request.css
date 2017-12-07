@@ -399,3 +399,26 @@ body.page-returnSubmit .accordtionTataCliq.removeMargin {
 .return-form.success .return-container .reason {
 	margin: 30px 0;
 }
+/* start add for TISCSS-54 */
+#addAddressForm .padd {
+	margin-bottom: 10px;	
+}
+#addAddressForm .form-group {
+	margin-bottom: 8px;
+}
+#addAddressForm select {
+	width: 100%;
+}
+.form-control[disabled], .form-control[readonly], fieldset[disabled] .form-control, input#city{
+	cursor: not-allowed;
+    background-color: #eee;
+    opacity: 1;
+}
+.textDisabled {
+	border: 0;
+    height: 30px;
+}
+#addAddressForm input:hover, #addAddressForm textarea:hover {
+	border-color: #000;
+}
+/* end add for TISCSS-54 */
