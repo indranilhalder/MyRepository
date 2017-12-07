@@ -3241,7 +3241,7 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 		catch (final Exception e)
 		{
 
-			LOG.error("Exception ocurred while saving customerBankDetails");
+			LOG.error("Exception ocurred while saving customerBankDetails",e);
 		}
 
 	}
