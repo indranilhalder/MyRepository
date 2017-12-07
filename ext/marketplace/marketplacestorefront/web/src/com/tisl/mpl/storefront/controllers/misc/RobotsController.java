@@ -38,30 +38,29 @@ import com.tisl.mpl.storefront.controllers.ControllerConstants;
 @Scope("tenant")
 public class RobotsController extends AbstractController
 {
-	
+
 	private static final String SITE_URL = "siteUrl";
 	private static final String MPL = "mpl";
 	private static final String LUX = "lux";
-	
+
 	@Autowired
 	private ConfigurationService configurationService;
-	
+
 	@Resource(name = "cmsSiteService")
 	private CMSSiteService cmsSiteService;
-	
+
 	// Number of seconds in one day
 	private static final String ONE_DAY = String.valueOf(60 * 60 * 24);
 
 	@RequestMapping(value = "/robots.txt", method = RequestMethod.GET)
-	public String getRobots(final HttpServletResponse response,final Model model)
+	public String getRobots(final HttpServletResponse response, final Model model)
 	{
 		// Add cache control header to cache response for a day
 		response.setHeader("Cache-Control", "public, max-age=" + ONE_DAY);
 		final CMSSiteModel currentSite = cmsSiteService.getCurrentSite();
-		if ( currentSite.getUid() == MPL)
+		if (currentSite.getUid() == MPL || currentSite.getUid().equals(MPL))
 		{
 			model.addAttribute(SITE_URL, MPL);
-			
 		}
 		else
 		{
