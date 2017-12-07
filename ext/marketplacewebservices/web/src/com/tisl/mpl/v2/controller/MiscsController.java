@@ -232,13 +232,13 @@ public class MiscsController extends BaseController
 	private CustomerFacade customerFacade;
 	/*
 	 * @Resource private ModelService modelService;
-	 * 
+	 *
 	 * @Autowired private ForgetPasswordFacade forgetPasswordFacade;
-	 * 
+	 *
 	 * @Autowired private ExtendedUserServiceImpl userexService;
-	 * 
+	 *
 	 * @Autowired private WishlistFacade wishlistFacade;
-	 * 
+	 *
 	 * @Autowired private MplSellerMasterService mplSellerInformationService;
 	 */
 	@Autowired
@@ -265,7 +265,7 @@ public class MiscsController extends BaseController
 	private FieldSetBuilder fieldSetBuilder;
 	/*
 	 * @Resource(name = "i18NFacade") private I18NFacade i18NFacade;
-	 * 
+	 *
 	 * @Autowired private MplCommerceCartServiceImpl mplCommerceCartService;
 	 */
 	@Autowired
@@ -720,9 +720,9 @@ public class MiscsController extends BaseController
 
 	/*
 	 * restriction set up interface to save the data comming from seller portal
-	 * 
+	 *
 	 * @param restrictionXML
-	 * 
+	 *
 	 * @return void
 	 */
 	@RequestMapping(value = "/{baseSiteId}/miscs/restrictionServer", method = RequestMethod.POST)
@@ -1447,7 +1447,7 @@ public class MiscsController extends BaseController
 	 * final MarketplaceDeliveryModeData deliveryModeData = new MarketplaceDeliveryModeData(); final
 	 * MplZoneDeliveryModeValueModel MplZoneDeliveryModeValueModel = mplCheckoutFacade
 	 * .populateDeliveryCostForUSSIDAndDeliveryMode(deliveryMode, MarketplaceFacadesConstants.INR, ussid);
-	 *
+	 * 
 	 * if (null != MplZoneDeliveryModeValueModel) { if (null != MplZoneDeliveryModeValueModel.getValue()) { final
 	 * PriceData priceData = formPriceData(MplZoneDeliveryModeValueModel.getValue()); if (null != priceData) {
 	 * deliveryModeData.setDeliveryCost(priceData); } } if (null != MplZoneDeliveryModeValueModel.getDeliveryMode() &&
@@ -1460,11 +1460,11 @@ public class MiscsController extends BaseController
 	 * MplZoneDeliveryModeValueModel.getDeliveryMode().getName()) {
 	 * deliveryModeData.setName(MplZoneDeliveryModeValueModel.getDeliveryMode().getName()); } if (null != ussid) {
 	 * deliveryModeData.setSellerArticleSKU(ussid); }
-	 *
+	 * 
 	 * } return deliveryModeData; }
-	 *
+	 * 
 	 * @param code
-	 *
+	 * 
 	 * @return
 	 */
 	@RequestMapping(value = "/{baseSiteId}/checkBrandOrCategory", method = RequestMethod.GET)
@@ -1640,6 +1640,67 @@ public class MiscsController extends BaseController
 		return offersData;
 	}
 
+	/**
+	 * Display OFFERS TERMS AND CONDITIONS IN PAYMENT PAGE
+	 *
+	 * @param fields
+	 * @return aboutUsBannerData
+	 * @throws CMSItemNotFoundException
+	 */
+
+	@RequestMapping(value = "/{baseSiteId}/paymentSpecificOffersTermsAndCondition", method = RequestMethod.GET)
+	@ResponseBody
+	public OfferListWsData getPaymentSpecificOffersTermsAndCondition(
+			@RequestParam(defaultValue = DEFAULT_FIELD_SET) final String fields) throws CMSItemNotFoundException
+	{
+		OfferListWsData offersData = new OfferListWsData();
+		try
+		{
+			offersData = mplCouponFacade.getAllOffersTermsAndConditionForMobile();
+			if (offersData != null)
+			{
+				offersData.setStatus(MarketplacecommerceservicesConstants.SUCCESS_FLAG);
+			}
+
+
+		}
+
+		catch (final EtailNonBusinessExceptions e)
+		{
+			ExceptionUtil.etailNonBusinessExceptionHandler(e);
+			if (null != e.getErrorMessage())
+			{
+				offersData.setError(e.getErrorMessage());
+			}
+			if (null != e.getErrorCode())
+			{
+				offersData.setErrorCode(e.getErrorCode());
+			}
+			offersData.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
+		}
+		catch (final EtailBusinessExceptions e)
+		{
+			ExceptionUtil.etailBusinessExceptionHandler(e, null);
+			if (null != e.getErrorMessage())
+			{
+				offersData.setError(e.getErrorMessage());
+			}
+			if (null != e.getErrorCode())
+			{
+				offersData.setErrorCode(e.getErrorCode());
+			}
+			offersData.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
+		}
+		catch (final Exception e)
+		{
+			ExceptionUtil.getCustomizedExceptionTrace(e);
+			offersData.setError(Localization.getLocalizedString(MarketplacecommerceservicesConstants.E0000));
+			offersData.setErrorCode(MarketplacecommerceservicesConstants.E0000);
+			offersData.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
+		}
+
+		return offersData;
+	}
 
 
 	/**
@@ -1922,9 +1983,9 @@ public class MiscsController extends BaseController
 
 	/*
 	 * to receive pancard status from SP for jewellery
-	 *
+	 * 
 	 * @param restrictionXML
-	 *
+	 * 
 	 * @return void
 	 */
 	@RequestMapping(value = "/{baseSiteId}/miscs/pancardStatus", method = RequestMethod.POST)

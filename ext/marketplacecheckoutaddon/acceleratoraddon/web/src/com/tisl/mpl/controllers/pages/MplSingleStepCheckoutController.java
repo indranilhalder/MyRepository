@@ -68,7 +68,6 @@ import de.hybris.platform.storelocator.location.Location;
 import de.hybris.platform.storelocator.location.impl.LocationDTO;
 import de.hybris.platform.storelocator.location.impl.LocationDtoWrapper;
 import de.hybris.platform.storelocator.model.PointOfServiceModel;
-import de.hybris.platform.voucher.model.VoucherModel;
 import de.hybris.platform.wishlist2.model.Wishlist2EntryModel;
 import de.hybris.platform.wishlist2.model.Wishlist2Model;
 
@@ -166,6 +165,7 @@ import com.tisl.mpl.juspay.response.ListCardsResponse;
 import com.tisl.mpl.marketplacecommerceservices.service.MplDeliveryCostService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplJewelleryService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplSellerInformationService;
+import com.tisl.mpl.model.MplCartOfferVoucherModel;
 import com.tisl.mpl.model.SellerInformationModel;
 import com.tisl.mpl.mplcommerceservices.service.data.CartSoftReservationData;
 import com.tisl.mpl.mplcommerceservices.service.data.InvReserForDeliverySlotsItemEDDInfoData;
@@ -2715,31 +2715,34 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 	 * @throws UnsupportedEncodingException
 	 */
 	@RequestMapping(value = MarketplacecheckoutaddonConstants.PAYMENTRELATEDOFFERS, method = RequestMethod.GET)
-	public String upDatePincodeServicabilityCheck(final Model model) throws CMSItemNotFoundException, UnsupportedEncodingException
+	public String getPaymentRelatedOffers(final Model model) throws CMSItemNotFoundException, UnsupportedEncodingException
 	{
 
 		try
 		{
-			final List<VoucherModel> allOffersData = mplCouponFacade.getAllPaymentModeSpecificOffers();
+			final List<MplCartOfferVoucherModel> allOffersData = mplCouponFacade.getAllPaymentModeSpecificOffers();
 			final Map<String, Double> allOffersTotalData = mplCouponFacade.getPaymentModerelatedVoucherswithTotal();
-
-
 
 			/*
 			 * for (final Map<VoucherModel, String> offer : allOffersData) { for (final Map.Entry<VoucherModel, String>
 			 * entry : offer.entrySet()) {
-			 *
+			 * 
 			 * System.out.println(entry.getKey().getDescription()); System.out.println(entry.getValue()); final } }
 			 */
 
-
-
-
-
-
 			model.addAttribute("offerPageData", allOffersData);
 			model.addAttribute("offerPageDataTotal", allOffersTotalData);
-			model.addAttribute("total_offerPage", Integer.valueOf(allOffersData.size()));
+			if (CollectionUtils.isNotEmpty(allOffersData))
+			{
+				model.addAttribute("total_offerPage", Integer.valueOf(allOffersData.size()));
+			}
+			else
+			{
+				model.addAttribute("total_offerPage", Integer.valueOf(0));
+			}
+
+			model.addAttribute("offer_page_contain", "offers");
+
 			return MarketplacecheckoutaddonControllerConstants.Views.Fragments.Checkout.Single.PaymentPageOfferPanel;
 		}
 		catch (final EtailBusinessExceptions e)
@@ -2753,6 +2756,50 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 			return frontEndErrorHelper.callNonBusinessError(model, MessageConstants.SYSTEM_ERROR_PAGE_NON_BUSINESS);
 		}
 
+
+
+	}
+
+	/**
+	 * This method is called to show offers terms and condition in payment page.
+	 *
+	 * @return if successful return list of pos for a product else null.
+	 * @throws CMSItemNotFoundException
+	 * @throws UnsupportedEncodingException
+	 */
+	@RequestMapping(value = MarketplacecheckoutaddonConstants.PAYMENTRELATEDOFFERSTERMS, method = RequestMethod.GET)
+	public String getPaymentRelatedOffersTerms(final Model model) throws CMSItemNotFoundException, UnsupportedEncodingException
+	{
+
+		try
+		{
+			final List<MplCartOfferVoucherModel> allOffersData = mplCouponFacade.getAllPaymentModeSpecificOffers();
+
+
+			model.addAttribute("offerTermsConditionsData", allOffersData);
+
+			if (CollectionUtils.isNotEmpty(allOffersData))
+			{
+				model.addAttribute("total_offerPage", Integer.valueOf(allOffersData.size()));
+			}
+			else
+			{
+				model.addAttribute("total_offerPage", Integer.valueOf(0));
+			}
+			model.addAttribute("offer_page_contain", "terms");
+
+			return MarketplacecheckoutaddonControllerConstants.Views.Fragments.Checkout.Single.PaymentPageOfferPanel;
+		}
+		catch (final EtailBusinessExceptions e)
+		{
+			ExceptionUtil.etailBusinessExceptionHandler(e, null);
+			return frontEndErrorHelper.callBusinessError(model, MessageConstants.SYSTEM_ERROR_PAGE_BUSINESS);
+		}
+		catch (final EtailNonBusinessExceptions e)
+		{
+			ExceptionUtil.etailNonBusinessExceptionHandler(e);
+			return frontEndErrorHelper.callNonBusinessError(model, MessageConstants.SYSTEM_ERROR_PAGE_NON_BUSINESS);
+		}
 
 
 	}
@@ -5017,7 +5064,7 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 
 	/*
 	 * @Description adding wishlist popup in cart page
-	 * 
+	 *
 	 * @param String productCode,String wishName, model
 	 */
 
@@ -5075,7 +5122,7 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 
 	/*
 	 * @Description showing wishlist popup in cart page
-	 * 
+	 *
 	 * @param String productCode, model
 	 */
 	@ResponseBody

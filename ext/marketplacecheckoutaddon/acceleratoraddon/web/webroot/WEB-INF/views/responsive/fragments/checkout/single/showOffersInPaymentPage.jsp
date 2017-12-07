@@ -5,9 +5,12 @@
 <%@ taglib prefix="theme" tagdir="/WEB-INF/tags/shared/theme"%>
 
 <c:if test="${total_offerPage > 0}">
+
+<c:if test="${offer_page_contain == 'offers'}">
+
 <div class="offer_container">
 <h2><span class="offer_heading">Avail Bank Offers</span></h2>
-<span class="offer_heading_sub">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</span>
+<span class="offer_heading_sub">Lorem ipsum dolor sit amet, consectetur adipiscing elit. <a onclick="ACC.singlePageCheckout.showPaymentSpecificOffersTermsConditions();">Terms & Conditions</a></span>
 
 		<ul class="offerui">
 		
@@ -66,7 +69,38 @@
 		    	 			
 </div>
 
+<!-- -------offer terms & conditions poppup section start------ -->
+<div class="offer_terms_container_poppup" style="display:none">
+</div>
+<!-- -------offer terms & conditions poppup section end------ -->
+
 </c:if>	
+
+</c:if>	
+
+<c:if test="${total_offerPage > 0}">
+  <c:if test="${offer_page_contain == 'terms'}">
+<!-- -------offer terms & conditions available  section ------ -->
+
+<h2><span class="offer_heading">Terms & Conditions</span></h2>
+<button class="close" data-dismiss="modal" style="border:0px !important;margin: 0px !important;">X</button>
+		<ul class="offertermsui">	
+		<c:forEach items="${offerTermsConditionsData}" var="offerTermsConditionsData"  varStatus="status">
+				<li class="offer" id="offertermspop${status.index}" >
+					<div class="offerchoosesection">
+						<span class="offer_title">${offerTermsConditionsData.name}</span>
+						<br><span class="offer_des">${offerTermsConditionsData.description}</span>						
+						<br><span class="offer_des">${offerTermsConditionsData.termsAndCondition}</span>		
+					</div>
+				</li>
+		 </c:forEach>  
+		</ul>
+<!-- -------offer terms & conditions available  section end ------ -->		    	 			
+
+
+  </c:if>	
+</c:if>	
+
 <style>
 .offerui li {
     display: inline;

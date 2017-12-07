@@ -14,6 +14,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.tisl.mpl.data.VoucherDisplayData;
+import com.tisl.mpl.model.MplCartOfferVoucherModel;
 
 
 /**
@@ -45,7 +46,7 @@ public interface MplCouponService
 	/**
 	 * TPR-7486
 	 */
-	List<VoucherModel> getPaymentModerelatedVouchers();
+	List<MplCartOfferVoucherModel> getPaymentModerelatedVouchers();
 
 	Map<String, Double> getPaymentModerelatedVoucherswithTotal();
 

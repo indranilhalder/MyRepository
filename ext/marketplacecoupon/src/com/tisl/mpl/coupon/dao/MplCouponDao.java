@@ -12,6 +12,8 @@ import de.hybris.platform.voucher.model.VoucherModel;
 import java.util.List;
 import java.util.Map;
 
+import com.tisl.mpl.model.MplCartOfferVoucherModel;
+
 
 /**
  * @author TCS
@@ -36,7 +38,7 @@ public interface MplCouponDao
 	/**
 	 * TPR-7486
 	 */
-	List<VoucherModel> getPaymentModerelatedVouchers();
+	List<MplCartOfferVoucherModel> getPaymentModerelatedVouchers();
 
 	Map<String, Double> getPaymentModerelatedVoucherswithTotal();
 

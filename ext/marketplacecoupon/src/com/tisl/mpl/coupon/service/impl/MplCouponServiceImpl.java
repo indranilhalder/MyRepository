@@ -83,7 +83,7 @@ public class MplCouponServiceImpl implements MplCouponService
 	 *
 	 */
 	@Override
-	public List<VoucherModel> getPaymentModerelatedVouchers()
+	public List<MplCartOfferVoucherModel> getPaymentModerelatedVouchers()
 	{
 		return getMplCouponDao().getPaymentModerelatedVouchers();
 	}

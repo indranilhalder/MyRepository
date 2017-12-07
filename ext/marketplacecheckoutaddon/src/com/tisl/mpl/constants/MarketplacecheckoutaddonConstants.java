@@ -240,6 +240,7 @@ public final class MarketplacecheckoutaddonConstants extends GeneratedMarketplac
 
 	public static final String UPDATE_CHECK_PINCODE = "/updatePincodeCheck";
 	public static final String PAYMENTRELATEDOFFERS = "/paymentRelatedOffers";
+	public static final String PAYMENTRELATEDOFFERSTERMS = "/paymentRelatedOffersTerms";
 
 	public static final String ADDPOSORDERENTRY = "/addPosToOrderEntry";
 	public static final String ADDPICKUPPERSONDETAILS = "/addPickupPersonDetails";

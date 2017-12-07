@@ -1891,6 +1891,7 @@ ACC.singlePageCheckout = {
 	    	      	}*/
         			//If data.validation=="success" set prePaymentValidationDone to true
         			ACC.singlePageCheckout.mobileValidationSteps.prePaymentValidationDone=true;
+        			recalculateCart();
         			
         			//Function to re-create order totals section inorder to take delivery mode specific promotion into account
 //        			var xhrResponse=ACC.singlePageCheckout.getOrderTotalsTag();
@@ -3038,6 +3039,7 @@ ACC.singlePageCheckout = {
 	                	{
 	                		//Validate payment in responsive
 	                		ACC.singlePageCheckout.proceedWithPaymentForResponsive(paymentMode,savedOrNew,radioId,callFromCvv);
+	                		
 	                	}
 	                	if(ACC.singlePageCheckout.mobileValidationSteps.isScheduleServiceble)
 	                	{	                		
@@ -3221,6 +3223,7 @@ ACC.singlePageCheckout = {
       
             	$('.offers_section_paymentpage').css("display","block");
             	$('.offers_section_paymentpage').html(response);
+            	ACC.singlePageCheckout.populatePaymentSpecificOffersTermsConditions();
             	
 		}); 
         
@@ -3229,6 +3232,29 @@ ACC.singlePageCheckout = {
 		});
 	
 	},
+	populatePaymentSpecificOffersTermsConditions:function(){
+
+		//ACC.singlePageCheckout.showAjaxLoader();
+		var url=ACC.config.encodedContextPath + "/checkout/single/paymentRelatedOffersTerms";
+		var data = null;
+		var xhrResponse=ACC.singlePageCheckout.ajaxRequest(url,"GET",data,false);
+        
+        xhrResponse.fail(function(xhr, textStatus, errorThrown) {
+			console.log("ERROR:"+textStatus + ': ' + errorThrown);
+		});
+        
+        xhrResponse.done(function(response, textStatus, jqXHR) {
+      
+            	$('.offer_terms_container_poppup').html(response);	
+            	
+		}); 
+        
+        xhrResponse.always(function(){
+        	//ACC.singlePageCheckout.hideAjaxLoader();
+		});
+	
+	},	
+	
 	chooseOffer:function(offerID,radioId){
 		//alert(offerID);
 		//$('input[name=offer_name]:checked+label::before').css("background", "black");
@@ -3336,7 +3362,16 @@ ACC.singlePageCheckout = {
      	   $("body").append('<div class="modal fade" id="paymentoffersPopup"><div class="content offer-content" style="padding: 40px;min-width: 45%;">'+data+'<button class="close" data-dismiss="modal" style="border:0px !important;margin: 0px !important;"></button></div><div class="overlay" data-dismiss="modal"></div></div>');
 
 		   $("#paymentoffersPopup").modal('show');
-	} 
+	},
+	showPaymentSpecificOffersTermsConditions:function(){	
+		if($("#offer_terms_container_poppup").html() != "") {
+	    	ACC.singlePageCheckout.paymentTermsConditionsOffersPopup($(".offer_terms_container_poppup").html());
+		}
+	},
+	paymentTermsConditionsOffersPopup:function(data){		
+  	   $("body").append('<div class="modal fade" id="paymenttermsoffersPopup"><div class="content offer-content" style="padding: 40px;min-width: 45%;">'+data+'<button class="close" data-dismiss="modal" style="border:0px !important;margin: 0px !important;"></button></div><div class="overlay" data-dismiss="modal"></div></div>');
+       $("#paymenttermsoffersPopup").modal('show');
+	}
 	
 	
 	
@@ -3407,6 +3442,7 @@ $(document).ready(function(){
 			//TPR-7486
 			$('#continue_payment_after_validate_responsive').show();
 			$('#continue_payment_after_validate').hide();
+			ACC.singlePageCheckout.populatePaymentSpecificOffers();
 		}
 		else
 		{

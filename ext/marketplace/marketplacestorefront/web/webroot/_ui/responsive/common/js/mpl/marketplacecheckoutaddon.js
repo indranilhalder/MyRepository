@@ -2778,7 +2778,7 @@ function savedDebitCardRadioChange(radioId){
 	  }
 
 
- function dopayment_bck(bin_current_status){
+ /*function dopayment_bck(bin_current_status){
 	 if($("#paymentMode").val()=="Credit Card"){
 		 var name = validateName();
 		 if(bin_current_status==true){
@@ -2914,7 +2914,7 @@ function savedDebitCardRadioChange(radioId){
 			 }
 		 }
 	 }
- }
+ }*/
  
  // INC144316811
  function openShippingFrmOpen(){
@@ -3857,7 +3857,7 @@ function validateCVVEmi() {
 		return true;
 	}
 }
-
+/*
 function validateCardNo_bck(formSubmit) {
 	var value=$("#cardNo").val();
 	var errorHandle = document.getElementById("cardNoError"); 
@@ -3937,8 +3937,8 @@ function validateCardNo_bck(formSubmit) {
 		return false;
 	}
 	// TISPRO-572 - Commenting check for EMI in case of AMEX
-	else if(cardType=='AMEX' && value.length==15 && (/* $("#paymentMode").val()=='EMI' || */ $("#paymentMode").val()=='Debit Card')){
-		binStatus=false;
+	else if(cardType=='AMEX' && value.length==15 && (/* $("#paymentMode").val()=='EMI' || */ /*$("#paymentMode").val()=='Debit Card')){
+		/*binStatus=false;
 		//TPR-629
 		if(formSubmit=="formSubmit")
 		{
@@ -4054,7 +4054,7 @@ function validateCardNo_bck(formSubmit) {
 //				}
 //				else
 //				{
-					binStatus=true;
+				/*binStatus=true;
 					if($("#paymentMode").val()!='EMI'){
 						//applyPromotion(null,binStatus,formSubmit,true);
 					}
@@ -4130,7 +4130,7 @@ function validateCardNo_bck(formSubmit) {
 //					}
 					
 				//}
-			}
+			/*}
 		},
 		error : function(resp) {
 			binStatus=false;
@@ -4147,8 +4147,8 @@ function validateCardNo_bck(formSubmit) {
 	});		
 	errorHandle.innerHTML = "";
 	return true;
-}
-
+} */
+/*
 function validateDebitCardNo_bck(formSubmit) {
 	
 	  var value=$("#cardNoDc").val();
@@ -4229,8 +4229,8 @@ function validateDebitCardNo_bck(formSubmit) {
 			return false;
 		}
 		//TISPRO-572 - Commenting check for EMI in case of AMEX
-		else if(cardType=='AMEX' && value.length==15 && (/*$("#paymentMode").val()=='EMI' ||*/ $("#paymentMode").val()=='Debit Card')){
-			binStatus=false;
+		else if(cardType=='AMEX' && value.length==15 && (/*$("#paymentMode").val()=='EMI' ||*/ /*$("#paymentMode").val()=='Debit Card')){
+			/*binStatus=false;
 			//TPR-629
 			if(formSubmit=="formSubmit")
 			{
@@ -4398,8 +4398,8 @@ function validateDebitCardNo_bck(formSubmit) {
 		});		
 		errorHandle.innerHTML = "";
 		return true;
-	}
-
+	} */
+/*
 function validateEmiCardNo_bck(formSubmit) {
 	
 	  var value=$("#cardNoEmi").val();
@@ -4480,8 +4480,8 @@ function validateEmiCardNo_bck(formSubmit) {
 			return false;
 		}
 		//TISPRO-572 - Commenting check for EMI in case of AMEX
-		else if(cardType=='AMEX' && value.length==15 && (/*$("#paymentMode").val()=='EMI' ||*/ $("#paymentMode").val()=='Debit Card')){
-			binStatus=false;
+		else if(cardType=='AMEX' && value.length==15 && (/*$("#paymentMode").val()=='EMI' ||*/ /*$("#paymentMode").val()=='Debit Card')){
+			/*binStatus=false;
 			//TPR-629
 			if(formSubmit=="formSubmit")
 			{
@@ -4658,7 +4658,7 @@ function validateEmiCardNo_bck(formSubmit) {
 		});		
 		errorHandle.innerHTML = "";
 		return true;
-	}
+	} */
 
 
 
@@ -5246,7 +5246,7 @@ function setBankForSavedCard(bankName){
 
 
 //TPR-629---changes in parameter
-function applyPromotion_bck(bankName,binValue,formSubmit,isNewCard)
+/*function applyPromotion_bck(bankName,binValue,formSubmit,isNewCard)
 {
 	var staticHost=$('#staticHost').val();
 	//Commenting the below two lines for UF-97
@@ -5356,7 +5356,7 @@ function applyPromotion_bck(bankName,binValue,formSubmit,isNewCard)
 						document.getElementById("promotion").innerHTML=response.totalDiscount.formattedValue;				
 					}*/
 					//UF-260
-					if(response.totalDiscntIncMrp.value != 0){
+					/*if(response.totalDiscntIncMrp.value != 0){
 						$("#promotionApplied").css("display","block");
 						document.getElementById("promotion").innerHTML=response.totalDiscntIncMrp.formattedValue;
 					}
@@ -5381,7 +5381,7 @@ function applyPromotion_bck(bankName,binValue,formSubmit,isNewCard)
 				var cartTotal=response.totalPrice.value;
 				
 				/*Added for mRupee wallet*/
-				if(cartTotal >= 20000){
+				/*if(cartTotal >= 20000){
 					$("#mRupeeInfo").css("display","block");			
 				}
 				//Ends here
@@ -5429,7 +5429,7 @@ function applyPromotion_bck(bankName,binValue,formSubmit,isNewCard)
 									}
 									
 									/*TPR-641*/
-									utag.link({
+									/*utag.link({
 										link_obj: this,
 										link_text: 'emi_more_information' ,
 										event_type : 'emi_more_information'
@@ -5486,23 +5486,23 @@ function applyPromotion_bck(bankName,binValue,formSubmit,isNewCard)
 										row.insertCell(0).innerHTML= '<input type="radio" name="termRadio" id="termRadioId' + index + '" value="" style="display: inherit;" onclick="validateSelection()"><label for="termRadioId' + index + '">' + data[index].term + ' Months </label>';
 										//row.insertCell(1).innerHTML= data[index].term + " months";
 										row.insertCell(1).innerHTML= data[index].interestRate + "%,";
-										row.insertCell(2).innerHTML= /*"Rs. " + */data[index].monthlyInstallment + " p.m";
-										row.insertCell(3).innerHTML= /*"Rs. " + */data[index].interestPayable;
-										var radioId=document.getElementsByName("termRadio")[index].id;
+										row.insertCell(2).innerHTML= /*"Rs. " + *//*data[index].monthlyInstallment + " p.m";
+										/*row.insertCell(3).innerHTML= /*"Rs. " + *data[index].interestPayable;
+										/*var radioId=document.getElementsByName("termRadio")[index].id;
 										document.getElementById(radioId).value=data[index].term;
 										
 									}
 									$("#emi-notice").show();
 									
 									/*TPR-641 starts*/
-									emiBankSelectedTealium = "emi_option_" + selectedBank.replace(/ /g, "").replace(/[^a-z0-9\s]/gi, '').toLowerCase();
+									/*emiBankSelectedTealium = "emi_option_" + selectedBank.replace(/ /g, "").replace(/[^a-z0-9\s]/gi, '').toLowerCase();
 									utag.link({
 										link_obj: this,
 										link_text: emiBankSelectedTealium , 
 										event_type : 'emi_option_selected'
 									});
 									/*TPR-641 ends*/
-								}
+								/*}
 								else{
 									$("#radioForEMI").css("display","none");
 									$("#emiNoBankError").show();
@@ -5555,9 +5555,9 @@ function applyPromotion_bck(bankName,binValue,formSubmit,isNewCard)
 			$(".make_payment").removeAttr('disabled');
 			$("#no-click1,.loaderDiv1").remove();*/
 			//TISUAT-6037 ends here
-		}
+		/*}
 	});
-}
+}*/
 
 
 

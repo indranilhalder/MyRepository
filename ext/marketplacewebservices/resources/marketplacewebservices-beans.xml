@@ -3389,6 +3389,7 @@
 		<property name="offerTitle" type="String"/>
 		<property name="offerMaxDiscount" type="String"/>
 		<property name="offerMinCartValue" type="String"/>	
+		<property name="offerTermsConditions" type="String"/>	
 	</bean>
 	
 
