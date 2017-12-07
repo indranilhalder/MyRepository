@@ -29,6 +29,7 @@ import com.tisl.mpl.facades.cms.data.NodeFormData;
 import com.tisl.mpl.facades.cms.data.WebForm;
 import com.tisl.mpl.facades.cms.data.WebFormData;
 import com.tisl.mpl.marketplacecommerceservices.service.MplWebFormService;
+import com.tisl.mpl.wsdto.CRMWsData;
 
 
 /**
@@ -213,7 +214,7 @@ public class MplDefaultWebFormFacade implements MplWebFormFacade
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.tisl.mpl.facades.webform.MplWebFormFacade#getCrmParentChildNodes(java.lang.String)
 	 */
 	@Override
@@ -223,4 +224,106 @@ public class MplDefaultWebFormFacade implements MplWebFormFacade
 		return null;
 	}
 
+
+
+	/*
+	 * (non-Javadoc)
+	 *
+	 * @see com.tisl.mpl.facades.webform.MplWebFormFacade#getCrmParentChildNodes(java.lang.String)
+	 */
+	@Override
+	public List<CRMWsData> getAllWebCRMTreedata()
+	{
+		final List<CRMWsData> crmL1Data = new ArrayList<CRMWsData>();
+		List<CRMWsData> crmL2Data = new ArrayList<CRMWsData>();
+		List<CRMWsData> crmL3Data = new ArrayList<CRMWsData>();
+		List<CRMWsData> crmL4Data = new ArrayList<CRMWsData>();
+
+		try
+		{
+			final List<MplWebCrmModel> webCrmL1Models = mplWebFormService.getWebCRMParentNodes();
+
+
+			for (final MplWebCrmModel crmModel : webCrmL1Models)
+			{
+				//L1
+				final CRMWsData nodeL1 = new CRMWsData();
+				nodeL1.setNodeType(crmModel.getNodeType());
+				nodeL1.setNodeCode(crmModel.getNodeCrmCode());
+				nodeL1.setNodeDesc(crmModel.getNodeText());
+				nodeL1.setTicketAnswer((crmModel.getTicketAnswer()));
+				nodeL1.setCreateTicketAllowed(crmModel.isCreateTicketAllowed());
+				nodeL1.setNodeDisplayAllowed(crmModel.isNodeDisplayAllowed());
+				//crmData.add(nodeL1);
+				//L2
+				final List<MplWebCrmModel> webCrmL2Models = mplWebFormService.getWebCRMByNodes(crmModel.getNodeCrmCode());
+				crmL2Data = new ArrayList<CRMWsData>();
+				for (final MplWebCrmModel crmL2Model : webCrmL2Models)
+				{
+					final CRMWsData nodeL2 = new CRMWsData();
+					nodeL2.setNodeType(crmL2Model.getNodeType());
+					nodeL2.setNodeCode(crmL2Model.getNodeCrmCode());
+					nodeL2.setNodeDesc(crmL2Model.getNodeText());
+					nodeL2.setTicketAnswer((crmL2Model.getTicketAnswer()));
+					nodeL2.setCreateTicketAllowed(crmL2Model.isCreateTicketAllowed());
+					nodeL2.setNodeDisplayAllowed(crmL2Model.isNodeDisplayAllowed());
+
+					//L3
+
+					final List<MplWebCrmModel> webCrmL3Models = mplWebFormService.getWebCRMByNodes(crmL2Model.getNodeCrmCode());
+					crmL3Data = new ArrayList<CRMWsData>();
+					for (final MplWebCrmModel crmL3Model : webCrmL3Models)
+					{
+						final CRMWsData nodeL3 = new CRMWsData();
+						nodeL3.setNodeType(crmL3Model.getNodeType());
+						nodeL3.setNodeCode(crmL3Model.getNodeCrmCode());
+						nodeL3.setNodeDesc(crmL3Model.getNodeText());
+						nodeL3.setTicketAnswer((crmL3Model.getTicketAnswer()));
+						nodeL3.setCreateTicketAllowed(crmL3Model.isCreateTicketAllowed());
+						nodeL3.setNodeDisplayAllowed(crmL3Model.isNodeDisplayAllowed());
+
+
+
+						//L4
+						final List<MplWebCrmModel> webCrmL4Models = mplWebFormService.getWebCRMByNodes(crmL3Model.getNodeCrmCode());
+
+						crmL4Data = new ArrayList<CRMWsData>();
+						for (final MplWebCrmModel crmL4Model : webCrmL4Models)
+						{
+							final CRMWsData nodeL4 = new CRMWsData();
+							nodeL4.setNodeType(crmL4Model.getNodeType());
+							nodeL4.setNodeCode(crmL4Model.getNodeCrmCode());
+							nodeL4.setNodeDesc(crmL4Model.getNodeText());
+							nodeL4.setTicketAnswer((crmL4Model.getTicketAnswer()));
+							nodeL4.setCreateTicketAllowed(crmL4Model.isCreateTicketAllowed());
+							nodeL4.setNodeDisplayAllowed(crmL4Model.isNodeDisplayAllowed());
+
+							crmL4Data.add(nodeL4);
+
+						}
+						nodeL3.setChildren(crmL4Data);
+						crmL3Data.add(nodeL3);
+					}
+					nodeL2.setChildren(crmL3Data);
+					crmL2Data.add(nodeL2);
+				}
+				nodeL1.setChildren(crmL2Data);
+				crmL1Data.add(nodeL1);
+
+
+			}
+
+
+		}
+		catch (final Exception e)
+		{
+			LOG.error(e);
+
+
+		}
+
+		return crmL1Data;
+
+
+	}
 }

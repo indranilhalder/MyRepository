@@ -541,6 +541,7 @@ public class MarketplacewebservicesConstants
 
 	public static final String THIRDPARTYWALLETORDER = "/{userId}/createThirdPartyWalletOrder";
 	public static final String WALLETPAYMENT = "/{userId}/walletPayment";
+	public static final String CRMNODES = "/{userId}/getWebCRMNodes";
 	public static final String MRUPEE = "MRUPEE".intern();
 
 	public final static String MRUPEE_NARRATION_VALUE = "payment.mRupee.narration".intern();

@@ -10,6 +10,7 @@ import java.util.List;
 import com.tis.mpl.facade.data.TicketStatusUpdate;
 import com.tisl.mpl.facades.cms.data.WebForm;
 import com.tisl.mpl.facades.cms.data.WebFormData;
+import com.tisl.mpl.wsdto.CRMWsData;
 
 
 
@@ -46,10 +47,16 @@ public interface MplWebFormFacade
 
 	/**
 	 * This method converts the hierachical data model to pojo
-	 * 
+	 *
 	 * @param nodeParent
 	 * @return List<WebFormData>
 	 */
 	public List<WebFormData> getCrmParentChildNodes(final String nodeParent);
+
+	/**
+	 * @return
+	 * @throws Exception
+	 */
+	public List<CRMWsData> getAllWebCRMTreedata();
 
 }

@@ -193,6 +193,7 @@ import com.tisl.mpl.facades.product.data.MplCustomerProfileData;
 import com.tisl.mpl.facades.product.data.ReturnReasonData;
 import com.tisl.mpl.facades.product.data.ReturnReasonDetails;
 import com.tisl.mpl.facades.product.data.StateData;
+import com.tisl.mpl.facades.webform.MplWebFormFacade;
 import com.tisl.mpl.helper.MplEnumerationHelper;
 import com.tisl.mpl.helper.MplUserHelper;
 import com.tisl.mpl.helper.ProductDetailsHelper;
@@ -224,6 +225,8 @@ import com.tisl.mpl.util.ExceptionUtil;
 import com.tisl.mpl.util.MplTimeconverUtility;
 import com.tisl.mpl.validation.data.AddressValidationData;
 import com.tisl.mpl.webservice.businessvalidator.DefaultCommonAsciiValidator;
+import com.tisl.mpl.wsdto.CRMWsData;
+import com.tisl.mpl.wsdto.CRMWsDataParent;
 import com.tisl.mpl.wsdto.CommonCouponsDTO;
 import com.tisl.mpl.wsdto.EMIBankListWsDTO;
 import com.tisl.mpl.wsdto.EMITermRateDataForMobile;
@@ -451,6 +454,9 @@ public class UsersController extends BaseCommerceController
 
 	@Resource(name = "voucherService")
 	private VoucherService voucherService;
+
+	@Resource(name = "mplWebFormFacade")
+	private MplWebFormFacade mplWebFormFacade;
 
 	//Sonar Fix
 	private static final String NO_JUSPAY_URL = "No juspayReturnUrl is defined in local properties";
@@ -698,7 +704,8 @@ public class UsersController extends BaseCommerceController
 	@RequestMapping(value = "/socialMediaRegistration", method = RequestMethod.POST, produces = APPLICATION_TYPE)
 	@ResponseBody
 	public MplUserResultWsDto socialMediaRegistration(@RequestParam final String emailId, @RequestParam final String socialMedia,
-			@RequestParam(required = false) final boolean tataTreatsEnable, @RequestParam(required = false) final String platformNumber) throws RequestParameterException,
+			@RequestParam(required = false) final boolean tataTreatsEnable,
+			@RequestParam(required = false) final String platformNumber) throws RequestParameterException,
 			WebserviceValidationException, MalformedURLException
 	{
 		MplUserResultWsDto result = new MplUserResultWsDto();
@@ -717,7 +724,7 @@ public class UsersController extends BaseCommerceController
 			}
 			LOG.debug("The platform number is " + platformDecider);
 			//SDI-639 ends here
-			
+
 			/* TPR-1140 Case-sensitive nature resulting in duplicate customer e-mails IDs */
 			final String emailIdLwCase = emailId.toLowerCase();
 			LOG.debug("****************** Social Media User Registration mobile web service ***********" + emailId);
@@ -9713,4 +9720,65 @@ public class UsersController extends BaseCommerceController
 		return toSortList;
 	}
 
+	/**
+	 * @Description : For getting the details of all the Coupons available for the User
+	 * @param emailId
+	 * @param currentPage
+	 * @param pageSize
+	 * @param usedCoupon
+	 * @param sortCode
+	 * @return CommonCouponsDTO
+	 * @throws RequestParameterException
+	 * @throws WebserviceValidationException
+	 * @throws MalformedURLException
+	 */
+
+	@Secured(
+	{ CUSTOMER, TRUSTED_CLIENT, CUSTOMERMANAGER, ROLE_CLIENT })
+	@RequestMapping(value = "/{userId}/getWebCRMNodes", method = RequestMethod.GET, produces = APPLICATION_TYPE)
+	@ResponseBody
+	public CRMWsDataParent getcemwebform(@PathVariable final String emailId) throws RequestParameterException,
+			WebserviceValidationException, MalformedURLException
+	{
+		final CRMWsDataParent crmDto = new CRMWsDataParent();
+
+
+		try
+		{
+
+			final List<CRMWsData> crmdata = mplWebFormFacade.getAllWebCRMTreedata();
+			crmDto.setNodes(crmdata);
+			crmDto.setStatus(MarketplacecommerceservicesConstants.SUCCESS_FLAG);
+
+
+
+		}
+		catch (final EtailNonBusinessExceptions e)
+		{
+			ExceptionUtil.etailNonBusinessExceptionHandler(e);
+			if (null != e.getErrorMessage())
+			{
+				crmDto.setError(e.getErrorMessage());
+			}
+			if (null != e.getErrorCode())
+			{
+				crmDto.setErrorCode(e.getErrorCode());
+			}
+			crmDto.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
+		}
+		catch (final EtailBusinessExceptions e)
+		{
+			ExceptionUtil.etailBusinessExceptionHandler(e, null);
+			if (null != e.getErrorMessage())
+			{
+				crmDto.setError(e.getErrorMessage());
+			}
+			if (null != e.getErrorCode())
+			{
+				crmDto.setErrorCode(e.getErrorCode());
+			}
+			crmDto.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
+		}
+		return crmDto;
+	}
 }
