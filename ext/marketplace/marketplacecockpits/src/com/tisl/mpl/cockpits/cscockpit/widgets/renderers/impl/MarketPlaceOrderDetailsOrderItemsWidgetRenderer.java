@@ -33,6 +33,7 @@ import com.tisl.mpl.cockpits.cscockpit.widgets.controllers.MarketplaceCheckoutCo
 import com.tisl.mpl.constants.MplConstants;
 import com.tisl.mpl.core.constants.GeneratedMarketplaceCoreConstants.Enumerations.ClickAndCollectEnum;
 import com.tisl.mpl.core.enums.DeliveryFulfillModesEnum;
+import com.tisl.mpl.core.model.MplCustomerBankAccountDetailsModel;
 import com.tisl.mpl.core.model.MplZoneDeliveryModeValueModel;
 import com.tisl.mpl.core.model.RichAttributeModel;
 import com.tisl.mpl.cockpits.cscockpit.widgets.controllers.MplDefaultOrderController;
@@ -173,12 +174,12 @@ public class MarketPlaceOrderDetailsOrderItemsWidgetRenderer extends
 		}
 		listheader = new Listheader(LabelUtils.getLabel(widget, "basePrice",
 				new Object[0]));
-		listheader.setWidth("80px");
+		listheader.setWidth("75px");
 		row.appendChild(listheader);
 
 		listheader = new Listheader(LabelUtils.getLabel(widget, "totalPrice",
 				new Object[0]));
-		listheader.setWidth("80px");
+		listheader.setWidth("75px");
 		row.appendChild(listheader);
 
 		listheader = new Listheader(LabelUtils.getLabel(widget, "qty",
@@ -189,13 +190,19 @@ public class MarketPlaceOrderDetailsOrderItemsWidgetRenderer extends
 		//CKD: TPR-3809
 		listheader = new Listheader(LabelUtils.getLabel(widget, "panCardStatus",
 				new Object[0]));
-		listheader.setWidth("120px");
+		listheader.setWidth("80px");
 		row.appendChild(listheader);
 		// TPR-7412 start
 		listheader = new Listheader(LabelUtils.getLabel(widget, "utrNoORarnNo",
 				new Object[0]));
+		listheader.setWidth("95px");
+		row.appendChild(listheader);
+		
+		listheader = new Listheader(LabelUtils.getLabel(widget, "bankDetails",
+				new Object[0]));
 		listheader.setWidth("120px");
 		row.appendChild(listheader);
+		
 		// TPR-7412 end
 		return row;
 	}
@@ -203,7 +210,7 @@ public class MarketPlaceOrderDetailsOrderItemsWidgetRenderer extends
 	protected void populateMasterRow(ListboxWidget widget, Listitem row,
 			Object context, TypedObject item) {
 		
-		row.setHeight("80px");
+		row.setHeight("120px");
 		PropertyDescriptor entryNumberPD = getCockpitTypeService()
 				.getPropertyDescriptor("AbstractOrderEntry.entryNumber");
 		PropertyDescriptor basePricePD = getCockpitTypeService()
@@ -405,6 +412,26 @@ public class MarketPlaceOrderDetailsOrderItemsWidgetRenderer extends
 			row.appendChild(new Listcell(MplConstants.NOT_AVAILABLE));
 		}
     //TPR-7412 end
+		if(null!=entrymodel.getOrder() && null!=entrymodel.getOrder().getUser() && null!=entrymodel.getOrder().getUser().getUid() )
+		{
+			MplCustomerBankAccountDetailsModel customerBankDetailsModel = null;
+			String st=null;
+			customerBankDetailsModel=((MplDefaultOrderController)widget.getWidgetController()).getCustomerBankdetails(entrymodel.getOrder().getUser().getUid());
+		    if(null !=customerBankDetailsModel)
+		    {
+			 st = customerBankDetailsModel.getAccountHolderName()+","+customerBankDetailsModel.getBankName()+", A/C NO:"+customerBankDetailsModel.getAccountNumber()+", IFSC:"+customerBankDetailsModel.getIfscCode();
+			 row.appendChild(new Listcell(st));
+		    }
+		    else
+			{
+			row.appendChild(new Listcell(MplConstants.NOT_AVAILABLE));
+			}
+		    
+		}
+		else
+		{
+		row.appendChild(new Listcell(MplConstants.NOT_AVAILABLE));
+		}
 	}
 
 	
