@@ -998,6 +998,7 @@ header .content .search .links li.ui-menu-item div.name {
 /*UF-93 end*/
 .logged_in.dropdown:hover .account-userTitle, .sign-in-dropdown.sign-in:hover a#socialLogin {
     text-decoration: underline;
+    color: #a9143c;		/* add for TISCSS-70 */
 }
 /*Header css end*/
 /*Header media query start*/
