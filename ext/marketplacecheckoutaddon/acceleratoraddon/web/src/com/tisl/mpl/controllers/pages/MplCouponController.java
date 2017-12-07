@@ -431,25 +431,60 @@ public class MplCouponController
 			}
 		}
 		final boolean redeem = false;
+		boolean isCartVoucherPresent = false;
+		String cartCouponCode = MarketplacecommerceservicesConstants.EMPTY;
 
 		//Release coupon for cartModel
 		if (null == orderModel)
 		{
-			final CartModel cartModel = getCartService().getSessionCart();
+			CartModel cartModel = getCartService().getSessionCart();
 			try
 			{
 				LOG.debug("Step 1:::The coupon code to be released by the customer is ::: " + couponCode);
 
+				final Tuple2<Boolean, String> cartCouponObj = isCartVoucherPresent(cartModel.getDiscounts());
+				isCartVoucherPresent = cartCouponObj.getFirst().booleanValue();
+
+				if (isCartVoucherPresent)
+				{
+					cartCouponCode = cartCouponObj.getSecond();
+					cartModel = (CartModel) getMplCouponFacade().removeLastCartCoupon(cartModel); // Removing any Cart level Coupon Offer
+				}
+
 				//Release the coupon
 				getMplCouponFacade().releaseVoucher(couponCode, cartModel, null);
-
 				//Recalculate cart after releasing coupon
 				getMplCouponFacade().recalculateCartForCoupon(cartModel, null); //Handled changed method signature for TPR-629
 
-				data = getMplCouponFacade().calculateValues(null, cartModel, true, redeem);
+				if (StringUtils.isNotEmpty(cartCouponCode))
+				{
+					try
+					{
+						final boolean applyStatus = getMplCouponFacade().applyCartVoucher(cartCouponCode, cartModel, null);
+						final VoucherDiscountData newData = getMplCouponFacade().populateCartVoucherData(null, cartModel, applyStatus,
+								true, couponCode);
 
-				//Update paymentInfo in session
-				getMplCouponFacade().updatePaymentInfoSession(paymentInfo, cartModel);
+						data = newData;
+						//data.setTotalDiscount(newData.getTotalDiscount());
+						//data.setTotalPrice(newData.getTotalPrice());
+
+					}
+					catch (final VoucherOperationException e)
+					{
+						LOG.debug("Failed to apply Voucher with Code >>>" + cartCouponCode);
+					}
+					catch (final Exception e)
+					{
+						ExceptionUtil.etailNonBusinessExceptionHandler((EtailNonBusinessExceptions) e);
+					}
+				}
+				else
+				{
+					data = getMplCouponFacade().calculateValues(null, cartModel, true, redeem);
+					getMplCouponFacade().updatePaymentInfoSession(paymentInfo, cartModel);
+				}
+
+
 
 			}
 			catch (final VoucherOperationException e)
@@ -475,16 +510,52 @@ public class MplCouponController
 			{
 				LOG.debug("Step 1:::The coupon code to be released by the customer is ::: " + couponCode);
 
+				final Tuple2<Boolean, String> cartCouponObj = isCartVoucherPresent(orderModel.getDiscounts());
+				isCartVoucherPresent = cartCouponObj.getFirst().booleanValue();
+
+				if (isCartVoucherPresent)
+				{
+					cartCouponCode = cartCouponObj.getSecond();
+					orderModel = (OrderModel) getMplCouponFacade().removeLastCartCoupon(orderModel); // Removing any Cart level Coupon Offer
+				}
+
 				//Release the coupon
 				getMplCouponFacade().releaseVoucher(couponCode, null, orderModel);
 
 				//Recalculate cart after releasing coupon
 				getMplCouponFacade().recalculateCartForCoupon(null, orderModel); //Handled changed method signature for TPR-629
 
-				data = getMplCouponFacade().calculateValues(orderModel, null, true, redeem);
+				if (StringUtils.isNotEmpty(cartCouponCode))
+				{
+					try
+					{
+						final boolean applyStatus = getMplCouponFacade().applyCartVoucher(cartCouponCode, null, orderModel);
+						final VoucherDiscountData newData = getMplCouponFacade().populateCartVoucherData(orderModel, null, applyStatus,
+								true, couponCode);
 
-				//Update paymentInfo in session
-				getMplCouponFacade().updatePaymentInfoSession(paymentInfo, orderModel);
+						data = newData;
+						//data.setTotalDiscount(newData.getTotalDiscount());
+						//data.setTotalPrice(newData.getTotalPrice());
+
+					}
+					catch (final VoucherOperationException e)
+					{
+						LOG.debug("Failed to apply Voucher with Code >>>" + cartCouponCode);
+					}
+					catch (final Exception e)
+					{
+						ExceptionUtil.etailNonBusinessExceptionHandler((EtailNonBusinessExceptions) e);
+					}
+				}
+				else
+				{
+					data = getMplCouponFacade().calculateValues(orderModel, null, true, redeem);
+
+					//Update paymentInfo in session
+					getMplCouponFacade().updatePaymentInfoSession(paymentInfo, orderModel);
+				}
+
+
 
 			}
 			catch (final VoucherOperationException e)
