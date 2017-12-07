@@ -29,6 +29,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 
 import javax.annotation.Resource;
 
@@ -102,8 +103,6 @@ public class WebFormPageController extends AbstractMplSearchPageController
 	public String ticketFormSave(@ModelAttribute final TicketWebForm webForm, final Model model) throws CMSItemNotFoundException
 	{
 		final WebFormData formData = new WebFormData();
-		String fileUploadLocation = null, nowDate = null;
-		Path path = null;
 		try
 		{
 			formData.setComment(webForm.getComment());
@@ -117,51 +116,11 @@ public class WebFormPageController extends AbstractMplSearchPageController
 			formData.setTransactionId(webForm.getTransactionId());
 
 			//formData.setL0code(webForm.get);
-			//uploading filre if any
-			if (CollectionUtils.isNotEmpty(webForm.getAttachments()))
+			//uploading file if any
+			if (CollectionUtils.isNotEmpty(webForm.getAttachmentFiles()))
 			{
-				fileUploadLocation = configurationService.getConfiguration().getString(RequestMappingUrlConstants.FILE_UPLOAD_PATH);
-				if (StringUtils.isNotEmpty(fileUploadLocation))
-				{
-					try
-					{
-						for (final MultipartFile filename : webForm.getAttachments())
-						{
-							final byte barr[] = filename.getBytes();
-							final SimpleDateFormat sdf = new SimpleDateFormat("YYYY/MM/dd");
-							nowDate = sdf.format(new Date());
-							path = Paths.get(fileUploadLocation + File.separator + nowDate);
-							//if directory exists?
-							if (!Files.exists(path))
-							{
-								try
-								{
-									Files.createDirectories(path);
-								}
-								catch (final IOException e)
-								{
-									//fail to create directory
-									LOG.error("Exception ,While creating the Directory " + e.getMessage());
-								}
-							}
-							final BufferedOutputStream bout = new BufferedOutputStream(new FileOutputStream(path + File.separator
-									+ filename.getOriginalFilename()));
-							bout.write(barr);
-							bout.flush();
-							bout.close();
-							LOG.debug("FileUploadLocation   :" + fileUploadLocation);
-						}
-					}
-					catch (final Exception e)
-					{
-						LOG.error("Exception is:" + e);
-					}
-
-				}
+				//formData.setAttachments(attachments);
 			}
-
-
-
 			mplWebFormFacade.sendWebformTicket(formData);
 			model.addAttribute("ticketForm", webForm);
 		}
@@ -187,6 +146,55 @@ public class WebFormPageController extends AbstractMplSearchPageController
 		}
 
 		return jsonObj;
+	}
+
+	@RequestMapping(value = "/fileUpload", method = RequestMethod.POST)
+	public @ResponseBody String fileUpload(@RequestParam(value = "uploadFile") final List<MultipartFile> uploadFile)
+			throws CMSItemNotFoundException
+	{
+		String fileUploadLocation = null, nowDate = null;
+		Path path = null;
+		fileUploadLocation = configurationService.getConfiguration().getString(RequestMappingUrlConstants.FILE_UPLOAD_PATH);
+		if (StringUtils.isNotEmpty(fileUploadLocation))
+		{
+			try
+			{
+				for (final MultipartFile filename : uploadFile)
+				{
+					final byte barr[] = filename.getBytes();
+					final SimpleDateFormat sdf = new SimpleDateFormat("YYYY/MM/dd");
+					nowDate = sdf.format(new Date());
+					path = Paths.get(fileUploadLocation + File.separator + nowDate);
+					//if directory exists?
+					if (!Files.exists(path))
+					{
+						try
+						{
+							Files.createDirectories(path);
+						}
+						catch (final IOException e)
+						{
+							//fail to create directory
+							LOG.error("Exception ,While creating the Directory " + e.getMessage());
+						}
+					}
+					final BufferedOutputStream bout = new BufferedOutputStream(new FileOutputStream(path + File.separator
+							+ filename.getOriginalFilename()));
+					bout.write(barr);
+					bout.flush();
+					bout.close();
+					LOG.debug("FileUploadLocation   :" + fileUploadLocation);
+				}
+			}
+			catch (final Exception e)
+			{
+				LOG.error("Exception is:" + e);
+				fileUploadLocation = "error";
+			}
+
+		}
+
+		return fileUploadLocation;
 	}
 
 }

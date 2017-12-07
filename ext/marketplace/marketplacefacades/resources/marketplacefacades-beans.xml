@@ -1338,7 +1338,7 @@
 		<property name="crmTicketRef" type="String" />
 		<property name="customerId" type="String" />
 		<property name="status" type="String" />
-		<property name="attachments" type="String" />
+		<property name="attachments" type="java.util.List&lt;java.lang.String>" />
 	</bean>
 	<!-- Added for TPR-5989 -->
 	<bean class="com.tis.mpl.facade.data.TicketStatusUpdate">

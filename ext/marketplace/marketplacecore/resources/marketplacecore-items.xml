@@ -13541,28 +13541,28 @@
 		<!-- TPR-6665 : sysnonums update to slave servers end -->
 		<!-- TPR- 5989 : Web Form to create a Ticket from commerce -->
 		<typegroup name="MPL_WEB_CRM_TICKET">
-		<itemtype code="MplWebCrm" autocreate="true" generate="true" extends="GenericItem">
+		<itemtype code="MplWebCrm" autocreate="true" generate="true" >
 				<deployment table="MplWebCrm" typecode="11890" />
 				<attributes>
 					<attribute qualifier="nodeType" type="java.lang.String">
-						<modifiers search="true" read="true" write="true" optional="false"/>
+						<modifiers optional="false" />
 						<persistence type="property" />
 					</attribute>
 					<attribute qualifier="nodeText" type="java.lang.String">
 						<persistence type="property" />
-						<modifiers search="true" optional="false" read="true" write="true" />
+						<modifiers optional="false" />
 					</attribute>
 					<attribute qualifier="nodeCrmCode" type="java.lang.String">
 						<persistence type="property" />
-						<modifiers search="true" optional="false" read="true" write="true" />
+						<modifiers optional="false" />
 					</attribute>
 					<attribute qualifier="nodeParent" type="java.lang.String">
 						<persistence type="property" />
-						<modifiers search="true" optional="true" read="true" write="true" />
+						<modifiers optional="true" />
 					</attribute>
 					<attribute qualifier="ticketType" type="java.lang.String">
 						<persistence type="property" />
-						<modifiers search="true" optional="true" read="true" write="true" />
+						<modifiers optional="true" />
 					</attribute>
 					<attribute qualifier="ticketAnswer" type="java.lang.String">
 						<persistence type="property">
@@ -13583,87 +13583,91 @@
 							</columntype>
 						</persistence>
 						<description>Ticket Answer</description>					
-						<modifiers read="true" write="true"	optional="true" />
+						<modifiers optional="true" />
 					</attribute>
 					<attribute qualifier="createTicketAllowed" type="boolean">
 						<defaultvalue>java.lang.Boolean.TRUE</defaultvalue>
 						<persistence type="property" />
-						<modifiers search="true" optional="true" read="true" write="true" />
+						<modifiers optional="true" />
 					</attribute>
 					<attribute qualifier="nodeDisplayAllowed" type="boolean">
 						<defaultvalue>java.lang.Boolean.TRUE</defaultvalue>
 						<persistence type="property" />
-						<modifiers search="true" optional="true" read="true" write="true" />
+						<modifiers optional="true" />
 					</attribute>
 				</attributes>
 			</itemtype>
 			
-			<itemtype code="MplWebCrmTicket" autocreate="true" generate="true" extends="GenericItem">
+			<itemtype code="MplWebCrmTicket" autocreate="true" generate="true" >
 				<deployment table="MplWebCrmTicket" typecode="11898" />
 				<attributes>
 					<attribute qualifier="commerceTicketId" type="java.lang.String">
-						<modifiers search="true" read="true" write="true" optional="false"/>
+						<modifiers optional="false" />
 						<persistence type="property" />
 					</attribute>
 					<attribute qualifier="ticketType" type="java.lang.String">
 						<persistence type="property" />
-						<modifiers search="true" optional="true" read="true" write="true" />
+						<modifiers optional="true" />
 					</attribute>
 					<attribute qualifier="ticketSubType" type="java.lang.String">
 						<persistence type="property" />
-						<modifiers search="true" optional="true" read="true" write="true" />
+						<modifiers optional="true" />
 					</attribute>
 					<attribute qualifier="orderCode" type="java.lang.String">
 						<persistence type="property" />
-						<modifiers search="true" optional="true" read="true" write="true" />
+						<modifiers optional="true" />
 					</attribute>
 					<attribute qualifier="subOrderCode" type="java.lang.String">
 						<persistence type="property" />
-						<modifiers search="true" optional="true" read="true" write="true" />
+						<modifiers optional="true" />
 					</attribute>
 					<attribute qualifier="transactionId" type="java.lang.String">
 						<persistence type="property" />
-						<modifiers search="true" optional="true" read="true" write="true" />
+						<modifiers optional="true" />
 					</attribute>
 					<attribute qualifier="L0code" type="java.lang.String">
 						<persistence type="property" />
-						<modifiers search="true" optional="false" read="true" write="true" />
+						<modifiers optional="false" />
 					</attribute>
 					<attribute qualifier="L1code" type="java.lang.String">
 						<persistence type="property" />
-						<modifiers search="true" optional="false" read="true" write="true" />
+						<modifiers optional="false" />
 					</attribute>
 					<attribute qualifier="L2code" type="java.lang.String">
 						<persistence type="property" />
-						<modifiers search="true" optional="false" read="true" write="true" />
+						<modifiers optional="false" />
 					</attribute>
 					<attribute qualifier="L3code" type="java.lang.String">
 						<persistence type="property" />
-						<modifiers search="true" optional="false" read="true" write="true" />
+						<modifiers optional="false" />
 					</attribute>
 					<attribute qualifier="L4code" type="java.lang.String">
-					       <persistence type="property" />
-						<modifiers search="true" optional="true" read="true" write="true" />
+					    <persistence type="property" />
+						<modifiers optional="false" />
 					</attribute>
 					<attribute qualifier="comment" type="java.lang.String">
 						<persistence type="property" />
-						<modifiers search="false" optional="true" read="true" write="true" />
+						<modifiers optional="true" />
 					</attribute>
 					<attribute qualifier="crmTicketRef" type="java.lang.String">				
 						<persistence type="property" />
-						<modifiers search="true" optional="true" read="true" write="true" />
+						<modifiers optional="true" />
 					</attribute>
 					<attribute qualifier="customerId" type="java.lang.String">				
 						<persistence type="property" />
-						<modifiers search="true" optional="false" read="true" write="true" />
+						<modifiers optional="true" />
+					</attribute>
+					<attribute qualifier="customerName" type="java.lang.String">				
+						<persistence type="property" />
+						<modifiers optional="false" />
 					</attribute>
 					<attribute qualifier="customerMobile" type="java.lang.String">				
 						<persistence type="property" />
-						<modifiers search="true" optional="true" read="true" write="true" />
+						<modifiers optional="false" />
 					</attribute>
 					<attribute qualifier="status" type="java.lang.String">				
 						<persistence type="property" />
-						<modifiers search="true" optional="true" read="true" write="true" />
+						<modifiers optional="true" />
 					</attribute>
 					<attribute qualifier="attachments" type="java.lang.String">
 						<persistence type="property">
@@ -13684,7 +13688,7 @@
 							</columntype>
 						</persistence>
 						<description>File Paths for attachments</description>					
-						<modifiers read="true" write="true"	optional="true" />
+						<modifiers optional="true" />
 					</attribute>
 				</attributes>
 			</itemtype>

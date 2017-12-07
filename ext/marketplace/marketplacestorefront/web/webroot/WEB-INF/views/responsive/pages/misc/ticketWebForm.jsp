@@ -13,57 +13,61 @@
 <spring:url value="/ticketForm" var="ticketUrl" />
 
 <template:page pageTitle="${pageTitle}">
-	<cms:pageSlot position="Section2A" var="comp">
-		<cms:component component="${comp}" />
-	</cms:pageSlot>
-	
-<div class="body-Content">	
-	<div class="custmCareHelp">
 
-		<div class="custmCareHeadSec">
-			<div class="secSide">
-				<h3 class="secLabel">Still Need Help?</h3>
-				<p>Tell us the exact issue. We would help you out.</p>
-			</div>
-			<div class="secSide btnRight">
-				<button class="needHelpBtn needHelpBtnLg contCustCareBtn dActive"
-					id="needHelpBtn">Contact Customer Care</button>
-			</div>
-			<button class="closeBtn active" id="closeCustCareSec">X</button>
+	<div class="customer-service">
+
+		<div class="side-nav">
+			<cms:pageSlot position="Section2A" var="comp">
+				<cms:component component="${comp}" />
+			</cms:pageSlot>
 		</div>
+		<div class="custmCareHelp">
 
-
-		<div class="custmCareQrySec" style="display: block;">
-			<form name="customerWebForm" id="customerWebForm" action="${ticketUrl}" method="POST" enctype="application/x-www-form-urlencoded">
-			
-			<input type="hidden" name="nodeL0" value="Customer" />
-			
-			<div class="custmCareForms">
-				<div class="formGroup">
-					<h3 class="secLabel queryType">Type of Query</h3>
-					<c:forEach items="${formFields.nodes}" var="l1Node">
-						<c:if test="${l1Node.category eq 'L1'}">
-							<div class="queryOptRadio">
-								<label> <input type="radio" name="nodeL1" class="node"
-									value="${l1Node.nodeCode}"> <span></span>
-									${l1Node.nodeDesc}
-								</label>
-							</div>
-						</c:if>
-					</c:forEach>
+			<!-- <div class="custmCareHeadSec">
+				<div class="secSide">
+					<h3 class="secLabel">Still Need Help?</h3>
+					<p>Tell us the exact issue. We would help you out.</p>
 				</div>
+				<div class="secSide btnRight">
+					<button class="needHelpBtn needHelpBtnLg contCustCareBtn dActive"
+						id="needHelpBtn">Contact Customer Care</button>
+				</div>
+				<button class="closeBtn active" id="closeCustCareSec">X</button>
+			</div> -->
 
-				<!-- <div class="loginSec">
+
+			<div class="custmCareQrySec">
+				<form name="customerWebForm" id="customerWebForm"
+					action="${ticketUrl}" method="POST">
+
+					<input type="hidden" name="nodeL0" value="Customer" />
+
+					<div class="custmCareForms">
+						<div class="formGroup">
+							<h3 class="secLabel queryType">Type of Query</h3>
+							<c:forEach items="${formFields.nodes}" var="l1Node">
+								<c:if test="${l1Node.nodeType eq 'L1'}">
+									<div class="queryOptRadio">
+										<label> <input type="radio" name="nodeL1" class="node"
+											value="${l1Node.nodeCode}"> <span></span>
+											${l1Node.nodeDesc}
+										</label>
+									</div>
+								</c:if>
+							</c:forEach>
+						</div>
+
+						<!-- <div class="loginSec">
 					<p class="loginTxt">Please login to see your order(s).</p>
 					<button class="needHelpBtn needHelpBtnSm">Login to
 						Continue</button>
 				</div> -->
 
-				<div class="formGroup">
-					<div class="selectOrderSec">
-						<h3 class="secLabel">Select Your Order(s).</h3>
-						<div class="selectOrders">
-							<!-- <div class="selectedProduct filled">
+						<div class="formGroup">
+							<div class="selectOrderSec">
+								<h3 class="secLabel">Select Your Order(s).</h3>
+								<div class="selectOrders">
+									<!-- <div class="selectedProduct filled">
 				                	<div class="prodImg">
 				                	  <img src="./Track Your Orders_files/product_1.jpg">
 				                	</div>
@@ -76,138 +80,143 @@
 					                	</div>
 					                </div>
 				                </div> -->
-							<ul class="orderDrop" style="display: none;">
-							
-							<c:if test="${fn:length(formFields.orderDatas) gt 0}">
-							
-								<c:forEach items="${formFields.orderDatas}" var="parentOrder" varStatus="parentStatus" >
-								
-									<c:forEach items="${parentOrder.sellerOrderList}" var="sellerOrder" varStatus="status" >
-										
-										<c:forEach items="${sellerOrder.entries}" var="entry"
-											varStatus="entryStatus">
-											<li>
-												<div class="prodImg">
-													<c:choose>
-														<c:when
-															test="${fn:toLowerCase(entry.product.luxIndicator)=='luxury'}">
-															<product:productPrimaryImage product="${entry.product}"
-																format="luxuryCartIcon" />
-														</c:when>
-														<c:otherwise>
-															<product:productPrimaryImage product="${entry.product}"
-																format="thumbnail" />
-														</c:otherwise>
-													</c:choose>
-	
-												</div>
-												<div class="prodInfo">
-													<div class="prodTxt">
-														<p class="orderDate">
-															Order on:
-															<fmt:formatDate value="${sellerOrder.created}"
-																pattern="MMMMM dd, yyyy" />${formatedDate}
-														</p>
-														<p class="prodName">${entry.product.name}</p>
-														<p class="prodPrice">
-															Price:
-															<format:price priceData="${entry.totalPrice}"
-																displayFreeForZero="true" />
-														</p>
-														<span class="prodShiping">Shipped</span>
-													</div>
-												</div>
-											</li>
-										</c:forEach>
-										
+									<ul class="orderDrop" style="display: none;">
+
+										<c:if test="${fn:length(formFields.orderDatas) gt 0}">
+
+											<c:forEach items="${formFields.orderDatas}" var="parentOrder"
+												varStatus="parentStatus">
+
+												<c:forEach items="${parentOrder.sellerOrderList}"
+													var="sellerOrder" varStatus="status">
+
+													<c:forEach items="${sellerOrder.entries}" var="entry"
+														varStatus="entryStatus">
+														<li>
+															<div class="prodImg">
+																<c:choose>
+																	<c:when
+																		test="${fn:toLowerCase(entry.product.luxIndicator)=='luxury'}">
+																		<product:productPrimaryImage
+																			product="${entry.product}" format="luxuryCartIcon" />
+																	</c:when>
+																	<c:otherwise>
+																		<product:productPrimaryImage
+																			product="${entry.product}" format="thumbnail" />
+																	</c:otherwise>
+																</c:choose>
+
+															</div>
+															<div class="prodInfo">
+																<div class="prodTxt">
+																	<p class="orderDate">
+																		Order on:
+																		<fmt:formatDate value="${sellerOrder.created}"
+																			pattern="MMMMM dd, yyyy" />${formatedDate}
+																	</p>
+																	<p class="prodName">${entry.product.name}</p>
+																	<p class="prodPrice">
+																		Price:
+																		<format:price priceData="${entry.totalPrice}"
+																			displayFreeForZero="true" />
+																	</p>
+																	<span class="prodShiping">Shipped</span>
+																</div>
+															</div>
+														</li>
+													</c:forEach>
+
+												</c:forEach>
+
+											</c:forEach>
+
+										</c:if>
+									</ul>
+								</div>
+							</div>
+						</div>
+						<div class="formGroup">
+							<h3 class="secLabel">What is the issue?</h3>
+							<span class="customSelectWrap"> <select class="node"
+								name="nodeL2">
+									<option>Select Your issue</option>
+									<c:forEach items="${formFields.nodes}" var="l2Node">
+										<c:if test="${l2Node.nodeType eq 'L2'}">
+											<option value="${l2Node.nodeCode}">${l2Node.nodeDesc}</option>
+										</c:if>
 									</c:forEach>
-									
-								</c:forEach>
-								
-							</c:if>
-							</ul>
+							</select> <span class="holder active">....</span></span>
 						</div>
-					</div>
-				</div>
-				<div class="formGroup">
-					<h3 class="secLabel">What is the issue?</h3>
-					<span class="customSelectWrap">
-					<select class="node" name="nodeL2">
-							<option>Select Your issue</option>
-							<c:forEach items="${formFields.nodes}" var="l2Node">
-								<c:if test="${l2Node.category eq 'L2'}">
-									<option value="${l2Node.nodeCode}">${l2Node.nodeDesc}</option>
-								</c:if>
-							</c:forEach>
-					</select> <span class="holder active">....</span></span>
-				</div>
-				<div class="formGroup">
-					<h3 class="secLabel">Select a sub-issue.</h3>
-					<span class="customSelectWrap"> 
-					<select class="node" name="nodeL3">
-							<option>Select your exact problem</option>
-							<c:forEach items="${formFields.nodes}" var="l3Node">
-								<c:if test="${l3Node.category eq 'L3'}">
-									<option value="${l3Node.nodeCode}">${l3Node.nodeDesc}</option>
-								</c:if>
-							</c:forEach>
-					</select> <span class="holder active">....</span></span>
-				</div>
-				<div class="formGroup">
-					<h3 class="secLabel">Name</h3>
-					<input type="text" class="formControl feildError"
-						placeholder="Enter Your Name" name="contactName" />
-					<p class="errorTxt"></p>
-				</div>
-				<div class="emalIdMobileFeild">
-					<div class="feildCols">
 						<div class="formGroup">
-							<h3 class="secLabel">Registered Email ID</h3>
-							<input type="text" class="formControl" name="contactEmail"
-								placeholder="Enter Your Email" />
+							<h3 class="secLabel">Select a sub-issue.</h3>
+							<span class="customSelectWrap"> <select class="node"
+								name="nodeL3">
+									<option>Select your exact problem</option>
+									<c:forEach items="${formFields.nodes}" var="l3Node">
+										<c:if test="${l3Node.nodeType eq 'L3'}">
+											<option value="${l3Node.nodeCode}">${l3Node.nodeDesc}</option>
+										</c:if>
+									</c:forEach>
+							</select> <span class="holder active">....</span></span>
 						</div>
-					</div>
-					<div class="feildCols">
 						<div class="formGroup">
-							<h3 class="secLabel">Mobile Number</h3>
-							<input type="text" class="formControl" placeholder="Enter Your Mobile" name="contactMobile" />
+							<h3 class="secLabel">Name</h3>
+							<input type="text" class="formControl feildError"
+								placeholder="Enter Your Name" name="contactName" />
+							<p class="errorTxt"></p>
+						</div>
+						<div class="emalIdMobileFeild">
+							<div class="feildCols">
+								<div class="formGroup">
+									<h3 class="secLabel">Registered Email ID</h3>
+									<input type="text" class="formControl" name="contactEmail"
+										placeholder="Enter Your Email" />
+								</div>
+							</div>
+							<div class="feildCols">
+								<div class="formGroup">
+									<h3 class="secLabel">Mobile Number</h3>
+									<input type="text" class="formControl"
+										placeholder="Enter Your Mobile" name="contactMobile" />
+								</div>
+							</div>
+						</div>
+						<div class="formGroup">
+							<h3 class="secLabel issueComment">Comment</h3>
+							<div class="commentLength">Remaining characters:1000</div>
+							<textarea class="formControl textArea" rows="3"
+								placeholder="Describe your issue here." name="comment"></textarea>
+						</div>
+						<div class="formGroup">
+							<h3 class="secLabel">Add attachment (Optional)</h3>
+							<p class="helpTxt">Upload JPEG, PNG, GIF, BMP, PDF (Maximum
+								upload size 5MB)</p>
+							<div class="uploadFile">
+								<span>Upload File</span> 
+								<input type="file" name="attachments" />
+								<input id="attachmentFiles" type="hidden" name="attachmentFiles[]" value="" />
+							</div>
+							<!-- The global progress bar -->
+						    <div id="progress" class="progress">
+						        <div class="progress-bar progress-bar-success"></div>
+						    </div>
+						</div>
+						<div class="formGroup">
+							<button class="needHelpBtn needHelpBtnMd">Submit</button>
 						</div>
 					</div>
-				</div>
-				<div class="formGroup">
-					<h3 class="secLabel issueComment">Comment</h3>
-					<div class="commentLength">Remaining characters:1000</div>
-					<textarea class="formControl textArea" rows="3"
-						placeholder="Describe your issue here." name="comment"></textarea>
-				</div>
-				<div class="formGroup">
-					<h3 class="secLabel">Add attachment (Optional)</h3>
-					<p class="helpTxt">Upload JPEG, PNG, GIF, BMP, PDF (Maximum
-						upload size 5MB)</p>
-					<div class="uploadFile">
-						<span>Upload File</span> 
-						<input type="file" name="attachments">
-					</div>
-				</div>
-				<div class="formGroup">
-					<button class="needHelpBtn needHelpBtnMd">Submit</button>
-				</div>
+				</form>
 			</div>
-			</form>
 		</div>
 	</div>
-</div>
 </template:page>
 
 <style>
 .custmCareHelp {
 	color: #000;
-	padding: 25px 0 27px;
 	border-top: 1px solid #eeeeee;
 	border-bottom: 1px solid #eeeeee;
 	font-size: 14px;
-	margin: 30px 0;
-	width: 100%;
 	float: left;
 }
 
@@ -277,10 +286,7 @@
 
 .custmCareQrySec {
 	width: 100%;
-	float: left;
-	display: none;
 }
-
 .custmCareSecDiv {
 	width: 100%;
 	float: left;

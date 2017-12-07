@@ -30,6 +30,7 @@ public class TicketWebForm
 	private String nodeL4;
 	private String comment;
 	private List<MultipartFile> attachments;
+	private List<String> attachmentFiles;
 
 	/**
 	 * @return the ticketType
@@ -267,6 +268,22 @@ public class TicketWebForm
 	public void setContactName(final String contactName)
 	{
 		this.contactName = contactName;
+	}
+
+	/**
+	 * @return the attachmentFiles
+	 */
+	public List<String> getAttachmentFiles()
+	{
+		return attachmentFiles;
+	}
+
+	/**
+	 * @param attachmentFiles the attachmentFiles to set
+	 */
+	public void setAttachmentFiles(List<String> attachmentFiles)
+	{
+		this.attachmentFiles = attachmentFiles;
 	}
 
 
