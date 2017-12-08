@@ -39,6 +39,15 @@ public interface PincodeServiceFacade
 			final String productCode);
 
 	/**
+	 * @param pincode
+	 * @param sellerUssId
+	 * @param productCode
+	 * @return
+	 */
+	public List<StoreLocationResponseData> getListofStoreLocationsforPincodeMobile(final String pincode, final String sellerUssId,
+			final CartModel cartModel);
+
+	/**
 	 *
 	 * @param pincode
 	 * @param productCode
@@ -105,5 +114,10 @@ public interface PincodeServiceFacade
 	 * @return List<PointOfServiceData>
 	 */
 	public List<PointOfServiceData> getAllReturnableStores(String pincode, String sellerId);
+
+	public List<PointOfServiceData> getProductWdPosCommerce(final List<StoreLocationRequestData> storeLocationRequestDataList,
+			final String pincode);
+
+	public List<PointOfServiceData> getProductWdPos(final List<StoreLocationResponseData> response, final String pincode);
 
 }

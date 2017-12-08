@@ -84,6 +84,11 @@
 					<cockpit code="VariantSelector" />
 			</td>
 			</tr>
+			<tr>
+				<td height="270px" colspan="5" class="structureViewSection">
+					<cockpit code="EMITermsandConditionsSlot" />
+				</td>
+			</tr>
 		
 		</tbody>
 	</table>

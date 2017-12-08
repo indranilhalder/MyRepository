@@ -123,6 +123,10 @@ ACC.singlePageCheckout = {
 	},
 	//Function used to fetch edit address form. 
 	getEditAddress:function(element,event){
+		/*TISPRNXIII-54*/
+    	if(typeof utag !="undefined"){
+			utag.link({ link_text : 'edit_address' ,event_type : 'edit_address_clicked'});
+		}
 		event.preventDefault();
 		//The ajax loader is loaded here and hidden in last line of showEditAddressDetails.jsp
 		ACC.singlePageCheckout.showAjaxLoader();
@@ -134,6 +138,10 @@ ACC.singlePageCheckout = {
 			ACC.singlePageCheckout.hideAjaxLoader();
 			data={displaymessage:"Network error occured",type:"error"};
 			ACC.singlePageCheckout.processError("#selectedAddressMessage",data);
+			/*TISPRNXIII-57*/
+        	if(typeof utag !="undefined"){
+				utag.link({ error_type : 'address_error'});
+			}
 		});
         
         xhrResponse.done(function(data) {
@@ -172,12 +180,20 @@ ACC.singlePageCheckout = {
 	        
 	        xhrResponse.fail(function(xhr, textStatus, errorThrown) {
 				console.log("ERROR:"+textStatus + ': ' + errorThrown);
+				/*TISPRNXIII-57*/
+	        	if(typeof utag !="undefined"){
+					utag.link({ error_type : 'address_error'});
+				}
 			});
 	        
 	        xhrResponse.done(function(data, textStatus, jqXHR) {
 	            if (jqXHR.responseJSON) {
 	                if(data.type!="response" && data.type!="confirm")
 	                {
+	                	/*TISPRNXIII-57*/
+	    	        	if(typeof utag !="undefined"){
+	    					utag.link({ error_type : 'address_error'});
+	    				}
 	                	ACC.singlePageCheckout.processError("#addressMessage",data);
 	                }
 	                else if(data.type=="confirm")
@@ -197,9 +213,9 @@ ACC.singlePageCheckout = {
 		        	ACC.singlePageCheckout.getDeliveryAddresses();
 		        	$("#selectedAddressMessage").hide();
 		        	ACC.singlePageCheckout.attachDeliveryModeChangeEvent();
-		        	//TISPRDT-2353
+		        	/*TISPRNXIII-55*/
 		        	if(typeof utag !="undefined"){
-						utag.link({ link_text : 'edit_address_saved' ,event_type : 'edit_address_saved'});
+						utag.link({ link_text : 'save_edited_address' ,event_type : 'save_edited_address_clicked'});
 					}
 		        	//calling tealium 
 		            $("#checkoutPageName").val("Choose Your Delivery Options");
@@ -1915,8 +1931,20 @@ ACC.singlePageCheckout = {
 //    	        		}
 //        	        });
         			
-        			//Populating sub-total which is subject to change on order item removal
-        			$("#orderTotalSpanId ul.totals li.subtotal span.amt span.priceFormat").html(data.subTotalPrice.formattedValue);
+        			//CAR-343 Starts
+        			try {
+    					var subTotalPrice=jQuery.parseJSON(data.subTotalPrice);
+    					//Populating sub-total which is subject to change on order item removal
+        				$("#orderTotalSpanId ul.totals li.subtotal span.amt span.priceFormat").html(subTotalPrice.formattedValue);
+    				}
+    				catch(e) 
+    				{
+    					console.log("Subtotal JS Exception="+e);
+    				}
+    				//Populating sub-total which is subject to change on order item removal
+        			//$("#orderTotalSpanId ul.totals li.subtotal span.amt span.priceFormat").html(data.subTotalPrice.formattedValue);
+    				//CAR-343 Ends
+        			
         			//alert("Saved or New"+savedOrNew);
         			if(savedOrNew=="savedCard")
         			{
@@ -2011,8 +2039,19 @@ ACC.singlePageCheckout = {
         			$("#selectedReviewOrderDivId").show();
     				callOnReady();//This method is in showAddPaymentMethod.jsp
         			
+    				//CAR-343 Starts
+    				try {
+    					var subTotalPrice=jQuery.parseJSON(data.subTotalPrice);
+    					//Populating sub-total which is subject to change on order item removal
+        				$("#orderTotalSpanId ul.totals li.subtotal span.amt span.priceFormat").html(subTotalPrice.formattedValue);
+    				}
+    				catch(e) 
+    				{
+    					console.log("Subtotal JS Exception="+e);
+    				}
     				//Populating sub-total which is subject to change on order item removal
-    				$("#orderTotalSpanId ul.totals li.subtotal span.amt span.priceFormat").html(data.subTotalPrice.formattedValue);
+        			//$("#orderTotalSpanId ul.totals li.subtotal span.amt span.priceFormat").html(data.subTotalPrice.formattedValue);
+    				//CAR-343 Ends
         			/*//$("#orderDetailsSectionId").html(data);
         			$("#totalWithConvField").html(data.totalPrice);*/
     				
@@ -3176,6 +3215,10 @@ ACC.singlePageCheckout = {
 		if(paymentMode=="MRUPEE")
 		{
 			viewPaymentMRupee();
+		}
+		if(paymentMode=="PAYTM")
+		{
+			viewPaymentPaytm();
 		}
 	},
 	//Function called when a saved card is selected.

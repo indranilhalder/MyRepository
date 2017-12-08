@@ -29,7 +29,6 @@ import org.springframework.beans.factory.annotation.Required;
 
 import com.tisl.mpl.core.model.BuyBoxModel;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
-import com.tisl.mpl.marketplacecommerceservices.service.BuyBoxService;
 import com.tisl.mpl.util.MplBuyBoxUtility;
 import com.tisl.mpl.util.MplJewelleryUtility;
 
@@ -38,8 +37,8 @@ import com.tisl.mpl.util.MplJewelleryUtility;
  * @author TCS
  *
  */
-public class MplPriceValueRangeProviderJewellery extends AbstractPropertyFieldValueProvider
-		implements FieldValueProvider, Serializable
+public class MplPriceValueRangeProviderJewellery extends AbstractPropertyFieldValueProvider implements FieldValueProvider,
+		Serializable
 {
 
 	private static final String FINE_JEWELLERY = "FineJewellery";
@@ -47,8 +46,6 @@ public class MplPriceValueRangeProviderJewellery extends AbstractPropertyFieldVa
 	private FieldNameProvider fieldNameProvider;
 	private MplBuyBoxUtility mplBuyBoxUtility;
 	private MplJewelleryUtility mplJewelleryUtility;
-	@Resource(name = "buyBoxService")
-	private BuyBoxService buyBoxService;
 
 	/**
 	 * @return the mplJewelleryUtility
@@ -100,7 +97,7 @@ public class MplPriceValueRangeProviderJewellery extends AbstractPropertyFieldVa
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see
 	 * de.hybris.platform.solrfacetsearch.provider.FieldValueProvider#getFieldValues(de.hybris.platform.solrfacetsearch.
 	 * config.IndexConfig, de.hybris.platform.solrfacetsearch.config.IndexedProperty, java.lang.Object)

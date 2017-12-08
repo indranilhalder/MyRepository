@@ -947,3 +947,8 @@ INSERT_UPDATE SolrIndexedProperty;solrIndexedType(identifier)[unique=true];name[
 INSERT_UPDATE SolrIndexedProperty;solrIndexedType(identifier)[unique=true];name[unique=true];type(code);sortableType(code);currency[default=false];localized[default=false];multiValue[default=false];useForSpellchecking[default=false];useForAutocomplete[default=false];fieldValueProvider;valueProviderParameter
 ;$solrIndexedType; relevancescore                  ;int ;            ;    ;;    ;;;                 ;
 # End PR-9/ relevance solr score 
+
+############# Impex for 7513 #################
+INSERT_UPDATE SolrIndexedProperty;solrIndexedType(identifier)[unique=true];name[unique=true];type(code);genericFacet[default=false];sortableType(code);currency[default=false];localized[default=false];multiValue[default=false];facet[default=true];facetType(code);facetSort(code);priority;visible;useForSpellchecking[default=false];useForAutocomplete[default=false];fieldValueProvider;facetDisplayNameProvider;customFacetSortProvider;topValuesProvider;rangeSets(name);facetTopValue
+;$solrIndexedType; volume               	  ;string ; 	;    ;     ;     ;true ;     ;MultiSelectOr ;Alpha ; 2500;true;     ;     ;mplVolumeFacetValueProvider            ;                						;sizeAttributeSortProvider  ;
+;$solrIndexedType; weight               	  ;string ; 	;    ;     ;     ;true ;     ;MultiSelectOr ;Alpha ; 2500;true;     ;     ;mplWeightFacetValueProvider            ;                						;sizeAttributeSortProvider  ;

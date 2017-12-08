@@ -181,7 +181,7 @@ public class MplSendSMSService implements SendSmsService
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.tisl.mpl.sms.SendSmsService#sendBulkSms(java.util.List)
 	 */
 	@Override
@@ -216,7 +216,7 @@ public class MplSendSMSService implements SendSmsService
 
 
 				m.marshal(bulkSmsListDTO, sw);
-				System.out.println(sw.toString());
+			//	System.out.println(sw.toString());
 				LOG.debug(sw.toString());
 			}
 			catch (final JAXBException e)

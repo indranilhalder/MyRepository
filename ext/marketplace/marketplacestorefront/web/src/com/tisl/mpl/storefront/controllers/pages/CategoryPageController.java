@@ -190,6 +190,7 @@ public class CategoryPageController extends AbstractCategoryPageController
 	//SonarFix
 	private static final String BRANDNAME = "brand";
 	private static final String SPACE_CHARACTERS = "\\s";
+	private static final String SLASH_C = "/c-";
 
 	private int pageSiseCount;
 
@@ -446,7 +447,7 @@ public class CategoryPageController extends AbstractCategoryPageController
 					{
 						response.setStatus(HttpServletResponse.SC_MOVED_PERMANENTLY);
 						final String categName = category.getName();
-						response.setHeader(LOCATION, "/" + categName + "/c-" + categoryCode.toLowerCase());
+						response.setHeader(LOCATION, "/" + categName + SLASH_C + categoryCode.toLowerCase());
 					}
 					//set empty for TPR-1283
 					model.addAttribute("otherProducts", "");
@@ -674,7 +675,7 @@ public class CategoryPageController extends AbstractCategoryPageController
 					{
 						response.setStatus(HttpServletResponse.SC_MOVED_PERMANENTLY);
 						final String categName = category.getName();
-						response.setHeader(LOCATION, "/" + categName + "/c-" + categoryCode.toLowerCase());
+						response.setHeader(LOCATION, "/" + categName + SLASH_C + categoryCode.toLowerCase());
 					}
 					//set empty for TPR-1283
 					model.addAttribute("otherProducts", "");
@@ -1017,7 +1018,7 @@ public class CategoryPageController extends AbstractCategoryPageController
 						response.setStatus(HttpServletResponse.SC_MOVED_PERMANENTLY);
 						final String appenedName = resolvedcatName + ("-") + brandName;
 						response.setHeader(LOCATION,
-								"/" + appenedName + "/c-" + categoryCode.toLowerCase() + "/b-" + brandCode.toLowerCase());
+								"/" + appenedName + SLASH_C + categoryCode.toLowerCase() + "/b-" + brandCode.toLowerCase());
 						return null;
 					}
 				}
@@ -1327,6 +1328,7 @@ public class CategoryPageController extends AbstractCategoryPageController
 	 * @return String
 	 */
 
+	@SuppressWarnings("boxing")
 	@RequestMapping(value =
 	{ NEW_CATEGORY_URL_PATTERN_PAGINATION }, method = RequestMethod.GET)
 	public String categoryPagination(@PathVariable(CATERGORYCODE) String categoryCode,
@@ -1356,6 +1358,7 @@ public class CategoryPageController extends AbstractCategoryPageController
 				String searchCode = new String(categoryCode);
 				//SEO: New pagination detection TISCR 340
 				pageNo = getPaginatedPageNo(request);
+				model.addAttribute("pageNo", pageNo);
 				/* TPR-1283 Changes --Starts */
 				final CategoryModel category = categoryService.getCategoryForCode(categoryCode);
 				final String urlName = getCategoryModelUrlResolver().resolve(category);
@@ -1672,7 +1675,7 @@ public class CategoryPageController extends AbstractCategoryPageController
 			redirect = true;
 			LOG.debug("**********The category is a luxury category.Hence redirecting to luxury website***********" + categoryCode);
 			final String luxuryHost = configurationService.getConfiguration().getString("luxury.resource.host");
-			final String luxuryCategoryUrl = luxuryHost + "/c-" + categoryCode.toLowerCase();
+			final String luxuryCategoryUrl = luxuryHost + SLASH_C + categoryCode.toLowerCase();
 			LOG.debug("Redirecting to ::::::" + luxuryCategoryUrl);
 			response.setStatus(HttpServletResponse.SC_MOVED_PERMANENTLY);
 			response.setHeader(LOCATION, luxuryCategoryUrl);

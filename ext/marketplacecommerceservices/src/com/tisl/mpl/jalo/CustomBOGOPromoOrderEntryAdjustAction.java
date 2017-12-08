@@ -114,6 +114,13 @@ public class CustomBOGOPromoOrderEntryAdjustAction extends GeneratedCustomBOGOPr
 		boolean needsCalc = false;
 		//Map<String, Integer> qualifyingCountMap = null;
 		String productPromoCode = null;
+
+		//TPR-7408 starts here
+		Double promoCostCentreOnePercentage = null;
+		Double promoCostCentreTwoPercentage = null;
+		Double promoCostCentreThreePercentage = null;
+		//TPR-7408 ends here
+
 		Map<String, List<String>> productAssociatedItemsMap = null;
 		Map<String, Integer> freeItemsForCatBogo = null;
 		List<PromotionOrderEntryConsumed> nonFreeConsumedEntries = null;
@@ -131,6 +138,42 @@ public class CustomBOGOPromoOrderEntryAdjustAction extends GeneratedCustomBOGOPr
 
 			nonFreeConsumedEntries = ctx.getAttributes().get(MarketplacecommerceservicesConstants.NONFREE_CONSUMED_ENTRIES) != null ? (List<PromotionOrderEntryConsumed>) ctx
 					.getAttributes().get(MarketplacecommerceservicesConstants.NONFREE_CONSUMED_ENTRIES) : null;
+
+
+			//TPR-7408 starts here
+			//			promoCostCentreOnePercentage = ctx.getAttributes().get(MarketplacecommerceservicesConstants.COSTCENTREONE) != null ? (String) ctx
+			//					.getAttributes().get(MarketplacecommerceservicesConstants.COSTCENTREONE) : null;
+			//
+			//			promoCostCentreTwoPercentage = ctx.getAttributes().get(MarketplacecommerceservicesConstants.COSTCENTRETWO) != null ? (String) ctx
+			//					.getAttributes().get(MarketplacecommerceservicesConstants.COSTCENTRETWO) : null;
+			//
+			//			promoCostCentreThreePercentage = ctx.getAttributes().get(MarketplacecommerceservicesConstants.COSTCENTRETHREE) != null ? (String) ctx
+			//					.getAttributes().get(MarketplacecommerceservicesConstants.COSTCENTRETHREE) : null;
+
+			try
+			{
+				promoCostCentreOnePercentage = (Double) getPromotionResult(ctx).getPromotion().getAttribute(ctx,
+						MarketplacecommerceservicesConstants.COSTCENTREONE);
+				promoCostCentreTwoPercentage = (Double) getPromotionResult(ctx).getPromotion().getAttribute(ctx,
+						MarketplacecommerceservicesConstants.COSTCENTRETWO);
+
+				promoCostCentreThreePercentage = (Double) getPromotionResult(ctx).getPromotion().getAttribute(ctx,
+						MarketplacecommerceservicesConstants.COSTCENTRETHREE);
+
+			}
+			catch (final JaloInvalidParameterException e)
+			{
+				// YTODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			catch (final JaloSecurityException e)
+			{
+				// YTODO Auto-generated catch block
+				e.printStackTrace();
+			}
+
+			//TPR-7408 ends here
+
 		}
 
 		try
@@ -158,7 +201,8 @@ public class CustomBOGOPromoOrderEntryAdjustAction extends GeneratedCustomBOGOPr
 					qCount = nonFreeCount;
 					setPrices(nonFreeEntry, amtTobeDeductedAtlineItemLevel, ctx);
 					setAssociatedItem(nonFreeEntryUSSID, productAssociatedItemsMap, nonFreeEntry, ctx);
-					setQcAndOthers(nonFreeEntry, ctx, qCount, productPromoCode);
+					setQcAndOthers(nonFreeEntry, ctx, qCount, productPromoCode, promoCostCentreOnePercentage,
+							promoCostCentreTwoPercentage, promoCostCentreThreePercentage);//parameter added for TPR-7408
 				}
 			}
 
@@ -171,7 +215,8 @@ public class CustomBOGOPromoOrderEntryAdjustAction extends GeneratedCustomBOGOPr
 
 				setPrices(orderEntry, amtTobeDeductedAtlineItemLevel, ctx);
 				setAssociatedItem(freeEntryUSSID, productAssociatedItemsMap, orderEntry, ctx);
-				setQcAndOthers(orderEntry, ctx, qCount, productPromoCode);
+				setQcAndOthers(orderEntry, ctx, qCount, productPromoCode, promoCostCentreOnePercentage, promoCostCentreTwoPercentage,
+						promoCostCentreThreePercentage);//parameter added for TPR-7408
 				orderEntry.setProperty(ctx, MarketplacecommerceservicesConstants.ISBOGOAPPLIED, Boolean.TRUE);
 				orderEntry.setProperty(ctx, MarketplacecommerceservicesConstants.FREECOUNT,
 						Integer.valueOf(getOrderEntryQuantity(ctx).intValue()));
@@ -183,7 +228,8 @@ public class CustomBOGOPromoOrderEntryAdjustAction extends GeneratedCustomBOGOPr
 
 				setPrices(orderEntry, amtTobeDeductedAtlineItemLevel, ctx);
 				setAssociatedItem(freeEntryUSSID, productAssociatedItemsMap, orderEntry, ctx);
-				setQcAndOthers(orderEntry, ctx, qCount, productPromoCode);
+				setQcAndOthers(orderEntry, ctx, qCount, productPromoCode, promoCostCentreOnePercentage, promoCostCentreTwoPercentage,
+						promoCostCentreThreePercentage);//parameter added for TPR-7408
 				orderEntry.setProperty(ctx, MarketplacecommerceservicesConstants.ISBOGOAPPLIED, Boolean.TRUE);
 				orderEntry.setProperty(ctx, MarketplacecommerceservicesConstants.FREECOUNT,
 						Integer.valueOf(getOrderEntryQuantity(ctx).intValue()));
@@ -247,11 +293,18 @@ public class CustomBOGOPromoOrderEntryAdjustAction extends GeneratedCustomBOGOPr
 	}
 
 	private void setQcAndOthers(final AbstractOrderEntry orderEntry, final SessionContext ctx, final int qCount,
-			final String productPromoCode)
+			final String productPromoCode, final Double promoCostCentreOnePercentage, final Double promoCostCentreTwoPercentage,
+			final Double promoCostCentreThreePercentage)//parameter added for TPR-7408
 	{
 		orderEntry.setProperty(ctx, MarketplacecommerceservicesConstants.DESCRIPTION, orderEntry.getProduct().getDescription());
 		orderEntry.setProperty(ctx, MarketplacecommerceservicesConstants.PRODUCTPROMOCODE, productPromoCode);
 		orderEntry.setProperty(ctx, MarketplacecommerceservicesConstants.QUALIFYINGCOUNT, Integer.valueOf(qCount));
+		//TPR-7408 starts here
+		orderEntry.setProperty(ctx, MarketplacecommerceservicesConstants.PRODUCTPROMOCOSTCENTREONE, promoCostCentreOnePercentage);
+		orderEntry.setProperty(ctx, MarketplacecommerceservicesConstants.PRODUCTPROMOCOSTCENTRETWO, promoCostCentreTwoPercentage);
+		orderEntry.setProperty(ctx, MarketplacecommerceservicesConstants.PRODUCTPROMOCOSTCENTRETHREE,
+				promoCostCentreThreePercentage);
+		//TPR-7408 ends here
 	}
 
 	///////////////////////////////////////////////////////////////////////////////////////////////////////////////

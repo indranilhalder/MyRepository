@@ -18,7 +18,6 @@ import de.hybris.platform.servicelayer.exceptions.ModelSavingException;
 import de.hybris.platform.servicelayer.model.ModelService;
 import de.hybris.platform.servicelayer.search.FlexibleSearchService;
 import de.hybris.platform.store.BaseStoreModel;
-import de.hybris.platform.store.services.BaseStoreService;
 
 import java.math.BigDecimal;
 import java.math.MathContext;
@@ -88,9 +87,9 @@ public class DefaultMplJusPayRefundService implements MplJusPayRefundService
 
 	@Autowired
 	private JuspayWebHookDao juspayWebHookDao;
-
-	@Autowired
-	private BaseStoreService baseStoreService;
+	//SONAR fix
+	//	@Autowired
+	//	private BaseStoreService baseStoreService;
 
 
 	private final List<PaymentTransactionType> validPaymentType = Arrays.asList(PaymentTransactionType.CAPTURE,

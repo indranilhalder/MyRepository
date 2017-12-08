@@ -2997,6 +2997,53 @@
 		</itemtype>  
 		<!-- TPR-629 ends -->
 		
+		<!-- TPR-7408 starts here -->
+		
+		<itemtype code="AbstractPromotion" autocreate="false" generate="false">
+			<attributes>
+			
+                 <attribute qualifier="promoCostCentreOnePercentage" autocreate="true"
+					type="java.lang.Double">
+					<defaultvalue>Double.valueOf(0D)</defaultvalue>
+					<description>Cost Centre One Percentage Attribution</description>
+					<modifiers read="true" write="true" search="true"
+						optional="false" />
+					<persistence type="property" />
+                 </attribute>
+
+                 <attribute qualifier="promoCostCentreTwoPercentage" autocreate="true"
+					type="java.lang.Double">
+					<defaultvalue>Double.valueOf(0D)</defaultvalue>
+					<description>Cost Centre Two Percentage Attribution</description>
+					<modifiers read="true" write="true" search="true"
+						optional="false" />
+					<persistence type="property" />
+                 </attribute>
+
+				 <attribute qualifier="promoCostCentreThreePercentage" autocreate="true"
+					type="java.lang.Double">
+					<defaultvalue>Double.valueOf(0D)</defaultvalue>
+					<description>Cost Centre Three Percentage Attribution</description>
+					<modifiers read="true" write="true" search="true"
+						optional="false" />
+					<persistence type="property" />
+                 </attribute>
+				
+			</attributes>
+			
+         </itemtype>
+		
+		
+		<!-- TPR-7408 ends here -->		
+		
+		
+		
+		
+		
+		
+		
+		
+		
 		<!-- TPR-3893 starts here -->
 		<!-- *** PROMOTION QUANTITY PRICES ROW redeclared here for Bundling Promotions with Percentage Slabs*** -->
 

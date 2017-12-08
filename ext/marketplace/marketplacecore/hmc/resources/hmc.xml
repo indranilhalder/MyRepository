@@ -921,6 +921,17 @@
 							    <!-- <text name="text.promotion.priority" /> -->
 								<attribute name="priority" labelwidth="100" width="224" />								
 							</row>
+							<!-- TPR-7408 starts here -->
+							<row>
+							<attribute name="promoCostCentreOnePercentage" labelwidth="100" />
+							</row>
+							<row>
+							<attribute name="promoCostCentreTwoPercentage" labelwidth="100" />
+							</row>
+							<row>
+							<attribute name="promoCostCentreThreePercentage" labelwidth="100" />
+							</row>
+							<!-- TPR-7408 ends here -->
 						</columnlayout>
 					</section>
 				</tab>
@@ -3619,6 +3630,17 @@
                      <row>
                         <attribute name="maxDiscountValue"/>
                      </row>
+                     <!-- TPR-7408 starts here -->
+                     <row>
+                        <attribute name="couponCostCentreOnePercentage"/>
+                     </row>
+                     <row>
+                        <attribute name="couponCostCentreTwoPercentage"/>
+                     </row>
+                     <row>
+                        <attribute name="couponCostCentreThreePercentage"/>
+                     </row>
+                     <!-- TPR-7408 ends here -->
                   </columnlayout>
                </section>
             </tab> 

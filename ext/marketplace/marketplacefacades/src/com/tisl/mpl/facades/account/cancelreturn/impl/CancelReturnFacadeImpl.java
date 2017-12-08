@@ -1252,7 +1252,7 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 					sendTicketLineItemData.setReturnReasonCode(reasonCode);
 
 					//TPR-5954
-					sendTicketLineItemData.setSubReasonCode(returnInfoData.getSubReasonCode());
+					//sendTicketLineItemData.setSubReasonCode(returnInfoData.getSubReasonCode());
 					//sendTicketLineItemData.setImageUrl(imageUrl);//To-do post image upload
 
 					sendTicketRequestData.setRefundType(refundType);
@@ -1366,7 +1366,7 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 					final SimpleDateFormat format2 = new SimpleDateFormat(DD_MM_YYYY);
 					final Date da = format1.parse(strDate);
 					final String date = format2.format(da);
-					System.out.println("date" + date);
+					//	System.out.println("date" + date);
 					final String timeSlotFrom = date.concat(" " + returnInfoData.getTimeSlotFrom());
 					final SimpleDateFormat format3 = new SimpleDateFormat("dd-MM-yyyy hh:mm a");
 					final SimpleDateFormat format4 = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
@@ -1393,7 +1393,7 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 					final SimpleDateFormat format2 = new SimpleDateFormat(DD_MM_YYYY);
 					final Date da = format1.parse(strDate);
 					final String date = format2.format(da);
-					System.out.println("date" + date);
+					//	System.out.println("date" + date);
 					final String timeSlotTo = date.concat(" " + returnInfoData.getTimeSlotTo());
 					final SimpleDateFormat format3 = new SimpleDateFormat("dd-MM-yyyy hh:mm a");
 					final SimpleDateFormat format4 = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
@@ -1417,7 +1417,7 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 			sendTicketRequestData.setTicketType(ticketTypeCode);
 			sendTicketRequestData.setAddressInfo(addressInfo);
 			//TPR-5954
-			sendTicketRequestData.setComments(returnInfoData.getComments());
+			//sendTicketRequestData.setComments(returnInfoData.getComments());
 
 			final String asyncEnabled = configurationService.getConfiguration()
 					.getString(MarketplacecommerceservicesConstants.ASYNC_ENABLE).trim();
@@ -1878,7 +1878,7 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 					image.setImgPath(uploadImg);
 					orderLineData.setUploadImg(image);
 				}
-				//TPR-5954 || Start
+
 			}
 			if (StringUtils.isNotEmpty(subEntry.getOrderLineId()))
 			{
@@ -3132,9 +3132,6 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 		final SellerInformationModel sellerInfoModel = getMplSellerInformationService().getSellerDetail(ussid);
 		if (sellerInfoModel != null && CollectionUtils.isNotEmpty(sellerInfoModel.getRichAttribute()))
 		{
-
-
-
 			richAttributeModel = (List<RichAttributeModel>) sellerInfoModel.getRichAttribute();
 		}
 
@@ -3826,15 +3823,15 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 			refundEntryModel.setExpectedQuantity(abstractOrderEntryModel.getQuantity());//Single line quantity
 			refundEntryModel.setReceivedQuantity(abstractOrderEntryModel.getQuantity());//Single line quantity
 			refundEntryModel.setRefundedDate(new Date());
-			//TPR-5954
-			if (null != returnInfoData.getSubReasonCode())
-			{
-				refundEntryModel.setSubReason(fetchSubReasonDesc(returnInfoData.getSubReasonCode()));
-			}
-			if (null != returnInfoData.getComments())
-			{
-				refundEntryModel.setReturnRemarks(returnInfoData.getComments());
-			}
+			//			//TPR-5954
+			//			if (null != returnInfoData.getSubReasonCode())
+			//			{
+			//				refundEntryModel.setSubReason(fetchSubReasonDesc(returnInfoData.getSubReasonCode()));
+			//			}
+			//			if (null != returnInfoData.getComments())
+			//			{
+			//				refundEntryModel.setReturnRemarks(returnInfoData.getComments());
+			//			}
 			//refundEntryModel.setImgUrl(value);//to-do post image url
 
 			final List<PaymentTransactionModel> tranactions = subOrderModel.getPaymentTransactions();
@@ -4795,7 +4792,7 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 						returnLogRespDTO
 								.setResponseMessage(MarketplacecommerceservicesConstants.REVERCE_LOGISTIC_PINCODE_SERVICEABLE_NOTAVAIL_MESSAGE);
 					}
-					returnLogRespDTO.setTransactionId(transactionId);
+					returnLogRespDTO.setTransactionId(returntransactionId);//Rectify mock
 					//returnLogRespData.setTransactionId(transactionId);
 					returnLogRespDTOList.add(returnLogRespDTO);
 					returnPincodeDTO.setReturnLogisticsResponseDTO(returnLogRespDTOList);

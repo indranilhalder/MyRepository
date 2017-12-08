@@ -19,6 +19,7 @@ import de.hybris.platform.core.model.product.PincodeModel;
 import de.hybris.platform.core.model.product.ProductModel;
 import de.hybris.platform.product.ProductService;
 import de.hybris.platform.servicelayer.dto.converter.Converter;
+import de.hybris.platform.servicelayer.session.SessionService;
 import de.hybris.platform.storelocator.GPS;
 import de.hybris.platform.storelocator.exception.LocationServiceException;
 import de.hybris.platform.storelocator.location.Location;
@@ -26,6 +27,8 @@ import de.hybris.platform.storelocator.location.impl.LocationDTO;
 import de.hybris.platform.storelocator.location.impl.LocationDtoWrapper;
 import de.hybris.platform.storelocator.model.PointOfServiceModel;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -51,6 +54,7 @@ import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.facade.checkout.MplCartFacade;
 import com.tisl.mpl.facade.checkout.MplCheckoutFacade;
 import com.tisl.mpl.facades.constants.MarketplaceFacadesConstants;
+import com.tisl.mpl.facades.data.ATSResponseData;
 import com.tisl.mpl.facades.data.PincodeData;
 import com.tisl.mpl.facades.data.StoreLocationRequestData;
 import com.tisl.mpl.facades.data.StoreLocationResponseData;
@@ -106,6 +110,8 @@ public class PincodeServiceFacadeImpl implements PincodeServiceFacade
 
 	@Resource(name = "mplJewelleryService")
 	MplJewelleryService mplJewelleryService;
+	@Resource(name = MarketplaceFacadesConstants.SESSION_SERVICE)
+	private SessionService sessionService;
 
 	/**
 	 * This method is used to check pincode is serviceable are not
@@ -225,6 +231,48 @@ public class PincodeServiceFacadeImpl implements PincodeServiceFacade
 			final String productCode)
 	{
 		List<StoreLocationResponseData> storeLocationResponseDataList = null;
+		final List<StoreLocationRequestData> storeLocationRequestDataList = new ArrayList<StoreLocationRequestData>();
+		try
+		{
+			final PincodeModel pinCodeModelObj = sessionService.getAttribute(MarketplacecommerceservicesConstants.PINCODE_MODEL_PDP);
+			if (null != pinCodeModelObj)
+			{
+
+				final LocationDTO dto = new LocationDTO();
+				dto.setLongitude(pinCodeModelObj.getLongitude().toString());
+				dto.setLatitude(pinCodeModelObj.getLatitude().toString());
+				final Location myLocation = new LocationDtoWrapper(dto);
+
+				final StoreLocationRequestData storeLocationRequestData = papulateClicknCollectRequestData(sellerUssId,
+						myLocation.getGPS());
+				if (null != storeLocationRequestData)
+				{
+					storeLocationRequestDataList.add(storeLocationRequestData);
+					//call to OMS get the storelocations for given pincode
+					storeLocationResponseDataList = mplCartFacade.getStoreLocationsforCnC(storeLocationRequestDataList, sellerUssId);
+
+				}
+			}
+		}
+		catch (final Exception e)
+		{
+			throw e;
+		}
+		return storeLocationResponseDataList;
+	}
+
+	/**
+	 * This method is used to prepare Storelocator response data for PDP
+	 *
+	 * @param pincode
+	 * @param sellerUssId
+	 * @return StoreLocationResponseData
+	 */
+	@Override
+	public List<StoreLocationResponseData> getListofStoreLocationsforPincodeMobile(final String pincode, final String sellerUssId,
+			final CartModel cartModel)
+	{
+		List<StoreLocationResponseData> storeLocationResponseDataList = null;
 		try
 		{
 			final List<StoreLocationRequestData> storeLocationRequestDataList = new ArrayList<StoreLocationRequestData>();
@@ -243,12 +291,8 @@ public class PincodeServiceFacadeImpl implements PincodeServiceFacade
 				{
 					storeLocationRequestDataList.add(storeLocationRequestData);
 					//call to OMS get the storelocations for given pincode
-					storeLocationResponseDataList = mplCartFacade.getStoreLocationsforCnC(storeLocationRequestDataList);
-					return storeLocationResponseDataList;
-				}
-				else
-				{
-					return storeLocationResponseDataList;
+					storeLocationResponseDataList = mplCartFacade.getStoreLocationsforCnCMobile(storeLocationRequestDataList,
+							sellerUssId, cartModel);
 				}
 			}
 			else
@@ -261,6 +305,7 @@ public class PincodeServiceFacadeImpl implements PincodeServiceFacade
 		{
 			throw e;
 		}
+		return storeLocationResponseDataList;
 	}
 
 	/**
@@ -884,6 +929,176 @@ public class PincodeServiceFacadeImpl implements PincodeServiceFacade
 			throw exception;
 		}
 		return pincodeData;
+	}
+
+	/**
+	 * @author TCS This method populates List of Ats and ussid to the data object.
+	 * @param response
+	 * @return list of pos with product.
+	 */
+	@Override
+	@SuppressWarnings("boxing")
+	public List<PointOfServiceData> getProductWdPos(final List<StoreLocationResponseData> response, final String pincode)
+	{
+		if (LOG.isDebugEnabled())
+		{
+			LOG.debug("from getProductWdPos method which gets product with pos");
+		}
+		final List<PointOfServiceData> posDataList = new ArrayList<PointOfServiceData>();
+		//iterate over oms response
+		Double distance = null;
+		final List<String> storeIds = new ArrayList<String>();
+		List<PointOfServiceModel> posModelList = new ArrayList<PointOfServiceModel>();
+		try
+		{
+			for (final StoreLocationResponseData storeLocationResponseData : response)
+			{
+				final String ussId = storeLocationResponseData.getUssId();
+				final String pincodeSellerId = ussId.substring(0, 6);
+				//get stores from commerce
+				if (LOG.isDebugEnabled())
+				{
+					LOG.debug("Get stores from commerce");
+				}
+				for (final ATSResponseData atsResponseData : storeLocationResponseData.getAts())
+				{
+					final int availableQty = atsResponseData.getQuantity();
+					if (availableQty >= 1)
+					{
+						storeIds.add(atsResponseData.getStoreId());
+					}
+				}
+
+			}
+			posModelList = pincodeService.findPOSBySellerAndSlave(storeIds);
+			//get stores from commerce from ats response
+			if (CollectionUtils.isNotEmpty(posModelList))
+			{
+				final LocationDTO dto = new LocationDTO();
+				Location myLocation = null;
+				final PincodeModel pinCodeModelObj = sessionService
+						.getAttribute(MarketplacecommerceservicesConstants.PINCODE_MODEL_PDP);
+				if (null != pinCodeModelObj)
+				{
+
+					try
+					{
+						dto.setLongitude(pinCodeModelObj.getLongitude().toString());
+						dto.setLatitude(pinCodeModelObj.getLatitude().toString());
+						myLocation = new LocationDtoWrapper(dto);
+						LOG.debug("Selected Location for Latitude:" + myLocation.getGPS().getDecimalLatitude());
+						LOG.debug("Selected Location for Longitude:" + myLocation.getGPS().getDecimalLongitude());
+						//populate model to data
+						for (final PointOfServiceModel pointOfServiceModel : posModelList)
+						{
+							PointOfServiceData posData = new PointOfServiceData();
+							if (null != pointOfServiceModel)
+							{
+								posData = pointOfServiceConverter.convert(pointOfServiceModel);
+								distance = pincodeService.calculateDistance(myLocation.getGPS(), pointOfServiceModel);
+								posData.setDistanceKm(new BigDecimal(distance.doubleValue()).setScale(2, RoundingMode.HALF_UP)
+										.doubleValue());
+								posData.setStatus(MarketplacecommerceservicesConstants.KM);
+								posDataList.add(posData);
+							}
+						}
+					}
+					catch (final Exception e)
+					{
+						LOG.error(e);
+					}
+				}
+
+			}
+		}
+		catch (final Exception e)
+		{
+			LOG.error(e);
+		}
+		return posDataList;
+	}
+
+	/**
+	 * @author TECH This method populates List of stores and product to the data object if oms is down.
+	 * @param storeLocationRequestDataList
+	 * @return list of product with stores
+	 */
+	@Override
+	@SuppressWarnings("boxing")
+	public List<PointOfServiceData> getProductWdPosCommerce(final List<StoreLocationRequestData> storeLocationRequestDataList,
+			final String pincode)
+	{
+		if (LOG.isDebugEnabled())
+		{
+			LOG.debug("from getProductWdPos method if oms is down which gets product with pos");
+		}
+		List<PointOfServiceModel> posModelList = new ArrayList<PointOfServiceModel>();
+		final List<PointOfServiceData> posDataList = new ArrayList<PointOfServiceData>();
+		Double distance = 0d;
+		final List<String> storeIds = new ArrayList<String>();
+		try
+		{
+			for (final StoreLocationRequestData storeLocationRequestData : storeLocationRequestDataList)
+			{
+
+				final String ussId = storeLocationRequestData.getUssId();
+				final String pincodeSellerId = ussId.substring(0, 6);
+				if (null != storeLocationRequestData.getStoreId())
+				{
+					for (final String store : storeLocationRequestData.getStoreId())
+					{
+						storeIds.add(store);
+					}
+				}
+			}
+			posModelList = pincodeService.findPOSBySellerAndSlave(storeIds);
+			//get stores from commerce from ats response
+			if (CollectionUtils.isNotEmpty(posModelList))
+			{
+				final PincodeModel pinCodeModelObj = sessionService
+						.getAttribute(MarketplacecommerceservicesConstants.PINCODE_MODEL_PDP);
+				if (null != pinCodeModelObj)
+				{
+					final LocationDTO dto = new LocationDTO();
+					Location myLocation = null;
+					if (null != pinCodeModelObj)
+					{
+						try
+						{
+							dto.setLongitude(pinCodeModelObj.getLongitude().toString());
+							dto.setLatitude(pinCodeModelObj.getLatitude().toString());
+							myLocation = new LocationDtoWrapper(dto);
+							LOG.debug("Selected Location for Latitude:" + myLocation.getGPS().getDecimalLatitude());
+							LOG.debug("Selected Location for Longitude:" + myLocation.getGPS().getDecimalLongitude());
+							for (final PointOfServiceModel pointOfServiceModel : posModelList)
+							{
+								//prepare pos data objects
+								PointOfServiceData posData = new PointOfServiceData();
+								if (null != pointOfServiceModel)
+								{
+									posData = pointOfServiceConverter.convert(pointOfServiceModel);
+									distance = pincodeService.calculateDistance(myLocation.getGPS(), pointOfServiceModel);
+									posData.setDistanceKm(new BigDecimal(distance.doubleValue()).setScale(2, RoundingMode.HALF_UP)
+											.doubleValue());
+									posData.setStatus(MarketplacecommerceservicesConstants.KM);
+									posDataList.add(posData);
+								}
+							}
+						}
+						catch (final Exception e)
+						{
+							LOG.error(e);
+						}
+					}
+				}
+			}
+
+		}
+		catch (final Exception e)
+		{
+			LOG.error(e);
+		}
+		return posDataList;
 	}
 
 	/**
