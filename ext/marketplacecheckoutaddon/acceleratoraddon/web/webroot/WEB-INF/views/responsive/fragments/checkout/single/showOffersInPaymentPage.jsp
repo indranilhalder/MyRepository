@@ -39,11 +39,15 @@
 						<br>
 						<span class="offer_des">${offerPageData.description}</span>
 						<div class="max-min-value">
-						<span class="offer_des">Max Discount: Rs.${offerPageData.maxDiscountValue}</span> 
+						   <c:if test="${not empty offerPageData.maxDiscountValue}">
+						  <span class="offer_des">Max Discount: Rs.${offerPageData.maxDiscountValue}</span> 
+						  </c:if>
 						<span class="offer_des">
 							<c:forEach var="carttotal" items="${offerPageDataTotal}">
 								<c:set var="idAsString">${offerPageData.pk}</c:set>
-								<c:if test="${idAsString == carttotal.key}">Min Cart Value: Rs  ${carttotal.value}</c:if>
+								<c:if test="${idAsString == carttotal.key && not empty carttotal.value}">
+								   Min Cart Value: Rs  ${carttotal.value}
+								</c:if>
 							</c:forEach>
 						</span>
 						</div>
@@ -82,11 +86,15 @@
 						<br>
 						<span class="offer_des">${offerPageData.description}</span>
 						<div class="max-min-value">
-						<span class="offer_des">Max Discount: Rs.${offerPageData.maxDiscountValue}</span> 
+						<c:if test="${not empty offerPageData.maxDiscountValue}">
+						  <span class="offer_des">Max Discount: Rs.${offerPageData.maxDiscountValue}</span>
+						  </c:if>
 						<span class="offer_des">
 							<c:forEach var="carttotal" items="${offerPageDataTotal}">
 								<c:set var="idAsString">${offerPageData.pk}</c:set>
-								<c:if test="${idAsString == carttotal.key}">Min Cart Value: Rs  ${carttotal.value}</c:if>
+								<c:if test="${idAsString == carttotal.key && not empty carttotal.value}">	
+								  Min Cart Value: Rs  ${carttotal.value}
+								</c:if>
 							</c:forEach>
 
 						</span>
