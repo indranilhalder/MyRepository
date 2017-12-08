@@ -160,7 +160,6 @@ http://www.springframework.org/schema/aop/spring-aop.xsd">
 		<property name="fieldNameProvider" ref="solrFieldNameProvider" />
 	</bean>
 
-
 	<bean id="mplSellerValueProvider"
 		class="com.tisl.mpl.core.search.solrfacetsearch.provider.impl.MplSellerValueProvider"
 		parent="abstractPropertyFieldValueProvider">
@@ -2050,4 +2049,16 @@ http://www.springframework.org/schema/aop/spring-aop.xsd">
 	</bean>
 	<!-- TPR-6665: solr server : synonyms injection end -->
 
+<!-- TISPRDT-7513 Start -->
+<bean id="mplWeightFacetValueProvider"
+		class="com.tisl.mpl.core.search.solrfacetsearch.provider.impl.MplWeightFacetValueProvider"
+		parent="abstractPropertyFieldValueProvider">
+		<property name="fieldNameProvider" ref="solrFieldNameProvider" />
+	</bean>
+	<bean id="mplVolumeFacetValueProvider"
+		class="com.tisl.mpl.core.search.solrfacetsearch.provider.impl.MplVolumeFacetValueProvider"
+		parent="abstractPropertyFieldValueProvider">
+		<property name="fieldNameProvider" ref="solrFieldNameProvider" />
+	</bean>
+<!-- TISPRDT-7513 End -->
 </beans>

@@ -709,6 +709,8 @@ tr.d0 td {
 </div>
 
 <div id="stw_widget_hf" class="lazy-reached-stw"></div>
+<div id="msd_widget_hf" class="lazy-reached-stw"></div>
+
 
 <div class="add-to-wishlist-container">
 <form>

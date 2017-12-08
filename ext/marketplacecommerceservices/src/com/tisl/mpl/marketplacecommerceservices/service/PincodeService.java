@@ -66,4 +66,6 @@ public interface PincodeService
 
 	public double calculateDistance(final GPS referenceGps, final PointOfServiceModel posModel) throws GeoLocatorException,
 			LocationServiceException;
+
+	public List<PointOfServiceModel> findPOSBySellerAndSlave(final List<String> slaveIds);
 }

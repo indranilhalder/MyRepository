@@ -488,7 +488,9 @@ $(document).on("click",".product-info > .product-image-container > .productImage
 
 /*Product Specification*/
 $(document).on("click",".nav-wrapper .nav.pdp",function(){
-	utag.link({"link_text":"product_specification", "event_type":"view_prod_specification",product_id : productIdArray});
+	if(typeof(utag) != 'undefined'){
+		utag.link({"link_text":"product_specification", "event_type":"view_prod_specification",product_id : productIdArray});
+	}
 })
 
 /*Out Of Stock During adding to bag*/
@@ -2316,3 +2318,13 @@ $(document).on('mouseup','.simpleSearchToggle',function(){
 	   }
 });
 //UF-472|Responsive search icon ends
+
+//TPR-5271 starts| edit address
+$(document).on('click','#changeAddressLink',function(){
+	if(typeof(utag) !="undefined"){
+		utag.link({
+			link_text: "edit_shipping_address_clicked",
+			event_type : "edit_shipping_address_clicked"
+		});
+	   }
+});

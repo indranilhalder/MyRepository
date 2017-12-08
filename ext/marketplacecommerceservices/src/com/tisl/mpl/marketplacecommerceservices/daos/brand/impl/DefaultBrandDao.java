@@ -27,6 +27,13 @@ public class DefaultBrandDao extends AbstractItemDao implements BrandDao
 	private FlexibleSearchService flexibleSearchService;
 	private ModelService modelService;
 
+	private static final String SELECT = "SELECT ";
+	private static final String AS_P = " AS p} ";
+	private static final String FROM = "FROM {";
+	private static final String WHERE = "WHERE ";
+	private static final String QUERYPARAM_EMAILID = "}=?emailId ";
+	private static final String EMAIL_ID = "emailId";
+
 	private final String P_STR = "{p:";
 
 	@Override
@@ -101,12 +108,12 @@ public class DefaultBrandDao extends AbstractItemDao implements BrandDao
 		if (null != emailId && !emailId.isEmpty())
 		{
 			final String queryString = //
-					"SELECT " + P_STR + MplNewsLetterSubscriptionModel.PK + "}" //
-							+ "FROM {" + MplNewsLetterSubscriptionModel._TYPECODE + " AS p} "//
-							+ "WHERE " + P_STR + MplNewsLetterSubscriptionModel.EMAILID + "}=?emailId ";
+			SELECT + P_STR + MplNewsLetterSubscriptionModel.PK + "}" //
+					+ FROM + MplNewsLetterSubscriptionModel._TYPECODE + AS_P//
+					+ WHERE + P_STR + MplNewsLetterSubscriptionModel.EMAILID + QUERYPARAM_EMAILID;
 
 			final FlexibleSearchQuery query = new FlexibleSearchQuery(queryString);
-			query.addQueryParameter("emailId", emailId);
+			query.addQueryParameter(EMAIL_ID, emailId);
 			if ((flexibleSearchService.<MplNewsLetterSubscriptionModel> search(query).getResult().isEmpty()))
 			{
 				return true;
@@ -124,14 +131,14 @@ public class DefaultBrandDao extends AbstractItemDao implements BrandDao
 		if (null != emailId && !emailId.isEmpty())
 		{
 			final String queryString = //
-					"SELECT " + P_STR + MplNewsLetterSubscriptionModel.PK + "}" //
-							+ "FROM {" + MplNewsLetterSubscriptionModel._TYPECODE + " AS p} "//
-							+ "WHERE " + P_STR + MplNewsLetterSubscriptionModel.EMAILID + "}=?emailId "//
-							+ "AND " + P_STR + MplNewsLetterSubscriptionModel.ISLUXURY + "}IS NULL OR"//
-							+ P_STR + MplNewsLetterSubscriptionModel.ISLUXURY + "} = ?isluxury";
+			SELECT + P_STR + MplNewsLetterSubscriptionModel.PK + "}" //
+					+ FROM + MplNewsLetterSubscriptionModel._TYPECODE + AS_P//
+					+ WHERE + P_STR + MplNewsLetterSubscriptionModel.EMAILID + QUERYPARAM_EMAILID//
+					+ "AND " + P_STR + MplNewsLetterSubscriptionModel.ISLUXURY + "}IS NULL OR"//
+					+ P_STR + MplNewsLetterSubscriptionModel.ISLUXURY + "} = ?isluxury";
 
 			final FlexibleSearchQuery query = new FlexibleSearchQuery(queryString);
-			query.addQueryParameter("emailId", emailId);
+			query.addQueryParameter(EMAIL_ID, emailId);
 			query.addQueryParameter("isluxury", MarketplacecommerceservicesConstants.IS_LUXURY);
 			/*
 			 * if ((flexibleSearchService.<MplNewsLetterSubscriptionModel> search(query).getResult().isEmpty())) { return
@@ -149,14 +156,14 @@ public class DefaultBrandDao extends AbstractItemDao implements BrandDao
 		if (null != emailId && !emailId.isEmpty())
 		{
 			final String queryString = //
-					"SELECT " + P_STR + MplNewsLetterSubscriptionModel.PK + "}" //
-							+ "FROM {" + MplNewsLetterSubscriptionModel._TYPECODE + " AS p} "//
-							+ "WHERE " + P_STR + MplNewsLetterSubscriptionModel.EMAILID + "}=?emailId "//
-							+ "AND " + P_STR + MplNewsLetterSubscriptionModel.ISMARKETPLACE + "}IS NULL OR"//
-							+ P_STR + MplNewsLetterSubscriptionModel.ISMARKETPLACE + "} = ?ismarketplace";
+			SELECT + P_STR + MplNewsLetterSubscriptionModel.PK + "}" //
+					+ FROM + MplNewsLetterSubscriptionModel._TYPECODE + AS_P//
+					+ WHERE + P_STR + MplNewsLetterSubscriptionModel.EMAILID + QUERYPARAM_EMAILID//
+					+ "AND " + P_STR + MplNewsLetterSubscriptionModel.ISMARKETPLACE + "}IS NULL OR"//
+					+ P_STR + MplNewsLetterSubscriptionModel.ISMARKETPLACE + "} = ?ismarketplace";
 
 			final FlexibleSearchQuery query = new FlexibleSearchQuery(queryString);
-			query.addQueryParameter("emailId", emailId);
+			query.addQueryParameter(EMAIL_ID, emailId);
 			query.addQueryParameter("ismarketplace", MarketplacecommerceservicesConstants.IS_MARKETPLACE);
 			/*
 			 * if ((flexibleSearchService.<MplNewsLetterSubscriptionModel> search(query).getResult().isEmpty())) { return
@@ -181,14 +188,14 @@ public class DefaultBrandDao extends AbstractItemDao implements BrandDao
 		if (null != emailId && !emailId.isEmpty())
 		{
 			final String queryString = //
-					"SELECT " + P_STR + MplNewsLetterSubscriptionModel.PK + "}" //
-							+ "FROM {" + MplNewsLetterSubscriptionModel._TYPECODE + " AS p} "//
-							+ "WHERE " + P_STR + MplNewsLetterSubscriptionModel.EMAILID + "}=?emailId "//
-							+ "AND (" + P_STR + MplNewsLetterSubscriptionModel.ISLUXURY + "}IS NULL OR"//
-							+ P_STR + MplNewsLetterSubscriptionModel.ISLUXURY + "} = ?isluxury)";
+			SELECT + P_STR + MplNewsLetterSubscriptionModel.PK + "}" //
+					+ FROM + MplNewsLetterSubscriptionModel._TYPECODE + AS_P//
+					+ WHERE + P_STR + MplNewsLetterSubscriptionModel.EMAILID + QUERYPARAM_EMAILID//
+					+ "AND (" + P_STR + MplNewsLetterSubscriptionModel.ISLUXURY + "}IS NULL OR"//
+					+ P_STR + MplNewsLetterSubscriptionModel.ISLUXURY + "} = ?isluxury)";
 
 			final FlexibleSearchQuery query = new FlexibleSearchQuery(queryString);
-			query.addQueryParameter("emailId", emailId);
+			query.addQueryParameter(EMAIL_ID, emailId);
 			query.addQueryParameter("isluxury", isLuxury);
 
 			return flexibleSearchService.<MplNewsLetterSubscriptionModel> search(query).getResult();
@@ -202,7 +209,7 @@ public class DefaultBrandDao extends AbstractItemDao implements BrandDao
 		final String queryString = //
 		"SELECT {" + PriorityBrandsModel.PK
 				+ "}" //
-				+ "FROM {" + PriorityBrandsModel._TYPECODE
+				+ FROM + PriorityBrandsModel._TYPECODE
 				+ "} "//
 				+ "WHERE" + "{" + PriorityBrandsModel.CATEGORYID + "}=?categoryCode" + " ORDER BY {" + PriorityBrandsModel.PRIORITY
 				+ "} DESC";
@@ -216,4 +223,3 @@ public class DefaultBrandDao extends AbstractItemDao implements BrandDao
 	}
 
 }
-
