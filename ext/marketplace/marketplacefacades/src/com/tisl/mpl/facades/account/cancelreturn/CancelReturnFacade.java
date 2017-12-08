@@ -13,6 +13,7 @@ import de.hybris.platform.returns.model.ReturnRequestModel;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 import com.tisl.mpl.core.model.MplReturnPickUpAddressInfoModel;
 import com.tisl.mpl.data.CODSelfShipData;
@@ -282,7 +283,7 @@ public interface CancelReturnFacade
 	 */
 	public boolean oneTouchReturn(OrderData subOrderDetails, OrderEntryData orderEntry, String reasonCode, String ticketTypeCode,
 			SalesApplication salesApplication, String returnPincode, List<AbstractOrderEntryModel> orderEntriesModel,
-			OrderModel subOrderModel, CODSelfShipData codSelfShipData, final String ussid, String txnId);
+			OrderModel subOrderModel, CODSelfShipData codSelfShipData, final String ussid, String txnId, Map<String, String> dataMap);
 
 	/**
 	 * Method: for pincode serviceability part of one touch CRM--TPR-1345

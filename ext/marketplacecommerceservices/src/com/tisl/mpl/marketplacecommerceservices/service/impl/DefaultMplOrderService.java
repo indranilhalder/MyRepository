@@ -155,6 +155,77 @@ public class DefaultMplOrderService implements MplOrderService
 		}
 	}
 
+	//TPR-5954
+	@Override
+	public List<ReturnReasonData> getCatspecificRetReason(final String L2CatCode)
+	{
+		try
+		{
+			final List<ReturnReasonData> reasonDataList = new ArrayList<ReturnReasonData>();
+			final List<ReturnReasonModel> reasonModelList = mplOrderDao.getCategorySpecificReturnReason(L2CatCode);
+			//if (null != reasonModelList && reasonModelList.size() > 0)
+			if (CollectionUtils.isNotEmpty(reasonModelList))
+			{
+				for (final ReturnReasonModel newModel : reasonModelList)
+				{
+					final ReturnReasonData oReasonData = new ReturnReasonData();
+
+					oReasonData.setReasonDescription(newModel.getReasonDescription());
+					oReasonData.setCode(newModel.getReasonCode());
+
+					reasonDataList.add(oReasonData);
+				}
+			}
+			return reasonDataList;
+		}
+		catch (final Exception e)
+		{
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000);
+		}
+	}
+
+	//TPR-5954
+	@Override
+	public List<ReturnReasonData> fetchSubReturnReason(final String parentReturnCode) throws Exception
+	{
+		try
+		{
+			final List<ReturnReasonData> reasonDataList = new ArrayList<ReturnReasonData>();
+			final List<ReturnReasonModel> reasonModelList = mplOrderDao.getSubReturnReason(parentReturnCode);
+
+			if (CollectionUtils.isNotEmpty(reasonModelList))
+			{
+				for (final ReturnReasonModel newModel : reasonModelList)
+				{
+					final ReturnReasonData oReasonData = new ReturnReasonData();
+					oReasonData.setReasonDescription(newModel.getReasonDescription());
+					oReasonData.setCode(newModel.getReasonCode());
+					reasonDataList.add(oReasonData);
+				}
+			}
+			return reasonDataList;
+		}
+		catch (final Exception e)
+		{
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000);
+		}
+	}
+
+	//TPR-5954
+	@Override
+	public String fetchReasonDesc(final String returnCode) throws Exception
+	{
+		try
+		{
+			final String reasonDesc = mplOrderDao.fetchReasonDesc(returnCode);
+			return reasonDesc;
+		}
+		catch (final Exception e)
+		{
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000);
+		}
+	}
+
 	/**
 	 *
 	 */

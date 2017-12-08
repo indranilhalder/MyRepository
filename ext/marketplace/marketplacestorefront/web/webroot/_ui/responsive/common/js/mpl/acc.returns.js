@@ -1064,4 +1064,118 @@ $(document).ready(function(){
 	}
 	
 });	
+
+function fetchCatSpecificReason(element){
+	try{
+	var code=$("#returnReason :selected").val();
+		  $.ajax({
+			  url: ACC.config.encodedContextPath+"/my-account/returns/fetchSubReason",
+			  type: "GET",
+			  data :"parentReasonCode="+code,
+			  success: function(data) {
+				  var options = $("#returnSubReason");
+				  $("#returnSubReason").html('');				  
+				    $.each(data, function(item,obj) {					
+				        options.append($("<option />").val(obj.code).text(obj.reasonDescription));
+				    });
+				    if($.isEmptyObject(data)){
+				    	$("select [name=subReasonList]").hide();
+				    }
+			  },
+			  error:function(data){
+				  console.log("Error in fetchCatSpecificReason"+data);
+			  }
+		  });
+	}
+	catch(e)
+	{
+		console.log("Error:"+e);
+	}
+}
+
+
+function uploadImage(){
+	try{
+	var ajaxData = new FormData();
+	//var code=$("#upload-files").val();
+	var files = $('#upload-files').prop('files');
+	for(var i=0;i<files.length;i++){
+	    ajaxData.append('files['+i+']', files[i]);
+	}
+	//ajaxData.append('files[]', files);
+	//var formData1 = JSON.stringify((ajaxData).serializeArray());
+	//ajaxData.append("file", files);
+	/*$.each(files, function(key, value)
+		    {
+		ajaxData.append(key, value);
+		    });*/
+	
+	
+	alert ('fsdgfd');
+	var outputLog = {}, iterator = ajaxData.entries(), end = false;
+	while(end == false) {
+	   var item = iterator.next();
+	   if(item.value!=undefined) {
+	       outputLog[item.value[0]] = item.value[1];
+	   } else if(item.done==true) {
+	       end = true;
+	   }
+	    }
+	console.log(outputLog);
+		  $.ajax({
+			  url: ACC.config.encodedContextPath+"/my-account/returns/uploadImg?files="+JSON.stringify(ajaxData),
+			  type: "POST",
+              contentType: false,
+              processData: false,
+             // data :{'files' : ajaxData},
+			  success: function(data) {
+				 console.log("success");
+			  },
+			  error:function(data){
+				  console.log("Error in fetchCatSpecificReason"+data);
+			  }
+		  });
+	}
+	catch(e)
+	{
+		console.log("Error:"+e);
+	}
+}
+
+$('#fileUploader').on('change', uploadFile);
+
+
+function uploadFile(event)
+	{
+	    //event.stopPropagation(); 
+	    //event.preventDefault(); 
+	var files = $('#upload-files').prop('files');
+	    var data = new FormData();
+	    $.each(files, function(key, value)
+	    {
+	        data.append(key, value);
+	    });
+	    postFilesData(data); 
+	 }
+	
+function postFilesData(data)
+	{
+	 $.ajax({
+        url: ACC.config.encodedContextPath+"/my-account/returns/uploadImg",
+        type: 'POST',
+        data: data,
+        cache: false,
+        dataType: 'json',
+        processData: false, 
+        contentType: false, 
+        success: function(data, textStatus, jqXHR)
+        {
+        	//success
+        },
+        error: function(jqXHR, textStatus, errorThrown)
+        {
+            console.log('ERRORS: ' + textStatus);
+        }
+	    });
+	}
 		
