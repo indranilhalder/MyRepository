@@ -3,8 +3,10 @@
  */
 package com.tisl.mpl.facades.webform;
 
+import de.hybris.platform.commercefacades.customer.CustomerFacade;
 import de.hybris.platform.commercefacades.order.data.OrderData;
 import de.hybris.platform.commercefacades.order.data.OrderHistoryData;
+import de.hybris.platform.commercefacades.user.data.CustomerData;
 import de.hybris.platform.commerceservices.search.pagedata.PageableData;
 import de.hybris.platform.commerceservices.search.pagedata.SearchPageData;
 import de.hybris.platform.core.model.user.CustomerModel;
@@ -12,6 +14,7 @@ import de.hybris.platform.servicelayer.config.ConfigurationService;
 import de.hybris.platform.servicelayer.user.UserService;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import javax.annotation.Resource;
@@ -23,12 +26,15 @@ import com.tis.mpl.facade.data.TicketStatusUpdate;
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.core.keygenerator.MplPrefixablePersistentKeyGenerator;
 import com.tisl.mpl.core.model.MplWebCrmModel;
+import com.tisl.mpl.core.model.MplWebCrmTicketModel;
 import com.tisl.mpl.facade.checkout.MplCheckoutFacade;
 import com.tisl.mpl.facades.account.register.MplOrderFacade;
 import com.tisl.mpl.facades.cms.data.NodeFormData;
 import com.tisl.mpl.facades.cms.data.WebForm;
 import com.tisl.mpl.facades.cms.data.WebFormData;
 import com.tisl.mpl.marketplacecommerceservices.service.MplWebFormService;
+import com.tisl.mpl.wsdto.CRMWebFormDataRequest;
+import com.tisl.mpl.wsdto.CRMWebFormDataResponse;
 import com.tisl.mpl.wsdto.CRMWsData;
 
 
@@ -39,6 +45,8 @@ import com.tisl.mpl.wsdto.CRMWsData;
 public class MplDefaultWebFormFacade implements MplWebFormFacade
 {
 	protected static final Logger LOG = Logger.getLogger(MplDefaultWebFormFacade.class);
+
+	private static final CRMWebFormDataResponse CRMWebFormDataResponse = null;
 
 	@Resource
 	private MplWebFormService mplWebFormService;
@@ -53,6 +61,8 @@ public class MplDefaultWebFormFacade implements MplWebFormFacade
 	private MplCheckoutFacade mplCheckoutFacade;
 	@Autowired
 	private MplPrefixablePersistentKeyGenerator prefixableKeyGenerator;
+	@Resource(name = "customerFacade")
+	private CustomerFacade customerFacade;
 
 	/*
 	 * (non-Javadoc)
@@ -326,4 +336,66 @@ public class MplDefaultWebFormFacade implements MplWebFormFacade
 
 
 	}
+
+	@Override
+	public CRMWebFormDataResponse getTicketSubmitForm(final CRMWebFormDataRequest crmTicket)
+	{
+		final CRMWebFormDataResponse mplCRMWebFormResponseData = new CRMWebFormDataResponse();
+
+
+
+
+
+
+		try
+		{
+			final String commerceTicketId = null;
+			final MplWebCrmTicketModel mplwebFormTicketModel = mplWebFormService.getWebCRMTicket(commerceTicketId);
+			final WebFormData formData = new WebFormData();
+
+
+			formData.setComment(crmTicket.getComment());
+			final CustomerData currentUser = customerFacade.getCurrentCustomer();
+			if (currentUser != null)
+			{
+				formData.setCustomerId(currentUser.getUid());
+			}
+			formData.setOrderCode(crmTicket.getOrderCode());
+			formData.setSubOrderCode(crmTicket.getSubOrderCode());
+			formData.setTransactionId(crmTicket.getTransactionId());
+			formData.setAttachments(new ArrayList(Arrays.asList(crmTicket.getAttachments().split(","))));
+
+			sendWebformTicket(formData);
+
+
+
+
+		}
+
+
+		catch (final Exception e)
+		{
+			LOG.error("ticketFormSave" + e);
+		}
+
+
+
+		return mplCRMWebFormResponseData;
+
+
+	}
+
+
+	/*
+	 * (non-Javadoc)
+	 *
+	 * @see com.tisl.mpl.facades.webform.MplWebFormFacade#getTicketSubmitForm()
+	 */
+	@Override
+	public List<CRMWebFormDataRequest> getTicketSubmitForm()
+	{
+		// YTODO Auto-generated method stub
+		return null;
+	}
+
 }

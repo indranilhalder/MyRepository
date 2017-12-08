@@ -225,8 +225,8 @@ import com.tisl.mpl.util.ExceptionUtil;
 import com.tisl.mpl.util.MplTimeconverUtility;
 import com.tisl.mpl.validation.data.AddressValidationData;
 import com.tisl.mpl.webservice.businessvalidator.DefaultCommonAsciiValidator;
-import com.tisl.mpl.wsdto.CRMWsData;
-import com.tisl.mpl.wsdto.CRMWsDataParent;
+import com.tisl.mpl.wsdto.CRMWebFormDataRequest;
+import com.tisl.mpl.wsdto.CRMWebFormDataResponse;
 import com.tisl.mpl.wsdto.CommonCouponsDTO;
 import com.tisl.mpl.wsdto.EMIBankListWsDTO;
 import com.tisl.mpl.wsdto.EMITermRateDataForMobile;
@@ -9720,14 +9720,10 @@ public class UsersController extends BaseCommerceController
 		return toSortList;
 	}
 
+
+
 	/**
-	 * @Description : For getting the details of all the Coupons available for the User
 	 * @param emailId
-	 * @param currentPage
-	 * @param pageSize
-	 * @param usedCoupon
-	 * @param sortCode
-	 * @return CommonCouponsDTO
 	 * @throws RequestParameterException
 	 * @throws WebserviceValidationException
 	 * @throws MalformedURLException
@@ -9735,21 +9731,17 @@ public class UsersController extends BaseCommerceController
 
 	@Secured(
 	{ CUSTOMER, TRUSTED_CLIENT, CUSTOMERMANAGER, ROLE_CLIENT })
-	@RequestMapping(value = "/{userId}/getWebCRMNodes", method = RequestMethod.GET, produces = APPLICATION_TYPE)
+	@RequestMapping(value = "/{userId}/getTicketSubmitForm", method = RequestMethod.POST, produces = APPLICATION_TYPE)
 	@ResponseBody
-	public CRMWsDataParent getcemwebform(@PathVariable final String emailId) throws RequestParameterException,
+	public CRMWebFormDataResponse getTicketSubmitForm(@PathVariable final String userId,
+			@RequestParam(required = false) final CRMWebFormDataRequest crmTicket) throws RequestParameterException,
 			WebserviceValidationException, MalformedURLException
 	{
-		final CRMWsDataParent crmDto = new CRMWsDataParent();
-
+		CRMWebFormDataResponse crmWebFormDTO = new CRMWebFormDataResponse();
 
 		try
 		{
-
-			final List<CRMWsData> crmdata = mplWebFormFacade.getAllWebCRMTreedata();
-			crmDto.setNodes(crmdata);
-			crmDto.setStatus(MarketplacecommerceservicesConstants.SUCCESS_FLAG);
-
+			crmWebFormDTO = mplWebFormFacade.getTicketSubmitForm(crmTicket);
 
 
 		}
@@ -9758,27 +9750,27 @@ public class UsersController extends BaseCommerceController
 			ExceptionUtil.etailNonBusinessExceptionHandler(e);
 			if (null != e.getErrorMessage())
 			{
-				crmDto.setError(e.getErrorMessage());
+				crmWebFormDTO.setError(e.getErrorMessage());
 			}
 			if (null != e.getErrorCode())
 			{
-				crmDto.setErrorCode(e.getErrorCode());
+				crmWebFormDTO.setErrorCode(e.getErrorCode());
 			}
-			crmDto.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
+			crmWebFormDTO.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
 		}
 		catch (final EtailBusinessExceptions e)
 		{
 			ExceptionUtil.etailBusinessExceptionHandler(e, null);
 			if (null != e.getErrorMessage())
 			{
-				crmDto.setError(e.getErrorMessage());
+				crmWebFormDTO.setError(e.getErrorMessage());
 			}
 			if (null != e.getErrorCode())
 			{
-				crmDto.setErrorCode(e.getErrorCode());
+				crmWebFormDTO.setErrorCode(e.getErrorCode());
 			}
-			crmDto.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
+			crmWebFormDTO.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
 		}
-		return crmDto;
+		return crmWebFormDTO;
 	}
 }

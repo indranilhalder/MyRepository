@@ -3432,5 +3432,15 @@
 		<property name="emailId" type="String" />
 		<property name="contatcNum" type="String" />
 	</bean>
-
+		
+	<bean class="com.tisl.mpl.wsdto.FileUploadResponseData">
+	<property name="errorMessage" type="String" />
+		<property name="error" type="String" />
+		<property name="errorCode" type="String" />
+		<property name="status" type="String" />
+		<property name="fileURL" type="String" />
+		<property name="uploadReferenceNumber" type="String" />
+	</bean>
+	
+	
 </beans>

@@ -50,6 +50,7 @@ import de.hybris.platform.commercewebservicescommons.dto.user.CountryListWsDTO;
 import de.hybris.platform.commercewebservicescommons.dto.user.TitleListWsDTO;
 import de.hybris.platform.commercewebservicescommons.dto.user.UserSignUpWsDTO;
 import de.hybris.platform.commercewebservicescommons.errors.exceptions.RequestParameterException;
+import de.hybris.platform.commercewebservicescommons.errors.exceptions.WebserviceValidationException;
 import de.hybris.platform.commercewebservicescommons.mapping.DataMapper;
 import de.hybris.platform.commercewebservicescommons.mapping.FieldSetBuilder;
 import de.hybris.platform.commercewebservicescommons.mapping.impl.FieldSetBuilderContext;
@@ -73,6 +74,7 @@ import de.hybris.platform.storelocator.location.impl.LocationDTO;
 import de.hybris.platform.storelocator.location.impl.LocationDtoWrapper;
 import de.hybris.platform.util.localization.Localization;
 
+import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
 import java.io.File;
@@ -82,11 +84,16 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.math.BigDecimal;
+import java.net.MalformedURLException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -121,6 +128,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.converters.basic.DateConverter;
@@ -175,9 +183,12 @@ import com.tisl.mpl.utility.SearchSuggestUtilityMethods;
 import com.tisl.mpl.wsdto.AboutUsResultWsData;
 import com.tisl.mpl.wsdto.AutoCompleteResultWsData;
 import com.tisl.mpl.wsdto.BannerWsDTO;
+import com.tisl.mpl.wsdto.CRMWsData;
+import com.tisl.mpl.wsdto.CRMWsDataParent;
 import com.tisl.mpl.wsdto.CategoryBrandDTO;
 import com.tisl.mpl.wsdto.CategorySNSWsData;
 import com.tisl.mpl.wsdto.CorporateAddressWsDTO;
+import com.tisl.mpl.wsdto.FileUploadResponseData;
 import com.tisl.mpl.wsdto.HelpAndServicestWsData;
 import com.tisl.mpl.wsdto.HomescreenListData;
 import com.tisl.mpl.wsdto.ListPinCodeServiceData;
@@ -689,9 +700,9 @@ public class MiscsController extends BaseController
 
 	/*
 	 * restriction set up interface to save the data comming from seller portal
-	 * 
+	 *
 	 * @param restrictionXML
-	 * 
+	 *
 	 * @return void
 	 */
 	@RequestMapping(value = "/{baseSiteId}/miscs/restrictionServer", method = RequestMethod.POST)
@@ -1416,7 +1427,7 @@ public class MiscsController extends BaseController
 	 * final MarketplaceDeliveryModeData deliveryModeData = new MarketplaceDeliveryModeData(); final
 	 * MplZoneDeliveryModeValueModel MplZoneDeliveryModeValueModel = mplCheckoutFacade
 	 * .populateDeliveryCostForUSSIDAndDeliveryMode(deliveryMode, MarketplaceFacadesConstants.INR, ussid);
-	 * 
+	 *
 	 * if (null != MplZoneDeliveryModeValueModel) { if (null != MplZoneDeliveryModeValueModel.getValue()) { final
 	 * PriceData priceData = formPriceData(MplZoneDeliveryModeValueModel.getValue()); if (null != priceData) {
 	 * deliveryModeData.setDeliveryCost(priceData); } } if (null != MplZoneDeliveryModeValueModel.getDeliveryMode() &&
@@ -1429,11 +1440,11 @@ public class MiscsController extends BaseController
 	 * MplZoneDeliveryModeValueModel.getDeliveryMode().getName()) {
 	 * deliveryModeData.setName(MplZoneDeliveryModeValueModel.getDeliveryMode().getName()); } if (null != ussid) {
 	 * deliveryModeData.setSellerArticleSKU(ussid); }
-	 * 
+	 *
 	 * } return deliveryModeData; }
-	 * 
+	 *
 	 * @param code
-	 * 
+	 *
 	 * @return
 	 */
 	@RequestMapping(value = "/{baseSiteId}/checkBrandOrCategory", method = RequestMethod.GET)
@@ -1826,9 +1837,9 @@ public class MiscsController extends BaseController
 
 	/*
 	 * to receive pancard status from SP for jewellery
-	 * 
+	 *
 	 * @param restrictionXML
-	 * 
+	 *
 	 * @return void
 	 */
 	@RequestMapping(value = "/{baseSiteId}/miscs/pancardStatus", method = RequestMethod.POST)
@@ -2561,4 +2572,181 @@ public class MiscsController extends BaseController
 		}
 
 	}
+
+	/**
+	 * @param emailId
+	 * @throws RequestParameterException
+	 * @throws WebserviceValidationException
+	 * @throws MalformedURLException
+	 */
+
+
+	@RequestMapping(value = "/getWebCRMNodes", method = RequestMethod.GET, produces = APPLICATION_TYPE)
+	@ResponseBody
+	public CRMWsDataParent getcemwebform(@PathVariable final String emailId) throws RequestParameterException,
+			WebserviceValidationException, MalformedURLException
+	{
+		final CRMWsDataParent crmDto = new CRMWsDataParent();
+
+
+		try
+		{
+
+			final List<CRMWsData> crmdata = mplWebFormFacade.getAllWebCRMTreedata();
+			crmDto.setNodes(crmdata);
+			crmDto.setStatus(MarketplacecommerceservicesConstants.SUCCESS_FLAG);
+
+
+
+		}
+		catch (final EtailNonBusinessExceptions e)
+		{
+			ExceptionUtil.etailNonBusinessExceptionHandler(e);
+			if (null != e.getErrorMessage())
+			{
+				crmDto.setError(e.getErrorMessage());
+			}
+			if (null != e.getErrorCode())
+			{
+				crmDto.setErrorCode(e.getErrorCode());
+			}
+			crmDto.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
+		}
+		catch (final EtailBusinessExceptions e)
+		{
+			ExceptionUtil.etailBusinessExceptionHandler(e, null);
+			if (null != e.getErrorMessage())
+			{
+				crmDto.setError(e.getErrorMessage());
+			}
+			if (null != e.getErrorCode())
+			{
+				crmDto.setErrorCode(e.getErrorCode());
+			}
+			crmDto.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
+		}
+		return crmDto;
+	}
+
+
+
+
+	@RequestMapping(value = "/getcrmFileUploadRequest", method = RequestMethod.POST)
+	@ResponseBody
+	public FileUploadResponseData getcrmFileUploadRequest(@RequestParam("file") final MultipartFile multipartFile)
+			throws WebserviceValidationException
+	{
+		final FileUploadResponseData crmFileUploaddata = new FileUploadResponseData();
+		String finalUrlForDispatchProof = null;
+
+		try
+		{
+
+			LOG.debug("***************:" + multipartFile.getOriginalFilename());
+			String fileUploadLocation = null;
+
+			//String finalUrlForDispatchProof = null;
+			//TISRLUAT-50
+			if (null != configurationService)
+			{
+				fileUploadLocation = configurationService.getConfiguration().getString(
+						MarketplacecommerceservicesConstants.FILE_UPLOAD_PATH);
+
+				if (null != fileUploadLocation && !fileUploadLocation.isEmpty())
+				{
+					try
+					{
+						final byte barr[] = multipartFile.getBytes();
+						finalUrlForDispatchProof = getPoDUploadPath(fileUploadLocation, multipartFile.getOriginalFilename()); //PRDI-151
+						final BufferedOutputStream bout = new BufferedOutputStream(new FileOutputStream(finalUrlForDispatchProof));
+						bout.write(barr);
+						bout.flush();
+						bout.close();
+						LOG.info("Txn ID: " + " >> Uploaded Proof of dispatch: " + finalUrlForDispatchProof);
+					}
+					catch (final Exception e)
+					{
+						LOG.error("Failed to upload PoD. Txnid: " + " -- Path: " + finalUrlForDispatchProof + " -- Exception: " + e);
+					}
+
+					crmFileUploaddata.setFileURL(finalUrlForDispatchProof);
+					crmFileUploaddata.setStatus(MarketplacecommerceservicesConstants.SUCCESS_FLAG);
+				}
+				else
+				{
+					LOG.error("Failed to upload Proof of dispatch. POD File Upload location is not configured: "
+							+ MarketplacecommerceservicesConstants.FILE_UPLOAD_PATH);
+				}
+			}
+
+		}
+		catch (final EtailBusinessExceptions e)
+		{
+			ExceptionUtil.etailBusinessExceptionHandler(e, null);
+			if (null != e.getErrorMessage())
+			{
+				crmFileUploaddata.setError(e.getErrorMessage());
+			}
+			if (null != e.getErrorCode())
+			{
+				crmFileUploaddata.setErrorCode(e.getErrorCode());
+			}
+			crmFileUploaddata.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
+
+		}
+		catch (final Exception e)
+		{
+			if (null != e.getMessage())
+			{
+				crmFileUploaddata.setError(e.getMessage());
+			}
+			crmFileUploaddata.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
+
+		}
+
+
+
+
+
+		return crmFileUploaddata;
+	}
+
+	/**
+	 * @param fileUploadLocation
+	 * @param originalFilename
+	 * @return
+	 */
+	private String getPoDUploadPath(final String fileUploadLocation, final String originalFilename)
+	{
+		String date = null;
+		Path path = null;
+		final StringBuffer buffer = new StringBuffer();
+		final SimpleDateFormat sdf = new SimpleDateFormat("YYYY/MM/dd");
+		try
+		{
+			date = sdf.format(new Date());
+			path = Paths.get(fileUploadLocation + File.separator + date);
+			//if directory exists?
+			//"fileUploadLocation", transactionId and fileName cannot be null or blank.
+			if (!Files.exists(path))
+			{
+				try
+				{
+					Files.createDirectories(path);
+				}
+				catch (final IOException e)
+				{
+					//fail to create directory
+					LOG.error("Exception, while creating the Directory: " + path + " -- " + e);
+				}
+			}
+		}
+		catch (final Exception ex)
+		{
+			LOG.error("Exception, While calculating the upload path: " + ex);
+		}
+		return buffer.append(path).append(File.separator).toString();
+	}
+
+
 }

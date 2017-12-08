@@ -10,6 +10,8 @@ import java.util.List;
 import com.tis.mpl.facade.data.TicketStatusUpdate;
 import com.tisl.mpl.facades.cms.data.WebForm;
 import com.tisl.mpl.facades.cms.data.WebFormData;
+import com.tisl.mpl.wsdto.CRMWebFormDataRequest;
+import com.tisl.mpl.wsdto.CRMWebFormDataResponse;
 import com.tisl.mpl.wsdto.CRMWsData;
 
 
@@ -58,5 +60,16 @@ public interface MplWebFormFacade
 	 * @throws Exception
 	 */
 	public List<CRMWsData> getAllWebCRMTreedata();
+
+	/**
+	 * @return
+	 */
+	public List<CRMWebFormDataRequest> getTicketSubmitForm();
+
+	/**
+	 * @param crmTicket
+	 * @return
+	 */
+	public CRMWebFormDataResponse getTicketSubmitForm(CRMWebFormDataRequest crmTicket);
 
 }
