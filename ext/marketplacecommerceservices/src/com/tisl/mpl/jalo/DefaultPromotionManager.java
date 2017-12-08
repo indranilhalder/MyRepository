@@ -2089,50 +2089,74 @@ public class DefaultPromotionManager extends PromotionsManager
 	 * @param adjustedDeliveryCharge
 	 * @param validProductUssidMapSize
 	 * @param validProductList
+	 * @param entry
 	 * @return Map<Product, Double>
 	 */
-	public Map<String, Map<String, Double>> calcForcedDeliveryCharges(final boolean isDeliveryFreeFlag,
-			final double adjustedDeliveryCharge, final String validProductUSSID, final AbstractOrder order,
-			final Map<String, Boolean> isProdShippingPromoAppliedMap, final int validProductUssidMapSize)
+	//	public Map<String, Map<String, Double>> calcForcedDeliveryCharges(final boolean isDeliveryFreeFlag,
+	//			final double adjustedDeliveryCharge, final String validProductUSSID, final AbstractOrder order,
+	//			final Map<String, Boolean> isProdShippingPromoAppliedMap, final int validProductUssidMapSize)
+
+	public Map<String, Map<String, Double>> calcForcedDeliveryCharges(final double adjustedDeliveryCharge,
+			final Map<String, Boolean> isProdShippingPromoAppliedMap, final int totalValidCount, final AbstractOrderEntry entryJalo)
 	{
 		final Map<String, Map<String, Double>> prodPrevCurrDelChargeMap = new HashMap<String, Map<String, Double>>();
 		final Map<AbstractOrderEntryModel, Double> prodDelChargeMap = new HashMap<AbstractOrderEntryModel, Double>();
-		//final AbstractOrderModel abstractOrderModel = (AbstractOrderModel) getModelService().get(order); //TPR-969
-
-		Double currDelCharge = Double.valueOf(0.00D);
-		//for (final AbstractOrderEntryModel entry : abstractOrderModel.getEntries())
-		for (final AbstractOrderEntry entryJalo : order.getEntries())
+		//Double currDelCharge = Double.valueOf(0.00D);
+		final Double currDelCharge = (Double) entryJalo.getProperty(MarketplacecommerceservicesConstants.CURRENTDELIVERYCHARGE);
+		final AbstractOrderEntryModel entryModel = (AbstractOrderEntryModel) getModelService().get(entryJalo);
+		final String selectedUSSID = entryModel.getSelectedUSSID();
+		if (null != entryModel.getMplDeliveryMode())
 		{
-			currDelCharge = (Double) entryJalo.getProperty(MarketplacecommerceservicesConstants.CURRENTDELIVERYCHARGE);
-			final AbstractOrderEntryModel entry = (AbstractOrderEntryModel) getModelService().get(entryJalo);
-			final String selectedUSSID = entry.getSelectedUSSID();
-			if (null != entry.getMplDeliveryMode() && selectedUSSID.equalsIgnoreCase(validProductUSSID))
+			final String selectedDeliveryModeCode = entryModel.getMplDeliveryMode().getDeliveryMode().getCode();
+			final String currencyIsoCode = MarketplacecommerceservicesConstants.INR;
+			ServicesUtil.validateParameterNotNull(selectedDeliveryModeCode, "deliveryCode cannot be null");
+			ServicesUtil.validateParameterNotNull(currencyIsoCode, "currencyIsoCode cannot be null");
+			ServicesUtil.validateParameterNotNull(selectedUSSID, "sellerArticleSKU cannot be null");
+			final MplZoneDeliveryModeValueModel mplZoneDeliveryModeValueModel = deliveryCostService.getDeliveryCost(
+					selectedDeliveryModeCode, currencyIsoCode, selectedUSSID, entryModel.getFulfillmentType());
+
+			if (null != isProdShippingPromoAppliedMap && isProdShippingPromoAppliedMap.containsKey(selectedUSSID)
+					&& isProdShippingPromoAppliedMap.get(selectedUSSID).booleanValue())
 			{
-				final String selectedDeliveryModeCode = entry.getMplDeliveryMode().getDeliveryMode().getCode();
-				final String currencyIsoCode = MarketplacecommerceservicesConstants.INR;
-				ServicesUtil.validateParameterNotNull(selectedDeliveryModeCode, "deliveryCode cannot be null");
-				ServicesUtil.validateParameterNotNull(currencyIsoCode, "currencyIsoCode cannot be null");
-				ServicesUtil.validateParameterNotNull(selectedUSSID, "sellerArticleSKU cannot be null");
-				final MplZoneDeliveryModeValueModel mplZoneDeliveryModeValueModel = deliveryCostService.getDeliveryCost(
-						selectedDeliveryModeCode, currencyIsoCode, selectedUSSID, entry.getFulfillmentType());
-				if (null != isProdShippingPromoAppliedMap && isProdShippingPromoAppliedMap.containsKey(selectedUSSID)
-						&& isProdShippingPromoAppliedMap.get(selectedUSSID).booleanValue())
-				{
-					prodDelChargeMap.put(entry, currDelCharge);
-				}
-				else
-				{
-					prodDelChargeMap.put(entry, mplZoneDeliveryModeValueModel.getValue());
-				}
-				break;
+				prodDelChargeMap.put(entryModel, currDelCharge);
+			}
+			else
+			{
+				prodDelChargeMap.put(entryModel, mplZoneDeliveryModeValueModel.getValue());
 			}
 		}
+
+		//		for (final AbstractOrderEntry entryJalo : order.getEntries())
+		//		{
+		//			currDelCharge = (Double) entryJalo.getProperty(MarketplacecommerceservicesConstants.CURRENTDELIVERYCHARGE);
+		//			final AbstractOrderEntryModel entry = (AbstractOrderEntryModel) getModelService().get(entryJalo);
+		//			final String selectedUSSID = entry.getSelectedUSSID();
+		//			if (null != entry.getMplDeliveryMode() && selectedUSSID.equalsIgnoreCase(validProductUSSID))
+		//			{
+		//				final String selectedDeliveryModeCode = entry.getMplDeliveryMode().getDeliveryMode().getCode();
+		//				final String currencyIsoCode = MarketplacecommerceservicesConstants.INR;
+		//				ServicesUtil.validateParameterNotNull(selectedDeliveryModeCode, "deliveryCode cannot be null");
+		//				ServicesUtil.validateParameterNotNull(currencyIsoCode, "currencyIsoCode cannot be null");
+		//				ServicesUtil.validateParameterNotNull(selectedUSSID, "sellerArticleSKU cannot be null");
+		//				final MplZoneDeliveryModeValueModel mplZoneDeliveryModeValueModel = deliveryCostService.getDeliveryCost(
+		//						selectedDeliveryModeCode, currencyIsoCode, selectedUSSID, entry.getFulfillmentType());
+		//				if (null != isProdShippingPromoAppliedMap && isProdShippingPromoAppliedMap.containsKey(selectedUSSID)
+		//						&& isProdShippingPromoAppliedMap.get(selectedUSSID).booleanValue())
+		//				{
+		//					prodDelChargeMap.put(entry, currDelCharge);
+		//				}
+		//				else
+		//				{
+		//					prodDelChargeMap.put(entry, mplZoneDeliveryModeValueModel.getValue());
+		//				}
+		//				break;
+		//			}
+		//		}
 
 		final Iterator iter = prodDelChargeMap.entrySet().iterator();
 		while (iter.hasNext())
 		{
 			final Map.Entry orderEntry = (Map.Entry) iter.next();
-
 			final Double entryLevelDelCharge = (Double) orderEntry.getValue();
 			final AbstractOrderEntryModel entry = (AbstractOrderEntryModel) orderEntry.getKey();
 			final Map<String, Double> prevCurrDeliveryChargeMap = new HashMap<String, Double>();
@@ -2145,7 +2169,8 @@ public class DefaultPromotionManager extends PromotionsManager
 			}
 			else
 			{
-				final double deliveryChargeAfterPromotion = adjustedDeliveryCharge / validProductUssidMapSize;
+				final double deliveryChargeAfterPromotion = (adjustedDeliveryCharge / totalValidCount)
+						* entry.getQuantity().intValue();
 				final double deliveryChargeForEntry = entryLevelDelCharge.doubleValue() * entry.getQuantity().intValue();
 				//				if (deliveryChargeForEntry >= amtTobeDeduced)
 				//				{
