@@ -155,6 +155,9 @@ body .account .right-account .order-history .product-block li.item a {
 body .account .right-account .order-history .product-block li.item .product-name a {
     text-decoration: none;
 }
+body .account .right-account .order-history .product-block li.item .product-name a:hover {
+	color: #a9143c; 	/* add for TISCSS-71 */
+}
 body .account .right-account .order-history .product-block li.item .image img {
     width: 100%;
     height: auto;
