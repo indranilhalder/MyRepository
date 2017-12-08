@@ -307,8 +307,10 @@ fn:contains(requestScope['javax.servlet.forward.request_uri'],'/cancelSuccess')}
 	src="${commonResourcePath}/js/mpl/acc.singlePageCheckout.js"></script>	
 </c:if>
 <!-- Web form TPR-5989 -->
-<script type="text/javascript"
-	src="${commonResourcePath}/js/mpl/acc.webform.js"></script>	
+<c:if test="${fn:contains(requestScope['javax.servlet.forward.request_uri'],'/ticketForm')}">
+	<script type="text/javascript" src="${commonResourcePath}/js/mpl/acc.webform.js"></script>	
+</c:if>
+
 
 
 <c:if test="${fn:contains(themeResourcePath,'theme-luxury')}">

@@ -1322,7 +1322,6 @@
 	</bean>
 	
 	<bean class="com.tisl.mpl.facades.cms.data.WebFormData">
-		<property name="nodes" type="java.util.List&lt;com.tisl.mpl.facades.cms.data.NodeFormData>" />
 		<property name="commerceTicketId" type="String" />
 		<property name="ticketType" type="String" />
 		<property name="ticketSubType" type="String" />
@@ -1337,8 +1336,10 @@
 		<property name="comment" type="String" />
 		<property name="crmTicketRef" type="String" />
 		<property name="customerId" type="String" />
+		<property name="customerName" type="String" />
+		<property name="customerEmail" type="String" />
 		<property name="status" type="String" />
-		<property name="attachments" type="java.util.List&lt;java.lang.String>" />
+		<property name="attachments" type="String" />
 	</bean>
 	<!-- Added for TPR-5989 -->
 	<bean class="com.tis.mpl.facade.data.TicketStatusUpdate">

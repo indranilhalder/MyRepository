@@ -16,7 +16,6 @@ package com.tisl.mpl.storefront.controllers.pages;
 import de.hybris.platform.acceleratorstorefrontcommons.breadcrumb.impl.StoreBreadcrumbBuilder;
 import de.hybris.platform.cms2.exceptions.CMSItemNotFoundException;
 import de.hybris.platform.commercefacades.customer.CustomerFacade;
-import de.hybris.platform.commercefacades.user.data.CustomerData;
 import de.hybris.platform.commerceservices.search.pagedata.PageableData;
 import de.hybris.platform.servicelayer.config.ConfigurationService;
 
@@ -28,6 +27,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -103,25 +103,28 @@ public class WebFormPageController extends AbstractMplSearchPageController
 	public String ticketFormSave(@ModelAttribute final TicketWebForm webForm, final Model model) throws CMSItemNotFoundException
 	{
 		final WebFormData formData = new WebFormData();
+		String ticketRefId = null;
 		try
 		{
 			formData.setComment(webForm.getComment());
-			final CustomerData currentUser = customerFacade.getCurrentCustomer();
-			if (currentUser != null)
-			{
-				formData.setCustomerId(currentUser.getUid());
-			}
 			formData.setOrderCode(webForm.getOrderCode());
 			formData.setSubOrderCode(webForm.getSubOrderCode());
 			formData.setTransactionId(webForm.getTransactionId());
 
-			//formData.setL0code(webForm.get);
+			formData.setL0code(webForm.getNodeL0());
+			formData.setL1code(webForm.getNodeL1());
+			formData.setL2code(webForm.getNodeL2());
+			formData.setL3code(webForm.getNodeL3());
+			formData.setL4code(webForm.getNodeL4());
+			formData.setTicketType(webForm.getTicketType());
+
 			//uploading file if any
 			if (CollectionUtils.isNotEmpty(webForm.getAttachmentFiles()))
 			{
-				//formData.setAttachments(attachments);
+				formData.setAttachments(webForm.getAttachmentFiles());
 			}
-			mplWebFormFacade.sendWebformTicket(formData);
+			ticketRefId = mplWebFormFacade.sendWebformTicket(formData);
+			model.addAttribute("ticketRefId", ticketRefId);
 			model.addAttribute("ticketForm", webForm);
 		}
 		catch (final Exception e)
@@ -154,6 +157,7 @@ public class WebFormPageController extends AbstractMplSearchPageController
 	{
 		String fileUploadLocation = null, nowDate = null;
 		Path path = null;
+		final List<String> fileUploadLocations = new ArrayList<String>();
 		fileUploadLocation = configurationService.getConfiguration().getString(RequestMappingUrlConstants.FILE_UPLOAD_PATH);
 		if (StringUtils.isNotEmpty(fileUploadLocation))
 		{
@@ -184,6 +188,7 @@ public class WebFormPageController extends AbstractMplSearchPageController
 					bout.flush();
 					bout.close();
 					LOG.debug("FileUploadLocation   :" + fileUploadLocation);
+					fileUploadLocations.add(fileUploadLocation);
 				}
 			}
 			catch (final Exception e)
@@ -193,8 +198,7 @@ public class WebFormPageController extends AbstractMplSearchPageController
 			}
 
 		}
-
-		return fileUploadLocation;
+		return StringUtils.join(fileUploadLocations, ',');
 	}
 
 }

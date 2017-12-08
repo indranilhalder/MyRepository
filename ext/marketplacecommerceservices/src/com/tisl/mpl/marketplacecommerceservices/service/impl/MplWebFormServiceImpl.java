@@ -59,8 +59,6 @@ public class MplWebFormServiceImpl implements MplWebFormService
 	@Resource(name = "orderConverter")
 	private Converter<OrderModel, OrderData> orderConverter;
 
-	@Resource(name = "webFormDataConverter")
-	private Converter<WebFormData, MplWebCrmTicketModel> webFormDataConverter;
 
 	private static final String SUCCESS = "success";
 	private static final String FAILURE = "failure";
@@ -191,18 +189,11 @@ public class MplWebFormServiceImpl implements MplWebFormService
 	}
 
 	@Override
-	public boolean sendWebFormTicket(final WebFormData ticketData)
+	public boolean sendWebFormTicket(final MplWebCrmTicketModel webFormModel)
 	{
-		if (checkDuplicateWebCRMTickets(ticketData))
-		{
-			final MplWebCrmTicketModel webFormModel = new MplWebCrmTicketModel();
-			return clientIntegration.sendWebFormTicket(webFormDataConverter.convert(ticketData, webFormModel));
-		}
-		else
-		{
-			return false;
-		}
+		//save Ticket in Commerce
+		modelService.save(webFormModel);
+		//send to PI
+		return clientIntegration.sendWebFormTicket(webFormModel);
 	}
-
-
 }

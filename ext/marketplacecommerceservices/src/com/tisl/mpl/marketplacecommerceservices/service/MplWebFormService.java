@@ -42,7 +42,7 @@ public interface MplWebFormService
 
 	public boolean webformTicketStatusUpdate(final TicketStatusUpdate ticketStatusUpdate) throws Exception;
 
-	public boolean sendWebFormTicket(final WebFormData formData) throws Exception;
+	public boolean sendWebFormTicket(final MplWebCrmTicketModel webFormModel) throws Exception;
 
 
 

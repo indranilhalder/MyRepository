@@ -11,6 +11,7 @@ import de.hybris.platform.commerceservices.search.pagedata.PageableData;
 import de.hybris.platform.commerceservices.search.pagedata.SearchPageData;
 import de.hybris.platform.core.model.user.CustomerModel;
 import de.hybris.platform.servicelayer.config.ConfigurationService;
+import de.hybris.platform.servicelayer.dto.converter.Converter;
 import de.hybris.platform.servicelayer.user.UserService;
 
 import java.util.ArrayList;
@@ -46,8 +47,6 @@ public class MplDefaultWebFormFacade implements MplWebFormFacade
 {
 	protected static final Logger LOG = Logger.getLogger(MplDefaultWebFormFacade.class);
 
-	private static final CRMWebFormDataResponse CRMWebFormDataResponse = null;
-
 	@Resource
 	private MplWebFormService mplWebFormService;
 
@@ -63,6 +62,8 @@ public class MplDefaultWebFormFacade implements MplWebFormFacade
 	private MplPrefixablePersistentKeyGenerator prefixableKeyGenerator;
 	@Resource(name = "customerFacade")
 	private CustomerFacade customerFacade;
+	@Resource(name = "webFormDataConverter")
+	private Converter<WebFormData, MplWebCrmTicketModel> webFormDataConverter;
 
 	/*
 	 * (non-Javadoc)
@@ -212,13 +213,21 @@ public class MplDefaultWebFormFacade implements MplWebFormFacade
 	 * @return the success/failure boolean response
 	 */
 	@Override
-	public boolean sendWebformTicket(final WebFormData formData) throws Exception
+	public String sendWebformTicket(final WebFormData formData) throws Exception
 	{
+		MplWebCrmTicketModel webFormModel = new MplWebCrmTicketModel();
+		final WebFormData ticketData = new WebFormData();
 		//Setting ECOM request prefix as E to for COMM triggered Ticket
 		prefixableKeyGenerator.setPrefix(MarketplacecommerceservicesConstants.TICKETID_PREFIX_E);
-		formData.setCommerceTicketId(prefixableKeyGenerator.generate().toString());
-		//Sending ticket to CRM via PI
-		return mplWebFormService.sendWebFormTicket(formData);
+		final String commerceTicketId = prefixableKeyGenerator.generate().toString();
+		formData.setCommerceTicketId(commerceTicketId);
+		//checking ticket is duplicate or not in Commerce
+		if (checkDuplicateWebCRMTickets(formData))
+		{
+			webFormModel = webFormDataConverter.convert(ticketData, webFormModel);
+			mplWebFormService.sendWebFormTicket(webFormModel);
+		}
+		return commerceTicketId;
 	}
 
 
@@ -341,19 +350,10 @@ public class MplDefaultWebFormFacade implements MplWebFormFacade
 	public CRMWebFormDataResponse getTicketSubmitForm(final CRMWebFormDataRequest crmTicket)
 	{
 		final CRMWebFormDataResponse mplCRMWebFormResponseData = new CRMWebFormDataResponse();
-
-
-
-
-
-
+		final WebFormData formData = new WebFormData();
+		String commerceRef = null;
 		try
 		{
-			final String commerceTicketId = null;
-			final MplWebCrmTicketModel mplwebFormTicketModel = mplWebFormService.getWebCRMTicket(commerceTicketId);
-			final WebFormData formData = new WebFormData();
-
-
 			formData.setComment(crmTicket.getComment());
 			final CustomerData currentUser = customerFacade.getCurrentCustomer();
 			if (currentUser != null)
@@ -365,26 +365,25 @@ public class MplDefaultWebFormFacade implements MplWebFormFacade
 			formData.setTransactionId(crmTicket.getTransactionId());
 			formData.setAttachments(new ArrayList(Arrays.asList(crmTicket.getAttachments().split(","))));
 
-			sendWebformTicket(formData);
-
-
-
-
+			commerceRef = sendWebformTicket(formData);
+			// API response set
+			if (commerceRef != null)
+			{
+				mplCRMWebFormResponseData.setReferenceNum(commerceRef);
+				mplCRMWebFormResponseData.setStatus(MarketplacecommerceservicesConstants.SUCCESS_FLAG);
+			}
+			else
+			{
+				mplCRMWebFormResponseData.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
+			}
 		}
-
-
 		catch (final Exception e)
 		{
 			LOG.error("ticketFormSave" + e);
+			mplCRMWebFormResponseData.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
 		}
-
-
-
 		return mplCRMWebFormResponseData;
-
-
 	}
-
 
 	/*
 	 * (non-Javadoc)

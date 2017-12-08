@@ -24,6 +24,7 @@ public class TicketWebForm
 	private String contactEmail;
 	private String contactMobile;
 	private String contactName;
+	private String nodeL0;
 	private String nodeL1;
 	private String nodeL2;
 	private String nodeL3;
@@ -279,11 +280,28 @@ public class TicketWebForm
 	}
 
 	/**
-	 * @param attachmentFiles the attachmentFiles to set
+	 * @param attachmentFiles
+	 *           the attachmentFiles to set
 	 */
-	public void setAttachmentFiles(List<String> attachmentFiles)
+	public void setAttachmentFiles(final List<String> attachmentFiles)
 	{
 		this.attachmentFiles = attachmentFiles;
+	}
+
+	/**
+	 * @return the nodeL0
+	 */
+	public String getNodeL0()
+	{
+		return nodeL0;
+	}
+
+	/**
+	 * @param nodeL0 the nodeL0 to set
+	 */
+	public void setNodeL0(String nodeL0)
+	{
+		this.nodeL0 = nodeL0;
 	}
 
 

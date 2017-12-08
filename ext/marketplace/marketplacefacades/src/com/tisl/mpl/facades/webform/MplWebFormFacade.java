@@ -45,7 +45,7 @@ public interface MplWebFormFacade
 	 * @param formData
 	 * @return the success/failure boolean response
 	 */
-	public boolean sendWebformTicket(final WebFormData formData) throws Exception;
+	public String sendWebformTicket(final WebFormData formData) throws Exception;
 
 	/**
 	 * This method converts the hierachical data model to pojo

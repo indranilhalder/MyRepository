@@ -13541,7 +13541,8 @@
 		<!-- TPR-6665 : sysnonums update to slave servers end -->
 		<!-- TPR- 5989 : Web Form to create a Ticket from commerce -->
 		<typegroup name="MPL_WEB_CRM_TICKET">
-		<itemtype code="MplWebCrm" autocreate="true" generate="true" >
+		<itemtype code="MplWebCrm" autocreate="true" generate="true" jaloclass="com.tisl.mpl.core.jalo.MplWebCrm">
+				<description>Takes Business Configured CRM mapping</description>
 				<deployment table="MplWebCrm" typecode="11890" />
 				<attributes>
 					<attribute qualifier="nodeType" type="java.lang.String">
@@ -13554,7 +13555,7 @@
 					</attribute>
 					<attribute qualifier="nodeCrmCode" type="java.lang.String">
 						<persistence type="property" />
-						<modifiers optional="false" />
+						<modifiers optional="false" unique="true" />
 					</attribute>
 					<attribute qualifier="nodeParent" type="java.lang.String">
 						<persistence type="property" />
@@ -13598,11 +13599,12 @@
 				</attributes>
 			</itemtype>
 			
-			<itemtype code="MplWebCrmTicket" autocreate="true" generate="true" >
+			<itemtype code="MplWebCrmTicket" autocreate="true" generate="true" jaloclass="com.tisl.mpl.core.jalo.MplWebCrmTicket">
+				<description>Stores Customer Ticket for sending to CRM</description>
 				<deployment table="MplWebCrmTicket" typecode="11898" />
 				<attributes>
 					<attribute qualifier="commerceTicketId" type="java.lang.String">
-						<modifiers optional="false" />
+						<modifiers optional="false" unique="true" />
 						<persistence type="property" />
 					</attribute>
 					<attribute qualifier="ticketType" type="java.lang.String">
