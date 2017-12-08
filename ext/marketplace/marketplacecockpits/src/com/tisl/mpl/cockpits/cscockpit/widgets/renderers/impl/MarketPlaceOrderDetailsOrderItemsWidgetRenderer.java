@@ -5,6 +5,8 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 
+import net.sourceforge.pmd.util.StringUtil;
+
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
@@ -31,6 +33,7 @@ import com.tisl.mpl.cockpits.cscockpit.widgets.controllers.MarketplaceCheckoutCo
 import com.tisl.mpl.constants.MplConstants;
 import com.tisl.mpl.core.constants.GeneratedMarketplaceCoreConstants.Enumerations.ClickAndCollectEnum;
 import com.tisl.mpl.core.enums.DeliveryFulfillModesEnum;
+import com.tisl.mpl.core.model.MplCustomerBankAccountDetailsModel;
 import com.tisl.mpl.core.model.MplZoneDeliveryModeValueModel;
 import com.tisl.mpl.core.model.RichAttributeModel;
 import com.tisl.mpl.cockpits.cscockpit.widgets.controllers.MplDefaultOrderController;
@@ -171,12 +174,12 @@ public class MarketPlaceOrderDetailsOrderItemsWidgetRenderer extends
 		}
 		listheader = new Listheader(LabelUtils.getLabel(widget, "basePrice",
 				new Object[0]));
-		listheader.setWidth("80px");
+		listheader.setWidth("75px");
 		row.appendChild(listheader);
 
 		listheader = new Listheader(LabelUtils.getLabel(widget, "totalPrice",
 				new Object[0]));
-		listheader.setWidth("80px");
+		listheader.setWidth("75px");
 		row.appendChild(listheader);
 
 		listheader = new Listheader(LabelUtils.getLabel(widget, "qty",
@@ -187,16 +190,27 @@ public class MarketPlaceOrderDetailsOrderItemsWidgetRenderer extends
 		//CKD: TPR-3809
 		listheader = new Listheader(LabelUtils.getLabel(widget, "panCardStatus",
 				new Object[0]));
+		listheader.setWidth("80px");
+		row.appendChild(listheader);
+		// TPR-7412 start
+		listheader = new Listheader(LabelUtils.getLabel(widget, "utrNoORarnNo",
+				new Object[0]));
+		listheader.setWidth("95px");
+		row.appendChild(listheader);
+		
+		listheader = new Listheader(LabelUtils.getLabel(widget, "bankDetails",
+				new Object[0]));
 		listheader.setWidth("120px");
 		row.appendChild(listheader);
-
+		
+		// TPR-7412 end
 		return row;
 	}
 
 	protected void populateMasterRow(ListboxWidget widget, Listitem row,
 			Object context, TypedObject item) {
 		
-		row.setHeight("80px");
+		row.setHeight("120px");
 		PropertyDescriptor entryNumberPD = getCockpitTypeService()
 				.getPropertyDescriptor("AbstractOrderEntry.entryNumber");
 		PropertyDescriptor basePricePD = getCockpitTypeService()
@@ -372,14 +386,52 @@ public class MarketPlaceOrderDetailsOrderItemsWidgetRenderer extends
 		row.appendChild(new Listcell(qtyString));
 		
 		//CKD-TPR-3809
-		String panCardStatus = ((MplDefaultOrderController)widget.getWidgetController()).getPanCardStatus(entrymodel.getOrderLineId());
+		String panCardStatus=null;
+		if(StringUtil.isNotEmpty(entrymodel.getOrderLineId())&&null!=entrymodel.getOrderLineId())
+		{
+		 panCardStatus = ((MplDefaultOrderController)widget.getWidgetController()).getPanCardStatus(entrymodel.getOrderLineId());
+		}
 		if (StringUtils.isNotBlank(panCardStatus)){
 			row.appendChild(new Listcell(panCardStatus));
 		}
 		else{
 			row.appendChild(new Listcell(MplConstants.NOT_AVAILABLE));
 		}
-
+      //	TPR-7412 start	
+		String utrNoORarnNo=null;
+		if(StringUtil.isNotEmpty(entrymodel.getOrderLineId())&&null!=entrymodel.getOrderLineId())
+		{
+		 utrNoORarnNo = ((MplDefaultOrderController)widget.getWidgetController()).getUtrNoArnNo(entrymodel.getOrderLineId());
+		}
+		if(StringUtils.isNotBlank(utrNoORarnNo))
+		{
+			row.appendChild(new Listcell(utrNoORarnNo));
+		}
+		else
+		{
+			row.appendChild(new Listcell(MplConstants.NOT_AVAILABLE));
+		}
+    //TPR-7412 end
+		if(null!=entrymodel.getOrder() && null!=entrymodel.getOrder().getUser() && null!=entrymodel.getOrder().getUser().getUid() )
+		{
+			MplCustomerBankAccountDetailsModel customerBankDetailsModel = null;
+			String st=null;
+			customerBankDetailsModel=((MplDefaultOrderController)widget.getWidgetController()).getCustomerBankdetails(entrymodel.getOrder().getUser().getUid());
+		    if(null !=customerBankDetailsModel)
+		    {
+			 st = customerBankDetailsModel.getAccountHolderName()+","+customerBankDetailsModel.getBankName()+", A/C NO:"+customerBankDetailsModel.getAccountNumber()+", IFSC:"+customerBankDetailsModel.getIfscCode();
+			 row.appendChild(new Listcell(st));
+		    }
+		    else
+			{
+			row.appendChild(new Listcell(MplConstants.NOT_AVAILABLE));
+			}
+		    
+		}
+		else
+		{
+		row.appendChild(new Listcell(MplConstants.NOT_AVAILABLE));
+		}
 	}
 
 	

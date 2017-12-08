@@ -74,7 +74,7 @@ public class MplProductFacadeImpl implements MplProductFacade
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.tisl.mpl.facade.product.MplProductFacade#getProductFeatureModelByProductAndQualifier(de.hybris.platform.
 	 * commercefacades.product.data.ProductData, java.lang.String)
 	 */
@@ -99,7 +99,7 @@ public class MplProductFacadeImpl implements MplProductFacade
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.tisl.mpl.facade.product.MplProductFacade#getPDPPincodeSession()
 	 */
 	@Override
@@ -112,7 +112,7 @@ public class MplProductFacadeImpl implements MplProductFacade
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.tisl.mpl.facade.product.MplProductFacade#setPDPPincodeSession(java.lang.String)
 	 */
 	@Override
@@ -121,5 +121,18 @@ public class MplProductFacadeImpl implements MplProductFacade
 		sessionService.setAttribute(MarketplacecommerceservicesConstants.SESSION_PINCODE, pincode);
 	}
 
+	@Override
+	public String getSizeForSTWProduct(final String productCode)
+	{
+		return mplProductService.getSizeForSTWProduct(productCode);
+
+	}
+
+	@Override
+	public List<String> getVariantsForSTWProducts(final String productCode)
+	{
+		return mplProductService.getVariantsForSTWProducts(productCode);
+
+	}
 
 }

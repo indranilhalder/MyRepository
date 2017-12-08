@@ -68,10 +68,14 @@
 											<p class="item-info">											
 												<span>Qty: ${entryReturn.quantity}</span>
 												<c:if test="${not empty entryReturn.product.size}">
+												<c:if test="${!fn:containsIgnoreCase(entryReturn.product.size, 'No Size')}">
 				 									<span>Size: ${entryReturn.product.size}</span>
+				 								</c:if>
 												</c:if>
 												<c:if test="${not empty entryReturn.product.colour}">
+												<c:if test="${!fn:containsIgnoreCase(entryReturn.product.colour, 'No Color')}">
 													<span>Color: ${entryReturn.product.colour}</span>
+												</c:if>
 												</c:if>
 												
 												<span class="price">
