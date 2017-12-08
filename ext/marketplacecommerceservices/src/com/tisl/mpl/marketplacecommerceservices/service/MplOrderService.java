@@ -32,6 +32,15 @@ public interface MplOrderService
 	 */
 	List<ReturnReasonData> getReturnReasonForOrderItem();
 
+	//TPR-5954
+	public List<ReturnReasonData> getCatspecificRetReason(String L2CatCode) throws Exception;
+
+	//TPR-5954
+	public List<ReturnReasonData> fetchSubReturnReason(final String parentReturnCode) throws Exception;
+
+	//TPR-5954
+	public String fetchReasonDesc(final String parentReturnCode) throws Exception;
+
 	/**
 	 *
 	 * @param paramCustomerModel

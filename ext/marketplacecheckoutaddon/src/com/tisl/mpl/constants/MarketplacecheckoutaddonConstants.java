@@ -221,6 +221,7 @@ public final class MarketplacecheckoutaddonConstants extends GeneratedMarketplac
 	public static final String INVENTORYNOTAVAILABLE = "Stock is not available for the pincode";
 	public static final String PAYNOWINVENTORYNOTPRESENT = "inventoryNotPresent";
 	public static final String PAYNOWPROMOTIONEXPIRED = "promotionexpired";
+	public static final String PAYMENTMODEINFO = "paymentModeInfo";//TPR-7486
 
 	public static final String ITEMLEVELDISCOUNT = "itemLevelDiscount";
 
@@ -238,6 +239,8 @@ public final class MarketplacecheckoutaddonConstants extends GeneratedMarketplac
 	public static final String CHANNEL_WEB = "WEB";
 
 	public static final String UPDATE_CHECK_PINCODE = "/updatePincodeCheck";
+	public static final String PAYMENTRELATEDOFFERS = "/paymentRelatedOffers";
+	public static final String PAYMENTRELATEDOFFERSTERMS = "/paymentRelatedOffersTerms";
 
 	public static final String ADDPOSORDERENTRY = "/addPosToOrderEntry";
 	public static final String ADDPICKUPPERSONDETAILS = "/addPickupPersonDetails";
@@ -295,6 +298,10 @@ public final class MarketplacecheckoutaddonConstants extends GeneratedMarketplac
 	public static final String DEBITCARDMODE = "Debit Card";
 	public static final String NETBANKINGMODE = "Netbanking";
 	public static final String EMIMODE = "EMI";
+
+	//TPR-7486
+	public static final String NEWCARD = "newCard";
+	public static final String SAVEDCARD = "savedCard";
 
 	public static final String SETUPMPLNETBANKINGFORM = "/setupMplNetbankingForm"; //TISPT-235
 	public static final String SETUPMPLCODFORM = "/setupMplCODForm"; //TISPT-235
@@ -368,8 +375,10 @@ public final class MarketplacecheckoutaddonConstants extends GeneratedMarketplac
 	public static final String REMOVEEXCHANGEFROMCART = "/removeExchangeFromCart";
 	//INC144316212
 	public static final String IS_DELIVERY_OPTION_PAGE = "isDeliveryOptionPage";
-	
+
 	public static final String CODELIGIBLE_SESSION = "codEligibleSession";
+	public static final String JUSPAYBASEURL = "juspayBaseUrl";//TPR-7448
+
 
 	//INC144317480: Order Threshold Discount Promotion: Netbanking Payment Mode Restriction doesn't work
 	//public static final String BANKNAMEFORNETBANKING = "bankNameforNetbanking";

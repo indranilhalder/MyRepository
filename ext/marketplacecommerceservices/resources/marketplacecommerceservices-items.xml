@@ -3469,6 +3469,42 @@
 		</typegroup>
 		 <!-- PR-15 ends -->
 		
+		<!-- TPR-7448 Starts here -->
+		<!-- Juspay Order Status -->
+		<typegroup name="JuspayCardStatus">
+		 <itemtype code="JuspayCardStatus" autocreate="true"
+				generate="true" jaloclass="com.tisl.mpl.core.jalo.JuspayCardStatus">
+				<deployment table="MplJuspayCrdStatus" typecode="1603" />
+		 		<attributes>
+					<attribute qualifier="card_token" type="java.lang.String"
+						autocreate="true" generate="true">
+						<modifiers read="true" write="true" search="true" />
+						<persistence type="property" />
+					</attribute>
+					<attribute qualifier="card_reference" type="java.lang.String"
+						autocreate="true" generate="true">
+						<modifiers read="true" write="true" search="true" />
+						<persistence type="property" />
+					</attribute>
+					<attribute qualifier="card_fingerprint" type="java.lang.String"
+						autocreate="true" generate="true">
+						<modifiers read="true" write="true" search="true" />
+						<persistence type="property" />
+					</attribute>
+					<attribute qualifier="guid" type="java.lang.String"
+						autocreate="true" generate="true">
+						<modifiers read="true" write="true" search="true" />
+						<persistence type="property" />
+					</attribute>
+					<attribute qualifier="customerId" type="java.lang.String"
+						autocreate="true" generate="true">
+						<modifiers read="true" write="true" search="true" />
+						<persistence type="property" />
+					</attribute>
+				</attributes>
+		</itemtype>
+		</typegroup>
+		<!-- TPR-7448 Ends here -->
 		
 	</itemtypes>
 	

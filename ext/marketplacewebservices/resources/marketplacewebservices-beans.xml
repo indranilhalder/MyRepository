@@ -3080,6 +3080,8 @@
         <property name="reverseSealFrJwlry" type="com.tisl.mpl.wsdto.RevSealJwlryDataWsDTO"/>
         <property name="reverseSealAvailable" type="java.lang.String"/>
         <property name="returnModes" type="com.tisl.mpl.wsdto.ReturnModesWsDTO"></property>
+        <!-- Added for TPR-5954 -->
+        <property name="returnReasonMap" type="java.util.Map&lt;String,java.util.List&lt;java.lang.String>>"/>
 	</bean>
 	<!-- For Return Web Services Change Pincode QuickDrop Stores -->
 	<bean class="com.tisl.mpl.wsdto.QuickDropStoresList" extends="com.tisl.mpl.wsdto.ErrorDTO">
@@ -3377,5 +3379,20 @@
 		<property name="LuxurySimpleBannerComponent" type="java.util.List&lt;com.tisl.mpl.wsdto.LuxurySimpleBannerComponentWsDTO>"/>																													 
 
 	</bean>
+	
+    <!--  TPR-7486 -->		
+    <bean class="com.tisl.mpl.wsdto.OfferListWsData" extends="com.tisl.mpl.wsdto.ErrorDTO">
+        <property name="totalOffers" type="String"/>
+	    <property name="coupons" type="java.util.List&lt;com.tisl.mpl.wsdto.OfferResultWsData>"/>
+	</bean>
+	<bean class="com.tisl.mpl.wsdto.OfferResultWsData">
+        <property name="offerCode" type="String"/>
+	    <property name="offerDescription" type="String"/>
+		<property name="offerTitle" type="String"/>
+		<property name="offerMaxDiscount" type="String"/>
+		<property name="offerMinCartValue" type="String"/>	
+		<property name="offerTermsConditions" type="String"/>	
+	</bean>
+	
 
 </beans>

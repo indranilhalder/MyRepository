@@ -12,6 +12,8 @@ import de.hybris.platform.voucher.model.VoucherModel;
 import java.util.List;
 import java.util.Map;
 
+import com.tisl.mpl.model.MplCartOfferVoucherModel;
+
 
 /**
  * @author TCS
@@ -33,6 +35,13 @@ public interface MplCouponDao
 	 */
 	SearchPageData<VoucherModel> findClosedVoucher(CustomerModel customer, PageableData pageableData);
 
+	/**
+	 * TPR-7486
+	 */
+	List<MplCartOfferVoucherModel> getPaymentModerelatedVouchers();
+
+	Map<String, Double> getPaymentModerelatedVoucherswithTotal();
+
 
 	/**
 	 * @param customer
@@ -46,5 +55,11 @@ public interface MplCouponDao
 	 * @return Map<String, Double>
 	 */
 	Map<String, Double> findVoucherHistoryAllInvalidations(CustomerModel customer);
+
+	/**
+	 * @param manuallyselectedvoucher
+	 * @return String
+	 */
+	String getVoucherCode(String manuallyselectedvoucher);
 
 }
