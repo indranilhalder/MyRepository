@@ -4,7 +4,11 @@
 		<property qualifier="PaymentTransactionEntry.time" visible="true"/>
 		<property qualifier="PaymentTransactionEntry.type" visible="true"/>
 		
-		<property qualifier="PaymentTransactionEntry.paymentMode.mode" visible="true"/>
+		<!--  <property qualifier="PaymentTransactionEntry.paymentMode.mode" visible="true"/> -->
+		<!-- SDI-2919 : EMI payment mode for EMI orders for displaying in cscockpit-->
+		<custom class="com.tisl.mpl.cockpits.services.config.impl.PaymentModeColumn" name="Payment Mode" visible="true">
+			<label key="cscockpit.PaymentTransactionEntry.mode" />
+		</custom>
 		
 		<property qualifier="PaymentTransactionEntry.paymentTransaction.requestID" visible="true"/>
 

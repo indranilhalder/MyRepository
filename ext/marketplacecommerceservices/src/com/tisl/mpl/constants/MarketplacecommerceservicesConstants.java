@@ -1905,6 +1905,8 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String MESSAGESTARTDATE = "startDate".intern();
 	public static final String MESSAGEENDDATE = "endDate".intern();
 
+	public static final String TERMSANDCONDITIONS = "termsAndConditions".intern();//CAR-327 added
+
 	//Added For TPR-1035
 	public static final String BIN_ERROR_HEADER = "BIN,CUSTOMER_ID,PAYMENTMODE,DATE,TYPE_OF_ERROR".intern();
 	public static final String BIN_ERROR_FILE_LOCATION = "bin.errorreport.csv.path".intern();
@@ -2313,6 +2315,7 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String ORDERFETCH_STARTTIME = "marketplace.refundorder.fetchStartTime".intern();
 
 	public static final String STARTTIME = "startTime".intern();
+	public static final String FINISHED = "FINISHED";
 
 	//PR-4 || Refund sms cron job
 	public static final String BULK_CUSTOMER_SMS_1 = "Hey ";

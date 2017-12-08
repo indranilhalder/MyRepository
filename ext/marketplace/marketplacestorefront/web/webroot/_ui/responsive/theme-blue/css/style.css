@@ -1,4 +1,4 @@
-/* http://meyerweb.com/eric/tools/css/reset/ 
+﻿/* http://meyerweb.com/eric/tools/css/reset/ 
    v2.0 | 20110126
    License: none (public domain)
 */
@@ -77603,6 +77603,44 @@ background: url(../images/search_image.png) no-repeat;}
     z-index: 2;
 }
 
+/* SDI-1393 End */
+
+/* TPR-5954 */
+.upload-image-title {
+				    cursor: pointer;
+					margin: 10px 18px;
+					color: #a9143c;
+				}
+				#upload-photo {
+				   opacity: 0;
+				   position: absolute;
+				   z-index: -1;
+				}
+				.add-comment-title{
+					color: #a9143c;
+				    font-size: 14px;
+				    margin: 10px 0;
+				}
+
+.accordtionTataCliq .accContents.selectReason.col-md-12 .col-md-7.col-sm-7.col-xs-12.selectReasonForReturn #returnSubReason{
+    width: 47%;
+}
+
+
+
+
+/* SDI-1393 End */
+
+/* start CAR-327 */
+#termsAndConditionsheading{
+	font-size: 12px;
+    font-weight: bold;
+}
+#termsAndConditions{
+	font-size: 12px;
+}
+/* end CAR-327 */
+
 .error_msg_backfrom_payment{
     line-height: normal;
     letter-spacing: .6px;
@@ -77621,8 +77659,6 @@ background: url(../images/search_image.png) no-repeat;}
 /* end change for TISUAT-6116 */
 
 /* SDI-1393 End */
-
-/* HOME-210 start */
 .homefurnishing-overview:nth-child(2) {
     float: right ! important;
 }

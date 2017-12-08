@@ -15,15 +15,15 @@
 <!-- 		<h2>Offers</h2> -->
 			<ycommerce:testId code="productDetails_promotion_label">
 			
-					<c:choose>
-					<c:when test="${not empty product.potentialPromotions}"> 
-								<%-- <input type="hidden" value='${product.potentialPromotions}' id="promolist"/> --%>
-			<%-- 	<c:if test="${not empty product.potentialPromotions}"> --%>
 					<%-- <c:choose>
+					<c:when test="${not empty product.potentialPromotions}"> 
+								<input type="hidden" value='${product.potentialPromotions}' id="promolist"/>
+				<c:if test="${not empty product.potentialPromotions}">
+					<c:choose>
 				<c:when test="${not empty product.potentialPromotions[0].couldFireMessages}">
 					<p>${product.potentialPromotions[0].couldFireMessages[0]}</p>
 				</c:when>
-				<c:otherwise> --%>
+				<c:otherwise>
 					<ul>
 						<c:choose>
 							<c:when
@@ -55,14 +55,14 @@
 												${product.potentialPromotions[0].title}
 											</h3>
 											<h3 class="promo-price"></h3>
-											<%-- <p>${product.potentialPromotions[0].description}</p> --%>
+											<p>${product.potentialPromotions[0].description}</p>
 											<input type="hidden" id="promotedSellerId"
 												value="${product.potentialPromotions[0].allowedSellers}" />
 
 											<c:forEach
 												items="${product.potentialPromotions[0].giftProduct}"
 												var="promotionProduct">
-												<%-- <a href="${request.contextPath}${promotionProduct.url}">View Details</a>  --%>
+												<a href="${request.contextPath}${promotionProduct.url}">View Details</a> 
 											</c:forEach>
 
 											<!-- <br />
@@ -108,7 +108,7 @@
 									<!-- end if check for channel web -->
 									<!-- added for TISTE-143, Block for channel mobile -->	
 									<!-- Commented for TISJEW-3402 -->								
-									<%-- <c:if test="${channel eq 'Mobile'}">					
+									<c:if test="${channel eq 'Mobile'}">					
 							  			<!-- <input type="hidden" value="" id="promolist"/> -->		
 							  			<ul>
 											<li>
@@ -118,7 +118,7 @@
 												</div>
 											</li>
 									   </ul>
-            	                  </c:if> --%>     	                  
+            	                  </c:if>     	                  
 								</c:forEach>
 							</c:when>
 							<c:otherwise>
@@ -146,14 +146,14 @@
 											${product.potentialPromotions[0].title}
 										</h3>
 										<h3 class="promo-price"></h3>
-										<%-- <p>${product.potentialPromotions[0].description}</p> --%>
+										<p>${product.potentialPromotions[0].description}</p>
 										<input type="hidden" id="promotedSellerId"
 											value="${product.potentialPromotions[0].allowedSellers}" />
 
 										<c:forEach
 											items="${product.potentialPromotions[0].giftProduct}"
 											var="promotionProduct">
-											<%-- <a href="${request.contextPath}${promotionProduct.url}">View Details</a>  --%>
+											<a href="${request.contextPath}${promotionProduct.url}">View Details</a> 
 										</c:forEach>
 
 										<!-- <br />
@@ -199,12 +199,12 @@
 							</c:otherwise>
 						</c:choose>
 					</ul>
-					<%-- </c:otherwise>
-			</c:choose> --%>
-			<%-- 	</c:if> --%>
+					</c:otherwise>
+			</c:choose>
+				</c:if>
 			<!-- //Added for displaying Non HMC configurable offer messages , TPR-589 -->
 			</c:when>
-			<c:otherwise>		
+			<c:otherwise>	commented for CAR-327	 --%>
 	  			<input type="hidden" value="" id="promolist"/>		
 	  			<ul>
 					<li>
@@ -214,8 +214,8 @@
 						</div>
 					</li>
 			</ul>
-            	</c:otherwise>
-            	</c:choose>
+            	<%-- </c:otherwise>
+            	</c:choose> --%>
 			</ycommerce:testId>
 		</div>
 	</div>
