@@ -1117,6 +1117,15 @@ body .right-account .order-details .deliveryTrack .dot-arrow {
 .confirmation .product-block li.header ul li.shipping ul.express, .confirmation .product-block li ul li.shipping ul.Express {
     color: #ffa800;
 }
+/* start change for TISCSS-66 */
+.confirmation .product-block li.header ul li.shipping ul.express:before, .confirmation .product-block li ul li.shipping ul.Express:before {
+	font-family: 'FontAwesome';
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    font-weight: 100;
+    content: "\f0d1";
+}
+/* end change for TISCSS-66 */
 .confirmation .left-block .address p {
     text-transform: uppercase;
     color: #a9143c;
