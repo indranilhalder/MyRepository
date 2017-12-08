@@ -2529,21 +2529,32 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 
 		if (CollectionUtils.isNotEmpty(voucherList))
 		{
-			if (voucherList.get(0) instanceof PromotionVoucherModel)
+			for (final DiscountModel discount : voucherList)
 			{
-				final PromotionVoucherModel promotionVoucherModel = (PromotionVoucherModel) voucherList.get(0);
-				if (null != promotionVoucherModel)
+				if (discount instanceof PromotionVoucherModel)
 				{
-					getVoucherService().releaseVoucher(promotionVoucherModel.getVoucherCode(), clonedSubOrder);
-					clonedSubOrder.setGlobalDiscountValuesInternal(null);
-					getModelService().save(clonedSubOrder);
-					getModelService().refresh(clonedSubOrder);
+					final PromotionVoucherModel promotionVoucherModel = (PromotionVoucherModel) discount;
 
+					getVoucherService().releaseVoucher(promotionVoucherModel.getVoucherCode(), clonedSubOrder);
+					//clonedSubOrder.setGlobalDiscountValuesInternal(null);
+					//getModelService().save(clonedSubOrder);
+					//getModelService().refresh(clonedSubOrder);
+
+					LOG.info(
+							"Voucher " + promotionVoucherModel.getVoucherCode() + "released from suborder " + clonedSubOrder.getCode());
+				}
+				else if (discount instanceof MplCartOfferVoucherModel)
+				{
+					final MplCartOfferVoucherModel promotionVoucherModel = (MplCartOfferVoucherModel) discount;
+					getVoucherService().releaseVoucher(promotionVoucherModel.getVoucherCode(), clonedSubOrder);
 					LOG.info(
 							"Voucher " + promotionVoucherModel.getVoucherCode() + "released from suborder " + clonedSubOrder.getCode());
 				}
 			}
 
+			clonedSubOrder.setGlobalDiscountValuesInternal(null);
+			getModelService().save(clonedSubOrder);
+			getModelService().refresh(clonedSubOrder);
 		}
 
 		return clonedSubOrder;
