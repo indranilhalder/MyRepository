@@ -676,6 +676,9 @@ div.wishlist-content .pagination a.active {
 	.manage-wishlist-container .actions button, .create-new-wishlist-popup-container .create_wishlist {
 		width: 100%;
 	}
+	#manageMyList button.close, #createNewList button.close {
+		display: none;		/* add for TISCSS-79 */
+	}
 }
 /* end of TISCSS-59 */
 .list .selectedWishlist {
