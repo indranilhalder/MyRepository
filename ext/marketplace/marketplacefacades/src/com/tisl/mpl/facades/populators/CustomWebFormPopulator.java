@@ -11,8 +11,6 @@ import de.hybris.platform.servicelayer.dto.converter.ConversionException;
 
 import javax.annotation.Resource;
 
-import org.apache.commons.lang.StringUtils;
-
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.core.model.MplWebCrmTicketModel;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
@@ -43,7 +41,7 @@ public class CustomWebFormPopulator<SOURCE extends WebFormData, TARGET extends M
 		webCrmTicketModel.setL2code(webFormData.getL2code());
 		webCrmTicketModel.setL3code(webFormData.getL3code());
 		webCrmTicketModel.setL4code(webFormData.getL4code());
-		webCrmTicketModel.setAttachments(StringUtils.join(webFormData.getAttachments(), ","));
+		webCrmTicketModel.setAttachments(String.join(",", webFormData.getAttachments()));
 		webCrmTicketModel.setComment(webFormData.getComment());
 		webCrmTicketModel.setOrderCode(webFormData.getOrderCode());
 		webCrmTicketModel.setSubOrderCode(webFormData.getSubOrderCode());
