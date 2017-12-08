@@ -4,6 +4,9 @@ var isNewCard = false; // this is variable to fix paynow blackout issue
 var isCodeligible = true; //cod fix
 var couponApplied=false;
 var bankNameSelected=null;
+
+var checkTamperingPlaceOrder = false; //TISUAT-6107 fix
+
 //var promoAvailable=$("#promoAvailable").val();
 //var bankAvailable=$("#bankAvailable").val();
 
@@ -729,7 +732,15 @@ function submitForm(){
 	{
 		var code=bankCodeCheck();
 		if(code){
-			submitNBForm();
+			//TISUAT-6037 fix
+			if(!checkTamperingPlaceOrder){			
+				submitNBForm();
+			}
+			else{
+		 	$("#juspayErrorMsg").html("Oops, something went wrong! Please re-select a payment mode and complete your purchase.");
+		 	$("#juspayconnErrorDiv").css("display","block");
+		 	$("body,html").animate({ scrollTop: 0 });
+		 	}		
 		}
 		else{
 			$("#netbankingIssueError").css("display","block");
@@ -1623,7 +1634,9 @@ $("#otpMobileNUMField").focus(function(){
 //     var frm = $(this.form)
 //     
 // }).on('change', function(e){
+//TISUAT-6057
 function savedCreditCardRadioChange(radioId){
+  //function savedCreditCardRadioChange(element){
   //var $this = $(this)
     // var cg = $this.parents("div.credit-card-group:first")
 	     // TISBOX-1732
@@ -1633,6 +1646,7 @@ function savedCreditCardRadioChange(radioId){
 	     $("input[name=emiCards]:radio.card_token").removeClass("card_token").addClass("card_token_hide");
 	     $(".card_token_hide").parent().parent().parent().find(".cvv").find(".security_code").removeClass("security_code").addClass("security_code_hide");
 		 $("#"+radioId).removeClass("card_token_hide").addClass("card_token");
+	     //$(element).removeClass("card_token_hide").addClass("card_token");
 		 $(".card_bank").removeClass("card_bank").addClass("card_bank_hide");
 		 $(".card_brand").removeClass("card_brand").addClass("card_brand_hide");
 		 $('.card_is_domestic').removeClass("card_is_domestic").addClass("card_is_domestic_hide");
@@ -1644,7 +1658,13 @@ function savedCreditCardRadioChange(radioId){
 	     $("#"+radioId).parent().find('.card_is_domestic_hide').removeClass("card_is_domestic_hide").addClass("card_is_domestic");
 	     $("#"+radioId).parent().find('.card_ebsErrorSavedCard_hide').removeClass("card_ebsErrorSavedCard_hide").addClass("card_ebsErrorSavedCard");
 	     $("#"+radioId).parent().parent().parent().find(".cvv").find('.card_cvvErrorSavedCard_hide').removeClass("card_cvvErrorSavedCard_hide").addClass("card_cvvErrorSavedCard");
-	     $(".security_code_hide").val(null);
+		 /*$(element).parent().find('.card_bank_hide').removeClass("card_bank_hide").addClass("card_bank"); 
+	     $(element).parent().parent().parent().find(".cvv").find(".security_code_hide").removeClass("security_code_hide").addClass("security_code");
+	     $(element).parent().find('.card_brand_hide').removeClass("card_brand_hide").addClass("card_brand");
+	     $(element).parent().find('.card_is_domestic_hide').removeClass("card_is_domestic_hide").addClass("card_is_domestic");
+	     $(element).parent().find('.card_ebsErrorSavedCard_hide').removeClass("card_ebsErrorSavedCard_hide").addClass("card_ebsErrorSavedCard");
+	     $(element).parent().parent().parent().find(".cvv").find('.card_cvvErrorSavedCard_hide').removeClass("card_cvvErrorSavedCard_hide").addClass("card_cvvErrorSavedCard");*/
+		 $(".security_code_hide").val(null);
 	     //SDI-2149
 	     $(".card_nochooseErrorSavedCard_popup").css("display","none");
 	     $('#make_saved_cc_payment').removeClass("saved_card_disabled");
@@ -1670,7 +1690,9 @@ function savedCreditCardRadioChange(radioId){
 //	     var frm = $(this.form)
 //	     
 //	 }).on('change', function(e){
+//TISUAT-6057  
 function savedDebitCardRadioChange(radioId){
+  //function savedDebitCardRadioChange(element){
 	     //var $this = $(this)
 	     // TISBOX-1732
 	     $(".card_cvvErrorSavedCard, card_cvvErrorSavedCard_hide, .card_ebsErrorSavedCard, .card_ebsErrorSavedCard_hide").css("display","none");
@@ -1680,6 +1702,7 @@ function savedDebitCardRadioChange(radioId){
 	     $("input[name=emiCards]:radio.card_token").removeClass("card_token").addClass("card_token_hide");
 	     $(".card_token_hide").parent().parent().parent().find(".cvv").find(".security_code").removeClass("security_code").addClass("security_code_hide");
 	     $("#"+radioId).removeClass("card_token_hide").addClass("card_token");
+	     //$(element).removeClass("card_token_hide").addClass("card_token");
 	     $(".card_bank").removeClass("card_bank").addClass("card_bank_hide");
 	     $(".card_brand").removeClass("card_brand").addClass("card_brand_hide");
 	     $('.card_is_domestic').removeClass("card_is_domestic").addClass("card_is_domestic_hide");
@@ -1691,6 +1714,12 @@ function savedDebitCardRadioChange(radioId){
 	     $("#"+radioId).parent().find('.card_is_domestic_hide').removeClass("card_is_domestic_hide").addClass("card_is_domestic");
 	     $("#"+radioId).parent().find('.card_ebsErrorSavedCard_hide').removeClass("card_ebsErrorSavedCard_hide").addClass("card_ebsErrorSavedCard");
 	     $("#"+radioId).parent().parent().parent().find(".cvv").find('.card_cvvErrorSavedCard_hide').removeClass("card_cvvErrorSavedCard_hide").addClass("card_cvvErrorSavedCard");
+	     /*$(element).parent().find('.card_bank_hide').removeClass("card_bank_hide").addClass("card_bank"); 
+	     $(element).parent().parent().parent().find(".cvv").find(".security_code_hide").removeClass("security_code_hide").addClass("security_code");
+	     $(element).parent().find('.card_brand_hide').removeClass("card_brand_hide").addClass("card_brand");
+	     $(element).parent().find('.card_is_domestic_hide').removeClass("card_is_domestic_hide").addClass("card_is_domestic");
+	     $(element).parent().find('.card_ebsErrorSavedCard_hide').removeClass("card_ebsErrorSavedCard_hide").addClass("card_ebsErrorSavedCard");
+	     $(element).parent().parent().parent().find(".cvv").find('.card_cvvErrorSavedCard_hide').removeClass("card_cvvErrorSavedCard_hide").addClass("card_cvvErrorSavedCard");*/
 	     $(".security_code_hide").val(null);
 	   //SDI-2149
 	     $(".card_nochooseErrorSavedCard_popup").css("display","none");
@@ -2397,16 +2426,30 @@ function savedDebitCardRadioChange(radioId){
 		$(".card_token").parent().parent().parent().find(".cvv").find(".cvvValdiation").focus();	//UF-211
 		return false;
 	}
- 	else if($(".card_brand").val()=="MAESTRO" && password==""){
- 		createJuspayOrderForSavedCard(); 
+ 	else if($(".card_brand").val()=="MAESTRO" && password==""){	//TISUAT-6037 fix
+ 		if(!checkTamperingPlaceOrder){
+ 			createJuspayOrderForSavedCard();  		
+ 		}
+ 		else{
+	 	$("#juspayErrorMsg").html("Oops, something went wrong! Please re-select a payment mode and complete your purchase.");
+	 	$("#juspayconnErrorDiv").css("display","block");
+	 	$("body,html").animate({ scrollTop: 0 });
+	 	}
  	}
 	else if(ebsDownCheck=="Y" && (isDomestic=="false" || isDomestic==""))
 	{
 		$(".card_ebsErrorSavedCard").css("display","block");		
 		return false;
 	}
-	else{
+	else{	//TISUAT-6037 fix
+		if(!checkTamperingPlaceOrder){			
 		createJuspayOrderForSavedCard(); 
+		}
+		else{
+	 	$("#juspayErrorMsg").html("Oops, something went wrong! Please re-select a payment mode and complete your purchase.");
+	 	$("#juspayconnErrorDiv").css("display","block");
+	 	$("body,html").animate({ scrollTop: 0 });
+	 	}
 	}
  });
  
@@ -2428,8 +2471,15 @@ function savedDebitCardRadioChange(radioId){
 			$(this).addClass("saved_card_disabled");	//UF-217
 			return false;
 		}
-	 	else if($(".card_brand").val()=="MAESTRO" && password==""){
-	 		createJuspayOrderForSavedDebitCard(); 
+	 	else if($(".card_brand").val()=="MAESTRO" && password==""){	//TISUAT-6037 fix
+	 		if(!checkTamperingPlaceOrder){
+	 	    createJuspayOrderForSavedDebitCard(); 
+	 		}
+	 		else{
+	 		 $("#juspayErrorMsg").html("Oops, something went wrong! Please re-select a payment mode and complete your purchase.");
+	 		 $("#juspayconnErrorDiv").css("display","block");
+	 		 $("body,html").animate({ scrollTop: 0 });
+	 		 }
 	 	}
 		else if(ebsDownCheck=="Y" && (isDomestic=="false" || isDomestic==""))
 		{
@@ -2437,7 +2487,14 @@ function savedDebitCardRadioChange(radioId){
 			return false;
 		}
 		else{
+			if(!checkTamperingPlaceOrder){	//TISUAT-6037 fix
 			createJuspayOrderForSavedDebitCard(); 
+			}
+			else{
+			$("#juspayErrorMsg").html("Oops, something went wrong! Please re-select a payment mode and complete your purchase.");
+			$("#juspayconnErrorDiv").css("display","block");
+			$("body,html").animate({ scrollTop: 0 });
+			}
 		}
 	 })
  
@@ -4387,7 +4444,7 @@ function creditCardTypeFromNumber(number){
 	        mastercard: /^5[1-5]/,
 	        amex: /^3[47]/,
 	        diners: /^(36|38|30[0-5])\d+$/,
-	        discover: /^(6011|65|64[4-9]|622)\d+$/,
+	        discover: /^65[4-9][0-9]{13}|64[4-9][0-9]{13}|6011[0-9]{12}|(622(?:12[6-9]|1[3-9][0-9]|[2-8][0-9][0-9]|9[01][0-9]|92[0-5])[0-9]{10})$/,
 	        jcb: /^35\d+$/
 	    };
 	   if (re.discover.test(number)) {
@@ -4468,7 +4525,7 @@ function debitCardTypeFromNumber(number){
 	        mastercard: /^5[1-5]/,
 	        amex: /^3[47]/,
 	        diners: /^(36|38|30[0-5])\d+$/,
-	        discover: /^(6011|65|64[4-9]|622)\d+$/,
+	        discover: /^65[4-9][0-9]{13}|64[4-9][0-9]{13}|6011[0-9]{12}|(622(?:12[6-9]|1[3-9][0-9]|[2-8][0-9][0-9]|9[01][0-9]|92[0-5])[0-9]{10})$/,
 	        jcb: /^35\d+$/
 	    };
 	  if (re.discover.test(number)) {
@@ -4549,7 +4606,7 @@ function emiCardTypeFromNumber(number){
 	        mastercard: /^5[1-5]/,
 	        amex: /^3[47]/,
 	        diners: /^(36|38|30[0-5])\d+$/,
-	        discover: /^(6011|65|64[4-9]|622)\d+$/,
+	        discover: /^65[4-9][0-9]{13}|64[4-9][0-9]{13}|6011[0-9]{12}|(622(?:12[6-9]|1[3-9][0-9]|[2-8][0-9][0-9]|9[01][0-9]|92[0-5])[0-9]{10})$/,
 	        jcb: /^35\d+$/
 	    };
 	 if (re.discover.test(number)) {
@@ -4979,7 +5036,9 @@ function applyPromotion(bankName,binValue,formSubmit,isNewCard)
 		type: "GET",
 		cache: false,
 		dataType:'json',
-		success : function(response) {
+		success : function(response) {			
+			checkTamperingPlaceOrder=false;//TISUAT-6107 fix
+			
 			if(null!=response.promoExpiryMsg && response.promoExpiryMsg=="redirect")
 			{
 				$(location).attr('href',ACC.config.encodedContextPath+"/cart"); // TISEE-510
@@ -5248,9 +5307,27 @@ function applyPromotion(bankName,binValue,formSubmit,isNewCard)
 		//}
 		},
 		error : function(resp) {
-			$("#no-click,.loaderDiv").remove();
+			checkTamperingPlaceOrder = true;
+			//TISUAT-6037 starts here
+			if(ACC.singlePageCheckout.getIsResponsive())
+				{
+				ACC.singlePageCheckout.resetPaymentModes();
+				$('.security_code').removeClass("security_code").addClass("security_code_hide");
+				$('.cvvValdiation').prop('disabled', true);
+				$("#juspayErrorMsg").html("Oops, something went wrong! Please re-select a payment mode and complete your purchase.");
+				$("#juspayconnErrorDiv").css("display","block");
+				}
+			else
+				{
+				ACC.singlePageCheckout.showAccordion("#reviewOrder"); 
+				$('.error_msg_backfrom_payment').html("Oops, something went wrong! Please click on PROCEED to complete your purchase.");
+				$('.error_msg_backfrom_payment').css("display","block");
+				}
+			
+			/*$("#no-click,.loaderDiv").remove();
 			$(".make_payment").removeAttr('disabled');
-			$("#no-click1,.loaderDiv1").remove();
+			$("#no-click1,.loaderDiv1").remove();*/
+			//TISUAT-6037 ends here
 		}
 	});
 }
@@ -9259,7 +9336,15 @@ function submitCODForm(){
 	{
 		var code=bankCodeCheck();
 		if(code){
-			submitNBForm();
+			//TISUAT-6037 fix
+			if(!checkTamperingPlaceOrder){			
+				submitNBForm();
+			}
+			else{
+		 	$("#juspayErrorMsg").html("Oops, something went wrong! Please re-select a payment mode and complete your purchase.");
+		 	$("#juspayconnErrorDiv").css("display","block");
+		 	$("body,html").animate({ scrollTop: 0 });
+		 	}			
 		}
 		else{
 			$("#netbankingIssueError").css("display","block");

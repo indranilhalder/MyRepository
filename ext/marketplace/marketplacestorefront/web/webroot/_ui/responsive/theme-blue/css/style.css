@@ -73252,8 +73252,11 @@ span#juspayErrorMsg{
 }
 @media(max-width: 767px){
 	#juspayconnErrorDiv{
-    top: 70px !important;
-}
+		/* start change of TISUAT-6086 */
+	    /* top: 70px !important; */
+	    top: 10px !important;
+	    /* end change of TISUAT-6086 */
+	}
 }
 /*TPR-4461 end*/
 
@@ -77599,6 +77602,7 @@ background: url(../images/search_image.png) no-repeat;}
 .page-viewAllTrending.pageType-ContentPage #ia_products_hot .right-block .select-view .select-list {
     z-index: 2;
 }
+
 /* SDI-1393 End */
 
 /* TPR-5954 */
@@ -77637,7 +77641,24 @@ background: url(../images/search_image.png) no-repeat;}
 }
 /* end CAR-327 */
 
-/* HOME-210 start */
+.error_msg_backfrom_payment{
+    line-height: normal;
+    letter-spacing: .6px;
+    color: red;
+    font-size: 14px;
+    border-radius: 4px;
+    background-color: #ffe5ec;
+    width: 100%;
+    padding: 10px;
+    text-align: center;
+}
+/* start change for TISUAT-6116 */
+.page-multiStepCheckoutSummaryPage .alert.alert-danger.alert-dismissable#juspayconnErrorDiv {
+	top: 1px !important;
+}
+/* end change for TISUAT-6116 */
+
+/* SDI-1393 End */
 .homefurnishing-overview:nth-child(2) {
     float: right ! important;
 }

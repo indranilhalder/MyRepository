@@ -116,10 +116,11 @@ public class PancardRejectEmailContext extends AbstractEmailContext<OrderProcess
 
 
 		final String orderCode = orderProcessModel.getOrder().getCode();
-
+		
+		//SDI-2038
 		final String trackOrderUrl = getConfigurationService().getConfiguration().getString(
 				MarketplacecommerceservicesConstants.MPL_TRACK_ORDER_LONG_URL_FORMAT)
-				+ orderCode;
+				+ "/" + orderCode;
 		/* Added in R2.3 for shortUrl START */
 		final String shortUrl = shortUrlService.genearateShortURL(orderCode);
 		put(TRACK_ORDER_URL, null != shortUrl ? shortUrl : trackOrderUrl);
